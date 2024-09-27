@@ -1,0 +1,122 @@
+#include "include.h"
+
+void mp3_res_play_kick(u32 addr, u32 len);
+void wav_res_play_kick(u32 addr, u32 len);
+void wav_res_dec_process(void);
+bool wav_res_is_play(void);
+bool wav_res_stop(void);
+void mp3_res_play_exit(void);
+
+#if DAC_DNR_EN
+static u8 msc_dnr_sta;
+#endif
+
+u8 mp3_res_process(void)
+{
+    if (sys_cb.mp3_res_playing) {
+        if (get_music_dec_sta() == MUSIC_STOP) {
+            printf("mp3 ring stop:%d\n", sys_cb.mute);
+            sys_cb.mp3_res_playing = false;
+            music_control(MUSIC_MSG_STOP);
+            bsp_change_volume(sys_cb.vol);
+
+            if (music_set_eq_is_done()) {
+                music_set_eq_by_num(sys_cb.eq_mode); // 恢复 EQ
+            }
+            mp3_res_play_exit();
+
+            if (sys_cb.mute) {
+                bsp_loudspeaker_mute();
+            }
+
+#if DAC_DNR_EN
+            dac_dnr_set_sta(msc_dnr_sta);
+#endif
+
+            func_bt_mp3_play_restore();
+            return 0;
+        }
+
+    }
+    return 1;
+}
+
+void mp3_res_play_do(u32 addr, u32 len, bool sync)
+{
+    if (len == 0) {
+        return;
+    }
+
+    printf("mp3 ring: %x, %d\n", addr, sys_cb.mute);
+#if DAC_DNR_EN
+    msc_dnr_sta = dac_dnr_get_sta();
+    dac_dnr_set_sta(0);
+#endif
+
+    if (sys_cb.mute) {
+        bsp_loudspeaker_unmute();
+    }
+
+    if (get_music_dec_sta() != MUSIC_STOP) { //避免来电响铃/报号未完成，影响get_music_dec_sta()状态
+        music_control(MUSIC_MSG_STOP);
+    }
+
+    bsp_change_volume(WARNING_VOLUME);
+    if (music_set_eq_is_done()) {
+        music_set_eq_by_num(0); // EQ 设置为 normal
+    }
+
+    mp3_res_play_kick(addr, len);
+    sys_cb.mp3_res_playing = true;
+}
+
+void mp3_res_play(u32 addr, u32 len)
+{
+    mp3_res_play_do(addr, len, 0);
+}
+
+void mp3_res_play_block(u32 addr, u32 len)
+{
+    bt_audio_bypass();
+
+	mp3_res_play(addr, len);
+	while(mp3_res_process()) {
+        bt_thread_check_trigger();
+        WDT_CLR();
+    }
+
+    bt_audio_enable();
+}
+
+#if WARNING_WAVRES_PLAY
+void wav_res_play_do(u32 addr, u32 len, bool sync)
+{
+    if (len == 0) {
+        return;
+    }
+
+#if DAC_DNR_EN
+    u8 sta = dac_dnr_get_sta();
+    dac_dnr_set_sta(0);
+#endif
+
+    wav_res_play_kick(addr, len);
+    while (wav_res_is_play()) {
+        bt_thread_check_trigger();
+        wav_res_dec_process();
+        WDT_CLR();
+    }
+    wav_res_stop();
+
+#if DAC_DNR_EN
+    dac_dnr_set_sta(sta);
+#endif
+}
+
+void wav_res_play(u32 addr, u32 len)
+{
+    wav_res_play_do(addr, len, 0);
+}
+
+#endif
+

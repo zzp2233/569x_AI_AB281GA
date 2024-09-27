@@ -1,0 +1,720 @@
+/**
+*@file
+*@brief        系统时间模块
+*@details  系统时间，闹钟接口，UTC时间等接口
+*@author       zn.zeng
+*@date       Jun 29, 2021
+*@version      v1.0
+*/
+
+#include "ute_module_systemtime.h"
+#include "ute_module_log.h"
+// #include "ute_application_common.h"
+// #include "ute_drv_battery_common.h"
+// #include "ute_drv_keys_common.h"
+// #include "ute_module_message.h"
+#include "ute_project_config.h"
+// #include "ute_module_sleep.h"
+// #include "ute_module_sport.h"
+// #include "ute_drv_motor.h"
+// #include "ute_language_common.h"
+// #include "ute_module_localRingtone.h"
+// #include "bt_hfp.h"
+#include "ute_module_filesystem.h"
+//#include "time.h"
+
+/*! 系统时间参数 */
+ute_module_systemtime_time_t systemTime;
+/*! 注册每秒回调函数数据结构zn.zeng, 2021-07-12  */
+ute_module_systemtime_register_t systemTimeRegisterData;
+
+static uint8_t uteModuleSystemTimeLocalTimeStatus;
+/*! 平年每月天数 */
+const static uint8_t everyMonDays[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+/*! 闰年每月天数 */
+const static uint8_t leapEveryMonDays[13] = {0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+/* 时间互斥量 zn.zeng 2022-02-14*/
+void *uteModuleSystemtimeMute;
+
+/**
+*@brief  系统时间初始化
+*@details
+*@author        zn.zeng
+*@date        Jun 29, 2021
+*/
+
+void uteModuleSystemtimeInit(void)
+{
+    uteModulePlatformCreateMutex(&uteModuleSystemtimeMute);
+    uteModulePlatformRtcInit();
+    uteModulePlatformRtcStart();
+    uteModuleSystemtimeReadConfig();
+    memset(&systemTimeRegisterData,0,sizeof(ute_module_systemtime_register_t));
+}
+
+/**
+*@brief  读取时间参数
+*@details
+*@author        zn.zeng
+*@date        2021-08-26
+*/
+void uteModuleSystemtimeReadConfig(void)
+{
+    /*! 闹钟参数读取zn.zeng, 2021-08-21  */
+    void *file=NULL;
+    uint8_t readbuff[15];
+    memset(&readbuff[0],0,15);
+    char path[20];
+    memset(&path[0],0,20);
+
+    /*! 时间格式，当设置语言 zn.zeng, 2021-08-18  */
+    readbuff[0] = DEFAULT_SYSTEM_TIME_FORMAT_MI;
+    readbuff[1] = DEFAULT_SYSTEM_TIME_FORMAT_12HOUR;
+    readbuff[2] = DEFAULT_SYSTEM_TIME_ZONE;
+    readbuff[3] = DEFAULT_LANGUAGE>>8&0xff;
+    readbuff[4] = DEFAULT_LANGUAGE&0xff;
+
+    readbuff[5] = (DEFAULT_SYSTEM_TIME_YEAR>>8)&0xff;
+    readbuff[6] = DEFAULT_SYSTEM_TIME_YEAR&0xff;
+    readbuff[7] = DEFAULT_SYSTEM_TIME_MONTH;
+    readbuff[8] = DEFAULT_SYSTEM_TIME_DAY;
+    readbuff[9] = DEFAULT_SYSTEM_TIME_HOUR;
+    readbuff[10] = DEFAULT_SYSTEM_TIME_MIN;
+    readbuff[11] = DEFAULT_SYSTEM_TIME_SEC;
+    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_TIME_FORMAT,&file,FS_O_RDONLY))
+    {
+        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+        uteModuleFilesystemReadData(file,&readbuff[0],14);
+        uteModuleFilesystemCloseFile(file);
+    }
+    ute_module_systemtime_time_t set;
+    memset(&set,0,sizeof(ute_module_systemtime_time_t));
+    set.isDistanceMi = readbuff[0];
+    set.is12HourTime = readbuff[1];
+    set.zone = readbuff[2];
+    set.languageId = readbuff[3]<<8|readbuff[4];
+    set.year = readbuff[5]<<8|readbuff[6];
+    set.month = readbuff[7];
+    set.day = readbuff[8];
+    set.hour = readbuff[9];
+    set.min = readbuff[10];
+    set.sec = readbuff[11];
+    set.isWatchSetLangage = readbuff[12];
+    set.AppSetlanguageId = readbuff[13];
+    uteModuleSystemtimeSetTime(set);
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,isDistanceMi=%d,is12HourTime=%d,time.zone=%d,languageId=%d", __func__,systemTime.isDistanceMi,systemTime.is12HourTime,systemTime.zone,systemTime.languageId);
+}
+/**
+*@brief  系统时间设置时间
+*@details
+*@param[in] ute_module_systemtime_time_t set  传入要设置的时间参数
+*@author        zn.zeng
+*@date        Jun 29, 2021
+*/
+
+void uteModuleSystemtimeSetTime(ute_module_systemtime_time_t set)
+{
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,%04d-%02d-%02d,%02d:%02d:%02d,zone=%d", __func__, set.year, set.month, set.day, set.hour, set.min, set.sec,set.zone);
+    if (set.year < 2000)
+    {
+        set.year = 2000;
+    }
+    if (set.month == 0)
+    {
+        set.month = 1;
+    }
+    if (set.day == 0)
+    {
+        set.day = 1;
+    }
+    // test
+    set.year = 2024;
+    set.month = 3;
+    set.day = 28;
+    set.hour = 18;
+    set.min = 1;
+    set.sec = 0;
+    //
+    ute_module_systemtime_time_t oldTime;
+    memcpy(&oldTime,&systemTime,sizeof(ute_module_systemtime_time_t));
+    //uteModuleSleepSystemtimeChange(systemTime,set);
+#if UTE_MODULE_CYWEE_MOTION_SUPPORT
+    //sportSystemTimeChange 中有uteModuleCwmReadCurrDayStepFromFs 操作,所以这个放在它执行之前
+    uteModuleCwmStepDataSystemtimeChange(systemTime,set);
+#endif
+    //uteModuleSportSystemtimeChange(systemTime,set);
+    uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
+    memcpy(&systemTime, &set, sizeof(ute_module_systemtime_time_t));
+    uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
+    systemTime.isSettingTime = true;
+    systemTime.week = uteModuleSystemtimeGetWeek(systemTime.year, systemTime.month, systemTime.day);
+    uteModulePlatformRtcSetTime(systemTime.year,systemTime.month,systemTime.day,systemTime.hour,systemTime.min,systemTime.sec);
+    uteModuleSystemtimeSaveTimeInfo();
+//    uteModulePlaformUpdateConnectParam(12,36,30*1000);
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+    if(uteModuleGuiCommonIsInScreenSaver())
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_MIN_REGISER,NULL);
+    }
+#endif
+//    uteModuleHeartSystemtimeChange(oldTime,set);
+}
+/**
+*@brief  判断是否是闰年
+*@details
+*@param[in] uint16_t year  传入年份
+*@author        zn.zeng
+*@return  返回true，此年份是闰年
+*@date        Jun 29, 2021
+*/
+static bool uteModuleSystemtimeIsLeapYear(uint16_t year)
+{
+    return (((year % 100 != 0) && (year % 4 == 0)) || (year % 400 == 0));
+}
+/**
+*@brief  系统时间秒计时
+*@details   秒加一
+*@param[in] ute_module_systemtime_time_t *time  时间变量指针
+*@author        zn.zeng
+*@date        Jun 29, 2021
+*/
+static void uteModuleSystemtimeChange(ute_module_systemtime_time_t *time)
+{
+    time->sec++;
+    if (time->sec > 59)
+    {
+        time->sec = 0;
+        time->min++;
+        if (time->min > 59)
+        {
+            time->min = 0;
+            time->hour++;
+            if (time->hour > 23)
+            {
+                const uint8_t *monday;
+                time->hour = 0;
+                time->day++;
+                if (uteModuleSystemtimeIsLeapYear(time->year))
+                {
+                    monday = &leapEveryMonDays[0];
+                }
+                else
+                {
+                    monday = &everyMonDays[0];
+                }
+                if (time->day > monday[time->month])
+                {
+                    time->day = 1;
+                    time->month++;
+                    if (time->month > 12)
+                    {
+                        time->month = 1;
+                        time->year = time->year + 1;
+                    }
+                }
+            }
+        }
+    }
+}
+/**
+*@brief  系统时间每秒处理函数
+*@details  系统时间每秒处理总入口
+*@author        zn.zeng
+*@date        Jun 29, 2021
+*/
+void uteModuleSystemtimeSecondCb(void)
+{
+    if (1)//(uteApplicationCommonIsStartupFinish())
+    {
+        uteModuleSystemtimeChange(&systemTime);
+        systemTime.week = uteModuleSystemtimeGetWeek(systemTime.year,systemTime.month,systemTime.day);
+        if(systemTime.isSettingTime)
+        {
+            systemTime.isSettingTime = false;
+            UTE_MODULE_LOG(UTE_LOG_TIME_LVL,"%s,now is setting time",__func__);
+        }
+        else
+        {
+            uteModulePlatformCalibrationSystemTimer();
+        }
+#if (UTE_LOG_TIME_LVL && UTE_MODULE_LOG_SUPPORT)
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,%04d-%02d-%02d %02d:%02d:%02d", __func__, systemTime.year, systemTime.month, systemTime.day, systemTime.hour, systemTime.min, systemTime.sec);
+#endif
+        if (systemTime.sec == 0)
+        {
+            uteModuleSystemtimeSaveTimeInfo();
+        }
+        for (uint8_t i = 0; i < systemTimeRegisterData.regCnt; i++)
+        {
+            uteModuleSystemtimeRegisterSecondCb(i);
+        }
+    }
+    else
+    {
+        /*! 启动流程 读取电池电压 zn.zeng  modify Jul 01, 2021 */
+//        uteDrvBatteryCommonUpdateBatteryInfo();
+//        if(uteDrvBatteryCommonGetVoltage()>UTE_DRV_BATTERY_POWER_ON_VOLTAGE)
+        {
+            //uteApplicationCommonStartupSecond();
+        }
+    }
+}
+/**
+*@brief  获取week
+*@details   传入年月日，计算星期
+*@param[in] uint16_t year
+*@param[in] uint16_t month
+*@param[in] uint16_t day
+*@return  返回星期，星期天为0
+*@author        zn.zeng
+*@date        Jun 29, 2021
+*/
+uint8_t uteModuleSystemtimeGetWeek(uint16_t year, uint8_t month, uint8_t day)
+{
+    uint8_t week;  //代表星期几
+    if (month == 1 || month == 2)
+    {
+        month += 12;
+        year--;
+    }
+    week = (day + 1 + 2 * month + 3 * (month + 1) / 5 + year + year / 4 - year / 100 + year / 400) % 7;
+    return week;
+}
+
+/**
+*@brief  获取系统时间
+*@details
+*@param[out] ute_module_systemtime_time_t *time  时间变量指针
+*@author        zn.zeng
+*@date        Jun 29, 2021
+*/
+void uteModuleSystemtimeGetTime(ute_module_systemtime_time_t *time)
+{
+    uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
+    memcpy(time, &systemTime, sizeof(ute_module_systemtime_time_t));
+    uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
+}
+/**
+*@brief
+*@details 计算增加天数的日期
+*@param[out] ute_module_systemtime_time_t *time  时间变量指针
+*@param[in] uint8_t addDay 增加的具体天数
+*@author        zn.zeng
+*@date        Jun 30, 2021
+*/
+void uteModuleSystemtimeInputDateCalDay(ute_module_systemtime_time_t *time, uint16_t addDay)
+{
+    for (int i = 0; i < addDay; i++)
+    {
+        const uint8_t *monday;
+        time->hour = 0;
+        time->day++;
+        if (uteModuleSystemtimeIsLeapYear(time->year))
+        {
+            monday = &leapEveryMonDays[0];
+        }
+        else
+        {
+            monday = &everyMonDays[0];
+        }
+        if (time->day > monday[time->month])
+        {
+            time->day = 1;
+            time->month++;
+            if (time->month > 12)
+            {
+                time->month = 1;
+                time->year = time->year + 1;
+            }
+        }
+    }
+}
+/**
+*@brief
+*@details 计算增加减少天数的日期
+*@param[out] ute_module_systemtime_time_t *time  时间变量指针
+*@param[in] int  增加减少的具体天数，正为增加，负为减少，0为不操作
+*@author        zn.zeng
+*@date        2022-08-19
+*/
+void uteModuleSystemtimeInputDateIncreaseDecreaseDay(ute_module_systemtime_time_t *time, int day)
+{
+    /*
+    struct tm timeptr;
+    struct tm *timeout;
+    time_t timestamp = 0;
+    timeptr.tm_year = time->year - 1900;
+    timeptr.tm_mon = systemTime.month - 1;
+    timeptr.tm_mday = systemTime.day;
+    timeptr.tm_hour = 0;
+    timeptr.tm_min = 0;
+    timeptr.tm_sec = 0;
+    time_t tmp = mktime(&timeptr);
+    timestamp = tmp + day * 86400;
+    timeout = localtime(&timestamp);
+    time->year = timeout->tm_year + 1900;
+    time->month = timeout->tm_mon + 1;
+    time->day = timeout->tm_mday;
+    time->week = timeout->tm_wday;
+    */
+}
+/**
+*@brief 注册系统每秒时间函数
+*@details
+*@param[in] void* function 函数指针
+*@author        zn.zeng
+*@date        2021-07-12
+*/
+void uteModuleSystemtimeRegisterSecond(void* function)
+{
+    for(uint8_t i = 0; i<UTE_MODULE_SYSTEMTEIM_REGISTER_MAX_CNT; i++)
+    {
+        if(systemTimeRegisterData.function[i]==NULL)
+        {
+            systemTimeRegisterData.function[i] = (ute_module_systemtime_reg_func_t)function;
+            systemTimeRegisterData.regCnt++;
+            UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,systemTimeRegisterData.regCnt=%d,.function[i]=%p", __func__, systemTimeRegisterData.regCnt,systemTimeRegisterData.function[i]);
+            return;
+        }
+        else if(systemTimeRegisterData.function[i]==(ute_module_systemtime_reg_func_t)function)
+        {
+            UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,has register function=0x%p", __func__, function);
+            return;
+        }
+    }
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,systemTimeRegisterData.regCnt is max", __func__);
+}
+/**
+*@brief 注册系统每秒时间回调函数
+*@details
+*@param[in] uint32_t param 参数
+*@author        zn.zeng
+*@date        2021-07-12
+*/
+void uteModuleSystemtimeRegisterSecondCb(uint32_t param)
+{
+    if(param>(UTE_MODULE_SYSTEMTEIM_REGISTER_MAX_CNT-1))
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,param is too lager", __func__);
+    }
+    if(systemTimeRegisterData.function[param]!=NULL)
+    {
+//        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,function[%d]=%p", __func__,param,systemTimeRegisterData.function[param]);
+        systemTimeRegisterData.function[param]();
+    }
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,param is error,function is NULL", __func__);
+    }
+}
+/**
+*@brief 注册系统每分钟时间回调函数
+*@details
+*@param[in] uint32_t param 参数
+*@author        cxd
+*@date        2022-04-26
+*/
+void uteModuleSystemtimeRegisterMinuteCb(void)
+{
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s", __func__);
+//    if(!uteApplicationCommonIsPowerOn())
+//    {
+//        return;
+//    }
+#if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
+    if(uteModuleGuiCommonIsInScreenSaver())
+    {
+        // uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN);
+        // uteDrvScreenCommonInterfaceInit();
+        // uteModulePlatformDelayMs(10);
+        uteModuleGuiCommonAnimationTimerCallback(NULL);
+        // uteModulePlatformDelayMs(100);
+        // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN);
+    }
+#endif
+}
+/**
+*@brief  获取是否晚上时间
+*@details
+*@return true为晚上时间定义
+*@author        zn.zeng
+*@date        2021-08-05
+*/
+bool uteModuleSystemtimeIsNight(void)
+{
+    uint32_t oneDaySecond = systemTime.hour*3600+systemTime.min*60+systemTime.sec;
+    if((oneDaySecond<28800||oneDaySecond>64800))  // 18:00~8:00
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+/**
+*@brief  获取是否睡眠时间
+*@details
+*@return true 为睡眠时间
+*@author        zn.zeng
+*@date        2021-08-05
+*/
+bool uteModuleSystemtimeIsSleepTime(void)
+{
+    uint32_t oneDaySecond = systemTime.hour*3600+systemTime.min*60+systemTime.sec;
+    if((oneDaySecond<43200||oneDaySecond>64800))  // 18:00~12:00
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
+}
+/**
+*@brief    保存时间信息
+*@details
+*@author        zn.zeng
+*@date        2021-11-08
+*/
+void uteModuleSystemtimeSaveTimeInfo(void)
+{
+    /*! 保存到文件zn.zeng, 2021-08-18  */
+    void *file;
+    uint8_t writebuff[14];
+    writebuff[0] = systemTime.isDistanceMi;
+    writebuff[1] = systemTime.is12HourTime;
+    writebuff[2] = systemTime.zone;
+    writebuff[3] = (systemTime.languageId>>8)&0xff;
+    writebuff[4] = systemTime.languageId&0xff;
+    writebuff[5] = (systemTime.year>>8)&0xff;
+    writebuff[6] = systemTime.year&0xff;
+    writebuff[7] = systemTime.month;
+    writebuff[8] = systemTime.day;
+    writebuff[9] = systemTime.hour;
+    writebuff[10] = systemTime.min;
+    writebuff[11] = systemTime.sec;
+    writebuff[12] = systemTime.isWatchSetLangage;
+    writebuff[13] = systemTime.AppSetlanguageId;
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,isDistanceMi=%d,is12HourTime=%d,time.zone=%d,languageId=%d", __func__,systemTime.isDistanceMi,systemTime.is12HourTime,systemTime.zone,systemTime.languageId);
+    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_TIME_FORMAT,&file,FS_O_WRONLY|FS_O_CREAT))
+    {
+        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+        uteModuleFilesystemWriteData(file,&writebuff[0],14);
+        uteModuleFilesystemCloseFile(file);
+    }
+
+}
+/**
+*@brief    设置显示时间格式
+*@details   包括距离的单位，英里和公里的切换，并保存
+*@author        zn.zeng
+*@date        2021-08-18
+*/
+void uteModuleSystemtimeSetTimeFormat(bool is12Hour,bool isMi)
+{
+    if(is12Hour != systemTime.is12HourTime)
+    {
+        systemTime.change12HourTime = true;
+    }
+    systemTime.isDistanceMi = isMi;
+    systemTime.is12HourTime = is12Hour;
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,isDistanceMi=%d,is12HourTime=%d", __func__,systemTime.isDistanceMi,systemTime.is12HourTime);
+    uteModuleSystemtimeSaveTimeInfo();
+}
+/**
+*@brief  保存时区
+*@details
+*@param[in] (int8_t zone)
+*@author        zn.zeng
+*@date        2021-08-18
+*/
+void uteModuleSystemtimeSetTimeZone(int8_t zone)
+{
+    systemTime.zone=zone;
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,zone=%d", __func__,systemTime.zone);
+    uteModuleSystemtimeSaveTimeInfo();
+}
+/**
+*@brief  保存语言
+*@details
+*@param[in] (uint8_t id)
+*@author        zn.zeng
+*@date        2021-08-23
+*/
+
+void uteModuleSystemtimeSetLanguage(uint16_t id)
+{
+    systemTime.languageId=id;
+    systemTime.isWatchSetLangage = true;
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,languageId=%d", __func__,systemTime.languageId);
+    uteModuleSystemtimeSaveTimeInfo();
+}
+/**
+*@brief  保存APP设计的语言
+*@details
+*@param[in] (uint8_t id)
+*@author        gyj
+*@date        2023-09-7
+*/
+
+void uteModuleSystemtimeAPPSetLanguage(uint16_t id)
+{
+    systemTime.AppSetlanguageId = id;
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,AppSetlanguageId=%d", __func__,systemTime.languageId);
+    uteModuleSystemtimeSaveTimeInfo();
+}
+/**
+*@brief  读取当前设置语言
+*@details
+*@author        zn.zeng
+*@date        2021-08-23
+*/
+uint16_t uteModuleSystemtimeReadLanguage(void)
+{
+    uint16_t id = 0;
+    id = systemTime.languageId;
+    return id;
+}
+/**
+*@brief  对比当前设置语言
+*@details
+*@author        xjc
+*@date        2022-01-22
+*/
+bool uteModuleSystemtimeCompareLanguage(uint16_t languageId)
+{
+    if(systemTime.languageId == languageId)
+    {
+        return true;
+    }
+    return false;
+}
+/**
+*@brief  读取距离类型
+*@details
+*@author        dengli.lu
+*@date        2021-10-26
+*/
+bool uteModuleSystemtimeGetDistanceMiType(void)
+{
+    return systemTime.isDistanceMi;
+}
+/**
+*@brief  复位时间制切换状态
+*@details
+*@author        xjc
+*@date        2022-08-26
+*/
+void uteModuleSystemtimeResetChange12HourTime(void)
+{
+    systemTime.change12HourTime = false;
+}
+/**
+*@brief  读取时间制是否切换
+*@details
+*@author        xjc
+*@date        2022-08-26
+*/
+bool uteModuleSystemtimeWhetherChange12HourTime(void)
+{
+    return systemTime.change12HourTime;
+}
+/**
+*@brief  是否打开24H制
+*@details
+*@return
+*@author        raymond
+*@date        2021-08-27
+*/
+bool uteModuleSystemtime12HOn(void)
+{
+    return systemTime.is12HourTime;
+}
+/**
+*@brief  设置24H制
+*@details
+*@return
+*@author        raymond
+*@date        2021-08-27
+*/
+void uteModuleSystemtime12HSwitchStatus(bool isopen)
+{
+    systemTime.is12HourTime = isopen;
+}
+/**
+*@brief  设置时间和日期状态
+*@details
+*@return
+*@author        raymond
+*@date        2022-03-01
+*/
+void uteModuleSystemTimeLocalTimeSetStatus(uint8_t status)
+{
+    uteModuleSystemTimeLocalTimeStatus = status;
+}
+
+/**
+*@brief  获取时间和日期状态
+*@details
+*@return
+*@author        raymond
+*@date        2022-03-01
+*/
+uint8_t uteModuleSystemTimeLocalTimeGetStatus(void)
+{
+    return uteModuleSystemTimeLocalTimeStatus;
+}
+
+/**
+*@brief             设置日期
+*@details
+*@return
+*@author      casen
+*@date        2022-10-29
+*/
+void uteModuleSystemTimeLocalSetDate(uint16_t year,uint8_t month,uint8_t day)
+{
+    if(year<2000 || year>2099) return;
+    if(month<1 || month >12) return;
+    if(day<1) return;
+    if (uteModuleSystemtimeIsLeapYear(year))
+    {
+        if(day>leapEveryMonDays[month])
+        {
+            return;
+        }
+    }
+    else
+    {
+        if(day>everyMonDays[month])
+        {
+            return;
+        }
+    }
+    ute_module_systemtime_time_t set;
+    uteModuleSystemtimeGetTime(&set);
+    set.year  = year;
+    set.month = month;
+    set.day     =   day;
+    uteModuleSystemtimeSetTime(set);
+}
+
+/**
+*@brief             设置时分
+*@details
+*@return
+*@author      casen
+*@date        2022-10-29
+*/
+void uteModuleSystemTimeLocalSetHourMin(uint8_t hour,uint8_t min)
+{
+    if(hour>23) return;
+    if(min>59) return;
+    ute_module_systemtime_time_t set;
+    uteModuleSystemtimeGetTime(&set);
+    set.hour  = hour;
+    set.min = min;
+    uteModuleSystemtimeSetTime(set);
+}
+

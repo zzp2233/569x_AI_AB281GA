@@ -12,6 +12,9 @@
 #include "ute_module_message.h"
 #include "ute_task_application.h"
 #include "ute_module_systemtime.h"
+
+ute_module_platform_adv_data_t uteModulePlatformAdvData;
+
 /**
 *@brief   us延时函数
 *@details   小于10ms使用此函数
@@ -675,12 +678,16 @@ void uteModulePlatformScreenQspiInit(void)
     GPIOACLR  =  BIT(4);
     GPIOADIR &= ~BIT(4);
 
+#if (GUI_MODE_SELECT == MODE_4WIRE_8BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
+    GPIOAFEN |= BIT(2);                         // D0
+    GPIOADE  |= BIT(2);
+    GPIOADIR |= BIT(2);
+
+    DC_ENABLE();
+#else
     GPIOAFEN |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));  // D0/D1/D2/D3
     GPIOADE  |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
     GPIOADIR |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
-
-#if MODE_4WIRE_8BIT
-    DC_ENABLE();
 #endif
 
     FUNCMCON2 = BIT(28);
@@ -691,7 +698,8 @@ void uteModulePlatformScreenQspiInit(void)
     port_wakeup_init(UTE_DRV_SCREEN_TE_SIGNAL_INT_GPIO_PIN,UTE_DRV_SCREEN_TE_SIGNAL_INT_GPIO_TRIGGER, UTE_DRV_SCREEN_TE_SIGNAL_INT_GPIO_PULL);               //开内部上拉, 下降沿唤醒
 
     //TICK Timer init
-    CLKGAT0 |= BIT(27);
+    CLKGAT0 |= BIT(28);
+    delay_us(1);                                        //set CLKGAT0需要时间生效
     TICK0CON = BIT(6) | BIT(5) | BIT(2);                //div64[6:4], xosc26m[3:1]
     TICK0PR = 0xFFFF;
     TICK0CNT = 0;
@@ -702,14 +710,24 @@ void uteModulePlatformScreenQspiInit(void)
     TICK1CNT = 0;
     sys_irq_init(IRQ_TE_TICK_VECTOR, 0, tick_te_isr);
 
-    sys_cb.te_mode = false;                             //初始化
-    sys_cb.te_mode_next = false;
+    tft_cb.te_mode = 0;                             //初始化
+    tft_cb.te_mode_next = 0;
 
     tft_set_temode(DEFAULT_TE_MODE);
 
     sys_irq_init(IRQ_DESPI_VECTOR, 0, tft_spi_isr);
 
-    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);    //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2]4BIT, [0]EN
+#if (GUI_SELECT == GUI_TFT_SPI)
+    DESPICON = BIT(27) | BIT(7) | BIT(0);                                           //[28:27]IN RGB565, [7]IE, [3:2]1BIT in, 1BIT out, [0]EN
+#if (GUI_MODE_SELECT == MODE_3WIRE_9BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
+    DESPICON |= BIT(18);                                                            //[18]3w-9b despi mode enable
+#elif (GUI_MODE_SELECT == MODE_QSPI)
+    DESPICON |= BIT(9) | BIT(3) | BIT(2);                                           //[9]MultiBit, [3:2]4BIT
+#endif
+
+#else
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2]4BIT, [0]EN
+#endif
 }
 /**
 *@brief   qspi 写命令
@@ -734,10 +752,18 @@ void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len)
 *@author         zn.zeng
 *@date     2021-10-12
 */
-void uteModulePlatformScreenDspiWriteCmd(void)
-{
-    DESPICON |= BIT(3)|BIT(2);
-}
+// void uteModulePlatformScreenQspiWriteGram(uint8_t cmd)
+// {
+//     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+//     uteModulePlatformDelayUs(2);
+//     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
+//     DESPICON &= ~BIT(3);                        //1BIT
+//     tft_spi_sendbyte(0x12);
+//     DESPICON |= BIT(3);                         //4BIT
+//     tft_spi_sendbyte(0x00);
+//     tft_spi_sendbyte(cmd);
+//     tft_spi_sendbyte(0x00);
+// }
 #elif UTE_DRV_DSPI_FOR_SCREEN_SUPPORT
 /**
 *@brief   dspi 初始化
@@ -788,8 +814,8 @@ void uteModulePlatformScreenDspiInit(void)
     TICK1CNT = 0;
     sys_irq_init(IRQ_TE_TICK_VECTOR, 0, tick_te_isr);
 
-    sys_cb.te_mode = false;                             //初始化
-    sys_cb.te_mode_next = false;
+    tft_cb.te_mode = 0;                             //初始化
+    tft_cb.te_mode_next = 0;
 
     tft_set_temode(DEFAULT_TE_MODE);
 
@@ -797,9 +823,9 @@ void uteModulePlatformScreenDspiInit(void)
 
     DESPICON = BIT(27) | BIT(9) | BIT(7)| BIT(0);    //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2]4BIT, [0]EN
 
-    DESPIBAUD = sys_cb.despi_baud;
+    DESPIBAUD = tft_cb.despi_baud;
 
-    sys_cb.tft_bglight_kick = true;
+    tft_cb.tft_bglight_kick = true;
 
 }
 /**
@@ -876,7 +902,7 @@ void uteModulePlatformScreenDspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,u
         buf[i] = tft_spi_getbyte();
     }
     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
-    DESPIBAUD = sys_cb.despi_baud;
+    DESPIBAUD = tft_cb.despi_baud;
 }
 #endif
 /**
@@ -917,3 +943,375 @@ void uteModulePlatformPwmDisable(pwm_gpio id,uint8_t pinNum)
     bsp_pwm_disable(id);
 }
 
+/**
+*@brief   获取BLE蓝牙地址
+*@details
+*@param[out] uint8_t *mac  6byte指针
+* @return  void
+*@author        zn.zeng
+*@date        Jul 05, 2021
+*/
+void uteModulePlatformGetBleMacAddress(uint8_t *mac)
+{
+    uint8_t mac_addr[6];
+    // get mac addr
+    ble_get_local_bd_addr(mac_addr);
+    memcpy(&mac[0], &mac_addr[0], 6);
+}
+
+/**
+*@brief   更新ble广播数据
+*@details 更新ble广播数据，输入不同广播类型和数据更新
+*@param[in]
+* @return  void
+*@author        zn.zeng
+*@date        Jul 05, 2021
+*/
+void uteModulePlatformAdvDataModifySub(bool isScanData, uint8_t advFlag, const uint8_t *newAdvData, uint8_t newAdvDataLen, ADV_MODIFY_TYPE type)
+{
+    int i = 0;
+    uint8_t advData[31];
+    uint8_t new_advdata[31] = {0x00};
+    uint8_t new_advdata_index = 0;
+    uint8_t content_len = 0; // 如0503F1F2F3F4.contnet_len =5;
+    uint8_t current_len = 0;
+    uint8_t new_data_len = 0;
+    uint8_t adv_len = 0;
+    bool valid_adv_flag = false;
+    ADV_PARSE_STATE parse_state = ADV_LENGTH;
+
+    new_data_len = newAdvDataLen;
+
+    memset(advData, 0x00, 31);
+
+    if (isScanData)
+    {
+        memcpy(&advData[0], &uteModulePlatformAdvData.scanData[0], 31);
+    }
+    else
+    {
+        memcpy(&advData[0], &uteModulePlatformAdvData.advData[0], 31);
+    }
+
+    // 遍历广播数据
+    for (; i < 31; i++)
+    {
+        if (new_advdata_index > (31 - 1))
+            break;
+        switch (parse_state)
+        {
+        case ADV_LENGTH:
+        {
+            if (advData[i] == 0x00)
+            {
+                goto MODIFY_ADVDATA_END;
+            }
+            parse_state = ADV_FLAG;
+            new_advdata[new_advdata_index++] = advData[i];
+            content_len = advData[i];
+            current_len = 0;
+            adv_len += (content_len + 1);
+            if (new_advdata_index + content_len > 31)
+            {
+                new_advdata[new_advdata_index - 1] = 31 - new_advdata_index;
+                UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "2_Advertisement interception !!!");
+            }
+        }
+        break;
+        case ADV_FLAG:
+        {
+            parse_state = ADV_LENGTH;
+            // 广播的Flag 与将要添加的新广播Flag相等时做对应的处理
+            if (advData[i] == advFlag)
+            {
+                valid_adv_flag = true;
+                parse_state = ADV_NEW_DATA;
+
+                if (type == ADV_APPEND) // 如果是附加广播要注意剩余的长度
+                {
+                    if ((adv_len + new_data_len) > 31)
+                    {
+                        new_data_len = 31 - adv_len;
+                    }
+                    new_advdata[new_advdata_index - 1] = new_data_len + content_len;
+                }
+                else if (type == ADV_REPLACE) // 如果替换对应的广播注意原先的长度
+                {
+                    if (((adv_len - (content_len - 1)) + new_data_len) > 31)
+                    {
+                        new_data_len = 31 - (adv_len - (content_len - 1));
+                    }
+                    new_advdata[new_advdata_index - 1] = new_data_len + 1;
+                }
+            }
+            else
+            {
+                parse_state = ADV_DATA;
+            }
+            new_advdata[new_advdata_index++] = advData[i];
+            current_len++;
+        }
+        break;
+        case ADV_DATA:
+        {
+            new_advdata[new_advdata_index++] = advData[i];
+            current_len++;
+            if (current_len == content_len)
+            {
+                parse_state = ADV_LENGTH;
+            }
+        }
+        break;
+        case ADV_NEW_DATA:
+        {
+            if (type == ADV_APPEND)
+            {
+                new_advdata[new_advdata_index++] = advData[i];
+            }
+            else if (type == ADV_REPLACE)
+            {
+            }
+            current_len++;
+            if (current_len == content_len)
+            {
+                for (uint8_t j = 0; j < new_data_len; j++)
+                {
+                    if (new_advdata_index > (31 - 1))
+                        break;
+                    new_advdata[new_advdata_index++] = *newAdvData;
+                    newAdvData++;
+                }
+                parse_state = ADV_LENGTH;
+            }
+        }
+        break;
+        default:
+            break;
+        }
+    }
+MODIFY_ADVDATA_END:
+    if (valid_adv_flag != true)
+    {
+        if (new_advdata_index < 31 - 1)
+        {
+            if (new_advdata_index + new_data_len + 2 <= 31)
+            {
+                new_advdata[new_advdata_index++] = new_data_len + 1;
+                new_advdata[new_advdata_index++] = advFlag;
+                memcpy(&new_advdata[new_advdata_index], newAdvData, new_data_len);
+                new_advdata_index += new_data_len;
+            }
+            else if (new_advdata_index + new_data_len + 2 > 31 && 31 > (new_advdata_index + 2))
+            {
+                new_data_len = 31 - new_advdata_index - 2;
+                new_advdata[new_advdata_index++] = new_data_len + 1;
+                new_advdata[new_advdata_index++] = advFlag;
+                memcpy(&new_advdata[new_advdata_index], newAdvData, new_data_len);
+                new_advdata_index += new_data_len;
+                UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "1_Advertisement interception !!! ");
+            }
+        }
+        else
+        {
+            new_advdata_index = 0;
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "Advertisement not enough space !!! ");
+        }
+    }
+    if (new_advdata_index)
+    {
+        memcpy(advData, new_advdata, new_advdata_index);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isScanData:%d,new_advdata_index:%d",__func__,isScanData,new_advdata_index);
+        UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL,advData,new_advdata_index);
+        if (isScanData)
+        {
+            memcpy(&uteModulePlatformAdvData.scanData[0], advData, new_advdata_index);
+            uteModulePlatformAdvData.scanLen = new_advdata_index;
+        }
+        else
+        {
+            memcpy(&uteModulePlatformAdvData.advData[0], advData, new_advdata_index);
+            uteModulePlatformAdvData.advLen = new_advdata_index;
+        }
+    }
+}
+
+/**
+*@brief   更新ble广播数据
+*@details
+*@return  void
+*@author        zn.zeng
+*@date        Jul 05, 2021
+*/
+void uteModulePlatformAdvDataUpdate(void)
+{
+    /*! adv data zn.zeng  modify Jul 05, 2021 */
+    //uteModulePlatformAdvDataInit();
+
+    ble_set_adv_data(uteModulePlatformAdvData.advData, 31);
+    ble_set_scan_rsp_data(uteModulePlatformAdvData.scanData, 31);
+}
+
+/**
+*@brief   获取广播剩余长度
+*@details
+*@return  void
+*@author        zn.zeng
+*@date        2021-12-08
+*/
+uint8_t uteModulePlatformGetAdvertismentRemainLength(void)
+{
+    uint8_t i = 31 - uteModulePlatformAdvData.advLen;
+    return i;
+}
+
+uint8_t uteModulePlatformGetScanRspRemainLength(void)
+{
+    uint8_t i = 31 - uteModulePlatformAdvData.scanLen;
+    return i;
+}
+
+/**
+*@brief   更新蓝牙名
+*@details
+*@return  void
+*@author        zn.zeng
+*@date        2021-08-18
+*/
+static uint8_t devName[32];
+static uint8_t devNameSize=0;
+void uteModulePlatformUpdateDevName(void)
+{
+    uint8_t name[32] ;
+    memset(name, 0, 32);
+    memset(devName, 0, 32);
+    devNameSize = 0;
+    uint8_t size=0;
+#if UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
+    size = strlen(xcfg_cb.le_name);
+    // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,read size=%d",__func__,size);
+    // UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL,xcfg_cb.le_name,32);
+#endif
+    if(size==0)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,size is error", __func__);
+        memcpy(&name[0],DEFAULT_BLE_DEV_NEME,strlen(DEFAULT_BLE_DEV_NEME));
+        size = strlen(DEFAULT_BLE_DEV_NEME);
+    }
+    else
+    {
+        memcpy(&name[0],xcfg_cb.le_name,size);
+    }
+    memcpy(devName,&name[0],size);
+    devNameSize = size;
+#if UTE_APP_DISPLAY_NAME_ID_SUPPORT
+    {
+        uint8_t device_MAC_address_buf[6];
+        uint8_t BleId[12];
+        uint8_t len = 0;
+        int remainLength = uteModulePlatformGetAdvertismentRemainLength();
+        // int remainLength = uteModulePlatformGetScanRspRemainLength();
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,remainLength=%d", __func__,remainLength);
+        uteModulePlatformGetBleMacAddress(&device_MAC_address_buf[0]);
+        for(int i=0; i<6; i++)
+        {
+            BleId[2*i] = (device_MAC_address_buf[i]/16)+ (((device_MAC_address_buf[i]/16)>9)?(-10 +'A'):(+'0'));
+            BleId[2*i+1] = (device_MAC_address_buf[i]%16)+ (((device_MAC_address_buf[i]%16)>9)?(-10 +'A'):(+'0'));
+        }
+        if((size+9+2)<=(remainLength))   //total char "(namelen+0x09)+...+(ID-XXXX)" 12byte
+        {
+
+            memcpy(&BleId[4],"(ID-",4);
+            len = 9;
+            memcpy(&name[size],&BleId[4],len-1);
+            memcpy(&name[size+len-1],")",1);
+            size = size + len;
+        }
+        else if((size+5+2)<=(remainLength)) //total char "(namelen+0x07)+...+-XXXX" 7byte
+        {
+            BleId[7]='-';
+            memcpy(&name[size],&BleId[7],5);
+            size = size + 5;
+        }
+        else if((size+4+2)<=(remainLength))
+        {
+            BleId[7]='-';
+            memcpy(&name[size],&BleId[7],4);
+            size = size + 4;
+        }
+        else if((size+2)<=(remainLength))
+        {
+
+        }
+        else
+        {
+            if(remainLength>2)
+            {
+                size = remainLength-2;
+            }
+        }
+    }
+#endif
+    name[size] = 0;
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,name =%s,size=%d", __func__, name,size);
+    uteModulePlatformAdvDataModifySub(false, 0x09, name, size, ADV_REPLACE);
+    ble_set_gap_name((char *)name,size);
+}
+
+/**
+*@brief   获取蓝牙名
+*@details
+*@param[out] uint8_t *name
+*@param[in] uint8_t *size，输入最大buff大小，输出实际大小
+*@return  void
+*@author        zn.zeng
+*@date        2022-01-20
+*/
+void uteModulePlatformGetDevName(uint8_t *name,uint8_t *size)
+{
+    uint8_t buffSize = *size;
+    memset(name, 0, buffSize);
+    if(buffSize>=devNameSize)
+    {
+        *size = devNameSize;
+    }
+    memcpy(&name[0],devName,*size);
+}
+
+uint8_t uteModulePlatformGetAdvData(uint8_t *advData, uint8_t advDataLen)
+{
+    if(advData && advDataLen)
+    {
+        memset(advData, 0, advDataLen);
+        memcpy(advData, &uteModulePlatformAdvData.advData[0], advDataLen > 31 ? 31 : advDataLen);
+        return uteModulePlatformAdvData.advLen;
+    }
+    return 0;
+}
+
+uint8_t uteModulePlatformGetScanRspData(uint8_t *scanRsp, uint8_t scanRspLen)
+{
+    if(scanRsp && scanRspLen)
+    {
+        memset(scanRsp, 0, scanRspLen);
+        memcpy(scanRsp, &uteModulePlatformAdvData.scanData[0], scanRspLen > 31 ? 31 : scanRspLen);
+        return uteModulePlatformAdvData.scanLen;
+    }
+    return 0;
+}
+
+void uteModulePlatformAdvDataInit(void)
+{
+    memset(&uteModulePlatformAdvData, 0, sizeof(uteModulePlatformAdvData));
+
+    uteModulePlatformAdvDataModifySub(false, 0x01, (const uint8_t *)"\x06", 1, ADV_APPEND);
+    uteModulePlatformAdvDataModifySub(false, 0x03, (const uint8_t *)UTE_ADVERTISE_DATA, strlen(UTE_ADVERTISE_DATA), ADV_APPEND);
+    uteModulePlatformAdvDataModifySub(false, 0x03, (const uint8_t *)UTE_APP_DISPLAY_BT_NAME_ADVERTISE_DATA, strlen(UTE_APP_DISPLAY_BT_NAME_ADVERTISE_DATA), ADV_APPEND);
+
+    /*! scan rsp data  zn.zeng  modify Jul 05, 2021 */
+    uint8_t mac[6];
+    uteModulePlatformGetBleMacAddress(mac);
+    uteModulePlatformAdvDataModifySub(true, 0xff, (const uint8_t *)"\x00\x00", 2, ADV_APPEND);
+    uteModulePlatformAdvDataModifySub(true, 0xff, mac, 6, ADV_APPEND);
+
+    uteModulePlatformUpdateDevName();
+}

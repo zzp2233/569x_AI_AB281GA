@@ -1,6 +1,6 @@
 #include "include.h"
 #include "bsp_ble.h"
-
+#include "ute_application_common.h"
 
 #if LE_EN
 
@@ -79,6 +79,7 @@ void ble_emit_notice(u8 evt, u8 *param)
             uint16_t max_rx_octets = param[5] | (param[6] << 8);
             uint16_t max_tx_octets = param[9] | (param[10] << 8);
             printf("LE_NOTICE_DATA_LEN_CHANGE: rx: %d, tx: %d\n", max_rx_octets, max_tx_octets);
+            uteApplicationCommonSetMtuSize(max_tx_octets-3);
         }
         break;
 

@@ -11,6 +11,13 @@
 #define _UTE_MODULE_PLATFORM_H_
 #include <stdint.h>
 #include "include.h"
+#include "rt_thread.h"
+#include "ute_flash_map_common.h"
+#include "api_gpio.h"
+#include "bsp_sys.h"
+#include "tft.h"
+#include "port_tft.h"
+#include "config_extra.h"
 
 #define __STATIC_INLINE  static __inline
 
@@ -30,6 +37,34 @@ typedef struct
     struct os_mutex mutex;
     bool isCreate;
 } ute_module_platform_mutex_t;
+
+/**
+ * @brief       ble adv 更新状态
+ * @details
+ */
+typedef enum
+{
+    ADV_LENGTH = 0,
+    ADV_FLAG,
+    ADV_DATA,
+    ADV_NEW_DATA,
+} ADV_PARSE_STATE;
+/**
+ * @brief       ble adv 更新方式
+ * @details 是追加还是替换
+ */
+typedef enum
+{
+    ADV_APPEND = 0,
+    ADV_REPLACE,
+} ADV_MODIFY_TYPE;
+
+typedef struct{
+    uint8_t advData[31];
+    uint8_t advLen;
+    uint8_t scanData[31];
+    uint8_t scanLen;
+}ute_module_platform_adv_data_t;
 /**
 *@brief   us延时函数
 *@details   小于10ms使用此函数
@@ -257,7 +292,7 @@ void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len);
 *@author         zn.zeng
 *@date     2021-10-12
 */
-void uteModulePlatformScreenDspiWriteCmd(void);
+void uteModulePlatformScreenQspiWriteGram(uint8_t cmd);
 #elif UTE_DRV_DSPI_FOR_SCREEN_SUPPORT
 /**
 *@brief   dspi 初始化
@@ -315,5 +350,67 @@ void uteModulePlatformPwmEnable(pwm_gpio id);
 *@date        2021-10-12
 */
 void uteModulePlatformPwmDisable(pwm_gpio id,uint8_t pinNum);
+
+/**
+*@brief   更新蓝牙名
+*@details
+*@return  void
+*@author        zn.zeng
+*@date        2021-08-18
+*/
+void uteModulePlatformUpdateDevName(void);
+/**
+*@brief   获取广播剩余长度
+*@details
+*@return  void
+*@author        zn.zeng
+*@date        2021-12-08
+*/
+uint8_t uteModulePlatformGetAdvertismentRemainLength(void);
+uint8_t uteModulePlatformGetScanRspRemainLength(void);
+/**
+*@brief   更新ble广播数据
+*@details
+*@return  void
+*@author        zn.zeng
+*@date        Jul 05, 2021
+*/
+void uteModulePlatformAdvDataUpdate(void);
+/**
+*@brief   更新ble广播数据
+*@details 更新ble广播数据，输入不同广播类型和数据更新
+*@param[in]
+* @return  void
+*@author        zn.zeng
+*@date        Jul 05, 2021
+*/
+void uteModulePlatformAdvDataModifySub(bool isScanData, uint8_t advFlag, const uint8_t *newAdvData, uint8_t newAdvDataLen, ADV_MODIFY_TYPE type);
+
+/**
+*@brief   获取蓝牙名
+*@details
+*@param[out] uint8_t *name
+*@param[in] uint8_t *size，输入最大buff大小，输出实际大小
+*@return  void
+*@author        zn.zeng
+*@date        2022-01-20
+*/
+void uteModulePlatformGetDevName(uint8_t *name,uint8_t *size);
+/**
+*@brief   获取BLE蓝牙地址
+*@details
+*@param[out] uint8_t *mac  6byte指针
+* @return  void
+*@author        zn.zeng
+*@date        Jul 05, 2021
+*/
+void uteModulePlatformGetBleMacAddress(uint8_t *mac);
+
+uint8_t uteModulePlatformGetAdvData(uint8_t *advData, uint8_t advDataLen);
+
+uint8_t uteModulePlatformGetScanRspData(uint8_t *scanRsp, uint8_t scanRspLen);
+
+void uteModulePlatformAdvDataInit(void);
+
 #endif //_UTE_MODULE_PLATFORM_H_
 

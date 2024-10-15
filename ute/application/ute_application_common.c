@@ -1239,7 +1239,7 @@ void uteApplicationCommonKeysPressEvent(uint32_t param)
 */
 void uteApplicationCommonSetMtuSize(uint16_t mtu)
 {
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,mtu=%d", __func__,mtu);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,mtu=%d,%d", __func__,mtu,ble_get_gatt_mtu());
     uteApplicationCommonData.mtuSize = mtu;
 }
 /**

@@ -24,6 +24,25 @@
 #ifndef UTE_SW_VERSION
 #define UTE_SW_VERSION "ABxxxV000001"
 #endif
+/*!默认公共协议服务开关，默认为关 zn.zeng  modify Jul 06, 2021 */
+#ifndef UTE_SERVICE_PUBLIC_BLE_SUPPORT
+#define UTE_SERVICE_PUBLIC_BLE_SUPPORT 1
+#endif
+
+/*! gloryfit 广播数据标识 zn.zeng  modify Jul 05, 2021 */
+#define UTE_ADVERTISE_DATA      "\x33\x55"
+/*! 应用端识别是否在搜索界面显示蓝牙名zn.zeng  modify Jul 05, 2021 */
+#define UTE_APP_DISPLAY_BT_NAME_ADVERTISE_DATA       "\x22\x22"
+
+/*! 显示蓝牙名蓝牙地址后4位 zn.zeng, 2021-12-08  */
+#ifndef UTE_APP_DISPLAY_NAME_ID_SUPPORT
+#define UTE_APP_DISPLAY_NAME_ID_SUPPORT 1
+#endif
+
+/*! PC工具烧录蓝牙名 wang.luo, 2022-07-14  */
+#ifndef UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
+#define UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT 1
+#endif
 
 /** 默认系统支持是最大闹钟数量*/
 #ifndef SYSTEM_TIME_ALARMS_MAX_CNT
@@ -114,14 +133,14 @@
 #endif
 /*! 背光PWM控制输出定时器索引 zn.zeng, 2021-09-24  */
 #ifndef UTE_DRV_SCREEN_BACKLIGHT_PWM_ID
-#define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PE6
+#define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PE3
 #endif
 /*! 背光控制输出管脚 zn.zeng, 2021-09-24  */
 #ifndef UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN
-#define UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN   IO_PE6
+#define UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN   IO_PE3
 #endif
 
-#define DRV_TFT_S280X284_I18_ST7789P3_XHL183BA2401_DSPI_SUPPORT 1
+#define DRV_TFT_S280X284_I18_ST7789P3_XHL183BA2401_DSPI_SUPPORT 0
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

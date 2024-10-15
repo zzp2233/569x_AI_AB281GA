@@ -15,3 +15,4 @@ app/projects/*/Output/bin/res/*
 app/projects/*/Output/bin/Settings/*
 app/projects/*/Output/bin/ui/*
 app/projects/*/Output/bin/ute_ui_coord_file.h
+.vscode/*

@@ -45,6 +45,9 @@ u8 bsp_sensor_hr_init(u8 mode)
     init = sensor_hx3605_init(mode);
 #elif(SENSOR_HR_SEL == SENSOR_HR_TYHX_HRS3300)
     init = sensor_hrs3300_init(mode);
+#elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
+    vc30fx_pwr_en();
+    init = vc30fx_usr_device_init(&vc30fx_data);
 #endif
 
     if (init) bsp_sensor_init_sta_set(SENSOR_INIT_HR);
@@ -61,6 +64,9 @@ u8 bsp_sensor_hr_stop(void)
     stop = sensor_hx3605_stop();
 #elif(SENSOR_HR_SEL == SENSOR_HR_TYHX_HRS3300)
     stop = sensor_hrs3300_stop();
+#elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
+    stop = vc30fx_usr_stop_work();
+    vc30fx_pwr_dis();
 #endif
 
     if (!stop) bsp_sensor_init_sta_clr(SENSOR_INIT_HR);

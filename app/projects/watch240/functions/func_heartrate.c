@@ -59,7 +59,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_form_add_image(frm, UI_BUF_HEART_RATE_DOWN_BIN, 226, 186);
 
 	//创建文本
-	s16 txt_x = 18;
+	s16 txt_x = 12;
 	s16 txt_y = 172;
 	s16 txt_x_offset = 76;
 

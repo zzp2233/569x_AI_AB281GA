@@ -17,6 +17,8 @@
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 1
 
+#define UTE_CHIP_PACKAGE_SELECT 
+
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
 #ifndef DEFAULT_BLE_DEV_NEME
 #define DEFAULT_BLE_DEV_NEME "UTE"

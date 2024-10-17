@@ -81,5 +81,14 @@ bool bsp_pwm_disable(pwm_gpio gpio);
  * @return    void
  **/
 void bsp_motor_set(pwm_gpio gpio, u32 duty, u32 vibrationtimes, u32 interval, u32 cnt);
+
+/**
+ * @brief 设置PWM的频率
+          硬件PWM共用一个timer5，频率是一样的，只是占空比分开可调;
+ * @param[in] freq 设置频率 Hz
+ *
+ * @return  返回是否成功
+ **/
+bool bsp_pwm_freq_set(u32 freq);
 #endif
 

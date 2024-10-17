@@ -743,9 +743,16 @@ static void func_clock_sub_card_data_update(void)
     compo_cardbox_t *cardbox;
     //活动记录
     cardbox = compo_getobj_byid(COMPO_ID_CARD_ACTIVITY);
-    compo_cardbox_text_set(cardbox, 0, "12000");    //步数
-    compo_cardbox_text_set(cardbox, 1, "512.7");    //卡路里
-    compo_cardbox_text_set(cardbox, 2, "8.0");      //距离
+    char step_str[8];
+    snprintf(step_str, sizeof(step_str), "%d", sc7a20_info.gsensor_data.step);
+    cardbox = compo_getobj_byid(COMPO_ID_CARD_ACTIVITY);
+    compo_cardbox_text_set(cardbox, 0, step_str);    //步数
+    char cal_str[8];
+    snprintf(cal_str, sizeof(cal_str), "%d", sc7a20_info.gsensor_data.cal);
+    compo_cardbox_text_set(cardbox, 1, cal_str);    //卡路里
+    char dist_str[8];
+    snprintf(dist_str, sizeof(dist_str), "%d", sc7a20_info.gsensor_data.distance);
+    compo_cardbox_text_set(cardbox, 2, dist_str);      //距离
     //睡眠
     cardbox = compo_getobj_byid(COMPO_ID_CARD_SLEEP);
     compo_cardbox_text_set(cardbox, 0, "07:36");    //总时长

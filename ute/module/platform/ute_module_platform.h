@@ -406,6 +406,16 @@ void uteModulePlatformGetDevName(uint8_t *name,uint8_t *size);
 */
 void uteModulePlatformGetBleMacAddress(uint8_t *mac);
 
+/**
+* @brief        修改蓝牙地址
+* @details      修改后重启生效
+* @param[in]    uint8_t *mac 6byte
+* @return       ture 修改成功 false 修改失败
+* @author       Wang.Luo
+* @date         2022-09-30
+*/
+bool uteModulePlatformSetBleMacAddress(uint8_t *mac);
+
 uint8_t uteModulePlatformGetAdvData(uint8_t *advData, uint8_t advDataLen);
 
 uint8_t uteModulePlatformGetScanRspData(uint8_t *scanRsp, uint8_t scanRspLen);

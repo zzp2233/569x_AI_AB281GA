@@ -960,6 +960,20 @@ void uteModulePlatformGetBleMacAddress(uint8_t *mac)
 }
 
 /**
+* @brief        修改蓝牙地址
+* @details      修改后重启生效
+* @param[in]    uint8_t *mac 6byte
+* @return       ture 修改成功 false 修改失败
+* @author       Wang.Luo
+* @date         2022-09-30
+*/
+bool uteModulePlatformSetBleMacAddress(uint8_t *mac)
+{
+    memcpy(xcfg_cb.bt_addr, &mac[0], 6);
+    return true;
+}
+
+/**
 *@brief   更新ble广播数据
 *@details 更新ble广播数据，输入不同广播类型和数据更新
 *@param[in]

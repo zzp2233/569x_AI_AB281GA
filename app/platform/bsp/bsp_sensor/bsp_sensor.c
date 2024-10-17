@@ -47,6 +47,7 @@ u8 bsp_sensor_hr_init(u8 mode)
     init = sensor_hrs3300_init(mode);
 #elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
     vc30fx_pwr_en();
+    vc30fx_data.work_mode = mode;
     init = vc30fx_usr_device_init(&vc30fx_data);
 #endif
 
@@ -134,6 +135,8 @@ bool bsp_sensor_hr_wear_sta_get(void)
     sta = sensor_hx3605_wear_sta_get();
 #elif(SENSOR_HR_SEL == SENSOR_HR_TYHX_HRS3300)
     sta = sensor_hx3300_wear_sta_get();
+#elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
+    sta = vc30fx_usr_get_wear_status();
 #endif
 
     return sta;

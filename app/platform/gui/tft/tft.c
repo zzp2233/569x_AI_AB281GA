@@ -1,4 +1,6 @@
 #include "include.h"
+#include "ute_module_platform.h"
+#include "ute_drv_screen_common.h"
 
 #define TRACE_EN                1
 
@@ -8,22 +10,7 @@
 #define TRACE(...)
 #endif
 
-struct {
-    //TE控制相关
-    bool tft_bglight_kick;      //背光控制
-    u8   tft_bglight_duty;      //背光pwm占空比
-    u8   tft_bglight_last_duty; //背光pwm上一次占空比
-    u8 te_mode;
-    u8 te_mode_next;
-    bool tft_bglight_first_set;
-
-    u8 te_bglight_cnt;          //在收到需要打开背光控制时，推完第一帧数据后延时打开背光
-    u8 despi_baud;
-    u8 despi_baud1;
-    u8 despi_baud2;
-    bool flag_in_frame;
-    bool tft_set_baud_kick;     //需要切换时钟，等TFT_END后再切
-} tft_cb;
+tft_cb_t tft_cb;
 
 AT(.com_text.tft_spi)
 static void tft_te_refresh(void)
@@ -114,6 +101,7 @@ void tft_frame_start(void)
 
     //tft_write_cmd12(0x2C);      //TFT_RAMWR
     tft_write_data_start();
+    // uteDrvScreenCommonSetWindow(0,0,UTE_DRV_SCREEN_WIDTH,UTE_DRV_SCREEN_HEIGHT);
 #if (GUI_SELECT == GUI_TFT_240_ST7789)
     TFT_SPI_DATA_EN();
 #endif
@@ -170,6 +158,7 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
     if (tft_cb.tft_bglight_last_duty != tft_cb.tft_bglight_duty)
     {
         bsp_pwm_duty_set(PORT_TFT_BL, tft_cb.tft_bglight_duty, false);
+        // uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
         tft_cb.tft_bglight_last_duty = tft_cb.tft_bglight_duty;
     }
 }
@@ -190,6 +179,7 @@ void tft_bglight_frist_set_check(void)
     }
 #ifdef GUI_USE_TFT
     tft_bglight_set_level(tft_cb.tft_bglight_duty,true);
+    // uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
 #endif
 }
 
@@ -239,8 +229,11 @@ void tft_init(void)
     DESPICON = BIT(27) | BIT(26) | BIT(18) | BIT(9) | BIT(7) | BIT(0);              //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2], [0]EN
 #elif (GUI_SELECT == GUI_TFT_RGBW_320_ST77916)
     DESPICON = BIT(27) | BIT(25) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);      //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
+#elif (GUI_SELECT == GUI_TFT_240_296_NV3030B)
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
+#elif (GUI_SELECT == GUI_TFT_320_385_GV9B71)
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
 #elif (GUI_SELECT == GUI_TFT_SPI)
-
     DESPICON = BIT(27) | BIT(7) | BIT(0);                                           //[28:27]IN RGB565, [7]IE, [3:2]1BIT in, 1BIT out, [0]EN
 #if (GUI_MODE_SELECT == MODE_3WIRE_9BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
     DESPICON |= BIT(18);                                                            //[18]3w-9b despi mode enable
@@ -271,15 +264,21 @@ void tft_init(void)
     tft_240_st7789_init();
 #elif (GUI_SELECT == GUI_TFT_240_ST7789W3)
     tft_240_st7789w3_init();
+#elif (GUI_SELECT == GUI_TFT_240_296_NV3030B)
+    tft_spi_nv3030b_init();
+#elif (GUI_SELECT == GUI_TFT_320_385_GV9B71)
+    tft_spi_gc9b71_init();
 #elif (GUI_SELECT == GUI_TFT_SPI)
     tft_spi_init();
 #elif (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
     tft_170_560_axs15231B_init();
+#elif (GUI_SELECT == DISPLAY_UTE)
 #else
     #error "Please Select GUI Display"
 #endif
 
     tft_set_window(0, 0, GUI_SCREEN_WIDTH - 1, GUI_SCREEN_HEIGHT - 1);
+    // uteDrvScreenCommonSetWindow(0,0,UTE_DRV_SCREEN_WIDTH,UTE_DRV_SCREEN_HEIGHT);
 
     tft_cb.tft_bglight_kick = true; //延时打开背光
 #ifdef GUI_USE_OLED
@@ -291,6 +290,7 @@ void tft_exit(void)
 {
 #ifdef GUI_USE_TFT
     bsp_pwm_disable(PORT_TFT_BL); //关背光
+    // uteDrvScreenCommonDisplayOff();
     printf("%s:%d\n",__func__,__LINE__);
 #endif
     port_tft_exit();

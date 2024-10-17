@@ -29,6 +29,7 @@
 #define DISPLAY_LCDSEG                  0x200                                   //选用断码屏做为显示驱动
 #define DISPLAY_LEDSEG                  0x400                                   //选用数码管做为显示驱动
 #define DISPLAY_TFT                     0x800                                   //选用彩屏做为显示驱动
+#define DISPLAY_UTE                     0x1000
 
 #define GUI_NO                          DISPLAY_NO                              //无主题，无显示
 #define GUI_TFT_320_ST77916             (DISPLAY_TFT | 0x01)                    //彩屏 320 * 385
@@ -37,6 +38,8 @@
 #define GUI_OLED_466_ICNA3310B          (DISPLAY_TFT | 0x04)                    //OLED彩屏 466 * 466
 #define GUI_TFT_JD9853                  (DISPLAY_TFT | 0x05)                    //JD9853  240*296 DSPI 屏
 #define GUI_TFT_170_560_AXS15231B       (DISPLAY_TFT | 0x06)                    //彩屏 170_560
+#define GUI_TFT_240_296_NV3030B         (DISPLAY_TFT | 0x07)                    //彩屏 240 *296
+#define GUI_TFT_320_385_GV9B71          (DISPLAY_TFT | 0x08)                    //彩屏 320 *385
 #define GUI_TFT_SPI                     (DISPLAY_TFT | 0x10)                    //spi通用接口
 
 //当使用通用接口时
@@ -62,6 +65,7 @@
 /*****************************************************************************
  * Module    : FLASH大小定义
  *****************************************************************************/
+#define FSIZE_16M                       0x1000000
 #define FSIZE_8M                        0x800000
 #define FSIZE_4M                        0x400000
 #define FSIZE_2M                        0x200000
@@ -371,5 +375,6 @@
 *****************************************************************************/
 #define USE_NULL_APP                    0
 #define USE_AB_APP                      1   //bluefit app
+#define USE_UTE_APP                     2
 
 #endif //CONFIG_DEFINE_H

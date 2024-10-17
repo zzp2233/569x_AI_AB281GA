@@ -1,4 +1,6 @@
 #include "include.h"
+#include "ute_drv_screen_common.h"
+#include "ute_module_log.h"
 
 #define TRACE_EN                1
 
@@ -49,6 +51,7 @@ void gui_init(void)
     power_gate_3v3_on();
     ctp_init();
     tft_init();
+    // uteDrvScreenCommonInit();
 #if FLASH_EXTERNAL_EN
     bsp_spi1flash_init();
 #endif
@@ -78,6 +81,7 @@ void gui_wakeup(void)
         ctp_init();
         tft_init();
         gui_widget_refresh();
+        // uteDrvScreenCommonInit();
         sys_cb.gui_sleep_sta = 0;
         //printf("gui_wakeup\n");
     }
@@ -120,3 +124,30 @@ void gui_halt(u32 halt_no)
     }
     tft_frame_end();
 }
+
+#if UTE_LOG_GUI_LVL
+//打印刷屏时长
+AT(.com_text.gui)
+bool gui_get_tick(void)
+{
+    return true;
+}
+#endif
+
+// zzn add 20240401
+void gui_clear_screen(uint16_t color,uint32_t size)
+{
+    uint32_t section = size/GUI_SCREEN_WIDTH;
+    uint32_t lastPix = size%GUI_SCREEN_WIDTH;
+    for(uint32_t i=0; i<section; i++)
+    {
+        de_fill_rgb565(gui_lines_buf, color, GUI_SCREEN_WIDTH);
+        tft_spi_send(gui_lines_buf, GUI_SCREEN_WIDTH * 2);
+    }
+    if(lastPix!=0)
+    {
+        de_fill_rgb565(gui_lines_buf, color, lastPix);
+        tft_spi_send(gui_lines_buf, lastPix * 2);
+    }
+}
+// zzn add 20240401

@@ -25,7 +25,7 @@ bool ctp_chsc6x_get_point(s32 *x, s32 *y);
 
 bool ctp_get_kick_status(void);
 
-//tpÖĞ¶ÏÔÚÖ§¸¶±¦iicÍ¨ĞÅÊ±ÏÈ¹ØÖĞ¶Ï
+//tpä¸­æ–­åœ¨æ”¯ä»˜å®iicé€šä¿¡æ—¶å…ˆå…³ä¸­æ–­
 void sys_ctp_irq_enble(int vector);
 void sys_ctp_irq_disable(int vector);
 

@@ -55,7 +55,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, int mode, char ms
 
     //创建文本
     compo_textbox_t *txt_off = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-    compo_textbox_set_location(txt_off, 160, 220, 320, 200);
+    compo_textbox_set_location(txt_off, 160, 180, 320, 200);
     compo_textbox_set_multiline(txt_off, true);
     compo_textbox_set(txt_off, msg);
 

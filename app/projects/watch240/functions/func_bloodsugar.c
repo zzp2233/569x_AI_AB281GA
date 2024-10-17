@@ -40,7 +40,7 @@ compo_form_t *func_bloodsugar_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-    compo_form_add_image(frm, UI_BUF_ICON_BLOODSUGAR_BIN, 160, 163);
+    compo_form_add_image(frm, UI_BUF_ICON_BLOODSUGAR_BIN, 120, 125);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
@@ -49,23 +49,23 @@ compo_form_t *func_bloodsugar_form_create(void)
 	//新建按钮
 	compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_setid(btn, COMPO_ID_BTN_IDLE);
-    compo_button_set_pos(btn, 160, 336);
+    compo_button_set_pos(btn, 120, 260);
 
     //新建图像
     compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_COMMON_BUTTON_CLICK_BIN);
     compo_setid(pic_click, COMPO_ID_PIC_CLICK);
-    compo_picturebox_set_pos(pic_click, 160, 336);
+    compo_picturebox_set_pos(pic_click, 120, 260);
     compo_picturebox_set_visible(pic_click, false);          //触摸按下的效果图先设置不可见
 
     //创建文本
     compo_textbox_t *txt_idle = compo_textbox_create(frm, 2);
     compo_setid(txt_idle, COMPO_ID_TXT_IDLE);
-    compo_textbox_set_pos(txt_idle, 160, 336);
+    compo_textbox_set_pos(txt_idle, 120, 260);
     compo_textbox_set(txt_idle, "测量");
 
     compo_textbox_t *txt_working = compo_textbox_create(frm, 3);
     compo_setid(txt_working, COMPO_ID_TXT_WORKING);
-    compo_textbox_set_pos(txt_working, 160, 336);
+    compo_textbox_set_pos(txt_working, 120, 260);
     compo_textbox_set(txt_working, "测量中");
     compo_textbox_set_visible(txt_working, false);
 

@@ -102,7 +102,6 @@ compo_form_t *func_menu_sub_disk_form_create(void)
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_MENU_GEAR_BIN);
     compo_setid(pic, COMPO_ID_GEAR);
     compo_picturebox_set_pos(pic, 0, GUI_SCREEN_CENTER_Y);
-    compo_picturebox_set_size(pic, 130, 130);
 
     return frm;
 }

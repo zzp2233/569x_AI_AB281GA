@@ -40,7 +40,7 @@ typedef struct light_pic_item_t_ {
 
 //图片item，创建时遍历一下
 static const light_pic_item_t tbl_light_pic_item[] = {
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL1,         82,    238,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL1,         80,    238,    false},
     {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL2,         100,    238,    false},
     {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL3,         120,    238,    false},
     {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL4,         140,    238,    false},

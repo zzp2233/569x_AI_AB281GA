@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_log.h"
 
 void bsp_qdec_init(void);
 void rtc_alarm_disable(void);
@@ -437,7 +438,7 @@ u8 bsp_key_scan(void)
         } else if (sys_cb.kh_vol_msg == key) {
             msg_queue_detach(key, 0);
         }
-//        printf(key_str, key);
+    //    printf("key_str:0x%x\n", key);
         if (sys_cb.gui_sleep_sta) {
             sys_cb.gui_need_wakeup = 1;
         }

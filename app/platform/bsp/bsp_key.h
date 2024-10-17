@@ -77,6 +77,7 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define EVT_SCO_DBG_TLV_RSP     0xde
 #define EVT_SCO_DBG_NOTIFY      0xdd
 #endif // BT_SCO_APP_DBG_EN
+#define EVT_VC30FX_ISR          0xdc
 
 //普通按键定义，可以支持短按，长按，双击等。范围：0 ~ 0xf
 #define NO_KEY                  0x00

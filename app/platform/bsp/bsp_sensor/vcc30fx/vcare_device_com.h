@@ -4,7 +4,7 @@
  * @Date: 2023-02-23 17:47:18
  * @LastEditTime: 2023-11-14 17:38:46
  * @LastEditors: Tse
- * @Description: 
+ * @Description:
  **********************************************************************************************/
 
 #ifndef __VCARE_DEVICE_COM_H__
@@ -37,7 +37,7 @@ typedef enum
 typedef enum
 {
 	WORK_MODE_HR = 0,
-	WORK_MODE_SPO2, 
+	WORK_MODE_SPO2,
 	WORK_MODE_HRV,
 	WORK_MODE_STRESS,
 	WORK_MODE_BLOODPRESSURE,
@@ -46,7 +46,7 @@ typedef enum
 	WORK_MODE_FACTORY0,
 	WORK_MODE_FACTORY1,
 	WORK_MODE_HRSPO2,
-	
+
 	WORK_MODE_UNDEFINED,
 	WORK_MODE_NUMBER,
 } work_mode;
@@ -181,12 +181,12 @@ extern void log_direct(unsigned int info, const char *fmt, ...);
 #define VCARE_DBG_LOG(fmt, ...)                                                             \
 	do                                                                                      \
 	{                                                                                       \
-		a_printf("[VCARE_LOG](%d)"fmt, __LINE__, ##__VA_ARGS__);					\
+		a_printf("[VCARE_LOG](%d)\n"fmt, __LINE__, ##__VA_ARGS__);					\
 	} while (0)
 #define VCARE_DBG_ERR(fmt, ...)                                                             \
 	do                                                                                      \
 	{                                                                                       \
-		a_printf("[VCARE_LOG](%d)"fmt, __LINE__, ##__VA_ARGS__);							\
+		a_printf("[VCARE_LOG](%d)\n"fmt, __LINE__, ##__VA_ARGS__);							\
 	} while (0)
 #endif
 

@@ -107,4 +107,6 @@ void sc7a20_init(void);
 void sc7a20_sleep_check(tm_t *now_time);
 void sc7a20_lowpwr_process(void);
 
+void sc7a20_500ms_callback_en(bool en);
+
 #endif

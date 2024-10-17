@@ -7,6 +7,7 @@
 #ifndef USER_CONFIG_H
 #define USER_CONFIG_H
 #include "config_define.h"
+#include "ute_flash_map_common.h"
 
 /*****************************************************************************
  * Module    : Function选择相关配置
@@ -32,9 +33,9 @@
 #define LP_XOSC_CLOCK_EN                0                           //是否使能低功耗晶振用于RTC CLOCK，支持关机时钟功能。(单脚晶振不支持低功耗晶振)
 #define GUI_AUTO_POWER_EN               1                           //是否使能刷图动态调节时钟，打开后系统时钟默认设置为SYS_CLK_SEL，刷图时调节为192M
 
-#define CHIP_PACKAGE_SELECT             CHIP_5691G                  //芯片封装选择 5691G/5691C_F
+#define CHIP_PACKAGE_SELECT             CHIP_5691C_F                  //芯片封装选择 5691G/5691C_F
 
-#define GUI_SELECT                      GUI_TFT_320_ST77916    		//GUI Display Select
+#define GUI_SELECT                      GUI_TFT_320_385_GV9B71    		        //GUI Display Select
 #define CTP_SELECT                      CTP_CST8X                   //CTP Select
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
@@ -103,14 +104,14 @@
 /*****************************************************************************
  * Module    : FLASH配置
  *****************************************************************************/
-#define FLASH_SIZE                      FSIZE_4M                //根据芯片信息配置实际FLASH SIZE
-#define FLASH_CODE_SIZE                 732k                    //程序使用空间大小
-#define FLASH_UI_BASE                   0xB7000                 //UI资源起始地址
-#define FLASH_UI_SIZE                   0x344000                //UI资源大小
-#define FLASH_CM_SIZE                   0x5000                  //CM参数区大小, 参数区至少20k
+#define FLASH_SIZE                      UTE_FLASH_SIZE            //根据芯片信息配置实际FLASH SIZE
+#define FLASH_CODE_SIZE                 UTE_CODE_SIZE             //程序使用空间大小
+#define FLASH_UI_BASE                   UTE_UI_ADDRESS            //UI资源起始地址
+#define FLASH_UI_SIZE                   UTE_UI_SIZE              //UI资源大小
+#define FLASH_CM_SIZE                   UTE_FACTORY_PARAM_SIZE   //CM参数区大小, 参数区至少20k
 #define FLASH_ERASE_4K                  1                       //是否支持4K擦除
-#define FLASH_DUAL_READ                 1                       //是否支持2线模式
-#define FLASH_QUAD_READ                 1                       //是否支持4线模式
+#define FLASH_DUAL_READ                 0                       //是否支持2线模式
+#define FLASH_QUAD_READ                 0                       //是否支持4线模式
 #define SPIFLASH_SPEED_UP_EN            1                       //SPI FLASH提速。
 #define FLASH_ERASE_32K_64K             0                       //是否支持32k和64k擦除
 #define FLASH_EXTERNAL_EN               0                       //是否支持外挂flash, 可存放UI资源
@@ -186,7 +187,7 @@
 
 //APP 功能相关(APP同时只能打开1个)
 #define LE_AB_LINK_APP_EN               0           //是否打开AB-LINK APP控制功能
-#define USE_APP_TYPE                    USE_AB_APP//USE_NULL_APP  //选择手表应用app类型
+#define USE_APP_TYPE                    USE_UTE_APP//USE_NULL_APP  //选择手表应用app类型
 
 //ANCS
 #define LE_ANCS_CLIENT_EN               1   //是否打开ANCS Clients
@@ -198,12 +199,12 @@
 #define LE_WIN10_POPUP                  0   //是否打开win10 swift pair快速配对
 
 //FOTA功能配置
-#define LE_AB_FOT_EN                    0   //是否打开BLE FOTA服务,需同时打开LE_AB_LINK_APP_EN
-#define AB_FOT_TYPE_PACK                0   //FOTA压缩升级（代码做压缩处理，升级完成需做解压才可正常运行）
+#define LE_AB_FOT_EN                    1   //是否打开BLE FOTA服务,需同时打开LE_AB_LINK_APP_EN
+#define AB_FOT_TYPE_PACK                1   //FOTA压缩升级（代码做压缩处理，升级完成需做解压才可正常运行）
 #define SW_VERSION		                "V0.0.1"   //只能使用数字0-9,ota需要转码
 #define HW_VERSION		                "V0.0.1"   //只能使用数字0-9,ota需要转码
-#define FLASH_PKG_START                 0x400000   //升级压缩包存放起始地址
-#define FLASH_PKG_SIZE                  0x300000   //升级压缩包大小
+#define FLASH_PKG_START                 UTE_OTA_TMP_ADDRESS   //升级压缩包存放起始地址
+#define FLASH_PKG_SIZE                  UTE_OTA_TMP_SIZE   //升级压缩包大小
 #define FOTA_UI_EN                      0          //是否支持UI升级，需要用一个批处理打包UI+FOT
 
 //HID功能配置
@@ -420,8 +421,8 @@
 /*****************************************************************************
  * Module    : 传感器配置
  *****************************************************************************/
-#define SENSOR_STEP_SEL                 SENSOR_STEP_NULL
-#define SENSOR_HR_SEL                   SENSOR_HR_NULL
+#define SENSOR_STEP_SEL                 SENSOR_STEP_SC7A20
+#define SENSOR_HR_SEL                   SENSOR_HR_VC30FX
 #define SENSOR_GEO_SEL                  SENSOR_GEO_NULL
 
 /*****************************************************************************

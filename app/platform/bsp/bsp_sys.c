@@ -756,10 +756,11 @@ void bsp_sys_init(void)
 	mic_bias_trim_w4_done();
 	dac_set_power_on_off(0);            //需要放到MIC TRIM后才能关DAC
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
-    bsp_i2c_init();
+    i2c_gsensor_init();
     //bsp_sensor_pe2_pwr_pg_on();         //需放在IIC初始化之后，未使用外设时注意关闭
     bsp_sensor_step_init();             //步数传感器初始化
-    bsp_sensor_hr_init(1);
+    bsp_i2c_init();
+    bsp_sensor_hr_init(0);
 #endif
     bsp_vbat_percent_init();            //放最后电压稍微稳定点
 

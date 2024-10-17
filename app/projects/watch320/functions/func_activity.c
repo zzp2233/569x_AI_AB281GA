@@ -341,9 +341,9 @@ static void func_activity_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_activity_t));
     func_cb.frm_main = func_activity_form_create();
     f_activity_t *f_activity = (f_activity_t *)func_cb.f_cb;
-    f_activity->last_steps = 0xffffffff;
-    f_activity->last_kcal = 0xffffffff;
-    f_activity->last_distance = 0xffffffff;
+    f_activity->last_steps = sc7a20_info.gsensor_data.step;
+    f_activity->last_kcal = sc7a20_info.gsensor_data.cal;
+    f_activity->last_distance = sc7a20_info.gsensor_data.distance;
     f_activity->tick = tick_get();
 }
 

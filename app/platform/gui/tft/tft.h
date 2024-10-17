@@ -28,31 +28,47 @@ void oled_set_brightness(u8 brightness);
 
 void tft_set_baud(u8 baud1, u8 baud2);
 
+typedef struct {
+    //TEæ§åˆ¶ç›¸å…³
+    bool tft_bglight_kick;      //èƒŒå…‰æ§åˆ¶
+    u8   tft_bglight_duty;      //èƒŒå…‰pwmå ç©ºæ¯”
+    u8   tft_bglight_last_duty; //èƒŒå…‰pwmä¸Šä¸€æ¬¡å ç©ºæ¯”
+    u8 te_mode;
+    u8 te_mode_next;
+    bool tft_bglight_first_set;
 
+    u8 te_bglight_cnt;          //åœ¨æ”¶åˆ°éœ€è¦æ‰“å¼€èƒŒå…‰æ§åˆ¶æ—¶ï¼Œæ¨å®Œç¬¬ä¸€å¸§æ•°æ®åå»¶æ—¶æ‰“å¼€èƒŒå…‰
+    u8 despi_baud;
+    u8 despi_baud1;
+    u8 despi_baud2;
+    bool flag_in_frame;
+    bool tft_set_baud_kick;     //éœ€è¦åˆ‡æ¢æ—¶é’Ÿï¼Œç­‰TFT_ENDåå†åˆ‡
+} tft_cb_t;
+extern tft_cb_t tft_cb;
 
 /**
- * @brief ÉèÖÃoledÁÁ¶È
- * @param[in] level       ÁÁ¶ÈµÈ¼¶£¬Ê¹ÓÃÎŞ¼«µ÷½ÚÊ±£¬·¶Î§0 ~ 100£¬·ñÔòÎª1~5
- * @param[in] stepless_en ÊÇ·ñÊ¹ÓÃÎŞ¼«µ÷½Ú
+ * @brief è®¾ç½®oledäº®åº¦
+ * @param[in] level       äº®åº¦ç­‰çº§ï¼Œä½¿ç”¨æ— æè°ƒèŠ‚æ—¶ï¼ŒèŒƒå›´0 ~ 100ï¼Œå¦åˆ™ä¸º1~5
+ * @param[in] stepless_en æ˜¯å¦ä½¿ç”¨æ— æè°ƒèŠ‚
  *
- * @return  ÎŞ
+ * @return  æ— 
  **/
 void oled_brightness_set_level(uint8_t level, bool stepless_en);
 
 /**
- * @brief ÉèÖÃ±³¹âÁÁ¶È
- * @param[in] level       ÁÁ¶ÈµÈ¼¶£¬Ê¹ÓÃÎŞ¼«µ÷½ÚÊ±£¬·¶Î§0 ~ 100£¬·ñÔòÎª1~5
- * @param[in] stepless_en ÊÇ·ñÊ¹ÓÃÎŞ¼«µ÷½Ú
+ * @brief è®¾ç½®èƒŒå…‰äº®åº¦
+ * @param[in] level       äº®åº¦ç­‰çº§ï¼Œä½¿ç”¨æ— æè°ƒèŠ‚æ—¶ï¼ŒèŒƒå›´0 ~ 100ï¼Œå¦åˆ™ä¸º1~5
+ * @param[in] stepless_en æ˜¯å¦ä½¿ç”¨æ— æè°ƒèŠ‚
  *
- * @return  ÎŞ
+ * @return  æ— 
  **/
 void tft_bglight_set_level(uint8_t level, bool stepless_en);
 
 /**
- * @brief Ê×´ÎÉèÖÃÁÁ¶È¼ì²â
- * @param ÎŞ
+ * @brief é¦–æ¬¡è®¾ç½®äº®åº¦æ£€æµ‹
+ * @param æ— 
  *
- * @return  ÎŞ
+ * @return  æ— 
  **/
 void tft_bglight_frist_set_check(void);
 
@@ -65,4 +81,6 @@ void tft_frame_start(void);
 void tft_frame_end(void);
 void tft_write_data_start(void);
 void tft_write_end();
+void tft_te_isr(void);
+void tick_te_isr(void);
 #endif

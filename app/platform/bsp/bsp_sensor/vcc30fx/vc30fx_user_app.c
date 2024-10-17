@@ -24,6 +24,8 @@ static gsensor_axes vc30fx_gsensor_data = {0};
 
 InitParamTypeDef vc30fx_data = {400, 0};
 
+static uint32_t hw_timer_count = 0;
+
 // InitParamTypeDef vc30fx_data = {400, WORK_MODE_HR};
 
 static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsigned short int ppg_count);
@@ -51,6 +53,7 @@ void vc30fx_pwr_en(void)		//PF5
     GPIOFDE  |= BIT(5);
     GPIOFDIR &= ~BIT(5);
 	GPIOFSET = BIT(5);
+	sc7a20_500ms_callback_en(false);
 }
 
 void vc30fx_pwr_dis(void)		//PF5
@@ -59,6 +62,7 @@ void vc30fx_pwr_dis(void)		//PF5
     GPIOFDE  |= BIT(5);
     GPIOFDIR &= ~BIT(5);
 	GPIOFCLR = BIT(5);
+	sc7a20_500ms_callback_en(true);
 }
 
 /****************************************************************************
@@ -128,9 +132,17 @@ int vc30fx_write_register(unsigned char regaddr, unsigned char *pbuf, unsigned s
 	bsp_hw_i2c_tx_buf(i2c_cfg, VC30FS_WRITE_ADDR(0x33), regaddr, pbuf,size);
 	return 0;
 }
+
+AT(.com_text.vc30fx)
+static void vc30fx_timer_count(void)
+{
+	hw_timer_count++;
+}
+
 unsigned int vc30fx_get_cputimer_tick(void)
 {
 	/*  return RTC(timer count value) */
+	return hw_timer_count;
 }
 
 /*********************************************************************************************************/
@@ -138,10 +150,18 @@ unsigned int vc30fx_get_cputimer_tick(void)
 #define ENABLE_GSENSOR 0
 const unsigned char arry10[] = {0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12};
 const unsigned char arry20[] = {0, 2, 3, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28};
+
 static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsigned short int ppg_count)
 {
 	unsigned char gsensor_len = 0;
 	vcare_memset(&vc30fx_gsensor_data, 0, sizeof(vc30fx_gsensor_data));
+	i2c_gsensor_init();
+	// SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_INIT();
+	SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_ALGO();
+	bsp_i2c_init();
+	// u8 id = 0;
+	// vc30fx_read_register(0x00,&id,1);
+    // printf("==========id = %d\n", id);
 #if ENABLE_GSENSOR
 	int i = 0;
 	AxesRaw_t gsensor_buff[40] = {0};
@@ -314,6 +334,7 @@ static int vc30fx_heart_rate_calculate(vcare_ppg_device_t *pdev)
 		VCARE_DBG_LOG("ALGO_STA=-1");
 	}
 	VCARE_DBG_LOG("ALGO-HR[%d][%d]", heartRate, reliability);
+	// printf("ALGO-HR[%d][%d]\n", heartRate, reliability);
 	return heartRate;
 }
 
@@ -390,6 +411,205 @@ static void vc30fx_temperature_ntc_calculate(vcare_ppg_device_t *pdev)
 			pdev->temperature1 = get_ntc_temperature(ext_R);
 		}
 	}
+}
+
+/****************************************************************************
+ * @description: 定时器校验当前IC状态,如果发生异常，则重启LDO后初始化
+ * @return {*}
+ ****************************************************************************/
+void vc30fx_usr_check_temperature_abnormal(void)
+{
+	unsigned char check_same_ret = 0, check_freq_ret = 0, check_temp_ret = 0;
+	unsigned short check_cnt1 = 0, check_cnt2 = 0;
+	check_same_ret = vc30fx_drv_read_check_temperature_abnormal(&vc30fx_dev, &check_freq_ret, &check_temp_ret, &check_cnt1, &check_cnt2);
+	vc30fx_temperature_ntc_calculate(&vc30fx_dev);
+	vc30fx_sample_info_t *result_info = (vc30fx_sample_info_t *)vc30fx_dev.result;
+	VCARE_DBG_LOG("status(%d),psbio_0(%d,%d),cnt=%d,%d,same_ret=%d,freq_ret=%d,temp_ret=%d, temp_ext=%d",vc30fx_dev.dev_work_status,
+	result_info->slot_result[2].u.ps_data, result_info->extra_result.bioext_data, check_cnt1, check_cnt2,
+	check_same_ret, check_freq_ret, check_temp_ret, vc30fx_dev.temperature1);
+
+	if (1 == vc30fx_dev.dev_work_status &&															/* IC处于工作状态 */
+		((result_info->slot_result[2].u.ps_data==0 && (result_info->extra_result.bioext_data==0&&result_info->extra_result.bioext_enwork) ) /* ps和bio同时异常，或者RCOSC异常 */
+		 || (check_cnt1 == 0 && check_cnt2 == 0)
+		 || (1 == check_same_ret)							/* bio-cnt其中之一已经不再变化 */
+		 || (1 == check_freq_ret)																	/* 频率温度异常 */
+		 || (1 == check_temp_ret)																	/* 内部温度异常 */
+		 || vc30fx_dev.temperature1 >= 600))														/* NTC温度异常，如果硬件NC则会固定250 */
+	{
+		/* 1.close ldo, 2.delay(200ms), 3.open ldo, 4.delay(10ms), 5.init_dev */
+		//extern void vcare_ldo_power_ctrl(unsigned char onoff);
+		//vcare_ldo_power_ctrl(0);
+		//platform_delay_ms(200);
+		//vcare_ldo_power_ctrl(1);
+		//platform_delay_ms(10);
+		//vc30fx_drv_init_start_work(&vc30fx_dev, vc30fx_dev.workmode, result_info->ppg_div, result_info->ps_div, result_info->fifo_div );
+	}
+}
+
+/****************************************************************************
+ * @description: 中断事件处理事件
+ * @param {unsigned char} heart_algo_mode
+ * @param {unsigned char} spo2_algo_mode
+ * @return {*}
+ ****************************************************************************/
+void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo2_algo_mode )
+{
+	unsigned short int ppg_num = 0;
+	unsigned short int gsensor_num = 0;
+	vc30fx_sample_info_t *sample_result_info_ptr = (vc30fx_sample_info_t *)vc30fx_dev.result;
+	if(!vc30fx_dev.dev_work_status) return;
+	VCARE_DBG_LOG("------------------");
+	vc30fx_dev.heart_algo_mode = heart_algo_mode;
+	vc30fx_dev.spo2_algo_mode = spo2_algo_mode;
+	vc30fx_drv_get_result_handler(&vc30fx_dev);
+	vc30fx_dev.wear = vc30fx_drv_get_wear_status(&vc30fx_dev);
+	if (vc30fx_drv_is_ps_event(&vc30fx_dev) || vc30fx_drv_is_fifo_event(&vc30fx_dev))
+	{
+		//disp_data.wear_sta = vc30fx_dev.wear;
+		//disp_data.disp_bio_val = sample_result_info_ptr->extra_result.bioext_data;
+		//disp_data.disp_bio_abs = sample_result_info_ptr->extra_result.bioabs_calc;
+		//VCARE_DBG_LOG("bio_absgap=%d, bioext=%d", disp_data.disp_bio_abs, disp_data.disp_bio_val );
+	}
+	switch (vc30fx_dev.workmode)
+	{
+	case WORK_MODE_HR:
+		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
+		{
+			ppg_num = sample_result_info_ptr->slot_result[0].ppg_num;
+			if (ppg_num > 40)
+				break;
+			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
+			if (gsensor_num)
+			{
+				vc30fx_gsensor_actuating_quantity(vc30fx_gsensor_data.xData[0], vc30fx_gsensor_data.yData[0], vc30fx_gsensor_data.zData[0]);
+			}
+			if (WEAR_STA_HOLD == vc30fx_dev.wear)
+			{
+				vc30fx_dev.heart_rate = vc30fx_heart_rate_calculate(&vc30fx_dev);
+				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+			}
+			else
+			{
+				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num?ppg_num:1);
+				vc30fx_dev.heart_rate = 0;
+				Algo_Init();
+			}
+			//disp_data.hr_rate = vc30fx_dev.heart_rate;
+			bsp_sensor_hrs_data_save(vc30fx_dev.heart_rate);
+		}
+		break;
+	case WORK_MODE_SPO2:
+		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
+		{
+			ppg_num = sample_result_info_ptr->slot_result[1].ppg_num;
+			if (ppg_num > 40)
+				break;
+			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
+			if (WEAR_STA_HOLD == vc30fx_dev.wear)
+			{
+				vc30fx_dev.spo2 = vc30fx_spo2_calculate(&vc30fx_dev);
+				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+			}
+			else
+			{
+				vc30fx_dev.spo2 = 0;
+				spo2AlgoInit_16bit();
+		//		vcSportMotionAlgoInit();
+			}
+			//disp_data.spo2_val = vc30fx_dev.spo2;
+			bsp_sensor_spo2_data_save(vc30fx_dev.spo2);
+		}
+		break;
+	case WORK_MODE_HRV:
+		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
+		{
+			ppg_num = sample_result_info_ptr->slot_result[0].ppg_num;
+			if (ppg_num > 40)
+				break;
+			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
+			if (WEAR_STA_HOLD == vc30fx_dev.wear)
+			{ /*wear is hold,call_algo_func*/
+				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+			}
+			else
+			{ /*wear is drop,clear_algo_data*/
+			}
+		}
+		break;
+	case WORK_MODE_STRESS:
+		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
+		{
+			ppg_num = sample_result_info_ptr->slot_result[0].ppg_num;
+			if (ppg_num > 40)
+				break;
+			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
+			if (WEAR_STA_HOLD == vc30fx_dev.wear)
+			{ /*wear is hold,call_algo_func*/
+				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+			}
+			else
+			{ /*wear is drop,clear_algo_data*/
+			}
+			//disp_data.hr_rate = vc30fx_dev.heart_rate;
+		}
+		break;
+	case WORK_MODE_BLOODPRESSURE:
+		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
+		{
+			ppg_num = sample_result_info_ptr->slot_result[0].ppg_num;
+			if (ppg_num > 40)
+				break;
+			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
+			if (WEAR_STA_HOLD == vc30fx_dev.wear)
+			{ /*wear is hold,call_algo_func*/
+				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+			}
+			else
+			{ /*wear is drop,clear_algo_data*/
+			}
+		}
+		break;
+	case WORK_MODE_WEAR:
+		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
+		{
+			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
+			if (gsensor_num)
+			{
+				vc30fx_gsensor_actuating_quantity(vc30fx_gsensor_data.xData[0], vc30fx_gsensor_data.yData[0], vc30fx_gsensor_data.zData[0]);
+			}
+			//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, sample_result_info_ptr->slot_result[2].ppg_num);
+		}
+		break;
+	case WORK_MODE_TEMPERATURE:
+		vc30fx_temperature_ntc_calculate(&vc30fx_dev);
+		//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, 1);
+		//disp_data.temperature_value0 = vc30fx_dev.temperature1;
+		break;
+	case WORK_MODE_FACTORY0:
+		//disp_data.gImx = sample_result_info_ptr->slot_result[0].slot_current;
+		//disp_data.gPre = sample_result_info_ptr->slot_result[0].u.pre_data;
+		//disp_data.ps = sample_result_info_ptr->slot_result[2].u.ps_data;
+		//disp_data.rImx = sample_result_info_ptr->slot_result[1].slot_current;
+		//disp_data.rPre = sample_result_info_ptr->slot_result[1].u.pre_data;
+		break;
+	case WORK_MODE_FACTORY1:
+		//disp_data.iImx = sample_result_info_ptr->slot_result[0].slot_current;
+		//disp_data.iPre = sample_result_info_ptr->slot_result[0].u.pre_data;
+		//disp_data.rImx = sample_result_info_ptr->slot_result[1].slot_current;
+		//disp_data.rPre = sample_result_info_ptr->slot_result[1].u.pre_data;
+		break;
+	default:
+		break;
+	}
+	/* 同步处理数据，清理fifo_buffer内存，为下次采样做准备 */
+	vc30fx_drv_finished_sync(&vc30fx_dev);
+}
+
+AT(.com_text.vc30fx)
+void vc30fx_isr(void)
+{
+	msg_enqueue(EVT_VC30FX_ISR);
+	//vc30fx_usr_device_handler(0, 1);
 }
 
 /*********************************************************************************************************
@@ -498,6 +718,15 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig )
 	VCARE_DBG_LOG("work_mode=%d", pinitconfig->work_mode );
 	/* 如果使用定时器，必须适配模式的定时器执行时间，否则无法正确解析数据 */
 	//unsigned short int timer_set_ms=(1000/frequency)*psdiv*fifodiv;
+	hw_timer_count = 0;
+	bsp_hw_timer_set(HW_TIMER4, 32, vc30fx_timer_count);
+#if (CHIP_PACKAGE_SELECT == CHIP_5691G)
+	extab_user_isr_set(IO_PG6, RISE_EDGE, IOUD_SEL_PD, vc30fx_isr);
+	extab_user_isr_mode_set(IO_PG6, MODE_BOTH_AWAKEN_SLEEP_PWK);
+#elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
+	extab_user_isr_set(IO_PE7, RISE_EDGE, IOUD_SEL_PD, vc30fx_isr);
+	extab_user_isr_mode_set(IO_PE7, MODE_BOTH_AWAKEN_SLEEP_PWK);
+#endif
 	return (pinitconfig->work_mode != -1);
 }
 
@@ -532,10 +761,11 @@ void vc30fx_usr_start_work(void)
  ****************************************************************************/
 int vc30fx_usr_stop_work(void)
 {
-	int ret = 0;
+	int ret = -1;
 	ret = vc30fx_drv_sleep_work(&vc30fx_dev);
 	vc30fx_dev.dev_work_status = 0;
-	return (ret != -1);
+	printf("vc30fx_usr_stop_work ret=%d\n", ret);
+	return ret;
 }
 /****************************************************************************
  * @description: 软复位
@@ -565,196 +795,6 @@ int vc30fx_usr_get_wear_status(void)
 		return 1;
 	}
 	return 0;
-}
-
-/****************************************************************************
- * @description: 定时器校验当前IC状态,如果发生异常，则重启LDO后初始化
- * @return {*}
- ****************************************************************************/
-void vc30fx_usr_check_temperature_abnormal(void)
-{
-	unsigned char check_same_ret = 0, check_freq_ret = 0, check_temp_ret = 0;
-	unsigned short check_cnt1 = 0, check_cnt2 = 0;
-	check_same_ret = vc30fx_drv_read_check_temperature_abnormal(&vc30fx_dev, &check_freq_ret, &check_temp_ret, &check_cnt1, &check_cnt2);
-	vc30fx_temperature_ntc_calculate(&vc30fx_dev);
-	vc30fx_sample_info_t *result_info = (vc30fx_sample_info_t *)vc30fx_dev.result;
-	VCARE_DBG_LOG("status(%d),psbio_0(%d,%d),cnt=%d,%d,same_ret=%d,freq_ret=%d,temp_ret=%d, temp_ext=%d",vc30fx_dev.dev_work_status,
-	result_info->slot_result[2].u.ps_data, result_info->extra_result.bioext_data, check_cnt1, check_cnt2,
-	check_same_ret, check_freq_ret, check_temp_ret, vc30fx_dev.temperature1);
-
-	if (1 == vc30fx_dev.dev_work_status &&															/* IC处于工作状态 */
-		((result_info->slot_result[2].u.ps_data==0 && (result_info->extra_result.bioext_data==0&&result_info->extra_result.bioext_enwork) ) /* ps和bio同时异常，或者RCOSC异常 */
-		 || (check_cnt1 == 0 && check_cnt2 == 0)
-		 || (1 == check_same_ret)							/* bio-cnt其中之一已经不再变化 */
-		 || (1 == check_freq_ret)																	/* 频率温度异常 */
-		 || (1 == check_temp_ret)																	/* 内部温度异常 */
-		 || vc30fx_dev.temperature1 >= 600))														/* NTC温度异常，如果硬件NC则会固定250 */
-	{
-		/* 1.close ldo, 2.delay(200ms), 3.open ldo, 4.delay(10ms), 5.init_dev */
-		//extern void vcare_ldo_power_ctrl(unsigned char onoff);
-		//vcare_ldo_power_ctrl(0);
-		//platform_delay_ms(200);
-		//vcare_ldo_power_ctrl(1);
-		//platform_delay_ms(10);
-		//vc30fx_drv_init_start_work(&vc30fx_dev, vc30fx_dev.workmode, result_info->ppg_div, result_info->ps_div, result_info->fifo_div );
-	}
-}
-
-/****************************************************************************
- * @description: 中断事件处理事件
- * @param {unsigned char} heart_algo_mode
- * @param {unsigned char} spo2_algo_mode
- * @return {*}
- ****************************************************************************/
-void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo2_algo_mode )
-{
-	unsigned short int ppg_num = 0;
-	unsigned short int gsensor_num = 0;
-	vc30fx_sample_info_t *sample_result_info_ptr = (vc30fx_sample_info_t *)vc30fx_dev.result;
-	if(!vc30fx_dev.dev_work_status) return;
-	VCARE_DBG_LOG("------------------");
-	vc30fx_dev.heart_algo_mode = heart_algo_mode;
-	vc30fx_dev.spo2_algo_mode = spo2_algo_mode;
-	vc30fx_drv_get_result_handler(&vc30fx_dev);
-	vc30fx_dev.wear = vc30fx_drv_get_wear_status(&vc30fx_dev);
-	if (vc30fx_drv_is_ps_event(&vc30fx_dev) || vc30fx_drv_is_fifo_event(&vc30fx_dev))
-	{
-		//disp_data.wear_sta = vc30fx_dev.wear;
-		//disp_data.disp_bio_val = sample_result_info_ptr->extra_result.bioext_data;
-		//disp_data.disp_bio_abs = sample_result_info_ptr->extra_result.bioabs_calc;
-		//VCARE_DBG_LOG("bio_absgap=%d, bioext=%d", disp_data.disp_bio_abs, disp_data.disp_bio_val );
-	}
-	switch (vc30fx_dev.workmode)
-	{
-	case WORK_MODE_HR:
-		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
-		{
-			ppg_num = sample_result_info_ptr->slot_result[0].ppg_num;
-			if (ppg_num > 40)
-				break;
-			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
-			if (gsensor_num)
-			{
-				vc30fx_gsensor_actuating_quantity(vc30fx_gsensor_data.xData[0], vc30fx_gsensor_data.yData[0], vc30fx_gsensor_data.zData[0]);
-			}
-			if (WEAR_STA_HOLD == vc30fx_dev.wear)
-			{
-				vc30fx_dev.heart_rate = vc30fx_heart_rate_calculate(&vc30fx_dev);
-				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
-			}
-			else
-			{
-				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num?ppg_num:1);
-				vc30fx_dev.heart_rate = 0;
-				Algo_Init();
-			}
-			//disp_data.hr_rate = vc30fx_dev.heart_rate;
-		}
-		break;
-	case WORK_MODE_SPO2:
-		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
-		{
-			ppg_num = sample_result_info_ptr->slot_result[1].ppg_num;
-			if (ppg_num > 40)
-				break;
-			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
-			if (WEAR_STA_HOLD == vc30fx_dev.wear)
-			{
-				vc30fx_dev.spo2 = vc30fx_spo2_calculate(&vc30fx_dev);
-				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
-			}
-			else
-			{
-				vc30fx_dev.spo2 = 0;
-				spo2AlgoInit_16bit();
-		//		vcSportMotionAlgoInit();
-			}
-			//disp_data.spo2_val = vc30fx_dev.spo2;
-		}
-		break;
-	case WORK_MODE_HRV:
-		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
-		{
-			ppg_num = sample_result_info_ptr->slot_result[0].ppg_num;
-			if (ppg_num > 40)
-				break;
-			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
-			if (WEAR_STA_HOLD == vc30fx_dev.wear)
-			{ /*wear is hold,call_algo_func*/
-				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
-			}
-			else
-			{ /*wear is drop,clear_algo_data*/
-			}
-		}
-		break;
-	case WORK_MODE_STRESS:
-		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
-		{
-			ppg_num = sample_result_info_ptr->slot_result[0].ppg_num;
-			if (ppg_num > 40)
-				break;
-			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
-			if (WEAR_STA_HOLD == vc30fx_dev.wear)
-			{ /*wear is hold,call_algo_func*/
-				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
-			}
-			else
-			{ /*wear is drop,clear_algo_data*/
-			}
-			//disp_data.hr_rate = vc30fx_dev.heart_rate;
-		}
-		break;
-	case WORK_MODE_BLOODPRESSURE:
-		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
-		{
-			ppg_num = sample_result_info_ptr->slot_result[0].ppg_num;
-			if (ppg_num > 40)
-				break;
-			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
-			if (WEAR_STA_HOLD == vc30fx_dev.wear)
-			{ /*wear is hold,call_algo_func*/
-				//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
-			}
-			else
-			{ /*wear is drop,clear_algo_data*/
-			}
-		}
-		break;
-	case WORK_MODE_WEAR:
-		if (vc30fx_drv_is_fifo_event(&vc30fx_dev))
-		{
-			vc30fx_get_board_gsensor_data(&gsensor_num, ppg_num);
-			if (gsensor_num)
-			{
-				vc30fx_gsensor_actuating_quantity(vc30fx_gsensor_data.xData[0], vc30fx_gsensor_data.yData[0], vc30fx_gsensor_data.zData[0]);
-			}
-			//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, sample_result_info_ptr->slot_result[2].ppg_num);
-		}
-		break;
-	case WORK_MODE_TEMPERATURE:
-		vc30fx_temperature_ntc_calculate(&vc30fx_dev);
-		//vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, 1);
-		//disp_data.temperature_value0 = vc30fx_dev.temperature1;
-		break;
-	case WORK_MODE_FACTORY0:
-		//disp_data.gImx = sample_result_info_ptr->slot_result[0].slot_current;
-		//disp_data.gPre = sample_result_info_ptr->slot_result[0].u.pre_data;
-		//disp_data.ps = sample_result_info_ptr->slot_result[2].u.ps_data;
-		//disp_data.rImx = sample_result_info_ptr->slot_result[1].slot_current;
-		//disp_data.rPre = sample_result_info_ptr->slot_result[1].u.pre_data;
-		break;
-	case WORK_MODE_FACTORY1:
-		//disp_data.iImx = sample_result_info_ptr->slot_result[0].slot_current;
-		//disp_data.iPre = sample_result_info_ptr->slot_result[0].u.pre_data;
-		//disp_data.rImx = sample_result_info_ptr->slot_result[1].slot_current;
-		//disp_data.rPre = sample_result_info_ptr->slot_result[1].u.pre_data;
-		break;
-	default:
-		break;
-	}
-	/* 同步处理数据，清理fifo_buffer内存，为下次采样做准备 */
-	vc30fx_drv_finished_sync(&vc30fx_dev);
 }
 
 static const dev_ops vc30fx_ops =

@@ -1683,6 +1683,7 @@ int vc30fx_drv_set_acce_wear_status(void *pdevice, int status)
 	}
 	return 0;
 }
+
 wear_status vc30fx_drv_get_wear_status(void *pdevice)
 {
 	vcare_ppg_device_t *pdev = (vcare_ppg_device_t *)pdevice;
@@ -1745,6 +1746,7 @@ void vc30fx_drv_read_event_infomation_byIRQ(void)
 	drv_read_event_status(drv_info_handle);
 }
 
+
 int vc30fx_drv_is_fifo_event(void *pdevice)
 {
 	if( drv_info_handle->fifo_read_data_valid )
@@ -1753,6 +1755,7 @@ int vc30fx_drv_is_fifo_event(void *pdevice)
 	}
 	return 0;
 }
+
 int vc30fx_drv_is_ps_event(void *pdevice)
 {
 	if (drv_info_handle->int_event & (VC30Fx_EVENT_INTPS_RDY))

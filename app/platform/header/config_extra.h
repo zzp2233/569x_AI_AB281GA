@@ -1,6 +1,8 @@
 #ifndef __CONFIG_EXTRA_H__
 #define __CONFIG_EXTRA_H__
 
+#include "ute_project_config.h"
+
 /*****************************************************************************
  * Module    : 系统功能配置
  *****************************************************************************/
@@ -74,9 +76,23 @@
     #define GUI_SCREEN_HEIGHT               480
     #define GUI_SCREEN_OFS_X                0//24
     #define GUI_SCREEN_OFS_Y                0//40
+#elif (GUI_SELECT == GUI_TFT_240_296_NV3030B)
+    #define GUI_SCREEN_WIDTH                240
+    #define GUI_SCREEN_HEIGHT               296
+    #define GUI_SCREEN_OFS_X                0//24
+    #define GUI_SCREEN_OFS_Y                12//40
+    #define GUI_USE_TFT
+#elif (GUI_SELECT == GUI_TFT_320_385_GV9B71)
+    #define GUI_SCREEN_WIDTH                320
+    #define GUI_SCREEN_HEIGHT               386
+    #define GUI_SCREEN_OFS_X                0//24
+    #define GUI_SCREEN_OFS_Y                0//40
+    #define GUI_USE_TFT
 #else
-    #define GUI_SCREEN_WIDTH                0
-    #define GUI_SCREEN_HEIGHT               0
+    #define GUI_SCREEN_WIDTH                UTE_DRV_SCREEN_WIDTH
+    #define GUI_SCREEN_HEIGHT               UTE_DRV_SCREEN_HEIGHT
+    #define GUI_SCREEN_OFS_X                0
+    #define GUI_SCREEN_OFS_Y                0
     #define GUI_USE_TFT
 #endif
 
@@ -450,6 +466,7 @@
 #define SENSOR_HR_EN                             0x200
 #define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)			            //天易合芯HRS3300心率血压传感器
 #define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)			            //天易合芯HX3605心率血氧传感器
+#define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
 
 #define SENSOR_GEO_NULL                           0
 #define SENSOR_GEO_EN                             0x300

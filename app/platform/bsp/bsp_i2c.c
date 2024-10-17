@@ -305,7 +305,84 @@ static void i2cx_init(void)
     delay_5ms(8);
 }
 
+void i2c_gsensor_init(void)
+{
+
+#if (CHIP_PACKAGE_SELECT == CHIP_5691G)
+    CLKCON1 |= BIT(7);      //x26m_clkdiv8
+    CLKGAT2 |= BIT(0);      //en iic0 clk
+    RSTCON0 |= BIT(3);      //Release IIC0
+
+    GPIOFDIR |= BIT(2) | BIT(1);                    //SCL SDA
+    GPIOFPU |= BIT(2) | BIT(1);
+    GPIOFDE |= BIT(2) | BIT(1);
+    GPIOFFEN |= BIT(2) | BIT(1);
+
+    FUNCMCON2 = (0xf << 8);
+    FUNCMCON2 = (8 << 8);
+#elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
+    CLKCON1 |= BIT(7);      //x26m_clkdiv8
+    CLKGAT2 |= BIT(0);      //en iic0 clk
+    RSTCON0 |= BIT(3);      //Release IIC0
+
+    GPIOEDIR |= BIT(1) | BIT(2);                    //SCL SDA
+    GPIOEPU |= BIT(1) | BIT(2);
+    GPIOEDE |= BIT(1) | BIT(2);
+    GPIOEFEN |= BIT(1) | BIT(2);
+
+    FUNCMCON2 = (0xf << 8);
+    FUNCMCON2 = (5 << 8);
 #endif
+
+    /* 
+        IIC速率计算方式: 时钟频率/分频数
+        时钟频率：CLK = CLKCON1 |= BIT(7);        x26m_clkdiv8 24M时钟频率 分频数为8 则时钟频率为3M
+        分频数：  DIV = IICxCON0[9:4];            在BIT(4)和BIT(9)之间填参 最小值=0;最大值=63
+        IIC速率： S = CLK / (DIV + 1);            3M / (20 + 1) ~= 142KHz
+     */
+
+    HW_IIC->sfr->IICxCON0 =     1 << 0 |     //IIC EN
+                                0 << 1 |     //IIC INT
+                                0 << 2 |     //IIC HOLD CNT [3:2]
+                                20 << 4 |    //IIC POSDIV [9:4]
+                                1 << 10;     //IIC WSCL_OPT
+
+    delay_5ms(8);
+    sys_irq_init(IRQ_I2C_VECTOR, 0, bsp_i2c_isr);
+}
+
+#endif
+
+// static void i2cx_init(void)
+// {
+//     CLKCON1 |= BIT(7);      //x26m_clkdiv8
+//     CLKGAT2 |= BIT(0);      //en iic0 clk
+//     RSTCON0 |= BIT(3);      //Release IIC0
+
+//     GPIOEDIR |= BIT(2) | BIT(1);                    //SCL SDA
+//     GPIOEPU |= BIT(2) | BIT(1);
+//     GPIOEDE |= BIT(2) | BIT(1);
+//     GPIOEFEN |= BIT(2) | BIT(1);
+
+//     FUNCMCON2 = (0xf << 8);
+//     FUNCMCON2 = (5 << 8);
+
+//     /* 
+//         IIC速率计算方式: 时钟频率/分频数
+//         时钟频率：CLK = CLKCON1 |= BIT(7);        x26m_clkdiv8 24M时钟频率 分频数为8 则时钟频率为3M
+//         分频数：  DIV = IICxCON0[9:4];            在BIT(4)和BIT(9)之间填参 最小值=0;最大值=63
+//         IIC速率： S = CLK / (DIV + 1);            3M / (20 + 1) ~= 142KHz
+//      */
+
+//     HW_IIC->sfr->IICxCON0 =     1 << 0 |     //IIC EN
+//                                 0 << 1 |     //IIC INT
+//                                 0 << 2 |     //IIC HOLD CNT [3:2]
+//                                 20 << 4 |    //IIC POSDIV [9:4]
+//                                 1 << 10;     //IIC WSCL_OPT
+
+//     delay_5ms(8);
+// }
+
 
 AT(.text.bsp.i2c)
 void bsp_i2c_init(void)

@@ -4,7 +4,7 @@
  * @Date: 2022-09-30 09:50:56
  * @LastEditTime: 2024-03-26 17:51:50
  * @LastEditors: Tse
- * @Description: 
+ * @Description:
  **********************************************************************************************/
 #ifndef __VC30Fx_DRIVER_CONFIG_H__
 #define __VC30Fx_DRIVER_CONFIG_H__
@@ -18,7 +18,7 @@
 #define VC30Fx_FUNC_ENABLE (1)
 
 /* HARDWARE IRQ PIN CONFIGURATION */
-#define VC30Fx_CFG_IRQPIN_PULSE_TIM (VC30Fx_IO_PULSE_TIM_400US)	/* vc30fx_core_com.h@VC30Fx_IO_PULSE_TIM */	
+#define VC30Fx_CFG_IRQPIN_PULSE_TIM (VC30Fx_IO_PULSE_TIM_400US)	/* vc30fx_core_com.h@VC30Fx_IO_PULSE_TIM */
 #define VC30Fx_CFG_IRQPIN_PUSHPULL_3V3UP   (0) 	/* 3.3v,push-pull, up-edge */
 #define VC30Fx_CFG_IRQPIN_PUSHPULL_3V3DOWN (1) 	/* 3.3v,push-pull, down-edge */
 #define VC30Fx_CFG_IRQPIN_OPENDRAIN_1V8DOWN (2)	/* 1.8v,open-drain, down-edge */
@@ -31,7 +31,7 @@
 #define VC30Fx_FREQUENCY_MIN 19900
 //#define VC30Fx_CFG_MCU_TICK_FREQUENCY 32000 // counter 32K
 extern unsigned short int VC30Fx_CFG_MCU_TICK_FREQUENCY; /* extern unsigned short int VC30Fx_CFG_MCU_TICK_FREQUENCY; */
-#define VC30Fx_CFG_MCU_TICK_MAX 0xffffff    // 24-bit counters
+#define VC30Fx_CFG_MCU_TICK_MAX 0xffffffff    // 24-bit counters
 #define VC30Fx_CFG_CLK_CALC_DEVIATION 3
 #define VC30Fx_CFG_CLK_CALC_GAPTIME 10 // interrupt gap times( 25hz_fifo_irq:20*40~0.4sec; 5hz_fifo_irq: 20*200 ~ 2sec; 1.25hz_fifo_irq: 10*800 ~ 8sec )
 

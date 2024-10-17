@@ -241,7 +241,11 @@ void ctp_cst8x_readkick(void)
 AT(.com_text.ctp)
 bool ctp_cst8x_get_point(s32 *x, s32 *y)
 {
+#if (GUI_SELECT == GUI_TFT_320_385_GV9B71)
+    *x = GUI_SCREEN_WIDTH - (((ctp_cst8x_buf[0] & 0xf) << 8) + ctp_cst8x_buf[1]);
+#else
     *x = ((ctp_cst8x_buf[0] & 0xf) << 8) + ctp_cst8x_buf[1];
+#endif
     *y = ((ctp_cst8x_buf[2] & 0xf) << 8) + ctp_cst8x_buf[3];
     return ((ctp_cst8x_buf[0] & 0xC0) == 0x80);
 }

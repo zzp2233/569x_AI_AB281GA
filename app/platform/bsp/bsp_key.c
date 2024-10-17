@@ -371,8 +371,8 @@ u8 get_double_key_time(void)
     }
 }
 
-//AT(.com_rodata.bsp.key)
-//const char key_str[] = "enqueue: %04x\n";
+// AT(.com_rodata.bsp.key)
+// const char key_str[] = "enqueue: %04x\n";
 
 AT(.com_text.bsp.key)
 u16 bsp_key_process(u16 key_val)
@@ -438,7 +438,7 @@ u8 bsp_key_scan(void)
         } else if (sys_cb.kh_vol_msg == key) {
             msg_queue_detach(key, 0);
         }
-    //    printf("key_str:0x%x\n", key);
+        // printf(key_str, key);
         if (sys_cb.gui_sleep_sta) {
             sys_cb.gui_need_wakeup = 1;
         }

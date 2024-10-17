@@ -118,6 +118,7 @@ enum {
     FUNC_MODEM_RING,
     FUNC_MESSAGE_REPLY,                  //消息发送
     FUNC_MIC_TEST,
+    FUNC_OTA_UI_MODE,
 
     FUNC_MAX_NUM,           //用于计数
 

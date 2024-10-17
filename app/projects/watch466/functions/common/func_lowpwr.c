@@ -29,8 +29,8 @@ bool sys_sleep_check(u32 *sleep_time)
         *sleep_time = co_min;
     }
 
-	if(*sleep_time == 0){
-		*sleep_time = 1;
+	if(*sleep_time < 4){
+		*sleep_time = 4;
 	}
 
     if(*sleep_time > sys_cb.sleep_wakeup_time) {

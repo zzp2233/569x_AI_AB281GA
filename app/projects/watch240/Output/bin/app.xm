@@ -2,7 +2,7 @@
 depend(0x01010200);
 setflash(1, FLASH_SIZE, FLASH_ERASE_4K, FLASH_DUAL_READ, FLASH_QUAD_READ);
 setspace(FLASH_CM_SIZE);
-setuserbin(FLASH_UI_BASE, FLASH_UI_SIZE, ui.bin, 1);   #起始地址要与ui.xm同步
+setuserbin(FLASH_UI_BASE, FLASH_UI_SIZE, ui.bin, 0);   #起始地址要与ui.xm同步
 #if FLASHDB_EN
 setkeepseg(0x4000); //数据库使用
 #endif

@@ -157,8 +157,9 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
 
     if (tft_cb.tft_bglight_last_duty != tft_cb.tft_bglight_duty)
     {
-        bsp_pwm_duty_set(PORT_TFT_BL, tft_cb.tft_bglight_duty, false);
-        // uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
+        // bsp_pwm_freq_set(200);
+        // bsp_pwm_duty_set(PORT_TFT_BL, tft_cb.tft_bglight_duty, false);
+        uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
         tft_cb.tft_bglight_last_duty = tft_cb.tft_bglight_duty;
     }
 }

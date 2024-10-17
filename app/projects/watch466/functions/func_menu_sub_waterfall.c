@@ -78,13 +78,13 @@ const menu_hc_item_t tbl_menu_waterfall[] = {
     {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
     {UI_BUF_ICON_FINDPHONE_BIN,                 FUNC_FINDPHONE},
     {UI_BUF_ICON_GAME_BIN,                      FUNC_GAME},
-    {UI_BUF_ICON_ALTITUDE_BIN,                  FUNC_ALTITUDE},
+    //{UI_BUF_ICON_ALTITUDE_BIN,                  FUNC_ALTITUDE},
     {UI_BUF_ICON_ALARM_CLOCK_BIN,               FUNC_ALARM_CLOCK},
     {UI_BUF_ICON_RESTORE_FACTORY_BIN,           FUNC_RSTFY},
 
     {UI_BUF_ICON_LANGUAGE_BIN,                  FUNC_LANGUAGE},
     {UI_BUF_ICON_LIGHT_BIN,                     FUNC_LIGHT},
-    {UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
+    //{UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
     {UI_BUF_ICON_MESSAGE_BIN,                   FUNC_MESSAGE},
     {UI_BUF_ICON_CALCULATOR_BIN,                FUNC_CALCULATOR},
     {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
@@ -104,7 +104,7 @@ const menu_hc_item_t tbl_menu_waterfall[] = {
     {UI_BUF_ICON_VOICE_BIN,                     FUNC_VOICE},
     {UI_BUF_ICON_WEATHER_BIN,                   FUNC_WEATHER},
     {UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},
-    {UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
+    //{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
 };
 
 

@@ -154,7 +154,6 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
     }
     duty = base_duty + level;
     tft_cb.tft_bglight_duty = duty;
-
     if (tft_cb.tft_bglight_last_duty != tft_cb.tft_bglight_duty)
     {
         // bsp_pwm_freq_set(200);

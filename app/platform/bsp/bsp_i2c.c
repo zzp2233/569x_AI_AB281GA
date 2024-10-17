@@ -177,7 +177,7 @@ static u32 bsp_hw_i2c_config(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u32 dat)
     u32 ticks = tick_get();
     while ( (!(HW_IIC->sfr->IICxCON0 & BIT(31)))) {
         if (tick_check_expire(ticks, 20)) {
-            printf("IIC ERROR\n");
+            printf("!!!IIC ERROR dev_addr:0x%X reg_addr:0x%x\n", dev_addr,reg_addr);
             return false;
         }
     }
@@ -299,7 +299,7 @@ static void i2cx_init(void)
     HW_IIC->sfr->IICxCON0 =     1 << 0 |     //IIC EN
                                 0 << 1 |     //IIC INT
                                 0 << 2 |     //IIC HOLD CNT [3:2]
-                                20 << 4 |    //IIC POSDIV [9:4]
+                                6 << 4 |    //IIC POSDIV [9:4]
                                 1 << 10;     //IIC WSCL_OPT
 
     delay_5ms(8);
@@ -344,7 +344,7 @@ void i2c_gsensor_init(void)
     HW_IIC->sfr->IICxCON0 =     1 << 0 |     //IIC EN
                                 0 << 1 |     //IIC INT
                                 0 << 2 |     //IIC HOLD CNT [3:2]
-                                20 << 4 |    //IIC POSDIV [9:4]
+                                6 << 4 |    //IIC POSDIV [9:4]
                                 1 << 10;     //IIC WSCL_OPT
 
     delay_5ms(8);

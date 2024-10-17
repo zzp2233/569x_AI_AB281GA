@@ -29,8 +29,8 @@ bool sys_sleep_check(u32 *sleep_time)
         *sleep_time = co_min;
     }
 
-	if(*sleep_time == 0){
-		*sleep_time = 1;
+	if(*sleep_time < 4){
+		*sleep_time = 4;
 	}
 
     if(*sleep_time > sys_cb.sleep_wakeup_time) {
@@ -256,6 +256,8 @@ static void sfunc_sleep(void)
     bsp_modem_sleep_enter();
 #endif
 
+    bsp_sensor_hr_stop();
+
     sysclk = sys_clk_get();
     sys_clk_set(SYS_24M);
     DACDIGCON0 &= ~BIT(0);                      //disable digital dac
@@ -276,12 +278,13 @@ static void sfunc_sleep(void)
     GPIOHDE = 0;
 
     u32 pf_keep = 0;
-    if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL)) {
+    // if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL)) {
+        printf("bsp_sensor_init_sta_get\n");
         GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
         pf_keep |= BIT(2);                      //SENSOR PG
-    } else {
-        GPIOEDE = 0;
-    }
+    // } else {
+    //     GPIOEDE = 0;
+    // }
 
 #if MODEM_CAT1_EN
     pf_keep |= BIT(1) | BIT(2) | BIT(3);
@@ -383,7 +386,7 @@ static void sfunc_sleep(void)
     }
 #endif
 #endif // CHARGE_EN
-    sys_set_tmr_enable(1, 1);
+    //sys_set_tmr_enable(1, 1);
     if (DAC_FAST_SETUP_EN) {
         bsp_loudspeaker_mute();
     }
@@ -396,6 +399,8 @@ static void sfunc_sleep(void)
     } else {
         sys_clk_set(SYS_24M);
     }
+
+    sys_set_tmr_enable(1, 1);
 
 #if LE_EN
     ble_set_adv_interval(adv_interval);

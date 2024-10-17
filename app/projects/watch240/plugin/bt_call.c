@@ -191,7 +191,7 @@ void bt_sco_dnn_init(u8 *sysclk, nr_cb_t *nr)
 
     bt_dnn_init(&dnn_cb);
 
-    *sysclk = *sysclk < SYS_88M ? SYS_88M : *sysclk;
+    *sysclk = *sysclk < SYS_192M ? SYS_192M : *sysclk;
 }
 
 void bt_sco_dnn_exit(void)

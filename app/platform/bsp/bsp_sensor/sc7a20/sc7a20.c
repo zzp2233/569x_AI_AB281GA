@@ -404,6 +404,7 @@ void sc7a20_500ms_callback_en(bool en)
         co_timer_enable(&sc7a20_500ms, true);
     } else {
         co_timer_enable(&sc7a20_500ms, false);
+        bsp_i2c_init();
     }
 }
 #endif //SENSOR_STEP_SEL

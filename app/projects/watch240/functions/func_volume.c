@@ -38,11 +38,11 @@ typedef struct volume_disp_pic_item_t_ {
 
 //图片item，创建时遍历一下
 static const volume_disp_pic_item_t tbl_volume_disp_pic_item[] = {
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL1,         108,    309,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL2,         134,    309,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL3,         160,    309,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL4,         186,    309,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL5,         212,    309,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL1,         80,    257,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL2,         100,    257,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL3,         120,    257,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL4,         140,    257,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL5,         160,    257,    false},
 };
 
 //创建调节音量窗体
@@ -50,8 +50,8 @@ compo_form_t *func_volume_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-    compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 160, 309);
-    compo_form_add_image(frm, UI_BUF_ICON_VOLUME_BIN, 160, 180);
+    compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 257);
+    compo_form_add_image(frm, UI_BUF_ICON_VOLUME_BIN, 120, 148);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
@@ -61,11 +61,11 @@ compo_form_t *func_volume_form_create(void)
 	compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_COMMON_REDUCE_BIN);
     compo_setid(btn, COMPO_ID_BTN_REDUCE);
-    compo_button_set_pos(btn, 54, 309);
+    compo_button_set_pos(btn, 40, 257);
 
 	btn = compo_button_create_by_image(frm, UI_BUF_COMMON_INCREASE_BIN);
     compo_setid(btn, COMPO_ID_BTN_INCREASE);
-    compo_button_set_pos(btn, 266, 309);
+    compo_button_set_pos(btn, 195, 257);
 
     //新建图像
     compo_picturebox_t *pic_level[5];
@@ -79,12 +79,12 @@ compo_form_t *func_volume_form_create(void)
     compo_picturebox_t *pic_button;
     pic_button = compo_picturebox_create(frm, UI_BUF_COMMON_REDUCE_CLICK_BIN);
     compo_setid(pic_button, COMPO_ID_PIC_REDUCE_CLICK);
-    compo_picturebox_set_pos(pic_button, 54, 309);
+    compo_picturebox_set_pos(pic_button, 40, 257);
     compo_picturebox_set_visible(pic_button, false);
 
     pic_button = compo_picturebox_create(frm, UI_BUF_COMMON_INCREASE_CLICK_BIN);
     compo_setid(pic_button, COMPO_ID_PIC_INCREASE_CLICK);
-    compo_picturebox_set_pos(pic_button, 266, 309);
+    compo_picturebox_set_pos(pic_button, 195, 257);
     compo_picturebox_set_visible(pic_button, false);
 
     compo_picturebox_set_visible(pic_level[0], true);

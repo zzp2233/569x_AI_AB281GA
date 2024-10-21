@@ -42,29 +42,29 @@ static bool music_pp_test = 0;
 //时钟、日期
 #define CARD_CLOCK_X                    GUI_SCREEN_CENTER_X                     //中心点
 #define CARD_CLOCK_Y                    70//80
-#define CLOCK_BG_X                      (76 - CARD_CLOCK_X)                     //时钟背景
+#define CLOCK_BG_X                      (76-10 - CARD_CLOCK_X)                     //时钟背景
 #define CLOCK_BG_Y                      0
-#define CLOCK_BG_W                      110//120
-#define CLOCK_BG_H                      110//120
+#define CLOCK_BG_W                      90//120
+#define CLOCK_BG_H                      90//120
 #define CLOCK_POINTER_H_X               CLOCK_BG_X                              //时钟指针hour
 #define CLOCK_POINTER_H_Y               CLOCK_BG_Y
-#define CLOCK_POINTER_H_W               38
-#define CLOCK_POINTER_H_H               6
+#define CLOCK_POINTER_H_W               28
+#define CLOCK_POINTER_H_H               4
 #define CLOCK_POINTER_M_X               CLOCK_BG_X                              //时钟指针minute
 #define CLOCK_POINTER_M_Y               CLOCK_BG_Y
-#define CLOCK_POINTER_M_W               52
-#define CLOCK_POINTER_M_H               6
-#define DATE_X                          (195 - CARD_CLOCK_X)//(224 - CARD_CLOCK_X)                    //日期
-#define DATE_Y                          (65 - CARD_CLOCK_Y)
+#define CLOCK_POINTER_M_W               36
+#define CLOCK_POINTER_M_H               4
+#define DATE_X                          (180 - CARD_CLOCK_X)//(224 - CARD_CLOCK_X)                    //日期
+#define DATE_Y                          (50 - CARD_CLOCK_Y)
 #define DATE_W                          100
 #define DATE_H                          35
 #define WEEKDAY_X                       DATE_X                                  //星期
-#define WEEKDAY_Y                       (105 - CARD_CLOCK_Y)
+#define WEEKDAY_Y                       (82 - CARD_CLOCK_Y)
 #define WEEKDAY_W                       60
 #define WEEKDAY_H                       DATE_H
 //运动&指南针卡片
 #define CARD_SPORT_COMPASS_X            GUI_SCREEN_CENTER_X                     //中心点
-#define CARD_SPORT_COMPASS_Y            190//228
+#define CARD_SPORT_COMPASS_Y            174//190//228
 #define SPORT_BG_X                      (65 - CARD_SPORT_COMPASS_X)//(79 - CARD_SPORT_COMPASS_X)             //运动背景/按钮
 #define SPORT_BG_Y                      0
 #define SPORT_BG_W                      (CARD_WIDTH_ORG/2 - 10)//146
@@ -91,15 +91,15 @@ static bool music_pp_test = 0;
 #define COMPASS_TXT_H                   SPORT_TXT_H
 //运动记录卡片
 #define CARD_ACTIVITY_X                 GUI_SCREEN_CENTER_X                     //中心点
-#define CARD_ACTIVITY_Y                 330//393
+#define CARD_ACTIVITY_Y                 190+106//393
 #define ACTIVITY_BG_X                   0                                       //背景/按钮
 #define ACTIVITY_BG_Y                   0
 #define ACTIVITY_BG_W                   (CARD_WIDTH_ORG -5)
-#define ACTIVITY_BG_H                   156
+#define ACTIVITY_BG_H                   120
 #define ACTIVITY_ICON_X                 SPORT_BG_X                              //图标
 #define ACTIVITY_ICON_Y                 0
-#define ACTIVITY_ICON_W                 110
-#define ACTIVITY_ICON_H                 110
+#define ACTIVITY_ICON_W                 90
+#define ACTIVITY_ICON_H                 90
 #define ACTIVITY_STEP_X                 COMPASS_BG_X                            //步数
 #define ACTIVITY_STEP_Y                 -40
 #define ACTIVITY_STEP_W                 (COMPASS_BG_W - 10)
@@ -114,7 +114,7 @@ static bool music_pp_test = 0;
 #define ACTIVITY_DISTANCE_H             ACTIVITY_STEP_H
 //睡眠卡片
 #define CARD_SLEEP_X                    GUI_SCREEN_CENTER_X
-#define CARD_SLEEP_Y                    490//563
+#define CARD_SLEEP_Y                    430-2//490//563
 #define SLEEP_BG_X                      ACTIVITY_BG_X                           //背景/按钮
 #define SLEEP_BG_Y                      ACTIVITY_BG_Y
 #define SLEEP_BG_W                      (CARD_WIDTH_ORG - 5)
@@ -149,7 +149,7 @@ static bool music_pp_test = 0;
 #define SLEEP_LIGHT_M_H                 SLEEP_DEEP_M_H
 //心率卡片
 #define CARD_HEARTRATE_X                GUI_SCREEN_CENTER_X
-#define CARD_HEARTRATE_Y                650//733
+#define CARD_HEARTRATE_Y                570-10//650//733
 #define HEARTRATE_BG_X                  ACTIVITY_BG_X                           //背景/按钮
 #define HEARTRATE_BG_Y                  ACTIVITY_BG_Y
 #define HEARTRATE_BG_W                  CARD_WIDTH_ORG
@@ -168,7 +168,7 @@ static bool music_pp_test = 0;
 #define HEARTRATE_VALUE_H               35
 //音乐卡片
 #define CARD_MUSIC_X                    GUI_SCREEN_CENTER_X
-#define CARD_MUSIC_Y                    810//903
+#define CARD_MUSIC_Y                    810-118//810//903
 #define MUSIC_BG_X                      ACTIVITY_BG_X                           //背景/按钮
 #define MUSIC_BG_Y                      ACTIVITY_BG_Y
 #define MUSIC_BG_W                      CARD_WIDTH_ORG
@@ -179,15 +179,15 @@ static bool music_pp_test = 0;
 #define MUSIC_PREV_H                    70
 #define MUSIC_PP_X                      MUSIC_BG_X                             //播放暂停
 #define MUSIC_PP_Y                      MUSIC_BG_Y
-#define MUSIC_PP_W                      104
-#define MUSIC_PP_H                      104
+#define MUSIC_PP_W                      80
+#define MUSIC_PP_H                      80
 #define MUSIC_NEXT_X                    (200 - CARD_MUSIC_X)//(267 - CARD_MUSIC_X)                    //下一首
 #define MUSIC_NEXT_Y                    MUSIC_BG_Y
 #define MUSIC_NEXT_W                    MUSIC_PREV_W
 #define MUSIC_NEXT_H                    MUSIC_PREV_H
 //关机&语音助手卡片
 #define CARD_POWEROFF_ASSISTANT_X       GUI_SCREEN_CENTER_X                     //中心点
-#define CARD_POWEROFF_ASSISTANT_Y       950//1068
+#define CARD_POWEROFF_ASSISTANT_Y       950-130//950//1068
 #define POWEROFF_BG_X                   SPORT_BG_X                              //关机背景/按钮
 #define POWEROFF_BG_Y                   SPORT_BG_Y
 #define POWEROFF_BG_W                   SPORT_BG_W
@@ -348,9 +348,10 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     cardbox = compo_cardbox_create(frm, 2, 2, 2, CARD_WIDTH_ORG, SPORT_BG_H);
     compo_setid(cardbox, COMPO_ID_CARD_SPORT_COMPASS);
     compo_cardbox_rect_set_location(cardbox, 0, COMPASS_BG_X, COMPASS_BG_Y, COMPASS_BG_W, COMPASS_BG_H, 20);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_COMPASS_BIN);
+    //compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_COMPASS_BIN);
+    compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_BLOOD_OXYGEN_BIN);
     compo_cardbox_icon_set_location(cardbox, 0, COMPASS_ICON_X, COMPASS_ICON_Y, COMPASS_ICON_W, COMPASS_ICON_H);
-    compo_cardbox_text_set(cardbox, 0, i18n[STR_COMPASS]);
+    compo_cardbox_text_set(cardbox, 0, i18n[STR_BLOOD_OXYGEN]);
     compo_cardbox_text_set_location(cardbox, 0, COMPASS_TXT_X, COMPASS_TXT_Y, COMPASS_TXT_W, COMPASS_TXT_H);
     compo_cardbox_rect_set_location(cardbox, 1, SPORT_BG_X, SPORT_BG_Y, SPORT_BG_W, SPORT_BG_H, 20);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_SPORT_BIN);
@@ -623,7 +624,7 @@ static void func_clock_sub_card_click_handler(void)
         cardbox = compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS);
         rect = compo_cardbox_get_rect_absolute(cardbox, 0); //指南针
         if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-            func_jump = FUNC_COMPASS;
+            func_jump = FUNC_BLOOD_OXYGEN;//FUNC_COMPASS;
         } else {
             rect = compo_cardbox_get_rect_absolute(cardbox, 1); //运动
             if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {

@@ -404,7 +404,7 @@ unsigned char SL_MCU_SLEEP_ALGO_FUNCTION(void)
 	USART_printf( USART1, "SL_SLEEP_ACTIVE:%d!\r\n",SL_SLEEP_ACTIVE);
 #endif
 //    static u16 cnt = 0;
-    // printf("cnt[%d] SL_SLEEP_STATUS[%d] SL_SLEEP_ACTIVE[%d] SL_SLEEP_ADOM[%d] sys_hour[%d]\n",
+//     printf("cnt[%d] SL_SLEEP_STATUS[%d] SL_SLEEP_ACTIVE[%d] SL_SLEEP_ADOM[%d] sys_hour[%d]\n",
 //           cnt, SL_SLEEP_STATUS, SL_SLEEP_ACTIVE, SL_SLEEP_ADOM, compo_cb.tm.hour);
 //    cnt++;
 

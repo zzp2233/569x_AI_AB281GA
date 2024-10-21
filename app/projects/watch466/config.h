@@ -228,7 +228,7 @@
 #define BT_SCO_AINS3_LEVEL				xcfg_cb.bt_sco_nr_level	    //0-30级
 
 #define BT_SCO_DNN_EN                   0                           //是否打开自研单麦DNN降噪算法
-#define BT_SCO_DNN_MODEL_SET            1                           //自研单麦DNN模型选择，0：标准模型，1：标准模型+6K
+#define BT_SCO_DNN_MODEL_SET            0                           //自研单麦DNN模型选择，0：标准模型，1：标准模型+6K
 #define	BT_SCO_DNN_MODE                 1                           //DNN模式，模式0，模式1（建议）
 #define BT_SCO_DNN_LEVEL                6                           //降噪量：0-30级
 #define BT_SCO_DNN_WIND_EN              0                           //默认关闭

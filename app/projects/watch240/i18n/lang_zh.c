@@ -188,5 +188,9 @@ const char * const i18n_zh[] = {
     [STR_STYLE_SKYRER]                  = "天圆地方",
     [STR_STYLE_WATERFALL]               = "瀑布",
     [STR_STYLE_FOOTBALL]                = "足球",
+
+    [STR_DEV_NEME]                      = "设备名称",
+    [STR_BLE_MAC]                       = "蓝牙地址",
+    [STR_SYS_VERSION]                   = "系统名称",
     [STR_NULL]                          = " ",
 };

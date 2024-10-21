@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_log.h"
+
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -31,8 +33,12 @@ typedef struct f_about_t_ {
 compo_form_t *func_set_sub_about_form_create(void)
 {
     component_t *compo;
-    char buf[16];
-
+    uint8_t davName[40];
+    memset(davName,0,sizeof(davName));
+    uint8_t davNameLength = sizeof(davName);
+    uteModulePlatformGetDevName(davName,davNameLength);
+    //printf("11111:%s",davName);
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"11111:%s",davName);
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -48,12 +54,11 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_cardbox_icon_set(compo, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
     compo_cardbox_icon_set_location(compo, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
 
-    compo_cardbox_text_set(compo, 0, i18n[STR_Equipment_name]);    //文字
+    compo_cardbox_text_set(compo, 0, i18n[STR_DEV_NEME]);    //文字
     compo_cardbox_text_set_location(compo,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
 
-    snprintf(buf, sizeof(buf), "%s",DEFAULT_BLE_DEV_NEME);    //信息
     compo_cardbox_text_set_font(compo, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
-    compo_cardbox_text_set(compo, 1, buf);
+    compo_cardbox_text_set(compo, 1, davName);
     compo_cardbox_text_set_location(compo,1,-7*12+4,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
 
     //系统版本
@@ -63,13 +68,11 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_cardbox_icon_set(compo, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
     compo_cardbox_icon_set_location(compo, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
 
-    compo_cardbox_text_set(compo, 0, i18n[STR_System_version]);    //文字
+    compo_cardbox_text_set(compo, 0, i18n[STR_SYS_VERSION]);    //文字
     compo_cardbox_text_set_location(compo,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
 
-    uteModulePlatformGetDevName("12345",5);
-    snprintf(buf, sizeof(buf), "%s",DEFAULT_BLE_DEV_NEME);    //信息
     compo_cardbox_text_set_font(compo, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
-    compo_cardbox_text_set(compo, 1, buf);
+    compo_cardbox_text_set(compo, 1, UTE_SW_VERSION);
     compo_cardbox_text_set_location(compo,1,-7*12+4,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
 
     //蓝牙地址
@@ -79,14 +82,13 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_cardbox_icon_set(compo, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
     compo_cardbox_icon_set_location(compo, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
 
-    compo_cardbox_text_set(compo, 0, i18n[STR_Bluetooth_address]);    //文字
+    compo_cardbox_text_set(compo, 0, i18n[STR_BLE_MAC]);    //文字
     compo_cardbox_text_set_location(compo,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
 
-    uteModulePlatformGetBleMacAddress(buf);//获取蓝牙地址
-    snprintf(buf, sizeof(buf), "%s",buf);    //信息
-    compo_cardbox_text_set_font(compo, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
-    compo_cardbox_text_set(compo, 1, buf);
-    compo_cardbox_text_set_location(compo,1,-4*24+6,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
+//    snprintf(buf, sizeof(buf), "%s",buf);    //信息
+//    compo_cardbox_text_set_font(compo, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
+//    compo_cardbox_text_set(compo, 1, buf);
+//    compo_cardbox_text_set_location(compo,1,-4*24+6,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
 
     return frm;
 }

@@ -121,13 +121,13 @@ static void func_light_button_click(void)
 
     switch (id) {
     case COMPO_ID_BTN_REDUCE:
-        if (sys_cb.light_level > 0 && sys_cb.light_level <= 5) {
+        if (sys_cb.light_level > DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE && sys_cb.light_level <= DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE) {
             sys_cb.light_level--;
         }
         break;
 
     case COMPO_ID_BTN_INCREASE:
-        if (sys_cb.light_level >= 0 && sys_cb.light_level < 5) {
+        if (sys_cb.light_level >= DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE && sys_cb.light_level < DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE) {
             sys_cb.light_level++;
         }
         break;
@@ -136,7 +136,7 @@ static void func_light_button_click(void)
         break;
     }
 
-    for (u8 i=0; i<5; i++) {
+    for (u8 i=0; i<DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE; i++) {
         if (i < sys_cb.light_level) {
             compo_picturebox_set_visible(pic_level[i],true);
         } else {
@@ -161,13 +161,13 @@ static void func_light_message(size_msg_t msg)
 	case MSG_CTP_CLICK:
         func_light_button_click();
         uint8_t level_tmp = sys_cb.light_level;
-        if(level_tmp < 1)
+        if(level_tmp < DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
         {
-            level_tmp = 1;
+            level_tmp = DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
         }
-        else if(level_tmp > 5)
+        else if(level_tmp > DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
         {
-            level_tmp = 5;
+            level_tmp = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
         }
         tft_bglight_set_level(level_tmp,false);
         break;

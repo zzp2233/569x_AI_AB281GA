@@ -14,6 +14,7 @@
 #include "ute_application_common.h"
 #include "ute_module_profile_ble.h"
 #include "ute_module_filesystem.h"
+#include "ute_module_gui_common.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -97,7 +98,7 @@ void uteModuleProtocolReadBatteryLvl(uint8_t*receive,uint8_t length)
 {
     uint8_t response[2]= {0};
     response[0] = receive[0];
-    response[1] = 0x58;//uteDrvBatteryCommonGetLvl();
+    response[1] = bsp_vbat_percent_get();//uteDrvBatteryCommonGetLvl();
     uteModuleProfileBleSendToPhone(&response[0],2);
 }
 /**
@@ -229,10 +230,10 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
         {
             isFahrenheit= true;
         }
-// #if (!QUICK_SWITCH_DISPLAY_TIME_SUPPORT)
-//         uint8_t displayTime = receive[5];
-//         uteModuleGuiCommonSetDisplayOffTime(displayTime);
-// #endif
+#if (!QUICK_SWITCH_DISPLAY_TIME_SUPPORT)
+        uint8_t displayTime = receive[5];
+        uteModuleGuiCommonSetDisplayOffTime(displayTime);
+#endif
 //         uteModuleGuiCommonSetDisplayTemperatureUtil(isFahrenheit);
 // #if UTE_MODULE_LOCAL_SET_LIFT_WRIST_SUPPORT
 //         isHandScreenOn = uteModuleSportGetIsOpenHandScreenOn();
@@ -1607,12 +1608,12 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
 {
     if(receive[1]==0x01)
     {
-        uteModuleHeartSetAutoTesting(true);
+        // uteModuleHeartSetAutoTesting(true);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
     }
     else if(receive[1]==0x02)
     {
-        uteModuleHeartSetAutoTesting(false);
+        // uteModuleHeartSetAutoTesting(false);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
     }
     else if(receive[1]==0xfa)
@@ -1628,7 +1629,7 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
             time.min = receive[7];
             time.sec = receive[8];
         }
-        uteModuleHeartStartSendHeartAutoTestHistoryData(time);
+        // uteModuleHeartStartSendHeartAutoTestHistoryData(time);
     }
 #if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
     else if (receive[1] == 0x05)
@@ -1915,7 +1916,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_BREATH_RATE_TEST,.publicCmd=CMD_BREATH_RATE_TEST,.function=uteModuleProtocolBreathrateCtrl},
     // {.privateCmd = CMD_SLEEP_ON_BAND,.publicCmd=PUBLIC_CMD_SLEEP_ON_BAND,.function=uteModuleProtocolSleepReadHistoryData},
     // {.privateCmd = CMD_SEND_SLEEP_ON_BAND_DATAS,.publicCmd=PUBLIC_CMD_SEND_SLEEP_ON_BAND_DATAS,.function=uteModuleProtocolSleepReadHistoryData},
-    {.privateCmd = CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.publicCmd=PUBLIC_CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.function=uteModuleProtocolMoreSportCtrl},
+    // {.privateCmd = CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.publicCmd=PUBLIC_CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.function=uteModuleProtocolMoreSportCtrl},
     // {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
     // {.privateCmd = CMD_MUSIC_CONTENT_CTRL,.publicCmd=CMD_MUSIC_CONTENT_CTRL,.function=uteModuleProtocolMusicCtrl},
     // {.privateCmd = CMD_FACTORY_TEST_MODE,.publicCmd=PUBLIC_CMD_FACTORY_TEST_MODE,.function=uteModuleProtocolFactoryTest},
@@ -2003,7 +2004,7 @@ void uteModuleProtocolFromPhone(uint8_t *receive,uint8_t length,bool isPublic)
     UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,receive=", __func__);
     UTE_MODULE_LOG_BUFF(UTE_LOG_PROTOCOL_LVL,receive,length);
     /*Casen 22-04-09*/
-    uteModulePlaformUpdateConnectParam(12,36,10*1000);
+    // uteModulePlaformUpdateConnectParam(12,36,10*1000);
     /*Casen 22-04-09*/
 
 //#if UTE_USER_ID_FOR_BINDING_SUPPORT
@@ -2021,7 +2022,7 @@ void uteModuleProtocolFromPhone(uint8_t *receive,uint8_t length,bool isPublic)
 //        else
 //        {
 //#if UTE_LOG_CONNECTION_PROTOCOL_LVL&&UTE_LOG_SYSTEM_LVL
-    uteModuleAppBindingSetOurAppConnection(true);
+    // uteModuleAppBindingSetOurAppConnection(true);
 //#endif
 //            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data return",__func__);
 //            return;

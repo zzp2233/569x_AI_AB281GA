@@ -9,7 +9,6 @@
 
 __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201068AvcPowerOn(void)
 {
-    uteDrvScreenCommonOpenBacklight(100);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11,NULL,0);
     uteModulePlatformDelayMs(120);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29,NULL,0);

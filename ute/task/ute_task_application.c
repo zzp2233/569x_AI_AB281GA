@@ -11,6 +11,8 @@
 #include "ute_module_filesystem.h"
 #include "ute_module_message.h"
 #include "ute_module_systemtime.h"
+#include "ute_application_common.h"
+#include "ute_module_gui_common.h"
 
 #define UTE_TASK_APPLICATION_PRIORITY             24
 #define UTE_TASK_APPLICATION_MESSAGE_MAX_CNT      0x20
@@ -131,10 +133,11 @@ void uteTaskApplicationMain(void *param)
     else
 #endif
     {
-        // uteApplicationCommonStartupFrist();
-        uteModuleFilesystemInit();
-        uteModuleFilesystemCreateDirectory("systemparam");
-        uteModuleSystemtimeInit();
+#if UTE_MODULE_USER_MALLOC_SUPPORT 
+        uteModulePlatformMemoryInitPool();
+#endif
+        uteApplicationCommonStartupFrist();
+        uteModuleGuiCommonInit();
     }
     uteModulePlatformCreateTimer(&uteTaskApplicationHandle,"task",0,20,true,uteTaskApplicationWhileRun);
 }

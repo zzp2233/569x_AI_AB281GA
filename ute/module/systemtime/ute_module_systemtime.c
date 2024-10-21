@@ -127,14 +127,7 @@ void uteModuleSystemtimeSetTime(ute_module_systemtime_time_t set)
     {
         set.day = 1;
     }
-    // test
-    set.year = 2024;
-    set.month = 3;
-    set.day = 28;
-    set.hour = 18;
-    set.min = 1;
-    set.sec = 0;
-    //
+
     ute_module_systemtime_time_t oldTime;
     memcpy(&oldTime,&systemTime,sizeof(ute_module_systemtime_time_t));
     //uteModuleSleepSystemtimeChange(systemTime,set);
@@ -224,7 +217,7 @@ static void uteModuleSystemtimeChange(ute_module_systemtime_time_t *time)
 */
 void uteModuleSystemtimeSecondCb(void)
 {
-    if (1)//(uteApplicationCommonIsStartupFinish())
+    if (uteApplicationCommonIsStartupFinish())
     {
         uteModuleSystemtimeChange(&systemTime);
         systemTime.week = uteModuleSystemtimeGetWeek(systemTime.year,systemTime.month,systemTime.day);
@@ -251,11 +244,12 @@ void uteModuleSystemtimeSecondCb(void)
     }
     else
     {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,uteApplicationCommonStartupSecond",__func__);
         /*! 启动流程 读取电池电压 zn.zeng  modify Jul 01, 2021 */
 //        uteDrvBatteryCommonUpdateBatteryInfo();
 //        if(uteDrvBatteryCommonGetVoltage()>UTE_DRV_BATTERY_POWER_ON_VOLTAGE)
         {
-            //uteApplicationCommonStartupSecond();
+            uteApplicationCommonStartupSecond();
         }
     }
 }

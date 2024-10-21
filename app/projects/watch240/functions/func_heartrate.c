@@ -130,6 +130,12 @@ static void func_heartrate_refresh(void)
             compo_textbox_set(txt, hr_buf);
 		}
 	}
+
+    if(cur_hr == 0 && bsp_sensor_hr_wear_sta_get())
+    {
+        reset_sleep_delay_all();
+    }
+
 }
 
 //心率功能事件处理

@@ -550,6 +550,7 @@ uint32_t uteModulePlatformGetSystemTick(void)
 {
     return uteModulePlatformSystemTickCnt;
 }
+#if !UTE_MODULE_USER_MALLOC_SUPPORT 
 /**
 *@brief   动态申请内存
 *@details
@@ -558,7 +559,7 @@ uint32_t uteModulePlatformGetSystemTick(void)
 */
 void *uteModulePlatformMemoryAlloc(size_t size)
 {
-    return func_zalloc(size);
+    return ab_calloc(size);
 }
 /**
 *@brief   释放动态申请的内存
@@ -570,9 +571,10 @@ void uteModulePlatformMemoryFree(void * p)
 {
     if (p != NULL)
     {
-        func_free(p);
+        ab_free(p);
     }
 }
+#endif
 /**
 *@brief   设置gpio输出
 *@details
@@ -678,17 +680,9 @@ void uteModulePlatformScreenQspiInit(void)
     GPIOACLR  =  BIT(4);
     GPIOADIR &= ~BIT(4);
 
-#if (GUI_MODE_SELECT == MODE_4WIRE_8BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
-    GPIOAFEN |= BIT(2);                         // D0
-    GPIOADE  |= BIT(2);
-    GPIOADIR |= BIT(2);
-
-    DC_ENABLE();
-#else
     GPIOAFEN |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));  // D0/D1/D2/D3
     GPIOADE  |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
     GPIOADIR |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
-#endif
 
     FUNCMCON2 = BIT(28);
 
@@ -715,19 +709,11 @@ void uteModulePlatformScreenQspiInit(void)
 
     tft_set_temode(DEFAULT_TE_MODE);
 
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
+
     sys_irq_init(IRQ_DESPI_VECTOR, 0, tft_spi_isr);
 
-#if (GUI_SELECT == GUI_TFT_SPI)
-    DESPICON = BIT(27) | BIT(7) | BIT(0);                                           //[28:27]IN RGB565, [7]IE, [3:2]1BIT in, 1BIT out, [0]EN
-#if (GUI_MODE_SELECT == MODE_3WIRE_9BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
-    DESPICON |= BIT(18);                                                            //[18]3w-9b despi mode enable
-#elif (GUI_MODE_SELECT == MODE_QSPI)
-    DESPICON |= BIT(9) | BIT(3) | BIT(2);                                           //[9]MultiBit, [3:2]4BIT
-#endif
-
-#else
-    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2]4BIT, [0]EN
-#endif
+    DESPIBAUD = tft_cb.despi_baud;
 }
 /**
 *@brief   qspi 写命令
@@ -746,6 +732,41 @@ void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len)
         tft_spi_sendbyte(buf[i]);
     }
 }
+
+/**
+*@brief   qspi 读命令
+*@details
+*@author         zn.zeng
+*@date     2021-10-12
+*/
+void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,uint8_t dummyClockByte)
+{
+    DESPIBAUD = 15;
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+    delay_us(1);
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
+
+    DESPICON &= ~BIT(3);                        //1BIT
+
+    tft_spi_sendbyte(0x03);
+    tft_spi_sendbyte(0x00);
+    tft_spi_sendbyte(cmd);
+    tft_spi_sendbyte(0x00);
+
+    for(uint32_t i=0; i<dummyClockByte; i++)
+    {
+        delay_us(1);
+        tft_spi_getbyte();
+    }
+    for(uint32_t i=0; i<len; i++)
+    {
+        delay_us(1);
+        buf[i] = tft_spi_getbyte();
+    }
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+    DESPIBAUD = tft_cb.despi_baud;
+}
+
 /**
 *@brief   Qspi 写gram数据
 *@details

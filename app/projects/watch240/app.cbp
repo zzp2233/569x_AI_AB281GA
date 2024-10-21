@@ -60,6 +60,8 @@
 			<Add directory="../../../ute/thrid_lib/little_fs" />
 			<Add directory="../../../ute/module/profile" />
 			<Add directory="../../../ute/module/protocol" />
+			<Add directory="../../../ute/module/mem" />
+			<Add directory="../../../ute/module/gui" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -107,10 +109,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/filesystem/ute_module_filesystem.h" />
+		<Unit filename="../../../ute/module/gui/ute_module_gui_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/gui/ute_module_gui_common.h" />
 		<Unit filename="../../../ute/module/log/ute_module_log.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/log/ute_module_log.h" />
+		<Unit filename="../../../ute/module/mem/ute_module_mem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/mem/ute_module_mem.h" />
 		<Unit filename="../../../ute/module/message/ute_module_message.c">
 			<Option compilerVar="CC" />
 		</Unit>

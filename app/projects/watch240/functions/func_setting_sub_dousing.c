@@ -77,17 +77,17 @@ void func_set_sub_dousing_list_icon_click(void)
     switch(icon_idx) {
     case  COMPO_ID_BTN_NUM0...COMPO_ID_BTN_NUM6:
         if (icon_idx==COMPO_ID_BTN_NUM0) {
-            sys_cb.sleep_time = 50;
+            uteModuleGuiCommonSetDisplayOffTime(5);
         } else if (icon_idx==COMPO_ID_BTN_NUM1) {
-            sys_cb.sleep_time = 100;
+            uteModuleGuiCommonSetDisplayOffTime(10);
         } else if (icon_idx==COMPO_ID_BTN_NUM2) {
-            sys_cb.sleep_time = 200;
+            uteModuleGuiCommonSetDisplayOffTime(15);
         } else if (icon_idx==COMPO_ID_BTN_NUM3) {
-            sys_cb.sleep_time = 300;
+            uteModuleGuiCommonSetDisplayOffTime(30);
         } else if (icon_idx==COMPO_ID_BTN_NUM4) {
-            sys_cb.sleep_time = 600;
+            uteModuleGuiCommonSetDisplayOffTime(60);
         } else if (icon_idx==COMPO_ID_BTN_NUM5) {
-            sys_cb.sleep_time = 3000;
+            // uteModuleGuiCommonSetDisplayOffTime(5);
         } else if (icon_idx==COMPO_ID_BTN_NUM6) {
             sys_cb.sleep_time = -1;
         }

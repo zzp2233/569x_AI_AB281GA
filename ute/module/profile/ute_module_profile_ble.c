@@ -163,7 +163,7 @@ static gatts_service_base_st gatts_ute_ble_read_write_base;
 static gatts_service_base_st gatts_ute_ble5_notify_base;
 static gatts_service_base_st gatts_ute_ble5_read_write_base;
 
-#if UTE_SERVICE_PUBLIC_BLE_SUPPORT
+#if 1 //UTE_SERVICE_PUBLIC_BLE_SUPPORT
 
 static const uint8_t ute_ble_public_service_primay_uuid[2] = {GATT_UUID_UTE_MODULE_PROFILE_PUBLIC_BLE_SERVICE & 0xff, GATT_UUID_UTE_MODULE_PROFILE_PUBLIC_BLE_SERVICE >> 8};
 const uint8_t ute_ble_public_read_write_uuid[2] = {GATT_UUID_UTE_MODULE_PROFILE_PUBLIC_BLE_CHAR_READ_WRITE & 0xff, GATT_UUID_UTE_MODULE_PROFILE_PUBLIC_BLE_CHAR_READ_WRITE >> 8};
@@ -297,8 +297,6 @@ static int uteModuleProfileBleWriteCallback(uint16_t con_handle, uint16_t handle
 
 //    printf("BLE_RX len[%d] handle[%d]\n", len, handle);
 //    print_r(ptr, len);
-    printf("BLE_RX len[%d] con_handle:%d,handle:%d,flag:%d\n",len,con_handle,handle,flag);
-    print_r(ptr, len);
 
     ble_cmd_cb.cmd_wptr++;
     if (len > BLE_RX_BUF_LEN) {
@@ -314,21 +312,21 @@ static int uteModuleProfileBleWriteCallback(uint16_t con_handle, uint16_t handle
 
 static int uteModuleProfileBleReadCallback(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len)
 {
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,handle:%d", __func__, handle);
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,handle:%d", __func__, handle);
 
     if (ptr)
     {
         if (handle == gatts_ute_ble_read_write_base.handle)
         {
             uteModuleProtocolReadFunctionSupport(&uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
-            UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
+            UTE_MODULE_LOG_BUFF(UTE_LOG_PROTOCOL_LVL, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
             memcpy(ptr, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
             return UTE_MODULE_PORFILE_READ_MAX_BYTES;
         }
         else if (handle == gatts_ute_ble5_read_write_base.handle)
         {
             uteModuleProtocolReadExpandFunctionSupport(&uteModuleProfileCharReadValueBuff[0],UTE_MODULE_PORFILE_READ_MAX_BYTES);
-            UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
+            UTE_MODULE_LOG_BUFF(UTE_LOG_PROTOCOL_LVL, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
             memcpy(ptr, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
             return UTE_MODULE_PORFILE_READ_MAX_BYTES;
         }
@@ -336,14 +334,14 @@ static int uteModuleProfileBleReadCallback(uint16_t con_handle, uint16_t handle,
         else if (handle == gatts_ute_ble_public_read_write_base.handle)
         {
             uteModuleProtocolReadFunctionSupport(&uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
-            UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
+            UTE_MODULE_LOG_BUFF(UTE_LOG_PROTOCOL_LVL, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
             memcpy(ptr, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
             return UTE_MODULE_PORFILE_READ_MAX_BYTES;
         }
         else if (handle == gatts_ute_ble5_public_read_write_base.handle)
         {
             uteModuleProtocolReadExpandFunctionSupport(&uteModuleProfileCharReadValueBuff[0],UTE_MODULE_PORFILE_READ_MAX_BYTES);
-            UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
+            UTE_MODULE_LOG_BUFF(UTE_LOG_PROTOCOL_LVL, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
             memcpy(ptr, &uteModuleProfileCharReadValueBuff[0], UTE_MODULE_PORFILE_READ_MAX_BYTES);
             return UTE_MODULE_PORFILE_READ_MAX_BYTES;
         }
@@ -391,8 +389,14 @@ void ble_app_watch_process(void)
     u8 len = ble_cmd_cb.cmd[rptr].len;
     u16 handle = ble_cmd_cb.cmd[rptr].handle;
 
-    if (handle == gatts_ute_ble_read_write_base.handle) {
-        ble_app_blue_fit_rx_callback(ptr, len);
+    if (handle == gatts_ute_ble_read_write_base.handle || handle == gatts_ute_ble5_read_write_base.handle || handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle)
+    {
+        bool isPublic = false;
+        if (handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle)
+        {
+            isPublic = true;
+        }
+        uteModuleProtocolFromPhone(ptr, len, isPublic);
     }
 }
 
@@ -424,7 +428,7 @@ bool uteModuleProfileBleSendToPhone(uint8_t *data,uint8_t size)
     }
     if(uteModuleProfileIsPublicProtocol)
     {
-        // uteModuleProtocolConversionCmd(data,TYPE_TO_PUBLIC);
+        uteModuleProtocolConversionCmd(data,TYPE_TO_PUBLIC);
         isRet = uteModuleProfileBleSendNotify(gatts_ute_ble_public_notify_base.handle, data, size);
     }
     else
@@ -454,7 +458,7 @@ bool uteModuleProfileBle50SendToPhone(uint8_t *data,uint8_t size)
     }
     if(uteModuleProfileIsPublicProtocol)
     {
-        // uteModuleProtocolConversionCmd(data,TYPE_TO_PUBLIC);
+        uteModuleProtocolConversionCmd(data,TYPE_TO_PUBLIC);
         isRet = uteModuleProfileBleSendNotify(gatts_ute_ble5_public_notify_base.handle, data, size);
     }
     else
@@ -592,7 +596,7 @@ uint8_t uteModuleProfileBleAddService(void)
 //
 void ble_app_watch_init(void)
 {
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s",__func__);
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s",__func__);
     uteModulePlatformAdvDataInit();
 
     uteModuleProfileBleAddService();

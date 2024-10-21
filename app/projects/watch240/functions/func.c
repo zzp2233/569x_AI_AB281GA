@@ -370,9 +370,9 @@ const func_t tbl_func_entry[] = {
 #if MIC_TEST_EN
 	{FUNC_MIC_TEST,                     func_mic_test},
 #endif // MIC_TEST_EN
-    {FUNC_BIRD,                         func_bird},                     
-    {FUNC_TETRIS,                       func_tetris},                     
-    {FUNC_TETRIS_START,                 func_tetris_start},                    
+    {FUNC_BIRD,                         func_bird},
+    {FUNC_TETRIS,                       func_tetris},
+    {FUNC_TETRIS_START,                 func_tetris_start},
 
 };
 

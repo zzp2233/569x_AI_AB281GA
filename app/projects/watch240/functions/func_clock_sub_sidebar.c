@@ -9,7 +9,7 @@
 #define TRACE(...)
 #endif
 
-#define SIDEBAR_PAGE_HEIGHT 990//1082    //长图总高度
+#define SIDEBAR_PAGE_HEIGHT 850//1082    //长图总高度
 #define QDEC_STEP_Y         180     //编码器步进距离
 
 #define TIMER_HOUR          (sys_cb.timer_left_sec / 3600)  //计时器数据
@@ -81,12 +81,12 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
 
     //时间天气
     cardbox = compo_cardbox_create(frm, 0, 2, 4, GUI_SCREEN_WIDTH-10, 156);
-    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 126);
+    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 98);
     compo_setid(cardbox, SIDEBAR_CARD_ID_TIME_WEATHER);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
-    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 156);
+    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_WEATHER_WEATHER_LIST_BIN);  //天气图标
-    compo_cardbox_icon_set_location(cardbox, 1, 245-180, 111-126, 96, 88);
+    compo_cardbox_icon_set_location(cardbox, 1, 245-180, 111-126, 72, 72);
     compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);
     snprintf(str_buff, sizeof(str_buff), "%02d:%02d", compo_cb.tm.hour, compo_cb.tm.min);    //时间
     compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_38_BIN);
@@ -95,97 +95,97 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     snprintf(str_buff, sizeof(str_buff), "%02d/%02d", compo_cb.tm.mon, compo_cb.tm.day);    //日期
     compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_cardbox_text_set(cardbox, 1, str_buff);
-    compo_cardbox_text_set_location(cardbox, 1, 95-140, 145-126, 100, 30);
+    compo_cardbox_text_set_location(cardbox, 1, 95-140, 145-126-10, 100, 30);
     compo_cardbox_text_set(cardbox, 2, i18n[STR_SUNDAY + compo_cb.tm.weekday]);    //星期
-    compo_cardbox_text_set_location(cardbox, 2, 95-140, 181-126, 80, 30);
+    compo_cardbox_text_set_location(cardbox, 2, 95-140, 181-126-10, 80, 30);
     snprintf(str_buff, sizeof(str_buff), "%02d℃", sys_cb.temperature[1]);    //温度
     compo_cardbox_text_set_font(cardbox, 3, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_cardbox_text_set(cardbox, 3, str_buff);
-    compo_cardbox_text_set_location(cardbox, 3, 245-180, 178-126, 120, 30);
+    compo_cardbox_text_set_location(cardbox, 3, 245-180, 178-126-10, 120, 30);
     //计时器
     cardbox = compo_cardbox_create(frm, 0, 2, 2, GUI_SCREEN_WIDTH-10, 156);
-    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 296);
+    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 98+134);
     compo_setid(cardbox, SIDEBAR_CARD_ID_TIMER);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
-    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 156);
+    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_TIMER_BIN);  //图标
-    compo_cardbox_icon_set_location(cardbox, 1, 54-120, 270-296, 64, 64);
+    compo_cardbox_icon_set_location(cardbox, 1, 54-130, 270-296, 54, 54);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_TIMER]);    //计时器
-    compo_cardbox_text_set_location(cardbox, 0, 140-120, 270-296, 120, 30);
+    compo_cardbox_text_set_location(cardbox, 0, 140-150, 270-296, 120, 30);
     snprintf(str_buff, sizeof(str_buff), "%02lu:%02lu:%02lu", TIMER_HOUR, TIMER_MIN, TIMER_SEC);    //计时时间
-    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_cardbox_text_set(cardbox, 1, str_buff);
     compo_cardbox_text_set_location(cardbox, 1, 5, 330-296, 300, 50);
     //秒表
     cardbox = compo_cardbox_create(frm, 0, 2, 2, GUI_SCREEN_WIDTH-10, 156);
-    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 466);
+    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 98+134+134);
     compo_setid(cardbox, SIDEBAR_CARD_ID_STOPWATCH);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
-    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 156);
+    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_STOPWATCH_BIN);  //图标
-    compo_cardbox_icon_set_location(cardbox, 1, 54-120, 440-466, 64, 64);
+    compo_cardbox_icon_set_location(cardbox, 1, 54-130, 440-466, 54, 54);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_STOP_WATCH]);    //秒表
-    compo_cardbox_text_set_location(cardbox, 0, 129-120, 440-466, 120, 30);
+    compo_cardbox_text_set_location(cardbox, 0, 129-150, 440-466, 120, 30);
     snprintf(str_buff, sizeof(str_buff), "%02lu:%02lu:%02lu", STOPWATCH_HOUR, STOPWATCH_MIN, STOPWATCH_SEC);    //计时时间
-    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_cardbox_text_set(cardbox, 1, str_buff);
     compo_cardbox_text_set_location(cardbox, 1, 5, 500-466, 300, 50);
     //计算器
     cardbox = compo_cardbox_create(frm, 0, 2, 1, GUI_SCREEN_WIDTH/2-10, 120);
-    compo_cardbox_set_pos(cardbox, 60, 620);
+    compo_cardbox_set_pos(cardbox, 60, 98+134+134+134);
     compo_setid(cardbox, SIDEBAR_CARD_ID_CALCULATOR);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_CALCULATOR_BIN);  //图标
-    compo_cardbox_icon_set_location(cardbox, 1, 60-71, 612-631, 72, 72);
+    compo_cardbox_icon_set_location(cardbox, 1, 60-71, 612-631, 58, 58);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_CALCULATOR]);    //计算器
     compo_cardbox_text_set_location(cardbox, 0, 0, 675-631, 140, 30);
     //日历
     cardbox = compo_cardbox_create(frm, 0, 2, 1, GUI_SCREEN_WIDTH/2-10, 120);
-    compo_cardbox_set_pos(cardbox, 180, 620);
+    compo_cardbox_set_pos(cardbox, 180, 98+134+134+134);
     compo_setid(cardbox, SIDEBAR_CARD_ID_CALENDAR);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_CALENDAR_BIN);  //图标
-    compo_cardbox_icon_set_location(cardbox, 1, 220-221, 612-631, 72, 72);
+    compo_cardbox_icon_set_location(cardbox, 1, 220-221, 612-631,58, 58);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_CALENDAR]);    //日历
     compo_cardbox_text_set_location(cardbox, 0, 0, 675-631, 140, 30);
     //游戏
     cardbox = compo_cardbox_create(frm, 0, 2, 1, GUI_SCREEN_WIDTH/2-10, 120);
-    compo_cardbox_set_pos(cardbox, 60, 750);
+    compo_cardbox_set_pos(cardbox, 60, 98+134+134+134+134);
     compo_setid(cardbox, SIDEBAR_CARD_ID_GAME);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_GAME_BIN);  //图标
-    compo_cardbox_icon_set_location(cardbox, 1, 60-71, 772-791, 72, 72);
+    compo_cardbox_icon_set_location(cardbox, 1, 60-71, 772-791, 58, 58);;
     compo_cardbox_text_set(cardbox, 0, i18n[STR_GAME]);    //游戏
     compo_cardbox_text_set_location(cardbox, 0, 0, 835-791, 140, 30);
     //呼吸
     cardbox = compo_cardbox_create(frm, 0, 2, 1, GUI_SCREEN_WIDTH/2-10, 120);
-    compo_cardbox_set_pos(cardbox, 180, 750);
+    compo_cardbox_set_pos(cardbox, 180, 98+134+134+134+134);
     compo_setid(cardbox, SIDEBAR_CARD_ID_BREATHE);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_BREATHE_BIN);  //图标
-    compo_cardbox_icon_set_location(cardbox, 1, 220-221, 772-791, 72, 72);
+    compo_cardbox_icon_set_location(cardbox, 1, 220-221, 772-791,58, 58);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_BREATHE]);    //呼吸
     compo_cardbox_text_set_location(cardbox, 0, 0, 835-791, 140, 30);
     //最近应用
     cardbox = compo_cardbox_create(frm, 0, 5, 1, GUI_SCREEN_WIDTH-10, 156);
-    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 900);
+    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 98+134+134+134+134+134+20);
     compo_setid(cardbox, SIDEBAR_CARD_ID_LATEST);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
-    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 156);
+    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 80);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_SIDEBAR_TOP_308_50_BIN);  //方框头
     compo_cardbox_icon_set_location(cardbox, 1, 0, 903-956, GUI_SCREEN_WIDTH-10, 50);
     compo_cardbox_icon_set(cardbox, 2, sidebar_get_latest_icon(0));  //图标0
-    compo_cardbox_icon_set_location(cardbox, 2, 60-140, 979-956, 72, 72);
+    compo_cardbox_icon_set_location(cardbox, 2, 60-140, 979-956-20+4, 58, 58);
     compo_cardbox_icon_set(cardbox, 3, sidebar_get_latest_icon(1));  //图标1
-    compo_cardbox_icon_set_location(cardbox, 3, 0, 979-956, 72, 72);
+    compo_cardbox_icon_set_location(cardbox, 3, 0, 979-956-20+4,58, 58);
     compo_cardbox_icon_set(cardbox, 4, sidebar_get_latest_icon(2));  //图标2
-    compo_cardbox_icon_set_location(cardbox, 4, 260-180, 979-956, 72, 72);
+    compo_cardbox_icon_set_location(cardbox, 4, 260-180, 979-956-20+4, 58, 58);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_LATEST_APP]);    //最近应用
-    compo_cardbox_text_set_location(cardbox, 0, 160-140, 908-956, 300, 40);
+    compo_cardbox_text_set_location(cardbox, 0, 140-140, 908-956, 300, 40);
 
     return frm;
 }
@@ -298,8 +298,8 @@ static void func_clock_sub_sidebar_click_handler(void)
     }
 
     if (func_jump != FUNC_NULL) {
-        func_switch_to(func_jump, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);  //切换动画
-//        func_cb.sta = btn_info.func_jump;  //直接跳转
+//        func_switch_to(func_jump, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);  //切换动画
+        func_cb.sta = func_jump;  //直接跳转
     }
 }
 

@@ -10,9 +10,12 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_style_t_ {
+#define Menu_PAGE_HEIGHT 850//1082    //长图总高度
+#define Menu_STEP_Y         180     //编码器步进距离
 
-} f_style_t;
+typedef struct f_style_t_ {
+    page_tp_move_t *ptm;
+} f_sidebar_t;
 
 char *style_str_list[MENU_STYLE_CNT] = {
     "蜂窝",
@@ -36,6 +39,7 @@ char *style_str_list[MENU_STYLE_CNT] = {
 //创建菜单风格窗体
 compo_form_t *func_style_form_create(void)
 {
+    compo_cardbox_t *cardbox;
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
@@ -43,16 +47,18 @@ compo_form_t *func_style_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_STYLE]);
 
+    cardbox = compo_cardbox_create(frm, 0, 2, 4, GUI_SCREEN_WIDTH-10, 156);
+
 	//创建按键
     compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_MENU_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-
-	compo_textbox_t *txt_style = compo_textbox_create(frm, 8);
-	compo_setid(txt_style, 8);
-    compo_textbox_set_pos(txt_style, GUI_SCREEN_CENTER_X, 230);
-    compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
-
-    func_cb.menu_idx = 0;           //切换风格后进入回中心位置
+//
+//	compo_textbox_t *txt_style = compo_textbox_create(frm, 8);
+//	compo_setid(txt_style, 8);
+//    compo_textbox_set_pos(txt_style, GUI_SCREEN_CENTER_X, 230);
+//    compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
+//
+//    func_cb.menu_idx = 0;           //切换风格后进入回中心位置
 
     return frm;
 }
@@ -76,46 +82,53 @@ static void func_set_sub_list_switch_to_menu(void)
 //菜单风格功能消息处理
 static void func_style_message(size_msg_t msg)
 {
-    compo_textbox_t *txt_style = compo_getobj_byid(8);
+    f_sidebar_t *f_sidebar = (f_sidebar_t *)func_cb.f_cb;
+//    compo_textbox_t *txt_style = compo_getobj_byid(8);
     switch (msg) {
-    case MSG_CTP_CLICK:
-        func_cb.menu_style++;
-        if (func_cb.menu_style >= MENU_STYLE_CNT) {
-            func_cb.menu_style = MENU_STYLE_HONEYCOMB;
-        }
-        TRACE("set_menu_style:%d\n", func_cb.menu_style);
-        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
-        break;
-
-    case MSG_CTP_LONG:
-        break;
-
-    case MSG_CTP_SHORT_UP:
+//    case MSG_CTP_CLICK:
+//        func_cb.menu_style++;
+//        if (func_cb.menu_style >= MENU_STYLE_CNT) {
+//            func_cb.menu_style = MENU_STYLE_HONEYCOMB;
+//        }
+//        TRACE("set_menu_style:%d\n", func_cb.menu_style);
+//        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
+//        break;
+//
+//    case MSG_CTP_LONG:
+//        break;
+//
+//    case MSG_CTP_SHORT_UP:
+//    case MSG_QDEC_FORWARD:
+//        func_cb.menu_style++;
+//        if (func_cb.menu_style >= MENU_STYLE_CNT) {
+//            func_cb.menu_style = MENU_STYLE_HONEYCOMB;
+//        }
+//        TRACE("set_menu_style:%d\n", func_cb.menu_style);
+//        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
+//        break;
+//
+//    case MSG_CTP_SHORT_DOWN:
+//    case MSG_QDEC_BACKWARD:
+//        if (func_cb.menu_style == 0) {
+//            func_cb.menu_style = MENU_STYLE_CNT - 1;
+//        } else {
+//            func_cb.menu_style--;
+//        }
+//        TRACE("set_menu_style:%d\n", func_cb.menu_style);
+//        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
+//        break;
+//
+//
+//    case MSG_CTP_SHORT_RIGHT:
+//        func_set_sub_list_switch_to_menu();
+//        break;
     case MSG_QDEC_FORWARD:
-        func_cb.menu_style++;
-        if (func_cb.menu_style >= MENU_STYLE_CNT) {
-            func_cb.menu_style = MENU_STYLE_HONEYCOMB;
-        }
-        TRACE("set_menu_style:%d\n", func_cb.menu_style);
-        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
+        compo_page_move_set(f_sidebar->ptm, -Menu_STEP_Y);
         break;
 
-    case MSG_CTP_SHORT_DOWN:
     case MSG_QDEC_BACKWARD:
-        if (func_cb.menu_style == 0) {
-            func_cb.menu_style = MENU_STYLE_CNT - 1;
-        } else {
-            func_cb.menu_style--;
-        }
-        TRACE("set_menu_style:%d\n", func_cb.menu_style);
-        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
+        compo_page_move_set(f_sidebar->ptm, Menu_STEP_Y);
         break;
-
-
-    case MSG_CTP_SHORT_RIGHT:
-        func_set_sub_list_switch_to_menu();
-        break;
-
 
     default:
         func_message(msg);
@@ -126,8 +139,22 @@ static void func_style_message(size_msg_t msg)
 //进入菜单风格功能
 static void func_style_enter(void)
 {
-    func_cb.f_cb = func_zalloc(sizeof(f_style_t));
+//    func_cb.f_cb = func_zalloc(sizeof(f_style_t));
+//    func_cb.frm_main = func_style_form_create();
+
+    func_cb.f_cb = func_zalloc(sizeof(f_sidebar_t));
     func_cb.frm_main = func_style_form_create();
+
+    f_sidebar_t *f_sidebar = (f_sidebar_t *)func_cb.f_cb;
+	f_sidebar->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info = {
+        .page_size = Menu_PAGE_HEIGHT,
+        .page_count = 1,
+        .quick_jump_perc = 50,
+        .up_over_perc = 5,
+        .down_over_perc = 5,
+    };
+    compo_page_move_init(f_sidebar->ptm, func_cb.frm_main->page_body, &info);
 }
 
 //退出菜单风格功能

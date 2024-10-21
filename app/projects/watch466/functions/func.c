@@ -697,7 +697,11 @@ void func_back_to(void)
         stack_top = FUNC_CLOCK;                                 //异常返回表盘
     }
 
-    if (stack_top == FUNC_MENU) {
+    if (stack_top == FUNC_MENU
+#if FUNC_MUSIC_EN
+        || func_cb.sta == FUNC_MUSIC
+#endif
+    ) {
         func_switch_to_menu();                                  //返回主菜单
     } else {
         func_switch_to(stack_top, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);    //返回上一个界面
@@ -865,6 +869,10 @@ void func_message(size_msg_t msg)
         if (func_cb.flag_sort) {
             func_switch_to_clock();                     //切换回主时钟
         } else if (func_cb.sta == FUNC_CLOCK) {
+            if(sys_cb.dialplate_btf_ready)
+            {
+                sys_cb.dialplate_btf_ready = false;
+            }
             func_switch_to_menu();                      //退回到主菜单
         } else {
             func_back_to();								//直接退出任务

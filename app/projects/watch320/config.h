@@ -205,7 +205,7 @@
 #define HW_VERSION		                "V0.0.1"   //只能使用数字0-9,ota需要转码
 #define FLASH_PKG_START                 UTE_OTA_TMP_ADDRESS   //升级压缩包存放起始地址
 #define FLASH_PKG_SIZE                  UTE_OTA_TMP_SIZE   //升级压缩包大小
-#define FOTA_UI_EN                      0          //是否支持UI升级，需要用一个批处理打包UI+FOT
+#define FOTA_UI_EN                      1          //是否支持UI升级，需要用一个批处理打包UI+FOT
 
 //HID功能配置
 #define LE_HID_EN                       0   //BLE HID总开关
@@ -247,7 +247,7 @@
 #define BT_SCO_AINS3_LEVEL				xcfg_cb.bt_sco_nr_level	    //0-30级
 
 #define BT_SCO_DNN_EN                   0                           //是否打开自研单麦DNN降噪算法
-#define BT_SCO_DNN_MODEL_SET            1                           //自研单麦DNN模型选择，0：标准模型，1：标准模型+6K
+#define BT_SCO_DNN_MODEL_SET            0                           //自研单麦DNN模型选择，0：标准模型，1：标准模型+6K
 #define	BT_SCO_DNN_MODE                 1                           //DNN模式，模式0，模式1（建议）
 #define BT_SCO_DNN_LEVEL                6                           //降噪量：0-30级
 #define BT_SCO_DNN_WIND_EN              0                           //默认关闭
@@ -434,7 +434,7 @@
 #define LOUDSPEAKER_MUTE()              loudspeaker_mute()
 #define LOUDSPEAKER_UNMUTE()            loudspeaker_unmute()
 #define LOUDSPEAKER_MUTE_PORT           IO_PE0
-#define LOUDSPEAKER_HIGH_MUTE           1           //高电平为MUTE状态
+#define LOUDSPEAKER_HIGH_MUTE           0//1          //高电平为MUTE状态
 #define LOUDSPEAKER_UNMUTE_DELAY        6           //UNMUTE延时配置，单位为5ms
 
 #define AMP_CTRL_AB_D_EN                0           //功放AB/D类控制

@@ -760,7 +760,7 @@ void bsp_sys_init(void)
     //bsp_sensor_pe2_pwr_pg_on();         //需放在IIC初始化之后，未使用外设时注意关闭
     bsp_sensor_step_init();             //步数传感器初始化
     bsp_i2c_init();
-    bsp_sensor_hr_init(0);
+    bsp_sensor_hr_init(5);
 #endif
     bsp_vbat_percent_init();            //放最后电压稍微稳定点
 

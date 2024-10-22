@@ -121,5 +121,14 @@ uint8_t uteModuleSystemTimeLocalTimeGetStatus(void);
 void uteModuleSystemTimeLocalSetDate(uint16_t year,uint8_t month,uint8_t day);
 void uteModuleSystemTimeLocalSetHourMin(uint8_t hour,uint8_t min);
 
+void uteModuleSystemtimeSaveAlarmInfo(ute_module_systemtime_one_alarm_t value,uint8_t index);
+void uteModuleSystemtimeSetAlarm(ute_module_systemtime_one_alarm_t set, uint8_t index);
+void uteModuleSystemtimeGetAlarm(ute_module_systemtime_one_alarm_t *set, uint8_t index);
+void uteModuleSystemtimeDeleteAlarm(uint8_t index);
+void uteModuleSystemtimeSetAlarmDisplayIndex(uint8_t alarmDisplayIndex);
+uint8_t uteModuleSystemtimeGetAlarmDisplayIndex(void);
+void uteModuleSystemtimeSetAlarmTotalCnt(uint8_t alarmTotalCnt);
+uint8_t uteModuleSystemtimeGetAlarmTotalCnt(void);
+
 #endif //_UTE_MODULE_SYSTEMTIME_H_
 

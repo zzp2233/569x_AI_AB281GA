@@ -806,6 +806,60 @@ void uteModuleSystemtimeDeleteAlarm(uint8_t index)
     uteModulePlatformMemoryFree(dirInfo);
 
 }
+
+/**
+*@brief  保存闹钟参数
+*@details
+*@param[in](ute_module_systemtime_one_alarm_t value,uint8_t index)
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+void uteModuleSystemtimeSaveAlarmInfo(ute_module_systemtime_one_alarm_t value,uint8_t index)
+{
+    /*! 保存到文件zn.zeng, 2021-08-21*/
+    void *file;
+    uint8_t writebuff[15];
+    memset(&writebuff[0],0,15);
+    if (index > (SYSTEM_TIME_ALARMS_MAX_CNT - 1))
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index is too max", __func__);
+        return;
+    }
+    memcpy(&systemAlarms.alarmParam[index],&value,sizeof(ute_module_systemtime_one_alarm_t));
+    writebuff[0] = systemAlarms.alarmParam[index].year>>8&0xff;
+    writebuff[1] = systemAlarms.alarmParam[index].year&0xff;
+    writebuff[2] = systemAlarms.alarmParam[index].month;
+    writebuff[3] = systemAlarms.alarmParam[index].day;
+    writebuff[4] = systemAlarms.alarmParam[index].weekDay;
+    writebuff[5] = systemAlarms.alarmParam[index].hour;
+    writebuff[6] = systemAlarms.alarmParam[index].min;
+    writebuff[7] = systemAlarms.alarmParam[index].sec;
+    writebuff[8] = systemAlarms.alarmParam[index].isSingle;
+    writebuff[9] = systemAlarms.alarmParam[index].durationTimeSec;
+    writebuff[10] = systemAlarms.alarmParam[index].isOpen;
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+    writebuff[11] = systemAlarms.alarmParam[index].isRepeatRemindOpen;
+    writebuff[12] = systemAlarms.alarmParam[index].repeatRemindHour;
+    writebuff[13] = systemAlarms.alarmParam[index].repeatRemindMin;
+    writebuff[14] = systemAlarms.alarmParam[index].repeatRemindTimes;
+#endif
+    uint8_t path[20];
+    memset(&path[0],0,20);
+    sprintf((char *)&path[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,index);
+    if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
+    {
+        uteModuleFilesystemWriteData(file,&writebuff[0],15);
+        uteModuleFilesystemCloseFile(file);
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,isSingle=%d,hour=%d,min=%d", __func__,value.isSingle,value.hour,value.min);
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index=%d,weekDay=0x%x,durationTimeSec=%d.isOpen=%d", __func__,index,value.weekDay,value.durationTimeSec,value.isOpen);
+    }
+    ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
+    uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR, dirInfo, NULL);
+    systemAlarms.alarmTotalCnt = dirInfo->filesCnt;
+    uteModulePlatformMemoryFree(dirInfo);
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,alarmTotalCnt = %d", __func__,systemAlarms.alarmTotalCnt);
+}
+
 /**
 *@brief  设置闹钟显示索引
 *@details

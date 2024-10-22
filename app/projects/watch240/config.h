@@ -184,7 +184,7 @@
 #define LE_SM_SC_EN                     1   //是否使能BLE的加密连接，需同时打开LE_PAIR_EN。一键双联需要打开此配置。
 #define LE_ADV_POWERON_EN               1   //是否上电默认打开BLE广播
 #define LE_BQB_RF_EN                    0   //BLE DUT测试模式，使用串口通信（仅用于BQB RFPHY测试）
-#define LE_ALLOW_WKUP_EN                0   //休眠中ble断开/连接/传输是否需要退出休眠
+#define LE_ALLOW_WKUP_EN                1   //休眠中ble断开/连接/传输是否需要退出休眠
 
 //gatt 配置
 #define LE_ATT_NUM                      45  //最大支持多少条gatt属性, att_handle 1 ~ LE_ATT_NUM

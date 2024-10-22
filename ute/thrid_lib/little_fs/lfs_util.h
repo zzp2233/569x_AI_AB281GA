@@ -217,7 +217,8 @@ static inline void *lfs_malloc(size_t size)
 {
 #ifndef LFS_NO_MALLOC
     UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL,"lfs_malloc,size=%d",size);
-    void *pMem = func_zalloc(size);
+    // void *pMem = func_zalloc(size);
+    void *pMem = uteModulePlatformMemoryAlloc(size);
     UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL,"lfs_malloc pMem=%p",pMem);
     return pMem;
 #else
@@ -233,7 +234,8 @@ static inline void lfs_free(void *p)
     UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL,"lfs_free,p=%p",p);
     if(p!=NULL)
     {
-        func_free(p);
+        // func_free(p);
+        uteModulePlatformMemoryFree(p);
         p = NULL;
     }
 #else

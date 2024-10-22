@@ -1,4 +1,6 @@
 #include "include.h"
+#include "ute_project_config.h"
+#include "ute_module_platform.h"
 
 #define TRACE_EN                0
 
@@ -749,6 +751,8 @@ void bsp_sys_init(void)
     sco_audio_init();   //先初始化一遍通话参数
     sco_audio_exit();
 #endif
+
+    uteTaskApplicationInit();
 
     gui_init();
     lang_select(LANG_ZH);

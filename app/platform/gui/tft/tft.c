@@ -1,6 +1,7 @@
 #include "include.h"
 #include "ute_module_platform.h"
 #include "ute_drv_screen_common.h"
+#include "ute_module_gui_common.h"
 
 #define TRACE_EN                1
 
@@ -146,20 +147,27 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
 
     if(!stepless_en)
     {
-        level = level * (100 / 5);
+        level = level * (DEFAULT_BACK_LIGHT_PERCENT_MAX / (DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE));
     }
-    if(100 < level)
+    if(DEFAULT_BACK_LIGHT_PERCENT_MAX < level)
     {
-        level = 100;
+        level = DEFAULT_BACK_LIGHT_PERCENT_MAX;
     }
+    else if (DEFAULT_BACK_LIGHT_PERCENT_MIN > level)
+    {
+        level = DEFAULT_BACK_LIGHT_PERCENT_MIN;
+    }
+    
     duty = base_duty + level;
     tft_cb.tft_bglight_duty = duty;
     if (tft_cb.tft_bglight_last_duty != tft_cb.tft_bglight_duty)
     {
-        // bsp_pwm_freq_set(200);
-        // bsp_pwm_duty_set(PORT_TFT_BL, tft_cb.tft_bglight_duty, false);
-        uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
+        bsp_pwm_freq_set(200);
+        bsp_pwm_duty_set(PORT_TFT_BL, tft_cb.tft_bglight_duty, false);
+        // uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
         tft_cb.tft_bglight_last_duty = tft_cb.tft_bglight_duty;
+        uteModuleGuiCommonSetBackLightPercent(tft_cb.tft_bglight_duty);
+        sys_cb.light_level = tft_cb.tft_bglight_duty / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
     }
 }
 
@@ -175,7 +183,7 @@ void tft_bglight_frist_set_check(void)
     //todo:后续根据客户定制调整
     if(0 == tft_cb.tft_bglight_duty)
     {
-        tft_cb.tft_bglight_duty = 100;
+        tft_cb.tft_bglight_duty = uteModuleGuiCommonGetBackLightPercent();
     }
 #ifdef GUI_USE_TFT
     tft_bglight_set_level(tft_cb.tft_bglight_duty,true);

@@ -9,6 +9,7 @@
 #include "ute_module_log.h"
 #include "ute_application_common.h"
 #include "ute_module_message.h"
+#include "include.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_heart.h"
@@ -745,10 +746,8 @@ void uteApplicationCommonReadConfig(void)
     uteApplicationCommonData.isHasConnectOurApp = readbuff[0];
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isHasConnectOurApp=%d", __func__,uteApplicationCommonData.isHasConnectOurApp);
     // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,end time=%d", __func__,uteModulePlatformGetSystemTick());
-
-    /*nfc开关，用于显示，无实际控制功能 ldl 2023-08-30*/
-    uteApplicationCommonReadNfcSwitch();
 }
+
 /**
 *@brief  保存个人信息
 *@details
@@ -972,11 +971,11 @@ void uteApplicationCommonSyncDataTimerMsg(void)
         uteApplicationCommonData.isSynchronizingData = false;
         return;
     }
-    // if (!uteModulePlatformIsAllowBleSend())
-    // {
-    //     uteModulePlatformRestartTimer(&uteApplicationCommonSyncDataTimer, UTE_SEND_DATA_TO_PHONE_INVTERVAL);
-    //     return;
-    // }
+    if (is_le_buff_full(2))
+    {
+        uteModulePlatformRestartTimer(&uteApplicationCommonSyncDataTimer, UTE_SEND_DATA_TO_PHONE_INVTERVAL);
+        return;
+    }
     if(!uteApplicationCommonData.isSyncTimerRunning)
     {
         return;
@@ -1772,65 +1771,4 @@ void uteApplicationCommonSetAncsConnStatus(bool isConnected)
 bool uteApplicationCommonGetAncsConnStatus(void)
 {
     return uteApplicationCommonData.isAncsConnected;
-}
-/**
-*@brief        读取NFC开关状态
-*@details
-*@author       ldl
-*@date       2023-08-30
-*/
-void uteApplicationCommonReadNfcSwitch(void)
-{
-    // void *file;
-    // uint8_t readbuff[1];
-    // memset(readbuff,0,1);
-    // /*! 显示参数zn.zeng, 2021-08-20  */
-    // readbuff[0] = DEFAULT_NFC_SWITCH_OPEN;
-    // if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_NFC_SWITCH,&file,FS_O_RDONLY))
-    // {
-    //     uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
-    //     uteModuleFilesystemReadData(file,&readbuff[0],1);
-    //     uteModuleFilesystemCloseFile(file);
-    // }
-    // uteApplicationCommonData.nfcSwitchOpen= readbuff[0];
-}
-/**
-*@brief        保存NFC开关状态
-*@details
-*@author       ldl
-*@date       2023-08-30
-*/
-void uteApplicationCommonSaveNfcSwitch(void)
-{
-    /*! 保存到文件zn.zeng, 2021-08-19  */
-    void *file;
-    uint8_t writebuff[1];
-    memset(writebuff,0,1);
-    writebuff[0] = uteApplicationCommonData.nfcSwitchOpen;
-    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_NFC_SWITCH,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
-    {
-        uteModuleFilesystemWriteData(file,&writebuff[0],1);
-        uteModuleFilesystemCloseFile(file);
-    }
-}
-/**
- *@brief  设置NFC开关状态
-*@details
-*@author       ldl
-*@date       2023-08-30
-*/
-void uteApplicationCommonSetNfcSwitch(bool isNfcOpen)
-{
-    uteApplicationCommonData.nfcSwitchOpen = isNfcOpen;
-    uteApplicationCommonSaveNfcSwitch();
-}
-/**
- *@brief  获取NFC开关状态
-*@details
-*@author       ldl
-*@date       2023-08-30
-*/
-bool uteApplicationCommonGetNfcSwitch(void)
-{
-    return uteApplicationCommonData.nfcSwitchOpen;
 }

@@ -18,6 +18,7 @@
 #include "tft.h"
 #include "port_tft.h"
 #include "config_extra.h"
+#include "ute_module_mem.h"
 
 #define __STATIC_INLINE  static __inline
 
@@ -247,6 +248,7 @@ void uteModulePlatformRtcSetTime(uint16_t year,uint8_t month,uint8_t day,uint8_t
 *@date        Jun 29, 2021
 */
 void uteModulePlatformCalibrationSystemTimer(void);
+#if !UTE_MODULE_USER_MALLOC_SUPPORT 
 /**
 *@brief   动态申请内存
 *@details
@@ -261,6 +263,7 @@ void *uteModulePlatformMemoryAlloc(size_t size);
 *@date        2021-08-23
 */
 void uteModulePlatformMemoryFree(void * p);
+#endif
 /**
 *@brief   设置gpio输出
 *@details
@@ -286,6 +289,13 @@ void uteModulePlatformScreenQspiInit(void);
 *@date     2021-10-12
 */
 void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len);
+/**
+*@brief   qspi 读命令
+*@details
+*@author         zn.zeng
+*@date     2021-10-12
+*/
+void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,uint8_t dummyClockByte);
 /**
 *@brief   qspi 写gram数据
 *@details

@@ -441,7 +441,10 @@ bool sleep_process(is_sleep_func is_sleep)
             return false;
         }
         if (sys_cb.sleep_delay == 0) {
-            sfunc_sleep();              //熄屏且进入休眠
+            if(sys_cb.guioff_delay == 0) /*! 亮屏时不休眠,wang.luo 2024-10-21 */
+            {
+                sfunc_sleep();              //熄屏且进入休眠                
+            }
             reset_sleep_delay_all();
             reset_pwroff_delay();
             return true;

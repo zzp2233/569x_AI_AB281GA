@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_clock.h"
+#include "ute_module_gui_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -578,6 +579,7 @@ static void func_clock_message(size_msg_t msg)
 //进入时钟表盘功能
 static void func_clock_enter(void)
 {
+    uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX) {

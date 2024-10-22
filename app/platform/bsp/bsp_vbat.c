@@ -54,7 +54,7 @@ u16 bsp_vbat_get_voltage(u32 rst_flag)
 void bsp_vbat_voltage_init(void)
 {
     sys_cb.vbat = bsp_vbat_get_voltage(1);
-    sys_cb.vbat_percent = 0xff;
+    // sys_cb.vbat_percent = 0xff;
 }
 
 int bsp_vbat_get_lpwr_status(void)
@@ -124,7 +124,10 @@ void bsp_vbat_lpwr_process(void)
 */
 static const u16 vbat_percent_table[11] = {
 //   0%    10%   20%   30%   40%   50%   60%   70%   80%   90%   100%
-    3450, 3500, 3550, 3600, 3650, 3700, 3750, 3800, 3850, 3902,  4050
+    UTE_DRV_BATTERY_000, UTE_DRV_BATTERY_010, UTE_DRV_BATTERY_020, 
+    UTE_DRV_BATTERY_030, UTE_DRV_BATTERY_040, UTE_DRV_BATTERY_050, 
+    UTE_DRV_BATTERY_060, UTE_DRV_BATTERY_070, UTE_DRV_BATTERY_080,
+    UTE_DRV_BATTERY_090, UTE_DRV_BATTERY_100
 };
 
 

@@ -25,6 +25,8 @@
 
 /*! 系统时间参数 */
 ute_module_systemtime_time_t systemTime;
+/*! 系统闹钟参数 */
+static ute_module_systemtime_alarm_t systemAlarms;
 /*! 注册每秒回调函数数据结构zn.zeng, 2021-07-12  */
 ute_module_systemtime_register_t systemTimeRegisterData;
 
@@ -48,6 +50,7 @@ void uteModuleSystemtimeInit(void)
     uteModulePlatformCreateMutex(&uteModuleSystemtimeMute);
     uteModulePlatformRtcInit();
     uteModulePlatformRtcStart();
+    uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR);
     uteModuleSystemtimeReadConfig();
     memset(&systemTimeRegisterData,0,sizeof(ute_module_systemtime_register_t));
 }
@@ -710,5 +713,141 @@ void uteModuleSystemTimeLocalSetHourMin(uint8_t hour,uint8_t min)
     set.hour  = hour;
     set.min = min;
     uteModuleSystemtimeSetTime(set);
+}
+
+/**
+*@brief  设置闹钟
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        Jun 29, 2021
+*/
+
+void uteModuleSystemtimeSetAlarm(ute_module_systemtime_one_alarm_t set, uint8_t index)
+{
+    if (index > (SYSTEM_TIME_ALARMS_MAX_CNT - 1))
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index is too max", __func__);
+        return;
+    }
+    uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
+    memcpy(&systemAlarms.alarmParam[index], &set, sizeof(ute_module_systemtime_one_alarm_t));
+    uteModuleSystemtimeSaveAlarmInfo(systemAlarms.alarmParam[index],index);
+    uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
+}
+/**
+*@brief  获取闹钟
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+void uteModuleSystemtimeGetAlarm(ute_module_systemtime_one_alarm_t *set, uint8_t index)
+{
+    if (index > (SYSTEM_TIME_ALARMS_MAX_CNT - 1))
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index is too max", __func__);
+        return;
+    }
+    uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
+    memcpy(set,&systemAlarms.alarmParam[index], sizeof(ute_module_systemtime_one_alarm_t));
+    uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
+}
+/**
+*@brief  删除闹钟
+*@details
+*@param[in] uint8_t index 所需要删除的闹钟序号，从0开始
+*@author       dengli.lu
+*@date        2021-11-29
+*/
+void uteModuleSystemtimeDeleteAlarm(uint8_t index)
+{
+    if (index > (SYSTEM_TIME_ALARMS_MAX_CNT - 1))
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index is too max", __func__);
+        return;
+    }
+    uint8_t beforeTotalCnt = systemAlarms.alarmTotalCnt;
+    uint8_t path[20];
+    memset(&path[0],0,20);
+    sprintf((char *)&path[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,index);
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index = %d,beforeTotalCnt=%d", __func__,index,beforeTotalCnt);
+    systemAlarms.alarmParam[index].isFinish = false;
+    uteModuleFilesystemDelFile(&path[0]);
+    ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
+    uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR, dirInfo, NULL);
+    if((index+1)<beforeTotalCnt)//删除最后一个，不需要重新命名
+    {
+        uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
+        for(uint8_t i = index+1; i <beforeTotalCnt ; i++)
+        {
+            uint8_t oldPath[20],newPath[20];
+            memset(&oldPath[0],0,20);
+            memset(&newPath[0],0,20);
+            sprintf((char *)&oldPath[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,i);
+            sprintf((char *)&newPath[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,i-1);
+            UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,oldPath=%s,newPath=%s", __func__,oldPath,newPath);
+            uteModuleFilesystemRenameFile(oldPath,newPath);
+            memcpy(&systemAlarms.alarmParam[i-1],&systemAlarms.alarmParam[i],sizeof(ute_module_systemtime_one_alarm_t));
+        }
+        uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
+    }
+    systemAlarms.alarmTotalCnt = dirInfo->filesCnt;
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,alarmTotalCnt = %d", __func__,systemAlarms.alarmTotalCnt);
+#if (UTE_LOG_TIME_LVL&&UTE_MODULE_LOG_SUPPORT)
+    for(uint8_t i = 0; i <systemAlarms.alarmTotalCnt ; i++)
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,hour=%d,min = %d", __func__,systemAlarms.alarmParam[i].hour,systemAlarms.alarmParam[i].min);
+    }
+    uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR, dirInfo, NULL);
+#endif
+    uteModulePlatformMemoryFree(dirInfo);
+
+}
+/**
+*@brief  设置闹钟显示索引
+*@details
+*@param[in] uint8_t index 所需要设置的闹钟索引1~8
+*@author       dengli.lu
+*@date        2021-11-29
+*/
+void uteModuleSystemtimeSetAlarmDisplayIndex(uint8_t alarmDisplayIndex)
+{
+    systemAlarms.alarmDisplayIndex = alarmDisplayIndex;
+}
+/**
+*@brief  获取闹钟显示索引
+*@details
+*@return  闹钟索引1~8
+*@author       dengli.lu
+*@date        2021-11-29
+*/
+uint8_t uteModuleSystemtimeGetAlarmDisplayIndex(void)
+{
+    return systemAlarms.alarmDisplayIndex;
+}
+/**
+*@brief  设置当前闹钟数量
+*@details
+*@param[in] uint8_t index 所需要设置的闹钟数量1~8
+*@author       dengli.lu
+*@date        2021-11-29
+*/
+void uteModuleSystemtimeSetAlarmTotalCnt(uint8_t alarmTotalCnt)
+{
+    systemAlarms.alarmTotalCnt = alarmTotalCnt;
+}
+/**
+*@brief  获取闹钟数量
+*@details
+*@return  闹钟索引1~8
+*@author       dengli.lu
+*@date        2021-11-29
+*/
+uint8_t uteModuleSystemtimeGetAlarmTotalCnt(void)
+{
+    return systemAlarms.alarmTotalCnt;
 }
 

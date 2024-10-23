@@ -47,12 +47,16 @@ void *uteModuleSystemtimeMute;
 
 void uteModuleSystemtimeInit(void)
 {
+    memset(&systemAlarms, 0, sizeof(ute_module_systemtime_alarm_t));
+    systemAlarms.isRemindingIndex = 0xff;
+
     uteModulePlatformCreateMutex(&uteModuleSystemtimeMute);
     uteModulePlatformRtcInit();
     uteModulePlatformRtcStart();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR);
     uteModuleSystemtimeReadConfig();
     memset(&systemTimeRegisterData,0,sizeof(ute_module_systemtime_register_t));
+
 }
 
 /**
@@ -69,6 +73,44 @@ void uteModuleSystemtimeReadConfig(void)
     memset(&readbuff[0],0,15);
     char path[20];
     memset(&path[0],0,20);
+    systemAlarms.alarmTotalCnt = 0;
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+    readbuff[11] = ALARM_REPEAT_REMIND_DEFAULT_OPEN;
+    readbuff[12] = 0;
+    readbuff[13] = 0;
+    readbuff[14] = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
+#endif
+    for(uint8_t i=0; i<SYSTEM_TIME_ALARMS_MAX_CNT; i++)
+    {
+        sprintf((char *)&path[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,i);
+        memset(&systemAlarms.alarmParam[i],0,sizeof(ute_module_systemtime_one_alarm_t));
+        if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_RDONLY))
+        {
+            uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+            uteModuleFilesystemReadData(file,&readbuff[0],15);
+            uteModuleFilesystemCloseFile(file);
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].year = readbuff[0]<<8|readbuff[1];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].month = readbuff[2];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].day = readbuff[3];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].weekDay = readbuff[4];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].hour = readbuff[5];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].min = readbuff[6];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].sec = readbuff[7];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].isSingle = readbuff[8];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].durationTimeSec = readbuff[9];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].isOpen = readbuff[10];
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].isRepeatRemindOpen = readbuff[11];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].repeatRemindHour = readbuff[12];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].repeatRemindMin = readbuff[13];
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].repeatRemindTimes = readbuff[14];
+#endif
+            systemAlarms.alarmParam[systemAlarms.alarmTotalCnt].isFinish = true;
+            UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,i=%d.weekDay = 0x%02x,.hour = %d,.min = %d,.isOpen=%d", __func__,i,systemAlarms.alarmParam[i].weekDay,systemAlarms.alarmParam[i].hour,systemAlarms.alarmParam[i].min,systemAlarms.alarmParam[i].isOpen);
+            systemAlarms.alarmTotalCnt++;
+        }
+    }
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,readAlarmTotalCnt = %d", __func__,systemAlarms.alarmTotalCnt);
 
     /*! 时间格式，当设置语言 zn.zeng, 2021-08-18  */
     readbuff[0] = DEFAULT_SYSTEM_TIME_FORMAT_MI;
@@ -736,6 +778,7 @@ void uteModuleSystemtimeSetAlarm(ute_module_systemtime_one_alarm_t set, uint8_t 
     uteModuleSystemtimeSaveAlarmInfo(systemAlarms.alarmParam[index],index);
     uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
 }
+
 /**
 *@brief  获取闹钟
 *@details
@@ -755,6 +798,8 @@ void uteModuleSystemtimeGetAlarm(ute_module_systemtime_one_alarm_t *set, uint8_t
     memcpy(set,&systemAlarms.alarmParam[index], sizeof(ute_module_systemtime_one_alarm_t));
     uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
 }
+
+
 /**
 *@brief  删除闹钟
 *@details
@@ -905,3 +950,179 @@ uint8_t uteModuleSystemtimeGetAlarmTotalCnt(void)
     return systemAlarms.alarmTotalCnt;
 }
 
+
+///适配中科平台接口（闹钟）
+
+/**
+*@brief  使能闹钟
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        Jun 29, 2021
+*/
+
+void uteModuleSystemtimeEnableAlarm(uint8_t index, bool en)
+{
+    if (index > (SYSTEM_TIME_ALARMS_MAX_CNT - 1))
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index is too max", __func__);
+        return;
+    }
+    uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
+    systemAlarms.alarmParam[index].isOpen = en;
+    uteModuleSystemtimeSaveAlarmInfo(systemAlarms.alarmParam[index],index);
+    uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
+}
+
+/**
+*@brief  获取闹钟设置的小时
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+
+uint8_t uteModuleSystemtimeGetAlarmHour(uint8_t index)
+{
+    ute_module_systemtime_one_alarm_t alarm;
+    uteModuleSystemtimeGetAlarm(&alarm, index);
+    return alarm.hour;
+}
+
+/**
+*@brief  获取闹钟设置的分钟
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+
+uint8_t uteModuleSystemtimeGetAlarmMin(uint8_t index)
+{
+    ute_module_systemtime_one_alarm_t alarm;
+    uteModuleSystemtimeGetAlarm(&alarm, index);
+    return alarm.min;
+}
+
+/**
+*@brief  获取闹钟设置的秒
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+
+uint8_t uteModuleSystemtimeGetAlarmSec(uint8_t index)
+{
+    ute_module_systemtime_one_alarm_t alarm;
+    uteModuleSystemtimeGetAlarm(&alarm, index);
+    return alarm.sec;
+}
+
+/**
+*@brief  获取闹钟设置的提醒周期
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+
+uint8_t uteModuleSystemtimeGetAlarmCycle(uint8_t index)
+{
+    uint8_t ret = 0;
+    ute_module_systemtime_one_alarm_t alarm;
+    uteModuleSystemtimeGetAlarm(&alarm, index);
+
+    ret |= alarm.weekDay;
+
+    if (alarm.isSingle) {
+        ret |= BIT(7);
+    } else {
+        ret &= ~BIT(7);
+    }
+
+    return ret;
+}
+
+/**
+*@brief  获取闹钟是否使能
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+
+uint8_t uteModuleSystemtimeGetAlarmEnableState(uint8_t index)
+{
+    ute_module_systemtime_one_alarm_t alarm;
+    uteModuleSystemtimeGetAlarm(&alarm, index);
+    return alarm.isOpen;
+}
+
+/**
+*@brief  获取闹钟可以设置的最大数量
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+
+uint8_t uteModuleSystemtimeGetAlarmMaxCnt(void)
+{
+    return SYSTEM_TIME_ALARMS_MAX_CNT;
+}
+
+/**
+*@brief  获取闹钟是否空闲
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+uint8_t uteModuleSystemtimeGetAlarmIsFree(uint8_t index)
+{
+    return (index < uteModuleSystemtimeGetAlarmMaxCnt()) && (index >= uteModuleSystemtimeGetAlarmTotalCnt());
+}
+
+/**
+*@brief  编辑闹钟
+*@details
+*@param[in] ute_module_systemtime_one_alarm_t *set  传入要设置闹钟参数的指针
+*@param[in] uint8_t index 所需要设置的闹钟序号，从0开始
+*@author        zn.zeng
+*@date        2021-08-21
+*/
+uint8_t uteModuleSystemtimeAlarmEdit(uint8_t index, bool enable, uint8_t cycle, uint8_t alarm_hour, uint8_t alarm_minute, uint8_t motor_mode, uint8_t remind_later)
+{
+
+    ute_module_systemtime_one_alarm_t set = {0};
+
+    set.isOpen = enable;
+    set.weekDay = cycle & (~BIT(7));
+    set.isSingle = (cycle & BIT(7)) ? true : false;
+    set.hour = alarm_hour;
+    set.min = alarm_minute;
+    set.sec = 0;
+
+//    uteModuleSystemtimeSetAlarmTotalCnt(uteModuleSystemtimeGetAlarmTotalCnt()+1);
+    uteModuleSystemtimeSetAlarm(set, index);
+    return 0;
+}
+
+uint8_t uteModuleSystemtimeGetAlarmRingIndex(void)
+{
+    return systemAlarms.isRemindingIndex;
+}
+
+void uteModuleSystemtimeSetAlarmRingIndex(uint8_t index)
+{
+    systemAlarms.isRemindingIndex = index;
+}

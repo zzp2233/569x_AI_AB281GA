@@ -28,6 +28,7 @@ extern void func_alarm_clock(void);
 extern void func_alarm_clock_sub_set(void);
 extern void func_alarm_clock_sub_repeat(void);
 extern void func_alarm_clock_sub_edit(void);
+extern void func_alarm_clock_sub_pop(void);
 extern void func_disturd_sub_set(void);
 extern void func_blood_oxygen(void);
 extern void func_breathe(void);
@@ -111,6 +112,7 @@ compo_form_t *func_alarm_clock_form_create(void);
 compo_form_t *func_alarm_clock_sub_set_form_create(void);
 compo_form_t *func_alarm_clock_sub_repeat_form_create(void);
 compo_form_t *func_alarm_clock_sub_edit_form_create(void);
+compo_form_t *func_alarm_clock_sub_pop_form_create(void);
 compo_form_t *func_blood_oxygen_form_create(void);
 compo_form_t *func_breathe_form_create(void);
 compo_form_t *func_calculator_form_create(void);
@@ -197,6 +199,7 @@ const func_t tbl_func_create[] = {
     {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set_form_create},
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat_form_create},
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit_form_create},
+    {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop_form_create},
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
     {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
@@ -283,6 +286,7 @@ const func_t tbl_func_entry[] = {
     {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set},      //闹钟--设置
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat},   //闹钟--重复
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
+    {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop},      //闹钟--弹出
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
     {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
@@ -396,14 +400,20 @@ void func_watch_bt_process(void)
 #else
     } else if (bt_cb.disp_status == BT_STA_INCOMING) {
 #endif
-        func_cb.sta = FUNC_BT_RING;
+        if (func_cb.sta != FUNC_BT_RING) {
+            func_cb.sta = FUNC_BT_RING;
+            msg_enqueue(EVT_MSGBOX_EXIT);
+        }
 
 #if BT_VOIP_REJECT_EN
     } else if (bt_cb.disp_status >= BT_STA_OUTGOING && bt_cb.call_type == CALL_TYPE_PHONE) {
 #else
     } else if (bt_cb.disp_status >= BT_STA_OUTGOING) {
 #endif
-        func_cb.sta = FUNC_BT_CALL;
+        if (func_cb.sta != FUNC_BT_CALL) {
+            func_cb.sta = FUNC_BT_CALL;
+            msg_enqueue(EVT_MSGBOX_EXIT);
+        }
     }
 #endif
 }
@@ -449,6 +459,18 @@ void func_process(void)
     if (sleep_process(bt_is_allow_sleep)) {
         bt_cb.disp_status = 0xff;
     }
+
+    if (sys_cb.remind_tag) { //闹钟响起
+        sys_cb.remind_tag = false;
+        gui_cover_msg_enqueue(sys_cb.cover_index);
+        printf(">>>REMIND POP\n");
+    }
+
+//    if (sys_cb.msg_tag) { //有消息弹出
+//        sys_cb.msg_tag = false;
+//        app_msg_pop_up();
+//        printf(">>>MSG POP\n");
+//    }
 
 #if VBAT_DETECT_EN
     bsp_vbat_lpwr_process();
@@ -958,6 +980,14 @@ void func_message(size_msg_t msg)
             bt_hfp_report_bat();
 #endif
             break;
+
+        case EVT_WATCH_SET_COVER:
+            gui_set_cover_index(sys_cb.cover_index);
+            break;
+
+//        case EVT_WATCH_MSG_POP_UP:
+//            app_ab_msg_pop_up();
+//            break;
 
         default:
             evt_message(msg);

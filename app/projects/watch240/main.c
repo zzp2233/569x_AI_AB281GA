@@ -23,7 +23,7 @@ const u8 tbl_despi_clk1[] = {
     [SYS_132M] = 3,         //33M
     [SYS_144M] = 3,         //36M
     [SYS_176M] = 4,         //35M
-    [SYS_192M] = 4,         //38M
+    [SYS_192M] = 6,         //38M
 };
 const u8 tbl_despi_clk2[] = {
     [SYS_88M] = 2,          //29.3M

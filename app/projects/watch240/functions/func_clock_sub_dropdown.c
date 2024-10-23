@@ -260,6 +260,11 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
     case MSG_QDEC_FORWARD:
         printf("MSG_QDEC_FORWARD\n");
         break;
+
+    case EVT_CLOCK_DROPDOWN_EXIT:
+        f_clk->sta = FUNC_CLOCK_MAIN;                       //返回到时钟主界面
+        break;
+
     default:
         func_clock_sub_message(msg);
         break;

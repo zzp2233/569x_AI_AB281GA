@@ -823,6 +823,9 @@
 		<Unit filename="functions/func_alarm_clock_sub_edit.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_alarm_clock_sub_pop.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_alarm_clock_sub_repeat.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -921,6 +924,10 @@
 		<Unit filename="functions/func_compo_select_sub.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_cover.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_cover.h" />
 		<Unit filename="functions/func_debug_info.c">
 			<Option compilerVar="CC" />
 		</Unit>

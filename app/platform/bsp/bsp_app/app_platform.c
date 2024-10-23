@@ -80,6 +80,8 @@ bool ute_alarm_check(tm_t *now_time)
                 goto __err;
             }
         }
+
+        goto __err;
 __exit:
         uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
         return true;
@@ -121,9 +123,6 @@ void ute_remind_check_1s_pro(co_timer_t *timer, void *param)
         TRACE("date_now[%d.%d.%d week%d]\n", tm_now.year, tm_now.mon, tm_now.day, tm_now.weekday);
         minute_bkp = tm_now.min;
         if (((uteModuleSystemtimeGetAlarmTotalCnt()) && ute_alarm_check(&tm_now))) { //|| interval_remind_check(&tm_now)) {   //闹钟提醒 //|| 健康提醒
-            printf("******************Alarm RING\n");
-            //开启马达 喇叭
-
             sys_cb.remind_tag = true;
         }
     }

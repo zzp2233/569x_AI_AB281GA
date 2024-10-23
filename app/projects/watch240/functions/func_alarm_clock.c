@@ -80,7 +80,6 @@ compo_form_t *func_alarm_clock_form_create(void)
     char str_buff[32];
     compo_cardbox_t *cardbox;
     if (ALARM_ENABLE_CNT()) {
-        printf("============= ALARM_ENABLE_CNT=%d\n", ALARM_ENABLE_CNT());
         for(u8 i=0; i<ALARM_ENABLE_CNT(); i++) {
             cardbox = compo_cardbox_create(frm, 1, 1, 2, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);

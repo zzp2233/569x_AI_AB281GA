@@ -105,6 +105,7 @@ void gui_set_cover_index(uint8_t index)
                 } else {
                     snprintf(title, sizeof(title), "%02d:%02d", alarm_p->hour, alarm_p->min);
                 }
+                //开启马达 喇叭
             }
 //            else if (sys_cb.cover_index == COVER_HEALTH_DRINK || sys_cb.cover_index == COVER_HEALTH_SEDENTARY) {
 //                tm_t tm = time_to_tm(RTCCNT);
@@ -115,8 +116,8 @@ void gui_set_cover_index(uint8_t index)
 
         int res = msgbox(msg, title, mode, MSGBOX_MSG_TYPE_COVER);
 
-        //稍后提醒
-        if (res == MSGBOX_RES_REMIND_LATER) {
+
+        if (res == MSGBOX_RES_REMIND_LATER) {       //稍后提醒
             if (sys_cb.cover_index == COVER_ALARM) {
                 printf("COVER_ALARM MSGBOX_RES_REMIND_LATER\n");
                 //开启配置贪睡时钟 参数
@@ -139,34 +140,26 @@ void gui_set_cover_index(uint8_t index)
                     uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                     printf("repeat alarm[%d] ring, [%02d:%02d]\n", uteModuleSystemtimeGetAlarmRingIndex(), alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
                 }
-
                 //关闭 喇叭 马达
-
            }
-        } else {
-            if (sys_cb.cover_index == COVER_ALARM) {
-                alarm_p->isRepeatRemindOpen = false;
-                uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
-            }
-        }
-
-        //强制退出弹窗
-        if (res == MSGBOX_RES_EXIT) {
+        } else if (res == MSGBOX_RES_EXIT) {               //强制退出弹窗
             if (sys_cb.cover_index == COVER_ALARM) {
                 printf("COVER_ALARM MSGBOX_RES_EXIT\n");
                 //关闭 喇叭 马达
 
             }
-        }
-
-        //提醒界面超时退出
-        if (res == MSGBOX_RES_TIMEOUT_EXIT) {
+        } else if (res == MSGBOX_RES_TIMEOUT_EXIT) {        //提醒界面超时退出
             if (sys_cb.cover_index == COVER_ALARM) {
                 printf("COVER_ALARM MSGBOX_RES_TIMEOUT_EXIT\n");
                 //关闭 喇叭 马达
             }
+        } else {
+            if (sys_cb.cover_index == COVER_ALARM) {
+                alarm_p->isRepeatRemindOpen = false;
+                uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+                //关闭 喇叭 马达
+            }
         }
-
 
     }
 }

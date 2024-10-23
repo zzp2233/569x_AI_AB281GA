@@ -42,7 +42,13 @@ u8 task_stack_pop(void);
  * @brief 获取栈顶
  * @return 栈顶的值
  **/
-u8 gui_get_stack_top(void);
+u8 task_stack_get_top(void);
+
+/**
+ * @brief 获取栈顶前一个任务值
+ * @return 栈顶前一个任务值
+ **/
+u8 task_stack_get_last(void);
 
 
 ///----------------------最近任务列表----------------------

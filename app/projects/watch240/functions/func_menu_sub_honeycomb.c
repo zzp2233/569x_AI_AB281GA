@@ -62,6 +62,7 @@ const menu_hc_item_t tbl_menu_honeycomb[] = {
     {UI_BUF_ICON_HEART_RATE_BIN,                FUNC_HEARTRATE},
     {UI_BUF_ICON_ACTIVITY_BIN,                  FUNC_ACTIVITY},
     {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_BLOOD_OXYGEN},
+    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},//压力
     {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
     {UI_BUF_ICON_BREATHE_BIN,                   FUNC_BREATHE},
     {UI_BUF_ICON_MUSIC_BIN,                     FUNC_BT},
@@ -545,11 +546,23 @@ static void func_menu_sub_honeycomb_enter(void)
     }
 }
 
+//typedef struct area_t_ {
+//    s16 wid;
+//    s16 hei;
+//} area_t;
+
 //主菜单功能
 void func_menu_sub_honeycomb(void)
 {
+   area_t area_ts;
+
     printf("%s\n", __func__);
     func_menu_sub_honeycomb_enter();
+
+     area_ts = gui_image_get_size(UI_BUF_ICON_BLOOD_OXYGEN_BIN);
+
+    printf("wid:%d   hei:%d ",area_ts.wid,area_ts.hei);
+
     while (func_cb.sta == FUNC_MENU
            && (func_cb.menu_style == MENU_STYLE_HONEYCOMB || func_cb.menu_style == MENU_STYLE_CUM_HONEYGRID)) {
         func_menu_sub_honeycomb_process();

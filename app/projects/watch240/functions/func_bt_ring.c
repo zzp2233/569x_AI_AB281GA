@@ -29,7 +29,7 @@ compo_form_t *func_bt_ring_form_create(void)
     compo_button_t *btn;
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50, GUI_SCREEN_WIDTH, 50);
+     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
@@ -37,12 +37,12 @@ compo_form_t *func_bt_ring_form_create(void)
     //接听
     btn = compo_button_create_by_image(frm, UI_BUF_CALL_ANSWER_BIN);
     compo_setid(btn, COMPO_ID_BTN_ANSWER);
-    compo_button_set_pos(btn, 250, 279);
+    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/1.28, GUI_SCREEN_HEIGHT/1.37);
 
     //挂断
     btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, 70, 279);
+    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4.57, GUI_SCREEN_HEIGHT/1.37);
 
     return frm;
 }

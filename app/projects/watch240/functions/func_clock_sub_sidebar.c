@@ -377,6 +377,7 @@ static void func_clock_sub_sidebar_enter(void)
 static void func_clock_sub_sidebar_exit(void)
 {
     f_sidebar_t *f_sidebar = (f_sidebar_t *)func_cb.f_cb;
+    func_cb.last = FUNC_SIDEBAR;
     if (f_sidebar->ptm) {
         func_free(f_sidebar->ptm);
     }

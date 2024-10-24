@@ -5,7 +5,7 @@
         <add key="func_music_en" value="True" />
         <add key="func_aux_en" value="True" />
         <add key="func_fmrx_en" value="True" />
-        <add key="powkey_10s_reset" value="False" />
+        <add key="powkey_10s_reset" value="True" />
         <add key="spk_mute_en" value="False" />
         <add key="spk_mute_io_sel" value="0" />
         <add key="high_mute" value="True" />
@@ -13,7 +13,7 @@
         <add key="ampabd_type" value="独立IO电平控制" />
         <add key="ampabd_io_sel" value="0" />
         <add key="earphone_det_iosel" value="0" />
-        <add key="sys_sleep_time" value="0" />
+        <add key="sys_sleep_time" value="5" />
         <add key="sys_off_time" value="0" />
         <add key="lowpower_warning_en" value="True" />
         <add key="lpwr_warning_vbat" value="3.4V" />
@@ -47,7 +47,7 @@
         <add key="charge_full_bled" value="0" />
         <add key="bt_name" value="BT-AB569X" />
         <add key="bt_addr_mode" value="固定地址" />
-        <add key="bt_addr" value="41:42:00:00:00:01" />
+        <add key="bt_addr" value="78:02:B7:00:44:55" />
         <add key="bt_addr_start" value="41:42:00:00:00:00" />
         <add key="bt_addr_step" value="00:00:00:00:00:01" />
         <add key="bt_addr_end" value="41:42:FF:FF:FF:FF" />
@@ -63,7 +63,7 @@
         <add key="bt_a2dp_vol_ctrl_en" value="True" />
         <add key="bt_sco_en" value="True" />
         <add key="bt_hfp_private_en" value="False" />
-        <add key="bt_hfp_ring_number_en" value="True" />
+        <add key="bt_hfp_ring_number_en" value="False" />
         <add key="bt_hfp_play_ios_ring_en" value="False" />
         <add key="bt_spp_en" value="False" />
         <add key="bt_hid_en" value="False" />
@@ -77,9 +77,9 @@
         <add key="tws_sel_left_gpio_sel" value="0" />
         <add key="bt_tws_name_suffix_en" value="False" />
         <add key="ble_en" value="True" />
-        <add key="le_name" value="LE-AB569X" />
+        <add key="le_name" value="" />
         <add key="bt_ch_mic" value="MIC_PF2" />
-        <add key="mic_bias_method" value="0" />
+        <add key="mic_bias_method" value="2" />
         <add key="mic_bias_resistor" value="3" />
         <add key="bt_anl_gain" value="6" />
         <add key="bt_dig_gain" value="26" />

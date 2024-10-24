@@ -226,6 +226,7 @@ static void sfunc_sleep(void)
     u8 sta = dac_dnr_get_sta();
     dac_dnr_set_sta(0);
 #endif
+    bsp_loudspeaker_mute();
     dac_power_off();                            //dac power down
 
     sys_set_tmr_enable(0, 0);
@@ -351,6 +352,16 @@ static void sfunc_sleep(void)
             break;
 		}
 
+        //ute add
+        if(uteModulePlatformNotAllowSleep())
+        {
+            if (uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN)
+            {
+                gui_need_wkp = true;
+            }
+            printf("ute_wakeup\n");
+            break;
+        }
     }
 
     RTCCON9 = BIT(7) | BIT(5) | BIT(2);         //clr port, bt, wko wakeup pending
@@ -443,6 +454,15 @@ bool sleep_process(is_sleep_func is_sleep)
 #endif
     if ((*is_sleep)()) {
         if (!sys_cb.sleep_en) {
+            reset_sleep_delay_all();
+            return false;
+        }
+        if(uteModulePlatformNotAllowSleep()) //ute add
+        {
+            if ((uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN) && sys_cb.gui_sleep_sta)
+            {
+                gui_wakeup();
+            }
             reset_sleep_delay_all();
             return false;
         }

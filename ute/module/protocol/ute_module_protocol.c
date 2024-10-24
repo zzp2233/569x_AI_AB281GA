@@ -15,6 +15,8 @@
 #include "ute_module_profile_ble.h"
 #include "ute_module_filesystem.h"
 #include "ute_module_gui_common.h"
+#include "ute_module_call.h"
+#include "ute_drv_motor.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -291,7 +293,7 @@ void uteModuleProtocolFactoryReset(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
 {
-#if 0
+#if 1
 
     if (length>=8)
     {
@@ -312,9 +314,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                 else
                 {
 #if !UTE_MODULE_FIND_WRISTAWAKE_SCREEN_SUPPORT
-                    ute_task_gui_message_t msg;
-                    msg.type = MSG_TYPE_HNAD_SCREEN_ON_NOTIFY;
-                    uteTaskGuiSendMsg(&msg);
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HNAD_SCREEN_ON_NOTIFY, 0);
 #endif
                 }
 
@@ -2051,7 +2051,7 @@ void uteModuleProtocolFromPhone(uint8_t *receive,uint8_t length,bool isPublic)
     }
     else
     {
-        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,error index is 0", __func__);
+        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,error index is 0 ---> 0x%x", __func__, receive[0]);
     }
 }
 /**

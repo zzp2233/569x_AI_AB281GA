@@ -34,6 +34,8 @@ typedef struct msg_cb_t_ {
     bool flag_animation;
     bool flag_entering;
     u32 exit_tick;
+
+    char msg_type;
 } msg_cb_t;
 
 //创建对话框窗体
@@ -275,7 +277,13 @@ static void msgbox_message(size_msg_t msg)
     case MSG_CTP_CLICK:
         printf("MSG_CTP_CLICK\n");
         if (!msg_cb->flag_animation) {
-            msgbox_button_click();                         //单击按钮
+            if (msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF) {
+                msg_cb->res = MSGBOX_RES_ENTER_DETAIL_MSG;
+                msg_cb->flag_animation = true;
+                msg_cb->flag_entering = false;
+            } else {
+                msgbox_button_click();                         //单击按钮
+            }
         }
         break;
 
@@ -371,6 +379,7 @@ int msgbox(char *msg, char *title, char* time, int mode, char msg_type)
     msg_cb_t *msg_cb;
     msgbox_enter(msgbox_frm_create(msg, title, time, mode, msg_type));
     msg_cb = func_cb.msg_cb;
+    msg_cb->msg_type = msg_type;
     while (msg_cb->show) {
         msgbox_message(msg_dequeue());
         msgbox_process();

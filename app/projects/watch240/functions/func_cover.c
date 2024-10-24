@@ -222,11 +222,12 @@ void app_ute_msg_pop_up(uint8_t index)
         char *msg = "测试测试信息测试测试信息测试测试信息测试测试信息";//(char *)&ble_msg->msg_content[ble_msg->msg_show_num];
         char *title = "姓名";//(char *)&ble_msg->msg_title[ble_msg->msg_show_num];
         char *time = "2024-2-23 14:00";
-//        int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
         int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
-    //    if (res == MSGBOX_RES_DELETE) {
-    //        //TODO: delete msg
-    //    }
+        if (res == MSGBOX_RES_ENTER_DETAIL_MSG) {       //点击进入详细消息弹窗
+            //TODO: delete msg
+            printf("enter MSGBOX_RES_ENTER_DETAIL_MSG\n");
+            int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
+        }
 
     }
 }

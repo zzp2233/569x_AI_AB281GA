@@ -21,6 +21,7 @@ enum {
     MSGBOX_RES_DELETE,      //删除
     MSGBOX_RES_REMIND_LATER,//稍后提醒
     MSGBOX_RES_EXIT,        //关闭弹窗
+    MSGBOX_RES_ENTER_DETAIL_MSG,  //进入详细消息弹窗
     MSGBOX_RES_TIMEOUT_EXIT,      //闹钟提醒弹窗超时退出
 
 };

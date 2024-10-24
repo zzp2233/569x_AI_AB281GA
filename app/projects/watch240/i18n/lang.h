@@ -199,6 +199,15 @@ enum {
     STR_BLE_MAC,
     STR_SYS_VERSION,
     STR_NULL,
+
+    STR_SOOTHING,
+    STR_SLOW,
+    STR_FASTER,
+
+    STR_OK,
+    STR_MINUTE,
+    STR_SETTING_MODE,
+
 };
 
 extern const char * const *i18n;

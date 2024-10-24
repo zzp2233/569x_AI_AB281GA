@@ -12,8 +12,11 @@
 #include "ute_module_message.h"
 #include "ute_task_application.h"
 #include "ute_module_systemtime.h"
+#include "ute_module_call.h"
 
 ute_module_platform_adv_data_t uteModulePlatformAdvData;
+
+static uint32_t uteModulePlatformDlpsBit = 0;AT(.sleep_text.ute_sleep_bit)
 
 /**
 *@brief   us延时函数
@@ -550,6 +553,7 @@ uint32_t uteModulePlatformGetSystemTick(void)
 {
     return uteModulePlatformSystemTickCnt;
 }
+#if !UTE_MODULE_USER_MALLOC_SUPPORT
 /**
 *@brief   动态申请内存
 *@details
@@ -558,7 +562,7 @@ uint32_t uteModulePlatformGetSystemTick(void)
 */
 void *uteModulePlatformMemoryAlloc(size_t size)
 {
-    return func_zalloc(size);
+    return ab_calloc(size);
 }
 /**
 *@brief   释放动态申请的内存
@@ -570,9 +574,10 @@ void uteModulePlatformMemoryFree(void * p)
 {
     if (p != NULL)
     {
-        func_free(p);
+        ab_free(p);
     }
 }
+#endif
 /**
 *@brief   设置gpio输出
 *@details
@@ -678,17 +683,9 @@ void uteModulePlatformScreenQspiInit(void)
     GPIOACLR  =  BIT(4);
     GPIOADIR &= ~BIT(4);
 
-#if (GUI_MODE_SELECT == MODE_4WIRE_8BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
-    GPIOAFEN |= BIT(2);                         // D0
-    GPIOADE  |= BIT(2);
-    GPIOADIR |= BIT(2);
-
-    DC_ENABLE();
-#else
     GPIOAFEN |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));  // D0/D1/D2/D3
     GPIOADE  |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
     GPIOADIR |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
-#endif
 
     FUNCMCON2 = BIT(28);
 
@@ -715,19 +712,11 @@ void uteModulePlatformScreenQspiInit(void)
 
     tft_set_temode(DEFAULT_TE_MODE);
 
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
+
     sys_irq_init(IRQ_DESPI_VECTOR, 0, tft_spi_isr);
 
-#if (GUI_SELECT == GUI_TFT_SPI)
-    DESPICON = BIT(27) | BIT(7) | BIT(0);                                           //[28:27]IN RGB565, [7]IE, [3:2]1BIT in, 1BIT out, [0]EN
-#if (GUI_MODE_SELECT == MODE_3WIRE_9BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
-    DESPICON |= BIT(18);                                                            //[18]3w-9b despi mode enable
-#elif (GUI_MODE_SELECT == MODE_QSPI)
-    DESPICON |= BIT(9) | BIT(3) | BIT(2);                                           //[9]MultiBit, [3:2]4BIT
-#endif
-
-#else
-    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2]4BIT, [0]EN
-#endif
+    DESPIBAUD = tft_cb.despi_baud;
 }
 /**
 *@brief   qspi 写命令
@@ -746,6 +735,41 @@ void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len)
         tft_spi_sendbyte(buf[i]);
     }
 }
+
+/**
+*@brief   qspi 读命令
+*@details
+*@author         zn.zeng
+*@date     2021-10-12
+*/
+void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,uint8_t dummyClockByte)
+{
+    DESPIBAUD = 15;
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+    delay_us(1);
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
+
+    DESPICON &= ~BIT(3);                        //1BIT
+
+    tft_spi_sendbyte(0x03);
+    tft_spi_sendbyte(0x00);
+    tft_spi_sendbyte(cmd);
+    tft_spi_sendbyte(0x00);
+
+    for(uint32_t i=0; i<dummyClockByte; i++)
+    {
+        delay_us(1);
+        tft_spi_getbyte();
+    }
+    for(uint32_t i=0; i<len; i++)
+    {
+        delay_us(1);
+        buf[i] = tft_spi_getbyte();
+    }
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+    DESPIBAUD = tft_cb.despi_baud;
+}
+
 /**
 *@brief   Qspi 写gram数据
 *@details
@@ -917,7 +941,7 @@ void uteModulePlatformScreenDspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,u
 */
 void uteModulePlatformPwmInit(pwm_gpio id,uint8_t pinNum,uint8_t duty,uint32_t rateHz)
 {
-    bsp_pwm_freq_set(rateHz);
+    bsp_pwm_freq_set(rateHz); /*! 使用多路pwm时，平台不支持设置频率，会影响其他路,wang.luo 2024-10-23 */
     bsp_pwm_duty_set(id,duty,false);
 }
 /**
@@ -1269,6 +1293,11 @@ void uteModulePlatformUpdateDevName(void)
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,name =%s,size=%d", __func__, name,size);
     uteModulePlatformAdvDataModifySub(false, 0x09, name, size, ADV_REPLACE);
     ble_set_gap_name((char *)name,size);
+#if UTE_BT30_CALL_SUPPORT
+#if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
+    uteModuleCallSetBtDevName(name,size);
+#endif
+#endif
 }
 
 /**
@@ -1328,4 +1357,59 @@ void uteModulePlatformAdvDataInit(void)
     uteModulePlatformAdvDataModifySub(true, 0xff, mac, 6, ADV_APPEND);
 
     uteModulePlatformUpdateDevName();
+}
+
+/**
+*@brief   使能休眠
+*@details
+*@param[in] uint32_t bit ,功能位
+*@author        zn.zeng
+*@date        2021-10-16
+*/
+AT(.sleep_text.ute_sleep_ctrl)
+void uteModulePlatformDlpsEnable(uint32_t bit)
+{
+    uint32_t lastDlpsBit = uteModulePlatformDlpsBit;
+    uteModulePlatformDlpsBit &= ~bit;
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,bit:%04x %04x --> %04x",__func__,bit,lastDlpsBit,uteModulePlatformDlpsBit);
+}
+/**
+*@brief   关闭休眠
+*@details
+*@param[in] uint32_t bit ,功能位
+*@author        zn.zeng
+*@date        2021-10-16
+*/
+AT(.sleep_text.ute_sleep_ctrl)
+void uteModulePlatformDlpsDisable(uint32_t bit)
+{
+    uint32_t lastDlpsBit = uteModulePlatformDlpsBit;
+    uteModulePlatformDlpsBit |= bit;
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,bit:%04x %04x --> %04x",__func__,bit,lastDlpsBit,uteModulePlatformDlpsBit);
+}
+
+/**
+ * @brief        是否允许休眠
+ * @details
+ * @return       true:允许休眠，false:不允许休眠
+ * @author       Wang.Luo
+ * @date         2024-10-23
+ */
+AT(.sleep_text.ute_sleep_ctrl)
+uint32_t uteModulePlatformNotAllowSleep(void)
+{
+    return uteModulePlatformDlpsBit;
+}
+
+/**
+ * @brief        重置休眠位
+ * @details
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2024-10-23
+ */
+AT(.sleep_text.ute_sleep_ctrl)
+void uteModulePlatformDlpsBitReset(void)
+{
+    uteModulePlatformDlpsBit = 0;
 }

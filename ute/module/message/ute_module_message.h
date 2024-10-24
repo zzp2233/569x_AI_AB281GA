@@ -24,6 +24,11 @@ enum
     TO_APP_TASK_MSG_UPDATE_ADV_DATA,
     TO_APP_TASK_MSG_UPDATE_DEV_NAME,
     TO_APP_TASK_MSG_STOP_ADV,
+    MSG_TYPE_DRV_MOTOR_START,
+    MSG_TYPE_DRV_MOTOR_STOP,
+    MSG_TYPE_DRV_MOTOR_HANDLE_TIMER,
+    MSG_TYPE_HNAD_SCREEN_ON_NOTIFY,
+    MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY,
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

@@ -239,10 +239,5 @@ void uteApplicationCommonRestart(void);
 void uteApplicationCommonSetAncsConnStatus(bool isConnected);
 bool uteApplicationCommonGetAncsConnStatus(void);
 
-void uteApplicationCommonReadNfcSwitch(void);
-void uteApplicationCommonSaveNfcSwitch(void);
-void uteApplicationCommonSetNfcSwitch(bool isNfcOpen);
-bool uteApplicationCommonGetNfcSwitch(void);
-
 #endif //_UTE_APPLICATION_COMMON_H_
 

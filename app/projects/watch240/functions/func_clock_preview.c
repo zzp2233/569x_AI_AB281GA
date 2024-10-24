@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_gui_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -370,6 +371,7 @@ static void func_clock_preview_message(size_msg_t msg)
     switch (msg) {
     case KU_BACK:
         sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
+        uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
         break;
     default:
         break;
@@ -383,6 +385,7 @@ static void func_clock_preview_message(size_msg_t msg)
     case MSG_CTP_CLICK:
         sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
         compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
+        uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
         break;
 
     default:

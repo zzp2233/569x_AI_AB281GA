@@ -197,4 +197,12 @@ const char * const i18n_zh[] = {
     [STR_SYS_VERSION]                   = "系统版本",
     [STR_NULL]                          = " ",
 
+    [STR_SOOTHING]                      = "舒缓",
+    [STR_SLOW]                          = "缓慢",
+    [STR_FASTER]                        = "稍快",
+
+    [STR_OK]                            = "确定",
+    [STR_MINUTE]                        = "分钟",
+    [STR_SETTING_MODE]                  = "模式设置",
+
 };

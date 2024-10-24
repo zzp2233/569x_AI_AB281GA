@@ -34,12 +34,14 @@ static void func_map_process(void)
 {
     func_process();
 }
-
+#include "func_cover.h"
 //地图功能消息处理
 static void func_map_message(size_msg_t msg)
 {
     switch (msg) {
     case MSG_CTP_CLICK:
+        sys_cb.msg_index = MSG_COVER_WECHAT;
+        sys_cb.msg_tag = true;
         break;
 
     case MSG_CTP_SHORT_UP:

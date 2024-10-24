@@ -1,4 +1,5 @@
 #include "sl_watch_application.h"
+#include "ute_module_message.h"
 #include "include.h"
 
 #if  (SENSOR_STEP_SEL == SENSOR_STEP_SC7A20)
@@ -252,6 +253,16 @@ unsigned int  SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_ALGO(void)     //SL_SC7A20_PE
 			/*******get wrist value******/
 			SL_WRIST= SL_Watch_Wrist_Algo();
             // printf("SL_WRIST:%d\n", SL_WRIST);
+			
+			if(SL_WRIST == 1)
+			{
+				uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HNAD_SCREEN_ON_NOTIFY,0);
+			}
+			else if(SL_WRIST == 2)
+			{
+				uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY,0);
+			}
+
 			SL_TWICE_WRIST=SL_Turn_Wrist_Twice_Status();
 
 			/*******get overturn value******/

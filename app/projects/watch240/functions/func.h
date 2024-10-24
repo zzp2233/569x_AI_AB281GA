@@ -37,6 +37,7 @@ enum {
     FUNC_ALARM_CLOCK_SUB_SET,			//闹钟--设置
     FUNC_ALARM_CLOCK_SUB_REPEAT,		//闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,		    //闹钟--编辑
+    FUNC_ALARM_CLOCK_SUB_POP,		    //闹钟--弹出
     FUNC_BLOOD_OXYGEN,			        //血氧
     FUNC_PRESSURE,			            //压力
     FUNC_PRESSURE_EXPLAIN,              //压力说明
@@ -44,6 +45,8 @@ enum {
     FUNC_BLOODSUGAR,                    //血糖
     FUNC_BLOOD_PRESSURE,                //血压
     FUNC_BREATHE,				        //呼吸
+    FUNC_BREATHE_SUB_MODE,              //呼吸--模式设置
+    FUNC_BREATHE_SUB_TIME,              //呼吸--时间设置
     FUNC_CALCULATOR,			        //计算器
     FUNC_CAMERA,				        //相机
     FUNC_LIGHT,					        //亮度调节

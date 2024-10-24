@@ -9,6 +9,9 @@
 #include "ute_module_log.h"
 #include "ute_application_common.h"
 #include "ute_module_message.h"
+#include "ute_module_call.h"
+#include "include.h"
+#include "ute_drv_motor.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_heart.h"
@@ -24,7 +27,6 @@
 #include "ute_module_breathrate.h"
 #include "ute_module_screens_common.h"
 #include "ute_task_gui.h"
-#include "ute_drv_motor.h"
 #include "ute_drv_battery_common.h"
 #include "ute_module_gui_common.h"
 #include "ute_module_sleep.h"
@@ -106,6 +108,7 @@ void *uteApplicationCommonSyncDataTimer = NULL;
 void uteApplicationCommonStartupFrist(void)
 {
     uteModulePlatformCreateMutex(&uteApplicationCommonMute);
+    uteModulePlatformDlpsBitReset();
     memset(&uteApplicationCommonData,0,sizeof(ute_application_common_data_t));
     uteApplicationCommonData.isStartupFristFinish = false;
     uteApplicationCommonData.isStartupSecondFinish = false;
@@ -167,7 +170,7 @@ void uteApplicationCommonStartupSecond(void)
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
         uteApplicationCommonData.isStartupFristFinish = true;
         //其他硬件初始化
-        //uteDrvMotorInit();
+        uteDrvMotorInit();
         //uteModulePlatformQdecInit();
 #if UTE_USER_ID_FOR_BINDING_SUPPORT||UTE_MODULE_SCREENS_APP_BINDING_SUPPORT
         uteModuleAppBindingInit();
@@ -228,7 +231,7 @@ void uteApplicationCommonStartupSecond(void)
         //uteModuleSportInit();
         //uteModuleNotifyInit();
         //uteModuleSleepInit();
-        //uteModuleCallInit();
+        uteModuleCallInit();
         //uteModuleOtaInit();
         //uteModuleMusicInit();
         //uteModuleStopWatchInit();
@@ -373,7 +376,7 @@ void uteApplicationCommonStartupSecond(void)
             uteModuleMotorSetIsOpenVibrationStatus(true);
         }
 #endif
-        // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         uteApplicationCommonData.isStartupSecondFinish = true;
         uteApplicationCommonData.isPowerOn = true;
         uteApplicationCommonData.systemPowerOnSecond = 0;
@@ -745,10 +748,8 @@ void uteApplicationCommonReadConfig(void)
     uteApplicationCommonData.isHasConnectOurApp = readbuff[0];
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isHasConnectOurApp=%d", __func__,uteApplicationCommonData.isHasConnectOurApp);
     // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,end time=%d", __func__,uteModulePlatformGetSystemTick());
-
-    /*nfc开关，用于显示，无实际控制功能 ldl 2023-08-30*/
-    uteApplicationCommonReadNfcSwitch();
 }
+
 /**
 *@brief  保存个人信息
 *@details
@@ -887,7 +888,7 @@ void uteApplicationCommonRealPowerOffMsg(void)
     uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);
     uteModuleCallIsBtAutoCloseSaveConfig();
 #endif
-    // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     // uteModulePlatformSetFastAdvertisingTimeCnt(0);
 
 #if UTE_MODULE_SHIP_MODE_SUPPORT
@@ -972,11 +973,11 @@ void uteApplicationCommonSyncDataTimerMsg(void)
         uteApplicationCommonData.isSynchronizingData = false;
         return;
     }
-    // if (!uteModulePlatformIsAllowBleSend())
-    // {
-    //     uteModulePlatformRestartTimer(&uteApplicationCommonSyncDataTimer, UTE_SEND_DATA_TO_PHONE_INVTERVAL);
-    //     return;
-    // }
+    if (is_le_buff_full(2))
+    {
+        uteModulePlatformRestartTimer(&uteApplicationCommonSyncDataTimer, UTE_SEND_DATA_TO_PHONE_INVTERVAL);
+        return;
+    }
     if(!uteApplicationCommonData.isSyncTimerRunning)
     {
         return;
@@ -1772,65 +1773,4 @@ void uteApplicationCommonSetAncsConnStatus(bool isConnected)
 bool uteApplicationCommonGetAncsConnStatus(void)
 {
     return uteApplicationCommonData.isAncsConnected;
-}
-/**
-*@brief        读取NFC开关状态
-*@details
-*@author       ldl
-*@date       2023-08-30
-*/
-void uteApplicationCommonReadNfcSwitch(void)
-{
-    // void *file;
-    // uint8_t readbuff[1];
-    // memset(readbuff,0,1);
-    // /*! 显示参数zn.zeng, 2021-08-20  */
-    // readbuff[0] = DEFAULT_NFC_SWITCH_OPEN;
-    // if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_NFC_SWITCH,&file,FS_O_RDONLY))
-    // {
-    //     uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
-    //     uteModuleFilesystemReadData(file,&readbuff[0],1);
-    //     uteModuleFilesystemCloseFile(file);
-    // }
-    // uteApplicationCommonData.nfcSwitchOpen= readbuff[0];
-}
-/**
-*@brief        保存NFC开关状态
-*@details
-*@author       ldl
-*@date       2023-08-30
-*/
-void uteApplicationCommonSaveNfcSwitch(void)
-{
-    /*! 保存到文件zn.zeng, 2021-08-19  */
-    void *file;
-    uint8_t writebuff[1];
-    memset(writebuff,0,1);
-    writebuff[0] = uteApplicationCommonData.nfcSwitchOpen;
-    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_NFC_SWITCH,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
-    {
-        uteModuleFilesystemWriteData(file,&writebuff[0],1);
-        uteModuleFilesystemCloseFile(file);
-    }
-}
-/**
- *@brief  设置NFC开关状态
-*@details
-*@author       ldl
-*@date       2023-08-30
-*/
-void uteApplicationCommonSetNfcSwitch(bool isNfcOpen)
-{
-    uteApplicationCommonData.nfcSwitchOpen = isNfcOpen;
-    uteApplicationCommonSaveNfcSwitch();
-}
-/**
- *@brief  获取NFC开关状态
-*@details
-*@author       ldl
-*@date       2023-08-30
-*/
-bool uteApplicationCommonGetNfcSwitch(void)
-{
-    return uteApplicationCommonData.nfcSwitchOpen;
 }

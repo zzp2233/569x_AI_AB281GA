@@ -72,6 +72,7 @@ const menu_hc_item_t tbl_menu_waterfall[] = {
     {UI_BUF_ICON_BREATHE_BIN,                   FUNC_BREATHE},
     {UI_BUF_ICON_MUSIC_BIN,                     FUNC_BT},
     {UI_BUF_ICON_CALL_BIN,                      FUNC_CALL},
+    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},//压力
 
     {UI_BUF_ICON_MENU_BIN,                      FUNC_STYLE},
 //    {UI_BUF_ICON_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},

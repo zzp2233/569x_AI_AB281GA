@@ -33,7 +33,9 @@ const static func_item_info_t func_item_tbl[] = {
     {FUNC_TIMER,	                UI_BUF_ICON_TIMER_BIN,                      STR_TIMER},                 //定时器
     {FUNC_SLEEP,	                UI_BUF_ICON_SLEEP_BIN,                      STR_SLEEP},                 //睡眠
     {FUNC_STOPWATCH,	            UI_BUF_ICON_STOPWATCH_BIN,                  STR_STOP_WATCH},            //秒表
-    {FUNC_WEATHER,	                UI_BUF_ICON_WEATHER_BIN,                    STR_WEATHER},               //天气
+    {FUNC_WEATHER,	                UI_BUF_ICON_WEATHER_BIN,                    STR_PRESSURE},              //天气
+    {FUNC_BLOOD_PRESSURE,	        UI_BUF_ICON_WEATHER_BIN,                    STR_WEATHER},               //压力
+
     {FUNC_GAME,                     UI_BUF_ICON_GAME_BIN,                       STR_GAME},                  //游戏
     {FUNC_ALTITUDE,                 UI_BUF_ICON_ALTITUDE_BIN,                   STR_ALTITUDE},              //海拔
     {FUNC_MAP,                      UI_BUF_ICON_MAP_BIN,                        STR_MAP},                   //地图

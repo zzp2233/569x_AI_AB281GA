@@ -91,7 +91,7 @@ extern void func_bt_call(void);
 extern void func_bthid(void);
 extern void func_usbdev(void);
 extern void func_aux(void);
-extern void func_smartstack(void);
+//extern void func_smartstack(void);
 extern void func_modem_call(void);
 extern void func_modem_ring(void);
 extern void func_message_reply_info(void);
@@ -100,7 +100,13 @@ extern void func_tetris(void);
 extern void func_tetris_start(void);
 extern void func_bird(void);
 extern void func_ota_ui(void);
+extern void func_pressure(void);//压力
+extern void func_pressure_explain(void);//压力说明
+extern void func_long_press(void);//关机 重启 SOS
 
+compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
+compo_form_t *func_pressure_explain_form_create(void);//压力说明
+compo_form_t *func_pressure_form_create(void);//压力
 compo_form_t *func_menu_form_create(void);
 compo_form_t *func_clock_form_create(void);
 compo_form_t *func_clock_sub_sidebar_form_create(void);
@@ -166,12 +172,12 @@ compo_form_t *func_clock_preview_form_create(void);
 compo_form_t *func_compo_select_form_create(void);
 compo_form_t *func_compo_select_sub_form_create(void);
 compo_form_t *func_debug_info_form_create(void);
-compo_form_t * func_smartstack_form_create(void);
+//compo_form_t * func_smartstack_form_create(void);
 compo_form_t *func_music_form_create(void);
 compo_form_t *func_usbdev_form_create(void);
 compo_form_t *func_recorder_form_create(void);
 compo_form_t *func_message_reply_form_create(void);
-compo_form_t * func_mic_test_form_create(void);
+compo_form_t *func_mic_test_form_create(void);
 compo_form_t *func_tetris_form_create(void);
 compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
@@ -198,6 +204,9 @@ const func_t tbl_func_create[] = {
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat_form_create},
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit_form_create},
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
+    {FUNC_PRESSURE,                     func_pressure_form_create},//压力
+    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain_form_create},//压力说明
+    {FUNC_LONG_PRESS,                   func_long_press_form_create},//关机 重启 SOS
     {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
     {FUNC_BREATHE,                      func_breathe_form_create},
@@ -249,7 +258,7 @@ const func_t tbl_func_create[] = {
     {FUNC_SET_SUB_OFF,                  func_set_sub_off_form_create},
     {FUNC_CHARGE,                       func_charge_form_create},
     {FUNC_DEBUG_INFO,                   func_debug_info_form_create},
-    {FUNC_SMARTSTACK,                   func_smartstack_form_create},
+  //  {FUNC_SMARTSTACK,                   func_smartstack_form_create},
 #if FUNC_MUSIC_EN
     {FUNC_MUSIC,                        func_music_form_create},
 #endif
@@ -284,6 +293,9 @@ const func_t tbl_func_entry[] = {
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat},   //闹钟--重复
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
+    {FUNC_PRESSURE,                     func_pressure},                 //压力
+    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
+    {FUNC_LONG_PRESS,                   func_long_press},               //关机 重启 SOS界面
     {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
@@ -337,7 +349,7 @@ const func_t tbl_func_entry[] = {
     {FUNC_SET_SUB_OFF,                  func_set_sub_off},              //设置--关机
     {FUNC_CHARGE,                       func_charge},                   //充电
     {FUNC_DEBUG_INFO,                   func_debug_info},               //DEBUG
-    {FUNC_SMARTSTACK,                   func_smartstack},               //智能堆栈
+   // {FUNC_SMARTSTACK,                   func_smartstack},               //智能堆栈
 #if FUNC_BT_EN
     {FUNC_BT,                           func_bt},
     {FUNC_BT_RING,                      func_bt_ring},
@@ -918,7 +930,8 @@ void func_message(size_msg_t msg)
                     compo_form_destroy(f_clk->sub_frm);     //下拉界面存在双窗体
                 }
             }
-            func_switch_to(FUNC_SMARTSTACK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            //func_switch_to(FUNC_SMARTSTACK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
             break;
 
 

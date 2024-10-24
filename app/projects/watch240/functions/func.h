@@ -38,6 +38,9 @@ enum {
     FUNC_ALARM_CLOCK_SUB_REPEAT,		//闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,		    //闹钟--编辑
     FUNC_BLOOD_OXYGEN,			        //血氧
+    FUNC_PRESSURE,			            //压力
+    FUNC_PRESSURE_EXPLAIN,              //压力说明
+    FUNC_LONG_PRESS,                    //关机 重启 SOS
     FUNC_BLOODSUGAR,                    //血糖
     FUNC_BLOOD_PRESSURE,                //血压
     FUNC_BREATHE,				        //呼吸
@@ -122,9 +125,9 @@ enum {
 
     FUNC_MAX_NUM,           //用于计数
 
-    FUNC_BIRD,          
-    FUNC_TETRIS,          
-    FUNC_TETRIS_START,           
+    FUNC_BIRD,
+    FUNC_TETRIS,
+    FUNC_TETRIS_START,
 };
 
 //task control block

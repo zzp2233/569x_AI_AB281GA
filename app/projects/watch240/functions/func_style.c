@@ -10,36 +10,54 @@
 #define TRACE(...)
 #endif
 
-#define Menu_PAGE_HEIGHT 850//1082    //长图总高度
-#define Menu_STEP_Y         180     //编码器步进距离
+
+#define SET_LIST_CNT                       ((int)(sizeof(tbl_style_list) / sizeof(tbl_style_list[0])))
+
+u8 func_menu_sub_skyrer_get_first_idx(void);
+
+enum {
+    COMPO_ID_LISTBOX = 1,
+};
+
+//风格列表tbl
+static const compo_listbox_item_t tbl_style_list[] = {
+    {STR_STYLE_SUDOKU_1,        UI_BUF_STYLE_01_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //九宫格
+    //{STR_STYLE_SUDOKU_2,        UI_BUF_STYLE_02_BIN,           .menu_style = MENU_STYLE_SUDOKU_HRZ},       //九宫格(横向)
+    {STR_STYLE_SUDOKU_3,        UI_BUF_STYLE_09_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //九宫格(缩放)
+    {STR_STYLE_DISK,            UI_BUF_STYLE_13_BIN,           .menu_style = MENU_STYLE_DISK},             //圆盘
+    {STR_STYLE_GRID_1,          UI_BUF_STYLE_02_BIN,           .menu_style = MENU_STYLE_GRID},             //网格
+    {STR_STYLE_GRID_2,          UI_BUF_STYLE_07_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格(缩放)
+    {STR_STYLE_HEXAGON,         UI_BUF_STYLE_05_BIN,           .menu_style = MENU_STYLE_CUM_HEXAGON},      //六边形
+    {STR_STYLE_HONEYCOMB,       UI_BUF_STYLE_03_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_STYLE_KALEIDOSCOPE,    UI_BUF_STYLE_06_BIN,           .menu_style = MENU_STYLE_KALE},             //万花筒
+    {STR_STYLE_LIST_1,          UI_BUF_STYLE_08_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
+    {STR_STYLE_LIST_2,          UI_BUF_STYLE_11_BIN,           .menu_style = MENU_STYLE_CUM_FOURGRID},     //四宫格
+    {STR_STYLE_RING,            UI_BUF_STYLE_10_BIN,           .menu_style = MENU_STYLE_RING},             //环形
+    {STR_STYLE_SKYRER,          UI_BUF_STYLE_04_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+    {STR_STYLE_WATERFALL,       UI_BUF_STYLE_12_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+    {STR_FOOTBALL,              UI_BUF_STYLE_14_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //足球
+};
 
 typedef struct f_style_t_ {
-    page_tp_move_t *ptm;
-} f_sidebar_t;
+    compo_listbox_t *listbox;
+    u8 sel_idx;
+    bool flags;
+} f_style_t;
 
-char *style_str_list[MENU_STYLE_CNT] = {
-    "蜂窝",
-    "瀑布流",
-    "列表",
-    "足球",
-    "九宫格",
-    "九宫格（横向）",
-    "网格",
-    "圆盘",
-    "环形",
-    "万花筒",
-    "天圆地方",
-    "九宫格(边缘缩放)",
-    "网格(边缘缩放)",
-    "六边型",
-    "列表(四宫格)",
-    "网格蜂窝",
-};
+
+u8 func_sel_style_bit(uint n)
+{
+    //TRACE("%s -> [%d,%d]\n", __func__, n, func_cb.menu_style);
+    if (func_cb.menu_style == n) {
+        return true;
+    }
+
+    return false;
+}
 
 //创建菜单风格窗体
 compo_form_t *func_style_form_create(void)
 {
-    compo_cardbox_t *cardbox;
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
@@ -47,87 +65,105 @@ compo_form_t *func_style_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_STYLE]);
 
-    cardbox = compo_cardbox_create(frm, 0, 2, 4, GUI_SCREEN_WIDTH-10, 156);
+    //新建菜单选择列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_style_list, SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_COMPO_SELECT_ADD_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bithook(listbox, func_sel_style_bit);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
 
-	//创建按键
-    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_MENU_BIN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-//
-//	compo_textbox_t *txt_style = compo_textbox_create(frm, 8);
-//	compo_setid(txt_style, 8);
-//    compo_textbox_set_pos(txt_style, GUI_SCREEN_CENTER_X, 230);
-//    compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
-//
-//    func_cb.menu_idx = 0;           //切换风格后进入回中心位置
+    uint8_t set_idx = sys_cb.set_idx;
+    if (set_idx < 1) {
+        set_idx = 1;
+    }
+
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
 
     return frm;
 }
 
+//点进图标进入对应的菜单风格
+static void func_set_sub_list_icon_click(void)
+{
+    int icon_idx;
+    f_style_t *f_set = (f_style_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+    u8 menu_style;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT) {
+        return;
+    }
+
+    //根据图标索引获取应用ID
+    menu_style = tbl_style_list[icon_idx].menu_style;
+
+    //切换风格
+    if (menu_style >= 0) {
+        func_cb.menu_style = menu_style;
+        if (func_cb.menu_style == MENU_STYLE_SKYRER) {
+            func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+        } else {
+            func_cb.menu_idx = 0;           //切换风格后进入回中心位置
+        }
+        sys_cb.set_idx = listbox->focus_icon_idx;
+    }
+}
+
+//切换到设置时钟页面
+static void func_set_sub_list_switch_to_clock(void)
+{
+    u8 func_sta = FUNC_CLOCK;
+    f_style_t *f_set = (f_style_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+    widget_icon_t *icon = compo_listbox_select_byidx(listbox, 0);
+    compo_form_t *frm = func_create_form(func_sta);
+    func_switching(FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO, icon);
+    compo_form_destroy(frm);
+    func_cb.sta = func_sta;
+    sys_cb.set_idx = 0;
+}
+
+
 //菜单风格功能事件处理
 static void func_style_process(void)
 {
+    f_style_t *f_set = (f_style_t *)func_cb.f_cb;
+    compo_listbox_move(f_set->listbox);
+    compo_listbox_update(f_set->listbox);
     func_process();
-}
-
-//切换到设置菜单页面
-static void func_set_sub_list_switch_to_menu(void)
-{
-    u8 func_sta = FUNC_MENU;
-    compo_form_t *frm = func_create_form(func_sta);
-    func_switching(FUNC_SWITCH_ZOOM_FADE_EXIT /*| FUNC_SWITCH_AUTO*/, NULL);
-    compo_form_destroy(frm);
-    func_cb.sta = func_sta;
 }
 
 //菜单风格功能消息处理
 static void func_style_message(size_msg_t msg)
 {
-    f_sidebar_t *f_sidebar = (f_sidebar_t *)func_cb.f_cb;
-//    compo_textbox_t *txt_style = compo_getobj_byid(8);
+    f_style_t *f_set = (f_style_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+
+    if (compo_listbox_message(listbox, msg)) {
+        return;                                         //处理列表框信息
+    }
+
     switch (msg) {
-//    case MSG_CTP_CLICK:
-//        func_cb.menu_style++;
-//        if (func_cb.menu_style >= MENU_STYLE_CNT) {
-//            func_cb.menu_style = MENU_STYLE_HONEYCOMB;
-//        }
-//        TRACE("set_menu_style:%d\n", func_cb.menu_style);
-//        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
-//        break;
-//
-//    case MSG_CTP_LONG:
-//        break;
-//
-//    case MSG_CTP_SHORT_UP:
-//    case MSG_QDEC_FORWARD:
-//        func_cb.menu_style++;
-//        if (func_cb.menu_style >= MENU_STYLE_CNT) {
-//            func_cb.menu_style = MENU_STYLE_HONEYCOMB;
-//        }
-//        TRACE("set_menu_style:%d\n", func_cb.menu_style);
-//        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
-//        break;
-//
-//    case MSG_CTP_SHORT_DOWN:
-//    case MSG_QDEC_BACKWARD:
-//        if (func_cb.menu_style == 0) {
-//            func_cb.menu_style = MENU_STYLE_CNT - 1;
-//        } else {
-//            func_cb.menu_style--;
-//        }
-//        TRACE("set_menu_style:%d\n", func_cb.menu_style);
-//        compo_textbox_set(txt_style, style_str_list[func_cb.menu_style]);
-//        break;
-//
-//
-//    case MSG_CTP_SHORT_RIGHT:
-//        func_set_sub_list_switch_to_menu();
-//        break;
-    case MSG_QDEC_FORWARD:
-        compo_page_move_set(f_sidebar->ptm, -Menu_STEP_Y);
+    case MSG_CTP_CLICK:
+        func_set_sub_list_icon_click();                //单击图标
+        func_switch_to_menu();                      //退回到主菜单
         break;
 
-    case MSG_QDEC_BACKWARD:
-        compo_page_move_set(f_sidebar->ptm, Menu_STEP_Y);
+    case MSG_CTP_LONG:
+        break;
+
+    case MSG_CTP_SHORT_RIGHT:
+        func_message(msg);
+        sys_cb.set_idx = 0;
+        break;
+
+    case KU_DELAY_BACK:
+        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
+            func_set_sub_list_switch_to_clock();       //返回时钟
+        }
         break;
 
     default:
@@ -139,27 +175,27 @@ static void func_style_message(size_msg_t msg)
 //进入菜单风格功能
 static void func_style_enter(void)
 {
-//    func_cb.f_cb = func_zalloc(sizeof(f_style_t));
-//    func_cb.frm_main = func_style_form_create();
-
-    func_cb.f_cb = func_zalloc(sizeof(f_sidebar_t));
+    func_cb.f_cb = func_zalloc(sizeof(f_style_t));
     func_cb.frm_main = func_style_form_create();
 
-    f_sidebar_t *f_sidebar = (f_sidebar_t *)func_cb.f_cb;
-	f_sidebar->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    page_move_info_t info = {
-        .page_size = Menu_PAGE_HEIGHT,
-        .page_count = 1,
-        .quick_jump_perc = 50,
-        .up_over_perc = 5,
-        .down_over_perc = 5,
-    };
-    compo_page_move_init(f_sidebar->ptm, func_cb.frm_main->page_body, &info);
+    f_style_t *f_set = (f_style_t *)func_cb.f_cb;
+    f_set->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
+    compo_listbox_t *listbox = f_set->listbox;
+    if (listbox->type != COMPO_TYPE_LISTBOX) {
+        halt(HALT_GUI_COMPO_LISTBOX_TYPE);
+    }
+    listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
+    compo_listbox_move_init_modify(listbox, 127, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+    func_cb.enter_tick = tick_get();
 }
 
 //退出菜单风格功能
 static void func_style_exit(void)
 {
+    printf("%s exit\n", __func__);
+    f_style_t *f_set = (f_style_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+    func_free(listbox->mcb);
     func_cb.last = FUNC_STYLE;
 }
 

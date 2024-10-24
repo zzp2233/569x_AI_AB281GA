@@ -438,7 +438,7 @@
 #define LOUDSPEAKER_MUTE()              loudspeaker_mute()
 #define LOUDSPEAKER_UNMUTE()            loudspeaker_unmute()
 #define LOUDSPEAKER_MUTE_PORT           IO_PE0
-#define LOUDSPEAKER_HIGH_MUTE           1           //高电平为MUTE状态
+#define LOUDSPEAKER_HIGH_MUTE           0           //高电平为MUTE状态
 #define LOUDSPEAKER_UNMUTE_DELAY        6           //UNMUTE延时配置，单位为5ms
 
 #define AMP_CTRL_AB_D_EN                0           //功放AB/D类控制

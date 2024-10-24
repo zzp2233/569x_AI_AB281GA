@@ -62,6 +62,8 @@
 			<Add directory="../../../ute/module/protocol" />
 			<Add directory="../../../ute/module/mem" />
 			<Add directory="../../../ute/module/gui" />
+			<Add directory="../../../ute/module/call" />
+			<Add directory="../../../ute/drv/motor" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -97,6 +99,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/application/ute_application_common.h" />
+		<Unit filename="../../../ute/drv/motor/ute_drv_motor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/motor/ute_drv_motor.h" />
 		<Unit filename="../../../ute/drv/screen/ute_drv_screen_common.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -105,6 +111,10 @@
 		<Unit filename="../../../ute/drv/screen/ute_drv_tft_s240x284_nv3030b_hy201068avc.h" />
 		<Unit filename="../../../ute/flashmap/ute_flash_64mbit_1024k_map.h" />
 		<Unit filename="../../../ute/flashmap/ute_flash_map_common.h" />
+		<Unit filename="../../../ute/module/call/ute_module_call.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/call/ute_module_call.h" />
 		<Unit filename="../../../ute/module/filesystem/ute_module_filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>

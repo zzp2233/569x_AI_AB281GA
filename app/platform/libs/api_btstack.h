@@ -664,6 +664,7 @@ void aap_init(void);
 uint8_t sdp_add_service(void *item);
 void sdp_rmv_service(uint32_t service_record_handle);
 uint bt_get_hfp_feature(void);
+bool bt_hfp_is_connected(void);
 
 //a2dp
 bool a2dp_is_playing_fast(void);

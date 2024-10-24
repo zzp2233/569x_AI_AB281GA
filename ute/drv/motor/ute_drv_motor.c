@@ -9,10 +9,10 @@
 #include "ute_drv_motor.h"
 #include "ute_module_log.h"
 #include "ute_module_message.h"
-#include "ute_drv_battery_common.h"
+// #include "ute_drv_battery_common.h"
 #include "ute_application_common.h"
+#include "ute_module_platform.h"
 
-#if 0
 
 /*! 马达运行数据zn.zeng, 2021-10-12  */
 ute_drv_motor_t uteDrvMotorData;
@@ -57,6 +57,7 @@ void uteDrvMotorVibrationReadConfig(void)
     uteDrvMotorData.isAllowMotorVibration = readbuff[1];
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,uteDrvMotorData.motorVibrationLevel=%d", __func__,uteDrvMotorData.motorVibrationLevel);
 }
+
 /**
 *@brief     保存马达数据到内存
 *@details
@@ -87,30 +88,17 @@ void uteDrvMotorVibrationSaveData(void)
 void uteDrvMotorEnable(void)
 {
 #if UTE_DRV_MOTOR_PWM_MODE_SUPPORT
-    // uteModulePlatformOutputGpioSet(UTE_DRV_MOTOR_GPIO_PIN,true);//开始振动前先拉高引脚，防止马达差异引起不振动现象，dengli.lu 2022/08/30
+    //开始振动前先拉高引脚，防止马达差异引起不振动现象，dengli.lu 2022/08/30
     uteModulePlatformPwmInit(UTE_DRV_MOTOR_PWM_ID,UTE_DRV_MOTOR_GPIO_PIN,80,UTE_DRV_MOTOR_PWM_RATE_HZ);
     uteModulePlatformPwmEnable(UTE_DRV_MOTOR_PWM_ID);
     uteModulePlatformDelayMs(20);
     uint8_t motorDuty = 0;
-    // if(uteDrvMotorData.motorTempVibrationLevel != 0)  //使用临时震动值
-    // {
-    //     motorDuty = (uteDrvBatteryCommonGetMaxVoltage()- uteDrvBatteryCommonGetVoltage())*0.02f+uteDrvMotorData.motorTempVibrationLevel;
-    // }
-    // else
-    // {
-    //     motorDuty = (uteDrvBatteryCommonGetMaxVoltage()- uteDrvBatteryCommonGetVoltage())*0.02f+uteDrvMotorData.motorVibrationLevel;
-    // }
     if(uteDrvMotorData.motorTempVibrationLevel != 0)  //使用临时震动值
     {
-        motorDuty = (uteDrvBatteryCommonGetMaxVoltage()- uteDrvBatteryCommonGetVoltage())*0.02f+uteDrvMotorData.motorTempVibrationLevel;
+        motorDuty = uteDrvMotorData.motorTempVibrationLevel;
     }
     else
     {
-        float curVoltage = (float)uteDrvBatteryCommonGetVoltage();
-        if (curVoltage < UTE_DRV_MOTOR_PWM_BASE_VOLTAGE_SUPPORT)
-        {
-            curVoltage = UTE_DRV_MOTOR_PWM_BASE_VOLTAGE_SUPPORT;
-        }
         if (0)
         {}
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
@@ -121,9 +109,9 @@ void uteDrvMotorEnable(void)
 #endif
         else
         {
-            motorDuty = (uint8_t)((UTE_DRV_MOTOR_PWM_BASE_VOLTAGE_SUPPORT/curVoltage)*uteDrvMotorData.motorVibrationLevel);
+            motorDuty = uteDrvMotorData.motorVibrationLevel;
         }
-        UTE_MODULE_LOG(UTE_LOG_DRV_MOTOR_LVL, "%s,motorDuty=%d,Voltage=%d,motorVibrationLevel=%d",__func__,motorDuty,uteDrvBatteryCommonGetVoltage(),uteDrvMotorData.motorVibrationLevel);
+        UTE_MODULE_LOG(UTE_LOG_DRV_MOTOR_LVL, "%s,motorDuty=%d,motorVibrationLevel=%d",__func__,motorDuty,uteDrvMotorData.motorVibrationLevel);
     }
     UTE_MODULE_LOG(UTE_LOG_DRV_MOTOR_LVL, "%s,motorDuty=%d",__func__,motorDuty);
     uteModulePlatformPwmInit(UTE_DRV_MOTOR_PWM_ID,UTE_DRV_MOTOR_GPIO_PIN,motorDuty,UTE_DRV_MOTOR_PWM_RATE_HZ);
@@ -177,12 +165,12 @@ void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_
     {
         return;
     }
-    if((uteDrvBatteryCommonGetChargerStatus()==BAT_STATUS_NO_CHARGE)&&(uteDrvBatteryCommonGetLvl()<10))
-    {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,lvl=%d is too low", __func__,uteDrvBatteryCommonGetLvl());
-        return;
-    }
-#if UTE_BT30_CALL_SUPPORT
+    // if((uteDrvBatteryCommonGetChargerStatus()==BAT_STATUS_NO_CHARGE)&&(uteDrvBatteryCommonGetLvl()<10))
+    // {
+    //     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,lvl=%d is too low", __func__,uteDrvBatteryCommonGetLvl());
+    //     return;
+    // }
+#if 0//UTE_BT30_CALL_SUPPORT
     ute_bt_call_data_t callData;
     uteModuleCallGetData(&callData);
     if ((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_ING_ID) || (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_QUICK_REPLY_LIST_ID) || (callData.state == BT_CALL_ING))
@@ -212,16 +200,16 @@ void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_
     }
 #endif
 
-    if(uteModuleNotDisturbIsAllowVibration()||(!uteApplicationCommonIsPowerOn()))
+    // if(uteModuleNotDisturbIsAllowVibration()||(!uteApplicationCommonIsPowerOn()))
     {
         uteDrvMotorData.durationTimeMsec = durationTimeMsec;
         uteDrvMotorData.intervalTimeMsec = intervalTimeMsec;
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START,cnt);
     }
-    else
-    {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
-    }
+    // else
+    // {
+    //     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
+    // }
 }
 /**
 *@brief        马达停止震动
@@ -478,4 +466,3 @@ void uteDrvMotorSetTempVibrationLevel(uint8_t motorVibrationLevel)
     uteDrvMotorData.motorTempVibrationLevel = motorVibrationLevel;
 }
 
-#endif

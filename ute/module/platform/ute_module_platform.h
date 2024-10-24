@@ -22,6 +22,12 @@
 
 #define __STATIC_INLINE  static __inline
 
+#define UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN        0x00000020
+#define UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR         0x00000040
+#define UTE_MODULE_PLATFORM_DLPS_BIT_KEYS          0x00000080
+#define UTE_MODULE_PLATFORM_DLPS_BIT_UART          0x00000100
+#define UTE_MODULE_PLATFORM_DLPS_BIT_SYNC          0x00000200
+
 #define UTE_MODULE_PLATFORM_TIMER_MAX    8
 #define UTE_MODULE_PLATFORM_MUTEX_MAX    6
 typedef struct
@@ -431,6 +437,11 @@ uint8_t uteModulePlatformGetAdvData(uint8_t *advData, uint8_t advDataLen);
 uint8_t uteModulePlatformGetScanRspData(uint8_t *scanRsp, uint8_t scanRspLen);
 
 void uteModulePlatformAdvDataInit(void);
+
+void uteModulePlatformDlpsEnable(uint32_t bit);
+void uteModulePlatformDlpsDisable(uint32_t bit);
+uint32_t uteModulePlatformNotAllowSleep(void);
+void uteModulePlatformDlpsBitReset(void);
 
 #endif //_UTE_MODULE_PLATFORM_H_
 

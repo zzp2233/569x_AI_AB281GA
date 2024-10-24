@@ -16,9 +16,9 @@ void app_ab_data_storage_init(void);
 co_timer_t ute_remind_timer;
 
 //星期日,一,二,三,四,五,六 -> BIT(6) BIT(0) BIT(1) BIT(2) BIT(3) BIT(4) BIT(5)
-const uint8_t rtc_weak_mask[7] = {0x40, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20};
+static const uint8_t rtc_weak_mask[7] = {0x40, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20};
 
-uint8_t wday_rtc_to_proc(uint8_t wday)
+static uint8_t wday_rtc_to_proc(uint8_t wday)
 {
     uint8_t ret = 0;
     if (wday < 7) {
@@ -27,7 +27,7 @@ uint8_t wday_rtc_to_proc(uint8_t wday)
     return ret;
 }
 
-bool ute_alarm_check(tm_t *now_time)
+static bool ute_alarm_check(tm_t *now_time)
 {
     uint8_t week_mask = wday_rtc_to_proc(now_time->weekday);
     ute_module_systemtime_one_alarm_t alarm = {0};
@@ -135,6 +135,37 @@ void app_ute_remind_init(void)
     co_timer_set(&ute_remind_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, ute_remind_check_1s_pro, NULL);
     co_timer_set_sleep(&ute_remind_timer, true);
 }
+
+void app_msg_pop_up(void)
+{
+    if (sys_cb.gui_sleep_sta) {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
+
+    msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+    msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_WATCH_MSG_POP_UP);
+}
+
+void app_ute_msg_pop_up(void)
+{
+    char *msg = NULL;
+    char *title = NULL;
+#if LE_ANCS_CLIENT_EN
+    ble_ancs_msg_cb_t *ble_msg = ble_app_ancs_get_msg();
+#else
+    ble_msg_cb_t *ble_msg = &app_data.sector0.ble_msg_cb;
+#endif
+    msg = (char *)&ble_msg->msg_content[ble_msg->msg_show_num];
+    title = (char *)&ble_msg->msg_title[ble_msg->msg_show_num];
+    int res = msgbox(msg, title, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_WECHAT);
+    if (res == MSGBOX_RES_DELETE) {
+        //TODO: delete msg
+    }
+}
+
+
 #endif
 
 void app_platform_process(void)

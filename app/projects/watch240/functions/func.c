@@ -32,6 +32,8 @@ extern void func_alarm_clock_sub_pop(void);
 extern void func_disturd_sub_set(void);
 extern void func_blood_oxygen(void);
 extern void func_breathe(void);
+extern void func_breathe_sub_mode(void);
+extern void func_breathe_sub_time(void);
 extern void func_calculator(void);
 extern void func_camera(void);
 extern void func_light(void);
@@ -115,6 +117,8 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void);
 compo_form_t *func_alarm_clock_sub_pop_form_create(void);
 compo_form_t *func_blood_oxygen_form_create(void);
 compo_form_t *func_breathe_form_create(void);
+compo_form_t *func_breathe_sub_mode_form_create(void);
+compo_form_t *func_breathe_sub_time_form_create(void);
 compo_form_t *func_calculator_form_create(void);
 compo_form_t *func_camera_form_create(void);
 compo_form_t *func_light_form_create(void);
@@ -204,6 +208,8 @@ const func_t tbl_func_create[] = {
     {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
     {FUNC_BREATHE,                      func_breathe_form_create},
+    {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode_form_create},
+    {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time_form_create},
     {FUNC_CALCULATOR,                   func_calculator_form_create},
     {FUNC_CAMERA,                       func_camera_form_create},
     {FUNC_TIMER,                        func_timer_form_create},
@@ -291,6 +297,8 @@ const func_t tbl_func_entry[] = {
     {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
+    {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置
+    {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time},         //呼吸--时间设置
     {FUNC_COMPO_SELECT,                 func_compo_select},             //组件选择
     {FUNC_COMPO_SELECT_SUB,             func_compo_select_sub},         //组件选择子界面
     {FUNC_CALCULATOR,                   func_calculator},               //计算器
@@ -466,11 +474,11 @@ void func_process(void)
         printf(">>>REMIND POP\n");
     }
 
-//    if (sys_cb.msg_tag) { //有消息弹出
-//        sys_cb.msg_tag = false;
-//        app_msg_pop_up();
-//        printf(">>>MSG POP\n");
-//    }
+    if (sys_cb.msg_tag) { //有消息弹出
+        sys_cb.msg_tag = false;
+        app_msg_pop_up();
+        printf(">>>MSG POP\n");
+    }
 
 #if VBAT_DETECT_EN
     bsp_vbat_lpwr_process();
@@ -985,9 +993,9 @@ void func_message(size_msg_t msg)
             gui_set_cover_index(sys_cb.cover_index);
             break;
 
-//        case EVT_WATCH_MSG_POP_UP:
-//            app_ab_msg_pop_up();
-//            break;
+        case EVT_WATCH_MSG_POP_UP:
+            app_ute_msg_pop_up();
+            break;
 
         default:
             evt_message(msg);

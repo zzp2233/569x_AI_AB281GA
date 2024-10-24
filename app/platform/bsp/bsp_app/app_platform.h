@@ -4,6 +4,10 @@
 void app_platform_init(void);                                         //app平台相关初始化
 void app_platform_process(void);                                      //app平台进程
 
+void app_ute_remind_init(void);
+void app_msg_pop_up(void);
+void app_ute_msg_pop_up(void);
+
 enum {
     //这个顺序更改,需要同步到func_cover.h那边
     COVER_NULL,

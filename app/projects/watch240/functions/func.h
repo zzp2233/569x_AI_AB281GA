@@ -42,6 +42,8 @@ enum {
     FUNC_BLOODSUGAR,                    //血糖
     FUNC_BLOOD_PRESSURE,                //血压
     FUNC_BREATHE,				        //呼吸
+    FUNC_BREATHE_SUB_MODE,              //呼吸--模式设置
+    FUNC_BREATHE_SUB_TIME,              //呼吸--时间设置
     FUNC_CALCULATOR,			        //计算器
     FUNC_CAMERA,				        //相机
     FUNC_LIGHT,					        //亮度调节

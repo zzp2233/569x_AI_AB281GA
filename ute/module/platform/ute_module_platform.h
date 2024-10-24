@@ -18,8 +18,15 @@
 #include "tft.h"
 #include "port_tft.h"
 #include "config_extra.h"
+#include "ute_module_mem.h"
 
 #define __STATIC_INLINE  static __inline
+
+#define UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN        0x00000020
+#define UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR         0x00000040
+#define UTE_MODULE_PLATFORM_DLPS_BIT_KEYS          0x00000080
+#define UTE_MODULE_PLATFORM_DLPS_BIT_UART          0x00000100
+#define UTE_MODULE_PLATFORM_DLPS_BIT_SYNC          0x00000200
 
 #define UTE_MODULE_PLATFORM_TIMER_MAX    8
 #define UTE_MODULE_PLATFORM_MUTEX_MAX    6
@@ -247,6 +254,7 @@ void uteModulePlatformRtcSetTime(uint16_t year,uint8_t month,uint8_t day,uint8_t
 *@date        Jun 29, 2021
 */
 void uteModulePlatformCalibrationSystemTimer(void);
+#if !UTE_MODULE_USER_MALLOC_SUPPORT 
 /**
 *@brief   动态申请内存
 *@details
@@ -261,6 +269,7 @@ void *uteModulePlatformMemoryAlloc(size_t size);
 *@date        2021-08-23
 */
 void uteModulePlatformMemoryFree(void * p);
+#endif
 /**
 *@brief   设置gpio输出
 *@details
@@ -286,6 +295,13 @@ void uteModulePlatformScreenQspiInit(void);
 *@date     2021-10-12
 */
 void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len);
+/**
+*@brief   qspi 读命令
+*@details
+*@author         zn.zeng
+*@date     2021-10-12
+*/
+void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,uint8_t dummyClockByte);
 /**
 *@brief   qspi 写gram数据
 *@details
@@ -421,6 +437,11 @@ uint8_t uteModulePlatformGetAdvData(uint8_t *advData, uint8_t advDataLen);
 uint8_t uteModulePlatformGetScanRspData(uint8_t *scanRsp, uint8_t scanRspLen);
 
 void uteModulePlatformAdvDataInit(void);
+
+void uteModulePlatformDlpsEnable(uint32_t bit);
+void uteModulePlatformDlpsDisable(uint32_t bit);
+uint32_t uteModulePlatformNotAllowSleep(void);
+void uteModulePlatformDlpsBitReset(void);
 
 #endif //_UTE_MODULE_PLATFORM_H_
 

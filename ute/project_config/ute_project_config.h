@@ -17,10 +17,13 @@
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 1
 
-/*! 芯片封装是5691C_F,wang.luo 2024-10-17 */
-#ifndef UTE_CHIP_PACKAGE_SELECT_5691C_F_SUPPORT
-#define UTE_CHIP_PACKAGE_SELECT_5691C_F_SUPPORT 1
-#endif
+/** 芯片选型 */
+#define CHIP_5691G                      0           //QFN40
+#define CHIP_5691C_F                    1           //QFN40
+#define CHIP_5690G                      2           //QFN52
+#define CHIP_5690F                      3           //QFN52
+
+#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F                  //芯片封装选择 5691G/5691C_F
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
 #ifndef DEFAULT_BLE_DEV_NEME
@@ -88,9 +91,40 @@
 #define UTE_DRV_BATTERY_POWER_ON_VOLTAGE     3000  //mv
 #endif
 
+/*! 电池电量分为几等份，默认5等份，即0 25 50 75 100  xjc, 2021-12-27  */
+#ifndef UTE_DRV_BATTERY_TOTAL_INDEX
+#define UTE_DRV_BATTERY_TOTAL_INDEX 5
+#endif
+/*! 低电提醒时电量  xjc, 2021-12-27  */
+#ifndef UTE_DRV_BATTERY_LOW_POWER_PERECNT
+#define UTE_DRV_BATTERY_LOW_POWER_PERECNT 13
+#endif
+
+/* 电池曲线 zn.zeng 2022-01-03*/
+#ifndef UTE_DRV_BATTERY_000
+#define UTE_DRV_BATTERY_000      3579
+#define UTE_DRV_BATTERY_010      3691
+#define UTE_DRV_BATTERY_020      3741
+#define UTE_DRV_BATTERY_030      3781
+#define UTE_DRV_BATTERY_040      3815
+#define UTE_DRV_BATTERY_050      3858
+#define UTE_DRV_BATTERY_060      3922
+#define UTE_DRV_BATTERY_070      4023
+#define UTE_DRV_BATTERY_080      4119
+#define UTE_DRV_BATTERY_090      4221
+#define UTE_DRV_BATTERY_100      4335
+#endif
+
 /*! 默认发送历史数据定时器间隔zn.zeng, 2021-08-23  */
 #ifndef UTE_SEND_DATA_TO_PHONE_INVTERVAL
 #define UTE_SEND_DATA_TO_PHONE_INVTERVAL 60 // ms
+#endif
+
+
+/*! 使用自定义内存申请,wang.luo 2024-10-21 */
+#ifndef UTE_MODULE_USER_MALLOC_SUPPORT
+#define UTE_MODULE_USER_MALLOC_SUPPORT 1
+#define UTE_MODULE_MEM_POOL_SIZE (1024*5) //内存池大小
 #endif
 
 /*! 屏宽度 zn.zeng, 2021-10-22  */
@@ -104,6 +138,80 @@
 /*! 屏使用16bit色彩 zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_SCREEN_PIXEL_BYTES
 #define UTE_DRV_SCREEN_PIXEL_BYTES 2
+#endif
+
+/*! 默认亮屏时间zn.zeng, 2021-08-20  */
+#ifndef DEFAULT_SCREEN_ON_TIME_SECOND
+#define DEFAULT_SCREEN_ON_TIME_SECOND 10
+#endif
+
+/*! 灭屏后延时清除显示深度，返回时间界面，默认时间 zn.zeng, 2021-11-03  */
+#ifndef UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND
+#define UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND 10
+#endif
+
+/*! 默认抬手亮屏开关zn.zeng, 2021-08-20  */
+#ifndef DEFAULT_HAND_SCREEN_ON_OPEN
+#define DEFAULT_HAND_SCREEN_ON_OPEN true
+#endif
+
+/*! 勿扰允许抬手亮屏dengli.lu, 2022-08-16  */
+#ifndef UTE_NOTDISTURB_ALLOW_HAND_SCREEN_ON_SUPPORT
+#define UTE_NOTDISTURB_ALLOW_HAND_SCREEN_ON_SUPPORT 0
+#endif
+
+/*! 默认温度单位为摄氏度 zn.zeng, 2021-08-20  */
+#ifndef DEFAULT_TEMPERATURE_IS_FAHRENHEIT
+#define DEFAULT_TEMPERATURE_IS_FAHRENHEIT false
+#endif
+
+/*! 屏最大亮度百分比 dengli.lu, 2021-10-29  */
+#ifndef DEFAULT_BACK_LIGHT_PERCENT_MAX
+#define DEFAULT_BACK_LIGHT_PERCENT_MAX 100
+#endif
+
+/*! 屏最小亮度百分比 dengli.lu, 2021-10-29  */
+#ifndef DEFAULT_BACK_LIGHT_PERCENT_MIN
+#define DEFAULT_BACK_LIGHT_PERCENT_MIN 25
+#endif
+
+/*! 调节屏亮度时增加或者减少的百分比 dengli.lu, 2021-10-29  */
+#ifndef BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE
+#define BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE 25
+#endif
+
+/*! 默认背光百分比zn.zeng, 2021-09-24  */
+#ifndef DEFAULT_SCREEN_BACKLIGHT_PERCENT
+#define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*2)
+#endif
+
+/*! 默认表盘索引 zn.zeng, 2021-10-25  */
+#ifndef DEFAULT_WATCH_INDEX
+#define DEFAULT_WATCH_INDEX                      0
+#endif
+
+/*! 最大表盘数量，包括在线表盘 zn.zeng, 2021-10-23  */
+#ifndef UTE_MODULE_SCREENS_WATCH_CNT_MAX
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
+#endif
+
+/*! 默认打开通话模块 zn.zeng, 2021-10-27  */
+#ifndef UTE_BT30_CALL_SUPPORT
+#define UTE_BT30_CALL_SUPPORT 1
+#endif
+
+/*! 是否保存BK的PowerOn状态 xjc, 2022-04-07  */
+#ifndef UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT
+#define UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT 1
+#endif
+
+#ifndef UTE_MODULE_BT_POWER_DEFAULT_ON
+#define UTE_MODULE_BT_POWER_DEFAULT_ON false
+#endif
+
+/*! 一次配对连接, casen 2022-02-14*/
+#ifndef UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
+#define UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT 1
 #endif
 
 /*! 每次亮屏之前先清屏，防止闪烁 xjc, 2022-05-18  */
@@ -138,19 +246,82 @@
 #endif
 /*! 背光PWM控制输出定时器索引 zn.zeng, 2021-09-24  */
 #ifndef UTE_DRV_SCREEN_BACKLIGHT_PWM_ID
-#if UTE_CHIP_PACKAGE_SELECT_5691C_F_SUPPORT
+#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
 #define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PE6
-#else
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
 #define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PE3
+#else
+#error CHIP ERR
 #endif
 #endif
 /*! 背光控制输出管脚 zn.zeng, 2021-09-24  */
 #ifndef UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN
-#if UTE_CHIP_PACKAGE_SELECT_5691C_F_SUPPORT
+#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
 #define UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN   IO_PE6
-#else
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
 #define UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN   IO_PE3
+#else
+#error CHIP ERR
 #endif
+#endif
+
+/*! 马达PWM控制输出定时器索引 zn.zeng, 2021-10-22  */
+#ifndef UTE_DRV_MOTOR_PWM_ID
+
+#define UTE_DRV_MOTOR_PWM_ID GPIO_PE3
+#endif
+
+/*! 控制马达的gpio pin zn.zeng, 2021-10-22  */
+#ifndef UTE_DRV_MOTOR_GPIO_PIN
+#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
+#define UTE_DRV_MOTOR_GPIO_PIN IO_PE3
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
+#define UTE_DRV_MOTOR_GPIO_PIN IO_PF3
+#else
+#error CHIP ERR
+#endif
+#endif
+
+/*! pwm控制马达支持zn.zeng, 2021-10-22  */
+#ifndef UTE_DRV_MOTOR_PWM_MODE_SUPPORT
+#define UTE_DRV_MOTOR_PWM_MODE_SUPPORT 0
+#endif
+
+/*! pwm控制马达的频率zn.zeng, 2021-10-22  */
+#ifndef UTE_DRV_MOTOR_PWM_RATE_HZ
+#define UTE_DRV_MOTOR_PWM_RATE_HZ 177
+#endif
+
+//允许马达振动
+#ifndef UTE_MOTOR_ALLOW_VIBRATION_DEFAULT_OPEN
+#define UTE_MOTOR_ALLOW_VIBRATION_DEFAULT_OPEN true
+#endif
+
+/*! pwm控制马达震动强度 xjc, 2023-05-29  */
+#ifndef UTE_DRV_MOTOR_PWM_VIBRATION_HIGH
+#define UTE_DRV_MOTOR_PWM_VIBRATION_HIGH 90
+#endif
+#ifndef UTE_DRV_MOTOR_PWM_VIBRATION_MEDIUM
+#define UTE_DRV_MOTOR_PWM_VIBRATION_MEDIUM 70
+#endif
+#ifndef UTE_DRV_MOTOR_PWM_VIBRATION_LOW
+#define UTE_DRV_MOTOR_PWM_VIBRATION_LOW 50
+#endif
+#ifndef UTE_DRV_MOTOR_PWM_VIBRATION_NONE
+#define UTE_DRV_MOTOR_PWM_VIBRATION_NONE 0
+#endif
+
+/*!默认震动强度 level 0-100, dengli.lu, 2022-06-16 */
+#ifndef UTE_MODULE_MOTOR_VIBRATION_DEFAULT_LEVEL
+#define UTE_MODULE_MOTOR_VIBRATION_DEFAULT_LEVEL UTE_DRV_MOTOR_PWM_VIBRATION_HIGH
+#endif
+
+/*!震动时长 unit:ms, lzc, 2022-01-20 */
+#ifndef UTE_MOTOR_DURATION_TIME
+#define UTE_MOTOR_DURATION_TIME 300
+#endif
+#ifndef UTE_MOTOR_INTERVAL_TIME
+#define UTE_MOTOR_INTERVAL_TIME 600
 #endif
 
 #define DRV_TFT_S280X284_I18_ST7789P3_XHL183BA2401_DSPI_SUPPORT 0
@@ -184,5 +355,21 @@
 #define SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT                 0 //罗马尼亚语 limba 0x1B
 #define SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT           1 //越南语 0x63
 #endif
+
+#ifndef UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+#define UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT 1
+#define ALARM_REPEAT_REMIND_DEFAULT_OPEN true//默认重复提醒开关
+#define ALARM_REPEAT_REMIND_DEFAULT_TIME_MIN 1
+#define ALARM_REPEAT_REMIND_DEFAULT_TIMES 3//默认重复提醒次数，未手动关闭时重复提醒5次后不再提醒
+#endif // UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+
+/*! 本地闹钟默认振动次数 dengli.lu, 2022-08-10  */
+#ifndef UTE_LOCAL_ALARM_DEFAULT_MOTOR_TIMES
+#define UTE_LOCAL_ALARM_DEFAULT_MOTOR_TIMES 10
+#endif
+
+#ifndef UTE_LOCAL_ALARM_DEFAULT_RING_TIMES
+#define UTE_LOCAL_ALARM_DEFAULT_RING_TIMES  20                  //闹钟默认响铃时间 20S
+#endif // UTE_LOCAL_ALARM_DEFAULT_RING_TIMES
 
 #endif//_UTE_PROJECT_CONFIG_H_

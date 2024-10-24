@@ -618,9 +618,10 @@ void bsp_fot_process(void)
                             }
                         }
                         fot_var.code_res_len = temp;
+                        i += 2;
                     }
-                    fot_var.total_len -= i+2;
-                    buff_ptr += i+2;
+                    fot_var.total_len -= i;
+                    buff_ptr += i;
                     
                     func_cb.sta = FUNC_OTA_UI_MODE;         //进入UI OTA模式，避免UI刷死机
                     printf("UI SIZE:%d CODE SIZE:%d %d\n", fot_var.ui_res_len, fot_var.code_res_len, i+2);

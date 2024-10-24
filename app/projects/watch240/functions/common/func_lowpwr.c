@@ -226,6 +226,7 @@ static void sfunc_sleep(void)
     u8 sta = dac_dnr_get_sta();
     dac_dnr_set_sta(0);
 #endif
+    bsp_loudspeaker_mute();
     dac_power_off();                            //dac power down
 
     sys_set_tmr_enable(0, 0);
@@ -335,6 +336,12 @@ static void sfunc_sleep(void)
         }
 #endif
 
+        if (sys_cb.remind_tag) {
+            printf("remind wakeup\n");
+            gui_need_wkp = true;
+            break;
+        }
+
         if (co_timer_pro(true)) {
             printf("co_timer_pro_wakeup\n");
 			break;
@@ -345,6 +352,16 @@ static void sfunc_sleep(void)
             break;
 		}
 
+        //ute add
+        if(uteModulePlatformNotAllowSleep())
+        {
+            if (uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN)
+            {
+                gui_need_wkp = true;
+            }
+            printf("ute_wakeup\n");
+            break;
+        }
     }
 
     RTCCON9 = BIT(7) | BIT(5) | BIT(2);         //clr port, bt, wko wakeup pending
@@ -440,11 +457,23 @@ bool sleep_process(is_sleep_func is_sleep)
             reset_sleep_delay_all();
             return false;
         }
-        if (sys_cb.sleep_delay == 0) {
-            sfunc_sleep();              //熄屏且进入休眠
+        if(uteModulePlatformNotAllowSleep()) //ute add
+        {
+            if ((uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN) && sys_cb.gui_sleep_sta)
+            {
+                gui_wakeup();
+            }
             reset_sleep_delay_all();
-            reset_pwroff_delay();
-            return true;
+            return false;
+        }
+        if (sys_cb.sleep_delay == 0) {
+            if(sys_cb.guioff_delay == 0) /*! 亮屏时不休眠,wang.luo 2024-10-21 */
+            {
+                sfunc_sleep();              //熄屏且进入休眠
+                reset_sleep_delay_all();
+                reset_pwroff_delay();
+                return true;
+            }
         }
     } else {
         if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta) {

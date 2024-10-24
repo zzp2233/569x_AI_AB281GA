@@ -6,6 +6,7 @@
 
 #ifndef USER_CONFIG_H
 #define USER_CONFIG_H
+#include "ute_project_config.h"
 #include "config_define.h"
 #include "ute_flash_map_common.h"
 
@@ -33,7 +34,7 @@
 #define LP_XOSC_CLOCK_EN                0                           //是否使能低功耗晶振用于RTC CLOCK，支持关机时钟功能。(单脚晶振不支持低功耗晶振)
 #define GUI_AUTO_POWER_EN               1                           //是否使能刷图动态调节时钟，打开后系统时钟默认设置为SYS_CLK_SEL，刷图时调节为192M
 
-#define CHIP_PACKAGE_SELECT             CHIP_5691C_F                  //芯片封装选择 5691G/5691C_F
+#define CHIP_PACKAGE_SELECT             UTE_CHIP_PACKAGE_SELECT                  //芯片封装选择 5691G/5691C_F
 
 #define GUI_SELECT                      GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71    		        //GUI Display Select
 #define CTP_SELECT                      CTP_CST8X                   //CTP Select
@@ -184,7 +185,7 @@
 #define LE_SM_SC_EN                     1   //是否使能BLE的加密连接，需同时打开LE_PAIR_EN。一键双联需要打开此配置。
 #define LE_ADV_POWERON_EN               1   //是否上电默认打开BLE广播
 #define LE_BQB_RF_EN                    0   //BLE DUT测试模式，使用串口通信（仅用于BQB RFPHY测试）
-#define LE_ALLOW_WKUP_EN                0   //休眠中ble断开/连接/传输是否需要退出休眠
+#define LE_ALLOW_WKUP_EN                1   //休眠中ble断开/连接/传输是否需要退出休眠
 
 //gatt 配置
 #define LE_ATT_NUM                      45  //最大支持多少条gatt属性, att_handle 1 ~ LE_ATT_NUM
@@ -438,7 +439,7 @@
 #define LOUDSPEAKER_MUTE()              loudspeaker_mute()
 #define LOUDSPEAKER_UNMUTE()            loudspeaker_unmute()
 #define LOUDSPEAKER_MUTE_PORT           IO_PE0
-#define LOUDSPEAKER_HIGH_MUTE           1           //高电平为MUTE状态
+#define LOUDSPEAKER_HIGH_MUTE           0           //高电平为MUTE状态
 #define LOUDSPEAKER_UNMUTE_DELAY        6           //UNMUTE延时配置，单位为5ms
 
 #define AMP_CTRL_AB_D_EN                0           //功放AB/D类控制

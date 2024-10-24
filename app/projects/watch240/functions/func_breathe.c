@@ -391,17 +391,19 @@ static void func_breathe_button_click(void)
             break;
 
         case COMPO_ID_BTN_TIME:
-            sys_cb.breathe_duration += (sys_cb.breathe_duration == BREATHE_TIME_MIN ? 4 : 5) * 60 *1000;
-            if (sys_cb.breathe_duration > BREATHE_TIME_MAX) {
-                sys_cb.breathe_duration = BREATHE_TIME_MIN;
-            }
-            printf(">>>breathe_duration:%ds\n", sys_cb.breathe_duration / 1000);
+//            sys_cb.breathe_duration += (sys_cb.breathe_duration == BREATHE_TIME_MIN ? 4 : 5) * 60 *1000;
+//            if (sys_cb.breathe_duration > BREATHE_TIME_MAX) {
+//                sys_cb.breathe_duration = BREATHE_TIME_MIN;
+//            }
+//            printf(">>>breathe_duration:%ds\n", sys_cb.breathe_duration / 1000);
+            func_cb.sta = FUNC_BREATHE_SUB_TIME;
             break;
 
         case COMPO_ID_BTN_MODE:
-            sys_cb.breathe_mode++;
-            sys_cb.breathe_mode %= BREATHE_MODE_FAST + 1;
-            printf(">>>breathe_mode:%d\n", sys_cb.breathe_mode);
+//            sys_cb.breathe_mode++;
+//            sys_cb.breathe_mode %= BREATHE_MODE_FAST + 1;
+//            printf(">>>breathe_mode:%d\n", sys_cb.breathe_mode);
+            func_cb.sta = FUNC_BREATHE_SUB_MODE;
             break;
 
         default:

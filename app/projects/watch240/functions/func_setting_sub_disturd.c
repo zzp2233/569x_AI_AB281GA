@@ -329,12 +329,12 @@ static void func_disturd_button_click(void)
     switch(id) {
     case COMPO_ID_BIN_ALLDAY_ON:
         if (!sys_cb.disturd_adl) {
-            ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL , COMPO_ID_NUM_DISP_ONE, MSGBOX_MSG_TYPE_NONE);
+            ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL , NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
         } else {
             ret = 0;
             sys_cb.disturd_adl = 0;
         }
-        if (ret == COMPO_ID_NUM_DISP_ONE) {
+        if (ret == MSGBOX_RES_OK) {
             if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE - 1) {
                 sys_cb.disturd_adl = COMPO_ID_NUM_DISP_ONE;
             }
@@ -343,13 +343,13 @@ static void func_disturd_button_click(void)
 
     case COMPO_ID_BIN_TIMING_ON:
         if (!sys_cb.disturd_tim) {
-            ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL , COMPO_ID_NUM_DISP_ONE, MSGBOX_MSG_TYPE_NONE);
+            ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
         } else {
             ret = 0;
             sys_cb.disturd_tim = 0;
         }
 
-        if (ret == COMPO_ID_NUM_DISP_ONE) {
+        if (ret == MSGBOX_RES_OK) {
             if(sys_cb.disturd_tim == COMPO_ID_NUM_DISP_ONE - 1) {
                 sys_cb.disturd_tim = COMPO_ID_NUM_DISP_ONE;
             }

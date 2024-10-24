@@ -79,10 +79,14 @@ static void func_clock_sub_dropdown_battery_pic_update(void)
 static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 {
     compo_picturebox_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    if(bt_is_connected()) {
-        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
-    } else{
+    compo_picturebox_set_visible(bluetooth_pic, true);
+    if (ble_is_connect() && bt_is_connected()) {
+        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);      
+    }
+    else if(bt_is_connected() || ble_is_connect()) {
         compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
+    } else{
+        compo_picturebox_set_visible(bluetooth_pic, false);
     }
 }
 
@@ -260,6 +264,11 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
     case MSG_QDEC_FORWARD:
         printf("MSG_QDEC_FORWARD\n");
         break;
+
+    case EVT_CLOCK_DROPDOWN_EXIT:
+        f_clk->sta = FUNC_CLOCK_MAIN;                       //返回到时钟主界面
+        break;
+
     default:
         func_clock_sub_message(msg);
         break;

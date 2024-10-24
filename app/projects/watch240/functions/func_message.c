@@ -120,7 +120,7 @@ static void func_message_icon_click(void)
     msg = (char *)&ancs_msg->msg_content[icon_idx];
     title = (char *)&ancs_msg->msg_title[icon_idx];
 #endif
-    int res = msgbox(msg, title, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_WECHAT);
+    int res = msgbox(msg, title, NULL, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
     if (res == MSGBOX_RES_DELETE) {
         //TODO: delete msg
     }

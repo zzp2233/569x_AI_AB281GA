@@ -105,9 +105,9 @@ static void func_wrist_button_click(void)
 
     switch(id) {
     case COMPO_ID_BIN_WRIST:
-        ret = msgbox((char *)i18n[STR_SETTING_UP], NULL , COMPO_ID_NUM_DISP_ONE, MSGBOX_MSG_TYPE_NONE);
+        ret = msgbox((char *)i18n[STR_SETTING_UP], NULL , NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
-        if (ret == COMPO_ID_NUM_DISP_ONE) {
+        if (ret == MSGBOX_RES_OK) {
             if (wrs->value == COMPO_ID_NUM_DISP_ONE) {
                 wrs->value = COMPO_ID_NUM_DISP_TWS;
             } else {

@@ -79,10 +79,14 @@ static void func_clock_sub_dropdown_battery_pic_update(void)
 static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 {
     compo_picturebox_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    if(bt_is_connected()) {
-        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
-    } else{
+    compo_picturebox_set_visible(bluetooth_pic, true);
+    if (ble_is_connect() && bt_is_connected()) {
+        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);      
+    }
+    else if(bt_is_connected() || ble_is_connect()) {
         compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
+    } else{
+        compo_picturebox_set_visible(bluetooth_pic, false);
     }
 }
 

@@ -32,7 +32,7 @@ static const compo_listbox_item_t tbl_dousing_list[] = {
     {STR_TWENTY_SEC},
     {STR_THIRTY_SEC},
     {STR_ONE_MIN},
-    {STR_FIVE_MIN},
+    // {STR_FIVE_MIN},
     {STR_NEVER},
 };
 
@@ -87,10 +87,11 @@ void func_set_sub_dousing_list_icon_click(void)
         } else if (icon_idx==COMPO_ID_BTN_NUM4) {
             uteModuleGuiCommonSetDisplayOffTime(60);
         } else if (icon_idx==COMPO_ID_BTN_NUM5) {
-            // uteModuleGuiCommonSetDisplayOffTime(5);
-        } else if (icon_idx==COMPO_ID_BTN_NUM6) {
-            sys_cb.sleep_time = -1;
-        }
+            uteModuleGuiCommonSetDisplayOffTime(0);
+        } 
+        // else if (icon_idx==COMPO_ID_BTN_NUM6) {
+        //     sys_cb.sleep_time = -1;
+        // }
 
         frm = func_create_form(FUNC_SETTING);
         res = func_switching(FUNC_SWITCH_DIRECT,NULL);

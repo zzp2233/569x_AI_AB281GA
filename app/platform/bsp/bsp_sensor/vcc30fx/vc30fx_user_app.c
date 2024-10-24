@@ -719,7 +719,7 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig )
 	/* 如果使用定时器，必须适配模式的定时器执行时间，否则无法正确解析数据 */
 	//unsigned short int timer_set_ms=(1000/frequency)*psdiv*fifodiv;
 	hw_timer_count = 0;
-	bsp_hw_timer_set(HW_TIMER4, 32, vc30fx_timer_count);
+	bsp_hw_timer_set(HW_TIMER2, 32, vc30fx_timer_count);
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
 	extab_user_isr_set(IO_PG6, RISE_EDGE, IOUD_SEL_PD, vc30fx_isr);
 	extab_user_isr_mode_set(IO_PG6, MODE_BOTH_AWAKEN_SLEEP_PWK);

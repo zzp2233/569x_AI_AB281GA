@@ -887,10 +887,10 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
         }
 #endif
 #if UTE_BT30_CALL_SUPPORT
-        if((id == UTE_MOUDLE_SCREENS_CALL_INCOMING_ID) || (id == UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID))
-        {
-            return false;
-        }
+//         if((id == UTE_MOUDLE_SCREENS_CALL_INCOMING_ID) || (id == UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID))
+//         {
+//             return false;
+//         }
 #endif
 #if UTE_MOUDLE_SCREENS_BREATH_TRAINING_ID
         if(id == UTE_MOUDLE_SCREENS_BREATH_TRAINING_ID)

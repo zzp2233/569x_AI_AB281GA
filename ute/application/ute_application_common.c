@@ -9,7 +9,9 @@
 #include "ute_module_log.h"
 #include "ute_application_common.h"
 #include "ute_module_message.h"
+#include "ute_module_call.h"
 #include "include.h"
+#include "ute_drv_motor.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_heart.h"
@@ -25,7 +27,6 @@
 #include "ute_module_breathrate.h"
 #include "ute_module_screens_common.h"
 #include "ute_task_gui.h"
-#include "ute_drv_motor.h"
 #include "ute_drv_battery_common.h"
 #include "ute_module_gui_common.h"
 #include "ute_module_sleep.h"
@@ -107,6 +108,7 @@ void *uteApplicationCommonSyncDataTimer = NULL;
 void uteApplicationCommonStartupFrist(void)
 {
     uteModulePlatformCreateMutex(&uteApplicationCommonMute);
+    uteModulePlatformDlpsBitReset();
     memset(&uteApplicationCommonData,0,sizeof(ute_application_common_data_t));
     uteApplicationCommonData.isStartupFristFinish = false;
     uteApplicationCommonData.isStartupSecondFinish = false;
@@ -168,7 +170,7 @@ void uteApplicationCommonStartupSecond(void)
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
         uteApplicationCommonData.isStartupFristFinish = true;
         //其他硬件初始化
-        //uteDrvMotorInit();
+        uteDrvMotorInit();
         //uteModulePlatformQdecInit();
 #if UTE_USER_ID_FOR_BINDING_SUPPORT||UTE_MODULE_SCREENS_APP_BINDING_SUPPORT
         uteModuleAppBindingInit();
@@ -229,7 +231,7 @@ void uteApplicationCommonStartupSecond(void)
         //uteModuleSportInit();
         //uteModuleNotifyInit();
         //uteModuleSleepInit();
-        //uteModuleCallInit();
+        uteModuleCallInit();
         //uteModuleOtaInit();
         //uteModuleMusicInit();
         //uteModuleStopWatchInit();
@@ -374,7 +376,7 @@ void uteApplicationCommonStartupSecond(void)
             uteModuleMotorSetIsOpenVibrationStatus(true);
         }
 #endif
-        // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         uteApplicationCommonData.isStartupSecondFinish = true;
         uteApplicationCommonData.isPowerOn = true;
         uteApplicationCommonData.systemPowerOnSecond = 0;
@@ -886,7 +888,7 @@ void uteApplicationCommonRealPowerOffMsg(void)
     uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);
     uteModuleCallIsBtAutoCloseSaveConfig();
 #endif
-    // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     // uteModulePlatformSetFastAdvertisingTimeCnt(0);
 
 #if UTE_MODULE_SHIP_MODE_SUPPORT

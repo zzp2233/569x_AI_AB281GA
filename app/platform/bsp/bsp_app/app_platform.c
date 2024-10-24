@@ -1,5 +1,5 @@
 #include "include.h"
-
+#include "func_cover.h"
 #define TRACE_EN                0
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -61,7 +61,7 @@ static bool ute_alarm_check(tm_t *now_time)
                 if ((alarm_p->repeatRemindHour == now_time->hour) && (alarm_p->repeatRemindMin == now_time->min)) {//到时间
                     TRACE("repeat alarm[%d] ring, [%02d:%02d]\n", i, alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
                     uteModuleSystemtimeSetAlarmRingIndex(i);
-                    sys_cb.cover_index = COVER_ALARM;
+                    sys_cb.cover_index = REMIND_COVER_ALARM;
 
                     goto __exit;
                 }
@@ -70,7 +70,7 @@ static bool ute_alarm_check(tm_t *now_time)
                     TRACE("alarm[%d] ring, [%02d:%02d]\n", i, alarm_p->hour, alarm_p->min);
                     uteModuleSystemtimeSetAlarmRingIndex(i);
                     //alarm_later_check();
-                    sys_cb.cover_index = COVER_ALARM;
+                    sys_cb.cover_index = REMIND_COVER_ALARM;
                     if (cycle >> 7) {
                         alarm_p->isOpen = false;
                     }
@@ -135,37 +135,6 @@ void app_ute_remind_init(void)
     co_timer_set(&ute_remind_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, ute_remind_check_1s_pro, NULL);
     co_timer_set_sleep(&ute_remind_timer, true);
 }
-
-void app_msg_pop_up(void)
-{
-    if (sys_cb.gui_sleep_sta) {
-        sys_cb.gui_need_wakeup = 1;
-    }
-    reset_sleep_delay_all();
-
-    msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
-    msg_enqueue(EVT_MSGBOX_EXIT);
-    msg_enqueue(EVT_WATCH_MSG_POP_UP);
-}
-
-void app_ute_msg_pop_up(void)
-{
-    char *msg = NULL;
-    char *title = NULL;
-#if LE_ANCS_CLIENT_EN
-    ble_ancs_msg_cb_t *ble_msg = ble_app_ancs_get_msg();
-#else
-    ble_msg_cb_t *ble_msg = &app_data.sector0.ble_msg_cb;
-#endif
-    msg = (char *)&ble_msg->msg_content[ble_msg->msg_show_num];
-    title = (char *)&ble_msg->msg_title[ble_msg->msg_show_num];
-    int res = msgbox(msg, title, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_WECHAT);
-    if (res == MSGBOX_RES_DELETE) {
-        //TODO: delete msg
-    }
-}
-
-
 #endif
 
 void app_platform_process(void)

@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func_menu.h"
+#include "func_cover.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -476,7 +477,7 @@ void func_process(void)
 
     if (sys_cb.msg_tag) { //有消息弹出
         sys_cb.msg_tag = false;
-        app_msg_pop_up();
+        app_msg_pop_up(sys_cb.msg_index);
         printf(">>>MSG POP\n");
     }
 
@@ -994,7 +995,7 @@ void func_message(size_msg_t msg)
             break;
 
         case EVT_WATCH_MSG_POP_UP:
-            app_ute_msg_pop_up();
+            app_ute_msg_pop_up(sys_cb.msg_index);
             break;
 
         default:

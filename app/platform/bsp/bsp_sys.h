@@ -4,45 +4,40 @@
 #define VOL_MAX                         xcfg_cb.vol_max   //最大音量级数
 
 //控制位汇总
-#define SYS_CTL_BT                      0               //蓝牙开关
-#define SYS_CTL_CALL_RING               1               //来电铃声
-#define SYS_CTL_ACLOCK_MON              2               //闹钟设置星期一
-#define SYS_CTL_ACLOCK_TUE              3               //闹钟设置星期二
-#define SYS_CTL_ACLOCK_WED              4               //闹钟设置星期三
-#define SYS_CTL_ACLOCK_THU              5               //闹钟设置星期四
-#define SYS_CTL_ACLOCK_FRI              6               //闹钟设置星期五
-#define SYS_CTL_ACLOCK_SAT              7               //闹钟设置星期六
-#define SYS_CTL_ACLOCK_SUN              8               //闹钟设置星期日
-#define SYS_CTL_ACLOCK1_ON              9               //闹钟1开关
-#define SYS_CTL_ACLOCK2_ON              10              //闹钟2开关
-#define SYS_CTL_ACLOCK3_ON              11              //闹钟3开关
-#define SYS_CTL_FUNC_SPORT_ON           12              //运动功能界面选择
-#define SYS_CTL_FUNC_SLEEP_ON           13              //睡眠功能界面选择
-#define SYS_CTL_FUNC_ACTIVITY_ON        14              //活动数据功能界面选择
-#define SYS_CTL_FUNC_HEART_ON           15              //心率功能界面选择
-#define SYS_CTL_FUNC_SPO2_ON            16              //血氧功能界面选择
-#define SYS_CTL_FUNC_HRV_ON             17              //血压功能界面选择b
-#define SYS_CTL_FUNC_BT_CALL_ON         18              //电话功能界面选择
-#define SYS_CTL_FUNC_WEATHER_ON         19              //天气功能界面选择
-#define SYS_CTL_FUNC_MUSIC_ON           20              //音乐功能界面选择
-#define SYS_CTL_FUNC_BREATHE_ON         21              //呼吸训练功能界面选择
-#define SYS_CTL_FUNC_SMS_ON             22              //消息功能界面选择
-#define SYS_CTL_FUNC_GAME_ON            23              //游戏功能界面选择
-#define SYS_CTL_FUNC_CALCUL_ON          24              //计算器功能界面选择
-#define SYS_CTL_FUNC_ALARM_ON           25              //闹钟功能界面选择
-#define SYS_CTL_FUNC_TIMER_ON           26              //定时器功能界面选择
-#define SYS_CTL_FUNC_STODWATCH_ON       27              //秒表功能界面选择
-#define SYS_CTL_FUNC_SETTINGS_ON        28              //设置功能界面选择
-#define SYS_CTL_FUNC_SPORT_RECORD_ON    29              //运动记录功能界面选择
+enum sys_ctl_bits {
+    SYS_CTL_BT = 0,                     //蓝牙开关
+    SYS_CTL_CALL_RING,                  //来电铃声
+    SYS_CTL_ACLOCK_MON,                 //闹钟设置星期一
+    SYS_CTL_ACLOCK_TUE,                 //闹钟设置星期二
+    SYS_CTL_ACLOCK_WED,                 //闹钟设置星期三
+    SYS_CTL_ACLOCK_THU,                 //闹钟设置星期四
+    SYS_CTL_ACLOCK_FRI,                 //闹钟设置星期五
+    SYS_CTL_ACLOCK_SAT,                 //闹钟设置星期六
+    SYS_CTL_ACLOCK_SUN,                 //闹钟设置星期日
+    SYS_CTL_FUNC_SPORT_ON,              //运动功能界面选择
+    SYS_CTL_FUNC_SLEEP_ON,              //睡眠功能界面选择
+    SYS_CTL_FUNC_ACTIVITY_ON,           //活动数据功能界面选择
+    SYS_CTL_FUNC_HEART_ON,              //心率功能界面选择
+    SYS_CTL_FUNC_SPO2_ON,               //血氧功能界面选择
+    SYS_CTL_FUNC_HRV_ON,                //血压功能界面选择b
+    SYS_CTL_FUNC_BT_CALL_ON,            //电话功能界面选择
+    SYS_CTL_FUNC_WEATHER_ON,            //天气功能界面选择
+    SYS_CTL_FUNC_MUSIC_ON,              //音乐功能界面选择
+    SYS_CTL_FUNC_BREATHE_ON,            //呼吸训练功能界面选择
+    SYS_CTL_FUNC_SMS_ON,                //消息功能界面选择
+    SYS_CTL_FUNC_GAME_ON,               //游戏功能界面选择
+    SYS_CTL_FUNC_CALCUL_ON,             //计算器功能界面选择
+    SYS_CTL_FUNC_ALARM_ON,              //闹钟功能界面选择
+    SYS_CTL_FUNC_TIMER_ON,              //定时器功能界面选择
+    SYS_CTL_FUNC_STODWATCH_ON,          //秒表功能界面选择
+    SYS_CTL_FUNC_SETTINGS_ON,           //设置功能界面选择
+    SYS_CTL_FUNC_SPORT_RECORD_ON,       //运动记录功能界面选择
 
-
-
-
-#define SYS_CTL_TOTAL_BITS              256
+    SYS_CTL_TOTAL_BITS = 256,
+};
 #define SYS_CTL_TOTAL_BYTES             ((SYS_CTL_TOTAL_BITS + 7) / 8)      //系统控制位
 
 //功能
-#define ALARM_CLOCK_NUM_MAX             3               //闹钟最大数量，需要同步修改列表item
 #define STOPWATCH_REC_NUM_MAX           10              //秒表最大数量，需要同步修改列表item
 #define WEATHER_CNT                     8               //天气类型数量
 
@@ -110,6 +105,8 @@ volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态
 #endif
     bool mp3_res_playing;
 
+    u8 rtc_cal_cnt;                                 //休眠后RTC校准次数，可通过差值判断是否已校准
+
     //运动
     u8 sport_idx;                                   //运动列表编号
     //设置
@@ -139,11 +136,11 @@ volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态
     u8  mon;
     u8  day;
     //闹钟
-    u32 alarm_total_sec[ALARM_CLOCK_NUM_MAX];       //记录每个闹钟总秒数
-    u8 alarm_week_sel[ALARM_CLOCK_NUM_MAX];         //记录每个闹钟的星期选择
-    u8 alarm_idx;                                   //当前闹钟 idx:0,1,2
-    u8 alarm_enable_cnt;                            //闹钟使能的个数 0:无闹钟
-    u8 alarm_enable_sel;                            //使能闹钟选择
+    u8 alarm_edit_idx;                              //当前编辑闹钟 idx:0,1,2
+    u8 alarm_edit_hour;                             //编辑闹钟时间（hour）
+    u8 alarm_edit_min;                              //编辑闹钟时间（min）
+    u8 alarm_edit_cycle;                            //编辑闹钟的星期选择（bit7:单次，bit6-bit0：日六五四三二一）
+    bool remind_tag;                                //闹钟提醒/健康提醒响起标志
     //勿扰定时
     u32 disturd_start_time_sec;               //记录开始休眠的总秒数
     u32 disturd_end_time_sec;                 //记录结束休眠的总秒数
@@ -168,10 +165,14 @@ volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态
     //运动记录
     u8 sport_record_cnt;
     u8 sport_record_btn_idx;
-    //SCO 状态
+    //弹窗序号
+    u8 cover_index;
+    //SCO状态
     bool sco_state;
     //通话
     u32 reject_tick;                                //通话挂断防呆计时，解决部分手机挂断状态更新慢的问题
+	//消息
+    bool msg_tag;                                   //消息弹出标志
 #if FUNC_MUSIC_EN
 	bool local_music_sta;                           //本地音乐状态
 	bool music_popup_en;                            //音乐页面插入跳转使能

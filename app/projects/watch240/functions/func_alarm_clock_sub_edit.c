@@ -7,6 +7,26 @@
 #define TRACE(...)
 #endif
 
+#if (USE_APP_TYPE == USE_AB_APP)
+#define ALARM_ENABLE_CNT()              alarm_num_get()
+#define ALARM_DELETE(idx)               alarm_clock_delete(idx)
+#define ALARM_GET_HOUR(idx)             app_data.sector0.alarm[idx].hour
+#define ALARM_GET_MIN(idx)              app_data.sector0.alarm[idx].minute
+#define ALARM_GET_CYCLE(idx)            app_data.sector0.alarm[idx].cycle
+#elif (USE_APP_TYPE == USE_UTE_APP)
+#define ALARM_ENABLE_CNT()              uteModuleSystemtimeGetAlarmTotalCnt()
+#define ALARM_DELETE(idx)               uteModuleSystemtimeDeleteAlarm(idx)
+#define ALARM_GET_HOUR(idx)             uteModuleSystemtimeGetAlarmHour(idx)
+#define ALARM_GET_MIN(idx)              uteModuleSystemtimeGetAlarmMin(idx)
+#define ALARM_GET_CYCLE(idx)            uteModuleSystemtimeGetAlarmCycle(idx)
+#else
+#define ALARM_ENABLE_CNT()              0
+#define ALARM_DELETE(idx)
+#define ALARM_GET_HOUR(idx)             0
+#define ALARM_GET_MIN(idx)              0
+#define ALARM_GET_CYCLE(idx)            0
+#endif
+
 //组件ID
 enum {
     //按键
@@ -37,49 +57,58 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 	compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_DELETE_BIN);
     compo_setid(btn, COMPO_ID_BTN_DEL);
-    compo_button_set_pos(btn, 120, 260);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei / 2 - 5);
 
-    btn = compo_button_create(frm);
-    compo_setid(btn, COMPO_ID_BTN_SET);
-    compo_button_set_location(btn, 120, 124, 240, 30);
-
-    btn = compo_button_create(frm);
-    compo_setid(btn, COMPO_ID_BTN_REPEAT);
-    compo_button_set_location(btn, 120, 220, 240, 30);
+    #define SELF_TXT_OFFSET     50
+    #define SELF_PIC_OFFSET     10
 
 	u8 hour, min;
-    hour = sys_cb.alarm_total_sec[sys_cb.alarm_idx] / 3600;
-    min = (sys_cb.alarm_total_sec[sys_cb.alarm_idx] % 3600) / 60;
+    hour = ALARM_GET_HOUR(sys_cb.alarm_edit_idx);
+    min = ALARM_GET_MIN(sys_cb.alarm_edit_idx);
     char aclock_str[8];
     sprintf(aclock_str, "%02d:%02d", hour, min);
 	compo_textbox_t *txt;
 	txt = compo_textbox_create(frm, 5);
 	compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_ASC_BIN);
 	compo_textbox_set_align_center(txt, false);
-	compo_textbox_set_pos(txt, 22, 70);
+	compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3);
     compo_textbox_set(txt, aclock_str);
+
+    btn = compo_button_create(frm);
+    compo_setid(btn, COMPO_ID_BTN_SET);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X,
+                              (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET + SELF_PIC_OFFSET,
+                              GUI_SCREEN_WIDTH, 50);
+
+    btn = compo_button_create(frm);
+    compo_setid(btn, COMPO_ID_BTN_REPEAT);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X,
+                              (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2 + SELF_PIC_OFFSET,
+                              GUI_SCREEN_WIDTH, 50);
 
     txt = compo_textbox_create(frm, 4);
     compo_textbox_set_align_center(txt, false);
-	compo_textbox_set_pos(txt, 22, 107);
+	compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET);
     compo_textbox_set(txt, "更改时间");
 
     txt = compo_textbox_create(frm, 4);
     compo_textbox_set_align_center(txt, false);
-	compo_textbox_set_pos(txt, 22, 154);
+	compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2);
     compo_textbox_set(txt, "设置重复");
 
     //新建图像
     compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_ALARM_CLOCK_DELETE_CLICK_BIN);
     compo_setid(pic_click, COMPO_ID_PIC_DEL_CLICK);
-    compo_picturebox_set_pos(pic_click, 120, 336);
+    compo_picturebox_set_pos(pic_click, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei / 2 - 5);
     compo_picturebox_set_visible(pic_click, false);
 
     pic_click = compo_picturebox_create(frm, UI_BUF_ALARM_CLOCK_OPEN_BIN);
-    compo_picturebox_set_pos(pic_click, 212, 124);
+    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_ALARM_CLOCK_OPEN_BIN).wid/2 - SELF_TXT_OFFSET,
+                             (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET + SELF_PIC_OFFSET);
 
     pic_click = compo_picturebox_create(frm, UI_BUF_ALARM_CLOCK_OPEN_BIN);
-    compo_picturebox_set_pos(pic_click, 212, 184);
+    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_ALARM_CLOCK_OPEN_BIN).wid/2 - SELF_TXT_OFFSET,
+                             (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2 + SELF_PIC_OFFSET);
 
 
 
@@ -118,18 +147,8 @@ static void func_alarm_clock_sub_edit_button_click(void)
 
     switch (id) {
     case COMPO_ID_BTN_DEL:
-        task_stack_pop();
+        ALARM_DELETE(sys_cb.alarm_edit_idx);
         func_cb.sta = FUNC_ALARM_CLOCK;
-        sys_cb.alarm_enable_cnt--;
-
-        for (u8 i=sys_cb.alarm_idx; i<sys_cb.alarm_enable_cnt; i++) {
-            sys_cb.alarm_total_sec[i] = sys_cb.alarm_total_sec[i + 1];
-            sys_cb.alarm_week_sel[i] = sys_cb.alarm_week_sel[i + 1];
-        }
-        sys_cb.alarm_total_sec[sys_cb.alarm_enable_cnt] = 0;
-        sys_cb.alarm_week_sel[sys_cb.alarm_enable_cnt] = 0;
-
-        sys_cb.alarm_idx = sys_cb.alarm_enable_cnt;             //最后一个闹钟idx
         break;
 
     case COMPO_ID_BTN_SET:
@@ -194,8 +213,6 @@ static void func_alarm_clock_sub_edit_enter(void)
 //退出闹钟功能
 static void func_alarm_clock_sub_edit_exit(void)
 {
-
-    func_cb.last = FUNC_ALARM_CLOCK_SUB_EDIT;
 }
 
 //闹钟功能

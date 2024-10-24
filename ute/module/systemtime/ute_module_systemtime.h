@@ -16,6 +16,7 @@
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_TIME_FORMAT  "systemparam/timeFormat"
 /*!写入闹钟信息参数目录 zn.zeng, 2021-08-21  */
 #define UTE_MODULE_FILESYSTEM_ALARMINFO_DIR "alarmInfo"
+
 /**
  * @brief       系统时间数据结构
  * @details 系统时间数据结构
@@ -122,13 +123,22 @@ void uteModuleSystemTimeLocalSetDate(uint16_t year,uint8_t month,uint8_t day);
 void uteModuleSystemTimeLocalSetHourMin(uint8_t hour,uint8_t min);
 
 void uteModuleSystemtimeSaveAlarmInfo(ute_module_systemtime_one_alarm_t value,uint8_t index);
-void uteModuleSystemtimeSetAlarm(ute_module_systemtime_one_alarm_t set, uint8_t index);
-void uteModuleSystemtimeGetAlarm(ute_module_systemtime_one_alarm_t *set, uint8_t index);
-void uteModuleSystemtimeDeleteAlarm(uint8_t index);
-void uteModuleSystemtimeSetAlarmDisplayIndex(uint8_t alarmDisplayIndex);
-uint8_t uteModuleSystemtimeGetAlarmDisplayIndex(void);
-void uteModuleSystemtimeSetAlarmTotalCnt(uint8_t alarmTotalCnt);
 uint8_t uteModuleSystemtimeGetAlarmTotalCnt(void);
+void uteModuleSystemtimeDeleteAlarm(uint8_t index);
+
+
+///适配中科平台接口（闹钟）
+void uteModuleSystemtimeEnableAlarm(uint8_t index, bool en);
+uint8_t uteModuleSystemtimeGetAlarmHour(uint8_t index);
+uint8_t uteModuleSystemtimeGetAlarmMin(uint8_t index);
+uint8_t uteModuleSystemtimeGetAlarmSec(uint8_t index);
+uint8_t uteModuleSystemtimeGetAlarmCycle(uint8_t index);
+uint8_t uteModuleSystemtimeGetAlarmEnableState(uint8_t index);
+uint8_t uteModuleSystemtimeGetAlarmMaxCnt(void);
+uint8_t uteModuleSystemtimeGetAlarmIsFree(uint8_t index);
+uint8_t uteModuleSystemtimeAlarmEdit(uint8_t index, bool enable, uint8_t cycle, uint8_t alarm_hour, uint8_t alarm_minute, uint8_t motor_mode, uint8_t remind_later);
+uint8_t uteModuleSystemtimeGetAlarmRingIndex(void);
+void uteModuleSystemtimeSetAlarmRingIndex(uint8_t index);
 
 #endif //_UTE_MODULE_SYSTEMTIME_H_
 

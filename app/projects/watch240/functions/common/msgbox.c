@@ -8,13 +8,8 @@
 
 #define ANIMATION_TICK_EXPIRE           18                          //对话框动画切换单位时间(ms)
 #define ANIMATION_STEP                  (GUI_SCREEN_WIDTH / 8)      //步进
-#if !FLASHDB_EN
 #define MSGBOX_MAX_TXT_LEN              64
-#else
-#define MSGBOX_MAX_TXT_LEN              140                         //短信的最大长度
-#endif
-
-bool fun_message_is_duanxin(void);
+#define MSGBOX_EXIT_TICK_EXPIRE         5000                        //定时退出单位时间(ms)
 
 //组件ID
 enum{
@@ -24,10 +19,13 @@ enum{
     COMPO_ID_BTN_YES,
     COMPO_ID_BTN_NO,
     COMPO_ID_BTN_DELETE,
+    COMPO_ID_BTN_REMIND_LATER,
+    COMPO_ID_BTN_CLOSE,
 };
 
 enum {
     MSG_TYPE_WECHAT = 1,   //微信消息
+    MSG_TYPE_COVER,        //弹窗消息
 };
 
 typedef struct msg_cb_t_ {
@@ -38,6 +36,7 @@ typedef struct msg_cb_t_ {
     bool show;
     bool flag_animation;
     bool flag_entering;
+    u32 exit_tick;
 } msg_cb_t;
 
 //创建对话框窗体
@@ -55,14 +54,22 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, int mode, char ms
 
     //创建文本
     compo_textbox_t *txt_off = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-    compo_textbox_set_location(txt_off, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y , GUI_SCREEN_WIDTH, 118);
+    compo_textbox_set_location(txt_off, 160, 220, 320, 200);
     compo_textbox_set_multiline(txt_off, true);
     compo_textbox_set(txt_off, msg);
 
     //消息推送弹框使用，根据消息类型创建对应消息图标
     switch(msg_type) {
         case MSG_TYPE_WECHAT:
-            compo_form_add_image(frm, UI_BUF_SETTING_LIGHT_BIN, 120, 84);  //需要更替为微信图标
+            compo_form_add_image(frm, UI_BUF_SETTING_LIGHT_BIN, 160, 100);  //需要更替为微信图标
+            break;
+        case MSG_TYPE_COVER:
+            compo_textbox_set_location(txt_off, GUI_SCREEN_CENTER_X, func_cover_get_txt_y(), GUI_SCREEN_WIDTH, 50);              //调整文本位置
+            compo_form_add_image(frm, func_cover_get_pic_res_addr(), GUI_SCREEN_CENTER_X, func_cover_get_pic_y());  //需要更替为弹窗图标
+            compo_textbox_t *txt = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+            compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, func_cover_get_title_txt_y());
+            compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+            compo_textbox_set(txt, title);
             break;
         default:
             break;
@@ -73,32 +80,45 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, int mode, char ms
     case MSGBOX_MODE_BTN_OK:
         btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
         compo_setid(btn, COMPO_ID_BTN_OK);
-        compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 231);
+        compo_button_set_pos(btn, 160, 300);
         break;
 
     case MSGBOX_MODE_BTN_OKCANCEL:
         btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
         compo_setid(btn, COMPO_ID_BTN_CANCEL);
-        compo_button_set_pos(btn, 46, 231);
+        compo_button_set_pos(btn, 61, 300);
 
         btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
         compo_setid(btn, COMPO_ID_BTN_OK);
-        compo_button_set_pos(btn, 174, 231);
+        compo_button_set_pos(btn, 261, 300);
         break;
 
     case MSGBOX_MODE_BTN_YESNO:
         btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
         compo_setid(btn, COMPO_ID_BTN_NO);
-        compo_button_set_pos(btn, 46, 231);
+        compo_button_set_pos(btn, 61, 300);
 
         btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
         compo_setid(btn, COMPO_ID_BTN_YES);
-        compo_button_set_pos(btn, 174, 231);
+        compo_button_set_pos(btn, 261, 300);
         break;
     case MSGBOX_MODE_BTN_DELETE:
         btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);  //需更替为删除图标
         compo_setid(btn, COMPO_ID_BTN_NO);
-        compo_button_set_pos(btn, 120, 231);
+        compo_button_set_pos(btn, 140, 300);
+        break;
+    case MSGBOX_MODE_BTN_NONE:
+        break;
+    case MSGBOX_MODE_BTN_REMIND_LATER_CLOSE:
+        //btn = compo_button_create_by_image(frm, UI_BUF_POP_UP_REMIND_LATER_BIN);
+        btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+        compo_setid(btn, COMPO_ID_BTN_REMIND_LATER);
+        compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_YES_BIN).hei/2 - 10);
+
+        //btn = compo_button_create_by_image(frm, UI_BUF_POP_UP_CLOSE_BIN);
+        btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+        compo_setid(btn, COMPO_ID_BTN_CLOSE);
+        compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei/2 - 10);
         break;
     default:
         halt(HALT_MSGBOX_MODE);
@@ -141,6 +161,17 @@ static void msgbox_button_click(void)
         msg_cb->flag_animation = true;
         msg_cb->flag_entering = false;
         break;
+    case COMPO_ID_BTN_REMIND_LATER:
+        msg_cb->res = MSGBOX_RES_REMIND_LATER;
+        msg_cb->flag_animation = true;
+        msg_cb->flag_entering = false;
+        break;
+
+    case COMPO_ID_BTN_CLOSE:
+        msg_cb->res = MSGBOX_RES_NO;
+        msg_cb->flag_animation = true;
+        msg_cb->flag_entering = false;
+        break;
 
     default:
         break;
@@ -153,24 +184,23 @@ static void msgbox_message(size_msg_t msg)
     msg_cb_t *msg_cb = func_cb.msg_cb;
     switch (msg) {
     case MSG_CTP_CLICK:
+        printf("MSG_CTP_CLICK\n");
         if (!msg_cb->flag_animation) {
             msgbox_button_click();                         //单击按钮
         }
         break;
 
-#if FLASHDB_EN
-    case MSG_CTP_SHORT_LEFT:
-        if (fun_message_is_duanxin()) {
-            // 快捷回复
-            func_cb.sta = FUNC_MESSAGE_REPLY;
-            msg_cb->show = false;
-        }
-        break;
-#endif
     case MSG_CTP_SHORT_RIGHT:
     case KU_BACK:
+        printf("KU_BACK\n");
         msg_cb->flag_animation = true;
         msg_cb->flag_entering = false;
+        break;
+
+    case EVT_MSGBOX_EXIT:
+        printf("EVT_MSGBOX_EXIT\n");
+        msg_cb->res = MSGBOX_RES_EXIT;
+        msg_cb->show = false;
         break;
 
     default:
@@ -206,6 +236,19 @@ static void msgbox_process(void)
             }
             compo_form_scale_to(msg_cb->frm, wid, hei);
         }
+    } else {
+
+        uint32_t msgbox_exit_time = MSGBOX_EXIT_TICK_EXPIRE;
+        if (sys_cb.cover_index == COVER_ALARM) {        //闹钟覆盖界面
+            msgbox_exit_time = UTE_LOCAL_ALARM_DEFAULT_RING_TIMES * 1000;
+        }
+
+        if (tick_check_expire(msg_cb->exit_tick, msgbox_exit_time)) { //定时退出
+            msg_cb->exit_tick = tick_get();
+            msg_cb->flag_animation = true;
+            msg_cb->flag_entering = false;
+            msg_cb->res = MSGBOX_RES_TIMEOUT_EXIT;
+        }
     }
     func_process();
 }
@@ -220,6 +263,7 @@ static void msgbox_enter(compo_form_t *frm)
     msg_cb->flag_animation = true;
     msg_cb->flag_entering = true;
     msg_cb->tick = tick_get();
+    msg_cb->exit_tick = tick_get();
     compo_form_scale_to(msg_cb->frm, 1, 1);
 }
 

@@ -336,6 +336,12 @@ static void sfunc_sleep(void)
         }
 #endif
 
+        if (sys_cb.remind_tag) {
+            printf("remind wakeup\n");
+            gui_need_wkp = true;
+            break;
+        }
+
         if (co_timer_pro(true)) {
             printf("co_timer_pro_wakeup\n");
 			break;
@@ -463,7 +469,7 @@ bool sleep_process(is_sleep_func is_sleep)
         if (sys_cb.sleep_delay == 0) {
             if(sys_cb.guioff_delay == 0) /*! 亮屏时不休眠,wang.luo 2024-10-21 */
             {
-                sfunc_sleep();              //熄屏且进入休眠                
+                sfunc_sleep();              //熄屏且进入休眠
             }
             reset_sleep_delay_all();
             reset_pwroff_delay();

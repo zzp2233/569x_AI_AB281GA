@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_log.h"
+#include "string.h"
 
 
 #if TRACE_EN
@@ -11,6 +12,10 @@
 
 #define Card_height 66
 #define Card_Y 74
+
+#define CARD_RECT_MAX   2
+#define CARD_ICON_MAX   5
+#define CARD_TEXT_MAX   5
 
 enum{
    Name=1,
@@ -32,13 +37,18 @@ typedef struct f_about_t_ {
 //关于页面
 compo_form_t *func_set_sub_about_form_create(void)
 {
-    component_t *compo;
+    compo_cardbox_t *cardbox;
     uint8_t davName[40];
-    memset(davName,0,sizeof(davName));
+    uint8_t Ble_Address[6];
+    uint8_t Ble_Address_str_buf[17+2];
     uint8_t davNameLength = sizeof(davName);
-    uteModulePlatformGetDevName(davName,davNameLength);
-    //printf("11111:%s",davName);
-    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"11111:%s",davName);
+
+    memset(Ble_Address,'\0',sizeof(Ble_Address));
+    memset(davName,'\0',sizeof(davName));
+
+    uteModulePlatformGetDevName(davName,&davNameLength);//获取设备名称
+    uteModulePlatformGetBleMacAddress(Ble_Address);//获取蓝牙地址
+   // UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"11111:%s",davName);
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -48,47 +58,47 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_ABOUT]);
 
     //设备名称
-    compo = compo_cardbox_create(frm, 0, 1, 2, GUI_SCREEN_WIDTH-10, Card_height);
-    compo_cardbox_set_pos(compo, GUI_SCREEN_CENTER_X, Card_Y);
-    compo_setid(compo, 0);
-    compo_cardbox_icon_set(compo, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
-    compo_cardbox_icon_set_location(compo, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
+    cardbox = compo_cardbox_create(frm, 0, 1, 2, GUI_SCREEN_WIDTH-10, Card_height);
+    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, Card_Y);
+    compo_setid(cardbox, 0);
+    compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
+    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
 
-    compo_cardbox_text_set(compo, 0, i18n[STR_DEV_NEME]);    //文字
-    compo_cardbox_text_set_location(compo,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
+    compo_cardbox_text_set(cardbox, 0, i18n[STR_DEV_NEME]);    //文字
+    compo_cardbox_text_set_location(cardbox,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
 
-    compo_cardbox_text_set_font(compo, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
-    compo_cardbox_text_set(compo, 1, davName);
-    compo_cardbox_text_set_location(compo,1,-7*12+4,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
+    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
+    compo_cardbox_text_set(cardbox, 1, (const char *)davName);
+    compo_cardbox_text_set_location(cardbox,1,-(9-strlen(davName)/2)*12+4,12+4,GUI_SCREEN_WIDTH-10,Card_height/2);
 
     //系统版本
-    compo = compo_cardbox_create(frm, 0, 1, 2, GUI_SCREEN_WIDTH-10, Card_height);
-    compo_cardbox_set_pos(compo, GUI_SCREEN_CENTER_X, Card_Y*2);
-    compo_setid(compo, 1);
-    compo_cardbox_icon_set(compo, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
-    compo_cardbox_icon_set_location(compo, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
+    cardbox = compo_cardbox_create(frm, 0, 1, 2, GUI_SCREEN_WIDTH-10, Card_height);
+    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, Card_Y*2);
+    compo_setid(cardbox, 1);
+    compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
+    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
 
-    compo_cardbox_text_set(compo, 0, i18n[STR_SYS_VERSION]);    //文字
-    compo_cardbox_text_set_location(compo,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
+    compo_cardbox_text_set(cardbox, 0, i18n[STR_SYS_VERSION]);    //文字
+    compo_cardbox_text_set_location(cardbox,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
 
-    compo_cardbox_text_set_font(compo, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
-    compo_cardbox_text_set(compo, 1, UTE_SW_VERSION);
-    compo_cardbox_text_set_location(compo,1,-7*12+4,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
+    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
+    compo_cardbox_text_set(cardbox, 1, UTE_SW_VERSION);
+    compo_cardbox_text_set_location(cardbox,1,-(9-sizeof(UTE_SW_VERSION)/2)*12+4,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
 
     //蓝牙地址
-    compo = compo_cardbox_create(frm, 0, 1, 2, GUI_SCREEN_WIDTH-10, Card_height);
-    compo_cardbox_set_pos(compo, GUI_SCREEN_CENTER_X, Card_Y*3);
-    compo_setid(compo, 2);
-    compo_cardbox_icon_set(compo, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
-    compo_cardbox_icon_set_location(compo, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
+    cardbox = compo_cardbox_create(frm, 0, 1, 2, GUI_SCREEN_WIDTH-10, Card_height);
+    compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, Card_Y*3);
+    compo_setid(cardbox, 2);
+    compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
+    compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10,Card_height);
 
-    compo_cardbox_text_set(compo, 0, i18n[STR_BLE_MAC]);    //文字
-    compo_cardbox_text_set_location(compo,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
+    compo_cardbox_text_set(cardbox, 0, i18n[STR_BLE_MAC]);    //文字
+    compo_cardbox_text_set_location(cardbox,0,-3*24+6,-12,GUI_SCREEN_WIDTH-10,Card_height/2);
 
-//    snprintf(buf, sizeof(buf), "%s",buf);    //信息
-//    compo_cardbox_text_set_font(compo, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
-//    compo_cardbox_text_set(compo, 1, buf);
-//    compo_cardbox_text_set_location(compo,1,-4*24+6,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
+    snprintf((char *)Ble_Address_str_buf, sizeof(Ble_Address_str_buf), "%02x:%02x:%02x:%02x:%02x:%02x",Ble_Address[0],Ble_Address[1],Ble_Address[2],Ble_Address[3],Ble_Address[4],Ble_Address[5]); //信息
+    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
+    compo_cardbox_text_set(cardbox, 1, Ble_Address_str_buf);
+    compo_cardbox_text_set_location(cardbox,1,-(9-(sizeof(Ble_Address_str_buf)/2-3))*12,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
 
     return frm;
 }

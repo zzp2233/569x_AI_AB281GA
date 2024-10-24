@@ -66,6 +66,7 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define EVT_UDE_SET_VOL         0xe9
 #define EVT_CALL_NUMBER_UPDATE  0xe8
 #define EVT_READY_EXCHANGE_MTU  0xe7
+
 #define EVT_BT_CONNECT_ONCE     0xe5
 #define EVT_ID3_TITLE_UPDATE    0xe4
 #define EVT_ID3_ARTIST_UPDATE   0xe3
@@ -78,6 +79,12 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define EVT_SCO_DBG_NOTIFY      0xdd
 #endif // BT_SCO_APP_DBG_EN
 #define EVT_VC30FX_ISR          0xdc
+
+#define EVT_CLOCK_DROPDOWN_EXIT 0xc0
+#define EVT_WATCH_SET_COVER     0xc1
+#define EVT_MSGBOX_EXIT         0xc2
+#define EVT_WATCH_MSG_POP_UP    0xc3
+
 
 //普通按键定义，可以支持短按，长按，双击等。范围：0 ~ 0xf
 #define NO_KEY                  0x00

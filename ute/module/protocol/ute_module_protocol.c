@@ -1,7 +1,7 @@
 /**
 *@file
-*@brief     Ğ­ÒéÄ£¿é
-*@details   ºÍÓ¦ÓÃ¶ËÍ¨Ñ¶Ğ­Òé
+*@brief     åè®®æ¨¡å—
+*@details   å’Œåº”ç”¨ç«¯é€šè®¯åè®®
 *@author        zn.zeng
 *@date        2021-08-17
 *@version       v1.0
@@ -19,8 +19,8 @@
 #include "ute_drv_motor.h"
 
 /**
-*@brief        ÉèÖÃÊ±¼ä12H»òÕß24H¸ñÊ½£¬¹«ÀïÓ¢ÀïÉèÖÃ
-*@details      ½âÎöĞ­Òé
+*@brief        è®¾ç½®æ—¶é—´12Hæˆ–è€…24Hæ ¼å¼ï¼Œå…¬é‡Œè‹±é‡Œè®¾ç½®
+*@details      è§£æåè®®
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -49,7 +49,7 @@ void uteModuleProtocolSetParamHourKmFormat(uint8_t*receive,uint8_t length)
     }
 }
 /**
-*@brief        °ó¶¨ÌáĞÑ
+*@brief        ç»‘å®šæé†’
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -71,7 +71,7 @@ void uteAppCmdVerificationBindingNotify()
 //     }
 }
 /**
-*@brief        »ñÈ¡Èí¼ş°æ±¾ºÅ
+*@brief        è·å–è½¯ä»¶ç‰ˆæœ¬å·
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -89,8 +89,8 @@ void uteModuleProtocolReadSoftwareVersion(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief        »ñÈ¡µç³ØµçÁ¿
-*@details    ·¶Î§ÔÚ0~100%
+*@brief        è·å–ç”µæ± ç”µé‡
+*@details    èŒƒå›´åœ¨0~100%
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -104,8 +104,8 @@ void uteModuleProtocolReadBatteryLvl(uint8_t*receive,uint8_t length)
     uteModuleProfileBleSendToPhone(&response[0],2);
 }
 /**
-*@brief        ÉèÖÃÊ±¼äÈÕÆÚ½âÎö
-*@details      °üÀ¨Ê±Çø
+*@brief        è®¾ç½®æ—¶é—´æ—¥æœŸè§£æ
+*@details      åŒ…æ‹¬æ—¶åŒº
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -164,7 +164,7 @@ void uteModuleProtocolSetDateTime(uint8_t*receive,uint8_t length)
     }
 }
 /**
-*@brief        ÉèÖÃbleÃû³Æ
+*@brief        è®¾ç½®bleåç§°
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -181,10 +181,10 @@ void uteModuleProtocolSetBleName(uint8_t*receive,uint8_t length)
     }
 }
 /**
-*@brief        ÉèÖÃÆäËû²ÎÊı½âÎö
-*@details      ²ÎÊı£ºÉí¸ß¡¢ÌåÖØ¡¢ÁÁÆÁÊ±¼ä¡¢Ä¿±ê²½Êı¡¢Ì§ÊÖÁÁÆÁ¿ª¹Ø¡¢
-*              ×î´óĞÄÂÊ±¨¾¯Öµ¡¢Ö§³ÖĞÄÂÊ¸¨ÖúË¯Ãß¿ª¹Ø£¨ÎŞĞ§£©¡¢ÄêÁä¡¢ĞÔ±ğ¡¢·À¶ª¹¦ÄÜ¿ª¹Ø£¨ÎŞĞ§£©¡¢
-*              ÖĞÓ¢ÎÄÉèÖÃ£¨ÎŞĞ§£©¡¢ÎÂ¶Èµ¥Î»ÇĞ»»¡¢×îĞ¡ĞÄÂÊ±¨¾¯Öµ
+*@brief        è®¾ç½®å…¶ä»–å‚æ•°è§£æ
+*@details      å‚æ•°ï¼šèº«é«˜ã€ä½“é‡ã€äº®å±æ—¶é—´ã€ç›®æ ‡æ­¥æ•°ã€æŠ¬æ‰‹äº®å±å¼€å…³ã€
+*              æœ€å¤§å¿ƒç‡æŠ¥è­¦å€¼ã€æ”¯æŒå¿ƒç‡è¾…åŠ©ç¡çœ å¼€å…³ï¼ˆæ— æ•ˆï¼‰ã€å¹´é¾„ã€æ€§åˆ«ã€é˜²ä¸¢åŠŸèƒ½å¼€å…³ï¼ˆæ— æ•ˆï¼‰ã€
+*              ä¸­è‹±æ–‡è®¾ç½®ï¼ˆæ— æ•ˆï¼‰ã€æ¸©åº¦å•ä½åˆ‡æ¢ã€æœ€å°å¿ƒç‡æŠ¥è­¦å€¼
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -211,7 +211,7 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
         personal.weight = receive[4]*1000+receive[3]*10;
         uteApplicationCommonSavePersonalInfo(personal);
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
-        cwmUserInfoUpdate();    //Í¬²½ÓÃ»§ĞÅÏ¢¸øÈüÎ¬Ëã·¨
+        cwmUserInfoUpdate();    //åŒæ­¥ç”¨æˆ·ä¿¡æ¯ç»™èµ›ç»´ç®—æ³•
 #endif
         bool isHandScreenOn;
         bool isFahrenheit;
@@ -270,7 +270,7 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
     }
 }
 /**
-*@brief        »Ö¸´³ö³§ÉèÖÃ
+*@brief        æ¢å¤å‡ºå‚è®¾ç½®
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -284,7 +284,7 @@ void uteModuleProtocolFactoryReset(uint8_t*receive,uint8_t length)
 }
 
 /**
-*@brief        ÉèÖÃÄÖÖÓ²ÎÊı»òÕß¿ØÖÆÕğ¶¯
+*@brief        è®¾ç½®é—¹é’Ÿå‚æ•°æˆ–è€…æ§åˆ¶éœ‡åŠ¨
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -297,11 +297,11 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
 
     if (length>=8)
     {
-        if(receive[1]==0x00)/*!Õğ¶¯¿ØÖÆ zn.zeng, 2021-08-21  */
+        if(receive[1]==0x00)/*!éœ‡åŠ¨æ§åˆ¶ zn.zeng, 2021-08-21  */
         {
             if ((receive[4] == 0x01) && (receive[5] == 0x02) && (receive[6] == 0x07) && (receive[7] == 0x01))
             {
-                /*!APP²éÕÒÊÖ»·Ê±ÁÁÆÁ xjc 2022-01-12*/
+                /*!APPæŸ¥æ‰¾æ‰‹ç¯æ—¶äº®å± xjc 2022-01-12*/
 
                 if(0)
                 {}
@@ -343,12 +343,12 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
             }
             else if(receive[5]==10)
             {
-                /*!À´µçµÄÊ±ºò£¬Õğ¶¯ÔÚ½çÃæÀïÃæ´¦Àí£¬zn.zeng 2022-07-01*/
+                /*!æ¥ç”µçš„æ—¶å€™ï¼Œéœ‡åŠ¨åœ¨ç•Œé¢é‡Œé¢å¤„ç†ï¼Œzn.zeng 2022-07-01*/
             }
             else
             {
 #if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
-                if(receive[5] == 0x01) //ÏûÏ¢ÌáĞÑÕğ¶¯
+                if(receive[5] == 0x01) //æ¶ˆæ¯æé†’éœ‡åŠ¨
                 {
                     if(!uteModuleGuiCommonIsDontNeedNotificationGuiScreen())
                     {
@@ -364,7 +364,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
 #endif
             }
         }
-        else/*! ÉèÖÃÄÖÖÓ²ÎÊı zn.zeng, 2021-08-21  */
+        else/*! è®¾ç½®é—¹é’Ÿå‚æ•° zn.zeng, 2021-08-21  */
         {
 #if (!UTE_MODULE_LOCAL_ALARM_SUPPORT)
             if((receive[8]>0)&&(receive[8]<=SYSTEM_TIME_ALARMS_MAX_CNT))
@@ -402,7 +402,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
 
 }
 /**
-*@brief        ¶ÁÈ¡ble mac µØÖ·
+*@brief        è¯»å–ble mac åœ°å€
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -418,7 +418,7 @@ void uteModuleProtocolReadBleMac(uint8_t*receive,uint8_t length)
     uteModuleProfileBleSendToPhone(&response[0],7);
 }
 /**
-*@brief        ÉèÖÃ¶à¹úÓïÑÔ
+*@brief        è®¾ç½®å¤šå›½è¯­è¨€
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -464,13 +464,13 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 #ifdef SCREEN_TITLE_MULTIPLE_HEBREW_LANGUAGE_SUPPORT
         response[17] |= SCREEN_TITLE_MULTIPLE_HEBREW_LANGUAGE_SUPPORT<<7;
 #endif
-#if SCREEN_TITLE_MULTIPLE_HUNGARIAN_LANGUAGE_SUPPORT//ĞÙÑÀÀûÓï 0x1a
+#if SCREEN_TITLE_MULTIPLE_HUNGARIAN_LANGUAGE_SUPPORT//åŒˆç‰™åˆ©è¯­ 0x1a
         response[16] |= SCREEN_TITLE_MULTIPLE_HUNGARIAN_LANGUAGE_SUPPORT << 1;
 #endif
 #ifdef SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT
         response[16] |= SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT   << 2;
 #endif
-#if SCREEN_TITLE_MULTIPLE_SHQIP_LANGUAGE_SUPPORT//°¢¶û°ÍÄáÑÇÓï 0x1d
+#if SCREEN_TITLE_MULTIPLE_SHQIP_LANGUAGE_SUPPORT//é˜¿å°”å·´å°¼äºšè¯­ 0x1d
         response[16] |= SCREEN_TITLE_MULTIPLE_SHQIP_LANGUAGE_SUPPORT << 4;
 #endif
 #if SCREEN_TITLE_MULTIPLE_BULGARIAN_LANGUAGE_SUPPORT
@@ -479,7 +479,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 #if SCREEN_TITLE_MULTIPLE_PERSIAN_LANGUAGE_SUPPORT
         response[15] |= SCREEN_TITLE_MULTIPLE_PERSIAN_LANGUAGE_SUPPORT << 7;
 #endif
-#ifdef SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT //ÂíÀ´Î÷ÑÇÓï 0x40
+#ifdef SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT //é©¬æ¥è¥¿äºšè¯­ 0x40
         response[12] |= SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT << 7;
 #endif
 #ifdef SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT
@@ -507,7 +507,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief        ¶ÁÈ¡ÊµÊ±²½ÊıĞÅÏ¢
+*@brief        è¯»å–å®æ—¶æ­¥æ•°ä¿¡æ¯
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -519,8 +519,8 @@ void uteModuleProtocolReadReadlTimeStepInfo(uint8_t*receive,uint8_t length)
     // uteModuleSportSendRealTimeStepInfo();
 }
 /**
-*@brief        ·¢ËÍ¼Æ²½ÀúÊ·Êı¾İ
-*@details         ´øÊ±¼ä´Á²ÎÊı
+*@brief        å‘é€è®¡æ­¥å†å²æ•°æ®
+*@details         å¸¦æ—¶é—´æˆ³å‚æ•°
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -546,8 +546,8 @@ void uteModuleProtocolReadStepHistoryData(uint8_t*receive,uint8_t length)
 }
 
 /**
-*@brief        ²éÑ¯ÏûÏ¢ÄÚÈİÖ§³Ö
-*@details         ¼æÈİÖ¸Áî
+*@brief        æŸ¥è¯¢æ¶ˆæ¯å†…å®¹æ”¯æŒ
+*@details         å…¼å®¹æŒ‡ä»¤
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -561,7 +561,7 @@ void uteModuleProtocolReadMsgContentSupport(uint8_t*receive,uint8_t length)
     uteModuleProfileBleSendToPhone(&response[0],2);
 }
 /**
-*@brief        »ñÈ¡µ±Ç°¿ì½İ¿ª¹ØµÄ×´Ì¬
+*@brief        è·å–å½“å‰å¿«æ·å¼€å…³çš„çŠ¶æ€
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -578,7 +578,7 @@ void uteModuleProtocolReadQuickSwitchStatus(uint8_t*receive,uint8_t length)
     memset(&response[0],0x00,20);
     response[0] = receive[0];
     response[1] = receive[1];
-    if(receive[1] == 0x01) //»ñÈ¡Ö§³ÖµÄ¿ì½İ¿ª¹Ø
+    if(receive[1] == 0x01) //è·å–æ”¯æŒçš„å¿«æ·å¼€å…³
     {
 #if QUICK_SWITCH_FINDBAND_SUPPORT
         setFlag|=QUICK_SWITCH_FINDBAND;
@@ -630,11 +630,11 @@ void uteModuleProtocolReadQuickSwitchStatus(uint8_t*receive,uint8_t length)
         response[5] = (setFlag)&0xff;
         uteModuleProfileBleSendToPhone(&response[0],20);
     }
-    else if(receive[1] == 0x02) // »ñÈ¡ÊÖ±í¿ì½İ¿ª¹ØµÄ×´Ì¬
+    else if(receive[1] == 0x02) // è·å–æ‰‹è¡¨å¿«æ·å¼€å…³çš„çŠ¶æ€
     {
         uteApplicationCommonSendQuickSwitchStatus();
     }
-    else if(receive[1] == 0x03) // ÉèÖÃÊÖ±í¿ì½İ¿ª¹ØµÄ×´Ì¬»ò²ÎÊı
+    else if(receive[1] == 0x03) // è®¾ç½®æ‰‹è¡¨å¿«æ·å¼€å…³çš„çŠ¶æ€æˆ–å‚æ•°
     {
         uteApplicationCommonSetQuickSwitchStatusFromApp(&receive[2]);
     }
@@ -645,8 +645,8 @@ void uteModuleProtocolReadQuickSwitchStatus(uint8_t*receive,uint8_t length)
 
 }
 /**
-*@brief        µç»°×´Ì¬¿ØÖÆ
-*@details   ½ö½öÕë¶Ôandroid£¬²»´øÍ¨»°µÄÏîÄ¿
+*@brief        ç”µè¯çŠ¶æ€æ§åˆ¶
+*@details   ä»…ä»…é’ˆå¯¹androidï¼Œä¸å¸¦é€šè¯çš„é¡¹ç›®
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -658,11 +658,11 @@ void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
     uint8_t response[2];
     response[0] = receive[0];
     response[1] = receive[1];
-    if(receive[1] == 0x04) /*!¹Ò¶Ïµç»° zn.zeng, 2021-08-24  */
+    if(receive[1] == 0x04) /*!æŒ‚æ–­ç”µè¯ zn.zeng, 2021-08-24  */
     {
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_CALL_DISABLE_NOTIFY,0);
     }
-    else if(receive[1] == 0x05)/*! Î´½Óµç»°zn.zeng, 2021-08-24  */
+    else if(receive[1] == 0x05)/*! æœªæ¥ç”µè¯zn.zeng, 2021-08-24  */
     {
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_CALL_UNANSWERED_NOTIFY,0);
     }
@@ -672,7 +672,7 @@ void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
 
 }
 /**
-*@brief        Ò¡Ò»Ò¡ÅÄÕÕ×´Ì¬¿ØÖÆ
+*@brief        æ‘‡ä¸€æ‘‡æ‹ç…§çŠ¶æ€æ§åˆ¶
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -701,8 +701,8 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief        ÏûÏ¢ÄÚÈİ½ÓÊÕ
-*@details    android Ê¹ÓÃ£¬ÍÆËÍÏÂÀ´Îªunicode ±àÂë
+*@brief        æ¶ˆæ¯å†…å®¹æ¥æ”¶
+*@details    android ä½¿ç”¨ï¼Œæ¨é€ä¸‹æ¥ä¸ºunicode ç¼–ç 
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -772,7 +772,7 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
             notifyPointer->titleBuff[notifyPointer->currNotify.titleSize] = 0x00;
             notifyPointer->titleBuff[notifyPointer->currNotify.titleSize+1] = 0x3a;
             notifyPointer->currNotify.titleSize +=2;
-            //title+nontent ,µ¥µ¥Õë¶Ô¶ÌĞÅ
+            //title+nontent ,å•å•é’ˆå¯¹çŸ­ä¿¡
             uint8_t cpySize = notifyPointer->currNotify.size;
             uint8_t tmpBuff[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE];
             memset(&tmpBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
@@ -801,7 +801,7 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief        ¿ØÖÆÀíÂÛÑªÑ¹²âÊÔ
+*@brief        æ§åˆ¶ç†è®ºè¡€å‹æµ‹è¯•
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -870,7 +870,7 @@ void uteModuleProtocolTheoryBloodpressureCtrl(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief        ¶ÁÈ¡ÑªÑ¹²âÊÔÖµ
+*@brief        è¯»å–è¡€å‹æµ‹è¯•å€¼
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -897,7 +897,7 @@ void uteModuleProtocolReadTheoryBloodpressureHistoryData(uint8_t*receive,uint8_t
 #endif
 }
 /**
-* @brief        ºã°®ÑªÑ¹Ä£×éÑªÑ¹²âÊÔ
+* @brief        æ’çˆ±è¡€å‹æ¨¡ç»„è¡€å‹æµ‹è¯•
 * @details
 * @param[in]    uint8_t *receive
 * @param[out]   uint8_t length
@@ -1107,20 +1107,20 @@ void uteModuleProtocolBloodpressureDn02Ctrl(uint8_t*receive,uint8_t length)
             uteModuleBloodpressureDn02StopDebug();
         }
     }
-    else if (receive[1] == 0x0d) /*! ²éÑ¯ÇéĞ÷Ñ¹Á¦Ëã·¨ÊÇ·ñÒÑ¼¤»î xjc, 2022-02-15  */
+    else if (receive[1] == 0x0d) /*! æŸ¥è¯¢æƒ…ç»ªå‹åŠ›ç®—æ³•æ˜¯å¦å·²æ¿€æ´» xjc, 2022-02-15  */
     {
         response[0] = receive[0];
         response[1] = receive[1];
         response[2] = (uteModuleEmotionPressureGetAlgoActiveStatus()) ? 0x11 : 0xFF;
         uteModuleProfileBleSendToPhone(&response[0], 3);
     }
-    else if (receive[1] == 0x0e) /*! APPÇëÇó»ñÈ¡ÉêÇë¼¤»îÂëËùÊ¹ÓÃµÄÉêÇëÂë xjc, 2022-02-15  */
+    else if (receive[1] == 0x0e) /*! APPè¯·æ±‚è·å–ç”³è¯·æ¿€æ´»ç æ‰€ä½¿ç”¨çš„ç”³è¯·ç  xjc, 2022-02-15  */
     {
-        if (receive[2] == 0x11) //»ñÈ¡ÉêÇë¼¤»îÂëËùÊ¹ÓÃµÄÉêÇëÂë
+        if (receive[2] == 0x11) //è·å–ç”³è¯·æ¿€æ´»ç æ‰€ä½¿ç”¨çš„ç”³è¯·ç 
         {
             uteModuleEmotionPressureSendDeviceInfomationToService();
         }
-        else if (receive[2] == EMOTION_PRESSURE_KEY_CODE_LEN) //·µ»ØÊÚÈ¨¼¤»îÂë
+        else if (receive[2] == EMOTION_PRESSURE_KEY_CODE_LEN) //è¿”å›æˆæƒæ¿€æ´»ç 
         {
             uteModuleEmotionPressureSetKeyCode(&receive[3]);
             uteModuleEmotionPressureActiveAlgo(true);
@@ -1135,7 +1135,7 @@ void uteModuleProtocolBloodpressureDn02Ctrl(uint8_t*receive,uint8_t length)
 #if APP_HENGAI_SECURITY_CODE_SUPPORT
     else if (receive[1] == 0xef)
     {
-        //0xef °ü×ÜÊı °üĞòºÅ µ±Ç°°üÊı¾İ³¤¶È Êı¾İ
+        //0xef åŒ…æ€»æ•° åŒ…åºå· å½“å‰åŒ…æ•°æ®é•¿åº¦ æ•°æ®
         SHM_DATA_SECTION static uint8_t securityCodeBuff[150];
         SHM_DATA_SECTION static uint8_t securityCodeCrc = 0;
         SHM_DATA_SECTION static uint8_t securityCodeSize = 0;
@@ -1172,7 +1172,7 @@ void uteModuleProtocolBloodpressureDn02Ctrl(uint8_t*receive,uint8_t length)
                 securityCodeBuff[4] = time.hour;
                 securityCodeBuff[5] = time.min;
             }
-            //Äê2+ÔÂ1+ÈÕ1+Ê±1+·Ö1+length
+            //å¹´2+æœˆ1+æ—¥1+æ—¶1+åˆ†1+length
             memcpy(&securityCodeBuff[7 + securityCodeSize],&receive[5],receive[4]);
             if (securityCodeSize + receive[4] <= sizeof(securityCodeBuff) - 7)
             {
@@ -1191,7 +1191,7 @@ void uteModuleProtocolBloodpressureDn02Ctrl(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief        ÉèÖÃ7ÌìÌìÆøÊı¾İ
+*@brief        è®¾ç½®7å¤©å¤©æ°”æ•°æ®
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1300,7 +1300,7 @@ void uteModuleProtocolSetWeatherData(uint8_t*receive,uint8_t length)
     uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
 }
 /**
-*@brief        °´¼üÊÂ¼şÉèÖÃ
+*@brief        æŒ‰é”®äº‹ä»¶è®¾ç½®
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1313,7 +1313,7 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
 
     if (receive[1] == 0x0A) //find phone
     {
-        if (length == 4) /*! ÊÖ»úÍ£Ö¹µÄÊ±ºò»á·µ»ØÍ£Ö¹ÏìÁåÖ¸Áî£¬xjc 2022-01-18*/
+        if (length == 4) /*! æ‰‹æœºåœæ­¢çš„æ—¶å€™ä¼šè¿”å›åœæ­¢å“é“ƒæŒ‡ä»¤ï¼Œxjc 2022-01-18*/
         {
             if (receive[2] == 0x01)
             {
@@ -1338,7 +1338,7 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
             uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],3);
         }
     }
-    /*! ÅäºÏ ams ¹¦ÄÜ£¬Í¬²½²¥·Å×´Ì¬ ºÍÒôÁ¿ zn.zeng, 2021-08-26  */
+    /*! é…åˆ ams åŠŸèƒ½ï¼ŒåŒæ­¥æ’­æ”¾çŠ¶æ€ å’ŒéŸ³é‡ zn.zeng, 2021-08-26  */
     else if(receive[1] == 0x0C)
     {
         if(receive[2] == 0x01)
@@ -1363,8 +1363,8 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
 
 }
 /**
-*@brief       iOS ANCSÏûÏ¢ÍÆËÍ¿ª¹ØÉèÖÃ
-*@details    µ¥µ¥iOSÊ¹ÓÃ
+*@brief       iOS ANCSæ¶ˆæ¯æ¨é€å¼€å…³è®¾ç½®
+*@details    å•å•iOSä½¿ç”¨
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -1392,7 +1392,7 @@ void uteModuleProtocoliOSAncsNotifySwitch(uint8_t*receive,uint8_t length)
     uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],length);
 }
 /**
-*@brief       ÉèÖÃ¾Ã×øÌáĞÑ²ÎÊı
+*@brief       è®¾ç½®ä¹…åæé†’å‚æ•°
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1431,7 +1431,7 @@ void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief       ÉèÖÃÎğÈÅ²ÎÊı
+*@brief       è®¾ç½®å‹¿æ‰°å‚æ•°
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1487,8 +1487,8 @@ void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief       Ó¦ÓÃ¶ËÍ¨ÖªÊÖ»·Ç°ºóÌ¨×´Ì¬
-*@details   ÔİÎ´Ê¹ÓÃ
+*@brief       åº”ç”¨ç«¯é€šçŸ¥æ‰‹ç¯å‰åå°çŠ¶æ€
+*@details   æš‚æœªä½¿ç”¨
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
 *@author       zn.zeng
@@ -1499,7 +1499,7 @@ void uteModuleProtocolFormAppFrontOrBack(uint8_t*receive,uint8_t length)
 
 }
 /**
-*@brief       ĞÄÂÊ²âÊÔ
+*@brief       å¿ƒç‡æµ‹è¯•
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1535,7 +1535,7 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief       gsenoserÊı¾İ¼·Ñ¹¼ì²éÖ¸Áî
+*@brief       gsenoseræ•°æ®æŒ¤å‹æ£€æŸ¥æŒ‡ä»¤
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1572,7 +1572,7 @@ void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
 }
 
 /**
-*@brief       ¹Ø»úÖ¸Áî
+*@brief       å…³æœºæŒ‡ä»¤
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1581,7 +1581,7 @@ void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetPowerOff(uint8_t*receive,uint8_t length)
 {
-#if UTE_MODULE_APP_CONTROL_RESTART_SUPPORT//dengli.lu ÊÖ»ú¿ØÖÆÊÖ»·ÖØÆô
+#if UTE_MODULE_APP_CONTROL_RESTART_SUPPORT//dengli.lu æ‰‹æœºæ§åˆ¶æ‰‹ç¯é‡å¯
     uint8_t response[2];
     response[0] = receive[0];
     response[1] = receive[1];
@@ -1597,7 +1597,7 @@ void uteModuleProtocolSetPowerOff(uint8_t*receive,uint8_t length)
     }
 }
 /**
-*@brief       ĞÄÂÊ24Ğ¡Ê±×Ô¶¯²âÊÔÀúÊ·Êı¾İ
+*@brief       å¿ƒç‡24å°æ—¶è‡ªåŠ¨æµ‹è¯•å†å²æ•°æ®
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1649,7 +1649,7 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
     }
 #endif
 #if UTE_MODULE_CUSTOM_DATA_SAVE_INTERVAL_SUPPORT
-    else if (receive[1] == 0x0a) //ÉèÖÃĞÄÂÊÊı¾İ±£´æ¼ä¸ô
+    else if (receive[1] == 0x0a) //è®¾ç½®å¿ƒç‡æ•°æ®ä¿å­˜é—´éš”
     {
         uteModuleHeartSetTimingIntervalMinute(receive[2]);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],3);
@@ -1672,7 +1672,7 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
 #endif
 }
 /**
-*@brief       ÑªÑõ¿ØÖÆºÍÊı¾İÍ¬²½
+*@brief       è¡€æ°§æ§åˆ¶å’Œæ•°æ®åŒæ­¥
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1684,7 +1684,7 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
     if(receive[1]==0x11)
     {
-        //Ã¿´Î²âÁ¿ÖØĞÂ¿ªÊ¼£¬ÒÔ·ÀÓÃ»§Ïë²âÊÔµÍÑõÏÂ²»À´
+        //æ¯æ¬¡æµ‹é‡é‡æ–°å¼€å§‹ï¼Œä»¥é˜²ç”¨æˆ·æƒ³æµ‹è¯•ä½æ°§ä¸‹ä¸æ¥
         if(uteModuleBloodoxygenIsTesting())
         {
             uteModuleBloodoxygenStopSingleTesting();
@@ -1712,14 +1712,14 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
     {
         uteModuleBloodoxygenStopSingleTesting();
     }
-    else if(receive[1]==0x03)/*! ×Ô¶¯²âÊÔ¿ª¹Ø+²ÉÑù¼ä¸ô zn.zeng, 2021-08-30  */
+    else if(receive[1]==0x03)/*! è‡ªåŠ¨æµ‹è¯•å¼€å…³+é‡‡æ ·é—´éš” zn.zeng, 2021-08-30  */
     {
         bool isAutoTesting = receive[2];
         uint16_t intervalMin = receive[3]<<8|receive[4];
         uteModuleBloodoxygenSaveAutoIntervalParam(isAutoTesting,intervalMin);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],5);
     }
-    else if(receive[1]==0x04)/*!ÉèÖÃ×Ô¶¯²âÊÔÊ±¼ä¶Î zn.zeng, 2021-08-30  */
+    else if(receive[1]==0x04)/*!è®¾ç½®è‡ªåŠ¨æµ‹è¯•æ—¶é—´æ®µ zn.zeng, 2021-08-30  */
     {
         bool isAutoTimeBucketTesting = receive[2];
         uint16_t startTimeHourMin = receive[3]<<8|receive[4];
@@ -1727,7 +1727,7 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
         uteModuleBloodoxygenSaveAutoTimeBucketParam(isAutoTimeBucketTesting,startTimeHourMin,endTimeHourMin);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],7);
     }
-    else if(receive[1]==0xaa)/*! ²éÑ¯²âÊÔ×´Ì¬  zn.zeng, 2021-08-30  */
+    else if(receive[1]==0xaa)/*! æŸ¥è¯¢æµ‹è¯•çŠ¶æ€  zn.zeng, 2021-08-30  */
     {
         uint8_t response[3];
         response[0] = receive[0];
@@ -1742,12 +1742,12 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
         }
         uteModuleProfileBleSendToPhone((uint8_t *)&response[0],3);
     }
-    else if(receive[1]==0x0c)/*! É¾³ıÀúÊ·Êı¾İ  zn.zeng, 2021-08-30  */
+    else if(receive[1]==0x0c)/*! åˆ é™¤å†å²æ•°æ®  zn.zeng, 2021-08-30  */
     {
         uteModuleBloodoxygenDelHistoryData();
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
     }
-    else if(receive[1]==0xfa)/*! Í¬²½ÀúÊ·Êı¾İ zn.zeng, 2021-08-31  */
+    else if(receive[1]==0xfa)/*! åŒæ­¥å†å²æ•°æ® zn.zeng, 2021-08-31  */
     {
         ute_module_systemtime_time_t time;
         memset(&time,0,sizeof(ute_module_systemtime_time_t));
@@ -1785,7 +1785,7 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
 
 }
 /**
-*@brief       ºôÎüÂÊ¿ØÖÆºÍÊı¾İÍ¬²½
+*@brief       å‘¼å¸ç‡æ§åˆ¶å’Œæ•°æ®åŒæ­¥
 *@details
 *@param[in] uint8_t*receive
 *@param[in] uint8_t length
@@ -1803,14 +1803,14 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
     {
         uteModuleBreathrateStopSingleTesting();
     }
-    else if(receive[1]==0x03)/*! ×Ô¶¯²âÊÔ¿ª¹Ø+²ÉÑù¼ä¸ô zn.zeng, 2021-08-30  */
+    else if(receive[1]==0x03)/*! è‡ªåŠ¨æµ‹è¯•å¼€å…³+é‡‡æ ·é—´éš” zn.zeng, 2021-08-30  */
     {
         bool isAutoTesting = receive[2];
         uint16_t intervalMin = receive[3]<<8|receive[4];
         uteModuleBreathrateSaveAutoIntervalParam(isAutoTesting,intervalMin);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],5);
     }
-    else if(receive[1]==0x04)/*!ÉèÖÃ×Ô¶¯²âÊÔÊ±¼ä¶Î zn.zeng, 2021-08-30  */
+    else if(receive[1]==0x04)/*!è®¾ç½®è‡ªåŠ¨æµ‹è¯•æ—¶é—´æ®µ zn.zeng, 2021-08-30  */
     {
         bool isAutoTimeBucketTesting = receive[2];
         uint16_t startTimeHourMin = receive[3]<<8|receive[4];
@@ -1818,7 +1818,7 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
         uteModuleBreathrateSaveAutoTimeBucketParam(isAutoTimeBucketTesting,startTimeHourMin,endTimeHourMin);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],7);
     }
-    else if(receive[1]==0xaa)/*! ²éÑ¯²âÊÔ×´Ì¬  zn.zeng, 2021-08-30  */
+    else if(receive[1]==0xaa)/*! æŸ¥è¯¢æµ‹è¯•çŠ¶æ€  zn.zeng, 2021-08-30  */
     {
         uint8_t response[3];
         response[0] = receive[0];
@@ -1833,12 +1833,12 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
         }
         uteModuleProfileBleSendToPhone((uint8_t *)&response[0],3);
     }
-    else if(receive[1]==0x0c)/*! É¾³ıÀúÊ·Êı¾İ  zn.zeng, 2021-08-30  */
+    else if(receive[1]==0x0c)/*! åˆ é™¤å†å²æ•°æ®  zn.zeng, 2021-08-30  */
     {
         uteModuleBreathrateDelHistoryData();
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
     }
-    else if(receive[1]==0xfa)/*! Í¬²½ÀúÊ·Êı¾İ zn.zeng, 2021-08-31  */
+    else if(receive[1]==0xfa)/*! åŒæ­¥å†å²æ•°æ® zn.zeng, 2021-08-31  */
     {
         ute_module_systemtime_time_t time;
         memset(&time,0,sizeof(ute_module_systemtime_time_t));
@@ -1878,7 +1878,7 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
 
 
 
-/*!Ö¸Áî×ª»¯ÁĞ±í zn.zeng, 2021-08-17  */
+/*!æŒ‡ä»¤è½¬åŒ–åˆ—è¡¨ zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 {
     {.privateCmd =0,.publicCmd=0,.function=NULL},
@@ -1949,11 +1949,11 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 };
 
 /**
-*@brief        ¹«¹²Ö¸ÁîºÍË½ÓĞÖ¸Áî×ª»¯
+*@brief        å…¬å…±æŒ‡ä»¤å’Œç§æœ‰æŒ‡ä»¤è½¬åŒ–
 *@details
-*@param[in] uint8_t *cmdHead  Ö¸ÁîÖ¸Õë
-*@param[in] ute_module_protocol_conversion_type_t tpye  ×ª»¯
-*@return ·µ»ØÖ¸Áî±íÀïÃæµÄË÷Òı
+*@param[in] uint8_t *cmdHead  æŒ‡ä»¤æŒ‡é’ˆ
+*@param[in] ute_module_protocol_conversion_type_t tpye  è½¬åŒ–
+*@return è¿”å›æŒ‡ä»¤è¡¨é‡Œé¢çš„ç´¢å¼•
 *@author       zn.zeng
 *@date       2021-08-16
 */
@@ -1990,11 +1990,11 @@ uint16_t uteModuleProtocolConversionCmd(uint8_t *cmdHead,ute_module_protocol_con
     return 0;
 }
 /**
-*@brief        Ğ­Òé½âÎö
-*@details   ÆÕÍ¨Ö¸ÁîºÍBLE5.0µÄÖ¸ÁîÈ«²¿×ß´Ëº¯Êı£¬ËùÓĞÖ¸Áî×ª»¯³ÉË½ÓĞÖ¸Áî´¦Àí
-*@param[in] uint8_t *receive  Êı¾İÖ¸Õë
-*@param[in] uint8_t length  Êı¾İ³¤¶È
-*@param[in] bool isPublic  ÊÇ·ñÊÇ¹«¹²Ğ­Òé£¬Ö¸ÁîÍ·²»Ò»Ñù
+*@brief        åè®®è§£æ
+*@details   æ™®é€šæŒ‡ä»¤å’ŒBLE5.0çš„æŒ‡ä»¤å…¨éƒ¨èµ°æ­¤å‡½æ•°ï¼Œæ‰€æœ‰æŒ‡ä»¤è½¬åŒ–æˆç§æœ‰æŒ‡ä»¤å¤„ç†
+*@param[in] uint8_t *receive  æ•°æ®æŒ‡é’ˆ
+*@param[in] uint8_t length  æ•°æ®é•¿åº¦
+*@param[in] bool isPublic  æ˜¯å¦æ˜¯å…¬å…±åè®®ï¼ŒæŒ‡ä»¤å¤´ä¸ä¸€æ ·
 *@author       zn.zeng
 *@date       2021-08-16
 */
@@ -2055,9 +2055,9 @@ void uteModuleProtocolFromPhone(uint8_t *receive,uint8_t length,bool isPublic)
     }
 }
 /**
-*@brief        ¶ÁÈ¡¹¦ÄÜ±êÖ¾
+*@brief        è¯»å–åŠŸèƒ½æ ‡å¿—
 *@details
-*@param[in] uint8_t *data  ¹¦ÄÜ¿ØÖÆÖ§³ÖÎ»£¬Ã¿¸öbit´ú±íÒ»¸ö¹¦ÄÜ
+*@param[in] uint8_t *data  åŠŸèƒ½æ§åˆ¶æ”¯æŒä½ï¼Œæ¯ä¸ªbitä»£è¡¨ä¸€ä¸ªåŠŸèƒ½
 *@author       zn.zeng
 *@date       2021-08-19
 */
@@ -2128,12 +2128,12 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
     data[5]|= 0x20;
 #endif
-#if UTE_DRV_BLOODPRESSURE_VITA_UART_SUPPORT  //³¤É£ÑªÑ¹±ê¶¨
+#if UTE_DRV_BLOODPRESSURE_VITA_UART_SUPPORT  //é•¿æ¡‘è¡€å‹æ ‡å®š
     data[5] |= 0x10;
     data[3] |= 0x04;
 #endif
     data[6]|= 0x01;
-    data[6]|= 0x08;  //Ö§³ÖÓ¦ÓÃÍ¨Öª¿ª¹ØÑ¡ÔñÏÔÊ¾
+    data[6]|= 0x08;  //æ”¯æŒåº”ç”¨é€šçŸ¥å¼€å…³é€‰æ‹©æ˜¾ç¤º
     data[6]|= 0x10;
 #if UTE_BT30_CALL_SUPPORT
     data[6]|= 0x20;
@@ -2146,7 +2146,7 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #if UTE_USER_ID_FOR_BINDING_SUPPORT
     data[7]|= 0x04;
 #endif
-#if UTE_MODULE_SCREENS_TEMPERATURE_SUPPORT //²»ÓÃUTE_MODULE_TEMPERATURE_SUPPORTÅĞ¶Ï xjc mark 20220107
+#if UTE_MODULE_SCREENS_TEMPERATURE_SUPPORT //ä¸ç”¨UTE_MODULE_TEMPERATURE_SUPPORTåˆ¤æ–­ xjc mark 20220107
     data[7]|= 0x08;
 #endif
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
@@ -2254,7 +2254,7 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
     data[15]|= 0x40;
     data[16]|= 0x08;
     data[16]|= 0x10;
-    data[16]|= 0x20;  //ÊÖ»·²éÕÒÊÖ»ú
+    data[16]|= 0x20;  //æ‰‹ç¯æŸ¥æ‰¾æ‰‹æœº
     data[16]|= 0x40;
     data[17]|= 0x01;
     data[17]|= 0x02;
@@ -2262,8 +2262,8 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #if UTE_MODULE_BLOODPRESSURE_SUPPORT
     data[17]|= 0x10;
 #endif
-    data[17]|=0x40; //À´µç¾Ü½Ó
-#if (!UTE_MODULE_CYWEE_MOTION_SUPPORT) //Ê¹ÓÃÈüÎ¬Ëã·¨¾ÍÆÁ±Î¼Æ²½ºÍÅÜ²½Çø·Ö
+    data[17]|=0x40; //æ¥ç”µæ‹’æ¥
+#if (!UTE_MODULE_CYWEE_MOTION_SUPPORT) //ä½¿ç”¨èµ›ç»´ç®—æ³•å°±å±è”½è®¡æ­¥å’Œè·‘æ­¥åŒºåˆ†
     data[18]|= 0x01;
 #endif
     data[18]|= 0x20;
@@ -2289,20 +2289,20 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 
 
 /**
-*@brief     34F1ÍØÕ¹µÄ¶ÁÈ¡¹¦ÄÜ±êÖ¾Î»
+*@brief     34F1æ‹“å±•çš„è¯»å–åŠŸèƒ½æ ‡å¿—ä½
 *@details
-*@param[in] uint8_t *data  ¹¦ÄÜ¿ØÖÆÖ§³ÖÎ»£¬Ã¿¸öbit´ú±íÒ»¸ö¹¦ÄÜ
+*@param[in] uint8_t *data  åŠŸèƒ½æ§åˆ¶æ”¯æŒä½ï¼Œæ¯ä¸ªbitä»£è¡¨ä¸€ä¸ªåŠŸèƒ½
 *@author    casen
 *@date      2022-11-03
 */
 void uteModuleProtocolReadExpandFunctionSupport(uint8_t *data,uint8_t size)
 {
     memset(data,0,size);
-    /*------------Ç°Á½×Ö½Ú²»ÔÊĞí±ä¶¯----------------*/
+    /*------------å‰ä¸¤å­—èŠ‚ä¸å…è®¸å˜åŠ¨----------------*/
     uint16_t mtuSize = uteApplicationCommonGetMtuSize();
     data[0] = (mtuSize>>8)&0xff;
     data[1] = mtuSize&0xff;
-    /*------------Ç°Á½×Ö½Ú²»ÔÊĞí±ä¶¯----------------*/
+    /*------------å‰ä¸¤å­—èŠ‚ä¸å…è®¸å˜åŠ¨----------------*/
 #if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
     data[19] |= 0x02;
 #endif
@@ -2335,7 +2335,7 @@ void uteModuleProtocolReadExpandFunctionSupport(uint8_t *data,uint8_t size)
 #endif
 
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
-    data[17] |= 0x40; //Î¬¿ÍÇéĞ÷Ñ¹Á¦
+    data[17] |= 0x40; //ç»´å®¢æƒ…ç»ªå‹åŠ›
 #endif
 #if UTE_MODULE_BLOODPRESSURE_DESIGNATED_TIME_TEST_SUPPORT
     data[15] |= 0x20;

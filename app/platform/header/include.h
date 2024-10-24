@@ -30,6 +30,17 @@
 #include "ui.h"
 #include "ui_external.h"
 
+///客户module include文件
+//#include "ute_module_filesystem.h"
+//#include "ute_module_gui_common.h"
+//#include "ute_module_log.h"
+//#include "ute_module_mem.h"
+//#include "ute_module_message.h"
+//#include "ute_module_platform.h
+//#include "ute_module_profile_ble.h"
+//#include "ute_module_protocol.h"
+#include "ute_module_systemtime.h"
+
 #ifndef sscanf
 extern int sscanf(char *s, const char *format, ...);
 #endif // sscanf

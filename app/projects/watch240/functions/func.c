@@ -510,6 +510,13 @@ void func_process(void)
 #if CHARGE_EN
     if (xcfg_cb.charge_en) {
         charge_detect(1);
+        if (bsp_charge_sta_get()) {
+            if (bt_cb.disp_status <= BT_STA_PLAYING && func_cb.sta != FUNC_OTA_UI_MODE && is_fot_start() == 0) {
+                msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+                msg_enqueue(EVT_MSGBOX_EXIT);
+                func_cb.sta = FUNC_CHARGE;
+            }
+        }
     }
 #endif // CHARGE_EN
 
@@ -520,6 +527,9 @@ void func_process(void)
 #endif
 #if LE_AB_FOT_EN
     	bsp_fot_process();
+    	if (is_fot_start() == true) {
+            //func_cb.sta = FUNC_OTA_MODE;
+    	}
 #endif
     }
 }
@@ -1078,7 +1088,7 @@ void func_run(void)
     func_cb.tbl_sort[5] = FUNC_BT;
     func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = 7;
-    func_cb.sta = FUNC_CLOCK;
+    func_cb.sta = FUNC_CHARGE;//FUNC_CLOCK;
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
     for (;;) {

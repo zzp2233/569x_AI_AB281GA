@@ -708,7 +708,7 @@ typedef struct f_porssos_Interface_t_ {
 //创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_long_press_form_create(void)
 {
-    component_t *compo;
+    //component_t *compo;
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
@@ -726,7 +726,7 @@ compo_form_t *func_long_press_form_create(void)
 
 static void func_long_press_message(size_msg_t msg)
 {
-	f_porssos_Interface_t *f_porssos_Interface = (f_porssos_Interface_t *)func_cb.f_cb;
+	//f_porssos_Interface_t *f_porssos_Interface = (f_porssos_Interface_t *)func_cb.f_cb;
 
     switch (msg) {
     case MSG_CTP_TOUCH:
@@ -742,7 +742,7 @@ static void func_long_press_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_porssos_Interface_t));
     func_cb.frm_main = func_long_press_form_create();
 
-    f_porssos_Interface_t *f_porssos_Interface = (f_porssos_Interface_t *)func_cb.f_cb;
+   // f_porssos_Interface_t *f_porssos_Interface = (f_porssos_Interface_t *)func_cb.f_cb;
 }
 
 //退出长按界面

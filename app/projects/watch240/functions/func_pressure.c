@@ -32,7 +32,7 @@ typedef struct f_pressure_t_
 
 
 u16 chart_value[CHART_NUM];
-u8  txt_buf[4];
+char  txt_buf[4];
 
 
 
@@ -46,7 +46,8 @@ compo_form_t *func_pressure_form_create(void)
     chart_value[3+7+7]=0;
     chart_value[3+7+7+7]=0;
 
-    component_t *compo;
+    //component_t *compo;
+    compo_textbox_t * txt;
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
@@ -62,29 +63,30 @@ compo_form_t *func_pressure_form_create(void)
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(chart, COMPO_ID_CHART);
 
+
     //平均压力
-    compo = (component_t *)compo_textbox_create(frm, TODAY_PRESSURE_TXT_MAX);
-    compo_textbox_set_font((compo_textbox_t *)compo, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_setid(compo, COMPO_ID_TEXT_MEAN);
-    compo_textbox_set_pos((compo_textbox_t *)compo,GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/5);
+    txt = compo_textbox_create(frm, TODAY_PRESSURE_TXT_MAX);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_setid(txt, COMPO_ID_TEXT_MEAN);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/5);
     snprintf(txt_buf, sizeof(txt_buf), "50");
-    compo_textbox_set((compo_textbox_t *)compo, txt_buf);
+    compo_textbox_set(txt, txt_buf);
 
     //最大压力
-    compo = (component_t *)compo_textbox_create(frm, TODAY_PRESSURE_TXT_MAX);
-    compo_textbox_set_font((compo_textbox_t *)compo, UI_BUF_0FONT_FONT_NUM_16_BIN);
-    compo_setid(compo, COMPO_ID_TEXT_PRESSURE_MAX);
-    compo_textbox_set_pos((compo_textbox_t *)compo,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/12-2);
+    txt = compo_textbox_create(frm, TODAY_PRESSURE_TXT_MAX);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_16_BIN);
+    compo_setid(txt, COMPO_ID_TEXT_PRESSURE_MAX);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/12-2);
     snprintf(txt_buf, sizeof(txt_buf), "50");
-    compo_textbox_set((compo_textbox_t *)compo, txt_buf);
+    compo_textbox_set(txt, txt_buf);
 
     //最小压力
-    compo = (component_t *)compo_textbox_create(frm, TODAY_PRESSURE_TXT_MAX);
-    compo_textbox_set_font((compo_textbox_t *)compo, UI_BUF_0FONT_FONT_NUM_16_BIN);
-    compo_setid(compo, COMPO_ID_TEXT_PRESSURE_MIN);
-    compo_textbox_set_pos((compo_textbox_t *)compo,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/12-2);
+    txt = compo_textbox_create(frm, TODAY_PRESSURE_TXT_MAX);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_16_BIN);
+    compo_setid(txt, COMPO_ID_TEXT_PRESSURE_MIN);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/12-2);
     snprintf(txt_buf, sizeof(txt_buf), "50");
-    compo_textbox_set((compo_textbox_t *)compo, txt_buf);
+    compo_textbox_set(txt, txt_buf);
 
     compo_form_add_image(frm, UI_BUF_HEART_RATE_UP_BIN, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/6, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/12);//红色向上图标
     compo_form_add_image(frm, UI_BUF_HEART_RATE_DOWN_BIN, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X*2/6,GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/12);//绿色向下图标
@@ -108,7 +110,7 @@ static void func_pressure_animation(void)
 //压力功能消息处理
 static void func_pressure_process(void)
 {
-    f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
+    ///f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
 
     func_pressure_animation();
     func_process();
@@ -138,20 +140,20 @@ static void func_pressure_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_pressure_t));
     func_cb.frm_main = func_pressure_form_create();
 
-    f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
+    //f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
     func_pressure_refresh();
 }
 
 //触摸单击按钮
 static void func_pressure_button_click(void)
 {
-    f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
+    //f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
 
     int id = compo_get_button_id();
 
     switch (id) {
     case COMPO_ID_IMG_BTNTON:
-        func_switch_to(FUNC_PRESSURE_EXPLAIN,NULL);
+        func_switch_to(FUNC_PRESSURE_EXPLAIN,NULL);//跳转压力说明界面
         break;
     default:
         break;
@@ -160,7 +162,7 @@ static void func_pressure_button_click(void)
 
 static void func_pressure_message(size_msg_t msg)
 {
-	f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
+	//f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
 
     switch (msg) {
     case MSG_CTP_CLICK:

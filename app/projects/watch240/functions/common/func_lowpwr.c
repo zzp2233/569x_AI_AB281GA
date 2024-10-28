@@ -459,21 +459,28 @@ bool sleep_process(is_sleep_func is_sleep)
         }
         if(uteModulePlatformNotAllowSleep()) //ute add
         {
-            if ((uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN) && sys_cb.gui_sleep_sta)
+            if ((uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN))
             {
-                gui_wakeup();
+                if(sys_cb.gui_sleep_sta)
+                {
+                    gui_wakeup();
+                }
             }
-            reset_sleep_delay_all();
+            else if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta) {
+                gui_sleep();                //仅熄屏
+            }
+            reset_sleep_delay();
+            reset_pwroff_delay();
             return false;
         }
         if (sys_cb.sleep_delay == 0) {
             if(sys_cb.guioff_delay == 0) /*! 亮屏时不休眠,wang.luo 2024-10-21 */
             {
                 sfunc_sleep();              //熄屏且进入休眠
+                reset_sleep_delay_all();
+                reset_pwroff_delay();   
+                return true;                         
             }
-            reset_sleep_delay_all();
-            reset_pwroff_delay();
-            return true;
         }
     } else {
         if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta) {

@@ -12,6 +12,7 @@
 
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
+#include "ute_module_profile_ble.h"
 
 #define WURAO_NO_SCREEN_MODE                0x01
 #define WURAO_NO_MOTOR_MODE                 0x02

@@ -1,5 +1,6 @@
 #include "include.h"
 #include "app.h"
+#include "ute_module_notify.h"
 
 void ble_app_init(void)
 {
@@ -92,6 +93,7 @@ void ble_app_client_cfg_callback(u16 handle, u8 cfg)
 void ble_app_ancs_client_notifiy_callback(u8 id, const char *att_name, const char *att_content)
 {
 #if LE_ANCS_CLIENT_EN
-    ble_app_watch_ancs_client_notifiy_process(id, att_name, att_content);
+    // ble_app_watch_ancs_client_notifiy_process(id, att_name, att_content);
+    uteModuleNotifySetAncsInfo(id,att_content,strlen(att_content));
 #endif
 }

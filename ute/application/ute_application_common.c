@@ -12,6 +12,8 @@
 #include "ute_module_call.h"
 #include "include.h"
 #include "ute_drv_motor.h"
+#include "ute_module_protocol.h"
+#include "ute_module_profile_ble.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_heart.h"
@@ -19,8 +21,6 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_sport.h"
-#include "ute_module_protocol.h"
-#include "ute_module_profile_ble.h"
 #include "ute_module_notify.h"
 #include "ute_module_weather.h"
 #include "ute_module_notdisturb.h"
@@ -229,7 +229,7 @@ void uteApplicationCommonStartupSecond(void)
 #endif
         //uteModuleFactoryTestInit();
         //uteModuleSportInit();
-        //uteModuleNotifyInit();
+        uteModuleNotifyInit();
         //uteModuleSleepInit();
         uteModuleCallInit();
         //uteModuleOtaInit();
@@ -489,17 +489,13 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
 */
 void uteApplicationCommonSetBlePariring(bool isSuccess)
 {
-    // uteApplicationCommonData.bleConnectState.isParired = isSuccess;
-    // uint8_t response[2] = {CMD_SET_ANCS_PARAM,0x01};
-    // if(isSuccess)
-    // {
-    //     response[1] = 0x01;
-    // }
-    // else
-    // {
-    //     response[1] = 0x02;
-    // }
-    // uteModuleProfileBleSendToPhone(&response[0],2);
+    uteApplicationCommonData.bleConnectState.isParired = isSuccess;
+    uint8_t response[2] = {CMD_SET_ANCS_PARAM,0x01};
+    if(!isSuccess)
+    {
+        response[1] = 0x02;
+    }
+    uteModuleProfileBleSendToPhone(&response[0],2);
 
 }
 

@@ -29,6 +29,7 @@ enum
     MSG_TYPE_DRV_MOTOR_HANDLE_TIMER,
     MSG_TYPE_HNAD_SCREEN_ON_NOTIFY,
     MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY,
+    MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

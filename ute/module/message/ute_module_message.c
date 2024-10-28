@@ -11,6 +11,7 @@
 #include "ute_module_log.h"
 #include "ute_module_systemtime.h"
 #include "ute_drv_motor.h" 
+#include "ute_module_notify.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -53,12 +54,18 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
                 sys_cb.gui_need_wakeup = 1;
             }
         }
+        break;
         case MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY:
         {
             if(!sys_cb.gui_sleep_sta)
             {
                 sys_cb.guioff_delay = 1;
             }
+        }
+        break;
+        case MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION:
+        {
+            uteModuleNotifyNotifycationHandlerMsg();
         }
         break;
         default:

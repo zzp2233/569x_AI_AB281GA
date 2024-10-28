@@ -64,6 +64,7 @@
 			<Add directory="../../../ute/module/gui" />
 			<Add directory="../../../ute/module/call" />
 			<Add directory="../../../ute/drv/motor" />
+			<Add directory="../../../ute/module/notify" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -135,6 +136,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/message/ute_module_message.h" />
+		<Unit filename="../../../ute/module/notify/ute_module_notify.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/notify/ute_module_notify.h" />
 		<Unit filename="../../../ute/module/platform/ute_module_platform.c">
 			<Option compilerVar="CC" />
 		</Unit>

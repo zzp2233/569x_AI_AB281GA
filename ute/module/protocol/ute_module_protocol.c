@@ -17,6 +17,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_call.h"
 #include "ute_drv_motor.h"
+#include "ute_module_notify.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -710,7 +711,6 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
 {
-#if 0
     ute_module_notify_data_t *notifyPointer = NULL;
     uteModuleNotifyGetDataPointer(&notifyPointer);
     uint8_t response[4];
@@ -798,7 +798,6 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
             uteModuleProfileBleSendToPhone(&response[0],2);
         }
     }
-#endif
 }
 /**
 *@brief        控制理论血压测试
@@ -1372,7 +1371,6 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocoliOSAncsNotifySwitch(uint8_t*receive,uint8_t length)
 {
-#if 0
     uint32_t flag = 0;
     uteModuleNotifyAncsGetFlag(&flag);
     if(receive[1]==0x01)//open
@@ -1388,9 +1386,190 @@ void uteModuleProtocoliOSAncsNotifySwitch(uint8_t*receive,uint8_t length)
 //      uint8_t ancsAdditionalOpenFlag[18]={0};
 //      memcpy(&receive[0],&ancsAdditionalOpenFlag[0],18);
 //      #endif
-#endif
     uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],length);
 }
+
+/**
+*@brief     支持应用通知选择显示功能
+*@details
+*@param[in] uint8_t *receive
+*@param[in] uint8_t length
+*@author    xjc
+*@date      2022-01-08
+*/
+#if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
+void uteModuleProtocolSocialAppSelectParam(uint8_t*receive,uint8_t length)
+{
+    uint32_t flag = 0;
+    uint8_t responseData[20];
+    memset(responseData, 0x00, 20);
+//    uteModuleNotifyAncsGetFlag(&flag);
+    switch (receive[1])
+    {
+        case 0x01://open
+        {
+            // UTE_MODULE_LOG(1,"open receive[16-19] = 0x%02x,0x%02x,0x%02x,0x%02x",receive[16],receive[17],receive[18],receive[19]);
+            flag |= ((receive[16] << 24) | (receive[17] << 16) | (receive[18] << 8) | (receive[19]));
+            uteModuleNotifyAncsSetFlag(flag);
+            uteModuleNotifyAncsSetAdditionalFlag(true,(uint8_t *)&receive[0], length);
+            uteModuleProfileBleSendToPhone((uint8_t *)&receive[0], length);
+        }
+        break;
+        case 0x02://close
+        {
+            // UTE_MODULE_LOG(1,"close receive[16-19] = 0x%02x,0x%02x,0x%02x,0x%02x",receive[16],receive[17],receive[18],receive[19]);
+            flag &= ~((receive[16] << 24) | (receive[17] << 16) | (receive[18] << 8) | (receive[19]));
+            uteModuleNotifyAncsSetFlag(flag);
+            uteModuleNotifyAncsSetAdditionalFlag(false,(uint8_t *)&receive[0], length);
+            uteModuleProfileBleSendToPhone((uint8_t *)&receive[0], length);
+        }
+        break;
+        case 0xAA: //search
+        {
+            responseData[0] = receive[0];
+            responseData[1] = receive[1];
+
+            responseData[19] |= ANCS_OPEN_SMS;
+            responseData[19] |= ANCS_OPEN_QQ;
+            responseData[19] |= ANCS_OPEN_WECHAT;
+            responseData[19] |= ANCS_OPEN_INCALL;
+            responseData[19] |= ANCS_OPEN_OTHER;
+            responseData[19] |= ANCS_OPEN_FACEBOOK;
+            responseData[19] |= ANCS_OPEN_TWITTER;
+            responseData[19] |= ANCS_OPEN_WHATSAPP;
+
+            responseData[18] |= ANCS_OPEN_MESSENGER;
+            responseData[18] |= ANCS_OPEN_LINE;
+            responseData[18] |= ANCS_OPEN_SKYPE;
+            responseData[18] |= ANCS_OPEN_HANGOUTS;
+            responseData[18] |= ANCS_OPEN_LINKEDIN;
+            responseData[18] |= ANCS_OPEN_INSTAGRAM;
+            responseData[18] |= ANCS_OPEN_VIBER;
+            responseData[18] |= ANCS_OPEN_KAKAOTALK;
+
+            responseData[17] |= ANCS_OPEN_VKONTAKTE;
+            responseData[17] |= ANCS_OPEN_SNAPCHAT;
+            responseData[17] |= ANCS_OPEN_GOOGLEPLUS;
+            responseData[17] |= ANCS_OPEN_GMAIL;
+            responseData[17] |= ANCS_OPEN_FLICKR;
+            responseData[17] |= ANCS_OPEN_TUMBLR;
+            responseData[17] |= ANCS_OPEN_PINTEREST;
+            responseData[17] |= ANCS_OPEN_YOUTUBE;
+
+            responseData[16] |= ANCS_OPEN_TELEGRAM;
+            responseData[16] |= ANCS_OPEN_TRUECALLER;
+            responseData[16] |= ANCS_OPEN_PAYTM;
+            responseData[16] |= ANCS_OPEN_ZALO;
+            responseData[16] |= ANCS_OPEN_IMO;
+            responseData[16] |= ANCS_OPEN_MICROSOFTTEAMS;
+            responseData[16] |= ANCS_OPEN_OUTLOOK;
+            responseData[16] |= ANCS_OPEN_SWIGGY;
+
+            responseData[15] |= ANCS_OPEN_ZOMATO;
+            responseData[15] |= ANCS_OPEN_GPAY;
+            responseData[15] |= ANCS_OPEN_PHONEPE;
+            responseData[15] |= ANCS_OPEN_HOTSTAR;
+            responseData[15] |= ANCS_OPEN_PRIMEVIDEO;
+            responseData[15] |= ANCS_OPEN_FLIPKART;
+            responseData[15] |= ANCS_OPEN_AMAZON;
+            responseData[15] |= ANCS_OPEN_MYNTRA;
+
+            responseData[14] |= ANCS_OPEN_NOISEAPP;
+            responseData[14] |= ANCS_OPEN_DAILYHUNT;
+            responseData[14] |= ANCS_OPEN_INSHORTS;
+            responseData[14] |= ANCS_OPEN_BOOKMYSHOW;
+
+            responseData[14] |= ANCS_OPEN_CALENDAR;
+            responseData[14] |= ANCS_OPEN_JIOTV;
+            responseData[14] |= ANCS_OPEN_MAKEMYTRIP;
+            responseData[14] |= ANCS_OPEN_NETFLIX;
+
+            responseData[13] |= ANCS_OPEN_OLA;
+            responseData[13] |= ANCS_OPEN_REFLEXAPP;
+            responseData[13] |= ANCS_OPEN_UBER;
+            responseData[13] |= ANCS_OPEN_YTMUSIC;
+            responseData[13] |= ANCS_OPEN_WHATSAPP_BUSINESS;
+            responseData[13] |= ANCS_OPEN_DUNZO;
+            responseData[13] |= ANCS_OPEN_GAANA;
+            responseData[13] |= ANCS_OPEN_GOOGLE_DRIVE;
+
+            responseData[12] |= ANCS_OPEN_GOOGLECHAT;
+            responseData[12] |= ANCS_OPEN_WYNKMUSIC;
+            responseData[12] |= ANCS_OPEN_YAHOO;
+            responseData[12] |= ANCS_OPEN_TITANSMARTWORLD;
+            responseData[12] |= ANCS_OPEN_SLACK;
+            responseData[12] |= ANCS_OPEN_SPOTIFY;
+
+
+            uteModuleProfileBleSendToPhone(&responseData[0], 20);
+        }
+    }
+}
+#else
+void uteModuleProtocolSocialAppSelectParam(uint8_t*receive,uint8_t length)
+{
+    uint32_t flag = 0;
+    uint8_t responseData[20];
+    memset(responseData, 0x00, 20);
+    uteModuleNotifyAncsGetFlag(&flag);
+    switch (receive[1])
+    {
+        case 0x01://open
+        {
+            // UTE_MODULE_LOG(1,"open receive[16-19] = 0x%02x,0x%02x,0x%02x,0x%02x",receive[16],receive[17],receive[18],receive[19]);
+            flag |= ((receive[16] << 24) | (receive[17] << 16) | (receive[18] << 8) | (receive[19]));
+            uteModuleNotifyAncsSetFlag(flag);
+            uteModuleProfileBleSendToPhone((uint8_t *)&receive[0], length);
+        }
+        break;
+        case 0x02://close
+        {
+            // UTE_MODULE_LOG(1,"close receive[16-19] = 0x%02x,0x%02x,0x%02x,0x%02x",receive[16],receive[17],receive[18],receive[19]);
+            flag &= ~((receive[16] << 24) | (receive[17] << 16) | (receive[18] << 8) | (receive[19]));
+            uteModuleNotifyAncsSetFlag(flag);
+            uteModuleProfileBleSendToPhone((uint8_t *)&receive[0], length);
+        }
+        break;
+        case 0xAA: //search
+        {
+            responseData[0] = receive[0];
+            responseData[1] = receive[1];
+
+            responseData[19] |= SOCIAL_APP_MMS_SUPPORT << 0;
+            responseData[19] |= SOCIAL_APP_QQ_SUPPORT << 1;
+            responseData[19] |= SOCIAL_APP_WECHAT_SUPPORT << 2;
+            responseData[19] |= SOCIAL_APP_CALL_SUPPORT << 3;
+            responseData[19] |= SOCIAL_APP_OTHER_SUPPORT << 4;
+            responseData[19] |= SOCIAL_APP_FACEBOOK_SUPPORT << 5;
+            responseData[19] |= SOCIAL_APP_TWITTER_SUPPORT << 6;
+            responseData[19] |= SOCIAL_APP_WHATSAPP_SUPPORT << 7;
+
+            responseData[18] |= SOCIAL_APP_FACEBOOK_MESSENGER_SUPPORT << 0;
+            responseData[18] |= SOCIAL_APP_LINE_SUPPORT << 1;
+            responseData[18] |= SOCIAL_APP_SKYPE_SUPPORT << 2;
+            responseData[18] |= SOCIAL_APP_HANGOUTS_SUPPORT << 3;
+            responseData[18] |= SOCIAL_APP_LINKED_IN_SUPPORT << 4;
+            responseData[18] |= SOCIAL_APP_INSTAGRAM_SUPPORT << 5;
+            responseData[18] |= SOCIAL_APP_VIBER_SUPPORT << 6;
+            responseData[18] |= SOCIAL_APP_KAKAO_TALK_SUPPORT << 7;
+
+            responseData[17] |= SOCIAL_APP_VKONTAKTE_SUPPORT << 0;
+            responseData[17] |= SOCIAL_APP_SNAPCHAT_SUPPORT << 1;
+            responseData[17] |= SOCIAL_APP_GOOGLE_PLUS_SUPPORT << 2;
+            responseData[17] |= SOCIAL_APP_GMAIL_SUPPORT << 3;
+            responseData[17] |= SOCIAL_APP_FLICKR_SUPPORT << 4;
+            responseData[17] |= SOCIAL_APP_TUMBLR_SUPPORT << 5;
+            responseData[17] |= SOCIAL_APP_PINTEREST_SUPPORT << 6;
+            responseData[17] |= SOCIAL_APP_YOUTUBE_SUPPORT << 7;
+
+            responseData[16] |= SOCIAL_APP_TELEGRAM_SUPPORT << 0;
+            responseData[16] |= SOCIAL_APP_ZALO_SUPPORT << 3;
+            uteModuleProfileBleSendToPhone(&responseData[0], 20);
+        }
+    }
+}
+#endif
+
 /**
 *@brief       设置久坐提醒参数
 *@details
@@ -1926,7 +2105,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_TEMPERATURE_HEAD,.publicCmd=CMD_TEMPERATURE_HEAD,.function=uteModuleProtocolTemperatureCtrl},
 #endif
     // {.privateCmd = CMD_SYNC_CONTACTS,.publicCmd=CMD_SYNC_CONTACTS,.function=uteModuleProtocolSyncAddressBook},
-    // {.privateCmd = CMD_SOCIAL_APP_SELECT,.publicCmd=CMD_SOCIAL_APP_SELECT,.function=uteModuleProtocolSocialAppSelectParam},
+    {.privateCmd = CMD_SOCIAL_APP_SELECT,.publicCmd=CMD_SOCIAL_APP_SELECT,.function=uteModuleProtocolSocialAppSelectParam},
     // {.privateCmd = CMD_EMOTION_PRESSURE_TEST,.publicCmd=CMD_EMOTION_PRESSURE_TEST,.function=uteModuleProtocolEmotionPressureCtrl},
     // {.privateCmd = CMD_USER_ID_FOR_BINDING,.publicCmd=PUBLIC_CMD_USER_ID_FOR_BINDING,.function=uteModuleProtocolAppBindingCtrl},
 #if UTE_MODULE_UNIT_TEST_FUNCTION_DATAS_SUPPORT

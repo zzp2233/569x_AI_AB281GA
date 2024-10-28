@@ -29,7 +29,7 @@ bool start_falg=0;
 //创建查找手机窗体
 compo_form_t *func_findphone_form_create(void)
 {
-    component_t *compo;
+   // component_t *compo;
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -39,21 +39,22 @@ compo_form_t *func_findphone_form_create(void)
     compo_form_set_title(frm, i18n[STR_FIND_PHONE]);
 
     //新建图像
-    //compo_picturebox_t *pic;
-    compo = (compo_picturebox_t *)compo_picturebox_create(frm, UI_BUF_COMMON_FIND_PHONE_BIN);
-    compo_setid((compo_picturebox_t *)compo, COMPO_ID_PIC_FIND);
-    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_t *pic;
+    pic = compo_picturebox_create(frm, UI_BUF_COMMON_FIND_PHONE_BIN);
+    compo_setid(pic, COMPO_ID_PIC_FIND);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
     //图像按钮
-	compo = (component_t *)compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
-    compo_setid(compo, COMPO_ID_BUTTON_FIND);
-    compo_button_set_pos((compo_button_t *)compo, GUI_SCREEN_CENTER_X, 258);
+    compo_button_t * btn;
+	btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
+    compo_setid(btn, COMPO_ID_BUTTON_FIND);
+    compo_button_set_pos((compo_button_t *)btn, GUI_SCREEN_CENTER_X, 258);
 
     //按钮上的文本
-    compo = (component_t *)compo_textbox_create(frm, 6);
-    compo_setid(compo, COMPO_ID_TEXT_FIND);
-    compo_textbox_set_pos((compo_textbox_t *)compo, GUI_SCREEN_CENTER_X, 258);
-    compo_textbox_set((compo_textbox_t *)compo, i18n[STR_START]);
+    compo_textbox_t * txt = compo_textbox_create(frm, 6);
+    compo_setid(txt, COMPO_ID_TEXT_FIND);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 258);
+    compo_textbox_set(txt, i18n[STR_START]);
 
     return frm;
 }
@@ -90,19 +91,19 @@ static void func_findphone_process(void)
 //查找手机按键事件处理
 static void func_findphone_button_touch_handle(void)
 {
-    f_findphone_t *f_bo = (f_findphone_t *)func_cb.f_cb;
-    component_t *compo;
+    f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
+    compo_textbox_t * txt;
 
     int id = compo_get_button_id();
     if (COMPO_ID_BUTTON_FIND == id)
     {
         start_falg ^=1;
-        compo = compo_getobj_byid(COMPO_ID_TEXT_FIND);
+        txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
 
         if(start_falg)
-            compo_textbox_set((compo_textbox_t *)compo, i18n[STR_MEASURING]);
+            compo_textbox_set(txt, i18n[STR_MEASURING]);
         else
-            compo_textbox_set((compo_textbox_t *)compo, i18n[STR_START]);
+            compo_textbox_set(txt, i18n[STR_START]);
     }
 
 

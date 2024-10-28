@@ -144,14 +144,6 @@ void uteModuleFilesystemDelAllData(void)
 {
     lfs_format(&uteModuleLfs, &uteModuleFilesystemFsConfig);
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
-#if UTE_MODULE_EMOTION_SAVE_REQCODE_PRESSURE_SUPPORT
-    //删除完文件系统数据之后，重新保存情绪压力激活码
-    uteModuleFilesystemInit();
-    uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
-    uteModuleEmotionPressureSaveReqCode();
-    uteModuleEmotionPressureSaveKeyCode();
-//     uteModuleEmotionPressureActiveAlgo(true);
-#endif
 }
 /**
 *@brief  文件系统初始化

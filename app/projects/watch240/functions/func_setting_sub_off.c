@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -56,7 +57,8 @@ static void func_off_button_click(void)
     int id = compo_get_button_id();
     switch (id) {
     case COMPO_ID_BTN_YES:
-        func_cb.sta = FUNC_PWROFF;
+        // func_cb.sta = FUNC_PWROFF;
+        uteApplicationCommonPoweroff();
         break;
 
     case COMPO_ID_BTN_NO:

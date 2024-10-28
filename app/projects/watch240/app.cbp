@@ -965,6 +965,9 @@
 		<Unit filename="functions/func_light.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_long_press.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_map.c">
 			<Option compilerVar="CC" />
 		</Unit>

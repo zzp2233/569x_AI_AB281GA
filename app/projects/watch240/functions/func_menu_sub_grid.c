@@ -39,7 +39,7 @@ static const menu_hc_item_t tbl_menu_grid[] = {
     {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
     {UI_BUF_ICON_ACTIVITY_BIN,                  FUNC_ACTIVITY},
     {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_BLOOD_OXYGEN},
-    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},//压力
+    {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},//压力
     {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
     {UI_BUF_ICON_BREATHE_BIN,                   FUNC_BREATHE},
     {UI_BUF_ICON_MUSIC_BIN,                     FUNC_BT},

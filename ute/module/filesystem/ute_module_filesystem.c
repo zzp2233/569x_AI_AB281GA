@@ -234,7 +234,8 @@ static bool uteModuleFilesystemLsCommon(lfs_t *fs,char *path, ute_module_filesys
                     dirInfo->totalSize = dirInfo->totalSize + info.size;
                     if (dirInfo->filesCnt < UTE_FILE_SYSTEM_DIR_INFO_FILE_MAX)
                     {
-                        snprintf((void *)&dirInfo->filesName[dirInfo->filesCnt][0], UTE_FILE_SYSTEM_DIR_FILE_NAME_MAX,"%.20s", info.name);
+                        // snprintf((void *)&dirInfo->filesName[dirInfo->filesCnt][0], UTE_FILE_SYSTEM_DIR_FILE_NAME_MAX,"%.20s", info.name);
+                        memcpy((void *)&dirInfo->filesName[dirInfo->filesCnt][0],(void*)&info.name[0], strlen((const char*)&info.name[0]) > UTE_FILE_SYSTEM_DIR_FILE_NAME_MAX ? UTE_FILE_SYSTEM_DIR_FILE_NAME_MAX : strlen((const char*)&info.name[0]));
                         dirInfo->filesSize[dirInfo->filesCnt] = info.size;
                     }
                     dirInfo->filesCnt++;

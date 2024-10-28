@@ -48,6 +48,7 @@ const uint8_t uteModuleLogTagString[][31] =
     {"LOG_EARPHONE"},
     {"LOG_ALI_UPAY"},
     {"LOG_CWM"},
+    {"LOG_MEMORY"},
 };
 #if UTE_MODULE_RUNING_LOG_SUPPORT
 static uint8_t writeLogTobuff(uint8_t *pLogData, uint8_t logLen);

@@ -14,6 +14,7 @@
 #include "ute_drv_motor.h"
 #include "ute_module_protocol.h"
 #include "ute_module_profile_ble.h"
+#include "ute_module_notify.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_heart.h"
@@ -21,7 +22,6 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_sport.h"
-#include "ute_module_notify.h"
 #include "ute_module_weather.h"
 #include "ute_module_notdisturb.h"
 #include "ute_module_breathrate.h"
@@ -479,7 +479,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
         // uteModulePlatformSetFastAdvertisingTimeCnt(0);
         // uteModulePlaformUpdateConnectParam(12,36,55000);
     }
-    // uteModuleCallBleConnectState(isConnected);
+    uteModuleCallBleConnectState(isConnected);
 }
 /**
 *@brief    更新ble配对状态

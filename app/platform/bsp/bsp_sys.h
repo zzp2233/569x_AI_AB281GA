@@ -173,6 +173,7 @@ volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态
     u32 reject_tick;                                //通话挂断防呆计时，解决部分手机挂断状态更新慢的问题
 	//消息
     bool msg_tag;                                   //消息弹出标志
+    u8 msg_index;                                   //消息类型
 #if FUNC_MUSIC_EN
 	bool local_music_sta;                           //本地音乐状态
 	bool music_popup_en;                            //音乐页面插入跳转使能

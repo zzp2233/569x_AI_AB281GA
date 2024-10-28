@@ -478,8 +478,8 @@ bool sleep_process(is_sleep_func is_sleep)
             {
                 sfunc_sleep();              //熄屏且进入休眠
                 reset_sleep_delay_all();
-                reset_pwroff_delay();   
-                return true;                         
+                reset_pwroff_delay();
+                return true;
             }
         }
     } else {

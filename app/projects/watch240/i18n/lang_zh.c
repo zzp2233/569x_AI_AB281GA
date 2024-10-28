@@ -21,6 +21,7 @@ const char * const i18n_zh[] = {
     [STR_BLOOD_PRESSURE]                = "血压",
     [STR_BLOOD_OXYGEN]                  = "血氧",
     [STR_BLOOD_SUGAR]                   = "血糖",
+    [STR_PRESSURE]                      = "压力",
     [STR_WEATHER]                       = "天气",
     [STR_BREATHE]                       = "呼吸",
     [STR_BREATHE_INHALE]                = "吸气",
@@ -188,10 +189,12 @@ const char * const i18n_zh[] = {
     [STR_STYLE_SKYRER]                  = "天圆地方",
     [STR_STYLE_WATERFALL]               = "瀑布",
     [STR_STYLE_FOOTBALL]                = "足球",
+    [STR_STYLE_GRID_HONEYCOMB]          = "网格蜂窝",
+
 
     [STR_DEV_NEME]                      = "设备名称",
     [STR_BLE_MAC]                       = "蓝牙地址",
-    [STR_SYS_VERSION]                   = "系统名称",
+    [STR_SYS_VERSION]                   = "系统版本",
     [STR_NULL]                          = " ",
 
     [STR_SOOTHING]                      = "舒缓",

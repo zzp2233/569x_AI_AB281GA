@@ -970,6 +970,9 @@
 		<Unit filename="functions/func_light.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_long_press.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_map.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1037,6 +1040,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_password_sub_select.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_pressure.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_pressure.h" />
+		<Unit filename="functions/func_pressure_explain.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_recorder.c">

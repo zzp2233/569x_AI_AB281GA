@@ -49,6 +49,7 @@ typedef struct compo_listbox_item_t_ {
     u8 item_mode;                               //菜单模式
     union {                                     //菜单参数
         u8 func_sta;                            //普通菜单模式
+        u8 menu_style;                          //菜单选择
         u16 vidx;                               //选择开关Switch绑定的系统位变量vidx
     };
 } compo_listbox_item_t;

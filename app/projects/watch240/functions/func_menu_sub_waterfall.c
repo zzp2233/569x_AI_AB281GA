@@ -73,6 +73,7 @@ const menu_hc_item_t tbl_menu_waterfall[] = {
     {UI_BUF_ICON_MUSIC_BIN,                     FUNC_BT},
     {UI_BUF_ICON_CALL_BIN,                      FUNC_CALL},
 
+
     {UI_BUF_ICON_MENU_BIN,                      FUNC_STYLE},
 //    {UI_BUF_ICON_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
     {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
@@ -81,6 +82,7 @@ const menu_hc_item_t tbl_menu_waterfall[] = {
     ////{UI_BUF_ICON_ALTITUDE_BIN,                  FUNC_ALTITUDE},
     {UI_BUF_ICON_ALARM_CLOCK_BIN,               FUNC_ALARM_CLOCK},
     {UI_BUF_ICON_RESTORE_FACTORY_BIN,           FUNC_RSTFY},
+    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},//压力
 
     {UI_BUF_ICON_LANGUAGE_BIN,                  FUNC_LANGUAGE},
     {UI_BUF_ICON_LIGHT_BIN,                     FUNC_LIGHT},

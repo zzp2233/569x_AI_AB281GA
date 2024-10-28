@@ -125,7 +125,8 @@ void uteModuleSystemTimeLocalSetHourMin(uint8_t hour,uint8_t min);
 void uteModuleSystemtimeSaveAlarmInfo(ute_module_systemtime_one_alarm_t value,uint8_t index);
 uint8_t uteModuleSystemtimeGetAlarmTotalCnt(void);
 void uteModuleSystemtimeDeleteAlarm(uint8_t index);
-
+void uteModuleSystemtimeGetAlarm(ute_module_systemtime_one_alarm_t *set, uint8_t index);
+void uteModuleSystemtimeSetAlarm(ute_module_systemtime_one_alarm_t set, uint8_t index);
 
 ///适配中科平台接口（闹钟）
 void uteModuleSystemtimeEnableAlarm(uint8_t index, bool en);

@@ -83,7 +83,7 @@ compo_form_t *func_set_sub_about_form_create(void)
 
     compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
     compo_cardbox_text_set(cardbox, 1, UTE_SW_VERSION);
-    compo_cardbox_text_set_location(cardbox,1,-(9-sizeof(UTE_SW_VERSION)/2)*12+4,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
+    compo_cardbox_text_set_location(cardbox,1,-(9-sizeof(UTE_SW_VERSION)/2)*12,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
 
     //蓝牙地址
     cardbox = compo_cardbox_create(frm, 0, 1, 2, GUI_SCREEN_WIDTH-10, Card_height);
@@ -104,24 +104,24 @@ compo_form_t *func_set_sub_about_form_create(void)
 }
 
 //关于功能事件处理
-static void func_set_sub_about_process(void)
-{
-    s32 h_x = 0, h_y = 0;
-    f_about_t *slp = (f_about_t *)func_cb.f_cb;
-    widget_page_t *page_body = func_cb.frm_main->page_body;
-
-    if(slp->flag_drag) {
-        slp->flag_drag = ctp_get_dxy(&h_x, &h_y);
-         if (slp->flag_drag ) {
-             slp->y = slp->y_pos + h_y;
-             widget_page_set_client(page_body, 0, slp->y);
-         } else {
-              slp->y_pos = slp->y;
-         }
-    }
-    func_debug_info_check();
-    func_process();
-}
+//static void func_set_sub_about_process(void)
+//{
+//    s32 h_x = 0, h_y = 0;
+//    f_about_t *slp = (f_about_t *)func_cb.f_cb;
+//    widget_page_t *page_body = func_cb.frm_main->page_body;
+//
+//    if(slp->flag_drag) {
+//        slp->flag_drag = ctp_get_dxy(&h_x, &h_y);
+//         if (slp->flag_drag ) {
+//             slp->y = slp->y_pos + h_y;
+//             widget_page_set_client(page_body, 0, slp->y);
+//         } else {
+//              slp->y_pos = slp->y;
+//         }
+//    }
+//    func_debug_info_check();
+//    func_process();
+//}
 
 
 //关于功能消息处理

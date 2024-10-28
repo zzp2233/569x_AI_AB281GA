@@ -17,10 +17,13 @@
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 1
 
-/*! 芯片封装是5691C_F,wang.luo 2024-10-17 */
-#ifndef UTE_CHIP_PACKAGE_SELECT_5691C_F_SUPPORT
-#define UTE_CHIP_PACKAGE_SELECT_5691C_F_SUPPORT 1
-#endif
+/** 芯片选型 */
+#define CHIP_5691G                      0           //QFN40
+#define CHIP_5691C_F                    1           //QFN40
+#define CHIP_5690G                      2           //QFN52
+#define CHIP_5690F                      3           //QFN52
+
+#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F                  //芯片封装选择 5691G/5691C_F
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
 #ifndef DEFAULT_BLE_DEV_NEME
@@ -243,29 +246,40 @@
 #endif
 /*! 背光PWM控制输出定时器索引 zn.zeng, 2021-09-24  */
 #ifndef UTE_DRV_SCREEN_BACKLIGHT_PWM_ID
-#if UTE_CHIP_PACKAGE_SELECT_5691C_F_SUPPORT
+#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
 #define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PE6
-#else
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
 #define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PE3
+#else
+#error CHIP ERR
 #endif
 #endif
 /*! 背光控制输出管脚 zn.zeng, 2021-09-24  */
 #ifndef UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN
-#if UTE_CHIP_PACKAGE_SELECT_5691C_F_SUPPORT
+#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
 #define UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN   IO_PE6
-#else
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
 #define UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN   IO_PE3
+#else
+#error CHIP ERR
 #endif
 #endif
 
 /*! 马达PWM控制输出定时器索引 zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_MOTOR_PWM_ID
+
 #define UTE_DRV_MOTOR_PWM_ID GPIO_PE3
 #endif
 
 /*! 控制马达的gpio pin zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_MOTOR_GPIO_PIN
+#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
 #define UTE_DRV_MOTOR_GPIO_PIN IO_PE3
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
+#define UTE_DRV_MOTOR_GPIO_PIN IO_PF3
+#else
+#error CHIP ERR
+#endif
 #endif
 
 /*! pwm控制马达支持zn.zeng, 2021-10-22  */

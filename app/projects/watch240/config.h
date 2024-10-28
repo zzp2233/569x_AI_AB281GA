@@ -6,6 +6,7 @@
 
 #ifndef USER_CONFIG_H
 #define USER_CONFIG_H
+#include "ute_project_config.h"
 #include "config_define.h"
 #include "ute_flash_map_common.h"
 
@@ -33,7 +34,7 @@
 #define LP_XOSC_CLOCK_EN                0                           //是否使能低功耗晶振用于RTC CLOCK，支持关机时钟功能。(单脚晶振不支持低功耗晶振)
 #define GUI_AUTO_POWER_EN               1                           //是否使能刷图动态调节时钟，打开后系统时钟默认设置为SYS_CLK_SEL，刷图时调节为192M
 
-#define CHIP_PACKAGE_SELECT             CHIP_5691C_F                  //芯片封装选择 5691G/5691C_F
+#define CHIP_PACKAGE_SELECT             UTE_CHIP_PACKAGE_SELECT                  //芯片封装选择 5691G/5691C_F
 
 #define GUI_SELECT                      GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71    		        //GUI Display Select
 #define CTP_SELECT                      CTP_CST8X                   //CTP Select

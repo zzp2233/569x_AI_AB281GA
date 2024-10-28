@@ -32,6 +32,7 @@ typedef struct f_menu_list_t_ {
 static const compo_listbox_item_t tbl_menu_list[] = {
     {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
     {STR_SPORTS,                 UI_BUF_ICON_SPORT_BIN,             .func_sta = FUNC_SPORT},                //运动
+    {STR_PRESSURE,               UI_BUF_ICON_PRESSURE_BIN,          .func_sta = FUNC_PRESSURE},             //压力
 //    {STR_STEP,                   UI_BUF_ICON_STEP_BIN,            .func_sta = FUNC_NULL},                 //计步
     {STR_SLEEP,                  UI_BUF_ICON_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
     {STR_ACTIVITY_RECORD,        UI_BUF_ICON_ACTIVITY_BIN,          .func_sta = FUNC_ACTIVITY},             //活动记录
@@ -96,12 +97,12 @@ compo_form_t *func_menu_sub_list_form_create(void)
     compo_listbox_t *listbox;
     if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID) {
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_FOURGRID);
-        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME | COMPO_FORM_MODE_SHOW_ICON);
+        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
         //电池电量
-        compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
-        compo_textbox_set_location(battery_txt, 100, 35, 0, 0);
-        compo_textbox_set_autosize(battery_txt, true);
-        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
+//        compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
+//        compo_textbox_set_location(battery_txt, 100, 35, 0, 0);
+//        compo_textbox_set_autosize(battery_txt, true);
+//        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
 
         if (menu_idx < 3) {
             menu_idx = 3;

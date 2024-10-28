@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func_menu.h"
+#include "func_cover.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -103,7 +104,13 @@ extern void func_tetris(void);
 extern void func_tetris_start(void);
 extern void func_bird(void);
 extern void func_ota_ui(void);
+extern void func_pressure(void);//压力
+extern void func_pressure_explain(void);//压力说明
+extern void func_long_press(void);//关机 重启 SOS
 
+compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
+compo_form_t *func_pressure_explain_form_create(void);//压力说明
+compo_form_t *func_pressure_form_create(void);//压力
 compo_form_t *func_menu_form_create(void);
 compo_form_t *func_clock_form_create(void);
 compo_form_t *func_clock_sub_sidebar_form_create(void);
@@ -177,7 +184,7 @@ compo_form_t *func_music_form_create(void);
 compo_form_t *func_usbdev_form_create(void);
 compo_form_t *func_recorder_form_create(void);
 compo_form_t *func_message_reply_form_create(void);
-compo_form_t * func_mic_test_form_create(void);
+compo_form_t *func_mic_test_form_create(void);
 compo_form_t *func_tetris_form_create(void);
 compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
@@ -205,6 +212,9 @@ const func_t tbl_func_create[] = {
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit_form_create},
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop_form_create},
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
+    {FUNC_PRESSURE,                     func_pressure_form_create},//压力
+    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain_form_create},//压力说明
+    {FUNC_LONG_PRESS,                   func_long_press_form_create},//关机 重启 SOS
     {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
     {FUNC_BREATHE,                      func_breathe_form_create},
@@ -294,6 +304,9 @@ const func_t tbl_func_entry[] = {
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop},      //闹钟--弹出
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
+    {FUNC_PRESSURE,                     func_pressure},                 //压力
+    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
+    {FUNC_LONG_PRESS,                   func_long_press},               //关机 重启 SOS界面
     {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
@@ -476,7 +489,7 @@ void func_process(void)
 
     if (sys_cb.msg_tag) { //有消息弹出
         sys_cb.msg_tag = false;
-        app_msg_pop_up();
+        app_msg_pop_up(sys_cb.msg_index);
         printf(">>>MSG POP\n");
     }
 
@@ -497,6 +510,13 @@ void func_process(void)
 #if CHARGE_EN
     if (xcfg_cb.charge_en) {
         charge_detect(1);
+        if (bsp_charge_sta_get()) {
+            if (bt_cb.disp_status <= BT_STA_PLAYING && func_cb.sta != FUNC_OTA_UI_MODE && is_fot_start() == 0) {
+                msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+                msg_enqueue(EVT_MSGBOX_EXIT);
+                func_cb.sta = FUNC_CHARGE;
+            }
+        }
     }
 #endif // CHARGE_EN
 
@@ -507,6 +527,9 @@ void func_process(void)
 #endif
 #if LE_AB_FOT_EN
     	bsp_fot_process();
+    	if (is_fot_start() == true) {
+            //func_cb.sta = FUNC_OTA_MODE;
+    	}
 #endif
     }
 }
@@ -950,7 +973,8 @@ void func_message(size_msg_t msg)
                     compo_form_destroy(f_clk->sub_frm);     //下拉界面存在双窗体
                 }
             }
-            func_switch_to(FUNC_SMARTSTACK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            //func_switch_to(FUNC_SMARTSTACK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
             break;
 
 
@@ -996,7 +1020,7 @@ void func_message(size_msg_t msg)
             break;
 
         case EVT_WATCH_MSG_POP_UP:
-            app_ute_msg_pop_up();
+            app_ute_msg_pop_up(sys_cb.msg_index);
             break;
 
         default:
@@ -1064,7 +1088,7 @@ void func_run(void)
     func_cb.tbl_sort[5] = FUNC_BT;
     func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = 7;
-    func_cb.sta = FUNC_CLOCK;
+    func_cb.sta = FUNC_CHARGE;//FUNC_CLOCK;
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
     for (;;) {

@@ -48,6 +48,7 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] = {
     {UI_BUF_ICON_FINDPHONE_BIN,                 FUNC_FINDPHONE},
     {UI_BUF_ICON_GAME_BIN,                      FUNC_GAME},
     ////{UI_BUF_ICON_ALTITUDE_BIN,                  FUNC_ALTITUDE},
+    {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},//压力
     {UI_BUF_ICON_ALARM_CLOCK_BIN,               FUNC_ALARM_CLOCK},
     {UI_BUF_ICON_RESTORE_FACTORY_BIN,           FUNC_RSTFY},
     {UI_BUF_ICON_LANGUAGE_BIN,                  FUNC_LANGUAGE},

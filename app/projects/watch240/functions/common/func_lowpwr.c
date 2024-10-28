@@ -278,19 +278,26 @@ static void sfunc_sleep(void)
     GPIOGDE = 0x3F;                             //MCP FLASH
     GPIOHDE = 0;
 
-    u32 pf_keep = 0;
-    // if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL)) {
-        printf("bsp_sensor_init_sta_get\n");
-        GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
-        pf_keep |= BIT(2);                      //SENSOR PG
-    // } else {
-    //     GPIOEDE = 0;
-    // }
+//    u32 pf_keep = 0;
+//     if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL)) {
+//        printf("bsp_sensor_init_sta_get\n");
+//        GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
+//        pf_keep |= BIT(2);                      //SENSOR PG
+//     } else {
+//         GPIOEDE = 0;
+//     }
 
-#if MODEM_CAT1_EN
-    pf_keep |= BIT(1) | BIT(2) | BIT(3);
+#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
+    GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
+    GPIOFDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
 #endif
-    GPIOFDE = pf_keep;
+
+
+//#if MODEM_CAT1_EN
+//    pf_keep |= BIT(1) | BIT(2) | BIT(3);
+//#endif
+//    GPIOFDE = pf_keep;
 
     wkie = WKUPCON & BIT(16);
     WKUPCON &= ~BIT(16);                        //休眠时关掉WKIE
@@ -338,6 +345,12 @@ static void sfunc_sleep(void)
 
         if (sys_cb.remind_tag) {
             printf("remind wakeup\n");
+            gui_need_wkp = true;
+            break;
+        }
+
+        if (sys_cb.msg_tag) {
+            printf("msg wakeup\n");
             gui_need_wkp = true;
             break;
         }

@@ -65,7 +65,7 @@ f_menu_skyrer_back skyrer_back_idx[SKYRER_LOOP_ICON_NUM];
 static const compo_rings_item_t tbl_menu_skyrer[] = {
     {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},            //时钟
     //{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
-    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},
+    {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},
     {UI_BUF_ICON_HEART_RATE_BIN,                FUNC_HEARTRATE},
     {UI_BUF_ICON_ACTIVITY_BIN,                  FUNC_ACTIVITY},
     {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_BLOOD_OXYGEN},

@@ -64,7 +64,7 @@ const menu_hc_item_t tbl_menu_ring[] = {
     {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
     {UI_BUF_ICON_MENU_BIN,                      FUNC_STYLE},
     {UI_BUF_ICON_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
-    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},
+    {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},
 
     {UI_BUF_ICON_FINDPHONE_BIN,                 FUNC_FINDPHONE},
     {UI_BUF_ICON_GAME_BIN,                      FUNC_GAME},

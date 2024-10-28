@@ -56,7 +56,8 @@ static const compo_football_item_t tbl_menu_football[] = {
     {UI_BUF_ICON_FOOTBALL_SPORT_BIN,            FUNC_SPORT},
     {UI_BUF_ICON_FOOTBALL_HEART_RATE_BIN,       FUNC_HEARTRATE},
     {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_SETTING},
-    {UI_BUF_ICON_FOOTBALL_CALL_BIN,             FUNC_PRESSURE},
+    {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_PRESSURE},
+   // {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},
 };
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

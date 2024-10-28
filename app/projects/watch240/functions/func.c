@@ -95,7 +95,7 @@ extern void func_bt_call(void);
 extern void func_bthid(void);
 extern void func_usbdev(void);
 extern void func_aux(void);
-//extern void func_smartstack(void);
+extern void func_smartstack(void);
 extern void func_modem_call(void);
 extern void func_modem_ring(void);
 extern void func_message_reply_info(void);
@@ -179,7 +179,7 @@ compo_form_t *func_clock_preview_form_create(void);
 compo_form_t *func_compo_select_form_create(void);
 compo_form_t *func_compo_select_sub_form_create(void);
 compo_form_t *func_debug_info_form_create(void);
-//compo_form_t * func_smartstack_form_create(void);
+compo_form_t * func_smartstack_form_create(void);
 compo_form_t *func_music_form_create(void);
 compo_form_t *func_usbdev_form_create(void);
 compo_form_t *func_recorder_form_create(void);
@@ -268,7 +268,7 @@ const func_t tbl_func_create[] = {
     {FUNC_SET_SUB_OFF,                  func_set_sub_off_form_create},
     {FUNC_CHARGE,                       func_charge_form_create},
     {FUNC_DEBUG_INFO,                   func_debug_info_form_create},
-  //  {FUNC_SMARTSTACK,                   func_smartstack_form_create},
+    {FUNC_SMARTSTACK,                   func_smartstack_form_create},
 #if FUNC_MUSIC_EN
     {FUNC_MUSIC,                        func_music_form_create},
 #endif
@@ -362,7 +362,7 @@ const func_t tbl_func_entry[] = {
     {FUNC_SET_SUB_OFF,                  func_set_sub_off},              //设置--关机
     {FUNC_CHARGE,                       func_charge},                   //充电
     {FUNC_DEBUG_INFO,                   func_debug_info},               //DEBUG
-   // {FUNC_SMARTSTACK,                   func_smartstack},               //智能堆栈
+    {FUNC_SMARTSTACK,                   func_smartstack},               //智能堆栈
 #if FUNC_BT_EN
     {FUNC_BT,                           func_bt},
     {FUNC_BT_RING,                      func_bt_ring},

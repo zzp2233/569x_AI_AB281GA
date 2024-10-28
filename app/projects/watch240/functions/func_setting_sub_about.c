@@ -83,7 +83,7 @@ compo_form_t *func_set_sub_about_form_create(void)
 
     compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_16_BIN);
     compo_cardbox_text_set(cardbox, 1, UTE_SW_VERSION);
-    compo_cardbox_text_set_location(cardbox,1,-(9-sizeof(UTE_SW_VERSION)/2)*12+4,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
+    compo_cardbox_text_set_location(cardbox,1,-(9-sizeof(UTE_SW_VERSION)/2)*12,12+6,GUI_SCREEN_WIDTH-10,Card_height/2);
 
     //蓝牙地址
     cardbox = compo_cardbox_create(frm, 0, 1, 2, GUI_SCREEN_WIDTH-10, Card_height);

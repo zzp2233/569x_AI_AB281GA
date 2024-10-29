@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_application_common.h"
 
 #define TRACE_EN    0
 
@@ -161,18 +162,20 @@ static void func_long_press_slide_disp_handle()
     touch_flag = ctp_get_dxy(&distance,&y);//获取触屏状态与滑动长度
 
     if(touch_flag){ //是否在触屏状态
-//    printf("X:%d  L:%d  R:%d T:%d\n",x,LENGTH_TOUCH,RIGHT_TOUCH,refresh_Icon_flag);
-//    printf("X:%d \n",distance);
-      if(x>=LENGTH_TOUCH && RIGHT_TOUCH>=x){//第一下触屏是否在图标上
-          refresh_Icon_flag = true;   //打开获取图标刷新长度
-          id = compo_get_button_id(); //获取图标id
+    //    printf("X:%d  L:%d  R:%d T:%d\n",x,LENGTH_TOUCH,RIGHT_TOUCH,refresh_Icon_flag);
+    //    printf("X:%d \n",distance);
+        if(x>=LENGTH_TOUCH && RIGHT_TOUCH>=x){//第一下触屏是否在图标上
+            refresh_Icon_flag = true;   //打开获取图标刷新长度
+            id = compo_get_button_id(); //获取图标id
 
-          if(id!=0)                   //获取id时防止获取到空id导致图标不能回弹
-          id_old = id;
-          else id = id_old;
-      }
-      if(refresh_Icon_flag)btn_location = distance; //获取图标滑动长度
-     }else{ //不在触屏状态
+            if(id!=0)                   //获取id时防止获取到空id导致图标不能回弹
+            id_old = id;
+            else id = id_old;
+        }
+        if(refresh_Icon_flag) {
+            btn_location = distance; //获取图标滑动长度
+        }
+    } else { //不在触屏状态
         func_long_press_event_handle(distance,id);//事件处理
         btn_location = 0; //松开回弹
         refresh_Icon_flag = false; //刷新图标关闭
@@ -220,6 +223,7 @@ static void func_long_press_message(size_msg_t msg)
         break;
     default:
         //func_message(msg);
+        evt_message(msg);
         break;
     }
 }

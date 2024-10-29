@@ -14,6 +14,9 @@
 #include "ute_drv_motor.h"
 #include "ute_module_protocol.h"
 #include "ute_module_profile_ble.h"
+#include "ute_module_notify.h"
+#include "ute_module_notdisturb.h"
+#include "ute_module_weather.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_heart.h"
@@ -21,9 +24,6 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_sport.h"
-#include "ute_module_notify.h"
-#include "ute_module_weather.h"
-#include "ute_module_notdisturb.h"
 #include "ute_module_breathrate.h"
 #include "ute_module_screens_common.h"
 #include "ute_task_gui.h"
@@ -248,8 +248,8 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
         uteModuleEmotionPressureInit();
 #endif
-        //uteModuleWeatherInit();
-        //uteModuleNotDisturbInit();
+        uteModuleWeatherInit();
+        uteModuleNotDisturbInit();
 #if UTE_MODULE_DRINK_WATER_NOTIFY_SCREEN_SUPPORT
         //uteModuleDrinkWaterInit();
 #endif
@@ -479,7 +479,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
         // uteModulePlatformSetFastAdvertisingTimeCnt(0);
         // uteModulePlaformUpdateConnectParam(12,36,55000);
     }
-    // uteModuleCallBleConnectState(isConnected);
+    uteModuleCallBleConnectState(isConnected);
 }
 /**
 *@brief    更新ble配对状态
@@ -667,7 +667,7 @@ void uteApplicationCommonEverySecond(void)
     uteModuleShipModeEverySecond();
 #endif
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT
-    uteModuleNotDisturbCleanHandOnStatus();
+    // uteModuleNotDisturbCleanHandOnStatus();
 #endif
 }
 /**
@@ -812,31 +812,6 @@ void uteApplicationCommonSaveQuickSwitchInfo(void)
 */
 void uteApplicationCommonStartPowerOffMsg(void)
 {
-    /*2022 08-08  关机暂停音乐*/
-#if UTE_MODULE_PLAYBACK_SUPPORT
-    if(uteModuleMusicGetPlayerPaused()==false)
-    {
-        uteModuleMusicCtrlPaused();
-        uteModuleMusicCtrlPausedBeforeOperationStop();
-    }
-#endif
-#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
-    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID);
-#else
-//    uteModuleGuiCommonDisplayOff(true);
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
-#endif
-}
-
-/**
-*@brief  真正关机
-*@details
-*@author        zn.zeng
-*@date        2021-08-20
-*/
-void uteApplicationCommonRealPowerOffMsg(void)
-{
-
     // if (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_CHARGING)
     // {
     //     uteModulePlatformSystemReboot();
@@ -846,16 +821,12 @@ void uteApplicationCommonRealPowerOffMsg(void)
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
 
     // uteApplicationCommonSaveQuickSwitchInfo();
-    // uteModuleWeatherSaveData();
+    uteModuleWeatherSaveData();
     // uteModuleSportSaveStepData();
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT&&UTE_MODULE_NOT_DISTURB_POWER_OFF_SAVE_STATUS_SUPPORT
     ute_module_not_disturb_data_t param;
     uteModuleNotDisturbGetParam(&param);
     uteModuleNotDisturbSaveParam(param);
-#endif
-
-#if UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT//BT开关保存放到关机，否则开关BT时会概率性点击无效，dengli.lu 2022/08/27
-    uteModuleCallSaveBtPowerOnOffStatus();
 #endif
 #if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
     uteModuleCallEntertranmentVoiceSwitchSaveConfig();
@@ -868,19 +839,19 @@ void uteApplicationCommonRealPowerOffMsg(void)
     uteModuleSportSaveTodayEveryHourAllSportKcalData();
 #endif
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isConnected=%d", __func__,uteApplicationCommonData.bleConnectState.isConnected);
-    uteApplicationCommonData.isPowerOn = false;
+
     if(uteApplicationCommonData.bleConnectState.isConnected)
     {
 //        uteModulePlatformBleDisconnect(uteApplicationCommonData.bleConnectState.connId);
     }
     else
     {
-        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_STOP_ADV,0);
+        // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_STOP_ADV,0);
     }
     // uteModuleHeartPowerOff();
     // uteModulePlatformQdecPowerOff();
     // uteModulePlatformPowerOffGpioConfig();
-#if UTE_BT30_CALL_SUPPORT
+#if 0//UTE_BT30_CALL_SUPPORT
     uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);
     uteModuleCallIsBtAutoCloseSaveConfig();
 #endif
@@ -897,6 +868,25 @@ void uteApplicationCommonRealPowerOffMsg(void)
 #endif
     // uteModuleFactoryTestStop();
     // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN|UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR|UTE_MODULE_PLATFORM_DLPS_BIT_KEYS|UTE_MODULE_PLATFORM_DLPS_BIT_UART);
+
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID);
+#else
+//    uteModuleGuiCommonDisplayOff(true);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
+#endif
+}
+
+/**
+*@brief  真正关机
+*@details
+*@author        zn.zeng
+*@date        2021-08-20
+*/
+void uteApplicationCommonRealPowerOffMsg(void)
+{
+    uteApplicationCommonData.isPowerOn = false;
+    func_pwroff(1);
 }
 /**
 *@brief  开机
@@ -993,70 +983,70 @@ void uteApplicationCommonSyncDataTimerMsg(void)
 */
 void uteApplicationCommonSendQuickSwitchStatus(void)
 {
-//     uint8_t response[20];
-//     uint32_t setFlag=0;
-//     memset(&response[0],0x00,20);
-//     response[0] = CMD_QUICK_SWITCH;
-//     response[1] = 0x02;
-//     if(uteApplicationCommonData.quickSwitch.isFindband)
-//     {
-//         setFlag|=QUICK_SWITCH_FINDBAND;
-//     }
-//     if(uteApplicationCommonData.quickSwitch.isTurnTheWrist)
-//     {
-//         setFlag|=QUICK_SWITCH_TURNTHEWRIST;
-//     }
-//     if(uteModuleSportSedentaryOpenCtrl(0,0))
-//     {
-//         setFlag|=QUICK_SWITCH_SEDENTARY;
-//     }
-//     if(uteApplicationCommonData.quickSwitch.isNotDisturb)
-//     {
-//         setFlag|=QUICK_SWITCH_NOT_DISTURB;
-//     }
-//     if(uteApplicationCommonData.quickSwitch.isFindPhone)
-//     {
-//         setFlag|=QUICK_SWITCH_ANTILOST;
-//     }
-//     if(uteApplicationCommonData.quickSwitch.isRejectCall)
-//     {
-//         setFlag|=QUICK_SWITCH_REJECT_CALL;
-//     }
-//     if(uteApplicationCommonData.quickSwitch.isHeart24h)
-//     {
-//         setFlag|=QUICK_SWITCH_24H_HEART;
-//     }
-//     if(uteApplicationCommonData.quickSwitch.isDisplayTime)
-//     {
-//         setFlag|=QUICK_SWITCH_DISPLAY_TIME;
-//     }
-//     if(uteApplicationCommonData.quickSwitch.isShockTime)
-//     {
-//         setFlag|=QUICK_SWITCH_SHOCK_TIME;
-//     }
-//     if(uteApplicationCommonData.quickSwitch.isGoalReach)
-//     {
-//         setFlag|=QUICK_SWITCH_GOAL_REACH;
-//     }
-//     if(uteModuleDrinkWaterOpenCtrl(0,0))
-//     {
-//         setFlag|=QUICK_SWITCH_DRINK_WATER;
-//     }
-//     if(uteModuleHeartWaringOpenCtrl(0,0))
-//     {
-//         setFlag|=QUICK_SWITCH_HR_ABNORMAL_WARNING;
-//     }
-// #if QUICK_SWITCH_LOCAL_IS24HOUR_SUPPORT
-//     if(uteModuleSystemtime12HOn()==false)
-//     {
-//         setFlag|=QUICK_SWITCH_LOCAL_IS24HOUR;
-//     }
-// #endif
-//     response[2] = (setFlag>>24)&0xff;
-//     response[3] = (setFlag>>16)&0xff;
-//     response[4] = (setFlag>>8)&0xff;
-//     response[5] = (setFlag)&0xff;
-//     uteModuleProfileBleSendToPhone(&response[0],20);
+    uint8_t response[20];
+    uint32_t setFlag=0;
+    memset(&response[0],0x00,20);
+    response[0] = CMD_QUICK_SWITCH;
+    response[1] = 0x02;
+    if(uteApplicationCommonData.quickSwitch.isFindband)
+    {
+        setFlag|=QUICK_SWITCH_FINDBAND;
+    }
+    if(uteApplicationCommonData.quickSwitch.isTurnTheWrist)
+    {
+        setFlag|=QUICK_SWITCH_TURNTHEWRIST;
+    }
+    // if(uteModuleSportSedentaryOpenCtrl(0,0))
+    // {
+    //     setFlag|=QUICK_SWITCH_SEDENTARY;
+    // }
+    if(uteApplicationCommonData.quickSwitch.isNotDisturb)
+    {
+        setFlag|=QUICK_SWITCH_NOT_DISTURB;
+    }
+    if(uteApplicationCommonData.quickSwitch.isFindPhone)
+    {
+        setFlag|=QUICK_SWITCH_ANTILOST;
+    }
+    if(uteApplicationCommonData.quickSwitch.isRejectCall)
+    {
+        setFlag|=QUICK_SWITCH_REJECT_CALL;
+    }
+    if(uteApplicationCommonData.quickSwitch.isHeart24h)
+    {
+        setFlag|=QUICK_SWITCH_24H_HEART;
+    }
+    if(uteApplicationCommonData.quickSwitch.isDisplayTime)
+    {
+        setFlag|=QUICK_SWITCH_DISPLAY_TIME;
+    }
+    if(uteApplicationCommonData.quickSwitch.isShockTime)
+    {
+        setFlag|=QUICK_SWITCH_SHOCK_TIME;
+    }
+    if(uteApplicationCommonData.quickSwitch.isGoalReach)
+    {
+        setFlag|=QUICK_SWITCH_GOAL_REACH;
+    }
+    // if(uteModuleDrinkWaterOpenCtrl(0,0))
+    // {
+    //     setFlag|=QUICK_SWITCH_DRINK_WATER;
+    // }
+    // if(uteModuleHeartWaringOpenCtrl(0,0))
+    // {
+    //     setFlag|=QUICK_SWITCH_HR_ABNORMAL_WARNING;
+    // }
+#if QUICK_SWITCH_LOCAL_IS24HOUR_SUPPORT
+    if(uteModuleSystemtime12HOn()==false)
+    {
+        setFlag|=QUICK_SWITCH_LOCAL_IS24HOUR;
+    }
+#endif
+    response[2] = (setFlag>>24)&0xff;
+    response[3] = (setFlag>>16)&0xff;
+    response[4] = (setFlag>>8)&0xff;
+    response[5] = (setFlag)&0xff;
+    uteModuleProfileBleSendToPhone(&response[0],20);
 }
 /**
 *@brief   设置快捷开关状态
@@ -1079,7 +1069,6 @@ void uteApplicationCommonSetQuickSwitchStatus(ute_quick_switch_t *quickSwitch)
 */
 void uteApplicationCommonSetQuickSwitchStatusFromApp(uint8_t *pData)
 {
-#if 0
     uint32_t setFlag=0;
 
     for(uint8_t i=0; i<4; i++)
@@ -1092,22 +1081,21 @@ void uteApplicationCommonSetQuickSwitchStatusFromApp(uint8_t *pData)
     uteApplicationCommonData.quickSwitch.isTurnTheWrist = (setFlag&QUICK_SWITCH_TURNTHEWRIST)?1:0;
     //uteApplicationCommonData.quickSwitch.is = (setFlag&QUICK_SWITCH_SEDENTARY)?1:0;
 
-    uteModuleSportSedentaryOpenCtrl(1,(setFlag&QUICK_SWITCH_SEDENTARY)?1:0);
+    // uteModuleSportSedentaryOpenCtrl(1,(setFlag&QUICK_SWITCH_SEDENTARY)?1:0);
 
     uteApplicationCommonData.quickSwitch.isNotDisturb = (setFlag&QUICK_SWITCH_NOT_DISTURB)?1:0;
     uteApplicationCommonData.quickSwitch.isFindPhone = (setFlag&QUICK_SWITCH_ANTILOST)?1:0;
     uteApplicationCommonData.quickSwitch.isRejectCall = (setFlag&QUICK_SWITCH_REJECT_CALL)?1:0;
     uteApplicationCommonData.quickSwitch.isHeart24h = (setFlag&QUICK_SWITCH_24H_HEART)?1:0;
-    //uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_DISPLAY_TIME)?1:0;
-    //uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_SHOCK_TIME)?1:0;
-    //uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_NOT_DISTURB_MODE)?1:0;
+    uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_DISPLAY_TIME)?1:0;
+    uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_SHOCK_TIME)?1:0;
+    uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_NOT_DISTURB_MODE)?1:0;
     uteApplicationCommonData.quickSwitch.isGoalReach = (setFlag&QUICK_SWITCH_GOAL_REACH)?1:0;
     //uteApplicationCommonData.quickSwitch.isDrinkWater = (setFlag&QUICK_SWITCH_DRINK_WATER)?1:0;
-    uteModuleDrinkWaterOpenCtrl(1,(setFlag&QUICK_SWITCH_DRINK_WATER)?1:0);
-    //uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning = (setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0;
-    uteModuleHeartWaringOpenCtrl(1,(setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0);
+    // uteModuleDrinkWaterOpenCtrl(1,(setFlag&QUICK_SWITCH_DRINK_WATER)?1:0);
+    // uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning = (setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0;
+    // uteModuleHeartWaringOpenCtrl(1,(setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0);
     uteApplicationCommonSaveQuickSwitchInfo();
-#endif
 }
 
 
@@ -1715,9 +1703,6 @@ void uteApplicationCommonFactoryReset(void)
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
     uteDrvBatteryCommonSaveLastLvlToSN1();
 #endif
-#if UTE_MODULE_ALI_UPAY_V02_SUPPORT
-    uteModuleAliUpayKvNvDelete();
-#endif
     uteModulePlatformSystemReboot();
 }
 
@@ -1746,7 +1731,8 @@ void uteApplicationCommonPoweroff(void)
 void uteApplicationCommonRestart(void)
 {
 //    uteDrvScreenCommonDisplayOff();
-    uteApplicationCommonRealPowerOffMsg(); // 先保存数据再执行重启
+    // uteApplicationCommonRealPowerOffMsg(); // 先保存数据再执行重启
+    uteApplicationCommonStartPowerOffMsg();
     uteModulePlatformSystemReboot();
 }
 

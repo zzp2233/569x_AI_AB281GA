@@ -1,6 +1,7 @@
 #include "include.h"
 #include "ute_drv_screen_common.h"
 #include "ute_module_log.h"
+#include "ute_module_gui_common.h"
 
 #define TRACE_EN                1
 
@@ -69,6 +70,7 @@ void gui_sleep(void)
         ctp_exit();
         power_gate_3v3_off();
         sys_cb.gui_sleep_sta = 1;
+        uteModuleGuiCommonDisplayOff(true);
         //printf("gui_sleep\n");
     }
 }
@@ -83,6 +85,7 @@ void gui_wakeup(void)
         gui_widget_refresh();
         // uteDrvScreenCommonInit();
         sys_cb.gui_sleep_sta = 0;
+        uteModuleGuiCommonDisplayOff(false);
         //printf("gui_wakeup\n");
     }
 }

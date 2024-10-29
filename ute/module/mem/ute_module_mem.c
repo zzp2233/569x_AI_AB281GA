@@ -35,7 +35,7 @@ void *uteModulePlatformMemoryAlloc(size_t size)
         // 如果自定义的内存池无法分配内存，则调用系统 malloc
         void *ptr = ab_malloc(size);
         if (ptr) {
-            printf("Using system malloc\n");
+            UTE_MODULE_LOG(UTE_LOG_MEMORY_LVL,"%s,Using system malloc,size:%d ptr:0x%x",__func__,size,ptr);
         }
         return ptr;
     }
@@ -49,6 +49,7 @@ void *uteModulePlatformMemoryAlloc(size_t size)
     }
     block->size = size;
     block->free = 0;
+    UTE_MODULE_LOG(UTE_LOG_MEMORY_LVL,"%s,Alloc size:%d ptr:0x%x",__func__,size,block+1)
     return (block + 1);
 }
 
@@ -63,12 +64,13 @@ void uteModulePlatformMemoryFree(void *ptr)
         // 释放自定义内存池中的内存
         MemoryBlock *block = (MemoryBlock *)ptr - 1;
         block->free = 1;
+        UTE_MODULE_LOG(UTE_LOG_MEMORY_LVL,"%s,Free ptr:0x%x",__func__,ptr)
     }
     else
     {
         // 释放系统 malloc 分配的内存
-        printf("Freeing system malloc\n");
         ab_free(ptr);
+        UTE_MODULE_LOG(UTE_LOG_MEMORY_LVL,"%s,Freeing system ptr:0x%x",__func__,ptr)
     }
 }
 

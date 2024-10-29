@@ -79,6 +79,11 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteApplicationCommonRealPowerOffMsg();
         }
         break;
+        case MSG_TYPE_MODULE_GUI_CLEAR_DEPTH:
+        {
+            uteModuleGuiCommonDisplayDepthClearTop(true);
+        }
+        break;
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

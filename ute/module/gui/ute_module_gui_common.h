@@ -89,4 +89,5 @@ bool uteModuleGuiCommonGetPowerSavingModeOpen(void);
 void uteResetHandScreenOnFlag(void);
 #endif
 bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void);
+void uteModuleGuiCommonDisplayOffAllowGoBack(bool allow);
 #endif //_UTE_MODULE_GUI_COMMON_H_

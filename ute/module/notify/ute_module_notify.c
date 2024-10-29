@@ -15,10 +15,11 @@
 #include "ute_drv_motor.h"
 #include "ute_module_message.h"
 #include "ute_module_charencode.h"
-
+#include "ute_module_notdisturb.h"
 #include "func_cover.h"
+
 // #include "ute_module_screens_common.h"
-// #include "ute_module_notdisturb.h"
+
 // #include "ute_module_gui_string.h"
 // #include "ute_module_quickReply.h"
 
@@ -223,7 +224,7 @@ void uteModuleNotifySaveNotifycationData(void)
 */
 void uteModuleNotifyNotifycationHandlerMsg(void)
 {
-    if(0)//(!uteModuleNotDisturbIsAllowNotify())
+    if(!uteModuleNotDisturbIsAllowNotify())
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
         return;
@@ -499,7 +500,7 @@ void uteModuleNotifyAncsStartPair(void)
 */
 void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
 {
-    if(1)//(uteModuleNotDisturbIsAllowNotify())
+    if(uteModuleNotDisturbIsAllowNotify())
     {
         UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,.attId=%d,uteModuleNotifyData.ancsSetOpenFlag=0x%p", __func__,attId,uteModuleNotifyData.ancsSetOpenFlag);
 

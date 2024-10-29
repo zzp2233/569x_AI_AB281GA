@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_notdisturb.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -402,6 +403,24 @@ static void func_set_sub_disturd_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_disturd_t));
     func_cb.frm_main = func_set_sub_disturd_form_create();
+
+    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
+    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
+    if(uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_ALLDAY_OPEN)
+    {
+        sys_cb.disturd_adl = true;
+        sys_cb.disturd_tim = false;
+    }
+    else if(uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_SCHEDULED_OPEN)
+    {
+        sys_cb.disturd_adl = false;
+        sys_cb.disturd_tim = true;
+    }
+    else
+    {
+        sys_cb.disturd_adl = false;
+        sys_cb.disturd_tim = false;
+    }
 }
 
 //退出勿扰模式功能

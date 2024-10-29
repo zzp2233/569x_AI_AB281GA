@@ -197,6 +197,7 @@ void uteApplicationCommonSyncDataTimerMsg(void);
 void uteApplicationCommonSendQuickSwitchStatus(void);
 void uteApplicationCommonSetQuickSwitchStatus(ute_quick_switch_t *quickSwitch);
 void uteApplicationCommonGetQuickSwitchStatus(ute_quick_switch_t *quickSwitch);
+void uteApplicationCommonSetQuickSwitchStatusFromApp(uint8_t *pData);
 void uteApplicationCommonGetSyncDataParam(ute_application_sync_data_param_t **param);
 void uteApplicationCommonKeysPressEvent(uint32_t param);
 void uteApplicationCommonSetMtuSize(uint16_t mtu);

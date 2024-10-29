@@ -50,6 +50,16 @@ void ble_app_disconnect_callback(void)
 #endif
 }
 
+void app_phone_type_set(u8 type)
+{
+    
+}
+
+u8 app_phone_type_get(void)
+{
+    return 1;
+}
+
 //一键双连应用示例
 void app_once_connect(u8 ble_app_ios)
 {

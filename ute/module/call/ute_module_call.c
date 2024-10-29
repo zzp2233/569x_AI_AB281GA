@@ -435,6 +435,7 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
             {
                 uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_APP_UNBIND);
             }
+            bt_nor_delete_link_info();
         }
         else
         {
@@ -525,6 +526,26 @@ void uteModuleCallBtSetBondFlag(bool isSet)
 {
     uteModuleCallAppCtrlData.isSetBondFlag = isSet;
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isSetBondFlag=%d", __func__,uteModuleCallAppCtrlData.isSetBondFlag);
+}
+
+/**
+*@brief  ble 连接状态接口
+*@details
+*@author        zn.zeng
+*@date        2022-06-10
+*/
+void uteModuleCallBleConnectState(bool isConnected)
+{
+#if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
+    if (isConnected)
+    {
+        /*Casen 22-08-04 自动休眠 & 配对地址不为空*/
+        if (!uteModuleCallBtIsPowerOn() && (uteModuleCallData.isBtAutoClose == true) && memcmp(uteModuleCallData.address, "\x00\x00\x00\x00\x00\x00", 6))
+        {
+            uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
+        }
+    }
+#endif
 }
 
 /**

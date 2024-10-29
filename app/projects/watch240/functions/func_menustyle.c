@@ -75,6 +75,7 @@ static void func_menustyle_message(size_msg_t msg)
     switch (msg) {
     case KU_BACK:
         func_cb.menu_style = compo_rotary_get_idx(rotary);
+        uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
         break;
 
     default:
@@ -88,6 +89,7 @@ static void func_menustyle_message(size_msg_t msg)
         //单击屏幕
         func_cb.menu_style = compo_rotary_get_idx(rotary);
         compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
+        uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
         break;
 
     default:

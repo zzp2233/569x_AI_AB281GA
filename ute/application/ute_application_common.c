@@ -14,6 +14,7 @@
 #include "ute_drv_motor.h"
 #include "ute_module_protocol.h"
 #include "ute_module_profile_ble.h"
+#include "ute_module_notify.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_heart.h"
@@ -21,7 +22,6 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_sport.h"
-#include "ute_module_notify.h"
 #include "ute_module_weather.h"
 #include "ute_module_notdisturb.h"
 #include "ute_module_breathrate.h"
@@ -479,7 +479,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
         // uteModulePlatformSetFastAdvertisingTimeCnt(0);
         // uteModulePlaformUpdateConnectParam(12,36,55000);
     }
-    // uteModuleCallBleConnectState(isConnected);
+    uteModuleCallBleConnectState(isConnected);
 }
 /**
 *@brief    更新ble配对状态
@@ -812,31 +812,6 @@ void uteApplicationCommonSaveQuickSwitchInfo(void)
 */
 void uteApplicationCommonStartPowerOffMsg(void)
 {
-    /*2022 08-08  关机暂停音乐*/
-#if UTE_MODULE_PLAYBACK_SUPPORT
-    if(uteModuleMusicGetPlayerPaused()==false)
-    {
-        uteModuleMusicCtrlPaused();
-        uteModuleMusicCtrlPausedBeforeOperationStop();
-    }
-#endif
-#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
-    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID);
-#else
-//    uteModuleGuiCommonDisplayOff(true);
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
-#endif
-}
-
-/**
-*@brief  真正关机
-*@details
-*@author        zn.zeng
-*@date        2021-08-20
-*/
-void uteApplicationCommonRealPowerOffMsg(void)
-{
-
     // if (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_CHARGING)
     // {
     //     uteModulePlatformSystemReboot();
@@ -853,10 +828,6 @@ void uteApplicationCommonRealPowerOffMsg(void)
     uteModuleNotDisturbGetParam(&param);
     uteModuleNotDisturbSaveParam(param);
 #endif
-
-#if UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT//BT开关保存放到关机，否则开关BT时会概率性点击无效，dengli.lu 2022/08/27
-    uteModuleCallSaveBtPowerOnOffStatus();
-#endif
 #if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
     uteModuleCallEntertranmentVoiceSwitchSaveConfig();
 #endif
@@ -868,19 +839,19 @@ void uteApplicationCommonRealPowerOffMsg(void)
     uteModuleSportSaveTodayEveryHourAllSportKcalData();
 #endif
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isConnected=%d", __func__,uteApplicationCommonData.bleConnectState.isConnected);
-    uteApplicationCommonData.isPowerOn = false;
+
     if(uteApplicationCommonData.bleConnectState.isConnected)
     {
 //        uteModulePlatformBleDisconnect(uteApplicationCommonData.bleConnectState.connId);
     }
     else
     {
-        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_STOP_ADV,0);
+        // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_STOP_ADV,0);
     }
     // uteModuleHeartPowerOff();
     // uteModulePlatformQdecPowerOff();
     // uteModulePlatformPowerOffGpioConfig();
-#if UTE_BT30_CALL_SUPPORT
+#if 0//UTE_BT30_CALL_SUPPORT
     uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);
     uteModuleCallIsBtAutoCloseSaveConfig();
 #endif
@@ -897,6 +868,25 @@ void uteApplicationCommonRealPowerOffMsg(void)
 #endif
     // uteModuleFactoryTestStop();
     // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN|UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR|UTE_MODULE_PLATFORM_DLPS_BIT_KEYS|UTE_MODULE_PLATFORM_DLPS_BIT_UART);
+
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID);
+#else
+//    uteModuleGuiCommonDisplayOff(true);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
+#endif
+}
+
+/**
+*@brief  真正关机
+*@details
+*@author        zn.zeng
+*@date        2021-08-20
+*/
+void uteApplicationCommonRealPowerOffMsg(void)
+{
+    uteApplicationCommonData.isPowerOn = false;
+    func_pwroff(1);
 }
 /**
 *@brief  开机
@@ -1715,9 +1705,6 @@ void uteApplicationCommonFactoryReset(void)
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
     uteDrvBatteryCommonSaveLastLvlToSN1();
 #endif
-#if UTE_MODULE_ALI_UPAY_V02_SUPPORT
-    uteModuleAliUpayKvNvDelete();
-#endif
     uteModulePlatformSystemReboot();
 }
 
@@ -1746,7 +1733,8 @@ void uteApplicationCommonPoweroff(void)
 void uteApplicationCommonRestart(void)
 {
 //    uteDrvScreenCommonDisplayOff();
-    uteApplicationCommonRealPowerOffMsg(); // 先保存数据再执行重启
+    // uteApplicationCommonRealPowerOffMsg(); // 先保存数据再执行重启
+    uteApplicationCommonStartPowerOffMsg();
     uteModulePlatformSystemReboot();
 }
 

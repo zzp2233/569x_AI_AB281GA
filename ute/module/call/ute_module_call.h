@@ -206,6 +206,8 @@ bool uteModuleCallBtIsPowerOn(void);
 
 bool uteModuleCallIsCurrentConnectionIphone(void);
 
+void uteModuleCallBleConnectState(bool isConnected);
+
 void uteModuleCallSetInComingNumberName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t nameSize);
 
 #endif //_UTE_MODULE_BT_AUDIO_H_

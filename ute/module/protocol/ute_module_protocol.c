@@ -18,6 +18,7 @@
 #include "ute_module_call.h"
 #include "ute_drv_motor.h"
 #include "ute_module_notify.h"
+#include "ute_module_weather.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -304,6 +305,14 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
             {
                 /*!APP查找手环时亮屏 xjc 2022-01-12*/
 
+                /************************/
+                //一件双连测试代码
+                printf("==============>bsp_change_bt_mac\n");
+                app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+                bsp_change_bt_mac();
+                ble_bt_connect();
+                /************************/
+                
                 if(0)
                 {}
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
@@ -571,9 +580,6 @@ void uteModuleProtocolReadMsgContentSupport(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolReadQuickSwitchStatus(uint8_t*receive,uint8_t length)
 {
-
-#if 0
-
     uint8_t response[20];
     uint32_t setFlag=0;
     memset(&response[0],0x00,20);
@@ -639,11 +645,6 @@ void uteModuleProtocolReadQuickSwitchStatus(uint8_t*receive,uint8_t length)
     {
         uteApplicationCommonSetQuickSwitchStatusFromApp(&receive[2]);
     }
-
-
-#endif
-
-
 }
 /**
 *@brief        电话状态控制
@@ -1199,7 +1200,6 @@ void uteModuleProtocolBloodpressureDn02Ctrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetWeatherData(uint8_t*receive,uint8_t length)
 {
-#if 0
     ute_module_weather_data_t data;
     uteModuleWeatherGetData(&data);
     if(receive[1]==0x01)
@@ -1293,8 +1293,6 @@ void uteModuleProtocolSetWeatherData(uint8_t*receive,uint8_t length)
     {
         uteModuleWeatherSetCityName(&receive[3],receive[2]);
     }
-#endif
-
 #endif
     uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
 }

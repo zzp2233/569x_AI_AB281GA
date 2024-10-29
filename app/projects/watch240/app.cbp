@@ -66,6 +66,8 @@
 			<Add directory="../../../ute/drv/motor" />
 			<Add directory="../../../ute/module/notify" />
 			<Add directory="../../../ute/module/charencode" />
+			<Add directory="../../../ute/module/notdisturb" />
+			<Add directory="../../../ute/module/weather" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -94,6 +96,7 @@
 		</Linker>
 		<ExtraCommands>
 			<Add before="Output\bin\prebuild.bat $(PROJECT_NAME)" />
+			<Add before="..\..\..\tools\AStyle\copy.bat" />
 			<Add after="Output\bin\postbuild.bat $(PROJECT_NAME)" />
 		</ExtraCommands>
 		<Unit filename="../../../libs/gui/spiflash/spiflash.h" />
@@ -141,6 +144,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/message/ute_module_message.h" />
+		<Unit filename="../../../ute/module/notdisturb/ute_module_notdisturb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/notdisturb/ute_module_notdisturb.h" />
 		<Unit filename="../../../ute/module/notify/ute_module_notify.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -161,6 +168,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/systemtime/ute_module_systemtime.h" />
+		<Unit filename="../../../ute/module/weather/ute_module_weather.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/weather/ute_module_weather.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281.h" />
 		<Unit filename="../../../ute/task/ute_task_application.c">

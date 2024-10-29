@@ -161,17 +161,17 @@ enum music_data{
     MUSIC_DATA_CUR_TIME,
 };
 
-enum weather_type{
-    WEATHER_TYPE_CLOUDY,
-    WEATHER_TYPE_SUNSHINE,
-    WEATHER_TYPE_SNOW,
-    WEATHER_TYPE_RAIN,
-    WEATHER_TYPE_OVERCAST,
-    WEATHER_TYPE_SAND_AND_DUST,
-    WEATHER_TYPE_WINDY,
-    WEATHER_TYPE_HAZE,
-};
-typedef enum weather_type weather_type_t;
+// enum weather_type{
+//     WEATHER_TYPE_CLOUDY,
+//     WEATHER_TYPE_SUNSHINE,
+//     WEATHER_TYPE_SNOW,
+//     WEATHER_TYPE_RAIN,
+//     WEATHER_TYPE_OVERCAST,
+//     WEATHER_TYPE_SAND_AND_DUST,
+//     WEATHER_TYPE_WINDY,
+//     WEATHER_TYPE_HAZE,
+// };
+// typedef enum weather_type weather_type_t;
 
 enum sys_time_format{
     SYS_TIME_FORMAT_AM         = 0x00,
@@ -221,7 +221,7 @@ struct weather_oneday_info{
     int8_t           min_temp;                                           //最小温度
     int8_t           max_temp;                                           //最大温度
 
-    weather_type_t   oneday_weather_type;                                //天气类型
+    // weather_type_t   oneday_weather_type;                                //天气类型
 
 };
 typedef struct weather_oneday_info weather_oneday_info_t;

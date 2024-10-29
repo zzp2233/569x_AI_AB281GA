@@ -285,6 +285,9 @@ enum
     ANCS_OPEN_IMO  =0X10000000,
     ANCS_OPEN_MICROSOFTTEAMS  =0X20000000,
 };
+
+
+
 #endif
 /*! 消息推送数据结构zn.zeng, 2021-11-09  */
 typedef struct
@@ -337,6 +340,7 @@ void uteModuleNotifySetNewNotifyFlag(bool isNewNotify);
 bool uteModuleNotifyIsNewNotifyDisplay(void);
 uint8_t uteModuleNotifyGetTotalNotifyCnt(void);
 void uteModuleNotifyGetDataPointer(ute_module_notify_data_t **data);
+void uteModuleNotifySetDisplayIndex(uint8_t displayIndex);
 
 #endif //_UTE_MODULE_CRC_H_
 

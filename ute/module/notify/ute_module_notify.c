@@ -16,7 +16,6 @@
 #include "ute_module_message.h"
 #include "ute_module_charencode.h"
 
-#include "func_cover.h"
 // #include "ute_module_screens_common.h"
 // #include "ute_module_notdisturb.h"
 // #include "ute_module_gui_string.h"
@@ -1532,4 +1531,7 @@ uint8_t uteModuleNotifyGetTotalNotifyCnt(void)
     return uteModuleNotifyData.totalNotifyCnt;
 }
 
-
+uint8_t uteModuleNotifyGetMaxNotifyCnt(void)
+{
+    return UTE_MODULE_NOTIFY_SAVE_CNT;
+}

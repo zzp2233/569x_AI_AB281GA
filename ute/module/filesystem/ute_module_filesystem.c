@@ -144,14 +144,6 @@ void uteModuleFilesystemDelAllData(void)
 {
     lfs_format(&uteModuleLfs, &uteModuleFilesystemFsConfig);
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
-#if UTE_MODULE_EMOTION_SAVE_REQCODE_PRESSURE_SUPPORT
-    //删除完文件系统数据之后，重新保存情绪压力激活码
-    uteModuleFilesystemInit();
-    uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
-    uteModuleEmotionPressureSaveReqCode();
-    uteModuleEmotionPressureSaveKeyCode();
-//     uteModuleEmotionPressureActiveAlgo(true);
-#endif
 }
 /**
 *@brief  文件系统初始化
@@ -234,9 +226,8 @@ static bool uteModuleFilesystemLsCommon(lfs_t *fs,char *path, ute_module_filesys
                     dirInfo->totalSize = dirInfo->totalSize + info.size;
                     if (dirInfo->filesCnt < UTE_FILE_SYSTEM_DIR_INFO_FILE_MAX)
                     {
-                        //snprintf((void *)&dirInfo->filesName[dirInfo->filesCnt][0], UTE_FILE_SYSTEM_DIR_FILE_NAME_MAX,"%.20s", info.name);
+                        // snprintf((void *)&dirInfo->filesName[dirInfo->filesCnt][0], UTE_FILE_SYSTEM_DIR_FILE_NAME_MAX,"%.20s", info.name);
                         memcpy((void *)&dirInfo->filesName[dirInfo->filesCnt][0],(void*)&info.name[0], strlen((const char*)&info.name[0]) > UTE_FILE_SYSTEM_DIR_FILE_NAME_MAX ? UTE_FILE_SYSTEM_DIR_FILE_NAME_MAX : strlen((const char*)&info.name[0]));
-
                         dirInfo->filesSize[dirInfo->filesCnt] = info.size;
                     }
                     dirInfo->filesCnt++;

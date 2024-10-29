@@ -284,12 +284,13 @@ void uteModuleGuiCommonInit(void)
 {
     memset(&uteModuleGuiCommonData,0,sizeof(ute_module_gui_common_t));
     /*! 创建定时器 zn.zeng, 2021-09-03  */
-    uteModulePlatformCreateTimer(&displayOffTimerPointer, "display off",1, 5000, false, uteModuleGuiCommonDisplayOffTimerCallback);
+    // uteModulePlatformCreateTimer(&displayOffTimerPointer, "display off",1, 5000, false, uteModuleGuiCommonDisplayOffTimerCallback);
     uteModulePlatformCreateTimer(&clearDepthAfterOffTimerPointer, "clear depth",1, 5000, false, uteModuleGuiCommonClearDepthTimerCallback);
     uteModuleGuiCommonReadConfig();
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
     uteModuleGuiCommonScreenSaverConfigInit();
 #endif
+    func_cb.menu_style = (uint8_t)uteModuleGuiCommonGetThemeTypeId();
 }
 
 /**
@@ -629,8 +630,12 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 */
 void uteModuleGuiCommonSetThemeTypeId(int themeTypeId)
 {
-    uteModuleGuiCommonData.themeTypeId = themeTypeId;
-    uteModuleGuiCommonSaveConfig();
+    if(uteModuleGuiCommonData.themeTypeId != themeTypeId)
+    {
+        uteModuleGuiCommonData.themeTypeId = themeTypeId;
+        uteModuleGuiCommonSaveConfig();      
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,themeTypeId=%d",__func__,themeTypeId);
+    }
 }
 /**
 *@brief        获取主题类型，如有需要，可增加type

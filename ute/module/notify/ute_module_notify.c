@@ -1533,4 +1533,7 @@ uint8_t uteModuleNotifyGetTotalNotifyCnt(void)
     return uteModuleNotifyData.totalNotifyCnt;
 }
 
-
+uint8_t uteModuleNotifyGetMaxNotifyCnt(void)
+{
+    return UTE_MODULE_NOTIFY_SAVE_CNT;
+}

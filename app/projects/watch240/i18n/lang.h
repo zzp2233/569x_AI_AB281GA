@@ -208,6 +208,7 @@ enum {
     STR_MINUTE,
     STR_SETTING_MODE,
 
+    STR_NO_MSG,
 };
 
 extern const char * const *i18n;

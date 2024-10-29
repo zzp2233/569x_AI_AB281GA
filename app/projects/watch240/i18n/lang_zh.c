@@ -205,4 +205,6 @@ const char * const i18n_zh[] = {
     [STR_MINUTE]                        = "分钟",
     [STR_SETTING_MODE]                  = "模式设置",
 
+    [STR_NO_MSG]                        = "没有新消息",
+
 };

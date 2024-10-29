@@ -370,21 +370,21 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
     response = uteModulePlatformMemoryAlloc(255);
     memset(response,0x00,255);
     memcpy(response,receive,length);
-    if(receive[1]==0x01)
+    if(receive[1]==0x01)       //首次绑定
     {
         if(length>2)
         {
-            uteModuleCallAppCtrlData.phoneOS = receive[2];
+            uteModuleCallAppCtrlData.phoneOS = receive[2];      // 1:IOS
         }
         if(length>3)
         {
-            uteModuleCallAppCtrlData.btAutomaticPair = receive[3];
+            uteModuleCallAppCtrlData.btAutomaticPair = receive[3];      // 是否自动配对
         }
-        if(length>4)
+        if(length>4)               // 判断链接ID
         {
             uint32_t tempUuid = (uint32_t)receive[4]<<24|receive[5]<<16|receive[6]<<8|receive[7];
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,.uuid = 0x%x tempUuid = 0x%x",__func__,uteModuleCallAppCtrlData.uuid,tempUuid);
-            if(uteModuleCallAppCtrlData.uuid != tempUuid)
+            if(uteModuleCallAppCtrlData.uuid != tempUuid)           // 换设备，ID更改
             {
                 uteModuleCallAppCtrlData.uuid = tempUuid;
                 if(memcmp(uteModuleCallData.address,"\x00\x00\x00\x00\x00\x00",6)!=0)
@@ -414,7 +414,13 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
 #endif
                 if(uteModuleCallAppCtrlData.phoneOS == 0x01)
                 {
-                    bsp_change_bt_mac();
+                    printf("======================>ble_bt_connect\n");
+                    /**************************/
+                    //一键双连代码，协议待跑通
+                    // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+                    // bsp_change_bt_mac();
+                    // ble_bt_connect();
+                    /**************************/
                     // ute_ble_connect_state_t state;
                     // uteApplicationCommonGetBleConnectionState(&state);
                     // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isParired=%d", __func__,state.isParired);
@@ -426,13 +432,14 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
         uteModuleProtocolGetBtInfo(&response[2],&totalByte);
         uteModuleProfileBle50SendToPhone(&response[0],totalByte+2);
     }
-    else if(receive[1]==0x02)
+    else if(receive[1]==0x02)           
     {
         uteModuleCallAppCtrlData.uuid = 0;
-        if(receive[2] == 0x00) //turn off
+        if(receive[2] == 0x00) //turn off       //解绑
         {
             if(uteModuleCallBtIsPowerOn())
             {
+                bt_nor_delete_link_info();
                 uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_APP_UNBIND);
             }
         }

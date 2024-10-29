@@ -304,6 +304,14 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
             {
                 /*!APP查找手环时亮屏 xjc 2022-01-12*/
 
+                /************************/
+                //一件双连测试代码
+                printf("==============>bsp_change_bt_mac\n");
+                app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+                bsp_change_bt_mac();
+                ble_bt_connect();
+                /************************/
+                
                 if(0)
                 {}
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT

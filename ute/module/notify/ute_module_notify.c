@@ -258,9 +258,9 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
 
     UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL,"%s,currNotify.size=%d",__func__,uteModuleNotifyData.currNotify.size);
     UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-    
+
     uteModulePlatformMemoryFree(utf8StrTemp);
-    
+
     /*! 来电提醒不保存 zn.zeng, 2021-08-25  */
     if(uteModuleNotifyData.currNotify.type!=MSG_CALL)
     {
@@ -346,7 +346,7 @@ void uteModuleNotifyAncsPushContect(uint8_t *buff,uint16_t length,bool isTitle)
     }
     uint16_t hasSize = UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-uteModuleNotifyData.currNotify.size;
     UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,currNotify.size=%d,hasSize=%d,startIndex=%d,size=%d", __func__,uteModuleNotifyData.currNotify.size,hasSize,startIndex,size);
-    
+
     // uteModuleCharencodeUtf8ConversionUnicode(&uteModuleNotifyData.currNotify.content[uteModuleNotifyData.currNotify.size],&hasSize,&buff[startIndex],size);
 
     if(hasSize >= size)
@@ -480,8 +480,9 @@ void uteModuleNotifyAncsGetFlag(uint32_t *flag)
 void uteModuleNotifyAncsStartPair(void)
 {
     if(!ble_ancs_is_connected())
-    {
-        ble_ancs_start();
+    {    
+        // 双连接口已发起加密配对
+        // ble_ancs_start();
     }
 }
 
@@ -499,7 +500,7 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
     if(1)//(uteModuleNotDisturbIsAllowNotify())
     {
         UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,.attId=%d,uteModuleNotifyData.ancsSetOpenFlag=0x%p", __func__,attId,uteModuleNotifyData.ancsSetOpenFlag);
-        
+
         UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL,"%s,len:%d,%s,",__func__,length,buff);
         UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,buff,length);
 

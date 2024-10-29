@@ -12,6 +12,7 @@
 // #include "ute_drv_battery_common.h"
 #include "ute_application_common.h"
 #include "ute_module_platform.h"
+#include "ute_module_notdisturb.h"
 
 
 /*! 马达运行数据zn.zeng, 2021-10-12  */
@@ -200,16 +201,16 @@ void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_
     }
 #endif
 
-    // if(uteModuleNotDisturbIsAllowVibration()||(!uteApplicationCommonIsPowerOn()))
+    if(uteModuleNotDisturbIsAllowVibration()||(!uteApplicationCommonIsPowerOn()))
     {
         uteDrvMotorData.durationTimeMsec = durationTimeMsec;
         uteDrvMotorData.intervalTimeMsec = intervalTimeMsec;
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START,cnt);
     }
-    // else
-    // {
-    //     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
-    // }
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
+    }
 }
 /**
 *@brief        马达停止震动

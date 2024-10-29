@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_clock.h"
+#include "ute_module_notdisturb.h"
 
 #define MENU_DROPDOWN_ALPHA             200
 
@@ -203,6 +204,14 @@ static void func_clock_sub_dropdown_click_handler(void)
         func_clock_sub_dropdown_bluetooth_btn_pic_update();
         break;
     case COMPO_ID_BTN_DISCURD:
+        if(dropdown_disturb_sw)
+        {
+            uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_CLOSE);
+        }
+        else
+        {
+            uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_ALLDAY_OPEN);
+        }
         dropdown_disturb_sw = !dropdown_disturb_sw;
         func_clock_sub_dropdown_disturb_pic_update();
         break;
@@ -285,6 +294,18 @@ static void func_clock_sub_dropdown_enter(void)
     }
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sta = FUNC_CLOCK_SUB_DROPDOWN;                   //进入到下拉菜单
+    if(uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_ALLDAY_OPEN)
+    {
+        dropdown_disturb_sw = 1;
+    }
+    else if (uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_SCHEDULED_OPEN && uteModuleNotDisturbIsTimeBucket())
+    {
+        dropdown_disturb_sw = 1;
+    }
+    else
+    {
+        dropdown_disturb_sw = 0;
+    }
 }
 
 //时钟表盘下拉菜单退出处理

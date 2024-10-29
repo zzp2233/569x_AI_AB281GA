@@ -96,6 +96,7 @@
 		</Linker>
 		<ExtraCommands>
 			<Add before="Output\bin\prebuild.bat $(PROJECT_NAME)" />
+			<Add before="..\..\..\tools\AStyle\copy.bat" />
 			<Add after="Output\bin\postbuild.bat $(PROJECT_NAME)" />
 		</ExtraCommands>
 		<Unit filename="../../../libs/gui/spiflash/spiflash.h" />

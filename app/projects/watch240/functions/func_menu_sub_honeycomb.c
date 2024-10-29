@@ -78,7 +78,7 @@ const menu_hc_item_t tbl_menu_honeycomb[] = {
     {UI_BUF_ICON_RESTORE_FACTORY_BIN,           FUNC_RSTFY},
     {UI_BUF_ICON_LANGUAGE_BIN,                  FUNC_LANGUAGE},
     {UI_BUF_ICON_LIGHT_BIN,                     FUNC_LIGHT},
-    {UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
+//    {UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
     {UI_BUF_ICON_MESSAGE_BIN,                   FUNC_MESSAGE},
 
     {UI_BUF_ICON_CALCULATOR_BIN,                FUNC_CALCULATOR},

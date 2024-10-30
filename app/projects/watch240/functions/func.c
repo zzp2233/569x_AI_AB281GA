@@ -454,11 +454,22 @@ void func_watch_bt_process(void)
     }
 #endif
 }
+void print_info(void)
+{
+    static u32 ticks = 0;
+    if (tick_check_expire(ticks, 1000))
+    {
+        ticks = tick_get();
+        extern void mem_monitor_run(void);
+        mem_monitor_run();
+    }
+}
 
 AT(.text.func.process)
 void func_process(void)
 {
     WDT_CLR();
+    //print_info();
 
 #if (FUNC_MUSIC_EN || FUNC_RECORDER_EN) && SD_SOFT_DETECT_EN
     sd_soft_cmd_detect(120);

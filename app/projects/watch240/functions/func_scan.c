@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -7,7 +8,8 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_scan_t_ {
+typedef struct f_scan_t_
+{
 
 } f_scan_t;
 
@@ -23,13 +25,16 @@ compo_form_t *func_scan_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SCAN]);
 
-	//创建按键
+    //创建按键
     //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_SCAN_BIN);
     //compo_button_set_pos(btn, 160, 180);
 
-    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, 64);
-    compo_qrcodebox_set(qrbox, "http://www.bluetrum.com");
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(128);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,128);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, 128);
+    compo_qrcodebox_set(qrbox, qr_str);
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 120);
+    uteModulePlatformMemoryFree(qr_str);
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
 
     return frm;
@@ -44,22 +49,23 @@ static void func_scan_process(void)
 //扫一扫功能消息处理
 static void func_scan_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -81,7 +87,8 @@ void func_scan(void)
 {
     printf("%s\n", __func__);
     func_scan_enter();
-    while (func_cb.sta == FUNC_SCAN) {
+    while (func_cb.sta == FUNC_SCAN)
+    {
         func_scan_process();
         func_scan_message(msg_dequeue());
     }

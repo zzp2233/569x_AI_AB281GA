@@ -239,6 +239,7 @@ void uteApplicationCommonRestart(void);
 
 void uteApplicationCommonSetAncsConnStatus(bool isConnected);
 bool uteApplicationCommonGetAncsConnStatus(void);
+uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len);
 
 #endif //_UTE_APPLICATION_COMMON_H_
 

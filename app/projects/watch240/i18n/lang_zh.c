@@ -215,4 +215,6 @@ const char * const i18n_zh[] =
     [STR_RAINY_SHOWERS]                 ="雷阵雨",
 
     [STR_NO_MSG]                        = "没有新消息",
+
+    [STR_FIND_WATCH]                    = "寻找手表",
 };

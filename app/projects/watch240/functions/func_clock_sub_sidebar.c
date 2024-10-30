@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_weather.h"
 
 #define TRACE_EN    0
 
@@ -23,7 +24,8 @@
 const u8 latest_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_SLEEP, FUNC_SPORT, FUNC_HEARTRATE};
 
 //卡片/按钮id
-enum{
+enum
+{
     SIDEBAR_CARD_ID_TIME_WEATHER = 1,
     SIDEBAR_CARD_ID_TIMER,
     SIDEBAR_CARD_ID_STOPWATCH,
@@ -36,13 +38,38 @@ enum{
     SIDEBAR_CARD_ID_CNT,
 };
 
-typedef struct f_sidebar_t_ {
-	page_tp_move_t *ptm;
+typedef struct f_sidebar_t_
+{
+    page_tp_move_t *ptm;
 
     s8 m_time_min;  //时间记录，判断是否更新控件
     s8 m_timer_sec;
     s8 m_stopwatch_sec;
+    u32 weather_list[];
 } f_sidebar_t;
+
+
+static const  weather_list[] =
+{
+    UI_BUF_WEATHER_UNKNOWN_BIN,                        //未知
+    UI_BUF_WEATHER_SUNNY_BIN,                          //晴天
+    UI_BUF_WEATHER_CLOUDY_BIN,                         //多云
+    UI_BUF_WEATHER_OVERCAST_BIN,                       //阴天
+    UI_BUF_WEATHER_MODERATE_RAIN_BIN,                  //阵雨
+    UI_BUF_WEATHER_RAINY_SHOWERS_BIN,                  //雷阵雨
+    UI_BUF_WEATHER_SLEET_BIN,                          //雨夹雪
+    UI_BUF_WEATHER_DRIZZLE_BIN,                        //小雨
+    UI_BUF_WEATHER_HEAVY_RAIN_BIN,                     //大雨
+    UI_BUF_WEATHER_RAINY_BIN,                          //雪
+    UI_BUF_WEATHER_SAND_AND_DUST_BIN,                  //沙尘暴
+    UI_BUF_WEATHER_HAZE_BIN,                           //雾霾
+    UI_BUF_WEATHER_WINDY_BIN,                          //大风
+    UI_BUF_WEATHER_TOMORROW_NIGHT_BIN,                 //明夜
+    UI_BUF_WEATHER_CLOUDY_NIGHT_BIN,                   //云遮月
+    UI_BUF_WEATHER_RAINY_NIGHT_BIN,                    //阵雨夜
+};
+
+
 
 //根据序号获取最近任务序号（idx=0为最近，无任务返回0）(idx<=3)
 static u8 sidebar_get_latest_func(u8 idx)
@@ -50,12 +77,17 @@ static u8 sidebar_get_latest_func(u8 idx)
     u8 i, j;
     u8 latest_default_tmp[DEFAULT_LATEST_TASK_NUM] = {0};
     u8 latest_cnt = latest_task_count();
-    if (latest_cnt > idx) {
+    if (latest_cnt > idx)
+    {
         return latest_task_get(idx);
-    } else {
+    }
+    else
+    {
         j = 0;
-        for (i = 0; i < DEFAULT_LATEST_TASK_NUM; i++) {   //最近任务不足DEFAULT_LATEST_TASK_NUM个且包含默认值
-            if (latest_task_find(latest_default[i]) == -1) {
+        for (i = 0; i < DEFAULT_LATEST_TASK_NUM; i++)     //最近任务不足DEFAULT_LATEST_TASK_NUM个且包含默认值
+        {
+            if (latest_task_find(latest_default[i]) == -1)
+            {
                 latest_default_tmp[j] = latest_default[i];
                 j++;
             }
@@ -74,7 +106,32 @@ static u32 sidebar_get_latest_icon(u8 idx)
 compo_form_t * func_clock_sub_sidebar_form_create(void)
 {
     compo_cardbox_t *cardbox;
+    ute_module_systemtime_time_t time;
+    ute_module_weather_data_t  weather_date;
+    u8 get_weather_id=0;
     char str_buff[16];
+
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
+    if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
+    {
+        uteModuleWeatherGetData(&weather_date);//获取天气状态
+        if(uteModuleSystemtimeIsNight()) //是否为夜间
+        {
+            switch(get_weather_id)
+            {
+                case WEATHER_TYPE_SUNNY:
+                    get_weather_id = 13;
+                    break;
+                case WEATHER_TYPE_CLOUDY:
+                    get_weather_id = 14;
+                    break;
+                case WEATHER_TYPE_THUNDERSHOWER_RAIN:
+                    get_weather_id = 15;
+                    break;
+            }
+        }
+        get_weather_id = weather_date.DayWeather[0]>>8;//获取天气状态
+    }
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -85,9 +142,9 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_setid(cardbox, SIDEBAR_CARD_ID_TIME_WEATHER);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 120);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_WEATHER_WEATHER_LIST_BIN);  //天气图标
-    compo_cardbox_icon_set_location(cardbox, 1, 245-180, 111-126, 72, 72);
-    compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);
+    compo_cardbox_icon_set(cardbox, 1, weather_list[get_weather_id]);  //天气图标
+    compo_cardbox_icon_set_location(cardbox, 1, 245-180, 111-126,gui_image_get_size( weather_list[get_weather_id]).wid,gui_image_get_size(weather_list[get_weather_id]).hei);
+    //compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);
     snprintf(str_buff, sizeof(str_buff), "%02d:%02d", compo_cb.tm.hour, compo_cb.tm.min);    //时间
     compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_cardbox_text_set(cardbox, 0, str_buff);
@@ -98,7 +155,14 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_text_set_location(cardbox, 1, 95-140, 145-126-10, 100, 30);
     compo_cardbox_text_set(cardbox, 2, i18n[STR_SUNDAY + compo_cb.tm.weekday]);    //星期
     compo_cardbox_text_set_location(cardbox, 2, 95-140, 181-126-10, 80, 30);
-    snprintf(str_buff, sizeof(str_buff), "%02d℃", sys_cb.temperature[1]);    //温度
+    if(uteModuleWeatherGetCurrDay() == time.day)
+    {
+        snprintf(str_buff, sizeof(str_buff), "%02d℃",weather_date.fristDayCurrTemperature); //今天温度
+    }
+    else
+    {
+        snprintf(str_buff, sizeof(str_buff), "---"); //今天温度
+    }
     compo_cardbox_text_set_font(cardbox, 3, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_cardbox_text_set(cardbox, 3, str_buff);
     compo_cardbox_text_set_location(cardbox, 3, 245-180, 178-126-10, 120, 30);
@@ -197,15 +261,17 @@ void func_clock_sub_sidebar_update(void)
     compo_cardbox_t *cardbox;
     char str_buff[16];
     //时间，天气图标，温度
-    if (f_sidebar->m_time_min != compo_cb.tm.min) { //一分钟更新一次
+    if (f_sidebar->m_time_min != compo_cb.tm.min)   //一分钟更新一次
+    {
         cardbox = compo_getobj_byid(SIDEBAR_CARD_ID_TIME_WEATHER);
         snprintf(str_buff, sizeof(str_buff), "%02d:%02d", compo_cb.tm.hour, compo_cb.tm.min);    //时间
         compo_cardbox_text_set(cardbox, 0, str_buff);
-        compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);  //天气
-        snprintf(str_buff, sizeof(str_buff), "%02d℃", sys_cb.temperature[1]);    //温度
-        compo_cardbox_text_set(cardbox, 3, str_buff);
+        //compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);  //天气
+        //snprintf(str_buff, sizeof(str_buff), "%02d℃", sys_cb.temperature[1]);    //温度
+        //compo_cardbox_text_set(cardbox, 3, str_buff);
         //日期，星期
-        if (f_sidebar->m_time_min <= 0) { //一小时更新一次
+        if (f_sidebar->m_time_min <= 0)   //一小时更新一次
+        {
             snprintf(str_buff, sizeof(str_buff), "%02d/%02d", compo_cb.tm.mon, compo_cb.tm.day);    //日期
             compo_cardbox_text_set(cardbox, 1, str_buff);
             compo_cardbox_text_set(cardbox, 2, i18n[STR_SUNDAY + compo_cb.tm.weekday]);    //星期
@@ -213,14 +279,16 @@ void func_clock_sub_sidebar_update(void)
         f_sidebar->m_time_min = compo_cb.tm.min;
     }
     //计时器
-    if (f_sidebar->m_timer_sec != TIMER_SEC) {
+    if (f_sidebar->m_timer_sec != TIMER_SEC)
+    {
         cardbox = compo_getobj_byid(SIDEBAR_CARD_ID_TIMER);
         snprintf(str_buff, sizeof(str_buff), "%02lu:%02lu:%02lu", TIMER_HOUR, TIMER_MIN, TIMER_SEC);    //计时时间
         compo_cardbox_text_set(cardbox, 1, str_buff);
         f_sidebar->m_timer_sec = TIMER_SEC;
     }
     //秒表
-    if (f_sidebar->m_stopwatch_sec != STOPWATCH_SEC) {
+    if (f_sidebar->m_stopwatch_sec != STOPWATCH_SEC)
+    {
         cardbox = compo_getobj_byid(SIDEBAR_CARD_ID_STOPWATCH);
         snprintf(str_buff, sizeof(str_buff), "%02lu:%02lu:%02lu", STOPWATCH_HOUR, STOPWATCH_MIN, STOPWATCH_SEC);    //计时时间
         compo_cardbox_text_set(cardbox, 1, str_buff);
@@ -237,67 +305,79 @@ static void func_clock_sub_sidebar_click_handler(void)
 
     point_t pt = ctp_get_sxy();
     u16 id = 0;
-    for(u8 i=SIDEBAR_CARD_ID_TIME_WEATHER; i<SIDEBAR_CARD_ID_CNT; i++) {
-        if (compo_cardbox_btn_is(compo_getobj_byid(i), pt)) {
+    for(u8 i=SIDEBAR_CARD_ID_TIME_WEATHER; i<SIDEBAR_CARD_ID_CNT; i++)
+    {
+        if (compo_cardbox_btn_is(compo_getobj_byid(i), pt))
+        {
             id = i;
         }
     }
     TRACE("click id:%d\n", id);
 
-    switch (id) {
-    case SIDEBAR_CARD_ID_TIME_WEATHER:
-        if (pt.x > GUI_SCREEN_CENTER_X) {
-            func_jump = FUNC_WEATHER;
-        }
-        break;
+    switch (id)
+    {
+        case SIDEBAR_CARD_ID_TIME_WEATHER:
+            if (pt.x > GUI_SCREEN_CENTER_X)
+            {
+                func_jump = FUNC_WEATHER;
+            }
+            break;
 
-    case SIDEBAR_CARD_ID_TIMER:
-        func_jump = FUNC_TIMER;
-        break;
+        case SIDEBAR_CARD_ID_TIMER:
+            func_jump = FUNC_TIMER;
+            break;
 
-    case SIDEBAR_CARD_ID_STOPWATCH:
-        func_jump = FUNC_STOPWATCH;
-        break;
+        case SIDEBAR_CARD_ID_STOPWATCH:
+            func_jump = FUNC_STOPWATCH;
+            break;
 
-    case SIDEBAR_CARD_ID_CALCULATOR:
-        func_jump = FUNC_CALCULATOR;
-        break;
+        case SIDEBAR_CARD_ID_CALCULATOR:
+            func_jump = FUNC_CALCULATOR;
+            break;
 
-    case SIDEBAR_CARD_ID_CALENDAR:
-        func_jump = FUNC_CALENDAER;
-        break;
+        case SIDEBAR_CARD_ID_CALENDAR:
+            func_jump = FUNC_CALENDAER;
+            break;
 
-    case SIDEBAR_CARD_ID_GAME:
-        func_jump = FUNC_GAME;
-        break;
+        case SIDEBAR_CARD_ID_GAME:
+            func_jump = FUNC_GAME;
+            break;
 
-    case SIDEBAR_CARD_ID_BREATHE:
-        func_jump = FUNC_BREATHE;
-        break;
+        case SIDEBAR_CARD_ID_BREATHE:
+            func_jump = FUNC_BREATHE;
+            break;
 
-    case SIDEBAR_CARD_ID_LATEST:
-        cardbox = compo_getobj_byid(SIDEBAR_CARD_ID_LATEST);
-        rect = compo_cardbox_get_icon_absolute(cardbox, 2); //latest0
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-            func_jump = sidebar_get_latest_func(0);
-        } else {
-            rect = compo_cardbox_get_icon_absolute(cardbox, 3); //latest1
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-                func_jump = sidebar_get_latest_func(1);
-            } else {
-                rect = compo_cardbox_get_icon_absolute(cardbox, 4); //latest2
-                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-                    func_jump = sidebar_get_latest_func(2);
+        case SIDEBAR_CARD_ID_LATEST:
+            cardbox = compo_getobj_byid(SIDEBAR_CARD_ID_LATEST);
+            rect = compo_cardbox_get_icon_absolute(cardbox, 2); //latest0
+            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+            {
+                func_jump = sidebar_get_latest_func(0);
+            }
+            else
+            {
+                rect = compo_cardbox_get_icon_absolute(cardbox, 3); //latest1
+                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+                {
+                    func_jump = sidebar_get_latest_func(1);
+                }
+                else
+                {
+                    rect = compo_cardbox_get_icon_absolute(cardbox, 4); //latest2
+                    if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+                    {
+                        func_jump = sidebar_get_latest_func(2);
+                    }
                 }
             }
-        }
-        break;
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
-    if (func_jump != FUNC_NULL) {
+    if (func_jump != FUNC_NULL)
+    {
 //        func_switch_to(func_jump, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);  //切换动画
         func_cb.sta = func_jump;  //直接跳转
     }
@@ -318,40 +398,41 @@ static void func_clock_sub_sidebar_message(size_msg_t msg)
 {
     f_sidebar_t *f_sidebar = (f_sidebar_t *)func_cb.f_cb;
 
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        compo_page_move_touch_handler(f_sidebar->ptm);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            compo_page_move_touch_handler(f_sidebar->ptm);
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_RIGHT:
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_LONG:
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-        func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
-        break;
+        case MSG_CTP_SHORT_LEFT:
+            func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
+            break;
 
-    case MSG_CTP_CLICK:
-        func_clock_sub_sidebar_click_handler();
-        break;
+        case MSG_CTP_CLICK:
+            func_clock_sub_sidebar_click_handler();
+            break;
 
-    case MSG_QDEC_FORWARD:
-        compo_page_move_set(f_sidebar->ptm, -QDEC_STEP_Y);
-        break;
+        case MSG_QDEC_FORWARD:
+            compo_page_move_set(f_sidebar->ptm, -QDEC_STEP_Y);
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        compo_page_move_set(f_sidebar->ptm, QDEC_STEP_Y);
-        break;
+        case MSG_QDEC_BACKWARD:
+            compo_page_move_set(f_sidebar->ptm, QDEC_STEP_Y);
+            break;
 
-    case KU_BACK:
-        func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
-        break;
+        case KU_BACK:
+            func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -362,8 +443,9 @@ static void func_clock_sub_sidebar_enter(void)
     func_cb.frm_main = func_clock_sub_sidebar_form_create();
 
     f_sidebar_t *f_sidebar = (f_sidebar_t *)func_cb.f_cb;
-	f_sidebar->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    page_move_info_t info = {
+    f_sidebar->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
         .page_size = SIDEBAR_PAGE_HEIGHT,
         .page_count = 1,
         .quick_jump_perc = 50,
@@ -378,7 +460,8 @@ static void func_clock_sub_sidebar_exit(void)
 {
     f_sidebar_t *f_sidebar = (f_sidebar_t *)func_cb.f_cb;
     func_cb.last = FUNC_SIDEBAR;
-    if (f_sidebar->ptm) {
+    if (f_sidebar->ptm)
+    {
         func_free(f_sidebar->ptm);
     }
 }
@@ -388,7 +471,8 @@ void func_clock_sub_sidebar(void)
 {
     printf("%s\n", __func__);
     func_clock_sub_sidebar_enter();
-    while (func_cb.sta == FUNC_SIDEBAR) {
+    while (func_cb.sta == FUNC_SIDEBAR)
+    {
         func_clock_sub_sidebar_process();
         func_clock_sub_sidebar_message(msg_dequeue());
     }

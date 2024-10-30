@@ -1217,64 +1217,64 @@
 #define UI_BUF_TIMER_BG_BIN                        UI_ADDR_BASE(0x2acab7)
 #define UI_LEN_TIMER_BG_BIN                        0x792
 
-#define UI_BUF_UPGRADE_ROCKET_BIN                  UI_ADDR_BASE(0x2ab0c2)
+#define UI_BUF_UPGRADE_ROCKET_BIN                  UI_ADDR_BASE(0x2ad249)
 #define UI_LEN_UPGRADE_ROCKET_BIN                  0xae2
 
-#define UI_BUF_UPGRADE_ROCKET_BASE_BIN             UI_ADDR_BASE(0x2abba4)
+#define UI_BUF_UPGRADE_ROCKET_BASE_BIN             UI_ADDR_BASE(0x2add2b)
 #define UI_LEN_UPGRADE_ROCKET_BASE_BIN             0xf53
 
-#define UI_BUF_VOICE_320_86_BIN                    UI_ADDR_BASE(0x2acaf7)
+#define UI_BUF_VOICE_320_86_BIN                    UI_ADDR_BASE(0x2aec7e)
 #define UI_LEN_VOICE_320_86_BIN                    0x3302
 
-#define UI_BUF_WEATHER_CLOUDY_BIN                  UI_ADDR_BASE(0x2afdf9)
-#define UI_LEN_WEATHER_CLOUDY_BIN                  0x750
+#define UI_BUF_WEATHER_CLOUDY_BIN                  UI_ADDR_BASE(0x2b1f80)
+#define UI_LEN_WEATHER_CLOUDY_BIN                  0x1c5a
 
-#define UI_BUF_WEATHER_CLOUDY_NIGHT_BIN            UI_ADDR_BASE(0x2b0549)
-#define UI_LEN_WEATHER_CLOUDY_NIGHT_BIN            0x69d
+#define UI_BUF_WEATHER_CLOUDY_NIGHT_BIN            UI_ADDR_BASE(0x2b3bda)
+#define UI_LEN_WEATHER_CLOUDY_NIGHT_BIN            0x1b14
 
-#define UI_BUF_WEATHER_DRIZZLE_BIN                 UI_ADDR_BASE(0x2b0be6)
-#define UI_LEN_WEATHER_DRIZZLE_BIN                 0x895
+#define UI_BUF_WEATHER_DRIZZLE_BIN                 UI_ADDR_BASE(0x2b56ee)
+#define UI_LEN_WEATHER_DRIZZLE_BIN                 0x1e0e
 
-#define UI_BUF_WEATHER_HAZE_BIN                    UI_ADDR_BASE(0x2b147b)
-#define UI_LEN_WEATHER_HAZE_BIN                    0xb20
+#define UI_BUF_WEATHER_HAZE_BIN                    UI_ADDR_BASE(0x2b74fc)
+#define UI_LEN_WEATHER_HAZE_BIN                    0xfc2
 
-#define UI_BUF_WEATHER_HEAVY_RAIN_BIN              UI_ADDR_BASE(0x2b1f9b)
-#define UI_LEN_WEATHER_HEAVY_RAIN_BIN              0x81a
+#define UI_BUF_WEATHER_HEAVY_RAIN_BIN              UI_ADDR_BASE(0x2b84be)
+#define UI_LEN_WEATHER_HEAVY_RAIN_BIN              0x1f02
 
-#define UI_BUF_WEATHER_MODERATE_RAIN_BIN           UI_ADDR_BASE(0x2b27b5)
-#define UI_LEN_WEATHER_MODERATE_RAIN_BIN           0x752
+#define UI_BUF_WEATHER_MODERATE_RAIN_BIN           UI_ADDR_BASE(0x2ba3c0)
+#define UI_LEN_WEATHER_MODERATE_RAIN_BIN           0x1df2
 
-#define UI_BUF_WEATHER_OVERCAST_BIN                UI_ADDR_BASE(0x2b2f07)
-#define UI_LEN_WEATHER_OVERCAST_BIN                0x568
+#define UI_BUF_WEATHER_OVERCAST_BIN                UI_ADDR_BASE(0x2bc1b2)
+#define UI_LEN_WEATHER_OVERCAST_BIN                0x1cf6
 
-#define UI_BUF_WEATHER_RAINY_BIN                   UI_ADDR_BASE(0x2b346f)
-#define UI_LEN_WEATHER_RAINY_BIN                   0xddf
+#define UI_BUF_WEATHER_RAINY_BIN                   UI_ADDR_BASE(0x2bdea8)
+#define UI_LEN_WEATHER_RAINY_BIN                   0x2136
 
-#define UI_BUF_WEATHER_RAINY_NIGHT_BIN             UI_ADDR_BASE(0x2b424e)
-#define UI_LEN_WEATHER_RAINY_NIGHT_BIN             0x7c7
+#define UI_BUF_WEATHER_RAINY_NIGHT_BIN             UI_ADDR_BASE(0x2bffde)
+#define UI_LEN_WEATHER_RAINY_NIGHT_BIN             0x1c86
 
-#define UI_BUF_WEATHER_RAINY_SHOWERS_BIN           UI_ADDR_BASE(0x2b4a15)
-#define UI_LEN_WEATHER_RAINY_SHOWERS_BIN           0xa57
+#define UI_BUF_WEATHER_RAINY_SHOWERS_BIN           UI_ADDR_BASE(0x2c1c64)
+#define UI_LEN_WEATHER_RAINY_SHOWERS_BIN           0x2002
 
-#define UI_BUF_WEATHER_SAND_AND_DUST_BIN           UI_ADDR_BASE(0x2b546c)
-#define UI_LEN_WEATHER_SAND_AND_DUST_BIN           0xa95
+#define UI_BUF_WEATHER_SAND_AND_DUST_BIN           UI_ADDR_BASE(0x2c3c66)
+#define UI_LEN_WEATHER_SAND_AND_DUST_BIN           0xfe6
 
-#define UI_BUF_WEATHER_SLEET_BIN                   UI_ADDR_BASE(0x2b5f01)
-#define UI_LEN_WEATHER_SLEET_BIN                   0x826
+#define UI_BUF_WEATHER_SLEET_BIN                   UI_ADDR_BASE(0x2c4c4c)
+#define UI_LEN_WEATHER_SLEET_BIN                   0x1f9e
 
-#define UI_BUF_WEATHER_SUNNY_BIN                   UI_ADDR_BASE(0x2b6727)
-#define UI_LEN_WEATHER_SUNNY_BIN                   0x814
+#define UI_BUF_WEATHER_SUNNY_BIN                   UI_ADDR_BASE(0x2c6bea)
+#define UI_LEN_WEATHER_SUNNY_BIN                   0xb2e
 
-#define UI_BUF_WEATHER_TOMORROW_NIGHT_BIN          UI_ADDR_BASE(0x2b6f3b)
-#define UI_LEN_WEATHER_TOMORROW_NIGHT_BIN          0x5c7
+#define UI_BUF_WEATHER_TOMORROW_NIGHT_BIN          UI_ADDR_BASE(0x2c7718)
+#define UI_LEN_WEATHER_TOMORROW_NIGHT_BIN          0x81b
 
-#define UI_BUF_WEATHER_UNKNOWN_BIN                 UI_ADDR_BASE(0x2b7502)
-#define UI_LEN_WEATHER_UNKNOWN_BIN                 0x6ca
+#define UI_BUF_WEATHER_UNKNOWN_BIN                 UI_ADDR_BASE(0x2c7f33)
+#define UI_LEN_WEATHER_UNKNOWN_BIN                 0x1bab
 
-#define UI_BUF_WEATHER_WEATHER_LIST_BIN            UI_ADDR_BASE(0x2b7bcc)
+#define UI_BUF_WEATHER_WEATHER_LIST_BIN            UI_ADDR_BASE(0x2c9ade)
 #define UI_LEN_WEATHER_WEATHER_LIST_BIN            0x869c
 
-#define UI_BUF_WEATHER_WINDY_BIN                   UI_ADDR_BASE(0x2c0268)
-#define UI_LEN_WEATHER_WINDY_BIN                   0x656
+#define UI_BUF_WEATHER_WINDY_BIN                   UI_ADDR_BASE(0x2d217a)
+#define UI_LEN_WEATHER_WINDY_BIN                   0xfb6
 
 #endif

@@ -64,6 +64,7 @@ typedef void widget_bar_t;
 //=== 常用颜色，非常用颜色可以用make_color函数来生成 ===
 #define COLOR_WHITE             0xFFFF
 #define COLOR_BLACK             0
+#define COLOR_DGRAY             make_color(0X23,0X23,0X23) //  浅黑色
 #define COLOR_RED               0xF800
 #define COLOR_GREEN             0x07E0
 #define COLOR_BLUE              0x001F

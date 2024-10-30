@@ -19,6 +19,7 @@
 #include "ute_drv_motor.h"
 #include "ute_module_notify.h"
 #include "ute_module_weather.h"
+#include "ute_module_heart.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -896,300 +897,7 @@ void uteModuleProtocolReadTheoryBloodpressureHistoryData(uint8_t*receive,uint8_t
     UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,error undefine", __func__);
 #endif
 }
-/**
-* @brief        恒爱血压模组血压测试
-* @details
-* @param[in]    uint8_t *receive
-* @param[out]   uint8_t length
-* @return       void*
-* @author       Wang.Luo
-* @date         2022-10-17
-*/
-void uteModuleProtocolBloodpressureDn02Ctrl(uint8_t*receive,uint8_t length)
-{
-#if UTE_DRV_BLOODPRESSURE_DN02_SUPPORT
-    uint8_t response[20];
-    if(receive[1]==0x00)
-    {
-        uteModuleBloodpressureStopSingleTesting();
-    }
-    else if(receive[1]==0x11 && receive[2]==0x00)
-    {
-        if (!uteModuleBloodpressureIsTesting())
-        {
-            uteModuleBloodpressureDn02SetAppStartStatus(true);
-            uteModuleBloodpressureStartSingleTesting();
-        }
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_BLOOD_PRESSURE_ID);
-    }
-    else if(receive[1]==0xaa)
-    {
-        response[0] = receive[0];
-        response[1] = receive[1];
-        if(uteModuleBloodpressureIsTesting())
-        {
-            response[2] = 0x11;
-        }
-        else
-        {
-            response[2] = 0x00;
-        }
-        uteModuleProfileBleSendToPhone(&response[0],3);
-    }
-    else if (receive[1]==0x02)
-    {
-        if(receive[2]==0xfa)
-        {
-            ute_module_systemtime_time_t time;
-            memset(&time,0,sizeof(time));
-            if (length == 9)
-            {
-                time.year = receive[3]<< 8 | receive[4];
-                time.month = receive[5];
-                time.day = receive[6];
-                time.hour = receive[7];
-                time.min = receive[8];
-            }
-            uteModuleBloodpressureStartSendHistoryPpgData(time);
-        }
-        else
-        {
-            if (receive[2]==0xfd)
-            {
-                ute_module_systemtime_time_t syncTime;
-                uteModuleBloodpressureDn02GetSyncDataTime(&syncTime);
-                uteModuleBloodpressureDelAllPpgData(syncTime);
-            }
-            uteModuleProfileBle50SendToPhone(&receive[0],3);
-            // uteApplicationJishiyunAutoSyncSetNeedGetFileInfo(true);
-        }
-    }
-    else if (receive[1]==0x03)
-    {
-        if(receive[2]==0xfa)
-        {
-            uteModuleBloodpressureStartSendHistoryMidData();
-        }
-        else
-        {
-            if (receive[2]==0xfd)
-            {
-                uint8_t path[45];
-                memset(&path[0],0,45);
-                ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
-                uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_BOOLDPRESSURE_DN02_MIDVALUE_DIR,dirInfo, NULL);
-                UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,dirInfo->filesCnt = %d", __func__,dirInfo->filesCnt);
-                for (uint8_t i = 0; i < dirInfo->filesCnt; i++)
-                {
-                    sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_BOOLDPRESSURE_DN02_MIDVALUE_DIR, &dirInfo->filesName[i][0]);
-                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,%s",__func__,path);
-                    uteModuleFilesystemDelFile(path);
-                    uteModulePlatformWdgFeed();
-                }
-                uteModulePlatformMemoryFree(dirInfo);
-            }
-            uteModuleProfileBle50SendToPhone(&receive[0],3);
-        }
-    }
-    else if (receive[1]==0x04)
-    {
-        if(receive[2] != 0xff)
-        {
-            ute_module_systemtime_time_t time;
-            memset(&time,0,sizeof(time));
-            if ((receive[2]<< 8 | receive[3]) > 2022 && (receive[2]<< 8 | receive[3]) < 2099)
-            {
-                time.year = receive[2]<< 8 | receive[3];
-                time.month = receive[4];
-                time.day = receive[5];
-                time.hour = receive[6];
-                time.min = receive[7];
-            }
-            else
-            {
-                uteModuleSystemtimeGetTime(&time);
-            }
-            uteModuleBloodpressureSaveCustomPressureData(time,receive[9],receive[8]);
-            uteModuleBloodpressureDn02AppSetTestFail(false);
-        }
-        else
-        {
-            uteModuleBloodpressureDn02AppSetTestFail(true);
-        }
 
-        uteModuleProfileBle50SendToPhone(&receive[0],length);
-    }
-    else if (receive[1]==0x05)
-    {
-        bool isAutoTesting = receive[3];
-        uint16_t intervalMin = receive[4]<<8|receive[5];
-        if (receive[2]==0x01)
-        {
-            uteModuleBloodpressureDn02SavePpgAutoIntervalParam(isAutoTesting,intervalMin);
-        }
-        else if (receive[2]==0x02)
-        {
-            uteModuleBloodpressureDn02SaveMidValueAutoIntervalParam(isAutoTesting,intervalMin);
-        }
-        uteModuleProfileBle50SendToPhone(&receive[0],length);
-    }
-    else if (receive[1] == 0x06)
-    {
-        uint8_t ver[20];
-        uint16_t ver_len;
-        uint8_t response[30] = {CMD_SET_BP_DN02_TEST, 0x06, 0};
-        uteModuleBloodpressureDn02GetVersionString((char *)&ver, &ver_len);
-        response[2] = ver_len;
-        memcpy(&response[3], ver, ver_len);
-        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,ver_len=%d,ver=%s", __func__, ver_len, ver);
-        uteModuleProfileBle50SendToPhone(response, ver_len + 3);
-    }
-    else if (receive[1] == 0x07)
-    {
-        SHM_DATA_SECTION static uint8_t bpModel[128] = {0};
-        SHM_DATA_SECTION static uint8_t bpModelSize = 0;
-        SHM_DATA_SECTION static uint8_t bpModelCrc = 0;
-        if (receive[2] == 0xfa)
-        {
-            if (receive[3] == 0x00)
-            {
-                memset(bpModel,0,sizeof(bpModel));
-                bpModelSize = 0;
-                memcpy(&bpModel[0],&receive[4],length-4);
-                bpModelSize += length-4;
-                bpModelCrc = 0;
-            }
-            else
-            {
-                memcpy(&bpModel[bpModelSize],&receive[4],length-4);
-                bpModelSize += length-4;
-            }
-            uteModuleCrc8Bit(&bpModelCrc, &receive[3],length-3);
-            uteModuleProfileBle50SendToPhone(&receive[0],4);
-        }
-        else if (receive[2] == 0xfd)
-        {
-            memcpy(&response[0],&receive[0],3);
-            response[3] = bpModelCrc;
-            uteModuleProfileBle50SendToPhone(&response[0],4);
-            uteModuleBloodpressureDn02SaveBpModel(bpModel,bpModelSize);
-        }
-    }
-    else if (receive[1] == 0x08)
-    {
-        response[0] = receive[0];
-        response[1] = receive[1];
-        if (uteModuleBloodpressureDn02IsHaveBpModel())
-        {
-            response[2] = 0x01;
-        }
-        else
-        {
-            response[2] = 0x00;
-        }
-        uteModuleProfileBle50SendToPhone(&response[0],3);
-    }
-    else if (receive[1] == 0x09)
-    {
-        if (receive[2] == 0xfa)
-        {
-            uteModuleBloodpressureStartSendLastHistoryPpgData();
-        }
-    }
-    else if (receive[1]==0xee)
-    {
-        if (receive[2] == 0x11)
-        {
-            uteModuleBloodpressureDn02StartDebug();
-        }
-        else if (receive[2] == 0x00)
-        {
-            uteModuleBloodpressureDn02StopDebug();
-        }
-    }
-    else if (receive[1] == 0x0d) /*! 查询情绪压力算法是否已激活 xjc, 2022-02-15  */
-    {
-        response[0] = receive[0];
-        response[1] = receive[1];
-        response[2] = (uteModuleEmotionPressureGetAlgoActiveStatus()) ? 0x11 : 0xFF;
-        uteModuleProfileBleSendToPhone(&response[0], 3);
-    }
-    else if (receive[1] == 0x0e) /*! APP请求获取申请激活码所使用的申请码 xjc, 2022-02-15  */
-    {
-        if (receive[2] == 0x11) //获取申请激活码所使用的申请码
-        {
-            uteModuleEmotionPressureSendDeviceInfomationToService();
-        }
-        else if (receive[2] == EMOTION_PRESSURE_KEY_CODE_LEN) //返回授权激活码
-        {
-            uteModuleEmotionPressureSetKeyCode(&receive[3]);
-            uteModuleEmotionPressureActiveAlgo(true);
-            response[0] = receive[0];
-            response[1] = receive[1];
-            response[2] = receive[2];
-            response[3] = (uteModuleEmotionPressureGetAlgoActiveStatus()) ? 0x11 : 0xFF;
-            response[4] = 0xFD;
-            uteModuleProfileBleSendToPhone(&response[0], 5);
-        }
-    }
-#if APP_HENGAI_SECURITY_CODE_SUPPORT
-    else if (receive[1] == 0xef)
-    {
-        //0xef 包总数 包序号 当前包数据长度 数据
-        SHM_DATA_SECTION static uint8_t securityCodeBuff[150];
-        SHM_DATA_SECTION static uint8_t securityCodeCrc = 0;
-        SHM_DATA_SECTION static uint8_t securityCodeSize = 0;
-
-        if (receive[2] == 0xfd)
-        {
-            memcpy(&response[0], &receive[0], 3);
-            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,securityCodeCrc=%d",__func__,securityCodeCrc);
-            if (receive[3] == securityCodeCrc)
-            {
-                response[3] = 0x00;
-                uteModulePlatformFlashNorErase(UTE_MODULE_HENAI_SECURITY_CODE_START_ADDRESS);
-                uteModulePlatformFlashNorWrite(&securityCodeBuff[0],UTE_MODULE_HENAI_SECURITY_CODE_START_ADDRESS,securityCodeSize + 7);
-            }
-            else
-            {
-                response[3] = 0xff;
-            }
-            uteModuleProfileBle50SendToPhone(&response[0], 4);
-        }
-        else
-        {
-            if (receive[3] == 0)
-            {
-                memset(securityCodeBuff,0,sizeof(securityCodeBuff));
-                securityCodeCrc = 0;
-                securityCodeSize = 0;
-                ute_module_systemtime_time_t time;
-                uteModuleSystemtimeGetTime(&time);
-                securityCodeBuff[0] = time.year >> 8 & 0xff;
-                securityCodeBuff[1] = time.year & 0xff;
-                securityCodeBuff[2] = time.month;
-                securityCodeBuff[3] = time.day;
-                securityCodeBuff[4] = time.hour;
-                securityCodeBuff[5] = time.min;
-            }
-            //年2+月1+日1+时1+分1+length
-            memcpy(&securityCodeBuff[7 + securityCodeSize],&receive[5],receive[4]);
-            if (securityCodeSize + receive[4] <= sizeof(securityCodeBuff) - 7)
-            {
-                securityCodeSize += receive[4];
-                uteModuleCrc8Bit(&securityCodeCrc, &receive[2],length-2);
-            }
-            securityCodeBuff[6] = securityCodeSize;
-            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,securityCodeSize=%d",__func__,securityCodeSize);
-            UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL,securityCodeBuff,sizeof(securityCodeBuff));
-            uteModuleProfileBle50SendToPhone(&receive[0], 5);
-        }
-    }
-#endif
-#else
-    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,error undefine", __func__);
-#endif
-}
 /**
 *@brief        设置7天天气数据
 *@details
@@ -1685,7 +1393,6 @@ void uteModuleProtocolFormAppFrontOrBack(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 {
-#if 0
     uint8_t response[3];
     response[0] = receive[0];
     response[1] = receive[1];
@@ -1709,7 +1416,6 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
         }
         uteModuleProfileBleSendToPhone(&response[0],3);
     }
-#endif
 }
 /**
 *@brief       gsenoser数据挤压检查指令
@@ -1785,12 +1491,12 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
 {
     if(receive[1]==0x01)
     {
-        // uteModuleHeartSetAutoTesting(true);
+        uteModuleHeartSetAutoTesting(true);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
     }
     else if(receive[1]==0x02)
     {
-        // uteModuleHeartSetAutoTesting(false);
+        uteModuleHeartSetAutoTesting(false);
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
     }
     else if(receive[1]==0xfa)
@@ -1806,7 +1512,7 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
             time.min = receive[7];
             time.sec = receive[8];
         }
-        // uteModuleHeartStartSendHeartAutoTestHistoryData(time);
+        uteModuleHeartStartSendHeartAutoTestHistoryData(time);
     }
 #if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
     else if (receive[1] == 0x05)
@@ -1823,28 +1529,6 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
     else if (receive[1] == 0x08)
     {
         uteModuleHeartSendHistoryRestingHeartData();
-    }
-#endif
-#if UTE_MODULE_CUSTOM_DATA_SAVE_INTERVAL_SUPPORT
-    else if (receive[1] == 0x0a) //设置心率数据保存间隔
-    {
-        uteModuleHeartSetTimingIntervalMinute(receive[2]);
-        uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],3);
-    }
-    else if (receive[1] == 0xea)
-    {
-        ute_module_systemtime_time_t time;
-        memset(&time,0,sizeof(ute_module_systemtime_time_t));
-        if(length>2)
-        {
-            time.year = receive[2]<<8|receive[3];
-            time.month = receive[4];
-            time.day = receive[5];
-            time.hour = receive[6];
-            time.min = receive[7];
-            time.sec = receive[8];
-        }
-        uteModuleHeartStartSendEveryMinuteAverageDate(time);
     }
 #endif
 }
@@ -1939,23 +1623,6 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
         }
         uteModuleBloodoxygenStartSendAutoTestHistoryData(time);
     }
-#if UTE_MODULE_CUSTOM_DATA_SAVE_INTERVAL_SUPPORT
-    else if (receive[1] == 0xea)
-    {
-        ute_module_systemtime_time_t time;
-        memset(&time,0,sizeof(ute_module_systemtime_time_t));
-        if(length>2)
-        {
-            time.year = receive[2]<<8|receive[3];
-            time.month = receive[4];
-            time.day = receive[5];
-            time.hour = receive[6];
-            time.min = receive[7];
-            time.sec = receive[8];
-        }
-        uteModuleBloodoxygenStartSendEveryMinuteDate(time);
-    }
-#endif
 #else
     UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,undefine ", __func__);
 #endif
@@ -2030,23 +1697,6 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
         }
         uteModuleBreathrateStartSendAutoTestHistoryData(time);
     }
-#if UTE_MODULE_CUSTOM_DATA_SAVE_INTERVAL_SUPPORT
-    else if (receive[1]==0xea)
-    {
-        ute_module_systemtime_time_t time;
-        memset(&time,0,sizeof(ute_module_systemtime_time_t));
-        if(length>2)
-        {
-            time.year = receive[2]<<8|receive[3];
-            time.month = receive[4];
-            time.day = receive[5];
-            time.hour = receive[6];
-            time.min = receive[7];
-            time.sec = receive[8];
-        }
-        uteModuleBreathrateStartSendEveryMinuteDate(time);
-    }
-#endif
 #else
     UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,undefine ", __func__);
 #endif
@@ -2506,9 +2156,6 @@ void uteModuleProtocolReadExpandFunctionSupport(uint8_t *data,uint8_t size)
 #endif
 #if CYWEE_USE_LIB_P850
     data[15] |= 0x02;
-#endif
-#if UTE_MODULE_CUSTOM_DATA_SAVE_INTERVAL_SUPPORT
-    data[15] |= 0x10;
 #endif
 
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT

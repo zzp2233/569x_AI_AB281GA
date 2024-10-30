@@ -15,6 +15,9 @@
 #include "algo.h"
 #include "spo2Algo_16bit.h"
 
+#include "include.h"
+#include "ute_module_heart.h"
+
 // #include "vcSportMotionIntAlgo.h"
 /* ble_debug,蓝牙发送原始数据 */
 /* vcare_ppg_device */
@@ -496,6 +499,7 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
 			}
 			//disp_data.hr_rate = vc30fx_dev.heart_rate;
 			bsp_sensor_hrs_data_save(vc30fx_dev.heart_rate);
+			uteModuleHeartSetHeartValue(vc30fx_dev.heart_rate);
 		}
 		break;
 	case WORK_MODE_SPO2:

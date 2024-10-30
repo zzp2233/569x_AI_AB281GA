@@ -28,14 +28,16 @@
 #define RIGHT_TOUCH  IMG_BTN_FIRST_X+IMG_WIDTH/2
 #define LENGTH_TOUCH IMG_BTN_FIRST_X-IMG_WIDTH/2
 
-typedef struct f_long_press_t_ {
-     bool touch_flag; //触屏状态标志位
-     bool touch_btn_flag;//触屏按键状态标志位
-     u16  touch_btn_id; //触屏按键id状态
+typedef struct f_long_press_t_
+{
+    bool touch_flag; //触屏状态标志位
+    bool touch_btn_flag;//触屏按键状态标志位
+    u16  touch_btn_id; //触屏按键id状态
 } f_long_press_t;
 
 
-enum{
+enum
+{
     RECT_ID_1 = 1,
 
     IMG_BTN_ID_1,
@@ -115,26 +117,29 @@ compo_form_t *func_long_press_form_create(void)
 }
 
 //滑动事件处理
-static void func_long_press_event_handle(s32 distance , u16 id)
+static void func_long_press_event_handle(s32 distance, u16 id)
 {
-    if(id){
-        if(distance==IMG_BTN_LAST_X){//滑动到设定X轴区间松开屏幕处理
-          switch(id){
-            case IMG_BTN_ID_1://SOS
-                break;
-            case IMG_BTN_ID_2://关机
-            //    func_cb.sta = FUNC_PWROFF;
-                uteApplicationCommonPoweroff();
-                break;
-            case IMG_BTN_ID_3://重启
-            //    ble_disconnect();
-            //    bt_disconnect(1);
-            //    WDT_RST();
-                uteApplicationCommonRestart();
-                break;
-            default:
-                break;
-          }
+    if(id)
+    {
+        if(distance==IMG_BTN_LAST_X) //滑动到设定X轴区间松开屏幕处理
+        {
+            switch(id)
+            {
+                case IMG_BTN_ID_1://SOS
+                    break;
+                case IMG_BTN_ID_2://关机
+                    //    func_cb.sta = FUNC_PWROFF;
+                    uteApplicationCommonPoweroff();
+                    break;
+                case IMG_BTN_ID_3://重启
+                    //    ble_disconnect();
+                    //    bt_disconnect(1);
+                    //    WDT_RST();
+                    uteApplicationCommonRestart();
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
@@ -146,36 +151,43 @@ static void func_long_press_slide_disp_handle()
     compo_shape_t  * rect_cover;
     s32 distance,y;
 
-    if(f_long_press->touch_flag == true) { //是否在触屏状态
+    if(f_long_press->touch_flag == true)   //是否在触屏状态
+    {
         int id = compo_get_button_id();
 
-        if(id!=0 && id!=RECT_ID_1) { //触摸是否是按键图标
+        if(id!=0 && id!=RECT_ID_1)   //触摸是否是按键图标
+        {
             f_long_press->touch_btn_id = id; //获取触摸按键图标id
             img_btn = compo_getobj_byid(id); //遍历按键图标控件
             f_long_press->touch_btn_flag = true;//开启滑动标志位
         }
         rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
 
-        if(f_long_press->touch_btn_flag == true){//滑动标志位
+        if(f_long_press->touch_btn_flag == true) //滑动标志位
+        {
             f_long_press->touch_flag = ctp_get_dxy(&distance,&y);//获取触屏状态与滑动长度
             y = widget_get_location(img_btn->widget).y; //获取控件y轴
             distance += IMG_BTN_FIRST_X;//获取滑动长度加上图标初始位置
 
-            if(distance<IMG_BTN_FIRST_X){//最小滑动距离
+            if(distance<IMG_BTN_FIRST_X) //最小滑动距离
+            {
                 distance = IMG_BTN_FIRST_X;
             }
-            else if(distance>IMG_BTN_LAST_X){//最大滑动距离
+            else if(distance>IMG_BTN_LAST_X) //最大滑动距离
+            {
                 distance = IMG_BTN_LAST_X;
             }
         }
 
-        if(f_long_press->touch_flag == false && f_long_press->touch_btn_id){//松开处理
-            func_long_press_event_handle(distance ,f_long_press->touch_btn_id );//事件处理
+        if(f_long_press->touch_flag == false && f_long_press->touch_btn_id) //松开处理
+        {
+            func_long_press_event_handle(distance,f_long_press->touch_btn_id ); //事件处理
             distance = IMG_BTN_FIRST_X;//回弹
             f_long_press->touch_btn_flag == false;//清除触摸按键图标标志位
         }
 
-        if(f_long_press->touch_btn_id ){//触摸状态为按键图标就刷新控件位置
+        if(f_long_press->touch_btn_id ) //触摸状态为按键图标就刷新控件位置
+        {
             compo_button_set_pos(img_btn, distance,y);
             compo_shape_set_location(rect_cover,distance/2+IMG_WIDTH/2-IMG_WIDTH/19,y,distance+IMG_WIDTH/5, GUI_SCREEN_HEIGHT/5);
         }
@@ -195,18 +207,18 @@ static void func_long_press_message(size_msg_t msg)
 {
     f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
 
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        f_long_press->touch_flag = true;
-        printf("11111\n");
-        break;
-    case KU_BACK:
-        func_switch_to_clock();
-        break;
-    default:
-        //func_message(msg);
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            f_long_press->touch_flag = true;
+            break;
+        case KU_BACK:
+            func_switch_to_clock();
+            break;
+        default:
+            //func_message(msg);
+            evt_message(msg);
+            break;
     }
 }
 
@@ -230,9 +242,10 @@ void func_long_press(void)
     printf("%s\n", __func__);
     func_long_press_enter();
 
-    while (func_cb.sta == FUNC_LONG_PRESS) {
-          func_long_press_process();
-          func_long_press_message(msg_dequeue());
+    while (func_cb.sta == FUNC_LONG_PRESS)
+    {
+        func_long_press_process();
+        func_long_press_message(msg_dequeue());
     }
     func_long_press_exit();
 }

@@ -36,12 +36,12 @@
 
 #define CHIP_PACKAGE_SELECT             UTE_CHIP_PACKAGE_SELECT                  //芯片封装选择 5691G/5691C_F
 
-#define GUI_SELECT                      GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71    		        //GUI Display Select
+#define GUI_SELECT                      GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 #define CTP_SELECT                      CTP_CST8X                   //CTP Select
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
 #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT             //屏幕接口选择
-#define TFT_SPI_DRIVER                  SPI_GC9307_V1		    //驱动选择
+#define TFT_SPI_DRIVER                  SPI_GC9307_V1           //驱动选择
 #define TFT_SPI_LCD_WIDTH               240
 #define TFT_SPI_LCD_HEIGHT              296
 #define TFT_SPI_LCD_OFS_X               0
@@ -49,7 +49,7 @@
 #endif
 
 #define CTP_SUPPORT_COVER               1                           //是否支持盖手息屏功能，需要确认屏幕是否支持
-#define DEFAULT_TE_MODE                 1                       	//默认1 TE模式, 0为2 TE模式, 3为复杂界面专用模式
+#define DEFAULT_TE_MODE                 1                           //默认1 TE模式, 0为2 TE模式, 3为复杂界面专用模式
 #define UART0_PRINTF_SEL                PRINTF_PB3                  //选择UART打印信息输出IO，或关闭打印信息输出
 #define SYS_INIT_VOLUME                 xcfg_cb.sys_init_vol        //系统默认音量
 
@@ -63,7 +63,7 @@
 /*****************************************************************************
  * Module    : GUI相关配置
  *****************************************************************************/
-#define COMPO_BUF_SIZE                  (2048)              	//组件BUF大小(2个BUF)
+#define COMPO_BUF_SIZE                  (2048)                  //组件BUF大小(2个BUF)
 #define TFT_TE_CYCLE                    16.67                   //TE周期时间 (ms)
 #define TFT_TE_CYCLE_DELAY              (TFT_TE_CYCLE / 3)
 #define GUI_LINES_CNT                   20                      //单次推屏行数
@@ -206,8 +206,8 @@
 //FOTA功能配置
 #define LE_AB_FOT_EN                    1   //是否打开BLE FOTA服务,需同时打开LE_AB_LINK_APP_EN
 #define AB_FOT_TYPE_PACK                1   //FOTA压缩升级（代码做压缩处理，升级完成需做解压才可正常运行）
-#define SW_VERSION		                "V0.0.1"   //只能使用数字0-9,ota需要转码
-#define HW_VERSION		                "V0.0.1"   //只能使用数字0-9,ota需要转码
+#define SW_VERSION                      "V0.0.1"   //只能使用数字0-9,ota需要转码
+#define HW_VERSION                      "V0.0.1"   //只能使用数字0-9,ota需要转码
 #define FLASH_PKG_START                 UTE_OTA_TMP_ADDRESS   //升级压缩包存放起始地址
 #define FLASH_PKG_SIZE                  UTE_OTA_TMP_SIZE   //升级压缩包大小
 #define FOTA_UI_EN                      1          //是否支持UI升级，需要用一个批处理打包UI+FOT
@@ -248,12 +248,12 @@
 #define BT_ALC_VOICE_THR                0x30000
 
 //通话近端降噪算法(耳机MIC采集数据降噪)
-#define BT_SCO_AINS3_EN					1	                        //是否打开MIC的AINS3降噪(AINS3与DNN二选一, AINS3占用资源少)
-#define BT_SCO_AINS3_LEVEL				xcfg_cb.bt_sco_nr_level	    //0-30级
+#define BT_SCO_AINS3_EN                 1                           //是否打开MIC的AINS3降噪(AINS3与DNN二选一, AINS3占用资源少)
+#define BT_SCO_AINS3_LEVEL              xcfg_cb.bt_sco_nr_level     //0-30级
 
 #define BT_SCO_DNN_EN                   0                           //是否打开自研单麦DNN降噪算法
 #define BT_SCO_DNN_MODEL_SET            0                           //自研单麦DNN模型选择，0：标准模型，1：标准模型+6K
-#define	BT_SCO_DNN_MODE                 1                           //DNN模式，模式0，模式1（建议）
+#define BT_SCO_DNN_MODE                 1                           //DNN模式，模式0，模式1（建议）
 #define BT_SCO_DNN_LEVEL                6                           //降噪量：0-30级
 #define BT_SCO_DNN_WIND_EN              0                           //默认关闭
 
@@ -358,7 +358,7 @@
 #define PWROFF_PRESS_TIME               18          //长按PWRKEY多长时间关机 3: 1.5秒, 6: 2秒, 9: 2.5秒, 12: 3秒, 15: 3.5秒, 18: 4秒, 24: 5秒
 
 #define ADKEY_CH                        ADCCH_PE7   //ADKEY的ADC通路选择
-#define IS_PWRKEY_PRESS()			    (0 == (RTCCON & BIT(19)))
+#define IS_PWRKEY_PRESS()               (0 == (RTCCON & BIT(19)))
 
 /*****************************************************************************
  * Module    : 电量检测及低电
@@ -367,8 +367,8 @@
 #define VUSB_DETECT_EN                  0           //充电电压检测功能
 #define VBAT2_ADCCH                     ADCCH_VBAT  //ADCCH_VBAT为内部1/2电压通路，带升压应用需要外部ADC通路检测1/2电池电压
 #define VBAT_FILTER_USE_PEAK            0           //电池检测滤波选则://0 取平均值.//1 取峰值(适用于播放音乐时,电池波动比较大的音箱方案).
-#define LPWR_WARNING_VBAT               3500        //低电提醒电压   0：表示关闭此功能
-#define LPWR_OFF_VBAT                   3100        //低电关机电压   0：表示关闭此功能
+#define LPWR_WARNING_VBAT               UTE_DRV_BATTERY_010        //低电提醒电压   0：表示关闭此功能
+#define LPWR_OFF_VBAT                   UTE_DRV_BATTERY_000        //低电关机电压   0：表示关闭此功能
 #define LOWPWR_REDUCE_VOL_EN            1           //低电时是否降低音量
 #define LPWR_WARING_TIMES               0xff        //报低电次数
 #define LPWR_WARNING_PERIOD             30          //低电播报周期(单位：秒)
@@ -386,14 +386,14 @@
 #define CHARGE_STOP_CURR                xcfg_cb.charge_stop_curr        //电流范围0~37.5mA, 配置值范围: 0~15, 步进2.5mA
 #define CHARGE_CONSTANT_CURR            xcfg_cb.charge_constant_curr    //电流范围0~320mA, 配置值范围: 0~63, 步进5mA
 #define CHARGE_TRICKLE_CURR             xcfg_cb.charge_trickle_curr
-#define CHARGE_STOP_VOLT                0                               //充电截止电压：0:4.2v；1:4.35v; 2:4.4v; 3:4.45v
+#define CHARGE_STOP_VOLT                UTE_DRV_BATTERY_CHARGE_STOP_VOLT  //充电截止电压：0:4.2v；1:4.35v; 2:4.4v; 3:4.45v
 #define CHARGE_TRICK_STOP_VOLT          1                               //涓流截止电压：0:2.9v; 1:3v
 #define CHARGE_VOLT_FOLLOW              0                               //是否打开跟随快充：0:NONE; 1:187.5mV; 2:62.5mV; 3:375mV
 
 #define CHARGE_VOL_DYNAMIC_DET          1                               //是否打开充电时候，动态检测电池电压功能；打开后，充5s停10ms
 //充电辅助设置项
 #define CHARGE_USER_NTC_EN              0                               //充电是否使用NTC参数
-#define CHARGE_VBAT_REFILL              4150                            //充满后停止充电，电池掉到指定电压后续充
+#define CHARGE_VBAT_REFILL              (UTE_DRV_BATTERY_MAX_VOLTAGE - 100) //充满后停止充电，电池掉到指定电压后续充
 
 #define CHARGE_NTC_ADC_MAX_TEMP         53                            //设置最小温度 摄氏度      53
 #define CHARGE_NTC_ADC_MAX_RE_TEMP      48                            //设置恢复温度 摄氏度     48

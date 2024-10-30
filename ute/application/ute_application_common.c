@@ -17,9 +17,9 @@
 #include "ute_module_notify.h"
 #include "ute_module_notdisturb.h"
 #include "ute_module_weather.h"
+#include "ute_module_heart.h"
 #if 0
 #include "ute_drv_keys_common.h"
-#include "ute_module_heart.h"
 #include "ute_module_bloodpressure.h"
 #include "ute_module_bloodoxygen.h"
 #include "ute_drv_gsensor_common.h"
@@ -1755,4 +1755,43 @@ void uteApplicationCommonSetAncsConnStatus(bool isConnected)
 bool uteApplicationCommonGetAncsConnStatus(void)
 {
     return uteApplicationCommonData.isAncsConnected;
+}
+
+/**
+ * @brief        获取设备二维码
+ * @details      
+ * @param[in]    len     二维码字符最大长度
+ * @param[out]   qrBuff  二维码字符串
+ * @return       二维码字符长度
+ * @author       Wang.Luo
+ * @date         2024-10-29
+ */
+uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len)
+{
+    uint8_t mac[6];
+    uteModulePlatformGetBleMacAddress(mac);
+    memset(qrBuff,0,len);
+
+    uint8_t stringSize = sizeof(UTE_BINDING_QRENCODE_LINK);
+
+    if(stringSize > len)
+    {
+        stringSize = len;
+    }
+
+    // 找到 "MAC=" 的位置
+    const char* mac_start = strstr(UTE_BINDING_QRENCODE_LINK, "MAC=");
+    if (mac_start == NULL)
+    {
+        memcpy(qrBuff, UTE_BINDING_QRENCODE_LINK, stringSize);
+    }
+    else
+    {
+        // 计算 "MAC=" 之前的部分长度
+        uint8_t prefix_len = mac_start - UTE_BINDING_QRENCODE_LINK;
+        memcpy(qrBuff, UTE_BINDING_QRENCODE_LINK, prefix_len);
+        snprintf(qrBuff + prefix_len, stringSize - prefix_len, "MAC=%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
+    }
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,qrBuff:%s",__func__,qrBuff);
+    return stringSize;
 }

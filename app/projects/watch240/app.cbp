@@ -68,6 +68,8 @@
 			<Add directory="../../../ute/module/charencode" />
 			<Add directory="../../../ute/module/notdisturb" />
 			<Add directory="../../../ute/module/weather" />
+			<Add directory="../../../ute/module/crc" />
+			<Add directory="../../../ute/module/heart" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -123,6 +125,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/charencode/ute_module_charencode.h" />
+		<Unit filename="../../../ute/module/crc/ute_module_crc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/crc/ute_module_crc.h" />
 		<Unit filename="../../../ute/module/filesystem/ute_module_filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -131,6 +137,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/gui/ute_module_gui_common.h" />
+		<Unit filename="../../../ute/module/heart/ute_module_heart.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/heart/ute_module_heart.h" />
 		<Unit filename="../../../ute/module/log/ute_module_log.c">
 			<Option compilerVar="CC" />
 		</Unit>

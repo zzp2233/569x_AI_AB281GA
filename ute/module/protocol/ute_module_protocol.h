@@ -1,7 +1,7 @@
 /**
 *@file
-*@brief     Ğ­ÒéÄ£¿é
-*@details   ºÍÓ¦ÓÃ¶ËÍ¨Ñ¶Ğ­Òé
+*@brief     åè®®æ¨¡å—
+*@details   å’Œåº”ç”¨ç«¯é€šè®¯åè®®
 *@author        zn.zeng
 *@date        2021-08-17
 *@version       v1.0
@@ -64,8 +64,8 @@
 #define CMD_FACTORY_GSENSOR_TEST            0xE7
 #define CMD_FACTORY_POWER_OFF               0XE8
 #define CMD_BODY_COMPOSITION_ANALYSIS       0xE9
-#define CMD_CYWEE_READ_STEP_DATA            0xEB  //Casen add 22-11-03 ÈüÎ¬Í¬²½²½ÊıÊı¾İÖ¸Áî
-#define CMD_CYWEE_READ_NAPSLEEP_DATA        0xEC  //Casen add 22-11-03 ÈüÎ¬Í¬²½Ë¯ÃßÊı¾İÖ¸Áî
+#define CMD_CYWEE_READ_STEP_DATA            0xEB  //Casen add 22-11-03 èµ›ç»´åŒæ­¥æ­¥æ•°æ•°æ®æŒ‡ä»¤
+#define CMD_CYWEE_READ_NAPSLEEP_DATA        0xEC  //Casen add 22-11-03 èµ›ç»´åŒæ­¥ç¡çœ æ•°æ®æŒ‡ä»¤
 #define CMD_RIDE_BIKE                       0xF3
 #define CMD_PLSY_BALL                       0xF4
 #define CMD_USER_CUSTOM_SCREEN              0xF9
@@ -79,7 +79,7 @@
 
 #define CMD_SPORT_MODE_AND_SPORT_HEART_RATE 0XFD//ellison  mark May 23, 2018
 
-#define CMD_DEBUG_TEST_DATA                 0xFE     //Êı¾İ²ÉÑù£¬µ÷ÊÔĞ­Òé£¬²»¶ÔÍâ¿ª·Å
+#define CMD_DEBUG_TEST_DATA                 0xFE     //æ•°æ®é‡‡æ ·ï¼Œè°ƒè¯•åè®®ï¼Œä¸å¯¹å¤–å¼€æ”¾
 
 #define CMD_FACTORY_TEST_MODE               0x30
 #define CMD_SET_WOMEN_MENSTRUAL_CYCLE       0x29
@@ -200,11 +200,7 @@
 #define PUBLIC_CMD_NFC_DATA                 0x84
 #define PUBLIC_CMD_SPO2_TEST                0x86
 
-#if APP_ZHIAO_CUSTOM_SUPPORT
-#define PUBLIC_CMD_ZHIAO_CUSTOM_HEALTH_CTRL     0x87
-#endif
-
-/*! Ö¸Áî×ª»¯ÀàĞÍÃ¶¾Ùzn.zeng, 2021-08-17*/
+/*! æŒ‡ä»¤è½¬åŒ–ç±»å‹æšä¸¾zn.zeng, 2021-08-17*/
 typedef enum
 {
     TYPE_FIND_INDEX,
@@ -214,7 +210,7 @@ typedef enum
 
 typedef void (*ute_module_protocol_cmd_func_t)(uint8_t*receive,uint8_t length);
 
-/*! Ö¸Áî×ª»¯±íÊı¾İ½á¹¹zn.zeng, 2021-08-17*/
+/*! æŒ‡ä»¤è½¬åŒ–è¡¨æ•°æ®ç»“æ„zn.zeng, 2021-08-17*/
 typedef struct
 {
     uint8_t privateCmd;

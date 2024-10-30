@@ -379,7 +379,8 @@ void sco_audio_init(void)
     dac_set_anl_offset(1);
     audio_path_init(AUDIO_PATH_BTMIC);
     audio_path_start(AUDIO_PATH_BTMIC);
-    bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
+    // bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
+    bsp_change_volume(VOL_MAX);     //通话改成默认最大音量
     dac_fade_in();
 }
 
@@ -392,6 +393,7 @@ void sco_audio_exit(void)
     dac_set_anl_offset(0);
     sco_clr_incall_flag(INCALL_FLAG_SCO);
     bsp_change_volume(sys_cb.vol);
+    // bsp_change_volume(VOL_MAX);             //通话改成默认最大音量
 
 #if BT_SCO_APP_DBG_EN
     CLKGAT1 &= ~BIT(27);
@@ -408,7 +410,8 @@ void modem_call_init(void)
     dac_set_anl_offset(1);
     audio_path_init(AUDIO_PATH_MODEMMIC);
     audio_path_start(AUDIO_PATH_MODEMMIC);
-    bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
+    // bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
+    bsp_change_volume(VOL_MAX);             //通话改成默认最大音量
     dac_fade_in();
 }
 
@@ -430,7 +433,8 @@ void bsp_bt_call_enter(void)
 {
     sco_set_incall_flag(INCALL_FLAG_CALL);
     if(sys_cb.incall_flag == INCALL_FLAG_FADE) {
-        bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
+        // bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
+        bsp_change_volume(VOL_MAX);                 //通话改成默认最大音量
         dac_fade_in();
     }
 }

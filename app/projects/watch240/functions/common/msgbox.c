@@ -61,28 +61,35 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                                  func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
 
             //title
-            compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-            compo_textbox_set_align_center(txt_title, false);
-            compo_textbox_set_pos(txt_title, 10,
-                                  func_cover_get_title_txt_y(msg_type));
-            //compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
-            compo_textbox_set(txt_title, title);
+            if (title != NULL) {
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_align_center(txt_title, false);
+                compo_textbox_set_pos(txt_title, 10,
+                                      func_cover_get_title_txt_y(msg_type));
+                //compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set(txt_title, title);
+            }
 
             //msg
-            compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-            compo_textbox_set_align_center(txt_msg, false);
-            compo_textbox_set_location(txt_msg, 10,
-                                       func_cover_get_txt_y(msg_type),
-                                       GUI_SCREEN_WIDTH-10, 50);              //调整文本位置
-            compo_textbox_set_multiline(txt_msg, true);
-            compo_textbox_set(txt_msg, msg);
+            if (msg != NULL) {
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_set_align_center(txt_msg, false);
+                compo_textbox_set_location(txt_msg, 10,
+                                           func_cover_get_txt_y(msg_type),
+                                           GUI_SCREEN_WIDTH-10, 70);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set_autoroll_mode(txt_msg, 2);
+                compo_textbox_set(txt_msg, msg);
+            }
 
             //time
-            compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
-            compo_textbox_set_align_center(txt_time, false);
-            compo_textbox_set_pos(txt_time, 10,
-                                       func_cover_get_time_txt_y(msg_type));              //调整文本位置
-            compo_textbox_set(txt_time, time);
+            if (time != NULL) {
+                compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
+                compo_textbox_set_align_center(txt_time, false);
+                compo_textbox_set_pos(txt_time, 10,
+                                           func_cover_get_time_txt_y(msg_type));              //调整文本位置
+                compo_textbox_set(txt_time, time);
+            }
         }   break;
 
         case MSGBOX_MSG_TYPE_BRIEF: {                 //简略消息弹窗
@@ -99,28 +106,34 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                                  func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
 
             //title
-            compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-            compo_textbox_set_align_center(txt_title, false);
-            compo_textbox_set_pos(txt_title, 10,
-                                  func_cover_get_title_txt_y(msg_type));
-            //compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
-            compo_textbox_set(txt_title, title);
+            if (title != NULL) {
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_align_center(txt_title, false);
+                compo_textbox_set_pos(txt_title, 10,
+                                      func_cover_get_title_txt_y(msg_type));
+                //compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set(txt_title, title);
+            }
 
             //msg
-            compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-            compo_textbox_set_align_center(txt_msg, false);
-            compo_textbox_set_location(txt_msg, 10,
-                                       func_cover_get_txt_y(msg_type),
-                                       GUI_SCREEN_WIDTH-10, 50);              //调整文本位置
-            compo_textbox_set_multiline(txt_msg, true);
-            compo_textbox_set(txt_msg, msg);
+            if (msg != NULL) {
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_set_align_center(txt_msg, false);
+                compo_textbox_set_location(txt_msg, 10,
+                                           func_cover_get_txt_y(msg_type),
+                                           GUI_SCREEN_WIDTH-10, 90);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set(txt_msg, msg);
+            }
 
             //time
-            compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
-            compo_textbox_set_align_center(txt_time, false);
-            compo_textbox_set_pos(txt_time, 10,
-                                       func_cover_get_time_txt_y(msg_type));              //调整文本位置
-            compo_textbox_set(txt_time, time);
+            if (time != NULL) {
+                compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
+                compo_textbox_set_align_center(txt_time, false);
+                compo_textbox_set_pos(txt_time, 10,
+                                           func_cover_get_time_txt_y(msg_type));              //调整文本位置
+                compo_textbox_set(txt_time, time);
+            }
         }   break;
 
         case MSGBOX_MSG_TYPE_REMIND_COVER: {

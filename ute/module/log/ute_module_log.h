@@ -41,19 +41,21 @@
 #define UTE_LOG_DRV_PSRAM 0//26
 #define UTE_LOG_EARPHONE_LVL 0//27
 #define UTE_LOG_ALI_UPAY_LVL 0//28
-#define UTE_LOG_CYWEE_MOTION_LVL    0 //29
+#define UTE_LOG_CYWEE_MOTION_LVL 0 //29
+#define UTE_LOG_MEMORY_LVL 0 //30
+
 /** 打印log，输入log等级和格式等*/
 extern const uint8_t uteModuleLogTagString[][31];
 #define UTE_MODULE_LOG(log_lvl,format,...) \
 {\
-  if((log_lvl!=0)&&(log_lvl<30))\
+  if((log_lvl!=0)&&(log_lvl<31))\
   {\
    printf("%s:"format"\n",&uteModuleLogTagString[log_lvl][0],##__VA_ARGS__);\
   }\
 }
 #define UTE_MODULE_LOG_BUFF(log_lvl,buff, size)\
 {\
-  if((log_lvl!=0)&&(log_lvl<30))\
+  if((log_lvl!=0)&&(log_lvl<31))\
   {\
    printf("%s:",&uteModuleLogTagString[log_lvl][0]);\
    uint8_t *tmpBuff = (uint8_t *)buff;\

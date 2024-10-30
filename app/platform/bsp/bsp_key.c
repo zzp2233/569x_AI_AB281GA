@@ -231,6 +231,7 @@ void power_on_check(void)
         }
 #endif
         u8 key_val = bsp_key_scan();
+        //printf("key_val=%d\n", key_val);
         if ((key_val & KEY_USAGE_MASK) == key_cb.pwr_usage_id) {
             up_cnt = 0;
             if (!pwrkey_pressed_flag) {

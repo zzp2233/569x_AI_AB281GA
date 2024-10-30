@@ -28,6 +28,27 @@ static const compo_listbox_item_t tbl_sport_list[] = {
     {STR_WALK,                  UI_BUF_SPORT_BEFORE_EXERCISE_WALK_BIN,               .func_sta = FUNC_SPORT_SWITCH},
 };
 
+u32 func_sport_get_current_idx(void)
+{
+    return sys_cb.sport_idx;
+}
+
+u32 func_sport_get_str(u8 sport_idx)
+{
+    if (sport_idx < MENU_LIST_CNT) {
+        return tbl_sport_list[sport_idx].str_idx;
+    }
+    return STR_NULL;
+}
+
+u32 func_sport_get_ui(u8 sport_idx)
+{
+    if (sport_idx < MENU_LIST_CNT) {
+        return tbl_sport_list[sport_idx].res_addr;
+    }
+    return 0;
+}
+
 //创建运动窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_form_create(void)
 {
@@ -74,6 +95,7 @@ static void func_sport_list_icon_click(void)
         compo_form_destroy(frm);
         func_cb.sta = func_sta;
         sys_cb.sport_idx = listbox->focus_icon_idx;                //记住当前编号
+        printf("sport_idx=%d\n", sys_cb.sport_idx);
     }
 
     if(listbox->flag_area) {

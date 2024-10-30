@@ -16,16 +16,32 @@ enum {
     REMIND_GCOVER_APP_CONNECT,
 };
 
-///消息弹窗界面
-enum {
-    MSG_COVER_NULL,         //无
-    MSG_COVER_WECHAT,       //微信消息
-    MSG_COVER_QQ,           //QQ消息
-    MSG_COVER_SMS,          //手机短信
-    MSG_COVER_OTHER,        //其他消息
+/////消息弹窗界面
+//enum {
+//    MSG_COVER_NULL,         //无
+//    MSG_COVER_WECHAT,       //微信消息
+//    MSG_COVER_QQ,           //QQ消息
+//    MSG_COVER_SMS,          //手机短信
+//    MSG_COVER_OTHER,        //其他消息
+//
+//    MSG_COVER_ALL,
+//};
 
-    MSG_COVER_ALL,
-};
+typedef struct f_cover_detail_msg_item_t_ {
+    u32 res_addr;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+    s16 time_txt_y;
+} f_cover_detail_msg_item_t;
+
+typedef struct f_cover_brief_msg_item_t_ {
+    u32 res_addr;
+    s16 pic_y;
+    s16 txt_y;
+    s16 title_y;
+    s16 time_txt_y;
+} f_cover_brief_msg_item_t;
 
 void gui_set_cover_index(uint8_t index);
 void gui_cover_msg_enqueue(uint8_t index);
@@ -37,5 +53,6 @@ s16 func_cover_get_txt_y(u8 type);
 s16 func_cover_get_title_txt_y(u8 type);
 s16 func_cover_get_time_txt_y(u8 type);
 
-
+u32 func_cover_get_detail_msg_cnt(void);
+u32 func_cover_get_detail_msg_ui(u8 index);
 #endif // _FUNC_COVER_H

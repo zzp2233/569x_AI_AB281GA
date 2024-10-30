@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -56,9 +57,10 @@ static void func_restart_button_click(void)
     int id = compo_get_button_id();
     switch (id) {
     case COMPO_ID_BTN_YES:
-        ble_disconnect();
-        bt_disconnect(1);
-        WDT_RST();
+        // ble_disconnect();
+        // bt_disconnect(1);
+        // WDT_RST();
+        uteApplicationCommonRestart();
         break;
 
     case COMPO_ID_BTN_NO:

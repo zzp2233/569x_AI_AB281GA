@@ -38,6 +38,7 @@ typedef struct msg_cb_t_
     u32 exit_tick;
 
     char msg_type;
+    u8 enter_msg_sta;
 } msg_cb_t;
 
 //创建对话框窗体
@@ -350,6 +351,7 @@ static void msgbox_process(void)
 {
     msg_cb_t *msg_cb = func_cb.msg_cb;
     u32 wid, hei;
+
     if (msg_cb->flag_animation)
     {
         if (tick_check_expire(msg_cb->tick, ANIMATION_TICK_EXPIRE))
@@ -440,6 +442,7 @@ int msgbox(char *msg, char *title, char* time, int mode, char msg_type)
     msgbox_enter(msgbox_frm_create(msg, title, time, mode, msg_type));
     msg_cb = func_cb.msg_cb;
     msg_cb->msg_type = msg_type;
+    msg_cb->enter_msg_sta = func_cb.sta;
     while (msg_cb->show)
     {
         msgbox_message(msg_dequeue());
@@ -449,3 +452,18 @@ int msgbox(char *msg, char *title, char* time, int mode, char msg_type)
     msgbox_exit();                      //这里释放到msg_cb结构体
     return res;
 }
+
+
+bool msgbox_frist_set_check(void)
+{
+    msg_cb_t *msg_cb = func_cb.msg_cb;
+    if (msg_cb != NULL)
+    {
+        if (msg_cb->enter_msg_sta != func_cb.sta)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+

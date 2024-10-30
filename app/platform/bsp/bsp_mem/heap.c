@@ -25,7 +25,8 @@ void get_customer_heap_info(void **buf, u32 *size)
 void customer_heap_init(void *buf, u32 size)
 {
     sys_tlsf = NULL;
-    if (size > 0) {
+    if (size > 0)
+    {
         printf("malloc heap size:%d\n", size);
         os_mutex_init(&sys_tlsf_mutex, "mm", OS_IPC_FLAG_FIFO);
         sys_tlsf = tlsf_create_with_pool(buf, size);
@@ -40,6 +41,19 @@ void *ab_malloc(size_t size)
     return ptr;
 }
 
+void *ab_zalloc(size_t size)
+{
+    os_mutex_take(&sys_tlsf_mutex, OS_WAITING_FOREVER);
+    void *ptr = tlsf_malloc(sys_tlsf, size);
+    os_mutex_release(&sys_tlsf_mutex);
+    if (ptr != NULL)
+    {
+        memset(ptr, 0, size);
+    }
+    return ptr;
+}
+
+
 void ab_free(void *ptr)
 {
     os_mutex_take(&sys_tlsf_mutex, OS_WAITING_FOREVER);
@@ -51,7 +65,8 @@ void *ab_calloc(size_t nitems, size_t size)
 {
     size_t total = nitems * size;
     void  *ptr   = ab_malloc(total);
-    if (ptr != NULL) {
+    if (ptr != NULL)
+    {
         memset(ptr, 0, total);
     }
     return ptr;

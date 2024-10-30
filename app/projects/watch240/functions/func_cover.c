@@ -26,12 +26,12 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
 {
     /*   res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
     {UI_BUF_ICON_ALARM_CLOCK_BIN,             STR_ALARM_CLOCK,        GUI_SCREEN_HEIGHT/5+30, GUI_SCREEN_HEIGHT/5,  GUI_SCREEN_CENTER_Y},
-//    {UI_BUF_POP_UP_SEDENTARY_CLOCK_BIN,         STR_SEDENTARY_REMIND,   102,            190},
-//    {UI_BUF_POP_UP_WATER_CLOCK_BIN,             STR_DRINK_REMIND,       102,            190},
-//    {UI_BUF_POP_UP_FIND_WATCH_BIN,              STR_FIND_WATCH,         175,            290},
-//    {UI_BUF_POP_UP_GOAL_ACHIEVEMENT_BIN,        STR_GOAL_ACHIEVE,       175,            290},
-//    {UI_BUF_POP_UP_BLUETOOTH_CONNECTION_BIN,    STR_BT_CONNECT,         175,            290},
-//    {UI_BUF_POP_UP_APP_CONNECTION_BIN,          STR_APP_CONNECT,        175,            290},
+    {0,0,0,0,0},//    {UI_BUF_POP_UP_SEDENTARY_CLOCK_BIN,         STR_SEDENTARY_REMIND,   102,            190},
+    {0,0,0,0,0},//    {UI_BUF_POP_UP_WATER_CLOCK_BIN,             STR_DRINK_REMIND,       102,            190},
+    {UI_BUF_ICON_FINDPHONE_BIN,               STR_FIND_WATCH,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+    {0,0,0,0,0},//    {UI_BUF_POP_UP_GOAL_ACHIEVEMENT_BIN,        STR_GOAL_ACHIEVE,       175,            290},
+    {0,0,0,0,0},//    {UI_BUF_POP_UP_BLUETOOTH_CONNECTION_BIN,    STR_BT_CONNECT,         175,            290},
+    {0,0,0,0,0},//    {UI_BUF_POP_UP_APP_CONNECTION_BIN,          STR_APP_CONNECT,        175,            290},
 };
 
 ///消息弹窗界面（简略）
@@ -437,6 +437,10 @@ void gui_set_cover_index(uint8_t index)
                 }
                 //开启马达 喇叭
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
+            }
+            else if (sys_cb.cover_index == REMIND_COVER_FIND_WATCH)
+            {
+                //snprintf(msg, sizeof(msg), "寻找手表");
             }
 //            else if (sys_cb.cover_index == COVER_HEALTH_DRINK || sys_cb.cover_index == COVER_HEALTH_SEDENTARY) {
 //                tm_t tm = time_to_tm(RTCCNT);

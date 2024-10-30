@@ -213,6 +213,7 @@ void bsp_bt_ring_exit(void)
     mp3_res_play_exit();
     music_control(MUSIC_MSG_STOP);
     sys_cb.gain_offset = f_bt_ring.play.gain_offset;
+    // bsp_change_volume(VOL_MAX);
     bsp_change_volume(sys_cb.vol);
     while(bt_cb.disp_status < BT_STA_INCOMING && sco_is_connected())
     {

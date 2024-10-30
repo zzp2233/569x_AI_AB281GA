@@ -8,7 +8,8 @@
 #define TRACE(...)
 #endif
 
-enum {
+enum
+{
     //MSGBOX_MSG_TYPE_NONE,
     MSGBOX_MSG_TYPE_WECHAT=1,   //微信消息
 };
@@ -17,7 +18,8 @@ enum {
 
 #define MSG_MAX_CONTENT     64  //消息保存的最大内容
 
-enum {
+enum
+{
     COMPO_ID_CARD_MSG1 = 1,
     COMPO_ID_CARD_MSGn = UTE_MODULE_NOTIFY_SAVE_CNT,
 
@@ -30,7 +32,8 @@ enum {
 };
 
 //按钮
-typedef struct message_btn_t_{
+typedef struct message_btn_t_
+{
     u8 id;
     s16 x;
     s16 y;
@@ -40,13 +43,15 @@ typedef struct message_btn_t_{
 } message_btn_t;
 
 #define MSG_BTN_CNT     ((int)(sizeof(message_btn)/sizeof(message_btn[0])))
-const message_btn_t message_btn[] = {
+const message_btn_t message_btn[] =
+{
     {COMPO_ID_BTN_DEL,  GUI_SCREEN_CENTER_X,  0,    70,      70,      UI_BUF_ALARM_CLOCK_DELETE_BIN},
 };
 
 
 //消息界面对应卡片结构
-typedef struct card_rect_t_ {
+typedef struct card_rect_t_
+{
     u8 id;
     s16 x;
     s16 y;
@@ -55,7 +60,8 @@ typedef struct card_rect_t_ {
     u16 r;
 } card_rect_t;
 
-typedef struct card_icon_t_ {
+typedef struct card_icon_t_
+{
     u8 id;
     s16 x;
     s16 y;
@@ -64,7 +70,8 @@ typedef struct card_icon_t_ {
     u32 res;
 } card_icon_t;
 
-typedef struct card_text_t_ {
+typedef struct card_text_t_
+{
     u8 id;
     s16 x;
     s16 y;
@@ -128,31 +135,36 @@ typedef struct card_##type##_t_ {   \
 #define CARD_MSG_X                 GUI_SCREEN_CENTER_X                     //中心点
 #define CARD_MSG_START_Y           140
 CARD_TYPEDEF_T(msg, CARD_RECT_CNT, CARD_ICON_CNT, CARD_TEXT_CNT);
-const CARD_T(msg) card = {
+const CARD_T(msg) card =
+{
     CARD_MSG_X,
     CARD_MSG_START_Y,
     GUI_SCREEN_WIDTH-12,
     GUI_SCREEN_HEIGHT/3,
 
-    {  ///矩形背景
-       //id      x       y       w                       h                       r
+    {
+        ///矩形背景
+        //id      x       y       w                       h                       r
         {0,      0,      0,      GUI_SCREEN_WIDTH-12,    GUI_SCREEN_HEIGHT/3,    20},
     },
 
-    {  ///图标
-       //id      x                                                                 y       w                           h                           res
+    {
+        ///图标
+        //id      x                                                                 y       w                           h                           res
         {0,      -(((GUI_SCREEN_WIDTH-12)/2) - ((GUI_SCREEN_HEIGHT/4-30)/2)),      0,      GUI_SCREEN_HEIGHT/4-30,     GUI_SCREEN_HEIGHT/4-30,     UI_BUF_ICON_MESSAGE_BIN},
     },
 
-    {  ///文本
-       //id      x       y       w       h       str                                res                         center  wordwrap   r  g  b
+    {
+        ///文本
+        //id      x       y       w       h       str                                res                         center  wordwrap   r  g  b
         {0,      20,      -30,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      true,   false,  208, 205, 205},
         {1,      -63,     -10,    180,    55,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   208, 205, 205},
     },
 };
 
 
-typedef struct f_message_t_ {
+typedef struct f_message_t_
+{
     bool flag_drag;
     s32 y_pos;  //上次松手y坐标
     s32 y;      //当前要对齐的y坐标
@@ -168,7 +180,7 @@ typedef struct f_message_t_ {
     u8 debug_msg; //测试
 
     //message_info_t msg[MSG_MAX_LIST_CNT];
-    ute_module_notify_data_t ute_msg;
+    ute_module_notify_data_t *ute_msg;
 } f_message_t;
 
 //创建消息窗体
@@ -182,15 +194,18 @@ compo_form_t *func_message_form_create(void)
     compo_form_set_title(frm, i18n[STR_MESSAGE]);
 
     //创建消息卡片
-    for (int i=0; i<MSG_MAX_LIST_CNT; i++) {
+    for (int i=0; i<MSG_MAX_LIST_CNT; i++)
+    {
         u8 id = COMPO_ID_CARD_MSG1+i;
         CREAT_CARD(id, CARD_RECT_CNT, CARD_ICON_CNT, CARD_TEXT_CNT, card, card.w, card.h);
     }
 
     //创建按钮
-    for (int i=0; i<MSG_BTN_CNT; i++) {
+    for (int i=0; i<MSG_BTN_CNT; i++)
+    {
         compo_button_t* btn;
-        if (message_btn[i].res) {
+        if (message_btn[i].res)
+        {
             btn = compo_button_create_by_image(frm, message_btn[i].res);
         }
         compo_button_set_location(btn, message_btn[i].x, message_btn[i].y, message_btn[i].w, message_btn[i].h);
@@ -219,13 +234,14 @@ static void func_message_btn_click(void)
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
     u8 id = compo_get_button_id();
 
-    switch (id) {
-    case COMPO_ID_BTN_DEL:
-        //清除消息
-        uteModuleNotifyDelAllHistoryData(true);
-        memset(&f_msg->ute_msg, 0, sizeof(f_msg->ute_msg));
-        widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_max);
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_DEL:
+            //清除消息
+            uteModuleNotifyDelAllHistoryData(true);
+            memset(f_msg->ute_msg, 0, sizeof(ute_module_notify_data_t));
+            widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_max);
+            break;
     }
 
 
@@ -238,11 +254,13 @@ static u16 func_message_card_get_btn_id(point_t pt)
     u16 ret = 0;
     rect_t rect;
     compo_cardbox_t *cardbox;
-    for(i=0; i<MSG_MAX_LIST_CNT; i++) {
+    for(i=0; i<MSG_MAX_LIST_CNT; i++)
+    {
         id = COMPO_ID_CARD_MSG1 + i;
         cardbox = compo_getobj_byid(id);
         rect = compo_cardbox_get_absolute(cardbox);
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
+        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+        {
             ret = id;
             break;
         }
@@ -255,22 +273,25 @@ static void func_message_card_click(void)
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_message_card_get_btn_id(pt);
-    if (compo_id <= 0 || compo_id > MSG_MAX_LIST_CNT) {
+    if (compo_id <= 0 || compo_id > MSG_MAX_LIST_CNT)
+    {
         return;
     }
     printf("click compo_id:%d\n", compo_id);
     compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
-    if (compo_cardbox_get_visible(cardbox)) {
-        char *msg = (char*)f_msg->ute_msg.historyNotify[compo_id-1].content;
-        char time[30]={0};
-        sprintf(time, "%04d-%02d-%02d %02d:%02d", f_msg->ute_msg.historyNotify[compo_id-1].year, f_msg->ute_msg.historyNotify[compo_id-1].month,
-                    f_msg->ute_msg.historyNotify[compo_id-1].day, f_msg->ute_msg.historyNotify[compo_id-1].hour, f_msg->ute_msg.historyNotify[compo_id-1].min);
-        sys_cb.msg_index = f_msg->ute_msg.historyNotify[compo_id-1].type;
+    if (compo_cardbox_get_visible(cardbox))
+    {
+        char *msg = (char*)f_msg->ute_msg->historyNotify[compo_id-1].content;
+        char time[30]= {0};
+        sprintf(time, "%04d-%02d-%02d %02d:%02d", f_msg->ute_msg->historyNotify[compo_id-1].year, f_msg->ute_msg->historyNotify[compo_id-1].month,
+                f_msg->ute_msg->historyNotify[compo_id-1].day, f_msg->ute_msg->historyNotify[compo_id-1].hour, f_msg->ute_msg->historyNotify[compo_id-1].min);
+        sys_cb.msg_index = f_msg->ute_msg->historyNotify[compo_id-1].type;
         int res = msgbox(msg, NULL, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
-        if (res == MSGBOX_RES_DELETE) {
+        if (res == MSGBOX_RES_DELETE)
+        {
             uteModuleNotifySetDisplayIndex(compo_id-1);
             uteModuleNotifyDelAllHistoryData(false);
-            uteModuleNotifyGetData(&f_msg->ute_msg);
+            uteModuleNotifyGetData(f_msg->ute_msg);
         }
     }
 
@@ -278,7 +299,8 @@ static void func_message_card_click(void)
 
 static u32 func_message_card_get_icon(u8 type)
 {
-    if (type < func_cover_get_detail_msg_cnt()) {
+    if (type < func_cover_get_detail_msg_cnt())
+    {
         return func_cover_get_detail_msg_ui(type);
     }
     return 0;
@@ -290,38 +312,44 @@ static void func_message_card_update(void)
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
 
     //更新卡片
-    uteModuleNotifyGetData(&f_msg->ute_msg);
+    uteModuleNotifyGetData(f_msg->ute_msg);
     s32 card_y = 0;
-    for (int i=0; i<MSG_MAX_LIST_CNT; i++) {
+    for (int i=0; i<MSG_MAX_LIST_CNT; i++)
+    {
 
         compo_cardbox_t* cardbox = compo_getobj_byid(COMPO_ID_CARD_MSG1+i);
 
-        if (i <= uteModuleNotifyGetTotalNotifyCnt()-1) {
+        if (i <= uteModuleNotifyGetTotalNotifyCnt()-1)
+        {
 
             char* time = (char*)func_zalloc(30);
-            char* msg = (char*)f_msg->ute_msg.historyNotify[i].content;
+            char* msg = (char*)f_msg->ute_msg->historyNotify[i].content;
 
-            memcpy(msg, f_msg->ute_msg.historyNotify[i].content, f_msg->ute_msg.historyNotify[i].size);
-            sprintf(time, "%04d-%02d-%02d %02d:%02d", f_msg->ute_msg.historyNotify[i].year, f_msg->ute_msg.historyNotify[i].month,
-                    f_msg->ute_msg.historyNotify[i].day, f_msg->ute_msg.historyNotify[i].hour, f_msg->ute_msg.historyNotify[i].min);
+            memcpy(msg, f_msg->ute_msg->historyNotify[i].content, f_msg->ute_msg->historyNotify[i].size);
+            sprintf(time, "%04d-%02d-%02d %02d:%02d", f_msg->ute_msg->historyNotify[i].year, f_msg->ute_msg->historyNotify[i].month,
+                    f_msg->ute_msg->historyNotify[i].day, f_msg->ute_msg->historyNotify[i].hour, f_msg->ute_msg->historyNotify[i].min);
             card_y += (card.h+10);
             compo_cardbox_set_visible(cardbox, true);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, card_y);
-            compo_cardbox_icon_set(cardbox, 0, func_message_card_get_icon(f_msg->ute_msg.historyNotify[i].type));
+            compo_cardbox_icon_set(cardbox, 0, func_message_card_get_icon(f_msg->ute_msg->historyNotify[i].type));
             compo_cardbox_text_set(cardbox, 0, time);
             compo_cardbox_text_set(cardbox, 1, msg);
 
             func_free(time);
-        } else {
+        }
+        else
+        {
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, -GUI_SCREEN_HEIGHT);
             compo_cardbox_set_visible(cardbox, false);
         }
     }
 
-    if (card_y) {
+    if (card_y)
+    {
         //更新按钮
         s32 btn_y  = 0;
-        for (int i=0; i<MSG_BTN_CNT; i++) {
+        for (int i=0; i<MSG_BTN_CNT; i++)
+        {
             btn_y = card_y + (card.h + 10) / 2 + message_btn[i].w/2 + 10;
             compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_DEL+i);
             compo_button_set_visible(btn, true);
@@ -337,15 +365,19 @@ static void func_message_card_update(void)
         //更新拖动范围
         f_msg->y_min = -(btn_y - (GUI_SCREEN_HEIGHT - message_btn[0].h) + 32);
         f_msg->y_max = -(card.h + 10) / 2;
-        if (btn_y + message_btn[0].h / 2 <= GUI_SCREEN_HEIGHT ) {
+        if (btn_y + message_btn[0].h / 2 <= GUI_SCREEN_HEIGHT )
+        {
             //f_msg->flag_drag = false;
             f_msg->y_min = f_msg->y_max;
             widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_max);
         }
         //printf("drag=>[%d,%d] -> [%d,%d,%d]\n", f_msg->y_min, f_msg->y_max, btn_y, card_y, (GUI_SCREEN_HEIGHT - message_btn[0].w / 2));
-    } else {
+    }
+    else
+    {
         //更新按钮
-        for (int i=0; i<MSG_BTN_CNT; i++) {
+        for (int i=0; i<MSG_BTN_CNT; i++)
+        {
             compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_DEL+i);
             compo_button_set_visible(btn, false);
         }
@@ -370,61 +402,94 @@ static void func_message_process(void)
 
     s32 dx,dy;
     //开始拖动页面
-    if (f_msg->flag_drag) {
+    if (f_msg->flag_drag)
+    {
         f_msg->flag_drag = ctp_get_dxy(&dx, &dy);
-        if (f_msg->flag_drag) {
+        if (f_msg->flag_drag)
+        {
             f_msg->y = f_msg->y_pos + dy;
 
-            if (f_msg->y > f_msg->y_max + 20) {
+            if (f_msg->y > f_msg->y_max + 20)
+            {
                 f_msg->y = f_msg->y_max + 20;
-            } else if (f_msg->y < f_msg->y_min - 20) {
+            }
+            else if (f_msg->y < f_msg->y_min - 20)
+            {
                 f_msg->y = f_msg->y_min - 20;
             }
 
             //printf("drag=>[%d,%d] -> %d\n", f_msg->y_min, f_msg->y_max, f_msg->y);
             widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y);
-        } else {
+        }
+        else
+        {
             //抬手
             f_msg->y_pos = f_msg->y;
             s16 last_dy = ctp_get_last_dxy().y;
             s16 to_y = f_msg->y_pos + (last_dy * 16);
             f_msg->moveto_y = to_y;
-            if (f_msg->moveto_y < f_msg->y_min - 20) {
+            if (f_msg->moveto_y < f_msg->y_min - 20)
+            {
                 f_msg->moveto_y = f_msg->y_min - 20;
-            } else if (f_msg->moveto_y > f_msg->y_max + 20) {
+            }
+            else if (f_msg->moveto_y > f_msg->y_max + 20)
+            {
                 f_msg->moveto_y = f_msg->y_max + 20;
             }
             f_msg->flag_move_auto = true;
             f_msg->tick = tick_get();
         }
-    } else if (f_msg->flag_move_auto) {
-        if (f_msg->y_pos == f_msg->moveto_y) {
+    }
+    else if (f_msg->flag_move_auto)
+    {
+        if (f_msg->y_pos == f_msg->moveto_y)
+        {
             //printf("=>moveto over\n");
-            if (f_msg->y_pos < f_msg->y_min) {          //回弹
+            if (f_msg->y_pos < f_msg->y_min)            //回弹
+            {
                 f_msg->moveto_y = f_msg->y_min;
-            } else if (f_msg->y_pos > f_msg->y_max) {
+            }
+            else if (f_msg->y_pos > f_msg->y_max)
+            {
                 f_msg->moveto_y = f_msg->y_max;
-            } else {
+            }
+            else
+            {
                 f_msg->flag_move_auto = false;            //移动完成
             }
-        } else if (tick_check_expire(f_msg->tick, 18)) {
+        }
+        else if (tick_check_expire(f_msg->tick, 18))
+        {
             s16 dy;
             f_msg->tick = tick_get();
             dy = f_msg->moveto_y - f_msg->y_pos;
-            if (dy > 0) {
-                if (dy > 16 * 6) {
+            if (dy > 0)
+            {
+                if (dy > 16 * 6)
+                {
                     dy = dy / 6;
-                } else if (dy > 16) {
+                }
+                else if (dy > 16)
+                {
                     dy = 16;
-                } else {
+                }
+                else
+                {
                     dy = 1;
                 }
-            } else if (dy < 0) {
-                if (dy < -16 * 6) {
+            }
+            else if (dy < 0)
+            {
+                if (dy < -16 * 6)
+                {
                     dy = dy / 6;
-                } else if (dy < -16) {
+                }
+                else if (dy < -16)
+                {
                     dy = -16;
-                } else {
+                }
+                else
+                {
                     dy = -1;
                 }
             }
@@ -441,24 +506,25 @@ static void func_message_message(size_msg_t msg)
 {
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_message_btn_click();
-        func_message_card_click();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_message_btn_click();
+            func_message_card_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-        f_msg->flag_drag = true;
-        f_msg->flag_move_auto = false;
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+            f_msg->flag_drag = true;
+            f_msg->flag_move_auto = false;
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -466,12 +532,25 @@ static void func_message_message(size_msg_t msg)
 static void func_message_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_message_t));
+    f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
+    f_msg->ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
+    if (f_msg->ute_msg == NULL)
+    {
+        printf("%s malloc err\n", __func__);
+        halt(0x1010);
+    }
     func_cb.frm_main = func_message_form_create();
 }
 
 //退出消息功能
 static void func_message_exit(void)
 {
+    f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
+    if (f_msg->ute_msg != NULL)
+    {
+        ab_free(f_msg->ute_msg);
+        f_msg->ute_msg = NULL;
+    }
     func_cb.last = FUNC_MESSAGE;
 }
 
@@ -480,7 +559,8 @@ void func_message_info(void)
 {
     printf("%s\n", __func__);
     func_message_enter();
-    while (func_cb.sta == FUNC_MESSAGE) {
+    while (func_cb.sta == FUNC_MESSAGE)
+    {
         func_message_process();
         func_message_message(msg_dequeue());
     }

@@ -1,6 +1,7 @@
 #include "include.h"
 
-const char * const i18n_zh[] = {
+const char * const i18n_zh[] =
+{
     [STR_CLOCK]                         = "时钟",
     [STR_CLOCK_PREVIEW]                 = "表盘预览",
     [STR_MESSAGE]                       = "消息",
@@ -139,7 +140,7 @@ const char * const i18n_zh[] = {
     [STR_STEPS]                         = "步数",
     [STR_DISTANCE]                      = "距离",
     [STR_BAROMETER]                     = "气压计",
-	[STR_RECORDER]                      = "录音机",
+    [STR_RECORDER]                      = "录音机",
     [STR_TEMPERATURE]                   = "温度",
     [STR_CELSIUS]                       = "℃",
     [STR_FAHRENHEIT]                    = "℉",
@@ -215,4 +216,5 @@ const char * const i18n_zh[] = {
 
     [STR_NO_MSG]                        = "没有新消息",
 
+    [STR_FIND_WATCH]                    = "寻找手表",
 };

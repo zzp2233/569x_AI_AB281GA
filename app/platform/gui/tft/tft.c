@@ -32,33 +32,44 @@ void tft_bglight_en(void)
 AT(.com_text.tft_spi)
 void tft_te_isr(void)
 {
-    if (WKUPEDG & BIT(16+PORT_TFT_INT_VECTOR)) {
+    if (WKUPEDG & BIT(16+PORT_TFT_INT_VECTOR))
+    {
         WKUPCPND = BIT(16+PORT_TFT_INT_VECTOR);
         bool flag_mode_nochange = true;
-        if (tft_cb.te_mode != tft_cb.te_mode_next) {
+        if (tft_cb.te_mode != tft_cb.te_mode_next)
+        {
             tft_cb.te_mode = tft_cb.te_mode_next;
             tft_cb.despi_baud = (tft_cb.te_mode > 0) ? tft_cb.despi_baud1 : tft_cb.despi_baud2;
-            if (tft_cb.flag_in_frame) {
+            if (tft_cb.flag_in_frame)
+            {
                 tft_cb.tft_set_baud_kick = true;
-            } else {
+            }
+            else
+            {
                 DESPIBAUD = tft_cb.despi_baud;
             }
             flag_mode_nochange = false;
         }
-        if (tft_cb.te_mode == 1) {
+        if (tft_cb.te_mode == 1)
+        {
             //1TE MODE
             TICK1CNT = 0;
             TICK1CON |= BIT(0);         //TICK EN
-        } else {
+        }
+        else
+        {
             //>1TE MODE, 如果Mode change停一个TE
-            if (flag_mode_nochange) {
+            if (flag_mode_nochange)
+            {
                 tft_te_refresh();
             }
         }
         //延时打开背光
-        if (tft_cb.te_bglight_cnt > 0) {
+        if (tft_cb.te_bglight_cnt > 0)
+        {
             tft_cb.te_bglight_cnt--;
-            if (tft_cb.te_bglight_cnt == 0) {
+            if (tft_cb.te_bglight_cnt == 0)
+            {
                 tft_cb.tft_bglight_first_set = true;
             }
         }
@@ -68,7 +79,8 @@ void tft_te_isr(void)
 AT(.com_text.tft_spi)
 void tick_te_isr(void)
 {
-    if (TICK1CON & BIT(9)) {
+    if (TICK1CON & BIT(9))
+    {
         TICK1CON &= ~BIT(0);
         TICK1CPND = BIT(9);
         tft_te_refresh();
@@ -113,11 +125,13 @@ void tft_frame_end(void)
 {
     tft_write_end();
     tft_cb.flag_in_frame = false;
-    if (tft_cb.tft_bglight_kick) {
+    if (tft_cb.tft_bglight_kick)
+    {
         tft_cb.tft_bglight_kick = false;
         tft_cb.te_bglight_cnt = 3; //3TE后打开背光
     }
-    if (tft_cb.tft_set_baud_kick) {
+    if (tft_cb.tft_set_baud_kick)
+    {
         tft_cb.tft_set_baud_kick = false;
         DESPIBAUD = tft_cb.despi_baud;
     }
@@ -128,9 +142,12 @@ void tft_frame_end(void)
 void oled_brightness_set_level(uint8_t level, bool stepless_en)
 {
     sys_cb.light_level = level;
-    if (!stepless_en) {
+    if (!stepless_en)
+    {
         level = level * 50;
-    } else {
+    }
+    else
+    {
         uint16_t level_tmp = 0xff * level / 100;
         level = (uint8_t)level_tmp;
     }
@@ -157,7 +174,7 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
     {
         level = DEFAULT_BACK_LIGHT_PERCENT_MIN;
     }
-    
+
     duty = base_duty + level;
     tft_cb.tft_bglight_duty = duty;
     if (tft_cb.tft_bglight_last_duty != tft_cb.tft_bglight_duty)
@@ -174,8 +191,14 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
 //背光亮度初始设置检测
 void tft_bglight_frist_set_check(void)
 {
-    if(!tft_cb.tft_bglight_first_set) {
+    if(!tft_cb.tft_bglight_first_set)
+    {
         return ;
+    }
+    extern bool msgbox_frist_set_check(void);
+    if (msgbox_frist_set_check())
+    {
+        return;
     }
     tft_cb.tft_bglight_first_set = false;
 
@@ -282,7 +305,7 @@ void tft_init(void)
     tft_170_560_axs15231B_init();
 #elif (GUI_SELECT == DISPLAY_UTE)
 #else
-    #error "Please Select GUI Display"
+#error "Please Select GUI Display"
 #endif
 
     tft_set_window(0, 0, GUI_SCREEN_WIDTH - 1, GUI_SCREEN_HEIGHT - 1);

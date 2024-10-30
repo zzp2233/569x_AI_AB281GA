@@ -8,7 +8,7 @@
 #define TRACE(...)
 #endif
 
-#define MAX_WORD_CNT                            16                          //每条列表项最多16个字符
+#define MAX_WORD_CNT                            32                          //每条列表项最多16个字符
 
 /**
  * @brief 创建一个卡片控件
@@ -28,15 +28,18 @@ compo_cardbox_t *compo_cardbox_create(compo_form_t *frm, u8 rect_num, u8 icon_nu
     widget_page_set_client(page, org_wid / 2, org_hei / 2); //卡片内控件参考坐标：卡片中心
     cardbox->page = page;
     rect_num = MIN(rect_num, CARD_RECT_MAX);
-    for (i=0; i<rect_num; i++) {
+    for (i=0; i<rect_num; i++)
+    {
         cardbox->rect[i] = widget_rect_create(page);
     }
     icon_num = MIN(icon_num, CARD_ICON_MAX);
-    for (i=0; i<icon_num; i++) {
+    for (i=0; i<icon_num; i++)
+    {
         cardbox->icon[i] = widget_image_create(page, 0);
     }
     text_num = MIN(text_num, CARD_TEXT_MAX);
-    for (i=0; i<text_num; i++) {
+    for (i=0; i<text_num; i++)
+    {
         cardbox->text[i] = widget_text_create(page, MAX_WORD_CNT);
         widget_text_set_autosize(cardbox->text[i], false);
     }
@@ -52,7 +55,8 @@ compo_cardbox_t *compo_cardbox_create(compo_form_t *frm, u8 rect_num, u8 icon_nu
  **/
 void compo_cardbox_rect_set_color(compo_cardbox_t *cardbox, u8 idx, u16 color)
 {
-    if (cardbox->rect[idx] && idx < CARD_RECT_MAX) {
+    if (cardbox->rect[idx] && idx < CARD_RECT_MAX)
+    {
         widget_rect_set_color(cardbox->rect[idx], color);
     }
 }
@@ -65,7 +69,8 @@ void compo_cardbox_rect_set_color(compo_cardbox_t *cardbox, u8 idx, u16 color)
  **/
 void compo_cardbox_rect_set_location(compo_cardbox_t *cardbox, u8 idx, s16 x, s16 y, u16 wid, u16 hei, u16 r)
 {
-    if (cardbox->rect[idx] && idx < CARD_RECT_MAX) {
+    if (cardbox->rect[idx] && idx < CARD_RECT_MAX)
+    {
         widget_set_location(cardbox->rect[idx], x, y, wid, hei);
         widget_rect_set_radius(cardbox->rect[idx], r);
     }
@@ -82,12 +87,13 @@ void compo_cardbox_rect_set_location(compo_cardbox_t *cardbox, u8 idx, s16 x, s1
 void compo_cardbox_icon_cut(compo_cardbox_t *cardbox, u8 idx, u8 index, u8 total_cnt)
 {
     widget_image_t *img = cardbox->icon[idx] ;
-	if (img && idx < CARD_ICON_MAX && total_cnt && index < total_cnt) {
-	    rect_t rect = widget_get_location(img);
+    if (img && idx < CARD_ICON_MAX && total_cnt && index < total_cnt)
+    {
+        rect_t rect = widget_get_location(img);
         area_t area = widget_image_get_size(img);
         widget_image_cut(img, 0, index * (area.hei / total_cnt), area.wid, area.hei / total_cnt);
         widget_set_size(img, rect.wid, rect.hei);
-	}
+    }
 }
 
 /**
@@ -98,7 +104,8 @@ void compo_cardbox_icon_cut(compo_cardbox_t *cardbox, u8 idx, u8 index, u8 total
  **/
 void compo_cardbox_icon_set_location(compo_cardbox_t *cardbox, u8 idx, s16 x, s16 y, u16 wid, u16 hei)
 {
-    if (cardbox->icon[idx] && idx < CARD_ICON_MAX) {
+    if (cardbox->icon[idx] && idx < CARD_ICON_MAX)
+    {
         widget_set_location(cardbox->icon[idx], x, y, wid, hei);
     }
 }
@@ -111,7 +118,8 @@ void compo_cardbox_icon_set_location(compo_cardbox_t *cardbox, u8 idx, s16 x, s1
  **/
 void compo_cardbox_icon_set_pos(compo_cardbox_t *cardbox, u8 idx, s16 x, s16 y)
 {
-    if (cardbox->icon[idx] && idx < CARD_ICON_MAX) {
+    if (cardbox->icon[idx] && idx < CARD_ICON_MAX)
+    {
         widget_set_pos(cardbox->icon[idx], x, y);
     }
 }
@@ -124,7 +132,8 @@ void compo_cardbox_icon_set_pos(compo_cardbox_t *cardbox, u8 idx, s16 x, s16 y)
  **/
 void compo_cardbox_icon_set(compo_cardbox_t *cardbox, u8 idx, u32 res_addr)
 {
-    if (cardbox->icon[idx] && idx < CARD_ICON_MAX) {
+    if (cardbox->icon[idx] && idx < CARD_ICON_MAX)
+    {
         widget_image_set(cardbox->icon[idx], res_addr);
     }
 }
@@ -137,7 +146,8 @@ void compo_cardbox_icon_set(compo_cardbox_t *cardbox, u8 idx, u32 res_addr)
  **/
 void compo_cardbox_text_set_location(compo_cardbox_t *cardbox, u8 idx, s16 x, s16 y, u16 wid, u16 hei)
 {
-    if (cardbox->text[idx] && idx < CARD_TEXT_MAX) {
+    if (cardbox->text[idx] && idx < CARD_TEXT_MAX)
+    {
         widget_set_location(cardbox->text[idx], x, y, wid, hei);
     }
 }
@@ -150,7 +160,8 @@ void compo_cardbox_text_set_location(compo_cardbox_t *cardbox, u8 idx, s16 x, s1
  **/
 void compo_cardbox_text_set_forecolor(compo_cardbox_t *cardbox, u8 idx, u16 color)
 {
-    if (cardbox->text[idx] && idx < CARD_TEXT_MAX) {
+    if (cardbox->text[idx] && idx < CARD_TEXT_MAX)
+    {
         widget_text_set_color(cardbox->text[idx], color);
     }
 }
@@ -163,7 +174,8 @@ void compo_cardbox_text_set_forecolor(compo_cardbox_t *cardbox, u8 idx, u16 colo
  **/
 void compo_cardbox_text_set(compo_cardbox_t *cardbox, u8 idx, const char *str)
 {
-    if (cardbox->text[idx] && idx < CARD_TEXT_MAX) {
+    if (cardbox->text[idx] && idx < CARD_TEXT_MAX)
+    {
         widget_text_set(cardbox->text[idx], str);
     }
 }
@@ -176,7 +188,8 @@ void compo_cardbox_text_set(compo_cardbox_t *cardbox, u8 idx, const char *str)
  **/
 void compo_cardbox_text_set_align_center(compo_cardbox_t *cardbox, u8 idx, bool align_center)
 {
-    if (cardbox->text[idx] && idx < CARD_TEXT_MAX) {
+    if (cardbox->text[idx] && idx < CARD_TEXT_MAX)
+    {
         widget_set_align_center(cardbox->text[idx], align_center);
     }
 }
@@ -189,7 +202,8 @@ void compo_cardbox_text_set_align_center(compo_cardbox_t *cardbox, u8 idx, bool 
  **/
 void compo_cardbox_text_set_font(compo_cardbox_t *cardbox, u8 idx, u32 font_res_addr)
 {
-    if (cardbox->text[idx] && idx < CARD_TEXT_MAX) {
+    if (cardbox->text[idx] && idx < CARD_TEXT_MAX)
+    {
         widget_text_set_font(cardbox->text[idx], font_res_addr);
     }
 }
@@ -202,7 +216,8 @@ void compo_cardbox_text_set_font(compo_cardbox_t *cardbox, u8 idx, u32 font_res_
  **/
 void compo_cardbox_text_set_autosize(compo_cardbox_t *cardbox, u8 idx, bool autosize)
 {
-    if (cardbox->text[idx] && idx < CARD_TEXT_MAX) {
+    if (cardbox->text[idx] && idx < CARD_TEXT_MAX)
+    {
         widget_text_set_autosize(cardbox->text[idx], autosize);
     }
 }
@@ -216,7 +231,8 @@ void compo_cardbox_text_set_autosize(compo_cardbox_t *cardbox, u8 idx, bool auto
 area_t compo_cardbox_text_get_area(compo_cardbox_t *cardbox, u8 idx)
 {
     area_t area = {0};
-    if (cardbox->text[idx] && idx < CARD_TEXT_MAX) {
+    if (cardbox->text[idx] && idx < CARD_TEXT_MAX)
+    {
         area = widget_text_get_area(cardbox->text[idx]);
     }
     return area;
@@ -275,7 +291,8 @@ rect_t compo_cardbox_get_absolute(compo_cardbox_t *cardbox)
 rect_t compo_cardbox_get_rect_absolute(compo_cardbox_t *cardbox, u8 idx)
 {
     rect_t rect = {0};
-    if (cardbox->rect[idx] && idx < CARD_RECT_MAX) {
+    if (cardbox->rect[idx] && idx < CARD_RECT_MAX)
+    {
         rect = widget_get_absolute(cardbox->rect[idx]);
     }
     return rect;
@@ -290,7 +307,8 @@ rect_t compo_cardbox_get_rect_absolute(compo_cardbox_t *cardbox, u8 idx)
 rect_t compo_cardbox_get_icon_absolute(compo_cardbox_t *cardbox, u8 idx)
 {
     rect_t rect = {0};
-    if (cardbox->icon[idx] && idx < CARD_ICON_MAX) {
+    if (cardbox->icon[idx] && idx < CARD_ICON_MAX)
+    {
         rect = widget_get_absolute(cardbox->icon[idx]);
     }
     return rect;
@@ -302,7 +320,8 @@ rect_t compo_cardbox_get_icon_absolute(compo_cardbox_t *cardbox, u8 idx)
  **/
 void compo_cardbox_icon_set_visible(compo_cardbox_t *cardbox, u8 idx, bool visible)
 {
-    if (cardbox->icon[idx] && idx < CARD_ICON_MAX) {
+    if (cardbox->icon[idx] && idx < CARD_ICON_MAX)
+    {
         widget_set_visible(cardbox->icon[idx], visible);
     }
 }
@@ -313,7 +332,8 @@ void compo_cardbox_icon_set_visible(compo_cardbox_t *cardbox, u8 idx, bool visib
  **/
 void compo_cardbox_text_set_visible(compo_cardbox_t *cardbox, u8 idx, bool visible)
 {
-    if (cardbox->text[idx] && idx < CARD_TEXT_MAX) {
+    if (cardbox->text[idx] && idx < CARD_TEXT_MAX)
+    {
         widget_set_visible(cardbox->text[idx], visible);
     }
 }
@@ -357,7 +377,8 @@ bool compo_cardbox_btn_is(compo_cardbox_t *cardbox, point_t pt)
 {
     rect_t rect = compo_cardbox_get_absolute(cardbox);
 
-    if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
+    if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+    {
         return true;
     }
 

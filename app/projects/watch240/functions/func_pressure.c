@@ -28,7 +28,7 @@ typedef struct f_pressure_t_
 {
     page_tp_move_t *ptm;
     u16 data[CHART_NUM];
-}f_pressure_t;
+} f_pressure_t;
 
 
 u16 chart_value[CHART_NUM];
@@ -39,7 +39,7 @@ char  txt_buf[4];
 //创建压力窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_pressure_form_create(void)
 {
-   for(int i=0;i<CHART_NUM;i++)chart_value[i] = 30;
+    for(int i=0; i<CHART_NUM; i++)chart_value[i] = 30;
     chart_value[0]=115;
     chart_value[3]=0;
     chart_value[3+7]=0;
@@ -126,9 +126,10 @@ static void func_pressure_refresh(void)
 
     chart_info.y = 0;
     chart_info.width = GUI_SCREEN_WIDTH/40;   //像素点
-    for (int i=0; i<max_num; i++) {
+    for (int i=0; i<max_num; i++)
+    {
         chart_info.x = i*chart_info.width + i;
-      // printf("%s->[%d,%d]\n",__func__, i, chart_info.x);
+        // printf("%s->[%d,%d]\n",__func__, i, chart_info.x);
         chart_info.height = chart_value[i];
         compo_chartbox_set_value(chart, i, chart_info, COLOR_GRAY);
     }
@@ -151,27 +152,29 @@ static void func_pressure_button_click(void)
 
     int id = compo_get_button_id();
 
-    switch (id) {
-    case COMPO_ID_IMG_BTNTON:
-        func_switch_to(FUNC_PRESSURE_EXPLAIN,NULL);//跳转压力说明界面
-        break;
-    default:
-        break;
+    switch (id)
+    {
+        case COMPO_ID_IMG_BTNTON:
+            func_switch_to(FUNC_PRESSURE_EXPLAIN, 0);//跳转压力说明界面
+            break;
+        default:
+            break;
     }
 }
 
 static void func_pressure_message(size_msg_t msg)
 {
-	//f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
+    //f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-         func_pressure_button_click();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_pressure_button_click();
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 //退出压力功能
@@ -184,7 +187,8 @@ void func_pressure(void)
 {
     printf("%s\n", __func__);
     func_pressure_enter();
-    while (func_cb.sta == FUNC_PRESSURE) {
+    while (func_cb.sta == FUNC_PRESSURE)
+    {
         func_pressure_process();
         func_pressure_message(msg_dequeue());
     }

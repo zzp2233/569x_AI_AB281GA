@@ -6,7 +6,8 @@ void bsp_qdec_init(void);
 void rtc_alarm_disable(void);
 
 AT(.com_rodata.key.table)
-const key_shake_tbl_t key_shake_table = {
+const key_shake_tbl_t key_shake_table =
+{
     .scan_cnt = KEY_SCAN_TIMES,
     .up_cnt   = KEY_UP_TIMES,
     .long_cnt = KEY_LONG_TIMES,
@@ -19,7 +20,8 @@ static u8 get_adkey(u8 key_val)
 {
     u8 num = 0;
 
-    while (key_val > adkey_table[num].adc_val) {
+    while (key_val > adkey_table[num].adc_val)
+    {
         num++;
     }
 
@@ -35,10 +37,12 @@ static u8 get_pwrkey(void)
     u32 wko_val = saradc_get_value10(ADCCH_WKO);
     u16 key_val = ((u32)wko_val << 8) / adc_cb.vrtc_val;
 
-    if (key_val > 0xff) {
+    if (key_val > 0xff)
+    {
         key_val = 0xff;
     }
-    while ((u8)key_val > pwrkey_table[num].adc_val) {
+    while ((u8)key_val > pwrkey_table[num].adc_val)
+    {
         num++;
     }
     return pwrkey_table[num].usage_id;
@@ -56,39 +60,51 @@ bool power_off_check(void)
 
     pwrkey_pressed_flag = 0;
     pwron_press_nms = PWRON_PRESS_TIME;
-    if (pwron_press_nms == 0) {
+    if (pwron_press_nms == 0)
+    {
         pwron_press_nms = 100;
     }
 
     //要等PWRKEY开关释放后再次按下才能重新开机, 否则充电过程中5分钟关机, 低电关机等异常
-    if ((PWRKEY_2_HW_PWRON) && (sys_cb.poweron_flag)) {
+    if ((PWRKEY_2_HW_PWRON) && (sys_cb.poweron_flag))
+    {
         restart_chk_en = 0;
         sys_cb.poweron_flag = 0;
     }
 
-    while (1) {
+    while (1)
+    {
         WDT_CLR();
         delay_ms(5);
-        if (get_pwrkey() == key_cb.pwr_usage_id) {
+        if (get_pwrkey() == key_cb.pwr_usage_id)
+        {
             up_cnt = 0;
-            if (restart_chk_en) {
-                if (!pwrkey_pressed_flag) {
+            if (restart_chk_en)
+            {
+                if (!pwrkey_pressed_flag)
+                {
                     ticks = tick_get();
                     pwrkey_pressed_flag = 1;
                     sys_cb.ms_ticks = tick_get();                                       //记录PWRKEY按键按下的时刻
                 }
-                if (!sys_cb.poweron_flag) {
-                    if (tick_check_expire(ticks, pwron_press_nms)) {                    //长按开机时间配置
+                if (!sys_cb.poweron_flag)
+                {
+                    if (tick_check_expire(ticks, pwron_press_nms))                      //长按开机时间配置
+                    {
                         sys_cb.poweron_flag = 1;
                         sys_cb.pwrdwn_hw_flag = 0;                                      //清PWRKEY硬开关的关机标志
                     }
                 }
             }
-        } else {
-            if (up_cnt < 3) {
+        }
+        else
+        {
+            if (up_cnt < 3)
+            {
                 up_cnt++;
             }
-            if (up_cnt == 3) {
+            if (up_cnt == 3)
+            {
                 up_cnt = 10;
                 sys_cb.poweron_flag = 0;
                 pwrkey_pressed_flag = 0;
@@ -97,17 +113,21 @@ bool power_off_check(void)
         }
 
 #if CHARGE_EN
-        if (xcfg_cb.charge_en) {
-			charge_cnt++;
-			if (charge_cnt > 20) {
+        if (xcfg_cb.charge_en)
+        {
+            charge_cnt++;
+            if (charge_cnt > 20)
+            {
                 charge_cnt = 0;
                 charge_detect(0);
             }
         }
 #endif // CHARGE_EN
 
-        if (sys_cb.poweron_flag) {
-            if ((CHARGE_DC_NOT_PWRON) && CHARGE_DC_IN()) {
+        if (sys_cb.poweron_flag)
+        {
+            if ((CHARGE_DC_NOT_PWRON) && CHARGE_DC_IN())
+            {
                 continue;
             }
             //长按PP/POWER开机
@@ -118,10 +138,15 @@ bool power_off_check(void)
 #endif // WARNING_POWER_ON
             func_cb.sta = FUNC_CLOCK;
             return true;
-        } else {
-            if (CHARGE_DC_IN()) {
+        }
+        else
+        {
+            if (CHARGE_DC_IN())
+            {
                 continue;
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
@@ -131,13 +156,16 @@ bool power_off_check(void)
 AT(.text.bsp.power)
 bool is_powron_frist_enable(u32 rtccon9)
 {
-    if (!PWRON_FRIST_BAT_EN) {
+    if (!PWRON_FRIST_BAT_EN)
+    {
         return false;
     }
-    if (rtccon9 & BIT(2)) {                                             //WKO wakeup不能直接开机
+    if (rtccon9 & BIT(2))                                               //WKO wakeup不能直接开机
+    {
         return false;
     }
-    if (CHARGE_DC_IN() && (CHARGE_DC_NOT_PWRON)) {                      //VUSB充电禁止开机
+    if (CHARGE_DC_IN() && (CHARGE_DC_NOT_PWRON))                        //VUSB充电禁止开机
+    {
         return false;
     }
     return true;
@@ -162,7 +190,8 @@ AT(.text.bsp.power)
 void rtc_power_on_calibration(void)
 {
     rtc_alarm_disable();
-    if (cm_read8(PARAM_RTC_CAL_VALID) == 1) {
+    if (cm_read8(PARAM_RTC_CAL_VALID) == 1)
+    {
         sniff_rc_init();
         rtc_calibration_read(PARAM_RTC_CAL_ADDR);
         rtc_clock_calc_by_rc(1);
@@ -186,15 +215,18 @@ void power_on_check(void)
     RTCCON10 = 0xfff;                                                   //Clr pending
     RTCCON1 &= ~BIT(6);                                                 //wko pin low level wakeup
 
-    if ((LVDCON & BIT(19)) && (rtccon10 & BIT(10)) && (sys_cb.vbat >LPWR_OFF_VBAT)) {
-        if (IS_PWRKEY_PRESS()) {
+    if ((LVDCON & BIT(19)) && (rtccon10 & BIT(10)) && (sys_cb.vbat >LPWR_OFF_VBAT))
+    {
+        if (IS_PWRKEY_PRESS())
+        {
             sys_cb.poweron_flag = 1;
         }
         rtc_alarm_disable();
         return;                                                         //长按PWRKEY 10S复位后直接开机。
     }
 
-    if (rtccon9 & BIT(0) && (sys_cb.vbat >LPWR_OFF_VBAT)) {
+    if (rtccon9 & BIT(0) && (sys_cb.vbat >LPWR_OFF_VBAT))
+    {
         printf("alarm wakeup\n");
         rtc_alarm_disable();
         return;
@@ -202,52 +234,65 @@ void power_on_check(void)
 
 #if USER_PWRKEY
     int up_cnt = 0, ticks = 0;
-    if (!IS_PWRKEY_PRESS()) {
+    if (!IS_PWRKEY_PRESS())
+    {
         pwrkey_pressed_flag = 1;
         ticks = sys_cb.ms_ticks;
     }
 #endif // USER_PWRKEY
 
     pwron_press_nms = PWRON_PRESS_TIME;
-    if (pwron_press_nms < 100) {
+    if (pwron_press_nms < 100)
+    {
         pwron_press_nms = 100;                                          //最小开机时间在100ms左右
     }
 
     //第一次上电是否直接开机
-    if (is_powron_frist_enable(rtccon9) && (sys_cb.vbat >LPWR_OFF_VBAT)) {
+    if (is_powron_frist_enable(rtccon9) && (sys_cb.vbat >LPWR_OFF_VBAT))
+    {
         rtc_alarm_disable();
         return;
     }
 
-    while (1) {
+    while (1)
+    {
         WDT_CLR();
         delay_ms(1);
         bsp_saradc_tmr1ms_process();
 
 #if CHARGE_EN
         // 实时更新电池电压会有100mv的误差   否则在while(1)循环中电池电压更新慢且不准
-        if ((charge_cnt %5) == 0) {
+        if ((charge_cnt %5) == 0)
+        {
             saradc_kick_start_do(saradc_cb.channel | BIT(ADCCH_VBAT), 0, 0);
         }
 #endif
         u8 key_val = bsp_key_scan();
-        if ((key_val & KEY_USAGE_MASK) == key_cb.pwr_usage_id) {
+        if ((key_val & KEY_USAGE_MASK) == key_cb.pwr_usage_id)
+        {
             up_cnt = 0;
-            if (!pwrkey_pressed_flag) {
+            if (!pwrkey_pressed_flag)
+            {
                 ticks = tick_get();
                 sys_cb.ms_ticks = ticks;                                //记录PWRKEY按键按下的时刻
                 pwrkey_pressed_flag = 1;
             }
-            if (!sys_cb.poweron_flag) {
-                if (tick_check_expire(ticks, pwron_press_nms)) {        //长按开机时间配置
+            if (!sys_cb.poweron_flag)
+            {
+                if (tick_check_expire(ticks, pwron_press_nms))          //长按开机时间配置
+                {
                     sys_cb.poweron_flag = 1;
                 }
             }
-        } else {
-            if (up_cnt < 3*5) {
+        }
+        else
+        {
+            if (up_cnt < 3*5)
+            {
                 up_cnt++;
             }
-            if (up_cnt == 3*5) {
+            if (up_cnt == 3*5)
+            {
                 up_cnt = 10*5;
                 pwrkey_pressed_flag = 0;
                 sys_cb.poweron_flag = 0;
@@ -255,34 +300,42 @@ void power_on_check(void)
         }
 
 #if CHARGE_EN
-        if (xcfg_cb.charge_en) {
-			charge_cnt++;
-			if ((charge_cnt % (20*5)) == 0) {
+        if (xcfg_cb.charge_en)
+        {
+            charge_cnt++;
+            if ((charge_cnt % (20*5)) == 0)
+            {
                 charge_detect(0);
             }
-            if (charge_cnt >= (200*5)) {  //1S
+            if (charge_cnt >= (200*5))    //1S
+            {
                 charge_cnt = 0;
-			}
-            if (CHARGE_DC_IN() && (sys_cb.vbat > LPWR_OFF_VBAT)) {
+            }
+            if (CHARGE_DC_IN() && (sys_cb.vbat > LPWR_OFF_VBAT))
+            {
                 printf(" break sys_cb.vbat %d \n", sys_cb.vbat);
                 break;
             }
             //充满且蓝灯已灭，进入关机状态
-            if ((sys_cb.charge_sta == 2) && (!sys_cb.charge_bled_flag)) {
+            if ((sys_cb.charge_sta == 2) && (!sys_cb.charge_bled_flag))
+            {
                 bsp_saradc_exit();
                 sfunc_pwrdown(0);
             }
         }
 #endif // CHARGE_EN
 
-        if (sys_cb.poweron_flag) {
-__pwron:
+        if (sys_cb.poweron_flag)
+        {
+        __pwron:
 #if VBAT_DETECT_EN
-            if (sys_cb.vbat <= LPWR_OFF_VBAT) {  //电压小于3.1v不开机
+            if (sys_cb.vbat <= LPWR_OFF_VBAT)    //电压小于3.1v不开机
+            {
                 continue;
             }
 #endif
-            if ((CHARGE_DC_NOT_PWRON) && CHARGE_DC_IN()) {
+            if ((CHARGE_DC_NOT_PWRON) && CHARGE_DC_IN())
+            {
                 continue;
             }
             //长按PP/POWER开机
@@ -290,16 +343,22 @@ __pwron:
             rtc_power_on_calibration();
 #endif
             break;
-        } else {
+        }
+        else
+        {
             //PWKKEY松开，立刻关机
-            if (!pwrkey_pressed_flag) {
-                if (!CHARGE_DC_IN()) {
-                    if ((!SOFT_POWER_ON_OFF) || ((!USER_PWRKEY) && (!PWRKEY_2_HW_PWRON))) {
+            if (!pwrkey_pressed_flag)
+            {
+                if (!CHARGE_DC_IN())
+                {
+                    if ((!SOFT_POWER_ON_OFF) || ((!USER_PWRKEY) && (!PWRKEY_2_HW_PWRON)))
+                    {
                         goto __pwron;       //没有软开关机功能，直接开机。
                     }
                     bsp_saradc_exit();
 #if !LP_XOSC_CLOCK_EN
-                    if (cm_read8(PARAM_RTC_CAL_VALID) == 1) {
+                    if (cm_read8(PARAM_RTC_CAL_VALID) == 1)
+                    {
                         sniff_rc_init();
                         rtc_calibration_read(PARAM_RTC_CAL_ADDR);
                         rtc_sleep_process();
@@ -364,29 +423,36 @@ u8 get_pwroff_pressed_time(void)
 
 u8 get_double_key_time(void)
 {
-    if (USER_MULTI_KEY_TIME > 8) {
+    if (USER_MULTI_KEY_TIME > 8)
+    {
         return 70;
-    } else {
+    }
+    else
+    {
         return (u8)(USER_MULTI_KEY_TIME*20 + 1);
     }
 }
 
-// AT(.com_rodata.bsp.key)
-// const char key_str[] = "enqueue: %04x\n";
+AT(.com_rodata.bsp.key)
+const char key_str[] = "enqueue: %04x\n";
 
 AT(.com_text.bsp.key)
 u16 bsp_key_process(u16 key_val)
 {
     u16 key_return = NO_KEY, key;
-	key_return = key_process(key_val);
+    key_return = key_process(key_val);
     key = key_return;
 
     //多击处理
 #if USER_MULTI_PRESS_EN
     key_return = key_multi_press_process(key_return);
-    if (key != key_return && (key & KEY_TYPE_MASK) == KEY_SHORT_UP) {
-        msg_enqueue(key);                   //short up key
-//        printf(key_str, key);
+    if (key != key_return && (key & KEY_TYPE_MASK) == KEY_SHORT_UP)
+    {
+        if (sys_cb.gui_sleep_sta == 0)
+        {
+            msg_enqueue(key);                   //short up key
+            printf(key_str, key);
+        }
     }
 #endif
     return key_return;
@@ -399,7 +465,8 @@ u8 bsp_key_scan(void)
     u16 key = NO_KEY;
 
 #if VBAT_DETECT_EN
-    if (adc_vbat2_flag) {
+    if (adc_vbat2_flag)
+    {
         adc_vbat2_flag = false;
         sys_cb.vbat = bsp_vbat_get_voltage(0);
     }
@@ -410,39 +477,56 @@ u8 bsp_key_scan(void)
 #endif
 
 #if USER_ADKEY
-    if (key_val == NO_KEY) {
+    if (key_val == NO_KEY)
+    {
         key_val = get_adkey(saradc_get_value8(ADKEY_CH));
     }
 #endif // USER_ADKEY
 
 #if USER_PWRKEY
-    if (key_val == NO_KEY) {
+    if (key_val == NO_KEY)
+    {
         key_val = get_pwrkey();
     }
 #endif // USER_PWRKEY
 
 #if USER_IOKEY
-    if (key_val == NO_KEY) {
+    if (key_val == NO_KEY)
+    {
         key_val = get_iokey();
     }
 #endif // USER_IOKEY
 
     key = bsp_key_process(key_val);
-    if (key != NO_KEY) {
+    if (key != NO_KEY)
+    {
         //防止enqueue多次HOLD消息
-        if ((key & KEY_TYPE_MASK) == KEY_LONG) {
+        if ((key & KEY_TYPE_MASK) == KEY_LONG)
+        {
             sys_cb.kh_vol_msg = (key & KEY_USAGE_MASK) | KEY_HOLD;
-        } else if ((key & KEY_TYPE_MASK) == KEY_LONG_UP) {
+        }
+        else if ((key & KEY_TYPE_MASK) == KEY_LONG_UP)
+        {
             msg_queue_detach(sys_cb.kh_vol_msg, 0);
             sys_cb.kh_vol_msg = NO_KEY;
-        } else if (sys_cb.kh_vol_msg == key) {
+        }
+        else if (sys_cb.kh_vol_msg == key)
+        {
             msg_queue_detach(key, 0);
         }
-        // printf(key_str, key);
-        if (sys_cb.gui_sleep_sta) {
-            sys_cb.gui_need_wakeup = 1;
+
+        if (sys_cb.gui_sleep_sta)
+        {
+            if ((key & KEY_TYPE_MASK) == KEY_SHORT_UP || (key & KEY_TYPE_MASK) == KEY_LONG_UP || (key & KEY_TYPE_MASK) == KEY_SHORT_UP_DELAY)
+            {
+                sys_cb.gui_need_wakeup = 1;
+            }
         }
-        msg_enqueue(key);
+        else
+        {
+            msg_enqueue(key);
+            printf(key_str, key);
+        }
         reset_sleep_delay_all();
     }
     return key_val;

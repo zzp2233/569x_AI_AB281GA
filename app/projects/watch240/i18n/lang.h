@@ -6,7 +6,8 @@
 //    LANG_ZH,
 //};
 
-enum {
+enum
+{
     STR_CLOCK,
     STR_CLOCK_PREVIEW,
     STR_MESSAGE,
@@ -207,6 +208,14 @@ enum {
     STR_OK,
     STR_MINUTE,
     STR_SETTING_MODE,
+    STR_DRIZZLE,
+    STR_SLEET,
+    STR_TOMORROW_NIGHT,
+    STR_CLOUDY_NIGHT,
+    STR_RAINY_NIGHT,
+    STR_RAINY_SHOWERS,
+    STR_MODERATE_RAIN,
+    STR_HEAVY_RAIN,
 
     STR_NO_MSG,
 };

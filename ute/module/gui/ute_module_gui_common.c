@@ -14,7 +14,7 @@
 #include "ute_module_gui_common.h"
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
-ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata); 
+ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
 // void *displayOffTimerPointer;
 void *clearDepthAfterOffTimerPointer;
 
@@ -313,16 +313,21 @@ void uteModuleGuiCommonDisplayExternalClearDepth(void)
 */
 void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
 {
+    msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+    msg_enqueue(EVT_MSGBOX_EXIT);
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s,isAllClear = %d", __func__,isAllClear);
     if (isAllClear)
     {
+
         task_stack_init();
+        task_stack_push(FUNC_CLOCK);
         func_cb.sta = FUNC_CLOCK;
     }
     else
     {
         func_cb.sta = task_stack_pop();
-        if (!func_cb.sta) {
+        if (!func_cb.sta)
+        {
             func_cb.sta = FUNC_CLOCK;                                 //异常返回表盘
         }
     }
@@ -375,7 +380,7 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
     {
         if(uteModuleGuiCommonData.isGoBackDisplay)
         {
-            uteModulePlatformRestartTimer(&clearDepthAfterOffTimerPointer,UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND*1000);            
+            uteModulePlatformRestartTimer(&clearDepthAfterOffTimerPointer,UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND*1000);
         }
         // uteDrvScreenCommonDisplayOff();
         // uteDrvTpCommonSleep();
@@ -392,7 +397,7 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
 
 /**
  * @brief        设置熄屏是否允许返回表盘
- * @details      
+ * @details
  * @param[in]    allow true 允许，false 不允许
  * @return       void*
  * @author       Wang.Luo
@@ -660,7 +665,7 @@ void uteModuleGuiCommonSetThemeTypeId(int themeTypeId)
     if(uteModuleGuiCommonData.themeTypeId != themeTypeId)
     {
         uteModuleGuiCommonData.themeTypeId = themeTypeId;
-        uteModuleGuiCommonSaveConfig();      
+        uteModuleGuiCommonSaveConfig();
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,themeTypeId=%d",__func__,themeTypeId);
     }
 }
@@ -899,7 +904,7 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
 {
     if(uteModuleGuiCommonData.isDisplayOn)
     {
-#if UTE_MODULE_HEART_SUPPORT
+#if 0//UTE_MODULE_HEART_SUPPORT
         if((id == UTE_MOUDLE_SCREENS_HEART_RATE_ID) && (uteModuleHeartIsWear()))
         {
             return false;

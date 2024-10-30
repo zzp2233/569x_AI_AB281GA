@@ -484,8 +484,9 @@ void uteModuleNotifyAncsGetFlag(uint32_t *flag)
 void uteModuleNotifyAncsStartPair(void)
 {
     if(!ble_ancs_is_connected())
-    {
-        ble_ancs_start();
+    {    
+        // 双连接口已发起加密配对
+        // ble_ancs_start();
     }
 }
 

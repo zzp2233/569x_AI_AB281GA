@@ -211,5 +211,8 @@ const char * const i18n_zh[] = {
     [STR_TOMORROW_NIGHT]                ="明夜",
     [STR_CLOUDY_NIGHT]                  ="多云夜",
     [STR_RAINY_NIGHT]                   ="阵雨夜",
-    [STR_RAINY_SHOWERS]                 ="阵雨天"
+    [STR_RAINY_SHOWERS]                 ="阵雨天",
+
+    [STR_NO_MSG]                        = "没有新消息",
+
 };

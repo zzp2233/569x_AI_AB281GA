@@ -337,7 +337,7 @@ void uteModuleProtocolGetBtInfo(uint8_t *response,uint8_t *length)
     }
     else
     {
-        response[totalByte] = 0; //为配对过设备
+        response[totalByte] = 0; //未配对过设备
     }
     totalByte += 1;
     response[totalByte] = isHfpAndA2dpProfileBothConnected();//uteModuleCallData.isConnected;
@@ -370,21 +370,21 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
     response = uteModulePlatformMemoryAlloc(255);
     memset(response,0x00,255);
     memcpy(response,receive,length);
-    if(receive[1]==0x01)
+    if(receive[1]==0x01)       //首次绑定
     {
         if(length>2)
         {
-            uteModuleCallAppCtrlData.phoneOS = receive[2];
+            uteModuleCallAppCtrlData.phoneOS = receive[2];      // 1:IOS
         }
         if(length>3)
         {
-            uteModuleCallAppCtrlData.btAutomaticPair = receive[3];
+            uteModuleCallAppCtrlData.btAutomaticPair = receive[3];      // 是否自动配对
         }
-        if(length>4)
+        if(length>4)               // 判断链接ID
         {
             uint32_t tempUuid = (uint32_t)receive[4]<<24|receive[5]<<16|receive[6]<<8|receive[7];
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,.uuid = 0x%x tempUuid = 0x%x",__func__,uteModuleCallAppCtrlData.uuid,tempUuid);
-            if(uteModuleCallAppCtrlData.uuid != tempUuid)
+            if(uteModuleCallAppCtrlData.uuid != tempUuid)           // 换设备，ID更改
             {
                 uteModuleCallAppCtrlData.uuid = tempUuid;
                 if(memcmp(uteModuleCallData.address,"\x00\x00\x00\x00\x00\x00",6)!=0)
@@ -401,12 +401,6 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
                         }
                     }
                 }
-                if(uteModuleCallAppCtrlData.phoneOS == 0x01)
-                {
-                    ute_ble_connect_state_t state;
-                    uteApplicationCommonGetBleConnectionState(&state);
-                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isParired=%d", __func__,state.isParired);
-                }
 #if UTE_MODULE_BT_LOW_BAT_NOT_ALLOW_POWER_ON_SUPPORT
                 if ((uteModuleCallBtIsPowerOn() == false) && (uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_LOW_POWER_PERECNT))
                 {
@@ -418,6 +412,19 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
                     uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
                 }
 #endif
+                if(uteModuleCallAppCtrlData.phoneOS == 0x01)
+                {
+                    printf("======================>ble_bt_connect\n");
+                    /**************************/
+                    //一键双连代码，协议待跑通
+                    // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+                    // bsp_change_bt_mac();
+                    // ble_bt_connect();
+                    /**************************/
+                    // ute_ble_connect_state_t state;
+                    // uteApplicationCommonGetBleConnectionState(&state);
+                    // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isParired=%d", __func__,state.isParired);
+                }
             }
         }
         uteModuleCallBtSaveCtrlAppData();
@@ -425,15 +432,17 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
         uteModuleProtocolGetBtInfo(&response[2],&totalByte);
         uteModuleProfileBle50SendToPhone(&response[0],totalByte+2);
     }
-    else if(receive[1]==0x02)
+    else if(receive[1]==0x02)           
     {
         uteModuleCallAppCtrlData.uuid = 0;
-        if(receive[2] == 0x00) //turn off
+        if(receive[2] == 0x00) //turn off       //解绑
         {
             if(uteModuleCallBtIsPowerOn())
             {
+                bt_nor_delete_link_info();
                 uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_APP_UNBIND);
             }
+            bt_nor_delete_link_info();
         }
         else
         {
@@ -460,6 +469,36 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
     }
     uteModulePlatformMemoryFree(response);
 }
+
+// void uteModuleCallBtOnceConnect(bool appIos)
+// {
+// #if LE_SM_SC_EN
+//     if (app_phone_type_get() != ble_app_ios) {
+//         app_phone_type_set(ble_app_ios);
+//         bsp_change_bt_mac();
+//     }
+
+//     if (ble_app_ios && !bt_is_connected()) {        //IOS
+//         if (bt_nor_get_link_info(NULL)) {           //如果存在配对信息
+//             sys_cb.bt_reconn_flag = true;
+//             bt_connect();
+//         } else {
+//             ble_bt_connect();                       //一键双联
+//         }
+//     }
+// #endif // LE_SM_SC_EN
+// }
+
+//sdk接口
+// void app_phone_type_set(u8 type)
+// {
+//     app_data.ble_app_ios = type;
+// }
+
+// u8 app_phone_type_get(void)
+// {
+//     return app_data.ble_app_ios;
+// }
 
 /**
 *@brief 获取来电转手表接听
@@ -494,6 +533,26 @@ void uteModuleCallBtSetBondFlag(bool isSet)
 {
     uteModuleCallAppCtrlData.isSetBondFlag = isSet;
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isSetBondFlag=%d", __func__,uteModuleCallAppCtrlData.isSetBondFlag);
+}
+
+/**
+*@brief  ble 连接状态接口
+*@details
+*@author        zn.zeng
+*@date        2022-06-10
+*/
+void uteModuleCallBleConnectState(bool isConnected)
+{
+#if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
+    if (isConnected)
+    {
+        /*Casen 22-08-04 自动休眠 & 配对地址不为空*/
+        if (!uteModuleCallBtIsPowerOn() && (uteModuleCallData.isBtAutoClose == true) && memcmp(uteModuleCallData.address, "\x00\x00\x00\x00\x00\x00", 6))
+        {
+            uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
+        }
+    }
+#endif
 }
 
 /**
@@ -593,3 +652,40 @@ bool uteModuleCallBtIsPowerOn(void)
     return uteModuleCallData.isPowerOn;
 }
 
+
+/**
+*@brief  来电提醒填入号码和名字
+*@details
+*@author        zn.zeng
+*@date        2021-11-06
+*/
+void uteModuleCallSetInComingNumberName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t nameSize)
+{
+    if((name!=NULL)&&(nameSize!=0))
+    {
+        if(nameSize>=(UTE_CALL_NAME_MAX-6))
+        {
+            memcpy(&name[(UTE_CALL_NAME_MAX-6)],"\x00\x2e\x00\x2e\x00\x2e",6);
+            uteModuleCallData.callData.nameSize = UTE_CALL_NAME_MAX;
+        }
+        else
+        {
+            uteModuleCallData.callData.nameSize = nameSize;
+        }
+        memcpy(&uteModuleCallData.callData.name[0],&name[0],uteModuleCallData.callData.nameSize);
+    }
+    if((number!=NULL)&&(numberSize!=0))
+    {
+        if(numberSize>=(UTE_CALL_DIAL_NUMBERS_MAX-6))
+        {
+            memcpy(&number[(UTE_CALL_DIAL_NUMBERS_MAX-6)],"\x00\x2e\x00\x2e\x00\x2e",6);
+            uteModuleCallData.callData.numberSize = UTE_CALL_DIAL_NUMBERS_MAX;
+        }
+        else
+        {
+            uteModuleCallData.callData.numberSize = numberSize;
+        }
+        memcpy(&uteModuleCallData.callData.number[0],&number[0],uteModuleCallData.callData.numberSize);
+    }
+    //APP_PRINT_INFO2("%s,numberSize=%d", TRACE_STRING(__func__),uteModuleCallData.callData.numberSize);
+}

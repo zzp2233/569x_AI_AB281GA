@@ -15,7 +15,7 @@
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata); 
-void *displayOffTimerPointer;
+// void *displayOffTimerPointer;
 void *clearDepthAfterOffTimerPointer;
 
 /**
@@ -24,20 +24,20 @@ void *clearDepthAfterOffTimerPointer;
 *@author       zn.zeng
 *@date       2021-09-03
 */
-void uteModuleGuiCommonDisplayOffTimerCallback(void *pxTimer)
-{
-    UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s", __func__);
-    if(uteModuleGuiCommonData.isDisplayOn)
-    {
-        // ute_task_gui_message_t msg;
-        // msg.type = MSG_TYPE_MODULE_GUI_DISPLAY_OFF_TIMER;
-        // uteTaskGuiSendMsg(&msg);
-    }
-    else
-    {
-        uteModulePlatformStopTimer(&displayOffTimerPointer);
-    }
-}
+// void uteModuleGuiCommonDisplayOffTimerCallback(void *pxTimer)
+// {
+//     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s", __func__);
+//     if(uteModuleGuiCommonData.isDisplayOn)
+//     {
+//         // ute_task_gui_message_t msg;
+//         // msg.type = MSG_TYPE_MODULE_GUI_DISPLAY_OFF_TIMER;
+//         // uteTaskGuiSendMsg(&msg);
+//     }
+//     else
+//     {
+//         uteModulePlatformStopTimer(&displayOffTimerPointer);
+//     }
+// }
 
 /**
 *@brief        延时清除显示深度定时器回调
@@ -48,9 +48,7 @@ void uteModuleGuiCommonDisplayOffTimerCallback(void *pxTimer)
 void uteModuleGuiCommonClearDepthTimerCallback(void *pxTimer)
 {
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s", __func__);
-    // ute_task_gui_message_t msg;
-    // msg.type = MSG_TYPE_MODULE_GUI_CLEAR_DEPTH;
-    // uteTaskGuiSendMsg(&msg);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_GUI_CLEAR_DEPTH,0);
 }
 
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
@@ -284,12 +282,14 @@ void uteModuleGuiCommonInit(void)
 {
     memset(&uteModuleGuiCommonData,0,sizeof(ute_module_gui_common_t));
     /*! 创建定时器 zn.zeng, 2021-09-03  */
-    uteModulePlatformCreateTimer(&displayOffTimerPointer, "display off",1, 5000, false, uteModuleGuiCommonDisplayOffTimerCallback);
+    // uteModulePlatformCreateTimer(&displayOffTimerPointer, "display off",1, 5000, false, uteModuleGuiCommonDisplayOffTimerCallback);
     uteModulePlatformCreateTimer(&clearDepthAfterOffTimerPointer, "clear depth",1, 5000, false, uteModuleGuiCommonClearDepthTimerCallback);
     uteModuleGuiCommonReadConfig();
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
     uteModuleGuiCommonScreenSaverConfigInit();
 #endif
+    uteModuleGuiCommonData.isGoBackDisplay = true;
+    func_cb.menu_style = (uint8_t)uteModuleGuiCommonGetThemeTypeId();
 }
 
 /**
@@ -314,7 +314,18 @@ void uteModuleGuiCommonDisplayExternalClearDepth(void)
 void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
 {
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s,isAllClear = %d", __func__,isAllClear);
-
+    if (isAllClear)
+    {
+        task_stack_init();
+        func_cb.sta = FUNC_CLOCK;
+    }
+    else
+    {
+        func_cb.sta = task_stack_pop();
+        if (!func_cb.sta) {
+            func_cb.sta = FUNC_CLOCK;                                 //异常返回表盘
+        }
+    }
 }
 
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
@@ -360,19 +371,36 @@ int uteModuleGuiCommonGetTempUIConfigId(void)
 void uteModuleGuiCommonDisplayOff(bool isPowerOff)
 {
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s,.isDisplayOn = %d", __func__,uteModuleGuiCommonData.isDisplayOn);
-    if(uteModuleGuiCommonData.isDisplayOn)
+    if(isPowerOff)
     {
-        uteModulePlatformRestartTimer(&clearDepthAfterOffTimerPointer,UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND*1000);
+        if(uteModuleGuiCommonData.isGoBackDisplay)
+        {
+            uteModulePlatformRestartTimer(&clearDepthAfterOffTimerPointer,UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND*1000);            
+        }
         // uteDrvScreenCommonDisplayOff();
         // uteDrvTpCommonSleep();
         uteModuleGuiCommonData.isDisplayOn = false;
-        uteModulePlatformStopTimer(&displayOffTimerPointer);
+        // uteModulePlatformStopTimer(&displayOffTimerPointer);
 
     }
     else
     {
-
+        uteModulePlatformStopTimer(&clearDepthAfterOffTimerPointer);
+        uteModuleGuiCommonData.isDisplayOn = true;
     }
+}
+
+/**
+ * @brief        设置熄屏是否允许返回表盘
+ * @details      
+ * @param[in]    allow true 允许，false 不允许
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2024-10-29
+ */
+void uteModuleGuiCommonDisplayOffAllowGoBack(bool allow)
+{
+    uteModuleGuiCommonData.isGoBackDisplay = allow;
 }
 
 /**
@@ -430,11 +458,11 @@ void uteResetHandScreenOnFlag(void)
 *@author       wuhuowang
 *@date       2023-04-25
 */
-void uteModuleGuiCommonResetTimer(int16_t displayOffTimeSecond)
-{
-    ute_display_ctrl_t info = uteModuleGuiCommonData.displayCtrl;
-    uteModulePlatformRestartTimer(&displayOffTimerPointer, displayOffTimeSecond * 1000);
-}
+// void uteModuleGuiCommonResetTimer(int16_t displayOffTimeSecond)
+// {
+//     ute_display_ctrl_t info = uteModuleGuiCommonData.displayCtrl;
+//     uteModulePlatformRestartTimer(&displayOffTimerPointer, displayOffTimeSecond * 1000);
+// }
 
 /**
 *@brief        获取当前表盘的配置索引
@@ -629,8 +657,12 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 */
 void uteModuleGuiCommonSetThemeTypeId(int themeTypeId)
 {
-    uteModuleGuiCommonData.themeTypeId = themeTypeId;
-    uteModuleGuiCommonSaveConfig();
+    if(uteModuleGuiCommonData.themeTypeId != themeTypeId)
+    {
+        uteModuleGuiCommonData.themeTypeId = themeTypeId;
+        uteModuleGuiCommonSaveConfig();      
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,themeTypeId=%d",__func__,themeTypeId);
+    }
 }
 /**
 *@brief        获取主题类型，如有需要，可增加type

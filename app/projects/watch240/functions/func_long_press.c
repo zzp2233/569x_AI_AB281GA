@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_application_common.h"
 
 #define TRACE_EN    0
 
@@ -122,12 +123,14 @@ static void func_long_press_event_handle(s32 distance , u16 id)
             case IMG_BTN_ID_1://SOS
                 break;
             case IMG_BTN_ID_2://关机
-               func_cb.sta = FUNC_PWROFF;
+            //    func_cb.sta = FUNC_PWROFF;
+                uteApplicationCommonPoweroff();
                 break;
             case IMG_BTN_ID_3://重启
-               ble_disconnect();
-               bt_disconnect(1);
-               WDT_RST();
+            //    ble_disconnect();
+            //    bt_disconnect(1);
+            //    WDT_RST();
+                uteApplicationCommonRestart();
                 break;
             default:
                 break;

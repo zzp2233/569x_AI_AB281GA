@@ -100,6 +100,7 @@ void ble_emit_notice(u8 evt, u8 *param)
             ble_cb.ancs_connected = false;
             printf("ANCS disconnect\n");
         }
+        uteApplicationCommonSetBlePariring(ble_cb.ancs_connected);
         break;
 #endif // LE_ANCS_CLIENT_EN
 

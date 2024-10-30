@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_menu.h"
+#include "ute_module_gui_common.h"
 
 #define TRACE_EN    1
 
@@ -109,6 +110,7 @@ static void func_set_sub_list_icon_click(void)
             func_cb.menu_idx = 0;           //切换风格后进入回中心位置
         }
         sys_cb.set_idx = listbox->focus_icon_idx;
+        uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
     }
 }
 

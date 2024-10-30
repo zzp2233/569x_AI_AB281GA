@@ -216,6 +216,7 @@ enum {
     STR_MODERATE_RAIN,
     STR_HEAVY_RAIN
 
+    STR_NO_MSG,
 };
 
 extern const char * const *i18n;

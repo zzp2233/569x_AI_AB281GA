@@ -204,5 +204,12 @@ const char * const i18n_zh[] = {
     [STR_OK]                            = "确定",
     [STR_MINUTE]                        = "分钟",
     [STR_SETTING_MODE]                  = "模式设置",
-
+    [STR_DRIZZLE]                       ="小雨",
+    [STR_MODERATE_RAIN]                 ="中雨",
+    [STR_HEAVY_RAIN]                    ="大雨",
+    [STR_SLEET]                         ="雨夹雪",
+    [STR_TOMORROW_NIGHT]                ="明夜",
+    [STR_CLOUDY_NIGHT]                  ="多云夜",
+    [STR_RAINY_NIGHT]                   ="阵雨夜",
+    [STR_RAINY_SHOWERS]                 ="阵雨天"
 };

@@ -71,7 +71,7 @@
 #define GUI_FONT_H_SPACE                0                       //全局字的行间距,0:不设置, 其他:设置文本行最小间距
 #define GUI_USE_ARC                     1                       //是否使用圆弧控件
 
-#define FORM_TITLE_HEIGHT               32                      //窗体标题高度
+#define FORM_TITLE_HEIGHT               28//32                      //窗体标题高度
 #define FORM_TITLE_LEFT                 (GUI_SCREEN_WIDTH / 9)
 
 
@@ -210,7 +210,7 @@
 #define HW_VERSION		                "V0.0.1"   //只能使用数字0-9,ota需要转码
 #define FLASH_PKG_START                 UTE_OTA_TMP_ADDRESS   //升级压缩包存放起始地址
 #define FLASH_PKG_SIZE                  UTE_OTA_TMP_SIZE   //升级压缩包大小
-#define FOTA_UI_EN                      0          //是否支持UI升级，需要用一个批处理打包UI+FOT
+#define FOTA_UI_EN                      1//0          //是否支持UI升级，需要用一个批处理打包UI+FOT
 
 //HID功能配置
 #define LE_HID_EN                       0   //BLE HID总开关

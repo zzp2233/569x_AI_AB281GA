@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -27,9 +28,12 @@ compo_form_t *func_scan_form_create(void)
     //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_SCAN_BIN);
     //compo_button_set_pos(btn, 160, 180);
 
-    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, 64);
-    compo_qrcodebox_set(qrbox, "http://www.bluetrum.com");
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(128);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,128);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, 128);
+    compo_qrcodebox_set(qrbox, qr_str);
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 120);
+    uteModulePlatformMemoryFree(qr_str);
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
 
     return frm;

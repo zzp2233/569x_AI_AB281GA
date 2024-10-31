@@ -291,8 +291,11 @@
 
 /*! 马达PWM控制输出定时器索引 zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_MOTOR_PWM_ID
-
+#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
 #define UTE_DRV_MOTOR_PWM_ID GPIO_PE3
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
+#define UTE_DRV_MOTOR_PWM_ID GPIO_PF3
+#endif
 #endif
 
 /*! 控制马达的gpio pin zn.zeng, 2021-10-22  */

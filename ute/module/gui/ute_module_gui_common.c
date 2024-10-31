@@ -699,7 +699,7 @@ bool uteModuleGuiCommonIsDisplayOn(void)
 */
 int uteModuleGuiCommonGetCurrentScreenId(void)
 {
-    return gui_get_stack_top();//uteModuleGuiCommonData.pCurrUIConfig->screenId;
+    return func_cb.sta;//gui_get_stack_top();
 }
 
 #if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
@@ -832,6 +832,8 @@ uint8_t uteModuleGuiCommonGetVailWatchCnt(void)
 *@author    cxd
 *@date      2022-05-30
 */
+
+#if 0
 int16_t uteModuleGuiGetDistanceFromCenter(UTE_UI_Point_t p)
 {
     return (int16_t)(sqrt((UTE_DRV_SCREEN_WIDTH/2-p.x)*(UTE_DRV_SCREEN_WIDTH/2-p.x)+(UTE_DRV_SCREEN_HEIGHT/2-p.y)*(UTE_DRV_SCREEN_HEIGHT/2-p.y)));
@@ -862,6 +864,7 @@ RESTART_LINE:
     sPoint.y -= height;
     memcpy(pOutPoint,&sPoint,sizeof(UTE_UI_Point_t));
 }
+#endif
 
 #if UTE_MODULE_POWER_SAVING_SUPPORT
 /**

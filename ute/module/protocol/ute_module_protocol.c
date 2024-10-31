@@ -239,11 +239,11 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
         uint8_t displayTime = receive[5];
         uteModuleGuiCommonSetDisplayOffTime(displayTime);
 #endif
-//         uteModuleGuiCommonSetDisplayTemperatureUtil(isFahrenheit);
-// #if UTE_MODULE_LOCAL_SET_LIFT_WRIST_SUPPORT
-//         isHandScreenOn = uteModuleSportGetIsOpenHandScreenOn();
-// #endif
-//         uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandScreenOn,stepsTargetCnt);
+        uteModuleGuiCommonSetDisplayTemperatureUtil(isFahrenheit);
+#if UTE_MODULE_LOCAL_SET_LIFT_WRIST_SUPPORT
+        isHandScreenOn = uteModuleSportGetIsOpenHandScreenOn();
+#endif
+        // uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandScreenOn,stepsTargetCnt);
 //         ute_module_heart_warning_t heartWarn;
 //         heartWarn.setMinHeart = receive[18];
 //         heartWarn.setMaxHeart = receive[11];
@@ -313,7 +313,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                 bsp_change_bt_mac();
                 ble_bt_connect();
                 /************************/
-                
+
                 if(0)
                 {}
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT

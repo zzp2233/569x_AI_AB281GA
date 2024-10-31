@@ -9,7 +9,7 @@
 
 #include "ute_module_systemtime.h"
 #include "ute_module_log.h"
-// #include "ute_application_common.h"
+#include "ute_application_common.h"
 // #include "ute_drv_battery_common.h"
 // #include "ute_drv_keys_common.h"
 // #include "ute_module_message.h"
@@ -84,7 +84,7 @@ void uteModuleSystemtimeReadConfig(void)
     {
         sprintf((char *)&path[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,i);
         memset(&systemAlarms.alarmParam[i],0,sizeof(ute_module_systemtime_one_alarm_t));
-        if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_RDONLY))
+        if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_RDONLY))
         {
             uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
             uteModuleFilesystemReadData(file,&readbuff[0],15);
@@ -820,7 +820,7 @@ void uteModuleSystemtimeDeleteAlarm(uint8_t index)
     sprintf((char *)&path[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,index);
     UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index = %d,beforeTotalCnt=%d", __func__,index,beforeTotalCnt);
     systemAlarms.alarmParam[index].isFinish = false;
-    uteModuleFilesystemDelFile(&path[0]);
+    uteModuleFilesystemDelFile((char *)&path[0]);
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR, dirInfo, NULL);
     if((index+1)<beforeTotalCnt)//删除最后一个，不需要重新命名
@@ -834,7 +834,7 @@ void uteModuleSystemtimeDeleteAlarm(uint8_t index)
             sprintf((char *)&oldPath[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,i);
             sprintf((char *)&newPath[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,i-1);
             UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,oldPath=%s,newPath=%s", __func__,oldPath,newPath);
-            uteModuleFilesystemRenameFile(oldPath,newPath);
+            uteModuleFilesystemRenameFile((char *)oldPath,(char *)newPath);
             memcpy(&systemAlarms.alarmParam[i-1],&systemAlarms.alarmParam[i],sizeof(ute_module_systemtime_one_alarm_t));
         }
         uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
@@ -891,7 +891,7 @@ void uteModuleSystemtimeSaveAlarmInfo(ute_module_systemtime_one_alarm_t value,ui
     uint8_t path[20];
     memset(&path[0],0,20);
     sprintf((char *)&path[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,index);
-    if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
+    if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
     {
         uteModuleFilesystemWriteData(file,&writebuff[0],15);
         uteModuleFilesystemCloseFile(file);
@@ -1040,9 +1040,12 @@ uint8_t uteModuleSystemtimeGetAlarmCycle(uint8_t index)
 
     ret |= alarm.weekDay;
 
-    if (alarm.isSingle) {
+    if (alarm.isSingle)
+    {
         ret |= BIT(7);
-    } else {
+    }
+    else
+    {
         ret &= ~BIT(7);
     }
 

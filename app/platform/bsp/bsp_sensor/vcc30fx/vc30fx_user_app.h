@@ -24,6 +24,8 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig );
 void vc30fx_usr_get_dev_info(unsigned char *pchip_id, unsigned char *pvers_id, char **drv_name, char **dev_name);
 void vc30fx_usr_start_work(void);
 int vc30fx_usr_stop_work(void);
+bool vc30fx_usr_get_work_status(void);
+work_mode vc30fx_usr_get_work_mode(void);
 void vc30fx_usr_soft_reset(void);
 void vc30fx_usr_reset_bio_param(void);
 int vc30fx_usr_get_wear_status(void);

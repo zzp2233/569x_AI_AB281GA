@@ -46,9 +46,9 @@
         <add key="charge_trickle_curr" value="5" />
         <add key="charge_full_bled" value="0" />
         <add key="bt_name" value="BT-AB569X" />
-        <add key="bt_addr_mode" value="固定地址" />
-        <add key="bt_addr" value="78:02:B7:00:22:88" />
-        <add key="bt_addr_start" value="41:42:00:00:00:00" />
+        <add key="bt_addr_mode" value="单次递增" />
+        <add key="bt_addr" value="78:02:B7:00:00:01" />
+        <add key="bt_addr_start" value="78:02:B7:00:00:01" />
         <add key="bt_addr_step" value="00:00:00:00:00:01" />
         <add key="bt_addr_end" value="78:02:B7:FF:FF:FF" />
         <add key="bt_rf_param" value="1" />
@@ -235,8 +235,8 @@
         <add key="vddcore_sel" value="16" />
         <add key="dacaud_ldo_sel" value="5" />
         <add key="dacaud_bypass_en" value="False" />
-        <add key="uosci_cap" value="43" />
-        <add key="uosco_cap" value="43" />
+        <add key="uosci_cap" value="60" />
+        <add key="uosco_cap" value="60" />
         <add key="ft_osc_cap_en" value="True" />
         <add key="rf_pa_gain" value="7" />
         <add key="rf_captune_vl" value="7" />

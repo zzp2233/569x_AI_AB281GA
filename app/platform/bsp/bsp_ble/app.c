@@ -109,6 +109,6 @@ void ble_app_ancs_client_notifiy_callback(u8 id, const char *att_name, const cha
 {
 #if LE_ANCS_CLIENT_EN
     // ble_app_watch_ancs_client_notifiy_process(id, att_name, att_content);
-    uteModuleNotifySetAncsInfo(id,(uint8_t*)att_content,strlen(att_content));
+    uteModuleNotifySetAncsInfo(id,(uint8_t *)att_content,strlen(att_content));
 #endif
 }

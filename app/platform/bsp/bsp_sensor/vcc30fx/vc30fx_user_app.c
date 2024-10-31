@@ -16,7 +16,6 @@
 #include "spo2Algo_16bit.h"
 
 #include "include.h"
-#include "ute_module_heart.h"
 
 // #include "vcSportMotionIntAlgo.h"
 /* ble_debug,蓝牙发送原始数据 */
@@ -52,6 +51,7 @@ int (*vc30fx_dbglog_user)(const char *, ...) = NULL;
 
 void vc30fx_pwr_en(void)        //PF5
 {
+    uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
     GPIOFFEN &= ~BIT(5);
     GPIOFDE  |= BIT(5);
     GPIOFDIR &= ~BIT(5);
@@ -61,11 +61,16 @@ void vc30fx_pwr_en(void)        //PF5
 
 void vc30fx_pwr_dis(void)       //PF5
 {
+    if(vc30fx_dev.dev_work_status)
+    {
+        vc30fx_dev.dev_work_status = 0;
+    }
     GPIOFFEN &= ~BIT(5);
     GPIOFDE  |= BIT(5);
     GPIOFDIR &= ~BIT(5);
     GPIOFCLR = BIT(5);
     sc7a20_500ms_callback_en(true);
+    uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
 }
 
 /****************************************************************************
@@ -499,7 +504,6 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 }
                 //disp_data.hr_rate = vc30fx_dev.heart_rate;
                 bsp_sensor_hrs_data_save(vc30fx_dev.heart_rate);
-                uteModuleHeartSetHeartValue(vc30fx_dev.heart_rate);
             }
             break;
         case WORK_MODE_SPO2:
@@ -615,10 +619,21 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     vc30fx_drv_finished_sync(&vc30fx_dev);
 }
 
+bool vc30fx_sleep_isr = false;
+
 AT(.com_text.vc30fx)
 void vc30fx_isr(void)
 {
-    msg_enqueue(EVT_VC30FX_ISR);
+    if(sleep_cb.sys_is_sleep)
+    {
+        vc30fx_sleep_isr = true;
+    }
+    else
+    {
+        msg_enqueue(EVT_VC30FX_ISR);
+        vc30fx_sleep_isr = false;
+    }
+
     //vc30fx_usr_device_handler(0, 1);
 }
 
@@ -732,10 +747,10 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig )
     bsp_hw_timer_set(HW_TIMER2, 32, vc30fx_timer_count);
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
     extab_user_isr_set(IO_PG6, RISE_EDGE, IOUD_SEL_PD, vc30fx_isr);
-    extab_user_isr_mode_set(IO_PG6, MODE_BOTH_AWAKEN_SLEEP_PWK);
+    extab_user_isr_mode_set(IO_PG6, MODE_BOTH_AWAKEN_SLEEP);
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
     extab_user_isr_set(IO_PE7, RISE_EDGE, IOUD_SEL_PD, vc30fx_isr);
-    extab_user_isr_mode_set(IO_PE7, MODE_BOTH_AWAKEN_SLEEP_PWK);
+    extab_user_isr_mode_set(IO_PE7, MODE_BOTH_AWAKEN_SLEEP);
 #endif
     return (pinitconfig->work_mode != -1);
 }
@@ -785,6 +800,22 @@ void vc30fx_usr_soft_reset(void)
 {
     vc30fx_drv_software_reset(&vc30fx_dev);
     vc30fx_dev.dev_work_status = 0;
+}
+/****************************************************************************
+ * @description: 获取工作状态
+ * @return {*}
+ ****************************************************************************/
+bool vc30fx_usr_get_work_status(void)
+{
+    return vc30fx_dev.dev_work_status;
+}
+/****************************************************************************
+ * @description: 获取工作模式
+ * @return {*}
+ ****************************************************************************/
+work_mode vc30fx_usr_get_work_mode(void)
+{
+    return vc30fx_dev.workmode;
 }
 /****************************************************************************
  * @description: 活体IC参数重置校准

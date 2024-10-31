@@ -34,6 +34,11 @@
 /*! 最大心率值zn.zeng, 2021-07-16  */
 #define UTE_MODULE_HEART_MAX_VALUE 200
 
+/*! 心率自动测量超时时间,wang.luo 2024-10-31 */
+#ifndef UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND
+#define UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND 45
+#endif
+
 /*! 心率值警告数据结构zn.zeng, 2021-07-13  */
 typedef struct
 {
@@ -67,6 +72,9 @@ typedef struct
 {
     bool isAutoTesting;
     bool isSingleTesting;
+    bool isAutoTestFlag;
+    uint16_t autoTestSecond;
+    bool lastIsWear;
     int heartValue;
     uint8_t currentDayMinHeart;
     uint8_t currentDayMaxHeart;

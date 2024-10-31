@@ -11,24 +11,27 @@
 #define NUM_REC_COLOR_PRESS         make_color(1, 60, 117)
 
 //组件ID
-enum {
+enum
+{
     //按键
     COMPO_ID_BTN_RECORD_VIEW = 1,       //查看记录
     COMPO_ID_BTN_RECORD,                //记录当前时间
     COMPO_ID_BTN_AFRESH,                //重新开始
     COMPO_ID_BTN_START_REC,             //开始计时
-	//数字文本
-	COMPO_ID_NUM_STOPWATCH_TIME,        //当前计时
-	COMPO_ID_NUM_STOPWATCH_REC,         //记录数
+    //数字文本
+    COMPO_ID_NUM_STOPWATCH_TIME,        //当前计时
+    COMPO_ID_NUM_STOPWATCH_REC,         //记录数
 };
 
-typedef struct f_stopwatch_t_ {
+typedef struct f_stopwatch_t_
+{
     u8 min;                 //分
     u8 sec;                 //秒
     u16 msec;               //毫秒
 } f_stopwatch_t;
 
-typedef struct stopwatch_num_item_t_ {
+typedef struct stopwatch_num_item_t_
+{
     u32 res_addr;
     int num_cnt;
     u16 num_id;
@@ -49,7 +52,7 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_STOP_WATCH]);
 
-	//新建按钮
+    //新建按钮
     u32 res_addr;
     compo_button_t *btn;
     res_addr = sys_cb.stopwatch_sta ? UI_BUF_COMMON_PAUSE_BIN : UI_BUF_COMMON_START_BIN;    //开始/暂停
@@ -69,28 +72,28 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_button_set_pos(btn, 120, 72);
     compo_button_set_visible(btn, sys_cb.stopwatch_rec_cnt > 0);
 
-	//创建数字文本
-	compo_textbox_t *txt_num;
-	char str_buff[9];
+    //创建数字文本
+    compo_textbox_t *txt_num;
+    char str_buff[9];
     u8 min, sec;
     u16 msec;
     min = ((sys_cb.stopwatch_total_msec / 1000) % 3600) / 60;
     sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
     msec = sys_cb.stopwatch_total_msec % 1000;
-	txt_num = compo_textbox_create(frm, 8);     //当前计时
-	compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_TIME);
-	compo_textbox_set_location(txt_num, GUI_SCREEN_CENTER_X, 137, 226, 46);
-	compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_38_BIN);
-	snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
-	compo_textbox_set(txt_num, str_buff);
-	txt_num = compo_textbox_create(frm, 2);     //记录数
-	compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
-	compo_textbox_set_location(txt_num, 131, 82, 226, 46);
-	compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_16_BIN);
-	snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
-	compo_textbox_set(txt_num, str_buff);
-	compo_textbox_set_forecolor(txt_num, NUM_REC_COLOR);
-	compo_textbox_set_visible(txt_num, sys_cb.stopwatch_rec_cnt > 0);
+    txt_num = compo_textbox_create(frm, 8);     //当前计时
+    compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_TIME);
+    compo_textbox_set_location(txt_num, GUI_SCREEN_CENTER_X, 137, 226, 46);
+    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
+    compo_textbox_set(txt_num, str_buff);
+    txt_num = compo_textbox_create(frm, 2);     //记录数
+    compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
+    compo_textbox_set_location(txt_num, 131, 82, 226, 46);
+    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_BIN);
+    snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
+    compo_textbox_set(txt_num, str_buff);
+    compo_textbox_set_forecolor(txt_num, NUM_REC_COLOR);
+    compo_textbox_set_visible(txt_num, sys_cb.stopwatch_rec_cnt > 0);
 
     return frm;
 }
@@ -109,32 +112,35 @@ static void func_stopwatch_button_touch_handle(void)
 
     //获取数字组件的地址
     compo_textbox_t *num_rec = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_REC);
-    switch (id) {
-    case COMPO_ID_BTN_RECORD_VIEW:
-        if (sys_cb.stopwatch_rec_cnt) {
-            compo_button_set_bgimg(btn_record1, UI_BUF_STOPWATCH_RECORD1_CLICK_BIN);
-            compo_textbox_set_forecolor(num_rec, NUM_REC_COLOR_PRESS);
-        }
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_RECORD_VIEW:
+            if (sys_cb.stopwatch_rec_cnt)
+            {
+                compo_button_set_bgimg(btn_record1, UI_BUF_STOPWATCH_RECORD1_CLICK_BIN);
+                compo_textbox_set_forecolor(num_rec, NUM_REC_COLOR_PRESS);
+            }
+            break;
 
-    case COMPO_ID_BTN_RECORD:
-        compo_button_set_bgimg(btn_record, UI_BUF_STOPWATCH_RECORD_CLICK_BIN);
-        if (sys_cb.stopwatch_rec_cnt && sys_cb.stopwatch_sta) {
-            compo_textbox_set_forecolor(num_rec, NUM_REC_COLOR_PRESS);
-        }
-        break;
+        case COMPO_ID_BTN_RECORD:
+            compo_button_set_bgimg(btn_record, UI_BUF_STOPWATCH_RECORD_CLICK_BIN);
+            if (sys_cb.stopwatch_rec_cnt && sys_cb.stopwatch_sta)
+            {
+                compo_textbox_set_forecolor(num_rec, NUM_REC_COLOR_PRESS);
+            }
+            break;
 
-    case COMPO_ID_BTN_AFRESH:
-        compo_button_set_bgimg(btn_afresh, UI_BUF_STOPWATCH_AFRESH_CLICK_BIN);
-        break;
+        case COMPO_ID_BTN_AFRESH:
+            compo_button_set_bgimg(btn_afresh, UI_BUF_STOPWATCH_AFRESH_CLICK_BIN);
+            break;
 
-    case COMPO_ID_BTN_START_REC:
-        res_addr = sys_cb.stopwatch_sta ? UI_BUF_COMMON_PAUSE_CLICK_BIN : UI_BUF_COMMON_START_CLICK_BIN;
-        compo_button_set_bgimg(btn_start, res_addr);
-        break;
+        case COMPO_ID_BTN_START_REC:
+            res_addr = sys_cb.stopwatch_sta ? UI_BUF_COMMON_PAUSE_CLICK_BIN : UI_BUF_COMMON_START_CLICK_BIN;
+            compo_button_set_bgimg(btn_start, res_addr);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -167,8 +173,10 @@ static void func_stopwatch_button_release_handle(void)
 static void stopwatch_50ms_pro(co_timer_t *timer, void *param)
 {
     static u32 real_total_msec;
-    if (sys_cb.stopwatch_sta && !sys_cb.gui_sleep_sta) {    //休眠不计时
-        if (sys_cb.stopwatch_total_msec == 0) {
+    if (sys_cb.stopwatch_sta && !sys_cb.gui_sleep_sta)      //休眠不计时
+    {
+        if (sys_cb.stopwatch_total_msec == 0)
+        {
             real_total_msec = 0;
         }
         real_total_msec += 50;
@@ -188,52 +196,58 @@ static void func_stopwatch_button_click(void)
     compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
     compo_textbox_t *num_rec = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_REC);
 
-    switch (id) {
-    case COMPO_ID_BTN_RECORD_VIEW:
-        if (sys_cb.stopwatch_rec_cnt) {
-            func_cb.sta = FUNC_STOPWATCH_SUB_RECORD;
-        }
-        break;
-
-    case COMPO_ID_BTN_RECORD:
-        //插入记录到头部
-        if (sys_cb.stopwatch_sta) {
-            sys_cb.stopwatch_rec_cnt += (sys_cb.stopwatch_rec_cnt < STOPWATCH_REC_NUM_MAX);
-            for (u8 i = sys_cb.stopwatch_rec_cnt - 1; i > 0; i--)  {
-                sys_cb.stopwatch_rec_view[i] = sys_cb.stopwatch_rec_view[i - 1];
+    switch (id)
+    {
+        case COMPO_ID_BTN_RECORD_VIEW:
+            if (sys_cb.stopwatch_rec_cnt)
+            {
+                func_cb.sta = FUNC_STOPWATCH_SUB_RECORD;
             }
-            sys_cb.stopwatch_rec_view[0] = sys_cb.stopwatch_total_msec;
+            break;
 
-            snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
-            compo_textbox_set(num_rec, str_buff);
-        }
-        break;
+        case COMPO_ID_BTN_RECORD:
+            //插入记录到头部
+            if (sys_cb.stopwatch_sta)
+            {
+                sys_cb.stopwatch_rec_cnt += (sys_cb.stopwatch_rec_cnt < STOPWATCH_REC_NUM_MAX);
+                for (u8 i = sys_cb.stopwatch_rec_cnt - 1; i > 0; i--)
+                {
+                    sys_cb.stopwatch_rec_view[i] = sys_cb.stopwatch_rec_view[i - 1];
+                }
+                sys_cb.stopwatch_rec_view[0] = sys_cb.stopwatch_total_msec;
 
-    case COMPO_ID_BTN_AFRESH:
-        if (sys_cb.stopwatch_total_msec > 0) {
-            sys_cb.stopwatch_sta = 0;
-            co_timer_del(&stopwatch_timer);
+                snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
+                compo_textbox_set(num_rec, str_buff);
+            }
+            break;
 
-            f_stopwatch->min = 0;
-            f_stopwatch->sec = 0;
-            f_stopwatch->msec = 0;
+        case COMPO_ID_BTN_AFRESH:
+            if (sys_cb.stopwatch_total_msec > 0)
+            {
+                sys_cb.stopwatch_sta = 0;
+                co_timer_del(&stopwatch_timer);
 
-            memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
-            sys_cb.stopwatch_rec_cnt = 0;
-            sys_cb.stopwatch_rec_cnt = 0;
-            sys_cb.stopwatch_total_msec = 0;
+                f_stopwatch->min = 0;
+                f_stopwatch->sec = 0;
+                f_stopwatch->msec = 0;
 
-            compo_textbox_set(num_time, "00:00.00");
-            compo_textbox_set(num_rec, "0");
-        }
-        break;
+                memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
+                sys_cb.stopwatch_rec_cnt = 0;
+                sys_cb.stopwatch_rec_cnt = 0;
+                sys_cb.stopwatch_total_msec = 0;
 
-    case COMPO_ID_BTN_START_REC:
-        sys_cb.stopwatch_sta = !sys_cb.stopwatch_sta;
-        if (sys_cb.stopwatch_sta && sys_cb.stopwatch_total_msec == 0) {
-            co_timer_set(&stopwatch_timer, 50, TIMER_REPEAT, LEVEL_LOW_PRI, stopwatch_50ms_pro, NULL);
-        }
-        break;
+                compo_textbox_set(num_time, "00:00.00");
+                compo_textbox_set(num_rec, "0");
+            }
+            break;
+
+        case COMPO_ID_BTN_START_REC:
+            sys_cb.stopwatch_sta = !sys_cb.stopwatch_sta;
+            if (sys_cb.stopwatch_sta && sys_cb.stopwatch_total_msec == 0)
+            {
+                co_timer_set(&stopwatch_timer, 50, TIMER_REPEAT, LEVEL_LOW_PRI, stopwatch_50ms_pro, NULL);
+            }
+            break;
     }
 
     func_stopwatch_button_release_handle();
@@ -242,7 +256,8 @@ static void func_stopwatch_button_click(void)
 //秒表功能事件处理
 static void func_stopwatch_process(void)
 {
-    if (sys_cb.stopwatch_sta) {
+    if (sys_cb.stopwatch_sta)
+    {
         u8 min = ((sys_cb.stopwatch_total_msec / 1000) % 3600) / 60;
         u8 sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
         u16 msec = sys_cb.stopwatch_total_msec % 1000;
@@ -252,7 +267,8 @@ static void func_stopwatch_process(void)
         //获取数字组件的地址
         compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
 
-        if (f_stopwatch->msec != msec || f_stopwatch->sec != sec || f_stopwatch->min != min) {
+        if (f_stopwatch->msec != msec || f_stopwatch->sec != sec || f_stopwatch->min != min)
+        {
             f_stopwatch->min = min;
             f_stopwatch->sec = sec;
             f_stopwatch->msec = msec;
@@ -269,33 +285,35 @@ static void func_stopwatch_process(void)
 //秒表功能消息处理
 static void func_stopwatch_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_stopwatch_button_touch_handle();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_stopwatch_button_touch_handle();
+            break;
 
-    case MSG_CTP_CLICK:
-        func_stopwatch_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_stopwatch_button_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        func_stopwatch_button_release_handle();
-        if (func_cb.flag_sort) {
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_stopwatch_button_release_handle();
+            if (func_cb.flag_sort)
+            {
+                func_message(msg);
+            }
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            func_stopwatch_button_release_handle();
             func_message(msg);
-        }
-        break;
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_stopwatch_button_release_handle();
-        func_message(msg);
-        break;
-
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -316,7 +334,8 @@ void func_stopwatch(void)
 {
     printf("%s\n", __func__);
     func_stopwatch_enter();
-    while (func_cb.sta == FUNC_STOPWATCH) {
+    while (func_cb.sta == FUNC_STOPWATCH)
+    {
         func_stopwatch_process();
         func_stopwatch_message(msg_dequeue());
     }

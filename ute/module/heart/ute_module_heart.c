@@ -41,9 +41,12 @@ void uteModuleHeartInit(void)
 #endif
 #endif
     memset(&uteModuleHeartData,0,sizeof(ute_module_heart_data_t));
+    uteModuleHeartData.lastIsWear = true;
     uteModuleHeartReadConfig();
 #if UTE_DRV_HEART_VCXX_SUPPORT
     uteDrvHeartVcxxInit();
+#else
+    bsp_sensor_hr_stop();
 #endif
     uteModuleSystemtimeRegisterSecond(uteModuleHeartEverySecond);
     /*add by pcm 2023-06-06 把心率温度检测延迟到心率模块初始化结束之后再开始检测*/
@@ -77,7 +80,7 @@ void uteModuleHeartReadConfig(void)
     heartWarning.setMinHeart = readbuff[1];
     heartWarning.setMaxHeart = readbuff[2];
     memcpy(&uteModuleHeartData.warning,&heartWarning,sizeof(ute_module_heart_warning_t));
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,heartwarning isOpen=%d,min=%d,max=%d", __func__,heartWarning.isOpen,heartWarning.setMinHeart,heartWarning.setMaxHeart);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,heartwarning isOpen=%d,min=%d,max=%d", __func__,heartWarning.isOpen,heartWarning.setMinHeart,heartWarning.setMaxHeart);
 #endif
 #if UTE_SPORTS_HEART_MAX_MIN_WARNING_NOTIFY_SUPPORT
     uteModuleHeartReadSportHeartWaringInfo();
@@ -91,7 +94,7 @@ void uteModuleHeartReadConfig(void)
         uteModuleFilesystemCloseFile(file);
     }
     uteModuleHeartData.isAutoTesting = readbuff[0];
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isAutoTesting=%d", __func__,uteModuleHeartData.isAutoTesting);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,isAutoTesting=%d", __func__,uteModuleHeartData.isAutoTesting);
 
     /*! 心率最大值最小值平均值,xjc, 2022-01-17  */
     readbuff[0] = 0;
@@ -106,7 +109,7 @@ void uteModuleHeartReadConfig(void)
     uteModuleHeartData.currentDayMaxHeart = readbuff[0];
     uteModuleHeartData.currentDayMinHeart = readbuff[1];
     uteModuleHeartData.currentDayAvgHeart = readbuff[2];
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,currentDayMaxHeart=%d,currentDayMinHeart=%d,currentDayAvgHeart=%d", __func__,uteModuleHeartData.currentDayMaxHeart,uteModuleHeartData.currentDayMinHeart,uteModuleHeartData.currentDayAvgHeart);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,currentDayMaxHeart=%d,currentDayMinHeart=%d,currentDayAvgHeart=%d", __func__,uteModuleHeartData.currentDayMaxHeart,uteModuleHeartData.currentDayMinHeart,uteModuleHeartData.currentDayAvgHeart);
 #if UTE_MODULE_HEART_WEEK_STATIC_SUPPORT
     uteModuleHeartrReadStaticHeartData();
 #endif
@@ -141,13 +144,11 @@ void uteModuleHeartSyncMaxMinAvgHeartValue(ute_module_systemtime_time_t time)
 #if UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT
             uteModuleProfileBleSendToPhone(&heartAvgData[0], 11);
 #else
-            // uint16_t screenId = uteModuleGuiCommonGetCurrentScreenId();
-            // if(uteModuleGuiCommonIsDisplayOn() \
-            //    &&((screenId==UTE_MOUDLE_SCREENS_HEART_RATE_ID) \
-            //       ||(screenId == UTE_MOUDLE_SCREENS_SPORTS_DETAIL_ID)))
-            // {
-            //     uteModuleProfileBleSendToPhone(&heartAvgData[0], 11);
-            // }
+            uint16_t screenId = uteModuleGuiCommonGetCurrentScreenId();
+            if(uteModuleGuiCommonIsDisplayOn()  && screenId == FUNC_HEARTRATE)
+            {
+                uteModuleProfileBleSendToPhone(&heartAvgData[0], 11);
+            }
 #endif
 #endif
         }
@@ -169,7 +170,12 @@ void uteModuleHeartEverySecond(void)
     uteDrvHeartVcxxCheckErrorEveryScond();
     uteDrvHeartVcxxGetAlgoHrData(&uteModuleHeartData.heartValue);
 #endif
-    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,uteModuleHeartData.heartValue=%d", __func__,uteModuleHeartData.heartValue);
+
+    if(vc30fx_usr_get_work_status() && (vc30fx_usr_get_work_mode() == WORK_MODE_HR || vc30fx_usr_get_work_mode() == WORK_MODE_HRSPO2))
+    {
+        uteModuleHeartData.heartValue = bsp_sensor_hrs_data_get();
+        UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,uteModuleHeartData.heartValue=%d", __func__,uteModuleHeartData.heartValue);
+    }
 
     /*! 每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
     uint8_t heartData[4] = {CMD_HEART_TEST,0x11,0,0};
@@ -185,47 +191,49 @@ void uteModuleHeartEverySecond(void)
         uint16_t oneDayMin = 0;
         oneDayMin = time.hour*60+time.min;
         /*! 每10分钟保存一次心率值并且发给app端 zn.zeng, 2021-07-15 */
-        bool isNeedAutoTest = false;
-        if(((oneDayMin%10)==8)&&(time.sec==0))  //
+
+        static bool isNeedAutoTest = false;
+        if(((oneDayMin%5) == 0) && (time.sec == 0))  //
         {
             isNeedAutoTest = true;
+        }
 
-//             if((uteModuleHeartData.heartValue>0)&&uteModuleHeartIsWear())
-//             {
-//                 uint8_t everyTenMinReport[9];
-//                 everyTenMinReport[0] = CMD_HEART_24HOURS_AUTO_TEST;
-//                 everyTenMinReport[1] = 0x03;
-//                 everyTenMinReport[2] = time.year>>8&0xff;
-//                 everyTenMinReport[3] = time.year&0xff;
-//                 everyTenMinReport[4] = time.month;
-//                 everyTenMinReport[5] = time.day;
-//                 everyTenMinReport[6] = time.hour;
-//                 everyTenMinReport[7] = time.min/10;
-//                 everyTenMinReport[8] = (uint8_t)uteModuleHeartData.heartValue;
-// #if !DUG_VCXX_HEART_SUPPORT
-//                 uteModuleProfileBleSendToPhone(&everyTenMinReport[0],9);
-// #endif
-//                 /*!保存数据 zn.zeng, 2021-07-15  */
-//                 uteModuleHeartAutoSaveHeartData();
-//                 /*!保存心率最大最小平均值数据 xjc, 2022-01-17  */
-//                 uteModuleHeartSaveHeartMaxMinAvgData();
-//             }
-        }
-        if(isNeedAutoTest && !uteModuleHeartData.isAutoTesting)
+        if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
         {
-            uteModuleHeartData.isAutoTesting = true;
+            uteModuleHeartStartSingleTesting(TYPE_HEART);
+            uteModuleHeartData.isAutoTestFlag = true;
+            uteModuleHeartData.autoTestSecond = 0;
         }
+        else
+        {
+            isNeedAutoTest = false;
+        }
+
+        if(uteModuleHeartData.isAutoTestFlag)
+        {
+            if (uteModuleHeartData.autoTestSecond >= UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND)
+            {
+                uteModuleHeartStopSingleTesting(TYPE_HEART);
+                uteModuleHeartData.isAutoTestFlag = false;
+                uteModuleHeartData.autoTestSecond = 0;
+            }
+            else
+            {
+                uteModuleHeartData.autoTestSecond++;
+            }
+        }
+
         /*! 心率界面每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
         if(uteModuleHeartIsWear()&&(uteModuleHeartData.type == TYPE_HEART))
         {
-// #if UTE_MODULE_HEART_SYNC_VALUE_IN_WATTCHMAIN_SUPPORT
-//             if(uteModuleGuiCommonGetCurrentScreenId()==UTE_MOUDLE_SCREENS_HEART_RATE_ID || uteModuleGuiCommonGetCurrentScreenId()==UTE_MOUDLE_SCREENS_WATCHMAIN_ID)
-// #else
-//             if(uteModuleGuiCommonGetCurrentScreenId()==UTE_MOUDLE_SCREENS_HEART_RATE_ID)
-// #endif
-//             {
-//                 uteModuleProfileBleSendToPhone(&heartData[0],4);
-//             }
+#if UTE_MODULE_HEART_SYNC_VALUE_IN_WATTCHMAIN_SUPPORT
+            if(uteModuleGuiCommonGetCurrentScreenId() == FUNC_HEARTRATE || uteModuleGuiCommonGetCurrentScreenId() == FUNC_CLOCK)
+#else
+            if(uteModuleGuiCommonGetCurrentScreenId() == FUNC_HEARTRATE)
+#endif
+            {
+                uteModuleProfileBleSendToPhone(&heartData[0],4);
+            }
         }
     }
     /*! 单次测试逻辑zn.zeng, 2021-07-16  */
@@ -258,10 +266,10 @@ void uteModuleHeartEverySecond(void)
                     uteModuleProfileBleSendToPhone(&stopSingleCmd[0],2);
                 }
                 /*! 每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
-                // if(uteModuleGuiCommonGetCurrentScreenId()==UTE_MOUDLE_SCREENS_HEART_RATE_ID)
-                // {
-                //     uteModuleProfileBleSendToPhone(&heartData[0],4);
-                // }
+                if(uteModuleGuiCommonGetCurrentScreenId() == FUNC_HEARTRATE)
+                {
+                    uteModuleProfileBleSendToPhone(&heartData[0],4);
+                }
                 uteModuleHeartData.notWearSecond = 0;
             }
         }
@@ -419,6 +427,7 @@ int uteModuleHeartGetAvgHeartValue(void)
 */
 void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
 {
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,input type:%d, curr type:%d",__func__,type,uteModuleHeartData.type);
     if(uteModuleHeartData.type != type)
     {
         uteModuleHeartStopSingleTesting(uteModuleHeartData.type);
@@ -429,6 +438,8 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
         uteModuleHeartData.isSingleTesting = true;
 #if UTE_DRV_HEART_VCXX_SUPPORT
         uteDrvHeartVcxxBloodoxygenStartSample();
+#else
+        bsp_sensor_hr_init(WORK_MODE_SPO2);
 #endif
     }
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
@@ -446,22 +457,26 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
         {
 #if UTE_DRV_BREATHRATE_VCXX_SUPPORT
             uteDrvHeartVcxxStartBreathrate();
+#else
+            bsp_sensor_hr_init(WORK_MODE_HR);
 #endif
         }
-        if(uteModuleHeartData.isAutoTesting)
-        {
-            return;
-        }
-        if(uteModuleHeartData.isSingleTesting)
-        {
-            return;
-        }
+        // if(uteModuleHeartData.isAutoTesting && uteModuleHeartData.isAutoTestFlag)
+        // {
+        //     return;
+        // }
+        // if(uteModuleHeartData.isSingleTesting)
+        // {
+        //     return;
+        // }
         uteModuleHeartData.isSingleTesting = true;
 #if UTE_DRV_HEART_VCXX_SUPPORT
         if(!uteModuleHeartData.isAutoTesting)
         {
             uteDrvHeartVcxxStartSample();
         }
+#else
+        bsp_sensor_hr_init(WORK_MODE_HR);
 #endif
         if(uteModuleHeartData.type==TYPE_HEART)
         {
@@ -479,6 +494,7 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
 */
 void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
 {
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,input type:%d, curr type:%d",__func__,type,uteModuleHeartData.type);
     /*当前测试类型与传入要停止的类型不一致时，不处理，xjc 2022-06-01*/
     if(uteModuleHeartData.type != type)
     {
@@ -490,6 +506,9 @@ void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
         uteModuleHeartData.isSingleTesting = false;
 #if UTE_DRV_HEART_VCXX_SUPPORT
         uteDrvHeartVcxxStartSample();
+#else
+        // bsp_sensor_hr_init(WORK_MODE_HR);
+        bsp_sensor_hr_stop();
 #endif
     }
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
@@ -509,21 +528,27 @@ void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
         {
 #if UTE_DRV_BREATHRATE_VCXX_SUPPORT
             uteDrvHeartVcxxStopBreathrate();
+#else
+            // bsp_sensor_hr_init(WORK_MODE_HR);
 #endif
         }
-        if(uteModuleHeartData.isAutoTesting)
-        {
-            uteModuleHeartData.type = TYPE_HEART;
-            return;
-        }
-        if(!uteModuleHeartData.isSingleTesting)
-        {
-            return;
-        }
+        // if(uteModuleHeartData.isAutoTesting)
+        // {
+        //     uteModuleHeartData.type = TYPE_HEART;
+        //     return;
+        // }
+        // if(!uteModuleHeartData.isSingleTesting)
+        // {
+        //     return;
+        // }
         uteModuleHeartData.isSingleTesting = false;
+        uteModuleHeartData.isAutoTestFlag = false;
         bool isWear = uteModuleHeartIsWear();
 #if UTE_DRV_HEART_VCXX_SUPPORT
         uteDrvHeartVcxxStopSample();
+#else
+        // bsp_sensor_hr_init(WORK_MODE_HR);
+        bsp_sensor_hr_stop();
 #endif
         if(type==TYPE_HEART)
         {
@@ -536,7 +561,29 @@ void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
             if(isWear)
             {
                 uteModuleProfileBleSendToPhone(&stopCmd[0],4);
-                /*! 不保存单次测试数据zn.zeng, 2021-07-16  */
+
+                if(uteModuleHeartData.heartValue > 0) //&& uteModuleHeartData.isAutoTestFlag
+                {
+                    ute_module_systemtime_time_t time;
+                    uteModuleSystemtimeGetTime(&time);
+                    uint8_t everyTenMinReport[9];
+                    everyTenMinReport[0] = CMD_HEART_24HOURS_AUTO_TEST;
+                    everyTenMinReport[1] = 0x03;
+                    everyTenMinReport[2] = time.year>>8&0xff;
+                    everyTenMinReport[3] = time.year&0xff;
+                    everyTenMinReport[4] = time.month;
+                    everyTenMinReport[5] = time.day;
+                    everyTenMinReport[6] = time.hour;
+                    everyTenMinReport[7] = time.min/10;
+                    everyTenMinReport[8] = (uint8_t)uteModuleHeartData.heartValue;
+#if !DUG_VCXX_HEART_SUPPORT
+                    uteModuleProfileBleSendToPhone(&everyTenMinReport[0],9);
+#endif
+                    /*!保存数据 zn.zeng, 2021-07-15  */
+                    uteModuleHeartAutoSaveHeartData();
+                    /*!保存心率最大最小平均值数据 xjc, 2022-01-17  */
+                    uteModuleHeartSaveHeartMaxMinAvgData();
+                }
             }
             else
             {
@@ -549,6 +596,7 @@ void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
         }
     }
 }
+
 /**
 *@brief        是否佩戴
 *@details
@@ -561,15 +609,19 @@ bool uteModuleHeartIsWear(void)
     bool isWear= false;
 #if UTE_DRV_HEART_VCXX_SUPPORT
     isWear= uteDrvHeartVcxxIsWear();
-#endif
-#if UTE_DRV_BLOODPRESSURE_DN02_SUPPORT
-    if (uteModuleBloodpressureDn02GetSampleStatus())
+#else
+    if(vc30fx_usr_get_work_status())
     {
-        isWear = uteModuleBloodpressureDn02IsWear();
+        isWear= bsp_sensor_hr_wear_sta_get();
+        uteModuleHeartData.lastIsWear = isWear;
+    }
+    else
+    {
+        isWear = uteModuleHeartData.lastIsWear;
     }
 #endif
+    // UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,isWear:%d",__func__,isWear);
     return isWear;
-
 }
 /**
 *@brief        计算当天的平均心率数值
@@ -580,7 +632,7 @@ bool uteModuleHeartIsWear(void)
 */
 void uteModuleHeartAvgHeartOfCurrentDayProcess(uint8_t heart)
 {
-    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,heart=%d,.currentDayMinHeart=%d,currentDayMaxHeart=%d",__func__,heart, uteModuleHeartData.currentDayMinHeart,uteModuleHeartData.currentDayMaxHeart);
+    // UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,heart=%d,.currentDayMinHeart=%d,currentDayMaxHeart=%d",__func__,heart, uteModuleHeartData.currentDayMinHeart,uteModuleHeartData.currentDayMaxHeart);
     if(heart!=0)
     {
         if(heart<uteModuleHeartData.currentDayMinHeart)
@@ -691,10 +743,10 @@ void uteModuleHeartSaveHeartWaringInfo(ute_module_heart_warning_t *value)
         uteModuleFilesystemWriteData(file,&writebuff[0],3);
         uteModuleFilesystemCloseFile(file);
         //memcpy(&uteModuleHeartData.warning,&value,sizeof(ute_module_heart_warning_t));
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isOpen=%d,min=%d,max=%d", __func__,value->isOpen,value->setMinHeart,value->setMaxHeart);
+        UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,isOpen=%d,min=%d,max=%d", __func__,value->isOpen,value->setMinHeart,value->setMaxHeart);
     }
 #else
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,undinfe ", __func__);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,undinfe ", __func__);
 #endif
 }
 
@@ -761,9 +813,9 @@ void uteModuleHeartAutoSaveHeartData(void)
     }
     uint16_t buffSize = 6*24+4;
     uint8_t *readBuff = uteModulePlatformMemoryAlloc(buffSize);
-    uint8_t path[30];
+    uint8_t path[40];
     memset(&readBuff[0],0xff,buffSize);
-    memset(&path[0],0,30);
+    memset(&path[0],0,40);
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
@@ -772,19 +824,19 @@ void uteModuleHeartAutoSaveHeartData(void)
     if((dirInfo->filesCnt>=UTE_MODULE_HEART_SAVE_DATA_MAX_DAYS)&&(memcmp(&path[0],&dirInfo->filesName[0][0],8)!=0))
     {
         /*! 删除最旧一天的数据zn.zeng, 2021-08-25*/
-        memset(&path[0],0,30);
+        memset(&path[0],0,40);
         sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_HEART_AUTO_DATA_DIR,&dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,del file=%s", __func__,&path[0]);
-        uteModuleFilesystemDelFile(&path[0]);
+        uteModuleFilesystemDelFile((char *)&path[0]);
     }
-    memset(&path[0],0,30);
+    memset(&path[0],0,40);
     sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_HEART_AUTO_DATA_DIR,time.year,time.month,time.day);
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,dirInfo->filesCnt=%d", __func__,dirInfo->filesCnt);
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,save file=%s", __func__,&path[0]);
     /*! 保存当前数据zn.zeng, 2021-08-30  */
     void *file;
     // read
-    if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_RDONLY))
+    if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_RDONLY))
     {
         uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
         uteModuleFilesystemReadData(file,&readBuff[0],buffSize);
@@ -797,7 +849,7 @@ void uteModuleHeartAutoSaveHeartData(void)
         readBuff[2] = time.month;
         readBuff[3] = time.day;
     }
-    if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_WRONLY|FS_O_CREAT))
+    if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_WRONLY|FS_O_CREAT))
     {
         uint16_t cacheOffset = 0;
         cacheOffset = 4+(time.hour*60+time.min)/10;
@@ -838,7 +890,7 @@ void uteModuleHeartSendHistoryData(void)
         sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_HEART_AUTO_DATA_DIR,&sendParam->dirInfo.filesName[sendParam->currSendFileIndex][0]);
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,read file=%s", __func__,&path[0]);
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,currSendFileIndex=%d,currSendMinIndex=%d", __func__,sendParam->currSendFileIndex,sendParam->currSendMinIndex);
-        if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_RDONLY))
+        if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_RDONLY))
         {
             uteModuleFilesystemReadData(file, &tempDataBuff[0], sendParam->dataBuffSize);
             memcpy(&dataBuff[0], tempDataBuff, 4);      /*!获取年月日 , xjc 2022-03-03*/
@@ -849,7 +901,7 @@ void uteModuleHeartSendHistoryData(void)
         {
             memset(&tempDataBuff[0],0,sendParam->dataBuffSize);
             sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_HEART_AUTO_DATA_DIR, &sendParam->dirInfo.filesName[sendParam->currSendFileIndex + 1][0]);
-            if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY))
+            if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
             {
                 uteModuleFilesystemReadData(file, &tempDataBuff[0], sendParam->dataBuffSize);
                 memcpy(&dataBuff[sendParam->dataBuffSize - 1], &tempDataBuff[4], 1); /*!获取后一天00：00的数据, xjc 2022-03-03*/
@@ -953,7 +1005,7 @@ void uteModuleHeartStartSendHeartAutoTestHistoryData(ute_module_systemtime_time_
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_HEART_AUTO_DATA_DIR, &param->dirInfo, NULL);
     uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleHeartSendHistoryData);
     uteApplicationCommonSyncDataTimerStart();
-    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,", __func__);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,filesCnt=%d", __func__,param->dirInfo.filesCnt);
 
 }
 /**
@@ -1353,16 +1405,16 @@ void uteModuleHeartrReadStaticHeartData(void)
     uint8_t path[30];
     ute_module_systemtime_time_t time, readTime;
     uteModuleSystemtimeGetTime(&time);
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,%04d%02d%02d,week=%d", __func__, time.year, time.month, time.day, time.week);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,%04d%02d%02d,week=%d", __func__, time.year, time.month, time.day, time.week);
     memset(&uteModuleHeartData.weekDayStaticHeart[0], 0, 7);
     for (uint8_t i = 0; i < 7; i++)
     {
         memcpy(&readTime, &time, sizeof(ute_module_systemtime_time_t));
         uteModuleSystemtimeInputDateIncreaseDecreaseDay(&readTime, i - 6);
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,readTime,%04d%02d%02d,week=%d", __func__, readTime.year, readTime.month, readTime.day, readTime.week);
+        UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,readTime,%04d%02d%02d,week=%d", __func__, readTime.year, readTime.month, readTime.day, readTime.week);
         memset(&path[0], 0, 30);
         sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_DIR, readTime.year, readTime.month, readTime.day);
-        if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY))
+        if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
         {
             uteModuleFilesystemSeek(file, 0, FS_SEEK_SET);
             uteModuleFilesystemReadData(file, &uteModuleHeartData.weekDayStaticHeart[i], 1);
@@ -1397,13 +1449,13 @@ void uteModuleHeartrSaveStaticHeartData(void)
         memset(&path[0],0,30);
         sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_DIR,&dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,del file=%s", __func__,&path[0]);
-        uteModuleFilesystemDelFile(&path[0]);
+        uteModuleFilesystemDelFile((char *)&path[0]);
     }
     memset(&path[0],0,30);
     sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_DIR,time.year,time.month,time.day);
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,dirInfo->filesCnt=%d", __func__,dirInfo->filesCnt);
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,save file=%s", __func__,&path[0]);
-    if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_WRONLY|FS_O_CREAT))
+    if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_WRONLY|FS_O_CREAT))
     {
         uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
         uteModuleFilesystemWriteData(file,&uteModuleHeartData.weekDayStaticHeart[6],1);
@@ -1496,7 +1548,7 @@ void uteModuleHeartCalcEveryHourMaxMInHeartData(uint8_t hour)
     uteModuleSystemtimeGetTime(&time);
     memset(&path[0], 0, 30);
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_HEART_AUTO_DATA_DIR, time.year, time.month, time.day);
-    if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY))
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
     {
         uteModuleFilesystemReadData(file, &tempDataBuff[0], 12 * 24 + 4);
         uteModuleFilesystemCloseFile(file);
@@ -1573,7 +1625,7 @@ void uteModuleHeartSendHistoryRestingHeartData(void)
         memset(&path[0], 0, 30);
         UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,year=%d,month=%d,day=%d", __func__,readTime.year,readTime.month,readTime.day);
         sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_DIR, readTime.year, readTime.month, readTime.day);
-        if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY))
+        if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
         {
             uteModuleFilesystemSeek(file, 0, FS_SEEK_SET);
             uteModuleFilesystemReadData(file, &weekDayStaticHeart[0], 1);

@@ -52,7 +52,7 @@ void ble_app_disconnect_callback(void)
 
 void app_phone_type_set(u8 type)
 {
-    
+
 }
 
 u8 app_phone_type_get(void)
@@ -64,16 +64,21 @@ u8 app_phone_type_get(void)
 void app_once_connect(u8 ble_app_ios)
 {
 #if LE_SM_SC_EN
-    if (app_phone_type_get() != ble_app_ios) {
+    if (app_phone_type_get() != ble_app_ios)
+    {
         app_phone_type_set(ble_app_ios);
         bsp_change_bt_mac();
     }
 
-    if (ble_app_ios && !bt_is_connected()) {        //IOS
-        if (bt_nor_get_link_info(NULL)) {           //如果存在配对信息
+    if (ble_app_ios && !bt_is_connected())          //IOS
+    {
+        if (bt_nor_get_link_info(NULL))             //如果存在配对信息
+        {
             sys_cb.bt_reconn_flag = true;
             bt_connect();
-        } else {
+        }
+        else
+        {
             ble_bt_connect();                       //一键双联
         }
     }
@@ -104,6 +109,6 @@ void ble_app_ancs_client_notifiy_callback(u8 id, const char *att_name, const cha
 {
 #if LE_ANCS_CLIENT_EN
     // ble_app_watch_ancs_client_notifiy_process(id, att_name, att_content);
-    uteModuleNotifySetAncsInfo(id,att_content,strlen(att_content));
+    uteModuleNotifySetAncsInfo(id,(uint8_t*)att_content,strlen(att_content));
 #endif
 }

@@ -105,7 +105,7 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y*1.5 - SHAPE_HEIGTH/2.5);
 
     txt = compo_textbox_create(frm,sizeof(Ble_Address_str_buf));
-    compo_textbox_set(txt, Ble_Address_str_buf);
+    compo_textbox_set(txt, (char*)Ble_Address_str_buf);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y*1.5);
 

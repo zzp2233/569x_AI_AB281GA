@@ -9,9 +9,9 @@ Copyright (c) 2017 Silan MEMS. All Rights Reserved.
 
 #if  (SENSOR_STEP_SEL == SENSOR_STEP_SC7A20)
 
-#define SC7A20_WRITE_ADDR(ADDR)     	((ADDR) << 1)
+#define SC7A20_WRITE_ADDR(ADDR)         ((ADDR) << 1)
 #define SC7A20_READ_ADDR_UPDATE(ADDR)   ((ADDR) << 1 | 1)
-#define SC7A20_READ_ADDR(ADDR)      	((ADDR) << 1 | 1) << 8 | ((ADDR) << 1)
+#define SC7A20_READ_ADDR(ADDR)          ((ADDR) << 1 | 1) << 8 | ((ADDR) << 1)
 
 #define SL_Sensor_Algo_Release_Enable 0x01
 //0x00: for debug
@@ -53,7 +53,7 @@ Copyright (c) 2017 Silan MEMS. All Rights Reserved.
 #define SL_SC7A20E_VERSION_VALUE     (unsigned char)0x26
 #define SL_SC7A20H_VERSION_VALUE     (unsigned char)0x28
 
-// extern  signed int  SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_ALGO(void);
+extern  unsigned int  SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_ALGO(void);
 extern  signed char SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_INIT(void);
 extern  signed int  SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_INT_SWAY_ALGO(void);
 extern  unsigned char SL_MCU_SLEEP_ALGO_FUNCTION(void);
@@ -538,9 +538,9 @@ UINT sc7a20_cur_distance_get(void);
 
 // #if  (SENSOR_STEP_SEL == SENSOR_STEP_SC7A20)
 
-// #define SC7A20_WRITE_ADDR(ADDR)     	((ADDR) << 1)
+// #define SC7A20_WRITE_ADDR(ADDR)      ((ADDR) << 1)
 // #define SC7A20_READ_ADDR_UPDATE(ADDR)   ((ADDR) << 1 | 1)
-// #define SC7A20_READ_ADDR(ADDR)      	((ADDR) << 1 | 1) << 8 | ((ADDR) << 1)
+// #define SC7A20_READ_ADDR(ADDR)       ((ADDR) << 1 | 1) << 8 | ((ADDR) << 1)
 
 // #define SL_Sensor_Algo_Release_Enable 0x01
 // //0x00: for debug

@@ -961,6 +961,7 @@ void uteApplicationCommonSyncDataTimerMsg(void)
     }
     if (is_le_buff_full(2))
     {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,le_buff_full!!!",__func__);
         uteModulePlatformRestartTimer(&uteApplicationCommonSyncDataTimer, UTE_SEND_DATA_TO_PHONE_INVTERVAL);
         return;
     }

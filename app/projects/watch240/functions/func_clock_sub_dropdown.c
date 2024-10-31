@@ -7,10 +7,11 @@
 
 static uint8_t dropdown_disturb_sw;     //功能未做，加个开关先放着
 
-enum{
+enum
+{
     COMPO_ID_BTN_START = FUNC_MAX_NUM, //从任务最大枚举开始，避免和表盘跳转et的d冲突
     //按键
-    COMPO_ID_BTN_CONNECT ,      //蓝牙连接开关
+    COMPO_ID_BTN_CONNECT,       //蓝牙连接开关
     COMPO_ID_BTN_DISCURD,       //勿扰模式开关
     COMPO_ID_BTN_MUTE,          //静音模式开关
     COMPO_ID_BTN_FLASHLIGHT,    //手电筒
@@ -28,7 +29,8 @@ enum{
 
 #define DROPDOWN_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_dropdown_disp_btn_item) / sizeof(tbl_dropdown_disp_btn_item[0])))
 
-typedef struct dropdown_disp_btn_item_t_ {
+typedef struct dropdown_disp_btn_item_t_
+{
     u32 res_addr;
     u16 btn_id;
     s16 x;
@@ -38,7 +40,8 @@ typedef struct dropdown_disp_btn_item_t_ {
 
 //类型有显示信息，控制开关，点击跳转任务
 //按钮item，创建时遍历一下
-static  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] = {
+static  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
+{
     {UI_BUF_DROPDOWN_BLUETOOTH_OFF_BIN,          COMPO_ID_BTN_CONNECT,          60,  80},     //蓝牙扫描开关
     {UI_BUF_DROPDOWN_DISTURB_OFF_BIN,            COMPO_ID_BTN_DISCURD,          180, 80},
     {UI_BUF_DROPDOWN_FLASHLIGHT_ON_BIN,          COMPO_ID_BTN_FLASHLIGHT,       60,  155},
@@ -51,7 +54,8 @@ static  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] = {
 static void func_clock_sub_dropdown_battery_pic_update(void)
 {
     compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
-    switch(sys_cb.vbat_percent){
+    switch(sys_cb.vbat_percent)
+    {
         case 1 ... 16:
             compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER1_BIN);
             break;
@@ -81,12 +85,16 @@ static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 {
     compo_picturebox_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_TXT_BLUETOOTH_STA_PIC);
     compo_picturebox_set_visible(bluetooth_pic, true);
-    if (ble_is_connect() && bt_is_connected()) {
-        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);      
+    if (ble_is_connect() && bt_is_connected())
+    {
+        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
     }
-    else if(bt_is_connected() || ble_is_connect()) {
+    else if(bt_is_connected() || ble_is_connect())
+    {
         compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
-    } else{
+    }
+    else
+    {
         compo_picturebox_set_visible(bluetooth_pic, false);
     }
 }
@@ -95,9 +103,12 @@ static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 static void func_clock_sub_dropdown_mute_pic_update(void)
 {
     compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_MUTE);
-    if(sys_cb.mute) {
+    if(sys_cb.mute)
+    {
         compo_button_set_bgimg(mute_pic, UI_BUF_DROPDOWN_MUTE_ON_BIN);
-    } else {
+    }
+    else
+    {
         compo_button_set_bgimg(mute_pic, UI_BUF_DROPDOWN_MUTE_OFF_BIN);
     }
 }
@@ -107,9 +118,12 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 {
     compo_button_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_BTN_CONNECT);
     printf("bt_get_scan: 0x%x\n", bt_get_scan());
-    if(bt_get_scan()) {
+    if(bt_get_scan())
+    {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_ON_BIN);
-    } else {
+    }
+    else
+    {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_OFF_BIN);
     }
 }
@@ -118,9 +132,12 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 static void func_clock_sub_dropdown_disturb_pic_update(void)
 {
     compo_button_t *disturb_pic = compo_getobj_byid(COMPO_ID_BTN_DISCURD);
-    if(dropdown_disturb_sw) {
+    if(dropdown_disturb_sw)
+    {
         compo_button_set_bgimg(disturb_pic, UI_BUF_DROPDOWN_DISTURB_ON_BIN);
-    } else {
+    }
+    else
+    {
         compo_button_set_bgimg(disturb_pic, UI_BUF_DROPDOWN_DISTURB_OFF_BIN);
     }
 
@@ -140,7 +157,8 @@ static void func_clock_sub_dropdown_form_create(void)
 
     //创建按钮
     static compo_button_t *btn;
-    for (u8 idx_btn = 0; idx_btn < DROPDOWN_DISP_BTN_ITEM_CNT; idx_btn++) {
+    for (u8 idx_btn = 0; idx_btn < DROPDOWN_DISP_BTN_ITEM_CNT; idx_btn++)
+    {
         btn = compo_button_create_by_image(frm, tbl_dropdown_disp_btn_item[idx_btn].res_addr);
         compo_setid(btn, tbl_dropdown_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_dropdown_disp_btn_item[idx_btn].x, tbl_dropdown_disp_btn_item[idx_btn].y);
@@ -165,7 +183,7 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_textbox_set_location(battery_txt, 200, 28, 0, 0);
     compo_textbox_set_autosize(battery_txt, true);
     compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
-    compo_textbox_set_font(battery_txt, UI_BUF_0FONT_FONT_ASC_BIN);
+    compo_textbox_set_font(battery_txt, UI_BUF_0FONT_FONT_BIN);
     compo_textbox_set_forecolor(battery_txt, make_color(0xae, 0xb3, 0xbc));     //和电池底图颜色一致
 
     func_clock_sub_dropdown_battery_pic_update();
@@ -189,53 +207,61 @@ static void func_clock_sub_dropdown_click_handler(void)
 {
     int id = compo_get_button_id();
     printf("id: %d\n", id);
-    switch(id) {
-    case COMPO_ID_BTN_CONNECT:
-        if(bt_get_scan()) {
-            if (bt_is_connected()) {
-                bt_disconnect(0);
+    switch(id)
+    {
+        case COMPO_ID_BTN_CONNECT:
+            if(bt_get_scan())
+            {
+                if (bt_is_connected())
+                {
+                    bt_disconnect(0);
+                }
+                bt_scan_disable();
             }
-            bt_scan_disable();
-        }else {
-            bt_scan_enable();
-            bt_connect();
-        }
-        printf("bt_get_scan: %d\n", bt_get_scan());
-        func_clock_sub_dropdown_bluetooth_btn_pic_update();
-        break;
-    case COMPO_ID_BTN_DISCURD:
-        if(dropdown_disturb_sw)
-        {
-            uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_CLOSE);
-        }
-        else
-        {
-            uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_ALLDAY_OPEN);
-        }
-        dropdown_disturb_sw = !dropdown_disturb_sw;
-        func_clock_sub_dropdown_disturb_pic_update();
-        break;
-    case COMPO_ID_BTN_MUTE:
-        if(sys_cb.mute) {
-            bsp_sys_unmute();
-        }else {
-            bsp_sys_mute();
-        }
-        func_clock_sub_dropdown_mute_pic_update();          //静音更新
-        break;
-    //点击任务跳转
-    case COMPO_ID_BTN_FLASHLIGHT:
-        func_cb.sta = FUNC_FLASHLIGHT;
-        break;
-    case COMPO_ID_BTN_SCAN:
-        func_cb.sta = FUNC_SCAN;
-        break;
-    case COMPO_ID_BTN_LIGHT:
-        func_cb.sta = FUNC_LIGHT;
-        break;
+            else
+            {
+                bt_scan_enable();
+                bt_connect();
+            }
+            printf("bt_get_scan: %d\n", bt_get_scan());
+            func_clock_sub_dropdown_bluetooth_btn_pic_update();
+            break;
+        case COMPO_ID_BTN_DISCURD:
+            if(dropdown_disturb_sw)
+            {
+                uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_CLOSE);
+            }
+            else
+            {
+                uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_ALLDAY_OPEN);
+            }
+            dropdown_disturb_sw = !dropdown_disturb_sw;
+            func_clock_sub_dropdown_disturb_pic_update();
+            break;
+        case COMPO_ID_BTN_MUTE:
+            if(sys_cb.mute)
+            {
+                bsp_sys_unmute();
+            }
+            else
+            {
+                bsp_sys_mute();
+            }
+            func_clock_sub_dropdown_mute_pic_update();          //静音更新
+            break;
+        //点击任务跳转
+        case COMPO_ID_BTN_FLASHLIGHT:
+            func_cb.sta = FUNC_FLASHLIGHT;
+            break;
+        case COMPO_ID_BTN_SCAN:
+            func_cb.sta = FUNC_SCAN;
+            break;
+        case COMPO_ID_BTN_LIGHT:
+            func_cb.sta = FUNC_LIGHT;
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -243,44 +269,46 @@ static void func_clock_sub_dropdown_click_handler(void)
 static void func_clock_sub_dropdown_message(size_msg_t msg)
 {
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_clock_sub_dropdown_click_handler();
-        break;
-    case MSG_CTP_SHORT_LEFT:
-        break;
-    case MSG_CTP_SHORT_RIGHT:
-        break;
-    case MSG_CTP_SHORT_UP:
-        if (func_switching(FUNC_SWITCH_MENU_DROPDOWN_UP, NULL)) {
-            f_clk->sta = FUNC_CLOCK_MAIN;                   //上滑返回到时钟主界面
-        }
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_clock_sub_dropdown_click_handler();
+            break;
+        case MSG_CTP_SHORT_LEFT:
+            break;
+        case MSG_CTP_SHORT_RIGHT:
+            break;
+        case MSG_CTP_SHORT_UP:
+            if (func_switching(FUNC_SWITCH_MENU_DROPDOWN_UP, NULL))
+            {
+                f_clk->sta = FUNC_CLOCK_MAIN;                   //上滑返回到时钟主界面
+            }
+            break;
 
-    case KU_BACK:
-        func_switching(FUNC_SWITCH_MENU_DROPDOWN_UP | FUNC_SWITCH_AUTO, NULL);
-        f_clk->sta = FUNC_CLOCK_MAIN;                       //单击BACK键返回到时钟主界面
-        break;
-    case MSG_SYS_1S:
-        func_clock_sub_dropdown_battery_pic_update();       //电量更新
-        func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
-        func_clock_sub_dropdown_mute_pic_update();          //静音更新
-        break;
-    case MSG_QDEC_BACKWARD:
-        printf("MSG_QDEC_BACKWARD\n");
-        break;
+        case KU_BACK:
+            func_switching(FUNC_SWITCH_MENU_DROPDOWN_UP | FUNC_SWITCH_AUTO, NULL);
+            f_clk->sta = FUNC_CLOCK_MAIN;                       //单击BACK键返回到时钟主界面
+            break;
+        case MSG_SYS_1S:
+            func_clock_sub_dropdown_battery_pic_update();       //电量更新
+            func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
+            func_clock_sub_dropdown_mute_pic_update();          //静音更新
+            break;
+        case MSG_QDEC_BACKWARD:
+            printf("MSG_QDEC_BACKWARD\n");
+            break;
 
-    case MSG_QDEC_FORWARD:
-        printf("MSG_QDEC_FORWARD\n");
-        break;
+        case MSG_QDEC_FORWARD:
+            printf("MSG_QDEC_FORWARD\n");
+            break;
 
-    case EVT_CLOCK_DROPDOWN_EXIT:
-        f_clk->sta = FUNC_CLOCK_MAIN;                       //返回到时钟主界面
-        break;
+        case EVT_CLOCK_DROPDOWN_EXIT:
+            f_clk->sta = FUNC_CLOCK_MAIN;                       //返回到时钟主界面
+            break;
 
-    default:
-        func_clock_sub_message(msg);
-        break;
+        default:
+            func_clock_sub_message(msg);
+            break;
     }
 }
 
@@ -289,7 +317,8 @@ static void func_clock_sub_dropdown_enter(void)
 {
     func_clock_butterfly_set_light_visible(false);
     func_clock_sub_dropdown_form_create();
-    if (!func_switching(FUNC_SWITCH_MENU_DROPDOWN_DOWN, NULL)) {
+    if (!func_switching(FUNC_SWITCH_MENU_DROPDOWN_DOWN, NULL))
+    {
         return;                                             //下拉到一半取消
     }
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
@@ -321,7 +350,8 @@ static void func_clock_sub_dropdown_exit(void)
 void func_clock_sub_dropdown(void)
 {
     func_clock_sub_dropdown_enter();
-    while (func_cb.sta == FUNC_CLOCK && ((f_clock_t *)func_cb.f_cb)->sta == FUNC_CLOCK_SUB_DROPDOWN) {
+    while (func_cb.sta == FUNC_CLOCK && ((f_clock_t *)func_cb.f_cb)->sta == FUNC_CLOCK_SUB_DROPDOWN)
+    {
         func_clock_sub_dropdown_process();
         func_clock_sub_dropdown_message(msg_dequeue());
     }

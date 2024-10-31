@@ -49,7 +49,7 @@ typedef struct f_sidebar_t_
 } f_sidebar_t;
 
 
-static const  weather_list[] =
+static const u32 weather_list[] =
 {
     UI_BUF_WEATHER_UNKNOWN_BIN,                        //未知
     UI_BUF_WEATHER_SUNNY_BIN,                          //晴天

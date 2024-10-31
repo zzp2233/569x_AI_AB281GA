@@ -961,6 +961,7 @@ void uteApplicationCommonSyncDataTimerMsg(void)
     }
     if (is_le_buff_full(2))
     {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,le_buff_full!!!",__func__);
         uteModulePlatformRestartTimer(&uteApplicationCommonSyncDataTimer, UTE_SEND_DATA_TO_PHONE_INVTERVAL);
         return;
     }
@@ -1759,7 +1760,7 @@ bool uteApplicationCommonGetAncsConnStatus(void)
 
 /**
  * @brief        获取设备二维码
- * @details      
+ * @details
  * @param[in]    len     二维码字符最大长度
  * @param[out]   qrBuff  二维码字符串
  * @return       二维码字符长度

@@ -11,16 +11,17 @@
 
 
 //组件ID
-enum {
+enum
+{
     //按键
-	COMPO_ID_BTN_OK = 1,
-	COMPO_ID_BTN_SLIDE,
+    COMPO_ID_BTN_OK = 1,
+    COMPO_ID_BTN_SLIDE,
 
     //图像
-	COMPO_ID_PIC_MODE,
-	COMPO_ID_PIC_OK_CLICK,
+    COMPO_ID_PIC_MODE,
+    COMPO_ID_PIC_OK_CLICK,
 
-	//数字
+    //数字
     COMPO_ID_NUM_UU,
     COMPO_ID_NUM_UP,
     COMPO_ID_NUM_CENTER,
@@ -28,7 +29,8 @@ enum {
     COMPO_ID_NUM_DD,
 };
 
-typedef struct breathe_set_num_item_t_ {
+typedef struct breathe_set_num_item_t_
+{
     int num_cnt;
     u16 num_id;
     s16 load_id;
@@ -39,7 +41,8 @@ typedef struct breathe_set_num_item_t_ {
     u8 alpha;
 } breathe_set_num_item_t;
 
-typedef struct f_breathe_sub_mode_t_ {
+typedef struct f_breathe_sub_mode_t_
+{
     breathe_set_num_item_t set_num_item[5];
     area_t size;
     u16 num_height;
@@ -58,8 +61,9 @@ typedef struct f_breathe_sub_mode_t_ {
 #define BREATHE_CLOCK_SET_NUM_POS_Y(y_start,space,cnt)    ((y_start)+(space)*(cnt))
 
 //搞个数字item，创建时遍历一下
-static const breathe_set_num_item_t tbl_breathe_set_num_item[] = {
-/*   num_cnt,      num_id,             load_num_id              val,                 x,                    y,                                             visible_en      alpha*/
+static const breathe_set_num_item_t tbl_breathe_set_num_item[] =
+{
+    /*   num_cnt,      num_id,             load_num_id              val,                 x,                    y,                                             visible_en      alpha*/
     {2,        COMPO_ID_NUM_UU,       COMPO_ID_NUM_UU,          /*2,*/          BREATHE_TXT_ITEM_M_X,         BREATHE_TXT_ITEM_Y,                                true,           100},
     {2,        COMPO_ID_NUM_UP,       COMPO_ID_NUM_UP,          /*1,*/          BREATHE_TXT_ITEM_M_X,         BREATHE_TXT_ITEM_Y+BREATHE_TXT_ITEM_Y_OFFSET,      true,           100},
     {2,        COMPO_ID_NUM_CENTER,   COMPO_ID_NUM_CENTER,      /*0,*/          BREATHE_TXT_ITEM_M_X,         BREATHE_TXT_ITEM_Y+BREATHE_TXT_ITEM_Y_OFFSET*2,    true,           255},
@@ -69,14 +73,16 @@ static const breathe_set_num_item_t tbl_breathe_set_num_item[] = {
 };
 
 //模式字符映射表
-typedef struct breathe_mode_tbl_t_ {
+typedef struct breathe_mode_tbl_t_
+{
     u16 str_id;
     u16 res;
 } breathe_mode_tbl_t;
 
 #define BREATHE_MODE_TBL_CNT                ((int)(sizeof(breathe_mode_tbl) / sizeof(breathe_mode_tbl[0])))
 //呼吸模式映射表
-static const breathe_mode_tbl_t breathe_mode_tbl[] = {
+static const breathe_mode_tbl_t breathe_mode_tbl[] =
+{
     {STR_SLOW, 0},          //缓慢0
     {STR_SOOTHING, 1},      //舒缓1
     {STR_FASTER, 2},        //快速2
@@ -85,22 +91,31 @@ static const breathe_mode_tbl_t breathe_mode_tbl[] = {
 //获取呼吸模式映射表 上一个和下一个的对应的下标
 static u8 func_breathe_get_str_cal(s8 num, u8 mode)
 {
-    if (num < 0) {
+    if (num < 0)
+    {
         num += BREATHE_MODE_TBL_CNT;
     }
 
-    if (mode == 1) {
-        if (num == 0 || num > BREATHE_MODE_TBL_CNT - 1) {
+    if (mode == 1)
+    {
+        if (num == 0 || num > BREATHE_MODE_TBL_CNT - 1)
+        {
             return BREATHE_MODE_TBL_CNT - 1;
         }
         return num - 1;
-    } else if (mode == 2){
-        if (num >= BREATHE_MODE_TBL_CNT - 1) {
+    }
+    else if (mode == 2)
+    {
+        if (num >= BREATHE_MODE_TBL_CNT - 1)
+        {
             return 0;
         }
         return num + 1;
-    } else {
-        if (num > BREATHE_MODE_TBL_CNT - 1) {
+    }
+    else
+    {
+        if (num > BREATHE_MODE_TBL_CNT - 1)
+        {
             return BREATHE_MODE_TBL_CNT - 1;
         }
         return num;
@@ -125,8 +140,9 @@ compo_form_t *func_breathe_sub_mode_form_create(void)
     compo_textbox_t *txt_str;
     u8 min = sys_cb.breathe_mode;
 
-	char buf[6];
-    for (u8 idx = 0; idx < BREATHE_SET_NUM_ITEM_CNT; idx++) {
+    char buf[6];
+    for (u8 idx = 0; idx < BREATHE_SET_NUM_ITEM_CNT; idx++)
+    {
         txt_str = compo_textbox_create_for_page(frm, sub_page, tbl_breathe_set_num_item[idx].num_cnt);
         compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_BIN);
         compo_setid(txt_str, tbl_breathe_set_num_item[idx].num_id);
@@ -136,23 +152,32 @@ compo_form_t *func_breathe_sub_mode_form_create(void)
         compo_textbox_set_alpha(txt_str, tbl_breathe_set_num_item[idx].alpha);
 
         memset(buf, 0, sizeof(buf));
-        if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_UU) {
+        if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_UU)
+        {
             snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(func_breathe_get_str_cal(min, 1), 1)].str_id]);
-        } else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_UP) {
+        }
+        else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_UP)
+        {
             snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(min, 1)].str_id]);
-        } else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_CENTER) {
-            //compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_ASC_BIN);
+        }
+        else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_CENTER)
+        {
+            //compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_NUM_24_BIN);
             snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[min].str_id]);
-        } else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_DOWN) {
+        }
+        else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_DOWN)
+        {
             snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(min, 2)].str_id]);
-        } else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_DD) {
+        }
+        else if (tbl_breathe_set_num_item[idx].load_id == COMPO_ID_NUM_DD)
+        {
             snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(func_breathe_get_str_cal(min, 2), 2)].str_id]);
         }
         compo_textbox_set(txt_str, buf);
     }
 
-	//新建按钮
-	compo_button_t *btn;
+    //新建按钮
+    compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_setid(btn, COMPO_ID_BTN_OK);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_BUTTON_BIN).hei/2 - 5);
@@ -201,9 +226,12 @@ static void breathe_set_num_pos_cal(s32 dy, bool press)
 
     time_item = &f_set->set_num_item[0];
 
-    if (press) {
+    if (press)
+    {
         distance = dy - last_dy;
-    } else {
+    }
+    else
+    {
         dy = 0;
         last_dy = 0;
         distance = 0;
@@ -215,32 +243,47 @@ static void breathe_set_num_pos_cal(s32 dy, bool press)
     time_item[3].y += distance;
     time_item[4].y += distance;
 
-    for (int i=0; i<5; i++) {
-        if (time_item[i].load_id == COMPO_ID_NUM_UP) {
-            if ((time_item[i].y /*- (BREATHE_NUM_PIC_CENTER_Y - size.hei/2)*/) <= -num_height) {
-                dir = -1;
-                break;
-            } else if (press == false && ((time_item[i].y /*- (BREATHE_NUM_PIC_CENTER_Y - size.hei/2)*/) <= -num_height/2)) {
+    for (int i=0; i<5; i++)
+    {
+        if (time_item[i].load_id == COMPO_ID_NUM_UP)
+        {
+            if ((time_item[i].y /*- (BREATHE_NUM_PIC_CENTER_Y - size.hei/2)*/) <= -num_height)
+            {
                 dir = -1;
                 break;
             }
-        } else if (time_item[i].load_id == COMPO_ID_NUM_DOWN) {
-            if (time_item[i].y >= (/*BREATHE_NUM_PIC_CENTER_Y + size.hei/2*/size_hei + num_height)) {
+            else if (press == false && ((time_item[i].y /*- (BREATHE_NUM_PIC_CENTER_Y - size.hei/2)*/) <= -num_height/2))
+            {
+                dir = -1;
+                break;
+            }
+        }
+        else if (time_item[i].load_id == COMPO_ID_NUM_DOWN)
+        {
+            if (time_item[i].y >= (/*BREATHE_NUM_PIC_CENTER_Y + size.hei/2*/size_hei + num_height))
+            {
                 dir = 1;
                 break;
-            } else if (press == false && (time_item[i].y >= (/*BREATHE_NUM_PIC_CENTER_Y + size.hei/2*/size_hei + num_height/2))) {
+            }
+            else if (press == false && (time_item[i].y >= (/*BREATHE_NUM_PIC_CENTER_Y + size.hei/2*/size_hei + num_height/2)))
+            {
                 dir = 1;
                 break;
             }
         }
     }
 
-    if (dir) {
-        for(int i=0; i<5; i++) {
+    if (dir)
+    {
+        for(int i=0; i<5; i++)
+        {
             time_item[i].load_id += dir;
-            if (time_item[i].load_id < COMPO_ID_NUM_UU) {
+            if (time_item[i].load_id < COMPO_ID_NUM_UU)
+            {
                 time_item[i].load_id = COMPO_ID_NUM_DD;
-            } else if (time_item[i].load_id > COMPO_ID_NUM_DD) {
+            }
+            else if (time_item[i].load_id > COMPO_ID_NUM_DD)
+            {
                 time_item[i].load_id = COMPO_ID_NUM_UU;
             }
         }
@@ -248,29 +291,40 @@ static void breathe_set_num_pos_cal(s32 dy, bool press)
         f_set->mcnt += dir;
     }
 
-    if (press == false || dir) {
-        for(int i=0; i<5; i++) {
-            if (time_item[i].load_id == COMPO_ID_NUM_UU) {
+    if (press == false || dir)
+    {
+        for(int i=0; i<5; i++)
+        {
+            if (time_item[i].load_id == COMPO_ID_NUM_UU)
+            {
                 time_item[i].visible_en = true;
                 time_item[i].num_cnt = 2;
                 time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_UU-COMPO_ID_NUM_UU);
                 time_item[i].alpha = 100;
-            } else if (time_item[i].load_id == COMPO_ID_NUM_DD) {
+            }
+            else if (time_item[i].load_id == COMPO_ID_NUM_DD)
+            {
                 time_item[i].visible_en = true;
                 time_item[i].num_cnt = 2;
                 time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_DD-COMPO_ID_NUM_UU);
                 time_item[i].alpha = 100;
-            } else if (time_item[i].load_id == COMPO_ID_NUM_UP) {
+            }
+            else if (time_item[i].load_id == COMPO_ID_NUM_UP)
+            {
                 time_item[i].visible_en = true;
                 time_item[i].num_cnt = 2;
                 time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_UP-COMPO_ID_NUM_UU);
                 time_item[i].alpha = 100;
-            } else if (time_item[i].load_id == COMPO_ID_NUM_CENTER) {
+            }
+            else if (time_item[i].load_id == COMPO_ID_NUM_CENTER)
+            {
                 time_item[i].visible_en = true;
                 time_item[i].num_cnt = 2;
                 time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_CENTER-COMPO_ID_NUM_UU);
                 time_item[i].alpha = 255;
-            } else if (time_item[i].load_id == COMPO_ID_NUM_DOWN) {
+            }
+            else if (time_item[i].load_id == COMPO_ID_NUM_DOWN)
+            {
                 time_item[i].visible_en = true;
                 time_item[i].num_cnt = 2;
                 time_item[i].y = BREATHE_CLOCK_SET_NUM_POS_Y(BREATHE_CLOCK_SET_NUM_POS_Y_START,BREATHE_TXT_ITEM_Y_OFFSET,COMPO_ID_NUM_DOWN-COMPO_ID_NUM_UU);
@@ -279,11 +333,12 @@ static void breathe_set_num_pos_cal(s32 dy, bool press)
         }
     }
 
-    for (int i=0; i<5; i++) {
+    for (int i=0; i<5; i++)
+    {
         compo_textbox_t *txt_num = compo_getobj_byid(time_item[i].num_id);
 
         //if (time_item[i].load_id == COMPO_ID_NUM_CENTER) {
-        //    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_ASC_BIN);
+        //    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
         //} else {
         //    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_BIN);
         //}
@@ -318,7 +373,8 @@ static void func_breathe_sub_mode_move_handle(void)
     u8 min = sys_cb.breathe_mode;
     s8 min_disp = min;
 
-    for (;;) {
+    for (;;)
+    {
         flag_press = ctp_get_dxy(&dx, &dy);
         //printf("x:%d, y:%d\n",dx, dy);
 
@@ -326,25 +382,36 @@ static void func_breathe_sub_mode_move_handle(void)
         //min_disp = (min - f_set->mcnt) % 60;
         min_disp = (min - f_set->mcnt) % BREATHE_MODE_TBL_CNT;
 
-        for (int idx = 0; idx < 5; idx++) {
+        for (int idx = 0; idx < 5; idx++)
+        {
             memset(buf, 0, sizeof(buf));
             compo_textbox_t *txt_num = compo_getobj_byid(time_item[idx].num_id);
-            if (time_item[idx].load_id == COMPO_ID_NUM_UU) {      //上上次的时间
+            if (time_item[idx].load_id == COMPO_ID_NUM_UU)        //上上次的时间
+            {
                 snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(func_breathe_get_str_cal(min_disp, 1), 1)].str_id]);
-            } else if (time_item[idx].load_id == COMPO_ID_NUM_UP) { //上次的时间
+            }
+            else if (time_item[idx].load_id == COMPO_ID_NUM_UP)     //上次的时间
+            {
                 snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(min_disp, 1)].str_id]);
-            } else if (time_item[idx].load_id == COMPO_ID_NUM_CENTER) {  //当前时间
+            }
+            else if (time_item[idx].load_id == COMPO_ID_NUM_CENTER)      //当前时间
+            {
                 snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(min_disp, 0)].str_id]);
-            } else if (time_item[idx].load_id == COMPO_ID_NUM_DOWN) { //下次时间
+            }
+            else if (time_item[idx].load_id == COMPO_ID_NUM_DOWN)     //下次时间
+            {
                 snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(min_disp, 2)].str_id]);
-            } else if (time_item[idx].load_id == COMPO_ID_NUM_DD) {   //下下次时间
+            }
+            else if (time_item[idx].load_id == COMPO_ID_NUM_DD)       //下下次时间
+            {
                 snprintf(buf, sizeof(buf), "%s", i18n[breathe_mode_tbl[func_breathe_get_str_cal(func_breathe_get_str_cal(min_disp, 2), 2)].str_id]);
             }
             compo_textbox_set(txt_num, buf);
         }
 
 
-        if (!flag_press) {
+        if (!flag_press)
+        {
             f_set->mcnt = 0;
             min = func_breathe_get_str_cal(min_disp, 0);
             sys_cb.breathe_mode = min;
@@ -366,17 +433,18 @@ static void func_breathe_sub_mode_button_touch_handle(void)
     //获取图片组件的地址
     compo_picturebox_t *pic_click = compo_getobj_byid(COMPO_ID_PIC_OK_CLICK);
 
-    switch (id) {
-    case COMPO_ID_BTN_OK:
-        compo_picturebox_set_visible(pic_click, true);
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_OK:
+            compo_picturebox_set_visible(pic_click, true);
+            break;
 
-    case COMPO_ID_BTN_SLIDE:
-        func_breathe_sub_mode_move_handle();
-        break;
+        case COMPO_ID_BTN_SLIDE:
+            func_breathe_sub_mode_move_handle();
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
 }
@@ -393,19 +461,21 @@ static void func_breathe_sub_mode_button_click(void)
 {
     int id = compo_get_button_id();
 
-    switch (id) {
-    case COMPO_ID_BTN_OK:
-        if (func_cb.last == FUNC_BREATHE) {
+    switch (id)
+    {
+        case COMPO_ID_BTN_OK:
+            if (func_cb.last == FUNC_BREATHE)
+            {
+                func_cb.sta = FUNC_BREATHE;
+                task_stack_pop();
+                break;
+            }
+
             func_cb.sta = FUNC_BREATHE;
-            task_stack_pop();
             break;
-        }
 
-        func_cb.sta = FUNC_BREATHE;
-        break;
-
-    default:
-        break;
+        default:
+            break;
     }
 
     func_breathe_sub_mode_button_release_handle();
@@ -421,34 +491,35 @@ static void func_breathe_sub_mode_process(void)
 static void func_breathe_sub_mode_message(size_msg_t msg)
 {
 
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_breathe_sub_mode_button_touch_handle();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_breathe_sub_mode_button_touch_handle();
+            break;
 
-	case MSG_CTP_CLICK:
-        func_breathe_sub_mode_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_breathe_sub_mode_button_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        func_breathe_sub_mode_button_release_handle();
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_breathe_sub_mode_button_release_handle();
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_breathe_sub_mode_button_release_handle();
-        func_message(msg);
-        break;
+        case MSG_CTP_SHORT_RIGHT:
+            func_breathe_sub_mode_button_release_handle();
+            func_message(msg);
+            break;
 
-    case MSG_QDEC_BACKWARD:
-    case MSG_QDEC_FORWARD:
-        break;
+        case MSG_QDEC_BACKWARD:
+        case MSG_QDEC_FORWARD:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -483,7 +554,8 @@ void func_breathe_sub_mode(void)
 {
     printf("%s\n", __func__);
     func_breathe_sub_mode_enter();
-    while (func_cb.sta == FUNC_BREATHE_SUB_MODE) {
+    while (func_cb.sta == FUNC_BREATHE_SUB_MODE)
+    {
         func_breathe_sub_mode_process();
         func_breathe_sub_mode_message(msg_dequeue());
     }

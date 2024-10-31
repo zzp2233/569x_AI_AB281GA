@@ -147,8 +147,8 @@ static void func_long_press_event_handle(s32 distance, u16 id)
 static void func_long_press_slide_disp_handle()
 {
     f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
-    compo_button_t * img_btn = NULL;
-    compo_shape_t  * rect_cover = NULL;
+    static compo_button_t * img_btn = NULL;
+    static compo_shape_t  * rect_cover = NULL;
     s32 distance,y;
 
     if(f_long_press->touch_flag == true)   //是否在触屏状态

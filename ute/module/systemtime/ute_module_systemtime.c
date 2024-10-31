@@ -986,9 +986,17 @@ void uteModuleSystemtimeEnableAlarm(uint8_t index, bool en)
 
 uint8_t uteModuleSystemtimeGetAlarmHour(uint8_t index)
 {
-    ute_module_systemtime_one_alarm_t alarm;
-    uteModuleSystemtimeGetAlarm(&alarm, index);
-    return alarm.hour;
+    uint8_t hour = 0;
+    ute_module_systemtime_one_alarm_t *alarm = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (alarm == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return 0;
+    }
+    uteModuleSystemtimeGetAlarm(alarm, index);
+    hour = alarm->hour;
+    ab_free(alarm);
+    return hour;
 }
 
 /**
@@ -1002,9 +1010,17 @@ uint8_t uteModuleSystemtimeGetAlarmHour(uint8_t index)
 
 uint8_t uteModuleSystemtimeGetAlarmMin(uint8_t index)
 {
-    ute_module_systemtime_one_alarm_t alarm;
-    uteModuleSystemtimeGetAlarm(&alarm, index);
-    return alarm.min;
+    uint8_t min = 0;
+    ute_module_systemtime_one_alarm_t *alarm = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (alarm == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return 0;
+    }
+    uteModuleSystemtimeGetAlarm(alarm, index);
+    min = alarm->min;
+    ab_free(alarm);
+    return min;
 }
 
 /**
@@ -1018,9 +1034,17 @@ uint8_t uteModuleSystemtimeGetAlarmMin(uint8_t index)
 
 uint8_t uteModuleSystemtimeGetAlarmSec(uint8_t index)
 {
-    ute_module_systemtime_one_alarm_t alarm;
-    uteModuleSystemtimeGetAlarm(&alarm, index);
-    return alarm.sec;
+    uint8_t sec = 0;
+    ute_module_systemtime_one_alarm_t *alarm = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (alarm == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return 0;
+    }
+    uteModuleSystemtimeGetAlarm(alarm, index);
+    sec = alarm->sec;
+    ab_free(alarm);
+    return sec;
 }
 
 /**
@@ -1035,12 +1059,17 @@ uint8_t uteModuleSystemtimeGetAlarmSec(uint8_t index)
 uint8_t uteModuleSystemtimeGetAlarmCycle(uint8_t index)
 {
     uint8_t ret = 0;
-    ute_module_systemtime_one_alarm_t alarm;
-    uteModuleSystemtimeGetAlarm(&alarm, index);
+    ute_module_systemtime_one_alarm_t *alarm = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (alarm == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return 0;
+    }
+    uteModuleSystemtimeGetAlarm(alarm, index);
 
-    ret |= alarm.weekDay;
+    ret |= alarm->weekDay;
 
-    if (alarm.isSingle)
+    if (alarm->isSingle)
     {
         ret |= BIT(7);
     }
@@ -1049,6 +1078,7 @@ uint8_t uteModuleSystemtimeGetAlarmCycle(uint8_t index)
         ret &= ~BIT(7);
     }
 
+    ab_free(alarm);
     return ret;
 }
 
@@ -1063,9 +1093,17 @@ uint8_t uteModuleSystemtimeGetAlarmCycle(uint8_t index)
 
 uint8_t uteModuleSystemtimeGetAlarmEnableState(uint8_t index)
 {
-    ute_module_systemtime_one_alarm_t alarm;
-    uteModuleSystemtimeGetAlarm(&alarm, index);
-    return alarm.isOpen;
+    uint8_t isOpen = 0;
+    ute_module_systemtime_one_alarm_t *alarm = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (alarm == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return 0;
+    }
+    uteModuleSystemtimeGetAlarm(alarm, index);
+    isOpen = alarm->isOpen;
+    ab_free(alarm);
+    return isOpen;
 }
 
 /**
@@ -1106,17 +1144,22 @@ uint8_t uteModuleSystemtimeGetAlarmIsFree(uint8_t index)
 uint8_t uteModuleSystemtimeAlarmEdit(uint8_t index, bool enable, uint8_t cycle, uint8_t alarm_hour, uint8_t alarm_minute, uint8_t motor_mode, uint8_t remind_later)
 {
 
-    ute_module_systemtime_one_alarm_t set = {0};
-
-    set.isOpen = enable;
-    set.weekDay = cycle & (~BIT(7));
-    set.isSingle = (cycle & BIT(7)) ? true : false;
-    set.hour = alarm_hour;
-    set.min = alarm_minute;
-    set.sec = 0;
+    ute_module_systemtime_one_alarm_t *set = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (set == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return 0;
+    }
+    set->isOpen = enable;
+    set->weekDay = cycle & (~BIT(7));
+    set->isSingle = (cycle & BIT(7)) ? true : false;
+    set->hour = alarm_hour;
+    set->min = alarm_minute;
+    set->sec = 0;
 
 //    uteModuleSystemtimeSetAlarmTotalCnt(uteModuleSystemtimeGetAlarmTotalCnt()+1);
-    uteModuleSystemtimeSetAlarm(set, index);
+    uteModuleSystemtimeSetAlarm(*set, index);
+    ab_free(set);
     return 0;
 }
 

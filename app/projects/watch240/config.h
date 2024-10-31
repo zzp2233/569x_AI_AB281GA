@@ -73,7 +73,7 @@
 
 #define FORM_TITLE_HEIGHT               28//32                      //窗体标题高度
 #define FORM_TITLE_LEFT                 (GUI_SCREEN_WIDTH / 9)
-
+#define FORM_TITLE_RIGHT                (GUI_SCREEN_WIDTH -  GUI_SCREEN_WIDTH / 3 - 10)
 
 #define UI_BUF_FONT_SYS                 UI_BUF_0FONT_FONT_BIN           //系统字体
 #define UI_BUF_FONT_FORM_TIME           UI_BUF_0FONT_FONT_BIN//UI_BUF_0FONT_FONT_ASC_BIN       //窗体标题栏时间字体

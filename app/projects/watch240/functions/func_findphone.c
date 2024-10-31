@@ -10,12 +10,14 @@
 #define FINDPHONE_POS_Y_MAX        170// 240
 #define FINDPHONE_POS_Y_MIN        108// 140
 
-typedef struct f_findphone_t_ {
+typedef struct f_findphone_t_
+{
     u16 pos_xy;
     u8 flag_find;
 } f_findphone_t;
 
-enum {
+enum
+{
     COMPO_ID_TEXT_FIND = 1,
     COMPO_ID_BUTTON_FIND,
     //COMPO_ID_BUTTON1_FIND
@@ -29,7 +31,7 @@ bool start_falg=0;
 //创建查找手机窗体
 compo_form_t *func_findphone_form_create(void)
 {
-   // component_t *compo;
+    // component_t *compo;
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -46,7 +48,7 @@ compo_form_t *func_findphone_form_create(void)
 
     //图像按钮
     compo_button_t * btn;
-	btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_setid(btn, COMPO_ID_BUTTON_FIND);
     compo_button_set_pos((compo_button_t *)btn, GUI_SCREEN_CENTER_X, 258);
 
@@ -68,21 +70,28 @@ static void func_findphone_process(void)
 
     if(start_falg)
     {
-      if (tick_check_expire(ticks, 10)) {
-          ticks = tick_get();
-          if (f_act->pos_xy <= FINDPHONE_POS_Y_MAX && f_act->flag_find) {
-              f_act->pos_xy++;
-          } else {
-              f_act->flag_find = 0;
-              f_act->pos_xy--;
-              if (f_act->pos_xy <= FINDPHONE_POS_Y_MIN) {
-                  f_act->flag_find = 1;
-              }
+        if (tick_check_expire(ticks, 10))
+        {
+            ticks = tick_get();
+            if (f_act->pos_xy <= FINDPHONE_POS_Y_MAX && f_act->flag_find)
+            {
+                f_act->pos_xy++;
             }
-      }
-    }else{
-    f_act->pos_xy = 120;
-    f_act->flag_find = 1;
+            else
+            {
+                f_act->flag_find = 0;
+                f_act->pos_xy--;
+                if (f_act->pos_xy <= FINDPHONE_POS_Y_MIN)
+                {
+                    f_act->flag_find = 1;
+                }
+            }
+        }
+    }
+    else
+    {
+        f_act->pos_xy = 120;
+        f_act->flag_find = 1;
     }
     compo_picturebox_set_size(pic, f_act->pos_xy, f_act->pos_xy);
     func_process();
@@ -91,7 +100,7 @@ static void func_findphone_process(void)
 //查找手机按键事件处理
 static void func_findphone_button_touch_handle(void)
 {
-    f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
+//    f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
     compo_textbox_t * txt;
 
     int id = compo_get_button_id();
@@ -114,25 +123,26 @@ static void func_findphone_button_touch_handle(void)
 //查找手机功能消息处理
 static void func_findphone_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_findphone_button_touch_handle();
-        break;
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_findphone_button_touch_handle();
+            break;
+        case MSG_CTP_CLICK:
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -161,7 +171,8 @@ void func_findphone(void)
 {
     printf("%s\n", __func__);
     func_findphone_enter();
-    while (func_cb.sta == FUNC_FINDPHONE) {
+    while (func_cb.sta == FUNC_FINDPHONE)
+    {
         func_findphone_process();
         func_findphone_message(msg_dequeue());
     }

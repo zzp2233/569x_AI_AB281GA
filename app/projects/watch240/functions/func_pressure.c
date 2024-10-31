@@ -155,7 +155,7 @@ static void func_pressure_button_click(void)
     switch (id)
     {
         case COMPO_ID_IMG_BTNTON:
-            func_switch_to(FUNC_PRESSURE_EXPLAIN,NULL);//跳转压力说明界面
+            func_switch_to(FUNC_PRESSURE_EXPLAIN, 0);//跳转压力说明界面
             break;
         default:
             break;

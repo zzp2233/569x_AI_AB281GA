@@ -14,7 +14,8 @@
 
 extern void func_debug_info_check();
 
-typedef struct f_about_t_ {
+typedef struct f_about_t_
+{
     bool flag_drag;                 //开始拖动
     s32 x_pos;
     s32 y_pos;
@@ -32,7 +33,7 @@ compo_form_t *func_set_sub_about_form_create(void)
 //    uint8_t davName[40];
 //    uint8_t Ble_Address[6];
 //    uint8_t Ble_Address_str_buf[17+2];
-//    uint8_t davNameLength = sizeof(davName);
+
 //
 //    memset(Ble_Address,'\0',sizeof(Ble_Address));
 //    memset(davName,'\0',sizeof(davName));
@@ -40,14 +41,18 @@ compo_form_t *func_set_sub_about_form_create(void)
 //    uteModulePlatformGetDevName(davName,&davNameLength);//获取设备名称
 //    uteModulePlatformGetBleMacAddress(Ble_Address);//获取蓝牙地址
 //   // UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"11111:%s",davName);
+    char davName[40];
+    memset(davName,'\0',sizeof(davName));
+    uint8_t davNameLength = sizeof(davName);
+    uteModulePlatformGetDevName((uint8_t*)davName,&davNameLength);//获取设备名称
 
     uint8_t Ble_Address[6];//获取蓝牙地址数组
-    uint8_t Ble_Address_str_buf[20];//蓝牙地址文本数组
+    char Ble_Address_str_buf[20];//蓝牙地址文本数组
     memset(Ble_Address_str_buf,'\0',sizeof(Ble_Address_str_buf));//初始化数组
     uteModulePlatformGetBleMacAddress(Ble_Address);//获取蓝牙地址
 
     snprintf((char *)Ble_Address_str_buf, sizeof(Ble_Address_str_buf), "%02x:%02x:%02x:%02x:%02x:%02x",\
-    Ble_Address[0],Ble_Address[1],Ble_Address[2],Ble_Address[3],Ble_Address[4],Ble_Address[5]); //信息
+             Ble_Address[0],Ble_Address[1],Ble_Address[2],Ble_Address[3],Ble_Address[4],Ble_Address[5]); //信息
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -67,8 +72,8 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y/2 - SHAPE_HEIGTH/2.5);
 
-    txt = compo_textbox_create(frm,sizeof(DEFAULT_BLE_DEV_NEME));
-    compo_textbox_set(txt, DEFAULT_BLE_DEV_NEME);
+    txt = compo_textbox_create(frm,sizeof(davName));
+    compo_textbox_set(txt, davName);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y/2);
 
@@ -134,22 +139,23 @@ static void func_set_sub_about_message(size_msg_t msg)
     f_about_t *slp = (f_about_t *)func_cb.f_cb;
     int id = compo_get_button_id();
 
-    switch (msg) {
+    switch (msg)
+    {
 
-    case MSG_CTP_CLICK:
-         if(id == 1)
-         func_directly_back_to();
-        break;
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-        slp->flag_drag = true;
+        case MSG_CTP_CLICK:
+            if(id == 1)
+                func_directly_back_to();
+            break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+            slp->flag_drag = true;
 
-    case KU_DELAY_BACK:
-        break;
+        case KU_DELAY_BACK:
+            break;
 
-    default:
-		func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -171,7 +177,8 @@ void func_set_sub_about(void)
 {
     printf("%s\n", __func__);
     func_set_sub_about_enter();
-    while (func_cb.sta == FUNC_SET_SUB_ABOUT) {
+    while (func_cb.sta == FUNC_SET_SUB_ABOUT)
+    {
         //func_set_sub_about_process();
         func_set_sub_about_message(msg_dequeue());
     }

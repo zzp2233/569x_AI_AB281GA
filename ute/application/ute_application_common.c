@@ -1759,7 +1759,7 @@ bool uteApplicationCommonGetAncsConnStatus(void)
 
 /**
  * @brief        获取设备二维码
- * @details      
+ * @details
  * @param[in]    len     二维码字符最大长度
  * @param[out]   qrBuff  二维码字符串
  * @return       二维码字符长度

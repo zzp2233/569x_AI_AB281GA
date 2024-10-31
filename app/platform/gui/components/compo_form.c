@@ -41,7 +41,7 @@ compo_form_t *compo_form_create(bool flag_top)
     widget_set_location(page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
 
     widget_set_align_center(time, false);
-    widget_set_location(time, GUI_SCREEN_WIDTH - GUI_PAGE_TIME_WIDTH, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, GUI_PAGE_TIME_WIDTH, FORM_TITLE_HEIGHT);
+    widget_set_location(time, FORM_TITLE_RIGHT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, GUI_PAGE_TIME_WIDTH, FORM_TITLE_HEIGHT);
     widget_text_set_font(time, UI_BUF_FONT_FORM_TIME);
     widget_set_visible(time, false);
 
@@ -78,7 +78,8 @@ compo_form_t *compo_form_create(bool flag_top)
  **/
 void compo_form_destroy(compo_form_t *frm)
 {
-    if (frm == NULL) {
+    if (frm == NULL)
+    {
         return;
     }
     widget_pool_clear(frm->page);
@@ -96,7 +97,8 @@ void compo_form_destroy(compo_form_t *frm)
  **/
 void compo_form_set_location(compo_form_t *frm, s16 x, s16 y, s16 width, s16 height)
 {
-    if (frm == NULL || frm->page == NULL) {
+    if (frm == NULL || frm->page == NULL)
+    {
         halt(HALT_GUI_COMPO_FORM_PTR);
     }
     widget_set_location(frm->page, x, y, width, height);
@@ -112,7 +114,8 @@ void compo_form_set_location(compo_form_t *frm, s16 x, s16 y, s16 width, s16 hei
  **/
 void compo_form_set_pos(compo_form_t *frm, s16 x, s16 y)
 {
-    if (frm == NULL || frm->page == NULL) {
+    if (frm == NULL || frm->page == NULL)
+    {
         halt(HALT_GUI_COMPO_FORM_PTR);
     }
     widget_set_pos(frm->page, x, y);
@@ -127,7 +130,8 @@ void compo_form_set_pos(compo_form_t *frm, s16 x, s16 y)
  **/
 void compo_form_scale_to(compo_form_t *frm, s16 width, s16 height)
 {
-    if (frm == NULL || frm->page == NULL) {
+    if (frm == NULL || frm->page == NULL)
+    {
         halt(HALT_GUI_COMPO_FORM_PTR);
     }
     widget_page_scale_to(frm->page, width, height);
@@ -140,7 +144,8 @@ void compo_form_scale_to(compo_form_t *frm, s16 width, s16 height)
  **/
 void compo_form_set_alpha(compo_form_t *frm, u8 alpha)
 {
-    if (frm == NULL || frm->page == NULL) {
+    if (frm == NULL || frm->page == NULL)
+    {
         halt(HALT_GUI_COMPO_FORM_PTR);
     }
     widget_set_alpha(frm->page, alpha);
@@ -152,11 +157,14 @@ void compo_form_set_alpha(compo_form_t *frm, u8 alpha)
  **/
 static void compo_form_page_update(compo_form_t *frm)
 {
-    if (frm->mode == 0) {
+    if (frm->mode == 0)
+    {
         compo_textbox_set_visible(frm->title, false);
         widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
         widget_page_set_client(frm->page_body, 0, 0);
-    } else {
+    }
+    else
+    {
         compo_textbox_set_visible(frm->title, (frm->mode & COMPO_FORM_MODE_SHOW_TITLE) != 0);
         widget_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
         widget_set_visible(frm->title_icon, (frm->mode & COMPO_FORM_MODE_SHOW_ICON) != 0);
@@ -173,7 +181,8 @@ static void compo_form_page_update(compo_form_t *frm)
  **/
 void compo_form_set_title(compo_form_t *frm, const char *title)
 {
-    if (title != NULL) {
+    if (title != NULL)
+    {
         frm->mode |= COMPO_FORM_MODE_SHOW_TITLE;
         compo_textbox_set(frm->title, title);
 
@@ -181,7 +190,8 @@ void compo_form_set_title(compo_form_t *frm, const char *title)
 
         area_t text_area = widget_text_get_area(compo_textbox->txt);
         rect_t textbox_rect = widget_get_location(compo_textbox->txt);
-        if (text_area.wid > textbox_rect.wid) {
+        if (text_area.wid > textbox_rect.wid)
+        {
             compo_textbox->roll_cb.mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;
             compo_textbox->roll_cb.direction = -1;
         }
@@ -246,7 +256,8 @@ void compo_form_set_bg(compo_form_t *frm, u32 res_addr)
  **/
 void compo_form_set_title_icon(compo_form_t *frm, u32 res_addr)
 {
-    if (widget_text_get_area(frm->title->txt).wid) {
+    if (widget_text_get_area(frm->title->txt).wid)
+    {
         widget_set_pos(frm->title_icon, FORM_TITLE_LEFT + widget_text_get_area(frm->title->txt).wid +
                        gui_image_get_size(res_addr).wid / 2 + 5, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT / 2 - 2);
         widget_set_size(frm->title_icon, FORM_TITLE_HEIGHT, FORM_TITLE_HEIGHT);

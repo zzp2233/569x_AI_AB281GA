@@ -377,7 +377,7 @@ void uteModuleHeartSetHeartValue(int heartValue)
     }
     else
     {
-        uteModuleHeartData.heartValue = 0;        
+        uteModuleHeartData.heartValue = 0;
     }
 }
 /**

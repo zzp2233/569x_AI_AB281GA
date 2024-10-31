@@ -8,7 +8,8 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_scan_t_ {
+typedef struct f_scan_t_
+{
 
 } f_scan_t;
 
@@ -24,7 +25,7 @@ compo_form_t *func_scan_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SCAN]);
 
-	//创建按键
+    //创建按键
     //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_SCAN_BIN);
     //compo_button_set_pos(btn, 160, 180);
 
@@ -48,22 +49,23 @@ static void func_scan_process(void)
 //扫一扫功能消息处理
 static void func_scan_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -85,7 +87,8 @@ void func_scan(void)
 {
     printf("%s\n", __func__);
     func_scan_enter();
-    while (func_cb.sta == FUNC_SCAN) {
+    while (func_cb.sta == FUNC_SCAN)
+    {
         func_scan_process();
         func_scan_message(msg_dequeue());
     }

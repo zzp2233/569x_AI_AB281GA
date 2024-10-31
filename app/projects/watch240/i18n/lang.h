@@ -218,6 +218,7 @@ enum
     STR_HEAVY_RAIN,
 
     STR_NO_MSG,
+    STR_FIND_WATCH,
 };
 
 extern const char * const *i18n;

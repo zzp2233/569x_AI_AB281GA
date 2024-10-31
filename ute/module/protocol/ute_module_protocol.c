@@ -20,7 +20,7 @@
 #include "ute_module_notify.h"
 #include "ute_module_weather.h"
 #include "ute_module_heart.h"
-
+#include "func_cover.h"
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
 *@details      解析协议
@@ -216,8 +216,8 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
         cwmUserInfoUpdate();    //同步用户信息给赛维算法
 #endif
-        bool isHandScreenOn;
-        bool isFahrenheit;
+        bool isHandScreenOn = false;
+        bool isFahrenheit = false;
         uint32_t stepsTargetCnt =receive[6]<<24|receive[7]<<16|receive[8]<<8|receive[9];
         if(receive[10]==0x01)
         {
@@ -305,6 +305,8 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
             if ((receive[4] == 0x01) && (receive[5] == 0x02) && (receive[6] == 0x07) && (receive[7] == 0x01))
             {
                 /*!APP查找手环时亮屏 xjc 2022-01-12*/
+                sys_cb.cover_index = REMIND_COVER_FIND_WATCH;
+                sys_cb.remind_tag = true;
 
                 /************************/
                 //一件双连测试代码

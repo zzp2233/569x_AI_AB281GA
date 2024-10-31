@@ -108,7 +108,9 @@ extern void func_ota_ui(void);
 extern void func_pressure(void);//压力
 extern void func_pressure_explain(void);//压力说明
 extern void func_long_press(void);//关机 重启 SOS
+extern void func_ota_update(void);
 
+compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
 compo_form_t *func_pressure_explain_form_create(void);//压力说明
 compo_form_t *func_pressure_form_create(void);//压力
@@ -290,6 +292,7 @@ const func_t tbl_func_create[] =
     {FUNC_BIRD,                         func_bird_form_create},
     {FUNC_TETRIS,                       func_tetris_form_create},
     {FUNC_TETRIS_START,                 func_tetris_start_form_create},
+    {FUNC_OTA_MODE,                     func_ota_update_form_create},
 };
 
 const func_t tbl_func_entry[] =
@@ -401,6 +404,7 @@ const func_t tbl_func_entry[] =
     {FUNC_BIRD,                         func_bird},
     {FUNC_TETRIS,                       func_tetris},
     {FUNC_TETRIS_START,                 func_tetris_start},
+    {FUNC_OTA_MODE,                     func_ota_update},
 
 };
 
@@ -454,11 +458,22 @@ void func_watch_bt_process(void)
     }
 #endif
 }
+void print_info(void)
+{
+    static u32 ticks = 0;
+    if (tick_check_expire(ticks, 1000))
+    {
+        ticks = tick_get();
+        extern void mem_monitor_run(void);
+        mem_monitor_run();
+    }
+}
 
 AT(.text.func.process)
 void func_process(void)
 {
     WDT_CLR();
+    //print_info();
 
 #if (FUNC_MUSIC_EN || FUNC_RECORDER_EN) && SD_SOFT_DETECT_EN
     sd_soft_cmd_detect(120);
@@ -558,7 +573,11 @@ void func_process(void)
         bsp_fot_process();
         if (is_fot_start() == true)
         {
-            //func_cb.sta = FUNC_OTA_MODE;
+            if (sys_cb.gui_sleep_sta)
+            {
+                sys_cb.gui_need_wakeup = 1;
+            }
+            func_cb.sta = FUNC_OTA_MODE;
         }
 #endif
     }

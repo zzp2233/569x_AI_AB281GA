@@ -816,7 +816,7 @@ void bsp_sys_init(void)
     sco_audio_init();   //先初始化一遍通话参数
     sco_audio_exit();
 #endif
-
+    extern void uteTaskApplicationInit(void);
     uteTaskApplicationInit();
 
     gui_init();
@@ -825,6 +825,7 @@ void bsp_sys_init(void)
     mic_bias_trim_w4_done();
     dac_set_power_on_off(0);            //需要放到MIC TRIM后才能关DAC
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
+    extern void i2c_gsensor_init(void);
     i2c_gsensor_init();
     //bsp_sensor_pe2_pwr_pg_on();         //需放在IIC初始化之后，未使用外设时注意关闭
     bsp_sensor_step_init();             //步数传感器初始化

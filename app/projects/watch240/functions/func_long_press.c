@@ -57,7 +57,7 @@ compo_form_t *func_long_press_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_FIND_PHONE]);
+    compo_form_set_title(frm, i18n[STR_CANCEL]);
 
     /*创建三个底部椭圆*/
     compo_shape_t * rectangle;
@@ -147,8 +147,8 @@ static void func_long_press_event_handle(s32 distance, u16 id)
 static void func_long_press_slide_disp_handle()
 {
     f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
-    compo_button_t * img_btn;
-    compo_shape_t  * rect_cover;
+    static compo_button_t * img_btn = NULL;
+    static compo_shape_t  * rect_cover = NULL;
     s32 distance,y;
 
     if(f_long_press->touch_flag == true)   //是否在触屏状态
@@ -166,6 +166,7 @@ static void func_long_press_slide_disp_handle()
         if(f_long_press->touch_btn_flag == true) //滑动标志位
         {
             f_long_press->touch_flag = ctp_get_dxy(&distance,&y);//获取触屏状态与滑动长度
+
             y = widget_get_location(img_btn->widget).y; //获取控件y轴
             distance += IMG_BTN_FIRST_X;//获取滑动长度加上图标初始位置
 
@@ -183,7 +184,7 @@ static void func_long_press_slide_disp_handle()
         {
             func_long_press_event_handle(distance,f_long_press->touch_btn_id ); //事件处理
             distance = IMG_BTN_FIRST_X;//回弹
-            f_long_press->touch_btn_flag == false;//清除触摸按键图标标志位
+            f_long_press->touch_btn_flag = false;//清除触摸按键图标标志位
         }
 
         if(f_long_press->touch_btn_id ) //触摸状态为按键图标就刷新控件位置

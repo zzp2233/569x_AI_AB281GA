@@ -18,8 +18,8 @@ pool_t tlsf_get_pool(tlsf_t tlsf);
 /**
  * @brief 遍历tlsf pool，后面两个参数给 NULL 会用默认 walker 打印 block 信息
  *        `tlsf_walk_pool(tlsf_get_pool(tlsf), NULL, NULL)`
- * 
- * @param pool 
+ *
+ * @param pool
  * @param walker 遍历 block 时的回调
  * @param user 会传递给 walker
  */
@@ -30,6 +30,7 @@ void tlsf_walk_pool(pool_t pool, tlsf_walker walker, void * user);
  * size:字节大小
  */
 void *ab_malloc(size_t size);
+void *ab_zalloc(size_t size);
 
 /**
  * 用户堆空间释放

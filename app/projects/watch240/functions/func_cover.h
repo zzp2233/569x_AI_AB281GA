@@ -2,9 +2,9 @@
 #define _FUNC_COVER_H
 
 ///闹钟蓝牙连接提醒等简单界面弹窗
-enum {
+enum
+{
     //这个顺序更改,需要同步到func_cover.h那边
-    REMIND_COVER_NULL,
     REMIND_COVER_ALARM,
     //这一段HEALTH按顺序,需要与analysis那边一致
     REMIND_COVER_HEALTH_SEDENTARY,
@@ -27,7 +27,8 @@ enum {
 //    MSG_COVER_ALL,
 //};
 
-typedef struct f_cover_detail_msg_item_t_ {
+typedef struct f_cover_detail_msg_item_t_
+{
     u32 res_addr;
     s16 pic_y;
     s16 txt_y;
@@ -35,7 +36,8 @@ typedef struct f_cover_detail_msg_item_t_ {
     s16 time_txt_y;
 } f_cover_detail_msg_item_t;
 
-typedef struct f_cover_brief_msg_item_t_ {
+typedef struct f_cover_brief_msg_item_t_
+{
     u32 res_addr;
     s16 pic_y;
     s16 txt_y;

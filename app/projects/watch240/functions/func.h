@@ -183,6 +183,8 @@ compo_form_t *func_create_form(u8 sta);     //根据任务名创建窗体
 void func_switch_prev(bool flag_auto);
 void func_switch_next(bool flag_auto,bool flag_loop);
 void func_switch_to_clock(void);
+void func_switch_to_menu(void);
+
 
 u8 get_funcs_total(void);
 void func_process(void);

@@ -50,14 +50,17 @@ void sd_soft_cmd_detect(u32 check_ms); //check_ms 时间间隔检测一次.  //�
 AT(.text.bsp.sys)
 void sd_soft_detect_poweron_check(void)  //开机检测
 {
-    if (!SD_IS_SOFT_DETECT()) {  //配置工具中是否配置sd检测.
+    if (!SD_IS_SOFT_DETECT())    //配置工具中是否配置sd检测.
+    {
         return;
     }
     dev_delay_times(DEV_SDCARD, 1);  //检测到1次成功, 则认为SD在线.
     u8 i = 5;
-    while(i--) {
+    while(i--)
+    {
         sd_soft_cmd_detect(0);
-        if (dev_is_online(DEV_SDCARD)) {
+        if (dev_is_online(DEV_SDCARD))
+        {
             break;
         }
         delay_ms(10);
@@ -69,25 +72,34 @@ AT(.text.bsp.sys)
 void sd_soft_cmd_detect(u32 check_ms) //check_ms 时间间隔检测一次.  //主循环中执行检测.
 {
     static u32 check_ticks = 0;
-    if (!SD_IS_SOFT_DETECT()) {  //配置工具中是否配置sd检测.
+    if (!SD_IS_SOFT_DETECT())    //配置工具中是否配置sd检测.
+    {
         return;
     }
-    if (tick_check_expire(check_ticks, check_ms) || (0 == check_ticks)) {  //每隔100ms才检测一次.
+    if (tick_check_expire(check_ticks, check_ms) || (0 == check_ticks))    //每隔100ms才检测一次.
+    {
         check_ticks = tick_get();
-    }else {
+    }
+    else
+    {
         return;
     }
 
 //    printf(sd_str);
 
-    if (sd_soft_detect()) {
-        if (dev_online_filter(DEV_SDCARD)) {
+    if (sd_soft_detect())
+    {
+        if (dev_online_filter(DEV_SDCARD))
+        {
             sd_insert();
             msg_enqueue(EVT_SD_INSERT);
             printf("sd soft insert\n");
         }
-    } else {
-        if (dev_offline_filter(DEV_SDCARD)) {
+    }
+    else
+    {
+        if (dev_offline_filter(DEV_SDCARD))
+        {
             sd_remove();
             msg_enqueue(EVT_SD_REMOVE);
         }
@@ -100,24 +112,31 @@ void sd_soft_cmd_detect(u32 check_ms) //check_ms 时间间隔检测一次.  //�
 AT(.com_text.detect)
 void sd_detect(void)
 {
-    if ((!dev_sdcard_is_support()) || (IS_DET_SD_BUSY())) {
+    if ((!dev_sdcard_is_support()) || (IS_DET_SD_BUSY()))
+    {
         return;
     }
 
 #if SD_SOFT_DETECT_EN
-    if (SD_IS_SOFT_DETECT()) {
+    if (SD_IS_SOFT_DETECT())
+    {
         return;
     }
 #endif
 
-    if (SD_IS_ONLINE()) {
-        if (dev_online_filter(DEV_SDCARD)) {
+    if (SD_IS_ONLINE())
+    {
+        if (dev_online_filter(DEV_SDCARD))
+        {
             sd_insert();
             msg_enqueue(EVT_SD_INSERT);
             TRACE_EVT(str_sd_insert);
         }
-    } else {
-        if (dev_offline_filter(DEV_SDCARD)) {
+    }
+    else
+    {
+        if (dev_offline_filter(DEV_SDCARD))
+        {
             sd_remove();
             msg_enqueue(EVT_SD_REMOVE);
             TRACE_EVT(str_sd_remove);
@@ -130,7 +149,8 @@ void sd_detect(void)
 AT(.com_text.detect)
 void usb_detect(void)
 {
-    if (!dev_usb_is_support()) {
+    if (!dev_usb_is_support())
+    {
         return;
     }
 
@@ -140,27 +160,37 @@ void usb_detect(void)
     u8 usb_sta = usbchk_connect(USBCHK_ONLY_HOST);
 #endif
 
-    if (usb_sta == USB_UDISK_CONNECTED) {
-        if (dev_online_filter(DEV_UDISK)) {
+    if (usb_sta == USB_UDISK_CONNECTED)
+    {
+        if (dev_online_filter(DEV_UDISK))
+        {
             udisk_insert();
             msg_enqueue(EVT_UDISK_INSERT);
             TRACE_EVT(str_udisk_insert);
         }
-    } else {
-        if (dev_offline_filter(DEV_UDISK)) {
+    }
+    else
+    {
+        if (dev_offline_filter(DEV_UDISK))
+        {
             udisk_remove();
             msg_enqueue(EVT_UDISK_REMOVE);
             TRACE_EVT(str_udisk_remove);
         }
     }
 #if FUNC_USBDEV_EN
-    if (usb_sta == USB_PC_CONNECTED) {
-        if (dev_online_filter(DEV_USBPC)) {
+    if (usb_sta == USB_PC_CONNECTED)
+    {
+        if (dev_online_filter(DEV_USBPC))
+        {
             msg_enqueue(EVT_PC_INSERT);
             TRACE_EVT(str_pc_insert);
         }
-    } else {
-        if (dev_offline_filter(DEV_USBPC)) {
+    }
+    else
+    {
+        if (dev_offline_filter(DEV_USBPC))
+        {
             msg_enqueue(EVT_PC_REMOVE);
             pc_remove();
             TRACE_EVT(str_pc_remove);
@@ -176,16 +206,23 @@ AT(.com_text.detect)
 void pwrkey_2_hw_pwroff_detect(void)
 {
     static int off_cnt = 0;
-    if (!PWRKEY_2_HW_PWRON) {
+    if (!PWRKEY_2_HW_PWRON)
+    {
         return;
     }
 
-    if (IS_PWRKEY_PRESS()) {
+    if (IS_PWRKEY_PRESS())
+    {
         off_cnt = 0;
-    } else {
-        if (off_cnt < 10) {
+    }
+    else
+    {
+        if (off_cnt < 10)
+        {
             off_cnt++;
-        } else if (off_cnt == 10) {
+        }
+        else if (off_cnt == 10)
+        {
             //pwrkey已松开，需要关机
             off_cnt = 20;
             sys_cb.pwrdwn_hw_flag = 1;
@@ -231,14 +268,16 @@ void usr_tmr5ms_isr(void)
 #endif
 
     //20ms timer process
-    if ((tmr5ms_cnt % 4) == 0) {
+    if ((tmr5ms_cnt % 4) == 0)
+    {
 #if DAC_DNR_EN
         dac_dnr_process();
 #endif // DAC_DNR_EN
     }
 
     //50ms timer process
-    if ((tmr5ms_cnt % 10) == 0) {
+    if ((tmr5ms_cnt % 10) == 0)
+    {
         co_timer_pro(2);
         ticks_50ms++;
 #if LED_DISP_EN
@@ -247,26 +286,31 @@ void usr_tmr5ms_isr(void)
     }
 
     //100ms timer process
-    if ((tmr5ms_cnt % 20) == 0) {
+    if ((tmr5ms_cnt % 20) == 0)
+    {
 #if UDE_HID_EN
-        if (func_cb.sta == FUNC_USBDEV) {
+        if (func_cb.sta == FUNC_USBDEV)
+        {
             ude_tmr_isr();
         }
 #endif // UDE_HID_EN
         lowpwr_tout_ticks();
-        if (sys_cb.lpwr_cnt > 0) {
+        if (sys_cb.lpwr_cnt > 0)
+        {
             sys_cb.lpwr_cnt++;
         }
     }
 
     //500ms timer process
-    if ((tmr5ms_cnt % 100) == 0) {
+    if ((tmr5ms_cnt % 100) == 0)
+    {
         msg_enqueue(MSG_SYS_500MS);
         sys_cb.cm_times++;
     }
 
     //1s timer process
-    if ((tmr5ms_cnt % 200) == 0) {
+    if ((tmr5ms_cnt % 200) == 0)
+    {
         msg_enqueue(MSG_SYS_1S);
         tmr5ms_cnt = 0;
         sys_cb.lpwr_warning_cnt++;
@@ -292,7 +336,8 @@ void bsp_loudspeaker_unmute(void)
 AT(.text.bsp.sys)
 void bsp_sys_mute(void)
 {
-    if (!sys_cb.mute) {
+    if (!sys_cb.mute)
+    {
         sys_cb.mute = 1;
         dac_fade_out();
         bsp_loudspeaker_mute();
@@ -305,7 +350,8 @@ void bsp_sys_mute(void)
 AT(.text.bsp.sys)
 void bsp_sys_unmute(void)
 {
-    if (sys_cb.mute) {
+    if (sys_cb.mute)
+    {
         sys_cb.mute = 0;
         bsp_loudspeaker_unmute();
         dac_fade_in();
@@ -318,7 +364,8 @@ void bsp_sys_unmute(void)
 AT(.text.bsp.sys)
 void bsp_clr_mute_sta(void)
 {
-    if (sys_cb.mute) {
+    if (sys_cb.mute)
+    {
         sys_cb.mute = 0;
 #if DAC_DNR_EN
         dac_dnr_set_sta(sys_cb.dnr_sta);
@@ -378,7 +425,8 @@ bool rtc_init(void)
 #endif
     RTCCON0 = temp;
     RTCCON2 = XOSC_CLK_HZ / 12 / 100 - 1;           //XOSC_CLK_HZ / 12 / 100 - 1
-    if (temp & BIT(7)) {
+    if (temp & BIT(7))
+    {
         temp &= ~BIT(7);                            //clear first poweron flag
         RTCCON0 = temp;
         sys_cb.rtc_first_pwron = 1;
@@ -388,7 +436,8 @@ bool rtc_init(void)
     }
 
     temp = bsp_rtc_recode_get();
-    if (temp) {
+    if (temp)
+    {
         RTCCNT = temp;
         printf("rtc wdt or 10s wk_rst,load ram cache rtc.[rtccnt:%d]\n",temp);
     }
@@ -400,7 +449,8 @@ bool rtc_init(void)
 void uart0_mapping_sel(void)
 {
     //等待uart0发送完成
-    if(UART0CON & BIT(0)) {
+    if(UART0CON & BIT(0))
+    {
         while (!(UART0CON & BIT(8)));
     }
     GPIOBPU  &= ~(BIT(2) | BIT(3) | BIT(4));
@@ -470,10 +520,12 @@ static void bsp_var_init(void)
     sys_cb.ms_ticks = tick_get();
     xcfg_cb.vol_max = maxvol_tbl[xcfg_cb.vol_max];
     sys_cb.hfp2sys_mul = (xcfg_cb.vol_max + 2) / 16;
-    if (SYS_INIT_VOLUME > xcfg_cb.vol_max) {
+    if (SYS_INIT_VOLUME > xcfg_cb.vol_max)
+    {
         SYS_INIT_VOLUME = xcfg_cb.vol_max;
     }
-    if (WARNING_VOLUME > xcfg_cb.vol_max) {
+    if (WARNING_VOLUME > xcfg_cb.vol_max)
+    {
         WARNING_VOLUME = xcfg_cb.vol_max;
     }
 
@@ -484,7 +536,8 @@ static void bsp_var_init(void)
     sys_cb.sleep_time = -1L;
     sys_cb.pwroff_time = -1L;
     sys_cb.guioff_delay = GUI_OFF_DELAY_TIME;
-    if (xcfg_cb.sys_sleep_time != 0) {
+    if (xcfg_cb.sys_sleep_time != 0)
+    {
         sys_cb.sleep_time = (u32)xcfg_cb.sys_sleep_time * 10;   //100ms为单位
     }
 //    if (xcfg_cb.sys_off_time != 0) {
@@ -497,7 +550,8 @@ static void bsp_var_init(void)
     sys_cb.lpwr_warning_times = LPWR_WARING_TIMES;
 
     if ((!xcfg_cb.ft_osc_cap_en) || (xcfg_cb.osci_cap == 0) || (xcfg_cb.osco_cap == 0) ||//没有过产测时，使用自定义OSC电容
-        (xcfg_cb.osci_cap != xcfg_cb.osco_cap) || (xcfg_cb.osci_cap > 63) || (xcfg_cb.osco_cap > 63)) {     //产测值非法继续使用默认值
+        (xcfg_cb.osci_cap != xcfg_cb.osco_cap) || (xcfg_cb.osci_cap > 63) || (xcfg_cb.osco_cap > 63))       //产测值非法继续使用默认值
+    {
         xcfg_cb.osci_cap = xcfg_cb.uosci_cap;
         xcfg_cb.osco_cap = xcfg_cb.uosco_cap;
     }
@@ -523,7 +577,8 @@ static void bsp_var_init(void)
 //获取系统控制位
 u8 bsp_sys_get_ctlbit(uint n)
 {
-    if (n >= SYS_CTL_TOTAL_BITS) {
+    if (n >= SYS_CTL_TOTAL_BITS)
+    {
         halt(HALT_BSP_SYS_CTLBITS);
     }
     int by = n / 8;
@@ -534,7 +589,8 @@ u8 bsp_sys_get_ctlbit(uint n)
 //设置系统控制位
 void bsp_sys_set_ctlbit(uint n, u8 v)
 {
-    if (n >= SYS_CTL_TOTAL_BITS) {
+    if (n >= SYS_CTL_TOTAL_BITS)
+    {
         halt(HALT_BSP_SYS_CTLBITS);
     }
     int by = n / 8;
@@ -545,7 +601,8 @@ void bsp_sys_set_ctlbit(uint n, u8 v)
 //反转系统控制位
 void bsp_sys_reverse_ctlbit(uint n)
 {
-    if (n >= SYS_CTL_TOTAL_BITS) {
+    if (n >= SYS_CTL_TOTAL_BITS)
+    {
         halt(HALT_BSP_SYS_CTLBITS);
     }
     int by = n / 8;
@@ -582,7 +639,8 @@ AT(.text.bsp.sys.init)
 void bsp_update_init(void)
 {
     /// config
-    if (!xcfg_init(&xcfg_cb, sizeof(xcfg_cb))) {           //获取配置参数
+    if (!xcfg_init(&xcfg_cb, sizeof(xcfg_cb)))             //获取配置参数
+    {
         printf("xcfg init error\n");
     }
 
@@ -605,10 +663,10 @@ void timer3_isr(void)
 
 void timer3_init(void)
 {
-	TMR3CON =  BIT(7);                  //Timer overflow interrupt enable
-	TMR3CNT = 0;
-	TMR3PR  = 1000000 / 2 - 1;          //500ms, select xosc26_div 1M clk
-	TMR3CON |= BIT(2) | BIT(0);         //Timer works in Counter Mode
+    TMR3CON =  BIT(7);                  //Timer overflow interrupt enable
+    TMR3CNT = 0;
+    TMR3PR  = 1000000 / 2 - 1;          //500ms, select xosc26_div 1M clk
+    TMR3CON |= BIT(2) | BIT(0);         //Timer works in Counter Mode
     sys_irq_init(IRQ_TMR3_VECTOR, 1, timer3_isr);
 }
 */
@@ -616,7 +674,7 @@ void timer3_init(void)
 #if !LP_XOSC_CLOCK_EN
 void rtc_printf(void)
 {
-    tm_t rtc_tm = time_to_tm(RTCCNT);           	//更新时间结构体
+    tm_t rtc_tm = time_to_tm(RTCCNT);               //更新时间结构体
     printf("time:  %d.%02d.%02d   %02d:%02d:%02d\n", (rtc_tm.year+0), rtc_tm.mon, rtc_tm.day,rtc_tm.hour, rtc_tm.min, rtc_tm.sec);
     printf("### RTCCON0:%x\n", RTCCON0);
 }
@@ -626,9 +684,11 @@ void rtc_pwd_calibration(void)
     param_init(sys_cb.rtc_first_pwron);
 
     u32 rtccon9 = RTCCON9;
-    if((rtccon9 & 1) == 1){                               //1000s起来一次校准rc rtc
+    if((rtccon9 & 1) == 1)                                //1000s起来一次校准rc rtc
+    {
         RTCCON9 = 0xfff;                                                    //Clr pending
-        if (cm_read8(PARAM_RTC_CAL_VALID) == 1) {
+        if (cm_read8(PARAM_RTC_CAL_VALID) == 1)
+        {
             sniff_rc_init();
             rtc_calibration_read(PARAM_RTC_CAL_ADDR);
             rtc_sleep_process();
@@ -658,7 +718,8 @@ AT(.text.bsp.sys.init)
 void bsp_sys_init(void)
 {
     /// config
-    if (!xcfg_init(&xcfg_cb, sizeof(xcfg_cb))) {           //获取配置参数
+    if (!xcfg_init(&xcfg_cb, sizeof(xcfg_cb)))             //获取配置参数
+    {
         printf("xcfg init error\n");
     }
     print_comm_info();
@@ -692,15 +753,19 @@ void bsp_sys_init(void)
 
     plugin_init();
 
-    if (POWKEY_10S_RESET) {
+    if (POWKEY_10S_RESET)
+    {
         RTCCON10 = BIT(10);                     //clear 10s pending
         RTCCON12 &= ~0x0f;                      //10S Reset Enable
-    } else {
+    }
+    else
+    {
         RTCCON12 = (RTCCON12 & ~0xf) | 0x0a;    //10S Reset Disable
     }
 
 #if CHARGE_EN
-    if (xcfg_cb.charge_en) {
+    if (xcfg_cb.charge_en)
+    {
         bsp_charge_init();
     }
 #endif // CHARGE_EN
@@ -751,15 +816,16 @@ void bsp_sys_init(void)
     sco_audio_init();   //先初始化一遍通话参数
     sco_audio_exit();
 #endif
-
+    extern void uteTaskApplicationInit(void);
     uteTaskApplicationInit();
 
     gui_init();
     lang_select(LANG_ZH);
 
-	mic_bias_trim_w4_done();
-	dac_set_power_on_off(0);            //需要放到MIC TRIM后才能关DAC
+    mic_bias_trim_w4_done();
+    dac_set_power_on_off(0);            //需要放到MIC TRIM后才能关DAC
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
+    extern void i2c_gsensor_init(void);
     i2c_gsensor_init();
     //bsp_sensor_pe2_pwr_pg_on();         //需放在IIC初始化之后，未使用外设时注意关闭
     bsp_sensor_step_init();             //步数传感器初始化

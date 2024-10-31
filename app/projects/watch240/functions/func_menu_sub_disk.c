@@ -25,12 +25,14 @@
 
 #define ICON_START_SIZE                     40
 
-enum {
+enum
+{
     COMPO_ID_DISKLIST = 1,
     COMPO_ID_GEAR,
 };
 
-typedef struct f_menu_disk_t_ {
+typedef struct f_menu_disk_t_
+{
     compo_disklist_t *disklist;
     bool flag_drag;                 //开始拖动
     bool flag_move_auto;            //自动移到坐标
@@ -47,7 +49,8 @@ typedef struct f_menu_disk_t_ {
     s16 deg_gear;
 } f_menu_disk_t;
 
-static const compo_disklist_item_t tbl_menu_disk[] = {
+static const compo_disklist_item_t tbl_menu_disk[] =
+{
     {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
     {STR_SPORTS,                 UI_BUF_ICON_SPORT_BIN,             .func_sta = FUNC_SPORT},                //运动
 //    {STR_STEP,                   UI_BUF_ICON_STEP_BIN,              .func_sta = FUNC_NULL},                 //计步
@@ -90,7 +93,8 @@ compo_form_t *func_menu_sub_disk_form_create(void)
     compo_disklist_add_time(disklist, COMPO_ICONLIST_TIME_TYPE_SEC, UI_BUF_ICON_CLOCK_S_BIN, 9, 2);
     compo_disklist_set_start_angle(disklist, 900);
 
-    if (func_cb.flag_animation) {
+    if (func_cb.flag_animation)
+    {
         compo_disklist_set_iconsize(disklist, ICON_START_SIZE);
     }
 
@@ -102,6 +106,7 @@ compo_form_t *func_menu_sub_disk_form_create(void)
     //齿轮背景图
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_MENU_GEAR_BIN);
     compo_setid(pic, COMPO_ID_GEAR);
+    compo_picturebox_set_size(pic, GUI_SCREEN_WIDTH/2, GUI_SCREEN_WIDTH/2);
     compo_picturebox_set_pos(pic, 0, GUI_SCREEN_CENTER_Y);
 
     return frm;
@@ -116,7 +121,8 @@ static void func_menu_sub_disk_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_disklist_select(disklist, ctp_get_sxy().x, ctp_get_sxy().y);
-    if (icon_idx < 0 || icon_idx >= MENU_DISK_CNT) {
+    if (icon_idx < 0 || icon_idx >= MENU_DISK_CNT)
+    {
         return;
     }
 
@@ -124,7 +130,8 @@ static void func_menu_sub_disk_icon_click(void)
     func_sta = tbl_menu_disk[icon_idx].func_sta;
 
     //切入应用
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
         compo_form_t *frm = func_create_form(func_sta);
         func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, disklist->sel_icon);
         compo_form_destroy(frm);
@@ -155,7 +162,8 @@ static void set_auto_flag(bool auto_sta)
     compo_disklist_t *disklist = f_menu->disklist;
     f_menu->flag_move_auto = auto_sta;
     disklist->focus_rem_en = !auto_sta;
-    if (disklist->focus_rem_en) {
+    if (disklist->focus_rem_en)
+    {
         compo_disklist_set_focus(disklist, f_menu->focus_deg);
         compo_disklist_update(disklist);
         f_menu->focus_deg = disklist->ofs_deg;
@@ -167,7 +175,8 @@ static void func_menu_sub_disk_entering(void)
 {
     f_menu_disk_t *f_menu = (f_menu_disk_t *)func_cb.f_cb;
     compo_disklist_t *disklist = f_menu->disklist;
-    if (disklist->icon_size < disklist->icon_org_size) {
+    if (disklist->icon_size < disklist->icon_org_size)
+    {
         disklist->icon_size++;
     }
     compo_disklist_set_iconsize(disklist, disklist->icon_size);
@@ -184,9 +193,12 @@ static void func_menu_sub_disk_gear_update(void)
     s32 deg_cur = -disklist->ofs_deg;
     s32 deg_diff = deg_cur - f_menu->deg_last;
     f_menu->deg_last = deg_cur;
-    if (deg_diff && abs(deg_diff) < 300) {  //防止连续不停转动后突变
+    if (deg_diff && abs(deg_diff) < 300)    //防止连续不停转动后突变
+    {
         f_menu->deg_gear += deg_diff;
-    } else if (deg_diff) {
+    }
+    else if (deg_diff)
+    {
         TRACE("[deg_diff:%d]\n", deg_diff);
     }
 
@@ -199,26 +211,34 @@ static void func_menu_sub_disk_process(void)
 {
     f_menu_disk_t *f_menu = (f_menu_disk_t *)func_cb.f_cb;
     compo_disklist_t *disklist = f_menu->disklist;
-    if (f_menu->animation_cnt > 0) {
+    if (f_menu->animation_cnt > 0)
+    {
         //入场动画
-        if (tick_check_expire(f_menu->tick, ANIMATION_TICK_EXPIRE)) {
+        if (tick_check_expire(f_menu->tick, ANIMATION_TICK_EXPIRE))
+        {
             f_menu->tick = tick_get();
             f_menu->animation_cnt--;
             func_menu_sub_disk_entering();
         }
-    } else if (f_menu->flag_drag) {
+    }
+    else if (f_menu->flag_drag)
+    {
         s32 dx;
         s32 ddeg = f_menu->focus_ddeg;
         f_menu->flag_drag = ctp_get_dxy(&dx, &f_menu->focus_ddeg);
-        if (f_menu->flag_drag) {
+        if (f_menu->flag_drag)
+        {
             //拖动菜单图标
             f_menu->focus_ddeg *= DY_TO_DDEG;
             f_menu->focus_degstep = f_menu->focus_ddeg - ddeg;
-            if (f_menu->focus_degstep) {
+            if (f_menu->focus_degstep)
+            {
                 compo_disklist_set_focus(disklist, f_menu->focus_deg - f_menu->focus_ddeg);
                 compo_disklist_update(disklist);
             }
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
             s32 last_dy = ctp_get_last_dxy().y;
             f_menu->focus_deg = disklist->ofs_deg;
@@ -229,28 +249,45 @@ static void func_menu_sub_disk_process(void)
             f_menu->tick = tick_get();
         }
     }
-    if (f_menu->flag_move_auto) {
+    if (f_menu->flag_move_auto)
+    {
         //自动移动
-        if (f_menu->focus_deg == f_menu->moveto_deg) {
+        if (f_menu->focus_deg == f_menu->moveto_deg)
+        {
             set_auto_flag(false);                 //移动完成
-        } else if (tick_check_expire(f_menu->tick, FOCUS_AUTO_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(f_menu->tick, FOCUS_AUTO_TICK_EXPIRE))
+        {
             s32 ddeg;
             f_menu->tick = tick_get();
             ddeg = f_menu->moveto_deg - f_menu->focus_deg;
-            if (ddeg > 0) {
-                if (ddeg > FOCUS_AUTO_STEP * DY_TO_DDEG * FOCUS_AUTO_STEP_DIV) {
+            if (ddeg > 0)
+            {
+                if (ddeg > FOCUS_AUTO_STEP * DY_TO_DDEG * FOCUS_AUTO_STEP_DIV)
+                {
                     ddeg = ddeg / FOCUS_AUTO_STEP_DIV;
-                } else if (ddeg > FOCUS_AUTO_STEP * DY_TO_DDEG) {
+                }
+                else if (ddeg > FOCUS_AUTO_STEP * DY_TO_DDEG)
+                {
                     ddeg = FOCUS_AUTO_STEP * DY_TO_DDEG;
-                } else if (ddeg > DY_TO_DDEG) {
+                }
+                else if (ddeg > DY_TO_DDEG)
+                {
                     ddeg = DY_TO_DDEG;
                 }
-            } else {
-                if (ddeg < -FOCUS_AUTO_STEP * DY_TO_DDEG * FOCUS_AUTO_STEP_DIV) {
+            }
+            else
+            {
+                if (ddeg < -FOCUS_AUTO_STEP * DY_TO_DDEG * FOCUS_AUTO_STEP_DIV)
+                {
                     ddeg = ddeg / FOCUS_AUTO_STEP_DIV;
-                } else if (ddeg < -FOCUS_AUTO_STEP * DY_TO_DDEG) {
+                }
+                else if (ddeg < -FOCUS_AUTO_STEP * DY_TO_DDEG)
+                {
                     ddeg = -FOCUS_AUTO_STEP * DY_TO_DDEG;
-                } else if (ddeg < -DY_TO_DDEG) {
+                }
+                else if (ddeg < -DY_TO_DDEG)
+                {
                     ddeg = -DY_TO_DDEG;
                 }
             }
@@ -266,20 +303,22 @@ static void func_menu_sub_disk_process(void)
 
 static void func_menu_sub_disk_entering_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
 //拖动过程中，只响应部分消息
 static void func_menu_sub_disk_drag_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
@@ -288,27 +327,28 @@ static void func_menu_sub_disk_move_auto_message(size_msg_t msg)
 {
     f_menu_disk_t *f_menu = (f_menu_disk_t *)func_cb.f_cb;
     compo_disklist_t *disklist = f_menu->disklist;
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        f_menu->flag_drag = true;                       //移动过程中，触屏停止
-        set_auto_flag(false);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            f_menu->flag_drag = true;                       //移动过程中，触屏停止
+            set_auto_flag(false);
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        f_menu->moveto_idx++;
-        f_menu->moveto_deg = compo_disklist_get_deg_byidx(disklist, f_menu->moveto_idx);
-        TRACE("++moveto_deg[%d]\n", f_menu->moveto_deg);
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            f_menu->moveto_idx++;
+            f_menu->moveto_deg = compo_disklist_get_deg_byidx(disklist, f_menu->moveto_idx);
+            TRACE("++moveto_deg[%d]\n", f_menu->moveto_deg);
+            break;
 
-    case MSG_QDEC_BACKWARD:                              //向后滚动菜单
-        f_menu->moveto_idx--;
-        f_menu->moveto_deg = compo_disklist_get_deg_byidx(disklist, f_menu->moveto_idx);
-        TRACE("--moveto_deg[%d]\n", f_menu->moveto_deg);
-        break;
+        case MSG_QDEC_BACKWARD:                              //向后滚动菜单
+            f_menu->moveto_idx--;
+            f_menu->moveto_deg = compo_disklist_get_deg_byidx(disklist, f_menu->moveto_idx);
+            TRACE("--moveto_deg[%d]\n", f_menu->moveto_deg);
+            break;
 
-    default:
-        evt_message(msg);
-        break;
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
@@ -317,45 +357,47 @@ static void func_menu_sub_disk_normal_message(size_msg_t msg)
 {
     f_menu_disk_t *f_menu = (f_menu_disk_t *)func_cb.f_cb;
     compo_disklist_t *disklist = f_menu->disklist;
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_menu_sub_disk_icon_click();                //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_menu_sub_disk_icon_click();                //单击图标
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_RIGHT:
-    case MSG_CTP_SHORT_DOWN:
-        f_menu->flag_drag = true;                       //任何方向短划，开启拖动
-        set_auto_flag(false);
-        break;
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_DOWN:
+            f_menu->flag_drag = true;                       //任何方向短划，开启拖动
+            set_auto_flag(false);
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        set_auto_flag(true);
-        f_menu->moveto_idx = disklist->focus_icon_idx + 1;
-        f_menu->moveto_deg = compo_disklist_get_deg_byidx(disklist, f_menu->moveto_idx);
-        TRACE("++moveto_deg[%d]\n", f_menu->moveto_deg);
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            set_auto_flag(true);
+            f_menu->moveto_idx = disklist->focus_icon_idx + 1;
+            f_menu->moveto_deg = compo_disklist_get_deg_byidx(disklist, f_menu->moveto_idx);
+            TRACE("++moveto_deg[%d]\n", f_menu->moveto_deg);
+            break;
 
-    case MSG_QDEC_BACKWARD:                              //向后滚动菜单
-        set_auto_flag(true);
-        f_menu->moveto_idx = disklist->focus_icon_idx - 1;
-        f_menu->moveto_deg = compo_disklist_get_deg_byidx(disklist, f_menu->moveto_idx);
-        TRACE("--moveto_deg[%d]\n", f_menu->moveto_deg);
-        break;
+        case MSG_QDEC_BACKWARD:                              //向后滚动菜单
+            set_auto_flag(true);
+            f_menu->moveto_idx = disklist->focus_icon_idx - 1;
+            f_menu->moveto_deg = compo_disklist_get_deg_byidx(disklist, f_menu->moveto_idx);
+            TRACE("--moveto_deg[%d]\n", f_menu->moveto_deg);
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
-            func_menu_sub_disk_switch_to_clock();       //返回时钟表盘界面
-        }
-        break;
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_disk_switch_to_clock();       //返回时钟表盘界面
+            }
+            break;
 
-    default:
-        func_menu_sub_message(msg);
-        break;
+        default:
+            func_menu_sub_message(msg);
+            break;
     }
 }
 
@@ -363,15 +405,22 @@ static void func_menu_sub_disk_normal_message(size_msg_t msg)
 static void func_menu_sub_disk_message(size_msg_t msg)
 {
     f_menu_disk_t *f_menu = (f_menu_disk_t *)func_cb.f_cb;
-    if (f_menu->animation_cnt > 0) {
+    if (f_menu->animation_cnt > 0)
+    {
         func_menu_sub_disk_entering_message(msg);
-    } else if (f_menu->flag_drag) {
+    }
+    else if (f_menu->flag_drag)
+    {
         //拖动过程中，只响应部分消息
         func_menu_sub_disk_drag_message(msg);
-    } else if (f_menu->flag_move_auto) {
+    }
+    else if (f_menu->flag_move_auto)
+    {
         //自动移动中，只响应部分消息
         func_menu_sub_disk_move_auto_message(msg);
-    } else {
+    }
+    else
+    {
         //正常模式下
         func_menu_sub_disk_normal_message(msg);
     }
@@ -386,14 +435,16 @@ static void func_menu_sub_disk_enter(void)
     f_menu_disk_t *f_menu = (f_menu_disk_t *)func_cb.f_cb;
     f_menu->disklist = compo_getobj_byid(COMPO_ID_DISKLIST);
     compo_disklist_t *disklist = f_menu->disklist;
-    if (disklist->type != COMPO_TYPE_DISKLIST) {
+    if (disklist->type != COMPO_TYPE_DISKLIST)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     f_menu->focus_deg = disklist->ofs_deg;
     func_cb.enter_tick = tick_get();
 
     f_menu->animation_cnt = 0;
-    if (func_cb.flag_animation) {
+    if (func_cb.flag_animation)
+    {
         func_cb.flag_animation = false;
         f_menu->animation_cnt = ENTERING_ANIMATION_CNT;
         f_menu->tick = tick_get();
@@ -405,7 +456,8 @@ void func_menu_sub_disk(void)
 {
     printf("%s\n", __func__);
     func_menu_sub_disk_enter();
-    while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_DISK) {
+    while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_DISK)
+    {
         func_menu_sub_disk_process();
         func_menu_sub_disk_message(msg_dequeue());
     }

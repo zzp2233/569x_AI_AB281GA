@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_bloodoxygen.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -14,25 +15,28 @@ static uint8_t sensor_blood_oxygen_data_get(void);
 static bool sensor_blood_oxygen_wear_sta_get(void);
 
 //血氧检测状态
-enum {
-	BO_STA_IDLE,		    //空闲
-	BO_STA_WORKING,		    //检测中
-	BO_STA_UNWEAR,			//未佩戴
+enum
+{
+    BO_STA_IDLE,            //空闲
+    BO_STA_WORKING,         //检测中
+    BO_STA_UNWEAR,          //未佩戴
 };
 
 //组件ID
-enum {
+enum
+{
     //按键
-	COMPO_ID_BTN = 1,
+    COMPO_ID_BTN = 1,
     COMPO_ID_PIC_BG,
-	COMPO_ID_PIC_CLICK,
-	COMPO_ID_TXT_TIPS,
+    COMPO_ID_PIC_CLICK,
+    COMPO_ID_TXT_TIPS,
     COMPO_ID_TXT_RESULT,
     COMPO_ID_PIC_UNWEAR,
 };
 
-typedef struct f_blood_oxygen_t_ {
-	uint8_t det_sta;
+typedef struct f_blood_oxygen_t_
+{
+    uint8_t det_sta;
     uint8_t value;
     bool touch;
 } f_blood_oxygen_t;
@@ -53,8 +57,8 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_BLOOD_OXYGEN]);
 
-	//图像按钮
-	compo = (component_t *)compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
+    //图像按钮
+    compo = (component_t *)compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_setid(compo, COMPO_ID_BTN);
     compo_button_set_pos((compo_button_t *)compo, GUI_SCREEN_CENTER_X, 258);
     compo = (component_t *)compo_picturebox_create(frm, UI_BUF_COMMON_BUTTON_CLICK_BIN);
@@ -89,7 +93,8 @@ static void func_blood_oxygen_button_touch_handle(void)
     f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
     int id = compo_get_button_id();
 
-    if (COMPO_ID_BTN != id) {
+    if (COMPO_ID_BTN != id)
+    {
         return ;
     }
 
@@ -114,7 +119,8 @@ static void func_blood_oxygen_button_click(void)
     component_t *compo;
 
     //未佩戴下退出
-    if (BO_STA_UNWEAR == f_bo->det_sta) {
+    if (BO_STA_UNWEAR == f_bo->det_sta)
+    {
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
         compo = compo_getobj_byid(COMPO_ID_PIC_BG);
@@ -122,26 +128,32 @@ static void func_blood_oxygen_button_click(void)
     }
 
     int id = compo_get_button_id();
-    if (COMPO_ID_BTN != id) {
+    if (COMPO_ID_BTN != id)
+    {
         return ;
     }
 
-    switch (f_bo->det_sta) {
-        case BO_STA_IDLE: {
+    switch (f_bo->det_sta)
+    {
+        case BO_STA_IDLE:
+        {
             sensor_blood_oxygen_stop();
             sensor_blood_oxygen_start();
             compo = compo_getobj_byid(COMPO_ID_TXT_TIPS);
             compo_textbox_set((compo_textbox_t *)compo, i18n[STR_MEASURING]);
             f_bo->det_sta = BO_STA_WORKING;
-        }break;
+        }
+        break;
 
         case BO_STA_WORKING:
-        case BO_STA_UNWEAR: {
+        case BO_STA_UNWEAR:
+        {
             sensor_blood_oxygen_stop();
             compo = compo_getobj_byid(COMPO_ID_TXT_TIPS);
             compo_textbox_set((compo_textbox_t *)compo, i18n[STR_START]);
             f_bo->det_sta = BO_STA_IDLE;
-        }break;
+        }
+        break;
     }
 }
 
@@ -151,7 +163,8 @@ static void func_blood_oxygen_unwear_handle(bool wear)
     f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
     component_t *compo;
 
-    if (wear) {
+    if (wear)
+    {
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
 
@@ -160,7 +173,9 @@ static void func_blood_oxygen_unwear_handle(bool wear)
 
         compo = compo_getobj_byid(COMPO_ID_TXT_TIPS);
         compo_textbox_set((compo_textbox_t *)compo, i18n[STR_MEASURING]);
-    } else {
+    }
+    else
+    {
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, true);
 
@@ -183,30 +198,43 @@ static void func_blood_oxygen_process(void)
     s32 dx, dy;
 
     //按钮释放效果
-    if (f_bo->touch && !ctp_get_dxy(&dx, &dy)) {
+    if (f_bo->touch && !ctp_get_dxy(&dx, &dy))
+    {
         f_bo->touch = false;
         func_blood_oxygen_button_release_handle();
     }
 
-    if (BO_STA_WORKING == f_bo->det_sta) {
-        if (!sensor_blood_oxygen_wear_sta_get()) { //未佩戴检测
+    if (BO_STA_WORKING == f_bo->det_sta)
+    {
+        if (!sensor_blood_oxygen_wear_sta_get())   //未佩戴检测
+        {
             func_blood_oxygen_unwear_handle(false);
             f_bo->det_sta = BO_STA_UNWEAR;
             printf("spo2 unwear\n");
-        } else {
+        }
+        else
+        {
             //出值结果刷新
             uint8_t value = sensor_blood_oxygen_data_get();
             char buf[8] = {0};
-            if (f_bo->value != value) {
+            if (f_bo->value != value)
+            {
                 f_bo->value = value;
                 compo_textbox_t *compo_txt = compo_getobj_byid(COMPO_ID_TXT_RESULT);
                 compo_textbox_set_visible(compo_txt, true);
                 snprintf(buf, sizeof(buf), "%d%%", value);
                 compo_textbox_set(compo_txt, buf);
             }
+            if(uteModuleBloodoxygenIsTesting())
+            {
+                reset_sleep_delay_all();
+            }
         }
-    } else if(BO_STA_UNWEAR == f_bo->det_sta) {    //佩戴检测
-        if (sensor_blood_oxygen_wear_sta_get()) {
+    }
+    else if(BO_STA_UNWEAR == f_bo->det_sta)        //佩戴检测
+    {
+        if (sensor_blood_oxygen_wear_sta_get())
+        {
             func_blood_oxygen_unwear_handle(true);
             f_bo->det_sta = BO_STA_WORKING;
             printf("spo2 wear\n");
@@ -219,18 +247,19 @@ static void func_blood_oxygen_process(void)
 //血氧功能消息处理
 static void func_blood_oxygen_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_blood_oxygen_button_touch_handle();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_blood_oxygen_button_touch_handle();
+            break;
 
-	case MSG_CTP_CLICK:
-        func_blood_oxygen_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_blood_oxygen_button_click();
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -248,7 +277,8 @@ static void func_blood_oxygen_enter(void)
 static void func_blood_oxygen_exit(void)
 {
     f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
-    if (BO_STA_IDLE != f_bo->det_sta) {
+    if (BO_STA_IDLE != f_bo->det_sta)
+    {
         sensor_blood_oxygen_stop();
     }
     func_cb.last = FUNC_BLOOD_OXYGEN;
@@ -259,7 +289,8 @@ void func_blood_oxygen(void)
 {
     printf("%s\n", __func__);
     func_blood_oxygen_enter();
-    while (func_cb.sta == FUNC_BLOOD_OXYGEN) {
+    while (func_cb.sta == FUNC_BLOOD_OXYGEN)
+    {
         func_blood_oxygen_process();
         func_blood_oxygen_message(msg_dequeue());
     }
@@ -270,14 +301,14 @@ void func_blood_oxygen(void)
 //血氧外设接口
 static void sensor_blood_oxygen_start(void)
 {
-    bsp_sensor_hr_init(1);
+    uteModuleBloodoxygenStartSingleTesting();
 
     return ;
 }
 
 static void sensor_blood_oxygen_stop(void)
 {
-    bsp_sensor_hr_stop();
+    uteModuleBloodoxygenStopSingleTesting();
 
     return ;
 }

@@ -17,6 +17,8 @@
 #include "ute_module_gui_common.h"
 #include "ute_drv_motor.h"
 #include "ute_module_filesystem.h"
+#include "ute_module_bloodoxygen.h"
+
 // #include "ute_drv_battery_common.h"
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
@@ -198,15 +200,18 @@ void uteModuleHeartEverySecond(void)
             isNeedAutoTest = true;
         }
 
-        if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
+        if(!uteModuleBloodoxygenIsTesting())
         {
-            uteModuleHeartStartSingleTesting(TYPE_HEART);
-            uteModuleHeartData.isAutoTestFlag = true;
-            uteModuleHeartData.autoTestSecond = 0;
-        }
-        else
-        {
-            isNeedAutoTest = false;
+            if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
+            {
+                uteModuleHeartStartSingleTesting(TYPE_HEART);
+                uteModuleHeartData.isAutoTestFlag = true;
+                uteModuleHeartData.autoTestSecond = 0;
+            }
+            else
+            {
+                isNeedAutoTest = false;
+            }
         }
 
         if(uteModuleHeartData.isAutoTestFlag)
@@ -435,7 +440,7 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
     uteModuleHeartData.type = type;
     if(uteModuleHeartData.type==TYPE_BLOODOXYGEN)
     {
-        uteModuleHeartData.isSingleTesting = true;
+        uteModuleHeartData.isSingleTesting = false;
 #if UTE_DRV_HEART_VCXX_SUPPORT
         uteDrvHeartVcxxBloodoxygenStartSample();
 #else
@@ -760,6 +765,8 @@ uint8_t uteModuleHeartGetBloodOxygenValue(void)
 {
 #if UTE_DRV_HEART_VCXX_SUPPORT
     uteModuleHeartData.bloodoxygenValue = uteDrvHeartVcxxGetBloodoxygenValue();
+#else
+    uteModuleHeartData.bloodoxygenValue = bsp_sensor_spo2_data_get();
 #endif
     return uteModuleHeartData.bloodoxygenValue;
 }
@@ -1062,6 +1069,8 @@ uint8_t uteModuleHeartGetWorkMode(void)
     uint8_t result = 0;
 #if UTE_DRV_HEART_VCXX_SUPPORT
     result = uteDrvHeartVcxxGetWorkMode();
+#else
+    result = vc30fx_usr_get_work_mode();
 #endif
     return result ;
 }

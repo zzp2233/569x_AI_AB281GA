@@ -453,7 +453,6 @@ void sc7a20_500ms_callback_en(bool en)
 {
     if (en)
     {
-        extern void i2c_gsensor_init(void);
         i2c_gsensor_init();
         co_timer_enable(&sc7a20_500ms, true);
     }

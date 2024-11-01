@@ -53,16 +53,18 @@ u16 dev_version = 0x0001; //设备版本号
 AT(.com_text.const)
 static const u8 fot_auth_data[] = {0xCC, 0xAA, 0x55, 0xEE, 0x12, 0x19, 0xE4};
 
-typedef enum{
+typedef enum
+{
     INFO_DEV_VER  = 1,
     INFO_UPDATE_REQ,
     INFO_DEV_FEATURE,
     INFO_DEV_CONNECT_STA,
     INFO_EDR_ADDR,
     INFO_DEV_CHANNEL,
-}DEV_INFO_E;
+} DEV_INFO_E;
 
-typedef struct __attribute__((packed)){
+typedef struct __attribute__((packed))
+{
     u16 remote_ver;
     u32 total_len;
     u32 remain_len;
@@ -79,21 +81,24 @@ typedef struct __attribute__((packed)){
     u32 ui_recv_remain;     //256对齐
     u8  is_ui_flag;         //是否是UI数据，1是，0不是
     u32 code_res_len;       //代码区间大小
-}fot_s;
+}
+fot_s;
 
 fot_s fot_var;
 
-typedef enum {
+typedef enum
+{
     FOT_FILE_TYPE_UI = 1,
     FOT_FILE_TYPE_FOT,
-}FOT_FILE_TYPE;
+} FOT_FILE_TYPE;
 
-typedef struct {
+typedef struct
+{
     FOT_FILE_TYPE  type;        //文件类型
     u8  percent;                //文件进度百分比
     u32 files_all_size;         //文件长度
     u32 files_recv_size;        //文件接收长度
-}fot_progress_t;
+} fot_progress_t;
 static fot_progress_t fot_progress;
 
 static u8 fot_data[FOT_BLOCK_LEN] AT(.fot_data.buf);
@@ -115,7 +120,8 @@ void app_fota_pack_write(void *buf, u32 len)
 {
     u32 total_use_len = 0;
 
-    while (len && (ota_pack_get_err() == FOT_ERR_OK)) {
+    while (len && (ota_pack_get_err() == FOT_ERR_OK))
+    {
         ota_pack_write(buf + total_use_len);
         len -= 512;
         total_use_len += 512;
@@ -169,7 +175,8 @@ bool app_fota_is_write_done(void)
 AT(.text.fot.cache)
 static void fot_sent_proc(u8 *buf,u8 len)
 {
-    if((fot_flag & FOT_FLAG_APP_CONNECT) == 0){
+    if((fot_flag & FOT_FLAG_APP_CONNECT) == 0)
+    {
         return;
     }
 
@@ -177,7 +184,8 @@ static void fot_sent_proc(u8 *buf,u8 len)
     FOT_DEBUG_R(buf,len);
 
 #if LE_AB_FOT_EN
-    if(ble_is_connect()){
+    if(ble_is_connect())
+    {
         ble_fot_send_packet(buf,len);
     }
 #endif
@@ -191,15 +199,18 @@ static void fot_reply_info_tlv(u8 *buf,u8 len)
     u8 rsp[32];
     u8 val_len = 0;
 
-    if((buf == NULL) || (len == 0)){
+    if((buf == NULL) || (len == 0))
+    {
         return;
     }
 
     rsp[write_offset++] = FOT_GET_INFO_TLV;
     rsp[write_offset++] = fot_seq++;
 
-    while(read_offset < len){
-        switch(buf[read_offset]){
+    while(read_offset < len)
+    {
+        switch(buf[read_offset])
+        {
             case INFO_DEV_VER:
                 FOT_DEBUG("INFO_DEV_VER\n");
                 val_len = buf[read_offset + 1];
@@ -207,7 +218,7 @@ static void fot_reply_info_tlv(u8 *buf,u8 len)
                 rsp[write_offset++] = 2;
                 rsp[write_offset++] = dev_version & 0xff;
                 rsp[write_offset++] = (dev_version >> 8) & 0xff;
-            break;
+                break;
 
             case INFO_DEV_FEATURE:
                 FOT_DEBUG("INFO_DEV_FEATURE\n");
@@ -219,7 +230,7 @@ static void fot_reply_info_tlv(u8 *buf,u8 len)
                     rsp[write_offset++] = dev_ability & 0xff;
                     rsp[write_offset++] = (dev_ability >> 8) & 0xff;
                 }
-            break;
+                break;
 
             case INFO_DEV_CONNECT_STA:
                 FOT_DEBUG("INFO_DEV_CONNECT_STA\n");
@@ -237,7 +248,8 @@ static void fot_reply_info_tlv(u8 *buf,u8 len)
         read_offset += (2 + val_len);
     }
 
-    if(write_offset > sizeof(rsp)){
+    if(write_offset > sizeof(rsp))
+    {
         FOT_DEBUG("fot:rsp buf overflow!!!\n");
         while(1);
     }
@@ -265,6 +277,18 @@ static void fot_dev_notify_sta(u8 sta)
 
     buf[0] = FOT_NOTIFY_STA;
     buf[1] = fot_seq++;
+    buf[2] = sta;
+
+    fot_sent_proc(buf,3);
+}
+
+AT(.text.fot.cache)
+static void fot_dev_notify_seq_err(u8 sta)
+{
+    u8 buf[3];
+
+    buf[0] = FOT_NOTIFY_STA;
+    buf[1] = fot_seq;
     buf[2] = sta;
 
     fot_sent_proc(buf,3);
@@ -308,7 +332,8 @@ void bsp_fot_exit(void)
     fot_remote_seq = 0;
     fot_flag &= ~FOT_FLAG_APP_CONNECT;
 
-    if(fot_var.sys_clk){
+    if(fot_var.sys_clk)
+    {
         sys_clk_set(fot_var.sys_clk);
     }
 
@@ -317,7 +342,8 @@ void bsp_fot_exit(void)
 
 void fot_update_pause(void)
 {
-    if(fot_sta & FOT_STA_START){
+    if(fot_sta & FOT_STA_START)
+    {
         fot_sta = FOT_STA_PAUSE;
         fot_dev_notify_sta(FOT_UPDATE_PAUSE);
     }
@@ -325,7 +351,8 @@ void fot_update_pause(void)
 
 void fot_update_continue(void)
 {
-    if(fot_sta & FOT_STA_PAUSE){
+    if(fot_sta & FOT_STA_PAUSE)
+    {
         bsp_fot_init();
         fot_dev_notify_sta(FOT_UPDATE_CONTINUE);
     }
@@ -335,7 +362,8 @@ u16 bsp_fot_mtu_get(void)
 {
     u16 packet_len = 0;
 #if LE_AB_FOT_EN
-    if(ble_is_connect()){
+    if(ble_is_connect())
+    {
         packet_len = ble_get_gatt_mtu();
     }
 #endif
@@ -353,14 +381,16 @@ static void fot_reply_update_request(void)
     u8 data[14];
     u8 need_update = 1;
 
-    if(bt_get_status() >= BT_STA_INCOMING){
+    if(bt_get_status() >= BT_STA_INCOMING)
+    {
         need_update = 0;
         fot_flag |= FOT_FLAG_UPDATE_EXIT;
         goto fot_req_reply;
     }
 
 #if LE_AB_FOT_EN
-    if(ble_is_connect()){
+    if(ble_is_connect())
+    {
         ble_update_conn_param(16,0,400);
     }
 #endif
@@ -379,13 +409,19 @@ static void fot_reply_update_request(void)
     param_fot_remote_ver_read((u8*)&flash_remote_ver);
     param_fot_hash_read((u8*)&hash);
 
-    FOT_DEBUG("flash hash val:0x%x\n",hash);
+    FOT_DEBUG("flash hash val:0x%x\n",hash);/*  */
 
-    if((fot_var.hash != 0xFFFFFFFF) && (flash_remote_ver == fot_var.remote_ver) && (hash == fot_var.hash)){
+    printf("1111flash hash val:0x%x\n",hash);
+    if((fot_var.hash != 0xFFFFFFFF) && (flash_remote_ver == fot_var.remote_ver) && (hash == fot_var.hash))
+    {
         param_fot_type_read(&fot_var.type);
-        if(app_fota_breakpoint_info_read() == true){
+        if(app_fota_breakpoint_info_read() == true)
+        {
             addr = app_fota_get_curaddr();
         }
+        printf("===================>func_cb.sta = FUNC_PWROFF;\n");
+        func_cb.sta = FUNC_PWROFF;
+        return;
     }
 
 fot_req_reply:
@@ -399,6 +435,14 @@ fot_req_reply:
     fot_sent_proc(data,14);
 }
 
+void ble_disconnect_callback(void)
+{
+#if LE_AB_FOT_EN
+
+    fot_ble_disconnect_callback();
+
+#endif
+}
 
 #if LE_AB_FOT_EN
 void fot_ble_disconnect_callback(void)
@@ -435,70 +479,90 @@ void fot_recv_proc(u8 *buf, u16 len)
     u32 recv_data_len;
     u8 cmd;
 
-    if(fot_remote_seq != buf[FOT_SEQ_POS]){
-        if(memcmp(fot_auth_data, buf, 7)){      //接入码先过掉
-            FOT_DEBUG("remote seq err:%d,%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
-            fot_dev_notify_sta(FOT_ERR_SEQ);
-            fot_flag |= FOT_FLAG_UPDATE_EXIT;
+    if(fot_remote_seq != buf[FOT_SEQ_POS])
+    {
+        if(!memcmp(fot_auth_data,buf,7))
+        {
+            return;
         }
+        //printf("fot_remote_seq:%d, buf[FOT_SEQ_POS]:%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
+        fot_dev_notify_seq_err(FOT_ERR_SEQ);
         return;
     }
 
+    // if(fot_remote_seq != buf[FOT_SEQ_POS]){
+    //     if(memcmp(fot_auth_data, buf, 7)){      //接入码先过掉
+    //         FOT_DEBUG("remote seq err:%d,%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
+    //         fot_dev_notify_sta(FOT_ERR_SEQ);
+    //         fot_flag |= FOT_FLAG_UPDATE_EXIT;
+    //     }
+    //     return;
+    // }
+
     fot_remote_seq++;
 
-    if((fot_sta & FOT_STA_INIT) == 0){
+    if((fot_sta & FOT_STA_INIT) == 0)
+    {
         return;
     }
 
     cmd = buf[FOT_CMD_POS];
 
-    switch(cmd){
-    case FOT_GET_INFO_TLV:
-        fot_reply_info_tlv(&buf[2],len-2);
-        break;
+    switch(cmd)
+    {
+        case FOT_GET_INFO_TLV:
+            fot_reply_info_tlv(&buf[2],len-2);
+            break;
 
-    case FOT_GET_INFO:
-        if(buf[2] == INFO_DEV_VER){
-            fot_reply_dev_version();
-        }else if(buf[2] == INFO_UPDATE_REQ){
-            memcpy(&fot_var.remote_ver,&buf[3],2);
-            memcpy(&fot_var.hash,&buf[5],4);
-            fot_reply_update_request();
-        }
-        break;
+        case FOT_GET_INFO:
+            if(buf[2] == INFO_DEV_VER)
+            {
+                fot_reply_dev_version();
+            }
+            else if(buf[2] == INFO_UPDATE_REQ)
+            {
+                memcpy(&fot_var.remote_ver,&buf[3],2);
+                memcpy(&fot_var.hash,&buf[5],4);
+                fot_reply_update_request();
+            }
+            break;
 
-    case FOT_OUT_DATA_START:
-        if(fot_var.remain_len){
-            FOT_DEBUG("--->len err:%d\n",fot_var.remain_len);
-            fot_dev_notify_sta(FOT_ERR_DATA_LEN);
-            fot_flag |= FOT_FLAG_UPDATE_EXIT;
-            return;
-        }
-        recv_data_len = len-DATA_START_POS;
-        memcpy(&fot_var.total_len,&buf[FOT_DATA_LEN_POS],4);
-        fot_var.remain_len = fot_var.total_len - recv_data_len;
-        memcpy(&addr,&buf[FOT_ADDR_POS],4);
-        memcpy(&fot_data[fot_var.data_pos],&buf[DATA_START_POS],recv_data_len);
-        fot_var.data_pos += recv_data_len;
-        if(fot_var.remain_len == 0){
-            fot_var.fot_recv_ok = 1;
-            fot_var.data_pos = 0;
-        }
-        break;
+        case FOT_OUT_DATA_START:
+            if(fot_var.remain_len)
+            {
+                FOT_DEBUG("--->len err:%d\n",fot_var.remain_len);
+                fot_dev_notify_sta(FOT_ERR_DATA_LEN);
+                fot_flag |= FOT_FLAG_UPDATE_EXIT;
+                return;
+            }
+            recv_data_len = len-DATA_START_POS;
+            memcpy(&fot_var.total_len,&buf[FOT_DATA_LEN_POS],4);
+            fot_var.remain_len = fot_var.total_len - recv_data_len;
+            memcpy(&addr,&buf[FOT_ADDR_POS],4);
+            memcpy(&fot_data[fot_var.data_pos],&buf[DATA_START_POS],recv_data_len);
+            fot_var.data_pos += recv_data_len;
+            if(fot_var.remain_len == 0)
+            {
+                fot_var.fot_recv_ok = 1;
+                fot_var.data_pos = 0;
+            }
+            break;
 
-    case FOT_OUT_DATA_CONTINUE:
-        recv_data_len = len-DATA_CONTINUE_POS;
-        if(fot_var.remain_len < recv_data_len){
-           recv_data_len =  fot_var.remain_len;
-        }
-        fot_var.remain_len -= recv_data_len;
-        memcpy(&fot_data[fot_var.data_pos],&buf[DATA_CONTINUE_POS],recv_data_len);
-        fot_var.data_pos += recv_data_len;
-        if(fot_var.remain_len == 0){
-            fot_var.fot_recv_ok = 1;
-            fot_var.data_pos = 0;
-        }
-        break;
+        case FOT_OUT_DATA_CONTINUE:
+            recv_data_len = len-DATA_CONTINUE_POS;
+            if(fot_var.remain_len < recv_data_len)
+            {
+                recv_data_len =  fot_var.remain_len;
+            }
+            fot_var.remain_len -= recv_data_len;
+            memcpy(&fot_data[fot_var.data_pos],&buf[DATA_CONTINUE_POS],recv_data_len);
+            fot_var.data_pos += recv_data_len;
+            if(fot_var.remain_len == 0)
+            {
+                fot_var.fot_recv_ok = 1;
+                fot_var.data_pos = 0;
+            }
+            break;
     }
 }
 
@@ -510,7 +574,8 @@ static u8 fot_data_buff[512] AT(.fot_data.buf);
 AT(.text.fot.cache)
 void bsp_fot_ui_write_page(void *buf)
 {
-    if((fot_var.ui_updata_address & 0xFFF) == 0){
+    if((fot_var.ui_updata_address & 0xFFF) == 0)
+    {
         os_spiflash_erase(fot_var.ui_updata_address);
     }
     os_spiflash_program(buf, fot_var.ui_updata_address, 256);
@@ -521,14 +586,18 @@ AT(.text.fot.cache)
 void bsp_fot_ui_updata_do(u8 *buf, u32 len)
 {
     uart_putchar('*');
-    if(fot_var.ui_recv_remain){
-        if((len + fot_var.ui_recv_remain) >= 256){
+    if(fot_var.ui_recv_remain)
+    {
+        if((len + fot_var.ui_recv_remain) >= 256)
+        {
             memcpy(&fot_data_buff[fot_var.ui_recv_remain], buf, 256-fot_var.ui_recv_remain);
             bsp_fot_ui_write_page(fot_data_buff);
             len -= 256-fot_var.ui_recv_remain;
             buf += 256-fot_var.ui_recv_remain;
             fot_var.ui_recv_remain = 0;
-        }else{
+        }
+        else
+        {
             memcpy(&fot_data_buff[fot_var.ui_recv_remain], buf, len);
             fot_var.ui_recv_remain += len;
             len = 0;
@@ -536,13 +605,15 @@ void bsp_fot_ui_updata_do(u8 *buf, u32 len)
         }
     }
 
-    while(len >= 256){
+    while(len >= 256)
+    {
         bsp_fot_ui_write_page(buf);
         buf += 256;
         len -= 256;
     }
 
-    if(len){
+    if(len)
+    {
         memcpy(fot_data_buff, buf, len);
         fot_var.ui_recv_remain = len;
     }
@@ -552,14 +623,18 @@ AT(.text.fot.cache)
 void bsp_fot_code_updata_do(u8 *buf, u32 len)
 {
     uart_putchar('.');
-    if(fot_var.ui_recv_remain){
-        if((len + fot_var.ui_recv_remain) >= 512){
+    if(fot_var.ui_recv_remain)
+    {
+        if((len + fot_var.ui_recv_remain) >= 512)
+        {
             memcpy(&fot_data_buff[fot_var.ui_recv_remain], buf, 512-fot_var.ui_recv_remain);
             app_fota_write(fot_data_buff, app_fota_get_curaddr(), 512);
             len -= 512-fot_var.ui_recv_remain;
             buf += 512-fot_var.ui_recv_remain;
             fot_var.ui_recv_remain = 0;
-        }else{
+        }
+        else
+        {
             memcpy(&fot_data_buff[fot_var.ui_recv_remain], buf, len);
             fot_var.ui_recv_remain += len;
             len = 0;
@@ -567,13 +642,15 @@ void bsp_fot_code_updata_do(u8 *buf, u32 len)
         }
     }
 
-    while(len >= 512){
+    while(len >= 512)
+    {
         app_fota_write(buf, app_fota_get_curaddr(), 512);
         buf += 512;
         len -= 512;
     }
 
-    if(len){
+    if(len)
+    {
         memcpy(fot_data_buff, buf, len);
         fot_var.ui_recv_remain = len;
     }
@@ -583,23 +660,31 @@ void bsp_fot_code_updata_do(u8 *buf, u32 len)
 AT(.text.fot.cache)
 void bsp_fot_process(void)
 {
-    if(fot_sta & FOT_STA_START){
-        if(fot_var.fot_recv_ok){
+    if(fot_sta & FOT_STA_START)
+    {
+        if(fot_var.fot_recv_ok)
+        {
             fot_var.fot_recv_ok = 0;
-        #if FOTA_UI_EN
+#if FOTA_UI_EN
             u8 *buff_ptr = fot_data;
 
-            if(fot_var.ota_recv_size == 0){
+            if(fot_var.ota_recv_size == 0)
+            {
                 //print_r(fot_data, fot_var.total_len);
                 fot_var.ui_updata_address = FLASH_UI_BASE;
                 fot_var.ui_recv_remain    = 0;
-                if(memcmp(ui_ota_res_sign, fot_data, 8) == 0){
+                if(memcmp(ui_ota_res_sign, fot_data, 8) == 0)
+                {
                     u32 temp = 0;
                     u8 i = 0;
-                    for(i=8; i<23; i++){
-                        if(fot_data[i] == 0x0D){
+                    for(i=8; i<23; i++)
+                    {
+                        if(fot_data[i] == 0x0D)
+                        {
                             break;
-                        }else{
+                        }
+                        else
+                        {
                             temp = temp *10 + fot_data[i]-'0';
                         }
                     }
@@ -608,12 +693,17 @@ void bsp_fot_process(void)
                     i += 2;
 
                     //增加代码大小 批处理需要新的
-                    if((fot_data[i] != 'F') || (fot_data[i+1] != 'O') || (fot_data[i+2] != 'N')){
+                    if((fot_data[i] != 'F') || (fot_data[i+1] != 'O') || (fot_data[i+2] != 'N'))
+                    {
                         temp = 0;
-                        for(; i<32; i++){
-                            if(fot_data[i] == 0x0D){
+                        for(; i<32; i++)
+                        {
+                            if(fot_data[i] == 0x0D)
+                            {
                                 break;
-                            }else{
+                            }
+                            else
+                            {
                                 temp = temp *10 + fot_data[i]-'0';
                             }
                         }
@@ -622,50 +712,72 @@ void bsp_fot_process(void)
                     }
                     fot_var.total_len -= i;
                     buff_ptr += i;
-                    
+
                     func_cb.sta = FUNC_OTA_UI_MODE;         //进入UI OTA模式，避免UI刷死机
                     printf("UI SIZE:%d CODE SIZE:%d %d\n", fot_var.ui_res_len, fot_var.code_res_len, i+2);
                 }
             }
 
-            if(fot_var.is_ui_flag){
-                if((fot_var.ota_recv_size + fot_var.total_len) <= fot_var.ui_res_len){
+            if(fot_var.is_ui_flag)
+            {
+                if((fot_var.ota_recv_size + fot_var.total_len) <= fot_var.ui_res_len)
+                {
                     bsp_fot_ui_updata_do(buff_ptr, fot_var.total_len);
-                }else{
-                    if(fot_var.ota_recv_size < fot_var.ui_res_len){
+                }
+                else
+                {
+                    if(fot_var.ota_recv_size < fot_var.ui_res_len)
+                    {
                         bsp_fot_ui_updata_do(buff_ptr, fot_var.ui_res_len-fot_var.ota_recv_size);
-                        if(fot_var.ui_recv_remain){
+                        if(fot_var.ui_recv_remain)
+                        {
                             bsp_fot_ui_write_page(fot_data_buff);
                             fot_var.ui_recv_remain = 0;
                         }
                         bsp_fot_code_updata_do(fot_data+(fot_var.ui_res_len-fot_var.ota_recv_size), fot_var.total_len - (fot_var.ui_res_len-fot_var.ota_recv_size));
-                    }else{
+                    }
+                    else
+                    {
                         bsp_fot_code_updata_do(fot_data, fot_var.total_len);
                     }
                 }
-            }else{
+            }
+            else
+            {
+                if (func_cb.sta != FUNC_OTA_UI_MODE && func_cb.sta != FUNC_OTA_MODE)
+                {
+                    func_cb.sta = FUNC_OTA_MODE;         //进入OTA升级界面
+                }
                 app_fota_write(fot_data, app_fota_get_curaddr(), fot_var.total_len);
             }
             fot_var.ota_recv_size += fot_var.total_len;
-        #else
+#else
+            func_cb.sta = FUNC_OTA_MODE;         //进入OTA升级界面
             app_fota_write(fot_data, app_fota_get_curaddr(), fot_var.total_len);
-        #endif
+#endif
             bsp_fot_progress_get();
-            if(app_fota_is_write_done()){
+            if(app_fota_is_write_done())
+            {
                 app_fota_verify();
-                if(app_fota_get_err()){
+                if(app_fota_get_err())
+                {
                     fot_dev_notify_sta(app_fota_get_err());
                     fot_flag |= FOT_FLAG_UPDATE_EXIT;
-                }else{
+                }
+                else
+                {
                     FOT_DEBUG("--->fot update success\n");
                     app_fota_update_done();
                     fot_flag |= (FOT_FLAG_UPDATE_OK | FOT_FLAG_SYS_RESET);
                     fot_var.tick = tick_get();
                     fot_dev_notify_sta(FOT_UPDATE_DONE);
                 }
-            }else{
+            }
+            else
+            {
                 fot_dev_notify_sta(app_fota_get_err());
-                if(app_fota_get_err()){
+                if(app_fota_get_err())
+                {
                     printf("err:0x%x\n", app_fota_get_err());
                     fot_flag |= FOT_FLAG_UPDATE_EXIT;
                 }
@@ -673,22 +785,26 @@ void bsp_fot_process(void)
         }
     }
 
-    if(fot_flag & FOT_FLAG_SYS_RESET){
-        if(tick_check_expire(fot_var.tick,3000)){
+    if(fot_flag & FOT_FLAG_SYS_RESET)
+    {
+        if(tick_check_expire(fot_var.tick,3000))
+        {
             fot_flag &= ~FOT_FLAG_SYS_RESET;
             FOT_DEBUG("-->fota update ok,sys reset\n");
             WDT_RST();
         }
     }
 
-    if(fot_flag & FOT_FLAG_CLK_SET){
+    if(fot_flag & FOT_FLAG_CLK_SET)
+    {
         FOT_DEBUG("--->FOT_FLAG_CLK_SET\n");
         fot_var.sys_clk = sys_clk_get_cur();
         sys_clk_set(SYS_132M);
         fot_flag &= ~FOT_FLAG_CLK_SET;
     }
 
-    if(fot_flag & FOT_FLAG_UPDATE_EXIT){
+    if(fot_flag & FOT_FLAG_UPDATE_EXIT)
+    {
         FOT_DEBUG("-->FOT_FLAG_UPDATE_EXIT");
         bsp_fot_exit();
         fot_flag &= ~FOT_FLAG_UPDATE_EXIT;
@@ -699,8 +815,10 @@ void bsp_fot_process(void)
 AT(.com_text.fot)
 u8 fot_app_connect_auth(uint8_t *packet, uint16_t size)
 {
-    if(!fot_sta){
-        if(size == 7 && !memcmp(fot_auth_data, packet, 7)){     //sizeof(fot_auth_data)
+    if(!fot_sta)
+    {
+        if(size == 7 && !memcmp(fot_auth_data, packet, 7))      //sizeof(fot_auth_data)
+        {
             fot_flag |= FOT_FLAG_APP_CONNECT;
             bsp_fot_init();
         }
@@ -720,29 +838,39 @@ fot_progress_t *bsp_fot_progress_get(void)
 {
     fot_progress_t *p = &fot_progress;
 
-    if (fot_var.is_ui_flag) {       
-        if (fot_var.ota_recv_size < fot_var.ui_res_len) {                   
+    if (fot_var.is_ui_flag)
+    {
+        if (fot_var.ota_recv_size < fot_var.ui_res_len)
+        {
             p->type = FOT_FILE_TYPE_UI;
             p->files_all_size = fot_var.ui_res_len;
             p->files_recv_size = fot_var.ota_recv_size;
-        } else {
-            if (ota_pack_get_total_size() == 0 && ota_pack_get_curaddr() == 0) {
+        }
+        else
+        {
+            if (ota_pack_get_total_size() == 0 && ota_pack_get_curaddr() == 0)
+            {
                 p->type = FOT_FILE_TYPE_UI;
                 p->files_all_size = fot_var.ui_res_len;
                 p->files_recv_size = fot_var.ui_res_len;
-            } else {
+            }
+            else
+            {
                 p->type = FOT_FILE_TYPE_FOT;
                 p->files_all_size = ota_pack_get_total_size();
                 p->files_recv_size = ota_pack_get_curaddr();
-            }                                                             
+            }
         }
-    } else {                        
+    }
+    else
+    {
         p->type = FOT_FILE_TYPE_FOT;
         p->files_all_size = ota_pack_get_total_size();
         p->files_recv_size = ota_pack_get_curaddr();
     }
 
-    if (p->files_all_size) {
+    if (p->files_all_size)
+    {
         p->percent = p->files_recv_size * 100 / p->files_all_size;
     }
 

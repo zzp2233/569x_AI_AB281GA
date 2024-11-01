@@ -488,6 +488,7 @@ static void func_sport_sub_run_message(size_msg_t msg)
 //进入室内跑步功能
 static void func_sport_sub_run_enter(void)
 {
+    uteModuleGuiCommonDisplayOffAllowGoBack(false);
     func_cb.f_cb = func_zalloc(sizeof(f_sport_sub_run_t));
     func_cb.frm_main = func_sport_sub_run_form_create();
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
@@ -497,6 +498,7 @@ static void func_sport_sub_run_enter(void)
 //退出室内跑步功能
 static void func_sport_sub_run_exit(void)
 {
+    uteModuleGuiCommonDisplayOffAllowGoBack(true);
     func_cb.last = FUNC_SPORT_SUB_RUN;
 }
 

@@ -143,58 +143,42 @@ static void func_long_press_event_handle(s32 distance, u16 id)
         }
     }
 }
+
 //长按滑动关机界面显示处理
 static void func_long_press_slide_disp_handle()
 {
     f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
-    static compo_button_t * img_btn = NULL;
-    static compo_shape_t  * rect_cover = NULL;
-    s32 distance,y;
 
-    if(f_long_press->touch_flag == true)   //是否在触屏状态
+    if(f_long_press->touch_flag)
     {
-        int id = compo_get_button_id();
+        s32 distance,y;
+        int id =  f_long_press->touch_btn_id;
+        compo_button_t *img_btn = compo_getobj_byid(id); //遍历按键图标控件
+        compo_shape_t  *rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
 
-        if(id!=0 && id!=RECT_ID_1)   //触摸是否是按键图标
+        f_long_press->touch_flag = ctp_get_dxy(&distance,&y);//获取触屏状态与滑动长度
+        y = widget_get_location(img_btn->widget).y; //获取控件y轴
+        distance += IMG_BTN_FIRST_X;//获取滑动长度加上图标初始位置
+
+        if(distance<IMG_BTN_FIRST_X)  //最小滑动距离
         {
-            f_long_press->touch_btn_id = id; //获取触摸按键图标id
-            img_btn = compo_getobj_byid(id); //遍历按键图标控件
-            f_long_press->touch_btn_flag = true;//开启滑动标志位
+            distance = IMG_BTN_FIRST_X;
         }
-        rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
-
-        if(f_long_press->touch_btn_flag == true) //滑动标志位
+        else if(distance>IMG_BTN_LAST_X)  //最大滑动距离
         {
-            f_long_press->touch_flag = ctp_get_dxy(&distance,&y);//获取触屏状态与滑动长度
-
-            y = widget_get_location(img_btn->widget).y; //获取控件y轴
-            distance += IMG_BTN_FIRST_X;//获取滑动长度加上图标初始位置
-
-            if(distance<IMG_BTN_FIRST_X) //最小滑动距离
-            {
-                distance = IMG_BTN_FIRST_X;
-            }
-            else if(distance>IMG_BTN_LAST_X) //最大滑动距离
-            {
-                distance = IMG_BTN_LAST_X;
-            }
+            distance = IMG_BTN_LAST_X;
         }
 
-        if(f_long_press->touch_flag == false && f_long_press->touch_btn_id) //松开处理
+        if(f_long_press->touch_flag == false)  //松开处理
         {
             func_long_press_event_handle(distance,f_long_press->touch_btn_id ); //事件处理
             distance = IMG_BTN_FIRST_X;//回弹
-            f_long_press->touch_btn_flag = false;//清除触摸按键图标标志位
         }
 
-        if(f_long_press->touch_btn_id ) //触摸状态为按键图标就刷新控件位置
-        {
-            compo_button_set_pos(img_btn, distance,y);
-            compo_shape_set_location(rect_cover,distance/2+IMG_WIDTH/2-IMG_WIDTH/19,y,distance+IMG_WIDTH/5, GUI_SCREEN_HEIGHT/5);
-        }
+        compo_button_set_pos(img_btn, distance,y);
+        compo_shape_set_location(rect_cover,distance/2+IMG_WIDTH/2-IMG_WIDTH/19,y,distance+IMG_WIDTH/5, GUI_SCREEN_HEIGHT/5);
     }
 }
-
 
 //长按滑动关机显示处理
 static void func_long_press_process(void)
@@ -203,15 +187,26 @@ static void func_long_press_process(void)
     func_process();
 }
 
-
-static void func_long_press_message(size_msg_t msg)
+//触摸按键处理
+static void func_long_press_button(void)
 {
     f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
 
+    f_long_press->touch_btn_id = compo_get_button_id();
+
+    if( f_long_press->touch_btn_id >=IMG_BTN_ID_1 &&  f_long_press->touch_btn_id <=IMG_BTN_ID_3)    //触摸是否是按键图标
+    {
+        f_long_press->touch_flag = true;
+    }
+}
+
+
+static void func_long_press_message(size_msg_t msg)
+{
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-            f_long_press->touch_flag = true;
+            func_long_press_button();
             break;
         case KU_BACK:
             func_switch_to_clock();

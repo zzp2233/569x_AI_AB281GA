@@ -207,7 +207,6 @@ static void func_weather_process(void)
 //天气功能消息处理
 static void func_weather_message(size_msg_t msg)
 {
-    compo_cardbox_t *cardbox;
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
 
     switch (msg)

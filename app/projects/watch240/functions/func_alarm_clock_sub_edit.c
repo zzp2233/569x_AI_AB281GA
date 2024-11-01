@@ -28,18 +28,20 @@
 #endif
 
 //组件ID
-enum {
+enum
+{
     //按键
-	COMPO_ID_BTN_DEL = 1,
-	COMPO_ID_BTN_SET,
-	COMPO_ID_BTN_REPEAT,
+    COMPO_ID_BTN_DEL = 1,
+    COMPO_ID_BTN_SET,
+    COMPO_ID_BTN_REPEAT,
 
     //图像
-	COMPO_ID_PIC_DEL_CLICK,
+    COMPO_ID_PIC_DEL_CLICK,
 
 };
 
-typedef struct f_alarm_clock_sub_edit_t_ {
+typedef struct f_alarm_clock_sub_edit_t_
+{
 
 } f_alarm_clock_sub_edit_t;
 
@@ -53,25 +55,25 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_EDIT]);
 
-	//新建按钮
-	compo_button_t *btn;
+    //新建按钮
+    compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_DELETE_BIN);
     compo_setid(btn, COMPO_ID_BTN_DEL);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei / 2 - 5);
 
-    #define SELF_TXT_OFFSET     50
-    #define SELF_PIC_OFFSET     10
+#define SELF_TXT_OFFSET     50
+#define SELF_PIC_OFFSET     10
 
-	u8 hour, min;
+    u8 hour, min;
     hour = ALARM_GET_HOUR(sys_cb.alarm_edit_idx);
     min = ALARM_GET_MIN(sys_cb.alarm_edit_idx);
     char aclock_str[8];
     sprintf(aclock_str, "%02d:%02d", hour, min);
-	compo_textbox_t *txt;
-	txt = compo_textbox_create(frm, 5);
-	compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_ASC_BIN);
-	compo_textbox_set_align_center(txt, false);
-	compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3);
+    compo_textbox_t *txt;
+    txt = compo_textbox_create(frm, 5);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3);
     compo_textbox_set(txt, aclock_str);
 
     btn = compo_button_create(frm);
@@ -88,12 +90,12 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 
     txt = compo_textbox_create(frm, 4);
     compo_textbox_set_align_center(txt, false);
-	compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET);
+    compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET);
     compo_textbox_set(txt, "更改时间");
 
     txt = compo_textbox_create(frm, 4);
     compo_textbox_set_align_center(txt, false);
-	compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2);
+    compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2);
     compo_textbox_set(txt, "设置重复");
 
     //新建图像
@@ -122,13 +124,14 @@ static void func_alarm_clock_sub_edit_button_touch_handle(void)
     int id = compo_get_button_id();
     compo_picturebox_t *pic_click = compo_getobj_byid(COMPO_ID_PIC_DEL_CLICK);
 
-    switch (id) {
-    case COMPO_ID_BTN_DEL:
-        compo_picturebox_set_visible(pic_click, true);
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_DEL:
+            compo_picturebox_set_visible(pic_click, true);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
 }
@@ -145,22 +148,23 @@ static void func_alarm_clock_sub_edit_button_click(void)
 {
     int id = compo_get_button_id();
 
-    switch (id) {
-    case COMPO_ID_BTN_DEL:
-        ALARM_DELETE(sys_cb.alarm_edit_idx);
-        func_cb.sta = FUNC_ALARM_CLOCK;
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_DEL:
+            ALARM_DELETE(sys_cb.alarm_edit_idx);
+            func_cb.sta = FUNC_ALARM_CLOCK;
+            break;
 
-    case COMPO_ID_BTN_SET:
-        func_cb.sta = FUNC_ALARM_CLOCK_SUB_SET;
-        break;
+        case COMPO_ID_BTN_SET:
+            func_cb.sta = FUNC_ALARM_CLOCK_SUB_SET;
+            break;
 
-    case COMPO_ID_BTN_REPEAT:
-        func_cb.sta = FUNC_ALARM_CLOCK_SUB_REPEAT;
-        break;
+        case COMPO_ID_BTN_REPEAT:
+            func_cb.sta = FUNC_ALARM_CLOCK_SUB_REPEAT;
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     func_alarm_clock_sub_edit_button_release_handle();
@@ -176,30 +180,31 @@ static void func_alarm_clock_sub_edit_process(void)
 static void func_alarm_clock_sub_edit_message(size_msg_t msg)
 {
 
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_alarm_clock_sub_edit_button_touch_handle();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_alarm_clock_sub_edit_button_touch_handle();
+            break;
 
-	case MSG_CTP_CLICK:
-        func_alarm_clock_sub_edit_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_alarm_clock_sub_edit_button_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        func_alarm_clock_sub_edit_button_release_handle();
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_alarm_clock_sub_edit_button_release_handle();
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_alarm_clock_sub_edit_button_release_handle();
-        func_message(msg);
-        break;
+        case MSG_CTP_SHORT_RIGHT:
+            func_alarm_clock_sub_edit_button_release_handle();
+            func_message(msg);
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -220,7 +225,8 @@ void func_alarm_clock_sub_edit(void)
 {
     printf("%s\n", __func__);
     func_alarm_clock_sub_edit_enter();
-    while (func_cb.sta == FUNC_ALARM_CLOCK_SUB_EDIT) {
+    while (func_cb.sta == FUNC_ALARM_CLOCK_SUB_EDIT)
+    {
         func_alarm_clock_sub_edit_process();
         func_alarm_clock_sub_edit_message(msg_dequeue());
     }

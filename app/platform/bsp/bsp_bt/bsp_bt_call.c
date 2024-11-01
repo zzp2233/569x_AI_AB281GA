@@ -16,7 +16,8 @@ void bt_sco_magic_exit(void);
 bool hfp_hf_check_is_3way(void);
 
 AT(.rodata.mic_gain)
-const int mic_gain_tbl[16] = {
+const int mic_gain_tbl[16] =
+{
     AEC_DIG_P0DB,
     AEC_DIG_P1DB,
     AEC_DIG_P2DB,
@@ -105,15 +106,16 @@ void sco_app_set_aec_far_offset(u8 offset)
 AT(.text.sco_app_dbg.app)
 u8 bt_sco_dbg_call_var_get(u8 index)
 {
-    switch (index) {
-    case 0:
-        return xcfg_cb.bt_anl_gain;
-    case 1:
-        return xcfg_cb.bt_dig_gain;
-    case 2:
-        return xcfg_cb.mic_post_gain;
-    default:
-        return 0;
+    switch (index)
+    {
+        case 0:
+            return xcfg_cb.bt_anl_gain;
+        case 1:
+            return xcfg_cb.bt_dig_gain;
+        case 2:
+            return xcfg_cb.mic_post_gain;
+        default:
+            return 0;
     }
 }
 #endif
@@ -153,22 +155,27 @@ static void bt_sco_eq_drc_init(call_cfg_t *p)
 {
     u32 mic_eq_addr, mic_eq_len;
     u32 mic_drc_addr, mic_drc_len;
-    if (bt_sco_is_msbc()) {
+    if (bt_sco_is_msbc())
+    {
         mic_eq_addr  = RES_BUF_EQ_BT_MIC_16K_EQ;
         mic_eq_len   = RES_LEN_EQ_BT_MIC_16K_EQ;
         mic_drc_addr = RES_BUF_DRC_BT_MIC_16K_DRC;
         mic_drc_len  = RES_LEN_DRC_BT_MIC_16K_DRC;
-    } else {
+    }
+    else
+    {
         mic_eq_addr  = RES_BUF_EQ_BT_MIC_8K_EQ;
         mic_eq_len   = RES_LEN_EQ_BT_MIC_8K_EQ;
         mic_drc_addr = RES_BUF_DRC_BT_MIC_8K_DRC;
         mic_drc_len  = RES_LEN_DRC_BT_MIC_8K_DRC;
     }
-    if (mic_set_eq_by_res(mic_eq_addr, mic_eq_len)) {
+    if (mic_set_eq_by_res(mic_eq_addr, mic_eq_len))
+    {
         p->mic_eq_en = 1;
         mic_set_drc_by_res(mic_drc_addr, mic_drc_len);      //mic drc
     }
-    if (xcfg_cb.mic_post_gain) {
+    if (xcfg_cb.mic_post_gain)
+    {
         p->post_gain = mic_gain_tbl[xcfg_cb.mic_post_gain];
     }
     mic_set_post_gain(mic_gain_tbl[xcfg_cb.mic_post_gain] << 8);
@@ -179,7 +186,8 @@ static void bt_sco_eq_drc_init(call_cfg_t *p)
     music_eq_off();
 #endif
 #ifdef RES_BUF_DRC_CALL_DAC_DRC
-    if (!music_set_drc_by_res(RES_BUF_DRC_CALL_DAC_DRC, RES_LEN_DRC_CALL_DAC_DRC)) {
+    if (!music_set_drc_by_res(RES_BUF_DRC_CALL_DAC_DRC, RES_LEN_DRC_CALL_DAC_DRC))
+    {
         music_drc_off();
     }
 #else
@@ -242,49 +250,52 @@ static void bt_call_alg_exit(void)
 
 void hfp_hf_call_notice(uint32_t evt)
 {
-    switch (evt) {
-    case BT_NOTICE_INCOMING:
-        printf("===>>> InComing, is 3way:%d\n", hfp_hf_check_is_3way());
-        bsp_call_mgr_send(CALL_MGR_BT_INCOM);
-        break;
-    case BT_NOTICE_OUTGOING:
-        printf("===>>> OutGoing, is 3way:%d\n", hfp_hf_check_is_3way());
-        bsp_call_mgr_send(CALL_MGR_BT_OUTGO);
-        break;
-    case BT_NOTICE_INCALL:
-        printf("===>>> InCall,   is 3way:%d\n", hfp_hf_check_is_3way());
+    switch (evt)
+    {
+        case BT_NOTICE_INCOMING:
+            printf("===>>> InComing, is 3way:%d\n", hfp_hf_check_is_3way());
+            bsp_call_mgr_send(CALL_MGR_BT_INCOM);
+            break;
+        case BT_NOTICE_OUTGOING:
+            printf("===>>> OutGoing, is 3way:%d\n", hfp_hf_check_is_3way());
+            bsp_call_mgr_send(CALL_MGR_BT_OUTGO);
+            break;
+        case BT_NOTICE_INCALL:
+            printf("===>>> InCall,   is 3way:%d\n", hfp_hf_check_is_3way());
 #if CALL_MGR_EN
-        bt_cb.incall_flag = 1;
+            bt_cb.incall_flag = 1;
 #endif
-        bsp_call_mgr_send(CALL_MGR_BT_INCALL);
-        break;
-    case BT_NOTICE_ENDCALL:
-        printf("===>>> EndCall\n");
-        bsp_call_mgr_send(CALL_MGR_BT_ENDCALL);
-        bt_cb.number_sta = false;
+            bsp_call_mgr_send(CALL_MGR_BT_INCALL);
+            break;
+        case BT_NOTICE_ENDCALL:
+            printf("===>>> EndCall\n");
+            bsp_call_mgr_send(CALL_MGR_BT_ENDCALL);
+            bt_cb.number_sta = false;
+            bt_cb.call_type = CALL_TYPE_NONE;
 #if CALL_MGR_EN
-        bt_cb.incall_flag = 0;
-        bt_cb.times = 0;
+            bt_cb.incall_flag = 0;
+            bt_cb.times = 0;
 #endif
-        break;
-    case BT_NOTICE_CALL_NUMBER:
-        printf("===>>> Number: %s\n", hfp_get_last_call_number(0));
-        bt_cb.number_sta = true;
+            break;
+        case BT_NOTICE_CALL_NUMBER:
+            printf("===>>> Number: %s\n", hfp_get_last_call_number(0));
+            bt_cb.number_sta = true;
 #if CALL_MGR_EN
-        // 三方来电 延迟更新号码
-        if (!bsp_call_mgr_need_update())
+            // 三方来电 延迟更新号码
+            if (!bsp_call_mgr_need_update())
 #endif
-        {
-            msg_enqueue(EVT_CALL_NUMBER_UPDATE);
-        }
-        break;
+            {
+                msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+            }
+            break;
     }
 }
 
 void bsp_bt_call_times_inc(void)
 {
 #if CALL_MGR_EN
-    if (bt_cb.incall_flag) {
+    if (bt_cb.incall_flag)
+    {
         bt_cb.times++;
     }
 #endif
@@ -293,22 +304,23 @@ void bsp_bt_call_times_inc(void)
 void bsp_bt_call_process(bsp_call_mgr_msg_t msg)
 {
 #if CALL_MGR_EN
-    switch (msg) {
-    case CALL_MGR_BT_INCOM:
-        bsp_iis_stop();
-        func_cb.sta = FUNC_BT_RING;
-        break;
-    case CALL_MGR_BT_OUTGO:
-        bsp_iis_stop();
-        func_cb.sta = FUNC_BT_CALL;
-        break;
-    case CALL_MGR_BT_INCALL:
-        func_cb.sta = FUNC_BT_CALL;
-        break;
-    case CALL_MGR_BT_ENDCALL:
-        break;
-    default:
-        break;
+    switch (msg)
+    {
+        case CALL_MGR_BT_INCOM:
+            bsp_iis_stop();
+            func_cb.sta = FUNC_BT_RING;
+            break;
+        case CALL_MGR_BT_OUTGO:
+            bsp_iis_stop();
+            func_cb.sta = FUNC_BT_CALL;
+            break;
+        case CALL_MGR_BT_INCALL:
+            func_cb.sta = FUNC_BT_CALL;
+            break;
+        case CALL_MGR_BT_ENDCALL:
+            break;
+        default:
+            break;
     }
 #endif
 }
@@ -355,7 +367,8 @@ bool sco_clr_incall_flag(u8 bit)
 {
     bool ret = false;
     GLOBAL_INT_DISABLE();
-    if(sys_cb.incall_flag == INCALL_FLAG_FADE) {
+    if(sys_cb.incall_flag == INCALL_FLAG_FADE)
+    {
         ret = true;
     }
     sys_cb.incall_flag &= ~bit;
@@ -432,7 +445,8 @@ void modem_call_exit(void)
 void bsp_bt_call_enter(void)
 {
     sco_set_incall_flag(INCALL_FLAG_CALL);
-    if(sys_cb.incall_flag == INCALL_FLAG_FADE) {
+    if(sys_cb.incall_flag == INCALL_FLAG_FADE)
+    {
         // bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
         bsp_change_volume(VOL_MAX);                 //通话改成默认最大音量
         dac_fade_in();
@@ -442,12 +456,15 @@ void bsp_bt_call_enter(void)
 void bsp_bt_call_exit(void)
 {
     bool vol_change = sco_clr_incall_flag(INCALL_FLAG_CALL);
-    if(vol_change) {
+    if(vol_change)
+    {
         u32 tick = tick_get();
-        while (!tick_check_expire(tick, 800)) {      //等待sco退出
+        while (!tick_check_expire(tick, 800))        //等待sco退出
+        {
             bt_thread_check_trigger();
             delay_5ms(2);
-            if (!sys_cb.incall_flag) {
+            if (!sys_cb.incall_flag)
+            {
                 break;
             }
         }

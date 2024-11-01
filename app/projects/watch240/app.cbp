@@ -1062,6 +1062,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_music.h" />
+		<Unit filename="functions/func_ota_update.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_passwod_sub_disp.c">
 			<Option compilerVar="CC" />
 		</Unit>

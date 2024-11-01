@@ -282,6 +282,18 @@ static void fot_dev_notify_sta(u8 sta)
     fot_sent_proc(buf,3);
 }
 
+AT(.text.fot.cache)
+static void fot_dev_notify_seq_err(u8 sta)
+{
+    u8 buf[3];
+
+    buf[0] = FOT_NOTIFY_STA;
+    buf[1] = fot_seq;
+    buf[2] = sta;
+
+    fot_sent_proc(buf,3);
+}
+
 AT(.text.fot.update)
 u8 is_fot_start(void)
 {
@@ -397,8 +409,9 @@ static void fot_reply_update_request(void)
     param_fot_remote_ver_read((u8*)&flash_remote_ver);
     param_fot_hash_read((u8*)&hash);
 
-    FOT_DEBUG("flash hash val:0x%x\n",hash);
+    FOT_DEBUG("flash hash val:0x%x\n",hash);/*  */
 
+    printf("1111flash hash val:0x%x\n",hash);
     if((fot_var.hash != 0xFFFFFFFF) && (flash_remote_ver == fot_var.remote_ver) && (hash == fot_var.hash))
     {
         param_fot_type_read(&fot_var.type);
@@ -406,6 +419,9 @@ static void fot_reply_update_request(void)
         {
             addr = app_fota_get_curaddr();
         }
+        printf("===================>func_cb.sta = FUNC_PWROFF;\n");
+        func_cb.sta = FUNC_PWROFF;
+        return;
     }
 
 fot_req_reply:
@@ -419,6 +435,14 @@ fot_req_reply:
     fot_sent_proc(data,14);
 }
 
+void ble_disconnect_callback(void)
+{
+#if LE_AB_FOT_EN
+
+    fot_ble_disconnect_callback();
+
+#endif
+}
 
 #if LE_AB_FOT_EN
 void fot_ble_disconnect_callback(void)
@@ -457,14 +481,23 @@ void fot_recv_proc(u8 *buf, u16 len)
 
     if(fot_remote_seq != buf[FOT_SEQ_POS])
     {
-        if(memcmp(fot_auth_data, buf, 7))       //接入码先过掉
+        if(!memcmp(fot_auth_data,buf,7))
         {
-            FOT_DEBUG("remote seq err:%d,%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
-            fot_dev_notify_sta(FOT_ERR_SEQ);
-            fot_flag |= FOT_FLAG_UPDATE_EXIT;
+            return;
         }
+        //printf("fot_remote_seq:%d, buf[FOT_SEQ_POS]:%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
+        fot_dev_notify_seq_err(FOT_ERR_SEQ);
         return;
     }
+
+    // if(fot_remote_seq != buf[FOT_SEQ_POS]){
+    //     if(memcmp(fot_auth_data, buf, 7)){      //接入码先过掉
+    //         FOT_DEBUG("remote seq err:%d,%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
+    //         fot_dev_notify_sta(FOT_ERR_SEQ);
+    //         fot_flag |= FOT_FLAG_UPDATE_EXIT;
+    //     }
+    //     return;
+    // }
 
     fot_remote_seq++;
 

@@ -70,6 +70,7 @@ static void func_ota_update_process(void)
 //进入升级界面
 static void func_ota_update_enter(void)
 {
+    uteModuleGuiCommonDisplayOffAllowGoBack(false);
     func_cb.f_cb = func_zalloc(sizeof(f_ota_update_t));
     func_cb.frm_main = func_ota_update_form_create();
     f_ota_update_t *f_ota_update = (f_ota_update_t *)func_cb.f_cb;
@@ -81,6 +82,7 @@ static void func_ota_update_enter(void)
 static void func_ota_update_exit(void)
 {
 //    f_ota_update_t *f_ota_update = (f_ota_update_t *)func_cb.f_cb;
+    uteModuleGuiCommonDisplayOffAllowGoBack(true);
     func_cb.last = FUNC_OTA_MODE;
 }
 

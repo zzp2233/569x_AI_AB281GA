@@ -2,7 +2,8 @@
 #include "func.h"
 
 
-typedef struct f_calendar_t_ {
+typedef struct f_calendar_t_
+{
     u16 today_year;
     u8 today_mon;
     u8 today_day;
@@ -19,7 +20,7 @@ enum
     CALE_THURSDAY,
     CALE_FRIDAY,
     CALE_SATURDAY,
-}e_cale_week;
+} e_cale_week;
 
 
 #define CALE_CONTEXT_X_START_GAP    10  //x方向边界间隙
@@ -41,7 +42,8 @@ enum
 #define CAL_DAY_OF_WEEK(year, month, day)     (uint16_t)(((day) + 1 + 2 * (month) + 3 * (month + 1) / 5 + \
                                                                 (year) + (year) / 4 - (year) / 100 + (year) / 400) % 7)
 
-enum{
+enum
+{
     //文本
     COMPO_ID_YEAR_TEXT = 1,
     COMPO_ID_MON_TEXT,
@@ -64,7 +66,8 @@ static uint8_t cal_max_of_days_per_month(uint16_t year, uint8_t month)
 {
     uint8_t day_max;
 
-    switch(month) {
+    switch(month)
+    {
         case 1:
         case 3:
         case 5:
@@ -109,40 +112,58 @@ static void func_calender_refresh(uint16_t year, uint8_t month, uint8_t today_da
     day = 1;
     day_max = cal_max_of_days_per_month(year, month);
     last_day_max = cal_max_of_days_per_month(year, cal_last_month(month));
-    if(1 == month || 2 == month) {
+    if(1 == month || 2 == month)
+    {
         month += 12;
         year --;
     }
     frist_day_week = CAL_DAY_OF_WEEK(year, month, 1);
 
-    for(i = 0; i < CALE_CONTEXT_MAX; i++) {
+    for(i = 0; i < CALE_CONTEXT_MAX; i++)
+    {
         comop = compo_getobj_byid(COMPO_ID_DATE_TEXT_START + i);
-        if(comop) {
-            if(i < frist_day_week) {
+        if(comop)
+        {
+            if(i < frist_day_week)
+            {
                 buf[0] = 48 + (last_day_max - frist_day_week + i + 1) / 10;
                 buf[1] = 48 + (last_day_max - frist_day_week + i + 1) % 10;
                 compo_label_set_forecolor((compo_label_t *)comop, COLOR_GRAY);
                 compo_label_set((compo_label_t *)comop, buf);
-            } else {
-                if(day <= day_max) {
-                    if(day < 10) {
+            }
+            else
+            {
+                if(day <= day_max)
+                {
+                    if(day < 10)
+                    {
                         buf[0] = 48 + day;
                         buf[1] = 0;
-                    } else {
+                    }
+                    else
+                    {
                         buf[0] = 48 + day / 10;
                         buf[1] = 48 + day % 10;
                     }
-                    if(today_day == day) {
+                    if(today_day == day)
+                    {
                         compo_label_set_forecolor((compo_label_t *)comop, COLOR_RED);
-                    } else {
+                    }
+                    else
+                    {
                         compo_label_set_forecolor((compo_label_t *)comop, COLOR_WHITE);
                     }
                     compo_label_set((compo_label_t *)comop, buf);
-                } else {
-                    if((day - day_max) < 10) {
+                }
+                else
+                {
+                    if((day - day_max) < 10)
+                    {
                         buf[0] = 48 + (day - day_max);
                         buf[1] = 0;
-                    } else {
+                    }
+                    else
+                    {
                         buf[0] = 48 + (day - day_max) / 10;
                         buf[1] = 48 + (day - day_max) % 10;
                     }
@@ -171,8 +192,10 @@ compo_form_t *func_calender_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_CALENDAR]);
 
     //新建日历文本内容
-    for(i = 0; i < CALE_CONTEXT_MAX; i++) {
-        if(!(i % 7)) {
+    for(i = 0; i < CALE_CONTEXT_MAX; i++)
+    {
+        if(!(i % 7))
+        {
             x_pos = CALE_CONTEXT_X_START_GAP + CALE_CONTEXT_WIDTH / 2;
             y_pos = CALE_CONTEXT_y_START_GAP + CALE_CONTEXT_HEIGHT / 2 + (i / 7) * (CALE_CONTEXT_HEIGHT + CALE_CONTEXT_y_GAP);
         }
@@ -186,7 +209,8 @@ compo_form_t *func_calender_form_create(void)
     //新建（日 一 二 三 四 五 六）文本
     x_pos = CALE_CONTEXT_X_START_GAP + CALE_CONTEXT_WIDTH / 2;
     y_pos = CALE_CONTEXT_y_START_GAP - 40;
-    for(i = 0; i < 7; i++) {
+    for(i = 0; i < 7; i++)
+    {
         cale_label = compo_label_create(frm, sizeof(week_text[i]));
         compo_label_set_pos(cale_label, x_pos, y_pos);
         compo_label_set(cale_label, week_text[i]);
@@ -199,14 +223,14 @@ compo_form_t *func_calender_form_create(void)
 
     //year_text
     cale_label = compo_label_create(frm, 4);
-    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_ASC_BIN);
+    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X - 20, CALE_CONTEXT_y_START_GAP - 80);
     compo_label_set(cale_label, "2023");
     compo_setid(cale_label, COMPO_ID_YEAR_TEXT);
 
     //mon_text
     cale_label = compo_label_create(frm, 2);
-    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_ASC_BIN);
+    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X + 40, CALE_CONTEXT_y_START_GAP - 80);
     compo_label_set(cale_label, "11");
     compo_setid(cale_label, COMPO_ID_MON_TEXT);
@@ -232,15 +256,20 @@ static void func_calendar_date_update(bool next)
     uint8_t today_day;
     char buf[8];
 
-    if(next) {
+    if(next)
+    {
         time->update_mon ++;
-        if(time->update_mon > 12) {
+        if(time->update_mon > 12)
+        {
             time->update_mon = 1;
             time->update_year ++;
         }
-    } else {
+    }
+    else
+    {
         time->update_mon --;
-        if(0 == time->update_mon) {
+        if(0 == time->update_mon)
+        {
             time->update_mon = 12;
             time->update_year --;
         }
@@ -256,7 +285,8 @@ static void func_calendar_date_update(bool next)
 
     //刷新当前日期
     today_day = 0;
-    if(time->today_year == time->update_year && time->today_mon == time->update_mon) {
+    if(time->today_year == time->update_year && time->today_mon == time->update_mon)
+    {
         today_day = time->today_day;
     }
 
@@ -269,9 +299,12 @@ static void func_calendar_button_click(void)
 {
     int id = compo_get_button_id();
 
-    if(COMPO_ID_LAST_BTN == id) {
+    if(COMPO_ID_LAST_BTN == id)
+    {
         func_calendar_date_update(false);
-    } else if(COMPO_ID_NEXT_BTN == id) {
+    }
+    else if(COMPO_ID_NEXT_BTN == id)
+    {
         func_calendar_date_update(true);
     }
 }
@@ -285,7 +318,8 @@ static void func_calendar_comm_process(void)
 //消息处理
 static void func_calendar_message(size_msg_t msg)
 {
-    switch (msg) {
+    switch (msg)
+    {
         case MSG_CTP_CLICK:
             func_calendar_button_click();
             break;
@@ -332,7 +366,8 @@ void func_calendar(void)
 {
     printf("%s\n", __func__);
     func_calendar_enter();
-    while (func_cb.sta == FUNC_CALENDAER) {
+    while (func_cb.sta == FUNC_CALENDAER)
+    {
         func_calendar_comm_process();
         func_calendar_message(msg_dequeue());
     }

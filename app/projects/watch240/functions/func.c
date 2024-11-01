@@ -108,7 +108,9 @@ extern void func_ota_ui(void);
 extern void func_pressure(void);//压力
 extern void func_pressure_explain(void);//压力说明
 extern void func_long_press(void);//关机 重启 SOS
+extern void func_ota_update(void);
 
+compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
 compo_form_t *func_pressure_explain_form_create(void);//压力说明
 compo_form_t *func_pressure_form_create(void);//压力
@@ -290,6 +292,7 @@ const func_t tbl_func_create[] =
     {FUNC_BIRD,                         func_bird_form_create},
     {FUNC_TETRIS,                       func_tetris_form_create},
     {FUNC_TETRIS_START,                 func_tetris_start_form_create},
+    {FUNC_OTA_MODE,                     func_ota_update_form_create},
 };
 
 const func_t tbl_func_entry[] =
@@ -401,6 +404,7 @@ const func_t tbl_func_entry[] =
     {FUNC_BIRD,                         func_bird},
     {FUNC_TETRIS,                       func_tetris},
     {FUNC_TETRIS_START,                 func_tetris_start},
+    {FUNC_OTA_MODE,                     func_ota_update},
 
 };
 
@@ -413,9 +417,7 @@ void func_watch_bt_process(void)
     {
         sfunc_bt_ota();
     }
-#if CALL_MGR_EN
-    bsp_call_mgr_process();
-#else
+#if !CALL_MGR_EN
     else if (sys_cb.reject_tick)
     {
         if (tick_check_expire(sys_cb.reject_tick, 3000) || disp_status < BT_STA_INCOMING)
@@ -462,6 +464,7 @@ void print_info(void)
         ticks = tick_get();
         extern void mem_monitor_run(void);
         mem_monitor_run();
+        printf("sys_cb.sco_state[%d], bt_cb.call_type[%d], bt_cb.disp_status[%d]\n", sys_cb.sco_state, bt_cb.call_type, bt_cb.disp_status);
     }
 }
 
@@ -536,6 +539,10 @@ void func_process(void)
     func_watch_bt_process();
 #endif
 
+#if CALL_MGR_EN
+    bsp_call_mgr_process();
+#endif
+
     //PWRKEY模拟硬开关关机处理
     if ((PWRKEY_2_HW_PWRON) && (sys_cb.pwrdwn_hw_flag))
     {
@@ -569,7 +576,11 @@ void func_process(void)
         bsp_fot_process();
         if (is_fot_start() == true)
         {
-            //func_cb.sta = FUNC_OTA_MODE;
+            if (sys_cb.gui_sleep_sta)
+            {
+                sys_cb.gui_need_wakeup = 1;
+            }
+            func_cb.sta = FUNC_OTA_MODE;
         }
 #endif
     }

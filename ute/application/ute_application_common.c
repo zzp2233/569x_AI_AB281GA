@@ -18,10 +18,10 @@
 #include "ute_module_notdisturb.h"
 #include "ute_module_weather.h"
 #include "ute_module_heart.h"
+#include "ute_module_bloodoxygen.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
-#include "ute_module_bloodoxygen.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_sport.h"
 #include "ute_module_breathrate.h"

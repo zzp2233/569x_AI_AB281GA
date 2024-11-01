@@ -21,6 +21,7 @@
 #include "ute_module_weather.h"
 #include "ute_module_heart.h"
 #include "func_cover.h"
+#include "ute_module_bloodoxygen.h"
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
 *@details      解析协议
@@ -1552,24 +1553,11 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
         {
             uteModuleBloodoxygenStopSingleTesting();
         }
-        if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_BLOOD_OXYGEN_ID)
+        if(!uteModuleGuiCommonIsDisplayOn() || uteModuleGuiCommonGetCurrentScreenId() != FUNC_BLOOD_OXYGEN)
         {
-            uteModuleBloodoxygenStartSingleTesting();
-#if PROJECT_RB280B_SUPPORT||GUI_SCREEN_SIZE_240X280RGB_I269001_SUPPORT
-            SHM_DATA_SECTION extern ute_module_gui_common_t uteModuleGuiCommonData;
-            if(!uteModuleGuiCommonData.isDisplayOn)
-            {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_BLOOD_OXYGEN_ID);
-            }
-#endif
+            uteTaskGuiStartScreenWithoutHistory(FUNC_BLOOD_OXYGEN,true);
         }
-        else
-        {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_BLOOD_OXYGEN_ID);
-#if PROJECT_RB303AT_SUPPORT
-            uteModuleBloodoxygenStartSingleTesting();
-#endif
-        }
+        uteModuleBloodoxygenStartSingleTesting();
     }
     else if(receive[1]==0x00)
     {

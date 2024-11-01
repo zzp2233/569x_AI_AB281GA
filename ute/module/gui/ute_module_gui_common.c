@@ -12,6 +12,8 @@
 #include "ute_drv_screen_common.h"
 #include "ute_application_common.h"
 #include "ute_module_gui_common.h"
+#include "ute_module_heart.h"
+#include "ute_module_bloodoxygen.h"
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
@@ -649,9 +651,46 @@ uint8_t uteModuleGuiCommonGetDisplayOffTime(void)
 */
 void uteModuleGuiCommonGoBackLastScreen(void)
 {
-    // ute_task_gui_message_t msg;
-    // msg.type = MSG_TYPE_MODULE_GUI_GO_BACK_LAST;
-    // uteTaskGuiSendMsg(&msg);
+    // func_directly_back_to();
+    func_switch_prev(true);
+}
+
+/**
+*@brief        开始显示界面
+*@detail
+*@param[in] int screenId 界面唯一id
+*@author       zn.zeng
+*@date       2021-09-03
+*/
+void uteTaskGuiStartScreen(uint8_t screenId)
+{
+    if(sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = true;;
+    }
+    func_switch_to(screenId, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+    task_stack_push(screenId);
+}
+
+/**
+*@brief        开始显示界面
+*@detail
+*@param[in] int screenId 界面唯一id
+*@param[in]  isWithoutHistory是否不把当前界面添加到历史栈列表
+*@author       cxd
+*@date       2022-07-11
+*/
+void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
+{
+    if(sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = true;;
+    }
+    func_switch_to(screenId, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+    if(!isWithoutHistory)
+    {
+        task_stack_push(screenId);
+    }
 }
 
 /**
@@ -905,16 +944,17 @@ bool uteModuleGuiCommonGetPowerSavingModeOpen(void)
 */
 bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
 {
+    int id = uteModuleGuiCommonGetCurrentScreenId();
     if(uteModuleGuiCommonData.isDisplayOn)
     {
-#if 0//UTE_MODULE_HEART_SUPPORT
-        if((id == UTE_MOUDLE_SCREENS_HEART_RATE_ID) && (uteModuleHeartIsWear()))
+#if UTE_MODULE_HEART_SUPPORT
+        if((id == FUNC_HEARTRATE) && (uteModuleHeartIsWear()))
         {
             return false;
         }
 #endif
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
-        if((id == UTE_MOUDLE_SCREENS_BLOOD_OXYGEN_ID) && (uteModuleBloodoxygenIsTesting()))
+        if((id == FUNC_BLOOD_OXYGEN) && (uteModuleBloodoxygenIsTesting()))
         {
             return false;
         }

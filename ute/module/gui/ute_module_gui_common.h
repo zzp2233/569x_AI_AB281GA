@@ -77,6 +77,8 @@ void uteModuleGuiCommonGoToMenuScreen(void);
 bool uteModuleGuiCommonIsDisplayOn(void);
 void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear);
 int uteModuleGuiCommonGetCurrentScreenId(void);
+void uteTaskGuiStartScreen(uint8_t screenId);
+void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory);
 
 uint8_t uteModuleGuiCommonGetBackLightPercent(void);
 bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void);

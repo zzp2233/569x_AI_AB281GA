@@ -219,6 +219,7 @@ enum
 
     STR_NO_MSG,
     STR_FIND_WATCH,
+    STR_SET_DATA_READ,
 };
 
 extern const char * const *i18n;

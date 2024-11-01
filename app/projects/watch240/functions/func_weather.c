@@ -58,26 +58,46 @@ compo_form_t *func_weather_form_create(void)
     ute_display_ctrl_t displayInfo;
 
     u8 week_sort[7];
-    u8 get_weather_id[7];
+    u8 week_day=0;
+    u8 get_weather_id[7];//存放一个星期的排序
     char str_buff[30];//用于存放打印数据
 
     memset(get_weather_id,0,sizeof(get_weather_id));
 
     uteModuleSystemtimeGetTime(&time);//获取系统时间
-    for(int i=0; i<7; i++) //星期排序
+    week_day = time.week; //获取星期
+    for(int i=0; i<=6; i++) //星期排序
     {
-        if(time.week+i >= 7)
+        switch(week_day)
         {
-            week_sort[i] = time.week+i-7;
+            case 0 :
+                week_sort[i] = 6;
+                break;
+            case 1 :
+                week_sort[i] = 0;
+                break;
+            case 2 :
+                week_sort[i] = 1;
+                break;
+            case 3 :
+                week_sort[i] = 2;
+                break;
+            case 4 :
+                week_sort[i] = 3;
+                break;
+            case 5 :
+                week_sort[i] = 4;
+                break;
+            case 6 :
+                week_sort[i] = 5;
+                break;
         }
-        else
-        {
-            week_sort[i] = time.week+i;
-        }
-        // printf("week:%d\n",week_sort[i]);
-    }
 
-    //printf("a:%d   b:%d\n",uteModuleWeatherGetCurrDay(),time.day);
+        if(++week_day==7)
+        {
+            week_day = 0;
+        }
+    }
 
     if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
     {
@@ -104,11 +124,14 @@ compo_form_t *func_weather_form_create(void)
             get_weather_id[i] = weather_date.DayWeather[i]>>8;//赋值排序天气状态
         }
 
-        if(displayInfo.isFahrenheit)   //是否为华氏度
+        if(displayInfo.isFahrenheit)    //是否为华氏度
         {
             weather_date.fristDayCurrTemperature= weather_date.fristDayCurrTemperature*9/5+32;
             /*pcm 2022-09-19 */
-            if(weather_date.fristDayCurrTemperature<(-99))  weather_date.fristDayCurrTemperature=-99;
+            if(weather_date.fristDayCurrTemperature<(-99))
+            {
+                weather_date.fristDayCurrTemperature=-99;
+            }
 
             for(int i=0; i<7; i++)
             {
@@ -168,17 +191,17 @@ compo_form_t *func_weather_form_create(void)
     {
         txt = compo_textbox_create(frm,6);
         compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_BIN);
-        compo_textbox_set(txt,i18n[STR_ALARM_CLOCK_MON+week_sort[i]]);
+        compo_textbox_set(txt,i18n[STR_ALARM_CLOCK_MON+week_sort[i]]);/// 星期
         compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X/6,GUI_SCREEN_HEIGHT+30+(i*30)-8);
         compo_textbox_set_align_center(txt,false);
 
-        picbox = compo_picturebox_create(frm,weather_list[get_weather_id[i]].res_addr);
+        picbox = compo_picturebox_create(frm,weather_list[get_weather_id[i]].res_addr);/// 天气
         compo_picturebox_set_size(picbox,gui_image_get_size( weather_list[get_weather_id[i]].res_addr).wid/3,\
                                   gui_image_get_size( weather_list[get_weather_id[i]].res_addr).hei/3);
         compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+30+(i*30));
 
         txt = compo_textbox_create(frm,6);
-        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_BIN);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_BIN);/// 温度
         if(uteModuleWeatherGetCurrDay() == time.day)
         {
             snprintf(str_buff, sizeof(str_buff), "%02d~%02d℃",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i]);//一周 小~大 温度

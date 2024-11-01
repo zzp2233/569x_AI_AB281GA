@@ -132,6 +132,7 @@ enum
     FUNC_BIRD,
     FUNC_TETRIS,
     FUNC_TETRIS_START,
+    FUNC_OTA_MODE,         //OTA升级
 };
 
 //task control block

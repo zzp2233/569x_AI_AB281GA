@@ -542,10 +542,10 @@ static void func_clock_message(size_msg_t msg)
 {
 
     point_t pt = ctp_get_sxy();
-    s16 cube_limit_x = (GUI_SCREEN_WIDTH - 240) / 2;
-    s16 cube_limit_y = (GUI_SCREEN_HEIGHT - 240) / 2;
-    bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + 240));
-    bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + 240));
+    s16 cube_limit_x = (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
+    s16 cube_limit_y = (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
+    bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
+    bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
 
 
     if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX && flag_cube_touch_x && flag_cube_touch_y)

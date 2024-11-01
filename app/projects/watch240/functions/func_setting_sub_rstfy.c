@@ -8,11 +8,13 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_rstfy_t_ {
+typedef struct f_rstfy_t_
+{
 
 } f_rstfy_t;
 
-enum{
+enum
+{
     COMPO_ID_BTN_NO = 1,
     COMPO_ID_BTN_YES,
 };
@@ -29,8 +31,8 @@ compo_form_t *func_set_sub_rstfy_form_create(void)
 
     //创建文本
     compo_textbox_t *txt_off = compo_textbox_create(frm, 9);
-    compo_textbox_set_align_center(txt_off, false);
-    compo_textbox_set_pos(txt_off, 10, GUI_SCREEN_CENTER_Y);
+    // compo_textbox_set_align_center(txt_off, false);
+    compo_textbox_set_pos(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y*1.2);
     compo_textbox_set(txt_off, "是否恢复出厂设置?");
 
     //创建按钮
@@ -55,41 +57,45 @@ static void func_set_sub_rstfy_process(void)
 static void func_rstfy_button_click(void)
 {
     int id = compo_get_button_id();
-    switch (id) {
-    case COMPO_ID_BTN_YES:
-        // WDT_RST();
-        uteApplicationCommonFactoryReset();
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_YES:
+            // WDT_RST();
+            uteApplicationCommonFactoryReset();
+            break;
 
-    case COMPO_ID_BTN_NO:
-        if(func_cb.last == FUNC_SETTING) {
-            func_cb.sta = FUNC_SETTING;
-        }
-        else {
-            func_cb.sta = FUNC_MENU;
-        }
-        break;
+        case COMPO_ID_BTN_NO:
+            if(func_cb.last == FUNC_SETTING)
+            {
+                func_cb.sta = FUNC_SETTING;
+            }
+            else
+            {
+                func_cb.sta = FUNC_MENU;
+            }
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
 //恢复出厂功能消息处理
 static void func_set_sub_rstfy_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_rstfy_button_click();                //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_rstfy_button_click();                //单击图标
+            break;
 
 
-    case KU_DELAY_BACK:
-        break;
+        case KU_DELAY_BACK:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -111,7 +117,8 @@ void func_set_sub_rstfy(void)
 {
     printf("%s\n", __func__);
     func_set_sub_rstfy_enter();
-    while (func_cb.sta == FUNC_SET_SUB_RSTFY) {
+    while (func_cb.sta == FUNC_SET_SUB_RSTFY)
+    {
         func_set_sub_rstfy_process();
         func_set_sub_rstfy_message(msg_dequeue());
     }

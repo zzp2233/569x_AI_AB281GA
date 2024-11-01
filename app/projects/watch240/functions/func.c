@@ -417,9 +417,7 @@ void func_watch_bt_process(void)
     {
         sfunc_bt_ota();
     }
-#if CALL_MGR_EN
-    bsp_call_mgr_process();
-#else
+#if !CALL_MGR_EN
     else if (sys_cb.reject_tick)
     {
         if (tick_check_expire(sys_cb.reject_tick, 3000) || disp_status < BT_STA_INCOMING)
@@ -466,6 +464,7 @@ void print_info(void)
         ticks = tick_get();
         extern void mem_monitor_run(void);
         mem_monitor_run();
+        printf("sys_cb.sco_state[%d], bt_cb.call_type[%d], bt_cb.disp_status[%d]\n", sys_cb.sco_state, bt_cb.call_type, bt_cb.disp_status);
     }
 }
 
@@ -538,6 +537,10 @@ void func_process(void)
 
 #if BT_BACKSTAGE_EN
     func_watch_bt_process();
+#endif
+
+#if CALL_MGR_EN
+    bsp_call_mgr_process();
 #endif
 
     //PWRKEY模拟硬开关关机处理

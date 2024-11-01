@@ -74,7 +74,7 @@ compo_form_t *func_pressure_form_create(void)
 
     //最大压力
     txt = compo_textbox_create(frm, TODAY_PRESSURE_TXT_MAX);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_16_BIN);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_BIN);
     compo_setid(txt, COMPO_ID_TEXT_PRESSURE_MAX);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/12-2);
     snprintf(txt_buf, sizeof(txt_buf), "50");
@@ -82,7 +82,7 @@ compo_form_t *func_pressure_form_create(void)
 
     //最小压力
     txt = compo_textbox_create(frm, TODAY_PRESSURE_TXT_MAX);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_16_BIN);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_BIN);
     compo_setid(txt, COMPO_ID_TEXT_PRESSURE_MIN);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/12-2);
     snprintf(txt_buf, sizeof(txt_buf), "50");

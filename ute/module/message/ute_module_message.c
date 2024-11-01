@@ -10,7 +10,7 @@
 #include "ute_module_message.h"
 #include "ute_module_log.h"
 #include "ute_module_systemtime.h"
-#include "ute_drv_motor.h" 
+#include "ute_drv_motor.h"
 #include "ute_module_notify.h"
 #include "ute_application_common.h"
 
@@ -82,6 +82,11 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         case MSG_TYPE_MODULE_GUI_CLEAR_DEPTH:
         {
             uteModuleGuiCommonDisplayDepthClearTop(true);
+        }
+        break;
+        case MSG_TYPE_SYNC_DATA_TIMER:
+        {
+            uteApplicationCommonSyncDataTimerMsg();
         }
         break;
         default:

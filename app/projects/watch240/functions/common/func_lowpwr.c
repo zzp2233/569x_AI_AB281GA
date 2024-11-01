@@ -9,13 +9,16 @@ bool lp_xosc_check(void);
 AT(.com_text.sleep)
 void lowpwr_tout_ticks(void)
 {
-    if(sys_cb.sleep_delay != -1L && sys_cb.sleep_delay > 0) {
+    if(sys_cb.sleep_delay != -1L && sys_cb.sleep_delay > 0)
+    {
         sys_cb.sleep_delay--;
     }
-    if(sys_cb.guioff_delay != -1L && sys_cb.guioff_delay > 0) {
+    if(sys_cb.guioff_delay != -1L && sys_cb.guioff_delay > 0)
+    {
         sys_cb.guioff_delay--;
     }
-    if(sys_cb.pwroff_delay != -1L && sys_cb.pwroff_delay > 0) {
+    if(sys_cb.pwroff_delay != -1L && sys_cb.pwroff_delay > 0)
+    {
         sys_cb.pwroff_delay--;
     }
 }
@@ -23,17 +26,20 @@ void lowpwr_tout_ticks(void)
 AT(.com_text.sleep)
 bool sys_sleep_check(u32 *sleep_time)
 {
-	u32 co_min = co_timer_get_min_time(true)*2;
+    u32 co_min = co_timer_get_min_time(true)*2;
 
-    if(*sleep_time > co_min) {
+    if(*sleep_time > co_min)
+    {
         *sleep_time = co_min;
     }
 
-	if(*sleep_time < 4){
-		*sleep_time = 4;
-	}
+    if(*sleep_time < 4)
+    {
+        *sleep_time = 4;
+    }
 
-    if(*sleep_time > sys_cb.sleep_wakeup_time) {
+    if(*sleep_time > sys_cb.sleep_wakeup_time)
+    {
         *sleep_time = sys_cb.sleep_wakeup_time;
         return true;
     }
@@ -55,9 +61,12 @@ void sys_sleep_cb(u8 lpclk_type)
 
     //此处关掉影响功耗的模块
     u32 gpiogde = GPIOGDE;
-    if ((gpiogde & BIT(6)) && ((WKPINMAP >> 14) & 0x3) == 0x1) {
+    if ((gpiogde & BIT(6)) && ((WKPINMAP >> 14) & 0x3) == 0x1)
+    {
         GPIOGDE = BIT(2) | BIT(4) | BIT(6);                  //SPICS, SPICLK
-    } else {
+    }
+    else
+    {
         GPIOGDE = BIT(2) | BIT(4);                  //SPICS, SPICLK
     }
 
@@ -72,19 +81,24 @@ void sleep_set_sysclk(uint8_t sys_clk)
 {
     uint8_t cur_sys_clk = sys_clk_get();
 
-    if (sys_clk < SYS_24M || cur_sys_clk == sys_clk) {
+    if (sys_clk < SYS_24M || cur_sys_clk == sys_clk)
+    {
         return;
     }
 
-    if (sys_clk > SYS_24M) {
-        if (cur_sys_clk <= SYS_24M) {
+    if (sys_clk > SYS_24M)
+    {
+        if (cur_sys_clk <= SYS_24M)
+        {
             CLKCON0 = (CLKCON0 & ~(0x03 << 2)) | (0x01 << 2); //sysclk select xosc26m_clk
             RSTCON0 &= ~BIT(4);                         //pllsdm disable
             adpll_init(DAC_OUT_SPR);                    //enable adpll
             adda_clk_source_sel(0);                     //adda_clk48_a select pll0
         }
         sys_clk_set(sys_clk);
-    } else {
+    }
+    else
+    {
         sys_clk_set(SYS_24M);
         DACDIGCON0 &= ~BIT(0);                      //disable digital dac
         adda_clk_source_sel(1);                     //adda_clk48_a select xosc52m
@@ -96,8 +110,10 @@ void sleep_set_sysclk(uint8_t sys_clk)
 AT(.sleep_text.sleep)
 void sleep_ble_param_check(void)
 {
-    if (sys_cb.flag_sleep_ble_status != ble_is_connect()) {
-        if ((sys_cb.flag_sleep_ble_status == false) && ble_is_connect()) {
+    if (sys_cb.flag_sleep_ble_status != ble_is_connect())
+    {
+        if ((sys_cb.flag_sleep_ble_status == false) && ble_is_connect())
+        {
             ble_update_conn_param(400, 0, 500);     //interval: 400*1.25ms = 500ms
         }
         sys_cb.flag_sleep_ble_status = ble_is_connect();
@@ -112,13 +128,15 @@ uint32_t sleep_timer(void)
     uint32_t ret = 0;
 
     sys_cb.sleep_counter++;
-    if (sys_cb.sleep_counter == 10) {
+    if (sys_cb.sleep_counter == 10)
+    {
         sys_cb.sleep_counter = 0;
 
 #if LPWR_WARNING_VBAT
         u32 rtccon8 = RTCCON8;
 #if CHARGE_VOL_DYNAMIC_DET
-        if (RTCCON & BIT(20)) {                 //vusb is online?
+        if (RTCCON & BIT(20))                   //vusb is online?
+        {
             gradient_process(1);
             RTCCON8 |= BIT(1);                  //charge stop
             delay_5ms(2);
@@ -132,7 +150,8 @@ uint32_t sleep_timer(void)
         while(!bsp_saradc_process(0));
         sys_cb.vbat = bsp_vbat_get_voltage(1);
         RTCCON8 = rtccon8;
-        if (sys_cb.vbat < LPWR_WARNING_VBAT) {
+        if (sys_cb.vbat < LPWR_WARNING_VBAT)
+        {
             //低电需要唤醒sniff mode
             ret = 2;
         }
@@ -141,28 +160,34 @@ uint32_t sleep_timer(void)
     }
 
 #if CHARGE_EN
-    if (xcfg_cb.charge_en) {
+    if (xcfg_cb.charge_en)
+    {
         charge_detect(0);
     }
 #endif // CHARGE_EN
 
     sys_cb.sleep_wakeup_time = -1L;
 
-    if(sys_cb.pwroff_delay != -1L) {
-        if(sys_cb.pwroff_delay > 5) {
+    if(sys_cb.pwroff_delay != -1L)
+    {
+        if(sys_cb.pwroff_delay > 5)
+        {
             sys_cb.pwroff_delay -= 5;
-        } else {
+        }
+        else
+        {
             sys_cb.pwroff_delay = 0;
             return 1;
         }
     }
 
-    if ((PWRKEY_2_HW_PWRON) && (!IS_PWRKEY_PRESS())){
+    if ((PWRKEY_2_HW_PWRON) && (!IS_PWRKEY_PRESS()))
+    {
         ret = 1;
     }
 
     rtc_sleep_process();
-	sleep_ble_param_check();
+    sleep_ble_param_check();
 
     return ret;
 }
@@ -187,7 +212,8 @@ static void sfunc_sleep(void)
     sys_cb.flag_sleep_ble_status = ble_is_connect();
 
 #if VBAT_DETECT_EN
-    if (bsp_vbat_get_lpwr_status()) {           //低电不进sniff mode
+    if (bsp_vbat_get_lpwr_status())             //低电不进sniff mode
+    {
         return;
     }
 #endif
@@ -200,7 +226,8 @@ static void sfunc_sleep(void)
 #if LE_EN
     adv_interval = ble_get_adv_interval();
     ble_set_adv_interval(1600);                  //interval: 500 * 0.625ms = 500ms
-    if (ble_is_connect()) {                     //ble已连接
+    if (ble_is_connect())                       //ble已连接
+    {
         interval = ble_get_conn_interval();
         latency = ble_get_conn_latency();
         tout = ble_get_conn_timeout();
@@ -208,17 +235,22 @@ static void sfunc_sleep(void)
     }
 #endif
 #if BT_SINGLE_SLEEP_LPW_EN
-    if (!bt_is_connected()){                    //蓝牙未连接
-        if (bt_get_scan()) {                    //双模休眠
+    if (!bt_is_connected())                     //蓝牙未连接
+    {
+        if (bt_get_scan())                      //双模休眠
+        {
             bt_update_bt_scan_param(4096, 8, 4096, 12);
-        } else {
+        }
+        else
+        {
             bt_update_bt_scan_param(4096, 0, 4096, 0);
             bt_scan_disable();
         }
     }
 #else
-    if (!bt_is_connected()){                    //蓝牙未连接
-    	bt_update_bt_scan_param(4096, 12, 2048, 12);
+    if (!bt_is_connected())                     //蓝牙未连接
+    {
+        bt_update_bt_scan_param(4096, 12, 2048, 12);
     }
 #endif
 
@@ -239,7 +271,8 @@ static void sfunc_sleep(void)
     bsp_charge_set_stop_time(3600);
     charge_set_detect_cnt(1);
 #if CHARGE_VOL_DYNAMIC_DET
-    if(sys_cb.chg_on){
+    if(sys_cb.chg_on)
+    {
         gradient_process(0);
         RTCCON8 &= ~BIT(1);                                  //charge open
     }
@@ -256,8 +289,6 @@ static void sfunc_sleep(void)
 #if MODEM_CAT1_EN
     bsp_modem_sleep_enter();
 #endif
-
-    bsp_sensor_hr_stop();
 
     sysclk = sys_clk_get();
     sys_clk_set(SYS_24M);
@@ -288,9 +319,13 @@ static void sfunc_sleep(void)
 //     }
 
 #if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
-    GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
+    GPIOFDE = 0 | BIT(2) | BIT(1);          //GSENSOR I2C
+    GPIOEDE = 0 | BIT(2) | BIT(1);          //HR I2C
+    GPIOFDE |= BIT(5);                      //HR POWER
 #elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-    GPIOFDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
+    GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
+    GPIOEDE |= BIT(4) | BIT(5);             //HR I2C
+    GPIOFDE = 0 | BIT(5);                   //HR POWER
 #endif
 
 
@@ -305,15 +340,19 @@ static void sfunc_sleep(void)
 
     sys_cb.sleep_counter = 0;
     sys_cb.sleep_wakeup_time = -1L;
-    while(bt_is_sleep()) {
+    while(bt_is_sleep())
+    {
         WDT_CLR();
         bt_thread_check_trigger();
         status = bt_sleep_proc();
 
-        if(status == 1) {
+        if(status == 1)
+        {
             ret = sleep_timer();
-            if(ret) {
-                if (ret == 1) {
+            if(ret)
+            {
+                if (ret == 1)
+                {
                     func_cb.sta = FUNC_PWROFF;
                 }
                 break;
@@ -325,45 +364,59 @@ static void sfunc_sleep(void)
         port_int_sleep_process(&wkpnd);
         bsp_sensor_step_lowpwr_pro();
 
-        if (wkpnd) {
+        extern bool vc30fx_sleep_isr;
+        if(vc30fx_sleep_isr)
+        {
+            vc30fx_usr_device_handler(0, 1);
+            vc30fx_sleep_isr = false;
+        }
+
+        if (wkpnd)
+        {
             printf("port wakeup: %x\n", wkpnd);
             gui_need_wkp = true;
             break;
         }
-        if ((RTCCON9 & BIT(2)) || (RTCCON10 & BIT(2)) || wko_wkup_flag) {
+        if ((RTCCON9 & BIT(2)) || (RTCCON10 & BIT(2)) || wko_wkup_flag)
+        {
             printf("wko wakeup\n");
             gui_need_wkp = true;
             break;
         }
 #if LE_EN
-        if (ble_app_need_wakeup()) {
+        if (ble_app_need_wakeup())
+        {
             printf("ble_app_need_wakeup\n");
             gui_need_wkp = true;
             break;
         }
 #endif
 
-        if (sys_cb.remind_tag) {
+        if (sys_cb.remind_tag)
+        {
             printf("remind wakeup\n");
             gui_need_wkp = true;
             break;
         }
 
-        if (sys_cb.msg_tag) {
+        if (sys_cb.msg_tag)
+        {
             printf("msg wakeup\n");
             gui_need_wkp = true;
             break;
         }
 
-        if (co_timer_pro(true)) {
+        if (co_timer_pro(true))
+        {
             printf("co_timer_pro_wakeup\n");
-			break;
-		}
-
-		if (bt_cb.call_type) {
-			printf("call_wakeup\n");
             break;
-		}
+        }
+
+        if (bt_cb.call_type)
+        {
+            printf("call_wakeup\n");
+            break;
+        }
 
         //ute add
         if(uteModulePlatformNotAllowSleep())
@@ -393,7 +446,8 @@ static void sfunc_sleep(void)
 
     bt_update_bt_scan_param_default();
 #if BT_SINGLE_SLEEP_LPW_EN
-    if(!bt_is_connected() && bt_get_scan()){    //单模
+    if(!bt_is_connected() && bt_get_scan())     //单模
+    {
         bt_scan_enable();
     }
 #endif
@@ -410,23 +464,28 @@ static void sfunc_sleep(void)
     bsp_charge_sta(sys_cb.charge_sta);          //update充灯状态
     charge_set_detect_cnt(5);
 #if CHARGE_VOL_DYNAMIC_DET
-    if(sys_cb.chg_on){
+    if(sys_cb.chg_on)
+    {
         gradient_process(0);
         RTCCON8 &= ~BIT(1);                     //charge open
     }
 #endif
 #endif // CHARGE_EN
     //sys_set_tmr_enable(1, 1);
-    if (DAC_FAST_SETUP_EN) {
+    if (DAC_FAST_SETUP_EN)
+    {
         bsp_loudspeaker_mute();
     }
 #if MODEM_CAT1_EN
     bsp_modem_sleep_exit();
 #endif
-    if (gui_need_wkp) {
+    if (gui_need_wkp)
+    {
         printf("gui_wakeup\n");
         gui_wakeup();
-    } else {
+    }
+    else
+    {
         sys_clk_set(SYS_24M);
     }
 
@@ -434,7 +493,8 @@ static void sfunc_sleep(void)
 
 #if LE_EN
     ble_set_adv_interval(adv_interval);
-    if (interval | latency | tout) {
+    if (interval | latency | tout)
+    {
         ble_update_conn_param(interval, latency, tout); //还原连接参数
     }
 #endif
@@ -451,7 +511,8 @@ static void sfunc_sleep(void)
 AT(.text.lowpwr.sleep)
 bool sleep_process(is_sleep_func is_sleep)
 {
-    if (sys_cb.gui_need_wakeup && sys_cb.gui_sleep_sta) {
+    if (sys_cb.gui_need_wakeup && sys_cb.gui_sleep_sta)
+    {
         gui_wakeup();                   //按键亮屏
         reset_sleep_delay_all();
         sys_cb.gui_need_wakeup = 0;
@@ -459,14 +520,17 @@ bool sleep_process(is_sleep_func is_sleep)
     }
 
 #if LE_EN
-    if (ble_app_need_wakeup()) {
+    if (ble_app_need_wakeup())
+    {
         reset_sleep_delay_all();
         reset_pwroff_delay();
         return false;
     }
 #endif
-    if ((*is_sleep)()) {
-        if (!sys_cb.sleep_en) {
+    if ((*is_sleep)())
+    {
+        if (!sys_cb.sleep_en)
+        {
             reset_sleep_delay_all();
             return false;
         }
@@ -479,14 +543,16 @@ bool sleep_process(is_sleep_func is_sleep)
                     gui_wakeup();
                 }
             }
-            else if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta) {
+            else if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)
+            {
                 gui_sleep();                //仅熄屏
             }
             reset_sleep_delay();
             reset_pwroff_delay();
             return false;
         }
-        if (sys_cb.sleep_delay == 0) {
+        if (sys_cb.sleep_delay == 0)
+        {
             if(sys_cb.guioff_delay == 0) /*! 亮屏时不休眠,wang.luo 2024-10-21 */
             {
                 sfunc_sleep();              //熄屏且进入休眠
@@ -495,8 +561,11 @@ bool sleep_process(is_sleep_func is_sleep)
                 return true;
             }
         }
-    } else {
-        if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta) {
+    }
+    else
+    {
+        if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)
+        {
             gui_sleep();                //仅熄屏
         }
         reset_sleep_delay();
@@ -543,7 +612,8 @@ void sfunc_power_save_enter(void)
     LOUDSPEAKER_MUTE_DIS();
     WDT_CLR();
 #if CHARGE_EN
-    if (xcfg_cb.charge_en) {
+    if (xcfg_cb.charge_en)
+    {
         bsp_charge_off();
     }
 #endif
@@ -562,12 +632,14 @@ void sfunc_power_save_enter(void)
 
 #if !LP_XOSC_CLOCK_EN
     RTCCON15 &= ~(3 << 13);                     //disable LP_XOSC
-    if (sys_cb.flag_shipping_mode) {
+    if (sys_cb.flag_shipping_mode)
+    {
         RTCCON0 &= ~(BIT(0) | BIT(18) | BIT(2));    //RI_EN_SNIFF = 0, RI_EN_RINGOSC = 0, 关掉RTC_RC
     }
 #else
     RTCCON0 &= ~(BIT(0) | BIT(18) | BIT(2));    //RI_EN_SNIFF = 0, RI_EN_RINGOSC = 0, 关掉RTC_RC
-    if (lp_xosc_clock_err) {
+    if (lp_xosc_clock_err)
+    {
         RTCCON15 &= ~(3 << 13);                     //disable LP_XOSC
     }
 #endif
@@ -591,10 +663,14 @@ void sfunc_lowbat_do(void)
     sfunc_power_save_enter();
     WDT_DIS();
     RTCCON3 |= BIT(11);                         //VUSB Wakeup enable
-    while(1) {
+    while(1)
+    {
         LPMCON |= BIT(0);                       //Sleep mode enable
-        asm("nop");asm("nop");asm("nop");
-        if (RTCCON10 & BIT(3)) {                //VUSB wake up pending
+        asm("nop");
+        asm("nop");
+        asm("nop");
+        if (RTCCON10 & BIT(3))                  //VUSB wake up pending
+        {
             WDT_RST();
         }
     }
@@ -605,24 +681,27 @@ AT(.text.pwroff.pwrdwn)
 void sfunc_pwrdown_do(u8 vusb_wakeup_en)
 {
 #if !LP_XOSC_CLOCK_EN
-    if (!sys_cb.flag_shipping_mode) {
+    if (!sys_cb.flag_shipping_mode)
+    {
         rtc_set_alarm_wakeup(900);              //15min
     }
 #endif
 
     sys_set_tmr_enable(0, 0);
     sfunc_power_save_enter();
-    if (!vusb_wakeup_en) {
+    if (!vusb_wakeup_en)
+    {
         RTCCON8 = (RTCCON8 & ~BIT(6)) | BIT(1); //disable charger function
         vusb_wakeup_en = sfunc_pwrdown_w4_vusb_offline();
     }
-    RTCCON1 &= ~(BIT(5) | BIT(7));		        //BIT(7): VRTC voltage for ADC, BIT(5):WK pin analog enable, output WKO voltage for ADC
+    RTCCON1 &= ~(BIT(5) | BIT(7));              //BIT(7): VRTC voltage for ADC, BIT(5):WK pin analog enable, output WKO voltage for ADC
     RTCCON11 = (RTCCON11 & ~0x03) | BIT(2);     //WK PIN filter select 8ms
 
     uint rtccon3 = RTCCON3 & ~BIT(11);
     uint rtccon1 = RTCCON1 & ~0x1f;
 #if CHARGE_EN
-    if ((xcfg_cb.charge_en) && (vusb_wakeup_en)) {
+    if ((xcfg_cb.charge_en) && (vusb_wakeup_en))
+    {
         rtccon3 |= BIT(11);                     //VUSB wakeup enable
     }
 #endif
@@ -642,7 +721,9 @@ void sfunc_pwrdown_do(u8 vusb_wakeup_en)
     RTCCON3 = rtccon3;
     LPMCON |= BIT(0);                           //sleep mode
     LPMCON |= BIT(1);                           //idle mode
-    asm("nop");asm("nop");asm("nop");
+    asm("nop");
+    asm("nop");
+    asm("nop");
     while (1);
 }
 
@@ -664,7 +745,8 @@ void func_pwroff(int pwroff_tone_en)
     printf("%s\n", __func__);
 
 #if !LP_XOSC_CLOCK_EN
-    if (!sys_cb.flag_shipping_mode) {
+    if (!sys_cb.flag_shipping_mode)
+    {
 
         sniff_rc_init();
         rtc_rc_sleep_enter();
@@ -676,32 +758,41 @@ void func_pwroff(int pwroff_tone_en)
 #endif
 
 #if WARNING_POWER_OFF
-    if (SOFT_POWER_ON_OFF) {
+    if (SOFT_POWER_ON_OFF)
+    {
         mp3_res_play(RES_BUF_POWEROFF_MP3, RES_LEN_POWEROFF_MP3);
     }
 #endif // WARNING_POWER_OFF
 
 //    gui_off();
 
-    if (SOFT_POWER_ON_OFF) {
-        if (!PWRKEY_2_HW_PWRON) {
-            while (IS_PWRKEY_PRESS()) {     //等待PWRKWY松开
+    if (SOFT_POWER_ON_OFF)
+    {
+        if (!PWRKEY_2_HW_PWRON)
+        {
+            while (IS_PWRKEY_PRESS())       //等待PWRKWY松开
+            {
                 delay_5ms(1);
                 WDT_CLR();
             }
         }
         dac_power_off();                    //dac power down
-        if (CHARGE_DC_IN()) {
-            if (power_off_check()) {        //充电过程中等待结束再关机
+        if (CHARGE_DC_IN())
+        {
+            if (power_off_check())          //充电过程中等待结束再关机
+            {
                 return;
             }
         }
         bsp_saradc_exit();                  //close saradc及相关通路模拟
-        if ((PWRKEY_2_HW_PWRON) && (sys_cb.poweron_flag)) {
+        if ((PWRKEY_2_HW_PWRON) && (sys_cb.poweron_flag))
+        {
             RTCCON1 |= BIT(6);              //WK PIN High level wakeup
         }
         sfunc_pwrdown(1);
-    } else {
+    }
+    else
+    {
         dac_power_off();                    //dac power down
         bsp_saradc_exit();                  //close saradc及相关通路模拟
 

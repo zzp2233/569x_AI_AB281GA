@@ -367,8 +367,8 @@
 #define VUSB_DETECT_EN                  0           //充电电压检测功能
 #define VBAT2_ADCCH                     ADCCH_VBAT  //ADCCH_VBAT为内部1/2电压通路，带升压应用需要外部ADC通路检测1/2电池电压
 #define VBAT_FILTER_USE_PEAK            0           //电池检测滤波选则://0 取平均值.//1 取峰值(适用于播放音乐时,电池波动比较大的音箱方案).
-#define LPWR_WARNING_VBAT               3500        //低电提醒电压   0：表示关闭此功能
-#define LPWR_OFF_VBAT                   3100        //低电关机电压   0：表示关闭此功能
+#define LPWR_WARNING_VBAT               UTE_DRV_BATTERY_010        //低电提醒电压   0：表示关闭此功能
+#define LPWR_OFF_VBAT                   UTE_DRV_BATTERY_000        //低电关机电压   0：表示关闭此功能
 #define LOWPWR_REDUCE_VOL_EN            1           //低电时是否降低音量
 #define LPWR_WARING_TIMES               0xff        //报低电次数
 #define LPWR_WARNING_PERIOD             30          //低电播报周期(单位：秒)
@@ -386,14 +386,14 @@
 #define CHARGE_STOP_CURR                xcfg_cb.charge_stop_curr        //电流范围0~37.5mA, 配置值范围: 0~15, 步进2.5mA
 #define CHARGE_CONSTANT_CURR            xcfg_cb.charge_constant_curr    //电流范围0~320mA, 配置值范围: 0~63, 步进5mA
 #define CHARGE_TRICKLE_CURR             xcfg_cb.charge_trickle_curr
-#define CHARGE_STOP_VOLT                0                               //充电截止电压：0:4.2v；1:4.35v; 2:4.4v; 3:4.45v
+#define CHARGE_STOP_VOLT                UTE_DRV_BATTERY_CHARGE_STOP_VOLT  //充电截止电压：0:4.2v；1:4.35v; 2:4.4v; 3:4.45v
 #define CHARGE_TRICK_STOP_VOLT          1                               //涓流截止电压：0:2.9v; 1:3v
 #define CHARGE_VOLT_FOLLOW              0                               //是否打开跟随快充：0:NONE; 1:187.5mV; 2:62.5mV; 3:375mV
 
 #define CHARGE_VOL_DYNAMIC_DET          1                               //是否打开充电时候，动态检测电池电压功能；打开后，充5s停10ms
 //充电辅助设置项
 #define CHARGE_USER_NTC_EN              0                               //充电是否使用NTC参数
-#define CHARGE_VBAT_REFILL              4150                            //充满后停止充电，电池掉到指定电压后续充
+#define CHARGE_VBAT_REFILL              (UTE_DRV_BATTERY_MAX_VOLTAGE - 100) //充满后停止充电，电池掉到指定电压后续充
 
 #define CHARGE_NTC_ADC_MAX_TEMP         53                            //设置最小温度 摄氏度      53
 #define CHARGE_NTC_ADC_MAX_RE_TEMP      48                            //设置恢复温度 摄氏度     48

@@ -19,7 +19,8 @@
 #define STOP_FLAG       BIT(11)
 #define NACK            BIT(12)
 
-typedef struct {
+typedef struct
+{
     volatile uint32_t IICxCON0;
     volatile uint32_t IICxCON1;
     volatile uint32_t IICxCMDA;
@@ -28,11 +29,13 @@ typedef struct {
     volatile uint32_t IICxDMACNT;
 } i2c_sfr_t;
 
-typedef struct {
+typedef struct
+{
     volatile uint32_t FUNCMCONx;
 } i2c_map_t;
 
-typedef struct {
+typedef struct
+{
     i2c_sfr_t *sfr;
     i2c_map_t *map;
 } i2c_t;
@@ -45,6 +48,7 @@ uint8_t bsp_i2c_rx_byte(void);
 bool bsp_i2c_rx_ack(void);
 void bsp_i2c_tx_ack(void);
 void bsp_i2c_tx_nack(void);
+void i2c_gsensor_init(void);
 
 void bsp_hw_i2c_rx_buf(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u8 *buf, u16 len);
 void bsp_hw_i2c_tx_buf(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u8 *buf, u16 len);

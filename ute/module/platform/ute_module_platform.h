@@ -24,7 +24,7 @@
 
 #define UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN        0x00000020
 #define UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR         0x00000040
-#define UTE_MODULE_PLATFORM_DLPS_BIT_KEYS          0x00000080
+#define UTE_MODULE_PLATFORM_DLPS_BIT_HEART         0x00000080
 #define UTE_MODULE_PLATFORM_DLPS_BIT_UART          0x00000100
 #define UTE_MODULE_PLATFORM_DLPS_BIT_SYNC          0x00000200
 
@@ -66,12 +66,13 @@ typedef enum
     ADV_REPLACE,
 } ADV_MODIFY_TYPE;
 
-typedef struct{
+typedef struct
+{
     uint8_t advData[31];
     uint8_t advLen;
     uint8_t scanData[31];
     uint8_t scanLen;
-}ute_module_platform_adv_data_t;
+} ute_module_platform_adv_data_t;
 /**
 *@brief   us延时函数
 *@details   小于10ms使用此函数
@@ -254,7 +255,7 @@ void uteModulePlatformRtcSetTime(uint16_t year,uint8_t month,uint8_t day,uint8_t
 *@date        Jun 29, 2021
 */
 void uteModulePlatformCalibrationSystemTimer(void);
-#if !UTE_MODULE_USER_MALLOC_SUPPORT 
+#if !UTE_MODULE_USER_MALLOC_SUPPORT
 /**
 *@brief   动态申请内存
 *@details

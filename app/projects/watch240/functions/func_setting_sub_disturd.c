@@ -8,7 +8,8 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_disturd_t_ {
+typedef struct f_disturd_t_
+{
     bool flag_drag;                 //开始拖动
     s32 x_pos;
     s32 y_pos;
@@ -16,7 +17,8 @@ typedef struct f_disturd_t_ {
     s32 y;
 } f_disturd_t;
 
-enum{
+enum
+{
     //数字
     COMPO_ID_NUM_DISP_ONE = 1,
     COMPO_ID_NUM_DISP_ZERO,
@@ -44,7 +46,8 @@ enum{
     COMPO_ID_MSK_TWS,
 };
 
-typedef struct disturd_disp_pic_item_t_ {
+typedef struct disturd_disp_pic_item_t_
+{
     u32 res_addr;
     u16 pic_id;
     s16 x;
@@ -55,7 +58,8 @@ typedef struct disturd_disp_pic_item_t_ {
 #define DISTURD_DISP_PIC_ITEM_CNT                       ((int)(sizeof(tbl_disturd_disp_pic_item) / sizeof(tbl_disturd_disp_pic_item[0])))
 
 //图片item，创建时遍历一下
-static const disturd_disp_pic_item_t tbl_disturd_disp_pic_item[] = {
+static const disturd_disp_pic_item_t tbl_disturd_disp_pic_item[] =
+{
     {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_ADL_ON,         198,    84,    false},
     {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_TIM_ON,         198,    154,    false},
     {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_ADL_OFF,        198,    84,    false},
@@ -64,7 +68,8 @@ static const disturd_disp_pic_item_t tbl_disturd_disp_pic_item[] = {
 
 #define DISURD_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_disturd_disp_btn_item) / sizeof(tbl_disturd_disp_btn_item[0])))
 
-typedef struct disturd_disp_btn_item_t_ {
+typedef struct disturd_disp_btn_item_t_
+{
     u16 btn_id;
     s16 x;
     s16 y;
@@ -73,14 +78,16 @@ typedef struct disturd_disp_btn_item_t_ {
 } disturd_disp_btn_item_t;
 
 //按钮item，创建时遍历一下
-static const disturd_disp_btn_item_t tbl_disturd_disp_btn_item[] = {
+static const disturd_disp_btn_item_t tbl_disturd_disp_btn_item[] =
+{
     {COMPO_ID_BIN_ALLDAY_ON,        120,     82},
     {COMPO_ID_BIN_TIMING_ON,        120,     150},
     {COMPO_ID_BIN_START,            120,     215,   240,    30},
     {COMPO_ID_BIN_END,              120,     262,   240,    30},
 };
 
-typedef struct disturd_num_item_t_ {
+typedef struct disturd_num_item_t_
+{
     u32 res_addr;
     int num_cnt;
     u16 num_id;
@@ -93,24 +100,27 @@ typedef struct disturd_num_item_t_ {
 #define DISTURD_NUM_ITEM_CNT                       ((int)(sizeof(tbl_disturd_num_item) / sizeof(tbl_disturd_num_item[0])))
 
 //搞个数字item，创建时遍历一下
-static const disturd_num_item_t tbl_disturd_num_item[] = {
+static const disturd_num_item_t tbl_disturd_num_item[] =
+{
     /*   res_addr,                           num_cnt,        num_id,                val,   x,     y,   visible_en*/
-    {UI_BUF_0FONT_FONT_NUM_16_BIN,            2,     COMPO_ID_NUM_DISP_ZERO,         0,   150,    211,   false},
-    {UI_BUF_0FONT_FONT_NUM_16_BIN,            2,     COMPO_ID_NUM_DISP_ONE,          0,   196,    211,   false},
-    {UI_BUF_0FONT_FONT_NUM_16_BIN,            2,     COMPO_ID_NUM_DISP_TWS,          0,   150,    265,   false},
-    {UI_BUF_0FONT_FONT_NUM_16_BIN,            2,     COMPO_ID_NUM_DISP_THR,          0,   196,    265,   false},
+    {UI_BUF_0FONT_FONT_BIN,            2,     COMPO_ID_NUM_DISP_ZERO,         0,   150,    211,   false},
+    {UI_BUF_0FONT_FONT_BIN,            2,     COMPO_ID_NUM_DISP_ONE,          0,   196,    211,   false},
+    {UI_BUF_0FONT_FONT_BIN,            2,     COMPO_ID_NUM_DISP_TWS,          0,   150,    265,   false},
+    {UI_BUF_0FONT_FONT_BIN,            2,     COMPO_ID_NUM_DISP_THR,          0,   196,    265,   false},
 };
 
 #define DISURD_DISP_TXT_ITEM_CNT    ((int)(sizeof(disturd_disp_txt_item) / sizeof(disturd_disp_txt_item[0])))
 
-typedef struct disturd_disp_txt_item_t_ {
+typedef struct disturd_disp_txt_item_t_
+{
     u16 btn_id;
     s16 x;
     s16 y;
 } disturd_disp_txt_item_t;
 
 //文字item，创建时遍历一下
-static const disturd_disp_txt_item_t disturd_disp_txt_item[] = {
+static const disturd_disp_txt_item_t disturd_disp_txt_item[] =
+{
     {COMPO_ID_TXT_ALL,        22,   74},
     {COMPO_ID_TXT_TIM,        22,   140},
     {COMPO_ID_TXT_START,      22,   200},
@@ -144,12 +154,16 @@ compo_form_t *func_set_sub_disturd_form_create(void)
 
     //创建按钮
     compo_button_t *btn;
-    for (u8 idx_btn = 0; idx_btn < DISURD_DISP_BTN_ITEM_CNT; idx_btn++) {
-        if (idx_btn < 2) {
+    for (u8 idx_btn = 0; idx_btn < DISURD_DISP_BTN_ITEM_CNT; idx_btn++)
+    {
+        if (idx_btn < 2)
+        {
             btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BG_BIN);
             compo_setid(btn, tbl_disturd_disp_btn_item[idx_btn].btn_id);
             compo_button_set_pos(btn, tbl_disturd_disp_btn_item[idx_btn].x, tbl_disturd_disp_btn_item[idx_btn].y);
-        } else {
+        }
+        else
+        {
             btn = compo_button_create(frm);
             compo_setid(btn, tbl_disturd_disp_btn_item[idx_btn].btn_id);
             compo_button_set_location(btn, tbl_disturd_disp_btn_item[idx_btn].x, tbl_disturd_disp_btn_item[idx_btn].y, tbl_disturd_disp_btn_item[idx_btn].h, tbl_disturd_disp_btn_item[idx_btn].l);
@@ -159,25 +173,35 @@ compo_form_t *func_set_sub_disturd_form_create(void)
 
     //创建文本
     compo_textbox_t *textbox[DISURD_DISP_TXT_ITEM_CNT];
-    for (int i=0;i<DISURD_DISP_TXT_ITEM_CNT;i++) {
+    for (int i=0; i<DISURD_DISP_TXT_ITEM_CNT; i++)
+    {
         textbox[i] = compo_textbox_create(frm, 4);
         compo_setid(textbox[i], COMPO_ID_TXT_ALL + i);
         compo_textbox_set_pos(textbox[i], disturd_disp_txt_item[i].x, disturd_disp_txt_item[i].y);
         compo_textbox_set_align_center(textbox[i], false);
 
-        if(i == 0) {
+        if(i == 0)
+        {
             compo_textbox_set(textbox[i], i18n[STR_DISTURD_ALL]);
-        } else if(i == 1) {
+        }
+        else if(i == 1)
+        {
             compo_textbox_set(textbox[i], i18n[STR_DISTURD_TIM]);
-        } else if(i == 2) {
+        }
+        else if(i == 2)
+        {
             compo_textbox_set_forecolor(textbox[i], COLOR_GREEN);
             compo_textbox_set(textbox[i], i18n[STR_DISTURD_TIM_START]);
             compo_textbox_set_visible(textbox[i], false);
-        } else if(i == 3) {
+        }
+        else if(i == 3)
+        {
             compo_textbox_set_forecolor(textbox[i], COLOR_GREEN);
             compo_textbox_set(textbox[i], i18n[STR_DISTURD_TIM_END]);
             compo_textbox_set_visible(textbox[i], false);
-        } else {
+        }
+        else
+        {
             compo_textbox_set(textbox[i], ":");
             compo_textbox_set_visible(textbox[i], false);
         }
@@ -185,7 +209,8 @@ compo_form_t *func_set_sub_disturd_form_create(void)
 
     //新建图像
     compo_picturebox_t *pic_click;
-    for (u8 idx = 0; idx < DISTURD_DISP_PIC_ITEM_CNT; idx++) {
+    for (u8 idx = 0; idx < DISTURD_DISP_PIC_ITEM_CNT; idx++)
+    {
         pic_click = compo_picturebox_create(frm, tbl_disturd_disp_pic_item[idx].res_addr);
         compo_setid(pic_click, tbl_disturd_disp_pic_item[idx].pic_id);
         compo_picturebox_set_pos(pic_click, tbl_disturd_disp_pic_item[idx].x, tbl_disturd_disp_pic_item[idx].y);
@@ -201,23 +226,31 @@ compo_form_t *func_set_sub_disturd_form_create(void)
     //创建数字
     compo_textbox_t *num_txt;
     char str_buff[8];
-    for (u8 idx = 0; idx < DISTURD_NUM_ITEM_CNT; idx++) {
+    for (u8 idx = 0; idx < DISTURD_NUM_ITEM_CNT; idx++)
+    {
         num_txt = compo_textbox_create(frm, tbl_disturd_num_item[idx].num_cnt);
         compo_textbox_set_font(num_txt, tbl_disturd_num_item[idx].res_addr);
         compo_setid(num_txt, tbl_disturd_num_item[idx].num_id);
         compo_textbox_set_pos(num_txt, tbl_disturd_num_item[idx].x, tbl_disturd_num_item[idx].y);
         compo_textbox_set_visible(num_txt, tbl_disturd_num_item[idx].visible_en);
 
-        if (tbl_disturd_num_item[idx].num_id ==  COMPO_ID_NUM_DISP_ZERO) {
+        if (tbl_disturd_num_item[idx].num_id ==  COMPO_ID_NUM_DISP_ZERO)
+        {
             snprintf(str_buff, sizeof(str_buff), "%02ld", hour_start);
             compo_textbox_set(num_txt, str_buff);
-        } else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_ONE) {
+        }
+        else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_ONE)
+        {
             snprintf(str_buff, sizeof(str_buff), "%02ld", min_start);
             compo_textbox_set(num_txt, str_buff);
-        } else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_TWS) {
+        }
+        else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_TWS)
+        {
             snprintf(str_buff, sizeof(str_buff), "%02ld", hour_end);
             compo_textbox_set(num_txt, str_buff);
-        } else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_THR) {
+        }
+        else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_THR)
+        {
             snprintf(str_buff, sizeof(str_buff), "%02ld", min_end);
             compo_textbox_set(num_txt, str_buff);
         }
@@ -240,35 +273,47 @@ static void func_set_sub_disturd_process(void)
     compo_textbox_t *txt_disp[4];
     compo_textbox_t *num_disp[4];
     compo_shape_t *masklayer[2];
-    for (int i=0;i<4;i++) {
+    for (int i=0; i<4; i++)
+    {
         txt_disp[i] = compo_getobj_byid(COMPO_ID_TXT_START + i);
         num_disp[i] = compo_getobj_byid(COMPO_ID_NUM_DISP_ONE + i);
-        if (i<2) {
+        if (i<2)
+        {
             masklayer[i] = compo_getobj_byid(COMPO_ID_MSK_ONE + i);
         }
     }
 
-    if (sys_cb.disturd_adl==0) {
+    if (sys_cb.disturd_adl==0)
+    {
         compo_picturebox_set_visible(pic_adl_off, true);
-    } else {
+    }
+    else
+    {
         compo_picturebox_set_visible(pic_adl_on, true);
     }
 
-    if(sys_cb.disturd_tim == 0) {
+    if(sys_cb.disturd_tim == 0)
+    {
         compo_picturebox_set_visible(pic_tim_off, true);
-        for (int i=0;i<4;i++) {
+        for (int i=0; i<4; i++)
+        {
             compo_textbox_set_visible(txt_disp[i], false);
             compo_textbox_set_visible(num_disp[i], false);
-            if(i<2) {
+            if(i<2)
+            {
                 compo_shape_set_alpha(masklayer[i], 0);
-                }
+            }
         }
-    } else {
+    }
+    else
+    {
         compo_picturebox_set_visible(pic_tim_on, true);
-        for (int i=0;i<4;i++) {
+        for (int i=0; i<4; i++)
+        {
             compo_textbox_set_visible(txt_disp[i], true);
             compo_textbox_set_visible(num_disp[i], true);
-            if(i<2) {
+            if(i<2)
+            {
                 compo_shape_set_alpha(masklayer[i], 255);
             }
         }
@@ -289,32 +334,41 @@ static void func_set_sub_disturd_disp(void)
     //获取文本组件的地址
     compo_textbox_t *txt[4];
     compo_textbox_t *num[4];
-    for (int i=0;i<4;i++) {
+    for (int i=0; i<4; i++)
+    {
         txt[i] = compo_getobj_byid(COMPO_ID_TXT_START+i);
         num[i] = compo_getobj_byid(COMPO_ID_NUM_DISP_ONE+i);
     }
 
     //显示界面各个组件
-    if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE) {
+    if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE)
+    {
         compo_picturebox_set_visible(pic_adl_on, true);
         compo_picturebox_set_visible(pic_adl_off, false);
-    } else {
+    }
+    else
+    {
         compo_picturebox_set_visible(pic_adl_on, false);
         compo_picturebox_set_visible(pic_adl_off, true);
     }
 
-    if (sys_cb.disturd_tim == COMPO_ID_NUM_DISP_ONE) {
+    if (sys_cb.disturd_tim == COMPO_ID_NUM_DISP_ONE)
+    {
         compo_picturebox_set_visible(pic_tim_on, true);
         compo_picturebox_set_visible(pic_tim_off, false);
-        for (int i=0;i<4;i++) {
+        for (int i=0; i<4; i++)
+        {
             compo_textbox_set_visible(txt[i], true);
             compo_textbox_set_visible(num[i], true);
         }
 
-    } else {
+    }
+    else
+    {
         compo_picturebox_set_visible(pic_tim_on, false);
         compo_picturebox_set_visible(pic_tim_off, true);
-        for (int i=0;i<4;i++) {
+        for (int i=0; i<4; i++)
+        {
             compo_textbox_set_visible(txt[i], false);
             compo_textbox_set_visible(num[i], false);
         }
@@ -327,54 +381,67 @@ static void func_disturd_button_click(void)
     u8 ret = 0;
     int id = compo_get_button_id();
 
-    switch(id) {
-    case COMPO_ID_BIN_ALLDAY_ON:
-        if (!sys_cb.disturd_adl) {
-            ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL , NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-        } else {
-            ret = 0;
-            sys_cb.disturd_adl = 0;
-        }
-        if (ret == MSGBOX_RES_OK) {
-            if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE - 1) {
-                sys_cb.disturd_adl = COMPO_ID_NUM_DISP_ONE;
+    switch(id)
+    {
+        case COMPO_ID_BIN_ALLDAY_ON:
+            if (!sys_cb.disturd_adl)
+            {
+                ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             }
-        }
-    break;
-
-    case COMPO_ID_BIN_TIMING_ON:
-        if (!sys_cb.disturd_tim) {
-            ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-        } else {
-            ret = 0;
-            sys_cb.disturd_tim = 0;
-        }
-
-        if (ret == MSGBOX_RES_OK) {
-            if(sys_cb.disturd_tim == COMPO_ID_NUM_DISP_ONE - 1) {
-                sys_cb.disturd_tim = COMPO_ID_NUM_DISP_ONE;
+            else
+            {
+                ret = 0;
+                sys_cb.disturd_adl = 0;
             }
-        }
-    break;
+            if (ret == MSGBOX_RES_OK)
+            {
+                if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE - 1)
+                {
+                    sys_cb.disturd_adl = COMPO_ID_NUM_DISP_ONE;
+                }
+            }
+            break;
 
-    case COMPO_ID_BIN_START:
-        if(sys_cb.disturd_tim) {
-            sys_cb.disturd_sel = 0;
-            func_cb.sta = FUNC_DISTURD_SUB_SET;
-            task_stack_pop();
-        }
-        break;
+        case COMPO_ID_BIN_TIMING_ON:
+            if (!sys_cb.disturd_tim)
+            {
+                ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+            }
+            else
+            {
+                ret = 0;
+                sys_cb.disturd_tim = 0;
+            }
 
-    case COMPO_ID_BIN_END:
-        if(sys_cb.disturd_tim) {
-            sys_cb.disturd_sel = 1;
-            func_cb.sta = FUNC_DISTURD_SUB_SET;
-            task_stack_pop();
-        }
-        break;
+            if (ret == MSGBOX_RES_OK)
+            {
+                if(sys_cb.disturd_tim == COMPO_ID_NUM_DISP_ONE - 1)
+                {
+                    sys_cb.disturd_tim = COMPO_ID_NUM_DISP_ONE;
+                }
+            }
+            break;
 
-    default:
-    break;
+        case COMPO_ID_BIN_START:
+            if(sys_cb.disturd_tim)
+            {
+                sys_cb.disturd_sel = 0;
+                func_cb.sta = FUNC_DISTURD_SUB_SET;
+                task_stack_pop();
+            }
+            break;
+
+        case COMPO_ID_BIN_END:
+            if(sys_cb.disturd_tim)
+            {
+                sys_cb.disturd_sel = 1;
+                func_cb.sta = FUNC_DISTURD_SUB_SET;
+                task_stack_pop();
+            }
+            break;
+
+        default:
+            break;
     }
 
     func_set_sub_disturd_disp();
@@ -383,18 +450,19 @@ static void func_disturd_button_click(void)
 //勿扰模式能消息处理
 static void func_set_sub_disturd_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_disturd_button_click();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_disturd_button_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -434,7 +502,8 @@ void func_set_sub_disturd(void)
 {
     printf("%s\n", __func__);
     func_set_sub_disturd_enter();
-    while (func_cb.sta == FUNC_SET_SUB_DISTURD) {
+    while (func_cb.sta == FUNC_SET_SUB_DISTURD)
+    {
         func_set_sub_disturd_process();
         func_set_sub_disturd_message(msg_dequeue());
     }

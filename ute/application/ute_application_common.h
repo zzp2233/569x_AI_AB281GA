@@ -189,6 +189,7 @@ void uteApplicationCommonReadConfig(void);
 void uteApplicationCommonSavePersonalInfo(ute_personal_info_t personalInfo);
 void uteApplicationCommonStartPowerOffMsg(void);
 void uteApplicationCommonRealPowerOffMsg(void);
+void uteApplicationCommonPowerOn(void);
 void uteApplicationCommonSyncDataTimerCallback(void *pxTimer);
 void uteApplicationCommonRegisterSyncDataTimerFunction(void *function);
 void uteApplicationCommonSyncDataTimerStart(void);

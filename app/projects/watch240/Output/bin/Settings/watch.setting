@@ -42,7 +42,7 @@
         <add key="charge_dc_reset" value="False" />
         <add key="charge_dc_not_pwron" value="False" />
         <add key="charge_stop_curr" value="6" />
-        <add key="charge_constant_curr" value="21" />
+        <add key="charge_constant_curr" value="35" />
         <add key="charge_trickle_curr" value="5" />
         <add key="charge_full_bled" value="0" />
         <add key="bt_name" value="BT-AB569X" />
@@ -230,7 +230,7 @@
         <add key="bt_sco_nr_en" value="True" />
         <add key="bt_sco_nr_level" value="2" />
         <add key="bt_sco_nr_trumpet_en" value="False" />
-        <add key="bt_hfp_inband_ring_en" value="False" />
+        <add key="bt_hfp_inband_ring_en" value="True" />
         <add key="buck_mode_en" value="True" />
         <add key="vddcore_sel" value="16" />
         <add key="dacaud_ldo_sel" value="5" />

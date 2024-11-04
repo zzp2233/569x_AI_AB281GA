@@ -213,7 +213,8 @@ static bool music_pp_test = 0;
 #define ASSISTANT_TXT_W                 COMPASS_TXT_W
 #define ASSISTANT_TXT_H                 COMPASS_TXT_H
 
-enum {
+enum
+{
     CARD_ID_CLOCK = 0,
     CARD_ID_SPORT_COMPASS,
     CARD_ID_ACTIVITY,
@@ -226,7 +227,8 @@ enum {
 };
 
 //卡片原始位置信息
-static const s16 card_y_info[CARD_COUNT] = {
+static const s16 card_y_info[CARD_COUNT] =
+{
     [CARD_ID_CLOCK]                 = CARD_CLOCK_Y,
     [CARD_ID_SPORT_COMPASS]         = CARD_SPORT_COMPASS_Y,
     [CARD_ID_ACTIVITY]              = CARD_ACTIVITY_Y,
@@ -237,7 +239,8 @@ static const s16 card_y_info[CARD_COUNT] = {
 };
 
 //组件ID
-enum {
+enum
+{
     COMPO_ID_CLOCK_BG = 256,
     COMPO_ID_CLOCK_H,
     COMPO_ID_CLOCK_M,
@@ -253,7 +256,8 @@ enum {
 };
 
 //功能结构体
-typedef struct f_card_t_ {
+typedef struct f_card_t_
+{
     s32 ofs_y;
     s32 ofs_y_drag;
     s8 focus_card;                  //靠近屏幕中央的卡片序号
@@ -388,106 +392,108 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
     u16 dc;  //当前卡片中心距屏幕中心距离
     u16 dc_min = GUI_SCREEN_CENTER_Y;
     component_t *compo = (component_t *)compo_pool_get_top();
-    while (compo != NULL) {
+    while (compo != NULL)
+    {
         //获取初始值
-        switch (compo->id) {
-        case COMPO_ID_CLOCK_BG:                                 //时钟
-            x = CLOCK_BG_X + CARD_CLOCK_X;
-            y = CLOCK_BG_Y + CARD_CLOCK_Y;
-            w = CLOCK_BG_W;
-            h = CLOCK_BG_H;
-            card_y = CARD_CLOCK_Y;
-            card_id = CARD_ID_CLOCK;
-            break;
+        switch (compo->id)
+        {
+            case COMPO_ID_CLOCK_BG:                                 //时钟
+                x = CLOCK_BG_X + CARD_CLOCK_X;
+                y = CLOCK_BG_Y + CARD_CLOCK_Y;
+                w = CLOCK_BG_W;
+                h = CLOCK_BG_H;
+                card_y = CARD_CLOCK_Y;
+                card_id = CARD_ID_CLOCK;
+                break;
 
-        case COMPO_ID_CLOCK_H:
-            x = CLOCK_POINTER_H_X + CARD_CLOCK_X;
-            y = CLOCK_POINTER_H_Y + CARD_CLOCK_Y;
-            w = CLOCK_POINTER_H_W;
-            h = CLOCK_POINTER_H_H;
-            card_y = CARD_CLOCK_Y;
-            card_id = CARD_ID_CLOCK;
-            break;
+            case COMPO_ID_CLOCK_H:
+                x = CLOCK_POINTER_H_X + CARD_CLOCK_X;
+                y = CLOCK_POINTER_H_Y + CARD_CLOCK_Y;
+                w = CLOCK_POINTER_H_W;
+                h = CLOCK_POINTER_H_H;
+                card_y = CARD_CLOCK_Y;
+                card_id = CARD_ID_CLOCK;
+                break;
 
-        case COMPO_ID_CLOCK_M:
-            x = CLOCK_POINTER_M_X + CARD_CLOCK_X;
-            y = CLOCK_POINTER_M_Y + CARD_CLOCK_Y;
-            w = CLOCK_POINTER_M_W;
-            h = CLOCK_POINTER_M_H;
-            card_y = CARD_CLOCK_Y;
-            card_id = CARD_ID_CLOCK;
-            break;
+            case COMPO_ID_CLOCK_M:
+                x = CLOCK_POINTER_M_X + CARD_CLOCK_X;
+                y = CLOCK_POINTER_M_Y + CARD_CLOCK_Y;
+                w = CLOCK_POINTER_M_W;
+                h = CLOCK_POINTER_M_H;
+                card_y = CARD_CLOCK_Y;
+                card_id = CARD_ID_CLOCK;
+                break;
 
-        case COMPO_ID_DATE:
-            x = DATE_X + CARD_CLOCK_X;
-            y = DATE_Y + CARD_CLOCK_Y;
-            w = DATE_W;
-            h = DATE_H;
-            card_y = CARD_CLOCK_Y;
-            card_id = CARD_ID_CLOCK;
-            break;
+            case COMPO_ID_DATE:
+                x = DATE_X + CARD_CLOCK_X;
+                y = DATE_Y + CARD_CLOCK_Y;
+                w = DATE_W;
+                h = DATE_H;
+                card_y = CARD_CLOCK_Y;
+                card_id = CARD_ID_CLOCK;
+                break;
 
-        case COMPO_ID_WEEKDAY:
-            x = WEEKDAY_X + CARD_CLOCK_X;
-            y = WEEKDAY_Y + CARD_CLOCK_Y;
-            w = WEEKDAY_W;
-            h = WEEKDAY_H;
-            card_y = CARD_CLOCK_Y;
-            card_id = CARD_ID_CLOCK;
-            break;
+            case COMPO_ID_WEEKDAY:
+                x = WEEKDAY_X + CARD_CLOCK_X;
+                y = WEEKDAY_Y + CARD_CLOCK_Y;
+                w = WEEKDAY_W;
+                h = WEEKDAY_H;
+                card_y = CARD_CLOCK_Y;
+                card_id = CARD_ID_CLOCK;
+                break;
 
-        case COMPO_ID_CARD_SPORT_COMPASS:                       //运动&指南针
-            x = CARD_SPORT_COMPASS_X;
-            y = card_y = CARD_SPORT_COMPASS_Y;
-            w = CARD_WIDTH_ORG;
-            h = SPORT_BG_H;
-            card_id = CARD_ID_SPORT_COMPASS;
-            break;
+            case COMPO_ID_CARD_SPORT_COMPASS:                       //运动&指南针
+                x = CARD_SPORT_COMPASS_X;
+                y = card_y = CARD_SPORT_COMPASS_Y;
+                w = CARD_WIDTH_ORG;
+                h = SPORT_BG_H;
+                card_id = CARD_ID_SPORT_COMPASS;
+                break;
 
-        case COMPO_ID_CARD_ACTIVITY:                            //活动记录
-            x = CARD_ACTIVITY_X;
-            y = card_y = CARD_ACTIVITY_Y;
-            w = ACTIVITY_BG_W;
-            h = ACTIVITY_BG_H;
-            card_id = CARD_ID_ACTIVITY;
-            break;
+            case COMPO_ID_CARD_ACTIVITY:                            //活动记录
+                x = CARD_ACTIVITY_X;
+                y = card_y = CARD_ACTIVITY_Y;
+                w = ACTIVITY_BG_W;
+                h = ACTIVITY_BG_H;
+                card_id = CARD_ID_ACTIVITY;
+                break;
 
-        case COMPO_ID_CARD_SLEEP:                               //睡眠
-            x = CARD_SLEEP_X;
-            y = card_y = CARD_SLEEP_Y;
-            w = SLEEP_BG_W;
-            h = SLEEP_BG_H;
-            card_id = CARD_ID_SLEEP;
-            break;
+            case COMPO_ID_CARD_SLEEP:                               //睡眠
+                x = CARD_SLEEP_X;
+                y = card_y = CARD_SLEEP_Y;
+                w = SLEEP_BG_W;
+                h = SLEEP_BG_H;
+                card_id = CARD_ID_SLEEP;
+                break;
 
-        case COMPO_ID_CARD_HEARTRATE:                           //心率
-            x = CARD_HEARTRATE_X;
-            y = card_y = CARD_HEARTRATE_Y;
-            w = HEARTRATE_BG_W;
-            h = HEARTRATE_BG_H;
-            card_id = CARD_ID_HEARTRATE;
-            break;
+            case COMPO_ID_CARD_HEARTRATE:                           //心率
+                x = CARD_HEARTRATE_X;
+                y = card_y = CARD_HEARTRATE_Y;
+                w = HEARTRATE_BG_W;
+                h = HEARTRATE_BG_H;
+                card_id = CARD_ID_HEARTRATE;
+                break;
 
-        case COMPO_ID_CARD_MUSIC:                               //音乐
-            x = CARD_MUSIC_X;
-            y = card_y = CARD_MUSIC_Y;
-            w = MUSIC_BG_W;
-            h = MUSIC_BG_H;
-            card_id = CARD_ID_MUSIC;
-            break;
+            case COMPO_ID_CARD_MUSIC:                               //音乐
+                x = CARD_MUSIC_X;
+                y = card_y = CARD_MUSIC_Y;
+                w = MUSIC_BG_W;
+                h = MUSIC_BG_H;
+                card_id = CARD_ID_MUSIC;
+                break;
 
-        case COMPO_ID_CARD_POWEROFF_ASSISTANT:                  //关机&语音助手
-            x = CARD_POWEROFF_ASSISTANT_X;
-            y = card_y = CARD_POWEROFF_ASSISTANT_Y;
-            w = CARD_WIDTH_ORG;
-            h = POWEROFF_BG_H;
-            card_id = CARD_ID_POWEROFF_ASSISTANT;
-            break;
+            case COMPO_ID_CARD_POWEROFF_ASSISTANT:                  //关机&语音助手
+                x = CARD_POWEROFF_ASSISTANT_X;
+                y = card_y = CARD_POWEROFF_ASSISTANT_Y;
+                w = CARD_WIDTH_ORG;
+                h = POWEROFF_BG_H;
+                card_id = CARD_ID_POWEROFF_ASSISTANT;
+                break;
 
-        default:
-            compo = compo_get_next(compo);
-            continue;
-            break;
+            default:
+                compo = compo_get_next(compo);
+                continue;
+                break;
         }
 
         //计算偏移、缩放
@@ -495,18 +501,22 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
         card_y += ofs_y;
         y += ofs_y;
         dc = abs_s(card_y - GUI_SCREEN_CENTER_Y);
-        if (creating == false && dc < dc_min) {  //焦点，创建时不使用f_cb
+        if (creating == false && dc < dc_min)    //焦点，创建时不使用f_cb
+        {
             f_card_t *f_card = (f_card_t *)func_cb.f_cb;
             f_card->focus_card = card_id;
             dc_min = dc;
 //            TRACE("focus[%d]\n", card_id);
         }
-        if (card_y > CARD_SCALE_START_POS && card_y < CARD_UNVISIBLE_POS_BOTTOM) {
-            if (card_y > CARD_SCALE_STOP_Y) {  //缩到最小后保持一段时间
+        if (card_y > CARD_SCALE_START_POS && card_y < CARD_UNVISIBLE_POS_BOTTOM)
+        {
+            if (card_y > CARD_SCALE_STOP_Y)    //缩到最小后保持一段时间
+            {
                 y -= card_y - CARD_SCALE_STOP_Y;
                 card_y = CARD_SCALE_STOP_Y;
             }
-            if (card_w > CARD_WIDTH_MIN) {
+            if (card_w > CARD_WIDTH_MIN)
+            {
                 //缩放
                 s16 card_w_org = card_w;
                 card_w -= (card_w - CARD_WIDTH_MIN) * (card_y - CARD_SCALE_START_POS) / (CARD_SCALE_STOP_Y - CARD_SCALE_START_POS);
@@ -523,41 +533,57 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
 
         //设置位置和大小
         bool unvisible = card_y < CARD_UNVISIBLE_POS_TOP || card_y >= CARD_UNVISIBLE_POS_BOTTOM;
-        if (compo->type == COMPO_TYPE_CARDBOX) {
+        if (compo->type == COMPO_TYPE_CARDBOX)
+        {
             compo_cardbox_t *cardbox = (compo_cardbox_t *)compo;
             compo_cardbox_set_location(cardbox, x, y, w, h);
             u8 level = y > CARD_SCALE_START_POS ? \
-                            (y < CARD_SCALE_STOP_POS ? \
-                                (CARD_BG_GRAY_START - (CARD_BG_GRAY_START - CARD_BG_GRAY_STOP) * (y - CARD_SCALE_START_POS) / (CARD_SCALE_STOP_POS - CARD_SCALE_START_POS)) : \
-                                CARD_BG_GRAY_STOP
-                            ) : \
-                        CARD_BG_GRAY_START;
+                       (y < CARD_SCALE_STOP_POS ? \
+                        (CARD_BG_GRAY_START - (CARD_BG_GRAY_START - CARD_BG_GRAY_STOP) * (y - CARD_SCALE_START_POS) / (CARD_SCALE_STOP_POS - CARD_SCALE_START_POS)) : \
+                        CARD_BG_GRAY_STOP
+                       ) : \
+                       CARD_BG_GRAY_START;
 //            TRACE("gray[%d]\n", level);
             compo_cardbox_rect_set_color(cardbox, 0, GRAY_LV(level));   //背景颜色
             compo_cardbox_rect_set_color(cardbox, 1, GRAY_LV(level));
-            if (unvisible) {
+            if (unvisible)
+            {
                 compo_cardbox_set_visible(cardbox, false);
-            } else {
+            }
+            else
+            {
                 compo_cardbox_set_visible(cardbox, true);
             }
-        } else if (compo->type == COMPO_TYPE_PICTUREBOX) {
+        }
+        else if (compo->type == COMPO_TYPE_PICTUREBOX)
+        {
             compo_picturebox_t *pic = (compo_picturebox_t *)compo;
             compo_picturebox_set_pos(pic, x, y);
             compo_picturebox_set_size(pic, w, h);
-            if (unvisible) {
+            if (unvisible)
+            {
                 compo_picturebox_set_visible(pic, false);
-            } else {
+            }
+            else
+            {
                 compo_picturebox_set_visible(pic, true);
             }
-        } else if (compo->type == COMPO_TYPE_TEXTBOX) {
+        }
+        else if (compo->type == COMPO_TYPE_TEXTBOX)
+        {
             compo_textbox_t *txt = (compo_textbox_t *)compo;
             compo_textbox_set_location(txt, x, y, w, h);
-            if (unvisible) {
+            if (unvisible)
+            {
                 compo_textbox_set_visible(txt, false);
-            } else {
+            }
+            else
+            {
                 compo_textbox_set_visible(txt, true);
             }
-        } else if (compo->type == COMPO_TYPE_DATETIME) {
+        }
+        else if (compo->type == COMPO_TYPE_DATETIME)
+        {
             compo_datetime_t *dt = (compo_datetime_t *)compo;
             compo_datetime_set_pos(dt, x, y);
         }
@@ -597,11 +623,13 @@ static u16 func_clock_sub_card_get_btn_id(point_t pt)
     u16 ret = 0;
     rect_t rect;
     compo_cardbox_t *cardbox;
-    for(i=0; i<CARD_BTN_COUNT; i++) {
+    for(i=0; i<CARD_BTN_COUNT; i++)
+    {
         id = COMPO_ID_CARD_SPORT_COMPASS + i;
         cardbox = compo_getobj_byid(id);
         rect = compo_cardbox_get_absolute(cardbox);
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
+        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+        {
             ret = id;
             break;
         }
@@ -619,71 +647,90 @@ static void func_clock_sub_card_click_handler(void)
     u16 compo_id = func_clock_sub_card_get_btn_id(pt);
     printf("click compo_id:%d\n", compo_id);
 
-    switch (compo_id) {
-    case COMPO_ID_CARD_SPORT_COMPASS:
-        cardbox = compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS);
-        rect = compo_cardbox_get_rect_absolute(cardbox, 0); //指南针
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-            func_jump = FUNC_BLOOD_OXYGEN;//FUNC_COMPASS;
-        } else {
-            rect = compo_cardbox_get_rect_absolute(cardbox, 1); //运动
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-                func_jump = FUNC_SPORT;
+    switch (compo_id)
+    {
+        case COMPO_ID_CARD_SPORT_COMPASS:
+            cardbox = compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS);
+            rect = compo_cardbox_get_rect_absolute(cardbox, 0); //指南针
+            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+            {
+                func_jump = FUNC_BLOOD_OXYGEN;//FUNC_COMPASS;
             }
-        }
-        break;
-
-    case COMPO_ID_CARD_ACTIVITY:
-        func_jump = FUNC_ACTIVITY;
-        break;
-
-    case COMPO_ID_CARD_SLEEP:
-        func_jump = FUNC_SLEEP;
-        break;
-
-    case COMPO_ID_CARD_HEARTRATE:
-        func_jump = FUNC_HEARTRATE;
-        break;
-
-    case COMPO_ID_CARD_MUSIC:
-        cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
-        rect = compo_cardbox_get_icon_absolute(cardbox, 0); //上一首
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-            printf("music_prev?\n");                                                    //--------->>>todo
-        } else {
-            rect = compo_cardbox_get_icon_absolute(cardbox, 1); //播放/暂停
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-                music_pp_test = !music_pp_test;
-                printf("music_play/pause[%d]?\n", music_pp_test);                       //--------->>>todo
-            } else {
-                rect = compo_cardbox_get_icon_absolute(cardbox, 2); //下一首
-                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-                    printf("music_next?\n");                                            //--------->>>todo
-                } else {
-                    func_jump = FUNC_BT;
+            else
+            {
+                rect = compo_cardbox_get_rect_absolute(cardbox, 1); //运动
+                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+                {
+                    func_jump = FUNC_SPORT;
                 }
             }
-        }
-        break;
+            break;
 
-    case COMPO_ID_CARD_POWEROFF_ASSISTANT:
-        cardbox = compo_getobj_byid(COMPO_ID_CARD_POWEROFF_ASSISTANT);
-        rect = compo_cardbox_get_rect_absolute(cardbox, 0); //语音助手
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-            func_jump = FUNC_VOICE;
-        } else {
-            rect = compo_cardbox_get_rect_absolute(cardbox, 1); //关机
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
-                func_jump = FUNC_OFF;
+        case COMPO_ID_CARD_ACTIVITY:
+            func_jump = FUNC_ACTIVITY;
+            break;
+
+        case COMPO_ID_CARD_SLEEP:
+            func_jump = FUNC_SLEEP;
+            break;
+
+        case COMPO_ID_CARD_HEARTRATE:
+            func_jump = FUNC_HEARTRATE;
+            break;
+
+        case COMPO_ID_CARD_MUSIC:
+            cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
+            rect = compo_cardbox_get_icon_absolute(cardbox, 0); //上一首
+            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+            {
+                printf("music_prev?\n");                                                    //--------->>>todo
             }
-        }
-        break;
+            else
+            {
+                rect = compo_cardbox_get_icon_absolute(cardbox, 1); //播放/暂停
+                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+                {
+                    music_pp_test = !music_pp_test;
+                    printf("music_play/pause[%d]?\n", music_pp_test);                       //--------->>>todo
+                }
+                else
+                {
+                    rect = compo_cardbox_get_icon_absolute(cardbox, 2); //下一首
+                    if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+                    {
+                        printf("music_next?\n");                                            //--------->>>todo
+                    }
+                    else
+                    {
+                        func_jump = FUNC_BT;
+                    }
+                }
+            }
+            break;
 
-    default:
-        break;
+        case COMPO_ID_CARD_POWEROFF_ASSISTANT:
+            cardbox = compo_getobj_byid(COMPO_ID_CARD_POWEROFF_ASSISTANT);
+            rect = compo_cardbox_get_rect_absolute(cardbox, 0); //语音助手
+            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+            {
+                func_jump = FUNC_VOICE;
+            }
+            else
+            {
+                rect = compo_cardbox_get_rect_absolute(cardbox, 1); //关机
+                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+                {
+                    func_jump = FUNC_OFF;
+                }
+            }
+            break;
+
+        default:
+            break;
     }
 
-    if (func_jump != FUNC_NULL) {
+    if (func_jump != FUNC_NULL)
+    {
         func_switch_to(func_jump, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);  //切换动画
 //        func_cb.sta = func_jump;  //直接跳转
     }
@@ -695,14 +742,19 @@ static s16 func_clock_sub_card_align_y(s16 ofs_y)
     u8 i, nearest_id = 0;
     u16 dc_min = GUI_SCREEN_CENTER_Y;
     u16 dc;
-    if (ofs_y >= DRAG_Y_MAX) {
+    if (ofs_y >= DRAG_Y_MAX)
+    {
         return DRAG_Y_MAX;  //回弹效果
-    } else if (ofs_y <= DRAG_Y_MIN) {
+    }
+    else if (ofs_y <= DRAG_Y_MIN)
+    {
         return DRAG_Y_MIN;
     }
-    for (i=0; i<CARD_COUNT; i++) {
+    for (i=0; i<CARD_COUNT; i++)
+    {
         dc = abs_s(card_y_info[i] + ofs_y - GUI_SCREEN_CENTER_Y);
-        if (dc < dc_min) {
+        if (dc < dc_min)
+        {
             nearest_id = i;
             dc_min = dc;
         }
@@ -713,11 +765,16 @@ static s16 func_clock_sub_card_align_y(s16 ofs_y)
 //根据卡片序号对齐页面偏移位置到屏幕中央
 static s16 func_clock_sub_card_align_by_idx(s8 card_id)
 {
-    if (card_id <= CARD_ID_CLOCK) {
+    if (card_id <= CARD_ID_CLOCK)
+    {
         return DRAG_Y_MAX;
-    } else if (card_id > (CARD_COUNT - 1)){
+    }
+    else if (card_id > (CARD_COUNT - 1))
+    {
         return DRAG_Y_MIN;
-    } else {
+    }
+    else
+    {
         return (GUI_SCREEN_CENTER_Y - card_y_info[card_id]);
     }
 }
@@ -742,6 +799,7 @@ static void func_clock_sub_card_set_offs(s16 ofs_y)
 static void func_clock_sub_card_data_update(void)
 {
     compo_cardbox_t *cardbox;
+#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     //活动记录
     char step_str[8];
     snprintf(step_str, sizeof(step_str), "%d", sc7a20_info.gsensor_data.step);
@@ -753,6 +811,7 @@ static void func_clock_sub_card_data_update(void)
     char dist_str[8];
     snprintf(dist_str, sizeof(dist_str), "%d", sc7a20_info.gsensor_data.distance);
     compo_cardbox_text_set(cardbox, 2, dist_str);      //距离
+#endif
     //睡眠
     cardbox = compo_getobj_byid(COMPO_ID_CARD_SLEEP);
     compo_cardbox_text_set(cardbox, 0, "07:36");    //总时长
@@ -773,14 +832,18 @@ static void func_clock_sub_card_process(void)
 {
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
 
-	if (f_card->flag_drag) {
+    if (f_card->flag_drag)
+    {
         s32 dx, dy;
         f_card->flag_drag = ctp_get_dxy(&dx, &dy);
-        if (f_card->flag_drag) {
+        if (f_card->flag_drag)
+        {
             //拖动页面
             f_card->ofs_y_drag = func_clock_sub_card_limit_y(f_card->ofs_y + dy);
             func_clock_sub_card_compo_update(f_card->ofs_y_drag, false);
-        } else {
+        }
+        else
+        {
             //抬手
             f_card->ofs_y = f_card->ofs_y_drag;
             s16 last_dy = ctp_get_last_dxy().y;
@@ -789,34 +852,53 @@ static void func_clock_sub_card_process(void)
             f_card->flag_move_auto = true;
             f_card->tick = tick_get();
         }
-    } else if (f_card->flag_move_auto) {
+    }
+    else if (f_card->flag_move_auto)
+    {
         //自动移动
-        if (f_card->ofs_y == f_card->moveto_y) {
-            if (f_card->ofs_y < SPRING_Y_MIN) {
+        if (f_card->ofs_y == f_card->moveto_y)
+        {
+            if (f_card->ofs_y < SPRING_Y_MIN)
+            {
                 f_card->moveto_y = SPRING_Y_MIN;
-            } else if (f_card->ofs_y > SPRING_Y_MAX) {
+            }
+            else if (f_card->ofs_y > SPRING_Y_MAX)
+            {
                 f_card->moveto_y = SPRING_Y_MAX;
-            } else {
+            }
+            else
+            {
                 f_card->flag_move_auto = false;            //移动完成
                 f_card->moveto_card = f_card->focus_card;
             }
-        } else if (tick_check_expire(f_card->tick, FOCUS_AUTO_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(f_card->tick, FOCUS_AUTO_TICK_EXPIRE))
+        {
             TRACE("[%d]--move_to->[%d]\n", f_card->ofs_y, f_card->moveto_y);
             s16 dy;
             f_card->tick = tick_get();
             dy = f_card->moveto_y - f_card->ofs_y;
-            if (dy > 0) {
-                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (dy > 0)
+            {
+                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dy = dy / FOCUS_AUTO_STEP_DIV;
-                } else if (dy > FOCUS_AUTO_STEP) {
+                }
+                else if (dy > FOCUS_AUTO_STEP)
+                {
                     dy = FOCUS_AUTO_STEP;
 //                } else {
 //                    dy = 1;
                 }
-            } else if (dy < 0) {
-                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else if (dy < 0)
+            {
+                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dy = dy / FOCUS_AUTO_STEP_DIV;
-                } else if (dy < -FOCUS_AUTO_STEP) {
+                }
+                else if (dy < -FOCUS_AUTO_STEP)
+                {
                     dy = -FOCUS_AUTO_STEP;
 //                } else {
 //                    dy = -1;
@@ -840,7 +922,8 @@ static void func_clock_sub_card_switch_to_clock(bool auto_switch)
     compo_form_t * frm_clock = func_create_form(FUNC_CLOCK);
     compo_form_t * frm = func_clock_sub_card_form_create_by_ofs(f_card->ofs_y);
     func_cb.frm_main = frm;
-    if (func_switching(switch_mode, NULL)) {
+    if (func_switching(switch_mode, NULL))
+    {
         func_cb.sta = FUNC_CLOCK;
     }
     compo_form_destroy(frm_clock);
@@ -851,45 +934,55 @@ static void func_clock_sub_card_message(size_msg_t msg)
 {
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
 
-    if (f_card->flag_drag) {
+    if (f_card->flag_drag)
+    {
         evt_message(msg);  //拖动中，只处理部分消息
         return;
-    } else if (f_card->flag_move_auto) {
-        switch (msg) {
-        case MSG_CTP_TOUCH:   //自动移动过程中，触屏停止
-            f_card->flag_drag = true;
-            f_card->flag_move_auto = false;
-            break;
+    }
+    else if (f_card->flag_move_auto)
+    {
+        switch (msg)
+        {
+            case MSG_CTP_TOUCH:   //自动移动过程中，触屏停止
+                f_card->flag_drag = true;
+                f_card->flag_move_auto = false;
+                break;
 
-        case MSG_QDEC_FORWARD:  //向前滚动菜单
-            if (++f_card->moveto_card > f_card->focus_card) {
-                f_card->moveto_y = func_clock_sub_card_align_by_idx(f_card->moveto_card);
-            }
-            break;
+            case MSG_QDEC_FORWARD:  //向前滚动菜单
+                if (++f_card->moveto_card > f_card->focus_card)
+                {
+                    f_card->moveto_y = func_clock_sub_card_align_by_idx(f_card->moveto_card);
+                }
+                break;
 
-        case MSG_QDEC_BACKWARD:
-            if (--f_card->moveto_card < f_card->focus_card) {
-                f_card->moveto_y = func_clock_sub_card_align_by_idx(f_card->moveto_card);
-            }
-            break;
+            case MSG_QDEC_BACKWARD:
+                if (--f_card->moveto_card < f_card->focus_card)
+                {
+                    f_card->moveto_y = func_clock_sub_card_align_by_idx(f_card->moveto_card);
+                }
+                break;
 
-        default:
-            evt_message(msg);
-            break;
+            default:
+                evt_message(msg);
+                break;
         }
         return;
     }
 
-    switch (msg) {
+    switch (msg)
+    {
         case MSG_CTP_CLICK:
             func_clock_sub_card_click_handler();
             break;
 
         case MSG_CTP_SHORT_UP:
         case MSG_CTP_SHORT_DOWN:
-            if (msg == MSG_CTP_SHORT_DOWN && ctp_get_sxy().y < EXIT_Y_MAX) {   //下滑返回到时钟主界面
+            if (msg == MSG_CTP_SHORT_DOWN && ctp_get_sxy().y < EXIT_Y_MAX)     //下滑返回到时钟主界面
+            {
                 func_clock_sub_card_switch_to_clock(false);
-            } else {
+            }
+            else
+            {
                 f_card->flag_drag = true;
                 f_card->flag_move_auto = false;
             }
@@ -902,7 +995,8 @@ static void func_clock_sub_card_message(size_msg_t msg)
 
         case MSG_QDEC_FORWARD:
             f_card->flag_move_auto = true;
-            if (++f_card->moveto_card > f_card->focus_card) {
+            if (++f_card->moveto_card > f_card->focus_card)
+            {
                 f_card->moveto_y = func_clock_sub_card_align_by_idx(f_card->moveto_card);
             }
             TRACE("focus_card[%d] to_y[%d]\n", f_card->focus_card, f_card->moveto_y);
@@ -910,7 +1004,8 @@ static void func_clock_sub_card_message(size_msg_t msg)
 
         case MSG_QDEC_BACKWARD:
             f_card->flag_move_auto = true;
-            if (--f_card->moveto_card < f_card->focus_card) {
+            if (--f_card->moveto_card < f_card->focus_card)
+            {
                 f_card->moveto_y = func_clock_sub_card_align_by_idx(f_card->moveto_card);
             }
             TRACE("focus_card[%d] to_y[%d]\n", f_card->focus_card, f_card->moveto_y);
@@ -945,7 +1040,8 @@ void func_clock_sub_card(void)
 {
     printf("%s\n", __func__);
     func_clock_sub_card_enter();
-    while (func_cb.sta == FUNC_CARD) {
+    while (func_cb.sta == FUNC_CARD)
+    {
         func_clock_sub_card_process();
         func_clock_sub_card_message(msg_dequeue());
     }

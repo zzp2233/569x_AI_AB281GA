@@ -426,7 +426,7 @@
 /*****************************************************************************
  * Module    : 传感器配置
  *****************************************************************************/
-#define SENSOR_STEP_SEL                 SENSOR_STEP_SC7A20
+#define SENSOR_STEP_SEL                 SENSOR_STEP_NULL
 #define SENSOR_HR_SEL                   SENSOR_HR_VC30FX
 #define SENSOR_GEO_SEL                  SENSOR_GEO_NULL
 

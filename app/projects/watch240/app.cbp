@@ -71,6 +71,11 @@
 			<Add directory="../../../ute/module/crc" />
 			<Add directory="../../../ute/module/heart" />
 			<Add directory="../../../ute/module/bloodoxygen" />
+			<Add directory="../../../ute/lib" />
+			<Add directory="../../../ute/drv/battery" />
+			<Add directory="../../../ute/module/sleep" />
+			<Add directory="../../../ute/module/sport" />
+			<Add directory="../../../ute/drv/gsensor" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -95,6 +100,8 @@
 			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_hr_vH102ed02_ZKLXRISCV32V2_NA_01.a" />
 			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_spo2_VC30FS_Int_ZhongKe5681_01.a" />
 			<Add library="../../platform/bsp/bsp_sensor/sc7a20/libSL_Watch_Pedo_Kcal_Wrist_Sleep_Sway_Algorithm.a" />
+			<Add library="../../../ute/lib/libute_all_sports_int_algorithms3_0.a" />
+			<Add library="../../../ute/lib/libUTEsleepOnBandLib.a" />
 			<Add directory="../../platform/libs" />
 		</Linker>
 		<ExtraCommands>
@@ -107,6 +114,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/application/ute_application_common.h" />
+		<Unit filename="../../../ute/drv/battery/ute_drv_battery_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/battery/ute_drv_battery_common.h" />
+		<Unit filename="../../../ute/drv/gsensor/ute_drv_gsensor_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/gsensor/ute_drv_gsensor_common.h" />
+		<Unit filename="../../../ute/drv/gsensor/ute_drv_gsensor_sc7a20h.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/gsensor/ute_drv_gsensor_sc7a20h.h" />
 		<Unit filename="../../../ute/drv/motor/ute_drv_motor.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -179,6 +198,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/protocol/ute_module_protocol.h" />
+		<Unit filename="../../../ute/module/sleep/ute_module_sleep.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/sleep/ute_module_sleep.h" />
+		<Unit filename="../../../ute/module/sport/ute_module_sport.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/sport/ute_module_sport.h" />
 		<Unit filename="../../../ute/module/systemtime/ute_module_systemtime.c">
 			<Option compilerVar="CC" />
 		</Unit>

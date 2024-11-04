@@ -18,8 +18,8 @@
 #include "ute_drv_motor.h"
 #include "ute_module_filesystem.h"
 #include "ute_module_bloodoxygen.h"
+#include "ute_drv_battery_common.h"
 
-// #include "ute_drv_battery_common.h"
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
 /*! 心率模块数据zn.zeng, 2021-07-13  */
@@ -200,7 +200,9 @@ void uteModuleHeartEverySecond(void)
             isNeedAutoTest = true;
         }
 
-        if(!uteModuleBloodoxygenIsTesting())
+        if(!uteModuleBloodoxygenIsTesting() &&
+           (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
+          )
         {
             if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
             {

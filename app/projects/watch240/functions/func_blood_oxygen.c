@@ -75,7 +75,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
     //测量结果
     compo = (component_t *)compo_textbox_create(frm, 4);
     compo_setid(compo, COMPO_ID_TXT_RESULT);
-    compo_textbox_set_pos((compo_textbox_t *)compo, GUI_SCREEN_CENTER_X, 176);
+    compo_textbox_set_pos((compo_textbox_t *)compo, GUI_SCREEN_CENTER_X, 176+10);
     compo_textbox_set_visible((compo_textbox_t *)compo, false);
 
     //未佩戴提示

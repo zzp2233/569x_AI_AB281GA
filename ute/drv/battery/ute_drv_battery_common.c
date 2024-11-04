@@ -1,7 +1,7 @@
 /**
 *@file
-*@brief     µç³ØÇı¶¯ÎÄ¼ş
-*@details    µç³ØÇı¶¯¹«¹²²ãÎÄ¼ş
+*@brief     ç”µæ± é©±åŠ¨æ–‡ä»¶
+*@details    ç”µæ± é©±åŠ¨å…¬å…±å±‚æ–‡ä»¶
 *@author        zn.zeng
 *@date        Jul 05, 2021
 *@version       v1.0
@@ -28,7 +28,7 @@ ute_drv_battery_common_data_t uteDrvBatteryCommonData;
 
 #if UTE_MODULE_BATTERY_RECORD_BAT_LVL_SUPPORT
 /**
-*@brief         ¶ÁÈ¡µç³Øconfig
+*@brief         è¯»å–ç”µæ± config
 *@details
 *@author       xjc
 *@date       2022-01-25
@@ -37,7 +37,7 @@ void uteDrvBatteryCommonReadConfig(void)
 {
     void *file = NULL;
     uint8_t readbuff[2];
-    /*! ¶ÁÈ¡¼ÇÂ¼µÄµç³ØµçÁ¿ xjc, 2022-01-25*/
+    /*! è¯»å–è®°å½•çš„ç”µæ± ç”µé‡ xjc, 2022-01-25*/
     readbuff[0]=uteDrvBatteryCommonData.lastLvl;
     if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_RECORD_BAT_PERCENT,&file,FS_O_RDONLY))
     {
@@ -47,7 +47,7 @@ void uteDrvBatteryCommonReadConfig(void)
     }
     if(readbuff[0]==0)
     {
-        /****recordLvl±ØĞëÊÇ´óÓÚ0£¬·ñÔòÃ»ÓĞÒâÒå,lastLvlÔÚÖ®Ç°µÄµØ·½ÒÑ¾­¶ÁÈ¡Ò»´Î£¬ËùÒÔ²»Îª0****/
+        /****recordLvlå¿…é¡»æ˜¯å¤§äº0ï¼Œå¦åˆ™æ²¡æœ‰æ„ä¹‰,lastLvlåœ¨ä¹‹å‰çš„åœ°æ–¹å·²ç»è¯»å–ä¸€æ¬¡ï¼Œæ‰€ä»¥ä¸ä¸º0****/
         if(uteDrvBatteryCommonData.lastLvl >0)
         {
             uteDrvBatteryCommonData.recordLvl = uteDrvBatteryCommonData.lastLvl;
@@ -61,7 +61,7 @@ void uteDrvBatteryCommonReadConfig(void)
 }
 
 /**
-*@brief        ±È½Ïµç³ØµçÁ¿
+*@brief        æ¯”è¾ƒç”µæ± ç”µé‡
 *@details
 *@author       xjc
 *@date       2022-01-25
@@ -69,7 +69,7 @@ void uteDrvBatteryCommonReadConfig(void)
 void uteDrvBatteryCommonCompareBatLvl(void)
 {
     uteDrvBatteryCommonReadConfig();
-    /****recordLvl±ØĞëÊÇ´óÓÚ0£¬·ñÔòÃ»ÓĞÒâÒå****/
+    /****recordLvlå¿…é¡»æ˜¯å¤§äº0ï¼Œå¦åˆ™æ²¡æœ‰æ„ä¹‰****/
     if ((uteDrvBatteryCommonData.recordLvl < uteDrvBatteryCommonData.lastLvl)
         &&(uteDrvBatteryCommonData.recordLvl >0))
     {
@@ -78,7 +78,7 @@ void uteDrvBatteryCommonCompareBatLvl(void)
 
     if((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)||(uteApplicationCommonGetSystemPowerOnSecond()<5))
     {
-        /*! ¶ÁÈ¡µ½µÄµçÁ¿±È¼ÇÂ¼µÄµçÁ¿´ó,²¢ÇÒÔÚ20ÒÔÄÚ,ÔòÈÏÎªÊÇµçÁ¿¶ÁÈ¡²»×¼È·,Ê¹ÓÃ¼ÇÂ¼µÄÖµ xjc, 2022-01-25*/
+        /*! è¯»å–åˆ°çš„ç”µé‡æ¯”è®°å½•çš„ç”µé‡å¤§,å¹¶ä¸”åœ¨20ä»¥å†…,åˆ™è®¤ä¸ºæ˜¯ç”µé‡è¯»å–ä¸å‡†ç¡®,ä½¿ç”¨è®°å½•çš„å€¼ xjc, 2022-01-25*/
         if(
             ((uteDrvBatteryCommonData.lastLvl - uteDrvBatteryCommonData.recordLvl) > 0)&&
             ((uteDrvBatteryCommonData.lastLvl - uteDrvBatteryCommonData.recordLvl) < 20))
@@ -93,7 +93,7 @@ void uteDrvBatteryCommonCompareBatLvl(void)
 }
 
 /**
-*@brief        µç³ØµçÁ¿±ä»¯Ê±£¬±£´æµç³ØµçÁ¿
+*@brief        ç”µæ± ç”µé‡å˜åŒ–æ—¶ï¼Œä¿å­˜ç”µæ± ç”µé‡
 *@details
 *@author      xjc
 *@date       2022-01-25
@@ -105,7 +105,7 @@ void uteDrvBatteryCommonSaveBatteryLvl(void)
         void *file;
         uint8_t writeBuff[2];
         memset(&writeBuff[0], 0, sizeof(writeBuff));
-        /*! ±£´æµ½ÎÄ¼şxjc, 2022-01-25*/
+        /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2022-01-25*/
         if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_RECORD_BAT_PERCENT, &file, FS_O_RDONLY | FS_O_WRONLY | FS_O_CREAT))
         {
             writeBuff[0] = uteDrvBatteryCommonData.lastLvl;
@@ -113,11 +113,11 @@ void uteDrvBatteryCommonSaveBatteryLvl(void)
             uteModuleFilesystemWriteData(file, &writeBuff[0], 1);
             uteModuleFilesystemCloseFile(file);
         }
-        //µç³ØµçÁ¿±ä»¯Ê±·¢ËÍµ½app dengli.lu 2022/09/30
+        //ç”µæ± ç”µé‡å˜åŒ–æ—¶å‘é€åˆ°app dengli.lu 2022/09/30
         uint8_t response[3]= {0};
         response[0] = CMD_READ_BATTERY_LVL;
         response[1] = uteDrvBatteryCommonData.lastLvl;
-        response[2] = 0x01;//±íÊ¾bleÖ÷¶¯ÉÏ·¢Ö¸Áî
+        response[2] = 0x01;//è¡¨ç¤ºbleä¸»åŠ¨ä¸Šå‘æŒ‡ä»¤
         if(!uteApplicationCommonGetIsSynchronizingData())
         {
             uteModuleProfileBleSendToPhone(&response[0],3);
@@ -128,7 +128,7 @@ void uteDrvBatteryCommonSaveBatteryLvl(void)
 #endif
 
 /**
-*@brief ³äµç×´Ì¬±ä»¯»Øµ÷
+*@brief å……ç”µçŠ¶æ€å˜åŒ–å›è°ƒ
 *@details
 *STATE_CHARGER_START = 0,
 *STATE_CHARGER_PRE_CHARGE,1
@@ -181,7 +181,7 @@ void uteDrvBatteryCommonChargerChangeCb(uint8_t state)
     UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,uteDrvBatteryCommonData.chargerStatus=%d", __func__,uteDrvBatteryCommonData.chargerStatus);
 }
 /**
-*@brief ¸üĞÂµç³ØÊı¾İ
+*@brief æ›´æ–°ç”µæ± æ•°æ®
 *@details
 *@author        zn.zeng
 *@date        2021-12-15
@@ -290,7 +290,7 @@ uint8_t uteDrvBatteryCommonCalibrationBatLvl(uint16_t voltage,int16_t current,ut
     return lvl;
 }
 /**
-*@brief ¸üĞÂµç³ØÊı¾İ
+*@brief æ›´æ–°ç”µæ± æ•°æ®
 *@details
 *@author        zn.zeng
 *@date        2021-12-15
@@ -403,7 +403,7 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 }
 #if UTE_DRV_BATTERY_CE_AUTH_SUPPORT
 /**
-*@brief    µç³ØCEÈÏÖ¤Á÷³Ì
+*@brief    ç”µæ± CEè®¤è¯æµç¨‹
 *@details
 *@author        zn.zeng
 *@date        2022-01-03
@@ -507,7 +507,7 @@ void uteDrvBatteryCommonCEAuthHandler(ute_module_systemtime_time_t time)
     }
 }
 /**
-*@brief    »ñÈ¡»·¾³ÎÂ¶È
+*@brief    è·å–ç¯å¢ƒæ¸©åº¦
 *@details
 *@author        zn.zeng
 *@date        2022-01-03
@@ -518,7 +518,7 @@ float uteDrvBatteryCommonGetCEAuthAmbientValue(void)
 }
 #endif
 /**
-*@brief     µç³ØÊÇ·ñ½øÈëµÍµç×´Ì¬º¯Êı
+*@brief     ç”µæ± æ˜¯å¦è¿›å…¥ä½ç”µçŠ¶æ€å‡½æ•°
 *@details
 *@author        xjc
 *@date        2022-1-3
@@ -556,13 +556,13 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
 #endif
         (uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_POWEROFF_ID)&&
         (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)&&
-        (!uteModuleSportMoreSportIsRuning()) /*! ÔË¶¯ÖĞÔÚÔË¶¯´¦Àíº¯ÊıÌø×ªµ½µÍµç½çÃæ£¬xjc 2022-02-18*/
+        (!uteModuleSportMoreSportIsRuning()) /*! è¿åŠ¨ä¸­åœ¨è¿åŠ¨å¤„ç†å‡½æ•°è·³è½¬åˆ°ä½ç”µç•Œé¢ï¼Œxjc 2022-02-18*/
     )
     {
         if (!uteDrvBatteryCommonData.isHasLowPowerNotify)
         {
 #if UTE_MODULE_PLAYBACK_SUPPORT
-            /*2022 08-17  µÍµçÁ¿¾¯±¨µÄÊ±ºò£¬ÔİÍ£±¾µØÒôÀÖ*/
+            /*2022 08-17  ä½ç”µé‡è­¦æŠ¥çš„æ—¶å€™ï¼Œæš‚åœæœ¬åœ°éŸ³ä¹*/
 
             if(uteModuleMusicGetPlayerPaused()==false)
             {
@@ -579,7 +579,7 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
             }
 #endif
 
-            /*! µÍµçÌáĞÑÖ®Ç°½áÊøÔË¶¯ÔÙÌø×ªµ½µÍµç½çÃæ, xjc 2022-01-26*/
+            /*! ä½ç”µæé†’ä¹‹å‰ç»“æŸè¿åŠ¨å†è·³è½¬åˆ°ä½ç”µç•Œé¢, xjc 2022-01-26*/
             if(uteModuleSportMoreSportIsRuning())
             {
                 uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CLOSE);
@@ -591,7 +591,7 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
 #if SET_THE_LOW_BATTERY_POPUP_TIME
             uteApplicationCommonSetlowBatterySecond(0);
 #endif
-            /*2022 08-08  µÍµçÔİÍ£ÒôÀÖ*/
+            /*2022 08-08  ä½ç”µæš‚åœéŸ³ä¹*/
             if(uteModuleMusicGetPlayerPaused()==false)
             {
                 uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_LOCAL_TO_SPEAKER);
@@ -614,7 +614,7 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
 }
 
 /**
-*@brief µç³ØÃ¿Ãëº¯Êı
+*@brief ç”µæ± æ¯ç§’å‡½æ•°
 *@details
 *@author        zn.zeng
 *@date        2021-12-15
@@ -655,7 +655,7 @@ void uteDrvBatteryCommonEverySecond(void)
         {
             uteDrvBatteryCommonCEAuthHandler(time);
         }
-        if(!uteApplicationCommonIsPowerOn())//dengli.lu 2022.07.23·ÀÖ¹¸ßÎÂÇé¿öÏÂ¹Ø»ú£¬µ¼ÖÂÎŞ·¨³äµç¿ª»ú
+        if(!uteApplicationCommonIsPowerOn())//dengli.lu 2022.07.23é˜²æ­¢é«˜æ¸©æƒ…å†µä¸‹å…³æœºï¼Œå¯¼è‡´æ— æ³•å……ç”µå¼€æœº
         {
             uteModulePlatformOutputGpioSet(UTE_DRV_CHARGE_POWER_GPIO_PIN,UTE_DRV_CHARGE_POWER_ACTION_LEVEL);
         }
@@ -688,7 +688,7 @@ void uteDrvBatteryCommonEverySecond(void)
 #endif
 }
 /**
-*@brief µç³Ø³õÊ¼»¯
+*@brief ç”µæ± åˆå§‹åŒ–
 *@details
 *@author        zn.zeng
 *@date        2021-11-08
@@ -722,9 +722,9 @@ void uteDrvBatteryCommonInit(void)
     UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s", __func__);
 }
 /**
-*@brief »ñÈ¡µ±Ç°µçÑ¹
-*@details »ñÈ¡µ±Ç°µçÑ¹£¬µ¥Î»ÎªmV
-*@return ·µ»Øµ±Ç°µç³ØµçÑ¹Öµ
+*@brief è·å–å½“å‰ç”µå‹
+*@details è·å–å½“å‰ç”µå‹ï¼Œå•ä½ä¸ºmV
+*@return è¿”å›å½“å‰ç”µæ± ç”µå‹å€¼
 *@author        zn.zeng
 *@date        Jul 05, 2021
 */
@@ -734,9 +734,9 @@ uint16_t uteDrvBatteryCommonGetVoltage(void)
     return uteDrvBatteryCommonData.voltage;
 }
 /**
-*@brief »ñÈ¡µ±Ç°µçµçÁ¿
-*@details »ñÈ¡µ±Ç°µçÁ¿£¬0~100%
-*@return ·µ»Øµ±Ç°µçÁ¿
+*@brief è·å–å½“å‰ç”µç”µé‡
+*@details è·å–å½“å‰ç”µé‡ï¼Œ0~100%
+*@return è¿”å›å½“å‰ç”µé‡
 *@author        zn.zeng
 *@date        2021-08-18
 */
@@ -745,9 +745,9 @@ uint8_t uteDrvBatteryCommonGetLvl(void)
     return uteDrvBatteryCommonData.lastLvl;
 }
 /**
-*@brief »ñÈ¡µ±Ç°µç³ØµÄ×î´óµçÑ¹
-*@details »ñÈ¡µ±Ç°µçÑ¹£¬µ¥Î»ÎªmV
-*@return ·µ»Øµ±Ç°µç³ØµçÑ¹Öµ
+*@brief è·å–å½“å‰ç”µæ± çš„æœ€å¤§ç”µå‹
+*@details è·å–å½“å‰ç”µå‹ï¼Œå•ä½ä¸ºmV
+*@return è¿”å›å½“å‰ç”µæ± ç”µå‹å€¼
 *@author        zn.zeng
 *@date        Jul 05, 2021
 */
@@ -756,7 +756,7 @@ uint16_t uteDrvBatteryCommonGetMaxVoltage(void)
     return UTE_DRV_BATTERY_MAX_VOLTAGE;
 }
 /**
-*@brief »ñÈ¡µ±Ç°³äµç×´Ì¬
+*@brief è·å–å½“å‰å……ç”µçŠ¶æ€
 *@details
 *@return ute_drv_battery_charger_status_t status
 *@author        zn.zeng
@@ -767,7 +767,7 @@ ute_drv_battery_charger_status_t uteDrvBatteryCommonGetChargerStatus(void)
     return uteDrvBatteryCommonData.chargerStatus;
 }
 /**
-*@brief    ÉèÖÃ³äµçÊÇ·ñ²åÈë
+*@brief    è®¾ç½®å……ç”µæ˜¯å¦æ’å…¥
 *@details
 *@author        zn.zeng
 *@date        2021-12-17
@@ -821,7 +821,7 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
     UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,uteDrvBatteryCommonData.isDelayDisplayCharger=%d", __func__,  uteDrvBatteryCommonData.isDelayDisplayCharger);
 }
 /**
-*@brief    »ñÈ¡³äµçÊÇ·ñ²åÈë
+*@brief    è·å–å……ç”µæ˜¯å¦æ’å…¥
 *@details
 *@author        xjc
 *@date        2022-05-09
@@ -832,7 +832,7 @@ bool uteDrvBatteryCommonGetChargerPlug(void)
     return uteDrvBatteryCommonData.isPlugIn;
 }
 /**
-*@brief    ¿ª»úÊ±ÊÇ·ñÑÓÊ±ÏÔÊ¾
+*@brief    å¼€æœºæ—¶æ˜¯å¦å»¶æ—¶æ˜¾ç¤º
 *@details
 *@author        zn.zeng
 *@date        2021-12-31
@@ -842,7 +842,7 @@ bool uteDrvBatteryCommonIsDelayDisplayCharger(void)
     return uteDrvBatteryCommonData.isDelayDisplayCharger;
 }
 /**
-*@brief    ÉèÖÃ³äµçÊ±¼ä
+*@brief    è®¾ç½®å……ç”µæ—¶é—´
 *@details
 *@author        ldl
 *@date        2023-11-10
@@ -852,10 +852,10 @@ void uteDrvBatteryCommonSetChargerTimeSecond(int chargerTimeSecond)
     uteDrvBatteryCommonData.chargerTimeSecond = chargerTimeSecond;
 }
 /**
-*@brief »ñÈ¡µ±Ç°µç³ØµçÁ¿µÈ¼¶£¬¼´µÚ¼¸¸ñµçÁ¿
+*@brief è·å–å½“å‰ç”µæ± ç”µé‡ç­‰çº§ï¼Œå³ç¬¬å‡ æ ¼ç”µé‡
 *@details
-*@param[in] uint8_t  totalIndex  ×ÜµÄµçÁ¿¸ñÊı
-*@return    uint8_t  batIndex    µ±Ç°µçÁ¿¸ñÊı
+*@param[in] uint8_t  totalIndex  æ€»çš„ç”µé‡æ ¼æ•°
+*@return    uint8_t  batIndex    å½“å‰ç”µé‡æ ¼æ•°
 *@author        xjc
 *@date        2021-12-27
 */
@@ -872,7 +872,7 @@ uint8_t uteDrvBatteryCommonGetBatteryIndex(uint8_t totalIndex)
     {
         if((uteDrvBatteryCommonData.lastLvl<UTE_DRV_BATTERY_LOW_POWER_PERECNT)&&(chargerStatus==BAT_STATUS_NO_CHARGE))
         {
-            // µç³ØµçÁ¿Ğ¡ÓÚµÍµçÖµ£¬ÈÃµç³ØÏÔÊ¾¸ĞÌ¾ºÅ
+            // ç”µæ± ç”µé‡å°äºä½ç”µå€¼ï¼Œè®©ç”µæ± æ˜¾ç¤ºæ„Ÿå¹å·
         }
         else
         {
@@ -898,7 +898,7 @@ uint8_t uteDrvBatteryCommonGetBatteryIndex(uint8_t totalIndex)
 
 #if UTE_MODULE_BATTERY_CHARGED_DISPLAY_ON_SUPPORT
 /**
-*@brief     »ñÈ¡³äÂúµçºóÊÇ·ñÁÁÆÁ¹ı
+*@brief     è·å–å……æ»¡ç”µåæ˜¯å¦äº®å±è¿‡
 *@details
 *@author        xjc
 *@date        2022-04-20
@@ -911,8 +911,8 @@ bool uteDrvBatteryCommonGetAlreadyDisplayOnParam(void)
 
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
 /**
-*@brief      ±£´æµçÁ¿ĞÅÏ¢
-*@details    Ã¿´Î»Ö¸´³ö³§ÉèÖÃÇ°±£´æµçÁ¿ĞÅÏ¢µ½UTE_BLE_SN1_ADDRESS
+*@brief      ä¿å­˜ç”µé‡ä¿¡æ¯
+*@details    æ¯æ¬¡æ¢å¤å‡ºå‚è®¾ç½®å‰ä¿å­˜ç”µé‡ä¿¡æ¯åˆ°UTE_BLE_SN1_ADDRESS
 *@author        xjc
 *@date        2023-02-03
 */
@@ -925,8 +925,8 @@ void uteDrvBatteryCommonSaveLastLvlToSN1(void)
     uteModulePlatformFlashNorWrite((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
 }
 /**
-*@brief      »Ö¸´µçÁ¿ĞÅÏ¢
-*@details    Ã¿´Î»Ö¸´³ö³§ÉèÖÃºóµÚÒ»´Î¿ª»ú»Ö¸´µçÁ¿ĞÅÏ¢
+*@brief      æ¢å¤ç”µé‡ä¿¡æ¯
+*@details    æ¯æ¬¡æ¢å¤å‡ºå‚è®¾ç½®åç¬¬ä¸€æ¬¡å¼€æœºæ¢å¤ç”µé‡ä¿¡æ¯
 *@author        xjc
 *@date        2023-02-03
 */
@@ -947,7 +947,7 @@ void uteDrvBatteryCommonReadLastLvlFromSN1(void)
 #else
 
 /**
-*@brief µç³ØÃ¿Ãëº¯Êı
+*@brief ç”µæ± æ¯ç§’å‡½æ•°
 *@details
 *@author        zn.zeng
 *@date        2021-12-15
@@ -958,7 +958,7 @@ void uteDrvBatteryCommonEverySecond(void)
     uteModuleSystemtimeGetTime(&time);
     //bool isStartAutoPowerOff = false;
 
-    if(uteDrvBatteryCommonGetChargerStatus == BAT_STATUS_NO_CHARGE)
+    if(uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
     {
         if((time.sec%10)==0)
         {
@@ -973,7 +973,7 @@ void uteDrvBatteryCommonEverySecond(void)
 }
 
 /**
-*@brief µç³Ø³õÊ¼»¯
+*@brief ç”µæ± åˆå§‹åŒ–
 *@details
 *@author        zn.zeng
 *@date        2021-11-08
@@ -985,9 +985,9 @@ void uteDrvBatteryCommonInit(void)
 }
 
 /**
-*@brief »ñÈ¡µ±Ç°µçÑ¹
-*@details »ñÈ¡µ±Ç°µçÑ¹£¬µ¥Î»ÎªmV
-*@return ·µ»Øµ±Ç°µç³ØµçÑ¹Öµ
+*@brief è·å–å½“å‰ç”µå‹
+*@details è·å–å½“å‰ç”µå‹ï¼Œå•ä½ä¸ºmV
+*@return è¿”å›å½“å‰ç”µæ± ç”µå‹å€¼
 *@author        zn.zeng
 *@date        Jul 05, 2021
 */
@@ -996,9 +996,9 @@ uint16_t uteDrvBatteryCommonGetVoltage(void)
     return sys_cb.vbat;
 }
 /**
-*@brief »ñÈ¡µ±Ç°µçµçÁ¿
-*@details »ñÈ¡µ±Ç°µçÁ¿£¬0~100%
-*@return ·µ»Øµ±Ç°µçÁ¿
+*@brief è·å–å½“å‰ç”µç”µé‡
+*@details è·å–å½“å‰ç”µé‡ï¼Œ0~100%
+*@return è¿”å›å½“å‰ç”µé‡
 *@author        zn.zeng
 *@date        2021-08-18
 */
@@ -1007,9 +1007,9 @@ uint8_t uteDrvBatteryCommonGetLvl(void)
     return bsp_vbat_percent_get();
 }
 /**
-*@brief »ñÈ¡µ±Ç°µç³ØµÄ×î´óµçÑ¹
-*@details »ñÈ¡µ±Ç°µçÑ¹£¬µ¥Î»ÎªmV
-*@return ·µ»Øµ±Ç°µç³ØµçÑ¹Öµ
+*@brief è·å–å½“å‰ç”µæ± çš„æœ€å¤§ç”µå‹
+*@details è·å–å½“å‰ç”µå‹ï¼Œå•ä½ä¸ºmV
+*@return è¿”å›å½“å‰ç”µæ± ç”µå‹å€¼
 *@author        zn.zeng
 *@date        Jul 05, 2021
 */
@@ -1018,7 +1018,7 @@ uint16_t uteDrvBatteryCommonGetMaxVoltage(void)
     return UTE_DRV_BATTERY_MAX_VOLTAGE;
 }
 /**
-*@brief »ñÈ¡µ±Ç°³äµç×´Ì¬
+*@brief è·å–å½“å‰å……ç”µçŠ¶æ€
 *@details
 *@return ute_drv_battery_charger_status_t status
 *@author        zn.zeng

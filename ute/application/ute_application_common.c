@@ -1798,3 +1798,25 @@ uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len)
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,qrBuff:%s",__func__,qrBuff);
     return stringSize;
 }
+
+/**
+*@brief   获取精确到十位的浮点型结果
+*@details
+*@author  dengli.lu
+*@date   2021-10-26
+*/
+float ExactDecimalPoint(float data,uint8_t bit)
+{
+    float dst = 0.0f;
+    uint32_t tmp = 0;
+    float multiple = 1;
+    char i = 0;
+    for( i=0; i<bit; i++)
+    {
+        multiple *= 10.0f;
+    }
+    data = data + (5.0f/(multiple*10.0f));//四舍五入最后一位小数
+    tmp = (data * multiple);//取整
+    dst = (float)tmp/multiple;
+    return dst;
+}

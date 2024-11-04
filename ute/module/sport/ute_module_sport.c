@@ -1,7 +1,7 @@
 /**
 *@file
-*@brief        ¶àÔË¶¯Ä£¿é
-*@details     °üº¬Õı³£×ßÂ·£¬ÅÜ²½£¬µÇÉ½µÈÆäËûÔË¶¯Ä£Ê½
+*@brief        å¤šè¿åŠ¨æ¨¡å—
+*@details     åŒ…å«æ­£å¸¸èµ°è·¯ï¼Œè·‘æ­¥ï¼Œç™»å±±ç­‰å…¶ä»–è¿åŠ¨æ¨¡å¼
 *@author       zn.zeng
 *@date       2021-07-27
 *@version      v1.0
@@ -36,18 +36,18 @@ ute_step_sleep_param_t mStepSleepParam;
 #if UTE_MODULE_WATCH_ROTATE_SUPPORT
 #include "ute_rotate.h"
 #endif
-/*! sportµÄÊı¾İ zn.zeng, 2021-10-23  */
+/*! sportçš„æ•°æ® zn.zeng, 2021-10-23  */
 ute_module_sport_data_t uteModuleSprotData;
 uint8_t uteModuleSportMoreSportSyncDataBuff[170];
-/* ÔË¶¯»¥³âÁ¿ zn.zeng 2022-02-14*/
+/* è¿åŠ¨äº’æ–¥é‡ zn.zeng 2022-02-14*/
 void *uteModuleSprotMute;
-/* ÔË¶¯µ¹¼ÆÊ±¶¨Ê±Æ÷ xjc 2022-05-31*/
+/* è¿åŠ¨å€’è®¡æ—¶å®šæ—¶å™¨ xjc 2022-05-31*/
 void *uteModuleSprotCountdownTimer = NULL;
-/*! ¼Ç²½Ëã·¨¶¨Ê±Æ÷,wang.luo 2023-05-05 */
+/*! è®°æ­¥ç®—æ³•å®šæ—¶å™¨,wang.luo 2023-05-05 */
 void *uteModuleSportInputDataBeforeAlgoTimer = NULL;
 /**
-*@brief  ¶àÔË¶¯Ä£¿é³õÊ¼»¯
-*@details  ÔÚgsensor³õÊ¼»¯ºóÖ´ĞĞ
+*@brief  å¤šè¿åŠ¨æ¨¡å—åˆå§‹åŒ–
+*@details  åœ¨gsensoråˆå§‹åŒ–åæ‰§è¡Œ
 *@author        zn.zeng
 *@date        2021-07-27
 */
@@ -94,7 +94,7 @@ void uteModuleSportInit(void)
 #endif
 }
 
-/*! Ö§³Ö°ÙÖÖ¶àÔË¶¯ xjc, 2022-03-29  */
+/*! æ”¯æŒç™¾ç§å¤šè¿åŠ¨ xjc, 2022-03-29  */
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
 const ute_sports_list_param_t uteModuleSportDefaultSort[] =
 {
@@ -446,7 +446,7 @@ const ute_sports_list_param_t uteModuleSportDefaultSort[] =
 };
 
 /**
-*@brief  ¶ÁÈ¡config
+*@brief  è¯»å–config
 *@details
 *@author        xjc
 *@date       2022-03-30
@@ -454,7 +454,7 @@ const ute_sports_list_param_t uteModuleSportDefaultSort[] =
 void uteModuleSportReadHundredSportConfig(void)
 {
     void *file;
-    /*! ÔË¶¯ÁĞ±íÅÅĞòÊı¾İ xjc, 2022-03-29  */
+    /*! è¿åŠ¨åˆ—è¡¨æ’åºæ•°æ® xjc, 2022-03-29  */
     uint16_t sportSortSize = sizeof(ute_sports_list_param_t)*UTE_MODULE_SPORT_MAX_SPORT_NUM;
     ute_sports_list_param_t *readBuffSportList = (ute_sports_list_param_t *)uteModulePlatformMemoryAlloc(sportSortSize);
     // init
@@ -476,7 +476,7 @@ void uteModuleSportReadHundredSportConfig(void)
 }
 
 /**
-*@brief  ±£´æconfig
+*@brief  ä¿å­˜config
 *@details
 *@author        xjc
 *@date       2022-03-30
@@ -485,7 +485,7 @@ void uteModuleSportSaveHundredSportConfig(void)
 {
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
     void *file;
-    /*! ±£´æµ½ÎÄ¼şxjc, 2022-03-30*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2022-03-30*/
     uint16_t sportSortSize = sizeof(ute_sports_list_param_t)*UTE_MODULE_SPORT_MAX_SPORT_NUM;
     ute_sports_list_param_t *writeBuffSportList = (ute_sports_list_param_t *)uteModulePlatformMemoryAlloc(sportSortSize);
     memcpy(writeBuffSportList,&uteModuleSprotData.sportSort.sportListData[0],sportSortSize);
@@ -499,16 +499,16 @@ void uteModuleSportSaveHundredSportConfig(void)
 }
 
 /**
-*@brief     ¸ù¾İÊı×éĞòºÅ»ñÈ¡Êµ¼ÊÔË¶¯
+*@brief     æ ¹æ®æ•°ç»„åºå·è·å–å®é™…è¿åŠ¨
 *@details
-*@param[in]   uint8_t sportOrder ´«Èëµ±Ç°Òª²éÕÒµÚ¼¸¸öÔË¶¯
-*@return     ·µ»ØÔÚÁĞ±íÖĞµÄĞòºÅ
+*@param[in]   uint8_t sportOrder ä¼ å…¥å½“å‰è¦æŸ¥æ‰¾ç¬¬å‡ ä¸ªè¿åŠ¨
+*@return     è¿”å›åœ¨åˆ—è¡¨ä¸­çš„åºå·
 *@author        xjc
 *@date       2022-03-30
 */
 int uteModuleSportFindHundredSportIndex(uint8_t sportOrder)
 {
-    uint8_t tempSportOrder = sportOrder+1; //ĞòºÅ = 1,2,3...,´Ó1¿ªÊ¼
+    uint8_t tempSportOrder = sportOrder+1; //åºå· = 1,2,3...,ä»1å¼€å§‹
     if (tempSportOrder > UTE_MODULE_SPORT_MAX_SPORT_NUM)
     {
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,ERROR, sportOrder out of range!", __func__);
@@ -526,11 +526,11 @@ int uteModuleSportFindHundredSportIndex(uint8_t sportOrder)
 }
 
 /**
-*@brief     ¸ù¾İÊµ¼ÊÔË¶¯»ñÈ¡Êı×éĞòºÅ
+*@brief     æ ¹æ®å®é™…è¿åŠ¨è·å–æ•°ç»„åºå·
 *@details
-*@param[in]   sport_mode_type sportMode ´«Èëµ±Ç°ÔË¶¯Ä£Ê½
-*@param[in]   sport_mode_type *sportList ´«Èë½çÃæÔË¶¯µÄÊı×é
-*@return     ·µ»ØÔÚÁĞ±íÖĞµÄĞòºÅ
+*@param[in]   sport_mode_type sportMode ä¼ å…¥å½“å‰è¿åŠ¨æ¨¡å¼
+*@param[in]   sport_mode_type *sportList ä¼ å…¥ç•Œé¢è¿åŠ¨çš„æ•°ç»„
+*@return     è¿”å›åœ¨åˆ—è¡¨ä¸­çš„åºå·
 *@author        xjc
 *@date       2022-03-30
 */
@@ -548,9 +548,9 @@ uint8_t uteModuleSportGetRealIndex(uint8_t sportMode, const uint8_t *sportList)
 }
 
 /**
-*@brief  »ñÈ¡½çÃæÏÔÊ¾ÔË¶¯ÊıÁ¿
+*@brief  è·å–ç•Œé¢æ˜¾ç¤ºè¿åŠ¨æ•°é‡
 *@details
-*@return     ·µ»ØÒ»¹²ÏÔÊ¾¶àÉÙÔË¶¯
+*@return     è¿”å›ä¸€å…±æ˜¾ç¤ºå¤šå°‘è¿åŠ¨
 *@author        xjc
 *@date       2022-03-30
 */
@@ -569,8 +569,8 @@ int uteModuleSportGetHundredSportValidNumber(void)
 }
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
 /**
- * @brief        »ñÈ¡APPĞŞ¸ÄÔË¶¯ÁĞ±í±êÖ¾
- * @details      ÓÃÓÚ½çÃæ¸üĞÂÏÔÊ¾
+ * @brief        è·å–APPä¿®æ”¹è¿åŠ¨åˆ—è¡¨æ ‡å¿—
+ * @details      ç”¨äºç•Œé¢æ›´æ–°æ˜¾ç¤º
  * @author       Wang.Luo
  * @date         2023-01-06
  */
@@ -579,8 +579,8 @@ bool uteModuleSportGetAppUpdateTrainingListFlag(void)
     return uteModuleSprotData.sportSort.appUpdateTrainingListFlag;
 }
 /**
- * @brief        ÉèÖÃAPPĞŞ¸ÄÔË¶¯ÁĞ±í±êÖ¾
- * @details      ¸üĞÂÏÔÊ¾ºóĞèÇå³ı±êÖ¾
+ * @brief        è®¾ç½®APPä¿®æ”¹è¿åŠ¨åˆ—è¡¨æ ‡å¿—
+ * @details      æ›´æ–°æ˜¾ç¤ºåéœ€æ¸…é™¤æ ‡å¿—
  * @author       Wang.Luo
  * @date         2023-01-06
  */
@@ -590,7 +590,7 @@ void uteModuleSportSetAppUpdateTrainingListFlag(bool isUpdate)
 }
 #endif
 /**
-*@brief        ¿ªÊ¼·¢ËÍ°ÙÖÖÊı¾İ
+*@brief        å¼€å§‹å‘é€ç™¾ç§æ•°æ®
 *@details
 *@author       xjc
 *@date       2022-03-30
@@ -600,15 +600,15 @@ void uteModuleSportSendHundredData(void)
     ute_application_sync_data_param_t *sendParam;
     uteApplicationCommonGetSyncDataParam(&sendParam);
     uint8_t sendSize = 0;
-    uint16_t sendPerSportNum = ((sendParam->currSendMtuSize - 4) / 3); //Ã¿¸ö°ü·¢ËÍ¶àÉÙ¸öÔË¶¯Êı¾İ
-    uint16_t responseBufferSize = 4 + (sendPerSportNum * 3);           //Ã¿¸ö°ü·¢ËÍµÄÔË¶¯Êı¾İĞèÒª¿ª¶à´óµÄbuffer
+    uint16_t sendPerSportNum = ((sendParam->currSendMtuSize - 4) / 3); //æ¯ä¸ªåŒ…å‘é€å¤šå°‘ä¸ªè¿åŠ¨æ•°æ®
+    uint16_t responseBufferSize = 4 + (sendPerSportNum * 3);           //æ¯ä¸ªåŒ…å‘é€çš„è¿åŠ¨æ•°æ®éœ€è¦å¼€å¤šå¤§çš„buffer
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,sendPerSportNum =%d,responseBufferSize =%d", __func__, sendPerSportNum, responseBufferSize);
     uint8_t *response = uteModulePlatformMemoryAlloc(responseBufferSize);
     memset(response,0,responseBufferSize);
     response[0] = CMD_SPORT_MODE_AND_SPORT_HEART_RATE;
-    response[1] = 0x48;//×Ô¶¨ÒåÔË¶¯ÁĞ±íÏÔÊ¾¹¦ÄÜ
-    response[2] = 0xAA;//²éÑ¯Ö¸Áî
-    response[3] = sendParam->currSendMinIndex;//µÚ¼¸¸ö°ü
+    response[1] = 0x48;//è‡ªå®šä¹‰è¿åŠ¨åˆ—è¡¨æ˜¾ç¤ºåŠŸèƒ½
+    response[2] = 0xAA;//æŸ¥è¯¢æŒ‡ä»¤
+    response[3] = sendParam->currSendMinIndex;//ç¬¬å‡ ä¸ªåŒ…
     sendSize = 4;
     if((sendParam->currSendFileSize - sendParam->currSendFileIndex) >= sendPerSportNum)
     {
@@ -661,7 +661,7 @@ void uteModuleSportSendHundredData(void)
 }
 
 /**
-*@brief        ×¼±¸¿ªÊ¼·¢ËÍ°ÙÖÖÔË¶¯Êı¾İ
+*@brief        å‡†å¤‡å¼€å§‹å‘é€ç™¾ç§è¿åŠ¨æ•°æ®
 *@details
 *@author       xjc
 *@date       2022-03-30
@@ -671,9 +671,9 @@ void uteModuleSportStartSendHundredData(void)
     ute_application_sync_data_param_t *param;
     uteApplicationCommonGetSyncDataParam(&param);
     param->crc = 0;
-    param->currSendMinIndex = 0; //ÓÃ×÷·¢ËÍµÄ°üÊıÁ¿
-    param->currSendFileIndex = 0; //ÒÑ·¢ËÍµÄÔË¶¯ÊıÁ¿
-    param->currSendFileSize = UTE_MODULE_SPORT_MAX_SPORT_NUM; //×ÜµÄÔË¶¯ÊıÁ¿
+    param->currSendMinIndex = 0; //ç”¨ä½œå‘é€çš„åŒ…æ•°é‡
+    param->currSendFileIndex = 0; //å·²å‘é€çš„è¿åŠ¨æ•°é‡
+    param->currSendFileSize = UTE_MODULE_SPORT_MAX_SPORT_NUM; //æ€»çš„è¿åŠ¨æ•°é‡
     param-> currSendMtuSize = uteApplicationCommonGetMtuSize();
     uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleSportSendHundredData);
     uteApplicationCommonSyncDataTimerStart();
@@ -681,7 +681,7 @@ void uteModuleSportStartSendHundredData(void)
 }
 
 /**
-*@brief        ½ÓÊÕAPPÉèÖÃ°ÙÖÖÔË¶¯Êı¾İ
+*@brief        æ¥æ”¶APPè®¾ç½®ç™¾ç§è¿åŠ¨æ•°æ®
 *@details
 *@author       xjc
 *@date       2022-03-30
@@ -699,13 +699,13 @@ void uteModuleSportSetHundredData(uint8_t*receive,uint8_t length)
             response[2] = 0xFD;
             response[3] = uteModuleSprotData.sportSort.receiveCrcCheck;
             uteModuleProfileBle50SendToPhone(&response[0], 4);
-            /*! ÇåÀí¾ÉÊı¾İ*/
+            /*! æ¸…ç†æ—§æ•°æ®*/
             for (uint8_t i = 0; i < UTE_MODULE_SPORT_MAX_SPORT_NUM; i++)
             {
                 uteModuleSprotData.sportSort.sportListData[i].sportOnOff = 0;
                 uteModuleSprotData.sportSort.sportListData[i].sportOrder = 0;
             }
-            /*! ´¦Àí½ÓÊÕµ½Êı¾İ*/
+            /*! å¤„ç†æ¥æ”¶åˆ°æ•°æ®*/
             UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,.receiveSportBytesLen=%d", __func__, uteModuleSprotData.sportSort.receiveSportBytesLen);
             for (uint8_t i = 0; i < (uteModuleSprotData.sportSort.receiveSportBytesLen / 3); i++)
             {
@@ -720,9 +720,9 @@ void uteModuleSportSetHundredData(uint8_t*receive,uint8_t length)
                     }
                 }
             }
-            /*! Êı¾İĞ£ÑéÍ¨¹ı±£´æ×îĞÂÊı¾İ*/
+            /*! æ•°æ®æ ¡éªŒé€šè¿‡ä¿å­˜æœ€æ–°æ•°æ®*/
             uteModuleSportSaveHundredSportConfig();
-            /*! ÉèÖÃapp¸üĞÂÔË¶¯ÁĞ±í±êÖ¾£¬ÓÃÓÚ½çÃæÏÔÊ¾¸üĞÂ,wang.luo 2023-01-06 */
+            /*! è®¾ç½®appæ›´æ–°è¿åŠ¨åˆ—è¡¨æ ‡å¿—ï¼Œç”¨äºç•Œé¢æ˜¾ç¤ºæ›´æ–°,wang.luo 2023-01-06 */
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
             uteModuleSportSetAppUpdateTrainingListFlag(true);
 #endif
@@ -731,22 +731,22 @@ void uteModuleSportSetHundredData(uint8_t*receive,uint8_t length)
         {
             response[2] = 0xFF;
             uteModuleProfileBle50SendToPhone(&response[0], 3);
-            /*! Êı¾İĞ£ÑéÊ§°Ü»Ö¸´Ö®Ç°Êı¾İ*/
+            /*! æ•°æ®æ ¡éªŒå¤±è´¥æ¢å¤ä¹‹å‰æ•°æ®*/
             uteModuleSportReadHundredSportConfig();
         }
     }
     else
     {
-        /*! µÚÒ»ÌõÊı¾İ*/
+        /*! ç¬¬ä¸€æ¡æ•°æ®*/
         if (receive[2] == 0)
         {
             uteModuleSprotData.sportSort.receiveCrcCheck = 0;
             uteModuleSprotData.sportSort.receiveSportBytesLen = 0;
             memset(&uteModuleSprotData.sportSort.receiveSportBytes[0], 0, (UTE_MODULE_SPORT_MAX_SPORT_NUM * 3));
         }
-        /*! Êı¾İĞ£Ñé*/
+        /*! æ•°æ®æ ¡éªŒ*/
         uteModuleCrc8Bit(&uteModuleSprotData.sportSort.receiveCrcCheck, &receive[2], (length - 2));
-        /*! ±£´æ½ÓÊÕµ½Êı¾İ*/
+        /*! ä¿å­˜æ¥æ”¶åˆ°æ•°æ®*/
         memcpy(&uteModuleSprotData.sportSort.receiveSportBytes[uteModuleSprotData.sportSort.receiveSportBytesLen], &receive[3], (length - 3));
         uteModuleSprotData.sportSort.receiveSportBytesLen += (length - 3);
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,.receiveSportBytesLen=%d", __func__, uteModuleSprotData.sportSort.receiveSportBytesLen);
@@ -755,7 +755,7 @@ void uteModuleSportSetHundredData(uint8_t*receive,uint8_t length)
             UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,ERROR,receive sport num not current!", __func__);
             uteModuleSprotData.sportSort.receiveCrcCheck = 0;
         }
-        /*! BLEÊÕµ½Ã¿ÌõÖ¸ÁîÒÔºó·µ»ØÖ¸Áî0xFD48FB+n(ĞòºÅ)*/
+        /*! BLEæ”¶åˆ°æ¯æ¡æŒ‡ä»¤ä»¥åè¿”å›æŒ‡ä»¤0xFD48FB+n(åºå·)*/
         response[2] = 0xFB;
         response[3] = receive[2];
         uteModuleProfileBle50SendToPhone(&response[0], 4);
@@ -763,7 +763,7 @@ void uteModuleSportSetHundredData(uint8_t*receive,uint8_t length)
 }
 
 /**
-*@brief      ´¦Àí°ÙÖÖÔË¶¯Ö§³ÖĞ­Òé
+*@brief      å¤„ç†ç™¾ç§è¿åŠ¨æ”¯æŒåè®®
 *@details
 *@author       xjc
 *@date       2022-03-29
@@ -772,19 +772,19 @@ void uteModuleSportHundredSportCmd(uint8_t*receive,uint8_t length)
 {
     if(receive[2] == 0xAA)
     {
-        /*! ²éÑ¯Ö¸Áî£ºÊÖ»ú¶Ë²éÑ¯µ±Ç°ÔË¶¯ÁĞ±íÏÔÊ¾µÄÄÚÈİ£¬xjc 2022-03-29*/
+        /*! æŸ¥è¯¢æŒ‡ä»¤ï¼šæ‰‹æœºç«¯æŸ¥è¯¢å½“å‰è¿åŠ¨åˆ—è¡¨æ˜¾ç¤ºçš„å†…å®¹ï¼Œxjc 2022-03-29*/
         uteModuleSportStartSendHundredData();
     }
     else
     {
-        /*! ½ÓÊÕ×Ô¶¨ÒåÔË¶¯ÁĞ±íÏÔÊ¾¹¦ÄÜ£¬xjc 2022-03-29*/
+        /*! æ¥æ”¶è‡ªå®šä¹‰è¿åŠ¨åˆ—è¡¨æ˜¾ç¤ºåŠŸèƒ½ï¼Œxjc 2022-03-29*/
         uteModuleSportSetHundredData(receive,length);
     }
 }
 #endif
 
 /**
-*@brief  ¶ÁÈ¡config
+*@brief  è¯»å–config
 *@details
 *@author        zn.zeng
 *@date        2021-08-26
@@ -841,16 +841,16 @@ void uteModuleSportReadConfig(void)
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,isOpenHandScreenOn=%d,stepsTargetCnt=%d", __func__,uteModuleSprotData.isOpenHandScreenOn,uteModuleSprotData.stepsTargetCnt);
 
 #if UTE_MODULE_SPORT_TODAY_ADD_ALL_SPORT_DATA_SUPPORT
-    /*! ¿ª»ú¶ÁÈ¡µ±ÌìÓĞ²½ÊıÔË¶¯µÄ²½Êı£¬¾àÀë¸ú¿¨Â·Àï xjc, 2022-01-17*/
+    /*! å¼€æœºè¯»å–å½“å¤©æœ‰æ­¥æ•°è¿åŠ¨çš„æ­¥æ•°ï¼Œè·ç¦»è·Ÿå¡è·¯é‡Œ xjc, 2022-01-17*/
     // uteModuleSportReadTodayAllSportDataConfig(time);
     uteModuleSprotData.updateTodayAllSportData = true;
 #endif
-    /*! ¿ª»ú»Ö¸´µ±Ç°Ğ¡Ê±²½Êı zn.zeng, 2021-10-23  */
-    uint8_t path[20];
+    /*! å¼€æœºæ¢å¤å½“å‰å°æ—¶æ­¥æ•° zn.zeng, 2021-10-23  */
+    uint8_t path[40];
     uint16_t buffSize = 12*24+4;
     uint8_t *readBuffOneDay = uteModulePlatformMemoryAlloc(buffSize);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,%04d-%02d-%02d,%02d:%02d:%02d", __func__,time.year,time.month,time.day,time.hour,time.min,time.sec);
-    memset(&path[0],0,20);
+    memset(&path[0],0,sizeof(path));
     sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR,time.year,time.month,time.day);
     // read
     memset(&readBuffOneDay[0],0,buffSize);
@@ -870,7 +870,7 @@ void uteModuleSportReadConfig(void)
     uteModulePlatformMemoryFree(readBuffOneDay);
 
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-    /*! ÔË¶¯ÁĞ±íÅÅĞòÊı¾İ xjc, 2022-03-29  */
+    /*! è¿åŠ¨åˆ—è¡¨æ’åºæ•°æ® xjc, 2022-03-29  */
     uteModuleSportReadHundredSportConfig();
 #endif
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
@@ -879,7 +879,7 @@ void uteModuleSportReadConfig(void)
 }
 
 /**
-*@brief        ÍùËã·¨¸üĞÂ²ÎÊı
+*@brief        å¾€ç®—æ³•æ›´æ–°å‚æ•°
 *@details
 *@author       xjc
 *@date       2022-03-21
@@ -902,9 +902,9 @@ void uteModuleSportUpdateStepSleepParam(void)
 }
 
 /**
-*@brief        ÍùËã·¨¸üĞÂ²ÎÊı
+*@brief        å¾€ç®—æ³•æ›´æ–°å‚æ•°
 *@details
-*@param[in]   ´«ÈëÊ±¼äÊı¾İ
+*@param[in]   ä¼ å…¥æ—¶é—´æ•°æ®
 *@author       zn.zeng
 *@date       2021-08-05
 */
@@ -937,7 +937,7 @@ void uteModuleSportUpdateAlgoParam(ute_module_systemtime_time_t time)
 #endif
 }
 /**
-*@brief        ¼ì²éÒ¡Ò»Ò¡ÅÄÕÕ×´Ì¬
+*@brief        æ£€æŸ¥æ‘‡ä¸€æ‘‡æ‹ç…§çŠ¶æ€
 *@details
 *@param[in]
 *@author       zn.zeng
@@ -955,7 +955,7 @@ void uteModuleSportCheckTakePicture(void)
 #endif
 }
 /**
-*@brief        ÊÖ»·¶ËÖ÷¶¯ÍË³öÅÄÕÕ×´Ì¬
+*@brief        æ‰‹ç¯ç«¯ä¸»åŠ¨é€€å‡ºæ‹ç…§çŠ¶æ€
 *@details
 *@author       xjc
 *@date       2022-04-25
@@ -967,7 +967,7 @@ void uteModuleSportExitTakePicture(void)
     uteModuleSportSetTakePictureEnable(false);
 }
 /**
-*@brief        ²é¿´ÊÇ·ñÔÚÒ¡Ò»Ò¡ÅÄÕÕ×´Ì¬
+*@brief        æŸ¥çœ‹æ˜¯å¦åœ¨æ‘‡ä¸€æ‘‡æ‹ç…§çŠ¶æ€
 *@details
 *@author       xjc
 *@date       2022-04-25
@@ -978,7 +978,7 @@ bool uteModuleSportIsTakePicture(void)
 
 }
 /**
-*@brief        ¾Ã×øÌáĞÑ´¦Àí
+*@brief        ä¹…åæé†’å¤„ç†
 *@details
 *@param[in]
 *@author       zn.zeng
@@ -987,7 +987,7 @@ bool uteModuleSportIsTakePicture(void)
 void uteModuleSportSedentaryHandler(ute_module_systemtime_time_t time)
 {
     bool needNotify = false;
-    /*! ÔË¶¯ÖĞ¾Ã×øÌáĞÑÊ±¼äÇåÁã, xjc 2022-03-21*/
+    /*! è¿åŠ¨ä¸­ä¹…åæé†’æ—¶é—´æ¸…é›¶, xjc 2022-03-21*/
     if(uteModuleSprotData.moreSportData.status!=ALL_SPORT_STATUS_CLOSE)
     {
         uteModuleSprotData.sedentary.sedentaryRemindSecCnt = 0;
@@ -1049,8 +1049,8 @@ void uteModuleSportSedentaryHandler(ute_module_systemtime_time_t time)
                 uteModuleSprotData.sedentary.sedentaryRemindSecCnt = 0;
 
                 /*||getSleepTotalMinute()<30  add by pcm 2022-10-17
-                Ìí¼ÓÅĞ¶ÏÌõ¼ş£¬ÅĞ¶ÏË¯ÃßÄ£Ê½ÏÂ£¬Ë¯ÃßÊı¾İ×ÜÊ±¼äĞ¡ÓÚ30·ÖÖÓÊ±ºò£¬»¹ÊÇ¼ÌĞøÌáÊ¾¾Ã×ø£¬
-                ½â¾öÖ®Ç°ÔçÉÏ²âÊÔ¾Ã×øÎŞÌáĞÑºÍÍíÉÏ²âÊÔ¾Ã×ø´ó¸ÅÂÊÎŞÌáĞÑµÄÎÊÌâ*/
+                æ·»åŠ åˆ¤æ–­æ¡ä»¶ï¼Œåˆ¤æ–­ç¡çœ æ¨¡å¼ä¸‹ï¼Œç¡çœ æ•°æ®æ€»æ—¶é—´å°äº30åˆ†é’Ÿæ—¶å€™ï¼Œè¿˜æ˜¯ç»§ç»­æç¤ºä¹…åï¼Œ
+                è§£å†³ä¹‹å‰æ—©ä¸Šæµ‹è¯•ä¹…åæ— æé†’å’Œæ™šä¸Šæµ‹è¯•ä¹…åå¤§æ¦‚ç‡æ— æé†’çš„é—®é¢˜*/
                 if(uteModuleSprotData.stepType == STEP_TYPE_STEP||getSleepTotalMinute()<30)
                 {
                     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SEDENTARY_NOTIFY,0);
@@ -1071,7 +1071,7 @@ void uteModuleSportSedentaryHandler(ute_module_systemtime_time_t time)
 }
 
 /**
-*@brief        ÇĞ»»µ½ÏÂÒ»Ğ¡Ê±
+*@brief        åˆ‡æ¢åˆ°ä¸‹ä¸€å°æ—¶
 *@details
 *@param[in]
 *@author       zn.zeng
@@ -1093,7 +1093,7 @@ void uteModuleSportBeforeGotoNextHour(ute_module_systemtime_time_t time)
         if(time.hour == 23)
         {
             void cwmPedometerReSet(void);
-            cwmPedometerReSet();    //Çå³ıËùÓĞÊı¾İ
+            cwmPedometerReSet();    //æ¸…é™¤æ‰€æœ‰æ•°æ®
         }
 #endif
     }
@@ -1106,7 +1106,7 @@ void uteModuleSportBeforeGotoNextHour(ute_module_systemtime_time_t time)
 #endif
 }
 /**
-*@brief        ²½ÊıÄ¿±êÌáĞÑ
+*@brief        æ­¥æ•°ç›®æ ‡æé†’
 *@details
 *@author       zn.zeng
 *@date       2021-11-30
@@ -1121,7 +1121,7 @@ void uteModuleSportStepTargetHandler(void)
         (second > 9))
     {
         uteModuleSprotData.isTargetCompleted = true;
-        /*! ±£´æµ½ÎÄ¼şxjc, 2022-01-05*/
+        /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2022-01-05*/
         void *file;
         uint8_t buff[12];
         if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_SPORTINFO, &file, FS_O_RDONLY|FS_O_WRONLY))
@@ -1154,7 +1154,7 @@ void uteModuleSportStepTargetHandler(void)
     }
 }
 /**
-*@brief        »»ÌìÇå³ıÄ¿±êÌáĞÑ±êÖ¾
+*@brief        æ¢å¤©æ¸…é™¤ç›®æ ‡æé†’æ ‡å¿—
 *@details
 *@param[in]
 *@author      xjc
@@ -1165,7 +1165,7 @@ void uteModuleSportDayStartClearStepTarget(ute_module_systemtime_time_t time)
     if(time.hour == 0 && time.min == 0 && time.sec == 0)
     {
         uteModuleSprotData.isTargetCompleted = false;
-        /*! ±£´æµ½ÎÄ¼şxjc, 2022-01-05*/
+        /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2022-01-05*/
         void *file;
         uint8_t buff[12];
         if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_SPORTINFO, &file, FS_O_RDONLY|FS_O_WRONLY))
@@ -1184,7 +1184,7 @@ void uteModuleSportDayStartClearStepTarget(ute_module_systemtime_time_t time)
 }
 #if UTE_MODULE_SPORT_TODAY_ADD_ALL_SPORT_DATA_SUPPORT
 /**
-*@brief  Çå³ıµ±ÌìÔË¶¯²½Êı»º´æ
+*@brief  æ¸…é™¤å½“å¤©è¿åŠ¨æ­¥æ•°ç¼“å­˜
 *@detailss
 *@author        xjc
 *@date       2022-03-30
@@ -1198,20 +1198,20 @@ void uteModuleSportClearTodayAllSportData(void)
 }
 
 /**
-*@brief  ¶ÁÈ¡µ±ÌìÔË¶¯²½Êıconfig
+*@brief  è¯»å–å½“å¤©è¿åŠ¨æ­¥æ•°config
 *@details
-*@param[in] ute_module_systemtime_time_t time, ÊäÈë¶ÁÈ¡µÄÈÕÆÚ
-*@param[out] ute_sports_today_with_step_data_t *stepData, ¼Æ²½Êı¾İÊä³öÊı¾İÖ¸Õë
-*@param[out] ute_module_target_notify_data_t *targetNotifyData£¬Ä¿±êÌáĞÑÊı¾İÊä³öÖ¸Õë
+*@param[in] ute_module_systemtime_time_t time, è¾“å…¥è¯»å–çš„æ—¥æœŸ
+*@param[out] ute_sports_today_with_step_data_t *stepData, è®¡æ­¥æ•°æ®è¾“å‡ºæ•°æ®æŒ‡é’ˆ
+*@param[out] ute_module_target_notify_data_t *targetNotifyDataï¼Œç›®æ ‡æé†’æ•°æ®è¾“å‡ºæŒ‡é’ˆ
 *@author        xjc
 *@date       2022-03-30
 */
 void uteModuleSportReadTodayAllSportDataConfig(ute_module_systemtime_time_t time,ute_sports_today_with_step_data_t *stepData,ute_module_target_notify_data_t *targetNotifyData)
 {
     void *file;
-    uint8_t path[30];
+    uint8_t path[40];
     memset(&path[0],0,sizeof(path));
-    uint8_t datePath[10];
+    uint8_t datePath[12];
     memset(&datePath[0],0,sizeof(datePath));
     uint8_t readBuff[33];
     memset(&readBuff[0],0,sizeof(readBuff));
@@ -1237,25 +1237,25 @@ void uteModuleSportReadTodayAllSportDataConfig(ute_module_systemtime_time_t time
                 uteModuleFilesystemReadData(file,&headBuff[0],33);
                 uteModuleFilesystemCloseFile(file);
                 UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,readData.sportsType=%d", __func__,headBuff[1]);
-                if ((headBuff[1] == SPORT_TYPE_RUNNING) /*ÅÜ²½ */
-                    || (headBuff[1] == SPORT_TYPE_CLIMBING) /*µÇÉ½ */
-                    || (headBuff[1] == SPORT_TYPE_WALKING) /*½¡×ß */
-                    || (headBuff[1] == SPORT_TYPE_TREADMILL) /*ÅÜ²½»ú */
+                if ((headBuff[1] == SPORT_TYPE_RUNNING) /*è·‘æ­¥ */
+                    || (headBuff[1] == SPORT_TYPE_CLIMBING) /*ç™»å±± */
+                    || (headBuff[1] == SPORT_TYPE_WALKING) /*å¥èµ° */
+                    || (headBuff[1] == SPORT_TYPE_TREADMILL) /*è·‘æ­¥æœº */
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-                    || (headBuff[1] == SPORT_TYPE_INDOOR_WALK) /*ÊÒÄÚ×ßÂ· */
-                    || (headBuff[1] == SPORT_TYPE_STEP_TRAINING) /*Ì¤²½ */
-                    || (headBuff[1] == SPORT_TYPE_OUTDOOR_WALK) /*»§Íâ½¡×ß */
-                    || (headBuff[1] == SPORT_TYPE_HIKING) /*Í½²½ */
-                    || (headBuff[1] == SPORT_TYPE_INDOOR_RUN) /*ÊÒÄÚÅÜ²½ */
-                    || (headBuff[1] == SPORT_TYPE_PARKOUR) /*ÅÜ¿á */
-                    || (headBuff[1] == SPORT_TYPE_MARATHON) /*ÂíÀ­ËÉ */
+                    || (headBuff[1] == SPORT_TYPE_INDOOR_WALK) /*å®¤å†…èµ°è·¯ */
+                    || (headBuff[1] == SPORT_TYPE_STEP_TRAINING) /*è¸æ­¥ */
+                    || (headBuff[1] == SPORT_TYPE_OUTDOOR_WALK) /*æˆ·å¤–å¥èµ° */
+                    || (headBuff[1] == SPORT_TYPE_HIKING) /*å¾’æ­¥ */
+                    || (headBuff[1] == SPORT_TYPE_INDOOR_RUN) /*å®¤å†…è·‘æ­¥ */
+                    || (headBuff[1] == SPORT_TYPE_PARKOUR) /*è·‘é…· */
+                    || (headBuff[1] == SPORT_TYPE_MARATHON) /*é©¬æ‹‰æ¾ */
 #endif
                    )
                 {
                     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,readData-sport.step=%d,caloire=%d,distance=%d.%d", __func__,headBuff[16]<<24|headBuff[17]<<16|headBuff[18]<<8|headBuff[19],headBuff[22]<<8|headBuff[23],headBuff[24],headBuff[25]);
                     stepData->step += headBuff[16]<<24|headBuff[17]<<16|headBuff[18]<<8|headBuff[19];
                     stepData->caloire += headBuff[22]<<8|headBuff[23];
-                    stepData->distance += (headBuff[24]*100 + headBuff[25]);//ÕûÊı²¿·ÖÏÈ·Å´ó100±¶
+                    stepData->distance += (headBuff[24]*100 + headBuff[25]);//æ•´æ•°éƒ¨åˆ†å…ˆæ”¾å¤§100å€
                 }
 #if UTE_MODULE_SPORT_TODAY_ADD_KCAL_SPORT_DATA_SUPPORT
                 else
@@ -1280,8 +1280,8 @@ void uteModuleSportReadTodayAllSportDataConfig(ute_module_systemtime_time_t time
 #endif
 
 /**
-*@brief        sportÃ¿Ãëº¯Êı
-*@details       ĞèÒª×¢²áµ½Ö÷Ê±¼ä£¬Ã¿ÃëÖ´ĞĞÒ»´Î
+*@brief        sportæ¯ç§’å‡½æ•°
+*@details       éœ€è¦æ³¨å†Œåˆ°ä¸»æ—¶é—´ï¼Œæ¯ç§’æ‰§è¡Œä¸€æ¬¡
 *@author       zn.zeng
 *@date       2021-07-27
 */
@@ -1298,7 +1298,7 @@ void uteModuleSportEverySecond(void)
     else if(uteModuleSprotData.updateTodayAllSportData == true)
     {
         uteModuleSprotData.updateTodayAllSportData = false;
-        /*! ¶ÁÈ¡µ±ÌìÓĞ²½ÊıÔË¶¯µÄ²½Êı£¬¾àÀë¸ú¿¨Â·Àï xjc, 2022-01-17*/
+        /*! è¯»å–å½“å¤©æœ‰æ­¥æ•°è¿åŠ¨çš„æ­¥æ•°ï¼Œè·ç¦»è·Ÿå¡è·¯é‡Œ xjc, 2022-01-17*/
         uteModuleSportReadTodayAllSportDataConfig(time,&uteModuleSprotData.todaySportWithStepsData,&uteModuleSprotData.todayTargetNotify);
 #if UTE_GUI_SCREEN_GET_SPORT_DATA_NEW_FUNC_SUPPORT
         uteModuleSportCalculatorEveryHourSportDataHandler(true);
@@ -1309,7 +1309,7 @@ void uteModuleSportEverySecond(void)
     {
         return;
     }
-    /*ºÈË®ÌáĞÑ£¬¶¨Ê±ÌáĞÑ£¬²»ĞèÒªÅĞÊÇ·ñÅå´÷*/
+    /*å–æ°´æé†’ï¼Œå®šæ—¶æé†’ï¼Œä¸éœ€è¦åˆ¤æ˜¯å¦ä½©æˆ´*/
 #if UTE_MODULE_DRINK_WATER_NOTIFY_SCREEN_SUPPORT
     uteModuleDrinkWaterHandler(time);
 #endif
@@ -1342,7 +1342,7 @@ void uteModuleSportEverySecond(void)
     uteModuleSportStepTargetHandler();
     if(uteModuleSprotData.stepType == STEP_TYPE_STEP)
     {
-        /*! ·¢ËÍÊµÊ±¼Æ²½Êı¾İ¸øÓ¦ÓÃ¶Ëzn.zeng, 2021-08-05  */
+        /*! å‘é€å®æ—¶è®¡æ­¥æ•°æ®ç»™åº”ç”¨ç«¯zn.zeng, 2021-08-05  */
         if((uteModuleSprotData.lastHourStepCnt!=uteModuleSprotData.stepSleepData.currentHourStepCnt)&&
            (state.connectedSecond>5))
         {
@@ -1363,7 +1363,7 @@ void uteModuleSportEverySecond(void)
     uteModuleSportSedentaryHandler(time);
 }
 /**
-*@brief        gsensor Êı¾İÊäÈëËã·¨¿â
+*@brief        gsensor æ•°æ®è¾“å…¥ç®—æ³•åº“
 *@details
 *@author       zn.zeng
 *@date       2021-07-27
@@ -1396,7 +1396,7 @@ void uteModuleSportInputDataBeforeAlgo(void)
     {
         if(uteDrvMotorGetRunningStatus())
         {
-            /* ellison add ,2022-Jun-07 16:8 Âí´ïÕñ¶¯²úÉúµÄ²½Êı²»Òª£¬Õñ¶¯Ê±Ò¡Ò»Ò¡ÅÄÕÕµÄ¸ÉÈÅ½á¹ûÒ²²»Òª*/
+            /* ellison add ,2022-Jun-07 16:8 é©¬è¾¾æŒ¯åŠ¨äº§ç”Ÿçš„æ­¥æ•°ä¸è¦ï¼ŒæŒ¯åŠ¨æ—¶æ‘‡ä¸€æ‘‡æ‹ç…§çš„å¹²æ‰°ç»“æœä¹Ÿä¸è¦*/
             break;
         }
         if(!((x[i]==0)&&(y[i]==0)&&(z[i]==0)))
@@ -1408,7 +1408,7 @@ void uteModuleSportInputDataBeforeAlgo(void)
             //    }
             if(uteModuleSprotData.moreSportData.status==ALL_SPORT_STATUS_PAUSE)
             {
-                /*! ÔË¶¯ÔİÍ£²»×ßËã·¨£¬²»³öÔË¶¯Öµ ,xjc 2022-03-09*/
+                /*! è¿åŠ¨æš‚åœä¸èµ°ç®—æ³•ï¼Œä¸å‡ºè¿åŠ¨å€¼ ,xjc 2022-03-09*/
             }
             else
             {
@@ -1444,7 +1444,7 @@ void uteModuleSportInputDataBeforeAlgo(void)
             }
             uteHandScreenAlgorithmsInputData(&x[i],&y[i],&z[i],accValue);
 #if UTE_MODULE_WATCH_ROTATE_SUPPORT
-            if(uteModuleSprotData.isGsensorRotateTesting && (!uteDrvHeartVcxxIsWear()))//ÊÖ±íĞı×ªÖĞÇÒÎ´Åå´÷£¬´«ÈëÈıÖáÊı¾İ
+            if(uteModuleSprotData.isGsensorRotateTesting && (!uteDrvHeartVcxxIsWear()))//æ‰‹è¡¨æ—‹è½¬ä¸­ä¸”æœªä½©æˆ´ï¼Œä¼ å…¥ä¸‰è½´æ•°æ®
             {
                 uteRotateInputData(&x[i],&y[i],&z[i]);
             }
@@ -1480,7 +1480,7 @@ void uteModuleSportInputDataBeforeAlgo(void)
             break;
             case ROLLOVER_HAND_SCREEN_OFF_STATUS:
             {
-#if UTE_MODULE_HAND_SCREEN_OFF_ONLY_WATCHMAIN_ID_SUPPORT//½öÖ÷½çÃæÔÊĞíÂäÍóÏ¢ÆÁ£¬ÆäËû²»ÔÊĞí£¬Ä¬ÈÏ¿ªÆô
+#if UTE_MODULE_HAND_SCREEN_OFF_ONLY_WATCHMAIN_ID_SUPPORT//ä»…ä¸»ç•Œé¢å…è®¸è½è…•æ¯å±ï¼Œå…¶ä»–ä¸å…è®¸ï¼Œé»˜è®¤å¼€å¯
                 if(uteModuleGuiCommonIsDisplayOn()&&(uteModuleGuiCommonGetCurrentScreenId()==UTE_MOUDLE_SCREENS_WATCHMAIN_ID))
 #else
                 if(uteModuleGuiCommonIsAllowHandGestureDisplayOff())
@@ -1494,11 +1494,11 @@ void uteModuleSportInputDataBeforeAlgo(void)
                 break;
         }
 #if UTE_MODULE_LIFT_WRIST_EXCEPTION_HANDLING_SUPPORT
-        // clear handup on screen status/*ÃğÆÁµÄÊ±ºò£¬Èç¹û»¹ÊÇÃğÆÁ×ËÌ¬ËµÃ÷ÓĞÌ§ÍóÁÁÆÁËã·¨ĞèÒªÖØĞÂ³õÊ¼»¯*/
+        // clear handup on screen status/*ç­å±çš„æ—¶å€™ï¼Œå¦‚æœè¿˜æ˜¯ç­å±å§¿æ€è¯´æ˜æœ‰æŠ¬è…•äº®å±ç®—æ³•éœ€è¦é‡æ–°åˆå§‹åŒ–*/
         if(((!uteModuleGuiCommonIsDisplayOn()) || (uteModuleGuiCommonIsScreenSaverSetOn() && (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_SCREEN_SAVER_ID))) && (rolloverHandScreenStatus ==ROLLOVER_HAND_SCREEN_OFF_STATUS))
         {
-            /*ellison add ·ÀÖ¹ÃğÆÁµÄÊ±ºòÃ»ÓĞÖØĞÂ³õÊ¼»¯Ì§ÊÖÁÁÆÁ£¬Õâ¸öºÍÎğÈÅÄ£Ê½ÎŞ¹Ø»òÕßÊÇ·ñ¿ªÆôÌ§ÍóÁÁÆÁÒ²Ã»ÓĞÖ±½Ó¹ØÏµ£¬
-            ÆäËûµÄÂß¼­²»Òª¿ØÖÆËã·¨Âß¼­£¬·ñÔò»áµ¼ÖÂËã·¨Òì³£¡£ÏÖÔÚ·¢ÏÖÒòÎª¶ÓÁĞÏûÏ¢¶ªÊ§µ¼ÖÂÌ§ÍóÁÁÆÁËã·¨Ã»ÓĞÖØĞÂ³õÊ¼»¯£¬Ì§ÍóÊ§Áé¡£*/
+            /*ellison add é˜²æ­¢ç­å±çš„æ—¶å€™æ²¡æœ‰é‡æ–°åˆå§‹åŒ–æŠ¬æ‰‹äº®å±ï¼Œè¿™ä¸ªå’Œå‹¿æ‰°æ¨¡å¼æ— å…³æˆ–è€…æ˜¯å¦å¼€å¯æŠ¬è…•äº®å±ä¹Ÿæ²¡æœ‰ç›´æ¥å…³ç³»ï¼Œ
+            å…¶ä»–çš„é€»è¾‘ä¸è¦æ§åˆ¶ç®—æ³•é€»è¾‘ï¼Œå¦åˆ™ä¼šå¯¼è‡´ç®—æ³•å¼‚å¸¸ã€‚ç°åœ¨å‘ç°å› ä¸ºé˜Ÿåˆ—æ¶ˆæ¯ä¸¢å¤±å¯¼è‡´æŠ¬è…•äº®å±ç®—æ³•æ²¡æœ‰é‡æ–°åˆå§‹åŒ–ï¼ŒæŠ¬è…•å¤±çµã€‚*/
             uteModuleSprotResetRovllverScreenMode();
         }
 #endif
@@ -1506,7 +1506,7 @@ void uteModuleSportInputDataBeforeAlgo(void)
 #endif
 }
 /**
-*@brief        ¸üĞÂ´«ÈëËã·¨¿â²ÎÊı±êÊ¶
+*@brief        æ›´æ–°ä¼ å…¥ç®—æ³•åº“å‚æ•°æ ‡è¯†
 *@details
 *@author       zn.zeng
 *@date       2021-07-27
@@ -1556,7 +1556,7 @@ void uteModuleSportUpdateGsensorIdAccRange(void)
     }
 }
 /**
-*@brief        ÉèÖÃstep type
+*@brief        è®¾ç½®step type
 *@details
 *@author       zn.zeng
 *@date       2021-08-05
@@ -1580,7 +1580,7 @@ void uteModuleSportStepTypeSetStep(void)
 
 }
 /**
-*@brief        ÉèÖÃsleep type
+*@brief        è®¾ç½®sleep type
 *@details
 *@author       zn.zeng
 *@date       2021-08-05
@@ -1604,14 +1604,14 @@ void uteModuleSportStepTypeSetSleep(void)
 
 }
 /**
-*@brief        ÉèÖÃnone type
-*@details     ²»¼Æ²½²»Ë¯Ãß£¬²»ÅÜËã·¨
+*@brief        è®¾ç½®none type
+*@details     ä¸è®¡æ­¥ä¸ç¡çœ ï¼Œä¸è·‘ç®—æ³•
 *@author       zn.zeng
 *@date       2021-08-05
 */
 void uteModuleSportStepTypeSetNone(void)
 {
-#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_SUPPORT  //ÈüÎ¬Ëã·¨²»ÉèÖÃNONE×´Ì¬
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_SUPPORT  //èµ›ç»´ç®—æ³•ä¸è®¾ç½®NONEçŠ¶æ€
 //    UTE_MODULE_LOG(1, "%s,uteModuleSprotData.stepType=%d", __func__,uteModuleSprotData.stepType);
     if(uteModuleSprotData.stepType!=STEP_TYPE_NONE)
     {
@@ -1626,14 +1626,14 @@ void uteModuleSportStepTypeSetNone(void)
 #endif
         uteDrvGsensorCommonClearFifo();
         uteDrvGsensorCommonSleep();
-        // ±£´æÏÖÓĞÊı¾İ
+        // ä¿å­˜ç°æœ‰æ•°æ®
         uteModuleSportSaveStepData();
     }
 #endif
 }
 /**
-*@brief        Çå¿ÕÌ§ÊÖÁÁÆÁ²ÎÊı
-*@details     ÒÔÏÂ¼¸ÖÖÇé¿ö±ØĞëÖØĞÂÊ¹ÄÜ£º1£©ÆÁÄ»offµÄÊ±ºò£»2£©£¨ÊÖµã»÷/»¬¶¯ÆÁÄ»£©ÊÖ¶¯²Ù×÷ÆÁÄ»µÄÊ±ºò
+*@brief        æ¸…ç©ºæŠ¬æ‰‹äº®å±å‚æ•°
+*@details     ä»¥ä¸‹å‡ ç§æƒ…å†µå¿…é¡»é‡æ–°ä½¿èƒ½ï¼š1ï¼‰å±å¹•offçš„æ—¶å€™ï¼›2ï¼‰ï¼ˆæ‰‹ç‚¹å‡»/æ»‘åŠ¨å±å¹•ï¼‰æ‰‹åŠ¨æ“ä½œå±å¹•çš„æ—¶å€™
 *@author       zn.zeng
 *@date       2021-08-05
 */
@@ -1650,7 +1650,7 @@ void uteModuleSprotResetRovllverScreenMode(void)
 #endif
 }
 /**
-*@brief        ·¢ËÍÊµÊ±²½Êı
+*@brief        å‘é€å®æ—¶æ­¥æ•°
 *@details
 *@author       zn.zeng
 *@date       2021-08-23
@@ -1719,23 +1719,23 @@ void uteModuleSportSendRealTimeStepInfo(void)
 #endif
 }
 /**
-*@brief        ±£´æµ±Ç°¼Æ²½Êı¾İ
-*@details      Ã¿Ìì±£´æÒ»¸öÎÄ¼ş£¬Ç°Ãæ4¸öbyteÎªÄêÔÂÈÕ£¬ºóÃæÃ¿12¸öbyteÎªÒ»¸öĞ¡Ê±µÄÊı¾İ£¨²Î¿¼Ğ­ÒéµÄÊı¾İ¸ñÊ½£©
+*@brief        ä¿å­˜å½“å‰è®¡æ­¥æ•°æ®
+*@details      æ¯å¤©ä¿å­˜ä¸€ä¸ªæ–‡ä»¶ï¼Œå‰é¢4ä¸ªbyteä¸ºå¹´æœˆæ—¥ï¼Œåé¢æ¯12ä¸ªbyteä¸ºä¸€ä¸ªå°æ—¶çš„æ•°æ®ï¼ˆå‚è€ƒåè®®çš„æ•°æ®æ ¼å¼ï¼‰
 *@author       zn.zeng
 *@date       2021-08-23
 */
 void uteModuleSportSaveStepData(void)
 {
-    /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+    /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
     if(!uteApplicationCommonIsHasConnectOurApp())
     {
         return;
     }
     uint16_t buffSize = 12*24+4;
     uint8_t *readBuff = uteModulePlatformMemoryAlloc(buffSize);
-    uint8_t path[20];
+    uint8_t path[40];
     memset(&readBuff[0],0,buffSize);
-    memset(&path[0],0,20);
+    memset(&path[0],0,sizeof(path));
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
@@ -1743,17 +1743,17 @@ void uteModuleSportSaveStepData(void)
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR, dirInfo, NULL);
     if((dirInfo->filesCnt>=UTE_MODULE_SPORT_SAVE_STEP_DATA_MAX_DAYS)&&(memcmp(&path[0],&dirInfo->filesName[0][0],8)!=0))
     {
-        /*! É¾³ı×î¾ÉÒ»ÌìµÄÊı¾İzn.zeng, 2021-08-23  */
-        memset(&path[0],0,20);
+        /*! åˆ é™¤æœ€æ—§ä¸€å¤©çš„æ•°æ®zn.zeng, 2021-08-23  */
+        memset(&path[0],0,sizeof(path));
         sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR,&dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,del file=%s", __func__,&path[0]);
         uteModuleFilesystemDelFile((char *)&path[0]);
     }
-    memset(&path[0],0,20);
+    memset(&path[0],0,sizeof(path));
     sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR,time.year,time.month,time.day);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,dirInfo->filesCnt=%d", __func__,dirInfo->filesCnt);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,save file=%s", __func__,&path[0]);
-    /*! ±£´æµ±Ç°Êı¾İzn.zeng, 2021-08-23  */
+    /*! ä¿å­˜å½“å‰æ•°æ®zn.zeng, 2021-08-23  */
     void *file;
     // read
     if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_RDONLY))
@@ -1802,12 +1802,12 @@ void uteModuleSportSaveStepData(void)
     uteModulePlatformMemoryFree(readBuff);
     uteModulePlatformMemoryFree(dirInfo);
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
-    uteModuleCwmSaveStepData();     //±£´æµ±ÌìÔË¶¯Êı¾İ
+    uteModuleCwmSaveStepData();     //ä¿å­˜å½“å¤©è¿åŠ¨æ•°æ®
 #endif
 }
 #if  UTE_MODULE_CYWEE_MOTION_SUPPORT
 /**
-*@brief        ÈüÎ¬¿ªÊ¼·¢ËÍ¼Æ²½Êı¾İ
+*@brief        èµ›ç»´å¼€å§‹å‘é€è®¡æ­¥æ•°æ®
 *@details
 *@author     casen
 *@date       2022-11-03
@@ -1899,7 +1899,7 @@ void uteModuleSportSendStepHistoryData(void)
 }
 #else
 /**
-*@brief        ¿ªÊ¼·¢ËÍ¼Æ²½Êı¾İ
+*@brief        å¼€å§‹å‘é€è®¡æ­¥æ•°æ®
 *@details
 *@author       zn.zeng
 *@date       2021-08-23
@@ -1908,12 +1908,12 @@ void uteModuleSportSendStepHistoryData(void)
 {
     ute_application_sync_data_param_t *sendParam;
     uteApplicationCommonGetSyncDataParam(&sendParam);
-    uint8_t path[20];
-    uint8_t response[20];
+    uint8_t path[40];
+    uint8_t response[sizeof(path)];
     uint8_t sendSize = 0;
     response[0] = CMD_START_SYN_SETP_DATA;
     uint8_t *dataBuff = (uint8_t *)uteModulePlatformMemoryAlloc(sendParam->dataBuffSize);
-    memset(&path[0],0,20);
+    memset(&path[0],0,sizeof(path));
     bool isHasData = false;
     if(sendParam->dirInfo.filesCnt>0)
     {
@@ -1990,9 +1990,9 @@ void uteModuleSportSendStepHistoryData(void)
 }
 #endif
 /**
-*@brief        ×¼±¸¿ªÊ¼·¢ËÍ¼Æ²½Êı¾İ
+*@brief        å‡†å¤‡å¼€å§‹å‘é€è®¡æ­¥æ•°æ®
 *@details
-*@param[in]  ĞèÒªÍ¬²½µÄÊı¾İÊ±¼ä´Á
+*@param[in]  éœ€è¦åŒæ­¥çš„æ•°æ®æ—¶é—´æˆ³
 *@author       zn.zeng
 *@date       2021-08-23
 */
@@ -2022,7 +2022,7 @@ void uteModuleSportStartSendStepHistoryData(ute_module_systemtime_time_t time)
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,", __func__);
 }
 /**
-*@brief          ´ò¿ª¹Ø±ÕÒ¡Ò»Ò¡ÅÄÕÕ
+*@brief          æ‰“å¼€å…³é—­æ‘‡ä¸€æ‘‡æ‹ç…§
 *@details
 *@author       zn.zeng
 *@date       2021-08-24
@@ -2042,7 +2042,7 @@ void uteModuleSportSetTakePictureEnable(bool isEnable)
 #endif
 }
 /**
-*@brief          Ò¡Ò»Ò¡ÅÄÕÕÏûÏ¢´¦Àí
+*@brief          æ‘‡ä¸€æ‘‡æ‹ç…§æ¶ˆæ¯å¤„ç†
 *@details
 *@author       zn.zeng
 *@date       2021-08-24
@@ -2064,7 +2064,7 @@ void uteModuleSportTakePictureHandlerMsg(void)
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
 }
 /**
-*@brief          Ò¡Ò»Ò¡ÅÄÕÕ´ò¿ªappÏà»ú½çÃæÏûÏ¢´¦Àí
+*@brief          æ‘‡ä¸€æ‘‡æ‹ç…§æ‰“å¼€appç›¸æœºç•Œé¢æ¶ˆæ¯å¤„ç†
 *@details
 *@author       dengli.lu
 *@date       2022-08-23
@@ -2080,7 +2080,7 @@ void uteModuleSportOpenAppTakePictureScreenHandler(void)
 }
 #endif
 /**
-*@brief         ±£´æ¾Ã×øÌáĞÑ²ÎÊı
+*@brief         ä¿å­˜ä¹…åæé†’å‚æ•°
 *@details
 *@author       zn.zeng
 *@date       2021-08-24
@@ -2101,7 +2101,7 @@ void uteModuleSportSaveSedentaryParam(ute_module_sport_sedentary_param_t *param)
 #endif
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,.isOpen=%d,setMin=%d,startPeriodHour=%d,startPeriodMin=%d", __func__,uteModuleSprotData.sedentary.isOpen,uteModuleSprotData.sedentary.setMin, uteModuleSprotData.sedentary.startPeriodHour,uteModuleSprotData.sedentary.startPeriodMin);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,endPeriodHour=%d,endPeriodMin=%d", __func__,uteModuleSprotData.sedentary.endPeriodHour,uteModuleSprotData.sedentary.endPeriodMin);
-    /*! ±£´æµ½ÎÄ¼şzn.zeng, 2021-08-26*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶zn.zeng, 2021-08-26*/
     void *file;
     uint8_t writebuff[17];
     writebuff[0] = uteModuleSprotData.sedentary.isOpen;
@@ -2135,7 +2135,7 @@ void uteModuleSportSaveSedentaryParam(ute_module_sport_sedentary_param_t *param)
 }
 
 /**
-*@brief         ¶ÁÈ¡¾Ã×øÌáĞÑ²ÎÊı
+*@brief         è¯»å–ä¹…åæé†’å‚æ•°
 *@details
 *@author       bang.zhou
 *@date       2022-10-11
@@ -2146,21 +2146,21 @@ void uteModuleSportReadSedentaryParam(ute_module_sport_sedentary_param_t *param)
 }
 
 /**
-*@brief         ±£´æÌ§ÊÖÁÁÆÁ¡¢Ä¿±ê²½Êı
+*@brief         ä¿å­˜æŠ¬æ‰‹äº®å±ã€ç›®æ ‡æ­¥æ•°
 *@details
 *@author       zn.zeng
 *@date       2021-08-26
 */
 void uteModuleSportSaveHandScreenOnStepsTargetCnt(bool isHandOpen,uint32_t targetCnt)
 {
-    /*! Ö»ÓĞĞŞ¸ÄµÄÄ¿±ê²½Êı´óÓÚµ±Ç°ÉèÖÃµÄÄ¿±ê²½Êı£¬²ÅÖØÖÃÒÑÌáĞÑ×´Ì¬ xjc, 2022-01-05*/
+    /*! åªæœ‰ä¿®æ”¹çš„ç›®æ ‡æ­¥æ•°å¤§äºå½“å‰è®¾ç½®çš„ç›®æ ‡æ­¥æ•°ï¼Œæ‰é‡ç½®å·²æé†’çŠ¶æ€ xjc, 2022-01-05*/
     if(targetCnt > uteModuleSprotData.stepsTargetCnt)
     {
         uteModuleSprotData.isTargetCompleted = false;
     }
     uteModuleSprotData.isOpenHandScreenOn = isHandOpen;
     uteModuleSprotData.stepsTargetCnt = targetCnt;
-    /*! ±£´æµ½ÎÄ¼şzn.zeng, 2021-08-26*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶zn.zeng, 2021-08-26*/
     void *file;
     uint8_t writebuff[12];
     writebuff[0] = uteModuleSprotData.sedentary.isOpen;
@@ -2217,11 +2217,11 @@ void uteModuleSportSedentaryOpenSwitch(void)
 
 
 /**
-*@brief         ´Óflash¶ÁÈ¡µ±Ìì²½ÊıĞÅÏ¢
+*@brief         ä»flashè¯»å–å½“å¤©æ­¥æ•°ä¿¡æ¯
 *@details
-*@param[out] uint32_t *total ×Ü²½Êı
-*@param[out] uint32_t *walk ×Ü×ßÂ·²½Êı
-*@param[out] uint32_t *run ×ÜÅÜ²½²½Êı
+*@param[out] uint32_t *total æ€»æ­¥æ•°
+*@param[out] uint32_t *walk æ€»èµ°è·¯æ­¥æ•°
+*@param[out] uint32_t *run æ€»è·‘æ­¥æ­¥æ•°
 *@author       zn.zeng
 *@date       2021-11-03
 */
@@ -2242,10 +2242,10 @@ void uteModuleSportReadCurrDayStepCnt(ute_module_systemtime_time_t time)
     if(time.hour!=uteModuleSprotData.lastDayReadHour)
     {
         void *file;
-        uint8_t path[20];
+        uint8_t path[40];
         uint16_t buffSize = 12*24+4;
         uint8_t *readBuff = uteModulePlatformMemoryAlloc(buffSize);
-        memset(&path[0],0,20);
+        memset(&path[0],0,sizeof(path));
         sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR,time.year,time.month,time.day);
         // read
         if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_RDONLY))
@@ -2303,11 +2303,11 @@ void uteModuleSportReadCurrDayStepCnt(ute_module_systemtime_time_t time)
 }
 
 /**
-*@brief         »ñÈ¡µ±Ìì²½ÊıĞÅÏ¢
+*@brief         è·å–å½“å¤©æ­¥æ•°ä¿¡æ¯
 *@details
-*@param[out] uint32_t *total ×Ü²½Êı
-*@param[out] uint32_t *walk ×Ü×ßÂ·²½Êı
-*@param[out] uint32_t *run ×ÜÅÜ²½²½Êı
+*@param[out] uint32_t *total æ€»æ­¥æ•°
+*@param[out] uint32_t *walk æ€»èµ°è·¯æ­¥æ•°
+*@param[out] uint32_t *run æ€»è·‘æ­¥æ­¥æ•°
 *@author       zn.zeng
 *@date       2021-10-23
 */
@@ -2357,7 +2357,7 @@ void uteModuleSportGetCurrDayStepCnt(uint32_t *total,uint32_t *walk,uint32_t *ru
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief  ¶ÁÈ¡Ä¿±ê²½Êı
+*@brief  è¯»å–ç›®æ ‡æ­¥æ•°
 *@details
 *@author        dengli.lu
 *@date        2021-10-26
@@ -2367,7 +2367,7 @@ uint32_t uteModuleSportGetStepsTargetCnt(void)
     return uteModuleSprotData.stepsTargetCnt;
 }
 /**
-*@brief  ÉèÖÃÄ¿±êÌáĞÑÊÇ·ñÍê³É
+*@brief  è®¾ç½®ç›®æ ‡æé†’æ˜¯å¦å®Œæˆ
 *@details
 *@author        dengli.lu
 *@date        2021-10-26
@@ -2377,7 +2377,7 @@ void uteModuleSportSetIsTargetCompleted(bool isTargetCompleted)
     uteModuleSprotData.isTargetCompleted = isTargetCompleted;
 }
 /**
-*@brief  »ñÈ¡Ä¿±êÌáĞÑÊÇ·ñÍê³É
+*@brief  è·å–ç›®æ ‡æé†’æ˜¯å¦å®Œæˆ
 *@details
 *@author        dengli.lu
 *@date        2021-10-26
@@ -2387,7 +2387,7 @@ bool uteModuleSportGetIsTargetCompleted(void)
     return uteModuleSprotData.isTargetCompleted;
 }
 /**
-*@brief  ¶ÁÈ¡Ì§ÊÖÁÁÆÁ¿ª¹Ø
+*@brief  è¯»å–æŠ¬æ‰‹äº®å±å¼€å…³
 *@details
 *@author        dengli.lu
 *@date        2021-10-26
@@ -2397,7 +2397,7 @@ bool uteModuleSportGetIsOpenHandScreenOn(void)
     return uteModuleSprotData.isOpenHandScreenOn;
 }
 /**
-*@brief         »ñÈ¡µ±Ìì¾àÀë
+*@brief         è·å–å½“å¤©è·ç¦»
 *@details
 *@author       dengli.lu
 *@date       2021-10-26
@@ -2457,7 +2457,7 @@ uint16_t uteModuleSportGetCurrDayDistanceData(void)
         distance=70;
     }
 #endif
-    tempDistance = (uint16_t)(distance*100.f) ; //·Å´ó¸¡µãÈ¡Ğ¡ÊıµãºóÁ½Î»
+    tempDistance = (uint16_t)(distance*100.f) ; //æ”¾å¤§æµ®ç‚¹å–å°æ•°ç‚¹åä¸¤ä½
 #if UTE_MODULE_SPORT_TODAY_ADD_ALL_SPORT_DATA_SUPPORT
     uint16_t moreSportDistance = (uint16_t)((uteModuleSystemtimeGetDistanceMiType()) ? (uteModuleSprotData.todaySportWithStepsData.distance * 0.6213712f) : uteModuleSprotData.todaySportWithStepsData.distance);
     tempDistance = tempDistance + moreSportDistance;
@@ -2470,7 +2470,7 @@ uint16_t uteModuleSportGetCurrDayDistanceData(void)
     return tempDistance;
 }
 /**
-*@brief         »ñÈ¡µ±Ìì¿¨Â·Àï
+*@brief         è·å–å½“å¤©å¡è·¯é‡Œ
 *@details
 *@author       dengli.lu
 *@date       2021-10-26
@@ -2547,11 +2547,11 @@ uint16_t uteModuleSportGetCurrDayKcalData(void)
 }
 
 /**
-*@brief     ¿ªÊ¼¶àÔË¶¯
+*@brief     å¼€å§‹å¤šè¿åŠ¨
 *@details
-*@param[in]  sportsType     ÔË¶¯Ä£Ê½±êÖ¾
-*@param[in]  startInterval  Ã¿¸ôN¸ö10Ãë
-*@param[in]  isAppStart     ÊÇ·ñÎªAPP¿ªÆôÔË¶¯
+*@param[in]  sportsType     è¿åŠ¨æ¨¡å¼æ ‡å¿—
+*@param[in]  startInterval  æ¯éš”Nä¸ª10ç§’
+*@param[in]  isAppStart     æ˜¯å¦ä¸ºAPPå¼€å¯è¿åŠ¨
 *@author       zn.zeng
 *@date       2021-11-11
 */
@@ -2561,7 +2561,7 @@ void uteModuleSportStartMoreSports(uint8_t sportsType,uint8_t startInterval,bool
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_SPORT_START_MORE_SPORTS,param);
 }
 /**
-*@brief     ·¢ËÍÔË¶¯×´Ì¬¸øapp
+*@brief     å‘é€è¿åŠ¨çŠ¶æ€ç»™app
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
@@ -2577,7 +2577,7 @@ void uteModuleSportSendMoreSportsStatus(void)
 }
 
 /**
-*@brief     ÓÃÓÚÓëAPPÍ¬²½ÔË¶¯×´Ì¬
+*@brief     ç”¨äºä¸APPåŒæ­¥è¿åŠ¨çŠ¶æ€
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
@@ -2587,11 +2587,11 @@ void uteModuleSportSyncAppSportStatus(all_sport_status_type sportStatus)
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,sportStatus=0x%x,uteModuleSprotData.moreSportData.status=0x%x,isAppStart=%d ", __func__,sportStatus,uteModuleSprotData.moreSportData.status,uteModuleSprotData.moreSportData.isAppStart);
     if(sportStatus ==uteModuleSprotData.moreSportData.status)
     {
-        return;//ÏàÍ¬µÄ×´Ì¬¾Í²»ÓÃÖØ¸´¸üĞÂ¸øÊÖ»ú
+        return;//ç›¸åŒçš„çŠ¶æ€å°±ä¸ç”¨é‡å¤æ›´æ–°ç»™æ‰‹æœº
     }
     if (sportStatus ==ALL_SPORT_STATUS_CONTINUE)
     {
-        /*!APPÆô¶¯ÔË¶¯£¬¶Ï¿ªÁ¬½Ó»ØÁ¬Ê±,²»·¢ËÍ¼ÌĞøÖ¸Áî£¬ÔÚ»ØÁ¬Í¬²½Êı¾İµÄÊ±ºò¿ÉÄÜ»áµ¼ÖÂÊÖ»·¶ËÊı¾İ²»¸üĞÂ xjc 2022-03-07*/
+        /*!APPå¯åŠ¨è¿åŠ¨ï¼Œæ–­å¼€è¿æ¥å›è¿æ—¶,ä¸å‘é€ç»§ç»­æŒ‡ä»¤ï¼Œåœ¨å›è¿åŒæ­¥æ•°æ®çš„æ—¶å€™å¯èƒ½ä¼šå¯¼è‡´æ‰‹ç¯ç«¯æ•°æ®ä¸æ›´æ–° xjc 2022-03-07*/
         if((uteModuleSportMoreSportIsAppStart())&&(!uteModuleSportMoreSportIsAppStartReconnection()))
         {
             return;
@@ -2609,7 +2609,7 @@ void uteModuleSportSyncAppSportStatus(all_sport_status_type sportStatus)
     {
         static uint8_t tmpSendData[14];
 
-        tmpSendData[0] = CMD_SPORT_MODE_AND_SPORT_HEART_RATE;   //Ö¸ÁîÍ·±êÖ¾
+        tmpSendData[0] = CMD_SPORT_MODE_AND_SPORT_HEART_RATE;   //æŒ‡ä»¤å¤´æ ‡å¿—
         tmpSendData[1] = sportStatus;
         tmpSendData[2] = uteModuleSprotData.moreSportData.saveData.sportsType;
         tmpSendData[3] = uteModuleSprotData.moreSportData.saveData.startInterval;
@@ -2632,7 +2632,7 @@ void uteModuleSportSyncAppSportStatus(all_sport_status_type sportStatus)
 }
 
 /**
-*@brief     app¶ËÆô¶¯ÔË¶¯ÊÇ·ñµÄ´øgpsµÄÔË¶¯ÀàĞÍ
+*@brief     appç«¯å¯åŠ¨è¿åŠ¨æ˜¯å¦çš„å¸¦gpsçš„è¿åŠ¨ç±»å‹
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
@@ -2652,7 +2652,7 @@ bool uteModuleSportIsPhoneAppStartGpsSportsType(void)
     return result;
 }
 /**
-*@brief     ¶àÔË¶¯Ã¿Ãë´ÓËã·¨»ñÈ¡Êı¾İ
+*@brief     å¤šè¿åŠ¨æ¯ç§’ä»ç®—æ³•è·å–æ•°æ®
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
@@ -2675,32 +2675,32 @@ void uteModuleSportMoreSportsGetDataFormAlgo(ute_module_systemtime_time_t *time)
     uteModulePlatformTakeMutex(uteModuleSprotMute);
     if(uteModuleSprotData.moreSportData.isAppStart)
     {
-        //Èç¹ûÊÇAPP¿ªÆôµÄGPSÔË¶¯£¬ÄÇÃ´¿¨Â·Àï¡¢¾àÀë¡¢ÅäËÙ¡¢ÔË¶¯Ê±³¤£¬ÕâËÄ¸öÊı¾İÓÉAPPÍÆËÍÏÂÀ´£¬²»ÔÚ´ÓËã·¨ÖĞ»ñÈ¡
+        //å¦‚æœæ˜¯APPå¼€å¯çš„GPSè¿åŠ¨ï¼Œé‚£ä¹ˆå¡è·¯é‡Œã€è·ç¦»ã€é…é€Ÿã€è¿åŠ¨æ—¶é•¿ï¼Œè¿™å››ä¸ªæ•°æ®ç”±APPæ¨é€ä¸‹æ¥ï¼Œä¸åœ¨ä»ç®—æ³•ä¸­è·å–
 #if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_SUPPORT
-        getUTESportData(currentTime);//Õâ¸öÖ»ÊÇ¸üĞÂ¿ªÊ¼ºÍ½áÊøÊ±¼ä£¬ÎªÁËÍ³Ò»ĞÔ£¬×ÜµÄÊ±³¤»¹ÊÇÓÉAPPÏÂ·¢£¬¿¨Â·ÀïÓÉËã·¨Ìá¹©
+        getUTESportData(currentTime);//è¿™ä¸ªåªæ˜¯æ›´æ–°å¼€å§‹å’Œç»“æŸæ—¶é—´ï¼Œä¸ºäº†ç»Ÿä¸€æ€§ï¼Œæ€»çš„æ—¶é•¿è¿˜æ˜¯ç”±APPä¸‹å‘ï¼Œå¡è·¯é‡Œç”±ç®—æ³•æä¾›
 #endif
         if (!uteModuleSportIsPhoneAppStartGpsSportsType())
         {
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
             uteModuleSprotData.moreSportData.saveData.sportCaloire = (uint16_t)cwmSportModeData.sportCalories;
-            //¾àÀë:±£Áô2Î»Ğ¡Êı
+            //è·ç¦»:ä¿ç•™2ä½å°æ•°
             sportDistanceInteger  = (uint8_t)(cwmSportModeData.sportDistance/1000);
             sportDistanceDecimals = (uint8_t)((cwmSportModeData.sportDistance - sportDistanceInteger*1000)/10);
             uteModuleSprotData.moreSportData.saveData.sportDistanceInteger = sportDistanceInteger;
             uteModuleSprotData.moreSportData.saveData.sportDistanceDecimals = sportDistanceDecimals;
-            //ÅäËÙ
+            //é…é€Ÿ
             sportPace = (uint16_t)(cwmSportModeData.sportPace*60);
             uteModuleSprotData.moreSportData.saveData.avgTimeMinute = sportPace/60;
             uteModuleSprotData.moreSportData.saveData.avgTimeSecond = sportPace%60;;
 
 #else
             uteModuleSprotData.moreSportData.saveData.sportCaloire = mUTESportDatas.sportKcal;
-            //¾àÀë:±£Áô2Î»Ğ¡Êı
+            //è·ç¦»:ä¿ç•™2ä½å°æ•°
             sportDistanceInteger  = (uint8_t)(mUTESportDatas.sportDistance);
             sportDistanceDecimals = (uint8_t)((mUTESportDatas.sportDistance-(float)sportDistanceInteger)*100);
             uteModuleSprotData.moreSportData.saveData.sportDistanceInteger = sportDistanceInteger;
             uteModuleSprotData.moreSportData.saveData.sportDistanceDecimals = sportDistanceDecimals;
-            //ÅäËÙ
+            //é…é€Ÿ
             uteModuleSprotData.moreSportData.saveData.avgTimeMinute = (mUTESportDatas.sportSpeed>>8)&0xFF;
             uteModuleSprotData.moreSportData.saveData.avgTimeSecond = mUTESportDatas.sportSpeed&0xFF;
 #endif
@@ -2718,36 +2718,36 @@ void uteModuleSportMoreSportsGetDataFormAlgo(ute_module_systemtime_time_t *time)
 #endif
         }
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
-        //¿¨Â·Àï
+        //å¡è·¯é‡Œ
         uteModuleSprotData.moreSportData.saveData.sportCaloire = (uint16_t)cwmSportModeData.sportCalories;
-        //¾àÀë:±£Áô2Î»Ğ¡Êı
+        //è·ç¦»:ä¿ç•™2ä½å°æ•°
         sportDistanceInteger  = (uint8_t)(cwmSportModeData.sportDistance/1000);
         sportDistanceDecimals = (uint8_t)((cwmSportModeData.sportDistance - sportDistanceInteger*1000)/10);
         uteModuleSprotData.moreSportData.saveData.sportDistanceInteger = sportDistanceInteger;
         uteModuleSprotData.moreSportData.saveData.sportDistanceDecimals = sportDistanceDecimals;
-        //ÅäËÙ
+        //é…é€Ÿ
         sportPace = (uint16_t)(cwmSportModeData.sportPace*60);
         uteModuleSprotData.moreSportData.saveData.avgTimeMinute = sportPace/60;
         uteModuleSprotData.moreSportData.saveData.avgTimeSecond = sportPace%60;;
 #else
-        //¿¨Â·Àï
+        //å¡è·¯é‡Œ
         uteModuleSprotData.moreSportData.saveData.sportCaloire = mUTESportDatas.sportKcal;
-        //¾àÀë:±£Áô2Î»Ğ¡Êı
+        //è·ç¦»:ä¿ç•™2ä½å°æ•°
         sportDistanceInteger  = (uint8_t)(mUTESportDatas.sportDistance);
         sportDistanceDecimals = (uint8_t)((mUTESportDatas.sportDistance-(float)sportDistanceInteger)*100);
         uteModuleSprotData.moreSportData.saveData.sportDistanceInteger = sportDistanceInteger;
         uteModuleSprotData.moreSportData.saveData.sportDistanceDecimals = sportDistanceDecimals;
-        //ÅäËÙ
+        //é…é€Ÿ
         uteModuleSprotData.moreSportData.saveData.avgTimeMinute = (mUTESportDatas.sportSpeed>>8)&0xFF;
         uteModuleSprotData.moreSportData.saveData.avgTimeSecond = mUTESportDatas.sportSpeed&0xFF;
 #endif
     }
     //UTE_LOG(UTE_LOG_SAVE_LVL,"sportDistanceInteger = %d \t sportDistanceDecimals = %d \n\r",sportDistanceInteger,sportDistanceDecimals);
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
-    //²½Êı
+    //æ­¥æ•°
     uteModuleSprotData.moreSportData.saveData.sportStep = (uint32_t)cwmSportModeData.sportStep;
-    //ÈüÎ¬Ìá¹©µÄ¿âÌøÉşºÍÓÎÓ¾Ê±²»Êä³öÔË¶¯´ÎÊı
-//    //´ÎÊı
+    //èµ›ç»´æä¾›çš„åº“è·³ç»³å’Œæ¸¸æ³³æ—¶ä¸è¾“å‡ºè¿åŠ¨æ¬¡æ•°
+//    //æ¬¡æ•°
 //    if(mUTESportDatas.sportType == SPORT_TYPE_JUMP_ROPE)
 //    {
 //        uteModuleSprotData.moreSportData.saveData.sportTimes = mUTESportDatas.jumpRopeCurrentCnt;
@@ -2756,14 +2756,14 @@ void uteModuleSportMoreSportsGetDataFormAlgo(ute_module_systemtime_time_t *time)
 //    {
 //        uteModuleSprotData.moreSportData.saveData.sportTimes = mUTESportDatas.swimmingCurrentCnt;
 //    }
-    //¿ªÊ¼Ê±¼ä&½áÊøÊ±¼ä
+    //å¼€å§‹æ—¶é—´&ç»“æŸæ—¶é—´
     memcpy(&uteModuleSprotData.moreSportData.saveData.startSportTime,&cwmSportModeData.startSportTime,7);
     memcpy(&uteModuleSprotData.moreSportData.saveData.stopSportTime,&cwmSportModeData.stopSportTime,7);
 
 #else
-    //²½Êı
+    //æ­¥æ•°
     uteModuleSprotData.moreSportData.saveData.sportStep = mUTESportDatas.sportSteps;
-    //´ÎÊı
+    //æ¬¡æ•°
     if(mUTESportDatas.sportType == SPORT_TYPE_JUMP_ROPE)
     {
         uteModuleSprotData.moreSportData.saveData.sportTimes = mUTESportDatas.jumpRopeCurrentCnt;
@@ -2772,7 +2772,7 @@ void uteModuleSportMoreSportsGetDataFormAlgo(ute_module_systemtime_time_t *time)
     {
         uteModuleSprotData.moreSportData.saveData.sportTimes = mUTESportDatas.swimmingCurrentCnt;
     }
-    //¿ªÊ¼Ê±¼ä&½áÊøÊ±¼ä
+    //å¼€å§‹æ—¶é—´&ç»“æŸæ—¶é—´
     memcpy(&uteModuleSprotData.moreSportData.saveData.startSportTime,&mUTESportDatas.startSportTime,7);
     memcpy(&uteModuleSprotData.moreSportData.saveData.stopSportTime,&mUTESportDatas.stopSportTime,7);
 #endif
@@ -2780,7 +2780,7 @@ void uteModuleSportMoreSportsGetDataFormAlgo(ute_module_systemtime_time_t *time)
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief     ¶àÔË¶¯Ã¿Ãë´¦ÀíĞÄÂÊÊı¾İ
+*@brief     å¤šè¿åŠ¨æ¯ç§’å¤„ç†å¿ƒç‡æ•°æ®
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
@@ -2800,10 +2800,10 @@ void uteModuleSportMoreSportsHeartDataHandler(void)
             uteModuleSprotData.moreSportData.heartCache[uteModuleSprotData.moreSportData.heartTotalCnt%SPORTS_HEART_DATAS_CACHE_LENGTH] = heart;
             if((uteModuleSprotData.moreSportData.heartTotalCnt%SPORTS_HEART_DATAS_CACHE_LENGTH)==0 && uteModuleSprotData.moreSportData.heartTotalCnt!=0)
             {
-                /*! ±£´æÊı¾İ zn.zeng, 2021-11-11  */
+                /*! ä¿å­˜æ•°æ® zn.zeng, 2021-11-11  */
                 uteModuleSportMoreSportsSaveData(false);
             }
-            //ĞÄÂÊ MAX MIN AVG
+            //å¿ƒç‡ MAX MIN AVG
             if(heart>uteModuleSprotData.moreSportData.saveData.maxHeartRate)
             {
                 uteModuleSprotData.moreSportData.saveData.maxHeartRate = heart;
@@ -2821,7 +2821,7 @@ void uteModuleSportMoreSportsHeartDataHandler(void)
 #endif
 }
 /**
-*@brief     ¶àÔË¶¯Ã¿Ãë·¢ËÍÊı¾İ¸øapp
+*@brief     å¤šè¿åŠ¨æ¯ç§’å‘é€æ•°æ®ç»™app
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
@@ -2860,7 +2860,7 @@ void uteModuleSportMoreSportsSendRealTimeData(void)
         if(updateRealTimeData)
         {
             UTE_MODULE_LOG(1,"RealTimeData heart =%d",heart);
-            tmpSendData[0] = CMD_SPORT_MODE_AND_SPORT_HEART_RATE;   //Ö¸ÁîÍ·±êÖ¾
+            tmpSendData[0] = CMD_SPORT_MODE_AND_SPORT_HEART_RATE;   //æŒ‡ä»¤å¤´æ ‡å¿—
             tmpSendData[1] = uteModuleSprotData.moreSportData.saveData.sportsType;
             tmpSendData[2] = heart;
             tmpSendData[3] = uteModuleSprotData.moreSportData.saveData.sportCaloire>>8;
@@ -2884,14 +2884,14 @@ void uteModuleSportMoreSportsSendRealTimeData(void)
     }
 }
 /**
-*@brief     ¶àÔË¶¯Ã¿Ãë´¦Àí
+*@brief     å¤šè¿åŠ¨æ¯ç§’å¤„ç†
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
 */
 void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
 {
-    /*! µÍµçÁ¿×Ô¶¯Í£Ö¹ÔË¶¯ zn.zeng, 2021-11-11  */
+    /*! ä½ç”µé‡è‡ªåŠ¨åœæ­¢è¿åŠ¨ zn.zeng, 2021-11-11  */
     if ((uteModuleSprotData.moreSportData.status == ALL_SPORT_STATUS_OPEN) &&
         (uteModuleSprotData.moreSportData.countZeroIndex == -1) &&
         uteDrvBatteryCommonGetLvl() < UTE_DRV_BATTERY_LOW_POWER_PERECNT)
@@ -2927,13 +2927,13 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                 if ((uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_INDOOR_WALK) ||
                     (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_STEP_TRAINING) ||
                     (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_OUTDOOR_WALK) ||
-                    (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_HIKING)) //ÊÒÄÚ×ßÂ·/Ì¤²½/»§Íâ½¡×ß/Í½²½
+                    (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_HIKING)) //å®¤å†…èµ°è·¯/è¸æ­¥/æˆ·å¤–å¥èµ°/å¾’æ­¥
                 {
                     enableUTESport(SPORT_TYPE_WALKING,sportTime,info.isMan,info.weight,info.height);
                 }
                 else if ((uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_INDOOR_RUN) ||
                          (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_PARKOUR) ||
-                         (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_MARATHON)) //ÊÒÄÚÅÜ²½/ÅÜ¿á/ÂíÀ­ËÉ
+                         (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_MARATHON)) //å®¤å†…è·‘æ­¥/è·‘é…·/é©¬æ‹‰æ¾
                 {
                     enableUTESport(SPORT_TYPE_RUNNING,sportTime,info.isMan,info.weight,info.height);
                 }
@@ -2954,7 +2954,7 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
         {
             if(uteModuleSprotData.moreSportData.status != ALL_SPORT_STATUS_PAUSE)
             {
-                //Ã¿Ãë»ñÈ¡Ò»´ÎÔË¶¯Êı¾İ
+                //æ¯ç§’è·å–ä¸€æ¬¡è¿åŠ¨æ•°æ®
                 uteModuleSportMoreSportsGetDataFormAlgo(time);
 #if UTE_SPORTS_HEART_MAX_MIN_WARNING_NOTIFY_SUPPORT
                 uteModuleSportMoreSportsHeartWarningProcess();
@@ -2966,18 +2966,18 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                 }
 #endif
             }
-            //ĞÄÂÊÊı¾İ
+            //å¿ƒç‡æ•°æ®
             uteModuleSportMoreSportsHeartDataHandler();
-            /*ÔË¶¯¿çÔ½ÌìÊıµÄÊ±ºò£º
-             *1£¬½«Ç°Ò»ÌìµÄÊı¾İ±£´æ
-             *2£¬¹Ø±ÕÔË¶¯Ëã·¨
-             *3£¬sportHeartRateCnt,sportHeartRateSum,heartRateDataLengthÇåÁã
-             *4£¬¿ªÆôÔË¶¯Ëã·¨
+            /*è¿åŠ¨è·¨è¶Šå¤©æ•°çš„æ—¶å€™ï¼š
+             *1ï¼Œå°†å‰ä¸€å¤©çš„æ•°æ®ä¿å­˜
+             *2ï¼Œå…³é—­è¿åŠ¨ç®—æ³•
+             *3ï¼ŒsportHeartRateCnt,sportHeartRateSum,heartRateDataLengthæ¸…é›¶
+             *4ï¼Œå¼€å¯è¿åŠ¨ç®—æ³•
              */
             if((time->hour==23)&&(time->min==59)&&(time->sec==59))
             {
                 uteModuleSportStopMoreSportsMsgHandler();
-                // ÏÂÒ»Ãë¿ªÊ¼µÄ²ÎÊı
+                // ä¸‹ä¸€ç§’å¼€å§‹çš„å‚æ•°
                 uteModuleSprotData.moreSportData.status = ALL_SPORT_STATUS_OPEN;
                 uteModuleSprotData.moreSportData.countZeroIndex = 0;
                 uteModuleSprotData.moreSportData.saveData.avgHeartRate = 0;
@@ -2987,19 +2987,19 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                 uteModuleSprotData.moreSportData.heartTotalCnt = 0;
                 uteModuleSprotData.moreSportData.totalSportTime = 0;
             }
-            /*! ·¢ËÍÊµÊ±Êı¾İµ½app zn.zeng, 2021-11-11  */
+            /*! å‘é€å®æ—¶æ•°æ®åˆ°app zn.zeng, 2021-11-11  */
             uteModuleSportMoreSportsSendRealTimeData();
-            /*! ¶Ï¿ª³¬Ê± zn.zeng, 2021-11-11  */
-            if((uteModuleSprotData.moreSportData.isAppStart)&& /*App¿ªÆôµÄÔË¶¯*/
-               (!uteModuleSprotData.moreSportData.isAppStartSportReConnection)&&           /*¶Ï¿ªÃ»ÓĞÊÕµ½APPÔË¶¯¼ÌĞøµÄÊ±ºò*/
-               (uteModuleSprotData.moreSportData.status==ALL_SPORT_STATUS_PAUSE) /*½øÈëµ½ÔİÍ£½çÃæ*/
+            /*! æ–­å¼€è¶…æ—¶ zn.zeng, 2021-11-11  */
+            if((uteModuleSprotData.moreSportData.isAppStart)&& /*Appå¼€å¯çš„è¿åŠ¨*/
+               (!uteModuleSprotData.moreSportData.isAppStartSportReConnection)&&           /*æ–­å¼€æ²¡æœ‰æ”¶åˆ°APPè¿åŠ¨ç»§ç»­çš„æ—¶å€™*/
+               (uteModuleSprotData.moreSportData.status==ALL_SPORT_STATUS_PAUSE) /*è¿›å…¥åˆ°æš‚åœç•Œé¢*/
               )
             {
                 uteModuleSprotData.moreSportData.appStartSportDisconnectTimeOutCnt++;
                 if(uteModuleSprotData.moreSportData.appStartSportDisconnectTimeOutCnt>=300)
                 {
                     uteModuleSportStopMoreSportsMsgHandler();
-                    /*! Ìø×ª½çÃæzn.zeng, 2021-11-11  */
+                    /*! è·³è½¬ç•Œé¢zn.zeng, 2021-11-11  */
                     if(uteModuleSportMoreSportsIsLessData())
                     {
                         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);
@@ -3009,7 +3009,7 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
 #if UTE_MODULE_SPORTS_HSTORY_RECORD_SUPPORT
                         uteModuleSprotData.sportsHistoryRecord.displayIndex = 0;
 #endif
-                        /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+                        /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
                         if(!uteApplicationCommonIsHasConnectOurApp())
                         {
                             // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);
@@ -3031,7 +3031,7 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
 
 #if UTE_GUI_SCREEN_GET_SPORT_DATA_NEW_FUNC_SUPPORT
 /**
-*@brief     ÖØĞÂ¼ÆËãÃ¿Ğ¡Ê±ÔË¶¯Êı¾İ
+*@brief     é‡æ–°è®¡ç®—æ¯å°æ—¶è¿åŠ¨æ•°æ®
 *@details
 *@author      xjc
 *@date       2023-05-31
@@ -3043,23 +3043,23 @@ void uteModuleSportCalculatorEveryHourSportDataHandler(bool isFinish)
     if (((uteModuleSprotData.moreSportData.status != ALL_SPORT_STATUS_CLOSE) && (uteModuleSprotData.moreSportData.countZeroIndex == (-1))) ||
         (isFinish))
     {
-        /*! ÓĞ²½ÊıµÄÔË¶¯*/
-        if ((uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_RUNNING)      /*ÅÜ²½ */
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_CLIMBING)  /*µÇÉ½*/
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_WALKING)   /*½¡×ß|Í½²½ */
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_TREADMILL) /*ÅÜ²½»ú */
+        /*! æœ‰æ­¥æ•°çš„è¿åŠ¨*/
+        if ((uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_RUNNING)      /*è·‘æ­¥ */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_CLIMBING)  /*ç™»å±±*/
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_WALKING)   /*å¥èµ°|å¾’æ­¥ */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_TREADMILL) /*è·‘æ­¥æœº */
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_INDOOR_WALK)   /*ÊÒÄÚ×ßÂ· */
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_STEP_TRAINING) /*Ì¤²½ */
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_OUTDOOR_WALK)  /*»§Íâ½¡×ß */
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_HIKING)        /*Í½²½ */
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_INDOOR_RUN)    /*ÊÒÄÚÅÜ²½ */
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_PARKOUR)       /*ÅÜ¿á */
-            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_MARATHON)      /*ÂíÀ­ËÉ */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_INDOOR_WALK)   /*å®¤å†…èµ°è·¯ */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_STEP_TRAINING) /*è¸æ­¥ */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_OUTDOOR_WALK)  /*æˆ·å¤–å¥èµ° */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_HIKING)        /*å¾’æ­¥ */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_INDOOR_RUN)    /*å®¤å†…è·‘æ­¥ */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_PARKOUR)       /*è·‘é…· */
+            || (uteModuleSprotData.moreSportData.saveData.sportsType == SPORT_TYPE_MARATHON)      /*é©¬æ‹‰æ¾ */
 #endif
            )
         {
-            /*! ¿çĞ¡Ê±±£´æÊı¾İ*/
+            /*! è·¨å°æ—¶ä¿å­˜æ•°æ®*/
             if (((time.min == 59) && (time.sec == 59)) || (isFinish))
             {
                 uint32_t tempStep, tempKcal;
@@ -3067,13 +3067,13 @@ void uteModuleSportCalculatorEveryHourSportDataHandler(bool isFinish)
                 tempKcal = uteModuleSprotData.dailyActivity.currentDayEveryHourSportKcal[time.hour];
                 if (time.hour == uteModuleSprotData.moreSportData.saveData.startSportTime.hour)
                 {
-                    /*±£´æµÚÒ»¸öĞ¡Ê±Êı¾İ*/
+                    /*ä¿å­˜ç¬¬ä¸€ä¸ªå°æ—¶æ•°æ®*/
                     tempStep += uteModuleSprotData.moreSportData.saveData.sportStep;
                     tempKcal += uteModuleSprotData.moreSportData.saveData.sportCaloire;
                 }
                 else
                 {
-                    /*±£´æÆäËüĞ¡Ê±Êı¾İ*/
+                    /*ä¿å­˜å…¶å®ƒå°æ—¶æ•°æ®*/
                     tempStep += (uteModuleSprotData.moreSportData.saveData.sportStep - uteModuleSprotData.dailyActivity.lastHourSportStep);
                     tempKcal += (uteModuleSprotData.moreSportData.saveData.sportCaloire - uteModuleSprotData.dailyActivity.lastHourSportKcal);
                 }
@@ -3095,7 +3095,7 @@ void uteModuleSportCalculatorEveryHourSportDataHandler(bool isFinish)
 }
 
 /**
- *@brief     ±£´æ¶àÔË¶¯Ã¿Ğ¡Ê±Êı¾İ
+ *@brief     ä¿å­˜å¤šè¿åŠ¨æ¯å°æ—¶æ•°æ®
  *@details
  *@author       xjc
  *@date       2023-05-31
@@ -3125,7 +3125,7 @@ void uteModuleSportSaveEveryHourData(void)
 }
 
 /**
- *@brief     ¶ÁÈ¡¶àÔË¶¯Ã¿Ğ¡Ê±Êı¾İ
+ *@brief     è¯»å–å¤šè¿åŠ¨æ¯å°æ—¶æ•°æ®
  *@details
  *@author       xjc
  *@date       2023-05-31
@@ -3151,7 +3151,7 @@ void uteModuleSportReadEveryHourData(void)
 #endif
 
 /**
-*@brief     ¿ªÊ¼¶àÔË¶¯ÏûÏ¢´¦Àí
+*@brief     å¼€å§‹å¤šè¿åŠ¨æ¶ˆæ¯å¤„ç†
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
@@ -3173,7 +3173,7 @@ void uteModuleSportStartMoreSportsMsgHandler(uint32_t param)
     if(isAppRestart)
     {
 //        uteModuleSportStopMoreSportsMsgHandler();
-        //¹Ø±ÕÔË¶¯Ëã·¨
+        //å…³é—­è¿åŠ¨ç®—æ³•
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
         uteModuleCwmStopSportMode();
 #else
@@ -3181,7 +3181,7 @@ void uteModuleSportStartMoreSportsMsgHandler(uint32_t param)
 #endif
         if(!uteModuleSportMoreSportsIsLessData())
         {
-            /*! ±£´æÊı¾İ zn.zeng, 2021-11-11  */
+            /*! ä¿å­˜æ•°æ® zn.zeng, 2021-11-11  */
             uteModuleSportMoreSportsSaveData(true);
 #if UTE_MODULE_SPORTS_HSTORY_RECORD_SUPPORT
             uteModuleSportReadHistoryRecordData();
@@ -3206,7 +3206,7 @@ void uteModuleSportStartMoreSportsMsgHandler(uint32_t param)
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
-    uteModuleCwmStartSportMode(sportsType);   //¿ªÊ¼ÔË¶¯
+    uteModuleCwmStartSportMode(sportsType);   //å¼€å§‹è¿åŠ¨
 #endif
     memset(&uteModuleSprotData.moreSportData,0,sizeof(ute_module_more_sports_data_t));
     uteModuleSprotData.moreSportData.isAppStart = isAppStart;
@@ -3232,7 +3232,7 @@ void uteModuleSportStartMoreSportsMsgHandler(uint32_t param)
     {
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
-    /*! Ìø×ª½çÃæzn.zeng, 2021-11-11  */
+    /*! è·³è½¬ç•Œé¢zn.zeng, 2021-11-11  */
     // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_DETAIL_ID);
     if(sportsType==SPORT_TYPE_JUMP_ROPE)
     {
@@ -3247,7 +3247,7 @@ void uteModuleSportStartMoreSportsMsgHandler(uint32_t param)
 #endif
 }
 /**
-*@brief     ½áÊø¶àÔË¶¯
+*@brief     ç»“æŸå¤šè¿åŠ¨
 *@details
 *@author       zn.zeng
 *@date       2021-11-11
@@ -3257,9 +3257,9 @@ void uteModuleSportStopMoreSports(void)
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_SPORT_STOP_MORE_SPORTS,0);
 }
 /**
-*@brief     ÅĞ¶ÏÔË¶¯Á¿ÊÇ·ñ¹ıÉÙ
+*@brief     åˆ¤æ–­è¿åŠ¨é‡æ˜¯å¦è¿‡å°‘
 *@details
-*@return ture ÎªÔË¶¯Á¿¹ıÉÙ
+*@return ture ä¸ºè¿åŠ¨é‡è¿‡å°‘
 *@author       zn.zeng
 *@date       2021-11-11
 */
@@ -3276,37 +3276,37 @@ bool uteModuleSportMoreSportsIsLessData(void)
     uint32_t tempDistance = 0;
     float distance = 0;
     distance = (float)(uteModuleSprotData.moreSportData.saveData.sportDistanceInteger + (float)(uteModuleSprotData.moreSportData.saveData.sportDistanceDecimals*0.01));
-    distance = distance*1000.0f; //·Å´ó1000±¶,m
+    distance = distance*1000.0f; //æ”¾å¤§1000å€,m
     tempDistance = (uint32_t)distance;
-    // 1 ¾àÀëµÈÓÚÁã£¬¿¨Â·ÀïµÈÓÚÁã
+    // 1 è·ç¦»ç­‰äºé›¶ï¼Œå¡è·¯é‡Œç­‰äºé›¶
     if((tempDistance==0)&&(uteModuleSprotData.moreSportData.saveData.sportCaloire==0))
     {
-        ret =  true;  // ²»ĞèÒª±£´æÊı¾İ
+        ret =  true;  // ä¸éœ€è¦ä¿å­˜æ•°æ®
     }
-    // 2 ¾àÀëĞ¡ÓÚ100m
+    // 2 è·ç¦»å°äº100m
     if((tempDistance!=0)&&(tempDistance<100))
     {
-        ret = true;  // ²»ĞèÒª±£´æÊı¾İ
+        ret = true;  // ä¸éœ€è¦ä¿å­˜æ•°æ®
     }
-    // 3 ¿¨Â·Àï²»µÈÓÚÁã£¬Ê±¼äĞ¡ÓÚ1·ÖÖÓ
+    // 3 å¡è·¯é‡Œä¸ç­‰äºé›¶ï¼Œæ—¶é—´å°äº1åˆ†é’Ÿ
     if((uteModuleSprotData.moreSportData.saveData.sportCaloire!=0)&&(uteModuleSprotData.moreSportData.totalSportTime<UTE_MODULE_SPORT_MORE_SPORT_MIN_SAVE_TIME))
     {
-        ret = true;  // ²»ĞèÒª±£´æÊı¾İ
+        ret = true;  // ä¸éœ€è¦ä¿å­˜æ•°æ®
     }
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     uint16_t stopType = uteModuleSprotData.moreSportData.saveData.sportsType;
-    if ((stopType == SPORT_TYPE_RUNNING)          /*ÅÜ²½ */
-        || (stopType == SPORT_TYPE_CLIMBING)      /*µÇÉ½*/
-        || (stopType == SPORT_TYPE_WALKING)       /*½¡×ß|Í½²½ */
-        || (stopType == SPORT_TYPE_TREADMILL)     /*ÅÜ²½»ú */
+    if ((stopType == SPORT_TYPE_RUNNING)          /*è·‘æ­¥ */
+        || (stopType == SPORT_TYPE_CLIMBING)      /*ç™»å±±*/
+        || (stopType == SPORT_TYPE_WALKING)       /*å¥èµ°|å¾’æ­¥ */
+        || (stopType == SPORT_TYPE_TREADMILL)     /*è·‘æ­¥æœº */
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-        || (stopType == SPORT_TYPE_INDOOR_WALK)   /*ÊÒÄÚ×ßÂ· */
-        || (stopType == SPORT_TYPE_STEP_TRAINING) /*Ì¤²½ */
-        || (stopType == SPORT_TYPE_OUTDOOR_WALK)  /*»§Íâ½¡×ß */
-        || (stopType == SPORT_TYPE_HIKING)        /*Í½²½ */
-        || (stopType == SPORT_TYPE_INDOOR_RUN)    /*ÊÒÄÚÅÜ²½ */
-        || (stopType == SPORT_TYPE_PARKOUR)       /*ÅÜ¿á */
-        || (stopType == SPORT_TYPE_MARATHON)      /*ÂíÀ­ËÉ */
+        || (stopType == SPORT_TYPE_INDOOR_WALK)   /*å®¤å†…èµ°è·¯ */
+        || (stopType == SPORT_TYPE_STEP_TRAINING) /*è¸æ­¥ */
+        || (stopType == SPORT_TYPE_OUTDOOR_WALK)  /*æˆ·å¤–å¥èµ° */
+        || (stopType == SPORT_TYPE_HIKING)        /*å¾’æ­¥ */
+        || (stopType == SPORT_TYPE_INDOOR_RUN)    /*å®¤å†…è·‘æ­¥ */
+        || (stopType == SPORT_TYPE_PARKOUR)       /*è·‘é…· */
+        || (stopType == SPORT_TYPE_MARATHON)      /*é©¬æ‹‰æ¾ */
 #endif
        )
     {
@@ -3324,7 +3324,7 @@ bool uteModuleSportMoreSportsIsLessData(void)
     return ret;
 }
 /**
-*@brief     Ìî³ä±£´æ¶àÔË¶¯Êı¾İ
+*@brief     å¡«å……ä¿å­˜å¤šè¿åŠ¨æ•°æ®
 *@details
 *@param[out] uint8_t *buff
 *@author       zn.zeng
@@ -3351,7 +3351,7 @@ void uteModuleSportFillMoreSportsSaveData(uint8_t *buff)
     timeptr.min = uteModuleSprotData.moreSportData.saveData.stopSportTime.min;
     timeptr.sec = uteModuleSprotData.moreSportData.saveData.stopSportTime.sec;
     time_t tmp = tm_to_time(timeptr);
-    //Casen ÔÚÔ­Ê±¼ä»ù´¡ÉÏÇ¿ÖÆ×ª»»Ê±¼äµ½GMT+8 ´æ´¢
+    //Casen åœ¨åŸæ—¶é—´åŸºç¡€ä¸Šå¼ºåˆ¶è½¬æ¢æ—¶é—´åˆ°GMT+8 å­˜å‚¨
     tmp = tmp - globalTime.zone*3600 + (globalTime.zone-8)*3600;
     buff[9] = (tmp>>24&0x000000FF);
     buff[10] = (tmp>>16&0x000000FF);
@@ -3386,7 +3386,7 @@ void uteModuleSportFillMoreSportsSaveData(uint8_t *buff)
     totalDistance = ExactDecimalPoint(totalDistance, 2);
     float pace = 0;
     pace = ((float)uteModuleSprotData.moreSportData.totalSportTime)/totalDistance;
-    pace = pace + 0.5f;//4Éá5Èë
+    pace = pace + 0.5f;//4èˆ5å…¥
     pace = ExactDecimalPoint(pace, 2);
     tempPace = (uint16_t)pace;
     uint8_t min = tempPace/60;
@@ -3409,7 +3409,7 @@ void uteModuleSportFillMoreSportsSaveData(uint8_t *buff)
     buff[32] = uteModuleSprotData.moreSportData.heartTotalCnt&0xff;
 }
 /**
-*@brief     ±£´æ¶àÔË¶¯Êı¾İ
+*@brief     ä¿å­˜å¤šè¿åŠ¨æ•°æ®
 *@details
 *@param[in] bool isStopSport
 *@author       zn.zeng
@@ -3417,13 +3417,13 @@ void uteModuleSportFillMoreSportsSaveData(uint8_t *buff)
 */
 void uteModuleSportMoreSportsSaveData(bool isStopSport)
 {
-    /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+    /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
     // if(!uteApplicationCommonIsHasConnectOurApp())
     // {
     //     return;
     // }
-    uint8_t path[30];
-    memset(&path[0],0,30);
+    uint8_t path[40];
+    memset(&path[0],0,sizeof(path));
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
     ute_module_systemtime_time_t time;
 
@@ -3437,17 +3437,17 @@ void uteModuleSportMoreSportsSaveData(bool isStopSport)
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SPORT_MORE_SPORTS_DIR, dirInfo, NULL);
     if((dirInfo->filesCnt>=UTE_MODULE_SPORT_MORE_SPORTS_DATA_MAX_CNT)&&(memcmp(&path[0],&dirInfo->filesName[0][0],12)!=0))
     {
-        /*! É¾³ı×î¾ÉÒ»ÌìµÄÊı¾İzn.zeng, 2021-11-12   */
-        memset(&path[0],0,30);
+        /*! åˆ é™¤æœ€æ—§ä¸€å¤©çš„æ•°æ®zn.zeng, 2021-11-12   */
+        memset(&path[0],0,sizeof(path));
         sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_SPORT_MORE_SPORTS_DIR,&dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,del file=%s", __func__,&path[0]);
         uteModuleFilesystemDelFile((char *)&path[0]);
     }
-    memset(&path[0],0,30);
+    memset(&path[0],0,sizeof(path));
     sprintf((char *)&path[0],"%s/%04d%02d%02d%02d%02d",UTE_MODULE_FILESYSTEM_SPORT_MORE_SPORTS_DIR,time.year,time.month,time.day,time.hour,time.min);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,dirInfo->filesCnt=%d", __func__,dirInfo->filesCnt);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,save file=%s", __func__,&path[0]);
-    /*! ±£´æµ±Ç°Êı¾İzn.zeng, 2021-11-12  */
+    /*! ä¿å­˜å½“å‰æ•°æ®zn.zeng, 2021-11-12  */
     void *file;
     int32_t fileSize = 0;
     uint8_t headBuff[33];
@@ -3457,11 +3457,11 @@ void uteModuleSportMoreSportsSaveData(bool isStopSport)
         fileSize = uteModuleFilesystemGetFileSize(file);
         if(isStopSport)
         {
-            // ÆäËûÊı¾İ
+            // å…¶ä»–æ•°æ®
             uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
             uteModuleSportFillMoreSportsSaveData(&headBuff[0]);
             uteModuleFilesystemWriteData(file,&headBuff[0],33);
-            // ĞÄÂÊÊı¾İ
+            // å¿ƒç‡æ•°æ®
             uteModuleFilesystemSeek(file,0,FS_SEEK_END);
             uint16_t heartCacheCnt = uteModuleSprotData.moreSportData.heartTotalCnt%SPORTS_HEART_DATAS_CACHE_LENGTH;
             uteModuleFilesystemWriteData(file,&uteModuleSprotData.moreSportData.heartCache[0],heartCacheCnt);
@@ -3470,7 +3470,7 @@ void uteModuleSportMoreSportsSaveData(bool isStopSport)
         {
             if(fileSize==0)
             {
-                // ÆäËûÊı¾İ
+                // å…¶ä»–æ•°æ®
                 uteModuleSportFillMoreSportsSaveData(&headBuff[0]);
                 uteModuleFilesystemWriteData(file,&headBuff[0],33);
             }
@@ -3493,7 +3493,7 @@ void uteModuleSportMoreSportsSaveData(bool isStopSport)
 }
 
 /**
-*@brief     É¾³ı»º´æĞÄÂÊÊı¾İÊ±±£´æµÄÔË¶¯¹ıÉÙµÄÊı¾İ
+*@brief     åˆ é™¤ç¼“å­˜å¿ƒç‡æ•°æ®æ—¶ä¿å­˜çš„è¿åŠ¨è¿‡å°‘çš„æ•°æ®
 *@details
 *@author     dengli.lu
 *@date       2023-11-23
@@ -3503,8 +3503,8 @@ void uteModuleSportMoreSportsDeleteLessData(void)
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s, heartTotalCnt = %d", __func__,uteModuleSprotData.moreSportData.heartTotalCnt);
     if(uteModuleSprotData.moreSportData.heartTotalCnt>=SPORTS_HEART_DATAS_CACHE_LENGTH)
     {
-        uint8_t path[30];
-        memset(&path[0],0,30);
+        uint8_t path[40];
+        memset(&path[0],0,sizeof(path));
         ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
         ute_module_systemtime_time_t time;
         time.year = uteModuleSprotData.moreSportData.saveData.startSportTime.year;
@@ -3518,7 +3518,7 @@ void uteModuleSportMoreSportsDeleteLessData(void)
         {
             if(memcmp(&path[0],&dirInfo->filesName[dirInfo->filesCnt-1][0],12) == 0)
             {
-                /*! É¾³ı²»Òª±£´æµÄÊı¾İ*/
+                /*! åˆ é™¤ä¸è¦ä¿å­˜çš„æ•°æ®*/
                 memset(&path[0],0,30);
                 sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_SPORT_MORE_SPORTS_DIR,&dirInfo->filesName[dirInfo->filesCnt-1][0]);
                 uteModuleFilesystemDelFile((char *)&path[0]);
@@ -3530,14 +3530,14 @@ void uteModuleSportMoreSportsDeleteLessData(void)
 }
 
 /**
-*@brief     ½áÊø¶àÔË¶¯ÏûÏ¢´¦Àí
-*@details   ¸Ä·½·¨½ö×÷Îª½áÊøÔË¶¯¶¯×÷£¬Çë²»ÒªÔÚÆäÖĞÊµÏÖUIÌø×ª
+*@brief     ç»“æŸå¤šè¿åŠ¨æ¶ˆæ¯å¤„ç†
+*@details   æ”¹æ–¹æ³•ä»…ä½œä¸ºç»“æŸè¿åŠ¨åŠ¨ä½œï¼Œè¯·ä¸è¦åœ¨å…¶ä¸­å®ç°UIè·³è½¬
 *@author       zn.zeng
 *@date      casen modify 2021-12-30
 */
 void uteModuleSportStopMoreSportsMsgHandler(void)
 {
-    //¹Ø±ÕÔË¶¯Ëã·¨
+    //å…³é—­è¿åŠ¨ç®—æ³•
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     uteModuleCwmStopSportMode();
     ute_module_systemtime_time_t time;
@@ -3549,7 +3549,7 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
     if(!uteModuleSportMoreSportsIsLessData())
     {
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s ", __func__);
-        /*! ±£´æÊı¾İ zn.zeng, 2021-11-11  */
+        /*! ä¿å­˜æ•°æ® zn.zeng, 2021-11-11  */
         uteModuleSportMoreSportsSaveData(true);
 #if UTE_MODULE_SPORTS_HSTORY_RECORD_SUPPORT
         uteModuleSportReadHistoryRecordData();
@@ -3588,7 +3588,7 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
 #endif
     }
 
-    /*! ½çÃæÌø×ª, xjc Mark 20220111 */
+    /*! ç•Œé¢è·³è½¬, xjc Mark 20220111 */
     if(uteModuleSportMoreSportsIsLessData())
     {
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);
@@ -3609,7 +3609,7 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
 #endif
 }
 /**
-*@brief     app Í¬²½ÔË¶¯Êı¾İµ½ble
+*@brief     app åŒæ­¥è¿åŠ¨æ•°æ®åˆ°ble
 *@details
 *@author       zn.zeng
 *@date       2021-11-13
@@ -3637,7 +3637,7 @@ void uteModuleSportSyncAppMoreSportData(const uint8_t *receive)
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief        ¿ªÊ¼·¢ËÍ¶àÔË¶¯Êı¾İ
+*@brief        å¼€å§‹å‘é€å¤šè¿åŠ¨æ•°æ®
 *@details
 *@author       zn.zeng
 *@date       2021-08-23
@@ -3648,9 +3648,9 @@ void uteModuleSportSendMoreSportHistoryData(void)
     uteApplicationCommonGetSyncDataParam(&sendParam);
     uint8_t response[20];
     uint8_t sendSize = 0;
-    uint8_t path[30];
+    uint8_t path[40];
     bool isSendFinish = false;
-    memset(&path[0],0,30);
+    memset(&path[0],0,sizeof(path));
     response[0] = CMD_SPORT_MODE_AND_SPORT_HEART_RATE;
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,currSendFileIndex=%d,currSendMinIndex=%d,dirInfo.filesCnt=%d", __func__,sendParam->currSendFileIndex,sendParam->currSendMinIndex,sendParam->dirInfo.filesCnt);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,sendParam->currSendFileSize=%d,currSendFileDataOffset=%d", __func__,sendParam->currSendFileSize,sendParam->currSendFileDataOffset);
@@ -3792,9 +3792,9 @@ void uteModuleSportSendMoreSportHistoryData(void)
 }
 
 /**
-*@brief        ×¼±¸¿ªÊ¼·¢ËÍ¶àÔË¶¯Êı¾İ
+*@brief        å‡†å¤‡å¼€å§‹å‘é€å¤šè¿åŠ¨æ•°æ®
 *@details
-*@param[in]  ĞèÒªÍ¬²½µÄÊı¾İÊ±¼ä´Á
+*@param[in]  éœ€è¦åŒæ­¥çš„æ•°æ®æ—¶é—´æˆ³
 *@author       zn.zeng
 *@date       2021-11-13
 */
@@ -3818,7 +3818,7 @@ void uteModuleSportStartSendMoreSportHistoryData(ute_module_systemtime_time_t ti
     param->dataBuffSize = 170;
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SPORT_MORE_SPORTS_DIR, &param->dirInfo, NULL);
     uint16_t  hasFiles = 0;
-    /*Casen add start 23-02-09 ĞÂÔöÅĞ¶Ï,Èç¹û´¦ÓÚÔË¶¯ÖĞ²¢ÇÒĞÄÂÊ±£´æÊı´óÓÚ90Ôòµ±ÌõÊı¾İ²»·¢¸øAPP*/
+    /*Casen add start 23-02-09 æ–°å¢åˆ¤æ–­,å¦‚æœå¤„äºè¿åŠ¨ä¸­å¹¶ä¸”å¿ƒç‡ä¿å­˜æ•°å¤§äº90åˆ™å½“æ¡æ•°æ®ä¸å‘ç»™APP*/
     uint8_t sportStatus = uteModuleSportMoreSportGetStatus();
     if(sportStatus != ALL_SPORT_STATUS_CLOSE)
     {
@@ -3834,8 +3834,8 @@ void uteModuleSportStartSendMoreSportHistoryData(ute_module_systemtime_time_t ti
     if(!param->isAllData)
     {
         uint64_t readTime,fileTime;
-        uint8_t timeBuff[15];
-        memset(timeBuff,0,15);
+        uint8_t timeBuff[18];
+        memset(timeBuff,0,18);
         sprintf((char *)&timeBuff[0],"%04d%02d%02d%02d%02d",time.year,time.month,time.day,time.hour,time.min);
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,%s", __func__,timeBuff);
         readTime = atoll((const char *)&timeBuff[0]);
@@ -3881,7 +3881,7 @@ void uteModuleSportStartSendMoreSportHistoryData(ute_module_systemtime_time_t ti
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,", __func__);
 }
 /**
-*@brief        ÉèÖÃÔË¶¯¿ªÊ¼µÄµ¹¼ÆÊ±
+*@brief        è®¾ç½®è¿åŠ¨å¼€å§‹çš„å€’è®¡æ—¶
 *@details
 *@author       dengli.lu
 *@date       2021-11-17
@@ -3891,7 +3891,7 @@ void uteModuleSportSetCountZeroIndex(uint8_t countZeroIndex)
     uteModuleSprotData.moreSportData.countZeroIndex = countZeroIndex;
 }
 /**
-*@brief        ¶Ï¿ªÁ¬½Ó´¦Àí
+*@brief        æ–­å¼€è¿æ¥å¤„ç†
 *@details
 *@author       zn.zeng
 *@date       2021-11-30
@@ -3910,7 +3910,7 @@ void uteModuleSportDisconnectHandler(void)
     }
 }
 /**
-*@brief    ¾Ã×øÌáĞÑmsg´¦Àíº¯Êı
+*@brief    ä¹…åæé†’msgå¤„ç†å‡½æ•°
 *@details
 *@author        zn.zeng
 *@date        2021-08-06
@@ -3922,7 +3922,7 @@ void uteModuleSportSedentaryMsg(void)
     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);
 }
 /**
-*@brief    ´ÓÎ´Åå´÷µ½Åå´÷ÇĞ»»
+*@brief    ä»æœªä½©æˆ´åˆ°ä½©æˆ´åˆ‡æ¢
 *@details
 *@author        zn.zeng
 *@date        2021-12-27
@@ -3942,7 +3942,7 @@ void uteModuleSportUnWearToWearSwitch(void)
 #if UTE_MODULE_SPORT_TAKE_PICTURE_MOTOR_SUPPORT
 void *uteModuleSportDelaySetTakePictureEnableTimerPointer = NULL;
 /**
-*@brief        ÑÓÊ±Ê¹ÄÜÅÄÕÕ´¦Àíº¯Êı
+*@brief        å»¶æ—¶ä½¿èƒ½æ‹ç…§å¤„ç†å‡½æ•°
 *@details
 *@author       xjc
 *@date       2022-01-07
@@ -3962,7 +3962,7 @@ void uteModuleSportDelaySetTakePictureEnableHandlerMsg(void)
 #endif
 }
 /**
-*@brief   Í£Ö¹Ê¹ÄÜÅÄÕÕ¶¨Ê±Æ÷´´½¨º¯Êı
+*@brief   åœæ­¢ä½¿èƒ½æ‹ç…§å®šæ—¶å™¨åˆ›å»ºå‡½æ•°
 *@details
 *@author       xjc
 *@date       2022-01-07
@@ -3976,7 +3976,7 @@ void uteModuleSportDelaySetTakePictureEnableTimerStop(void)
     uteModuleSportDelaySetTakePictureEnableTimerPointer = NULL;
 }
 /**
-*@brief        ÑÓÊ±Ê¹ÄÜÅÄÕÕ»Øµ÷º¯Êı
+*@brief        å»¶æ—¶ä½¿èƒ½æ‹ç…§å›è°ƒå‡½æ•°
 *@details
 *@author       xjc
 *@date       2022-01-07
@@ -3987,7 +3987,7 @@ void uteModuleSportDelaySetTakePictureEnableTimerCallback(void *pxTimer)
     uteModuleSportDelaySetTakePictureEnableTimerStop();
 }
 /**
-*@brief        ÑÓÊ±Ê¹ÄÜÅÄÕÕ¶¨Ê±Æ÷´´½¨º¯Êı
+*@brief        å»¶æ—¶ä½¿èƒ½æ‹ç…§å®šæ—¶å™¨åˆ›å»ºå‡½æ•°
 *@details
 *@author       xjc
 *@date       2022-01-07
@@ -4000,7 +4000,7 @@ void uteModuleSportDelaySetTakePictureEnableTimerCreate(void)
     }
 }
 /**
-*@brief     Æô¶¯Ê¹ÄÜÅÄÕÕ¶¨Ê±Æ÷´´½¨º¯Êı
+*@brief     å¯åŠ¨ä½¿èƒ½æ‹ç…§å®šæ—¶å™¨åˆ›å»ºå‡½æ•°
 *@details
 *@author       xjc
 *@date       2022-01-07
@@ -4013,7 +4013,7 @@ void uteModuleSportDelaySetTakePictureEnableTimerStart(uint16_t ms)
 }
 #endif
 /**
-*@brief       ¶àÔË¶¯ÕıÔÚÔËĞĞ
+*@brief       å¤šè¿åŠ¨æ­£åœ¨è¿è¡Œ
 *@details
 *@author       zn.zeng
 *@date       2022-01-11
@@ -4032,7 +4032,7 @@ bool uteModuleSportMoreSportIsRuning(void)
 
 }
 /**
-*@brief       »ñÈ¡¶àÔË¶¯µÄÔË¶¯ÀàĞÍ
+*@brief       è·å–å¤šè¿åŠ¨çš„è¿åŠ¨ç±»å‹
 *@details
 *@author       zn.zeng
 *@date       2022-02-14
@@ -4042,7 +4042,7 @@ uint8_t uteModuleSportMoreSportGetType(void)
     return uteModuleSprotData.moreSportData.saveData.sportsType;
 }
 /**
-*@brief       »ñÈ¡¶àÔË¶¯µÄÔË¶¯×´Ì¬
+*@brief       è·å–å¤šè¿åŠ¨çš„è¿åŠ¨çŠ¶æ€
 *@details
 *@author       zn.zeng
 *@date       2022-02-14
@@ -4052,7 +4052,7 @@ uint8_t uteModuleSportMoreSportGetStatus(void)
     return uteModuleSprotData.moreSportData.status;
 }
 /**
-*@brief       ÉèÖÃ¶àÔË¶¯µÄÔË¶¯×´Ì¬
+*@brief       è®¾ç½®å¤šè¿åŠ¨çš„è¿åŠ¨çŠ¶æ€
 *@details
 *@author       zn.zeng
 *@date       2022-02-14
@@ -4062,7 +4062,7 @@ void uteModuleSportMoreSportSetStatus(all_sport_status_type sportStatus)
     uteModuleSprotData.moreSportData.status = sportStatus;
 }
 /**
-*@brief       »ñÈ¡¶àÔË¶¯µÄÔË¶¯ÊÇ·ñÊÇÊÖ»ú¶Ë¿ªÆôµÄ
+*@brief       è·å–å¤šè¿åŠ¨çš„è¿åŠ¨æ˜¯å¦æ˜¯æ‰‹æœºç«¯å¼€å¯çš„
 *@details
 *@author       zn.zeng
 *@date       2022-02-14
@@ -4072,7 +4072,7 @@ bool uteModuleSportMoreSportIsAppStart(void)
     return uteModuleSprotData.moreSportData.isAppStart;
 }
 /**
-*@brief       ÉèÖÃ¶àÔË¶¯µÄÔË¶¯ÊÇ·ñÊÇÊÖ»ú¶Ë¿ªÆôµÄ»ØÁ¬×´Ì¬
+*@brief       è®¾ç½®å¤šè¿åŠ¨çš„è¿åŠ¨æ˜¯å¦æ˜¯æ‰‹æœºç«¯å¼€å¯çš„å›è¿çŠ¶æ€
 *@details
 *@author       zn.zeng
 *@date       2022-02-14
@@ -4082,7 +4082,7 @@ void uteModuleSportMoreSportSetIsAppStartReconnection(bool isAppStartSportReConn
     uteModuleSprotData.moreSportData.isAppStartSportReConnection = isAppStartSportReConnection;
 }
 /**
-*@brief       »ñÈ¡¶àÔË¶¯µÄÔË¶¯ÊÇ·ñÊÇÊÖ»ú¶Ë¿ªÆôµÄ»ØÁ¬×´Ì¬
+*@brief       è·å–å¤šè¿åŠ¨çš„è¿åŠ¨æ˜¯å¦æ˜¯æ‰‹æœºç«¯å¼€å¯çš„å›è¿çŠ¶æ€
 *@details
 *@author       zn.zeng
 *@date       2022-02-14
@@ -4092,7 +4092,7 @@ bool uteModuleSportMoreSportIsAppStartReconnection(void)
     return uteModuleSprotData.moreSportData.isAppStartSportReConnection;
 }
 /**
-*@brief     »ñÈ¡¶àÔË¶¯Êı¾İ
+*@brief     è·å–å¤šè¿åŠ¨æ•°æ®
 *@details
 *@author       zn.zeng
 *@date       2022-02-14
@@ -4104,7 +4104,7 @@ void uteModuleSportGetMoreSportsDatas(ute_module_more_sports_data_t *data)
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief       »ñÈ¡¶àÔË¶¯µÄµ¹¼ÆÊ±¼ÆÊı
+*@brief       è·å–å¤šè¿åŠ¨çš„å€’è®¡æ—¶è®¡æ•°
 *@details
 *@author       zn.zeng
 *@date       2022-02-14
@@ -4115,7 +4115,7 @@ int8_t uteModuleSportMoreSportGetCountZeroIndex(void)
 }
 
 /**
-*@brief        ÔË¶¯µ¹¼ÆÊ±´¦Àíº¯Êı
+*@brief        è¿åŠ¨å€’è®¡æ—¶å¤„ç†å‡½æ•°
 *@details
 *@author       xjc
 *@date       2022-05-31
@@ -4133,7 +4133,7 @@ void uteModuleSprotCountdownTimerHandlerMsg(void)
     }
 }
 /**
-*@brief      ÔË¶¯µ¹¼ÆÊ±¶¨Ê±Æ÷»Øµ÷
+*@brief      è¿åŠ¨å€’è®¡æ—¶å®šæ—¶å™¨å›è°ƒ
 *@details
 *@author     xjc
 *@date       2022-05-31
@@ -4143,7 +4143,7 @@ void uteModuleSprotCountdownTimerCallback(void *pxTimer)
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_SPORT_COUNTDOWN_TIMER,0);
 }
 /**
-*@brief      ¿ªÊ¼ÔË¶¯µ¹¼ÆÊ±¶¨Ê±Æ÷
+*@brief      å¼€å§‹è¿åŠ¨å€’è®¡æ—¶å®šæ—¶å™¨
 *@details
 *@author     xjc
 *@date       2022-05-31
@@ -4157,7 +4157,7 @@ void uteModuleSprotCountdownTimerStart(uint16_t ms)
     uteModulePlatformRestartTimer(&uteModuleSprotCountdownTimer, ms);
 }
 /**
-*@brief      Í£Ö¹ÔË¶¯µ¹¼ÆÊ±¶¨Ê±Æ÷
+*@brief      åœæ­¢è¿åŠ¨å€’è®¡æ—¶å®šæ—¶å™¨
 *@details
 *@author     xjc
 *@date       2022-05-31
@@ -4170,10 +4170,10 @@ void uteModuleSprotCountdownTimerStop(void)
 }
 
 /**
- *@brief        Ê±¼ä±ä»¯
- *@details   ¿çÌìÊıÊ±Òª´¦ÀíÇåÁã
- *@param[in] ute_module_systemtime_time_t curr,µ±Ç°Ê±¼ä
- *@param[in] ute_module_systemtime_time_t newSet,½«ÒªÉèÖÃµÄÊ±¼ä
+ *@brief        æ—¶é—´å˜åŒ–
+ *@details   è·¨å¤©æ•°æ—¶è¦å¤„ç†æ¸…é›¶
+ *@param[in] ute_module_systemtime_time_t curr,å½“å‰æ—¶é—´
+ *@param[in] ute_module_systemtime_time_t newSet,å°†è¦è®¾ç½®çš„æ—¶é—´
  *@author       xjc
  *@date       2022-04-28
  */
@@ -4190,13 +4190,13 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
     uteModulePlatformTakeMutex(uteModuleSprotMute);
     void *file;
     uint16_t buffSize = 12*24+4;
-    uint8_t path[20];
-    memset(&path[0],0,20);
+    uint8_t path[40];
+    memset(&path[0],0,sizeof(path));
     uint8_t *readBuffOneDay = uteModulePlatformMemoryAlloc(buffSize);
     uteModuleSprotData.lastDayReadHour = -1;
     if(newDay<currDay)
     {
-        /*! Ê±¼äÍù»ØÉèÖÃ,É¾³ı´óÓÚĞÂÉèÖÃÈÕÆÚµÄÊı¾İ*/
+        /*! æ—¶é—´å¾€å›è®¾ç½®,åˆ é™¤å¤§äºæ–°è®¾ç½®æ—¥æœŸçš„æ•°æ®*/
         uint32_t newSetDay = 0;
         uint32_t fileDay = 0;
         ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
@@ -4223,7 +4223,7 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,after del file", __func__);
         uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR, NULL, NULL);
 #endif
-        /*! Çå³ıµ±Ìì²½ÊıÊı¾İ*/
+        /*! æ¸…é™¤å½“å¤©æ­¥æ•°æ•°æ®*/
         uteModuleSprotData.stepSleepData.currentHourStepCnt = 0;
         uteModuleSprotData.stepSleepData.current_hour_run_stepCnt = 0;
         uteModuleSprotData.stepSleepData.current_hour_walk_stepCnt = 0;
@@ -4233,20 +4233,20 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
         uteModuleSprotData.currDayTotalStep = 0;
         uteModuleSprotData.currDayWalkStep = 0;
         uteModuleSprotData.currDayRunStep = 0;
-        /*! »Ö¸´µ±Ç°²½Êı*/
-        memset(&path[0],0,20);
+        /*! æ¢å¤å½“å‰æ­¥æ•°*/
+        memset(&path[0],0,sizeof(path));
         sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR,newSet.year,newSet.month,newSet.day);
         memset(&readBuffOneDay[0],0,buffSize);
         if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_RDONLY|FS_O_WRONLY))
         {
             uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
             uteModuleFilesystemReadData(file,&readBuffOneDay[0],buffSize);
-            /*! Çå³ıµ±Ç°Ê±¼äÏÂÒ»¸öĞ¡Ê±Ö®ºóµÄÊı¾İ*/
+            /*! æ¸…é™¤å½“å‰æ—¶é—´ä¸‹ä¸€ä¸ªå°æ—¶ä¹‹åçš„æ•°æ®*/
             memset(&readBuffOneDay[4+(newSet.hour+1)*12],0,buffSize-(4+(newSet.hour+1)*12));
             uteModuleFilesystemWriteData(file,&readBuffOneDay[0],buffSize);
             uteModuleFilesystemCloseFile(file);
         }
-        /*! »Ö¸´µ±Ç°Ğ¡Ê±²½Êı*/
+        /*! æ¢å¤å½“å‰å°æ—¶æ­¥æ•°*/
         uteModuleSprotData.stepSleepData.currentHourStepCnt = (readBuffOneDay[4+newSet.hour*12]<<8|readBuffOneDay[4+newSet.hour*12+1]);
         uteModuleSprotData.stepSleepData.current_hour_run_stepCnt = (readBuffOneDay[4+newSet.hour*12+5]<<8|readBuffOneDay[4+newSet.hour*12+6]);
         uteModuleSprotData.stepSleepData.current_hour_walk_stepCnt = (readBuffOneDay[4+newSet.hour*12+10]<<8|readBuffOneDay[4+newSet.hour*12+11]);
@@ -4254,7 +4254,7 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
         mStepSleepParam.currentHourStepCnt = uteModuleSprotData.stepSleepData.currentHourStepCnt;
         mStepSleepParam.current_hour_run_stepCnt = uteModuleSprotData.stepSleepData.current_hour_run_stepCnt;
         mStepSleepParam.current_hour_walk_stepCnt = uteModuleSprotData.stepSleepData.current_hour_walk_stepCnt;
-        /*! »Ö¸´µ±Ìì²½ÊıĞÅÏ¢*/
+        /*! æ¢å¤å½“å¤©æ­¥æ•°ä¿¡æ¯*/
         uteModuleSportReadCurrDayStepCnt(newSet);
         uteModulePlatformMemoryFree(dirInfo);
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
@@ -4267,7 +4267,7 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
         uteModuleSportSaveTodayTargetNotifyData();
 #endif
 #if UTE_MODULE_SPORT_TODAY_ADD_ALL_SPORT_DATA_SUPPORT
-        /*! ÖØĞÂ¶ÁÈ¡µ±ÌìÓĞ²½ÊıÔË¶¯µÄ²½Êı£¬¾àÀë¸ú¿¨Â·Àï xjc, 2022-08-03*/
+        /*! é‡æ–°è¯»å–å½“å¤©æœ‰æ­¥æ•°è¿åŠ¨çš„æ­¥æ•°ï¼Œè·ç¦»è·Ÿå¡è·¯é‡Œ xjc, 2022-08-03*/
         // uteModuleSportReadTodayAllSportDataConfig(newSet);
         uteModuleSprotData.updateTodayAllSportData = true;
 #endif
@@ -4276,7 +4276,7 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
     {
         if(newSet.hour < curr.hour)
         {
-            /*! Çå³ıµ±Ìì²½ÊıÊı¾İ*/
+            /*! æ¸…é™¤å½“å¤©æ­¥æ•°æ•°æ®*/
             uteModuleSprotData.stepSleepData.currentHourStepCnt = 0;
             uteModuleSprotData.stepSleepData.current_hour_run_stepCnt = 0;
             uteModuleSprotData.stepSleepData.current_hour_walk_stepCnt = 0;
@@ -4286,19 +4286,19 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
             uteModuleSprotData.currDayTotalStep = 0;
             uteModuleSprotData.currDayWalkStep = 0;
             uteModuleSprotData.currDayRunStep = 0;
-            memset(&path[0],0,20);
+            memset(&path[0],0,sizeof(path));
             sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR,newSet.year,newSet.month,newSet.day);
             memset(&readBuffOneDay[0],0,buffSize);
             if(uteModuleFilesystemOpenFile((char *)&path[0],&file,FS_O_RDONLY|FS_O_WRONLY))
             {
                 uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
                 uteModuleFilesystemReadData(file,&readBuffOneDay[0],buffSize);
-                /*! Çå³ıµ±Ç°Ê±¼äÏÂÒ»¸öĞ¡Ê±Ö®ºóµÄÊı¾İ*/
+                /*! æ¸…é™¤å½“å‰æ—¶é—´ä¸‹ä¸€ä¸ªå°æ—¶ä¹‹åçš„æ•°æ®*/
                 memset(&readBuffOneDay[4+(newSet.hour+1)*12],0,buffSize-(4+(newSet.hour+1)*12));
                 uteModuleFilesystemWriteData(file,&readBuffOneDay[0],buffSize);
                 uteModuleFilesystemCloseFile(file);
             }
-            /*! »Ö¸´µ±Ç°Ğ¡Ê±²½Êı*/
+            /*! æ¢å¤å½“å‰å°æ—¶æ­¥æ•°*/
             uteModuleSprotData.stepSleepData.currentHourStepCnt = (readBuffOneDay[4+newSet.hour*12]<<8|readBuffOneDay[4+newSet.hour*12+1]);
             uteModuleSprotData.stepSleepData.current_hour_run_stepCnt = (readBuffOneDay[4+newSet.hour*12+5]<<8|readBuffOneDay[4+newSet.hour*12+6]);
             uteModuleSprotData.stepSleepData.current_hour_walk_stepCnt = (readBuffOneDay[4+newSet.hour*12+10]<<8|readBuffOneDay[4+newSet.hour*12+11]);
@@ -4306,7 +4306,7 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
             mStepSleepParam.currentHourStepCnt = uteModuleSprotData.stepSleepData.currentHourStepCnt;
             mStepSleepParam.current_hour_run_stepCnt = uteModuleSprotData.stepSleepData.current_hour_run_stepCnt;
             mStepSleepParam.current_hour_walk_stepCnt = uteModuleSprotData.stepSleepData.current_hour_walk_stepCnt;
-            /*! »Ö¸´µ±Ìì²½ÊıĞÅÏ¢*/
+            /*! æ¢å¤å½“å¤©æ­¥æ•°ä¿¡æ¯*/
             uteModuleSportReadCurrDayStepCnt(newSet);
         }
 #if (UTE_MODULE_CYWEE_MOTION_SUPPORT == false)
@@ -4333,8 +4333,8 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
     }
     else
     {
-        /*! Çå³ıµ±Ìì²½ÊıÊı¾İ*/
-        memset(&path[0],0,20);
+        /*! æ¸…é™¤å½“å¤©æ­¥æ•°æ•°æ®*/
+        memset(&path[0],0,sizeof(path));
         sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR,newSet.year,newSet.month,newSet.day);
         uteModuleFilesystemDelFile((char *)&path[0]);
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,del file=%s", __func__,&path[0]);
@@ -4357,7 +4357,7 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
         uteModuleSportSaveTodayTargetNotifyData();
 #endif
 #if UTE_MODULE_SPORT_TODAY_ADD_ALL_SPORT_DATA_SUPPORT
-        /*! ÖØĞÂ¶ÁÈ¡µ±ÌìÓĞ²½ÊıÔË¶¯µÄ²½Êı£¬¾àÀë¸ú¿¨Â·Àï xjc, 2022-08-03*/
+        /*! é‡æ–°è¯»å–å½“å¤©æœ‰æ­¥æ•°è¿åŠ¨çš„æ­¥æ•°ï¼Œè·ç¦»è·Ÿå¡è·¯é‡Œ xjc, 2022-08-03*/
         // uteModuleSportReadTodayAllSportDataConfig(newSet);
         uteModuleSprotData.updateTodayAllSportData = true;
 #endif
@@ -4368,14 +4368,14 @@ void uteModuleSportSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
 
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
 /**
-*@brief     ¶ÁÈ¡Ä¿±êÊı¾İ
+*@brief     è¯»å–ç›®æ ‡æ•°æ®
 *@details
 *@author        dengli.lu
 *@date        2022-03-18
 */
 void uteModuleSportReadTodayTargetNotifyData(void)
 {
-    /*! ¶ÁÈ¡Ä¿±êÊı¾İ*/
+    /*! è¯»å–ç›®æ ‡æ•°æ®*/
     void *file;
     uint8_t readbuff[32];
     memset(&readbuff[0],0,sizeof(readbuff));
@@ -4431,14 +4431,14 @@ void uteModuleSportReadTodayTargetNotifyData(void)
 }
 
 /**
-*@brief     ±£´æÄ¿±êÊı¾İ
+*@brief     ä¿å­˜ç›®æ ‡æ•°æ®
 *@details
 *@author        dengli.lu
 *@date        2022-03-18
 */
 void uteModuleSportSaveTodayTargetNotifyData(void)
 {
-    /*! ±£´æÄ¿±êÊı¾İ*/
+    /*! ä¿å­˜ç›®æ ‡æ•°æ®*/
     void *file;
     uint8_t writeBuff[32];
     memset(&writeBuff[0],0,sizeof(writeBuff));
@@ -4486,9 +4486,9 @@ void uteModuleSportSaveTodayTargetNotifyData(void)
     }
 }
 /**
-*@brief  ÉèÖÃ½ñÈÕ»î¶¯Ä¿±ê
+*@brief  è®¾ç½®ä»Šæ—¥æ´»åŠ¨ç›®æ ‡
 *@details
-*@param[in] ute_module_target_notify_data_t setTodayTarget  ´«ÈëÒªÉèÖÃ½ñÈÕ»î¶¯²ÎÊıµÄÖ¸Õë
+*@param[in] ute_module_target_notify_data_t setTodayTarget  ä¼ å…¥è¦è®¾ç½®ä»Šæ—¥æ´»åŠ¨å‚æ•°çš„æŒ‡é’ˆ
 *@author      dengli.lu
 *@date       2022-03-08
 */
@@ -4507,9 +4507,9 @@ void uteModuleSportSetTodayTargetNotifyData(ute_module_target_notify_data_t setT
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief  »ñÈ¡½ñÈÕ»î¶¯Ä¿±ê
+*@brief  è·å–ä»Šæ—¥æ´»åŠ¨ç›®æ ‡
 *@details
-*@param[in] ute_module_target_notify_data_t *set  ´«Èë»ñÈ¡½ñÈÕ»î¶¯²ÎÊıµÄÖ¸Õë
+*@param[in] ute_module_target_notify_data_t *set  ä¼ å…¥è·å–ä»Šæ—¥æ´»åŠ¨å‚æ•°çš„æŒ‡é’ˆ
 *@author      dengli.lu
 *@date       2022-03-08
 */
@@ -4524,9 +4524,9 @@ void uteModuleSportGetTodayTargetNotifyData(ute_module_target_notify_data_t *tod
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief  »ñÈ¡½ñÈÕ»î¶¯Ä¿±ê
+*@brief  è·å–ä»Šæ—¥æ´»åŠ¨ç›®æ ‡
 *@details
-*@param[in] ute_module_target_notify_data_t *set  ´«Èë»ñÈ¡½ñÈÕ»î¶¯²ÎÊıµÄÖ¸Õë
+*@param[in] ute_module_target_notify_data_t *set  ä¼ å…¥è·å–ä»Šæ—¥æ´»åŠ¨å‚æ•°çš„æŒ‡é’ˆ
 *@author      dengli.lu
 *@date       2022-03-08
 */
@@ -4537,7 +4537,7 @@ void uteModuleSportProtocolGetTodayTargetNotifyData(ute_module_target_notify_dat
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief     Ä¿±êÊı¾İÃ¿Ãë´¦Àíº¯Êı
+*@brief     ç›®æ ‡æ•°æ®æ¯ç§’å¤„ç†å‡½æ•°
 *@details
 *@author        dengli.lu
 *@date        2022-03-18
@@ -4556,7 +4556,7 @@ void uteModuleSportTodayTargetHandler(void)
                    (uteModuleSprotData.todayTargetNotify.isStandTimeTargetNotifyOpen),uteModuleSprotData.todayTargetNotify.currStandMin,uteModuleSprotData.moreSportData.status);
     if(uteModuleSystemtimeGetDistanceMiType())
     {
-        tempDistance = (float)tempDistance / 0.6213712f;//ÏÈ×ª»»ÎªKM£¬ÔÚ×ª»»ÎªÃ×
+        tempDistance = (float)tempDistance / 0.6213712f;//å…ˆè½¬æ¢ä¸ºKMï¼Œåœ¨è½¬æ¢ä¸ºç±³
     }
     uint32_t curryDayDistance = tempDistance;
     //kcal notify
@@ -4650,7 +4650,7 @@ void uteModuleSportTodayTargetHandler(void)
             {
                 uteModuleSprotData.dailyActivity.sedentarinessFlag = false;
             }
-            if(time.min == 59)  //ÕûĞ¡Ê±xx:59:59
+            if(time.min == 59)  //æ•´å°æ—¶xx:59:59
             {
                 if(uteModuleSprotData.dailyActivity.sedentarinessFlag == false && uteModuleSprotData.todayTargetNotify.currStandMin == 60)
                 {
@@ -4658,7 +4658,7 @@ void uteModuleSportTodayTargetHandler(void)
                     uteModuleSprotData.todayTargetNotify.standStartMin = time.min;
                     uteModuleSprotData.todayTargetNotify.currStandMin = 60;
                     uteModuleSportSaveStandTimeData(uteModuleSprotData.todayTargetNotify.standStartHour,uteModuleSprotData.todayTargetNotify.standStartMin,uteModuleSprotData.todayTargetNotify.currStandMin);
-                    //±£´æÒ»´ÎÊı¾İ
+                    //ä¿å­˜ä¸€æ¬¡æ•°æ®
                 }
                 uteModuleSprotData.todayTargetNotify.currStandMin = 0;
                 uteModuleSprotData.todayTargetNotify.standStartHour = time.hour;
@@ -4667,11 +4667,11 @@ void uteModuleSportTodayTargetHandler(void)
             }
             if(!uteModuleSprotData.todayTargetNotify.isStandTimeTargetHasNotify)
             {
-#if UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT  //add pcm 2022+09-23 Ìí¼Óºê¿ØÖÆ£¬·ÀÖ¹ÆäËûÏîÄ¿±àÒë²»¹ı
+#if UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT  //add pcm 2022+09-23 æ·»åŠ å®æ§åˆ¶ï¼Œé˜²æ­¢å…¶ä»–é¡¹ç›®ç¼–è¯‘ä¸è¿‡
                 if(uteModuleSportGetCurrDayEveryHourStandTime()>=uteModuleSprotData.todayTargetNotify.standTimeTargetSetMin)
 #endif
                 {
-                    //ÌáĞÑ
+                    //æé†’
 #if !UTE_MODULE_RH281LX_DEBUG_SUPPORT
                     memset(&uteModuleSprotData.todayTargetNotify.todayTargetNotifyType,0,sizeof(ute_module_today_target_notify_type_t));
 #endif
@@ -4759,14 +4759,14 @@ void uteModuleSportTodayTargetHandler(void)
 }
 
 /**
-*@brief      ±£´æµ±Ç°Õ¾Á¢Ê±³¤Êı¾İ
-*@details    Ã¿Ìì±£´æÒ»¸öÎÄ¼ş£¬Ç°Ãæ4¸öbyteÎªÄêÔÂÈÕ£¬ºóÃæÃ¿4¸öbyteÎªÒ»¸öĞ¡Ê±µÄÊı¾İ£¨²Î¿¼Ğ­ÒéµÄÊı¾İ¸ñÊ½£©
+*@brief      ä¿å­˜å½“å‰ç«™ç«‹æ—¶é•¿æ•°æ®
+*@details    æ¯å¤©ä¿å­˜ä¸€ä¸ªæ–‡ä»¶ï¼Œå‰é¢4ä¸ªbyteä¸ºå¹´æœˆæ—¥ï¼Œåé¢æ¯4ä¸ªbyteä¸ºä¸€ä¸ªå°æ—¶çš„æ•°æ®ï¼ˆå‚è€ƒåè®®çš„æ•°æ®æ ¼å¼ï¼‰
 *@author     casen
 *@date       2022-07-14
 */
 void uteModuleSportSaveStandTimeData(uint8_t standStartHour,uint8_t standStartMin,uint8_t currStandMin)
 {
-    /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+    /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
     if(!uteApplicationCommonIsHasConnectOurApp())
     {
         return;
@@ -4783,7 +4783,7 @@ void uteModuleSportSaveStandTimeData(uint8_t standStartHour,uint8_t standStartMi
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SPORT_STAND_TIME_DATA, dirInfo, NULL);
     if((dirInfo->filesCnt>=UTE_MODULE_SPORT_STANDTIME_SAVE_DATA_MAX_DAYS)&&(memcmp(&path[0],&dirInfo->filesName[0][0],8)!=0))
     {
-        /*! É¾³ı×î¾ÉÒ»ÌìµÄÊı¾İzn.zeng, 2021-08-23  */
+        /*! åˆ é™¤æœ€æ—§ä¸€å¤©çš„æ•°æ®zn.zeng, 2021-08-23  */
         memset(&path[0],0,20);
         sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_SPORT_STAND_TIME_DATA,&dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,del file=%s", __func__,&path[0]);
@@ -4793,7 +4793,7 @@ void uteModuleSportSaveStandTimeData(uint8_t standStartHour,uint8_t standStartMi
     sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_SPORT_STAND_TIME_DATA,time.year,time.month,time.day);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,dirInfo->filesCnt=%d", __func__,dirInfo->filesCnt);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,save file=%s", __func__,&path[0]);
-    /*! ±£´æµ±Ç°Êı¾İzn.zeng, 2021-08-23  */
+    /*! ä¿å­˜å½“å‰æ•°æ®zn.zeng, 2021-08-23  */
     void *file;
 
     writeBuff[0] = standStartHour;
@@ -4805,9 +4805,9 @@ void uteModuleSportSaveStandTimeData(uint8_t standStartHour,uint8_t standStartMi
     {
         int32_t size = uteModuleFilesystemGetFileSize(file);
         UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,size=%d", __func__, size);
-        if((size+buffSize)<=(4*24)) //·ÀÖ¹Ìø×ªÈÕÆÚ·´¸´´æ´¢
+        if((size+buffSize)<=(4*24)) //é˜²æ­¢è·³è½¬æ—¥æœŸåå¤å­˜å‚¨
         {
-            uteModuleFilesystemSeek(file,0,FS_SEEK_END);  //ÔÚÎÄ¼şÄ©Î²Ìí¼ÓÊı¾İ
+            uteModuleFilesystemSeek(file,0,FS_SEEK_END);  //åœ¨æ–‡ä»¶æœ«å°¾æ·»åŠ æ•°æ®
             uteModuleFilesystemWriteData(file,&writeBuff[0],buffSize);
             uteModuleFilesystemCloseFile(file);
         }
@@ -4816,7 +4816,7 @@ void uteModuleSportSaveStandTimeData(uint8_t standStartHour,uint8_t standStartMi
     uteModulePlatformMemoryFree(dirInfo);
 }
 /**
-*@brief      ¿ªÊ¼·¢ËÍÕ¾Á¢Ê±³¤Êı¾İ
+*@brief      å¼€å§‹å‘é€ç«™ç«‹æ—¶é•¿æ•°æ®
 *@details
 *@author     casen
 *@date       2022-07-14
@@ -4873,9 +4873,9 @@ void uteModuleSportSendStandTimeHistoryData(void)
     }
 }
 /**
-*@brief        ×¼±¸¿ªÊ¼·¢ËÍ¼Æ²½Êı¾İ
+*@brief        å‡†å¤‡å¼€å§‹å‘é€è®¡æ­¥æ•°æ®
 *@details
-*@param[in]  ĞèÒªÍ¬²½µÄÊı¾İÊ±¼ä´Á
+*@param[in]  éœ€è¦åŒæ­¥çš„æ•°æ®æ—¶é—´æˆ³
 *@author     casen
 *@date       2022-07-14
 */
@@ -4896,7 +4896,7 @@ void uteModuleSportStartSendStandTimeHistoryData(void)
 
 #if UTE_MODULE_SPORTS_HSTORY_RECORD_SUPPORT
 /**
-*@brief  ¶ÁÈ¡ÔË¶¯ÀúÊ·¼ÇÂ¼
+*@brief  è¯»å–è¿åŠ¨å†å²è®°å½•
 *@details
 *@author      dengli.lu
 *@date       2022-06-25
@@ -4932,9 +4932,9 @@ void uteModuleSportReadHistoryRecordData(void)
             uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].startSportTime.hour = readbuff[6];
             uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].startSportTime.min = readbuff[7];
             uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].startSportTime.sec = readbuff[8];
-            uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].stopSportTime.hour = (readbuff[13]<<16|readbuff[14]<<8|readbuff[15])/3600;//ÓÃÓÚ±íÊ¾ÔË¶¯Ê±³¤µÄĞ¡Ê±
-            uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].stopSportTime.min = (readbuff[13]<<16|readbuff[14]<<8|readbuff[15])%3600/60;//ÓÃÓÚ±íÊ¾ÔË¶¯Ê±³¤µÄ·ÖÖÓ
-            uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].stopSportTime.sec = (readbuff[13]<<16|readbuff[14]<<8|readbuff[15])%60;//ÓÃÓÚ±íÊ¾ÔË¶¯Ê±³¤µÄÃë
+            uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].stopSportTime.hour = (readbuff[13]<<16|readbuff[14]<<8|readbuff[15])/3600;//ç”¨äºè¡¨ç¤ºè¿åŠ¨æ—¶é•¿çš„å°æ—¶
+            uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].stopSportTime.min = (readbuff[13]<<16|readbuff[14]<<8|readbuff[15])%3600/60;//ç”¨äºè¡¨ç¤ºè¿åŠ¨æ—¶é•¿çš„åˆ†é’Ÿ
+            uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].stopSportTime.sec = (readbuff[13]<<16|readbuff[14]<<8|readbuff[15])%60;//ç”¨äºè¡¨ç¤ºè¿åŠ¨æ—¶é•¿çš„ç§’
             uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].sportStep = (readbuff[16]<<24|readbuff[17]<<16|readbuff[18]<<8|readbuff[19]);
             uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].sportTimes = (readbuff[20]<<8|readbuff[21]);
             uteModuleSprotData.sportsHistoryRecord.oneHistoryRecordData[vailCnt].sportCaloire = (readbuff[22]<<8|readbuff[23]);
@@ -4955,7 +4955,7 @@ void uteModuleSportReadHistoryRecordData(void)
     uteModulePlatformMemoryFree(dirInfo);
 }
 /**
-*@brief     »ñÈ¡ÔË¶¯ÀúÊ·Êı¾İ
+*@brief     è·å–è¿åŠ¨å†å²æ•°æ®
 *@details
 *@author      dengli.lu
 *@date       2022-06-25
@@ -4968,7 +4968,7 @@ void uteModuleSportsHistoryRecordGetData(ute_module_sports_record_data_t *data)
 }
 
 /**
-*@brief     ÉèÖÃÔË¶¯ÀúÊ·Êı¾İ±êÖ¾£¨ÔÚÀúÊ·¼ÇÂ¼½çÃæ½øÈëÉèÖÃ£©
+*@brief     è®¾ç½®è¿åŠ¨å†å²æ•°æ®æ ‡å¿—ï¼ˆåœ¨å†å²è®°å½•ç•Œé¢è¿›å…¥è®¾ç½®ï¼‰
 *@details
 *@author      pcm
 *@date       2022-010-15
@@ -4980,7 +4980,7 @@ void uteModuleSportsHistoryRecordSetIsHistoryRecordData(bool IsHistoryRecordData
 
 }
 /**
-*@brief     »ñÈ¡ÔË¶¯ÀúÊ·Êı¾İ±êÖ¾£¨ÔÚÀúÊ·¼ÇÂ¼½çÃæ½øÈëÉèÖÃ£©
+*@brief     è·å–è¿åŠ¨å†å²æ•°æ®æ ‡å¿—ï¼ˆåœ¨å†å²è®°å½•ç•Œé¢è¿›å…¥è®¾ç½®ï¼‰
 *@details
 *@author      pcm
 *@date       2022-010-15
@@ -4993,7 +4993,7 @@ bool uteModuleSportsHistoryRecordGetIsHistoryRecordData(void)
 }
 
 /**
-*@brief        »ñÈ¡´æÔÚ¼ÇÂ¼µÄ×ÜÌõÊı
+*@brief        è·å–å­˜åœ¨è®°å½•çš„æ€»æ¡æ•°
 *@details
 *@return uint8_t
 *@author      dengli.lu
@@ -5004,7 +5004,7 @@ uint8_t uteModuleSportsHistoryGetRecordTotalCnt(void)
     return uteModuleSprotData.sportsHistoryRecord.sportsHistoryRecordTotalCnt;
 }
 /**
-*@brief     ÉèÖÃÔË¶¯ÀúÊ·¼ÇÂ¼ÏÔÊ¾Ë÷Òı
+*@brief     è®¾ç½®è¿åŠ¨å†å²è®°å½•æ˜¾ç¤ºç´¢å¼•
 *@details
 *@author      dengli.lu
 *@date       2022-06-25
@@ -5017,8 +5017,8 @@ void uteModuleSportsSetHistoryRecordDisplayIndex(uint8_t displayIndex)
 
 #if UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT
 /**
-*@brief  ¶ÁÈ¡ÔË¶¯µ±ÌìÃ¿Ğ¡Ê±µÄÔË¶¯Ê±³¤
-*@details  totalSportMinSec:µ±Ìì×ÜµÄÔË¶¯Ê±³¤
+*@brief  è¯»å–è¿åŠ¨å½“å¤©æ¯å°æ—¶çš„è¿åŠ¨æ—¶é•¿
+*@details  totalSportMinSec:å½“å¤©æ€»çš„è¿åŠ¨æ—¶é•¿
 *@author   casen
 *@date     2022-07-13
 */
@@ -5032,7 +5032,7 @@ uint32_t uteModuleSportGetCurrDayEveryHourSportTime(void)
     memset(&path[0],0,sizeof(path));
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SPORT_MORE_SPORTS_DIR, dirInfo, NULL);
-    //Çå¿ÕÊı¾İ
+    //æ¸…ç©ºæ•°æ®
     memset(uteModuleSprotData.dailyActivity.everyHourSportTime,0x00,sizeof(uteModuleSprotData.dailyActivity.everyHourSportTime[0])*24);
 
     ute_module_systemtime_time_t time;
@@ -5067,7 +5067,7 @@ uint32_t uteModuleSportGetCurrDayEveryHourSportTime(void)
                         uint8_t i = 1;
                         while(sportTimeMin  > 60)
                         {
-                            //¿çÌìµÄÊı¾İ²»´¦Àí
+                            //è·¨å¤©çš„æ•°æ®ä¸å¤„ç†
                             if((startSportHour+i)<24)
                             {
                                 uteModuleSprotData.dailyActivity.everyHourSportTime[startSportHour+i] += 60;
@@ -5075,7 +5075,7 @@ uint32_t uteModuleSportGetCurrDayEveryHourSportTime(void)
                             sportTimeMin -= 60;
                             i++;
                         }
-                        //¿çÌìµÄÊı¾İ²»´¦Àí
+                        //è·¨å¤©çš„æ•°æ®ä¸å¤„ç†
                         if((startSportHour+i)<24)
                         {
                             uteModuleSprotData.dailyActivity.everyHourSportTime[startSportHour+i] += sportTimeMin;
@@ -5094,7 +5094,7 @@ uint32_t uteModuleSportGetCurrDayEveryHourSportTime(void)
 }
 
 /**
-*@brief      »ñÈ¡µ±ÌìÃ¿¸öĞ¡Ê±µÄ¿¨Â·Àï
+*@brief      è·å–å½“å¤©æ¯ä¸ªå°æ—¶çš„å¡è·¯é‡Œ
 *@details
 *@author     casen
 *@date       2022-07-13
@@ -5144,10 +5144,10 @@ uint16_t uteModuleSportGetCurrDayEveryHourKcal(void)
 }
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
 /**
-*@brief      »ñÈ¡µ±ÌìÃ¿¸öĞ¡Ê±µÄÕ¾Á¢Ê±³¤Êı¾İ
-*@details   1£©¶ÁÈ¡µ±ÌìÃ¿¸öĞ¡Ê±µÄÊı¾İ£¬²¢»º´æµ½È«¾Ö±äÁ¿ÖµÖĞ£»
-            2£©·µ»ØÖµÊÇµ±ÌìµÄÕ¾Á¢Ê±³¤£¬Ã¿´ÎÊÇ60·ÖÖÓ£¬Èç¹ûÒªÏÔÊ¾´ÎÊı£¬ĞèÒª³ıÒÔ60¼´¿ÉµÃµ½´ÎÊı
-*@return    µ±ÌìÕ¾Á¢Ê±³¤£¬µ¥Î»·ÖÖÓ
+*@brief      è·å–å½“å¤©æ¯ä¸ªå°æ—¶çš„ç«™ç«‹æ—¶é•¿æ•°æ®
+*@details   1ï¼‰è¯»å–å½“å¤©æ¯ä¸ªå°æ—¶çš„æ•°æ®ï¼Œå¹¶ç¼“å­˜åˆ°å…¨å±€å˜é‡å€¼ä¸­ï¼›
+            2ï¼‰è¿”å›å€¼æ˜¯å½“å¤©çš„ç«™ç«‹æ—¶é•¿ï¼Œæ¯æ¬¡æ˜¯60åˆ†é’Ÿï¼Œå¦‚æœè¦æ˜¾ç¤ºæ¬¡æ•°ï¼Œéœ€è¦é™¤ä»¥60å³å¯å¾—åˆ°æ¬¡æ•°
+*@return    å½“å¤©ç«™ç«‹æ—¶é•¿ï¼Œå•ä½åˆ†é’Ÿ
 *@author     casen
 *@date       2022-07-13
 */
@@ -5167,7 +5167,7 @@ uint16_t uteModuleSportGetCurrDayEveryHourStandTime(void)
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SPORT_STAND_TIME_DATA, dirInfo, NULL);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,uteModuleSprotMute = 0x%d,", __func__,uteModuleSprotMute);
-    //Çå¿ÕÊı¾İ
+    //æ¸…ç©ºæ•°æ®
     memset(uteModuleSprotData.dailyActivity.everyHourStandTime,0x00,sizeof(uteModuleSprotData.dailyActivity.everyHourStandTime[0])*24);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,dirInfo->filesCnt = %d,", __func__,dirInfo->filesCnt);
     for(uint8_t i = dirInfo->filesCnt; i > 0; i--)
@@ -5205,8 +5205,8 @@ uint16_t uteModuleSportGetCurrDayEveryHourStandTime(void)
 }
 #endif
 /**
-*@brief     ¶ÁÈ¡Ã¿Ğ¡Ê±ËùÓĞÔË¶¯µÄ²½ÊıÊı¾İ
-*@details   ¿ª»úµÄÊ±ºò¶ÁÈ¡flashÀïÃæµÄ±£´æÊı¾İ
+*@brief     è¯»å–æ¯å°æ—¶æ‰€æœ‰è¿åŠ¨çš„æ­¥æ•°æ•°æ®
+*@details   å¼€æœºçš„æ—¶å€™è¯»å–flashé‡Œé¢çš„ä¿å­˜æ•°æ®
 *@author    casen
 *@date      2022-07-14
 */
@@ -5230,14 +5230,14 @@ void uteModuleSportReadTodayEveryHourAllSportStepData(void)
 }
 
 /**
-*@brief     ±£´æÃ¿Ğ¡Ê±ËùÓĞÔË¶¯²½ÊıÊı¾İ
-*@details   ¹Ø»úµÄÊ±ºò£¬±£´æÊı¾İµ½flash
+*@brief     ä¿å­˜æ¯å°æ—¶æ‰€æœ‰è¿åŠ¨æ­¥æ•°æ•°æ®
+*@details   å…³æœºçš„æ—¶å€™ï¼Œä¿å­˜æ•°æ®åˆ°flash
 *@author     casen
 *@date        2022-07-14
 */
 void uteModuleSportSaveTodayEveryHourAllSportStepData(void)
 {
-    /*! ±£´æÄ¿±êÊı¾İ*/
+    /*! ä¿å­˜ç›®æ ‡æ•°æ®*/
     void *file;
     if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SPORT_TODAY_EVERYHOUR_ALLSPORT_STEP_DATA, &file, FS_O_RDONLY|FS_O_WRONLY|FS_O_CREAT))
     {
@@ -5255,7 +5255,7 @@ void uteModuleSportSaveTodayEveryHourAllSportStepData(void)
 }
 
 /**
-*@brief     ¶ÁÈ¡Ã¿Ğ¡Ê±ËùÓĞÔË¶¯µÄ¿¨Â·ÀïÊı¾İ
+*@brief     è¯»å–æ¯å°æ—¶æ‰€æœ‰è¿åŠ¨çš„å¡è·¯é‡Œæ•°æ®
 *@details
 *@author    casen
 *@date      2022-07-14
@@ -5272,10 +5272,10 @@ void uteModuleSportReadTodayEveryHourAllSportKcalData(void)
 }
 
 /**
-*@brief     ¶ÁÈ¡Ò»ÌìµÄËùÓĞ²½Êı£¬°üÀ¨¶àÔË¶¯µÄ
+*@brief     è¯»å–ä¸€å¤©çš„æ‰€æœ‰æ­¥æ•°ï¼ŒåŒ…æ‹¬å¤šè¿åŠ¨çš„
 *@details
-*@param[in] ute_module_systemtime_time_t time, ¶ÁÈ¡µÄÊ±¼ä
-*@return uint32_t ·µ»Ø×Ü²½Êı
+*@param[in] ute_module_systemtime_time_t time, è¯»å–çš„æ—¶é—´
+*@return uint32_t è¿”å›æ€»æ­¥æ•°
 *@author        zn.zeng
 *@date        2022-09-02
 */
@@ -5308,7 +5308,7 @@ uint32_t uteModuleSportReadAllStepWithTime(ute_module_systemtime_time_t time)
     return totalStep;
 }
 /**
-*@brief     ¶ÁÈ¡Ò»ÖÜÄÚÃ¿ÌìµÄ×Ü¼Æ²½Êı¾İ
+*@brief     è¯»å–ä¸€å‘¨å†…æ¯å¤©çš„æ€»è®¡æ­¥æ•°æ®
 *@details
 *@author        zn.zeng
 *@date        2022-08-19
@@ -5331,14 +5331,14 @@ void uteModuleSportReadWeekDayStep(void)
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL,"%s,finish",__func__);
 }
 /**
-*@brief     ±£´æÃ¿Ğ¡Ê±ËùÓĞ¿¨Â·Àï²½ÊıÊı¾İ
+*@brief     ä¿å­˜æ¯å°æ—¶æ‰€æœ‰å¡è·¯é‡Œæ­¥æ•°æ•°æ®
 *@details
 *@author        dengli.lu
 *@date        2022-03-18
 */
 void uteModuleSportSaveTodayEveryHourAllSportKcalData(void)
 {
-    /*! ±£´æÄ¿±êÊı¾İ*/
+    /*! ä¿å­˜ç›®æ ‡æ•°æ®*/
     void *file;
     if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SPORT_TODAY_EVERYHOUR_ALLSPORT_KCAL_DATA, &file, FS_O_RDONLY|FS_O_WRONLY|FS_O_CREAT))
     {
@@ -5349,16 +5349,16 @@ void uteModuleSportSaveTodayEveryHourAllSportKcalData(void)
 
 }
 /**
-*@brief     ¼ÓÔØ½ñÈÕ»î¶¯Ã¿¸öĞ¡Ê±µÄ²½ÊıÖù×´Í¼
+*@brief     åŠ è½½ä»Šæ—¥æ´»åŠ¨æ¯ä¸ªå°æ—¶çš„æ­¥æ•°æŸ±çŠ¶å›¾
 *@details
 *@param[in] everyHourStepHistorygramGraph
-*@param[in] color ÑÕÉ«
-*@param[in] x¿ªÊ¼×ø±ê
-*@param[in] y¿ªÊ¼×ø±ê
-*@param[in] drawWidth ¿í¶È
-*@param[in] intervalWidth Ö®¼äµÄ¼ä¸ô
-*@param[in] hightRange ¶ÔÓ¦µÄÏñËØ¸ß¶È
-*@return  uint32_t  µ±Ìì×î´óÊı¾İµÄÕû1000±¶Êı¾İ£¬Èç2300£¬·µ»Ø3000£¬×îĞ¡·µ»Ø1000
+*@param[in] color é¢œè‰²
+*@param[in] xå¼€å§‹åæ ‡
+*@param[in] yå¼€å§‹åæ ‡
+*@param[in] drawWidth å®½åº¦
+*@param[in] intervalWidth ä¹‹é—´çš„é—´éš”
+*@param[in] hightRange å¯¹åº”çš„åƒç´ é«˜åº¦
+*@return  uint32_t  å½“å¤©æœ€å¤§æ•°æ®çš„æ•´1000å€æ•°æ®ï¼Œå¦‚2300ï¼Œè¿”å›3000ï¼Œæœ€å°è¿”å›1000
 *@author      dengli.lu
 *@date       2022-07-14
 */
@@ -5472,16 +5472,16 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(UT_GraphsParam *everyHo
     return intStep1000;
 }
 /**
-*@brief     ¼ÓÔØ½ñÈÕ»î¶¯Ã¿¸öĞ¡Ê±µÄKcalÖù×´Í¼
+*@brief     åŠ è½½ä»Šæ—¥æ´»åŠ¨æ¯ä¸ªå°æ—¶çš„KcalæŸ±çŠ¶å›¾
 *@details
 *@param[in] everyHourStepHistorygramGraph
-*@param[in] color ÑÕÉ«
-*@param[in] x¿ªÊ¼×ø±ê
-*@param[in] y¿ªÊ¼×ø±ê
-*@param[in] drawWidth ¿í¶È
-*@param[in] intervalWidth Ö®¼äµÄ¼ä¸ô
-*@param[in] hightRange ¶ÔÓ¦µÄÏñËØ¸ß¶È
-*@return    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@param[in] color é¢œè‰²
+*@param[in] xå¼€å§‹åæ ‡
+*@param[in] yå¼€å§‹åæ ‡
+*@param[in] drawWidth å®½åº¦
+*@param[in] intervalWidth ä¹‹é—´çš„é—´éš”
+*@param[in] hightRange å¯¹åº”çš„åƒç´ é«˜åº¦
+*@return    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author      dengli.lu
 *@date       2022-07-14
 */
@@ -5559,16 +5559,16 @@ bool uteModuleSportLoadTodayEveryHourKcalHistoryData(UT_GraphsParam *everyHourKc
     return true;
 }
 /**
-*@brief     ¼ÓÔØ½ñÈÕ»î¶¯Ã¿¸öĞ¡Ê±µÄÔË¶¯Ê±³¤Öù×´Í¼
+*@brief     åŠ è½½ä»Šæ—¥æ´»åŠ¨æ¯ä¸ªå°æ—¶çš„è¿åŠ¨æ—¶é•¿æŸ±çŠ¶å›¾
 *@details
 *@param[in] everyHourStepHistorygramGraph
-*@param[in] color ÑÕÉ«
-*@param[in] x¿ªÊ¼×ø±ê
-*@param[in] y¿ªÊ¼×ø±ê
-*@param[in] drawWidth ¿í¶È
-*@param[in] intervalWidth Ö®¼äµÄ¼ä¸ô
-*@param[in] hightRange ¶ÔÓ¦µÄÏñËØ¸ß¶È
-*@return    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@param[in] color é¢œè‰²
+*@param[in] xå¼€å§‹åæ ‡
+*@param[in] yå¼€å§‹åæ ‡
+*@param[in] drawWidth å®½åº¦
+*@param[in] intervalWidth ä¹‹é—´çš„é—´éš”
+*@param[in] hightRange å¯¹åº”çš„åƒç´ é«˜åº¦
+*@return    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author      dengli.lu
 *@date       2022-07-14
 */
@@ -5623,16 +5623,16 @@ bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(UT_GraphsParam *everyH
 }
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
 /**
-*@brief     ¼ÓÔØ½ñÈÕ»î¶¯Ã¿¸öĞ¡Ê±µÄÕ¾Á¢Ê±³¤Öù×´Í¼
+*@brief     åŠ è½½ä»Šæ—¥æ´»åŠ¨æ¯ä¸ªå°æ—¶çš„ç«™ç«‹æ—¶é•¿æŸ±çŠ¶å›¾
 *@details
 *@param[in] everyHourStepHistorygramGraph
-*@param[in] color ÑÕÉ«
-*@param[in] x¿ªÊ¼×ø±ê
-*@param[in] y¿ªÊ¼×ø±ê
-*@param[in] drawWidth ¿í¶È
-*@param[in] intervalWidth Ö®¼äµÄ¼ä¸ô
-*@param[in] hightRange ¶ÔÓ¦µÄÏñËØ¸ß¶È
-*@return    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@param[in] color é¢œè‰²
+*@param[in] xå¼€å§‹åæ ‡
+*@param[in] yå¼€å§‹åæ ‡
+*@param[in] drawWidth å®½åº¦
+*@param[in] intervalWidth ä¹‹é—´çš„é—´éš”
+*@param[in] hightRange å¯¹åº”çš„åƒç´ é«˜åº¦
+*@return    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author      dengli.lu
 *@date       2022-07-14
 */
@@ -5663,17 +5663,17 @@ uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(UT_GraphsParam *ev
 }
 #endif
 /**
-*@brief     ¼ÓÔØ½ñÈÕ»î¶¯ÖÜÃ¿ÌìµÄ²½ÊıÖù×´Í¼
+*@brief     åŠ è½½ä»Šæ—¥æ´»åŠ¨å‘¨æ¯å¤©çš„æ­¥æ•°æŸ±çŠ¶å›¾
 *@details
 *@param[in] weekDayStepHistorygramGraph
-*@param[in] color ÑÕÉ«
-*@param[in] x¿ªÊ¼×ø±ê
-*@param[in] y¿ªÊ¼×ø±ê
-*@param[in] drawWidth ¿í¶È
-*@param[in] intervalWidth Ö®¼äµÄ¼ä¸ô
-*@param[in] hightRange ¶ÔÓ¦µÄÏñËØ¸ß¶È
-*@param[out] *totalStep ÖÜ²½Êı×Ü²½Êı
-*@return  uint32_t  µ±ÖÜ×î´óÊı¾İµÄÕû1000±¶Êı¾İ£¬Èç2300£¬·µ»Ø3000£¬×îĞ¡·µ»Ø1000
+*@param[in] color é¢œè‰²
+*@param[in] xå¼€å§‹åæ ‡
+*@param[in] yå¼€å§‹åæ ‡
+*@param[in] drawWidth å®½åº¦
+*@param[in] intervalWidth ä¹‹é—´çš„é—´éš”
+*@param[in] hightRange å¯¹åº”çš„åƒç´ é«˜åº¦
+*@param[out] *totalStep å‘¨æ­¥æ•°æ€»æ­¥æ•°
+*@return  uint32_t  å½“å‘¨æœ€å¤§æ•°æ®çš„æ•´1000å€æ•°æ®ï¼Œå¦‚2300ï¼Œè¿”å›3000ï¼Œæœ€å°è¿”å›1000
 *@author      zn.zeng
 *@date       2022-09-02
 */
@@ -5742,7 +5742,7 @@ uint32_t uteModuleSportLoadWeekDayStepHistoryData(UT_GraphsParam *weekDayStepHis
 
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
 /**
-*@brief  ¶àÔË¶¯Ä¿±êÌáĞÑ³õÊ¼»¯º¯Êı
+*@brief  å¤šè¿åŠ¨ç›®æ ‡æé†’åˆå§‹åŒ–å‡½æ•°
 *@details
 *@author        dengli.lu
 *@date        2022-03-08
@@ -5755,14 +5755,14 @@ void uteModuleSportMoreSportsTargetInit(void)
 #endif
 }
 /**
-*@brief     ¶àÔË¶¯Ä¿±êÌáĞÑ¶ÁÈ¡Êı¾İ
+*@brief     å¤šè¿åŠ¨ç›®æ ‡æé†’è¯»å–æ•°æ®
 *@details
 *@author        dengli.lu
 *@date        2022-04-24
 */
 void uteModuleSportMoreSportsTargetReadConfig(void)
 {
-    /*! ±£´æµ½ÎÄ¼şdengli.lu, 2022-04-24*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶dengli.lu, 2022-04-24*/
     void *file;
     uint8_t readbuff[11];
     memset(readbuff,0,11);
@@ -5790,14 +5790,14 @@ void uteModuleSportMoreSportsTargetReadConfig(void)
     uteModuleSprotData.moreSportsTarget.isNoTarget = readbuff[10];
 }
 /**
-*@brief     ¶àÔË¶¯Ä¿±êÌáĞÑ±£´æÊı¾İµ½ÄÚ´æ
+*@brief     å¤šè¿åŠ¨ç›®æ ‡æé†’ä¿å­˜æ•°æ®åˆ°å†…å­˜
 *@details
 *@author        dengli.lu
 *@date        2022-04-24
 */
 void uteModuleSportMoreSportsTargetSaveData(void)
 {
-    /*! ±£´æµ½ÎÄ¼ş£¬dengli.lu, 2022-04-24*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶ï¼Œdengli.lu, 2022-04-24*/
     void *file;
     uint8_t writebuff[11];
     writebuff[0] = (uteModuleSprotData.moreSportsTarget.sportDistanceTargeCnt>>24)&0xff;
@@ -5819,9 +5819,9 @@ void uteModuleSportMoreSportsTargetSaveData(void)
     }
 }
 /**
-*@brief  ÉèÖÃ¶àÔË¶¯Ä¿±ê
+*@brief  è®¾ç½®å¤šè¿åŠ¨ç›®æ ‡
 *@details
-*@param[in] ute_module_sports_target_data_t setMoreSportsTarget  ´«ÈëÒªÉèÖÃ¶àÔË¶¯Ä¿±ê²ÎÊıµÄÖ¸Õë
+*@param[in] ute_module_sports_target_data_t setMoreSportsTarget  ä¼ å…¥è¦è®¾ç½®å¤šè¿åŠ¨ç›®æ ‡å‚æ•°çš„æŒ‡é’ˆ
 *@author      dengli.lu
 *@date       2022-03-08
 */
@@ -5835,9 +5835,9 @@ void uteModuleSportSetMoreSportsTargetData(ute_module_sports_target_data_t setMo
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief  »ñÈ¡¶àÔË¶¯Ä¿±ê
+*@brief  è·å–å¤šè¿åŠ¨ç›®æ ‡
 *@details
-*@param[in] ute_module_sports_target_data_t *sportsTarget  ´«Èë»ñÈ¡¶àÔË¶¯Ä¿±ê²ÎÊıµÄÖ¸Õë
+*@param[in] ute_module_sports_target_data_t *sportsTarget  ä¼ å…¥è·å–å¤šè¿åŠ¨ç›®æ ‡å‚æ•°çš„æŒ‡é’ˆ
 *@author      dengli.lu
 *@date       2022-03-08
 */
@@ -5852,7 +5852,7 @@ void uteModuleSportGetMoreSportsTargetData(ute_module_sports_target_data_t *spor
     uteModulePlatformGiveMutex(uteModuleSprotMute);
 }
 /**
-*@brief        ¶àÔË¶¯Ä¿±ê´¦Àí
+*@brief        å¤šè¿åŠ¨ç›®æ ‡å¤„ç†
 *@details
 *@author      dengli.lu
 *@date       2022-03-08
@@ -5862,14 +5862,14 @@ void uteModuleSportMoreSportsTargetsProcess(void)
     uint32_t sportDistancemi = 0;
     float distance = 0;
     distance = (float)(uteModuleSprotData.moreSportData.saveData.sportDistanceInteger + (float)(uteModuleSprotData.moreSportData.saveData.sportDistanceDecimals*0.01f));
-    distance = distance*1000.0f; //·Å´ó1000±¶,m
+    distance = distance*1000.0f; //æ”¾å¤§1000å€,m
     sportDistancemi = (uint32_t)distance;
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,status =%d", __func__,uteModuleSprotData.moreSportData.status);
-    if((uteModuleSprotData.moreSportData.totalSportTime > 0) && (!uteModuleSprotData.moreSportsTarget.isNoTarget))//Æô¶¯ÔË¶¯Ä¿±êÌáĞÑ
+    if((uteModuleSprotData.moreSportData.totalSportTime > 0) && (!uteModuleSprotData.moreSportsTarget.isNoTarget))//å¯åŠ¨è¿åŠ¨ç›®æ ‡æé†’
     {
         if(0)
         {}
-#if UTE_SPORTS_ITTEGER_KM_DISTANCE_TARGET//Õû¹«ÀïÌáĞÑ
+#if UTE_SPORTS_ITTEGER_KM_DISTANCE_TARGET//æ•´å…¬é‡Œæé†’
         else if(sportDistancemi >= (UTE_SPORTS_ITTEGER_KM_DISTANCE_TARGET*1000))
         {
             if(uteModuleSprotData.moreSportsTarget.isSportIntegerKmHasNotify == false)
@@ -5947,7 +5947,7 @@ void uteModuleSportMoreSportsTargetsProcess(void)
 }
 #endif
 /**
-*@brief        ´¦ÀíÔË¶¯ĞÄÂÊÖµ¾¯¸æÊı¾İ
+*@brief        å¤„ç†è¿åŠ¨å¿ƒç‡å€¼è­¦å‘Šæ•°æ®
 *@details
 *@author      denglilu
 *@date       2022-03-16
@@ -5990,7 +5990,7 @@ void uteModuleSportMoreSportsHeartWarningProcess(void)
 #endif
 
 /**
-*@brief       »ñÈ¡¶àÔË¶¯µÄÔË¶¯¶Ï¿ªÁ¬½Ó³¬Ê±¼ÆÊı
+*@brief       è·å–å¤šè¿åŠ¨çš„è¿åŠ¨æ–­å¼€è¿æ¥è¶…æ—¶è®¡æ•°
 *@details
 *@author     casen
 *@date       2022-09-04
@@ -6002,7 +6002,7 @@ uint16_t uteModuleSportMoreSportGetDisconnectTimeoutCnt(void)
 
 #if UTE_MODULE_SPORT_CLASSIFICATION_SUPPORT
 /**
-*@brief       »ñÈ¡¶àÔË¶¯µÄÔË¶¯·ÖÀà½çÃæ
+*@brief       è·å–å¤šè¿åŠ¨çš„è¿åŠ¨åˆ†ç±»ç•Œé¢
 *@details
 *@author     xjc
 *@date       2022-11-28
@@ -6012,7 +6012,7 @@ TRAIN_LIST_PAGE_T uteModuleSportMoreSportGetTrainListPage(void)
     return uteModuleSprotData.trainListPage;
 }
 /**
-*@brief      ÉèÖÃ¶àÔË¶¯µÄÔË¶¯·ÖÀà½çÃæ
+*@brief      è®¾ç½®å¤šè¿åŠ¨çš„è¿åŠ¨åˆ†ç±»ç•Œé¢
 *@details
 *@author     xjc
 *@date       2022-11-28
@@ -6033,11 +6033,11 @@ void uteModuleSportGetHeartZoneArray(ute_module_sport_heart_zone_data_t *zoneDat
 uint8_t  uteModuleSportGetHeartZoneRange(uint8_t *heartHistory,uint8_t heartCnt,uint8_t *reduceStatus,uint8_t *burnFatStatus,uint8_t *heartLungStatus,uint8_t *noOxygenStatus,uint8_t *limitStatus)
 {
     uint8_t zoneRange = 0;
-    uint8_t reduceStatusCounter =0; // ¼õÑ¹
-    uint8_t burnFatStatusCounter =0;    //È¼Ö¬
-    uint8_t heartLungStatusCounter =0;  // ĞÄ·Î
-    uint8_t noOxygenStatusCounter =0;   // ÎŞÑõ
-    uint8_t limitStatusCounter =0;  // ¼«ÏŞ
+    uint8_t reduceStatusCounter =0; // å‡å‹
+    uint8_t burnFatStatusCounter =0;    //ç‡ƒè„‚
+    uint8_t heartLungStatusCounter =0;  // å¿ƒè‚º
+    uint8_t noOxygenStatusCounter =0;   // æ— æ°§
+    uint8_t limitStatusCounter =0;  // æé™
     uint8_t heartHistoryCounter = 0;
     for(uint8_t index =0; index<heartCnt; index++)
     {
@@ -6045,7 +6045,7 @@ uint8_t  uteModuleSportGetHeartZoneRange(uint8_t *heartHistory,uint8_t heartCnt,
         {
             zoneRange = uteModuleHeartGetHeartValueRange(heartHistory[index]);
             UTE_MODULE_LOG(1,"%s,HEART [%d] = %d ,zoneRange = %d",__func__,index,heartHistory[index],zoneRange);
-            if(zoneRange!=1)  //¹ıÂË¾²Ï¢
+            if(zoneRange!=1)  //è¿‡æ»¤é™æ¯
             {
                 heartHistoryCounter++;
             }
@@ -6168,8 +6168,8 @@ void  uteModuleSportGetHeartZoneRangePercent(uint8_t heartHistoryCounter,uint8_t
 }
 
 /**
-*@brief  ¶ÁÈ¡ÔË¶¯ÀúÊ·ĞÄÂÊÇø¼äÊı¾İ
-*@details  queryTime ²éÑ¯µÄÊ±¼ä
+*@brief  è¯»å–è¿åŠ¨å†å²å¿ƒç‡åŒºé—´æ•°æ®
+*@details  queryTime æŸ¥è¯¢çš„æ—¶é—´
 *@author   casen
 *@date     2023-02-18
 */
@@ -6184,11 +6184,11 @@ void uteModuleSportReadHistoryHeartZoneData(ute_module_systemtime_time_t *queryT
     memset(&datePath[0],0,sizeof(datePath));
     sprintf((char *)&datePath[0],"%04d%02d%02d%02d%02d",queryTime->year,queryTime->month,queryTime->day,queryTime->hour,queryTime->min);
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,datePath = %s", __func__, datePath);
-    uint8_t reduceStatusCounter =0; // ¼õÑ¹
-    uint8_t burnFatStatusCounter =0;    //È¼Ö¬
-    uint8_t heartLungStatusCounter =0;  // ĞÄ·Î
-    uint8_t noOxygenStatusCounter =0;   // ÎŞÑõ
-    uint8_t limitStatusCounter =0;  // ¼«ÏŞ
+    uint8_t reduceStatusCounter =0; // å‡å‹
+    uint8_t burnFatStatusCounter =0;    //ç‡ƒè„‚
+    uint8_t heartLungStatusCounter =0;  // å¿ƒè‚º
+    uint8_t noOxygenStatusCounter =0;   // æ— æ°§
+    uint8_t limitStatusCounter =0;  // æé™
     uint8_t heartHistoryCounter =0;
     uint8_t zoneRange = 0;
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
@@ -6208,7 +6208,7 @@ void uteModuleSportReadHistoryHeartZoneData(ute_module_systemtime_time_t *queryT
                 uteModuleFilesystemReadData(file,&readbuff[0],33);
                 uint16_t heartTotalLen = (uint16_t)(readbuff[31]<<8|readbuff[32]);
                 UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,heartTotalLen = %d,readbuff[31] =%d , readbuff[32] = %d", __func__,heartTotalLen,readbuff[31],readbuff[32]);
-                /*¶ÁÈ¡ĞÄÂÊÊı¾İ*/
+                /*è¯»å–å¿ƒç‡æ•°æ®*/
                 uint8_t tempHeartBuff[24];
                 uint16_t heartBuffLength = sizeof(tempHeartBuff)/sizeof(&tempHeartBuff[0]);
                 memset(tempHeartBuff,0x00,heartBuffLength);
@@ -6219,7 +6219,7 @@ void uteModuleSportReadHistoryHeartZoneData(ute_module_systemtime_time_t *queryT
                     uteModuleFilesystemSeek(file,33+i*heartBuffLength,FS_SEEK_SET);
                     uteModuleFilesystemReadData(file,&tempHeartBuff[0],heartBuffLength);
                     heartHistoryCounter += uteModuleSportGetHeartZoneRange(tempHeartBuff,heartBuffLength,&tempReduce,&tempBurnFat,&tempHeartLung,&tempNoOxygen,&tempLimit);
-                    //ÀÛ¼Æ
+                    //ç´¯è®¡
                     reduceStatusCounter += tempReduce;
                     burnFatStatusCounter += tempBurnFat;
                     heartLungStatusCounter += tempHeartLung;
@@ -6233,7 +6233,7 @@ void uteModuleSportReadHistoryHeartZoneData(ute_module_systemtime_time_t *queryT
                     uteModuleFilesystemSeek(file,33+(heartTotalLen/heartBuffLength)*heartBuffLength,FS_SEEK_SET);
                     uteModuleFilesystemReadData(file,&tempHeartBuff[0],heartTotalLen%heartBuffLength);
                     heartHistoryCounter += uteModuleSportGetHeartZoneRange(tempHeartBuff,heartTotalLen%heartBuffLength,&tempReduce,&tempBurnFat,&tempHeartLung,&tempNoOxygen,&tempLimit);
-                    //ÀÛ¼Æ
+                    //ç´¯è®¡
                     reduceStatusCounter += tempReduce;
                     burnFatStatusCounter += tempBurnFat;
                     heartLungStatusCounter += tempHeartLung;
@@ -6243,7 +6243,7 @@ void uteModuleSportReadHistoryHeartZoneData(ute_module_systemtime_time_t *queryT
                 UTE_MODULE_LOG(UTE_LOG_STEP_LVL,"%s ,status,%d,%d,%d,%d,%d ,heartHistoryCounter = %d",__func__,reduceStatusCounter,burnFatStatusCounter,heartLungStatusCounter,noOxygenStatusCounter,limitStatusCounter,heartHistoryCounter);
                 uteModuleSportGetHeartZoneRangePercent(heartHistoryCounter,reduceStatusCounter,burnFatStatusCounter,heartLungStatusCounter,noOxygenStatusCounter,limitStatusCounter);
                 UTE_MODULE_LOG(UTE_LOG_STEP_LVL,"%s ,StatusPencent %d,%d,%d,%d,%d ",__func__,sportHeartZoneData.reducePer,sportHeartZoneData.burnFatPer,sportHeartZoneData.heartLungPer,sportHeartZoneData.noOxygenPer,sportHeartZoneData.limitPer);
-                /*¶ÁÈ¡ĞÄÂÊÊı¾İ*/
+                /*è¯»å–å¿ƒç‡æ•°æ®*/
 
                 uteModuleFilesystemCloseFile(file);
                 break;
@@ -6255,15 +6255,15 @@ void uteModuleSportReadHistoryHeartZoneData(ute_module_systemtime_time_t *queryT
 }
 
 /**
-*@brief     ¼ÓÔØĞÄÂÊÇø¼äÖù×´Í¼
-*@details   ÕâÀï¼ÓÔØµÄÊÇÃ¿ĞĞ¶ÀÁ¢µÄÇø¼äÍ¼£¬Ò»°ãÔÚLONGPAGEVIEW ½çÃæÖĞ»¹ÒªÖØĞÂÉèÖÃ¶ÔÓ¦µÄy.
-            Ò²¿ÉÒÔÍ¨¹ıÉèÖÃxÊµÏÖÇø¼ä±ÈÀıÔÚÍ¬Ò»ĞĞ.
-*@param[in] zoneGramGraph Êı×éÖ¸Õë£¬ĞèÒª´«µİÒ»¸öÀàĞÍÊÇUT_GraphsParam ³¤¶ÈÊÇ5µÄÊı×éµØÖ·£¬¶ÔÓ¦¼õÑ¹¡¢È¼Ö¬¡¢ĞÄ·Î¡¢ÎŞÑõ¡¢¼«ÏŞ
-*@param[in] color ÑÕÉ«
-*@param[in] x¿ªÊ¼×ø±ê
-*@param[in] y¿ªÊ¼×ø±ê
-*@param[in] drawWidth ×ÜµÄ¿í¶ÈÓÃÓÚ¼ÆËã±ÈÀı
-*@param[in] drawHight ¸ß¶È
+*@brief     åŠ è½½å¿ƒç‡åŒºé—´æŸ±çŠ¶å›¾
+*@details   è¿™é‡ŒåŠ è½½çš„æ˜¯æ¯è¡Œç‹¬ç«‹çš„åŒºé—´å›¾ï¼Œä¸€èˆ¬åœ¨LONGPAGEVIEW ç•Œé¢ä¸­è¿˜è¦é‡æ–°è®¾ç½®å¯¹åº”çš„y.
+            ä¹Ÿå¯ä»¥é€šè¿‡è®¾ç½®xå®ç°åŒºé—´æ¯”ä¾‹åœ¨åŒä¸€è¡Œ.
+*@param[in] zoneGramGraph æ•°ç»„æŒ‡é’ˆï¼Œéœ€è¦ä¼ é€’ä¸€ä¸ªç±»å‹æ˜¯UT_GraphsParam é•¿åº¦æ˜¯5çš„æ•°ç»„åœ°å€ï¼Œå¯¹åº”å‡å‹ã€ç‡ƒè„‚ã€å¿ƒè‚ºã€æ— æ°§ã€æé™
+*@param[in] color é¢œè‰²
+*@param[in] xå¼€å§‹åæ ‡
+*@param[in] yå¼€å§‹åæ ‡
+*@param[in] drawWidth æ€»çš„å®½åº¦ç”¨äºè®¡ç®—æ¯”ä¾‹
+*@param[in] drawHight é«˜åº¦
 *@return
 *@author    casen
 *@date      2023-02-21
@@ -6319,7 +6319,7 @@ uint8_t sendDbgData[160];
 uint8_t sendFrameCnt = 0;
 uint32_t sendDbgDataCnt = 0;
 /**
-*@brief        ·¢ËÍgsensor²É¼¯Ô­Ê¼Êı¾İ
+*@brief        å‘é€gsensoré‡‡é›†åŸå§‹æ•°æ®
 *@details
 *@author       dengli.lu
 *@date       2023-09-15
@@ -6368,7 +6368,7 @@ void uteModuleSportSendGsensorDataToPhone(int16_t tempx, int16_t tempy,int16_t t
     }
 }
 /**
-*@brief        ÉèÖÃgsensor²É¼¯Ô­Ê¼Êı¾İ¿ª¹Ø
+*@brief        è®¾ç½®gsensoré‡‡é›†åŸå§‹æ•°æ®å¼€å…³
 *@details
 *@author       dengli.lu
 *@date       2023-09-15
@@ -6378,7 +6378,7 @@ void uteModuleSportSetAppDebugGsensorDataSwitch(bool appDebugGsensorDataSwitch)
     uteModuleSprotData.appDebugGsensorDataSwitch = appDebugGsensorDataSwitch;
 }
 /**
-*@brief        »ñÈ¡gsensor²É¼¯Ô­Ê¼Êı¾İ¿ª¹Ø
+*@brief        è·å–gsensoré‡‡é›†åŸå§‹æ•°æ®å¼€å…³
 *@details
 *@author       dengli.lu
 *@date       2023-09-15
@@ -6390,7 +6390,7 @@ bool uteModuleSportGetAppDebugGsensorDataSwitch(void)
 #endif
 
 #if UTE_MODULE_WATCH_ROTATE_SUPPORT
-/**         »ñÈ¡Ğı×ªÕıÔÚ²âÊÔÖĞ
+/**         è·å–æ—‹è½¬æ­£åœ¨æµ‹è¯•ä¸­
 *@brief
 *@details
 *@author     dengli.lu
@@ -6401,7 +6401,7 @@ bool uteModuleSportGetGsensorRotateTesting(void)
     return uteModuleSprotData.isGsensorRotateTesting;
 }
 /**
-* @brief        ÉèÖÃĞı×ªÕıÔÚ²âÊÔÖĞ
+* @brief        è®¾ç½®æ—‹è½¬æ­£åœ¨æµ‹è¯•ä¸­
 * @details
 * @param[in]
 *@author     dengli.lu
@@ -6412,7 +6412,7 @@ void uteModuleSportSetGsensorRotateTesting(bool isGsensorRotateTesting)
     uteModuleSprotData.isGsensorRotateTesting = isGsensorRotateTesting;
 }
 /**
-*@brief        »ñÈ¡Ëã·¨ÖĞgsensorĞı×ª´ÎÊı,Ã¿500ms»òÕßÃ¿Ãë»ñÈ¡Ò»´Î
+*@brief        è·å–ç®—æ³•ä¸­gsensoræ—‹è½¬æ¬¡æ•°,æ¯500msæˆ–è€…æ¯ç§’è·å–ä¸€æ¬¡
 *@details
 *@author       dengli.lu
 *@date       2023-09-15
@@ -6422,7 +6422,7 @@ uint16_t uteModuleSportGetGsensorRotateCnt(void)
     return getRotateResult();
 }
 /**
-*@brief        Çå³ıËã·¨ÖĞgsensorĞı×ª´ÎÊı
+*@brief        æ¸…é™¤ç®—æ³•ä¸­gsensoræ—‹è½¬æ¬¡æ•°
 *@details
 *@author       dengli.lu
 *@date       2023-09-15
@@ -6463,9 +6463,9 @@ void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
 }
 
 /**
- * @brief        ¿ªÆô¼Ç²½Ëã·¨¶¨Ê±Æ÷
+ * @brief        å¼€å¯è®°æ­¥ç®—æ³•å®šæ—¶å™¨
  * @details
- * @param[in]    ms ¶¨Ê±¼äÊ±³¤
+ * @param[in]    ms å®šæ—¶é—´æ—¶é•¿
  * @author       Wang.Luo
  * @date         2023-05-05
  */
@@ -6479,7 +6479,7 @@ void uteModuleSportAlgoTimerStart(uint16_t ms)
     uteModulePlatformRestartTimer(&uteModuleSportInputDataBeforeAlgoTimer, ms);
 }
 /**
- * @brief        Í£Ö¹¼Ç²½Ëã·¨¶¨Ê±Æ÷
+ * @brief        åœæ­¢è®°æ­¥ç®—æ³•å®šæ—¶å™¨
  * @details
  * @author       Wang.Luo
  * @date         2023-05-05

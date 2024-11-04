@@ -1,7 +1,7 @@
 /**
 *@file
-*@brief        gsensor¹«¹²²ãÇı¶¯ÎÄ¼ş
-*@details       °üÀ¨¼ÓËÙ¶È¡¢ÍÓÂİ¡¢µØ´ÅµÄÇı¶¯¹«¹²²ã
+*@brief        gsensorå…¬å…±å±‚é©±åŠ¨æ–‡ä»¶
+*@details       åŒ…æ‹¬åŠ é€Ÿåº¦ã€é™€èºã€åœ°ç£çš„é©±åŠ¨å…¬å…±å±‚
 *@author       zn.zeng
 *@date       2021-07-23
 *@version      v1.0
@@ -13,30 +13,30 @@
 #include "ute_drv_gsensor_stk8321.h"
 #include "ute_drv_gsensor_sc7a20e.h"
 #include "ute_drv_gsensor_sc7a20h.h"
-/*! Çı¶¯ÅäÖÃº¯ÊıÖ¸Õëzn.zeng, 2021-07-23  */
+/*! é©±åŠ¨é…ç½®å‡½æ•°æŒ‡é’ˆzn.zeng, 2021-07-23  */
 const ute_drv_gsensor_common_config_t *uteDrvGsensorCommonFunction=NULL;
-/*!Êı¾İ zn.zeng, 2021-07-26  */
+/*!æ•°æ® zn.zeng, 2021-07-26  */
 ute_drv_gsensor_common_data_t uteDrvGsensorCommonData;
-/*! ¼æÈİ²»Í¬sensor Ö¸ÕëÁĞ±í zn.zeng, 2021-07-26  */
+/*! å…¼å®¹ä¸åŒsensor æŒ‡é’ˆåˆ—è¡¨ zn.zeng, 2021-07-26  */
 const ute_drv_gsensor_common_config_t *uteDrvGsensorConfigList[]=
 {
 #if UTE_DRV_STK8321_SUPPORT
-    {&drvGsensorStk8321Function},
-    {&drvGsensorStk8325Function},
+    &drvGsensorStk8321Function,
+    &drvGsensorStk8325Function,
 #endif
 #if UTE_DRV_GSENSOR_SC7A20E_SUPPORT
-    {&drvGsensorSc7a20eFunction},
+    &drvGsensorSc7a20eFunction,
 #endif
 #if UTE_DRV_GSENSOR_SC7A20H_SUPPORT
-    {&drvGsensorSc7a20hFunction},
+    &drvGsensorSc7a20hFunction,
 #endif
 };
 /**
-*@brief        gsensor¶ÁÈ¡id
-*@details      spiºÍi2c½Ó¿Ú¶ÈÊ¹ÓÃ´Ëº¯Êı
-*@param[in]    uint8_t slaveAdress  i2cÆ÷¼şµØÖ·
-*@param[in]    uint8_t reg  Æ÷¼şµØÖ·¶ÁÈ¡¼Ä´æÆ÷
-*@return trueÎª³É¹¦
+*@brief        gsensorè¯»å–id
+*@details      spiå’Œi2cæ¥å£åº¦ä½¿ç”¨æ­¤å‡½æ•°
+*@param[in]    uint8_t slaveAdress  i2cå™¨ä»¶åœ°å€
+*@param[in]    uint8_t reg  å™¨ä»¶åœ°å€è¯»å–å¯„å­˜å™¨
+*@return trueä¸ºæˆåŠŸ
 *@author       zn.zeng
 *@date       2021-07-24
 */
@@ -53,13 +53,13 @@ uint8_t uteDrvGsensorCommonReadId(uint8_t slaveAddress,uint8_t reg)
 
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,slaveAddress=0x%x,reg=0x%x,readId=0x%02x", __func__,slaveAddress,reg,readId);
 #if UTE_DRV_STK8321_SUPPORT
-    if((readId == 0x21) || (readId == 0x25))/*¶Áµ½´íÎóID£¬0x14¼Ä´æÆ÷ĞèÒªĞ´Ò»´Î0xB6×öGsensorÈí¸´Î»£¬È»ºóÖØĞÂ¶ÁÈ¡Ò»´ÎID£¬dengli.lu 2024-03-18*/
+    if((readId == 0x21) || (readId == 0x25))/*è¯»åˆ°é”™è¯¯IDï¼Œ0x14å¯„å­˜å™¨éœ€è¦å†™ä¸€æ¬¡0xB6åšGsensorè½¯å¤ä½ï¼Œç„¶åé‡æ–°è¯»å–ä¸€æ¬¡IDï¼Œdengli.lu 2024-03-18*/
     {
         uteDrvGsensorStk8321WriteReg(0x14,0xB6);
         uteModulePlatformDelayUs(50000);
         uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,slaveAddress,&reg,1,&readId,1);
     }
-    if(readId == 0x26)/*STK8321ÏµÁĞµÄÒ»¿îĞÍºÅ£¬IDÒ²ÊÇ0x26(ºÍ7A20EÒ»Ñù),¿É¶Á0x28¼Ä´æÆ÷ÅĞ¶Ï£¬dengli.lu 2024-03-18*/
+    if(readId == 0x26)/*STK8321ç³»åˆ—çš„ä¸€æ¬¾å‹å·ï¼ŒIDä¹Ÿæ˜¯0x26(å’Œ7A20Eä¸€æ ·),å¯è¯»0x28å¯„å­˜å™¨åˆ¤æ–­ï¼Œdengli.lu 2024-03-18*/
     {
         uint8_t regValue = 0;
         uteDrvGsensorStk8321ReadReg(0x28,&regValue,1);
@@ -67,18 +67,18 @@ uint8_t uteDrvGsensorCommonReadId(uint8_t slaveAddress,uint8_t reg)
         {
             uteDrvGsensorStk8321WriteReg(0x14,0xB6);
             uteModulePlatformDelayUs(50000);
-            uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,slaveAddress,&reg,1,&readId,1);//Ô­³§²¹³äĞŞ¸Ä£¬ÔÚ´Ë¸ÄÎªÖØĞÂ¶ÁÈ¡Ò»´ÎID dengli.lu 2024-04-17*/
+            uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,slaveAddress,&reg,1,&readId,1);//åŸå‚è¡¥å……ä¿®æ”¹ï¼Œåœ¨æ­¤æ”¹ä¸ºé‡æ–°è¯»å–ä¸€æ¬¡ID dengli.lu 2024-04-17*/
         }
     }
 #endif
     return readId;
 }
 /**
-*@brief        gsensor accÇı¶¯³õÊ¼»¯
+*@brief        gsensor accé©±åŠ¨åˆå§‹åŒ–
 *@details
-*@param[in]     ute_drv_gsensor_acc_rate_t sampleRate  ²ÉÑùÂÊ
-*@param[in]    uint8_t accRange  ¼ÓËÙ¶È·¶Î§
-*@return trueÎª³É¹¦
+*@param[in]     ute_drv_gsensor_acc_rate_t sampleRate  é‡‡æ ·ç‡
+*@param[in]    uint8_t accRange  åŠ é€Ÿåº¦èŒƒå›´
+*@return trueä¸ºæˆåŠŸ
 *@author       zn.zeng
 *@date       2021-07-23
 */
@@ -108,7 +108,7 @@ bool uteDrvGsensorCommonInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accRange
     }
     if(id==0)
     {
-        // ¶ÁÈ¡²»µ½Ê¹ÓÃ8321µÄ function
+        // è¯»å–ä¸åˆ°ä½¿ç”¨8321çš„ function
         uteDrvGsensorCommonFunction = uteDrvGsensorConfigList[0];
     }
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
@@ -119,10 +119,10 @@ bool uteDrvGsensorCommonInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accRange
     return initResult;
 }
 /**
-*@brief        ×ª»»xyzÖáÊı¾İ
-*@details      ×ª»»xyzÖáÊı¾İ£¬Ê¹ÓÃ²»Í¬µÄbit
-*@param[in]     ´«ÈëÊäÈëÊä³öÖ¸Õë
-*@param[in]    ×ª»»ÀàĞÍ
+*@brief        è½¬æ¢xyzè½´æ•°æ®
+*@details      è½¬æ¢xyzè½´æ•°æ®ï¼Œä½¿ç”¨ä¸åŒçš„bit
+*@param[in]     ä¼ å…¥è¾“å…¥è¾“å‡ºæŒ‡é’ˆ
+*@param[in]    è½¬æ¢ç±»å‹
 *@author       zn.zeng
 *@date       2021-07-23
 */
@@ -163,9 +163,9 @@ void uteDrvGsensorCommonXYZaxisDataBitChange(ute_drv_gsensor_common_axis_bit_cha
     }
 }
 /**
-*@brief        »ñÈ¡µ±Ç°acc µÄ²ÉÑù·¶Î§
+*@brief        è·å–å½“å‰acc çš„é‡‡æ ·èŒƒå›´
 *@details      +-G
-*@return  ·µ»Ø²ÉÑù·¶Î§
+*@return  è¿”å›é‡‡æ ·èŒƒå›´
 *@author       zn.zeng
 *@date       2021-07-26
 */
@@ -174,9 +174,9 @@ uint8_t uteDrvGsensorCommonGetAccRange(void)
     return uteDrvGsensorCommonData.accRange;
 }
 /**
-*@brief        »ñÈ¡µ±Ç°acc µÄ²ÉÑùÆµÂÊ
+*@brief        è·å–å½“å‰acc çš„é‡‡æ ·é¢‘ç‡
 *@details
-*@return  ·µ»Ø²ÉÑùÆµÂÊ
+*@return  è¿”å›é‡‡æ ·é¢‘ç‡
 *@author       zn.zeng
 *@date       2021-07-26
 */
@@ -185,7 +185,7 @@ ute_drv_gsensor_acc_rate_t uteDrvGsensorCommonGetAccRate(void)
     return uteDrvGsensorCommonData.accRate;
 }
 /**
-*@brief        »ñÈ¡µ±Ç°acc µÄx y z ÊµÊ±Êı¾İ
+*@brief        è·å–å½“å‰acc çš„x y z å®æ—¶æ•°æ®
 *@details
 *@author       zn.zeng
 *@date       2021-07-26
@@ -195,7 +195,7 @@ void uteDrvGsensorCommonGetAccXyz(int16_t *x,int16_t *y,int16_t *z)
     uteDrvGsensorCommonFunction->getAccData(x,y,z);
 }
 /**
-*@brief        gsensorË¯Ãß
+*@brief        gsensorç¡çœ 
 *@details
 *@author       zn.zeng
 *@date       2021-07-26
@@ -206,7 +206,7 @@ void uteDrvGsensorCommonSleep(void)
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
 }
 /**
-*@brief        gsensor Çå³ıfifoÊı¾İ
+*@brief        gsensor æ¸…é™¤fifoæ•°æ®
 *@details
 *@author       zn.zeng
 *@date       2021-07-26
@@ -217,9 +217,9 @@ void uteDrvGsensorCommonClearFifo(void)
     uteDrvGsensorCommonData.axisData.isHasReadFifo = false;
 }
 /**
-*@brief        gsensor ¶ÁÈ¡fifoÊı¾İ
+*@brief        gsensor è¯»å–fifoæ•°æ®
 *@details
-*@param[out] ute_drv_gsensor_common_axis_data_t * ·µ»ØÊı¾İÖ¸Õë£¬È«¾Ö±äÁ¿
+*@param[out] ute_drv_gsensor_common_axis_data_t * è¿”å›æ•°æ®æŒ‡é’ˆï¼Œå…¨å±€å˜é‡
 *@author       zn.zeng
 *@date       2021-07-26
 */
@@ -234,7 +234,7 @@ void uteDrvGsensorCommonReadFifo(ute_drv_gsensor_common_axis_data_t **data)
     *data = &uteDrvGsensorCommonData.axisData;
 }
 /**
-*@brief        »ñÈ¡µ±Ç°Ê¹ÓÃµÄgsensor id
+*@brief        è·å–å½“å‰ä½¿ç”¨çš„gsensor id
 *@details
 *@author       zn.zeng
 *@date       2021-07-26

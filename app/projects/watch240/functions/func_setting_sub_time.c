@@ -78,24 +78,24 @@ compo_form_t *func_set_sub_time_form_create(void)
 
     //文本
     char buf[84];
-    component_t *compo = (component_t *)compo_textbox_create(frm,2);
+    compo_textbox_t *compo = (compo_textbox_t *)compo_textbox_create(frm,2);
     compo_setid(compo, COMPO_ID_TEXT_CALENDE);
     compo_textbox_set_pos((compo_textbox_t *)compo, 30, 65);
     compo_textbox_set((compo_textbox_t *)compo, i18n[STR_CUSTOM_CALENDAR]);
 
-    component_t *compo_tws = (component_t *)compo_textbox_create(frm,3);
+    compo_textbox_t *compo_tws = (compo_textbox_t *)compo_textbox_create(frm,3);
     compo_setid(compo_tws, COMPO_ID_TEXT_CALENDE);
     compo_textbox_set_pos((compo_textbox_t *)compo_tws, 41,134);
     compo_textbox_set((compo_textbox_t *)compo_tws, i18n[STR_CUSTOM_DATA]);
 
-    component_t *compo_thr = (component_t *)compo_textbox_create(frm,2);
+    compo_textbox_t *compo_thr = (compo_textbox_t *)compo_textbox_create(frm,2);
     compo_setid(compo_thr, COMPO_ID_TEXT_CALENDE);
     compo_textbox_set_pos((compo_textbox_t *)compo_thr, 30, 204);
     compo_textbox_set((compo_textbox_t *)compo_thr, i18n[STR_CUSTOM_TIME]);
 
     //snprintf(buf, sizeof(buf), "%d%s%s", 2023, ".11", ".28");
     snprintf(buf, sizeof(buf), "%d%c%d%c%d",time.year,'.',time.month,'.',time.day);
-    component_t *compo_four = (component_t *)compo_textbox_create(frm,10);
+    compo_textbox_t *compo_four = (compo_textbox_t *)compo_textbox_create(frm,10);
     compo_textbox_set_font((compo_textbox_t *)compo_four, UI_BUF_0FONT_FONT_BIN);
     compo_setid(compo_four, COMPO_ID_TEXT_CALENDE);
     compo_textbox_set_align_center(compo_four, false);
@@ -104,7 +104,7 @@ compo_form_t *func_set_sub_time_form_create(void)
     compo_textbox_set((compo_textbox_t *)compo_four, buf);
 
     snprintf(buf, sizeof(buf), "%d", 24);
-    component_t *compo_five = (component_t *)compo_textbox_create(frm,2);
+    compo_textbox_t *compo_five = (compo_textbox_t *)compo_textbox_create(frm,2);
     compo_textbox_set_font((compo_textbox_t *)compo_five, UI_BUF_0FONT_FONT_BIN);
     compo_setid(compo_five, COMPO_ID_TEXT_CALENDE);
     compo_textbox_set_align_center(compo_five, false);
@@ -114,7 +114,7 @@ compo_form_t *func_set_sub_time_form_create(void)
 
 //    snprintf(buf, sizeof(buf), "%s", "12.20");
     snprintf(buf, sizeof(buf), "%d%c%d",time.hour,':',time.min);
-    component_t *compo_six = (component_t *)compo_textbox_create(frm,5);
+    compo_textbox_t *compo_six = (compo_textbox_t *)compo_textbox_create(frm,5);
     compo_textbox_set_font((compo_textbox_t *)compo_six, UI_BUF_0FONT_FONT_BIN);
     compo_setid(compo_six, COMPO_ID_TEXT_CALENDE);
     compo_textbox_set_align_center(compo_six, false);
@@ -123,7 +123,7 @@ compo_form_t *func_set_sub_time_form_create(void)
     compo_textbox_set((compo_textbox_t *)compo_six, buf);
 
     //snprintf(buf, sizeof(buf), "%s", "");
-    component_t *compo_sev = (component_t *)compo_textbox_create(frm, strlen(i18n[STR_SET_DATA_READ]));
+    compo_textbox_t *compo_sev = (compo_textbox_t *)compo_textbox_create(frm, strlen(i18n[STR_SET_DATA_READ]));
     compo_textbox_set_multiline((compo_textbox_t *)compo_sev, true);
     compo_textbox_set_autosize((compo_textbox_t *)compo_sev, false);
     compo_textbox_set_location((compo_textbox_t *)compo_sev, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+154, 226, 92);

@@ -19,17 +19,18 @@
 #include "ute_module_weather.h"
 #include "ute_module_heart.h"
 #include "ute_module_bloodoxygen.h"
+#include "ute_drv_battery_common.h"
+#include "ute_module_sleep.h"
+#include "ute_module_sport.h"
+
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
 #include "ute_drv_gsensor_common.h"
-#include "ute_module_sport.h"
 #include "ute_module_breathrate.h"
 #include "ute_module_screens_common.h"
 #include "ute_task_gui.h"
-#include "ute_drv_battery_common.h"
 #include "ute_module_gui_common.h"
-#include "ute_module_sleep.h"
 #include "ute_module_call.h"
 #include "ute_module_ota.h"
 #include "ute_module_music.h"
@@ -125,7 +126,7 @@ void uteApplicationCommonStartupFrist(void)
 #endif
     uteModuleSystemtimeInit();
     //bat
-    //uteDrvBatteryCommonInit();
+    uteDrvBatteryCommonInit();
     //按键
     //uteDrvKeysCommonInit();
 #if UTE_MODULE_SHIP_MODE_SUPPORT
@@ -171,6 +172,7 @@ void uteApplicationCommonStartupSecond(void)
         uteApplicationCommonData.isStartupFristFinish = true;
         //其他硬件初始化
         uteDrvMotorInit();
+        uteModuleSportAlgoTimerStart(400);
         //uteModulePlatformQdecInit();
 #if UTE_USER_ID_FOR_BINDING_SUPPORT||UTE_MODULE_SCREENS_APP_BINDING_SUPPORT
         uteModuleAppBindingInit();
@@ -228,9 +230,9 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleBloodsugarInit();
 #endif
         //uteModuleFactoryTestInit();
-        //uteModuleSportInit();
+        uteModuleSportInit();
         uteModuleNotifyInit();
-        //uteModuleSleepInit();
+        uteModuleSleepInit();
         uteModuleCallInit();
         //uteModuleOtaInit();
         //uteModuleMusicInit();
@@ -812,11 +814,11 @@ void uteApplicationCommonSaveQuickSwitchInfo(void)
 */
 void uteApplicationCommonStartPowerOffMsg(void)
 {
-    // if (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_CHARGING)
-    // {
-    //     uteModulePlatformSystemReboot();
-    //     return;
-    // }
+    if (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_CHARGING)
+    {
+        uteModulePlatformSystemReboot();
+        return;
+    }
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
 
@@ -1795,4 +1797,26 @@ uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len)
     }
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,qrBuff:%s",__func__,qrBuff);
     return stringSize;
+}
+
+/**
+*@brief   获取精确到十位的浮点型结果
+*@details
+*@author  dengli.lu
+*@date   2021-10-26
+*/
+float ExactDecimalPoint(float data,uint8_t bit)
+{
+    float dst = 0.0f;
+    uint32_t tmp = 0;
+    float multiple = 1;
+    char i = 0;
+    for( i=0; i<bit; i++)
+    {
+        multiple *= 10.0f;
+    }
+    data = data + (5.0f/(multiple*10.0f));//四舍五入最后一位小数
+    tmp = (data * multiple);//取整
+    dst = (float)tmp/multiple;
+    return dst;
 }

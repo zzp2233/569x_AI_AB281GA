@@ -9,7 +9,7 @@
 #include "ute_drv_motor.h"
 #include "ute_module_log.h"
 #include "ute_module_message.h"
-// #include "ute_drv_battery_common.h"
+#include "ute_drv_battery_common.h"
 #include "ute_application_common.h"
 #include "ute_module_platform.h"
 #include "ute_module_notdisturb.h"
@@ -166,11 +166,11 @@ void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_
     {
         return;
     }
-    // if((uteDrvBatteryCommonGetChargerStatus()==BAT_STATUS_NO_CHARGE)&&(uteDrvBatteryCommonGetLvl()<10))
-    // {
-    //     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,lvl=%d is too low", __func__,uteDrvBatteryCommonGetLvl());
-    //     return;
-    // }
+    if((uteDrvBatteryCommonGetChargerStatus()==BAT_STATUS_NO_CHARGE)&&(uteDrvBatteryCommonGetLvl()<10))
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,lvl=%d is too low", __func__,uteDrvBatteryCommonGetLvl());
+        return;
+    }
 #if 0//UTE_BT30_CALL_SUPPORT
     ute_bt_call_data_t callData;
     uteModuleCallGetData(&callData);

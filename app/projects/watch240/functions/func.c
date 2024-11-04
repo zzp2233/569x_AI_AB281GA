@@ -990,8 +990,8 @@ void evt_message(size_msg_t msg)
             {
                 printf("EVT_A2DP_MUSIC_STOP\n");
                 dac_fade_out();     //淡出完成会自动MUTE功放
-                dac_fade_wait();
-                bsp_sys_mute();
+                // dac_fade_wait();
+                // bsp_sys_mute();
             }
             bt_cb.music_playing = false;
             break;

@@ -189,6 +189,7 @@ void uteApplicationCommonReadConfig(void);
 void uteApplicationCommonSavePersonalInfo(ute_personal_info_t personalInfo);
 void uteApplicationCommonStartPowerOffMsg(void);
 void uteApplicationCommonRealPowerOffMsg(void);
+void uteApplicationCommonPowerOn(void);
 void uteApplicationCommonSyncDataTimerCallback(void *pxTimer);
 void uteApplicationCommonRegisterSyncDataTimerFunction(void *function);
 void uteApplicationCommonSyncDataTimerStart(void);
@@ -240,6 +241,8 @@ void uteApplicationCommonRestart(void);
 void uteApplicationCommonSetAncsConnStatus(bool isConnected);
 bool uteApplicationCommonGetAncsConnStatus(void);
 uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len);
+
+float ExactDecimalPoint(float data,uint8_t bit);
 
 #endif //_UTE_APPLICATION_COMMON_H_
 

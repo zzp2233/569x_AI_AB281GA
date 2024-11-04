@@ -4,7 +4,8 @@
 #define VOL_MAX                         xcfg_cb.vol_max   //最大音量级数
 
 //控制位汇总
-enum sys_ctl_bits {
+enum sys_ctl_bits
+{
     SYS_CTL_BT = 0,                     //蓝牙开关
     SYS_CTL_CALL_RING,                  //来电铃声
     SYS_CTL_ACLOCK_MON,                 //闹钟设置星期一
@@ -41,7 +42,8 @@ enum sys_ctl_bits {
 #define STOPWATCH_REC_NUM_MAX           10              //秒表最大数量，需要同步修改列表item
 #define WEATHER_CNT                     8               //天气类型数量
 
-typedef struct {
+typedef struct
+{
     //控制位
     u8 ctl_bits[SYS_CTL_TOTAL_BYTES];   //控制位汇总
     u8  play_mode;
@@ -62,7 +64,7 @@ typedef struct {
     u16 vbat;                   //当前电压值(mv)
     u16 vbat_percent;           //电量百分比
     u16 kh_vol_msg;
-	u32 vusb;
+    u32 vusb;
     u32 sleep_time;             //配置工具配置系统息屏时间
     u32 pwroff_time;            //配置工具配置自动关机时间
     u32 sleep_delay;            //系统休眠时间, 深度睡眠计时
@@ -73,33 +75,33 @@ typedef struct {
     u32 ms_ticks;               //ms为单位
     u32 rand_seed;
 
-volatile u8  cm_times;
-volatile u8  loudspeaker_mute;  //功放MUTE标志
-volatile u8  charge_sta;        //0:充电关闭， 1：充电开启， 2：充满
-volatile u8  charge_bled_flag;  //charge充满蓝灯常亮标志
-volatile u8  ch_bled_cnt;       //charge充满蓝灯亮时间计数
-volatile u8  poweron_flag;      //pwrkey开机标志
-volatile u8  pwrdwn_hw_flag;    //模拟硬开关，关机标志
-volatile u8  incall_flag;
-volatile u8  gui_sleep_sta;
-volatile u8  gui_need_wakeup;
-volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态，0关闭状态
+    volatile u8  cm_times;
+    volatile u8  loudspeaker_mute;  //功放MUTE标志
+    volatile u8  charge_sta;        //0:充电关闭， 1：充电开启， 2：充满
+    volatile u8  charge_bled_flag;  //charge充满蓝灯常亮标志
+    volatile u8  ch_bled_cnt;       //charge充满蓝灯亮时间计数
+    volatile u8  poweron_flag;      //pwrkey开机标志
+    volatile u8  pwrdwn_hw_flag;    //模拟硬开关，关机标志
+    volatile u8  incall_flag;
+    volatile u8  gui_sleep_sta;
+    volatile u8  gui_need_wakeup;
+    volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态，0关闭状态
 
     ///位变量不要用于需要在中断改值的变量。 请谨慎使用位变量，尽量少定义位变量。
-    u8  rtc_first_pwron  		: 1,   //RTC是否第一次上电
-        mute             		: 1,   //系统MUTE控制标志
-        cm_factory       		: 1,   //是否第一次FLASH上电
-        cm_vol_change    		: 1,   //音量级数是否需要更新到FLASH
-        port2led_en      		: 1,   //1个IO推两个灯
-        voice_evt_brk_en 		: 1;   //播放提示音时，U盘、SD卡、LINEIN等插入事件是否立即响应.
+    u8  rtc_first_pwron         : 1,   //RTC是否第一次上电
+    mute                    : 1,   //系统MUTE控制标志
+    cm_factory              : 1,   //是否第一次FLASH上电
+    cm_vol_change           : 1,   //音量级数是否需要更新到FLASH
+    port2led_en             : 1,   //1个IO推两个灯
+    voice_evt_brk_en        : 1;   //播放提示音时，U盘、SD卡、LINEIN等插入事件是否立即响应.
 
-    u8  sleep_en         		: 1,   //用于控制是否进入sleep
-		lowbat_flag      		: 1,
-        bt_reconn_flag   		: 1,   //回连失败时候发起一键双连标志
-        flag_sleep_ble_status 	: 1,   //用于未连接ble休眠后,当ble连接上后更新连接参数用
-        flag_halt               : 1,   //蓝屏异常标志位
-        flag_shipping_mode      : 1,   //船运模式标志位
-        flag_pwroff             : 1;   //关机标志位
+    u8  sleep_en                : 1,   //用于控制是否进入sleep
+    lowbat_flag             : 1,
+    bt_reconn_flag          : 1,   //回连失败时候发起一键双连标志
+    flag_sleep_ble_status   : 1,   //用于未连接ble休眠后,当ble连接上后更新连接参数用
+    flag_halt               : 1,   //蓝屏异常标志位
+    flag_shipping_mode      : 1,   //船运模式标志位
+    flag_pwroff             : 1;   //关机标志位
 #if BT_MAP_EN
     u8 map_retry;
 #endif
@@ -111,11 +113,11 @@ volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态
     u8 sport_idx;                                   //运动列表编号
     //设置
     u8 set_idx;                                     //设置菜单编号
-	//调节亮度
+    //调节亮度
     u8 light_level;                                 //亮度等级
     //调节音量
     u8 volume_level;                                //音量等级
-	//调节振动强度
+    //调节振动强度
     u8 motor_level;
     //定时器
     u8 timer_sta;                                   //计时器工作状态（0:未开启 1:正在计时 2:暂停 3:结束 4:复位）
@@ -171,18 +173,21 @@ volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态
     bool sco_state;
     //通话
     u32 reject_tick;                                //通话挂断防呆计时，解决部分手机挂断状态更新慢的问题
-	//消息
+    //消息
     bool msg_tag;                                   //消息弹出标志
     u8 msg_index;                                   //消息类型
 #if FUNC_MUSIC_EN
-	bool local_music_sta;                           //本地音乐状态
-	bool music_popup_en;                            //音乐页面插入跳转使能
+    bool local_music_sta;                           //本地音乐状态
+    bool music_popup_en;                            //音乐页面插入跳转使能
 #endif
     u8 music_src;                                   //音源
     bool dialplate_btf_ready;
 
     //俄罗斯方块
     u32 max_score;
+
+    //用于记录当前iic配置是心率还是gsensor, ute add
+    bool gsensor_iic_en;
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

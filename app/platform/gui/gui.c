@@ -27,7 +27,8 @@ static u8 gui_element_buf[GUI_ELE_BUF_SIZE] AT(.disp.buf);      //Element Buf
 static u8 gui_widget_buf[GUI_WGT_BUF_SIZE] AT(.disp.buf);       //Widgets Buf
 
 //GUI初始化配置表
-static const gui_init_param_t tbl_gui_init_param = {
+static const gui_init_param_t tbl_gui_init_param =
+{
     .screen_width = GUI_SCREEN_WIDTH,
     .screen_height = GUI_SCREEN_HEIGHT,
     .element_buf = gui_element_buf,
@@ -64,7 +65,8 @@ void gui_init(void)
 
 void gui_sleep(void)
 {
-    if (!sys_cb.gui_sleep_sta) {
+    if (!sys_cb.gui_sleep_sta)
+    {
         os_gui_draw_w4_done();      //关tft前要等当前帧刷完
         tft_exit();
         ctp_exit();
@@ -77,7 +79,8 @@ void gui_sleep(void)
 
 void gui_wakeup(void)
 {
-    if (sys_cb.gui_sleep_sta) {
+    if (sys_cb.gui_sleep_sta)
+    {
         power_gate_3v3_on();
         //tft_init();
         ctp_init();
@@ -104,7 +107,7 @@ bool gui_get_auto_power_en(void)
 
 bool qr_encode_use_malloc(void)
 {
-	return true;
+    return true;
 }
 
 //蓝屏
@@ -114,13 +117,16 @@ void gui_halt(u32 halt_no)
     int i;
     tft_bglight_en();               //打开背光
     tft_frame_end();
-    for (i=0; i<20000; i++) {
+    for (i=0; i<20000; i++)
+    {
         asm("nop");                  //足够的延时，保证前面SPI推完
     }
     tft_frame_start();
-    for (i=0; i<GUI_SCREEN_HEIGHT; i++) {
+    for (i=0; i<GUI_SCREEN_HEIGHT; i++)
+    {
         de_fill_rgb565(gui_lines_buf, COLOR_BLUE, GUI_SCREEN_WIDTH);
-        if (i >= GUI_SCREEN_CENTER_Y - 5 && i < GUI_SCREEN_CENTER_Y + 5) {
+        if (i >= GUI_SCREEN_CENTER_Y - 5 && i < GUI_SCREEN_CENTER_Y + 5)
+        {
             de_fill_num(gui_lines_buf + GUI_SCREEN_CENTER_X * 2 - 96, halt_no, i - (GUI_SCREEN_CENTER_Y - 5));
         }
         tft_spi_send(gui_lines_buf, GUI_SCREEN_WIDTH * 2);
@@ -128,7 +134,7 @@ void gui_halt(u32 halt_no)
     tft_frame_end();
 }
 
-#if UTE_LOG_GUI_LVL
+#if 0 //UTE_LOG_GUI_LVL
 //打印刷屏时长
 AT(.com_text.gui)
 bool gui_get_tick(void)

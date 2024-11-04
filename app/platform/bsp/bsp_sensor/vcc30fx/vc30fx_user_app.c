@@ -16,6 +16,7 @@
 #include "spo2Algo_16bit.h"
 
 #include "include.h"
+#include "ute_module_sport.h"
 
 // #include "vcSportMotionIntAlgo.h"
 /* ble_debug,蓝牙发送原始数据 */
@@ -56,7 +57,12 @@ void vc30fx_pwr_en(void)        //PF5
     GPIOFDE  |= BIT(5);
     GPIOFDIR &= ~BIT(5);
     GPIOFSET = BIT(5);
+#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(false);
+#else
+    bsp_i2c_init();
+    uteModuleSportAlgoTimerStart(400);
+#endif
 }
 
 void vc30fx_pwr_dis(void)       //PF5
@@ -69,7 +75,12 @@ void vc30fx_pwr_dis(void)       //PF5
     GPIOFDE  |= BIT(5);
     GPIOFDIR &= ~BIT(5);
     GPIOFCLR = BIT(5);
+#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(true);
+#else
+    uteModuleSprotAlgoTimerStop();
+    i2c_gsensor_init();
+#endif
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
 }
 
@@ -165,7 +176,25 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
     vcare_memset(&vc30fx_gsensor_data, 0, sizeof(vc30fx_gsensor_data));
     i2c_gsensor_init();
     // SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_INIT();
+#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_ALGO();
+#else
+#if UTE_MODULE_CYWEE_MOTION_SUPPORT
+    uteModuleCwmtWearStatusSwitch(vc30fx_dev.wear); //
+#else
+    uteModuleSportInputDataBeforeAlgo();
+#if UTE_HEART_VCXX_NO_WEAR_NO_RUN_STEP_ALGO_SUPPORT
+    if (vc30fx_dev.wear)
+    {
+        uteModuleSportUnWearToWearSwitch();
+    }
+    else
+    {
+        uteModuleSportStepTypeSetNone();
+    }
+#endif
+#endif
+#endif
     bsp_i2c_init();
     // u8 id = 0;
     // vc30fx_read_register(0x00,&id,1);

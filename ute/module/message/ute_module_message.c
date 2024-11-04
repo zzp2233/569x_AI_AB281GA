@@ -13,6 +13,7 @@
 #include "ute_drv_motor.h"
 #include "ute_module_notify.h"
 #include "ute_application_common.h"
+#include "ute_module_sport.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -87,6 +88,36 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         case MSG_TYPE_SYNC_DATA_TIMER:
         {
             uteApplicationCommonSyncDataTimerMsg();
+        }
+        break;
+        case MSG_TYPE_TAKE_PICTURE_NOTIFY:
+        {
+            uteModuleSportTakePictureHandlerMsg();
+        }
+        break;
+        case MSG_TYPE_SEDENTARY_NOTIFY:
+        {
+            uteModuleSportSedentaryMsg();
+        }
+        break;
+        case MSG_TYPE_MODULE_SPORT_START_MORE_SPORTS:
+        {
+            uteModuleSportStartMoreSportsMsgHandler(param);
+        }
+        break;
+        case MSG_TYPE_MODULE_SPORT_STOP_MORE_SPORTS:
+        {
+            uteModuleSportStopMoreSportsMsgHandler();
+        }
+        break;
+        case MSG_TYPE_DRV_SPORT_COUNTDOWN_TIMER:
+        {
+            uteModuleSprotCountdownTimerHandlerMsg();
+        }
+        break;
+        case MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER:
+        {
+            uteModuleSprotInputDataBeforeAlgoTimerHandler();
         }
         break;
         default:

@@ -41,7 +41,8 @@ bool bsp_i2c_rx_ack(void)
     bsp_i2c_delay();
     I2C_SCL_H();
     bsp_i2c_delay();
-    if (!I2C_SDA_IS_H()) {
+    if (!I2C_SDA_IS_H())
+    {
         ret = true;
     }
     I2C_SCL_L();
@@ -90,10 +91,14 @@ void bsp_i2c_tx_byte(uint8_t dat)
 {
     u8 i;
     I2C_SDA_OUT();
-    for (i=0; i<8; i++) {
-        if (dat & BIT(7)) {
+    for (i=0; i<8; i++)
+    {
+        if (dat & BIT(7))
+        {
             I2C_SDA_H();
-        } else {
+        }
+        else
+        {
             I2C_SDA_L();
         }
         bsp_i2c_delay();
@@ -110,12 +115,14 @@ uint8_t bsp_i2c_rx_byte(void)
 {
     u8 i, dat = 0;
     I2C_SDA_IN();
-    for (i=0; i<8; i++) {
+    for (i=0; i<8; i++)
+    {
         bsp_i2c_delay();
         I2C_SCL_H();
         bsp_i2c_delay();
         dat <<= 1;
-        if (I2C_SDA_IS_H()) {
+        if (I2C_SDA_IS_H())
+        {
             dat |= BIT(0);
         }
         I2C_SCL_L();
@@ -127,13 +134,15 @@ uint8_t bsp_i2c_rx_byte(void)
 #if I2C_HW_EN
 
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G || CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-static i2c_t HW_IIC0 = {
+static i2c_t HW_IIC0 =
+{
     .sfr         = (i2c_sfr_t *) &IIC0CON0,
     .map         = (i2c_map_t *) &FUNCMCON2,
 };
 i2c_t *HW_IIC = &HW_IIC0;
 #elif (CHIP_PACKAGE_SELECT == CHIP_5690G || CHIP_PACKAGE_SELECT == CHIP_5690F)
-static i2c_t HW_IIC1 = {
+static i2c_t HW_IIC1 =
+{
     .sfr         = (i2c_sfr_t *) &IIC1CON0,
     .map         = (i2c_map_t *) &FUNCMCON2,
 };
@@ -155,7 +164,8 @@ void bsp_i2c0_unlock(void)
 AT(.com_text.isr.i2c)
 void bsp_i2c_isr(void)
 {
-    if (HW_IIC->sfr->IICxCON0 & BIT(31)) {
+    if (HW_IIC->sfr->IICxCON0 & BIT(31))
+    {
         HW_IIC->sfr->IICxCON0 |=  BIT(29);                   // clear pending
         HW_IIC->sfr->IICxCON0 &= ~BIT(1);                    // disable irq
 
@@ -168,15 +178,17 @@ static u32 bsp_hw_i2c_config(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u32 dat)
     TRACE("%s: cfg=%X dev=%X reg=%X\n", __FUNCTION__, i2c_cfg, dev_addr, reg_addr);
 
     HW_IIC->sfr->IICxCMDA = (u8)dev_addr | ((u32)(dev_addr >> 8)) << 24 |
-                              (u32)((u8)reg_addr) << 8 | (u32)((u8)(reg_addr >> 8)) << 16;
+                            (u32)((u8)reg_addr) << 8 | (u32)((u8)(reg_addr >> 8)) << 16;
 
     HW_IIC->sfr->IICxCON1 = i2c_cfg;
     HW_IIC->sfr->IICxDATA = dat;
     HW_IIC->sfr->IICxCON0 |= BIT(28);                     // kick
 
     u32 ticks = tick_get();
-    while ( (!(HW_IIC->sfr->IICxCON0 & BIT(31)))) {
-        if (tick_check_expire(ticks, 20)) {
+    while ( (!(HW_IIC->sfr->IICxCON0 & BIT(31))))
+    {
+        if (tick_check_expire(ticks, 20))
+        {
             printf("!!!IIC ERROR dev_addr:0x%X reg_addr:0x%x\n", dev_addr,reg_addr);
             return false;
         }
@@ -184,9 +196,12 @@ static u32 bsp_hw_i2c_config(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u32 dat)
 
     HW_IIC->sfr->IICxCON0 |= BIT(29);
 
-    if (i2c_cfg & RDATA) {
+    if (i2c_cfg & RDATA)
+    {
         return HW_IIC->sfr->IICxDATA;
-    } else {
+    }
+    else
+    {
         return true;
     }
 }
@@ -202,18 +217,22 @@ void bsp_hw_i2c_tx_buf(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u8 *buf, u16 len
 {
     int i;
     u32 cfg;
-    if (buf == NULL || len == 0) {
+    if (buf == NULL || len == 0)
+    {
         return;
     }
 
     bsp_i2c0_lock();
 
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < len; i++)
+    {
         cfg = WDATA;
-        if (i == 0) {               //收第1byte
+        if (i == 0)                 //收第1byte
+        {
             cfg |= i2c_cfg;
         }
-        if (i == (len - 1)) {       //收最后1byte
+        if (i == (len - 1))         //收最后1byte
+        {
             cfg |= STOP_FLAG;
         }
         bsp_hw_i2c_config(cfg | DATA_CNT_1B, dev_addr, reg_addr, buf[i]);
@@ -226,18 +245,22 @@ void bsp_hw_i2c_rx_buf(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u8 *buf, u16 len
 {
     int i;
     u32 cfg;
-    if (buf == NULL || len == 0) {
+    if (buf == NULL || len == 0)
+    {
         return;
     }
 
     bsp_i2c0_lock();
 
-    for (i = 0; i < len; i++) {
+    for (i = 0; i < len; i++)
+    {
         cfg = RDATA;
-        if (i == 0) {               //收第1byte
+        if (i == 0)                 //收第1byte
+        {
             cfg |= i2c_cfg;
         }
-        if (i == (len - 1)) {       //收最后1byte
+        if (i == (len - 1))         //收最后1byte
+        {
             cfg |= STOP_FLAG | NACK;
         }
         buf[i] = bsp_hw_i2c_config(cfg | DATA_CNT_1B, dev_addr, reg_addr, 0);
@@ -289,7 +312,7 @@ static void i2cx_init(void)
     FUNCMCON2 = (4 << 8);
 #endif
 
-    /* 
+    /*
         IIC速率计算方式: 时钟频率/分频数
         时钟频率：CLK = CLKCON1 |= BIT(7);        x26m_clkdiv8 24M时钟频率 分频数为8 则时钟频率为3M
         分频数：  DIV = IICxCON0[9:4];            在BIT(4)和BIT(9)之间填参 最小值=0;最大值=63
@@ -307,7 +330,7 @@ static void i2cx_init(void)
 
 void i2c_gsensor_init(void)
 {
-
+    sys_cb.gsensor_iic_en = true;
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
     CLKCON1 |= BIT(7);      //x26m_clkdiv8
     CLKGAT2 |= BIT(0);      //en iic0 clk
@@ -334,7 +357,7 @@ void i2c_gsensor_init(void)
     FUNCMCON2 = (5 << 8);
 #endif
 
-    /* 
+    /*
         IIC速率计算方式: 时钟频率/分频数
         时钟频率：CLK = CLKCON1 |= BIT(7);        x26m_clkdiv8 24M时钟频率 分频数为8 则时钟频率为3M
         分频数：  DIV = IICxCON0[9:4];            在BIT(4)和BIT(9)之间填参 最小值=0;最大值=63
@@ -367,7 +390,7 @@ void i2c_gsensor_init(void)
 //     FUNCMCON2 = (0xf << 8);
 //     FUNCMCON2 = (5 << 8);
 
-//     /* 
+//     /*
 //         IIC速率计算方式: 时钟频率/分频数
 //         时钟频率：CLK = CLKCON1 |= BIT(7);        x26m_clkdiv8 24M时钟频率 分频数为8 则时钟频率为3M
 //         分频数：  DIV = IICxCON0[9:4];            在BIT(4)和BIT(9)之间填参 最小值=0;最大值=63
@@ -387,6 +410,7 @@ void i2c_gsensor_init(void)
 AT(.text.bsp.i2c)
 void bsp_i2c_init(void)
 {
+    sys_cb.gsensor_iic_en = false;
 #if I2C_SW_EN
     I2C_SDA_SCL_OUT();
     I2C_SDA_H();

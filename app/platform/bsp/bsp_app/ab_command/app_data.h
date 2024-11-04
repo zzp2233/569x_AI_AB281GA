@@ -4,13 +4,15 @@
 #include "app_data_config.h"
 #include "app_data.h"
 
-enum{
+enum
+{
     SQUARE_WATCH,                   //方屏
     CIRCULAR_WATCH,                 //圆屏
     BRACELET,                       //手环
 };
 
-enum DEVICE_LANGUAGE{
+enum DEVICE_LANGUAGE
+{
     ENGLISH_EN,                     //英文(英国)
     CHINESE_ZH_CH,                  //中文(简体)
     ITALIAN_IT_IT,                  //意大利语(意大利)
@@ -42,7 +44,8 @@ enum DEVICE_LANGUAGE{
 };
 
 //手表支持的功能
-enum DEVICE_FUNCTION{
+enum DEVICE_FUNCTION
+{
     SUPORT_WATCH_MARKET,            //表盘市场
     SUPORT_MESSAGE,                 //消息提醒
     SUPORT_WEATHER,                 //天气功能
@@ -61,7 +64,8 @@ enum DEVICE_FUNCTION{
 };
 
 //手表支持的检测功能
-enum DETECTION_FUNCTION{
+enum DETECTION_FUNCTION
+{
     SUPORT_HEART_RATE,              //心率
     SUPORT_BLOOD_OXYGEN,            //血氧
     SUPORT_BLOOD_PRESSURE,          //血压
@@ -71,7 +75,8 @@ enum DETECTION_FUNCTION{
 };
 
 //手环支持的开关
-enum SUPORT_SWI{
+enum SUPORT_SWI
+{
     SWI_ANTILOST,                   //防丢开关
     SWI_WRITST,                     //抬腕亮屏
     SWI_AUTO_SYNC,                  //自动同步
@@ -88,7 +93,8 @@ enum SUPORT_SWI{
     SWI_MESSAGE_VIBRATION,          //消息通知振动开关
 };
 
-enum sport_type{
+enum sport_type
+{
     RUNNING,
     CYCLING,
     WALK1,
@@ -106,7 +112,8 @@ enum sport_type{
 };
 typedef enum sport_type sport_type_t;
 
-enum BIND_STA{
+enum BIND_STA
+{
     BIND_NULL = 0,              //未绑定
     BIND_DONE,                  //绑定完成
 
@@ -115,13 +122,15 @@ enum BIND_STA{
     BIND_ING_APP_DONE,          //绑定中(app已完成)
 };
 
-enum{
+enum
+{
     CMD_TYPE_REQUEST = 0x01,
     CMD_TYPE_RESPONSE,
     CMD_TYPE_NOTIFY,
 };
 
-enum CMD_RERULT{
+enum CMD_RERULT
+{
     CMD_RESULT_OK = 0,           /* Cmd result is no error */
     CMD_RESULT_FAILE = 1,        /* Cmd result have a generic error */
     CMD_RESULT_LEN_INVALID = 2,  /* Cmd package length is invalid */
@@ -134,7 +143,8 @@ enum CMD_RERULT{
 };
 
 
-enum {
+enum
+{
     GMUSIC_BLE_STATE_STOP = 0x00,
     GMUSIC_BLE_STATE_PLAY,
     GMUSIC_BLE_STATE_PREV,
@@ -149,12 +159,14 @@ enum {
     GMUSIC_BLE_STATE_NULL = 0xff,
 };
 
-enum music_query{
+enum music_query
+{
     MUSIC_QUERY_START = 0,
     MUSIC_QUERY_STOP,
 };
 
-enum music_data{
+enum music_data
+{
     MUSIC_DATA_TITLE = 0,
     MUSIC_DATA_ARTIST,
     MUSIC_DATA_DURATION,
@@ -173,7 +185,8 @@ enum music_data{
 // };
 // typedef enum weather_type weather_type_t;
 
-enum sys_time_format{
+enum sys_time_format
+{
     SYS_TIME_FORMAT_AM         = 0x00,
     SYS_TIME_FORMAT_PM         = 0x01,
 
@@ -181,7 +194,8 @@ enum sys_time_format{
 };
 typedef enum sys_time_format sys_time_format_t;
 
-enum health_remind_type{
+enum health_remind_type
+{
     HEALTH_TYPE_SPORT       = 0x00,
     HEALTH_TYPE_MEDICINE,
     HEALTH_TYPE_BOOK,
@@ -191,7 +205,8 @@ enum health_remind_type{
 };
 typedef enum health_remind_type health_remind_type_t;
 
-struct user_info_t{
+struct user_info_t
+{
     uint8_t           user_sex;                                         //协议：性别：0x00：男 0x01：女
     uint8_t           user_age;                                         //协议：年龄（单位：岁）
     uint8_t           user_height;                                      //协议：身高（单位：厘米）
@@ -199,7 +214,8 @@ struct user_info_t{
 };
 typedef struct user_info_t user_info;
 
-struct period{
+struct period
+{
     uint8_t           start_hour;                                       //开始时间：小时
     uint8_t           start_minute;                                     //开始时间：分钟
     uint8_t           end_hour;                                         //结束时间：小时
@@ -207,14 +223,16 @@ struct period{
 };
 typedef struct period period_t;
 
-struct not_disturb_t{
-        uint8_t           sw;                                               //定时勿扰开关
-        period_t          period;                                           //时间段
-        uint8_t           all_day;                                          //全天勿扰
+struct not_disturb_t
+{
+    uint8_t           sw;                                               //定时勿扰开关
+    period_t          period;                                           //时间段
+    uint8_t           all_day;                                          //全天勿扰
 };
 typedef struct not_disturb_t not_disturb;
 
-struct weather_oneday_info{
+struct weather_oneday_info
+{
     //uint8_t         weather_unit;                                       //协议：摄氏度 华氏度
     bool             temp_limit;                                         //温度限制：0:0度以上  1:0度以下
     int8_t           current_temp;                                       //当前温度
@@ -227,7 +245,8 @@ struct weather_oneday_info{
 typedef struct weather_oneday_info weather_oneday_info_t;
 
 #define WEATHER_LOCATION_MAX    108
-struct weather_condition{
+struct weather_condition
+{
     weather_oneday_info_t           first_day;                           //第一天天气数据
     weather_oneday_info_t           second_day;                          //第二天天气数据
     weather_oneday_info_t           third_day;                           //第三天天气数据
@@ -236,7 +255,8 @@ struct weather_condition{
 };
 typedef struct weather_condition weather_condition_t;
 
-struct drink_info_t{
+struct drink_info_t
+{
     uint8_t                                 dr_switch;                                                  //闹钟开关
     uint8_t                                 dr_start_hour;                                              //时
     uint8_t                                 dr_start_minute;                                            //分
@@ -246,7 +266,8 @@ struct drink_info_t{
 };
 typedef struct drink_info_t drink_info;
 
-struct sedentary_info_t{
+struct sedentary_info_t
+{
     uint8_t                                 sit_switch;                                                  //闹钟开关
     uint8_t                                 sit_start_hour;                                              //时
     uint8_t                                 sit_start_minute;                                            //分
@@ -256,7 +277,8 @@ struct sedentary_info_t{
 };
 typedef struct sedentary_info_t sedentary_info;
 
-struct health_info_t{
+struct health_info_t
+{
     uint8_t                                 hea_type;                                                    //健康类型：0：运动 1：吃药 2：看书 3：出行
     uint8_t                                 hea_switch;                                                  //闹钟开关
     uint8_t                                 hea_hour;                                                    //时
@@ -266,7 +288,8 @@ struct health_info_t{
 };
 typedef struct health_info_t health_info;
 
-struct health2_info_t{
+struct health2_info_t
+{
     uint8_t                                 hea2_type;                                                    //第二类健康类型：
     uint8_t                                 hea2_num;                                                     //参数设置
 
@@ -276,9 +299,11 @@ struct health2_info_t{
 };
 typedef struct health2_info_t health2_info;
 
-union sys_resource_switch{
+union sys_resource_switch
+{
     uint16_t u16_sw;
-    struct {
+    struct
+    {
         uint16_t sw_sedentary                :1;                                                         //久坐
         uint16_t sw_drink                    :1;                                                         //喝水
         uint16_t sw_hr                       :1;                                                         //心率
@@ -298,11 +323,12 @@ union sys_resource_switch{
         uint16_t sw_chargesave               :1;                                                         //省电模式
         uint16_t sw_antilost                 :1;                                                         //防丢开关
         uint16_t sw_top_hour_sample          :1;                                                         //整点采集健康数据开关
-    }sys_sw;
+    } sys_sw;
 };
 typedef union sys_resource_switch sys_resource_switch_t;
 
-struct reminder_info_t{
+struct reminder_info_t
+{
 //    uint8_t                                 alarm_num;                                                  //闹钟数量
 //    alarm_info                              alarm[8];                                                   //闹钟到钟提醒
     drink_info                              drink;                                                      //喝水提醒
@@ -314,9 +340,11 @@ struct reminder_info_t{
 typedef struct reminder_info_t reminder_info;
 
 
-union sys_switch{
+union sys_switch
+{
     uint32_t u32_sw;
-    struct {
+    struct
+    {
         uint32_t antilost                    :1;                                                         //防丢开关
         uint32_t wrist                       :1;                                                         //抬腕亮屏
         uint32_t auto_syns                   :1;                                                         //自动同步
@@ -351,23 +379,27 @@ union sys_switch{
         uint32_t reserve29                   :1;                                                         //保留
         uint32_t reserve30                   :1;                                                         //保留
         uint32_t reserve31                   :1;                                                         //保留
-    }sw;
+    } sw;
 };
 typedef union sys_switch sys_switch_t;
 
-union com_switch{
+union com_switch
+{
     uint32_t u32_sw;
-    struct {
+    struct
+    {
         uint32_t ble_bpm_upload              :1;                                                         //上传心率数据开关
-        uint32_t ble_spo2_upload             :1;														 //上传血氧数据开关
-        uint32_t ble_bp_upload               :1;														 //上传血压数据开关
-    }sw;
+        uint32_t ble_spo2_upload             :1;                                                         //上传血氧数据开关
+        uint32_t ble_bp_upload               :1;                                                         //上传血压数据开关
+    } sw;
 };
 typedef union com_switch com_switch_t;
 
-union social_switch_list{
+union social_switch_list
+{
     uint32_t u32_sw;
-    struct {
+    struct
+    {
         uint32_t ring                        :1;                                                         //来电
         uint32_t missed_call                 :1;                                                         //未接来电
         uint32_t message                     :1;                                                         //短信
@@ -401,12 +433,13 @@ union social_switch_list{
         uint32_t reserve29                   :1;                                                         //保留
         uint32_t reserve30                   :1;                                                         //保留
         uint32_t reserve31                   :1;                                                         //保留
-    }sw;
+    } sw;
 };
 typedef union social_switch_list social_switch_list_t;
 
 
-struct daily_goals{
+struct daily_goals
+{
     uint16_t                    swi;                                    //开关
     uint8_t                     step;                                   //步数目标
     uint8_t                     distance;                               //距离目标
@@ -418,7 +451,8 @@ struct daily_goals{
 typedef struct daily_goals daily_goals_t;
 
 //运动记录
-struct sport_recored{
+struct sport_recored
+{
     uint8_t                                  sport_type;                                                //运动类型
     uint32_t                                 timestamp;                                                 //开始时间戳：s
     uint32_t                                 step;                                                      //步数(步)
@@ -427,11 +461,12 @@ struct sport_recored{
     uint32_t                                 duration;                                                  //运动时间(s)
     uint8_t                                  avg_hr;                                                    //平均心率：未开启自动检测时为0
     uint32_t                                 base_cal;                                                  //基础卡路里：卡
-}PACKED;
+} PACKED;
 typedef struct sport_recored sport_record_t;
 
 //睡眠监测
-struct sleep_check{
+struct sleep_check
+{
     uint8_t           start_hour;                                       //开始时间：小时
     uint8_t           start_minute;                                     //开始时间：分钟
     uint8_t           end_hour;                                         //结束时间：小时
@@ -440,14 +475,16 @@ struct sleep_check{
 };
 typedef struct sleep_check sleep_check_t;
 
-struct hr_alarm_range{
+struct hr_alarm_range
+{
     uint8_t           sw;                                               //协议：开关
     uint8_t           hr_upper;                                         //协议：上限值
     uint8_t           hr_lower;                                         //协议：下限值
 };
 typedef struct hr_alarm_range hr_alarm_range_t;
 
-struct sedentary_remind_setting{
+struct sedentary_remind_setting
+{
     uint8_t           sit_sw;                                           //静坐使能开关
     uint8_t           cycle;                                            //协议：周期(周一~周日)
     uint8_t           interval;                                         //协议：检测频率(分钟)
@@ -472,7 +509,8 @@ struct ble_protocol_upload
 };
 typedef struct ble_protocol_upload ble_protocol_upload_t;
 
-struct alarm_clock{
+struct alarm_clock
+{
     uint8_t                                 swi;                                                     //闹钟开关
     uint8_t                                 cycle;                                                   //周期：0bit~6bit表示周一到周日,bit7:0:重复提醒 1:只提醒一次，当天有效
     uint8_t                                 hour;                                                    //时
@@ -482,7 +520,8 @@ struct alarm_clock{
 };
 typedef struct alarm_clock alarm_clock_t;
 
-struct normal_remind{
+struct normal_remind
+{
     uint8_t                                 re_id;                                                      //提醒ID
     uint8_t                                 re_switch;                                                  //提醒开关
     uint8_t                                 re_cycle;                                                   //周期：0bit~6bit表示周一到周日,bit7:0:重复提醒 1:只提醒一次，当天有效
@@ -494,7 +533,8 @@ struct normal_remind{
 typedef struct normal_remind normal_remind_t;
 
 //保存提醒事件
-struct interval_remind{
+struct interval_remind
+{
     uint8_t                                 id;                                                         //提醒ID
     uint8_t                                 cycle;                                                      //周期：0bit~6bit表示周一到周日,bit7: 提醒总开关
     uint8_t                                 start_hour;                                                 //时
@@ -503,19 +543,21 @@ struct interval_remind{
     uint8_t                                 end_minute;                                                 //分
     uint8_t                                 interval;                                                   //间隔：分钟
     uint32_t                                cnt_cycle;                                                  //计数判断是否到达时间间隔
-}PACKED;
+} PACKED;
 typedef struct interval_remind interval_remind_t;
 
 //电话簿
-typedef struct{
+typedef struct
+{
     u8 idx;                                     //联系人编号
     u8 name[CONTACTS_NAME_SAVE_MAX];
     u8 num_len;                                 //buf中有效号码长度
     u8 num_buf[CALL_NUM_LEN/2 + 1];                 //2个号码占一个字节, 低位在前, 高位在后, '+'用A代替
     //u8 numchar_buf[CALL_NUM_LEN + 1];               //显示字符串号码
-}contact_info_t;
+} contact_info_t;
 
-typedef struct {
+typedef struct
+{
     contact_info_t                          info;                       //联系人信息
     bool                                    contact_type;               //通话类型: 0来电, 1去电
     bool                                    answer_hang;                //接听/挂断:0挂断, 1接听
@@ -523,10 +565,11 @@ typedef struct {
     u8                                      day;                        //日
     u8                                      hour;                       //时
     u8                                      min;                        //分
-}call_records_info_t;
+} call_records_info_t;
 
 //时间戳数据
-struct timestamp_data{
+struct timestamp_data
+{
 
     uint32_t                                 timestamp;                                                //UTC时间戳：s
     uint8_t                                  value;
@@ -534,43 +577,47 @@ struct timestamp_data{
 typedef struct timestamp_data timestamp_data_t;
 
 //睡眠
-struct sleep_record{
-    uint16_t                                 awake_min;     //清醒时长
-    uint16_t                                 light_min;     //浅睡时长
-    uint16_t                                 deep_min;      //深睡时长
-    uint8_t                                  wkup_time;     //醒来次数
+// struct sleep_record{
+//     uint16_t                                 awake_min;     //清醒时长
+//     uint16_t                                 light_min;     //浅睡时长
+//     uint16_t                                 deep_min;      //深睡时长
+//     uint8_t                                  wkup_time;     //醒来次数
 
-    uint8_t                                  index;
-    timestamp_data_t                         change[SLEEP_RECORD_MAX];
-    bool                                     remind_flag;                           //今日是否已提醒
-};
-typedef struct sleep_record sleep_record_t;
+//     uint8_t                                  index;
+//     timestamp_data_t                         change[SLEEP_RECORD_MAX];
+//     bool                                     remind_flag;                           //今日是否已提醒
+// };
+// typedef struct sleep_record sleep_record_t;
 
 ///心率
-struct heartrate{
+struct heartrate
+{
     uint8_t                                 bpm_last;                               //心率最后一次测量值
 };
 typedef struct heartrate heartrate_t;
 
 //血氧
-struct blood_oxygen{
+struct blood_oxygen
+{
     uint8_t                                 bo_last;                                //血氧最后一次测量值
 };
 typedef struct blood_oxygen blood_oxygen_t;
 
 //血压
-struct blood_pressure{
+struct blood_pressure
+{
     uint8_t                                 sbp_last;                               //收缩压最后一次测量值
     uint8_t                                 dbp_last;                               //舒张压最后一次测量值
 };
 typedef struct blood_pressure blood_pressure_t;
 
-typedef struct flash_sector0{
+typedef struct flash_sector0
+{
     u8                                      bind_flag:1;                                                //是否已被绑定标志
     user_info                               userinfo;                                                   //用户信息
     uint8_t                                 alarm_num;                                                  //闹钟数量
     alarm_clock_t                           alarm[ALARM_NUM_MAX];                                       //闹钟信息
-	reminder_info                           reminder_all;
+    reminder_info                           reminder_all;
     normal_remind_t                         remind[REMIND_NUM_MAX];                                     //单次提醒信息
     interval_remind_t                       remind_group[REMIND_NUM_MAX];                               //健康提醒
     weather_condition_t                     weather;                                                    //天气
@@ -578,13 +625,14 @@ typedef struct flash_sector0{
     call_records_info_t                     call_records[CALL_RECORD_LEN];                              //通话记录
     sport_record_t                          sport_record[SPORT_RECORD_NUM_MAX];                         //运动数据
     uint8_t                                 sport_record_idx;                                           //运动数据当前索引
-}flash_sector0_t;
+} flash_sector0_t;
 
-typedef struct flash_sector1{
+typedef struct flash_sector1
+{
     uint8_t                                 time_format;                                                //时间格式(12h/24h) 0->24; 1->12;
     uint8_t                                 lang;                                                       //设备语言
-    u32 									sleep_time;													//熄屏时间
-    u16 									vbat;													    //电压
+    u32                                     sleep_time;                                                 //熄屏时间
+    u16                                     vbat;                                                       //电压
 
     contact_info_t                          contact_info[CONTACTS_MAX_NUM];                             //联系人
     uint                                    step;                                                       //步数
@@ -602,33 +650,38 @@ typedef struct flash_sector1{
 
     social_switch_list_t                    social_sw;                                                  //社交开关扩展
     not_disturb                             not_disturb_info;                                           //勿扰模式
-    sleep_record_t                          sleep;                                                      //睡眠数据
+    // sleep_record_t                          sleep;                                                      //睡眠数据
     sleep_check_t                           sleep_check;                                                //自动睡眠检测设置
-}flash_sector1_t;
+} flash_sector1_t;
 
 /// Platform Manager Status
-enum {
+enum
+{
     PM_NULL,
     PM_CHANGE,
 };
 
-enum {
+enum
+{
     PM_SYNC_SECTOR0 = 0,
     PM_SYNC_SECTOR1,
     PM_SYNC_MAX,
 };
 
-union pm_switch{
+union pm_switch
+{
     uint32_t u32_sync;
-    struct {
+    struct
+    {
         uint32_t sector0                      :1;
         uint32_t sector1                      :1;
         uint32_t sector2                      :1;
-    }sync;
+    } sync;
 };
 typedef union pm_switch pm_switch_t;
 
-typedef struct {
+typedef struct
+{
     uint8_t                                 ble_app_ios     :1;                                         //APP区别安卓苹果链接, 0:Android 1:IOS
 
     bool                                    init_mark;                                                  //绑定完成标志
@@ -645,7 +698,7 @@ typedef struct {
 //    uint8_t                                 alarm_ring : 4;                                             //当前响起的闹钟
 //
 //    uint8_t                                 auto_hr_interval;                                           //自动心率监测间隔
-//	uint8_t                                 base_cal_sw;                                                //静态卡路里开关
+//  uint8_t                                 base_cal_sw;                                                //静态卡路里开关
 //    password_type                           gpwdselect_sta;                                             //密码选择状态
 //    uint8_t                                 recent_task[RECENT_APP_NUM_MAX];                            //最近任务
 //    bool                                    exist_recent_task;                                          //存在最近任务标志,开机默认不存在

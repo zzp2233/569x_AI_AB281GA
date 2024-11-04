@@ -392,11 +392,12 @@ ute_drv_gsensor_common_axis_data_t recordLastAxisData;
 void uteDrvGsensorSc7a20hReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
 {
     uint8_t buff[192] = {0};
-    uint8_t retReadValue = 0;
-    uint8_t retWriteValue = 0;
     uint8_t frame_cnt = 0;
     bool isException =false;
 #if 0  /*MTP写入和CRC校验*/
+    uint8_t retReadValue = 0;
+    uint8_t retWriteValue = 0;
+
     retReadValue = SL_SC7A20_MTP_READ(2,buff,0); //0下拉 1上拉
     // UTE_MODULE_LOG(1, "7a20hReadFifo log---,retReadValue=%d",retReadValue);
     // UTE_MODULE_LOG_BUFF(1,buff,29);

@@ -242,5 +242,7 @@ void uteApplicationCommonSetAncsConnStatus(bool isConnected);
 bool uteApplicationCommonGetAncsConnStatus(void);
 uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len);
 
+float ExactDecimalPoint(float data,uint8_t bit);
+
 #endif //_UTE_APPLICATION_COMMON_H_
 

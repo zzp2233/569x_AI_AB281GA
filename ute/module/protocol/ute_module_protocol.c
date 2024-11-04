@@ -24,6 +24,7 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_drv_battery_common.h"
 #include "ute_module_sport.h"
+#include "ute_module_sleep.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置

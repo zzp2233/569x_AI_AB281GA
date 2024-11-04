@@ -1,6 +1,6 @@
 /**
  *@file
- *@brief        Ë¯Ãß
+ *@brief        ç¡çœ 
  *@details
  *@author       zn.zeng
  *@date       2021-10-25
@@ -15,16 +15,16 @@
 #include "ute_module_protocol.h"
 #include "ute_module_profile_ble.h"
 #include "ute_flash_map_common.h"
-#include "ute_module_sleep.h"
+#include "ute_module_systemtime.h"
 
-/*! Ë¯ÃßËã·¨Êı¾İzn.zeng, 2021-10-26  */
+/*! ç¡çœ ç®—æ³•æ•°æ®zn.zeng, 2021-10-26  */
 ute_sleep_data_t uteSleepAlgoData;
 ute_module_sleep_data_t uteModuleSleepData;
-/* Ë¯Ãß»¥³âÁ¿ zn.zeng 2022-02-14*/
+/* ç¡çœ äº’æ–¥é‡ zn.zeng 2022-02-14*/
 void *uteModuleSleepMute;
 
 /**
- *@brief       Ë¯Ãß³õÊ¼»¯
+ *@brief       ç¡çœ åˆå§‹åŒ–
  *@details
  *@author        zn.zeng
  *@date        2021-10-26
@@ -56,14 +56,14 @@ void uteModuleSleepInit(void)
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,read file=%s", __func__, &path[0]);
     uint32_t currTimeMinSec = time.hour*3600+time.min*60+time.sec;
     bool isNotGetUp = false;
-    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))  //¶ÁÈ¡Êı¾İ
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))  //è¯»å–æ•°æ®
     {
-        if ((currTimeMinSec >= (18 * 3600)) || (currTimeMinSec < (6 * 3600))) //>=18:00  <6:00 // ·ÇÆğ´²×´Ì¬
+        if ((currTimeMinSec >= (18 * 3600)) || (currTimeMinSec < (6 * 3600))) //>=18:00  <6:00 // éèµ·åºŠçŠ¶æ€
         {
             isNotGetUp = true;
             UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,not get up", __func__);
         }
-        else// ÒÑ¾­ÊÇÆğ´²×´Ì¬
+        else// å·²ç»æ˜¯èµ·åºŠçŠ¶æ€
         {
             uteModuleFilesystemSeek(file, 0, FS_SEEK_SET);
             uteModuleFilesystemReadData(file, &(uteSleepAlgoData.saveData), sizeof(ute_sleep_data_save_t));
@@ -81,7 +81,7 @@ void uteModuleSleepInit(void)
 #if UTE_OPTIMIZE_SLEEP_SUPPORT
     else
     {
-        if ((currTimeMinSec >= (18 * 3600)) || (currTimeMinSec < (6 * 3600))) //>=18:00  <6:00 // ·ÇÆğ´²×´Ì¬
+        if ((currTimeMinSec >= (18 * 3600)) || (currTimeMinSec < (6 * 3600))) //>=18:00  <6:00 // éèµ·åºŠçŠ¶æ€
         {
             isNotGetUp = true;
             UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,not get up", __func__);
@@ -108,23 +108,23 @@ void uteModuleSleepInit(void)
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,currTimeMinSec=%d,uteSleepAlgoData.isGetUp=%d", __func__,currTimeMinSec,uteSleepAlgoData.isGetUp);
 }
 /**
- *@brief       Ë¯ÃßÊı¾İ±£´æ
+ *@brief       ç¡çœ æ•°æ®ä¿å­˜
  *@details
  *@author        zn.zeng
  *@date        2021-10-26
  */
 void uteModuleSleepSaveSleepData(ute_module_systemtime_time_t time)
 {
-    /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+    /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
     if(!uteApplicationCommonIsHasConnectOurApp())
     {
         return;
     }
     uint16_t buffSize = sizeof(ute_sleep_data_save_t);
-    uint8_t path[20];
-    memset(&path[0], 0, 20);
+    uint8_t path[40];
+    memset(&path[0], 0, sizeof(path));
     uint16_t currTimeHourMin = time.hour << 8 | time.min;
-    /*! 18~24µã²»±£´æÊı¾İ zn.zeng 2022-03-22*/
+    /*! 18~24ç‚¹ä¸ä¿å­˜æ•°æ® zn.zeng 2022-03-22*/
     if (currTimeHourMin > 0x1200)
     {
         return;
@@ -159,17 +159,17 @@ void uteModuleSleepSaveSleepData(ute_module_systemtime_time_t time)
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SLEEP_DIR, dirInfo, NULL);
     if ((dirInfo->filesCnt >= UTE_MODULE_SLEEP_DATA_MAX_DAYS) && (memcmp(&path[0], &dirInfo->filesName[0][0], 8) != 0))
     {
-        /*! É¾³ı×î¾ÉÒ»ÌìµÄÊı¾İzn.zeng, 2021-10-26*/
-        memset(&path[0], 0, 20);
+        /*! åˆ é™¤æœ€æ—§ä¸€å¤©çš„æ•°æ®zn.zeng, 2021-10-26*/
+        memset(&path[0], 0, sizeof(path));
         sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_SLEEP_DIR, &dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,del file=%s", __func__, &path[0]);
         uteModuleFilesystemDelFile((char *)&path[0]);
     }
-    memset(&path[0], 0, 20);
+    memset(&path[0], 0, sizeof(path));
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_SLEEP_DIR, time.year, time.month, time.day);
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,dirInfo->filesCnt=%d", __func__, dirInfo->filesCnt);
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,save file=%s", __func__, &path[0]);
-    /*! ±£´æµ±Ç°Êı¾İzn.zeng, 2021-10-26  */
+    /*! ä¿å­˜å½“å‰æ•°æ®zn.zeng, 2021-10-26  */
     void *file;
     if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT | FS_O_TRUNC))
     {
@@ -185,9 +185,9 @@ void uteModuleSleepSaveSleepData(ute_module_systemtime_time_t time)
 }
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
 /**
- *@brief       Í¨¹ı»ñÈ¡Ğ¡Ë¯Ë¯ÃßÊı¾İÀ´»­Í¼
- *@details  °´Ê±¼äÈÕÆÚ¶ÁÈ¡
- *@return true Îª´æÔÚÊı¾İ
+ *@brief       é€šè¿‡è·å–å°ç¡ç¡çœ æ•°æ®æ¥ç”»å›¾
+ *@details  æŒ‰æ—¶é—´æ—¥æœŸè¯»å–
+ *@return true ä¸ºå­˜åœ¨æ•°æ®
  *@author        zn.zeng
  *@date        2021-10-26
  */
@@ -244,9 +244,9 @@ bool uteModuleSleepReadDayData(uint16_t year, uint8_t mon, uint8_t day, ute_slee
 }
 #else
 /**
- *@brief       Ë¯ÃßÊı¾İ¶ÁÈ¡
- *@details  °´Ê±¼äÈÕÆÚ¶ÁÈ¡
- *@return true Îª´æÔÚÊı¾İ
+ *@brief       ç¡çœ æ•°æ®è¯»å–
+ *@details  æŒ‰æ—¶é—´æ—¥æœŸè¯»å–
+ *@return true ä¸ºå­˜åœ¨æ•°æ®
  *@author        zn.zeng
  *@date        2021-10-26
  */
@@ -294,8 +294,8 @@ bool uteModuleSleepReadDayData(uint16_t year, uint8_t mon, uint8_t day, ute_slee
         return true;
     }
     void *file;
-    uint8_t path[20];
-    memset(&path[0], 0, 20);
+    uint8_t path[40];
+    memset(&path[0], 0, sizeof(path));
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_SLEEP_DIR, year, mon, day);
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,read file=%s", __func__, &path[0]);
     if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
@@ -323,14 +323,14 @@ bool uteModuleSleepReadDayData(uint16_t year, uint8_t mon, uint8_t day, ute_slee
 
 #if UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT
 /**
- *@brief       Ë¯ÃßÊı¾İ½ÓÈë
- *@details    Ã¿ÃëÅÜÒ»´Î£¬´Ósport ½ÓÈë
+ *@brief       ç¡çœ æ•°æ®æ¥å…¥
+ *@details    æ¯ç§’è·‘ä¸€æ¬¡ï¼Œä»sport æ¥å…¥
  *@author        zn.zeng
  *@date        2021-10-26
  */
 void uteModuleSleepSaveSampleData(uint16_t minStepCnt, uint8_t minSleepCnt, ute_module_systemtime_time_t time, uint8_t avgHeart)
 {
-    /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+    /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
     if(!uteApplicationCommonIsHasConnectOurApp())
     {
         return;
@@ -350,7 +350,7 @@ void uteModuleSleepSaveSampleData(uint16_t minStepCnt, uint8_t minSleepCnt, ute_
         uteModuleFilesystemSeek(file, 0, FS_SEEK_END);
         int32_t size = uteModuleFilesystemGetFileSize(file);
         UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,size=%d", __func__, size);
-        if (size >= (11520*2)) //´óÓÚ5(57600)ÌìÊı¾İ£¬É¾³ıÊı¾İÖØĞÂ¿ªÊ¼±£´æ
+        if (size >= (11520*2)) //å¤§äº5(57600)å¤©æ•°æ®ï¼Œåˆ é™¤æ•°æ®é‡æ–°å¼€å§‹ä¿å­˜
         {
             UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,seek set", __func__);
             uteModuleFilesystemCloseFile(file);
@@ -363,7 +363,7 @@ void uteModuleSleepSaveSampleData(uint16_t minStepCnt, uint8_t minSleepCnt, ute_
     }
 }
 /**
- *@brief        ¿ªÊ¼·¢ËÍË¯Ãß²ÉÑùÊı¾İ
+ *@brief        å¼€å§‹å‘é€ç¡çœ é‡‡æ ·æ•°æ®
  *@details
  *@author       zn.zeng
  *@date       2021-12-29
@@ -415,7 +415,7 @@ void uteModuleSleepSendSleepSampleData(void)
 }
 
 /**
- *@brief        ×¼±¸¿ªÊ¼·¢ËÍË¯Ãß²ÉÑùÊı¾İ
+ *@brief        å‡†å¤‡å¼€å§‹å‘é€ç¡çœ é‡‡æ ·æ•°æ®
  *@details
  *@author       zn.zeng
  *@date       2021-12-29
@@ -431,14 +431,14 @@ void uteModuleSleepStartSendSleepSampleData(void)
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,", __func__);
 }
 /**
- *@brief        ±£´æË¯ÃßdebugÊı¾İ
- *@details     Ã¿Ğ¡Ê±±£´æÒ»´ÎdebugÊı¾İ
+ *@brief        ä¿å­˜ç¡çœ debugæ•°æ®
+ *@details     æ¯å°æ—¶ä¿å­˜ä¸€æ¬¡debugæ•°æ®
  *@author       zn.zeng
  *@date       2022-03-29
  */
 void uteModuleSleepSaveLogData(ute_module_systemtime_time_t time)
 {
-    /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+    /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
     if(!uteApplicationCommonIsHasConnectOurApp())
     {
         return;
@@ -467,7 +467,7 @@ void uteModuleSleepSaveLogData(ute_module_systemtime_time_t time)
     uteModulePlatformMemoryFree(dirInfo);
 }
 /**
- *@brief        ¿ªÊ¼·¢ËÍË¯ÃßlogÊı¾İ
+ *@brief        å¼€å§‹å‘é€ç¡çœ logæ•°æ®
  *@details
  *@author       zn.zeng
  *@date       2022-03-29
@@ -532,7 +532,7 @@ void uteModuleSleepSendSleepLogData(void)
     uteModulePlatformMemoryFree(dataBuff);
 }
 /**
- *@brief        ×¼±¸¿ªÊ¼·¢ËÍË¯ÃßlogÊı¾İ
+ *@brief        å‡†å¤‡å¼€å§‹å‘é€ç¡çœ logæ•°æ®
  *@details
  *@author       zn.zeng
  *@date       2022-03-29
@@ -553,9 +553,9 @@ void uteModuleSleepStartSendSleepLogData(void)
 #endif
 #if UTE_MODULE_SLEEP_RUN_SIMULATION_SUPPORT
 /**
- *@brief        ¶ÁÈ¡Ä£ÄâÊı¾İ
+ *@brief        è¯»å–æ¨¡æ‹Ÿæ•°æ®
  *@details
- *@return false Îª¶ÁÈ¡½áÊø
+ *@return false ä¸ºè¯»å–ç»“æŸ
  *@author       zn.zeng
  *@date       2021-12-29
  */
@@ -590,14 +590,14 @@ bool uteModuleSleepReadSimulationData(ute_module_systemtime_time_t *time, ute_st
 }
 #endif
 /**
- *@brief       Ë¯ÃßµÄÇé¿öÏÂ±£´æÁÙÊ±Êı¾İ£¬ÓÃÓÚ¿ª¹Ø»ú»Ö¸´
- *@details    Ã¿ÃëÅÜÒ»´Î£¬´Ósport ½ÓÈë
+ *@brief       ç¡çœ çš„æƒ…å†µä¸‹ä¿å­˜ä¸´æ—¶æ•°æ®ï¼Œç”¨äºå¼€å…³æœºæ¢å¤
+ *@details    æ¯ç§’è·‘ä¸€æ¬¡ï¼Œä»sport æ¥å…¥
  *@author        zn.zeng
  *@date        2022-04-12
  */
 void uteModuleSleepSaveTmpDataForPowerOff(void)
 {
-    /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+    /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
     if(!uteApplicationCommonIsHasConnectOurApp())
     {
         return;
@@ -613,8 +613,8 @@ void uteModuleSleepSaveTmpDataForPowerOff(void)
 }
 
 /**
- *@brief       Ë¯ÃßÊı¾İ½ÓÈë
- *@details    Ã¿ÃëÅÜÒ»´Î£¬´Ósport ½ÓÈë
+ *@brief       ç¡çœ æ•°æ®æ¥å…¥
+ *@details    æ¯ç§’è·‘ä¸€æ¬¡ï¼Œä»sport æ¥å…¥
  *@author        zn.zeng
  *@date        2021-10-26
  */
@@ -663,8 +663,8 @@ void uteModuleSleepDataInputSecond(ute_step_sleep_param_t *sleepData, ute_module
         {
             goto SIMULATION_FINISH;
         }
-        while (uteModuleSleepReadSimulationData(&time, sleepData, &avgHeart))//Ò»´ÎĞÔÄ£Äâ
-            // if(uteModuleSleepReadSimulationData(&time, sleepData, &avgHeart))//ÕæÊµÄ£Äâ£¬Ã¿·ÖÖÓÅÜÒ»´Î
+        while (uteModuleSleepReadSimulationData(&time, sleepData, &avgHeart))//ä¸€æ¬¡æ€§æ¨¡æ‹Ÿ
+            // if(uteModuleSleepReadSimulationData(&time, sleepData, &avgHeart))//çœŸå®æ¨¡æ‹Ÿï¼Œæ¯åˆ†é’Ÿè·‘ä¸€æ¬¡
         {
 #endif
             uint32_t currTimeSec = time.hour*3600+time.min*60+time.sec;
@@ -726,7 +726,7 @@ void uteModuleSleepDataInputSecond(ute_step_sleep_param_t *sleepData, ute_module
             else
             {
 #if UTE_OPTIMIZE_SLEEP_SUPPORT
-                if (currTimeSec >= (18*3600)||(currTimeSec < (6*3600))) //add by pcm 20220812 ÔÚ18~6µãÕâ¸öÊ±¼ä¶ÎÄÚ£¬Èç¹ûisGetUpÎªtrue£¬Ôò¶¼½øÀ´ÖØĞÂÉèÖÃÒ»´Î£¬È»ºóÇå³ıË¯ÃßÊı¾İ
+                if (currTimeSec >= (18*3600)||(currTimeSec < (6*3600))) //add by pcm 20220812 åœ¨18~6ç‚¹è¿™ä¸ªæ—¶é—´æ®µå†…ï¼Œå¦‚æœisGetUpä¸ºtrueï¼Œåˆ™éƒ½è¿›æ¥é‡æ–°è®¾ç½®ä¸€æ¬¡ï¼Œç„¶åæ¸…é™¤ç¡çœ æ•°æ®
 #else
                 if (currTimeSec == (18*3600-1))  //delete by pcm 20220812
 #endif
@@ -751,10 +751,10 @@ void uteModuleSleepDataInputSecond(ute_step_sleep_param_t *sleepData, ute_module
         }
         // else
         // {
-        //     isSimulationFinish = true;//ÕæÊµÄ£Äâ£¬Ã¿·ÖÖÓÅÜÒ»´Î
+        //     isSimulationFinish = true;//çœŸå®æ¨¡æ‹Ÿï¼Œæ¯åˆ†é’Ÿè·‘ä¸€æ¬¡
         // }
     SIMULATION_FINISH:
-        isSimulationFinish = true; //Ò»´ÎĞÔÄ£Äâ
+        isSimulationFinish = true; //ä¸€æ¬¡æ€§æ¨¡æ‹Ÿ
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isSimulationFinish=%d,simulation data end time=%d", __func__,isSimulationFinish,uteModulePlatformGetSystemTick());
 #endif
         sleepData->currentMinuteSleepTurnCnt = 0;
@@ -764,7 +764,7 @@ void uteModuleSleepDataInputSecond(ute_step_sleep_param_t *sleepData, ute_module
 }
 
 /**
- *@brief        ¿ªÊ¼·¢ËÍË¯ÃßÊı¾İ
+ *@brief        å¼€å§‹å‘é€ç¡çœ æ•°æ®
  *@details
  *@author       zn.zeng
  *@date       2021-10-26
@@ -773,14 +773,14 @@ void uteModuleSleepSendSleepHistoryData(void)
 {
     ute_application_sync_data_param_t *sendParam;
     uteApplicationCommonGetSyncDataParam(&sendParam);
-    uint8_t path[20];
+    uint8_t path[40];
     uint8_t response[247];
     uint16_t sendSize = 0;
     uint16_t mtuSize = uteApplicationCommonGetMtuSize();
     sendParam->dataBuffSize = sizeof(ute_sleep_data_save_t);
     ute_sleep_data_save_t *pRead = (ute_sleep_data_save_t *)uteModulePlatformMemoryAlloc(sendParam->dataBuffSize);
     memset((void*)pRead, 0, sendParam->dataBuffSize);
-    memset(&path[0], 0, 20);
+    memset(&path[0], 0, sizeof(path));
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,currSendFileIndex=%d,currSendHourIndex=%d,dirInfo.filesCnt=%d", __func__, sendParam->currSendFileIndex, sendParam->currSendHourIndex, sendParam->dirInfo.filesCnt);
 
     if (sendParam->currSendFileIndex < sendParam->dirInfo.filesCnt)
@@ -848,9 +848,9 @@ void uteModuleSleepSendSleepHistoryData(void)
 }
 
 /**
- *@brief        ×¼±¸¿ªÊ¼·¢ËÍË¯ÃßÊı¾İ
+ *@brief        å‡†å¤‡å¼€å§‹å‘é€ç¡çœ æ•°æ®
  *@details
- *@param[in]  ĞèÒªÍ¬²½µÄÊı¾İÊ±¼ä´Á
+ *@param[in]  éœ€è¦åŒæ­¥çš„æ•°æ®æ—¶é—´æˆ³
  *@author       zn.zeng
  *@date       2021-10-26
  */
@@ -886,9 +886,9 @@ void uteModuleSleepStartSendSleepHistoryData(ute_module_systemtime_time_t time)
 }
 
 /**
- *@brief        »ñÈ¡µ±Ç°Ë¯ÃßÊı¾İ
+ *@brief        è·å–å½“å‰ç¡çœ æ•°æ®
  *@details
- *@param[out]  ute_module_sleep_display_data_t *sleepDisplayData ,Êı¾İÖ¸Õë
+ *@param[out]  ute_module_sleep_display_data_t *sleepDisplayData ,æ•°æ®æŒ‡é’ˆ
  *@author       zn.zeng
  *@date       2021-10-26
  */
@@ -966,10 +966,10 @@ void uteModuleSleepGetCurrDayDataDisplay(ute_module_sleep_display_data_t *sleepD
     uteModulePlatformMemoryFree(pRead);
 }
 /**
- *@brief        Ê±¼ä±ä»¯
- *@details   ¿çÌìÊı£¬¿ç18:00Ê±Òª´¦ÀíÇåÁã
- *@param[in] ute_module_systemtime_time_t curr,µ±Ç°Ê±¼ä
- *@param[in] ute_module_systemtime_time_t newSet,½«ÒªÉèÖÃµÄÊ±¼ä
+ *@brief        æ—¶é—´å˜åŒ–
+ *@details   è·¨å¤©æ•°ï¼Œè·¨18:00æ—¶è¦å¤„ç†æ¸…é›¶
+ *@param[in] ute_module_systemtime_time_t curr,å½“å‰æ—¶é—´
+ *@param[in] ute_module_systemtime_time_t newSet,å°†è¦è®¾ç½®çš„æ—¶é—´
  *@author       zn.zeng
  *@date       2022-04-20
  */
@@ -1012,7 +1012,7 @@ void uteModuleSleepSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
 }
 
 /**
- *@brief        »ñÈ¡µ±ÌìÆğ´²±êÖ¾
+ *@brief        è·å–å½“å¤©èµ·åºŠæ ‡å¿—
  *@details
  *@author       zn.zeng
  *@date       2022-04-20
@@ -1022,7 +1022,7 @@ bool uteModuleSleepCurrDayIsGetUp(void)
     return uteSleepAlgoData.isGetUp;
 }
 /**
- *@brief        ÊÇ·ñÓĞË¯Ãß
+ *@brief        æ˜¯å¦æœ‰ç¡çœ 
  *@details
  *@author       zn.zeng
  *@date       2022-04-20
@@ -1034,13 +1034,13 @@ bool uteModuleSleepCurrDayIsHasSleep(void)
 
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
 /*
- *ÈüÎ¬Ë¯ÃßËã·¨Êä³ö´¦Àí
+ *èµ›ç»´ç¡çœ ç®—æ³•è¾“å‡ºå¤„ç†
  *
  */
-static uint16_t lastSleepStatusStartTime = 0;  //ÉÏÒ»¸ö×´Ì¬¿ªÊ¼Ê±¼ä
-static uint16_t notifySleepStatusTime = 0;  //Í¨ÖªË¯ÃßµÄÊ±¼ä,µ±×öË¯ÃßÆğÊ¼Ê±¼ä
+static uint16_t lastSleepStatusStartTime = 0;  //ä¸Šä¸€ä¸ªçŠ¶æ€å¼€å§‹æ—¶é—´
+static uint16_t notifySleepStatusTime = 0;  //é€šçŸ¥ç¡çœ çš„æ—¶é—´,å½“åšç¡çœ èµ·å§‹æ—¶é—´
 /*
-isSleep true:±íÊ¾Ë¯Ãß½âÎö false:±íÊ¾Ğ¡Ë¯½âÎö
+isSleep true:è¡¨ç¤ºç¡çœ è§£æ false:è¡¨ç¤ºå°ç¡è§£æ
 */
 void uteModuleSleepAnalysis(uteCwmSleepOnceData_t uteCwmSleepOnceData,bool isSleep)
 {
@@ -1070,14 +1070,14 @@ void uteModuleSleepAnalysis(uteCwmSleepOnceData_t uteCwmSleepOnceData,bool isSle
 
     switch(uteCwmSleepOnceData.sleepStatus)
     {
-        case CWM_SLEEP_STATUS_FALL_SLEEP:   //ÈëË¯µ±×öÇ³Ë¯´¦Àí
+        case CWM_SLEEP_STATUS_FALL_SLEEP:   //å…¥ç¡å½“åšæµ…ç¡å¤„ç†
         case CWM_SLEEP_STATUS_LIGHT_SLEEP:
         {
             if(uteCwmSleepOnceData.sleepStatus == CWM_SLEEP_STATUS_FALL_SLEEP)
             {
                 notifySleepStatusTime = uteCwmSleepOnceData.hour*60+uteCwmSleepOnceData.min;
                 lastSleepStatusStartTime = notifySleepStatusTime;
-                /*ÉÏÒ»¶ÎË¯ÃßÈç¹û³¬¹ı3Ğ¡Ê±,ĞÂµÄÈëË¯Ê±¼äÓëËü¼ä¸ôĞ¡ÓÚµÈÓÚ30·ÖÖÓ,ÓÃÇåĞÑ×´Ì¬Á¬½Ó*/
+                /*ä¸Šä¸€æ®µç¡çœ å¦‚æœè¶…è¿‡3å°æ—¶,æ–°çš„å…¥ç¡æ—¶é—´ä¸å®ƒé—´éš”å°äºç­‰äº30åˆ†é’Ÿ,ç”¨æ¸…é†’çŠ¶æ€è¿æ¥*/
                 if(uteCwmSleepData.lastSleepIsLongTime == true)
                 {
                     if(saveIndex > 0)
@@ -1183,7 +1183,7 @@ void uteModuleSleepAnalysis(uteCwmSleepOnceData_t uteCwmSleepOnceData,bool isSle
             uteModuleCwmIsSetSleeping(true);
         }
         break;
-        case CWM_SLEEP_STATUS_CLOSE_NAP_SLEEP: //½áÊøĞ¡Ë¯
+        case CWM_SLEEP_STATUS_CLOSE_NAP_SLEEP: //ç»“æŸå°ç¡
         case CWM_SLEEP_STATUS_STOP_SLEEP:
         {
             uint8_t saveIndex = pTempSleepData->recordIndex;
@@ -1215,17 +1215,17 @@ void uteModuleSleepAnalysis(uteCwmSleepOnceData_t uteCwmSleepOnceData,bool isSle
             pTempSleepData->sleep_record[pTempSleepData->recordIndex].state = STOP_SLEEP;
             pTempSleepData->recordIndex++;
             uteModuleSleepSaveNapSleepData();
-            if(diffTotalMin>=3*60) //±ê¼ÇÕâÊÇ³¤Ë¯Ãß
+            if(diffTotalMin>=3*60) //æ ‡è®°è¿™æ˜¯é•¿ç¡çœ 
             {
                 uteCwmSleepData.lastSleepIsLongTime = true;
             }
-            /*! 18~24µã²»ËãÒ¹¼äË¯Ãß*/
+            /*! 18~24ç‚¹ä¸ç®—å¤œé—´ç¡çœ */
             bool saveFlag = true;
             if (currTimeHourMin > 0x1200)
             {
                 saveFlag = false;
             }
-            if(diffTotalMin>=3*60 && saveFlag && uteSleepAlgoData.isGetUp == false) //´óÓÚ3Ğ¡Ê±Ë¯Ãß & µ±Ç°Ê±¼ä²»´óÓÚ18:00
+            if(diffTotalMin>=3*60 && saveFlag && uteSleepAlgoData.isGetUp == false) //å¤§äº3å°æ—¶ç¡çœ  & å½“å‰æ—¶é—´ä¸å¤§äº18:00
             {
                 uteSleepAlgoData.isGetUp = true;
                 if (currTimeSec < (18*3600-1))//<18:00
@@ -1240,7 +1240,7 @@ void uteModuleSleepAnalysis(uteCwmSleepOnceData_t uteCwmSleepOnceData,bool isSle
         break;
         case CWM_SLEEP_STATUS_REQ_LAST_DATA:
         {
-            //Í¨¹ıSCL_REQ_SLEEPING_DATA ²éÑ¯µÄ×îºóÒ»ÌõÊı¾İ¶¼ÊÇÇåĞÑ,ÕâÀï¹ıÂËµô
+            //é€šè¿‡SCL_REQ_SLEEPING_DATA æŸ¥è¯¢çš„æœ€åä¸€æ¡æ•°æ®éƒ½æ˜¯æ¸…é†’,è¿™é‡Œè¿‡æ»¤æ‰
             uint8_t saveIndex = pTempSleepData->recordIndex;
             if(saveIndex>0)
             {
@@ -1251,7 +1251,7 @@ void uteModuleSleepAnalysis(uteCwmSleepOnceData_t uteCwmSleepOnceData,bool isSle
                     pTempSleepData->sleep_record[saveIndex-1].state = INIDLE;
                     pTempSleepData->sleep_record[saveIndex-1].period = 0;
                     pTempSleepData->recordIndex --;
-                    //¹ıÂË²éÑ¯Ë¯Ãß·µ»ØµÄ×îºóÒ»ÌõÊıÖ®ºó,ÔÚ°ÑÇ°Ò»ÌõÊı¾İÊ±¼ä¸üĞÂ¡£
+                    //è¿‡æ»¤æŸ¥è¯¢ç¡çœ è¿”å›çš„æœ€åä¸€æ¡æ•°ä¹‹å,åœ¨æŠŠå‰ä¸€æ¡æ•°æ®æ—¶é—´æ›´æ–°ã€‚
                     if(pTempSleepData->recordIndex > 0)
                     {
                         lastSleepStatusStartTime = pTempSleepData->sleep_record[pTempSleepData->recordIndex-1].startTime.hour * 60 + pTempSleepData->sleep_record[pTempSleepData->recordIndex-1].startTime.min;
@@ -1265,9 +1265,9 @@ void uteModuleSleepAnalysis(uteCwmSleepOnceData_t uteCwmSleepOnceData,bool isSle
     }
 }
 /**
- *@brief    Ğ¡Ë¯Ë¯ÃßÊı¾İ¶ÁÈ¡
- *@details  °´Ê±¼äÈÕÆÚ¶ÁÈ¡
- *@return true Îª´æÔÚÊı¾İ
+ *@brief    å°ç¡ç¡çœ æ•°æ®è¯»å–
+ *@details  æŒ‰æ—¶é—´æ—¥æœŸè¯»å–
+ *@return true ä¸ºå­˜åœ¨æ•°æ®
  *@author   casen
  *@date     2022-10-18
  */
@@ -1341,7 +1341,7 @@ bool uteModuleSleepReadDayNapData(ute_module_sleep_nap_display_data_t *pread)
 }
 
 /**
- *@brief       ÈüÎ¬¿ªÊ¼·¢ËÍË¯ÃßÊı¾İ
+ *@brief       èµ›ç»´å¼€å§‹å‘é€ç¡çœ æ•°æ®
  *@details
  *@author       zn.zeng
  *@date       2021-10-26
@@ -1426,9 +1426,9 @@ void uteModuleSleepSendCwmNapSleepHistoryData(void)
 }
 
 /**
- *@brief        ×¼±¸¿ªÊ¼·¢ËÍË¯ÃßÊı¾İ
+ *@brief        å‡†å¤‡å¼€å§‹å‘é€ç¡çœ æ•°æ®
  *@details
- *@param[in]  ĞèÒªÍ¬²½µÄÊı¾İÊ±¼ä´Á
+ *@param[in]  éœ€è¦åŒæ­¥çš„æ•°æ®æ—¶é—´æˆ³
  *@author       zn.zeng
  *@date       2021-10-26
  */

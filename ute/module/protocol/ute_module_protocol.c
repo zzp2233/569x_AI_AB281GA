@@ -22,6 +22,9 @@
 #include "ute_module_heart.h"
 #include "func_cover.h"
 #include "ute_module_bloodoxygen.h"
+#include "ute_drv_battery_common.h"
+#include "ute_module_sport.h"
+
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
 *@details      解析协议
@@ -104,7 +107,7 @@ void uteModuleProtocolReadBatteryLvl(uint8_t*receive,uint8_t length)
 {
     uint8_t response[2]= {0};
     response[0] = receive[0];
-    response[1] = bsp_vbat_percent_get();//uteDrvBatteryCommonGetLvl();
+    response[1] = uteDrvBatteryCommonGetLvl();
     uteModuleProfileBleSendToPhone(&response[0],2);
 }
 /**
@@ -244,28 +247,28 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_LOCAL_SET_LIFT_WRIST_SUPPORT
         isHandScreenOn = uteModuleSportGetIsOpenHandScreenOn();
 #endif
-        // uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandScreenOn,stepsTargetCnt);
-//         ute_module_heart_warning_t heartWarn;
-//         heartWarn.setMinHeart = receive[18];
-//         heartWarn.setMaxHeart = receive[11];
-//         if((heartWarn.setMaxHeart>=0xfe)||(heartWarn.setMinHeart==0))
-//         {
-//             heartWarn.isOpen = false;
-//         }
-//         if((receive[11]>99) && (receive[11]<=200 ))
-//         {
-//             heartWarn.isOpen =true;
-//             heartWarn.setMaxHeart = receive[11];
-//         }
-//         if(length>=19)
-//         {
-//             if((receive[18]<=100) && (receive[18]>0))
-//             {
-//                 heartWarn.isOpen =true;
-//                 heartWarn.setMinHeart = receive[18];
-//             }
-//         }
-//         uteModuleHeartSaveHeartWaringInfo(&heartWarn);
+        uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandScreenOn,stepsTargetCnt);
+        ute_module_heart_warning_t heartWarn;
+        heartWarn.setMinHeart = receive[18];
+        heartWarn.setMaxHeart = receive[11];
+        if((heartWarn.setMaxHeart>=0xfe)||(heartWarn.setMinHeart==0))
+        {
+            heartWarn.isOpen = false;
+        }
+        if((receive[11]>99) && (receive[11]<=200 ))
+        {
+            heartWarn.isOpen =true;
+            heartWarn.setMaxHeart = receive[11];
+        }
+        if(length>=19)
+        {
+            if((receive[18]<=100) && (receive[18]>0))
+            {
+                heartWarn.isOpen =true;
+                heartWarn.setMinHeart = receive[18];
+            }
+        }
+        uteModuleHeartSaveHeartWaringInfo(&heartWarn);
         uteModuleProfileBleSendToPhone(&response[0],1);
     }
     else
@@ -348,7 +351,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
 #endif
 #if UTE_MODULE_FIND_WRISTAWAKE_SCREEN_SUPPORT
-                SHM_DATA_SECTION extern ute_module_gui_common_t uteModuleGuiCommonData;
+                extern ute_module_gui_common_t uteModuleGuiCommonData;
                 if(uteModuleGuiCommonData.pCurrUIConfig->screenId != UTE_MOUDLE_SCREENS_FACTORY_TEST_ID)
                 {
                     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FIND_WRITAWAKE_SCREEN_ID);
@@ -1693,7 +1696,139 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
 
 }
 
+/**
+*@brief       读取睡眠历史数据
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       zn.zeng
+*@date       2021-10-26
+*/
+void uteModuleProtocolSleepReadHistoryData(uint8_t*receive,uint8_t length)
+{
+    if(receive[1]==0x01)
+    {
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+        uteModuleSleepStartSendSleepHistoryData(time);
+    }
+#if UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT
+    else if(receive[1]==0x03)
+    {
+        uteModuleSleepStartSendSleepSampleData();
+    }
+#endif
+}
+/**
+*@brief       多运动控制指令
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       zn.zeng
+*@date       2021-11-13
+*/
+void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
+{
+    uint8_t response[20];
+    memset(response,0x00,20);
+    bool isAppStart = uteModuleSportMoreSportIsAppStart();
+    uint8_t sportStatus = uteModuleSportMoreSportGetStatus();
+    if(receive[1]==0x11)//open sport
+    {
+#if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT/* ellison add ,2022-Jun-14 低电量不给启动运动，并且显示低电量提醒 */
+        uint8_t batLvl = uteDrvBatteryCommonGetLvl();
+        if(batLvl < UTE_DRV_BATTERY_LOW_POWER_PERECNT)
+        {
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_LOW_BATTERY_NOTIFY_ID);
+            return;
+        }
+#endif
+        uteModuleSportStartMoreSports(receive[2],receive[3],true);
+    }
+    else if(receive[1]==0x00)//close sport
+    {
+        if(sportStatus==ALL_SPORT_STATUS_CLOSE||(isAppStart==false))
+        {
+            memcpy(&response[0],&receive[0],4);
+            response[1] = sportStatus;
+            uteModuleProfileBleSendToPhone(&response[0],4);
+        }
+        else
+        {
+            uteModuleSportStopMoreSports();
+        }
+    }
+    else if(receive[1]==0xaa)
+    {
+        response[0] = receive[0];
+        response[1] = 0xAA;
+        response[2] = sportStatus;
+        response[3] =uteModuleSportMoreSportGetType();
+        uteModuleProfileBleSendToPhone(&response[0],4);
+    }
+    else if(receive[1]==ALL_SPORT_STATUS_PAUSE)
+    {
+        if(isAppStart)
+        {
+            uteModuleSportMoreSportSetStatus(ALL_SPORT_STATUS_PAUSE);
+            uteModuleSportSyncAppMoreSportData(receive);
+            uteModuleProfileBleSendToPhone(&receive[0],13);
+            //跳转运动暂停界面
+            // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_PAUSED_ID);
 
+        }
+    }
+    else if(receive[1]==ALL_SPORT_STATUS_CONTINUE)
+    {
+        if(isAppStart)
+        {
+            if((sportStatus!=ALL_SPORT_STATUS_OPEN)&&(sportStatus>0))
+            {
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+                //跳转运动详情界面
+                // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_DETAIL_ID);
+            }
+            uteModuleSportMoreSportSetStatus(ALL_SPORT_STATUS_CONTINUE);
+            uteModuleSportSyncAppMoreSportData(receive);
+            uteModuleProfileBleSendToPhone(&receive[0],13);
+        }
+    }
+    else if(receive[1]==ALL_SPORT_STATUS_UPDATE_DATA)
+    {
+        if(sportStatus==ALL_SPORT_STATUS_PAUSE)
+        {
+            //如果是暂停状态,就不在更新时间
+            return;
+        }
+        if(isAppStart)
+        {
+            uteModuleSportMoreSportSetStatus(ALL_SPORT_STATUS_UPDATE_DATA);
+            uteModuleSportSyncAppMoreSportData(receive);
+            uteModuleProfileBleSendToPhone(&receive[0],13);
+        }
+    }
+    else if(receive[1]==0xfa)
+    {
+        ute_module_systemtime_time_t time;
+        memset(&time,0,sizeof(ute_module_systemtime_time_t));
+        if(length == 8)
+        {
+            time.year = receive[2]<<8|receive[3];
+            time.month = receive[4];
+            time.day = receive[5];
+            time.hour = receive[6];
+            time.min = receive[7];
+        }
+        uteModuleSportStartSendMoreSportHistoryData(time);
+    }
+#if UTE_MODULE_SPORT_HUNDRED_SUPPORT
+    else if(receive[1]==0x48) /*! 自定义运动列表显示功能，xjc 2022-03-29*/
+    {
+        uteModuleSportHundredSportCmd(receive,length);
+    }
+#endif
+}
 
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
@@ -1731,9 +1866,9 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_HEART_24HOURS_AUTO_TEST,.publicCmd=PUBLIC_CMD_HEART_24HOURS_AUTO_TEST,.function=uteModuleProtocolHeartAutoTestHistoryData},
     {.privateCmd = CMD_SPO2_TEST,.publicCmd=PUBLIC_CMD_SPO2_TEST,.function=uteModuleProtocolBloodoxygenCtrl},
     {.privateCmd = CMD_BREATH_RATE_TEST,.publicCmd=CMD_BREATH_RATE_TEST,.function=uteModuleProtocolBreathrateCtrl},
-    // {.privateCmd = CMD_SLEEP_ON_BAND,.publicCmd=PUBLIC_CMD_SLEEP_ON_BAND,.function=uteModuleProtocolSleepReadHistoryData},
-    // {.privateCmd = CMD_SEND_SLEEP_ON_BAND_DATAS,.publicCmd=PUBLIC_CMD_SEND_SLEEP_ON_BAND_DATAS,.function=uteModuleProtocolSleepReadHistoryData},
-    // {.privateCmd = CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.publicCmd=PUBLIC_CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.function=uteModuleProtocolMoreSportCtrl},
+    {.privateCmd = CMD_SLEEP_ON_BAND,.publicCmd=PUBLIC_CMD_SLEEP_ON_BAND,.function=uteModuleProtocolSleepReadHistoryData},
+    {.privateCmd = CMD_SEND_SLEEP_ON_BAND_DATAS,.publicCmd=PUBLIC_CMD_SEND_SLEEP_ON_BAND_DATAS,.function=uteModuleProtocolSleepReadHistoryData},
+    {.privateCmd = CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.publicCmd=PUBLIC_CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.function=uteModuleProtocolMoreSportCtrl},
     // {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
     // {.privateCmd = CMD_MUSIC_CONTENT_CTRL,.publicCmd=CMD_MUSIC_CONTENT_CTRL,.function=uteModuleProtocolMusicCtrl},
     // {.privateCmd = CMD_FACTORY_TEST_MODE,.publicCmd=PUBLIC_CMD_FACTORY_TEST_MODE,.function=uteModuleProtocolFactoryTest},

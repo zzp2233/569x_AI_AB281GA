@@ -81,8 +81,8 @@ static void func_ota_update_enter(void)
 //退出升级界面
 static void func_ota_update_exit(void)
 {
+//    f_ota_update_t *f_ota_update = (f_ota_update_t *)func_cb.f_cb;
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
-    f_ota_update_t *f_ota_update = (f_ota_update_t *)func_cb.f_cb;
     func_cb.last = FUNC_OTA_MODE;
 }
 

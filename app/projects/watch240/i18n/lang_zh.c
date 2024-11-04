@@ -217,4 +217,5 @@ const char * const i18n_zh[] =
     [STR_NO_MSG]                        = "没有新消息",
 
     [STR_FIND_WATCH]                    = "寻找手表",
+    [STR_SET_DATA_READ]                 = "当前设定时间如果已与App连接,同步时间将会产生睡眠数据修改.",
 };

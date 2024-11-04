@@ -744,10 +744,15 @@ void bsp_fot_process(void)
             }
             else
             {
+                if (func_cb.sta != FUNC_OTA_UI_MODE && func_cb.sta != FUNC_OTA_MODE)
+                {
+                    func_cb.sta = FUNC_OTA_MODE;         //进入OTA升级界面
+                }
                 app_fota_write(fot_data, app_fota_get_curaddr(), fot_var.total_len);
             }
             fot_var.ota_recv_size += fot_var.total_len;
 #else
+            func_cb.sta = FUNC_OTA_MODE;         //进入OTA升级界面
             app_fota_write(fot_data, app_fota_get_curaddr(), fot_var.total_len);
 #endif
             bsp_fot_progress_get();

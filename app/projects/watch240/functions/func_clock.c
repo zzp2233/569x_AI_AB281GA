@@ -12,7 +12,8 @@
 extern u16 func_clock_preview_get_type(void);
 
 //立方体图标列表(固定6项)
-static const compo_cube_item_t tbl_menu_cube[] = {
+static const compo_cube_item_t tbl_menu_cube[] =
+{
     {UI_BUF_DIALPLATE_CUBE_CALL_BIN,             FUNC_CALL},
     {UI_BUF_DIALPLATE_CUBE_HEART_RATE_BIN,       FUNC_HEARTRATE},
     {UI_BUF_DIALPLATE_CUBE_MUSIC_BIN,            FUNC_BT},
@@ -31,14 +32,14 @@ static const compo_cube_item_t tbl_menu_cube[] = {
 #define BTF_LIGHT_NUM               20                      //左+右边光晕泡泡数量
 #define BTF_STATIC_FLAP_EXPIRE      5                       //静态挥动翅膀频率,ms
 #define BTF_MOVE_FLAP_EXPIRE        2                       //静态挥动翅膀频率,ms
-#define BTF_LEFT_EDGE 		        GUI_SCREEN_WIDTH / 3    //点击范围左边距判断
-#define BTF_RIGHT_EDGE				GUI_SCREEN_WIDTH / 3 * 2//点击范围右边距判断
+#define BTF_LEFT_EDGE               GUI_SCREEN_WIDTH / 3    //点击范围左边距判断
+#define BTF_RIGHT_EDGE              GUI_SCREEN_WIDTH / 3 * 2//点击范围右边距判断
 
 //立方体
-#define CUBE_RADIUS                 60                                                             //切图正方形一半
+#define CUBE_RADIUS                 (gui_image_get_size(tbl_menu_cube[0].res_addr).wid)/2          //切图正方形一半
 #define KALE_EDGE_SPACE             2                                                              //边缘距离
 #define KALE_ICON_SPACE             2                                                              //图标距离
-#define KALE_ICON_OUTER_SIZE        (gui_image_get_size(tbl_menu_cube[0].res_addr).wid)    		   //外圈图标大小
+#define KALE_ICON_OUTER_SIZE        (gui_image_get_size(tbl_menu_cube[0].res_addr).wid)            //外圈图标大小
 #define KALE_ICON_INNER_SIZE        (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
 #define KALE_REFRASH_EXPIRE         4                                                              //刷新间隔 uint：ms
 #define KALE_SWITCH_DR              2                                                              //单次变更R值
@@ -49,7 +50,8 @@ static const compo_cube_item_t tbl_menu_cube[] = {
 #define DIALPLATE_BTF_IDX           DIALPLATE_NUM - 1        //蝴蝶表盘默认最后一个
 #define DIALPLATE_CUBE_IDX          DIALPLATE_NUM - 2        //立方体表盘默认倒数第二个
 
-const u32 dialplate_info[] = {
+const u32 dialplate_info[] =
+{
     UI_BUF_DIALPLATE_1_BIN,
 #if !SECURITY_TRANSITCODE_EN
 //    UI_BUF_DIALPLATE_2_BIN,
@@ -104,7 +106,8 @@ const u8 quick_btn_tbl[] =
     FUNC_SETTING,
 };
 
-enum{
+enum
+{
     COMPO_ID_BTFLY = 1,
     COMPO_ID_TIME_DOT,
     COMPO_ID_L_LIGHT1,
@@ -149,7 +152,8 @@ u32 func_clock_get_dialplate_info(u8 index)
 //点进图标进入应用
 static void func_clock_cube_disk_icon_click(void)
 {
-    if (sys_cb.dialplate_index != DIALPLATE_CUBE_IDX) {
+    if (sys_cb.dialplate_index != DIALPLATE_CUBE_IDX)
+    {
         return;
     }
 
@@ -158,14 +162,16 @@ static void func_clock_cube_disk_icon_click(void)
 
     int icon_idx = compo_cube_get_idx(cube, pt.x, pt.y);
     u8 func_sta;
-    if (icon_idx < 0 || icon_idx >= CUBE_ITEM_CNT) {
+    if (icon_idx < 0 || icon_idx >= CUBE_ITEM_CNT)
+    {
         return;
     }
     //根据图标索引获取应用ID
     func_sta = tbl_menu_cube[icon_idx].func_sta;
 
     //切入应用
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
 //        func_switching(FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO, NULL);
         func_switch_to(func_sta, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
         func_cb.sta = func_sta;
@@ -176,18 +182,24 @@ static void func_clock_cube_disk_icon_click(void)
 //触摸某一个区域触发飞舞
 void func_clock_butterfly_click(void)
 {
-    if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX || sys_cb.dialplate_btf_ready == false) {
+    if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX || sys_cb.dialplate_btf_ready == false)
+    {
         return;
     }
 
     s32 sx, sy, x, y;
     compo_butterfly_t *btfly = compo_getobj_byid(COMPO_ID_BTFLY);
     ctp_get_cur_point(&sx, &sy, &x, &y);
-    if (sx < BTF_LEFT_EDGE) {     //左边
+    if (sx < BTF_LEFT_EDGE)       //左边
+    {
         compo_butterfly_move_control(btfly, COMPO_BUTTERFLY_MOVE_CMD_LEFT);
-    } else if (sx > BTF_RIGHT_EDGE) {
+    }
+    else if (sx > BTF_RIGHT_EDGE)
+    {
         compo_butterfly_move_control(btfly, COMPO_BUTTERFLY_MOVE_CMD_RIGHT);
-    } else {
+    }
+    else
+    {
         compo_butterfly_move_control(btfly, COMPO_BUTTERFLY_MOVE_CMD_LOOP);
     }
 
@@ -198,13 +210,19 @@ static void func_clock_button_click(void)
 {
     u16 btn_id = compo_get_button_id();
     u16 animation_id = compo_get_animation_id();
-    if (btn_id) {
+    if (btn_id)
+    {
         func_switch_to(quick_btn_tbl[btn_id], FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
-    } else if (animation_id) {
+    }
+    else if (animation_id)
+    {
         compo_animation_t *animation = compo_getobj_byid(animation_id);
-        if (animation->bond_data == COMPO_BOND_IMAGE_CLICK) {
+        if (animation->bond_data == COMPO_BOND_IMAGE_CLICK)
+        {
             compo_animation_manual_next(animation);
-        } else if (animation->bond_data == COMPO_BOND_ANIMATION_AREA_CLICK) {
+        }
+        else if (animation->bond_data == COMPO_BOND_ANIMATION_AREA_CLICK)
+        {
             compo_animation_click_set_vis(animation);
         }
     }
@@ -274,7 +292,8 @@ compo_form_t *func_clock_butterfly_form_create(void)
     compo_setid(btfly, COMPO_ID_BTFLY);
 
     //新建光晕泡泡
-    for(u8 i=0;i<BTF_LIGHT_NUM;i++) {
+    for(u8 i=0; i<BTF_LIGHT_NUM; i++)
+    {
         compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_DIALPLATE_BUTTERFLY_LIGHT_BIN);
         compo_setid(pic, COMPO_ID_L_LIGHT1 + i);
         compo_picturebox_set_visible(pic, false);
@@ -315,14 +334,20 @@ compo_form_t *func_clock_butterfly_form_create(void)
 compo_form_t *func_clock_form_create(void)
 {
     compo_form_t *frm;
-    if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX) {
+    if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
+    {
         frm = func_clock_butterfly_form_create();
-    } else if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX) {
+    }
+    else if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
+    {
         frm = func_clock_cube_form_create();
-    } else {
+    }
+    else
+    {
         u32 base_addr = dialplate_info[sys_cb.dialplate_index];
         u16 compo_num = bsp_uitool_header_phrase(base_addr);
-        if (!compo_num) {
+        if (!compo_num)
+        {
             halt(HALT_GUI_DIALPLATE_HEAD);
         }
 
@@ -337,15 +362,18 @@ compo_form_t *func_clock_form_create(void)
 
 void func_clock_butterfly_set_light_visible(bool visible)
 {
-    if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX) {
+    if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX)
+    {
         return;
     }
 
     sys_cb.dialplate_btf_ready = visible;
     compo_picturebox_t *pic;
-    for(u8 i=0;i<BTF_LIGHT_NUM;i++) {
+    for(u8 i=0; i<BTF_LIGHT_NUM; i++)
+    {
         pic = compo_getobj_byid(COMPO_ID_L_LIGHT1 + i);
-        if (compo_picturebox_get_visible(pic)) {
+        if (compo_picturebox_get_visible(pic))
+        {
             compo_picturebox_set_visible(pic, visible);
         }
     }
@@ -353,7 +381,8 @@ void func_clock_butterfly_set_light_visible(bool visible)
 
 void func_clock_butterfly_process(void)
 {
-    if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX || sys_cb.dialplate_btf_ready == false) {
+    if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX || sys_cb.dialplate_btf_ready == false)
+    {
         return;
     }
 
@@ -370,21 +399,29 @@ void func_clock_butterfly_process(void)
     compo_picturebox_t *pic;
 
     //移动挥动翅膀加速
-    if (compo_butterfly_get_sta(btfly) == COMPO_BUTTERFLY_STA_MOVE) {
+    if (compo_butterfly_get_sta(btfly) == COMPO_BUTTERFLY_STA_MOVE)
+    {
         expire = BTF_MOVE_FLAP_EXPIRE;
         max_wing = BTF_MOVE_MAX_WING;
-    } else {
-        if (btfly_wind_angle > max_wing) {
+    }
+    else
+    {
+        if (btfly_wind_angle > max_wing)
+        {
             btfly_wind_angle = max_wing;
         }
     }
 
     //挥动翅膀处理
-    if (tick_check_expire(ticks, expire)) {
+    if (tick_check_expire(ticks, expire))
+    {
         ticks = tick_get();
-        if (btfly_wind_angle == BTF_MAX_WING) {
+        if (btfly_wind_angle == BTF_MAX_WING)
+        {
             direction = 1;
-        } else if(btfly_wind_angle == max_wing) {
+        }
+        else if(btfly_wind_angle == max_wing)
+        {
             direction = -1;
         }
         btfly_wind_angle += direction;
@@ -397,7 +434,8 @@ void func_clock_butterfly_process(void)
         s16 z = compo_butterfly_get_z(btfly);
         pic = compo_getobj_byid(COMPO_ID_L_LIGHT1 + index);
 
-        if (compo_picturebox_get_visible(pic) == false) {
+        if (compo_picturebox_get_visible(pic) == false)
+        {
             s16 x = 100 + get_random(70);
             s16 y = -get_random(200 + rota / 10);
             compo_picturebox_set_rotation_center(pic, x, y);
@@ -410,7 +448,8 @@ void func_clock_butterfly_process(void)
 
         index = get_random(BTF_LIGHT_NUM >> 1) + (BTF_LIGHT_NUM >> 1);
         pic = compo_getobj_byid(COMPO_ID_L_LIGHT1 + index);
-        if (compo_picturebox_get_visible(pic) == false) {
+        if (compo_picturebox_get_visible(pic) == false)
+        {
             s16 x = -100 - get_random(70);
             s16 y = -get_random(200 + rota / 10);
             compo_picturebox_set_rotation_center(pic, x, y);
@@ -426,23 +465,28 @@ void func_clock_butterfly_process(void)
     compo_butterfly_move(btfly);
 
     //光晕处理
-    if (tick_check_expire(ticks_light, expire * 2)) {
+    if (tick_check_expire(ticks_light, expire * 2))
+    {
         ticks_light = tick_get();
-        for(u8 i=0;i<BTF_LIGHT_NUM;i++) {
+        for(u8 i=0; i<BTF_LIGHT_NUM; i++)
+        {
             pic = compo_getobj_byid(COMPO_ID_L_LIGHT1 + i);
-            if (compo_picturebox_get_visible(pic) == true) {
+            if (compo_picturebox_get_visible(pic) == true)
+            {
                 u8 alpha = compo_picturebox_get_alpha(pic);
                 alpha = !alpha ? 204 :alpha;
                 alpha -= 5;
                 s16 size = 50 *(255 - alpha) / 255;
-                if (size >= 10) {
+                if (size >= 10)
+                {
                     compo_picturebox_set_size(pic, size,size);
                     compo_picturebox_set_alpha(pic, alpha);
                 }
 
                 s32 rota = compo_butterfly_get_rotation(btfly);
                 compo_picturebox_set_rotation(pic, rota);
-                if (alpha < 30) {
+                if (alpha < 30)
+                {
                     compo_picturebox_set_visible(pic, false);
                 }
             }
@@ -466,7 +510,8 @@ void func_clock_sub_message(size_msg_t msg)
 //时钟表盘功能事件处理
 static void func_clock_process(void)
 {
-    if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX) {
+    if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
+    {
         compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
         compo_cube_move(cube);
     }
@@ -497,82 +542,94 @@ static void func_clock_message(size_msg_t msg)
 {
 
     point_t pt = ctp_get_sxy();
-    s16 cube_limit_x = (GUI_SCREEN_WIDTH - 240) / 2;
-    s16 cube_limit_y = (GUI_SCREEN_HEIGHT - 240) / 2;
-    bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + 240));
-    bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + 240));
+    s16 cube_limit_x = (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
+    s16 cube_limit_y = (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
+    bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
+    bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
 
 
-    if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX && flag_cube_touch_x && flag_cube_touch_y) {
-        if (msg == MSG_CTP_TOUCH) {
+    if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX && flag_cube_touch_x && flag_cube_touch_y)
+    {
+        if (msg == MSG_CTP_TOUCH)
+        {
             compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
             //移动过程中，触屏停止。重新进入到开始拖动模式
             compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_DRAG);
-        } else if (msg >= MSG_CTP_SHORT_LEFT && msg <= MSG_CTP_SHORT_DOWN){
+        }
+        else if (msg >= MSG_CTP_SHORT_LEFT && msg <= MSG_CTP_SHORT_DOWN)
+        {
             return;
         }
 
     }
     static bool time_visible = 0;
-    switch (msg) {
-    case MSG_CTP_SHORT_UP:
+    switch (msg)
+    {
+        case MSG_CTP_SHORT_UP:
 //        func_clock_sub_pullup();                //上拉菜单
-        func_clock_butterfly_set_light_visible(false);
-        func_switch_to(FUNC_CARD, FUNC_SWITCH_MENU_PULLUP_UP);  //上拉卡片界面
-        if (func_cb.sta == FUNC_CLOCK) {
-            func_clock_butterfly_set_light_visible(true);
-        }
-        break;
+            func_clock_butterfly_set_light_visible(false);
+            func_switch_to(FUNC_CARD, FUNC_SWITCH_MENU_PULLUP_UP);  //上拉卡片界面
+            if (func_cb.sta == FUNC_CLOCK)
+            {
+                func_clock_butterfly_set_light_visible(true);
+            }
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_RIGHT:
 //        func_clock_sub_side();                  //右拉边菜单
-        func_switch_to(FUNC_SIDEBAR, FUNC_SWITCH_LR_ZOOM_RIGHT);  //右滑界面
-        break;
+            func_switch_to(FUNC_SIDEBAR, FUNC_SWITCH_LR_ZOOM_RIGHT);  //右滑界面
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        func_clock_sub_dropdown();              //下拉菜单
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            func_clock_sub_dropdown();              //下拉菜单
+            break;
 
-    case MSG_CTP_CLICK:
-        func_clock_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_clock_button_click();
+            break;
 
-    case MSG_SYS_500MS:
-    //秒跳动处理
+        case MSG_SYS_500MS:
+            //秒跳动处理
 
-        if (sys_cb.dialplate_index >= DIALPLATE_CUBE_IDX) {
-            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
-            compo_textbox_set_visible(txt, time_visible);
-            time_visible ^= 1;
-        }
+            if (sys_cb.dialplate_index >= DIALPLATE_CUBE_IDX)
+            {
+                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
+                compo_textbox_set_visible(txt, time_visible);
+                time_visible ^= 1;
+            }
 
-        break;
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX) {
-            compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
-            compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_FORWARD);
-        }
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
+            {
+                compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+                compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_FORWARD);
+            }
+            break;
 
-    case MSG_QDEC_BACKWARD:                             //向后滚动菜单
-        if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX) {
-            compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
-            compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_BACKWARD);
-        }
-        break;
+        case MSG_QDEC_BACKWARD:                             //向后滚动菜单
+            if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
+            {
+                compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+                compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_BACKWARD);
+            }
+            break;
 
-    case MSG_CTP_LONG:
-        if (func_clock_preview_get_type() == PREVIEW_ROTARY_STYLE) {
-            func_cb.sta = FUNC_CLOCK_PREVIEW;
-        } else {
-            func_switch_to(FUNC_CLOCK_PREVIEW, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);                    //切换回主时钟
-        }
-        break;
+        case MSG_CTP_LONG:
+            if (func_clock_preview_get_type() == PREVIEW_ROTARY_STYLE)
+            {
+                func_cb.sta = FUNC_CLOCK_PREVIEW;
+            }
+            else
+            {
+                func_switch_to(FUNC_CLOCK_PREVIEW, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);                    //切换回主时钟
+            }
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -582,7 +639,8 @@ static void func_clock_enter(void)
     uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
-    if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX) {
+    if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
+    {
         sys_cb.dialplate_btf_ready = true;
         tft_set_temode(0);
     }
@@ -591,7 +649,8 @@ static void func_clock_enter(void)
 //退出时钟表盘功能
 static void func_clock_exit(void)
 {
-    if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX) {
+    if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
+    {
         sys_cb.dialplate_btf_ready = false;
         tft_set_temode(DEFAULT_TE_MODE);
     }
@@ -603,7 +662,8 @@ void func_clock(void)
 {
     printf("%s\n", __func__);
     func_clock_enter();
-    while (func_cb.sta == FUNC_CLOCK) {
+    while (func_cb.sta == FUNC_CLOCK)
+    {
         func_clock_process();
         func_clock_message(msg_dequeue());
     }

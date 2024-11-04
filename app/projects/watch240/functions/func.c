@@ -576,11 +576,11 @@ void func_process(void)
         bsp_fot_process();
         if (is_fot_start() == true)
         {
+            reset_sleep_delay_all()
             if (sys_cb.gui_sleep_sta)
             {
                 sys_cb.gui_need_wakeup = 1;
             }
-            func_cb.sta = FUNC_OTA_MODE;
         }
 #endif
     }

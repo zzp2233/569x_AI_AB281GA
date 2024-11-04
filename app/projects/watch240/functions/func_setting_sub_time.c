@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_weather.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -52,6 +53,9 @@ static const disturd_disp_btn_item_t tbl_disturd_disp_btn_item[] =
 //时间设置页面
 compo_form_t *func_set_sub_time_form_create(void)
 {
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
+
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
@@ -89,33 +93,41 @@ compo_form_t *func_set_sub_time_form_create(void)
     compo_textbox_set_pos((compo_textbox_t *)compo_thr, 30, 204);
     compo_textbox_set((compo_textbox_t *)compo_thr, i18n[STR_CUSTOM_TIME]);
 
-    snprintf(buf, sizeof(buf), "%d%s%s", 2023, ".11", ".28");
+    //snprintf(buf, sizeof(buf), "%d%s%s", 2023, ".11", ".28");
+    snprintf(buf, sizeof(buf), "%d%c%d%c%d",time.year,'.',time.month,'.',time.day);
     component_t *compo_four = (component_t *)compo_textbox_create(frm,10);
     compo_textbox_set_font((compo_textbox_t *)compo_four, UI_BUF_0FONT_FONT_BIN);
     compo_setid(compo_four, COMPO_ID_TEXT_CALENDE);
-    compo_textbox_set_pos((compo_textbox_t *)compo_four, 60, 97);
+    compo_textbox_set_align_center(compo_four, false);
+    compo_textbox_set_right_align(compo_four, false);//左对齐
+    compo_textbox_set_pos((compo_textbox_t *)compo_four, 10, tbl_disturd_disp_btn_item[0].y);
     compo_textbox_set((compo_textbox_t *)compo_four, buf);
 
     snprintf(buf, sizeof(buf), "%d", 24);
     component_t *compo_five = (component_t *)compo_textbox_create(frm,2);
     compo_textbox_set_font((compo_textbox_t *)compo_five, UI_BUF_0FONT_FONT_BIN);
     compo_setid(compo_five, COMPO_ID_TEXT_CALENDE);
-    compo_textbox_set_pos((compo_textbox_t *)compo_five, 22, 166);
+    compo_textbox_set_align_center(compo_five, false);
+    compo_textbox_set_right_align(compo_five, false);//左对齐
+    compo_textbox_set_pos((compo_textbox_t *)compo_five, 10, tbl_disturd_disp_btn_item[1].y);
     compo_textbox_set((compo_textbox_t *)compo_five, buf);
 
-    snprintf(buf, sizeof(buf), "%s", "12.20");
+//    snprintf(buf, sizeof(buf), "%s", "12.20");
+    snprintf(buf, sizeof(buf), "%d%c%d",time.hour,':',time.min);
     component_t *compo_six = (component_t *)compo_textbox_create(frm,5);
     compo_textbox_set_font((compo_textbox_t *)compo_six, UI_BUF_0FONT_FONT_BIN);
     compo_setid(compo_six, COMPO_ID_TEXT_CALENDE);
-    compo_textbox_set_pos((compo_textbox_t *)compo_six, 32, 232);
+    compo_textbox_set_align_center(compo_six, false);
+    compo_textbox_set_right_align(compo_six, false);//左对齐
+    compo_textbox_set_pos((compo_textbox_t *)compo_six, 10, tbl_disturd_disp_btn_item[2].y);
     compo_textbox_set((compo_textbox_t *)compo_six, buf);
 
-    snprintf(buf, sizeof(buf), "%s", "当前设定时间如果已与App连接,同步时间将会产生睡眠数据修改.");
-    component_t *compo_sev = (component_t *)compo_textbox_create(frm, 44);
+    //snprintf(buf, sizeof(buf), "%s", "");
+    component_t *compo_sev = (component_t *)compo_textbox_create(frm, strlen(i18n[STR_SET_DATA_READ]));
     compo_textbox_set_multiline((compo_textbox_t *)compo_sev, true);
     compo_textbox_set_autosize((compo_textbox_t *)compo_sev, false);
     compo_textbox_set_location((compo_textbox_t *)compo_sev, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+154, 226, 92);
-    compo_textbox_set((compo_textbox_t *)compo_sev, buf);
+    compo_textbox_set((compo_textbox_t *)compo_sev, i18n[STR_SET_DATA_READ]);
     widget_page_set_client(frm->page_body, 0, -60);
     return frm;
 }
@@ -133,6 +145,16 @@ static void func_set_sub_time_process(void)
         if (slp->flag_drag )
         {
             slp->y = slp->y_pos + h_y;
+
+            if(slp->y > -45)
+            {
+                slp->y = -45;
+            }
+            else if(slp->y < -125)
+            {
+                slp->y = -125;
+            }
+
             widget_page_set_client(page_body, 0, slp->y);
         }
         else
@@ -188,7 +210,10 @@ static void func_set_sub_time_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_time_t));
     func_cb.frm_main = func_set_sub_time_form_create();
     f_time_t *slp = (f_time_t *)func_cb.f_cb;
-    slp->y_pos = -60;
+    widget_page_t *page_body = func_cb.frm_main->page_body;
+
+    slp->y_pos = -45;
+    widget_page_set_client(page_body, 0, slp->y_pos);
 }
 
 //退出时间设置功能

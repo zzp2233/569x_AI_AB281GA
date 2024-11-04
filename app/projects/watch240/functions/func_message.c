@@ -110,8 +110,8 @@ typedef struct card_##type##_t_ {   \
         compo_cardbox_rect_set_color(cardbox, card0.rect[i].id, make_color(26,26,26)); \
     } \
     for (u8 i=0; i<icon_cnt; i++) { \
-        compo_cardbox_icon_set(cardbox, card0.icon[i].id, card0.icon[i].res); \
         compo_cardbox_icon_set_location(cardbox, card0.icon[i].id, card0.icon[i].x, card0.icon[i].y, card0.icon[i].w, card0.icon[i].h); \
+        compo_cardbox_icon_set(cardbox, card0.icon[i].id, card0.icon[i].res); \
     } \
     for (u8 i=0; i<text_cnt; i++) { \
         compo_cardbox_text_set_font(cardbox, card0.text[i].id, card0.text[i].res); \
@@ -151,7 +151,7 @@ const CARD_T(msg) card =
     {
         ///图标
         //id      x                                                                 y       w                           h                           res
-        {0,      -(((GUI_SCREEN_WIDTH-12)/2) - ((GUI_SCREEN_HEIGHT/4-30)/2)),      0,      GUI_SCREEN_HEIGHT/4-30,     GUI_SCREEN_HEIGHT/4-30,     UI_BUF_ICON_MESSAGE_BIN},
+        {0,      -(((GUI_SCREEN_WIDTH-12)/2) - ((GUI_SCREEN_HEIGHT/4-30)/2)),      0,      GUI_SCREEN_HEIGHT/4-30,     GUI_SCREEN_HEIGHT/4-30,     0},
     },
 
     {
@@ -325,13 +325,14 @@ static void func_message_card_update(void)
             char* time = (char*)func_zalloc(30);
             char* msg = (char*)f_msg->ute_msg->historyNotify[i].content;
 
-            memcpy(msg, f_msg->ute_msg->historyNotify[i].content, f_msg->ute_msg->historyNotify[i].size);
+            //memcpy(msg, f_msg->ute_msg->historyNotify[i].content, f_msg->ute_msg->historyNotify[i].size);
             sprintf(time, "%04d-%02d-%02d %02d:%02d", f_msg->ute_msg->historyNotify[i].year, f_msg->ute_msg->historyNotify[i].month,
                     f_msg->ute_msg->historyNotify[i].day, f_msg->ute_msg->historyNotify[i].hour, f_msg->ute_msg->historyNotify[i].min);
             card_y += (card.h+10);
             compo_cardbox_set_visible(cardbox, true);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, card_y);
             compo_cardbox_icon_set(cardbox, 0, func_message_card_get_icon(f_msg->ute_msg->historyNotify[i].type));
+            compo_cardbox_icon_set_location(cardbox, card.icon[0].id, card.icon[0].x, card.icon[0].y, card.icon[0].w, card.icon[0].h);
             compo_cardbox_text_set(cardbox, 0, time);
             compo_cardbox_text_set(cardbox, 1, msg);
 

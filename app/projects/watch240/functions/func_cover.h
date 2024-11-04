@@ -4,6 +4,7 @@
 ///闹钟蓝牙连接提醒等简单界面弹窗
 enum
 {
+    REMIND_COVER_NONE,
     //这个顺序更改,需要同步到func_cover.h那边
     REMIND_COVER_ALARM,
     //这一段HEALTH按顺序,需要与analysis那边一致

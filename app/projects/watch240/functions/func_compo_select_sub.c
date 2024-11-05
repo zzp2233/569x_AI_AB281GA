@@ -7,17 +7,22 @@
 #define TRACE(...)
 #endif
 
+#define SET_LIST_CNT                       ((int)(sizeof(tbl_list_data) / sizeof(tbl_list_data[0])))
 
-typedef struct f_compo_select_sub_t_ {
+
+typedef struct f_compo_select_sub_t_
+{
     compo_listbox_item_t *p_list_data;
 } f_compo_select_sub_t;
 
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
 };
 
-const compo_listbox_item_t tbl_list_data[] = {
+const compo_listbox_item_t tbl_list_data[] =
+{
     {STR_SPORTS,                 UI_BUF_ICON_SPORT_BIN,          .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SPORT_ON},     //运动
     {STR_SLEEP,                  UI_BUF_ICON_SLEEP_BIN,          .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SLEEP_ON},     //睡眠
     {STR_ACTIVITY_RECORD,        UI_BUF_ICON_ACTIVITY_BIN,       .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_ACTIVITY_ON},  //活动记录
@@ -37,7 +42,8 @@ const compo_listbox_item_t tbl_list_data[] = {
     {STR_SETTING,                UI_BUF_ICON_SETTING_BIN,        .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SETTINGS_ON},  //设置
 };
 
-const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] = {
+const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
+{
     SYS_CTL_FUNC_ACTIVITY_ON,       FUNC_ACTIVITY,
     SYS_CTL_FUNC_HEART_ON,          FUNC_HEARTRATE,
     SYS_CTL_FUNC_SLEEP_ON,          FUNC_SLEEP,
@@ -59,11 +65,12 @@ const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] = {
 
 #define LIST_ITEM_CNT_MAX (sizeof(tbl_list_data) / sizeof(tbl_list_data[0]))
 
-static u8 list_data_sort[LIST_ITEM_CNT_MAX] = {
+static u8 list_data_sort[LIST_ITEM_CNT_MAX] =
+{
     SYS_CTL_FUNC_ACTIVITY_ON,
-    SYS_CTL_FUNC_HEART_ON, 
-    SYS_CTL_FUNC_SLEEP_ON, 
-    SYS_CTL_FUNC_SPO2_ON, 
+    SYS_CTL_FUNC_HEART_ON,
+    SYS_CTL_FUNC_SLEEP_ON,
+    SYS_CTL_FUNC_SPO2_ON,
     SYS_CTL_FUNC_MUSIC_ON,
     SYS_CTL_FUNC_SPORT_ON,
     SYS_CTL_FUNC_HRV_ON,
@@ -82,8 +89,10 @@ static u8 list_data_sort[LIST_ITEM_CNT_MAX] = {
 //根据vidx信息获取list_data
 static const compo_listbox_item_t *get_tbl_list_data_by_vidx(u16 vidx)
 {
-    for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++) {
-        if (vidx == tbl_list_data[i].vidx) {
+    for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++)
+    {
+        if (vidx == tbl_list_data[i].vidx)
+        {
             return (compo_listbox_item_t *)&tbl_list_data[i];
         }
     }
@@ -98,8 +107,10 @@ static void func_compo_list_data_update(void)
     compo_listbox_item_t *p_list_data = f_compo_select_sub->p_list_data;
     int i;
 
-    for (i = 0; i < LIST_ITEM_CNT_MAX; i++) {
-        if (list_data_sort[i] != p_list_data[i].vidx) {
+    for (i = 0; i < LIST_ITEM_CNT_MAX; i++)
+    {
+        if (list_data_sort[i] != p_list_data[i].vidx)
+        {
             memcpy(&p_list_data[i], get_tbl_list_data_by_vidx(list_data_sort[i]), sizeof(compo_listbox_item_t));
         }
     }
@@ -111,10 +122,14 @@ static u8 list_data_sort_get_add_cnt(void)
     int i;
     u8 cnt = 0;
 
-    for (i = 0; i < LIST_ITEM_CNT_MAX; i++) {
-        if (bsp_sys_get_ctlbit(list_data_sort[i])) {
+    for (i = 0; i < LIST_ITEM_CNT_MAX; i++)
+    {
+        if (bsp_sys_get_ctlbit(list_data_sort[i]))
+        {
             cnt ++;
-        } else {
+        }
+        else
+        {
             break;
         }
     }
@@ -129,13 +144,16 @@ static void list_data_sort_add(u8 vidx)
     u8 i = 0, index = 0;
     u8 add_cnt = list_data_sort_get_add_cnt();
 
-    if (add_cnt) {
+    if (add_cnt)
+    {
         memcpy(list_data_sort_tmp, list_data_sort, add_cnt * sizeof(list_data_sort_tmp[0]));
     }
     list_data_sort_tmp[add_cnt] = vidx;
     index = add_cnt + 1;
-    for (i = add_cnt; i < LIST_ITEM_CNT_MAX; i++) {
-        if (vidx != list_data_sort[i]) {
+    for (i = add_cnt; i < LIST_ITEM_CNT_MAX; i++)
+    {
+        if (vidx != list_data_sort[i])
+        {
             list_data_sort_tmp[index ++] = list_data_sort[i];
         }
     }
@@ -151,8 +169,10 @@ static void list_data_sort_del(u8 vidx)
     u8 i = 0, index = LIST_ITEM_CNT_MAX - 1;
 
     list_data_sort_tmp[index --] = vidx;
-    for (i = 0; i < LIST_ITEM_CNT_MAX; i++) {
-        if (vidx != list_data_sort[LIST_ITEM_CNT_MAX - 1 - i]) {
+    for (i = 0; i < LIST_ITEM_CNT_MAX; i++)
+    {
+        if (vidx != list_data_sort[LIST_ITEM_CNT_MAX - 1 - i])
+        {
             list_data_sort_tmp[index --] = list_data_sort[LIST_ITEM_CNT_MAX - 1 - i];
         }
     }
@@ -167,15 +187,21 @@ static void list_data_sort_up(u8 vidx)
     u8 pos = 0;
     u8 add_cnt = list_data_sort_get_add_cnt();
 
-    if (add_cnt < 2) {
+    if (add_cnt < 2)
+    {
         return ;
     }
 
-    for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++) {
-        if (list_data_sort[i] == vidx) {
-            if (i == 0) {
+    for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++)
+    {
+        if (list_data_sort[i] == vidx)
+        {
+            if (i == 0)
+            {
                 pos = add_cnt - 1;
-            } else {
+            }
+            else
+            {
                 pos = i - 1;
             }
             u8 vidx_tmp = list_data_sort[pos];
@@ -193,7 +219,7 @@ static void list_data_sort_up(u8 vidx)
 compo_form_t *func_compo_select_sub_form_create(void)
 {
     //新建窗体
-    compo_form_t *frm = compo_form_create(true);       
+    compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
@@ -202,22 +228,27 @@ compo_form_t *func_compo_select_sub_form_create(void)
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
     compo_setid(listbox, COMPO_ID_LISTBOX);
-    
-    if (LIST_ITEM_CNT_MAX > (MAX_FUNC_SORT_CNT - 2) || LIST_ITEM_CNT_MAX != sizeof(SYS_CTL_ON_TO_FUNC_STA_TABLE) / 2) {
+
+    if (LIST_ITEM_CNT_MAX > (MAX_FUNC_SORT_CNT - 2) || LIST_ITEM_CNT_MAX != sizeof(SYS_CTL_ON_TO_FUNC_STA_TABLE) / 2)
+    {
         printf("%s:%d,err\n", __func__, __LINE__);
         halt(HALT_GUI_COMPO_LISTBOX_CREATE);
     }
 
     //控制位未加载时进行初始化
     bool bit_init = true;
-    for (uint32_t i = SYS_CTL_FUNC_SPORT_ON; i <= SYS_CTL_FUNC_SETTINGS_ON; i++) {
-        if (bsp_sys_get_ctlbit(i)) {
+    for (uint32_t i = SYS_CTL_FUNC_SPORT_ON; i <= SYS_CTL_FUNC_SETTINGS_ON; i++)
+    {
+        if (bsp_sys_get_ctlbit(i))
+        {
             bit_init = false;
             break;
         }
     }
-    if (bit_init) {
-        for (u8 i = 0; i < 5; i++) {
+    if (bit_init)
+    {
+        for (u8 i = 0; i < 5; i++)
+        {
             bsp_sys_set_ctlbit(list_data_sort[i], true);
         }
     }
@@ -242,28 +273,37 @@ static void func_compo_select_sub_click(void)
 
     bool del = false;
     point_t cur_point = ctp_get_sxy();
-    if (cur_point.x < 180) {
-        return ;    
+    if (cur_point.x < 180)
+    {
+        return ;
     }
-    if (cur_point.x >= 250) {
+    if (cur_point.x >= 250)
+    {
         del = true;
     }
 
     int idx = compo_listbox_select(listbox, cur_point);
-    if (idx < 0) {
+    if (idx < 0)
+    {
         return ;
-    } 
-    u8 vidx = f_compo_select_sub->p_list_data[idx].vidx;  
+    }
+    u8 vidx = f_compo_select_sub->p_list_data[idx].vidx;
 
     bool bit_sta = bsp_sys_get_ctlbit(vidx);
-    if (!bit_sta) {
+    if (!bit_sta)
+    {
         list_data_sort_add(vidx);
         bsp_sys_reverse_ctlbit(vidx);
-    } else {
-        if (del) {
+    }
+    else
+    {
+        if (del)
+        {
             list_data_sort_del(vidx);
             bsp_sys_reverse_ctlbit(vidx);
-        } else {
+        }
+        else
+        {
             list_data_sort_up(vidx);
         }
     }
@@ -275,27 +315,29 @@ static void func_compo_select_sub_click(void)
 static void func_compo_select_sub_message(size_msg_t msg)
 {
     compo_listbox_t *listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_compo_select_sub_click();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_compo_select_sub_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -307,17 +349,19 @@ static void func_compo_select_sub_enter(void)
 
     f_compo_select_sub_t *f_compo_select_sub = (f_compo_select_sub_t *)func_cb.f_cb;
     f_compo_select_sub->p_list_data = func_zalloc(LIST_ITEM_CNT_MAX * sizeof(compo_listbox_item_t));
-    if (NULL == f_compo_select_sub->p_list_data) {
+    if (NULL == f_compo_select_sub->p_list_data)
+    {
         printf("%s:%d,err\n", __func__, __LINE__);
         halt(HALT_GUI_COMPO_LISTBOX_CREATE);
     }
     func_compo_list_data_update();
-    
+
     compo_listbox_t *listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
-    
+
     compo_listbox_set(listbox, f_compo_select_sub->p_list_data, LIST_ITEM_CNT_MAX);
     u8 menu_idx = func_cb.menu_idx;
-    if (menu_idx < 1) {
+    if (menu_idx < 1)
+    {
         menu_idx = 1;
     }
     compo_listbox_set_focus_byidx(listbox, menu_idx);
@@ -326,7 +370,9 @@ static void func_compo_select_sub_enter(void)
 
     compo_listbox_move(listbox);
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    compo_listbox_move_init(listbox);
+    //compo_listbox_move_init_modify(listbox, GUI_SCREEN_CENTER_Y-FORM_TITLE_HEIGHT-gui_image_get_size(UI_BUF_COMMON_BG_BIN).hei/2, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+    //compo_listbox_move_init(listbox);
 }
 
 //退出组件选择功能
@@ -341,10 +387,14 @@ static void func_compo_select_sub_exit(void)
     func_free(listbox->mcb);
 
     u8 index = 1;
-    for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++) {
-        if (bsp_sys_get_ctlbit(list_data_sort[i])) {
-            for (u8 j = 0; j < sizeof(SYS_CTL_ON_TO_FUNC_STA_TABLE) / 2; j++) {
-                if (SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j] == list_data_sort[i]) {
+    for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++)
+    {
+        if (bsp_sys_get_ctlbit(list_data_sort[i]))
+        {
+            for (u8 j = 0; j < sizeof(SYS_CTL_ON_TO_FUNC_STA_TABLE) / 2; j++)
+            {
+                if (SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j] == list_data_sort[i])
+                {
                     func_cb.tbl_sort[index ++] = SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j + 1];
                     break;
                 }
@@ -361,7 +411,8 @@ void func_compo_select_sub(void)
 {
     printf("%s\n", __func__);
     func_compo_select_sub_enter();
-    while (func_cb.sta == FUNC_COMPO_SELECT_SUB) {
+    while (func_cb.sta == FUNC_COMPO_SELECT_SUB)
+    {
         func_compo_select_sub_process();
         func_compo_select_sub_message(msg_dequeue());
     }

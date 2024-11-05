@@ -457,7 +457,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
         // uteModuleOtaDisconectHandler();
         // uteModuleFactoryTestDisconnectHandler();
         // uteApplicationCommonSetHasUpdateConnectionParam(false);
-        // uteModuleSportDisconnectHandler();
+        uteModuleSportDisconnectHandler();
         // if(!uteModulePlatformGetFastAdvertisingTimeCnt())
         // {
         //     uteModulePlatformSetFastAdvertisingTimeCnt(UTE_FAST_ADVERTISE_TIMEOUT);
@@ -1311,6 +1311,10 @@ bool uteApplicationCommonIsHasConnectOurApp(void)
 void uteApplicationCommonSetAppClosed(bool isAppClosed)
 {
     uteApplicationCommonData.isAppClosed = isAppClosed;
+    if(isAppClosed)
+    {
+        uteModuleSportDisconnectHandler();
+    }
 }
 
 /**

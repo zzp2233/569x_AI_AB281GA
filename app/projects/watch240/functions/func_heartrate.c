@@ -76,22 +76,23 @@ compo_form_t *func_heartrate_form_create(void)
 
     //测量心率值
     s16 txt_val_x = 38;
-    s16 txt_val_y = 128;
+    s16 txt_val_y = 148;
     s16 txt_val_x_offset = 76;
     for (idx = 0; idx < HEARTRATE_TEXT_ITEM_CNT; idx++)
     {
         compo_textbox_t *txt_val = compo_textbox_create(frm, 3);
         compo_textbox_set_font(txt_val, UI_BUF_0FONT_FONT_NUM_24_BIN);
         compo_setid(txt_val, COMPO_ID_NUM_HEARTRATE_MAX + idx);
-        compo_textbox_set_align_center(txt_val, false);
+        //compo_textbox_set_align_center(txt_val, false);
         compo_textbox_set_pos(txt_val, txt_val_x + (idx * txt_val_x_offset), txt_val_y);
         compo_textbox_set(txt_val, "0");
     }
 
 
-
     //心率详情
-    compo_form_add_image(frm, UI_BUF_HEART_RATE_CHART_BG_BIN, 120, 440);
+    // compo_form_add_image(frm, UI_BUF_HEART_RATE_CHART_BG_BIN, 120, 440);
+    compo_form_add_image(frm, UI_BUF_HEART_RATE_CHART_BG2_BIN, 120, 440);
+
 
     //创建图表
     compo = (component_t *)compo_chartbox_create(frm, CHART_TYPE_BAR, 7);

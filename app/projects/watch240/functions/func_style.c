@@ -16,12 +16,14 @@
 
 u8 func_menu_sub_skyrer_get_first_idx(void);
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
 };
 
 //风格列表tbl
-static const compo_listbox_item_t tbl_style_list[] = {
+static const compo_listbox_item_t tbl_style_list[] =
+{
     {STR_STYLE_SUDOKU_1,        UI_BUF_STYLE_01_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //九宫格
     //{STR_STYLE_SUDOKU_2,        UI_BUF_STYLE_02_BIN,           .menu_style = MENU_STYLE_SUDOKU_HRZ},       //九宫格(横向)
     {STR_STYLE_SUDOKU_3,        UI_BUF_STYLE_09_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //九宫格(缩放)
@@ -39,7 +41,8 @@ static const compo_listbox_item_t tbl_style_list[] = {
     {STR_FOOTBALL,              UI_BUF_STYLE_14_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //足球
 };
 
-typedef struct f_style_t_ {
+typedef struct f_style_t_
+{
     compo_listbox_t *listbox;
     u8 sel_idx;
     bool flags;
@@ -49,7 +52,8 @@ typedef struct f_style_t_ {
 u8 func_sel_style_bit(uint n)
 {
     //TRACE("%s -> [%d,%d]\n", __func__, n, func_cb.menu_style);
-    if (func_cb.menu_style == n) {
+    if (func_cb.menu_style == n)
+    {
         return true;
     }
 
@@ -75,7 +79,8 @@ compo_form_t *func_style_form_create(void)
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     uint8_t set_idx = sys_cb.set_idx;
-    if (set_idx < 1) {
+    if (set_idx < 1)
+    {
         set_idx = 1;
     }
 
@@ -94,7 +99,8 @@ static void func_set_sub_list_icon_click(void)
     u8 menu_style;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT) {
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
+    {
         return;
     }
 
@@ -102,11 +108,15 @@ static void func_set_sub_list_icon_click(void)
     menu_style = tbl_style_list[icon_idx].menu_style;
 
     //切换风格
-    if (menu_style >= 0) {
+    if (menu_style >= 0)
+    {
         func_cb.menu_style = menu_style;
-        if (func_cb.menu_style == MENU_STYLE_SKYRER) {
+        if (func_cb.menu_style == MENU_STYLE_SKYRER)
+        {
             func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
-        } else {
+        }
+        else
+        {
             func_cb.menu_idx = 0;           //切换风格后进入回中心位置
         }
         sys_cb.set_idx = listbox->focus_icon_idx;
@@ -144,33 +154,36 @@ static void func_style_message(size_msg_t msg)
     f_style_t *f_set = (f_style_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_set_sub_list_icon_click();                //单击图标
-        func_switch_to_menu();                      //退回到主菜单
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_set_sub_list_icon_click();                //单击图标
+            func_switch_to_menu();                      //退回到主菜单
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_message(msg);
-        sys_cb.set_idx = 0;
-        break;
+        case MSG_CTP_SHORT_RIGHT:
+            func_message(msg);
+            sys_cb.set_idx = 0;
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
-            func_set_sub_list_switch_to_clock();       //返回时钟
-        }
-        break;
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_set_sub_list_switch_to_clock();       //返回时钟
+            }
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -183,11 +196,12 @@ static void func_style_enter(void)
     f_style_t *f_set = (f_style_t *)func_cb.f_cb;
     f_set->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_set->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    compo_listbox_move_init_modify(listbox, 127, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
     func_cb.enter_tick = tick_get();
 }
 
@@ -206,7 +220,8 @@ void func_style(void)
 {
     printf("%s\n", __func__);
     func_style_enter();
-    while (func_cb.sta == FUNC_STYLE) {
+    while (func_cb.sta == FUNC_STYLE)
+    {
         func_style_process();
         func_style_message(msg_dequeue());
     }

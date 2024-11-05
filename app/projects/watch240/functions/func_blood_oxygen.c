@@ -73,10 +73,13 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_textbox_set((compo_textbox_t *)compo, i18n[STR_START]);
 
     //测量结果
-    compo = (component_t *)compo_textbox_create(frm, 4);
-    compo_setid(compo, COMPO_ID_TXT_RESULT);
-    compo_textbox_set_pos((compo_textbox_t *)compo, GUI_SCREEN_CENTER_X, 176+10);
-    compo_textbox_set_visible((compo_textbox_t *)compo, false);
+    compo_textbox_t *textbox;
+    textbox = compo_textbox_create(frm, 4);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_setid(textbox, COMPO_ID_TXT_RESULT);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, 176+20);
+    compo_textbox_set_visible(textbox, false);
+    widget_text_set_color(textbox->txt, make_color(233, 16, 75));
 
     //未佩戴提示
     compo = (component_t *)compo_picturebox_create(frm, UI_BUF_BLOOD_OXYGEN_EXPLAIN_BIN);

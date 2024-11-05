@@ -407,6 +407,7 @@ void gui_set_cover_index(uint8_t index)
     }
     if (!COVER_REMIND_ITEM_CNT)
     {
+        printf("COVER_REMIND_ITEM_CNT err\n");
         ab_free(alarm_p);
         return;
     }

@@ -70,6 +70,11 @@ static void func_findphone_process(void)
 
     if(start_falg)
     {
+        if (sys_cb.gui_sleep_sta)
+        {
+            sys_cb.gui_need_wakeup = 1;
+        }
+        reset_sleep_delay_all();
         if (tick_check_expire(ticks, 10))
         {
             ticks = tick_get();

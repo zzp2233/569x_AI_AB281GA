@@ -220,6 +220,9 @@ enum
     STR_NO_MSG,
     STR_FIND_WATCH,
     STR_SET_DATA_READ,
+    STR_SET_STEP_COUNT,
+    STR_SET_DISTANCE,
+    STR_SET_CALORIE,
 };
 
 extern const char * const *i18n;

@@ -14,6 +14,7 @@
 #include "ute_module_notify.h"
 #include "ute_application_common.h"
 #include "ute_module_sport.h"
+#include "ute_module_gui_common.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -55,6 +56,7 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             {
                 sys_cb.gui_need_wakeup = 1;
             }
+            reset_sleep_delay_all();
         }
         break;
         case MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY:

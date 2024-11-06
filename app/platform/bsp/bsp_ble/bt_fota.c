@@ -338,6 +338,9 @@ void bsp_fot_exit(void)
     }
 
     unlock_code_fota();
+
+    task_stack_init();
+    func_cb.sta = FUNC_CLOCK;         //OTA退出返回表盘
 }
 
 void fot_update_pause(void)

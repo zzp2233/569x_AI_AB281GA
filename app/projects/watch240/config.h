@@ -40,10 +40,10 @@
 #define CTP_SELECT                      CTP_CST8X                   //CTP Select
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
-#define GUI_MODE_SELECT                 MODE_4WIRE_8BIT             //屏幕接口选择
-#define TFT_SPI_DRIVER                  SPI_GC9307_V1           //驱动选择
+#define GUI_MODE_SELECT                 MODE_3WIRE_9BIT_2LINE             //屏幕接口选择
+#define TFT_SPI_DRIVER                  SPI_ST7789_V1           //驱动选择
 #define TFT_SPI_LCD_WIDTH               240
-#define TFT_SPI_LCD_HEIGHT              296
+#define TFT_SPI_LCD_HEIGHT              284
 #define TFT_SPI_LCD_OFS_X               0
 #define TFT_SPI_LCD_OFS_Y               20
 #endif

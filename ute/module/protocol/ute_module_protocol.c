@@ -25,6 +25,7 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_sport.h"
 #include "ute_module_sleep.h"
+#include "ute_module_notdisturb.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -1332,7 +1333,6 @@ void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
 {
-#if 0
     ute_module_not_disturb_data_t param;
     memset(&param,0,sizeof(ute_module_not_disturb_data_t));
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT
@@ -1376,7 +1376,6 @@ void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
 #endif
     uteModuleProfileBleSendToPhone(&receive[0],length);
     uteModuleNotDisturbSaveParam(param);
-#endif
 }
 /**
 *@brief       应用端通知手环前后台状态
@@ -1831,6 +1830,258 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
 #endif
 }
 
+/**
+*@brief       android 音乐控制指令
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       zn.zeng
+*@date       2021-11-20
+*/
+void uteModuleProtocolMusicCtrl(uint8_t*receive,uint8_t length)
+{
+#if 0
+    ute_module_music_data_t musicData;
+    uteModuleMusicGetPlayerData(&musicData);
+//    if(receive[1]==0x00)
+//    {
+//        musicData.androidCrc = 0;
+//    }
+//    else
+    if(receive[1]==0x01)
+    {
+        musicData.androidCrc = 0;
+        if(receive[2]==0x01) //paused
+        {
+            musicData.isPaused = true;
+        }
+        else if(receive[2]==0x02) //play
+        {
+            musicData.isPaused = false;
+        }
+        if(receive[3] != 0xFF)
+        {
+//            musicData.playerMode = receive[3];
+            musicData.loopMode = (ute_module_music_loop_mode_t)receive[3];
+        }
+        if(receive[4] != 0xFF)
+        {
+            musicData.volume= receive[4];
+        }
+        if((*((uint32_t *)&receive[5]) != 0xFFFFFFFF) && (*((uint32_t *)&receive[9]) != 0xFFFFFFFF))
+        {
+            musicData.playerTatolTimeMs = receive[5]<<24|receive[6]<<16|receive[7]<<8|receive[8];
+            musicData.playerCurrTimeMs = receive[9]<<24|receive[10]<<16|receive[11]<<8|receive[12];
+        }
+        for(uint8_t i = 0; i<length; i++)
+        {
+            musicData.androidCrc^=receive[i];
+        }
+        uteModuleMusicSetPlayerData(musicData);
+    }
+    else if(receive[1]==0x02)
+    {
+//        musicData.playerMode = receive[2];
+        musicData.loopMode = (ute_module_music_loop_mode_t)receive[2];
+        for(uint8_t i = 0; i<length; i++)
+        {
+            musicData.androidCrc^=receive[i];
+        }
+    }
+    else if(receive[1]==0x03)
+    {
+        musicData.playerTatolTimeMs = receive[2]<<24|receive[3]<<16|receive[4]<<8|receive[5];
+        musicData.playerCurrTimeMs = receive[6]<<24|receive[7]<<16|receive[8]<<8|receive[9];
+        for(uint8_t i = 0; i<length; i++)
+        {
+            musicData.androidCrc^=receive[i];
+        }
+    }
+    else if(receive[1]==0x04)
+    {
+        for(uint8_t i = 0; i<length; i++)
+        {
+            musicData.androidCrc^=receive[i];
+        }
+        uteModuleMusicSetPlayerData(musicData);
+        uteModuleMusicSetPlayerArtist(&receive[2],length-2);
+    }
+    else if(receive[1]==0x05)
+    {
+        for(uint8_t i = 0; i<length; i++)
+        {
+            musicData.androidCrc^=receive[i];
+        }
+        uteModuleMusicSetPlayerData(musicData);
+    }
+    else if(receive[1]==0x06)
+    {
+        for(uint8_t i = 0; i<length; i++)
+        {
+            musicData.androidCrc^=receive[i];
+        }
+        uteModuleMusicSetPlayerData(musicData);
+        uteModuleMusicSetPlayerTitle(&receive[3],length-3);
+    }
+    else if(receive[1]==0xfa)
+    {
+        uint8_t response[3];
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = musicData.androidCrc;
+        uteModuleProfileBleSendToPhone(&response[0],3);
+        uteModuleMusicSetPlayerData(musicData);
+        musicData.androidCrc = 0;
+    }
+#endif
+}
+
+/**
+*@brief       日常活动目标设置，站立时长、运动时长、卡路里、步数、距离目标提醒
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       dengli.lu
+*@date       2022-03-29
+*/
+void uteModuleProtocolTodayTargetCtrl(uint8_t*receive,uint8_t length)
+{
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
+    ute_module_target_notify_data_t targetNotifyData;
+    uteModuleSportGetTodayTargetNotifyData(&targetNotifyData);
+    if(receive[1]==0x01)//站立时长
+    {
+        if(receive[2]==0x00)
+        {
+            targetNotifyData.isStandTimeTargetNotifyOpen = false;
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+        else if(receive[2]==0x01)
+        {
+            targetNotifyData.isStandTimeTargetNotifyOpen = true;
+            uint16_t standTime = targetNotifyData.currStandMin;
+            if(standTime < (receive[3]<<8|receive[4]))//当天已经提醒，那么需要设置比之前大才要提醒
+            {
+                targetNotifyData.isStandTimeTargetHasNotify = false;
+                targetNotifyData.isTodayAllTargetHasNotify = false;
+            }
+            targetNotifyData.standTimeTargetSetMin = receive[3]<<8|receive[4];
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+        else if(receive[2]==0x02)//读取七天历史记录
+        {
+            uteModuleSportStartSendStandTimeHistoryData();
+        }
+    }
+    else if(receive[1]==0x02)//运动时长
+    {
+        if(receive[2]==0x00)
+        {
+            targetNotifyData.isSportTimeTargetNotifyOpen = false;
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+        else if(receive[2]==0x01)
+        {
+            targetNotifyData.isSportTimeTargetNotifyOpen = true;
+            if((targetNotifyData.currentDayAllSportTimeSec/60) < (receive[3]<<8|receive[4]))
+            {
+                //当天已经提醒，那么需要设置比之前大才要提醒
+                targetNotifyData.isSportTimeTargetHasNotify = false;
+                targetNotifyData.isTodayAllTargetHasNotify = false;
+            }
+            targetNotifyData.sportTimeTargetSetMin = receive[3]<<8|receive[4];
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+    }
+    else if(receive[1]==0x03)//kcal 目标
+    {
+        if(receive[2]==0x00)
+        {
+            targetNotifyData.isTodayKcalTargetNotifyOpen = false;
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+        else if(receive[2]==0x01)
+        {
+            targetNotifyData.isTodayKcalTargetNotifyOpen = true;
+            uint16_t kcalValue = uteModuleSportGetCurrDayKcalData();
+            if(kcalValue< (receive[3]<<8|receive[4]))
+            {
+                //当天已经提醒，那么需要设置比之前大才要提醒
+                targetNotifyData.isTodayKcalTargetHasNotify = false;
+                targetNotifyData.isTodayAllTargetHasNotify = false;
+            }
+            targetNotifyData.todayKcalTarget = receive[3]<<8|receive[4];
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+    }
+    else if(receive[1]==0x04)//步数目标
+    {
+        if(receive[2]==0x00)
+        {
+            targetNotifyData.isTodayStepTargetNotifyOpen = false;
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+        else if(receive[2]==0x01)
+        {
+            targetNotifyData.isTodayStepTargetNotifyOpen = true;
+            uint32_t setStep = receive[3]<<24|receive[4]<<16|receive[5]<<8|receive[6];
+            bool isHandOpen = uteModuleSportGetIsOpenHandScreenOn();
+            if(uteModuleSportGetStepsTargetCnt() < setStep)
+            {
+                uteModuleSportSetIsTargetCompleted(false);
+                targetNotifyData.isTodayAllTargetHasNotify = false;
+            }
+            uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,setStep);
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+    }
+    else if(receive[1]==0x05)//距离目标
+    {
+        if(receive[2]==0x00)
+        {
+            targetNotifyData.isTodayDistanceTargetNotifyOpen = false;
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+        else if(receive[2]==0x01)
+        {
+            targetNotifyData.isTodayDistanceTargetNotifyOpen = true;
+            uint16_t tempDistance = uteModuleSportGetCurrDayDistanceData();
+            if(uteModuleSystemtimeGetDistanceMiType())
+            {
+                tempDistance = (float)tempDistance / 0.6213712f;//先转换为KM，在转换为米
+            }
+            uint32_t totalDistance = tempDistance/100*1000 + tempDistance%100*10;
+            if(totalDistance < (receive[3]<<24|receive[4]<<16|receive[5]<<8|receive[6]))
+            {
+                //当天已经提醒，那么需要设置比之前大才要提醒
+                targetNotifyData.isTodayDistanceTargetHasNotify = false;
+                targetNotifyData.isTodayAllTargetHasNotify = false;
+            }
+            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,distance = %d,", __func__,receive[3]<<24|receive[4]<<16|receive[5]<<8|receive[6]);
+            targetNotifyData.todayDistanceTarget = receive[3]<<24|receive[4]<<16|receive[5]<<8|receive[6];
+            uteModuleProfileBleSendToPhone(&receive[0],length);
+        }
+    }
+    uteModuleSportSetTodayTargetNotifyData(targetNotifyData);
+#endif
+}
+
+/**
+*@brief     快捷回复数据
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       xjc
+*@date       2022-07-01
+*/
+void uteModuleProtocolQuickReply(uint8_t*receive,uint8_t length)
+{
+#if UTE_MODUEL_QUICK_REPLY_SUPPORT
+    uteModuleQuickReplyCmd(receive,length);
+#endif
+}
+
+
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 {
@@ -1871,7 +2122,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_SEND_SLEEP_ON_BAND_DATAS,.publicCmd=PUBLIC_CMD_SEND_SLEEP_ON_BAND_DATAS,.function=uteModuleProtocolSleepReadHistoryData},
     {.privateCmd = CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.publicCmd=PUBLIC_CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.function=uteModuleProtocolMoreSportCtrl},
     // {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
-    // {.privateCmd = CMD_MUSIC_CONTENT_CTRL,.publicCmd=CMD_MUSIC_CONTENT_CTRL,.function=uteModuleProtocolMusicCtrl},
+    {.privateCmd = CMD_MUSIC_CONTENT_CTRL,.publicCmd=CMD_MUSIC_CONTENT_CTRL,.function=uteModuleProtocolMusicCtrl},
     // {.privateCmd = CMD_FACTORY_TEST_MODE,.publicCmd=PUBLIC_CMD_FACTORY_TEST_MODE,.function=uteModuleProtocolFactoryTest},
     // {.privateCmd = CMD_WATCH_ONLINE,.publicCmd=PUBLIC_CMD_WATCH_ONLINE,.function=uteModuleProtocolWatchOnlineCtrl},
     // {.privateCmd = CMD_WATCH_ONLINE_BLE5_0,.publicCmd=PUBLIC_CMD_WATCH_ONLINE_BLE5_0,.function=uteModuleProtocolWatchOnlineData},
@@ -1887,11 +2138,11 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 #else
     // {.privateCmd = CMD_DEBUG_TEST_DATA,.publicCmd=CMD_DEBUG_TEST_DATA,.function=uteModuleProtocolDebugData},
 #endif
-    // {.privateCmd = CMD_QUICK_REPLY_GET_PHONE_NUMBER,.publicCmd=CMD_QUICK_REPLY_GET_PHONE_NUMBER,.function=uteModuleProtocolQuickReply},
-    // {.privateCmd = CMD_QUICK_REPLY_CONTENT,.publicCmd=CMD_QUICK_REPLY_CONTENT,.function=uteModuleProtocolQuickReply},
-    // {.privateCmd = CMD_QUICK_REPLY_CTRL,.publicCmd=CMD_QUICK_REPLY_CTRL,.function=uteModuleProtocolQuickReply},
+    {.privateCmd = CMD_QUICK_REPLY_GET_PHONE_NUMBER,.publicCmd=CMD_QUICK_REPLY_GET_PHONE_NUMBER,.function=uteModuleProtocolQuickReply},
+    {.privateCmd = CMD_QUICK_REPLY_CONTENT,.publicCmd=CMD_QUICK_REPLY_CONTENT,.function=uteModuleProtocolQuickReply},
+    {.privateCmd = CMD_QUICK_REPLY_CTRL,.publicCmd=CMD_QUICK_REPLY_CTRL,.function=uteModuleProtocolQuickReply},
     // {.privateCmd = CMD_SET_DRINK_WATER_PARAM,.publicCmd=CMD_SET_DRINK_WATER_PARAM,.function=uteModuleProtocolSetDrinkWater},
-    // {.privateCmd = CMD_TODAY_TARGET_CTRL,.publicCmd=CMD_TODAY_TARGET_CTRL,.function=uteModuleProtocolTodayTargetCtrl},
+    {.privateCmd = CMD_TODAY_TARGET_CTRL,.publicCmd=CMD_TODAY_TARGET_CTRL,.function=uteModuleProtocolTodayTargetCtrl},
     // {.privateCmd = CMD_SYNC_CYWEE_SWIM_DATA,.publicCmd=CMD_SYNC_CYWEE_SWIM_DATA,.function=uteModuleProtocolSyncCyweeSwimData},
     // {.privateCmd = CMD_SPORTS_TARGET_SELECT,.publicCmd=CMD_SPORTS_TARGET_SELECT,.function=uteModuleProtocolSportsTargetSelect},
     // {.privateCmd = CMD_CUST_DEFINE_CMD,.publicCmd=CMD_CUST_DEFINE_CMD,.function=uteModuleProtocolCustomF6CmdHandle},

@@ -9,27 +9,30 @@
 
 #define SET_LIST_CNT                       ((int)(sizeof(tbl_setting_list) / sizeof(tbl_setting_list[0])))
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
 };
 
-typedef struct f_set_list_t_ {
+typedef struct f_set_list_t_
+{
     compo_listbox_t *listbox;
 
 } f_set_list_t;
 
-static const compo_listbox_item_t tbl_setting_list[] = {
+static const compo_listbox_item_t tbl_setting_list[] =
+{
     {STR_SETTING_LIGHT,                  UI_BUF_SETTING_LIGHT_BIN,                      .func_sta = FUNC_LIGHT},            //亮度调节
     {STR_SETTING_DOUSING,                UI_BUF_SETTING_BREATHING_SCREEN_CLICK_BIN,     .func_sta = FUNC_SET_SUB_DOUSING},  //息屏时长
     {STR_SETTING_UP,                     UI_BUF_SETTING_WRIST_BIN,                      .func_sta = FUNC_SET_SUB_WRIST},    //抬腕亮屏
     {STR_SETTING_DISTURD,                UI_BUF_SETTING_DISTURB_CLICK_BIN,              .func_sta = FUNC_SET_SUB_DISTURD},  //勿扰模式
     {STR_SETTING_SAV,                    UI_BUF_SETTING_SOUND_AND_VIBRATION_BIN,        .func_sta = FUNC_SET_SUB_SAV},      //声音与振动
     {STR_SETTING_LANGUAGE,               UI_BUF_SETTING_LANGUAGE_BIN,                   .func_sta = FUNC_SET_SUB_LANGUAGE}, //语言设置
-    {STR_SETTING_TIME,                   UI_BUF_SETTING_TIME_BIN,                       .func_sta = FUNC_SET_SUB_TIME},     //时间设置
+    //{STR_SETTING_TIME,                   UI_BUF_SETTING_TIME_BIN,                       .func_sta = FUNC_SET_SUB_TIME},     //时间设置
     {STR_SETTING_CALENDAR,               UI_BUF_SETTING_CALENDAR_BIN,                   .func_sta = FUNC_CALENDAER},        //日期设置
     {STR_SETTING_PASSWORD,               UI_BUF_SETTING_PASSWORD_BIN,                   .func_sta = FUNC_SET_SUB_PASSWORD}, //密码锁
     {STR_SETTING_ABOUT,                  UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_ABOUT},    //关于
-   // {STR_SETTING_4G,                     UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_4G},       //4G
+    // {STR_SETTING_4G,                     UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_4G},       //4G
     {STR_SETTING_RESTART,                UI_BUF_SETTING_RESTART_BIN,                    .func_sta = FUNC_SET_SUB_RESTART},  //重启
     {STR_SETTING_RSTFY,                  UI_BUF_SETTING_RESTORE_FACTORY_BIN,            .func_sta = FUNC_SET_SUB_RSTFY},    //恢复出厂
     {STR_SETTING_OFF,                    UI_BUF_SETTING_OFF_BIN,                        .func_sta = FUNC_SET_SUB_OFF},      //关机
@@ -52,7 +55,8 @@ compo_form_t *func_set_sub_list_form_create(void)
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     u8 set_idx = sys_cb.set_idx;
-    if (set_idx < 1) {
+    if (set_idx < 1)
+    {
         set_idx = 1;
     }
 
@@ -71,14 +75,16 @@ static void func_set_sub_list_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT) {
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
+    {
         return;
     }
 
     //根据图标索引获取应用ID
     func_sta = tbl_setting_list[icon_idx].func_sta;
     //切入应用
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
         compo_form_t *frm = func_create_form(func_sta);
         func_switching(FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO, listbox->sel_icon);
         compo_form_destroy(frm);
@@ -118,11 +124,12 @@ static void func_set_sub_list_enter(void)
     f_set_list_t *f_set = (f_set_list_t *)func_cb.f_cb;
     f_set->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_set->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    compo_listbox_move_init_modify(listbox, 127, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+    compo_listbox_move_init_modify(listbox, GUI_SCREEN_CENTER_Y-FORM_TITLE_HEIGHT-gui_image_get_size(UI_BUF_COMMON_BG_BIN).hei/2, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
     func_cb.enter_tick = tick_get();
 }
 
@@ -132,31 +139,34 @@ static void func_set_sub_list_message(size_msg_t msg)
     f_set_list_t *f_set = (f_set_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_set_sub_list_icon_click();                //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_set_sub_list_icon_click();                //单击图标
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_message(msg);
-        sys_cb.set_idx = 0;
-        break;
+        case MSG_CTP_SHORT_RIGHT:
+            func_message(msg);
+            sys_cb.set_idx = 0;
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
-            func_set_sub_list_switch_to_clock();       //返回设置界面
-        }
-        break;
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_set_sub_list_switch_to_clock();       //返回设置界面
+            }
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -174,7 +184,8 @@ void func_set_sub_exit(void)
 void func_set_sub_list(void)
 {
     func_set_sub_list_enter();
-    while (func_cb.sta == FUNC_SETTING) {
+    while (func_cb.sta == FUNC_SETTING)
+    {
         func_set_sub_list_process();
         func_set_sub_list_message(msg_dequeue());
     }

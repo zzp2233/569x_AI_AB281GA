@@ -209,5 +209,14 @@ bool uteModuleCallIsCurrentConnectionIphone(void);
 void uteModuleCallBleConnectState(bool isConnected);
 
 void uteModuleCallSetInComingNumberName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t nameSize);
+void uteModuleCallGetAllAddressBookContactContent(uint16_t totalLen,ute_module_call_addressbook_t *pData);
+void uteModuleCallParseAddressBookContactNameAndNumber(uint8_t *data,uint8_t *name,uint8_t *nameLen,uint8_t *number,uint8_t *numberLen);
+uint16_t uteModuleCallGetAddressBookSize(void);
+void uteModuleCallDeleteAllBookData(void);
+void uteModuleCallSyncAddressBookEnd(void);
+void uteModuleCallSyncAddressBookData(uint8_t *receive,uint8_t length);
+void uteModuleCallSyncAddressBookStart(void);
+void uteModuleCallClearNumberAndName(void);
+bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen);
 
 #endif //_UTE_MODULE_BT_AUDIO_H_

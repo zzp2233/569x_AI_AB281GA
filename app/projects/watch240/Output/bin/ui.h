@@ -893,469 +893,574 @@
 #define UI_BUF_PULLUP_MIN_BIN                      UI_ADDR_BASE(0x26b4d0)
 #define UI_LEN_PULLUP_MIN_BIN                      0x107
 
-#define UI_BUF_REMIND_FINDWATCH_BIN                UI_ADDR_BASE(0x26b5d7)
+#define UI_BUF_REMIND_ALARM_CLOCK_BIN              UI_ADDR_BASE(0x26b5d7)
+#define UI_LEN_REMIND_ALARM_CLOCK_BIN              0xca4
+
+#define UI_BUF_REMIND_APP_CONNECTION_BIN           UI_ADDR_BASE(0x26c27b)
+#define UI_LEN_REMIND_APP_CONNECTION_BIN           0x1583
+
+#define UI_BUF_REMIND_BLUETOOTH_CONNECTION_BIN     UI_ADDR_BASE(0x26d7fe)
+#define UI_LEN_REMIND_BLUETOOTH_CONNECTION_BIN     0x1755
+
+#define UI_BUF_REMIND_CLOSE_BIN                    UI_ADDR_BASE(0x26ef53)
+#define UI_LEN_REMIND_CLOSE_BIN                    0x757
+
+#define UI_BUF_REMIND_FINDWATCH_BIN                UI_ADDR_BASE(0x26f6aa)
 #define UI_LEN_REMIND_FINDWATCH_BIN                0x10c5
 
-#define UI_BUF_SETTING_ABOUT_BIN                   UI_ADDR_BASE(0x26c69c)
+#define UI_BUF_REMIND_FIND_WATCH_BIN               UI_ADDR_BASE(0x27076f)
+#define UI_LEN_REMIND_FIND_WATCH_BIN               0x1bc6
+
+#define UI_BUF_REMIND_GOAL_ACHIEVEMENT_BIN         UI_ADDR_BASE(0x272335)
+#define UI_LEN_REMIND_GOAL_ACHIEVEMENT_BIN         0x14ca
+
+#define UI_BUF_REMIND_REMIND_LATER_BIN             UI_ADDR_BASE(0x2737ff)
+#define UI_LEN_REMIND_REMIND_LATER_BIN             0xe0d
+
+#define UI_BUF_REMIND_SEDENTARY_CLOCK_BIN          UI_ADDR_BASE(0x27460c)
+#define UI_LEN_REMIND_SEDENTARY_CLOCK_BIN          0x8de
+
+#define UI_BUF_REMIND_SLEEPING_CLOCK_BIN           UI_ADDR_BASE(0x274eea)
+#define UI_LEN_REMIND_SLEEPING_CLOCK_BIN           0xecd
+
+#define UI_BUF_REMIND_WATER_CLOCK_BIN              UI_ADDR_BASE(0x275db7)
+#define UI_LEN_REMIND_WATER_CLOCK_BIN              0xacf
+
+#define UI_BUF_SETTING_ABOUT_BIN                   UI_ADDR_BASE(0x276886)
 #define UI_LEN_SETTING_ABOUT_BIN                   0x38e
 
-#define UI_BUF_SETTING_ABOUT_CLICK_BIN             UI_ADDR_BASE(0x26ca2a)
+#define UI_BUF_SETTING_ABOUT_CLICK_BIN             UI_ADDR_BASE(0x276c14)
 #define UI_LEN_SETTING_ABOUT_CLICK_BIN             0x392
 
-#define UI_BUF_SETTING_BREATHING_SCREEN_BIN        UI_ADDR_BASE(0x26cdbc)
+#define UI_BUF_SETTING_BREATHING_SCREEN_BIN        UI_ADDR_BASE(0x276fa6)
 #define UI_LEN_SETTING_BREATHING_SCREEN_BIN        0x4cf
 
-#define UI_BUF_SETTING_BREATHING_SCREEN_CLICK_BIN    UI_ADDR_BASE(0x26d28b)
+#define UI_BUF_SETTING_BREATHING_SCREEN_CLICK_BIN    UI_ADDR_BASE(0x277475)
 #define UI_LEN_SETTING_BREATHING_SCREEN_CLICK_BIN    0x4a8
 
-#define UI_BUF_SETTING_CALENDAR_BIN                UI_ADDR_BASE(0x26d733)
+#define UI_BUF_SETTING_CALENDAR_BIN                UI_ADDR_BASE(0x27791d)
 #define UI_LEN_SETTING_CALENDAR_BIN                0x3a3
 
-#define UI_BUF_SETTING_CALENDAR_CLICK_BIN          UI_ADDR_BASE(0x26dad6)
+#define UI_BUF_SETTING_CALENDAR_CLICK_BIN          UI_ADDR_BASE(0x277cc0)
 #define UI_LEN_SETTING_CALENDAR_CLICK_BIN          0x394
 
-#define UI_BUF_SETTING_DISTURB_BIN                 UI_ADDR_BASE(0x26de6a)
+#define UI_BUF_SETTING_DISTURB_BIN                 UI_ADDR_BASE(0x278054)
 #define UI_LEN_SETTING_DISTURB_BIN                 0x3c4
 
-#define UI_BUF_SETTING_DISTURB_CLICK_BIN           UI_ADDR_BASE(0x26e22e)
+#define UI_BUF_SETTING_DISTURB_CLICK_BIN           UI_ADDR_BASE(0x278418)
 #define UI_LEN_SETTING_DISTURB_CLICK_BIN           0x3ab
 
-#define UI_BUF_SETTING_LANGUAGE_BIN                UI_ADDR_BASE(0x26e5d9)
+#define UI_BUF_SETTING_LANGUAGE_BIN                UI_ADDR_BASE(0x2787c3)
 #define UI_LEN_SETTING_LANGUAGE_BIN                0x441
 
-#define UI_BUF_SETTING_LANGUAGE_CLICK_BIN          UI_ADDR_BASE(0x26ea1a)
+#define UI_BUF_SETTING_LANGUAGE_CLICK_BIN          UI_ADDR_BASE(0x278c04)
 #define UI_LEN_SETTING_LANGUAGE_CLICK_BIN          0x425
 
-#define UI_BUF_SETTING_LIGHT_BIN                   UI_ADDR_BASE(0x26ee3f)
+#define UI_BUF_SETTING_LIGHT_BIN                   UI_ADDR_BASE(0x279029)
 #define UI_LEN_SETTING_LIGHT_BIN                   0x43e
 
-#define UI_BUF_SETTING_LIGHT_CLICK_BIN             UI_ADDR_BASE(0x26f27d)
+#define UI_BUF_SETTING_LIGHT_CLICK_BIN             UI_ADDR_BASE(0x279467)
 #define UI_LEN_SETTING_LIGHT_CLICK_BIN             0x437
 
-#define UI_BUF_SETTING_OFF_BIN                     UI_ADDR_BASE(0x26f6b4)
+#define UI_BUF_SETTING_OFF_BIN                     UI_ADDR_BASE(0x27989e)
 #define UI_LEN_SETTING_OFF_BIN                     0x422
 
-#define UI_BUF_SETTING_OFF_CLICK_BIN               UI_ADDR_BASE(0x26fad6)
+#define UI_BUF_SETTING_OFF_CLICK_BIN               UI_ADDR_BASE(0x279cc0)
 #define UI_LEN_SETTING_OFF_CLICK_BIN               0x411
 
-#define UI_BUF_SETTING_PASSWORD_BIN                UI_ADDR_BASE(0x26fee7)
+#define UI_BUF_SETTING_PASSWORD_BIN                UI_ADDR_BASE(0x27a0d1)
 #define UI_LEN_SETTING_PASSWORD_BIN                0x3e4
 
-#define UI_BUF_SETTING_PASSWORD_CLICK_BIN          UI_ADDR_BASE(0x2702cb)
+#define UI_BUF_SETTING_PASSWORD_CLICK_BIN          UI_ADDR_BASE(0x27a4b5)
 #define UI_LEN_SETTING_PASSWORD_CLICK_BIN          0x3df
 
-#define UI_BUF_SETTING_RESTART_BIN                 UI_ADDR_BASE(0x2706aa)
+#define UI_BUF_SETTING_RESTART_BIN                 UI_ADDR_BASE(0x27a894)
 #define UI_LEN_SETTING_RESTART_BIN                 0x3ea
 
-#define UI_BUF_SETTING_RESTART_CLICK_BIN           UI_ADDR_BASE(0x270a94)
+#define UI_BUF_SETTING_RESTART_CLICK_BIN           UI_ADDR_BASE(0x27ac7e)
 #define UI_LEN_SETTING_RESTART_CLICK_BIN           0x3db
 
-#define UI_BUF_SETTING_RESTORE_FACTORY_BIN         UI_ADDR_BASE(0x270e6f)
+#define UI_BUF_SETTING_RESTORE_FACTORY_BIN         UI_ADDR_BASE(0x27b059)
 #define UI_LEN_SETTING_RESTORE_FACTORY_BIN         0x3f3
 
-#define UI_BUF_SETTING_RESTORE_FACTORY_CLICK_BIN    UI_ADDR_BASE(0x271262)
+#define UI_BUF_SETTING_RESTORE_FACTORY_CLICK_BIN    UI_ADDR_BASE(0x27b44c)
 #define UI_LEN_SETTING_RESTORE_FACTORY_CLICK_BIN    0x3dc
 
-#define UI_BUF_SETTING_SOUND_AND_VIBRATION_BIN     UI_ADDR_BASE(0x27163e)
+#define UI_BUF_SETTING_SOUND_AND_VIBRATION_BIN     UI_ADDR_BASE(0x27b828)
 #define UI_LEN_SETTING_SOUND_AND_VIBRATION_BIN     0x390
 
-#define UI_BUF_SETTING_SOUND_AND_VIBRATION_CLICK_BIN    UI_ADDR_BASE(0x2719ce)
+#define UI_BUF_SETTING_SOUND_AND_VIBRATION_CLICK_BIN    UI_ADDR_BASE(0x27bbb8)
 #define UI_LEN_SETTING_SOUND_AND_VIBRATION_CLICK_BIN    0x370
 
-#define UI_BUF_SETTING_TIME_BIN                    UI_ADDR_BASE(0x271d3e)
+#define UI_BUF_SETTING_TIME_BIN                    UI_ADDR_BASE(0x27bf28)
 #define UI_LEN_SETTING_TIME_BIN                    0x394
 
-#define UI_BUF_SETTING_TIME_CLICK_BIN              UI_ADDR_BASE(0x2720d2)
+#define UI_BUF_SETTING_TIME_CLICK_BIN              UI_ADDR_BASE(0x27c2bc)
 #define UI_LEN_SETTING_TIME_CLICK_BIN              0x38e
 
-#define UI_BUF_SETTING_WRIST_BIN                   UI_ADDR_BASE(0x272460)
+#define UI_BUF_SETTING_WRIST_BIN                   UI_ADDR_BASE(0x27c64a)
 #define UI_LEN_SETTING_WRIST_BIN                   0x409
 
-#define UI_BUF_SETTING_WRIST_CLICK_BIN             UI_ADDR_BASE(0x272869)
+#define UI_BUF_SETTING_WRIST_CLICK_BIN             UI_ADDR_BASE(0x27ca53)
 #define UI_LEN_SETTING_WRIST_CLICK_BIN             0x3e2
 
-#define UI_BUF_SETTING_LIGHT_LIGHT_BIN             UI_ADDR_BASE(0x272c4b)
+#define UI_BUF_SETTING_LIGHT_LIGHT_BIN             UI_ADDR_BASE(0x27ce35)
 #define UI_LEN_SETTING_LIGHT_LIGHT_BIN             0x14ba
 
-#define UI_BUF_SETTING_PASSWORD_7_CLICK_BIN        UI_ADDR_BASE(0x274105)
+#define UI_BUF_SETTING_PASSWORD_7_CLICK_BIN        UI_ADDR_BASE(0x27e2ef)
 #define UI_LEN_SETTING_PASSWORD_7_CLICK_BIN        0x4a8
 
-#define UI_BUF_SETTING_PASSWORD_9_CLICK_BIN        UI_ADDR_BASE(0x2745ad)
+#define UI_BUF_SETTING_PASSWORD_9_CLICK_BIN        UI_ADDR_BASE(0x27e797)
 #define UI_LEN_SETTING_PASSWORD_9_CLICK_BIN        0x5ee
 
-#define UI_BUF_SETTING_PASSWORD_BG_BIN             UI_ADDR_BASE(0x274b9b)
+#define UI_BUF_SETTING_PASSWORD_BG_BIN             UI_ADDR_BASE(0x27ed85)
 #define UI_LEN_SETTING_PASSWORD_BG_BIN             0x3ef9
 
-#define UI_BUF_SETTING_PASSWORD_BG_NUM_BIN         UI_ADDR_BASE(0x278a94)
+#define UI_BUF_SETTING_PASSWORD_BG_NUM_BIN         UI_ADDR_BASE(0x282c7e)
 #define UI_LEN_SETTING_PASSWORD_BG_NUM_BIN         0x896
 
-#define UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN      UI_ADDR_BASE(0x27932a)
+#define UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN      UI_ADDR_BASE(0x283514)
 #define UI_LEN_SETTING_PASSWORD_DEL_CLICK_BIN      0x60d
 
-#define UI_BUF_SETTING_PASSWORD_FRAME_755_BIN      UI_ADDR_BASE(0x279937)
+#define UI_BUF_SETTING_PASSWORD_FRAME_755_BIN      UI_ADDR_BASE(0x283b21)
 #define UI_LEN_SETTING_PASSWORD_FRAME_755_BIN      0x5c3
 
-#define UI_BUF_SETTING_PASSWORD_NUM_BIN            UI_ADDR_BASE(0x279efa)
+#define UI_BUF_SETTING_PASSWORD_NUM_BIN            UI_ADDR_BASE(0x2840e4)
 #define UI_LEN_SETTING_PASSWORD_NUM_BIN            0x210
 
-#define UI_BUF_SETTING_PASSWORD_OPEN_BIN           UI_ADDR_BASE(0x27a10a)
+#define UI_BUF_SETTING_PASSWORD_OPEN_BIN           UI_ADDR_BASE(0x2842f4)
 #define UI_LEN_SETTING_PASSWORD_OPEN_BIN           0x222
 
-#define UI_BUF_SIDEBAR_BG_146_146_BIN              UI_ADDR_BASE(0x27a32c)
+#define UI_BUF_SIDEBAR_BG_146_146_BIN              UI_ADDR_BASE(0x284516)
 #define UI_LEN_SIDEBAR_BG_146_146_BIN              0xa82
 
-#define UI_BUF_SIDEBAR_BG_146_146_0_BIN            UI_ADDR_BASE(0x27adae)
+#define UI_BUF_SIDEBAR_BG_146_146_0_BIN            UI_ADDR_BASE(0x284f98)
 #define UI_LEN_SIDEBAR_BG_146_146_0_BIN            0xa82
 
-#define UI_BUF_SIDEBAR_BG_146_146_1_BIN            UI_ADDR_BASE(0x27b830)
+#define UI_BUF_SIDEBAR_BG_146_146_1_BIN            UI_ADDR_BASE(0x285a1a)
 #define UI_LEN_SIDEBAR_BG_146_146_1_BIN            0xa82
 
-#define UI_BUF_SIDEBAR_BG_308_156_BIN              UI_ADDR_BASE(0x27c2b2)
+#define UI_BUF_SIDEBAR_BG_308_156_BIN              UI_ADDR_BASE(0x28649c)
 #define UI_LEN_SIDEBAR_BG_308_156_BIN              0x100e
 
-#define UI_BUF_SIDEBAR_BG_308_156_1_BIN            UI_ADDR_BASE(0x27d2c0)
+#define UI_BUF_SIDEBAR_BG_308_156_1_BIN            UI_ADDR_BASE(0x2874aa)
 #define UI_LEN_SIDEBAR_BG_308_156_1_BIN            0x100e
 
-#define UI_BUF_SIDEBAR_BG_308_156_2_BIN            UI_ADDR_BASE(0x27e2ce)
+#define UI_BUF_SIDEBAR_BG_308_156_2_BIN            UI_ADDR_BASE(0x2884b8)
 #define UI_LEN_SIDEBAR_BG_308_156_2_BIN            0x100e
 
-#define UI_BUF_SIDEBAR_BG_308_156_3_BIN            UI_ADDR_BASE(0x27f2dc)
+#define UI_BUF_SIDEBAR_BG_308_156_3_BIN            UI_ADDR_BASE(0x2894c6)
 #define UI_LEN_SIDEBAR_BG_308_156_3_BIN            0x100e
 
-#define UI_BUF_SIDEBAR_BG_308_156_4_BIN            UI_ADDR_BASE(0x2802ea)
+#define UI_BUF_SIDEBAR_BG_308_156_4_BIN            UI_ADDR_BASE(0x28a4d4)
 #define UI_LEN_SIDEBAR_BG_308_156_4_BIN            0x100e
 
-#define UI_BUF_SIDEBAR_DEGREE_BIN                  UI_ADDR_BASE(0x2812f8)
+#define UI_BUF_SIDEBAR_DEGREE_BIN                  UI_ADDR_BASE(0x28b4e2)
 #define UI_LEN_SIDEBAR_DEGREE_BIN                  0x3ad
 
-#define UI_BUF_SIDEBAR_SLAS_BIN                    UI_ADDR_BASE(0x2816a5)
+#define UI_BUF_SIDEBAR_SLAS_BIN                    UI_ADDR_BASE(0x28b88f)
 #define UI_LEN_SIDEBAR_SLAS_BIN                    0x1cc
 
-#define UI_BUF_SIDEBAR_TOP_308_50_BIN              UI_ADDR_BASE(0x281871)
+#define UI_BUF_SIDEBAR_TOP_308_50_BIN              UI_ADDR_BASE(0x28ba5b)
 #define UI_LEN_SIDEBAR_TOP_308_50_BIN              0x429
 
-#define UI_BUF_SLEEP_CHART_BG_BIN                  UI_ADDR_BASE(0x281c9a)
+#define UI_BUF_SLEEP_CHART_BG_BIN                  UI_ADDR_BASE(0x28be84)
 #define UI_LEN_SLEEP_CHART_BG_BIN                  0x479e
 
-#define UI_BUF_SLEEP_DEEP_ALEEP_BIN                UI_ADDR_BASE(0x286438)
+#define UI_BUF_SLEEP_DEEP_ALEEP_BIN                UI_ADDR_BASE(0x290622)
 #define UI_LEN_SLEEP_DEEP_ALEEP_BIN                0x6a0
 
-#define UI_BUF_SLEEP_LIGHT_SLEEP_BIN               UI_ADDR_BASE(0x286ad8)
+#define UI_BUF_SLEEP_LIGHT_SLEEP_BIN               UI_ADDR_BASE(0x290cc2)
 #define UI_LEN_SLEEP_LIGHT_SLEEP_BIN               0x5db
 
-#define UI_BUF_SLEEP_SLEEP_BIN                     UI_ADDR_BASE(0x2870b3)
+#define UI_BUF_SLEEP_SLEEP_BIN                     UI_ADDR_BASE(0x29129d)
 #define UI_LEN_SLEEP_SLEEP_BIN                     0xff1
 
-#define UI_BUF_SMARTSTACK_BG_BIN                   UI_ADDR_BASE(0x2880a4)
+#define UI_BUF_SMARTSTACK_BG_BIN                   UI_ADDR_BASE(0x29228e)
 #define UI_LEN_SMARTSTACK_BG_BIN                   0x1fc4
 
-#define UI_BUF_SMARTSTACK_DELET_BIN                UI_ADDR_BASE(0x28a068)
+#define UI_BUF_SMARTSTACK_DELET_BIN                UI_ADDR_BASE(0x294252)
 #define UI_LEN_SMARTSTACK_DELET_BIN                0x4bc
 
-#define UI_BUF_SMARTSTACK_NULL_BIN                 UI_ADDR_BASE(0x28a524)
+#define UI_BUF_SMARTSTACK_NULL_BIN                 UI_ADDR_BASE(0x29470e)
 #define UI_LEN_SMARTSTACK_NULL_BIN                 0x5a1
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_BG_BIN        UI_ADDR_BASE(0x28aac5)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_BG_BIN        UI_ADDR_BASE(0x294caf)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_BG_BIN        0x139b
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_FOOTBALL_BIN    UI_ADDR_BASE(0x28be60)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_FOOTBALL_BIN    UI_ADDR_BASE(0x29604a)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_FOOTBALL_BIN    0xdc5
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_INDOOR_CYCLING_BIN    UI_ADDR_BASE(0x28cc25)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_INDOOR_CYCLING_BIN    UI_ADDR_BASE(0x296e0f)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_INDOOR_CYCLING_BIN    0x1103
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_INDOOR_RUNNING_BIN    UI_ADDR_BASE(0x28dd28)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_INDOOR_RUNNING_BIN    UI_ADDR_BASE(0x297f12)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_INDOOR_RUNNING_BIN    0x103f
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_KCAL_BG_BIN    UI_ADDR_BASE(0x28ed67)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_KCAL_BG_BIN    UI_ADDR_BASE(0x298f51)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_KCAL_BG_BIN    0x1a98
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_KCAL_NUM_BIN    UI_ADDR_BASE(0x2907ff)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_KCAL_NUM_BIN    UI_ADDR_BASE(0x29a9e9)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_KCAL_NUM_BIN    0xd73
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_KM_BG_BIN     UI_ADDR_BASE(0x291572)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_KM_BG_BIN     UI_ADDR_BASE(0x29b75c)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_KM_BG_BIN     0x1a31
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_KM_NUM_BIN    UI_ADDR_BASE(0x292fa3)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_KM_NUM_BIN    UI_ADDR_BASE(0x29d18d)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_KM_NUM_BIN    0xd7f
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_OUTDOOR_CYCLING_BIN    UI_ADDR_BASE(0x293d22)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_OUTDOOR_CYCLING_BIN    UI_ADDR_BASE(0x29df0c)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_OUTDOOR_CYCLING_BIN    0x148d
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_RUN_BIN       UI_ADDR_BASE(0x2951af)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_RUN_BIN       UI_ADDR_BASE(0x29f399)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_RUN_BIN       0xd0c
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_STEP_BG_BIN    UI_ADDR_BASE(0x295ebb)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_STEP_BG_BIN    UI_ADDR_BASE(0x2a00a5)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_STEP_BG_BIN    0x186d
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_STEP_NUM_BIN    UI_ADDR_BASE(0x297728)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_STEP_NUM_BIN    UI_ADDR_BASE(0x2a1912)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_STEP_NUM_BIN    0x1003
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_SWIM_BIN      UI_ADDR_BASE(0x29872b)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_SWIM_BIN      UI_ADDR_BASE(0x2a2915)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_SWIM_BIN      0xda1
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_TIME_BG_BIN    UI_ADDR_BASE(0x2994cc)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_TIME_BG_BIN    UI_ADDR_BASE(0x2a36b6)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_TIME_BG_BIN    0x19c2
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_TIME_NUM_BIN    UI_ADDR_BASE(0x29ae8e)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_TIME_NUM_BIN    UI_ADDR_BASE(0x2a5078)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_TIME_NUM_BIN    0xd7d
 
-#define UI_BUF_SPORT_BEFORE_EXERCISE_WALK_BIN      UI_ADDR_BASE(0x29bc0b)
+#define UI_BUF_SPORT_BEFORE_EXERCISE_WALK_BIN      UI_ADDR_BASE(0x2a5df5)
 #define UI_LEN_SPORT_BEFORE_EXERCISE_WALK_BIN      0xce8
 
-#define UI_BUF_SPORT_EXERCISING_1_BIN              UI_ADDR_BASE(0x29c8f3)
+#define UI_BUF_SPORT_EXERCISING_1_BIN              UI_ADDR_BASE(0x2a6add)
 #define UI_LEN_SPORT_EXERCISING_1_BIN              0x5c9
 
-#define UI_BUF_SPORT_EXERCISING_2_BIN              UI_ADDR_BASE(0x29cebc)
+#define UI_BUF_SPORT_EXERCISING_2_BIN              UI_ADDR_BASE(0x2a70a6)
 #define UI_LEN_SPORT_EXERCISING_2_BIN              0xa4a
 
-#define UI_BUF_SPORT_EXERCISING_3_BIN              UI_ADDR_BASE(0x29d906)
+#define UI_BUF_SPORT_EXERCISING_3_BIN              UI_ADDR_BASE(0x2a7af0)
 #define UI_LEN_SPORT_EXERCISING_3_BIN              0xb57
 
-#define UI_BUF_SPORT_EXERCISING_BG_HR_BIN          UI_ADDR_BASE(0x29e45d)
+#define UI_BUF_SPORT_EXERCISING_BG_HR_BIN          UI_ADDR_BASE(0x2a8647)
 #define UI_LEN_SPORT_EXERCISING_BG_HR_BIN          0x855
 
-#define UI_BUF_SPORT_EXERCISING_CANCEL_BIN         UI_ADDR_BASE(0x29ecb2)
+#define UI_BUF_SPORT_EXERCISING_CANCEL_BIN         UI_ADDR_BASE(0x2a8e9c)
 #define UI_LEN_SPORT_EXERCISING_CANCEL_BIN         0x10a7
 
-#define UI_BUF_SPORT_EXERCISING_DOU2_BIN           UI_ADDR_BASE(0x29fd59)
+#define UI_BUF_SPORT_EXERCISING_DOU2_BIN           UI_ADDR_BASE(0x2a9f43)
 #define UI_LEN_SPORT_EXERCISING_DOU2_BIN           0x1bf
 
-#define UI_BUF_SPORT_EXERCISING_KCAL_BIN           UI_ADDR_BASE(0x29ff18)
+#define UI_BUF_SPORT_EXERCISING_KCAL_BIN           UI_ADDR_BASE(0x2aa102)
 #define UI_LEN_SPORT_EXERCISING_KCAL_BIN           0x7b7
 
-#define UI_BUF_SPORT_EXERCISING_KM_BIN             UI_ADDR_BASE(0x2a06cf)
+#define UI_BUF_SPORT_EXERCISING_KM_BIN             UI_ADDR_BASE(0x2aa8b9)
 #define UI_LEN_SPORT_EXERCISING_KM_BIN             0x70c
 
-#define UI_BUF_SPORT_EXERCISING_PAUSE_BIN          UI_ADDR_BASE(0x2a0ddb)
+#define UI_BUF_SPORT_EXERCISING_PAUSE_BIN          UI_ADDR_BASE(0x2aafc5)
 #define UI_LEN_SPORT_EXERCISING_PAUSE_BIN          0x10e0
 
-#define UI_BUF_SPORT_EXERCISING_STEP_BIN           UI_ADDR_BASE(0x2a1ebb)
+#define UI_BUF_SPORT_EXERCISING_STEP_BIN           UI_ADDR_BASE(0x2ac0a5)
 #define UI_LEN_SPORT_EXERCISING_STEP_BIN           0x50b
 
-#define UI_BUF_SPORT_EXERCISING_TIME_BIN           UI_ADDR_BASE(0x2a23c6)
+#define UI_BUF_SPORT_EXERCISING_TIME_BIN           UI_ADDR_BASE(0x2ac5b0)
 #define UI_LEN_SPORT_EXERCISING_TIME_BIN           0x655
 
-#define UI_BUF_STOPWATCH_AFRESH_BIN                UI_ADDR_BASE(0x2a2a1b)
+#define UI_BUF_SPORT_ICON_BADMINTON_BIN            UI_ADDR_BASE(0x2acc05)
+#define UI_LEN_SPORT_ICON_BADMINTON_BIN            0xb04
+
+#define UI_BUF_SPORT_ICON_BASEBALL_BIN             UI_ADDR_BASE(0x2ad709)
+#define UI_LEN_SPORT_ICON_BASEBALL_BIN             0xa62
+
+#define UI_BUF_SPORT_ICON_BASKETBALL_BIN           UI_ADDR_BASE(0x2ae16b)
+#define UI_LEN_SPORT_ICON_BASKETBALL_BIN           0xb9d
+
+#define UI_BUF_SPORT_ICON_BOATING_BIN              UI_ADDR_BASE(0x2aed08)
+#define UI_LEN_SPORT_ICON_BOATING_BIN              0xfb0
+
+#define UI_BUF_SPORT_ICON_CLIMBING_BIN             UI_ADDR_BASE(0x2afcb8)
+#define UI_LEN_SPORT_ICON_CLIMBING_BIN             0xba8
+
+#define UI_BUF_SPORT_ICON_CRICKET_BIN              UI_ADDR_BASE(0x2b0860)
+#define UI_LEN_SPORT_ICON_CRICKET_BIN              0x962
+
+#define UI_BUF_SPORT_ICON_DANCE_BIN                UI_ADDR_BASE(0x2b11c2)
+#define UI_LEN_SPORT_ICON_DANCE_BIN                0x916
+
+#define UI_BUF_SPORT_ICON_FOOTBALL_BIN             UI_ADDR_BASE(0x2b1ad8)
+#define UI_LEN_SPORT_ICON_FOOTBALL_BIN             0xb24
+
+#define UI_BUF_SPORT_ICON_FREE_TRAINING_BIN        UI_ADDR_BASE(0x2b25fc)
+#define UI_LEN_SPORT_ICON_FREE_TRAINING_BIN        0x92a
+
+#define UI_BUF_SPORT_ICON_GYMNASTICS_BIN           UI_ADDR_BASE(0x2b2f26)
+#define UI_LEN_SPORT_ICON_GYMNASTICS_BIN           0x888
+
+#define UI_BUF_SPORT_ICON_HOCKEY_BIN               UI_ADDR_BASE(0x2b37ae)
+#define UI_LEN_SPORT_ICON_HOCKEY_BIN               0xa88
+
+#define UI_BUF_SPORT_ICON_JUMPING_JACK_BIN         UI_ADDR_BASE(0x2b4236)
+#define UI_LEN_SPORT_ICON_JUMPING_JACK_BIN         0xa20
+
+#define UI_BUF_SPORT_ICON_JUMP_ROPE_BIN            UI_ADDR_BASE(0x2b4c56)
+#define UI_LEN_SPORT_ICON_JUMP_ROPE_BIN            0xc00
+
+#define UI_BUF_SPORT_ICON_RIDE_BIKE_BIN            UI_ADDR_BASE(0x2b5856)
+#define UI_LEN_SPORT_ICON_RIDE_BIKE_BIN            0xece
+
+#define UI_BUF_SPORT_ICON_RUGBY_BIN                UI_ADDR_BASE(0x2b6724)
+#define UI_LEN_SPORT_ICON_RUGBY_BIN                0xa71
+
+#define UI_BUF_SPORT_ICON_RUN_BIN                  UI_ADDR_BASE(0x2b7195)
+#define UI_LEN_SPORT_ICON_RUN_BIN                  0x9a0
+
+#define UI_BUF_SPORT_ICON_SIT_UP_BIN               UI_ADDR_BASE(0x2b7b35)
+#define UI_LEN_SPORT_ICON_SIT_UP_BIN               0x78e
+
+#define UI_BUF_SPORT_ICON_SPINNING_BIN             UI_ADDR_BASE(0x2b82c3)
+#define UI_LEN_SPORT_ICON_SPINNING_BIN             0xe3e
+
+#define UI_BUF_SPORT_ICON_SWIMMING_BIN             UI_ADDR_BASE(0x2b9101)
+#define UI_LEN_SPORT_ICON_SWIMMING_BIN             0xbb4
+
+#define UI_BUF_SPORT_ICON_TABLE_TENNIS_BIN         UI_ADDR_BASE(0x2b9cb5)
+#define UI_LEN_SPORT_ICON_TABLE_TENNIS_BIN         0xb2e
+
+#define UI_BUF_SPORT_ICON_TENNIS_BIN               UI_ADDR_BASE(0x2ba7e3)
+#define UI_LEN_SPORT_ICON_TENNIS_BIN               0xbe8
+
+#define UI_BUF_SPORT_ICON_TREADMILL_BIN            UI_ADDR_BASE(0x2bb3cb)
+#define UI_LEN_SPORT_ICON_TREADMILL_BIN            0xb8e
+
+#define UI_BUF_SPORT_ICON_VOLLEYBALL_BIN           UI_ADDR_BASE(0x2bbf59)
+#define UI_LEN_SPORT_ICON_VOLLEYBALL_BIN           0xa81
+
+#define UI_BUF_SPORT_ICON_WALKING_BIN              UI_ADDR_BASE(0x2bc9da)
+#define UI_LEN_SPORT_ICON_WALKING_BIN              0xa9c
+
+#define UI_BUF_SPORT_ICON_YOGA_BIN                 UI_ADDR_BASE(0x2bd476)
+#define UI_LEN_SPORT_ICON_YOGA_BIN                 0x968
+
+#define UI_BUF_STOPWATCH_AFRESH_BIN                UI_ADDR_BASE(0x2bddde)
 #define UI_LEN_STOPWATCH_AFRESH_BIN                0x833
 
-#define UI_BUF_STOPWATCH_AFRESH_CLICK_BIN          UI_ADDR_BASE(0x2a324e)
+#define UI_BUF_STOPWATCH_AFRESH_CLICK_BIN          UI_ADDR_BASE(0x2be611)
 #define UI_LEN_STOPWATCH_AFRESH_CLICK_BIN          0x81e
 
-#define UI_BUF_STOPWATCH_NUM1_12_18_BIN            UI_ADDR_BASE(0x2a3a6c)
+#define UI_BUF_STOPWATCH_NUM1_12_18_BIN            UI_ADDR_BASE(0x2bee2f)
 #define UI_LEN_STOPWATCH_NUM1_12_18_BIN            0x17ee
 
-#define UI_BUF_STOPWATCH_NUM1_12_18_CLICK_BIN      UI_ADDR_BASE(0x2a525a)
+#define UI_BUF_STOPWATCH_NUM1_12_18_CLICK_BIN      UI_ADDR_BASE(0x2c061d)
 #define UI_LEN_STOPWATCH_NUM1_12_18_CLICK_BIN      0x17ef
 
-#define UI_BUF_STOPWATCH_NUM1_16_24_BIN            UI_ADDR_BASE(0x2a6a49)
+#define UI_BUF_STOPWATCH_NUM1_16_24_BIN            UI_ADDR_BASE(0x2c1e0c)
 #define UI_LEN_STOPWATCH_NUM1_16_24_BIN            0x1a28
 
-#define UI_BUF_STOPWATCH_NUM1_16_24_CLICK_BIN      UI_ADDR_BASE(0x2a8471)
+#define UI_BUF_STOPWATCH_NUM1_16_24_CLICK_BIN      UI_ADDR_BASE(0x2c3834)
 #define UI_LEN_STOPWATCH_NUM1_16_24_CLICK_BIN      0x1a29
 
-#define UI_BUF_STOPWATCH_RECORD_BIN                UI_ADDR_BASE(0x2a9e9a)
+#define UI_BUF_STOPWATCH_RECORD_BIN                UI_ADDR_BASE(0x2c525d)
 #define UI_LEN_STOPWATCH_RECORD_BIN                0x83b
 
-#define UI_BUF_STOPWATCH_RECORD1_BIN               UI_ADDR_BASE(0x2aa6d5)
+#define UI_BUF_STOPWATCH_RECORD1_BIN               UI_ADDR_BASE(0x2c5a98)
 #define UI_LEN_STOPWATCH_RECORD1_BIN               0x57b
 
-#define UI_BUF_STOPWATCH_RECORD1_CLICK_BIN         UI_ADDR_BASE(0x2aac50)
+#define UI_BUF_STOPWATCH_RECORD1_CLICK_BIN         UI_ADDR_BASE(0x2c6013)
 #define UI_LEN_STOPWATCH_RECORD1_CLICK_BIN         0x56b
 
-#define UI_BUF_STOPWATCH_RECORD_CLICK_BIN          UI_ADDR_BASE(0x2ab1bb)
+#define UI_BUF_STOPWATCH_RECORD_CLICK_BIN          UI_ADDR_BASE(0x2c657e)
 #define UI_LEN_STOPWATCH_RECORD_CLICK_BIN          0x81b
 
-#define UI_BUF_STYLE_01_BIN                        UI_ADDR_BASE(0x2ab9d6)
+#define UI_BUF_STYLE_01_BIN                        UI_ADDR_BASE(0x2c6d99)
 #define UI_LEN_STYLE_01_BIN                        0x492
 
-#define UI_BUF_STYLE_02_BIN                        UI_ADDR_BASE(0x2abe68)
+#define UI_BUF_STYLE_02_BIN                        UI_ADDR_BASE(0x2c722b)
 #define UI_LEN_STYLE_02_BIN                        0x4c6
 
-#define UI_BUF_STYLE_03_BIN                        UI_ADDR_BASE(0x2ac32e)
+#define UI_BUF_STYLE_03_BIN                        UI_ADDR_BASE(0x2c76f1)
 #define UI_LEN_STYLE_03_BIN                        0x677
 
-#define UI_BUF_STYLE_04_BIN                        UI_ADDR_BASE(0x2ac9a5)
+#define UI_BUF_STYLE_04_BIN                        UI_ADDR_BASE(0x2c7d68)
 #define UI_LEN_STYLE_04_BIN                        0x595
 
-#define UI_BUF_STYLE_05_BIN                        UI_ADDR_BASE(0x2acf3a)
+#define UI_BUF_STYLE_05_BIN                        UI_ADDR_BASE(0x2c82fd)
 #define UI_LEN_STYLE_05_BIN                        0x4e6
 
-#define UI_BUF_STYLE_06_BIN                        UI_ADDR_BASE(0x2ad420)
+#define UI_BUF_STYLE_06_BIN                        UI_ADDR_BASE(0x2c87e3)
 #define UI_LEN_STYLE_06_BIN                        0x59b
 
-#define UI_BUF_STYLE_07_BIN                        UI_ADDR_BASE(0x2ad9bb)
+#define UI_BUF_STYLE_07_BIN                        UI_ADDR_BASE(0x2c8d7e)
 #define UI_LEN_STYLE_07_BIN                        0x637
 
-#define UI_BUF_STYLE_08_BIN                        UI_ADDR_BASE(0x2adff2)
+#define UI_BUF_STYLE_08_BIN                        UI_ADDR_BASE(0x2c93b5)
 #define UI_LEN_STYLE_08_BIN                        0x34d
 
-#define UI_BUF_STYLE_09_BIN                        UI_ADDR_BASE(0x2ae33f)
+#define UI_BUF_STYLE_09_BIN                        UI_ADDR_BASE(0x2c9702)
 #define UI_LEN_STYLE_09_BIN                        0x5e0
 
-#define UI_BUF_STYLE_10_BIN                        UI_ADDR_BASE(0x2ae91f)
+#define UI_BUF_STYLE_10_BIN                        UI_ADDR_BASE(0x2c9ce2)
 #define UI_LEN_STYLE_10_BIN                        0x5b2
 
-#define UI_BUF_STYLE_11_BIN                        UI_ADDR_BASE(0x2aeed1)
+#define UI_BUF_STYLE_11_BIN                        UI_ADDR_BASE(0x2ca294)
 #define UI_LEN_STYLE_11_BIN                        0x4c1
 
-#define UI_BUF_STYLE_12_BIN                        UI_ADDR_BASE(0x2af392)
+#define UI_BUF_STYLE_12_BIN                        UI_ADDR_BASE(0x2ca755)
 #define UI_LEN_STYLE_12_BIN                        0x68d
 
-#define UI_BUF_STYLE_13_BIN                        UI_ADDR_BASE(0x2afa1f)
+#define UI_BUF_STYLE_13_BIN                        UI_ADDR_BASE(0x2cade2)
 #define UI_LEN_STYLE_13_BIN                        0x442
 
-#define UI_BUF_STYLE_14_BIN                        UI_ADDR_BASE(0x2afe61)
+#define UI_BUF_STYLE_14_BIN                        UI_ADDR_BASE(0x2cb224)
 #define UI_LEN_STYLE_14_BIN                        0x499
 
-#define UI_BUF_TETRIS__S_BJ_START_BIN              UI_ADDR_BASE(0x2b02fa)
+#define UI_BUF_TETRIS__S_BJ_START_BIN              UI_ADDR_BASE(0x2cb6bd)
 #define UI_LEN_TETRIS__S_BJ_START_BIN              0x93bd
 
-#define UI_BUF_TETRIS__S_FRAME_BIN                 UI_ADDR_BASE(0x2b96b7)
+#define UI_BUF_TETRIS__S_FRAME_BIN                 UI_ADDR_BASE(0x2d4a7a)
 #define UI_LEN_TETRIS__S_FRAME_BIN                 0xa4ed
 
-#define UI_BUF_TETRIS__S_NO_BIN                    UI_ADDR_BASE(0x2c3ba4)
+#define UI_BUF_TETRIS__S_NO_BIN                    UI_ADDR_BASE(0x2def67)
 #define UI_LEN_TETRIS__S_NO_BIN                    0x6e5
 
-#define UI_BUF_TETRIS__S_REMIND_BIN                UI_ADDR_BASE(0x2c4289)
+#define UI_BUF_TETRIS__S_REMIND_BIN                UI_ADDR_BASE(0x2df64c)
 #define UI_LEN_TETRIS__S_REMIND_BIN                0x9c5
 
-#define UI_BUF_TETRIS__S_START_BIN                 UI_ADDR_BASE(0x2c4c4e)
+#define UI_BUF_TETRIS__S_START_BIN                 UI_ADDR_BASE(0x2e0011)
 #define UI_LEN_TETRIS__S_START_BIN                 0x92d
 
-#define UI_BUF_TETRIS__S_SUSPEND_BIN               UI_ADDR_BASE(0x2c557b)
+#define UI_BUF_TETRIS__S_SUSPEND_BIN               UI_ADDR_BASE(0x2e093e)
 #define UI_LEN_TETRIS__S_SUSPEND_BIN               0xa35
 
-#define UI_BUF_TETRIS__S_YES_BIN                   UI_ADDR_BASE(0x2c5fb0)
+#define UI_BUF_TETRIS__S_YES_BIN                   UI_ADDR_BASE(0x2e1373)
 #define UI_LEN_TETRIS__S_YES_BIN                   0x6cb
 
-#define UI_BUF_TETRIS_16_1_BIN                     UI_ADDR_BASE(0x2c667b)
+#define UI_BUF_TETRIS_16_1_BIN                     UI_ADDR_BASE(0x2e1a3e)
 #define UI_LEN_TETRIS_16_1_BIN                     0x1fe
 
-#define UI_BUF_TETRIS_16_2_BIN                     UI_ADDR_BASE(0x2c6879)
+#define UI_BUF_TETRIS_16_2_BIN                     UI_ADDR_BASE(0x2e1c3c)
 #define UI_LEN_TETRIS_16_2_BIN                     0x1d1
 
-#define UI_BUF_TETRIS_16_3_BIN                     UI_ADDR_BASE(0x2c6a4a)
+#define UI_BUF_TETRIS_16_3_BIN                     UI_ADDR_BASE(0x2e1e0d)
 #define UI_LEN_TETRIS_16_3_BIN                     0x1dc
 
-#define UI_BUF_TETRIS_16_4_BIN                     UI_ADDR_BASE(0x2c6c26)
+#define UI_BUF_TETRIS_16_4_BIN                     UI_ADDR_BASE(0x2e1fe9)
 #define UI_LEN_TETRIS_16_4_BIN                     0x1de
 
-#define UI_BUF_TETRIS_16_5_BIN                     UI_ADDR_BASE(0x2c6e04)
+#define UI_BUF_TETRIS_16_5_BIN                     UI_ADDR_BASE(0x2e21c7)
 #define UI_LEN_TETRIS_16_5_BIN                     0x1e6
 
-#define UI_BUF_TETRIS_16_6_BIN                     UI_ADDR_BASE(0x2c6fea)
+#define UI_BUF_TETRIS_16_6_BIN                     UI_ADDR_BASE(0x2e23ad)
 #define UI_LEN_TETRIS_16_6_BIN                     0x1f0
 
-#define UI_BUF_TETRIS_BJ_BIN                       UI_ADDR_BASE(0x2c71da)
+#define UI_BUF_TETRIS_BJ_BIN                       UI_ADDR_BASE(0x2e259d)
 #define UI_LEN_TETRIS_BJ_BIN                       0x9f68
 
-#define UI_BUF_TETRIS_BZ_BIN                       UI_ADDR_BASE(0x2d1142)
+#define UI_BUF_TETRIS_BZ_BIN                       UI_ADDR_BASE(0x2ec505)
 #define UI_LEN_TETRIS_BZ_BIN                       0xcbf5
 
-#define UI_BUF_TETRIS_BZ2_BIN                      UI_ADDR_BASE(0x2ddd37)
+#define UI_BUF_TETRIS_BZ2_BIN                      UI_ADDR_BASE(0x2f90fa)
 #define UI_LEN_TETRIS_BZ2_BIN                      0x4bde
 
-#define UI_BUF_TETRIS_FALL_1_BIN                   UI_ADDR_BASE(0x2e2915)
+#define UI_BUF_TETRIS_FALL_1_BIN                   UI_ADDR_BASE(0x2fdcd8)
 #define UI_LEN_TETRIS_FALL_1_BIN                   0x184
 
-#define UI_BUF_TETRIS_FALL_2_BIN                   UI_ADDR_BASE(0x2e2a99)
+#define UI_BUF_TETRIS_FALL_2_BIN                   UI_ADDR_BASE(0x2fde5c)
 #define UI_LEN_TETRIS_FALL_2_BIN                   0x176
 
-#define UI_BUF_TETRIS_FALL_3_BIN                   UI_ADDR_BASE(0x2e2c0f)
+#define UI_BUF_TETRIS_FALL_3_BIN                   UI_ADDR_BASE(0x2fdfd2)
 #define UI_LEN_TETRIS_FALL_3_BIN                   0x18b
 
-#define UI_BUF_TETRIS_FALL_4_BIN                   UI_ADDR_BASE(0x2e2d9a)
+#define UI_BUF_TETRIS_FALL_4_BIN                   UI_ADDR_BASE(0x2fe15d)
 #define UI_LEN_TETRIS_FALL_4_BIN                   0x186
 
-#define UI_BUF_TETRIS_FALL_5_BIN                   UI_ADDR_BASE(0x2e2f20)
+#define UI_BUF_TETRIS_FALL_5_BIN                   UI_ADDR_BASE(0x2fe2e3)
 #define UI_LEN_TETRIS_FALL_5_BIN                   0x180
 
-#define UI_BUF_TETRIS_FALL_6_BIN                   UI_ADDR_BASE(0x2e30a0)
+#define UI_BUF_TETRIS_FALL_6_BIN                   UI_ADDR_BASE(0x2fe463)
 #define UI_LEN_TETRIS_FALL_6_BIN                   0x180
 
-#define UI_BUF_TETRIS_GAMEOVER_BIN                 UI_ADDR_BASE(0x2e3220)
+#define UI_BUF_TETRIS_GAMEOVER_BIN                 UI_ADDR_BASE(0x2fe5e3)
 #define UI_LEN_TETRIS_GAMEOVER_BIN                 0x662d
 
-#define UI_BUF_TETRIS_GAME_TETRIS_BIN              UI_ADDR_BASE(0x2e984d)
+#define UI_BUF_TETRIS_GAME_TETRIS_BIN              UI_ADDR_BASE(0x304c10)
 #define UI_LEN_TETRIS_GAME_TETRIS_BIN              0xb941
 
-#define UI_BUF_TETRIS_GAME_TETRIS_ENTER_BIN        UI_ADDR_BASE(0x2f518e)
+#define UI_BUF_TETRIS_GAME_TETRIS_ENTER_BIN        UI_ADDR_BASE(0x310551)
 #define UI_LEN_TETRIS_GAME_TETRIS_ENTER_BIN        0x9c84
 
-#define UI_BUF_TETRIS_GAME_TETRIS_EXITNOTICE_BIN    UI_ADDR_BASE(0x2fee12)
+#define UI_BUF_TETRIS_GAME_TETRIS_EXITNOTICE_BIN    UI_ADDR_BASE(0x31a1d5)
 #define UI_LEN_TETRIS_GAME_TETRIS_EXITNOTICE_BIN    0x36bf
 
-#define UI_BUF_TETRIS_GAME_TETRIS_OVER_BIN         UI_ADDR_BASE(0x3024d1)
+#define UI_BUF_TETRIS_GAME_TETRIS_OVER_BIN         UI_ADDR_BASE(0x31d894)
 #define UI_LEN_TETRIS_GAME_TETRIS_OVER_BIN         0xc1d7
 
-#define UI_BUF_TETRIS_GAME_TETRIS_STOP_BIN         UI_ADDR_BASE(0x30e6a8)
+#define UI_BUF_TETRIS_GAME_TETRIS_STOP_BIN         UI_ADDR_BASE(0x329a6b)
 #define UI_LEN_TETRIS_GAME_TETRIS_STOP_BIN         0xb991
 
-#define UI_BUF_TIMER_AGAIN_BIN                     UI_ADDR_BASE(0x31a039)
+#define UI_BUF_TIMER_AGAIN_BIN                     UI_ADDR_BASE(0x3353fc)
 #define UI_LEN_TIMER_AGAIN_BIN                     0xe43
 
-#define UI_BUF_TIMER_BG_BIN                        UI_ADDR_BASE(0x31ae7c)
+#define UI_BUF_TIMER_BG_BIN                        UI_ADDR_BASE(0x33623f)
 #define UI_LEN_TIMER_BG_BIN                        0x792
 
-#define UI_BUF_UPGRADE_ROCKET_BIN                  UI_ADDR_BASE(0x31b60e)
+#define UI_BUF_UPGRADE_ROCKET_BIN                  UI_ADDR_BASE(0x3369d1)
 #define UI_LEN_UPGRADE_ROCKET_BIN                  0xae2
 
-#define UI_BUF_UPGRADE_ROCKET_BASE_BIN             UI_ADDR_BASE(0x31c0f0)
+#define UI_BUF_UPGRADE_ROCKET_BASE_BIN             UI_ADDR_BASE(0x3374b3)
 #define UI_LEN_UPGRADE_ROCKET_BASE_BIN             0xf53
 
-#define UI_BUF_VOICE_320_86_BIN                    UI_ADDR_BASE(0x31d043)
+#define UI_BUF_VOICE_320_86_BIN                    UI_ADDR_BASE(0x338406)
 #define UI_LEN_VOICE_320_86_BIN                    0x3302
 
-#define UI_BUF_WEATHER_CLOUDY_BIN                  UI_ADDR_BASE(0x320345)
+#define UI_BUF_WEATHER_CLOUDY_BIN                  UI_ADDR_BASE(0x33b708)
 #define UI_LEN_WEATHER_CLOUDY_BIN                  0x1c5a
 
-#define UI_BUF_WEATHER_CLOUDY_NIGHT_BIN            UI_ADDR_BASE(0x321f9f)
+#define UI_BUF_WEATHER_CLOUDY_NIGHT_BIN            UI_ADDR_BASE(0x33d362)
 #define UI_LEN_WEATHER_CLOUDY_NIGHT_BIN            0x1b14
 
-#define UI_BUF_WEATHER_DRIZZLE_BIN                 UI_ADDR_BASE(0x323ab3)
+#define UI_BUF_WEATHER_DRIZZLE_BIN                 UI_ADDR_BASE(0x33ee76)
 #define UI_LEN_WEATHER_DRIZZLE_BIN                 0x1e0e
 
-#define UI_BUF_WEATHER_HAZE_BIN                    UI_ADDR_BASE(0x3258c1)
+#define UI_BUF_WEATHER_HAZE_BIN                    UI_ADDR_BASE(0x340c84)
 #define UI_LEN_WEATHER_HAZE_BIN                    0xfc2
 
-#define UI_BUF_WEATHER_HEAVY_RAIN_BIN              UI_ADDR_BASE(0x326883)
+#define UI_BUF_WEATHER_HEAVY_RAIN_BIN              UI_ADDR_BASE(0x341c46)
 #define UI_LEN_WEATHER_HEAVY_RAIN_BIN              0x1f02
 
-#define UI_BUF_WEATHER_MODERATE_RAIN_BIN           UI_ADDR_BASE(0x328785)
+#define UI_BUF_WEATHER_MODERATE_RAIN_BIN           UI_ADDR_BASE(0x343b48)
 #define UI_LEN_WEATHER_MODERATE_RAIN_BIN           0x1df2
 
-#define UI_BUF_WEATHER_OVERCAST_BIN                UI_ADDR_BASE(0x32a577)
+#define UI_BUF_WEATHER_OVERCAST_BIN                UI_ADDR_BASE(0x34593a)
 #define UI_LEN_WEATHER_OVERCAST_BIN                0x1cf6
 
-#define UI_BUF_WEATHER_RAINY_BIN                   UI_ADDR_BASE(0x32c26d)
+#define UI_BUF_WEATHER_RAINY_BIN                   UI_ADDR_BASE(0x347630)
 #define UI_LEN_WEATHER_RAINY_BIN                   0x2136
 
-#define UI_BUF_WEATHER_RAINY_NIGHT_BIN             UI_ADDR_BASE(0x32e3a3)
+#define UI_BUF_WEATHER_RAINY_NIGHT_BIN             UI_ADDR_BASE(0x349766)
 #define UI_LEN_WEATHER_RAINY_NIGHT_BIN             0x1c86
 
-#define UI_BUF_WEATHER_RAINY_SHOWERS_BIN           UI_ADDR_BASE(0x330029)
+#define UI_BUF_WEATHER_RAINY_SHOWERS_BIN           UI_ADDR_BASE(0x34b3ec)
 #define UI_LEN_WEATHER_RAINY_SHOWERS_BIN           0x2002
 
-#define UI_BUF_WEATHER_SAND_AND_DUST_BIN           UI_ADDR_BASE(0x33202b)
+#define UI_BUF_WEATHER_SAND_AND_DUST_BIN           UI_ADDR_BASE(0x34d3ee)
 #define UI_LEN_WEATHER_SAND_AND_DUST_BIN           0xfe6
 
-#define UI_BUF_WEATHER_SLEET_BIN                   UI_ADDR_BASE(0x333011)
+#define UI_BUF_WEATHER_SLEET_BIN                   UI_ADDR_BASE(0x34e3d4)
 #define UI_LEN_WEATHER_SLEET_BIN                   0x1f9e
 
-#define UI_BUF_WEATHER_SUNNY_BIN                   UI_ADDR_BASE(0x334faf)
+#define UI_BUF_WEATHER_SUNNY_BIN                   UI_ADDR_BASE(0x350372)
 #define UI_LEN_WEATHER_SUNNY_BIN                   0xb2e
 
-#define UI_BUF_WEATHER_TOMORROW_NIGHT_BIN          UI_ADDR_BASE(0x335add)
+#define UI_BUF_WEATHER_TOMORROW_NIGHT_BIN          UI_ADDR_BASE(0x350ea0)
 #define UI_LEN_WEATHER_TOMORROW_NIGHT_BIN          0x81b
 
-#define UI_BUF_WEATHER_UNKNOWN_BIN                 UI_ADDR_BASE(0x3362f8)
+#define UI_BUF_WEATHER_UNKNOWN_BIN                 UI_ADDR_BASE(0x3516bb)
 #define UI_LEN_WEATHER_UNKNOWN_BIN                 0x1bab
 
-#define UI_BUF_WEATHER_WEATHER_LIST_BIN            UI_ADDR_BASE(0x337ea3)
+#define UI_BUF_WEATHER_WEATHER_LIST_BIN            UI_ADDR_BASE(0x353266)
 #define UI_LEN_WEATHER_WEATHER_LIST_BIN            0x869c
 
-#define UI_BUF_WEATHER_WINDY_BIN                   UI_ADDR_BASE(0x34053f)
+#define UI_BUF_WEATHER_WINDY_BIN                   UI_ADDR_BASE(0x35b902)
 #define UI_LEN_WEATHER_WINDY_BIN                   0xfb6
 
 #endif

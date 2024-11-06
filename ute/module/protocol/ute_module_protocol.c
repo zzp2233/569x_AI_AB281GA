@@ -2081,6 +2081,64 @@ void uteModuleProtocolQuickReply(uint8_t*receive,uint8_t length)
 #endif
 }
 
+/**
+*@brief     同步通讯录
+*@details
+*@param[in] uint8_t *receive
+*@param[in] uint8_t length
+*@author    casen
+*@date      2021-12-6
+*/
+void uteModuleProtocolSyncAddressBook(uint8_t*receive,uint8_t length)
+{
+    if(receive[1] == 0xFA)
+    {
+        uteModuleCallSyncAddressBookStart();
+        uteModuleProfileBleSendToPhone(&receive[0],3);
+    }
+    else if(receive[1] == 0xFB)
+    {
+        uteModuleCallSyncAddressBookData(receive,length);
+        uteModuleProfileBleSendToPhone(&receive[0],3);
+    }
+    else if(receive[1] == 0xFC)
+    {
+        uteModuleCallSyncAddressBookEnd();
+        uteModuleProfileBleSendToPhone(&receive[0],3);
+    }
+#if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
+    else if(receive[1] == 0xAA)
+    {
+        uint8_t response[3];
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = UTE_MODUEL_CALL_SOS_CONTACT_MAX;
+        uteModuleProfileBleSendToPhone(&response[0],3);
+    }
+    else if(receive[1] == 0xAB)
+    {
+        uteModuleCallSyncSosContactStart();
+        uteModuleProfileBleSendToPhone(&receive[0],3);
+    }
+    else if(receive[1] == 0xAC)
+    {
+        uteModuleCallSyncSosContactStart();
+        uteModuleCallSyncSosContactData(receive,length);
+        uteModuleProfileBleSendToPhone(&receive[0],3);
+    }
+    else if(receive[1] == 0xAD)
+    {
+        uteModuleProfileBleSendToPhone(&receive[0],4);
+    }
+    else if(receive[1] == 0xAE)
+    {
+        uteModuleCallSyncSosContactStart();
+        uteModuleProfileBleSendToPhone(&receive[0],2);
+    }
+#endif
+}
+
+
 
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
@@ -2129,7 +2187,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 #if UTE_MODULE_TEMPERATURE_SUPPORT
     {.privateCmd = CMD_TEMPERATURE_HEAD,.publicCmd=CMD_TEMPERATURE_HEAD,.function=uteModuleProtocolTemperatureCtrl},
 #endif
-    // {.privateCmd = CMD_SYNC_CONTACTS,.publicCmd=CMD_SYNC_CONTACTS,.function=uteModuleProtocolSyncAddressBook},
+    {.privateCmd = CMD_SYNC_CONTACTS,.publicCmd=CMD_SYNC_CONTACTS,.function=uteModuleProtocolSyncAddressBook},
     {.privateCmd = CMD_SOCIAL_APP_SELECT,.publicCmd=CMD_SOCIAL_APP_SELECT,.function=uteModuleProtocolSocialAppSelectParam},
     // {.privateCmd = CMD_EMOTION_PRESSURE_TEST,.publicCmd=CMD_EMOTION_PRESSURE_TEST,.function=uteModuleProtocolEmotionPressureCtrl},
     // {.privateCmd = CMD_USER_ID_FOR_BINDING,.publicCmd=PUBLIC_CMD_USER_ID_FOR_BINDING,.function=uteModuleProtocolAppBindingCtrl},

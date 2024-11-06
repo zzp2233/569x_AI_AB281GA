@@ -15,7 +15,7 @@
 typedef struct f_cover_remind_item_t_
 {
     u32 res_addr;
-    u8 str_idx;
+    u16 str_idx;
     s16 pic_y;
     s16 txt_y;
     s16 title_y;
@@ -26,10 +26,10 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
 {
     /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
     [REMIND_COVER_ALARM]            = {UI_BUF_ICON_ALARM_CLOCK_BIN,             STR_ALARM_CLOCK,        GUI_SCREEN_HEIGHT/5+30, GUI_SCREEN_HEIGHT/5,  GUI_SCREEN_CENTER_Y},
-//    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_POP_UP_SEDENTARY_CLOCK_BIN,         STR_SEDENTARY_REMIND,   102,            190},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_REMIND_SEDENTARY_CLOCK_BIN,       STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
 //    [REMIND_COVER_HEALTH_DRINK]     = {UI_BUF_POP_UP_WATER_CLOCK_BIN,             STR_DRINK_REMIND,       102,            190},
     [REMIND_COVER_FIND_WATCH]       = {UI_BUF_REMIND_FINDWATCH_BIN,             STR_FIND_WATCH,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
-//    [REMIND_COVER_GOAL]             = {UI_BUF_POP_UP_GOAL_ACHIEVEMENT_BIN,        STR_GOAL_ACHIEVE,       175,            290},
+    [REMIND_COVER_GOAL]             = {UI_BUF_REMIND_GOAL_ACHIEVEMENT_BIN,      STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
 //    [REMIND_GCOVER_BT_CONNECT]      = {UI_BUF_POP_UP_BLUETOOTH_CONNECTION_BIN,    STR_BT_CONNECT,         175,            290},
 //    [REMIND_GCOVER_APP_CONNECT]     = {UI_BUF_POP_UP_APP_CONNECTION_BIN,          STR_APP_CONNECT,        175,            290},
 };
@@ -213,7 +213,7 @@ u32 func_cover_get_pic_res_addr(u8 type)
     return 0;
 }
 
-u8 func_cover_get_str_idx(u8 type)
+u16 func_cover_get_str_idx(u8 type)
 {
     switch (type)
     {
@@ -420,9 +420,8 @@ void gui_set_cover_index(uint8_t index)
         char title[8] = {'\0'};
         if ((sys_cb.cover_index >= REMIND_COVER_ALARM) && (sys_cb.cover_index <= REMIND_COVER_HEALTH_DRINK))
         {
-            if (sys_cb.cover_index == REMIND_COVER_ALARM)
+            if (sys_cb.cover_index == REMIND_COVER_ALARM)                   //用户闹钟
             {
-
                 //获取用户闹钟
                 if (uteModuleSystemtimeGetAlarmRingIndex() != 0xff)
                 {
@@ -439,20 +438,16 @@ void gui_set_cover_index(uint8_t index)
                 }
                 //开启马达 喇叭
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
+                mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
             }
-            else if (sys_cb.cover_index == REMIND_COVER_FIND_WATCH)
+            else if (sys_cb.cover_index == REMIND_COVER_HEALTH_SEDENTARY)           //久坐提醒
             {
-                //snprintf(msg, sizeof(msg), "寻找手表");
-            }
-//            else if (sys_cb.cover_index == COVER_HEALTH_DRINK || sys_cb.cover_index == COVER_HEALTH_SEDENTARY) {
 //                tm_t tm = time_to_tm(RTCCNT);
 //                snprintf(title, sizeof(title), "%02d:%02d", tm.hour, tm.min);
-//            }
-            mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
+            }
         }
 
         int res = msgbox(msg, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
-
 
         if (res == MSGBOX_RES_REMIND_LATER)         //稍后提醒
         {

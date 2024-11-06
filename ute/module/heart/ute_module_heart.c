@@ -1149,6 +1149,138 @@ void uteModuleHeartWaringOpenSwitch(void)
     uteModuleHeartSaveHeartWaringInfo(NULL);
 }
 
+/**
+*@brief      处理加载当天心率历史数据，用于心率柱状图显示
+*@details    当天有数据返回true,没有则返回false
+*@author     xjc
+*@date       2021-12-22
+*/
+static bool uteModuleHeartLoadTodayHistoryData(uint8_t *heartHistoryGraph, uint8_t heartHistoryGraphCount, uint8_t *heartHistoryData, uint8_t heartHistoryDataLen)
+{
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,heartHistoryGraphCount=%d", __func__, heartHistoryGraphCount);
+#if UTE_LOG_GUI_LVL // test
+    for (uint8_t i = 0; i < 144; i++)
+    {
+        heartHistoryData[i] = 50 + rand() % 150;
+    }
+#endif
+
+    /*! 心率历史数据每隔10分钟显示 xjc, 2022-03-21  */
+#if UTE_HEART_HISTOTY_DISPLAY_EACH_20_MIN_SUPPORT
+    uint8_t tempHeartHistoryData[72];
+    memset(tempHeartHistoryData, 0, sizeof(tempHeartHistoryData));
+    for (uint8_t i = 0; i < 72; i++)
+    {
+        tempHeartHistoryData[i] = heartHistoryData[i * 2];
+    }
+    memcpy(heartHistoryGraph, tempHeartHistoryData, 72);
+#elif APP_HEART_HISTORY_EACH_HOUR_AVERAGE_VALUE_SUPPORT // 24小时，每个小时的平均值显示，共24条,包括预留24小时的最大和最小值计算
+    uint8_t tempHeartHistoryData[144];
+    uint8_t m = 144 / heartHistoryGraphCount;
+    memset(tempHeartHistoryData, 0, sizeof(tempHeartHistoryData));
+    for (uint8_t i = 0; i < heartHistoryGraphCount; i++)
+    {
+        uint8_t heart = 0;
+        uint16_t HeartValidValue = 0; // 总心率值
+        uint8_t averageHeartvalueCnt = 0;
+        for (int j = m; j > 0; j--)
+        {
+            heart = heartHistoryData[i * m + (j - 1)];
+            if ((heart != 255) && (heart != 0))
+            {
+                HeartValidValue += heart;
+                averageHeartvalueCnt++;
+                //                UTE_MODULE_LOG(1, "%s,j=%d,heart=%d,HeartValidValue=%d,averageHeartvalueCnt=%d", __func__,j,heart,HeartValidValue,averageHeartvalueCnt);
+            }
+        }
+        tempHeartHistoryData[i] = HeartValidValue / averageHeartvalueCnt;
+        //              UTE_MODULE_LOG(1, "%s,33333 i=%d,tempHeartHistoryData[i]=%d,HeartValidValue=%d,averageHeartvalueCnt=%d", __func__,i,tempHeartHistoryData[i],HeartValidValue,averageHeartvalueCnt);
+    }
+    memcpy(heartHistoryGraph, tempHeartHistoryData, heartHistoryGraphCount);
+#else
+    uint8_t tempHeartHistoryData[144];
+    uint8_t m = 144 / heartHistoryGraphCount;
+    memset(tempHeartHistoryData, 0, sizeof(tempHeartHistoryData));
+    for (uint8_t i = 0; i < heartHistoryGraphCount; i++)
+    {
+        uint8_t heart = 0;
+        for (int j = m; j > 0; j--)
+        {
+            heart = heartHistoryData[i * m + (j - 1)];
+            if ((heart != 255) && (heart != 0))
+            {
+                break;
+            }
+        }
+        if(heart == 0xff)
+        {
+            tempHeartHistoryData[i] = 0;
+        }
+        else
+        {
+            tempHeartHistoryData[i] = heart;
+        }
+    }
+    memcpy(heartHistoryGraph, tempHeartHistoryData, heartHistoryGraphCount);
+#endif
+
+    /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2021-12-23  */
+#if UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT
+    uteModuleHeartData.avgHeartCnt = 0;
+    uteModuleHeartData.currentDayMinHeart = 255;
+    uteModuleHeartData.currentDayMaxHeart = 0;
+    for (uint8_t i = 0; i < heartHistoryGraphCount; i++)
+    {
+        if (heartHistoryData[i] != 0 && heartHistoryData[i] != 0xFF)
+        {
+            uteModuleHeartAvgHeartOfCurrentDayProcess(heartHistoryData[i]);
+        }
+    }
+    /*! 同步手环和手机端的最大最小平均值 xjc, 2021-12-23  */
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    uteModuleHeartSyncMaxMinAvgHeartValue(time);
+#endif
+
+    return false;
+}
+
+/**
+*@brief      获取当天心率历史数据，用于心率柱状图显示
+*@details    当天有数据返回true,没有则返回false
+*@author     xjc
+*@date       2021-12-22
+*/
+bool uteModuleHeartGetTodayHistoryData(uint8_t *heartHistoryGraph, uint8_t heartHistoryGraphCount)
+{
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s", __func__);
+    void *file;
+    uint8_t path[40];
+    uint8_t *heartHistoryData = (uint8_t *)uteModulePlatformMemoryAlloc(144); //一天24h的数据，十分钟一条，一共144条
+    ute_module_systemtime_time_t time;
+    memset(heartHistoryData, 0, 144);
+    memset(heartHistoryGraph,0, heartHistoryGraphCount);
+    uteModuleSystemtimeGetTime(&time);
+    sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_HEART_AUTO_DATA_DIR, time.year, time.month, time.day);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,read file=%s", __func__, &path[0]);
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
+    {
+        uteModuleFilesystemSeek(file,4,FS_SEEK_SET);
+        uteModuleFilesystemReadData(file, heartHistoryData, 144);
+        uteModuleFilesystemCloseFile(file);
+        uteModuleHeartLoadTodayHistoryData(heartHistoryGraph, heartHistoryGraphCount, heartHistoryData, 144);
+        uteModulePlatformMemoryFree(heartHistoryData);
+        return true;
+    }
+    else
+    {
+#if UTE_LOG_GUI_LVL // test
+        uteModuleHeartLoadTodayHistoryData(heartHistoryGraph, heartHistoryGraphCount, heartHistoryData, 144);
+        uteModulePlatformMemoryFree(heartHistoryData);
+#endif
+        return false;
+    }
+}
 
 #if UTE_SPORTS_HEART_MAX_MIN_WARNING_NOTIFY_SUPPORT
 /**

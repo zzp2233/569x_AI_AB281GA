@@ -9,6 +9,8 @@
 #endif
 
 #define FUNC_HR_SIMULATE_DATA_EN  0
+#define CHART_NUM 28 //柱形图数量
+#define CHART_100_LENGTH GUI_SCREEN_CENTER_Y*6.25/8  //柱形图框高度
 
 //组件ID;
 enum
@@ -35,6 +37,7 @@ typedef struct f_heartrate_t_
     u8 last_hr;
     u8 max_hr;
     u8 min_hr;
+    u16 data[CHART_NUM];
 } f_heartrate_t;
 
 #if FUNC_HR_SIMULATE_DATA_EN
@@ -45,9 +48,10 @@ static const uint16_t total_hr_value[] = {10,20,30,40,50,60,70};
 //创建心率窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_heartrate_form_create(void)
 {
-    //新建窗体
     u8 idx = 0;
-    component_t *compo;
+
+    //新建窗体
+//    component_t *compo;
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
@@ -95,10 +99,21 @@ compo_form_t *func_heartrate_form_create(void)
 
 
     //创建图表
-    compo = (component_t *)compo_chartbox_create(frm, CHART_TYPE_BAR, 7);
-    compo_chartbox_set_location((compo_chartbox_t *)compo, 120, 440, 230, 150);
-    compo_chartbox_set_pixel((compo_chartbox_t *)compo, 2);
-    compo_setid((compo_chartbox_t *)compo, COMPO_ID_CHART);
+    compo_chartbox_t *chart = compo_chartbox_create(frm, CHART_TYPE_BAR, CHART_NUM);//图表内的柱形图
+    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/9, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y/1.1+6, (GUI_SCREEN_WIDTH/40+1)*CHART_NUM,CHART_100_LENGTH);
+    compo_chartbox_set_pixel(chart, 1);
+    compo_setid(chart, COMPO_ID_CHART);
+
+    chart_t chart_info;
+    chart_info.y = 0;
+    chart_info.width = GUI_SCREEN_WIDTH/40;   //像素点
+    for (int i=0; i<CHART_NUM; i++)
+    {
+        chart_info.x = i*chart_info.width + i;
+        chart_info.height = 50;
+        compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
+    }
+
 
     return frm;
 }

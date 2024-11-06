@@ -1481,7 +1481,7 @@ void uteModuleSportInputDataBeforeAlgo(void)
             case ROLLOVER_HAND_SCREEN_OFF_STATUS:
             {
 #if UTE_MODULE_HAND_SCREEN_OFF_ONLY_WATCHMAIN_ID_SUPPORT//仅主界面允许落腕息屏，其他不允许，默认开启
-                if(uteModuleGuiCommonIsDisplayOn()&&(uteModuleGuiCommonGetCurrentScreenId()==UTE_MOUDLE_SCREENS_WATCHMAIN_ID))
+                if(uteModuleGuiCommonIsDisplayOn()&&(uteModuleGuiCommonGetCurrentScreenId() == FUNC_CLOCK))
 #else
                 if(uteModuleGuiCommonIsAllowHandGestureDisplayOff())
 #endif

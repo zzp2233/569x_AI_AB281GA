@@ -16,7 +16,7 @@
 #endif
 
 #define UI_ADDR_BASE(n)                 (FLASH_UI_BASE + n)
-#define UI_EX_ADDR_BASE(n)              (0x10000000 + n)		//mask
+#define UI_EX_ADDR_BASE(n)              (0x10000000 + n)        //mask
 
 #ifndef SYS_MODE_BREAKPOINT_EN
 #define SYS_MODE_BREAKPOINT_EN      0
@@ -37,73 +37,88 @@
 #endif
 
 #if (GUI_SELECT == GUI_TFT_320_ST77916)
-    #define GUI_SCREEN_WIDTH                320
-    #define GUI_SCREEN_HEIGHT               385
-    #define GUI_SCREEN_OFS_X                0
-    #define GUI_SCREEN_OFS_Y                0
-    #define GUI_USE_TFT
+#define GUI_SCREEN_WIDTH                320
+#define GUI_SCREEN_HEIGHT               385
+#define GUI_SCREEN_OFS_X                0
+#define GUI_SCREEN_OFS_Y                0
+#define GUI_USE_TFT
 #elif (GUI_SELECT == GUI_TFT_RGBW_320_ST77916)
-    #define GUI_SCREEN_WIDTH                240
-    #define GUI_SCREEN_HEIGHT               385
-    #define GUI_SCREEN_OFS_X                0
-    #define GUI_SCREEN_OFS_Y                0
-    #define GUI_USE_TFT
+#define GUI_SCREEN_WIDTH                240
+#define GUI_SCREEN_HEIGHT               385
+#define GUI_SCREEN_OFS_X                0
+#define GUI_SCREEN_OFS_Y                0
+#define GUI_USE_TFT
 #elif (GUI_SELECT == GUI_TFT_360_GC9C01)
-    #define GUI_SCREEN_WIDTH                360
-    #define GUI_SCREEN_HEIGHT               360
-    #define GUI_SCREEN_OFS_X                0
-    #define GUI_SCREEN_OFS_Y                0
-    #define GUI_USE_TFT
+#define GUI_SCREEN_WIDTH                360
+#define GUI_SCREEN_HEIGHT               360
+#define GUI_SCREEN_OFS_X                0
+#define GUI_SCREEN_OFS_Y                0
+#define GUI_USE_TFT
 #elif (GUI_SELECT == GUI_OLED_466_ICNA3310B)
-    #define GUI_SCREEN_WIDTH                466
-    #define GUI_SCREEN_HEIGHT               466
-    #define GUI_SCREEN_OFS_X                6
-    #define GUI_SCREEN_OFS_Y                0
-    #define GUI_USE_OLED
+#define GUI_SCREEN_WIDTH                466
+#define GUI_SCREEN_HEIGHT               466
+#define GUI_SCREEN_OFS_X                6
+#define GUI_SCREEN_OFS_Y                0
+#define GUI_USE_OLED
 #elif (GUI_SELECT == GUI_TFT_JD9853)
-    #define GUI_SCREEN_WIDTH                240
-    #define GUI_SCREEN_HEIGHT               296
-    #define GUI_SCREEN_OFS_X                0
-    #define GUI_SCREEN_OFS_Y                0
-    #define GUI_USE_TFT
+#define GUI_SCREEN_WIDTH                240
+#define GUI_SCREEN_HEIGHT               296
+#define GUI_SCREEN_OFS_X                0
+#define GUI_SCREEN_OFS_Y                0
+#define GUI_USE_TFT
 #elif (GUI_SELECT == GUI_TFT_SPI)
-    #define GUI_SCREEN_WIDTH                320
-    #define GUI_SCREEN_HEIGHT               240
-    #define GUI_SCREEN_OFS_X                0
-    #define GUI_SCREEN_OFS_Y                0
+#if (TFT_SPI_DRIVER == SPI_GC9307_V1)
+#define GUI_SCREEN_WIDTH                SPI_GC9307_WIDTH
+#define GUI_SCREEN_HEIGHT               SPI_GC9307_HIGHT
+#define GUI_SCREEN_OFS_X                SPI_GC9307_OFS_X
+#define GUI_SCREEN_OFS_Y                SPI_GC9307_OFS_Y
+#define GUI_USE_TFT
+#elif (TFT_SPI_DRIVER == SPI_JD9853_V1)
+#define GUI_SCREEN_WIDTH                SPI_JD9853_WIDTH
+#define GUI_SCREEN_HEIGHT               SPI_JD9853_HIGHT
+#define GUI_SCREEN_OFS_X                SPI_JD9835_OFS_X
+#define GUI_SCREEN_OFS_Y                SPI_JD9835_OFS_Y
+#define GUI_USE_TFT
+#elif (TFT_SPI_DRIVER == SPI_ST7789_V1)
+#define GUI_SCREEN_WIDTH                SPI_ST7789_WIDTH
+#define GUI_SCREEN_HEIGHT               SPI_ST7789_HIGHT
+#define GUI_SCREEN_OFS_X                SPI_ST7789_OFS_X
+#define GUI_SCREEN_OFS_Y                SPI_ST7789_OFS_Y
+#define GUI_USE_TFT
+#endif  //#if (TFT_SPI_DRIVER == SPI_GC9307_V1)
 #elif (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
-    #define GUI_SCREEN_WIDTH                120
-    #define GUI_SCREEN_HEIGHT               480
-    #define GUI_SCREEN_OFS_X                0//24
-    #define GUI_SCREEN_OFS_Y                0//40
+#define GUI_SCREEN_WIDTH                120
+#define GUI_SCREEN_HEIGHT               480
+#define GUI_SCREEN_OFS_X                0//24
+#define GUI_SCREEN_OFS_Y                0//40
 #elif (GUI_SELECT == GUI_TFT_240_296_NV3030B)
-    #define GUI_SCREEN_WIDTH                240
-    #define GUI_SCREEN_HEIGHT               296
-    #define GUI_SCREEN_OFS_X                0//24
-    #define GUI_SCREEN_OFS_Y                12//40
-    #define GUI_USE_TFT
+#define GUI_SCREEN_WIDTH                240
+#define GUI_SCREEN_HEIGHT               296
+#define GUI_SCREEN_OFS_X                0//24
+#define GUI_SCREEN_OFS_Y                12//40
+#define GUI_USE_TFT
 #elif (GUI_SELECT == GUI_TFT_320_385_GV9B71)
-    #define GUI_SCREEN_WIDTH                320
-    #define GUI_SCREEN_HEIGHT               386
-    #define GUI_SCREEN_OFS_X                0//24
-    #define GUI_SCREEN_OFS_Y                0//40
-    #define GUI_USE_TFT
+#define GUI_SCREEN_WIDTH                320
+#define GUI_SCREEN_HEIGHT               386
+#define GUI_SCREEN_OFS_X                0//24
+#define GUI_SCREEN_OFS_Y                0//40
+#define GUI_USE_TFT
 #else
-    #define GUI_SCREEN_WIDTH                UTE_DRV_SCREEN_WIDTH
-    #define GUI_SCREEN_HEIGHT               UTE_DRV_SCREEN_HEIGHT
-    #define GUI_SCREEN_OFS_X                0
-    #define GUI_SCREEN_OFS_Y                0
-    #define GUI_USE_TFT
+#define GUI_SCREEN_WIDTH                UTE_DRV_SCREEN_WIDTH
+#define GUI_SCREEN_HEIGHT               UTE_DRV_SCREEN_HEIGHT
+#define GUI_SCREEN_OFS_X                0
+#define GUI_SCREEN_OFS_Y                0
+#define GUI_USE_TFT
 #endif
 
 #define GUI_SCREEN_CENTER_X                 (GUI_SCREEN_WIDTH / 2)
 #define GUI_SCREEN_CENTER_Y                 (GUI_SCREEN_HEIGHT / 2)
 
 #if (CTP_SELECT == CTP_CST8X)
-    #define TP_IIC_ADDR                     0x15
-    #define TP_IIC_UPDATE_ADDR              0x6A
+#define TP_IIC_ADDR                     0x15
+#define TP_IIC_UPDATE_ADDR              0x6A
 #elif (CTP_SELECT == CTP_CHSC6X)
-    #define TP_IIC_ADDR                     0x2E
+#define TP_IIC_ADDR                     0x2E
 
 #endif
 
@@ -265,27 +280,27 @@
 
 
 #if !LE_EN
-    #undef LE_PAIR_EN
-    #undef LE_SM_SC_EN
-    #undef LE_AB_LINK_APP_EN
-    #undef LE_BQB_RF_EN
-    #define LE_PAIR_EN              0
-    #define LE_SM_SC_EN             0
-    #define LE_AB_LINK_APP_EN       0
-    #define LE_BQB_RF_EN            0
+#undef LE_PAIR_EN
+#undef LE_SM_SC_EN
+#undef LE_AB_LINK_APP_EN
+#undef LE_BQB_RF_EN
+#define LE_PAIR_EN              0
+#define LE_SM_SC_EN             0
+#define LE_AB_LINK_APP_EN       0
+#define LE_BQB_RF_EN            0
 #endif
 
 #if LE_BQB_RF_EN
-    #undef BT_FCC_TEST_EN
-    #undef USER_KEY_QDEC_EN
-    #define BT_FCC_TEST_EN          1   //LE_BQB和FCC共用huart_init
-    #define USER_KEY_QDEC_EN        0
+#undef BT_FCC_TEST_EN
+#undef USER_KEY_QDEC_EN
+#define BT_FCC_TEST_EN          1   //LE_BQB和FCC共用huart_init
+#define USER_KEY_QDEC_EN        0
 #endif
 
 #if LE_EN
-    #define BT_DUAL_MODE_EN         1
+#define BT_DUAL_MODE_EN         1
 #else
-    #define BT_DUAL_MODE_EN         0
+#define BT_DUAL_MODE_EN         0
 #endif
 
 #if USE_APP_TYPE
@@ -314,20 +329,20 @@
 #endif
 
 #if BT_FCC_TEST_EN
-    #undef WORK_MODE
-    #if LE_BQB_RF_EN
-        #define WORK_MODE           MODE_BQB_RF_BLE
-    #else
-        #define WORK_MODE           MODE_FCC_TEST
-    #endif
-#elif BT_BQB_RF_EN
-    #define WORK_MODE           MODE_BQB_RF_BREDR
-#elif LE_BQB_RF_EN
-    #define WORK_MODE           MODE_BQB_RF_BLE
-#elif BT_DUT_MODE_EN
-    #define WORK_MODE           MODE_NORMAL_DUT
+#undef WORK_MODE
+#if LE_BQB_RF_EN
+#define WORK_MODE           MODE_BQB_RF_BLE
 #else
-    #define WORK_MODE           MODE_NORMAL
+#define WORK_MODE           MODE_FCC_TEST
+#endif
+#elif BT_BQB_RF_EN
+#define WORK_MODE           MODE_BQB_RF_BREDR
+#elif LE_BQB_RF_EN
+#define WORK_MODE           MODE_BQB_RF_BLE
+#elif BT_DUT_MODE_EN
+#define WORK_MODE           MODE_NORMAL_DUT
+#else
+#define WORK_MODE           MODE_NORMAL
 #endif
 
 #if !BT_HID_EN
@@ -351,33 +366,33 @@
  * Module    : uart0 printf 功能自动配置(自动关闭SD卡，USB)
  *****************************************************************************/
 #if (UART0_PRINTF_SEL == PRINTF_PB3)
-    #undef  FUNC_USBDEV_EN
-    #undef  MUSIC_UDISK_EN
-    #define FUNC_USBDEV_EN          0
-    #define MUSIC_UDISK_EN          0
+#undef  FUNC_USBDEV_EN
+#undef  MUSIC_UDISK_EN
+#define FUNC_USBDEV_EN          0
+#define MUSIC_UDISK_EN          0
 #elif (UART0_PRINTF_SEL == PRINTF_NONE)
-    //关闭所以打印信息
-    #undef printf
-    #undef vprintf
-    #undef print_r
-    #undef print_r16
-    #undef print_r32
-    #undef printk
-    #undef vprintk
-    #undef print_kr
-    #undef print_kr16
-    #undef print_kr32
+//关闭所以打印信息
+#undef printf
+#undef vprintf
+#undef print_r
+#undef print_r16
+#undef print_r32
+#undef printk
+#undef vprintk
+#undef print_kr
+#undef print_kr16
+#undef print_kr32
 
-    #define printf(...)
-    #define vprintf(...)
-    #define print_r(...)
-    #define print_r16(...)
-    #define print_r32(...)
-    #define printk(...)
-    #define vprintk(...)
-    #define print_kr(...)
-    #define print_kr16(...)
-    #define print_kr32(...)
+#define printf(...)
+#define vprintf(...)
+#define print_r(...)
+#define print_r16(...)
+#define print_r32(...)
+#define printk(...)
+#define vprintk(...)
+#define print_kr(...)
+#define print_kr16(...)
+#define print_kr32(...)
 #endif
 
 #if !MUSIC_SDCARD_EN
@@ -396,19 +411,19 @@
  * Module    : usb device 功能配置
  *****************************************************************************/
 #if !FUNC_USBDEV_EN
-    #undef  UDE_STORAGE_EN
-    #undef  UDE_SPEAKER_EN
-    #undef  UDE_HID_EN
-    #undef  UDE_MIC_EN
-    #undef  UDE_ENUM_TYPE
+#undef  UDE_STORAGE_EN
+#undef  UDE_SPEAKER_EN
+#undef  UDE_HID_EN
+#undef  UDE_MIC_EN
+#undef  UDE_ENUM_TYPE
 
-    #define UDE_STORAGE_EN              0
-    #define UDE_SPEAKER_EN              0
-    #define UDE_HID_EN                  0
-    #define UDE_MIC_EN                  0
-    #define UDE_ENUM_TYPE               0
+#define UDE_STORAGE_EN              0
+#define UDE_SPEAKER_EN              0
+#define UDE_HID_EN                  0
+#define UDE_MIC_EN                  0
+#define UDE_ENUM_TYPE               0
 #else
-    #define UDE_ENUM_TYPE               (UDE_STORAGE_EN*0x01 + UDE_SPEAKER_EN*0x02 + UDE_HID_EN*0x04 + UDE_MIC_EN*0x08)
+#define UDE_ENUM_TYPE               (UDE_STORAGE_EN*0x01 + UDE_SPEAKER_EN*0x02 + UDE_HID_EN*0x04 + UDE_MIC_EN*0x08)
 #endif
 
 #if ((!MUSIC_UDISK_EN) && (!MUSIC_SDCARD_EN))
@@ -464,8 +479,8 @@
 
 #define SENSOR_HR_NULL                           0
 #define SENSOR_HR_EN                             0x200
-#define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)			            //天易合芯HRS3300心率血压传感器
-#define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)			            //天易合芯HX3605心率血氧传感器
+#define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)                       //天易合芯HRS3300心率血压传感器
+#define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)                       //天易合芯HX3605心率血氧传感器
 #define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
 
 #define SENSOR_GEO_NULL                           0

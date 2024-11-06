@@ -32,9 +32,6 @@ typedef struct f_pressure_t_
 
 
 u16 chart_value[CHART_NUM];
-char  txt_buf[4];
-
-
 
 //创建压力窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_pressure_form_create(void)
@@ -46,6 +43,7 @@ compo_form_t *func_pressure_form_create(void)
     chart_value[3+7+7]=0;
     chart_value[3+7+7+7]=0;
 
+    char  txt_buf[4];
     //component_t *compo;
     compo_textbox_t * txt;
 

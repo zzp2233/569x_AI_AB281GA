@@ -155,6 +155,8 @@ static void func_blood_oxygen_button_click(void)
             compo = compo_getobj_byid(COMPO_ID_TXT_TIPS);
             compo_textbox_set((compo_textbox_t *)compo, i18n[STR_START]);
             f_bo->det_sta = BO_STA_IDLE;
+            compo_textbox_t *compo_txt = compo_getobj_byid(COMPO_ID_TXT_RESULT);
+            compo_textbox_set_visible(compo_txt, false);
         }
         break;
     }

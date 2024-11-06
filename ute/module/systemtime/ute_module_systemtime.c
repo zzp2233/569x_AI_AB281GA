@@ -10,13 +10,14 @@
 #include "ute_module_systemtime.h"
 #include "ute_module_log.h"
 #include "ute_application_common.h"
-// #include "ute_drv_battery_common.h"
+#include "ute_drv_battery_common.h"
 // #include "ute_drv_keys_common.h"
-// #include "ute_module_message.h"
+#include "ute_module_message.h"
 #include "ute_project_config.h"
-// #include "ute_module_sleep.h"
-// #include "ute_module_sport.h"
-// #include "ute_drv_motor.h"
+#include "ute_module_sleep.h"
+#include "ute_module_sport.h"
+#include "ute_module_heart.h"
+#include "ute_drv_motor.h"
 // #include "ute_language_common.h"
 // #include "ute_module_localRingtone.h"
 // #include "bt_hfp.h"
@@ -175,12 +176,12 @@ void uteModuleSystemtimeSetTime(ute_module_systemtime_time_t set)
 
     ute_module_systemtime_time_t oldTime;
     memcpy(&oldTime,&systemTime,sizeof(ute_module_systemtime_time_t));
-    //uteModuleSleepSystemtimeChange(systemTime,set);
+    uteModuleSleepSystemtimeChange(systemTime,set);
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     //sportSystemTimeChange 中有uteModuleCwmReadCurrDayStepFromFs 操作,所以这个放在它执行之前
     uteModuleCwmStepDataSystemtimeChange(systemTime,set);
 #endif
-    //uteModuleSportSystemtimeChange(systemTime,set);
+    uteModuleSportSystemtimeChange(systemTime,set);
     uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
     memcpy(&systemTime, &set, sizeof(ute_module_systemtime_time_t));
     uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
@@ -195,7 +196,7 @@ void uteModuleSystemtimeSetTime(ute_module_systemtime_time_t set)
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_MIN_REGISER,NULL);
     }
 #endif
-//    uteModuleHeartSystemtimeChange(oldTime,set);
+    uteModuleHeartSystemtimeChange(oldTime,set);
 }
 /**
 *@brief  判断是否是闰年

@@ -50,7 +50,7 @@ void gui_set_cover_index(uint8_t index);
 void gui_cover_msg_enqueue(uint8_t index);
 
 u32 func_cover_get_pic_res_addr(u8 type);
-u8 func_cover_get_str_idx(u8 type);
+u16 func_cover_get_str_idx(u8 type);
 s16 func_cover_get_pic_y(u8 type);
 s16 func_cover_get_txt_y(u8 type);
 s16 func_cover_get_title_txt_y(u8 type);

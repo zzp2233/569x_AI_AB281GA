@@ -414,7 +414,7 @@ static void func_activity_process(void)
                 for (i = 0; i < count; i++)
                 {
                     f_activity->value[i] -= 10;
-                    if (f_activity->value[i] ==   activity_arc_value_goal[i])
+                    if (f_activity->value[i] < activity_arc_value_goal[i]+10)
                     {
                         //f_activity->value[i] = ARC_VALUE_MAX;
                         f_activity->anim_status = ARC_ANIM_STATUS_END;

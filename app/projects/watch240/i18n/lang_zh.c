@@ -343,6 +343,10 @@ const char * const i18n_zh[] =
 
     [STR_FIND_WATCH]                    = "寻找手表",
     [STR_SET_DATA_READ]                 = "当前设定时间如果已与App连接,同步时间将会产生睡眠数据修改.",
+    [STR_SET_STEP_COUNT]                = "步数",
+    [STR_SET_DISTANCE]                  = "距离",
+    [STR_SET_CALORIE]                   = "卡路里",
     [STR_GOAL_ACHIEVE]                  = "目标完成",
     [STR_SEDENTARY_REMIND]              = "久坐提醒",
+
 };

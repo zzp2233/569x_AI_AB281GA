@@ -3,7 +3,7 @@
 #include "ute_all_sports_int_algorithms.h"
 #include "ute_module_sport.h"
 
-#define TRACE_EN        1
+#define TRACE_EN        0
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

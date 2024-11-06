@@ -558,6 +558,14 @@ void func_process(void)
         {
             if (bt_cb.disp_status <= BT_STA_PLAYING && func_cb.sta != FUNC_OTA_UI_MODE && is_fot_start() == 0)
             {
+                if (charge_dc_change_detect())
+                {
+                    if (sys_cb.gui_sleep_sta)           //亮屏
+                    {
+                        sys_cb.gui_need_wakeup = 1;
+                    }
+                    reset_sleep_delay_all();
+                }
                 msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
                 msg_enqueue(EVT_MSGBOX_EXIT);
                 func_cb.sta = FUNC_CHARGE;

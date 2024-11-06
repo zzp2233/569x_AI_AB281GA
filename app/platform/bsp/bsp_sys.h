@@ -163,6 +163,7 @@ typedef struct
     u8 distance_goal;
     u8 kcal_cur;
     u8 kcal_goal;
+    u8 sport_app_disconnect;                             //1:暂停   0:开始
     char outgoing_number[16];
     //运动记录
     u8 sport_record_cnt;

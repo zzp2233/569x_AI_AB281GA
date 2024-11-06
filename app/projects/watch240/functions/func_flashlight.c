@@ -21,6 +21,7 @@ enum
 typedef struct f_flashlight_t_
 {
     u8 flashlight_flag;
+    u8 light_level;
 } f_flashlight_t;
 
 //创建手电筒窗体
@@ -71,39 +72,39 @@ static void func_flashlight_process(void)
 }
 
 //单击按钮
-static void func_flashlight_button_click(void)
-{
-    int id = compo_get_button_id();
-    compo_textbox_t *txt_off = compo_getobj_byid(COMPO_ID_PIC_FLASHOFF);
-    compo_textbox_t *txt_on  = compo_getobj_byid(COMPO_ID_PIC_FLASHON);
-    f_flashlight_t *fst = (f_flashlight_t *)func_cb.f_cb;
-    switch(id)
-    {
-        case COMPO_ID_BTN_FLASHON:
-            if (fst->flashlight_flag)
-            {
-                fst->flashlight_flag = 0;
-            }
-            else
-            {
-                fst->flashlight_flag = 1;
-            }
-            break;
-
-        default:
-            break;
-    }
-    if (fst->flashlight_flag)
-    {
-        compo_textbox_set_visible(txt_on, true);
-        compo_textbox_set_visible(txt_off, false);
-    }
-    else
-    {
-        compo_textbox_set_visible(txt_on, false);
-        compo_textbox_set_visible(txt_off, true);
-    }
-}
+//static void func_flashlight_button_click(void)
+//{
+//    int id = compo_get_button_id();
+//    compo_textbox_t *txt_off = compo_getobj_byid(COMPO_ID_PIC_FLASHOFF);
+//    compo_textbox_t *txt_on  = compo_getobj_byid(COMPO_ID_PIC_FLASHON);
+//    f_flashlight_t *fst = (f_flashlight_t *)func_cb.f_cb;
+//    switch(id)
+//    {
+//        case COMPO_ID_BTN_FLASHON:
+//            if (fst->flashlight_flag)
+//            {
+//                fst->flashlight_flag = 0;
+//            }
+//            else
+//            {
+//                fst->flashlight_flag = 1;
+//            }
+//            break;
+//
+//        default:
+//            break;
+//    }
+//    if (fst->flashlight_flag)
+//    {
+//        compo_textbox_set_visible(txt_on, true);
+//        compo_textbox_set_visible(txt_off, false);
+//    }
+//    else
+//    {
+//        compo_textbox_set_visible(txt_on, false);
+//        compo_textbox_set_visible(txt_off, true);
+//    }
+//}
 
 //手电筒功能消息处理
 static void func_flashlight_message(size_msg_t msg)
@@ -134,11 +135,19 @@ static void func_flashlight_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_flashlight_t));
     func_cb.frm_main = func_flashlight_form_create();
+//    f_flashlight_t f * f_flashlight = (f_flashlight_t*)func_cb.f_cb;
+    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+    f_flashlight ->light_level = sys_cb.light_level;
+    sys_cb.light_level = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
+    tft_bglight_set_level(sys_cb.light_level,false);
 }
 
 //退出手电筒功能
 static void func_flashlight_exit(void)
 {
+    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+    sys_cb.light_level = f_flashlight ->light_level;
+    tft_bglight_set_level(sys_cb.light_level,false);
     func_cb.last = FUNC_FLASHLIGHT;
 }
 

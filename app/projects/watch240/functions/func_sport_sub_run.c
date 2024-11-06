@@ -345,7 +345,7 @@ static void func_sport_sub_run_updata(void)
 //            }
             memset(buf, 0, sizeof(buf));
 //        snprintf(buf, sizeof(buf), "%dKM", f_sport_sub_run->km);
-            snprintf(buf, sizeof(buf), "%d.%d", f_sport_sub_run->km_integer, f_sport_sub_run->km_decimals);
+            snprintf(buf, sizeof(buf), "%d.%02d", f_sport_sub_run->km_integer, f_sport_sub_run->km_decimals);
             compo_textbox_t* txt_km = compo_getobj_byid(sport_sub_run_text[4].id);
             compo_textbox_set(txt_km, buf);
 
@@ -630,21 +630,33 @@ static void func_sport_sub_run_enter(void)
     f_sport_sub_run->sport_run_state = true;
     if (uteModuleSportMoreSportIsAppStart())
     {
-        uteModuleSportStartMoreSports(uteModuleSportMoreSportGetType(), 1, 1);
+        //uteModuleSportStartMoreSports(uteModuleSportMoreSportGetType(), 1, 1);
+        if (func_cb.last != FUNC_SPORT_SWITCH)
+        {
+            func_cb.sta = FUNC_SPORT_SWITCH;
+        }
+        else
+        {
+            uteModuleSportSetCountZeroIndex(0);
+        }
         TRACE("【APP】开始运动\n");
     }
     else
     {
+        uteModuleSportSetCountZeroIndex(0);
         uteModuleSportStartMoreSports(func_sport_get_current_idx()+1, 1, 0);
         TRACE("【本地】开始运动:%d\n",func_sport_get_current_idx()+1);
     }
-
 }
 
 //退出室内跑步功能
 static void func_sport_sub_run_exit(void)
 {
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
+    if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
+    {
+        task_stack_pop();
+    }
     func_cb.last = FUNC_SPORT_SUB_RUN;
 }
 

@@ -15,7 +15,7 @@
 typedef struct f_cover_remind_item_t_
 {
     u32 res_addr;
-    u8 str_idx;
+    u16 str_idx;
     s16 pic_y;
     s16 txt_y;
     s16 title_y;
@@ -213,7 +213,7 @@ u32 func_cover_get_pic_res_addr(u8 type)
     return 0;
 }
 
-u8 func_cover_get_str_idx(u8 type)
+u16 func_cover_get_str_idx(u8 type)
 {
     switch (type)
     {
@@ -438,24 +438,16 @@ void gui_set_cover_index(uint8_t index)
                 }
                 //开启马达 喇叭
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
+                mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
             }
-            else if (sys_cb.cover_index == REMIND_COVER_FIND_WATCH)         //寻找手表
+            else if (sys_cb.cover_index == REMIND_COVER_HEALTH_SEDENTARY)           //久坐提醒
             {
-                //snprintf(msg, sizeof(msg), "寻找手表");
-            }
-            else if (sys_cb.cover_index == REMIND_COVER_GOAL)               //日常运动目标完成
-            {
-
-            }
-//            else if (sys_cb.cover_index == COVER_HEALTH_DRINK || sys_cb.cover_index == COVER_HEALTH_SEDENTARY) {
 //                tm_t tm = time_to_tm(RTCCNT);
 //                snprintf(title, sizeof(title), "%02d:%02d", tm.hour, tm.min);
-//            }
-            mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
+            }
         }
 
         int res = msgbox(msg, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
-
 
         if (res == MSGBOX_RES_REMIND_LATER)         //稍后提醒
         {

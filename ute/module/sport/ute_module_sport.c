@@ -3022,16 +3022,17 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                         if(!uteApplicationCommonIsHasConnectOurApp())
                         {
                             // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);  //退回运动列表
-                            //extern u8 task_stack_pop(void);
-                            //task_stack_pop();
+//                            extern u8 task_stack_pop(void);
+//                            task_stack_pop();
                             void func_switch_to(u8 sta, u16 switch_mode);
                             func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
                         }
                         else
                         {
                             // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);     //运动完成数据弹窗
-                            sys_cb.cover_index = REMIND_COVER_GOAL;
-                            sys_cb.remind_tag = true;
+                            func_cb.sta = FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
+//                            sys_cb.cover_index = REMIND_COVER_GOAL;
+//                            sys_cb.remind_tag = true;
 
                         }
                     }
@@ -3622,8 +3623,9 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
         uteModuleSprotData.sportsHistoryRecord.displayIndex = 0;
 #endif
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);     //运动完成数据界面
-        sys_cb.cover_index = REMIND_COVER_GOAL;
-        sys_cb.remind_tag = true;
+        func_cb.sta = FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
+//        sys_cb.cover_index = REMIND_COVER_GOAL;
+//        sys_cb.remind_tag = true;
 #endif
     }
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT

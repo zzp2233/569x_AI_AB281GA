@@ -10,7 +10,7 @@
 static u8 animation_id = 0;
 
 //表盘文本编号表
-const u8 text_str_tbl[] =
+const u16 text_str_tbl[] =
 {
     [1] = STR_CALORIE,
     STR_STEPS,
@@ -59,54 +59,56 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
 
     TRACE("UITOOL_TYPE_IMAGE:%d, res_addr:%x, x:%d, y:%d\n", uitool_res->bond_type, uitoolres->res_addr, uitool_res->x, uitool_res->y);
 
-    switch (uitool_res->bond_type) {
+    switch (uitool_res->bond_type)
+    {
         case COMPO_BOND_IMAGE_STATIC:
             compo_form_add_image(frm, res_addr, uitool_res->x, uitool_res->y);
             break;
 
         case COMPO_BOND_IMAGE_CLICK:
+        {
+            compo_animation_t *animation = compo_animation_create(frm, res_addr);
+            compo_animation_set_click_area(animation, uitool_res->x, uitool_res->y, click_wid, click_hei);
+            compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+            compo_animation_set_radix(animation, uitool_res->res_num);
+            compo_animation_set_interval(animation, 0);
+            compo_bonddata(animation, uitool_res->bond_type);
+            compo_setid(animation, ++animation_id);
+
+        }
+        break;
+
+        case COMPO_BOND_ANIMATION_STATIC:
+        {
+            compo_animation_t *animation = compo_animation_create(frm, res_addr);
+            compo_animation_set_pos(animation, uitool_res->x, uitool_res->y);
+            compo_animation_set_radix(animation, uitool_res->res_num);
+            compo_animation_set_interval(animation, interval);
+            compo_bonddata(animation, uitool_res->bond_type);
+        }
+        break;
+
+        case COMPO_BOND_ANIMATION_AREA_CLICK:
+        {
+            for (u8 i = 0; i < COMPO_ANIMATION_CLICK_NUM; i++)
             {
                 compo_animation_t *animation = compo_animation_create(frm, res_addr);
                 compo_animation_set_click_area(animation, uitool_res->x, uitool_res->y, click_wid, click_hei);
-                compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-                compo_animation_set_radix(animation, uitool_res->res_num);
-                compo_animation_set_interval(animation, 0);
-                compo_bonddata(animation, uitool_res->bond_type);
-                compo_setid(animation, ++animation_id);
-
-            }
-            break;
-
-        case COMPO_BOND_ANIMATION_STATIC:
-            {
-                compo_animation_t *animation = compo_animation_create(frm, res_addr);
-                compo_animation_set_pos(animation, uitool_res->x, uitool_res->y);
+                compo_animation_set_pos(animation, 0, 0);
                 compo_animation_set_radix(animation, uitool_res->res_num);
                 compo_animation_set_interval(animation, interval);
+                compo_animation_set_visible(animation, false);
                 compo_bonddata(animation, uitool_res->bond_type);
+                compo_setid(animation, ++animation_id);
             }
-            break;
-
-        case COMPO_BOND_ANIMATION_AREA_CLICK:
-            {
-                for (u8 i = 0; i < COMPO_ANIMATION_CLICK_NUM; i++) {
-                    compo_animation_t *animation = compo_animation_create(frm, res_addr);
-                    compo_animation_set_click_area(animation, uitool_res->x, uitool_res->y, click_wid, click_hei);
-                    compo_animation_set_pos(animation, 0, 0);
-                    compo_animation_set_radix(animation, uitool_res->res_num);
-                    compo_animation_set_interval(animation, interval);
-                    compo_animation_set_visible(animation, false);
-                    compo_bonddata(animation, uitool_res->bond_type);
-                    compo_setid(animation, ++animation_id);
-                }
-            }
-            break;
+        }
+        break;
 
         case COMPO_BOND_ANIMATION_CLICK:
-            {
+        {
 
-            }
-            break;
+        }
+        break;
 
         case COMPO_BOND_IMAGE_WEATHER:
         case COMPO_BOND_BLE_STA:
@@ -116,15 +118,15 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
         case COMPO_BOND_KCAL_PROGRESS:
         case COMPO_BOND_STEPS_PROGRESS:
         case COMPO_BOND_VBAT_PROGRESS:
-            {
-                compo_picturebox_t *pic;
-                pic = compo_picturebox_create(frm, res_addr);
-                compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
-                compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
-                compo_bonddata(pic, uitool_res->bond_type);
-                printf("type[%d]\n", uitool_res->bond_type);
-            }
-            break;
+        {
+            compo_picturebox_t *pic;
+            pic = compo_picturebox_create(frm, res_addr);
+            compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
+            compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
+            compo_bonddata(pic, uitool_res->bond_type);
+            printf("type[%d]\n", uitool_res->bond_type);
+        }
+        break;
 
         default:
             break;
@@ -148,8 +150,10 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
     u8 max_cnt = 0;
     u8 bond_compo_type = COMPO_TYPE_NONE;
     TRACE("UITOOL_TYPE_NUM:%d, x:%d, y:%d, res_num:%d\n", uitool_res->bond_type, uitool_res->x, uitool_res->y, uitool_res->res_num);
-    if (use_num) {
-        switch (uitool_res->bond_type) {
+    if (use_num)
+    {
+        switch (uitool_res->bond_type)
+        {
             case COMPO_BOND_HOUR_H:
             case COMPO_BOND_MINUTE_H:
             case COMPO_BOND_HOUR_L:
@@ -178,7 +182,8 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 break;
         }
 
-        if (bond_compo_type == COMPO_TYPE_NUMBER) {
+        if (bond_compo_type == COMPO_TYPE_NUMBER)
+        {
             //数字
             bool minus = uitool_res->param1 & BIT(1);
             bool num_part_en = uitool_res->param1 & BIT(2);
@@ -187,7 +192,8 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
             u8 cnt = num_part_en ? 5 : 1;
             max_cnt = num_part_en ? 1 : max_cnt;
             compo_number_t *num;
-            for(u8 i=0;i<cnt;i++) {
+            for(u8 i=0; i<cnt; i++)
+            {
                 num = compo_number_create(frm, res_addr, max_cnt);
                 compo_number_set_radix(num, uitool_res->res_num, minus);
                 num->num_part = num_part_en ? i + 1 : 0;
@@ -198,7 +204,9 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 compo_bonddata(num, uitool_res->bond_type);
                 compo_set_bonddata((component_t *)num, time_to_tm(compo_cb.rtc_cnt));
             }
-        } else if (bond_compo_type == COMPO_TYPE_PICTUREBOX) {
+        }
+        else if (bond_compo_type == COMPO_TYPE_PICTUREBOX)
+        {
             //图像
             compo_picturebox_t *pic;
             pic = compo_picturebox_create(frm, res_addr);
@@ -206,7 +214,9 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
         }
-    } else {
+    }
+    else
+    {
         max_cnt = 2;
         compo_textbox_t *txt = compo_textbox_create(frm, max_cnt);
         compo_textbox_set_location(txt, uitool_res->x, uitool_res->y, 80, 40);
@@ -236,23 +246,26 @@ u16 bsp_uitool_header_phrase(u32 base_addr)
     TRACE("sig:%x, ver:%d, size:%x, num:%x\n", uitool_header.sig, uitool_header.ver, uitool_header.size, uitool_header.num);
     TRACE("user id:%d, index:%d, wid:%d, hei:%d\n", uitool_header.user_id, uitool_header.index, uitool_header.wid, uitool_header.hei);
 //    print_r(uitool_header.user_extend, 32);
-	if (uitool_header.sig != UITOOL_HEADER_FORMAT) {
-		printf("UITOOL Format Uncorrect:%x, %x\n", uitool_header.sig, UITOOL_HEADER_FORMAT);
-		return false;
-	}
-	return uitool_header.num;
+    if (uitool_header.sig != UITOOL_HEADER_FORMAT)
+    {
+        printf("UITOOL Format Uncorrect:%x, %x\n", uitool_header.sig, UITOOL_HEADER_FORMAT);
+        return false;
+    }
+    return uitool_header.num;
 }
 
 void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
 {
     uitool_res_t uitool_res;
-	memset(&uitool_res, 0, sizeof(uitool_res_t));
-	animation_id = 0;
+    memset(&uitool_res, 0, sizeof(uitool_res_t));
+    animation_id = 0;
 
-    for(u16 i=0;i<compo_num;i++) {
+    for(u16 i=0; i<compo_num; i++)
+    {
         os_spiflash_read(&uitool_res, base_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
         u32 res_addr = base_addr + uitool_res.res_addr;
-         switch (uitool_res.res_type) {
+        switch (uitool_res.res_type)
+        {
             case UITOOL_TYPE_POINTER:
                 bsp_uitool_pointer_create(frm, &uitool_res, res_addr);
                 break;
@@ -277,7 +290,7 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
                 TRACE("HALT_GUI_DIALPLATE_TYPE:%d\n", uitool_res.res_type);
                 halt(HALT_GUI_DIALPLATE_TYPE);
                 break;
-            }
+        }
     }
 }
 

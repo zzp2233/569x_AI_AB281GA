@@ -431,8 +431,9 @@ static void sfunc_sleep(void)
             if (uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN)
             {
                 gui_need_wkp = true;
+                printf("%s,ute_wakeup_screen\n",__func__);
             }
-            printf("ute_wakeup\n");
+            printf("ute_wakeup:%04x\n",uteModulePlatformNotAllowSleep());
             break;
         }
     }
@@ -548,6 +549,10 @@ bool sleep_process(is_sleep_func is_sleep)
                 if(sys_cb.gui_sleep_sta)
                 {
                     gui_wakeup();
+                    reset_sleep_delay_all();
+                    sys_cb.gui_need_wakeup = 0;
+                    printf("%s,ute_wakeup_screen\n",__func__);
+                    return false;
                 }
             }
             else if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)

@@ -2,6 +2,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_clock.h"
+#include "ute_module_sport.h"
 
 #define TRACE_EN    0
 
@@ -276,6 +277,11 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_textbox_t *txt;
     compo_datetime_t *dt;
 
+    char txt_buf[20];
+    uint32_t totalStepCnt = 0;
+    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+    uint16_t KM = uteModuleSportGetCurrDayDistanceData();
+
     //关机&语音助手
     cardbox = compo_cardbox_create(frm, 2, 2, 2, CARD_WIDTH_ORG, POWEROFF_BG_H);
     compo_setid(cardbox, COMPO_ID_CARD_POWEROFF_ASSISTANT);
@@ -340,13 +346,19 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_ACTIVITY_BIN);
     compo_cardbox_icon_set_location(cardbox, 0, ACTIVITY_ICON_X, ACTIVITY_ICON_Y, ACTIVITY_ICON_W, ACTIVITY_ICON_H);
     compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 0, "12000");    //步数--------->>>todo
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
+    compo_cardbox_text_set(cardbox, 0, txt_buf);    //步数--------->>>todo
+    compo_cardbox_text_set_forecolor(cardbox,0, make_color(26, 137, 255));
     compo_cardbox_text_set_location(cardbox, 0, ACTIVITY_STEP_X, ACTIVITY_STEP_Y, ACTIVITY_STEP_W, ACTIVITY_STEP_H);
     compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 1, "512.7");    //卡路里--------->>>todo
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());
+    compo_cardbox_text_set(cardbox, 1,txt_buf);    //卡路里--------->>>todo
+    compo_cardbox_text_set_forecolor(cardbox,1, make_color(233, 16, 75));
     compo_cardbox_text_set_location(cardbox, 1, ACTIVITY_CALORIE_X, ACTIVITY_CALORIE_Y, ACTIVITY_CALORIE_W, ACTIVITY_CALORIE_H);
     compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 2, "8.0");      //距离--------->>>todo
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/1000,KM/100,KM/10);
+    compo_cardbox_text_set(cardbox, 2,txt_buf);      //距离--------->>>todo
+    compo_cardbox_text_set_forecolor(cardbox,2, make_color(57, 255, 0));
     compo_cardbox_text_set_location(cardbox, 2, ACTIVITY_DISTANCE_X, ACTIVITY_DISTANCE_Y, ACTIVITY_DISTANCE_W, ACTIVITY_DISTANCE_H);
     //运动&指南针
     cardbox = compo_cardbox_create(frm, 2, 2, 2, CARD_WIDTH_ORG, SPORT_BG_H);

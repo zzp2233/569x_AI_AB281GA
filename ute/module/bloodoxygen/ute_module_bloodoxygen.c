@@ -15,7 +15,7 @@
 #include "ute_module_protocol.h"
 #include "ute_module_crc.h"
 #include "ute_drv_motor.h"
-// #include "ute_module_sport.h"
+#include "ute_module_sport.h"
 #include "ute_drv_battery_common.h"
 // #include "ute_drv_heart_vcxx_common.h"
 // #include "ute_module_emotionPressure.h"
@@ -162,7 +162,7 @@ void uteModuleBloodoxygenEverySecond(void)
         }
         if (//uteModuleBloodoxygenIsWear() &&
             (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE) &&
-            // (!uteModuleSportMoreSportIsRuning()) &&
+            (!uteModuleSportMoreSportIsRuning()) &&
             (uteApplicationCommonGetSystemPowerOnSecond() > 5) &&
             // (!uteModuleBreathrateIsTesting()) &&
             // (!uteModuleGetBreathTrainingStatus()) &&

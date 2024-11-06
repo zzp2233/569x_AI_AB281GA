@@ -251,7 +251,8 @@ uint32_t activity_arc_value_goal[3];
 //创建活动记录窗体
 compo_form_t *func_activity_form_create(void)
 {
-    char txt_buf[10];
+    char txt_buf[20];
+    uint16_t KM = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
 
@@ -288,36 +289,57 @@ compo_form_t *func_activity_form_create(void)
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X/5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5-GUI_SCREEN_HEIGHT/3.5);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d-STEP",totalStepCnt);
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
     textbox = compo_textbox_create(frm,strlen(txt_buf));//步数数据
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/2,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5-GUI_SCREEN_HEIGHT/3.5-12);
     widget_text_set_color(textbox->txt, make_color(26, 137, 255));
+
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_STEPS]));//步数
+    //compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set(textbox, i18n[STR_STEPS]);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/2+strlen(txt_buf)*16+8,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5-GUI_SCREEN_HEIGHT/3.5-8);
+    widget_text_set_color(textbox->txt, make_color(26, 137, 255));
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     pic = compo_picturebox_create(frm, UI_BUF_SPORT_EXERCISING_KM_BIN);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X/5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d-KM",uteModuleSportGetCurrDayDistanceData());
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/1000,KM/100,KM/10);
     textbox = compo_textbox_create(frm,strlen(txt_buf));//距离数据
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/2,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5-12);
     widget_text_set_color(textbox->txt, make_color(57, 255, 0));
+
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_KM]));//千米
+    //compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set(textbox, i18n[STR_KM]);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/2+strlen(txt_buf)*16+8,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5-8);
+    widget_text_set_color(textbox->txt, make_color(57, 255, 0));
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     pic = compo_picturebox_create(frm, UI_BUF_SPORT_EXERCISING_KCAL_BIN);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X/5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5+GUI_SCREEN_HEIGHT/3.5);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d-KCAL",uteModuleSportGetCurrDayKcalData());
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());
     textbox = compo_textbox_create(frm,strlen(txt_buf));//卡路里数据
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/2,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5+GUI_SCREEN_HEIGHT/3.5-12);
+    widget_text_set_color(textbox->txt, make_color(233, 16, 75));
+
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_KCAL]));//千卡
+    //compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set(textbox, i18n[STR_KCAL]);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/2+strlen(txt_buf)*16+8,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5+GUI_SCREEN_HEIGHT/3.5-8);
     widget_text_set_color(textbox->txt, make_color(233, 16, 75));
 
     return frm;
@@ -332,7 +354,7 @@ static void func_activity_process(void)
     compo_page_move_process(f_activity->ptm);
     func_process();
 
-    if (ARC_ANIM_STATUS_END == f_activity->anim_status)
+    if (ARC_ANIM_STATUS_END == f_activity->anim_status)//界面刷图动画
     {
         for (i = 0; i < sizeof(activity_arc_info) / sizeof(activity_arc_info[0]); i++)
         {
@@ -342,7 +364,7 @@ static void func_activity_process(void)
         return ;
     }
 
-    if(tick_check_expire(f_activity->tick, 10))
+    if(tick_check_expire(f_activity->tick, 15))
     {
         f_activity->tick = tick_get();
         u8 count = sizeof(f_activity->value) / sizeof(f_activity->value[0]);
@@ -375,17 +397,26 @@ static void func_activity_process(void)
 
             case ARC_ANIM_STATUS_BW:
             {
-                for (i = 0; i < sizeof(f_activity->value) / sizeof(f_activity->value[0]); i++)
+//                for (i = 0; i < sizeof(f_activity->value) / sizeof(f_activity->value[0]); i++)
+//                {
+//                    u16 offset = (ARC_VALUE_MAX - activity_arc_value_goal[i]) / 20;
+//                    if (f_activity->value[i] < activity_arc_value_goal[i])
+//                    {
+//                        f_activity->value[i] = activity_arc_value_goal[i];
+//
+//                    }
+//                    else
+//                    {
+//                        f_activity->value[i] -= offset;
+//                        //f_activity->anim_status = ARC_ANIM_STATUS_END;
+//                    }
+//                }
+                for (i = 0; i < count; i++)
                 {
-                    u16 offset = (ARC_VALUE_MAX - activity_arc_value_goal[i]) / 20;
-                    if (f_activity->value[i] < activity_arc_value_goal[i])
+                    f_activity->value[i] -= 10;
+                    if (f_activity->value[i] ==   activity_arc_value_goal[i])
                     {
-                        f_activity->value[i] = activity_arc_value_goal[i];
-//                            f_activity->anim_status = ARC_ANIM_STATUS_END;
-                    }
-                    else
-                    {
-                        f_activity->value[i] -= offset;
+                        //f_activity->value[i] = ARC_VALUE_MAX;
                         f_activity->anim_status = ARC_ANIM_STATUS_END;
                     }
                 }

@@ -19,6 +19,7 @@
 #include "ute_module_filesystem.h"
 #include "ute_module_bloodoxygen.h"
 #include "ute_drv_battery_common.h"
+#include "ute_module_sport.h"
 
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
@@ -218,7 +219,10 @@ void uteModuleHeartEverySecond(void)
 
         if(uteModuleHeartData.isAutoTestFlag)
         {
-            if (uteModuleHeartData.autoTestSecond >= UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND)
+            if (uteModuleHeartData.autoTestSecond >= UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND
+                && uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_CLOSE
+                && uteModuleGuiCommonGetCurrentScreenId() != FUNC_HEARTRATE
+               )
             {
                 uteModuleHeartStopSingleTesting(TYPE_HEART);
                 uteModuleHeartData.isAutoTestFlag = false;

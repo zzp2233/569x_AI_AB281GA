@@ -481,6 +481,5 @@ void uteModuleSportClearGsensorRotateData(void);
 void uteModuleSportAlgoTimerStart(uint16_t ms);
 void uteModuleSprotAlgoTimerStop(void);
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void);
-
 #endif //_UTE_MODULE_SPORT_H_
 

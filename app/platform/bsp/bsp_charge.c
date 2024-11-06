@@ -84,6 +84,18 @@ u8 charge_dc_detect(void)
     return (RTCCON >> 20) & 0x01;
 }
 
+AT(.text.charge_com.det)
+bool charge_dc_change_detect(void)
+{
+    static u8 last_dc_state = 0;
+    if (last_dc_state != charge_dc_detect())
+    {
+        last_dc_state = charge_dc_detect();
+        return true;
+    }
+    return false;
+}
+
 void bsp_charge_set_stop_time(u16 stop_time)
 {
     charge_cfg.stop_time = stop_time;

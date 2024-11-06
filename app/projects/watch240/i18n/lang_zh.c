@@ -8,13 +8,138 @@ const char * const i18n_zh[] =
     [STR_PHONE]                         = "电话",
     [STR_SPORTS]                        = "运动",
     [STR_SPORTS_CONFIG]                 = "设置目标",
-    [STR_INDOOR_RUN]                    = "室内跑步",
+
+    //[STR_INDOOR_RUN]                    = "室内跑步",
     [STR_FOOTBALL]                      = "足球",
-    [STR_INDOOR_CYCLING]                = "室内自行车",
-    [STR_OUTDOOR_CYCLING]               = "室外自行车",
-    [STR_RUN]                           = "室外跑步",
-    [STR_SWIM]                          = "游泳",
-    [STR_WALK]                          = "爬山",
+    //[STR_INDOOR_CYCLING]                = "室内自行车",
+    //[STR_OUTDOOR_CYCLING]               = "室外自行车",
+    //[STR_RUN]                           = "室外跑步",
+    //[STR_SWIM]                          = "游泳",
+    //[STR_WALK]                          = "爬山",
+
+    [STR_SPORT_RUN]                     = "跑步",
+    [STR_SPORT_RIDE_BIKE]               = "骑行",
+    [STR_SPORT_JUMP_ROPE]               = "跳绳",
+    [STR_SPORT_SWIMMING]                = "游泳",
+    [STR_SPORT_BADMINTON]               = "羽毛球",
+    [STR_SPORT_TABLE_TENNIS]            = "乒乓球",
+    [STR_SPORT_TENNIS]                  = "网球",
+    [STR_SPORT_CLIMBING]                = "爬山",
+    [STR_SPORT_WALKING]                 = "徒步",
+    [STR_SPORT_BASKETBALL]              = "篮球",
+    [STR_SPORT_FOOTBALL]                = "足球",
+    [STR_SPORT_BASEBALL]                = "棒球",
+    [STR_SPORT_VOLLEYBALL]              = "排球",
+    [STR_SPORT_CRICKET]                 = "板球",
+    [STR_SPORT_RUGBY]                   = "橄榄球",
+    [STR_SPORT_HOCKEY]                  = "曲棍球",
+    [STR_SPORT_DANCE]                   = "跳舞",
+    [STR_SPORT_SPINNING]                = "动感单车",
+    [STR_SPORT_YOGA]                    = "瑜伽",
+    [STR_SPORT_SIT_UP]                  = "仰卧起坐",
+    [STR_SPORT_TREADMILL]               = "跑步机",
+    [STR_SPORT_GYMNASTICS]              = "体操",
+    [STR_SPORT_BOATING]                 = "划船",
+    [STR_SPORT_JUMPING_JACK]            = "开合跳",
+    [STR_SPORT_FREE_TRAINING]           = "自由训练",
+
+//    STR_SPORT_INDOOR_WALK,  //室内走路
+//    STR_SPORT_INDOOR_RUN,   //室内跑步
+//    STR_SPORT_STRENGTH_TRAINING,    //力量训练
+//    STR_SPORT_STEP_TRAINING,    //踏步
+//    STR_SPORT_HORSE_RIDING,     //骑马
+//    STR_SPORT_ELLIPTICAL_TRAINER,       //椭圆机
+//    STR_SPORT_TAI_CHI,      //太极
+//    STR_SPORT_SHUTTLECOCK,  //毽球
+//    STR_SPORT_BOXING,       //拳击
+//    STR_SPORT_OUTDOOR_WALK, //户外健走
+//    STR_SPORT_TRAIL_RUNNING,    //越野跑
+//    STR_SPORT_SKIING,       //滑雪
+//    STR_SPORT_ICE_HOCKEY,   //冰球
+//    STR_SPORT_TAEKWONDO,    //跆拳道
+//    STR_SPORT_VO2MAX_TEST,  //最大摄氧量测试
+//    STR_SPORT_ROWING_MACHING,   //划船机
+//    STR_SPORT_AIR_WALKER,       //漫步机
+//    STR_SPORT_HIKING,       //徒步
+//    STR_SPORT_ATHLETICS,    //田径
+//    STR_SPORT_WAIST_TRAINING,   //腰腹训练
+//    STR_SPORT_KARATE,       //空手道
+//    STR_SPORT_COOLDOWN,     //整理放松
+//    STR_SPORT_CROSS_TRAINING,   //交叉训练
+//    STR_SPORT_PILATES,      //普拉提
+//    STR_SPORT_CROSS_FIT,    //交叉配合
+//    STR_SPORT_FUNCTIONAL_TRAINING,      //功能性训练
+//    STR_SPORT_PHYSICAL_TRAINING,        //体能训练
+//    STR_SPORT_ARCHERY,          //射箭
+//    STR_SPORT_FLEXIBILITY,      //柔韧度
+//    STR_SPORT_MIXED_CARDIO,     //混合有氧
+//    STR_SPORT_LATIN_DANCE,      //拉丁舞
+//    STR_SPORT_STREET_DANCE,     //街舞
+//    STR_SPORT_KICKBOXING,       //自由搏击
+//    STR_SPORT_BARRE,            //芭蕾
+//    STR_SPORT_AUSTRALIAN_FOOTBALL,  //澳式足球
+//    STR_SPORT_MARTIAL_ARTS,     //武术
+//    STR_SPORT_STAIRS,           //爬楼
+//    STR_SPORT_HANDBALL,         //手球
+//    STR_SPORT_BOWLING,          //保龄球
+//    STR_SPORT_RACQUETBALL,      //壁球
+//    STR_SPORT_CURLING,          //冰壶
+//    STR_SPORT_HUNTING,          //打猎
+//    STR_SPORT_SNOWBOARDING,     //单板滑雪
+//    STR_SPORT_PLAY,             //休闲运动
+//    STR_SPORT_AMERICAN_FOOTBALL,    //美式橄榄球
+//    STR_SPORT_HAND_CYCLING,     //手摇车
+//    STR_SPORT_FISHING,          //钓鱼
+//    STR_SPORT_DISC_SPORTS,      //飞盘
+//    STR_SPORT_RUGGER,           //橄榄球
+//    STR_SPORT_GOLF,             //高尔夫
+//    STR_SPORT_FOLK_DANCE,       //民族舞
+//    STR_SPORT_DOWNHILL_SKIING,      //高山滑雪
+//    STR_SPORT_SNOW_SPORTS,      //雪上运动
+//    STR_SPORT_MIND_BODY,        //舒缓冥想类运动
+//    STR_SPORT_CORE_TRAINING,    //核心训练
+//    STR_SPORT_SKATING,          //滑冰
+//    STR_SPORT_FITNESS_GAMING,   //健身游戏
+//    STR_SPORT_AEROBICS,         //健身操
+//    STR_SPORT_GROUP_TRAINING,   //团体操
+//    STR_SPORT_KENDO,            //搏击操
+//    STR_SPORT_LACROSSE,         //长曲棍球
+//    STR_SPORT_ROLLING,          //泡沫轴筋膜放松
+//    STR_SPORT_WRESTLING,        //摔跤
+//    STR_SPORT_FENCING,          //击剑
+//    STR_SPORT_SOFTBALL,         //垒球
+//    STR_SPORT_SINGLE_BAR,       //单杠
+//    STR_SPORT_PARALLEL_BARS,    //双杠
+//    STR_SPORT_ROLLER_SKATING,   //轮滑
+//    STR_SPORT_HULA_HOOP,        //呼啦圈
+//    STR_SPORT_DARTS,            //飞镖
+//    STR_SPORT_PICKLEBALL,       //匹克球
+//    STR_SPORT_HIIT,             //HIIT
+//    STR_SPORT_SHOOTING,         //射击
+//    STR_SPORT_JUDO,             //柔道
+//    STR_SPORT_TRAMPOLINE,       //蹦床
+//    STR_SPORT_SKATEBOARDING,    //滑板
+//    STR_SPORT_HOVERBOARD,       //平衡车
+//    STR_SPORT_BLADING,          //溜旱冰
+//    STR_SPORT_PARKOUR,          //跑酷
+//    STR_SPORT_DIVING,           //跳水
+//    STR_SPORT_SURFING,          //冲浪
+//    STR_SPORT_SNORKELING,       //浮潜
+//    STR_SPORT_PULL_UP,          //引体向上
+//    STR_SPORT_PUSH_UP,          //俯卧撑
+//    STR_SPORT_PLANKING,         //平板支撑
+//    STR_SPORT_ROCK_CLIMBING,    //攀岩
+//    STR_SPORT_HIGHTJUMP,        //跳高
+//    STR_SPORT_BUNGEE_JUMPING,   //蹦极
+//    STR_SPORT_LONGJUMP,         //跳远
+//    STR_SPORT_MARATHON,         //马拉松
+//    STR_SPORT_OTHER,            //其他，判断此类型，跳转到其他界面
+//    STR_SPORT_CYWEE_SWIM_GNSS,  //第三方游泳算法，带gps数据 20201009
+//    STR_SPORT_CYWEE_SWIM,       //第三方游泳算法 20201009
+    [STR_SPORT_EXIT_MSG1]               = "运动结束",
+    [STR_SPORT_EXIT_MSG2]               = "本次运动量少数据将不会被保存是否结束",
+    [STR_SPORT_EXIT_MSG3]               = "本次运动将不会被保存是否结束",
+
     [STR_STEP]                          = "计步",
     [STR_SLEEP]                         = "睡眠",
     [STR_MUSIC]                         = "音乐",
@@ -218,4 +343,6 @@ const char * const i18n_zh[] =
 
     [STR_FIND_WATCH]                    = "寻找手表",
     [STR_SET_DATA_READ]                 = "当前设定时间如果已与App连接,同步时间将会产生睡眠数据修改.",
+    [STR_GOAL_ACHIEVE]                  = "目标完成",
+    [STR_SEDENTARY_REMIND]              = "久坐提醒",
 };

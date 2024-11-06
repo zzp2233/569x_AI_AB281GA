@@ -4,10 +4,10 @@
 
 typedef enum
 {
-    CHARGE_NO_FULL = 0,			//电池没满
-    CHARGE_FULL,				//电池满了
-    CHARGE_REFILL				//电池续充
-}charge_sta_m;
+    CHARGE_NO_FULL = 0,         //电池没满
+    CHARGE_FULL,                //电池满了
+    CHARGE_REFILL               //电池续充
+} charge_sta_m;
 
 
 void bsp_charge_init(void);
@@ -18,7 +18,7 @@ void bsp_charge_sta(u8 sta);
 void bsp_charge_set_stop_time(u16 stop_time);
 void bsp_charge_bled_ctrl(void);
 void charge_set_detect_cnt(u8 value);
-
+bool charge_dc_change_detect(void);
 
 /**
  *   充电状态函数

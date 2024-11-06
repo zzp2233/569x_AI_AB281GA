@@ -418,6 +418,13 @@ static void sfunc_sleep(void)
             break;
         }
 
+        if (charge_dc_change_detect())
+        {
+            printf("dc change\n");
+            gui_need_wkp = true;
+            break;
+        }
+
         //ute add
         if(uteModulePlatformNotAllowSleep())
         {

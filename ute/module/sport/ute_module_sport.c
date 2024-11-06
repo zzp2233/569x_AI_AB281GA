@@ -36,6 +36,9 @@ ute_step_sleep_param_t mStepSleepParam;
 #if UTE_MODULE_WATCH_ROTATE_SUPPORT
 #include "ute_rotate.h"
 #endif
+
+#include "func_cover.h"
+
 /*! sport的数据 zn.zeng, 2021-10-23  */
 ute_module_sport_data_t uteModuleSprotData;
 uint8_t uteModuleSportMoreSportSyncDataBuff[170];
@@ -1147,7 +1150,9 @@ void uteModuleSportStepTargetHandler(void)
             if(uteModuleSprotData.todayTargetNotify.isTodayStepTargetNotifyOpen)
 #endif
             {
-                // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID);
+                // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID);       //日常步数目标完成弹窗
+                sys_cb.cover_index = REMIND_COVER_GOAL;
+                sys_cb.remind_tag = true;
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,2);
             }
         }
@@ -2557,6 +2562,7 @@ uint16_t uteModuleSportGetCurrDayKcalData(void)
 */
 void uteModuleSportStartMoreSports(uint8_t sportsType,uint8_t startInterval,bool isAppStart)
 {
+    printf("%s\n",__func__);
     uint32_t param = sportsType<<24|startInterval<<16|isAppStart<<8;
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_SPORT_START_MORE_SPORTS,param);
 }
@@ -2900,7 +2906,8 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
 #if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
         uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_LOW_BATTERY_NOTIFY_ID);
 #else
-        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);              //低电停止运动返回表盘
+        func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
 #endif
     }
     if(uteModuleSprotData.moreSportData.status!=ALL_SPORT_STATUS_CLOSE)
@@ -3002,7 +3009,9 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                     /*! 跳转界面zn.zeng, 2021-11-11  */
                     if(uteModuleSportMoreSportsIsLessData())
                     {
-                        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);
+                        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID); //退回运动列表
+                        void func_switch_to(u8 sta, u16 switch_mode);
+                        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
                     }
                     else
                     {
@@ -3012,11 +3021,19 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                         /*! 没有连接过APP不保存数据 xjc, 2022-05-06  */
                         if(!uteApplicationCommonIsHasConnectOurApp())
                         {
-                            // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);
+                            // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);  //退回运动列表
+//                            extern u8 task_stack_pop(void);
+//                            task_stack_pop();
+                            void func_switch_to(u8 sta, u16 switch_mode);
+                            func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
                         }
                         else
                         {
-                            // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);
+                            // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);     //运动完成数据弹窗
+                            func_cb.sta = FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
+//                            sys_cb.cover_index = REMIND_COVER_GOAL;
+//                            sys_cb.remind_tag = true;
+
                         }
                     }
                 }
@@ -3233,7 +3250,10 @@ void uteModuleSportStartMoreSportsMsgHandler(uint32_t param)
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
     /*! 跳转界面zn.zeng, 2021-11-11  */
-    // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_DETAIL_ID);
+    // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_DETAIL_ID);      //运动RUNING界面
+    //func_switch_to(FUNC_SPORT_SUB_RUN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+    func_cb.sta = FUNC_SPORT_SUB_RUN;
+    sys_cb.sport_app_disconnect = false;
     if(sportsType==SPORT_TYPE_JUMP_ROPE)
     {
         // uteDrvHeartVcxxStopSample();
@@ -3591,7 +3611,8 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
     /*! 界面跳转, xjc Mark 20220111 */
     if(uteModuleSportMoreSportsIsLessData())
     {
-        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);
+        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);      //运动列表
+        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
     }
     else
     {
@@ -3601,7 +3622,10 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
 #if UTE_MODULE_SPORTS_HSTORY_RECORD_SUPPORT
         uteModuleSprotData.sportsHistoryRecord.displayIndex = 0;
 #endif
-        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);
+        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);     //运动完成数据界面
+        func_cb.sta = FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
+//        sys_cb.cover_index = REMIND_COVER_GOAL;
+//        sys_cb.remind_tag = true;
 #endif
     }
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
@@ -3906,7 +3930,10 @@ void uteModuleSportDisconnectHandler(void)
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
         uteModuleSprotData.moreSportData.isAppStartSportReConnection = false;
         uteModuleSprotData.moreSportData.status = ALL_SPORT_STATUS_PAUSE;
-        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_PAUSED_ID);
+        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_PAUSED_ID);          //跳到暂停界面，自动暂停运动，蓝牙连接才可继续跑
+        //func_switch_to(FUNC_SPORT_SUB_RUN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+        func_cb.sta = FUNC_SPORT_SUB_RUN;
+        sys_cb.sport_app_disconnect = true;
     }
 }
 /**
@@ -3918,7 +3945,9 @@ void uteModuleSportDisconnectHandler(void)
 void uteModuleSportSedentaryMsg(void)
 {
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
-    // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SEDENTARY_REMIND_ID);
+    // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SEDENTARY_REMIND_ID);           //久坐提醒界面
+    sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
+    sys_cb.remind_tag = true;
     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);
 }
 /**
@@ -6491,3 +6520,7 @@ void uteModuleSprotAlgoTimerStop(void)
     uteModuleSportInputDataBeforeAlgoTimer = NULL;
 }
 
+ute_module_more_sports_data_t uteModuleSportGetMoreData(void)
+{
+    return uteModuleSprotData.moreSportData;
+}

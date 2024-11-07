@@ -196,7 +196,7 @@ void uteModuleHeartEverySecond(void)
         /*! 每10分钟保存一次心率值并且发给app端 zn.zeng, 2021-07-15 */
 
         static bool isNeedAutoTest = false;
-        if(((oneDayMin%5) == 0) && (time.sec == 0))  //
+        if(((oneDayMin % 10) == 0) && (time.sec == 0))  //
         {
             isNeedAutoTest = true;
         }

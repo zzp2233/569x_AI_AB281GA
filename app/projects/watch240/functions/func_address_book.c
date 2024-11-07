@@ -7,7 +7,7 @@
 #define TRACE(...)
 #endif
 
-#define ADDRESS_BOOK_LIST_CNT           5 //显示的联系人个数
+#define ADDRESS_BOOK_LIST_CNT           30 //显示的联系人个数
 
 extern bool func_switching_flag;
 enum
@@ -22,8 +22,19 @@ typedef struct f_address_book_list_t_
     pbap_pb_buf_t pb_list[ADDRESS_BOOK_LIST_CNT];
 } f_address_book_list_t;
 
-static const compo_listbox_item_t tbl_call_list[ADDRESS_BOOK_LIST_CNT] = {0};
-compo_listbox_custom_item_t tbl_call_txt_list[ADDRESS_BOOK_LIST_CNT] = {0};
+static const compo_listbox_item_t tbl_call_list[ADDRESS_BOOK_LIST_CNT] = {0};       //list列表
+
+
+compo_listbox_custom_item_t tbl_call_txt_list[ADDRESS_BOOK_LIST_CNT] = {0};         //輸入联系人的数据 20个
+
+void test_callback(u32 item_cnt, char* str_txt, u16 index)
+{
+//    printf("item_cnt = %d\n", item_cnt);
+    if (index < item_cnt)
+    {
+        memcpy(str_txt, tbl_call_txt_list[index].str_txt, sizeof(tbl_call_txt_list[index].str_txt));
+    }
+}
 
 //创建电话簿窗体
 compo_form_t *func_address_book_form_create(void)
@@ -40,7 +51,9 @@ compo_form_t *func_address_book_form_create(void)
     compo_listbox_set(listbox, tbl_call_list, ADDRESS_BOOK_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
-    compo_listbox_set_text_modify(listbox, tbl_call_txt_list);
+    compo_listbox_set_text_modify_by_idx_callback(listbox, test_callback);
+
+//    compo_listbox_set_text_modify(listbox, tbl_call_txt_list);
 
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
@@ -76,7 +89,7 @@ static void func_address_book_sync_pb_callback(void *info, u16 count)
     {
         compo_listbox_t *listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
         compo_listbox_set(listbox, tbl_call_list, ADDRESS_BOOK_LIST_CNT);
-        compo_listbox_set_text_modify(listbox, tbl_call_txt_list);
+//        compo_listbox_set_text_modify(listbox, tbl_call_txt_list);
         compo_listbox_set_focus_byidx(listbox, 1);
         compo_listbox_update(listbox);
     }
@@ -110,6 +123,10 @@ static void func_address_book_process(void)
 {
     f_address_book_list_t *f_book = (f_address_book_list_t *)func_cb.f_cb;
     compo_listbox_move(f_book->listbox);
+
+
+    //printf("focus_icon_idx=%d\n", f_book->listbox->focus_icon_idx);
+
     func_process();
 }
 
@@ -145,6 +162,7 @@ static void func_address_book_message(size_msg_t msg)
     }
 }
 
+
 //进入电话簿功能
 static void func_address_book_enter(void)
 {
@@ -172,6 +190,9 @@ static void func_address_book_enter(void)
                            ADDRESS_BOOK_LIST_CNT, func_address_book_sync_pb_callback);
     }
 #endif
+
+
+
 }
 
 

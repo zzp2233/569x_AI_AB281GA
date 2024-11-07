@@ -38,8 +38,25 @@
 #define SPI_DRIVER_NO                  0                                        //无QSPI显示驱动
 #define SPI_DRIVER_JD9853              0x100                                    //JD9853系列驱动
 #define SPI_JD9853_V1                  (SPI_DRIVER_JD9853 | 0x01)               //JD9853系列驱动版本选择V1
+#define SPI_JD9853_WIDTH               240
+#define SPI_JD9835_HIGHT               284
+#define SPI_JD9835_OFS_X               0
+#define SPI_JD9835_OFS_Y               20
+
 #define SPI_DRIVER_GC9307              0x200                                    //GC9307系列驱动
 #define SPI_GC9307_V1                  (SPI_DRIVER_GC9307 | 0x01)               //GC9307系列驱动版本选择V1
+#define SPI_GC9307_WIDTH               240
+#define SPI_GC9307_HIGHT               284
+#define SPI_GC9307_OFS_X               0
+#define SPI_GC9307_OFS_Y               20
+
+#define SPI_DRIVER_ST7789              0x300                                    //ST7789系列驱动
+#define SPI_ST7789_V1                  (SPI_DRIVER_ST7789 | 0x01)               //ST7789系列驱动版本选择V1   
+#define SPI_ST7789_WIDTH               240
+#define SPI_ST7789_HIGHT               296
+#define SPI_ST7789_OFS_X               0
+#define SPI_ST7789_OFS_Y               20
+
 //屏幕接口模式
 #define MODE_3WIRE_9BIT                 0                                       //屏幕3线9bit模式: 3线为SCLK CS D0; 9bit每次传输一个byte有效数据, 开头多1bit作为DC识别;
 #define MODE_3WIRE_9BIT_2LINE           1                                       //屏幕3线9bit 两线模式(despi): 写命令用3w-9b, 写数据为两线模式多了D1/DC, 3w-9b-2line;

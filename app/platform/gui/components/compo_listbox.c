@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_call.h"
 
 #define TRACE_EN                1
 
@@ -12,7 +13,8 @@
 #define LISTBOX_ITEM_SIZE_THRESHOLD_CIRCLE      (GUI_SCREEN_HEIGHT / 6)     //弧线菜单大小保持区
 #define LISTBOX_STYLE_CIRCLE_R                  (GUI_SCREEN_WIDTH * 2)      //更表弧线半径
 
-#define MAX_WORD_CNT                            32                          //每条列表项最多32个字符
+#define LISTBOX_MAX_ITEM_CNT                    UTE_MODULE_CALL_ADDRESSBOOK_MAX_COUNT
+#define MAX_WORD_CNT                            (UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH + UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH)//32                          //每条列表项最多32个字符
 #define LIST_CUSTOM_AREA_X_MIN                  90                          //点击列表中X坐标的最小差值
 #define LIST_CUSTOM_AREA_X_MAX                  140                         //点击列表中X坐标的最大差值
 #define LIST_CUSTOM_AREA_Y_MIN                 -110                         //点击列表中Y坐标的最小差值
@@ -395,11 +397,16 @@ void compo_listbox_update(compo_listbox_t *listbox)
         }
         else if (listbox->flag_text_modify == 2)
         {
-            char str_txt[LISTBOX_MAX_ITEM_CNT] = {0};
-            if (listbox->set_text_modify_by_idx_callback != NULL)
+            char* str_txt = ab_zalloc(MAX_WORD_CNT);
+            if (listbox->set_text_modify_by_idx_callback != NULL && str_txt != NULL)
             {
                 listbox->set_text_modify_by_idx_callback(listbox->item_cnt, str_txt, listbox->item_idx[i]);
                 widget_text_set(listbox->item_text[i], str_txt);
+            }
+            if (str_txt != NULL)
+            {
+                ab_free(str_txt);
+                str_txt= NULL;
             }
         }
         widget_set_align_center(listbox->item_text[i], listbox->flag_text_center);

@@ -1,7 +1,7 @@
 #ifndef _COMPO_LISTBOX_H
 #define _COMPO_LISTBOX_H
 
-#define LISTBOX_MAX_ITEM_CNT            40
+
 
 #define LISTBOX_ITEM_CNT                10       //每页列表，中心上下各保留3个进行滚动
 #define LISTBOX_TEXT_LEN                30      //自定义文字的长度

@@ -19,6 +19,7 @@
 #include "ute_module_filesystem.h"
 #include "ute_module_bloodoxygen.h"
 #include "ute_drv_battery_common.h"
+#include "ute_module_sport.h"
 
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
@@ -195,7 +196,7 @@ void uteModuleHeartEverySecond(void)
         /*! 每10分钟保存一次心率值并且发给app端 zn.zeng, 2021-07-15 */
 
         static bool isNeedAutoTest = false;
-        if(((oneDayMin%5) == 0) && (time.sec == 0))  //
+        if(((oneDayMin % 10) == 0) && (time.sec == 0))  //
         {
             isNeedAutoTest = true;
         }
@@ -218,7 +219,10 @@ void uteModuleHeartEverySecond(void)
 
         if(uteModuleHeartData.isAutoTestFlag)
         {
-            if (uteModuleHeartData.autoTestSecond >= UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND)
+            if (uteModuleHeartData.autoTestSecond >= UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND
+                && uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_CLOSE
+                && uteModuleGuiCommonGetCurrentScreenId() != FUNC_HEARTRATE
+               )
             {
                 uteModuleHeartStopSingleTesting(TYPE_HEART);
                 uteModuleHeartData.isAutoTestFlag = false;

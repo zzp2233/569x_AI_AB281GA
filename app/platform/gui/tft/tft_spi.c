@@ -179,18 +179,18 @@ AT(.com_text.tft_spi)
 void tft_write_data_start(void)
 {
 #if (GUI_MODE_SELECT == MODE_3WIRE_9BIT)
-	tft_write_cmd(0x2C);
-	DC_DATA_EN();
+    tft_write_cmd(0x2C);
+    DC_DATA_EN();
 #elif (GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
-	tft_write_cmd(0x2C);
+    tft_write_cmd(0x2C);
     DC_DATA_EN();
     //3w-9b 2line mode
     DESPICON |= BIT(26) | BIT(9) | BIT(3); //[26]dual en, [9]MultiBit, [3:2]2BIT data bus
 #elif (GUI_MODE_SELECT == MODE_4WIRE_8BIT)
-	tft_write_cmd(0x2C);
+    tft_write_cmd(0x2C);
     DC_DATA_EN();
 #elif (GUI_MODE_SELECT == MODE_QSPI)
-	tft_write_cmd12(0x2C);      //TFT_RAMWR
+    tft_write_cmd12(0x2C);      //TFT_RAMWR
 #endif
 }
 
@@ -206,7 +206,8 @@ void spi_display_point(uint16_t x1, uint16_t y1, uint16_t color)
 
     printf("%s DESPICON[%x]\n", __func__, DESPICON);
 #if 0//DMA buf
-    for (int i = 0; i <= x1*2; i += 2) {
+    for (int i = 0; i <= x1*2; i += 2)
+    {
         debug_tft_dma_buf[i + 1] = color >> 8;      //dataH => SDA
         debug_tft_dma_buf[i] = color & 0xff;        //dataL => DC
     }
@@ -215,13 +216,16 @@ void spi_display_point(uint16_t x1, uint16_t y1, uint16_t color)
 //    print_r(debug_tft_dma_buf, 8);
 
     tft_spi_send(debug_tft_dma_buf, 10);
-    for (int i = 0; i <= 240; i++) {
+    for (int i = 0; i <= 240; i++)
+    {
         WDT_CLR();
         tft_spi_send(debug_tft_dma_buf, 320*2);
     }
 #else
-    for (int x = 0; x <= x1; x++) {
-        for (int y = 0; y <= y1; y++) {
+    for (int x = 0; x <= x1; x++)
+    {
+        for (int y = 0; y <= y1; y++)
+        {
             WDT_CLR();
             WriteData(color >> 8);
             WriteData(color);
@@ -250,10 +254,12 @@ uint32_t tft_read_id(void)
 
 void tft_spi_init(void)
 {
-#if (TFT_SPI_DRIVER & SPI_DRIVER_JD9853)
+#if (TFT_SPI_DRIVER == SPI_JD9853_V1)
     tft_spi_jd9853_init();
-#elif (TFT_SPI_DRIVER & SPI_DRIVER_GC9307)
+#elif (TFT_SPI_DRIVER == SPI_GC9307_V1)
     tft_spi_gc9307_init();
+#elif (TFT_SPI_DRIVER == SPI_ST7789_V1)
+    tft_240_st7789_init();
 #endif
 }
 

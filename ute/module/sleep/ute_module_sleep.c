@@ -16,6 +16,7 @@
 #include "ute_module_profile_ble.h"
 #include "ute_flash_map_common.h"
 #include "ute_module_systemtime.h"
+#include "ute_module_platform.h"
 
 /*! 睡眠算法数据zn.zeng, 2021-10-26  */
 ute_sleep_data_t uteSleepAlgoData;
@@ -955,16 +956,18 @@ void uteModuleSleepGetCurrDayDataDisplay(ute_module_sleep_display_data_t *sleepD
         sleepDisplayData->getUpSleepTime.hour = pRead->getUpTime.hour;
         sleepDisplayData->getUpSleepTime.min = pRead->getUpTime.min;
 #endif
+        memcpy(sleepDisplayData->sleep_record, pRead->sleep_record, sizeof(sleep_record_t) * UTE_SLEEP_ON_BAND_MAX_RECORD_SIZE);
     }
     else
     {
         memset(&sleepDisplayData->fallAsSleepTime, 0x00, sizeof(timestmap_t));
         memset(&sleepDisplayData->getUpSleepTime, 0x00, sizeof(timestmap_t));
     }
-    //uteModuleSleepSetCurrDayDataGraphs(pRead,sleepDisplayData);
+    // uteModuleSleepSetCurrDayDataGraphs(pRead,sleepDisplayData);
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,deepSleepMin=%d,lightSleepMin=%d,wakeSleepMin=%d", __func__, sleepDisplayData->deepSleepMin, sleepDisplayData->lightSleepMin, sleepDisplayData->wakeSleepMin);
     uteModulePlatformMemoryFree(pRead);
 }
+
 /**
  *@brief        时间变化
  *@details   跨天数，跨18:00时要处理清零

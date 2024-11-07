@@ -40,10 +40,10 @@
 #define CTP_SELECT                      CTP_CST8X                   //CTP Select
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
-#define GUI_MODE_SELECT                 MODE_4WIRE_8BIT             //屏幕接口选择
-#define TFT_SPI_DRIVER                  SPI_GC9307_V1           //驱动选择
+#define GUI_MODE_SELECT                 MODE_3WIRE_9BIT_2LINE             //屏幕接口选择
+#define TFT_SPI_DRIVER                  SPI_ST7789_V1           //驱动选择
 #define TFT_SPI_LCD_WIDTH               240
-#define TFT_SPI_LCD_HEIGHT              296
+#define TFT_SPI_LCD_HEIGHT              284
 #define TFT_SPI_LCD_OFS_X               0
 #define TFT_SPI_LCD_OFS_Y               20
 #endif
@@ -53,7 +53,7 @@
 #define UART0_PRINTF_SEL                PRINTF_PB3                  //选择UART打印信息输出IO，或关闭打印信息输出
 #define SYS_INIT_VOLUME                 xcfg_cb.sys_init_vol        //系统默认音量
 
-#define HEAP_FUNC_SIZE                  4096+1024                        //FUNC HEAP SIZE
+#define HEAP_FUNC_SIZE                  4096                        //FUNC HEAP SIZE
 #define CUSTOMER_HEAP_SIZE              (16 * 1024)                 //malloc 空间大小
 
 #define TS_MODE_EN                      0                           //内部NTC模块是否开启

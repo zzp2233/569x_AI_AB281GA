@@ -41,15 +41,7 @@ typedef struct
 #endif
     timestmap_t fallAsSleepTime;
     timestmap_t getUpSleepTime;
-    // UT_GraphsParam currSleepGraphPara[UTE_SLEEP_ON_BAND_MAX_RECORD_SIZE];
-    // int16_t currSleepGraphStartX;
-    // int16_t currSleepGraphStartY;
-    // uint16_t currSleepGraphight;
-    // uint16_t currSleepGrapMaxWith;
-    // uint32_t lightSleepColor;
-    // uint32_t deepSleepColor;
-    // uint32_t wakeSleepColor;
-    // uint32_t remSleepColor;
+    sleep_record_t sleep_record[UTE_SLEEP_ON_BAND_MAX_RECORD_SIZE];
     uint8_t recordCnt;
 } ute_module_sleep_display_data_t;
 /*! zn.zeng, 2021-10-26  */

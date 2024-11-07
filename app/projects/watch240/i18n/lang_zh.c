@@ -348,5 +348,8 @@ const char * const i18n_zh[] =
     [STR_SET_CALORIE]                   = "卡路里",
     [STR_GOAL_ACHIEVE]                  = "目标完成",
     [STR_SEDENTARY_REMIND]              = "久坐提醒",
-
+    [STR_DEEP_SLEEP]                    = "深睡",
+    [STR_LIGHT_SLEEP]                   = "浅睡",
+    [STR_ALWAKE_SLEEP]                  = "清醒",
+    [STR_EYE_MOVE_SLEEP]                = "快速眼动",
 };

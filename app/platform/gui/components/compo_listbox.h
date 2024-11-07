@@ -6,7 +6,8 @@
 #define LISTBOX_ITEM_CNT                10       //每页列表，中心上下各保留3个进行滚动
 #define LISTBOX_TEXT_LEN                30      //自定义文字的长度
 
-enum COMPO_LISTBOX_STYLE {
+enum COMPO_LISTBOX_STYLE
+{
     COMPO_LISTBOX_STYLE_MENU_NORMAL,            //普通菜单
     COMPO_LISTBOX_STYLE_MENU_CIRCLE,            //圆屏弧形菜单
     COMPO_LISTBOX_STYLE_TITLE,                  //带Title的列表，头部不做缩放
@@ -16,38 +17,44 @@ enum COMPO_LISTBOX_STYLE {
     COMPO_LISTBOX_STYLE_MENU_FOURGRID,          //四宫格列表菜单
 };
 
-enum COMPO_LISTBOX_ITEM_MODE {
+enum COMPO_LISTBOX_ITEM_MODE
+{
     COMPO_LISTBOX_ITEM_MODE_NORMAL,             //普通菜单
     COMPO_LISTBOX_ITEM_MODE_SWITCH,             //选择开关
 };
 
 //列表框移动控制命令
-enum COMPO_LISTBOX_MOVE_CMD {
+enum COMPO_LISTBOX_MOVE_CMD
+{
     COMPO_LISTBOX_MOVE_CMD_DRAG,                //开始拖动
     COMPO_LISTBOX_MOVE_CMD_FORWARD,             //向前滚动
     COMPO_LISTBOX_MOVE_CMD_BACKWARD,            //向后滚动
 };
 
 //列表框当前状态
-enum COMPO_LISTBOX_STA {
+enum COMPO_LISTBOX_STA
+{
     COMPO_LISTBOX_STA_IDLE,                     //空闲状态
     COMPO_LISTBOX_STA_DARG,                     //拖动中
     COMPO_LISTBOX_STA_MOVE,                     //移动中
 };
 
 //列表框时钟
-enum COMPO_LISTBOX_TIME_TYPE {
+enum COMPO_LISTBOX_TIME_TYPE
+{
     COMPO_LISTBOX_TIME_TYPE_HOUR,
     COMPO_LISTBOX_TIME_TYPE_MIN,
     COMPO_LISTBOX_TIME_TYPE_SEC,
 };
 
 //菜单项定义
-typedef struct compo_listbox_item_t_ {
+typedef struct compo_listbox_item_t_
+{
     u32 str_idx;                                //文字
     u32 res_addr;                               //图标
     u8 item_mode;                               //菜单模式
-    union {                                     //菜单参数
+    union                                       //菜单参数
+    {
         u8 func_sta;                            //普通菜单模式
         u8 menu_style;                          //菜单选择
         u16 vidx;                               //选择开关Switch绑定的系统位变量vidx
@@ -55,13 +62,15 @@ typedef struct compo_listbox_item_t_ {
 } compo_listbox_item_t;
 
 //菜单自定义项定义，列表中内容需要动态更新的在這里创建
-typedef struct compo_listbox_custom_item_t_ {
-    char str_txt[LISTBOX_TEXT_LEN];          	//自定义文字
+typedef struct compo_listbox_custom_item_t_
+{
+    char str_txt[LISTBOX_TEXT_LEN];             //自定义文字
 
 } compo_listbox_custom_item_t;
 
 //列表移动控制
-typedef struct compo_listbox_move_cb_t_ {
+typedef struct compo_listbox_move_cb_t_
+{
     u32 tick;
     s32 focus_y;
     s32 focus_dy;
@@ -74,7 +83,8 @@ typedef struct compo_listbox_move_cb_t_ {
     bool flag_move_auto;            //自动移到坐标
 } compo_listbox_move_cb_t;
 
-typedef struct compo_listbox_t_ {
+typedef struct compo_listbox_t_
+{
     COMPO_STRUCT_COMMON;
     compo_listbox_move_cb_t *mcb;   //移动控制
     widget_page_t *page;
@@ -108,7 +118,7 @@ typedef struct compo_listbox_t_ {
     s16 focus_icon_idx;              //焦点的图标编号
     bool flag_sel_icon2;            //是否选中状态图标
     bool flag_text_center;          //是否居中文本
-    bool flag_text_modify;          //是否修改文本内容
+    u8 flag_text_modify;          //是否修改文本内容
     bool flag_cycle;                //是否循环滑动
 
     u8 flag_area;                   //是否点击特定区域
@@ -123,13 +133,15 @@ typedef struct compo_listbox_t_ {
     compo_roll_cb_t roll_cb[LISTBOX_ITEM_CNT];
     s16 item_idx[LISTBOX_ITEM_CNT];
 
-    u8 idx_time;				//加入时分秒针元素
-	widget_page_t *page_time;
-	widget_icon_t *time_bg;
-	widget_image_t *hour;
-	widget_image_t *min;
-	widget_image_t *sec;
-	s16 start_angle;
+    u8 idx_time;                //加入时分秒针元素
+    widget_page_t *page_time;
+    widget_icon_t *time_bg;
+    widget_image_t *hour;
+    widget_image_t *min;
+    widget_image_t *sec;
+    s16 start_angle;
+
+    void (*set_text_modify_by_idx_callback)(u32 item_cnt, char* str_txt, u16 index);
 
 } compo_listbox_t;
 
@@ -349,4 +361,13 @@ void compo_listbox_set_start_angle(compo_listbox_t *listbox, s16 angle);
  * @param[in] idx : 时钟序号
  **/
 void compo_listbox_set_time_idx(compo_listbox_t *listbox, u8 idx);
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text_modify_by_idx_callback(compo_listbox_t *listbox, void* callback);
+
+
 #endif

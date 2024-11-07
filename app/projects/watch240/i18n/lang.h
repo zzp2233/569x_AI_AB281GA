@@ -23,125 +23,125 @@ enum
 //    STR_SWIM,
 //    STR_WALK,
 
-    STR_SPORT_RUN,          //ÅÜ²½
-    STR_SPORT_RIDE_BIKE,    // ÆïÐÐ
-    STR_SPORT_JUMP_ROPE,    //ÌøÉþ
-    STR_SPORT_SWIMMING,     // ÓÎÓ¾
-    STR_SPORT_BADMINTON,    // ÓðÃ«Çò
-    STR_SPORT_TABLE_TENNIS, //Æ¹ÅÒÇò
-    STR_SPORT_TENNIS,       //ÍøÇò
-    STR_SPORT_CLIMBING,     //ÅÀÉ½
-    STR_SPORT_WALKING,      //Í½²½
-    STR_SPORT_BASKETBALL,   //ÀºÇò
-    STR_SPORT_FOOTBALL,     //×ãÇò
-    STR_SPORT_BASEBALL,     //°ôÇò
-    STR_SPORT_VOLLEYBALL,   //ÅÅÇò
-    STR_SPORT_CRICKET,      //°åÇò
-    STR_SPORT_RUGBY,        //éÏé­Çò
-    STR_SPORT_HOCKEY,       // Çú¹÷Çò
-    STR_SPORT_DANCE,        //ÌøÎè
-    STR_SPORT_SPINNING,     //¶¯¸Ðµ¥³µ
-    STR_SPORT_YOGA,         //è¤Ù¤
-    STR_SPORT_SIT_UP,       //ÑöÎÔÆð×ø
-    STR_SPORT_TREADMILL,    // ÅÜ²½»ú
-    STR_SPORT_GYMNASTICS,   //Ìå²Ù
-    STR_SPORT_BOATING,      // »®´¬
-    STR_SPORT_JUMPING_JACK, //¿ªºÏÌø
-    STR_SPORT_FREE_TRAINING,//×ÔÓÉÑµÁ·20191231
+    STR_SPORT_RUN,          //è·‘æ­¥
+    STR_SPORT_RIDE_BIKE,    // éª‘è¡Œ
+    STR_SPORT_JUMP_ROPE,    //è·³ç»³
+    STR_SPORT_SWIMMING,     // æ¸¸æ³³
+    STR_SPORT_BADMINTON,    // ç¾½æ¯›çƒ
+    STR_SPORT_TABLE_TENNIS, //ä¹’ä¹“çƒ
+    STR_SPORT_TENNIS,       //ç½‘çƒ
+    STR_SPORT_CLIMBING,     //çˆ¬å±±
+    STR_SPORT_WALKING,      //å¾’æ­¥
+    STR_SPORT_BASKETBALL,   //ç¯®çƒ
+    STR_SPORT_FOOTBALL,     //è¶³çƒ
+    STR_SPORT_BASEBALL,     //æ£’çƒ
+    STR_SPORT_VOLLEYBALL,   //æŽ’çƒ
+    STR_SPORT_CRICKET,      //æ¿çƒ
+    STR_SPORT_RUGBY,        //æ©„æ¦„çƒ
+    STR_SPORT_HOCKEY,       // æ›²æ£çƒ
+    STR_SPORT_DANCE,        //è·³èˆž
+    STR_SPORT_SPINNING,     //åŠ¨æ„Ÿå•è½¦
+    STR_SPORT_YOGA,         //ç‘œä¼½
+    STR_SPORT_SIT_UP,       //ä»°å§èµ·å
+    STR_SPORT_TREADMILL,    // è·‘æ­¥æœº
+    STR_SPORT_GYMNASTICS,   //ä½“æ“
+    STR_SPORT_BOATING,      // åˆ’èˆ¹
+    STR_SPORT_JUMPING_JACK, //å¼€åˆè·³
+    STR_SPORT_FREE_TRAINING,//è‡ªç”±è®­ç»ƒ20191231
 
-    STR_SPORT_INDOOR_WALK,  //ÊÒÄÚ×ßÂ·
-    STR_SPORT_INDOOR_RUN,   //ÊÒÄÚÅÜ²½
-    STR_SPORT_STRENGTH_TRAINING,    //Á¦Á¿ÑµÁ·
-    STR_SPORT_STEP_TRAINING,    //Ì¤²½
-    STR_SPORT_HORSE_RIDING,     //ÆïÂí
-    STR_SPORT_ELLIPTICAL_TRAINER,       //ÍÖÔ²»ú
-    STR_SPORT_TAI_CHI,      //Ì«¼«
-    STR_SPORT_SHUTTLECOCK,  //ë¦Çò
-    STR_SPORT_BOXING,       //È­»÷
-    STR_SPORT_OUTDOOR_WALK, //»§Íâ½¡×ß
-    STR_SPORT_TRAIL_RUNNING,    //Ô½Ò°ÅÜ
-    STR_SPORT_SKIING,       //»¬Ñ©
-    STR_SPORT_ICE_HOCKEY,   //±ùÇò
-    STR_SPORT_TAEKWONDO,    //õÌÈ­µÀ
-    STR_SPORT_VO2MAX_TEST,  //×î´óÉãÑõÁ¿²âÊÔ
-    STR_SPORT_ROWING_MACHING,   //»®´¬»ú
-    STR_SPORT_AIR_WALKER,       //Âþ²½»ú
-    STR_SPORT_HIKING,       //Í½²½
-    STR_SPORT_ATHLETICS,    //Ìï¾¶
-    STR_SPORT_WAIST_TRAINING,   //Ñü¸¹ÑµÁ·
-    STR_SPORT_KARATE,       //¿ÕÊÖµÀ
-    STR_SPORT_COOLDOWN,     //ÕûÀí·ÅËÉ
-    STR_SPORT_CROSS_TRAINING,   //½»²æÑµÁ·
-    STR_SPORT_PILATES,      //ÆÕÀ­Ìá
-    STR_SPORT_CROSS_FIT,    //½»²æÅäºÏ
-    STR_SPORT_FUNCTIONAL_TRAINING,      //¹¦ÄÜÐÔÑµÁ·
-    STR_SPORT_PHYSICAL_TRAINING,        //ÌåÄÜÑµÁ·
-    STR_SPORT_ARCHERY,          //Éä¼ý
-    STR_SPORT_FLEXIBILITY,      //ÈáÈÍ¶È
-    STR_SPORT_MIXED_CARDIO,     //»ìºÏÓÐÑõ
-    STR_SPORT_LATIN_DANCE,      //À­¶¡Îè
-    STR_SPORT_STREET_DANCE,     //½ÖÎè
-    STR_SPORT_KICKBOXING,       //×ÔÓÉ²«»÷
-    STR_SPORT_BARRE,            //°ÅÀÙ
-    STR_SPORT_AUSTRALIAN_FOOTBALL,  //°ÄÊ½×ãÇò
-    STR_SPORT_MARTIAL_ARTS,     //ÎäÊõ
-    STR_SPORT_STAIRS,           //ÅÀÂ¥
-    STR_SPORT_HANDBALL,         //ÊÖÇò
-    STR_SPORT_BOWLING,          //±£ÁäÇò
-    STR_SPORT_RACQUETBALL,      //±ÚÇò
-    STR_SPORT_CURLING,          //±ùºø
-    STR_SPORT_HUNTING,          //´òÁÔ
-    STR_SPORT_SNOWBOARDING,     //µ¥°å»¬Ñ©
-    STR_SPORT_PLAY,             //ÐÝÏÐÔË¶¯
-    STR_SPORT_AMERICAN_FOOTBALL,    //ÃÀÊ½éÏé­Çò
-    STR_SPORT_HAND_CYCLING,     //ÊÖÒ¡³µ
-    STR_SPORT_FISHING,          //µöÓã
-    STR_SPORT_DISC_SPORTS,      //·ÉÅÌ
-    STR_SPORT_RUGGER,           //éÏé­Çò
-    STR_SPORT_GOLF,             //¸ß¶û·ò
-    STR_SPORT_FOLK_DANCE,       //Ãñ×åÎè
-    STR_SPORT_DOWNHILL_SKIING,      //¸ßÉ½»¬Ñ©
-    STR_SPORT_SNOW_SPORTS,      //Ñ©ÉÏÔË¶¯
-    STR_SPORT_MIND_BODY,        //Êæ»ºÚ¤ÏëÀàÔË¶¯
-    STR_SPORT_CORE_TRAINING,    //ºËÐÄÑµÁ·
-    STR_SPORT_SKATING,          //»¬±ù
-    STR_SPORT_FITNESS_GAMING,   //½¡ÉíÓÎÏ·
-    STR_SPORT_AEROBICS,         //½¡Éí²Ù
-    STR_SPORT_GROUP_TRAINING,   //ÍÅÌå²Ù
-    STR_SPORT_KENDO,            //²«»÷²Ù
-    STR_SPORT_LACROSSE,         //³¤Çú¹÷Çò
-    STR_SPORT_ROLLING,          //ÅÝÄ­Öá½îÄ¤·ÅËÉ
-    STR_SPORT_WRESTLING,        //Ë¤õÓ
-    STR_SPORT_FENCING,          //»÷½£
-    STR_SPORT_SOFTBALL,         //ÀÝÇò
-    STR_SPORT_SINGLE_BAR,       //µ¥¸Ü
-    STR_SPORT_PARALLEL_BARS,    //Ë«¸Ü
-    STR_SPORT_ROLLER_SKATING,   //ÂÖ»¬
-    STR_SPORT_HULA_HOOP,        //ºôÀ²È¦
-    STR_SPORT_DARTS,            //·ÉïÚ
-    STR_SPORT_PICKLEBALL,       //Æ¥¿ËÇò
+    STR_SPORT_INDOOR_WALK,  //å®¤å†…èµ°è·¯
+    STR_SPORT_INDOOR_RUN,   //å®¤å†…è·‘æ­¥
+    STR_SPORT_STRENGTH_TRAINING,    //åŠ›é‡è®­ç»ƒ
+    STR_SPORT_STEP_TRAINING,    //è¸æ­¥
+    STR_SPORT_HORSE_RIDING,     //éª‘é©¬
+    STR_SPORT_ELLIPTICAL_TRAINER,       //æ¤­åœ†æœº
+    STR_SPORT_TAI_CHI,      //å¤ªæž
+    STR_SPORT_SHUTTLECOCK,  //æ¯½çƒ
+    STR_SPORT_BOXING,       //æ‹³å‡»
+    STR_SPORT_OUTDOOR_WALK, //æˆ·å¤–å¥èµ°
+    STR_SPORT_TRAIL_RUNNING,    //è¶Šé‡Žè·‘
+    STR_SPORT_SKIING,       //æ»‘é›ª
+    STR_SPORT_ICE_HOCKEY,   //å†°çƒ
+    STR_SPORT_TAEKWONDO,    //è·†æ‹³é“
+    STR_SPORT_VO2MAX_TEST,  //æœ€å¤§æ‘„æ°§é‡æµ‹è¯•
+    STR_SPORT_ROWING_MACHING,   //åˆ’èˆ¹æœº
+    STR_SPORT_AIR_WALKER,       //æ¼«æ­¥æœº
+    STR_SPORT_HIKING,       //å¾’æ­¥
+    STR_SPORT_ATHLETICS,    //ç”°å¾„
+    STR_SPORT_WAIST_TRAINING,   //è…°è…¹è®­ç»ƒ
+    STR_SPORT_KARATE,       //ç©ºæ‰‹é“
+    STR_SPORT_COOLDOWN,     //æ•´ç†æ”¾æ¾
+    STR_SPORT_CROSS_TRAINING,   //äº¤å‰è®­ç»ƒ
+    STR_SPORT_PILATES,      //æ™®æ‹‰æ
+    STR_SPORT_CROSS_FIT,    //äº¤å‰é…åˆ
+    STR_SPORT_FUNCTIONAL_TRAINING,      //åŠŸèƒ½æ€§è®­ç»ƒ
+    STR_SPORT_PHYSICAL_TRAINING,        //ä½“èƒ½è®­ç»ƒ
+    STR_SPORT_ARCHERY,          //å°„ç®­
+    STR_SPORT_FLEXIBILITY,      //æŸ”éŸ§åº¦
+    STR_SPORT_MIXED_CARDIO,     //æ··åˆæœ‰æ°§
+    STR_SPORT_LATIN_DANCE,      //æ‹‰ä¸èˆž
+    STR_SPORT_STREET_DANCE,     //è¡—èˆž
+    STR_SPORT_KICKBOXING,       //è‡ªç”±æå‡»
+    STR_SPORT_BARRE,            //èŠ­è•¾
+    STR_SPORT_AUSTRALIAN_FOOTBALL,  //æ¾³å¼è¶³çƒ
+    STR_SPORT_MARTIAL_ARTS,     //æ­¦æœ¯
+    STR_SPORT_STAIRS,           //çˆ¬æ¥¼
+    STR_SPORT_HANDBALL,         //æ‰‹çƒ
+    STR_SPORT_BOWLING,          //ä¿é¾„çƒ
+    STR_SPORT_RACQUETBALL,      //å£çƒ
+    STR_SPORT_CURLING,          //å†°å£¶
+    STR_SPORT_HUNTING,          //æ‰“çŒŽ
+    STR_SPORT_SNOWBOARDING,     //å•æ¿æ»‘é›ª
+    STR_SPORT_PLAY,             //ä¼‘é—²è¿åŠ¨
+    STR_SPORT_AMERICAN_FOOTBALL,    //ç¾Žå¼æ©„æ¦„çƒ
+    STR_SPORT_HAND_CYCLING,     //æ‰‹æ‘‡è½¦
+    STR_SPORT_FISHING,          //é’“é±¼
+    STR_SPORT_DISC_SPORTS,      //é£žç›˜
+    STR_SPORT_RUGGER,           //æ©„æ¦„çƒ
+    STR_SPORT_GOLF,             //é«˜å°”å¤«
+    STR_SPORT_FOLK_DANCE,       //æ°‘æ—èˆž
+    STR_SPORT_DOWNHILL_SKIING,      //é«˜å±±æ»‘é›ª
+    STR_SPORT_SNOW_SPORTS,      //é›ªä¸Šè¿åŠ¨
+    STR_SPORT_MIND_BODY,        //èˆ’ç¼“å†¥æƒ³ç±»è¿åŠ¨
+    STR_SPORT_CORE_TRAINING,    //æ ¸å¿ƒè®­ç»ƒ
+    STR_SPORT_SKATING,          //æ»‘å†°
+    STR_SPORT_FITNESS_GAMING,   //å¥èº«æ¸¸æˆ
+    STR_SPORT_AEROBICS,         //å¥èº«æ“
+    STR_SPORT_GROUP_TRAINING,   //å›¢ä½“æ“
+    STR_SPORT_KENDO,            //æå‡»æ“
+    STR_SPORT_LACROSSE,         //é•¿æ›²æ£çƒ
+    STR_SPORT_ROLLING,          //æ³¡æ²«è½´ç­‹è†œæ”¾æ¾
+    STR_SPORT_WRESTLING,        //æ‘”è·¤
+    STR_SPORT_FENCING,          //å‡»å‰‘
+    STR_SPORT_SOFTBALL,         //åž’çƒ
+    STR_SPORT_SINGLE_BAR,       //å•æ 
+    STR_SPORT_PARALLEL_BARS,    //åŒæ 
+    STR_SPORT_ROLLER_SKATING,   //è½®æ»‘
+    STR_SPORT_HULA_HOOP,        //å‘¼å•¦åœˆ
+    STR_SPORT_DARTS,            //é£žé•–
+    STR_SPORT_PICKLEBALL,       //åŒ¹å…‹çƒ
     STR_SPORT_HIIT,             //HIIT
-    STR_SPORT_SHOOTING,         //Éä»÷
-    STR_SPORT_JUDO,             //ÈáµÀ
-    STR_SPORT_TRAMPOLINE,       //±Ä´²
-    STR_SPORT_SKATEBOARDING,    //»¬°å
-    STR_SPORT_HOVERBOARD,       //Æ½ºâ³µ
-    STR_SPORT_BLADING,          //Áïºµ±ù
-    STR_SPORT_PARKOUR,          //ÅÜ¿á
-    STR_SPORT_DIVING,           //ÌøË®
-    STR_SPORT_SURFING,          //³åÀË
-    STR_SPORT_SNORKELING,       //¸¡Ç±
-    STR_SPORT_PULL_UP,          //ÒýÌåÏòÉÏ
-    STR_SPORT_PUSH_UP,          //¸©ÎÔ³Å
-    STR_SPORT_PLANKING,         //Æ½°åÖ§³Å
-    STR_SPORT_ROCK_CLIMBING,    //ÅÊÑÒ
-    STR_SPORT_HIGHTJUMP,        //Ìø¸ß
-    STR_SPORT_BUNGEE_JUMPING,   //±Ä¼«
-    STR_SPORT_LONGJUMP,         //ÌøÔ¶
-    STR_SPORT_MARATHON,         //ÂíÀ­ËÉ
-    STR_SPORT_OTHER,            //ÆäËû£¬ÅÐ¶Ï´ËÀàÐÍ£¬Ìø×ªµ½ÆäËû½çÃæ
-    STR_SPORT_CYWEE_SWIM_GNSS,  //µÚÈý·½ÓÎÓ¾Ëã·¨£¬´øgpsÊý¾Ý 20201009
-    STR_SPORT_CYWEE_SWIM,       //µÚÈý·½ÓÎÓ¾Ëã·¨ 20201009
+    STR_SPORT_SHOOTING,         //å°„å‡»
+    STR_SPORT_JUDO,             //æŸ”é“
+    STR_SPORT_TRAMPOLINE,       //è¹¦åºŠ
+    STR_SPORT_SKATEBOARDING,    //æ»‘æ¿
+    STR_SPORT_HOVERBOARD,       //å¹³è¡¡è½¦
+    STR_SPORT_BLADING,          //æºœæ—±å†°
+    STR_SPORT_PARKOUR,          //è·‘é…·
+    STR_SPORT_DIVING,           //è·³æ°´
+    STR_SPORT_SURFING,          //å†²æµª
+    STR_SPORT_SNORKELING,       //æµ®æ½œ
+    STR_SPORT_PULL_UP,          //å¼•ä½“å‘ä¸Š
+    STR_SPORT_PUSH_UP,          //ä¿¯å§æ’‘
+    STR_SPORT_PLANKING,         //å¹³æ¿æ”¯æ’‘
+    STR_SPORT_ROCK_CLIMBING,    //æ”€å²©
+    STR_SPORT_HIGHTJUMP,        //è·³é«˜
+    STR_SPORT_BUNGEE_JUMPING,   //è¹¦æž
+    STR_SPORT_LONGJUMP,         //è·³è¿œ
+    STR_SPORT_MARATHON,         //é©¬æ‹‰æ¾
+    STR_SPORT_OTHER,            //å…¶ä»–ï¼Œåˆ¤æ–­æ­¤ç±»åž‹ï¼Œè·³è½¬åˆ°å…¶ä»–ç•Œé¢
+    STR_SPORT_CYWEE_SWIM_GNSS,  //ç¬¬ä¸‰æ–¹æ¸¸æ³³ç®—æ³•ï¼Œå¸¦gpsæ•°æ® 20201009
+    STR_SPORT_CYWEE_SWIM,       //ç¬¬ä¸‰æ–¹æ¸¸æ³³ç®—æ³• 20201009
     STR_SPORT_EXIT_MSG1,
     STR_SPORT_EXIT_MSG2,
     STR_SPORT_EXIT_MSG3,

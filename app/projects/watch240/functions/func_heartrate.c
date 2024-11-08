@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#define FINT_HEIGHT 24*2+8
+
 #define FUNC_HR_SIMULATE_DATA_EN  0
 #define CHART_NUM 24 //柱形图数量
 #define CHART_200_LENGTH GUI_SCREEN_CENTER_Y*6.25/8  //柱形图框高度
@@ -74,11 +76,15 @@ compo_form_t *func_heartrate_form_create(void)
 
     for(idx = 0; idx < HEARTRATE_TEXT_ITEM_CNT; idx++)
     {
-        compo_textbox_t *txt_title = compo_textbox_create(frm, 3);
+        compo_textbox_t *txt_title = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
         compo_textbox_set_align_center(txt_title, false);
-        compo_textbox_set_pos(txt_title, txt_x + (idx * txt_x_offset), txt_y);
-        compo_textbox_set(txt_title, "次/分");
+//        compo_textbox_set_pos(txt_title, txt_x + (idx * txt_x_offset), txt_y);
+        compo_textbox_set_location(txt_title, txt_x + (idx * txt_x_offset), txt_y,FINT_HEIGHT,FINT_HEIGHT);
+        compo_textbox_set_autoroll_mode(txt_title, 0);
+        compo_textbox_set(txt_title, i18n[STR_PER_MINUTE]);
     }
+
+
 
     //测量心率值
     s16 txt_val_x = 38;

@@ -16,23 +16,26 @@
 
 #define ENTERING_STYLE                      0               //入场动画风格 可选 0,1
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
     COMPO_ID_TXT_BATTERY_PIC,
 
     COMPO_ID_SCROLLBAR,
 };
 
-typedef struct f_menu_list_t_ {
+typedef struct f_menu_list_t_
+{
     compo_listbox_t *listbox;
     int animation_cnt;
     u32 tick;
 } f_menu_list_t;
 
-static const compo_listbox_item_t tbl_menu_list[] = {
+static const compo_listbox_item_t tbl_menu_list[] =
+{
     {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
     {STR_SPORTS,                 UI_BUF_ICON_SPORT_BIN,             .func_sta = FUNC_SPORT},                //运动
-    {STR_PRESSURE,               UI_BUF_ICON_PRESSURE_BIN,          .func_sta = FUNC_PRESSURE},             //压力
+//    {STR_PRESSURE,               UI_BUF_ICON_PRESSURE_BIN,          .func_sta = FUNC_PRESSURE},             //压力
 //    {STR_STEP,                   UI_BUF_ICON_STEP_BIN,            .func_sta = FUNC_NULL},                 //计步
     {STR_SLEEP,                  UI_BUF_ICON_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
     {STR_ACTIVITY_RECORD,        UI_BUF_ICON_ACTIVITY_BIN,          .func_sta = FUNC_ACTIVITY},             //活动记录
@@ -59,10 +62,12 @@ static const compo_listbox_item_t tbl_menu_list[] = {
 //菜单栏自定义图标更新
 static void func_menu_sub_list_battery_pic_update(void)
 {
-    if (func_cb.frm_main == NULL) {
+    if (func_cb.frm_main == NULL)
+    {
         return;
     }
-    switch(sys_cb.vbat_percent){
+    switch(sys_cb.vbat_percent)
+    {
         case 1 ... 16:
             compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER1_BIN);
             break;
@@ -95,7 +100,8 @@ compo_form_t *func_menu_sub_list_form_create(void)
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
     //新建菜单列表
     compo_listbox_t *listbox;
-    if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID) {
+    if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
+    {
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_FOURGRID);
         compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
         //电池电量
@@ -104,12 +110,16 @@ compo_form_t *func_menu_sub_list_form_create(void)
 //        compo_textbox_set_autosize(battery_txt, true);
 //        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
 
-        if (menu_idx < 3) {
+        if (menu_idx < 3)
+        {
             menu_idx = 3;
         }
-    } else {
+    }
+    else
+    {
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
-        if (menu_idx < 1) {
+        if (menu_idx < 1)
+        {
             menu_idx = 1;
         }
     }
@@ -127,11 +137,13 @@ compo_form_t *func_menu_sub_list_form_create(void)
 
     compo_listbox_update(listbox);
 
-    if (func_cb.flag_animation) {
+    if (func_cb.flag_animation)
+    {
         widget_set_visible(listbox->page, false);
     }
 
-    if (func_cb.menu_style == MENU_STYLE_LIST) {
+    if (func_cb.menu_style == MENU_STYLE_LIST)
+    {
         compo_scroll_t* scroll = compo_scroll_create(frm, SCROLL_TYPE_VERTICAL);
         compo_setid(scroll, COMPO_ID_SCROLLBAR);
         compo_scroll_set_w_r(scroll, 10);
@@ -153,7 +165,8 @@ static void func_menu_sub_list_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= MENU_LIST_CNT) {
+    if (icon_idx < 0 || icon_idx >= MENU_LIST_CNT)
+    {
         return;
     }
 
@@ -161,7 +174,8 @@ static void func_menu_sub_list_icon_click(void)
     func_sta = tbl_menu_list[icon_idx].func_sta;
 
     //切入应用
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
         compo_form_t *frm = func_create_form(func_sta);
         func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
         compo_form_destroy(frm);
@@ -190,13 +204,15 @@ static void func_menu_sub_list_entering(void)
     f_menu_list_t *f_menu = (f_menu_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_menu->listbox;
 
-    #if ENTERING_STYLE == 0           //入场风格1
-    if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID) {
+#if ENTERING_STYLE == 0           //入场风格1
+    if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID)
+    {
         widget_set_visible(listbox->page, true);
         return;
     }
     //入场动画
-    static const int tbl_entering_start_pos[] = {
+    static const int tbl_entering_start_pos[] =
+    {
         ENTERING_ANIMATION_MAX,
         ENTERING_ANIMATION_MAX - GUI_SCREEN_HEIGHT * 2 / 6,
         ENTERING_ANIMATION_MAX - GUI_SCREEN_HEIGHT * 4 / 6,
@@ -207,48 +223,61 @@ static void func_menu_sub_list_entering(void)
     int idx = 0;
     int y_step = ENTERING_ANIMATION_MAX / ENTERING_ANIMATION_CNT;
     widget_set_visible(listbox->page, true);
-    if(listbox->page_time != NULL) {
+    if(listbox->page_time != NULL)
+    {
         widget_set_visible(listbox->page_time, false);
     }
     compo_listbox_update(listbox);
     widget_t *widget = widget_get_next(listbox->page);
-    while (widget != NULL) {
-        if (widget_get_parent(widget) == listbox->page) {
+    while (widget != NULL)
+    {
+        if (widget_get_parent(widget) == listbox->page)
+        {
             int ln = idx;
             rect_t rect = widget_get_location(widget);
 
-            if (ln <= LISTBOX_ITEM_CNT/2-2) {  //基础空页面跳过
+            if (ln <= LISTBOX_ITEM_CNT/2-2)    //基础空页面跳过
+            {
 
-            } else {
+            }
+            else
+            {
                 ln -= (LISTBOX_ITEM_CNT/2-2);
                 int y = rect.y + y_step * f_menu->animation_cnt - tbl_entering_start_pos[ln];
-                if (y > rect.y) {
+                if (y > rect.y)
+                {
                     int w_rate = 0x10000 + 0x20000 * (y - rect.y) / (y_step * ENTERING_ANIMATION_CNT - tbl_entering_start_pos[ln]);
                     rect.y = y;
                     rect.wid = muls_shift16(rect.wid, w_rate);
                     rect.hei = muls_shift16(rect.hei, w_rate);
                 }
             }
-            if (idx > LISTBOX_ITEM_CNT/2-2 && idx < LISTBOX_ITEM_CNT/2+3) {
+            if (idx > LISTBOX_ITEM_CNT/2-2 && idx < LISTBOX_ITEM_CNT/2+3)
+            {
                 widget_set_pos(widget, rect.x, rect.y);
                 //widget_page_scale_to(widget, GUI_SCREEN_WIDTH, rect.hei);
-            } else {
+            }
+            else
+            {
                 widget_set_pos(widget, rect.x, rect.y-20);
             }
             idx++;
-            if (idx > LISTBOX_ITEM_CNT/2+3) {
+            if (idx > LISTBOX_ITEM_CNT/2+3)
+            {
                 return;
             }
         }
-        if(listbox->page_time != NULL && f_menu->animation_cnt <= 1){
+        if(listbox->page_time != NULL && f_menu->animation_cnt <= 1)
+        {
             widget_set_visible(listbox->page_time, true);
         }
 
         //遍历Widget
         widget = widget_get_next(widget);
     }
-    #elif ENTERING_STYLE == 1 //入场风格2
-    if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID) {
+#elif ENTERING_STYLE == 1 //入场风格2
+    if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID)
+    {
         widget_set_visible(listbox->page, true);
         return;
     }
@@ -256,12 +285,15 @@ static void func_menu_sub_list_entering(void)
     int ofs_y = y_step * f_menu->animation_cnt;
     widget_set_visible(listbox->page, true);
     compo_listbox_update(listbox);
-    if (ofs_y < listbox->line_space + listbox->line_height/2) {
+    if (ofs_y < listbox->line_space + listbox->line_height/2)
+    {
         compo_listbox_set_focus_byidx(listbox, 1);
-    } else {
+    }
+    else
+    {
         widget_page_set_client(listbox->page, 0, ofs_y);
     }
-    #endif
+#endif
 
 
 }
@@ -270,15 +302,20 @@ static void func_menu_sub_list_entering(void)
 static void func_menu_sub_list_process(void)
 {
     f_menu_list_t *f_menu = (f_menu_list_t *)func_cb.f_cb;
-    if (f_menu->animation_cnt > 0) {
+    if (f_menu->animation_cnt > 0)
+    {
         //入场动画
-        if (tick_check_expire(f_menu->tick, ANIMATION_TICK_EXPIRE)) {
+        if (tick_check_expire(f_menu->tick, ANIMATION_TICK_EXPIRE))
+        {
             func_menu_sub_list_entering();
             f_menu->tick = tick_get();
             f_menu->animation_cnt--;
         }
-    } else {
-        if (func_cb.menu_style == MENU_STYLE_LIST) {
+    }
+    else
+    {
+        if (func_cb.menu_style == MENU_STYLE_LIST)
+        {
             int value = (f_menu->listbox->ofs_y - f_menu->listbox->mcb->first_y) * 1000 / abs_s(f_menu->listbox->mcb->last_y - f_menu->listbox->mcb->first_y);
             //printf("value = %d, ofs_y=%d, first_y=%d, last_y=%d\n", value, f_menu->listbox->ofs_y,
             //                f_menu->listbox->mcb->first_y, f_menu->listbox->mcb->last_y);
@@ -293,10 +330,11 @@ static void func_menu_sub_list_process(void)
 
 static void func_menu_sub_list_entering_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
@@ -306,36 +344,43 @@ static void func_menu_sub_list_message(size_msg_t msg)
     f_menu_list_t *f_menu = (f_menu_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_menu->listbox;
 
-    if (f_menu->animation_cnt > 0) {
+    if (f_menu->animation_cnt > 0)
+    {
         func_menu_sub_list_entering_message(msg);
-    } else {
-        if (compo_listbox_message(listbox, msg)) {
+    }
+    else
+    {
+        if (compo_listbox_message(listbox, msg))
+        {
             return;                                         //处理列表框信息
         }
-        switch (msg) {
-        case MSG_CTP_CLICK:
-            func_menu_sub_list_icon_click();                //单击图标
-            break;
+        switch (msg)
+        {
+            case MSG_CTP_CLICK:
+                func_menu_sub_list_icon_click();                //单击图标
+                break;
 
-        case MSG_CTP_LONG:
-            break;
+            case MSG_CTP_LONG:
+                break;
 
-        case MSG_CTP_SHORT_RIGHT:
-        case KU_DELAY_BACK:
-            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
-                func_menu_sub_list_switch_to_clock();       //返回时钟表盘界面
-            }
-            break;
+            case MSG_CTP_SHORT_RIGHT:
+            case KU_DELAY_BACK:
+                if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+                {
+                    func_menu_sub_list_switch_to_clock();       //返回时钟表盘界面
+                }
+                break;
 
-        case MSG_SYS_500MS:
-            if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID) {
-                func_menu_sub_list_battery_pic_update();
-            }
-            break;
+            case MSG_SYS_500MS:
+                if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
+                {
+                    func_menu_sub_list_battery_pic_update();
+                }
+                break;
 
-        default:
-            func_menu_sub_message(msg);
-            break;
+            default:
+                func_menu_sub_message(msg);
+                break;
         }
     }
 }
@@ -349,13 +394,15 @@ static void func_menu_sub_list_enter(void)
     f_menu_list_t *f_menu = (f_menu_list_t *)func_cb.f_cb;
     f_menu->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_menu->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init(listbox);
     func_cb.enter_tick = tick_get();
-    if (func_cb.flag_animation) {
+    if (func_cb.flag_animation)
+    {
         func_cb.flag_animation = 0;
         f_menu->animation_cnt = ENTERING_ANIMATION_CNT;
         f_menu->tick = tick_get();
@@ -380,7 +427,8 @@ void func_menu_sub_list(void)
 {
     printf("%s\n", __func__);
     func_menu_sub_list_enter();
-    while (func_cb.sta == FUNC_MENU && (func_cb.menu_style == MENU_STYLE_LIST || func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)) {
+    while (func_cb.sta == FUNC_MENU && (func_cb.menu_style == MENU_STYLE_LIST || func_cb.menu_style == MENU_STYLE_CUM_FOURGRID))
+    {
         func_menu_sub_list_process();
         func_menu_sub_list_message(msg_dequeue());
     }

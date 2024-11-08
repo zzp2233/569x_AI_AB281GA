@@ -355,6 +355,10 @@ enum
     STR_SET_CALORIE,
     STR_GOAL_ACHIEVE,
     STR_SEDENTARY_REMIND,
+    STR_DEEP_SLEEP,
+    STR_LIGHT_SLEEP,
+    STR_ALWAKE_SLEEP,
+    STR_EYE_MOVE_SLEEP,
 };
 
 extern const char * const *i18n;

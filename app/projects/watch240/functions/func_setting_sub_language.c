@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_systemtime.h"
+#include "ute_language_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -8,9 +10,6 @@
 #endif
 
 #define LANGUAGE_LIST_CNT                       ((int)(sizeof(tbl_language_list) / sizeof(tbl_language_list[0])))
-
-static void func_set_sub_language_enter(void);
-static void func_set_sub_language_exit(void);
 
 enum
 {
@@ -80,10 +79,10 @@ void func_set_sub_language_list_icon_click(void)
     switch(icon_idx)
     {
         case 0:
-            lang_select(LANG_ZH);
+            uteModuleSystemtimeSetLanguage(CHINESE_LANGUAGE_ID);
             break;
         case 1:
-            lang_select(LANG_EN);
+            uteModuleSystemtimeSetLanguage(ENGLISH_LANGUAGE_ID);
             break;
         default:
             break;

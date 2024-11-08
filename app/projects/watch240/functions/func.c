@@ -1,6 +1,8 @@
 #include "include.h"
 #include "func_menu.h"
 #include "func_cover.h"
+#include "ute_module_systemtime.h"
+#include "ute_language_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

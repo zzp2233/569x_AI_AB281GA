@@ -354,5 +354,6 @@ const char * const i18n_zh[] =
     [STR_LIGHT_SLEEP]                   = "浅睡",
     [STR_ALWAKE_SLEEP]                  = "清醒",
     [STR_EYE_MOVE_SLEEP]                = "快速眼动",
+
 };
 #endif

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-08 12:01:22
+*@date   2024-11-08 16:17:15
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -235,6 +235,15 @@ enum
     STR_UPGRADING, // 升级中
     STR_UPGRADE_SUCCESSFUL, // 升级成功
     STR_UPGRADE_FAILED, // 升级失败
+    STR_PRESSURE_EXPLAIN, // 压力值,及心率变异性的压力指标,是通过测量心率信号中的非线性和非周期性变化,来反应自主神经系统对心脏压力调节的有效性.这一指标可以帮助我们了解人体的压力状态,从而为压力管理提供依据.
+    STR_SEVERE, // 重度
+    STR_LIGHT, // 轻度
+    STR_MODERATE, // 中度
+    STR_RELAX, // 放松
+    STR_DEEP_SLEEP, // 深睡
+    STR_LIGHT_SLEEP, // 浅睡
+    STR_ALWAKE_SLEEP, // 清醒
+    STR_EYE_MOVE_SLEEP, // 快速眼动
 };
 
 extern const char * const *i18n;

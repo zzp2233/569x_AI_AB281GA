@@ -316,10 +316,10 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
 
                 /************************/
                 //一件双连测试代码
-                printf("==============>bsp_change_bt_mac\n");
-                app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
-                bsp_change_bt_mac();
-                ble_bt_connect();
+                // printf("==============>bsp_change_bt_mac\n");
+                // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+                // bsp_change_bt_mac();
+                // ble_bt_connect();
                 /************************/
 
                 if(0)

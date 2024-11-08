@@ -535,6 +535,11 @@ void func_process(void)
         printf(">>>MSG POP\n");
     }
 
+    if(sys_cb.hand_screen_on) //抬手亮屏
+    {
+        sys_cb.hand_screen_on = false;
+    }
+
 #if VBAT_DETECT_EN
     bsp_vbat_lpwr_process();
 #endif

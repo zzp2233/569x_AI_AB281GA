@@ -406,6 +406,13 @@ static void sfunc_sleep(void)
             break;
         }
 
+        if(sys_cb.hand_screen_on)
+        {
+            printf("ute hand wakeup\n");
+            gui_need_wkp = true;
+            break;
+        }
+
         if (co_timer_pro(true))
         {
             printf("co_timer_pro_wakeup\n");

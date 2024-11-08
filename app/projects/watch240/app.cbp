@@ -675,6 +675,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/gui/components/compo_picturebox.h" />
+		<Unit filename="../../platform/gui/components/compo_progressbar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/gui/components/compo_progressbar.h" />
 		<Unit filename="../../platform/gui/components/compo_qrcodebox.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1107,6 +1111,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_music.h" />
+		<Unit filename="functions/func_ota_err.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_ota_update.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -218,5 +218,4 @@ void uteModuleCallSyncAddressBookData(uint8_t *receive,uint8_t length);
 void uteModuleCallSyncAddressBookStart(void);
 void uteModuleCallClearNumberAndName(void);
 bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen);
-
 #endif //_UTE_MODULE_BT_AUDIO_H_

@@ -1,7 +1,7 @@
 /**
 *@file
-*@brief        ¶àÔË¶¯Ä£¿éÍ·ÎÄ¼ş
-*@details     °üº¬Õı³£×ßÂ·£¬ÅÜ²½£¬µÇÉ½µÈÆäËûÔË¶¯Ä£Ê½
+*@brief        å¤šè¿åŠ¨æ¨¡å—å¤´æ–‡ä»¶
+*@details     åŒ…å«æ­£å¸¸èµ°è·¯ï¼Œè·‘æ­¥ï¼Œç™»å±±ç­‰å…¶ä»–è¿åŠ¨æ¨¡å¼
 *@author       zn.zeng
 *@date       2021-07-27
 *@version      v1.0
@@ -17,25 +17,25 @@
 #include "include.h"
 
 
-/*! sport ¼Æ²½Êı¾İ±£´æÄ¿Â¼ zn.zeng, 2021-08-23  */
+/*! sport è®¡æ­¥æ•°æ®ä¿å­˜ç›®å½• zn.zeng, 2021-08-23  */
 #define UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR "sportStep"
-/*!Ğ´Èë¾Ã×øÌáĞÑ£¬Ì§ÊÖÁÁÆÁ£¬Ä¿±ê²½ÊıĞÅÏ¢²ÎÊı zn.zeng, 2021-08-20  */
+/*!å†™å…¥ä¹…åæé†’ï¼ŒæŠ¬æ‰‹äº®å±ï¼Œç›®æ ‡æ­¥æ•°ä¿¡æ¯å‚æ•° zn.zeng, 2021-08-20  */
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_SPORTINFO  "systemparam/sportInfo"
-/*! sport ¶àÔË¶¯Êı¾İ±£´æÄ¿Â¼,Ö»±£´æÔË¶¯Êı¾İ£¬ÆäËûÄÚÈİ²»ÔÊĞí·ÅÔÚ¸ÃÎÄ¼ş¼ĞÏÂ zn.zeng, 2021-11-12  */
+/*! sport å¤šè¿åŠ¨æ•°æ®ä¿å­˜ç›®å½•,åªä¿å­˜è¿åŠ¨æ•°æ®ï¼Œå…¶ä»–å†…å®¹ä¸å…è®¸æ”¾åœ¨è¯¥æ–‡ä»¶å¤¹ä¸‹ zn.zeng, 2021-11-12  */
 #define UTE_MODULE_FILESYSTEM_SPORT_MORE_SPORTS_DIR "moreSports"
-/*! ±£´æ¶àÔË¶¯ÁĞ±íÏÔÊ¾µÄÔË¶¯ÊıÁ¿¸úÀàĞÍ xjc, 2022-03-29  */
+/*! ä¿å­˜å¤šè¿åŠ¨åˆ—è¡¨æ˜¾ç¤ºçš„è¿åŠ¨æ•°é‡è·Ÿç±»å‹ xjc, 2022-03-29  */
 #define UTE_MODULE_FILESYSTEM_SPORT_HUNDRED_SPORT_SORT_DATA "systemparam/sportSort"
 
-/*! Õ¾Á¢Ê±³¤¡¢ÔË¶¯Ê±³¤¡¢¿¨Â·Àï¡¢²½Êı¡¢¾àÀëÄ¿±êÌáĞÑÊı¾İ dengli.lu, 2022-01-17  */
+/*! ç«™ç«‹æ—¶é•¿ã€è¿åŠ¨æ—¶é•¿ã€å¡è·¯é‡Œã€æ­¥æ•°ã€è·ç¦»ç›®æ ‡æé†’æ•°æ® dengli.lu, 2022-01-17  */
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
 #define UTE_MODULE_FILESYSTEM_SPORT_TODAY_TARGET_NOTIFY_DATA "systemparam/targetNotifyData"
 #endif
-/*! Õ¾Á¢Ê±³¤Êı¾İ dengli.lu, 2022-01-17  */
+/*! ç«™ç«‹æ—¶é•¿æ•°æ® dengli.lu, 2022-01-17  */
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
 #define UTE_MODULE_FILESYSTEM_SPORT_STAND_TIME_DATA "satndTime"
 #endif
 
-/*! Ã¿Ğ¡Ê±ËùÓĞÔË¶¯µÄ²½ÊıÊı¾İ casen, 2022-07-14  */
+/*! æ¯å°æ—¶æ‰€æœ‰è¿åŠ¨çš„æ­¥æ•°æ•°æ® casen, 2022-07-14  */
 #if UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT
 #define UTE_MODULE_FILESYSTEM_SPORT_TODAY_EVERYHOUR_ALLSPORT_STEP_DATA "systemparam/everyHourAllSportStep"
 #define UTE_MODULE_FILESYSTEM_SPORT_TODAY_EVERYHOUR_ALLSPORT_KCAL_DATA "systemparam/everyHourAllSportKcal"
@@ -46,21 +46,21 @@
 #define UTE_MODULE_FILESYSTEM_SPORT_TODAY_EVERYHOUR_SPORT_KCAL_DATA "systemparam/everyHourSportKcal"
 #endif
 
-/*¶àÔË¶¯Ä¿±êÉèÖÃ±£´æ*/
+/*å¤šè¿åŠ¨ç›®æ ‡è®¾ç½®ä¿å­˜*/
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
 #define UTE_MODULE_FILESYSTEM_MORE_SPORTS_TARGET_DATA "systemparam/moreSportsTarget"
 #endif
 
 #define SPORTS_HEART_DATAS_CACHE_LENGTH 90
 
-/*! ¼Æ²½ÀàĞÍ£¬¼Æ²½¡¢Ë¯Ãß¡¢²»¼Æ²½²»Ë¯Ãß zn.zeng, 2021-08-05  */
+/*! è®¡æ­¥ç±»å‹ï¼Œè®¡æ­¥ã€ç¡çœ ã€ä¸è®¡æ­¥ä¸ç¡çœ  zn.zeng, 2021-08-05  */
 typedef enum
 {
-    STEP_TYPE_NONE,/*! ²»¼Æ²½²»Ë¯Ãßzn.zeng, 2021-08-05  */
-    STEP_TYPE_STEP,/*! ¼Æ²½zn.zeng, 2021-08-05  */
-    STEP_TYPE_SLEEP,/*! Ë¯Ãßzn.zeng, 2021-08-05  */
+    STEP_TYPE_NONE,/*! ä¸è®¡æ­¥ä¸ç¡çœ zn.zeng, 2021-08-05  */
+    STEP_TYPE_STEP,/*! è®¡æ­¥zn.zeng, 2021-08-05  */
+    STEP_TYPE_SLEEP,/*! ç¡çœ zn.zeng, 2021-08-05  */
 } ute_module_sport_step_type;
-/*! ¾Ã×øÌáĞÑÊı¾İ½á¹¹zn.zeng, 2021-08-06  */
+/*! ä¹…åæé†’æ•°æ®ç»“æ„zn.zeng, 2021-08-06  */
 typedef struct
 {
     bool isOpen;
@@ -70,11 +70,11 @@ typedef struct
     uint8_t endPeriodHour;
     uint8_t endPeriodMin;
     uint8_t isOpenNoonSleep;
-    uint16_t noonSleepStartTime;//ÎçĞİ¿ªÊ¼Ê±¼ä£¬µ¥Î»£º·ÖÖÓ£¬Ê±*60+·Ö
-    uint16_t noonSleepEndTime;//ÎçĞİ½áÊøÊ±¼ä£¬µ¥Î»£º·ÖÖÓ£¬Ê±*60+·Ö
+    uint16_t noonSleepStartTime;//åˆä¼‘å¼€å§‹æ—¶é—´ï¼Œå•ä½ï¼šåˆ†é’Ÿï¼Œæ—¶*60+åˆ†
+    uint16_t noonSleepEndTime;//åˆä¼‘ç»“æŸæ—¶é—´ï¼Œå•ä½ï¼šåˆ†é’Ÿï¼Œæ—¶*60+åˆ†
     uint16_t sedentaryRemindSecCnt;
 } ute_module_sport_sedentary_param_t;
-/*! ¶àÔË¶¯Êı¾İ zn.zeng, 2021-11-11  */
+/*! å¤šè¿åŠ¨æ•°æ® zn.zeng, 2021-11-11  */
 typedef enum
 {
     ALL_SPORT_STATUS_CLOSE      = 0X00,
@@ -91,31 +91,31 @@ typedef struct
 } ute_sports_today_with_step_data_t;
 typedef struct
 {
-    uint8_t  startInterval;// ´æ´¢¼ä¸ôÊ±¼ä,10s Ò»¸öµ¥Î»
-    uint8_t  sportsType; //ÔË¶¯±êÖ¾
-    struct prf_date_time startSportTime; //¿ªÊ¼Ê±¼ä
-    struct prf_date_time stopSportTime;  //½áÊøÊ±¼ä
-    uint32_t sportStep; //ÔË¶¯Á¿,²½Êı
-    uint16_t sportTimes;    //ÔË¶¯Á¿,´ÎÊı
-    uint16_t sportCaloire;  //ÔË¶¯Á¿,¿¨Â·Àï
-    uint8_t  sportDistanceInteger;  //ÔË¶¯Á¿,¾àÀë£¨ÕûÊı£© //¾àÀë£¨2byteÇ°Ò»¸ö×Ö½ÚÊÇÕûÊıÎ»£¬ºóÒ»¸ö×Ö½ÚÊÇĞ¡ÊıÎ»£©
-    uint8_t  sportDistanceDecimals; //ÔË¶¯Á¿,¾àÀë£¨Ğ¡Êı£©
-    uint8_t  avgHeartRate;  //Æ½¾ùĞÄÂÊ
-    uint8_t  maxHeartRate;  //×î´óĞÄÂÊ
-    uint8_t  minHeartRate;  //×îĞ¡ĞÄÂÊ
-    uint8_t  avgTimeMinute; //Æ½¾ùÅäËÙ£¬2bytes ¸ñÊ½Îª¡±·Ö+Ãë¡±¡£0x08´ú±í8·Ö£¬0x32´ú±í50Ãë£¬Æ½¾ùÅäËÙµÄÒâË¼ÊÇ£¬¡°ÒÆ¶¯Ò»¹«ÀïĞèÒª¶àÉÙÊ±¼ä¡±£»
+    uint8_t  startInterval;// å­˜å‚¨é—´éš”æ—¶é—´,10s ä¸€ä¸ªå•ä½
+    uint8_t  sportsType; //è¿åŠ¨æ ‡å¿—
+    struct prf_date_time startSportTime; //å¼€å§‹æ—¶é—´
+    struct prf_date_time stopSportTime;  //ç»“æŸæ—¶é—´
+    uint32_t sportStep; //è¿åŠ¨é‡,æ­¥æ•°
+    uint16_t sportTimes;    //è¿åŠ¨é‡,æ¬¡æ•°
+    uint16_t sportCaloire;  //è¿åŠ¨é‡,å¡è·¯é‡Œ
+    uint8_t  sportDistanceInteger;  //è¿åŠ¨é‡,è·ç¦»ï¼ˆæ•´æ•°ï¼‰ //è·ç¦»ï¼ˆ2byteå‰ä¸€ä¸ªå­—èŠ‚æ˜¯æ•´æ•°ä½ï¼Œåä¸€ä¸ªå­—èŠ‚æ˜¯å°æ•°ä½ï¼‰
+    uint8_t  sportDistanceDecimals; //è¿åŠ¨é‡,è·ç¦»ï¼ˆå°æ•°ï¼‰
+    uint8_t  avgHeartRate;  //å¹³å‡å¿ƒç‡
+    uint8_t  maxHeartRate;  //æœ€å¤§å¿ƒç‡
+    uint8_t  minHeartRate;  //æœ€å°å¿ƒç‡
+    uint8_t  avgTimeMinute; //å¹³å‡é…é€Ÿï¼Œ2bytes æ ¼å¼ä¸ºâ€åˆ†+ç§’â€ã€‚0x08ä»£è¡¨8åˆ†ï¼Œ0x32ä»£è¡¨50ç§’ï¼Œå¹³å‡é…é€Ÿçš„æ„æ€æ˜¯ï¼Œâ€œç§»åŠ¨ä¸€å…¬é‡Œéœ€è¦å¤šå°‘æ—¶é—´â€ï¼›
     uint8_t  avgTimeSecond;
 } ute_sports_save_data_t;
 typedef struct
 {
-    uint8_t status;/*! ÔË¶¯×´Ì¬£¬¿ªÊ¼/Í£Ö¹¡¢ÔİÍ£¡¢¼ÌĞø zn.zeng, 2021-11-11  */
-    bool isAppStart;/*! ÊÇ·ñÎªapp¶ËÆô¶¯ zn.zeng, 2021-11-11  */
+    uint8_t status;/*! è¿åŠ¨çŠ¶æ€ï¼Œå¼€å§‹/åœæ­¢ã€æš‚åœã€ç»§ç»­ zn.zeng, 2021-11-11  */
+    bool isAppStart;/*! æ˜¯å¦ä¸ºappç«¯å¯åŠ¨ zn.zeng, 2021-11-11  */
     uint8_t heartCache[SPORTS_HEART_DATAS_CACHE_LENGTH];//15min
     uint16_t heartTotalCnt;
     uint32_t heartTotalSum;
-    uint32_t totalSportTime; /*! ×ÜÊ±³¤£¬µ¥Î»ÎªÃëzn.zeng, 2021-11-11  */
-    int8_t countZeroIndex;/*! µ¹¼ÆÊ±¿ªÊ¼ zn.zeng, 2021-11-11  */
-    ute_sports_save_data_t saveData;/*! ĞèÒª±£´æµÄÊı¾İ zn.zeng, 2021-11-11  */
+    uint32_t totalSportTime; /*! æ€»æ—¶é•¿ï¼Œå•ä½ä¸ºç§’zn.zeng, 2021-11-11  */
+    int8_t countZeroIndex;/*! å€’è®¡æ—¶å¼€å§‹ zn.zeng, 2021-11-11  */
+    ute_sports_save_data_t saveData;/*! éœ€è¦ä¿å­˜çš„æ•°æ® zn.zeng, 2021-11-11  */
     bool isAppStartSportReConnection;
     uint16_t appStartSportDisconnectTimeOutCnt;
 } ute_module_more_sports_data_t;
@@ -137,23 +137,23 @@ typedef struct
     bool isTodayKcalTargetNotifyOpen;
     bool isTodayKcalTargetHasNotify;
     bool isTodayStepTargetNotifyOpen;
-    uint32_t todayDistanceTarget;//µ¥Î»Ã×
+    uint32_t todayDistanceTarget;//å•ä½ç±³
     bool isTodayDistanceTargetNotifyOpen;
     bool isTodayDistanceTargetHasNotify;
 
     bool isStandTimeTargetNotifyOpen;
     bool isStandTimeTargetHasNotify;
-    uint16_t standTimeTargetSetMin;//·ÖÖÓ
+    uint16_t standTimeTargetSetMin;//åˆ†é’Ÿ
     uint16_t currStandMin;
     uint32_t allMinStepCnt;
     uint32_t lastMinStepCnt;
-    uint8_t standStartHour;//Ğ¡Ê±
-    uint8_t standStartMin;//·ÖÖÓ
+    uint8_t standStartHour;//å°æ—¶
+    uint8_t standStartMin;//åˆ†é’Ÿ
 
     bool isSportTimeTargetNotifyOpen;
     bool isSportTimeTargetHasNotify;
-    uint16_t sportTimeTargetSetMin;//·ÖÖÓ
-    uint32_t currentDayAllSportTimeSec;//µ±ÌìÔË¶¯Ê±³¤£¬Ãë£¬²»ĞèÒª±£´æ
+    uint16_t sportTimeTargetSetMin;//åˆ†é’Ÿ
+    uint32_t currentDayAllSportTimeSec;//å½“å¤©è¿åŠ¨æ—¶é•¿ï¼Œç§’ï¼Œä¸éœ€è¦ä¿å­˜
 
     bool isTodayAllTargetHasNotify;
     ute_module_today_target_notify_type_t todayTargetNotifyType;
@@ -183,9 +183,9 @@ typedef struct
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
 typedef struct
 {
-    sport_mode_type sportMode; //ÔË¶¯ÀàĞÍ
-    uint8_t sportOnOff; //ÔË¶¯¿ª¹Ø
-    uint8_t sportOrder; //ÔË¶¯ĞòºÅ
+    sport_mode_type sportMode; //è¿åŠ¨ç±»å‹
+    uint8_t sportOnOff; //è¿åŠ¨å¼€å…³
+    uint8_t sportOrder; //è¿åŠ¨åºå·
 } ute_sports_list_param_t;
 typedef struct
 {
@@ -193,9 +193,9 @@ typedef struct
     uint8_t receiveCrcCheck;
     uint16_t receiveSportBytesLen;
     uint8_t receiveSportBytes[UTE_MODULE_SPORT_MAX_SPORT_NUM*3];
-    uint16_t minSportNum; //×îÉÙÏÔÊ¾ÔË¶¯ÊıÁ¿
-    uint16_t maxSportNum; //×î´óÏÔÊ¾ÔË¶¯ÊıÁ¿
-    bool appUpdateTrainingListFlag; //APPĞŞ¸ÄÔË¶¯ÁĞ±í
+    uint16_t minSportNum; //æœ€å°‘æ˜¾ç¤ºè¿åŠ¨æ•°é‡
+    uint16_t maxSportNum; //æœ€å¤§æ˜¾ç¤ºè¿åŠ¨æ•°é‡
+    bool appUpdateTrainingListFlag; //APPä¿®æ”¹è¿åŠ¨åˆ—è¡¨
 } ute_sports_hundred_sort_data_t;
 #endif
 
@@ -228,47 +228,47 @@ typedef enum
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
 typedef struct
 {
-    uint32_t sportDistanceTargeCnt;//Ã×
-    bool isSportDistanceTargetNotify;//Ä¿±ê¾àÀëÌáĞÑ
-    bool isSportDistanceTargetHasNotify;//Ä¿±êÊ±¾àÀëÒÑ¾­ÌáĞÑ¹ı
+    uint32_t sportDistanceTargeCnt;//ç±³
+    bool isSportDistanceTargetNotify;//ç›®æ ‡è·ç¦»æé†’
+    bool isSportDistanceTargetHasNotify;//ç›®æ ‡æ—¶è·ç¦»å·²ç»æé†’è¿‡
     uint32_t sportTimeTargetSec;
-    bool isSportTimeTargetNotify;//Ä¿±êÊ±¼äÌáĞÑ
-    bool isSportTimeTargetHasNotify;//Ä¿±êÊ±¼äÒÑ¾­ÌáĞÑ¹ı
+    bool isSportTimeTargetNotify;//ç›®æ ‡æ—¶é—´æé†’
+    bool isSportTimeTargetHasNotify;//ç›®æ ‡æ—¶é—´å·²ç»æé†’è¿‡
     uint16_t sportKcalTarget;
     bool isSportKcalTargetNotify;
     bool isSportKcalTargetHasNotify;
-    bool isSportIntegerHourNotify;//ÔË¶¯ÕûĞ¡Ê±ÌáĞÑ
+    bool isSportIntegerHourNotify;//è¿åŠ¨æ•´å°æ—¶æé†’
     bool isSportIntegerHourHasNotify;
-    bool isSportIntegerKmNotify;//ÔË¶¯ÕûÇ§Ã×ÌáĞÑ
+    bool isSportIntegerKmNotify;//è¿åŠ¨æ•´åƒç±³æé†’
     bool isSportIntegerKmHasNotify;
-    bool isNoTarget;//ÎŞÄ¿±ê
+    bool isNoTarget;//æ— ç›®æ ‡
 } ute_module_sports_target_data_t;
 #endif
 
 #if UTE_MODULE_SPORT_CLASSIFICATION_SUPPORT
 typedef enum
 {
-    TRAIN_LIST_PAGE_MAIN_SPORT = 0, //Ä¬ÈÏÔË¶¯|ÔË¶¯·ÖÀà
-    TRAIN_LIST_PAGE_MORE_SPORT,     //¸ü¶àÔË¶¯
-    TRAIN_LIST_PAGE_NORMAL,         //³£¹æÄ£Ê½
-    TRAIN_LIST_PAGE_OUTDOOR,        //»§ÍâÄ£Ê½
-    TRAIN_LIST_PAGE_BALL,           //ÇòÀà
-    TRAIN_LIST_PAGE_DANCE,          //Îèµ¸
-    TRAIN_LIST_PAGE_MARTIAL_ART,    //ÎäÊõ
-    TRAIN_LIST_PAGE_GYMNASTICS,     //Ìå²Ù
-    TRAIN_LIST_PAGE_OTHER,          //ÆäËüÔË¶¯
+    TRAIN_LIST_PAGE_MAIN_SPORT = 0, //é»˜è®¤è¿åŠ¨|è¿åŠ¨åˆ†ç±»
+    TRAIN_LIST_PAGE_MORE_SPORT,     //æ›´å¤šè¿åŠ¨
+    TRAIN_LIST_PAGE_NORMAL,         //å¸¸è§„æ¨¡å¼
+    TRAIN_LIST_PAGE_OUTDOOR,        //æˆ·å¤–æ¨¡å¼
+    TRAIN_LIST_PAGE_BALL,           //çƒç±»
+    TRAIN_LIST_PAGE_DANCE,          //èˆè¹ˆ
+    TRAIN_LIST_PAGE_MARTIAL_ART,    //æ­¦æœ¯
+    TRAIN_LIST_PAGE_GYMNASTICS,     //ä½“æ“
+    TRAIN_LIST_PAGE_OTHER,          //å…¶å®ƒè¿åŠ¨
     TRAIN_LIST_PAGE_MAX,
 } TRAIN_LIST_PAGE_T;
 #endif
 
 
-/*! sportÊı¾İ½á¹¹zn.zeng, 2021-07-27  */
+/*! sportæ•°æ®ç»“æ„zn.zeng, 2021-07-27  */
 typedef struct
 {
-    gsensor_mode_type accRange;/*! ´«ÈëËã·¨acc ·¶Î§±ê¼Ç£¬Çø±ğÓÚÇı¶¯zn.zeng, 2021-07-27  */
-    gsensor_id_type gsensorId;/*! ´«ÈëËã·¨gsensorĞÍºÅ±ê¼Ç zn.zeng, 2021-07-27  */
+    gsensor_mode_type accRange;/*! ä¼ å…¥ç®—æ³•acc èŒƒå›´æ ‡è®°ï¼ŒåŒºåˆ«äºé©±åŠ¨zn.zeng, 2021-07-27  */
+    gsensor_id_type gsensorId;/*! ä¼ å…¥ç®—æ³•gsensorå‹å·æ ‡è®° zn.zeng, 2021-07-27  */
     ute_module_sport_step_type stepType;
-    ute_module_sport_step_type lastStepType;/* ¼ÇÂ¼ÉÏÒ»´ÎµÄÀàĞÍ zn.zeng 2021-12-27*/
+    ute_module_sport_step_type lastStepType;/* è®°å½•ä¸Šä¸€æ¬¡çš„ç±»å‹ zn.zeng 2021-12-27*/
     ute_step_sleep_param_t stepSleepData;
     uint16_t lastHourStepCnt;
     ute_module_sport_sedentary_param_t sedentary;
@@ -278,10 +278,10 @@ typedef struct
     uint32_t currDayTotalStep;
     uint32_t currDayWalkStep;
     uint32_t currDayRunStep;
-    uint32_t currDayReadTotalStep;//²»°üÀ¨µ±Ç°Ğ¡Ê±
-    uint32_t currDayReadWalkStep;//²»°üÀ¨µ±Ç°Ğ¡Ê±
-    uint32_t currDayReadRunStep;//²»°üÀ¨µ±Ç°Ğ¡Ê±
-    int lastDayReadHour;//ÉÏÒ»´Î¶ÁÈ¡Êı¾İµÄĞ¡Ê±£¬¼õÉÙ¹¦ºÄ
+    uint32_t currDayReadTotalStep;//ä¸åŒ…æ‹¬å½“å‰å°æ—¶
+    uint32_t currDayReadWalkStep;//ä¸åŒ…æ‹¬å½“å‰å°æ—¶
+    uint32_t currDayReadRunStep;//ä¸åŒ…æ‹¬å½“å‰å°æ—¶
+    int lastDayReadHour;//ä¸Šä¸€æ¬¡è¯»å–æ•°æ®çš„å°æ—¶ï¼Œå‡å°‘åŠŸè€—
     bool isTargetCompleted;
     uint32_t currDayTotaladdSportStep;
     ute_module_more_sports_data_t moreSportData;
@@ -314,7 +314,7 @@ typedef struct
     bool appDebugGsensorDataSwitch;
 #endif
 #if UTE_MODULE_WATCH_ROTATE_SUPPORT
-    bool isGsensorRotateTesting;//ÊÖ±íĞı×ªÖĞ
+    bool isGsensorRotateTesting;//æ‰‹è¡¨æ—‹è½¬ä¸­
 #endif
 } ute_module_sport_data_t;
 

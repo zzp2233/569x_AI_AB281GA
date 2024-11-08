@@ -20,16 +20,20 @@
 #define KALE_SWITCH_DR                           2                                                              //单次变更R值
 #define KALE_ROTATE_ANGLE                        25                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 
-enum {
+enum
+{
     COMPO_ID_FOOTBALL = 1,
 };
 
-typedef struct f_menu_football_t_ {
+typedef struct f_menu_football_t_
+{
     compo_football_t *ball;
 } f_menu_football_t;
 
 //足球图标列表(固定20项)
-static const compo_football_item_t tbl_menu_football[] = {
+static const compo_football_item_t tbl_menu_football[] =
+{
+    {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_STYLE},
     {UI_BUF_ICON_FOOTBALL_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
     {UI_BUF_ICON_FOOTBALL_TIMER_BIN,            FUNC_TIMER},
     //{UI_BUF_ICON_FOOTBALL_MAP_BIN,              FUNC_MAP},
@@ -56,8 +60,8 @@ static const compo_football_item_t tbl_menu_football[] = {
     {UI_BUF_ICON_FOOTBALL_SPORT_BIN,            FUNC_SPORT},
     {UI_BUF_ICON_FOOTBALL_HEART_RATE_BIN,       FUNC_HEARTRATE},
     {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_SETTING},
-    {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_PRESSURE},
-   // {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},
+//    {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_PRESSURE},
+    // {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},
 };
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -87,14 +91,16 @@ static void func_menu_sub_disk_icon_click(void)
 
     int icon_idx = compo_football_get_idx(ball, pt.x, pt.y);
     u8 func_sta;
-    if (icon_idx < 0 || icon_idx >= MENU_FOOTBALL_ITEM_CNT) {
+    if (icon_idx < 0 || icon_idx >= MENU_FOOTBALL_ITEM_CNT)
+    {
         return;
     }
     //根据图标索引获取应用ID
     func_sta = tbl_menu_football[icon_idx].func_sta;
 
     //切入应用
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
         func_switching(FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO, NULL);
         func_cb.sta = func_sta;
         func_cb.menu_idx = icon_idx;                //记住当前编号
@@ -123,10 +129,11 @@ static void func_menu_sub_football_process(void)
 //拖动过程中，只响应部分消息
 static void func_menu_sub_football_drag_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
@@ -136,23 +143,24 @@ static void func_menu_sub_football_move_message(size_msg_t msg)
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     compo_football_t *ball = f_menu->ball;
 
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        //移动过程中，触屏停止。重新进入到开始拖动模式
-        compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_DRAG);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            //移动过程中，触屏停止。重新进入到开始拖动模式
+            compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_DRAG);
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_FORWARD);
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_FORWARD);
+            break;
 
-    case MSG_QDEC_BACKWARD:                             //向后滚动菜单
-        compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_BACKWARD);
-        break;
+        case MSG_QDEC_BACKWARD:                             //向后滚动菜单
+            compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_BACKWARD);
+            break;
 
-    default:
-        func_menu_sub_message(msg);
-        break;
+        default:
+            func_menu_sub_message(msg);
+            break;
     }
 }
 
@@ -162,35 +170,37 @@ static void func_menu_sub_football_normal_message(size_msg_t msg)
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     compo_football_t *ball = f_menu->ball;
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_menu_sub_disk_icon_click();                //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_menu_sub_disk_icon_click();                //单击图标
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_RIGHT:
-    case MSG_CTP_SHORT_DOWN:
-        compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_DRAG);
-        break;
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_DOWN:
+            compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_DRAG);
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_FORWARD);
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_FORWARD);
+            break;
 
-    case MSG_QDEC_BACKWARD:                             //向后滚动菜单
-        compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_BACKWARD);
-        break;
+        case MSG_QDEC_BACKWARD:                             //向后滚动菜单
+            compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_BACKWARD);
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
-            func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面
-        }
-        break;
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面
+            }
+            break;
 
-    default:
-        func_menu_sub_message(msg);
-        break;
+        default:
+            func_menu_sub_message(msg);
+            break;
     }
 }
 
@@ -200,25 +210,26 @@ static void func_menu_sub_football_message(size_msg_t msg)
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     compo_football_t *ball = f_menu->ball;
     u8 sta = compo_football_get_sta(ball);
-    switch (sta) {
-    case COMPO_FOOTBALL_STA_IDLE:
-        //正常模式下
-        func_menu_sub_football_normal_message(msg);
-        break;
+    switch (sta)
+    {
+        case COMPO_FOOTBALL_STA_IDLE:
+            //正常模式下
+            func_menu_sub_football_normal_message(msg);
+            break;
 
-    case COMPO_FOOTBALL_STA_DARG:
-        //拖动过程中，只响应部分消息
-        func_menu_sub_football_drag_message(msg);
-        break;
+        case COMPO_FOOTBALL_STA_DARG:
+            //拖动过程中，只响应部分消息
+            func_menu_sub_football_drag_message(msg);
+            break;
 
-    case COMPO_FOOTBALL_STA_MOVE:
-        //自动移动中，只响应部分消息
-        func_menu_sub_football_move_message(msg);
-        break;
+        case COMPO_FOOTBALL_STA_MOVE:
+            //自动移动中，只响应部分消息
+            func_menu_sub_football_move_message(msg);
+            break;
 
-    default:
-        halt(HALT_GUI_COMPO_FOOTBALL_MOVE_STA);
-        break;
+        default:
+            halt(HALT_GUI_COMPO_FOOTBALL_MOVE_STA);
+            break;
     }
 }
 
@@ -232,7 +243,8 @@ static void func_menu_sub_football_enter(void)
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     f_menu->ball = compo_getobj_byid(COMPO_ID_FOOTBALL);
     compo_football_t *ball = f_menu->ball;
-    if (ball->type != COMPO_TYPE_FOOTBALL) {
+    if (ball->type != COMPO_TYPE_FOOTBALL)
+    {
         halt(HALT_GUI_COMPO_FOOTBALL_TYPE);
     }
     func_cb.enter_tick = tick_get();
@@ -243,7 +255,8 @@ void func_menu_sub_football(void)
 {
     printf("%s\n", __func__);
     func_menu_sub_football_enter();
-    while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_FOOTBALL) {
+    while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_FOOTBALL)
+    {
         func_menu_sub_football_process();
         func_menu_sub_football_message(msg_dequeue());
     }

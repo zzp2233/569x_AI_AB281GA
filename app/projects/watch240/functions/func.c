@@ -313,10 +313,10 @@ const func_t tbl_func_entry[] =
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop},      //闹钟--弹出
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
-    {FUNC_PRESSURE,                     func_pressure},                 //压力
+//    {FUNC_PRESSURE,                     func_pressure},                 //压力
     {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
     {FUNC_LONG_PRESS,                   func_long_press},               //关机 重启 SOS界面
-    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
+//    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
     {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置

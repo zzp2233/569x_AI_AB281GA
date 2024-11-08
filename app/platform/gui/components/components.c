@@ -15,111 +15,116 @@ static u8 compos_buf[COMPO_BUF_SIZE] AT(.disp.buf);              //Components Bu
 static int compo_get_size(int type)
 {
     int compo_size;
-    switch (type) {
-    case COMPO_TYPE_FORM:
-        compo_size = sizeof(compo_form_t);
-        break;
+    switch (type)
+    {
+        case COMPO_TYPE_FORM:
+            compo_size = sizeof(compo_form_t);
+            break;
 
-    case COMPO_TYPE_PICTUREBOX:
-        compo_size = sizeof(compo_picturebox_t);
-        break;
+        case COMPO_TYPE_PICTUREBOX:
+            compo_size = sizeof(compo_picturebox_t);
+            break;
 
-    case COMPO_TYPE_LABEL:
-        compo_size = sizeof(compo_label_t);
-        break;
+        case COMPO_TYPE_LABEL:
+            compo_size = sizeof(compo_label_t);
+            break;
 
-    case COMPO_TYPE_TEXTBOX:
-        compo_size = sizeof(compo_textbox_t);
-        break;
+        case COMPO_TYPE_TEXTBOX:
+            compo_size = sizeof(compo_textbox_t);
+            break;
 
-    case COMPO_TYPE_SHAPE:
-        compo_size = sizeof(compo_shape_t);
-        break;
+        case COMPO_TYPE_SHAPE:
+            compo_size = sizeof(compo_shape_t);
+            break;
 
-    case COMPO_TYPE_BUTTON:
-        compo_size = sizeof(compo_button_t);
-        break;
+        case COMPO_TYPE_BUTTON:
+            compo_size = sizeof(compo_button_t);
+            break;
 
-    case COMPO_TYPE_NUMBER:
-        compo_size = sizeof(compo_number_t);
-        break;
+        case COMPO_TYPE_NUMBER:
+            compo_size = sizeof(compo_number_t);
+            break;
 
-    case COMPO_TYPE_DATETIME:
-        compo_size = sizeof(compo_datetime_t);
-        break;
+        case COMPO_TYPE_DATETIME:
+            compo_size = sizeof(compo_datetime_t);
+            break;
 
-    case COMPO_TYPE_QRCODEBOX:
-        compo_size = sizeof(compo_qrcodebox_t);
-        break;
+        case COMPO_TYPE_QRCODEBOX:
+            compo_size = sizeof(compo_qrcodebox_t);
+            break;
 
-    case COMPO_TYPE_LISTBOX:
-        compo_size = sizeof(compo_listbox_t);
-        break;
+        case COMPO_TYPE_LISTBOX:
+            compo_size = sizeof(compo_listbox_t);
+            break;
 
-    case COMPO_TYPE_STACKLIST:
-        compo_size = sizeof(compo_stacklist_t);
-        break;
+        case COMPO_TYPE_STACKLIST:
+            compo_size = sizeof(compo_stacklist_t);
+            break;
 
-    case COMPO_TYPE_ROWBOX:
-        compo_size = sizeof(compo_rowbox_t);
-        break;
+        case COMPO_TYPE_ROWBOX:
+            compo_size = sizeof(compo_rowbox_t);
+            break;
 
-    case COMPO_TYPE_ICONLIST:
-        compo_size = sizeof(compo_iconlist_t);
-        break;
+        case COMPO_TYPE_ICONLIST:
+            compo_size = sizeof(compo_iconlist_t);
+            break;
 
-    case COMPO_TYPE_ROTARY:
-        compo_size = sizeof(compo_rotary_t);
-        break;
+        case COMPO_TYPE_ROTARY:
+            compo_size = sizeof(compo_rotary_t);
+            break;
 
-    case COMPO_TYPE_FOOTBALL:
-        compo_size = sizeof(compo_football_t);
-        break;
+        case COMPO_TYPE_FOOTBALL:
+            compo_size = sizeof(compo_football_t);
+            break;
 
-    case COMPO_TYPE_CUBE:
-        compo_size = sizeof(compo_cube_t);
-        break;
+        case COMPO_TYPE_CUBE:
+            compo_size = sizeof(compo_cube_t);
+            break;
 
-    case COMPO_TYPE_DISKLIST:
-        compo_size = sizeof(compo_disklist_t);
-        break;
+        case COMPO_TYPE_DISKLIST:
+            compo_size = sizeof(compo_disklist_t);
+            break;
 
-    case COMPO_TYPE_KALEIDOSCOPE:
-        compo_size = sizeof(compo_kaleidoscope_t);
-        break;
+        case COMPO_TYPE_KALEIDOSCOPE:
+            compo_size = sizeof(compo_kaleidoscope_t);
+            break;
 
-    case COMPO_TYPE_ANIMATION:
-        compo_size = sizeof(compo_animation_t);
-        break;
+        case COMPO_TYPE_ANIMATION:
+            compo_size = sizeof(compo_animation_t);
+            break;
 
-    case COMPO_TYPE_RINGS:
-        compo_size = sizeof(compo_rings_t);
-        break;
+        case COMPO_TYPE_RINGS:
+            compo_size = sizeof(compo_rings_t);
+            break;
 
-    case COMPO_TYPE_ARC:
-        compo_size = sizeof(compo_arc_t);
-        break;
+        case COMPO_TYPE_ARC:
+            compo_size = sizeof(compo_arc_t);
+            break;
 
-    case COMPO_TYPE_CHARTBOX:
-        compo_size = sizeof(compo_chartbox_t);
-        break;
+        case COMPO_TYPE_CHARTBOX:
+            compo_size = sizeof(compo_chartbox_t);
+            break;
 
-    case COMPO_TYPE_CARDBOX:
-        compo_size = sizeof(compo_cardbox_t);
-        break;
+        case COMPO_TYPE_CARDBOX:
+            compo_size = sizeof(compo_cardbox_t);
+            break;
 
-    case COMPO_TYPE_BUTTERFLY:
-        compo_size = sizeof(compo_butterfly_t);
-        break;
-		
-    case COMPO_TYPE_SCROLLBAR:
-        compo_size = sizeof(compo_scroll_t);
-        break;
+        case COMPO_TYPE_BUTTERFLY:
+            compo_size = sizeof(compo_butterfly_t);
+            break;
 
-    default:
-        TRACE("Unknow Compo Type: %d\n", type);
-        halt(HALT_GUI_COMPO_UNKNOW_TYPE);
-        return 0;
+        case COMPO_TYPE_SCROLLBAR:
+            compo_size = sizeof(compo_scroll_t);
+            break;
+
+        case COMPO_TYPE_PROGRESSBAR:
+            compo_size = sizeof(compo_progressbar_t);
+            break;
+
+        default:
+            TRACE("Unknow Compo Type: %d\n", type);
+            halt(HALT_GUI_COMPO_UNKNOW_TYPE);
+            return 0;
     }
     return compo_size;
 }
@@ -128,11 +133,16 @@ static int compo_get_size(int type)
 bool compo_in_buf0(void *compo)
 {
     u8 *compo_buf = compo;
-    if (compo_buf >= compo_cb.buf0 && compo_buf < compo_cb.buf0 + compo_cb.buf0_size) {
+    if (compo_buf >= compo_cb.buf0 && compo_buf < compo_cb.buf0 + compo_cb.buf0_size)
+    {
         return true;
-    } else if (compo_buf >= compo_cb.buf1 && compo_buf < compo_cb.buf1 + compo_cb.buf1_size) {
+    }
+    else if (compo_buf >= compo_cb.buf1 && compo_buf < compo_cb.buf1 + compo_cb.buf1_size)
+    {
         return false;
-    } else {
+    }
+    else
+    {
         halt(HALT_GUI_COMPO_PTR);
         return false;
     }
@@ -147,25 +157,39 @@ void *compo_get_head(void)
 //获取下一个
 component_t *compo_get_next(component_t *compo)
 {
-    if (compo == NULL) {
+    if (compo == NULL)
+    {
         halt(HALT_GUI_COMPO_GET_NEXT);
     }
     int compo_size = compo_get_size(compo->type);
     u8* compo_next = (u8 *)compo + compo_size;
-    if (compo_in_buf0(compo)) {
-        if (compo_next < (u8 *)compo_cb.buf0 + compo_cb.buf0_pos) {
+    if (compo_in_buf0(compo))
+    {
+        if (compo_next < (u8 *)compo_cb.buf0 + compo_cb.buf0_pos)
+        {
             return (component_t *)compo_next;
-        } else if (compo_cb.top_num == 1 && compo_cb.buf1_pos > 0) {
+        }
+        else if (compo_cb.top_num == 1 && compo_cb.buf1_pos > 0)
+        {
             return (component_t *)compo_cb.buf1;
-        } else {
+        }
+        else
+        {
             return NULL;
         }
-    } else {
-        if (compo_next < (u8 *)compo_cb.buf1 + compo_cb.buf1_pos) {
+    }
+    else
+    {
+        if (compo_next < (u8 *)compo_cb.buf1 + compo_cb.buf1_pos)
+        {
             return (component_t *)compo_next;
-        } else if (compo_cb.top_num == 0 && compo_cb.buf0_pos > 0) {
+        }
+        else if (compo_cb.top_num == 0 && compo_cb.buf0_pos > 0)
+        {
             return (component_t *)compo_cb.buf0;
-        } else {
+        }
+        else
+        {
             return NULL;
         }
     }
@@ -174,29 +198,37 @@ component_t *compo_get_next(component_t *compo)
 //新建一个组件
 void *compo_create(compo_form_t *parent, u8 type)
 {
-    if (parent == NULL) {
+    if (parent == NULL)
+    {
         halt(HALT_GUI_COMPO_CREATE);
     }
     component_t *compo;
     int compo_size = compo_get_size(type);
     u8 *parent_buf = (u8 *)parent;
-    if (parent_buf == compo_cb.buf0) {
-        if (compo_cb.buf0_pos + compo_size > compo_cb.buf0_size) {
+    if (parent_buf == compo_cb.buf0)
+    {
+        if (compo_cb.buf0_pos + compo_size > compo_cb.buf0_size)
+        {
             TRACE("Compo Size Exceed\n");
             halt(HALT_GUI_COMPO_BUF_EXCEED);
         }
         compo = (component_t *)(compo_cb.buf0 + compo_cb.buf0_pos);
         compo_cb.buf0_pos += compo_size;
 //        TRACE("compo_buff0[%d/%d]\n", compo_cb.buf0_pos, compo_cb.buf0_size);
-    } else if (parent_buf == compo_cb.buf1) {
-        if (compo_cb.buf1_pos + compo_size > compo_cb.buf1_size) {
+    }
+    else if (parent_buf == compo_cb.buf1)
+    {
+        if (compo_cb.buf1_pos + compo_size > compo_cb.buf1_size)
+        {
             TRACE("Compo Size Exceed\n");
             halt(HALT_GUI_COMPO_BUF_EXCEED);
         }
         compo = (component_t *)(compo_cb.buf1 + compo_cb.buf1_pos);
         compo_cb.buf1_pos += compo_size;
 //        TRACE("compo_buff1[%d/%d]\n", compo_cb.buf1_pos, compo_cb.buf1_size);
-    } else {
+    }
+    else
+    {
         halt(HALT_GUI_COMPO_CREATE);
         return NULL;
     }
@@ -208,7 +240,8 @@ void *compo_create(compo_form_t *parent, u8 type)
 //设置组件绑定数据
 void compo_bonddata(void *compo, u8 bond_data)
 {
-    if (compo == NULL) {
+    if (compo == NULL)
+    {
         halt(HALT_GUI_COMPO_POOL_BONDDATA);
     }
     ((component_t *)compo)->bond_data = bond_data;
@@ -217,7 +250,8 @@ void compo_bonddata(void *compo, u8 bond_data)
 //设置组件ID
 void compo_setid(void *compo, u16 id)
 {
-    if (compo == NULL) {
+    if (compo == NULL)
+    {
         halt(HALT_GUI_COMPO_POOL_SETID);
     }
     ((component_t *)compo)->id = id;
@@ -227,15 +261,20 @@ void compo_setid(void *compo, u16 id)
 void *compo_pool_create(bool flag_top)
 {
     compo_form_t *frm;
-    if (compo_cb.buf0_pos == 0) {
+    if (compo_cb.buf0_pos == 0)
+    {
         compo_cb.buf0_pos = sizeof(compo_form_t);
         compo_cb.top_num = flag_top ? 0 : 1;
         frm = (compo_form_t *)compo_cb.buf0;
-    } else if (compo_cb.buf1_pos == 0) {
+    }
+    else if (compo_cb.buf1_pos == 0)
+    {
         compo_cb.buf1_pos = sizeof(compo_form_t);
         compo_cb.top_num = flag_top ? 1 : 0;
         frm = (compo_form_t *)compo_cb.buf1;
-    } else {
+    }
+    else
+    {
         halt(HALT_GUI_COMPO_POOL_CREATE);
         return NULL;
     }
@@ -247,11 +286,16 @@ void *compo_pool_create(bool flag_top)
 void compo_pool_clear(compo_form_t *compo)
 {
     u8 *compo_buf = (u8 *)compo;
-    if (compo_cb.buf0 == compo_buf) {
+    if (compo_cb.buf0 == compo_buf)
+    {
         compo_cb.buf0_pos = 0;
-    } else if (compo_cb.buf1 == compo_buf) {
+    }
+    else if (compo_cb.buf1 == compo_buf)
+    {
         compo_cb.buf1_pos = 0;
-    } else {
+    }
+    else
+    {
         halt(HALT_GUI_COMPO_POOL_CLEAR);
     }
 }
@@ -259,18 +303,25 @@ void compo_pool_clear(compo_form_t *compo)
 //获取组件池顶上一个
 compo_form_t *compo_pool_get_top(void)
 {
-    if (compo_cb.top_num == 0) {
-        if (compo_cb.buf0_pos >= sizeof(compo_form_t)) {
+    if (compo_cb.top_num == 0)
+    {
+        if (compo_cb.buf0_pos >= sizeof(compo_form_t))
+        {
             return (compo_form_t *)compo_cb.buf0;
         }
-        if (compo_cb.buf1_pos >= sizeof(compo_form_t)) {
+        if (compo_cb.buf1_pos >= sizeof(compo_form_t))
+        {
             return (compo_form_t *)compo_cb.buf1;
         }
-    } else {
-        if (compo_cb.buf1_pos >= sizeof(compo_form_t)) {
+    }
+    else
+    {
+        if (compo_cb.buf1_pos >= sizeof(compo_form_t))
+        {
             return (compo_form_t *)compo_cb.buf1;
         }
-        if (compo_cb.buf0_pos >= sizeof(compo_form_t)) {
+        if (compo_cb.buf0_pos >= sizeof(compo_form_t))
+        {
             return (compo_form_t *)compo_cb.buf0;
         }
     }
@@ -280,18 +331,25 @@ compo_form_t *compo_pool_get_top(void)
 //获取组件池底下一个
 compo_form_t *compo_pool_get_bottom(void)
 {
-    if (compo_cb.top_num == 0) {
-        if (compo_cb.buf1_pos >= sizeof(compo_form_t)) {
+    if (compo_cb.top_num == 0)
+    {
+        if (compo_cb.buf1_pos >= sizeof(compo_form_t))
+        {
             return (compo_form_t *)compo_cb.buf1;
         }
-        if (compo_cb.buf0_pos >= sizeof(compo_form_t)) {
+        if (compo_cb.buf0_pos >= sizeof(compo_form_t))
+        {
             return (compo_form_t *)compo_cb.buf0;
         }
-    } else {
-        if (compo_cb.buf0_pos >= sizeof(compo_form_t)) {
+    }
+    else
+    {
+        if (compo_cb.buf0_pos >= sizeof(compo_form_t))
+        {
             return (compo_form_t *)compo_cb.buf0;
         }
-        if (compo_cb.buf1_pos >= sizeof(compo_form_t)) {
+        if (compo_cb.buf1_pos >= sizeof(compo_form_t))
+        {
             return (compo_form_t *)compo_cb.buf1;
         }
     }
@@ -302,11 +360,16 @@ compo_form_t *compo_pool_get_bottom(void)
 void compo_pool_set_top(compo_form_t *frm)
 {
     u8 *ptr = (u8 *)frm;
-    if (ptr == compo_cb.buf0) {
+    if (ptr == compo_cb.buf0)
+    {
         compo_cb.top_num = 0;
-    } else if (ptr == compo_cb.buf1) {
+    }
+    else if (ptr == compo_cb.buf1)
+    {
         compo_cb.top_num = 1;
-    } else {
+    }
+    else
+    {
         halt(HALT_GUI_COMPO_POOL_SETTOP);
     }
     widget_pool_set_top(compo_cb.top_num);

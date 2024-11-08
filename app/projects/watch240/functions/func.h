@@ -127,12 +127,13 @@ enum
     FUNC_MIC_TEST,
     FUNC_OTA_UI_MODE,
 
-    FUNC_MAX_NUM,           //用于计数
-
     FUNC_BIRD,
     FUNC_TETRIS,
     FUNC_TETRIS_START,
     FUNC_OTA_MODE,         //OTA升级
+    FUNC_OTA_ERROR,         //OTA升级失败界面
+
+    FUNC_MAX_NUM,           //用于计数
 };
 
 //task control block

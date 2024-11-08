@@ -1,7 +1,8 @@
 #ifndef _COMPONENTS_H
 #define _COMPONENTS_H
 
-enum COMPO_TYPE {
+enum COMPO_TYPE
+{
     COMPO_TYPE_NONE,
     COMPO_TYPE_FORM,                    //窗体
     COMPO_TYPE_PICTUREBOX,              //图像框
@@ -30,10 +31,12 @@ enum COMPO_TYPE {
     COMPO_TYPE_CARDBOX,                 //卡片
     COMPO_TYPE_BUTTERFLY,               //蝴蝶
     COMPO_TYPE_SCROLLBAR,               //滚动条
+    COMPO_TYPE_PROGRESSBAR,             //进度条
 };
 
 //绑定数据
-enum COMPO_BOND_DATA {
+enum COMPO_BOND_DATA
+{
     COMPO_BOND_NONE,
     COMPO_BOND_YEAD,                    //年
     COMPO_BOND_MONTH,                   //月
@@ -84,12 +87,14 @@ enum COMPO_BOND_DATA {
     u8 bond_data;                       /*绑定数据*/                \
     u16 id;                             /*组件ID*/
 
-typedef struct component_t_ {
+typedef struct component_t_
+{
     COMPO_STRUCT_COMMON;
     u8 content[0];                      //组件详细内容
 } component_t;
 
-typedef struct compo_cb_t_ {
+typedef struct compo_cb_t_
+{
     u8 *buf0;                           //组件Buffer
     u32 buf0_size;
     u32 buf0_pos;
@@ -150,5 +155,5 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num);
 #include "compo_move_ctr.h"
 #include "compo_butterfly.h"
 #include "compo_scrollbar.h"
-
+#include "compo_progressbar.h"
 #endif

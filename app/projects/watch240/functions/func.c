@@ -109,6 +109,7 @@ extern void func_pressure(void);//压力
 extern void func_pressure_explain(void);//压力说明
 extern void func_long_press(void);//关机 重启 SOS
 extern void func_ota_update(void);
+extern void func_ota_err(void);
 
 compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
@@ -405,7 +406,7 @@ const func_t tbl_func_entry[] =
     {FUNC_TETRIS,                       func_tetris},
     {FUNC_TETRIS_START,                 func_tetris_start},
     {FUNC_OTA_MODE,                     func_ota_update},
-
+    {FUNC_OTA_ERROR,                      func_ota_err},
 };
 
 AT(.text.func.process)
@@ -481,7 +482,7 @@ void func_process(void)
     tft_bglight_frist_set_check();
     // gui 没有休眠才更新 防止客户乱改我们的唤醒流程导致卡主的问题
 #if FOTA_UI_EN
-    if ((!sys_cb.gui_sleep_sta) && (func_cb.sta != FUNC_OTA_UI_MODE) && !sys_cb.flag_halt)
+    if ((!sys_cb.gui_sleep_sta) /*&& (func_cb.sta != FUNC_OTA_UI_MODE)*/ && !sys_cb.flag_halt)
     {
 #else
     if (!sys_cb.gui_sleep_sta && !sys_cb.flag_halt)
@@ -1248,7 +1249,7 @@ void func_run(void)
     func_cb.tbl_sort[5] = FUNC_BT;
     func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = 7;
-    func_cb.sta = FUNC_CLOCK;
+    func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
     for (;;)

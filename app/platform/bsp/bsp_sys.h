@@ -189,6 +189,8 @@ typedef struct
 
     //用于记录当前iic配置是心率还是gsensor, ute add
     bool gsensor_iic_en;
+    bool refresh_language_flag;
+    u8 sta_old;
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

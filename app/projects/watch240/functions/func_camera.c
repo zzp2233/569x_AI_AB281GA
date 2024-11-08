@@ -320,6 +320,14 @@ void func_camera(void)
     func_camera_exit();
 }
 #else
+
+enum
+{
+    START_BTN_ID=1,
+    START_TXT_ID,
+
+};
+
 typedef struct f_camera_t_
 {
 
@@ -340,11 +348,12 @@ compo_form_t *func_camera_form_create(void)
     compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 258);
+    compo_setid(btn,START_BTN_ID);
 
     //创建文本
-    compo_textbox_t *txt_start = compo_textbox_create(frm, 2);
+    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
     compo_textbox_set_pos(txt_start, GUI_SCREEN_CENTER_X, 258);
-    compo_textbox_set(txt_start, "开始");
+    compo_setid(txt_start,START_TXT_ID);
 
     return frm;
 }
@@ -352,7 +361,29 @@ compo_form_t *func_camera_form_create(void)
 //相机功能事件处理
 static void func_camera_process(void)
 {
+    compo_textbox_t *txt_start = compo_getobj_byid(START_TXT_ID);
+    if(ble_is_connect())
+    {
+        compo_textbox_set(txt_start, i18n[STR_START]);
+    }
+    else
+    {
+        compo_textbox_set(txt_start, i18n[STR_CONNECT_BLUETOOTH]);
+    }
     func_process();
+}
+
+static void func_camera_button_handle(void)
+{
+    int id = compo_get_button_id();
+
+    if(id == START_BTN_ID)
+    {
+        if(uteModuleSportIsTakePicture())
+        {
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
+        }
+    }
 }
 
 //相机功能消息处理
@@ -361,10 +392,7 @@ static void func_camera_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
-            if(uteModuleSportIsTakePicture())
-            {
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
-            }
+            func_camera_button_handle();
             break;
 
         case MSG_CTP_SHORT_UP:

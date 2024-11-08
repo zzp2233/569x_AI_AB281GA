@@ -102,7 +102,7 @@ const menu_hc_item_t tbl_menu_cum_sudoku[] =
     {UI_BUF_ICON_VOICE_BIN,                     FUNC_VOICE},
     {UI_BUF_ICON_WEATHER_BIN,                   FUNC_WEATHER},
 
-    {UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},
+    //{UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},
     ////{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
 };
 

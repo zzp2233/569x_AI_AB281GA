@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-11-08 16:49:58
+*@date   2024-11-08 19:42:13
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -237,9 +237,11 @@ const char * const i18n_en_rus[] =
     [STR_LIGHT] = "\x4c\x69\x67\x68\x74\x20\x73\x6c\x65\x65\x70\x00", // [224] Light sleep
     [STR_MODERATE] = "\x61\x77\x61\x6b\x65\x00", // [225] awake
     [STR_RELAX] = "\x52\x61\x70\x69\x64\x20\x65\x79\x65\x20\x6d\x6f\x76\x65\x6d\x65\x6e\x74\x00", // [226] Rapid eye movement
-    [STR_DEEP_SLEEP] = "\x20\x00", // [227]
-    [STR_LIGHT_SLEEP] = "\x20\x00", // [228]
-    [STR_ALWAKE_SLEEP] = "\x20\x00", // [229]
-    [STR_EYE_MOVE_SLEEP] = "\x20\x00", // [230]
+    [STR_DEEP_SLEEP] = "\x44\x65\x65\x70\x20\x73\x6c\x65\x65\x70\x00", // [227] Deep sleep
+    [STR_LIGHT_SLEEP] = "\x4c\x69\x67\x68\x74\x20\x53\x6c\x65\x65\x70\x00", // [228] Light Sleep
+    [STR_ALWAKE_SLEEP] = "\x73\x6f\x62\x65\x72\x00", // [229] sober
+    [STR_EYE_MOVE_SLEEP] = "\x52\x61\x70\x69\x64\x20\x45\x79\x65\x20\x4d\x6f\x76\x65\x6d\x65\x6e\x74\x00", // [230] Rapid Eye Movement
+    [STR_CONNECT_BLUETOOTH] = "\x50\x6c\x65\x61\x73\x65\x20\x63\x6f\x6e\x6e\x65\x63\x74\x20\x42\x6c\x75\x65\x74\x6f\x6f\x74\x68\x20\x66\x69\x72\x73\x74\x00", // [231] Please connect Bluetooth first
+    [STR_PER_MINUTE] = "\x74\x69\x6d\x65\x73\x2f\x6d\x69\x6e\x00", // [232] times/min
 };
 

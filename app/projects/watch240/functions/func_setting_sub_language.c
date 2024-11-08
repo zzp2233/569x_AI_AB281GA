@@ -26,10 +26,10 @@ static const compo_listbox_item_t tbl_language_list[] =
 {
     {STR_LANGUAGE_CN},
     {STR_LANGUAGE_ENG},
-    {STR_LANGUAGE_FN},
-    {STR_LANGUAGE_RU},
-    {STR_LANGUAGE_AT},
-    {STR_LANGUAGE_JP},
+//    {STR_LANGUAGE_FN},
+//    {STR_LANGUAGE_RU},
+//    {STR_LANGUAGE_AT},
+//    {STR_LANGUAGE_JP},
 
 };
 
@@ -75,7 +75,6 @@ void func_set_sub_language_list_icon_click(void)
     {
         return;
     }
-    printf("id:%d\n",icon_idx);
     switch(icon_idx)
     {
         case 0:
@@ -87,9 +86,10 @@ void func_set_sub_language_list_icon_click(void)
         default:
             break;
     }
-    sys_cb.sta_old = func_cb.sta;
-    sys_cb.refresh_language_flag = true;
-    func_switch_to(FUNC_MAP, 0);
+//    sys_cb.sta_old = func_cb.sta;
+//    sys_cb.refresh_language_flag = true;
+//    func_switch_to(FUNC_MAP, 0);
+
 //    compo_form_destroy(func_cb.frm_main);
 //    func_set_sub_language_exit();
 //    func_free(func_cb.f_cb);

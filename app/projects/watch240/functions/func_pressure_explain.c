@@ -21,7 +21,7 @@ compo_form_t *func_pressure_explain_form_create(void)
     compo_textbox_t *textbox;
     compo_form_t *frm = compo_form_create(true);
 
-    textbox = compo_textbox_create(frm, 2);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PRESSURE]));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_BIN);
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/5);
     compo_textbox_set(textbox,i18n[STR_PRESSURE]);

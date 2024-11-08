@@ -52,7 +52,7 @@ compo_form_t *func_sleep_form_create(void)
 {
     compo_textbox_t * txt;
     compo_picturebox_t *pic;
-    char buf[30];
+    char buf[50];
 
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
@@ -75,9 +75,12 @@ compo_form_t *func_sleep_form_create(void)
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3+GUI_SCREEN_CENTER_X/4- GUI_SCREEN_CENTER_X/10, GUI_SCREEN_CENTER_Y);
-    compo_textbox_set(txt, i18n[STR_HOUR]);
+    //compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3+GUI_SCREEN_CENTER_X/4- GUI_SCREEN_CENTER_X/10, GUI_SCREEN_CENTER_Y);
     compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3+GUI_SCREEN_CENTER_X/4- GUI_SCREEN_CENTER_X/10, GUI_SCREEN_CENTER_Y,FINT_HEIGHT,FINT_HEIGHT);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
     snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
@@ -88,9 +91,12 @@ compo_form_t *func_sleep_form_create(void)
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3+GUI_SCREEN_CENTER_X/4 - GUI_SCREEN_CENTER_X/10, GUI_SCREEN_CENTER_Y);
-    compo_textbox_set(txt, i18n[STR_MIN]);
+//    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3+GUI_SCREEN_CENTER_X/4 - GUI_SCREEN_CENTER_X/10, GUI_SCREEN_CENTER_Y);
     compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3+GUI_SCREEN_CENTER_X/4 - GUI_SCREEN_CENTER_X/10, GUI_SCREEN_CENTER_Y,FINT_HEIGHT,FINT_HEIGHT);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
+    compo_textbox_set(txt, i18n[STR_MIN]);
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
 
@@ -295,56 +301,56 @@ static void func_sleep_data_refresh(void)
 }
 
 //睡眠图表动画
-static void func_sleep_animation(void)
-{
-    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
-    if (f_sleep->anim_sta == CHART_ANIM_STA_END)
-    {
-        return;
-    }
-    compo_chartbox_t *chart = compo_getobj_byid(COMPO_ID_CHART_SHALLOW);
-    u8 max_num = compo_chartbox_get_max_num(chart);
-
-    chart_t chart_info;
-    chart_info.y = 0;
-    chart_info.width = 5;   //5 * pixel(2) = 10像素点
-
-    static u8 anim_cnt;
-    static u32 ticks;
-    if(tick_check_expire(ticks, 10))
-    {
-        ticks = tick_get();
-
-        switch (f_sleep->anim_sta)
-        {
-            case CHART_ANIM_STA_IDLE:
-//                printf("sleep_get_offs:%d\n", compo_page_move_get_offset(f_sleep->ptm));
-                if (compo_page_move_get_offset(f_sleep->ptm) < -300)
-                {
-                    anim_cnt = 0;
-                    f_sleep->anim_sta = CHART_ANIM_STA_START;
-                }
-                break;
-
-            case CHART_ANIM_STA_START:
-                for (int i=0; i<max_num; i++)
-                {
-                    if (i == 0 && ++anim_cnt >= 255)            //图表数据最大时退出动画
-                    {
-                        f_sleep->anim_sta = CHART_ANIM_STA_END;
-                    }
-                    if (anim_cnt > f_sleep->data[i])
-                    {
-                        continue;
-                    }
-                    chart_info.x = i*17 + 1;
-                    chart_info.height = anim_cnt;
-                    compo_chartbox_set_value(chart, i, chart_info, COLOR_BLUE);
-                }
-                break;
-        }
-    }
-}
+//static void func_sleep_animation(void)
+//{
+//    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
+//    if (f_sleep->anim_sta == CHART_ANIM_STA_END)
+//    {
+//        return;
+//    }
+//    compo_chartbox_t *chart = compo_getobj_byid(COMPO_ID_CHART_SHALLOW);
+//    u8 max_num = compo_chartbox_get_max_num(chart);
+//
+//    chart_t chart_info;
+//    chart_info.y = 0;
+//    chart_info.width = 5;   //5 * pixel(2) = 10像素点
+//
+//    static u8 anim_cnt;
+//    static u32 ticks;
+//    if(tick_check_expire(ticks, 10))
+//    {
+//        ticks = tick_get();
+//
+//        switch (f_sleep->anim_sta)
+//        {
+//            case CHART_ANIM_STA_IDLE:
+////                printf("sleep_get_offs:%d\n", compo_page_move_get_offset(f_sleep->ptm));
+//                if (compo_page_move_get_offset(f_sleep->ptm) < -300)
+//                {
+//                    anim_cnt = 0;
+//                    f_sleep->anim_sta = CHART_ANIM_STA_START;
+//                }
+//                break;
+//
+//            case CHART_ANIM_STA_START:
+//                for (int i=0; i<max_num; i++)
+//                {
+//                    if (i == 0 && ++anim_cnt >= 255)            //图表数据最大时退出动画
+//                    {
+//                        f_sleep->anim_sta = CHART_ANIM_STA_END;
+//                    }
+//                    if (anim_cnt > f_sleep->data[i])
+//                    {
+//                        continue;
+//                    }
+//                    chart_info.x = i*17 + 1;
+//                    chart_info.height = anim_cnt;
+//                    compo_chartbox_set_value(chart, i, chart_info, COLOR_BLUE);
+//                }
+//                break;
+//        }
+//    }
+//}
 
 //睡眠功能消息处理
 static void func_sleep_process(void)
@@ -352,7 +358,7 @@ static void func_sleep_process(void)
     f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
 
     compo_page_move_process(f_sleep->ptm);
-    func_sleep_animation();
+    //func_sleep_animation();
     func_process();
 }
 

@@ -590,6 +590,7 @@ void uteModuleSystemtimeSetLanguage(uint16_t id)
     UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,languageId=%d", __func__,systemTime.languageId);
     uteModuleSystemtimeSaveTimeInfo();
     uteLanguageCommonSelect(systemTime.languageId);
+    msg_enqueue(MSG_CHECK_LANGUAGE);
 }
 /**
 *@brief  保存APP设计的语言

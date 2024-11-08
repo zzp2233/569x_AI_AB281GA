@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-08 16:17:15
+*@date   2024-11-08 16:49:57
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -110,11 +110,11 @@ enum
     STR_CALL_VOL, // 通话音量
     STR_SETTING_LANGUAGE, // 语言切换
     STR_LANGUAGE_CN, // 中文
-    STR_LANGUAGE_ENG, // 英语
-    STR_LANGUAGE_FN, // 法语
-    STR_LANGUAGE_RU, // 俄语
-    STR_LANGUAGE_AT, // 阿根廷语
-    STR_LANGUAGE_JP, // 日本文
+    STR_LANGUAGE_ENG, // English
+    STR_LANGUAGE_FN, // Français
+    STR_LANGUAGE_RU, // Русский язык
+    STR_LANGUAGE_AT, // Аргентинский язык
+    STR_LANGUAGE_JP, // 日本語
     STR_SETTING_TIME, // 时间设置
     STR_CUSTOM_CALENDAR, // 日期
     STR_CUSTOM_TIME, // 时间

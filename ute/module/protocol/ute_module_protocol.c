@@ -688,14 +688,13 @@ void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
 {
-#if 0
     if(receive[1] == 0x01)
     {
 #if DRV_HID_PHOTO
         uteModuleNotifyAncsClearQueueRestart();
 #endif
         uteModuleSportSetTakePictureEnable(true);
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TAKE_PICTURE_ID);
+        uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
     }
     else
     {
@@ -705,7 +704,6 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
             uteModuleGuiCommonGoBackLastScreen();
         }
     }
-#endif
 }
 /**
 *@brief        消息内容接收

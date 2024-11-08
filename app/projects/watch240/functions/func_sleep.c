@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_sleep.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -43,7 +44,7 @@ typedef struct f_sleep_t_
 
 
 #if FUNC_SLEEP_SIMULATE_DATA_EN
-static const uint16_t total_sleep_time[] = {8*60+30, 9*60+40, 7*60+20, 10*60+30, 5*60+10, 0, 8*60+30}; //min
+//static const uint16_t total_sleep_time[] = {8*60+30, 9*60+40, 7*60+20, 10*60+30, 5*60+10, 0, 8*60+30}; //min
 #endif
 
 //创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -52,6 +53,9 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_t * txt;
     compo_picturebox_t *pic;
     char buf[30];
+
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
@@ -63,7 +67,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y*0.6);
     compo_picturebox_set_size(pic, 70, 70);
 
-    snprintf(buf, sizeof(buf), "%d", 15);///* 总睡眠小时*/
+    snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3- GUI_SCREEN_CENTER_X/10, GUI_SCREEN_CENTER_Y);
@@ -76,7 +80,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_align_center(txt, false);
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
-    snprintf(buf, sizeof(buf), "%d", 45);///* 总睡眠分钟*/
+    snprintf(buf, sizeof(buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3- GUI_SCREEN_CENTER_X/10, GUI_SCREEN_CENTER_Y);
@@ -90,14 +94,14 @@ compo_form_t *func_sleep_form_create(void)
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
 
-    snprintf(buf, sizeof(buf), "%02d:%02d", 8,0);///* 起床点*/
+    snprintf(buf, sizeof(buf), "%02d:%02d", sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡眠点*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
     compo_textbox_set(txt, buf);
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
-    snprintf(buf, sizeof(buf), "%02d:%02d", 22,0);///* 睡眠点*/
+    snprintf(buf, sizeof(buf), "%02d:%02d", sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起床点*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
@@ -123,14 +127,14 @@ compo_form_t *func_sleep_form_create(void)
 
     compo_form_add_image(frm, UI_BUF_SLEEP_SLEEP_DATE_BG_BIN, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4);///* 背景图*/
 
-    snprintf(buf, sizeof(buf), "%02d:%02d", 24,0);///* 睡眠初始点*/
+    snprintf(buf, sizeof(buf), "%02d:%02d", sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡眠初始点*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-pic_size.wid/2, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4+pic_size.hei/2-FINT_HEIGHT);
     compo_textbox_set(txt, buf);
     compo_textbox_set_forecolor(txt, COLOR_GRAY);
 
-    snprintf(buf, sizeof(buf), "%02d:%02d", 8,0);///* 睡眠结束点*/
+    snprintf(buf, sizeof(buf), "%02d:%02d", sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 睡眠结束点*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X+pic_size.wid/2-FINT_HEIGHT/2*strlen(buf), GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4+pic_size.hei/2-FINT_HEIGHT);
@@ -178,7 +182,7 @@ compo_form_t *func_sleep_form_create(void)
 //    compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
 //    compo_textbox_set_forecolor(txt, make_color(0x00, 0xf7, 0xd6));
 //////////////////////////////////////////////////////////////////////////////////
-    snprintf(buf, sizeof(buf), "%d", 15);///* 深睡小时数据*/
+    snprintf(buf, sizeof(buf), "%02d", sleep_data->deepSleepMin/60);///* 深睡小时数据*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
@@ -190,20 +194,20 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, i18n[STR_HOUR]);
     compo_textbox_set_align_center(txt, false);
 
-    snprintf(buf, sizeof(buf), "%d", 15);///* 深睡分钟数据*/
+    snprintf(buf, sizeof(buf), "%02d", sleep_data->deepSleepMin%60);///* 深睡分钟数据*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*2.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.7);
     compo_textbox_set(txt, buf);
 
-    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));///* 分钟*/
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));///* 分钟*/
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5);
-    compo_textbox_set(txt, i18n[STR_HOUR]);
+    compo_textbox_set(txt, i18n[STR_MIN]);
     compo_textbox_set_align_center(txt, false);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
-    snprintf(buf, sizeof(buf), "%d", 15);///* 浅睡小时数据*/
+    snprintf(buf, sizeof(buf), "%02d", sleep_data->lightSleepMin/60);///* 浅睡小时数据*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
@@ -215,19 +219,19 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, i18n[STR_HOUR]);
     compo_textbox_set_align_center(txt, false);
 
-    snprintf(buf, sizeof(buf), "%d", 15);///* 浅睡分钟数据*/
+    snprintf(buf, sizeof(buf), "%02d", sleep_data->lightSleepMin%60);///* 浅睡分钟数据*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*2.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.7+length);
     compo_textbox_set(txt, buf);
 
-    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));///* 分钟*/
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));///* 分钟*/
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length);
-    compo_textbox_set(txt, i18n[STR_HOUR]);
+    compo_textbox_set(txt, i18n[STR_MIN]);
     compo_textbox_set_align_center(txt, false);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-    snprintf(buf, sizeof(buf), "%d", 15);///* 清醒小时数据*/
+    snprintf(buf, sizeof(buf), "%02d", sleep_data->wakeSleepMin/60);///* 清醒小时数据*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
@@ -239,16 +243,16 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, i18n[STR_HOUR]);
     compo_textbox_set_align_center(txt, false);
 
-    snprintf(buf, sizeof(buf), "%d", 15);///* 清醒分钟数据*/
+    snprintf(buf, sizeof(buf), "%02d", sleep_data->wakeSleepMin%60);///* 清醒分钟数据*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*2.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.7+length*2);
     compo_textbox_set(txt, buf);
 
-    txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));///* 分钟*/
+    txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));///* 分钟*/
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*2);
-    compo_textbox_set(txt, i18n[STR_HOUR]);
+    compo_textbox_set(txt, i18n[STR_MIN]);
     compo_textbox_set_align_center(txt, false);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //    snprintf(buf, sizeof(buf), "%d", 15);///* 浅睡小时数据*/
@@ -274,7 +278,7 @@ compo_form_t *func_sleep_form_create(void)
 //    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*3);
 //    compo_textbox_set(txt, i18n[STR_HOUR]);
 //    compo_textbox_set_align_center(txt, false);
-
+    ab_free(sleep_data);
 
     return frm;
 }
@@ -286,7 +290,7 @@ static void func_sleep_data_refresh(void)
     uint16_t total_sleep_time[2] = {0};
 #endif
 
-    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
+//    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
 
 }
 

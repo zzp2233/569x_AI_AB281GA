@@ -1178,6 +1178,14 @@ void func_message(size_msg_t msg)
             app_ute_msg_pop_up(sys_cb.msg_index);
             break;
 
+        case MSG_CHECK_LANGUAGE://APP语言切换
+//            compo_form_destroy(func_cb.frm_main);
+//            func_cb.frm_main = func_create_form(func_cb.sta);
+            sys_cb.sta_old = func_cb.sta;
+            sys_cb.refresh_language_flag = true;
+            func_switch_to(FUNC_MAP, 0);
+            break;
+
         default:
             evt_message(msg);
             break;
@@ -1253,6 +1261,12 @@ void func_run(void)
     latest_task_init(); //最近任务
     for (;;)
     {
+        if(sys_cb.refresh_language_flag) //刷新语言
+        {
+            func_switch_to(sys_cb.sta_old, NULL);
+            sys_cb.refresh_language_flag = false;
+        }
+
         func_enter();
         for (int i = 0; i < FUNC_ENTRY_CNT; i++)
         {

@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 中文(简体）
 *@author
-*@date   2024-11-08 16:49:58
+*@date   2024-11-08 19:42:13
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -241,5 +241,7 @@ const char * const i18n_zh_rcn[] =
     [STR_LIGHT_SLEEP] = "\xe6\xb5\x85\xe7\x9d\xa1\x00", // [228] 浅睡
     [STR_ALWAKE_SLEEP] = "\xe6\xb8\x85\xe9\x86\x92\x00", // [229] 清醒
     [STR_EYE_MOVE_SLEEP] = "\xe5\xbf\xab\xe9\x80\x9f\xe7\x9c\xbc\xe5\x8a\xa8\x00", // [230] 快速眼动
+    [STR_CONNECT_BLUETOOTH] = "\xe8\xaf\xb7\xe5\x85\x88\xe8\xbf\x9e\xe6\x8e\xa5\xe8\x93\x9d\xe7\x89\x99\x00", // [231] 请先连接蓝牙
+    [STR_PER_MINUTE] = "\xe6\xac\xa1\x2f\xe5\x88\x86\x00", // [232] 次/分
 };
 

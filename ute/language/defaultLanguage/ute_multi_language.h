@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-08 16:49:57
+*@date   2024-11-08 19:42:12
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -244,6 +244,8 @@ enum
     STR_LIGHT_SLEEP, // 浅睡
     STR_ALWAKE_SLEEP, // 清醒
     STR_EYE_MOVE_SLEEP, // 快速眼动
+    STR_CONNECT_BLUETOOTH, // 请先连接蓝牙
+    STR_PER_MINUTE, // 次/分
 };
 
 extern const char * const *i18n;

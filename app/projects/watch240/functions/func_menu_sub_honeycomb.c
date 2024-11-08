@@ -21,11 +21,13 @@
 
 #define MENU_HC_CNT                         ((int)((sizeof(tbl_menu_honeycomb) / sizeof(tbl_menu_honeycomb[0]))))
 
-enum {
+enum
+{
     COMPO_ID_ICONLIST = 1,
 };
 
-typedef struct f_menu_hc_t_ {
+typedef struct f_menu_hc_t_
+{
     compo_iconlist_t *iconlist;
     bool flag_drag;                 //开始拖动
     bool flag_move_auto;            //自动移到坐标
@@ -50,22 +52,25 @@ typedef struct f_menu_hc_t_ {
     bool flag_zooming;
 } f_menu_hc_t;
 
-typedef struct menu_hc_item_t_ {
+typedef struct menu_hc_item_t_
+{
     u32 res_addr;
     u8 func_sta;
 } menu_hc_item_t;
 
 //蜂窝图标列表及顺序
-const menu_hc_item_t tbl_menu_honeycomb[] = {
+const menu_hc_item_t tbl_menu_honeycomb[] =
+{
     {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
 
     {UI_BUF_ICON_HEART_RATE_BIN,                FUNC_HEARTRATE},
     {UI_BUF_ICON_ACTIVITY_BIN,                  FUNC_ACTIVITY},
     {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_BLOOD_OXYGEN},
-    {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},//压力
-    {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
+    //{UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},//压力
+//    {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
     {UI_BUF_ICON_BREATHE_BIN,                   FUNC_BREATHE},
     {UI_BUF_ICON_MUSIC_BIN,                     FUNC_BT},
+    {UI_BUF_ICON_MESSAGE_BIN,                   FUNC_MESSAGE},
 
     {UI_BUF_ICON_CALL_BIN,                      FUNC_CALL},
     {UI_BUF_ICON_MENU_BIN,                      FUNC_STYLE},
@@ -79,7 +84,7 @@ const menu_hc_item_t tbl_menu_honeycomb[] = {
     {UI_BUF_ICON_LANGUAGE_BIN,                  FUNC_LANGUAGE},
     {UI_BUF_ICON_LIGHT_BIN,                     FUNC_LIGHT},
 //    {UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
-    {UI_BUF_ICON_MESSAGE_BIN,                   FUNC_MESSAGE},
+
 
     {UI_BUF_ICON_CALCULATOR_BIN,                FUNC_CALCULATOR},
     {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
@@ -111,14 +116,18 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
     //新建蜂窝效果
-    if (func_cb.menu_style == MENU_STYLE_HONEYCOMB) {
+    if (func_cb.menu_style == MENU_STYLE_HONEYCOMB)
+    {
         iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_HONEYCOMB);
-    } else {
+    }
+    else
+    {
         iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_CUM_HONEYGRID);
     }
 
     compo_setid(iconlist, COMPO_ID_ICONLIST);
-    for (int i=0; i<MENU_HC_CNT; i++) {
+    for (int i=0; i<MENU_HC_CNT; i++)
+    {
         compo_iconlist_add(iconlist, tbl_menu_honeycomb[i].res_addr);
     }
     compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_HOUR, UI_BUF_ICON_CLOCK_H_BIN, 1, 2);
@@ -142,21 +151,26 @@ static void func_menu_sub_honeycomb_icon_click(void)
 
     pt = ctp_get_sxy();
     icon_idx = compo_iconlist_select(iconlist, pt.x, pt.y);
-    if (icon_idx < 0 || icon_idx >= MENU_HC_CNT) {
+    if (icon_idx < 0 || icon_idx >= MENU_HC_CNT)
+    {
         return;
     }
 
-    if (f_menu->flag_zoomout) {
+    if (f_menu->flag_zoomout)
+    {
         compo_iconlist_set_focus_byidx(iconlist, icon_idx);
         compo_iconlist_update(iconlist);
         f_menu->flag_zooming = true;
         f_menu->zoom_target = 0;
-    } else {
+    }
+    else
+    {
         //根据图标索引获取应用ID
         func_sta = tbl_menu_honeycomb[icon_idx].func_sta;
 
         //切入应用
-        if (func_sta > 0) {
+        if (func_sta > 0)
+        {
             compo_form_t *frm = func_create_form(func_sta);
             func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, iconlist->sel_icon);
             compo_form_destroy(frm);
@@ -172,7 +186,8 @@ static void func_menu_sub_honeycomb_switching_in(void)
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
     int icon_idx = iconlist->focus_icon_idx;
-    if (icon_idx < 0 || icon_idx >= MENU_HC_CNT) {
+    if (icon_idx < 0 || icon_idx >= MENU_HC_CNT)
+    {
         return;
     }
 
@@ -180,11 +195,13 @@ static void func_menu_sub_honeycomb_switching_in(void)
     u8 func_sta = tbl_menu_honeycomb[icon_idx].func_sta;
 
     //切入应用
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
         compo_form_t *frm = func_create_form(func_sta);
         bool res = func_switching(FUNC_SWITCH_ZOOM_ENTER, iconlist->focus_icon);
         compo_form_destroy(frm);
-        if (res) {
+        if (res)
+        {
             func_cb.sta = func_sta;
             func_cb.menu_idx = icon_idx;            //记住当前编号
         }
@@ -197,7 +214,8 @@ static void func_menu_sub_honeycomb_zooming_in()
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
     f_menu->flag_zooming = true;
     f_menu->zoom_target += MENU_HC_ZOOMOUT_STEP * MENU_HC_ZOOMOUT_STEP_DIV;
-    if (f_menu->zoom_target > 0) {
+    if (f_menu->zoom_target > 0)
+    {
         f_menu->zoom_target = 0;
         f_menu->tick = tick_get();
     }
@@ -209,7 +227,8 @@ static void func_menu_sub_honeycomb_zooming_out()
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
     f_menu->flag_zooming = true;
     f_menu->zoom_target -= MENU_HC_ZOOMOUT_STEP * MENU_HC_ZOOMOUT_STEP_DIV;
-    if (f_menu->zoom_target < f_menu->zoom_min) {
+    if (f_menu->zoom_target < f_menu->zoom_min)
+    {
         f_menu->zoom_target = f_menu->zoom_min;
         f_menu->tick = tick_get();
     }
@@ -225,7 +244,8 @@ static void func_menu_sub_honeycomb_switch_to_clock(void)
     u8 func_sta = FUNC_CLOCK;
     int switch_mode = FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO;
     compo_form_t *frm = func_create_form(func_sta);
-    if (rect.wid < 10) {
+    if (rect.wid < 10)
+    {
         switch_mode = FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO;
     }
     func_switching(switch_mode, icon);
@@ -239,17 +259,21 @@ static void func_menu_sub_honeycomb_process(void)
 {
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
-    if (f_menu->flag_drag) {
+    if (f_menu->flag_drag)
+    {
         s32 dx = f_menu->focus_dx;
         s32 dy = f_menu->focus_dy;
         f_menu->flag_drag = ctp_get_dxy(&f_menu->focus_dx, &f_menu->focus_dy);
-        if (f_menu->flag_drag) {
+        if (f_menu->flag_drag)
+        {
             //拖动菜单图标
             f_menu->focus_xstep = f_menu->focus_dx - dx;
             f_menu->focus_ystep = f_menu->focus_dy - dy;
             compo_iconlist_set_focus(iconlist, f_menu->focus_x - f_menu->focus_dx, f_menu->focus_y - f_menu->focus_dy);
             compo_iconlist_update(iconlist);
-        } else if (f_menu->flag_zoomout) {
+        }
+        else if (f_menu->flag_zoomout)
+        {
             //平铺视图下抬手后开始自动居中
             f_menu->focus_x = iconlist->ofs_x;
             f_menu->focus_y = iconlist->ofs_y;
@@ -257,7 +281,9 @@ static void func_menu_sub_honeycomb_process(void)
             f_menu->moveto.x = 0;
             f_menu->moveto.y = 0;
             f_menu->tick = tick_get();
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
             point_t last_dxy = ctp_get_last_dxy();
             s32 to_x, to_y, r;
@@ -267,53 +293,85 @@ static void func_menu_sub_honeycomb_process(void)
             to_x = f_menu->focus_x - (last_dxy.x * DRAG_AUTO_SPEED);
             to_y = f_menu->focus_y - (last_dxy.y * DRAG_AUTO_SPEED);
             r = sqrt64(to_x * to_x + to_y * to_y);
-            if (r > iconlist->max_r) {
+            if (r > iconlist->max_r)
+            {
                 to_x = to_x * iconlist->max_r / r;
                 to_y = to_y * iconlist->max_r / r;
             }
             f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
             f_menu->tick = tick_get();
         }
-    } else if (f_menu->flag_move_auto) {
+    }
+    else if (f_menu->flag_move_auto)
+    {
         //自动移动
-        if (f_menu->focus_x == f_menu->moveto.x && f_menu->focus_y == f_menu->moveto.y) {
+        if (f_menu->focus_x == f_menu->moveto.x && f_menu->focus_y == f_menu->moveto.y)
+        {
             f_menu->flag_move_auto = false;            //移动完成
-        } else if (tick_check_expire(f_menu->tick, FOCUS_AUTO_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(f_menu->tick, FOCUS_AUTO_TICK_EXPIRE))
+        {
             s32 dx, dy;
             f_menu->tick = tick_get();
             dx = f_menu->moveto.x - f_menu->focus_x;
             dy = f_menu->moveto.y - f_menu->focus_y;
-            if (dx > 0) {
-                if (dx > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (dx > 0)
+            {
+                if (dx > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dx = dx / FOCUS_AUTO_STEP_DIV;
-                } else if (dx > FOCUS_AUTO_STEP) {
+                }
+                else if (dx > FOCUS_AUTO_STEP)
+                {
                     dx = FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dx = 1;
                 }
-            } else if (dx < 0) {
-                if (dx < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else if (dx < 0)
+            {
+                if (dx < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dx = dx / FOCUS_AUTO_STEP_DIV;
-                } else if (dx < -FOCUS_AUTO_STEP) {
+                }
+                else if (dx < -FOCUS_AUTO_STEP)
+                {
                     dx = -FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dx = -1;
                 }
             }
-            if (dy > 0) {
-                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (dy > 0)
+            {
+                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dy = dy / FOCUS_AUTO_STEP_DIV;
-                } else if (dy > FOCUS_AUTO_STEP) {
+                }
+                else if (dy > FOCUS_AUTO_STEP)
+                {
                     dy = FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dy = 1;
                 }
-            } else if (dy < 0) {
-                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else if (dy < 0)
+            {
+                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dy = dy / FOCUS_AUTO_STEP_DIV;
-                } else if (dy < -FOCUS_AUTO_STEP) {
+                }
+                else if (dy < -FOCUS_AUTO_STEP)
+                {
                     dy = -FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dy = -1;
                 }
             }
@@ -322,15 +380,21 @@ static void func_menu_sub_honeycomb_process(void)
             compo_iconlist_set_focus(iconlist, f_menu->focus_x, f_menu->focus_y);
             compo_iconlist_update(iconlist);
         }
-    } else if (f_menu->flag_zooming) {
-        if (f_menu->zoom_cur == f_menu->zoom_target) {
-            if (f_menu->zoom_cur == 0) {
+    }
+    else if (f_menu->flag_zooming)
+    {
+        if (f_menu->zoom_cur == f_menu->zoom_target)
+        {
+            if (f_menu->zoom_cur == 0)
+            {
                 f_menu->flag_zooming = false;
                 f_menu->flag_zoomout = false;
 
                 f_menu->focus_x = iconlist->ofs_x;
                 f_menu->focus_y = iconlist->ofs_y;
-            } else if (f_menu->zoom_cur == f_menu->zoom_out) {
+            }
+            else if (f_menu->zoom_cur == f_menu->zoom_out)
+            {
                 f_menu->flag_zooming = false;
                 f_menu->flag_zoomout = true;
 
@@ -340,31 +404,48 @@ static void func_menu_sub_honeycomb_process(void)
                 f_menu->flag_move_auto = true;
                 f_menu->moveto.x = 0;
                 f_menu->moveto.y = 0;
-            } else if (f_menu->flag_zoomout) {
-                if (f_menu->zoom_cur > f_menu->zoomin_threshold) {
+            }
+            else if (f_menu->flag_zoomout)
+            {
+                if (f_menu->zoom_cur > f_menu->zoomin_threshold)
+                {
                     f_menu->zoom_target = 0;
-                } else if (tick_check_expire(f_menu->tick, MENU_HC_ZOOM_CANCEL_TICK_EXPIRE)) {
+                }
+                else if (tick_check_expire(f_menu->tick, MENU_HC_ZOOM_CANCEL_TICK_EXPIRE))
+                {
                     f_menu->zoom_target = f_menu->zoom_out;
                 }
-            } else {
-                if (f_menu->zoom_cur < f_menu->zoomout_threshold) {
+            }
+            else
+            {
+                if (f_menu->zoom_cur < f_menu->zoomout_threshold)
+                {
                     f_menu->zoom_target = f_menu->zoom_out;
-                } else if (tick_check_expire(f_menu->tick, MENU_HC_ZOOM_CANCEL_TICK_EXPIRE)) {
+                }
+                else if (tick_check_expire(f_menu->tick, MENU_HC_ZOOM_CANCEL_TICK_EXPIRE))
+                {
                     f_menu->zoom_target = 0;
                 }
             }
-        } else if (tick_check_expire(f_menu->tick, MENU_HC_ZOOMOUT_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(f_menu->tick, MENU_HC_ZOOMOUT_TICK_EXPIRE))
+        {
             int dzoom = f_menu->zoom_target - f_menu->zoom_cur;
             int dw;
             f_menu->tick = tick_get();
-            if (dzoom > MENU_HC_ZOOMOUT_STEP) {
+            if (dzoom > MENU_HC_ZOOMOUT_STEP)
+            {
                 dzoom /= MENU_HC_ZOOMOUT_STEP_DIV;
-                if (dzoom < MENU_HC_ZOOMOUT_STEP) {
+                if (dzoom < MENU_HC_ZOOMOUT_STEP)
+                {
                     dzoom = MENU_HC_ZOOMOUT_STEP;
                 }
-            } else if (dzoom < -MENU_HC_ZOOMOUT_STEP) {
+            }
+            else if (dzoom < -MENU_HC_ZOOMOUT_STEP)
+            {
                 dzoom /= MENU_HC_ZOOMOUT_STEP_DIV;
-                if (dzoom > -MENU_HC_ZOOMOUT_STEP) {
+                if (dzoom > -MENU_HC_ZOOMOUT_STEP)
+                {
                     dzoom = -MENU_HC_ZOOMOUT_STEP;
                 }
             }
@@ -382,10 +463,11 @@ static void func_menu_sub_honeycomb_process(void)
 //拖动过程中，只响应部分消息
 static void func_menu_sub_honeycomb_drag_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
@@ -393,33 +475,35 @@ static void func_menu_sub_honeycomb_drag_message(size_msg_t msg)
 static void func_menu_sub_honeycomb_move_auto_message(size_msg_t msg)
 {
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        f_menu->flag_drag = true;                               //移动过程中，触屏停止
-        f_menu->flag_move_auto = false;
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            f_menu->flag_drag = true;                               //移动过程中，触屏停止
+            f_menu->flag_move_auto = false;
+            break;
 
-    default:
-        evt_message(msg);
-        break;
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
 //处理缩放过程中，只响应部分消息
 static void func_menu_sub_honeycomb_zooming_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_QDEC_FORWARD:
-        func_menu_sub_honeycomb_zooming_in();
-        break;
+    switch (msg)
+    {
+        case MSG_QDEC_FORWARD:
+            func_menu_sub_honeycomb_zooming_in();
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        func_menu_sub_honeycomb_zooming_out();
-        break;
+        case MSG_QDEC_BACKWARD:
+            func_menu_sub_honeycomb_zooming_out();
+            break;
 
-    default:
-        evt_message(msg);
-        break;
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
@@ -427,35 +511,36 @@ static void func_menu_sub_honeycomb_zooming_message(size_msg_t msg)
 static void func_menu_sub_honeycomb_zoomout_message(size_msg_t msg)
 {
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_menu_sub_honeycomb_icon_click();           //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_menu_sub_honeycomb_icon_click();           //单击图标
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_RIGHT:
-    case MSG_CTP_SHORT_DOWN:
-        f_menu->flag_drag = true;                       //任何方向短划，开启拖动
-        f_menu->flag_move_auto = false;
-        break;
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_DOWN:
+            f_menu->flag_drag = true;                       //任何方向短划，开启拖动
+            f_menu->flag_move_auto = false;
+            break;
 
-    case MSG_QDEC_FORWARD:
-        func_menu_sub_honeycomb_zooming_in();
-        break;
+        case MSG_QDEC_FORWARD:
+            func_menu_sub_honeycomb_zooming_in();
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        func_menu_sub_honeycomb_zooming_out();
-        break;
+        case MSG_QDEC_BACKWARD:
+            func_menu_sub_honeycomb_zooming_out();
+            break;
 
-    case KU_DELAY_BACK:
-        f_menu->flag_zooming = true;
-        f_menu->zoom_target = 0;
-        break;
+        case KU_DELAY_BACK:
+            f_menu->flag_zooming = true;
+            f_menu->zoom_target = 0;
+            break;
 
-    default:
-        func_menu_sub_message(msg);
-        break;
+        default:
+            func_menu_sub_message(msg);
+            break;
     }
 }
 
@@ -463,39 +548,41 @@ static void func_menu_sub_honeycomb_zoomout_message(size_msg_t msg)
 static void func_menu_sub_honeycomb_normal_message(size_msg_t msg)
 {
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_menu_sub_honeycomb_icon_click();           //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_menu_sub_honeycomb_icon_click();           //单击图标
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_RIGHT:
-    case MSG_CTP_SHORT_DOWN:
-        f_menu->flag_drag = true;                       //任何方向短划，开启拖动
-        f_menu->flag_move_auto = false;
-        break;
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_DOWN:
+            f_menu->flag_drag = true;                       //任何方向短划，开启拖动
+            f_menu->flag_move_auto = false;
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        func_menu_sub_honeycomb_switching_in();
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            func_menu_sub_honeycomb_switching_in();
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        func_menu_sub_honeycomb_zooming_out();
-        break;
+        case MSG_QDEC_BACKWARD:
+            func_menu_sub_honeycomb_zooming_out();
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
-            func_menu_sub_honeycomb_switch_to_clock();      //返回时钟表盘界面
-        }
-        break;
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_honeycomb_switch_to_clock();      //返回时钟表盘界面
+            }
+            break;
 
-    default:
-        func_menu_sub_message(msg);
-        break;
+        default:
+            func_menu_sub_message(msg);
+            break;
     }
 }
 
@@ -503,19 +590,28 @@ static void func_menu_sub_honeycomb_normal_message(size_msg_t msg)
 static void func_menu_sub_honeycomb_message(size_msg_t msg)
 {
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
-    if (f_menu->flag_drag) {
+    if (f_menu->flag_drag)
+    {
         //拖动过程中，只响应部分消息
         func_menu_sub_honeycomb_drag_message(msg);
-    } else if (f_menu->flag_move_auto) {
+    }
+    else if (f_menu->flag_move_auto)
+    {
         //自动移动中，只响应部分消息
         func_menu_sub_honeycomb_move_auto_message(msg);
-    } else if (f_menu->flag_zooming) {
+    }
+    else if (f_menu->flag_zooming)
+    {
         //处理缩放过程中，只响应部分消息
         func_menu_sub_honeycomb_zooming_message(msg);
-    } else if (f_menu->flag_zoomout) {
+    }
+    else if (f_menu->flag_zoomout)
+    {
         //全局视图下的消息处理
         func_menu_sub_honeycomb_zoomout_message(msg);
-    } else {
+    }
+    else
+    {
         //正常模式下
         func_menu_sub_honeycomb_normal_message(msg);
     }
@@ -530,7 +626,8 @@ static void func_menu_sub_honeycomb_enter(void)
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
     f_menu->iconlist = compo_getobj_byid(COMPO_ID_ICONLIST);
     compo_iconlist_t *iconlist = f_menu->iconlist;
-    if (iconlist->type != COMPO_TYPE_ICONLIST) {
+    if (iconlist->type != COMPO_TYPE_ICONLIST)
+    {
         halt(HALT_GUI_COMPO_ICONLIST_TYPE);
     }
     f_menu->focus_x = iconlist->ofs_x;
@@ -541,7 +638,8 @@ static void func_menu_sub_honeycomb_enter(void)
     f_menu->zoomout_threshold = f_menu->zoom_out * 2 / 3;
     f_menu->zoomin_threshold = f_menu->zoom_out / 3;
     func_cb.enter_tick = tick_get();
-    if (func_cb.flag_animation) {
+    if (func_cb.flag_animation)
+    {
         func_cb.flag_animation = 0;
     }
 }
@@ -556,10 +654,11 @@ void func_menu_sub_honeycomb(void)
 {
     printf("%s\n", __func__);
     func_menu_sub_honeycomb_enter();
-   // printf("wid:%d   hei:%d ",gui_image_get_size(UI_BUF_WEATHER_WEATHER_LIST_BIN).wid,gui_image_get_size(UI_BUF_WEATHER_WEATHER_LIST_BIN).hei);
+    // printf("wid:%d   hei:%d ",gui_image_get_size(UI_BUF_WEATHER_WEATHER_LIST_BIN).wid,gui_image_get_size(UI_BUF_WEATHER_WEATHER_LIST_BIN).hei);
 
     while (func_cb.sta == FUNC_MENU
-           && (func_cb.menu_style == MENU_STYLE_HONEYCOMB || func_cb.menu_style == MENU_STYLE_CUM_HONEYGRID)) {
+           && (func_cb.menu_style == MENU_STYLE_HONEYCOMB || func_cb.menu_style == MENU_STYLE_CUM_HONEYGRID))
+    {
         func_menu_sub_honeycomb_process();
         func_menu_sub_honeycomb_message(msg_dequeue());
     }

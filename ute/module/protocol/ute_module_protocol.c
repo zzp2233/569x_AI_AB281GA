@@ -446,8 +446,6 @@ void uteModuleProtocolReadBleMac(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 {
-#if 0
-
     uint8_t response[20];
     memset(&response[0],0,20);
     response[0] = receive[0];
@@ -455,8 +453,8 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
     if(receive[1]==0xaa)
     {
         response[2] = uteModuleSystemtimeReadLanguage();
-        response[19] |= (SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT||SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_USE_WORK_STOCK_SUPPORT)<<0;
-        response[19] |= (SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT||SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_USE_WORK_STOCK_SUPPORT)<<1;
+        response[19] |= SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT<<0;
+        response[19] |= SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT<<1;
         response[19] |= SCREEN_TITLE_MULTIPLE_KOREAN_LANGUAGE_SUPPORT<<2;
         response[19] |= SCREEN_TITLE_MULTIPLE_JAPANESE_LANGUAGE_SUPPORT<<3;
         response[19] |= SCREEN_TITLE_MULTIPLE_GERMAN_LANGUAGE_SUPPORT<<4;
@@ -522,8 +520,6 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
         }
         uteModuleProfileBleSendToPhone(&response[0],3);
     }
-
-#endif
 }
 /**
 *@brief        读取实时步数信息

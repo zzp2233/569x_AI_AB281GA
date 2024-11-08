@@ -37,9 +37,21 @@ void bt_dnn_init(void *alg_cb) {}
 void bt_dnn_exit(void) {}
 void bt_dnn_nr_process(void) {}
 AT(.com_text.bt_sco)
-bool bt_sco_dnn_is_en(void) {return false;}
+bool bt_sco_dnn_is_en(void)
+{
+    return false;
+}
 void dnn_far_upsample(s16 *out, s16 *in, u32 samples, u8 step) {}
-u32 dnn_near_downsample(s16 *ptr, u32 samples) {return 0;}
+u32 dnn_near_downsample(s16 *ptr, u32 samples)
+{
+    return 0;
+}
 #endif
 
+#if !BT_SCO_AIAEC_DNN_EN
+void bt_aiaec_dnn_init(void *alg_cb) {}
+void bt_aiaec_dnn_exit(void) {}
+void bt_aiaec_dnn_nr_process(void) {}
+void bt_aiaec_dnn_process(void) {}
+#endif
 

@@ -1,8 +1,10 @@
 #include "include.h"
 
+#if !UTE_MULTIPLE_LANGUAGE_SUPPORT
+
 const char * const i18n_zh[] =
 {
-    [STR_CLOCK]                         = "时钟",
+    [STR_CLOCK]                         = "\xe6\x97\xb6\xe9\x92\x9f\x00",
     [STR_CLOCK_PREVIEW]                 = "表盘预览",
     [STR_MESSAGE]                       = "消息",
     [STR_PHONE]                         = "电话",
@@ -350,3 +352,4 @@ const char * const i18n_zh[] =
     [STR_SEDENTARY_REMIND]              = "久坐提醒",
 
 };
+#endif

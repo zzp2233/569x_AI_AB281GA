@@ -14,6 +14,95 @@
 #include "ute_application_common.h"
 #include "ute_module_gui_common.h"
 
+#if UTE_TASK_APPLICATION_STACK_SIZE
+
+/*! ute app task的指针 zn.zeng, 2022-03-01  */
+os_mq_t uteTaskApplicationMsgQueueHandle;
+static os_thread_t uteTaskApplicationHandle;
+
+void uteTaskApplicationMsgHandler(ute_task_application_message_t *msg)
+{
+    uteModuleMessageUteApplicationTaskHandler(msg);
+}
+
+void uteTaskApplicationMain(void *param)
+{
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,enter ute app thread",__func__);
+
+#if UTE_FACTORY_TEST_AUDIO_RF_MODE_SUPPORT
+    ute_new_factory_test_data_t *data;
+    uteModuleNewFactoryTestSetMode(&data);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,data->mode = %d",__func__,data->mode);
+    if(data->mode == FACTORY_TEST_MODE_RF_DUT)
+    {
+        uteDrvKeysCommonInit();
+    }
+    else
+#endif
+    {
+#if UTE_MODULE_USER_MALLOC_SUPPORT
+        uteModulePlatformMemoryInitPool();
+#endif
+        uteApplicationCommonStartupFrist();
+        uteModuleGuiCommonInit();
+    }
+    while (1)
+    {
+        ute_task_application_message_t msg;
+        if (os_mq_recv(uteTaskApplicationMsgQueueHandle, &msg, sizeof(msg),0xFFFFFFFF) == OS_EOK)
+        {
+            printf("uteTaskApplicationMsgHandler,type=%d\n",msg.type);
+            uteModulePlatformWdgFeed();
+            uteTaskApplicationMsgHandler(&msg);
+        }
+    }
+}
+
+/**
+*@brief        发送msg到ute app task
+*@detail
+*@author       zn.zeng
+*@date       2022-03-01
+*/
+bool uteTaskApplicationSendMsg(ute_task_application_message_t *pMsg)
+{
+    if(os_mq_send(uteTaskApplicationMsgQueueHandle, pMsg, sizeof(ute_task_application_message_t)) != OS_EOK)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,fail to queue,type=%d",__func__,pMsg->type);
+        return false;
+    }
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,type=%d",__func__,pMsg->type);
+        return true;
+    }
+}
+
+/**
+*@brief        ute app task 初始化，创建task
+*@details
+*@author       zn.zeng
+*@date       2023-03-25
+*/
+void uteTaskApplicationInit(void)
+{
+    uteTaskApplicationMsgQueueHandle = os_mq_create("ute_msg", sizeof(ute_task_application_message_t), UTE_TASK_APPLICATION_MESSAGE_MAX_CNT, OS_IPC_FLAG_FIFO);
+    uteTaskApplicationHandle = os_thread_create(
+                                   "ute",
+                                   uteTaskApplicationMain,
+                                   0,
+                                   UTE_TASK_APPLICATION_STACK_SIZE,
+                                   UTE_TASK_APPLICATION_PRIORITY,
+                                   -1);
+    if (uteTaskApplicationHandle != 0)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,startup ute app thread",__func__);
+        os_thread_startup(uteTaskApplicationHandle);
+    }
+}
+
+#else
+
 #define UTE_TASK_APPLICATION_PRIORITY             24
 #define UTE_TASK_APPLICATION_MESSAGE_MAX_CNT      0x20
 #define UTE_TASK_APPLICATION_STACK_SIZE           0x2000
@@ -133,7 +222,7 @@ void uteTaskApplicationMain(void *param)
     else
 #endif
     {
-#if UTE_MODULE_USER_MALLOC_SUPPORT 
+#if UTE_MODULE_USER_MALLOC_SUPPORT
         uteModulePlatformMemoryInitPool();
 #endif
         uteApplicationCommonStartupFrist();
@@ -171,3 +260,5 @@ bool uteTaskApplicationSendMsg(ute_task_application_message_t *pMsg)
         return true;
     }
 }
+
+#endif

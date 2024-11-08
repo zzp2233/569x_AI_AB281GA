@@ -465,6 +465,7 @@ void print_info(void)
         extern void mem_monitor_run(void);
         mem_monitor_run();
         printf("sys_cb.sco_state[%d], bt_cb.call_type[%d], bt_cb.disp_status[%d]\n", sys_cb.sco_state, bt_cb.call_type, bt_cb.disp_status);
+        thread_info_printf();
     }
 }
 
@@ -472,7 +473,7 @@ AT(.text.func.process)
 void func_process(void)
 {
     WDT_CLR();
-    //print_info();
+    // print_info();
 
 #if (FUNC_MUSIC_EN || FUNC_RECORDER_EN) && SD_SOFT_DETECT_EN
     sd_soft_cmd_detect(120);

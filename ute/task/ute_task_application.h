@@ -11,6 +11,7 @@
 
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
+#include "include.h"
 
 typedef struct
 {

@@ -172,7 +172,7 @@ void uteApplicationCommonStartupSecond(void)
         uteApplicationCommonData.isStartupFristFinish = true;
         //其他硬件初始化
         uteDrvMotorInit();
-        uteModuleSportAlgoTimerStart(400);
+        uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);
         //uteModulePlatformQdecInit();
 #if UTE_USER_ID_FOR_BINDING_SUPPORT||UTE_MODULE_SCREENS_APP_BINDING_SUPPORT
         uteModuleAppBindingInit();
@@ -188,6 +188,9 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
         uteModuleNewFactoryTestInit();
 #endif
+
+        extern void app_ute_remind_init(void);
+        app_ute_remind_init();
 
 #if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartInit();

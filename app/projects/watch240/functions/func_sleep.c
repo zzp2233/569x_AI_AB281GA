@@ -196,9 +196,11 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));///* 小时*/
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5);
-    compo_textbox_set(txt, i18n[STR_HOUR]);
+//    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5);
     compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5,FINT_HEIGHT,FINT_HEIGHT);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
 
     snprintf(buf, sizeof(buf), "%02d", sleep_data->deepSleepMin%60);///* 深睡分钟数据*/
     txt = compo_textbox_create(frm,strlen(buf));
@@ -208,9 +210,11 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));///* 分钟*/
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5);
-    compo_textbox_set(txt, i18n[STR_MIN]);
+//    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5);
     compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5,FINT_HEIGHT,FINT_HEIGHT);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
     snprintf(buf, sizeof(buf), "%02d", sleep_data->lightSleepMin/60);///* 浅睡小时数据*/
@@ -221,9 +225,11 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));///* 小时*/
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length);
-    compo_textbox_set(txt, i18n[STR_HOUR]);
+//    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length);
     compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length,FINT_HEIGHT,FINT_HEIGHT);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
 
     snprintf(buf, sizeof(buf), "%02d", sleep_data->lightSleepMin%60);///* 浅睡分钟数据*/
     txt = compo_textbox_create(frm,strlen(buf));
@@ -233,9 +239,11 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));///* 分钟*/
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length);
-    compo_textbox_set(txt, i18n[STR_MIN]);
+//    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length);
     compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length,FINT_HEIGHT,FINT_HEIGHT);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     snprintf(buf, sizeof(buf), "%02d", sleep_data->wakeSleepMin/60);///* 清醒小时数据*/
     txt = compo_textbox_create(frm,strlen(buf));
@@ -245,9 +253,11 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));///* 小时*/
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*2);
-    compo_textbox_set(txt, i18n[STR_HOUR]);
+//    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*2);
     compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*1.5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*2,FINT_HEIGHT,FINT_HEIGHT);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_HOUR]);
 
     snprintf(buf, sizeof(buf), "%02d", sleep_data->wakeSleepMin%60);///* 清醒分钟数据*/
     txt = compo_textbox_create(frm,strlen(buf));
@@ -257,9 +267,11 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));///* 分钟*/
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*2);
-    compo_textbox_set(txt, i18n[STR_MIN]);
+//    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*2);
     compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*2,FINT_HEIGHT,FINT_HEIGHT);
+    compo_textbox_set_autoroll_mode(txt, 0);
+    compo_textbox_set(txt, i18n[STR_MIN]);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 //    snprintf(buf, sizeof(buf), "%d", 15);///* 浅睡小时数据*/
 //    txt = compo_textbox_create(frm,strlen(buf));

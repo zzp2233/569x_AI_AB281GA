@@ -296,7 +296,14 @@ void bsp_fot_exit(void)
     unlock_code_fota();
 
     task_stack_init();
-    func_cb.sta = FUNC_OTA_ERROR;         //OTA退出返回表盘
+    if (func_cb.sta == FUNC_OTA_MODE)
+    {
+        func_cb.sta = FUNC_CLOCK;           //OTA退出返回表盘
+    }
+    else
+    {
+        func_cb.sta = FUNC_OTA_ERROR;       //UI OTA进入错误界面
+    }
 }
 
 void fot_update_pause(void)

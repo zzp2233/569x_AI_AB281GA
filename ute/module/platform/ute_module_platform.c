@@ -13,10 +13,12 @@
 #include "ute_task_application.h"
 #include "ute_module_systemtime.h"
 #include "ute_module_call.h"
+#include "include.h"
 
 ute_module_platform_adv_data_t uteModulePlatformAdvData;
 
-static uint32_t uteModulePlatformDlpsBit = 0;AT(.sleep_text.ute_sleep_bit)
+static uint32_t uteModulePlatformDlpsBit = 0;
+AT(.sleep_text.ute_sleep_bit)
 
 /**
 *@brief   us延时函数
@@ -562,7 +564,7 @@ uint32_t uteModulePlatformGetSystemTick(void)
 */
 void *uteModulePlatformMemoryAlloc(size_t size)
 {
-    return ab_calloc(size);
+    return ab_malloc(size);
 }
 /**
 *@brief   释放动态申请的内存
@@ -1038,93 +1040,93 @@ void uteModulePlatformAdvDataModifySub(bool isScanData, uint8_t advFlag, const u
             break;
         switch (parse_state)
         {
-        case ADV_LENGTH:
-        {
-            if (advData[i] == 0x00)
+            case ADV_LENGTH:
             {
-                goto MODIFY_ADVDATA_END;
-            }
-            parse_state = ADV_FLAG;
-            new_advdata[new_advdata_index++] = advData[i];
-            content_len = advData[i];
-            current_len = 0;
-            adv_len += (content_len + 1);
-            if (new_advdata_index + content_len > 31)
-            {
-                new_advdata[new_advdata_index - 1] = 31 - new_advdata_index;
-                UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "2_Advertisement interception !!!");
-            }
-        }
-        break;
-        case ADV_FLAG:
-        {
-            parse_state = ADV_LENGTH;
-            // 广播的Flag 与将要添加的新广播Flag相等时做对应的处理
-            if (advData[i] == advFlag)
-            {
-                valid_adv_flag = true;
-                parse_state = ADV_NEW_DATA;
-
-                if (type == ADV_APPEND) // 如果是附加广播要注意剩余的长度
+                if (advData[i] == 0x00)
                 {
-                    if ((adv_len + new_data_len) > 31)
-                    {
-                        new_data_len = 31 - adv_len;
-                    }
-                    new_advdata[new_advdata_index - 1] = new_data_len + content_len;
+                    goto MODIFY_ADVDATA_END;
                 }
-                else if (type == ADV_REPLACE) // 如果替换对应的广播注意原先的长度
+                parse_state = ADV_FLAG;
+                new_advdata[new_advdata_index++] = advData[i];
+                content_len = advData[i];
+                current_len = 0;
+                adv_len += (content_len + 1);
+                if (new_advdata_index + content_len > 31)
                 {
-                    if (((adv_len - (content_len - 1)) + new_data_len) > 31)
-                    {
-                        new_data_len = 31 - (adv_len - (content_len - 1));
-                    }
-                    new_advdata[new_advdata_index - 1] = new_data_len + 1;
+                    new_advdata[new_advdata_index - 1] = 31 - new_advdata_index;
+                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "2_Advertisement interception !!!");
                 }
             }
-            else
-            {
-                parse_state = ADV_DATA;
-            }
-            new_advdata[new_advdata_index++] = advData[i];
-            current_len++;
-        }
-        break;
-        case ADV_DATA:
-        {
-            new_advdata[new_advdata_index++] = advData[i];
-            current_len++;
-            if (current_len == content_len)
+            break;
+            case ADV_FLAG:
             {
                 parse_state = ADV_LENGTH;
+                // 广播的Flag 与将要添加的新广播Flag相等时做对应的处理
+                if (advData[i] == advFlag)
+                {
+                    valid_adv_flag = true;
+                    parse_state = ADV_NEW_DATA;
+
+                    if (type == ADV_APPEND) // 如果是附加广播要注意剩余的长度
+                    {
+                        if ((adv_len + new_data_len) > 31)
+                        {
+                            new_data_len = 31 - adv_len;
+                        }
+                        new_advdata[new_advdata_index - 1] = new_data_len + content_len;
+                    }
+                    else if (type == ADV_REPLACE) // 如果替换对应的广播注意原先的长度
+                    {
+                        if (((adv_len - (content_len - 1)) + new_data_len) > 31)
+                        {
+                            new_data_len = 31 - (adv_len - (content_len - 1));
+                        }
+                        new_advdata[new_advdata_index - 1] = new_data_len + 1;
+                    }
+                }
+                else
+                {
+                    parse_state = ADV_DATA;
+                }
+                new_advdata[new_advdata_index++] = advData[i];
+                current_len++;
             }
-        }
-        break;
-        case ADV_NEW_DATA:
-        {
-            if (type == ADV_APPEND)
+            break;
+            case ADV_DATA:
             {
                 new_advdata[new_advdata_index++] = advData[i];
-            }
-            else if (type == ADV_REPLACE)
-            {
-            }
-            current_len++;
-            if (current_len == content_len)
-            {
-                for (uint8_t j = 0; j < new_data_len; j++)
+                current_len++;
+                if (current_len == content_len)
                 {
-                    if (new_advdata_index > (31 - 1))
-                        break;
-                    new_advdata[new_advdata_index++] = *newAdvData;
-                    newAdvData++;
+                    parse_state = ADV_LENGTH;
                 }
-                parse_state = ADV_LENGTH;
             }
-        }
-        break;
-        default:
             break;
+            case ADV_NEW_DATA:
+            {
+                if (type == ADV_APPEND)
+                {
+                    new_advdata[new_advdata_index++] = advData[i];
+                }
+                else if (type == ADV_REPLACE)
+                {
+                }
+                current_len++;
+                if (current_len == content_len)
+                {
+                    for (uint8_t j = 0; j < new_data_len; j++)
+                    {
+                        if (new_advdata_index > (31 - 1))
+                            break;
+                        new_advdata[new_advdata_index++] = *newAdvData;
+                        newAdvData++;
+                    }
+                    parse_state = ADV_LENGTH;
+                }
+            }
+            break;
+            default:
+                break;
         }
     }
 MODIFY_ADVDATA_END:

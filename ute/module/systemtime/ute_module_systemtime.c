@@ -18,7 +18,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_heart.h"
 #include "ute_drv_motor.h"
-// #include "ute_language_common.h"
+#include "ute_language_common.h"
 // #include "ute_module_localRingtone.h"
 // #include "bt_hfp.h"
 #include "ute_module_filesystem.h"
@@ -57,7 +57,7 @@ void uteModuleSystemtimeInit(void)
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR);
     uteModuleSystemtimeReadConfig();
     memset(&systemTimeRegisterData,0,sizeof(ute_module_systemtime_register_t));
-
+    uteLanguageCommonSelect(systemTime.languageId);
 }
 
 /**
@@ -589,6 +589,7 @@ void uteModuleSystemtimeSetLanguage(uint16_t id)
     systemTime.isWatchSetLangage = true;
     UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,languageId=%d", __func__,systemTime.languageId);
     uteModuleSystemtimeSaveTimeInfo();
+    uteLanguageCommonSelect(systemTime.languageId);
 }
 /**
 *@brief  保存APP设计的语言

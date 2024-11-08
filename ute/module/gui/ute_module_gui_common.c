@@ -653,8 +653,8 @@ uint8_t uteModuleGuiCommonGetDisplayOffTime(void)
 */
 void uteModuleGuiCommonGoBackLastScreen(void)
 {
-    // func_directly_back_to();
-    func_switch_prev(true);
+    func_directly_back_to();
+    // func_switch_prev(true);
 }
 
 /**
@@ -670,8 +670,11 @@ void uteTaskGuiStartScreen(uint8_t screenId)
     {
         sys_cb.gui_need_wakeup = true;;
     }
-    func_switch_to(screenId, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
-    task_stack_push(screenId);
+    if(func_cb.sta != screenId)
+    {
+        func_switch_to(screenId, 0);
+        task_stack_push(screenId);
+    }
 }
 
 /**
@@ -688,10 +691,13 @@ void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
     {
         sys_cb.gui_need_wakeup = true;;
     }
-    func_switch_to(screenId, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
-    if(!isWithoutHistory)
+    if(func_cb.sta != screenId)
     {
-        task_stack_push(screenId);
+        func_switch_to(screenId, 0);
+        if(!isWithoutHistory)
+        {
+            task_stack_push(screenId);
+        }
     }
 }
 

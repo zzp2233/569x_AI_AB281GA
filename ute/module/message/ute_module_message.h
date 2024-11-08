@@ -37,6 +37,7 @@ enum
     MSG_TYPE_MODULE_SPORT_STOP_MORE_SPORTS,
     MSG_TYPE_DRV_SPORT_COUNTDOWN_TIMER,
     MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER, //记步算法定时器
+    MSG_TYPE_TAKE_PICTURE_OPEN_APP_SCREEN,
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

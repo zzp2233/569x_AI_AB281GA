@@ -325,7 +325,7 @@ static void sfunc_sleep(void)
 #elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
     GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
     GPIOEDE |= BIT(4) | BIT(5);             //HR I2C
-    GPIOFDE = 0 | BIT(5);                   //HR POWER
+    GPIOFDE = 0;// | BIT(5);                   //HR POWER
 #endif
 
 

@@ -117,7 +117,7 @@ __err:
 
 //1s闹钟检测回调函数
 //AT(.text.lowpwr.sleep)
-void ute_remind_check_1s_pro(co_timer_t *timer, void *param)
+void ute_remind_check_1s_pro(void)
 {
     static u8 rtc_cal_cnt_bkp;
     static u32 rtccnt_tmp;
@@ -165,8 +165,9 @@ void ute_remind_check_1s_pro(co_timer_t *timer, void *param)
 
 void app_ute_remind_init(void)
 {
-    co_timer_set(&ute_remind_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, ute_remind_check_1s_pro, NULL);
-    co_timer_set_sleep(&ute_remind_timer, true);
+    // co_timer_set(&ute_remind_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, ute_remind_check_1s_pro, NULL);
+    // co_timer_set_sleep(&ute_remind_timer, true);
+    uteModuleSystemtimeRegisterSecond(ute_remind_check_1s_pro);
 }
 #endif
 

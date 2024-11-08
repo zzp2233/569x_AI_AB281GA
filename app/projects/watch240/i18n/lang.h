@@ -1,6 +1,11 @@
 #ifndef _LANG_H
 #define _LANG_H
 
+#if UTE_MULTIPLE_LANGUAGE_SUPPORT
+
+#include "ute_language_common.h"
+
+#else
 //enum {
 //    LANG_EN,
 //    LANG_ZH,
@@ -355,5 +360,7 @@ enum
 extern const char * const *i18n;
 
 void lang_select(int lang_id);
+
+#endif
 
 #endif

@@ -67,12 +67,12 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
-    txt = compo_textbox_create(frm,sizeof(i18n[STR_DEV_NEME]));
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEV_NEME]));
     compo_textbox_set(txt, i18n[STR_DEV_NEME]);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y/2 - SHAPE_HEIGTH/2.5);
 
-    txt = compo_textbox_create(frm,sizeof(davName));
+    txt = compo_textbox_create(frm,strlen(davName));
     compo_textbox_set(txt, davName);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y/2);
@@ -83,12 +83,12 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
-    txt = compo_textbox_create(frm,sizeof(i18n[STR_SYS_VERSION]));
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SYS_VERSION]));
     compo_textbox_set(txt, i18n[STR_SYS_VERSION]);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y - SHAPE_HEIGTH/2.5);
 
-    txt = compo_textbox_create(frm,sizeof(UTE_SW_VERSION));
+    txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
     compo_textbox_set(txt, UTE_SW_VERSION);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y);
@@ -99,12 +99,12 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
-    txt = compo_textbox_create(frm,sizeof(i18n[STR_BLE_MAC]));
+    txt = compo_textbox_create(frm,strlen(i18n[STR_BLE_MAC]));
     compo_textbox_set(txt, i18n[STR_BLE_MAC]);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y*1.5 - SHAPE_HEIGTH/2.5);
 
-    txt = compo_textbox_create(frm,sizeof(Ble_Address_str_buf));
+    txt = compo_textbox_create(frm,strlen(Ble_Address_str_buf));
     compo_textbox_set(txt, (char*)Ble_Address_str_buf);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y*1.5);

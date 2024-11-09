@@ -52,19 +52,12 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         break;
         case MSG_TYPE_HNAD_SCREEN_ON_NOTIFY:
         {
-            if(sys_cb.gui_sleep_sta)
-            {
-                sys_cb.gui_need_wakeup = 1;
-            }
-            reset_sleep_delay_all();
+            uteModuleGuiCommonHandScreenOnMsg();
         }
         break;
         case MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY:
         {
-            if(!sys_cb.gui_sleep_sta)
-            {
-                sys_cb.guioff_delay = 1;
-            }
+            uteModuleGuiCommonHandScreenOffMsg();
         }
         break;
         case MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION:

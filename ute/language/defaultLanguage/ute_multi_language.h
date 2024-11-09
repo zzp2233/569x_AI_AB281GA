@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-08 19:42:12
+*@date   2024-11-09 14:25:36
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -246,6 +246,15 @@ enum
     STR_EYE_MOVE_SLEEP, // 快速眼动
     STR_CONNECT_BLUETOOTH, // 请先连接蓝牙
     STR_PER_MINUTE, // 次/分
+    STR_CUSTOM, // 自定义
+    STR_ONCE, // 单次
+    STR_EVERY_DAY, // 每天
+    STR_REPEAT, // 重复:
+    STR_NO_CLOCK, // 无闹钟
+    STR_SURE_OFF, // 是否关机?
+    STR_SURE_RESET, // 是否恢复出厂设置?
+    STR_SURE_REBOOT, // 是否重启?
+    STR_FLY_BIRD, // 飞扬的小鸟
 };
 
 extern const char * const *i18n;

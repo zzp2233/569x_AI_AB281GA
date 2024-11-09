@@ -30,10 +30,10 @@ compo_form_t *func_set_sub_rstfy_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_RSTFY]);
 
     //创建文本
-    compo_textbox_t *txt_off = compo_textbox_create(frm, 9);
+    compo_textbox_t *txt_off = compo_textbox_create(frm, strlen(i18n[STR_SURE_RESET]));
     // compo_textbox_set_align_center(txt_off, false);
-    compo_textbox_set_pos(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y*1.2);
-    compo_textbox_set(txt_off, "是否恢复出厂设置?");
+    compo_textbox_set_pos(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_textbox_set(txt_off, i18n[STR_SURE_RESET]);
 
     //创建按钮
     compo_button_t *btn;

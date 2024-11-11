@@ -56,7 +56,7 @@ compo_form_t *func_game_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, "游戏");
+    compo_form_set_title(frm, i18n[STR_GAME]);
 
     for(int i=0; i<GAME_NUM; i++)
     {
@@ -68,9 +68,10 @@ compo_form_t *func_game_form_create(void)
         compo_button_set_location(btn, 120, 100 + i*72, 220, 60);
 
         //文本
-        compo_textbox_t * txt = compo_textbox_create(frm, 15);
+        compo_textbox_t * txt = compo_textbox_create(frm, strlen(i18n[STR_FLY_BIRD]));
         compo_textbox_set_location(txt, 150, 100 + i*72, 180, 35);
-        compo_textbox_set(txt, game[i].name);
+//        compo_textbox_set(txt, game[i].name);
+        compo_textbox_set(txt, i18n[STR_FLY_BIRD]);
         compo_textbox_set_visible(txt, 1);
 
         //图标

@@ -136,11 +136,11 @@ static void func_set_sub_language_list_message(size_msg_t msg)
         case MSG_CTP_LONG:
             break;
 
-        case KU_DELAY_BACK:
-            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
-            {
-
-            }
+//        case KU_DELAY_BACK:
+//            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+//            {
+//
+//            }
             break;
 
 //    case MSG_CHECK_LANGUAGE://APP语言切换
@@ -172,8 +172,9 @@ static void func_set_sub_language_enter(void)
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     // compo_listbox_move_init(listbox);
 
-    compo_listbox_move_init_modify(listbox, 127, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
-    func_cb.enter_tick = tick_get();
+    compo_listbox_move_init(listbox);
+    //compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
+    //func_cb.enter_tick = tick_get();
 
 }
 
@@ -197,5 +198,4 @@ void func_set_sub_language(void)
         func_set_sub_language_list_message(msg_dequeue());
     }
     func_set_sub_language_exit();
-    //func_switch_to(FUNC_SET_SUB_LANGUAGE, NULL);
 }

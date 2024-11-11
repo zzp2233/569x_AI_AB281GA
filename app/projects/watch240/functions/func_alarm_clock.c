@@ -39,19 +39,21 @@
 #define ACLOCK_LIST_CNT                 ((int)(sizeof(tbl_aclock_list) / sizeof(tbl_aclock_list[0])))
 
 //组件ID
-enum {
+enum
+{
     //按键
-	COMPO_ID_BTN_ADD = 1,
+    COMPO_ID_BTN_ADD = 1,
 
     //图像
-	COMPO_ID_PIC_ADD_CLICK,
+    COMPO_ID_PIC_ADD_CLICK,
 
-	//卡片
-	COMPO_ID_CARD_0,
+    //卡片
+    COMPO_ID_CARD_0,
 };
 
-typedef struct f_alarm_clock_t_ {
-	page_tp_move_t *ptm;
+typedef struct f_alarm_clock_t_
+{
+    page_tp_move_t *ptm;
 } f_alarm_clock_t;
 
 static widget_icon_t *icon_add;
@@ -67,21 +69,26 @@ compo_form_t *func_alarm_clock_form_create(void)
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK]);
 
     //添加闹钟按钮图标
-    if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX) {
+    if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
+    {
         icon_add = widget_icon_create(frm->page, UI_BUF_ALARM_CLOCK_ADD_BIN);
         widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_ADD_BIN).hei / 2 - 10);
 
         //page_body结合compo_page_move实现列表滑动（先绘制所有组件，再将page平均分段）
         widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 42 / 100, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT * 6 / 10);//208);
-    } else {
+    }
+    else
+    {
         icon_add = NULL;
     }
 
     //闹钟选项卡
     char str_buff[32];
     compo_cardbox_t *cardbox;
-    if (ALARM_ENABLE_CNT()) {
-        for(u8 i=0; i<ALARM_ENABLE_CNT(); i++) {
+    if (ALARM_ENABLE_CNT())
+    {
+        for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
+        {
             cardbox = compo_cardbox_create(frm, 1, 1, 2, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
@@ -97,15 +104,22 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_text_set_align_center(cardbox, 0, false);
             compo_cardbox_text_set_location(cardbox, 0, -100, -35, 180, 50);
 
-            if (ALARM_GET_CYCLE(i) & BIT(7)) {
-                snprintf(str_buff, sizeof(str_buff), "单次");
-            } else if (ALARM_GET_CYCLE(i) == 0x7f) {
-                snprintf(str_buff, sizeof(str_buff), "每天");
-            } else {
-                snprintf(str_buff, sizeof(str_buff), "重复:");
+            if (ALARM_GET_CYCLE(i) & BIT(7))
+            {
+                snprintf(str_buff, sizeof(str_buff), i18n[STR_ONCE]);
+            }
+            else if (ALARM_GET_CYCLE(i) == 0x7f)
+            {
+                snprintf(str_buff, sizeof(str_buff), i18n[STR_EVERY_DAY]);
+            }
+            else
+            {
+                snprintf(str_buff, sizeof(str_buff), i18n[STR_REPEAT]);
                 char *buff_pt = str_buff + strlen(str_buff);
-                for (u8 j=0; j<7; j++) {
-                    if (ALARM_GET_CYCLE(i) & BIT(j)) {
+                for (u8 j=0; j<7; j++)
+                {
+                    if (ALARM_GET_CYCLE(i) & BIT(j))
+                    {
                         *buff_pt = '0' + j + 1;
                         buff_pt++;
                     }
@@ -121,12 +135,14 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_rect_set_color(cardbox, 0, MAKE_GRAY(26));
             compo_cardbox_rect_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4, 20);
         }
-    } else {
+    }
+    else
+    {
         cardbox = compo_cardbox_create(frm, 1, 0, 1, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
         compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4);
         compo_setid(cardbox, COMPO_ID_CARD_0);
 
-        snprintf(str_buff, sizeof(str_buff), "无闹钟");
+        snprintf(str_buff, sizeof(str_buff), i18n[STR_NO_CLOCK]);
         compo_cardbox_text_set_forecolor(cardbox, 0, MAKE_GRAY(128));
         compo_cardbox_text_set(cardbox, 0, str_buff);
         compo_cardbox_text_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH - 10, widget_text_get_height());
@@ -140,10 +156,12 @@ compo_form_t *func_alarm_clock_form_create(void)
 //触摸按钮效果处理
 static void func_alarm_clock_button_touch_handle(void)
 {
-    if (icon_add) {
+    if (icon_add)
+    {
         point_t pt = ctp_get_sxy();
         rect_t rect = widget_get_absolute(icon_add);
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) { //添加闹钟
+        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)   //添加闹钟
+        {
             widget_icon_set(icon_add, UI_BUF_ALARM_CLOCK_ADD_CLICK_BIN);
         }
     }
@@ -153,14 +171,16 @@ static void func_alarm_clock_button_touch_handle(void)
 static void func_alarm_clock_button_release_handle(void)
 {
     compo_cardbox_t *cardbox;
-    for(u8 i=0; i<ALARM_ENABLE_CNT(); i++) {
+    for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
+    {
         cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
         compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN : UI_BUF_ALARM_CLOCK_SELECT1_BIN);
         compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
 //        compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
     }
 
-    if (icon_add) {
+    if (icon_add)
+    {
         widget_icon_set(icon_add, UI_BUF_ALARM_CLOCK_ADD_BIN);
     }
 }
@@ -171,10 +191,13 @@ static void func_alarm_clock_button_click(void)
     rect_t rect;
     point_t pt = ctp_get_sxy();
 
-    if (icon_add) {
+    if (icon_add)
+    {
         rect = widget_get_absolute(icon_add);
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) { //添加闹钟
-            if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX) {
+        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)   //添加闹钟
+        {
+            if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
+            {
                 sys_cb.alarm_edit_idx = ALARM_ENABLE_CNT();
                 func_cb.sta = FUNC_ALARM_CLOCK_SUB_SET;
                 return;
@@ -183,11 +206,16 @@ static void func_alarm_clock_button_click(void)
     }
 
     //编辑/开关闹钟
-    for(u8 i=0; i<ALARM_ENABLE_CNT(); i++) {
-        if (compo_cardbox_btn_is(compo_getobj_byid(COMPO_ID_CARD_0 + i), pt)) {
-            if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN).wid)) { //开关
+    for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
+    {
+        if (compo_cardbox_btn_is(compo_getobj_byid(COMPO_ID_CARD_0 + i), pt))
+        {
+            if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN).wid))   //开关
+            {
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
-            } else {    //编辑
+            }
+            else        //编辑
+            {
                 sys_cb.alarm_edit_idx = i;
                 func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
             }
@@ -212,42 +240,44 @@ static void func_alarm_clock_message(size_msg_t msg)
 {
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
 
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_alarm_clock_button_touch_handle();
-        compo_page_move_touch_handler(f_aclock->ptm);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_alarm_clock_button_touch_handle();
+            compo_page_move_touch_handler(f_aclock->ptm);
+            break;
 
-	case MSG_CTP_CLICK:
-        func_alarm_clock_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_alarm_clock_button_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        func_alarm_clock_button_release_handle();
-        if (func_cb.flag_sort) {
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_alarm_clock_button_release_handle();
+            if (func_cb.flag_sort)
+            {
+                func_message(msg);
+            }
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            func_alarm_clock_button_release_handle();
             func_message(msg);
-        }
-        break;
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_alarm_clock_button_release_handle();
-        func_message(msg);
-        break;
+        case MSG_QDEC_BACKWARD:
+            compo_page_move_set_by_pages(f_aclock->ptm, -1);
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        compo_page_move_set_by_pages(f_aclock->ptm, -1);
-		break;
+        case MSG_QDEC_FORWARD:
+            compo_page_move_set_by_pages(f_aclock->ptm, 1);
+            break;
 
-	case MSG_QDEC_FORWARD:
-        compo_page_move_set_by_pages(f_aclock->ptm, 1);
-		break;
-
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 
 }
@@ -260,7 +290,8 @@ static void func_alarm_clock_enter(void)
 
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
     f_aclock->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    page_move_info_t info = {
+    page_move_info_t info =
+    {
         .title_used = true,
         .page_size = 104,
         .page_count = ALARM_ENABLE_CNT(),
@@ -277,7 +308,8 @@ static void func_alarm_clock_enter(void)
 static void func_alarm_clock_exit(void)
 {
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
-    if (f_aclock->ptm) {
+    if (f_aclock->ptm)
+    {
         func_free(f_aclock->ptm);
     }
 }
@@ -287,7 +319,8 @@ void func_alarm_clock(void)
 {
     printf("%s\n", __func__);
     func_alarm_clock_enter();
-    while (func_cb.sta == FUNC_ALARM_CLOCK) {
+    while (func_cb.sta == FUNC_ALARM_CLOCK)
+    {
         func_alarm_clock_process();
         func_alarm_clock_message(msg_dequeue());
     }

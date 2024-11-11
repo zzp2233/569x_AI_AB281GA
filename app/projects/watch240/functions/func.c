@@ -78,7 +78,6 @@ extern void func_set_sub_about(void);
 extern void func_set_sub_restart(void);
 extern void func_set_sub_rstfy(void);
 extern void func_set_sub_off(void);
-extern void func_set_sub_4g(void);
 extern void func_switching_to_menu(void);
 extern void func_volume(void);
 extern void func_activity(void);
@@ -169,7 +168,6 @@ compo_form_t *func_time_sub_custom_form_create(void);
 compo_form_t *func_set_sub_password_form_create(void);
 compo_form_t *func_password_sub_disp_form_create(void);
 compo_form_t *func_password_sub_select_form_create(void);
-compo_form_t *func_set_sub_4g_form_create(void);
 compo_form_t *func_set_sub_about_form_create(void);
 compo_form_t *func_set_sub_restart_form_create(void);
 compo_form_t *func_set_sub_rstfy_form_create(void);
@@ -269,7 +267,6 @@ const func_t tbl_func_create[] =
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
     {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about_form_create},
-    {FUNC_SET_SUB_4G,                   func_set_sub_4g_form_create},
     {FUNC_SET_SUB_RESTART,              func_set_sub_restart_form_create},
     {FUNC_SET_SUB_RSTFY,                func_set_sub_rstfy_form_create},
     {FUNC_SET_SUB_OFF,                  func_set_sub_off_form_create},
@@ -365,7 +362,6 @@ const func_t tbl_func_entry[] =
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp},        //设置--新密码锁设置
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select},      //设置--密码锁确认
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about},            //设置--关于
-    {FUNC_SET_SUB_4G,                   func_set_sub_4g},               //设置--4G
     {FUNC_SET_SUB_RESTART,              func_set_sub_restart},          //设置--重启
     {FUNC_SET_SUB_RSTFY,                func_set_sub_rstfy},            //设置--恢复出厂
     {FUNC_SET_SUB_OFF,                  func_set_sub_off},              //设置--关机

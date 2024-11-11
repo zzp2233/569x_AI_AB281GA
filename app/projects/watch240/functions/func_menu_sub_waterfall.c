@@ -33,11 +33,13 @@
 
 #define MENU_WF_CNT                         ((int)((sizeof(tbl_menu_waterfall) / sizeof(tbl_menu_waterfall[0]))))
 
-enum {
+enum
+{
     COMPO_ID_ICONLIST = 1,
 };
 
-typedef struct f_menu_wf_t_ {
+typedef struct f_menu_wf_t_
+{
     compo_iconlist_t *iconlist;
     bool flag_drag;                 //开始拖动
     bool flag_move_auto;            //自动移到坐标
@@ -58,20 +60,23 @@ typedef struct f_menu_wf_t_ {
 #endif
 } f_menu_wf_t;
 
-typedef struct menu_hc_item_t_ {
+typedef struct menu_hc_item_t_
+{
     u32 res_addr;
     u8 func_sta;
 } menu_hc_item_t;
 
 //瀑布流图标列表及顺序
-const menu_hc_item_t tbl_menu_waterfall[] = {
+const menu_hc_item_t tbl_menu_waterfall[] =
+{
     {UI_BUF_ICON_HEART_RATE_BIN,                FUNC_HEARTRATE},
     {UI_BUF_ICON_ACTIVITY_BIN,                  FUNC_ACTIVITY},
     {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_BLOOD_OXYGEN},
-    {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
+//    {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
     {UI_BUF_ICON_BREATHE_BIN,                   FUNC_BREATHE},
     {UI_BUF_ICON_MUSIC_BIN,                     FUNC_BT},
     {UI_BUF_ICON_CALL_BIN,                      FUNC_CALL},
+    {UI_BUF_ICON_LIGHT_BIN,                     FUNC_LIGHT},
 
 
     {UI_BUF_ICON_MENU_BIN,                      FUNC_STYLE},
@@ -82,10 +87,10 @@ const menu_hc_item_t tbl_menu_waterfall[] = {
     ////{UI_BUF_ICON_ALTITUDE_BIN,                  FUNC_ALTITUDE},
     {UI_BUF_ICON_ALARM_CLOCK_BIN,               FUNC_ALARM_CLOCK},
     {UI_BUF_ICON_RESTORE_FACTORY_BIN,           FUNC_RSTFY},
-    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},//压力
+//    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},//压力
 
     {UI_BUF_ICON_LANGUAGE_BIN,                  FUNC_LANGUAGE},
-    {UI_BUF_ICON_LIGHT_BIN,                     FUNC_LIGHT},
+
     ////{UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
     {UI_BUF_ICON_MESSAGE_BIN,                   FUNC_MESSAGE},
     {UI_BUF_ICON_CALCULATOR_BIN,                FUNC_CALCULATOR},
@@ -105,7 +110,7 @@ const menu_hc_item_t tbl_menu_waterfall[] = {
     {UI_BUF_ICON_ADDRESS_BOOK_BIN,              FUNC_ADDRESS_BOOK},
     {UI_BUF_ICON_VOICE_BIN,                     FUNC_VOICE},
     {UI_BUF_ICON_WEATHER_BIN,                   FUNC_WEATHER},
-    {UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},
+//    {UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},
     ////{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
 };
 
@@ -119,7 +124,8 @@ compo_form_t *func_menu_sub_waterfall_form_create(void)
     //新建瀑布流效果
     compo_iconlist_t *iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_WATERFALL);
     compo_setid(iconlist, COMPO_ID_ICONLIST);
-    for (int i=0; i<MENU_WF_CNT; i++) {
+    for (int i=0; i<MENU_WF_CNT; i++)
+    {
         compo_iconlist_add(iconlist, tbl_menu_waterfall[i].res_addr);
     }
 
@@ -130,7 +136,8 @@ compo_form_t *func_menu_sub_waterfall_form_create(void)
     compo_iconlist_set_start_angle(iconlist, 900);
 
     u8 menu_idx = func_cb.menu_idx;
-    if (menu_idx < 8) {
+    if (menu_idx < 8)
+    {
         menu_idx = 8;
     }
     compo_iconlist_set_focus_byidx(iconlist, menu_idx);
@@ -149,21 +156,23 @@ static void func_menu_sub_waterfall_icon_click(void)
 
     pt = ctp_get_sxy();
     icon_idx = compo_iconlist_select(iconlist, pt.x, pt.y);
-    if (icon_idx < 0 || icon_idx >= MENU_WF_CNT) {
+    if (icon_idx < 0 || icon_idx >= MENU_WF_CNT)
+    {
         return;
     }
 
-	//根据图标索引获取应用ID
-	func_sta = tbl_menu_waterfall[icon_idx].func_sta;
+    //根据图标索引获取应用ID
+    func_sta = tbl_menu_waterfall[icon_idx].func_sta;
 
-	//切入应用
-	if (func_sta > 0) {
-		compo_form_t *frm = func_create_form(func_sta);
-		func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, iconlist->sel_icon);
-		compo_form_destroy(frm);
-		func_cb.sta = func_sta;
-		func_cb.menu_idx = icon_idx;                //记住当前编号
-	}
+    //切入应用
+    if (func_sta > 0)
+    {
+        compo_form_t *frm = func_create_form(func_sta);
+        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, iconlist->sel_icon);
+        compo_form_destroy(frm);
+        func_cb.sta = func_sta;
+        func_cb.menu_idx = icon_idx;                //记住当前编号
+    }
 }
 
 //切换到时钟
@@ -180,7 +189,8 @@ static void func_menu_sub_waterfall_switch_to_clock(void)
     func_cb.menu_idx = 0;
 }
 
-const int tbl_entering_start_pos[] = {
+const int tbl_entering_start_pos[] =
+{
 #if (WATERFALL_ANIMATION_STYLE == 0)
     ENTERING_ANIMATION_MAX,
     ENTERING_ANIMATION_MAX - GUI_SCREEN_HEIGHT * 3 / 6,
@@ -207,41 +217,52 @@ static void func_menu_sub_waterfall_entering()
     int idx = 0;
     int y_step = ENTERING_ANIMATION_MAX / ENTERING_ANIMATION_CNT;
     compo_iconlist_update(iconlist);
-    while (widget != NULL) {
-        if (widget_is_icon(widget) && widget_get_parent(widget) == iconlist->page) {
+    while (widget != NULL)
+    {
+        if (widget_is_icon(widget) && widget_get_parent(widget) == iconlist->page)
+        {
 #if (WATERFALL_ANIMATION_STYLE == 0)
             int ln = compo_iconlist_getline_byidx(iconlist, idx);
             rect_t rect = widget_get_location(widget);
             int x_rate = 0xF800;
-            if (ln == 0) {
+            if (ln == 0)
+            {
                 int y = y_step * (f_menu->animation_cnt) - tbl_entering_start_pos[1];
                 //int y = y_step * (f_menu->animation_cnt - 10) - tbl_entering_start_pos[1];
-                if (y > 0) {
+                if (y > 0)
+                {
                     x_rate += 0x8000 * y / (y_step * ENTERING_ANIMATION_CNT - tbl_entering_start_pos[1]);
                 }
-            } else {
+            }
+            else
+            {
 
                 int y;
                 y = rect.y + y_step * (f_menu->animation_cnt) - tbl_entering_start_pos[ln];
                 //y = rect.y + y_step * (f_menu->animation_cnt - 15) - tbl_entering_start_pos[ln];
                 //point_t pt = compo_iconlist_getxy_byipos(iconlist, 0, ln);
 
-                if (/*rect.y >= pt.y &&*/ y > rect.y) {
+                if (/*rect.y >= pt.y &&*/ y > rect.y)
+                {
                     int w_rate = 0x10000 + 0x20000 * (y - rect.y) / (y_step * ENTERING_ANIMATION_CNT - tbl_entering_start_pos[ln]);
                     x_rate += 0x20000 * (y - rect.y) / (y_step * ENTERING_ANIMATION_CNT - tbl_entering_start_pos[ln]);
                     rect.wid = muls_shift16(rect.wid, w_rate);
                     rect.hei = muls_shift16(rect.hei, w_rate);
                     rect.y = y;
-                } else {        //设置 回弹
+                }
+                else            //设置 回弹
+                {
                     x_rate = 0x10000 - 0x800 * 0;//f_menu->animation_cnt / ENTERING_ANIMATION_BACK_CNT;
-                    if (ln >= 1) {
+                    if (ln >= 1)
+                    {
                         //rect.y -= ENTERING_ANIMATION_BACK_STEP * (ln - 1) * f_menu->animation_cnt / ENTERING_ANIMATION_BACK_CNT;
                         //rect.y -= ENTERING_ANIMATION_BACK_STEP * (ln - 1) * f_menu->animation_cnt / 20;
 
                         int tmp =  2 * (6-ln) * f_menu->back_cnt[ln] / 60;
                         rect.y -= tmp > 9 ? 9 : tmp;
                         f_menu->back_cnt[ln]-=1;
-                        if (f_menu->back_cnt[ln] < 0) {
+                        if (f_menu->back_cnt[ln] < 0)
+                        {
                             f_menu->back_cnt[ln] = 0;
                         }
                     }
@@ -251,19 +272,26 @@ static void func_menu_sub_waterfall_entering()
             int ln = compo_iconlist_getline_byidx(iconlist, idx);
             rect_t rect = widget_get_location(widget);
             int x_rate;
-            if (f_menu->animation_cnt > ENTERING_ANIMATION_BACK_CNT) {
-                if (ln > 1) {
+            if (f_menu->animation_cnt > ENTERING_ANIMATION_BACK_CNT)
+            {
+                if (ln > 1)
+                {
                     rect.y -= ENTERING_ANIMATION_BACK_STEP * (ln - 1);
                 }
                 x_rate = 0xF800;
-                if (ln == 0) {
+                if (ln == 0)
+                {
                     int y = y_step * (f_menu->animation_cnt - ENTERING_ANIMATION_BACK_CNT) - tbl_entering_start_pos[1];
-                    if (y > 0) {
+                    if (y > 0)
+                    {
                         x_rate += 0x8000 * y / (y_step * ENTERING_ANIMATION_CNT - tbl_entering_start_pos[1]);
                     }
-                } else {
+                }
+                else
+                {
                     int y = rect.y + y_step * (f_menu->animation_cnt - ENTERING_ANIMATION_BACK_CNT) - tbl_entering_start_pos[ln];
-                    if (y > rect.y) {
+                    if (y > rect.y)
+                    {
                         int w_rate = 0x10000 + 0x20000 * (y - rect.y) / (y_step * ENTERING_ANIMATION_CNT - tbl_entering_start_pos[ln]);
                         x_rate += 0x20000 * (y - rect.y) / (y_step * ENTERING_ANIMATION_CNT - tbl_entering_start_pos[ln]);
                         rect.y = y;
@@ -271,9 +299,12 @@ static void func_menu_sub_waterfall_entering()
                         rect.hei = muls_shift16(rect.hei, w_rate);
                     }
                 }
-            } else {
+            }
+            else
+            {
                 x_rate = 0x10000 - 0x800 * f_menu->animation_cnt / ENTERING_ANIMATION_BACK_CNT;
-                if (ln > 1) {
+                if (ln > 1)
+                {
                     rect.y -= ENTERING_ANIMATION_BACK_STEP * (ln - 1) * f_menu->animation_cnt / ENTERING_ANIMATION_BACK_CNT;
                 }
             }
@@ -281,12 +312,14 @@ static void func_menu_sub_waterfall_entering()
 
             rect.x = muls_shift16(rect.x, x_rate);
             widget_set_location(widget, rect.x, rect.y, rect.wid, rect.hei);
-            if (idx == iconlist->idx_time) {
+            if (idx == iconlist->idx_time)
+            {
                 widget_page_scale_to(iconlist->page_time, rect.wid, rect.hei);
                 widget_set_pos(iconlist->page_time, rect.x, rect.y);
             }
             idx++;
-            if (idx >= 21) {
+            if (idx >= 21)
+            {
                 return;
             }
         }
@@ -300,98 +333,148 @@ static void func_menu_sub_waterfall_process(void)
 {
     f_menu_wf_t *f_menu = (f_menu_wf_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
-	int r;
-	if (f_menu->animation_cnt > 0) {
-	    //入场动画
-        if (tick_check_expire(f_menu->tick, ANIMATION_TICK_EXPIRE)) {
+    int r;
+    if (f_menu->animation_cnt > 0)
+    {
+        //入场动画
+        if (tick_check_expire(f_menu->tick, ANIMATION_TICK_EXPIRE))
+        {
             f_menu->tick = tick_get();
             func_menu_sub_waterfall_entering();
             f_menu->animation_cnt--;
 #if (WATERFALL_ANIMATION_STYLE == 0)
-            if (func_cb.last == FUNC_CLOCK) {
+            if (func_cb.last == FUNC_CLOCK)
+            {
                 compo_form_set_alpha(func_cb.frm_main, abs_s(ENTERING_ANIMATION_TOTAL_CNT - f_menu->animation_cnt) * 0xff / (ENTERING_ANIMATION_TOTAL_CNT));
             }
 #endif
         }
-	} else if (f_menu->flag_drag) {
+    }
+    else if (f_menu->flag_drag)
+    {
         s32 dx = f_menu->focus_dx;
         s32 dy = f_menu->focus_dy;
         f_menu->flag_drag = ctp_get_dxy(&f_menu->focus_dx, &f_menu->focus_dy);
-        if (f_menu->flag_drag) {
+        if (f_menu->flag_drag)
+        {
             //拖动菜单图标
             f_menu->focus_xstep = f_menu->focus_dx - dx;
             f_menu->focus_ystep = f_menu->focus_dy - dy;
             compo_iconlist_set_focus(iconlist, f_menu->focus_x - f_menu->focus_dx, f_menu->focus_y - f_menu->focus_dy);
             compo_iconlist_update(iconlist);
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
             point_t last_dxy = ctp_get_last_dxy();
             s32 to_x, to_y;
             f_menu->focus_x = iconlist->ofs_x;
             f_menu->focus_y = iconlist->ofs_y;
             f_menu->flag_move_auto = true;
-			r = iconlist->icon_org_size >> 1;
+            r = iconlist->icon_org_size >> 1;
             to_x = f_menu->focus_x - (last_dxy.x * DRAG_AUTO_SPEED);
             to_y = f_menu->focus_y - (last_dxy.y * DRAG_AUTO_SPEED);
-			if (to_x < -r) {
-				to_x = -r;
-			} else if (to_x > r) {
-				to_x = r;
-			}
-			if (to_y < iconlist->ln_hei * 2 - r) {
-				to_y = iconlist->ln_hei * 2 - r;
-			} else if (to_y > iconlist->max_hei + r) {
-				to_y = iconlist->max_hei + r;
-			}
+            if (to_x < -r)
+            {
+                to_x = -r;
+            }
+            else if (to_x > r)
+            {
+                to_x = r;
+            }
+            if (to_y < iconlist->ln_hei * 2 - r)
+            {
+                to_y = iconlist->ln_hei * 2 - r;
+            }
+            else if (to_y > iconlist->max_hei + r)
+            {
+                to_y = iconlist->max_hei + r;
+            }
             f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
             f_menu->tick = tick_get();
         }
-    } else if (f_menu->flag_move_auto) {
+    }
+    else if (f_menu->flag_move_auto)
+    {
         //自动移动
-        if (f_menu->focus_x == f_menu->moveto.x && f_menu->focus_y == f_menu->moveto.y) {
-			if (f_menu->focus_y < iconlist->ln_hei * 2) {
-				f_menu->moveto.y = iconlist->ln_hei * 2;
-			} else if (f_menu->focus_y > iconlist->max_hei) {
-				f_menu->moveto.y = iconlist->max_hei;
-			} else {
-				f_menu->flag_move_auto = false;            //移动完成
-			}
-        } else if (tick_check_expire(f_menu->tick, FOCUS_AUTO_TICK_EXPIRE)) {
+        if (f_menu->focus_x == f_menu->moveto.x && f_menu->focus_y == f_menu->moveto.y)
+        {
+            if (f_menu->focus_y < iconlist->ln_hei * 2)
+            {
+                f_menu->moveto.y = iconlist->ln_hei * 2;
+            }
+            else if (f_menu->focus_y > iconlist->max_hei)
+            {
+                f_menu->moveto.y = iconlist->max_hei;
+            }
+            else
+            {
+                f_menu->flag_move_auto = false;            //移动完成
+            }
+        }
+        else if (tick_check_expire(f_menu->tick, FOCUS_AUTO_TICK_EXPIRE))
+        {
             s32 dx, dy;
             f_menu->tick = tick_get();
             dx = f_menu->moveto.x - f_menu->focus_x;
             dy = f_menu->moveto.y - f_menu->focus_y;
-            if (dx > 0) {
-                if (dx > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (dx > 0)
+            {
+                if (dx > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dx = dx / FOCUS_AUTO_STEP_DIV;
-                } else if (dx > FOCUS_AUTO_STEP) {
+                }
+                else if (dx > FOCUS_AUTO_STEP)
+                {
                     dx = FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dx = 1;
                 }
-            } else if (dx < 0) {
-                if (dx < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else if (dx < 0)
+            {
+                if (dx < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dx = dx / FOCUS_AUTO_STEP_DIV;
-                } else if (dx < -FOCUS_AUTO_STEP) {
+                }
+                else if (dx < -FOCUS_AUTO_STEP)
+                {
                     dx = -FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dx = -1;
                 }
             }
-            if (dy > 0) {
-                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (dy > 0)
+            {
+                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dy = dy / FOCUS_AUTO_STEP_DIV;
-                } else if (dy > FOCUS_AUTO_STEP) {
+                }
+                else if (dy > FOCUS_AUTO_STEP)
+                {
                     dy = FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dy = 1;
                 }
-            } else if (dy < 0) {
-                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else if (dy < 0)
+            {
+                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dy = dy / FOCUS_AUTO_STEP_DIV;
-                } else if (dy < -FOCUS_AUTO_STEP) {
+                }
+                else if (dy < -FOCUS_AUTO_STEP)
+                {
                     dy = -FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dy = -1;
                 }
             }
@@ -407,104 +490,113 @@ static void func_menu_sub_waterfall_process(void)
 //拖动过程中，只响应部分消息
 static void func_menu_sub_waterfall_entering_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
 //拖动过程中，只响应部分消息
 static void func_menu_sub_waterfall_drag_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
 //自动移动中，只响应部分消息
 static void func_menu_sub_waterfall_move_auto_message(size_msg_t msg)
 {
-	int to_y;
+    int to_y;
     f_menu_wf_t *f_menu = (f_menu_wf_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        f_menu->flag_drag = true;                               //移动过程中，触屏停止
-        f_menu->flag_move_auto = false;
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            f_menu->flag_drag = true;                               //移动过程中，触屏停止
+            f_menu->flag_move_auto = false;
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        f_menu->flag_move_auto = true;
-        if (f_menu->moveto.y <= iconlist->max_hei) {
-			to_y = f_menu->moveto.y + iconlist->ln_hei;
-            f_menu->moveto = compo_iconlist_align_xy(iconlist, f_menu->moveto.x, to_y);
-        }
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            f_menu->flag_move_auto = true;
+            if (f_menu->moveto.y <= iconlist->max_hei)
+            {
+                to_y = f_menu->moveto.y + iconlist->ln_hei;
+                f_menu->moveto = compo_iconlist_align_xy(iconlist, f_menu->moveto.x, to_y);
+            }
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        f_menu->flag_move_auto = true;
-        if (f_menu->moveto.y >= 0) {
-			to_y = f_menu->moveto.y - iconlist->ln_hei;
-            f_menu->moveto = compo_iconlist_align_xy(iconlist, f_menu->moveto.x, to_y);
-        }
-		break;
+        case MSG_QDEC_BACKWARD:
+            f_menu->flag_move_auto = true;
+            if (f_menu->moveto.y >= 0)
+            {
+                to_y = f_menu->moveto.y - iconlist->ln_hei;
+                f_menu->moveto = compo_iconlist_align_xy(iconlist, f_menu->moveto.x, to_y);
+            }
+            break;
 
-    default:
-        evt_message(msg);
-        break;
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
 //正常模式下
 static void func_menu_sub_waterfall_normal_message(size_msg_t msg)
 {
-	int to_y;
+    int to_y;
     f_menu_wf_t *f_menu = (f_menu_wf_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_menu_sub_waterfall_icon_click();           //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_menu_sub_waterfall_icon_click();           //单击图标
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_RIGHT:
-    case MSG_CTP_SHORT_DOWN:
-        f_menu->flag_drag = true;                       //任何方向短划，开启拖动
-        f_menu->flag_move_auto = false;
-        break;
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_DOWN:
+            f_menu->flag_drag = true;                       //任何方向短划，开启拖动
+            f_menu->flag_move_auto = false;
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        f_menu->flag_move_auto = true;
-        if (f_menu->moveto.y <= iconlist->max_hei) {
-			to_y = f_menu->moveto.y + iconlist->ln_hei;
-            f_menu->moveto = compo_iconlist_align_xy(iconlist, f_menu->moveto.x, to_y);
-        }
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            f_menu->flag_move_auto = true;
+            if (f_menu->moveto.y <= iconlist->max_hei)
+            {
+                to_y = f_menu->moveto.y + iconlist->ln_hei;
+                f_menu->moveto = compo_iconlist_align_xy(iconlist, f_menu->moveto.x, to_y);
+            }
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        f_menu->flag_move_auto = true;
-        if (f_menu->moveto.y >= 0) {
-			to_y = f_menu->moveto.y - iconlist->ln_hei;
-            f_menu->moveto = compo_iconlist_align_xy(iconlist, f_menu->moveto.x, to_y);
-        }
-        break;
+        case MSG_QDEC_BACKWARD:
+            f_menu->flag_move_auto = true;
+            if (f_menu->moveto.y >= 0)
+            {
+                to_y = f_menu->moveto.y - iconlist->ln_hei;
+                f_menu->moveto = compo_iconlist_align_xy(iconlist, f_menu->moveto.x, to_y);
+            }
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
-            func_menu_sub_waterfall_switch_to_clock();      //返回时钟表盘界面
-        }
-        break;
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_waterfall_switch_to_clock();      //返回时钟表盘界面
+            }
+            break;
 
-    default:
-        func_menu_sub_message(msg);
-        break;
+        default:
+            func_menu_sub_message(msg);
+            break;
     }
 }
 
@@ -512,16 +604,23 @@ static void func_menu_sub_waterfall_normal_message(size_msg_t msg)
 static void func_menu_sub_waterfall_message(size_msg_t msg)
 {
     f_menu_wf_t *f_menu = (f_menu_wf_t *)func_cb.f_cb;
-    if (f_menu->animation_cnt > 0) {
+    if (f_menu->animation_cnt > 0)
+    {
         //入场动画过程中，只响应部分消息
         func_menu_sub_waterfall_entering_message(msg);
-    } else if (f_menu->flag_drag) {
+    }
+    else if (f_menu->flag_drag)
+    {
         //拖动过程中，只响应部分消息
         func_menu_sub_waterfall_drag_message(msg);
-    } else if (f_menu->flag_move_auto) {
+    }
+    else if (f_menu->flag_move_auto)
+    {
         //自动移动中，只响应部分消息
         func_menu_sub_waterfall_move_auto_message(msg);
-    } else {
+    }
+    else
+    {
         //正常模式下
         func_menu_sub_waterfall_normal_message(msg);
     }
@@ -536,14 +635,16 @@ static void func_menu_sub_waterfall_enter(void)
     f_menu_wf_t *f_menu = (f_menu_wf_t *)func_cb.f_cb;
     f_menu->iconlist = compo_getobj_byid(COMPO_ID_ICONLIST);
     compo_iconlist_t *iconlist = f_menu->iconlist;
-    if (iconlist->type != COMPO_TYPE_ICONLIST) {
+    if (iconlist->type != COMPO_TYPE_ICONLIST)
+    {
         halt(HALT_GUI_COMPO_ICONLIST_TYPE);
     }
     f_menu->focus_x = iconlist->ofs_x;
     f_menu->focus_y = iconlist->ofs_y;
     f_menu->moveto = compo_iconlist_align_xy(iconlist, 0, f_menu->focus_y);
     func_cb.enter_tick = tick_get();
-    if (func_cb.flag_animation) {
+    if (func_cb.flag_animation)
+    {
         func_cb.flag_animation = 0;
         f_menu->animation_cnt = ENTERING_ANIMATION_TOTAL_CNT;
 #if (WATERFALL_ANIMATION_STYLE == 0)
@@ -557,7 +658,8 @@ void func_menu_sub_waterfall(void)
 {
     printf("%s\n", __func__);
     func_menu_sub_waterfall_enter();
-    while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_WATERFALL) {
+    while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_WATERFALL)
+    {
         func_menu_sub_waterfall_process();
         func_menu_sub_waterfall_message(msg_dequeue());
     }

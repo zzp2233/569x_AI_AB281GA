@@ -316,10 +316,10 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
 
                 /************************/
                 //一件双连测试代码
-                printf("==============>bsp_change_bt_mac\n");
-                app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
-                bsp_change_bt_mac();
-                ble_bt_connect();
+                // printf("==============>bsp_change_bt_mac\n");
+                // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+                // bsp_change_bt_mac();
+                // ble_bt_connect();
                 /************************/
 
                 if(0)
@@ -446,8 +446,6 @@ void uteModuleProtocolReadBleMac(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 {
-#if 0
-
     uint8_t response[20];
     memset(&response[0],0,20);
     response[0] = receive[0];
@@ -455,8 +453,8 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
     if(receive[1]==0xaa)
     {
         response[2] = uteModuleSystemtimeReadLanguage();
-        response[19] |= (SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT||SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_USE_WORK_STOCK_SUPPORT)<<0;
-        response[19] |= (SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT||SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_USE_WORK_STOCK_SUPPORT)<<1;
+        response[19] |= SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT<<0;
+        response[19] |= SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT<<1;
         response[19] |= SCREEN_TITLE_MULTIPLE_KOREAN_LANGUAGE_SUPPORT<<2;
         response[19] |= SCREEN_TITLE_MULTIPLE_JAPANESE_LANGUAGE_SUPPORT<<3;
         response[19] |= SCREEN_TITLE_MULTIPLE_GERMAN_LANGUAGE_SUPPORT<<4;
@@ -522,8 +520,6 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
         }
         uteModuleProfileBleSendToPhone(&response[0],3);
     }
-
-#endif
 }
 /**
 *@brief        读取实时步数信息
@@ -692,14 +688,13 @@ void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
 {
-#if 0
     if(receive[1] == 0x01)
     {
 #if DRV_HID_PHOTO
         uteModuleNotifyAncsClearQueueRestart();
 #endif
         uteModuleSportSetTakePictureEnable(true);
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TAKE_PICTURE_ID);
+        uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
     }
     else
     {
@@ -709,7 +704,6 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
             uteModuleGuiCommonGoBackLastScreen();
         }
     }
-#endif
 }
 /**
 *@brief        消息内容接收

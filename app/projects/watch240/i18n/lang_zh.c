@@ -1,8 +1,10 @@
 #include "include.h"
 
+#if !UTE_MULTIPLE_LANGUAGE_SUPPORT
+
 const char * const i18n_zh[] =
 {
-    [STR_CLOCK]                         = "时钟",
+    [STR_CLOCK]                         = "\xe6\x97\xb6\xe9\x92\x9f\x00",
     [STR_CLOCK_PREVIEW]                 = "表盘预览",
     [STR_MESSAGE]                       = "消息",
     [STR_PHONE]                         = "电话",
@@ -187,7 +189,7 @@ const char * const i18n_zh[] =
     [STR_ONE_MIN]                       = "1分钟",
     [STR_FIVE_MIN]                      = "5分钟",
     [STR_NEVER]                         = "永不熄屏",
-    [STR_SETTING_UP]                    = "抬腕亮屏1抬腕亮屏2抬腕亮屏3抬腕亮屏4",
+    [STR_SETTING_UP]                    = "抬腕亮屏",
     [STR_SETTING_DISTURD]               = "勿扰模式",
     [STR_DISTURD_ALL]                   = "全天勿扰",
     [STR_DISTURD_TIM]                   = "定时勿扰",
@@ -348,5 +350,10 @@ const char * const i18n_zh[] =
     [STR_SET_CALORIE]                   = "卡路里",
     [STR_GOAL_ACHIEVE]                  = "目标完成",
     [STR_SEDENTARY_REMIND]              = "久坐提醒",
+    [STR_DEEP_SLEEP]                    = "深睡",
+    [STR_LIGHT_SLEEP]                   = "浅睡",
+    [STR_ALWAKE_SLEEP]                  = "清醒",
+    [STR_EYE_MOVE_SLEEP]                = "快速眼动",
 
 };
+#endif

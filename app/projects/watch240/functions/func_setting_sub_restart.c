@@ -8,11 +8,13 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_restart_t_ {
+typedef struct f_restart_t_
+{
 
 } f_restart_t;
 
-enum{
+enum
+{
     COMPO_ID_BTN_NO = 1,
     COMPO_ID_BTN_YES,
 };
@@ -27,10 +29,10 @@ compo_form_t *func_set_sub_restart_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_RESTART]);
 
     //创建文本
-    compo_textbox_t *txt_rst = compo_textbox_create(frm, 5);
-    compo_textbox_set_align_center(txt_rst, false);
-    compo_textbox_set_pos(txt_rst, 60, GUI_SCREEN_CENTER_Y);
-    compo_textbox_set(txt_rst, "是否重启?");
+    compo_textbox_t *txt_rst = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
+//    compo_textbox_set_align_center(txt_rst, false);
+    compo_textbox_set_pos(txt_rst, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
 
     //创建按钮
     compo_button_t *btn;
@@ -55,43 +57,47 @@ static void func_set_sub_restart_process(void)
 static void func_restart_button_click(void)
 {
     int id = compo_get_button_id();
-    switch (id) {
-    case COMPO_ID_BTN_YES:
-        // ble_disconnect();
-        // bt_disconnect(1);
-        // WDT_RST();
-        uteApplicationCommonRestart();
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_YES:
+            // ble_disconnect();
+            // bt_disconnect(1);
+            // WDT_RST();
+            uteApplicationCommonRestart();
+            break;
 
-    case COMPO_ID_BTN_NO:
-        task_stack_pop();
-        if(func_cb.last == FUNC_SETTING) {
-            func_cb.sta = FUNC_SETTING;
-        }
-        else {
-            func_cb.sta = FUNC_MENU;
-        }
-        break;
+        case COMPO_ID_BTN_NO:
+            task_stack_pop();
+            if(func_cb.last == FUNC_SETTING)
+            {
+                func_cb.sta = FUNC_SETTING;
+            }
+            else
+            {
+                func_cb.sta = FUNC_MENU;
+            }
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
 //重启功能消息处理
 static void func_set_sub_restart_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_restart_button_click();                  //单击按钮
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_restart_button_click();                  //单击按钮
+            break;
 
-    case KU_DELAY_BACK:
-        break;
+        case KU_DELAY_BACK:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -113,7 +119,8 @@ void func_set_sub_restart(void)
 {
     printf("%s\n", __func__);
     func_set_sub_restart_enter();
-    while (func_cb.sta == FUNC_SET_SUB_RESTART) {
+    while (func_cb.sta == FUNC_SET_SUB_RESTART)
+    {
         func_set_sub_restart_process();
         func_set_sub_restart_message(msg_dequeue());
     }

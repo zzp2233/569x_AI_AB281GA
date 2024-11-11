@@ -92,4 +92,6 @@ void uteResetHandScreenOnFlag(void);
 #endif
 bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void);
 void uteModuleGuiCommonDisplayOffAllowGoBack(bool allow);
+void uteModuleGuiCommonHandScreenOnMsg(void);
+void uteModuleGuiCommonHandScreenOffMsg(void);
 #endif //_UTE_MODULE_GUI_COMMON_H_

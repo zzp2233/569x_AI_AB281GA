@@ -401,6 +401,14 @@ u32 system_get_main_stack_size(void)
 }
 #endif // OS_THREAD_MAIN_STACK
 
+#if OS_THREAD_MAIN_PRIOPITY
+AT(.text.startup.init)
+u32 system_get_main_stack_priopity(void)
+{
+    return OS_THREAD_MAIN_PRIOPITY;
+}
+#endif // OS_THREAD_MAIN_PRIOPITY
+
 //MUSIC线程栈大小设置
 #if OS_THREAD_MUSIC_STACK
 AT(.text.startup.init)

@@ -78,8 +78,8 @@ void vc30fx_pwr_dis(void)       //PF5
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(true);
 #else
-    uteModuleSportAlgoTimerStart(400);
     i2c_gsensor_init();
+    uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);
 #endif
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
 }

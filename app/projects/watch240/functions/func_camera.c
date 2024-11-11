@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_sport.h"
+#include "ute_module_message.h"
 
 #if FUNC_CAMERA_TRANS_EN
 
@@ -10,7 +12,8 @@
 #endif
 
 //组件ID
-enum{
+enum
+{
     //按钮
     COMPO_ID_BTN_TAKE_A_PIC = 1,
     COMPO_ID_BTN_START = 1,
@@ -18,7 +21,8 @@ enum{
     COMPO_ID_MASK,
 };
 
-typedef struct f_picture_t_ {
+typedef struct f_picture_t_
+{
     compo_shape_t *mask;
     u32 mask_tick;
     u8 phone_status;        //用于区分HID还是APP控制
@@ -35,7 +39,8 @@ typedef struct f_picture_t_ {
 
 #if JPEG_LOCAL_TEST
 //AT(.jpeg_tbuf)
-u8 t_buf1[JPEG_RX_BUF_SIZE] = {
+u8 t_buf1[JPEG_RX_BUF_SIZE] =
+{
 
 };
 #endif
@@ -43,7 +48,8 @@ u8 t_buf1[JPEG_RX_BUF_SIZE] = {
 static u8 jpeg_rx_buf[2][JPEG_RX_BUF_SIZE];// AT(.jpeg_rx);
 void func_camera_set(u8 status);
 
-typedef struct{
+typedef struct
+{
     u8 rgb_buf[JPEG2RGB_BUF_SIZE];
     u16 wptr;
     u8 *buf;
@@ -53,7 +59,8 @@ typedef struct{
 f_camera_jpeg_t f_camera_jpeg;// AT(.jpeg_rgb);
 
 //按钮
-enum{
+enum
+{
     CAMERA_CLOSE = 0,
     CAMERA_OPEN,
     CAMERA_TAKE_PHOTOS,
@@ -65,12 +72,15 @@ static u32 my_tick = 0;
 
 void func_camera_jpeg_rx(u8 *buf, u16 len)
 {
-    if (buf[0] == 0xaa && buf[1] == 0x55) {
+    if (buf[0] == 0xaa && buf[1] == 0x55)
+    {
         f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
         u8 status = buf[2];
         bool res = buf[3];
-        if (res) {
-            switch(status) {
+        if (res)
+        {
+            switch(status)
+            {
                 case CAMERA_OPEN:
                     f_camera->phone_status = CAMERA_OPEN;
                     printf("RECV PHONE CAMERA_OPEN\n");
@@ -90,9 +100,12 @@ void func_camera_jpeg_rx(u8 *buf, u16 len)
             }
         }
 
-    } else {
+    }
+    else
+    {
 
-        if (f_camera_jpeg.wptr == 0) {
+        if (f_camera_jpeg.wptr == 0)
+        {
             my_tick = tick_get();
         }
 
@@ -100,8 +113,9 @@ void func_camera_jpeg_rx(u8 *buf, u16 len)
         f_camera_jpeg.wptr += len - 1;
 
         //结束
-        if (buf[len - 1] == 0) {
-    //        printf("rx tick:%d, total:%d\n", tick_get() - my_tick, f_camera_jpeg.wptr);
+        if (buf[len - 1] == 0)
+        {
+            //        printf("rx tick:%d, total:%d\n", tick_get() - my_tick, f_camera_jpeg.wptr);
             f_camera_jpeg.wptr = 0;
             f_camera_jpeg.flag ^= 1;
 
@@ -116,14 +130,16 @@ void func_camera_jpeg_rx(u8 *buf, u16 len)
 void func_camera_set(u8 status)
 {
 
-    if (!ble_is_connect()) {
+    if (!ble_is_connect())
+    {
         printf("please connect ble!\n");
         return;
     }
 
     u8 buf[13] = {0xaa, 0x55, status, JPEG_WID & 0xff, JPEG_WID >> 8, JPEG_HEI & 0xff, JPEG_HEI >> 8, JPEG_ROTATION, JPEG_RX_BUF_SIZE & 0xff, JPEG_RX_BUF_SIZE >> 8, 0, 0, 0};
     u8 size = sizeof(buf);
-    switch(status) {
+    switch(status)
+    {
         case CAMERA_OPEN:
             break;
 
@@ -145,21 +161,23 @@ void func_camera_set(u8 status)
 static void func_camera_button_click(void)
 {
     int id = compo_get_button_id();
-    switch (id) {
-    case COMPO_ID_BTN_START:
+    switch (id)
+    {
+        case COMPO_ID_BTN_START:
         {
             f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
             printf("COMPO_ID_BTN_START\n");
             func_camera_set(CAMERA_TAKE_PHOTOS);
-            if (func_cb.sta == FUNC_CAMERA) {
+            if (func_cb.sta == FUNC_CAMERA)
+            {
                 compo_shape_set_visible(f_camera->mask, true);
                 f_camera->mask_tick = tick_get();
             }
         }
         break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -172,9 +190,9 @@ compo_form_t *func_camera_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-//	创建图片
-	compo_picturebox_t *pic = compo_picturebox_create(frm, 0);
-	compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+//  创建图片
+    compo_picturebox_t *pic = compo_picturebox_create(frm, 0);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_setid(pic, COMPO_ID_PIC);
 
     //新建按钮
@@ -182,7 +200,8 @@ compo_form_t *func_camera_form_create(void)
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 150);
     compo_setid(btn, COMPO_ID_BTN_START);
 
-    if (func_cb.sta == FUNC_CAMERA) {
+    if (func_cb.sta == FUNC_CAMERA)
+    {
         f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
         f_camera->mask = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
         compo_shape_set_location(f_camera->mask, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
@@ -197,7 +216,8 @@ compo_form_t *func_camera_form_create(void)
 static void func_camera_process(void)
 {
     f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
-    if (compo_shape_get_visible(f_camera->mask) && tick_check_expire(f_camera->mask_tick, 100)) {
+    if (compo_shape_get_visible(f_camera->mask) && tick_check_expire(f_camera->mask_tick, 100))
+    {
         compo_shape_set_visible(f_camera->mask, false);
     }
 
@@ -207,58 +227,62 @@ static void func_camera_process(void)
 //拍照消息处理
 static void func_camera_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_camera_button_click();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_camera_button_click();
+            break;
 
-    //不需要点击mask效果这里return回去
-    case MSG_CTP_TOUCH:
-        break;
+        //不需要点击mask效果这里return回去
+        case MSG_CTP_TOUCH:
+            break;
 
 
-    case KU_LEFT:
+        case KU_LEFT:
         {
-            #if JPEG_LOCAL_TEST
+#if JPEG_LOCAL_TEST
             compo_picturebox_t *pic = compo_getobj_byid(COMPO_ID_PIC);
             jpeg_decode(f_picture_jpeg.rgb_buf, JPEG2RGB_BUF_SIZE, t_buf2, JPEG_RX_BUF_SIZE);
             my_tick = 0;
             compo_picturebox_set_ram(pic, f_picture_jpeg.rgb_buf);
             compo_picturebox_set_size(pic, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
-            #else
+#else
             func_camera_set(CAMERA_TRANS_START);
-            #endif
+#endif
         }
         break;
 
-    case EVT_JPEG_DECODE:
+        case EVT_JPEG_DECODE:
         {
             int res = 0;
             func_camera_set(CAMERA_TRANS_START);
             compo_picturebox_t *pic = compo_getobj_byid(COMPO_ID_PIC);
 
-            #if JPEG_LOCAL_TEST
+#if JPEG_LOCAL_TEST
             res = jpeg_decode(f_picture_jpeg.rgb_buf, JPEG2RGB_BUF_SIZE, t_buf1, JPEG_RX_BUF_SIZE);
-            #else
+#else
             res = jpeg_decode(f_camera_jpeg.rgb_buf, JPEG2RGB_BUF_SIZE, jpeg_rx_buf[!f_camera_jpeg.flag], JPEG_RX_BUF_SIZE);
-            #endif
+#endif
             memset(&jpeg_rx_buf[!f_camera_jpeg.flag], 0, JPEG_RX_BUF_SIZE);
 
 //            printf("### jpeg_decode time:%d, flag:%d\n", tick_get() - my_tick, f_picture_jpeg.flag);
             my_tick = 0;
-            if (res > 0 ) {
+            if (res > 0 )
+            {
 //                printf("### set\n");
                 compo_picturebox_set_ram(pic, f_camera_jpeg.rgb_buf);
                 compo_picturebox_set_size(pic, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
-            } else {
+            }
+            else
+            {
 //                printf("### JPEG DECODE err:%d\n", res);
             }
         }
         break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -288,14 +312,24 @@ void func_camera(void)
     printf("%s\n", __func__);
     func_camera_enter();
 //    msg_enqueue(EVT_JPEG_DECODE);
-    while (func_cb.sta == FUNC_CAMERA) {
+    while (func_cb.sta == FUNC_CAMERA)
+    {
         func_camera_process();
         func_camera_message(msg_dequeue());
     }
     func_camera_exit();
 }
 #else
-typedef struct f_camera_t_ {
+
+enum
+{
+    START_BTN_ID=1,
+    START_TXT_ID,
+
+};
+
+typedef struct f_camera_t_
+{
 
 } f_camera_t;
 
@@ -304,21 +338,22 @@ compo_form_t *func_camera_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-	compo_form_add_image(frm, UI_BUF_CAMERA_CAMERA_BIN, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-10);
+    compo_form_add_image(frm, UI_BUF_CAMERA_CAMERA_BIN, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-10);
 
-	//设置标题栏
+    //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_CAMERA]);
 
-	//新建按钮
-	compo_button_t *btn;
+    //新建按钮
+    compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 258);
+    compo_setid(btn,START_BTN_ID);
 
-	//创建文本
-	compo_textbox_t *txt_start = compo_textbox_create(frm, 2);
-	compo_textbox_set_pos(txt_start, GUI_SCREEN_CENTER_X, 258);
-    compo_textbox_set(txt_start, "开始");
+    //创建文本
+    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
+    compo_textbox_set_pos(txt_start, GUI_SCREEN_CENTER_X, 258);
+    compo_setid(txt_start,START_TXT_ID);
 
     return frm;
 }
@@ -326,28 +361,52 @@ compo_form_t *func_camera_form_create(void)
 //相机功能事件处理
 static void func_camera_process(void)
 {
+    compo_textbox_t *txt_start = compo_getobj_byid(START_TXT_ID);
+    if(ble_is_connect())
+    {
+        compo_textbox_set(txt_start, i18n[STR_START]);
+    }
+    else
+    {
+        compo_textbox_set(txt_start, i18n[STR_CONNECT_BLUETOOTH]);
+    }
     func_process();
+}
+
+static void func_camera_button_handle(void)
+{
+    int id = compo_get_button_id();
+
+    if(id == START_BTN_ID)
+    {
+        if(uteModuleSportIsTakePicture())
+        {
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
+        }
+    }
 }
 
 //相机功能消息处理
 static void func_camera_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_camera_button_handle();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -356,12 +415,26 @@ static void func_camera_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_camera_t));
     func_cb.frm_main = func_camera_form_create();
+
+#if UTE_MODULE_SPORT_TAKE_PICTURE_OPEN_APP_SCREEN
+    if(!uteModuleSportIsTakePicture())
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_OPEN_APP_SCREEN,0);
+    }
+#endif
+
 }
 
 //退出相机功能
 static void func_camera_exit(void)
 {
     func_cb.last = FUNC_CAMERA;
+
+    if(uteModuleSportIsTakePicture())
+    {
+        uteModuleSportExitTakePicture();
+    }
+
 }
 
 //相机功能
@@ -369,7 +442,8 @@ void func_camera(void)
 {
     printf("%s\n", __func__);
     func_camera_enter();
-    while (func_cb.sta == FUNC_CAMERA) {
+    while (func_cb.sta == FUNC_CAMERA)
+    {
         func_camera_process();
         func_camera_message(msg_dequeue());
     }

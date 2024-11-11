@@ -8,11 +8,13 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_off_t_ {
+typedef struct f_off_t_
+{
 
 } f_off_t;
 
-enum{
+enum
+{
     COMPO_ID_BTN_NO = 1,
     COMPO_ID_BTN_YES,
 };
@@ -27,10 +29,10 @@ compo_form_t *func_set_sub_off_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_OFF]);
 
     //创建文本
-    compo_textbox_t *txt_off = compo_textbox_create(frm, 5);
-    compo_textbox_set_align_center(txt_off, false);
-    compo_textbox_set_pos(txt_off, 60, GUI_SCREEN_CENTER_Y);
-    compo_textbox_set(txt_off, "是否关机?");
+    compo_textbox_t *txt_off = compo_textbox_create(frm, strlen(i18n[STR_SURE_OFF]));
+    //compo_textbox_set_align_center(txt_off, false);
+    compo_textbox_set_pos(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_textbox_set(txt_off, i18n[STR_SURE_OFF]);
 
     //创建按钮
     compo_button_t *btn;
@@ -55,42 +57,46 @@ static void func_set_sub_off_process(void)
 static void func_off_button_click(void)
 {
     int id = compo_get_button_id();
-    switch (id) {
-    case COMPO_ID_BTN_YES:
-        // func_cb.sta = FUNC_PWROFF;
-        uteApplicationCommonPoweroff();
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_YES:
+            // func_cb.sta = FUNC_PWROFF;
+            uteApplicationCommonPoweroff();
+            break;
 
-    case COMPO_ID_BTN_NO:
-        task_stack_pop();
-        if(func_cb.last == FUNC_SETTING) {
-            func_cb.sta = FUNC_SETTING;
-        }
-        else {
-            func_cb.sta = FUNC_MENU;
-        }
-        break;
+        case COMPO_ID_BTN_NO:
+            task_stack_pop();
+            if(func_cb.last == FUNC_SETTING)
+            {
+                func_cb.sta = FUNC_SETTING;
+            }
+            else
+            {
+                func_cb.sta = FUNC_MENU;
+            }
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
 //关机功能消息处理
 static void func_set_sub_off_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_off_button_click();                  //单击按钮
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_off_button_click();                  //单击按钮
+            break;
 
 
-    case KU_DELAY_BACK:
-        break;
+        case KU_DELAY_BACK:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -112,7 +118,8 @@ void func_set_sub_off(void)
 {
     printf("%s\n", __func__);
     func_set_sub_off_enter();
-    while (func_cb.sta == FUNC_SET_SUB_OFF) {
+    while (func_cb.sta == FUNC_SET_SUB_OFF)
+    {
         func_set_sub_off_process();
         func_set_sub_off_message(msg_dequeue());
     }

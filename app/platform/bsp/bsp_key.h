@@ -36,6 +36,8 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define MSG_CTP_LONG_LIFT       0xAB        //长按抬起
 #define MSG_CTP_COVER           0xAC
 
+#define MSG_CHECK_LANGUAGE      0xAD        //语言切换
+
 //编码器
 #define MSG_QDEC_FORWARD        0xBF
 #define MSG_QDEC_BACKWARD        0xBE
@@ -158,14 +160,16 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 
 
 //按键消抖参数
-typedef struct {
+typedef struct
+{
     u16 scan_cnt;
     u16 up_cnt;
     u16 long_cnt;
     u16 hold_cnt;
 } key_shake_tbl_t;
 
-typedef struct {
+typedef struct
+{
     u8 adc_val;
     u8 usage_id;
 } adkey_tbl_t;

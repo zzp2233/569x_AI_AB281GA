@@ -27,7 +27,7 @@ const compo_listbox_item_t tbl_list_data[] =
     {STR_SLEEP,                  UI_BUF_ICON_SLEEP_BIN,          .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SLEEP_ON},     //睡眠
     {STR_ACTIVITY_RECORD,        UI_BUF_ICON_ACTIVITY_BIN,       .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_ACTIVITY_ON},  //活动记录
     {STR_HEART_RATE,             UI_BUF_ICON_HEART_RATE_BIN,     .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_HEART_ON},     //心率
-    {STR_BLOOD_PRESSURE,         UI_BUF_ICON_BLOOD_PRESSURE_BIN, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_HRV_ON},       //血压
+//    {STR_BLOOD_PRESSURE,         UI_BUF_ICON_BLOOD_PRESSURE_BIN, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_HRV_ON},       //血压
     {STR_BLOOD_OXYGEN,           UI_BUF_ICON_BLOOD_OXYGEN_BIN,   .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SPO2_ON},      //血氧
     {STR_MESSAGE,                UI_BUF_ICON_MESSAGE_BIN,        .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SMS_ON},       //消息
     {STR_PHONE,                  UI_BUF_ICON_CALL_BIN,           .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_BT_CALL_ON},   //电话
@@ -50,7 +50,7 @@ const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
     SYS_CTL_FUNC_SPO2_ON,           FUNC_BLOOD_OXYGEN,
     SYS_CTL_FUNC_MUSIC_ON,          FUNC_BT,
     SYS_CTL_FUNC_SPORT_ON,          FUNC_SPORT,
-    SYS_CTL_FUNC_HRV_ON,            FUNC_BLOOD_PRESSURE,
+//    SYS_CTL_FUNC_HRV_ON,            FUNC_BLOOD_PRESSURE,
     SYS_CTL_FUNC_SMS_ON,            FUNC_MESSAGE,
     SYS_CTL_FUNC_BT_CALL_ON,        FUNC_CALL,
     SYS_CTL_FUNC_WEATHER_ON,        FUNC_WEATHER,
@@ -73,7 +73,7 @@ static u8 list_data_sort[LIST_ITEM_CNT_MAX] =
     SYS_CTL_FUNC_SPO2_ON,
     SYS_CTL_FUNC_MUSIC_ON,
     SYS_CTL_FUNC_SPORT_ON,
-    SYS_CTL_FUNC_HRV_ON,
+//    SYS_CTL_FUNC_HRV_ON,
     SYS_CTL_FUNC_SMS_ON,
     SYS_CTL_FUNC_BT_CALL_ON,
     SYS_CTL_FUNC_WEATHER_ON,

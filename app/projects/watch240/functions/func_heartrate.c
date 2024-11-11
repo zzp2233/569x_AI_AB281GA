@@ -8,8 +8,10 @@
 #define TRACE(...)
 #endif
 
+#define FINT_HEIGHT 24*2+8
+
 #define FUNC_HR_SIMULATE_DATA_EN  0
-#define CHART_NUM 28 //柱形图数量
+#define CHART_NUM 24 //柱形图数量
 #define CHART_200_LENGTH GUI_SCREEN_CENTER_Y*6.25/8  //柱形图框高度
 
 //组件ID;
@@ -49,20 +51,8 @@ static const uint16_t total_hr_value[] = {10,20,30,40,50,60,70};
 compo_form_t *func_heartrate_form_create(void)
 {
     u8 idx = 0;
-    int i=0,j=0;
     uint8_t heart_date[24];
-    uint8_t chart_date[CHART_NUM];
-    memset(chart_date,0,sizeof(chart_date));
     uteModuleHeartGetTodayHistoryData(heart_date,24);//获取一天的心率
-    for(i=0; i<CHART_NUM-4; i++)
-    {
-        if(j == 3 || j%7==3)
-        {
-            j+=1;
-        }
-        chart_date[j] = 1.15*(heart_date[i]/2); //心率数据转换柱形条数据
-        j++;
-    }
 
 
     //新建窗体
@@ -86,11 +76,15 @@ compo_form_t *func_heartrate_form_create(void)
 
     for(idx = 0; idx < HEARTRATE_TEXT_ITEM_CNT; idx++)
     {
-        compo_textbox_t *txt_title = compo_textbox_create(frm, 3);
+        compo_textbox_t *txt_title = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
         compo_textbox_set_align_center(txt_title, false);
-        compo_textbox_set_pos(txt_title, txt_x + (idx * txt_x_offset), txt_y);
-        compo_textbox_set(txt_title, "次/分");
+//        compo_textbox_set_pos(txt_title, txt_x + (idx * txt_x_offset), txt_y);
+        compo_textbox_set_location(txt_title, txt_x + (idx * txt_x_offset), txt_y,FINT_HEIGHT,FINT_HEIGHT);
+        compo_textbox_set_autoroll_mode(txt_title, 0);
+        compo_textbox_set(txt_title, i18n[STR_PER_MINUTE]);
     }
+
+
 
     //测量心率值
     s16 txt_val_x = 38;
@@ -109,12 +103,18 @@ compo_form_t *func_heartrate_form_create(void)
 
     //心率详情
     // compo_form_add_image(frm, UI_BUF_HEART_RATE_CHART_BG_BIN, 120, 440);
-    compo_form_add_image(frm, UI_BUF_HEART_RATE_CHART_BG2_BIN, 120, 440);
+    //compo_form_add_image(frm, UI_BUF_HEART_RATE_CHART_BG2_BIN, 120, 440);
+    //s16 pic_w,pic_h;
+
+    compo_picturebox_t *pic;
+    pic = compo_picturebox_create(frm, UI_BUF_HEART_RATE_CHART_BG2_BIN);
+    compo_picturebox_set_size(pic,  gui_image_get_size(UI_BUF_HEART_RATE_CHART_BG2_BIN).wid/1.07,gui_image_get_size(UI_BUF_HEART_RATE_CHART_BG2_BIN).hei);
+    compo_picturebox_set_pos(pic, 120, 440);
 
 
     //创建图表
     compo_chartbox_t *chart = compo_chartbox_create(frm, CHART_TYPE_BAR, CHART_NUM);//图表内的柱形图
-    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/9, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y/1.1+5, (GUI_SCREEN_WIDTH/40+1)*CHART_NUM,CHART_200_LENGTH);
+    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/10, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y/1.1+5, (GUI_SCREEN_WIDTH/40+1)*CHART_NUM,CHART_200_LENGTH);
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(chart, COMPO_ID_CHART);
 
@@ -124,7 +124,7 @@ compo_form_t *func_heartrate_form_create(void)
     for (int i=0; i<CHART_NUM; i++)
     {
         chart_info.x = i*chart_info.width + i;
-        chart_info.height = chart_date[i];
+        chart_info.height = 1.15*(heart_date[i]/2);//心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
     }
 

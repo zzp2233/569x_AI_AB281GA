@@ -121,10 +121,10 @@ compo_form_t *func_breathe_form_create(void)
     compo_picturebox_set_visible(pic, false);
 
     //创建文本
-    compo_textbox_t *txt_start = compo_textbox_create(frm, 2);
+    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_START]));
     compo_textbox_set_pos(txt_start,120, 258);
     compo_setid(txt_start, COMPO_ID_TXT_START);
-    compo_textbox_set(txt_start, "开始");
+    compo_textbox_set(txt_start, i18n[STR_START]);
 
     return frm;
 }

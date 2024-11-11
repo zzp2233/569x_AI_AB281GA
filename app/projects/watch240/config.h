@@ -53,7 +53,7 @@
 #define UART0_PRINTF_SEL                PRINTF_PB3                  //选择UART打印信息输出IO，或关闭打印信息输出
 #define SYS_INIT_VOLUME                 xcfg_cb.sys_init_vol        //系统默认音量
 
-#define HEAP_FUNC_SIZE                  4096+1024                        //FUNC HEAP SIZE
+#define HEAP_FUNC_SIZE                  4096                        //FUNC HEAP SIZE
 #define CUSTOMER_HEAP_SIZE              (16 * 1024)                 //malloc 空间大小
 
 #define TS_MODE_EN                      0                           //内部NTC模块是否开启
@@ -368,7 +368,7 @@
 #define VBAT2_ADCCH                     ADCCH_VBAT  //ADCCH_VBAT为内部1/2电压通路，带升压应用需要外部ADC通路检测1/2电池电压
 #define VBAT_FILTER_USE_PEAK            0           //电池检测滤波选则://0 取平均值.//1 取峰值(适用于播放音乐时,电池波动比较大的音箱方案).
 #define LPWR_WARNING_VBAT               UTE_DRV_BATTERY_010        //低电提醒电压   0：表示关闭此功能
-#define LPWR_OFF_VBAT                   UTE_DRV_BATTERY_000        //低电关机电压   0：表示关闭此功能
+#define LPWR_OFF_VBAT                   UTE_DRV_BATTERY_POWER_ON_VOLTAGE        //低电关机电压   0：表示关闭此功能
 #define LOWPWR_REDUCE_VOL_EN            1           //低电时是否降低音量
 #define LPWR_WARING_TIMES               0xff        //报低电次数
 #define LPWR_WARNING_PERIOD             30          //低电播报周期(单位：秒)
@@ -488,10 +488,13 @@
 /*****************************************************************************
  * Module    :线程大小配置
  *****************************************************************************/
-#define MEM_HEAP_SIZE                   16*1024 + (2048 + 512)            //用于分配全部线程的总栈内存大小, 如果设置为 0, 采用中科平台库内置默认大小 16*1024
+#define MEM_HEAP_SIZE                   16*1024 + (2048 + 512) + UTE_TASK_APPLICATION_STACK_SIZE          //用于分配全部线程的总栈内存大小, 如果设置为 0, 采用中科平台库内置默认大小 16*1024
 #define OS_THREAD_MAIN_STACK            2048 + 1536 + (2048 + 512)        //分配main线程栈内存大小, 如果设置为 0, 采用中科平台库内置默认大小 2048 + 1536
 
 #define OS_THREAD_MUSIC_STACK           896 + (512) * OPUS_ENC_EN
+
+#define OS_THREAD_MAIN_PRIOPITY         0 //main线程优先级 大于 25 小于 31
+
 /*****************************************************************************
  * Module    : 麦克风功能配置
  *****************************************************************************/

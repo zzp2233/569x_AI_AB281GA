@@ -1,6 +1,8 @@
 #include "include.h"
 #include "func_menu.h"
 #include "func_cover.h"
+#include "ute_module_systemtime.h"
+#include "ute_language_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -109,6 +111,7 @@ extern void func_pressure(void);//压力
 extern void func_pressure_explain(void);//压力说明
 extern void func_long_press(void);//关机 重启 SOS
 extern void func_ota_update(void);
+extern void func_ota_err(void);
 
 compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
@@ -310,10 +313,10 @@ const func_t tbl_func_entry[] =
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop},      //闹钟--弹出
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
-    {FUNC_PRESSURE,                     func_pressure},                 //压力
+//    {FUNC_PRESSURE,                     func_pressure},                 //压力
     {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
     {FUNC_LONG_PRESS,                   func_long_press},               //关机 重启 SOS界面
-    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
+//    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
     {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置
@@ -405,7 +408,7 @@ const func_t tbl_func_entry[] =
     {FUNC_TETRIS,                       func_tetris},
     {FUNC_TETRIS_START,                 func_tetris_start},
     {FUNC_OTA_MODE,                     func_ota_update},
-
+    {FUNC_OTA_ERROR,                      func_ota_err},
 };
 
 AT(.text.func.process)
@@ -465,6 +468,7 @@ void print_info(void)
         extern void mem_monitor_run(void);
         mem_monitor_run();
         printf("sys_cb.sco_state[%d], bt_cb.call_type[%d], bt_cb.disp_status[%d]\n", sys_cb.sco_state, bt_cb.call_type, bt_cb.disp_status);
+        thread_info_printf();
     }
 }
 
@@ -472,7 +476,7 @@ AT(.text.func.process)
 void func_process(void)
 {
     WDT_CLR();
-    //print_info();
+    // print_info();
 
 #if (FUNC_MUSIC_EN || FUNC_RECORDER_EN) && SD_SOFT_DETECT_EN
     sd_soft_cmd_detect(120);
@@ -481,7 +485,7 @@ void func_process(void)
     tft_bglight_frist_set_check();
     // gui 没有休眠才更新 防止客户乱改我们的唤醒流程导致卡主的问题
 #if FOTA_UI_EN
-    if ((!sys_cb.gui_sleep_sta) && (func_cb.sta != FUNC_OTA_UI_MODE) && !sys_cb.flag_halt)
+    if ((!sys_cb.gui_sleep_sta) /*&& (func_cb.sta != FUNC_OTA_UI_MODE)*/ && !sys_cb.flag_halt)
     {
 #else
     if (!sys_cb.gui_sleep_sta && !sys_cb.flag_halt)
@@ -529,6 +533,11 @@ void func_process(void)
         sys_cb.msg_tag = false;
         app_msg_pop_up(sys_cb.msg_index);
         printf(">>>MSG POP\n");
+    }
+
+    if(sys_cb.hand_screen_on) //抬手亮屏
+    {
+        sys_cb.hand_screen_on = false;
     }
 
 #if VBAT_DETECT_EN
@@ -1178,6 +1187,14 @@ void func_message(size_msg_t msg)
             app_ute_msg_pop_up(sys_cb.msg_index);
             break;
 
+        case MSG_CHECK_LANGUAGE://APP语言切换
+//            compo_form_destroy(func_cb.frm_main);
+//            func_cb.frm_main = func_create_form(func_cb.sta);
+            sys_cb.sta_old = func_cb.sta;
+            sys_cb.refresh_language_flag = true;
+            func_switch_to(FUNC_MAP, 0);
+            break;
+
         default:
             evt_message(msg);
             break;
@@ -1248,11 +1265,17 @@ void func_run(void)
     func_cb.tbl_sort[5] = FUNC_BT;
     func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = 7;
-    func_cb.sta = FUNC_CLOCK;
+    func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
     for (;;)
     {
+        if(sys_cb.refresh_language_flag) //刷新语言
+        {
+            func_switch_to(sys_cb.sta_old, NULL);
+            sys_cb.refresh_language_flag = false;
+        }
+
         func_enter();
         for (int i = 0; i < FUNC_ENTRY_CNT; i++)
         {

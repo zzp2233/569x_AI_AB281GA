@@ -21,11 +21,13 @@
 
 #define ICON_START_SIZE                     40
 
-enum {
+enum
+{
     COMPO_ID_ICONLIST = 1,
 };
 
-typedef struct f_menu_sud_t_ {
+typedef struct f_menu_sud_t_
+{
     compo_iconlist_t *iconlist;
     bool flag_drag;                 //开始拖动
     bool flag_move_auto;            //自动移到坐标
@@ -44,36 +46,39 @@ typedef struct f_menu_sud_t_ {
 
 } f_menu_sud_t;
 
-typedef struct menu_hc_item_t_ {
+typedef struct menu_hc_item_t_
+{
     u32 res_addr;
     u8 func_sta;
 } menu_hc_item_t;
 
 //瀑布流图标列表及顺序
-const menu_hc_item_t tbl_menu_sudoku[] = {
+const menu_hc_item_t tbl_menu_sudoku[] =
+{
     {UI_BUF_ICON_HEART_RATE_BIN,                FUNC_HEARTRATE},
     {UI_BUF_ICON_ACTIVITY_BIN,                  FUNC_ACTIVITY},
     {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_BLOOD_OXYGEN},
 
-    {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
+    {UI_BUF_ICON_GAME_BIN,                      FUNC_GAME},
+//    {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
     {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
     {UI_BUF_ICON_BREATHE_BIN,                   FUNC_BREATHE},
     {UI_BUF_ICON_MUSIC_BIN,                     FUNC_BT},
+    {UI_BUF_ICON_LIGHT_BIN,                     FUNC_LIGHT},
 
     {UI_BUF_ICON_CALL_BIN,                      FUNC_CALL},
     {UI_BUF_ICON_MENU_BIN,                      FUNC_STYLE},
     {UI_BUF_ICON_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
 
     {UI_BUF_ICON_FINDPHONE_BIN,                 FUNC_FINDPHONE},
-    {UI_BUF_ICON_GAME_BIN,                      FUNC_GAME},
-    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},//压力
+//    {UI_BUF_ICON_BLOOD_OXYGEN_BIN,              FUNC_PRESSURE},//压力
     //{UI_BUF_ICON_ALTITUDE_BIN,                  FUNC_ALTITUDE},
 
     {UI_BUF_ICON_ALARM_CLOCK_BIN,               FUNC_ALARM_CLOCK},
     {UI_BUF_ICON_RESTORE_FACTORY_BIN,           FUNC_RSTFY},
     {UI_BUF_ICON_LANGUAGE_BIN,                  FUNC_LANGUAGE},//lang 4
 
-    {UI_BUF_ICON_LIGHT_BIN,                     FUNC_LIGHT},
+
     ////{UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
     {UI_BUF_ICON_MESSAGE_BIN,                   FUNC_MESSAGE},
 
@@ -97,7 +102,7 @@ const menu_hc_item_t tbl_menu_sudoku[] = {
     {UI_BUF_ICON_VOICE_BIN,                     FUNC_VOICE},
     {UI_BUF_ICON_WEATHER_BIN,                   FUNC_WEATHER},
 
-    {UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},//11
+//    {UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},//11
     ////{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
 };
 
@@ -111,13 +116,17 @@ compo_form_t *func_menu_sub_sudoku_form_create(void)
 
     //新建九宫格效果
     compo_iconlist_t *iconlist;
-    if (func_cb.menu_style == MENU_STYLE_SUDOKU) {
+    if (func_cb.menu_style == MENU_STYLE_SUDOKU)
+    {
         iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_SUDOKU);
-    } else {
+    }
+    else
+    {
         iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_SUDOKU_HRZ);
     }
     compo_setid(iconlist, COMPO_ID_ICONLIST);
-    for (int i=0; i<MENU_SUD_CNT; i++) {
+    for (int i=0; i<MENU_SUD_CNT; i++)
+    {
         compo_iconlist_add(iconlist, tbl_menu_sudoku[i].res_addr);
     }
 
@@ -127,7 +136,8 @@ compo_form_t *func_menu_sub_sudoku_form_create(void)
     compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_SEC, UI_BUF_ICON_CLOCK_S_BIN, 9, 2);
     compo_iconlist_set_start_angle(iconlist, 900);
 
-    if (func_cb.flag_animation) {
+    if (func_cb.flag_animation)
+    {
         compo_iconlist_set_iconsize(iconlist, ICON_START_SIZE);
     }
     compo_iconlist_set_focus_byidx(iconlist, func_cb.menu_idx);
@@ -147,21 +157,23 @@ static void func_menu_sub_sudoku_icon_click(void)
 
     pt = ctp_get_sxy();
     icon_idx = compo_iconlist_select(iconlist, pt.x, pt.y);
-    if (icon_idx < 0 || icon_idx >= MENU_SUD_CNT) {
+    if (icon_idx < 0 || icon_idx >= MENU_SUD_CNT)
+    {
         return;
     }
 
-	//根据图标索引获取应用ID
-	func_sta = tbl_menu_sudoku[icon_idx].func_sta;
+    //根据图标索引获取应用ID
+    func_sta = tbl_menu_sudoku[icon_idx].func_sta;
 
-	//切入应用
-	if (func_sta > 0) {
-		compo_form_t *frm = func_create_form(func_sta);
-		func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, iconlist->sel_icon);
-		compo_form_destroy(frm);
-		func_cb.sta = func_sta;
-		func_cb.menu_idx = icon_idx;                //记住当前编号
-	}
+    //切入应用
+    if (func_sta > 0)
+    {
+        compo_form_t *frm = func_create_form(func_sta);
+        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, iconlist->sel_icon);
+        compo_form_destroy(frm);
+        func_cb.sta = func_sta;
+        func_cb.menu_idx = icon_idx;                //记住当前编号
+    }
 }
 
 //切换到时钟
@@ -185,7 +197,8 @@ static void func_menu_sub_sudoku_entering(void)
     f_menu_sud_t *f_menu = (f_menu_sud_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
 
-    if (iconlist->icon_size < iconlist->icon_org_size) {
+    if (iconlist->icon_size < iconlist->icon_org_size)
+    {
         iconlist->icon_size++;
     }
     compo_iconlist_set_iconsize(iconlist, iconlist->icon_size);
@@ -199,24 +212,31 @@ static void func_menu_sub_sudoku_process(void)
     f_menu_sud_t *f_menu = (f_menu_sud_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
 
-	if (f_menu->animation_cnt > 0) {
+    if (f_menu->animation_cnt > 0)
+    {
         //入场动画
-        if (tick_check_expire(f_menu->tick, ANIMATION_TICK_EXPIRE)) {
+        if (tick_check_expire(f_menu->tick, ANIMATION_TICK_EXPIRE))
+        {
             f_menu->tick = tick_get();
             f_menu->animation_cnt--;
             func_menu_sub_sudoku_entering();
         }
-    } else if (f_menu->flag_drag) {
+    }
+    else if (f_menu->flag_drag)
+    {
         s32 dx = f_menu->focus_dx;
         s32 dy = f_menu->focus_dy;
         f_menu->flag_drag = ctp_get_dxy(&f_menu->focus_dx, &f_menu->focus_dy);
-        if (f_menu->flag_drag) {
+        if (f_menu->flag_drag)
+        {
             //拖动菜单图标
             f_menu->focus_xstep = f_menu->focus_dx - dx;
             f_menu->focus_ystep = f_menu->focus_dy - dy;
             compo_iconlist_set_focus(iconlist, f_menu->focus_x - f_menu->focus_dx, f_menu->focus_y - f_menu->focus_dy);
             compo_iconlist_update(iconlist);
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
             point_t last_dxy = ctp_get_last_dxy();
             s32 to_x;
@@ -229,54 +249,90 @@ static void func_menu_sub_sudoku_process(void)
             f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
             f_menu->tick = tick_get();
         }
-    } else if (f_menu->flag_move_auto) {
+    }
+    else if (f_menu->flag_move_auto)
+    {
         //自动移动
-        if (f_menu->focus_x == f_menu->moveto.x && f_menu->focus_y == f_menu->moveto.y) {
+        if (f_menu->focus_x == f_menu->moveto.x && f_menu->focus_y == f_menu->moveto.y)
+        {
             s32 focus_main = func_cb.menu_style == MENU_STYLE_SUDOKU ? f_menu->focus_y : f_menu->focus_x;
             s16 *p_move_to = func_cb.menu_style == MENU_STYLE_SUDOKU ? &f_menu->moveto.y : &f_menu->moveto.x;
-            if (focus_main < 0) {
+            if (focus_main < 0)
+            {
                 *p_move_to = 0;
-            } else if (focus_main > iconlist->ofs_max) {
+            }
+            else if (focus_main > iconlist->ofs_max)
+            {
                 *p_move_to = iconlist->ofs_max;
-            } else {
+            }
+            else
+            {
                 f_menu->flag_move_auto = false;            //移动完成
             }
-        } else if (tick_check_expire(f_menu->tick, FOCUS_AUTO_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(f_menu->tick, FOCUS_AUTO_TICK_EXPIRE))
+        {
             s16 dx, dy;
             f_menu->tick = tick_get();
             dx = f_menu->moveto.x - f_menu->focus_x;
             dy = f_menu->moveto.y - f_menu->focus_y;
-            if (dx > 0) {
-                if (dx > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (dx > 0)
+            {
+                if (dx > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dx = dx / FOCUS_AUTO_STEP_DIV;
-                } else if (dx > FOCUS_AUTO_STEP) {
+                }
+                else if (dx > FOCUS_AUTO_STEP)
+                {
                     dx = FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dx = 1;
                 }
-            } else if (dx < 0) {
-                if (dx < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else if (dx < 0)
+            {
+                if (dx < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dx = dx / FOCUS_AUTO_STEP_DIV;
-                } else if (dx < -FOCUS_AUTO_STEP) {
+                }
+                else if (dx < -FOCUS_AUTO_STEP)
+                {
                     dx = -FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dx = -1;
                 }
             }
-            if (dy > 0) {
-                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (dy > 0)
+            {
+                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dy = dy / FOCUS_AUTO_STEP_DIV;
-                } else if (dy > FOCUS_AUTO_STEP) {
+                }
+                else if (dy > FOCUS_AUTO_STEP)
+                {
                     dy = FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dy = 1;
                 }
-            } else if (dy < 0) {
-                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else if (dy < 0)
+            {
+                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dy = dy / FOCUS_AUTO_STEP_DIV;
-                } else if (dy < -FOCUS_AUTO_STEP) {
+                }
+                else if (dy < -FOCUS_AUTO_STEP)
+                {
                     dy = -FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dy = -1;
                 }
             }
@@ -291,100 +347,105 @@ static void func_menu_sub_sudoku_process(void)
 
 static void func_menu_sub_sudoku_entering_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
 //拖动过程中，只响应部分消息
 static void func_menu_sub_sudoku_drag_message(size_msg_t msg)
 {
-    switch (msg) {
-    default:
-        evt_message(msg);
-        break;
+    switch (msg)
+    {
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
 //自动移动中，只响应部分消息
 static void func_menu_sub_sudoku_move_auto_message(size_msg_t msg)
 {
-	int to_x, to_y;
+    int to_x, to_y;
     f_menu_sud_t *f_menu = (f_menu_sud_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        f_menu->flag_drag = true;                               //移动过程中，触屏停止
-        f_menu->flag_move_auto = false;
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            f_menu->flag_drag = true;                               //移动过程中，触屏停止
+            f_menu->flag_move_auto = false;
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        f_menu->flag_move_auto = true;
-        to_x = f_menu->moveto.x + iconlist->ln_hei;
-        to_y = f_menu->moveto.y + iconlist->ln_hei;
-        f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            f_menu->flag_move_auto = true;
+            to_x = f_menu->moveto.x + iconlist->ln_hei;
+            to_y = f_menu->moveto.y + iconlist->ln_hei;
+            f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        f_menu->flag_move_auto = true;
-        to_x = f_menu->moveto.x - iconlist->ln_hei;
-        to_y = f_menu->moveto.y - iconlist->ln_hei;
-        f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
-		break;
+        case MSG_QDEC_BACKWARD:
+            f_menu->flag_move_auto = true;
+            to_x = f_menu->moveto.x - iconlist->ln_hei;
+            to_y = f_menu->moveto.y - iconlist->ln_hei;
+            f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
+            break;
 
-    default:
-        evt_message(msg);
-        break;
+        default:
+            evt_message(msg);
+            break;
     }
 }
 
 //正常模式下
 static void func_menu_sub_sudoku_normal_message(size_msg_t msg)
 {
-	int to_x, to_y;
+    int to_x, to_y;
     f_menu_sud_t *f_menu = (f_menu_sud_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_menu_sub_sudoku_icon_click();           //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_menu_sub_sudoku_icon_click();           //单击图标
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_RIGHT:
-        f_menu->flag_drag = true;                       //上下短划，开启拖动
-        f_menu->flag_move_auto = false;
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_RIGHT:
+            f_menu->flag_drag = true;                       //上下短划，开启拖动
+            f_menu->flag_move_auto = false;
+            break;
 
-    case MSG_QDEC_FORWARD:                              //向前滚动菜单
-        f_menu->flag_move_auto = true;
-        to_x = f_menu->moveto.x + iconlist->ln_hei;
-        to_y = f_menu->moveto.y + iconlist->ln_hei;
-        f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
-        break;
+        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+            f_menu->flag_move_auto = true;
+            to_x = f_menu->moveto.x + iconlist->ln_hei;
+            to_y = f_menu->moveto.y + iconlist->ln_hei;
+            f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        f_menu->flag_move_auto = true;
-        to_x = f_menu->moveto.x - iconlist->ln_hei;
-        to_y = f_menu->moveto.y - iconlist->ln_hei;
-        f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
-		break;
+        case MSG_QDEC_BACKWARD:
+            f_menu->flag_move_auto = true;
+            to_x = f_menu->moveto.x - iconlist->ln_hei;
+            to_y = f_menu->moveto.y - iconlist->ln_hei;
+            f_menu->moveto = compo_iconlist_align_xy(iconlist, to_x, to_y);
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
-            func_menu_sub_sudoku_switch_to_clock();      //返回时钟表盘界面
-        }
-        break;
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_sudoku_switch_to_clock();      //返回时钟表盘界面
+            }
+            break;
 
-    default:
-        func_menu_sub_message(msg);
-        break;
+        default:
+            func_menu_sub_message(msg);
+            break;
     }
 }
 
@@ -393,15 +454,22 @@ static void func_menu_sub_sudoku_message(size_msg_t msg)
 {
     f_menu_sud_t *f_menu = (f_menu_sud_t *)func_cb.f_cb;
 
-    if (f_menu->animation_cnt > 0) {
+    if (f_menu->animation_cnt > 0)
+    {
         func_menu_sub_sudoku_entering_message(msg);
-    } else if (f_menu->flag_drag) {
+    }
+    else if (f_menu->flag_drag)
+    {
         //拖动过程中，只响应部分消息
         func_menu_sub_sudoku_drag_message(msg);
-    } else if (f_menu->flag_move_auto) {
+    }
+    else if (f_menu->flag_move_auto)
+    {
         //自动移动中，只响应部分消息
         func_menu_sub_sudoku_move_auto_message(msg);
-    } else {
+    }
+    else
+    {
         //正常模式下
         func_menu_sub_sudoku_normal_message(msg);
     }
@@ -416,7 +484,8 @@ static void func_menu_sub_sudoku_enter(void)
     f_menu_sud_t *f_menu = (f_menu_sud_t *)func_cb.f_cb;
     f_menu->iconlist = compo_getobj_byid(COMPO_ID_ICONLIST);
     compo_iconlist_t *iconlist = f_menu->iconlist;
-    if (iconlist->type != COMPO_TYPE_ICONLIST) {
+    if (iconlist->type != COMPO_TYPE_ICONLIST)
+    {
         halt(HALT_GUI_COMPO_ICONLIST_TYPE);
     }
 
@@ -425,7 +494,8 @@ static void func_menu_sub_sudoku_enter(void)
     f_menu->moveto = compo_iconlist_align_xy(iconlist, 0, f_menu->focus_y);
     func_cb.enter_tick = tick_get();
 
-    if (func_cb.flag_animation) {
+    if (func_cb.flag_animation)
+    {
         func_cb.flag_animation = 0;
         f_menu->animation_cnt = ENTERING_ANIMATION_CNT;
         f_menu->tick = tick_get();
@@ -440,7 +510,8 @@ void func_menu_sub_sudoku(void)
     printf("%s-->style:%d\n", __func__, func_cb.menu_style);
 
     func_menu_sub_sudoku_enter();
-    while (func_cb.sta == FUNC_MENU && (func_cb.menu_style == MENU_STYLE_SUDOKU || func_cb.menu_style == MENU_STYLE_SUDOKU_HRZ)) {
+    while (func_cb.sta == FUNC_MENU && (func_cb.menu_style == MENU_STYLE_SUDOKU || func_cb.menu_style == MENU_STYLE_SUDOKU_HRZ))
+    {
         func_menu_sub_sudoku_process();
         func_menu_sub_sudoku_message(msg_dequeue());
     }

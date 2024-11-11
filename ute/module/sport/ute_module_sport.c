@@ -1407,10 +1407,10 @@ void uteModuleSportInputDataBeforeAlgo(void)
         if(!((x[i]==0)&&(y[i]==0)&&(z[i]==0)))
         {
             uint16_t accValue =0;
-            //    if(i==0)
-            //    {
+            // if(i==0)
+            // {
             //     UTE_MODULE_LOG(1, "%s,i=%02d,frameCnt=%02d,x=%d,y=%d,z=%d", __func__,i,frameCnt,x[i],y[i],z[i]);
-            //    }
+            // }
             if(uteModuleSprotData.moreSportData.status==ALL_SPORT_STATUS_PAUSE)
             {
                 /*! 运动暂停不走算法，不出运动值 ,xjc 2022-03-09*/
@@ -1459,7 +1459,7 @@ void uteModuleSportInputDataBeforeAlgo(void)
     if(uteModuleSprotData.isOpenHandScreenOn)
     {
         uint8_t rolloverHandScreenStatus = getHandRollVerScreenDisplayParam();
-        // UTE_MODULE_LOG(UTE_LOG_STEP_LVL,"%s,rolloverHandScreenStatus=%d",__func__,rolloverHandScreenStatus);
+        // UTE_MODULE_LOG(1,"%s,rolloverHandScreenStatus=%d",__func__,rolloverHandScreenStatus);
         switch (rolloverHandScreenStatus)
         {
             case ROLLOVER_HAND_SCREEN_ON_STATUS:

@@ -16,7 +16,7 @@ extern void func_debug_info_check();
 
 typedef struct f_about_t_
 {
-    bool flag_drag;                 //开始拖动
+    //bool flag_drag;                 //开始拖动
     s32 x_pos;
     s32 y_pos;
     s32 x;
@@ -67,12 +67,12 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
-    txt = compo_textbox_create(frm,sizeof(i18n[STR_DEV_NEME]));
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEV_NEME]));
     compo_textbox_set(txt, i18n[STR_DEV_NEME]);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y/2 - SHAPE_HEIGTH/2.5);
 
-    txt = compo_textbox_create(frm,sizeof(davName));
+    txt = compo_textbox_create(frm,strlen(davName));
     compo_textbox_set(txt, davName);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y/2);
@@ -83,12 +83,12 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
-    txt = compo_textbox_create(frm,sizeof(i18n[STR_SYS_VERSION]));
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SYS_VERSION]));
     compo_textbox_set(txt, i18n[STR_SYS_VERSION]);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y - SHAPE_HEIGTH/2.5);
 
-    txt = compo_textbox_create(frm,sizeof(UTE_SW_VERSION));
+    txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
     compo_textbox_set(txt, UTE_SW_VERSION);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y);
@@ -99,12 +99,12 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
-    txt = compo_textbox_create(frm,sizeof(i18n[STR_BLE_MAC]));
+    txt = compo_textbox_create(frm,strlen(i18n[STR_BLE_MAC]));
     compo_textbox_set(txt, i18n[STR_BLE_MAC]);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y*1.5 - SHAPE_HEIGTH/2.5);
 
-    txt = compo_textbox_create(frm,sizeof(Ble_Address_str_buf));
+    txt = compo_textbox_create(frm,strlen(Ble_Address_str_buf));
     compo_textbox_set(txt, (char*)Ble_Address_str_buf);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y*1.5);
@@ -136,19 +136,16 @@ compo_form_t *func_set_sub_about_form_create(void)
 //关于功能消息处理
 static void func_set_sub_about_message(size_msg_t msg)
 {
-    f_about_t *slp = (f_about_t *)func_cb.f_cb;
-    int id = compo_get_button_id();
+//    f_about_t *slp = (f_about_t *)func_cb.f_cb;
 
     switch (msg)
     {
 
         case MSG_CTP_CLICK:
-            if(id == 1)
-                func_directly_back_to();
             break;
-        case MSG_CTP_SHORT_UP:
-        case MSG_CTP_SHORT_DOWN:
-            slp->flag_drag = true;
+//        case MSG_CTP_SHORT_UP:
+//        case MSG_CTP_SHORT_DOWN:
+//            slp->flag_drag = true;
 
         case KU_DELAY_BACK:
             break;
@@ -180,6 +177,7 @@ void func_set_sub_about(void)
     while (func_cb.sta == FUNC_SET_SUB_ABOUT)
     {
         //func_set_sub_about_process();
+        func_process();
         func_set_sub_about_message(msg_dequeue());
     }
     func_set_sub_about_exit();

@@ -101,7 +101,7 @@ compo_form_t *func_menu_sub_disk_form_create(void)
     compo_setid(disklist, COMPO_ID_DISKLIST);
 
     compo_disklist_set_focus_byidx(disklist, func_cb.menu_idx);
-    compo_disklist_update(disklist);
+    compo_disklist_update_with_text_scroll_rst(disklist);
 
     //齿轮背景图
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_MENU_GEAR_BIN);

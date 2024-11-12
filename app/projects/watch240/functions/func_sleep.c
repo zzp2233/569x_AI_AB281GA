@@ -103,14 +103,14 @@ compo_form_t *func_sleep_form_create(void)
     snprintf(buf, sizeof(buf), "%02d:%02d", sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡眠点*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
     compo_textbox_set(txt, buf);
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
     snprintf(buf, sizeof(buf), "%02d:%02d", sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起床点*/
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
     compo_textbox_set(txt, buf);
 //    compo_textbox_set_forecolor(txt, make_color(128, 0, 128));
 
@@ -296,8 +296,106 @@ compo_form_t *func_sleep_form_create(void)
 //    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.3+FINT_HEIGHT*4, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3+GUI_SCREEN_HEIGHT/2.5+length*3);
 //    compo_textbox_set(txt, i18n[STR_HOUR]);
 //    compo_textbox_set_align_center(txt, false);
-    ab_free(sleep_data);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//    compo_shape_t *shape;
+//    u8 test_value[8] = {60,60,60,60,60,60,60,60};
+//    u8 test_value_state[8] = {0,1,0,2,1,0,2,1};
+//    u16 disp_test = 23600/(8*60);
+//    s16 location_x;
+//
+//    for(int i=0;i<8;i++)
+//    {
+//       if(!i){
+//            location_x = test_value[i]*disp_test/100/2;
+//       }
+//       else {
+//            location_x += test_value[i]*disp_test/100/2+1;
+//       }
+//
+//       shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
+//
+//       compo_shape_set_location(shape,location_x+3, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4.1-(21*test_value_state[i]),test_value[i]*disp_test/100, 16);
+//
+//       switch(test_value_state[i])
+//       {
+//        case 0:
+//            compo_shape_set_color(shape, make_color(0x78, 0x35, 0xf7));
+//            break;
+//        case 1:
+//            compo_shape_set_color(shape, make_color(0xad, 0x86, 0xfc));
+//            break;
+//        case 2:
+//            compo_shape_set_color(shape, make_color(0xff, 0x87, 0x0f));
+//            break;
+//       }
+//
+//       if(!i){
+//            location_x = compo_shape_get_location(shape).wid;
+//       }
+//       else{
+//            location_x += compo_shape_get_location(shape).wid/2;
+//       }
+//
+//    }
+////////////////////////////////////////////////////////////////////////////////////
+//    u8 test_value[8] = {60,60,60,60,60,60,60,60};
+//    u8 test_value_state[8] = {0,1,0,2,1,0,2,1};
+//    sleep_data->totalSleepMin=8;
+//
+//    for(int i=0;i<sleep_data->totalSleepMin;i++){
+//
+//        sleep_data->sleep_record[i].startTime.hour = test_value[i]/60;
+//        sleep_data->sleep_record[i].startTime.min  = test_value[i]%60;
+//        sleep_data->sleep_record[i].sleepFlag = test_value_state[i];
+//    }
+/////////////////////////////////////////////////////////////////////////////////////
+    compo_shape_t *shape;
+    u16 disp_test = 23600/sleep_data->totalSleepMin;
+    s16 location_x;
 
+    if(sleep_data->totalSleepMin)
+    {
+        for(int i=0; i<sleep_data->recordCnt; i++)
+        {
+            if(!i)
+            {
+                location_x = (sleep_data->sleep_record[i].startTime.hour*60 + sleep_data->sleep_record[i].startTime.min)*disp_test/100/2;
+            }
+            else
+            {
+                location_x += (sleep_data->sleep_record[i].startTime.hour*60 + sleep_data->sleep_record[i].startTime.min)*disp_test/100/2+1;
+            }
+
+            shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
+            compo_shape_set_location(shape,location_x+3, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4.1-(21*sleep_data->sleep_record[i].sleepFlag),
+                                     (sleep_data->sleep_record[i].startTime.hour*60 + sleep_data->sleep_record[i].startTime.min)*disp_test/100, 16);
+
+            switch(sleep_data->sleep_record[i].sleepFlag)
+            {
+                case DEEP_SLEEP:
+                    compo_shape_set_color(shape, make_color(0x78, 0x35, 0xf7));
+                    break;
+                case LIGHT_SLEEP:
+                    compo_shape_set_color(shape, make_color(0xad, 0x86, 0xfc));
+                    break;
+                case AWAKE_SLEEP:
+                    compo_shape_set_color(shape, make_color(0xff, 0x87, 0x0f));
+                    break;
+            }
+
+            if(!i)
+            {
+                location_x = compo_shape_get_location(shape).wid;
+            }
+            else
+            {
+                location_x += compo_shape_get_location(shape).wid/2;
+            }
+
+        }
+    }
+
+    ab_free(sleep_data);
     return frm;
 }
 

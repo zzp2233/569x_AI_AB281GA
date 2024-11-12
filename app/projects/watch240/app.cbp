@@ -1143,9 +1143,6 @@
 		<Unit filename="functions/func_setting_sub_about.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions/func_setting_sub_about_4g.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="functions/func_setting_sub_disturd.c">
 			<Option compilerVar="CC" />
 		</Unit>

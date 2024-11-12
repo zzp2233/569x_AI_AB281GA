@@ -35,7 +35,8 @@ static bool music_pp_test = 0;
 #define FOCUS_AUTO_STEP_DIV             6
 #define DRAG_AUTO_SPEED                 16                                                                      //拖动松手后的速度(惯性)
 
-#define EXIT_Y_MAX                      20//60                                                                      //下滑退出触摸点离屏幕顶部小于某值
+#define EXIT_Y_MIN                      0
+#define EXIT_Y_MAX                      50//60                                                                      //下滑退出触摸点离屏幕顶部小于某值
 #define TXT_CNT_MAX                     8                                                                       //文本框最大字符数
 #define CARD_BTN_COUNT                  (COMPO_ID_CARD_POWEROFF_ASSISTANT - COMPO_ID_CARD_SPORT_COMPASS + 1)    //卡片（按钮）数量
 
@@ -77,7 +78,7 @@ static bool music_pp_test = 0;
 #define SPORT_ICON_H                    50//72
 #define SPORT_TXT_X                     SPORT_BG_X                              //文本
 #define SPORT_TXT_Y                     35//45
-#define SPORT_TXT_W                     (CARD_WIDTH_ORG/2 - 15)//140
+#define SPORT_TXT_W                     80//(CARD_WIDTH_ORG/2 - 30)//140
 #define SPORT_TXT_H                     35
 #define COMPASS_BG_X                    (180 - CARD_SPORT_COMPASS_X)//(241 - CARD_SPORT_COMPASS_X)            //指南针背景/按钮
 #define COMPASS_BG_Y                    SPORT_BG_Y
@@ -125,7 +126,7 @@ static bool music_pp_test = 0;
 #define SLEEP_ICON_DEEP_Y               21//(584 - CARD_SLEEP_Y)
 #define SLEEP_ICON_DEEP_W               50
 #define SLEEP_ICON_DEEP_H               50
-#define SLEEP_ICON_LIGHT_X              (193 - CARD_SLEEP_X)                    //浅睡图标
+#define SLEEP_ICON_LIGHT_X              (150 - CARD_SLEEP_X)                    //浅睡图标
 #define SLEEP_ICON_LIGHT_Y              SLEEP_ICON_DEEP_Y
 #define SLEEP_ICON_LIGHT_W              SLEEP_ICON_DEEP_W
 #define SLEEP_ICON_LIGHT_H              SLEEP_ICON_DEEP_H
@@ -133,7 +134,7 @@ static bool music_pp_test = 0;
 #define SLEEP_TOTAL_Y                   -43//(520 - CARD_SLEEP_Y)
 #define SLEEP_TOTAL_W                   110
 #define SLEEP_TOTAL_H                   35
-#define SLEEP_DEEP_H_X                  (113 - CARD_SLEEP_X)                    //深睡时间hour
+#define SLEEP_DEEP_H_X                  (100 - CARD_SLEEP_X)                    //深睡时间hour
 #define SLEEP_DEEP_H_Y                  2//(565 - CARD_SLEEP_Y)
 #define SLEEP_DEEP_H_W                  90
 #define SLEEP_DEEP_H_H                  SLEEP_TOTAL_H
@@ -141,7 +142,7 @@ static bool music_pp_test = 0;
 #define SLEEP_DEEP_M_Y                  41//(604 - CARD_SLEEP_Y)
 #define SLEEP_DEEP_M_W                  SLEEP_DEEP_H_W
 #define SLEEP_DEEP_M_H                  SLEEP_DEEP_H_H
-#define SLEEP_LIGHT_H_X                 (261 - CARD_SLEEP_X)                    //浅睡时间hour
+#define SLEEP_LIGHT_H_X                 (200 - CARD_SLEEP_X)                    //浅睡时间hour
 #define SLEEP_LIGHT_H_Y                 SLEEP_DEEP_H_Y
 #define SLEEP_LIGHT_H_W                 SLEEP_DEEP_H_W
 #define SLEEP_LIGHT_H_H                 SLEEP_DEEP_H_H
@@ -294,11 +295,15 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_icon_set_location(cardbox, 0, ASSISTANT_ICON_X, ASSISTANT_ICON_Y, ASSISTANT_ICON_W, ASSISTANT_ICON_H);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_VOICE]);
     compo_cardbox_text_set_location(cardbox, 0, ASSISTANT_TXT_X, ASSISTANT_TXT_Y, ASSISTANT_TXT_W, ASSISTANT_TXT_H);
+    compo_cardbox_text_map_center2left_location(cardbox, 0, ASSISTANT_TXT_X, ASSISTANT_TXT_Y, ASSISTANT_TXT_W, ASSISTANT_TXT_H);
+
     compo_cardbox_rect_set_location(cardbox, 1, POWEROFF_BG_X, POWEROFF_BG_Y, POWEROFF_BG_W, POWEROFF_BG_H, 20);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_OFF_BIN);
     compo_cardbox_icon_set_location(cardbox, 1, POWEROFF_ICON_X, POWEROFF_ICON_Y, POWEROFF_ICON_W, POWEROFF_ICON_H);
     compo_cardbox_text_set(cardbox, 1, i18n[STR_SETTING_OFF]);
     compo_cardbox_text_set_location(cardbox, 1, POWEROFF_TXT_X, POWEROFF_TXT_Y, POWEROFF_TXT_W, POWEROFF_TXT_H);
+    compo_cardbox_text_map_center2left_location(cardbox, 1, POWEROFF_TXT_X, POWEROFF_TXT_Y, POWEROFF_TXT_W, POWEROFF_TXT_H);
+
     //音乐
     cardbox = compo_cardbox_create(frm, 1, 3, 0, CARD_WIDTH_ORG, MUSIC_BG_H);
     compo_setid(cardbox, COMPO_ID_CARD_MUSIC);
@@ -332,19 +337,19 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     snprintf(txt_buf, sizeof(txt_buf), "%02d:%02d", sleep_data->totalSleepMin/60,sleep_data->totalSleepMin%60);///* 总睡眠小时*/
     compo_cardbox_text_set(cardbox, 0, txt_buf);    //总时长--------->>>todo
     compo_cardbox_text_set_location(cardbox, 0, SLEEP_TOTAL_X, SLEEP_TOTAL_Y, SLEEP_TOTAL_W, SLEEP_TOTAL_H);
-//    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_BIN);
     snprintf(txt_buf, sizeof(txt_buf), "%02dh", sleep_data->deepSleepMin/60);///* 深睡小时数据*/
     compo_cardbox_text_set(cardbox, 1, txt_buf);      //深睡时长hour--------->>>todo
     compo_cardbox_text_set_location(cardbox, 1, SLEEP_DEEP_H_X, SLEEP_DEEP_H_Y, SLEEP_DEEP_H_W, SLEEP_DEEP_H_H);
-//    compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_BIN);
     snprintf(txt_buf, sizeof(txt_buf), "%02dm",sleep_data->deepSleepMin%60);///* 深睡小时数据*/
     compo_cardbox_text_set(cardbox, 2, txt_buf);      //深睡时长min--------->>>todo
     compo_cardbox_text_set_location(cardbox, 2, SLEEP_DEEP_M_X, SLEEP_DEEP_M_Y, SLEEP_DEEP_M_W, SLEEP_DEEP_M_H);
-//    compo_cardbox_text_set_font(cardbox, 3, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_cardbox_text_set_font(cardbox, 3, UI_BUF_0FONT_FONT_BIN);
     snprintf(txt_buf, sizeof(txt_buf), "%02dh", sleep_data->lightSleepMin/60);///* 浅睡小时数据*/
     compo_cardbox_text_set(cardbox, 3, txt_buf);      //浅睡时长hour--------->>>todo
     compo_cardbox_text_set_location(cardbox, 3, SLEEP_LIGHT_H_X, SLEEP_LIGHT_H_Y, SLEEP_LIGHT_H_W, SLEEP_LIGHT_H_H);
-//    compo_cardbox_text_set_font(cardbox, 4, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_cardbox_text_set_font(cardbox, 4, UI_BUF_0FONT_FONT_BIN);
     snprintf(txt_buf, sizeof(txt_buf), "%02dm", sleep_data->lightSleepMin%60);///* 浅睡小时数据*/
     compo_cardbox_text_set(cardbox, 4, txt_buf);      //浅睡时长min--------->>>todo
     compo_cardbox_text_set_location(cardbox, 4, SLEEP_LIGHT_M_X, SLEEP_LIGHT_M_Y, SLEEP_LIGHT_M_W, SLEEP_LIGHT_M_H);
@@ -378,11 +383,14 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_icon_set_location(cardbox, 0, COMPASS_ICON_X, COMPASS_ICON_Y, COMPASS_ICON_W, COMPASS_ICON_H);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_BLOOD_OXYGEN]);
     compo_cardbox_text_set_location(cardbox, 0, COMPASS_TXT_X, COMPASS_TXT_Y, COMPASS_TXT_W, COMPASS_TXT_H);
+    compo_cardbox_text_map_center2left_location(cardbox, 0, COMPASS_TXT_X, COMPASS_TXT_Y, COMPASS_TXT_W, COMPASS_TXT_H);
+
     compo_cardbox_rect_set_location(cardbox, 1, SPORT_BG_X, SPORT_BG_Y, SPORT_BG_W, SPORT_BG_H, 20);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_SPORT_BIN);
     compo_cardbox_icon_set_location(cardbox, 1, SPORT_ICON_X, SPORT_ICON_Y, SPORT_ICON_W, SPORT_ICON_H);
     compo_cardbox_text_set(cardbox, 1, i18n[STR_SPORTS]);
     compo_cardbox_text_set_location(cardbox, 1, SPORT_TXT_X, SPORT_TXT_Y, SPORT_TXT_W, SPORT_TXT_H);
+//    compo_cardbox_text_map_center2left_location(cardbox, 1, SPORT_TXT_X, SPORT_TXT_Y, SPORT_TXT_W, SPORT_TXT_H);
     //时钟、日期
     pic = compo_picturebox_create(frm, UI_BUF_PULLUP_DIALPLATE_BG_BIN); //时钟背景
     compo_setid(pic, COMPO_ID_CLOCK_BG);
@@ -403,6 +411,9 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     txt = compo_textbox_create(frm, TXT_CNT_MAX);                       //星期
     compo_setid(txt, COMPO_ID_WEEKDAY);
     compo_bonddata(txt, COMPO_BOND_WEEKDAY);
+
+    ab_free(sleep_data);
+
 }
 
 //更新组件位置和大小
@@ -575,6 +586,20 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
             {
                 compo_cardbox_set_visible(cardbox, true);
             }
+
+            if (card_id > COMPO_ID_CARD_SPORT_COMPASS)      //被覆盖的卡片不可见，降低element溢出概率
+            {
+                rect_t rect = compo_cardbox_get_location((compo_cardbox_t *)compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS + (card_id - CARD_ID_SPORT_COMPASS) - 1));
+                if (y <= rect.y)
+                {
+                    compo_cardbox_set_visible(cardbox, false);
+                }
+                else
+                {
+                    compo_cardbox_set_visible(cardbox, true);
+                }
+            }
+
         }
         else if (compo->type == COMPO_TYPE_PICTUREBOX)
         {
@@ -873,9 +898,22 @@ static void func_clock_sub_card_process(void)
             f_card->flag_move_auto = true;
             f_card->tick = tick_get();
         }
+        for(u8 i=0; i<CARD_BTN_COUNT; i++)      //文本滚动
+        {
+            u16 id = COMPO_ID_CARD_SPORT_COMPASS + i;
+            compo_cardbox_text_scroll_reset((compo_cardbox_t *)compo_getobj_byid(id));   //scroll test
+            compo_cardbox_text_scroll_pause((compo_cardbox_t *)compo_getobj_byid(id), true);   //scroll test
+        }
+
     }
     else if (f_card->flag_move_auto)
     {
+        for(u8 i=0; i<CARD_BTN_COUNT; i++)      //文本滚动
+        {
+            u16 id = COMPO_ID_CARD_SPORT_COMPASS + i;
+            compo_cardbox_text_scroll_pause((compo_cardbox_t *)compo_getobj_byid(id), false);   //scroll test
+        }
+
         //自动移动
         if (f_card->ofs_y == f_card->moveto_y)
         {
@@ -931,11 +969,18 @@ static void func_clock_sub_card_process(void)
 
     func_clock_sub_card_data_update();
     func_process();
+
+    for(u8 i=0; i<CARD_BTN_COUNT; i++)      //文本滚动
+    {
+        u16 id = COMPO_ID_CARD_SPORT_COMPASS + i;
+        compo_cardbox_text_scroll_process((compo_cardbox_t *)compo_getobj_byid(id), true);
+    }
 }
 
 //下拉返回表盘
 static void func_clock_sub_card_switch_to_clock(bool auto_switch)
 {
+    printf("%s\n", __func__);
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
 
     u16 switch_mode = FUNC_SWITCH_MENU_PULLUP_DOWN | (auto_switch ? FUNC_SWITCH_AUTO : 0);
@@ -998,7 +1043,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
 
         case MSG_CTP_SHORT_UP:
         case MSG_CTP_SHORT_DOWN:
-            if (msg == MSG_CTP_SHORT_DOWN && ctp_get_sxy().y < EXIT_Y_MAX)     //下滑返回到时钟主界面
+            if (msg == MSG_CTP_SHORT_DOWN && ctp_get_sxy().y < EXIT_Y_MAX && ctp_get_sxy().y > EXIT_Y_MIN)     //下滑返回到时钟主界面
             {
                 func_clock_sub_card_switch_to_clock(false);
             }

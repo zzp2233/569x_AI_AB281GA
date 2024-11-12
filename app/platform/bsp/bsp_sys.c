@@ -2,6 +2,7 @@
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "ute_task_application.h"
+#include "ute_drv_gsensor_common.h"
 
 #define TRACE_EN                0
 
@@ -830,6 +831,7 @@ void bsp_sys_init(void)
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
     i2c_gsensor_init();
     //bsp_sensor_pe2_pwr_pg_on();         //需放在IIC初始化之后，未使用外设时注意关闭
+    uteDrvGsensorCommonInit(UTE_DRV_GSENSOR_DEFAULT_ACC_RATE_VALUE,UTE_DRV_GSENSOR_DEFAULT_ACC_RANGE_VALUE);
     bsp_sensor_step_init();             //步数传感器初始化
     bsp_i2c_init();
     bsp_sensor_hr_init(0);

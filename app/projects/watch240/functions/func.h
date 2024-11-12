@@ -133,6 +133,7 @@ enum
     FUNC_OTA_ERROR,         //OTA升级失败界面
 
     FUNC_MAX_NUM,           //用于计数
+    FUNC_BLE_CALL,
 };
 
 //task control block

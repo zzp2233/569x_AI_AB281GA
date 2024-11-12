@@ -17,6 +17,8 @@
 
 #include "include.h"
 #include "ute_module_sport.h"
+#include "ute_drv_gsensor_common.h"
+#include "ute_module_message.h"
 
 // #include "vcSportMotionIntAlgo.h"
 /* ble_debug,蓝牙发送原始数据 */
@@ -133,6 +135,11 @@ int vc30fx_read_register(unsigned char regaddr, unsigned char *pbuf, unsigned sh
      * to register(s) pointed by pRegisters.
      * return:  0(read success),-1(read fail)
      ******************************************************************************/
+
+    if(sys_cb.gsensor_iic_en)
+    {
+        bsp_i2c_init();
+    }
     uint32_t i2c_cfg = START_FLAG0 | DEV_ADDR0 | REG_ADDR_0 | START_FLAG1 | DEV_ADDR1;
     bsp_hw_i2c_rx_buf(i2c_cfg, VC30FS_READ_ADDR(0x33), regaddr, pbuf,size);
     return 0;
@@ -147,6 +154,11 @@ int vc30fx_write_register(unsigned char regaddr, unsigned char *pbuf, unsigned s
      * to register(s) pointed by pRegisters.
      * return:  0(write success),-1(write fail)
      ******************************************************************************/
+
+    if(sys_cb.gsensor_iic_en)
+    {
+        bsp_i2c_init();
+    }
     uint32_t i2c_cfg = START_FLAG0 | DEV_ADDR0 | REG_ADDR_0 | WDATA;
     bsp_hw_i2c_tx_buf(i2c_cfg, VC30FS_WRITE_ADDR(0x33), regaddr, pbuf,size);
     return 0;
@@ -166,7 +178,7 @@ unsigned int vc30fx_get_cputimer_tick(void)
 
 /*********************************************************************************************************/
 /* user gsensor code */
-#define ENABLE_GSENSOR 0
+#define ENABLE_GSENSOR 1
 const unsigned char arry10[] = {0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12};
 const unsigned char arry20[] = {0, 2, 3, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28};
 
@@ -174,36 +186,40 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
 {
     unsigned char gsensor_len = 0;
     vcare_memset(&vc30fx_gsensor_data, 0, sizeof(vc30fx_gsensor_data));
-    i2c_gsensor_init();
-    // SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_INIT();
-#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
-    SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_ALGO();
-#else
-#if UTE_MODULE_CYWEE_MOTION_SUPPORT
-    uteModuleCwmtWearStatusSwitch(vc30fx_dev.wear); //
-#else
-    uteModuleSportInputDataBeforeAlgo();
-#if UTE_HEART_VCXX_NO_WEAR_NO_RUN_STEP_ALGO_SUPPORT
-    if (vc30fx_dev.wear)
-    {
-        uteModuleSportUnWearToWearSwitch();
-    }
-    else
-    {
-        uteModuleSportStepTypeSetNone();
-    }
-#endif
-#endif
-#endif
-    bsp_i2c_init();
     // u8 id = 0;
     // vc30fx_read_register(0x00,&id,1);
     // printf("==========id = %d\n", id);
 #if ENABLE_GSENSOR
     int i = 0;
-    AxesRaw_t gsensor_buff[40] = {0};
+
+    static int16_t xx[UTE_DRV_GSENSOR_AXIS_DATA_MAX],yy[UTE_DRV_GSENSOR_AXIS_DATA_MAX],zz[UTE_DRV_GSENSOR_AXIS_DATA_MAX];
+    memset(xx,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*sizeof(int16_t));
+    memset(yy,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*sizeof(int16_t));
+    memset(zz,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*sizeof(int16_t));
+
+    ute_drv_gsensor_common_axis_data_t *data = NULL;
+    uteDrvGsensorCommonReadFifo(&data);
+
+    ute_drv_gsensor_common_axis_bit_change_t axisBitChange;
+    axisBitChange.inputXaxis = &data->accXaxis[0];
+    axisBitChange.inputYaxis = &data->accYaxis[0];
+    axisBitChange.inputZaxis = &data->accZaxis[0];
+    axisBitChange.outputXaxis = &xx[0];
+    axisBitChange.outputYaxis = &yy[0];
+    axisBitChange.outputZaxis = &zz[0];
+    for(uint8_t i=data->frameCnt; i<UTE_DRV_GSENSOR_AXIS_DATA_MAX; i++)
+    {
+        data->accXaxis[i] = data->accXaxis[data->frameCnt-1];
+        data->accYaxis[i] = data->accYaxis[data->frameCnt-1];
+        data->accZaxis[i] = data->accZaxis[data->frameCnt-1];
+    }
+    // change g-sensor bit
+    uteDrvGsensorCommonXYZaxisDataBitChange(&axisBitChange,50,GSENSOR_DATA_BIT_VCXX);
+
+    // AxesRaw_t gsensor_buff[40] = {0};
     /* Gsensor精度要求 ReadGsensorFIFO(+-4G11bit or +-8G12bit 256/g) 一个fifo周期为1sec,10组ppg数据，需要获取1sec内10组gsensor数据(100ms*10)，用于匹配10组ppg信号*/
-    stk8321_get_fifo_data(&gsensor_len, gsensor_buff);
+    // stk8321_get_fifo_data(&gsensor_len, gsensor_buff);
+
     VCARE_DBG_LOG("gsensor_len[%d]-ppgsize[%d]", gsensor_len, ppg_count);
     if (0 == ppg_count)
     {
@@ -212,13 +228,13 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
         for (i = 0; i < *pgsensor_len; i++)
         {
 #if (BOARD_VERSION == BOARD_NEW_BOARD)
-            vc30fx_gsensor_data.xData[i] = gsensor_buff[i].AXIS_X;
-            vc30fx_gsensor_data.yData[i] = gsensor_buff[i].AXIS_Y;
-            vc30fx_gsensor_data.zData[i] = gsensor_buff[i].AXIS_Z;
+            vc30fx_gsensor_data.xData[i] = xx[i];
+            vc30fx_gsensor_data.yData[i] = yy[i];
+            vc30fx_gsensor_data.zData[i] = zz[i];
 #elif (BOARD_VERSION == BOARD_OLD_BOARD)
-            vc30fx_gsensor_data.xData[i] = gsensor_buff[i].AXIS_Y;
-            vc30fx_gsensor_data.yData[i] = gsensor_buff[i].AXIS_X;
-            vc30fx_gsensor_data.zData[i] = gsensor_buff[i].AXIS_Z;
+            vc30fx_gsensor_data.xData[i] = xx[i];
+            vc30fx_gsensor_data.yData[i] = yy[i];
+            vc30fx_gsensor_data.zData[i] = zz[i];
 #endif
         }
     }
@@ -232,13 +248,13 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
             for (i = 0; i < ppg_count; i++)
             {
 #if (BOARD_VERSION == BOARD_NEW_BOARD)
-                vc30fx_gsensor_data.xData[i] = gsensor_buff[arry10[i]].AXIS_X;
-                vc30fx_gsensor_data.yData[i] = gsensor_buff[arry10[i]].AXIS_Y;
-                vc30fx_gsensor_data.zData[i] = gsensor_buff[arry10[i]].AXIS_Z;
+                vc30fx_gsensor_data.xData[i] = xx[arry10[i]];
+                vc30fx_gsensor_data.yData[i] = yy[arry10[i]];
+                vc30fx_gsensor_data.zData[i] = zz[arry10[i]];
 #elif (BOARD_VERSION == BOARD_OLD_BOARD)
-                vc30fx_gsensor_data.xData[i] = gsensor_buff[arry10[i]].AXIS_Y;
-                vc30fx_gsensor_data.yData[i] = gsensor_buff[arry10[i]].AXIS_X;
-                vc30fx_gsensor_data.zData[i] = gsensor_buff[arry10[i]].AXIS_Z;
+                vc30fx_gsensor_data.xData[i] = xx[arry10[i]];
+                vc30fx_gsensor_data.yData[i] = yy[arry10[i]];
+                vc30fx_gsensor_data.zData[i] = zz[arry10[i]];
 #endif
             }
         }
@@ -247,13 +263,13 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
             for (i = 0; i < ppg_count; i++)
             {
 #if (BOARD_VERSION == BOARD_NEW_BOARD)
-                vc30fx_gsensor_data.xData[i] = gsensor_buff[arry20[i]].AXIS_X;
-                vc30fx_gsensor_data.yData[i] = gsensor_buff[arry20[i]].AXIS_Y;
-                vc30fx_gsensor_data.zData[i] = gsensor_buff[arry20[i]].AXIS_Z;
+                vc30fx_gsensor_data.xData[i] = xx[arry20[i]];
+                vc30fx_gsensor_data.yData[i] = yy[arry20[i]];
+                vc30fx_gsensor_data.zData[i] = zz[arry20[i]];
 #elif (BOARD_VERSION == BOARD_OLD_BOARD)
-                vc30fx_gsensor_data.xData[i] = gsensor_buff[arry20[i]].AXIS_Y;
-                vc30fx_gsensor_data.yData[i] = gsensor_buff[arry20[i]].AXIS_X;
-                vc30fx_gsensor_data.zData[i] = gsensor_buff[arry20[i]].AXIS_Z;
+                vc30fx_gsensor_data.xData[i] = xx[arry20[i]];
+                vc30fx_gsensor_data.yData[i] = yy[arry20[i]];
+                vc30fx_gsensor_data.zData[i] = zz[arry20[i]];
 #endif
             }
         }
@@ -264,25 +280,25 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
         for (i = 0; i < gsensor_len; i++)
         {
 #if (BOARD_VERSION == BOARD_NEW_BOARD)
-            vc30fx_gsensor_data.xData[i] = gsensor_buff[i].AXIS_X;
-            vc30fx_gsensor_data.yData[i] = gsensor_buff[i].AXIS_Y;
-            vc30fx_gsensor_data.zData[i] = gsensor_buff[i].AXIS_Z;
+            vc30fx_gsensor_data.xData[i] = xx[i];
+            vc30fx_gsensor_data.yData[i] = yy[i];
+            vc30fx_gsensor_data.zData[i] = zz[i];
 #elif (BOARD_VERSION == BOARD_OLD_BOARD)
-            vc30fx_gsensor_data.xData[i] = gsensor_buff[i].AXIS_Y;
-            vc30fx_gsensor_data.yData[i] = gsensor_buff[i].AXIS_X;
-            vc30fx_gsensor_data.zData[i] = gsensor_buff[i].AXIS_Z;
+            vc30fx_gsensor_data.xData[i] = xx[i];
+            vc30fx_gsensor_data.yData[i] = yy[i];
+            vc30fx_gsensor_data.zData[i] = zz[i];
 #endif
         }
         for (i = gsensor_len; i < ppg_count; i++)
         {
 #if (BOARD_VERSION == BOARD_NEW_BOARD)
-            vc30fx_gsensor_data.xData[i] = gsensor_buff[gsensor_len - 1].AXIS_X;
-            vc30fx_gsensor_data.yData[i] = gsensor_buff[gsensor_len - 1].AXIS_Y;
-            vc30fx_gsensor_data.zData[i] = gsensor_buff[gsensor_len - 1].AXIS_Z;
+            vc30fx_gsensor_data.xData[i] = xx[gsensor_len - 1];
+            vc30fx_gsensor_data.yData[i] = yy[gsensor_len - 1];
+            vc30fx_gsensor_data.zData[i] = zz[gsensor_len - 1];
 #elif (BOARD_VERSION == BOARD_OLD_BOARD)
-            vc30fx_gsensor_data.xData[i] = gsensor_buff[gsensor_len - 1].AXIS_Y;
-            vc30fx_gsensor_data.yData[i] = gsensor_buff[gsensor_len - 1].AXIS_X;
-            vc30fx_gsensor_data.zData[i] = gsensor_buff[gsensor_len - 1].AXIS_Z;
+            vc30fx_gsensor_data.xData[i] = xx[gsensor_len - 1];
+            vc30fx_gsensor_data.yData[i] = yy[gsensor_len - 1];
+            vc30fx_gsensor_data.zData[i] = zz[gsensor_len - 1];
 #endif
         }
     }
@@ -524,6 +540,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     vc30fx_dev.heart_rate = vc30fx_heart_rate_calculate(&vc30fx_dev);
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -546,6 +565,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     vc30fx_dev.spo2 = vc30fx_spo2_calculate(&vc30fx_dev);
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -568,6 +590,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     /*wear is hold,call_algo_func*/
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -586,6 +611,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     /*wear is hold,call_algo_func*/
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -605,6 +633,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     /*wear is hold,call_algo_func*/
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -619,6 +650,11 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 if (gsensor_num)
                 {
                     vc30fx_gsensor_actuating_quantity(vc30fx_gsensor_data.xData[0], vc30fx_gsensor_data.yData[0], vc30fx_gsensor_data.zData[0]);
+
+                    if (WEAR_STA_HOLD == vc30fx_dev.wear)
+                    {
+                        uteModuleSportInputDataBeforeAlgo();
+                    }
                 }
                 //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, sample_result_info_ptr->slot_result[2].ppg_num);
             }
@@ -646,22 +682,35 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     }
     /* 同步处理数据，清理fifo_buffer内存，为下次采样做准备 */
     vc30fx_drv_finished_sync(&vc30fx_dev);
+
+#if UTE_HEART_VCXX_NO_WEAR_NO_RUN_STEP_ALGO_SUPPORT
+    if (WEAR_STA_HOLD == vc30fx_dev.wear)
+    {
+        uteModuleSportUnWearToWearSwitch();
+    }
+    else
+    {
+        uteModuleSportStepTypeSetNone();
+    }
+#endif
+
 }
 
-bool vc30fx_sleep_isr = false;
+// bool vc30fx_sleep_isr = false;
 
 AT(.com_text.vc30fx)
 void vc30fx_isr(void)
 {
-    if(sleep_cb.sys_is_sleep)
-    {
-        vc30fx_sleep_isr = true;
-    }
-    else
-    {
-        msg_enqueue(EVT_VC30FX_ISR);
-        vc30fx_sleep_isr = false;
-    }
+    // if(sleep_cb.sys_is_sleep)
+    // {
+    //     vc30fx_sleep_isr = true;
+    // }
+    // else
+    // {
+    // msg_enqueue(EVT_VC30FX_ISR);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_GET_AAC_HANDLER,0);
+    //     vc30fx_sleep_isr = false;
+    // }
 
     //vc30fx_usr_device_handler(0, 1);
 }

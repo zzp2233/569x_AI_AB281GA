@@ -532,7 +532,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolReadReadlTimeStepInfo(uint8_t*receive,uint8_t length)
 {
-    // uteModuleSportSendRealTimeStepInfo();
+    uteModuleSportSendRealTimeStepInfo();
 }
 /**
 *@brief        发送计步历史数据

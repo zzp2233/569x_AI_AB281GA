@@ -318,22 +318,20 @@ void usr_tmr5ms_isr(void)
     }
 }
 
-co_timer_t timer_mute;
-
-AT(.com_text.bsp.sys)
-co_timer_callback_t bsp_loudspeaker_mute_callback(void)
-{
-    dac_set_power_on_off(0);
-    printf("dac_off\n");
-}
-
 AT(.com_text.bsp.sys)
 void bsp_loudspeaker_mute(void)
 {
-    printf("bsp_loudspeaker_mute\n");
     LOUDSPEAKER_MUTE();
     sys_cb.loudspeaker_mute = 1;
-    co_timer_set(&timer_mute, 20, TIMER_ONE_SHOT, false, bsp_loudspeaker_mute_callback, NULL);
+    delay_5ms(4);
+    dac_set_power_on_off(0);
+}
+
+AT(.com_text.bsp.sys)
+void bsp_loudspeaker_unmute(void)
+{
+    sys_cb.loudspeaker_mute = 0;
+    LOUDSPEAKER_UNMUTE();
 }
 
 //手动控制mute才需要调用(其它功放MUTE控制在淡入淡出流程里)
@@ -351,22 +349,6 @@ void bsp_sys_mute(void)
     }
 }
 
-co_timer_t timer_unmute;
-
-AT(.com_text.bsp.sys)
-co_timer_callback_t bsp_loudspeaker_unmute_callback(void)
-{
-    dac_fade_in();
-    printf("dac_on\n");
-}
-
-AT(.com_text.bsp.sys)
-void bsp_loudspeaker_unmute(void)
-{
-    sys_cb.loudspeaker_mute = 0;
-    LOUDSPEAKER_UNMUTE();
-}
-
 AT(.text.bsp.sys)
 void bsp_sys_unmute(void)
 {
@@ -374,7 +356,7 @@ void bsp_sys_unmute(void)
     {
         sys_cb.mute = 0;
         bsp_loudspeaker_unmute();
-        co_timer_set(&timer_unmute, 20, TIMER_ONE_SHOT, false, bsp_loudspeaker_unmute_callback, NULL);
+        dac_fade_in();
 #if DAC_DNR_EN
         dac_dnr_set_sta(sys_cb.dnr_sta);
 #endif

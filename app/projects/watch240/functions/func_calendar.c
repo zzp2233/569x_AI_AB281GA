@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_systemtime.h"
 
 
 typedef struct f_calendar_t_
@@ -343,16 +344,20 @@ static void func_calendar_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_calendar_t));
     f_calendar_t *f_calendar = (f_calendar_t *)func_cb.f_cb;
-    f_calendar->today_year = 2023;
-    f_calendar->today_mon = 11;
-    f_calendar->today_day = 22;
+
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+
+    f_calendar->today_year = time.year;
+    f_calendar->today_mon = time.month;
+    f_calendar->today_day = time.day;
 
     f_calendar->update_year = f_calendar->today_year;
     f_calendar->update_mon = f_calendar->today_mon;
 
     func_cb.frm_main = func_calender_form_create();
     //刷新文本内容
-    func_calender_refresh(2023, 11, 22);
+    func_calender_refresh(time.year, time.month, time.day);
 }
 
 //退出日历功能

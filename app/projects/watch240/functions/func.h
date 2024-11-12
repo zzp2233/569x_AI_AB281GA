@@ -92,7 +92,6 @@ enum
     FUNC_PASSWORD_SUB_DISP,             //新密码锁设置
     FUNC_PASSWORD_SUB_SELECT,           //确认密码锁
     FUNC_SET_SUB_ABOUT,                 //设置--关于
-    FUNC_SET_SUB_4G,                    //设置--4G
     FUNC_SET_SUB_RESTART,               //设置--重启
     FUNC_RESTART = FUNC_SET_SUB_RESTART,//重启
     FUNC_SET_SUB_RSTFY,                 //设置--恢复出厂

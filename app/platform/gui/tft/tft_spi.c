@@ -184,6 +184,7 @@ void tft_write_data_start(void)
 #elif (GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
     tft_write_cmd(0x2C);
     DC_DATA_EN();
+    DC_DISABLE();
     //3w-9b 2line mode
     DESPICON |= BIT(26) | BIT(9) | BIT(3); //[26]dual en, [9]MultiBit, [3:2]2BIT data bus
 #elif (GUI_MODE_SELECT == MODE_4WIRE_8BIT)

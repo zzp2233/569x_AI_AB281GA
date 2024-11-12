@@ -55,7 +55,7 @@
 #define SPI_ST7789_WIDTH               240
 #define SPI_ST7789_HIGHT               296
 #define SPI_ST7789_OFS_X               0
-#define SPI_ST7789_OFS_Y               20
+#define SPI_ST7789_OFS_Y               0
 
 //屏幕接口模式
 #define MODE_3WIRE_9BIT                 0                                       //屏幕3线9bit模式: 3线为SCLK CS D0; 9bit每次传输一个byte有效数据, 开头多1bit作为DC识别;

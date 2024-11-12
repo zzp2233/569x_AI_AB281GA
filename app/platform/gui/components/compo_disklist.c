@@ -27,7 +27,8 @@ compo_disklist_t *compo_disklist_create(compo_form_t *frm)
     widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
     widget_page_set_client(page, 0, GUI_SCREEN_CENTER_Y);  //圆心
     disklist->page = page;
-    for (i=0; i<DISKLIST_ITEM_CNT; i++) {
+    for (i=0; i<DISKLIST_ITEM_CNT; i++)
+    {
         widget_icon_t *item_icon = widget_icon_create(page, 0);
         widget_page_t *txt_page = widget_page_create(page);
         widget_text_t *item_text = widget_text_create(txt_page, MAX_WORD_CNT);
@@ -48,12 +49,14 @@ compo_disklist_t *compo_disklist_create(compo_form_t *frm)
  **/
 void compo_disklist_set(compo_disklist_t *disklist, compo_disklist_item_t const *item, int item_cnt)
 {
-    if (disklist == NULL) {
+    if (disklist == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_SET);
     }
     disklist->item = item;
     disklist->item_cnt = item_cnt;
-    if (item_cnt <= 0 || item_cnt > DISKLIST_MAX_ITEM_CNT) {
+    if (item_cnt <= 0 || item_cnt > DISKLIST_MAX_ITEM_CNT)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_CREATE);
     }
     disklist->cycle_deg = disklist->item_cnt * DISKLIST_ITEM_DEG_DIFF;
@@ -69,7 +72,8 @@ void compo_disklist_set(compo_disklist_t *disklist, compo_disklist_item_t const 
  **/
 void compo_disklist_set_iconsize(compo_disklist_t *disklist, u16 icon_size)
 {
-    if (disklist == NULL) {
+    if (disklist == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_SET);
     }
     disklist->icon_size = icon_size;
@@ -84,7 +88,8 @@ void compo_disklist_set_iconsize(compo_disklist_t *disklist, u16 icon_size)
 int compo_disklist_get_deg_byidx(compo_disklist_t *disklist, int idx)
 {
 //    TRACE("%s[%d]\n", __func__, idx);
-    if (disklist == NULL) {
+    if (disklist == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_GET_Y);
     }
     return DISKLIST_ITEM_DEG_DIFF * idx;
@@ -98,7 +103,8 @@ int compo_disklist_get_deg_byidx(compo_disklist_t *disklist, int idx)
 void compo_disklist_set_focus(compo_disklist_t *disklist, int deg)
 {
     TRACE("%s[%d]-->", __func__, deg);
-    if (disklist == NULL) {
+    if (disklist == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_SET_FOCUS);
     }
 #if DISKLIST_INFINITE_ROTATE
@@ -108,7 +114,8 @@ void compo_disklist_set_focus(compo_disklist_t *disklist, int deg)
     int deg_max = disklist->max_deg;
     disklist->ofs_deg = deg < deg_min ? deg_min : (deg > deg_max ? deg_max : deg);
 #endif // INFINITE_ROTATE
-    if (disklist->focus_rem_en) {
+    if (disklist->focus_rem_en)
+    {
         disklist->ofs_deg %= disklist->cycle_deg;
     }
     TRACE("[%d]\n", disklist->ofs_deg);
@@ -134,35 +141,44 @@ void compo_disklist_update(compo_disklist_t *disklist)
 {
 //TRACE("%s\n", __func__);
 #define PRINT(...)  //do{if(cidx>=18||cidx<=3){TRACE(__VA_ARGS__);}} while(0)  //边界切换数值检测
-    if (disklist == NULL) {
+    if (disklist == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_UPDATE);
     }
     int i;
     int font_height = widget_text_get_height();
     int cidx, sidx;
     s32 ofs = disklist->ofs_deg;
-    if (ofs >= 0) {
+    if (ofs >= 0)
+    {
         cidx = (ofs + DISKLIST_ITEM_DEG_DIFF / 2) / DISKLIST_ITEM_DEG_DIFF;
-    } else {
+    }
+    else
+    {
         cidx = (ofs - DISKLIST_ITEM_DEG_DIFF / 2) / DISKLIST_ITEM_DEG_DIFF;
     }
     disklist->focus_icon_idx = cidx;
-    while (cidx < 0 || cidx >= disklist->item_cnt) {
+    while (cidx < 0 || cidx >= disklist->item_cnt)
+    {
         cidx = cidx + (cidx < 0 ? disklist->item_cnt : (cidx >= disklist->item_cnt ? -disklist->item_cnt : 0));
     }
     sidx = cidx - DISKLIST_ITEM_CNT / 2;
     PRINT("focus[%d]-->[%d] \n", disklist->focus_icon_idx, cidx);
-    for (i=0; i<DISKLIST_ITEM_CNT; i++) {  // 图标处理
+    for (i=0; i<DISKLIST_ITEM_CNT; i++)    // 图标处理
+    {
         int idx = sidx + i;
 #if DISKLIST_INFINITE_ROTATE
         disklist->item_idx[i] = idx + (idx < 0 ? disklist->item_cnt : (idx >= disklist->item_cnt ? -disklist->item_cnt : 0));
 #else
-        if (idx < 0 || idx >= disklist->item_cnt) {
+        if (idx < 0 || idx >= disklist->item_cnt)
+        {
             widget_set_visible(disklist->item_icon[i], false);
             widget_set_visible(disklist->item_page_text[i], false);
             disklist->item_idx[i] = -1;
             continue;
-        } else {
+        }
+        else
+        {
             disklist->item_idx[i] = idx;
             widget_set_visible(disklist->item_icon[i], true);
             widget_set_visible(disklist->item_page_text[i], true);
@@ -175,26 +191,39 @@ void compo_disklist_update(compo_disklist_t *disklist)
 
         int ix, iy, deg10;
         ofs %= disklist->cycle_deg;  //图标0所在角度
-        if (cidx==0 && abs(ofs)>disklist->max_deg) {  //转了一圈后focus在0和-1间变化
-            if (ofs > 0) {
+        if (cidx==0 && abs(ofs)>disklist->max_deg)    //转了一圈后focus在0和-1间变化
+        {
+            if (ofs > 0)
+            {
                 ofs = ofs % disklist->max_deg + 3600 - DISKLIST_ITEM_DEG_DIFF;
-            } else {
+            }
+            else
+            {
                 ofs = ofs % disklist->max_deg + DISKLIST_ITEM_DEG_DIFF;
             }
             PRINT("ofs[%d]", ofs);
         }
-        if (idx != disklist->item_idx[i]) {  //补头尾
-            if (ofs > -DISKLIST_ITEM_DEG_DIFF / 2) {
+        if (idx != disklist->item_idx[i])    //补头尾
+        {
+            if (ofs > -DISKLIST_ITEM_DEG_DIFF / 2)
+            {
                 deg10 = (cidx - idx) * DISKLIST_ITEM_DEG_DIFF + (ofs - cidx * DISKLIST_ITEM_DEG_DIFF);
-            } else {
+            }
+            else
+            {
                 deg10 = (cidx - idx) * DISKLIST_ITEM_DEG_DIFF + (ofs + (disklist->item_cnt - cidx) * DISKLIST_ITEM_DEG_DIFF);
             }
             PRINT("!deg[%d]", deg10);
-        } else {  //正常画
-            if (ofs > -DISKLIST_ITEM_DEG_DIFF / 2) {
+        }
+        else      //正常画
+        {
+            if (ofs > -DISKLIST_ITEM_DEG_DIFF / 2)
+            {
                 deg10 = ofs - idx * DISKLIST_ITEM_DEG_DIFF;
                 PRINT("+deg[%d]", deg10);
-            } else {
+            }
+            else
+            {
                 deg10 = ofs + (disklist->item_cnt - idx) * DISKLIST_ITEM_DEG_DIFF;
                 PRINT("-deg[%d]", deg10);
             }
@@ -205,7 +234,8 @@ void compo_disklist_update(compo_disklist_t *disklist)
         PRINT("\n");
 //        TRACE("deg[%d] xy[%d %d]\n", deg10, ix, iy);
 
-        if (disklist->page_time != NULL && disklist->idx_time == disklist->item_idx[i]) {
+        if (disklist->page_time != NULL && disklist->idx_time == disklist->item_idx[i])
+        {
             disklist->time_bg = disklist->item_icon[i];
             widget_page_scale_to(disklist->page_time, disklist->icon_size, disklist->icon_size);
             widget_set_pos(disklist->page_time, ix, iy);
@@ -213,8 +243,10 @@ void compo_disklist_update(compo_disklist_t *disklist)
         }
 
     }
-    for (i=0; i<DISKLIST_ITEM_CNT; i++) {  //文本处理
-        if (disklist->item_idx[i] >= 0) {
+    for (i=0; i<DISKLIST_ITEM_CNT; i++)    //文本处理
+    {
+        if (disklist->item_idx[i] >= 0)
+        {
             int ptx, pty, pth, tx, ty, temp;
             rect_t rect_cur, rect_cmp;
             rect_cur = widget_get_location(disklist->item_icon[i]);
@@ -225,7 +257,8 @@ void compo_disklist_update(compo_disklist_t *disklist)
             pth = rect_cur.hei;
             tx = rect_cur.wid / 8;
             ty = (pth - font_height) / 2;
-            if (i < DISKLIST_ITEM_CNT / 2) {
+            if (i < DISKLIST_ITEM_CNT / 2)
+            {
                 rect_cmp = widget_get_location(disklist->item_icon[i + 1]);
                 temp = pty + ty;
                 ty -= (temp * temp) * (rect_cur.wid / 5) / (DISKLIST_CIRCLE_R * DISKLIST_CIRCLE_R);  //离中心越远向外移动越多
@@ -234,7 +267,9 @@ void compo_disklist_update(compo_disklist_t *disklist)
                 ty = (pty + ty + font_height + 5) > temp ? (temp - font_height - 5 - pty) : ty;
                 temp = pty + ty;
                 tx += (temp * temp) * (rect_cur.wid / 4) / (DISKLIST_CIRCLE_R * DISKLIST_CIRCLE_R);
-            } else if (i > DISKLIST_ITEM_CNT / 2) {
+            }
+            else if (i > DISKLIST_ITEM_CNT / 2)
+            {
                 rect_cmp = widget_get_location(disklist->item_icon[i - 1]);
                 temp = pty + ty + font_height;
                 ty += (temp * temp) * (rect_cur.wid / 5) / (DISKLIST_CIRCLE_R * DISKLIST_CIRCLE_R);
@@ -247,20 +282,116 @@ void compo_disklist_update(compo_disklist_t *disklist)
                 pth = temp > 0 ? temp : 0;
                 temp = pty + ty + font_height;
                 tx += (temp * temp) * (rect_cur.wid / 4) / (DISKLIST_CIRCLE_R * DISKLIST_CIRCLE_R);
-            } else if (i == DISKLIST_ITEM_CNT / 2) {
+            }
+            else if (i == DISKLIST_ITEM_CNT / 2)
+            {
                 temp = pty + ty + (rect_cur.y > 0 ? font_height : 0);
-                if (rect_cur.y > 0) {
+                if (rect_cur.y > 0)
+                {
                     ty += (temp * temp) * (rect_cur.wid / 5) / (DISKLIST_CIRCLE_R * DISKLIST_CIRCLE_R);
-                } else {
+                }
+                else
+                {
                     ty -= (temp * temp) * (rect_cur.wid / 5) / (DISKLIST_CIRCLE_R * DISKLIST_CIRCLE_R);
                 }
                 tx += (temp * temp) * (rect_cur.wid / 4) / (DISKLIST_CIRCLE_R * DISKLIST_CIRCLE_R);
             }
 //            TRACE("ptx[%d] pty[%d] pth[%d] tx[%d] ty[%d]\n", ptx, pty, pth, tx, ty);
             widget_set_location(disklist->item_page_text[i], ptx, pty, GUI_SCREEN_WIDTH, pth);
-            widget_set_location(disklist->item_text[i], tx, ty, GUI_SCREEN_WIDTH, font_height);
+            widget_set_location(disklist->item_text[i], tx, ty, GUI_SCREEN_WIDTH - ptx - tx, font_height);
         }
     }
+    if (sidx != disklist->sidx || disklist->txt_roll_need_rst)      //滚动控制器
+    {
+        u8 i = 0;
+        u8 i_end = 0;
+        int sidx_pre = disklist->sidx;
+        disklist->sidx = sidx;
+
+        if (!disklist->txt_roll_need_rst)
+        {
+            if  (sidx * sidx_pre < 0)    //边界处理
+            {
+                if (sidx < 0)
+                {
+                    sidx += disklist->item_cnt;
+                }
+                else
+                {
+                    sidx_pre += disklist->item_cnt;
+                }
+            }
+            if (sidx > sidx_pre)                        //向上滑动
+            {
+                int k = sidx - sidx_pre;                //向上滑动的列表行数
+                for (i=0; i<DISKLIST_ITEM_CNT-k; i++)   //将下一行列表项对应的滚动控制器 赋值给 上一行列表对应的滚动控制器
+                {
+                    disklist->roll_cb[i] = disklist->roll_cb[i + k];
+                }
+                i_end = DISKLIST_ITEM_CNT;
+            }
+            else if (sidx < sidx_pre)                               //向下滑动
+            {
+                int k = sidx_pre - sidx;                            //向下滑动的列表行数
+                for (i_end=DISKLIST_ITEM_CNT; i_end>k; i_end--)     //将上一行列表项对应的滚动控制器 赋值给 下一行列表对应的滚动控制器
+                {
+                    disklist->roll_cb[i_end - 1] = disklist->roll_cb[i_end - 1 - k];
+                }
+            }
+        }
+        else
+        {
+            i_end = DISKLIST_ITEM_CNT;
+            disklist->txt_roll_need_rst = false;
+        }
+
+        for (; i<i_end; i++)    //对移动超出列表项个数一半的滚动控制器重新赋值
+        {
+            memset(&disklist->roll_cb[i], 0, sizeof(compo_roll_cb_t));
+            disklist->roll_cb[i].tick = tick_get();
+            widget_text_set_autoroll_mode(disklist->item_text[i], TEXT_AUTOROLL_MODE_NULL);
+        }
+
+        for (i=0; i<DISKLIST_ITEM_CNT; i++)     //判断列表中的项是否可以滚动
+        {
+            widget_text_t *txt = disklist->item_text[i];
+            if (widget_get_visble(txt))
+            {
+                area_t text_area = widget_text_get_area(txt);
+                rect_t textbox_rect = widget_get_location(txt);
+                if (text_area.wid > textbox_rect.wid)
+                {
+                    disklist->roll_cb[i].mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;
+                    disklist->roll_cb[i].direction = -1;
+//                    disklist->roll_cb[i].tick = tick_get();
+                    if (widget_get_align_center(txt))
+                    {
+                        disklist->roll_cb[i].offset = (text_area.wid - textbox_rect.wid) / 2;
+                    }
+                    widget_text_set_autoroll_mode(disklist->item_text[i], TEXT_AUTOROLL_MODE_SROLL_CIRC);
+                }
+                else if (disklist->roll_cb[i].direction == 0)
+                {
+                    widget_text_set_autoroll_mode(disklist->item_text[i], TEXT_AUTOROLL_MODE_NULL);
+                }
+                else
+                {
+                    widget_text_set_autoroll_mode(disklist->item_text[i], TEXT_AUTOROLL_MODE_SROLL_CIRC);
+                }
+            }
+            widget_text_set_client(disklist->item_text[i], disklist->roll_cb[i].offset, 0);
+        }
+    }
+}
+
+/**
+ * @brief 更新列表框Widget，同时重置所有文本滚动（item中str突变时需要调用，防止C208蓝屏）
+ * @param[in] disklist : 圆盘列表指针
+ **/
+void compo_disklist_update_with_text_scroll_rst(compo_disklist_t *disklist)
+{
+    disklist->txt_roll_need_rst = true;
+    compo_disklist_update(disklist);
 }
 
 /**
@@ -272,19 +403,23 @@ void compo_disklist_update(compo_disklist_t *disklist)
  **/
 int compo_disklist_select(compo_disklist_t *disklist, int x, int y)
 {
-    if (disklist == NULL) {
+    if (disklist == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_SELECT);
     }
     int i;
-    for (i=0; i<DISKLIST_ITEM_CNT; i++) {
-        if (disklist->item_idx[i] < 0) {
+    for (i=0; i<DISKLIST_ITEM_CNT; i++)
+    {
+        if (disklist->item_idx[i] < 0)
+        {
             continue;
         }
 //        widget_page_t *page = disklist->item_page_text[i];
         rect_t rect = widget_get_absolute(disklist->item_icon[i]);
         rect_t rect_cur = widget_get_absolute(disklist->item_page_text[i]);
         if ((x > rect_cur.x && x < (rect_cur.x + rect_cur.wid) && y > rect_cur.y && y < (rect_cur.y + rect_cur.hei)) || \
-            (abs_s(x - rect.x) * 2 <= rect.wid && abs_s(y - rect.y) * 2 <= rect.hei)) {  //点击区域：图标+文本page
+            (abs_s(x - rect.x) * 2 <= rect.wid && abs_s(y - rect.y) * 2 <= rect.hei))    //点击区域：图标+文本page
+        {
             disklist->sel_icon = disklist->item_icon[i];
             disklist->sel_idx = disklist->item_idx[i];
             TRACE("%s-->xy[%d,%d] idx[%d]\n", __func__, x, y, disklist->sel_idx);
@@ -305,12 +440,15 @@ int compo_disklist_select(compo_disklist_t *disklist, int x, int y)
 widget_icon_t *compo_disklist_select_byidx(compo_disklist_t *disklist, int idx)
 {
 //    TRACE("%s[%d]\n", __func__, idx);
-    if (disklist == NULL) {
+    if (disklist == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_SELECT);
     }
     int i;
-    for (i=0; i<DISKLIST_ITEM_CNT; i++) {
-        if (disklist->item_idx[i] == idx) {
+    for (i=0; i<DISKLIST_ITEM_CNT; i++)
+    {
+        if (disklist->item_idx[i] == idx)
+        {
             disklist->sel_icon = disklist->item_icon[i];
             disklist->sel_idx = idx;
             return disklist->sel_icon;
@@ -328,11 +466,13 @@ widget_icon_t *compo_disklist_select_byidx(compo_disklist_t *disklist, int idx)
  **/
 rect_t compo_disklist_get_sel_rect(compo_disklist_t *disklist)
 {
-    if (disklist == NULL) {
+    if (disklist == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_GET_SELECT);
     }
     rect_t rect = {0};
-    if (disklist->sel_icon == NULL) {
+    if (disklist->sel_icon == NULL)
+    {
         return rect;
     }
     rect = widget_get_location(disklist->sel_icon);
@@ -352,7 +492,8 @@ rect_t compo_disklist_get_sel_rect(compo_disklist_t *disklist)
  **/
 void compo_disklist_add_time(compo_disklist_t *disklist, u8 type, u32 res_addr, s16 cx, s16 cy)
 {
-    if (disklist->page_time == NULL) {
+    if (disklist->page_time == NULL)
+    {
         disklist->page_time = widget_page_create(disklist->page);
         widget_set_location(disklist->page_time, 0, 0, disklist->icon_size, disklist->icon_size);
         widget_page_set_client(disklist->page_time, disklist->icon_size / 2, disklist->icon_size / 2);
@@ -361,22 +502,23 @@ void compo_disklist_add_time(compo_disklist_t *disklist, u8 type, u32 res_addr, 
     widget_image_t *img = widget_image_create(disklist->page_time, res_addr);
     widget_image_set_rotation_center(img, cx, cy);
 
-    switch (type) {
-    case COMPO_ICONLIST_TIME_TYPE_HOUR:
-        disklist->hour = img;
-        break;
+    switch (type)
+    {
+        case COMPO_ICONLIST_TIME_TYPE_HOUR:
+            disklist->hour = img;
+            break;
 
-    case COMPO_ICONLIST_TIME_TYPE_MIN:
-        disklist->min = img;
-        break;
+        case COMPO_ICONLIST_TIME_TYPE_MIN:
+            disklist->min = img;
+            break;
 
-    case COMPO_ICONLIST_TIME_TYPE_SEC:
-        disklist->sec = img;
-        break;
+        case COMPO_ICONLIST_TIME_TYPE_SEC:
+            disklist->sec = img;
+            break;
 
-    default:
-        halt(HALT_GUI_COMPO_ICONLIST_TIME_TYPE);
-        return;
+        default:
+            halt(HALT_GUI_COMPO_ICONLIST_TIME_TYPE);
+            return;
     }
     compo_cb.rtc_update = true;                 //创建时钟组件，需要同步更新时间
 }

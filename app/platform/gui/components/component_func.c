@@ -633,14 +633,16 @@ void compo_set_update(tm_t tm, u16 mtime)
 //            }
 //            break;
 
-//        case COMPO_TYPE_CARDBOX:
-//            {
-//                compo_cardbox_t *cardbox = (compo_cardbox_t *)compo;
-//                if (cardbox->text[0]) {
-//                    compo_set_roll(&cardbox->roll_cb, cardbox->text[0], false);     //滚动
-//                }
-//            }
-//            break;
+            case COMPO_TYPE_CARDBOX:
+            {
+                compo_cardbox_t *cardbox = (compo_cardbox_t *)compo;
+                for (int i=0; i<CARD_TEXT_MAX; i++)
+                {
+                    widget_text_t* txt = cardbox->text[i];
+                    compo_set_roll(&cardbox->roll_cb[i], txt, false);     //滚动
+                }
+            }
+            break;
 
             case COMPO_TYPE_FORM:
             {

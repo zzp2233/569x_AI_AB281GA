@@ -323,6 +323,7 @@ void bsp_loudspeaker_mute(void)
 {
     LOUDSPEAKER_MUTE();
     sys_cb.loudspeaker_mute = 1;
+    delay_5ms(4);
     dac_set_power_on_off(0);
 }
 

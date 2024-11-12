@@ -8,8 +8,8 @@
 #define TRACE(...)
 #endif
 
-#define COMPO_TEXTBOX_DIR_LR	-1		//从左往右
-#define COMPO_TEXTBOX_DIR_RL	 1		//从右往左
+#define COMPO_TEXTBOX_DIR_LR    -1      //从左往右
+#define COMPO_TEXTBOX_DIR_RL     1      //从右往左
 
 /**
  * @brief 创建一个文本框
@@ -30,13 +30,13 @@ compo_textbox_t *compo_textbox_create(compo_form_t *frm, u16 max_word_cnt)
     return textbox;
 }
 
- /**
- * @brief 创建一个文本框
- * @param[in] frm : 窗体指针
- * @param[in] parent : 父页面
- * @param[in] max_word_cnt : 最大字数
- * @return 返回文本指针
- **/
+/**
+* @brief 创建一个文本框
+* @param[in] frm : 窗体指针
+* @param[in] parent : 父页面
+* @param[in] max_word_cnt : 最大字数
+* @return 返回文本指针
+**/
 compo_textbox_t *compo_textbox_create_for_page(compo_form_t *frm, void* page, u16 max_word_cnt)
 {
     compo_textbox_t *textbox = compo_create(frm, COMPO_TYPE_TEXTBOX);
@@ -75,43 +75,58 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
     s16 client_y = 0;
 
     rect_t textbox_rect = widget_get_location(txt);
-    if (textbox_rect.wid && align_center) {
-        if (0 == textbox_rect.hei) {   //当文本框为高度自适应且使能居中时，文本的坐标需按照左上角对齐
+    if (textbox_rect.wid && align_center)
+    {
+        if (0 == textbox_rect.hei)     //当文本框为高度自适应且使能居中时，文本的坐标需按照左上角对齐
+        {
             textbox_rect.x += textbox_rect.wid / 2;
             textbox_rect.y += rel_text_area.hei / 2;
             widget_set_pos(txt, textbox_rect.x, textbox_rect.y);
-        } else {                       //当文本框指定了高度且为多行居中时，内容上下也居中(视用户需要可屏蔽)
+        }
+        else                           //当文本框指定了高度且为多行居中时，内容上下也居中(视用户需要可屏蔽)
+        {
             u8 line_cnt = widget_text_get_line_cnt(txt);
-            if (textbox_rect.hei > rel_text_area.hei) {
-                if (line_cnt > 1 || (line_cnt <= 1 && textbox_rect.wid < rel_text_area.wid)) {
+            if (textbox_rect.hei > rel_text_area.hei)
+            {
+                if (line_cnt > 1 || (line_cnt <= 1 && textbox_rect.wid < rel_text_area.wid))
+                {
                     client_y = (textbox_rect.hei - rel_text_area.hei) >> 1;
                 }
             }
         }
     }
 
-    if (textbox->multiline && rel_textbox_area.hei < rel_text_area.hei && rel_textbox_area.hei != 0 && !widget_text_get_ellipsis(txt)) {
+    if (textbox->multiline && rel_textbox_area.hei < rel_text_area.hei && rel_textbox_area.hei != 0 && !widget_text_get_ellipsis(txt))
+    {
         textbox->roll_cb.direction = -1;
         compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_SROLL);
         widget_text_set_client(txt, 0, client_y);
 
-    } else {
-        if (rel_text_area.wid > rel_textbox_area.wid) {
+    }
+    else
+    {
+        if (rel_text_area.wid > rel_textbox_area.wid)
+        {
             textbox->roll_cb.direction = widget_text_get_right_align(txt) ? COMPO_TEXTBOX_DIR_RL : COMPO_TEXTBOX_DIR_LR;
-        } else {
+        }
+        else
+        {
             textbox->roll_cb.direction = 0;
         }
 
-        textbox->roll_cb.sta = COMPO_ROLL_STA_IDLE;
+        //textbox->roll_cb.sta = COMPO_ROLL_STA_IDLE;
 
         //未设置文本框宽度默认不滚动
-        if (rel_textbox_area.wid) {
-            if ((rel_text_area.wid > rel_textbox_area.wid)) {
+        if (rel_textbox_area.wid)
+        {
+            if ((rel_text_area.wid > rel_textbox_area.wid))
+            {
                 compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_SROLL_CIRC);
-            } else {
+            }
+            else
+            {
                 textbox->roll_cb.offset = 0;
                 compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_NULL);
-
             }
         }
 
@@ -140,9 +155,12 @@ u8 compo_textbox_get_line_cnt(compo_textbox_t *textbox)
 void compo_textbox_set_location(compo_textbox_t *textbox, s16 x, s16 y, s16 width, s16 height)
 {
     widget_set_location(textbox->txt, x, y, width, height);
-    if (0 != width && 0 != height) {
-         widget_text_set_autosize(textbox->txt, false);
-    } else {
+    if (0 != width && 0 != height)
+    {
+        widget_text_set_autosize(textbox->txt, false);
+    }
+    else
+    {
         widget_text_set_ellipsis(textbox->txt, false);
     }
 }
@@ -257,7 +275,8 @@ void compo_textbox_set_visible(compo_textbox_t *textbox, bool visible)
  **/
 void compo_textbox_set_autoroll_mode(compo_textbox_t *textbox, u8 mode)
 {
-    if ((textbox->roll_cb.mode == mode) || (textbox->multiline && mode == TEXT_AUTOROLL_MODE_SROLL_CIRC)) {
+    if ((textbox->roll_cb.mode == mode) || (textbox->multiline && mode == TEXT_AUTOROLL_MODE_SROLL_CIRC))
+    {
         return;
     }
 

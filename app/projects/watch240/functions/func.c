@@ -78,7 +78,7 @@ extern void func_set_sub_about(void);
 extern void func_set_sub_restart(void);
 extern void func_set_sub_rstfy(void);
 extern void func_set_sub_off(void);
-extern void func_set_sub_4g(void);
+//extern void func_set_sub_4g(void);
 extern void func_switching_to_menu(void);
 extern void func_volume(void);
 extern void func_activity(void);
@@ -169,7 +169,7 @@ compo_form_t *func_time_sub_custom_form_create(void);
 compo_form_t *func_set_sub_password_form_create(void);
 compo_form_t *func_password_sub_disp_form_create(void);
 compo_form_t *func_password_sub_select_form_create(void);
-compo_form_t *func_set_sub_4g_form_create(void);
+//compo_form_t *func_set_sub_4g_form_create(void);
 compo_form_t *func_set_sub_about_form_create(void);
 compo_form_t *func_set_sub_restart_form_create(void);
 compo_form_t *func_set_sub_rstfy_form_create(void);
@@ -269,7 +269,7 @@ const func_t tbl_func_create[] =
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
     {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about_form_create},
-    {FUNC_SET_SUB_4G,                   func_set_sub_4g_form_create},
+//    {FUNC_SET_SUB_4G,                   func_set_sub_4g_form_create},
     {FUNC_SET_SUB_RESTART,              func_set_sub_restart_form_create},
     {FUNC_SET_SUB_RSTFY,                func_set_sub_rstfy_form_create},
     {FUNC_SET_SUB_OFF,                  func_set_sub_off_form_create},
@@ -365,7 +365,7 @@ const func_t tbl_func_entry[] =
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp},        //设置--新密码锁设置
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select},      //设置--密码锁确认
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about},            //设置--关于
-    {FUNC_SET_SUB_4G,                   func_set_sub_4g},               //设置--4G
+//    {FUNC_SET_SUB_4G,                   func_set_sub_4g},               //设置--4G
     {FUNC_SET_SUB_RESTART,              func_set_sub_restart},          //设置--重启
     {FUNC_SET_SUB_RSTFY,                func_set_sub_rstfy},            //设置--恢复出厂
     {FUNC_SET_SUB_OFF,                  func_set_sub_off},              //设置--关机
@@ -468,7 +468,7 @@ void print_info(void)
         extern void mem_monitor_run(void);
         mem_monitor_run();
         printf("sys_cb.sco_state[%d], bt_cb.call_type[%d], bt_cb.disp_status[%d]\n", sys_cb.sco_state, bt_cb.call_type, bt_cb.disp_status);
-        extern int thread_info_printf(void);
+        extern void thread_info_printf(void);
         thread_info_printf();
     }
 }
@@ -1266,14 +1266,14 @@ void func_run(void)
     func_cb.tbl_sort[5] = FUNC_BT;
     func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = 7;
-    func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//
+    func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
     for (;;)
     {
         if(sys_cb.refresh_language_flag) //刷新语言
         {
-            func_switch_to(sys_cb.sta_old, NULL);
+            func_switch_to(sys_cb.sta_old, 0);
             sys_cb.refresh_language_flag = false;
         }
 

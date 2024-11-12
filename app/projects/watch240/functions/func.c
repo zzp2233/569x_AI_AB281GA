@@ -111,7 +111,9 @@ extern void func_pressure_explain(void);//压力说明
 extern void func_long_press(void);//关机 重启 SOS
 extern void func_ota_update(void);
 extern void func_ota_err(void);
+extern void func_ble_call(void);
 
+compo_form_t *func_ble_call_form_create(void);
 compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
 compo_form_t *func_pressure_explain_form_create(void);//压力说明
@@ -201,6 +203,7 @@ func_cb_t func_cb AT(.buf.func_cb);
 
 const func_t tbl_func_create[] =
 {
+    {FUNC_BLE_CALL,                     func_ble_call_form_create},
     {FUNC_MENU,                         func_menu_form_create},
     {FUNC_MENUSTYLE,                    NULL},
     {FUNC_CLOCK,                        func_clock_form_create},
@@ -404,7 +407,8 @@ const func_t tbl_func_entry[] =
     {FUNC_TETRIS,                       func_tetris},
     {FUNC_TETRIS_START,                 func_tetris_start},
     {FUNC_OTA_MODE,                     func_ota_update},
-    {FUNC_OTA_ERROR,                      func_ota_err},
+    {FUNC_OTA_ERROR,                    func_ota_err},
+    {FUNC_BLE_CALL,                     func_ble_call},
 };
 
 AT(.text.func.process)
@@ -1261,7 +1265,7 @@ void func_run(void)
     func_cb.tbl_sort[5] = FUNC_BT;
     func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = 7;
-    func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//
+    func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
     for (;;)

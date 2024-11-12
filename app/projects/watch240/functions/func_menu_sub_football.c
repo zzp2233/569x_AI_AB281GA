@@ -33,7 +33,7 @@ typedef struct f_menu_football_t_
 //足球图标列表(固定20项)
 static const compo_football_item_t tbl_menu_football[] =
 {
-    {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_STYLE},
+    {UI_BUF_ICON_FOOTBALL_STYLE_BIN,            FUNC_STYLE},
     {UI_BUF_ICON_FOOTBALL_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
     {UI_BUF_ICON_FOOTBALL_TIMER_BIN,            FUNC_TIMER},
     //{UI_BUF_ICON_FOOTBALL_MAP_BIN,              FUNC_MAP},
@@ -67,6 +67,7 @@ static const compo_football_item_t tbl_menu_football[] =
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_sub_football_form_create(void)
 {
+
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 

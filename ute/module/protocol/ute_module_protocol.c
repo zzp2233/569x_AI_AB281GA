@@ -26,6 +26,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_sleep.h"
 #include "ute_module_notdisturb.h"
+#include "ute_drv_gsensor_common.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -543,8 +544,6 @@ void uteModuleProtocolReadReadlTimeStepInfo(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolReadStepHistoryData(uint8_t*receive,uint8_t length)
 {
-#if 0//
-
     ute_module_systemtime_time_t time;
     memset(&time,0,sizeof(ute_module_systemtime_time_t));
     if(length>8)
@@ -557,7 +556,6 @@ void uteModuleProtocolReadStepHistoryData(uint8_t*receive,uint8_t length)
         time.sec = receive[8];
     }
     uteModuleSportStartSendStepHistoryData(time);
-#endif
 }
 
 /**
@@ -1288,7 +1286,6 @@ void uteModuleProtocolSocialAppSelectParam(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
 {
-#if 0
     ute_module_sport_sedentary_param_t param;
     memset(&param,0,sizeof(ute_module_sport_sedentary_param_t));
     if(receive[1]==0x01)
@@ -1315,7 +1312,6 @@ void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
     }
     uteModuleProfileBleSendToPhone(&receive[0],2);
     uteModuleSportSaveSedentaryParam(&param);
-#endif
 }
 /**
 *@brief       设置勿扰参数
@@ -1427,7 +1423,6 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
 {
-#if 0
     uint8_t response[10];
     int16_t xx,yy,zz,accvalue;
     uteDrvGsensorCommonGetAccXyz(&xx,&yy,&zz);
@@ -1451,7 +1446,6 @@ void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
     response[8] = (accvalue>>8)&0xff;
     response[9] = accvalue&0xff;
     uteModuleProfileBleSendToPhone(&response[0],10);
-#endif
 }
 
 /**
@@ -1476,7 +1470,7 @@ void uteModuleProtocolSetPowerOff(uint8_t*receive,uint8_t length)
     else
 #endif
     {
-        // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
     }
 }
 /**

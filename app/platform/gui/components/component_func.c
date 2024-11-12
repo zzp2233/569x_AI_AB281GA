@@ -8,8 +8,8 @@
 #define TRACE(...)
 #endif
 
-#define COMPO_TEXT_AUTOROLL_NORMAL            0							//单方向滚动后循环滚动
-#define COMPO_TEXT_AUTOROLL_LR                1							//左右回弹
+#define COMPO_TEXT_AUTOROLL_NORMAL            0                         //单方向滚动后循环滚动
+#define COMPO_TEXT_AUTOROLL_LR                1                         //左右回弹
 #define COMPO_TEXT_AUTOROLL_DIRECTION         COMPO_TEXT_AUTOROLL_NORMAL//文本滚动方向
 
 #define COMPO_TEXT_AUTOROLL_START_TICK        1000                      //文本滚动开始延时
@@ -25,12 +25,15 @@ void func_clock_butterfly_process(void);
  **/
 void *compo_getobj_byid(u16 id)
 {
-    if (id == 0) {
+    if (id == 0)
+    {
         return NULL;
     }
     component_t *compo = compo_get_head();
-    while (compo != NULL) {
-        if (compo->id == id) {
+    while (compo != NULL)
+    {
+        if (compo->id == id)
+        {
             return compo;
         }
         compo = compo_get_next(compo);          //遍历组件
@@ -56,7 +59,8 @@ void compo_update(void)
     GLOBAL_INT_RESTORE();
     func_clock_butterfly_process();
 
-    if (!rtc_update) {
+    if (!rtc_update)
+    {
         return;
     }
     compo_cb.tm = time_to_tm(rtc_cnt);
@@ -77,209 +81,222 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
     char value_str[16];
     memset(value_str, '\0', 16);
 
-    switch (compo->bond_data) {
-    case COMPO_BOND_YEAD:
-        value = tm.year;
-        sprintf(value_str, "%d", value);
-        break;
+    switch (compo->bond_data)
+    {
+        case COMPO_BOND_YEAD:
+            value = tm.year;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_MONTH:
-        value = tm.mon;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_MONTH:
+            value = tm.mon;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_DAY:
-        value = tm.day;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_DAY:
+            value = tm.day;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_WEEKDAY:
-        value = tm.weekday;
-        sprintf(value_str, "%d", value);
-        strcpy(value_str, i18n[STR_SUNDAY + value]);
-        break;
+        case COMPO_BOND_WEEKDAY:
+            value = tm.weekday;
+            sprintf(value_str, "%d", value);
+            strcpy(value_str, i18n[STR_SUNDAY + value]);
+            break;
 
-    case COMPO_BOND_HOUR:
-        value = tm.hour;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_HOUR:
+            value = tm.hour;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_MINUTE:
-        value = tm.min;
-        sprintf(value_str, "%02d", value);
-        break;
+        case COMPO_BOND_MINUTE:
+            value = tm.min;
+            sprintf(value_str, "%02d", value);
+            break;
 
-    case COMPO_BOND_HOUR_H:
-        value = tm.hour / 10;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_HOUR_H:
+            value = tm.hour / 10;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_HOUR_L:
-        value = tm.hour % 10;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_HOUR_L:
+            value = tm.hour % 10;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_MINUTE_H:
-        value = tm.min / 10;
-        sprintf(value_str, "%02d", value);
-        break;
+        case COMPO_BOND_MINUTE_H:
+            value = tm.min / 10;
+            sprintf(value_str, "%02d", value);
+            break;
 
-    case COMPO_BOND_MINUTE_L:
-        value = tm.min % 10;
-        sprintf(value_str, "%02d", value);
-        break;
+        case COMPO_BOND_MINUTE_L:
+            value = tm.min % 10;
+            sprintf(value_str, "%02d", value);
+            break;
 
-    case COMPO_BOND_SECOND:
-        value = tm.sec;
-        sprintf(value_str, "%02d", value);
-        break;
+        case COMPO_BOND_SECOND:
+            value = tm.sec;
+            sprintf(value_str, "%02d", value);
+            break;
 
-    case COMPO_BOND_DATE:
-        value = tm.mon * 100 + tm.day;
-        sprintf(value_str, "%02d/%02d", tm.mon, tm.day);
-        break;
-
-
-    case COMPO_BOND_IMAGE_WEATHER:
-        value = sys_cb.weather_idx;
-        sprintf(value_str, "%d", value);
-        break;
-
-    case COMPO_BOND_BLE_STA:
-        value = !ble_is_connected();
-        sprintf(value_str, "%d", value);
-        break;
-
-    case COMPO_BOND_BT_STA:
-        value = !bt_is_connected();
-        sprintf(value_str, "%d", value);
-        break;
-
-    case COMPO_BOND_BTBLE_STA:
-        //0-3:BTBLE,BT,BLE,NULL
-        value = ((!bt_is_connected()) << 1) | (!ble_is_connect());
-        sprintf(value_str, "%d", value);
-        break;
-
-    case COMPO_BOND_DISTANCE_PROGRESS:
-        value = 0;
-        if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.distance_goal) {
-            value = ((compo_picturebox_t*)compo)->radix * sys_cb.distance_cur / sys_cb.distance_goal;
-            value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
-        }
-        sprintf(value_str, "%d", value);
-        break;
-
-    case COMPO_BOND_KCAL_PROGRESS:
-        value = 0;
-        if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.kcal_goal) {
-            value = ((compo_picturebox_t*)compo)->radix * sys_cb.kcal_cur / sys_cb.kcal_goal;
-            value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
-        }
-        sprintf(value_str, "%d", value);
-        break;
-
-    case COMPO_BOND_STEPS_PROGRESS:
-        value = 0;
-        if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.step_goal) {
-            value = ((compo_picturebox_t*)compo)->radix * sys_cb.step_cur / sys_cb.step_goal;
-            value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
-        }
-        sprintf(value_str, "%d", value);
-        break;
-
-    case COMPO_BOND_VBAT_PROGRESS:
-        value = 0;
-        if (compo->type == COMPO_TYPE_PICTUREBOX) {
-            value = ((compo_picturebox_t*)compo)->radix * sys_cb.vbat_percent / 100;
-            value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
-        }
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_DATE:
+            value = tm.mon * 100 + tm.day;
+            sprintf(value_str, "%02d/%02d", tm.mon, tm.day);
+            break;
 
 
-    case COMPO_BOND_KCAL:
-        value = 0;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_IMAGE_WEATHER:
+            value = sys_cb.weather_idx;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_STEP:
-        value = 0;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_BLE_STA:
+            value = !ble_is_connected();
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_HEARTRATE:
-        value = 0;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_BT_STA:
+            value = !bt_is_connected();
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_BLOOD_OXYGEN:
-        value = 0;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_BTBLE_STA:
+            //0-3:BTBLE,BT,BLE,NULL
+            value = ((!bt_is_connected()) << 1) | (!ble_is_connect());
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_BLOOD_SUGER:
-        value = 0;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_DISTANCE_PROGRESS:
+            value = 0;
+            if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.distance_goal)
+            {
+                value = ((compo_picturebox_t*)compo)->radix * sys_cb.distance_cur / sys_cb.distance_goal;
+                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
+            }
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_WEATHER:
-        value = sys_cb.weather_idx;
-        sprintf(value_str, "%s", i18n[STR_CLOUDY + value]);
-        break;
+        case COMPO_BOND_KCAL_PROGRESS:
+            value = 0;
+            if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.kcal_goal)
+            {
+                value = ((compo_picturebox_t*)compo)->radix * sys_cb.kcal_cur / sys_cb.kcal_goal;
+                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
+            }
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_ATMOMS:
-        value = 0;
-        sprintf(value_str, "%d", value);
-        break;
+        case COMPO_BOND_STEPS_PROGRESS:
+            value = 0;
+            if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.step_goal)
+            {
+                value = ((compo_picturebox_t*)compo)->radix * sys_cb.step_cur / sys_cb.step_goal;
+                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
+            }
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_TEMPERATURE:
-        value = (sys_cb.temperature[0] + sys_cb.temperature[1] + 1) / 2;  //平均温度
-        sprintf(value_str, "%d~%d℃", sys_cb.temperature[0], sys_cb.temperature[1]);  //温度范围
-        break;
+        case COMPO_BOND_VBAT_PROGRESS:
+            value = 0;
+            if (compo->type == COMPO_TYPE_PICTUREBOX)
+            {
+                value = ((compo_picturebox_t*)compo)->radix * sys_cb.vbat_percent / 100;
+                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
+            }
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_ALTITUDE:
-        value = 0;
-        sprintf(value_str, "%d", value);
-        break;
 
-    case COMPO_BOND_BATTERY:
-        value = sys_cb.vbat_percent;
-        sprintf(value_str, "%d%%", value);
-        break;
+        case COMPO_BOND_KCAL:
+            value = 0;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_TEMPERATURE_UNIT:
-        value = 0;              //0:℃ 1:℉
-        //strcpy(value_str, i18n[STR_CELSIUS + value]);
-        break;
+        case COMPO_BOND_STEP:
+            value = 0;
+            sprintf(value_str, "%d", value);
+            break;
 
-    case COMPO_BOND_DISTANCE_UNIT:
-        value = 0;              //0:km 1:mile
-        //strcpy(value_str, i18n[STR_KM + value]);
-        break;
+        case COMPO_BOND_HEARTRATE:
+            value = 0;
+            sprintf(value_str, "%d", value);
+            break;
 
-    default:
-        flag_update = false;
-        break;
+        case COMPO_BOND_BLOOD_OXYGEN:
+            value = 0;
+            sprintf(value_str, "%d", value);
+            break;
+
+        case COMPO_BOND_BLOOD_SUGER:
+            value = 0;
+            sprintf(value_str, "%d", value);
+            break;
+
+        case COMPO_BOND_WEATHER:
+            value = sys_cb.weather_idx;
+            sprintf(value_str, "%s", i18n[STR_CLOUDY + value]);
+            break;
+
+        case COMPO_BOND_ATMOMS:
+            value = 0;
+            sprintf(value_str, "%d", value);
+            break;
+
+        case COMPO_BOND_TEMPERATURE:
+            value = (sys_cb.temperature[0] + sys_cb.temperature[1] + 1) / 2;  //平均温度
+            sprintf(value_str, "%d~%d℃", sys_cb.temperature[0], sys_cb.temperature[1]);  //温度范围
+            break;
+
+        case COMPO_BOND_ALTITUDE:
+            value = 0;
+            sprintf(value_str, "%d", value);
+            break;
+
+        case COMPO_BOND_BATTERY:
+            value = sys_cb.vbat_percent;
+            sprintf(value_str, "%d%%", value);
+            break;
+
+        case COMPO_BOND_TEMPERATURE_UNIT:
+            value = 0;              //0:℃ 1:℉
+            //strcpy(value_str, i18n[STR_CELSIUS + value]);
+            break;
+
+        case COMPO_BOND_DISTANCE_UNIT:
+            value = 0;              //0:km 1:mile
+            //strcpy(value_str, i18n[STR_KM + value]);
+            break;
+
+        default:
+            flag_update = false;
+            break;
     }
 
-    if (flag_update) {
+    if (flag_update)
+    {
 //        printf("bond_data:%d, type:%d, value:%d\n", compo->bond_data, compo->type, value);
-        if (compo->type == COMPO_TYPE_NUMBER) {
+        if (compo->type == COMPO_TYPE_NUMBER)
+        {
             compo_number_t *num = (compo_number_t *)compo;
-            if (num->num_part) {
-                if (num->num_part > 1) {
+            if (num->num_part)
+            {
+                if (num->num_part > 1)
+                {
                     value /= soft_pow(10, num->num_part - 1);
                 }
                 value %= 10;
             }
             compo_number_set(num, value);
             compo_number_set_visible(num, true);
-        } else if (compo->type == COMPO_TYPE_TEXTBOX) {
+        }
+        else if (compo->type == COMPO_TYPE_TEXTBOX)
+        {
             compo_textbox_t *txt = (compo_textbox_t *)compo;
             compo_textbox_set(txt, value_str);
             compo_textbox_set_visible(txt, true);
-        } else if (compo->type == COMPO_TYPE_PICTUREBOX) {
+        }
+        else if (compo->type == COMPO_TYPE_PICTUREBOX)
+        {
             compo_picturebox_t *pic = (compo_picturebox_t *)compo;
             compo_picturebox_cut(pic, value, pic->radix);
             compo_picturebox_set_visible(pic, true);
@@ -296,7 +313,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
  **/
 static void compo_set_roll(compo_roll_cb_t *rcb, widget_text_t *txt, bool multiline)
 {
-    if (!rcb->mode && !rcb->is_drag) {
+    if (!rcb->mode && !rcb->is_drag)
+    {
         return;
     }
 
@@ -314,132 +332,181 @@ static void compo_set_roll(compo_roll_cb_t *rcb, widget_text_t *txt, bool multil
 
 
     flag_drag = ctp_get_dxy(&dx, &dy);
-    if (flag_drag) {    //按下
+    if (flag_drag)      //按下
+    {
 
-    } else {        //抬起
+    }
+    else            //抬起
+    {
         ddy = rcb->offset;
     }
 
-    switch (rcb->sta) {
-    case COMPO_ROLL_STA_IDLE:
-        if (flag_drag && rcb->is_drag && multiline) {           //多行显示可拖拽
-            rcb->tick = tick_get();
-            rcb->sta = COMPO_ROLL_STA_ROLL;
-        } else if (tick_check_expire(rcb->tick, COMPO_TEXT_AUTOROLL_START_TICK)) {
-            rcb->tick = tick_get();
-            rcb->sta = COMPO_ROLL_STA_ROLL;
-        }
-        break;
-
-    case COMPO_ROLL_STA_ROLL:
-        if (flag_drag && rcb->is_drag && multiline) {           //多行显示可拖拽
-            rcb->tick = tick_get();
-            rcb->offset = ddy + dy;
-            if (rcb->offset > 0) {
-                rcb->offset = 0;
-            } else if (rcb->offset < end_hei - rel_text_area.hei) {
-                rcb->offset = end_hei - rel_text_area.hei;
+    switch (rcb->sta)
+    {
+        case COMPO_ROLL_STA_IDLE:
+            if (flag_drag && rcb->is_drag && multiline)             //多行显示可拖拽
+            {
+                rcb->tick = tick_get();
+                rcb->sta = COMPO_ROLL_STA_ROLL;
             }
-            widget_text_set_client(txt, client_x, rcb->offset);
-        } else if (tick_check_expire(rcb->tick, COMPO_TEXT_AUTOROLL_TICK)) {
-            rcb->tick = tick_get();
-            if (rcb->mode) {
-                rcb->offset += rcb->direction;
+            else if (tick_check_expire(rcb->tick, COMPO_TEXT_AUTOROLL_START_TICK))
+            {
+                rcb->tick = tick_get();
+                rcb->sta = COMPO_ROLL_STA_ROLL;
             }
-            if (multiline) {
-                if (rel_text_area.hei + rcb->offset <= end_hei) {
-                    rcb->sta = COMPO_ROLL_STA_STOP;
-                }
-                widget_text_set_client(txt, client_x, rcb->offset);
+            break;
 
-            } else {
-                int end_wid = 0;
-				rel_text_area.wid = align_center ? rel_text_area.wid / 2 : rel_text_area.wid;  //文本居中时，宽度需要/2，防止滚完导致C208蓝屏
-                if (txt_directoion) {
-#if COMPO_TEXT_AUTOROLL_DIRECTION
-                    end_wid = rel_textbox_area.wid * 1 / 3;
-                    if ((rcb->offset <= -(rel_text_area.wid * 1 / 3 + end_wid)) || (rcb->offset >= end_wid)) {
-                        rcb->direction = -rcb->direction;
-                    }
-#else
-                    if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC) {
-                        end_wid = 0;
-                    } else if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL) {
-                        end_wid = rel_text_area.wid;
-                        if (rel_textbox_area.wid < rel_text_area.wid / 3) {
-                            end_wid += (rel_text_area.wid / 3 - rel_textbox_area.wid);
-                        }
-                    }
-
-                    if (rcb->offset > end_wid) {
-                        if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC) {
-							rcb->offset = -(rel_text_area.wid * (1 + align_center)  + circ_pixel);
-						} else if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL) {
-                            rcb->sta = COMPO_ROLL_STA_STOP;
-						}
-                    }
-#endif
-                } else {
-#if COMPO_TEXT_AUTOROLL_DIRECTION
-                    end_wid = rel_textbox_area.wid * 1 / 3;
-                    if ((rcb->offset <= -(rel_text_area.wid * 1 / 3 + end_wid)) || (rcb->offset >= end_wid)) {
-                        rcb->direction = -rcb->direction;
-                    }
-#else
-                    s16 circ_end_wid = align_center ? (rel_text_area.wid * 2 + circ_pixel) : (rel_text_area.wid + circ_pixel);
-                    if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC) {
-                        end_wid = circ_end_wid;
-                    } else if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL) {
-                        end_wid = rel_text_area.wid * 2 / 3;
-                    }
-
-                    if (rel_textbox_area.wid < rel_text_area.wid / 3) {
-                        end_wid += (rel_text_area.wid / 3 - rel_textbox_area.wid);
-                    }
-                    if (rcb->offset < -end_wid) {
-						if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC) {
-							rcb->offset = 0;
-						} else if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL){
-                          rcb->sta = COMPO_ROLL_STA_STOP;
-						}
-
-                    }
-#endif
-                }
-                widget_text_set_client(txt, rcb->offset, client_y);
-            }
-        }
-        break;
-
-    case COMPO_ROLL_STA_STOP:
-        if (flag_drag && rcb->is_drag && multiline) {               //多行显示可拖拽
-            rcb->tick = tick_get();
-            rcb->sta = COMPO_ROLL_STA_ROLL;
-        } else if (tick_check_expire(rcb->tick, COMPO_TEXT_AUTOROLL_STOP_TICK)) {
-            rcb->tick = tick_get();
-            rcb->sta = COMPO_ROLL_STA_IDLE;
-            if (multiline) {
-                rcb->offset = 0;
-                widget_text_set_client(txt, client_x, rcb->offset);
-            } else {
-                rcb->offset = (txt_directoion && rcb->mode) ?  -rel_text_area.wid : 0;
-                if (txt_directoion && (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC)) {
-                    rcb->offset = -rel_text_area.wid;
-                    //居中对齐且存在滚动时从最左边开始滚动
-                    if ( widget_get_align_center(txt)) {
-                        rcb->offset = (rel_text_area.wid - rel_textbox_area.wid) / 2;
-                    }
-                } else {
+        case COMPO_ROLL_STA_ROLL:
+            if (flag_drag && rcb->is_drag && multiline)             //多行显示可拖拽
+            {
+                rcb->tick = tick_get();
+                rcb->offset = ddy + dy;
+                if (rcb->offset > 0)
+                {
                     rcb->offset = 0;
                 }
-                widget_text_set_client(txt, rcb->offset, client_y);
+                else if (rcb->offset < end_hei - rel_text_area.hei)
+                {
+                    rcb->offset = end_hei - rel_text_area.hei;
+                }
+                widget_text_set_client(txt, client_x, rcb->offset);
             }
-        }
-        break;
+            else if (tick_check_expire(rcb->tick, COMPO_TEXT_AUTOROLL_TICK))
+            {
+                rcb->tick = tick_get();
+                if (rcb->mode)
+                {
+                    rcb->offset += rcb->direction;
+                }
+                if (multiline)
+                {
+                    if (rel_text_area.hei + rcb->offset <= end_hei)
+                    {
+                        rcb->sta = COMPO_ROLL_STA_STOP;
+                    }
+                    widget_text_set_client(txt, client_x, rcb->offset);
 
-    default:
-        halt(HALT_GUI_COMPO_ROLL);
-        break;
+                }
+                else
+                {
+                    int end_wid = 0;
+                    rel_text_area.wid = align_center ? rel_text_area.wid / 2 : rel_text_area.wid;  //文本居中时，宽度需要/2，防止滚完导致C208蓝屏
+                    if (txt_directoion)
+                    {
+#if COMPO_TEXT_AUTOROLL_DIRECTION
+                        end_wid = rel_textbox_area.wid * 1 / 3;
+                        if ((rcb->offset <= -(rel_text_area.wid * 1 / 3 + end_wid)) || (rcb->offset >= end_wid))
+                        {
+                            rcb->direction = -rcb->direction;
+                        }
+#else
+                        if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC)
+                        {
+                            end_wid = 0;
+                        }
+                        else if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL)
+                        {
+                            end_wid = rel_text_area.wid;
+                            if (rel_textbox_area.wid < rel_text_area.wid / 3)
+                            {
+                                end_wid += (rel_text_area.wid / 3 - rel_textbox_area.wid);
+                            }
+                        }
+
+                        if (rcb->offset > end_wid)
+                        {
+                            if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC)
+                            {
+                                rcb->offset = -(rel_text_area.wid * (1 + align_center)  + circ_pixel);
+                            }
+                            else if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL)
+                            {
+                                rcb->sta = COMPO_ROLL_STA_STOP;
+                            }
+                        }
+#endif
+                    }
+                    else
+                    {
+#if COMPO_TEXT_AUTOROLL_DIRECTION
+                        end_wid = rel_textbox_area.wid * 1 / 3;
+                        if ((rcb->offset <= -(rel_text_area.wid * 1 / 3 + end_wid)) || (rcb->offset >= end_wid))
+                        {
+                            rcb->direction = -rcb->direction;
+                        }
+#else
+                        s16 circ_end_wid = align_center ? (rel_text_area.wid * 2 + circ_pixel) : (rel_text_area.wid + circ_pixel);
+                        if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC)
+                        {
+                            end_wid = circ_end_wid;
+                        }
+                        else if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL)
+                        {
+                            end_wid = rel_text_area.wid * 2 / 3;
+                        }
+
+                        if (rel_textbox_area.wid < rel_text_area.wid / 3)
+                        {
+                            end_wid += (rel_text_area.wid / 3 - rel_textbox_area.wid);
+                        }
+                        if (rcb->offset < -end_wid)
+                        {
+                            if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC)
+                            {
+                                rcb->offset = 0;
+                            }
+                            else if (rcb->mode == TEXT_AUTOROLL_MODE_SROLL)
+                            {
+                                rcb->sta = COMPO_ROLL_STA_STOP;
+                            }
+
+                        }
+#endif
+                    }
+                    widget_text_set_client(txt, rcb->offset, client_y);
+                }
+            }
+            break;
+
+        case COMPO_ROLL_STA_STOP:
+            if (flag_drag && rcb->is_drag && multiline)                 //多行显示可拖拽
+            {
+                rcb->tick = tick_get();
+                rcb->sta = COMPO_ROLL_STA_ROLL;
+            }
+            else if (tick_check_expire(rcb->tick, COMPO_TEXT_AUTOROLL_STOP_TICK))
+            {
+                rcb->tick = tick_get();
+                rcb->sta = COMPO_ROLL_STA_IDLE;
+                if (multiline)
+                {
+                    rcb->offset = 0;
+                    widget_text_set_client(txt, client_x, rcb->offset);
+                }
+                else
+                {
+                    rcb->offset = (txt_directoion && rcb->mode) ?  -rel_text_area.wid : 0;
+                    if (txt_directoion && (rcb->mode == TEXT_AUTOROLL_MODE_SROLL_CIRC))
+                    {
+                        rcb->offset = -rel_text_area.wid;
+                        //居中对齐且存在滚动时从最左边开始滚动
+                        if ( widget_get_align_center(txt))
+                        {
+                            rcb->offset = (rel_text_area.wid - rel_textbox_area.wid) / 2;
+                        }
+                    }
+                    else
+                    {
+                        rcb->offset = 0;
+                    }
+                    widget_text_set_client(txt, rcb->offset, client_y);
+                }
+            }
+            break;
+
+        default:
+            halt(HALT_GUI_COMPO_ROLL);
+            break;
     }
 }
 
@@ -461,28 +528,32 @@ void compo_set_update(tm_t tm, u16 mtime)
     //angle_s = tm.sec * 60 + mtime * 6 / 100 - 900;              //按实际ms
 
     //printf("%d %d %d\n", angle_h, angle_m, angle_s);
-    while (compo != NULL) {
-        switch (compo->type) {
-        case COMPO_TYPE_DATETIME:
+    while (compo != NULL)
+    {
+        switch (compo->type)
+        {
+            case COMPO_TYPE_DATETIME:
             {
                 s16 angle = 0;
-                switch (compo->bond_data) {
-                case COMPO_BOND_HOUR:
-                    angle = angle_h;
-                    break;
+                switch (compo->bond_data)
+                {
+                    case COMPO_BOND_HOUR:
+                        angle = angle_h;
+                        break;
 
-                case COMPO_BOND_MINUTE:
-                    angle = angle_m;
-                    break;
+                    case COMPO_BOND_MINUTE:
+                        angle = angle_m;
+                        break;
 
-                case COMPO_BOND_SECOND:
-                    angle = angle_s;
-                    break;
+                    case COMPO_BOND_SECOND:
+                        angle = angle_s;
+                        break;
 
-                default:
-                    break;
+                    default:
+                        break;
                 }
-                if (angle) {
+                if (angle)
+                {
                     compo_datetime_t *dtime = (compo_datetime_t *)compo;
                     angle -= dtime->start_angle;
                     angle = dtime->anticlockwise ? (3600 - angle) : angle;
@@ -491,167 +562,222 @@ void compo_set_update(tm_t tm, u16 mtime)
             }
             break;
 
-        case COMPO_TYPE_ICONLIST:
+            case COMPO_TYPE_ICONLIST:
             {
                 s16 angle = 0;
                 compo_iconlist_t *iconlist = (compo_iconlist_t *)compo;
-                if (iconlist->hour != NULL) {
+                if (iconlist->hour != NULL)
+                {
                     angle = angle_h - iconlist->start_angle;
                     widget_image_set_rotation(iconlist->hour, angle);
                 }
-                if (iconlist->min != NULL) {
+                if (iconlist->min != NULL)
+                {
                     angle = angle_m - iconlist->start_angle;
                     widget_image_set_rotation(iconlist->min, angle);
                 }
-                if (iconlist->sec != NULL) {
+                if (iconlist->sec != NULL)
+                {
                     angle = angle_s - iconlist->start_angle;
                     widget_image_set_rotation(iconlist->sec, angle);
                 }
-                if (iconlist->page_time != NULL) {
+                if (iconlist->page_time != NULL)
+                {
                     //同步时钟图标Alpha值
-                    widget_set_alpha(iconlist->page_time , widget_get_alpha(iconlist->time_bg));
+                    widget_set_alpha(iconlist->page_time, widget_get_alpha(iconlist->time_bg));
                 }
             }
             break;
 
-        case COMPO_TYPE_LISTBOX:
+            case COMPO_TYPE_LISTBOX:
             {
                 compo_listbox_t *listbox = (compo_listbox_t *)compo;
                 int i;
-                for (i=0; i<LISTBOX_ITEM_CNT; i++) {
+                for (i=0; i<LISTBOX_ITEM_CNT; i++)
+                {
                     compo_set_roll(&listbox->roll_cb[i], listbox->item_text[i], false);     //滚动
                 }
 
                 s16 angle = 0;
-                if (listbox->hour != NULL) {
+                if (listbox->hour != NULL)
+                {
                     angle = angle_h - listbox->start_angle;
                     widget_image_set_rotation(listbox->hour, angle);
                 }
-                if (listbox->min != NULL) {
+                if (listbox->min != NULL)
+                {
                     angle = angle_m - listbox->start_angle;
                     widget_image_set_rotation(listbox->min, angle);
                 }
-                if (listbox->sec != NULL) {
+                if (listbox->sec != NULL)
+                {
                     angle = angle_s - listbox->start_angle;
                     widget_image_set_rotation(listbox->sec, angle);
                 }
-                if (listbox->page_time != NULL && listbox->time_bg != NULL) {
+                if (listbox->page_time != NULL && listbox->time_bg != NULL)
+                {
                     //同步时钟图标Alpha值
-                    widget_set_alpha(listbox->page_time , widget_get_alpha(listbox->time_bg));
+                    widget_set_alpha(listbox->page_time, widget_get_alpha(listbox->time_bg));
                 }
 
             }
             break;
 
-        case COMPO_TYPE_FORM:
+//        case COMPO_TYPE_DISKLIST:
+//            {
+//                compo_disklist_t *disklist = (compo_disklist_t *)compo;
+//                int i;
+//                for (i=0; i<DISKLIST_ITEM_CNT; i++) {
+//                    compo_set_roll(&disklist->roll_cb[i], disklist->item_text[i], false);     //滚动
+//                }
+//            }
+//            break;
+
+//        case COMPO_TYPE_CARDBOX:
+//            {
+//                compo_cardbox_t *cardbox = (compo_cardbox_t *)compo;
+//                if (cardbox->text[0]) {
+//                    compo_set_roll(&cardbox->roll_cb, cardbox->text[0], false);     //滚动
+//                }
+//            }
+//            break;
+
+            case COMPO_TYPE_FORM:
             {
                 compo_form_t *frm = (compo_form_t *)compo;
-                if (widget_get_visble(frm->time)) {
+                if (widget_get_visble(frm->time))
+                {
                     sprintf(time_str, "%02d:%02d", tm.hour, tm.min);
                     widget_text_set(frm->time, time_str);
                 }
             }
             break;
 
-        case COMPO_TYPE_NUMBER:
-        case COMPO_TYPE_PICTUREBOX:
-            compo_set_bonddata(compo, tm);
-            break;
+            case COMPO_TYPE_NUMBER:
+            case COMPO_TYPE_PICTUREBOX:
+                compo_set_bonddata(compo, tm);
+                break;
 
-        case COMPO_TYPE_TEXTBOX:
-            compo_set_bonddata(compo, tm);                                                  //设置绑定数据
-            compo_textbox_t *textbox = (compo_textbox_t *)compo;
-            compo_set_roll(&textbox->roll_cb, textbox->txt, textbox->multiline);            //滚动
-            break;
+            case COMPO_TYPE_TEXTBOX:
+                compo_set_bonddata(compo, tm);                                                  //设置绑定数据
+                compo_textbox_t *textbox = (compo_textbox_t *)compo;
+                compo_set_roll(&textbox->roll_cb, textbox->txt, textbox->multiline);            //滚动
+                break;
 
-        case COMPO_TYPE_ANIMATION:
-            compo_animation_process((compo_animation_t *)compo);
-            break;
+            case COMPO_TYPE_ANIMATION:
+                compo_animation_process((compo_animation_t *)compo);
+                break;
 
-        case COMPO_TYPE_RINGS:
+            case COMPO_TYPE_RINGS:
             {
                 s16 angle = 0;
                 compo_rings_t *rings = (compo_rings_t *)compo;
-                if (rings->time0.hour != NULL) {
+                if (rings->time0.hour != NULL)
+                {
                     angle = angle_h - rings->time0.start_angle;
                     widget_image_set_rotation(rings->time0.hour, angle);
                 }
-                if (rings->time0.min != NULL) {
+                if (rings->time0.min != NULL)
+                {
                     angle = angle_m - rings->time0.start_angle;
                     widget_image_set_rotation(rings->time0.min, angle);
                 }
-                if (rings->time0.sec != NULL) {
+                if (rings->time0.sec != NULL)
+                {
                     angle = angle_s - rings->time0.start_angle;
                     widget_image_set_rotation(rings->time0.sec, angle);
                 }
-                if (rings->time0.page_time != NULL && rings->time0.time_bg != NULL) {
-                    widget_set_alpha(rings->time0.page_time , widget_get_alpha(rings->time0.time_bg));
+                if (rings->time0.page_time != NULL && rings->time0.time_bg != NULL)
+                {
+                    widget_set_alpha(rings->time0.page_time, widget_get_alpha(rings->time0.time_bg));
                 }
-                if (rings->time1.hour != NULL) {
+                if (rings->time1.hour != NULL)
+                {
                     angle = angle_h - rings->time1.start_angle;
                     widget_image_set_rotation(rings->time1.hour, angle);
                 }
-                if (rings->time1.min != NULL) {
+                if (rings->time1.min != NULL)
+                {
                     angle = angle_m - rings->time1.start_angle;
                     widget_image_set_rotation(rings->time1.min, angle);
                 }
-                if (rings->time1.sec != NULL) {
+                if (rings->time1.sec != NULL)
+                {
                     angle = angle_s - rings->time1.start_angle;
                     widget_image_set_rotation(rings->time1.sec, angle);
                 }
-                if (rings->time1.page_time != NULL && rings->time1.time_bg != NULL) {
-                    widget_set_alpha(rings->time1.page_time , widget_get_alpha(rings->time1.time_bg));
+                if (rings->time1.page_time != NULL && rings->time1.time_bg != NULL)
+                {
+                    widget_set_alpha(rings->time1.page_time, widget_get_alpha(rings->time1.time_bg));
                 }
             }
             break;
 
-		case COMPO_TYPE_KALEIDOSCOPE:
+            case COMPO_TYPE_KALEIDOSCOPE:
             {
                 s16 angle = 0;
                 compo_kaleidoscope_t *kale = (compo_kaleidoscope_t *)compo;
-                if (kale->hour != NULL) {
+                if (kale->hour != NULL)
+                {
                     angle = angle_h - kale->start_angle;
                     widget_image_set_rotation(kale->hour, angle);
                 }
-                if (kale->min != NULL) {
+                if (kale->min != NULL)
+                {
                     angle = angle_m - kale->start_angle;
                     widget_image_set_rotation(kale->min, angle);
                 }
-                if (kale->sec != NULL) {
+                if (kale->sec != NULL)
+                {
                     angle = angle_s - kale->start_angle;
                     widget_image_set_rotation(kale->sec, angle);
                 }
-                if (kale->page_time != NULL) {
+                if (kale->page_time != NULL)
+                {
                     //同步时钟图标Alpha值
-                    widget_set_alpha(kale->page_time , widget_get_alpha(kale->time_bg));
+                    widget_set_alpha(kale->page_time, widget_get_alpha(kale->time_bg));
                 }
             }
             break;
 
-        case COMPO_TYPE_DISKLIST:
+            case COMPO_TYPE_DISKLIST:
+            {
+                compo_disklist_t *disklist = (compo_disklist_t *)compo;
+                int i;
+                for (i=0; i<DISKLIST_ITEM_CNT; i++)
+                {
+                    compo_set_roll(&disklist->roll_cb[i], disklist->item_text[i], false);     //滚动
+                }
+            }
+
             {
                 s16 angle = 0;
                 compo_disklist_t *disk = (compo_disklist_t*)compo;
-                if (disk->hour != NULL) {
+                if (disk->hour != NULL)
+                {
                     angle = angle_h - disk->start_angle;
-                        widget_image_set_rotation(disk->hour, angle);
-                    }
-                    if (disk->min != NULL) {
-                        angle = angle_m - disk->start_angle;
-                        widget_image_set_rotation(disk->min, angle);
-                    }
-                    if (disk->sec != NULL) {
-                        angle = angle_s - disk->start_angle;
-                        widget_image_set_rotation(disk->sec, angle);
-                    }
-                    if (disk->page_time != NULL && disk->time_bg != NULL) {
-                        widget_set_alpha(disk->page_time, widget_get_alpha(disk->time_bg));
+                    widget_image_set_rotation(disk->hour, angle);
+                }
+                if (disk->min != NULL)
+                {
+                    angle = angle_m - disk->start_angle;
+                    widget_image_set_rotation(disk->min, angle);
+                }
+                if (disk->sec != NULL)
+                {
+                    angle = angle_s - disk->start_angle;
+                    widget_image_set_rotation(disk->sec, angle);
+                }
+                if (disk->page_time != NULL && disk->time_bg != NULL)
+                {
+                    widget_set_alpha(disk->page_time, widget_get_alpha(disk->time_bg));
                 }
             }
+
             break;
 
-        default:
-            break;
+            default:
+                break;
         }
         compo = compo_get_next(compo);                                                      //遍历组件
     }
@@ -664,11 +790,14 @@ int compo_get_button_id(void)
 {
     point_t pt = ctp_get_sxy();
     component_t *compo = (component_t *)compo_pool_get_top();
-    while (compo != NULL) {
-        if (compo->type == COMPO_TYPE_BUTTON) {
+    while (compo != NULL)
+    {
+        if (compo->type == COMPO_TYPE_BUTTON)
+        {
             compo_button_t *btn = (compo_button_t *)compo;
             rect_t rect = widget_get_absolute(btn->widget);
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei) {
+            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+            {
                 return btn->id;
             }
         }

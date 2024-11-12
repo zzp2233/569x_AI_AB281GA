@@ -3,6 +3,7 @@
 #include "func.h"
 #include "func_clock.h"
 #include "ute_module_sport.h"
+#include "ute_module_sleep.h"
 
 #define TRACE_EN    0
 
@@ -282,6 +283,9 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
     uint16_t KM = uteModuleSportGetCurrDayDistanceData();
 
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+
     //关机&语音助手
     cardbox = compo_cardbox_create(frm, 2, 2, 2, CARD_WIDTH_ORG, POWEROFF_BG_H);
     compo_setid(cardbox, COMPO_ID_CARD_POWEROFF_ASSISTANT);
@@ -325,19 +329,24 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_SLEEP_LIGHT_SLEEP_BIN);
     compo_cardbox_icon_set_location(cardbox, 1, SLEEP_ICON_LIGHT_X, SLEEP_ICON_LIGHT_Y, SLEEP_ICON_LIGHT_W, SLEEP_ICON_LIGHT_H);
     compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 0, "07:36");    //总时长--------->>>todo
+    snprintf(txt_buf, sizeof(txt_buf), "%02d:%02d", sleep_data->totalSleepMin/60,sleep_data->totalSleepMin%60);///* 总睡眠小时*/
+    compo_cardbox_text_set(cardbox, 0, txt_buf);    //总时长--------->>>todo
     compo_cardbox_text_set_location(cardbox, 0, SLEEP_TOTAL_X, SLEEP_TOTAL_Y, SLEEP_TOTAL_W, SLEEP_TOTAL_H);
 //    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 1, "02h");      //深睡时长hour--------->>>todo
+    snprintf(txt_buf, sizeof(txt_buf), "%02dh", sleep_data->deepSleepMin/60);///* 深睡小时数据*/
+    compo_cardbox_text_set(cardbox, 1, txt_buf);      //深睡时长hour--------->>>todo
     compo_cardbox_text_set_location(cardbox, 1, SLEEP_DEEP_H_X, SLEEP_DEEP_H_Y, SLEEP_DEEP_H_W, SLEEP_DEEP_H_H);
 //    compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 2, "07m");      //深睡时长min--------->>>todo
+    snprintf(txt_buf, sizeof(txt_buf), "%02dm",sleep_data->deepSleepMin%60);///* 深睡小时数据*/
+    compo_cardbox_text_set(cardbox, 2, txt_buf);      //深睡时长min--------->>>todo
     compo_cardbox_text_set_location(cardbox, 2, SLEEP_DEEP_M_X, SLEEP_DEEP_M_Y, SLEEP_DEEP_M_W, SLEEP_DEEP_M_H);
 //    compo_cardbox_text_set_font(cardbox, 3, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 3, "05h");      //浅睡时长hour--------->>>todo
+    snprintf(txt_buf, sizeof(txt_buf), "%02dh", sleep_data->lightSleepMin/60);///* 浅睡小时数据*/
+    compo_cardbox_text_set(cardbox, 3, txt_buf);      //浅睡时长hour--------->>>todo
     compo_cardbox_text_set_location(cardbox, 3, SLEEP_LIGHT_H_X, SLEEP_LIGHT_H_Y, SLEEP_LIGHT_H_W, SLEEP_LIGHT_H_H);
 //    compo_cardbox_text_set_font(cardbox, 4, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 4, "29m");      //浅睡时长min--------->>>todo
+    snprintf(txt_buf, sizeof(txt_buf), "%02dm", sleep_data->lightSleepMin%60);///* 浅睡小时数据*/
+    compo_cardbox_text_set(cardbox, 4, txt_buf);      //浅睡时长min--------->>>todo
     compo_cardbox_text_set_location(cardbox, 4, SLEEP_LIGHT_M_X, SLEEP_LIGHT_M_Y, SLEEP_LIGHT_M_W, SLEEP_LIGHT_M_H);
     //活动记录
     cardbox = compo_cardbox_create(frm, 1, 1, 3, CARD_WIDTH_ORG, ACTIVITY_BG_H);
@@ -814,26 +823,26 @@ static void func_clock_sub_card_data_update(void)
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     //活动记录
     char step_str[8];
-    snprintf(step_str, sizeof(step_str), "%d", sc7a20_info.gsensor_data.step);
-    cardbox = compo_getobj_byid(COMPO_ID_CARD_ACTIVITY);
-    compo_cardbox_text_set(cardbox, 0, step_str);    //步数
-    char cal_str[8];
-    snprintf(cal_str, sizeof(cal_str), "%d", sc7a20_info.gsensor_data.cal);
-    compo_cardbox_text_set(cardbox, 1, cal_str);    //卡路里
-    char dist_str[8];
-    snprintf(dist_str, sizeof(dist_str), "%d", sc7a20_info.gsensor_data.distance);
-    compo_cardbox_text_set(cardbox, 2, dist_str);      //距离
+//    snprintf(step_str, sizeof(step_str), "%d", sc7a20_info.gsensor_data.step);
+//    cardbox = compo_getobj_byid(COMPO_ID_CARD_ACTIVITY);
+//    compo_cardbox_text_set(cardbox, 0, step_str);    //步数
+//    char cal_str[8];
+//    snprintf(cal_str, sizeof(cal_str), "%d", sc7a20_info.gsensor_data.cal);
+//    compo_cardbox_text_set(cardbox, 1, cal_str);    //卡路里
+//    char dist_str[8];
+//    snprintf(dist_str, sizeof(dist_str), "%d", sc7a20_info.gsensor_data.distance);
+//    compo_cardbox_text_set(cardbox, 2, dist_str);      //距离
 #endif
     //睡眠
-    cardbox = compo_getobj_byid(COMPO_ID_CARD_SLEEP);
-    compo_cardbox_text_set(cardbox, 0, "07:36");    //总时长
-    compo_cardbox_text_set(cardbox, 1, "02h");      //深睡h
-    compo_cardbox_text_set(cardbox, 2, "07m");      //深睡m
-    compo_cardbox_text_set(cardbox, 3, "05h");      //浅睡h
-    compo_cardbox_text_set(cardbox, 4, "29m");      //浅睡m
-    //心率
-    cardbox = compo_getobj_byid(COMPO_ID_CARD_HEARTRATE);
-    compo_cardbox_text_set(cardbox, 0, "72");       //心率值
+//    cardbox = compo_getobj_byid(COMPO_ID_CARD_SLEEP);
+//    compo_cardbox_text_set(cardbox, 0, "07:36");    //总时长
+//    compo_cardbox_text_set(cardbox, 1, "02h");      //深睡h
+//    compo_cardbox_text_set(cardbox, 2, "07m");      //深睡m
+//    compo_cardbox_text_set(cardbox, 3, "05h");      //浅睡h
+//    compo_cardbox_text_set(cardbox, 4, "29m");      //浅睡m
+//    //心率
+//    cardbox = compo_getobj_byid(COMPO_ID_CARD_HEARTRATE);
+//    compo_cardbox_text_set(cardbox, 0, "72");       //心率值
     //音乐
     cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
     compo_cardbox_icon_set(cardbox, 1, music_pp_test ? UI_BUF_MUSIC_PAUSE_BIN : UI_BUF_MUSIC_PLAY_BIN);  //播放/暂停

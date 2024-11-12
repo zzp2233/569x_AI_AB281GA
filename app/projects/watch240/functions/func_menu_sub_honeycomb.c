@@ -61,7 +61,7 @@ typedef struct menu_hc_item_t_
 //蜂窝图标列表及顺序
 const menu_hc_item_t tbl_menu_honeycomb[] =
 {
-    {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
+    {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},//
 
     {UI_BUF_ICON_HEART_RATE_BIN,                FUNC_HEARTRATE},
     {UI_BUF_ICON_ACTIVITY_BIN,                  FUNC_ACTIVITY},

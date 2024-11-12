@@ -315,7 +315,7 @@ compo_form_t *func_activity_form_create(void)
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X/5, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/1000,KM/100%10,KM/10%10);
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/100,KM/10%10,KM%10);
     textbox = compo_textbox_create(frm,7);//距离数据
     compo_setid(textbox,KM_TXT_ID);
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
@@ -383,7 +383,7 @@ static void func_data_refresh(void)
     compo_textbox_set_pos(textbox_STEP_UINT,GUI_SCREEN_CENTER_X/2+strlen(txt_buf)*16+8,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5-GUI_SCREEN_HEIGHT/3.5-8);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/1000,KM/100%10,KM/10%10);
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/100,KM/10%10,KM%10);
     compo_textbox_set(textbox_KM_TXT, txt_buf);
     compo_textbox_set_pos(textbox_KM_UINT,GUI_SCREEN_CENTER_X/2+strlen(txt_buf)*16+8,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/2.5-8);
 

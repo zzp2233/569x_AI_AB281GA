@@ -957,6 +957,7 @@ void uteModuleSleepGetCurrDayDataDisplay(ute_module_sleep_display_data_t *sleepD
         sleepDisplayData->getUpSleepTime.min = pRead->getUpTime.min;
 #endif
         memcpy(sleepDisplayData->sleep_record, pRead->sleep_record, sizeof(sleep_record_t) * UTE_SLEEP_ON_BAND_MAX_RECORD_SIZE);
+        sleepDisplayData->recordCnt = pRead->recordIndex;
     }
     else
     {

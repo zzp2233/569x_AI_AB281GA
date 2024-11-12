@@ -929,6 +929,9 @@
 		<Unit filename="functions/func_bird.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_ble_call.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_blood_oxygen.c">
 			<Option compilerVar="CC" />
 		</Unit>

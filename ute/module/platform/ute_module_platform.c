@@ -456,6 +456,7 @@ void uteModulePlatformFlashNorErase(uint32_t addr)
 *@author        zn.zeng
 *@date        Jun 29, 2021
 */
+AT(.com_text.ute_msg)
 void uteModulePlatformSendMsgToUteApplicationTask(uint16_t type, uint32_t param)
 {
     ute_task_application_message_t p_msg;
@@ -475,6 +476,7 @@ void uteModulePlatformSendMsgToUteApplicationTask(uint16_t type, uint32_t param)
 *@author        zn.zeng
 *@date        Jun 29, 2021
 */
+AT(.com_text.ute_msg)
 void uteModulePlatformSendMsgToAppTask(uint16_t type, uint32_t param)
 {
     ute_task_application_message_t p_msg;
@@ -1371,9 +1373,13 @@ void uteModulePlatformAdvDataInit(void)
 AT(.sleep_text.ute_sleep_ctrl)
 void uteModulePlatformDlpsEnable(uint32_t bit)
 {
+#if UTE_LOG_SYSTEM_LVL
     uint32_t lastDlpsBit = uteModulePlatformDlpsBit;
+#endif
     uteModulePlatformDlpsBit &= ~bit;
+#if UTE_LOG_SYSTEM_LVL
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,bit:%04x %04x --> %04x",__func__,bit,lastDlpsBit,uteModulePlatformDlpsBit);
+#endif
 }
 /**
 *@brief   关闭休眠
@@ -1385,9 +1391,13 @@ void uteModulePlatformDlpsEnable(uint32_t bit)
 AT(.sleep_text.ute_sleep_ctrl)
 void uteModulePlatformDlpsDisable(uint32_t bit)
 {
+#if UTE_LOG_SYSTEM_LVL
     uint32_t lastDlpsBit = uteModulePlatformDlpsBit;
+#endif
     uteModulePlatformDlpsBit |= bit;
+#if UTE_LOG_SYSTEM_LVL
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,bit:%04x %04x --> %04x",__func__,bit,lastDlpsBit,uteModulePlatformDlpsBit);
+#endif
 }
 
 /**

@@ -15,6 +15,7 @@
 #include "ute_application_common.h"
 #include "ute_module_sport.h"
 #include "ute_module_gui_common.h"
+#include "ute_drv_gsensor_common.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -122,6 +123,25 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         }
         break;
 #endif
+        case MSG_TYPE_HEART_GET_AAC_HANDLER:
+        {
+            vc30fx_get_ute_gsensor_data();
+
+            msg_enqueue(EVT_VC30FX_ISR);
+            // vc30fx_usr_device_handler(0, 1);
+        }
+        break;
+        // case MSG_TYPE_HEART_START_SINGLE_TESTING:
+        // {
+        //     uteModuleHeartStartSingleTestingMsgHandler(param);
+        // }
+        // break;
+        // case MSG_TYPE_HEART_STOP_SINGLE_TESTING:
+        // {
+        //     uteModuleHeartStopSingleTestingMsgHandler(param);
+        // }
+        // break;
+
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

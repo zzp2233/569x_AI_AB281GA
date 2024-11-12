@@ -47,6 +47,7 @@ void vc30fx_usr_check_temperature_abnormal(void);
 };
 */
 vcare_ppg_device_t *get_vc30fx_device(void);
+void vc30fx_get_ute_gsensor_data(void);
 
 #endif // !
 

@@ -379,18 +379,28 @@ static void fot_reply_update_request(void)
 
     FOT_DEBUG("flash hash val:0x%x\n",hash);/*  */
 
-    printf("1111flash hash val:0x%x\n",hash);
+    // if((fot_var.hash != 0xFFFFFFFF) && (flash_remote_ver == fot_var.remote_ver) && (hash == fot_var.hash))
+    // {
+    //     param_fot_type_read(&fot_var.type);
+    //     if(app_fota_breakpoint_info_read() == true)
+    //     {
+    //         addr = app_fota_get_curaddr();
+    //     }
+    //     printf("===================>func_cb.sta = FUNC_PWROFF;\n");
+    //     func_cb.sta = FUNC_PWROFF;
+    //     return;
+    // }
     if((fot_var.hash != 0xFFFFFFFF) && (flash_remote_ver == fot_var.remote_ver) && (hash == fot_var.hash))
     {
-        param_fot_type_read(&fot_var.type);
-        if(app_fota_breakpoint_info_read() == true)
-        {
-            addr = app_fota_get_curaddr();
-        }
-        printf("===================>func_cb.sta = FUNC_PWROFF;\n");
+        // param_fot_type_read(&fot_var.type);
+        // if(app_fota_breakpoint_info_read() == true)
+        // {
+        //     addr = app_fota_get_curaddr();
+        // }
+        printf("===================>func_cb.sta = FUNC_PWROFF\n");
         func_cb.sta = FUNC_PWROFF;
-        return;
     }
+
 
 fot_req_reply:
     data[0] = FOT_GET_INFO;
@@ -757,6 +767,10 @@ void bsp_fot_process(void)
     {
         if(tick_check_expire(fot_var.tick,3000))
         {
+            param_fot_hash_write((u8*)&fot_var.hash);
+            param_fot_remote_ver_write((u8*)&fot_var.remote_ver);
+            param_sync();
+
             fot_flag &= ~FOT_FLAG_SYS_RESET;
             FOT_DEBUG("-->fota update ok,sys reset\n");
             WDT_RST();

@@ -15,7 +15,7 @@
 #include"ute_project_config_ab281.h"
 #endif
 /** Log模块控制开关*/
-#define UTE_MODULE_LOG_SUPPORT 0
+#define UTE_MODULE_LOG_SUPPORT 1
 
 /** 芯片选型 */
 #define CHIP_5691G                      0           //QFN40
@@ -181,10 +181,17 @@
 #endif
 
 /*! UTE任务配置,wang.luo 2024-11-07 */
+#ifndef UTE_TASK_USER_SUPPORT
+#define UTE_TASK_USER_SUPPORT 0
+#endif
+#if UTE_TASK_USER_SUPPORT
 #ifndef UTE_TASK_APPLICATION_STACK_SIZE
 #define UTE_TASK_APPLICATION_PRIORITY             27
-#define UTE_TASK_APPLICATION_STACK_SIZE           (1024 * 4)
+#define UTE_TASK_APPLICATION_STACK_SIZE           (1024 * 8)
 #define UTE_TASK_APPLICATION_MESSAGE_MAX_CNT      0x20
+#endif
+#else
+#define UTE_TASK_APPLICATION_STACK_SIZE 0
 #endif
 
 /*! 屏宽度 zn.zeng, 2021-10-22  */
@@ -820,7 +827,7 @@
 #define DEFAULT_SEDENTARY_NOTIFY_OPNE false
 #endif
 #ifndef DEFAULT_SEDENTARY_NOTIFY_TIME_INTERVAL
-#define DEFAULT_SEDENTARY_NOTIFY_TIME_INTERVAL 0x3c//60分钟 
+#define DEFAULT_SEDENTARY_NOTIFY_TIME_INTERVAL 0x3c//60分钟
 #endif
 #ifndef DEFAULT_SEDENTARY_NOTIFY_START_TIME
 #define DEFAULT_SEDENTARY_NOTIFY_START_TIME  0x0800 //08:00

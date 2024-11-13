@@ -14,7 +14,7 @@
 #include "ute_application_common.h"
 #include "ute_module_gui_common.h"
 
-#if UTE_TASK_APPLICATION_STACK_SIZE
+#if UTE_TASK_USER_SUPPORT
 
 /*! ute app task的指针 zn.zeng, 2022-03-01  */
 os_mq_t uteTaskApplicationMsgQueueHandle;
@@ -51,7 +51,7 @@ void uteTaskApplicationMain(void *param)
         ute_task_application_message_t msg;
         if (os_mq_recv(uteTaskApplicationMsgQueueHandle, &msg, sizeof(msg),0xFFFFFFFF) == OS_EOK)
         {
-            printf("uteTaskApplicationMsgHandler,type=%d\n",msg.type);
+            // printf("uteTaskApplicationMsgHandler,type=%d\n",msg.type);
             uteModulePlatformWdgFeed();
             uteTaskApplicationMsgHandler(&msg);
         }
@@ -64,6 +64,7 @@ void uteTaskApplicationMain(void *param)
 *@author       zn.zeng
 *@date       2022-03-01
 */
+AT(.com_text.ute_msg)
 bool uteTaskApplicationSendMsg(ute_task_application_message_t *pMsg)
 {
     if(os_mq_send(uteTaskApplicationMsgQueueHandle, pMsg, sizeof(ute_task_application_message_t)) != OS_EOK)
@@ -73,7 +74,6 @@ bool uteTaskApplicationSendMsg(ute_task_application_message_t *pMsg)
     }
     else
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,type=%d",__func__,pMsg->type);
         return true;
     }
 }
@@ -105,7 +105,7 @@ void uteTaskApplicationInit(void)
 
 #define UTE_TASK_APPLICATION_PRIORITY             24
 #define UTE_TASK_APPLICATION_MESSAGE_MAX_CNT      0x20
-#define UTE_TASK_APPLICATION_STACK_SIZE           0x2000
+// #define UTE_TASK_APPLICATION_STACK_SIZE           0x2000
 void *uteTaskApplicationHandle;
 ute_task_application_mq_t uteTaskApplicationMsgQueueHandle;
 static uint8_t taskAppMqBuff[UTE_TASK_APPLICATION_MESSAGE_MAX_CNT*sizeof(ute_task_application_message_t)] AT(.disp.ute); // mq msg buff

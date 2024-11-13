@@ -531,7 +531,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolReadReadlTimeStepInfo(uint8_t*receive,uint8_t length)
 {
-    // uteModuleSportSendRealTimeStepInfo();
+    uteModuleSportSendRealTimeStepInfo();
 }
 /**
 *@brief        发送计步历史数据
@@ -543,8 +543,6 @@ void uteModuleProtocolReadReadlTimeStepInfo(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolReadStepHistoryData(uint8_t*receive,uint8_t length)
 {
-#if 0//
-
     ute_module_systemtime_time_t time;
     memset(&time,0,sizeof(ute_module_systemtime_time_t));
     if(length>8)
@@ -557,7 +555,6 @@ void uteModuleProtocolReadStepHistoryData(uint8_t*receive,uint8_t length)
         time.sec = receive[8];
     }
     uteModuleSportStartSendStepHistoryData(time);
-#endif
 }
 
 /**
@@ -1288,7 +1285,6 @@ void uteModuleProtocolSocialAppSelectParam(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
 {
-#if 0
     ute_module_sport_sedentary_param_t param;
     memset(&param,0,sizeof(ute_module_sport_sedentary_param_t));
     if(receive[1]==0x01)
@@ -1315,7 +1311,6 @@ void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
     }
     uteModuleProfileBleSendToPhone(&receive[0],2);
     uteModuleSportSaveSedentaryParam(&param);
-#endif
 }
 /**
 *@brief       设置勿扰参数

@@ -397,16 +397,11 @@ void compo_listbox_update(compo_listbox_t *listbox)
         }
         else if (listbox->flag_text_modify == 2)
         {
-            char* str_txt = ab_zalloc(MAX_WORD_CNT);
+            static char str_txt[MAX_WORD_CNT] = {0};
             if (listbox->set_text_modify_by_idx_callback != NULL && str_txt != NULL)
             {
                 listbox->set_text_modify_by_idx_callback(listbox->item_cnt, str_txt, listbox->item_idx[i]);
                 widget_text_set(listbox->item_text[i], str_txt);
-            }
-            if (str_txt != NULL)
-            {
-                ab_free(str_txt);
-                str_txt= NULL;
             }
         }
         widget_set_align_center(listbox->item_text[i], listbox->flag_text_center);

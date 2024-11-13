@@ -8,12 +8,14 @@
 #endif
 
 //组件ID
-enum {
+enum
+{
     //图像
-	COMPO_ID_PIC_VOICE = 1,
+    COMPO_ID_PIC_VOICE = 1,
 };
 
-typedef struct f_voice_t_ {
+typedef struct f_voice_t_
+{
 
 } f_voice_t;
 
@@ -27,7 +29,7 @@ compo_form_t *func_voice_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_VOICE]);
 
-	//创建动画
+    //创建动画
     compo_animation_t *animation = compo_animation_create(frm, UI_BUF_VOICE_320_86_BIN);
     compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_animation_set_radix(animation, 2);
@@ -42,16 +44,19 @@ static void func_voice_animation_roll(void)
 {
     compo_animation_t *animation = compo_getobj_byid(COMPO_ID_PIC_VOICE);
 
-    if (animation->interval == 0) {
+    if (animation->interval == 0)
+    {
         return;
     }
 
     static s32 dx;
     static u32 tick;
-    if (tick_check_expire(tick, animation->interval)){
+    if (tick_check_expire(tick, animation->interval))
+    {
         tick = tick_get();
         dx--;
-        if (dx < -(animation->wid * animation->radix)) {
+        if (dx < -(animation->wid * animation->radix))
+        {
             dx = 0;
         }
         widget_page_set_client(animation->page, dx, 0);
@@ -69,22 +74,25 @@ static void func_voice_process(void)
 //语音助手功能消息处理
 static void func_voice_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            bt_hfp_siri_switch();
+            printf("bt_hfp_siri_switch\n");
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -106,7 +114,8 @@ void func_voice(void)
 {
     printf("%s\n", __func__);
     func_voice_enter();
-    while (func_cb.sta == FUNC_VOICE) {
+    while (func_cb.sta == FUNC_VOICE)
+    {
         func_voice_process();
         func_voice_message(msg_dequeue());
     }

@@ -157,8 +157,8 @@ typedef struct
     u8 weather_idx;
     s8 temperature[2];                              //温度（0:最低 1:最高）
     //运动
-    u16 step_cur;
-    u16 step_goal;
+    u32 step_cur;
+    u32 step_goal;
     u8 distance_cur;
     u8 distance_goal;
     u8 kcal_cur;

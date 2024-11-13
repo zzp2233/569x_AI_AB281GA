@@ -178,7 +178,7 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleAppBindingInit();
         ute_application_sn_data_t snData;
         uint32_t size = sizeof(ute_application_sn_data_t);
-        uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,size);
+        uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,size);
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,snData.userId = 0x%08x",__func__,snData.userId);
         if(snData.userId != 0xffffffff)
         {

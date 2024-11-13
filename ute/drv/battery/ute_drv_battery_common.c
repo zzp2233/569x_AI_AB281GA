@@ -919,10 +919,10 @@ bool uteDrvBatteryCommonGetAlreadyDisplayOnParam(void)
 void uteDrvBatteryCommonSaveLastLvlToSN1(void)
 {
     ute_application_sn_data_t snData;
-    uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
-    uteModulePlatformFlashNorErase(UTE_BLE_SN1_ADDRESS);
+    uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
+    uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
     snData.beforeFactoryBatLvl = uteDrvBatteryCommonData.lastLvl;
-    uteModulePlatformFlashNorWrite((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
+    uteModulePlatformFlashNorWrite((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
 }
 /**
 *@brief      恢复电量信息
@@ -933,13 +933,13 @@ void uteDrvBatteryCommonSaveLastLvlToSN1(void)
 void uteDrvBatteryCommonReadLastLvlFromSN1(void)
 {
     ute_application_sn_data_t snData;
-    uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
+    uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
     if (snData.beforeFactoryBatLvl != 0 && snData.beforeFactoryBatLvl != 0xFF)
     {
         uteDrvBatteryCommonData.lastLvl = snData.beforeFactoryBatLvl;
         snData.beforeFactoryBatLvl = 0xFF;
-        uteModulePlatformFlashNorErase(UTE_BLE_SN1_ADDRESS);
-        uteModulePlatformFlashNorWrite((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
+        uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
+        uteModulePlatformFlashNorWrite((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
     }
 }
 #endif

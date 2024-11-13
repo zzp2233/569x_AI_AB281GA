@@ -17,7 +17,9 @@
 #define UTE_MODULE_WATCHONLINE_START_ADDRESS            0x006FB000
 #define UTE_MODULE_WATCHONLINE_MAX_SIZE                 0x00080000  //512K Bytes
 #define UTE_MODULE_FILESYSTEM_START_ADDRESS             0x0077B000
-#define UTE_MODULE_FILESYSTEM_MAX_SIZE                  0x00080000  //512K Bytes
+#define UTE_MODULE_FILESYSTEM_MAX_SIZE                  0x0007F000  //508K Bytes
+#define UTE_USER_PARAM_ADDRESS                          0x007FA000
+#define UTE_USER_PARAM_SIZE                             0x00001000  //4K Bytes
 #define UTE_FACTORY_PARAM_ADDRESS                       0x007FB000
 #define UTE_FACTORY_PARAM_SIZE                          0x00005000  //20K Bytes
 

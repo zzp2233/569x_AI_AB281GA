@@ -229,6 +229,13 @@ void uteModuleHeartEverySecond(void)
                 uteModuleHeartData.isAutoTestFlag = false;
                 uteModuleHeartData.autoTestSecond = 0;
             }
+            else if (!uteModuleHeartIsWear() && uteModuleHeartData.autoTestSecond >= 10)
+            {
+                uteModuleHeartStopSingleTesting(TYPE_HEART);
+                uteModuleHeartData.isAutoTestFlag = false;
+                uteModuleHeartData.autoTestSecond = 0;
+                isNeedAutoTest = false;
+            }
             else
             {
                 uteModuleHeartData.autoTestSecond++;
@@ -662,6 +669,11 @@ bool uteModuleHeartIsWear(void)
         isWear = uteModuleHeartData.lastIsWear;
     }
 #endif
+    if(!uteModuleHeartData.isAutoTesting)
+    {
+        isWear= true;
+        uteModuleHeartData.lastIsWear = isWear;
+    }
     // UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,isWear:%d",__func__,isWear);
     return isWear;
 }

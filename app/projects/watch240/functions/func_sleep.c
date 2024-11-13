@@ -298,8 +298,8 @@ compo_form_t *func_sleep_form_create(void)
 //    compo_textbox_set_align_center(txt, false);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //    compo_shape_t *shape;
-//    u8 test_value[8] = {60,60,60,60,60,60,60,60};
-//    u8 test_value_state[8] = {0,1,0,2,1,0,2,1};
+//    u8 test_value[8] = {120,30,30,60,60,60,60,60};
+//    u8 test_value_state[8] = {3,1,3,2,1,3,2,1};
 //    u16 disp_test = 23600/(8*60);
 //    s16 location_x;
 //
@@ -314,7 +314,7 @@ compo_form_t *func_sleep_form_create(void)
 //
 //       shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
 //
-//       compo_shape_set_location(shape,location_x+3, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4.1-(21*test_value_state[i]),test_value[i]*disp_test/100, 16);
+//       compo_shape_set_location(shape,location_x+3, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4.1-(21*(test_value_state[i]-1)),test_value[i]*disp_test/100, 16);
 //
 //       switch(test_value_state[i])
 //       {
@@ -349,28 +349,29 @@ compo_form_t *func_sleep_form_create(void)
 //        sleep_data->sleep_record[i].sleepFlag = test_value_state[i];
 //    }
 /////////////////////////////////////////////////////////////////////////////////////
-    compo_shape_t *shape;
-    u16 disp_test = 23600/sleep_data->totalSleepMin;
-    s16 location_x;
 
-    if(sleep_data->totalSleepMin)
+    if(sleep_data->totalSleepMin)///是否有睡眠时长
     {
-        for(int i=0; i<sleep_data->recordCnt; i++)
+        compo_shape_t *shape;
+        u16 disp_test = 23600/sleep_data->totalSleepMin;///放大图片像素/总睡眠分钟，获取每分钟像素精度
+        s16 location_x;
+
+        for(int i=0; i<sleep_data->recordCnt; i++)/// 总睡眠中睡眠状态次数 <-sleep_data->recordCn->
         {
-            if(!i)
+            if(!i) ///设置第一个显示块的X坐标
             {
                 location_x = (sleep_data->sleep_record[i].startTime.hour*60 + sleep_data->sleep_record[i].startTime.min)*disp_test/100/2;
             }
-            else
+            else ///设置累加显示块的X坐标
             {
                 location_x += (sleep_data->sleep_record[i].startTime.hour*60 + sleep_data->sleep_record[i].startTime.min)*disp_test/100/2+1;
             }
 
-            shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
-            compo_shape_set_location(shape,location_x+3, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4.1-(21*sleep_data->sleep_record[i].sleepFlag),
+            shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);///创建显示块矩形
+            compo_shape_set_location(shape,location_x+3, GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/4.1-(21*(sleep_data->sleep_record[i].sleepFlag-1)),///设置显示块X坐标与宽度
                                      (sleep_data->sleep_record[i].startTime.hour*60 + sleep_data->sleep_record[i].startTime.min)*disp_test/100, 16);
 
-            switch(sleep_data->sleep_record[i].sleepFlag)
+            switch(sleep_data->sleep_record[i].sleepFlag)///设置不同睡眠状态显示块Y坐标及颜色
             {
                 case DEEP_SLEEP:
                     compo_shape_set_color(shape, make_color(0x78, 0x35, 0xf7));
@@ -383,11 +384,11 @@ compo_form_t *func_sleep_form_create(void)
                     break;
             }
 
-            if(!i)
+            if(!i) ///设置第一个显示块的X坐标处理
             {
                 location_x = compo_shape_get_location(shape).wid;
             }
-            else
+            else ///设置累加显示块的X坐标处理
             {
                 location_x += compo_shape_get_location(shape).wid/2;
             }

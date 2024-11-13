@@ -171,7 +171,7 @@ static gatts_service_base_st gatts_ute_ble_read_write_base;
 static gatts_service_base_st gatts_ute_ble5_notify_base;
 static gatts_service_base_st gatts_ute_ble5_read_write_base;
 
-#if 1 //UTE_SERVICE_PUBLIC_BLE_SUPPORT
+#if UTE_SERVICE_PUBLIC_BLE_SUPPORT
 
 static const uint8_t ute_ble_public_service_primay_uuid[2] = {GATT_UUID_UTE_MODULE_PROFILE_PUBLIC_BLE_SERVICE & 0xff, GATT_UUID_UTE_MODULE_PROFILE_PUBLIC_BLE_SERVICE >> 8};
 const uint8_t ute_ble_public_read_write_uuid[2] = {GATT_UUID_UTE_MODULE_PROFILE_PUBLIC_BLE_CHAR_READ_WRITE & 0xff, GATT_UUID_UTE_MODULE_PROFILE_PUBLIC_BLE_CHAR_READ_WRITE >> 8};
@@ -418,13 +418,20 @@ void ble_app_watch_process(void)
     u8 len = ble_cmd_cb.cmd[rptr].len;
     u16 handle = ble_cmd_cb.cmd[rptr].handle;
 
-    if (handle == gatts_ute_ble_read_write_base.handle || handle == gatts_ute_ble5_read_write_base.handle || handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle)
+    if (handle == gatts_ute_ble_read_write_base.handle || handle == gatts_ute_ble5_read_write_base.handle
+#if UTE_SERVICE_PUBLIC_BLE_SUPPORT
+        || handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle
+#endif
+       )
     {
         bool isPublic = false;
+#if UTE_SERVICE_PUBLIC_BLE_SUPPORT
         if (handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle)
         {
             isPublic = true;
         }
+#endif
+        uteModuleProfileSetPublicProtocol(isPublic);
         uteModuleProtocolFromPhone(ptr, len, isPublic);
     }
 }
@@ -455,12 +462,14 @@ bool uteModuleProfileBleSendToPhone(uint8_t *data,uint8_t size)
     {
         return false;
     }
+#if UTE_SERVICE_PUBLIC_BLE_SUPPORT
     if(uteModuleProfileIsPublicProtocol)
     {
         uteModuleProtocolConversionCmd(data,TYPE_TO_PUBLIC);
         isRet = uteModuleProfileBleSendNotify(gatts_ute_ble_public_notify_base.handle, data, size);
     }
     else
+#endif
     {
         isRet = uteModuleProfileBleSendNotify(gatts_ute_ble_notify_base.handle, data, size);
     }
@@ -485,12 +494,14 @@ bool uteModuleProfileBle50SendToPhone(uint8_t *data,uint8_t size)
     {
         return false;
     }
+#if UTE_SERVICE_PUBLIC_BLE_SUPPORT
     if(uteModuleProfileIsPublicProtocol)
     {
         uteModuleProtocolConversionCmd(data,TYPE_TO_PUBLIC);
         isRet = uteModuleProfileBleSendNotify(gatts_ute_ble5_public_notify_base.handle, data, size);
     }
     else
+#endif
     {
         isRet = uteModuleProfileBleSendNotify(gatts_ute_ble5_notify_base.handle, data, size);
     }
@@ -645,8 +656,9 @@ void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
 {
     if (handle == gatts_ute_ble_read_write_base.handle || handle == gatts_ute_ble5_read_write_base.handle
 #if UTE_SERVICE_PUBLIC_BLE_SUPPORT
-        || handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle)
+        || handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle
 #endif
+       )
     {
         uteApplicationCommonSetAppClosed(cfg == 0 ? true : false);
     }

@@ -34,7 +34,7 @@
 #endif
 /*!默认公共协议服务开关，默认为关 zn.zeng  modify Jul 06, 2021 */
 #ifndef UTE_SERVICE_PUBLIC_BLE_SUPPORT
-#define UTE_SERVICE_PUBLIC_BLE_SUPPORT 1
+#define UTE_SERVICE_PUBLIC_BLE_SUPPORT 0
 #endif
 
 /*! gloryfit 广播数据标识 zn.zeng  modify Jul 05, 2021 */

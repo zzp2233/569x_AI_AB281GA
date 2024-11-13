@@ -10,7 +10,7 @@
 
 #define ROTARY_SIGHT_DISTANCE           1280                            //视距
 #define ROTARY_OVERLOOK                 150                             //默认视角15度
-#define ROTARY_RADIUS                   150                             //转盘半径
+#define ROTARY_RADIUS                   112                             //转盘半径
 #define ROTARY_HALF_CIRCUM              ((int)(M_PI * ROTARY_RADIUS))   //圆周一半
 #define ROTARY_FIX_ANGLE                845                             //从正前顺时针转过多少度后切图
 
@@ -44,13 +44,15 @@ compo_rotary_t *compo_rotary_create(compo_form_t *frm, compo_rotary_item_t const
     rotary->radius = ROTARY_RADIUS;
 
     y = muls_shift16(-rotary->radius, SIN(ROTARY_OVERLOOK));
-    if (item_cnt <= 0) {
+    if (item_cnt <= 0)
+    {
         halt(HALT_GUI_COMPO_ROTARY_CREATE);
     }
     widget_axis3d_set_distance(axis, ROTARY_SIGHT_DISTANCE);
     widget_axis3d_set_overlook(axis, ROTARY_OVERLOOK);
     widget_axis3d_set_pos(axis, 0, y, -rotary->radius);
-    for (i=0; i<ROTARY_ITEM_CNT; i++) {
+    for (i=0; i<ROTARY_ITEM_CNT; i++)
+    {
         widget_image3d_t *img = widget_image3d_create(page, 0);
         rotary->item_img[i] = img;
 
@@ -76,23 +78,27 @@ void compo_rotary_update(compo_rotary_t *rotary)
     int sidx;
     int s_angle = rotary->angle - ROTARY_FIX_ANGLE + ROTARY_ITEM_ANGLE;
 
-    if (s_angle < 0) {
+    if (s_angle < 0)
+    {
         s_angle += rotary->total_angle;
     }
     sidx = s_angle / ROTARY_ITEM_ANGLE;
     s_angle = (sidx + 1) * ROTARY_ITEM_ANGLE - s_angle - ROTARY_FIX_ANGLE;
 
-    for (i=0; i<ROTARY_ITEM_CNT; i++) {
+    for (i=0; i<ROTARY_ITEM_CNT; i++)
+    {
         int idx = sidx + (ROTARY_ITEM_CNT - 1 - i);
         s32 angle = s_angle + (ROTARY_ITEM_CNT - 1 - i) * ROTARY_ITEM_ANGLE;
-        if (idx >= rotary->item_cnt) {
+        if (idx >= rotary->item_cnt)
+        {
             idx -= rotary->item_cnt;
         }
         widget_image3d_t *img = rotary->item_img[i];
         compo_rotary_item_t const *item = &(rotary->item[idx]);
         widget_image3d_set(img, item->res_addr);
         widget_image3d_set_azimuth(img, angle);
-        if (abs(angle) < ROTARY_ITEM_ANGLE / 2) {
+        if (abs(angle) < ROTARY_ITEM_ANGLE / 2)
+        {
             widget_text_set(rotary->item_title, i18n[item->str_idx]);
         }
     }
@@ -105,10 +111,12 @@ void compo_rotary_update(compo_rotary_t *rotary)
  **/
 s32 compo_rotary_set_rotation(compo_rotary_t *rotary, s32 angle)
 {
-    if (angle < 0) {
+    if (angle < 0)
+    {
         angle = rotary->total_angle - (-angle % rotary->total_angle);
     }
-    if (angle >= rotary->total_angle) {
+    if (angle >= rotary->total_angle)
+    {
         angle = angle % rotary->total_angle;
     }
     rotary->angle = angle;
@@ -127,7 +135,8 @@ void compo_rotary_set_radius(compo_rotary_t *rotary, u16 radius)
     widget_axis3d_set_distance(rotary->axis, ROTARY_SIGHT_DISTANCE);
     widget_axis3d_set_overlook(rotary->axis, ROTARY_OVERLOOK);
     widget_axis3d_set_pos(rotary->axis, 0, y, -rotary->radius);
-    for (int i=0; i<ROTARY_ITEM_CNT; i++) {
+    for (int i=0; i<ROTARY_ITEM_CNT; i++)
+    {
         widget_image3d_t *img = widget_image3d_create(rotary->page, 0);
         rotary->item_img[i] = img;
 
@@ -162,7 +171,8 @@ static int compo_rotary_calc_idx(compo_rotary_t *rotary)
 int compo_rotary_get_idx(compo_rotary_t *rotary)
 {
     int idx = compo_rotary_calc_idx(rotary);
-    if (idx < 0 || idx >= rotary->item_cnt) {
+    if (idx < 0 || idx >= rotary->item_cnt)
+    {
         idx = 0;
     }
     return idx;
@@ -189,27 +199,34 @@ static void compo_rotary_set_overlook(compo_rotary_t *rotary, s16 angle)
 u8 compo_rotary_get_sta(compo_rotary_t *rotary)
 {
     compo_rotary_move_cb_t *mcb = &rotary->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return COMPO_ROTARY_STA_IDLE;
     }
-    switch (mcb->sta) {
-    case COMPO_ROTARY_STA_ENTERING:
-        return COMPO_ROTARY_STA_ENTERING;
+    switch (mcb->sta)
+    {
+        case COMPO_ROTARY_STA_ENTERING:
+            return COMPO_ROTARY_STA_ENTERING;
 
-    case COMPO_ROTARY_STA_EXITING:
-        return COMPO_ROTARY_STA_EXITING;
+        case COMPO_ROTARY_STA_EXITING:
+            return COMPO_ROTARY_STA_EXITING;
 
-    case COMPO_ROTARY_STA_EXIT:
-        return COMPO_ROTARY_STA_EXIT;
+        case COMPO_ROTARY_STA_EXIT:
+            return COMPO_ROTARY_STA_EXIT;
 
-    default:
-        break;
+        default:
+            break;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
         return COMPO_ROTARY_STA_DARG;
-    } else if (mcb->flag_move_auto) {
+    }
+    else if (mcb->flag_move_auto)
+    {
         return COMPO_ROTARY_STA_MOVE;
-    } else {
+    }
+    else
+    {
         return COMPO_ROTARY_STA_IDLE;
     }
 }
@@ -221,66 +238,76 @@ u8 compo_rotary_get_sta(compo_rotary_t *rotary)
 void compo_rotary_move(compo_rotary_t *rotary)
 {
     compo_rotary_move_cb_t *mcb = &rotary->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    switch (mcb->sta) {
-    case COMPO_ROTARY_STA_ENTERING:
-        if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE)) {
-            s16 cnt, wid, hei, swid, shei, angle;
-            mcb->tick = tick_get();
-            mcb->animation_cnt++;
-            cnt = mcb->animation_cnt;
-            angle = ROTARY_OVERLOOK * cnt / ANIMATION_CNT_ENTERING;
-            swid = rotary->img_area.wid;
-            wid = GUI_SCREEN_WIDTH - (GUI_SCREEN_WIDTH - swid) * cnt / ANIMATION_CNT_ENTERING;
-            wid = GUI_SCREEN_WIDTH * wid / swid;
-            shei = rotary->img_area.hei;
-            hei = GUI_SCREEN_HEIGHT - (GUI_SCREEN_HEIGHT - shei) * cnt / ANIMATION_CNT_ENTERING;
-            hei = GUI_SCREEN_HEIGHT * hei / shei;
-            compo_rotary_set_overlook(rotary, angle);
-            widget_page_scale_to(rotary->page, wid, hei);
-            if (mcb->animation_cnt >= ANIMATION_CNT_ENTERING) {
-                mcb->sta = COMPO_ROTARY_STA_IDLE;
-                widget_set_visible(rotary->item_title, true);
+    switch (mcb->sta)
+    {
+        case COMPO_ROTARY_STA_ENTERING:
+            if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+            {
+                s16 cnt, wid, hei, swid, shei, angle;
+                mcb->tick = tick_get();
+                mcb->animation_cnt++;
+                cnt = mcb->animation_cnt;
+                angle = ROTARY_OVERLOOK * cnt / ANIMATION_CNT_ENTERING;
+                swid = rotary->img_area.wid;
+                wid = GUI_SCREEN_WIDTH - (GUI_SCREEN_WIDTH - swid) * cnt / ANIMATION_CNT_ENTERING;
+                wid = GUI_SCREEN_WIDTH * wid / swid;
+                shei = rotary->img_area.hei;
+                hei = GUI_SCREEN_HEIGHT - (GUI_SCREEN_HEIGHT - shei) * cnt / ANIMATION_CNT_ENTERING;
+                hei = GUI_SCREEN_HEIGHT * hei / shei;
+                compo_rotary_set_overlook(rotary, angle);
+                widget_page_scale_to(rotary->page, wid, hei);
+                if (mcb->animation_cnt >= ANIMATION_CNT_ENTERING)
+                {
+                    mcb->sta = COMPO_ROTARY_STA_IDLE;
+                    widget_set_visible(rotary->item_title, true);
+                }
             }
-        }
-        return;
+            return;
 
-    case COMPO_ROTARY_STA_EXITING:
-        if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE)) {
-            s16 cnt, wid, hei, swid, shei, angle;
-            mcb->tick = tick_get();
-            mcb->animation_cnt++;
-            cnt = mcb->animation_cnt;
-            angle = ROTARY_OVERLOOK - ROTARY_OVERLOOK * cnt / ANIMATION_CNT_ENTERING;
-            swid = rotary->img_area.wid;
-            wid = swid + (GUI_SCREEN_WIDTH - swid) * cnt / ANIMATION_CNT_ENTERING;
-            wid = GUI_SCREEN_WIDTH * wid / swid;
-            shei = rotary->img_area.hei;
-            hei = shei + (GUI_SCREEN_HEIGHT - shei) * cnt / ANIMATION_CNT_ENTERING;
-            hei = GUI_SCREEN_HEIGHT * hei / shei;
-            compo_rotary_set_overlook(rotary, angle);
-            widget_page_scale_to(rotary->page, wid, hei);
-            if (mcb->animation_cnt >= ANIMATION_CNT_ENTERING) {
-                mcb->sta = COMPO_ROTARY_STA_EXIT;
+        case COMPO_ROTARY_STA_EXITING:
+            if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+            {
+                s16 cnt, wid, hei, swid, shei, angle;
+                mcb->tick = tick_get();
+                mcb->animation_cnt++;
+                cnt = mcb->animation_cnt;
+                angle = ROTARY_OVERLOOK - ROTARY_OVERLOOK * cnt / ANIMATION_CNT_ENTERING;
+                swid = rotary->img_area.wid;
+                wid = swid + (GUI_SCREEN_WIDTH - swid) * cnt / ANIMATION_CNT_ENTERING;
+                wid = GUI_SCREEN_WIDTH * wid / swid;
+                shei = rotary->img_area.hei;
+                hei = shei + (GUI_SCREEN_HEIGHT - shei) * cnt / ANIMATION_CNT_ENTERING;
+                hei = GUI_SCREEN_HEIGHT * hei / shei;
+                compo_rotary_set_overlook(rotary, angle);
+                widget_page_scale_to(rotary->page, wid, hei);
+                if (mcb->animation_cnt >= ANIMATION_CNT_ENTERING)
+                {
+                    mcb->sta = COMPO_ROTARY_STA_EXIT;
+                }
             }
-        }
-        return;
+            return;
 
-    default:
-        break;
+        default:
+            break;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
         s32 dx, dy, da;
         int focus_idx;
         mcb->flag_drag = ctp_get_dxy(&dx, &dy);
-        if (mcb->flag_drag) {
+        if (mcb->flag_drag)
+        {
             //拖动菜单图标
             da = dx * 1800 / (int)(M_PI * rotary->radius);
             compo_rotary_set_rotation(rotary, mcb->focus_a - da);
             compo_rotary_update(rotary);
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
             s32 last_dx;
             last_dx = ctp_get_last_dxy().x;
@@ -292,29 +319,46 @@ void compo_rotary_move(compo_rotary_t *rotary)
             mcb->tick = tick_get();
         }
     }
-    if (mcb->flag_move_auto) {
+    if (mcb->flag_move_auto)
+    {
         //自动移动
-        if (mcb->focus_a == mcb->moveto_a) {
+        if (mcb->focus_a == mcb->moveto_a)
+        {
             mcb->flag_move_auto = false;              //移动完成
             compo_rotary_update(rotary);
-        } else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+        {
             s32 da;
             mcb->tick = tick_get();
             da = mcb->moveto_a - mcb->focus_a;
-            if (da > 0) {
-                if (da > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (da > 0)
+            {
+                if (da > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     da = da / FOCUS_AUTO_STEP_DIV;
-                } else if (da > FOCUS_AUTO_STEP) {
+                }
+                else if (da > FOCUS_AUTO_STEP)
+                {
                     da = FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     da = 1;
                 }
-            } else {
-                if (da < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else
+            {
+                if (da < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     da = da / FOCUS_AUTO_STEP_DIV;
-                } else if (da < -FOCUS_AUTO_STEP) {
+                }
+                else if (da < -FOCUS_AUTO_STEP)
+                {
                     da = -FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     da = -1;
                 }
             }
@@ -334,59 +378,63 @@ void compo_rotary_move_control(compo_rotary_t *rotary, int cmd)
 {
     int wid, hei;
     compo_rotary_move_cb_t *mcb = &rotary->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    switch (cmd) {
-    case COMPO_ROTARY_MOVE_CMD_ENTERING:
-        wid = GUI_SCREEN_WIDTH * GUI_SCREEN_WIDTH / rotary->img_area.wid;
-        hei = GUI_SCREEN_HEIGHT * GUI_SCREEN_HEIGHT / rotary->img_area.hei;
-        widget_page_scale_to(rotary->page, wid, hei);
-        widget_set_visible(rotary->item_title, false);
-        compo_rotary_set_overlook(rotary, 0);
-        mcb->sta = COMPO_ROTARY_STA_ENTERING;
-        mcb->animation_cnt = 0;
-        mcb->tick = tick_get();
-        break;
+    switch (cmd)
+    {
+        case COMPO_ROTARY_MOVE_CMD_ENTERING:
+            wid = GUI_SCREEN_WIDTH * GUI_SCREEN_WIDTH / rotary->img_area.wid;
+            hei = GUI_SCREEN_HEIGHT * GUI_SCREEN_HEIGHT / rotary->img_area.hei;
+            widget_page_scale_to(rotary->page, wid, hei);
+            widget_set_visible(rotary->item_title, false);
+            compo_rotary_set_overlook(rotary, 0);
+            mcb->sta = COMPO_ROTARY_STA_ENTERING;
+            mcb->animation_cnt = 0;
+            mcb->tick = tick_get();
+            break;
 
-    case COMPO_ROTARY_MOVE_CMD_EXITING:
-        widget_set_visible(rotary->item_title, false);
-        mcb->sta = COMPO_ROTARY_STA_EXITING;
-        mcb->animation_cnt = 0;
-        mcb->tick = tick_get();
-        break;
+        case COMPO_ROTARY_MOVE_CMD_EXITING:
+            widget_set_visible(rotary->item_title, false);
+            mcb->sta = COMPO_ROTARY_STA_EXITING;
+            mcb->animation_cnt = 0;
+            mcb->tick = tick_get();
+            break;
 
-    case COMPO_ROTARY_MOVE_CMD_DRAG:
-        //开始拖动
-        mcb->flag_drag = true;
-        mcb->flag_move_auto = false;
-        mcb->focus_a = rotary->angle;
-        break;
-
-    case COMPO_ROTARY_MOVE_CMD_FORWARD:
-        //向前滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->moveto_idx = compo_rotary_calc_idx(rotary);
+        case COMPO_ROTARY_MOVE_CMD_DRAG:
+            //开始拖动
+            mcb->flag_drag = true;
+            mcb->flag_move_auto = false;
             mcb->focus_a = rotary->angle;
-        }
-        mcb->moveto_idx++;
-        mcb->moveto_a = mcb->moveto_idx * ROTARY_ITEM_ANGLE;
-        break;
+            break;
 
-    case COMPO_ROTARY_MOVE_CMD_BACKWARD:
-        //向后滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->moveto_idx = compo_rotary_calc_idx(rotary);
-            mcb->focus_a = rotary->angle;
-        }
-        mcb->moveto_idx--;
-        mcb->moveto_a = mcb->moveto_idx * ROTARY_ITEM_ANGLE;
-        break;
+        case COMPO_ROTARY_MOVE_CMD_FORWARD:
+            //向前滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->moveto_idx = compo_rotary_calc_idx(rotary);
+                mcb->focus_a = rotary->angle;
+            }
+            mcb->moveto_idx++;
+            mcb->moveto_a = mcb->moveto_idx * ROTARY_ITEM_ANGLE;
+            break;
 
-    default:
-        halt(HALT_GUI_COMPO_ROTARY_MOVE_CMD);
-        break;
+        case COMPO_ROTARY_MOVE_CMD_BACKWARD:
+            //向后滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->moveto_idx = compo_rotary_calc_idx(rotary);
+                mcb->focus_a = rotary->angle;
+            }
+            mcb->moveto_idx--;
+            mcb->moveto_a = mcb->moveto_idx * ROTARY_ITEM_ANGLE;
+            break;
+
+        default:
+            halt(HALT_GUI_COMPO_ROTARY_MOVE_CMD);
+            break;
     }
 }

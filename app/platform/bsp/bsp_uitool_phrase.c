@@ -1,6 +1,8 @@
 #include "include.h"
 #include "../gui/components/compo_form.h"
 
+#define TRACE_EN        0
+
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -57,7 +59,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
     s16 click_wid = (BYTE0(uitool_res->param2) << 8) | BYTE3(uitool_res->param1);
     s16 click_hei = (BYTE2(uitool_res->param2) << 8) | BYTE1(uitool_res->param2);
 
-    TRACE("UITOOL_TYPE_IMAGE:%d, res_addr:%x, x:%d, y:%d\n", uitool_res->bond_type, uitoolres->res_addr, uitool_res->x, uitool_res->y);
+    TRACE("UITOOL_TYPE_IMAGE:%d, res_addr:%x, x:%d, y:%d\n", uitool_res->bond_type, uitool_res->res_addr, uitool_res->x, uitool_res->y);
 
     switch (uitool_res->bond_type)
     {

@@ -43,7 +43,7 @@ enum
     MSG_TYPE_HEART_STOP_SINGLE_TESTING,
     MSG_TYPE_BLOODOXYGEN_START_SINGLE_TESTING,
     MSG_TYPE_BLOODOXYGEN_STOP_SINGLE_TESTING,
-    MSG_TYPE_HEART_GET_AAC_HANDLER,
+    MSG_TYPE_HEART_ALGO_HANDLER,
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

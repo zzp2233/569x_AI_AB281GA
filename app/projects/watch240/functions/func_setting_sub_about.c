@@ -51,7 +51,7 @@ compo_form_t *func_set_sub_about_form_create(void)
     memset(Ble_Address_str_buf,'\0',sizeof(Ble_Address_str_buf));//初始化数组
     uteModulePlatformGetBleMacAddress(Ble_Address);//获取蓝牙地址
 
-    snprintf((char *)Ble_Address_str_buf, sizeof(Ble_Address_str_buf), "%02x:%02x:%02x:%02x:%02x:%02x",\
+    snprintf((char *)Ble_Address_str_buf, sizeof(Ble_Address_str_buf), "%02X:%02X:%02X:%02X:%02X:%02X",\
              Ble_Address[0],Ble_Address[1],Ble_Address[2],Ble_Address[3],Ble_Address[4],Ble_Address[5]); //信息
 
     //新建窗体

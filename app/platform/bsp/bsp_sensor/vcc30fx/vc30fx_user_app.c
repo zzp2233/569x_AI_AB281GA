@@ -135,6 +135,11 @@ int vc30fx_read_register(unsigned char regaddr, unsigned char *pbuf, unsigned sh
      * to register(s) pointed by pRegisters.
      * return:  0(read success),-1(read fail)
      ******************************************************************************/
+
+    if(sys_cb.gsensor_iic_en)
+    {
+        bsp_i2c_init();
+    }
     uint32_t i2c_cfg = START_FLAG0 | DEV_ADDR0 | REG_ADDR_0 | START_FLAG1 | DEV_ADDR1;
     bsp_hw_i2c_rx_buf(i2c_cfg, VC30FS_READ_ADDR(0x33), regaddr, pbuf,size);
     return 0;
@@ -149,6 +154,11 @@ int vc30fx_write_register(unsigned char regaddr, unsigned char *pbuf, unsigned s
      * to register(s) pointed by pRegisters.
      * return:  0(write success),-1(write fail)
      ******************************************************************************/
+
+    if(sys_cb.gsensor_iic_en)
+    {
+        bsp_i2c_init();
+    }
     uint32_t i2c_cfg = START_FLAG0 | DEV_ADDR0 | REG_ADDR_0 | WDATA;
     bsp_hw_i2c_tx_buf(i2c_cfg, VC30FS_WRITE_ADDR(0x33), regaddr, pbuf,size);
     return 0;
@@ -172,14 +182,6 @@ unsigned int vc30fx_get_cputimer_tick(void)
 const unsigned char arry10[] = {0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12};
 const unsigned char arry20[] = {0, 2, 3, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28};
 
-void vc30fx_get_ute_gsensor_data(void)
-{
-    i2c_gsensor_init();
-    ute_drv_gsensor_common_axis_data_t *data = NULL;
-    uteDrvGsensorCommonReadFifo(&data);
-    bsp_i2c_init();
-}
-
 static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsigned short int ppg_count)
 {
     unsigned char gsensor_len = 0;
@@ -191,9 +193,9 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
     int i = 0;
 
     static int16_t xx[UTE_DRV_GSENSOR_AXIS_DATA_MAX],yy[UTE_DRV_GSENSOR_AXIS_DATA_MAX],zz[UTE_DRV_GSENSOR_AXIS_DATA_MAX];
-    memset(xx,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*2);
-    memset(yy,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*2);
-    memset(zz,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*2);
+    memset(xx,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*sizeof(int16_t));
+    memset(yy,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*sizeof(int16_t));
+    memset(zz,0,UTE_DRV_GSENSOR_AXIS_DATA_MAX*sizeof(int16_t));
 
     ute_drv_gsensor_common_axis_data_t *data = NULL;
     uteDrvGsensorCommonReadFifo(&data);
@@ -538,6 +540,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     vc30fx_dev.heart_rate = vc30fx_heart_rate_calculate(&vc30fx_dev);
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -560,6 +565,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     vc30fx_dev.spo2 = vc30fx_spo2_calculate(&vc30fx_dev);
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -582,6 +590,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     /*wear is hold,call_algo_func*/
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -600,6 +611,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     /*wear is hold,call_algo_func*/
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -619,6 +633,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 {
                     /*wear is hold,call_algo_func*/
                     //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, ppg_num);
+
+                    uteModuleSportInputDataBeforeAlgo();
+
                 }
                 else
                 {
@@ -633,6 +650,11 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
                 if (gsensor_num)
                 {
                     vc30fx_gsensor_actuating_quantity(vc30fx_gsensor_data.xData[0], vc30fx_gsensor_data.yData[0], vc30fx_gsensor_data.zData[0]);
+
+                    if (WEAR_STA_HOLD == vc30fx_dev.wear)
+                    {
+                        uteModuleSportInputDataBeforeAlgo();
+                    }
                 }
                 //vc30fx_send_orginal_data(&vc30fx_dev, &vc30fx_gsensor_data, sample_result_info_ptr->slot_result[2].ppg_num);
             }
@@ -661,7 +683,17 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     /* 同步处理数据，清理fifo_buffer内存，为下次采样做准备 */
     vc30fx_drv_finished_sync(&vc30fx_dev);
 
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER,0);
+#if UTE_HEART_VCXX_NO_WEAR_NO_RUN_STEP_ALGO_SUPPORT
+    if (WEAR_STA_HOLD == vc30fx_dev.wear)
+    {
+        uteModuleSportUnWearToWearSwitch();
+    }
+    else
+    {
+        uteModuleSportStepTypeSetNone();
+    }
+#endif
+
 }
 
 // bool vc30fx_sleep_isr = false;

@@ -328,6 +328,7 @@ static void i2cx_init(void)
     delay_5ms(8);
 }
 
+AT(.text.bsp.i2c)
 void i2c_gsensor_init(void)
 {
     sys_cb.gsensor_iic_en = true;

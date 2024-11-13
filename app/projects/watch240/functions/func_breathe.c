@@ -96,6 +96,7 @@ compo_form_t *func_breathe_form_create(void)
     compo_button_set_pos(btn, 30, 132);
 
     btn = compo_button_create_by_image(frm, UI_BUF_BREATHE_MODE_BIN);
+    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_BREATHE_TIME_BIN).wid, gui_image_get_size(UI_BUF_BREATHE_TIME_BIN).hei);
     compo_setid(btn, COMPO_ID_BTN_MODE);
     compo_button_set_pos(btn, 209, 132);
 

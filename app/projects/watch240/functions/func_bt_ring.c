@@ -2,19 +2,22 @@
 #include "func.h"
 #include "func_bt.h"
 
-enum {
+enum
+{
     COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
     COMPO_ID_BTN_ANSWER,
     COMPO_ID_BTN_REJECT,
 };
 
-typedef struct f_bt_call_t_ {
+typedef struct f_bt_call_t_
+{
 
 } f_bt_ring_t;
 
 void func_bt_ring_number_update(void)
 {
-    if (bt_cb.number_sta) {
+    if (bt_cb.number_sta)
+    {
         compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
         compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     }
@@ -29,10 +32,15 @@ compo_form_t *func_bt_ring_form_create(void)
     compo_button_t *btn;
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //接听
     btn = compo_button_create_by_image(frm, UI_BUF_CALL_ANSWER_BIN);
@@ -52,9 +60,11 @@ void func_bt_ring_process(void)
     bsp_bt_ring_process();
 
 #if !CALL_MGR_EN
-    if(bt_cb.disp_status != BT_STA_INCOMING) {//退出来电页面
+    if(bt_cb.disp_status != BT_STA_INCOMING)  //退出来电页面
+    {
         func_directly_back_to();
-        if (bt_cb.disp_status == BT_STA_OUTGOING || bt_cb.disp_status == BT_STA_INCALL) {
+        if (bt_cb.disp_status == BT_STA_OUTGOING || bt_cb.disp_status == BT_STA_INCALL)
+        {
             func_cb.sta = FUNC_BT_CALL;
         }
     }
@@ -64,19 +74,20 @@ void func_bt_ring_process(void)
 static void func_bt_ring_click(void)
 {
     int id = compo_get_button_id();
-    switch (id) {
-    case COMPO_ID_BTN_ANSWER:
-        printf("COMPO_ID_BTN_ANSWER\n");
-        bt_call_answer_incoming();
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_ANSWER:
+            printf("COMPO_ID_BTN_ANSWER\n");
+            bt_call_answer_incoming();
+            break;
 
-    case COMPO_ID_BTN_REJECT:
-        printf("COMPO_ID_BTN_REJECT\n");
-        bt_call_terminate();
-        break;
+        case COMPO_ID_BTN_REJECT:
+            printf("COMPO_ID_BTN_REJECT\n");
+            bt_call_terminate();
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
 }
@@ -84,22 +95,23 @@ static void func_bt_ring_click(void)
 //蓝牙通话消息处理
 static void func_bt_ring_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_bt_ring_click();                         //单击按钮
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_bt_ring_click();                         //单击按钮
+            break;
 
-    case EVT_CALL_NUMBER_UPDATE:
-        func_bt_ring_number_update();
-        break;
+        case EVT_CALL_NUMBER_UPDATE:
+            func_bt_ring_number_update();
+            break;
 
-    case MSG_SYS_500MS:
-        reset_sleep_delay_all();                           //来电不休眠
-        break;
+        case MSG_SYS_500MS:
+            reset_sleep_delay_all();                           //来电不休眠
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -111,7 +123,8 @@ void func_bt_ring_enter(void)
     func_cb.mp3_res_play = func_bt_mp3_res_play;
     bsp_bt_ring_enter();
 
-    if (sys_cb.gui_sleep_sta) {
+    if (sys_cb.gui_sleep_sta)
+    {
         sys_cb.gui_need_wakeup = 1;
     }
 }
@@ -128,7 +141,8 @@ void func_bt_ring(void)
     printf("%s\n", __func__);
 
     // Adjust BLE connection parameter when incoming
-    if (ble_is_connect() && (ble_get_conn_interval() < 400)) {
+    if (ble_is_connect() && (ble_get_conn_interval() < 400))
+    {
         interval = ble_get_conn_interval();
         latency = ble_get_conn_latency();
         tout = ble_get_conn_timeout();
@@ -136,15 +150,18 @@ void func_bt_ring(void)
     }
 
     func_bt_ring_enter();
-    while (func_cb.sta == FUNC_BT_RING) {
+    while (func_cb.sta == FUNC_BT_RING)
+    {
         func_bt_ring_process();
         func_bt_ring_message(msg_dequeue());
     }
     func_bt_ring_exit();
 
     // Restore BLE connection parameter when call stop
-    if (bt_cb.disp_status != BT_STA_INCALL) {
-        if (interval | latency | tout) {
+    if (bt_cb.disp_status != BT_STA_INCALL)
+    {
+        if (interval | latency | tout)
+        {
             ble_update_conn_param(interval, latency, tout);
         }
     }

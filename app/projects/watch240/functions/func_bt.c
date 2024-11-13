@@ -13,7 +13,8 @@
 #define TITLE_BUF_LEN     128   //歌词buffer长度
 #define ARTIST_BUF_LEN    128   //歌名/歌手buffer长度
 
-enum {
+enum
+{
     COMPO_ID_BTN_PREV = 1,
     COMPO_ID_BTN_NEXT,
     COMPO_ID_BTN_PLAY,
@@ -24,7 +25,8 @@ enum {
     COMPO_ID_PIC_MUSIC_VOL,
 };
 
-typedef struct f_bt_t_ {
+typedef struct f_bt_t_
+{
     bool ams_play_sta;
     bool bt_play_sta;
     u8 vol;
@@ -52,12 +54,14 @@ static void func_bt_music_vol_btnpic_refresh(u8 vol);
 
 void func_bt_mp3_res_play(u32 addr, u32 len)
 {
-    if (len == 0) {
+    if (len == 0)
+    {
         return;
     }
     bt_cb.res_bt_bypass = true;
 
-    if (!sbc_is_bypass()) {
+    if (!sbc_is_bypass())
+    {
         bt_audio_bypass();
     }
     mp3_res_play(addr, len);
@@ -65,7 +69,8 @@ void func_bt_mp3_res_play(u32 addr, u32 len)
 
 void func_bt_mp3_play_restore(void)
 {
-    if (bt_cb.res_bt_bypass) {
+    if (bt_cb.res_bt_bypass)
+    {
         bt_cb.res_bt_bypass = false;
         bt_audio_enable();
     }
@@ -73,7 +78,8 @@ void func_bt_mp3_play_restore(void)
 
 void func_bt_init(void)
 {
-    if (!bt_cb.bt_is_inited) {
+    if (!bt_cb.bt_is_inited)
+    {
         msg_queue_clear();
         dis_auto_pwroff();
         bsp_bt_init();
@@ -84,7 +90,8 @@ void func_bt_init(void)
 
 void func_bt_chk_off(void)
 {
-    if ((func_cb.sta != FUNC_BT) && (bt_cb.bt_is_inited)) {
+    if ((func_cb.sta != FUNC_BT) && (bt_cb.bt_is_inited))
+    {
         bt_disconnect(1);
         bt_off();
         bt_cb.bt_is_inited = 0;
@@ -97,9 +104,12 @@ static void bt_control_play_pause(void)
 {
     //f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
 
-    if (bt_is_connected()) {
+    if (bt_is_connected())
+    {
         bt_music_play_pause();
-    } else if (ble_ams_is_connected()) {
+    }
+    else if (ble_ams_is_connected())
+    {
         ble_ams_remote_ctrl(AMS_REMOTE_CMD_PLAY_PAUSE);
     }
 }
@@ -107,9 +117,12 @@ static void bt_control_play_pause(void)
 //切换上一曲
 static void bt_control_prev(void)
 {
-    if (bt_is_connected()) {
+    if (bt_is_connected())
+    {
         bt_music_prev();
-    } else if (ble_ams_is_connected()) {
+    }
+    else if (ble_ams_is_connected())
+    {
         ble_ams_remote_ctrl(AMS_REMOTE_CMD_PREV_TRACK);
     }
 }
@@ -117,9 +130,12 @@ static void bt_control_prev(void)
 //切换下一曲
 static void bt_control_next(void)
 {
-    if (bt_is_connected()) {
+    if (bt_is_connected())
+    {
         bt_music_next();
-    } else if (ble_ams_is_connected()) {
+    }
+    else if (ble_ams_is_connected())
+    {
         ble_ams_remote_ctrl(AMS_REMOTE_CMD_NEXT_TRACK);
     }
 }
@@ -127,7 +143,8 @@ static void bt_control_next(void)
 //音量更新
 static void bt_vol_update(void)
 {
-    if (!bt_cb.bt_form_created) {
+    if (!bt_cb.bt_form_created)
+    {
         return ;
     }
 
@@ -135,19 +152,25 @@ static void bt_vol_update(void)
 
     bool vol_uodate_flag = false;
 
-    if (bt_is_connected()) {
-        if (f_bt->vol != sys_cb.vol) {
+    if (bt_is_connected())
+    {
+        if (f_bt->vol != sys_cb.vol)
+        {
             f_bt->vol = sys_cb.vol;
             vol_uodate_flag = true;
         }
-    } else if (ble_ams_is_connected()) {
-        if (f_bt->vol != f_bt->ams_vol) {
+    }
+    else if (ble_ams_is_connected())
+    {
+        if (f_bt->vol != f_bt->ams_vol)
+        {
             f_bt->vol = f_bt->ams_vol;
             vol_uodate_flag = true;
         }
     }
 
-    if (vol_uodate_flag) {
+    if (vol_uodate_flag)
+    {
         func_bt_music_vol_btnpic_refresh(f_bt->vol);
     }
 }
@@ -155,9 +178,12 @@ static void bt_vol_update(void)
 //音量控制+
 static void bt_control_vol_up(void)
 {
-    if (bt_is_connected()) {
+    if (bt_is_connected())
+    {
         bt_volume_up();
-    } else if (ble_ams_is_connected()) {
+    }
+    else if (ble_ams_is_connected())
+    {
         ble_ams_remote_ctrl(AMS_REMOTE_CMD_VOL_UP);
     }
     bt_vol_update();
@@ -166,9 +192,12 @@ static void bt_control_vol_up(void)
 //音量控制-
 static void bt_control_vol_down(void)
 {
-    if (bt_is_connected()) {
+    if (bt_is_connected())
+    {
         bt_volume_down();
-    } else if (ble_ams_is_connected()) {
+    }
+    else if (ble_ams_is_connected())
+    {
         ble_ams_remote_ctrl(AMS_REMOTE_CMD_VOL_DOWN);
     }
     bt_vol_update();
@@ -178,77 +207,83 @@ static void bt_control_vol_down(void)
 //AMS推送状态更新处理
 static void ble_ams_sta_update_handle(u8 sta, void *p_data, u16 len)
 {
-    if (bt_is_connected() || !ble_ams_is_connected() || !bt_cb.bt_form_created) {
+    if (bt_is_connected() || !ble_ams_is_connected() || !bt_cb.bt_form_created)
+    {
         return ;
     }
     f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
 
-    switch (sta) {
+    switch (sta)
+    {
         case BLE_AMS_STA_UPDATE_PAUSE:
-            {
-                f_bt->ams_play_sta = false;
-                func_bt_music_play_btnpic_refresh(false);
-            }
-            break;
+        {
+            f_bt->ams_play_sta = false;
+            func_bt_music_play_btnpic_refresh(false);
+        }
+        break;
 
         case BLE_AMS_STA_UPDATE_PLAYING:
-            {
-                 f_bt->ams_play_sta = true;
-                func_bt_music_play_btnpic_refresh(true);
-            }
-            break;
+        {
+            f_bt->ams_play_sta = true;
+            func_bt_music_play_btnpic_refresh(true);
+        }
+        break;
 
         case BLE_AMS_STA_UPDATE_VOLUME:
-            {
-                u32 volume = GET_LE32(p_data);
-                f_bt->ams_vol = volume / 625;
-                bt_vol_update();
-                TRACE("ams volume:%d, ams_vol:%d\n", volume, f_bt->ams_vol);
-            }
-            break;
+        {
+            u32 volume = GET_LE32(p_data);
+            f_bt->ams_vol = volume / 625;
+            bt_vol_update();
+            TRACE("ams volume:%d, ams_vol:%d\n", volume, f_bt->ams_vol);
+        }
+        break;
 
         case BLE_AMS_STA_UPDATE_TITLE:
+        {
+            char *title = (char *)p_data;
+            if (strlen(title))
             {
-                char *title = (char *)p_data;
-                if (strlen(title)) {
-                    memcpy(f_bt->title_buf, title, TITLE_BUF_LEN-1);
-                    msg_enqueue(EVT_ID3_TITLE_UPDATE);
-                    TRACE("ams title:%s\n",title);
-                }
+                memcpy(f_bt->title_buf, title, TITLE_BUF_LEN-1);
+                msg_enqueue(EVT_ID3_TITLE_UPDATE);
+                TRACE("ams title:%s\n",title);
             }
-            break;
+        }
+        break;
 
         case BLE_AMS_STA_UPDATE_ALBUM:
+        {
+            char * album = (char *)p_data;
+            if (strlen(album))
             {
-                char * album = (char *)p_data;
-                if (strlen(album)) {
-                    memcpy(f_bt->artist_buf, album, ARTIST_BUF_LEN-1);
-                    msg_enqueue(EVT_ID3_ARTIST_UPDATE);
-                    TRACE("ams album:%s\n",album);
-                }
+                memcpy(f_bt->artist_buf, album, ARTIST_BUF_LEN-1);
+                msg_enqueue(EVT_ID3_ARTIST_UPDATE);
+                TRACE("ams album:%s\n",album);
             }
-            break;
+        }
+        break;
 
         case BLE_AMS_STA_UPDATE_ARTIST:
+        {
+            char * artist = (char *)p_data;
+            if (strlen(artist))
             {
-                char * artist = (char *)p_data;
-                if (strlen(artist)) {
-                    memcpy(f_bt->artist_buf, artist, ARTIST_BUF_LEN-1);
-                    msg_enqueue(EVT_ID3_ARTIST_UPDATE);
-                    TRACE("ams artist:%s\n",artist);
-                }
+                memcpy(f_bt->artist_buf, artist, ARTIST_BUF_LEN-1);
+                msg_enqueue(EVT_ID3_ARTIST_UPDATE);
+                TRACE("ams artist:%s\n",artist);
             }
-            break;
+        }
+        break;
 
         case BLE_AMS_STA_UPDATE_APP_NAME:
+        {
+            char * app_name = (char *)p_data;
+            if (strlen(app_name))
             {
-                char * app_name = (char *)p_data;
-                if (strlen(app_name)) {
-                    compo_form_set_title(func_cb.frm_main, app_name);
-                    TRACE("ams app name:%s\n",app_name);
-                }
+                compo_form_set_title(func_cb.frm_main, app_name);
+                TRACE("ams app name:%s\n",app_name);
             }
-            break;
+        }
+        break;
     }
 }
 #endif // LE_AMS_CLIENT_EN
@@ -258,10 +293,13 @@ static void ble_ams_sta_update_handle(u8 sta, void *p_data, u16 len)
 static void bt_id3_tag_update_handle(u8 type, char *str)
 {
     f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
-    if (BT_ID3_TAG_TITLE == type) {
+    if (BT_ID3_TAG_TITLE == type)
+    {
         memcpy(f_bt->title_buf, str, TITLE_BUF_LEN-1);
         msg_enqueue(EVT_ID3_TITLE_UPDATE);
-    } else if (BT_ID3_TAG_ARTIST == type) {
+    }
+    else if (BT_ID3_TAG_ARTIST == type)
+    {
         memcpy(f_bt->artist_buf, str, ARTIST_BUF_LEN-1);
         msg_enqueue(EVT_ID3_ARTIST_UPDATE);
     }
@@ -295,6 +333,7 @@ compo_form_t *func_bt_form_create(void)
     compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
     compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
     compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
+    compo_textbox_set_forecolor(lyric_txt, COLOR_GRAY );
 
     //新建按钮
     compo_button_t *btn;
@@ -320,7 +359,7 @@ compo_form_t *func_bt_form_create(void)
 
     compo_picturebox_t *vol_pic = compo_picturebox_create(frm, UI_BUF_MUSIC_VOLUME1_BIN);
     compo_setid(vol_pic, COMPO_ID_PIC_MUSIC_VOL);
-    compo_picturebox_set_pos(vol_pic, 82, 250);
+    compo_picturebox_set_pos(vol_pic, 82, 260);
     widget_set_align_center(vol_pic->img, false);
     compo_picturebox_set_visible(vol_pic, false);
 
@@ -330,7 +369,8 @@ compo_form_t *func_bt_form_create(void)
 #if (BT_ID3_TAG_EN || LE_AMS_CLIENT_EN)
 static void func_bt_music_title_refresh(void *buf)
 {
-    if (bt_cb.bt_form_created) {
+    if (bt_cb.bt_form_created)
+    {
         compo_textbox_t *tilte_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_LYRIC);
         compo_textbox_set(tilte_txt, buf);
     }
@@ -338,7 +378,8 @@ static void func_bt_music_title_refresh(void *buf)
 
 static void func_bt_music_artist_refresh(void *buf)
 {
-    if (bt_cb.bt_form_created) {
+    if (bt_cb.bt_form_created)
+    {
         compo_textbox_t *tilte_art_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_NAME);
         compo_textbox_set(tilte_art_txt, buf);
     }
@@ -347,14 +388,18 @@ static void func_bt_music_artist_refresh(void *buf)
 
 static void func_bt_music_play_btnpic_refresh(u8 sta)
 {
-    if (!bt_cb.bt_form_created) {
+    if (!bt_cb.bt_form_created)
+    {
         return ;
     }
     compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_PLAY);
 
-    if (sta) {
+    if (sta)
+    {
         compo_button_set_bgimg(btn, UI_BUF_MUSIC_PAUSE_BIN);
-    } else {
+    }
+    else
+    {
         compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
     }
 }
@@ -364,7 +409,8 @@ static void func_bt_music_vol_btnpic_refresh(u8 vol)
     compo_picturebox_t *vol_pic;
 
     vol_pic = compo_getobj_byid(COMPO_ID_PIC_MUSIC_VOL);
-    switch (vol){
+    switch (vol)
+    {
         case 0:
             compo_picturebox_set(vol_pic, UI_BUF_MUSIC_VOLUME1_BIN);
             compo_picturebox_set_visible(vol_pic, false);
@@ -398,51 +444,53 @@ extern void btstack_ble_sm_req_for_android(void);
 static void func_bt_button_click(void)
 {
     int id = compo_get_button_id();
-    switch (id) {
-    case COMPO_ID_BTN_PREV:
-        #if LE_HID_TEST
-        ble_hid_event_tiktok(BLE_HID_MSG_UP);
-        #else
-        bt_control_prev();
-        #endif // LE_HID_TEST
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_PREV:
+#if LE_HID_TEST
+            ble_hid_event_tiktok(BLE_HID_MSG_UP);
+#else
+            bt_control_prev();
+#endif // LE_HID_TEST
+            break;
 
-    case COMPO_ID_BTN_NEXT:
-        #if LE_HID_TEST
-        ble_hid_event_tiktok(BLE_HID_MSG_DOWN);
-        #else
-        bt_control_next();
-        #endif // LE_HID_TEST
-        break;
+        case COMPO_ID_BTN_NEXT:
+#if LE_HID_TEST
+            ble_hid_event_tiktok(BLE_HID_MSG_DOWN);
+#else
+            bt_control_next();
+#endif // LE_HID_TEST
+            break;
 
-    case COMPO_ID_BTN_PLAY:
-        #if LE_HID_TEST
-        if (!ble_hid_peer_device_is_ios()){
-            btstack_ble_sm_req_for_android();
-        }
-        #else
-        bt_control_play_pause();
-        #endif // LE_HID_TEST
-        break;
+        case COMPO_ID_BTN_PLAY:
+#if LE_HID_TEST
+            if (!ble_hid_peer_device_is_ios())
+            {
+                btstack_ble_sm_req_for_android();
+            }
+#else
+            bt_control_play_pause();
+#endif // LE_HID_TEST
+            break;
 
-    case COMPO_ID_BTN_VOL_UP:
-        #if LE_HID_TEST
-        ble_hid_event_tiktok(BLE_HID_MSG_VOLUME_UP);
-        #else
-        bt_control_vol_up();
-        #endif // LE_HID_TEST
-        break;
+        case COMPO_ID_BTN_VOL_UP:
+#if LE_HID_TEST
+            ble_hid_event_tiktok(BLE_HID_MSG_VOLUME_UP);
+#else
+            bt_control_vol_up();
+#endif // LE_HID_TEST
+            break;
 
-    case COMPO_ID_BTN_VOL_DOWN:
-        #if LE_HID_TEST
-        ble_hid_event_tiktok(BLE_HID_MSG_VOLUME_DOWN);
-        #else
-        bt_control_vol_down();
-        #endif // LE_HID_TEST
-        break;
+        case COMPO_ID_BTN_VOL_DOWN:
+#if LE_HID_TEST
+            ble_hid_event_tiktok(BLE_HID_MSG_VOLUME_DOWN);
+#else
+            bt_control_vol_down();
+#endif // LE_HID_TEST
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -459,7 +507,8 @@ void func_bt_process(void)
     func_process();
     func_bt_sub_process();
 
-    if(sys_cb.pwroff_delay == 0) {
+    if(sys_cb.pwroff_delay == 0)
+    {
         func_cb.sta = FUNC_PWROFF;
         return;
     }
@@ -470,45 +519,49 @@ static void func_bt_message_do(size_msg_t msg)
 {
     f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_bt_button_click();                         //单击按钮
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_bt_button_click();                         //单击按钮
+            break;
 
-    case MSG_SYS_500MS:
-        if (bt_is_connected() && !sys_cb.gui_sleep_sta) {
+        case MSG_SYS_500MS:
+            if (bt_is_connected() && !sys_cb.gui_sleep_sta)
+            {
 #if BT_ID3_TAG_EN
-            bt_music_paly_status_info();
+                bt_music_paly_status_info();
 #endif
-            if (f_bt->bt_play_sta != bt_cb.music_playing) {
-                f_bt->bt_play_sta = bt_cb.music_playing;
-                func_bt_music_play_btnpic_refresh(bt_cb.music_playing);
+                if (f_bt->bt_play_sta != bt_cb.music_playing)
+                {
+                    f_bt->bt_play_sta = bt_cb.music_playing;
+                    func_bt_music_play_btnpic_refresh(bt_cb.music_playing);
+                }
+                bt_vol_update();
             }
-            bt_vol_update();
-        }
-        break;
+            break;
 
-    case EVT_ID3_TITLE_UPDATE:
-        func_bt_music_title_refresh(f_bt->title_buf);
-        break;
+        case EVT_ID3_TITLE_UPDATE:
+            func_bt_music_title_refresh(f_bt->title_buf);
+            break;
 
-    case EVT_ID3_ARTIST_UPDATE:
-        func_bt_music_artist_refresh(f_bt->artist_buf);
-        break;
+        case EVT_ID3_ARTIST_UPDATE:
+            func_bt_music_artist_refresh(f_bt->artist_buf);
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 #if LE_HID_TEST
 //AT(.text.func.bt.msg)
 void func_ble_hid_message_do(u16 msg)
 {
-    switch (msg) {
-     case MSG_CTP_CLICK:
-        func_bt_button_click();                         //单击按钮
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_bt_button_click();                         //单击按钮
+            break;
 //    case KU_PLAY_PWR_USER_DEF:
 //        printf("tiktok click\n");
 //        ble_hid_event_tiktok(BLE_HID_MSG_VOLUME_DOWN);
@@ -524,9 +577,9 @@ void func_ble_hid_message_do(u16 msg)
 //        ble_hid_event_tiktok(BLE_HID_MSG_DOWN);
 //        break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 #endif
@@ -554,14 +607,17 @@ void func_bt_enter(void)
     f_bt->vol = 0;
     func_bt_music_play_btnpic_refresh(0);
 #if LE_AMS_CLIENT_EN
-    if (ble_ams_is_connected()) {
-        if (ble_ams_cb.play_state) {
+    if (ble_ams_is_connected())
+    {
+        if (ble_ams_cb.play_state)
+        {
             f_bt->ams_play_sta = true;
             func_bt_music_play_btnpic_refresh(1);
         }
         f_bt->ams_vol = ble_ams_cb.vol;
         func_bt_music_vol_btnpic_refresh(f_bt->ams_vol);
-        if (strlen(ble_ams_cb.app_name)) {
+        if (strlen(ble_ams_cb.app_name))
+        {
             compo_form_set_title(func_cb.frm_main, ble_ams_cb.app_name);
         }
     }
@@ -594,12 +650,15 @@ void func_bt_exit(void)
     bt_off();
     bt_cb.bt_is_inited = 0;
 #else
-    if (bt_get_status() == BT_STA_PLAYING && !bt_is_testmode()) {        //蓝牙退出停掉音乐
+    if (bt_get_status() == BT_STA_PLAYING && !bt_is_testmode())          //蓝牙退出停掉音乐
+    {
         delay_5ms(10);
-        if(bt_get_status() == BT_STA_PLAYING) {     //再次确认play状态
+        if(bt_get_status() == BT_STA_PLAYING)       //再次确认play状态
+        {
             u32 timeout = 850; //8.5s
             bt_music_pause();
-            while (bt_get_status() == BT_STA_PLAYING && timeout > 0) {
+            while (bt_get_status() == BT_STA_PLAYING && timeout > 0)
+            {
                 timeout--;
                 delay_5ms(2);
             }
@@ -619,7 +678,8 @@ void func_bt(void)
 {
     printf("%s\n", __func__);
     func_bt_enter();
-    while (func_cb.sta == FUNC_BT) {
+    while (func_cb.sta == FUNC_BT)
+    {
         func_bt_process();
         func_bt_message(msg_dequeue());
     }

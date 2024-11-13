@@ -501,12 +501,14 @@ static void func_sport_sub_run_click_handler(void)
                 if (f_sport_sub_run->sport_run_state == true)
                 {
                     compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
+                    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).wid, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).hei);
                     f_sport_sub_run->sport_run_state = false;
                     if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
                     {
                         if (sys_cb.sport_app_disconnect)                            //判断app是否断链，断链停止运动
                         {
                             compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
+                            widget_set_size(btn->widget, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).wid, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).hei);
                             f_sport_sub_run->sport_run_state = false;
                             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);   //通知APP暂停运动
                             TRACE("【APP连接】本地通知APP运动停止\n");
@@ -526,6 +528,7 @@ static void func_sport_sub_run_click_handler(void)
                         if (sys_cb.sport_app_disconnect)                            //判断app是否断链，断链停止运动
                         {
                             compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
+                            widget_set_size(btn->widget, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).wid, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).hei);
                             f_sport_sub_run->sport_run_state = false;
                             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);   //通知APP暂停运动
                             TRACE("【APP连接】本地通知APP运动继续\n");

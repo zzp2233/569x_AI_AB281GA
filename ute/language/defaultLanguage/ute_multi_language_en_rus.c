@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-11-09 14:25:37
+*@date   2024-11-13 19:46:42
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -252,5 +252,7 @@ const char * const i18n_en_rus[] =
     [STR_SURE_RESET] = "\x49\x73\x20\x69\x74\x20\x61\x20\x66\x61\x63\x74\x6f\x72\x79\x20\x72\x65\x73\x65\x74\x20\x6f\x72\x20\x6e\x6f\x74\x3f\x00", // [239] Is it a factory reset or not?
     [STR_SURE_REBOOT] = "\x52\x65\x62\x6f\x6f\x74\x20\x6f\x72\x20\x6e\x6f\x74\x3f\x00", // [240] Reboot or not?
     [STR_FLY_BIRD] = "\x46\x6c\x61\x70\x70\x79\x20\x62\x69\x72\x64\x73\x00", // [241] Flappy birds
+    [STR_IN_CALL] = "\x49\x6e\x20\x63\x61\x6c\x6c\x2e\x2e\x2e\x00", // [242] In call...
+    [STR_CALL_ME] = "\x43\x61\x6c\x6c\x20\x6d\x65\x00", // [243] Call me
 };
 

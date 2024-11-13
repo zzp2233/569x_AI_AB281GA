@@ -562,7 +562,7 @@ static void func_clock_message(size_msg_t msg)
         }
 
     }
-    static bool time_visible = 0;
+    static bool time_visible = 1;
     switch (msg)
     {
         case MSG_CTP_SHORT_UP:
@@ -595,7 +595,7 @@ static void func_clock_message(size_msg_t msg)
             {
                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
                 compo_textbox_set_visible(txt, time_visible);
-                time_visible ^= 1;
+//                time_visible ^= 1;
             }
 
             break;

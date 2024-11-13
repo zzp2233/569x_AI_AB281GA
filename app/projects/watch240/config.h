@@ -63,7 +63,7 @@
 /*****************************************************************************
  * Module    : GUI相关配置
  *****************************************************************************/
-#define COMPO_BUF_SIZE                  (2048)                  //组件BUF大小(2个BUF)
+#define COMPO_BUF_SIZE                  (2048+1024)                  //组件BUF大小(2个BUF)
 #define TFT_TE_CYCLE                    16.67                   //TE周期时间 (ms)
 #define TFT_TE_CYCLE_DELAY              (TFT_TE_CYCLE / 3)
 #define GUI_LINES_CNT                   20                      //单次推屏行数

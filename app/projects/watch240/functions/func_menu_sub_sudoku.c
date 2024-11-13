@@ -84,7 +84,7 @@ const menu_hc_item_t tbl_menu_sudoku[] =
 
     {UI_BUF_ICON_CALCULATOR_BIN,                FUNC_CALCULATOR},
     {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
-    {UI_BUF_ICON_RESTART_BIN,                   FUNC_RESTART},
+//    {UI_BUF_ICON_RESTART_BIN,                   FUNC_RESTART},
 
     {UI_BUF_ICON_CALENDAR_BIN,                  FUNC_CALENDAER},
     {UI_BUF_ICON_SCAN_BIN,                      FUNC_SCAN},

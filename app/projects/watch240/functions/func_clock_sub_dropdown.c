@@ -24,6 +24,7 @@ enum
     COMPO_ID_TXT_BATTERY_PIC,
     //蓝牙状态图片
     COMPO_ID_TXT_BLUETOOTH_STA_PIC,
+    COMPO_ID_TXT_BTETOOTH_STA_PIC,
 };
 
 
@@ -84,19 +85,27 @@ static void func_clock_sub_dropdown_battery_pic_update(void)
 static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 {
     compo_picturebox_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    compo_picturebox_set_visible(bluetooth_pic, true);
-    if (ble_is_connect() && bt_is_connected())
+    compo_picturebox_t *btooth_pic = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
+//    compo_picturebox_set_visible(bluetooth_pic, true);
+    if (ble_is_connect())
     {
         compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
-    }
-    else if(bt_is_connected() || ble_is_connect())
-    {
-        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
+//        printf("w:%d h:%d\n",gui_image_get_size(UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN).wid,gui_image_get_size(UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN).hei);
     }
     else
     {
-        compo_picturebox_set_visible(bluetooth_pic, false);
+        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
     }
+
+    if(bt_is_connected())
+    {
+        compo_picturebox_set(btooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
+    }
+    else
+    {
+        compo_picturebox_set(btooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
+    }
+
 }
 
 //下拉静音图标更新
@@ -168,23 +177,30 @@ static void func_clock_sub_dropdown_form_create(void)
     //电池
     compo_picturebox_t *battery_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_POWER1_BIN);
     compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
-    compo_picturebox_set_pos(battery_pic, 260, 30);
+    compo_picturebox_set_pos(battery_pic, GUI_SCREEN_CENTER_X*1.7, GUI_SCREEN_CENTER_Y/8);
     compo_picturebox_set_visible(battery_pic, true);
 
     //蓝牙状态
     compo_picturebox_t *bluetooth_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    compo_picturebox_set_pos(bluetooth_pic, 60, 30);
-    compo_picturebox_set_visible(bluetooth_pic, true);
+    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y/8);
+    compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
+//    compo_picturebox_set_visible(bluetooth_pic, true);
+
+    bluetooth_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
+    compo_setid(bluetooth_pic, COMPO_ID_TXT_BTETOOTH_STA_PIC);
+    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/3.5, GUI_SCREEN_CENTER_Y/8);
+    compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
+//    compo_picturebox_set_visible(bluetooth_pic, true);
 
 
     //电池电量
-    compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
-    compo_textbox_set_location(battery_txt, 200, 28, 0, 0);
-    compo_textbox_set_autosize(battery_txt, true);
-    compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
-    compo_textbox_set_font(battery_txt, UI_BUF_0FONT_FONT_BIN);
-    compo_textbox_set_forecolor(battery_txt, make_color(0xae, 0xb3, 0xbc));     //和电池底图颜色一致
+//    compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
+//    compo_textbox_set_location(battery_txt, 200, 28, 0, 0);
+//    compo_textbox_set_autosize(battery_txt, true);
+//    compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
+//    compo_textbox_set_font(battery_txt, UI_BUF_0FONT_FONT_BIN);
+//    compo_textbox_set_forecolor(battery_txt, make_color(0xae, 0xb3, 0xbc));     //和电池底图颜色一致
 
     func_clock_sub_dropdown_battery_pic_update();
     func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新

@@ -242,7 +242,7 @@ static void func_blood_oxygen_process(void)
         {
             func_blood_oxygen_unwear_handle(true);
             f_bo->det_sta = BO_STA_WORKING;
-            printf("spo2 wear\n");
+            printf("spo2 wear111111\n");
         }
     }
 

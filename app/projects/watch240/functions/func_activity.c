@@ -423,7 +423,7 @@ static void func_activity_process(void)
         return ;
     }
 
-    if(tick_check_expire(f_activity->tick, 15))
+    if(tick_check_expire(f_activity->tick, 10))
     {
         f_activity->tick = tick_get();
         u8 count = sizeof(f_activity->value) / sizeof(f_activity->value[0]);

@@ -6469,10 +6469,10 @@ void uteModuleSprotInputDataBeforeAlgoTimerCallback(void *pxTimer)
 
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
 {
-    // if (vc30fx_usr_get_work_status())
-    // {
-    //     return;
-    // }
+    if (vc30fx_usr_get_work_status())
+    {
+        return;
+    }
 
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     uteModuleCwmtWearStatusSwitch(uteModuleHeartIsWear()); //

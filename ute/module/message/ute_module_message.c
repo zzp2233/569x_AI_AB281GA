@@ -125,10 +125,7 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
 #endif
         case MSG_TYPE_HEART_GET_AAC_HANDLER:
         {
-            vc30fx_get_ute_gsensor_data();
-
-            msg_enqueue(EVT_VC30FX_ISR);
-            // vc30fx_usr_device_handler(0, 1);
+            vc30fx_usr_device_handler(0, 1);
         }
         break;
         // case MSG_TYPE_HEART_START_SINGLE_TESTING:

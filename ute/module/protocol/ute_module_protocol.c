@@ -26,6 +26,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_sleep.h"
 #include "ute_module_notdisturb.h"
+#include "ute_drv_gsensor_common.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -1422,7 +1423,6 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
 {
-#if 0
     uint8_t response[10];
     int16_t xx,yy,zz,accvalue;
     uteDrvGsensorCommonGetAccXyz(&xx,&yy,&zz);
@@ -1446,7 +1446,6 @@ void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
     response[8] = (accvalue>>8)&0xff;
     response[9] = accvalue&0xff;
     uteModuleProfileBleSendToPhone(&response[0],10);
-#endif
 }
 
 /**
@@ -1471,7 +1470,7 @@ void uteModuleProtocolSetPowerOff(uint8_t*receive,uint8_t length)
     else
 #endif
     {
-        // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
     }
 }
 /**
@@ -2554,6 +2553,7 @@ void uteModuleProtocolReadExpandFunctionSupport(uint8_t *data,uint8_t size)
     data[0] = (mtuSize>>8)&0xff;
     data[1] = mtuSize&0xff;
     /*------------前两字节不允许变动----------------*/
+    data[2] |= 0x08; //中科平台标识
 #if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
     data[19] |= 0x02;
 #endif

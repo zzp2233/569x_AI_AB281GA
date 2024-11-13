@@ -395,3 +395,113 @@ void compo_cardbox_set_alpha(compo_cardbox_t *cardbox, u8 alpha)
 {
     widget_set_alpha(cardbox->page, alpha);
 }
+
+/**
+ * @brief 卡片控件文本滚动刷新
+        注意：1.文本需要set_align_center为false，否则初始状态无法保证左对齐；
+        2.界面文本控件较多时可能出现C203蓝屏，需减小MAX_WORD_CNT或增大GUI_ELE_BUF_SIZE
+ * @param[in] cardbox : 卡片指针
+ * @return 无
+ **/
+void compo_cardbox_text_scroll_process(compo_cardbox_t* cardbox, bool auto_scroll)
+{
+    for (int i=0; i<CARD_TEXT_MAX; i++)
+    {
+        widget_text_t* txt = cardbox->text[i];
+
+        if (txt)
+        {
+            rect_t rect_card = widget_get_location(cardbox->page);
+            if (auto_scroll)
+            {
+                if (rect_card.y < (-rect_card.hei / 2) || rect_card.y > (GUI_SCREEN_HEIGHT + rect_card.hei / 2))    //卡片超出屏幕，滚动重置
+                {
+                    cardbox->roll_cb[i].mode = TEXT_AUTOROLL_MODE_NULL;
+                    widget_text_set_client(txt, 0, 0);
+                    return;
+                }
+            }
+            if (cardbox->roll_cb[i].mode == TEXT_AUTOROLL_MODE_NULL)    //重置
+            {
+                if (widget_get_visble(txt))
+                {
+                    area_t text_area = widget_text_get_area(txt);
+                    rect_t textbox_rect = widget_get_location(txt);
+                    if (text_area.wid > textbox_rect.wid)
+                    {
+                        memset(&cardbox->roll_cb[i], 0, sizeof(compo_roll_cb_t));
+                        cardbox->roll_cb[i].tick = tick_get();
+                        cardbox->roll_cb[i].mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;
+                        cardbox->roll_cb[i].direction = -1;
+                        if (widget_get_align_center(txt))
+                        {
+                            cardbox->roll_cb[i].offset = text_area.wid/2 - textbox_rect.wid/2;
+                            widget_text_set_client(txt, cardbox->roll_cb[i].offset, 0);
+                        }
+                        widget_text_set_autoroll_mode(txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
+                    }
+                    else
+                    {
+                        widget_text_set_autoroll_mode(txt, TEXT_AUTOROLL_MODE_NULL);
+                    }
+                }
+            }
+        }
+    }
+
+}
+
+/**
+ * @brief 卡片控件文本0滚动暂停/继续
+ * @param[in] cardbox : 卡片指针
+ * @param[in] pause : true暂停，false继续
+ * @return 无
+ **/
+void compo_cardbox_text_scroll_pause(compo_cardbox_t *cardbox, bool pause)
+{
+    for (int i=0; i<CARD_TEXT_MAX; i++)
+    {
+        widget_text_t* txt = cardbox->text[i];
+        if (txt)
+        {
+            cardbox->roll_cb[i].direction = pause ? 0 : -1;
+        }
+    }
+}
+
+/**
+ * @brief 卡片控件文本滚动重置（赋值后需要重新计算）
+ * @param[in] cardbox : 卡片指针
+ * @return 无
+ **/
+void compo_cardbox_text_scroll_reset(compo_cardbox_t *cardbox)
+{
+    for (int i=0; i<CARD_TEXT_MAX; i++)
+    {
+        widget_text_t* txt = cardbox->text[i];
+        if (txt)
+        {
+            cardbox->roll_cb[i].mode = TEXT_AUTOROLL_MODE_NULL;
+            widget_text_set_client(txt, 0, 0);
+        }
+    }
+}
+
+
+/**
+ * @brief 卡片控件文本中心坐标映射到左上角
+ * @param[in] cardbox : 卡片指针
+              idx : 卡片内容id
+              cx : 中心对其时的x坐标
+              cy : 中心对其时的y坐标
+              cwid : 文本框宽度
+              chei : 文本框高度
+ * @return 无
+ **/
+void compo_cardbox_text_map_center2left_location(compo_cardbox_t *cardbox, u8 idx, s16 cx, s16 cy, u16 cwid, u16 chei)
+{
+    compo_cardbox_text_set_align_center(cardbox, idx, false);
+    compo_cardbox_text_set_location(cardbox, idx, cx-cwid/2, cy-chei/2, cwid, chei);
+}
+
+

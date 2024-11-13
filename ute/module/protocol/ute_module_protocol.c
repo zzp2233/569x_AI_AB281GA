@@ -532,7 +532,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolReadReadlTimeStepInfo(uint8_t*receive,uint8_t length)
 {
-    // uteModuleSportSendRealTimeStepInfo();
+    uteModuleSportSendRealTimeStepInfo();
 }
 /**
 *@brief        发送计步历史数据
@@ -2553,6 +2553,7 @@ void uteModuleProtocolReadExpandFunctionSupport(uint8_t *data,uint8_t size)
     data[0] = (mtuSize>>8)&0xff;
     data[1] = mtuSize&0xff;
     /*------------前两字节不允许变动----------------*/
+    data[2] |= 0x08; //中科平台标识
 #if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
     data[19] |= 0x02;
 #endif

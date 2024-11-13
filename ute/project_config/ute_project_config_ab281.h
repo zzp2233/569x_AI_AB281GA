@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281_H_
 
 #define DEFAULT_BLE_DEV_NEME "AB281"
-#define UTE_SW_VERSION "AB281V000002"
+#define UTE_SW_VERSION "AB281V000003"
 
 #define UTE_DRV_DSPI_FOR_SCREEN_SUPPORT 0
 #define UTE_DRV_QSPI_FOR_SCREEN_SUPPORT 1
@@ -31,7 +31,7 @@
 
 #define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1
 
-#define UTE_TASK_APPLICATION_STACK_SIZE 0
+#define UTE_TASK_USER_SUPPORT 1
 
 /*! 抬手亮屏参数 zn.zeng, 2021-10-22  */
 #define ROLLOVER_HAND_SCREEN_X_MIN  46
@@ -41,5 +41,31 @@
 #define ROLLOVER_HAND_SCREEN_Z_MIN  -136
 #define ROLLOVER_HAND_SCREEN_Z_MAX  128
 #define ROLLOVER_HAND_SCREEN_ACC_DIFF_VALUE  40
+
+#define UTE_MODULE_SPORT_RUNNING_SUPPORT                1 //跑步
+#define UTE_MODULE_SPORT_BIKE_SUPPORT                   1 //骑行
+#define UTE_MODULE_SPORT_JUMP_ROPE_SUPPORT              1 //跳绳
+#define UTE_MODULE_SPORT_SWIMMING_SUPPORT               1 //游泳
+#define UTE_MODULE_SPORT_BADMINTION_SUPPORT             1 //羽毛球
+#define UTE_MODULE_SPORT_TABLE_TENNIS_SUPPORT           1 //乒乓球
+#define UTE_MODULE_SPORT_TENNIS_SUPPORT                 1 //网球
+#define UTE_MODULE_SPORT_CLIMBING_SUPPORT               1 //登山
+#define UTE_MODULE_SPORT_WALKING_SUPPORT                1 //徒步
+#define UTE_MODULE_SPORT_BASKETBALL_SUPPORT             1 //篮球
+#define UTE_MODULE_SPORT_FOOTBALL_SUPPORT               1 //足球
+#define UTE_MODULE_SPORT_BASEBALL_SUPPORT               1 //棒球（或垒球）
+#define UTE_MODULE_SPORT_VOLLEYBALL_SUPPORT             1 //排球
+#define UTE_MODULE_SPORT_CRICKET_SUPPORT                1 //板球
+#define UTE_MODULE_SPORT_RUGBY_SUPPORT                  1 //橄榄球（或美式足球）
+#define UTE_MODULE_SPORT_HOCKEY_SUPPORT                 1 //曲棍球
+#define UTE_MODULE_SPORT_DANCE_SUPPORT                  1 //跳舞
+#define UTE_MODULE_SPORT_SPINNING_SUPPORT               1 //动感单车
+#define UTE_MODULE_SPORT_YOGA_SUPPORT                   1 //瑜伽
+#define UTE_MODULE_SPORT_SIT_UP_SUPPORT                 1 //仰卧起坐
+#define UTE_MODULE_SPORT_TREADMILL_SUPPORT              1 //跑步机
+#define UTE_MODULE_SPORT_GYMNASTICS_SUPPORT             1 //体操
+#define UTE_MODULE_SPORT_BOATING_SUPPORT                1 //划船
+#define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
+#define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          1 //自由训练
 
 #endif//_UTE_PROJECT_CONFIG_AB281_H_

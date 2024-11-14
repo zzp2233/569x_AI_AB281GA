@@ -25,34 +25,54 @@ static const compo_listbox_item_t tbl_call_list[UTE_MODULE_CALL_ADDRESSBOOK_MAX_
 static ute_module_call_addressbook_t* address_book_tbl = NULL;            //电话簿数据
 static u16 address_book_cnt = 0;                                       //联系人个数
 
-
-
-static void address_book_update_callback(u32 item_cnt, char* str_txt, u16 index)
+//更新电话簿列表回调函数
+static void address_book_update_callback(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index)
 {
     if (index < item_cnt && index < address_book_cnt)
     {
+        //需要使用静态数组作为中间变量，以防占用堆栈内存
+        //中间缓存大小要比实际获取的名字要大
+        //方便再接受到的名字过长时，方便后面使用uteModuleCharencodeGetUtf8String转换的时候可以自动加入省略号
+        static char name_utf8[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH+5] = {0};
+        uint16_t name_utf8_len = 0;
 
-        static char name_utf8[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH] = {0};
-        static uint16_t name_utf8_len = 0;
+        static char name_utf8_l[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH+10] = {0};
+        uint16_t name_utf8_len_l = 0;
 
-        static char name_utf8_l[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH] = {0};
-        static uint16_t name_utf8_len_l = 0;
+        memset(name_utf8, 0, sizeof(name_utf8));
+        memset(name_utf8_l, 0, sizeof(name_utf8_l));
 
-        static char name_number_utf8[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH + UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH + 5] = {0};
+        if (str_txt1_len > sizeof(name_utf8_l))
+        {
+            str_txt1_len = sizeof(name_utf8_l);
+        }
+
+        if (str_txt2_len > address_book_tbl[index].numberAsciiLen)
+        {
+            str_txt2_len = address_book_tbl[index].numberAsciiLen;
+        }
 
         uteModuleCharencodeUnicodeConversionUtf8(address_book_tbl[index].nameUnicode,
                 address_book_tbl[index].nameUnicodeLen,
                 (uint8_t*)name_utf8,
                 &name_utf8_len,
-                UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH);
+                sizeof(name_utf8));
 
-        uteModuleCharencodeGetUtf8String((uint8_t*)name_utf8, name_utf8_len, (uint8_t*)name_utf8_l, &name_utf8_len_l);
+        if (name_utf8_len >= UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH)
+        {
 
-        sprintf(name_number_utf8, "%s:%s", name_utf8_l, address_book_tbl[index].numberAscii);
-//        snprintf(name_number_utf8, UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH + UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH + 5, "%s:%s", address_book_tbl[index].nameUnicode, address_book_tbl[index].numberAscii);
-//        printf("%d ==> %s ==> cpyLen=%d\n", index, name_number_utf8, name_utf8_len+address_book_tbl[index].numberAsciiLen+2);
-        memcpy(str_txt, name_number_utf8, UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH + UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH + 5);
+            uteModuleCharencodeGetUtf8String((uint8_t*)name_utf8, name_utf8_len, (uint8_t*)name_utf8_l, &name_utf8_len_l);
+            memcpy(str_txt1, name_utf8_l, str_txt1_len);
+//            printf("[%d, %d] -> %s, %s\n", name_utf8_len, name_utf8_len_l,  name_utf8, name_utf8_l);
+        }
+        else
+        {
+            memcpy(name_utf8_l, name_utf8, sizeof(name_utf8));
+            memcpy(str_txt1, name_utf8_l, str_txt1_len);
+//            printf("****[%d] -> %s\n", name_utf8_len, name_utf8);
+        }
 
+        memcpy(str_txt2, address_book_tbl[index].numberAscii, str_txt2_len);
     }
 }
 
@@ -93,7 +113,8 @@ compo_form_t *func_address_book_form_create(void)
     compo_form_set_title(frm, i18n[STR_CALL_LINK]);
 
     //新建列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+//    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     //更新联系人
     func_address_book_update();
@@ -101,12 +122,11 @@ compo_form_t *func_address_book_form_create(void)
     {
         compo_listbox_set(listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
     }
-    compo_listbox_set_text_modify_by_idx_callback(listbox, address_book_update_callback);
+    compo_listbox_set_alike_icon(listbox, UI_BUF_ICON_ADDRESS_BOOK_BIN);
+    compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
-
-
 
     return frm;
 }

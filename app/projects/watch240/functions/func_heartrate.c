@@ -63,10 +63,10 @@ compo_form_t *func_heartrate_form_create(void)
     compo_form_set_title(frm, i18n[STR_HEART_RATE]);
 
     //设置内容
-    compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BIN, 128, 88);
+    compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BIN, 124, 88);
     compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BG_BIN, 120, 230);
 
-    compo_form_add_image(frm, UI_BUF_HEART_RATE_UP_BIN, 76, 186);
+    compo_form_add_image(frm, UI_BUF_HEART_RATE_UP_BIN, 72, 186);
     compo_form_add_image(frm, UI_BUF_HEART_RATE_DOWN_BIN, 226, 186);
 
     //创建文本

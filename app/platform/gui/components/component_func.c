@@ -359,7 +359,6 @@ static void compo_set_roll(compo_roll_cb_t *rcb, widget_text_t *txt, bool multil
     s16 client_x = 0, client_y = 0;
     widget_text_get_client(txt, &client_x, &client_y);
 
-
     flag_drag = ctp_get_dxy(&dx, &dy);
     if (flag_drag)      //按下
     {

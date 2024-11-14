@@ -130,13 +130,13 @@ static const timer_txt_item_t tbl_timer_txt_item[] =
 #define TIMER_CUSTOM_BTN_ITEM_CNT   ((int)(sizeof(tbl_timer_custom_btn_item) / sizeof(tbl_timer_custom_btn_item[0])))
 static const timer_btn_item_t tbl_timer_custom_btn_item[] =
 {
-    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_HOUR_INC,      48,     76,    true},
-    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_MIN_INC,       120,    76,    true},
-    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_SEC_INC,       192,    76,    true},
-    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_HOUR_RED,      48,     185,    true},
-    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_MIN_RED,       120,    185,    true},
-    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_SEC_RED,       192,    185,    true},
-    {UI_BUF_COMMON_BUTTON_BIN,          COMPO_ID_BTN_OK,            120,    260,    true},
+    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_HOUR_INC,      GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3,     76,    true},
+    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_MIN_INC,       GUI_SCREEN_CENTER_X,    76,    true},
+    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_SEC_INC,       GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3,    76,    true},
+    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_HOUR_RED,      GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3,     185,    true},
+    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_MIN_RED,       GUI_SCREEN_CENTER_X,    185,    true},
+    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_SEC_RED,       GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3,    185,    true},
+    {UI_BUF_COMMON_BUTTON_BIN,          COMPO_ID_BTN_OK,            GUI_SCREEN_CENTER_X,    260,    true},
 };
 
 //创建定时器窗体，文件内调用
@@ -206,7 +206,7 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             //创建文本
             txt = compo_textbox_create(frm, 3);
             compo_textbox_set_pos(txt, 120, 262);
-            compo_textbox_set(txt, "OK");
+            compo_textbox_set(txt, i18n[STR_START]);
             break;
 
         case TIMER_PAGE_COUNTDOWN:

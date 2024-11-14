@@ -19,6 +19,7 @@ typedef struct f_bt_call_t_
     char call_time_str[10];     //通话计时字符串
     u32 clcc_tick;              //主动查询号码计时
     u32 exit_tick;              //页面退出计时
+    bool call_mute_flag;
 } f_bt_call_t;
 
 static void func_bt_call_back_to(void)
@@ -109,11 +110,19 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_IN_CALL]));
+    compo_textbox_set(txt, i18n[STR_IN_CALL]);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1, GUI_SCREEN_CENTER_Y/1.2);
+    compo_textbox_set_forecolor(txt, COLOR_GREEN);
+
     //挂断按钮
     btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/4);
 
+    btn = compo_button_create_by_image(frm, UI_BUF_CALL_MUTE_BIN);
+    compo_setid(btn, COMPO_ID_BTN_MIC);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/3, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/4);
 
     return frm;
 }
@@ -183,9 +192,26 @@ static void func_bt_call_click(void)
     {
 
         case COMPO_ID_BTN_REJECT:
-            printf("COMPO_ID_BTN_REJECT\n");
+//        printf("COMPO_ID_BTN_REJECT\n");
             bt_call_terminate();
             f_bt_call->exit_tick = tick_get();
+            break;
+        case COMPO_ID_BTN_MIC:
+//        printf("COMPO_ID_BTN_REJECT\n");
+            f_bt_call->call_mute_flag ^=1;
+            compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_MIC);
+
+            if(f_bt_call->call_mute_flag)
+            {
+                audio_path_exit(AUDIO_PATH_BTMIC);
+                compo_button_set_bgimg(btn,UI_BUF_CALL_MUTE_ON_BIN);
+            }
+            else
+            {
+                compo_button_set_bgimg(btn,UI_BUF_CALL_MUTE_BIN);
+                audio_path_init(AUDIO_PATH_BTMIC);
+                audio_path_start(AUDIO_PATH_BTMIC);
+            }
             break;
 
         default:
@@ -253,7 +279,9 @@ void func_bt_call_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_bt_call_t));
     func_cb.frm_main = func_bt_outgoing_form_create();
+    f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
+    f_bt_call->call_mute_flag =false;
     func_cb.mp3_res_play = func_bt_mp3_res_play;
 
     bsp_bt_call_enter();

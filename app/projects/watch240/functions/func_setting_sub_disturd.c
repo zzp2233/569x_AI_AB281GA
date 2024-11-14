@@ -125,8 +125,8 @@ static const disturd_disp_txt_item_t disturd_disp_txt_item[] =
     {COMPO_ID_TXT_TIM,        22,   140},
     {COMPO_ID_TXT_START,      22,   200},
     {COMPO_ID_TXT_END,        22,   255},
-    {COMPO_ID_TXT_PRCOLON,    172,  200},
-    {COMPO_ID_TXT_LASTCOLON,  172,  255},
+    {COMPO_ID_TXT_PRCOLON,    168,  200},
+    {COMPO_ID_TXT_LASTCOLON,  168,  255},
 };
 
 //勿扰模式页面
@@ -216,8 +216,14 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         compo_picturebox_set_pos(pic_click, tbl_disturd_disp_pic_item[idx].x, tbl_disturd_disp_pic_item[idx].y);
         compo_picturebox_set_visible(pic_click, tbl_disturd_disp_pic_item[idx].visible_en);
     }
-
+//        sys_cb.disturd_adl = false;
+//        sys_cb.disturd_tim = true;
     //获取显示时间
+    if(!sys_cb.disturd_tim)
+    {
+        sys_cb.disturd_start_time_sec = 0;
+        sys_cb.disturd_end_time_sec = 0;
+    }
     u32 hour_start = sys_cb.disturd_start_time_sec / 3600;
     u32 min_start  = (sys_cb.disturd_start_time_sec % 3600) / 60;
     u32 hour_end   = sys_cb.disturd_end_time_sec / 3600;
@@ -472,23 +478,24 @@ static void func_set_sub_disturd_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_disturd_t));
     func_cb.frm_main = func_set_sub_disturd_form_create();
 
-    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
-    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
-    if(uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_ALLDAY_OPEN)
-    {
-        sys_cb.disturd_adl = true;
-        sys_cb.disturd_tim = false;
-    }
-    else if(uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_SCHEDULED_OPEN)
-    {
-        sys_cb.disturd_adl = false;
-        sys_cb.disturd_tim = true;
-    }
-    else
-    {
-        sys_cb.disturd_adl = false;
-        sys_cb.disturd_tim = false;
-    }
+//    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
+//    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
+//    if(uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_ALLDAY_OPEN)
+//    {
+//        sys_cb.disturd_adl = true;
+//        sys_cb.disturd_tim = false;
+//    }
+//    else if(uteModuleNotDisturbIsOpenScheduled() == true)
+//    {
+//        sys_cb.disturd_adl = false;
+//        sys_cb.disturd_tim = true;
+//    }
+//    else
+//    {
+//        sys_cb.disturd_adl = false;
+//        sys_cb.disturd_tim = false;
+//    }
+
 }
 
 //退出勿扰模式功能

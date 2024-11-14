@@ -36,7 +36,7 @@
 
 /*! 心率自动测量超时时间,wang.luo 2024-10-31 */
 #ifndef UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND
-#define UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND 45
+#define UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND 30
 #endif
 
 /*! 心率值警告数据结构zn.zeng, 2021-07-13  */

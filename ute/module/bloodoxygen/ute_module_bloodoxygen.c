@@ -88,6 +88,9 @@ void uteModuleBloodoxygenEverySecond(void)
     {
         return;
     }
+
+    static bool isNeedAutoTest = false;
+
     if(uteModuleBloodoxygenData.isSingleTesting)
     {
         uteModuleBloodoxygenData.value = uteModuleHeartGetBloodOxygenValue();
@@ -121,6 +124,10 @@ void uteModuleBloodoxygenEverySecond(void)
         }
         else
         {
+            if(uteModuleBloodoxygenData.isBloodOxygenAutoTestFlag)
+            {
+                isNeedAutoTest = false;
+            }
             uteModuleBloodoxygenStopSingleTesting();
         }
     }
@@ -128,7 +135,6 @@ void uteModuleBloodoxygenEverySecond(void)
     /*! 自动测试逻辑 zn.zeng, 2021-08-31  */
     if(uteModuleBloodoxygenData.isAutoTesting)
     {
-        static bool isNeedAutoTest = false;
         ute_module_systemtime_time_t time;
         uteModuleSystemtimeGetTime(&time);
         uint32_t oneDaySec = time.hour*3600+time.min*60+time.sec;

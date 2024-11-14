@@ -182,7 +182,8 @@ bool uteModuleCharencodeGetUtf8String(uint8_t*input_utf8,int16_t len,uint8_t*out
 
     // strncpy(&output_utf8[new_utf8_len],"...",3);
     // *utf8_len = new_utf8_len+3;
-    memcpy(&output_utf8[new_utf8_len],"\x2e\x2e\x2e\x1e\x1e\x1e\x00",7);
+//    memcpy(&output_utf8[new_utf8_len],"\x2e\x2e\x2e\x1e\x1e\x1e\x00",7);
+    memcpy(&output_utf8[new_utf8_len],"\x2e\x2e\x2e\x00",4);
     *utf8_len = new_utf8_len+7;
 
 

@@ -123,7 +123,7 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         }
         break;
 #endif
-        case MSG_TYPE_HEART_GET_AAC_HANDLER:
+        case MSG_TYPE_HEART_ALGO_HANDLER:
         {
             vc30fx_usr_device_handler(0, 1);
         }

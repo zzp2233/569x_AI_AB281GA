@@ -1,4 +1,9 @@
 #include "include.h"
+#include "ute_module_systemtime.h"
+#include "ute_module_sport.h"
+#include "ute_module_gui_common.h"
+#include "ute_module_heart.h"
+#include "ute_module_bloodoxygen.h"
 
 #define TRACE_EN                1
 
@@ -81,6 +86,30 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
     char value_str[16];
     memset(value_str, '\0', 16);
 
+    u8 tmp_time_hour = tm.hour;
+    if(uteModuleSystemtime12HOn())
+    {
+        if(tmp_time_hour > 12)
+        {
+            tmp_time_hour = tmp_time_hour - 12;
+        }
+        else if (tmp_time_hour == 0)
+        {
+            tmp_time_hour = 12;
+        }
+    }
+
+    sys_cb.distance_cur = uteModuleSportGetCurrDayDistanceData();
+    sys_cb.kcal_cur = uteModuleSportGetCurrDayKcalData();
+
+    uint32_t totalStepCnt = 0;
+    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+    sys_cb.step_cur = totalStepCnt;
+    sys_cb.step_goal = uteModuleSportGetStepsTargetCnt();
+
+    ute_display_ctrl_t displayInfo;
+    uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
+
     switch (compo->bond_data)
     {
         case COMPO_BOND_YEAD:
@@ -105,8 +134,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_HOUR:
-            value = tm.hour;
-            sprintf(value_str, "%d", value);
+            value = tmp_time_hour;
+            sprintf(value_str, "%02d", value);
             break;
 
         case COMPO_BOND_MINUTE:
@@ -115,12 +144,12 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_HOUR_H:
-            value = tm.hour / 10;
+            value = tmp_time_hour / 10;
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_HOUR_L:
-            value = tm.hour % 10;
+            value = tmp_time_hour % 10;
             sprintf(value_str, "%d", value);
             break;
 
@@ -208,22 +237,22 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
 
         case COMPO_BOND_KCAL:
-            value = 0;
+            value = sys_cb.kcal_cur;
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_STEP:
-            value = 0;
+            value = sys_cb.step_cur;
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_HEARTRATE:
-            value = 0;
+            value = uteModuleHeartGetHeartValue();
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_BLOOD_OXYGEN:
-            value = 0;
+            value = uteModuleBloodoxygenGetValue();
             sprintf(value_str, "%d", value);
             break;
 
@@ -258,12 +287,12 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_TEMPERATURE_UNIT:
-            value = 0;              //0:℃ 1:℉
+            value = displayInfo.isFahrenheit ? 1 : 0;              //0:℃ 1:℉
             //strcpy(value_str, i18n[STR_CELSIUS + value]);
             break;
 
         case COMPO_BOND_DISTANCE_UNIT:
-            value = 0;              //0:km 1:mile
+            value = uteModuleSystemtimeGetDistanceMiType() == true ? 1 : 0;              //0:km 1:mile
             //strcpy(value_str, i18n[STR_KM + value]);
             break;
 
@@ -329,7 +358,6 @@ static void compo_set_roll(compo_roll_cb_t *rcb, widget_text_t *txt, bool multil
     bool txt_directoion = widget_text_get_right_align(txt);
     s16 client_x = 0, client_y = 0;
     widget_text_get_client(txt, &client_x, &client_y);
-
 
     flag_drag = ctp_get_dxy(&dx, &dy);
     if (flag_drag)      //按下

@@ -55,10 +55,12 @@ int (*vc30fx_dbglog_user)(const char *, ...) = NULL;
 void vc30fx_pwr_en(void)        //PF5
 {
     uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
-    GPIOFFEN &= ~BIT(5);
-    GPIOFDE  |= BIT(5);
-    GPIOFDIR &= ~BIT(5);
-    GPIOFSET = BIT(5);
+    // GPIOFFEN &= ~BIT(5);
+    // GPIOFDE  |= BIT(5);
+    // GPIOFDIR &= ~BIT(5);
+    // GPIOFSET = BIT(5);
+
+    uteModulePlatformOutputGpioSet(IO_PF5,true);
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(false);
 #else
@@ -73,16 +75,22 @@ void vc30fx_pwr_dis(void)       //PF5
     {
         vc30fx_dev.dev_work_status = 0;
     }
-    GPIOFFEN &= ~BIT(5);
-    GPIOFDE  |= BIT(5);
-    GPIOFDIR &= ~BIT(5);
-    GPIOFCLR = BIT(5);
+    // GPIOFFEN &= ~BIT(5);
+    // GPIOFDE  |= BIT(5);
+    // GPIOFDIR &= ~BIT(5);
+    // GPIOFCLR = BIT(5);
+    uteModulePlatformOutputGpioSet(IO_PF5,false);
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(true);
 #else
     i2c_gsensor_init();
     uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);
 #endif
+    uteModulePlatformOutputGpioSet(IO_PE4,false);
+    uteModulePlatformOutputGpioSet(IO_PE5,false);
+
+    // vc30fx_msg_set_look(false);
+
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
 }
 
@@ -173,6 +181,7 @@ static void vc30fx_timer_count(void)
 unsigned int vc30fx_get_cputimer_tick(void)
 {
     /*  return RTC(timer count value) */
+    hw_timer_count = cc_time_count() / 32;
     return hw_timer_count;
 }
 
@@ -708,7 +717,7 @@ void vc30fx_isr(void)
     // else
     // {
     // msg_enqueue(EVT_VC30FX_ISR);
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_GET_AAC_HANDLER,0);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_ALGO_HANDLER,0);
     //     vc30fx_sleep_isr = false;
     // }
 
@@ -822,7 +831,8 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig )
     /* 如果使用定时器，必须适配模式的定时器执行时间，否则无法正确解析数据 */
     //unsigned short int timer_set_ms=(1000/frequency)*psdiv*fifodiv;
     hw_timer_count = 0;
-    bsp_hw_timer_set(HW_TIMER2, 32, vc30fx_timer_count);
+    // bsp_hw_timer_set(HW_TIMER2, 32, vc30fx_timer_count);
+    cc_time_init();
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
     extab_user_isr_set(IO_PG6, RISE_EDGE, IOUD_SEL_PD, vc30fx_isr);
     extab_user_isr_mode_set(IO_PG6, MODE_BOTH_AWAKEN_SLEEP);

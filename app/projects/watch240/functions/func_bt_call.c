@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_bt.h"
+#include "ute_module_call.h"
 
 enum
 {
@@ -40,6 +41,9 @@ void bt_incall_time_update(void)
 #else
     u16 call_times = bt_cb.times;
 #endif
+
+    uteModuleCallUpdateCallingTimeSecond(call_times);
+
     u8 hours   = call_times / 3600;
     u8 minutes = (call_times % 3600) / 60;
     u8 seconds = call_times % 60;

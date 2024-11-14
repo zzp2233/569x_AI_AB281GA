@@ -322,14 +322,14 @@ compo_form_t *func_bt_form_create(void)
 
     //歌名
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y -76, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 76, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
     compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
     compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
 
     //歌词
     compo_textbox_t *lyric_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 30, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
     compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
     compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
@@ -600,11 +600,23 @@ void func_bt_enter(void)
     func_cb.frm_main = func_bt_form_create();
     f_bt = (f_bt_t *)func_cb.f_cb;
 
+
+
     func_cb.mp3_res_play = func_bt_mp3_res_play;
     bt_cb.bt_form_created = 1;
     f_bt->bt_play_sta = false;
     f_bt->ams_play_sta = false;
     f_bt->vol = 0;
+    if (sys_cb.music_title_init)
+    {
+        memcpy(f_bt->title_buf, sys_cb.title_buf, sizeof(sys_cb.title_buf));
+        msg_enqueue(EVT_ID3_TITLE_UPDATE);
+    }
+    if (sys_cb.music_artist_init)
+    {
+        memcpy(f_bt->artist_buf, sys_cb.artist_buf, sizeof(sys_cb.artist_buf));
+        msg_enqueue(EVT_ID3_ARTIST_UPDATE);
+    }
     func_bt_music_play_btnpic_refresh(0);
 #if LE_AMS_CLIENT_EN
     if (ble_ams_is_connected())

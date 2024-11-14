@@ -15,6 +15,7 @@ enum COMPO_LISTBOX_STYLE
     COMPO_LISTBOX_STYLE_SELECT,                 //选择模式
     COMPO_LISTBOX_STYLE_LANGUAGE,               //语言选择模式, 列表文本不使用i18n的Radio模式
     COMPO_LISTBOX_STYLE_MENU_FOURGRID,          //四宫格列表菜单
+    COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT,         //带Title的列表，头部不做缩放，两行Text
 };
 
 enum COMPO_LISTBOX_ITEM_MODE
@@ -129,6 +130,7 @@ typedef struct compo_listbox_t_
     widget_icon_t *item_bgimg[LISTBOX_ITEM_CNT];
     widget_icon_t *item_icon[LISTBOX_ITEM_CNT];
     widget_text_t *item_text[LISTBOX_ITEM_CNT];
+    widget_text_t *item_text2[LISTBOX_ITEM_CNT];
     widget_icon_t *item_icon2[LISTBOX_ITEM_CNT];
     compo_roll_cb_t roll_cb[LISTBOX_ITEM_CNT];
     s16 item_idx[LISTBOX_ITEM_CNT];
@@ -141,7 +143,11 @@ typedef struct compo_listbox_t_
     widget_image_t *sec;
     s16 start_angle;
 
+    u32 alike_icon;
+    bool flag_alike_icon;
+
     void (*set_text_modify_by_idx_callback)(u32 item_cnt, char* str_txt, u16 index);
+    void (*set_text_modify_by_idx_callback2)(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index);
 
 } compo_listbox_t;
 
@@ -368,6 +374,20 @@ void compo_listbox_set_time_idx(compo_listbox_t *listbox, u8 idx);
  * @param[in] callback : 回调函数
  **/
 void compo_listbox_set_text_modify_by_idx_callback(compo_listbox_t *listbox, void* callback);
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text_modify_by_idx_callback2(compo_listbox_t *listbox, void* callback);
+
+/**
+ * @brief 列表图标全部采用相同的
+ * @param[in] listbox : 图标集指针
+ * @param[in] res : 图片资源
+ **/
+void compo_listbox_set_alike_icon(compo_listbox_t *listbox, u32 res);
 
 
 #endif

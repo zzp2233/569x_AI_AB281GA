@@ -130,7 +130,7 @@ compo_form_t *func_breathe_sub_mode_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_TIME]);
+    compo_form_set_title(frm, i18n[STR_SETTING_MODE]);
 
     //创建子页
     widget_page_t* sub_page = widget_page_create(frm->page_body);

@@ -338,7 +338,11 @@ compo_form_t *func_camera_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-    compo_form_add_image(frm, UI_BUF_CAMERA_CAMERA_BIN, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-10);
+//    compo_form_add_image(frm, UI_BUF_CAMERA_CAMERA_BIN, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-10);
+
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_CAMERA_CAMERA_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.2);
+    compo_picturebox_set_size(pic, GUI_SCREEN_CENTER_Y/1.2, GUI_SCREEN_CENTER_Y/1.2);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);

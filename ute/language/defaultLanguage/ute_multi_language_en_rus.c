@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-11-13 19:46:42
+*@date   2024-11-14 10:21:52
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -254,5 +254,7 @@ const char * const i18n_en_rus[] =
     [STR_FLY_BIRD] = "\x46\x6c\x61\x70\x70\x79\x20\x62\x69\x72\x64\x73\x00", // [241] Flappy birds
     [STR_IN_CALL] = "\x49\x6e\x20\x63\x61\x6c\x6c\x2e\x2e\x2e\x00", // [242] In call...
     [STR_CALL_ME] = "\x43\x61\x6c\x6c\x20\x6d\x65\x00", // [243] Call me
+    [STR_REVISE_TIMR] = "\x43\x68\x61\x6e\x67\x65\x20\x74\x68\x65\x20\x74\x69\x6d\x65\x00", // [244] Change the time
+    [STR_SET_REPEAT] = "\x53\x65\x74\x20\x75\x70\x20\x64\x75\x70\x6c\x69\x63\x61\x74\x65\x73\x00", // [245] Set up duplicates
 };
 

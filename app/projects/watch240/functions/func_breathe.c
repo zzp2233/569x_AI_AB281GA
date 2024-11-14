@@ -140,7 +140,7 @@ static void func_breathe_disp_init(u8 page_sta)
     switch (page_sta)
     {
         case BREATHE_STA_IDLE:
-            compo_textbox_set(txt, "开始");
+            compo_textbox_set(txt, i18n[STR_START]);
             btn = compo_getobj_byid(COMPO_ID_BTN_START);
             compo_button_set_visible(btn, true);
             btn = compo_getobj_byid(COMPO_ID_BTN_TIME);

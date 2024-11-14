@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 中文(简体）
 *@author
-*@date   2024-11-13 19:46:42
+*@date   2024-11-14 10:21:51
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -254,5 +254,7 @@ const char * const i18n_zh_rcn[] =
     [STR_FLY_BIRD] = "\xe9\xa3\x9e\xe6\x89\xac\xe7\x9a\x84\xe5\xb0\x8f\xe9\xb8\x9f\x00", // [241] 飞扬的小鸟
     [STR_IN_CALL] = "\xe5\x91\xbc\xe5\x8f\xab\xe4\xb8\xad\x2e\x2e\x2e\x00", // [242] 呼叫中...
     [STR_CALL_ME] = "\xe6\x9d\xa5\xe7\x94\xb5\x00", // [243] 来电
+    [STR_REVISE_TIMR] = "\xe6\x9b\xb4\xe6\x94\xb9\xe6\x97\xb6\xe9\x97\xb4\x00", // [244] 更改时间
+    [STR_SET_REPEAT] = "\xe8\xae\xbe\xe7\xbd\xae\xe9\x87\x8d\xe5\xa4\x8d\x00", // [245] 设置重复
 };
 

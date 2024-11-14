@@ -48,15 +48,15 @@ compo_form_t *func_findphone_form_create(void)
 
     //图像按钮
     compo_button_t * btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_FIND_PHONE_START_BIN);
     compo_setid(btn, COMPO_ID_BUTTON_FIND);
     compo_button_set_pos((compo_button_t *)btn, GUI_SCREEN_CENTER_X, 258);
 
     //按钮上的文本
-    compo_textbox_t * txt = compo_textbox_create(frm, 6);
-    compo_setid(txt, COMPO_ID_TEXT_FIND);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 258);
-    compo_textbox_set(txt, i18n[STR_START]);
+//    compo_textbox_t * txt = compo_textbox_create(frm, 6);
+//    compo_setid(txt, COMPO_ID_TEXT_FIND);
+//    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 258);
+//    compo_textbox_set(txt, i18n[STR_START]);
 
     return frm;
 }
@@ -106,18 +106,21 @@ static void func_findphone_process(void)
 static void func_findphone_button_touch_handle(void)
 {
 //    f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
-    compo_textbox_t * txt;
+//    compo_textbox_t * txt;
 
     int id = compo_get_button_id();
     if (COMPO_ID_BUTTON_FIND == id)
     {
         start_falg ^=1;
-        txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
+//        txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
+        compo_button_t * btn = compo_getobj_byid(COMPO_ID_BUTTON_FIND);
 
         if(start_falg)
-            compo_textbox_set(txt, i18n[STR_MEASURING]);
+            compo_button_set_bgimg(btn, UI_BUF_COMMON_FIND_PHONE_STOP_BIN);
+//            compo_textbox_set(txt, i18n[STR_MEASURING]);
         else
-            compo_textbox_set(txt, i18n[STR_START]);
+            compo_button_set_bgimg(btn, UI_BUF_COMMON_FIND_PHONE_START_BIN);
+//            compo_textbox_set(txt, i18n[STR_START]);
     }
 
 

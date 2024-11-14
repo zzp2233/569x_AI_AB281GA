@@ -78,6 +78,7 @@
 			<Add directory="../../../ute/drv/gsensor" />
 			<Add directory="../../../ute/language" />
 			<Add directory="../../../ute/language/defaultLanguage" />
+			<Add directory="../../../ute/module/findphone" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -171,6 +172,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/filesystem/ute_module_filesystem.h" />
+		<Unit filename="../../../ute/module/findphone/ute_module_findphone.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/findphone/ute_module_findphone.h" />
 		<Unit filename="../../../ute/module/gui/ute_module_gui_common.c">
 			<Option compilerVar="CC" />
 		</Unit>

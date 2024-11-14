@@ -27,6 +27,7 @@
 #include "ute_module_sleep.h"
 #include "ute_module_notdisturb.h"
 #include "ute_drv_gsensor_common.h"
+#include "ute_module_findphone.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -1014,8 +1015,6 @@ void uteModuleProtocolSetWeatherData(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
 {
-#if 0
-
     if (receive[1] == 0x0A) //find phone
     {
         if (length == 4) /*! 手机停止的时候会返回停止响铃指令，xjc 2022-01-18*/
@@ -1048,11 +1047,11 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
     {
         if(receive[2] == 0x01)
         {
-            uteModuleMusicSetPlayerPaused(false,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
+            // uteModuleMusicSetPlayerPaused(false,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
         }
         else if(receive[2] == 0x02)
         {
-            uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
+            // uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
         }
         receive[2] = 0x00;
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],3);
@@ -1061,10 +1060,9 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
     {
         if(receive[2] <= 100)
         {
-            uteModuleMusicSetPlayerVolume(receive[2]);
+            // uteModuleMusicSetPlayerVolume(receive[2]);
         }
     }
-#endif
 
 }
 /**

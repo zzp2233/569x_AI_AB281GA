@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_findphone.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -25,7 +26,7 @@ enum
 
 };
 
-bool start_falg=0;
+bool start_falg = false;
 
 
 //创建查找手机窗体
@@ -111,19 +112,24 @@ static void func_findphone_button_touch_handle(void)
     int id = compo_get_button_id();
     if (COMPO_ID_BUTTON_FIND == id)
     {
-        start_falg ^=1;
+        start_falg = !start_falg;
 //        txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
         compo_button_t * btn = compo_getobj_byid(COMPO_ID_BUTTON_FIND);
 
         if(start_falg)
+        {
             compo_button_set_bgimg(btn, UI_BUF_COMMON_FIND_PHONE_STOP_BIN);
+            uteModuleFindPhoneStartRing();
 //            compo_textbox_set(txt, i18n[STR_MEASURING]);
+        }
         else
+        {
             compo_button_set_bgimg(btn, UI_BUF_COMMON_FIND_PHONE_START_BIN);
+            uteModuleFindPhoneStopRing();
 //            compo_textbox_set(txt, i18n[STR_START]);
+        }
+
     }
-
-
 
 }
 
@@ -170,6 +176,11 @@ static void func_findphone_enter(void)
 static void func_findphone_exit(void)
 {
     func_cb.last = FUNC_FINDPHONE;
+
+    if(uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
+    {
+        uteModuleFindPhoneStopRing();
+    }
 
 //    ab_app_search_phone(false);
 }

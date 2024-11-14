@@ -84,7 +84,7 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_TIME);
     compo_textbox_set_pos(txt_num, GUI_SCREEN_CENTER_X, 128);
     compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_38_BIN);
-    snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
+    snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", min, sec, msec / 10);
     compo_textbox_set(txt_num, str_buff);
     txt_num = compo_textbox_create(frm, 2);     //记录数
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
@@ -236,7 +236,7 @@ static void func_stopwatch_button_click(void)
                 sys_cb.stopwatch_rec_cnt = 0;
                 sys_cb.stopwatch_total_msec = 0;
 
-                compo_textbox_set(num_time, "00:00.00");
+                compo_textbox_set(num_time, "00:00:00");
                 compo_textbox_set(num_rec, "0");
             }
             break;
@@ -273,7 +273,7 @@ static void func_stopwatch_process(void)
             f_stopwatch->sec = sec;
             f_stopwatch->msec = msec;
 
-            snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
+            snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", min, sec, msec / 10);
             compo_textbox_set(num_time, str_buff);
         }
 

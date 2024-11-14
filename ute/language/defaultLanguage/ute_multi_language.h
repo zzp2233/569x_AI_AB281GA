@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-09 14:25:36
+*@date   2024-11-14 10:21:51
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -255,6 +255,10 @@ enum
     STR_SURE_RESET, // 是否恢复出厂设置?
     STR_SURE_REBOOT, // 是否重启?
     STR_FLY_BIRD, // 飞扬的小鸟
+    STR_IN_CALL, // 呼叫中...
+    STR_CALL_ME, // 来电
+    STR_REVISE_TIMR, // 更改时间
+    STR_SET_REPEAT, // 设置重复
 };
 
 extern const char * const *i18n;

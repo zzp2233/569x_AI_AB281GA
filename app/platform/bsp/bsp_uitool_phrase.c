@@ -1,7 +1,7 @@
 #include "include.h"
 #include "../gui/components/compo_form.h"
 
-#define TRACE_EN        0
+//#define TRACE_EN    1
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

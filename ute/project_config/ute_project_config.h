@@ -23,7 +23,7 @@
 #define CHIP_5690G                      2           //QFN52
 #define CHIP_5690F                      3           //QFN52
 
-#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F                  //芯片封装选择 5691G/5691C_F
+#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691G                  //芯片封装选择 5691G/5691C_F
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
 #ifndef DEFAULT_BLE_DEV_NEME

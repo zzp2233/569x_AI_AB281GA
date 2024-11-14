@@ -157,10 +157,26 @@ typedef enum
     CALL_DIALED,
 } CALL_TYPE_T;
 
+typedef enum
+{
+    CALL_OUTGOING = 0,
+    CALL_INCOMING,
+} CALL_STATUS_T;
+
 /**
  * @brief     通话记录数据结构
  * @details   用于记录列表格式化显示
  */
+typedef struct
+{
+    uint8_t numberAscii[UTE_CALL_DIAL_NUMBERS_MAX];
+    uint8_t numberAsciiLen;
+    uint8_t nameUnicode[UTE_CALL_NAME_MAX];
+    uint8_t nameUnicodeLen;
+    CALL_TYPE_T callType; // 0:MISSED 1:RECEIVED 2:DIALED
+    ute_module_systemtime_time_t callTime; //来电时间
+} ute_module_call_records_t;
+
 typedef struct
 {
     bool appCallForwarding; //app 来电手表转接
@@ -209,6 +225,7 @@ bool uteModuleCallIsCurrentConnectionIphone(void);
 void uteModuleCallBleConnectState(bool isConnected);
 
 void uteModuleCallSetInComingNumberName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t nameSize);
+void uteModuleCallSetContactsNumberAndName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t nameSize);
 void uteModuleCallGetAllAddressBookContactContent(uint16_t totalLen,ute_module_call_addressbook_t *pData);
 void uteModuleCallParseAddressBookContactNameAndNumber(uint8_t *data,uint8_t *name,uint8_t *nameLen,uint8_t *number,uint8_t *numberLen);
 uint16_t uteModuleCallGetAddressBookSize(void);
@@ -218,4 +235,6 @@ void uteModuleCallSyncAddressBookData(uint8_t *receive,uint8_t length);
 void uteModuleCallSyncAddressBookStart(void);
 void uteModuleCallClearNumberAndName(void);
 bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen);
+void uteModuleCallSetBeforeCallStatus(uint8_t status);
+void uteModuleCallUpdateCallingTimeSecond(uint32_t second);
 #endif //_UTE_MODULE_BT_AUDIO_H_

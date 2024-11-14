@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_call.h"
 
 static call_cfg_t bt_voice_cb AT(.sco_data);
 
@@ -272,6 +273,10 @@ void hfp_hf_call_notice(uint32_t evt)
             bsp_call_mgr_send(CALL_MGR_BT_ENDCALL);
             bt_cb.number_sta = false;
             bt_cb.call_type = CALL_TYPE_NONE;
+
+            //保存通话记录
+            uteModuleCallUpdateRecordsData();
+
 #if CALL_MGR_EN
             bt_cb.incall_flag = 0;
             bt_cb.times = 0;
@@ -350,7 +355,14 @@ bool hfp_hf_3way_number_update_control(void)
  * @param type
  */
 void hfp_hf_parse_clcc_cb(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode, uint8_t mpty, char *number, uint8_t type)
-{}
+{
+    printf("===>>> clcc: idx:%d, dir:%d, status:%d, mode:%d, mpty:%d, number:%s, type:%d\n", idx, dir, status, mode, mpty, number, type);
+    if(mode == 0 && (status == 0 || status == 2 || status == 4))
+    {
+        uteModuleCallSetBeforeCallStatus(dir);
+        uteModuleCallSetContactsNumberAndName(number, strlen(number), NULL, 0);
+    }
+}
 
 #endif //HFP_3WAY_CONTROL_EN
 

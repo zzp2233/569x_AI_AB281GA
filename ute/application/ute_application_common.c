@@ -248,7 +248,7 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_PLAYBACK_SUPPORT
         uteModuleMicRecordInit();
 #endif
-        //uteModuleFindPhoneInit();
+        uteModuleFindPhoneInit();
         //uteModuleGuiStringInit();
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
         uteModuleEmotionPressureInit();

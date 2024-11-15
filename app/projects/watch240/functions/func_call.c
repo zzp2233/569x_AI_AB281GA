@@ -9,18 +9,21 @@
 
 #define CALL_LIST_CNT                       ((int)(sizeof(tbl_call_list) / sizeof(tbl_call_list[0])))
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
 };
 
-typedef struct f_call_list_t_ {
+typedef struct f_call_list_t_
+{
     compo_listbox_t *listbox;
 
 } f_call_list_t;
 
-static const compo_listbox_item_t tbl_call_list[] = {
+static const compo_listbox_item_t tbl_call_list[] =
+{
     {STR_CALL_RECENT,      UI_BUF_ICON_CALL_BIN,               .func_sta = FUNC_CALL_SUB_RECORD},
-    {STR_CALL_LINK,        UI_BUF_ICON_ADDRESS_BOOK_BIN,       .func_sta = FUNC_CALL_SUB_LINKMAN},
+    {STR_CONTACTS,        UI_BUF_ICON_ADDRESS_BOOK_BIN,       .func_sta = FUNC_CALL_SUB_LINKMAN},
     {STR_CALL_DIAL,        UI_BUF_ICON_MENU_BIN,               .func_sta = FUNC_CALL_SUB_DIAL},
 };
 
@@ -49,14 +52,16 @@ void func_call_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= CALL_LIST_CNT) {
+    if (icon_idx < 0 || icon_idx >= CALL_LIST_CNT)
+    {
         return;
     }
 
     //根据图标索引获取应用ID
     func_sta = tbl_call_list[icon_idx].func_sta;
     //切入应用
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
         compo_form_t *frm = func_create_form(func_sta);
         func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
         compo_form_destroy(frm);
@@ -70,21 +75,23 @@ static void func_call_list_message(size_msg_t msg)
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_call->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_call_icon_click();                //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_call_icon_click();                //单击图标
+            break;
 
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -105,7 +112,8 @@ static void func_call_enter(void)
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
     f_call->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_call->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
@@ -127,7 +135,8 @@ void func_call(void)
 {
     printf("%s\n", __func__);
     func_call_enter();
-    while (func_cb.sta == FUNC_CALL) {
+    while (func_cb.sta == FUNC_CALL)
+    {
         func_call_process();
         func_call_list_message(msg_dequeue());
     }

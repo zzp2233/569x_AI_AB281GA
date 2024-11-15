@@ -134,14 +134,18 @@ static void func_clock_sub_dropdown_mute_pic_update(void)
 static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 {
     compo_button_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_BTN_CONNECT);
+    compo_picturebox_t *bluetooth = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
     printf("bt_get_scan: 0x%x\n", bt_get_scan());
     if(bt_get_scan())
     {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_ON_BIN);
+        compo_picturebox_set_visible(bluetooth, true);
     }
     else
     {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_OFF_BIN);
+        compo_picturebox_set_visible(bluetooth, false);
+
     }
 }
 
@@ -206,20 +210,20 @@ static void func_clock_sub_dropdown_form_create(void)
     //电池
     compo_picturebox_t *battery_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_POWER1_BIN);
     compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
-    compo_picturebox_set_pos(battery_pic, GUI_SCREEN_CENTER_X*1.7, GUI_SCREEN_CENTER_Y/8);
+    compo_picturebox_set_pos(battery_pic, GUI_SCREEN_CENTER_X*1.6, GUI_SCREEN_CENTER_Y/8);
     compo_picturebox_set_visible(battery_pic, true);
 
     //蓝牙状态
     compo_picturebox_t *bluetooth_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y/8);
+    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/3.5, GUI_SCREEN_CENTER_Y/8);
 //    compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
     compo_picturebox_set(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_ICON_OFF_BIN);
 //    compo_picturebox_set_visible(bluetooth_pic, true);
 
     bluetooth_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BTETOOTH_STA_PIC);
-    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/3.5, GUI_SCREEN_CENTER_Y/8);
+    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/1.9, GUI_SCREEN_CENTER_Y/8);
     compo_picturebox_set(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BLE_ICON_OFF_BIN);
 //    compo_picturebox_set_visible(bluetooth_pic, true);
 

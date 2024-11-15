@@ -964,6 +964,68 @@ void uteModuleSleepGetCurrDayDataDisplay(ute_module_sleep_display_data_t *sleepD
         memset(&sleepDisplayData->fallAsSleepTime, 0x00, sizeof(timestmap_t));
         memset(&sleepDisplayData->getUpSleepTime, 0x00, sizeof(timestmap_t));
     }
+
+#if UTE_LOG_GUI_LVL // test
+    static uint8_t sleepDatas[21*6]=
+    {
+        0x01,0x23,0x01,0x01,0x00,0x2d,
+        0x02,0x14,0x02,0x01,0x00,0x0f,
+        0x02,0x23,0x01,0x01,0x00,0x2a,
+        0x03,0x11,0x02,0x01,0x00,0x01,
+        0x03,0x12,0x01,0x01,0x00,0x1c,
+        0x03,0x2e,0x02,0x01,0x00,0x21,
+        0x04,0x13,0x01,0x01,0x00,0x25,
+        0x04,0x38,0x02,0x01,0x00,0x20,
+        0x05,0x1c,0x01,0x01,0x00,0x28,
+        0x06,0x08,0x02,0x01,0x00,0x01,
+        0x06,0x09,0x01,0x01,0x00,0x17,
+        0x06,0x20,0x02,0x01,0x00,0x01,
+        0x06,0x21,0x01,0x01,0x00,0x1c,
+        0x07,0x01,0x02,0x01,0x00,0x04,
+        0x07,0x05,0x01,0x01,0x00,0x25,
+        0x07,0x2a,0x02,0x01,0x00,0x09,
+        0x07,0x38,0x03,0x01,0x00,0x02,
+        0x07,0x3a,0x01,0x01,0x00,0x29,
+        0x08,0x27,0x02,0x01,0x00,0x01,
+        0x08,0x28,0x03,0x01,0x00,0x01,
+        0x08,0x29,0x02,0x01,0x00,0x0b,
+    };
+    sleepDisplayData->sleep_record[0].state=rand()%2+1;
+    sleepDisplayData->sleep_record[0].sleepFlag =0;
+    sleepDisplayData->sleep_record[0].period =60;
+    sleepDisplayData->sleep_record[0].startTime.hour=1;
+    sleepDisplayData->sleep_record[0].startTime.min=1;
+
+    for(uint8_t   i= 0; i < 21; i++)
+    {
+        sleepDisplayData->sleep_record[i].state = sleepDatas[6*i+2];
+        sleepDisplayData->sleep_record[i].sleepFlag = sleepDatas[6*i+3];
+        sleepDisplayData->sleep_record[i].period = sleepDatas[6*i+5];
+        sleepDisplayData->sleep_record[i].startTime.hour=sleepDatas[6*i];
+        sleepDisplayData->sleep_record[i].startTime.min=sleepDatas[6*i+1];
+        sleepDatas[6*i] =rand()%2+1;
+
+        if(sleepDisplayData->sleep_record[i].state == LIGHT_SLEEP)
+        {
+            sleepDisplayData->lightSleepMin += sleepDisplayData->sleep_record[i].period;
+        }
+        else if (sleepDisplayData->sleep_record[i].state == DEEP_SLEEP)
+        {
+            sleepDisplayData->deepSleepMin += sleepDisplayData->sleep_record[i].period;
+        }
+
+
+    }
+
+//    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,YYMMDD=%d-%d-%d\r\n", __func__,uteSleepAlgoData.saveData.year,uteSleepAlgoData.saveData.mon,uteSleepAlgoData.saveData.day);
+    sleepDisplayData->recordCnt =21;
+
+    sleepDisplayData->SleepMin = sleepDisplayData->lightSleepMin + sleepDisplayData->deepSleepMin;
+
+    sleepDisplayData->totalSleepMin = sleepDisplayData->SleepMin + sleepDisplayData->wakeSleepMin+sleepDisplayData->RemSleepMin;
+
+#endif
+
     // uteModuleSleepSetCurrDayDataGraphs(pRead,sleepDisplayData);
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,deepSleepMin=%d,lightSleepMin=%d,wakeSleepMin=%d", __func__, sleepDisplayData->deepSleepMin, sleepDisplayData->lightSleepMin, sleepDisplayData->wakeSleepMin);
     uteModulePlatformMemoryFree(pRead);

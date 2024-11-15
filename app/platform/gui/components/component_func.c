@@ -677,7 +677,19 @@ void compo_set_update(tm_t tm, u16 mtime)
                 compo_form_t *frm = (compo_form_t *)compo;
                 if (widget_get_visble(frm->time))
                 {
-                    sprintf(time_str, "%02d:%02d", tm.hour, tm.min);
+                    u8 tmp_time_hour = tm.hour;
+                    if(uteModuleSystemtime12HOn())
+                    {
+                        if(tmp_time_hour > 12)
+                        {
+                            tmp_time_hour = tmp_time_hour - 12;
+                        }
+                        else if (tmp_time_hour == 0)
+                        {
+                            tmp_time_hour = 12;
+                        }
+                    }
+                    sprintf(time_str, "%02d:%02d", tmp_time_hour, tm.min);
                     widget_text_set(frm->time, time_str);
                 }
             }

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-14 10:21:51
+*@date   2024-11-15 11:31:47
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -259,6 +259,9 @@ enum
     STR_CALL_ME, // 来电
     STR_REVISE_TIMR, // 更改时间
     STR_SET_REPEAT, // 设置重复
+    STR_RETRY, // 重试
+    STR_CONTACTS, // 通讯录
+    STR_ENTER_NUMBER, // 请输入电话号码！
 };
 
 extern const char * const *i18n;

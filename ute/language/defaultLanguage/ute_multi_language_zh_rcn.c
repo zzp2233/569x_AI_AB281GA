@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 中文(简体）
 *@author
-*@date   2024-11-14 10:21:51
+*@date   2024-11-15 11:31:48
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -256,5 +256,8 @@ const char * const i18n_zh_rcn[] =
     [STR_CALL_ME] = "\xe6\x9d\xa5\xe7\x94\xb5\x00", // [243] 来电
     [STR_REVISE_TIMR] = "\xe6\x9b\xb4\xe6\x94\xb9\xe6\x97\xb6\xe9\x97\xb4\x00", // [244] 更改时间
     [STR_SET_REPEAT] = "\xe8\xae\xbe\xe7\xbd\xae\xe9\x87\x8d\xe5\xa4\x8d\x00", // [245] 设置重复
+    [STR_RETRY] = "\xe9\x87\x8d\xe8\xaf\x95\x00", // [246] 重试
+    [STR_CONTACTS] = "\xe9\x80\x9a\xe8\xae\xaf\xe5\xbd\x95\x00", // [247] 通讯录
+    [STR_ENTER_NUMBER] = "\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\xe7\x94\xb5\xe8\xaf\x9d\xe5\x8f\xb7\xe7\xa0\x81\xef\xbc\x81\x00", // [248] 请输入电话号码！
 };
 

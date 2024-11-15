@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_sport.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -7,11 +9,13 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_wrist_t_ {
+typedef struct f_wrist_t_
+{
     u8 value;
 } f_wrist_t;
 
-enum {
+enum
+{
     //数字
     COMPO_ID_NUM_DISP_ONE = 1,
     COMPO_ID_NUM_DISP_TWS,
@@ -23,7 +27,8 @@ enum {
     COMPO_ID_PIC_WRIST_OFF,
 };
 
-typedef struct wrist_disp_pic_item_t_ {
+typedef struct wrist_disp_pic_item_t_
+{
     u32 res_addr;
     u16 pic_id;
     s16 x;
@@ -34,10 +39,23 @@ typedef struct wrist_disp_pic_item_t_ {
 #define WRIST_DISP_PIC_ITEM_CNT             ((int)(sizeof(tbl_wrist_disp_pic_item) / sizeof(tbl_wrist_disp_pic_item[0])))
 
 //图片item，创建时遍历一下
-static const wrist_disp_pic_item_t tbl_wrist_disp_pic_item[] = {
-    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_WRIST_ON,         200,    164,    false},
-    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_WRIST_OFF,        200,    164,    true},
+static const wrist_disp_pic_item_t tbl_wrist_disp_pic_item[] =
+{
+    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_WRIST_ON,         200,    160,    true},
+    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_WRIST_OFF,        200,    160,    true},
 };
+
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+
 
 //抬腕亮屏页面
 compo_form_t *func_set_sub_wrist_form_create(void)
@@ -56,18 +74,42 @@ compo_form_t *func_set_sub_wrist_form_create(void)
 
     //新建图像
     compo_picturebox_t *pic_click;
-    for (u8 idx = 0; idx < WRIST_DISP_PIC_ITEM_CNT; idx++) {
+    for (u8 idx = 0; idx < WRIST_DISP_PIC_ITEM_CNT; idx++)
+    {
         pic_click = compo_picturebox_create(frm, tbl_wrist_disp_pic_item[idx].res_addr);
         compo_setid(pic_click, tbl_wrist_disp_pic_item[idx].pic_id);
         compo_picturebox_set_pos(pic_click, tbl_wrist_disp_pic_item[idx].x, tbl_wrist_disp_pic_item[idx].y);
-        compo_picturebox_set_visible(pic_click, tbl_wrist_disp_pic_item[idx].visible_en);
+
+        if(idx == 0)
+        {
+            if(uteModuleSportGetIsOpenHandScreenOn())
+            {
+                compo_picturebox_set_visible(pic_click, true);
+            }
+            else
+            {
+                compo_picturebox_set_visible(pic_click, false);
+            }
+        }
+        else
+        {
+            if(uteModuleSportGetIsOpenHandScreenOn())
+            {
+                compo_picturebox_set_visible(pic_click, false);
+            }
+            else
+            {
+                compo_picturebox_set_visible(pic_click, true);
+            }
+        }
+
     }
 
     //创建按钮
     compo_button_t *btn;
     btn = compo_button_create(frm);
     compo_setid(btn, COMPO_ID_BIN_WRIST);
-    compo_button_set_location(btn, 200, 164, 60, 30);
+    compo_button_set_location(btn, 200, 160, 60, 30);
 
     return frm;
 }
@@ -87,10 +129,13 @@ static void func_set_sub_wrist_disp(void)
     compo_picturebox_t *pic_wrs_on  = compo_getobj_byid(COMPO_ID_PIC_WRIST_ON);
     compo_picturebox_t *pic_wrs_off = compo_getobj_byid(COMPO_ID_PIC_WRIST_OFF);
 
-    if (wrs->value == COMPO_ID_NUM_DISP_TWS) {
+    if (wrs->value == COMPO_ID_NUM_DISP_TWS)
+    {
         compo_picturebox_set_visible(pic_wrs_on, true);
         compo_picturebox_set_visible(pic_wrs_off, false);
-    } else if (wrs->value == COMPO_ID_NUM_DISP_ONE) {
+    }
+    else if (wrs->value == COMPO_ID_NUM_DISP_ONE)
+    {
         compo_picturebox_set_visible(pic_wrs_on, false);
         compo_picturebox_set_visible(pic_wrs_off, true);
     }
@@ -103,21 +148,27 @@ static void func_wrist_button_click(void)
     f_wrist_t *wrs = (f_wrist_t *)func_cb.f_cb;
     int id = compo_get_button_id();
 
-    switch(id) {
-    case COMPO_ID_BIN_WRIST:
-        ret = msgbox((char *)i18n[STR_SETTING_UP], NULL , NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+    switch(id)
+    {
+        case COMPO_ID_BIN_WRIST:
+            ret = msgbox((char *)i18n[STR_SETTING_UP], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
-        if (ret == MSGBOX_RES_OK) {
-            if (wrs->value == COMPO_ID_NUM_DISP_ONE) {
-                wrs->value = COMPO_ID_NUM_DISP_TWS;
-            } else {
-                wrs->value = COMPO_ID_NUM_DISP_ONE;
+            if (ret == MSGBOX_RES_OK)
+            {
+                if (wrs->value == COMPO_ID_NUM_DISP_ONE)
+                {
+                    wrs->value = COMPO_ID_NUM_DISP_TWS;
+                }
+                else
+                {
+                    wrs->value = COMPO_ID_NUM_DISP_ONE;
+                }
+                switch_set_sub_wrist();
             }
-        }
-    break;
+            break;
 
-    default:
-    break;
+        default:
+            break;
     }
     func_set_sub_wrist_disp();
 }
@@ -125,15 +176,16 @@ static void func_wrist_button_click(void)
 //抬腕亮屏功能消息处理
 static void func_set_sub_wrist_message(size_msg_t msg)
 {
-    switch (msg) {
+    switch (msg)
+    {
 
-    case MSG_CTP_CLICK:
-        func_wrist_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_wrist_button_click();
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -145,8 +197,15 @@ static void func_set_sub_wrist_enter(void)
 
     //初始化变量
     f_wrist_t *wrs = (f_wrist_t *)func_cb.f_cb;
-    wrs->value = COMPO_ID_NUM_DISP_ONE;
-    wrs->value = COMPO_ID_NUM_DISP_ONE;
+
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
+        wrs->value = COMPO_ID_NUM_DISP_TWS;
+    }
+    else
+    {
+        wrs->value = COMPO_ID_NUM_DISP_ONE;
+    }
 }
 
 //退出抬腕亮屏功能
@@ -160,7 +219,8 @@ void func_set_sub_wrist(void)
 {
     printf("%s\n", __func__);
     func_set_sub_wrist_enter();
-    while (func_cb.sta == FUNC_SET_SUB_WRIST) {
+    while (func_cb.sta == FUNC_SET_SUB_WRIST)
+    {
         func_set_sub_wrist_process();
         func_set_sub_wrist_message(msg_dequeue());
     }

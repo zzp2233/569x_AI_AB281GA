@@ -261,7 +261,7 @@ compo_form_t *func_clock_cube_form_create(void)
     txt = compo_textbox_create(frm, 10);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 180, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 140, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + GUI_SCREEN_CENTER_X, 300, 70);
     compo_bonddata(txt, COMPO_BOND_DATE);
 
     txt = compo_textbox_create(frm, 1);

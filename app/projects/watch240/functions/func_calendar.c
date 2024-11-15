@@ -358,6 +358,8 @@ static void func_calendar_enter(void)
     func_cb.frm_main = func_calender_form_create();
     //刷新文本内容
     func_calender_refresh(time.year, time.month, time.day);
+    func_calendar_date_update(true);
+    func_calendar_date_update(false);
 }
 
 //退出日历功能

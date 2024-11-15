@@ -118,13 +118,13 @@ static const timer_btn_item_t tbl_timer_btn_item[] =
 #define TIMER_TXT_ITEM_CNT  ((int)(sizeof(tbl_timer_txt_item) / sizeof(tbl_timer_txt_item[0])))
 static const timer_txt_item_t tbl_timer_txt_item[] =
 {
-    {"1min",      4,    48,   98,    true},
-    {"2min",      4,    120,  98,    true},
-    {"3min",      4,    192,  98,    true},
-    {"5min",      4,    48,   176,    true},
-    {"10min",     5,    120,  176,    true},
-    {"30min",     5,    192,  176,    true},
-    {"自定义",    6,    120,  260,    true},
+    {"1",      4,    48,   98,     true},
+    {"2",      4,    120,  98,     true},
+    {"3",      4,    192,  98,     true},
+    {"5",      4,    48,   176,    true},
+    {"10",     5,    120,  176,    true},
+    {"30",     5,    192,  176,    true},
+    {"自定义", 6,    120,  260,    true},
 };
 
 #define TIMER_CUSTOM_BTN_ITEM_CNT   ((int)(sizeof(tbl_timer_custom_btn_item) / sizeof(tbl_timer_custom_btn_item[0])))
@@ -170,17 +170,25 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             for (u8 idx = 0; idx < TIMER_TXT_ITEM_CNT; idx++)
             {
                 txt = compo_textbox_create(frm, tbl_timer_txt_item[idx].max_word_cnt);
-                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
+                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y-14);
+                compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
 
                 if(idx == TIMER_TXT_ITEM_CNT-1)
                 {
                     compo_textbox_set(txt, i18n[STR_CUSTOM]);
-                }
-                else
-                {
-                    compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
+                    compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
                 }
                 compo_textbox_set_visible(txt, tbl_timer_txt_item[idx].visible_en);
+
+                if(!(idx == TIMER_TXT_ITEM_CNT-1))
+                {
+                    txt = compo_textbox_create(frm, strlen(i18n[STR_MINUTE]));
+                    compo_textbox_set(txt, i18n_zh_rcn[STR_MINUTE]);
+                    //compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y+8);
+                    compo_textbox_set_location(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y+8,
+                                               widget_text_get_box_area_rel(txt->txt).wid,  widget_text_get_box_area_rel(txt->txt).hei);
+                    compo_textbox_set(txt, i18n[STR_MINUTE]);
+                }
             }
             break;
 

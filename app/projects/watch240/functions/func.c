@@ -540,6 +540,13 @@ void func_process(void)
         printf(">>>MSG POP\n");
     }
 
+    if (sys_cb.timer_done)
+    {
+        sys_cb.timer_done = false;
+        msg_enqueue(EVT_WATCH_TIMER_DONE);
+        printf(">>>TIMER DONE\n");
+    }
+
     if(sys_cb.hand_screen_on) //抬手亮屏
     {
         sys_cb.hand_screen_on = false;
@@ -1198,6 +1205,10 @@ void func_message(size_msg_t msg)
             sys_cb.sta_old = func_cb.sta;
             sys_cb.refresh_language_flag = true;
             func_switch_to(FUNC_MAP, 0);
+            break;
+
+        case EVT_WATCH_TIMER_DONE:      //计时器响铃
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
             break;
 
         default:

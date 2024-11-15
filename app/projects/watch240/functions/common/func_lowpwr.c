@@ -432,6 +432,13 @@ static void sfunc_sleep(void)
             break;
         }
 
+        if (sys_cb.timer_done)
+        {
+            printf("watch timer done\n");
+            gui_need_wkp = true;
+            break;
+        }
+
         //ute add
         if(uteModulePlatformNotAllowSleep())
         {

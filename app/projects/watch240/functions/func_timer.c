@@ -249,6 +249,7 @@ compo_form_t *func_timer_form_create(void)
             break;
 
         case TIMER_STA_WORKING:
+            uteModuleGuiCommonDisplayOffAllowGoBack(false);
         case TIMER_STA_PAUSE:
         case TIMER_STA_DONE:
         case TIMER_STA_RESET:
@@ -323,7 +324,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     {
         count = (u8 *)param;
     }
-    if (count && sys_cb.timer_sta == TIMER_STA_WORKING && !sys_cb.gui_sleep_sta)    //休眠不计时
+    if (count && sys_cb.timer_sta == TIMER_STA_WORKING /*&& !sys_cb.gui_sleep_sta*/)    //休眠不计时
     {
         if (sys_cb.timer_left_sec == 0)
         {
@@ -341,6 +342,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     if (done)
     {
         printf(">>>TIMER_DONE\n");
+        sys_cb.timer_done = true;
         sys_cb.timer_sta = TIMER_STA_DONE;
     }
 }
@@ -418,15 +420,18 @@ static void func_timer_button_click(void)
             switch (id)
             {
                 case COMPO_ID_BTN_START:
+//                    printf("COMPO_ID_BTN_START %d\n",sys_cb.timer_sta);
                     if (sys_cb.timer_sta == TIMER_STA_WORKING)
                     {
                         sys_cb.timer_sta = TIMER_STA_PAUSE;
+                        uteModuleGuiCommonDisplayOffAllowGoBack(true);
                     }
                     else if (sys_cb.timer_sta == TIMER_STA_DONE)
                     {
                         count_100ms = 0;
                         sys_cb.timer_left_sec = sys_cb.timer_total_sec;
                         sys_cb.timer_sta = TIMER_STA_RESET;
+                        uteModuleGuiCommonDisplayOffAllowGoBack(true);
                     }
                     else
                     {
@@ -436,6 +441,7 @@ static void func_timer_button_click(void)
                             co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
                         }
                         sys_cb.timer_sta = TIMER_STA_WORKING;
+                        uteModuleGuiCommonDisplayOffAllowGoBack(false);
                     }
                     break;
 
@@ -559,6 +565,8 @@ static void func_timer_enter(void)
 //退出定时器功能
 static void func_timer_exit(void)
 {
+    uteModuleGuiCommonDisplayOffAllowGoBack(true);
+    func_cb.last = FUNC_TIMER;
 }
 
 //定时器功能

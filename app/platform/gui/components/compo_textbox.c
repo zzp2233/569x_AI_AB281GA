@@ -135,7 +135,7 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
         {
             if (align_center)
             {
-                printf("align_center = %s\n", text);
+//                printf("align_center = %s\n", text);
                 if(textbox->roll_cb.direction == 1)
                 {
                     textbox->roll_cb.offset = -(rel_text_area.wid + circ_pixel);
@@ -152,17 +152,17 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
                     }
                 }
             }
-            else
-            {
-                if(textbox->roll_cb.direction == 1)
-                {
-                    textbox->roll_cb.offset = -(rel_text_area.wid + circ_pixel);
-                }
-                else
-                {
-                    textbox->roll_cb.offset = (textbox->roll_cb.direction && textbox->roll_cb.mode) ?  -(rel_text_area.wid +  circ_pixel): 0;
-                }
-            }
+//            else
+//            {
+//                if(textbox->roll_cb.direction == 1)
+//                {
+//                    textbox->roll_cb.offset = -(rel_text_area.wid + circ_pixel);
+//                }
+//                else
+//                {
+//                    textbox->roll_cb.offset = (textbox->roll_cb.direction && textbox->roll_cb.mode) ?  -(rel_text_area.wid +  circ_pixel): 0;
+//                }
+//            }
         }
 
         widget_text_set_client(txt, textbox->roll_cb.offset, client_y);

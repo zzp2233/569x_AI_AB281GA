@@ -33,26 +33,29 @@
 #define WEEKS_LIST_CNT                  ((int)(sizeof(tbl_weeks_list) / sizeof(tbl_weeks_list[0])))
 
 //组件ID
-enum {
+enum
+{
     //列表
     COMPO_ID_LISTBOX = 1,
 
     //按键
-	COMPO_ID_BTN_REPETAT_NO,
-	COMPO_ID_BTN_REPETAT_YES,
+    COMPO_ID_BTN_REPETAT_NO,
+    COMPO_ID_BTN_REPETAT_YES,
 
     //图像
-	COMPO_ID_PIC_REPETAT_NO_CLICK,
-	COMPO_ID_PIC_REPETAT_YES_CLICK,
+    COMPO_ID_PIC_REPETAT_NO_CLICK,
+    COMPO_ID_PIC_REPETAT_YES_CLICK,
 
 };
 
-typedef struct f_alarm_clock_sub_repeat_t_ {
+typedef struct f_alarm_clock_sub_repeat_t_
+{
     compo_listbox_t *listbox;
 
 } f_alarm_clock_sub_repeat_t;
 
-static const compo_listbox_item_t tbl_weeks_list[] = {
+static const compo_listbox_item_t tbl_weeks_list[] =
+{
     {STR_ALARM_CLOCK_MON, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_MON},
     {STR_ALARM_CLOCK_TUE, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_TUE},
     {STR_ALARM_CLOCK_WED, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_WED},
@@ -72,27 +75,28 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_REPEAT]);
 
-    #define SLEF_LIST_Y_OFFSET    15
-    #define SLEF_LIST_HEI_OFFSET  30
+#define SLEF_LIST_Y_OFFSET    15
+#define SLEF_LIST_HEI_OFFSET  30
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
     compo_listbox_set(listbox, tbl_weeks_list, WEEKS_LIST_CNT);
     compo_listbox_set_location(listbox, GUI_SCREEN_CENTER_X, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei - 5)/2 + SLEF_LIST_Y_OFFSET,
-                            GUI_SCREEN_WIDTH, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei-SLEF_LIST_HEI_OFFSET));
+                               GUI_SCREEN_WIDTH, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei-SLEF_LIST_HEI_OFFSET));
     compo_listbox_set_item_height(listbox, gui_image_get_size(UI_BUF_COMMON_SELECT_ON_BIN).hei+5);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_sta_icon(listbox, UI_BUF_COMMON_SELECT_ON_BIN, UI_BUF_COMMON_SELECT_BIN);
     compo_listbox_set_bithook(listbox, bsp_sys_get_ctlbit);
     compo_listbox_set_focus_byidx(listbox, 2);
 
-    for (int i=0; i<7; i++) {       //获取当前闹钟设置的星期
+    for (int i=0; i<7; i++)         //获取当前闹钟设置的星期
+    {
         bsp_sys_set_ctlbit(SYS_CTL_ACLOCK_MON + i, (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) >> i) & 1);
     }
 
     compo_listbox_update(listbox);
 
-	//新建按钮
-	compo_button_t *btn;
+    //新建按钮
+    compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
     compo_setid(btn, COMPO_ID_BTN_REPETAT_NO);
     compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei / 2 - 5);
@@ -123,16 +127,17 @@ static void func_alarm_clock_sub_repeat_button_touch_handle(void)
     compo_picturebox_t *pic_no_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK);
     compo_picturebox_t *pic_yes_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK);
 
-    switch (id) {
-    case COMPO_ID_BTN_REPETAT_NO:
-        compo_picturebox_set_visible(pic_no_click, true);
-        break;
-    case COMPO_ID_BTN_REPETAT_YES:
-        compo_picturebox_set_visible(pic_yes_click, true);
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_REPETAT_NO:
+            compo_picturebox_set_visible(pic_no_click, true);
+            break;
+        case COMPO_ID_BTN_REPETAT_YES:
+            compo_picturebox_set_visible(pic_yes_click, true);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
 }
@@ -156,50 +161,56 @@ static void func_alarm_clock_sub_repeat_button_click(void)
     compo_listbox_t *listbox = f_aclock->listbox;
 
     week_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (week_idx >= 0) {
+    if (week_idx >= 0)
+    {
         bsp_sys_reverse_ctlbit(tbl_weeks_list[week_idx].vidx);
         compo_listbox_update(listbox);
     }
 
-    switch (id) {
-    case COMPO_ID_BTN_REPETAT_NO:
-        if (task_stack_get_last() == FUNC_ALARM_CLOCK_SUB_EDIT) {
-            func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
+    switch (id)
+    {
+        case COMPO_ID_BTN_REPETAT_NO:
+            if (task_stack_get_last() == FUNC_ALARM_CLOCK_SUB_EDIT)
+            {
+                func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
+                break;
+            }
+            func_cb.sta = FUNC_ALARM_CLOCK;
             break;
-        }
-        func_cb.sta = FUNC_ALARM_CLOCK;
-        break;
 
-    case COMPO_ID_BTN_REPETAT_YES:
-        sys_cb.alarm_edit_cycle = 0;
-        for (int i=0; i<7; i++) {
-            sys_cb.alarm_edit_cycle |= (bsp_sys_get_ctlbit(SYS_CTL_ACLOCK_MON + i) << i);
-        }
+        case COMPO_ID_BTN_REPETAT_YES:
+            sys_cb.alarm_edit_cycle = 0;
+            for (int i=0; i<7; i++)
+            {
+                sys_cb.alarm_edit_cycle |= (bsp_sys_get_ctlbit(SYS_CTL_ACLOCK_MON + i) << i);
+            }
 //        printf("%s-->alarm_edit_cycle[0x%x]:%x\n", __func__, sys_cb.alarm_edit_idx, sys_cb.alarm_edit_cycle);
 
-        if (sys_cb.alarm_edit_cycle == 0) {
-            sys_cb.alarm_edit_cycle = 0x80;   //单次
-        }
+            if (sys_cb.alarm_edit_cycle == 0)
+            {
+                sys_cb.alarm_edit_cycle = 0x80;   //单次
+            }
 
-        if (task_stack_get_last() == FUNC_ALARM_CLOCK_SUB_EDIT) {
-            ALARM_EDIT(sys_cb.alarm_edit_idx,
-                         ALARM_GET_SWITCH(sys_cb.alarm_edit_idx),
-                         sys_cb.alarm_edit_cycle,
-                         ALARM_GET_HOUR(sys_cb.alarm_edit_idx),
-                         ALARM_GET_MIN(sys_cb.alarm_edit_idx),
-                         0,
-                         0);
-            func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
+            if (task_stack_get_last() == FUNC_ALARM_CLOCK_SUB_EDIT)
+            {
+                ALARM_EDIT(sys_cb.alarm_edit_idx,
+                           ALARM_GET_SWITCH(sys_cb.alarm_edit_idx),
+                           sys_cb.alarm_edit_cycle,
+                           ALARM_GET_HOUR(sys_cb.alarm_edit_idx),
+                           ALARM_GET_MIN(sys_cb.alarm_edit_idx),
+                           0,
+                           0);
+                func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
+                break;
+            }
+
+
+            ALARM_SET(sys_cb.alarm_edit_idx, true, sys_cb.alarm_edit_cycle, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min, 0, 0);
+            func_cb.sta = FUNC_ALARM_CLOCK;
             break;
-        }
 
-
-        ALARM_SET(sys_cb.alarm_edit_idx, false, sys_cb.alarm_edit_cycle, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min, 0, 0);
-        func_cb.sta = FUNC_ALARM_CLOCK;
-        break;
-
-    default:
-        break;
+        default:
+            break;
     }
 
     func_alarm_clock_sub_repeat_button_release_handle();
@@ -220,36 +231,38 @@ static void func_alarm_clock_sub_repeat_message(size_msg_t msg)
     f_alarm_clock_sub_repeat_t *f_aclock = (f_alarm_clock_sub_repeat_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_aclock->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         func_alarm_clock_sub_repeat_button_release_handle();
         return;                                         //处理列表框信息
     }
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_alarm_clock_sub_repeat_button_touch_handle();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_alarm_clock_sub_repeat_button_touch_handle();
+            break;
 
-	case MSG_CTP_CLICK:
-        func_alarm_clock_sub_repeat_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_alarm_clock_sub_repeat_button_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        func_alarm_clock_sub_repeat_button_release_handle();
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_alarm_clock_sub_repeat_button_release_handle();
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_alarm_clock_sub_repeat_button_release_handle();
-        func_message(msg);
-        break;
+        case MSG_CTP_SHORT_RIGHT:
+            func_alarm_clock_sub_repeat_button_release_handle();
+            func_message(msg);
+            break;
 
 
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -262,7 +275,8 @@ static void func_alarm_clock_sub_repeat_enter(void)
     f_alarm_clock_sub_repeat_t *f_aclock = (f_alarm_clock_sub_repeat_t *)func_cb.f_cb;
     f_aclock->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_aclock->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
@@ -288,7 +302,8 @@ void func_alarm_clock_sub_repeat(void)
 {
     printf("%s\n", __func__);
     func_alarm_clock_sub_repeat_enter();
-    while (func_cb.sta == FUNC_ALARM_CLOCK_SUB_REPEAT) {
+    while (func_cb.sta == FUNC_ALARM_CLOCK_SUB_REPEAT)
+    {
         func_alarm_clock_sub_repeat_process();
         func_alarm_clock_sub_repeat_message(msg_dequeue());
     }

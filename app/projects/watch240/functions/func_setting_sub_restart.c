@@ -25,8 +25,8 @@ compo_form_t *func_set_sub_restart_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_RESTART]);
+//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+//    compo_form_set_title(frm, i18n[STR_SETTING_RESTART]);
 
     //创建文本
     compo_textbox_t *txt_rst = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
@@ -38,11 +38,11 @@ compo_form_t *func_set_sub_restart_form_create(void)
     compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
     compo_setid(btn, COMPO_ID_BTN_NO);
-    compo_button_set_pos(btn, 65, 249);
+    compo_button_set_pos(btn, 65, 240);
 
     btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
     compo_setid(btn, COMPO_ID_BTN_YES);
-    compo_button_set_pos(btn, 175, 249);
+    compo_button_set_pos(btn, 175, 240);
 
     return frm;
 }

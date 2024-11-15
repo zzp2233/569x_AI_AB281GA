@@ -103,7 +103,7 @@ compo_form_t *func_menu_sub_list_form_create(void)
     if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
     {
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_FOURGRID);
-        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
+//        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
         //电池电量
 //        compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
 //        compo_textbox_set_location(battery_txt, 100, 35, 0, 0);
@@ -374,7 +374,7 @@ static void func_menu_sub_list_message(size_msg_t msg)
             case MSG_SYS_500MS:
                 if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
                 {
-                    func_menu_sub_list_battery_pic_update();
+//                    func_menu_sub_list_battery_pic_update();
                 }
                 break;
 

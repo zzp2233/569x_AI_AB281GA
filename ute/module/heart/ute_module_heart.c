@@ -242,6 +242,7 @@ void uteModuleHeartEverySecond(void)
             }
         }
 
+#if !DUG_VCXX_HEART_SUPPORT
         /*! 心率界面每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
         if(uteModuleHeartIsWear()&&(uteModuleHeartData.type == TYPE_HEART))
         {
@@ -254,6 +255,7 @@ void uteModuleHeartEverySecond(void)
                 uteModuleProfileBleSendToPhone(&heartData[0],4);
             }
         }
+#endif
     }
     /*! 单次测试逻辑zn.zeng, 2021-07-16  */
     if(uteModuleHeartData.isSingleTesting)
@@ -285,10 +287,12 @@ void uteModuleHeartEverySecond(void)
                     uteModuleProfileBleSendToPhone(&stopSingleCmd[0],2);
                 }
                 /*! 每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
+#if !DUG_VCXX_HEART_SUPPORT
                 if(uteModuleGuiCommonGetCurrentScreenId() == FUNC_HEARTRATE)
                 {
                     uteModuleProfileBleSendToPhone(&heartData[0],4);
                 }
+#endif
                 uteModuleHeartData.notWearSecond = 0;
             }
         }

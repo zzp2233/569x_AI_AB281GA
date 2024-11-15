@@ -31,6 +31,7 @@ enum
     COMPO_ID_PIC_CLICK,
     COMPO_ID_TXT_TIPS,
     COMPO_ID_TXT_RESULT,
+    COMPO_ID_TXT_UNWEAR,
     COMPO_ID_PIC_UNWEAR,
 };
 
@@ -67,9 +68,9 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_picturebox_set_visible((compo_picturebox_t *)compo, false);                   //触摸按下的效果图先设置不可见
 
     //按钮上的文本
-    compo = (component_t *)compo_textbox_create(frm, 6);
+    compo = (component_t *)compo_textbox_create(frm, 20);
     compo_setid(compo, COMPO_ID_TXT_TIPS);
-    compo_textbox_set_pos((compo_textbox_t *)compo, GUI_SCREEN_CENTER_X, 258);
+    compo_textbox_set_location((compo_textbox_t *)compo, GUI_SCREEN_CENTER_X, 258, gui_image_get_size(UI_BUF_COMMON_BUTTON_CLICK_BIN).wid, widget_text_get_height());
     compo_textbox_set((compo_textbox_t *)compo, i18n[STR_START]);
 
     //测量结果
@@ -84,8 +85,15 @@ compo_form_t *func_blood_oxygen_form_create(void)
     //未佩戴提示
     compo = (component_t *)compo_picturebox_create(frm, UI_BUF_BLOOD_OXYGEN_EXPLAIN_BIN);
     compo_setid(compo, COMPO_ID_PIC_UNWEAR);
-    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/2);
     compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+
+    //未佩戴提示文本
+    compo = (component_t *)compo_textbox_create(frm, 20);
+    compo_setid(compo, COMPO_ID_TXT_UNWEAR);
+    compo_textbox_set_location((compo_textbox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, gui_image_get_size(UI_BUF_COMMON_BUTTON_CLICK_BIN).wid, widget_text_get_height());
+    compo_textbox_set((compo_textbox_t *)compo, i18n[STR_WEAR_CHECK]);
+    compo_textbox_set_visible((compo_textbox_t *)compo, false);
 
     return frm;
 }
@@ -121,19 +129,21 @@ static void func_blood_oxygen_button_click(void)
     f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
     component_t *compo;
 
+    int id = compo_get_button_id();
+    if (COMPO_ID_BTN != id)
+    {
+        return ;
+    }
+
     //未佩戴下退出
     if (BO_STA_UNWEAR == f_bo->det_sta)
     {
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+        compo = compo_getobj_byid(COMPO_ID_TXT_UNWEAR);
+        compo_textbox_set_visible((compo_textbox_t *)compo, false);
         compo = compo_getobj_byid(COMPO_ID_PIC_BG);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, true);
-    }
-
-    int id = compo_get_button_id();
-    if (COMPO_ID_BTN != id)
-    {
-        return ;
     }
 
     switch (f_bo->det_sta)
@@ -173,6 +183,9 @@ static void func_blood_oxygen_unwear_handle(bool wear)
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
 
+        compo = compo_getobj_byid(COMPO_ID_TXT_UNWEAR);
+        compo_textbox_set_visible((compo_textbox_t *)compo, false);
+
         compo = compo_getobj_byid(COMPO_ID_PIC_BG);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, true);
 
@@ -184,11 +197,14 @@ static void func_blood_oxygen_unwear_handle(bool wear)
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, true);
 
+        compo = compo_getobj_byid(COMPO_ID_TXT_UNWEAR);
+        compo_textbox_set_visible((compo_textbox_t *)compo, true);
+
         compo = compo_getobj_byid(COMPO_ID_PIC_BG);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
 
         compo = compo_getobj_byid(COMPO_ID_TXT_TIPS);
-        compo_textbox_set((compo_textbox_t *)compo, i18n[STR_WEAR_CHECK]);
+        compo_textbox_set((compo_textbox_t *)compo, i18n[STR_RETRY]);
 
         f_bo->value = 0;
         compo = compo_getobj_byid(COMPO_ID_TXT_RESULT);

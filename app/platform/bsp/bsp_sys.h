@@ -124,6 +124,7 @@ typedef struct
     u8 motor_level;
     //定时器
     u8 timer_sta;                                   //计时器工作状态（0:未开启 1:正在计时 2:暂停 3:结束 4:复位）
+    u8 timer_done;                                //计时器到时
     u32 timer_total_sec;                            //当前计时器总时间 （单位：秒）
     u32 timer_left_sec;                             //当前计时器剩余时间 （单位：秒）
     u32 timer_custom_sec;                           //计时器自定义时间记忆值

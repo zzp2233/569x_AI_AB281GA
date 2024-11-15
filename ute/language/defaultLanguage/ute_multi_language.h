@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-14 10:21:51
+*@date   2024-11-15 11:02:49
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -187,7 +187,7 @@ enum
     STR_SEC, // 秒
     STR_START, // 开始
     STR_MEASURING, // 测量中
-    STR_WEAR_CHECK, // 佩戴检测中
+    STR_WEAR_CHECK, // 请正确佩戴手表，保持静止
     STR_UNKNOWN, // 未知
     STR_COMPO_SELECT, // 组件选择
     STR_STYLE_SUDOKU_1, // 九宫格
@@ -259,6 +259,7 @@ enum
     STR_CALL_ME, // 来电
     STR_REVISE_TIMR, // 更改时间
     STR_SET_REPEAT, // 设置重复
+    STR_RETRY, // 重试
 };
 
 extern const char * const *i18n;

@@ -108,6 +108,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_t *cardbox;
     ute_module_systemtime_time_t time;
     ute_module_weather_data_t  weather_date;
+    ute_display_ctrl_t displayInfo;
     u8 get_weather_id=0;
     char str_buff[16];
 
@@ -131,6 +132,16 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
             }
         }
         get_weather_id = weather_date.DayWeather[0]>>8;//获取天气状态
+
+        if(displayInfo.isFahrenheit)    //是否为华氏度
+        {
+            weather_date.fristDayCurrTemperature= weather_date.fristDayCurrTemperature*9/5+32;
+            /*pcm 2022-09-19 */
+            if(weather_date.fristDayCurrTemperature<(-99))
+            {
+                weather_date.fristDayCurrTemperature=-99;
+            }
+        }
     }
 
     //新建窗体
@@ -176,7 +187,8 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_TIMER_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 54-130, 270-296, 54, 54);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_TIMER]);    //计时器
-    compo_cardbox_text_set_location(cardbox, 0, 129-110, 270-296, 100, 30);
+    compo_cardbox_text_set_align_center(cardbox,0,false);
+    compo_cardbox_text_set_location(cardbox, 0, -24, -38, 100, 30);
 //    compo_cardbox_text_map_center2left_location(cardbox, 0, 140-110, 270-296, 100, 30);
     snprintf(str_buff, sizeof(str_buff), "%02lu:%02lu:%02lu", TIMER_HOUR, TIMER_MIN, TIMER_SEC);    //计时时间
     compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
@@ -191,7 +203,8 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_STOPWATCH_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 54-130, 440-466, 54, 54);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_STOP_WATCH]);    //秒表
-    compo_cardbox_text_set_location(cardbox, 0, 129-110, 440-466, 100, 30);
+    compo_cardbox_text_set_align_center(cardbox,0,false);
+    compo_cardbox_text_set_location(cardbox, 0, -24, -38, 100, 30);
 //    compo_cardbox_text_map_center2left_location(cardbox, 0, 129-110, 440-466, 100, 30);
     snprintf(str_buff, sizeof(str_buff), "%02lu:%02lu:%02lu", STOPWATCH_HOUR, STOPWATCH_MIN, STOPWATCH_SEC);    //计时时间
     compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);

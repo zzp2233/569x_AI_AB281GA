@@ -108,6 +108,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_t *cardbox;
     ute_module_systemtime_time_t time;
     ute_module_weather_data_t  weather_date;
+    ute_display_ctrl_t displayInfo;
     u8 get_weather_id=0;
     char str_buff[16];
 
@@ -131,6 +132,16 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
             }
         }
         get_weather_id = weather_date.DayWeather[0]>>8;//获取天气状态
+
+        if(displayInfo.isFahrenheit)    //是否为华氏度
+        {
+            weather_date.fristDayCurrTemperature= weather_date.fristDayCurrTemperature*9/5+32;
+            /*pcm 2022-09-19 */
+            if(weather_date.fristDayCurrTemperature<(-99))
+            {
+                weather_date.fristDayCurrTemperature=-99;
+            }
+        }
     }
 
     //新建窗体

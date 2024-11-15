@@ -83,14 +83,17 @@ compo_form_t *func_call_sub_dial_form_create(void)
         compo_setid(btn, tbl_call_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_call_disp_btn_item[idx_btn].x, tbl_call_disp_btn_item[idx_btn].y);
     }
+    printf("W:%d H:%d\n",gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).wid,gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).hei);
+
 
     //创建文本
-    compo_textbox_t *txt_title = compo_textbox_create(frm, 50);
+    compo_textbox_t *txt_title = compo_textbox_create(frm, strlen(i18n[STR_ENTER_NUMBER]));
     compo_setid(txt_title, COMPO_ID_PIC_NUM);
     //compo_textbox_set_align_center(txt_title, false);
-    compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, 40, GUI_SCREEN_WIDTH, widget_text_get_height());
+    compo_textbox_set_pos(txt_title, 10, 18);
+    compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, widget_text_get_height());
     //compo_textbox_set_autoroll_mode(txt_title,1);
-    compo_textbox_set(txt_title, "请输入电话号码！");
+    compo_textbox_set(txt_title, i18n[STR_ENTER_NUMBER]);
 
     //创建数字
     compo_textbox_t *txt_num;

@@ -9,19 +9,26 @@
 /* system include */
 //#include "os_timer.h"
 //#include <simple_ble_service.h>
+#include "ute_module_profile_ble.h"
+#include "ute_project_config.h"
 //#include "wristband_global_data.h"
 //extern RtkWristBandSysType_t RtkWristbandSys;
 /* vcare include */
 #include "vcare_device_com.h"
 #include "vc30fx_sample_result.h"
+#include "ute_application_common.h"
 
+#if DUG_VCXX_HEART_SUPPORT
 static unsigned char ble_buf[2000] = {0};
 static unsigned short int buf_size = 0;
 static unsigned short int buf_index = 0;
 #define BLE_PACK_SIZE 200
 #define TIMER_BLE_GAP 10
 
-static void debug_orginal_data_send(unsigned short int size);
+
+void uteModuleDugStartSendHrData(void);
+
+//static void debug_orginal_data_send(unsigned short int size);
 /*********************************************************************************************************
  * 调试蓝牙数据格式：
  * [0~7]slot0_8bytes
@@ -131,14 +138,21 @@ void vc30fx_send_orginal_data(vcare_ppg_device_t *pdev, gsensor_axes *pgsensor, 
             ble_buf[i * FRAME_SIZE + j++] = (presult->slot_result[2].u.ps_data >> 8) & 0xff;
             ble_buf[i * FRAME_SIZE + j++] = (presult->slot_result[2].u.ps_data >> 0) & 0xff;
         }
-/* 30-35 xyz：2*3=6*/
+        /* 30-35 xyz：2*3=6*/
 #if 1
-        ble_buf[i * FRAME_SIZE + j++] = pgsensor->xData[i] >> 8;
-        ble_buf[i * FRAME_SIZE + j++] = pgsensor->xData[i] & 0xff;
-        ble_buf[i * FRAME_SIZE + j++] = pgsensor->yData[i] >> 8;
-        ble_buf[i * FRAME_SIZE + j++] = pgsensor->yData[i] & 0xff;
-        ble_buf[i * FRAME_SIZE + j++] = pgsensor->zData[i] >> 8;
-        ble_buf[i * FRAME_SIZE + j++] = pgsensor->zData[i] & 0xff;
+#if UTE_DRV_HEART_VCXX_ARM_XY_EXCHANGE||SC7A20H_ROLLOVER_HAND_SCREEN_XY_EXCHANGE_SUPPORT
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->yData[i] >> 8;//X高位
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->yData[i] & 0xff;//X低
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->xData[i] >> 8;//Y高位
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->xData[i] & 0xff;//Y低位
+#else
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->xData[i] >> 8;//X高位
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->xData[i] & 0xff;//X低
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->yData[i] >> 8;//Y高位
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->yData[i] & 0xff;//Y低位
+#endif
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->zData[i] >> 8;//Z高位
+        ble_buf[i * FRAME_SIZE + j++] = pgsensor->zData[i] & 0xff;//Z低位
 #else  /* temp result */
         ble_buf[i * FRAME_SIZE + j++] = presult->extra_result.tempref_data >> 8;
         ble_buf[i * FRAME_SIZE + j++] = presult->extra_result.tempref_data & 0xff;
@@ -154,119 +168,53 @@ void vc30fx_send_orginal_data(vcare_ppg_device_t *pdev, gsensor_axes *pgsensor, 
         /* [39]wear_bioret(bit7) | algoret(bit6) | acceret(bit5) | wear_drv(bit3~bit0) */
         ble_buf[i * FRAME_SIZE + j++] = (bio_result<<7)|(algo_result<<6)|(acce_result<<5)| (pdev->wear & 0xf);
     }
-//    debug_orginal_data_send(ppgsize * FRAME_SIZE);
+    buf_size=(ppgsize * FRAME_SIZE);
+    buf_index=0;
+    uteModuleDugStartSendHrData();
+//       debug_orginal_data_send(ppgsize * FRAME_SIZE);
+    // UTE_MODULE_LOG(1, "%s,", __func__);
 }
 
 #endif
 
-//void vc30fx_send_orginal_data_debug_mark_data( void )
-//{
-//    for(int i=0; i<FRAME_SIZE; i++)
-//    {
-//        ble_buf[i]=0xff;
-//    }
-//    debug_orginal_data_send(FRAME_SIZE);
-//}
-//
-///**********************************************************************************************************
-// *	对苹果手机APP不能连续接收长段数据，利用软件定时器，进行分包发送
-// *	创建软件定时器及数据分包处理
-// */
-//static void send_data_by_ble(unsigned char *pbuf, unsigned short int size)
-//{
-//    if (RtkWristbandSys.gap_conn_state == GAP_CONN_STATE_CONNECTED)
-//    {
-//        hr_ble_service_send_v3_notify(RtkWristbandSys.wristband_conn_id, hr_ser_id, pbuf, size);
-//    }
-//    VCARE_DBG_LOG("send_data_by_ble=%d", size);
-//}
+//每秒发送一次
+static int uteModuleHrSendStandDugVcxxHrData(void)
+{
+//    debugSecond=*HrDataSize;
+    VCARE_DBG_LOG("buf_index=%d,buf_size=%d",buf_index,buf_size);
 
-//static int timer_send_data_function(void)
-//{
-//    unsigned short int residue_size = 0;
-//    // 数据发送已经完成
-//    if (buf_index >= buf_size)
-//    {
-//        return 0;
-//    }
-//    // 判断剩余数据长度是否还需要分包
-//    residue_size = buf_size - buf_index;
-//    if (residue_size <= BLE_PACK_SIZE)
-//    {
-//        send_data_by_ble(&ble_buf[buf_index], residue_size);
-//        return 0;
-//    }
-//    else
-//    {
-//        send_data_by_ble(&ble_buf[buf_index], BLE_PACK_SIZE);
-//        buf_index += BLE_PACK_SIZE;
-//        return 1;
-//    }
-//}
+    unsigned short int residue_size = 0;
+    // 数据发送已经完成
+    if (buf_index >= buf_size)
+    {
+        uteApplicationCommonSyncDataTimerStop();
+        return 0;
+    }
+    // 判断剩余数据长度是否还需要分包
+    residue_size = buf_size - buf_index;
+    VCARE_DBG_LOG("residue_size=%d,buf_size=%d,",residue_size,buf_size);
+    if (residue_size <= BLE_PACK_SIZE)
+    {
+        VCARE_DBG_LOG("timer_send_data_function return 0");
+        uteModuleProfileBle50SendToPhone(&ble_buf[buf_index], residue_size);
+        uteApplicationCommonSyncDataTimerStop();
+    }
+    else
+    {
+        VCARE_DBG_LOG("timer_send_data_function return 1");
+        uteModuleProfileBle50SendToPhone(&ble_buf[buf_index], BLE_PACK_SIZE);
+        buf_index += BLE_PACK_SIZE;
 
-///* 创建软件定时器,如果数据太长通过软件定时器发送 */
-//#define TIMER_ID 0xf0
-//static void *debug_send_timer = NULL;
-//static void debug_send_timer_start(void)
-//{
-//    if (debug_send_timer)
-//    {
-//        os_timer_restart(&debug_send_timer, TIMER_BLE_GAP);
-//    }
-//}
-//static void debug_send_timer_stop(void)
-//{
-//    if (debug_send_timer)
-//    {
-//        os_timer_stop(&debug_send_timer);
-//    }
-//}
-//
-//static void debug_send_timer_callback(void *p_handle)
-//{
-//    if (timer_send_data_function())
-//    {
-//        /* 定时器继续循环 */
-//        os_timer_restart(&debug_send_timer, TIMER_BLE_GAP);
-//    }
-//    else
-//    {
-//        /* 关闭定时器 */
-//        debug_send_timer_stop();
-//    }
-//}
+    }
+    return 1;
+}
 
-//void vc30fx_send_orginal_data_timer_init(void)
-//{
-//    if (debug_send_timer == NULL)
-//    {
-//        os_timer_create(&debug_send_timer, "debug_send_timer", TIMER_ID, TIMER_BLE_GAP, false, debug_send_timer_callback);
-//    }
-//    os_timer_restart(&debug_send_timer, TIMER_BLE_GAP);
-//    os_timer_stop(&debug_send_timer);
-//}
-//
-//static void debug_orginal_data_send(unsigned short int size)
-//{
-//    buf_index = 0;
-//    buf_size = size;
-//    VCARE_DBG_LOG("debug_orginal_data_send = %d", size);
-//#if 1
-//    if (buf_size <= BLE_PACK_SIZE)
-//    {
-//        send_data_by_ble(ble_buf, size);
-//    }
-//    else
-//    {
-//        send_data_by_ble(ble_buf, BLE_PACK_SIZE);
-//        buf_index += BLE_PACK_SIZE;
-//        debug_send_timer_start();
-//    }
-//#else
-//    for (unsigned char i = 0; i * 8 < size; i++)
-//    {
-//        VCARE_DBG_LOG("[%d~%d]:%02x %02x %02x %02x , %02x %02x %02x %02x", i * 8, (i + 1) * 8,
-//                   ble_buf[i * 8], ble_buf[i * 8 + 1], ble_buf[i * 8 + 2], ble_buf[i * 8 + 3], ble_buf[i * 8 + 4], ble_buf[i * 8 + 5], ble_buf[i * 8 + 6], ble_buf[i * 8 + 7]);
-//    }
-//#endif
-//}
+//准备发送原始数据
+void uteModuleDugStartSendHrData(void)
+{
+    uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleHrSendStandDugVcxxHrData);
+    uteApplicationCommonSyncDataTimerStart();
+    UTE_MODULE_LOG(1, "%s,", __func__);
+}
+
+#endif

@@ -966,46 +966,58 @@ void uteModuleSleepGetCurrDayDataDisplay(ute_module_sleep_display_data_t *sleepD
     }
 
 #if UTE_LOG_GUI_LVL // test
-    static uint8_t sleepDatas[21*6]=
+
+    static uint8_t sleepDatas[] =
     {
-        0x01,0x23,0x01,0x01,0x00,0x2d,
-        0x02,0x14,0x02,0x01,0x00,0x0f,
-        0x02,0x23,0x01,0x01,0x00,0x2a,
-        0x03,0x11,0x02,0x01,0x00,0x01,
-        0x03,0x12,0x01,0x01,0x00,0x1c,
-        0x03,0x2e,0x02,0x01,0x00,0x21,
-        0x04,0x13,0x01,0x01,0x00,0x25,
-        0x04,0x38,0x02,0x01,0x00,0x20,
-        0x05,0x1c,0x01,0x01,0x00,0x28,
-        0x06,0x08,0x02,0x01,0x00,0x01,
-        0x06,0x09,0x01,0x01,0x00,0x17,
-        0x06,0x20,0x02,0x01,0x00,0x01,
-        0x06,0x21,0x01,0x01,0x00,0x1c,
-        0x07,0x01,0x02,0x01,0x00,0x04,
-        0x07,0x05,0x01,0x01,0x00,0x25,
-        0x07,0x2a,0x02,0x01,0x00,0x09,
-        0x07,0x38,0x03,0x01,0x00,0x02,
-        0x07,0x3a,0x01,0x01,0x00,0x29,
-        0x08,0x27,0x02,0x01,0x00,0x01,
-        0x08,0x28,0x03,0x01,0x00,0x01,
-        0x08,0x29,0x02,0x01,0x00,0x0b,
+        0x01,0x2F,0x02,0x01,0x00,0x0B,
+        0x01,0x3A,0x01,0x01,0x00,0x18,
+        0x02,0x16,0x02,0x01,0x00,0x3A,
+        0x03,0x14,0x04,0x01,0x00,0x02,
+        0x03,0x16,0x02,0x01,0x00,0x1B,
+        0x03,0x31,0x04,0x01,0x00,0x04,
+        0x03,0x35,0x02,0x01,0x00,0x1A,
+        0x04,0x13,0x01,0x01,0x00,0x15,
+        0x04,0x29,0x0,0x01,0x00,0x30,
+        0x05,0x1D,0x04,0x01,0x00,0x02,
+        0x05,0x1F,0x02,0x01,0x00,0x09,
+        0x05,0x28,0x01,0x01,0x00,0x15,
+        0x06,0x01,0x02,0x01,0x00,0x3C,
+        0x07,0x01,0x01,0x01,0x00,0x09,
+        0x07,0x0A,0x04,0x01,0x00,0x03,
+        0x07,0x0D,0x02,0x01,0x00,0x3B
     };
-    sleepDisplayData->sleep_record[0].state=rand()%2+1;
-    sleepDisplayData->sleep_record[0].sleepFlag =0;
-    sleepDisplayData->sleep_record[0].period =60;
-    sleepDisplayData->sleep_record[0].startTime.hour=1;
-    sleepDisplayData->sleep_record[0].startTime.min=1;
 
-    for(uint8_t   i= 0; i < 21; i++)
+    sleepDisplayData->lightSleepMin = 0;
+    sleepDisplayData->deepSleepMin = 0;
+    sleepDisplayData->wakeSleepMin = 0;
+    sleepDisplayData->totalSleepMin = 0;
+#if UTE_REM_SLEEP_SUPPORT
+    sleepDisplayData->RemSleepMin = 0;
+#endif
+
+    sleepDisplayData->recordCnt = sizeof(sleepDatas) / 6;
+
+    for (uint8_t i = 0; i < sleepDisplayData->recordCnt; i++)
     {
-        sleepDisplayData->sleep_record[i].state = sleepDatas[6*i+2];
-        sleepDisplayData->sleep_record[i].sleepFlag = sleepDatas[6*i+3];
-        sleepDisplayData->sleep_record[i].period = sleepDatas[6*i+5];
-        sleepDisplayData->sleep_record[i].startTime.hour=sleepDatas[6*i];
-        sleepDisplayData->sleep_record[i].startTime.min=sleepDatas[6*i+1];
-        sleepDatas[6*i] =rand()%2+1;
+        sleepDisplayData->sleep_record[i].startTime.hour = sleepDatas[6 * i];
+        sleepDisplayData->sleep_record[i].startTime.min = sleepDatas[6 * i + 1];
+        sleepDisplayData->sleep_record[i].state = sleepDatas[6 * i + 2];
+        sleepDisplayData->sleep_record[i].sleepFlag = sleepDatas[6 * i + 3];
+        sleepDisplayData->sleep_record[i].period = sleepDatas[6 * i + 4] << 8 | sleepDatas[6 * i + 5];
 
-        if(sleepDisplayData->sleep_record[i].state == LIGHT_SLEEP)
+        if (i == 0)
+        {
+            sleepDisplayData->fallAsSleepTime.hour = sleepDisplayData->sleep_record[i].startTime.hour;
+            sleepDisplayData->fallAsSleepTime.min = sleepDisplayData->sleep_record[i].startTime.min;
+        }
+        else if (i == sleepDisplayData->recordCnt - 1)
+        {
+            uint16_t getUpSleepTime = sleepDisplayData->sleep_record[i].startTime.hour * 60 + sleepDisplayData->sleep_record[i].startTime.min + sleepDisplayData->sleep_record[i].period;
+            sleepDisplayData->getUpSleepTime.hour = getUpSleepTime / 60;
+            sleepDisplayData->getUpSleepTime.min = getUpSleepTime % 60;
+        }
+
+        if (sleepDisplayData->sleep_record[i].state == LIGHT_SLEEP)
         {
             sleepDisplayData->lightSleepMin += sleepDisplayData->sleep_record[i].period;
         }
@@ -1013,17 +1025,32 @@ void uteModuleSleepGetCurrDayDataDisplay(ute_module_sleep_display_data_t *sleepD
         {
             sleepDisplayData->deepSleepMin += sleepDisplayData->sleep_record[i].period;
         }
-
-
+        else if (sleepDisplayData->sleep_record[i].state == AWAKE_SLEEP)
+        {
+            sleepDisplayData->wakeSleepMin += sleepDisplayData->sleep_record[i].period;
+        }
+#if UTE_REM_SLEEP_SUPPORT
+        else if (sleepDisplayData->sleep_record[i].state == REM_SLEEP)
+        {
+            sleepDisplayData->RemSleepMin += sleepDisplayData->sleep_record[i].period;
+        }
+#endif
     }
-
-//    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,YYMMDD=%d-%d-%d\r\n", __func__,uteSleepAlgoData.saveData.year,uteSleepAlgoData.saveData.mon,uteSleepAlgoData.saveData.day);
-    sleepDisplayData->recordCnt =21;
-
+#if UTE_REM_SLEEP_SUPPORT
     sleepDisplayData->SleepMin = sleepDisplayData->lightSleepMin + sleepDisplayData->deepSleepMin;
-
-    sleepDisplayData->totalSleepMin = sleepDisplayData->SleepMin + sleepDisplayData->wakeSleepMin+sleepDisplayData->RemSleepMin;
-
+#if UTE_MODULE_SLEEP_NOT_AWAKE_DATA_SUPPORT
+    sleepDisplayData->totalSleepMin = sleepDisplayData->SleepMin + sleepDisplayData->RemSleepMin;
+#else
+    sleepDisplayData->totalSleepMin = sleepDisplayData->SleepMin + sleepDisplayData->wakeSleepMin + sleepDisplayData->RemSleepMin;
+#endif
+#else
+    sleepDisplayData->SleepMin = sleepDisplayData->lightSleepMin + sleepDisplayData->deepSleepMin;
+#if UTE_MODULE_SLEEP_NOT_AWAKE_DATA_SUPPORT
+    sleepDisplayData->totalSleepMin = sleepDisplayData->SleepMin;
+#else
+    sleepDisplayData->totalSleepMin = sleepDisplayData->SleepMin + sleepDisplayData->wakeSleepMin;
+#endif
+#endif
 #endif
 
     // uteModuleSleepSetCurrDayDataGraphs(pRead,sleepDisplayData);

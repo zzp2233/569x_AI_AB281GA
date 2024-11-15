@@ -109,6 +109,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     ute_module_systemtime_time_t time;
     ute_module_weather_data_t  weather_date;
     ute_display_ctrl_t displayInfo;
+    uteModuleGuiCommonGetDisplayInfo(&displayInfo);
     u8 get_weather_id=0;
     char str_buff[16];
 

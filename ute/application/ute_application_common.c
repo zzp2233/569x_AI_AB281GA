@@ -295,8 +295,8 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 
         uteModulePlatformCreateTimer(&uteApplicationCommonSyncDataTimer, "SYNC DATA timer", 1, UTE_SEND_DATA_TO_PHONE_INVTERVAL, false, uteApplicationCommonSyncDataTimerCallback);
-        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_ADV_DATA,0);
-        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_DEV_NAME,0);
+        // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_ADV_DATA,0);
+        // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_DEV_NAME,0);
         //uteModulePlatformAdvertisingInit();
 #if UTE_SIMPLIFY_WECHAT_SUPPORT
         uteModuleSimplifyWechatInit();

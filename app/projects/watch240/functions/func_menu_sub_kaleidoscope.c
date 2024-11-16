@@ -74,6 +74,12 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
     {UI_BUF_ICON_CAMERA_BIN,                    FUNC_CAMERA},
     {UI_BUF_ICON_TIMER_BIN,                     FUNC_TIMER},
     {UI_BUF_ICON_ADDRESS_BOOK_BIN,              FUNC_ADDRESS_BOOK},
+
+    ///后续有新功能可把下面重复的功能替换
+    {UI_BUF_ICON_MENU_BIN,                      FUNC_STYLE},
+    {UI_BUF_ICON_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
+    {UI_BUF_ICON_FINDPHONE_BIN,                 FUNC_FINDPHONE},
+    {UI_BUF_ICON_GAME_BIN,                      FUNC_GAME},
 };
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

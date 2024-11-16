@@ -10,18 +10,21 @@
 #define TRACE(...)
 #endif
 
-enum {
+enum
+{
     COMPO_ID_NUM_DISP = 128,
 };
 
-typedef struct f_calculator_t_ {
+typedef struct f_calculator_t_
+{
 
 } f_calculator_t;
 
 #define CALCULATOR_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_calculator_disp_btn_item) / sizeof(tbl_calculator_disp_btn_item[0])))
 #define CALCULATOR_DISP_NUMBER_MAX      32                 //显示最大位数
 
-typedef struct calculator_disp_btn_item_t_ {
+typedef struct calculator_disp_btn_item_t_
+{
     u32 res_addr;
     u16 btn_id;
     s16 x;
@@ -29,7 +32,8 @@ typedef struct calculator_disp_btn_item_t_ {
 } calculator_disp_btn_item_t;
 
 //按钮item，创建时遍历一下
-static const calculator_disp_btn_item_t tbl_calculator_disp_btn_item[] = {
+static const calculator_disp_btn_item_t tbl_calculator_disp_btn_item[] =
+{
     {UI_BUF_CALCULATOR_1_CLICK_BIN,             BTN_1,              32,     213},
     {UI_BUF_CALCULATOR_2_CLICK_BIN,             BTN_2,              92,    213},
     {UI_BUF_CALCULATOR_3_CLICK_BIN,             BTN_3,              149,    213},
@@ -62,11 +66,15 @@ compo_form_t *func_calculator_form_create(void)
 
     //创建按钮
     compo_button_t *btn;
-    for (u8 idx_btn = 0; idx_btn < CALCULATOR_DISP_BTN_ITEM_CNT; idx_btn++) {
-        if (tbl_calculator_disp_btn_item[idx_btn].res_addr) {
+    for (u8 idx_btn = 0; idx_btn < CALCULATOR_DISP_BTN_ITEM_CNT; idx_btn++)
+    {
+        if (tbl_calculator_disp_btn_item[idx_btn].res_addr)
+        {
             btn = compo_button_create_by_image(frm, tbl_calculator_disp_btn_item[idx_btn].res_addr);
             compo_button_set_pos(btn, tbl_calculator_disp_btn_item[idx_btn].x, tbl_calculator_disp_btn_item[idx_btn].y);
-        } else {
+        }
+        else
+        {
             btn = compo_button_create(frm);
             compo_button_set_location(btn, tbl_calculator_disp_btn_item[idx_btn].x, tbl_calculator_disp_btn_item[idx_btn].y, 76, 56);
         }
@@ -79,6 +87,7 @@ compo_form_t *func_calculator_form_create(void)
     txt = compo_textbox_create(frm, CALCULATOR_DISP_NUMBER_MAX);
     compo_setid(txt, COMPO_ID_NUM_DISP);
     compo_textbox_set_pos(txt, 120, 26);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_autosize(txt, true);
     compo_textbox_set(txt, gcal_get_show_str());
 
@@ -95,7 +104,8 @@ static void func_calculator_process(void)
 static void func_calculator_button_press_handle(void)
 {
     compo_button_t *btn = compo_getobj_byid(compo_get_button_id());
-    if (btn) {
+    if (btn)
+    {
         compo_button_set_visible(btn, true);
     }
 }
@@ -105,8 +115,10 @@ static void func_calculator_button_release_handle(void)
 {
     u16 hold_id = gcal_get_holding_operator();
     component_t *compo = (component_t *)compo_pool_get_top();
-    while (compo != NULL) {
-        if (compo->type == COMPO_TYPE_BUTTON && compo->id != hold_id) {
+    while (compo != NULL)
+    {
+        if (compo->type == COMPO_TYPE_BUTTON && compo->id != hold_id)
+        {
             compo_button_t *btn = (compo_button_t *)compo;
             compo_button_set_visible(btn, false);
         }
@@ -128,33 +140,35 @@ static void func_calculator_button_click_handler(void)
 //计算器功能消息处理
 static void func_calculator_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_calculator_button_press_handle();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_calculator_button_press_handle();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        func_calculator_button_release_handle();
-        if (func_cb.flag_sort) {
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_calculator_button_release_handle();
+            if (func_cb.flag_sort)
+            {
+                func_message(msg);
+            }
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            func_calculator_button_release_handle();
             func_message(msg);
-        }
-        break;
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_calculator_button_release_handle();
-        func_message(msg);
-        break;
+        case MSG_CTP_CLICK:
+            func_calculator_button_click_handler();
+            break;
 
-    case MSG_CTP_CLICK:
-        func_calculator_button_click_handler();
-        break;
-
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -164,7 +178,8 @@ static void func_calculator_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_calculator_t));
     func_cb.frm_main = func_calculator_form_create();
 
-    if (gcal_cb_init() == false) {
+    if (gcal_cb_init() == false)
+    {
         halt(HALT_MALLOC);
     }
 }
@@ -180,7 +195,8 @@ void func_calculator(void)
 {
     printf("%s\n", __func__);
     func_calculator_enter();
-    while (func_cb.sta == FUNC_CALCULATOR) {
+    while (func_cb.sta == FUNC_CALCULATOR)
+    {
         func_calculator_process();
         func_calculator_message(msg_dequeue());
     }

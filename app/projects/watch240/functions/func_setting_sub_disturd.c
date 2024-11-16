@@ -60,10 +60,10 @@ typedef struct disturd_disp_pic_item_t_
 //图片item，创建时遍历一下
 static const disturd_disp_pic_item_t tbl_disturd_disp_pic_item[] =
 {
-    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_ADL_ON,         198,    84,    false},
-    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_TIM_ON,         198,    154,    false},
-    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_ADL_OFF,        198,    84,    false},
-    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_TIM_OFF,        198,    154,    false},
+    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_ADL_ON,         198,    80,    false},
+    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_TIM_ON,         198,    146,    false},
+    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_ADL_OFF,        198,    80,    false},
+    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_TIM_OFF,        198,    146,    false},
 };
 
 #define DISURD_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_disturd_disp_btn_item) / sizeof(tbl_disturd_disp_btn_item[0])))
@@ -121,12 +121,12 @@ typedef struct disturd_disp_txt_item_t_
 //文字item，创建时遍历一下
 static const disturd_disp_txt_item_t disturd_disp_txt_item[] =
 {
-    {COMPO_ID_TXT_ALL,        22,   74},
-    {COMPO_ID_TXT_TIM,        22,   140},
+    {COMPO_ID_TXT_ALL,        22,   70},
+    {COMPO_ID_TXT_TIM,        22,   136},
     {COMPO_ID_TXT_START,      22,   200},
     {COMPO_ID_TXT_END,        22,   255},
-    {COMPO_ID_TXT_PRCOLON,    168,  200},
-    {COMPO_ID_TXT_LASTCOLON,  168,  255},
+    {COMPO_ID_TXT_PRCOLON,    172,  200},
+    {COMPO_ID_TXT_LASTCOLON,  172,  255},
 };
 
 //勿扰模式页面
@@ -278,15 +278,15 @@ static void func_set_sub_disturd_process(void)
     //获取文本组件的地址
     compo_textbox_t *txt_disp[4];
     compo_textbox_t *num_disp[4];
-    compo_shape_t *masklayer[2];
+//    compo_shape_t *masklayer[2];
     for (int i=0; i<4; i++)
     {
         txt_disp[i] = compo_getobj_byid(COMPO_ID_TXT_START + i);
         num_disp[i] = compo_getobj_byid(COMPO_ID_NUM_DISP_ONE + i);
-        if (i<2)
-        {
-            masklayer[i] = compo_getobj_byid(COMPO_ID_MSK_ONE + i);
-        }
+//        if (i<2)
+//        {
+//            masklayer[i] = compo_getobj_byid(COMPO_ID_MSK_ONE + i);
+//        }
     }
 
     if (sys_cb.disturd_adl==0)
@@ -305,10 +305,10 @@ static void func_set_sub_disturd_process(void)
         {
             compo_textbox_set_visible(txt_disp[i], false);
             compo_textbox_set_visible(num_disp[i], false);
-            if(i<2)
-            {
-                compo_shape_set_alpha(masklayer[i], 0);
-            }
+//            if(i<2)
+//            {
+//                compo_shape_set_alpha(masklayer[i], 0);
+//            }
         }
     }
     else
@@ -318,10 +318,10 @@ static void func_set_sub_disturd_process(void)
         {
             compo_textbox_set_visible(txt_disp[i], true);
             compo_textbox_set_visible(num_disp[i], true);
-            if(i<2)
-            {
-                compo_shape_set_alpha(masklayer[i], 255);
-            }
+//            if(i<2)
+//            {
+//                compo_shape_set_alpha(masklayer[i], 255);
+//            }
         }
     }
 

@@ -15,6 +15,7 @@
 #include "ute_module_heart.h"
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_sport.h"
+#include "ute_module_filesystem.h"
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
@@ -235,6 +236,83 @@ bool uteModuleGuiCommonIsInScreenSaver(void)
     return uteModuleGuiCommonData.isScreenSaver;
 }
 #endif
+
+/**
+ * @brief        保存一级界面显示控制参数
+ * @details
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2024-11-16
+ */
+void uteModuleGuiCommonSavescreenTblSort(uint8_t *tblSort, uint8_t sortCnt)
+{
+    if(memcmp(tblSort,&uteModuleGuiCommonData.displayCtrl.screenTblSort,MAX_FUNC_SORT_CNT) != 0)
+    {
+        void *file;
+        if( uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_SCREEN_TBL_SORT,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
+        {
+            uint8_t writeBuff[MAX_FUNC_SORT_CNT + 1];
+            memset(&writeBuff[0],0,sizeof(writeBuff));
+            writeBuff[0] = sortCnt;
+            memcpy(&writeBuff[1],&tblSort[0],sortCnt);
+            uteModuleFilesystemWriteData(file,&writeBuff[0],sizeof(writeBuff));
+            uteModuleFilesystemCloseFile(file);
+        }
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,save screen ctl bits",__func__);
+        UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL,tblSort,MAX_FUNC_SORT_CNT);
+    }
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,screen ctl bits not change",__func__);
+    }
+}
+
+/**
+ * @brief        读取一级界面显示控制参数
+ * @details
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2024-11-16
+ */
+void uteModuleGuiCommonReadScreenTblSort(void)
+{
+    void *file;
+    static const uint8_t defaultScreenTblSort[UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT] = UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT;
+    memcpy(&uteModuleGuiCommonData.displayCtrl.screenTblSort[0],&defaultScreenTblSort[0],sizeof(defaultScreenTblSort));
+    uteModuleGuiCommonData.displayCtrl.screenSortCnt = UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT;
+    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_SCREEN_TBL_SORT,&file,FS_O_RDONLY))
+    {
+        uint8_t readBuff[MAX_FUNC_SORT_CNT + 1];
+        memset(&readBuff[0],0,sizeof(readBuff));
+        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+        uteModuleFilesystemReadData(file,&readBuff[0],sizeof(readBuff));
+        uteModuleFilesystemCloseFile(file);
+
+        uteModuleGuiCommonData.displayCtrl.screenSortCnt =  readBuff[0];
+        memcpy(&uteModuleGuiCommonData.displayCtrl.screenTblSort[0], &readBuff[1], MAX_FUNC_SORT_CNT);
+
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,read screen ctl bits",__func__);
+        UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL,&uteModuleGuiCommonData.displayCtrl.screenTblSort[0],MAX_FUNC_SORT_CNT);
+    }
+}
+
+/**
+ * @brief        外部获取一级界面显示控制参数
+ * @details
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2024-11-16
+ */
+AT(.com_text.ute_gui)
+void uteModuleGuiCommonGetScreenTblSort(uint8_t *tblSort, uint8_t *sortCnt)
+{
+    if(tblSort != NULL && sortCnt != NULL && memcmp(tblSort, &uteModuleGuiCommonData.displayCtrl.screenTblSort[0], MAX_FUNC_SORT_CNT))
+    {
+        *sortCnt = uteModuleGuiCommonData.displayCtrl.screenSortCnt;
+        memcpy(tblSort, &uteModuleGuiCommonData.displayCtrl.screenTblSort[0], uteModuleGuiCommonData.displayCtrl.screenSortCnt);
+    }
+}
+
 /**
 *@brief        读取显示参数
 *@details
@@ -271,6 +349,7 @@ void uteModuleGuiCommonReadConfig(void)
     uteModuleGuiCommonData.displayCtrl.currScreenSaverIndex = readbuff[9];
 #endif
     uteModuleGuiCommonData.isPowerSavingOpen = readbuff[10];
+    uteModuleGuiCommonReadScreenTblSort();
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,displayOffTime=%d,isFahrenheit=%d,backLightPercent=%d,currWatchIndex=%d,themeTypeId=%d", __func__,uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond,uteModuleGuiCommonData.displayCtrl.isFahrenheit,
                    uteModuleGuiCommonData.displayCtrl.backLightPercent,uteModuleGuiCommonData.displayCtrl.currWatchIndex,uteModuleGuiCommonData.themeTypeId);
 }
@@ -304,7 +383,9 @@ void uteModuleGuiCommonInit(void)
 */
 void uteModuleGuiCommonDisplayExternalClearDepth(void)
 {
-
+    task_stack_init();
+    task_stack_push(FUNC_CLOCK);
+    func_cb.sta = FUNC_CLOCK;
 }
 
 /**
@@ -321,7 +402,6 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s,isAllClear = %d", __func__,isAllClear);
     if (isAllClear)
     {
-
         task_stack_init();
         task_stack_push(FUNC_CLOCK);
         func_cb.sta = FUNC_CLOCK;

@@ -3,6 +3,7 @@
 #include "func_cover.h"
 #include "ute_module_systemtime.h"
 #include "ute_language_common.h"
+#include "ute_drv_motor.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -1282,6 +1283,9 @@ void func_run(void)
     func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = 7;
     func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
+    // 获取自定义排序
+    uteModuleGuiCommonGetScreenTblSort(func_cb.tbl_sort, &func_cb.sort_cnt);
+
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
     for (;;)

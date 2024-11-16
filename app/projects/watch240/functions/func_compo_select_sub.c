@@ -404,6 +404,8 @@ static void func_compo_select_sub_exit(void)
     func_cb.tbl_sort[index ++] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = index;
     func_cb.flag_sort = true;
+    // 保存排序
+    uteModuleGuiCommonSavescreenTblSort(func_cb.tbl_sort, func_cb.sort_cnt);
 }
 
 //组件选择功能

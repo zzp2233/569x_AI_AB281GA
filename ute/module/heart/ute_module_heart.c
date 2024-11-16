@@ -417,7 +417,7 @@ void uteModuleHeartSetHeartValue(int heartValue)
 *@author       dengli.lu
 *@date       2021-10-25
 */
-int uteModuleHeartGetMaxHeartValue(void)
+uint8_t uteModuleHeartGetMaxHeartValue(void)
 {
     return uteModuleHeartData.currentDayMaxHeart;
 }
@@ -427,7 +427,7 @@ int uteModuleHeartGetMaxHeartValue(void)
 *@author       dengli.lu
 *@date       2021-10-25
 */
-int uteModuleHeartGetMinHeartValue(void)
+uint8_t uteModuleHeartGetMinHeartValue(void)
 {
     return uteModuleHeartData.currentDayMinHeart;
 }
@@ -437,7 +437,7 @@ int uteModuleHeartGetMinHeartValue(void)
 *@author       dengli.lu
 *@date       2021-10-25
 */
-int uteModuleHeartGetAvgHeartValue(void)
+uint8_t uteModuleHeartGetAvgHeartValue(void)
 {
     return uteModuleHeartData.currentDayAvgHeart;
 }
@@ -1282,9 +1282,9 @@ static bool uteModuleHeartLoadTodayHistoryData(uint8_t *heartHistoryGraph, uint8
     uteModuleHeartData.currentDayMaxHeart = 0;
     for (uint8_t i = 0; i < heartHistoryGraphCount; i++)
     {
-        if (heartHistoryData[i] != 0 && heartHistoryData[i] != 0xFF)
+        if (heartHistoryGraph[i] != 0 && heartHistoryGraph[i] != 0xFF)
         {
-            uteModuleHeartAvgHeartOfCurrentDayProcess(heartHistoryData[i]);
+            uteModuleHeartAvgHeartOfCurrentDayProcess(heartHistoryGraph[i]);
         }
     }
     /*! 同步手环和手机端的最大最小平均值 xjc, 2021-12-23  */

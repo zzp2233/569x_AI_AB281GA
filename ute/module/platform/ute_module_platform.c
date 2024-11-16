@@ -1221,6 +1221,7 @@ uint8_t uteModulePlatformGetScanRspRemainLength(void)
 */
 static uint8_t devName[32];
 static uint8_t devNameSize=0;
+static uint8_t devCompleteNameSize=0; // 带设备ID
 void uteModulePlatformUpdateDevName(void)
 {
     uint8_t name[32] ;
@@ -1243,7 +1244,7 @@ void uteModulePlatformUpdateDevName(void)
     {
         memcpy(&name[0],xcfg_cb.le_name,size);
     }
-    memcpy(devName,&name[0],size);
+    // memcpy(devName,&name[0],size);
     devNameSize = size;
 #if UTE_APP_DISPLAY_NAME_ID_SUPPORT
     {
@@ -1294,6 +1295,8 @@ void uteModulePlatformUpdateDevName(void)
     }
 #endif
     name[size] = 0;
+    memcpy(devName,&name[0],size);
+    devCompleteNameSize = size;
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,name =%s,size=%d", __func__, name,size);
     uteModulePlatformAdvDataModifySub(false, 0x09, name, size, ADV_REPLACE);
     ble_set_gap_name((char *)name,size);
@@ -1320,6 +1323,26 @@ void uteModulePlatformGetDevName(uint8_t *name,uint8_t *size)
     if(buffSize>=devNameSize)
     {
         *size = devNameSize;
+    }
+    memcpy(&name[0],devName,*size);
+}
+
+/**
+ * @brief        获取完整蓝牙名
+ * @details      蓝牙名称带设备ID
+ * @param[out]   uint8_t *name
+ * @param[in]    uint8_t *size，输入最大buff大小，输出实际大小
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2024-11-16
+ */
+void uteModulePlatformGetDevCompleteName(uint8_t *name,uint8_t *size)
+{
+    uint8_t buffSize = *size;
+    memset(name, 0, buffSize);
+    if(buffSize>=devCompleteNameSize)
+    {
+        *size = devCompleteNameSize;
     }
     memcpy(&name[0],devName,*size);
 }

@@ -29,9 +29,10 @@ compo_form_t *func_scan_form_create(void)
     //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_SCAN_BIN);
     //compo_button_set_pos(btn, 160, 180);
 
-    char *qr_str = (char *)uteModulePlatformMemoryAlloc(128);
-    uteApplicationCommonGetDeviceQrCodeLink(qr_str,128);
-    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, 128);
+    static const uint8_t maxSizeQrCodeLink = 160;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
     compo_qrcodebox_set(qrbox, qr_str);
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 120);
     uteModulePlatformMemoryFree(qr_str);

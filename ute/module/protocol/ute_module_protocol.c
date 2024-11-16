@@ -2334,7 +2334,7 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #if UTE_MODUEL_CALL_ADDRESSBOOK_EXPANSION_LENGTH_SUPPORT
     data[2]|= 0x08;
 #endif
-#if UTE_MODULE_SCREENS_LANGUAGE_SELECT_LIST_SUPPORT
+#if 1//UTE_MODULE_SCREENS_LANGUAGE_SELECT_LIST_SUPPORT
     data[2]|= 0x20;
 #endif
     data[2]|= 0x40;

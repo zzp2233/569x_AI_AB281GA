@@ -758,7 +758,7 @@
 #endif
 /*!血氧自动测试模式默认打开 zn.zeng, 2021-08-31  */
 #ifndef UTE_MODULE_BLOODOXYGEN_IS_AUTO_OPEN
-#define UTE_MODULE_BLOODOXYGEN_IS_AUTO_OPEN true
+#define UTE_MODULE_BLOODOXYGEN_IS_AUTO_OPEN false
 #endif
 /*!血氧时间段测试模式默认关闭 zn.zeng, 2021-08-31  */
 #ifndef UTE_MODULE_BLOODOXYGEN_IS_AUTO_TIME_BUCKET_OPEN

@@ -104,27 +104,22 @@ compo_form_t *func_heartrate_form_create(void)
         {
             compo_textbox_set_font(txt_val, UI_BUF_0FONT_FONT_NUM_24_BIN);
             compo_textbox_set_pos(txt_val, txt_val_x + (idx * txt_val_x_offset), txt_val_y-4);
+            compo_textbox_set(txt_val, "0");
         }
-        compo_textbox_set(txt_val, "0");
-    }
-
-    compo_textbox_t *txt = NULL;
-    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
-    char hr_buf[4];
-    memset(hr_buf, 0, sizeof(hr_buf));
-    if (f_heartrate->max_hr != uteModuleHeartGetMaxHeartValue())
-    {
-        f_heartrate->max_hr = uteModuleHeartGetMaxHeartValue();
-        txt = (compo_textbox_t *)compo_getobj_byid(COMPO_ID_NUM_HEARTRATE_MAX);
-        snprintf(hr_buf, sizeof(hr_buf), "%d", f_heartrate->max_hr);
-        compo_textbox_set(txt, hr_buf);
-    }
-    if (f_heartrate->min_hr != uteModuleHeartGetMinHeartValue() && uteModuleHeartGetMinHeartValue() != 0 && uteModuleHeartGetMinHeartValue() != 255)
-    {
-        f_heartrate->min_hr = uteModuleHeartGetMinHeartValue();
-        txt = (compo_textbox_t *)compo_getobj_byid(COMPO_ID_NUM_HEARTRATE_MIN);
-        snprintf(hr_buf, sizeof(hr_buf), "%d", f_heartrate->min_hr);
-        compo_textbox_set(txt, hr_buf);
+        else if (idx == 0)
+        {
+            char hr_buf[4];
+            memset(hr_buf, 0, sizeof(hr_buf));
+            snprintf(hr_buf, sizeof(hr_buf), "%d", uteModuleHeartGetMaxHeartValue());
+            compo_textbox_set(txt_val, hr_buf);
+        }
+        else if (idx == 2)
+        {
+            char hr_buf[4];
+            memset(hr_buf, 0, sizeof(hr_buf));
+            snprintf(hr_buf, sizeof(hr_buf), "%d", uteModuleHeartGetMinHeartValue());
+            compo_textbox_set(txt_val, hr_buf);
+        }
     }
 
     //心率详情

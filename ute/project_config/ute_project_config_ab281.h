@@ -49,6 +49,9 @@
 #define QUICK_SWITCH_TURNTHEWRIST_SUPPORT 1
 #define QUICK_SWITCH_SHOCK_TIME_SUPPORT    1
 
+/*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
+#define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1
+
 /*! 支持的运动数量, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_MAX_SPORT_NUM 25
 #define UTE_MODULE_SPORT_RUNNING_SUPPORT                1 //跑步

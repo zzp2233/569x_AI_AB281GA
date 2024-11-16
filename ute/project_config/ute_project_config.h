@@ -780,7 +780,7 @@
 
 //二维码链接内容
 #ifndef UTE_BINDING_QRENCODE_LINK
-#define UTE_BINDING_QRENCODE_LINK "https://app.uteasy.com/gloryme/download/index.html?MAC=12:34:56:78:90:1a"
+#define UTE_BINDING_QRENCODE_LINK "https://app.uteasy.com/gloryme/download/index.html"
 #endif
 
 /*! gsensro默认acc采样范围 zn.zeng, 2021-10-22  */

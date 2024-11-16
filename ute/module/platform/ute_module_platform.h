@@ -414,6 +414,16 @@ void uteModulePlatformAdvDataModifySub(bool isScanData, uint8_t advFlag, const u
 */
 void uteModulePlatformGetDevName(uint8_t *name,uint8_t *size);
 /**
+ * @brief        获取完整蓝牙名
+ * @details      蓝牙名称带设备ID
+ * @param[out]   uint8_t *name
+ * @param[in]    uint8_t *size，输入最大buff大小，输出实际大小
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2024-11-16
+ */
+void uteModulePlatformGetDevCompleteName(uint8_t *name,uint8_t *size);
+/**
 *@brief   获取BLE蓝牙地址
 *@details
 *@param[out] uint8_t *mac  6byte指针

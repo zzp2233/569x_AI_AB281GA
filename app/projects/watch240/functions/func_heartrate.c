@@ -117,7 +117,7 @@ compo_form_t *func_heartrate_form_create(void)
         {
             char hr_buf[4];
             memset(hr_buf, 0, sizeof(hr_buf));
-            snprintf(hr_buf, sizeof(hr_buf), "%d", uteModuleHeartGetMinHeartValue());
+            snprintf(hr_buf, sizeof(hr_buf), "%d", uteModuleHeartGetMinHeartValue() == 0xff ? 0 : uteModuleHeartGetMinHeartValue());
             compo_textbox_set(txt_val, hr_buf);
         }
     }

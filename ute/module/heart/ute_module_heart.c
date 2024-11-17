@@ -451,9 +451,9 @@ uint8_t uteModuleHeartGetAvgHeartValue(void)
 */
 void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
 {
-//     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,type=%d", __func__, type);
-//     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_START_SINGLE_TESTING, (uint32_t)type);
-// }
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,type=%d", __func__, type);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_START_SINGLE_TESTING, (uint32_t)type);
+}
 
 // /**
 // *@brief        开始单次测试消息处理函数
@@ -462,9 +462,9 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
 // *@author       zn.zeng
 // *@date       2021-07-16
 // */
-// void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
-// {
-//     ute_module_heart_type_t type = (ute_module_heart_type_t)param;
+void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
+{
+    ute_module_heart_type_t type = (ute_module_heart_type_t)param;
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,input type:%d, curr type:%d",__func__,type,uteModuleHeartData.type);
     if(uteModuleHeartData.type != type)
     {
@@ -533,9 +533,9 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
 */
 void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
 {
-//     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,type=%d", __func__, type);
-//     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_STOP_SINGLE_TESTING, (uint32_t)type);
-// }
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,type=%d", __func__, type);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_STOP_SINGLE_TESTING, (uint32_t)type);
+}
 
 // /**
 // *@brief        结束单次测试消息处理函数
@@ -544,9 +544,9 @@ void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
 // *@author       zn.zeng
 // *@date       2021-07-16
 // */
-// void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
-// {
-//     ute_module_heart_type_t type = (ute_module_heart_type_t)param;
+void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
+{
+    ute_module_heart_type_t type = (ute_module_heart_type_t)param;
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,input type:%d, curr type:%d",__func__,type,uteModuleHeartData.type);
     /*当前测试类型与传入要停止的类型不一致时，不处理，xjc 2022-06-01*/
     if(uteModuleHeartData.type != type)

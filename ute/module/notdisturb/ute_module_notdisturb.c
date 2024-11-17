@@ -12,6 +12,7 @@
 #include "ute_application_common.h"
 #include "ute_drv_motor.h"
 #include "ute_module_gui_common.h"
+#include "ute_module_sport.h"
 
 /* NotDisturb 互斥量 zn.zeng 2022-02-14*/
 void *uteModuleNotDisturbMute;

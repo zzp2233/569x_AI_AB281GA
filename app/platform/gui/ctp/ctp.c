@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_message.h"
 
 #define TRACE_EN                0
 
@@ -212,6 +213,7 @@ void ctp_msg_deal(bool press)
         ctp_cb.cnt = 0;
         ctp_cb.sta = CTP_STA_IDLE;
     }
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
 }
 
 void sys_ctp_irq_enble(int vector)
@@ -273,6 +275,7 @@ void ctp_isr(void)
 #endif
         TRACE_K(str_xy, press, ctp_cb.x, ctp_cb.y);
         ctp_msg_deal(press);
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
     }
 }
 

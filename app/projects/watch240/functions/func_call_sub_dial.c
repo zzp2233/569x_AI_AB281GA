@@ -48,18 +48,18 @@ typedef struct password_disp_btn_item_t_
 //按钮item，创建时遍历一下
 static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
 {
-    {UI_BUF_COMMON_1_CLICK_BIN,             COMPO_ID_BTN_NUM1,         45,     84},
-    {UI_BUF_COMMON_2_CLICK_BIN,             COMPO_ID_BTN_NUM2,         120,    84},
-    {UI_BUF_COMMON_3_CLICK_BIN,             COMPO_ID_BTN_NUM3,         195,    84},
-    {UI_BUF_COMMON_4_CLICK_BIN,             COMPO_ID_BTN_NUM4,         45,     140},
-    {UI_BUF_COMMON_5_CLICK_BIN,             COMPO_ID_BTN_NUM5,         120,    140},
-    {UI_BUF_COMMON_6_CLICK_BIN,             COMPO_ID_BTN_NUM6,         195,    140},
-    {UI_BUF_CALL_7_CLICK_BIN,               COMPO_ID_BTN_NUM7,         45,     198},
-    {UI_BUF_COMMON_8_CLICK_BIN,             COMPO_ID_BTN_NUM8,         120,    198},
-    {UI_BUF_CALL_9_CLICK_BIN,               COMPO_ID_BTN_NUM9,         195,    198},
-    {UI_BUF_CALL_0_CLICK_BIN,               COMPO_ID_BTN_NUM0,         120,    252},
-    {UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN, COMPO_ID_BTN_DEL,          195,    252},
-    {UI_BUF_CALL_CALL_CLICK_BIN,            COMPO_ID_BTN_CALL,         45,    252},
+    {UI_BUF_CALL_DIAL_NUM_1_BIN,             COMPO_ID_BTN_NUM1,         45,     84},
+    {UI_BUF_CALL_DIAL_NUM_2_BIN,             COMPO_ID_BTN_NUM2,         120,    84},
+    {UI_BUF_CALL_DIAL_NUM_3_BIN,             COMPO_ID_BTN_NUM3,         195,    84},
+    {UI_BUF_CALL_DIAL_NUM_4_BIN,             COMPO_ID_BTN_NUM4,         45,     140},
+    {UI_BUF_CALL_DIAL_NUM_5_BIN,             COMPO_ID_BTN_NUM5,         120,    140},
+    {UI_BUF_CALL_DIAL_NUM_6_BIN,             COMPO_ID_BTN_NUM6,         195,    140},
+    {UI_BUF_CALL_DIAL_NUM_7_BIN,             COMPO_ID_BTN_NUM7,         45,     198},
+    {UI_BUF_CALL_DIAL_NUM_8_BIN,             COMPO_ID_BTN_NUM8,         120,    198},
+    {UI_BUF_CALL_DIAL_NUM_9_BIN,             COMPO_ID_BTN_NUM9,         195,    198},
+    {UI_BUF_CALL_DIAL_NUM_0_BIN,             COMPO_ID_BTN_NUM0,         120,    252},
+    {UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN,  COMPO_ID_BTN_DEL,          195,    252},
+    {UI_BUF_CALL_CALL_CLICK_BIN,             COMPO_ID_BTN_CALL,         45,    252},
 };
 
 typedef struct f_call_sub_dial_t_

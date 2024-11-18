@@ -1,6 +1,8 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_log.h"
+#include "ute_module_platform.h"
+#include "ute_module_message.h"
 
 void bsp_qdec_init(void);
 void rtc_alarm_disable(void);
@@ -30,6 +32,10 @@ static u8 get_adkey(u8 key_val)
 #endif // USER_ADKEY
 
 #if USER_PWRKEY
+#if UTE_LOG_KEYS_LVL
+AT(.com_text.port.key.val)
+char key_val_str[]="key_val=0x%x\n";
+#endif
 AT(.com_text.port.key)
 static u8 get_pwrkey(void)
 {
@@ -41,6 +47,12 @@ static u8 get_pwrkey(void)
     {
         key_val = 0xff;
     }
+#if UTE_LOG_KEYS_LVL
+    else
+    {
+        printf(key_val_str, key_val);
+    }
+#endif
     while ((u8)key_val > pwrkey_table[num].adc_val)
     {
         num++;
@@ -433,8 +445,10 @@ u8 get_double_key_time(void)
     }
 }
 
+#if UTE_LOG_KEYS_LVL
 AT(.com_rodata.bsp.key)
 const char key_str[] = "enqueue: %04x\n";
+#endif
 
 AT(.com_text.bsp.key)
 u16 bsp_key_process(u16 key_val)
@@ -451,7 +465,9 @@ u16 bsp_key_process(u16 key_val)
         if (sys_cb.gui_sleep_sta == 0)
         {
             msg_enqueue(key);                   //short up key
+#if UTE_LOG_KEYS_LVL
             printf(key_str, key);
+#endif
         }
     }
 #endif
@@ -525,7 +541,10 @@ u8 bsp_key_scan(void)
         else
         {
             msg_enqueue(key);
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
+#if UTE_LOG_KEYS_LVL
             printf(key_str, key);
+#endif
         }
         reset_sleep_delay_all();
     }

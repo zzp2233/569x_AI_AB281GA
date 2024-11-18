@@ -16,9 +16,9 @@
 #define TIMER_HOUR          (sys_cb.timer_left_sec / 3600)  //计时器数据
 #define TIMER_MIN           ((sys_cb.timer_left_sec % 3600) / 60)
 #define TIMER_SEC           (sys_cb.timer_left_sec % 60)
-#define STOPWATCH_HOUR      (sys_cb.stopwatch_total_msec / 1000 / 3600)  //秒表数据
-#define STOPWATCH_MIN       (((sys_cb.stopwatch_total_msec / 1000) % 3600) / 60)
-#define STOPWATCH_SEC       ((sys_cb.stopwatch_total_msec / 1000) % 60)
+#define STOPWATCH_HOUR      (((sys_cb.stopwatch_total_msec / 1000) % 3600) / 60)  //秒表数据
+#define STOPWATCH_MIN       ((sys_cb.stopwatch_total_msec / 1000) % 60)
+#define STOPWATCH_SEC       (sys_cb.stopwatch_total_msec /10)%100
 
 #define DEFAULT_LATEST_TASK_NUM 3   //最近任务不足3个时默认值补上
 const u8 latest_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_SLEEP, FUNC_SPORT, FUNC_HEARTRATE};
@@ -108,6 +108,8 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_t *cardbox;
     ute_module_systemtime_time_t time;
     ute_module_weather_data_t  weather_date;
+    ute_display_ctrl_t displayInfo;
+    uteModuleGuiCommonGetDisplayInfo(&displayInfo);
     u8 get_weather_id=0;
     char str_buff[16];
 
@@ -131,6 +133,16 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
             }
         }
         get_weather_id = weather_date.DayWeather[0]>>8;//获取天气状态
+
+        if(displayInfo.isFahrenheit)    //是否为华氏度
+        {
+            weather_date.fristDayCurrTemperature= weather_date.fristDayCurrTemperature*9/5+32;
+            /*pcm 2022-09-19 */
+            if(weather_date.fristDayCurrTemperature<(-99))
+            {
+                weather_date.fristDayCurrTemperature=-99;
+            }
+        }
     }
 
     //新建窗体
@@ -143,9 +155,21 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 120);
     compo_cardbox_icon_set(cardbox, 1, weather_list[get_weather_id]);  //天气图标
-    compo_cardbox_icon_set_location(cardbox, 1, 245-180, 111-126,gui_image_get_size( weather_list[get_weather_id]).wid,gui_image_get_size(weather_list[get_weather_id]).hei);
+    compo_cardbox_icon_set_location(cardbox, 1, 245-180, 111-126,gui_image_get_size( weather_list[get_weather_id]).wid/1.2,gui_image_get_size(weather_list[get_weather_id]).hei/1.2);
     //compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);
-    snprintf(str_buff, sizeof(str_buff), "%02d:%02d", compo_cb.tm.hour, compo_cb.tm.min);    //时间
+    uint8_t tmp_time_hour = compo_cb.tm.hour;
+    if(uteModuleSystemtime12HOn())
+    {
+        if(tmp_time_hour > 12)
+        {
+            tmp_time_hour = tmp_time_hour - 12;
+        }
+        else if (tmp_time_hour == 0)
+        {
+            tmp_time_hour = 12;
+        }
+    }
+    snprintf(str_buff, sizeof(str_buff), "%02d:%02d", tmp_time_hour, compo_cb.tm.min);    //时间
     compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_cardbox_text_set(cardbox, 0, str_buff);
     compo_cardbox_text_set_location(cardbox, 0, 98-140, 93-126, 180, 56);
@@ -176,7 +200,8 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_TIMER_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 54-130, 270-296, 54, 54);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_TIMER]);    //计时器
-    compo_cardbox_text_set_location(cardbox, 0, 129-110, 270-296, 100, 30);
+    compo_cardbox_text_set_align_center(cardbox,0,false);
+    compo_cardbox_text_set_location(cardbox, 0, -24, -38, 100, 30);
 //    compo_cardbox_text_map_center2left_location(cardbox, 0, 140-110, 270-296, 100, 30);
     snprintf(str_buff, sizeof(str_buff), "%02lu:%02lu:%02lu", TIMER_HOUR, TIMER_MIN, TIMER_SEC);    //计时时间
     compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
@@ -191,7 +216,8 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_STOPWATCH_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 54-130, 440-466, 54, 54);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_STOP_WATCH]);    //秒表
-    compo_cardbox_text_set_location(cardbox, 0, 129-110, 440-466, 100, 30);
+    compo_cardbox_text_set_align_center(cardbox,0,false);
+    compo_cardbox_text_set_location(cardbox, 0, -24, -38, 100, 30);
 //    compo_cardbox_text_map_center2left_location(cardbox, 0, 129-110, 440-466, 100, 30);
     snprintf(str_buff, sizeof(str_buff), "%02lu:%02lu:%02lu", STOPWATCH_HOUR, STOPWATCH_MIN, STOPWATCH_SEC);    //计时时间
     compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
@@ -204,7 +230,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_CALCULATOR_BIN);  //图标
-    compo_cardbox_icon_set_location(cardbox, 1, 60-71, 612-631, 58, 58);
+    compo_cardbox_icon_set_location(cardbox, 1, 220-221, 612-631, 58, 58);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_CALCULATOR]);    //计算器
     compo_cardbox_text_set_location(cardbox, 0, 0, 675-631, 100, 30);
 //    compo_cardbox_text_map_center2left_location(cardbox, 0, 0, 675-631, 90, 30);
@@ -226,7 +252,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_GAME_BIN);  //图标
-    compo_cardbox_icon_set_location(cardbox, 1, 60-71, 772-791, 58, 58);;
+    compo_cardbox_icon_set_location(cardbox, 1, 220-221, 772-791, 58, 58);;
     compo_cardbox_text_set(cardbox, 0, i18n[STR_GAME]);    //游戏
     compo_cardbox_text_set_location(cardbox, 0, 0, 835-791, 90, 30);
 //    compo_cardbox_text_map_center2left_location(cardbox, 0, 0, 835-791, 90, 30);
@@ -272,7 +298,19 @@ void func_clock_sub_sidebar_update(void)
     if (f_sidebar->m_time_min != compo_cb.tm.min)   //一分钟更新一次
     {
         cardbox = compo_getobj_byid(SIDEBAR_CARD_ID_TIME_WEATHER);
-        snprintf(str_buff, sizeof(str_buff), "%02d:%02d", compo_cb.tm.hour, compo_cb.tm.min);    //时间
+        uint8_t tmp_time_hour = compo_cb.tm.hour;
+        if(uteModuleSystemtime12HOn())
+        {
+            if(tmp_time_hour > 12)
+            {
+                tmp_time_hour = tmp_time_hour - 12;
+            }
+            else if (tmp_time_hour == 0)
+            {
+                tmp_time_hour = 12;
+            }
+        }
+        snprintf(str_buff, sizeof(str_buff), "%02d:%02d", tmp_time_hour, compo_cb.tm.min);    //时间
         compo_cardbox_text_set(cardbox, 0, str_buff);
         //compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);  //天气
         //snprintf(str_buff, sizeof(str_buff), "%02d℃", sys_cb.temperature[1]);    //温度

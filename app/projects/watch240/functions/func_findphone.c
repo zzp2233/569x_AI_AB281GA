@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_findphone.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -25,7 +26,7 @@ enum
 
 };
 
-bool start_falg=0;
+bool start_falg = false;
 
 
 //创建查找手机窗体
@@ -48,15 +49,15 @@ compo_form_t *func_findphone_form_create(void)
 
     //图像按钮
     compo_button_t * btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_FIND_PHONE_START_BIN);
     compo_setid(btn, COMPO_ID_BUTTON_FIND);
     compo_button_set_pos((compo_button_t *)btn, GUI_SCREEN_CENTER_X, 258);
 
     //按钮上的文本
-    compo_textbox_t * txt = compo_textbox_create(frm, 6);
-    compo_setid(txt, COMPO_ID_TEXT_FIND);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 258);
-    compo_textbox_set(txt, i18n[STR_START]);
+//    compo_textbox_t * txt = compo_textbox_create(frm, 6);
+//    compo_setid(txt, COMPO_ID_TEXT_FIND);
+//    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 258);
+//    compo_textbox_set(txt, i18n[STR_START]);
 
     return frm;
 }
@@ -106,21 +107,29 @@ static void func_findphone_process(void)
 static void func_findphone_button_touch_handle(void)
 {
 //    f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
-    compo_textbox_t * txt;
+//    compo_textbox_t * txt;
 
     int id = compo_get_button_id();
     if (COMPO_ID_BUTTON_FIND == id)
     {
-        start_falg ^=1;
-        txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
+        start_falg = !start_falg;
+//        txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
+        compo_button_t * btn = compo_getobj_byid(COMPO_ID_BUTTON_FIND);
 
         if(start_falg)
-            compo_textbox_set(txt, i18n[STR_MEASURING]);
+        {
+            compo_button_set_bgimg(btn, UI_BUF_COMMON_FIND_PHONE_STOP_BIN);
+            uteModuleFindPhoneStartRing();
+//            compo_textbox_set(txt, i18n[STR_MEASURING]);
+        }
         else
-            compo_textbox_set(txt, i18n[STR_START]);
+        {
+            compo_button_set_bgimg(btn, UI_BUF_COMMON_FIND_PHONE_START_BIN);
+            uteModuleFindPhoneStopRing();
+//            compo_textbox_set(txt, i18n[STR_START]);
+        }
+
     }
-
-
 
 }
 
@@ -167,6 +176,11 @@ static void func_findphone_enter(void)
 static void func_findphone_exit(void)
 {
     func_cb.last = FUNC_FINDPHONE;
+
+    if(uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
+    {
+        uteModuleFindPhoneStopRing();
+    }
 
 //    ab_app_search_phone(false);
 }

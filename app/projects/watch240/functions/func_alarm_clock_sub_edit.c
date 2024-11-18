@@ -88,15 +88,21 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
                               (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2 + SELF_PIC_OFFSET,
                               GUI_SCREEN_WIDTH, 50);
 
-    txt = compo_textbox_create(frm, 4);
+    txt = compo_textbox_create(frm, strlen(i18n[STR_REVISE_TIMR]));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET);
-    compo_textbox_set(txt, "更改时间");
+    //compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET);
+    compo_textbox_set(txt, i18n_zh_rcn[STR_REVISE_TIMR]);
+    compo_textbox_set_location(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET
+                               , widget_text_get_area(txt->txt).wid, widget_text_get_area(txt->txt).hei);
+    compo_textbox_set(txt, i18n[STR_REVISE_TIMR]);
 
-    txt = compo_textbox_create(frm, 4);
+    txt = compo_textbox_create(frm, strlen(i18n[STR_SET_REPEAT]));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2);
-    compo_textbox_set(txt, "设置重复");
+//    compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2);
+    compo_textbox_set(txt, i18n_zh_rcn[STR_SET_REPEAT]);
+    compo_textbox_set_location(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2
+                               , widget_text_get_area(txt->txt).wid, widget_text_get_area(txt->txt).hei);
+    compo_textbox_set(txt, i18n[STR_SET_REPEAT]);
 
     //新建图像
     compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_ALARM_CLOCK_DELETE_CLICK_BIN);
@@ -105,12 +111,10 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
     compo_picturebox_set_visible(pic_click, false);
 
     pic_click = compo_picturebox_create(frm, UI_BUF_ALARM_CLOCK_OPEN_BIN);
-    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_ALARM_CLOCK_OPEN_BIN).wid/2 - SELF_TXT_OFFSET,
-                             (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET + SELF_PIC_OFFSET);
+    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH /1.2,(GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET + SELF_PIC_OFFSET);
 
     pic_click = compo_picturebox_create(frm, UI_BUF_ALARM_CLOCK_OPEN_BIN);
-    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_ALARM_CLOCK_OPEN_BIN).wid/2 - SELF_TXT_OFFSET,
-                             (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2 + SELF_PIC_OFFSET);
+    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH /1.2, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2 + SELF_PIC_OFFSET);
 
 
 

@@ -229,12 +229,20 @@ void uteModuleHeartEverySecond(void)
                 uteModuleHeartData.isAutoTestFlag = false;
                 uteModuleHeartData.autoTestSecond = 0;
             }
+            else if (!uteModuleHeartIsWear() && uteModuleHeartData.autoTestSecond >= 10)
+            {
+                uteModuleHeartStopSingleTesting(TYPE_HEART);
+                uteModuleHeartData.isAutoTestFlag = false;
+                uteModuleHeartData.autoTestSecond = 0;
+                isNeedAutoTest = false;
+            }
             else
             {
                 uteModuleHeartData.autoTestSecond++;
             }
         }
 
+#if !DUG_VCXX_HEART_SUPPORT
         /*! 心率界面每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
         if(uteModuleHeartIsWear()&&(uteModuleHeartData.type == TYPE_HEART))
         {
@@ -247,6 +255,7 @@ void uteModuleHeartEverySecond(void)
                 uteModuleProfileBleSendToPhone(&heartData[0],4);
             }
         }
+#endif
     }
     /*! 单次测试逻辑zn.zeng, 2021-07-16  */
     if(uteModuleHeartData.isSingleTesting)
@@ -278,10 +287,12 @@ void uteModuleHeartEverySecond(void)
                     uteModuleProfileBleSendToPhone(&stopSingleCmd[0],2);
                 }
                 /*! 每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
+#if !DUG_VCXX_HEART_SUPPORT
                 if(uteModuleGuiCommonGetCurrentScreenId() == FUNC_HEARTRATE)
                 {
                     uteModuleProfileBleSendToPhone(&heartData[0],4);
                 }
+#endif
                 uteModuleHeartData.notWearSecond = 0;
             }
         }
@@ -406,7 +417,7 @@ void uteModuleHeartSetHeartValue(int heartValue)
 *@author       dengli.lu
 *@date       2021-10-25
 */
-int uteModuleHeartGetMaxHeartValue(void)
+uint8_t uteModuleHeartGetMaxHeartValue(void)
 {
     return uteModuleHeartData.currentDayMaxHeart;
 }
@@ -416,7 +427,7 @@ int uteModuleHeartGetMaxHeartValue(void)
 *@author       dengli.lu
 *@date       2021-10-25
 */
-int uteModuleHeartGetMinHeartValue(void)
+uint8_t uteModuleHeartGetMinHeartValue(void)
 {
     return uteModuleHeartData.currentDayMinHeart;
 }
@@ -426,7 +437,7 @@ int uteModuleHeartGetMinHeartValue(void)
 *@author       dengli.lu
 *@date       2021-10-25
 */
-int uteModuleHeartGetAvgHeartValue(void)
+uint8_t uteModuleHeartGetAvgHeartValue(void)
 {
     return uteModuleHeartData.currentDayAvgHeart;
 }
@@ -440,9 +451,9 @@ int uteModuleHeartGetAvgHeartValue(void)
 */
 void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
 {
-//     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,type=%d", __func__, type);
-//     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_START_SINGLE_TESTING, (uint32_t)type);
-// }
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,type=%d", __func__, type);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_START_SINGLE_TESTING, (uint32_t)type);
+}
 
 // /**
 // *@brief        开始单次测试消息处理函数
@@ -451,9 +462,9 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
 // *@author       zn.zeng
 // *@date       2021-07-16
 // */
-// void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
-// {
-//     ute_module_heart_type_t type = (ute_module_heart_type_t)param;
+void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
+{
+    ute_module_heart_type_t type = (ute_module_heart_type_t)param;
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,input type:%d, curr type:%d",__func__,type,uteModuleHeartData.type);
     if(uteModuleHeartData.type != type)
     {
@@ -522,9 +533,9 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
 */
 void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
 {
-//     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,type=%d", __func__, type);
-//     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_STOP_SINGLE_TESTING, (uint32_t)type);
-// }
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,type=%d", __func__, type);
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_STOP_SINGLE_TESTING, (uint32_t)type);
+}
 
 // /**
 // *@brief        结束单次测试消息处理函数
@@ -533,9 +544,9 @@ void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
 // *@author       zn.zeng
 // *@date       2021-07-16
 // */
-// void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
-// {
-//     ute_module_heart_type_t type = (ute_module_heart_type_t)param;
+void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
+{
+    ute_module_heart_type_t type = (ute_module_heart_type_t)param;
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,input type:%d, curr type:%d",__func__,type,uteModuleHeartData.type);
     /*当前测试类型与传入要停止的类型不一致时，不处理，xjc 2022-06-01*/
     if(uteModuleHeartData.type != type)
@@ -662,6 +673,11 @@ bool uteModuleHeartIsWear(void)
         isWear = uteModuleHeartData.lastIsWear;
     }
 #endif
+    if(!uteModuleHeartData.isAutoTesting)
+    {
+        isWear= true;
+        uteModuleHeartData.lastIsWear = isWear;
+    }
     // UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,isWear:%d",__func__,isWear);
     return isWear;
 }
@@ -1266,9 +1282,9 @@ static bool uteModuleHeartLoadTodayHistoryData(uint8_t *heartHistoryGraph, uint8
     uteModuleHeartData.currentDayMaxHeart = 0;
     for (uint8_t i = 0; i < heartHistoryGraphCount; i++)
     {
-        if (heartHistoryData[i] != 0 && heartHistoryData[i] != 0xFF)
+        if (heartHistoryGraph[i] != 0 && heartHistoryGraph[i] != 0xFF)
         {
-            uteModuleHeartAvgHeartOfCurrentDayProcess(heartHistoryData[i]);
+            uteModuleHeartAvgHeartOfCurrentDayProcess(heartHistoryGraph[i]);
         }
     }
     /*! 同步手环和手机端的最大最小平均值 xjc, 2021-12-23  */

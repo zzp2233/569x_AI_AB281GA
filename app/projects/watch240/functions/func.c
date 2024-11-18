@@ -3,6 +3,7 @@
 #include "func_cover.h"
 #include "ute_module_systemtime.h"
 #include "ute_language_common.h"
+#include "ute_drv_motor.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -538,6 +539,13 @@ void func_process(void)
         sys_cb.msg_tag = false;
         app_msg_pop_up(sys_cb.msg_index);
         printf(">>>MSG POP\n");
+    }
+
+    if (sys_cb.timer_done)
+    {
+        sys_cb.timer_done = false;
+        msg_enqueue(EVT_WATCH_TIMER_DONE);
+        printf(">>>TIMER DONE\n");
     }
 
     if(sys_cb.hand_screen_on) //抬手亮屏
@@ -1231,6 +1239,10 @@ void func_message(size_msg_t msg)
             func_switch_to(FUNC_MAP, 0);
             break;
 
+        case EVT_WATCH_TIMER_DONE:      //计时器响铃
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
+            break;
+
         default:
             evt_message(msg);
             break;
@@ -1302,6 +1314,9 @@ void func_run(void)
     func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = 7;
     func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
+    // 获取自定义排序
+    uteModuleGuiCommonGetScreenTblSort(func_cb.tbl_sort, &func_cb.sort_cnt);
+
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
     for (;;)

@@ -19,10 +19,11 @@
 #define RECT_WIDTH GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6
 
 //图标对应矩形X轴前部坐标
-#define IMG_BTN_FIRST_X GUI_SCREEN_CENTER_X - (GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6)/2 + gui_image_get_size(UI_BUF_LONG_PRESS_RESTART_BIN).wid/2
-#define IMG_BTN_LAST_X  GUI_SCREEN_CENTER_X + (GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6)/2 - gui_image_get_size(UI_BUF_LONG_PRESS_RESTART_BIN).wid/2
+#define IMG_BTN_FIRST_X GUI_SCREEN_CENTER_X - (GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6)/2 + gui_image_get_size(UI_BUF_LONG_PRESS_RESTART_BIN).wid/2+3
+#define IMG_BTN_LAST_X  GUI_SCREEN_CENTER_X + (GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6)/2 - gui_image_get_size(UI_BUF_LONG_PRESS_RESTART_BIN).wid/2-3
 
-#define IMG_WIDTH    gui_image_get_size(UI_BUF_LONG_PRESS_RESTART_BIN).wid//图片宽度
+//#define IMG_WIDTH    gui_image_get_size(UI_BUF_LONG_PRESS_RESTART_BIN).wid//图片宽度
+#define IMG_WIDTH  56//图片宽度
 
 //进度条前后点
 #define RIGHT_TOUCH  IMG_BTN_FIRST_X+IMG_WIDTH/2
@@ -62,17 +63,17 @@ compo_form_t *func_long_press_form_create(void)
     /*创建三个底部椭圆*/
     compo_shape_t * rectangle;
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_1,RECT_WIDTH, GUI_SCREEN_HEIGHT/5);
+    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_1,RECT_WIDTH, IMG_WIDTH+6);
     compo_shape_set_color(rectangle,COLOR_GRAY);
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_2,RECT_WIDTH, GUI_SCREEN_HEIGHT/5);
+    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_2,RECT_WIDTH,IMG_WIDTH+6);
     compo_shape_set_color(rectangle,COLOR_GRAY);
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_3,RECT_WIDTH, GUI_SCREEN_HEIGHT/5);
+    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_3,RECT_WIDTH, IMG_WIDTH+6);
     compo_shape_set_color(rectangle,COLOR_GRAY);
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
@@ -96,20 +97,23 @@ compo_form_t *func_long_press_form_create(void)
     /*创建一个椭圆用于滑动时覆盖字体*/
     rect_cover = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
     compo_setid(rect_cover, RECT_ID_1);
-    compo_shape_set_color(rect_cover,COLOR_RED);
+    compo_shape_set_color(rect_cover,make_color(0xff, 0x39, 0x10));
     compo_shape_set_radius(rect_cover, GUI_SCREEN_HEIGHT/4/2);
 
     /*创建三个滑动图标*/
     img_btn = compo_button_create_by_image(frm,UI_BUF_LONG_PRESS_SOS_BIN);
     compo_button_set_pos(img_btn, IMG_BTN_FIRST_X,RECT_Y_1);
+    widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
     compo_setid(img_btn, IMG_BTN_ID_1);
 
     img_btn = compo_button_create_by_image(frm,UI_BUF_LONG_PRESS_OFF_BIN);
     compo_button_set_pos(img_btn, IMG_BTN_FIRST_X,RECT_Y_2);
+    widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
     compo_setid(img_btn, IMG_BTN_ID_2);
 
     img_btn = compo_button_create_by_image(frm,UI_BUF_LONG_PRESS_RESTART_BIN);
     compo_button_set_pos(img_btn, IMG_BTN_FIRST_X,RECT_Y_3);
+    widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
     compo_setid(img_btn, IMG_BTN_ID_3);
 
 
@@ -176,7 +180,7 @@ static void func_long_press_slide_disp_handle()
         }
 
         compo_button_set_pos(img_btn, distance,y);
-        compo_shape_set_location(rect_cover,distance/2+IMG_WIDTH/2-IMG_WIDTH/19,y,distance+IMG_WIDTH/5, GUI_SCREEN_HEIGHT/5);
+        compo_shape_set_location(rect_cover,distance/2+IMG_WIDTH/2-IMG_WIDTH/19,y,distance, IMG_WIDTH);
     }
 }
 

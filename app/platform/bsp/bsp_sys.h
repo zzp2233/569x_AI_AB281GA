@@ -42,6 +42,9 @@ enum sys_ctl_bits
 #define STOPWATCH_REC_NUM_MAX           10              //秒表最大数量，需要同步修改列表item
 #define WEATHER_CNT                     8               //天气类型数量
 
+#define TITLE_BUF_LEN     128   //歌词buffer长度
+#define ARTIST_BUF_LEN    128   //歌名/歌手buffer长度
+
 typedef struct
 {
     //控制位
@@ -121,6 +124,7 @@ typedef struct
     u8 motor_level;
     //定时器
     u8 timer_sta;                                   //计时器工作状态（0:未开启 1:正在计时 2:暂停 3:结束 4:复位）
+    u8 timer_done;                                //计时器到时
     u32 timer_total_sec;                            //当前计时器总时间 （单位：秒）
     u32 timer_left_sec;                             //当前计时器剩余时间 （单位：秒）
     u32 timer_custom_sec;                           //计时器自定义时间记忆值
@@ -157,8 +161,8 @@ typedef struct
     u8 weather_idx;
     s8 temperature[2];                              //温度（0:最低 1:最高）
     //运动
-    u16 step_cur;
-    u16 step_goal;
+    u32 step_cur;
+    u32 step_goal;
     u8 distance_cur;
     u8 distance_goal;
     u8 kcal_cur;
@@ -191,6 +195,13 @@ typedef struct
     bool hand_screen_on; //抬手亮屏唤醒
     bool refresh_language_flag;
     u8 sta_old;
+
+    //音乐歌词 歌名 作者名记录
+    char title_buf[TITLE_BUF_LEN];
+    char artist_buf[ARTIST_BUF_LEN];
+    bool music_title_init;
+    bool music_artist_init;
+
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

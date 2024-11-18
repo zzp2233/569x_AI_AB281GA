@@ -22,6 +22,7 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_sleep.h"
 #include "ute_module_sport.h"
+#include "ute_module_findphone.h"
 
 #if 0
 #include "ute_drv_keys_common.h"
@@ -52,7 +53,6 @@
 #include "ute_module_appbinding.h"
 #include "ute_module_quickReply.h"
 #include "ute_module_gui_string.h"
-#include "ute_module_findphone.h"
 #include "ute_module_ecg.h"
 
 #if UTE_SIMPLIFY_WECHAT_SUPPORT
@@ -178,7 +178,7 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleAppBindingInit();
         ute_application_sn_data_t snData;
         uint32_t size = sizeof(ute_application_sn_data_t);
-        uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,size);
+        uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,size);
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,snData.userId = 0x%08x",__func__,snData.userId);
         if(snData.userId != 0xffffffff)
         {
@@ -248,7 +248,7 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_PLAYBACK_SUPPORT
         uteModuleMicRecordInit();
 #endif
-        //uteModuleFindPhoneInit();
+        uteModuleFindPhoneInit();
         //uteModuleGuiStringInit();
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
         uteModuleEmotionPressureInit();
@@ -295,8 +295,8 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 
         uteModulePlatformCreateTimer(&uteApplicationCommonSyncDataTimer, "SYNC DATA timer", 1, UTE_SEND_DATA_TO_PHONE_INVTERVAL, false, uteApplicationCommonSyncDataTimerCallback);
-        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_ADV_DATA,0);
-        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_DEV_NAME,0);
+        // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_ADV_DATA,0);
+        // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_DEV_NAME,0);
         //uteModulePlatformAdvertisingInit();
 #if UTE_SIMPLIFY_WECHAT_SUPPORT
         uteModuleSimplifyWechatInit();
@@ -1771,7 +1771,7 @@ bool uteApplicationCommonGetAncsConnStatus(void)
  * @brief        获取设备二维码
  * @details
  * @param[in]    len     二维码字符最大长度
- * @param[out]   qrBuff  二维码字符串
+ * @param[out]   qrBuff  二维码字符串接收数组
  * @return       二维码字符长度
  * @author       Wang.Luo
  * @date         2024-10-29
@@ -1779,30 +1779,15 @@ bool uteApplicationCommonGetAncsConnStatus(void)
 uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len)
 {
     uint8_t mac[6];
+    uint8_t macStr[18];
     uteModulePlatformGetBleMacAddress(mac);
+    snprintf((char *)macStr,sizeof(macStr),"%02X:%02X:%02X:%02X:%02X:%02X",mac[0],mac[1],mac[2],mac[3],mac[4],mac[5]);
+    uint8_t drvName[32] = {0};
+    uint8_t drvNameLen = sizeof(drvName);
+    uteModulePlatformGetDevCompleteName(drvName,&drvNameLen);
     memset(qrBuff,0,len);
-
-    uint8_t stringSize = sizeof(UTE_BINDING_QRENCODE_LINK);
-
-    if(stringSize > len)
-    {
-        stringSize = len;
-    }
-
-    // 找到 "MAC=" 的位置
-    const char* mac_start = strstr(UTE_BINDING_QRENCODE_LINK, "MAC=");
-    if (mac_start == NULL)
-    {
-        memcpy(qrBuff, UTE_BINDING_QRENCODE_LINK, stringSize);
-    }
-    else
-    {
-        // 计算 "MAC=" 之前的部分长度
-        uint8_t prefix_len = mac_start - UTE_BINDING_QRENCODE_LINK;
-        memcpy(qrBuff, UTE_BINDING_QRENCODE_LINK, prefix_len);
-        snprintf(qrBuff + prefix_len, stringSize - prefix_len, "MAC=%02x:%02x:%02x:%02x:%02x:%02x", mac[0], mac[1], mac[2], mac[3], mac[4], mac[5]);
-    }
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,qrBuff:%s",__func__,qrBuff);
+    snprintf(qrBuff,len,"%s?Name=%s&SW=%s&MAC=%s",UTE_BINDING_QRENCODE_LINK,drvName,UTE_SW_VERSION,macStr);
+    uint8_t stringSize = strlen(qrBuff);
     return stringSize;
 }
 

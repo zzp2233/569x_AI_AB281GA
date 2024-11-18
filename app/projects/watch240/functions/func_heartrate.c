@@ -63,16 +63,16 @@ compo_form_t *func_heartrate_form_create(void)
     compo_form_set_title(frm, i18n[STR_HEART_RATE]);
 
     //设置内容
-    compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BIN, 128, 88);
+    compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BIN, 124, 88);
     compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BG_BIN, 120, 230);
 
-    compo_form_add_image(frm, UI_BUF_HEART_RATE_UP_BIN, 76, 186);
-    compo_form_add_image(frm, UI_BUF_HEART_RATE_DOWN_BIN, 226, 186);
+    compo_form_add_image(frm, UI_BUF_HEART_RATE_UP_BIN, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.45, 186);
+    compo_form_add_image(frm, UI_BUF_HEART_RATE_DOWN_BIN, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2.4, 186);
 
     //创建文本
     s16 txt_x = 12;
     s16 txt_y = 172;
-    s16 txt_x_offset = 76;
+    s16 txt_x_offset = 84;
 
     for(idx = 0; idx < HEARTRATE_TEXT_ITEM_CNT; idx++)
     {
@@ -80,6 +80,10 @@ compo_form_t *func_heartrate_form_create(void)
         compo_textbox_set_align_center(txt_title, false);
 //        compo_textbox_set_pos(txt_title, txt_x + (idx * txt_x_offset), txt_y);
         compo_textbox_set_location(txt_title, txt_x + (idx * txt_x_offset), txt_y,FINT_HEIGHT,FINT_HEIGHT);
+        if(idx == 1)
+        {
+            compo_textbox_set_location(txt_title, txt_x + (idx * txt_x_offset), txt_y-4,FINT_HEIGHT,FINT_HEIGHT);
+        }
         compo_textbox_set_autoroll_mode(txt_title, 0);
         compo_textbox_set(txt_title, i18n[STR_PER_MINUTE]);
     }
@@ -89,17 +93,34 @@ compo_form_t *func_heartrate_form_create(void)
     //测量心率值
     s16 txt_val_x = 38;
     s16 txt_val_y = 148;
-    s16 txt_val_x_offset = 76;
+    s16 txt_val_x_offset = 84;
     for (idx = 0; idx < HEARTRATE_TEXT_ITEM_CNT; idx++)
     {
         compo_textbox_t *txt_val = compo_textbox_create(frm, 3);
-        compo_textbox_set_font(txt_val, UI_BUF_0FONT_FONT_NUM_24_BIN);
         compo_setid(txt_val, COMPO_ID_NUM_HEARTRATE_MAX + idx);
         //compo_textbox_set_align_center(txt_val, false);
         compo_textbox_set_pos(txt_val, txt_val_x + (idx * txt_val_x_offset), txt_val_y);
-        compo_textbox_set(txt_val, "0");
+        if(idx == 1)
+        {
+            compo_textbox_set_font(txt_val, UI_BUF_0FONT_FONT_NUM_24_BIN);
+            compo_textbox_set_pos(txt_val, txt_val_x + (idx * txt_val_x_offset), txt_val_y-4);
+            compo_textbox_set(txt_val, "0");
+        }
+        else if (idx == 0)
+        {
+            char hr_buf[4];
+            memset(hr_buf, 0, sizeof(hr_buf));
+            snprintf(hr_buf, sizeof(hr_buf), "%d", uteModuleHeartGetMaxHeartValue());
+            compo_textbox_set(txt_val, hr_buf);
+        }
+        else if (idx == 2)
+        {
+            char hr_buf[4];
+            memset(hr_buf, 0, sizeof(hr_buf));
+            snprintf(hr_buf, sizeof(hr_buf), "%d", uteModuleHeartGetMinHeartValue() == 0xff ? 0 : uteModuleHeartGetMinHeartValue());
+            compo_textbox_set(txt_val, hr_buf);
+        }
     }
-
 
     //心率详情
     // compo_form_add_image(frm, UI_BUF_HEART_RATE_CHART_BG_BIN, 120, 440);
@@ -151,18 +172,18 @@ static void func_heartrate_refresh(void)
 
         compo_textbox_set(txt, hr_buf);
 
-        if (f_heartrate->max_hr <= cur_hr)
+        if (f_heartrate->max_hr != uteModuleHeartGetMaxHeartValue())
         {
-            f_heartrate->max_hr = cur_hr;
+            f_heartrate->max_hr = uteModuleHeartGetMaxHeartValue();
             txt = (compo_textbox_t *)compo_getobj_byid(COMPO_ID_NUM_HEARTRATE_MAX);
             snprintf(hr_buf, sizeof(hr_buf), "%d", f_heartrate->max_hr);
             compo_textbox_set(txt, hr_buf);
-            return;
+            // return;
         }
 
-        if (f_heartrate->min_hr == 0 || ((f_heartrate->min_hr > cur_hr) && (cur_hr != 0)))
+        if (f_heartrate->min_hr != uteModuleHeartGetMinHeartValue() && uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
         {
-            f_heartrate->min_hr = cur_hr;
+            f_heartrate->min_hr = uteModuleHeartGetMinHeartValue();
             txt = (compo_textbox_t *)compo_getobj_byid(COMPO_ID_NUM_HEARTRATE_MIN);
             snprintf(hr_buf, sizeof(hr_buf), "%d", f_heartrate->min_hr);
             compo_textbox_set(txt, hr_buf);

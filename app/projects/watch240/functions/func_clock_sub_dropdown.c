@@ -24,6 +24,7 @@ enum
     COMPO_ID_TXT_BATTERY_PIC,
     //蓝牙状态图片
     COMPO_ID_TXT_BLUETOOTH_STA_PIC,
+    COMPO_ID_TXT_BTETOOTH_STA_PIC,
 };
 
 
@@ -35,6 +36,7 @@ typedef struct dropdown_disp_btn_item_t_
     u16 btn_id;
     s16 x;
     s16 y;
+    u8 light_flag;
 
 } dropdown_disp_btn_item_t;
 
@@ -42,12 +44,19 @@ typedef struct dropdown_disp_btn_item_t_
 //按钮item，创建时遍历一下
 static  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 {
-    {UI_BUF_DROPDOWN_BLUETOOTH_OFF_BIN,          COMPO_ID_BTN_CONNECT,          60,  80},     //蓝牙扫描开关
-    {UI_BUF_DROPDOWN_DISTURB_OFF_BIN,            COMPO_ID_BTN_DISCURD,          180, 80},
-    {UI_BUF_DROPDOWN_FLASHLIGHT_ON_BIN,          COMPO_ID_BTN_FLASHLIGHT,       60,  155},
-    {UI_BUF_DROPDOWN_MUTE_ON_BIN,                COMPO_ID_BTN_MUTE,             180, 155},
-    {UI_BUF_DROPDOWN_SCAN_2_BIN,                 COMPO_ID_BTN_SCAN,             60,  230},
-    {UI_BUF_DROPDOWN_LIGHT_1_BIN,                COMPO_ID_BTN_LIGHT,            180, 230},
+//    {UI_BUF_DROPDOWN_BLUETOOTH_OFF_BIN,          COMPO_ID_BTN_CONNECT,          60,  80},     //蓝牙扫描开关
+//    {UI_BUF_DROPDOWN_DISTURB_OFF_BIN,            COMPO_ID_BTN_DISCURD,          180, 80},
+//    {UI_BUF_DROPDOWN_FLASHLIGHT_ON_BIN,          COMPO_ID_BTN_FLASHLIGHT,       60,  155},
+//    {UI_BUF_DROPDOWN_MUTE_ON_BIN,                COMPO_ID_BTN_MUTE,             180, 155},
+//    {UI_BUF_DROPDOWN_SCAN_2_BIN,                 COMPO_ID_BTN_SCAN,             60,  230},
+//    {UI_BUF_DROPDOWN_LIGHT_1_BIN,                COMPO_ID_BTN_LIGHT,            180, 230},
+
+    {UI_BUF_CLOCK_DOWN_MENU_BT_OFF_BIN,          COMPO_ID_BTN_CONNECT,          60,  80},     //蓝牙扫描开关
+    {UI_BUF_CLOCK_DOWN_MENU_DND_OFF_BIN,         COMPO_ID_BTN_DISCURD,          180, 80},
+    {UI_BUF_CLOCK_DOWN_MENU_TOUCH_BIN,           COMPO_ID_BTN_FLASHLIGHT,       60,  155},
+    {UI_BUF_CLOCK_DOWN_MENU_MUTE_ON_BIN,         COMPO_ID_BTN_MUTE,             180, 155},
+    {UI_BUF_CLOCK_DOWN_MENU_SETTING_BIN,         COMPO_ID_BTN_SCAN,             60,  230},
+    {UI_BUF_CLOCK_DOWN_MENU_LIGHT_1_BIN,         COMPO_ID_BTN_LIGHT,            180, 230},
 };
 
 //下拉电量图标更新
@@ -84,19 +93,27 @@ static void func_clock_sub_dropdown_battery_pic_update(void)
 static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 {
     compo_picturebox_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    compo_picturebox_set_visible(bluetooth_pic, true);
-    if (ble_is_connect() && bt_is_connected())
+    compo_picturebox_t *btooth_pic = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
+//    compo_picturebox_set_visible(bluetooth_pic, true);
+    if (ble_is_connect())
     {
-        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
-    }
-    else if(bt_is_connected() || ble_is_connect())
-    {
-        compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
+        compo_picturebox_set(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BLE_ICON_ON_BIN);
+//        printf("w:%d h:%d\n",gui_image_get_size(UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN).wid,gui_image_get_size(UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN).hei);
     }
     else
     {
-        compo_picturebox_set_visible(bluetooth_pic, false);
+        compo_picturebox_set(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BLE_ICON_OFF_BIN);
     }
+
+    if(bt_is_connected())
+    {
+        compo_picturebox_set(btooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_ICON_ON_BIN);
+    }
+    else
+    {
+        compo_picturebox_set(btooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_ICON_OFF_BIN);
+    }
+
 }
 
 //下拉静音图标更新
@@ -105,11 +122,11 @@ static void func_clock_sub_dropdown_mute_pic_update(void)
     compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_MUTE);
     if(sys_cb.mute)
     {
-        compo_button_set_bgimg(mute_pic, UI_BUF_DROPDOWN_MUTE_ON_BIN);
+        compo_button_set_bgimg(mute_pic, UI_BUF_CLOCK_DOWN_MENU_MUTE_ON_BIN);
     }
     else
     {
-        compo_button_set_bgimg(mute_pic, UI_BUF_DROPDOWN_MUTE_OFF_BIN);
+        compo_button_set_bgimg(mute_pic, UI_BUF_CLOCK_DOWN_MENU_MUTE_OFF_BIN);
     }
 }
 
@@ -117,14 +134,18 @@ static void func_clock_sub_dropdown_mute_pic_update(void)
 static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 {
     compo_button_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_BTN_CONNECT);
+    compo_picturebox_t *bluetooth = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
     printf("bt_get_scan: 0x%x\n", bt_get_scan());
     if(bt_get_scan())
     {
-        compo_button_set_bgimg(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_ON_BIN);
+        compo_button_set_bgimg(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_ON_BIN);
+        compo_picturebox_set_visible(bluetooth, true);
     }
     else
     {
-        compo_button_set_bgimg(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_OFF_BIN);
+        compo_button_set_bgimg(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_OFF_BIN);
+        compo_picturebox_set_visible(bluetooth, false);
+
     }
 }
 
@@ -134,11 +155,11 @@ static void func_clock_sub_dropdown_disturb_pic_update(void)
     compo_button_t *disturb_pic = compo_getobj_byid(COMPO_ID_BTN_DISCURD);
     if(dropdown_disturb_sw)
     {
-        compo_button_set_bgimg(disturb_pic, UI_BUF_DROPDOWN_DISTURB_ON_BIN);
+        compo_button_set_bgimg(disturb_pic, UI_BUF_CLOCK_DOWN_MENU_DND_ON_BIN);
     }
     else
     {
-        compo_button_set_bgimg(disturb_pic, UI_BUF_DROPDOWN_DISTURB_OFF_BIN);
+        compo_button_set_bgimg(disturb_pic, UI_BUF_CLOCK_DOWN_MENU_DND_OFF_BIN);
     }
 
 }
@@ -153,38 +174,67 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_shape_t *masklayer = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_color(masklayer, COLOR_BLACK);
     compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
-    compo_shape_set_alpha(masklayer, 140);
+    compo_shape_set_alpha(masklayer, 255);
 
     //创建按钮
-    static compo_button_t *btn;
+    compo_button_t *btn;
     for (u8 idx_btn = 0; idx_btn < DROPDOWN_DISP_BTN_ITEM_CNT; idx_btn++)
     {
         btn = compo_button_create_by_image(frm, tbl_dropdown_disp_btn_item[idx_btn].res_addr);
         compo_setid(btn, tbl_dropdown_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_dropdown_disp_btn_item[idx_btn].x, tbl_dropdown_disp_btn_item[idx_btn].y);
         compo_button_set_alpha(btn, MENU_DROPDOWN_ALPHA);
+        if(idx_btn == DROPDOWN_DISP_BTN_ITEM_CNT-1)
+        {
+            switch(sys_cb.light_level)
+            {
+                case 1:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_1_BIN);
+                    break;
+                case 2:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_2_BIN);
+                    break;
+                case 3:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_3_BIN);
+                    break;
+                case 4:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_4_BIN);
+                    break;
+                case 5:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_5_BIN);
+                    break;
+            }
+        }
     }
 
     //电池
     compo_picturebox_t *battery_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_POWER1_BIN);
     compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
-    compo_picturebox_set_pos(battery_pic, 260, 30);
+    compo_picturebox_set_pos(battery_pic, GUI_SCREEN_CENTER_X*1.6, GUI_SCREEN_CENTER_Y/8);
     compo_picturebox_set_visible(battery_pic, true);
 
     //蓝牙状态
     compo_picturebox_t *bluetooth_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    compo_picturebox_set_pos(bluetooth_pic, 60, 30);
-    compo_picturebox_set_visible(bluetooth_pic, true);
+    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/3.5, GUI_SCREEN_CENTER_Y/8);
+//    compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
+    compo_picturebox_set(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_ICON_OFF_BIN);
+//    compo_picturebox_set_visible(bluetooth_pic, true);
+
+    bluetooth_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
+    compo_setid(bluetooth_pic, COMPO_ID_TXT_BTETOOTH_STA_PIC);
+    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/1.9, GUI_SCREEN_CENTER_Y/8);
+    compo_picturebox_set(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BLE_ICON_OFF_BIN);
+//    compo_picturebox_set_visible(bluetooth_pic, true);
 
 
     //电池电量
-    compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
-    compo_textbox_set_location(battery_txt, 200, 28, 0, 0);
-    compo_textbox_set_autosize(battery_txt, true);
-    compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
-    compo_textbox_set_font(battery_txt, UI_BUF_0FONT_FONT_BIN);
-    compo_textbox_set_forecolor(battery_txt, make_color(0xae, 0xb3, 0xbc));     //和电池底图颜色一致
+//    compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
+//    compo_textbox_set_location(battery_txt, 200, 28, 0, 0);
+//    compo_textbox_set_autosize(battery_txt, true);
+//    compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
+//    compo_textbox_set_font(battery_txt, UI_BUF_0FONT_FONT_BIN);
+//    compo_textbox_set_forecolor(battery_txt, make_color(0xae, 0xb3, 0xbc));     //和电池底图颜色一致
 
     func_clock_sub_dropdown_battery_pic_update();
     func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
@@ -206,6 +256,7 @@ static void func_clock_sub_dropdown_process(void)
 static void func_clock_sub_dropdown_click_handler(void)
 {
     int id = compo_get_button_id();
+    compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_LIGHT);
     printf("id: %d\n", id);
     switch(id)
     {
@@ -254,10 +305,31 @@ static void func_clock_sub_dropdown_click_handler(void)
             func_cb.sta = FUNC_FLASHLIGHT;
             break;
         case COMPO_ID_BTN_SCAN:
-            func_cb.sta = FUNC_SCAN;
+            //func_cb.sta = FUNC_SCAN;
+            func_cb.sta = FUNC_SETTING;
             break;
         case COMPO_ID_BTN_LIGHT:
-            func_cb.sta = FUNC_LIGHT;
+//            func_cb.sta = FUNC_LIGHT;
+            if(++sys_cb.light_level>5)sys_cb.light_level=1;
+            switch(sys_cb.light_level)
+            {
+                case 1:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_1_BIN);
+                    break;
+                case 2:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_2_BIN);
+                    break;
+                case 3:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_3_BIN);
+                    break;
+                case 4:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_4_BIN);
+                    break;
+                case 5:
+                    compo_button_set_bgimg(btn, UI_BUF_CLOCK_DOWN_MENU_LIGHT_5_BIN);
+                    break;
+            }
+            tft_bglight_set_level(sys_cb.light_level,false);
             break;
 
         default:

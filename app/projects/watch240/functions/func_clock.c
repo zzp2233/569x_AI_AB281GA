@@ -65,45 +65,45 @@ const u32 dialplate_info[] =
 
 };
 
-//表盘快捷按钮编号表
+//表盘快捷按钮编号表 对应表盘工具
 const u8 quick_btn_tbl[] =
 {
-    FUNC_NULL,
-    FUNC_HEARTRATE,
-    FUNC_BT,
-    FUNC_ALARM_CLOCK,
-    FUNC_BLOOD_OXYGEN,
-//    FUNC_BLOODSUGAR,
-    FUNC_BLOOD_PRESSURE,
-    FUNC_BREATHE,
-    FUNC_CALCULATOR,
+    [0]     = FUNC_NULL,                    //空
+    [1]     = FUNC_HEARTRATE,               //心率
+    [2]     = FUNC_BT,                      //音乐
+    [3]     = FUNC_ALARM_CLOCK,             //闹钟
+    [4]     = FUNC_BLOOD_OXYGEN,            //血氧
+    [5]     = FUNC_NULL,                    //血糖
+    [6]     = FUNC_BLOOD_PRESSURE,          //血压
+    [7]     = FUNC_BREATHE,                 //呼吸
+    [8]     = FUNC_CALCULATOR,              //计算器
 
-    FUNC_CAMERA,
-    FUNC_TIMER,
-    FUNC_SLEEP,
-    FUNC_STOPWATCH,
-    FUNC_WEATHER,
-    FUNC_GAME,
-    FUNC_STYLE,
-    FUNC_ALTITUDE,
-    FUNC_MAP,
-    FUNC_MESSAGE,
-    FUNC_SCAN,
-    FUNC_VOICE,
+    [9]     = FUNC_CAMERA,                  //相机
+    [10]    = FUNC_TIMER,                   //定时器
+    [11]    = FUNC_SLEEP,                   //睡眠
+    [12]    = FUNC_STOPWATCH,               //秒表
+    [13]    = FUNC_WEATHER,                 //天气
+    [14]    = FUNC_GAME,                    //游戏
+    [15]    = FUNC_STYLE,                   //菜单风格
+    [16]    = FUNC_ALTITUDE,                //海拔
+    [17]    = FUNC_MAP,                     //地图
+    [18]    = FUNC_MESSAGE,                 //消息
+    [19]    = FUNC_SCAN,                    //扫一扫
+    [20]    = FUNC_VOICE,                   //语音助手
 #if SECURITY_PAY_EN
-    FUNC_ALIPAY,
+    [21]    = FUNC_ALIPAY,                  //支付宝
 #else
-    FUNC_NULL,
+    [21]    = FUNC_NULL,                    //支付宝
 #endif // SECURITY_PAY_EN
-    FUNC_COMPASS,
-    FUNC_ADDRESS_BOOK,
-    FUNC_SPORT,
-    FUNC_CALL,
-    FUNC_FINDPHONE,
-    FUNC_CALENDAER,
-    FUNC_ACTIVITY,
-    FUNC_FLASHLIGHT,
-    FUNC_SETTING,
+    [22]    = FUNC_COMPASS,                 //指南针
+    [23]    = FUNC_ADDRESS_BOOK,            //电话簿
+    [24]    = FUNC_SPORT,                   //运动
+    [25]    = FUNC_CALL,                    //电话
+    [26]    = FUNC_FINDPHONE,               //寻找手机
+    [27]    = FUNC_CALENDAER,               //日历
+    [28]    = FUNC_ACTIVITY,                //活动记录
+    [29]    = FUNC_FLASHLIGHT,              //手电筒
+    [30]    = FUNC_SETTING,                 //设置
 };
 
 enum
@@ -261,7 +261,7 @@ compo_form_t *func_clock_cube_form_create(void)
     txt = compo_textbox_create(frm, 10);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 180, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 140, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + GUI_SCREEN_CENTER_X, 300, 70);
     compo_bonddata(txt, COMPO_BOND_DATE);
 
     txt = compo_textbox_create(frm, 1);
@@ -562,7 +562,7 @@ static void func_clock_message(size_msg_t msg)
         }
 
     }
-    static bool time_visible = 0;
+    static bool time_visible = 1;
     switch (msg)
     {
         case MSG_CTP_SHORT_UP:
@@ -595,7 +595,7 @@ static void func_clock_message(size_msg_t msg)
             {
                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
                 compo_textbox_set_visible(txt, time_visible);
-                time_visible ^= 1;
+//                time_visible ^= 1;
             }
 
             break;

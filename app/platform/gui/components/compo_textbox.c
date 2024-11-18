@@ -73,7 +73,7 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
     area_t rel_text_area = widget_text_get_area(txt);
     bool align_center = widget_get_align_center(txt);
     s16 client_y = 0;
-
+    u16 circ_pixel = textbox->roll_cb.mode ? widget_text_get_autoroll_circ_pixel(txt) : 0;
     rect_t textbox_rect = widget_get_location(txt);
     if (textbox_rect.wid && align_center)
     {
@@ -128,6 +128,41 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
                 textbox->roll_cb.offset = 0;
                 compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_NULL);
             }
+        }
+
+        //居中对齐且存在滚动时从最左边开始滚动
+        if (textbox->roll_cb.direction && textbox->roll_cb.mode)
+        {
+            if (align_center)
+            {
+//                printf("align_center = %s\n", text);
+                if(textbox->roll_cb.direction == 1)
+                {
+                    textbox->roll_cb.offset = -(rel_text_area.wid + circ_pixel);
+                }
+                else
+                {
+                    if (rel_text_area.wid > rel_textbox_area.wid)
+                    {
+                        textbox->roll_cb.offset = 0;
+                    }
+                    else
+                    {
+                        textbox->roll_cb.offset = (rel_text_area.wid - rel_textbox_area.wid) / 2;
+                    }
+                }
+            }
+//            else
+//            {
+//                if(textbox->roll_cb.direction == 1)
+//                {
+//                    textbox->roll_cb.offset = -(rel_text_area.wid + circ_pixel);
+//                }
+//                else
+//                {
+//                    textbox->roll_cb.offset = (textbox->roll_cb.direction && textbox->roll_cb.mode) ?  -(rel_text_area.wid +  circ_pixel): 0;
+//                }
+//            }
         }
 
         widget_text_set_client(txt, textbox->roll_cb.offset, client_y);

@@ -429,8 +429,6 @@ bool SL_SC7A20_FIFO_TEST(void);
 /**return :0  FIFO 正常*******************/
 /****SL_Watch_ALGO_DRV__H__*********/
 
-#endif //(SENSOR_STEP_SEL == SENSOR_STEP_SC7A20)
-
 
 /*****加测项目客户端测试 校准XY零漂*******/
 bool SL_SC7A20_CAL_FUN(unsigned char *sl_fifo_num,signed char *sl_xy_cal);
@@ -520,6 +518,8 @@ bool sc7a20_sway_status_get(void);
 UINT sc7a20_cur_steps_get(void);
 UINT sc7a20_cur_kcal_get(void);
 UINT sc7a20_cur_distance_get(void);
+
+#endif //(SENSOR_STEP_SEL == SENSOR_STEP_SC7A20)
 
 #endif //SL_WATCH_APPLICATION__H__
 

@@ -89,6 +89,13 @@ compo_form_t *func_alarm_clock_form_create(void)
     {
         for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
         {
+
+//            if(i == ALARM_ENABLE_CNT()-1  && !ALARM_GET_SWITCH(ALARM_ENABLE_CNT()-1))///开启新闹钟
+//            {
+//                ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
+//            }
+
+
             cardbox = compo_cardbox_create(frm, 1, 1, 2, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);

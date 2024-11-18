@@ -78,6 +78,7 @@
 			<Add directory="../../../ute/drv/gsensor" />
 			<Add directory="../../../ute/language" />
 			<Add directory="../../../ute/language/defaultLanguage" />
+			<Add directory="../../../ute/module/findphone" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -101,9 +102,9 @@
 			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_BIODetect_V141_codeBlock_Riscv_01.a" />
 			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_hr_vH102ed02_ZKLXRISCV32V2_NA_01.a" />
 			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_spo2_VC30FS_Int_ZhongKe5681_01.a" />
-			<Add library="../../platform/bsp/bsp_sensor/sc7a20/libSL_Watch_Pedo_Kcal_Wrist_Sleep_Sway_Algorithm.a" />
 			<Add library="../../../ute/lib/libute_all_sports_int_algorithms3_0.a" />
 			<Add library="../../../ute/lib/libUTEsleepOnBandLib.a" />
+			<Add library="../../../ute/drv/gsensor/libSL_Acc_Mtp_WR.a" />
 			<Add directory="../../platform/libs" />
 		</Linker>
 		<ExtraCommands>
@@ -171,6 +172,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/filesystem/ute_module_filesystem.h" />
+		<Unit filename="../../../ute/module/findphone/ute_module_findphone.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/findphone/ute_module_findphone.h" />
 		<Unit filename="../../../ute/module/gui/ute_module_gui_common.c">
 			<Option compilerVar="CC" />
 		</Unit>

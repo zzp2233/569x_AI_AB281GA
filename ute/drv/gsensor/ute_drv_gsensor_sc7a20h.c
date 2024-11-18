@@ -13,7 +13,7 @@
 #include "ute_module_platform.h"
 #include "ute_drv_gsensor_sc7a20h.h"
 #include "ute_module_platform.h"
-// #include "SL_Acc_Mtp_WR.h"
+#include "SL_Acc_Mtp_WR.h"
 #include "ute_application_common.h"
 
 #if UTE_DRV_GSENSOR_SC7A20H_SUPPORT
@@ -203,11 +203,9 @@ bool uteDrvGsensorSc7a20hAccInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accR
     // // }
 #endif
     /*开机时读取一次，用于判断是否写入过正确buff dengli.lu 2024.04.17*/
-#if 0
     ute_application_sn_data_t snData;
-    uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
+    uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
     validValue = snData.sc7a20hRetReadValue;
-#endif
     return true;
 }
 /**
@@ -394,7 +392,7 @@ void uteDrvGsensorSc7a20hReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
     uint8_t buff[192] = {0};
     uint8_t frame_cnt = 0;
     bool isException =false;
-#if 0  /*MTP写入和CRC校验*/
+#if 1  /*MTP写入和CRC校验*/
     uint8_t retReadValue = 0;
     uint8_t retWriteValue = 0;
 
@@ -407,12 +405,12 @@ void uteDrvGsensorSc7a20hReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
         {
             /*把正确的buff(retReadValue等于29时是正确的)存起来，只存这一次，下次异常时再重新写入 dengli.lu 2024.04.17*/
             ute_application_sn_data_t snData;
-            uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
-            uteModulePlatformFlashNorErase(UTE_BLE_SN1_ADDRESS);
+            uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
+            uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
             memcpy(snData.sc7a20hTempBuffer,buff,29);
             validValue = 29;
             snData.sc7a20hRetReadValue = 29;
-            uteModulePlatformFlashNorWrite((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
+            uteModulePlatformFlashNorWrite((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
         }
     }
     else
@@ -421,7 +419,7 @@ void uteDrvGsensorSc7a20hReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
         {
             /*读取错误时(retReadValue不等于29时是错误的)，把正确的buff从flash中读出来重新写入 dengli.lu 2024.04.17*/
             ute_application_sn_data_t snData;
-            uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_BLE_SN1_ADDRESS,sizeof(ute_application_sn_data_t));
+            uteModulePlatformFlashNorRead((uint8_t *)&snData,UTE_USER_PARAM_ADDRESS,sizeof(ute_application_sn_data_t));
             retWriteValue = SL_SC7A20_MTP_WRITE(2,snData.sc7a20hTempBuffer);
         }
         // UTE_MODULE_LOG(1, "7a20hReadFifo log---,retWriteValue=%d",retWriteValue);

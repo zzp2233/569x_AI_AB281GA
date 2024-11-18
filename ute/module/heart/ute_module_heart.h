@@ -36,7 +36,7 @@
 
 /*! 心率自动测量超时时间,wang.luo 2024-10-31 */
 #ifndef UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND
-#define UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND 45
+#define UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND 30
 #endif
 
 /*! 心率值警告数据结构zn.zeng, 2021-07-13  */
@@ -108,13 +108,13 @@ bool uteModuleHeartIsAutoTesting(void);
 bool uteModuleHeartIsSingleTesting(void);
 int uteModuleHeartGetHeartValue(void);
 void uteModuleHeartSetHeartValue(int heartValue);
-int uteModuleHeartGetMaxHeartValue(void);
-int uteModuleHeartGetMinHeartValue(void);
-int uteModuleHeartGetAvgHeartValue(void);
+uint8_t uteModuleHeartGetMaxHeartValue(void);
+uint8_t uteModuleHeartGetMinHeartValue(void);
+uint8_t uteModuleHeartGetAvgHeartValue(void);
 void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type);
-// void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param);
+void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param);
 void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type);
-// void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param);
+void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param);
 bool uteModuleHeartIsWear(void);
 void uteModuleHeartAvgHeartOfCurrentDayProcess(uint8_t heart);
 void uteModuleHeartClearAvgHeartOfCurrentDay(ute_module_systemtime_time_t *time);

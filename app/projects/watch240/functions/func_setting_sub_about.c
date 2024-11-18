@@ -51,7 +51,7 @@ compo_form_t *func_set_sub_about_form_create(void)
     memset(Ble_Address_str_buf,'\0',sizeof(Ble_Address_str_buf));//初始化数组
     uteModulePlatformGetBleMacAddress(Ble_Address);//获取蓝牙地址
 
-    snprintf((char *)Ble_Address_str_buf, sizeof(Ble_Address_str_buf), "%02x:%02x:%02x:%02x:%02x:%02x",\
+    snprintf((char *)Ble_Address_str_buf, sizeof(Ble_Address_str_buf), "%02X:%02X:%02X:%02X:%02X:%02X",\
              Ble_Address[0],Ble_Address[1],Ble_Address[2],Ble_Address[3],Ble_Address[4],Ble_Address[5]); //信息
 
     //新建窗体
@@ -63,51 +63,51 @@ compo_form_t *func_set_sub_about_form_create(void)
 
     //设备名称
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/24, SHAPE_HEIGTH);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/30, SHAPE_HEIGTH);
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_DEV_NEME]));
     compo_textbox_set(txt, i18n[STR_DEV_NEME]);
     compo_textbox_set_align_center(txt,false);
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y/2 - SHAPE_HEIGTH/2.5);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y/2 - SHAPE_HEIGTH/2.5);
 
     txt = compo_textbox_create(frm,strlen(davName));
     compo_textbox_set(txt, davName);
     compo_textbox_set_align_center(txt,false);
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y/2);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y/2);
 
     //系统版本
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/24, SHAPE_HEIGTH);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/30, SHAPE_HEIGTH);
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_SYS_VERSION]));
     compo_textbox_set(txt, i18n[STR_SYS_VERSION]);
     compo_textbox_set_align_center(txt,false);
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y - SHAPE_HEIGTH/2.5);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y - SHAPE_HEIGTH/2.5);
 
     txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
     compo_textbox_set(txt, UTE_SW_VERSION);
     compo_textbox_set_align_center(txt,false);
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y);
 
     //蓝牙地址
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y*1.5, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/24, SHAPE_HEIGTH);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y*1.5, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/30, SHAPE_HEIGTH);
     compo_shape_set_radius(shape,SHAPE_HEIGTH/5);
     compo_shape_set_color(shape,COLOR_DGRAY);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_BLE_MAC]));
     compo_textbox_set(txt, i18n[STR_BLE_MAC]);
     compo_textbox_set_align_center(txt,false);
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y*1.5 - SHAPE_HEIGTH/2.5);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.5 - SHAPE_HEIGTH/2.5);
 
     txt = compo_textbox_create(frm,strlen(Ble_Address_str_buf));
     compo_textbox_set(txt, (char*)Ble_Address_str_buf);
     compo_textbox_set_align_center(txt,false);
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/16,GUI_SCREEN_CENTER_Y*1.5);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.5);
 
     return frm;
 }

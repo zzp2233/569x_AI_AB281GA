@@ -105,6 +105,11 @@ bool gui_get_auto_power_en(void)
 //    return true;
 //}
 
+bool gui_font_get_align_top(void)
+{
+    return true;
+}
+
 bool qr_encode_use_malloc(void)
 {
     return true;

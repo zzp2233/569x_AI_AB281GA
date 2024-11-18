@@ -15,8 +15,8 @@
 #define SKYRER_OTHER_ICON_NUM                       4                                                                                       //方形个数
 #define SKYRER_EDGE_SPACE                           2                                                                                       //边缘距离
 #define SKYRER_ICON_SIZE_ORG                        (gui_image_get_size(tbl_menu_skyrer[0].res_addr).wid)                                   //原始图标大小
-#define SKYRER_ICON_SIZE_MAX                        ((SKYRER_ICON_SIZE_ORG >> 4) * 13)                                                      //图标最大尺寸
-#define SKYRER_ICON_SIZE_MIN                        ((SKYRER_ICON_SIZE_MAX >> 4) * 13)                                                      //图标最小尺寸
+#define SKYRER_ICON_SIZE_MAX                        ((SKYRER_ICON_SIZE_ORG >> 4) * 15)                                                      //图标最大尺寸
+#define SKYRER_ICON_SIZE_MIN                        ((SKYRER_ICON_SIZE_MAX >> 4) * 19)                                                      //图标最小尺寸
 #define SKYRER_CENX                                 GUI_SCREEN_CENTER_X                                                                     //中心点
 #define SKYRER_CENY                                 GUI_SCREEN_CENTER_Y                                                                     //中心点
 #define SKYRER_SHORT_SIDE                           ((GUI_SCREEN_HEIGHT >= GUI_SCREEN_WIDTH) ? GUI_SCREEN_WIDTH : GUI_SCREEN_HEIGHT)        //取短边

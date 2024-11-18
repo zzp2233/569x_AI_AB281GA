@@ -2,6 +2,8 @@
 #include "func.h"
 #include "func_clock.h"
 #include "ute_module_notdisturb.h"
+#include "ute_module_liftwrist.h"
+#include "ute_application_common.h"
 
 #define MENU_DROPDOWN_ALPHA             200
 
@@ -168,6 +170,30 @@ static void func_clock_sub_dropdown_disturb_pic_update(void)
 //创建下拉菜单
 static void func_clock_sub_dropdown_form_create(void)
 {
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    if(quick.isNotDisturb)
+    {
+        dropdown_disturb_sw = 1;
+    }
+    else
+    {
+        dropdown_disturb_sw = 0;
+    }
+#if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT
+    if(uteModuleNotDisturbIsOpenScheduled())
+    {
+        if(uteModuleNotDisturbIsTimeBucket())
+        {
+            dropdown_disturb_sw = 1;
+        }
+        else
+        {
+            dropdown_disturb_sw = 0;
+        }
+    }
+#endif
+
     compo_form_t *frm = compo_form_create(true);
 
     //创建遮罩层
@@ -278,17 +304,57 @@ static void func_clock_sub_dropdown_click_handler(void)
             func_clock_sub_dropdown_bluetooth_btn_pic_update();
             break;
         case COMPO_ID_BTN_DISCURD:
-            if(dropdown_disturb_sw)
+        {
+#if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT
+            ute_quick_switch_t quick;
+            uteApplicationCommonGetQuickSwitchStatus(&quick);
+            quick.isNotDisturb = !quick.isNotDisturb;
+            if(quick.isNotDisturb)
             {
-                uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_CLOSE);
+                uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_ALLDAY_OPEN);
+                uteModuleLiftWristRecordOpenStatus();
+                if(uteModuleLiftWristGetOldOpenStatus())
+                {
+                    uteModuleLiftWristSetOpenStatus(false);
+                }
+                else if(uteModuleLiftWristGetOldScheduledOpenStatus())
+                {
+                    uteModuleLiftWristSetScheduled(false);
+                }
+                if(uteModuleNotDisturbIsOpenScheduled())
+                {
+                    uteModuleNotDisturbSetScheduled(false);
+                }
             }
             else
             {
-                uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_ALLDAY_OPEN);
+                uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_CLOSE);
+                if(uteModuleLiftWristGetOldOpenStatus())
+                {
+                    uteModuleLiftWristSetOpenStatus(true);
+                }
+                else if(uteModuleLiftWristGetOldScheduledOpenStatus())
+                {
+                    uteModuleLiftWristSetScheduled(true);
+                }
             }
-            dropdown_disturb_sw = !dropdown_disturb_sw;
+            uteApplicationCommonSetQuickSwitchStatus(&quick);
+#else
+            ute_module_not_disturb_data_t param;
+            uteModuleNotDisturbGetParam(&param);
+            param.isOpen = !param.isOpen;
+            uteModuleNotDisturbSaveParam(param);
+
+            ute_quick_switch_t quick;
+            uteApplicationCommonGetQuickSwitchStatus(&quick);
+            quick.isNotDisturb = !quick.isNotDisturb;
+            uteApplicationCommonSetQuickSwitchStatus(&quick);
+#endif
+            uteApplicationCommonSendQuickSwitchStatus();
+            dropdown_disturb_sw = quick.isNotDisturb;
             func_clock_sub_dropdown_disturb_pic_update();
-            break;
+        }
+        break;
         case COMPO_ID_BTN_MUTE:
             if(sys_cb.mute)
             {
@@ -395,18 +461,6 @@ static void func_clock_sub_dropdown_enter(void)
     }
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sta = FUNC_CLOCK_SUB_DROPDOWN;                   //进入到下拉菜单
-    if(uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_ALLDAY_OPEN)
-    {
-        dropdown_disturb_sw = 1;
-    }
-    else if (uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_SCHEDULED_OPEN && uteModuleNotDisturbIsTimeBucket())
-    {
-        dropdown_disturb_sw = 1;
-    }
-    else
-    {
-        dropdown_disturb_sw = 0;
-    }
 }
 
 //时钟表盘下拉菜单退出处理

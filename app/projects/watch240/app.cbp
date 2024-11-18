@@ -79,6 +79,7 @@
 			<Add directory="../../../ute/language" />
 			<Add directory="../../../ute/language/defaultLanguage" />
 			<Add directory="../../../ute/module/findphone" />
+			<Add directory="../../../ute/module/liftwrist" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -184,6 +185,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/heart/ute_module_heart.h" />
+		<Unit filename="../../../ute/module/liftwrist/ute_module_liftwrist.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/liftwrist/ute_module_liftwrist.h" />
 		<Unit filename="../../../ute/module/log/ute_module_log.c">
 			<Option compilerVar="CC" />
 		</Unit>

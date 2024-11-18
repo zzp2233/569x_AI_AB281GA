@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_notdisturb.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -132,6 +133,37 @@ static const disturd_disp_txt_item_t disturd_disp_txt_item[] =
 //勿扰模式页面
 compo_form_t *func_set_sub_disturd_form_create(void)
 {
+
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    if(quick.isNotDisturb)
+    {
+        if(uteModuleNotDisturbIsOpenScheduled())
+        {
+            sys_cb.disturd_adl = 0;
+            sys_cb.disturd_tim = 1;
+        }
+        else
+        {
+            sys_cb.disturd_adl = 1;
+            sys_cb.disturd_tim = 0;
+        }
+    }
+    else
+    {
+        if(uteModuleNotDisturbIsOpenScheduled())
+        {
+            sys_cb.disturd_tim = 1;
+        }
+        else
+        {
+            sys_cb.disturd_tim = 0;
+        }
+        sys_cb.disturd_adl = 0;
+    }
+    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
+    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
+
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
@@ -398,12 +430,14 @@ static void func_disturd_button_click(void)
             {
                 ret = 0;
                 sys_cb.disturd_adl = 0;
+                uteModuleNotDisturbAllDaySwitch();
             }
             if (ret == MSGBOX_RES_OK)
             {
                 if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE - 1)
                 {
                     sys_cb.disturd_adl = COMPO_ID_NUM_DISP_ONE;
+                    uteModuleNotDisturbAllDaySwitch();
                 }
             }
             break;
@@ -417,6 +451,7 @@ static void func_disturd_button_click(void)
             {
                 ret = 0;
                 sys_cb.disturd_tim = 0;
+                uteModuleNotDisturbScheduledSwitch();
             }
 
             if (ret == MSGBOX_RES_OK)
@@ -424,6 +459,7 @@ static void func_disturd_button_click(void)
                 if(sys_cb.disturd_tim == COMPO_ID_NUM_DISP_ONE - 1)
                 {
                     sys_cb.disturd_tim = COMPO_ID_NUM_DISP_ONE;
+                    uteModuleNotDisturbScheduledSwitch();
                 }
             }
             break;
@@ -433,6 +469,7 @@ static void func_disturd_button_click(void)
             {
                 sys_cb.disturd_sel = 0;
                 func_cb.sta = FUNC_DISTURD_SUB_SET;
+                uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
                 task_stack_pop();
             }
             break;
@@ -442,6 +479,7 @@ static void func_disturd_button_click(void)
             {
                 sys_cb.disturd_sel = 1;
                 func_cb.sta = FUNC_DISTURD_SUB_SET;
+                uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_END_TIME);
                 task_stack_pop();
             }
             break;
@@ -477,25 +515,6 @@ static void func_set_sub_disturd_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_disturd_t));
     func_cb.frm_main = func_set_sub_disturd_form_create();
-
-//    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
-//    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
-//    if(uteModuleNotDisturbGetOpenStatus() == NOT_DISTURB_ALLDAY_OPEN)
-//    {
-//        sys_cb.disturd_adl = true;
-//        sys_cb.disturd_tim = false;
-//    }
-//    else if(uteModuleNotDisturbIsOpenScheduled() == true)
-//    {
-//        sys_cb.disturd_adl = false;
-//        sys_cb.disturd_tim = true;
-//    }
-//    else
-//    {
-//        sys_cb.disturd_adl = false;
-//        sys_cb.disturd_tim = false;
-//    }
-
 }
 
 //退出勿扰模式功能

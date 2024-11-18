@@ -118,25 +118,25 @@ static const timer_btn_item_t tbl_timer_btn_item[] =
 #define TIMER_TXT_ITEM_CNT  ((int)(sizeof(tbl_timer_txt_item) / sizeof(tbl_timer_txt_item[0])))
 static const timer_txt_item_t tbl_timer_txt_item[] =
 {
-    {"1min",      4,    48,   98,    true},
-    {"2min",      4,    120,  98,    true},
-    {"3min",      4,    192,  98,    true},
-    {"5min",      4,    48,   176,    true},
-    {"10min",     5,    120,  176,    true},
-    {"30min",     5,    192,  176,    true},
-    {"自定义",    6,    120,  260,    true},
+    {"1",      4,    48,   98,     true},
+    {"2",      4,    120,  98,     true},
+    {"3",      4,    192,  98,     true},
+    {"5",      4,    48,   176,    true},
+    {"10",     5,    120,  176,    true},
+    {"30",     5,    192,  176,    true},
+    {"自定义", 6,    120,  260,    true},
 };
 
 #define TIMER_CUSTOM_BTN_ITEM_CNT   ((int)(sizeof(tbl_timer_custom_btn_item) / sizeof(tbl_timer_custom_btn_item[0])))
 static const timer_btn_item_t tbl_timer_custom_btn_item[] =
 {
-    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_HOUR_INC,      48,     76,    true},
-    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_MIN_INC,       120,    76,    true},
-    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_SEC_INC,       192,    76,    true},
-    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_HOUR_RED,      48,     185,    true},
-    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_MIN_RED,       120,    185,    true},
-    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_SEC_RED,       192,    185,    true},
-    {UI_BUF_COMMON_BUTTON_BIN,          COMPO_ID_BTN_OK,            120,    260,    true},
+    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_HOUR_INC,      GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3,     76,    true},
+    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_MIN_INC,       GUI_SCREEN_CENTER_X,    76,    true},
+    {UI_BUF_COMMON_INCREASE_BIN,        COMPO_ID_BTN_SEC_INC,       GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3,    76,    true},
+    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_HOUR_RED,      GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3,     185,    true},
+    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_MIN_RED,       GUI_SCREEN_CENTER_X,    185,    true},
+    {UI_BUF_COMMON_REDUCE_BIN,          COMPO_ID_BTN_SEC_RED,       GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3,    185,    true},
+    {UI_BUF_COMMON_BUTTON_BIN,          COMPO_ID_BTN_OK,            GUI_SCREEN_CENTER_X,    260,    true},
 };
 
 //创建定时器窗体，文件内调用
@@ -170,17 +170,25 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             for (u8 idx = 0; idx < TIMER_TXT_ITEM_CNT; idx++)
             {
                 txt = compo_textbox_create(frm, tbl_timer_txt_item[idx].max_word_cnt);
-                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
+                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y-14);
+                compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
 
                 if(idx == TIMER_TXT_ITEM_CNT-1)
                 {
                     compo_textbox_set(txt, i18n[STR_CUSTOM]);
-                }
-                else
-                {
-                    compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
+                    compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
                 }
                 compo_textbox_set_visible(txt, tbl_timer_txt_item[idx].visible_en);
+
+                if(!(idx == TIMER_TXT_ITEM_CNT-1))
+                {
+                    txt = compo_textbox_create(frm, strlen(i18n[STR_MINUTE]));
+                    compo_textbox_set(txt, i18n_zh_rcn[STR_MINUTE]);
+                    //compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y+8);
+                    compo_textbox_set_location(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y+8,
+                                               widget_text_get_box_area_rel(txt->txt).wid,  widget_text_get_box_area_rel(txt->txt).hei);
+                    compo_textbox_set(txt, i18n[STR_MINUTE]);
+                }
             }
             break;
 
@@ -206,7 +214,7 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             //创建文本
             txt = compo_textbox_create(frm, 3);
             compo_textbox_set_pos(txt, 120, 262);
-            compo_textbox_set(txt, "OK");
+            compo_textbox_set(txt, i18n[STR_START]);
             break;
 
         case TIMER_PAGE_COUNTDOWN:
@@ -249,6 +257,7 @@ compo_form_t *func_timer_form_create(void)
             break;
 
         case TIMER_STA_WORKING:
+            uteModuleGuiCommonDisplayOffAllowGoBack(false);
         case TIMER_STA_PAUSE:
         case TIMER_STA_DONE:
         case TIMER_STA_RESET:
@@ -323,7 +332,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     {
         count = (u8 *)param;
     }
-    if (count && sys_cb.timer_sta == TIMER_STA_WORKING && !sys_cb.gui_sleep_sta)    //休眠不计时
+    if (count && sys_cb.timer_sta == TIMER_STA_WORKING /*&& !sys_cb.gui_sleep_sta*/)    //休眠不计时
     {
         if (sys_cb.timer_left_sec == 0)
         {
@@ -341,6 +350,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     if (done)
     {
         printf(">>>TIMER_DONE\n");
+        sys_cb.timer_done = true;
         sys_cb.timer_sta = TIMER_STA_DONE;
     }
 }
@@ -418,15 +428,18 @@ static void func_timer_button_click(void)
             switch (id)
             {
                 case COMPO_ID_BTN_START:
+//                    printf("COMPO_ID_BTN_START %d\n",sys_cb.timer_sta);
                     if (sys_cb.timer_sta == TIMER_STA_WORKING)
                     {
                         sys_cb.timer_sta = TIMER_STA_PAUSE;
+                        uteModuleGuiCommonDisplayOffAllowGoBack(true);
                     }
                     else if (sys_cb.timer_sta == TIMER_STA_DONE)
                     {
                         count_100ms = 0;
                         sys_cb.timer_left_sec = sys_cb.timer_total_sec;
                         sys_cb.timer_sta = TIMER_STA_RESET;
+                        uteModuleGuiCommonDisplayOffAllowGoBack(true);
                     }
                     else
                     {
@@ -436,6 +449,7 @@ static void func_timer_button_click(void)
                             co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
                         }
                         sys_cb.timer_sta = TIMER_STA_WORKING;
+                        uteModuleGuiCommonDisplayOffAllowGoBack(false);
                     }
                     break;
 
@@ -559,6 +573,8 @@ static void func_timer_enter(void)
 //退出定时器功能
 static void func_timer_exit(void)
 {
+    uteModuleGuiCommonDisplayOffAllowGoBack(true);
+    func_cb.last = FUNC_TIMER;
 }
 
 //定时器功能

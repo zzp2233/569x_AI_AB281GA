@@ -1498,9 +1498,9 @@ void uteModuleSportInputDataBeforeAlgo(void)
             default:
                 break;
         }
-#if UTE_MODULE_LIFT_WRIST_EXCEPTION_HANDLING_SUPPORT
+#if 1//UTE_MODULE_LIFT_WRIST_EXCEPTION_HANDLING_SUPPORT
         // clear handup on screen status/*灭屏的时候，如果还是灭屏姿态说明有抬腕亮屏算法需要重新初始化*/
-        if(((!uteModuleGuiCommonIsDisplayOn()) || (uteModuleGuiCommonIsScreenSaverSetOn() && (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_SCREEN_SAVER_ID))) && (rolloverHandScreenStatus ==ROLLOVER_HAND_SCREEN_OFF_STATUS))
+        if(!uteModuleGuiCommonIsDisplayOn() && rolloverHandScreenStatus == ROLLOVER_HAND_SCREEN_OFF_STATUS)
         {
             /*ellison add 防止灭屏的时候没有重新初始化抬手亮屏，这个和勿扰模式无关或者是否开启抬腕亮屏也没有直接关系，
             其他的逻辑不要控制算法逻辑，否则会导致算法异常。现在发现因为队列消息丢失导致抬腕亮屏算法没有重新初始化，抬腕失灵。*/

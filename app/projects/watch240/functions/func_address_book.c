@@ -25,42 +25,54 @@ static const compo_listbox_item_t tbl_call_list[UTE_MODULE_CALL_ADDRESSBOOK_MAX_
 static ute_module_call_addressbook_t* address_book_tbl = NULL;            //电话簿数据
 static u16 address_book_cnt = 0;                                       //联系人个数
 
-static void address_book_update_callback(u32 item_cnt, char* str_txt, u16 index)
+//更新电话簿列表回调函数
+static void address_book_update_callback(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index)
 {
     if (index < item_cnt && index < address_book_cnt)
     {
-        char* name_utf8 = ab_zalloc(UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH);
+        //需要使用静态数组作为中间变量，以防占用堆栈内存
+        //中间缓存大小要比实际获取的名字要大
+        //方便再接受到的名字过长时，方便后面使用uteModuleCharencodeGetUtf8String转换的时候可以自动加入省略号
+        static char name_utf8[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH+5] = {0};
         uint16_t name_utf8_len = 0;
 
-        if (name_utf8 == NULL)
+        static char name_utf8_l[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH+10] = {0};
+        uint16_t name_utf8_len_l = 0;
+
+        memset(name_utf8, 0, sizeof(name_utf8));
+        memset(name_utf8_l, 0, sizeof(name_utf8_l));
+
+        if (str_txt1_len > sizeof(name_utf8_l))
         {
-            goto __exit1;
+            str_txt1_len = sizeof(name_utf8_l);
         }
+
+        if (str_txt2_len > address_book_tbl[index].numberAsciiLen)
+        {
+            str_txt2_len = address_book_tbl[index].numberAsciiLen;
+        }
+
         uteModuleCharencodeUnicodeConversionUtf8(address_book_tbl[index].nameUnicode,
                 address_book_tbl[index].nameUnicodeLen,
                 (uint8_t*)name_utf8,
                 &name_utf8_len,
-                UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH);
+                sizeof(name_utf8));
 
-        char* name_number_utf8 = ab_zalloc(name_utf8_len+address_book_tbl[index].numberAsciiLen+2);
-        if (name_number_utf8 == NULL)
+        if (name_utf8_len >= UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH)
         {
-            goto __exit2;
-        }
-        sprintf(name_number_utf8, "%s:%s", name_utf8, address_book_tbl[index].numberAscii);
-        memcpy(str_txt, name_number_utf8, name_utf8_len+address_book_tbl[index].numberAsciiLen+2);
 
-    __exit2:
-        if (name_number_utf8 != NULL)
+            uteModuleCharencodeGetUtf8String((uint8_t*)name_utf8, name_utf8_len, (uint8_t*)name_utf8_l, &name_utf8_len_l);
+            memcpy(str_txt1, name_utf8_l, str_txt1_len);
+//            printf("[%d, %d] -> %s, %s\n", name_utf8_len, name_utf8_len_l,  name_utf8, name_utf8_l);
+        }
+        else
         {
-            ab_free(name_number_utf8);
+            memcpy(name_utf8_l, name_utf8, sizeof(name_utf8));
+            memcpy(str_txt1, name_utf8_l, str_txt1_len);
+//            printf("****[%d] -> %s\n", name_utf8_len, name_utf8);
         }
 
-    __exit1:
-        if (name_utf8 != NULL)
-        {
-            ab_free(name_utf8);
-        }
+        memcpy(str_txt2, address_book_tbl[index].numberAscii, str_txt2_len);
     }
 }
 
@@ -71,6 +83,7 @@ static bool func_address_book_update(void)
     {
         address_book_cnt = uteModuleCallGetAddressBookSize();
         printf("address_book_cnt:%d\n", address_book_cnt);
+//        if (func_cb.sta == FUNC_ADDRESS_BOOK) {
         if (address_book_tbl != NULL)
         {
             ab_free(address_book_tbl);
@@ -79,9 +92,11 @@ static bool func_address_book_update(void)
         address_book_tbl = ab_zalloc(sizeof(ute_module_call_addressbook_t)*address_book_cnt);
         if (address_book_tbl != NULL)
         {
+            printf("update address\n");
             uteModuleCallGetAllAddressBookContactContent(address_book_cnt, address_book_tbl);
             return true;
         }
+//        }
     }
 
     return false;
@@ -98,7 +113,8 @@ compo_form_t *func_address_book_form_create(void)
     compo_form_set_title(frm, i18n[STR_CALL_LINK]);
 
     //新建列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+//    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     //更新联系人
     func_address_book_update();
@@ -106,12 +122,11 @@ compo_form_t *func_address_book_form_create(void)
     {
         compo_listbox_set(listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
     }
-    compo_listbox_set_text_modify_by_idx_callback(listbox, address_book_update_callback);
+    compo_listbox_set_alike_icon(listbox, UI_BUF_ICON_ADDRESS_BOOK_BIN);
+    compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
-
-
 
     return frm;
 }
@@ -229,6 +244,13 @@ static void func_address_book_exit(void)
 {
     f_address_book_list_t *f_book = (f_address_book_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_book->listbox;
+
+    if (address_book_tbl != NULL)
+    {
+        ab_free(address_book_tbl);
+        address_book_tbl = NULL;
+    }
+    address_book_cnt = 0;
 
     func_free(listbox->mcb);                                            //释放移动控制块
     func_cb.last = FUNC_ADDRESS_BOOK;

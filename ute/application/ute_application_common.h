@@ -33,6 +33,8 @@
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_SOFTWARE_VERSION "systemparam/softVersion"
 /*写入NFC开关,用于图标显示 ldl 2023-08-30*/
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_NFC_SWITCH "systemparam/nfcSwitch"
+/*! 写入一级界显示开关、顺序,wang.luo 2024-11-16 */
+#define UTE_MODULE_FILESYSTEM_SYSTEMPARM_SCREEN_TBL_SORT "systemparam/screenTblSort"
 
 /*快捷开关表! zn.zeng, 2021-08-24  */
 #define    QUICK_SWITCH_FINDBAND   0x01000000
@@ -114,15 +116,16 @@ typedef struct
 
 typedef struct
 {
+    // 新增变量必须加在最后面
     uint32_t userId;
-    uint8_t snNo[32]; //serialNomber，由工具烧录到flash的，SN is 16 bytes hex number
-#if 1//DRV_HEART_SENSOR_TEMPERATURE_CHECK_VCXXHCI_SUPPORT
-    uint8_t vcxxSensorExpectionFlag;
-    uint16_t initialFrequency; //心率体温校验值，必须开机的时候校验一次保存到flash中不擦除，开机以后读取这个值，恢复出厂设置不清零
-#endif
     gsensor_offset_data_t gSensorCalibrationData; // g-sensor 校验数据
-    uint8_t beforeFactoryBatLvl;
-    uint16_t tempertureInital; //校准时的环境温度，如果主板有热敏电阻则传给环境温度。如果没有则默认传入25摄氏度。
+#if 1//UTE_DRV_GSENSOR_SC7A20H_SUPPORT
+    uint8_t sc7a20hRetReadValue;
+    uint8_t sc7a20hTempBuffer[29];
+#endif
+#if 1//UTE_DRV_HEART_VC30FX_SUPPORT
+    uint8_t bioSaveBuf[10];
+#endif
 } ute_application_sn_data_t;
 
 typedef void (*ute_module_sync_data_reg_func_t)(void);

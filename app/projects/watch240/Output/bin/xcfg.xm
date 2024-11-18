@@ -39,9 +39,13 @@ config(LISTVAL, "充电截止电流", "选择充电截止电流", CHARGE_STOP_CU
 config(LISTVAL, "恒流充电电流", "恒流充电电流", CHARGE_CONSTANT_CURR, BIT, 6, 19, 38, ("15mA", 2), ("20mA", 3), ("25mA", 4), ("30mA", 5), ("35mA", 6), ("40mA", 7), ("45mA", 8), ("50mA", 9), ("55mA", 10), ("60mA", 11), ("65mA", 12), ("70mA", 13), ("75mA", 14), ("80mA", 15), ("90mA", 17), ("100mA", 19), ("110mA", 21), ("120mA", 23), ("130mA", 25), ("140mA", 27), ("150mA", 29), ("160mA", 31), ("170mA", 33), ("180mA", 35), ("190mA", 37), ("200mA", 39), ("210mA", 41), ("220mA", 43), ("230mA", 45), ("240mA", 47), ("250mA", 49), ("260mA", 51), ("270mA", 53), ("280mA", 55), ("290mA", 57), ("300mA", 59), ("310mA", 61), ("320mA", 63), CHARGE_EN);
 config(LISTVAL, "涓流充电电流", "涓流充电电流", CHARGE_TRICKLE_CURR,  BIT, 6, 5, 7, ("5mA", 0), ("10mA", 1), ("20mA", 3), ("25mA", 4), ("30mA", 5), ("35mA", 6), ("40mA", 7), CHARGE_TRICK_EN);
 
+config(LEVEL, 0x07);
 config(SUB, "蓝牙配置", "蓝牙的相关配置");
+config(LEVEL, 0x03);
 config(TEXT, "蓝牙名称", "手机上可以看到的蓝牙名称", BT_NAME, 32, "BT-AB569X");
+config(LEVEL, 0x07);
 config(MAC, "蓝牙地址", "蓝牙的MAC地址", BT_ADDR, 6, 41:42:00:00:00:00, 41:42:00:00:00:FF, 41:42:00:00:00:01);
+config(LEVEL, 0x03);
 config(LISTVAL, "降低回连TXPWR", "是否降低回连TXPWR", BT_RF_TXPWR_RECON, BIT, 3, 0, 4, ("不降低", 0), ("降低3dbm", 1), ("降低6dbm", 2), ("降低9dbm", 3));
 config(CHECK, "音乐播放功能", "是否支持蓝牙音乐播放功能", BT_A2DP_EN, 1);
 config(CHECK, "音乐音量同步", "是否支持A2DP音量与手机同步", BT_A2DP_VOL_CTRL_EN, 1, BT_A2DP_EN);
@@ -51,7 +55,9 @@ config(CHECK, "来电报号功能", "是否支持来电报号功能", BT_HFP_RIN
 config(CHECK, "来电播放手机铃声", "打开此功能后，可以播放手机铃声，例如ios", BT_HFP_INBAND_RING_EN, 0, BT_SCO_EN);
 config(CHECK, "串口功能", "是否支持蓝牙串口的功能", BT_SPP_EN, 1);
 config(CHECK, "BLE控制功能", "是否支持BLE音乐控制的功能", BLE_EN, 0);
+config(LEVEL, 0x07);
 config(TEXT, "BLE名称", "手机上可以看到的BLE蓝牙名称", LE_NAME, 32, "LE-AB569X", BLE_EN);
+config(LEVEL, 0x03);
 
 config(SUB, "蓝牙RF配置", "蓝牙RF相关配置");
 config(BYTE, "PA_GAIN0",  "PA_GAIN0",  RF_PA_GAIN, 0, 7, 7);
@@ -77,11 +83,11 @@ config(CHECK, "AEC功能", "是否支持AEC功能，AEC/ALC只能二选一", BT_
 config(BIT, "AEC回声消除级别", "回声消除级别(级别越高，回声衰减越明显，但通话效果越差)", BT_ECHO_LEVEL, 4, 0, 15, 2, BT_AEC_EN);
 config(BYTE, "AEC远端补偿值", "远端补偿值(0~255)", BT_FAR_OFFSET, 0, 255, 42, BT_AEC_EN);
 config(CHECK, "ALC功能", "是否支持ALC功能，AEC/ALC只能二选一", BT_ALC_EN, 0, BT_SCO_EN);
-
+config(LEVEL, 0x07);
 config(SUB, "生产配置", "生产配置");
 config(TEXT, "序列号前两个字节", "序列号前两个字节", SERIAL_2, 8, "ABAB");
 config(MAC, "序列号", "烧录的序列号", SERIAL_NUM, 6, 00:00:00:00:00:01, 00:00:FF:FF:FF:FF, 00:00:00:00:00:01);
-
+config(LEVEL, 0x03);
 config(LEVEL, 0x0E);
 config(SUB, "产测参数", "产测校准的一些参数，不要改动！");
 config(KEEP);

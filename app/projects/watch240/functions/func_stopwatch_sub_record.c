@@ -9,11 +9,13 @@
 
 #define STOPWATCH_LIST_CNT                       ((int)(sizeof(tbl_stopwatch_list) / sizeof(tbl_stopwatch_list[0])))
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
 };
 
-typedef struct f_stopwatch_sub_record_t_ {
+typedef struct f_stopwatch_sub_record_t_
+{
     compo_listbox_t *listbox;
 
 } f_stopwatch_sub_record_t;
@@ -39,14 +41,15 @@ compo_form_t *func_stopwatch_sub_record_form_create(void)
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
     compo_listbox_set_text_modify(listbox, tbl_stopwatch_txt_list);
 
-	u8 min = 0;
-	u8 sec = 0;
-	u16 msec = 0;
-    for (u8 i = 0; i < sys_cb.stopwatch_rec_cnt; i++) {
+    u8 min = 0;
+    u8 sec = 0;
+    u16 msec = 0;
+    for (u8 i = 0; i < sys_cb.stopwatch_rec_cnt; i++)
+    {
         min = ((sys_cb.stopwatch_rec_view[i] / 1000) % 3600) / 60;
         sec = (sys_cb.stopwatch_rec_view[i] / 1000) % 60;
         msec = sys_cb.stopwatch_rec_view[i] % 1000;
-        sprintf(tbl_stopwatch_txt_list[i].str_txt, "%2d. %02d:%02d.%02d", sys_cb.stopwatch_rec_cnt - i, min, sec, msec / 10);
+        sprintf(tbl_stopwatch_txt_list[i].str_txt, "%2d. %02d:%02d:%02d", sys_cb.stopwatch_rec_cnt - i, min, sec, msec / 10);
     }
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
@@ -68,25 +71,27 @@ static void func_stopwatch_sub_record_message(size_msg_t msg)
     f_stopwatch_sub_record_t *f_stopwatch = (f_stopwatch_sub_record_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_stopwatch->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_backing_to();
-        break;
+        case MSG_CTP_SHORT_RIGHT:
+            func_backing_to();
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -99,11 +104,12 @@ static void func_stopwatch_sub_record_enter(void)
     f_stopwatch_sub_record_t *f_stopwatch = (f_stopwatch_sub_record_t *)func_cb.f_cb;
     f_stopwatch->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_stopwatch->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    compo_listbox_move_init_modify(listbox, 127, compo_listbox_gety_byidx(listbox, STOPWATCH_LIST_CNT - 2));
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, STOPWATCH_LIST_CNT - 2));
     func_cb.enter_tick = tick_get();
 }
 
@@ -121,7 +127,8 @@ void func_stopwatch_sub_record(void)
 {
     printf("%s\n", __func__);
     func_stopwatch_sub_record_enter();
-    while (func_cb.sta == FUNC_STOPWATCH_SUB_RECORD) {
+    while (func_cb.sta == FUNC_STOPWATCH_SUB_RECORD)
+    {
         func_stopwatch_sub_record_process();
         func_stopwatch_sub_record_message(msg_dequeue());
     }

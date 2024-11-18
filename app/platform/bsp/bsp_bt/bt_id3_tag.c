@@ -28,7 +28,8 @@ static bt_id3_tag_update_cb_t bt_id3_tag_update_cb = NULL;
 
 void bt_id3_tag_update_cb_reg(void *func_cb)
 {
-    if (func_cb) {
+    if (func_cb)
+    {
         bt_id3_tag_update_cb = (bt_id3_tag_update_cb_t)func_cb;
     }
 }
@@ -44,15 +45,20 @@ void bt_id3_tag_callback(u8 packet_type, u8 *buf, u16 size)
 {
     //拼包
     static u16 ptr = 0;
-    if (packet_type != 0) {
-        if(packet_type == 3){
+    if (packet_type != 0)
+    {
+        if(packet_type == 3)
+        {
             memcpy(&id3_buf[ptr-1], buf, size);
             ptr += (size-1);
-        } else {
+        }
+        else
+        {
             memcpy(&id3_buf[ptr], buf, size);
             ptr += size;
         }
-        if (packet_type != 3) {
+        if (packet_type != 3)
+        {
             return;
         }
         buf = id3_buf;
@@ -69,7 +75,8 @@ void bt_id3_tag_callback(u8 packet_type, u8 *buf, u16 size)
     u16 offset = 0;
     u8 att_num = buf[offset++];
 
-    while (att_num) {
+    while (att_num)
+    {
         u32 index = ((u32)buf[offset + 3]) | (((u32)buf[offset + 2]) << 8) | (((u32)buf[offset + 1]) << 16) | (((u32)buf[offset + 0]) << 24);
         offset += 4;
         u16 character = ((u32)buf[offset + 1]) | (((u32)buf[offset + 0]) << 8);
@@ -77,19 +84,28 @@ void bt_id3_tag_callback(u8 packet_type, u8 *buf, u16 size)
         u16 length = ((u32)buf[offset + 1]) | (((u32)buf[offset + 0]) << 8);
         offset += 2;
         TRACE("bt id3:%x %x %x\n", index, character, length);
-        switch (index) {
+        switch (index)
+        {
             case BT_ID3_TITLE:
-                 TRACE("name: %s\n", &buf[offset]);
-                 if (bt_id3_tag_update_cb) {
+                TRACE("name: %s\n", &buf[offset]);
+                if (bt_id3_tag_update_cb)
+                {
                     bt_id3_tag_update_cb(BT_ID3_TAG_TITLE, (char *)&buf[offset]);
-                 }
+                }
+                memset(sys_cb.title_buf, 0, sizeof(sys_cb.title_buf));
+                memcpy(sys_cb.title_buf, (char *)&buf[offset], sizeof(sys_cb.title_buf)-1);
+                sys_cb.music_title_init = true;
                 break;
 
             case BT_ID3_ARTIST:
                 TRACE("artist: %s\n", &buf[offset]);
-                if (bt_id3_tag_update_cb) {
+                if (bt_id3_tag_update_cb)
+                {
                     bt_id3_tag_update_cb(BT_ID3_TAG_ARTIST, (char *)&buf[offset]);
                 }
+                memset(sys_cb.artist_buf, 0, sizeof(sys_cb.artist_buf));
+                memcpy(sys_cb.artist_buf, (char *)&buf[offset], sizeof(sys_cb.artist_buf)-1);
+                sys_cb.music_artist_init = true;
                 break;
 
             default:
@@ -97,7 +113,8 @@ void bt_id3_tag_callback(u8 packet_type, u8 *buf, u16 size)
         }
         offset += length;
         att_num--;
-        if((offset >= size) && (packet_type == 0)){
+        if((offset >= size) && (packet_type == 0))
+        {
             break;
         }
         character = character;

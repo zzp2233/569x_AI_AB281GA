@@ -68,23 +68,28 @@ typedef struct f_disturd_sub_set_t_
 #define ALARM_CLOCK_SET_NUM_POS_Y_START                 ALARM_TXT_ITEM_Y
 #define ALARM_CLOCK_SET_NUM_POS_Y(y_start,space,cnt)    (y_start)+(space)*(cnt)
 
+#define DISTURD_FOCUS_ITEM_FONT         UI_BUF_0FONT_FONT_NUM_24_BIN
+#define DISTURD_ITEM_FONT               UI_BUF_0FONT_FONT_BIN
+
 //搞个数字item，创建时遍历一下
 static const disturd_set_num_item_t tbl_disturd_set_num_item[] =
 {
     /*   res_addr,                   num_cnt,                 num_id,                           load_num_id                val,   x,                     y,                                             visible_en      alpha*/
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR_UU,      COMPO_ID_NUM_ACLOCK_SET_HOUR_UU,    22,   ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y,                              true,           100},
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR_UP,      COMPO_ID_NUM_ACLOCK_SET_HOUR_UP,    23,   ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET,      true,           100},
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR,         COMPO_ID_NUM_ACLOCK_SET_HOUR,       0,    ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*2,    true,           255},
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR_DOWN,    COMPO_ID_NUM_ACLOCK_SET_HOUR_DOWN,  1,    ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*3,    true,           100},
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR_DD,      COMPO_ID_NUM_ACLOCK_SET_HOUR_DD,    2,    ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*4,    true,           100},
+    {DISTURD_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR_UU,      COMPO_ID_NUM_ACLOCK_SET_HOUR_UU,    22,   ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y,                              true,           100},
+    {DISTURD_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR_UP,      COMPO_ID_NUM_ACLOCK_SET_HOUR_UP,    23,   ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET,      true,           100},
+    {DISTURD_FOCUS_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR,         COMPO_ID_NUM_ACLOCK_SET_HOUR,       0,    ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*2,    true,           255},
+    {DISTURD_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR_DOWN,    COMPO_ID_NUM_ACLOCK_SET_HOUR_DOWN,  1,    ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*3,    true,           100},
+    {DISTURD_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_HOUR_DD,      COMPO_ID_NUM_ACLOCK_SET_HOUR_DD,    2,    ALARM_TXT_ITEM_H_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*4,    true,           100},
 
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN_UU,       COMPO_ID_NUM_ACLOCK_SET_MIN_UU,     58,   ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y,                              true,           100},
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN_UP,       COMPO_ID_NUM_ACLOCK_SET_MIN_UP,     59,   ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET,      true,           100},
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN,          COMPO_ID_NUM_ACLOCK_SET_MIN,        0,    ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*2,    true,           255},
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN_DOWN,     COMPO_ID_NUM_ACLOCK_SET_MIN_DOWN,   1,    ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*3,    true,           100},
-    {UI_BUF_0FONT_FONT_BIN,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN_DD,       COMPO_ID_NUM_ACLOCK_SET_MIN_DD,     2,    ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*4,    true,           100},
+    {DISTURD_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN_UU,       COMPO_ID_NUM_ACLOCK_SET_MIN_UU,     58,   ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y,                              true,           100},
+    {DISTURD_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN_UP,       COMPO_ID_NUM_ACLOCK_SET_MIN_UP,     59,   ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET,      true,           100},
+    {DISTURD_FOCUS_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN,          COMPO_ID_NUM_ACLOCK_SET_MIN,        0,    ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*2,    true,           255},
+    {DISTURD_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN_DOWN,     COMPO_ID_NUM_ACLOCK_SET_MIN_DOWN,   1,    ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*3,    true,           100},
+    {DISTURD_ITEM_FONT,      2,        COMPO_ID_NUM_ACLOCK_SET_MIN_DD,       COMPO_ID_NUM_ACLOCK_SET_MIN_DD,     2,    ALARM_TXT_ITEM_M_X,    ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*4,    true,           100},
 
 };
+
+
 
 //获取 时分 上一个和下一个的数字
 static u8 func_disturd_get_time_cal(s8 num, bool hour_en, u8 mode)     //mode 0:返回当前hour/min，1：返回上一个hour/min，2：返回下一个hour/min
@@ -430,6 +435,14 @@ static void disturd_set_num_pos_cal(s32 dy, u8 id, bool press)
     for (int i=0; i<5; i++)
     {
         compo_textbox_t *num = compo_getobj_byid(time_item[i].num_id);
+        if (time_item[i].alpha == 255)
+        {
+            compo_textbox_set_font(num, DISTURD_FOCUS_ITEM_FONT);
+        }
+        else
+        {
+            compo_textbox_set_font(num, DISTURD_ITEM_FONT);
+        }
         compo_textbox_set_pos(num, time_item[i].x, time_item[i].y);
         compo_textbox_set_visible(num, time_item[i].visible_en);
         compo_textbox_set_alpha(num, time_item[i].alpha);
@@ -443,7 +456,7 @@ static void func_disturd_set_move_handle(u8 id)
     f_disturd_sub_set_t *f_alarm_set = (f_disturd_sub_set_t*)func_cb.f_cb;
     disturd_set_num_item_t *time_item;
     bool flag_press = 0;
-    u32 tick = tick_get();
+//    u32 tick = tick_get();
     s32 dx = 0, dy = 0;     //坐标差量
     char str_buff[4];
 
@@ -495,9 +508,9 @@ static void func_disturd_set_move_handle(u8 id)
         hour_disp = (hour - f_alarm_set->hcnt) % 24;
         min_disp = (min - f_alarm_set->mcnt) % 60;
 
-        if (tick_check_expire(tick, 15))        //15ms刷新一下数字框
+        if (1)//(tick_check_expire(tick, 15))        //15ms刷新一下数字框
         {
-            tick = tick_get();
+//            tick = tick_get();
             if (id == COMPO_ID_BTN_ACLOCK_HOUR)
             {
                 for (int idx = 0; idx < 5; idx++)

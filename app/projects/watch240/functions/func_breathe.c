@@ -96,6 +96,7 @@ compo_form_t *func_breathe_form_create(void)
     compo_button_set_pos(btn, 30, 132);
 
     btn = compo_button_create_by_image(frm, UI_BUF_BREATHE_MODE_BIN);
+    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_BREATHE_TIME_BIN).wid, gui_image_get_size(UI_BUF_BREATHE_TIME_BIN).hei);
     compo_setid(btn, COMPO_ID_BTN_MODE);
     compo_button_set_pos(btn, 209, 132);
 
@@ -139,7 +140,7 @@ static void func_breathe_disp_init(u8 page_sta)
     switch (page_sta)
     {
         case BREATHE_STA_IDLE:
-            compo_textbox_set(txt, "开始");
+            compo_textbox_set(txt, i18n[STR_START]);
             btn = compo_getobj_byid(COMPO_ID_BTN_START);
             compo_button_set_visible(btn, true);
             btn = compo_getobj_byid(COMPO_ID_BTN_TIME);

@@ -68,6 +68,17 @@ SECTIONS
         *\ble_evt.o(.rodata*)
         *\hci_transport_h3.o(.rodata*)
         *gui.o(.rodata*)
+
+        *ute_all_sports_int_algorithms3_0.o(.text*)
+        *ute_all_sports_int_algorithms3_0.o(.bss*)
+        *ute_all_sports_int_algorithms3_0.o(.sbss*)
+        *ute_all_sports_int_algorithms3_0.o(.rodata*)
+
+        *ute_sleep_algorithms_on_band.o(.text*)
+        *ute_sleep_algorithms_on_band.o(.bss*)
+        *ute_sleep_algorithms_on_band.o(.sbss*)
+        *ute_sleep_algorithms_on_band.o(.rodata*)
+
         __comm_end = .;
         . = ALIGN(512);
     } > sram AT > flash

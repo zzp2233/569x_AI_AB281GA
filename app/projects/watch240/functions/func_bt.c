@@ -345,6 +345,15 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(btn, COMPO_ID_BTN_PLAY);
     compo_button_set_pos(btn, 120, 188);
 
+    if (bt_cb.music_playing)
+    {
+        compo_button_set_bgimg(btn, UI_BUF_MUSIC_PAUSE_BIN);
+    }
+    else
+    {
+        compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
+    }
+
     btn = compo_button_create_by_image(frm, UI_BUF_MUSIC_NEXT_CLICK_BIN);
     compo_setid(btn, COMPO_ID_BTN_NEXT);
     compo_button_set_pos(btn, 200, 190);
@@ -362,6 +371,8 @@ compo_form_t *func_bt_form_create(void)
     compo_picturebox_set_pos(vol_pic, 82, 260);
     widget_set_align_center(vol_pic->img, false);
     compo_picturebox_set_visible(vol_pic, false);
+
+
 
     return frm;
 }
@@ -604,7 +615,7 @@ void func_bt_enter(void)
 
     func_cb.mp3_res_play = func_bt_mp3_res_play;
     bt_cb.bt_form_created = 1;
-    f_bt->bt_play_sta = false;
+    f_bt->bt_play_sta = bt_cb.music_playing;
     f_bt->ams_play_sta = false;
     f_bt->vol = 0;
     if (sys_cb.music_title_init)
@@ -617,7 +628,8 @@ void func_bt_enter(void)
         memcpy(f_bt->artist_buf, sys_cb.artist_buf, sizeof(sys_cb.artist_buf));
         msg_enqueue(EVT_ID3_ARTIST_UPDATE);
     }
-    func_bt_music_play_btnpic_refresh(0);
+    printf("%s->%d\n", __func__, f_bt->bt_play_sta);
+    func_bt_music_play_btnpic_refresh(f_bt->bt_play_sta);
 #if LE_AMS_CLIENT_EN
     if (ble_ams_is_connected())
     {

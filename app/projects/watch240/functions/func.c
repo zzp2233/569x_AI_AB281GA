@@ -1063,6 +1063,27 @@ void evt_message(size_msg_t msg)
     }
 }
 
+float uteDrvTemperatureInfraredThermistorSeriesConversionTemperature(uint16_t vddAdc,uint16_t adc)
+{
+    adc = adc * 3300 / 1024;
+    printf("adc = %d\n", adc);
+    uint16_t b = 4250;//UTE_DRV_INFRARED_THERMISTOR_RT_B;
+    uint16_t RS = 330;//UTE_DRV_INFRARED_THERMISTOR_RS;
+    uint16_t RT = 100;//UTE_DRV_INFRARED_THERMISTOR_RT;
+    float t = 25+273.15f;//298.15
+// #if UTE_DRV_INFRARED_THERMISTOR_IS_PARALLEL
+//  uint16_t RTp = UTE_DRV_INFRARED_THERMISTOR_PARALLEL_RT;
+//  double RTk = adc/((vddAdc-adc)/RS*1.0f-adc/RTp*1.0f)*1.0f;
+// #else
+    double RTk = adc*RS*1.0f/(vddAdc-adc);
+// #endif
+    double logvalue = (double)(RT/RTk);
+    double lnvalue = log(logvalue);
+    float tk = b*t/(b-t*lnvalue);
+    tk = tk-273.15f;
+    return tk;
+}
+
 //func common message process
 void func_message(size_msg_t msg)
 {
@@ -1190,6 +1211,16 @@ void func_message(size_msg_t msg)
 #if BT_HFP_BAT_REPORT_EN
             bt_hfp_report_bat();
 #endif
+
+            /*******************************************************/
+            //NTC测试代码
+            // u16 ntc_adc = 0;
+            // saradc_set_channel(BIT(ADCCH_PB2));
+            // ntc_adc = saradc_get_value10(ADCCH_PB2);
+            // printf("ntc_adc = %d\n", ntc_adc);
+            // u16 tem = uteDrvTemperatureInfraredThermistorSeriesConversionTemperature(3300, ntc_adc);
+            // printf("tem = %d\n", tem);
+            /*******************************************************/
             break;
 
         case EVT_WATCH_SET_COVER:

@@ -446,10 +446,17 @@ void compo_listbox_update(compo_listbox_t *listbox)
             memset(str_txt_number, 0, sizeof(str_txt_number));
             if (listbox->set_text_modify_by_idx_callback2 != NULL && str_txt_name != NULL && str_txt_number != NULL)
             {
-                listbox->set_text_modify_by_idx_callback2(listbox->item_cnt, str_txt_name, sizeof(str_txt_name), str_txt_number, sizeof(str_txt_number), listbox->item_idx[i]);
-                widget_text_set(listbox->item_text[i], str_txt_name);
-                widget_text_set(listbox->item_text2[i], str_txt_number);
-                widget_text_set_color(listbox->item_text2[i], COLOR_GRAY);
+                if (listbox->set_text_modify_by_idx_callback2(listbox->item_cnt, str_txt_name, sizeof(str_txt_name), str_txt_number, sizeof(str_txt_number), listbox->item_idx[i]))
+                {
+                    widget_set_visible(listbox->item_page[i], true);
+                    widget_text_set(listbox->item_text[i], str_txt_name);
+                    widget_text_set(listbox->item_text2[i], str_txt_number);
+                    widget_text_set_color(listbox->item_text2[i], COLOR_GRAY);
+                }
+                else
+                {
+                    widget_set_visible(listbox->item_page[i], false);
+                }
 //                printf("[%d,%d] %s:%s\n", sizeof(str_txt_name), sizeof(str_txt_number), str_txt_name, str_txt_number);
             }
         }
@@ -1245,4 +1252,14 @@ void compo_listbox_set_alike_icon(compo_listbox_t *listbox, u32 res)
     listbox->icon_area = gui_image_get_size(res);
     listbox->alike_icon = res;
     compo_listbox_init_update(listbox);
+}
+
+/**
+ * @brief 列表是否可以显示
+ * @param[in] listbox : 图标集指针
+ * @param[in] visible : 是否可以显示
+ **/
+void compo_listbox_set_visible(compo_listbox_t *listbox, bool visible)
+{
+    widget_set_visible(listbox->page, visible);
 }

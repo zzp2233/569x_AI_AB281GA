@@ -52,6 +52,22 @@
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1
 
+/* 电池容量 zn.zeng 2022-01-07*/
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      220 //mAh
+
+/* 电池曲线 zn.zeng 2022-01-03*/
+#define UTE_DRV_BATTERY_000      3480
+#define UTE_DRV_BATTERY_010      3620
+#define UTE_DRV_BATTERY_020      3740
+#define UTE_DRV_BATTERY_030      3767
+#define UTE_DRV_BATTERY_040      3791
+#define UTE_DRV_BATTERY_050      3805
+#define UTE_DRV_BATTERY_060      3872
+#define UTE_DRV_BATTERY_070      3946
+#define UTE_DRV_BATTERY_080      4090
+#define UTE_DRV_BATTERY_090      4055
+#define UTE_DRV_BATTERY_100      4140
+
 /*! 支持的运动数量, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_MAX_SPORT_NUM 25
 #define UTE_MODULE_SPORT_RUNNING_SUPPORT                1 //跑步

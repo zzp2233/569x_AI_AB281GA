@@ -526,7 +526,8 @@ void uteModuleGuiCommonHandScreenOffMsg(void)
     // uteModuleGuiCommonDisplayOff(false);
     if(!sys_cb.gui_sleep_sta)
     {
-        sys_cb.guioff_delay = 1;
+        sys_cb.guioff_delay = 0;
+        gui_sleep();                //½öÏ¨ÆÁ
     }
 }
 

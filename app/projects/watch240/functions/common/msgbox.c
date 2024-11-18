@@ -211,12 +211,12 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei/2 - 10);
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei/2 - 20);
 
             btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_YES_BIN).hei/2 - 10);
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_YES_BIN).hei/2 - 20);
             break;
 
         case MSGBOX_MODE_BTN_YESNO:         //确定与取消按钮2

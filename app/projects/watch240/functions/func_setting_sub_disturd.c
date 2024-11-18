@@ -397,15 +397,19 @@ static void func_disturd_button_click(void)
             else
             {
                 ret = 0;
-                sys_cb.disturd_adl = 0;
+                sys_cb.disturd_adl = false;
             }
             if (ret == MSGBOX_RES_OK)
             {
-                if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE - 1)
-                {
-                    sys_cb.disturd_adl = COMPO_ID_NUM_DISP_ONE;
-                }
+                sys_cb.disturd_adl = true;
+
+//                if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE - 1)
+//                {
+//                    sys_cb.disturd_adl = COMPO_ID_NUM_DISP_ONE;
+//                }
             }
+            uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
+            //s printf("wr:%d\n",uteModuleNotDisturbGetOpenStatus());
             break;
 
         case COMPO_ID_BIN_TIMING_ON:

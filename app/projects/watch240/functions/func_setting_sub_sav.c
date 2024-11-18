@@ -62,8 +62,8 @@ typedef struct sav_disp_btn_item_t_
 //按钮item，创建时遍历一下
 static const sav_disp_btn_item_t tbl_sav_disp_btn_item[] =
 {
-    {UI_BUF_COMMON_REDUCE_CLICK_BIN,    COMPO_ID_BIN_REDUCE_ONE,            40,      116,   30,  30},
-    {UI_BUF_COMMON_INCREASE_CLICK_BIN,  COMPO_ID_BIN_INCREASE_ONE,          200,     116,   30,  30},
+    {UI_BUF_COMMON_REDUCE_CLICK_BIN,    COMPO_ID_BIN_REDUCE_ONE,            40,      112,   30,  30},
+    {UI_BUF_COMMON_INCREASE_CLICK_BIN,  COMPO_ID_BIN_INCREASE_ONE,          200,     112,   30,  30},
     {UI_BUF_COMMON_REDUCE_CLICK_BIN,    COMPO_ID_BIN_REDUCE_TWS,            40,      200,   30,  30},
     {UI_BUF_COMMON_INCREASE_CLICK_BIN,  COMPO_ID_BIN_INCREASE_TWS,          200,     200,   30,  30},
     {UI_BUF_COMMON_REDUCE_CLICK_BIN,    COMPO_ID_BIN_REDUCE_THR,            40,      276,   30,  30},
@@ -84,11 +84,11 @@ typedef struct sav_disp_pic_item_t_
 //图片item，创建时遍历一下
 static const sav_disp_pic_item_t tbl_sav_disp_pic_item[] =
 {
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL1,          80,    116,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL2,          100,    116,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL3,          120,    116,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL4,          140,    116,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL5,          160,    116,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL1,          80,    112,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL2,          100,    112,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL3,          120,    112,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL4,          140,    112,    false},
+    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL5,          160,    112,    false},
     {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL6,          80,    200,    false},
     {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL7,          100,    200,    false},
     {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL8,          120,    200,    false},
@@ -106,7 +106,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
-    compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 116);
+    compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 112);
     compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 200);
     compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 276);
 

@@ -149,6 +149,7 @@ typedef struct f_sport_sub_run_t_
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_sub_run_form_create(void)
 {
+    bool sport_flag[3]= {true,true,true};
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
@@ -168,67 +169,209 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_form_set_title(frm, i18n[str_id]);
 
 
-    switch (str_id)
+
+
+    switch(func_sport_get_current_idx())
     {
-        //不同运行界面不同数据,用户自己添加 --> todo
-//    case STR_RIDE_ATVS:
-//        break;
-        //否则采用默认运行界面
-        default:
-            //创建数字
-            for (int i=0; i<TEXT_CNT; i++)
-            {
-                compo_textbox_t* txt = compo_textbox_create(frm, sport_sub_run_text[i].wordcnt);
-                compo_textbox_set_font(txt, sport_sub_run_text[i].res);
-                widget_text_set_color(txt->txt, make_color(sport_sub_run_text[i].color.r, sport_sub_run_text[i].color.g, sport_sub_run_text[i].color.b));
-                compo_textbox_set_align_center(txt, sport_sub_run_text[i].center);
-                compo_textbox_set_multiline(txt, sport_sub_run_text[i].wordwap);
-                if (sport_sub_run_text[i].w == 0 || sport_sub_run_text[i].h == 0)
-                {
-                    compo_textbox_set_autosize(txt, true);
-                }
-                compo_textbox_set_location(txt, sport_sub_run_text[i].x, sport_sub_run_text[i].y, sport_sub_run_text[i].w, sport_sub_run_text[i].h);
-                compo_setid(txt, sport_sub_run_text[i].id);
-            }
-
-#if USE_GOAL_ARC
-            //创建圆弧
-            for (int i=0; i<ARC_CNT; i++)
-            {
-                compo_arc_t *arc = compo_arc_create(frm);
-                compo_arc_set_alpha(arc, 0xff, 0xff);
-                compo_arc_set_location(arc, sport_sub_run_arc[i].x, sport_sub_run_arc[i].y, sport_sub_run_arc[i].w, sport_sub_run_arc[i].h);
-                compo_arc_set_width(arc, sport_sub_run_arc[i].width);
-                compo_arc_set_rotation(arc, 0);
-                compo_arc_set_angles(arc, 0, 3600);
-                compo_arc_set_color(arc, make_color(sport_sub_run_arc[i].content_color.r, sport_sub_run_arc[i].content_color.g, sport_sub_run_arc[i].content_color.b),
-                                    make_color(sport_sub_run_arc[i].bg_color.r, sport_sub_run_arc[i].bg_color.g, sport_sub_run_arc[i].bg_color.b));
-                widget_arc_set_edge_circle(arc->arc, true, true);
-                compo_setid(arc, sport_sub_run_arc[i].id);
-            }
-#endif // USE_GOAL_ARC
-
-            //创建运动类型图片
-            for (int i=0; i<PICTURE_CNT; i++)
-            {
-                compo_picturebox_t* pic;
-                if (sport_sub_run_picture[i].res)
-                {
-                    pic = compo_picturebox_create(frm, sport_sub_run_picture[i].res);
-                }
-                else
-                {
-                    pic = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
-                }
-                compo_picturebox_set_pos(pic, sport_sub_run_picture[i].x, sport_sub_run_picture[i].y);
-                if (sport_sub_run_picture[i].w !=0 && sport_sub_run_picture[i].h != 0)
-                {
-                    compo_picturebox_set_size(pic, sport_sub_run_picture[i].w, sport_sub_run_picture[i].h);
-                }
-                compo_setid(pic, sport_sub_run_picture[i].id);
-            }
+        case 0://跑步
+            sport_flag[0] = true;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 1://骑行
+            sport_flag[0] = true;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 2://跳绳
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 3://游泳
+            sport_flag[0] = true;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 4://羽毛球
+            sport_flag[0] = false;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 5://乒乓球
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 6://网球
+            sport_flag[0] = false;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 7://爬山
+            sport_flag[0] = true;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 8://徒步
+            sport_flag[0] = true;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 9://篮球
+            sport_flag[0] = false;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 10://足球
+            sport_flag[0] = true;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 11://棒球
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 12://排球
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 13://板球
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 14://橄榄球
+            sport_flag[0] = true;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 15://曲棍球
+            sport_flag[0] = true;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 16://跳舞
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 17://动感单车
+            sport_flag[0] = true;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 18://瑜伽
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 19://仰卧起坐
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 20://跑步机
+            sport_flag[0] = true;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 21://体操
+            sport_flag[0] = false;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 22://划船
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 23://开合跳
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
+            sport_flag[2] = true;//卡路里
+            break;
+        case 24://自由训练
+            sport_flag[0] = true;//公里
+            sport_flag[1] = true;//步数
+            sport_flag[2] = true;//卡路里
             break;
     }
+
+    //不同运行界面不同数据,用户自己添加 --> todo
+
+    //否则采用默认运行界面
+
+    //创建数字
+    for (int i=0; i<TEXT_CNT; i++)
+    {
+
+        compo_textbox_t* txt = compo_textbox_create(frm, sport_sub_run_text[i].wordcnt);
+        compo_textbox_set_font(txt, sport_sub_run_text[i].res);
+        widget_text_set_color(txt->txt, make_color(sport_sub_run_text[i].color.r, sport_sub_run_text[i].color.g, sport_sub_run_text[i].color.b));
+        compo_textbox_set_align_center(txt, sport_sub_run_text[i].center);
+        compo_textbox_set_multiline(txt, sport_sub_run_text[i].wordwap);
+        if (sport_sub_run_text[i].w == 0 || sport_sub_run_text[i].h == 0)
+        {
+            compo_textbox_set_autosize(txt, true);
+        }
+        compo_textbox_set_location(txt, sport_sub_run_text[i].x, sport_sub_run_text[i].y, sport_sub_run_text[i].w, sport_sub_run_text[i].h);
+        compo_setid(txt, sport_sub_run_text[i].id);
+
+        if(i>=2 && i<5)
+        {
+            compo_textbox_set_visible(txt, sport_flag[i-2]);///不同模式屏蔽不同功能
+        }
+        else if(i>=5)
+        {
+            compo_textbox_set_visible(txt, sport_flag[i-5]);///不同模式屏蔽不同功能
+        }
+    }
+
+#if USE_GOAL_ARC
+    //创建圆弧
+    for (int i=0; i<ARC_CNT; i++)
+    {
+        compo_arc_t *arc = compo_arc_create(frm);
+        compo_arc_set_alpha(arc, 0xff, 0xff);
+        compo_arc_set_location(arc, sport_sub_run_arc[i].x, sport_sub_run_arc[i].y, sport_sub_run_arc[i].w, sport_sub_run_arc[i].h);
+        compo_arc_set_width(arc, sport_sub_run_arc[i].width);
+        compo_arc_set_rotation(arc, 0);
+        compo_arc_set_angles(arc, 0, 3600);
+        compo_arc_set_color(arc, make_color(sport_sub_run_arc[i].content_color.r, sport_sub_run_arc[i].content_color.g, sport_sub_run_arc[i].content_color.b),
+                            make_color(sport_sub_run_arc[i].bg_color.r, sport_sub_run_arc[i].bg_color.g, sport_sub_run_arc[i].bg_color.b));
+        widget_arc_set_edge_circle(arc->arc, true, true);
+        compo_setid(arc, sport_sub_run_arc[i].id);
+    }
+#endif // USE_GOAL_ARC
+
+    //创建运动类型图片
+    for (int i=0; i<PICTURE_CNT; i++)
+    {
+        compo_picturebox_t* pic;
+        if (sport_sub_run_picture[i].res)
+        {
+            pic = compo_picturebox_create(frm, sport_sub_run_picture[i].res);
+        }
+        else
+        {
+            pic = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
+        }
+        compo_picturebox_set_pos(pic, sport_sub_run_picture[i].x, sport_sub_run_picture[i].y);
+        if (sport_sub_run_picture[i].w !=0 && sport_sub_run_picture[i].h != 0)
+        {
+            compo_picturebox_set_size(pic, sport_sub_run_picture[i].w, sport_sub_run_picture[i].h);
+        }
+        compo_setid(pic, sport_sub_run_picture[i].id);
+
+        if(i>=2)
+        {
+            compo_picturebox_set_visible(pic, sport_flag[i-2]);///不同模式屏蔽不同功能
+        }
+    }
+
 
     //右滑退出界面
     compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_SPORT_EXERCISING_PAUSE_BIN);
@@ -650,6 +793,7 @@ static void func_sport_sub_run_enter(void)
         uteModuleSportStartMoreSports(func_sport_get_current_idx()+1, 1, 0);
         TRACE("【本地】开始运动:%d\n",func_sport_get_current_idx()+1);
     }
+
 }
 
 //退出室内跑步功能

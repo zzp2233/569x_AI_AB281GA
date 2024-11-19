@@ -1,6 +1,8 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_log.h"
+#include "ute_module_platform.h"
+#include "ute_module_message.h"
 
 void bsp_qdec_init(void);
 void rtc_alarm_disable(void);
@@ -539,6 +541,7 @@ u8 bsp_key_scan(void)
         else
         {
             msg_enqueue(key);
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
 #if UTE_LOG_KEYS_LVL
             printf(key_str, key);
 #endif

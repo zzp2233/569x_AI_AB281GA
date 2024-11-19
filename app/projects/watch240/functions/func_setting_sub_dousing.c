@@ -91,7 +91,7 @@ void func_set_sub_dousing_list_icon_click(void)
             }
             else if (icon_idx==COMPO_ID_BTN_NUM2)
             {
-                uteModuleGuiCommonSetDisplayOffTime(15);
+                uteModuleGuiCommonSetDisplayOffTime(20);
             }
             else if (icon_idx==COMPO_ID_BTN_NUM3)
             {

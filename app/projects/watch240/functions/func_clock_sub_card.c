@@ -4,6 +4,7 @@
 #include "func_clock.h"
 #include "ute_module_sport.h"
 #include "ute_module_sleep.h"
+#include "ute_module_heart.h"
 
 #define TRACE_EN    0
 
@@ -323,7 +324,8 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_HEART_RATE_BIN);
     compo_cardbox_icon_set_location(cardbox, 1, HEARTRATE_ICON_X, HEARTRATE_ICON_Y, HEARTRATE_ICON_W, HEARTRATE_ICON_H);
     compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_cardbox_text_set(cardbox, 0, "72");   //心率值--------->>>todo
+    snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
+    compo_cardbox_text_set(cardbox, 0, txt_buf);   //心率值--------->>>todo
     compo_cardbox_text_set_location(cardbox, 0, HEARTRATE_VALUE_X, HEARTRATE_VALUE_Y, HEARTRATE_VALUE_W, HEARTRATE_VALUE_H);
     //睡眠
     cardbox = compo_cardbox_create(frm, 1, 2, 5, CARD_WIDTH_ORG, SLEEP_BG_H);
@@ -866,8 +868,10 @@ static void func_clock_sub_card_data_update(void)
 //    compo_cardbox_text_set(cardbox, 3, "05h");      //浅睡h
 //    compo_cardbox_text_set(cardbox, 4, "29m");      //浅睡m
 //    //心率
-//    cardbox = compo_getobj_byid(COMPO_ID_CARD_HEARTRATE);
-//    compo_cardbox_text_set(cardbox, 0, "72");       //心率值
+    char hr_str[4];
+    snprintf(hr_str, sizeof(hr_str), "%d", uteModuleHeartGetHeartValue());
+    cardbox = compo_getobj_byid(COMPO_ID_CARD_HEARTRATE);
+    compo_cardbox_text_set(cardbox, 0, hr_str);       //心率值
     //音乐
     cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
     compo_cardbox_icon_set(cardbox, 1, music_pp_test ? UI_BUF_MUSIC_PAUSE_BIN : UI_BUF_MUSIC_PLAY_BIN);  //播放/暂停

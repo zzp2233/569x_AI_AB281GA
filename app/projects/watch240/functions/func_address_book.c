@@ -13,6 +13,10 @@ extern bool func_switching_flag;
 enum
 {
     COMPO_ID_LISTBOX = 1,
+
+    COMPO_ID_COVER_PIC,
+    COMPO_ID_COVER_TXT,
+
 };
 
 typedef struct f_address_book_list_t_
@@ -26,7 +30,7 @@ static ute_module_call_addressbook_t* address_book_tbl = NULL;            //电�
 static u16 address_book_cnt = 0;                                       //联系人个数
 
 //更新电话簿列表回调函数
-static void address_book_update_callback(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index)
+static bool address_book_update_callback(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index)
 {
     if (index < item_cnt && index < address_book_cnt)
     {
@@ -73,10 +77,12 @@ static void address_book_update_callback(u32 item_cnt, char* str_txt1, u16 str_t
         }
 
         memcpy(str_txt2, address_book_tbl[index].numberAscii, str_txt2_len);
+        return true;
     }
+    return false;
 }
 
-static bool func_address_book_update(void)
+static u8 func_address_book_update(void)
 {
     //获取通讯录联系人
     if (address_book_cnt != uteModuleCallGetAddressBookSize())
@@ -112,8 +118,19 @@ compo_form_t *func_address_book_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_CALL_LINK]);
 
+    //创建无消息界面
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_ICON_ADDRESS_BOOK_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_visible(pic, false);
+    compo_setid(pic, COMPO_ID_COVER_PIC);
+
+    compo_textbox_t* txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH / 2, widget_text_get_height());
+    compo_textbox_set_visible(txt, false);
+    compo_textbox_set(txt, "请使用APP同步联系人！！");
+    compo_setid(txt, COMPO_ID_COVER_TXT);
+
     //新建列表
-//    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     //更新联系人
@@ -122,11 +139,15 @@ compo_form_t *func_address_book_form_create(void)
     {
         compo_listbox_set(listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
     }
+
     compo_listbox_set_alike_icon(listbox, UI_BUF_ICON_ADDRESS_BOOK_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
+
+    compo_textbox_set_visible(txt, address_book_cnt > 0 ? false : true);
+    compo_picturebox_set_visible(pic, address_book_cnt > 0 ? false : true);
 
     return frm;
 }
@@ -163,19 +184,34 @@ static void func_address_book_process(void)
     {
         f_book->tick = tick_get();
         //更新联系人
-        if (func_address_book_update())
+        u8 sta = func_address_book_update();
+        if (sta)
         {
+            compo_textbox_t* txt = compo_getobj_byid(COMPO_ID_COVER_TXT);
+            compo_picturebox_t* pic = compo_getobj_byid(COMPO_ID_COVER_PIC);
             if (address_book_cnt)
             {
-                compo_listbox_set(f_book->listbox, tbl_call_list, address_book_cnt);
+                compo_listbox_set_visible(f_book->listbox, true);
+                compo_listbox_set(f_book->listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
+                compo_listbox_set_alike_icon(f_book->listbox, UI_BUF_ICON_ADDRESS_BOOK_BIN);
                 compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1));
                 compo_listbox_update_with_text_scroll_rst(f_book->listbox);
+                compo_listbox_set_bgimg(f_book->listbox, UI_BUF_COMMON_BG_BIN);
+                compo_listbox_set_focus_byidx(f_book->listbox, 1);
                 compo_listbox_update(f_book->listbox);
             }
+            else
+            {
+                compo_listbox_set_visible(f_book->listbox, false);
+                compo_listbox_set(f_book->listbox, tbl_call_list, address_book_cnt);
+            }
+            compo_textbox_set_visible(txt, address_book_cnt > 0 ? false : true);
+            compo_picturebox_set_visible(pic, address_book_cnt > 0 ? false : true);
         }
     }
 
     compo_listbox_move(f_book->listbox);
+    compo_listbox_update(f_book->listbox);
 
     func_process();
 }
@@ -234,7 +270,6 @@ static void func_address_book_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1));
-
     func_cb.enter_tick = tick_get();
 }
 

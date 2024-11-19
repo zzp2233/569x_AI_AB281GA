@@ -23,6 +23,8 @@ typedef struct
     bool isFahrenheit;
     uint8_t currWatchIndex; //当前表盘的配置索引
     uint8_t currWatchMaxIndex; //表盘总个数配置
+    uint8_t screenTblSort[MAX_FUNC_SORT_CNT];
+    uint8_t screenSortCnt;
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
     uint8_t currScreenSaverIndex;
     bool isScreenSaverSetOn;
@@ -94,4 +96,6 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void);
 void uteModuleGuiCommonDisplayOffAllowGoBack(bool allow);
 void uteModuleGuiCommonHandScreenOnMsg(void);
 void uteModuleGuiCommonHandScreenOffMsg(void);
+void uteModuleGuiCommonSavescreenTblSort(uint8_t *tblSort, uint8_t sortCnt);
+void uteModuleGuiCommonGetScreenTblSort(uint8_t *tblSort, uint8_t *sortCnt);
 #endif //_UTE_MODULE_GUI_COMMON_H_

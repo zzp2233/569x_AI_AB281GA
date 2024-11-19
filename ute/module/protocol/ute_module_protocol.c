@@ -483,23 +483,42 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 #ifdef SCREEN_TITLE_MULTIPLE_HEBREW_LANGUAGE_SUPPORT
         response[17] |= SCREEN_TITLE_MULTIPLE_HEBREW_LANGUAGE_SUPPORT<<7;
 #endif
+#if SCREEN_TITLE_MULTIPLE_SLOVAK_LANGUAGE_SUPPORT//斯洛伐克语 0x19  
+        response[16] |= SCREEN_TITLE_MULTIPLE_SLOVAK_LANGUAGE_SUPPORT << 0;
+#endif
 #if SCREEN_TITLE_MULTIPLE_HUNGARIAN_LANGUAGE_SUPPORT//匈牙利语 0x1a
         response[16] |= SCREEN_TITLE_MULTIPLE_HUNGARIAN_LANGUAGE_SUPPORT << 1;
 #endif
 #ifdef SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT
         response[16] |= SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT   << 2;
 #endif
-#if SCREEN_TITLE_MULTIPLE_SHQIP_LANGUAGE_SUPPORT//阿尔巴尼亚语 0x1d
-        response[16] |= SCREEN_TITLE_MULTIPLE_SHQIP_LANGUAGE_SUPPORT << 4;
-#endif
-#if SCREEN_TITLE_MULTIPLE_BULGARIAN_LANGUAGE_SUPPORT
+#if SCREEN_TITLE_MULTIPLE_BULGARIAN_LANGUAGE_SUPPORT //保加利亚语 0X26  38
         response[15] |= SCREEN_TITLE_MULTIPLE_BULGARIAN_LANGUAGE_SUPPORT << 5;
 #endif
 #if SCREEN_TITLE_MULTIPLE_PERSIAN_LANGUAGE_SUPPORT
         response[15] |= SCREEN_TITLE_MULTIPLE_PERSIAN_LANGUAGE_SUPPORT << 7;
 #endif
+#ifdef SCREEN_TITLE_MULTIPLE_KHMER_LANGUAGE_SUPPORT
+        response[14] |= SCREEN_TITLE_MULTIPLE_KHMER_LANGUAGE_SUPPORT << 2;
+#endif
+#if SCREEN_TITLE_MULTIPLE_HRVATSKA_LANGUAGE_SUPPORT //克罗地亚语 0X33  51
+        response[13] |= SCREEN_TITLE_MULTIPLE_HRVATSKA_LANGUAGE_SUPPORT << 2;
+#endif
+#ifdef SCREEN_TITLE_MULTIPLE_DANISH_LANGUAGE_SUPPORT//丹麦语 0X39
+        response[12] |= SCREEN_TITLE_MULTIPLE_DANISH_LANGUAGE_SUPPORT<<0;
+#endif
 #ifdef SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT //马来西亚语 0x40
         response[12] |= SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT << 7;
+#endif
+#ifdef SCREEN_TITLE_MULTIPLE_SLOVENIAN_LANGUAGE_SUPPORT //斯洛文尼亚语 0X4d 77
+        response[10] |= SCREEN_TITLE_MULTIPLE_SLOVENIAN_LANGUAGE_SUPPORT << 4;
+#endif
+
+#ifdef SCREEN_TITLE_MULTIPLE_UKRAINIAN_LANGUAGE_SUPPORT//乌克兰 0x58  88
+        response[9] |= SCREEN_TITLE_MULTIPLE_UKRAINIAN_LANGUAGE_SUPPORT << 7;
+#endif
+#ifdef SCREEN_TITLE_MULTIPLE_SWEDISH_LANGUAGE_SUPPORT//瑞典语（svenska） 0x4a
+        response[10] |= SCREEN_TITLE_MULTIPLE_SWEDISH_LANGUAGE_SUPPORT << 1;
 #endif
 #ifdef SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT
         response[7] |= SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT << 2;
@@ -513,8 +532,26 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
     {
         if(receive[2]<LANGUAGE_ID_MAX)
         {
+#if UTE_MODULE_SCREENS_NO_FOLLOW_APP_LANGUAGE_SELECT_SUPPORT
+            response[2] = receive[2];
+            ute_module_systemtime_time_t set;
+            uteModuleSystemtimeGetTime(&set);
+            if(set.AppSetlanguageId==response[2])
+            {
+
+                response[2]=set.languageId;
+                uteModuleSystemtimeSetLanguage(response[2]);
+
+            }
+            else
+            {
+                uteModuleSystemtimeSetLanguage(response[2]);
+                uteModuleSystemtimeAPPSetLanguage(response[2]);
+            }
+#else
             response[2] = receive[2];
             uteModuleSystemtimeSetLanguage(receive[2]);
+#endif
         }
         else
         {
@@ -523,6 +560,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
         uteModuleProfileBleSendToPhone(&response[0],3);
     }
 }
+
 /**
 *@brief        读取实时步数信息
 *@details
@@ -2334,7 +2372,7 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #if UTE_MODUEL_CALL_ADDRESSBOOK_EXPANSION_LENGTH_SUPPORT
     data[2]|= 0x08;
 #endif
-#if UTE_MODULE_SCREENS_LANGUAGE_SELECT_LIST_SUPPORT
+#if 1//UTE_MODULE_SCREENS_LANGUAGE_SELECT_LIST_SUPPORT
     data[2]|= 0x20;
 #endif
     data[2]|= 0x40;

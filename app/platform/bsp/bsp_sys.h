@@ -202,6 +202,8 @@ typedef struct
     bool music_title_init;
     bool music_artist_init;
 
+    u8 set_sleep_time_id;
+
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

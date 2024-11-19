@@ -155,11 +155,10 @@ static void func_voice_process(void)
     if (f_voice->siri_en)
     {
         func_voice_animation_roll(true);
-//        compo_textbox_set(txt, i18n[STR_VOICE_SPEAKER]);
         if (f_voice->siri_status != FUNC_SIRI_STATUS_SPEAKER)
         {
             f_voice->siri_status = FUNC_SIRI_STATUS_SPEAKER;
-            compo_textbox_set(txt, "请说话...");
+            compo_textbox_set(txt, i18n[STR_VOICE_SPEAKER]);
         }
     }
     else
@@ -167,22 +166,20 @@ static void func_voice_process(void)
 
         if (!bt_is_connected())
         {
-//            compo_textbox_set(txt, i18n[STR_VOICE_BT_NOT_CONNECT]);
             if (f_voice->siri_status != FUNC_SIRI_STATUS_CONNBT)
             {
                 //func_voice_animation_roll(false);
                 f_voice->siri_status = FUNC_SIRI_STATUS_CONNBT;
-                compo_textbox_set(txt, "蓝牙未连接");
+                compo_textbox_set(txt, i18n[STR_VOICE_BT_NOT_CONNECT]);
             }
         }
         else
         {
-//            compo_textbox_set(txt, i18n[STR_VOICE_SIRI_START]);
             if (f_voice->siri_status != FUNC_SIRI_STATUS_CLICK)
             {
                 //func_voice_animation_roll(false);
                 f_voice->siri_status = FUNC_SIRI_STATUS_CLICK;
-                compo_textbox_set(txt, "点击屏幕开启SIRI");
+                compo_textbox_set(txt, i18n[STR_VOICE_SIRI_START]);
             }
         }
     }

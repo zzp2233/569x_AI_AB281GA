@@ -68,23 +68,26 @@ static void func_menu_sub_list_battery_pic_update(void)
     }
     switch(sys_cb.vbat_percent)
     {
-        case 1 ... 16:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER1_BIN);
+        case 0 ... 14:
+            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_0_BIN);
             break;
-        case 17 ... 32:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER2_BIN);
+        case 15 ... 29:
+            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_1_BIN);
             break;
-        case 33 ... 48:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER3_BIN);
+        case 30 ... 44:
+            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_2_BIN);
             break;
-        case 49 ... 64:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER4_BIN);
+        case 45 ... 59:
+            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_3_BIN);
             break;
-        case 65 ... 80:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER5_BIN);
+        case 60 ... 74:
+            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_4_BIN);
             break;
-        case 81 ... 100:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER6_BIN);
+        case 75 ... 84:
+            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_5_BIN);
+            break;
+        case 85 ... 100:
+            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_6_BIN);
             break;
         default:
             compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER6_BIN);

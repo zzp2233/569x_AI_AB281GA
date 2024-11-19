@@ -1,5 +1,6 @@
 #include "include.h"
 #include "ute_drv_battery_common.h"
+#include "ute_drv_temperature_common.h"
 
 #if CHARGE_EN
 
@@ -160,47 +161,60 @@ static void charge_timer_callback (co_timer_t *timer, void *param)
     static charge_sta_m charge_full_flag = CHARGE_NO_FULL;
     static uint16_t refill_count = 0;
     static uint16_t refill_curr_cnt = 0;
-#if CHARGE_USER_NTC_EN && TS_MODE_EN
+#if (CHARGE_USER_NTC_EN && TS_MODE_EN) || UTE_DRV_BATTERY_CE_AUTH_SUPPORT
     static uint16_t charge_ntc_stop_flag = 0;
+    static int16_t ambientTemperature = 0;
 #endif
 
 #if TS_MODE_EN
     adc_cb.ntc_temp = ts_adc2ntc(adc_cb.vts);
+    ambientTemperature = adc_cb.ntc_temp;
+#elif UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+    if(uteDrvTemperatureCommonIsInitSuccessful())
+    {
+        uteDrvTemperatureCommonPowerOn(true);
+        uteDrvTemperatureCommonEverySecond();
+        ambientTemperature = (int16_t)uteDrvTemperatureCommonGetAmbientValue();
+    }
+    else
+    {
+        ambientTemperature = 25;
+    }
 #endif // TS_MODE_EN
 
-    TRACE("DC_IN:%d charge_sta:%d VBAT:%d VBAT2:%d VTS:%d NTC:%d\n", CHARGE_DC_IN(), sys_cb.charge_sta, adc_cb.vbat_val, adc_cb.vbat2, adc_cb.vts, adc_cb.ntc_temp);
+    TRACE("DC_IN:%d charge_sta:%d VBAT:%d VBAT2:%d VTS:%d NTC:%d\n", CHARGE_DC_IN(), sys_cb.charge_sta, adc_cb.vbat_val, adc_cb.vbat2, adc_cb.vts, ambientTemperature);
 
     switch(sys_cb.charge_sta)
     {
         case 0:             //移开5v
             charge_full_flag = CHARGE_NO_FULL;
-#if CHARGE_USER_NTC_EN && TS_MODE_EN
+#if (CHARGE_USER_NTC_EN && TS_MODE_EN) || UTE_DRV_BATTERY_CE_AUTH_SUPPORT
             charge_ntc_stop_flag = 0;
 #endif
             charge_ctrl(1);
             break;
         case 1:             //充电中
             //NTC
-#if CHARGE_USER_NTC_EN && TS_MODE_EN
-            if((charge_ntc_stop_flag== 0)  && ((adc_cb.ntc_temp > CHARGE_NTC_ADC_MAX_TEMP) || (adc_cb.ntc_temp < CHARGE_NTC_ADC_MIN_TEMP)))
+#if (CHARGE_USER_NTC_EN && TS_MODE_EN) || UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+            if((charge_ntc_stop_flag== 0)  && ((ambientTemperature > CHARGE_NTC_ADC_MAX_TEMP) || (ambientTemperature < CHARGE_NTC_ADC_MIN_TEMP)))
             {
                 //温度异常 停止充
-                TRACE("NTC STOP CHARGE:%d\n", adc_cb.ntc_temp);
+                TRACE("NTC STOP CHARGE:%d\n", ambientTemperature);
                 charge_ntc_stop_flag = 1;
                 charge_ctrl(0);
             }
 
-            if((charge_ntc_stop_flag== 1)  && (adc_cb.ntc_temp < CHARGE_NTC_ADC_MAX_RE_TEMP) && (adc_cb.ntc_temp > CHARGE_NTC_ADC_MIN_RE_TEMP))
+            if((charge_ntc_stop_flag== 1)  && (ambientTemperature < CHARGE_NTC_ADC_MAX_RE_TEMP) && (ambientTemperature > CHARGE_NTC_ADC_MIN_RE_TEMP))
             {
                 //温度恢复 继续充
-                TRACE("NTC Continue CHARGE:%d\n", adc_cb.ntc_temp);
+                TRACE("NTC Continue CHARGE:%d\n", ambientTemperature);
                 charge_ntc_stop_flag = 0;
                 charge_ctrl(1);
             }
 #endif
             break;
         case 2:             //充电满
-#if CHARGE_USER_NTC_EN && TS_MODE_EN
+#if (CHARGE_USER_NTC_EN && TS_MODE_EN) || UTE_DRV_BATTERY_CE_AUTH_SUPPORT
             charge_ntc_stop_flag = 0;
 #endif
             if(charge_full_flag == CHARGE_NO_FULL)

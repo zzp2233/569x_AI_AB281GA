@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_notdisturb.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -578,10 +579,20 @@ static void func_disturd_set_move_handle(u8 id)
             if (sys_cb.disturd_sel)
             {
                 sys_cb.disturd_end_time_sec = hour * 3600 + min * 60;
+                if(uteModuleNotDisturbGetTimeStatus() != NOT_DISTURB_END_TIME)
+                {
+                    uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_END_TIME);
+                }
+                uteModuleNotDisturbSetTime(sys_cb.disturd_end_time_sec / 60);
             }
             else
             {
                 sys_cb.disturd_start_time_sec = hour * 3600 + min * 60;
+                if(uteModuleNotDisturbGetTimeStatus() != NOT_DISTURB_START_TIME)
+                {
+                    uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
+                }
+                uteModuleNotDisturbSetTime(sys_cb.disturd_start_time_sec / 60);
             }
             printf("total_sec:%d, hour:%d, min:%d\n",sys_cb.disturd_start_time_sec, hour, min);
             break;

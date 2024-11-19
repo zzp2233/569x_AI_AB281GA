@@ -147,7 +147,7 @@ typedef struct compo_listbox_t_
     bool flag_alike_icon;
 
     void (*set_text_modify_by_idx_callback)(u32 item_cnt, char* str_txt, u16 index);
-    void (*set_text_modify_by_idx_callback2)(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index);
+    bool (*set_text_modify_by_idx_callback2)(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index);
 
 } compo_listbox_t;
 
@@ -389,5 +389,10 @@ void compo_listbox_set_text_modify_by_idx_callback2(compo_listbox_t *listbox, vo
  **/
 void compo_listbox_set_alike_icon(compo_listbox_t *listbox, u32 res);
 
-
+/**
+ * @brief 列表是否可以显示
+ * @param[in] listbox : 图标集指针
+ * @param[in] visible : 是否可以显示
+ **/
+void compo_listbox_set_visible(compo_listbox_t *listbox, bool visible);
 #endif

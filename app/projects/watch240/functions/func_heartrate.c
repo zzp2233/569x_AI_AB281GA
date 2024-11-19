@@ -64,7 +64,7 @@ compo_form_t *func_heartrate_form_create(void)
 
     //设置内容
     compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BIN, 124, 88);
-    compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BG_BIN, 120, 230);
+    compo_form_add_image(frm, UI_BUF_HEART_RATE_HR_BG_BIN, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/1.2);
 
     compo_form_add_image(frm, UI_BUF_HEART_RATE_UP_BIN, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.45, 186);
     compo_form_add_image(frm, UI_BUF_HEART_RATE_DOWN_BIN, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2.4, 186);

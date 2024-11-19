@@ -149,6 +149,12 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                     font_y = (listbox->line_height - font_height) >> 1;
                 }
                 font_w = listbox->item_width - font_x - (font_height >> 1);
+                if (listbox->res_sta_icon1)
+                {
+                    area_t area = gui_image_get_size(listbox->res_sta_icon1);
+//                    int icon_x = listbox->item_width - area.wid;
+                    font_w = font_w - area.wid;
+                }
             }
         }
 
@@ -254,11 +260,12 @@ void compo_listbox_set_sta_icon(compo_listbox_t *listbox, u32 res_addr1, u32 res
     if (res_addr1 != 0)
     {
         area_t area = gui_image_get_size(res_addr1);
-        int icon_x = listbox->item_width - area.wid;
+        int icon_x = listbox->item_width - area.wid/2;
         for (i=0; i<LISTBOX_ITEM_CNT; i++)
         {
             widget_set_pos(listbox->item_icon2[i], icon_x, listbox->line_center_y);
         }
+        compo_listbox_init_update(listbox);
     }
 }
 

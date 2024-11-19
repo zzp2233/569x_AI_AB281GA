@@ -234,7 +234,7 @@ static void func_bt_call_message(size_msg_t msg)
             }
             else
             {
-                bt_call_terminate();                        //挂断当前通话
+//                bt_call_terminate();                        //挂断当前通话
             }
             break;
 

@@ -186,6 +186,7 @@ compo_form_t *func_calender_form_create(void)
     s16 x_pos = CALE_CONTEXT_X_START_GAP + CALE_CONTEXT_WIDTH / 2;
     s16 y_pos = CALE_CONTEXT_y_START_GAP + CALE_CONTEXT_HEIGHT / 2;
     char week_text[7][4] = {"日", "一", "二", "三", "四", "五", "六"};
+    // u16 week_text_idx[7] = {STR_SUNDAY, STR_MONDAY, STR_TUESDAY, STR_WEDNESDAY, STR_THURSDAY, STR_FRIDAY, STR_SATURDAY};
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -213,8 +214,10 @@ compo_form_t *func_calender_form_create(void)
     for(i = 0; i < 7; i++)
     {
         cale_label = compo_label_create(frm, sizeof(week_text[i]));
+        // cale_label = compo_label_create(frm, i18n[week_text_idx[i]]);
         compo_label_set_pos(cale_label, x_pos, y_pos);
         compo_label_set(cale_label, week_text[i]);
+        // compo_label_set(cale_label, i18n[week_text_idx[i]]);
         x_pos += (CALE_CONTEXT_WIDTH + CALE_CONTEXT_X_GAP);
     }
 
@@ -222,18 +225,23 @@ compo_form_t *func_calender_form_create(void)
     compo_shape_set_location(line_shape, GUI_SCREEN_CENTER_X, y_pos + CALE_CONTEXT_HEIGHT, GUI_SCREEN_WIDTH, 2);
     compo_shape_set_color(line_shape, COLOR_GRAY);
 
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    char date_str[6] = {0};
     //year_text
     cale_label = compo_label_create(frm, 4);
     compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X - 20, CALE_CONTEXT_y_START_GAP - 80);
-    compo_label_set(cale_label, "2023");
+    sprintf(date_str, "%04d", time.year);
+    compo_label_set(cale_label, date_str);
     compo_setid(cale_label, COMPO_ID_YEAR_TEXT);
 
     //mon_text
     cale_label = compo_label_create(frm, 2);
     compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X + 40, CALE_CONTEXT_y_START_GAP - 80);
-    compo_label_set(cale_label, "11");
+    sprintf(date_str, "%02d", time.month);
+    compo_label_set(cale_label, date_str);
     compo_setid(cale_label, COMPO_ID_MON_TEXT);
 
     //last_btn
@@ -358,8 +366,6 @@ static void func_calendar_enter(void)
     func_cb.frm_main = func_calender_form_create();
     //刷新文本内容
     func_calender_refresh(time.year, time.month, time.day);
-    func_calendar_date_update(true);
-    func_calendar_date_update(false);
 }
 
 //退出日历功能

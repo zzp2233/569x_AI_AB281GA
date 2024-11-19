@@ -16,6 +16,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_gui_common.h"
 #include "ute_drv_gsensor_common.h"
+#include "ute_module_heart.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -129,16 +130,21 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData();
         }
         break;
-        // case MSG_TYPE_HEART_START_SINGLE_TESTING:
-        // {
-        //     uteModuleHeartStartSingleTestingMsgHandler(param);
-        // }
-        // break;
-        // case MSG_TYPE_HEART_STOP_SINGLE_TESTING:
-        // {
-        //     uteModuleHeartStopSingleTestingMsgHandler(param);
-        // }
-        // break;
+        case MSG_TYPE_HEART_START_SINGLE_TESTING:
+        {
+            uteModuleHeartStartSingleTestingMsgHandler(param);
+        }
+        break;
+        case MSG_TYPE_HEART_STOP_SINGLE_TESTING:
+        {
+            uteModuleHeartStopSingleTestingMsgHandler(param);
+        }
+        break;
+        case MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE:
+        {
+            uteModuleSprotResetRovllverScreenMode();
+        }
+        break;
 
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);

@@ -157,7 +157,19 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set(cardbox, 1, weather_list[get_weather_id]);  //天气图标
     compo_cardbox_icon_set_location(cardbox, 1, 245-180, 111-126,gui_image_get_size( weather_list[get_weather_id]).wid/1.2,gui_image_get_size(weather_list[get_weather_id]).hei/1.2);
     //compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);
-    snprintf(str_buff, sizeof(str_buff), "%02d:%02d", compo_cb.tm.hour, compo_cb.tm.min);    //时间
+    uint8_t tmp_time_hour = compo_cb.tm.hour;
+    if(uteModuleSystemtime12HOn())
+    {
+        if(tmp_time_hour > 12)
+        {
+            tmp_time_hour = tmp_time_hour - 12;
+        }
+        else if (tmp_time_hour == 0)
+        {
+            tmp_time_hour = 12;
+        }
+    }
+    snprintf(str_buff, sizeof(str_buff), "%02d:%02d", tmp_time_hour, compo_cb.tm.min);    //时间
     compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_cardbox_text_set(cardbox, 0, str_buff);
     compo_cardbox_text_set_location(cardbox, 0, 98-140, 93-126, 180, 56);
@@ -286,7 +298,19 @@ void func_clock_sub_sidebar_update(void)
     if (f_sidebar->m_time_min != compo_cb.tm.min)   //一分钟更新一次
     {
         cardbox = compo_getobj_byid(SIDEBAR_CARD_ID_TIME_WEATHER);
-        snprintf(str_buff, sizeof(str_buff), "%02d:%02d", compo_cb.tm.hour, compo_cb.tm.min);    //时间
+        uint8_t tmp_time_hour = compo_cb.tm.hour;
+        if(uteModuleSystemtime12HOn())
+        {
+            if(tmp_time_hour > 12)
+            {
+                tmp_time_hour = tmp_time_hour - 12;
+            }
+            else if (tmp_time_hour == 0)
+            {
+                tmp_time_hour = 12;
+            }
+        }
+        snprintf(str_buff, sizeof(str_buff), "%02d:%02d", tmp_time_hour, compo_cb.tm.min);    //时间
         compo_cardbox_text_set(cardbox, 0, str_buff);
         //compo_cardbox_icon_cut(cardbox, 1, sys_cb.weather_idx, WEATHER_CNT);  //天气
         //snprintf(str_buff, sizeof(str_buff), "%02d℃", sys_cb.temperature[1]);    //温度

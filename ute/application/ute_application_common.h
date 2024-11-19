@@ -33,6 +33,8 @@
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_SOFTWARE_VERSION "systemparam/softVersion"
 /*写入NFC开关,用于图标显示 ldl 2023-08-30*/
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_NFC_SWITCH "systemparam/nfcSwitch"
+/*! 写入一级界显示开关、顺序,wang.luo 2024-11-16 */
+#define UTE_MODULE_FILESYSTEM_SYSTEMPARM_SCREEN_TBL_SORT "systemparam/screenTblSort"
 
 /*快捷开关表! zn.zeng, 2021-08-24  */
 #define    QUICK_SWITCH_FINDBAND   0x01000000

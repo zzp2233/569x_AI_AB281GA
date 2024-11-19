@@ -46,7 +46,8 @@ void uteModuleNotDisturbSetTime(uint16_t notDisturbHourMin);
 uint16_t uteModuleNotDisturbGetTime(uint8_t timestatus);
 void uteModuleNotDisturbSetOpenStatus(uint8_t openstatus);
 uint8_t uteModuleNotDisturbGetOpenStatus(void);
-
+void uteModuleNotDisturbScheduledSwitch(void);
+void uteModuleNotDisturbAllDaySwitch(void);
 #endif
 void uteModuleNotDisturbReadConfig(void);
 void uteModuleNotDisturbInit(void);

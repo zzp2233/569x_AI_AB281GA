@@ -83,7 +83,7 @@ compo_form_t *func_call_sub_dial_form_create(void)
         compo_setid(btn, tbl_call_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_call_disp_btn_item[idx_btn].x, tbl_call_disp_btn_item[idx_btn].y);
     }
-    printf("W:%d H:%d\n",gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).wid,gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).hei);
+//    printf("W:%d H:%d\n",gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).wid,gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).hei);
 
 
     //创建文本
@@ -177,44 +177,7 @@ static void func_call_sub_dial_exit(void)
     func_cb.last = FUNC_CALL_SUB_DIAL;
 }
 
-//计算前八位的数字显示。
-u32 func_calculate_number(u8 cnt, u8 *data)
-{
-    if(cnt == 8)
-    {
-        return data[0]*10000000+data[1]*1000000+data[2]*100000+data[3]*10000+data[4]*1000+data[5]*100+data[6]*10+data[7]*1;
-    }
-    else if(cnt == 7)
-    {
-        return data[0]*1000000+data[1]*100000+data[2]*10000+data[3]*1000+data[4]*100+data[5]*10+data[6]*1;
-    }
-    else if(cnt == 6)
-    {
-        return data[0]*100000+data[1]*10000+data[2]*1000+data[3]*100+data[4]*10+data[5]*1;
-    }
-    else if(cnt == 5)
-    {
-        return data[0]*10000+data[1]*1000+data[2]*100+data[3]*10+data[4]*1;
-    }
-    else if(cnt == 4)
-    {
-        return data[0]*1000+data[1]*100+data[2]*10+data[3]*1;
-    }
-    else if(cnt == 3)
-    {
-        return data[0]*100+data[1]*10+data[2]*1;
-    }
-    else if(cnt == 2)
-    {
-        return data[0]*10+data[1]*1;
-    }
-    else if(cnt == 1)
-    {
-        return data[0]*1;
-    }
-    return 0;
-}
-
+///单击
 static void func_call_sub_dial_button_click(void)
 {
     int id = compo_get_button_id();
@@ -233,7 +196,7 @@ static void func_call_sub_dial_button_click(void)
             compo_textbox_set_visible(txt, false);
             if(call->phone_number_cnt < 11)
             {
-                call->phone_number[call->phone_number_cnt++] = id - 1;
+                call->phone_number[call->phone_number_cnt++] = id+0x30 - 1;
             }
             break;
 
@@ -241,7 +204,7 @@ static void func_call_sub_dial_button_click(void)
             memset(sys_cb.outgoing_number, 0, 16);
             for(int i=0; i<call->phone_number_cnt; i++)
             {
-                sys_cb.outgoing_number[i] = call->phone_number[i] + 0x30;
+                sys_cb.outgoing_number[i] = call->phone_number[i];
             }
 #if MODEM_CAT1_EN
             if (bsp_modem_get_init_flag())
@@ -259,7 +222,7 @@ static void func_call_sub_dial_button_click(void)
             compo_textbox_set_visible(txt, false);
             if(call->phone_number_cnt > 0)
             {
-                call->phone_number_cnt--;
+                call->phone_number[--call->phone_number_cnt] = '\0';
             }
             break;
 
@@ -268,59 +231,58 @@ static void func_call_sub_dial_button_click(void)
     }
 
     memset(buf, 0, sizeof(buf));
-    if(call->phone_number_cnt == 1)
+    if(call->phone_number_cnt)
     {
-        snprintf(buf, sizeof(buf), "%d", call->phone_number[0]);
-    }
-    else if(call->phone_number_cnt == 2)
-    {
-        snprintf(buf, sizeof(buf), "%d%d", call->phone_number[0], call->phone_number[1]);
-    }
-    else if(call->phone_number_cnt == 3)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2]);
-    }
-    else if(call->phone_number_cnt == 4)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2], call->phone_number[3]);
-    }
-    else if(call->phone_number_cnt == 5)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2], call->phone_number[3], call->phone_number[4]);
-    }
-    else if(call->phone_number_cnt == 6)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2], call->phone_number[3], call->phone_number[4], call->phone_number[5]);
-    }
-    else if(call->phone_number_cnt == 7)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d%d%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2], call->phone_number[3],
-                 call->phone_number[4], call->phone_number[5], call->phone_number[6]);
-    }
-    else if(call->phone_number_cnt == 8)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d%d%d%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2], call->phone_number[3],
-                 call->phone_number[4], call->phone_number[5], call->phone_number[6], call->phone_number[7]);
-    }
-    else if(call->phone_number_cnt == 9)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d%d%d%d%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2], call->phone_number[3],
-                 call->phone_number[4], call->phone_number[5], call->phone_number[6], call->phone_number[7], call->phone_number[8]);
-    }
-    else if(call->phone_number_cnt == 10)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d%d%d%d%d%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2], call->phone_number[3],
-                 call->phone_number[4], call->phone_number[5], call->phone_number[6], call->phone_number[7], call->phone_number[8], call->phone_number[9]);
-    }
-    else if(call->phone_number_cnt == 11)
-    {
-        snprintf(buf, sizeof(buf), "%d%d%d%d%d%d%d%d%d%d%d", call->phone_number[0], call->phone_number[1], call->phone_number[2], call->phone_number[3],
-                 call->phone_number[4], call->phone_number[5], call->phone_number[6], call->phone_number[7], call->phone_number[8], call->phone_number[9], call->phone_number[10]);
-    }
-    else
-    {
+        snprintf(buf, sizeof(buf), "%s", call->phone_number);
     }
     compo_textbox_set(txt_num, buf);
+}
+
+///长按处理
+static void func_call_sub_dial_button_long(void)
+{
+    int id = compo_get_button_id();
+    //获取文本组件的地址
+    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_PIC_NUM);
+
+    //获取数字组件地址
+    char buf[34];
+    compo_textbox_t *txt_num = compo_getobj_byid(COMPO_ID_NUM_DISP_ZERO);
+
+    f_call_sub_dial_t *call = (f_call_sub_dial_t *)func_cb.f_cb;
+
+    switch (id)
+    {
+        case COMPO_ID_BTN_NUM7:
+            compo_textbox_set_visible(txt, false);
+            if(call->phone_number_cnt < 11)
+            {
+                call->phone_number[call->phone_number_cnt++] = '*';
+            }
+            break;
+        case COMPO_ID_BTN_NUM9:
+            compo_textbox_set_visible(txt, false);
+            if(call->phone_number_cnt < 11)
+            {
+                call->phone_number[call->phone_number_cnt++] = '#';
+            }
+            break;
+        case COMPO_ID_BTN_NUM0:
+            compo_textbox_set_visible(txt, false);
+            if(call->phone_number_cnt < 11)
+            {
+                call->phone_number[call->phone_number_cnt++] = '+';
+            }
+            break;
+    }
+
+    memset(buf, 0, sizeof(buf));
+    if(call->phone_number_cnt)
+    {
+        snprintf(buf, sizeof(buf), "%s", call->phone_number);
+    }
+    compo_textbox_set(txt_num, buf);
+
 }
 
 //电话消息处理
@@ -332,7 +294,9 @@ static void func_call_sub_dial_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_call_sub_dial_button_click();
             break;
-
+        case MSG_CTP_LONG:
+            func_call_sub_dial_button_long();
+            break;
 
         case MSG_QDEC_FORWARD:
         case MSG_QDEC_BACKWARD:

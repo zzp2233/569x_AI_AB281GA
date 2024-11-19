@@ -121,12 +121,18 @@ compo_form_t *func_alarm_clock_form_create(void)
             }
             else
             {
-                snprintf(str_buff, sizeof(str_buff), i18n[STR_REPEAT]);
+                snprintf(str_buff, sizeof(str_buff), i18n[STR_WEEK]);
                 char *buff_pt = str_buff + strlen(str_buff);
                 for (u8 j=0; j<7; j++)
                 {
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {
+                        if(j!=0)
+                        {
+                            *buff_pt = ',';
+                            buff_pt++;
+                        }
+
                         *buff_pt = '0' + j + 1;
                         buff_pt++;
                     }

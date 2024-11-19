@@ -24,6 +24,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_findphone.h"
 #include "ute_module_liftwrist.h"
+#include "ute_drv_temperature_common.h"
 
 #if 0
 #include "ute_drv_keys_common.h"
@@ -206,6 +207,9 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #if UTE_MODULE_TEMPERATURE_SUPPORT
         uteModuleTemperatureInit();
+#elif UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+        uteDrvTemperatureCommonInit();
+        uteDrvTemperatureCommonPowerOff();
 #else
         //uteModuleTemperatureIoInit();
 #endif

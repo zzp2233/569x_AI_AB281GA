@@ -80,6 +80,8 @@
 			<Add directory="../../../ute/language/defaultLanguage" />
 			<Add directory="../../../ute/module/findphone" />
 			<Add directory="../../../ute/module/liftwrist" />
+			<Add directory="../../../ute/drv/temperature" />
+			<Add directory="../../../ute/module/temperature" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -140,6 +142,14 @@
 		<Unit filename="../../../ute/drv/screen/ute_drv_screen_common.h" />
 		<Unit filename="../../../ute/drv/screen/ute_drv_tft_s240x284_i18_st7789p3_xhl183ba2401.h" />
 		<Unit filename="../../../ute/drv/screen/ute_drv_tft_s240x284_nv3030b_hy201068avc.h" />
+		<Unit filename="../../../ute/drv/temperature/ute_drv_temperature_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/temperature/ute_drv_temperature_common.h" />
+		<Unit filename="../../../ute/drv/temperature/ute_drv_temperature_infrared_thermistor.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/temperature/ute_drv_temperature_infrared_thermistor.h" />
 		<Unit filename="../../../ute/flashmap/ute_flash_64mbit_1024k_map.h" />
 		<Unit filename="../../../ute/flashmap/ute_flash_map_common.h" />
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language.h" />
@@ -233,6 +243,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/systemtime/ute_module_systemtime.h" />
+		<Unit filename="../../../ute/module/temperature/ute_module_temperature.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/temperature/ute_module_temperature.h" />
 		<Unit filename="../../../ute/module/weather/ute_module_weather.c">
 			<Option compilerVar="CC" />
 		</Unit>

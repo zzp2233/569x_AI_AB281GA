@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-19 11:08:41
+*@date   2024-11-19 15:39:50
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -263,6 +263,10 @@ enum
     STR_CONTACTS, // 通讯录
     STR_ENTER_NUMBER, // 请输入电话号码！
     STR_WEEK, // 星期:
+    STR_VOICE_SPEAKER, // 请说话...
+    STR_VOICE_BT_NOT_CONNECT, // 蓝牙未连接
+    STR_VOICE_SIRI_START, // 点击屏幕开启SIRI
+    STR_ADDRESS_BOOK_SYNC, // 请使用APP同步联系人！！
 };
 
 extern const char * const *i18n;

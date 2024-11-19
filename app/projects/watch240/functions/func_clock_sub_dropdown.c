@@ -67,23 +67,26 @@ static void func_clock_sub_dropdown_battery_pic_update(void)
     compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
     switch(sys_cb.vbat_percent)
     {
-        case 1 ... 16:
-            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER1_BIN);
+        case 0 ... 14:
+            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_BATTERY_0_BIN);
             break;
-        case 17 ... 32:
-            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER2_BIN);
+        case 15 ... 29:
+            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_BATTERY_1_BIN);
             break;
-        case 33 ... 48:
-            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER3_BIN);
+        case 30 ... 44:
+            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_BATTERY_2_BIN);
             break;
-        case 49 ... 64:
-            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER4_BIN);
+        case 45 ... 59:
+            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_BATTERY_3_BIN);
             break;
-        case 65 ... 80:
-            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER5_BIN);
+        case 60 ... 74:
+            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_BATTERY_4_BIN);
             break;
-        case 81 ... 100:
-            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER6_BIN);
+        case 75 ... 84:
+            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_BATTERY_5_BIN);
+            break;
+        case 85 ... 100:
+            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_BATTERY_6_BIN);
             break;
         default:
             compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER6_BIN);
@@ -155,13 +158,18 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 static void func_clock_sub_dropdown_disturb_pic_update(void)
 {
     compo_button_t *disturb_pic = compo_getobj_byid(COMPO_ID_BTN_DISCURD);
+
     if(dropdown_disturb_sw)
     {
+        sys_cb.disturd_adl = true;
         compo_button_set_bgimg(disturb_pic, UI_BUF_CLOCK_DOWN_MENU_DND_ON_BIN);
+        uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
     }
     else
     {
+        sys_cb.disturd_adl = false;
         compo_button_set_bgimg(disturb_pic, UI_BUF_CLOCK_DOWN_MENU_DND_OFF_BIN);
+        uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
     }
 
 }
@@ -234,7 +242,7 @@ static void func_clock_sub_dropdown_form_create(void)
     }
 
     //电池
-    compo_picturebox_t *battery_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_POWER1_BIN);
+    compo_picturebox_t *battery_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BATTERY_0_BIN);
     compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
     compo_picturebox_set_pos(battery_pic, GUI_SCREEN_CENTER_X*1.6, GUI_SCREEN_CENTER_Y/8);
     compo_picturebox_set_visible(battery_pic, true);
@@ -242,14 +250,14 @@ static void func_clock_sub_dropdown_form_create(void)
     //蓝牙状态
     compo_picturebox_t *bluetooth_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/3.5, GUI_SCREEN_CENTER_Y/8);
+    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/3.2, GUI_SCREEN_CENTER_Y/8);
 //    compo_picturebox_set(bluetooth_pic, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_ON_BIN);
     compo_picturebox_set(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BT_ICON_OFF_BIN);
 //    compo_picturebox_set_visible(bluetooth_pic, true);
 
     bluetooth_pic = compo_picturebox_create(frm, UI_BUF_DROPDOWN_BLUETOOTH_CONNECT_OFF_BIN);
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BTETOOTH_STA_PIC);
-    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/1.9, GUI_SCREEN_CENTER_Y/8);
+    compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_CENTER_X/1.7, GUI_SCREEN_CENTER_Y/8);
     compo_picturebox_set(bluetooth_pic, UI_BUF_CLOCK_DOWN_MENU_BLE_ICON_OFF_BIN);
 //    compo_picturebox_set_visible(bluetooth_pic, true);
 
@@ -453,6 +461,15 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
 //时钟表盘下拉菜单进入处理
 static void func_clock_sub_dropdown_enter(void)
 {
+    if(uteModuleNotDisturbGetOpenStatus() == true)
+    {
+        dropdown_disturb_sw = 1;
+    }
+    else
+    {
+        dropdown_disturb_sw = 0;
+    }
+
     func_clock_butterfly_set_light_visible(false);
     func_clock_sub_dropdown_form_create();
     if (!func_switching(FUNC_SWITCH_MENU_DROPDOWN_DOWN, NULL))

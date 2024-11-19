@@ -255,6 +255,7 @@ static void func_menu_sub_football_enter(void)
 void func_menu_sub_football(void)
 {
     printf("%s\n", __func__);
+    printf("w:%d  h%d\n",gui_image_get_size(UI_BUF_ICON_FOOTBALL_STYLE_BIN).wid,gui_image_get_size(UI_BUF_ICON_FOOTBALL_STYLE_BIN).hei);
     func_menu_sub_football_enter();
     while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_FOOTBALL)
     {

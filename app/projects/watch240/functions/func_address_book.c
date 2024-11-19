@@ -127,7 +127,7 @@ compo_form_t *func_address_book_form_create(void)
     compo_textbox_t* txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH / 2, widget_text_get_height());
     compo_textbox_set_visible(txt, false);
-    compo_textbox_set(txt, "请使用APP同步联系人！！");
+    compo_textbox_set(txt, i18n[STR_ADDRESS_BOOK_SYNC]);
     compo_setid(txt, COMPO_ID_COVER_TXT);
 
     //新建列表

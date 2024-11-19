@@ -392,13 +392,13 @@
 
 #define CHARGE_VOL_DYNAMIC_DET          1                               //是否打开充电时候，动态检测电池电压功能；打开后，充5s停10ms
 //充电辅助设置项
-#define CHARGE_USER_NTC_EN              0                               //充电是否使用NTC参数
+#define CHARGE_USER_NTC_EN              UTE_DRV_BATTERY_CE_AUTH_SUPPORT //充电是否使用NTC参数
 #define CHARGE_VBAT_REFILL              (UTE_DRV_BATTERY_MAX_VOLTAGE - 100) //充满后停止充电，电池掉到指定电压后续充
 
-#define CHARGE_NTC_ADC_MAX_TEMP         53                            //设置最小温度 摄氏度      53
-#define CHARGE_NTC_ADC_MAX_RE_TEMP      48                            //设置恢复温度 摄氏度     48
-#define CHARGE_NTC_ADC_MIN_TEMP         0                             //设置最高温度 摄氏度0
-#define CHARGE_NTC_ADC_MIN_RE_TEMP      5                             //设置恢复温度 摄氏度5
+#define CHARGE_NTC_ADC_MAX_TEMP         UTE_DRV_BATTERY_CE_AUTH_NOT_ALLOW_TEMPERATURE  //设置最小温度 摄氏度      53
+#define CHARGE_NTC_ADC_MAX_RE_TEMP      UTE_DRV_BATTERY_CE_AUTH_ALLOW_TEMPERATURE  //设置恢复温度 摄氏度     48
+#define CHARGE_NTC_ADC_MIN_TEMP         UTE_DRV_BATTERY_CE_AUTH_NOT_ALLOW_LOW_TEMPERATURE  //设置最高温度 摄氏度0
+#define CHARGE_NTC_ADC_MIN_RE_TEMP      UTE_DRV_BATTERY_CE_AUTH_ALLOW_LOW_TEMPERATURE  //设置恢复温度 摄氏度5
 /*****************************************************************************
  * Module    : 硬件I2C配置
  *****************************************************************************/

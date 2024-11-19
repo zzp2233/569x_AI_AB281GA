@@ -199,7 +199,6 @@ compo_form_t *func_set_sub_disturd_form_create(void)
             btn = compo_button_create(frm);
             compo_setid(btn, tbl_disturd_disp_btn_item[idx_btn].btn_id);
             compo_button_set_location(btn, tbl_disturd_disp_btn_item[idx_btn].x, tbl_disturd_disp_btn_item[idx_btn].y, tbl_disturd_disp_btn_item[idx_btn].h, tbl_disturd_disp_btn_item[idx_btn].l);
-
         }
     }
 
@@ -305,6 +304,36 @@ static void func_set_sub_disturd_process(void)
     compo_picturebox_t *pic_tim_on  = compo_getobj_byid(COMPO_ID_PIC_TIM_ON);
     compo_picturebox_t *pic_adl_off = compo_getobj_byid(COMPO_ID_PIC_ADL_OFF);
     compo_picturebox_t *pic_tim_off = compo_getobj_byid(COMPO_ID_PIC_TIM_OFF);
+
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    if(quick.isNotDisturb)
+    {
+        if(uteModuleNotDisturbIsOpenScheduled())
+        {
+            sys_cb.disturd_adl = 0;
+            sys_cb.disturd_tim = 1;
+        }
+        else
+        {
+            sys_cb.disturd_adl = 1;
+            sys_cb.disturd_tim = 0;
+        }
+    }
+    else
+    {
+        if(uteModuleNotDisturbIsOpenScheduled())
+        {
+            sys_cb.disturd_tim = 1;
+        }
+        else
+        {
+            sys_cb.disturd_tim = 0;
+        }
+        sys_cb.disturd_adl = 0;
+    }
+    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
+    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
 
     //获取图像组件的地址
     //获取文本组件的地址
@@ -440,6 +469,8 @@ static void func_disturd_button_click(void)
                     uteModuleNotDisturbAllDaySwitch();
                 }
             }
+            uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
+            //s printf("wr:%d\n",uteModuleNotDisturbGetOpenStatus());
             break;
 
         case COMPO_ID_BIN_TIMING_ON:

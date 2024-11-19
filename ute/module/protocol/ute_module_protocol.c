@@ -483,7 +483,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 #ifdef SCREEN_TITLE_MULTIPLE_HEBREW_LANGUAGE_SUPPORT
         response[17] |= SCREEN_TITLE_MULTIPLE_HEBREW_LANGUAGE_SUPPORT<<7;
 #endif
-#if SCREEN_TITLE_MULTIPLE_SLOVAK_LANGUAGE_SUPPORT//斯洛伐克语 0x19  
+#if SCREEN_TITLE_MULTIPLE_SLOVAK_LANGUAGE_SUPPORT//斯洛伐克语 0x19 
         response[16] |= SCREEN_TITLE_MULTIPLE_SLOVAK_LANGUAGE_SUPPORT << 0;
 #endif
 #if SCREEN_TITLE_MULTIPLE_HUNGARIAN_LANGUAGE_SUPPORT//匈牙利语 0x1a
@@ -1743,6 +1743,66 @@ void uteModuleProtocolSleepReadHistoryData(uint8_t*receive,uint8_t length)
     }
 #endif
 }
+
+#if UTE_MODULE_TEMPERATURE_SUPPORT
+/**
+*@brief       体温相关协议控制指令
+*@details
+*@param[in] uint8_t *receive
+*@param[in] uint8_t length
+*@author       casen
+*@date       2021-12-03
+*/
+void uteModuleProtocolTemperatureCtrl(uint8_t*receive,uint8_t length)
+{
+    if(receive[1]==0x01)
+    {
+        uteModuleTemperatureStartTesting(TEMPERATURE_MODE_APP_SINGLE);
+        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TEMPERATURE_ID);
+    }
+    else if(receive[1]==0x03)/*! 自动测试开关+测试间隔 zn.zeng, 2021-12-03  */
+    {
+        uint32_t second = (receive[3]<<8|receive[4])*60;
+        uteModuleTemperatureSetAutoTestInterval(receive[2],second);
+        uteModuleProfileBleSendToPhone(&receive[0],4);
+    }
+    else if(receive[1]==0x04)//设置自动测试时间段
+    {
+        uint32_t startSecond = receive[3]*3600+receive[4]*60;
+        uint32_t stopSecond = receive[5]*3600+receive[6]*60;
+        uteModuleTemperatureSetAutoTestLimitTime(receive[2],startSecond,stopSecond);
+        uteModuleProfileBleSendToPhone(&receive[0],7);
+    }
+    else if(receive[1]==0x05)//删除历史数据
+    {
+        uteModuleTemperatureDelHistoryData();
+        uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
+    }
+    else if(receive[1]==0x06)//设置警告参数
+    {
+        uint16_t height = (receive[3]<<8|receive[4]);
+        uint16_t low = (receive[5]<<8|receive[6]);
+        uteModuleTemperatureSetWarningParam(receive[2],low,height);
+        uteModuleProfileBleSendToPhone(&receive[0],7);
+    }
+    else if(receive[1]==0xfa)//读取历史数据
+    {
+        ute_module_systemtime_time_t time;
+        memset(&time,0,sizeof(ute_module_systemtime_time_t));
+        if(length>2)
+        {
+            time.year = receive[2]<<8|receive[3];
+            time.month = receive[4];
+            time.day = receive[5];
+            time.hour = receive[6];
+            time.min = receive[7];
+            time.sec = receive[8];
+        }
+        uteModuleTemperatureStartSendHistoryData(time);
+    }
+}
+#endif
+
 /**
 *@brief       多运动控制指令
 *@details

@@ -202,7 +202,9 @@ typedef struct
     bool music_title_init;
     bool music_artist_init;
 
-    u8 set_sleep_time_id;
+    u8 set_sleep_time_id;//熄屏时常id
+
+    char pbap_result_Name[50];//存放来电与接听联系人名字
 
 } sys_cb_t;
 extern sys_cb_t sys_cb;

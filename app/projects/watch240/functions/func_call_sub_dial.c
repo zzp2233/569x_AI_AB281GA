@@ -71,7 +71,6 @@ typedef struct f_call_sub_dial_t_
 //打电话页面
 compo_form_t *func_call_sub_dial_form_create(void)
 {
-
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
@@ -201,6 +200,7 @@ static void func_call_sub_dial_button_click(void)
             break;
 
         case COMPO_ID_BTN_CALL:
+            bt_pbap_lookup_number(call->phone_number);
             memset(sys_cb.outgoing_number, 0, 16);
             for(int i=0; i<call->phone_number_cnt; i++)
             {

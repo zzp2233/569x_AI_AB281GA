@@ -23,6 +23,8 @@
 #include "ute_module_sleep.h"
 #include "ute_module_sport.h"
 #include "ute_module_findphone.h"
+#include "ute_module_liftwrist.h"
+#include "ute_drv_temperature_common.h"
 
 #if 0
 #include "ute_drv_keys_common.h"
@@ -74,7 +76,6 @@
 #if UTE_MODULE_SHIP_MODE_SUPPORT
 #include "ute_module_ship_mode.h"
 #endif
-#include "ute_module_liftwrist.h"
 #if UTE_MODULE_LOCK_WATCH_DIAL_SUPPORT
 #include "ute_module_lockWatchDial.h"
 #endif
@@ -206,6 +207,9 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #if UTE_MODULE_TEMPERATURE_SUPPORT
         uteModuleTemperatureInit();
+#elif UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+        uteDrvTemperatureCommonInit();
+        uteDrvTemperatureCommonPowerOff();
 #else
         //uteModuleTemperatureIoInit();
 #endif
@@ -258,7 +262,7 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_DRINK_WATER_NOTIFY_SCREEN_SUPPORT
         //uteModuleDrinkWaterInit();
 #endif
-        //uteModuleLiftWristInit();
+        uteModuleLiftWristInit();
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
         uteModuleSportMoreSportsTargetInit();
 #endif

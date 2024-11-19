@@ -13,6 +13,7 @@
 #include "ute_drv_motor.h"
 #include "ute_module_gui_common.h"
 #include "ute_module_sport.h"
+#include "ute_module_liftwrist.h"
 
 /* NotDisturb 互斥量 zn.zeng 2022-02-14*/
 void *uteModuleNotDisturbMute;
@@ -490,5 +491,77 @@ uint8_t uteModuleNotDisturbGetOpenStatus(void)
 {
     return uteModuleNotDisturbOpenStatus;
 }
-#endif
 
+/**
+*@brief        定时勿扰开关
+*@details
+*@author       raymond
+*@date       2022-03-01
+*/
+void uteModuleNotDisturbScheduledSwitch(void)
+{
+    bool isopen = false;
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isNotDisturb=%d,IsOpenScheduled=%d",__func__,quick.isNotDisturb,uteModuleNotDisturbIsOpenScheduled());
+    if (!uteModuleNotDisturbIsOpenScheduled())
+    {
+        isopen = true;
+        uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_SCHEDULED_OPEN);
+        if (quick.isNotDisturb)
+        {
+            quick.isNotDisturb = false;
+            uteApplicationCommonSetQuickSwitchStatus(&quick);
+        }
+    }
+    else
+    {
+        uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_CLOSE);
+    }
+    uteModuleNotDisturbSetScheduled(isopen);
+}
+
+/**
+*@brief        勿扰全天开关
+*@details
+*@author       raymond
+*@date       2022-03-01
+*/
+void uteModuleNotDisturbAllDaySwitch(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isNotDisturb=%d",__func__,quick.isNotDisturb);
+    quick.isNotDisturb = !quick.isNotDisturb;
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    if (quick.isNotDisturb)
+    {
+        uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_ALLDAY_OPEN);
+        uteModuleLiftWristRecordOpenStatus();
+        if (uteModuleLiftWristGetOldOpenStatus())
+        {
+            uteModuleLiftWristSetOpenStatus(false);
+        }
+        else if (uteModuleLiftWristGetOldScheduledOpenStatus())
+        {
+            uteModuleLiftWristSetScheduled(false);
+        }
+        if (uteModuleNotDisturbIsOpenScheduled())
+        {
+            uteModuleNotDisturbSetScheduled(false);
+        }
+    }
+    else
+    {
+        uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_CLOSE);
+        if (uteModuleLiftWristGetOldOpenStatus())
+        {
+            uteModuleLiftWristSetOpenStatus(true);
+        }
+        else if (uteModuleLiftWristGetOldScheduledOpenStatus())
+        {
+            uteModuleLiftWristSetScheduled(true);
+        }
+    }
+}
+#endif

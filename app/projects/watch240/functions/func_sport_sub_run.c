@@ -546,21 +546,21 @@ static void func_sport_sub_run_click_handler(void)
         {
             const char* msg = NULL;
             //退出按钮
-            if (uteModuleSportMoreSportIsAppStart())   //多运动是手机端开启的
+//            if (uteModuleSportMoreSportIsAppStart())   //多运动是手机端开启的
+//            {
+            if (uteModuleSportMoreSportsIsLessData())
             {
-                if (uteModuleSportMoreSportsIsLessData())
-                {
-                    msg = i18n[STR_SPORT_EXIT_MSG2];
-                }
-                else
-                {
-                    msg = i18n[STR_SPORT_EXIT_MSG1];
-                }
+                msg = i18n[STR_SPORT_EXIT_MSG2];
             }
             else
             {
-                msg = i18n[STR_SPORT_EXIT_MSG3];
+                msg = i18n[STR_SPORT_EXIT_MSG1];
             }
+//            }
+//            else
+//            {
+//                msg = i18n[STR_SPORT_EXIT_MSG3];
+//            }
             int res = msgbox((char*)msg, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, 0);
             if (res == MSGBOX_RES_OK)
             {
@@ -571,6 +571,10 @@ static void func_sport_sub_run_click_handler(void)
 //                    task_stack_pop();
 //                    func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
 //                }
+                if (uteModuleSportMoreSportsIsLessData())
+                {
+
+                }
             }
             else if (res == MSGBOX_RES_CANCEL)
             {
@@ -646,8 +650,8 @@ static void func_sport_sub_run_enter(void)
     }
     else
     {
-        uteModuleSportSetCountZeroIndex(0);
         uteModuleSportStartMoreSports(func_sport_get_current_idx()+1, 1, 0);
+        uteModuleSportSetCountZeroIndex(0);
         TRACE("【本地】开始运动:%d\n",func_sport_get_current_idx()+1);
     }
 }

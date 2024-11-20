@@ -134,6 +134,11 @@ enum
 
     FUNC_MAX_NUM,           //用于计数
     FUNC_BLE_CALL,
+
+
+    FUNC_TEST_MODE,      ///*出厂测试模式选择*/
+    FUNC_FACTORY_TESTING,///*工厂测试*/
+
 };
 
 //task control block

@@ -147,6 +147,9 @@ static void func_set_sub_about_message(size_msg_t msg)
 //        case MSG_CTP_SHORT_DOWN:
 //            slp->flag_drag = true;
 
+        case MSG_CTP_LONG:
+            func_switch_to(FUNC_TEST_MODE, NULL);
+            break;
         case KU_DELAY_BACK:
             break;
 

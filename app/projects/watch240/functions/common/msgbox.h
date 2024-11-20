@@ -1,17 +1,20 @@
 #ifndef _MSGBOX_H
 #define _MSGBOX_H
 
-enum {
+enum
+{
     MSGBOX_MODE_BTN_NONE,
     MSGBOX_MODE_BTN_OK,
     MSGBOX_MODE_BTN_OKCANCEL,
     MSGBOX_MODE_BTN_YESNO,
     MSGBOX_MODE_BTN_DELETE, //消息推送删除按键
     MSGBOX_MODE_BTN_REMIND_LATER_CLOSE,   //稍后提醒,关闭
+    MSGBOX_MODE_BTN_FACTORR,//出厂测试
 };
 
 //msgbox返回值
-enum {
+enum
+{
     MSGBOX_RES_NONE,
     MSGBOX_RES_OK,          //确定
     MSGBOX_RES_CANCEL,      //取消
@@ -26,7 +29,8 @@ enum {
 
 };
 
-enum {
+enum
+{
     MSGBOX_MSG_TYPE_NONE,
     MSGBOX_MSG_TYPE_DETAIL,   //详细消息显示弹窗
     MSGBOX_MSG_TYPE_BRIEF,    //简略消息显示弹窗

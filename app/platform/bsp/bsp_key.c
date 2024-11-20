@@ -407,7 +407,7 @@ void key_init(void)
     saradc_set_channel(BIT(ADCCH_BGOP) | BIT(VBAT2_ADCCH));
 #endif
 
-#if USER_KEY_QDEC_EN || USER_ADKEY_QDEC_EN
+#if USER_KEY_QDEC_EN || USER_ADKEY_QDEC_EN || USER_IO_QEDC_EN
     bsp_qdec_init();                            //旋转编码器初始化
 #endif
 

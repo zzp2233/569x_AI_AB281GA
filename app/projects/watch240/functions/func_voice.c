@@ -51,7 +51,7 @@ compo_form_t *func_voice_form_create(void)
     compo_animation_set_roll(animation, UI_BUF_VOICE_320_86_BIN);
 
     //创建TEXT
-    compo_textbox_t* txt = compo_textbox_create(frm, 50);
+    compo_textbox_t* txt = compo_textbox_create(frm, MAX(MAX(strlen(i18n[STR_VOICE_SIRI_START]), strlen(i18n[STR_VOICE_BT_NOT_CONNECT])), strlen(i18n[STR_VOICE_SPEAKER])));
     compo_textbox_set_font(txt, 0);
     compo_textbox_set_align_center(txt, true);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*4/5, GUI_SCREEN_WIDTH/2+5, widget_text_get_height());

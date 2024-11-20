@@ -28,7 +28,9 @@ extern u32 __bss_start, __bss_end, __bss_size;
 
 void sd_detect(void);
 void tbox_uart_isr(void);
-
+#if USER_IO_QEDC_EN
+void bsp_qdec_io_process(void);
+#endif
 static u8 heap_func[HEAP_FUNC_SIZE] AT(.heap.func);
 
 #if TRACE_EN
@@ -243,7 +245,9 @@ void usr_tmr1ms_isr(void)
 #endif // LED_DISP_EN
 
     bsp_saradc_tmr1ms_process();
-
+#if USER_IO_QEDC_EN
+    bsp_qdec_io_process();
+#endif
     plugin_tmr1ms_isr();
 }
 

@@ -5,6 +5,7 @@
 enum
 {
     COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
+    COMPO_ID_TXT_NAME,
     COMPO_ID_BTN_ANSWER,
     COMPO_ID_BTN_REJECT,
 };
@@ -31,15 +32,22 @@ compo_form_t *func_bt_ring_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
 
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_autosize(name_txt, true);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+//    compo_textbox_set(name_txt, "中国移动");
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //接听

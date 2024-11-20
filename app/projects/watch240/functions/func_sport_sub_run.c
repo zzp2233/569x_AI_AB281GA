@@ -458,7 +458,7 @@ static void func_sport_sub_run_updata(void)
             compo_textbox_t* txt_kcal_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_KCAL);
             area_t rel_text_area = widget_text_get_area(txt_kcal->txt);
             compo_textbox_set_location(txt_kcal_unit, sport_sub_run_text[2].x + rel_text_area.wid + 10, sport_sub_run_text[2].y+8, 0, 0);
-            compo_textbox_set(txt_kcal_unit, "KCAL");
+            compo_textbox_set(txt_kcal_unit, i18n[STR_SET_CALORIE]);
 
             //更新计步
 //            if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
@@ -476,7 +476,7 @@ static void func_sport_sub_run_updata(void)
             compo_textbox_t* txt_step_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_STEP);
             rel_text_area = widget_text_get_area(txt_step->txt);
             compo_textbox_set_location(txt_step_unit, sport_sub_run_text[3].x + rel_text_area.wid + 10, sport_sub_run_text[3].y+8, 0, 0);
-            compo_textbox_set(txt_step_unit, "STEP");
+            compo_textbox_set(txt_step_unit, i18n[STR_SET_STEP_COUNT]);
 
             //更新距离
 //            if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
@@ -495,7 +495,7 @@ static void func_sport_sub_run_updata(void)
             compo_textbox_t* txt_km_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_KM);
             rel_text_area = widget_text_get_area(txt_km->txt);
             compo_textbox_set_location(txt_km_unit, sport_sub_run_text[4].x + rel_text_area.wid + 10, sport_sub_run_text[4].y+8, 0, 0);
-            compo_textbox_set(txt_km_unit, "KM");
+            compo_textbox_set(txt_km_unit, i18n[STR_SET_DISTANCE]);
 
 #if USE_GOAL_ARC
             //更新圆弧

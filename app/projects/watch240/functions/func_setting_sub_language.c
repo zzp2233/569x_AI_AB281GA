@@ -49,7 +49,7 @@ compo_form_t *func_set_sub_language_form_create(void)
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    compo_listbox_set_item_text(listbox, 120, 40, GUI_SCREEN_WIDTH, 40, true);
+    compo_listbox_set_item_text(listbox, GUI_SCREEN_CENTER_X, 30, GUI_SCREEN_WIDTH, 40, true);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
 

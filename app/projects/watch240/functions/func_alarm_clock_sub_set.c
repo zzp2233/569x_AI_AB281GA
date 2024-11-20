@@ -30,6 +30,9 @@
 #define ALARM_GET_SWITCH(idx)           0
 #endif
 
+static void func_alarm_clock_sub_set_enter(void);
+static void func_alarm_clock_sub_set_exit(void);
+
 //组件ID
 enum
 {
@@ -57,6 +60,9 @@ enum
     COMPO_ID_NUM_ACLOCK_SET_MIN,
     COMPO_ID_NUM_ACLOCK_SET_MIN_DOWN,
     COMPO_ID_NUM_ACLOCK_SET_MIN_DD,
+
+    //AM PM 文本
+    COMPO_ID_TXT_AM_PM,
 };
 
 typedef struct aclock_set_num_item_t_
@@ -78,6 +84,8 @@ typedef struct f_alarm_clock_sub_set_t_
     u16 num_height;
     s16 hcnt;
     s16 mcnt;
+
+    bool time_scale;
 } f_alarm_clock_sub_set_t;
 
 #define ACLOCK_SET_NUM_ITEM_CNT             ((int)(sizeof(tbl_aclock_set_num_item) / sizeof(tbl_aclock_set_num_item[0])))
@@ -94,6 +102,8 @@ typedef struct f_alarm_clock_sub_set_t_
 
 #define ALARM_CLOCK_FOCUS_ITEM_FONT         UI_BUF_0FONT_FONT_NUM_24_BIN
 #define ALARM_CLOCK_ITEM_FONT               UI_BUF_0FONT_FONT_BIN
+
+#define ALARM_OFS_X                         20
 
 //搞个数字item，创建时遍历一下
 static const aclock_set_num_item_t tbl_aclock_set_num_item[] =
@@ -113,9 +123,66 @@ static const aclock_set_num_item_t tbl_aclock_set_num_item[] =
 
 };
 
-//获取闹钟 时分 上一个和下一个的数字
-static u8 func_alarm_clock_get_time_cal(s8 num, bool hour_en, u8 mode)     //mode 0:返回当前hour/min，1：返回上一个hour/min，2：返回下一个hour/min
+static s16 func_alarm_get_ofs_x(void)
 {
+    if(uteModuleSystemtime12HOn())
+    {
+        return  ALARM_OFS_X;
+    }
+    return 0;
+}
+
+typedef struct func_alarm_hour_format_t_
+{
+    u8 hour;
+    u8 am_pm;
+} func_alarm_hour_format_t;
+
+static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
+{
+    u8 am_pm = (hour24 >= 12) ? 2 : 1;    //2 PM, 1 AM
+    func_alarm_hour_format_t hour12;
+    if(uteModuleSystemtime12HOn())
+    {
+        if (hour24 == 0)
+        {
+            hour12.hour = 12;
+        }
+        else if (hour24 > 12)
+        {
+            hour12.hour = hour24 - 12;
+        }
+        else
+        {
+            hour12.hour = hour24;
+        }
+        hour12.am_pm = am_pm;
+        return hour12;
+    }
+    hour12.hour = hour24;
+    hour12.am_pm = 0;
+    return hour12;
+}
+
+//获取闹钟 时分 上一个和下一个的数字
+static u8 func_alarm_clock_get_time_cal(s8 num, bool hour_en, u8 mode/*, u8 scale*/)     //mode 0:返回当前hour/min，1：返回上一个hour/min，2：返回下一个hour/min scale:输入时间制 0:24小时; 1:AM,12小时; 2:PM,12小时
+{
+
+//    //时间制统一转换到24小时
+//    if (hour_en) {
+//        if (scale) {
+//            if (scale == 2) {           //PM
+//                if (num != 12) {
+//                    num += 12;
+//                }
+//            } else if (scale == 1) {    //AM
+//                if (num == 12) {
+//                    num = 0;
+//                }
+//            }
+//        }
+//    }
+
     if (num < 0)
     {
         if (hour_en)
@@ -195,7 +262,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
 
     compo_picturebox_t *pic_bg = compo_picturebox_create(frm, UI_BUF_ALARM_CLOCK_NUM_BIN);
-    compo_picturebox_set_pos(pic_bg, ALARM_NUM_PIC_CENTER_X, ALARM_NUM_PIC_CENTER_Y);
+    compo_picturebox_set_pos(pic_bg, ALARM_NUM_PIC_CENTER_X + func_alarm_get_ofs_x(), ALARM_NUM_PIC_CENTER_Y);
 
     area_t size = gui_image_get_size(UI_BUF_ALARM_CLOCK_NUM_BIN);
 
@@ -222,31 +289,31 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_textbox_set_font(txt_num, ALARM_CLOCK_ITEM_FONT);
         compo_setid(txt_num, tbl_aclock_set_num_item[idx].num_id);
         compo_textbox_set_align_center(txt_num, true);
-        compo_textbox_set_pos(txt_num, tbl_aclock_set_num_item[idx].x, tbl_aclock_set_num_item[idx].y);
+        compo_textbox_set_pos(txt_num, tbl_aclock_set_num_item[idx].x + func_alarm_get_ofs_x(), tbl_aclock_set_num_item[idx].y);
         compo_textbox_set_visible(txt_num, tbl_aclock_set_num_item[idx].visible_en);
         compo_textbox_set_alpha(txt_num, tbl_aclock_set_num_item[idx].alpha);
 
         memset(buf, 0, sizeof(buf));
         if (tbl_aclock_set_num_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR_UU)        //上上次的时间
         {
-            snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(hour, 1, 1), 1, 1));
+            snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(hour, 1, 1), 1, 1)).hour);
         }
         else if (tbl_aclock_set_num_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR_UP)     //上次的时间
         {
-            snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(hour, 1, 1));
+            snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(hour, 1, 1)).hour);
         }
         else if (tbl_aclock_set_num_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR)      //当前时间
         {
             compo_textbox_set_font(txt_num, ALARM_CLOCK_FOCUS_ITEM_FONT);
-            snprintf(buf, sizeof(buf), "%02d", hour);
+            snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(hour).hour);
         }
         else if (tbl_aclock_set_num_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR_DOWN)     //下次时间
         {
-            snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(hour, 1, 2));
+            snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(hour, 1, 2)).hour);
         }
         else if (tbl_aclock_set_num_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR_DD)       //下下次时间
         {
-            snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(hour, 1, 2), 1, 2));
+            snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(hour, 1, 2), 1, 2)).hour);
         }
         else if (tbl_aclock_set_num_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_MIN_UU)
         {
@@ -275,11 +342,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     //画两个矩形遮挡框框外面的数字
     compo_shape_t *shape_up = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_color(shape_up, COLOR_BLACK);
-    compo_shape_set_location(shape_up, 120, 47, size.wid, 32);
+    compo_shape_set_location(shape_up, 120 + func_alarm_get_ofs_x(), 47, size.wid, 32);
 
     compo_shape_t *shape_down = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_color(shape_down, COLOR_BLACK);
-    compo_shape_set_location(shape_down, 120, 236, size.wid, 96);
+    compo_shape_set_location(shape_down, 120 + func_alarm_get_ofs_x(), 236, size.wid, 96);
 
 
     //新建按钮
@@ -303,11 +370,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
 
     btn = compo_button_create(frm);
     compo_setid(btn, COMPO_ID_BTN_ACLOCK_HOUR);
-    compo_button_set_location(btn, 71, 126, 75, 130);
+    compo_button_set_location(btn, 71 + func_alarm_get_ofs_x(), 126, 75, 130);
 
     btn = compo_button_create(frm);
     compo_setid(btn, COMPO_ID_BTN_ACLOCK_MIN);
-    compo_button_set_location(btn, 171, 126, 75, 130);
+    compo_button_set_location(btn, 171 + func_alarm_get_ofs_x(), 126, 75, 130);
 
     //新建图像
     compo_picturebox_t *pic_click;
@@ -329,6 +396,27 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_setid(pic_click, COMPO_ID_PIC_REPETAT_YES_CLICK);
         compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_YES_CLICK_BIN).hei / 2 - 10);
         compo_picturebox_set_visible(pic_click, false);
+    }
+
+    //AM PM TXT
+    compo_textbox_t* txt_am_pm = compo_textbox_create(frm, 50);
+    compo_textbox_set_font(txt_am_pm, 0);
+    compo_setid(txt_am_pm, COMPO_ID_TXT_AM_PM);
+    compo_textbox_set_location(txt_am_pm, ALARM_TXT_ITEM_H_X-40, ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*2, GUI_SCREEN_WIDTH / 6, widget_text_get_height());
+    compo_textbox_set_visible(txt_am_pm, true);
+//    compo_textbox_set_alpha(txt_am_pm, tbl_aclock_set_num_item[idx].alpha);
+    u8 am_pm = func_alarm_convert_to_12hour(hour).am_pm;
+    if (am_pm == 1)                //AM
+    {
+        compo_textbox_set(txt_am_pm, "上午");
+    }
+    else if (am_pm == 2)           //PM
+    {
+        compo_textbox_set(txt_am_pm, "下午");
+    }
+    else if (am_pm == 0)
+    {
+        compo_textbox_set_visible(txt_am_pm, false);
     }
 
     return frm;
@@ -485,7 +573,7 @@ static void alarm_clock_set_num_pos_cal(s32 dy, u8 id, bool press)
             compo_textbox_set_font(txt_num, ALARM_CLOCK_ITEM_FONT);
         }
         compo_textbox_set_align_center(txt_num, true);
-        compo_textbox_set_pos(txt_num, time_item[i].x, time_item[i].y);
+        compo_textbox_set_pos(txt_num, time_item[i].x + func_alarm_get_ofs_x(), time_item[i].y);
         compo_textbox_set_visible(txt_num, time_item[i].visible_en);
         compo_textbox_set_alpha(txt_num, time_item[i].alpha);
     }
@@ -508,6 +596,8 @@ static void func_alarm_clock_set_move_handle(u8 id)
 //    u32 tick = tick_get();
     s32 dx = 0, dy = 0;     //坐标差量
     char buf[4];
+
+    static u8 am_pm_last = 0;
 
     if (id == COMPO_ID_BTN_ACLOCK_HOUR)
     {
@@ -543,24 +633,24 @@ static void func_alarm_clock_set_move_handle(u8 id)
 //                    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_BIN);
                     if (time_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR_UU)        //上上次的时间
                     {
-                        snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(hour_disp, 1, 1), 1, 1));
+                        snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(hour_disp, 1, 1), 1, 1)).hour);
                     }
                     else if (time_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR_UP)     //上次的时间
                     {
-                        snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(hour_disp, 1, 1));
+                        snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(hour_disp, 1, 1)).hour);
                     }
                     else if (time_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR)      //当前时间
                     {
 //                        compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
-                        snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(hour_disp, 1, 0));
+                        snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(hour_disp, 1, 0)).hour);
                     }
                     else if (time_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR_DOWN)     //下次时间
                     {
-                        snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(hour_disp, 1, 2));
+                        snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(hour_disp, 1, 2)).hour);
                     }
                     else if (time_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_HOUR_DD)       //下下次时间
                     {
-                        snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(hour_disp, 1, 2), 1, 2));
+                        snprintf(buf, sizeof(buf), "%02d", func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(hour_disp, 1, 2), 1, 2)).hour);
                     }
                     compo_textbox_set(txt_num, buf);
                 }
@@ -594,6 +684,24 @@ static void func_alarm_clock_set_move_handle(u8 id)
                         snprintf(buf, sizeof(buf), "%02d", func_alarm_clock_get_time_cal(func_alarm_clock_get_time_cal(min_disp, 0, 2), 0, 2));
                     }
                     compo_textbox_set(txt_num, buf);
+                }
+            }
+        }
+
+        compo_textbox_t* am_pm_txt = compo_getobj_byid(COMPO_ID_TXT_AM_PM);
+        u8 am_pm = func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(hour_disp, 1, 0)).am_pm;
+        if (am_pm != 0 && am_pm_last != am_pm)
+        {
+            am_pm_last = am_pm;
+            if (am_pm_txt != NULL)
+            {
+                if (am_pm_last == 1)                //AM
+                {
+                    compo_textbox_set(am_pm_txt, "上午");
+                }
+                else if (am_pm_last == 2)           //PM
+                {
+                    compo_textbox_set(am_pm_txt, "下午");
                 }
             }
         }
@@ -697,13 +805,23 @@ static void func_alarm_clock_sub_set_button_click(void)
 //闹钟设置功能事件处理
 static void func_alarm_clock_sub_set_process(void)
 {
+    compo_textbox_t* txt_am_pm = compo_getobj_byid(COMPO_ID_TXT_AM_PM);
+    if (uteModuleSystemtime12HOn())
+    {
+        compo_textbox_set_visible(txt_am_pm, true);
+    }
+    else
+    {
+        compo_textbox_set_visible(txt_am_pm, false);
+    }
+
     func_process();
 }
 
 //闹钟设置功能消息处理
 static void func_alarm_clock_sub_set_message(size_msg_t msg)
 {
-
+    f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -730,6 +848,23 @@ static void func_alarm_clock_sub_set_message(size_msg_t msg)
         case MSG_QDEC_FORWARD:
             break;
 
+        case MSG_SYS_500MS:
+            if (f_alarm_set->time_scale != uteModuleSystemtime12HOn())
+            {
+                if (func_cb.frm_main != NULL)
+                {
+                    compo_form_destroy(func_cb.frm_main);
+                }
+                func_alarm_clock_sub_set_exit();
+                if (func_cb.f_cb != NULL)
+                {
+                    func_free(func_cb.f_cb);
+                    func_cb.f_cb = NULL;
+                }
+                func_alarm_clock_sub_set_enter();
+            }
+            break;
+
         default:
             func_message(msg);
             break;
@@ -748,6 +883,8 @@ static void func_alarm_clock_sub_set_enter(void)
     f_alarm_set->num_height = widget_text_get_height();
 
     func_cb.enter_tick = tick_get();
+
+    f_alarm_set->time_scale = uteModuleSystemtime12HOn();
 }
 
 //退出闹钟设置功能

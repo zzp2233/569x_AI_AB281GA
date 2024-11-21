@@ -139,7 +139,6 @@ compo_form_t *func_address_book_form_create(void)
     {
         compo_listbox_set(listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
     }
-
     compo_listbox_set_alike_icon(listbox, UI_BUF_ICON_ADDRESS_BOOK_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);

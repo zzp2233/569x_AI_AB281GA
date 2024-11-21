@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-21 18:02:44
+*@date   2024-11-21 18:11:00
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -279,6 +279,8 @@ enum
     STR_PASS, // 通过
     STR_FALL, // 不通过
     STR_DO_PASS, // 是否通过？
+    STR_AM, // 上午
+    STR_PM, // 下午
 };
 
 extern const char * const *i18n;

@@ -114,7 +114,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
     compo_textbox_set(txt, aclock_str);
 
 
-    txt = compo_textbox_create(frm, 20);
+    txt = compo_textbox_create(frm, MAX(strlen(i18n[STR_AM]), strlen(i18n[STR_PM])));
     compo_textbox_set_font(txt, 0);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + 5, GUI_SCREEN_CENTER_X, widget_text_get_height()+5);

@@ -399,7 +399,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     }
 
     //AM PM TXT
-    compo_textbox_t* txt_am_pm = compo_textbox_create(frm, 50);
+    compo_textbox_t* txt_am_pm = compo_textbox_create(frm, MAX(strlen(i18n[STR_AM]), strlen(i18n[STR_PM])));
     compo_textbox_set_font(txt_am_pm, 0);
     compo_setid(txt_am_pm, COMPO_ID_TXT_AM_PM);
     compo_textbox_set_location(txt_am_pm, ALARM_TXT_ITEM_H_X-40, ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*2, GUI_SCREEN_WIDTH / 6, widget_text_get_height());

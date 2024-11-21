@@ -125,11 +125,11 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
     }
     else if (hour_cov.am_pm == 1)           //AM
     {
-        compo_textbox_set(txt, "上午");
+        compo_textbox_set(txt, i18n[STR_AM]);
     }
     else if (hour_cov.am_pm == 2)           //PM
     {
-        compo_textbox_set(txt, "下午");
+        compo_textbox_set(txt, i18n[STR_PM]);
     }
 
     btn = compo_button_create(frm);

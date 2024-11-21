@@ -399,7 +399,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     }
 
     //AM PM TXT
-    compo_textbox_t* txt_am_pm = compo_textbox_create(frm, 50);
+    compo_textbox_t* txt_am_pm = compo_textbox_create(frm, MAX(strlen(i18n[STR_AM]), strlen(i18n[STR_PM])));
     compo_textbox_set_font(txt_am_pm, 0);
     compo_setid(txt_am_pm, COMPO_ID_TXT_AM_PM);
     compo_textbox_set_location(txt_am_pm, ALARM_TXT_ITEM_H_X-40, ALARM_TXT_ITEM_Y+ALARM_TXT_ITEM_Y_OFFSET*2, GUI_SCREEN_WIDTH / 6, widget_text_get_height());
@@ -408,11 +408,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     u8 am_pm = func_alarm_convert_to_12hour(hour).am_pm;
     if (am_pm == 1)                //AM
     {
-        compo_textbox_set(txt_am_pm, "上午");
+        compo_textbox_set(txt_am_pm, i18n[STR_AM]);
     }
     else if (am_pm == 2)           //PM
     {
-        compo_textbox_set(txt_am_pm, "下午");
+        compo_textbox_set(txt_am_pm, i18n[STR_PM]);
     }
     else if (am_pm == 0)
     {
@@ -697,11 +697,11 @@ static void func_alarm_clock_set_move_handle(u8 id)
             {
                 if (am_pm_last == 1)                //AM
                 {
-                    compo_textbox_set(am_pm_txt, "上午");
+                    compo_textbox_set(am_pm_txt, i18n[STR_AM]);
                 }
                 else if (am_pm_last == 2)           //PM
                 {
-                    compo_textbox_set(am_pm_txt, "下午");
+                    compo_textbox_set(am_pm_txt, i18n[STR_PM]);
                 }
             }
         }

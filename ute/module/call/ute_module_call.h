@@ -237,4 +237,7 @@ void uteModuleCallClearNumberAndName(void);
 bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen);
 void uteModuleCallSetBeforeCallStatus(uint8_t status);
 void uteModuleCallUpdateCallingTimeSecond(uint32_t second);
+
+uint8_t uteModuleCallGetCallRecordsSize(ute_module_call_records_t *pData);
+bool uteModuleCallDeleteCallRecords(void);
 #endif //_UTE_MODULE_BT_AUDIO_H_

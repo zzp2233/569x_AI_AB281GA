@@ -408,11 +408,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     u8 am_pm = func_alarm_convert_to_12hour(hour).am_pm;
     if (am_pm == 1)                //AM
     {
-        compo_textbox_set(txt_am_pm, "上午");
+        compo_textbox_set(txt_am_pm, i18n[STR_AM]);
     }
     else if (am_pm == 2)           //PM
     {
-        compo_textbox_set(txt_am_pm, "下午");
+        compo_textbox_set(txt_am_pm, i18n[STR_PM]);
     }
     else if (am_pm == 0)
     {
@@ -697,11 +697,11 @@ static void func_alarm_clock_set_move_handle(u8 id)
             {
                 if (am_pm_last == 1)                //AM
                 {
-                    compo_textbox_set(am_pm_txt, "上午");
+                    compo_textbox_set(am_pm_txt, i18n[STR_AM]);
                 }
                 else if (am_pm_last == 2)           //PM
                 {
-                    compo_textbox_set(am_pm_txt, "下午");
+                    compo_textbox_set(am_pm_txt, i18n[STR_PM]);
                 }
             }
         }

@@ -158,11 +158,11 @@ compo_form_t *func_alarm_clock_form_create(void)
             }
             else if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 1)           //AM
             {
-                compo_cardbox_text_set(cardbox, 2, "上午");
+                compo_cardbox_text_set(cardbox, 2, i18n[STR_AM]);
             }
             else if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 2)           //PM
             {
-                compo_cardbox_text_set(cardbox, 2, "下午");
+                compo_cardbox_text_set(cardbox, 2, i18n[STR_PM]);
             }
 
             if (ALARM_GET_CYCLE(i) & BIT(7))

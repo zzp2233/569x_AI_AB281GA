@@ -74,22 +74,25 @@ static void func_test_mode_click(void)
     int id = compo_get_button_id();
     u8 ret = 0;
 
-    char buf_txt[strlen(i18n[STR_DO_WANT_IN])+strlen(i18n[f_test_mode_list[id-1].txt_num])+10];
-    memset(buf_txt, '\0', sizeof(buf_txt));
+#define BUF_TXT_LEN     (strlen(i18n[STR_DO_WANT_IN])+strlen(i18n[f_test_mode_list[id-1].txt_num])+10)
+    char *buf_txt = func_zalloc(BUF_TXT_LEN);
 
     switch(id)
     {
         case MODE_FACTORY_TESTING_ID:///工厂测试
-            snprintf(buf_txt,sizeof(buf_txt),"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_FACTORY_TESTING_ID-1].txt_num]);
+//            printf("%s 0\n", __func__);
+            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_FACTORY_TESTING_ID-1].txt_num]);
             ret = msgbox(buf_txt, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
             if(ret == MSGBOX_RES_OK)
             {
+//                printf("%s 1\n", __func__);
                 func_switch_to(FUNC_FACTORY_TESTING, 0);///跳转工厂测试界面
+//                printf("%s 2\n", __func__);
             }
             break;
         case MODE_AGING_TESTING_ID:///老化测试
-            snprintf(buf_txt,sizeof(buf_txt),"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_AGING_TESTING_ID-1].txt_num]);
+            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_AGING_TESTING_ID-1].txt_num]);
             ret = msgbox(buf_txt, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
             if(ret == MSGBOX_RES_OK)
@@ -98,7 +101,7 @@ static void func_test_mode_click(void)
             }
             break;
         case STR_SHIPPING:///船运测试
-            snprintf(buf_txt,sizeof(buf_txt),"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[STR_SHIPPING-1].txt_num]);
+            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[STR_SHIPPING-1].txt_num]);
             ret = msgbox(buf_txt, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
             if(ret == MSGBOX_RES_OK)
@@ -107,7 +110,7 @@ static void func_test_mode_click(void)
             }
             break;
         case MODE_AUDIO_ID:///音频测试
-            snprintf(buf_txt,sizeof(buf_txt),"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_AUDIO_ID-1].txt_num]);
+            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_AUDIO_ID-1].txt_num]);
             ret = msgbox(buf_txt, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
             if(ret == MSGBOX_RES_OK)
@@ -118,6 +121,8 @@ static void func_test_mode_click(void)
         default:
             break;
     }
+
+    func_free(buf_txt);
 
 }
 
@@ -144,6 +149,7 @@ static void func_test_mode_message(size_msg_t msg)
 ///进入测试功能
 static void func_test_mode_enter(void)
 {
+    printf("%s\n", __func__);
     func_cb.f_cb = func_zalloc(sizeof(f_test_mode_t));
     func_cb.frm_main = func_test_mode_form_create();
     f_test_mode_t *f_test_mode = (f_test_mode_t *)func_cb.f_cb;
@@ -163,6 +169,7 @@ static void func_test_mode_enter(void)
 ///退出测试功能
 static void func_test_mode_exit(void)
 {
+    printf("%s\n", __func__);
     f_test_mode_t *f_test_mode = (f_test_mode_t *)func_cb.f_cb;
     if (f_test_mode->ptm)
     {

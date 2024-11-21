@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-20 15:29:38
+*@date   2024-11-21 18:02:44
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -278,6 +278,7 @@ enum
     STR_TP_VERSION, // TP版本：
     STR_PASS, // 通过
     STR_FALL, // 不通过
+    STR_DO_PASS, // 是否通过？
 };
 
 extern const char * const *i18n;

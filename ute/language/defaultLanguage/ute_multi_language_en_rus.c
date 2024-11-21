@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-11-20 15:29:39
+*@date   2024-11-21 18:02:44
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -275,5 +275,6 @@ const char * const i18n_en_rus[] =
     [STR_TP_VERSION] = "\x54\x50\x20\x76\x65\x72\x73\x69\x6f\x6e\x3a\x00", // [262] TP version:
     [STR_PASS] = "\x50\x41\x53\x53\x00", // [263] PASS
     [STR_FALL] = "\x46\x41\x4c\x4c\x00", // [264] FALL
+    [STR_DO_PASS] = "\x44\x69\x64\x20\x69\x74\x20\x70\x61\x73\x73\x3f\x00", // [265] Did it pass?
 };
 

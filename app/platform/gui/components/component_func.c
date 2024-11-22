@@ -547,7 +547,7 @@ void compo_set_update(tm_t tm, u16 mtime)
 {
     component_t *compo = compo_get_head();
     s16 angle_h, angle_m, angle_s;
-    char time_str[8];
+    char time_str[20];
 
     angle_h = tm.hour * 300 + tm.min * 5 + tm.sec / 12;
     angle_m = tm.min * 60 + tm.sec;
@@ -675,7 +675,7 @@ void compo_set_update(tm_t tm, u16 mtime)
             case COMPO_TYPE_FORM:
             {
                 compo_form_t *frm = (compo_form_t *)compo;
-                if (widget_get_visble(frm->time))
+                if (widget_get_visble(frm->time->txt))
                 {
                     u8 tmp_time_hour = tm.hour;
                     if(uteModuleSystemtime12HOn())
@@ -688,9 +688,22 @@ void compo_set_update(tm_t tm, u16 mtime)
                         {
                             tmp_time_hour = 12;
                         }
+
+                        if (((tm.hour >= 12) ? 1 : 0) == 0)      //2 PM, 1 AM
+                        {
+                            sprintf(time_str, "%s%02d:%02d", i18n[STR_AM], tmp_time_hour, tm.min);
+                        }
+                        else
+                        {
+                            sprintf(time_str, "%s%02d:%02d", i18n[STR_PM], tmp_time_hour, tm.min);
+                        }
                     }
-                    sprintf(time_str, "%02d:%02d", tmp_time_hour, tm.min);
-                    widget_text_set(frm->time, time_str);
+                    else
+                    {
+                        sprintf(time_str, "%02d:%02d", tmp_time_hour, tm.min);
+                    }
+
+                    compo_textbox_set(frm->time, time_str);
                 }
             }
             break;

@@ -65,16 +65,7 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
         static u8 str_txt2_time[30] = {0};
         memset(str_txt2_time, 0, sizeof(str_txt2_time));
 
-        if (str_txt1_len > record_tbl[index].nameUnicodeLen)
-        {
-            str_txt1_len = record_tbl[index].nameUnicodeLen;
-        }
-
-        if (str_txt2_len > sizeof(str_txt2_time))
-        {
-            str_txt2_len = sizeof(str_txt2_time);
-        }
-
+//        printf("len [%d,%d]\n", str_txt1_len, str_txt2_len);
         if (record_tbl[index].nameUnicodeLen == 0)
         {
             if (str_txt1_len > record_tbl[index].numberAsciiLen)
@@ -82,10 +73,20 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
                 str_txt1_len = record_tbl[index].numberAsciiLen;
             }
             memcpy(str_txt1, record_tbl[index].numberAscii, str_txt1_len);
+//            printf("####[%d,%d,%d]->[%s] [%s]\n", record_tbl[index].nameUnicodeLen, record_tbl[index].numberAsciiLen, str_txt1_len, str_txt1, record_tbl[index].numberAscii);
         }
         else
         {
+            if (str_txt1_len > record_tbl[index].nameUnicodeLen)
+            {
+                str_txt1_len = record_tbl[index].nameUnicodeLen;
+            }
             memcpy(str_txt1, record_tbl[index].nameUnicode, str_txt1_len);
+        }
+
+        if (str_txt2_len > sizeof(str_txt2_time))
+        {
+            str_txt2_len = sizeof(str_txt2_time);
         }
 
         //"2024-11-11 09:10:50"

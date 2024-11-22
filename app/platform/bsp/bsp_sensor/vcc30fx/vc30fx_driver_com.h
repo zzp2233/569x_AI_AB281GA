@@ -4,7 +4,7 @@
  * @Date: 2023-08-03 16:09:24
  * @LastEditTime: 2023-09-18 11:22:33
  * @LastEditors: Tse
- * @Description: 
+ * @Description:
  **********************************************************************************************/
 
 #ifndef __VC30Fx_DRIVER_COM_H__
@@ -144,6 +144,7 @@ void vc30fx_drv_read_event_infomation_byIRQ(void);
  * @param  {*}
  * @return {*}
  ****************************************************************************/
+void drv_calibration_clk_clear(void);
 int vc30fx_drv_read_check_temperature_abnormal( void *pdevice, unsigned char *p_freq_ret, unsigned char *p_temp_ret, unsigned short *pdev_cnt1, unsigned short *pdev_cnt2 );
 
 int vc30fx_drv_memroy_alloc(void);

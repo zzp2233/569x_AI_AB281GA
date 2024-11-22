@@ -19,7 +19,7 @@ void bsp_sensor_init_sta_clr(sensor_init_type type)
     bsensor.init &= ~type;
 }
 
-//开 外设共用电源控制脚 PE2 
+//开 外设共用电源控制脚 PE2
 void bsp_sensor_pe2_pwr_pg_on(void)
 {
     GPIOFDE |= BIT(2);
@@ -76,9 +76,11 @@ u8 bsp_sensor_hr_stop(void)
 }
 
 //保存心率值
+AT(.com_text.vc30fx)
 void bsp_sensor_hrs_data_save(u8 bpm)
 {
-    if (bsensor.hr.back_bpm != bpm) {
+    if (bsensor.hr.back_bpm != bpm)
+    {
         bsensor.hr.back_bpm = bpm;
         printf("%s: %d\n", __func__, bpm);
     }
@@ -87,7 +89,8 @@ void bsp_sensor_hrs_data_save(u8 bpm)
 //保存血氧值
 void bsp_sensor_spo2_data_save(u8 spo2)
 {
-    if (bsensor.hr.spo2_value != spo2) {
+    if (bsensor.hr.spo2_value != spo2)
+    {
         bsensor.hr.spo2_value = spo2;
         printf("%s: %d\n", __func__, spo2);
     }
@@ -96,7 +99,8 @@ void bsp_sensor_spo2_data_save(u8 spo2)
 //保存血压值
 void bsp_sensor_bp_data_save(u8 sbp, u8 dbp)
 {
-    if (bsensor.hr.sbp != sbp || bsensor.hr.dbp != dbp) {
+    if (bsensor.hr.sbp != sbp || bsensor.hr.dbp != dbp)
+    {
         bsensor.hr.sbp = sbp;
         bsensor.hr.dbp = dbp;
         printf("%s: sbp->%d, dbp->%d\n", __func__, sbp, dbp);
@@ -106,7 +110,7 @@ void bsp_sensor_bp_data_save(u8 sbp, u8 dbp)
 //获取心率值
 u8 bsp_sensor_hrs_data_get(void)
 {
-	return bsensor.hr.back_bpm;
+    return bsensor.hr.back_bpm;
 }
 
 //获取血氧值
@@ -118,7 +122,8 @@ u8 bsp_sensor_spo2_data_get(void)
 //获取血压值
 void bsp_sensor_bp_data_get(u8 *sbp, u8 *dbp)
 {
-    if (NULL == sbp || NULL == dbp) {
+    if (NULL == sbp || NULL == dbp)
+    {
         return ;
     }
 
@@ -145,18 +150,39 @@ bool bsp_sensor_hr_wear_sta_get(void)
 //空函数
 void sensor_step_init(void) {}
 void sensor_step_stop(void) {}
-AT(.text.lowpwr.sleep)          
+AT(.text.lowpwr.sleep)
 void sensor_step_lowpwr_pro(void) {}
 
-AT(.text.lowpwr.sleep)          
-void sensor_step_pro_isr(void) {}   
+AT(.text.lowpwr.sleep)
+void sensor_step_pro_isr(void) {}
 
-void sensor_step_wrist_set(bool x) {}  
-u8   sensor_step_wrist_get(void) {return 0;}     
-s8   sensor_step_wkup_get(void) {return 0;}       
-void sensor_step_sway_set(bool x) {}      
-bool sensor_step_sway_get(void) {return 0;}    
-bool sensor_step_sway_status_get(void) {return 0;}    
-int  sensor_step_cur_steps_get(void) {return 0;}      
-int  sensor_step_cur_kcal_get(void) {return 0;}       
-int  sensor_step_cur_distance_get(void) {return 0;}
+void sensor_step_wrist_set(bool x) {}
+u8   sensor_step_wrist_get(void)
+{
+    return 0;
+}
+s8   sensor_step_wkup_get(void)
+{
+    return 0;
+}
+void sensor_step_sway_set(bool x) {}
+bool sensor_step_sway_get(void)
+{
+    return 0;
+}
+bool sensor_step_sway_status_get(void)
+{
+    return 0;
+}
+int  sensor_step_cur_steps_get(void)
+{
+    return 0;
+}
+int  sensor_step_cur_kcal_get(void)
+{
+    return 0;
+}
+int  sensor_step_cur_distance_get(void)
+{
+    return 0;
+}

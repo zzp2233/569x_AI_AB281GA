@@ -286,7 +286,7 @@ static void i2cx_init(void)
     FUNCMCON2 = (5 << 8);
 
 #elif (CHIP_PACKAGE_SELECT == CHIP_5690G || CHIP_PACKAGE_SELECT == CHIP_5690F)
-    CLKCON1 |= BIT(8);      //x26m_clkdiv8
+    CLKCON1 |= BIT(8);      //rc2m
     CLKGAT2 |= BIT(1);      //en iic1 clk
     RSTCON0 |= BIT(7);      //Release IIC1
 
@@ -299,7 +299,7 @@ static void i2cx_init(void)
     FUNCMCON2 = (8 << 12);
 
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-    CLKCON1 |= BIT(7);      //x26m_clkdiv8
+    CLKCON1 &= ~BIT(7);      //x26m_clkdiv8
     CLKGAT2 |= BIT(0);      //en iic0 clk
     RSTCON0 |= BIT(3);      //Release IIC0
 
@@ -325,7 +325,7 @@ static void i2cx_init(void)
                                 6 << 4 |    //IIC POSDIV [9:4]
                                 1 << 10;     //IIC WSCL_OPT
 
-    delay_5ms(8);
+    //  delay_5ms(1);
 }
 
 AT(.text.bsp.i2c)
@@ -345,7 +345,7 @@ void i2c_gsensor_init(void)
     FUNCMCON2 = (0xf << 8);
     FUNCMCON2 = (8 << 8);
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-    CLKCON1 |= BIT(7);      //x26m_clkdiv8
+    CLKCON1 &= ~BIT(7);      //rc2m
     CLKGAT2 |= BIT(0);      //en iic0 clk
     RSTCON0 |= BIT(3);      //Release IIC0
 
@@ -371,7 +371,7 @@ void i2c_gsensor_init(void)
                                 6 << 4 |    //IIC POSDIV [9:4]
                                 1 << 10;     //IIC WSCL_OPT
 
-    delay_5ms(8);
+    //  delay_5ms(1);
     sys_irq_init(IRQ_I2C_VECTOR, 0, bsp_i2c_isr);
 }
 

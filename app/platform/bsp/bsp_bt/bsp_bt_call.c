@@ -275,6 +275,7 @@ void hfp_hf_call_notice(uint32_t evt)
             bt_cb.call_type = CALL_TYPE_NONE;
 
             //保存通话记录
+            memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
             uteModuleCallUpdateRecordsData();
 
 #if CALL_MGR_EN
@@ -360,7 +361,7 @@ void hfp_hf_parse_clcc_cb(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode
     if(mode == 0 && (status == 0 || status == 2 || status == 4))
     {
         uteModuleCallSetBeforeCallStatus(dir);
-        uteModuleCallSetContactsNumberAndName(number, strlen(number), NULL, 0);
+        uteModuleCallSetContactsNumberAndName((uint8_t*)number, strlen(number), (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
     }
 }
 

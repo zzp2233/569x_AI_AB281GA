@@ -187,8 +187,11 @@ static u32 bsp_hw_i2c_config(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u32 dat)
     u32 ticks = tick_get();
     while ( (!(HW_IIC->sfr->IICxCON0 & BIT(31))))
     {
-        if (tick_check_expire(ticks, 20))
+        WDT_CLR();
+        if (tick_check_expire(ticks, 1000))
         {
+            func_process();
+            ticks = tick_get();
             printf("!!!IIC ERROR dev_addr:0x%X reg_addr:0x%x\n", dev_addr,reg_addr);
             return false;
         }

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-19 15:39:50
+*@date   2024-11-22 10:23:09
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -14,21 +14,22 @@
 
 enum
 {
+    STR_NULL, //
     STR_CLOCK, // 表盘
     STR_CLOCK_PREVIEW, // 表盘预览
     STR_MESSAGE, // 消息
     STR_PHONE, // 电话
-    STR_SPORTS, // 运动
+    STR_SPORTS, // 锻炼
     STR_SPORTS_CONFIG, // 设置目标
     STR_FOOTBALL, // 足球
-    STR_SPORT_RUN, // 跑步
+    STR_SPORT_RUN, // 户外跑步
     STR_SPORT_RIDE_BIKE, // 骑行
     STR_SPORT_JUMP_ROPE, // 跳绳
     STR_SPORT_SWIMMING, // 游泳
     STR_SPORT_BADMINTON, // 羽毛球
     STR_SPORT_TABLE_TENNIS, // 乒乓球
     STR_SPORT_TENNIS, // 网球
-    STR_SPORT_CLIMBING, // 爬山
+    STR_SPORT_CLIMBING, // 登山
     STR_SPORT_WALKING, // 徒步
     STR_SPORT_BASKETBALL, // 篮球
     STR_SPORT_FOOTBALL, // 足球
@@ -58,10 +59,10 @@ enum
     STR_BLOOD_SUGAR, // 血糖
     STR_PRESSURE, // 压力
     STR_WEATHER, // 天气
-    STR_BREATHE, // 呼吸训练
+    STR_BREATHE, // 呼吸
     STR_BREATHE_INHALE, // 吸气
     STR_BREATHE_EXHALE, // 呼气
-    STR_ACTIVITY_RECORD, // 活动记录
+    STR_ACTIVITY_RECORD, // 运动记录
     STR_CONNECT_PHONE, // 连接手机
     STR_CALCULATOR, // 计算器
     STR_ALARM_CLOCK, // 闹钟
@@ -81,14 +82,14 @@ enum
     STR_TIMER, // 计时器
     STR_STOP_WATCH, // 秒表
     STR_STOP_WATCH_RECORD, // 秒表记录
-    STR_CAMERA, // 相机
+    STR_CAMERA, // 遥控拍照
     STR_VOICE_ASSISTANT, // 语音助手
     STR_FIND_PHONE, // 查找手机
-    STR_FIND_PHONEING, // 查找中手机正在响铃
+    STR_FIND_PHONEING, // 正在响铃
     STR_GAME, // 游戏
     STR_SETTING, // 设置
-    STR_SETTING_LIGHT, // 亮度调节
-    STR_SETTING_DOUSING, // 熄屏时长
+    STR_SETTING_LIGHT, // 亮度
+    STR_SETTING_DOUSING, // 亮屏时长
     STR_FIVE_SEC, // 5秒
     STR_TEN_SEC, // 10秒
     STR_TWENTY_SEC, // 20秒
@@ -98,18 +99,18 @@ enum
     STR_NEVER, // 永不熄屏
     STR_SETTING_UP, // 抬腕亮屏
     STR_SETTING_DISTURD, // 勿扰模式
-    STR_DISTURD_ALL, // 全天勿扰
-    STR_DISTURD_TIM, // 定时勿扰
+    STR_DISTURD_ALL, // 全天开启
+    STR_DISTURD_TIM, // 定时开启
     STR_DISTURD_TIM_CTT, // 开启后来电和通知静音且不震动(闹钟除外)抬腕不亮屏，是否开启？
     STR_DISTURD_TIM_START, // 开始时间
     STR_DISTURD_TIM_END, // 结束时间
-    STR_SETTING_SAV, // 声音振动
+    STR_SETTING_SAV, // 声音设置
     STR_VOL, // 声音
     STR_SHK, // 振动
     STR_MEDIA_VOL, // 媒体音量
     STR_CALL_VOL, // 通话音量
-    STR_SETTING_LANGUAGE, // 语言切换
-    STR_LANGUAGE_CN, // 中文
+    STR_SETTING_LANGUAGE, // 语言选择
+    STR_LANGUAGE_CN, // 简体中文
     STR_LANGUAGE_ENG, // English
     STR_LANGUAGE_FN, // Français
     STR_LANGUAGE_RU, // Русский язык
@@ -120,14 +121,14 @@ enum
     STR_CUSTOM_TIME, // 时间
     STR_CUSTOM_DATA, // 时间制
     STR_SETTING_CALENDAR, // 日历
-    STR_SETTING_PASSWORD, // 密码锁
+    STR_SETTING_PASSWORD, // 密码
     STR_SETTING_ABOUT, // 关于
     STR_SETTING_RESTART, // 重启
     STR_SETTING_RSTFY, // 恢复出厂
     STR_SETTING_OFF, // 关机
-    STR_CALL_RECENT, // 最近通话
+    STR_CALL_RECENT, // 通话记录
     STR_CALL_LINK, // 联系人
-    STR_CALL_DIAL, // 拨号按键
+    STR_CALL_DIAL, // 拨号盘
     STR_ALIPAY, // 支付宝
     STR_ALIPAY_BIND_TIP, // 使用支付宝扫码绑定
     STR_ALIPAY_UNBIND_TIP, // 解绑后将无法使用支付宝各功能，确认解绑？
@@ -148,9 +149,9 @@ enum
     STR_FLASHLIGHT, // 手电筒
     STR_MAP, // 地图
     STR_SCAN, // 扫一扫
-    STR_STYLE, // 菜单风格
+    STR_STYLE, // 主题
     STR_VOICE, // 语音助手
-    STR_VOLUME, // 调节音量
+    STR_VOLUME, // 音量调节
     STR_CALENDAR, // 日历
     STR_LATEST_APP, // 最近应用
     STR_CALORIE, // 卡路里
@@ -185,9 +186,9 @@ enum
     STR_HOUR, // 时
     STR_MIN, // 分
     STR_SEC, // 秒
-    STR_START, // 开始
-    STR_MEASURING, // 测量中
-    STR_WEAR_CHECK, // 请正确佩戴手表，保持静止
+    STR_START, // 开始测量
+    STR_MEASURING, // 正在测量
+    STR_WEAR_CHECK, // 请保持静止并紧贴皮肤佩戴
     STR_UNKNOWN, // 未知
     STR_COMPO_SELECT, // 组件选择
     STR_STYLE_SUDOKU_1, // 九宫格
@@ -209,13 +210,12 @@ enum
     STR_DEV_NEME, // 设备名称
     STR_BLE_MAC, // 蓝牙地址
     STR_SYS_VERSION, // 系统版本
-    STR_NULL, //
     STR_SOOTHING, // 舒缓
     STR_SLOW, // 缓慢
     STR_FASTER, // 稍快
     STR_OK, // 确定
     STR_MINUTE, // 分钟
-    STR_SETTING_MODE, // 模式设置
+    STR_SETTING_MODE, // 呼吸节奏
     STR_DRIZZLE, // 小雨
     STR_MODERATE_RAIN, // 阵雨
     STR_HEAVY_RAIN, // 大雨
@@ -224,22 +224,22 @@ enum
     STR_CLOUDY_NIGHT, // 云遮月
     STR_RAINY_NIGHT, // 阵雨夜
     STR_RAINY_SHOWERS, // 雷阵雨
-    STR_NO_MSG, // 没有新消息
+    STR_NO_MSG, // 无消息
     STR_FIND_WATCH, // 寻找手表
     STR_SET_DATA_READ, // 当前设定时间如果已与App连接同步时间将会产生睡眠数据修改
     STR_SET_STEP_COUNT, // 步数
     STR_SET_DISTANCE, // 距离
     STR_SET_CALORIE, // 卡路里
-    STR_GOAL_ACHIEVE, // 目标完成
+    STR_GOAL_ACHIEVE, // 目标达成！
     STR_SEDENTARY_REMIND, // 久坐提醒
     STR_UPGRADING, // 升级中
     STR_UPGRADE_SUCCESSFUL, // 升级成功
     STR_UPGRADE_FAILED, // 升级失败
-    STR_PRESSURE_EXPLAIN, // 压力值,及心率变异性的压力指标,是通过测量心率信号中的非线性和非周期性变化,来反应自主神经系统对心脏压力调节的有效性.这一指标可以帮助我们了解人体的压力状态,从而为压力管理提供依据.
+    STR_PRESSURE_EXPLAIN, // 压力在心理学上指精神上束缚和紧张的感受，适当压力有助于提高工作和学习的效率，压力过大则会影响到身心健康。压力指标是通过心率变异性(HRV)的数值变化进行计算，用来评定身体状态改变的指标。
     STR_SEVERE, // 重度
     STR_LIGHT, // 轻度
     STR_MODERATE, // 中度
-    STR_RELAX, // 放松
+    STR_RELAX, // 轻松
     STR_DEEP_SLEEP, // 深睡
     STR_LIGHT_SLEEP, // 浅睡
     STR_ALWAKE_SLEEP, // 清醒
@@ -262,11 +262,26 @@ enum
     STR_RETRY, // 重试
     STR_CONTACTS, // 通讯录
     STR_ENTER_NUMBER, // 请输入电话号码！
-    STR_WEEK, // 星期:
     STR_VOICE_SPEAKER, // 请说话...
     STR_VOICE_BT_NOT_CONNECT, // 蓝牙未连接
     STR_VOICE_SIRI_START, // 点击屏幕开启SIRI
     STR_ADDRESS_BOOK_SYNC, // 请使用APP同步联系人！！
+    STR_WEEK, // 星期:
+    STR_DO_WANT_IN, // 是否进入
+    STR_MODE_SELECTION, // 模式选择
+    STR_FACTORY_TESTING, // 工厂测试模式
+    STR_AGING_TESTING, // 老化测试模式
+    STR_SHIPPING, // 船运模式
+    STR_AUDIO, // 音频测试
+    STR_AVERSION_MAC, // 版本号&MAC
+    STR_BATTERY_INFORMATION, // 电池信息
+    STR_TP_VERSION, // TP版本：
+    STR_PASS, // 通过
+    STR_FALL, // 不通过
+    STR_DO_PASS, // 是否通过？
+    STR_AM, // 上午
+    STR_PM, // 下午
+    STR_NO_CALL_RECORD, // 无通话记录
 };
 
 extern const char * const *i18n;

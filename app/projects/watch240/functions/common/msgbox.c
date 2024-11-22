@@ -264,8 +264,29 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei/2 - 10);
             break;
+        case MSGBOX_MODE_BTN_FACTORR:///工厂测试
+        {
+            compo_textbox_t *textbox;
+            textbox = compo_textbox_create(frm, strlen(i18n[STR_PASS]));///PASS
+            compo_textbox_set(textbox, i18n[STR_PASS]);
+            compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y/10*2+GUI_SCREEN_HEIGHT/11*9);
+            compo_textbox_set_forecolor(textbox, COLOR_GREEN);
 
+            btn = compo_button_create(frm);///透明按钮PASS
+            compo_button_set_location(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y/10*2+GUI_SCREEN_HEIGHT/11*9, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+            compo_setid(btn,COMPO_ID_BTN_OK);
 
+            textbox = compo_textbox_create(frm, strlen(i18n[STR_FALL]));///FALL
+            compo_textbox_set(textbox, i18n[STR_FALL]);
+            compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  GUI_SCREEN_CENTER_Y/10*2+GUI_SCREEN_HEIGHT/11*9);
+            compo_textbox_set_forecolor(textbox, COLOR_RED);
+
+            btn = compo_button_create(frm);///透明按钮FALL
+            compo_button_set_location(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  GUI_SCREEN_CENTER_Y/10*2+GUI_SCREEN_HEIGHT/11*9, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+            compo_setid(btn,COMPO_ID_BTN_CANCEL);
+
+        }
+        break;
         default:
             halt(HALT_MSGBOX_MODE);
             break;

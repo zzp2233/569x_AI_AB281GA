@@ -1373,6 +1373,7 @@ void uteModuleSportEverySecond(void)
 *@author       zn.zeng
 *@date       2021-07-27
 */
+AT(.com_text.gsensor)
 void uteModuleSportInputDataBeforeAlgo(void)
 {
 #if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_SUPPORT
@@ -6474,6 +6475,11 @@ void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
         return;
     }
 
+    if (sleep_cb.sys_is_sleep)
+    {
+        sleep_set_sysclk(SYS_176M);
+    }
+
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     uteModuleCwmtWearStatusSwitch(uteModuleHeartIsWear()); //
 #else
@@ -6487,8 +6493,13 @@ void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
     {
         uteModuleSportStepTypeSetNone();
     }
+
 #endif
 #endif
+    if (sleep_cb.sys_is_sleep)
+    {
+        sleep_set_sysclk(SYS_24M);
+    }
 }
 
 /**

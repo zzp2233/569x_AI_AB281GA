@@ -21,6 +21,9 @@
 #include "ute_module_message.h"
 #include "ute_module_bloodoxygen.h"
 
+#include "vc30fx_driver.h"
+extern vc30fx_clk_info clk_info;            /* oscclk_calibration_infomation */
+
 // #include "vcSportMotionIntAlgo.h"
 
 /* ble_debug,蓝牙发送原始数据 */
@@ -60,13 +63,16 @@ int (*vc30fx_dbglog_user)(const char *, ...) = NULL;
 
 void vc30fx_pwr_en(void)        //PF5
 {
-    uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
-    // GPIOFFEN &= ~BIT(5);
-    // GPIOFDE  |= BIT(5);
-    // GPIOFDIR &= ~BIT(5);
-    // GPIOFSET = BIT(5);
+    if(clk_info.clk_calc_status == 0)
+    {
+        uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
+    }
 
-    uteModulePlatformOutputGpioSet(IO_PF5,true);
+    if(!vc30fx_dev.dev_work_status)
+    {
+        uteModulePlatformOutputGpioSet(IO_PF5,true);
+    }
+
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(false);
 #else
@@ -81,10 +87,7 @@ void vc30fx_pwr_dis(void)       //PF5
     {
         vc30fx_dev.dev_work_status = 0;
     }
-    // GPIOFFEN &= ~BIT(5);
-    // GPIOFDE  |= BIT(5);
-    // GPIOFDIR &= ~BIT(5);
-    // GPIOFCLR = BIT(5);
+
     printf("vc30fx_pwr_dis\n");
     drv_calibration_clk_clear();
     uteModulePlatformOutputGpioSet(IO_PF5,false);
@@ -805,9 +808,6 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     // GPIOBSET = BIT(0);
 }
 
-#include "vc30fx_driver.h"
-extern vc30fx_clk_info clk_info;            /* oscclk_calibration_infomation */
-
 bool vc30fx_sleep_isr = false;
 
 AT(.com_text.vc30fx)
@@ -824,13 +824,13 @@ void vc30fx_isr(void)
     //     sleep_set_sysclk(SYS_192M);
     // }
     //GPIOBCLR = BIT(1);
-    if (clk_info.clk_calc_status == 0)
+    if (clk_info.clk_calc_status == 0 || !sleep_cb.sys_is_sleep)
     {
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_ALGO_HANDLER,0);
     }
     //     vc30fx_sleep_isr = false;
     // }
-    if (clk_info.clk_calc_status == 1)
+    if (clk_info.clk_calc_status == 1 && sleep_cb.sys_is_sleep)
     {
         vc30fx_sleep_isr = true;
     }

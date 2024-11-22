@@ -67,7 +67,9 @@ u8 bsp_sensor_hr_stop(void)
     stop = sensor_hrs3300_stop();
 #elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
     stop = vc30fx_usr_stop_work();
-    vc30fx_pwr_dis();
+    // vc30fx_pwr_dis();
+    vc30fx_data.work_mode = WORK_MODE_WEAR;
+    vc30fx_usr_device_init(&vc30fx_data);
 #endif
 
     if (!stop) bsp_sensor_init_sta_clr(SENSOR_INIT_HR);

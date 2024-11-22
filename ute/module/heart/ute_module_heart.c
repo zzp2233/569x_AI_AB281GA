@@ -1108,6 +1108,9 @@ void uteModuleHeartPowerOff(void)
     uteDrvHeartVcxxStopSample();
 #endif
     uteDrvHeartVcxxSetPowerEnable(false);
+#else
+    vc30fx_usr_stop_work();
+    vc30fx_pwr_dis();
 #endif
 }
 

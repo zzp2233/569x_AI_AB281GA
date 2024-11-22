@@ -27,6 +27,9 @@
 #define ALARM_GET_CYCLE(idx)            0
 #endif
 
+static void func_alarm_clock_sub_edit_enter(void);
+static void func_alarm_clock_sub_edit_exit(void);
+
 //组件ID
 enum
 {
@@ -42,8 +45,40 @@ enum
 
 typedef struct f_alarm_clock_sub_edit_t_
 {
-
+    bool time_scale;        //时间制 0:24小时; 1:12小时
 } f_alarm_clock_sub_edit_t;
+
+typedef struct func_alarm_hour_format_t_
+{
+    u8 hour;
+    u8 am_pm;
+} func_alarm_hour_format_t;
+
+static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
+{
+    u8 am_pm = (hour24 >= 12) ? 2 : 1;    //2 PM, 1 AM
+    func_alarm_hour_format_t hour12;
+    if(uteModuleSystemtime12HOn())
+    {
+        if (hour24 == 0)
+        {
+            hour12.hour = 12;
+        }
+        else if (hour24 > 12)
+        {
+            hour12.hour = hour24 - 12;
+        }
+        else
+        {
+            hour12.hour = hour24;
+        }
+        hour12.am_pm = am_pm;
+        return hour12;
+    }
+    hour12.hour = hour24;
+    hour12.am_pm = 0;
+    return hour12;
+}
 
 //创建闹钟窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_sub_edit_form_create(void)
@@ -67,14 +102,35 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
     u8 hour, min;
     hour = ALARM_GET_HOUR(sys_cb.alarm_edit_idx);
     min = ALARM_GET_MIN(sys_cb.alarm_edit_idx);
-    char aclock_str[8];
+    func_alarm_hour_format_t hour_cov = func_alarm_convert_to_12hour(hour);
+    hour = hour_cov.hour;
+    char aclock_str[20] = {0};
     sprintf(aclock_str, "%02d:%02d", hour, min);
     compo_textbox_t *txt;
-    txt = compo_textbox_create(frm, 5);
+    txt = compo_textbox_create(frm, strlen(aclock_str));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3);
     compo_textbox_set(txt, aclock_str);
+
+
+    txt = compo_textbox_create(frm, MAX(strlen(i18n[STR_AM]), strlen(i18n[STR_PM])));
+    compo_textbox_set_font(txt, 0);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + 5, GUI_SCREEN_CENTER_X, widget_text_get_height()+5);
+    compo_textbox_set_visible(txt, true);
+    if (hour_cov.am_pm == 0)
+    {
+        compo_textbox_set_visible(txt, false);
+    }
+    else if (hour_cov.am_pm == 1)           //AM
+    {
+        compo_textbox_set(txt, i18n[STR_AM]);
+    }
+    else if (hour_cov.am_pm == 2)           //PM
+    {
+        compo_textbox_set(txt, i18n[STR_PM]);
+    }
 
     btn = compo_button_create(frm);
     compo_setid(btn, COMPO_ID_BTN_SET);
@@ -93,7 +149,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
     //compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET);
     compo_textbox_set(txt, i18n_zh_rcn[STR_REVISE_TIMR]);
     compo_textbox_set_location(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET
-                               , widget_text_get_area(txt->txt).wid, widget_text_get_area(txt->txt).hei);
+                               , widget_text_get_area(txt->txt).wid, widget_text_get_height()+5);
     compo_textbox_set(txt, i18n[STR_REVISE_TIMR]);
 
     txt = compo_textbox_create(frm, strlen(i18n[STR_SET_REPEAT]));
@@ -101,7 +157,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 //    compo_textbox_set_pos(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2);
     compo_textbox_set(txt, i18n_zh_rcn[STR_SET_REPEAT]);
     compo_textbox_set_location(txt, 30, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_DELETE_BIN).hei)/3 + SELF_TXT_OFFSET*2
-                               , widget_text_get_area(txt->txt).wid, widget_text_get_area(txt->txt).hei);
+                               , widget_text_get_area(txt->txt).wid, widget_text_get_height()+5);
     compo_textbox_set(txt, i18n[STR_SET_REPEAT]);
 
     //新建图像
@@ -183,6 +239,7 @@ static void func_alarm_clock_sub_edit_process(void)
 //闹钟功能消息处理
 static void func_alarm_clock_sub_edit_message(size_msg_t msg)
 {
+    f_alarm_clock_sub_edit_t *f_alarm_clock_sub_edit = (f_alarm_clock_sub_edit_t*)func_cb.f_cb;
 
     switch (msg)
     {
@@ -206,6 +263,23 @@ static void func_alarm_clock_sub_edit_message(size_msg_t msg)
             func_message(msg);
             break;
 
+        case MSG_SYS_500MS:
+            if (f_alarm_clock_sub_edit->time_scale != uteModuleSystemtime12HOn())
+            {
+                if (func_cb.frm_main != NULL)
+                {
+                    compo_form_destroy(func_cb.frm_main);
+                }
+                func_alarm_clock_sub_edit_exit();
+                if (func_cb.f_cb != NULL)
+                {
+                    func_free(func_cb.f_cb);
+                    func_cb.f_cb = NULL;
+                }
+                func_alarm_clock_sub_edit_enter();
+            }
+            break;
+
         default:
             func_message(msg);
             break;
@@ -217,6 +291,10 @@ static void func_alarm_clock_sub_edit_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_alarm_clock_sub_edit_t));
     func_cb.frm_main = func_alarm_clock_sub_edit_form_create();
+
+    f_alarm_clock_sub_edit_t *f_alarm_clock_sub_edit = (f_alarm_clock_sub_edit_t*)func_cb.f_cb;
+    f_alarm_clock_sub_edit->time_scale = uteModuleSystemtime12HOn();
+
 }
 
 //退出闹钟功能

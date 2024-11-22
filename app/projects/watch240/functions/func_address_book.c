@@ -124,7 +124,7 @@ compo_form_t *func_address_book_form_create(void)
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
-    compo_textbox_t* txt = compo_textbox_create(frm, 50);
+    compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_ADDRESS_BOOK_SYNC]));
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH / 2, widget_text_get_height());
     compo_textbox_set_visible(txt, false);
     compo_textbox_set(txt, i18n[STR_ADDRESS_BOOK_SYNC]);
@@ -139,7 +139,6 @@ compo_form_t *func_address_book_form_create(void)
     {
         compo_listbox_set(listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
     }
-
     compo_listbox_set_alike_icon(listbox, UI_BUF_ICON_ADDRESS_BOOK_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-21 18:11:00
+*@date   2024-11-22 10:23:09
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -281,6 +281,7 @@ enum
     STR_DO_PASS, // 是否通过？
     STR_AM, // 上午
     STR_PM, // 下午
+    STR_NO_CALL_RECORD, // 无通话记录
 };
 
 extern const char * const *i18n;

@@ -342,9 +342,14 @@ static void sfunc_sleep(void)
     sys_cb.sleep_wakeup_time = -1L;
 
     // GPIOBFEN &= ~BIT(0);
-    // GPIOBDE  |=  BIT(0) | BIT(1);
+    // GPIOBDE  |=  BIT(0);
     // GPIOBDIR &= ~BIT(0);
-    // GPIOBSET = BIT(0);
+    // GPIOBCLR = BIT(0);
+
+    // GPIOBFEN &= ~BIT(1);
+    // GPIOBDE  |=  BIT(1);
+    // GPIOBDIR &= ~BIT(1);
+    // GPIOBCLR = BIT(0);
 
     while(bt_is_sleep())
     {

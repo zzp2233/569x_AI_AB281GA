@@ -38,7 +38,7 @@ void bsp_sensor_pe2_pwr_pg_off(void)
 //心率开启
 u8 bsp_sensor_hr_init(u8 mode)
 {
-    if (bsp_sensor_init_sta_get(SENSOR_INIT_HR)) return true;
+    // if (bsp_sensor_init_sta_get(SENSOR_INIT_HR)) return true;
 
     bool init = false;
 #if (SENSOR_HR_SEL == SENSOR_HR_TYHX_HX3605)
@@ -59,20 +59,23 @@ u8 bsp_sensor_hr_init(u8 mode)
 //心率关闭
 u8 bsp_sensor_hr_stop(void)
 {
-    if (!bsp_sensor_init_sta_get(SENSOR_INIT_HR)) return false;
+    // if (!bsp_sensor_init_sta_get(SENSOR_INIT_HR)) return false;
     bool stop = true;
 #if (SENSOR_HR_SEL == SENSOR_HR_TYHX_HX3605)
     stop = sensor_hx3605_stop();
 #elif(SENSOR_HR_SEL == SENSOR_HR_TYHX_HRS3300)
     stop = sensor_hrs3300_stop();
 #elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
-    stop = vc30fx_usr_stop_work();
-    // vc30fx_pwr_dis();
+#if UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT
     vc30fx_data.work_mode = WORK_MODE_WEAR;
     vc30fx_usr_device_init(&vc30fx_data);
+#else
+    stop = vc30fx_usr_stop_work();
+    vc30fx_pwr_dis();
+#endif
 #endif
 
-    if (!stop) bsp_sensor_init_sta_clr(SENSOR_INIT_HR);
+    // if (!stop) bsp_sensor_init_sta_clr(SENSOR_INIT_HR);
 
     return stop;
 }

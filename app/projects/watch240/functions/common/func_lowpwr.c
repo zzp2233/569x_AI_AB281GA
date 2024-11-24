@@ -381,7 +381,8 @@ static void sfunc_sleep(void)
             // GPIOBSET = BIT(0);
             // sleep_set_sysclk(SYS_176M);
             // printf("sleep hr enter\n");
-            vc30fx_usr_device_handler(0, 1);
+            // vc30fx_usr_device_handler(0, 1);
+            uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData();
             // GPIOBCLR = BIT(0);
             // printf("sleep hr exit\n");
             vc30fx_sleep_isr = false;

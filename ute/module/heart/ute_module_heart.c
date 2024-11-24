@@ -671,13 +671,13 @@ bool uteModuleHeartIsWear(void)
     else
     {
         isWear = uteModuleHeartData.lastIsWear;
+        if(!uteModuleHeartData.isAutoTesting)
+        {
+            isWear= true;
+            uteModuleHeartData.lastIsWear = isWear;
+        }
     }
 #endif
-    if(!uteModuleHeartData.isAutoTesting)
-    {
-        isWear= true;
-        uteModuleHeartData.lastIsWear = isWear;
-    }
     // UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,isWear:%d",__func__,isWear);
     return isWear;
 }

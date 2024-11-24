@@ -1014,6 +1014,11 @@
 #define UTE_DRV_HEART_VCXX_ARM_XY_EXCHANGE 1
 #endif
 
+/*! vcxx 保持心率电源，不测量时使用wear模式,wang.luo 2024-11-22 */
+#ifndef UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT
+#define UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT 0
+#endif
+
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #ifndef UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7

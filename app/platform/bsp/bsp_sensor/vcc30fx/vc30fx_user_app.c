@@ -105,6 +105,7 @@ void vc30fx_pwr_dis(void)       //PF5
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
 }
 
+AT(.com_text.vc30fx)
 void uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData(void)
 {
     uint8_t sportType = uteModuleSportMoreSportGetType();
@@ -276,6 +277,7 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
 
     ute_drv_gsensor_common_axis_data_t *data = NULL;
     uteDrvGsensorCommonReadFifo(&data);
+    gsensor_len = data->frameCnt;
 
     ute_drv_gsensor_common_axis_bit_change_t axisBitChange;
     axisBitChange.inputXaxis = &data->accXaxis[0];
@@ -607,6 +609,7 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     vc30fx_dev.spo2_algo_mode = spo2_algo_mode;
     vc30fx_drv_get_result_handler(&vc30fx_dev);
     vc30fx_dev.wear = vc30fx_drv_get_wear_status(&vc30fx_dev);
+    // printf("clk_calc_status:%d,wear:%d,workmode:%d\n",clk_info.clk_calc_status, vc30fx_dev.wear, vc30fx_dev.workmode);
     if (vc30fx_drv_is_ps_event(&vc30fx_dev) || vc30fx_drv_is_fifo_event(&vc30fx_dev))
     {
         //disp_data.wear_sta = vc30fx_dev.wear;
@@ -1006,6 +1009,7 @@ void vc30fx_usr_soft_reset(void)
  * @description: 获取工作状态
  * @return {*}
  ****************************************************************************/
+AT(.com_text.vc30fx)
 bool vc30fx_usr_get_work_status(void)
 {
     return vc30fx_dev.dev_work_status;
@@ -1014,6 +1018,7 @@ bool vc30fx_usr_get_work_status(void)
  * @description: 获取工作模式
  * @return {*}
  ****************************************************************************/
+AT(.com_text.vc30fx)
 work_mode vc30fx_usr_get_work_mode(void)
 {
     return vc30fx_dev.workmode;

@@ -4048,6 +4048,7 @@ void uteModuleSportDelaySetTakePictureEnableTimerStart(uint16_t ms)
 *@author       zn.zeng
 *@date       2022-01-11
 */
+AT(.com_text.ute_sport)
 bool uteModuleSportMoreSportIsRuning(void)
 {
     // UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,.moreSportData.status=%d", __func__,uteModuleSprotData.moreSportData.status);
@@ -4067,10 +4068,12 @@ bool uteModuleSportMoreSportIsRuning(void)
 *@author       zn.zeng
 *@date       2022-02-14
 */
+AT(.com_text.ute_sport)
 uint8_t uteModuleSportMoreSportGetType(void)
 {
     return uteModuleSprotData.moreSportData.saveData.sportsType;
 }
+
 /**
 *@brief       获取多运动的运动状态
 *@details
@@ -6468,6 +6471,7 @@ void uteModuleSprotInputDataBeforeAlgoTimerCallback(void *pxTimer)
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER,0);
 }
 
+AT(.com_text.ute_sport)
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
 {
     if (vc30fx_usr_get_work_status())
@@ -6475,10 +6479,10 @@ void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
         return;
     }
 
-    if (sleep_cb.sys_is_sleep)
-    {
-        sleep_set_sysclk(SYS_176M);
-    }
+    // if (sleep_cb.sys_is_sleep)
+    // {
+    //     sleep_set_sysclk(SYS_176M);
+    // }
 
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     uteModuleCwmtWearStatusSwitch(uteModuleHeartIsWear()); //
@@ -6496,10 +6500,10 @@ void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
 
 #endif
 #endif
-    if (sleep_cb.sys_is_sleep)
-    {
-        sleep_set_sysclk(SYS_24M);
-    }
+    // if (sleep_cb.sys_is_sleep)
+    // {
+    //     sleep_set_sysclk(SYS_24M);
+    // }
 }
 
 /**

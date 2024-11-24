@@ -126,6 +126,7 @@ bool uteDrvGsensorCommonInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accRange
 *@author       zn.zeng
 *@date       2021-07-23
 */
+AT(.com_text.ute_drv_gsensor)
 void uteDrvGsensorCommonXYZaxisDataBitChange(ute_drv_gsensor_common_axis_bit_change_t *bitChange,uint8_t size,ute_drv_gsensor_data_bit_change_type_t type)
 {
     int8_t offsetBit = 0;
@@ -180,6 +181,7 @@ uint8_t uteDrvGsensorCommonGetAccRange(void)
 *@author       zn.zeng
 *@date       2021-07-26
 */
+AT(.com_text.ute_drv_gsensor)
 ute_drv_gsensor_acc_rate_t uteDrvGsensorCommonGetAccRate(void)
 {
     return uteDrvGsensorCommonData.accRate;
@@ -211,6 +213,7 @@ void uteDrvGsensorCommonSleep(void)
 *@author       zn.zeng
 *@date       2021-07-26
 */
+AT(.com_text.ute_drv_gsensor)
 void uteDrvGsensorCommonClearFifo(void)
 {
     uteDrvGsensorCommonFunction->clearFifo();
@@ -223,6 +226,7 @@ void uteDrvGsensorCommonClearFifo(void)
 *@author       zn.zeng
 *@date       2021-07-26
 */
+AT(.com_text.ute_drv_gsensor)
 void uteDrvGsensorCommonReadFifo(ute_drv_gsensor_common_axis_data_t **data)
 {
     if(!uteDrvGsensorCommonData.axisData.isHasReadFifo)

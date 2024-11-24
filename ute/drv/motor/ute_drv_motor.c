@@ -309,6 +309,7 @@ void uteDrvMotorTimerHandlerMsg(void)
 *@author       dengli.lu
 *@date       2021-12-09
 */
+AT(.com_text.ute_drv_motor)
 bool uteDrvMotorGetRunningStatus(void)
 {
     return uteDrvMotorData.isRunning;

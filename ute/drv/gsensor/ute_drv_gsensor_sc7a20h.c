@@ -215,6 +215,7 @@ bool uteDrvGsensorSc7a20hAccInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accR
 *@author       zn.zeng
 *@date       2022-06-25
 */
+AT(.com_text.ute_drv_gsensor)
 void uteDrvGsensorSc7a20hReadAccXyz(int16_t *x, int16_t *y, int16_t *z)
 {
     uint8_t buff[6] = {0};
@@ -234,6 +235,7 @@ void uteDrvGsensorSc7a20hReadAccXyz(int16_t *x, int16_t *y, int16_t *z)
 *@author       zn.zeng
 *@date       2022-06-25
 */
+AT(.com_text.ute_drv_gsensor)
 void uteDrvGsensorSc7a20hClearFifo(void)
 {
     uteDrvGsensorSc7a20hWriteReg(0x2e,0x00);
@@ -261,6 +263,8 @@ static uint16_t overvalueXCount = 0;
 static uint16_t overvalueYCount = 0;
 static uint16_t overvalueZCount = 0;
 #define VALUE_MAX (665) //512+512*0.3 //±30%
+
+AT(.com_text.ute_drv_gsensor)
 bool uteDrvGsensorSc7a20hCheckIfAnyUnchanged(int16_t x, int16_t y, int16_t z)
 {
     bool result = false;
@@ -387,6 +391,7 @@ bool uteDrvGsensorSc7a20hCheckIfXYZOverValue(int16_t x, int16_t y, int16_t z)
 *@date       2022-06-25
 */
 ute_drv_gsensor_common_axis_data_t recordLastAxisData;
+AT(.com_text.ute_drv_gsensor)
 void uteDrvGsensorSc7a20hReadFifo(ute_drv_gsensor_common_axis_data_t *axisData)
 {
     uint8_t buff[192] = {0};

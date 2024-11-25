@@ -857,7 +857,7 @@ void uteApplicationCommonStartPowerOffMsg(void)
     {
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_STOP_ADV,0);
     }
-    // uteModuleHeartPowerOff();
+    uteModuleHeartPowerOff();
     // uteModulePlatformQdecPowerOff();
     // uteModulePlatformPowerOffGpioConfig();
 #if 0//UTE_BT30_CALL_SUPPORT

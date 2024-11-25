@@ -192,6 +192,7 @@ uint32_t sleep_timer(void)
     return ret;
 }
 
+extern bool vc30fx_sleep_isr;
 AT(.text.lowpwr.sleep)
 static void sfunc_sleep(void)
 {
@@ -328,7 +329,6 @@ static void sfunc_sleep(void)
     GPIOFDE = 0 | BIT(5);                   //HR POWER
 #endif
 
-
 //#if MODEM_CAT1_EN
 //    pf_keep |= BIT(1) | BIT(2) | BIT(3);
 //#endif
@@ -340,14 +340,31 @@ static void sfunc_sleep(void)
 
     sys_cb.sleep_counter = 0;
     sys_cb.sleep_wakeup_time = -1L;
+
+    // GPIOBFEN &= ~BIT(0);
+    // GPIOBDE  |=  BIT(0);
+    // GPIOBDIR &= ~BIT(0);
+    // GPIOBCLR = BIT(0);
+
+    // GPIOBFEN &= ~BIT(1);
+    // GPIOBDE  |=  BIT(1);
+    // GPIOBDIR &= ~BIT(1);
+    // GPIOBCLR = BIT(0);
+
     while(bt_is_sleep())
     {
         WDT_CLR();
         bt_thread_check_trigger();
         status = bt_sleep_proc();
+        // GPIOBSET = BIT(1);
+        // GPIOBCLR = BIT(0);
 
         if(status == 1)
         {
+            if(vc30fx_sleep_isr)
+            {
+                sleep_set_sysclk(SYS_192M);
+            }
             ret = sleep_timer();
             if(ret)
             {
@@ -362,14 +379,20 @@ static void sfunc_sleep(void)
         wko_wkup_flag = port_wko_is_wakeup();
 
         port_int_sleep_process(&wkpnd);
-        bsp_sensor_step_lowpwr_pro();
+        // bsp_sensor_step_lowpwr_pro();
 
-        // extern bool vc30fx_sleep_isr;
-        // if(vc30fx_sleep_isr)
-        // {
-        //     vc30fx_usr_device_handler(0, 1);
-        //     vc30fx_sleep_isr = false;
-        // }
+        if(vc30fx_sleep_isr)
+        {
+            // GPIOBSET = BIT(0);
+            // sleep_set_sysclk(SYS_176M);
+            // printf("sleep hr enter\n");
+            // vc30fx_usr_device_handler(0, 1);
+            uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData();
+            // GPIOBCLR = BIT(0);
+            // printf("sleep hr exit\n");
+            vc30fx_sleep_isr = false;
+            sleep_set_sysclk(SYS_24M);
+        }
 
         if (wkpnd)
         {

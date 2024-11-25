@@ -282,6 +282,7 @@ enum
     STR_AM, // 上午
     STR_PM, // 下午
     STR_PLEASE_ENTER_SOS, // 请输入SOS电话号码
+    STR_NO_CALL_RECORD, // 无通话记录
 };
 
 extern const char * const *i18n;

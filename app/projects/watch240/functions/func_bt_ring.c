@@ -21,6 +21,7 @@ void func_bt_ring_number_update(void)
     {
         compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
         compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+        bt_pbap_lookup_number(hfp_get_last_call_number(0));
     }
 }
 
@@ -62,9 +63,14 @@ compo_form_t *func_bt_ring_form_create(void)
 
     return frm;
 }
-
+void func_bt_ring_up_date_process(void)
+{
+    compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+}
 void func_bt_ring_process(void)
 {
+    func_bt_ring_up_date_process();
     bsp_bt_ring_process();
 
 #if !CALL_MGR_EN

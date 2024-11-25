@@ -69,7 +69,7 @@ void  func_bt_call_number_update(void)
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_bt_call_form_create(void)
 {
-    bt_pbap_lookup_number(hfp_get_last_call_number(0));
+//    bt_pbap_lookup_number(hfp_get_last_call_number(0));
     //printf("%s\n", __func__);
     //新建窗体, 通话页面
     compo_form_t *frm = compo_form_create(true);
@@ -193,9 +193,14 @@ static void func_bt_call_exit_process(void)
             func_bt_call_back_to();
         }
 }
-
+void func_bt_call_up_date_process(void)
+{
+    compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+}
 void func_bt_call_process(void)
 {
+    func_bt_call_up_date_process();
     func_process();
     func_bt_sub_process();
     func_bt_call_exit_process();

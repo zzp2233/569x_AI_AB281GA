@@ -4,6 +4,7 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_sport.h"
 #include "ute_drv_motor.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -11,11 +12,11 @@
 #define TRACE(...)
 #endif
 
-///*版本测试*/
-#define MODE_ONE_SPACING_Y  GUI_SCREEN_HEIGHT/11
-#define MODE_ONE_INTIAL_SPACING_Y  GUI_SCREEN_CENTER_Y/10
-#define PURPLE_COLOR   make_color(0x66,0x33,0xcc)
-///*模式一*/
+#define SIDEBAR_PAGE_HEIGHT GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3    ///长图总高度
+#define MODE_ONE_SPACING_Y          GUI_SCREEN_HEIGHT/11
+#define MODE_ONE_INTIAL_SPACING_Y   GUI_SCREEN_CENTER_Y/10
+#define PURPLE_COLOR                make_color(0x66,0x33,0xcc)
+#define RESULT_Y                    GUI_SCREEN_HEIGHT/10
 
 compo_form_t * func_factory_testing_mode_1(void);
 compo_form_t * func_factory_testing_mode_2(void);
@@ -30,13 +31,7 @@ compo_form_t * func_factory_testing_mode_10(void);
 compo_form_t * func_factory_testing_mode_11(void);
 compo_form_t * func_factory_testing_mode_12(void);
 compo_form_t * func_factory_testing_mode_13(void);
-compo_form_t * func_factory_testing_mode_14(void);
-compo_form_t * func_factory_testing_mode_15(void);
-compo_form_t * func_factory_testing_mode_16(void);
-compo_form_t * func_factory_testing_mode_17(void);
-compo_form_t * func_factory_testing_mode_18(void);
-compo_form_t * func_factory_testing_mode_19(void);
-compo_form_t * func_factory_testing_mode_20(void);
+compo_form_t * func_factory_testing_mode_result(void);
 
 enum
 {
@@ -53,13 +48,7 @@ enum
     MODE_11,
     MODE_12,
     MODE_13,
-    MODE_14,
-    MODE_15,
-    MODE_16,
-    MODE_17,
-    MODE_18,
-    MODE_19,
-    MODE_20,
+    MODE_RESULT,
 };
 
 enum
@@ -110,13 +99,20 @@ enum
     KEY_TXT_ID,
     ///*马达测试*/
     MOTOR_TXT_ID,
+    ///*充电测试*/
+    CHARGE_TXT_ID,
+    ///*录音测试*/
+    TAPE_TXT_ID,
+    ///*喇叭测试*/
+    HORN_TXT_ID,
 };
 
 static int mode_id = MODE_1;
+bool mode_test_result_data[13];
 
 typedef struct f_factory_testing_t_
 {
-    bool mode_test_result[20];
+    page_tp_move_t *ptm;
     u8 rgb_num;///RBB点击次数
     bool tp_test[9];///tp九宫格点击次状态
     u8 leakage_test_mode;///漏光测试
@@ -125,7 +121,26 @@ typedef struct f_factory_testing_t_
     u8 heart_max;///心率测试最大值
     u8 heart_dif;///心率测试dif值
     bool motor_flag;///测试马达标志位
+    bool tape_flag;///测试录音标志位
+    bool horn_flag;///测试喇叭标志位
 } f_factory_testing_t;
+
+const char result_txt[13][30]=
+{
+    "版本号测试",
+    "十字架测试",
+    "RGB测试",
+    "TP测试",
+    "漏光测试",
+    "心率测试",
+    "血氧测试",
+    "gsensor测试",
+    "按键测试",
+    "马达测试",
+    "充电测试",
+    "咪头喇叭测试",
+    "喇叭测试",
+};
 
 typedef struct f_tp_test_t_///tp九宫格
 {
@@ -186,41 +201,38 @@ compo_form_t *func_factory_testing_create(void)
         case MODE_10:
             frm = func_factory_testing_mode_10();
             break;
-//        case MODE_11:
-//            frm = func_factory_testing_mode_11();
-//            break;
-//        case MODE_12:
-//            frm = func_factory_testing_mode_12();
-//            break;
-//        case MODE_13:
-//            frm = func_factory_testing_mode_13();
-//            break;
-//        case MODE_14:
-//            frm = func_factory_testing_mode_14();
-//            break;
-//        case MODE_15:
-//            frm = func_factory_testing_mode_15();
-//            break;
-//        case MODE_16:
-//            frm = func_factory_testing_mode_16();
-//            break;
-//        case MODE_17:
-//            frm = func_factory_testing_mode_17();
-//            break;
-//        case MODE_18:
-//            frm = func_factory_testing_mode_18();
-//            break;
-//        case MODE_19:
-//            frm = func_factory_testing_mode_19();
-//            break;
-//        case MODE_20:
-//            frm = func_factory_testing_mode_20();
-//            break;
+        case MODE_11:
+            frm = func_factory_testing_mode_11();
+            break;
+        case MODE_12:
+            frm = func_factory_testing_mode_12();
+            break;
+        case MODE_13:
+            frm = func_factory_testing_mode_13();
+            break;
+        case MODE_RESULT:
+            frm = func_factory_testing_mode_result();
+            break;
     }
 
     return frm;
 }
 
+///创建结果长图
+static void func_result_long_pic(void)
+{
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+
+    f_factory_testing->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .page_size = SIDEBAR_PAGE_HEIGHT,
+        .page_count = 1,
+        .up_over_perc = 0,
+        .down_over_perc = 0,
+    };
+    compo_page_move_init(f_factory_testing->ptm, func_cb.frm_main->page_body, &info);
+}
 ///数据初始化
 static void func_factory_testing_init(void)
 {
@@ -235,7 +247,8 @@ static void func_factory_testing_init(void)
     f_factory_testing->heart_dif = 0;///初始化心率dif值
     f_factory_testing->heart_max = 0;///初始化心率最大值
     f_factory_testing->motor_flag =0;///初始化测试马达标志位
-
+    f_factory_testing->tape_flag = false;///初始化测试录音标志位
+    f_factory_testing->horn_flag = false;///初始化测试喇叭标志位
 }
 ///创建版本测试窗体   模式一*/
 compo_form_t * func_factory_testing_mode_1(void)
@@ -683,18 +696,155 @@ compo_form_t * func_factory_testing_mode_10(void)
     compo_setid(btn,PASS_ID);
     return frm;
 }
+///创建充电测试窗体   模式十一*/
+compo_form_t * func_factory_testing_mode_11(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("充电测试"));
+    compo_textbox_set(textbox, "充电测试");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
+
+    textbox = compo_textbox_create(frm, strlen("电池:未充电"));
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
+    compo_textbox_set(textbox, "电池:未充电");
+    compo_setid(textbox,CHARGE_TXT_ID);
+    compo_textbox_set_forecolor(textbox, COLOR_RED);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_FALL]));///FALL
+    compo_textbox_set(textbox, i18n[STR_FALL]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9);
+    compo_textbox_set_forecolor(textbox, COLOR_RED);
+
+    btn = compo_button_create(frm);///透明按钮FALL
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,FALL_ID);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PASS]));///PASS
+    compo_textbox_set(textbox, i18n[STR_PASS]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9);
+    compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+
+    btn = compo_button_create(frm);///透明按钮PASS
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,PASS_ID);
+    return frm;
+}
+///创建咪喇叭测试窗体   模式十二*/
+compo_form_t * func_factory_testing_mode_12(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("咪头喇叭测试"));
+    compo_textbox_set(textbox, "咪头喇叭测试");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
+
+    textbox = compo_textbox_create(frm, strlen("开始录音"));
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
+    compo_textbox_set(textbox, "开始录音");
+    compo_setid(textbox,TAPE_TXT_ID);
+    compo_textbox_set_forecolor(textbox, make_color(0,191,255));
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_FALL]));///FALL
+    compo_textbox_set(textbox, i18n[STR_FALL]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9);
+    compo_textbox_set_forecolor(textbox, COLOR_RED);
+
+    btn = compo_button_create(frm);///透明按钮FALL
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,FALL_ID);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PASS]));///PASS
+    compo_textbox_set(textbox, i18n[STR_PASS]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9);
+    compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+
+    btn = compo_button_create(frm);///透明按钮PASS
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,PASS_ID);
+    return frm;
+}
+///创建喇叭测试窗体   模式十三*/
+compo_form_t * func_factory_testing_mode_13(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("喇叭测试"));
+    compo_textbox_set(textbox, "喇叭测试");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
+
+    textbox = compo_textbox_create(frm, strlen("声音已关闭"));
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
+    compo_textbox_set(textbox, "声音已关闭");
+    compo_setid(textbox,HORN_TXT_ID);
+    compo_textbox_set_forecolor(textbox, make_color(0,191,255));
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_FALL]));///FALL
+    compo_textbox_set(textbox, i18n[STR_FALL]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9);
+    compo_textbox_set_forecolor(textbox, COLOR_RED);
+
+    btn = compo_button_create(frm);///透明按钮FALL
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,FALL_ID);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PASS]));///PASS
+    compo_textbox_set(textbox, i18n[STR_PASS]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9);
+    compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+
+    btn = compo_button_create(frm);///透明按钮PASS
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, MODE_ONE_INTIAL_SPACING_Y*2+MODE_ONE_SPACING_Y*9, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,PASS_ID);
+    return frm;
+}
+///创建测试结果窗体   测试结果*/
+compo_form_t * func_factory_testing_mode_result(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    for(int i=0; i<13; i++)
+    {
+        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(result_txt[i]));
+        compo_textbox_set_align_center(textbox, false );
+        compo_textbox_set(textbox, result_txt[i]);
+        compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/5,RESULT_Y*i+MODE_ONE_INTIAL_SPACING_Y-widget_text_get_area(textbox->txt).hei/3);
+
+        textbox = compo_textbox_create(frm, 4);
+        compo_textbox_set_align_center(textbox, false );
+        if(mode_test_result_data[i] == true)
+        {
+            compo_textbox_set(textbox, i18n[STR_PASS]);
+            compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+        }
+        else
+        {
+            compo_textbox_set(textbox, i18n[STR_FALL]);
+            compo_textbox_set_forecolor(textbox, COLOR_RED);
+        }
+        compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3,RESULT_Y*i+MODE_ONE_INTIAL_SPACING_Y-widget_text_get_area(textbox->txt).hei/3);
+
+    }
+    return frm;
+
+}
 
 ///*事件监听*/
 static void func_mode_pop_click(void)///弹窗
 {
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-
     u8 ret = msgbox((char *)i18n[STR_DO_PASS], NULL, NULL, MSGBOX_MODE_BTN_FACTORR, MSGBOX_MSG_TYPE_NONE);
 
     if(ret == MSGBOX_RES_OK)
     {
         compo_form_t *frm = func_cb.frm_main;
-        f_factory_testing->mode_test_result[mode_id] = true;///获取测试结果
+        mode_test_result_data[mode_id] = true;///获取测试结果
         mode_id ++;///切换下一个模式
         if (frm != NULL)
         {
@@ -706,7 +856,7 @@ static void func_mode_pop_click(void)///弹窗
     else if(ret == MSGBOX_RES_CANCEL)
     {
         compo_form_t *frm = func_cb.frm_main;
-        f_factory_testing->mode_test_result[mode_id] = false;///获取测试结果
+        mode_test_result_data[mode_id] = false;///获取测试结果
         mode_id ++;///切换下一个模式
         if (frm != NULL)
         {
@@ -719,14 +869,13 @@ static void func_mode_pop_click(void)///弹窗
 static void func_mode_1_click(void)
 {
     int id = compo_get_button_id();
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
 
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = false;///获取测试结果
+            mode_test_result_data[mode_id] = false;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -739,7 +888,7 @@ static void func_mode_1_click(void)
         case PASS_ID: ///通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = true;///获取测试结果
+            mode_test_result_data[mode_id] = true;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -890,7 +1039,7 @@ static void func_mode_5_click(void)
             case FALL_ID: ///不通过后切换下一个模式
             {
                 compo_form_t *frm = func_cb.frm_main;
-                f_factory_testing->mode_test_result[mode_id] = false;///获取测试结果
+                mode_test_result_data[mode_id] = false;///获取测试结果
                 mode_id ++;///切换下一个模式
                 if (frm != NULL)
                 {
@@ -903,7 +1052,7 @@ static void func_mode_5_click(void)
             case PASS_ID: ///通过后切换下一个模式
             {
                 compo_form_t *frm = func_cb.frm_main;
-                f_factory_testing->mode_test_result[mode_id] = true;///获取测试结果
+                mode_test_result_data[mode_id] = true;///获取测试结果
                 mode_id ++;///切换下一个模式
                 if (frm != NULL)
                 {
@@ -948,14 +1097,13 @@ static void func_mode_5_message(size_msg_t msg)
 static void func_mode_6_click(void)
 {
     int id = compo_get_button_id();
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
 
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = false;///获取测试结果
+            mode_test_result_data[mode_id] = false;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -968,7 +1116,7 @@ static void func_mode_6_click(void)
         case PASS_ID: ///通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = true;///获取测试结果
+            mode_test_result_data[mode_id] = true;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -994,14 +1142,13 @@ static void func_mode_6_message(size_msg_t msg)
 static void func_mode_7_click(void)
 {
     int id = compo_get_button_id();
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
 
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = false;///获取测试结果
+            mode_test_result_data[mode_id] = false;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -1015,7 +1162,7 @@ static void func_mode_7_click(void)
         case PASS_ID: ///通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = true;///获取测试结果
+            mode_test_result_data[mode_id] = true;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -1042,14 +1189,13 @@ static void func_mode_7_message(size_msg_t msg)
 static void func_mode_8_click(void)
 {
     int id = compo_get_button_id();
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
 
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = false;///获取测试结果
+            mode_test_result_data[mode_id] = false;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -1062,7 +1208,7 @@ static void func_mode_8_click(void)
         case PASS_ID: ///通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = true;///获取测试结果
+            mode_test_result_data[mode_id] = true;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -1088,14 +1234,13 @@ static void func_mode_8_message(size_msg_t msg)
 static void func_mode_9_click(void)
 {
     int id = compo_get_button_id();
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
 
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = false;///获取测试结果
+            mode_test_result_data[mode_id] = false;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -1108,7 +1253,7 @@ static void func_mode_9_click(void)
         case PASS_ID: ///通过后切换下一个模式
         {
             compo_form_t *frm = func_cb.frm_main;
-            f_factory_testing->mode_test_result[mode_id] = true;///获取测试结果
+            mode_test_result_data[mode_id] = true;///获取测试结果
             mode_id ++;///切换下一个模式
             if (frm != NULL)
             {
@@ -1139,36 +1284,38 @@ static void func_mode_10_click(void)
 {
     int id = compo_get_button_id();
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-    compo_textbox_t *textbox = compo_getobj_byid(MOTOR_TXT_ID);///马达整图
+    compo_textbox_t *textbox = compo_getobj_byid(MOTOR_TXT_ID);///马达震动
 
     switch(id)
     {
-//        case FALL_ID:{///不通过后切换下一个模式
-//                uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
-//                compo_form_t *frm = func_cb.frm_main;
-//                f_factory_testing->mode_test_result[mode_id] = false;///获取测试结果
-//                mode_id ++;///切换下一个模式
-//                if (frm != NULL)
-//                {
-//                    compo_form_destroy(frm);
-//                    frm = NULL;
-//                }
-//                func_cb.frm_main = func_factory_testing_create();
-//            }
-//            break;
-//        case PASS_ID:{///通过后切换下一个模式
-//                uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
-//                compo_form_t *frm = func_cb.frm_main;
-//                f_factory_testing->mode_test_result[mode_id] = true;///获取测试结果
-//                mode_id ++;///切换下一个模式
-//                if (frm != NULL)
-//                {
-//                    compo_form_destroy(frm);
-//                    frm = NULL;
-//                }
-//                func_cb.frm_main = func_factory_testing_create();
-//            }
-//            break;
+        case FALL_ID: ///不通过后切换下一个模式
+        {
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            compo_form_t *frm = func_cb.frm_main;
+            mode_test_result_data[mode_id] = false;///获取测试结果
+            mode_id ++;///切换下一个模式
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+        }
+        break;
+        case PASS_ID: ///通过后切换下一个模式
+        {
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            compo_form_t *frm = func_cb.frm_main;
+            mode_test_result_data[mode_id] = true;///获取测试结果
+            mode_id ++;///切换下一个模式
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+        }
+        break;
         default:
             f_factory_testing->motor_flag ^=1;
 
@@ -1197,6 +1344,192 @@ static void func_mode_10_message(size_msg_t msg)
             break;
     }
 }
+static void func_mode_11_click(void)
+{
+    int id = compo_get_button_id();
+
+    switch(id)
+    {
+        case FALL_ID: ///不通过后切换下一个模式
+        {
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            compo_form_t *frm = func_cb.frm_main;
+            mode_test_result_data[mode_id] = false;///获取测试结果
+            mode_id ++;///切换下一个模式
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+        }
+        break;
+        case PASS_ID: ///通过后切换下一个模式
+        {
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            compo_form_t *frm = func_cb.frm_main;
+            mode_test_result_data[mode_id] = true;///获取测试结果
+            mode_id ++;///切换下一个模式
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+        }
+        break;
+    }
+}
+static void func_mode_11_message(size_msg_t msg)
+{
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_mode_11_click();
+            break;
+        default:
+            break;
+    }
+}
+static void func_mode_12_click(void)
+{
+    int id = compo_get_button_id();
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
+
+    switch(id)
+    {
+        case FALL_ID: ///不通过后切换下一个模式
+        {
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            compo_form_t *frm = func_cb.frm_main;
+            mode_test_result_data[mode_id] = false;///获取测试结果
+            mode_id ++;///切换下一个模式
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+        }
+        break;
+        case PASS_ID: ///通过后切换下一个模式
+        {
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            compo_form_t *frm = func_cb.frm_main;
+            mode_test_result_data[mode_id] = true;///获取测试结果
+            mode_id ++;///切换下一个模式
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+        }
+        break;
+        default:
+            printf("%s=test",__func__);
+            f_factory_testing->tape_flag ^=1;
+
+            if(f_factory_testing->tape_flag == true)
+            {
+                compo_textbox_set(textbox, "停止录音");
+            }
+            else
+            {
+                compo_textbox_set(textbox, "开始录音");
+            }
+            break;
+    }
+}
+static void func_mode_12_message(size_msg_t msg)
+{
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_mode_12_click();
+            break;
+        default:
+            break;
+    }
+}
+static void func_mode_13_click(void)
+{
+    int id = compo_get_button_id();
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    compo_textbox_t *textbox = compo_getobj_byid(HORN_TXT_ID);///喇叭状态
+
+    switch(id)
+    {
+        case FALL_ID: ///不通过后切换下一个模式
+        {
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            compo_form_t *frm = func_cb.frm_main;
+            mode_test_result_data[mode_id] = false;///获取测试结果
+            mode_id ++;///切换下一个模式
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+            func_result_long_pic();
+        }
+        break;
+        case PASS_ID: ///通过后切换下一个模式
+        {
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            compo_form_t *frm = func_cb.frm_main;
+            mode_test_result_data[mode_id] = true;///获取测试结果
+            mode_id ++;///切换下一个模式
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+            func_result_long_pic();
+        }
+        break;
+        default:
+            printf("%s=test",__func__);
+            f_factory_testing->horn_flag ^=1;
+
+            if(f_factory_testing->horn_flag == true)
+            {
+                compo_textbox_set(textbox, "声音已开启");
+            }
+            else
+            {
+                compo_textbox_set(textbox, "声音已关闭");
+            }
+            break;
+    }
+}
+static void func_mode_13_message(size_msg_t msg)
+{
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_mode_13_click();
+            break;
+        default:
+            break;
+    }
+}
+static void func_mode_result_message(size_msg_t msg)
+{
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            compo_page_move_touch_handler(f_factory_testing->ptm);
+            break;
+        default:
+            break;
+    }
+}
+
 ///工厂测试功能消息处理
 static void func_factory_testing_message(size_msg_t msg)
 {
@@ -1232,6 +1565,18 @@ static void func_factory_testing_message(size_msg_t msg)
             break;
         case MODE_10:
             func_mode_10_message(msg);
+            break;
+        case MODE_11:
+            func_mode_11_message(msg);
+            break;
+        case MODE_12:
+            func_mode_12_message(msg);
+            break;
+        case MODE_13:
+            func_mode_13_message(msg);
+            break;
+        case MODE_RESULT:
+            func_mode_result_message(msg);
             func_message(msg);
             break;
         default:
@@ -1401,6 +1746,27 @@ static void func_mode_8_process(void)
     compo_textbox_set(textbox4, txt_buf);
 
 }
+static void func_mode_11_process(void)
+{
+    compo_textbox_t *textbox = compo_getobj_byid(CHARGE_TXT_ID);///充电状态
+
+    if(uteApplicationCommonIsStartupFinish()) ///获取充电状态
+    {
+        compo_textbox_set(textbox, "电池:充电中");
+        compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+    }
+    else
+    {
+        compo_textbox_set_forecolor(textbox, COLOR_RED);
+        compo_textbox_set(textbox, "电池:未充电");
+    }
+
+}
+static void func_mode_result_process(void)
+{
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    compo_page_move_process(f_factory_testing->ptm);
+}
 ///工厂测试功能事件处理
 static void func_factory_testing_process(void)
 {
@@ -1418,6 +1784,12 @@ static void func_factory_testing_process(void)
         case MODE_8:
             func_mode_8_process();
             break;
+        case MODE_11:
+            func_mode_11_process();
+            break;
+        case MODE_RESULT:
+            func_mode_result_process();
+            break;
     }
     func_process();
 }
@@ -1434,6 +1806,11 @@ static void func_factory_testing_enter(void)
 ///退出工厂测试功能
 static void func_factory_testing_exit(void)
 {
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    if (f_factory_testing->ptm)
+    {
+        func_free(f_factory_testing->ptm);
+    }
     func_cb.last = FUNC_FACTORY_TESTING;
 }
 

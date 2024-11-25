@@ -66,6 +66,10 @@ enum COMPO_BOND_DATA
     COMPO_BOND_KCAL_PROGRESS,           //卡路里进度
     COMPO_BOND_STEPS_PROGRESS,          //步数进度
     COMPO_BOND_VBAT_PROGRESS,           //电量进度
+    COMPO_BOND_COMM_UNIT,               //单位
+    COMPO_BOND_TIME_AMPM,               //上午/下午
+    COMPO_BOND_TIME_WEEK = 37,          //星期
+    COMPO_BOND_TIME_MONTH,              //月份
 
     COMPO_BOND_KCAL = 64,               //卡路里
     COMPO_BOND_STEP,                    //步数

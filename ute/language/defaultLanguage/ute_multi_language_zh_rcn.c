@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 中文(简体）
 *@author
-*@date   2024-11-21 18:11:00
+*@date   2024-11-25 10:49:18
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -278,5 +278,6 @@ const char * const i18n_zh_rcn[] =
     [STR_DO_PASS] = "\xe6\x98\xaf\xe5\x90\xa6\xe9\x80\x9a\xe8\xbf\x87\xef\xbc\x9f\x00", // [265] 是否通过？
     [STR_AM] = "\xe4\xb8\x8a\xe5\x8d\x88\x00", // [266] 上午
     [STR_PM] = "\xe4\xb8\x8b\xe5\x8d\x88\x00", // [267] 下午
+    [STR_PLEASE_ENTER_SOS] = "\xe8\xaf\xb7\xe8\xbe\x93\xe5\x85\xa5\x53\x4f\x53\xe7\x94\xb5\xe8\xaf\x9d\xe5\x8f\xb7\xe7\xa0\x81\x00", // [268] 请输入SOS电话号码
 };
 

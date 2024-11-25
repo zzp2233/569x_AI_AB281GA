@@ -89,7 +89,7 @@ void func_ble_call_enter(void)
 
 void func_ble_call_exit(void)
 {
-    f_ble_call_t *f_ble_call = (f_ble_call_t *)func_cb.f_cb;
+//    f_ble_call_t *f_ble_call = (f_ble_call_t *)func_cb.f_cb;
     func_cb.last = FUNC_BLE_CALL;
 }
 

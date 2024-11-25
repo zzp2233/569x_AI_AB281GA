@@ -86,9 +86,7 @@ static void func_test_mode_click(void)
 
             if(ret == MSGBOX_RES_OK)
             {
-//                printf("%s 1\n", __func__);
                 func_switch_to(FUNC_FACTORY_TESTING, 0);///跳转工厂测试界面
-//                printf("%s 2\n", __func__);
             }
             break;
         case MODE_AGING_TESTING_ID:///老化测试
@@ -97,13 +95,12 @@ static void func_test_mode_click(void)
 
             if(ret == MSGBOX_RES_OK)
             {
-                func_switch_to(FUNC_PRESSURE_EXPLAIN, 0);//跳转压力说明界面
+                func_switch_to(FUNC_AGEING, 0);///跳转老化测试界面
             }
             break;
-        case STR_SHIPPING:///船运测试
-            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[STR_SHIPPING-1].txt_num]);
+        case MODE_SHIPPING_ID:///船运测试
+            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_SHIPPING_ID-1].txt_num]);
             ret = msgbox(buf_txt, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-
             if(ret == MSGBOX_RES_OK)
             {
                 func_switch_to(FUNC_PRESSURE_EXPLAIN, 0);//跳转压力说明界面

@@ -206,6 +206,9 @@ typedef struct
 
     char pbap_result_Name[50];//存放来电与接听联系人名字
 
+    char sos_call_number[11];
+    bool sos_open_flag;
+
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

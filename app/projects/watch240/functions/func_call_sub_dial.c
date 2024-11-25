@@ -54,12 +54,12 @@ static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
     {UI_BUF_CALL_DIAL_NUM_4_BIN,             COMPO_ID_BTN_NUM4,         45,     140},
     {UI_BUF_CALL_DIAL_NUM_5_BIN,             COMPO_ID_BTN_NUM5,         120,    140},
     {UI_BUF_CALL_DIAL_NUM_6_BIN,             COMPO_ID_BTN_NUM6,         195,    140},
-    {UI_BUF_CALL_DIAL_NUM_7_BIN,             COMPO_ID_BTN_NUM7,         45,     198},
-    {UI_BUF_CALL_DIAL_NUM_8_BIN,             COMPO_ID_BTN_NUM8,         120,    198},
-    {UI_BUF_CALL_DIAL_NUM_9_BIN,             COMPO_ID_BTN_NUM9,         195,    198},
+    {UI_BUF_CALL_DIAL_NUM_7_BIN,             COMPO_ID_BTN_NUM7,         45,     196},
+    {UI_BUF_CALL_DIAL_NUM_8_BIN,             COMPO_ID_BTN_NUM8,         120,    196},
+    {UI_BUF_CALL_DIAL_NUM_9_BIN,             COMPO_ID_BTN_NUM9,         195,    196},
     {UI_BUF_CALL_DIAL_NUM_0_BIN,             COMPO_ID_BTN_NUM0,         120,    252},
     {UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN,  COMPO_ID_BTN_DEL,          195,    252},
-    {UI_BUF_CALL_CALL_CLICK_BIN,             COMPO_ID_BTN_CALL,         45,    252},
+    {UI_BUF_CALL_CALL_CLICK_BIN,             COMPO_ID_BTN_CALL,         45,     252},
 };
 
 typedef struct f_call_sub_dial_t_

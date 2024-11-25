@@ -22,7 +22,7 @@ typedef struct f_set_list_t_
 
 static const compo_listbox_item_t tbl_setting_list[] =
 {
-    {STR_SETTING_LIGHT,                  UI_BUF_SETTING_LIGHT_BIN,                      .func_sta = FUNC_LIGHT},            //亮度调节
+    {STR_SETTING_ABOUT,                  UI_BUF_SETTING_LIGHT_BIN,                      .func_sta = FUNC_LIGHT},            //亮度调节
     {STR_SETTING_DOUSING,                UI_BUF_SETTING_BREATHING_SCREEN_CLICK_BIN,     .func_sta = FUNC_SET_SUB_DOUSING},  //息屏时长
     {STR_SETTING_UP,                     UI_BUF_SETTING_WRIST_BIN,                      .func_sta = FUNC_SET_SUB_WRIST},    //抬腕亮屏
     {STR_SETTING_DISTURD,                UI_BUF_SETTING_DISTURB_CLICK_BIN,              .func_sta = FUNC_SET_SUB_DISTURD},  //勿扰模式
@@ -33,6 +33,7 @@ static const compo_listbox_item_t tbl_setting_list[] =
     {STR_SETTING_PASSWORD,               UI_BUF_SETTING_PASSWORD_BIN,                   .func_sta = FUNC_SET_SUB_PASSWORD}, //密码锁
     {STR_SETTING_ABOUT,                  UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_ABOUT},    //关于
     // {STR_SETTING_4G,                     UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_4G},       //4G
+    {STR_SETTING_ABOUT,                  UI_BUF_SETTING_RESTART_BIN,                    .func_sta = FUNC_SET_SUB_SOS},  //SOS
     {STR_SETTING_RESTART,                UI_BUF_SETTING_RESTART_BIN,                    .func_sta = FUNC_SET_SUB_RESTART},  //重启
     {STR_SETTING_RSTFY,                  UI_BUF_SETTING_RESTORE_FACTORY_BIN,            .func_sta = FUNC_SET_SUB_RSTFY},    //恢复出厂
     {STR_SETTING_OFF,                    UI_BUF_SETTING_OFF_BIN,                        .func_sta = FUNC_SET_SUB_OFF},      //关机

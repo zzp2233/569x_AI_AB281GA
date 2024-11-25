@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_systemtime.h"
 #include "ute_drv_motor.h"
+#include "ute_application_common.h"
 
 #define TXT_SPACING    GUI_SCREEN_HEIGHT/13
 

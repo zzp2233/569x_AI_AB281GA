@@ -129,7 +129,7 @@ static void input_mode(bool inpu_mode_flag)
     {
         compo_shape_set_location(shape_box, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6, GUI_SCREEN_HEIGHT/7+6);
         compo_shape_set_location(shape_bg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6-6, GUI_SCREEN_HEIGHT/7.5);
-        compo_textbox_set_location(txt_number, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/10, GUI_SCREEN_HEIGHT/3.5);
+        compo_textbox_set_pos(txt_number, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/2.5);
         compo_textbox_set_font(txt_number, UI_BUF_0FONT_FONT_NUM_24_BIN);
         compo_button_set_location(btn_input,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y/2.5,GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6-6,GUI_SCREEN_HEIGHT/7.5);
         compo_button_set_location(img_btn, 0,0,0,0);
@@ -144,7 +144,7 @@ static void input_mode(bool inpu_mode_flag)
     {
         compo_shape_set_location(shape_box, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6, GUI_SCREEN_HEIGHT/7+6);
         compo_shape_set_location(shape_bg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6-6, GUI_SCREEN_HEIGHT/7.5);
-        compo_textbox_set_location(txt_number, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/10, GUI_SCREEN_HEIGHT/3.5);
+        compo_textbox_set_pos(txt_number, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
         compo_button_set_location(btn_input,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y,GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6-6,GUI_SCREEN_HEIGHT/7.5);
         compo_button_set_location(img_btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y/4 );
         compo_button_set_visible(img_btn, true);
@@ -176,7 +176,7 @@ compo_form_t *func_set_sub_sos_form_create(void)
     compo_shape_set_alpha(shape, 180);
     compo_setid(shape, COMPO_ID_TXT_SHAPE_BG);
 
-    compo_textbox_t *txt_number = compo_textbox_create(frm, 11);///创建输入框文本
+    compo_textbox_t *txt_number = compo_textbox_create(frm, 30);///创建输入框文本
     if(sys_cb.sos_call_number[0]=='\0' || sys_cb.sos_call_number[0]==0)
     {
         compo_textbox_set(txt_number,i18n[STR_PLEASE_ENTER_SOS]);///请输入SOS电话号码
@@ -187,7 +187,7 @@ compo_form_t *func_set_sub_sos_form_create(void)
         snprintf(number_buf,sizeof(number_buf),"%s",sys_cb.sos_call_number);
         compo_textbox_set(txt_number,number_buf);
     }
-    compo_textbox_set_location(txt_number, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/10, GUI_SCREEN_HEIGHT/3.5);
+    compo_textbox_set_location(txt_number, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6-6, GUI_SCREEN_HEIGHT/3.5);
     compo_textbox_set_alpha(txt_number, 100 );
     compo_setid(txt_number, COMPO_ID_TXT_NUM);
 
@@ -286,7 +286,6 @@ static void func_sos_button_click(void)
     int id = compo_get_button_id();
     compo_textbox_t *txt_number = compo_getobj_byid(COMPO_ID_TXT_NUM);
     compo_button_t *img_btn = compo_getobj_byid(COMPO_ID_OPEN_BTN);
-    compo_textbox_t *txt_cursor = compo_getobj_byid(COMPO_ID_TXT_CURSOR);
     char buf[30];
 
     switch (id)

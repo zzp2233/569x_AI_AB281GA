@@ -1,5 +1,7 @@
 #include "include.h"
 #include "../gui/components/compo_form.h"
+#include "ute_module_systemtime.h"
+#include "ute_language_common.h"
 
 //#define TRACE_EN    1
 
@@ -130,6 +132,57 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
         }
         break;
 
+        case COMPO_BOND_TIME_AMPM:
+        case COMPO_BOND_TIME_WEEK:
+        case COMPO_BOND_TIME_MONTH:
+        {
+            compo_picturebox_t *pic;
+            pic = compo_picturebox_create(frm, res_addr);
+            compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
+            compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
+            compo_bonddata(pic, uitool_res->bond_type);
+            printf("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
+
+            if(CHINESE_LANGUAGE_ID == uitool_res->rsv && uteModuleSystemtimeCompareLanguage(CHINESE_LANGUAGE_ID))
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+#if SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT
+            else if((ENGLISH_LANGUAGE_ID == uitool_res->rsv || 0 == uitool_res->rsv) && uteModuleSystemtimeCompareLanguage(ENGLISH_LANGUAGE_ID))
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+#endif
+#if SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT
+            else if (TRADITIONAL_CHINESE_ID == uitool_res->rsv && uteModuleSystemtimeCompareLanguage(TRADITIONAL_CHINESE_ID))
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+#endif
+            else if(uitool_res->rsv == 0)
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+            else
+            {
+                printf("type[%d] rsv[%d] not support\n", uitool_res->bond_type, uitool_res->rsv);
+                compo_picturebox_set_visible(pic, false);
+            }
+
+            if(uitool_res->bond_type == COMPO_BOND_TIME_AMPM)
+            {
+                if(uteModuleSystemtime12HOn())
+                {
+                    compo_picturebox_set_visible(pic, true);
+                }
+                else
+                {
+                    compo_picturebox_set_visible(pic, false);
+                }
+            }
+        }
+        break;
+
         default:
             break;
     }
@@ -178,6 +231,21 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 max_cnt = 4;
                 break;
 
+            case COMPO_BOND_KCAL:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
+
+            case COMPO_BOND_STEP:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 5;
+                break;
+
+            case COMPO_BOND_HEARTRATE:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
+
             default:
                 bond_compo_type = COMPO_TYPE_NUMBER;
                 max_cnt = 2;
@@ -201,7 +269,15 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 num->num_part = num_part_en ? i + 1 : 0;
                 //个位中心坐标
                 compo_number_set_pos(num, uitool_res->x - delt_x * i, uitool_res->y + delt_y * i);
-                compo_number_set_zfill(num, true);
+                if(uitool_res->bond_type > COMPO_BOND_NONE && uitool_res->bond_type <= COMPO_BOND_DATE)
+                {
+                    compo_number_set_zfill(num, true);
+                }
+                else
+                {
+                    compo_number_set_zfill(num, false);
+                }
+                compo_number_set_align(num, uitool_res->rsv);
                 //compo_number_set_visible(num, false);
                 compo_bonddata(num, uitool_res->bond_type);
                 compo_set_bonddata((component_t *)num, time_to_tm(compo_cb.rtc_cnt));

@@ -358,7 +358,7 @@ bool hfp_hf_3way_number_update_control(void)
 void hfp_hf_parse_clcc_cb(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode, uint8_t mpty, char *number, uint8_t type)
 {
     printf("===>>> clcc: idx:%d, dir:%d, status:%d, mode:%d, mpty:%d, number:%s, type:%d\n", idx, dir, status, mode, mpty, number, type);
-    if(mode == 0 && (status == 0 || status == 2 || status == 4))
+    if(mode == 0 && status != 1)
     {
         uteModuleCallSetBeforeCallStatus(dir);
         uteModuleCallSetContactsNumberAndName((uint8_t*)number, strlen(number), (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));

@@ -140,6 +140,7 @@ enum
     FUNC_TEST_MODE,      ///*出厂测试模式选择*/
     FUNC_FACTORY_TESTING,///*工厂测试*/
     FUNC_AGEING,         ///*老化测试*/
+    FUNC_AUDIO,         ///*音频测试*/
 
 };
 

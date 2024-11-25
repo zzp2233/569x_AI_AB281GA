@@ -119,6 +119,7 @@ extern void func_set_sub_sos(void);
 extern void func_test_mode(void);///*出厂测试模式选择*/
 extern void func_factory_testing(void);///*工厂测试*/
 extern void func_ageing(void);///*老化测试*/
+extern void func_audio(void);///*音频测试*/
 
 compo_form_t *func_ble_call_form_create(void);
 compo_form_t *func_ota_update_form_create(void);
@@ -207,6 +208,7 @@ compo_form_t *func_set_sub_sos_form_create(void);
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_factory_testing_create(void);///*工厂测试*/
 compo_form_t * func_ageing_create(void);///*老化测试*/
+compo_form_t * func_audio_create(void);///*音频测试*/
 
 bool func_music_is_play(void);
 void func_music_play(bool sta);
@@ -314,6 +316,7 @@ const func_t tbl_func_create[] =
     {FUNC_TEST_MODE,                    func_test_mode_form_create},///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/
     {FUNC_AGEING,                       func_ageing_create},///*老化测试*/
+    {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
 };
 
 const func_t tbl_func_entry[] =
@@ -433,6 +436,7 @@ const func_t tbl_func_entry[] =
     {FUNC_TEST_MODE,                    func_test_mode}, ///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing},///*工厂测试*/
     {FUNC_AGEING,                       func_ageing},///*老化测试*/
+    {FUNC_AUDIO,                        func_audio},///*音频测试*/
 
 };
 

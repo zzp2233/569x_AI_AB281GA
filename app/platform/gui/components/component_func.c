@@ -296,6 +296,18 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             //strcpy(value_str, i18n[STR_KM + value]);
             break;
 
+        case COMPO_BOND_TIME_WEEK: //图片 星期
+            value = tm.weekday; //0-6:SUN-SAT
+            break;
+
+        case COMPO_BOND_TIME_AMPM: //图片 am pm
+            value = tm.hour > 12 ? 1 : 0; // 0:AM 1:PM
+            break;
+
+        case COMPO_BOND_TIME_MONTH: //图片 月份
+            value = tm.mon - 1;
+            break;
+
         default:
             flag_update = false;
             break;
@@ -327,8 +339,11 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         else if (compo->type == COMPO_TYPE_PICTUREBOX)
         {
             compo_picturebox_t *pic = (compo_picturebox_t *)compo;
-            compo_picturebox_cut(pic, value, pic->radix);
-            compo_picturebox_set_visible(pic, true);
+            if (widget_get_visble(pic->img))
+            {
+                compo_picturebox_cut(pic, value, pic->radix);
+                // compo_picturebox_set_visible(pic, true);
+            }
         }
     }
 }

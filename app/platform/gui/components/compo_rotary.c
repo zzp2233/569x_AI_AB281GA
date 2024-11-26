@@ -89,8 +89,9 @@ void compo_rotary_update(compo_rotary_t *rotary)
     {
         int idx = sidx + (ROTARY_ITEM_CNT - 1 - i);
         s32 angle = s_angle + (ROTARY_ITEM_CNT - 1 - i) * ROTARY_ITEM_ANGLE;
-        if (idx >= rotary->item_cnt)
+        while (idx >= rotary->item_cnt)
         {
+            WDT_CLR();
             idx -= rotary->item_cnt;
         }
         widget_image3d_t *img = rotary->item_img[i];

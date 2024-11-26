@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_gui_common.h"
+#include "ute_module_watchonline.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -17,14 +18,20 @@ extern const u32 dialplate_info[];
 //根据表盘的基地址获取对应的预览图
 u32 func_clock_preview_get_addr(u32 base_addr)
 {
+    u32 user_addr = base_addr;
+#if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
+    user_addr += sizeof(watchConfig_t);
+#endif
     uitool_header_t uitool_header;
-    os_spiflash_read(&uitool_header, base_addr, UITOOL_HEADER);
-	for(u16 i=0; i<uitool_header.num; i++) {
+    os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
+    for(u16 i=0; i<uitool_header.num; i++)
+    {
         uitool_res_t uitool_res = {0};
-        os_spiflash_read(&uitool_res, base_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
-        u32 res_addr = base_addr + uitool_res.res_addr;
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        u32 res_addr = user_addr + uitool_res.res_addr;
         //预览图
-        if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW) {
+        if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW)
+        {
             return res_addr;
         }
     }
@@ -42,13 +49,15 @@ u16 func_clock_preview_get_type(void)
 #if (CUR_PREVIEW_STYLE == PREVIEW_ROWBOX_STYLE)
 
 //组件ID
-enum {
+enum
+{
     //列表(横向)
     COMPO_ID_ROWBOX = 1,
 
 };
 
-typedef struct f_clock_preview_t_ {
+typedef struct f_clock_preview_t_
+{
 
 } f_clock_preview_t;
 
@@ -66,9 +75,9 @@ compo_form_t *func_clock_preview_form_create(void)
 
     //创建预览图
     compo_rowbox_t *rowbox = compo_rowbox_create(frm);
-    compo_rowbox_set_style(rowbox, COMPO_ROWBOX_STYLE_PREVIEW);			//设置预览样式，用于表盘时需要在set前调用
+    compo_rowbox_set_style(rowbox, COMPO_ROWBOX_STYLE_PREVIEW);         //设置预览样式，用于表盘时需要在set前调用
 
-	u8 dialplate_max_num = func_clock_get_max_dialplate_num();
+    u8 dialplate_max_num = func_clock_get_max_dialplate_num();
     compo_rowbox_set(rowbox, dialplate_info, dialplate_max_num);
     compo_setid(rowbox, COMPO_ID_ROWBOX);
     compo_rowbox_cycle_en(rowbox, true);                                //循环滚动
@@ -95,56 +104,62 @@ static void func_clock_preview_message(size_msg_t msg)
     compo_rowbox_move_cb_t *mcb = rowbox->mcb;
     int sel_idx;    //选择表盘的idx
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        sel_idx = compo_rowbox_select(rowbox, ctp_get_sxy());
-        if (sel_idx >= 0) {
-            sys_cb.dialplate_index = sel_idx;
-            func_switch_to(FUNC_CLOCK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);                    //切换回主时钟
-        }
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            sel_idx = compo_rowbox_select(rowbox, ctp_get_sxy());
+            if (sel_idx >= 0)
+            {
+                sys_cb.dialplate_index = sel_idx;
+                func_switch_to(FUNC_CLOCK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);                    //切换回主时钟
+            }
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_RIGHT:
-        mcb->flag_drag = true;
-        mcb->flag_move_auto = false;
-        break;
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_RIGHT:
+            mcb->flag_drag = true;
+            mcb->flag_move_auto = false;
+            break;
 
-    case MSG_QDEC_FORWARD:
-        //向前滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->moveto_idx = rowbox->focus_icon_idx;
-        }
-        if (mcb->moveto_idx <= rowbox->img_cnt - 1 || rowbox->flag_cycle) {
-            mcb->moveto_idx++;
-            mcb->moveto_x = compo_rowbox_getx_byidx(rowbox, mcb->moveto_idx);
-        }
-        break;
+        case MSG_QDEC_FORWARD:
+            //向前滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->moveto_idx = rowbox->focus_icon_idx;
+            }
+            if (mcb->moveto_idx <= rowbox->img_cnt - 1 || rowbox->flag_cycle)
+            {
+                mcb->moveto_idx++;
+                mcb->moveto_x = compo_rowbox_getx_byidx(rowbox, mcb->moveto_idx);
+            }
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        //向后滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->moveto_idx = rowbox->focus_icon_idx;
-        }
-        if (mcb->moveto_idx >= 0 || rowbox->flag_cycle) {
-            mcb->moveto_idx--;
-            mcb->moveto_x = compo_rowbox_getx_byidx(rowbox, mcb->moveto_idx);
-        }
-        break;
+        case MSG_QDEC_BACKWARD:
+            //向后滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->moveto_idx = rowbox->focus_icon_idx;
+            }
+            if (mcb->moveto_idx >= 0 || rowbox->flag_cycle)
+            {
+                mcb->moveto_idx--;
+                mcb->moveto_x = compo_rowbox_getx_byidx(rowbox, mcb->moveto_idx);
+            }
+            break;
 
-    case KU_BACK:
-        sys_cb.dialplate_index = rowbox->img_idx[IMG_MAX/2];    //中间为焦点
-        func_switch_to(FUNC_CLOCK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
-        break;
+        case KU_BACK:
+            sys_cb.dialplate_index = rowbox->img_idx[IMG_MAX/2];    //中间为焦点
+            func_switch_to(FUNC_CLOCK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -173,7 +188,8 @@ void func_clock_preview(void)
 {
     printf("%s\n", __func__);
     func_clock_preview_enter();
-    while (func_cb.sta == FUNC_CLOCK_PREVIEW) {
+    while (func_cb.sta == FUNC_CLOCK_PREVIEW)
+    {
         func_clock_preview_process();
         func_clock_preview_message(msg_dequeue());
     }
@@ -187,13 +203,15 @@ void func_clock_preview(void)
 #if(CUR_PREVIEW_STYLE == PREVIEW_STACKLIST_STYLE)
 
 //组件ID
-enum {
+enum
+{
     //列表(横向)
     COMPO_ID_STACKLIST = 1,
 
 };
 
-typedef struct f_clock_preview_t_ {
+typedef struct f_clock_preview_t_
+{
 
 } f_clock_preview_t;
 
@@ -220,7 +238,8 @@ compo_form_t *func_clock_preview_form_create(void)
     //设置图片
     u8 dial_count = func_clock_get_max_dialplate_num();
     u32 prev_dial_pic[STACKLIST_PIC_COUNT_MAX] = {0};
-    for (u8 i = 0; i < dial_count; i++) {
+    for (u8 i = 0; i < dial_count; i++)
+    {
         prev_dial_pic[i] = func_clock_preview_get_addr(dialplate_info[i]);
     }
     compo_stacklist_set_pic(stacklist, prev_dial_pic, dial_count);
@@ -241,35 +260,36 @@ static void func_clock_preview_message(size_msg_t msg)
 {
     compo_stacklist_t *stacklist = compo_getobj_byid(COMPO_ID_STACKLIST);
 
-    switch (msg) {
-    case MSG_CTP_TOUCH:
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
             compo_stacklist_set_drag(stacklist, true);
-         break;
+            break;
 
-    case MSG_CTP_CLICK:
-    case KU_BACK:
+        case MSG_CTP_CLICK:
+        case KU_BACK:
             sys_cb.dialplate_index = stacklist->cur_index;
             func_switch_to(FUNC_CLOCK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);      //切换回表盘界面
-        break;
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_RIGHT:
-        break;
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_RIGHT:
+            break;
 
-    case MSG_QDEC_FORWARD:
-        compo_stacklist_symm_pic_move(stacklist, 20);
-        break;
+        case MSG_QDEC_FORWARD:
+            compo_stacklist_symm_pic_move(stacklist, 20);
+            break;
 
-    case MSG_QDEC_BACKWARD:
-        compo_stacklist_symm_pic_move(stacklist, -20);
-        break;
+        case MSG_QDEC_BACKWARD:
+            compo_stacklist_symm_pic_move(stacklist, -20);
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -291,7 +311,8 @@ void func_clock_preview(void)
 {
     printf("%s\n", __func__);
     func_clock_preview_enter();
-    while (func_cb.sta == FUNC_CLOCK_PREVIEW) {
+    while (func_cb.sta == FUNC_CLOCK_PREVIEW)
+    {
         func_clock_preview_process();
         func_clock_preview_message(msg_dequeue());
     }
@@ -310,13 +331,15 @@ void func_clock_preview(void)
 
 
 //组件ID
-enum {
+enum
+{
     //列表(横向)
     COMPO_ID_ROTARY = 1,
 
 };
 
-typedef struct f_clock_preview_t_ {
+typedef struct f_clock_preview_t_
+{
     compo_rotary_t *rotary;
 } f_clock_preview_t;
 
@@ -329,7 +352,8 @@ compo_form_t *func_clock_preview_form_create(void)
     //获取表盘预览图集合
     u8 dial_count = func_clock_get_max_dialplate_num();
 
-    for (u8 i = 0; i < dial_count; i++) {
+    for (u8 i = 0; i < dial_count; i++)
+    {
         prev_dial_item[i].res_addr = func_clock_preview_get_addr(dialplate_info[i]);
         prev_dial_item[i].str_idx = STR_NULL;
     }
@@ -357,7 +381,8 @@ static void func_clock_preview_process(void)
     //printf("idx = %d, width = %d, height = %d\n", compo_rotary_get_idx(rotary),
     //       gui_image_get_size(prev_dial_item[compo_rotary_get_idx(rotary)].res_addr).wid,
     //       gui_image_get_size(prev_dial_item[compo_rotary_get_idx(rotary)].res_addr).hei);
-    if (compo_rotary_get_sta(rotary) == COMPO_ROTARY_STA_EXIT) {
+    if (compo_rotary_get_sta(rotary) == COMPO_ROTARY_STA_EXIT)
+    {
         func_cb.sta = FUNC_CLOCK;
     }
 }
@@ -368,29 +393,32 @@ static void func_clock_preview_message(size_msg_t msg)
     f_clock_preview_t *f_clock_preview = (f_clock_preview_t *)func_cb.f_cb;
     compo_rotary_t *rotary = f_clock_preview->rotary;
 
-    switch (msg) {
-    case KU_BACK:
-        sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
-        uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
-        break;
-    default:
-        break;
+    switch (msg)
+    {
+        case KU_BACK:
+            sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
+            uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
+            break;
+        default:
+            break;
     }
 
-    if (compo_rotary_message(rotary, msg)) {
+    if (compo_rotary_message(rotary, msg))
+    {
         return;
     }
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
-        compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
-        uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
+            compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
+            uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 
 
@@ -405,7 +433,8 @@ static void func_clock_preview_enter(void)
     f_clock_preview_t *f_clock_preview = (f_clock_preview_t *)func_cb.f_cb;
     f_clock_preview->rotary = compo_getobj_byid(COMPO_ID_ROTARY);
     compo_rotary_t *rotary = f_clock_preview->rotary;
-    if (rotary->type != COMPO_TYPE_ROTARY) {
+    if (rotary->type != COMPO_TYPE_ROTARY)
+    {
         halt(HALT_GUI_COMPO_ROTARY_TYPE);
     }
     compo_rotary_set_rotation_byidx(rotary, sys_cb.dialplate_index);
@@ -425,7 +454,8 @@ void func_clock_preview(void)
 {
     printf("%s\n", __func__);
     func_clock_preview_enter();
-    while (func_cb.sta == FUNC_CLOCK_PREVIEW) {
+    while (func_cb.sta == FUNC_CLOCK_PREVIEW)
+    {
         func_clock_preview_process();
         func_clock_preview_message(msg_dequeue());
     }

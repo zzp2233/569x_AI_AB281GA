@@ -373,6 +373,7 @@ void uteModuleGuiCommonInit(void)
 #endif
     uteModuleGuiCommonData.isGoBackDisplay = true;
     func_cb.menu_style = (uint8_t)uteModuleGuiCommonGetThemeTypeId();
+    uteModuleGuiCommonWatchConfigInit();
 }
 
 /**
@@ -597,12 +598,23 @@ void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
 {
     uteModuleGuiCommonData.displayCtrl.currWatchIndex = index;
     sys_cb.dialplate_index = index;
-
     if(index >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
     {
         uteModuleWatchOnlineUpateConfigFromFlash();
     }
     uteModuleGuiCommonSaveConfig();
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,index=%d",__func__,index);
+}
+
+/**
+*@brief      watch config init
+*@details
+*@author     zn.zeng
+*@date       2021-10-23
+*/
+void uteModuleGuiCommonWatchConfigInit(void)
+{
+    uteModuleGuiCommonSetCurrWatchIndex(uteModuleGuiCommonData.displayCtrl.currWatchIndex);
 }
 
 /**

@@ -4,6 +4,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_watchonline.h"
 #include "ute_project_config.h"
+#include "ute_module_log.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -647,17 +648,25 @@ static void func_clock_message(size_msg_t msg)
 static void func_clock_enter(void)
 {
     uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
-    func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
-    func_cb.frm_main = func_clock_form_create();
 #if UTE_MODULE_WATCHONLINE_SUPPORT
-    if(uteModuleWatchOnlineGetVailWatchCnt())
+    if (uteModuleWatchOnlineGetVailWatchCnt())
     {
         for (uint8_t i = 0; i < uteModuleWatchOnlineGetVailWatchCnt(); i++)
         {
             dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i] = uteModuleWatchOnlineGetBaseAddress(i);
+            UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,watch online index %d: 0x%x", __func__, i, dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i]);
         }
     }
+    else
 #endif
+    {
+        if (sys_cb.dialplate_index > UTE_MODULE_SCREENS_WATCH_CNT_MAX - 1)
+        {
+            sys_cb.dialplate_index = DEFAULT_WATCH_INDEX;
+        }
+    }
+    func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
+    func_cb.frm_main = func_clock_form_create();
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {

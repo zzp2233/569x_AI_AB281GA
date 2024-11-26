@@ -2466,7 +2466,7 @@ void uteModuleProtocolFromPhone(uint8_t *receive,uint8_t length,bool isPublic)
 void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 {
     memset(data,0,size);
-    data[0]|= 0x08;
+    // data[0]|= 0x08; //瑞昱平台标识
 #if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
     data[1]|= 0x02;
 #endif
@@ -2536,7 +2536,7 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #endif
     data[6]|= 0x01;
     data[6]|= 0x08;  //支持应用通知开关选择显示
-    data[6]|= 0x10;
+    // data[6]|= 0x10; //安卓音乐信息
 #if UTE_BT30_CALL_SUPPORT
     data[6]|= 0x20;
 #endif

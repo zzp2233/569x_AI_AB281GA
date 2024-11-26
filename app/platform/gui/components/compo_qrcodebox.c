@@ -37,6 +37,18 @@ compo_qrcodebox_t *compo_qrcodebox_create(compo_form_t *frm, u8 qr_type, u16 max
     return qrcodebox;
 }
 
+void compo_qrcodebox_set_pos(compo_qrcodebox_t *qrcodebox, s16 x, s16 y)
+{
+    if (qrcodebox == NULL)
+    {
+        halt(HALT_GUI_COMPO);
+    }
+    widget_set_pos(qrcodebox->qrcode, x, y);
+    rect_t rect = widget_get_location(qrcodebox->qrcode);
+    widget_set_location(qrcodebox->bg, rect.x, rect.y, rect.wid + QRCODEBOX_PADDING, rect.hei + QRCODEBOX_PADDING);
+
+}
+
 /**
  * @brief 设置码的内容
  * @param[in] qrcodebox : 码指针

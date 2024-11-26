@@ -9,7 +9,6 @@
 
 #ifndef _UTE_MODULE_PLATFORM_H_
 #define _UTE_MODULE_PLATFORM_H_
-#include <stdint.h>
 #include "include.h"
 #include "rt_thread.h"
 #include "ute_flash_map_common.h"
@@ -19,6 +18,7 @@
 #include "port_tft.h"
 #include "config_extra.h"
 #include "ute_module_mem.h"
+#include "rt_thread.h"
 
 #define __STATIC_INLINE  static __inline
 
@@ -41,7 +41,7 @@ typedef struct
 typedef void (*uteModulePlatformTimerCallback_t)(void *pxTimer);
 typedef struct
 {
-    struct os_mutex mutex;
+    os_mutex_t mutex;
     bool isCreate;
 } ute_module_platform_mutex_t;
 

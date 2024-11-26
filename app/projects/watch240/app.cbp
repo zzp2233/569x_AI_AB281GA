@@ -1261,6 +1261,9 @@
 		<Unit filename="functions/test_mode/func_test_ageing.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/test_mode/func_test_audio.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/test_mode/func_test_mode.c">
 			<Option compilerVar="CC" />
 		</Unit>

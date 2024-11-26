@@ -479,8 +479,19 @@ void compo_listbox_update(compo_listbox_t *listbox)
                 {
                     widget_set_visible(listbox->item_page[i], true);
                     widget_text_set(listbox->item_text[i], str_txt_name);
+                    if (listbox->set_text1_color_callback != NULL)
+                    {
+                        widget_text_set_color(listbox->item_text[i], listbox->set_text1_color_callback(listbox->item_idx[i]));
+                    }
                     widget_text_set(listbox->item_text2[i], str_txt_number);
-                    widget_text_set_color(listbox->item_text2[i], COLOR_GRAY);
+                    if (listbox->set_text2_color_callback != NULL)
+                    {
+                        widget_text_set_color(listbox->item_text2[i], listbox->set_text2_color_callback(listbox->item_idx[i]));
+                    }
+                    else
+                    {
+                        widget_text_set_color(listbox->item_text2[i], COLOR_GRAY);
+                    }
                 }
                 else
                 {
@@ -1318,5 +1329,18 @@ void compo_listbox_set_icon_callback(compo_listbox_t *listbox, void* callback)
     listbox->set_icon_callback = callback;
 }
 
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符颜色，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text1_color_callback(compo_listbox_t *listbox, void* callback)
+{
+    listbox->set_text1_color_callback = callback;
+}
 
+void compo_listbox_set_text2_color_callback(compo_listbox_t *listbox, void* callback)
+{
+    listbox->set_text2_color_callback = callback;
+}
 

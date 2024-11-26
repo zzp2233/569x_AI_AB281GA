@@ -21,18 +21,20 @@ static u16 test_value = 0;
 #define LOWPWR_PERCENT          10  //低电百分比阈值
 #define NUM_PERCENT_MARGIN      6  //数字和百分号间距
 
-enum {
-	//图像id
-	COMPO_ID_PIC_LOWPWR = 1,        //红色底图
-	COMPO_ID_PIC_QUARTER0,          //绿色底图
-	COMPO_ID_PIC_QUARTER1,          //50%部分
-	COMPO_ID_PIC_QUARTER2,          //75%部分
-	COMPO_ID_PIC_QUARTER,           //1/4绿圈
-	//数字
+enum
+{
+    //图像id
+    COMPO_ID_PIC_LOWPWR = 1,        //红色底图
+    COMPO_ID_PIC_QUARTER0,          //绿色底图
+    COMPO_ID_PIC_QUARTER1,          //50%部分
+    COMPO_ID_PIC_QUARTER2,          //75%部分
+    COMPO_ID_PIC_QUARTER,           //1/4绿圈
+    //数字
     COMPO_ID_NUM_PERCENT,
 };
 
-typedef struct f_charge_t_ {
+typedef struct f_charge_t_
+{
     u8 percent_bkp;
 } f_charge_t;
 
@@ -83,14 +85,14 @@ compo_form_t *func_charge_form_create(void)
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_picturebox_set_visible(pic, BAT_PERCENT_VALUE > LOWPWR_PERCENT);
 
-	//创建数字
-	char str_buff[8];
-	compo_textbox_t *txt = compo_textbox_create(frm, 4);
-	compo_setid(txt, COMPO_ID_NUM_PERCENT);
-	compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*4/5);
-	compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
-	snprintf(str_buff, sizeof(str_buff), "%d%%", BAT_PERCENT_VALUE);
-	compo_textbox_set(txt, str_buff);
+    //创建数字
+    char str_buff[8];
+    compo_textbox_t *txt = compo_textbox_create(frm, 4);
+    compo_setid(txt, COMPO_ID_NUM_PERCENT);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*4/4.5);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    snprintf(str_buff, sizeof(str_buff), "%d%%", BAT_PERCENT_VALUE);
+    compo_textbox_set(txt, str_buff);
 
     return frm;
 }
@@ -105,13 +107,15 @@ static void func_charge_process(void)
 
 #if TEST_EN
     static u32 tick = 0;
-    if (tick_check_expire(func_cb.enter_tick, 3000) && tick_check_expire(tick, 300)) {
+    if (tick_check_expire(func_cb.enter_tick, 3000) && tick_check_expire(tick, 300))
+    {
         tick = tick_get();
         test_value += test_value >= 100 ? 0 : 1;
     }
 #endif // TEST_EN
 
-    if (f_charge->percent_bkp != BAT_PERCENT_VALUE) {
+    if (f_charge->percent_bkp != BAT_PERCENT_VALUE)
+    {
         TRACE("vbat:%d-->%d\n", f_charge->percent_bkp, BAT_PERCENT_VALUE);
         pic = compo_getobj_byid(COMPO_ID_PIC_LOWPWR);
         compo_picturebox_set_visible(pic, BAT_PERCENT_VALUE <= LOWPWR_PERCENT);
@@ -132,7 +136,8 @@ static void func_charge_process(void)
         f_charge->percent_bkp = BAT_PERCENT_VALUE;
     }
 
-    if (bsp_charge_sta_get() == 0) {
+    if (bsp_charge_sta_get() == 0)
+    {
         func_cb.sta = FUNC_CLOCK;
     }
 
@@ -142,29 +147,30 @@ static void func_charge_process(void)
 //充电功能消息处理
 static void func_charge_message(size_msg_t msg)
 {
-    switch (msg) {
+    switch (msg)
+    {
 #if TEST_EN
-    case MSG_CTP_CLICK:
-        test_value = 0;
-        TRACE("test_value:%d\n", test_value);
-        break;
+        case MSG_CTP_CLICK:
+            test_value = 0;
+            TRACE("test_value:%d\n", test_value);
+            break;
 #endif // TEST_EN
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_SHORT_RIGHT:
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_LONG:
+            break;
 
-    case MSG_QDEC_FORWARD:
-    case MSG_QDEC_BACKWARD:
-        break;
+        case MSG_QDEC_FORWARD:
+        case MSG_QDEC_BACKWARD:
+            break;
 
-    default:
-        //func_message(msg);
-        evt_message(msg);
-        break;
+        default:
+            //func_message(msg);
+            evt_message(msg);
+            break;
     }
 }
 
@@ -190,7 +196,8 @@ void func_charge(void)
 {
     printf("%s\n", __func__);
     func_charge_enter();
-    while (func_cb.sta == FUNC_CHARGE) {
+    while (func_cb.sta == FUNC_CHARGE)
+    {
         func_charge_process();
         func_charge_message(msg_dequeue());
     }

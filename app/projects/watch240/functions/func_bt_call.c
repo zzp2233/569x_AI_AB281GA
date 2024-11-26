@@ -6,6 +6,7 @@
 enum
 {
     COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
+    COMPO_ID_TXT_NAME,
     COMPO_ID_TXT_TIME,
     COMPO_ID_BTN_REJECT,
     COMPO_ID_BTN_MIC,
@@ -55,31 +56,40 @@ void bt_incall_time_update(void)
     compo_textbox_set_visible(time_txt, true);
 }
 
-void func_bt_call_number_update(void)
+void  func_bt_call_number_update(void)
 {
     if (bt_cb.number_sta)
     {
         compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
         compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+        bt_pbap_lookup_number(hfp_get_last_call_number(0));
     }
 }
 
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_bt_call_form_create(void)
 {
+//    bt_pbap_lookup_number(hfp_get_last_call_number(0));
     //printf("%s\n", __func__);
     //新建窗体, 通话页面
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
 
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_autosize(name_txt, true);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+//    compo_textbox_set(name_txt, "中国移动");
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
     compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
-    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/4, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(time_txt, true);
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
 
@@ -100,19 +110,28 @@ compo_form_t *func_bt_call_form_create(void)
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_bt_outgoing_form_create(void)
 {
+//    bt_pbap_lookup_number(hfp_get_last_call_number(0));
 //    新建窗体, 呼出页面
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
 
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_autosize(name_txt, true);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    //compo_textbox_set(name_txt, "中国移动");
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_IN_CALL]));
     compo_textbox_set(txt, i18n[STR_IN_CALL]);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1, GUI_SCREEN_CENTER_Y/1.2);
+    compo_textbox_set_autosize(number_txt, true);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1,GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //挂断按钮
@@ -174,9 +193,14 @@ static void func_bt_call_exit_process(void)
             func_bt_call_back_to();
         }
 }
-
+void func_bt_call_up_date_process(void)
+{
+    compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+}
 void func_bt_call_process(void)
 {
+    func_bt_call_up_date_process();
     func_process();
     func_bt_sub_process();
     func_bt_call_exit_process();
@@ -234,7 +258,7 @@ static void func_bt_call_message(size_msg_t msg)
             }
             else
             {
-                bt_call_terminate();                        //挂断当前通话
+//                bt_call_terminate();                        //挂断当前通话
             }
             break;
 

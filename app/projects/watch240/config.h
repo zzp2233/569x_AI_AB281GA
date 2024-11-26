@@ -343,12 +343,16 @@
 #define USER_ADKEY                      0           //ADKEY的使用， 0为不使用
 #define USER_IOKEY                      0           //IOKEY的使用， 0为不使用
 
-#define USER_KEY_QDEC_EN                1           //旋钮, 硬件正交解码, A,B输出分别接一个IO
+#define USER_KEY_QDEC_EN                0           //旋钮, 硬件正交解码, A,B输出分别接一个IO
 #define USER_QDEC_MAPPING               QDEC_MAP_G1 //选择硬件正交解码的mapping, 每组map的IO固定，详见define处说明
 
 #define USER_ADKEY_QDEC_EN              0           //旋钮, A,B串不同电阻接到同一个IO口上，软件ADC采集并解码
 #define USER_ADKEY_QDEC_NO_STD          0           //是否使用非标准电平判断(适用编码器漏电平时)
 #define USER_QDEC_ADCH                  ADCCH_PA0   //选择旋钮的ADC通道
+
+#define USER_IO_QEDC_EN                 1           //旋钮, 使用两个普通IO方式
+#define QEDC_IO_A                       IO_PB0
+#define QEDC_IO_B                       IO_PB1
 
 #define USER_MULTI_PRESS_EN             1           //按键多击检测使能
 #define USER_MULTI_KEY_TIME             4           //按键多击响应时间（单位100ms）
@@ -490,7 +494,6 @@
  *****************************************************************************/
 #define MEM_HEAP_SIZE                   16*1024 + (2048 + 512) + UTE_TASK_APPLICATION_STACK_SIZE          //用于分配全部线程的总栈内存大小, 如果设置为 0, 采用中科平台库内置默认大小 16*1024
 #define OS_THREAD_MAIN_STACK            2048 + 1536 + (2048 + 512)        //分配main线程栈内存大小, 如果设置为 0, 采用中科平台库内置默认大小 2048 + 1536
-
 #define OS_THREAD_MUSIC_STACK           896 + (512) * OPUS_ENC_EN
 
 #define OS_THREAD_MAIN_PRIOPITY         0 //main线程优先级 大于 25 小于 31

@@ -38,6 +38,9 @@
 
 #define ACLOCK_LIST_CNT                 ((int)(sizeof(tbl_aclock_list) / sizeof(tbl_aclock_list[0])))
 
+static void func_alarm_clock_exit(void);
+static void func_alarm_clock_enter(void);
+
 //组件ID
 enum
 {
@@ -54,9 +57,42 @@ enum
 typedef struct f_alarm_clock_t_
 {
     page_tp_move_t *ptm;
+    bool time_scale;        //时间制 0:24小时; 1:12小时
 } f_alarm_clock_t;
 
 static widget_icon_t *icon_add;
+
+typedef struct func_alarm_hour_format_t_
+{
+    u8 hour;
+    u8 am_pm;
+} func_alarm_hour_format_t;
+
+static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
+{
+    u8 am_pm = (hour24 >= 12) ? 2 : 1;    //2 PM, 1 AM
+    func_alarm_hour_format_t hour12;
+    if(uteModuleSystemtime12HOn())
+    {
+        if (hour24 == 0)
+        {
+            hour12.hour = 12;
+        }
+        else if (hour24 > 12)
+        {
+            hour12.hour = hour24 - 12;
+        }
+        else
+        {
+            hour12.hour = hour24;
+        }
+        hour12.am_pm = am_pm;
+        return hour12;
+    }
+    hour12.hour = hour24;
+    hour12.am_pm = 0;
+    return hour12;
+}
 
 //创建闹钟窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_form_create(void)
@@ -96,7 +132,7 @@ compo_form_t *func_alarm_clock_form_create(void)
 //            }
 
 
-            cardbox = compo_cardbox_create(frm, 1, 1, 2, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
+            cardbox = compo_cardbox_create(frm, 1, 1, 3, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
 
@@ -104,12 +140,30 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_icon_set_pos(cardbox, 0,
                                        (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN).wid / 2 - 2, 0);
 
-            snprintf(str_buff, sizeof(str_buff), "%02d:%02d", ALARM_GET_HOUR(i), ALARM_GET_MIN(i));
+            snprintf(str_buff, sizeof(str_buff), "%02d:%02d", func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).hour, ALARM_GET_MIN(i));
             compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
             compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
             compo_cardbox_text_set(cardbox, 0, str_buff);
             compo_cardbox_text_set_align_center(cardbox, 0, false);
             compo_cardbox_text_set_location(cardbox, 0, -100, -35, 180, 50);
+
+            compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_BIN);
+            compo_cardbox_text_set_forecolor(cardbox, 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+            compo_cardbox_text_set_align_center(cardbox, 2, false);
+            compo_cardbox_text_set_location(cardbox, 2, -20, -30, 80, 50);
+            compo_cardbox_text_set_visible(cardbox, 2, true);
+            if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 0)
+            {
+                compo_cardbox_text_set_visible(cardbox, 2, false);
+            }
+            else if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 1)           //AM
+            {
+                compo_cardbox_text_set(cardbox, 2, i18n[STR_AM]);
+            }
+            else if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 2)           //PM
+            {
+                compo_cardbox_text_set(cardbox, 2, i18n[STR_PM]);
+            }
 
             if (ALARM_GET_CYCLE(i) & BIT(7))
             {
@@ -121,12 +175,18 @@ compo_form_t *func_alarm_clock_form_create(void)
             }
             else
             {
-                snprintf(str_buff, sizeof(str_buff), i18n[STR_REPEAT]);
+                snprintf(str_buff, sizeof(str_buff), i18n[STR_WEEK]);
                 char *buff_pt = str_buff + strlen(str_buff);
                 for (u8 j=0; j<7; j++)
                 {
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {
+                        if(j!=0)
+                        {
+                            *buff_pt = ',';
+                            buff_pt++;
+                        }
+
                         *buff_pt = '0' + j + 1;
                         buff_pt++;
                     }
@@ -183,6 +243,7 @@ static void func_alarm_clock_button_release_handle(void)
         cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
         compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN : UI_BUF_ALARM_CLOCK_SELECT1_BIN);
         compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+        compo_cardbox_text_set_forecolor(cardbox, 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
 //        compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
     }
 
@@ -239,6 +300,12 @@ static void func_alarm_clock_process(void)
     compo_page_move_process(f_aclock->ptm);
 
     func_process();
+
+    for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)      //文本滚动
+    {
+        compo_cardbox_t* cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
+        compo_cardbox_text_scroll_process(cardbox, true);
+    }
 }
 
 
@@ -246,6 +313,8 @@ static void func_alarm_clock_process(void)
 static void func_alarm_clock_message(size_msg_t msg)
 {
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
+
+
 
     switch (msg)
     {
@@ -282,6 +351,24 @@ static void func_alarm_clock_message(size_msg_t msg)
             compo_page_move_set_by_pages(f_aclock->ptm, 1);
             break;
 
+        case MSG_SYS_500MS:
+            //时间制检测
+            if (f_aclock->time_scale != uteModuleSystemtime12HOn())
+            {
+                if (func_cb.frm_main != NULL)
+                {
+                    compo_form_destroy(func_cb.frm_main);
+                }
+                func_alarm_clock_exit();
+                if (func_cb.f_cb != NULL)
+                {
+                    func_free(func_cb.f_cb);
+                    func_cb.f_cb = NULL;
+                }
+                func_alarm_clock_enter();
+            }
+            break;
+
         default:
             func_message(msg);
             break;
@@ -309,6 +396,9 @@ static void func_alarm_clock_enter(void)
         .down_spring_perc = icon_add ? 0 : 40,
     };
     compo_page_move_init(f_aclock->ptm, func_cb.frm_main->page_body, &info);
+
+    //当前显示的时间制
+    f_aclock->time_scale = uteModuleSystemtime12HOn();
 }
 
 //退出闹钟功能

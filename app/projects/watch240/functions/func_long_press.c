@@ -130,6 +130,21 @@ static void func_long_press_event_handle(s32 distance, u16 id)
             switch(id)
             {
                 case IMG_BTN_ID_1://SOS
+                    memset(sys_cb.outgoing_number, 0, 16);
+                    for(int i=0; i<strlen(sys_cb.sos_call_number); i++)
+                    {
+                        sys_cb.outgoing_number[i] = sys_cb.sos_call_number[i];
+                    }
+#if MODEM_CAT1_EN
+                    if (bsp_modem_get_init_flag())
+                    {
+                        modem_call_dial(sys_cb.outgoing_number);
+                    }
+                    else
+#endif
+                    {
+                        bt_call_redial_number();
+                    }
                     break;
                 case IMG_BTN_ID_2://关机
                     //    func_cb.sta = FUNC_PWROFF;

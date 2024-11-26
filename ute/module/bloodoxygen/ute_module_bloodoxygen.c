@@ -624,6 +624,7 @@ void uteModuleBloodoxygenDelHistoryData(void)
 *@author       xjc
 *@date       2022-01-18
 */
+AT(.com_text.ute_spo2)
 bool uteModuleBloodoxygenIsBloodOxygenAutoTesting(void)
 {
     return uteModuleBloodoxygenData.isBloodOxygenAutoTestFlag;

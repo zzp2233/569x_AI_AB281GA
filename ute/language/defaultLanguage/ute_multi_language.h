@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-18 10:01:36
+*@date   2024-11-25 10:49:17
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -262,6 +262,27 @@ enum
     STR_RETRY, // 重试
     STR_CONTACTS, // 通讯录
     STR_ENTER_NUMBER, // 请输入电话号码！
+    STR_VOICE_SPEAKER, // 请说话...
+    STR_VOICE_BT_NOT_CONNECT, // 蓝牙未连接
+    STR_VOICE_SIRI_START, // 点击屏幕开启SIRI
+    STR_ADDRESS_BOOK_SYNC, // 请使用APP同步联系人！！
+    STR_WEEK, // 星期:
+    STR_DO_WANT_IN, // 是否进入
+    STR_MODE_SELECTION, // 模式选择
+    STR_FACTORY_TESTING, // 工厂测试模式
+    STR_AGING_TESTING, // 老化测试模式
+    STR_SHIPPING, // 船运模式
+    STR_AUDIO, // 音频测试
+    STR_AVERSION_MAC, // 版本号&MAC
+    STR_BATTERY_INFORMATION, // 电池信息
+    STR_TP_VERSION, // TP版本：
+    STR_PASS, // 通过
+    STR_FALL, // 不通过
+    STR_DO_PASS, // 是否通过？
+    STR_AM, // 上午
+    STR_PM, // 下午
+    STR_PLEASE_ENTER_SOS, // 请输入SOS电话号码
+    STR_NO_CALL_RECORD, // 无通话记录
 };
 
 extern const char * const *i18n;

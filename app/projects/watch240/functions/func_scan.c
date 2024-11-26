@@ -34,7 +34,7 @@ compo_form_t *func_scan_form_create(void)
     uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
     compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
     compo_qrcodebox_set(qrbox, qr_str);
-    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 120);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X);
     uteModulePlatformMemoryFree(qr_str);
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
 

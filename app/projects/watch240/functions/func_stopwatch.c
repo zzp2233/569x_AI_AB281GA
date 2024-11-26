@@ -88,7 +88,7 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_textbox_set(txt_num, str_buff);
     txt_num = compo_textbox_create(frm, 2);     //记录数
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
-    compo_textbox_set_location(txt_num, 131, 82, 226, 46);
+    compo_textbox_set_location(txt_num, 131, 70, 226, widget_text_get_height());
     compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_BIN);
     snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
     compo_textbox_set(txt_num, str_buff);
@@ -258,6 +258,7 @@ static void func_stopwatch_process(void)
 {
     if (sys_cb.stopwatch_sta)
     {
+        reset_sleep_delay_all();        //计时的时候不许休眠
         u8 min = ((sys_cb.stopwatch_total_msec / 1000) % 3600) / 60;
         u8 sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
         u16 msec = sys_cb.stopwatch_total_msec % 1000;
@@ -276,7 +277,6 @@ static void func_stopwatch_process(void)
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", min, sec, msec / 10);
             compo_textbox_set(num_time, str_buff);
         }
-
     }
 
     func_process();
@@ -320,6 +320,7 @@ static void func_stopwatch_message(size_msg_t msg)
 //进入秒表功能
 static void func_stopwatch_enter(void)
 {
+    uteModuleGuiCommonDisplayOffAllowGoBack(false);
     func_cb.f_cb = func_zalloc(sizeof(f_stopwatch_t));
     func_cb.frm_main = func_stopwatch_form_create();
 }
@@ -327,6 +328,8 @@ static void func_stopwatch_enter(void)
 //退出秒表功能
 static void func_stopwatch_exit(void)
 {
+    uteModuleGuiCommonDisplayOffAllowGoBack(true);
+    func_cb.last = FUNC_STOPWATCH;
 }
 
 //秒表功能

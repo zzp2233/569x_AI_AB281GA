@@ -71,7 +71,6 @@ enum COMPO_BOND_DATA
     COMPO_BOND_TIME_WEEK = 37,          //星期
     COMPO_BOND_TIME_MONTH,              //月份
 
-
     COMPO_BOND_KCAL = 64,               //卡路里
     COMPO_BOND_STEP,                    //步数
     COMPO_BOND_HEARTRATE,               //心率

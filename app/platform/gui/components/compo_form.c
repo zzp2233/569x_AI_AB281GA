@@ -15,7 +15,7 @@
 #define GUI_PAGE_BODY_CENTER_Y          (GUI_PAGE_HEAD_HEIGHT + GUI_PAGE_BODY_HEIGHT / 2)
 
 #define GUI_PAGE_TITLE_WIDTH            (GUI_SCREEN_WIDTH * 2 / 5)
-#define GUI_PAGE_TIME_WIDTH             (GUI_SCREEN_WIDTH / 3)
+#define GUI_PAGE_TIME_WIDTH             (GUI_SCREEN_WIDTH - FORM_TITLE_RIGHT - GUI_SCREEN_WIDTH/12)//(GUI_SCREEN_WIDTH / 3)
 
 /**
  * @brief 创建窗体
@@ -35,23 +35,32 @@ compo_form_t *compo_form_create(bool flag_top)
     widget_set_size(icon, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
 
     widget_page_t *page_body = widget_page_create(page);
-    widget_text_t *time = widget_text_create(page, 5);
+//    widget_text_t *time = widget_text_create(page, 5);
 
     widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
     widget_set_location(page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
 
-    widget_set_align_center(time, false);
-    widget_set_location(time, FORM_TITLE_RIGHT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, GUI_PAGE_TIME_WIDTH, FORM_TITLE_HEIGHT);
-    widget_text_set_font(time, UI_BUF_FONT_FORM_TIME);
-    widget_set_visible(time, false);
+//    widget_set_align_center(time, false);
+//    widget_set_location(time, FORM_TITLE_RIGHT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, GUI_PAGE_TIME_WIDTH, FORM_TITLE_HEIGHT);
+//    widget_text_set_font(time, UI_BUF_FONT_FORM_TIME);
+//    widget_set_visible(time, false);
+
 
     frm->type = COMPO_TYPE_FORM;
     frm->page = page;
     frm->icon = icon;
 
+    frm->page_body = page;
+
+    compo_textbox_t *time = compo_textbox_create(frm, MAX_WORD_CNT);
+    compo_textbox_set_align_center(time, false);
+    compo_textbox_set_location(time, FORM_TITLE_RIGHT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, GUI_PAGE_TIME_WIDTH, FORM_TITLE_HEIGHT);
+    compo_textbox_set_multiline(time, false);
+    compo_textbox_set_autosize(time, false);
+    compo_textbox_set_font(time, UI_BUF_FONT_FORM_TIME);
+    compo_textbox_set_visible(time, false);
     frm->time = time;
 
-    frm->page_body = page;
     compo_textbox_t *title = compo_textbox_create(frm, MAX_WORD_CNT);
     frm->page_body = page_body;
     compo_textbox_set_align_center(title, false);
@@ -62,6 +71,8 @@ compo_form_t *compo_form_create(bool flag_top)
     compo_textbox_set_autoroll_mode(title, TEXT_AUTOROLL_MODE_NULL);
     compo_textbox_set_visible(title, true);
     frm->title = title;
+
+
 
     widget_icon_t *title_icon = widget_icon_create(page, 0);
     widget_set_pos(title_icon, FORM_TITLE_LEFT + 10, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT / 2 - 2);
@@ -166,7 +177,8 @@ static void compo_form_page_update(compo_form_t *frm)
     else
     {
         compo_textbox_set_visible(frm->title, (frm->mode & COMPO_FORM_MODE_SHOW_TITLE) != 0);
-        widget_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
+//        widget_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
+        compo_textbox_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
         widget_set_visible(frm->title_icon, (frm->mode & COMPO_FORM_MODE_SHOW_ICON) != 0);
         widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_PAGE_BODY_CENTER_Y, GUI_SCREEN_WIDTH, GUI_PAGE_BODY_HEIGHT);
         widget_page_set_client(frm->page_body, 0, -GUI_PAGE_HEAD_HEIGHT);

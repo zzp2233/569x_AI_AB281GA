@@ -57,6 +57,8 @@ static unsigned char set_cap_max=31;
 static unsigned char set_cap_mid=16;
 static unsigned char set_cap_min=1;
 
+static unsigned char vc30fx_clk_calc_done = 0;
+
 #if (VC30Fx_USE_MEMORY_SELECT == VC30Fx_USE_STATIC_MEMORY)
 static vc30fx_sample_info_t sample_info = {0};  /* sample config & sample result */
 static vc30fx_adjust_info adjust_info[2] = {0}; /* slot_adjust_infomation */
@@ -82,6 +84,12 @@ static int drv_read_sample_param(vc30fx_sample_info_t *psample_ret);
 static int drv_read_fifo_data(vc30fx_sample_info_t *psample_result);
 static int drv_read_event_status(vc30fx_drv_info *pdrv_info);
 //void drv_fifo_error_softreset( void );
+
+AT(.com_text.vc30fx)
+unsigned char vc30fx_clk_calc_status(void)
+{
+    return vc30fx_clk_calc_done;
+}
 
 /********************************************************************************************************
  * 驱动参数内存申请/释放，初始化/结束使用
@@ -1274,8 +1282,12 @@ static int drv_auto_calibration_oscclk(vc30fx_clk_info *pclk_info)
         else
         {
             pclk_info->clk_calc_status = 1; /* calibration finished mark */     //校验完成
-            //printf("clk_calc_status done uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART);\n");
-            uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART);        //校验完成直接休眠
+            if (vc30fx_clk_calc_done == 0)
+            {
+                vc30fx_clk_calc_done = 1;
+                uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART);        //校验完成直接休眠
+            }
+            // printf("clk_calc_status done uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART);\n");
             pclk_info->osc_gap_cnt = 0;
             rcosc_max = rcosc_mid + 2; /* 修正成功后，扩张一个调整点的范围，以便温漂时调整余量 */
             rcosc_min = rcosc_mid - 2;
@@ -1353,7 +1365,7 @@ void drv_calibration_clk_clear(void)
     }
     else
     {
-//      if( pclk_info->rcosc_calibration==0 )
+        if( pclk_info->rcosc_calibration==0 )
         {
             rcosc_max=rcosc_max_thh;
             rcosc_mid=(rcosc_max_thh+rcosc_min_thh)/2;
@@ -1575,6 +1587,7 @@ static int drv_ppg_mode_handler(const void *ops_self, vcare_ppg_device_t *pdev)
     vc30fx_sample_info_t *sample_result_ptr = pdev->result;
     vc30fx_mode_ops *self_ptr = (vc30fx_mode_ops *)ops_self;
     drv_calibration_oscclk_config( pdev );
+    // printf("WORK_MODE_[%d] clk_status[%d]\n", self_ptr->mode, clk_info_handle->clk_calc_status);
     if( 1 == clk_info_handle->clk_calc_status )
     {
         ret = drv_auto_adjust_slot_config(drv_info_handle->int_event, drv_info_handle->ov_status);

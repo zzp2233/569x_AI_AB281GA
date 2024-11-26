@@ -1,7 +1,10 @@
 #include "include.h"
 #include "../gui/components/compo_form.h"
+#include "ute_module_systemtime.h"
+#include "ute_language_common.h"
+#include "ute_module_watchonline.h"
 
-//#define TRACE_EN    1
+#define TRACE_EN    0
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -126,7 +129,59 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
-            printf("type[%d]\n", uitool_res->bond_type);
+            TRACE("type[%d]\n", uitool_res->bond_type);
+        }
+        break;
+
+        case COMPO_BOND_COMM_UNIT:
+        case COMPO_BOND_TIME_AMPM:
+        case COMPO_BOND_TIME_WEEK:
+        case COMPO_BOND_TIME_MONTH:
+        {
+            compo_picturebox_t *pic;
+            pic = compo_picturebox_create(frm, res_addr);
+            compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
+            compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
+            compo_bonddata(pic, uitool_res->bond_type);
+            TRACE("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
+
+            if(CHINESE_LANGUAGE_ID == uitool_res->rsv && uteModuleSystemtimeCompareLanguage(CHINESE_LANGUAGE_ID))
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+#if SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT
+            else if((ENGLISH_LANGUAGE_ID == uitool_res->rsv || 0 == uitool_res->rsv) && uteModuleSystemtimeCompareLanguage(ENGLISH_LANGUAGE_ID))
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+#endif
+#if SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT
+            else if (TRADITIONAL_CHINESE_ID == uitool_res->rsv && uteModuleSystemtimeCompareLanguage(TRADITIONAL_CHINESE_ID))
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+#endif
+            else if(uitool_res->rsv == 0)
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+            else
+            {
+                TRACE("type[%d] rsv[%d] not support\n", uitool_res->bond_type, uitool_res->rsv);
+                compo_picturebox_set_visible(pic, false);
+            }
+
+            if(uitool_res->bond_type == COMPO_BOND_TIME_AMPM)
+            {
+                if(uteModuleSystemtime12HOn())
+                {
+                    compo_picturebox_set_visible(pic, true);
+                }
+                else
+                {
+                    compo_picturebox_set_visible(pic, false);
+                }
+            }
         }
         break;
 
@@ -178,6 +233,21 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 max_cnt = 4;
                 break;
 
+            case COMPO_BOND_KCAL:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
+
+            case COMPO_BOND_STEP:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 5;
+                break;
+
+            case COMPO_BOND_HEARTRATE:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
+
             default:
                 bond_compo_type = COMPO_TYPE_NUMBER;
                 max_cnt = 2;
@@ -201,7 +271,15 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 num->num_part = num_part_en ? i + 1 : 0;
                 //个位中心坐标
                 compo_number_set_pos(num, uitool_res->x - delt_x * i, uitool_res->y + delt_y * i);
-                compo_number_set_zfill(num, true);
+                if(uitool_res->bond_type > COMPO_BOND_NONE && uitool_res->bond_type <= COMPO_BOND_DATE)
+                {
+                    compo_number_set_zfill(num, true);
+                }
+                else
+                {
+                    compo_number_set_zfill(num, false);
+                }
+                compo_number_set_align(num, uitool_res->rsv);
                 //compo_number_set_visible(num, false);
                 compo_bonddata(num, uitool_res->bond_type);
                 compo_set_bonddata((component_t *)num, time_to_tm(compo_cb.rtc_cnt));
@@ -243,14 +321,17 @@ void bsp_uitool_area_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res
 u16 bsp_uitool_header_phrase(u32 base_addr)
 {
     uitool_header_t uitool_header;
-
-    os_spiflash_read(&uitool_header, base_addr, UITOOL_HEADER);
+    u32 user_addr = base_addr;
+#if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
+    user_addr += sizeof(watchConfig_t);
+#endif
+    os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
     TRACE("sig:%x, ver:%d, size:%x, num:%x\n", uitool_header.sig, uitool_header.ver, uitool_header.size, uitool_header.num);
     TRACE("user id:%d, index:%d, wid:%d, hei:%d\n", uitool_header.user_id, uitool_header.index, uitool_header.wid, uitool_header.hei);
 //    print_r(uitool_header.user_extend, 32);
     if (uitool_header.sig != UITOOL_HEADER_FORMAT)
     {
-        printf("UITOOL Format Uncorrect:%x, %x\n", uitool_header.sig, UITOOL_HEADER_FORMAT);
+        TRACE("UITOOL Format Uncorrect:%x, %x\n", uitool_header.sig, UITOOL_HEADER_FORMAT);
         return false;
     }
     return uitool_header.num;
@@ -262,10 +343,12 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
     memset(&uitool_res, 0, sizeof(uitool_res_t));
     animation_id = 0;
 
+    u32 user_addr = base_addr + sizeof(watchConfig_t);
+
     for(u16 i=0; i<compo_num; i++)
     {
-        os_spiflash_read(&uitool_res, base_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
-        u32 res_addr = base_addr + uitool_res.res_addr;
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        u32 res_addr = user_addr + uitool_res.res_addr;
         switch (uitool_res.res_type)
         {
             case UITOOL_TYPE_POINTER:

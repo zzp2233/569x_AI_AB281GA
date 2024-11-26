@@ -200,7 +200,15 @@
 #endif
 /*! 屏高度 zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_SCREEN_HEIGHT
-#define UTE_DRV_SCREEN_HEIGHT 284
+#define UTE_DRV_SCREEN_HEIGHT 296
+#endif
+/*! 0为圆形，1为方形*/
+#ifndef UTE_DRV_SCREEN_SHAPE
+#define UTE_DRV_SCREEN_SHAPE 1
+#endif
+/*! 相同分辨率不同R角的在线表盘区分,R角范围0~255 xjc 2023-07-05 */
+#ifndef UTE_MODULE_WATCHONLINNE_R_VALUE
+#define UTE_MODULE_WATCHONLINNE_R_VALUE   0
 #endif
 /*! 屏使用16bit色彩 zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_SCREEN_PIXEL_BYTES
@@ -257,9 +265,14 @@
 #define DEFAULT_WATCH_INDEX                      0
 #endif
 
-/*! 最大表盘数量，包括在线表盘 zn.zeng, 2021-10-23  */
+/*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #ifndef UTE_MODULE_SCREENS_WATCH_CNT_MAX
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
+#endif
+
+/*! 表盘排序地址数组,wang.luo 2024-11-26 */
+#ifndef UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {0}
 #endif
 
 /*! 默认打开通话模块 zn.zeng, 2021-10-27  */
@@ -1100,6 +1113,26 @@
 #define UTE_MODULE_TEMPERATURE_WARNING_OPEN      false
 #define UTE_MODULE_TEMPERATURE_WARNING_LOW_VALUE 0 // 0度
 #define UTE_MODULE_TEMPERATURE_WARNING_HEIGHT_VALUE 3730 // 37.3度
+#endif
+
+/*! 在线表盘功能 casen, 2021-11-26  */
+#ifndef UTE_MODULE_WATCHONLINE_SUPPORT
+#define UTE_MODULE_WATCHONLINE_SUPPORT    1
+#endif
+#ifndef UTE_MODULE_WATCHONLINNE_COMPATIBLE_LEVEL
+#define UTE_MODULE_WATCHONLINNE_COMPATIBLE_LEVEL    2
+#endif
+/*! 多个在线表盘功能，最大表盘个数,默认值为1，不能修改，在具体项目里面修改此值 zn.zeng, 2022-06-28  */
+#ifndef UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT
+#define UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT    1
+#endif
+/*! 多个在线表盘功能，每个表盘的起始地址组 zn.zeng, 2022-06-28  */
+#ifndef UTE_MODULE_WATCHONLINE_MULTIPLE_BASE_ADDRESS_ARRAYS
+#define UTE_MODULE_WATCHONLINE_MULTIPLE_BASE_ADDRESS_ARRAYS {UTE_MODULE_WATCHONLINE_START_ADDRESS}
+#endif
+/*! 使用UTE表盘头,需使用修改后的表盘工具生成表盘，无法使用原厂工具,wang.luo 2024-11-25 */
+#ifndef UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
+#define UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT 1
 #endif
 
 #endif//_UTE_PROJECT_CONFIG_H_

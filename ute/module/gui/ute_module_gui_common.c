@@ -16,6 +16,7 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_sport.h"
 #include "ute_module_filesystem.h"
+#include "ute_module_watchonline.h"
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
@@ -580,8 +581,8 @@ void uteModuleGuiCommonGetCurrWatchIndex(uint8_t *index)
 */
 uint8_t uteModuleGuiCommonGetCurrWatchMaxIndex(void)
 {
-    uint8_t WatchMaxIndex=0;
-    // WatchMaxIndex=uteModuleWatchOnlineGetVailWatchCnt()+UTE_MODULE_SCREENS_WATCH_CNT_MAX;
+    uint8_t WatchMaxIndex = 0;
+    WatchMaxIndex = uteModuleWatchOnlineGetVailWatchCnt() + UTE_MODULE_SCREENS_WATCH_CNT_MAX;
     return WatchMaxIndex;
 }
 
@@ -594,7 +595,7 @@ uint8_t uteModuleGuiCommonGetCurrWatchMaxIndex(void)
 */
 void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
 {
-    uint8_t maxCnt = uteModuleGuiCommonGetVailWatchCnt();
+    // uint8_t maxCnt = uteModuleGuiCommonGetVailWatchCnt();
     uteModuleGuiCommonData.displayCtrl.currWatchIndex = index;
     // uteModuleGuiCommonData.watchPreview1Index = index;
     // uteModuleGuiCommonData.watchPreview2Index = index+1;
@@ -610,9 +611,9 @@ void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
     // {
     //     uteModuleGuiCommonData.watchPreview0Index = maxCnt-1;
     // }
-    if(index>=UTE_MODULE_SCREENS_WATCH_CNT_MAX)
+    if(index >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
     {
-        // uteModuleWatchOnlineUpateConfigFromFlash();
+        uteModuleWatchOnlineUpateConfigFromFlash();
     }
     uteModuleGuiCommonSaveConfig();
 }
@@ -954,10 +955,10 @@ bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void)
 uint8_t uteModuleGuiCommonGetVailWatchCnt(void)
 {
     uint8_t maxCnt = UTE_MODULE_SCREENS_WATCH_CNT_MAX;
-    // if(uteModuleWatchOnlineGetVailWatchCnt())
-    // {
-    //     maxCnt = maxCnt + uteModuleWatchOnlineGetVailWatchCnt();
-    // }
+    if(uteModuleWatchOnlineGetVailWatchCnt())
+    {
+        maxCnt = maxCnt + uteModuleWatchOnlineGetVailWatchCnt();
+    }
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL,"%s,maxCnt=%d",__func__,maxCnt);
     return maxCnt;
 }

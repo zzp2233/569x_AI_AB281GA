@@ -1,20 +1,25 @@
 #include "include.h"
+#include "ute_project_config.h"
 
 uint calc_crc(void *buf, uint len, uint seed);
 
-typedef struct {
+typedef struct
+{
     uint crc;
     uint32_t rtccnt;
-}rtc_recode_t;
+} rtc_recode_t;
 
 static rtc_recode_t s_rtc_recode AT(.rtc_cache);
 
 void bsp_rtc_recode_set(bool clear)
 {
-    if (clear) {
+    if (clear)
+    {
         memset(&s_rtc_recode, 0, sizeof(s_rtc_recode));
         s_rtc_recode.crc = 0xffff;
-    } else {
+    }
+    else
+    {
         s_rtc_recode.rtccnt = RTCCNT;
         s_rtc_recode.crc = calc_crc(&s_rtc_recode.rtccnt, sizeof(s_rtc_recode.rtccnt), 0xffff);
     }
@@ -23,10 +28,11 @@ void bsp_rtc_recode_set(bool clear)
 uint32_t bsp_rtc_recode_get(void)
 {
     uint crc = calc_crc(&s_rtc_recode.rtccnt, sizeof(s_rtc_recode.rtccnt), 0xffff);
-    if (crc == s_rtc_recode.crc && s_rtc_recode.crc != 0xffff) {
+    if (crc == s_rtc_recode.crc && s_rtc_recode.crc != 0xffff)
+    {
         return s_rtc_recode.rtccnt;
     }
-    
+
     return 0;
 }
 
@@ -34,12 +40,12 @@ uint32_t bsp_rtc_recode_get(void)
 void rtc_clock_init(void)
 {
     tm_t tm;
-    tm.year = 2023;
-    tm.mon  = 8;
-    tm.day = 18;
-    tm.hour = 10;
-    tm.min  = 8;
-    tm.sec  = 36;
+    tm.year = DEFAULT_SYSTEM_TIME_YEAR;
+    tm.mon  = DEFAULT_SYSTEM_TIME_MONTH;
+    tm.day  = DEFAULT_SYSTEM_TIME_DAY;
+    tm.hour = DEFAULT_SYSTEM_TIME_HOUR;
+    tm.min  = DEFAULT_SYSTEM_TIME_MIN;
+    tm.sec  = DEFAULT_SYSTEM_TIME_SEC;
     //tm.weekday = get_weekday(tm.year, tm.mon, tm.day);
     RTCCNT = tm_to_time(tm);
 }
@@ -74,7 +80,7 @@ void rtc_alarm_disable(void)
     printf("%s\n", __func__);
     RTCCPND = BIT(17) | BIT(18);                //clear RTC alarm pending
     RTCCON9 = BIT(0);                           //clear alarm pending
-	RTCCON &= ~BIT(8);                          //clear sniff wakeup
+    RTCCON &= ~BIT(8);                          //clear sniff wakeup
     RTCCON3 &= ~BIT(8);                         //clear power down wakeup
 }
 
@@ -84,11 +90,13 @@ void rtc_alarm_disable(void)
 */
 void rtc_clock_set(tm_t rtc_tm)
 {
-    if (sleep_cb.sys_is_sleep) {
+    if (sleep_cb.sys_is_sleep)
+    {
         rtc_sleep_exit();
     }
     RTCCNT = tm_to_time(rtc_tm);
-    if (sleep_cb.sys_is_sleep) {
+    if (sleep_cb.sys_is_sleep)
+    {
         rtc_sleep_enter();
     }
 }

@@ -149,7 +149,8 @@ typedef struct compo_listbox_t_
     bool (*set_text_modify_by_idx_callback)(u32 item_cnt, char* str_txt, u16 index);
     bool (*set_text_modify_by_idx_callback2)(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index);
     u32  (*set_icon_callback)(u32 index);
-
+    u16  (*set_text1_color_callback)(u32 index);
+    u16  (*set_text2_color_callback)(u32 index);
 } compo_listbox_t;
 
 /**
@@ -410,5 +411,13 @@ void compo_listbox_set_icon_area(compo_listbox_t *listbox, area_t area);
  * @param[in] callback : 回调函数
  **/
 void compo_listbox_set_icon_callback(compo_listbox_t *listbox, void* callback);
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符颜色，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text1_color_callback(compo_listbox_t *listbox, void* callback);
+void compo_listbox_set_text2_color_callback(compo_listbox_t *listbox, void* callback);
 
 #endif

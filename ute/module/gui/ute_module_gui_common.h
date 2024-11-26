@@ -98,4 +98,5 @@ void uteModuleGuiCommonHandScreenOnMsg(void);
 void uteModuleGuiCommonHandScreenOffMsg(void);
 void uteModuleGuiCommonSavescreenTblSort(uint8_t *tblSort, uint8_t sortCnt);
 void uteModuleGuiCommonGetScreenTblSort(uint8_t *tblSort, uint8_t *sortCnt);
+void uteModuleGuiCommonWatchConfigInit(void);
 #endif //_UTE_MODULE_GUI_COMMON_H_

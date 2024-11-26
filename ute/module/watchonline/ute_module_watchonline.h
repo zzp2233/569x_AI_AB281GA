@@ -66,7 +66,7 @@ typedef struct
     uint8_t multipleValidWatchCnt;//有效在线表盘数量
     uint8_t multipleWatchIndexBuff[UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT];
 } ute_module_watchonline_data_t;
-void uteModuleWatchOnlineGetDataPointer(ute_module_watchonline_data_t **pData);
+uint32_t uteModuleWatchOnlineGetBaseAddress(uint8_t index);
 void uteModuleWatchOnlineReadDeviceInfo(uint8_t *data);
 void uteModuleWatchOnlineUpateConfigFromFlash(void);
 void uteModuleWatchOnlineReadyStart(void);

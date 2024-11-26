@@ -13,7 +13,7 @@
 
 extern u8 func_clock_get_max_dialplate_num(void);
 extern u16 func_clock_header_phrase(u32 base_addr);
-extern const u32 dialplate_info[];
+extern u32 dialplate_info[];
 
 //根据表盘的基地址获取对应的预览图
 u32 func_clock_preview_get_addr(u32 base_addr)
@@ -396,8 +396,8 @@ static void func_clock_preview_message(size_msg_t msg)
     switch (msg)
     {
         case KU_BACK:
-            sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
-            uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
+            // sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
+            uteModuleGuiCommonSetCurrWatchIndex(compo_rotary_get_idx(rotary));
             break;
         default:
             break;
@@ -411,9 +411,9 @@ static void func_clock_preview_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
-            sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
+            // sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
+            uteModuleGuiCommonSetCurrWatchIndex(compo_rotary_get_idx(rotary));
             compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
-            uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
             break;
 
         default:

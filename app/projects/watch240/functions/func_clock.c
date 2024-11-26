@@ -52,7 +52,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define DIALPLATE_BTF_IDX           UTE_WATCHS_DIALPLATE_BTF_INDEX        //蝴蝶表盘默认最后一个
 #define DIALPLATE_CUBE_IDX          UTE_WATCHS_DIALPLATE_CUBE_INDEX        //立方体表盘默认倒数第二个
 
-const u32 dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT] = UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS;
+u32 dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT] = UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS;
 
 //表盘快捷按钮编号表 对应表盘工具
 const u8 quick_btn_tbl[] =
@@ -649,6 +649,15 @@ static void func_clock_enter(void)
     uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
+#if UTE_MODULE_WATCHONLINE_SUPPORT
+    if(uteModuleWatchOnlineGetVailWatchCnt())
+    {
+        for (uint8_t i = 0; i < uteModuleWatchOnlineGetVailWatchCnt(); i++)
+        {
+            dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i] = uteModuleWatchOnlineGetBaseAddress(i);
+        }
+    }
+#endif
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {

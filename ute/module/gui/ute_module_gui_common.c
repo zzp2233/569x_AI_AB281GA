@@ -595,22 +595,9 @@ uint8_t uteModuleGuiCommonGetCurrWatchMaxIndex(void)
 */
 void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
 {
-    // uint8_t maxCnt = uteModuleGuiCommonGetVailWatchCnt();
     uteModuleGuiCommonData.displayCtrl.currWatchIndex = index;
-    // uteModuleGuiCommonData.watchPreview1Index = index;
-    // uteModuleGuiCommonData.watchPreview2Index = index+1;
-    // if(uteModuleGuiCommonData.watchPreview2Index>=maxCnt)
-    // {
-    //     uteModuleGuiCommonData.watchPreview2Index = 0;
-    // }
-    // if(uteModuleGuiCommonData.watchPreview1Index>0)
-    // {
-    //     uteModuleGuiCommonData.watchPreview0Index = uteModuleGuiCommonData.watchPreview1Index-1;
-    // }
-    // else
-    // {
-    //     uteModuleGuiCommonData.watchPreview0Index = maxCnt-1;
-    // }
+    sys_cb.dialplate_index = index;
+
     if(index >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
     {
         uteModuleWatchOnlineUpateConfigFromFlash();

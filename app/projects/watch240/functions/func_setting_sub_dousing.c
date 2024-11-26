@@ -30,14 +30,26 @@ typedef struct f_dousing_list_t_
 
 static const compo_listbox_item_t tbl_dousing_list[] =
 {
-    {STR_FIVE_SEC},
-    {STR_TEN_SEC},
-    {STR_TWENTY_SEC},
-    {STR_THIRTY_SEC},
-    {STR_ONE_MIN},
-    // {STR_FIVE_MIN},
-    {STR_NEVER},
+    {STR_FIVE_SEC,         .menu_style = COMPO_ID_BTN_NUM0},
+    {STR_TEN_SEC,          .menu_style = COMPO_ID_BTN_NUM1},
+    {STR_TWENTY_SEC,       .menu_style = COMPO_ID_BTN_NUM2},
+    {STR_THIRTY_SEC,       .menu_style = COMPO_ID_BTN_NUM3},
+    {STR_ONE_MIN,          .menu_style = COMPO_ID_BTN_NUM4},
+    // {STR_FIVE_MIN},     .menu_style = 1,
+    {STR_NEVER,            .menu_style = COMPO_ID_BTN_NUM5},
 };
+
+u8 func_sel_dousing_bit(uint n)
+{
+//    printf("n=%d\n",n);
+    if(sys_cb.set_sleep_time_id == n)
+    {
+        return true;
+    }
+
+    return false;
+}
+
 
 //熄屏设置页面
 compo_form_t *func_set_sub_dousing_form_create(void)
@@ -50,14 +62,29 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_DOUSING]);
 
     //新建列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_dousing_list, DOUSING_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
+
+    compo_listbox_set_sta_icon(listbox, UI_BUF_COMPO_SELECT_ADD_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bithook(listbox, func_sel_dousing_bit);
+
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
+
+
     compo_listbox_set_item_text(listbox, 120, gui_image_get_size(UI_BUF_COMMON_BG_BIN).hei/2, GUI_SCREEN_WIDTH, 40, true);
-    compo_listbox_set_focus_byidx(listbox, 1);
+//    compo_listbox_set_focus_byidx(listbox, 1);
+//    compo_listbox_update(listbox);
+    uint8_t set_idx = COMPO_ID_BTN_NUM0;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+
+    compo_listbox_set_focus_byidx(listbox, set_idx);
     compo_listbox_update(listbox);
+
 
     return frm;
 }
@@ -68,15 +95,15 @@ void func_set_sub_dousing_list_icon_click(void)
     int icon_idx;
     f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
-    compo_form_t *frm = NULL;
-    bool res = false;
+//    compo_form_t *frm = NULL;
+//    bool res = false;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
     if (icon_idx < 0 || icon_idx >= DOUSING_LIST_CNT)
     {
         return;
     }
-
+    sys_cb.set_sleep_time_id = icon_idx;
     //切入应用
     switch(icon_idx)
     {
@@ -109,13 +136,14 @@ void func_set_sub_dousing_list_icon_click(void)
             //     sys_cb.sleep_time = -1;
             // }
 
-            frm = func_create_form(FUNC_SETTING);
-            res = func_switching(FUNC_SWITCH_DIRECT,NULL);
-            compo_form_destroy(frm);             //切换完成或取消，销毁窗体
-            if (res)
-            {
-                func_cb.sta = FUNC_SETTING;
-            }
+//            frm = func_create_form(FUNC_SETTING);
+//            res = func_switching(FUNC_SWITCH_DIRECT,NULL);
+//            compo_form_destroy(frm);             //切换完成或取消，销毁窗体
+//            if (res)
+//            {
+//                func_cb.sta = FUNC_SETTING;
+//            }
+            compo_listbox_update(listbox);
             break;
 
         default:

@@ -4,7 +4,7 @@
  * @Date: 2023-06-09 11:57:36
  * @LastEditTime: 2024-01-05 09:28:32
  * @LastEditors: Tse
- * @Description: 
+ * @Description:
  **********************************************************************************************/
 #ifndef __VC30Fx_SAMPLE_RESULT_H__
 #define __VC30Fx_SAMPLE_RESULT_H__
@@ -16,19 +16,19 @@ fifo_data_memory static:  128*2 + 64*(2*2+2*1) = 448 bytes
 fifo_data_memory dynamic: 128*x + 64*(2*y+2*z) = 0~448 bytes
 fifo_data_memory fixdync:
 */
-#define VC30Fx_USE_STATIC_MEMORY (0)  
+#define VC30Fx_USE_STATIC_MEMORY (0)
 #define VC30Fx_USE_FIXDYNC_MEMORY (1) /* memory is allocated when the device is registered and freed when the device is deregistered */
 #define VC30Fx_USE_MEMORY_SELECT (VC30Fx_USE_STATIC_MEMORY)
 #define VC30Fx_PPGSLOT_BUFFER_NUM (64) /* memory_buffer(40~64) = enable_ppgslot_num * ( VC30Fx_PPGSLOT_BUFFER_NUM * sizeof(unsigned short int) ) */
 #define VC30Fx_PS2SLOT_BUFFER_NUM (32) /* memory_buffer(20~32) = enable_bioslot_num * ( VC30Fx_PS2SLOT_BUFFER_NUM * sizeof(unsigned short int) ) + 1*( VC30Fx_PS2SLOT_BUFFER_NUM * sizeof(unsigned short int) ) */
 
-/* ps sample frequency config, if work_fast,the frequency=12.5hz, otherwise is 5hz 
+/* ps sample frequency config, if work_fast,the frequency=12.5hz, otherwise is 5hz
 [0] ps=  5hz~200ms, fifo_time=1000ms, 800ms, 600ms, 400ms, 200ms
-[1] ps=(1000/520)hz~520ms, fifo_time=520ms(25hz), 260ms(50hz), 130ms(100hz), user defined time, ps-fifo working on the same frequency (~9201,VC30F). 
+[1] ps=(1000/520)hz~520ms, fifo_time=520ms(25hz), 260ms(50hz), 130ms(100hz), user defined time, ps-fifo working on the same frequency (~9201,VC30F).
     !!!notice: need config bio_param_time @ vc30fx_core_com.h @ core30fx_set_bioslot_config
 [2]........
 */
-#define VC30Fx_PS_WORK_FREQUENCY_CONFIG (0)
+#define VC30Fx_PS_WORK_FREQUENCY_CONFIG (1)
 
 /*the ic type: VC30FS / VC30FC  */
 #define VC30Fx_IC_TYPE_VC30FC (0)

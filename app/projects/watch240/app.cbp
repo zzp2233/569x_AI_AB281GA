@@ -1199,6 +1199,9 @@
 		<Unit filename="functions/func_setting_sub_sav.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_setting_sub_sos.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_setting_sub_time.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1255,6 +1258,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_weather.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/test_mode/func_factory_testing_mode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/test_mode/func_test_ageing.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/test_mode/func_test_audio.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/test_mode/func_test_mode.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="i18n/lang.c">

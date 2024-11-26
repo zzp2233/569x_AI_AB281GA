@@ -187,8 +187,11 @@ static u32 bsp_hw_i2c_config(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u32 dat)
     u32 ticks = tick_get();
     while ( (!(HW_IIC->sfr->IICxCON0 & BIT(31))))
     {
-        if (tick_check_expire(ticks, 20))
+        WDT_CLR();
+        if (tick_check_expire(ticks, 1000))
         {
+            func_process();
+            ticks = tick_get();
             printf("!!!IIC ERROR dev_addr:0x%X reg_addr:0x%x\n", dev_addr,reg_addr);
             return false;
         }
@@ -286,7 +289,7 @@ static void i2cx_init(void)
     FUNCMCON2 = (5 << 8);
 
 #elif (CHIP_PACKAGE_SELECT == CHIP_5690G || CHIP_PACKAGE_SELECT == CHIP_5690F)
-    CLKCON1 |= BIT(8);      //x26m_clkdiv8
+    CLKCON1 |= BIT(8);      //rc2m
     CLKGAT2 |= BIT(1);      //en iic1 clk
     RSTCON0 |= BIT(7);      //Release IIC1
 
@@ -299,7 +302,7 @@ static void i2cx_init(void)
     FUNCMCON2 = (8 << 12);
 
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-    CLKCON1 |= BIT(7);      //x26m_clkdiv8
+    CLKCON1 &= ~BIT(7);      //x26m_clkdiv8
     CLKGAT2 |= BIT(0);      //en iic0 clk
     RSTCON0 |= BIT(3);      //Release IIC0
 
@@ -325,7 +328,7 @@ static void i2cx_init(void)
                                 6 << 4 |    //IIC POSDIV [9:4]
                                 1 << 10;     //IIC WSCL_OPT
 
-    delay_5ms(8);
+    //  delay_5ms(1);
 }
 
 AT(.text.bsp.i2c)
@@ -345,7 +348,7 @@ void i2c_gsensor_init(void)
     FUNCMCON2 = (0xf << 8);
     FUNCMCON2 = (8 << 8);
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-    CLKCON1 |= BIT(7);      //x26m_clkdiv8
+    CLKCON1 &= ~BIT(7);      //rc2m
     CLKGAT2 |= BIT(0);      //en iic0 clk
     RSTCON0 |= BIT(3);      //Release IIC0
 
@@ -371,7 +374,7 @@ void i2c_gsensor_init(void)
                                 6 << 4 |    //IIC POSDIV [9:4]
                                 1 << 10;     //IIC WSCL_OPT
 
-    delay_5ms(8);
+    //  delay_5ms(1);
     sys_irq_init(IRQ_I2C_VECTOR, 0, bsp_i2c_isr);
 }
 

@@ -671,13 +671,13 @@ bool uteModuleHeartIsWear(void)
     else
     {
         isWear = uteModuleHeartData.lastIsWear;
+        if(!uteModuleHeartData.isAutoTesting)
+        {
+            isWear= true;
+            uteModuleHeartData.lastIsWear = isWear;
+        }
     }
 #endif
-    if(!uteModuleHeartData.isAutoTesting)
-    {
-        isWear= true;
-        uteModuleHeartData.lastIsWear = isWear;
-    }
     // UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,isWear:%d",__func__,isWear);
     return isWear;
 }
@@ -1108,6 +1108,9 @@ void uteModuleHeartPowerOff(void)
     uteDrvHeartVcxxStopSample();
 #endif
     uteDrvHeartVcxxSetPowerEnable(false);
+#else
+    vc30fx_usr_stop_work();
+    vc30fx_pwr_dis();
 #endif
 }
 

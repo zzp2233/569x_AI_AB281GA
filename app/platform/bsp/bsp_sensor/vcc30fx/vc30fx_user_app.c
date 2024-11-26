@@ -21,6 +21,9 @@
 #include "ute_module_message.h"
 #include "ute_module_bloodoxygen.h"
 
+#include "vc30fx_driver.h"
+extern vc30fx_clk_info clk_info;            /* oscclk_calibration_infomation */
+
 // #include "vcSportMotionIntAlgo.h"
 
 /* ble_debug,蓝牙发送原始数据 */
@@ -29,7 +32,7 @@ static vcare_ppg_device_t vc30fx_dev = {"vc30fx_sc", 0};
 /* G-Sensor Data */
 static gsensor_axes vc30fx_gsensor_data = {0};
 
-InitParamTypeDef vc30fx_data = {400, 0};
+InitParamTypeDef vc30fx_data = {600, 0};
 
 static uint32_t hw_timer_count = 0;
 
@@ -60,13 +63,16 @@ int (*vc30fx_dbglog_user)(const char *, ...) = NULL;
 
 void vc30fx_pwr_en(void)        //PF5
 {
-    uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
-    // GPIOFFEN &= ~BIT(5);
-    // GPIOFDE  |= BIT(5);
-    // GPIOFDIR &= ~BIT(5);
-    // GPIOFSET = BIT(5);
+    if(vc30fx_clk_calc_status() == 0)
+    {
+        uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
+    }
 
-    uteModulePlatformOutputGpioSet(IO_PF5,true);
+    if(!vc30fx_dev.dev_work_status)
+    {
+        uteModulePlatformOutputGpioSet(IO_PF5,true);
+    }
+
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(false);
 #else
@@ -81,10 +87,9 @@ void vc30fx_pwr_dis(void)       //PF5
     {
         vc30fx_dev.dev_work_status = 0;
     }
-    // GPIOFFEN &= ~BIT(5);
-    // GPIOFDE  |= BIT(5);
-    // GPIOFDIR &= ~BIT(5);
-    // GPIOFCLR = BIT(5);
+
+    printf("vc30fx_pwr_dis\n");
+    // drv_calibration_clk_clear();
     uteModulePlatformOutputGpioSet(IO_PF5,false);
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(true);
@@ -100,6 +105,7 @@ void vc30fx_pwr_dis(void)       //PF5
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
 }
 
+AT(.com_text.vc30fx)
 void uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData(void)
 {
     uint8_t sportType = uteModuleSportMoreSportGetType();
@@ -253,6 +259,7 @@ unsigned int vc30fx_get_cputimer_tick(void)
 const unsigned char arry10[] = {0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12};
 const unsigned char arry20[] = {0, 2, 3, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28};
 
+AT(.com_text.vc30fx)
 static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsigned short int ppg_count)
 {
     unsigned char gsensor_len = 0;
@@ -270,6 +277,7 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
 
     ute_drv_gsensor_common_axis_data_t *data = NULL;
     uteDrvGsensorCommonReadFifo(&data);
+    gsensor_len = data->frameCnt;
 
     ute_drv_gsensor_common_axis_bit_change_t axisBitChange;
     axisBitChange.inputXaxis = &data->accXaxis[0];
@@ -384,6 +392,7 @@ static void vc30fx_get_board_gsensor_data(unsigned short int *pgsensor_len, unsi
  * @param {int} z_axis
  * @return {*}
  ****************************************************************************/
+AT(.com_text.vc30fx)
 static unsigned int vc30fx_gsensor_actuating_quantity(int x_axis, int y_axis, int z_axis)
 {
     unsigned int ret_atc = 0;
@@ -420,6 +429,7 @@ static unsigned int vc30fx_gsensor_actuating_quantity(int x_axis, int y_axis, in
  * @param {vcare_ppg_device_t} *pdev
  * @return {*}
  ****************************************************************************/
+AT(.com_text.vc30fx)
 static int vc30fx_heart_rate_calculate(vcare_ppg_device_t *pdev)
 {
     int heartRate = 0;
@@ -586,8 +596,10 @@ void vc30fx_usr_check_temperature_abnormal(void)
  * @param {unsigned char} spo2_algo_mode
  * @return {*}
  ****************************************************************************/
+AT(.com_text.vc30fx)
 void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo2_algo_mode )
 {
+    // GPIOBCLR = BIT(0);
     unsigned short int ppg_num = 0;
     unsigned short int gsensor_num = 0;
     vc30fx_sample_info_t *sample_result_info_ptr = (vc30fx_sample_info_t *)vc30fx_dev.result;
@@ -597,6 +609,7 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     vc30fx_dev.spo2_algo_mode = spo2_algo_mode;
     vc30fx_drv_get_result_handler(&vc30fx_dev);
     vc30fx_dev.wear = vc30fx_drv_get_wear_status(&vc30fx_dev);
+    // printf("clk_calc_status:%d,wear:%d,workmode:%d\n",clk_info.clk_calc_status, vc30fx_dev.wear, vc30fx_dev.workmode);
     if (vc30fx_drv_is_ps_event(&vc30fx_dev) || vc30fx_drv_is_fifo_event(&vc30fx_dev))
     {
         //disp_data.wear_sta = vc30fx_dev.wear;
@@ -788,9 +801,17 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     }
 #endif
 
+    // if (sleep_cb.sys_is_sleep) {
+    //     sleep_set_sysclk(SYS_24M);
+    // }
+    // if (func_cb.sta != FUNC_HEARTRATE) {
+    //     printf("handler done uteModulePlatformDlpsEnable(0x00000080);\n");
+    //     uteModulePlatformDlpsEnable(0x00000080);     //算法完成直接休眠
+    // }
+    // GPIOBSET = BIT(0);
 }
 
-// bool vc30fx_sleep_isr = false;
+bool vc30fx_sleep_isr = false;
 
 AT(.com_text.vc30fx)
 void vc30fx_isr(void)
@@ -802,11 +823,21 @@ void vc30fx_isr(void)
     // else
     // {
     // msg_enqueue(EVT_VC30FX_ISR);
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_ALGO_HANDLER,0);
+    // if (sleep_cb.sys_is_sleep) {
+    //     sleep_set_sysclk(SYS_192M);
+    // }
+    //GPIOBCLR = BIT(1);
+    if (vc30fx_clk_calc_status() == 0 || !sleep_cb.sys_is_sleep)
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_ALGO_HANDLER,0);
+    }
     //     vc30fx_sleep_isr = false;
     // }
-
-    //vc30fx_usr_device_handler(0, 1);
+    if (vc30fx_clk_calc_status() == 1 && sleep_cb.sys_is_sleep)
+    {
+        vc30fx_sleep_isr = true;
+    }
+    // vc30fx_usr_device_handler(0, 1);
 }
 
 /*********************************************************************************************************
@@ -978,6 +1009,7 @@ void vc30fx_usr_soft_reset(void)
  * @description: 获取工作状态
  * @return {*}
  ****************************************************************************/
+AT(.com_text.vc30fx)
 bool vc30fx_usr_get_work_status(void)
 {
     return vc30fx_dev.dev_work_status;
@@ -986,6 +1018,7 @@ bool vc30fx_usr_get_work_status(void)
  * @description: 获取工作模式
  * @return {*}
  ****************************************************************************/
+AT(.com_text.vc30fx)
 work_mode vc30fx_usr_get_work_mode(void)
 {
     return vc30fx_dev.workmode;

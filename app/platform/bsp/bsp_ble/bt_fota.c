@@ -1,5 +1,6 @@
 #include "include.h"
 #include "bt_fota.h"
+#include "ute_application_common.h""
 
 #if LE_AB_FOT_EN
 
@@ -397,8 +398,11 @@ static void fot_reply_update_request(void)
         // {
         //     addr = app_fota_get_curaddr();
         // }
-        printf("===================>func_cb.sta = FUNC_PWROFF\n");
-        func_cb.sta = FUNC_PWROFF;
+        if(uteApplicationCommonIsAppClosed()) //如果是ute app连接，则不关机
+        {
+            printf("===================>func_cb.sta = FUNC_PWROFF\n");
+            func_cb.sta = FUNC_PWROFF;
+        }
     }
 
 

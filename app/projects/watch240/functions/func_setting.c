@@ -33,6 +33,7 @@ static const compo_listbox_item_t tbl_setting_list[] =
     {STR_SETTING_PASSWORD,               UI_BUF_SETTING_PASSWORD_BIN,                   .func_sta = FUNC_SET_SUB_PASSWORD}, //密码锁
     {STR_SETTING_ABOUT,                  UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_ABOUT},    //关于
     // {STR_SETTING_4G,                     UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_4G},       //4G
+    {STR_SETTING_ABOUT,                  UI_BUF_SETTING_RESTART_BIN,                    .func_sta = FUNC_SET_SUB_SOS},  //SOS
     {STR_SETTING_RESTART,                UI_BUF_SETTING_RESTART_BIN,                    .func_sta = FUNC_SET_SUB_RESTART},  //重启
     {STR_SETTING_RSTFY,                  UI_BUF_SETTING_RESTORE_FACTORY_BIN,            .func_sta = FUNC_SET_SUB_RSTFY},    //恢复出厂
     {STR_SETTING_OFF,                    UI_BUF_SETTING_OFF_BIN,                        .func_sta = FUNC_SET_SUB_OFF},      //关机
@@ -183,6 +184,7 @@ void func_set_sub_exit(void)
 //主菜单功能
 void func_set_sub_list(void)
 {
+    printf("pic w:%d h:%d\n",gui_image_get_size(tbl_setting_list->res_addr).wid,gui_image_get_size(tbl_setting_list->res_addr).hei);
     func_set_sub_list_enter();
     while (func_cb.sta == FUNC_SETTING)
     {

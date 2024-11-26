@@ -7,7 +7,8 @@
 
 
 
-typedef struct compo_textbox_t_ {
+typedef struct compo_textbox_t_
+{
     COMPO_STRUCT_COMMON;
     widget_text_t *txt;
     compo_roll_cb_t roll_cb;
@@ -15,14 +16,16 @@ typedef struct compo_textbox_t_ {
 } compo_textbox_t;
 
 
-typedef struct compo_form_t_ {
+typedef struct compo_form_t_
+{
     COMPO_STRUCT_COMMON;
     widget_page_t *page;
     widget_page_t *page_body;
     widget_icon_t *icon;
     widget_icon_t *title_icon;
     compo_textbox_t *title;
-    widget_text_t *time;
+//    widget_text_t *time;
+    compo_textbox_t *time;
     int mode;
 } compo_form_t;
 

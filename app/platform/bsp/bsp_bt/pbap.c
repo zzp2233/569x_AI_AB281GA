@@ -12,10 +12,14 @@ static pbap_param_t pbap_param;
 static u8 qp_convert_do(char *in)
 {
     u8 utf8_cod = 0;
-    for(u8 i = 0;i < 2;i++){
-        if(*in > '@' && *in < 'G'){
+    for(u8 i = 0; i < 2; i++)
+    {
+        if(*in > '@' && *in < 'G')
+        {
             utf8_cod |= (0x0A + *in - 'A') << 4*(1-i);
-        }else if(*in > '/' && *in < ':'){
+        }
+        else if(*in > '/' && *in < ':')
+        {
             utf8_cod |= (*in - '0') << 4*(1-i);
         }
         in++;
@@ -27,11 +31,13 @@ static void qp_convert(char *out)
 {
     u8 cnt = strlen(out);
     u8 utf8_len = 0;
-    for(u8 i = 0;i < cnt;i ++){
-       if(out[i] != '='){
-         out[utf8_len++] = qp_convert_do(&out[i]);
-         i++;
-       }
+    for(u8 i = 0; i < cnt; i ++)
+    {
+        if(out[i] != '=')
+        {
+            out[utf8_len++] = qp_convert_do(&out[i]);
+            i++;
+        }
     }
     out[utf8_len] = '\0';
 }
@@ -42,19 +48,26 @@ void bt_pbap_data_callback(u8 type, void *item)
     //注意函数内不要进行耗时大的操作，会影响电话本获取的速度
     pbap_data_cb_t *p = (pbap_data_cb_t *)item;
     //memcpy(p->name,qp,sizeof(qp));
-    if (p->name[0] == '=') {
+    if (p->name[0] == '=')
+    {
         qp_convert(p->name);
     }
 
 #if PBAP_DEBUG_EN
     printf("[%d] [name:%s]  ", type, p->name);
     printf("[tele:%s]  ", p->anum);
-    if (type) {
+    if (type)
+    {
         printf("[date:%s]\n", p->bnum);
-    } else {
-        if (p->bnum[0]) {
+    }
+    else
+    {
+        if (p->bnum[0])
+        {
             printf("[%s]\n", p->bnum);
-        } else {
+        }
+        else
+        {
             printf("\n");
         }
     }
@@ -64,13 +77,16 @@ void bt_pbap_data_callback(u8 type, void *item)
 
 #if FLASHDB_EN
     // 本地号码存 kvdb
-    if ((type == 0) && (strlen(p->anum) > 0)) {
+    if ((type == 0) && (strlen(p->anum) > 0))
+    {
         contacts_kvdb_set(p->name, p->anum);
         return;
     }
 #endif
-    if (pbap_param.pb_idx < pbap_param.pb_count) {
-        if (strlen(p->name) > PBAP_MAX_NAME_LEN || strlen(p->anum) > PBAP_MAX_NUM_LEN) {
+    if (pbap_param.pb_idx < pbap_param.pb_count)
+    {
+        if (strlen(p->name) > PBAP_MAX_NAME_LEN || strlen(p->anum) > PBAP_MAX_NUM_LEN)
+        {
             printf("[pbap]name len or num len exceeds the max!");
             return;
         }
@@ -94,11 +110,13 @@ bool bt_pbap_is_syncing(void)
 
 void bt_pbap_event_handle(uint evt, u8 *params)
 {
-    switch(evt) {
+    switch(evt)
+    {
         case BT_NOTICE_PBAP_CONNECTED:
             printf("===>>> PBAP: Connected\n");
             //若sync之前pbap没连上,连上后再读取通话记录
-            if (pbap_param.is_pb_syncing) {
+            if (pbap_param.is_pb_syncing)
+            {
                 bt_pbap_get_phonebook_size();
             }
             pbap_param.is_pbap_connected = true;
@@ -118,7 +136,8 @@ void bt_pbap_event_handle(uint evt, u8 *params)
         case BT_NOTICE_PBAP_PULL_PHONEBOOK_COMPLETE:
             printf("===>>> PBAP: Pull phonebook complete\n");
             pbap_param.is_pb_syncing = false;
-            if (pbap_param.cb) {
+            if (pbap_param.cb)
+            {
                 pbap_param.cb(pbap_param.pb_buf, pbap_param.pb_count);
             }
             break;
@@ -130,15 +149,18 @@ void bt_pbap_event_handle(uint evt, u8 *params)
 void bt_pbap_sync_start(u8 object, void *buf, u16 count, pbap_sync_finish_cb_t finish_cb)
 {
     printf("[%s]", __func__);
-    if (object > PBAP_OBJECT_CCH || count == 0) {
+    if (object > PBAP_OBJECT_CCH || count == 0)
+    {
         printf("[%s]:object or count error!", __func__);
         return;
     }
-    if (buf == NULL || finish_cb == NULL) {
+    if (buf == NULL || finish_cb == NULL)
+    {
         printf("[%s]:buf or cb is null!", __func__);
         return;
     }
-    if (bt_get_status() < BT_STA_CONNECTED) {
+    if (bt_get_status() < BT_STA_CONNECTED)
+    {
         printf("[%s]:bt is disconnected!", __func__);
         return;
     }
@@ -158,6 +180,13 @@ void bt_pbap_sync_stop(void)
 {
     pbap_param.is_pb_syncing = false;
     pbap_param.cb = NULL;
+}
+
+void bt_pbap_report_card_result(const char *name)
+{
+    printf("pbap result Name:   '%s'\n", name);
+    memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
+    snprintf(sys_cb.pbap_result_Name, sizeof(sys_cb.pbap_result_Name),"%s",name);///* 获取名字*/
 }
 
 #endif //BT_PBAP_EN

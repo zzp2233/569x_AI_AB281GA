@@ -1080,6 +1080,8 @@ void uteModuleCallUpdateRecordsData(void)
     }
 CALL_UPDATE_END:
     uteModuleCallData.callData.callingTimeSecond = 0;
+    uteModuleCallData.callData.numberSize = 0;
+    uteModuleCallData.callData.nameSize = 0;
     uteModulePlatformMemoryFree(readBuff);
 }
 

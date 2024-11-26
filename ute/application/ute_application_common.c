@@ -419,6 +419,7 @@ bool uteApplicationCommonIsStartupFinish(void)
 *@author        zn.zeng
 *@date        2021-07-15
 */
+AT(.text.ute_app)
 bool uteApplicationCommonIsPowerOn(void)
 {
     return uteApplicationCommonData.isPowerOn;
@@ -857,7 +858,7 @@ void uteApplicationCommonStartPowerOffMsg(void)
     {
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_STOP_ADV,0);
     }
-    // uteModuleHeartPowerOff();
+    uteModuleHeartPowerOff();
     // uteModulePlatformQdecPowerOff();
     // uteModulePlatformPowerOffGpioConfig();
 #if 0//UTE_BT30_CALL_SUPPORT
@@ -1706,6 +1707,7 @@ void uteApplicationCommonVddPowerEverySecond(void)
 void uteApplicationCommonFactoryReset(void)
 {
     // uteDrvScreenCommonDisplayOff();
+    gui_sleep();
 #if UTE_USER_ID_FOR_BINDING_SUPPORT
     uteModuleAppBindingClearUserId();
 #endif
@@ -1717,6 +1719,7 @@ void uteApplicationCommonFactoryReset(void)
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
     uteDrvBatteryCommonSaveLastLvlToSN1();
 #endif
+    bsp_rtc_recode_set(1);
     uteModulePlatformSystemReboot();
 }
 

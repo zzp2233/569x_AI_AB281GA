@@ -139,12 +139,28 @@ void uteModuleSystemtimeReadConfig(void)
     set.is12HourTime = readbuff[1];
     set.zone = readbuff[2];
     set.languageId = readbuff[3]<<8|readbuff[4];
-    set.year = readbuff[5]<<8|readbuff[6];
-    set.month = readbuff[7];
-    set.day = readbuff[8];
-    set.hour = readbuff[9];
-    set.min = readbuff[10];
-    set.sec = readbuff[11];
+
+    rtc_clock_calc_by_rc(1);
+    tm_t rtc_tm;
+    rtc_tm.year = readbuff[5] << 8 | readbuff[6];
+    rtc_tm.mon = readbuff[7];
+    rtc_tm.day = readbuff[8];
+    rtc_tm.hour = readbuff[9];
+    rtc_tm.min = readbuff[10];
+    rtc_tm.sec = readbuff[11];
+
+    if (tm_to_time(rtc_tm) < RTCCNT)
+    {
+        rtc_tm = time_to_tm(RTCCNT);
+    }
+
+    set.year = rtc_tm.year;
+    set.month = rtc_tm.mon;
+    set.day = rtc_tm.day;
+    set.hour = rtc_tm.hour;
+    set.min = rtc_tm.min;
+    set.sec = rtc_tm.sec;
+
     set.isWatchSetLangage = readbuff[12];
     set.AppSetlanguageId = readbuff[13];
     uteModuleSystemtimeSetTime(set);

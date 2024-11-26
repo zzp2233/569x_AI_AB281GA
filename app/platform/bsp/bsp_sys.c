@@ -3,6 +3,7 @@
 #include "ute_module_platform.h"
 #include "ute_task_application.h"
 #include "ute_drv_gsensor_common.h"
+#include "ute_module_message.h"
 
 #define TRACE_EN                0
 

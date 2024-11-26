@@ -68,7 +68,7 @@ int main(void)
     printf("Hello AB569X: %08x\n", rst_reason);
     if (rst_reason & BIT(24))
     {
-        bsp_rtc_recode_set(1);
+        // bsp_rtc_recode_set(1);
         printf("SW reset\n");
     }
     else if (rst_reason & BIT(19))
@@ -84,17 +84,17 @@ int main(void)
     }
     else if (rst_reason & BIT(18))
     {
-        bsp_rtc_recode_set(1);
+        // bsp_rtc_recode_set(1);
         printf("WKUP reset\n");
     }
     else if (rst_reason & BIT(17) || rtccon10 & BIT(3))
     {
-        bsp_rtc_recode_set(1);
+        // bsp_rtc_recode_set(1);
         printf("VUSB reset\n");
     }
     else if (rst_reason & BIT(16))
     {
-        bsp_rtc_recode_set(1);
+        // bsp_rtc_recode_set(1);
         printf("WDT reset\n");
     }
 

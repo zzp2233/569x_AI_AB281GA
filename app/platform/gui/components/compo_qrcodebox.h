@@ -1,12 +1,13 @@
 #ifndef _COMPO_QRCODEBOX_H
 #define _COMPO_QRCODEBOX_H
 
-#define QR_LEVEL_L				0								//7%的字码可被修正
-#define QR_LEVEL_M				1								//15%的字码可被修正
-#define QR_LEVEL_Q				2								//25%的字码可被修正
-#define QR_LEVEL_H				3								//30%的字码可被修正
+#define QR_LEVEL_L              0                               //7%的字码可被修正
+#define QR_LEVEL_M              1                               //15%的字码可被修正
+#define QR_LEVEL_Q              2                               //25%的字码可被修正
+#define QR_LEVEL_H              3                               //30%的字码可被修正
 
-typedef struct compo_qrcodebox_t_ {
+typedef struct compo_qrcodebox_t_
+{
     COMPO_STRUCT_COMMON;
     widget_rect_t *bg;
     widget_qrcode_t *qrcode;
@@ -64,4 +65,6 @@ void compo_qrcodebox_set_level(compo_qrcodebox_t *qrcodebox, u8 level);
  **/
 void compo_barcode_set_type(compo_qrcodebox_t *qrcodebox, u8 type);
 
+
+void compo_qrcodebox_set_pos(compo_qrcodebox_t *qrcodebox, s16 x, s16 y);
 #endif

@@ -25,6 +25,9 @@ enum
     TXT_6_ID,///y轴
     TXT_7_ID,///z轴
     TXT_8_ID,///运行时间
+
+    PASS_SHAPE_BG_ID,
+    PASS_TXT_ID,
 };
 
 
@@ -131,7 +134,6 @@ compo_form_t * func_ageing_mode_create(u8 mode,u8 time)
     compo_textbox_set(textbox,"G-sensor:");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X/5, TXT_SPACING*8.8-widget_text_get_area(textbox->txt).hei/2);
 
-
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set_align_center(textbox, false );
     compo_textbox_set(textbox,"X:--");
@@ -154,6 +156,20 @@ compo_form_t * func_ageing_mode_create(u8 mode,u8 time)
     compo_textbox_set(textbox,"运行时间:00:00:00");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING*12.2);
     compo_setid(textbox,TXT_8_ID);
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE );
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_setid(shape,PASS_SHAPE_BG_ID);
+    compo_shape_set_color(shape, COLOR_BLACK );
+    compo_shape_set_visible(shape, false );
+
+
+    textbox = compo_textbox_create(frm, 4 );
+    compo_textbox_set(textbox,"PASS");
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+    compo_setid(textbox,PASS_TXT_ID);
+    compo_textbox_set_visible(textbox, false );
 
     return frm;
 }
@@ -240,6 +256,9 @@ static void func_ageing_process(void)
             compo_textbox_t *textbox6 = compo_getobj_byid(TXT_6_ID);///y轴
             compo_textbox_t *textbox7 = compo_getobj_byid(TXT_7_ID);///z轴
             compo_textbox_t *textbox8 = compo_getobj_byid(TXT_8_ID);///运行时间
+            compo_shape_t *shape_pass = compo_getobj_byid(PASS_SHAPE_BG_ID);///运行时间
+            compo_textbox_t *pass_txt = compo_getobj_byid(PASS_TXT_ID);///运行时间
+
 
             if(f_ageing->sec%3 == 0)compo_shape_set_color(shape, COLOR_GREEN );
             else if(f_ageing->sec%3 == 1)compo_shape_set_color(shape, COLOR_BLUE );
@@ -297,6 +316,16 @@ static void func_ageing_process(void)
                 {
                     f_ageing->min = 0;
                     f_ageing->hour++;
+                }
+            }
+
+            if(f_ageing->time_flag == 0)///4小时模式
+            {
+                if(f_ageing->sec == 10)
+                {
+                    f_ageing->test_state = false;
+                    compo_textbox_set_visible(pass_txt, true );
+                    compo_shape_set_visible(shape_pass, true );
                 }
             }
         }

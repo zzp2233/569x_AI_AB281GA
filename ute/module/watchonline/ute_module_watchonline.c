@@ -35,9 +35,23 @@ ute_module_watchonline_data_t uteModuleWatchOnlineData =
 void *uteModuleWatchOnlineRecvTimeoutTimerPointer = NULL;
 void *uteModuleWatchOnlineOneSecTimerPointer = NULL;
 
-void uteModuleWatchOnlineGetDataPointer(ute_module_watchonline_data_t **pData)
+/**
+ * @brief        获取在线表盘地址
+ * @details
+ * @return       在线表盘地址
+ * @author       Wang.Luo
+ * @date         2024-11-26
+ */
+uint32_t uteModuleWatchOnlineGetBaseAddress(uint8_t index)
 {
-    (*pData) = &uteModuleWatchOnlineData;
+    if(index > sizeof(uteModuleWatchOnlineMultipleBaseAddress)/sizeof(uint32_t) - 1)
+    {
+        return 0;
+    }
+    else
+    {
+        return uteModuleWatchOnlineMultipleBaseAddress[index];
+    }
 }
 
 /**
@@ -79,7 +93,7 @@ void uteModuleWatchOnlineRecvTimeoutTimerCallback(void * pxTimer)
     uteApplicationCommonGetBleConnectionState(&state);
     if(state.isConnected == true)
     {
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_WATCHONLINE_RECVTIMEOUT_TIMER,NULL);
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_WATCHONLINE_RECVTIMEOUT_TIMER,0);
     }
     else
     {
@@ -94,7 +108,7 @@ void uteModuleWatchOnlineOneSecCallback(void * pxTimer)
     uteApplicationCommonGetBleConnectionState(&state);
     if(state.isConnected == true)
     {
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_WATCHONLINE_ONESEC_TIMER,NULL);
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_WATCHONLINE_ONESEC_TIMER,0);
     }
     else
     {
@@ -193,7 +207,7 @@ void uteModuleWatchOnlineUpateConfigFromFlash(void)
     }
     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,supportMultipleMaxCnt=%d\r\n", __func__, uteModuleWatchOnlineData.supportMultipleMaxCnt);
     int watchConfigSize = sizeof(watchConfig_t);
-    int picConfigSize = sizeof(watchConfig_t);
+    // int picConfigSize = sizeof(watchConfig_t);
     uteModuleWatchOnlineData.validPicConfigCnt = 0;
     watchConfig_t config;
     uint8_t vailWatch = 0;

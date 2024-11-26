@@ -3,6 +3,7 @@
 #include "ute_module_log.h"
 #include "ute_module_platform.h"
 #include "ute_module_message.h"
+#include "ute_application_common.h"
 
 void bsp_qdec_init(void);
 void rtc_alarm_disable(void);

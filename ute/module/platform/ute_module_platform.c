@@ -249,8 +249,9 @@ void uteModulePlatformWdgFeed(void)
 {
     WDT_CLR();
 }
-// static ute_module_platform_mutex_t uteModulePlatformMutexBuff[UTE_MODULE_PLATFORM_MUTEX_MAX] AT(.disp.ute);
-// uint8_t uteModulePlatformMutexCnt = 0;
+
+static ute_module_platform_mutex_t uteModulePlatformMutexBuff[UTE_MODULE_PLATFORM_MUTEX_MAX] AT(.disp.ute);
+uint8_t uteModulePlatformMutexCnt = 0;
 /**
 *@brief   创建互斥量
 *@details
@@ -261,19 +262,24 @@ void uteModulePlatformWdgFeed(void)
 bool uteModulePlatformCreateMutex(void **pp_handle)
 {
     bool result = false;
-#if 0
-    if(uteModulePlatformMutexCnt==0)
+
+    if (uteModulePlatformMutexCnt == 0)
     {
-        memset((void*)&uteModulePlatformMutexBuff[0],0,sizeof(ute_module_platform_mutex_t)*UTE_MODULE_PLATFORM_MUTEX_MAX);
-    }
-    if(uteModulePlatformMutexCnt<UTE_MODULE_PLATFORM_MUTEX_MAX)
-    {
-        for(uint8_t i=0; i<UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
+        for (uint8_t i = 0; i < UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
         {
-            if(!uteModulePlatformMutexBuff[i].isCreate)
+            uteModulePlatformMutexBuff[i].isCreate = false;
+            uteModulePlatformMutexBuff[i].mutex = NULL;
+        }
+    }
+
+    if (uteModulePlatformMutexCnt < UTE_MODULE_PLATFORM_MUTEX_MAX)
+    {
+        for (uint8_t i = 0; i < UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
+        {
+            if (!uteModulePlatformMutexBuff[i].isCreate)
             {
-                os_err_t ret = os_mutex_init(&uteModulePlatformMutexBuff[i].mutex,"ute",OS_IPC_FLAG_FIFO);
-                if(ret==OS_EOK)
+                uteModulePlatformMutexBuff[i].mutex = os_mutex_create("ute", OS_IPC_FLAG_FIFO);
+                if (uteModulePlatformMutexBuff[i].mutex != NULL)
                 {
                     *pp_handle = &uteModulePlatformMutexBuff[i];
                     uteModulePlatformMutexBuff[i].isCreate = true;
@@ -282,7 +288,7 @@ bool uteModulePlatformCreateMutex(void **pp_handle)
                 }
                 else
                 {
-                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,init error,ret=%d",__func__,ret);
+                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, create error", __func__);
                 }
                 break;
             }
@@ -290,11 +296,11 @@ bool uteModulePlatformCreateMutex(void **pp_handle)
     }
     else
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,uteModulePlatformMutexCnt=%d,is max",__func__,uteModulePlatformMutexCnt);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, uteModulePlatformMutexCnt=%d, is max", __func__, uteModulePlatformMutexCnt);
     }
-#endif
     return result;
 }
+
 /**
 *@brief   删除互斥量
 *@details
@@ -305,33 +311,37 @@ bool uteModulePlatformCreateMutex(void **pp_handle)
 bool uteModulePlatformDeleteMutex(void **pp_handle)
 {
     bool result = false;
-#if 0
-    if(pp_handle == NULL || (*pp_handle) == NULL)
+    if (pp_handle == NULL || (*pp_handle) == NULL)
     {
         return result;
     }
-    for(uint8_t i=0; i<UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
+
+    for (uint8_t i = 0; i < UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
     {
-        if((&uteModulePlatformMutexBuff[i]) == (*pp_handle))
+        if (&uteModulePlatformMutexBuff[i] == (*pp_handle))
         {
-            os_err_t ret = os_mutex_delete(&uteModulePlatformMutexBuff[i].mutex);
-            if(ret==OS_EOK)
+            if (uteModulePlatformMutexBuff[i].mutex != NULL)
             {
-                (*pp_handle) = NULL;
-                uteModulePlatformMutexBuff[i].isCreate = false;
-                uteModulePlatformMutexCnt--;
-                result = true;
-            }
-            else
-            {
-                UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,del error,ret=%d",__func__,ret);
+                os_err_t ret = os_mutex_delete(uteModulePlatformMutexBuff[i].mutex);
+                if (ret == OS_EOK)
+                {
+                    (*pp_handle) = NULL;
+                    uteModulePlatformMutexBuff[i].isCreate = false;
+                    uteModulePlatformMutexBuff[i].mutex = NULL;
+                    uteModulePlatformMutexCnt--;
+                    result = true;
+                }
+                else
+                {
+                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, delete error, ret=%d", __func__, ret);
+                }
             }
             break;
         }
     }
-#endif
     return result;
 }
+
 /**
 *@brief   使用互斥量
 *@details  超时500ms
@@ -342,30 +352,33 @@ bool uteModulePlatformDeleteMutex(void **pp_handle)
 bool uteModulePlatformTakeMutex(void *pp_handle)
 {
     bool result = false;
-#if 0
-    if(pp_handle == NULL)
+    if (pp_handle == NULL)
     {
         return result;
     }
-    for(uint8_t i=0; i<UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
+
+    for (uint8_t i = 0; i < UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
     {
-        if((&uteModulePlatformMutexBuff[i]) == pp_handle)
+        if (&uteModulePlatformMutexBuff[i] == pp_handle)
         {
-            os_err_t ret = os_mutex_take(&uteModulePlatformMutexBuff[i].mutex,500);
-            if(ret==OS_EOK)
+            if (uteModulePlatformMutexBuff[i].mutex != NULL)
             {
-                result = true;
-            }
-            else
-            {
-                UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,take error,ret=%d",__func__,ret);
+                os_err_t ret = os_mutex_take(uteModulePlatformMutexBuff[i].mutex, 500);
+                if (ret == OS_EOK)
+                {
+                    result = true;
+                }
+                else
+                {
+                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, take error, ret=%d", __func__, ret);
+                }
             }
             break;
         }
     }
-#endif
     return result;
 }
+
 /**
 *@brief   释放互斥量
 *@details
@@ -376,30 +389,33 @@ bool uteModulePlatformTakeMutex(void *pp_handle)
 bool uteModulePlatformGiveMutex(void *pp_handle)
 {
     bool result = false;
-#if 0
-    if(pp_handle == NULL)
+    if (pp_handle == NULL)
     {
         return result;
     }
-    for(uint8_t i=0; i<UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
+
+    for (uint8_t i = 0; i < UTE_MODULE_PLATFORM_MUTEX_MAX; i++)
     {
-        if((&uteModulePlatformMutexBuff[i]) == pp_handle)
+        if (&uteModulePlatformMutexBuff[i] == pp_handle)
         {
-            os_err_t ret = os_mutex_release(&uteModulePlatformMutexBuff[i].mutex);
-            if(ret==OS_EOK)
+            if (uteModulePlatformMutexBuff[i].mutex != NULL)
             {
-                result = true;
-            }
-            else
-            {
-                UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,take error,ret=%d",__func__,ret);
+                os_err_t ret = os_mutex_release(uteModulePlatformMutexBuff[i].mutex);
+                if (ret == OS_EOK)
+                {
+                    result = true;
+                }
+                else
+                {
+                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, release error, ret=%d", __func__, ret);
+                }
             }
             break;
         }
     }
-#endif
     return result;
 }
+
 /**
 * @brief   nor flash 读函数
 *@param[in] uint8_t   *data 数据指针

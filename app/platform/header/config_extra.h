@@ -62,7 +62,7 @@
 #define GUI_USE_OLED
 #elif (GUI_SELECT == GUI_TFT_JD9853)
 #define GUI_SCREEN_WIDTH                240
-#define GUI_SCREEN_HEIGHT               296
+#define GUI_SCREEN_HEIGHT               284
 #define GUI_SCREEN_OFS_X                0
 #define GUI_SCREEN_OFS_Y                0
 #define GUI_USE_TFT

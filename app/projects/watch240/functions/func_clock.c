@@ -329,6 +329,25 @@ compo_form_t *func_clock_form_create(void)
 {
     compo_form_t *frm;
 
+    uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
+#if UTE_MODULE_WATCHONLINE_SUPPORT
+    if (uteModuleWatchOnlineGetVailWatchCnt())
+    {
+        for (uint8_t i = 0; i < uteModuleWatchOnlineGetVailWatchCnt(); i++)
+        {
+            dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i] = uteModuleWatchOnlineGetBaseAddress(i);
+            UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,watch online index %d: 0x%x", __func__, i, dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i]);
+        }
+    }
+    else
+#endif
+    {
+        if (sys_cb.dialplate_index > UTE_MODULE_SCREENS_WATCH_CNT_MAX - 1)
+        {
+            sys_cb.dialplate_index = DEFAULT_WATCH_INDEX;
+        }
+    }
+
     switch (sys_cb.dialplate_index)
     {
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
@@ -544,6 +563,17 @@ static void func_clock_process(void)
 //    func_cb.frm_main = func_clock_form_create();
 //}
 
+//重建表盘界面
+void func_clock_recreate_dial(void)
+{
+    printf("dialplate index:%d\n", sys_cb.dialplate_index);
+    if(func_cb.sta == FUNC_CLOCK)
+    {
+        compo_form_destroy(func_cb.frm_main);
+        func_cb.frm_main = func_clock_form_create();
+    }
+}
+
 //时钟表盘功能消息处理
 static void func_clock_message(size_msg_t msg)
 {
@@ -647,24 +677,6 @@ static void func_clock_message(size_msg_t msg)
 //进入时钟表盘功能
 static void func_clock_enter(void)
 {
-    uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
-#if UTE_MODULE_WATCHONLINE_SUPPORT
-    if (uteModuleWatchOnlineGetVailWatchCnt())
-    {
-        for (uint8_t i = 0; i < uteModuleWatchOnlineGetVailWatchCnt(); i++)
-        {
-            dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i] = uteModuleWatchOnlineGetBaseAddress(i);
-            UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,watch online index %d: 0x%x", __func__, i, dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i]);
-        }
-    }
-    else
-#endif
-    {
-        if (sys_cb.dialplate_index > UTE_MODULE_SCREENS_WATCH_CNT_MAX - 1)
-        {
-            sys_cb.dialplate_index = DEFAULT_WATCH_INDEX;
-        }
-    }
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT

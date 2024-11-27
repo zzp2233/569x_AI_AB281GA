@@ -19,10 +19,13 @@
 #include "ute_module_call.h"
 #include "ute_module_sport.h"
 #include "ute_module_message.h"
+#include "include.h"
 
 #if UTE_MODULE_WATCHONLINE_SUPPORT
 
 const uint32_t uteModuleWatchOnlineMultipleBaseAddress[UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT] = UTE_MODULE_WATCHONLINE_MULTIPLE_BASE_ADDRESS_ARRAYS;
+
+extern void func_clock_recreate_dial(void);
 
 /*! 在线表盘的数据 casen, 2021-11-27  */
 ute_module_watchonline_data_t uteModuleWatchOnlineData =
@@ -337,9 +340,19 @@ void uteModuleWatchOnlineReadyStart(void)
 #else
     if(isUpdateWatch||!uteModuleGuiCommonIsDisplayOn())
     {
-
-        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
-
+        if(func_cb.sta != FUNC_CLOCK)
+        {
+            uteTaskGuiStartScreen(FUNC_CLOCK);
+        }
+        else
+        {
+            func_clock_recreate_dial();
+            if(sys_cb.gui_sleep_sta)
+            {
+                sys_cb.gui_need_wakeup = true;;
+            }
+            reset_sleep_delay_all();
+        }
     }
 #endif
 }
@@ -479,7 +492,19 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     }
     else
     {
-        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+        if(func_cb.sta != FUNC_CLOCK)
+        {
+            uteTaskGuiStartScreen(FUNC_CLOCK);
+        }
+        else
+        {
+            func_clock_recreate_dial();
+            if(sys_cb.gui_sleep_sta)
+            {
+                sys_cb.gui_need_wakeup = true;;
+            }
+            reset_sleep_delay_all();
+        }
     }
     return status;
 }

@@ -345,11 +345,11 @@ compo_form_t * func_factory_testing_mode_2(void)
 
     compo_shape_t *shape;
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_WIDTH/20);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, 2);
     compo_shape_set_color(shape, COLOR_YELLOW );
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH/20, GUI_SCREEN_HEIGHT);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 2, GUI_SCREEN_HEIGHT);
     compo_shape_set_color(shape, COLOR_YELLOW );
 
     return frm;
@@ -1770,6 +1770,7 @@ static void func_mode_result_process(void)
 ///工厂测试功能事件处理
 static void func_factory_testing_process(void)
 {
+    reset_guioff_delay();
     switch (mode_id)
     {
         case MODE_5:

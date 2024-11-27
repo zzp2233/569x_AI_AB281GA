@@ -118,4 +118,6 @@ typedef struct
     int (*mode_handler)(const void *ops_self, vcare_ppg_device_t *pdev);
 } vc30fx_mode_ops;
 
+unsigned char vc30fx_clk_calc_status(void);
+
 #endif /* __VC9211x_DRIVER_H__ */

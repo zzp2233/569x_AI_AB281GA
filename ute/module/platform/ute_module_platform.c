@@ -18,7 +18,7 @@
 ute_module_platform_adv_data_t uteModulePlatformAdvData;
 
 static uint32_t uteModulePlatformDlpsBit = 0;
-AT(.sleep_text.ute_sleep_bit)
+//AT(.sleep_text.ute_sleep_bit)
 
 /**
 *@brief   us延时函数
@@ -1409,7 +1409,7 @@ void uteModulePlatformAdvDataInit(void)
 *@author        zn.zeng
 *@date        2021-10-16
 */
-AT(.sleep_text.ute_sleep_ctrl)
+//AT(.sleep_text.ute_sleep_ctrl)
 void uteModulePlatformDlpsEnable(uint32_t bit)
 {
 #if UTE_LOG_SYSTEM_LVL
@@ -1432,7 +1432,7 @@ void uteModulePlatformDlpsEnable(uint32_t bit)
 *@author        zn.zeng
 *@date        2021-10-16
 */
-AT(.sleep_text.ute_sleep_ctrl)
+//AT(.sleep_text.ute_sleep_ctrl)
 void uteModulePlatformDlpsDisable(uint32_t bit)
 {
 #if UTE_LOG_SYSTEM_LVL
@@ -1451,7 +1451,7 @@ void uteModulePlatformDlpsDisable(uint32_t bit)
  * @author       Wang.Luo
  * @date         2024-10-23
  */
-AT(.sleep_text.ute_sleep_ctrl)
+//AT(.sleep_text.ute_sleep_ctrl)
 uint32_t uteModulePlatformNotAllowSleep(void)
 {
     return uteModulePlatformDlpsBit;
@@ -1464,7 +1464,7 @@ uint32_t uteModulePlatformNotAllowSleep(void)
  * @author       Wang.Luo
  * @date         2024-10-23
  */
-AT(.sleep_text.ute_sleep_ctrl)
+//AT(.sleep_text.ute_sleep_ctrl)
 void uteModulePlatformDlpsBitReset(void)
 {
     uteModulePlatformDlpsBit = 0;

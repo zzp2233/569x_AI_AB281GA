@@ -1215,6 +1215,9 @@
 		<Unit filename="functions/func_sport_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_sport_sort.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_sport_sub_run.c">
 			<Option compilerVar="CC" />
 		</Unit>

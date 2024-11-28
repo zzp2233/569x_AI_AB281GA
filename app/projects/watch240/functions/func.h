@@ -70,9 +70,11 @@ enum
     FUNC_SPORT_CONFIG,                  //运动配置
     FUNC_SPORT_SUB_RUN,                 //运动--室内跑步
     FUNC_SPORT_SWITCH,                  //运动开启
+    FUNC_SPORT_SORT,                    //运动边菜单
     FUNC_CALL,                          //电话
     FUNC_CALL_SUB_RECORD,               //电话-最近通话
     FUNC_CALL_SUB_DIAL,                 //电话-拨打电话
+    FUNC_CALL_SORT,                     //通话-一级界面
     FUNC_FINDPHONE,                     //寻找手机
     FUNC_CALENDAER,                     //日历
     FUNC_VOLUME,                        //音量
@@ -134,15 +136,13 @@ enum
     FUNC_OTA_MODE,         //OTA升级
     FUNC_OTA_ERROR,         //OTA升级失败界面
 
-    FUNC_MAX_NUM,           //用于计数
     FUNC_BLE_CALL,
-
-
     FUNC_TEST_MODE,      ///*出厂测试模式选择*/
     FUNC_FACTORY_TESTING,///*工厂测试*/
     FUNC_AGEING,         ///*老化测试*/
     FUNC_AUDIO,         ///*音频测试*/
 
+    FUNC_MAX_NUM,           //用于计数
 };
 
 //task control block

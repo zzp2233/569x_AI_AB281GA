@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_watchonline.h"
 
 #define TRACE_EN                0
 
@@ -28,13 +29,15 @@ compo_rowbox_t *compo_rowbox_create(compo_form_t *frm)
     rowbox->page = page;
 
     //先创建背景框，确保在所有图片的底部
-    for (int i=0; i<IMG_MAX; i++) {
+    for (int i=0; i<IMG_MAX; i++)
+    {
         rowbox->rect[i] = widget_rect_create(page);
         //widget_rect_set_color(rowbox->rect[i], make_color(0xff, 0x00, 0x00));
         widget_rect_set_color(rowbox->rect[i], make_color(0x48, 0x48, 0x48));//default color
     }
 
-    for (int i=0; i<IMG_MAX; i++) {
+    for (int i=0; i<IMG_MAX; i++)
+    {
         widget_image_t *img = widget_image_create(page, 0);
         rowbox->img[i] = img;
     }
@@ -46,13 +49,19 @@ compo_rowbox_t *compo_rowbox_create(compo_form_t *frm)
 static u32 compo_rowbox_preview_style(u32 base_addr)
 {
     uitool_header_t uitool_header;
-    os_spiflash_read(&uitool_header, base_addr, UITOOL_HEADER);
-	for(u16 i=0; i<uitool_header.num; i++) {
+    u32 user_addr = base_addr;
+#if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
+    user_addr += sizeof(watchConfig_t);
+#endif
+    os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
+    for(u16 i=0; i<uitool_header.num; i++)
+    {
         uitool_res_t uitool_res = {0};
-        os_spiflash_read(&uitool_res, base_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
-        u32 res_addr = base_addr + uitool_res.res_addr;
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        u32 res_addr = user_addr + uitool_res.res_addr;
         //预览图
-        if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW) {
+        if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW)
+        {
             return res_addr;
         }
     }
@@ -70,7 +79,8 @@ static u32 compo_rowbox_preview_style(u32 base_addr)
  **/
 int compo_rowbox_set_margin(compo_rowbox_t *rowbox, u8 margin_en, u8 margin_width, u16 margin_radius, u16 margin_color)
 {
-    if ((!rowbox) || (!rowbox->page)) {
+    if ((!rowbox) || (!rowbox->page))
+    {
         return -1;
     }
     rowbox->margin_en = margin_en;
@@ -78,7 +88,8 @@ int compo_rowbox_set_margin(compo_rowbox_t *rowbox, u8 margin_en, u8 margin_widt
     rowbox->margin_color = margin_color;
     rowbox->margin_width = margin_width;
 
-    for (int i=0; i<IMG_MAX; i++) {
+    for (int i=0; i<IMG_MAX; i++)
+    {
         widget_rect_set_color(rowbox->rect[i], margin_color);
     }
 
@@ -96,9 +107,12 @@ int compo_rowbox_set_margin(compo_rowbox_t *rowbox, u8 margin_en, u8 margin_widt
 void compo_rowbox_set(compo_rowbox_t *rowbox, const u32 *res_tbl, u8 img_cnt)
 {
     area_t img_area;
-    if (rowbox->style == COMPO_ROWBOX_STYLE_NORMAL) {
+    if (rowbox->style == COMPO_ROWBOX_STYLE_NORMAL)
+    {
         img_area = gui_image_get_size(res_tbl[0]);
-    } else {
+    }
+    else
+    {
         img_area = gui_image_get_size(compo_rowbox_preview_style(res_tbl[0]));
     }
 
@@ -151,10 +165,14 @@ void compo_rowbox_set_focus(compo_rowbox_t *rowbox, s16 x)
     int ix;
     rect_t location;
 
-    if (!rowbox->flag_cycle) {
-        if (x < 0) {
+    if (!rowbox->flag_cycle)
+    {
+        if (x < 0)
+        {
             x = 0;
-        } else if (x > rowbox->total_width) {
+        }
+        else if (x > rowbox->total_width)
+        {
             x = rowbox->total_width;
         }
     }
@@ -198,32 +216,43 @@ void compo_rowbox_update(compo_rowbox_t *rowbox)
     rowbox->focus_icon_idx = cidx;
 
     sidx = cidx - 3;
-    for (i=0; i<IMG_MAX; i++) {
+    for (i=0; i<IMG_MAX; i++)
+    {
         int idx = sidx + i;
         int idx_tmp;
 
-        if (!rowbox->flag_cycle) {      //normal
-            if (idx < 0 || idx >= rowbox->img_cnt) {
+        if (!rowbox->flag_cycle)        //normal
+        {
+            if (idx < 0 || idx >= rowbox->img_cnt)
+            {
                 widget_set_visible(rowbox->img[i], false);
                 widget_set_visible(rowbox->rect[i], false);
                 rowbox->img_idx[i] = -1;
                 continue;
-            } else {
+            }
+            else
+            {
                 rowbox->img_idx[i] = idx;
                 widget_set_visible(rowbox->img[i], true);
                 widget_set_visible(rowbox->rect[i], true);
             }
-        } else {                        //cycle
+        }
+        else                            //cycle
+        {
             idx_tmp = idx + (idx < 0 ? rowbox->img_cnt : (idx >= rowbox->img_cnt ? -rowbox->img_cnt : 0));
-            while (idx_tmp < 0 || idx_tmp >= rowbox->img_cnt) {
+            while (idx_tmp < 0 || idx_tmp >= rowbox->img_cnt)
+            {
                 idx_tmp = idx_tmp + (idx_tmp < 0 ? rowbox->img_cnt : (idx_tmp >= rowbox->img_cnt ? -rowbox->img_cnt : 0));
             }
             rowbox->img_idx[i] = idx_tmp;
         }
 
-        if (rowbox->style == COMPO_ROWBOX_STYLE_NORMAL) {
+        if (rowbox->style == COMPO_ROWBOX_STYLE_NORMAL)
+        {
             widget_image_set(rowbox->img[i], rowbox->res_tbl[rowbox->img_idx[i]]);
-        } else {    //表盘的图片需要解析一下地址，才能获取预览图
+        }
+        else        //表盘的图片需要解析一下地址，才能获取预览图
+        {
             widget_image_set(rowbox->img[i], compo_rowbox_preview_style(rowbox->res_tbl[rowbox->img_idx[i]]));
         }
 
@@ -242,7 +271,8 @@ void compo_rowbox_update(compo_rowbox_t *rowbox)
         widget_set_size(rowbox->img[i], img_wid, img_hei);
         widget_set_alpha(rowbox->img[i], img_wid >= rowbox->img_area.wid ? 255 : (img_wid * 255 / rowbox->img_area.wid));
         widget_set_pos(rowbox->img[i], lnx, lny);
-        if (rowbox->margin_en) {
+        if (rowbox->margin_en)
+        {
             //widget_set_alpha(rowbox->img[i], 255);
             if (dx == 0)
             {
@@ -251,7 +281,9 @@ void compo_rowbox_update(compo_rowbox_t *rowbox)
                 widget_set_location(rowbox->rect[i], lnx, lny, img_wid + rowbox->margin_width, img_hei + rowbox->margin_width);
                 widget_rect_set_radius(rowbox->rect[i], rowbox->margin_radius);
                 widget_set_visible(rowbox->rect[i], true);
-            } else {
+            }
+            else
+            {
                 widget_set_visible(rowbox->rect[i], false);
             }
         }
@@ -265,7 +297,8 @@ void compo_rowbox_update(compo_rowbox_t *rowbox)
 void compo_rowbox_move_init(compo_rowbox_t *rowbox)
 {
     compo_rowbox_move_cb_t *mcb = rowbox->mcb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
     mcb->focus_x = rowbox->ofs_x;
@@ -280,64 +313,94 @@ void compo_rowbox_move_init(compo_rowbox_t *rowbox)
 void compo_rowbox_move(compo_rowbox_t *rowbox)
 {
     compo_rowbox_move_cb_t *mcb = rowbox->mcb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
         s32 dx = mcb->focus_dx;
         s32 dy;
         mcb->flag_drag = ctp_get_dxy(&mcb->focus_dx, &dy);
-        if (mcb->flag_drag) {
+        if (mcb->flag_drag)
+        {
             //拖动菜单图标
             mcb->focus_xstep = mcb->focus_dx - dx;
             compo_rowbox_set_focus(rowbox, mcb->focus_x - mcb->focus_dx);
             compo_rowbox_update(rowbox);
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
             s32 last_dx = ctp_get_last_dxy().x;
             mcb->focus_x = rowbox->ofs_x;
             mcb->flag_move_auto = true;
             mcb->moveto_idx = rowbox->focus_icon_idx - (last_dx * DRAG_AUTO_SPEED / GUI_SCREEN_HEIGHT);
-            if (mcb->moveto_idx > rowbox->img_cnt && !rowbox->flag_cycle) {
+            if (mcb->moveto_idx > rowbox->img_cnt && !rowbox->flag_cycle)
+            {
                 mcb->moveto_idx = rowbox->img_cnt;
-            } else if (mcb->moveto_idx < -1 && !rowbox->flag_cycle) {
+            }
+            else if (mcb->moveto_idx < -1 && !rowbox->flag_cycle)
+            {
                 mcb->moveto_idx = -1;
             }
             mcb->moveto_x = compo_rowbox_getx_byidx(rowbox, mcb->moveto_idx);
             mcb->tick = tick_get();
         }
     }
-    if (mcb->flag_move_auto) {
+    if (mcb->flag_move_auto)
+    {
         //自动移动
-        if (mcb->focus_x == mcb->moveto_x) {
-            if (mcb->focus_x < mcb->first_x && !rowbox->flag_cycle) {
+        if (mcb->focus_x == mcb->moveto_x)
+        {
+            if (mcb->focus_x < mcb->first_x && !rowbox->flag_cycle)
+            {
                 mcb->moveto_x = mcb->first_x;             //超过第1个，回弹
-            } else if (mcb->focus_x > mcb->last_x && !rowbox->flag_cycle) {
+            }
+            else if (mcb->focus_x > mcb->last_x && !rowbox->flag_cycle)
+            {
                 mcb->moveto_x = mcb->last_x;              //超过最后1个，回弹
-            } else {
+            }
+            else
+            {
                 mcb->flag_move_auto = false;              //移动完成
                 rowbox->ofs_x %= rowbox->cycle_width;  //循环滑动防止ofs_y溢出
                 rowbox->focus_icon_idx = rowbox->ofs_x / rowbox->row_width_total - (rowbox->ofs_x < 0 ? 1 : 0);
                 mcb->focus_x = rowbox->ofs_x;
             }
-        } else if (tick_check_expire(mcb->tick, FOCUS_AUTO_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(mcb->tick, FOCUS_AUTO_TICK_EXPIRE))
+        {
             s32 dx;
             mcb->tick = tick_get();
             dx = mcb->moveto_x - mcb->focus_x;
-            if (dx > 0) {
-                if (dx > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (dx > 0)
+            {
+                if (dx > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dx = dx / FOCUS_AUTO_STEP_DIV;
-                } else if (dx > FOCUS_AUTO_STEP) {
+                }
+                else if (dx > FOCUS_AUTO_STEP)
+                {
                     dx = FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dx = 1;
                 }
-            } else {
-                if (dx < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else
+            {
+                if (dx < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     dx = dx / FOCUS_AUTO_STEP_DIV;
-                } else if (dx < -FOCUS_AUTO_STEP) {
+                }
+                else if (dx < -FOCUS_AUTO_STEP)
+                {
                     dx = -FOCUS_AUTO_STEP;
-                } else {
+                }
+                else
+                {
                     dx = -1;
                 }
             }
@@ -356,16 +419,20 @@ void compo_rowbox_move(compo_rowbox_t *rowbox)
  **/
 int compo_rowbox_select(compo_rowbox_t *rowbox, point_t pt)
 {
-    if (rowbox == NULL) {
+    if (rowbox == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_SELECT);
     }
     int i;
-    for (i=0; i<IMG_MAX; i++) {
-        if (rowbox->img_idx[i] < 0) {
+    for (i=0; i<IMG_MAX; i++)
+    {
+        if (rowbox->img_idx[i] < 0)
+        {
             continue;
         }
         rect_t rect = widget_get_absolute(rowbox->img[i]);
-        if (abs_s(pt.y - rect.y) * 2 <= rect.hei && abs_s(pt.x - rect.x) * 2 <= rect.wid) {
+        if (abs_s(pt.y - rect.y) * 2 <= rect.hei && abs_s(pt.x - rect.x) * 2 <= rect.wid)
+        {
             return rowbox->img_idx[i];
         }
     }

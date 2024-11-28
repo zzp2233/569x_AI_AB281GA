@@ -16,6 +16,7 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_sport.h"
 #include "ute_module_filesystem.h"
+#include "ute_module_watchonline.h"
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
@@ -372,6 +373,7 @@ void uteModuleGuiCommonInit(void)
 #endif
     uteModuleGuiCommonData.isGoBackDisplay = true;
     func_cb.menu_style = (uint8_t)uteModuleGuiCommonGetThemeTypeId();
+    uteModuleGuiCommonWatchConfigInit();
 }
 
 /**
@@ -580,8 +582,8 @@ void uteModuleGuiCommonGetCurrWatchIndex(uint8_t *index)
 */
 uint8_t uteModuleGuiCommonGetCurrWatchMaxIndex(void)
 {
-    uint8_t WatchMaxIndex=0;
-    // WatchMaxIndex=uteModuleWatchOnlineGetVailWatchCnt()+UTE_MODULE_SCREENS_WATCH_CNT_MAX;
+    uint8_t WatchMaxIndex = 0;
+    WatchMaxIndex = uteModuleWatchOnlineGetVailWatchCnt() + UTE_MODULE_SCREENS_WATCH_CNT_MAX;
     return WatchMaxIndex;
 }
 
@@ -594,27 +596,25 @@ uint8_t uteModuleGuiCommonGetCurrWatchMaxIndex(void)
 */
 void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
 {
-    uint8_t maxCnt = uteModuleGuiCommonGetVailWatchCnt();
     uteModuleGuiCommonData.displayCtrl.currWatchIndex = index;
-    // uteModuleGuiCommonData.watchPreview1Index = index;
-    // uteModuleGuiCommonData.watchPreview2Index = index+1;
-    // if(uteModuleGuiCommonData.watchPreview2Index>=maxCnt)
-    // {
-    //     uteModuleGuiCommonData.watchPreview2Index = 0;
-    // }
-    // if(uteModuleGuiCommonData.watchPreview1Index>0)
-    // {
-    //     uteModuleGuiCommonData.watchPreview0Index = uteModuleGuiCommonData.watchPreview1Index-1;
-    // }
-    // else
-    // {
-    //     uteModuleGuiCommonData.watchPreview0Index = maxCnt-1;
-    // }
-    if(index>=UTE_MODULE_SCREENS_WATCH_CNT_MAX)
+    sys_cb.dialplate_index = index;
+    if(index >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
     {
-        // uteModuleWatchOnlineUpateConfigFromFlash();
+        uteModuleWatchOnlineUpateConfigFromFlash();
     }
     uteModuleGuiCommonSaveConfig();
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,index=%d",__func__,index);
+}
+
+/**
+*@brief      watch config init
+*@details
+*@author     zn.zeng
+*@date       2021-10-23
+*/
+void uteModuleGuiCommonWatchConfigInit(void)
+{
+    uteModuleGuiCommonSetCurrWatchIndex(uteModuleGuiCommonData.displayCtrl.currWatchIndex);
 }
 
 /**
@@ -954,10 +954,10 @@ bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void)
 uint8_t uteModuleGuiCommonGetVailWatchCnt(void)
 {
     uint8_t maxCnt = UTE_MODULE_SCREENS_WATCH_CNT_MAX;
-    // if(uteModuleWatchOnlineGetVailWatchCnt())
-    // {
-    //     maxCnt = maxCnt + uteModuleWatchOnlineGetVailWatchCnt();
-    // }
+    if(uteModuleWatchOnlineGetVailWatchCnt())
+    {
+        maxCnt = maxCnt + uteModuleWatchOnlineGetVailWatchCnt();
+    }
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL,"%s,maxCnt=%d",__func__,maxCnt);
     return maxCnt;
 }

@@ -20,5 +20,6 @@ void func_pwroff(int pwroff_tone_en);           //进入低电或者关机状态
 void sys_enter_sleep(u8 lpclk_type);
 void sleep_set_sysclk(uint8_t sys_clk);         //休眠状态下设置系统时钟, 用于抬高主频跑算法，使用完需要设置为24M
 
-
+void sfunc_deepsleep(void);                     //进入深睡
+void func_deepsleep(void);                      //深睡关机
 #endif // __FUNC_LOWPWR_H

@@ -1344,6 +1344,10 @@ void func_run(void)
         {
             func_pwroff(1);
         }
+        if (func_cb.sta == FUNC_DEEPSLEEP)
+        {
+            func_deepsleep();
+        }
         func_exit();
     }
 }

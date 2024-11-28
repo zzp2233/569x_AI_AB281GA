@@ -82,6 +82,7 @@
 			<Add directory="../../../ute/module/liftwrist" />
 			<Add directory="../../../ute/drv/temperature" />
 			<Add directory="../../../ute/module/temperature" />
+			<Add directory="../../../ute/module/watchonline" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -247,6 +248,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/temperature/ute_module_temperature.h" />
+		<Unit filename="../../../ute/module/watchonline/ute_module_watchonline.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/watchonline/ute_module_watchonline.h" />
 		<Unit filename="../../../ute/module/weather/ute_module_weather.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1213,6 +1218,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_sport_config.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_sport_sort.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_sport_sub_run.c">

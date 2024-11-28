@@ -50,6 +50,7 @@ extern void func_weather(void);
 extern void func_sport(void);
 extern void func_sport_config(void);
 extern void func_sport_sub_run(void);
+extern void func_sport_sort(void);
 extern void func_calendar(void);
 extern void func_call(void);
 extern void func_call_sub_record(void);
@@ -153,6 +154,7 @@ compo_form_t *func_sport_form_create(void);
 compo_form_t *func_sport_config_form_create(void);
 compo_form_t *func_sport_sub_run_form_create(void);
 compo_form_t *func_sport_switching_form_create(void);
+compo_form_t *func_sport_sort_form_create(void);
 compo_form_t *func_set_sub_disturd_form_create(void);
 compo_form_t *func_disturd_sub_set_form_create(void);
 compo_form_t *func_call_form_create(void);
@@ -253,6 +255,7 @@ const func_t tbl_func_create[] =
     {FUNC_SPORT_CONFIG,                 func_sport_config_form_create},
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run_form_create},
     {FUNC_SPORT_SWITCH,                 func_sport_switching_form_create},
+    {FUNC_SPORT_SORT,                   func_sport_sort_form_create},
     {FUNC_GAME,                         func_game_form_create},
     {FUNC_STYLE,                        func_style_form_create},
     {FUNC_FINDPHONE,                    func_findphone_form_create},
@@ -356,6 +359,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SPORT_CONFIG,                 func_sport_config},             //运动配置
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run},            //运动--室内跑步
     {FUNC_SPORT_SWITCH,                 func_sport_switching},          //运动开启动画
+    {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
     {FUNC_GAME,                         func_game},                     //游戏
     {FUNC_STYLE,                        func_style},                    //菜单风格
     {FUNC_ALTITUDE,                     func_altitude},                 //海拔
@@ -1298,14 +1302,14 @@ void func_run(void)
     void (*func_entry)(void) = NULL;
     printf("%s\n", __func__);
     memset(func_cb.tbl_sort, 0, sizeof(func_cb.tbl_sort));
-    func_cb.tbl_sort[0] = FUNC_CLOCK;
-    func_cb.tbl_sort[1] = FUNC_ACTIVITY;
-    func_cb.tbl_sort[2] = FUNC_HEARTRATE;
-    func_cb.tbl_sort[3] = FUNC_SLEEP;
-    func_cb.tbl_sort[4] = FUNC_BLOOD_OXYGEN;
-    func_cb.tbl_sort[5] = FUNC_BT;
-    func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
-    func_cb.sort_cnt = 7;
+//    func_cb.tbl_sort[0] = FUNC_CLOCK;
+//    func_cb.tbl_sort[1] = FUNC_ACTIVITY;
+//    func_cb.tbl_sort[2] = FUNC_HEARTRATE;
+//    func_cb.tbl_sort[3] = FUNC_SLEEP;
+//    func_cb.tbl_sort[4] = FUNC_BLOOD_OXYGEN;
+//    func_cb.tbl_sort[5] = FUNC_BT;
+//    func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
+//    func_cb.sort_cnt = 7;
     func_cb.sta = FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
     // 获取自定义排序
     uteModuleGuiCommonGetScreenTblSort(func_cb.tbl_sort, &func_cb.sort_cnt);

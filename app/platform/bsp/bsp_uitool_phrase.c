@@ -2,8 +2,9 @@
 #include "../gui/components/compo_form.h"
 #include "ute_module_systemtime.h"
 #include "ute_language_common.h"
+#include "ute_module_watchonline.h"
 
-//#define TRACE_EN    1
+#define TRACE_EN    0
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -128,10 +129,11 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
-            printf("type[%d]\n", uitool_res->bond_type);
+            TRACE("type[%d]\n", uitool_res->bond_type);
         }
         break;
 
+        case COMPO_BOND_COMM_UNIT:
         case COMPO_BOND_TIME_AMPM:
         case COMPO_BOND_TIME_WEEK:
         case COMPO_BOND_TIME_MONTH:
@@ -141,7 +143,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
-            printf("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
+            TRACE("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
 
             if(CHINESE_LANGUAGE_ID == uitool_res->rsv && uteModuleSystemtimeCompareLanguage(CHINESE_LANGUAGE_ID))
             {
@@ -165,7 +167,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             }
             else
             {
-                printf("type[%d] rsv[%d] not support\n", uitool_res->bond_type, uitool_res->rsv);
+                TRACE("type[%d] rsv[%d] not support\n", uitool_res->bond_type, uitool_res->rsv);
                 compo_picturebox_set_visible(pic, false);
             }
 
@@ -319,14 +321,17 @@ void bsp_uitool_area_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res
 u16 bsp_uitool_header_phrase(u32 base_addr)
 {
     uitool_header_t uitool_header;
-
-    os_spiflash_read(&uitool_header, base_addr, UITOOL_HEADER);
+    u32 user_addr = base_addr;
+#if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
+    user_addr += sizeof(watchConfig_t);
+#endif
+    os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
     TRACE("sig:%x, ver:%d, size:%x, num:%x\n", uitool_header.sig, uitool_header.ver, uitool_header.size, uitool_header.num);
     TRACE("user id:%d, index:%d, wid:%d, hei:%d\n", uitool_header.user_id, uitool_header.index, uitool_header.wid, uitool_header.hei);
 //    print_r(uitool_header.user_extend, 32);
     if (uitool_header.sig != UITOOL_HEADER_FORMAT)
     {
-        printf("UITOOL Format Uncorrect:%x, %x\n", uitool_header.sig, UITOOL_HEADER_FORMAT);
+        TRACE("UITOOL Format Uncorrect:%x, %x\n", uitool_header.sig, UITOOL_HEADER_FORMAT);
         return false;
     }
     return uitool_header.num;
@@ -338,10 +343,12 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
     memset(&uitool_res, 0, sizeof(uitool_res_t));
     animation_id = 0;
 
+    u32 user_addr = base_addr + sizeof(watchConfig_t);
+
     for(u16 i=0; i<compo_num; i++)
     {
-        os_spiflash_read(&uitool_res, base_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
-        u32 res_addr = base_addr + uitool_res.res_addr;
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        u32 res_addr = user_addr + uitool_res.res_addr;
         switch (uitool_res.res_type)
         {
             case UITOOL_TYPE_POINTER:

@@ -2,6 +2,9 @@
 #include "func.h"
 #include "func_clock.h"
 #include "ute_module_gui_common.h"
+#include "ute_module_watchonline.h"
+#include "ute_project_config.h"
+#include "ute_module_log.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -46,24 +49,11 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define KALE_ROTATE_ANGLE           25
 
 
-#define DIALPLATE_NUM               (sizeof(dialplate_info) / sizeof(u32))
-#define DIALPLATE_BTF_IDX           DIALPLATE_NUM - 1        //蝴蝶表盘默认最后一个
-#define DIALPLATE_CUBE_IDX          DIALPLATE_NUM - 2        //立方体表盘默认倒数第二个
+#define DIALPLATE_NUM               uteModuleGuiCommonGetCurrWatchMaxIndex()
+#define DIALPLATE_BTF_IDX           UTE_WATCHS_DIALPLATE_BTF_INDEX        //蝴蝶表盘默认最后一个
+#define DIALPLATE_CUBE_IDX          UTE_WATCHS_DIALPLATE_CUBE_INDEX        //立方体表盘默认倒数第二个
 
-const u32 dialplate_info[] =
-{
-    UI_BUF_DIALPLATE_1_BIN,
-#if !SECURITY_TRANSITCODE_EN
-//    UI_BUF_DIALPLATE_2_BIN,
-    UI_BUF_DIALPLATE_5_BIN,
-    UI_BUF_DIALPLATE_6_BIN,
-//    UI_BUF_DIALPLATE_7_BIN,
-    UI_BUF_DIALPLATE_4_BIN,
-#endif
-    UI_BUF_DIALPLATE_CUBE_BIN,
-    UI_BUF_DIALPLATE_BTF_BIN,
-
-};
+u32 dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT] = UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS;
 
 //表盘快捷按钮编号表 对应表盘工具
 const u8 quick_btn_tbl[] =
@@ -141,7 +131,8 @@ void func_switch_to(u8 sta, u16 switch_mode);
 
 u8 func_clock_get_max_dialplate_num(void)
 {
-    return (sizeof(dialplate_info) / sizeof(u32));
+    // return (sizeof(dialplate_info) / sizeof(u32));
+    return uteModuleGuiCommonGetCurrWatchMaxIndex();
 }
 
 u32 func_clock_get_dialplate_info(u8 index)
@@ -152,6 +143,7 @@ u32 func_clock_get_dialplate_info(u8 index)
 //点进图标进入应用
 static void func_clock_cube_disk_icon_click(void)
 {
+#if UTE_WATCHS_CUBE_DIAL_SUPPORT
     if (sys_cb.dialplate_index != DIALPLATE_CUBE_IDX)
     {
         return;
@@ -177,11 +169,13 @@ static void func_clock_cube_disk_icon_click(void)
         func_cb.sta = func_sta;
         func_cb.menu_idx = icon_idx;                //记住当前编号
     }
+#endif
 }
 
 //触摸某一个区域触发飞舞
 void func_clock_butterfly_click(void)
 {
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX || sys_cb.dialplate_btf_ready == false)
     {
         return;
@@ -202,7 +196,7 @@ void func_clock_butterfly_click(void)
     {
         compo_butterfly_move_control(btfly, COMPO_BUTTERFLY_MOVE_CMD_LOOP);
     }
-
+#endif
 }
 
 //单击按钮
@@ -334,34 +328,62 @@ compo_form_t *func_clock_butterfly_form_create(void)
 compo_form_t *func_clock_form_create(void)
 {
     compo_form_t *frm;
-    if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
+
+    uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
+#if UTE_MODULE_WATCHONLINE_SUPPORT
+    if (uteModuleWatchOnlineGetVailWatchCnt())
     {
-        frm = func_clock_butterfly_form_create();
-    }
-    else if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
-    {
-        frm = func_clock_cube_form_create();
+        for (uint8_t i = 0; i < uteModuleWatchOnlineGetVailWatchCnt(); i++)
+        {
+            dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i] = uteModuleWatchOnlineGetBaseAddress(i);
+            UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,watch online index %d: 0x%x", __func__, i, dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i]);
+        }
     }
     else
+#endif
     {
-        u32 base_addr = dialplate_info[sys_cb.dialplate_index];
-        u16 compo_num = bsp_uitool_header_phrase(base_addr);
-        if (!compo_num)
+        if (sys_cb.dialplate_index > UTE_MODULE_SCREENS_WATCH_CNT_MAX - 1)
         {
-            halt(HALT_GUI_DIALPLATE_HEAD);
+            sys_cb.dialplate_index = DEFAULT_WATCH_INDEX;
         }
-
-        frm = compo_form_create(true);
-        bsp_uitool_create(frm, base_addr, compo_num);
-        return frm;
     }
 
+    switch (sys_cb.dialplate_index)
+    {
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
+        case DIALPLATE_BTF_IDX:
+        {
+            frm = func_clock_butterfly_form_create();
+        }
+        break;
+#endif
+#if UTE_WATCHS_CUBE_DIAL_SUPPORT
+        case DIALPLATE_CUBE_IDX:
+        {
+            frm = func_clock_cube_form_create();
+        }
+        break;
+#endif
+        default:
+        {
+            u32 base_addr = dialplate_info[sys_cb.dialplate_index];
+            u16 compo_num = bsp_uitool_header_phrase(base_addr);
+            if (!compo_num)
+            {
+                halt(HALT_GUI_DIALPLATE_HEAD);
+            }
+            frm = compo_form_create(true);
+            bsp_uitool_create(frm, base_addr, compo_num);
+        }
+        break;
+    }
 
     return frm;
 }
 
 void func_clock_butterfly_set_light_visible(bool visible)
 {
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX)
     {
         return;
@@ -377,10 +399,12 @@ void func_clock_butterfly_set_light_visible(bool visible)
             compo_picturebox_set_visible(pic, visible);
         }
     }
+#endif
 }
 
 void func_clock_butterfly_process(void)
 {
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index != DIALPLATE_BTF_IDX || sys_cb.dialplate_btf_ready == false)
     {
         return;
@@ -492,7 +516,7 @@ void func_clock_butterfly_process(void)
             }
         }
     }
-
+#endif
 }
 
 //子功能公共事件处理
@@ -510,11 +534,13 @@ void func_clock_sub_message(size_msg_t msg)
 //时钟表盘功能事件处理
 static void func_clock_process(void)
 {
+#if UTE_WATCHS_CUBE_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
     {
         compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
         compo_cube_move(cube);
     }
+#endif
     func_process();                                  //刷新UI
 }
 
@@ -536,6 +562,17 @@ static void func_clock_process(void)
 //    compo_form_destroy(func_cb.frm_main);
 //    func_cb.frm_main = func_clock_form_create();
 //}
+
+//重建表盘界面
+void func_clock_recreate_dial(void)
+{
+    printf("dialplate index:%d\n", sys_cb.dialplate_index);
+    if(func_cb.sta == FUNC_CLOCK)
+    {
+        compo_form_destroy(func_cb.frm_main);
+        func_cb.frm_main = func_clock_form_create();
+    }
+}
 
 //时钟表盘功能消息处理
 static void func_clock_message(size_msg_t msg)
@@ -562,7 +599,7 @@ static void func_clock_message(size_msg_t msg)
         }
 
     }
-    static bool time_visible = 1;
+
     switch (msg)
     {
         case MSG_CTP_SHORT_UP:
@@ -588,32 +625,36 @@ static void func_clock_message(size_msg_t msg)
             func_clock_button_click();
             break;
 
-        case MSG_SYS_500MS:
-            //秒跳动处理
-
-            if (sys_cb.dialplate_index >= DIALPLATE_CUBE_IDX)
+        case MSG_SYS_500MS: //秒跳动处理
+        {
+            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
+            if(txt != NULL)
             {
-                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
+                static bool time_visible = true;
                 compo_textbox_set_visible(txt, time_visible);
-//                time_visible ^= 1;
+                time_visible = !time_visible;
             }
-
-            break;
+        }
+        break;
 
         case MSG_QDEC_FORWARD:                              //向前滚动菜单
+#if UTE_WATCHS_CUBE_DIAL_SUPPORT
             if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
             {
                 compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
                 compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_FORWARD);
             }
+#endif
             break;
 
         case MSG_QDEC_BACKWARD:                             //向后滚动菜单
+#if UTE_WATCHS_CUBE_DIAL_SUPPORT
             if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
             {
                 compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
                 compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_BACKWARD);
             }
+#endif
             break;
 
         case MSG_CTP_LONG:
@@ -636,24 +677,27 @@ static void func_clock_message(size_msg_t msg)
 //进入时钟表盘功能
 static void func_clock_enter(void)
 {
-    uteModuleGuiCommonGetCurrWatchIndex(&sys_cb.dialplate_index);
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {
         sys_cb.dialplate_btf_ready = true;
         tft_set_temode(0);
     }
+#endif
 }
 
 //退出时钟表盘功能
 static void func_clock_exit(void)
 {
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {
         sys_cb.dialplate_btf_ready = false;
         tft_set_temode(DEFAULT_TE_MODE);
     }
+#endif
     func_cb.last = FUNC_CLOCK;
 }
 

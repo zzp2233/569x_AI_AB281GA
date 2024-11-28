@@ -49,7 +49,7 @@ const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
     SYS_CTL_FUNC_SLEEP_ON,          FUNC_SLEEP,
     SYS_CTL_FUNC_SPO2_ON,           FUNC_BLOOD_OXYGEN,
     SYS_CTL_FUNC_MUSIC_ON,          FUNC_BT,
-    SYS_CTL_FUNC_SPORT_ON,          FUNC_SPORT,
+    SYS_CTL_FUNC_SPORT_ON,          FUNC_SPORT_SORT,//FUNC_SPORT,
 //    SYS_CTL_FUNC_HRV_ON,            FUNC_BLOOD_PRESSURE,
     SYS_CTL_FUNC_SMS_ON,            FUNC_MESSAGE,
     SYS_CTL_FUNC_BT_CALL_ON,        FUNC_CALL,
@@ -127,6 +127,7 @@ static u8 list_data_sort_get_add_cnt(void)
         if (bsp_sys_get_ctlbit(list_data_sort[i]))
         {
             cnt ++;
+            printf("ctlbit [%d,%d]\n", bsp_sys_get_ctlbit(list_data_sort[i]), cnt);
         }
         else
         {
@@ -165,6 +166,7 @@ static void list_data_sort_add(u8 vidx)
 //删除
 static void list_data_sort_del(u8 vidx)
 {
+    printf("%s\n", __func__);
     u8 list_data_sort_tmp[LIST_ITEM_CNT_MAX] = {0};
     u8 i = 0, index = LIST_ITEM_CNT_MAX - 1;
 
@@ -184,6 +186,7 @@ static void list_data_sort_del(u8 vidx)
 //向上
 static void list_data_sort_up(u8 vidx)
 {
+    printf("%s\n", __func__);
     u8 pos = 0;
     u8 add_cnt = list_data_sort_get_add_cnt();
 
@@ -247,9 +250,17 @@ compo_form_t *func_compo_select_sub_form_create(void)
     }
     if (bit_init)
     {
-        for (u8 i = 0; i < 5; i++)
+        for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++)
         {
-            bsp_sys_set_ctlbit(list_data_sort[i], true);
+            for (u8 j = 0; j < sizeof(SYS_CTL_ON_TO_FUNC_STA_TABLE) / 2; j++)
+            {
+                if (SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j + 1] == func_cb.tbl_sort[i])
+                {
+                    bsp_sys_set_ctlbit(SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j], true);
+                    break;
+//                    printf("sort [%d] -> [%d]\n", index, SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j]);
+                }
+            }
         }
     }
     compo_listbox_set_bithook(listbox, bsp_sys_get_ctlbit);
@@ -273,11 +284,13 @@ static void func_compo_select_sub_click(void)
 
     bool del = false;
     point_t cur_point = ctp_get_sxy();
-    if (cur_point.x < 180)
+//    printf("%s->x:%d\n", __func__, cur_point.x);
+    if (cur_point.x < listbox->item_width - gui_image_get_size(listbox->res_sta_icon1).wid)
     {
         return ;
     }
-    if (cur_point.x >= 250)
+    //点击删除按钮范围, 去掉向上了，直接就是180
+    if (cur_point.x >= listbox->item_width - gui_image_get_size(listbox->res_sta_icon1).wid)
     {
         del = true;
     }

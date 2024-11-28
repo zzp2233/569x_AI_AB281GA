@@ -287,6 +287,18 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 
         }
         break;
+        case MSGBOX_MODE_BTN_SURE:
+        {
+            btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN);///确定
+            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.4);
+            compo_setid(btn,COMPO_ID_BTN_OK);
+
+            compo_textbox_t *textbox;
+            textbox = compo_textbox_create(frm, strlen(i18n[STR_OK]) );
+            compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.4);
+            compo_textbox_set(textbox,i18n[STR_OK]);
+        }
+        break;
         default:
             halt(HALT_MSGBOX_MODE);
             break;

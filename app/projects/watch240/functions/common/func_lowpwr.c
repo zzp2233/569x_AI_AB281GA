@@ -848,3 +848,397 @@ void func_pwroff(int pwroff_tone_en)
         sfunc_lowbat();                     //低电关机进入Sleep Mode
     }
 }
+
+/****************************************************************************************************************
+* Deepsleep mode模式
+* VDDCORE关闭、VDDIO用ano电源域、lp_top用vrtc11供电、关掉VDDBT、模拟模块置成复位状态
+* 支持所有引脚唤醒，WKO，VUSB插入，INBOX或者RTC定时唤醒，MCLR引脚复位等
+* 唤醒后VDDCORE重新上电复位，重新load flash程序跑起来
+*               开rtc计时(时钟选择sniff rc)     开rtc计时(时钟选择ring rc)   不开rtc计时
+* 基础电流           12~13uA                    8~9uA                       5~6uA
+*使用方式：调用 func_deepsleep()函数即可进入该模式, 唤醒方式可根据具体情况修改唤醒源
+*注: 如果使用带屏幕的开发板测试, 由于屏幕用到了PA1, 如果配置了PA1唤醒, 会导致关机关不下去
+****************************************************************************************************************/
+
+typedef struct deepsleep_cfg_t_
+{
+    bool touch_wkup_en;
+    bool hall_wkup_en;
+    bool rtc_wkup_en;
+} deepsleep_cfg_t;
+deepsleep_cfg_t deepsleep;
+
+#if BOX_RTC_EN
+//关机RTC走时的时钟选择, 二选一
+#define SNF_RC_EN       1       //关机走时使用sniff rc, 走时比较准, 开了这个功耗高6~7μa
+#define RING_RC_EN      0       //关机走时使用ring rc, 走不准, 功耗高3~4μa
+#endif
+
+//关机时VDDIO LDO选择, 二选一
+#define VDDIO_EN        0       //关机时使用标准VDDIO, 3.3V, 功耗在45~46μa(开了sniff rc), 需要vddio供电时使用
+#define VDDIO_AON_EN    1       //关机时使用VDDIO_AON, 档位2.8V, 功耗在12~13μa(开了sniff rc)
+
+#define PWRKEY_WAKEUP   0       //pwrkey唤醒 WKO (io唤醒)
+// #define TOUCH_WAKEUP    1       //触摸唤醒
+// #define HALL_WAKEUP     HALL_EN //HALL唤醒
+#define VUSB_WAKEUP     1       //VUSB唤醒 (io唤醒 PB1)
+#define WKO_WAKEUP      1       //wko pin唤醒
+
+void deepsleep_touch_wkup_set(bool en)
+{
+    deepsleep.touch_wkup_en = en;
+}
+
+void deepsleep_hall_wkup_set(bool en)
+{
+    deepsleep.hall_wkup_en = en;
+}
+
+void deepsleep_rtc_wkup_set(bool en)
+{
+    deepsleep.rtc_wkup_en = en;
+}
+
+void deepsleep_var_init(void)
+{
+    deepsleep_touch_wkup_set(true);
+    deepsleep_hall_wkup_set(true);
+    deepsleep_rtc_wkup_set(true);
+}
+
+AT(.com_text.lp.deepsleep)
+void deepsleep_save_to_cache(u8 *src_addr, u32 length)
+{
+    //需要把RAM0的程序copy到ICACHE RAM上面跑
+    u32 i;
+    u8 *cp_dst_ptr, *cp_src_ptr;
+    cp_src_ptr = (u8*) src_addr;
+    cp_dst_ptr = (u8*) 0x70000;
+    for(i = 0; i < length; i++)
+    {
+        *cp_dst_ptr++ = *cp_src_ptr++;
+    }
+
+    asm("j 0x70000");
+    while(1);
+}
+
+AT(.com_text.lp.deepsleep)
+void port_wkup_init(void)
+{
+    PORTINTEDG = 0;
+    PORTINTEN = 0;
+
+
+#if TOUCH_WAKEUP
+    if (deepsleep.touch_wkup_en)
+    {
+        port_wakeup_all_init(PORT_CTP_INT, 1, 1);
+    }
+#endif // TOUCH_WAKEUP
+
+#if HALL_WAKEUP
+    if (deepsleep.hall_wkup_en)
+    {
+        bsp_gpio_de_en(HALL_GPIO);
+        if (bsp_gpio_get_sta(HALL_GPIO))
+        {
+#if HALL_VDD_SEL
+            port_wakeup_all_init(HALL_GPIO, 1, 1);
+#else
+            port_wakeup_all_init(HALL_GPIO, 1, 0);
+#endif
+        }
+        else
+        {
+            port_wakeup_all_init(HALL_GPIO, 0, 0);
+        }
+    }
+#endif
+
+//#if VUSB_WAKEUP
+//#if (CHARGE_EX_IC_SELECT == CHARGE_IC_SY8827)
+//    port_wakeup_all_init(CHARGE_SDA_GPIO, 0, 0);
+//#else
+//    port_wakeup_all_init(CHARGE_SDA_GPIO, 1, 1);
+//#endif
+//#endif
+
+#if PWRKEY_WAKEUP
+    //pwrkey 唤醒
+    RTCCON11 &= ~BIT(4);
+    RTCCON1 |= BIT(0) | BIT(2) | BIT(4);    //OPEN WKO_IE  pull_up
+    WKPINMAP |= (0x3 << 0);
+    WKUPEDG |= BIT(0);                      //fall edge
+    WKUPCON |= BIT(0);                      //0 enable
+    WKUPCPND |= BIT(16);                    //clear 0 pending
+#endif
+
+#if (PWRKEY_WAKEUP || TOUCH_WAKEUP || HALL_WAKEUP || VUSB_WAKEUP)
+    WKUPCON |= 1<<20;                       //fall filter select
+#endif
+
+#if HALL_WAKEUP
+    if (deepsleep.hall_wkup_en)
+    {
+        WKUPCON |= 1<<22;                   //rise filter select
+    }
+#endif
+    WKUPCON |= BIT(17);                     //wakup sniff enable
+
+#if WKO_WAKEUP
+    RTCCON1 |= BIT(0);                      //wk0 pin ie enable
+    RTCCON1 &= ~BIT(6);                     //wk0 pin low level wakup
+    RTCCON1 |= BIT(4);                      //wk0 pin pullup_en en
+    RTCCON1 &= ~BIT(1);                     //wk0 pin pulldown dis
+    RTCCON11 |= BIT(4);                     //wko_protect en
+    RTCCON11 = (RTCCON11 & ~(0x3 << 0)) | (0x0 << 0);   //filter time select
+    RTCCON11 |= BIT(2);                     //wko filt en
+#endif
+}
+
+AT(.com_text.lp.deepsleep)
+void deepsleep_port_state(void)
+{
+    //关机下不需要用到的IO，都配置为模拟IO，避免漏电
+    GPIOADE  = 0x0;
+    GPIOBDE  = 0x0;
+    GPIOGDE  = 0x0;
+    GPIOEDE  = 0x0;
+    GPIOFDE  = 0x0;
+
+    GPIOAFEN = 0x0;
+    GPIOBFEN = 0x0;
+    GPIOGFEN = 0x0;
+    GPIOEFEN = 0x0;
+    GPIOFFEN = 0x0;
+
+    GPIOAPU  = 0x0;
+    GPIOBPU  = 0x0;
+    GPIOGPU  = 0x0;
+    GPIOEPU  = 0x0;
+    GPIOFPU  = 0x0;
+
+    GPIOAPD  = 0x0;
+    GPIOBPD  = 0x0;
+    GPIOGPD  = 0x0;
+    GPIOEPD  = 0x0;
+    GPIOFPD  = 0x0;
+
+    port_wkup_init();
+
+    PWRCON1 &= ~(0xF<<14);    //disable flash PG
+    GPIOGDE = BIT(2);
+    GPIOGPU = BIT(2);         //pull up cs
+
+    WKUPCPND = 0xff<<16;     //clear pendind
+    CLKGAT0 &= ~BIT(15);     //disable lp_top clock
+    RTCCON5 &= ~BIT(12);     //IO interface disable, io控制寄存器无法写
+}
+
+AT(.com_text.lp.deepsleep)
+void sfunc_deepsleep_do(void)
+{
+    CLKCON0 |= BIT(0);                              //rosc_en
+    CLKCON0 = (CLKCON0 & ~(0x3<<2)) | (0x0<<2);     //sys_clk sel rc2m
+    CLKGAT1 &= ~BIT(29);                            //disable x24m_clken
+    RTCCON15 &= ~(BIT(13) | BIT(14) | BIT(19));     //disable lpwr_rtc
+    XOSCCON = 0;
+    PLL0CON = 0;
+
+    CLKGAT0 &= ~(3<<2);     //disable ram0/1 clock
+    RTCCON5 &= ~BIT(11);    //lpif_en interface disable
+    RTCCON5 |= BIT(18);     //power_flag
+
+    RTCCON0 = (RTCCON0 & ~(0x7<<22)) | (0x1<<22);
+    RTCCON4 = (RTCCON4 & ~(0x3f<<24)) | (4<<24) | (4<<27);
+
+    RTCCON3 = (RTCCON3 & ~(0x1<<24)) | (0x0<<24);   //wakeup disable
+    RTCCON3 = (RTCCON3 & ~(0x3ff<<8)) | (0x0<<8);
+    RTCCON9 = 0xffff;       //wakeup pending clear
+    RTCCON |= BIT(5);       //PowerDown Reset，如果有Pending，则马上Reset
+
+    RTCCON3  = //BIT(19)      //pd_core3
+        BIT(17)         //wk1_en
+//            | BIT(11)       //VUSB wkup enable
+#if WKO_WAKEUP
+        | BIT(10)       //wakeup pin wakeup enable
+#endif
+//            |  BIT(9)       //rtc1s_wken
+#if BOX_RTC_EN
+        | BIT(8)        //RTC alarm wakeup enable
+#endif
+#if VDDIO_EN
+        |  BIT(1)       //VDDIO LDO
+#elif VDDIO_AON_EN
+        |  BIT(7)       //en vddio_aon
+#endif
+//             | BIT(6)    //pd_core
+        |  BIT(4)      //pd_core2
+        |  BIT(3)      //rl2vlc   不用IO唤醒可以关掉这个，功耗可以省4uA左右
+        ;
+    LPMCON |= BIT(0);                           //sleep mode
+    LPMCON |= BIT(1);                           //idle mode
+    while(1);
+}
+
+//AT(.com_text.str)
+//const char str2[] = "RTCCON0: %x, RTCCON3: %x, RTCCON4: %x, RTCCON5: %x, RTCCON12: %x\n";
+//
+//AT(.com_text.str)
+//const char str3[] = "GPIOAPU: %x, GPIOBPU: %x, GPIOGPU: %x\n";
+
+AT(.com_text.lp.deepsleep)
+void sfunc_deepsleep(void)
+{
+#if BOX_RTC_EN
+    if (deepsleep.rtc_wkup_en)
+    {
+        rtc_set_alarm_wakeup(900);    //15min
+    }
+#endif
+    PICCONCLR = BIT(0);     //关总中断
+    WDT_DIS();
+
+#if RING_RC_EN
+    RTCCON0 &= ~(0x3f<<8);
+    RTCCON0 |= BIT(0);                          //enable PMU RC
+    RTCCON0 &= ~BIT(18);                        //disable SNIFF RC
+    RTCCON0 = (RTCCON0 & ~(3<<8)) | (1<<8);     //CLK32K_RTC Select RC2M_RTC
+#elif SNF_RC_EN
+    RTCCON0 &= ~(0x3f<<8);                      //2m bt,tk,rtc disable
+    RTCCON0 |= BIT(18);                         //enable SNIFF RC
+    RTCCON0 = (RTCCON0 & ~(0x3<<16)) | (0x1<<16);   //SNF_BIAS      //同步zxl分支s1113
+    RTCCON0 = (RTCCON0 & ~(3<<8)) | (2<<8);     //CLK32K_RTC Select SNF_RC_RTC
+#else
+    RTCCON0 &= ~(0x3f<<8);
+    RTCCON0 &= ~BIT(18);                            //disable SNIFF RC
+    RTCCON0 &= ~BIT(0);                             //disable PMU RC
+    RTCCON0 = (RTCCON0 & ~(0x3<<16)) | (0x0<<16);   //SNF_BIAS
+    RTCCON0 &= ~BIT(25);                            //CAP2PLL
+#endif
+
+//    printf(str2, RTCCON0, RTCCON3, RTCCON4, RTCCON5, RTCCON12);
+//    printf(str3, GPIOAPU, GPIOBPU, GPIOGPU);
+
+    //配置关机下，VRTC 数字的工作电压；RTCCON BIT0为0则选择RTCCON4 BIT26:24; 为1则选择BIT 29:27
+    RTCCON4 = (RTCCON4 & ~(7<<24)) | (4<<24);
+
+#if VDDIO_AON_EN
+    //VDDIO LDO从正常LDO切换到VDDIO_AON
+    RTCCON3 |= BIT(7);    //VDDIO_AON enable
+    RTCCON3 &= ~BIT(1);
+//    RTCCON4 |= BIT(23);    //VDDIO_AON SEL 3.3V
+    RTCCON4 = (RTCCON4 & ~(7<<24)) | (1<<24);
+#elif VDDIO_EN
+    PWRCON0 = (PWRCON0 & ~(0xf<<5)) | (0x9<<5);   //VDDIO=3.3v
+    RTCCON4 = (RTCCON4 & ~(3<<17)) | (0<<17);     //VIO_TC
+#endif
+
+    RTCCON11 |= BIT(4);  //wko protect
+    RTCCON4 &= ~BIT(22); //rtcbg_uvm disable
+    RTCCON4 &= ~BIT(16); //VIOPD
+//    RTCCON8 = (RTCCON8 & ~(0X1F<<24)) | (0XF<<24);  //BGTRIM  //基准电压被调偏, 会导致关机后VDDIO被拉低0.1V左右
+    RTCCON1 = 0;
+
+    RTCCON12 = 0xfa;  //disable wkp10s, gpio, wdt reset
+
+////rtc1s wakeup
+//    RTCCON0 |= BIT(0);
+//    RTCCON0 &= ~BIT(6);
+//    RTCCON0 = (RTCCON0 & ~(0x3 << 8)) | (0x1<<8);
+//    RTCCON2 = 0x7ffff;
+//    RTCCNT = 0;
+
+    deepsleep_port_state();
+
+    //需要把RAM0的程序copy到ICACHE RAM上面跑
+    deepsleep_save_to_cache((u8 *)sfunc_deepsleep_do, 500);
+}
+
+AT(.text.lowpwr.deepsleep)
+void func_deepsleep(void)
+{
+    printf("%s RTCCON4[%x]\n", __func__, RTCCON4);
+
+//    bsp_charge_ex_mode_set(BOX_COMM_MODE);
+//    bsp_smart_vhouse_cmd_sned(VHOUSE_CMD_PWROFF, LEFT_CHANNEL_USER, 0, 0);
+//    bsp_smart_vhouse_cmd_sned(VHOUSE_CMD_PWROFF, RIGHT_CHANNEL_USER, 0, 0);
+
+    if (bt_cb.bt_is_inited)
+    {
+        if (ble_is_connect())
+        {
+            ble_disconnect();
+        }
+        else
+        {
+            bt_disconnect(0);
+        }
+        bt_ off();
+        bt_cb.bt_is_inited = 0;
+    }
+
+//    bsp_charge_ex_hal_mode_set(BOX_CHK_MODE);   //入仓检测模式
+    delay_5ms(160);
+
+//#if TOUCH_WAKEUP
+//    if (deepsleep.touch_wkup_en) {
+//        ctp_int_sleep();
+//    } else {
+//        ctp_sleep();
+//    }
+//#else
+//    ctp_sleep();
+//#endif
+
+    gui_sleep();
+
+    rtc_printf();
+
+    rtc_sleep_enter();
+//#if BOX_RTC_EN
+//    if (deepsleep.rtc_wkup_en) {
+//        rtc_calibration_write(PARAM_RTC_CAL_ADDR);
+//        cm_write8(PARAM_RTC_CAL_VALID, 1);
+//    }
+//#endif
+//    cm_write(&earphone.tws_addr[0], PARAM_EARPHONE_TWS_ADDR, 6);
+//    cm_write(&earphone.bt_addr[EARPHONE_LEFT][0], PARAM_EARPHONE_L_ADDR, 6);
+//    cm_write(&earphone.bt_addr[EARPHONE_RIGHT][0], PARAM_EARPHONE_R_ADDR, 6);
+//    if (sys_cb.deepsleep_is_pwroff) {
+//        cm_write8(PARAM_DEEP_SLEEP_FLAG, 0);
+//    } else {
+//        cm_write8(PARAM_DEEP_SLEEP_FLAG, 1);
+//    }
+//    cm_write8(PARAM_CV_PERCENT_TICKS_CNT, charge_ex_cb.percent_cv_tick_cnt + ((tick_get() - charge_ex_cb.percent_cv_tick)/1000));
+//    cm_write8(PARAM_EARPHONE_VBAT_L, earphone.vbat[EARPHONE_LEFT]);
+//    cm_write8(PARAM_EARPHONE_VBAT_R, earphone.vbat[EARPHONE_RIGHT]);
+//#if HALL_EN
+//    cm_write8(PARAM_EARPHONE_INBOX_L, earphone.inbox[EARPHONE_LEFT]);
+//    cm_write8(PARAM_EARPHONE_INBOX_R, earphone.inbox[EARPHONE_RIGHT]);
+//    cm_write8(PARAM_BOX_HALL_STA, bsp_hall_open_box());
+//#endif
+//    param_box_data_write();
+//    cm_write(&earphone.paired, PARAM_EARPHONE_PAIRED, 1);
+//    cm_sync();
+
+    rtc_printf();
+
+    dac_power_off();                    //dac power down
+
+    sys_set_tmr_enable(0, 0);           //关闭定时器
+    bsp_hw_timer_del(HW_TIMER3);
+
+    if (CHARGE_DC_IN())
+    {
+        if (power_off_check())          //充电过程中等待结束再关机
+        {
+            return;
+        }
+    }
+    bsp_saradc_exit();                  //close saradc及相关通路模拟
+
+    sys_clk_set(SYS_24M);
+    sfunc_deepsleep();
+}

@@ -10,6 +10,7 @@ enum
     MSGBOX_MODE_BTN_DELETE, //消息推送删除按键
     MSGBOX_MODE_BTN_REMIND_LATER_CLOSE,   //稍后提醒,关闭
     MSGBOX_MODE_BTN_FACTORR,//出厂测试
+    MSGBOX_MODE_BTN_SURE,//确定
 };
 
 //msgbox返回值

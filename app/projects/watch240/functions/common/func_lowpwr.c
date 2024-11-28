@@ -1175,7 +1175,7 @@ void func_deepsleep(void)
         {
             bt_disconnect(0);
         }
-        bt_ off();
+        bt_off();
         bt_cb.bt_is_inited = 0;
     }
 

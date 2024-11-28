@@ -63,7 +63,7 @@ int (*vc30fx_dbglog_user)(const char *, ...) = NULL;
 
 void vc30fx_pwr_en(void)        //PF5
 {
-    if(clk_info.clk_calc_status == 0)
+    if(vc30fx_clk_calc_status() == 0)
     {
         uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
     }
@@ -89,7 +89,7 @@ void vc30fx_pwr_dis(void)       //PF5
     }
 
     printf("vc30fx_pwr_dis\n");
-    drv_calibration_clk_clear();
+    // drv_calibration_clk_clear();
     uteModulePlatformOutputGpioSet(IO_PF5,false);
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(true);
@@ -827,13 +827,13 @@ void vc30fx_isr(void)
     //     sleep_set_sysclk(SYS_192M);
     // }
     //GPIOBCLR = BIT(1);
-    if (clk_info.clk_calc_status == 0 || !sleep_cb.sys_is_sleep)
+    if (vc30fx_clk_calc_status() == 0 || !sleep_cb.sys_is_sleep)
     {
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_ALGO_HANDLER,0);
     }
     //     vc30fx_sleep_isr = false;
     // }
-    if (clk_info.clk_calc_status == 1 && sleep_cb.sys_is_sleep)
+    if (vc30fx_clk_calc_status() == 1 && sleep_cb.sys_is_sleep)
     {
         vc30fx_sleep_isr = true;
     }

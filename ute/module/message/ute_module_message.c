@@ -17,6 +17,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_heart.h"
+#include "ute_module_watchonline.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -145,6 +146,18 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleSprotResetRovllverScreenMode();
         }
         break;
+#if UTE_MODULE_WATCHONLINE_SUPPORT
+        case MSG_TYPE_MODULE_WATCHONLINE_RECVTIMEOUT_TIMER:
+        {
+            uteModuleWatchOnlineRecvTimeoutMsgHandler();
+        }
+        break;
+        case MSG_TYPE_MODULE_WATCHONLINE_ONESEC_TIMER:
+        {
+            uteModuleWatchOnlineOneSecMsgHandler();
+        }
+        break;
+#endif
 
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);

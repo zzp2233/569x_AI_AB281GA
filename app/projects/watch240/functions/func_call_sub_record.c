@@ -30,6 +30,26 @@ static const compo_listbox_item_t tbl_record_list[UTE_MODULE_CALL_RECORDS_MAX_CO
 static ute_module_call_records_t* record_tbl = NULL;            //通话记录数据
 static u16 record_cnt = 0;                                       //通话记录个数
 
+//设置已接、未接电话颜色
+static u32 call_record_set_text1_callback(u32 index)
+{
+    switch (record_tbl[index].callType)
+    {
+        case CALL_MISSED:                   //未接电话时要显示的图标
+            return  make_color(255, 69, 31);
+
+        case CALL_RECEIVED:                 //接听电话时要显示的图标
+            return  COLOR_WHITE;
+
+        case CALL_DIALED:                   //拨出电话时要显示的图标
+            return  COLOR_WHITE;
+
+        default:
+            break;
+    }
+
+    return COLOR_WHITE;
+}
 
 //单个图标设置回调函数
 static u32 call_record_set_icon_callback(u32 index)
@@ -163,6 +183,7 @@ compo_form_t *func_call_sub_record_form_create(void)
     compo_listbox_set_icon_area(listbox, CALL_TYPE_ICON_AREA);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, call_record_update_callback);
     compo_listbox_set_icon_callback(listbox, call_record_set_icon_callback);
+    compo_listbox_set_text1_color_callback(listbox, call_record_set_text1_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);

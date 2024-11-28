@@ -257,7 +257,7 @@ void tft_init(void)
 #if (GUI_SELECT == GUI_TFT_240_ST7789)
     DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(0);                                  //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
 #elif (GUI_SELECT == GUI_TFT_JD9853)
-    DESPICON = BIT(27) | BIT(26) | BIT(18) | BIT(9) | BIT(7) | BIT(0);              //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2], [0]EN
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2], [0]EN
 #elif (GUI_SELECT == GUI_TFT_RGBW_320_ST77916)
     DESPICON = BIT(27) | BIT(25) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);      //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
 #elif (GUI_SELECT == GUI_TFT_240_296_NV3030B)

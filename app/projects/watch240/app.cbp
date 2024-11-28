@@ -1006,6 +1006,9 @@
 		<Unit filename="functions/func_call.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_call_sort.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_call_sub_dial.c">
 			<Option compilerVar="CC" />
 		</Unit>

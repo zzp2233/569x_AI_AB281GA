@@ -174,7 +174,7 @@ static void func_set_sub_list_message(size_msg_t msg)
 //退出菜单样式
 void func_set_sub_exit(void)
 {
-    printf("func_set_sub_exit\r\n");
+//    printf("func_set_sub_exit\r\n");
     f_set_list_t *f_set = (f_set_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
     func_free(listbox->mcb);                                            //释放移动控制块
@@ -184,7 +184,7 @@ void func_set_sub_exit(void)
 //主菜单功能
 void func_set_sub_list(void)
 {
-    printf("pic w:%d h:%d\n",gui_image_get_size(tbl_setting_list->res_addr).wid,gui_image_get_size(tbl_setting_list->res_addr).hei);
+//    printf("pic w:%d h:%d\n",gui_image_get_size(tbl_setting_list->res_addr).wid,gui_image_get_size(tbl_setting_list->res_addr).hei);
     func_set_sub_list_enter();
     while (func_cb.sta == FUNC_SETTING)
     {

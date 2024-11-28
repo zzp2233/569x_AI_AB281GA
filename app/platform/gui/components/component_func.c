@@ -890,7 +890,7 @@ int compo_get_button_id(void)
         {
             compo_button_t *btn = (compo_button_t *)compo;
             rect_t rect = widget_get_absolute(btn->widget);
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+            if ((widget_get_visble(btn->widget)) && (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei))
             {
                 return btn->id;
             }

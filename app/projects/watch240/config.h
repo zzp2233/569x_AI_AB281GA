@@ -331,7 +331,7 @@
  * Module    : EQ相关配置
  *****************************************************************************/
 #define EQ_MODE_EN                      0           //是否调节EQ MODE (POP, Rock, Jazz, Classic, Country)
-#define MIC_EQ_EN                       0           //是否调节MIC_EQ (非通话模式)
+#define MIC_EQ_EN                       1           //是否调节MIC_EQ (非通话模式)
 #define EQ_DBG_IN_UART                  1           //是否使能UART在线调节EQ
 #define EQ_DBG_IN_SPP                   1           //是否使能SPP在线调节EQ
 

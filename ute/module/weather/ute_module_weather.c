@@ -98,8 +98,10 @@ void uteModuleWeatherGetData(ute_module_weather_data_t *data)
             uteModuleWeatherData.currDay = 0;
         }
     }
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,cityName:", __func__);
-//    UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL,&uteModuleWeatherData.cityString[0],uteModuleWeatherData.cityNameLen);
+#if UTE_MODULE_WEATHER_CITY_NAME_NEW_SUPPORT
+    UTE_MODULE_LOG(UTE_LOG_WEATHER_LVL,"%s,cityName:", __func__);
+    UTE_MODULE_LOG_BUFF(UTE_LOG_WEATHER_LVL,&uteModuleWeatherData.cityString[0],uteModuleWeatherData.cityNameLen);
+#endif
     memcpy(data,&uteModuleWeatherData,sizeof(ute_module_weather_data_t));
     uteModulePlatformGiveMutex(uteModuleWeatherMute);
 }

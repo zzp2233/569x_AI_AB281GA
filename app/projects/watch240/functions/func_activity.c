@@ -159,6 +159,7 @@ static void func_activity_process(void)
 
     if(tick_check_expire(f_activity->tick, 10))
     {
+        f_activity->tick = tick_get();
         char txt_buf[20];
         uint32_t totalStepCnt = 0;
         uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
@@ -169,8 +170,6 @@ static void func_activity_process(void)
         compo_textbox_t *textbox_kcal = compo_getobj_byid(KCAL_TXT_VALUE_ID);
         compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
         compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
-
-        f_activity->tick = tick_get();
 
         if(f_activity->activity_state == 0)
         {

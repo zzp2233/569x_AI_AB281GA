@@ -2,11 +2,12 @@
 #define _COMPO_NUMBER_H
 
 //当图片资源只有0~9，暂不支持负数，需要自己手动拼图
-//当图片资源有 0~9 -, 可以选择支持负数 
+//当图片资源有 0~9 -, 可以选择支持负数
 //默认设置数字组件都不显示符号位
 #define MAX_NUMBER_CNT          8   //最大支持8位: 0 ~ 99999999
 
-typedef struct compo_number_t_ {
+typedef struct compo_number_t_
+{
     COMPO_STRUCT_COMMON;
     widget_image_t *img;
     int num_cnt;                //数
@@ -25,6 +26,7 @@ typedef struct compo_number_t_ {
     u8 num_layout;              //0:横向排列  1:竖向排列
     u8 num_part;                //数字位分割, 个十百千万
     u8 radix;                   //裁剪个数 (默认为10，0~9数字裁剪，符号不算)，进制数，默认10进制
+    u8 znum;                    //高位0的个数
     widget_image_t *img_num[MAX_NUMBER_CNT];
     widget_image_t *img_sym;    //符号位
 } compo_number_t;
@@ -46,7 +48,7 @@ compo_number_t *compo_number_create(compo_form_t *frm, u32 res_addr, int num_cnt
  * @param[in] num_cnt : 表示该数字最大位数
  * @return 返回数字指针
  **/
- compo_number_t *compo_number_create_for_page(compo_form_t *frm, widget_page_t* parent, u32 res_addr, int num_cnt);
+compo_number_t *compo_number_create_for_page(compo_form_t *frm, widget_page_t* parent, u32 res_addr, int num_cnt);
 
 /**
  * @brief 设置数字框裁剪个数
@@ -125,4 +127,10 @@ rect_t compo_number_get_location(compo_number_t *num);
  * @param[in] margin : 0  横向排列(默认); 1  竖向排列;
  **/
 void compo_number_set_layout(compo_number_t *num, u8 margin);
+/**
+ * @brief 获取数字框位置和大小
+ * @param[in] num : 数字指针
+ * @return 返回数字框位置和大小
+ **/
+rect_t compo_number_get_rel_location(compo_number_t *num);
 #endif

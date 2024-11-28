@@ -302,6 +302,28 @@ static void func_call_sub_dial_message(size_msg_t msg)
         case MSG_QDEC_BACKWARD:
             break;
 
+        case MSG_CTP_SHORT_RIGHT:
+            if (func_cb.flag_sort)
+            {
+                func_backing_to();
+            }
+            else
+            {
+                func_message(msg);
+            }
+            break;
+
+        case MSG_CTP_SHORT_LEFT:
+            if (func_cb.flag_sort)
+            {
+
+            }
+            else
+            {
+                func_message(msg);
+            }
+            break;
+
         default:
             func_message(msg);
             break;

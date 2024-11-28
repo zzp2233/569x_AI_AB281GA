@@ -55,6 +55,7 @@ extern void func_calendar(void);
 extern void func_call(void);
 extern void func_call_sub_record(void);
 extern void func_call_sub_dial(void);
+extern void func_call_sort(void);
 extern void func_game(void);
 extern void func_style(void);
 extern void func_findphone(void);
@@ -160,6 +161,7 @@ compo_form_t *func_disturd_sub_set_form_create(void);
 compo_form_t *func_call_form_create(void);
 compo_form_t *func_call_sub_record_form_create(void);
 compo_form_t *func_call_sub_dial_form_create(void);
+compo_form_t *func_call_sort_form_create(void);
 compo_form_t *func_game_form_create(void);
 compo_form_t *func_style_form_create(void);
 compo_form_t *func_findphone_form_create(void);
@@ -269,6 +271,7 @@ const func_t tbl_func_create[] =
     {FUNC_CALL,                         func_call_form_create},
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record_form_create},
     {FUNC_CALL_SUB_DIAL,                func_call_sub_dial_form_create},
+    {FUNC_CALL_SORT,                    func_call_sort_form_create},
     {FUNC_SETTING,                      func_set_sub_list_form_create},
     {FUNC_CALENDAER,                    func_calender_form_create},
     {FUNC_VOLUME,                       func_volume_form_create},
@@ -374,6 +377,7 @@ const func_t tbl_func_entry[] =
     {FUNC_CALL,                         func_call},                     //电话
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record},          //电话--最近通话
     {FUNC_CALL_SUB_DIAL,                func_call_sub_dial},            //电话--拨号
+    {FUNC_CALL_SORT,                    func_call_sort},                //电话--一级界面
     {FUNC_VOLUME,                       func_volume},                   //音量调节
     {FUNC_ACTIVITY,                     func_activity},                 //活动记录
     {FUNC_FLASHLIGHT,                   func_flashlight},               //手电筒

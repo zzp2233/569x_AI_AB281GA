@@ -4,6 +4,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_heart.h"
 #include "ute_module_bloodoxygen.h"
+#include "ute_module_weather.h"
 
 #define TRACE_EN                1
 
@@ -108,7 +109,29 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
     sys_cb.step_goal = uteModuleSportGetStepsTargetCnt();
 
     ute_display_ctrl_t displayInfo;
-    uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
+    uteModuleGuiCommonGetDisplayInfo(&displayInfo);
+
+    ute_module_weather_data_t weatherData;
+    uteModuleWeatherGetData(&weatherData);
+    sys_cb.weather_idx = (uint8_t)weatherData.DayWeather[0];
+    sys_cb.temperature[0] = weatherData.dayTemperatureMin[0];
+    sys_cb.temperature[1] = weatherData.dayTemperatureMax[0];
+
+    if (tm.hour >= 18 || tm.hour < 6)
+    {
+        if (sys_cb.weather_idx == WEATHER_TYPE_SUNNY)
+        {
+            sys_cb.weather_idx = 13;
+        }
+        else if (sys_cb.weather_idx == WEATHER_TYPE_CLOUDY)
+        {
+            sys_cb.weather_idx = 14;
+        }
+        else if (sys_cb.weather_idx >= WEATHER_TYPE_SHOWER_RAIN && sys_cb.weather_idx <= WEATHER_TYPE_HEAVY_RAIN)
+        {
+            sys_cb.weather_idx = 15;
+        }
+    }
 
     switch (compo->bond_data)
     {
@@ -272,7 +295,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_TEMPERATURE:
-            value = (sys_cb.temperature[0] + sys_cb.temperature[1] + 1) / 2;  //平均温度
+            // value = (sys_cb.temperature[0] + sys_cb.temperature[1] + 1) / 2;  //平均温度
+            value = weatherData.fristDayCurrTemperature;
             sprintf(value_str, "%d~%d℃", sys_cb.temperature[0], sys_cb.temperature[1]);  //温度范围
             break;
 

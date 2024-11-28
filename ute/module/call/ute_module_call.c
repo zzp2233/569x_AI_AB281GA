@@ -667,7 +667,7 @@ void uteModuleCallSetInComingNumberName(uint8_t *number,uint8_t numberSize,uint8
         if(nameSize>UTE_CALL_NAME_MAX)
         {
             uteModuleCallData.callData.nameSize = UTE_CALL_NAME_MAX;
-            uteModuleCharencodeGetUtf8String(&name[0],UTE_CALL_NAME_MAX,&uteModuleCallData.callData.name[0],&uteModuleCallData.callData.nameSize);
+            uteModuleCharencodeGetUtf8String(&name[0],UTE_CALL_NAME_MAX,&uteModuleCallData.callData.name[0],(uint16_t *)&uteModuleCallData.callData.nameSize);
         }
         else
         {
@@ -681,7 +681,7 @@ void uteModuleCallSetInComingNumberName(uint8_t *number,uint8_t numberSize,uint8
         if(numberSize>UTE_CALL_DIAL_NUMBERS_MAX)
         {
             uteModuleCallData.callData.numberSize = UTE_CALL_DIAL_NUMBERS_MAX;
-            uteModuleCharencodeGetUtf8String(&number[0],UTE_CALL_DIAL_NUMBERS_MAX,&uteModuleCallData.callData.number[0],&uteModuleCallData.callData.numberSize);
+            uteModuleCharencodeGetUtf8String(&number[0],UTE_CALL_DIAL_NUMBERS_MAX,&uteModuleCallData.callData.number[0],(uint16_t *)&uteModuleCallData.callData.numberSize);
         }
         else
         {
@@ -707,7 +707,7 @@ void uteModuleCallSetContactsNumberAndName(uint8_t *number,uint8_t numberSize,ui
         if(numberSize > UTE_CALL_NAME_MAX)
         {
             uteModuleCallData.callData.nameSize = UTE_CALL_NAME_MAX;
-            uteModuleCharencodeGetUtf8String(&name[0],UTE_CALL_NAME_MAX,&uteModuleCallData.callData.name[0],&uteModuleCallData.callData.nameSize);
+            uteModuleCharencodeGetUtf8String(&name[0],UTE_CALL_NAME_MAX,&uteModuleCallData.callData.name[0],(uint16_t *)&uteModuleCallData.callData.nameSize);
         }
         else
         {
@@ -722,7 +722,7 @@ void uteModuleCallSetContactsNumberAndName(uint8_t *number,uint8_t numberSize,ui
         if(numberSize>UTE_CALL_DIAL_NUMBERS_MAX)
         {
             uteModuleCallData.callData.numberSize = UTE_CALL_DIAL_NUMBERS_MAX;
-            uteModuleCharencodeGetUtf8String(&number[0],UTE_CALL_DIAL_NUMBERS_MAX,&uteModuleCallData.callData.number[0],&uteModuleCallData.callData.numberSize);
+            uteModuleCharencodeGetUtf8String(&number[0],UTE_CALL_DIAL_NUMBERS_MAX,&uteModuleCallData.callData.number[0],(uint16_t *)&uteModuleCallData.callData.numberSize);
         }
         else
         {
@@ -941,7 +941,7 @@ bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,u
             if(isBtPbapNameUpdate == true) break;
             if(memcmp(number,tempData.numberAscii,numberSize) == 0 && numberSize!=0 && numberSize == tempData.numberAsciiLen)
             {
-                uteModuleCharencodeUnicodeConversionUtf8(&tempData.nameUnicode[0],tempData.nameUnicodeLen,name,*nameLen,UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH);
+                uteModuleCharencodeUnicodeConversionUtf8(&tempData.nameUnicode[0],tempData.nameUnicodeLen,name,(uint16_t *)nameLen,UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH);
                 isMatch = true;
                 break;
             }

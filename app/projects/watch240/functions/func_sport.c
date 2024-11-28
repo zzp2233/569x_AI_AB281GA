@@ -159,6 +159,10 @@ u32 func_sport_get_str(u8 sport_idx)
     {
         return tbl_sport_list[sport_idx].str_idx;
     }
+    if (sport_idx == SPORT_TYPE_MAX - 1)
+    {
+        return STR_MODERATE;
+    }
     return STR_NULL;
 }
 
@@ -167,6 +171,10 @@ u32 func_sport_get_ui(u8 sport_idx)
     if (sport_idx < MENU_LIST_CNT)
     {
         return tbl_sport_list[sport_idx].res_addr;
+    }
+    if (sport_idx == SPORT_TYPE_MAX - 1)
+    {
+        return UI_BUF_SPORT_ICON_FREE_TRAINING_BIN;
     }
     return 0;
 }
@@ -257,7 +265,14 @@ static void func_sport_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-            func_message(msg);
+            if (func_cb.flag_sort)
+            {
+                func_backing_to();
+            }
+            else
+            {
+                func_message(msg);
+            }
             sys_cb.sport_idx = 0;
             break;
 

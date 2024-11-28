@@ -28,6 +28,7 @@
 #include "ute_module_notdisturb.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_findphone.h"
+#include "ute_module_watchonline.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -483,7 +484,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 #ifdef SCREEN_TITLE_MULTIPLE_HEBREW_LANGUAGE_SUPPORT
         response[17] |= SCREEN_TITLE_MULTIPLE_HEBREW_LANGUAGE_SUPPORT<<7;
 #endif
-#if SCREEN_TITLE_MULTIPLE_SLOVAK_LANGUAGE_SUPPORT//斯洛伐克语 0x19 
+#if SCREEN_TITLE_MULTIPLE_SLOVAK_LANGUAGE_SUPPORT//斯洛伐克语 0x19
         response[16] |= SCREEN_TITLE_MULTIPLE_SLOVAK_LANGUAGE_SUPPORT << 0;
 #endif
 #if SCREEN_TITLE_MULTIPLE_HUNGARIAN_LANGUAGE_SUPPORT//匈牙利语 0x1a
@@ -2021,6 +2022,61 @@ void uteModuleProtocolMusicCtrl(uint8_t*receive,uint8_t length)
 }
 
 /**
+*@brief       在线表盘开始结束控制指令
+*@details
+*@param[in] uint8_t *receive
+*@param[in] uint8_t length
+*@author       casen
+*@date       2021-11-26
+*/
+void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
+{
+    uint8_t response[20];
+    memset(response,0x00,20);
+    response[0] = receive[0];
+    response[1] = receive[1];
+
+    if(receive[1]==0x01) // 读取表盘信息
+    {
+        uteModuleWatchOnlineReadDeviceInfo(&response[2]);
+        uteModuleProfileBleSendToPhone(&response[0],20);
+    }
+    else if(receive[1]==0x02) // 开始同步表盘数据
+    {
+        uteModuleWatchOnlineReadyStart();
+        uteModuleProfileBleSendToPhone(&response[0],2);
+    }
+    else if(receive[1]==0x03) // 结束同步表盘数据
+    {
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = uteModuleWatchOnLineTSyncComplete();
+        uteModuleProfileBleSendToPhone(&response[0],3);
+    }
+    else if(receive[1]==0x05)
+    {
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = receive[2];
+        uteModuleWatchOnlineGetInfoWithIndex(receive[2], &response[3]);
+        uteModuleProfileBleSendToPhone(&response[0], 7);
+    }
+    else if(receive[1]==0x06)
+    {
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = receive[2];
+        uteModuleWatchOnlineSetWillUpdateDataIndex(receive[2]);
+        uteModuleProfileBleSendToPhone(&response[0], 3);
+    }
+}
+
+void uteModuleProtocolWatchOnlineData(uint8_t*receive,uint8_t length)
+{
+    uteModuleWatchOnlineSyncData(receive,length);
+}
+
+/**
 *@brief       日常活动目标设置，站立时长、运动时长、卡路里、步数、距离目标提醒
 *@details
 *@param[in] uint8_t*receive
@@ -2266,8 +2322,8 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     // {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
     {.privateCmd = CMD_MUSIC_CONTENT_CTRL,.publicCmd=CMD_MUSIC_CONTENT_CTRL,.function=uteModuleProtocolMusicCtrl},
     // {.privateCmd = CMD_FACTORY_TEST_MODE,.publicCmd=PUBLIC_CMD_FACTORY_TEST_MODE,.function=uteModuleProtocolFactoryTest},
-    // {.privateCmd = CMD_WATCH_ONLINE,.publicCmd=PUBLIC_CMD_WATCH_ONLINE,.function=uteModuleProtocolWatchOnlineCtrl},
-    // {.privateCmd = CMD_WATCH_ONLINE_BLE5_0,.publicCmd=PUBLIC_CMD_WATCH_ONLINE_BLE5_0,.function=uteModuleProtocolWatchOnlineData},
+    {.privateCmd = CMD_WATCH_ONLINE,.publicCmd=PUBLIC_CMD_WATCH_ONLINE,.function=uteModuleProtocolWatchOnlineCtrl},
+    {.privateCmd = CMD_WATCH_ONLINE_BLE5_0,.publicCmd=PUBLIC_CMD_WATCH_ONLINE_BLE5_0,.function=uteModuleProtocolWatchOnlineData},
 #if UTE_MODULE_TEMPERATURE_SUPPORT
     {.privateCmd = CMD_TEMPERATURE_HEAD,.publicCmd=CMD_TEMPERATURE_HEAD,.function=uteModuleProtocolTemperatureCtrl},
 #endif
@@ -2410,7 +2466,7 @@ void uteModuleProtocolFromPhone(uint8_t *receive,uint8_t length,bool isPublic)
 void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 {
     memset(data,0,size);
-    data[0]|= 0x08;
+    // data[0]|= 0x08; //瑞昱平台标识
 #if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
     data[1]|= 0x02;
 #endif
@@ -2480,7 +2536,7 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #endif
     data[6]|= 0x01;
     data[6]|= 0x08;  //支持应用通知开关选择显示
-    data[6]|= 0x10;
+    // data[6]|= 0x10; //安卓音乐信息
 #if UTE_BT30_CALL_SUPPORT
     data[6]|= 0x20;
 #endif

@@ -240,4 +240,13 @@ void uteModuleCallUpdateCallingTimeSecond(uint32_t second);
 
 uint8_t uteModuleCallGetCallRecordsSize(ute_module_call_records_t *pData);
 bool uteModuleCallDeleteCallRecords(void);
+
+#if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
+void uteModuleCallSyncSosContactStart(void);
+void uteModuleCallSyncSosContactData(uint8_t *receive,uint8_t length);
+uint16_t uteModuleCallGetSosContactSize(void);
+void uteModuleCallGetSosContact(ute_module_call_addressbook_t *pData);
+void uteModuleCallDialSos(bool isKeyEnter);
+#endif
+
 #endif //_UTE_MODULE_BT_AUDIO_H_

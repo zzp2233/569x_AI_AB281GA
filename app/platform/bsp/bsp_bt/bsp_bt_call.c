@@ -182,14 +182,24 @@ static void bt_sco_eq_drc_init(call_cfg_t *p)
     mic_set_post_gain(mic_gain_tbl[xcfg_cb.mic_post_gain] << 8);
 
 #ifdef RES_BUF_EQ_CALL_NORMAL_EQ
-    music_set_eq_by_res(RES_BUF_EQ_CALL_NORMAL_EQ, RES_LEN_EQ_CALL_NORMAL_EQ);
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+    if (!xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_spp_en)
+#endif
+    {
+        music_set_eq_by_res(RES_BUF_EQ_CALL_NORMAL_EQ, RES_LEN_EQ_CALL_NORMAL_EQ);
+    }
 #else
     music_eq_off();
 #endif
 #ifdef RES_BUF_DRC_CALL_DAC_DRC
-    if (!music_set_drc_by_res(RES_BUF_DRC_CALL_DAC_DRC, RES_LEN_DRC_CALL_DAC_DRC))
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+    if (!xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_spp_en)
+#endif
     {
-        music_drc_off();
+        if (!music_set_drc_by_res(RES_BUF_DRC_CALL_DAC_DRC, RES_LEN_DRC_CALL_DAC_DRC))
+        {
+            music_drc_off();
+        }
     }
 #else
     music_drc_off();

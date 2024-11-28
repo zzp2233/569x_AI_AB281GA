@@ -53,8 +53,8 @@ compo_form_t *func_blood_oxygen_form_create(void)
 
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///血氧数据
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.75,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.75,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9);
     compo_textbox_set(textbox,"--");
     compo_setid(textbox,COMPO_ID_TXT_VALUE);
 
@@ -99,7 +99,24 @@ static void func_blood_oxygen_disp_handle(void)
             snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_spo2_data_get());///血氧值
             compo_textbox_set(textbox,txt_buf);
 
-            compo_button_set_visible(btn, false);
+            if(bsp_sensor_hr_wear_sta_get() == true)  ///佩戴处理
+            {
+                f_bo->blood_oxygen_state = BO_STA_IDLE;
+                if(uteModuleBloodoxygenIsTesting() == true) ///true测试状态  fasle结果状态
+                {
+                    compo_button_set_visible(btn, false);
+                }
+                else
+                {
+                    compo_button_set_visible(btn, true);
+                }
+            }
+            else
+            {
+                msgbox("请佩戴手表测量", NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+                f_bo->blood_oxygen_state = BO_STA_UNWEAR;
+                compo_button_set_visible(btn, true);
+            }
         }
     }
     else  ///未佩戴界面
@@ -108,17 +125,6 @@ static void func_blood_oxygen_disp_handle(void)
         memset(txt_buf,0,sizeof(txt_buf));
         snprintf(txt_buf,sizeof(txt_buf),"--");///血氧值
         compo_textbox_set(textbox,txt_buf);
-    }
-
-    if(bsp_sensor_hr_wear_sta_get() == true) ///佩戴处理
-    {
-        f_bo->blood_oxygen_state = BO_STA_IDLE;
-        compo_button_set_visible(btn, false);
-    }
-    else
-    {
-        f_bo->blood_oxygen_state = BO_STA_UNWEAR;
-        compo_button_set_visible(btn, true);
     }
 }
 //血氧功能事件处理
@@ -133,19 +139,23 @@ static void func_blood_oxygen_process(void)
 static void func_blood_oxygen_button_click(void)
 {
     f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
-    compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
     int id = compo_get_button_id();
-    u8 ret;
 
     switch(id)
     {
         case COMPO_ID_AGAIN_BTN:
-            ret = msgbox("请佩戴手表测量", NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
-//        if(ret == MSGBOX_RES_OK){
-//            compo_button_set_visible(btn, true);
-//        }
-            f_bo->blood_oxygen_state = BO_STA_IDLE;
-            uteModuleBloodoxygenStartSingleTesting();///开启测试
+
+            if(bsp_sensor_hr_wear_sta_get() == true)  ///佩戴处理
+            {
+                f_bo->blood_oxygen_state = BO_STA_IDLE;
+                uteModuleBloodoxygenStartSingleTesting();///开启测试
+            }
+            else
+            {
+                msgbox("请佩戴手表测量", NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+                f_bo->blood_oxygen_state = BO_STA_UNWEAR;
+                uteModuleBloodoxygenStopSingleTesting();///关闭测试
+            }
 
             break;
     }
@@ -171,6 +181,8 @@ static void func_blood_oxygen_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_blood_oxygen_t));
     func_cb.frm_main = func_blood_oxygen_form_create();
+    f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
+    f_bo->blood_oxygen_state = BO_STA_UNWEAR;
 }
 
 //退出血氧功能

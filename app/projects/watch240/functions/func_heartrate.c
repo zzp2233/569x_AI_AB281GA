@@ -53,8 +53,8 @@ compo_form_t *func_heartrate_form_create(void)
 
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///次/分 数据
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.75,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.75,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9);
     compo_textbox_set(textbox,"---");
     compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
 
@@ -63,25 +63,25 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_ONCE]) );///最高
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.45,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
-    compo_textbox_set(textbox,i18n[STR_ONCE]);
+    compo_textbox_set(textbox,i18n[STR_HIGHEST]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
     textbox = compo_textbox_create(frm, 3);///最高数据
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3.05,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
-    compo_textbox_set(textbox,"---");
+    compo_textbox_set(textbox,"--");
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_MAX_TXT);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_ONCE]) );///最低
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X*1.05,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
-    compo_textbox_set(textbox,i18n[STR_ONCE]);
+    compo_textbox_set(textbox,i18n[STR_LOWSET]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
     textbox = compo_textbox_create(frm, 3);///最低数据
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2.85,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
-    compo_textbox_set(textbox,"---");
+    compo_textbox_set(textbox,"--");
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_MIN_TXT);
 
@@ -132,7 +132,14 @@ static void func_heartrate_refresh(void)
         {
             case 0:
                 compo_picturebox_set_size(picbox,pic_size.wid,pic_size.hei);
-                f_heartrate->heart_pic_state = 1;
+                if(bsp_sensor_hr_wear_sta_get() == true)  ///佩戴处理
+                {
+                    f_heartrate->heart_pic_state = 1;
+                }
+                else
+                {
+                    f_heartrate->heart_pic_state = 0;
+                }
                 break;
             case 1:
                 compo_picturebox_set_size(picbox,pic_size.wid/1.2,pic_size.hei/1.2);
@@ -144,17 +151,29 @@ static void func_heartrate_refresh(void)
 
         }
 
-        memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetMaxHeartValue());
-        compo_textbox_set(textbox_max,txt_buf);
+        if(uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetMaxHeartValue());
+            compo_textbox_set(textbox_max,txt_buf);
 
-        memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetMinHeartValue());
-        compo_textbox_set(textbox_min,txt_buf);
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetMinHeartValue());
+            compo_textbox_set(textbox_min,txt_buf);
+        }
 
-        memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_hrs_data_get());
-        compo_textbox_set(textbox_value,txt_buf);
+        if(bsp_sensor_hr_wear_sta_get() == true)  ///佩戴处理
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_hrs_data_get());
+            compo_textbox_set(textbox_value,txt_buf);
+        }
+        else
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"--");
+            compo_textbox_set(textbox_value,txt_buf);
+        }
     }
 
 }

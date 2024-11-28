@@ -177,6 +177,7 @@ typedef struct card_##type##_t_ {   \
         widget_text_set_wordwrap(cardbox->text[card0.text[i].id], card0.text[i].wordwrap); \
         widget_text_set_color(cardbox->text[card0.text[i].id], make_color(card0.text[i].r, card0.text[i].g, card0.text[i].b)); \
         compo_cardbox_text_set_location(cardbox, card0.text[i].id, card0.text[i].x, card0.text[i].y, card0.text[i].w, card0.text[i].h); \
+        extern u32 func_sport_get_str(u8 sport_idx); \
         if (card0.text[i].str != NULL) {    \
             compo_cardbox_text_set(cardbox, card0.text[i].id, card0.text[i].str); \
         } else if (func_sport_get_str(card0.text[i].rev) != STR_NULL) { \
@@ -189,7 +190,7 @@ typedef struct card_##type##_t_ {   \
 
 ///户外跑步卡片
 CARD_TYPEDEF_T(card1, CARD1_RECT_CNT, CARD1_ICON_CNT, CARD1_TEXT_CNT);
-const CARD_T(card1) card1 =
+static const CARD_T(card1) card1 =
 {
     CARD1_X,
     CARD1_Y,
@@ -216,7 +217,7 @@ const CARD_T(card1) card1 =
 
 ///户外骑行卡片
 CARD_TYPEDEF_T(card2, CARD2_RECT_CNT, CARD2_ICON_CNT, CARD2_TEXT_CNT);
-const CARD_T(card2) card2 =
+static const CARD_T(card2) card2 =
 {
     CARD2_X,
     CARD2_Y,
@@ -243,7 +244,7 @@ const CARD_T(card2) card2 =
 
 ///跑步机卡片
 CARD_TYPEDEF_T(card3, CARD3_RECT_CNT, CARD3_ICON_CNT, CARD3_TEXT_CNT);
-const CARD_T(card3) card3 =
+static const CARD_T(card3) card3 =
 {
     CARD3_X,
     CARD3_Y,
@@ -270,7 +271,7 @@ const CARD_T(card3) card3 =
 
 ///更多运动卡片
 CARD_TYPEDEF_T(card4, CARD4_RECT_CNT, CARD4_ICON_CNT, CARD4_TEXT_CNT);
-const CARD_T(card4) card4 =
+static const CARD_T(card4) card4 =
 {
     CARD4_X,
     CARD4_Y,
@@ -417,13 +418,13 @@ static void func_sport_sort_message(size_msg_t msg)
 static void func_sport_sort_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_sport_sort_t));
-    f_sport_sort_t *f_sport_sort = (f_sport_sort_t*)func_cb.f_cb;
+//    f_sport_sort_t *f_sport_sort = (f_sport_sort_t*)func_cb.f_cb;
     func_cb.frm_main = func_sport_sort_form_create();
 }
 
 static void func_sport_sort_exit(void)
 {
-    f_sport_sort_t *f_sport_sort = (f_sport_sort_t*)func_cb.f_cb;
+//    f_sport_sort_t *f_sport_sort = (f_sport_sort_t*)func_cb.f_cb;
     func_cb.last = FUNC_SPORT_SORT;
 }
 

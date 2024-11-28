@@ -1,8 +1,8 @@
 #ifndef _FUNC_MANAGE_H
 #define _FUNC_MANAGE_H
 
-#define TASK_STACK_MAX                      8         //任务堆栈最大入栈个数
-#define LATEST_TASK_MAX                     8         //最近任务最大记录个数
+#define TASK_STACK_MAX                      20         //任务堆栈最大入栈个数
+#define LATEST_TASK_MAX                     20         //最近任务最大记录个数
 
 /**
  * @brief 获取任务图标资源地址

@@ -207,6 +207,10 @@ void func_bt_call_process(void)
     func_bt_call_interface();
 }
 
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+bool mic_eq_drc_test = false;
+#endif
+
 static void func_bt_call_click(void)
 {
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
@@ -227,14 +231,37 @@ static void func_bt_call_click(void)
 
             if(f_bt_call->call_mute_flag)
             {
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+                if (xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_uart_en)
+                {
+                    mic_eq_drc_test = false;
+                }
+                else
+                {
+                    audio_path_exit(AUDIO_PATH_BTMIC);
+                }
+#else
                 audio_path_exit(AUDIO_PATH_BTMIC);
+#endif
                 compo_button_set_bgimg(btn,UI_BUF_CALL_MUTE_ON_BIN);
             }
             else
             {
-                compo_button_set_bgimg(btn,UI_BUF_CALL_MUTE_BIN);
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+                if (xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_uart_en)
+                {
+                    mic_eq_drc_test = true;
+                }
+                else
+                {
+                    audio_path_init(AUDIO_PATH_BTMIC);
+                    audio_path_start(AUDIO_PATH_BTMIC);
+                }
+#else
                 audio_path_init(AUDIO_PATH_BTMIC);
                 audio_path_start(AUDIO_PATH_BTMIC);
+#endif
+                compo_button_set_bgimg(btn,UI_BUF_CALL_MUTE_BIN);
             }
             break;
 

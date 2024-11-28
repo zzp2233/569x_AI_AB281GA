@@ -74,6 +74,7 @@ enum
     FUNC_CALL,                          //电话
     FUNC_CALL_SUB_RECORD,               //电话-最近通话
     FUNC_CALL_SUB_DIAL,                 //电话-拨打电话
+    FUNC_CALL_SORT,                     //通话-一级界面
     FUNC_FINDPHONE,                     //寻找手机
     FUNC_CALENDAER,                     //日历
     FUNC_VOLUME,                        //音量
@@ -111,6 +112,7 @@ enum
     FUNC_SPDIF,
     FUNC_SPEAKER,
     FUNC_PWROFF,
+    FUNC_DEEPSLEEP,
     FUNC_SLEEPMODE,
     FUNC_I2S,
 #if FUNC_RECORDER_EN

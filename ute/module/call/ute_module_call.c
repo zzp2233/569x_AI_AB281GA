@@ -1135,3 +1135,111 @@ bool uteModuleCallDeleteCallRecords(void)
     sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_RECORDS_DIR);
     return uteModuleFilesystemDelFile((char *)&path[0]);
 }
+
+#if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
+/**
+*@brief    准备同步sos联系人
+*@details  先删除sos联系人保存文件
+*@author   xjc
+*@date     2022-07-06
+*/
+void uteModuleCallSyncSosContactStart(void)
+{
+    uint8_t path[25];
+    memset(&path[0],0,25);
+    sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
+    uteModuleFilesystemDelFile(&path[0]);
+    UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,del file=%s", __func__,&path[0]);
+}
+
+/**
+*@brief    同步sos联系人
+*@details
+*@author   xjc
+*@date     2022-07-06
+*/
+void uteModuleCallSyncSosContactData(uint8_t *receive,uint8_t length)
+{
+    uint8_t receive_onece_dataNum = receive[2];
+    uint8_t *buff = (uint8_t *)uteModulePlatformMemoryAlloc(receive_onece_dataNum*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
+    uint8_t dataIndex = 3,contactLen = 0,phoneNumLen = 0,contactSaveLen = 0;
+    memset(buff,0x00,receive_onece_dataNum*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
+    for(uint8_t i=0; i<receive_onece_dataNum; i++)
+    {
+        phoneNumLen = receive[dataIndex+2];
+        contactLen =  receive[dataIndex+3];
+        contactSaveLen = (contactLen>(UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH-1))?(UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH-1):contactLen;
+        memcpy(&buff[i*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH],&receive[dataIndex+2],(phoneNumLen+contactSaveLen+2));
+        dataIndex = dataIndex + (phoneNumLen + contactLen + 4);
+    }
+    uint8_t path[25];
+    memset(&path[0],0,25);
+    uint16_t contactsTotalSize = 0;
+    sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
+    UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,path=%s", __func__,&path[0]);
+    void *file;
+    if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY | FS_O_WRONLY | FS_O_CREAT))
+    {
+        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+        uteModuleFilesystemReadData(file,&contactsTotalSize,2);
+
+        uteModuleFilesystemSeek(file,2+(contactsTotalSize)*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH,FS_SEEK_SET);
+        uteModuleFilesystemWriteData(file,&buff[0],receive_onece_dataNum*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
+        //APP_PRINT_INFO1("name = %b",TRACE_BINARY(receive_onece_dataNum*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH, &buff[0]));
+        contactsTotalSize += receive_onece_dataNum;
+        UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,contactsTotalSize = %d", __func__,contactsTotalSize);
+        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+        uteModuleFilesystemWriteData(file,&contactsTotalSize,2);
+        uteModuleFilesystemCloseFile(file);
+    }
+    uteModulePlatformMemoryFree(buff);
+}
+
+/**
+*@brief    获取sos联系人个数
+*@details
+*@author   xjc
+*@date     2022-07-06
+*/
+uint16_t uteModuleCallGetSosContactSize(void)
+{
+    uint8_t path[25];
+    memset(&path[0],0,25);
+    uint16_t contactsTotalSize = 0;
+    sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
+    UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,path=%s", __func__,&path[0]);
+    void *file;
+    if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_RDONLY))
+    {
+        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+        uteModuleFilesystemReadData(file,&contactsTotalSize,2);
+        UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,contactsTotalSize = %d", __func__,contactsTotalSize);
+        uteModuleFilesystemCloseFile(file);
+    }
+    return contactsTotalSize;
+}
+
+/**
+*@brief    获取sos联系人数据
+*@details
+*@author   xjc
+*@date     2022-07-06
+*/
+void uteModuleCallGetSosContact(ute_module_call_addressbook_t *pData)
+{
+    uint8_t path[25];
+    memset(&path[0],0,25);
+    uint8_t tempBuff[UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH];
+    sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
+    void *file;
+    if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_RDONLY))
+    {
+        uteModuleFilesystemSeek(file,2,FS_SEEK_SET);
+        uteModuleFilesystemReadData(file,&tempBuff[0],UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
+        uteModuleCallParseAddressBookContactNameAndNumber(tempBuff,&pData->nameUnicode[0],&pData->nameUnicodeLen,&pData->numberAscii[0],&pData->numberAsciiLen);
+        UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,nameUnicodeLen=%d,numberAsciiLen=%d", __func__,pData->nameUnicodeLen,pData->numberAsciiLen);
+        uteModuleFilesystemCloseFile(file);
+
+    }
+}
+#endif //end UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT

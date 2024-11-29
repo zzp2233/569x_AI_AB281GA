@@ -284,6 +284,12 @@ enum
     STR_PLEASE_ENTER_SOS, // 请输入SOS电话号码
     STR_NO_CALL_RECORD, // 无通话记录
     STR_BLOOD_OXYGEN_UINT, // 血氧饱和度
+    STR_HIGHEST, // 最高
+    STR_LOWSET, // 最低
+    STR_SLIDE_REST, // 滑动重启
+    STR_SLIDE_OFF, // 滑动关机
+    STR_SLIDE_CALL, // 滑动呼叫
+    STR_NO_DATA, // 无数据
 };
 
 extern const char * const *i18n;

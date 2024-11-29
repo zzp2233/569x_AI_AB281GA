@@ -86,6 +86,9 @@
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 2    // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 3   // 立方体表盘索引
 
+/*! SOS联系人拨号功能,xjc 2022-07-06  */
+#define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
+
 /*! 支持的运动数量, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_MAX_SPORT_NUM 25
 #define UTE_MODULE_SPORT_RUNNING_SUPPORT                1 //跑步

@@ -26,8 +26,8 @@
         <add key="osci_cap" value="31" />
         <add key="osco_cap" value="31" />
         <add key="eq_dgb_spp_en" value="False" />
-        <add key="eq_dgb_uart_en" value="False" />
-        <add key="eq_uart_sel" value="0" />
+        <add key="eq_dgb_uart_en" value="True" />
+        <add key="eq_uart_sel" value="3" />
         <add key="vddbt_capless_en" value="False" />
         <add key="vddio_sel" value="9" />
         <add key="vddbt_sel" value="12" />

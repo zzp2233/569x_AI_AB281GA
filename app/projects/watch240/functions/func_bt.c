@@ -325,27 +325,59 @@ compo_form_t *func_bt_form_create(void)
     compo_form_add_image(frm, UI_BUF_I330001_MUSIC_BG_BIN, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y );
 
     //歌名
-    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
-    compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
-    compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
+    if(bt_is_connected())
+    {
+        compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+        compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
+        compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
+        compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
+        compo_textbox_set_forecolor(name_txt, COLOR_GRAY );
+        //歌词
+        compo_textbox_t *lyric_txt = compo_textbox_create(frm, 50);
+        compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
+        compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
+        compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
+    }
+    else
+    {
+        compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+        compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
+        compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
+        compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
+        compo_textbox_set_forecolor(name_txt, COLOR_GRAY );
+        compo_textbox_set_visible(name_txt, false);
 
-    //歌词
-    compo_textbox_t *lyric_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
-    compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
-    compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
-    compo_textbox_set_forecolor(lyric_txt, COLOR_GRAY );
+        compo_textbox_t *lyric_txt = compo_textbox_create(frm, 50);
+        compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
+        compo_textbox_set(lyric_txt, "蓝牙未连接");
+        compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
+    }
 
     //新建按钮
     compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PREVIOUSSONG02_BIN);///上一曲
+    if(bt_is_connected())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PREVIOUSSONG02_BIN);///上一曲
+    }
+    else
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PREVIOUSSONG01_BIN);///上一曲
+    }
     compo_setid(btn, COMPO_ID_BTN_PREV);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.5, GUI_SCREEN_CENTER_Y);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PLAY01_BIN);///暂停 播放
+    if(bt_is_connected())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PLAY01_BIN);///暂停 播放
+    }
+    else
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PLAY02_BIN);///暂停 播放
+    }
     compo_setid(btn, COMPO_ID_BTN_PLAY);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
@@ -355,18 +387,47 @@ compo_form_t *func_bt_form_create(void)
     }
     else
     {
-        compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY01_BIN);
+        if(bt_is_connected())
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY01_BIN);
+        }
+        else
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY02_BIN);
+        }
     }
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_NEXTSONG02_BIN);///下一曲
+    if(bt_is_connected())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_NEXTSONG02_BIN);///下一曲
+    }
+    else
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_NEXTSONG01_BIN);///下一曲
+    }
     compo_setid(btn, COMPO_ID_BTN_NEXT);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.5, GUI_SCREEN_CENTER_Y);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME02_BIN);///音量减
+
+    if(bt_is_connected())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME02_BIN);///音量减
+    }
+    else
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME01_BIN);///音量减
+    }
     compo_setid(btn, COMPO_ID_BTN_VOL_DOWN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME04_BIN);///音量加
+    if(bt_is_connected())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME04_BIN);///音量加
+    }
+    else
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME03_BIN);///音量加
+    }
     compo_setid(btn, COMPO_ID_BTN_VOL_UP);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
 
@@ -379,6 +440,14 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(shape, COMPO_ID_SHAPE_MUSIC_VOL);
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2, PROGRESS_BAR_LENGTH, 6 );
     compo_shape_set_radius(shape, 3);
+    if(bt_is_connected())
+    {
+        compo_shape_set_visible(shape,true);
+    }
+    else
+    {
+        compo_shape_set_visible(shape,false);
+    }
 
 
     return frm;
@@ -406,6 +475,8 @@ static void func_bt_music_artist_refresh(void *buf)
 
 static void func_bt_music_play_btnpic_refresh(u8 sta)
 {
+    if(!bt_is_connected())return;
+
     if (!bt_cb.bt_form_created)
     {
         return ;
@@ -431,6 +502,7 @@ extern void btstack_ble_sm_req_for_android(void);
 ///按钮释放
 static void func_bt_button_release_handle()
 {
+    if(!bt_is_connected())return;
 
     f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
     s32 dx, dy;

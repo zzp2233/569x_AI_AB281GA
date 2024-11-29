@@ -1,7 +1,8 @@
 #ifndef _COMPO_BUTTON_H
 #define _COMPO_BUTTON_H
 
-typedef struct compo_button_t_ {
+typedef struct compo_button_t_
+{
     COMPO_STRUCT_COMMON;
     widget_t *widget;
 } compo_button_t;
@@ -63,5 +64,14 @@ void compo_button_set_visible(compo_button_t *btn, bool visible);
  * @param[in] addr : 图像资源的地址
  **/
 void compo_button_set_bgimg(compo_button_t *btn, u32 addr);
+
+/**
+ * @brief 根据图像在页面上创建一个按钮
+ * @param[in] frm : 窗体指针
+ * @param[in] widget : 页面
+ * @param[in] res_addr : 图像资源的地址
+ * @return 返回按钮指针
+ **/
+compo_button_t *compo_button_create_page_by_image(compo_form_t *frm,widget_page_t *widget, u32 res_addr);
 
 #endif

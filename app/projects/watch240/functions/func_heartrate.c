@@ -116,7 +116,7 @@ compo_form_t *func_heartrate_form_create(void)
 static void func_heartrate_refresh(void)
 {
     f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
-    if(tick_check_expire(f_heartrate->tick, 300))
+    if(tick_check_expire(f_heartrate->tick, 100))
     {
         f_heartrate->tick = tick_get();
         area_t pic_size;

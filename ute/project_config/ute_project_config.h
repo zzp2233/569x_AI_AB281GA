@@ -1039,7 +1039,9 @@
 #endif
 
 /*! 体温模块支持zn.zeng, 2021-12-01  */
+#ifndef UTE_MODULE_TEMPERATURE_SUPPORT
 #define UTE_MODULE_TEMPERATURE_SUPPORT     0
+#endif
 
 /* 充电CE认证 zn.zeng 2022-01-03*/
 #ifndef UTE_DRV_BATTERY_CE_AUTH_SUPPORT
@@ -1147,6 +1149,11 @@
 /*! 最大支持SOS联系人数量,xjc 2022-07-06  */
 #ifndef UTE_MODUEL_CALL_SOS_CONTACT_MAX
 #define UTE_MODUEL_CALL_SOS_CONTACT_MAX 1
+#endif
+
+/* 音频调试，正常模式下不能打开 zn.zeng 2022-01-10*/
+#ifndef UTE_CONNECT_PC_AUDIO_TEST
+#define UTE_CONNECT_PC_AUDIO_TEST 0
 #endif
 
 #endif//_UTE_PROJECT_CONFIG_H_

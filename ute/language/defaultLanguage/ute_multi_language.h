@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-25 10:49:17
+*@date   2024-11-29 10:52:27
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -283,6 +283,7 @@ enum
     STR_PM, // 下午
     STR_PLEASE_ENTER_SOS, // 请输入SOS电话号码
     STR_NO_CALL_RECORD, // 无通话记录
+    STR_BLOOD_OXYGEN_UINT, // 血氧饱和度
 };
 
 extern const char * const *i18n;

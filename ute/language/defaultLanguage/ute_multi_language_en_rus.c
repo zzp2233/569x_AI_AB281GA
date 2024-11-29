@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-11-25 10:49:18
+*@date   2024-11-29 10:52:28
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -279,6 +279,7 @@ const char * const i18n_en_rus[] =
     [STR_AM] = "\x41\x4d\x00", // [266] AM
     [STR_PM] = "\x50\x4d\x00", // [267] PM
     [STR_PLEASE_ENTER_SOS] = "\x50\x6c\x65\x61\x73\x65\x20\x65\x6e\x74\x65\x72\x20\x74\x68\x65\x20\x53\x4f\x53\x20\x70\x68\x6f\x6e\x65\x20\x6e\x75\x6d\x62\x65\x72\x00", // [268] Please enter the SOS phone number
-    [STR_NO_CALL_RECORD] = "\x4e\x6f\x20\x63\x61\x6c\x6c\x20\x72\x65\x63\x6f\x72\x64\x00", // [268] No call record
+    [STR_NO_CALL_RECORD] = "\x4e\x6f\x20\x63\x61\x6c\x6c\x20\x72\x65\x63\x6f\x72\x64\x00", // [269] No call record
+    [STR_BLOOD_OXYGEN_UINT] = "\x42\x6c\x6f\x6f\x64\x20\x6f\x78\x79\x67\x65\x6e\x20\x73\x61\x74\x75\x72\x61\x74\x69\x6f\x6e\x00", // [270] Blood oxygen saturation
 };
 

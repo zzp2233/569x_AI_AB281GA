@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-28 16:02:57
+*@date   2024-11-29 10:40:08
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -285,6 +285,10 @@ enum
     STR_NO_CALL_RECORD, // 无通话记录
     STR_HIGHEST, // 最高
     STR_LOWSET, // 最低
+    STR_SLIDE_REST, // 滑动重启
+    STR_SLIDE_OFF, // 滑动关机
+    STR_SLIDE_CALL, // 滑动呼叫
+    STR_NO_DATA, // 无数据
 };
 
 extern const char * const *i18n;

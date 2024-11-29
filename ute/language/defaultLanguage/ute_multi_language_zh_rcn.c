@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 中文(简体）
 *@author
-*@date   2024-11-28 16:02:58
+*@date   2024-11-29 10:40:08
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -282,5 +282,9 @@ const char * const i18n_zh_rcn[] =
     [STR_NO_CALL_RECORD] = "\xe6\x97\xa0\xe9\x80\x9a\xe8\xaf\x9d\xe8\xae\xb0\xe5\xbd\x95\x00", // [269] 无通话记录
     [STR_HIGHEST] = "\xe6\x9c\x80\xe9\xab\x98\x00", // [270] 最高
     [STR_LOWSET] = "\xe6\x9c\x80\xe4\xbd\x8e\x00", // [271] 最低
+    [STR_SLIDE_REST] = "\xe6\xbb\x91\xe5\x8a\xa8\xe9\x87\x8d\xe5\x90\xaf\x00", // [272] 滑动重启
+    [STR_SLIDE_OFF] = "\xe6\xbb\x91\xe5\x8a\xa8\xe5\x85\xb3\xe6\x9c\xba\x00", // [273] 滑动关机
+    [STR_SLIDE_CALL] = "\xe6\xbb\x91\xe5\x8a\xa8\xe5\x91\xbc\xe5\x8f\xab\x00", // [274] 滑动呼叫
+    [STR_NO_DATA] = "\xe6\x97\xa0\xe6\x95\xb0\xe6\x8d\xae\x00", // [275] 无数据
 };
 

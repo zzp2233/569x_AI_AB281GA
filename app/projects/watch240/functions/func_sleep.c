@@ -136,8 +136,8 @@ compo_form_t *func_sleep_form_create(void)
     ///* 第二页*/
     if(sleep_data->totalSleepMin == 0) ///是否有睡眠时长
     {
-        txt = compo_textbox_create(frm,strlen(i18n[STR_NO_MSG]));
-        compo_textbox_set(txt, i18n[STR_NO_MSG]);
+        txt = compo_textbox_create(frm,strlen(i18n[STR_NO_DATA]));
+        compo_textbox_set(txt, i18n[STR_NO_DATA]);
         compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y/2+GUI_SCREEN_HEIGHT);
     }
 

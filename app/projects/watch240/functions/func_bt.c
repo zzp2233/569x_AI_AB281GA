@@ -13,6 +13,7 @@
 #define TITLE_BUF_LEN     128   //歌词buffer长度
 #define ARTIST_BUF_LEN    128   //歌名/歌手buffer长度
 #define PROGRESS_BAR_LENGTH GUI_SCREEN_WIDTH/1.65
+#define BTN_REST_DISP_TIME 300   //按钮释放时间 ms 级别
 
 enum
 {
@@ -410,9 +411,6 @@ static void func_bt_music_play_btnpic_refresh(u8 sta)
         return ;
     }
     compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_PLAY);
-    compo_button_t *btn_Previous = compo_getobj_byid(COMPO_ID_BTN_PREV);
-    compo_button_t *btn_next = compo_getobj_byid(COMPO_ID_BTN_NEXT);
-
     if (sta)
     {
         compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PAUSED_BIN);
@@ -421,9 +419,6 @@ static void func_bt_music_play_btnpic_refresh(u8 sta)
     {
         compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY01_BIN);
     }
-
-    compo_button_set_bgimg(btn_Previous,UI_BUF_I330001_MUSIC_PREVIOUSSONG02_BIN );
-    compo_button_set_bgimg(btn_next,UI_BUF_I330001_MUSIC_NEXTSONG02_BIN );
 }
 
 static void func_bt_music_vol_btnpic_refresh(u8 vol)
@@ -432,19 +427,68 @@ static void func_bt_music_vol_btnpic_refresh(u8 vol)
     compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2,vol*(PROGRESS_BAR_LENGTH/16), 6 );
 }
 extern void btstack_ble_sm_req_for_android(void);
+
+///按钮释放
+static void func_bt_button_release_handle()
+{
+
+    f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
+    s32 dx, dy;
+
+    compo_button_t *btn_prev = compo_getobj_byid(COMPO_ID_BTN_PREV);
+    compo_button_t *btn_next = compo_getobj_byid(COMPO_ID_BTN_NEXT);
+    compo_button_t *btn_play = compo_getobj_byid(COMPO_ID_BTN_PLAY);
+    compo_button_t *btn_up   = compo_getobj_byid(COMPO_ID_BTN_VOL_UP);
+    compo_button_t *btn_down = compo_getobj_byid(COMPO_ID_BTN_VOL_DOWN);
+
+    if(f_bt->tick <= tick_get()-BTN_REST_DISP_TIME)
+    {
+        compo_button_set_bgimg(btn_prev,UI_BUF_I330001_MUSIC_PREVIOUSSONG02_BIN );
+        compo_button_set_bgimg(btn_next,UI_BUF_I330001_MUSIC_NEXTSONG02_BIN );
+        if (bt_cb.music_playing == false)
+        {
+            compo_button_set_bgimg(btn_play,UI_BUF_I330001_MUSIC_PLAY01_BIN );
+        }
+        compo_button_set_bgimg(btn_up,UI_BUF_I330001_MUSIC_VOLUME04_BIN );
+        compo_button_set_bgimg(btn_down,UI_BUF_I330001_MUSIC_VOLUME02_BIN );
+    }
+
+    int id = compo_get_button_id();
+    if(id == 0 || !ctp_get_dxy(&dx, &dy)) return;
+
+    f_bt->tick = tick_get();
+
+    switch(id)
+    {
+        case COMPO_ID_BTN_PREV:
+            compo_button_set_bgimg(btn_prev,UI_BUF_I330001_MUSIC_PREVIOUSSONG01_BIN );
+            break;
+        case COMPO_ID_BTN_NEXT:
+            compo_button_set_bgimg(btn_next,UI_BUF_I330001_MUSIC_NEXTSONG01_BIN );
+            break;
+        case COMPO_ID_BTN_PLAY:
+            if (bt_cb.music_playing == false)
+            {
+                compo_button_set_bgimg(btn_play,UI_BUF_I330001_MUSIC_PLAY02_BIN );
+            }
+            break;
+        case COMPO_ID_BTN_VOL_UP:
+            compo_button_set_bgimg(btn_up,UI_BUF_I330001_MUSIC_VOLUME03_BIN );
+            break;
+        case COMPO_ID_BTN_VOL_DOWN:
+            compo_button_set_bgimg(btn_down,UI_BUF_I330001_MUSIC_VOLUME01_BIN );
+            break;
+    }
+}
+
+
 //单击按钮
 static void func_bt_button_click(void)
 {
-    f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
     int id = compo_get_button_id();
-    compo_button_t *btn_play = compo_getobj_byid(COMPO_ID_BTN_PLAY);
-    compo_button_t *btn_Previous = compo_getobj_byid(COMPO_ID_BTN_PREV);
-    compo_button_t *btn_next = compo_getobj_byid(COMPO_ID_BTN_NEXT);
-
     switch (id)
     {
         case COMPO_ID_BTN_PREV:
-            compo_button_set_bgimg(btn_Previous,UI_BUF_I330001_MUSIC_PREVIOUSSONG01_BIN );
 #if LE_HID_TEST
             ble_hid_event_tiktok(BLE_HID_MSG_UP);
 #else
@@ -453,7 +497,6 @@ static void func_bt_button_click(void)
             break;
 
         case COMPO_ID_BTN_NEXT:
-            compo_button_set_bgimg(btn_next,UI_BUF_I330001_MUSIC_NEXTSONG01_BIN );
 #if LE_HID_TEST
             ble_hid_event_tiktok(BLE_HID_MSG_DOWN);
 #else
@@ -462,11 +505,6 @@ static void func_bt_button_click(void)
             break;
 
         case COMPO_ID_BTN_PLAY:
-            if (bt_cb.music_playing == false)
-            {
-                compo_button_set_bgimg(btn_play,UI_BUF_I330001_MUSIC_PLAY02_BIN );
-            }
-
 #if LE_HID_TEST
             if (!ble_hid_peer_device_is_ios())
             {
@@ -508,6 +546,7 @@ void func_bt_sub_process(void)
 
 void func_bt_process(void)
 {
+    func_bt_button_release_handle();
     func_process();
     func_bt_sub_process();
 

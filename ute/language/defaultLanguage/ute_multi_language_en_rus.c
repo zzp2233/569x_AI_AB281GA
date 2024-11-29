@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-11-28 16:02:58
+*@date   2024-11-29 10:40:08
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -282,5 +282,9 @@ const char * const i18n_en_rus[] =
     [STR_NO_CALL_RECORD] = "\x4e\x6f\x20\x63\x61\x6c\x6c\x20\x72\x65\x63\x6f\x72\x64\x00", // [269] No call record
     [STR_HIGHEST] = "\x48\x69\x67\x68\x65\x73\x74\x00", // [270] Highest
     [STR_LOWSET] = "\x6c\x6f\x77\x65\x73\x74\x00", // [271] lowest
+    [STR_SLIDE_REST] = "\x53\x6c\x69\x64\x65\x20\x72\x65\x73\x74\x61\x72\x74\x00", // [272] Slide restart
+    [STR_SLIDE_OFF] = "\x53\x6c\x69\x64\x69\x6e\x67\x20\x73\x68\x75\x74\x64\x6f\x77\x6e\x00", // [273] Sliding shutdown
+    [STR_SLIDE_CALL] = "\x53\x6c\x69\x64\x65\x20\x63\x61\x6c\x6c\x00", // [274] Slide call
+    [STR_NO_DATA] = "\x4e\x6f\x20\x64\x61\x74\x61\x20\x61\x76\x61\x69\x6c\x61\x62\x6c\x65\x00", // [275] No data available
 };
 

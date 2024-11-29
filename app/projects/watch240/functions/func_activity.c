@@ -8,25 +8,6 @@
 #define TRACE(...)
 #endif
 
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-#define ARC_WID                        20
-#define KCAL_ARC_ARDUIS                222-ARC_WID/2
-#define KM_ARC_ARDUIS                  172-ARC_WID/2
-#define STEP_ARC_ARDUIS                122-ARC_WID/2
-
-#define KCAL_ARC_COLOR                61861
-#define KM_ARC_COLOR                  65188
-#define STEP_ARC_COLOR                1946
-
-#define TXT_SPACING_Y                 widget_text_get_height()+4
-
-#elif UTE_CUM_XXX
-#else
-#error "UTE_CUM_XXX ERR"
-#endif // UTE_CUM_XXX
-
 enum
 {
     ARC_ANIM_STATUS_START = 0,
@@ -56,6 +37,19 @@ typedef struct f_activity_t_
     u8 activity_state;
 } f_activity_t;
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+#define ARC_WID                        20
+#define KCAL_ARC_ARDUIS                222-ARC_WID/2
+#define KM_ARC_ARDUIS                  172-ARC_WID/2
+#define STEP_ARC_ARDUIS                122-ARC_WID/2
+
+#define KCAL_ARC_COLOR                61861
+#define KM_ARC_COLOR                  65188
+#define STEP_ARC_COLOR                1946
+
+#define TXT_SPACING_Y                 widget_text_get_height()+4
+
 /// size, arc_w, rotation, s_angle, e_angle, content_color, bg_color
 static const int16_t activity_arc_info[][7] =
 {
@@ -67,7 +61,6 @@ static const int16_t activity_arc_info[][7] =
 ///创建活动记录窗体
 compo_form_t *func_activity_form_create(void)
 {
-
     ///新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
@@ -146,14 +139,12 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/1.2+TXT_SPACING_Y);
     compo_textbox_set_forecolor(textbox,STEP_ARC_COLOR);
 
-
-
     return frm;
 }
 
 
-///活动记录功能事件处理
-static void func_activity_process(void)
+//活动记录功能事件处理
+static void func_activity_disp_handle(void)
 {
     f_activity_t *f_activity = (f_activity_t *)func_cb.f_cb;
 
@@ -227,7 +218,33 @@ static void func_activity_process(void)
     }
     func_process();
 }
-///活动记录功能消息处理
+
+#else
+//创建活动记录窗体
+compo_form_t *func_activity_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ACTIVITY_RECORD]);
+    return frm;
+}
+
+static void func_activity_disp_handle(void)
+{
+    return;
+}
+#endif
+
+// 显示活动记录界面刷新
+static void func_activity_process(void)
+{
+    func_activity_disp_handle();
+    func_process();
+}
+
+//活动记录功能消息处理
 static void func_activity_message(size_msg_t msg)
 {
     switch (msg)
@@ -242,20 +259,20 @@ static void func_activity_message(size_msg_t msg)
     }
 }
 
-///进入活动记录控制功能
+//进入活动记录控制功能
 static void func_activity_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_activity_t));
     func_cb.frm_main = func_activity_form_create();
 }
 
-///退出活动记录功能
+//退出活动记录功能
 static void func_activity_exit(void)
 {
     func_cb.last = FUNC_ACTIVITY;
 }
 
-///活动记录功能
+//活动记录功能
 void func_activity(void)
 {
     printf("%s\n", __func__);

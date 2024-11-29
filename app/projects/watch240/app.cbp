@@ -112,9 +112,9 @@
 			<Add directory="../../platform/libs" />
 		</Linker>
 		<ExtraCommands>
+			<Add before="python ..\..\..\ute\ui_config_patch\build_cpy_res.py" />
 			<Add before="Output\bin\prebuild.bat $(PROJECT_NAME)" />
 			<Add after="Output\bin\postbuild.bat $(PROJECT_NAME)" />
-			<Add after="..\..\..\tools\AStyle\copy.bat" />
 		</ExtraCommands>
 		<Unit filename="../../../libs/gui/spiflash/spiflash.h" />
 		<Unit filename="../../../ute/application/ute_application_common.c">

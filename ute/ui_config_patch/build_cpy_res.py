@@ -89,6 +89,21 @@ def main(argv):
     print('cpy_cmd:',cpy_cmd)
     os.system(cpy_cmd)
 
+    # language
+    language_dir = os.path.join(project_dir, 'defaultLanguage')
+    target_language_dir = project_dir = current_dir[0:index]+"ute\\language\\defaultLanguage"
+    
+    # 检查源目录是否存在
+    if os.path.exists(language_dir):
+        # 如果目标目录存在，先删除
+        if os.path.exists(target_language_dir):
+            shutil.rmtree(target_language_dir)
+        # 复制源目录到目标目录
+        shutil.copytree(language_dir, target_language_dir)
+    #     print(f"成功将 {language_dir} 复制到 {target_language_dir}")
+    # else:
+    #     print(f"{language_dir} 不存在")
+
     #git copy
     git_copy_file = current_dir[0:index]+"ute\\tool\\AStyle\\pre-commit"
     git_copy_cmd = "copy /y "+git_copy_file+" ..\\..\\..\\.git\hooks"

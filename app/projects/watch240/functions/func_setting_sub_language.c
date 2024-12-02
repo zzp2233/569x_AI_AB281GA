@@ -46,7 +46,7 @@ compo_form_t *func_set_sub_language_form_create(void)
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
     compo_listbox_set(listbox, tbl_language_list, LANGUAGE_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     compo_listbox_set_item_text(listbox, GUI_SCREEN_CENTER_X, 30, GUI_SCREEN_WIDTH, 40, true);

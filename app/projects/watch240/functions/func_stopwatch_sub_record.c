@@ -38,7 +38,7 @@ compo_form_t *func_stopwatch_sub_record_form_create(void)
     compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_text_modify(listbox, tbl_stopwatch_txt_list);
 
     u8 min = 0;

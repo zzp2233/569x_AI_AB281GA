@@ -255,14 +255,15 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 
         case MSGBOX_MODE_BTN_REMIND_LATER_CLOSE:        //稍后提醒与关闭按钮
             //btn = compo_button_create_by_image(frm, UI_BUF_POP_UP_REMIND_LATER_BIN);
-            btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+//            btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_SOON_BIN);
             compo_setid(btn, COMPO_ID_BTN_REMIND_LATER);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_YES_BIN).hei/2 - 10);
+            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_SOON_BIN).hei/2 - 10);
 
             //btn = compo_button_create_by_image(frm, UI_BUF_POP_UP_CLOSE_BIN);
-            btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei/2 - 10);
+            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei/2 - 10);
             break;
         case MSGBOX_MODE_BTN_FACTORR:///工厂测试
         {

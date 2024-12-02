@@ -112,17 +112,10 @@ void uteModuleNotifyInit(void)
 void uteModuleNotifyCallDisableHandlerMsg(void)
 {
 #if UTE_BT30_CALL_SUPPORT
-#if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
-    if(uteModuleCallBtIsPowerOn())
-    {
-        uteModuleCallBtBleHungUpOrAnwser();
-    }
-#else
     if(uteModuleCallBtIsConnected())
     {
 
     }
-#endif
     else
 #endif
     {
@@ -298,12 +291,6 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
 
             //需要弹出来电界面
 
-#if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
-            if(!uteModuleCallBtGetPowerStatus() && uteModuleCallGetIsBtAutoClose())
-            {
-                uteModuleCallBtPowerOn(UTE_BT_POWER_ON_FORM_BLE_CALL_NOTIFY);
-            }
-#endif
         }
     }
 }

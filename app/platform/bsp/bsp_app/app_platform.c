@@ -185,6 +185,6 @@ void app_platform_init(void)
 #endif
 
     //开启闹钟提醒软件定时器
-    app_ute_remind_init();
+    // app_ute_remind_init();
 
 }

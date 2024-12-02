@@ -1029,5 +1029,49 @@ ute_drv_battery_charger_status_t uteDrvBatteryCommonGetChargerStatus(void)
     return sys_cb.charge_sta ;
 }
 
+/**
+*@brief 获取当前电池电量等级，即第几格电量
+*@details
+*@param[in] uint8_t  totalIndex  总的电量格数
+*@return    uint8_t  batIndex    当前电量格数
+*@author        xjc
+*@date        2021-12-27
+*/
+uint8_t uteDrvBatteryCommonGetBatteryIndex(uint8_t totalIndex)
+{
+    uint8_t batIndex = 0;
+    ute_drv_battery_charger_status_t chargerStatus;
+    batIndex = uteDrvBatteryCommonGetLvl() / (100 / (totalIndex - 1));
+    chargerStatus = uteDrvBatteryCommonGetChargerStatus();
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    if (uteDrvBatteryCommonGetLvl() % (100 / (totalIndex - 1)))
+    {
+        if ((uteDrvBatteryCommonGetLvl() < UTE_DRV_BATTERY_LOW_POWER_PERECNT) && (chargerStatus == BAT_STATUS_NO_CHARGE))
+        {
+            // 电池电量小于低电值，让电池显示感叹号
+        }
+        else
+        {
+            batIndex = batIndex + 1;
+        }
+    }
+    if (batIndex > (totalIndex - 1))
+    {
+        batIndex = totalIndex - 1;
+    }
+    if (chargerStatus == BAT_STATUS_CHARGING)
+    {
+        if (time.sec % 2)
+        {
+            if (batIndex > 0)
+            {
+                batIndex = batIndex - 1;
+            }
+        }
+    }
+    return batIndex;
+}
+
 #endif
 

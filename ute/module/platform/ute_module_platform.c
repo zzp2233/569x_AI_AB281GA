@@ -606,6 +606,7 @@ void uteModulePlatformMemoryFree(void * p)
 *@author        zn.zeng
 *@date        2021-09-07
 */
+AT(.com_text.ute_gpio)
 void uteModulePlatformOutputGpioSet(uint8_t pinNum, bool isHeight)
 {
     if(pinNum==0)

@@ -169,6 +169,10 @@ static void func_findphone_enter(void)
     f_act->pos_xy = 120;
     f_act->flag_find = 1;
 
+    if(bt_a2dp_profile_completely_connected())
+    {
+        bt_a2dp_profile_dis();
+    }
 //    ab_app_search_phone(true);
 }
 
@@ -183,6 +187,7 @@ static void func_findphone_exit(void)
     }
 
 //    ab_app_search_phone(false);
+    bt_a2dp_profile_en();
 }
 
 //查找手机功能

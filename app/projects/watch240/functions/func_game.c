@@ -62,7 +62,7 @@ compo_form_t *func_game_form_create(void)
     {
         //矩形框
         compo_button_t * btn = compo_create(frm, COMPO_TYPE_BUTTON);
-        widget_icon_t *img_btn = widget_icon_create(frm->page_body, UI_BUF_COMMON_BG_BIN);
+        widget_icon_t *img_btn = widget_icon_create(frm->page_body, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
         btn->widget = img_btn;
         compo_setid(btn, GAME_ID_BTN_ICON_1 + i);
         compo_button_set_location(btn, 120, 100 + i*72, 220, 60);

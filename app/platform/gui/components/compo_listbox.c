@@ -261,7 +261,7 @@ void compo_listbox_set_sta_icon(compo_listbox_t *listbox, u32 res_addr1, u32 res
     if (res_addr1 != 0)
     {
         area_t area = gui_image_get_size(res_addr1);
-        int icon_x = listbox->item_width - area.wid/2;
+        int icon_x = listbox->item_width - area.wid/2 - 10;
         for (i=0; i<LISTBOX_ITEM_CNT; i++)
         {
             widget_set_pos(listbox->item_icon2[i], icon_x, listbox->line_center_y);

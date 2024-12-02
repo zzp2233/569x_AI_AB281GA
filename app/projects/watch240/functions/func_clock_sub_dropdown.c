@@ -4,6 +4,8 @@
 #include "ute_module_notdisturb.h"
 #include "ute_module_liftwrist.h"
 #include "ute_application_common.h"
+#include "ute_drv_battery_common.h"
+#include "ute_module_sport.h"
 
 #define PAGE_HEIGHT     GUI_SCREEN_HEIGHT - GUI_SCREEN_HEIGHT/3.7
 #define  BT_ON_PIC_BIN       UI_BUF_I330001_SLIDEMENU_ICON_TELEPHONE_GROUP_898_BIN    ///BT 连接状态图片
@@ -152,7 +154,7 @@ static void func_clock_sub_dropdown_form_create(void)
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);//获取系统时间
 
-    snprintf(txt_buf,sizeof(txt_buf),"%d//%d %s",time.month,time.day,i18n[STR_SUNDAY+time.week]);
+    snprintf(txt_buf,sizeof(txt_buf),"%02d/%02d %s",time.month,time.day,i18n[STR_SUNDAY+time.week]);
     compo_textbox_t *textbox = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/5.5,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/10.5);
     compo_textbox_set(textbox,txt_buf );
@@ -440,25 +442,25 @@ void func_clock_sub_dropdown(void)
 static void func_clock_sub_dropdown_battery_pic_update(void)
 {
     compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
-    switch(sys_cb.vbat_percent)
+    switch(uteDrvBatteryCommonGetBatteryIndex(5))
     {
-        case 0 ... 20:
+        case 0:
             compo_picturebox_set(battery_pic, BATTERY_PIC_0_BIN);
             break;
-        case 21 ... 40:
+        case 1:
             compo_picturebox_set(battery_pic, BATTERY_PIC_1_BIN);
             break;
-        case 41 ... 60:
+        case 2:
             compo_picturebox_set(battery_pic, BATTERY_PIC_2_BIN);
             break;
-        case 61 ... 80:
+        case 3:
             compo_picturebox_set(battery_pic, BATTERY_PIC_3_BIN);
             break;
-        case 81 ... 100:
+        case 4:
             compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
             break;
         default:
-            compo_picturebox_set(battery_pic, UI_BUF_DROPDOWN_POWER6_BIN);
+            compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
             break;
     }
 }

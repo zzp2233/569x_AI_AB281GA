@@ -107,8 +107,8 @@ compo_form_t *func_alarm_clock_form_create(void)
     //添加闹钟按钮图标
     if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
     {
-        icon_add = widget_icon_create(frm->page, UI_BUF_ALARM_CLOCK_ADD_BIN);
-        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_ADD_BIN).hei / 2 - 10);
+        icon_add = widget_icon_create(frm->page, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
+        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 10);
 
         //page_body结合compo_page_move实现列表滑动（先绘制所有组件，再将page平均分段）
         widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 42 / 100, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT * 6 / 10);//208);
@@ -116,6 +116,16 @@ compo_form_t *func_alarm_clock_form_create(void)
     else
     {
         icon_add = NULL;
+    }
+
+    //添加闹钟按钮文字
+//    compo_textbox_t* icon_add_txt = compo_textbox_create(frm, strlen(i18n[STR_ADD_CLOCK]));
+    if (icon_add) {
+        compo_textbox_t* icon_add_txt = compo_textbox_create_for_page(frm, frm->page, 50);
+        compo_textbox_set_location(icon_add_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 10,
+                                   gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
+                                   gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
+        compo_textbox_set(icon_add_txt, "添加闹钟");
     }
 
     //闹钟选项卡
@@ -136,9 +146,9 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
 
-            compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN : UI_BUF_ALARM_CLOCK_SELECT1_BIN);
+            compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I330001_PUBLIC_SWITCH01_BIN : UI_BUF_I330001_PUBLIC_SWITCH00_BIN);
             compo_cardbox_icon_set_pos(cardbox, 0,
-                                       (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN).wid / 2 - 2, 0);
+                                       (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_I330001_PUBLIC_SWITCH01_BIN).wid / 2 - 2, 0);
 
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d", func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).hour, ALARM_GET_MIN(i));
             compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
@@ -229,7 +239,7 @@ static void func_alarm_clock_button_touch_handle(void)
         rect_t rect = widget_get_absolute(icon_add);
         if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)   //添加闹钟
         {
-            widget_icon_set(icon_add, UI_BUF_ALARM_CLOCK_ADD_CLICK_BIN);
+            widget_icon_set(icon_add, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
         }
     }
 }
@@ -241,7 +251,7 @@ static void func_alarm_clock_button_release_handle(void)
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
     {
         cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
-        compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN : UI_BUF_ALARM_CLOCK_SELECT1_BIN);
+        compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I330001_PUBLIC_SWITCH01_BIN : UI_BUF_I330001_PUBLIC_SWITCH00_BIN);
         compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
         compo_cardbox_text_set_forecolor(cardbox, 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
 //        compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
@@ -249,7 +259,7 @@ static void func_alarm_clock_button_release_handle(void)
 
     if (icon_add)
     {
-        widget_icon_set(icon_add, UI_BUF_ALARM_CLOCK_ADD_BIN);
+        widget_icon_set(icon_add, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
     }
 }
 
@@ -278,7 +288,7 @@ static void func_alarm_clock_button_click(void)
     {
         if (compo_cardbox_btn_is(compo_getobj_byid(COMPO_ID_CARD_0 + i), pt))
         {
-            if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_ALARM_CLOCK_SELECT1_ON_BIN).wid))   //开关
+            if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_I330001_PUBLIC_SWITCH01_BIN).wid))   //开关
             {
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
             }

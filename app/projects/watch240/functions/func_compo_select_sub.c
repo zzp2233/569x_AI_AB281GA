@@ -383,7 +383,7 @@ static void func_compo_select_sub_enter(void)
 
     compo_listbox_move(listbox);
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    //compo_listbox_move_init_modify(listbox, GUI_SCREEN_CENTER_Y-FORM_TITLE_HEIGHT-gui_image_get_size(UI_BUF_COMMON_BG_BIN).hei/2, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+    //compo_listbox_move_init_modify(listbox, GUI_SCREEN_CENTER_Y-FORM_TITLE_HEIGHT-gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei/2, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
     //compo_listbox_move_init(listbox);
 }

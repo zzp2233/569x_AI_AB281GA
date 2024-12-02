@@ -10,7 +10,7 @@
 #endif
 
 #define CALL_LIST_CNT                       ((int)(sizeof(tbl_record_list) / sizeof(tbl_record_list[0])))
-#define CALL_TYPE_ICON_AREA                 (gui_image_get_size(UI_BUF_ICON_CALL_BIN))                  //通话记录类型图标显示区域, 如果图片输入0表示图标所占区域为0
+#define CALL_TYPE_ICON_AREA                 (gui_image_get_size(UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN))                  //通话记录类型图标显示区域, 如果图片输入0表示图标所占区域为0
 
 enum
 {
@@ -57,13 +57,13 @@ static u32 call_record_set_icon_callback(u32 index)
     switch (record_tbl[index].callType)
     {
         case CALL_MISSED:                   //未接电话时要显示的图标
-            return  UI_BUF_ICON_CALL_BIN;
+            return  UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN;//UI_BUF_ICON_CALL_BIN;
 
         case CALL_RECEIVED:                 //接听电话时要显示的图标
-            return  UI_BUF_ICON_ADDRESS_BOOK_BIN;
+            return  UI_BUF_I330001_CALL_CALL_LOG_DEENERGIZE_BIN;
 
         case CALL_DIALED:                   //拨出电话时要显示的图标
-            return  UI_BUF_ICON_CALL_NUM_BIN;
+            return  UI_BUF_I330001_CALL_CALL_LOG_DEENERGIZE_BIN;
 
         default:
             break;
@@ -159,7 +159,7 @@ compo_form_t *func_call_sub_record_form_create(void)
     compo_form_set_title(frm, i18n[STR_CALL_RECENT]);
 
     //创建无消息界面
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_ICON_CALL_BIN);
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_CALL_NO_LOG_BIN);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);
@@ -184,7 +184,8 @@ compo_form_t *func_call_sub_record_form_create(void)
     compo_listbox_set_text_modify_by_idx_callback2(listbox, call_record_update_callback);
     compo_listbox_set_icon_callback(listbox, call_record_set_icon_callback);
     compo_listbox_set_text1_color_callback(listbox, call_record_set_text1_callback);
-    compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
+//    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
 
@@ -241,7 +242,7 @@ static void func_set_sub_record_list_process(void)
                 compo_listbox_set_icon_area(f_call->listbox, CALL_TYPE_ICON_AREA);
                 compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1));
                 compo_listbox_update_with_text_scroll_rst(f_call->listbox);
-                compo_listbox_set_bgimg(f_call->listbox, UI_BUF_COMMON_BG_BIN);
+                compo_listbox_set_bgimg(f_call->listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
                 compo_listbox_set_focus_byidx(f_call->listbox, 1);
 
                 compo_listbox_update(f_call->listbox);

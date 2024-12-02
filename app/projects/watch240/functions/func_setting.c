@@ -52,7 +52,7 @@ compo_form_t *func_set_sub_list_form_create(void)
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
     compo_listbox_set(listbox, tbl_setting_list, SET_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     u8 set_idx = sys_cb.set_idx;
@@ -130,7 +130,7 @@ static void func_set_sub_list_enter(void)
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    compo_listbox_move_init_modify(listbox, GUI_SCREEN_CENTER_Y-FORM_TITLE_HEIGHT-gui_image_get_size(UI_BUF_COMMON_BG_BIN).hei/2, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+    compo_listbox_move_init_modify(listbox, GUI_SCREEN_CENTER_Y-FORM_TITLE_HEIGHT-gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei/2, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
     func_cb.enter_tick = tick_get();
 }
 

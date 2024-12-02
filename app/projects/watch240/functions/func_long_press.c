@@ -64,35 +64,32 @@ compo_form_t *func_long_press_form_create(void)
     compo_shape_t * rectangle;
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_1,RECT_WIDTH, IMG_WIDTH+6);
-    compo_shape_set_color(rectangle,COLOR_GRAY);
+    compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_2,RECT_WIDTH,IMG_WIDTH+6);
-    compo_shape_set_color(rectangle,COLOR_GRAY);
+    compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_3,RECT_WIDTH, IMG_WIDTH+6);
-    compo_shape_set_color(rectangle,COLOR_GRAY);
+    compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     /*创建三个文本*/
     compo_textbox_t *txt;
-    txt = compo_textbox_create(frm,5);
-    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_BIN);
-    compo_textbox_set(txt,"滑动SOS");
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1, RECT_Y_1);
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_CALL]));
+    compo_textbox_set(txt,i18n[STR_SLIDE_CALL]);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3 );
 
-    txt = compo_textbox_create(frm,4);
-    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_BIN);
-    compo_textbox_set(txt,"滑动关机");
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_OFF]));
+    compo_textbox_set(txt,i18n[STR_SLIDE_OFF]);
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1, RECT_Y_2);
 
-    txt = compo_textbox_create(frm,4);
-    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_BIN);
-    compo_textbox_set(txt,"滑动重启");
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1, RECT_Y_3);
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_REST]));
+    compo_textbox_set(txt,i18n[STR_SLIDE_REST]);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1, RECT_Y_1);
 
     /*创建一个椭圆用于滑动时覆盖字体*/
     rect_cover = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
@@ -101,20 +98,20 @@ compo_form_t *func_long_press_form_create(void)
     compo_shape_set_radius(rect_cover, GUI_SCREEN_HEIGHT/4/2);
 
     /*创建三个滑动图标*/
-    img_btn = compo_button_create_by_image(frm,UI_BUF_LONG_PRESS_SOS_BIN);
+    img_btn = compo_button_create_by_image(frm,UI_BUF_I330001_POWEROFF_ICON_RESTART_BIN);
     compo_button_set_pos(img_btn, IMG_BTN_FIRST_X,RECT_Y_1);
     widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
-    compo_setid(img_btn, IMG_BTN_ID_1);
+    compo_setid(img_btn, IMG_BTN_ID_3);
 
-    img_btn = compo_button_create_by_image(frm,UI_BUF_LONG_PRESS_OFF_BIN);
+    img_btn = compo_button_create_by_image(frm,UI_BUF_I330001_POWEROFF_ICON_SHUTDOWN_BIN);
     compo_button_set_pos(img_btn, IMG_BTN_FIRST_X,RECT_Y_2);
     widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
     compo_setid(img_btn, IMG_BTN_ID_2);
 
-    img_btn = compo_button_create_by_image(frm,UI_BUF_LONG_PRESS_RESTART_BIN);
+    img_btn = compo_button_create_by_image(frm,UI_BUF_I330001_POWEROFF_ICON_SOS_BIN);
     compo_button_set_pos(img_btn, IMG_BTN_FIRST_X,RECT_Y_3);
     widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
-    compo_setid(img_btn, IMG_BTN_ID_3);
+    compo_setid(img_btn, IMG_BTN_ID_1);
 
 
     return frm;
@@ -212,10 +209,24 @@ static void func_long_press_button(void)
     f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
 
     f_long_press->touch_btn_id = compo_get_button_id();
+    compo_shape_t  *rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
 
     if( f_long_press->touch_btn_id >=IMG_BTN_ID_1 &&  f_long_press->touch_btn_id <=IMG_BTN_ID_3)    //触摸是否是按键图标
     {
         f_long_press->touch_flag = true;
+
+        switch(f_long_press->touch_btn_id)
+        {
+            case IMG_BTN_ID_3:
+                compo_shape_set_color(rect_cover,COLOR_WHITE);
+                break;
+            case IMG_BTN_ID_2:
+                compo_shape_set_color(rect_cover,COLOR_WHITE);
+                break;
+            case IMG_BTN_ID_1:
+                compo_shape_set_color(rect_cover,make_color(0xff,0x39,0x10));
+                break;
+        }
     }
 }
 

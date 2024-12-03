@@ -1274,7 +1274,7 @@ static void func_alarm_clock_set_move_handle(u8 id)
 
 }
 
-static u8 func_breathe_sub_mode_move_handle(u8 am_pm)
+static u8 func_alarm_clock_sub_set_ampm_move_handle(u8 am_pm)
 {
     f_alarm_clock_sub_set_t *f_set = (f_alarm_clock_sub_set_t*)func_cb.f_cb;
     aclock_set_ampm_item_t *time_item;
@@ -1389,8 +1389,8 @@ static u8 func_breathe_sub_mode_move_handle(u8 am_pm)
 static void func_alarm_clock_sub_set_button_touch_handle(void)
 {
 
-    static u8 am_pm_state = 0;  //0:AM 1:PM
-//    f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
+//    static u8 am_pm_state = 0;  //0:AM 1:PM
+    f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
     int id = compo_get_button_id();
 
     switch (id)
@@ -1415,8 +1415,8 @@ static void func_alarm_clock_sub_set_button_touch_handle(void)
 
         case COMPO_ID_BTN_ACLOCK_AM_PM:
             printf("COMPO_ID_BTN_ACLOCK_AM_PM\n");
-            am_pm_state = func_breathe_sub_mode_move_handle(am_pm_state);
-//            f_alarm_set->time_am_pm = func_breathe_sub_mode_move_handle(f_alarm_set->time_am_pm);
+//            am_pm_state = func_alarm_clock_sub_set_ampm_move_handle(am_pm_state);
+            f_alarm_set->time_am_pm = func_alarm_clock_sub_set_ampm_move_handle(f_alarm_set->time_am_pm);
             break;
 
         default:

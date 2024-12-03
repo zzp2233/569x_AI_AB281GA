@@ -224,10 +224,8 @@ compo_form_t *func_message_form_create(void)
     }
 
 
-
-
     //创建无消息界面
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_ICON_MESSAGE_BIN);
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_THEME_1_MESSAGE_BIN);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);

@@ -45,13 +45,6 @@ enum
 
 typedef struct
 {
-    u8 r;
-    u8 g;
-    u8 b;
-} color_t;
-
-typedef struct
-{
     u8 id;
     s16 x;
     s16 y;

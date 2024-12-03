@@ -20,6 +20,13 @@ enum {
     FONT_TYPE_PART_DOWN,      	    //偏旁原本位置降低自身高度一半
 };
 
+typedef struct
+{
+    u8 r;
+    u8 g;
+    u8 b;
+} color_t;
+
 typedef struct rect_t_ {
     s16 x;
     s16 y;

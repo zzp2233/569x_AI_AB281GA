@@ -28,12 +28,12 @@ enum
 
 #define BAT_PERCENT_VALUE       sys_cb.vbat_percent  //电量百分比数值
 
-typedef struct
-{
-    u8 r;
-    u8 g;
-    u8 b;
-} color_t;
+//typedef struct
+//{
+//    u8 r;
+//    u8 g;
+//    u8 b;
+//} color_t;
 
 typedef struct charge_ui_handle_t_
 {

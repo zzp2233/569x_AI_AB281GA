@@ -157,11 +157,7 @@ enum
     CARD_ID_END,
 
     //文本
-    COMPO_ID_TEXT_BTN_DEL,
-
-    COMPO_ID_BTN_SET,
-    COMPO_ID_BTN_REPEAT,
-
+    COMPO_ID_TEXT_BTN_DEL,W
 };
 
 static const ui_handle_t ui_handle = {
@@ -184,7 +180,7 @@ static const ui_handle_t ui_handle = {
         .y      = 216+62/2,
         .w      = 0,
         .h      = 0,
-        .str_id = STR_CANCEL,
+        .str_id = STR_DEL,
         .color = {254, 59, 48},
     },
 
@@ -212,7 +208,7 @@ static const ui_handle_t ui_handle = {
                 .idx    = 0,
                 .x      = 10 - 232/2,
                 .y      = 5 - 72/2,
-                .w      = 63,
+                .w      = 70,
                 .h      = 34,
                 .str_id = STR_NULL,
                 .res    = UI_BUF_0FONT_FONT_NUM_22_BIN,
@@ -227,7 +223,7 @@ static const ui_handle_t ui_handle = {
                 .y      = 40 - 72/2,
                 .w      = 200,
                 .h      = 26,
-                .str_id = STR_TIMER,
+                .str_id = STR_CUSTOM_TIME,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
                 .wordwrap = false,
@@ -289,7 +285,7 @@ static const ui_handle_t ui_handle = {
                 .y      = 40 - 72/2,
                 .w      = 200,
                 .h      = 26,
-                .str_id = STR_REPEAT,
+                .str_id = STR_ALARM_CLOCK_REPEAT,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
                 .wordwrap = false,

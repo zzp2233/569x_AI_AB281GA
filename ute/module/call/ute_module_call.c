@@ -161,7 +161,9 @@ void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
     }
     else
     {
-        bt_nor_unpair_device();
+        bt_disconnect(0);
+        bt_nor_delete_link_info();
+        bt_scan_disable();
     }
 
     if(UTE_BT_POWER_OFF_AUTO != reason)
@@ -176,6 +178,37 @@ void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
     uteModuleCallData.isPowerOn = false;
     uteModuleCallData.callData.isAutoWakupFromBle = false;
 }
+
+//void bsp_bt_trun_off(void)
+//{
+//    printk("bsp_bt_trun_off\n");
+//    bt_onoff_timer_cnt = 5;
+//    bt_scan_disable();
+//    bt_onoff_timer_falg = false;
+//    if(bt_onoff_timer.en){
+//        co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
+//        bt_onoff_timer_sta = 1;
+//        printk("off 000 a2dp[%d] hfp[%d] hid[%d] hid_type_isAndroid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), hid_type_isAndroid);
+//
+//    }else{
+//        printk("off 111 \n");
+//        if (bt_onoff_timer_sta == 0) {
+//            printk("off 222 a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]hid_type_isAndroid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), a2dp_on_off_flag, hid_type_isAndroid);
+//            if (bt_disconnect_on_flag()) {
+//                printk("off 333 a2dp[%d] hfp[%d] hid[%d] hid_type_isAndroid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), hid_type_isAndroid);
+//                //bt_abort_reconnect(); //终止回连
+//                //bt_disconnect(0);
+//                bt_comm_msg(COMM_BT_DISCONNECT, 0xffff);
+//            }
+//            else {
+//                bt_onoff_timer_sta = 1;
+//                co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
+//            }
+//
+//
+//        }
+//    }
+//}
 
 /**
 *@brief  call bt开机，可连接
@@ -284,7 +317,7 @@ void uteModuleCallEverySecond(void)
     {
         uteModuleCallData.isPowerOn = false;
     }
-    
+
     if(uteModuleCallData.isPowerOn)
     {
         uteModuleCallData.powerOnTimeSecond++;

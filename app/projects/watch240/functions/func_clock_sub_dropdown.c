@@ -6,6 +6,7 @@
 #include "ute_application_common.h"
 #include "ute_drv_battery_common.h"
 #include "ute_module_sport.h"
+#include "ute_module_call.h"
 
 #define PAGE_HEIGHT     GUI_SCREEN_HEIGHT - GUI_SCREEN_HEIGHT/3.7
 #define  BT_ON_PIC_BIN       UI_BUF_I330001_SLIDEMENU_ICON_TELEPHONE_GROUP_898_BIN    ///BT 连接状态图片
@@ -242,18 +243,13 @@ static void func_clock_sub_dropdown_click_handler(void)
     switch(id)
     {
         case COMPO_ID_BTN_CONNECT:
-            if(bt_get_scan())
+            if(uteModuleCallBtIsPowerOn())
             {
-                if (bt_is_connected())
-                {
-                    bt_disconnect(0);
-                }
-                bt_scan_disable();
+                uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_BUTTON);
             }
             else
             {
-                bt_scan_enable();
-                bt_connect();
+                uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
             }
             printf("bt_get_scan: %d\n", bt_get_scan());
             func_clock_sub_dropdown_bluetooth_btn_pic_update();
@@ -478,7 +474,7 @@ static void func_clock_sub_dropdown_bluetooth_pic_update(void)
         compo_picturebox_set(bluetooth_pic, BLE_OFF_PIC_BIN);
     }
 
-    if(bt_is_connected())
+    if(uteModuleCallBtIsConnected())
     {
         compo_picturebox_set(btooth_pic, BT_ON_PIC_BIN);
     }
@@ -508,7 +504,7 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
     compo_button_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_BTN_CONNECT);
     compo_picturebox_t *bluetooth = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
     printf("bt_get_scan: 0x%x\n", bt_get_scan());
-    if(bt_get_scan())
+    if(uteModuleCallBtIsPowerOn())
     {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_I330001_SLIDEMENU_ICON_CALL01_BIN);
         compo_picturebox_set_visible(bluetooth, true);

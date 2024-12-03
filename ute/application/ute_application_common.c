@@ -861,9 +861,14 @@ void uteApplicationCommonStartPowerOffMsg(void)
     uteModuleHeartPowerOff();
     // uteModulePlatformQdecPowerOff();
     // uteModulePlatformPowerOffGpioConfig();
-#if 0//UTE_BT30_CALL_SUPPORT
-    uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);
+#if UTE_BT30_CALL_SUPPORT
+#if UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT
+    uteModuleCallSaveBtPowerOnOffStatus();
+#endif
+#if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
     uteModuleCallIsBtAutoCloseSaveConfig();
+#endif
+    uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);
 #endif
     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     // uteModulePlatformSetFastAdvertisingTimeCnt(0);

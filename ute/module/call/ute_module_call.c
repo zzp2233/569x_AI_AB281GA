@@ -117,10 +117,8 @@ void uteModuleCallBtReadConfig(void)
 */
 bool uteModuleCallBtIsConnected(void)
 {
-#if UTE_MODULE_CALL_SET_MODE_EXCEPTION_HANDLER_SUPPORT
-    // uint8_t btStatus =1;
-    //btStatus = uteModuleCallBtGetPowerStatus();//BT必须打开的情况下才有链接，防止异常的时候显示图标异常
-    return isHfpAndA2dpProfileBothConnected();//(uteModuleCallData.isConnected && btStatus);
+#if 1
+    return isHfpAndA2dpProfileBothConnected();
 #else
     return bt_is_connected();
 #endif
@@ -135,7 +133,6 @@ bool uteModuleCallBtIsConnected(void)
 */
 void uteModuleCallBtUpdateKeyConnectAddress(uint8_t *addr)
 {
-
     if(memcmp(&uteModuleCallData.address[0],&addr[0],6)!=0)
     {
         memcpy(&uteModuleCallData.address[0],&addr[0],6);
@@ -154,8 +151,6 @@ void uteModuleCallBtUpdateKeyConnectAddress(uint8_t *addr)
 */
 void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
 {
-    uteModuleCallData.isPowerOn = false;
-
     if(reason != UTE_BT_POWER_OFF_APP_UNBIND)
     {
         if (bt_is_connected())
@@ -164,10 +159,22 @@ void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
         }
         bt_scan_disable();
     }
+    else
+    {
+        bt_nor_unpair_device();
+    }
 
+    if(UTE_BT_POWER_OFF_AUTO != reason)
+    {
+        uteModuleCallData.isBtAutoClose = false;
+    }
+    else
+    {
+        uteModuleCallData.isBtAutoClose = true;
+    }
+
+    uteModuleCallData.isPowerOn = false;
     uteModuleCallData.callData.isAutoWakupFromBle = false;
-    uteModuleCallData.isBtAutoClose = false;
-
 }
 
 /**
@@ -181,8 +188,6 @@ void uteModuleCallBtPowerOn(ute_bt_power_on_type_t type)
     uteModuleCallData.powerOnType = type;
     if (type != UTE_BT_POWER_OFF)
     {
-        uteModuleCallData.isPowerOn = true;
-
         if(!bt_get_scan())
         {
             bt_scan_enable();
@@ -193,6 +198,7 @@ void uteModuleCallBtPowerOn(ute_bt_power_on_type_t type)
         uteModuleCallData.callData.inOutToActiveRtc = 0;
         uteModuleCallData.powerOnTimeSecond = 0;
         uteModuleCallData.idleTimerSecond = 0;
+        uteModuleCallData.isPowerOn = true;
     }
     if(type==UTE_BT_POWER_ON_FORM_BLE_CALL_NOTIFY)
     {
@@ -250,6 +256,61 @@ bool uteModuleCallGetIsBtAutoClose(void)
 }
 
 /**
+*@brief  call 每秒函数
+*@details
+*@author        zn.zeng
+*@date        2021-12-08
+*/
+void uteModuleCallEverySecond(void)
+{
+    if(!uteApplicationCommonIsPowerOn())
+    {
+        return;
+    }
+#if UTE_MODULE_LOW_BATTERY_AUTO_POWER_OFF_BT_SUPPORT
+    if(uteModuleCallData.isPowerOn && (uteDrvBatteryCommonGetLvl() < UTE_DRV_BATTERY_LOW_POWER_PERECNT))
+    {
+        uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO);
+        uteModuleCallData.isBtAutoClose = true;
+    }
+#endif
+
+    // 重新检测BT状态，防止打开或关闭BT不成功导致状态不一致
+    if((isHfpAndA2dpProfileBothConnected() || bt_get_scan()) && !uteModuleCallData.isPowerOn)
+    {
+        uteModuleCallData.isPowerOn = true;
+    }
+    else if (!isHfpAndA2dpProfileBothConnected() && !bt_get_scan() && uteModuleCallData.isPowerOn)
+    {
+        uteModuleCallData.isPowerOn = false;
+    }
+    
+    if(uteModuleCallData.isPowerOn)
+    {
+        uteModuleCallData.powerOnTimeSecond++;
+        if(isHfpAndA2dpProfileBothConnected())
+        {
+            uteModuleCallData.powerOnTimeSecond =0;
+        }
+        UTE_MODULE_LOG(UTE_LOG_BT_AUDIO_LVL, "%s,.powerOnTimeSecond = %d", __func__, uteModuleCallData.powerOnTimeSecond);
+
+        // uteModuleCallBtPowerOnMultipleConnect(false); //回连处理
+
+#if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
+        if (uteModuleCallData.powerOnTimeSecond > (UTE_BT30_AUTO_POWRER_OFF_TIME_SECOND + 10)&&(!isHfpAndA2dpProfileBothConnected()))
+        {
+            uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO);
+            uteModuleCallData.isBtAutoClose = true;
+        }
+#endif
+    }
+    else
+    {
+        uteModuleCallData.powerOnTimeSecond = 0;
+    }
+}
+
+/**
 *@brief  call 初始化
 *@details
 *@param[in] uint16_t type ，消息类型
@@ -262,6 +323,7 @@ void uteModuleCallInit(void)
 #if UTE_MODULE_LOG_SUPPORT
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_CALL_DATA_DIR, NULL, NULL);
 #endif
+    uteModuleSystemtimeRegisterSecond(uteModuleCallEverySecond);
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,line=%d,reset mac address",__func__,__LINE__);
     memset(&uteModuleCallData,0,sizeof(ute_module_call_data_t));
     uteModuleCallData.isPowerOn = false;
@@ -271,10 +333,17 @@ void uteModuleCallInit(void)
 #endif
 #if UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT
     uteModuleCallReadBtPowerOnOffStatus();
-    if(uteModuleCallData.isPowerOn)
+    uteModuleCallIsBtAutoCloseReadConfig();
+    if(uteModuleCallData.isPowerOn || uteModuleCallData.isBtAutoClose)
     {
         uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
     }
+    else
+    {
+        uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_BUTTON);
+    }
+#else
+    uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
 #endif
 }
 
@@ -440,10 +509,12 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
         {
             if(uteModuleCallBtIsPowerOn())
             {
-                bt_nor_delete_link_info();
                 uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_APP_UNBIND);
             }
-            bt_nor_delete_link_info();
+            else
+            {
+                bt_nor_delete_link_info();
+            }
         }
         else
         {
@@ -470,36 +541,6 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
     }
     uteModulePlatformMemoryFree(response);
 }
-
-// void uteModuleCallBtOnceConnect(bool appIos)
-// {
-// #if LE_SM_SC_EN
-//     if (app_phone_type_get() != ble_app_ios) {
-//         app_phone_type_set(ble_app_ios);
-//         bsp_change_bt_mac();
-//     }
-
-//     if (ble_app_ios && !bt_is_connected()) {        //IOS
-//         if (bt_nor_get_link_info(NULL)) {           //如果存在配对信息
-//             sys_cb.bt_reconn_flag = true;
-//             bt_connect();
-//         } else {
-//             ble_bt_connect();                       //一键双联
-//         }
-//     }
-// #endif // LE_SM_SC_EN
-// }
-
-//sdk接口
-// void app_phone_type_set(u8 type)
-// {
-//     app_data.ble_app_ios = type;
-// }
-
-// u8 app_phone_type_get(void)
-// {
-//     return app_data.ble_app_ios;
-// }
 
 /**
 *@brief 获取来电转手表接听
@@ -548,7 +589,7 @@ void uteModuleCallBleConnectState(bool isConnected)
     if (isConnected)
     {
         /*Casen 22-08-04 自动休眠 & 配对地址不为空*/
-        if (!uteModuleCallBtIsPowerOn() && (uteModuleCallData.isBtAutoClose == true) && memcmp(uteModuleCallData.address, "\x00\x00\x00\x00\x00\x00", 6))
+        if (!uteModuleCallBtIsPowerOn() && (uteModuleCallData.isBtAutoClose == true)) //&& memcmp(uteModuleCallData.address, "\x00\x00\x00\x00\x00\x00", 6)
         {
             uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
         }
@@ -1145,9 +1186,9 @@ bool uteModuleCallDeleteCallRecords(void)
 */
 void uteModuleCallSyncSosContactStart(void)
 {
-    uint8_t path[25];
+    char path[25];
     memset(&path[0],0,25);
-    sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
+    sprintf(&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
     uteModuleFilesystemDelFile(&path[0]);
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,del file=%s", __func__,&path[0]);
 }
@@ -1172,10 +1213,10 @@ void uteModuleCallSyncSosContactData(uint8_t *receive,uint8_t length)
         memcpy(&buff[i*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH],&receive[dataIndex+2],(phoneNumLen+contactSaveLen+2));
         dataIndex = dataIndex + (phoneNumLen + contactLen + 4);
     }
-    uint8_t path[25];
+    char path[25];
     memset(&path[0],0,25);
     uint16_t contactsTotalSize = 0;
-    sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
+    sprintf(&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,path=%s", __func__,&path[0]);
     void *file;
     if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY | FS_O_WRONLY | FS_O_CREAT))
@@ -1203,10 +1244,10 @@ void uteModuleCallSyncSosContactData(uint8_t *receive,uint8_t length)
 */
 uint16_t uteModuleCallGetSosContactSize(void)
 {
-    uint8_t path[25];
+    char path[25];
     memset(&path[0],0,25);
     uint16_t contactsTotalSize = 0;
-    sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
+    sprintf(&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,path=%s", __func__,&path[0]);
     void *file;
     if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_RDONLY))
@@ -1227,10 +1268,10 @@ uint16_t uteModuleCallGetSosContactSize(void)
 */
 void uteModuleCallGetSosContact(ute_module_call_addressbook_t *pData)
 {
-    uint8_t path[25];
+    char path[25];
     memset(&path[0],0,25);
     uint8_t tempBuff[UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH];
-    sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
+    sprintf(&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_SOS_CONTACT_DATA);
     void *file;
     if(uteModuleFilesystemOpenFile(&path[0],&file,FS_O_RDONLY))
     {

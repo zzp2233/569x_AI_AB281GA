@@ -192,6 +192,7 @@ typedef enum
     UTE_BT_POWER_OFF_BUTTON = 0x00, //按键
     UTE_BT_POWER_OFF_SYSTEM_OFF = 0X01, //关机
     UTE_BT_POWER_OFF_APP_UNBIND = 0X02, //APP解绑BLE的时候，不需要特别关闭蓝牙，
+    UTE_BT_POWER_OFF_AUTO = 0X03,
 } UTE_BT_POWER_OFF_REASON;
 
 #if UTE_BT30_CALL_SUPPORT
@@ -224,6 +225,7 @@ bool uteModuleCallIsCurrentConnectionIphone(void);
 
 void uteModuleCallBleConnectState(bool isConnected);
 
+void uteModuleCallUpdateRecordsData(void);
 void uteModuleCallSetInComingNumberName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t nameSize);
 void uteModuleCallSetContactsNumberAndName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t nameSize);
 void uteModuleCallGetAllAddressBookContactContent(uint16_t totalLen,ute_module_call_addressbook_t *pData);
@@ -240,6 +242,7 @@ void uteModuleCallUpdateCallingTimeSecond(uint32_t second);
 
 uint8_t uteModuleCallGetCallRecordsSize(ute_module_call_records_t *pData);
 bool uteModuleCallDeleteCallRecords(void);
+void uteModuleCallIsBtAutoCloseSaveConfig(void);
 
 #if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
 void uteModuleCallSyncSosContactStart(void);

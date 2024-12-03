@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-12-03 14:47:49
+*@date   2024-12-03 16:46:12
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -288,5 +288,7 @@ const char * const i18n_en_rus[] =
      [STR_NO_DATA] = "\x4e\x6f\x20\x64\x61\x74\x61\x20\x61\x76\x61\x69\x6c\x61\x62\x6c\x65\x00", // [275] No data available
      [STR_BLOOD_OXYGEN_UINT] = "\x42\x6c\x6f\x6f\x64\x20\x6f\x78\x79\x67\x65\x6e\x20\x73\x61\x74\x75\x72\x61\x74\x69\x6f\x6e\x00", // [276] Blood oxygen saturation
      [STR_DEL] = "\x44\x65\x6c\x65\x74\x65\x00", // [277] Delete
+     [STR_CLEAR] = "\x43\x6c\x65\x61\x72\x00", // [278] Clear
+     [STR_CLEAR_ALL] = "\x43\x6c\x65\x61\x72\x20\x41\x4c\x4c\x00", // [279] Clear ALL
 };
 

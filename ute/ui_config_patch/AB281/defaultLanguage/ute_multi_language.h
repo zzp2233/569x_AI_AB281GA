@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-03 14:47:46
+*@date   2024-12-03 16:46:09
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -291,6 +291,8 @@ enum
     STR_NO_DATA, // 无数据
     STR_BLOOD_OXYGEN_UINT, // 血氧饱和度
     STR_DEL, // 删除
+    STR_CLEAR, // 清除
+    STR_CLEAR_ALL, // 全部清除
 };
 
 extern const char * const *i18n;

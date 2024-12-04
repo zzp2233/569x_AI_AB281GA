@@ -228,6 +228,36 @@ static void func_clock_sub_dropdown_disturb_pic_update(void)
     }
 
 }
+//菜单id更新
+static void get_menu_idx_update(void)
+{
+    dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
+    for(int i=0;i<MENU_CNT;i++)
+    {
+        if(dwon_tbl_style_list[i].menu_style == func_cb.menu_style)
+        {
+            dropdown_disp_btn_item->sel_idx = i;
+            return;
+        }
+    }
+}
+//菜单样式图标更新
+static void func_clock_sub_dropdown_menu_pic_update(void)
+{
+    dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
+    compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_MENU);
+    compo_button_set_bgimg(btn, dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].res_addr);
+    if (func_cb.menu_style == MENU_STYLE_SKYRER)
+    {
+        func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+    }
+    else
+    {
+        func_cb.menu_idx = 0;           //切换风格后进入回中心位置
+    }
+    uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
+}
+
 ///               /                 *更新*                    /                 ///
 
 widget_page_t *widget;///创建按键父局器页面

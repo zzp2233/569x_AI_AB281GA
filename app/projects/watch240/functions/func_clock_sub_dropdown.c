@@ -7,6 +7,7 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_sport.h"
 #include "func_menu.h"
+#include "ute_module_call.h"
 
 #define PAGE_HEIGHT     GUI_SCREEN_HEIGHT - GUI_SCREEN_HEIGHT/3.7
 #define  BT_ON_PIC_BIN       UI_BUF_I330001_SLIDEMENU_ICON_TELEPHONE_GROUP_898_BIN    ///BT 连接状态图片
@@ -96,6 +97,7 @@ static const compo_listbox_item_t dwon_tbl_style_list[] =
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 ///               /                 *更新*                    /                 ///
+
 //下拉电量图标更新
 static void func_clock_sub_dropdown_battery_pic_update(void)
 {
@@ -136,7 +138,7 @@ static void func_clock_sub_dropdown_bluetooth_pic_update(void)
         compo_picturebox_set(bluetooth_pic, BLE_OFF_PIC_BIN);
     }
 
-    if(bt_is_connected())
+    if(uteModuleCallBtIsConnected())
     {
         compo_picturebox_set(btooth_pic, BT_ON_PIC_BIN);
     }
@@ -159,13 +161,14 @@ static void func_clock_sub_dropdown_mute_pic_update(void)
         compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES00_BIN);
     }
 }
+
 ////下拉蓝牙按钮更新
 static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 {
     compo_button_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_BTN_CONNECT);
     compo_picturebox_t *bluetooth = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
     printf("bt_get_scan: 0x%x\n", bt_get_scan());
-    if(bt_get_scan())
+    if(uteModuleCallBtIsPowerOn())
     {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_I330001_SLIDEMENU_ICON_CALL01_BIN);
         compo_picturebox_set_visible(bluetooth, true);
@@ -204,37 +207,6 @@ static void func_clock_sub_dropdown_wrist_pic_update(void)
     {
         compo_button_set_bgimg(wrist_pic, UI_BUF_I330001_SLIDEMENU_ICON_TAIWAN00_BIN);
     }
-
-}
-//下拉菜单->菜单切换id获取
-static void get_menu_idx_update(void){
-
-    dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
-    dropdown_disp_btn_item->sel_idx = 0;
-    for(int i=0; i<=MENU_CNT;i++){
-//        printf("enm:%d  2:%d\n",func_cb.menu_style, dwon_tbl_style_list[i].menu_style);
-        if(dwon_tbl_style_list[i].menu_style == func_cb.menu_style){
-//            printf("1:%d  2:%d\n",(uint8_t)uteModuleGuiCommonGetThemeTypeId(), dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style);
-            dropdown_disp_btn_item->sel_idx = i;
-            return;
-        }
-    }
-}
-//下拉菜单->菜单切换按钮更新
-static void func_clock_sub_dropdown_menu_pic_update(void)
-{
-    compo_button_t *menu_pic = compo_getobj_byid(COMPO_ID_BTN_MENU);
-    dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
-
-    printf("sty->id:%d\n",dropdown_disp_btn_item->sel_idx);
-    func_cb.menu_style = dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style;
-    compo_button_set_bgimg(menu_pic, dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].res_addr);
-    if (func_cb.menu_style == MENU_STYLE_SKYRER){
-        func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
-    }else{
-        func_cb.menu_idx = 0;           //切换风格后进入回中心位置
-    }
-    uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
 
 }
 //下拉勿扰按钮更新
@@ -472,18 +444,13 @@ static void func_clock_sub_dropdown_click_handler(void)
     switch(id)
     {
         case COMPO_ID_BTN_CONNECT:
-            if(bt_get_scan())
+            if(uteModuleCallBtIsPowerOn())
             {
-                if (bt_is_connected())
-                {
-                    bt_disconnect(0);
-                }
-                bt_scan_disable();
+                uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_BUTTON);
             }
             else
             {
-                bt_scan_enable();
-                bt_connect();
+                uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
             }
             func_clock_sub_dropdown_bluetooth_btn_pic_update();
             break;

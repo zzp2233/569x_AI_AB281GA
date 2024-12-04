@@ -16,23 +16,25 @@ enum
     COMPO_ID_BTN_NUM9,
     COMPO_ID_BTN_CALL,
     COMPO_ID_BTN_DEL,
-    COMPO_ID_NUM_DISP_ZERO,
-    COMPO_ID_NUM_DISP_ONE,
-    COMPO_ID_NUM_DISP_TWS,
-    COMPO_ID_NUM_DISP_THR,
-    COMPO_ID_NUM_DISP_FOUR,
-    COMPO_ID_NUM_DISP_FIVE,
-    COMPO_ID_NUM_DISP_SIX,
-    COMPO_ID_NUM_DISP_SEV,
-    COMPO_ID_NUM_DISP_EIG,
-    COMPO_ID_NUM_DISP_NIN,
-    COMPO_ID_NUM_DISP_TEN,
-    COMPO_ID_NUM_DISP_ELE,
-    COMPO_ID_BTN_INCOMING,
-    COMPO_ID_BTN_REJECT,
-    COMPO_ID_BTN_MSG,
 
+    COMPO_ID_PIC_CLICK_NUM0,
+    COMPO_ID_PIC_CLICK_NUM1,
+    COMPO_ID_PIC_CLICK_NUM2,
+    COMPO_ID_PIC_CLICK_NUM3,
+    COMPO_ID_PIC_CLICK_NUM4,
+    COMPO_ID_PIC_CLICK_NUM5,
+    COMPO_ID_PIC_CLICK_NUM6,
+    COMPO_ID_PIC_CLICK_NUM7,
+    COMPO_ID_PIC_CLICK_NUM8,
+    COMPO_ID_PIC_CLICK_NUM9,
+    COMPO_ID_PIC_CLICK_CALL,
+    COMPO_ID_PIC_CLICK_DEL,
+
+
+    COMPO_ID_NUM_DISP_ZERO,
     COMPO_ID_PIC_NUM,
+
+
 };
 
 #define CALL_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_call_disp_btn_item) / sizeof(tbl_call_disp_btn_item[0])))
@@ -41,6 +43,8 @@ typedef struct password_disp_btn_item_t_
 {
     u32 res_addr;
     u16 btn_id;
+    u32 res_click;
+    u16 btn_click_id;
     s16 x;
     s16 y;
 } call_disp_btn_item_t;
@@ -48,18 +52,18 @@ typedef struct password_disp_btn_item_t_
 //按钮item，创建时遍历一下
 static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
 {
-    {UI_BUF_CALL_DIAL_NUM_1_BIN,             COMPO_ID_BTN_NUM1,         45,     84},
-    {UI_BUF_CALL_DIAL_NUM_2_BIN,             COMPO_ID_BTN_NUM2,         120,    84},
-    {UI_BUF_CALL_DIAL_NUM_3_BIN,             COMPO_ID_BTN_NUM3,         195,    84},
-    {UI_BUF_CALL_DIAL_NUM_4_BIN,             COMPO_ID_BTN_NUM4,         45,     140},
-    {UI_BUF_CALL_DIAL_NUM_5_BIN,             COMPO_ID_BTN_NUM5,         120,    140},
-    {UI_BUF_CALL_DIAL_NUM_6_BIN,             COMPO_ID_BTN_NUM6,         195,    140},
-    {UI_BUF_CALL_DIAL_NUM_7_BIN,             COMPO_ID_BTN_NUM7,         45,     196},
-    {UI_BUF_CALL_DIAL_NUM_8_BIN,             COMPO_ID_BTN_NUM8,         120,    196},
-    {UI_BUF_CALL_DIAL_NUM_9_BIN,             COMPO_ID_BTN_NUM9,         195,    196},
-    {UI_BUF_CALL_DIAL_NUM_0_BIN,             COMPO_ID_BTN_NUM0,         120,    252},
-    {UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN,  COMPO_ID_BTN_DEL,          195,    252},
-    {UI_BUF_CALL_CALL_CLICK_BIN,             COMPO_ID_BTN_CALL,         45,     252},
+    {UI_BUF_I330001_CALL_DIAL_GREY_01_BIN,             COMPO_ID_BTN_NUM1,       UI_BUF_I330001_CALL_DIAL_BLUE_01_BIN,  COMPO_ID_PIC_CLICK_NUM1,     45,     84},
+    {UI_BUF_I330001_CALL_DIAL_GREY_02_BIN,             COMPO_ID_BTN_NUM2,       UI_BUF_I330001_CALL_DIAL_BLUE_02_BIN,  COMPO_ID_PIC_CLICK_NUM2,     120,    84},
+    {UI_BUF_I330001_CALL_DIAL_GREY_03_BIN,             COMPO_ID_BTN_NUM3,       UI_BUF_I330001_CALL_DIAL_BLUE_03_BIN,  COMPO_ID_PIC_CLICK_NUM3,     195,    84},
+    {UI_BUF_I330001_CALL_DIAL_GREY_04_BIN,             COMPO_ID_BTN_NUM4,       UI_BUF_I330001_CALL_DIAL_BLUE_04_BIN,  COMPO_ID_PIC_CLICK_NUM4,     45,     140},
+    {UI_BUF_I330001_CALL_DIAL_GREY_05_BIN,             COMPO_ID_BTN_NUM5,       UI_BUF_I330001_CALL_DIAL_BLUE_05_BIN,  COMPO_ID_PIC_CLICK_NUM5,     120,    140},
+    {UI_BUF_I330001_CALL_DIAL_GREY_06_BIN,             COMPO_ID_BTN_NUM6,       UI_BUF_I330001_CALL_DIAL_BLUE_06_BIN,  COMPO_ID_PIC_CLICK_NUM6,     195,    140},
+    {UI_BUF_I330001_CALL_DIAL_GREY_07_BIN,             COMPO_ID_BTN_NUM7,       UI_BUF_I330001_CALL_DIAL_BLUE_07_BIN,  COMPO_ID_PIC_CLICK_NUM7,     45,     196},
+    {UI_BUF_I330001_CALL_DIAL_GREY_08_BIN,             COMPO_ID_BTN_NUM8,       UI_BUF_I330001_CALL_DIAL_BLUE_08_BIN,  COMPO_ID_PIC_CLICK_NUM8,     120,    196},
+    {UI_BUF_I330001_CALL_DIAL_GREY_09_BIN,             COMPO_ID_BTN_NUM9,       UI_BUF_I330001_CALL_DIAL_BLUE_09_BIN,  COMPO_ID_PIC_CLICK_NUM9,     195,    196},
+    {UI_BUF_I330001_CALL_DIAL_GREY_00_BIN,             COMPO_ID_BTN_NUM0,       UI_BUF_I330001_CALL_DIAL_BLUE_00_BIN,  COMPO_ID_PIC_CLICK_NUM0,     120,    252},
+    {UI_BUF_I330001_CALL_DIAL_DELETE_BIN,              COMPO_ID_BTN_DEL,        0,                                     COMPO_ID_PIC_CLICK_DEL,      195,    252},
+    {UI_BUF_I330001_CALL_DIAL_CALL_BIN,                COMPO_ID_BTN_CALL,       0,                                     COMPO_ID_PIC_CLICK_CALL,     45,     252},
 };
 
 typedef struct f_call_sub_dial_t_
@@ -84,6 +88,13 @@ compo_form_t *func_call_sub_dial_form_create(void)
     }
 //    printf("W:%d H:%d\n",gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).wid,gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).hei);
 
+    //创建点击按钮变色图片
+    for (u8 i=0; i<CALL_DISP_BTN_ITEM_CNT; i++) {
+        compo_picturebox_t* pic = compo_picturebox_create(frm, tbl_call_disp_btn_item[i].res_click);
+        compo_setid(pic, tbl_call_disp_btn_item[i].btn_click_id);
+        compo_picturebox_set_pos(pic, tbl_call_disp_btn_item[i].x, tbl_call_disp_btn_item[i].y);
+        compo_picturebox_set_visible(pic, false);
+    }
 
     //创建文本
     compo_textbox_t *txt_title = compo_textbox_create(frm, strlen(i18n[STR_ENTER_NUMBER]));
@@ -106,74 +117,27 @@ compo_form_t *func_call_sub_dial_form_create(void)
     return frm;
 }
 
-//创建来电窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
-compo_form_t *func_call_answer_form_create(void)
+///触摸按钮效果处理
+static void func_call_sub_dial_button_touch_handle(void)
 {
-    compo_button_t *btn;
-
-    //新建窗体
-    compo_form_t *frm = compo_form_create(true);
-
-    //来电按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_ANSWER_CLICK_BIN);
-    compo_setid(btn, COMPO_ID_BTN_INCOMING);
-    compo_button_set_pos(btn, 54, 212);
-
-    //挂电话按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_CLICK_BIN);
-    compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, 188, 216);
-
-    //信息按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_MES_CLICK_BIN);
-    compo_setid(btn, COMPO_ID_BTN_MSG);
-    compo_button_set_pos(btn, 120, 246);
-
-    //创建消息文本
-    compo_textbox_t *txt = compo_textbox_create(frm, 2);
-    compo_textbox_set_pos(txt, 120, 258);
-    compo_textbox_set(txt,"信息");
-    return frm;
+    int id = compo_get_button_id();
+    switch (id) {
+    case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_DEL:
+        printf("id=%d\n", id);
+        compo_picturebox_set_visible(compo_getobj_byid(id+COMPO_ID_BTN_DEL), true);
+        break;
+    default:
+        break;
+    }
 }
 
-//创建接通窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
-compo_form_t *func_calling_form_create(void)
+///释放按钮效果处理
+static void func_call_sub_dial_button_release_handle(void)
 {
-    compo_button_t *btn;
-
-    //新建窗体
-    compo_form_t *frm = compo_form_create(true);
-
-    //新建按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_MUTE_CLICK_BIN);
-    compo_setid(btn, COMPO_ID_BTN_CALL);
-    compo_button_set_pos(btn, 36, 240);
-
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_CLICK_BIN);
-    compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, 120, 196);
-
-    return frm;
-}
-
-
-//进入打电话界面
-static void func_call_sub_dial_enter(void)
-{
-    func_cb.f_cb = func_zalloc(sizeof(f_call_sub_dial_t));
-    func_cb.frm_main = func_call_sub_dial_form_create();
-}
-
-//电话功能事件处理
-static void func_call_sub_dial_process(void)
-{
-    func_process();                                  //刷新UI
-}
-
-//退出电话表盘功能
-static void func_call_sub_dial_exit(void)
-{
-    func_cb.last = FUNC_CALL_SUB_DIAL;
+    for (u8 i=0; i<CALL_DISP_BTN_ITEM_CNT; i++) {
+        compo_picturebox_t* pic = compo_getobj_byid(tbl_call_disp_btn_item[i].btn_click_id);
+        compo_picturebox_set_visible(pic, false);       //触摸效果图设置不可见
+    }
 }
 
 ///单击
@@ -200,7 +164,7 @@ static void func_call_sub_dial_button_click(void)
             break;
 
         case COMPO_ID_BTN_CALL:
-            bt_pbap_lookup_number(call->phone_number);
+            bt_pbap_lookup_number((char*)call->phone_number);
             memset(sys_cb.outgoing_number, 0, 16);
             for(int i=0; i<call->phone_number_cnt; i++)
             {
@@ -236,6 +200,7 @@ static void func_call_sub_dial_button_click(void)
         snprintf(buf, sizeof(buf), "%s", call->phone_number);
     }
     compo_textbox_set(txt_num, buf);
+    func_call_sub_dial_button_release_handle();
 }
 
 ///长按处理
@@ -282,6 +247,7 @@ static void func_call_sub_dial_button_long(void)
         snprintf(buf, sizeof(buf), "%s", call->phone_number);
     }
     compo_textbox_set(txt_num, buf);
+    func_call_sub_dial_button_release_handle();
 
 }
 
@@ -291,6 +257,11 @@ static void func_call_sub_dial_message(size_msg_t msg)
 
     switch (msg)
     {
+
+        case MSG_CTP_TOUCH:
+            func_call_sub_dial_button_touch_handle();
+            break;
+
         case MSG_CTP_CLICK:
             func_call_sub_dial_button_click();
             break;
@@ -328,6 +299,25 @@ static void func_call_sub_dial_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+}
+
+//进入打电话界面
+static void func_call_sub_dial_enter(void)
+{
+    func_cb.f_cb = func_zalloc(sizeof(f_call_sub_dial_t));
+    func_cb.frm_main = func_call_sub_dial_form_create();
+}
+
+//电话功能事件处理
+static void func_call_sub_dial_process(void)
+{
+    func_process();                                  //刷新UI
+}
+
+//退出电话表盘功能
+static void func_call_sub_dial_exit(void)
+{
+    func_cb.last = FUNC_CALL_SUB_DIAL;
 }
 
 //电话显示界面

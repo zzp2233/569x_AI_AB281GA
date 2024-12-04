@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-03 16:46:09
+*@date   2024-12-02 10:01:37
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -290,6 +290,11 @@ enum
     STR_SLIDE_CALL, // 滑动呼叫
     STR_NO_DATA, // 无数据
     STR_BLOOD_OXYGEN_UINT, // 血氧饱和度
+    STR_GONG_GE, // 宫格
+    STR_SPHERE, // 球体
+    STR_CHECKERBOARD, // 棋盘
+    STR_HALO, // 光环
+    STR_SIX_PALACE_GRID, // 六宫格
     STR_DEL, // 删除
     STR_CLEAR, // 清除
     STR_CLEAR_ALL, // 全部清除

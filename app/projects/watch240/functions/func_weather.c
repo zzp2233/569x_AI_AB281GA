@@ -170,15 +170,14 @@ compo_form_t *func_weather_form_create(void)
     picbox = compo_picturebox_create(frm, weather_list[get_weather_id[0]].res_addr);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5);
 
-    if(weather_date.fristDayCurrTemperature < 1)weather_date.fristDayCurrTemperature = 0;
+    if(weather_date.fristDayCurrTemperature == 0)weather_date.fristDayCurrTemperature = 0;
 
-    picbox = compo_picturebox_create(frm,UI_BUF_I330001_WEATHER_NUM_BIN );///图片数字十位
-    compo_picturebox_cut(picbox,weather_date.fristDayCurrTemperature/10, 10);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/6, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
-
-    picbox = compo_picturebox_create(frm,UI_BUF_I330001_WEATHER_NUM_BIN );///图片数字个位
-    compo_picturebox_cut(picbox,weather_date.fristDayCurrTemperature%10, 10);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/6, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
+    compo_number_t *num = compo_number_create(frm,UI_BUF_I330001_WEATHER_NUM_BIN, 3);
+    compo_number_set_margin(num, -2);
+    compo_number_set_radix(num, 11, true);
+    compo_number_set(num, weather_date.fristDayCurrTemperature);
+    compo_number_set_align(num, 1 );
+    compo_number_set_pos(num, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
 
     if(displayInfo.isFahrenheit)     ///是否为华氏度
     {
@@ -188,7 +187,8 @@ compo_form_t *func_weather_form_create(void)
     {
         picbox = compo_picturebox_create(frm,UI_BUF_I330001_WEATHER_DC_BIN);///温度符号
     }
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2.2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);
+
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X*1.15+compo_number_get_rel_location(num).wid/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);
 
     if(uteModuleWeatherGetCurrDay() == time.day)
     {

@@ -295,6 +295,9 @@ enum
     STR_CHECKERBOARD, // 棋盘
     STR_HALO, // 光环
     STR_SIX_PALACE_GRID, // 六宫格
+    STR_DEL, // 删除
+    STR_CLEAR, // 清除
+    STR_CLEAR_ALL, // 全部清除
 };
 
 extern const char * const *i18n;

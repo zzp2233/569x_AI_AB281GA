@@ -39,11 +39,11 @@ enum
     COMPO_ID_LISTBOX = 1,
 
     //按键
-    COMPO_ID_BTN_REPETAT_NO,
+//    COMPO_ID_BTN_REPETAT_NO,
     COMPO_ID_BTN_REPETAT_YES,
 
     //图像
-    COMPO_ID_PIC_REPETAT_NO_CLICK,
+//    COMPO_ID_PIC_REPETAT_NO_CLICK,
     COMPO_ID_PIC_REPETAT_YES_CLICK,
 
 };
@@ -79,14 +79,16 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 #define SLEF_LIST_HEI_OFFSET  30
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set(listbox, tbl_weeks_list, WEEKS_LIST_CNT);
-    compo_listbox_set_location(listbox, GUI_SCREEN_CENTER_X, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei - 5)/2 + SLEF_LIST_Y_OFFSET,
-                               GUI_SCREEN_WIDTH, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei-SLEF_LIST_HEI_OFFSET));
-    compo_listbox_set_item_height(listbox, gui_image_get_size(UI_BUF_COMMON_SELECT_ON_BIN).hei+5);
+    compo_listbox_set_location(listbox, GUI_SCREEN_CENTER_X, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei - 5)/2 + SLEF_LIST_Y_OFFSET,
+                               GUI_SCREEN_WIDTH, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei-SLEF_LIST_HEI_OFFSET));
+//    compo_listbox_set_item_height(listbox, gui_image_get_size(UI_BUF_I330001_ALARM_SELECT01_BIN).hei+5);
+
     compo_setid(listbox, COMPO_ID_LISTBOX);
-    compo_listbox_set_sta_icon(listbox, UI_BUF_COMMON_SELECT_ON_BIN, UI_BUF_COMMON_SELECT_BIN);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_ALARM_SELECT01_BIN, UI_BUF_I330001_ALARM_SELECT00_BIN);
     compo_listbox_set_bithook(listbox, bsp_sys_get_ctlbit);
-    compo_listbox_set_focus_byidx(listbox, 2);
+    compo_listbox_set_focus_byidx(listbox, 1);
 
     for (int i=0; i<7; i++)         //获取当前闹钟设置的星期
     {
@@ -97,24 +99,32 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 
     //新建按钮
     compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
-    compo_setid(btn, COMPO_ID_BTN_REPETAT_NO);
-    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei / 2 - 5);
+//    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+//    compo_setid(btn, COMPO_ID_BTN_REPETAT_NO);
+//    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei / 2 - 5);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
     compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
-    compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_YES_BIN).hei / 2 - 5);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 5);
 
     //新建图像
-    compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_COMMON_NO_CLICK_BIN);
-    compo_setid(pic_click, COMPO_ID_PIC_REPETAT_NO_CLICK);
-    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_CLICK_BIN).hei / 2 - 5);
+//    compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_COMMON_NO_CLICK_BIN);
+//    compo_setid(pic_click, COMPO_ID_PIC_REPETAT_NO_CLICK);
+//    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_CLICK_BIN).hei / 2 - 5);
+//    compo_picturebox_set_visible(pic_click, false);
+
+    compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
+    compo_setid(pic_click, COMPO_ID_PIC_REPETAT_YES_CLICK);
+    compo_picturebox_set_pos(pic_click, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei / 2 - 5);
     compo_picturebox_set_visible(pic_click, false);
 
-    pic_click = compo_picturebox_create(frm, UI_BUF_ALARM_CLOCK_YES_CLICK_BIN);
-    compo_setid(pic_click, COMPO_ID_PIC_REPETAT_YES_CLICK);
-    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_YES_CLICK_BIN).hei / 2 - 5);
-    compo_picturebox_set_visible(pic_click, false);
+    //确定文本
+    compo_textbox_t* yes_txt = compo_textbox_create_for_page(frm, frm->page, strlen(i18n[STR_OK]));
+    compo_textbox_set_location(yes_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 5,
+                               gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
+                               gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
+    compo_textbox_set(yes_txt, i18n[STR_OK]);
+
 
     return frm;
 }
@@ -124,14 +134,14 @@ static void func_alarm_clock_sub_repeat_button_touch_handle(void)
 {
 
     int id = compo_get_button_id();
-    compo_picturebox_t *pic_no_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK);
+//    compo_picturebox_t *pic_no_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK);
     compo_picturebox_t *pic_yes_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK);
 
     switch (id)
     {
-        case COMPO_ID_BTN_REPETAT_NO:
-            compo_picturebox_set_visible(pic_no_click, true);
-            break;
+//        case COMPO_ID_BTN_REPETAT_NO:
+//            compo_picturebox_set_visible(pic_no_click, true);
+//            break;
         case COMPO_ID_BTN_REPETAT_YES:
             compo_picturebox_set_visible(pic_yes_click, true);
             break;
@@ -145,9 +155,9 @@ static void func_alarm_clock_sub_repeat_button_touch_handle(void)
 //释放按钮效果处理
 static void func_alarm_clock_sub_repeat_button_release_handle(void)
 {
-    compo_picturebox_t *pic_no_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK);
+//    compo_picturebox_t *pic_no_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK);
     compo_picturebox_t *pic_yes_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK);
-    compo_picturebox_set_visible(pic_no_click, false);
+//    compo_picturebox_set_visible(pic_no_click, false);
     compo_picturebox_set_visible(pic_yes_click, false);
 }
 
@@ -169,14 +179,14 @@ static void func_alarm_clock_sub_repeat_button_click(void)
 
     switch (id)
     {
-        case COMPO_ID_BTN_REPETAT_NO:
-            if (task_stack_get_last() == FUNC_ALARM_CLOCK_SUB_EDIT)
-            {
-                func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
-                break;
-            }
-            func_cb.sta = FUNC_ALARM_CLOCK;
-            break;
+//        case COMPO_ID_BTN_REPETAT_NO:
+//            if (task_stack_get_last() == FUNC_ALARM_CLOCK_SUB_EDIT)
+//            {
+//                func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
+//                break;
+//            }
+//            func_cb.sta = FUNC_ALARM_CLOCK;
+//            break;
 
         case COMPO_ID_BTN_REPETAT_YES:
             sys_cb.alarm_edit_cycle = 0;
@@ -281,7 +291,7 @@ static void func_alarm_clock_sub_repeat_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
 
-    s32 first_y = compo_listbox_gety_byidx(listbox, 2);
+    s32 first_y = compo_listbox_gety_byidx(listbox, 1);
     s32 last_y = compo_listbox_gety_byidx(listbox, WEEKS_LIST_CNT - 1);
     compo_listbox_move_init_modify(listbox, first_y, last_y);
 

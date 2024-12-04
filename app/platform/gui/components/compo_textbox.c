@@ -83,7 +83,11 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
             textbox_rect.y += rel_text_area.hei / 2;
             widget_set_pos(txt, textbox_rect.x, textbox_rect.y);
         }
-        else                           //当文本框指定了高度且为多行居中时，内容上下也居中(视用户需要可屏蔽)
+        else if (textbox->center_top)
+        {
+            ;
+        }
+        else                             //当文本框指定了高度且为多行居中时，内容上下也居中(视用户需要可屏蔽)
         {
             u8 line_cnt = widget_text_get_line_cnt(txt);
             if (textbox_rect.hei > rel_text_area.hei)
@@ -91,6 +95,7 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
                 if (line_cnt > 1 || (line_cnt <= 1 && textbox_rect.wid < rel_text_area.wid))
                 {
                     client_y = (textbox_rect.hei - rel_text_area.hei) >> 1;
+//                    printf("client_y [%d,%d]\n", line_cnt, client_y);
                 }
             }
         }
@@ -244,6 +249,17 @@ void compo_textbox_set_align_center(compo_textbox_t *textbox, bool align_center)
 }
 
 /**
+ * @brief 设置文本框是否居顶
+ * @param[in] textbox : 文本指针
+ * @param[in] align_center : 是否居中
+ **/
+void compo_textbox_set_align_center_top(compo_textbox_t *textbox, bool align_center)
+{
+    widget_set_align_center(textbox->txt, align_center);
+    textbox->center_top = align_center;
+}
+
+/**
  * @brief 设置文本框文字的颜色
  * @param[in] textbox : 文本指针
  * @param[in] color : 颜色
@@ -381,4 +397,6 @@ void compo_textbox_set_multiline_drag(compo_textbox_t *textbox, bool is_drag)
 {
     textbox->roll_cb.is_drag = is_drag;
     textbox->roll_cb.tick = tick_get();
+
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
 }

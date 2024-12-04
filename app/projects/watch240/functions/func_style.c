@@ -74,7 +74,7 @@ compo_form_t *func_style_form_create(void)
     //新建菜单选择列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_style_list, SET_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_sta_icon(listbox, UI_BUF_COMPO_SELECT_ADD_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_style_bit);
     compo_setid(listbox, COMPO_ID_LISTBOX);

@@ -119,7 +119,7 @@ compo_form_t *func_address_book_form_create(void)
     compo_form_set_title(frm, i18n[STR_CALL_LINK]);
 
     //创建无消息界面
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_ICON_ADDRESS_BOOK_BIN);
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_CALL_NO_CONTACTS_BIN);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);
@@ -141,7 +141,7 @@ compo_form_t *func_address_book_form_create(void)
     }
     compo_listbox_set_alike_icon(listbox, UI_BUF_ICON_ADDRESS_BOOK_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
-    compo_listbox_set_bgimg(listbox, UI_BUF_COMMON_BG_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
 
@@ -195,7 +195,7 @@ static void func_address_book_process(void)
                 compo_listbox_set_alike_icon(f_book->listbox, UI_BUF_ICON_ADDRESS_BOOK_BIN);
                 compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1));
                 compo_listbox_update_with_text_scroll_rst(f_book->listbox);
-                compo_listbox_set_bgimg(f_book->listbox, UI_BUF_COMMON_BG_BIN);
+                compo_listbox_set_bgimg(f_book->listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
                 compo_listbox_set_focus_byidx(f_book->listbox, 1);
                 compo_listbox_update(f_book->listbox);
             }

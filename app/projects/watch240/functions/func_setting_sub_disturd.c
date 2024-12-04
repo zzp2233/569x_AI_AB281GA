@@ -190,7 +190,7 @@ compo_form_t *func_set_sub_disturd_form_create(void)
     {
         if (idx_btn < 2)
         {
-            btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BG_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
             compo_setid(btn, tbl_disturd_disp_btn_item[idx_btn].btn_id);
             compo_button_set_pos(btn, tbl_disturd_disp_btn_item[idx_btn].x, tbl_disturd_disp_btn_item[idx_btn].y);
         }

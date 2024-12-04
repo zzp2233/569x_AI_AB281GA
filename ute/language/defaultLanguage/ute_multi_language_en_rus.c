@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-12-03 16:46:12
+*@date   2024-12-02 10:01:38
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -287,6 +287,11 @@ const char * const i18n_en_rus[] =
      [STR_SLIDE_CALL] = "\x53\x6c\x69\x64\x65\x20\x63\x61\x6c\x6c\x00", // [274] Slide call
      [STR_NO_DATA] = "\x4e\x6f\x20\x64\x61\x74\x61\x20\x61\x76\x61\x69\x6c\x61\x62\x6c\x65\x00", // [275] No data available
      [STR_BLOOD_OXYGEN_UINT] = "\x42\x6c\x6f\x6f\x64\x20\x6f\x78\x79\x67\x65\x6e\x20\x73\x61\x74\x75\x72\x61\x74\x69\x6f\x6e\x00", // [276] Blood oxygen saturation
+     [STR_GONG_GE] = "\x47\x6f\x6e\x67\x20\x47\x65\x00", // [277] Gong Ge
+     [STR_SPHERE] = "\x73\x70\x68\x65\x72\x65\x00", // [278] sphere
+     [STR_CHECKERBOARD] = "\x63\x68\x65\x63\x6b\x65\x72\x62\x6f\x61\x72\x64\x00", // [279] checkerboard
+     [STR_HALO] = "\x68\x61\x6c\x6f\x00", // [280] halo
+     [STR_SIX_PALACE_GRID] = "\x53\x69\x78\x20\x50\x61\x6c\x61\x63\x65\x20\x47\x72\x69\x64\x00", // [281] Six Palace Grid
      [STR_DEL] = "\x44\x65\x6c\x65\x74\x65\x00", // [277] Delete
      [STR_CLEAR] = "\x43\x6c\x65\x61\x72\x00", // [278] Clear
      [STR_CLEAR_ALL] = "\x43\x6c\x65\x61\x72\x20\x41\x4c\x4c\x00", // [279] Clear ALL

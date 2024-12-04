@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 中文(简体）
 *@author
-*@date   2024-12-03 16:46:10
+*@date   2024-12-02 10:01:38
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -287,6 +287,11 @@ const char * const i18n_zh_rcn[] =
      [STR_SLIDE_CALL] = "\xe6\xbb\x91\xe5\x8a\xa8\xe5\x91\xbc\xe5\x8f\xab\x00", // [274] 滑动呼叫
      [STR_NO_DATA] = "\xe6\x97\xa0\xe6\x95\xb0\xe6\x8d\xae\x00", // [275] 无数据
      [STR_BLOOD_OXYGEN_UINT] = "\xe8\xa1\x80\xe6\xb0\xa7\xe9\xa5\xb1\xe5\x92\x8c\xe5\xba\xa6\x00", // [276] 血氧饱和度
+     [STR_GONG_GE] = "\xe5\xae\xab\xe6\xa0\xbc\x00", // [277] 宫格
+     [STR_SPHERE] = "\xe7\x90\x83\xe4\xbd\x93\x00", // [278] 球体
+     [STR_CHECKERBOARD] = "\xe6\xa3\x8b\xe7\x9b\x98\x00", // [279] 棋盘
+     [STR_HALO] = "\xe5\x85\x89\xe7\x8e\xaf\x00", // [280] 光环
+     [STR_SIX_PALACE_GRID] = "\xe5\x85\xad\xe5\xae\xab\xe6\xa0\xbc\x00", // [281] 六宫格
      [STR_DEL] = "\xe5\x88\xa0\xe9\x99\xa4\x00", // [277] 删除
      [STR_CLEAR] = "\xe6\xb8\x85\xe9\x99\xa4\x00", // [278] 清除
      [STR_CLEAR_ALL] = "\xe5\x85\xa8\xe9\x83\xa8\xe6\xb8\x85\xe9\x99\xa4\x00", // [279] 全部清除

@@ -6,28 +6,21 @@
 #include "ute_application_common.h"
 #include "ute_drv_battery_common.h"
 #include "ute_module_sport.h"
+#include "func_menu.h"
 
 #define PAGE_HEIGHT     GUI_SCREEN_HEIGHT - GUI_SCREEN_HEIGHT/3.7
 #define  BT_ON_PIC_BIN       UI_BUF_I330001_SLIDEMENU_ICON_TELEPHONE_GROUP_898_BIN    ///BT 连接状态图片
 #define  BT_OFF_PIC_BIN      UI_BUF_I330001_SLIDEMENU_ICON_TELEPHONE_FRAME_1389_BIN   ///BT 断开状态图片
 #define  BLE_ON_PIC_BIN      UI_BUF_I330001_SLIDEMENU_ICON_CONNECT_GROUP_899_BIN      ///BLE 连接状态图片
 #define  BLE_OFF_PIC_BIN     UI_BUF_I330001_SLIDEMENU_ICON_CONNECT_FRAME_1390_BIN     ///BLE 断开状态图片
-
 #define  BATTERY_PIC_0_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
 #define  BATTERY_PIC_1_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1
 #define  BATTERY_PIC_2_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
 #define  BATTERY_PIC_3_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
 #define  BATTERY_PIC_4_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
-
+#define  PAGE_NUM_WHITE_BIN   UI_BUF_I330001_SLIDEMENU_DOT_01_BIN           ///底部页码点->白
+#define  PAGE_NUM_GREY_BIN    UI_BUF_I330001_SLIDEMENU_DOT_00_BIN           ///底部页码点->灰
 #define  PAGE_HEIGHT_ADJUST    -3   ///page 页面y轴调节
-
-static void func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
-static void func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
-static void func_clock_sub_dropdown_bluetooth_btn_pic_update();
-static void func_clock_sub_dropdown_mute_pic_update();          //静音更新
-static void func_clock_sub_dropdown_disturb_pic_update();       //勿扰
-static void func_clock_sub_dropdown_wrist_pic_update(void);//下拉抬婉亮屏按钮更新
-static void switch_set_sub_wrist(void);//下拉抬婉亮屏按钮状态切换
 
 static uint8_t dropdown_disturb_sw;     //功能未做，加个开关先放着
 
@@ -45,6 +38,8 @@ enum
     COMPO_ID_BTN_PHONE,         //查找手机
     COMPO_ID_BTN_SETTING,       //设置
 
+    COMPO_ID_PIC_WHITE,       //底部页码点->白
+    COMPO_ID_PIC_GREY,        //底部页码点->灰
 
     //电池百分比文本
     COMPO_ID_TXT_BATTERY_PERCENT,
@@ -61,6 +56,7 @@ typedef struct dropdown_disp_btn_item_t_
     u16 btn_id;
     s16 x;
     s16 y;
+    u8 sel_idx;
 } dropdown_disp_btn_item_t;
 
 #define DROPDOWN_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_dropdown_disp_btn_item) / sizeof(tbl_dropdown_disp_btn_item[0])))
@@ -81,7 +77,186 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
     {UI_BUF_I330001_SLIDEMENU_ICON_SETTINGS_BIN,        COMPO_ID_BTN_SETTING,          GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  62+31+4},///设置
 };
 
+#define MENU_CNT    ((int)(sizeof(dwon_tbl_style_list) / sizeof(dwon_tbl_style_list[0])))
+//风格列表tbl
+static const compo_listbox_item_t dwon_tbl_style_list[] =
+{
+    {STR_STYLE_LIST_1,          UI_BUF_I330001_SLIDEMENU_ICON_THEME03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
+    {STR_GONG_GE,               UI_BUF_I330001_SLIDEMENU_ICON_THEME01_BIN,           .menu_style = MENU_STYLE_RING},             //宫格
+    {STR_STYLE_HONEYCOMB,       UI_BUF_I330001_SLIDEMENU_ICON_THEME00_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_SPHERE,                UI_BUF_I330001_SLIDEMENU_ICON_THEME07_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
+    {STR_CHECKERBOARD,          UI_BUF_I330001_SLIDEMENU_ICON_THEME06_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //棋盘
+    {STR_HALO,                  UI_BUF_I330001_SLIDEMENU_ICON_THEME02_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
+    {STR_STYLE_SKYRER,          UI_BUF_I330001_SLIDEMENU_ICON_THEME08_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+    {STR_STYLE_GRID_2,          UI_BUF_I330001_SLIDEMENU_ICON_THEME09_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
+    {STR_SIX_PALACE_GRID,       UI_BUF_I330001_SLIDEMENU_ICON_THEME04_BIN,           .menu_style = MENU_STYLE_CUM_FOURGRID},     //六宫格
+    {STR_STYLE_WATERFALL,       UI_BUF_I330001_SLIDEMENU_ICON_THEME05_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+};
 
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+///               /                 *更新*                    /                 ///
+//下拉电量图标更新
+static void func_clock_sub_dropdown_battery_pic_update(void)
+{
+    compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
+    switch(uteDrvBatteryCommonGetBatteryIndex(5))
+    {
+        case 0:
+            compo_picturebox_set(battery_pic, BATTERY_PIC_0_BIN);
+            break;
+        case 1:
+            compo_picturebox_set(battery_pic, BATTERY_PIC_1_BIN);
+            break;
+        case 2:
+            compo_picturebox_set(battery_pic, BATTERY_PIC_2_BIN);
+            break;
+        case 3:
+            compo_picturebox_set(battery_pic, BATTERY_PIC_3_BIN);
+            break;
+        case 4:
+            compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
+            break;
+        default:
+            compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
+            break;
+    }
+}
+////下拉蓝牙连接标志更新
+static void func_clock_sub_dropdown_bluetooth_pic_update(void)
+{
+    compo_picturebox_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_TXT_BLUETOOTH_STA_PIC);
+    compo_picturebox_t *btooth_pic = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
+    if (ble_is_connect())
+    {
+        compo_picturebox_set(bluetooth_pic, BLE_ON_PIC_BIN);
+    }
+    else
+    {
+        compo_picturebox_set(bluetooth_pic, BLE_OFF_PIC_BIN);
+    }
+
+    if(bt_is_connected())
+    {
+        compo_picturebox_set(btooth_pic, BT_ON_PIC_BIN);
+    }
+    else
+    {
+        compo_picturebox_set(btooth_pic, BT_OFF_PIC_BIN);
+    }
+
+}
+//下拉静音图标更新
+static void func_clock_sub_dropdown_mute_pic_update(void)
+{
+    compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_MUTE);
+    if(sys_cb.mute)
+    {
+        compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES01_BIN);
+    }
+    else
+    {
+        compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES00_BIN);
+    }
+}
+////下拉蓝牙按钮更新
+static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
+{
+    compo_button_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_BTN_CONNECT);
+    compo_picturebox_t *bluetooth = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
+    printf("bt_get_scan: 0x%x\n", bt_get_scan());
+    if(bt_get_scan())
+    {
+        compo_button_set_bgimg(bluetooth_pic, UI_BUF_I330001_SLIDEMENU_ICON_CALL01_BIN);
+        compo_picturebox_set_visible(bluetooth, true);
+    }
+    else
+    {
+        compo_button_set_bgimg(bluetooth_pic,UI_BUF_I330001_SLIDEMENU_ICON_CALL00_BIN );
+        compo_picturebox_set_visible(bluetooth, false);
+
+    }
+}
+//下拉抬婉亮屏按钮状态切换
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+//下拉抬婉亮屏按钮更新
+static void func_clock_sub_dropdown_wrist_pic_update(void)
+{
+    compo_button_t *wrist_pic = compo_getobj_byid(COMPO_ID_BTN_WIRST);
+
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+
+    if(quick.isTurnTheWrist == true)
+    {
+        compo_button_set_bgimg(wrist_pic, UI_BUF_I330001_SLIDEMENU_ICON_TAIWAN01_BIN);
+    }
+    else
+    {
+        compo_button_set_bgimg(wrist_pic, UI_BUF_I330001_SLIDEMENU_ICON_TAIWAN00_BIN);
+    }
+
+}
+//下拉菜单->菜单切换id获取
+static void get_menu_idx_update(void){
+
+    dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
+    dropdown_disp_btn_item->sel_idx = 0;
+    for(int i=0; i<=MENU_CNT;i++){
+//        printf("enm:%d  2:%d\n",func_cb.menu_style, dwon_tbl_style_list[i].menu_style);
+        if(dwon_tbl_style_list[i].menu_style == func_cb.menu_style){
+//            printf("1:%d  2:%d\n",(uint8_t)uteModuleGuiCommonGetThemeTypeId(), dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style);
+            dropdown_disp_btn_item->sel_idx = i;
+            return;
+        }
+    }
+}
+//下拉菜单->菜单切换按钮更新
+static void func_clock_sub_dropdown_menu_pic_update(void)
+{
+    compo_button_t *menu_pic = compo_getobj_byid(COMPO_ID_BTN_MENU);
+    dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
+
+    printf("sty->id:%d\n",dropdown_disp_btn_item->sel_idx);
+    func_cb.menu_style = dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style;
+    compo_button_set_bgimg(menu_pic, dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].res_addr);
+    if (func_cb.menu_style == MENU_STYLE_SKYRER){
+        func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+    }else{
+        func_cb.menu_idx = 0;           //切换风格后进入回中心位置
+    }
+    uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
+
+}
+//下拉勿扰按钮更新
+static void func_clock_sub_dropdown_disturb_pic_update(void)
+{
+    compo_button_t *disturb_pic = compo_getobj_byid(COMPO_ID_BTN_DISCURD);
+
+    if(dropdown_disturb_sw)
+    {
+        sys_cb.disturd_adl = true;
+        compo_button_set_bgimg(disturb_pic, UI_BUF_I330001_SLIDEMENU_ICON_DND01_BIN);
+        uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
+    }
+    else
+    {
+        sys_cb.disturd_adl = false;
+        compo_button_set_bgimg(disturb_pic, UI_BUF_I330001_SLIDEMENU_ICON_DND00_BIN);
+        uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
+    }
+
+}
+///               /                 *更新*                    /                 ///
 
 widget_page_t *widget;///创建按键父局器页面
 
@@ -124,6 +299,14 @@ static void func_clock_sub_dropdown_form_create(void)
     widget_page_set_client(widget, 0, 0);
     widget_set_location(widget,GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT/1.55+PAGE_HEIGHT_ADJUST,GUI_SCREEN_WIDTH*2,PAGE_HEIGHT);
 
+    ///创建页码点
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, PAGE_NUM_WHITE_BIN);
+    compo_picturebox_set_pos(picbox,114 , 278);
+    compo_setid(picbox,COMPO_ID_PIC_WHITE);
+
+    picbox = compo_picturebox_create(frm, PAGE_NUM_GREY_BIN);
+    compo_picturebox_set_pos(picbox,126 , 278);
+    compo_setid(picbox,COMPO_ID_PIC_GREY);
 
     ///创建按钮
     compo_button_t *btn;
@@ -165,6 +348,7 @@ static void func_clock_sub_dropdown_form_create(void)
     func_clock_sub_dropdown_mute_pic_update();          //静音更新
     func_clock_sub_dropdown_disturb_pic_update();       //勿扰
     func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
+    func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
 
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sub_frm = frm;
@@ -172,71 +356,117 @@ static void func_clock_sub_dropdown_form_create(void)
 }
 
 static bool disp_flag=false;
-static bool touch_state=false;
+static u8 touch_state=false;
 static s32 old_dx = 0;
+static s16 touch_last_dx = 0;
+uint32_t tick = 0;
+#define MOVE_DISP_PIXEL   GUI_SCREEN_WIDTH/24
 //下滑菜单左右滑动处理
 static void func_clock_sub_dropdown_slide_handle(void)
 {
     s32 dy=0,dx=0;
     bool touch_flag = 0;
+    compo_picturebox_t *picbox_white = compo_getobj_byid(COMPO_ID_PIC_WHITE);
+    compo_picturebox_t *picbox_grey  = compo_getobj_byid(COMPO_ID_PIC_GREY);
 
     touch_flag = ctp_get_dxy(&dx, &dy);
-
     if(touch_flag == true)
     {
         old_dx = dx;
+        touch_last_dx = ctp_get_last_dxy().x;
         if(disp_flag == true)
         {
             old_dx=old_dx-GUI_SCREEN_WIDTH;
+            if(old_dx < -GUI_SCREEN_WIDTH)
+            {
+                old_dx = -GUI_SCREEN_WIDTH;
+            }
         }
         else
         {
             if(old_dx>0)old_dx=0;
         }
         widget_page_set_client(widget, old_dx, 0);
-        old_dx = dx;
-        touch_state = true;
+        widget_page_update();
+        touch_state = 1;
     }
-    else if(touch_state == true)
+    else if(touch_state)
     {
-        if(disp_flag == false)
+        if(touch_state == 1)
         {
-            if(old_dx < -GUI_SCREEN_CENTER_X/2)
+            if(disp_flag == false)
             {
-                widget_page_set_client(widget, -GUI_SCREEN_WIDTH, 0);
-                disp_flag = true;
+                if(old_dx < -GUI_SCREEN_CENTER_X || touch_last_dx <=(-7))
+                {
+                    touch_state = 2;
+                    disp_flag = true;
+                }else {
+                        touch_state = 3;
+                }
             }
             else
             {
-                widget_page_set_client(widget, 0, 0);
+                if(old_dx > -GUI_SCREEN_CENTER_X ||  touch_last_dx >=7)
+                {
+                    touch_state = 4;
+                    disp_flag = false;
+                }else {
+                    touch_state = 5;
+                }
             }
         }
-        else
-        {
-            if(old_dx > GUI_SCREEN_CENTER_X/2)
-            {
-                widget_page_set_client(widget, 0, 0);
-                disp_flag = false;
-            }
-            else
-            {
-                widget_page_set_client(widget, -GUI_SCREEN_WIDTH, 0);
-            }
-        }
-        printf("disp_flag:%d-> x:%d\n",disp_flag,old_dx);
-        touch_state=false;
-    }
-    widget_page_update();
-}
-//时钟表盘主要事件流程处理
-static void func_clock_sub_dropdown_process(void)
-{
-    func_clock_sub_dropdown_slide_handle();
-    func_clock_sub_process();
-}
+        if(old_dx == 0 || old_dx == -GUI_SCREEN_WIDTH) touch_state = 0;
 
+        if(tick_check_expire(tick, 10))
+        {
+            tick = tick_get();
+            switch(touch_state)
+            {
+            case 2:
+                old_dx -=MOVE_DISP_PIXEL;
+                if(old_dx<=-GUI_SCREEN_WIDTH)
+                {
+                    touch_state = 0;
+                    old_dx=-GUI_SCREEN_WIDTH;
+                    compo_picturebox_set(picbox_white,PAGE_NUM_GREY_BIN);
+                    compo_picturebox_set(picbox_grey,PAGE_NUM_WHITE_BIN);
+                }
+                break;
+            case 3:
+                old_dx+=MOVE_DISP_PIXEL;
+                if(old_dx >= 0)
+                {
+                    touch_state = 0;
+                    old_dx = 0;
+                }
+                break;
+            case 4:
+                old_dx+=MOVE_DISP_PIXEL;
+                if(old_dx >= 0)
+                {
+                    touch_state = 0;
+                    old_dx = 0;
+                    compo_picturebox_set(picbox_white,PAGE_NUM_WHITE_BIN);
+                    compo_picturebox_set(picbox_grey,PAGE_NUM_GREY_BIN);
+                }
+                break;
+            case 5:
+                old_dx -=MOVE_DISP_PIXEL;
+                if(old_dx <= -GUI_SCREEN_WIDTH)
+                {
+                    touch_state = 0;
+                    old_dx = -GUI_SCREEN_WIDTH;
+                }
+                break;
+            }
+             widget_page_set_client(widget, old_dx, 0);
+             widget_page_update();
+        }
+    }
+}
 static void func_clock_sub_dropdown_click_handler(void)
 {
+    dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
     int id = compo_get_button_id();
 
     switch(id)
@@ -255,7 +485,6 @@ static void func_clock_sub_dropdown_click_handler(void)
                 bt_scan_enable();
                 bt_connect();
             }
-            printf("bt_get_scan: %d\n", bt_get_scan());
             func_clock_sub_dropdown_bluetooth_btn_pic_update();
             break;
         case COMPO_ID_BTN_DISCURD:
@@ -337,10 +566,26 @@ static void func_clock_sub_dropdown_click_handler(void)
         case COMPO_ID_BTN_WIRST:
             switch_set_sub_wrist();
             break;
-
+        case COMPO_ID_BTN_MENU:
+            if(++dropdown_disp_btn_item->sel_idx==MENU_CNT){
+                dropdown_disp_btn_item->sel_idx = 0;
+            }
+           func_cb.menu_style = dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style;
+           func_clock_sub_dropdown_menu_pic_update();
+//           printf("1:%d  2:%d\n",func_cb.menu_style, dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style);
+            break;
         default:
             break;
     }
+}
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+//时钟表盘主要事件流程处理
+static void func_clock_sub_dropdown_process(void)
+{
+    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+    func_clock_sub_dropdown_slide_handle();
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+    func_clock_sub_process();
 }
 
 //时钟表盘下拉菜单功能消息处理
@@ -350,7 +595,9 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
+            #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             func_clock_sub_dropdown_click_handler();
+            #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_CTP_SHORT_LEFT:
             break;
@@ -368,10 +615,12 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             f_clk->sta = FUNC_CLOCK_MAIN;                       //单击BACK键返回到时钟主界面
             break;
         case MSG_SYS_1S:
+            #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             func_clock_sub_dropdown_battery_pic_update();       //电量更新
             func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
             func_clock_sub_dropdown_mute_pic_update();          //静音更新
             func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
+            #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_QDEC_BACKWARD:
             printf("MSG_QDEC_BACKWARD\n");
@@ -404,7 +653,10 @@ static void func_clock_sub_dropdown_enter(void)
     }
 
     func_clock_butterfly_set_light_visible(false);
+    get_menu_idx_update();
+    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_clock_sub_dropdown_form_create();
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     if (!func_switching(FUNC_SWITCH_MENU_DROPDOWN_DOWN, NULL))
     {
         return;                                             //下拉到一半取消
@@ -413,6 +665,7 @@ static void func_clock_sub_dropdown_enter(void)
     f_clk->sta = FUNC_CLOCK_SUB_DROPDOWN;                   //进入到下拉菜单
     disp_flag=false;
     touch_state=false;
+
 }
 
 //时钟表盘下拉菜单退出处理
@@ -434,137 +687,4 @@ void func_clock_sub_dropdown(void)
         func_clock_sub_dropdown_message(msg_dequeue());
     }
     func_clock_sub_dropdown_exit();
-}
-
-///               /                 *更新*                    /                 ///
-
-//下拉电量图标更新
-static void func_clock_sub_dropdown_battery_pic_update(void)
-{
-    compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
-    switch(uteDrvBatteryCommonGetBatteryIndex(5))
-    {
-        case 0:
-            compo_picturebox_set(battery_pic, BATTERY_PIC_0_BIN);
-            break;
-        case 1:
-            compo_picturebox_set(battery_pic, BATTERY_PIC_1_BIN);
-            break;
-        case 2:
-            compo_picturebox_set(battery_pic, BATTERY_PIC_2_BIN);
-            break;
-        case 3:
-            compo_picturebox_set(battery_pic, BATTERY_PIC_3_BIN);
-            break;
-        case 4:
-            compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
-            break;
-        default:
-            compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
-            break;
-    }
-}
-////下拉蓝牙连接标志更新
-static void func_clock_sub_dropdown_bluetooth_pic_update(void)
-{
-    compo_picturebox_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    compo_picturebox_t *btooth_pic = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
-    if (ble_is_connect())
-    {
-        compo_picturebox_set(bluetooth_pic, BLE_ON_PIC_BIN);
-    }
-    else
-    {
-        compo_picturebox_set(bluetooth_pic, BLE_OFF_PIC_BIN);
-    }
-
-    if(bt_is_connected())
-    {
-        compo_picturebox_set(btooth_pic, BT_ON_PIC_BIN);
-    }
-    else
-    {
-        compo_picturebox_set(btooth_pic, BT_OFF_PIC_BIN);
-    }
-
-}
-//下拉静音图标更新
-static void func_clock_sub_dropdown_mute_pic_update(void)
-{
-    compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_MUTE);
-    if(sys_cb.mute)
-    {
-        compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES01_BIN);
-    }
-    else
-    {
-        compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES00_BIN);
-    }
-}
-
-////下拉蓝牙按钮更新
-static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
-{
-    compo_button_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_BTN_CONNECT);
-    compo_picturebox_t *bluetooth = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
-    printf("bt_get_scan: 0x%x\n", bt_get_scan());
-    if(bt_get_scan())
-    {
-        compo_button_set_bgimg(bluetooth_pic, UI_BUF_I330001_SLIDEMENU_ICON_CALL01_BIN);
-        compo_picturebox_set_visible(bluetooth, true);
-    }
-    else
-    {
-        compo_button_set_bgimg(bluetooth_pic,UI_BUF_I330001_SLIDEMENU_ICON_CALL00_BIN );
-        compo_picturebox_set_visible(bluetooth, false);
-
-    }
-}
-//下拉抬婉亮屏按钮状态切换
-static void switch_set_sub_wrist(void)
-{
-    ute_quick_switch_t quick;
-    uteApplicationCommonGetQuickSwitchStatus(&quick);
-    quick.isTurnTheWrist = !quick.isTurnTheWrist;
-    bool isHandOpen = quick.isTurnTheWrist;
-    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
-    uteApplicationCommonSetQuickSwitchStatus(&quick);
-    uteApplicationCommonSendQuickSwitchStatus();
-}
-//下拉抬婉亮屏按钮更新
-static void func_clock_sub_dropdown_wrist_pic_update(void)
-{
-    compo_button_t *wrist_pic = compo_getobj_byid(COMPO_ID_BTN_WIRST);
-
-    ute_quick_switch_t quick;
-    uteApplicationCommonGetQuickSwitchStatus(&quick);
-
-    if(quick.isTurnTheWrist == true)
-    {
-        compo_button_set_bgimg(wrist_pic, UI_BUF_I330001_SLIDEMENU_ICON_TAIWAN01_BIN);
-    }
-    else
-    {
-        compo_button_set_bgimg(wrist_pic, UI_BUF_I330001_SLIDEMENU_ICON_TAIWAN00_BIN);
-    }
-
-}
-//下拉勿扰按钮更新
-static void func_clock_sub_dropdown_disturb_pic_update(void)
-{
-    compo_button_t *disturb_pic = compo_getobj_byid(COMPO_ID_BTN_DISCURD);
-
-    if(dropdown_disturb_sw)
-    {
-        sys_cb.disturd_adl = true;
-        compo_button_set_bgimg(disturb_pic, UI_BUF_I330001_SLIDEMENU_ICON_DND01_BIN);
-        uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
-    }
-    else
-    {
-        sys_cb.disturd_adl = false;
-        compo_button_set_bgimg(disturb_pic, UI_BUF_I330001_SLIDEMENU_ICON_DND00_BIN);
-        uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
-    }
-
 }

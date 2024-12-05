@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-11-29 10:52:27
+*@date   2024-12-02 10:01:37
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -12,9 +12,9 @@
 
 #include <include.h>
 
-enum
+enum 
 {
-    STR_NULL, //
+    STR_NULL, // 
     STR_CLOCK, // 表盘
     STR_CLOCK_PREVIEW, // 表盘预览
     STR_MESSAGE, // 消息
@@ -283,13 +283,21 @@ enum
     STR_PM, // 下午
     STR_PLEASE_ENTER_SOS, // 请输入SOS电话号码
     STR_NO_CALL_RECORD, // 无通话记录
-    STR_BLOOD_OXYGEN_UINT, // 血氧饱和度
     STR_HIGHEST, // 最高
     STR_LOWSET, // 最低
     STR_SLIDE_REST, // 滑动重启
     STR_SLIDE_OFF, // 滑动关机
     STR_SLIDE_CALL, // 滑动呼叫
     STR_NO_DATA, // 无数据
+    STR_BLOOD_OXYGEN_UINT, // 血氧饱和度
+    STR_GONG_GE, // 宫格
+    STR_SPHERE, // 球体
+    STR_CHECKERBOARD, // 棋盘
+    STR_HALO, // 光环
+    STR_SIX_PALACE_GRID, // 六宫格
+    STR_DEL, // 删除
+    STR_CLEAR, // 清除
+    STR_CLEAR_ALL, // 全部清除
 };
 
 extern const char * const *i18n;

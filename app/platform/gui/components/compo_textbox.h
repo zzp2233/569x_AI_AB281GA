@@ -172,4 +172,10 @@ void compo_textbox_set_direction(compo_textbox_t *textbox, bool direction);
  **/
 bool compo_textbox_get_direction(compo_textbox_t *textbox);
 
+/**
+ * @brief 设置文本框是否居顶
+ * @param[in] textbox : 文本指针
+ * @param[in] align_center : 是否居中
+ **/
+void compo_textbox_set_align_center_top(compo_textbox_t *textbox, bool align_center);
 #endif

@@ -27,6 +27,8 @@ enum
 
     COMPO_ID_BTN_DEL,
 
+    COMPO_ID_TXT_DEL,
+
     COMPO_ID_COVER_PIC,
     COMPO_ID_COVER_TXT,
 };
@@ -45,7 +47,7 @@ typedef struct message_btn_t_
 #define MSG_BTN_CNT     ((int)(sizeof(message_btn)/sizeof(message_btn[0])))
 const message_btn_t message_btn[] =
 {
-    {COMPO_ID_BTN_DEL,  GUI_SCREEN_CENTER_X,  0,    70,      70,      UI_BUF_ALARM_CLOCK_DELETE_BIN},
+    {COMPO_ID_BTN_DEL,  GUI_SCREEN_CENTER_X,  0,    70,      70,      UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN},
 };
 
 
@@ -107,7 +109,7 @@ typedef struct card_##type##_t_ {   \
     compo_setid(cardbox, compo_id); \
     for (u8 i=0; i<rect_cnt; i++) { \
         compo_cardbox_rect_set_location(cardbox, card0.rect[i].id, card0.rect[i].x, card0.rect[i].y, card0.rect[i].w, card0.rect[i].h, card0.rect[i].r); \
-        compo_cardbox_rect_set_color(cardbox, card0.rect[i].id, make_color(26,26,26)); \
+        compo_cardbox_rect_set_color(cardbox, card0.rect[i].id, make_color(41,41,41)); \
     } \
     for (u8 i=0; i<icon_cnt; i++) { \
         compo_cardbox_icon_set_location(cardbox, card0.icon[i].id, card0.icon[i].x, card0.icon[i].y, card0.icon[i].w, card0.icon[i].h); \
@@ -132,33 +134,33 @@ typedef struct card_##type##_t_ {   \
 #define CARD_RECT_CNT      1
 #define CARD_ICON_CNT      1
 #define CARD_TEXT_CNT      2
-#define CARD_MSG_X                 GUI_SCREEN_CENTER_X                     //中心点
-#define CARD_MSG_START_Y           140
+#define CARD_MSG_X                 6+228/2                     //中心点
+#define CARD_MSG_START_Y           54+110/2
 CARD_TYPEDEF_T(msg, CARD_RECT_CNT, CARD_ICON_CNT, CARD_TEXT_CNT);
 const CARD_T(msg) card =
 {
     CARD_MSG_X,
     CARD_MSG_START_Y,
-    GUI_SCREEN_WIDTH-12,
-    GUI_SCREEN_HEIGHT/3,
+    228,//GUI_SCREEN_WIDTH-12,
+    110,//GUI_SCREEN_HEIGHT/3,
 
     {
         ///矩形背景
-        //id      x       y       w                       h                       r
-        {0,      0,      0,      GUI_SCREEN_WIDTH-12,    GUI_SCREEN_HEIGHT/3,    20},
+        //id      x       y         w        h      r
+        {0,       0,      8,   228,    94,    16},
     },
 
     {
         ///图标
-        //id      x                                                                 y       w                           h                           res
-        {0,      -(((GUI_SCREEN_WIDTH-12)/2) - ((GUI_SCREEN_HEIGHT/4-30)/2)),      0,      GUI_SCREEN_HEIGHT/4-30,     GUI_SCREEN_HEIGHT/4-30,     0},
+        //id      x                   y               w       h       res
+        {0,       12+36/2-228/2,      36/2-110/2,      32,     32,     0},
     },
 
     {
         ///文本
-        //id      x       y       w       h       str                                res                         center  wordwrap   r  g  b
-        {0,      20,      -30,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      true,   false,  208, 205, 205},
-        {1,      -63,     -10,    180,    55,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   208, 205, 205},
+        //id      x                 y       w       h       str                                res                         center  wordwrap   r  g  b
+        {0,      -65,               -38,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      false,   false,  148, 148, 148},
+        {1,      3+36/2-228/2,      -10,    212,    55,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   255, 255, 255},
     },
 };
 
@@ -200,21 +202,30 @@ compo_form_t *func_message_form_create(void)
         CREAT_CARD(id, CARD_RECT_CNT, CARD_ICON_CNT, CARD_TEXT_CNT, card, card.w, card.h);
     }
 
-    //创建按钮
+
     for (int i=0; i<MSG_BTN_CNT; i++)
     {
+        //创建按钮
         compo_button_t* btn;
         if (message_btn[i].res)
         {
             btn = compo_button_create_by_image(frm, message_btn[i].res);
         }
-        compo_button_set_location(btn, message_btn[i].x, message_btn[i].y, message_btn[i].w, message_btn[i].h);
+        compo_button_set_pos(btn, message_btn[i].x, message_btn[i].y);
         compo_button_set_visible(btn, false);
         compo_setid(btn, message_btn[i].id);
+
+        //创建删除按钮文本
+        compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR_ALL]));
+        compo_textbox_set_location(text, message_btn[i].x, message_btn[i].y, gui_image_get_size(message_btn[i].res).wid - gui_image_get_size(message_btn[i].res).hei, gui_image_get_size(message_btn[i].res).hei);
+        compo_textbox_set(text, i18n[STR_CLEAR_ALL]);
+        compo_textbox_set_visible(text, false);
+        compo_setid(text, COMPO_ID_TXT_DEL);
     }
 
+
     //创建无消息界面
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_ICON_MESSAGE_BIN);
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_THEME_1_MESSAGE_BIN);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);
@@ -283,7 +294,7 @@ static void func_message_card_click(void)
     {
         char *msg = (char*)f_msg->ute_msg->historyNotify[compo_id-1].content;
         char time[30]= {0};
-        sprintf(time, "%04d-%02d-%02d %02d:%02d", f_msg->ute_msg->historyNotify[compo_id-1].year, f_msg->ute_msg->historyNotify[compo_id-1].month,
+        sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[compo_id-1].year, f_msg->ute_msg->historyNotify[compo_id-1].month,
                 f_msg->ute_msg->historyNotify[compo_id-1].day, f_msg->ute_msg->historyNotify[compo_id-1].hour, f_msg->ute_msg->historyNotify[compo_id-1].min);
         sys_cb.msg_index = f_msg->ute_msg->historyNotify[compo_id-1].type;
         int res = msgbox(msg, NULL, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
@@ -326,7 +337,7 @@ static void func_message_card_update(void)
             char* msg = (char*)f_msg->ute_msg->historyNotify[i].content;
 
             //memcpy(msg, f_msg->ute_msg->historyNotify[i].content, f_msg->ute_msg->historyNotify[i].size);
-            sprintf(time, "%04d-%02d-%02d %02d:%02d", f_msg->ute_msg->historyNotify[i].year, f_msg->ute_msg->historyNotify[i].month,
+            sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[i].year, f_msg->ute_msg->historyNotify[i].month,
                     f_msg->ute_msg->historyNotify[i].day, f_msg->ute_msg->historyNotify[i].hour, f_msg->ute_msg->historyNotify[i].min);
             card_y += (card.h+10);
             compo_cardbox_set_visible(cardbox, true);
@@ -355,6 +366,11 @@ static void func_message_card_update(void)
             compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_DEL+i);
             compo_button_set_visible(btn, true);
             compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, btn_y);
+
+            compo_textbox_t* text = compo_getobj_byid(COMPO_ID_TXT_DEL+i);
+            compo_textbox_set_visible(text, true);
+            compo_textbox_set_pos(text, GUI_SCREEN_CENTER_X, btn_y);
+
         }
 
         //显示无消息页面

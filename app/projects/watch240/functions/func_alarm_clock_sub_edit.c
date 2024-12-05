@@ -480,7 +480,7 @@ static u16 func_alarm_clcok_sub_edit_card_get_btn_id(point_t pt)
         id = CARD_ID_START + 1 + i;
         cardbox = compo_getobj_byid(id);
         rect = compo_cardbox_get_absolute(cardbox);
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+        if (compo_cardbox_get_visible(cardbox) && abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
         {
             ret = id;
             break;

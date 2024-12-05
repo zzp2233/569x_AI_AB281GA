@@ -3,6 +3,17 @@
 #include "ute_module_notdisturb.h"
 #include "ute_application_common.h"
 
+static void func_set_sub_disturd_exit(void);
+static void func_set_sub_disturd_enter(void);
+#define         DRAG_AUTO_SPEED     10
+#define         DRAG_MAX_DISTANCE   151
+#define         DRAG_MAX_DISTANCE1  84
+#define         DRAG_MIN_DISTANCE   4
+#define         DRAG_MAX_BACK_DISTANCE      117
+#define         DRAG_MIN_BACK_DISTANCE      49
+#define         FOCUS_AUTO_STEP         5
+#define         FOCUS_AUTO_STEP_DIV     16
+
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -12,128 +23,345 @@
 typedef struct f_disturd_t_
 {
     bool flag_drag;                 //开始拖动
-    s32 x_pos;
-    s32 y_pos;
-    s32 x;
-    s32 y;
+    bool flag_move_auto;            //自动移动，惯性
+    u32 tick;
+    s32 focus_x;
+    s32 focus_y;
+    s32 focus_dx;
+    s32 focus_dy;
+    s32 focus_ofsx;
+    s32 focus_ofsy;
+//    s32 focus_ofsx_max;
+//    s32 focus_ofsy_max;
+    int moveto_ix;                  //设定自动移到的目标菜单ix
+    int moveto_iy;                  //设置自动移到的目标菜单iy
+    point_t moveto;                 //设定自动移到的坐标
+    u8 time_scale;
 } f_disturd_t;
 
 enum
 {
-    //数字
-    COMPO_ID_NUM_DISP_ONE = 1,
-    COMPO_ID_NUM_DISP_ZERO,
-    COMPO_ID_NUM_DISP_TWS,
-    COMPO_ID_NUM_DISP_THR,
-    //按钮
-    COMPO_ID_BIN_TIMING_ON,
-    COMPO_ID_BIN_ALLDAY_ON,
-    COMPO_ID_BIN_START,
-    COMPO_ID_BIN_END,
-    //图片
-    COMPO_ID_PIC_ADL_ON,
-    COMPO_ID_PIC_TIM_ON,
-    COMPO_ID_PIC_ADL_OFF,
-    COMPO_ID_PIC_TIM_OFF,
-    //文字
-    COMPO_ID_TXT_ALL,
-    COMPO_ID_TXT_TIM,
-    COMPO_ID_TXT_START,
-    COMPO_ID_TXT_END,
-    COMPO_ID_TXT_PRCOLON,
-    COMPO_ID_TXT_LASTCOLON,
-    //图形
-    COMPO_ID_MSK_ONE,
-    COMPO_ID_MSK_TWS,
+    CARD_ID_START = 1,
+    COMPO_ID_CARD_DISTURD_ALL,
+    COMPO_ID_CARD_DISTURD_DEF,
+    COMPO_ID_CARD_DISTURD_START_TIME,
+    COMPO_ID_CARD_DISTURD_END_TIME,
+    CARD_ID_END,
 };
 
-typedef struct disturd_disp_pic_item_t_
-{
-    u32 res_addr;
-    u16 pic_id;
-    s16 x;
-    s16 y;
-    bool visible_en;
-} disturd_disp_pic_item_t;
 
-#define DISTURD_DISP_PIC_ITEM_CNT                       ((int)(sizeof(tbl_disturd_disp_pic_item) / sizeof(tbl_disturd_disp_pic_item[0])))
+typedef struct ui_handle_t_ {
 
-//图片item，创建时遍历一下
-static const disturd_disp_pic_item_t tbl_disturd_disp_pic_item[] =
-{
-    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_ADL_ON,         198,    80,    false},
-    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_TIM_ON,         198,    146,    false},
-    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_ADL_OFF,        198,    80,    false},
-    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_TIM_OFF,        198,    146,    false},
+    ///全天勿扰
+    struct card1_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct card_rect_t {
+            u8 idx;
+            s16 x,y;
+            s16 w,h;
+            u16 r;
+        } rect[1];
+
+        struct card_icon_t {
+            u8 idx;
+            s16 x,y;
+            u16 w,h;
+            u32 res_on;
+            u32 res_off;
+        } icon[1];
+
+        struct card_text_t {
+            u8 idx;
+            s16 x,y;
+            u16 w,h;
+            u16 str_id;
+            u32 res;
+            bool center;
+            bool wordwrap;
+            color_t color;
+            u16 rev;
+        } text[1];
+    } disturd_all_card;
+
+    ///定时勿扰
+    struct card1_t disturd_def_card;
+
+    ///开始时间
+    struct card2_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct card_rect_t rect[1];
+        struct card_text_t text[3];
+    } disturd_start_time;
+
+    ///结束时间
+    struct card2_t disturd_end_time;
+
+} ui_handle_t;
+
+static const ui_handle_t ui_handle = {
+    .disturd_all_card = {
+        .id = COMPO_ID_CARD_DISTURD_ALL,
+        .x  = 4+232/2,
+        .y  = 54+62/2,
+        .w  = 232,
+        .h  = 62,
+
+        .rect = {
+            [0] = {
+                .idx    = 0,
+                .x      = 0,
+                .y      = 0,
+                .w      = 232,
+                .h      = 62,
+                .r      = 16,
+            },
+        },
+
+        .icon = {
+            [0] = {
+                .idx    = 0,
+                .x      = 182+40/2 - 232/2,
+                .y      = 19+24/2 - 62/2,
+                .w      = 40,
+                .h      = 24,
+                .res_on = UI_BUF_I330001_PUBLIC_SWITCH02_BIN,
+                .res_off= UI_BUF_I330001_PUBLIC_SWITCH00_BIN,
+            },
+        },
+
+        .text = {
+            [0] = {
+                .idx    = 0,
+                .x      = 12 - 232/2,
+                .y      = 18 - 62/2,
+                .w      = 96,
+                .h      = 26,
+                .str_id = STR_DISTURD_ALL,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {255,255,255},
+                .rev    = 0,
+            },
+        },
+    },
+
+    .disturd_def_card = {
+        .id = COMPO_ID_CARD_DISTURD_DEF,
+        .x  = 4+232/2,
+        .y  = 122+62/2,
+        .w  = 232,
+        .h  = 62,
+
+        .rect = {
+            [0] = {
+                .idx    = 0,
+                .x      = 0,
+                .y      = 0,
+                .w      = 232,
+                .h      = 62,
+                .r      = 16,
+            },
+        },
+
+        .icon = {
+            [0] = {
+                .idx    = 0,
+                .x      = 182+40/2 - 232/2,
+                .y      = 19+24/2 - 62/2,
+                .w      = 40,
+                .h      = 24,
+                .res_on = UI_BUF_I330001_PUBLIC_SWITCH02_BIN,
+                .res_off= UI_BUF_I330001_PUBLIC_SWITCH00_BIN,
+            },
+        },
+
+        .text = {
+            [0] = {
+                .idx    = 0,
+                .x      = 12 - 232/2,
+                .y      = 18 - 62/2,
+                .w      = 96,
+                .h      = 26,
+                .str_id = STR_DISTURD_TIM,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {255,255,255},
+                .rev    = 0,
+            },
+        },
+    },
+
+    .disturd_start_time = {
+        .id = COMPO_ID_CARD_DISTURD_START_TIME,
+        .x  = 4+232/2,
+        .y  = 190+72/2,
+        .w  = 232,
+        .h  = 72,
+
+        .rect = {
+            [0] = {
+                .idx    = 0,
+                .x      = 0,
+                .y      = 0,
+                .w      = 232,
+                .h      = 72,
+                .r      = 16,
+            },
+        },
+
+        .text = {
+            [0] = {
+                .idx    = 0,
+                .x      = 10 - 232/2,
+                .y      = 10 - 72/2,
+                .w      = 96,
+                .h      = 26,
+                .str_id = STR_DISTURD_TIM_START,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {255,255,255},
+                .rev    = 0,
+            },
+
+            [1] = {
+                .idx    = 1,
+                .x      = 10 - 232/2,
+                .y      = 40 - 72/2,
+                .w      = 52,
+                .h      = 26,
+                .str_id = STR_NULL,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {148,148,148},
+                .rev    = 0,
+            },
+
+            [2] = {
+                .idx    = 2,
+                .x      = 10 - 232/2 + 60,
+                .y      = 40 - 72/2,
+                .w      = 52,
+                .h      = 26,
+                .str_id = STR_AM,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {148,148,148},
+                .rev    = STR_PM,
+            },
+        },
+    },
+
+
+    .disturd_end_time = {
+        .id = COMPO_ID_CARD_DISTURD_END_TIME,
+        .x  = 4+232/2,
+        .y  = 268+72/2,
+        .w  = 232,
+        .h  = 72,
+
+        .rect = {
+            [0] = {
+                .idx    = 0,
+                .x      = 0,
+                .y      = 0,
+                .w      = 232,
+                .h      = 72,
+                .r      = 16,
+            },
+        },
+
+        .text = {
+            [0] = {
+                .idx    = 0,
+                .x      = 10 - 232/2,
+                .y      = 10 - 72/2,
+                .w      = 96,
+                .h      = 26,
+                .str_id = STR_DISTURD_TIM_START,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {255,255,255},
+                .rev    = 0,
+            },
+
+            [1] = {
+                .idx    = 1,
+                .x      = 10 - 232/2,
+                .y      = 40 - 72/2,
+                .w      = 52,
+                .h      = 26,
+                .str_id = STR_NULL,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {148,148,148},
+                .rev    = 0,
+            },
+
+            [2] = {
+                .idx    = 2,
+                .x      = 10 - 232/2 + 60,
+                .y      = 40 - 72/2,
+                .w      = 52,
+                .h      = 26,
+                .str_id = STR_AM,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {148,148,148},
+                .rev    = STR_PM,
+            },
+        },
+    },
 };
 
-#define DISURD_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_disturd_disp_btn_item) / sizeof(tbl_disturd_disp_btn_item[0])))
-
-typedef struct disturd_disp_btn_item_t_
+typedef struct func_alarm_hour_format_t_
 {
-    u16 btn_id;
-    s16 x;
-    s16 y;
-    s16 h;
-    s16 l;
-} disturd_disp_btn_item_t;
+    u8 hour;
+    u8 am_pm;
+} func_alarm_hour_format_t;
 
-//按钮item，创建时遍历一下
-static const disturd_disp_btn_item_t tbl_disturd_disp_btn_item[] =
+static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
 {
-    {COMPO_ID_BIN_ALLDAY_ON,        120,     82},
-    {COMPO_ID_BIN_TIMING_ON,        120,     150},
-    {COMPO_ID_BIN_START,            120,     215,   240,    30},
-    {COMPO_ID_BIN_END,              120,     262,   240,    30},
-};
+    u8 am_pm = (hour24 >= 12) ? 2 : 1;    //2 PM, 1 AM
+    func_alarm_hour_format_t hour12;
+    if(uteModuleSystemtime12HOn())
+    {
+        if (hour24 == 0)
+        {
+            hour12.hour = 12;
+        }
+        else if (hour24 > 12)
+        {
+            hour12.hour = hour24 - 12;
+        }
+        else
+        {
+            hour12.hour = hour24;
+        }
+        hour12.am_pm = am_pm;
+        return hour12;
+    }
+    hour12.hour = hour24;
+    hour12.am_pm = 0;
+    return hour12;
+}
 
-typedef struct disturd_num_item_t_
+
+static void func_set_sub_disturd_state_update(void)
 {
-    u32 res_addr;
-    int num_cnt;
-    u16 num_id;
-    int val;
-    s16 x;
-    s16 y;
-    bool visible_en;
-} disturd_num_item_t;
-
-#define DISTURD_NUM_ITEM_CNT                       ((int)(sizeof(tbl_disturd_num_item) / sizeof(tbl_disturd_num_item[0])))
-
-//搞个数字item，创建时遍历一下
-static const disturd_num_item_t tbl_disturd_num_item[] =
-{
-    /*   res_addr,                           num_cnt,        num_id,                val,   x,     y,   visible_en*/
-    {UI_BUF_0FONT_FONT_BIN,            2,     COMPO_ID_NUM_DISP_ZERO,         0,   150,    211,   false},
-    {UI_BUF_0FONT_FONT_BIN,            2,     COMPO_ID_NUM_DISP_ONE,          0,   196,    211,   false},
-    {UI_BUF_0FONT_FONT_BIN,            2,     COMPO_ID_NUM_DISP_TWS,          0,   150,    265,   false},
-    {UI_BUF_0FONT_FONT_BIN,            2,     COMPO_ID_NUM_DISP_THR,          0,   196,    265,   false},
-};
-
-#define DISURD_DISP_TXT_ITEM_CNT    ((int)(sizeof(disturd_disp_txt_item) / sizeof(disturd_disp_txt_item[0])))
-
-typedef struct disturd_disp_txt_item_t_
-{
-    u16 btn_id;
-    s16 x;
-    s16 y;
-} disturd_disp_txt_item_t;
-
-//文字item，创建时遍历一下
-static const disturd_disp_txt_item_t disturd_disp_txt_item[] =
-{
-    {COMPO_ID_TXT_ALL,        22,   70},
-    {COMPO_ID_TXT_TIM,        22,   136},
-    {COMPO_ID_TXT_START,      22,   200},
-    {COMPO_ID_TXT_END,        22,   255},
-    {COMPO_ID_TXT_PRCOLON,    172,  200},
-    {COMPO_ID_TXT_LASTCOLON,  172,  255},
-};
-
-//勿扰模式页面
-compo_form_t *func_set_sub_disturd_form_create(void)
-{
-
     ute_quick_switch_t quick;
     uteApplicationCommonGetQuickSwitchStatus(&quick);
     if(quick.isNotDisturb)
@@ -164,6 +392,11 @@ compo_form_t *func_set_sub_disturd_form_create(void)
     sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
     sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
 
+}
+
+//勿扰模式页面
+compo_form_t *func_set_sub_disturd_form_create(void)
+{
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
@@ -171,331 +404,290 @@ compo_form_t *func_set_sub_disturd_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_DISTURD]);
 
-    //创建图像框
-    compo_shape_t *masklayer = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_color(masklayer, COLOR_DIMGRAY);
-    compo_setid(masklayer, COMPO_ID_MSK_ONE);
-    compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 61, 210, 30);
-    compo_shape_set_alpha(masklayer, 0);
+    func_set_sub_disturd_state_update();
 
-    compo_shape_t *masklayer_tws = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_color(masklayer_tws, COLOR_DIMGRAY);
-    compo_setid(masklayer_tws, COMPO_ID_MSK_TWS);
-    compo_shape_set_location(masklayer_tws, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 115, 210, 30);
-    compo_shape_set_alpha(masklayer_tws, 0);
+    ///创建全天勿扰卡片
+    compo_cardbox_t* disturd_all_card = compo_cardbox_create(frm,
+                                                      sizeof(ui_handle.disturd_all_card.rect)/sizeof(ui_handle.disturd_all_card.rect[0]),
+                                                      sizeof(ui_handle.disturd_all_card.icon)/sizeof(ui_handle.disturd_all_card.icon[0]),
+                                                      sizeof(ui_handle.disturd_all_card.text)/sizeof(ui_handle.disturd_all_card.text[0]),
+                                                      ui_handle.disturd_all_card.w, ui_handle.disturd_all_card.h);
+    compo_cardbox_set_visible(disturd_all_card, true);
+    compo_cardbox_set_location(disturd_all_card, ui_handle.disturd_all_card.x, ui_handle.disturd_all_card.y, ui_handle.disturd_all_card.w, ui_handle.disturd_all_card.h);
+    compo_setid(disturd_all_card, ui_handle.disturd_all_card.id);
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.rect)/sizeof(ui_handle.disturd_all_card.rect[0]); i++) {
+        compo_cardbox_rect_set_location(disturd_all_card, ui_handle.disturd_all_card.rect[i].idx, ui_handle.disturd_all_card.rect[i].x, ui_handle.disturd_all_card.rect[i].y,
+                                        ui_handle.disturd_all_card.rect[i].w, ui_handle.disturd_all_card.rect[i].h, ui_handle.disturd_all_card.rect[i].r);
+        compo_cardbox_rect_set_color(disturd_all_card, ui_handle.disturd_all_card.rect[i].idx, make_color(41, 41, 41));
+    }
 
-    //创建按钮
-    compo_button_t *btn;
-    for (u8 idx_btn = 0; idx_btn < DISURD_DISP_BTN_ITEM_CNT; idx_btn++)
-    {
-        if (idx_btn < 2)
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.icon)/sizeof(ui_handle.disturd_all_card.icon[0]); i++) {
+        compo_cardbox_icon_set_location(disturd_all_card, ui_handle.disturd_all_card.icon[i].idx, ui_handle.disturd_all_card.icon[i].x, ui_handle.disturd_all_card.icon[i].y,
+                                        ui_handle.disturd_all_card.icon[i].w, ui_handle.disturd_all_card.icon[i].h);
+        compo_cardbox_icon_set(disturd_all_card, ui_handle.disturd_all_card.icon[i].idx,
+                               sys_cb.disturd_adl > 0 ? ui_handle.disturd_all_card.icon[i].res_on : ui_handle.disturd_all_card.icon[i].res_off);
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.text)/sizeof(ui_handle.disturd_all_card.text[0]); i++) {
+        compo_cardbox_text_set_font(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, ui_handle.disturd_all_card.text[i].res);
+        widget_text_set_ellipsis(disturd_all_card->text[ui_handle.disturd_all_card.text[i].idx], false);
+        compo_cardbox_text_set_align_center(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, ui_handle.disturd_all_card.text[i].center);
+        widget_text_set_wordwrap(disturd_all_card->text[ui_handle.disturd_all_card.text[i].idx], ui_handle.disturd_all_card.text[i].wordwrap);
+        widget_text_set_color(disturd_all_card->text[ui_handle.disturd_all_card.text[i].idx], make_color(ui_handle.disturd_all_card.text[i].color.r, ui_handle.disturd_all_card.text[i].color.g, ui_handle.disturd_all_card.text[i].color.b));
+        compo_cardbox_text_set_location(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, ui_handle.disturd_all_card.text[i].x, ui_handle.disturd_all_card.text[i].y,
+                                        ui_handle.disturd_all_card.text[i].w, ui_handle.disturd_all_card.text[i].h);
+        compo_cardbox_text_set(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, i18n[ui_handle.disturd_all_card.text[i].str_id]);
+    }
+
+    ///创建定时勿扰卡片
+    compo_cardbox_t* disturd_def_card = compo_cardbox_create(frm,
+                                                      sizeof(ui_handle.disturd_def_card.rect)/sizeof(ui_handle.disturd_def_card.rect[0]),
+                                                      sizeof(ui_handle.disturd_def_card.icon)/sizeof(ui_handle.disturd_def_card.icon[0]),
+                                                      sizeof(ui_handle.disturd_def_card.text)/sizeof(ui_handle.disturd_def_card.text[0]),
+                                                      ui_handle.disturd_def_card.w, ui_handle.disturd_def_card.h);
+    compo_cardbox_set_visible(disturd_def_card, true);
+    compo_cardbox_set_location(disturd_def_card, ui_handle.disturd_def_card.x, ui_handle.disturd_def_card.y, ui_handle.disturd_def_card.w, ui_handle.disturd_def_card.h);
+    compo_setid(disturd_def_card, ui_handle.disturd_def_card.id);
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.rect)/sizeof(ui_handle.disturd_def_card.rect[0]); i++) {
+        compo_cardbox_rect_set_location(disturd_def_card, ui_handle.disturd_def_card.rect[i].idx, ui_handle.disturd_def_card.rect[i].x, ui_handle.disturd_def_card.rect[i].y,
+                                        ui_handle.disturd_def_card.rect[i].w, ui_handle.disturd_def_card.rect[i].h, ui_handle.disturd_def_card.rect[i].r);
+        compo_cardbox_rect_set_color(disturd_def_card, ui_handle.disturd_def_card.rect[i].idx, make_color(41, 41, 41));
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.icon)/sizeof(ui_handle.disturd_def_card.icon[0]); i++) {
+        compo_cardbox_icon_set_location(disturd_def_card, ui_handle.disturd_def_card.icon[i].idx, ui_handle.disturd_def_card.icon[i].x, ui_handle.disturd_def_card.icon[i].y,
+                                        ui_handle.disturd_def_card.icon[i].w, ui_handle.disturd_def_card.icon[i].h);
+        compo_cardbox_icon_set(disturd_def_card, ui_handle.disturd_def_card.icon[i].idx,
+                               sys_cb.disturd_tim > 0 ? ui_handle.disturd_def_card.icon[i].res_on : ui_handle.disturd_def_card.icon[i].res_off);
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.text)/sizeof(ui_handle.disturd_def_card.text[0]); i++) {
+        compo_cardbox_text_set_font(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, ui_handle.disturd_def_card.text[i].res);
+        widget_text_set_ellipsis(disturd_def_card->text[ui_handle.disturd_def_card.text[i].idx], false);
+        compo_cardbox_text_set_align_center(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, ui_handle.disturd_def_card.text[i].center);
+        widget_text_set_wordwrap(disturd_def_card->text[ui_handle.disturd_def_card.text[i].idx], ui_handle.disturd_def_card.text[i].wordwrap);
+        widget_text_set_color(disturd_def_card->text[ui_handle.disturd_def_card.text[i].idx], make_color(ui_handle.disturd_def_card.text[i].color.r, ui_handle.disturd_def_card.text[i].color.g, ui_handle.disturd_def_card.text[i].color.b));
+        compo_cardbox_text_set_location(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, ui_handle.disturd_def_card.text[i].x, ui_handle.disturd_def_card.text[i].y,
+                                        ui_handle.disturd_def_card.text[i].w, ui_handle.disturd_def_card.text[i].h);
+        compo_cardbox_text_set(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, i18n[ui_handle.disturd_def_card.text[i].str_id]);
+    }
+
+    ///创建开始时间卡片
+    compo_cardbox_t* disturd_start_time = compo_cardbox_create(frm,
+                                                      sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]),
+                                                      0,
+                                                      sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]),
+                                                      ui_handle.disturd_start_time.w, ui_handle.disturd_start_time.h);
+    compo_cardbox_set_visible(disturd_start_time, sys_cb.disturd_tim > 0 ? true : false);
+    compo_cardbox_set_location(disturd_start_time, ui_handle.disturd_start_time.x, ui_handle.disturd_start_time.y, ui_handle.disturd_start_time.w, ui_handle.disturd_start_time.h);
+    compo_setid(disturd_start_time, ui_handle.disturd_start_time.id);
+    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]); i++) {
+        compo_cardbox_rect_set_location(disturd_start_time, ui_handle.disturd_start_time.rect[i].idx, ui_handle.disturd_start_time.rect[i].x, ui_handle.disturd_start_time.rect[i].y,
+                                        ui_handle.disturd_start_time.rect[i].w, ui_handle.disturd_start_time.rect[i].h, ui_handle.disturd_start_time.rect[i].r);
+        compo_cardbox_rect_set_color(disturd_start_time, ui_handle.disturd_start_time.rect[i].idx, make_color(41, 41, 41));
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]); i++) {
+        compo_cardbox_text_set_font(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].res);
+        widget_text_set_ellipsis(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], false);
+        compo_cardbox_text_set_align_center(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].center);
+        widget_text_set_wordwrap(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], ui_handle.disturd_start_time.text[i].wordwrap);
+        widget_text_set_color(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], make_color(ui_handle.disturd_start_time.text[i].color.r, ui_handle.disturd_start_time.text[i].color.g, ui_handle.disturd_start_time.text[i].color.b));
+        compo_cardbox_text_set_location(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].x, ui_handle.disturd_start_time.text[i].y,
+                                        ui_handle.disturd_start_time.text[i].w, ui_handle.disturd_start_time.text[i].h);
+        if(sys_cb.disturd_tim == 0)
         {
-            btn = compo_button_create_by_image(frm, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
-            compo_setid(btn, tbl_disturd_disp_btn_item[idx_btn].btn_id);
-            compo_button_set_pos(btn, tbl_disturd_disp_btn_item[idx_btn].x, tbl_disturd_disp_btn_item[idx_btn].y);
+            sys_cb.disturd_start_time_sec = 0;
+            sys_cb.disturd_end_time_sec = 0;
         }
-        else
-        {
-            btn = compo_button_create(frm);
-            compo_setid(btn, tbl_disturd_disp_btn_item[idx_btn].btn_id);
-            compo_button_set_location(btn, tbl_disturd_disp_btn_item[idx_btn].x, tbl_disturd_disp_btn_item[idx_btn].y, tbl_disturd_disp_btn_item[idx_btn].h, tbl_disturd_disp_btn_item[idx_btn].l);
+        u8 hour = sys_cb.disturd_start_time_sec / 3600;
+        u8 min  = (sys_cb.disturd_start_time_sec % 3600) / 60;
+        u8 am_pm = 0;
+        func_alarm_hour_format_t hour_cov = func_alarm_convert_to_12hour(hour);
+        hour = hour_cov.hour;
+        am_pm = hour_cov.am_pm;
+        char aclock_str[20] = {0};
+        memset(aclock_str, '\0', sizeof(aclock_str));
+        sprintf(aclock_str, "%02d:%02d", hour, min);
+
+        if (ui_handle.disturd_start_time.text[i].idx == 2) {
+            if(am_pm == 1) {    //AM
+                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
+            } else if (am_pm == 2) {
+                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
+            } else {
+//                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
+            }
+        } else if (ui_handle.disturd_start_time.text[i].idx == 1) {
+            compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, aclock_str);
+        } else if (ui_handle.disturd_start_time.text[i].idx == 0) {
+            compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
         }
     }
 
-    //创建文本
-    compo_textbox_t *textbox[DISURD_DISP_TXT_ITEM_CNT];
-    for (int i=0; i<DISURD_DISP_TXT_ITEM_CNT; i++)
-    {
-        textbox[i] = compo_textbox_create(frm, 4);
-        compo_setid(textbox[i], COMPO_ID_TXT_ALL + i);
-        compo_textbox_set_pos(textbox[i], disturd_disp_txt_item[i].x, disturd_disp_txt_item[i].y);
-        compo_textbox_set_align_center(textbox[i], false);
+    ///创建结束时间卡片
+    compo_cardbox_t* disturd_end_time = compo_cardbox_create(frm,
+                                                      sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]),
+                                                      0,
+                                                      sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]),
+                                                      ui_handle.disturd_end_time.w, ui_handle.disturd_end_time.h);
+    compo_cardbox_set_visible(disturd_end_time, sys_cb.disturd_tim > 0 ? true : false);
+    compo_cardbox_set_location(disturd_end_time, ui_handle.disturd_end_time.x, ui_handle.disturd_end_time.y, ui_handle.disturd_end_time.w, ui_handle.disturd_end_time.h);
+    compo_setid(disturd_end_time, ui_handle.disturd_end_time.id);
+    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]); i++) {
+        compo_cardbox_rect_set_location(disturd_end_time, ui_handle.disturd_end_time.rect[i].idx, ui_handle.disturd_end_time.rect[i].x, ui_handle.disturd_end_time.rect[i].y,
+                                        ui_handle.disturd_end_time.rect[i].w, ui_handle.disturd_end_time.rect[i].h, ui_handle.disturd_end_time.rect[i].r);
+        compo_cardbox_rect_set_color(disturd_end_time, ui_handle.disturd_end_time.rect[i].idx, make_color(41, 41, 41));
+    }
 
-        if(i == 0)
+    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]); i++) {
+        compo_cardbox_text_set_font(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].res);
+        widget_text_set_ellipsis(disturd_end_time->text[ui_handle.disturd_end_time.text[i].idx], false);
+        compo_cardbox_text_set_align_center(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].center);
+        widget_text_set_wordwrap(disturd_end_time->text[ui_handle.disturd_end_time.text[i].idx], ui_handle.disturd_end_time.text[i].wordwrap);
+        widget_text_set_color(disturd_end_time->text[ui_handle.disturd_end_time.text[i].idx], make_color(ui_handle.disturd_end_time.text[i].color.r, ui_handle.disturd_end_time.text[i].color.g, ui_handle.disturd_end_time.text[i].color.b));
+        compo_cardbox_text_set_location(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].x, ui_handle.disturd_end_time.text[i].y,
+                                        ui_handle.disturd_end_time.text[i].w, ui_handle.disturd_end_time.text[i].h);
+
+        if(sys_cb.disturd_tim == 0)
         {
-            compo_textbox_set(textbox[i], i18n[STR_DISTURD_ALL]);
+            sys_cb.disturd_start_time_sec = 0;
+            sys_cb.disturd_end_time_sec = 0;
         }
-        else if(i == 1)
-        {
-            compo_textbox_set(textbox[i], i18n[STR_DISTURD_TIM]);
-        }
-        else if(i == 2)
-        {
-            compo_textbox_set_forecolor(textbox[i], COLOR_GREEN);
-            compo_textbox_set(textbox[i], i18n[STR_DISTURD_TIM_START]);
-            compo_textbox_set_visible(textbox[i], false);
-        }
-        else if(i == 3)
-        {
-            compo_textbox_set_forecolor(textbox[i], COLOR_GREEN);
-            compo_textbox_set(textbox[i], i18n[STR_DISTURD_TIM_END]);
-            compo_textbox_set_visible(textbox[i], false);
-        }
-        else
-        {
-            compo_textbox_set(textbox[i], ":");
-            compo_textbox_set_visible(textbox[i], false);
+        u8 hour   = sys_cb.disturd_end_time_sec / 3600;
+        u8 min  = (sys_cb.disturd_end_time_sec % 3600) / 60;
+        u8 am_pm = 0;
+        func_alarm_hour_format_t hour_cov = func_alarm_convert_to_12hour(hour);
+        hour = hour_cov.hour;
+        am_pm = hour_cov.am_pm;
+        char aclock_str[20] = {0};
+        memset(aclock_str, '\0', sizeof(aclock_str));
+        sprintf(aclock_str, "%02d:%02d", hour, min);
+
+        if (ui_handle.disturd_end_time.text[i].idx == 2) {
+            if(am_pm == 1) {    //AM
+                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
+            } else if (am_pm == 2) {
+                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
+            } else {
+//                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
+            }
+        } else if (ui_handle.disturd_end_time.text[i].idx == 1) {
+                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, aclock_str);
+        } else if (ui_handle.disturd_end_time.text[i].idx == 0) {
+            compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
         }
     }
 
-    //新建图像
-    compo_picturebox_t *pic_click;
-    for (u8 idx = 0; idx < DISTURD_DISP_PIC_ITEM_CNT; idx++)
-    {
-        pic_click = compo_picturebox_create(frm, tbl_disturd_disp_pic_item[idx].res_addr);
-        compo_setid(pic_click, tbl_disturd_disp_pic_item[idx].pic_id);
-        compo_picturebox_set_pos(pic_click, tbl_disturd_disp_pic_item[idx].x, tbl_disturd_disp_pic_item[idx].y);
-        compo_picturebox_set_visible(pic_click, tbl_disturd_disp_pic_item[idx].visible_en);
-    }
-//        sys_cb.disturd_adl = false;
-//        sys_cb.disturd_tim = true;
-    //获取显示时间
-    if(!sys_cb.disturd_tim)
-    {
-        sys_cb.disturd_start_time_sec = 0;
-        sys_cb.disturd_end_time_sec = 0;
-    }
-    u32 hour_start = sys_cb.disturd_start_time_sec / 3600;
-    u32 min_start  = (sys_cb.disturd_start_time_sec % 3600) / 60;
-    u32 hour_end   = sys_cb.disturd_end_time_sec / 3600;
-    u32 min_end  = (sys_cb.disturd_end_time_sec % 3600) / 60;
-
-    //创建数字
-    compo_textbox_t *num_txt;
-    char str_buff[8];
-    for (u8 idx = 0; idx < DISTURD_NUM_ITEM_CNT; idx++)
-    {
-        num_txt = compo_textbox_create(frm, tbl_disturd_num_item[idx].num_cnt);
-        compo_textbox_set_font(num_txt, tbl_disturd_num_item[idx].res_addr);
-        compo_setid(num_txt, tbl_disturd_num_item[idx].num_id);
-        compo_textbox_set_pos(num_txt, tbl_disturd_num_item[idx].x, tbl_disturd_num_item[idx].y);
-        compo_textbox_set_visible(num_txt, tbl_disturd_num_item[idx].visible_en);
-
-        if (tbl_disturd_num_item[idx].num_id ==  COMPO_ID_NUM_DISP_ZERO)
-        {
-            snprintf(str_buff, sizeof(str_buff), "%02ld", hour_start);
-            compo_textbox_set(num_txt, str_buff);
-        }
-        else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_ONE)
-        {
-            snprintf(str_buff, sizeof(str_buff), "%02ld", min_start);
-            compo_textbox_set(num_txt, str_buff);
-        }
-        else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_TWS)
-        {
-            snprintf(str_buff, sizeof(str_buff), "%02ld", hour_end);
-            compo_textbox_set(num_txt, str_buff);
-        }
-        else if (tbl_disturd_num_item[idx].num_id == COMPO_ID_NUM_DISP_THR)
-        {
-            snprintf(str_buff, sizeof(str_buff), "%02ld", min_end);
-            compo_textbox_set(num_txt, str_buff);
-        }
-    }
-
+    widget_page_set_client(func_cb.frm_main->page_body, 0, DRAG_MIN_BACK_DISTANCE);
     return frm;
 }
 
-//勿扰模式事件处理
-static void func_set_sub_disturd_process(void)
+
+//获取点击卡片的id
+static u16 func_set_sub_disturd_card_get_btn_id(point_t pt)
 {
-    //获取图片组件的地址
-    compo_picturebox_t *pic_adl_on  = compo_getobj_byid(COMPO_ID_PIC_ADL_ON);
-    compo_picturebox_t *pic_tim_on  = compo_getobj_byid(COMPO_ID_PIC_TIM_ON);
-    compo_picturebox_t *pic_adl_off = compo_getobj_byid(COMPO_ID_PIC_ADL_OFF);
-    compo_picturebox_t *pic_tim_off = compo_getobj_byid(COMPO_ID_PIC_TIM_OFF);
-
-    ute_quick_switch_t quick;
-    uteApplicationCommonGetQuickSwitchStatus(&quick);
-    if(quick.isNotDisturb)
+    u16 i, id;
+    u16 ret = 0;
+    rect_t rect;
+    compo_cardbox_t *cardbox;
+    for(i=0; i<CARD_ID_END-CARD_ID_START-1; i++)
     {
-        if(uteModuleNotDisturbIsOpenScheduled())
+        id = CARD_ID_START + 1 + i;
+        cardbox = compo_getobj_byid(id);
+        rect = compo_cardbox_get_absolute(cardbox);
+        if (compo_cardbox_get_visible(cardbox) && abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
         {
-            sys_cb.disturd_adl = 0;
-            sys_cb.disturd_tim = 1;
-        }
-        else
-        {
-            sys_cb.disturd_adl = 1;
-            sys_cb.disturd_tim = 0;
+            ret = id;
+            break;
         }
     }
-    else
-    {
-        if(uteModuleNotDisturbIsOpenScheduled())
-        {
-            sys_cb.disturd_tim = 1;
-        }
-        else
-        {
-            sys_cb.disturd_tim = 0;
-        }
-        sys_cb.disturd_adl = 0;
-    }
-    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
-    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
-
-    //获取图像组件的地址
-    //获取文本组件的地址
-    compo_textbox_t *txt_disp[4];
-    compo_textbox_t *num_disp[4];
-//    compo_shape_t *masklayer[2];
-    for (int i=0; i<4; i++)
-    {
-        txt_disp[i] = compo_getobj_byid(COMPO_ID_TXT_START + i);
-        num_disp[i] = compo_getobj_byid(COMPO_ID_NUM_DISP_ONE + i);
-//        if (i<2)
-//        {
-//            masklayer[i] = compo_getobj_byid(COMPO_ID_MSK_ONE + i);
-//        }
-    }
-
-    if (sys_cb.disturd_adl==0)
-    {
-        compo_picturebox_set_visible(pic_adl_off, true);
-    }
-    else
-    {
-        compo_picturebox_set_visible(pic_adl_on, true);
-    }
-
-    if(sys_cb.disturd_tim == 0)
-    {
-        compo_picturebox_set_visible(pic_tim_off, true);
-        for (int i=0; i<4; i++)
-        {
-            compo_textbox_set_visible(txt_disp[i], false);
-            compo_textbox_set_visible(num_disp[i], false);
-//            if(i<2)
-//            {
-//                compo_shape_set_alpha(masklayer[i], 0);
-//            }
-        }
-    }
-    else
-    {
-        compo_picturebox_set_visible(pic_tim_on, true);
-        for (int i=0; i<4; i++)
-        {
-            compo_textbox_set_visible(txt_disp[i], true);
-            compo_textbox_set_visible(num_disp[i], true);
-//            if(i<2)
-//            {
-//                compo_shape_set_alpha(masklayer[i], 255);
-//            }
-        }
-    }
-
-    func_process();
+    return ret;
 }
+
 
 //更新显示勿扰模式界面
-static void func_set_sub_disturd_disp(void)
+static void func_set_sub_disturd_disp_update(void)
 {
-    //获取图片组件的地址
-    compo_picturebox_t *pic_adl_on  = compo_getobj_byid(COMPO_ID_PIC_ADL_ON);
-    compo_picturebox_t *pic_tim_on  = compo_getobj_byid(COMPO_ID_PIC_TIM_ON);
-    compo_picturebox_t *pic_adl_off = compo_getobj_byid(COMPO_ID_PIC_ADL_OFF);
-    compo_picturebox_t *pic_tim_off = compo_getobj_byid(COMPO_ID_PIC_TIM_OFF);
-
-    //获取文本组件的地址
-    compo_textbox_t *txt[4];
-    compo_textbox_t *num[4];
-    for (int i=0; i<4; i++)
+    func_set_sub_disturd_state_update();
+    compo_cardbox_t* cardbox_disturd_all = compo_getobj_byid(ui_handle.disturd_all_card.id);
+    if (sys_cb.disturd_adl==0)                              //全天勿扰关闭状态
     {
-        txt[i] = compo_getobj_byid(COMPO_ID_TXT_START+i);
-        num[i] = compo_getobj_byid(COMPO_ID_NUM_DISP_ONE+i);
-    }
-
-    //显示界面各个组件
-    if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE)
-    {
-        compo_picturebox_set_visible(pic_adl_on, true);
-        compo_picturebox_set_visible(pic_adl_off, false);
+        compo_cardbox_icon_set(cardbox_disturd_all, ui_handle.disturd_all_card.icon[0].idx, ui_handle.disturd_all_card.icon[0].res_off);
     }
     else
     {
-        compo_picturebox_set_visible(pic_adl_on, false);
-        compo_picturebox_set_visible(pic_adl_off, true);
+        compo_cardbox_icon_set(cardbox_disturd_all, ui_handle.disturd_all_card.icon[0].idx, ui_handle.disturd_all_card.icon[0].res_on);
     }
 
-    if (sys_cb.disturd_tim == COMPO_ID_NUM_DISP_ONE)
+    compo_cardbox_t* cardbox_disturd_def = compo_getobj_byid(ui_handle.disturd_def_card.id);
+    if(sys_cb.disturd_tim == 0)                             //定时勿扰关闭
     {
-        compo_picturebox_set_visible(pic_tim_on, true);
-        compo_picturebox_set_visible(pic_tim_off, false);
-        for (int i=0; i<4; i++)
-        {
-            compo_textbox_set_visible(txt[i], true);
-            compo_textbox_set_visible(num[i], true);
-        }
-
+        compo_cardbox_icon_set(cardbox_disturd_def, ui_handle.disturd_def_card.icon[0].idx, ui_handle.disturd_def_card.icon[0].res_off);
+        compo_cardbox_t* cardbox_start_time = compo_getobj_byid(ui_handle.disturd_start_time.id);
+        compo_cardbox_set_visible(cardbox_start_time, false);
+        compo_cardbox_t* cardbox_end_time = compo_getobj_byid(ui_handle.disturd_end_time.id);
+        compo_cardbox_set_visible(cardbox_end_time, false);
     }
     else
     {
-        compo_picturebox_set_visible(pic_tim_on, false);
-        compo_picturebox_set_visible(pic_tim_off, true);
-        for (int i=0; i<4; i++)
-        {
-            compo_textbox_set_visible(txt[i], false);
-            compo_textbox_set_visible(num[i], false);
-        }
+        compo_cardbox_icon_set(cardbox_disturd_def, ui_handle.disturd_def_card.icon[0].idx, ui_handle.disturd_def_card.icon[0].res_on);
+        compo_cardbox_t* cardbox_start_time = compo_getobj_byid(ui_handle.disturd_start_time.id);
+        compo_cardbox_set_visible(cardbox_start_time, true);
+        compo_cardbox_t* cardbox_end_time = compo_getobj_byid(ui_handle.disturd_end_time.id);
+        compo_cardbox_set_visible(cardbox_end_time, true);
     }
+
 }
 
-//单击按钮
-static void func_disturd_button_click(void)
-{
-    u8 ret = 0;
-    int id = compo_get_button_id();
 
-    switch(id)
+//单击按钮
+static void func_disturd_card_click(void)
+{
+    point_t pt = ctp_get_sxy();
+    u16 compo_id = func_set_sub_disturd_card_get_btn_id(pt);
+    if (compo_id <= 0 || compo_id > CARD_ID_END-1)
     {
-        case COMPO_ID_BIN_ALLDAY_ON:
-            if (!sys_cb.disturd_adl)
-            {
-                ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-            }
-            else
-            {
-                ret = 0;
+        return;
+    }
+    printf("click compo_id:%d\n", compo_id);
+
+    compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
+    if (compo_cardbox_get_visible(cardbox))
+    {
+        if (compo_id == ui_handle.disturd_all_card.id)              //全天勿扰
+        {
+            if (sys_cb.disturd_adl == 0) {
+                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK) {
+                    if (sys_cb.disturd_adl == 0)
+                    {
+                        sys_cb.disturd_adl = 1;
+                        uteModuleNotDisturbAllDaySwitch();
+                    }
+                }
+            } else {
                 sys_cb.disturd_adl = 0;
                 uteModuleNotDisturbAllDaySwitch();
             }
-            if (ret == MSGBOX_RES_OK)
-            {
-                if (sys_cb.disturd_adl == COMPO_ID_NUM_DISP_ONE - 1)
-                {
-                    sys_cb.disturd_adl = COMPO_ID_NUM_DISP_ONE;
-                    uteModuleNotDisturbAllDaySwitch();
-                }
-            }
             uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
-            //s printf("wr:%d\n",uteModuleNotDisturbGetOpenStatus());
-            break;
-
-        case COMPO_ID_BIN_TIMING_ON:
-            if (!sys_cb.disturd_tim)
-            {
-                ret = msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-            }
-            else
-            {
-                ret = 0;
+        }
+        else if (compo_id == ui_handle.disturd_def_card.id)         //定时勿扰
+        {
+            if (sys_cb.disturd_tim == 0) {
+                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK) {
+                    if(sys_cb.disturd_tim == 0)
+                    {
+                        sys_cb.disturd_tim = 1;
+                        uteModuleNotDisturbScheduledSwitch();
+                    }
+                }
+            } else {
                 sys_cb.disturd_tim = 0;
                 uteModuleNotDisturbScheduledSwitch();
             }
-
-            if (ret == MSGBOX_RES_OK)
-            {
-                if(sys_cb.disturd_tim == COMPO_ID_NUM_DISP_ONE - 1)
-                {
-                    sys_cb.disturd_tim = COMPO_ID_NUM_DISP_ONE;
-                    uteModuleNotDisturbScheduledSwitch();
-                }
-            }
-            break;
-
-        case COMPO_ID_BIN_START:
+        }
+        else if (compo_id == ui_handle.disturd_start_time.id)      //开始时间
+        {
             if(sys_cb.disturd_tim)
             {
                 sys_cb.disturd_sel = 0;
@@ -503,9 +695,9 @@ static void func_disturd_button_click(void)
                 uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
                 task_stack_pop();
             }
-            break;
-
-        case COMPO_ID_BIN_END:
+        }
+        else if (compo_id == ui_handle.disturd_end_time.id)      //结束时间
+        {
             if(sys_cb.disturd_tim)
             {
                 sys_cb.disturd_sel = 1;
@@ -513,26 +705,207 @@ static void func_disturd_button_click(void)
                 uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_END_TIME);
                 task_stack_pop();
             }
-            break;
+        }
+    }
+    func_set_sub_disturd_disp_update();
+}
 
-        default:
-            break;
+//勿扰模式事件处理
+static void func_set_sub_disturd_process(void)
+{
+    f_disturd_t* f_disturd = (f_disturd_t*)func_cb.f_cb;
+    if (f_disturd->flag_drag) {
+//        s32 dx = f_disturd->focus_dx;
+//        s32 dy = f_disturd->focus_dy;
+        f_disturd->flag_drag = ctp_get_dxy(&f_disturd->focus_dx, &f_disturd->focus_dy);
+        if (f_disturd->flag_drag)
+        {
+            //拖动菜单图标
+//            f_disturd->focus_xstep = f_disturd->focus_dx - dx;
+//            f_disturd->focus_ystep = f_disturd->focus_dy - dy;
+            f_disturd->focus_ofsx = 0;
+            f_disturd->focus_ofsy = f_disturd->focus_y - f_disturd->focus_dy;
+
+            if (sys_cb.disturd_tim == 1) {
+                if (f_disturd->focus_ofsy > DRAG_MAX_DISTANCE) {
+                    f_disturd->focus_ofsy = DRAG_MAX_DISTANCE;
+                }
+            } else {
+                if (f_disturd->focus_ofsy > DRAG_MAX_DISTANCE1) {
+                    f_disturd->focus_ofsy = DRAG_MAX_DISTANCE1;
+                }
+            }
+
+            if (f_disturd->focus_ofsy < DRAG_MIN_DISTANCE) {
+                f_disturd->focus_ofsy = DRAG_MIN_DISTANCE;
+            }
+
+            widget_page_set_client(func_cb.frm_main->page_body, f_disturd->focus_ofsx, -f_disturd->focus_ofsy);
+
+//            printf("f_disturd->focus_ofsy =%d\n", f_disturd->focus_ofsy);
+        }
+        else
+        {
+            //抬手后开始自动移动
+            point_t last_dxy = ctp_get_last_dxy();
+            s32 to_x;
+            s32 to_y;
+            f_disturd->focus_x = f_disturd->focus_ofsx;
+            f_disturd->focus_y = f_disturd->focus_ofsy;
+            f_disturd->flag_move_auto = true;
+            to_x = 0;
+            to_y = f_disturd->focus_y - (last_dxy.y * DRAG_AUTO_SPEED);
+            f_disturd->moveto.x = to_x;
+            f_disturd->moveto.y = to_y;
+            if (sys_cb.disturd_tim == 1) {
+                if (f_disturd->moveto.y > DRAG_MAX_DISTANCE) {
+                    f_disturd->moveto.y = DRAG_MAX_DISTANCE;
+                }
+            } else {
+                if (f_disturd->moveto.y > DRAG_MAX_DISTANCE1) {
+                    f_disturd->moveto.y = DRAG_MAX_DISTANCE1;
+                }
+            }
+
+            if (f_disturd->moveto.y < DRAG_MIN_DISTANCE) {
+                f_disturd->moveto.y = DRAG_MIN_DISTANCE;
+            }
+            f_disturd->tick = tick_get();
+        }
+    }
+    else if (f_disturd->flag_move_auto)
+    {
+        //自动移动
+        if (f_disturd->focus_x == f_disturd->moveto.x && f_disturd->focus_y == f_disturd->moveto.y)
+        {
+            if (sys_cb.disturd_tim == 1) {
+                if (f_disturd->focus_y < DRAG_MIN_BACK_DISTANCE)
+                {
+                    f_disturd->moveto.y = DRAG_MIN_BACK_DISTANCE;
+                }
+                else if (f_disturd->focus_y > DRAG_MAX_BACK_DISTANCE)
+                {
+                    f_disturd->moveto.y = DRAG_MAX_BACK_DISTANCE;
+                }
+                else
+                {
+                    f_disturd->flag_move_auto = false;            //移动完成
+                }
+            } else {
+                if (f_disturd->focus_y < DRAG_MIN_BACK_DISTANCE)
+                {
+                    f_disturd->moveto.y = DRAG_MIN_BACK_DISTANCE;
+                }
+                else if (f_disturd->focus_y > DRAG_MIN_BACK_DISTANCE)
+                {
+                    f_disturd->moveto.y = DRAG_MIN_BACK_DISTANCE;
+                }
+                else
+                {
+                    f_disturd->flag_move_auto = false;            //移动完成
+                }
+            }
+        }
+        else if (tick_check_expire(f_disturd->tick, 10))
+        {
+            TRACE("[%d %d]--move_to->[%d %d]\n", f_disturd->focus_x, f_disturd->focus_y, f_disturd->moveto.x, f_disturd->moveto.y);
+            s16 dx, dy;
+            f_disturd->tick = tick_get();
+            dx = 0;
+            dy = f_disturd->moveto.y - f_disturd->focus_y;
+            if (dy > 0)
+            {
+                if (dy > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
+                    dy = dy / FOCUS_AUTO_STEP_DIV;
+                }
+                else if (dy > FOCUS_AUTO_STEP)
+                {
+                    dy = FOCUS_AUTO_STEP;
+                }
+                else
+                {
+                    dy = 1;
+                }
+            }
+            else if (dy < 0)
+            {
+                if (dy < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
+                    dy = dy / FOCUS_AUTO_STEP_DIV;
+                }
+                else if (dy < -FOCUS_AUTO_STEP)
+                {
+                    dy = -FOCUS_AUTO_STEP;
+                }
+                else
+                {
+                    dy = -1;
+                }
+            }
+            f_disturd->focus_x += dx;
+            f_disturd->focus_y += dy;
+            widget_page_set_client(func_cb.frm_main->page_body, f_disturd->focus_x, -f_disturd->focus_y);
+        }
     }
 
-    func_set_sub_disturd_disp();
+
+    func_set_sub_disturd_disp_update();
+    func_process();
 }
 
 //勿扰模式能消息处理
 static void func_set_sub_disturd_message(size_msg_t msg)
 {
+    f_disturd_t* f_disturd = (f_disturd_t*)func_cb.f_cb;
     switch (msg)
     {
         case MSG_CTP_CLICK:
-            func_disturd_button_click();
+            func_disturd_card_click();
             break;
 
         case MSG_CTP_SHORT_UP:
         case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_TOUCH:
+            f_disturd->flag_drag = true;
+            f_disturd->flag_move_auto = true;
+            break;
+
+//        case MSG_QDEC_FORWARD:                              //向前滚动菜单
+//            f_disturd->flag_move_auto = true;
+//            f_disturd->moveto.x = 0;
+//            f_disturd->moveto.y++;
+////            if (f_disturd->moveto.y > 268+90) {
+////                f_disturd->moveto.y = 268+90;
+////            }
+//            break;
+//
+//        case MSG_QDEC_BACKWARD:
+//            f_disturd->flag_move_auto = true;
+//            f_disturd->moveto.x = 0;
+//            f_disturd->moveto.y--;
+//
+////            if (f_disturd->moveto.y < 0) {
+////                f_disturd->moveto.y = 0;
+////            }
+//
+//            break;
+        case MSG_SYS_500MS:
+
+            if (f_disturd->time_scale != uteModuleSystemtime12HOn())
+            {
+                if (func_cb.frm_main != NULL)
+                {
+                    compo_form_destroy(func_cb.frm_main);
+                }
+                func_set_sub_disturd_exit();
+                if (func_cb.f_cb != NULL)
+                {
+                    func_free(func_cb.f_cb);
+                    func_cb.f_cb = NULL;
+                }
+                func_set_sub_disturd_enter();
+            }
             break;
 
         default:
@@ -546,6 +919,10 @@ static void func_set_sub_disturd_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_disturd_t));
     func_cb.frm_main = func_set_sub_disturd_form_create();
+    f_disturd_t* f_disturd = (f_disturd_t*)func_cb.f_cb;
+    f_disturd->focus_y = DRAG_MIN_BACK_DISTANCE;
+    widget_page_set_client(func_cb.frm_main->page_body, 0, -f_disturd->focus_y);
+    f_disturd->time_scale = uteModuleSystemtime12HOn();
 }
 
 //退出勿扰模式功能

@@ -13,6 +13,7 @@ typedef struct compo_textbox_t_
     widget_text_t *txt;
     compo_roll_cb_t roll_cb;
     bool multiline;             //多行
+    bool center_top;            //居顶对齐
 } compo_textbox_t;
 
 

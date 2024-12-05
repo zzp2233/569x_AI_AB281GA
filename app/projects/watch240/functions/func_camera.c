@@ -321,9 +321,12 @@ void func_camera(void)
 }
 #else
 
+#include "func_cover.h"
+///非相机传输功能
 enum
 {
     START_BTN_ID=1,
+    START_BTN_CLICK_ID,
     START_TXT_ID,
 
 };
@@ -333,31 +336,76 @@ typedef struct f_camera_t_
 
 } f_camera_t;
 
+typedef struct ui_handle_t_ {
+
+    struct btn_t {
+        u16 id;
+        u16 click_id;
+        s16 x,y;
+        u16 w,h;
+        u32 res;
+        u32 click_res;
+    } btn;
+
+    struct text_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+        u32 res;
+        bool center;
+        u16 str_id1;
+    } text;
+} ui_handle_t;
+
+const static ui_handle_t ui_handle = {
+    .btn = {
+        .id = START_BTN_ID,
+        .click_id = START_BTN_CLICK_ID,
+        .x  = 58+124/2,
+        .y  = 85+124/2,
+        .w  = 0,
+        .h  = 0,
+        .res = UI_BUF_I330001_PHOTO_BTN_BIN,
+        .click_res = 0,
+    },
+
+    .text = {
+        .id = START_TXT_ID,
+        .x  = 48+144/2,
+        .y  = 240+28/2,
+        .w  = 144,
+        .h  = 28,
+        .center = true,
+        .str_id1 = STR_START,
+    },
+};
+
 //创建相机窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_camera_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-//    compo_form_add_image(frm, UI_BUF_CAMERA_CAMERA_BIN, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-10);
-
-    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_CAMERA_CAMERA_BIN);
-    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.2);
-    compo_picturebox_set_size(pic, GUI_SCREEN_CENTER_Y/1.2, GUI_SCREEN_CENTER_Y/1.2);
-
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_CAMERA]);
 
-    //新建按钮
-    compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 258);
-    compo_setid(btn,START_BTN_ID);
+    //按钮
+    compo_button_t *btn = compo_button_create_by_image(frm, ui_handle.btn.res);
+    compo_button_set_pos(btn, ui_handle.btn.x, ui_handle.btn.y);
+    compo_setid(btn,ui_handle.btn.id);
 
-    //创建文本
-    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
-    compo_textbox_set_pos(txt_start, GUI_SCREEN_CENTER_X, 258);
-    compo_setid(txt_start,START_TXT_ID);
+    //按钮点击图片
+    compo_picturebox_t* pic = compo_picturebox_create(frm, ui_handle.btn.click_res);
+    compo_picturebox_set_pos(pic, ui_handle.btn.x, ui_handle.btn.y);
+    compo_setid(pic, ui_handle.btn.click_id);
+    compo_picturebox_set_visible(pic, false);
+
+    //创建提示文本
+    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[ui_handle.text.str_id1]));
+    compo_textbox_set_location(txt_start, ui_handle.text.x, ui_handle.text.y, ui_handle.text.w, ui_handle.text.h);
+    compo_textbox_set_align_center(txt_start, ui_handle.text.center);
+    compo_textbox_set(txt_start, i18n[ui_handle.text.str_id1]);
+    compo_setid(txt_start,ui_handle.text.id);
 
     return frm;
 }
@@ -365,15 +413,6 @@ compo_form_t *func_camera_form_create(void)
 //相机功能事件处理
 static void func_camera_process(void)
 {
-    compo_textbox_t *txt_start = compo_getobj_byid(START_TXT_ID);
-    if(ble_is_connect())
-    {
-        compo_textbox_set(txt_start, i18n[STR_START]);
-    }
-    else
-    {
-        compo_textbox_set(txt_start, i18n[STR_CONNECT_BLUETOOTH]);
-    }
     func_process();
 }
 
@@ -383,9 +422,14 @@ static void func_camera_button_handle(void)
 
     if(id == START_BTN_ID)
     {
-        if(uteModuleSportIsTakePicture())
-        {
-            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
+        if (ble_is_connect()) {
+            if(uteModuleSportIsTakePicture())
+            {
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
+            }
+        } else {
+            sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+            msgbox((char*)i18n[STR_VOICE_BT_NOT_CONNECT], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
         }
     }
 }

@@ -56,7 +56,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
 
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///血氧数据
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.75,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2);
     char txt_buf[5];
     if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)

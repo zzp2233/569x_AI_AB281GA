@@ -29,10 +29,11 @@ const adkey_tbl_t adkey_table[] =
 AT(.com_rodata.pwrkey.table)
 const adkey_tbl_t pwrkey_table[6] =
 {
-    {0x08, KEY_BACK},               //LEFT          0R
-    {0x3A, KEY_RIGHT},              //RIGHT         12K
-    {0x7B, NO_KEY},               //BACK          47K
-    {0xFF, NO_KEY},
+    {UTE_DRV_PWRKEY_KEY0_MAX_ADC, UTE_DRV_PWRKEY_KEY0},               //LEFT          0R
+    {UTE_DRV_PWRKEY_KEY1_MAX_ADC, UTE_DRV_PWRKEY_KEY1},               //RIGHT         12K
+    {UTE_DRV_PWRKEY_KEY2_MAX_ADC, UTE_DRV_PWRKEY_KEY2},               //BACK          47K
+    {UTE_DRV_PWRKEY_KEY3_MAX_ADC, UTE_DRV_PWRKEY_KEY3},
+    {UTE_DRV_PWRKEY_KEY4_MAX_ADC, UTE_DRV_PWRKEY_KEY4},
 };
 #endif // USER_PWRKEY
 

@@ -20,6 +20,7 @@
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_message.h"
 #include "ute_module_bloodoxygen.h"
+#include "ute_module_factorytest.h"
 
 #include "vc30fx_driver.h"
 extern vc30fx_clk_info clk_info;            /* oscclk_calibration_infomation */
@@ -777,12 +778,22 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
             //disp_data.ps = sample_result_info_ptr->slot_result[2].u.ps_data;
             //disp_data.rImx = sample_result_info_ptr->slot_result[1].slot_current;
             //disp_data.rPre = sample_result_info_ptr->slot_result[1].u.pre_data;
+            if(uteModuleFactoryTestGetCheckLightMode() == FACTORY_VCXX_TEST_MODE_RED_LIGHT)
+            {
+                uteModuleFactoryTestSetVkData(sample_result_info_ptr->slot_result[1].u.pre_data, sample_result_info_ptr->slot_result[1].slot_current, sample_result_info_ptr->slot_result[2].u.ps_data);                
+            }
+            else
+            {
+                uteModuleFactoryTestSetVkData(sample_result_info_ptr->slot_result[0].u.pre_data, sample_result_info_ptr->slot_result[0].slot_current, sample_result_info_ptr->slot_result[2].u.ps_data);                
+            }
+
             break;
         case WORK_MODE_FACTORY1:
             //disp_data.iImx = sample_result_info_ptr->slot_result[0].slot_current;
             //disp_data.iPre = sample_result_info_ptr->slot_result[0].u.pre_data;
             //disp_data.rImx = sample_result_info_ptr->slot_result[1].slot_current;
             //disp_data.rPre = sample_result_info_ptr->slot_result[1].u.pre_data;
+            uteModuleFactoryTestSetVkData(sample_result_info_ptr->slot_result[0].u.pre_data, sample_result_info_ptr->slot_result[0].slot_current, sample_result_info_ptr->slot_result[2].u.ps_data); 
             break;
         default:
             break;

@@ -339,9 +339,9 @@
 /*****************************************************************************
  * Module    : User按键配置 (可以同时选择多组按键)
  *****************************************************************************/
-#define USER_PWRKEY                     1           //PWRKEY的使用，0为不使用
-#define USER_ADKEY                      0           //ADKEY的使用， 0为不使用
-#define USER_IOKEY                      0           //IOKEY的使用， 0为不使用
+#define USER_PWRKEY                     UTE_DRV_PWRKEY_SUPPORT           //PWRKEY的使用，0为不使用
+#define USER_ADKEY                      UTE_DRV_ADCKEY_SUPPORT           //ADKEY的使用， 0为不使用
+#define USER_IOKEY                      UTE_DRV_IOKEY_SUPPORT            //IOKEY的使用， 0为不使用
 
 #define USER_KEY_QDEC_EN                0           //旋钮, 硬件正交解码, A,B输出分别接一个IO
 #define USER_QDEC_MAPPING               QDEC_MAP_G1 //选择硬件正交解码的mapping, 每组map的IO固定，详见define处说明

@@ -739,6 +739,9 @@ uint8_t uteModuleGuiCommonGetDisplayOffTime(void)
 */
 void uteModuleGuiCommonGoBackLastScreen(void)
 {
+    msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+    msg_enqueue(EVT_MSGBOX_EXIT);
+    
     func_directly_back_to();
     // func_switch_prev(true);
 }
@@ -759,7 +762,10 @@ void uteTaskGuiStartScreen(uint8_t screenId)
     reset_sleep_delay_all();
     if(func_cb.sta != screenId)
     {
-        func_switch_to(screenId, 0);
+        msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+        msg_enqueue(EVT_MSGBOX_EXIT);
+        func_cb.sta = screenId;
+        //func_switch_to(screenId, 0);
         task_stack_push(screenId);
     }
 }
@@ -781,7 +787,11 @@ void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
     reset_sleep_delay_all();
     if(func_cb.sta != screenId)
     {
-        func_switch_to(screenId, 0);
+
+        msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+        msg_enqueue(EVT_MSGBOX_EXIT);
+        func_cb.sta = screenId;
+        // func_switch_to(screenId, 0);
         if(!isWithoutHistory)
         {
             task_stack_push(screenId);
@@ -1109,7 +1119,7 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
             return false;
         }
 #endif
-#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+#if 0//UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
         if((id == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID) || (id == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID) || (id == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID))
         {
             return false;

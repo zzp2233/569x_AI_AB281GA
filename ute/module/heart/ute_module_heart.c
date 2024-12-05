@@ -21,6 +21,7 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_sport.h"
 #include "ute_module_message.h"
+#include "ute_module_factoryTest.h"
 
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
@@ -204,6 +205,7 @@ void uteModuleHeartEverySecond(void)
 
         if(!uteModuleBloodoxygenIsTesting() &&
            (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
+           && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
           )
         {
             if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
@@ -489,6 +491,14 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
 #endif
     }
 #endif
+    else if (uteModuleHeartData.type == TYPE_FACTORY0)
+    {
+        bsp_sensor_hr_init(WORK_MODE_FACTORY0);
+    }
+    else if (uteModuleHeartData.type == TYPE_FACTORY1)
+    {
+        bsp_sensor_hr_init(WORK_MODE_FACTORY1);
+    }
     else
     {
         if(uteModuleHeartData.type==TYPE_BREATHRATE)

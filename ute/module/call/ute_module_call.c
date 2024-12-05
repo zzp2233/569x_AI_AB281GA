@@ -487,9 +487,10 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
                     printf("======================>ble_bt_connect\n");
                     /**************************/
                     //一键双连代码，协议待跑通
-                    app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
-                    bsp_change_bt_mac();
-                    ble_bt_connect();
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR,0);
+                    // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+                    // bsp_change_bt_mac();
+                    // ble_bt_connect();
                     /**************************/
                     // ute_ble_connect_state_t state;
                     // uteApplicationCommonGetBleConnectionState(&state);

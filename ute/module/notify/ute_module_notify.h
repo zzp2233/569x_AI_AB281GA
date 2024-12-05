@@ -334,7 +334,8 @@ void uteModuleNotifyAncsGetAdditionalFlag(uint8_t*receive);
 #endif
 
 void uteModuleNotifyAncsStartPair(void);
-void uteModuleNotifyAncsClearQueueHandlerMsg(void);
+void uteModuleNotifyAncsStartPairHandlerMsg(void);
+void uteModuleNotifyAncsTimerConnectHandler(bool isConnected);
 void uteModuleNotifyDelAllHistoryData(bool isDelAll);
 void uteModuleNotifySetNewNotifyFlag(bool isNewNotify);
 bool uteModuleNotifyIsNewNotifyDisplay(void);

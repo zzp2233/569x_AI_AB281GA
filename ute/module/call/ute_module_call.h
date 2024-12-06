@@ -200,7 +200,7 @@ bool uteModuleCallBtIsConnected(void);
 void uteModuleCallInit(void);
 void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason);
 void uteModuleCallBtPowerOn(ute_bt_power_on_type_t type);
-
+void uteModuleCallBtUpdateKeyConnectAddress(uint8_t *addr);
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
 void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length);
 void uteModuleCallBtReadCtrlAppData(void);
@@ -222,7 +222,7 @@ void uteModuleCallBtSetBondFlag(bool isSet);
 bool uteModuleCallBtIsPowerOn(void);
 
 bool uteModuleCallIsCurrentConnectionIphone(void);
-
+bool uteModuleCallIsHasConnection(void);
 void uteModuleCallBleConnectState(bool isConnected);
 
 void uteModuleCallUpdateRecordsData(void);

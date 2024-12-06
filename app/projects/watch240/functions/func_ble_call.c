@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_platform.h"
+#include "ute_module_gui_common.h"
 
 enum
 {
@@ -55,7 +57,8 @@ static void func_ble_call_click(void)
     {
 
         case COMPO_ID_BTN_REJECT:
-
+            uteModulePlatformRejectIncall();
+            uteModuleGuiCommonGoBackLastScreen();
             break;
 
         default:
@@ -74,6 +77,9 @@ static void func_ble_call_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_ble_call_click();
             break;
+        case KL_BACK:
+            uteModulePlatformRejectIncall();
+            uteModuleGuiCommonGoBackLastScreen();
         default:
             func_message(msg);
             break;

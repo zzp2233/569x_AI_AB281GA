@@ -98,6 +98,7 @@ void ble_emit_notice(u8 evt, u8 *param)
             printf("ANCS connect\n");
         } else {
             ble_cb.ancs_connected = false;
+            ble_cb.ansc_uid = 0; // ute add
             printf("ANCS disconnect\n");
         }
         uteApplicationCommonSetBlePariring(ble_cb.ancs_connected);

@@ -289,7 +289,7 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
 #endif
         {
             uteModuleCallSetInComingNumberName(NULL,0,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-            // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CALL_INCOMING_ID);
+            uteTaskGuiStartScreenWithoutHistory(FUNC_BLE_CALL, true);
 
             //需要弹出来电界面
 

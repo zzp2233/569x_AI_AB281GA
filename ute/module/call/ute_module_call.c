@@ -852,6 +852,17 @@ void uteModuleCallClearNumberAndName(void)
 }
 
 /**
+*@brief  获取拨号打电话信息
+*@details
+*@author        zn.zeng
+*@date        2021-10-28
+*/
+void uteModuleCallGetData(ute_bt_call_data_t *data)
+{
+    memcpy(data,&uteModuleCallData.callData,sizeof(ute_bt_call_data_t));
+}
+
+/**
 *@brief    准备同步通讯录
 *@details
 *@author   casen

@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_application_common.h"
+#include "ute_module_call.h"
 
 #define TRACE_EN    0
 
@@ -127,30 +128,40 @@ static void func_long_press_event_handle(s32 distance, u16 id)
             switch(id)
             {
                 case IMG_BTN_ID_1://SOS
-                    memset(sys_cb.outgoing_number, 0, 16);
-                    for(int i=0; i<strlen(sys_cb.sos_call_number); i++)
+                    memset(sys_cb.outgoing_number, 0, sizeof(sys_cb.outgoing_number));
+                    ute_module_call_addressbook_t sosData;
+                    memset(&sosData, 0, sizeof(ute_module_call_addressbook_t));
+                    uteModuleCallGetSosContact(&sosData);
+                    if(strlen((const char *)sosData.numberAscii) && uteModuleCallBtIsConnected())
                     {
-                        sys_cb.outgoing_number[i] = sys_cb.sos_call_number[i];
-                    }
-#if MODEM_CAT1_EN
-                    if (bsp_modem_get_init_flag())
-                    {
-                        modem_call_dial(sys_cb.outgoing_number);
+                        memcpy(sys_cb.outgoing_number, sosData.numberAscii, strlen((const char *)sosData.numberAscii));
+    #if MODEM_CAT1_EN
+                        if (bsp_modem_get_init_flag())
+                        {
+                            modem_call_dial(sys_cb.outgoing_number);
+                        }
+                        else
+    #endif
+                        {
+                            bt_call_redial_number();
+                        }                        
                     }
                     else
-#endif
                     {
-                        bt_call_redial_number();
+                        if(uteModuleCallBtIsConnected())
+                        {
+                            msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+                        }
+                        else
+                        {
+                            msgbox((char *)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+                        }
                     }
                     break;
                 case IMG_BTN_ID_2://关机
-                    //    func_cb.sta = FUNC_PWROFF;
                     uteApplicationCommonPoweroff();
                     break;
                 case IMG_BTN_ID_3://重启
-                    //    ble_disconnect();
-                    //    bt_disconnect(1);
-                    //    WDT_RST();
                     uteApplicationCommonRestart();
                     break;
                 default:

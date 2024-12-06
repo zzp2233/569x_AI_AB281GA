@@ -6,6 +6,7 @@
 *@date       Jul 01, 2021
 *@version      v1.0
 */
+#include "include.h"
 #include "ute_module_log.h"
 #include "ute_application_common.h"
 #include "ute_module_message.h"
@@ -25,7 +26,7 @@
 #include "ute_module_findphone.h"
 #include "ute_module_liftwrist.h"
 #include "ute_drv_temperature_common.h"
-
+#include "ute_module_factorytest.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -41,7 +42,6 @@
 #include "ute_module_breathtraining.h"
 #include "ute_module_countdown.h"
 #include "ute_module_menstrualcycle.h"
-#include "ute_module_factorytest.h"
 #include "ute_module_temperature.h"
 #include "ute_module_emotionPressure.h"
 #include "UTEsecurityCode.h"
@@ -236,7 +236,7 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_BLOODSUGAR_SUPPORT
         uteModuleBloodsugarInit();
 #endif
-        //uteModuleFactoryTestInit();
+        uteModuleFactoryTestInit();
         uteModuleSportInit();
         uteModuleNotifyInit();
         uteModuleSleepInit();
@@ -449,14 +449,14 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     uteApplicationCommonData.bleConnectState.isConnected = isConnected;
     uteApplicationCommonData.bleConnectState.connectedSecond = 0;
     uteApplicationCommonData.bleConnectState.isParired = false;
-    //uteModuleNotifyAncsTimerConnectHandler(isConnected);
+    uteModuleNotifyAncsTimerConnectHandler(isConnected);
     if(!isConnected) /* ellison add ,2022-Jun-15 断开以后回到20 byte 兼容部分手机同步表盘失败*/
     {
         uteApplicationCommonSetMtuSize(20);
     }
     if(!uteApplicationCommonData.bleConnectState.isConnected)
     {
-        // uteModuleSportSetTakePictureEnable(false);
+        uteModuleSportSetTakePictureEnable(false);
         if(!uteApplicationCommonData.isPowerOn)
         {
             // uteModulePlatformSetFastAdvertisingTimeCnt(0);
@@ -1414,10 +1414,6 @@ void uteApplicationCommonCheckSoftwareVersion(void)
 #if UTE_USER_ID_FOR_BINDING_SUPPORT
             uteModuleAppBindingClearUserId();
 #endif
-#if UTE_MODULE_PLAYBACK_SUPPORT
-            uteModuleMicRecordDeInit();
-            uteModuleEarphoneBondDeleteALLByIndex();
-#endif
             uteModuleFilesystemDelAllData();
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
             uteDrvBatteryCommonSaveLastLvlToSN1();
@@ -1716,10 +1712,6 @@ void uteApplicationCommonFactoryReset(void)
 #if UTE_USER_ID_FOR_BINDING_SUPPORT
     uteModuleAppBindingClearUserId();
 #endif
-#if UTE_MODULE_PLAYBACK_SUPPORT
-    uteModuleMicRecordDeInit();
-    uteModuleEarphoneBondDeleteALLByIndex();
-#endif
     uteModuleFilesystemDelAllData();
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
     uteDrvBatteryCommonSaveLastLvlToSN1();
@@ -1736,6 +1728,7 @@ void uteApplicationCommonFactoryReset(void)
  */
 void uteApplicationCommonPoweroff(void)
 {
+    gui_sleep();
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT&&UTE_MODULE_SHIP_MODE_POWER_OFF_SUPPORT //关机进入船运模式
     ute_new_factory_test_data_t *data;
     uteModuleNewFactoryTestSetMode(&data);
@@ -1754,6 +1747,7 @@ void uteApplicationCommonRestart(void)
 {
 //    uteDrvScreenCommonDisplayOff();
     // uteApplicationCommonRealPowerOffMsg(); // 先保存数据再执行重启
+    gui_sleep();
     uteApplicationCommonStartPowerOffMsg();
     uteModulePlatformSystemReboot();
 }

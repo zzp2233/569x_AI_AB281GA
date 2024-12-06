@@ -105,7 +105,7 @@ extern void func_smartstack(void);
 extern void func_modem_call(void);
 extern void func_modem_ring(void);
 extern void func_message_reply_info(void);
-extern void func_mic_test(void);
+// extern void func_mic_test(void);
 extern void func_tetris(void);
 extern void func_tetris_start(void);
 extern void func_bird(void);
@@ -122,6 +122,8 @@ extern void func_test_mode(void);///*出厂测试模式选择*/
 extern void func_factory_testing(void);///*工厂测试*/
 extern void func_ageing(void);///*老化测试*/
 extern void func_audio(void);///*音频测试*/
+
+extern void func_online_factory_test(void);
 
 compo_form_t *func_ble_call_form_create(void);
 compo_form_t *func_ota_update_form_create(void);
@@ -203,7 +205,7 @@ compo_form_t *func_music_form_create(void);
 compo_form_t *func_usbdev_form_create(void);
 compo_form_t *func_recorder_form_create(void);
 compo_form_t *func_message_reply_form_create(void);
-compo_form_t *func_mic_test_form_create(void);
+// compo_form_t *func_mic_test_form_create(void);
 compo_form_t *func_tetris_form_create(void);
 compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
@@ -211,8 +213,9 @@ compo_form_t *func_set_sub_sos_form_create(void);
 
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_factory_testing_create(void);///*工厂测试*/
-compo_form_t * func_ageing_create(void);///*老化测试*/
-compo_form_t * func_audio_create(void);///*音频测试*/
+compo_form_t *func_ageing_create(void);///*老化测试*/
+compo_form_t *func_audio_create(void);///*音频测试*/
+compo_form_t *func_online_factory_test_form_create(void);
 
 bool func_music_is_play(void);
 void func_music_play(bool sta);
@@ -309,7 +312,7 @@ const func_t tbl_func_create[] =
 #if FLASHDB_EN
     {FUNC_MESSAGE_REPLY,                func_message_reply_form_create},
 #endif
-#if MIC_TEST_EN
+#if 0//MIC_TEST_EN
     {FUNC_MIC_TEST,                     func_mic_test_form_create},
 #endif // MIC_TEST_EN
 
@@ -323,6 +326,7 @@ const func_t tbl_func_create[] =
     {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/
     {FUNC_AGEING,                       func_ageing_create},///*老化测试*/
     {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
+    {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test_form_create},
 };
 
 const func_t tbl_func_entry[] =
@@ -430,7 +434,7 @@ const func_t tbl_func_entry[] =
 #if FLASHDB_EN
     {FUNC_MESSAGE_REPLY,                func_message_reply_info},
 #endif
-#if MIC_TEST_EN
+#if 0//MIC_TEST_EN
     {FUNC_MIC_TEST,                     func_mic_test},
 #endif // MIC_TEST_EN
     {FUNC_BIRD,                         func_bird},
@@ -445,7 +449,7 @@ const func_t tbl_func_entry[] =
     {FUNC_FACTORY_TESTING,              func_factory_testing},///*工厂测试*/
     {FUNC_AGEING,                       func_ageing},///*老化测试*/
     {FUNC_AUDIO,                        func_audio},///*音频测试*/
-
+    {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test},
 };
 
 AT(.text.func.process)

@@ -13,6 +13,7 @@ void ble_ancs_client_notifiy_callback(u8 id, const char *att_name, const char *a
 
 void ble_ancs_notifiy_info_callback(uint32_t uid, uint8_t event_id, uint8_t event_flags, uint8_t category_id, uint8_t category_count)
 {
+    ble_cb.ansc_uid = uid;
     printf("uid:%x, event_id:%x, category_id:%x\n", uid, event_id, category_id);
 }
 

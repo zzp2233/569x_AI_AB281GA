@@ -141,6 +141,7 @@ enum
     FUNC_FACTORY_TESTING,///*工厂测试*/
     FUNC_AGEING,         ///*老化测试*/
     FUNC_AUDIO,         ///*音频测试*/
+    FUNC_ONLINE_FACTORY_TEST, /*在线工厂测试*/
 
     FUNC_MAX_NUM,           //用于计数
 };
@@ -160,8 +161,11 @@ typedef struct
     u8 sta_break;                                   //被中断的任务
     u8 sort_cnt;                                    //快捷任务个数
     u8 tbl_sort[MAX_FUNC_SORT_CNT];                 //快捷任务表
+    u16 left_sta;                                   //CLOCK左边菜单
     u8  flag_sort       : 1,                        //已进入快捷任务
     flag_animation  : 1;                        //入场动画
+
+
 
     void (*mp3_res_play)(u32 addr, u32 len);        //各任务的语音播报函数接口
     void (*set_vol_callback)(u8 dir);               //设置音量的回调函数，用于各任务的音量事件处理。

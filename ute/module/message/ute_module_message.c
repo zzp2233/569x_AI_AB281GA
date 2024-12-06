@@ -18,6 +18,7 @@
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_heart.h"
 #include "ute_module_watchonline.h"
+#include "ute_module_factorytest.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -158,6 +159,17 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         }
         break;
 #endif
+        case MSG_TYPE_DRV_KEY_HANDLER:
+        {
+            uteModuleFactoryTestKeysHandler(param);
+            uteModuleWatchOnlineRecvTimeoutMsgHandler();
+        }
+        break;
+        case MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR:
+        {
+            uteModuleNotifyAncsStartPairHandlerMsg();
+        }
+        break;
 
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);

@@ -83,6 +83,9 @@
 			<Add directory="../../../ute/drv/temperature" />
 			<Add directory="../../../ute/module/temperature" />
 			<Add directory="../../../ute/module/watchonline" />
+			<Add directory="../../../ute/module/newFactoryTest" />
+			<Add directory="../../../ute/module/factorytest" />
+			<Add directory="../../../ute/module/micrecord" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -180,6 +183,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/crc/ute_module_crc.h" />
+		<Unit filename="../../../ute/module/factorytest/ute_module_factorytest.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/factorytest/ute_module_factorytest.h" />
 		<Unit filename="../../../ute/module/filesystem/ute_module_filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -212,6 +219,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/message/ute_module_message.h" />
+		<Unit filename="../../../ute/module/micrecord/ute_module_micrecord.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/micrecord/ute_module_micrecord.h" />
+		<Unit filename="../../../ute/module/newFactoryTest/ute_module_newFactoryTest.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/newFactoryTest/ute_module_newFactoryTest.h" />
 		<Unit filename="../../../ute/module/notdisturb/ute_module_notdisturb.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1133,9 +1148,6 @@
 		<Unit filename="functions/func_message.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions/func_mic_test.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="functions/func_modem_call.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1146,6 +1158,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_music.h" />
+		<Unit filename="functions/func_online_factorytest.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_ota_err.c">
 			<Option compilerVar="CC" />
 		</Unit>

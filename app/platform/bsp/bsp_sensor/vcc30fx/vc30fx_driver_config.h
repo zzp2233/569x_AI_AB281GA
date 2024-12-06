@@ -9,6 +9,7 @@
 #ifndef __VC30Fx_DRIVER_CONFIG_H__
 #define __VC30Fx_DRIVER_CONFIG_H__
 
+#define VC30Fx_FIFO_BUFFER_CHECK (0)   /* LW-Hisilicon, operation fifo(I2C) error. 1:enable-check */
 /* wear default status select */
 #define VC30Fx_WEAR_DFT_NONE (0)
 #define VC30Fx_WEAR_DFT_DROP (1)
@@ -16,6 +17,14 @@
 /* function enable select */
 #define VC30Fx_FUNC_DISABLE (0)
 #define VC30Fx_FUNC_ENABLE (1)
+#define VC30Fx_LEDTX0_PULL_UP_ENABLE 0
+#define VC30Fx_LEDTX1_PULL_UP_ENABLE 0
+#define VC30Fx_LEDTX2_PULL_UP_ENABLE 0
+#define VC30Fx_BIO_PDSEL_INNAB 0
+#define VC30Fx_BIO_PDSEL_INNA  1
+#define VC30Fx_BIO_PDSEL_INNB  2
+#define VC30Fx_BIO_PDSEL_NONE  3 /* float pin */
+#define VC30Fx_BIO_PDSEL  (VC30Fx_BIO_PDSEL_INNAB)
 
 /* HARDWARE IRQ PIN CONFIGURATION */
 #define VC30Fx_CFG_IRQPIN_PULSE_TIM (VC30Fx_IO_PULSE_TIM_400US)	/* vc30fx_core_com.h@VC30Fx_IO_PULSE_TIM */

@@ -454,5 +454,7 @@ void uteModulePlatformDlpsDisable(uint32_t bit);
 uint32_t uteModulePlatformNotAllowSleep(void);
 void uteModulePlatformDlpsBitReset(void);
 
+void uteModulePlatformRejectIncall(void);
+
 #endif //_UTE_MODULE_PLATFORM_H_
 

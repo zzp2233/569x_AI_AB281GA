@@ -1,6 +1,7 @@
 #include "include.h"
 #include "api.h"
 #include "func.h"
+#include "ute_module_call.h"
 
 bsp_bt_t bt_cb;
 
@@ -104,6 +105,12 @@ void bt_emit_notice(uint evt, void *params)
     case BT_NOTICE_CONNECTED:
         bt_cb.warning_status |= BT_WARN_CON;
         bt_redial_reset(((u8 *)params)[0] & 0x01);
+        //ute add
+        uint8_t mac[6];
+        if(bt_nor_get_link_info(mac))
+        {
+            uteModuleCallBtUpdateKeyConnectAddress(mac);
+        }
 #if BT_HID_ONLY_FOR_IOS_EN
         bd_addr_t address_iphone;
         bd_addr_t remote_address;

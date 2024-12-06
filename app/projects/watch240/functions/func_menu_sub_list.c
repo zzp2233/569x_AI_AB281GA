@@ -15,7 +15,11 @@
 #define ANIMATION_TICK_EXPIRE               12
 
 #define ENTERING_STYLE                      0               //入场动画风格 可选 0,1
-
+#define  BATTERY_PIC_0_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
+#define  BATTERY_PIC_1_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1
+#define  BATTERY_PIC_2_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
+#define  BATTERY_PIC_3_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
+#define  BATTERY_PIC_4_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
 enum
 {
     COMPO_ID_LISTBOX = 1,
@@ -33,30 +37,31 @@ typedef struct f_menu_list_t_
 
 static const compo_listbox_item_t tbl_menu_list[] =
 {
-    {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
-    {STR_SPORTS,                 UI_BUF_ICON_SPORT_BIN,             .func_sta = FUNC_SPORT},                //运动
+//    {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
+    {STR_SPORTS,                 UI_BUF_I330001_THEME_1_SOPRT_BIN,             .func_sta = FUNC_SPORT},                //运动
 //    {STR_PRESSURE,               UI_BUF_ICON_PRESSURE_BIN,          .func_sta = FUNC_PRESSURE},             //压力
 //    {STR_STEP,                   UI_BUF_ICON_STEP_BIN,            .func_sta = FUNC_NULL},                 //计步
-    {STR_SLEEP,                  UI_BUF_ICON_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
-    {STR_ACTIVITY_RECORD,        UI_BUF_ICON_ACTIVITY_BIN,          .func_sta = FUNC_ACTIVITY},             //活动记录
-    {STR_HEART_RATE,             UI_BUF_ICON_HEART_RATE_BIN,        .func_sta = FUNC_HEARTRATE},            //心率
+    {STR_SLEEP,                  UI_BUF_I330001_THEME_1_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
+    {STR_EVREY_DAY_ACTIVITY,        UI_BUF_I330001_THEME_1_ACTIVITY_BIN,          .func_sta = FUNC_ACTIVITY},             //活动记录
+    {STR_HEART_RATE,             UI_BUF_I330001_THEME_1_HEART_BIN,             .func_sta = FUNC_HEARTRATE},            //心率
 //    {STR_BLOOD_PRESSURE,         UI_BUF_ICON_BLOOD_PRESSURE_BIN,    .func_sta = FUNC_BLOOD_PRESSURE},       //血压
-    {STR_BLOOD_OXYGEN,           UI_BUF_ICON_BLOOD_OXYGEN_BIN,      .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
-    {STR_MESSAGE,                UI_BUF_ICON_MESSAGE_BIN,           .func_sta = FUNC_MESSAGE},              //消息
-    {STR_PHONE,                  UI_BUF_ICON_CALL_BIN,              .func_sta = FUNC_CALL},                 //电话
-    {STR_MUSIC,                  UI_BUF_ICON_MUSIC_BIN,             .func_sta = FUNC_BT},                   //音乐
-    {STR_WEATHER,                UI_BUF_ICON_WEATHER_BIN,           .func_sta = FUNC_WEATHER},              //天气
-    {STR_BREATHE,                UI_BUF_ICON_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
-    {STR_CALCULATOR,             UI_BUF_ICON_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器
-    {STR_ALARM_CLOCK,            UI_BUF_ICON_ALARM_CLOCK_BIN,       .func_sta = FUNC_ALARM_CLOCK},          //闹钟
-    {STR_TIMER,                  UI_BUF_ICON_TIMER_BIN,             .func_sta = FUNC_TIMER},                //定时器
-    {STR_STOP_WATCH,             UI_BUF_ICON_STOPWATCH_BIN,         .func_sta = FUNC_STOPWATCH},            //秒表
-    {STR_CAMERA,                 UI_BUF_ICON_CAMERA_BIN,            .func_sta = FUNC_CAMERA},               //相机
-    {STR_VOICE_ASSISTANT,        UI_BUF_ICON_VOICE_BIN,             .func_sta = FUNC_VOICE},                //语音助手
-    {STR_FIND_PHONE,             UI_BUF_ICON_FINDPHONE_BIN,         .func_sta = FUNC_FINDPHONE},            //查找手机
-    {STR_GAME,                   UI_BUF_ICON_GAME_BIN,              .func_sta = FUNC_GAME},                 //游戏
-    {STR_SETTING,                UI_BUF_ICON_SETTING_BIN,           .func_sta = FUNC_SETTING},              //设置
-    {STR_STYLE,                  UI_BUF_ICON_MENU_BIN,              .func_sta = FUNC_STYLE},                //风格
+    {STR_BLOOD_OXYGEN,           UI_BUF_I330001_THEME_1_SPO2_BIN,              .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
+    {STR_MESSAGE,                UI_BUF_I330001_THEME_1_MESSAGE_BIN,           .func_sta = FUNC_MESSAGE},              //消息
+    {STR_PHONE,                  UI_BUF_I330001_THEME_1_CALL_BIN,              .func_sta = FUNC_CALL},                 //电话
+    {STR_MUSIC,                  UI_BUF_I330001_THEME_1_MUSIC_BIN,             .func_sta = FUNC_BT},                   //音乐
+    {STR_WEATHER,                UI_BUF_I330001_THEME_1_WEATHER_BIN,           .func_sta = FUNC_WEATHER},              //天气
+    {STR_BEATHER_DURATION,       UI_BUF_I330001_THEME_1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
+    {STR_CALCULATOR,             UI_BUF_I330001_THEME_1_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器
+    {STR_ALARM_CLOCK,            UI_BUF_I330001_THEME_1_ALARM_BIN,             .func_sta = FUNC_ALARM_CLOCK},          //闹钟
+    {STR_TIMER,                  UI_BUF_I330001_THEME_1_TIMER_BIN,             .func_sta = FUNC_TIMER},                //定时器
+    {STR_STOP_WATCH,             UI_BUF_I330001_THEME_1_STOPWATCH_BIN,         .func_sta = FUNC_STOPWATCH},            //秒表
+    {STR_CALENDAR,               UI_BUF_I330001_THEME_1_CALENDAR_BIN,          .func_sta = FUNC_CALENDAER},            //日历
+    {STR_CAMERA,                 UI_BUF_I330001_THEME_1_PHOTO_BIN,             .func_sta = FUNC_CAMERA},               //相机
+    {STR_VOICE_ASSISTANT,        UI_BUF_I330001_THEME_1_VIOCE_BIN,             .func_sta = FUNC_VOICE},                //语音助手
+    {STR_FIND_PHONE,             UI_BUF_I330001_THEME_1_FINDPHONE_BIN,         .func_sta = FUNC_FINDPHONE},            //查找手机
+    {STR_GAME,                   UI_BUF_I330001_THEME_1_GAME_BIN,              .func_sta = FUNC_GAME},                 //游戏
+    {STR_SETTING,                UI_BUF_I330001_THEME_1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
+    {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
 };
 
 //菜单栏自定义图标更新
@@ -66,31 +71,25 @@ static void func_menu_sub_list_battery_pic_update(void)
     {
         return;
     }
-    switch(sys_cb.vbat_percent)
+    switch(uteDrvBatteryCommonGetBatteryIndex(5))
     {
-        case 0 ... 14:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_0_BIN);
+        case 0:
+            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_0_BIN);
             break;
-        case 15 ... 29:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_1_BIN);
+        case 1:
+            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_1_BIN);
             break;
-        case 30 ... 44:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_2_BIN);
+        case 2:
+            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_2_BIN);
             break;
-        case 45 ... 59:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_3_BIN);
+        case 3:
+            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_3_BIN);
             break;
-        case 60 ... 74:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_4_BIN);
-            break;
-        case 75 ... 84:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_5_BIN);
-            break;
-        case 85 ... 100:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_BATTERY_6_BIN);
+        case 4:
+            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_4_BIN);
             break;
         default:
-            compo_form_set_title_icon(func_cb.frm_main, UI_BUF_DROPDOWN_POWER6_BIN);
+            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_4_BIN);
             break;
     }
 }
@@ -106,12 +105,12 @@ compo_form_t *func_menu_sub_list_form_create(void)
     if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
     {
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_FOURGRID);
-//        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
+        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
         //电池电量
-//        compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
-//        compo_textbox_set_location(battery_txt, 100, 35, 0, 0);
+        compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
+        compo_textbox_set_pos(battery_txt, 43, 25);
 //        compo_textbox_set_autosize(battery_txt, true);
-//        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
+        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
 
         if (menu_idx < 3)
         {
@@ -132,11 +131,11 @@ compo_form_t *func_menu_sub_list_form_create(void)
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_focus_byidx(listbox, menu_idx);
 
-    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_HOUR, UI_BUF_ICON_CLOCK_H_BIN, 1, 2);
-    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_MIN, UI_BUF_ICON_CLOCK_M_BIN, 1, 2);
-    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_SEC, UI_BUF_ICON_CLOCK_S_BIN, 9, 2);
-    compo_listbox_set_start_angle(listbox, 900);
-    compo_listbox_set_time_idx(listbox, 0);
+//    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_HOUR, UI_BUF_ICON_CLOCK_H_BIN, 1, 2);
+//    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_MIN, UI_BUF_ICON_CLOCK_M_BIN, 1, 2);
+//    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_SEC, UI_BUF_ICON_CLOCK_S_BIN, 9, 2);
+//    compo_listbox_set_start_angle(listbox, 900);
+//    compo_listbox_set_time_idx(listbox, 0);
 
     compo_listbox_update(listbox);
 
@@ -377,7 +376,7 @@ static void func_menu_sub_list_message(size_msg_t msg)
             case MSG_SYS_500MS:
                 if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
                 {
-//                    func_menu_sub_list_battery_pic_update();
+                    func_menu_sub_list_battery_pic_update();
                 }
                 break;
 

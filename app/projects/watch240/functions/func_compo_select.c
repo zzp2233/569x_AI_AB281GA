@@ -27,7 +27,7 @@ compo_form_t *func_compo_select_form_create(void)
     compo_form_set_title(frm, i18n[STR_COMPO_SELECT]);
 
     //创建按键
-    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_COMPO_SELECT_BG_BIN);
+    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_FIRSTORDER_00_BIN);
     compo_setid(btn, COMPO_ID_BG_BTN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 

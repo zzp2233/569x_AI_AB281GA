@@ -41,7 +41,7 @@ compo_form_t *func_alarm_clock_sub_pop_form_create(void)
 
     //新建图像
     compo_picturebox_t *pic;
-    pic = compo_picturebox_create(frm, UI_BUF_ICON_ALARM_CLOCK_BIN);
+    pic = compo_picturebox_create(frm, UI_BUF_I330001_THEME_1_ALARM_BIN);
     compo_setid(pic, COMPO_ID_PIC_ALARM);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 40);
 

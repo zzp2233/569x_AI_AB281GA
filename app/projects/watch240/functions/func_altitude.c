@@ -22,8 +22,8 @@ compo_form_t *func_altitude_form_create(void)
     compo_form_set_title(frm, i18n[STR_ALTITUDE]);
 
     //创建按键
-    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_ALTITUDE_BIN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+//    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_ALTITUDE_BIN);
+//    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
     return frm;
 }

@@ -25,7 +25,7 @@ typedef struct f_cover_remind_item_t_
 const f_cover_remind_item_t tbl_cover_remind_item[] =
 {
     /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
-    [REMIND_COVER_ALARM]            = {UI_BUF_ICON_ALARM_CLOCK_BIN,             STR_ALARM_CLOCK,        GUI_SCREEN_HEIGHT/5+30, GUI_SCREEN_HEIGHT/5,  GUI_SCREEN_CENTER_Y},
+    [REMIND_COVER_ALARM]            = {UI_BUF_I330001_THEME_1_ALARM_BIN,             STR_ALARM_CLOCK,        GUI_SCREEN_HEIGHT/5+30, GUI_SCREEN_HEIGHT/5,  GUI_SCREEN_CENTER_Y},
     [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_REMIND_SEDENTARY_CLOCK_BIN,       STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
 //    [REMIND_COVER_HEALTH_DRINK]     = {UI_BUF_POP_UP_WATER_CLOCK_BIN,             STR_DRINK_REMIND,       102,            190},
     [REMIND_COVER_FIND_WATCH]       = {UI_BUF_REMIND_FINDWATCH_BIN,             STR_FIND_WATCH,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},

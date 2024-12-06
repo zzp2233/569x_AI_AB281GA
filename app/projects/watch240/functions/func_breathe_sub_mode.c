@@ -17,10 +17,6 @@ enum
     COMPO_ID_BTN_OK = 1,
     COMPO_ID_BTN_SLIDE,
 
-    //图像
-    COMPO_ID_PIC_MODE,
-    COMPO_ID_PIC_OK_CLICK,
-
     //数字
     COMPO_ID_NUM_UU,
     COMPO_ID_NUM_UP,
@@ -51,7 +47,7 @@ typedef struct f_breathe_sub_mode_t_
 } f_breathe_sub_mode_t;
 
 #define BREATHE_NUM_PIC_CENTER_X              GUI_SCREEN_CENTER_X //时间设置子页面位置x
-#define BREATHE_NUM_PIC_CENTER_Y              (GUI_SCREEN_HEIGHT/2+10) //时间设置子页面位置y
+#define BREATHE_NUM_PIC_CENTER_Y              (GUI_SCREEN_HEIGHT/2-20) //时间设置子页面位置y
 #define BREATHE_SET_NUM_ITEM_CNT             ((int)(sizeof(tbl_breathe_set_num_item) / sizeof(tbl_breathe_set_num_item[0])))
 #define BREATHE_TXT_ITEM_M_X                  BREATHE_NUM_PIC_CENTER_X
 #define BREATHE_TXT_ITEM_Y                    -20
@@ -178,30 +174,22 @@ compo_form_t *func_breathe_sub_mode_form_create(void)
 
     //新建按钮
     compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN);
     compo_setid(btn, COMPO_ID_BTN_OK);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_BUTTON_BIN).hei/2 - 5);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN).hei/2 - 5);
 
     btn = compo_button_create(frm);
     compo_setid(btn, COMPO_ID_BTN_SLIDE);
     compo_button_set_location(btn, BREATHE_NUM_PIC_CENTER_X, BREATHE_NUM_PIC_CENTER_Y, GUI_SCREEN_WIDTH/3, BREATHE_TXT_ITEM_Y_OFFSET*3);
 
     //新建图像
-    compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_BREATHE_MODE_BIN);
-    compo_setid(pic_click, COMPO_ID_PIC_MODE);
-    compo_picturebox_set_pos(pic_click, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4);
-    compo_picturebox_set_visible(pic_click, true);
-
-    //创建按钮pic
-    pic_click = compo_picturebox_create(frm, UI_BUF_COMMON_BUTTON_CLICK_BIN);
-    compo_setid(pic_click, COMPO_ID_PIC_OK_CLICK);
-    compo_picturebox_set_pos(pic_click, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_BUTTON_BIN).hei/2 - 5);
-    compo_picturebox_set_visible(pic_click, false);
+    compo_picturebox_t *pic_bg = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_BOX_BIN);
+    compo_picturebox_set_pos(pic_bg, GUI_SCREEN_CENTER_X, BREATHE_NUM_PIC_CENTER_Y);
 
     //创建TEXT
     compo_textbox_t *txt = compo_textbox_create(frm, 10);
     compo_textbox_set_align_center(txt, true);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_BUTTON_BIN).hei/2 - 5,
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN).hei/2 - 5,
                                GUI_SCREEN_WIDTH, widget_text_get_height());
     compo_textbox_set_visible(txt, true);
     compo_textbox_set_autoroll_mode(txt, 0);
@@ -430,15 +418,8 @@ static void func_breathe_sub_mode_button_touch_handle(void)
 
     int id = compo_get_button_id();
 
-    //获取图片组件的地址
-    compo_picturebox_t *pic_click = compo_getobj_byid(COMPO_ID_PIC_OK_CLICK);
-
     switch (id)
     {
-        case COMPO_ID_BTN_OK:
-            compo_picturebox_set_visible(pic_click, true);
-            break;
-
         case COMPO_ID_BTN_SLIDE:
             func_breathe_sub_mode_move_handle();
             break;
@@ -449,12 +430,12 @@ static void func_breathe_sub_mode_button_touch_handle(void)
 
 }
 
-//释放按钮效果处理
-static void func_breathe_sub_mode_button_release_handle(void)
-{
-    compo_picturebox_t *pic_start_click = compo_getobj_byid(COMPO_ID_PIC_OK_CLICK);
-    compo_picturebox_set_visible(pic_start_click, false);
-}
+////释放按钮效果处理
+//static void func_breathe_sub_mode_button_release_handle(void)
+//{
+//    compo_picturebox_t *pic_start_click = compo_getobj_byid(COMPO_ID_PIC_OK_CLICK);
+//    compo_picturebox_set_visible(pic_start_click, false);
+//}
 
 //单击按钮
 static void func_breathe_sub_mode_button_click(void)
@@ -478,7 +459,7 @@ static void func_breathe_sub_mode_button_click(void)
             break;
     }
 
-    func_breathe_sub_mode_button_release_handle();
+//    func_breathe_sub_mode_button_release_handle();
 }
 
 //设置功能事件处理
@@ -505,11 +486,11 @@ static void func_breathe_sub_mode_message(size_msg_t msg)
         case MSG_CTP_SHORT_DOWN:
         case MSG_CTP_SHORT_LEFT:
         case MSG_CTP_LONG:
-            func_breathe_sub_mode_button_release_handle();
+//            func_breathe_sub_mode_button_release_handle();
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-            func_breathe_sub_mode_button_release_handle();
+//            func_breathe_sub_mode_button_release_handle();
             func_message(msg);
             break;
 

@@ -94,14 +94,14 @@ compo_form_t *func_bt_call_form_create(void)
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
 
     //挂断按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/4);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 240);
 
     //mic
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_MUTE_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_JINGYIN00_BIN);
     compo_setid(btn, COMPO_ID_BTN_MIC);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/3, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/4);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/3, 240);
 
 
     return frm;
@@ -135,13 +135,13 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //挂断按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/4);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 240);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_MUTE_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_JINGYIN00_BIN);
     compo_setid(btn, COMPO_ID_BTN_MIC);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/3, GUI_SCREEN_HEIGHT-GUI_SCREEN_HEIGHT/4);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/3, 240);
 
     return frm;
 }
@@ -243,7 +243,7 @@ static void func_bt_call_click(void)
 #else
                 audio_path_exit(AUDIO_PATH_BTMIC);
 #endif
-                compo_button_set_bgimg(btn,UI_BUF_CALL_MUTE_ON_BIN);
+                compo_button_set_bgimg(btn,UI_BUF_I330001_CALL_CALLING_JINGYIN01_BIN);
             }
             else
             {
@@ -261,7 +261,7 @@ static void func_bt_call_click(void)
                 audio_path_init(AUDIO_PATH_BTMIC);
                 audio_path_start(AUDIO_PATH_BTMIC);
 #endif
-                compo_button_set_bgimg(btn,UI_BUF_CALL_MUTE_BIN);
+                compo_button_set_bgimg(btn,UI_BUF_I330001_CALL_CALLING_JINGYIN00_BIN);
             }
             break;
 

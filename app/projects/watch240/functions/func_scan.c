@@ -23,18 +23,18 @@ compo_form_t *func_scan_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SCAN]);
+    compo_form_set_title(frm, i18n[STR_QRCODE]);
 
     //创建按键
-    //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_SCAN_BIN);
+    //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_QR_BIN);
     //compo_button_set_pos(btn, 160, 180);
 
-    static const uint8_t maxSizeQrCodeLink = 160;
+    static const uint8_t maxSizeQrCodeLink = 140;
     char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
     uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
     compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
     compo_qrcodebox_set(qrbox, qr_str);
-    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
     uteModulePlatformMemoryFree(qr_str);
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
 

@@ -67,11 +67,11 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 
 	//新建按钮
 	compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
     compo_setid(btn, COMPO_ID_BTN_REPETAT_NO);
     compo_button_set_pos(btn, 87, 321);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
     compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
     compo_button_set_pos(btn, 233, 321);
 

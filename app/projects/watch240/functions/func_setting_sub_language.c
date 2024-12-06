@@ -11,6 +11,9 @@
 
 #define LANGUAGE_LIST_CNT                       ((int)(sizeof(tbl_language_list) / sizeof(tbl_language_list[0])))
 
+#define CHINESE_ID   1
+#define ENGLISH_ID   2
+
 enum
 {
     COMPO_ID_LISTBOX = 1,
@@ -24,14 +27,24 @@ typedef struct f_language_list_t_
 
 static const compo_listbox_item_t tbl_language_list[] =
 {
-    {STR_LANGUAGE_CN},
-    {STR_LANGUAGE_ENG},
+    {STR_LANGUAGE_CN,   .vidx = CHINESE_ID},
+    {STR_LANGUAGE_ENG,  .vidx = ENGLISH_ID},
 //    {STR_LANGUAGE_FN},
 //    {STR_LANGUAGE_RU},
 //    {STR_LANGUAGE_AT},
 //    {STR_LANGUAGE_JP},
 
 };
+
+u8 func_sel_language_bit(uint n)
+{
+    if(uteModuleSystemtimeReadLanguage() == n)
+    {
+        return true;
+    }
+
+    return false;
+}
 
 //语言设置页面
 compo_form_t *func_set_sub_language_form_create(void)
@@ -44,14 +57,22 @@ compo_form_t *func_set_sub_language_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
 
     //新建列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_language_list, LANGUAGE_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
-    compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    compo_listbox_set_item_text(listbox, GUI_SCREEN_CENTER_X, 30, GUI_SCREEN_WIDTH, 40, true);
-    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bithook(listbox, func_sel_language_bit);
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    uint8_t set_idx = 1;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+    compo_listbox_set_focus_byidx(listbox, set_idx);
     compo_listbox_update(listbox);
+
 
     return frm;
 }
@@ -62,26 +83,21 @@ void func_set_sub_language_list_icon_click(void)
     int icon_idx;
     f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
-//    u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-//    if (icon_idx >= 0) {                                                                                //ls
-//        bsp_sys_reverse_ctlbit(tbl_language_list[icon_idx].vidx);
-//        compo_listbox_update(listbox);
-//        return;
-//    }
 
     if (icon_idx < 0 || icon_idx >= LANGUAGE_LIST_CNT)
     {
         return;
     }
+    compo_listbox_update(listbox);
     switch(icon_idx)
     {
         case 0:
-            uteModuleSystemtimeSetLanguage(CHINESE_LANGUAGE_ID);
+           uteModuleSystemtimeSetLanguage(CHINESE_LANGUAGE_ID);
             break;
         case 1:
-            uteModuleSystemtimeSetLanguage(ENGLISH_LANGUAGE_ID);
+           uteModuleSystemtimeSetLanguage(ENGLISH_LANGUAGE_ID);
             break;
         default:
             break;
@@ -173,7 +189,7 @@ static void func_set_sub_language_enter(void)
     // compo_listbox_move_init(listbox);
 
     compo_listbox_move_init(listbox);
-    //compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
+//    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
     //func_cb.enter_tick = tick_get();
 
 }

@@ -99,9 +99,9 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 
     //新建按钮
     compo_button_t *btn;
-//    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
 //    compo_setid(btn, COMPO_ID_BTN_REPETAT_NO);
-//    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei / 2 - 5);
+//    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei / 2 - 5);
 
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
     compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);

@@ -72,7 +72,7 @@ compo_form_t *func_set_sub_password_form_create(void)
 
     if(sys_cb.password_cnt == 4) {
         compo_button_set_visible(btn, true);
-        compo_form_add_image(frm, UI_BUF_SETTING_PASSWORD_OPEN_BIN, 150, 183);
+//        compo_form_add_image(frm, UI_BUF_SETTING_PASSWORD_OPEN_BIN, 150, 183);
     }
 
     return frm;

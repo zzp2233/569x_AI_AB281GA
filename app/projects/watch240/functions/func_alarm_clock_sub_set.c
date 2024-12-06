@@ -715,13 +715,13 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
 //    }
 //    else        //edit
 //    {
-//        btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+//        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
 //        compo_setid(btn, COMPO_ID_BTN_REPETAT_NO);
-//        compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_BIN).hei / 2 - 10);
+//        compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei / 2 - 10);
 //
-//        btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+//        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
 //        compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
-//        compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_YES_BIN).hei / 2 - 10);
+//        compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_OK01_BIN).hei / 2 - 10);
 //    }
 
     //建立确定按钮 - 未按下图片

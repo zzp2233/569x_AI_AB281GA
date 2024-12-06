@@ -61,7 +61,7 @@ compo_form_t *func_set_sub_time_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_TIME]);
+    compo_form_set_title(frm, i18n[STR_BEATHER_DURATION]);
 
     //创建按钮
     compo_button_t *btn;
@@ -71,9 +71,9 @@ compo_form_t *func_set_sub_time_form_create(void)
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
         compo_setid(btn, tbl_disturd_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_disturd_disp_btn_item[idx_btn].x, tbl_disturd_disp_btn_item[idx_btn].y);
-        pic[idx_btn] = compo_picturebox_create(frm, UI_BUF_SETTING_PASSWORD_OPEN_BIN);
-        compo_picturebox_set_pos(pic[idx_btn], 210, tbl_disturd_disp_btn_item[idx_btn].y);
-        compo_picturebox_set_visible(pic[idx_btn], true);
+//        pic[idx_btn] = compo_picturebox_create(frm, UI_BUF_SETTING_PASSWORD_OPEN_BIN);
+//        compo_picturebox_set_pos(pic[idx_btn], 210, tbl_disturd_disp_btn_item[idx_btn].y);
+//        compo_picturebox_set_visible(pic[idx_btn], true);
     }
 
     //文本

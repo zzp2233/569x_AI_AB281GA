@@ -27,6 +27,7 @@ enum
     COMPO_ID_TEXT_SPORT_KCAL,
     COMPO_ID_TEXT_SPORT_STEP,
     COMPO_ID_TEXT_SPORT_KM,
+    COMPO_ID_TEXT_SPORT_HEARTRATE,
 
     COMPO_ID_PIC_SPORT_TYPE,        //运动图标
     COMPO_ID_PIC_SPORT_HEART,
@@ -41,6 +42,8 @@ enum
 
     COMPO_ID_BTN_SPORT_STOP,
     COMPO_ID_BTN_SPORT_EXIT,
+
+    COMPO_ID_TXT_TIME,
 };
 
 typedef struct
@@ -61,16 +64,16 @@ typedef struct
 #define TEXT_CNT    ((int)(sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0])))
 static const text_t sport_sub_run_text[] =
 {
-    {COMPO_ID_NUM_SPORT_TIME,       100,    70,     0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=255, .b=255},    20,    "02:38.58"},
-    {COMPO_ID_NUM_SPORT_HEARTRATE,  60,     115,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=69, .b=58},     3,      "108"},
-    {COMPO_ID_NUM_SPORT_KCAL,       60,     160,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=233, .g=16, .b=75},     20,     "5000 KCAL"},
-    {COMPO_ID_NUM_SPORT_STEP,       60,     205,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=26, .g=137, .b=255},     20,    "20000 STEP"},
-    {COMPO_ID_NUM_SPORT_KM,         60,     250,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=57, .g=255, .b=0},     10,      "50 KM"},
+    {COMPO_ID_NUM_SPORT_TIME,       10,     66,     0,      0,  UI_BUF_0FONT_FONT_NUM_46_BIN,   false,  false,  {.r=169, .g=255, .b=0},         20,    "02:38.58"},
+    {COMPO_ID_NUM_SPORT_KM,         45,     163,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=255, .b=255},       10,    "50 KM"},
+    {COMPO_ID_NUM_SPORT_STEP,       45,     201,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,    "20000 STEP"},
+    {COMPO_ID_NUM_SPORT_KCAL,       42,     125,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,     "5000 KCAL"},
+    {COMPO_ID_NUM_SPORT_HEARTRATE,  44,     237,    0,      0,  UI_BUF_0FONT_FONT_NUM_48_BIN,   false,  false,  {.r=255, .g=255, .b=255},       3,      "108"},
 
-    {COMPO_ID_TEXT_SPORT_KCAL,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=233, .g=16, .b=75},     20,     "KCAL"},
-    {COMPO_ID_TEXT_SPORT_STEP,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=26, .g=137, .b=255},     20,    "STEP"},
-    {COMPO_ID_TEXT_SPORT_KM,        0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=57, .g=255, .b=0},     10,      "KM"},
-
+    {COMPO_ID_TEXT_SPORT_KCAL,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
+    {COMPO_ID_TEXT_SPORT_STEP,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
+    {COMPO_ID_TEXT_SPORT_KM,        0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KM"},
+    {COMPO_ID_TEXT_SPORT_HEARTRATE, 0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "MIN/Cnt"},
 };
 
 typedef struct
@@ -85,11 +88,11 @@ typedef struct
 #define PICTURE_CNT     ((int)(sizeof(sport_sub_run_picture)/sizeof(sport_sub_run_picture[0])))
 static const picture_t sport_sub_run_picture[] =
 {
-    {COMPO_ID_PIC_SPORT_TYPE,   50,  70,    0,  0,  0},
-    {COMPO_ID_PIC_SPORT_HEART,   30, 130,   40, 40, UI_BUF_ICON_HEART_RATE_BIN},
-    {COMPO_ID_PIC_SPORT_KCAL,  30, 175,   40,  40,  UI_BUF_SPORT_EXERCISING_KCAL_BIN},
-    {COMPO_ID_PIC_SPORT_STEP,   30, 220,   40, 40, UI_BUF_SPORT_EXERCISING_STEP_BIN},
-    {COMPO_ID_PIC_SPORT_KM,   30, 260,   40, 40, UI_BUF_SPORT_EXERCISING_KM_BIN},
+    {COMPO_ID_PIC_SPORT_TYPE,   10+56/2,  12+56/2,    56,   56,       0},
+    {COMPO_ID_PIC_SPORT_KM,     10+24/2,  169+24/2,   24,  24,      UI_BUF_I330001_SPORT_ICON2_DIS_BIN},
+    {COMPO_ID_PIC_SPORT_STEP,   10+24/2,  207+24/2,   24,  24,      UI_BUF_I330001_SPORT_ICON2_STEP_BIN},
+    {COMPO_ID_PIC_SPORT_KCAL,   10+24/2,  131+24/2,   24,  24,      UI_BUF_I330001_SPORT_ICON2_CALORIES_BIN},
+    {COMPO_ID_PIC_SPORT_HEART,  10+24/2,  251+24/2,   24,  24,      UI_BUF_I330001_SPORT_ICON2_HR_BIN},
 };
 
 #if USE_GOAL_ARC
@@ -142,26 +145,30 @@ typedef struct f_sport_sub_run_t_
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_sub_run_form_create(void)
 {
-    bool sport_flag[3]= {true,true,true};
+    bool sport_flag[4]= {true,true,true,true};
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    u32 str_id = STR_NULL;
-    if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
-    {
-        str_id = func_sport_get_str(uteModuleSportMoreSportGetType()-1);
-        TRACE("【APP连接】运动的类型:%d\n", str_id);
-    }
-    else                                                            //本地点击
-    {
-        str_id = func_sport_get_str(func_sport_get_current_idx());
-        TRACE("【本地】运动的类型:%d\n", str_id);
-    }
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[str_id]);
+//    u32 str_id = STR_NULL;
+//    if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
+//    {
+//        str_id = func_sport_get_str(uteModuleSportMoreSportGetType()-1);
+//        TRACE("【APP连接】运动的类型:%d\n", str_id);
+//    }
+//    else                                                            //本地点击
+//    {
+//        str_id = func_sport_get_str(func_sport_get_current_idx());
+//        TRACE("【本地】运动的类型:%d\n", str_id);
+//    }
+//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+//    compo_form_set_title(frm, i18n[str_id]);
 
-
+    compo_textbox_t* time = compo_textbox_create(frm, 32);
+    compo_textbox_set_align_center(time, false);
+    compo_textbox_set_location(time, 168, 15, 52, 23);
+    compo_setid(time, COMPO_ID_TXT_TIME);
+    compo_bonddata(time, COMPO_BOND_HOURMIN_TXT);
 
 
     switch(func_sport_get_current_idx())
@@ -293,6 +300,8 @@ compo_form_t *func_sport_sub_run_form_create(void)
             break;
     }
 
+    sport_flag[3] = true;   //心率
+
     //不同运行界面不同数据,用户自己添加 --> todo
 
     //否则采用默认运行界面
@@ -313,9 +322,9 @@ compo_form_t *func_sport_sub_run_form_create(void)
         compo_textbox_set_location(txt, sport_sub_run_text[i].x, sport_sub_run_text[i].y, sport_sub_run_text[i].w, sport_sub_run_text[i].h);
         compo_setid(txt, sport_sub_run_text[i].id);
 
-        if(i>=2 && i<5)
+        if(i>=1 && i<5)
         {
-            compo_textbox_set_visible(txt, sport_flag[i-2]);///不同模式屏蔽不同功能
+            compo_textbox_set_visible(txt, sport_flag[i-1]);///不同模式屏蔽不同功能
         }
         else if(i>=5)
         {
@@ -359,23 +368,34 @@ compo_form_t *func_sport_sub_run_form_create(void)
         }
         compo_setid(pic, sport_sub_run_picture[i].id);
 
-        if(i>=2)
+        if(i>=1)
         {
-            compo_picturebox_set_visible(pic, sport_flag[i-2]);///不同模式屏蔽不同功能
+            compo_picturebox_set_visible(pic, sport_flag[i-1]);///不同模式屏蔽不同功能
         }
     }
 
 
     //右滑退出界面
-    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_SPORT_EXERCISING_PAUSE_BIN);
-    compo_button_set_pos(btn, -140, GUI_SCREEN_CENTER_Y);
+    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
+    compo_button_set_pos(btn, -140-120/2, 62+68/2);
     compo_button_set_visible(btn, true);
     compo_setid(btn, COMPO_ID_BTN_SPORT_STOP);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_SPORT_EXERCISING_CANCEL_BIN);
-    compo_button_set_pos(btn, -260, GUI_SCREEN_CENTER_Y);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_CLOSE_BIN);
+    compo_button_set_pos(btn, -140-120/2, 176+68/2);
     compo_button_set_visible(btn, true);
     compo_setid(btn, COMPO_ID_BTN_SPORT_EXIT);
+
+    compo_textbox_t* text = compo_textbox_create(frm, 32);
+    compo_textbox_set_location(text, -140-120/2, 134+23/2,
+                               gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).wid - gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei,
+                               gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
+    compo_textbox_set(text, "暂停");
+
+    text = compo_textbox_create(frm, 32);
+    compo_textbox_set_location(text, -140-120/2, 248+23/2, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).wid - gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei,
+                               gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
+    compo_textbox_set(text, "关闭");
 
     return frm;
 }
@@ -411,83 +431,113 @@ static void func_sport_sub_run_updata(void)
         {
             //更新时间
             char buf[14];
-            compo_textbox_t *txt_time = compo_getobj_byid(sport_sub_run_text[0].id);
-//            if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
+            compo_textbox_t *txt_time = NULL;
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_TIME) {
+                    txt_time = compo_getobj_byid(sport_sub_run_text[i].id);
+                    break;
+                }
+            }
             f_sport_sub_run->hour = data->totalSportTime / 3600;
             f_sport_sub_run->min = ((data->totalSportTime) % 3600) / 60;
             f_sport_sub_run->sec = (data->totalSportTime) % 60;
             snprintf(buf, sizeof(buf), "%02d:%02d:%02d", f_sport_sub_run->hour, f_sport_sub_run->min, f_sport_sub_run->sec);
-//            } else {
-//                f_sport_sub_run->total_msec += 10;
-//                f_sport_sub_run->min = ((f_sport_sub_run->total_msec / 1000) % 3600) / 60;
-//                f_sport_sub_run->sec = (f_sport_sub_run->total_msec / 1000) % 60;
-//                f_sport_sub_run->msec = f_sport_sub_run->total_msec % 1000;
-//                memset(buf, 0, sizeof(buf));
-//                snprintf(buf, sizeof(buf), "%02d:%02d.%02d", f_sport_sub_run->min, f_sport_sub_run->sec, f_sport_sub_run->msec / 10);
-//            }
             compo_textbox_set(txt_time, buf);
+
+
             //更新心率
-//            if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
             f_sport_sub_run->heartrate = data->saveData.avgHeartRate;
-//            } else {
-//                f_sport_sub_run->heartrate = 108;
-//            }
             memset(buf, 0, sizeof(buf));
             snprintf(buf, sizeof(buf), "%d", f_sport_sub_run->heartrate);
-            compo_textbox_t* txt_heartrate = compo_getobj_byid(sport_sub_run_text[1].id);
+            compo_textbox_t* txt_heartrate = NULL;
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_HEARTRATE) {
+                    txt_heartrate = compo_getobj_byid(sport_sub_run_text[i].id);
+                    break;
+                }
+            }
             compo_textbox_set(txt_heartrate, buf);
+
+            compo_textbox_t* txt_heartrate_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_HEARTRATE);
+            area_t rel_text_area = widget_text_get_area(txt_heartrate->txt);
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_HEARTRATE) {
+                    compo_textbox_set_location(txt_heartrate_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+8, 0, 0);
+                    break;
+                }
+            }
+            compo_textbox_set(txt_heartrate_unit, "次/分");
+
+
             //更新卡路里
-//            if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
             f_sport_sub_run->kcal = data->saveData.sportCaloire;
-//            } else {
-//                f_sport_sub_run->kcal = 5000;
-//            }
             memset(buf, 0, sizeof(buf));
 //        snprintf(buf, sizeof(buf), "%dKCAL", f_sport_sub_run->kcal);
             snprintf(buf, sizeof(buf), "%d", f_sport_sub_run->kcal);
-            compo_textbox_t* txt_kcal = compo_getobj_byid(sport_sub_run_text[2].id);
+            compo_textbox_t* txt_kcal = NULL;
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KCAL) {
+                    txt_kcal = compo_getobj_byid(sport_sub_run_text[i].id);
+                    break;
+                }
+            }
             compo_textbox_set(txt_kcal, buf);
 
             compo_textbox_t* txt_kcal_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_KCAL);
-            area_t rel_text_area = widget_text_get_area(txt_kcal->txt);
-            compo_textbox_set_location(txt_kcal_unit, sport_sub_run_text[2].x + rel_text_area.wid + 10, sport_sub_run_text[2].y+8, 0, 0);
+            rel_text_area = widget_text_get_area(txt_kcal->txt);
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KCAL) {
+                    compo_textbox_set_location(txt_kcal_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+8, 0, 0);
+                    break;
+                }
+            }
             compo_textbox_set(txt_kcal_unit, i18n[STR_SET_CALORIE]);
 
             //更新计步
-//            if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
             f_sport_sub_run->step = data->saveData.sportStep;
-//            } else {
-//                f_sport_sub_run->step = 20000;
-//            }
             memset(buf, 0, sizeof(buf));
-//        snprintf(buf, sizeof(buf), "%dSTEP", f_sport_sub_run->step);
-//        snprintf(buf, sizeof(buf), "%dSTEP", f_sport_sub_run->step);
             snprintf(buf, sizeof(buf), "%d", f_sport_sub_run->step);
-            compo_textbox_t* txt_step = compo_getobj_byid(sport_sub_run_text[3].id);
+            compo_textbox_t* txt_step = NULL;
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP) {
+                    txt_step = compo_getobj_byid(sport_sub_run_text[i].id);
+                    break;
+                }
+            }
             compo_textbox_set(txt_step, buf);
 
             compo_textbox_t* txt_step_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_STEP);
             rel_text_area = widget_text_get_area(txt_step->txt);
-            compo_textbox_set_location(txt_step_unit, sport_sub_run_text[3].x + rel_text_area.wid + 10, sport_sub_run_text[3].y+8, 0, 0);
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP) {
+                    compo_textbox_set_location(txt_step_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+8, 0, 0);
+                    break;
+                }
+            }
             compo_textbox_set(txt_step_unit, i18n[STR_SET_STEP_COUNT]);
 
             //更新距离
-//            if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
             f_sport_sub_run->km_integer = data->saveData.sportDistanceInteger;
             f_sport_sub_run->km_decimals = data->saveData.sportDistanceDecimals;
-//            } else {
-//                f_sport_sub_run->km_integer = 50;
-//                f_sport_sub_run->km_decimals = 1;
-//            }
             memset(buf, 0, sizeof(buf));
-//        snprintf(buf, sizeof(buf), "%dKM", f_sport_sub_run->km);
             snprintf(buf, sizeof(buf), "%d.%02d", f_sport_sub_run->km_integer, f_sport_sub_run->km_decimals);
-            compo_textbox_t* txt_km = compo_getobj_byid(sport_sub_run_text[4].id);
+            compo_textbox_t* txt_km = NULL;
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KM) {
+                    txt_km = compo_getobj_byid(sport_sub_run_text[i].id);
+                    break;
+                }
+            }
             compo_textbox_set(txt_km, buf);
 
             compo_textbox_t* txt_km_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_KM);
             rel_text_area = widget_text_get_area(txt_km->txt);
-            compo_textbox_set_location(txt_km_unit, sport_sub_run_text[4].x + rel_text_area.wid + 10, sport_sub_run_text[4].y+8, 0, 0);
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KM) {
+                    compo_textbox_set_location(txt_km_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+8, 0, 0);
+                    break;
+                }
+            }
             compo_textbox_set(txt_km_unit, i18n[STR_SET_DISTANCE]);
 
 #if USE_GOAL_ARC
@@ -521,24 +571,20 @@ static void func_sport_sub_run_process(void)
     {
         if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
         {
-//            if (sys_cb.sport_app_disconnect) {                          //判断app是否断链，断链停止运动
-//                compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
-//                f_sport_sub_run->sport_run_state = false;
-//            }
             u8 ute_sport_status = uteModuleSportMoreSportGetStatus();
 
             switch (ute_sport_status)
             {
                 case ALL_SPORT_STATUS_CLOSE:
                 case ALL_SPORT_STATUS_PAUSE:
-                    compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
+                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
                     f_sport_sub_run->sport_run_state = false;
                     TRACE("【APP连接】运动停止/退出\n");
                     break;
 
                 case ALL_SPORT_STATUS_OPEN:
                 case ALL_SPORT_STATUS_CONTINUE:
-                    compo_button_set_bgimg(btn, UI_BUF_SPORT_EXERCISING_PAUSE_BIN);
+                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
                     f_sport_sub_run->sport_run_state = true;
                     TRACE("【APP连接】运动开始/继续\n");
                     break;
@@ -564,7 +610,7 @@ static void func_sport_sub_run_process(void)
             {
                 f_sport_sub_run->focus_x = 0;
             }
-            widget_page_set_client(func_cb.frm_main->page_body, f_sport_sub_run->focus_x, -(GUI_SCREEN_HEIGHT/8));
+            widget_page_set_client(func_cb.frm_main->page_body, f_sport_sub_run->focus_x, 0);
         }
         else     //松手
         {
@@ -576,12 +622,12 @@ static void func_sport_sub_run_process(void)
                 if (dx > 0)
                 {
                     f_sport_sub_run->moveto.x = 320;
-                    f_sport_sub_run->moveto.y = -(GUI_SCREEN_HEIGHT/8);
+                    f_sport_sub_run->moveto.y = 0;
                 }
                 else if (dx < 0)
                 {
                     f_sport_sub_run->moveto.x = 0;
-                    f_sport_sub_run->moveto.y = -(GUI_SCREEN_HEIGHT/8);
+                    f_sport_sub_run->moveto.y = 0;
                 }
             }
             f_sport_sub_run->flag_auto_move = true;
@@ -606,7 +652,7 @@ static void func_sport_sub_run_process(void)
                 f_sport_sub_run->last_dx -= 16;
                 f_sport_sub_run->last_dx = (f_sport_sub_run->last_dx < f_sport_sub_run->moveto.x) ? f_sport_sub_run->moveto.x : f_sport_sub_run->last_dx;
             }
-            widget_page_set_client(func_cb.frm_main->page_body, f_sport_sub_run->last_dx, -(GUI_SCREEN_HEIGHT/8));
+            widget_page_set_client(func_cb.frm_main->page_body, f_sport_sub_run->last_dx, 0);
         }
     }
 
@@ -636,15 +682,15 @@ static void func_sport_sub_run_click_handler(void)
             {
                 if (f_sport_sub_run->sport_run_state == true)
                 {
-                    compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
-                    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).wid, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).hei);
+                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
+                    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).wid, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).hei);
                     f_sport_sub_run->sport_run_state = false;
                     if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
                     {
                         if (sys_cb.sport_app_disconnect)                            //判断app是否断链，断链停止运动
                         {
-                            compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
-                            widget_set_size(btn->widget, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).wid, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).hei);
+                            compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
+                            widget_set_size(btn->widget, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).wid, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).hei);
                             f_sport_sub_run->sport_run_state = false;
                             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);   //通知APP暂停运动
                             TRACE("【APP连接】本地通知APP运动停止\n");
@@ -657,14 +703,14 @@ static void func_sport_sub_run_click_handler(void)
                 }
                 else if (f_sport_sub_run->sport_run_state == false)
                 {
-                    compo_button_set_bgimg(btn, UI_BUF_SPORT_EXERCISING_PAUSE_BIN);
+                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
                     f_sport_sub_run->sport_run_state = true;
                     if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
                     {
                         if (sys_cb.sport_app_disconnect)                            //判断app是否断链，断链停止运动
                         {
-                            compo_button_set_bgimg(btn, UI_BUF_MUSIC_PLAY_BIN);
-                            widget_set_size(btn->widget, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).wid, gui_image_get_size(UI_BUF_SPORT_EXERCISING_PAUSE_BIN).hei);
+                            compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
+                            widget_set_size(btn->widget, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).wid, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).hei);
                             f_sport_sub_run->sport_run_state = false;
                             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);   //通知APP暂停运动
                             TRACE("【APP连接】本地通知APP运动继续\n");

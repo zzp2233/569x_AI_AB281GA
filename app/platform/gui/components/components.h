@@ -68,6 +68,7 @@ enum COMPO_BOND_DATA
     COMPO_BOND_VBAT_PROGRESS,           //电量进度
     COMPO_BOND_COMM_UNIT,               //单位
     COMPO_BOND_TIME_AMPM,               //上午/下午
+
     COMPO_BOND_TIME_WEEK = 37,          //星期
     COMPO_BOND_TIME_MONTH,              //月份
 
@@ -84,6 +85,9 @@ enum COMPO_BOND_DATA
     COMPO_BOND_DISTANCE_UNIT,           //距离单位
     COMPO_BOND_REVERSE2,                //保留
     COMPO_BOND_BATTERY,                 //电池
+
+
+    COMPO_BOND_HOURMIN_TXT = 120,
 };
 
 #define COMPO_STRUCT_COMMON                                         \

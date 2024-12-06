@@ -29,6 +29,7 @@
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_findphone.h"
 #include "ute_module_watchonline.h"
+#include "ute_module_factorytest.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -2278,7 +2279,18 @@ void uteModuleProtocolSyncAddressBook(uint8_t*receive,uint8_t length)
 #endif
 }
 
-
+/**
+*@brief       工厂测试模式
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       zn.zeng
+*@date       2021-11-23
+*/
+void uteModuleProtocolFactoryTest(uint8_t*receive,uint8_t length)
+{
+    uteModuleFactoryTestProtocol(receive,length);
+}
 
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
@@ -2321,7 +2333,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.publicCmd=PUBLIC_CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.function=uteModuleProtocolMoreSportCtrl},
     // {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
     {.privateCmd = CMD_MUSIC_CONTENT_CTRL,.publicCmd=CMD_MUSIC_CONTENT_CTRL,.function=uteModuleProtocolMusicCtrl},
-    // {.privateCmd = CMD_FACTORY_TEST_MODE,.publicCmd=PUBLIC_CMD_FACTORY_TEST_MODE,.function=uteModuleProtocolFactoryTest},
+    {.privateCmd = CMD_FACTORY_TEST_MODE,.publicCmd=PUBLIC_CMD_FACTORY_TEST_MODE,.function=uteModuleProtocolFactoryTest},
     {.privateCmd = CMD_WATCH_ONLINE,.publicCmd=PUBLIC_CMD_WATCH_ONLINE,.function=uteModuleProtocolWatchOnlineCtrl},
     {.privateCmd = CMD_WATCH_ONLINE_BLE5_0,.publicCmd=PUBLIC_CMD_WATCH_ONLINE_BLE5_0,.function=uteModuleProtocolWatchOnlineData},
 #if UTE_MODULE_TEMPERATURE_SUPPORT

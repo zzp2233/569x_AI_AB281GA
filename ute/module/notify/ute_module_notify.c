@@ -17,6 +17,7 @@
 #include "ute_module_charencode.h"
 #include "ute_module_notdisturb.h"
 #include "func_cover.h"
+#include "ute_module_platform.h"
 
 // #include "ute_module_screens_common.h"
 
@@ -25,6 +26,7 @@
 
 /*! 消息数据zn.zeng, 2021-08-24  */
 ute_module_notify_data_t uteModuleNotifyData;
+void *uteModuleNotifyAncsPairTimer=NULL;
 /* module nofiy 互斥量 zn.zeng 2022-02-14*/
 void *uteModuleNotifyMute;
 
@@ -399,12 +401,7 @@ void uteModuleNotifyAncsSetFlag(uint32_t flag)
     {
         uteModuleNotifyAncsStartPair();
     }
-#if 0// UTE_BT30_CALL_SUPPORT
-    else
-    {
-        uteModuleNotifyAncsStartPair();
-    }
-#endif
+
 #if (!APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT)
     uteModuleNotifyAncsSaveFlag(flag);
 #endif
@@ -463,6 +460,31 @@ void uteModuleNotifyAncsGetFlag(uint32_t *flag)
 }
 
 /**
+*@brief     开始配对处理
+*@details
+*@author        zn.zeng
+*@date        2021-11-18
+*/
+void uteModuleNotifyAncsStartPairHandlerMsg(void)
+{
+    UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s, ancsConnected:%d,BtConnected:%d,automaticPair:%d,HasConnection:%d", __func__, ble_ancs_is_connected(), uteModuleCallBtIsConnected(), uteModuleCallBtGetAutomaticPair(), uteModuleCallIsHasConnection());
+    if (!ble_ancs_is_connected() || (!uteModuleCallBtIsConnected() && uteModuleCallBtIsPowerOn()))
+    {
+        if (!uteModuleCallBtGetAutomaticPair())
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,ancs pair", __func__);
+            ble_ancs_start();
+        }
+        else
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,one pair", __func__);
+            bsp_change_bt_mac();
+            ble_bt_connect();
+        }
+    }
+}
+
+/**
 *@brief     ancs开始配对
 *@details
 *@author        zn.zeng
@@ -470,16 +492,44 @@ void uteModuleNotifyAncsGetFlag(uint32_t *flag)
 */
 void uteModuleNotifyAncsStartPair(void)
 {
-    if(!ble_ancs_is_connected())
+    uteModulePlatformRestartTimer(&uteModuleNotifyAncsPairTimer,10000);
+}
+
+/**
+*@brief   ancs连接配对回调函数
+*@details
+*@author        zn.zeng
+*@date        2021-11-16
+*/
+void uteModuleNotifyAncsStartPairTimerCallback(void *pxTimer)
+{
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR,0);
+}
+
+/**
+*@brief     连接断开定时器处理
+*@details
+*@author        zn.zeng
+*@date        2021-11-18
+*/
+void uteModuleNotifyAncsTimerConnectHandler(bool isConnected)
+{
+    if(isConnected)
     {
-        // 双连接口已发起加密配对
-        ble_ancs_start();
+        if(uteModuleNotifyAncsPairTimer == NULL)
+        {
+            uteModulePlatformCreateTimer(&uteModuleNotifyAncsPairTimer, "ancsPariTimer",1, 5000, false, uteModuleNotifyAncsStartPairTimerCallback);
+        }
     }
-
-    // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
-    // bsp_change_bt_mac();
-    // ble_bt_connect();
-
+    else
+    {
+        if(uteModuleNotifyAncsPairTimer != NULL)
+        {
+            uteModulePlatformStopTimer(&uteModuleNotifyAncsPairTimer);
+            uteModulePlatformDeleteTimer(&uteModuleNotifyAncsPairTimer);
+            uteModuleNotifyAncsPairTimer = NULL;            
+        }
+    }
 }
 
 /**

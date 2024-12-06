@@ -332,6 +332,7 @@ static void drv_infomation_param_init(vcare_ppg_device_t *pdev)
                 sample_info_handle->slot_result[i].slot_enwork = 0;
             }
         }
+		core30fx_disable_depsdirturb_config( sample_info_handle->ic_type, sample_info_handle->ic_FICV );
     }
     wear_info_handle->wear_status = wear_info_handle->last_status;
     pdev->wear = wear_info_handle->last_status;
@@ -339,7 +340,7 @@ static void drv_infomation_param_init(vcare_ppg_device_t *pdev)
     wear_info_handle->drop_cnt = VC30Fx_CFG_WEAR_DROP_CNT;
     wear_info_handle->hold_cnt = VC30Fx_CFG_WEAR_HOLD_CNT;
     wear_info_handle->acce_wear_status = WEAR_STA_HOLD;
-    wear_info_handle->algo_wear_status = WEAR_STA_HOLD;
+	wear_info_handle->algo_wear_status = wear_info_handle->algo_wear_status?wear_info_handle->algo_wear_status:WEAR_STA_HOLD;
     /* dev_clk param */
     drv_calibration_clk_clear();
     /* read_fifo_address */
@@ -674,7 +675,6 @@ static int drv_wear_mode_init(void)
 }
 static int drv_factory_green_ps_mode_init(void)
 {
-    sample_info_handle->fifo_enable=0;
     core30fx_set_common_config( sample_info_handle );
     /* ppg0 */
     VC30Fx_PPG_SLOT_PARAM_CONFIG(sample_info_handle->slot_result[0] /*slot0_ppg*/, VC30Fx_FAT_GREEN_MAX_CURT /*current*/, VC30Fx_FAT_RESISTANCE /*resistance*/);
@@ -696,7 +696,6 @@ static int drv_factory_green_ps_mode_init(void)
 }
 static int drv_factory_ir_red_mode_init(void)
 {
-    sample_info_handle->fifo_enable=0;
     core30fx_set_common_config( sample_info_handle );
     /* ppg0 */
     VC30Fx_PPG_SLOT_PARAM_CONFIG(sample_info_handle->slot_result[0] /*slot0_ppg*/, VC30Fx_FAT_IR_MAX_CURT /*current*/, VC30Fx_FAT_RESISTANCE /*resistance*/);
@@ -853,7 +852,7 @@ static int drv_calc_biology_sense_absolute(vc30fx_wear_info *pwear_info, vc30fx_
         pwear_info->last_ps_data[0] = ps_data;
     }
     /* bio 有效判断 */
-    if (bioinn_data && bioext_data)
+	if (bioinn_data>=1000 && bioext_data)
     {
         bio_refence_base = bioinn_data - drv_info_handle->optimal_bio_gap;
         VCARE_DBG_LOG("bio_gap=%d, bio_base=%d, bio_ext=%d, abs_gap(%d?[%d,%d])",
@@ -876,6 +875,8 @@ static int drv_calc_biology_sense_absolute(vc30fx_wear_info *pwear_info, vc30fx_
 
 static vc30fx_wear_change drv_wear_status_identify(vc30fx_wear_info *pwear_info, vc30fx_sample_info_t *presult)
 {
+	static unsigned short int bioinn_LWlast = 0;
+	static unsigned short int bioext_LWlast = 0;
     vc30fx_wear_change ret_change = VC30Fx_WEAR_NO_CHANGE;
     int ret_bio_algo = VC30Fx_BIO_STA_NONE;
     /* 根据是否存入fifo对参数进行取值 和 采样次数进行判断 */
@@ -916,6 +917,30 @@ static vc30fx_wear_change drv_wear_status_identify(vc30fx_wear_info *pwear_info,
             bioext = presult->extra_result.bioext_data;
         }
         env = presult->slot_result[2].env_data;
+#if VC30Fx_FIFO_BUFFER_CHECK  /* LW check fifo error,调试裸芯片时，请注释掉 */
+		if( bioext_LWlast )
+		{
+			if( (VC_ABS(bioinn,bioinn_LWlast)>=10000||VC_ABS(bioext,bioext_LWlast)>=10000) )
+			{
+				if( VC_ABS(bioext,ps)<=5000 )
+				{
+					unsigned int change_data = ps;
+					ps = bioext;
+					bioext = change_data;
+					VCARE_DBG_LOG("=====change_bio_ext");
+				}
+				if( VC_ABS(bioinn,ps)<=5000 )
+				{
+					unsigned int change_data = ps;
+					ps = bioinn;
+					bioinn = change_data;
+					VCARE_DBG_LOG("=====change_bio_inn");
+				}
+			}
+		}
+		bioinn_LWlast = bioinn;
+		bioext_LWlast = bioext;
+#endif
 #if (VC30Fx_FUNC_DISABLE == VC30Fx_CFG_WEAR_BIO_EN)
         ret_bio_algo = VC30Fx_BIO_STA_NONE;
 #else
@@ -1422,6 +1447,7 @@ static void drv_fifo_error_softreset( void )
     unsigned char save_config[24]= {0};
     /* 软复位，清空所有数据，避免传入算法或者引起其他异常 */
     drv_sample_result_memroy_finished( sample_info_handle );
+	drv_info_handle->fifo_read_data_valid =0;
     vc30fx_read_register( 0x40, save_config, sizeof(save_config) );
     core30fx_write_work_cmd( VC30Fx_STOP_WORK_CMD );
     core30fx_write_work_cmd( VC30Fx_RESET_SOFT_CMD );
@@ -1487,7 +1513,7 @@ static int drv_read_fifo_data(vc30fx_sample_info_t *psample_result)
         }
         else if( VC30FS_FDY_VER_ID0==sample_result_ptr->ic_FICV || VC30FC_FDY_VER_ID0==sample_result_ptr->ic_FICV )
         {
-            if( read_fifo_ret==1 && drv_info_handle->int_event & VC30Fx_EVENT_INTFIFO_RDY ) /* 当出现了fifo中断，且并不是fifo数量的倍数时，可以认定为错位，进行纠错处理 */
+			if( read_fifo_ret==1 && (drv_info_handle->int_event&VC30Fx_EVENT_INTFIFO_RDY) && !(drv_info_handle->int_event&VC30Fx_EVENT_INSAMPLE) ) /* 当出现了fifo中断，且并不是fifo数量的倍数时，可以认定为错位，进行纠错处理 */
             {
                 drv_info_handle->read_fifo_address = drv_info_handle->write_fifo_address_bak;
                 drv_info_handle->fifo_read_data_valid = 2;
@@ -1497,15 +1523,16 @@ static int drv_read_fifo_data(vc30fx_sample_info_t *psample_result)
             /* 20240119.校验RO_PS与fifo_PS是否异常（如果异常则可以判断为fifo异常错位：1.过度延后导致的fifo覆盖反转，2.ICfifo数据异常丢失） */
             if( sample_result_ptr->slot_result[2].slot_enwork && sample_result_ptr->slot_result[2].ppg_num!=0 )
             {
-                if( sample_result_ptr->slot_result[2].ppg_buffer[sample_result_ptr->slot_result[2].ppg_num-1]>>8 != sample_result_ptr->slot_result[2].u.ps_data)
+				if( sample_result_ptr->slot_result[2].ppg_buffer[sample_result_ptr->slot_result[2].ppg_num-1]>>9 != sample_result_ptr->slot_result[2].u.ps_data>>1 )
                 {
                     VCARE_DBG_LOG("===PS_FIFO_ERROR===") ;
                     drv_fifo_error_softreset();
+					return read_fifo_ret;
                 }
             }
         }
         /* 在insample的时候，如果出现中断延时处理，获取到的RO_bio的值可能还未完全采样计算完成，需要从fifo中更新数据 */
-        if( drv_info_handle->int_event&VC30Fx_EVENT_INSAMPLE && 1==sample_result_ptr->extra_result.biodata_storefifo )
+		if( (VC30Fx_CFG_IRQ_BY_TIMER_EN||drv_info_handle->int_event&VC30Fx_EVENT_INSAMPLE) && 1==sample_result_ptr->extra_result.biodata_storefifo )
         {
             if( sample_result_ptr->extra_result.bioext_data != sample_result_ptr->extra_result.bioext_buffer[sample_result_ptr->extra_result.bio_fifo_num-1] )
             {

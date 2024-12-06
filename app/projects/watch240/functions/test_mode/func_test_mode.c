@@ -64,6 +64,7 @@ compo_form_t *func_test_mode_form_create(void)
 ///测试功能事件处理
 static void func_test_mode_process(void)
 {
+    reset_guioff_delay();
     f_test_mode_t *f_test_mode = (f_test_mode_t *)func_cb.f_cb;
     compo_page_move_process(f_test_mode->ptm);
     func_process();
@@ -76,7 +77,7 @@ static void func_test_mode_click(void)
     {
         return;
     }
-#define BUF_TXT_LEN     (strlen(i18n[STR_DO_WANT_IN])+strlen(i18n[f_test_mode_list[id-1].txt_num])+10)
+    #define BUF_TXT_LEN     (strlen(i18n[STR_DO_WANT_IN])+strlen(i18n[f_test_mode_list[id-1].txt_num])+10)
     char *buf_txt = func_zalloc(BUF_TXT_LEN);
 
     switch(id)
@@ -163,7 +164,7 @@ static void func_test_mode_enter(void)
         .down_over_perc = 0,
     };
     compo_page_move_init(f_test_mode->ptm, func_cb.frm_main->page_body, &info);
-
+    uteModuleGuiCommonDisplayOffAllowGoBack(false);
 }
 
 ///退出测试功能
@@ -175,6 +176,7 @@ static void func_test_mode_exit(void)
         func_free(f_test_mode->ptm);
     }
     func_cb.last = FUNC_TEST_MODE;
+    uteModuleGuiCommonDisplayOffAllowGoBack(true);
 }
 
 ///测试功能

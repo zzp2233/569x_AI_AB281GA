@@ -27,7 +27,8 @@ static bool music_pp_test = 0;
 #define GRAY_LV(x)                      make_color(x, x, x)                                                     //生成灰度颜色值（0:黑 255:白）
 
 #define SPRING_Y_MAX                    0                                                                       //回弹到顶部时的ofs_y
-#define SPRING_Y_MIN                    (GUI_SCREEN_CENTER_Y - card_y_info[CARD_COUNT - 1] + 50)                     //回弹到底部时的ofs_y
+//#define SPRING_Y_MIN                    (GUI_SCREEN_CENTER_Y - card_y_info[CARD_COUNT - 1] + 50)                     //回弹到底部时的ofs_y
+#define SPRING_Y_MIN                    (GUI_SCREEN_CENTER_Y - func_clock_sub_card_get_y_info(COMPO_CARD_END-1) + 50)                     //回弹到底部时的ofs_y
 #define DRAG_Y_MAX                      (SPRING_Y_MAX + 30)                                                     //拖动到顶部时的ofs_y
 #define DRAG_Y_MIN                      (SPRING_Y_MIN - 78)                                                     //拖动到底部时的ofs_y
 
@@ -39,208 +40,192 @@ static bool music_pp_test = 0;
 #define EXIT_Y_MIN                      0
 #define EXIT_Y_MAX                      50//60                                                                      //下滑退出触摸点离屏幕顶部小于某值
 #define TXT_CNT_MAX                     8                                                                       //文本框最大字符数
-#define CARD_BTN_COUNT                  (COMPO_ID_CARD_POWEROFF_ASSISTANT - COMPO_ID_CARD_SPORT_COMPASS + 1)    //卡片（按钮）数量
+#define CARD_BTN_COUNT                  (COMPO_CARD_END - COMPO_CARD_START - 1)    //卡片（按钮）数量
 
 ///卡片、组件原始位置（相对于卡片中心点）
-#define CARD_WIDTH_ORG                  228//308
-//时钟、日期
-#define CARD_CLOCK_X                    GUI_SCREEN_CENTER_X                     //中心点
-#define CARD_CLOCK_Y                    70//80
-#define CLOCK_BG_X                      (76-10 - CARD_CLOCK_X)                     //时钟背景
-#define CLOCK_BG_Y                      0
-#define CLOCK_BG_W                      90//120
-#define CLOCK_BG_H                      90//120
-#define CLOCK_POINTER_H_X               CLOCK_BG_X                              //时钟指针hour
-#define CLOCK_POINTER_H_Y               CLOCK_BG_Y
-#define CLOCK_POINTER_H_W               28
-#define CLOCK_POINTER_H_H               4
-#define CLOCK_POINTER_M_X               CLOCK_BG_X                              //时钟指针minute
-#define CLOCK_POINTER_M_Y               CLOCK_BG_Y
-#define CLOCK_POINTER_M_W               36
-#define CLOCK_POINTER_M_H               4
-#define DATE_X                          (180 - CARD_CLOCK_X)//(224 - CARD_CLOCK_X)                    //日期
-#define DATE_Y                          (50 - CARD_CLOCK_Y)
-#define DATE_W                          100
-#define DATE_H                          35
-#define WEEKDAY_X                       DATE_X                                  //星期
-#define WEEKDAY_Y                       (82 - CARD_CLOCK_Y)
-#define WEEKDAY_W                       60
-#define WEEKDAY_H                       DATE_H
-//运动&指南针卡片
-#define CARD_SPORT_COMPASS_X            GUI_SCREEN_CENTER_X                     //中心点
-#define CARD_SPORT_COMPASS_Y            174//190//228
-#define SPORT_BG_X                      (65 - CARD_SPORT_COMPASS_X)//(79 - CARD_SPORT_COMPASS_X)             //运动背景/按钮
-#define SPORT_BG_Y                      0
-#define SPORT_BG_W                      (CARD_WIDTH_ORG/2 - 10)//146
-#define SPORT_BG_H                      (CARD_WIDTH_ORG/2 - 10)//146
-#define SPORT_ICON_X                    (SPORT_BG_X - 20)                       //图标
-#define SPORT_ICON_Y                    (SPORT_BG_Y - 20)
-#define SPORT_ICON_W                    50//72
-#define SPORT_ICON_H                    50//72
-#define SPORT_TXT_X                     SPORT_BG_X                              //文本
-#define SPORT_TXT_Y                     35//45
-#define SPORT_TXT_W                     80//(CARD_WIDTH_ORG/2 - 30)//140
-#define SPORT_TXT_H                     35
-#define COMPASS_BG_X                    (180 - CARD_SPORT_COMPASS_X)//(241 - CARD_SPORT_COMPASS_X)            //指南针背景/按钮
-#define COMPASS_BG_Y                    SPORT_BG_Y
-#define COMPASS_BG_W                    SPORT_BG_W
-#define COMPASS_BG_H                    SPORT_BG_H
-#define COMPASS_ICON_X                  (COMPASS_BG_X - 20)                     //图标
-#define COMPASS_ICON_Y                  SPORT_ICON_Y
-#define COMPASS_ICON_W                  SPORT_ICON_W
-#define COMPASS_ICON_H                  SPORT_ICON_H
-#define COMPASS_TXT_X                   COMPASS_BG_X                            //文本
-#define COMPASS_TXT_Y                   SPORT_TXT_Y
-#define COMPASS_TXT_W                   SPORT_TXT_W
-#define COMPASS_TXT_H                   SPORT_TXT_H
-//运动记录卡片
-#define CARD_ACTIVITY_X                 GUI_SCREEN_CENTER_X                     //中心点
-#define CARD_ACTIVITY_Y                 190+106//393
-#define ACTIVITY_BG_X                   0                                       //背景/按钮
-#define ACTIVITY_BG_Y                   0
-#define ACTIVITY_BG_W                   (CARD_WIDTH_ORG -5)
-#define ACTIVITY_BG_H                   120
-#define ACTIVITY_ICON_X                 SPORT_BG_X                              //图标
-#define ACTIVITY_ICON_Y                 0
-#define ACTIVITY_ICON_W                 90
-#define ACTIVITY_ICON_H                 90
-#define ACTIVITY_STEP_X                 COMPASS_BG_X                            //步数
-#define ACTIVITY_STEP_Y                 -40
-#define ACTIVITY_STEP_W                 (COMPASS_BG_W - 10)
-#define ACTIVITY_STEP_H                 35
-#define ACTIVITY_CALORIE_X              ACTIVITY_STEP_X                         //卡路里
-#define ACTIVITY_CALORIE_Y              0
-#define ACTIVITY_CALORIE_W              ACTIVITY_STEP_W
-#define ACTIVITY_CALORIE_H              ACTIVITY_STEP_H
-#define ACTIVITY_DISTANCE_X             ACTIVITY_STEP_X                         //距离
-#define ACTIVITY_DISTANCE_Y             40
-#define ACTIVITY_DISTANCE_W             ACTIVITY_STEP_W
-#define ACTIVITY_DISTANCE_H             ACTIVITY_STEP_H
-//睡眠卡片
-#define CARD_SLEEP_X                    GUI_SCREEN_CENTER_X
-#define CARD_SLEEP_Y                    430-2//490//563
-#define SLEEP_BG_X                      ACTIVITY_BG_X                           //背景/按钮
-#define SLEEP_BG_Y                      ACTIVITY_BG_Y
-#define SLEEP_BG_W                      (CARD_WIDTH_ORG - 5)
-#define SLEEP_BG_H                      ACTIVITY_BG_H
-#define SLEEP_ICON_DEEP_X               (46 - CARD_SLEEP_X)                     //深睡图标
-#define SLEEP_ICON_DEEP_Y               21//(584 - CARD_SLEEP_Y)
-#define SLEEP_ICON_DEEP_W               50
-#define SLEEP_ICON_DEEP_H               50
-#define SLEEP_ICON_LIGHT_X              (150 - CARD_SLEEP_X)                    //浅睡图标
-#define SLEEP_ICON_LIGHT_Y              SLEEP_ICON_DEEP_Y
-#define SLEEP_ICON_LIGHT_W              SLEEP_ICON_DEEP_W
-#define SLEEP_ICON_LIGHT_H              SLEEP_ICON_DEEP_H
-#define SLEEP_TOTAL_X                   0                                       //总睡眠时间
-#define SLEEP_TOTAL_Y                   -43//(520 - CARD_SLEEP_Y)
-#define SLEEP_TOTAL_W                   110
-#define SLEEP_TOTAL_H                   35
-#define SLEEP_DEEP_H_X                  (100 - CARD_SLEEP_X)                    //深睡时间hour
-#define SLEEP_DEEP_H_Y                  2//(565 - CARD_SLEEP_Y)
-#define SLEEP_DEEP_H_W                  90
-#define SLEEP_DEEP_H_H                  SLEEP_TOTAL_H
-#define SLEEP_DEEP_M_X                  SLEEP_DEEP_H_X                          //深睡时间min
-#define SLEEP_DEEP_M_Y                  41//(604 - CARD_SLEEP_Y)
-#define SLEEP_DEEP_M_W                  SLEEP_DEEP_H_W
-#define SLEEP_DEEP_M_H                  SLEEP_DEEP_H_H
-#define SLEEP_LIGHT_H_X                 (200 - CARD_SLEEP_X)                    //浅睡时间hour
-#define SLEEP_LIGHT_H_Y                 SLEEP_DEEP_H_Y
-#define SLEEP_LIGHT_H_W                 SLEEP_DEEP_H_W
-#define SLEEP_LIGHT_H_H                 SLEEP_DEEP_H_H
-#define SLEEP_LIGHT_M_X                 SLEEP_LIGHT_H_X                         //浅睡时间min
-#define SLEEP_LIGHT_M_Y                 SLEEP_DEEP_M_Y
-#define SLEEP_LIGHT_M_W                 SLEEP_DEEP_M_W
-#define SLEEP_LIGHT_M_H                 SLEEP_DEEP_M_H
-//心率卡片
-#define CARD_HEARTRATE_X                GUI_SCREEN_CENTER_X
-#define CARD_HEARTRATE_Y                570-10//650//733
-#define HEARTRATE_BG_X                  ACTIVITY_BG_X                           //背景/按钮
-#define HEARTRATE_BG_Y                  ACTIVITY_BG_Y
-#define HEARTRATE_BG_W                  CARD_WIDTH_ORG
-#define HEARTRATE_BG_H                  ACTIVITY_BG_H
-#define HEARTRATE_ICON_X                (48 - CARD_HEARTRATE_X)                 //心率图标
-#define HEARTRATE_ICON_Y                -37//(696 - CARD_HEARTRATE_Y)
-#define HEARTRATE_ICON_W                32
-#define HEARTRATE_ICON_H                32
-#define HEARTRATE_LINE_X                HEARTRATE_BG_X                          //折线背景
-#define HEARTRATE_LINE_Y                23//(756 - CARD_HEARTRATE_Y)
-#define HEARTRATE_LINE_W                300
-#define HEARTRATE_LINE_H                72
-#define HEARTRATE_VALUE_X               (104 - CARD_HEARTRATE_X)                //心率值
-#define HEARTRATE_VALUE_Y               HEARTRATE_ICON_Y
-#define HEARTRATE_VALUE_W               60
-#define HEARTRATE_VALUE_H               35
-//音乐卡片
-#define CARD_MUSIC_X                    GUI_SCREEN_CENTER_X
-#define CARD_MUSIC_Y                    810-118//810//903
-#define MUSIC_BG_X                      ACTIVITY_BG_X                           //背景/按钮
-#define MUSIC_BG_Y                      ACTIVITY_BG_Y
-#define MUSIC_BG_W                      CARD_WIDTH_ORG
-#define MUSIC_BG_H                      ACTIVITY_BG_H
-#define MUSIC_PREV_X                    (40 - CARD_MUSIC_X)//(53 - CARD_MUSIC_X)                     //上一首
-#define MUSIC_PREV_Y                    MUSIC_BG_Y
-#define MUSIC_PREV_W                    70
-#define MUSIC_PREV_H                    70
-#define MUSIC_PP_X                      MUSIC_BG_X                             //播放暂停
-#define MUSIC_PP_Y                      MUSIC_BG_Y
-#define MUSIC_PP_W                      80
-#define MUSIC_PP_H                      80
-#define MUSIC_NEXT_X                    (200 - CARD_MUSIC_X)//(267 - CARD_MUSIC_X)                    //下一首
-#define MUSIC_NEXT_Y                    MUSIC_BG_Y
-#define MUSIC_NEXT_W                    MUSIC_PREV_W
-#define MUSIC_NEXT_H                    MUSIC_PREV_H
-//关机&语音助手卡片
-#define CARD_POWEROFF_ASSISTANT_X       GUI_SCREEN_CENTER_X                     //中心点
-#define CARD_POWEROFF_ASSISTANT_Y       950-130//950//1068
-#define POWEROFF_BG_X                   SPORT_BG_X                              //关机背景/按钮
-#define POWEROFF_BG_Y                   SPORT_BG_Y
-#define POWEROFF_BG_W                   SPORT_BG_W
-#define POWEROFF_BG_H                   SPORT_BG_H
-#define POWEROFF_ICON_X                 SPORT_ICON_X                            //图标
-#define POWEROFF_ICON_Y                 SPORT_ICON_Y
-#define POWEROFF_ICON_W                 SPORT_ICON_W
-#define POWEROFF_ICON_H                 SPORT_ICON_H
-#define POWEROFF_TXT_X                  SPORT_TXT_X                             //文本
-#define POWEROFF_TXT_Y                  SPORT_TXT_Y
-#define POWEROFF_TXT_W                  SPORT_TXT_W
-#define POWEROFF_TXT_H                  SPORT_TXT_H
-#define ASSISTANT_BG_X                  COMPASS_BG_X                            //语音助手背景/按钮
-#define ASSISTANT_BG_Y                  COMPASS_BG_Y
-#define ASSISTANT_BG_W                  COMPASS_BG_W
-#define ASSISTANT_BG_H                  COMPASS_BG_H
-#define ASSISTANT_ICON_X                COMPASS_ICON_X                          //图标
-#define ASSISTANT_ICON_Y                COMPASS_ICON_Y
-#define ASSISTANT_ICON_W                COMPASS_ICON_W
-#define ASSISTANT_ICON_H                COMPASS_ICON_H
-#define ASSISTANT_TXT_X                 COMPASS_TXT_X                           //文本
-#define ASSISTANT_TXT_Y                 COMPASS_TXT_Y
-#define ASSISTANT_TXT_W                 COMPASS_TXT_W
-#define ASSISTANT_TXT_H                 COMPASS_TXT_H
+#define CARD_WIDTH_ORG                  232//308
 
-enum
-{
-    CARD_ID_CLOCK = 0,
-    CARD_ID_SPORT_COMPASS,
-    CARD_ID_ACTIVITY,
-    CARD_ID_SLEEP,
-    CARD_ID_HEARTRATE,
-    CARD_ID_MUSIC,
-    CARD_ID_POWEROFF_ASSISTANT,
+//enum
+//{
+//    CARD_ID_CLOCK = 0,
+//    CARD_ID_SPORT_COMPASS,
+//    CARD_ID_ACTIVITY,
+//    CARD_ID_SLEEP,
+//    CARD_ID_HEARTRATE,
+//    CARD_ID_MUSIC,
+//    CARD_ID_POWEROFF_ASSISTANT,
+//
+//    CARD_COUNT,
+//};
 
-    CARD_COUNT,
-};
 
-//卡片原始位置信息
-static const s16 card_y_info[CARD_COUNT] =
-{
-    [CARD_ID_CLOCK]                 = CARD_CLOCK_Y,
-    [CARD_ID_SPORT_COMPASS]         = CARD_SPORT_COMPASS_Y,
-    [CARD_ID_ACTIVITY]              = CARD_ACTIVITY_Y,
-    [CARD_ID_SLEEP]                 = CARD_SLEEP_Y,
-    [CARD_ID_HEARTRATE]             = CARD_HEARTRATE_Y,
-    [CARD_ID_MUSIC]                 = CARD_MUSIC_Y,
-    [CARD_ID_POWEROFF_ASSISTANT]    = CARD_POWEROFF_ASSISTANT_Y,
-};
+
+typedef struct ui_handle_t_ {
+    struct card_clock_day_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct date_t {
+            u16 id;
+            s16 x,y;
+            u16 w,h;
+            u8 bonddata;
+            bool center;
+            color_t color;
+            u32 res;
+        } date;
+
+        struct week_t {
+            u16 id;
+            s16 x,y;
+            u16 w,h;
+            bool center;
+            u8 bonddata;
+            color_t color;
+            u32 res;
+        } week;
+
+        struct clock_t {
+            u16 id_bg;
+            u16 id_h;
+            u16 id_min;
+            s16 bg_x,bg_y,h_x,h_y,m_x,m_y;
+            u16 bg_w,bg_h,h_w,h_h,m_w,m_h;
+            u32 bg_res, h_res, m_res;
+            u8 h_bonddata, m_bonddata;
+        } clock;
+    } card_clock_day;
+
+    struct card1_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct rect_t {
+            u16 idx;
+            s16 x,y;
+            u16 w,h;
+            u16 r;
+            color_t color;
+        } rect;
+
+        struct pic_t {
+            u16 idx;
+            s16 x,y;
+            u16 w,h;
+            u32 res;
+        } pic_kcal;
+        struct pic_t pic_km;
+        struct pic_t pic_step;
+
+        struct sport_arc_t {
+            u16 id;
+            s16 x,y;
+            u16 w,r;
+            color_t color;
+            u16 zero_angle;
+            u16 angle_min;
+            u16 angle_max;
+        } arc_kcal;
+        struct sport_arc_t arc_km;
+        struct sport_arc_t arc_step;
+
+        struct text_t {
+            u16 idx;
+            s16 x,y;
+            u16 w,h;
+            u32 res;
+            u16 str_id;
+            bool center;
+            color_t color;
+        } text_kcal;
+        struct text_t text_km;
+        struct text_t text_step;
+    } card1;
+
+    struct card2_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct rect_t rect;
+
+        struct text_t text_sleep;
+        struct text_t text_hour;
+        struct text_t text_hour_unit;
+        struct text_t text_min;
+        struct text_t text_min_unit;
+    } card2;
+
+    struct card3_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct rect_t rect;
+
+        struct text_t text_music;
+
+        struct pic_click_t {
+            u16 idx;
+            s16 x,y;
+            u16 w,h;
+            u32 res;
+            u32 res_click;
+            u32 res_switch;
+            u16 func_sta;
+        } pic_click_prev;
+        struct pic_click_t pic_click_next;
+        struct pic_click_t pic_click_play;
+    } card3;
+
+    struct card4_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct rect_t rect;
+
+        struct text_t text_timer;
+        struct text_t text_time;
+    } card4;
+
+    struct card5_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct rect_t rect;
+
+        struct text_t text_stopwatch;
+        struct text_t text_time;
+    } card5;
+
+    struct card6_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct rect_t rect;
+
+        struct text_t text_comm_use;
+        struct pic_click_t pic_click[3];
+    } card6;
+
+    struct card7_t {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct rect_t rect;
+
+        struct text_t text_last_use;
+        struct pic_click_t pic_click[4];
+    } card7;
+
+} ui_handle_t;
+
 
 //组件ID
 enum
@@ -251,20 +236,604 @@ enum
     COMPO_ID_DATE,
     COMPO_ID_WEEKDAY,
 
-    COMPO_ID_CARD_SPORT_COMPASS,    //靠前的卡片优先扫描（按钮）
-    COMPO_ID_CARD_ACTIVITY,
-    COMPO_ID_CARD_SLEEP,
-    COMPO_ID_CARD_HEARTRATE,
-    COMPO_ID_CARD_MUSIC,
-    COMPO_ID_CARD_POWEROFF_ASSISTANT,
+    COMPO_CARD_START,
+    COMPO_ID_CARD_1,
+    COMPO_ID_CARD_2,
+    COMPO_ID_CARD_3,
+    COMPO_ID_CARD_4,
+    COMPO_ID_CARD_5,
+    COMPO_ID_CARD_6,
+    COMPO_ID_CARD_7,
+    COMPO_CARD_END,
+
+    COMPO_ID_ARC_KCAL,
+    COMPO_ID_ARC_KM,
+    COMPO_ID_ARC_STEP,
 };
+
+
+//卡片原始位置信息
+//static const s16 card_y_info[CARD_COUNT] =
+//{
+////    [CARD_ID_CLOCK]                 = CARD_CLOCK_Y,
+////    [CARD_ID_SPORT_COMPASS]         = CARD_SPORT_COMPASS_Y,
+////    [CARD_ID_ACTIVITY]              = CARD_ACTIVITY_Y,
+////    [CARD_ID_SLEEP]                 = CARD_SLEEP_Y,
+////    [CARD_ID_HEARTRATE]             = CARD_HEARTRATE_Y,
+////    [CARD_ID_MUSIC]                 = CARD_MUSIC_Y,
+////    [CARD_ID_POWEROFF_ASSISTANT]    = CARD_POWEROFF_ASSISTANT_Y,
+//};
+
+static const ui_handle_t ui_handle = {
+    .card_clock_day = {
+        .id = COMPO_CARD_START,
+        .x  = GUI_SCREEN_CENTER_X,
+        .y  = 24+100/2,
+        .w  = 0,
+        .h  = 0,
+
+        .date = {
+            .id = COMPO_ID_DATE,
+            .x  = 12-232/2,
+            .y  = 41-136/2,
+            .w  = 80,
+            .h  = 38,
+            .center = false,
+            .bonddata = COMPO_BOND_DATE,
+            .color = {255,255,255},
+            .res = UI_BUF_0FONT_FONT_BIN,
+        },
+
+        .week = {
+            .id = COMPO_ID_WEEKDAY,
+            .x  = 12-232/2,
+            .y  = 79-136/2,
+            .w  = 45,
+            .h  = 32,
+            .center = false,
+            .bonddata = COMPO_BOND_WEEKDAY,
+            .color = {153,153,153},
+            .res = UI_BUF_0FONT_FONT_BIN,
+        },
+
+        .clock = {
+            .id_bg  = COMPO_ID_CLOCK_BG,
+            .id_h   = COMPO_ID_CLOCK_H,
+            .id_min = COMPO_ID_CLOCK_M,
+            .bg_x   = 130+100/2-232/2,
+            .bg_y   = 0,
+            .h_x    = 130+100/2-232/2,
+            .h_y    = 0,
+            .m_x    = 130+100/2-232/2,
+            .m_y    = 0,
+            .bg_w   = 100,
+            .bg_h   = 100,
+            .h_w    = 53,
+            .h_h    = 18,
+            .m_w    = 65,
+            .m_h    = 18,
+            .bg_res = UI_BUF_I330001_FIRSTORDER_TIME_BG_BIN,
+            .h_res  = UI_BUF_I330001_FIRSTORDER_TIME_H_BIN,
+            .m_res  = UI_BUF_I330001_FIRSTORDER_TIME_M_BIN,
+            .h_bonddata = COMPO_BOND_HOUR,
+            .m_bonddata = COMPO_BOND_MINUTE,
+        },
+    } ,
+
+    .card1 = {
+        .id = COMPO_ID_CARD_1,
+        .x  = 4+232/2,
+        .y  = 136+108/2,
+        .w  = 232,
+        .h  = 108,
+
+        .rect = {
+            .idx    = 0,
+            .x      = 0,
+            .y      = 0,
+            .w      = 232,
+            .h      = 108,
+            .r      = 16,
+            .color  = {41,41,41},
+        },
+
+        .pic_kcal = {
+            .idx    = 0,
+            .x      = 10+18/2-232/2,
+            .y      = 21+18/2-108/2,
+            .w      = 18,
+            .h      = 18,
+            .res    = UI_BUF_I330001_FIRSTORDER_ACTIVITY_CALORIES_BIN,
+        },
+        .pic_km = {
+            .idx    = 1,
+            .x      = 10+18/2-232/2,
+            .y      = 46+18/2-108/2,
+            .w      = 18,
+            .h      = 18,
+            .res    = UI_BUF_I330001_FIRSTORDER_ACTIVITY_DIS_BIN,
+        },
+        .pic_step = {
+            .idx    = 2,
+            .x      = 10+18/2-232/2,
+            .y      = 71+18/2-108/2,
+            .w      = 18,
+            .h      = 18,
+            .res    = UI_BUF_I330001_FIRSTORDER_ACTIVITY_STEPT_BIN,
+        },
+
+        .arc_kcal = {
+            .id     = COMPO_ID_ARC_KCAL,
+            .x      = 122+100/2-232/2,
+            .y      = 28+50/2-108/2,
+            .w      = 10,
+            .r      = 50,
+            .color  = {252,55,40},
+            .zero_angle = 2700,
+            .angle_min  = 0,
+            .angle_max  = 1800,
+        },
+        .arc_km = {
+            .id     = COMPO_ID_ARC_KM,
+            .x      = 122+100/2-232/2,
+            .y      = 28+50/2-108/2,
+            .w      = 10,
+            .r      = 50,
+            .color  = {255,212,0},
+            .zero_angle = 2700,
+            .angle_min  = 0,
+            .angle_max  = 1800,
+        },
+        .arc_step = {
+            .id     = COMPO_ID_ARC_STEP,
+            .x      = 122+100/2-232/2,
+            .y      = 28+50/2-108/2,
+            .w      = 10,
+            .r      = 50,
+            .color  = {0,242,214},
+            .zero_angle = 2700,
+            .angle_min  = 0,
+            .angle_max  = 1800,
+        },
+
+        .text_kcal = {
+            .idx    = 0,
+            .x      = 34-232/2,
+            .y      = 17-108/2,
+            .w      = 80,
+            .h      = 24,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_NULL,
+            .center = false,
+            .color  = {252,55,40},
+        },
+        .text_km = {
+            .idx    = 1,
+            .x      = 34-232/2,
+            .y      = 42-108/2,
+            .w      = 80,
+            .h      = 24,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_NULL,
+            .center = false,
+            .color  = {255,212,0},
+        },
+        .text_step  = {
+            .idx    = 2,
+            .x      = 34-232/2,
+            .y      = 67-108/2,
+            .w      = 80,
+            .h      = 24,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_NULL,
+            .center = false,
+            .color  = {0,242,214},
+        },
+    },
+
+    .card2 = {
+        .id = COMPO_ID_CARD_2,
+        .x  = 4+232/2,
+        .y  = 250+108/2,
+        .w  = 232,
+        .h  = 108,
+
+        .rect = {
+            .idx    = 0,
+            .x      = 0,
+            .y      = 0,
+            .w      = 232,
+            .h      = 108,
+            .r      = 16,
+            .color  = {41,41,41},
+        },
+
+        .text_sleep = {
+            .idx    = 0,
+            .x      = 12-232/2,
+            .y      = 10-108/2,
+            .w      = 100,
+            .h      = 30,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_SLEEP,
+            .center = false,
+            .color  = {100,95,255},
+        },
+        .text_hour = {
+            .idx    = 1,
+            .x      = 12-232/2,
+            .y      = 38-108/2,
+            .w      = 41,
+            .h      = 46,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_NULL,
+            .center = false,
+            .color  = {255,255,255},
+        },
+        .text_hour_unit = {
+            .idx    = 2,
+            .x      = 56-232/2,
+            .y      = 53-108/2,
+            .w      = 30,
+            .h      = 28,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_HOUR,
+            .center = false,
+            .color  = {255,255,255},
+        },
+        .text_min = {
+            .idx    = 3,
+            .x      = 97-232/2,
+            .y      = 38-108/2,
+            .w      = 40,
+            .h      = 46,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_NULL,
+            .center = false,
+            .color  = {255,255,255},
+        },
+        .text_min_unit = {
+            .idx    = 4,
+            .x      = 140-232/2,
+            .y      = 53-108/2,
+            .w      = 30,
+            .h      = 28,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_MIN,
+            .center = false,
+            .color  = {255,255,255},
+        },
+    },
+
+    .card3 = {
+        .id = COMPO_ID_CARD_3,
+        .x  = 4+232/2,
+        .y  = 360+108/2,
+        .w  = 232,
+        .h  = 108,
+
+        .rect = {
+            .idx    = 0,
+            .x      = 0,
+            .y      = 0,
+            .w      = 232,
+            .h      = 108,
+            .r      = 16,
+            .color  = {41,41,41},
+        },
+
+        .text_music = {
+            .idx    = 0,
+            .x      = 12-232/2,
+            .y      = 10-108/2,
+            .w      = 100,
+            .h      = 30,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_MUSIC,
+            .center = false,
+            .color  = {255,48,96},
+        },
+
+        .pic_click_prev = {
+            .idx    = 0,
+            .x      = 26+28/2-232/2,
+            .y      = 52+28/2-108/2,
+            .w      = 28,
+            .h      = 28,
+            .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_UP00_BIN,
+            .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_UP01_BIN,
+            .res_switch = 0,
+            .func_sta = 0,
+        },
+        .pic_click_next = {
+            .idx    = 1,
+            .x      = 178+28/2-232/2,
+            .y      = 52+28/2-108/2,
+            .w      = 28,
+            .h      = 28,
+            .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_NEXT00_BIN,
+            .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_NEXT01_BIN,
+            .res_switch = 0,
+            .func_sta = 0,
+        },
+        .pic_click_play = {
+            .idx    = 2,
+            .x      = 88+56/2-232/2,
+            .y      = 38+56/2-108/2,
+            .w      = 28,
+            .h      = 28,
+            .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY00_BIN,
+            .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY01_BIN,
+            .res_switch = UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN,
+            .func_sta = 0,
+        },
+    },
+
+    .card4 = {
+        .id = COMPO_ID_CARD_4,
+        .x  = 4+232/2,
+        .y  = 470+108/2,
+        .w  = 232,
+        .h  = 108,
+
+        .rect = {
+            .idx    = 0,
+            .x      = 0,
+            .y      = 0,
+            .w      = 232,
+            .h      = 108,
+            .r      = 16,
+            .color  = {41,41,41},
+        },
+
+        .text_timer = {
+            .idx    = 0,
+            .x      = 12-232/2,
+            .y      = 10-108/2,
+            .w      = 100,
+            .h      = 30,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_TIMER,
+            .center = false,
+            .color  = {248,132,10},
+        },
+        .text_time = {
+            .idx    = 1,
+            .x      = 12-232/2,
+            .y      = 37-108/2,
+            .w      = 200,
+            .h      = 46,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_NULL,
+            .center = false,
+            .color  = {248,132,10},
+        },
+    },
+
+    .card5 = {
+        .id = COMPO_ID_CARD_5,
+        .x  = 4+232/2,
+        .y  = 580+108/2,
+        .w  = 232,
+        .h  = 108,
+
+        .rect = {
+            .idx    = 0,
+            .x      = 0,
+            .y      = 0,
+            .w      = 232,
+            .h      = 108,
+            .r      = 16,
+            .color  = {41,41,41},
+        },
+
+       .text_stopwatch = {
+            .idx    = 0,
+            .x      = 12-232/2,
+            .y      = 10-108/2,
+            .w      = 100,
+            .h      = 30,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_STOP_WATCH,
+            .center = false,
+            .color  = {248,132,10},
+        },
+        .text_time = {
+            .idx    = 1,
+            .x      = 12-232/2,
+            .y      = 37-108/2,
+            .w      = 200,
+            .h      = 46,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_NULL,
+            .center = false,
+            .color  = {248,132,10},
+        },
+    },
+
+    .card6 = {
+        .id = COMPO_ID_CARD_6,
+        .x  = 4+232/2,
+        .y  = 690+108/2,
+        .w  = 232,
+        .h  = 108,
+
+        .rect = {
+            .idx    = 0,
+            .x      = 0,
+            .y      = 0,
+            .w      = 232,
+            .h      = 108,
+            .r      = 16,
+            .color  = {41,41,41},
+        },
+
+        .text_comm_use = {
+            .idx    = 0,
+            .x      = 12-232/2,
+            .y      = 10-108/2,
+            .w      = 100,
+            .h      = 30,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_LATEST_APP,
+            .center = false,
+            .color  = {255,255,255},
+        },
+        .pic_click = {
+            [0] = {
+                .idx    = 0,
+                .x      = 27+48/2-232/2,
+                .y      = 41+48/2-108/2,
+                .w      = 48,
+                .h      = 48,
+                .res    = UI_BUF_I330001_FIRSTORDER_FIXED_SPORT_BIN,
+                .res_click = 0,
+                .res_switch = 0,
+                .func_sta = FUNC_SPORT,
+            },
+
+            [1] = {
+                .idx    = 1,
+                .x      = 91+48/2-232/2,
+                .y      = 41+48/2-108/2,
+                .w      = 48,
+                .h      = 48,
+                .res    = UI_BUF_I330001_FIRSTORDER_FIXED_MSM_BIN,
+                .res_click = 0,
+                .res_switch = 0,
+                .func_sta = FUNC_MESSAGE,
+            },
+
+            [2] = {
+                .idx    = 2,
+                .x      = 155+48/2-232/2,
+                .y      = 41+48/2-108/2,
+                .w      = 48,
+                .h      = 48,
+                .res    = UI_BUF_I330001_FIRSTORDER_FIXED_CALL_BIN,
+                .res_click = 0,
+                .res_switch = 0,
+                .func_sta = FUNC_CALL,
+            },
+        },
+    },
+
+    .card7 = {
+        .id = COMPO_ID_CARD_7,
+        .x  = 4+232/2,
+        .y  = 802+108/2,
+        .w  = 232,
+        .h  = 108,
+
+        .rect = {
+            .idx    = 0,
+            .x      = 0,
+            .y      = 0,
+            .w      = 232,
+            .h      = 108,
+            .r      = 16,
+            .color  = {41,41,41},
+        },
+
+        .text_last_use = {
+            .idx    = 0,
+            .x      = 12-232/2,
+            .y      = 10-108/2,
+            .w      = 100,
+            .h      = 30,
+            .res    = UI_BUF_0FONT_FONT_BIN,
+            .str_id = STR_LATEST_APP,
+            .center = false,
+            .color  = {255,255,255},
+        },
+        .pic_click = {
+            [0] = {
+                .idx    = 0,
+                .x      = 12+44/2-232/2,
+                .y      = 43+44/2-108/2,
+                .w      = 44,
+                .h      = 44,
+                .res    = UI_BUF_I330001_THEME_1_SOPRT_BIN,
+                .res_click = 0,
+                .res_switch = 0,
+                .func_sta = FUNC_SPORT,
+            },
+            [1] = {
+                .idx    = 1,
+                .x      = 66+44/2-232/2,
+                .y      = 43+44/2-108/2,
+                .w      = 44,
+                .h      = 44,
+                .res    = UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,
+                .res_click = 0,
+                .res_switch = 0,
+                .func_sta = FUNC_LIGHT,
+            },
+            [2] = {
+                .idx    = 2,
+                .x      = 120+44/2-232/2,
+                .y      = 43+44/2-108/2,
+                .w      = 44,
+                .h      = 44,
+                .res    = UI_BUF_I330001_THEME_1_TIMER_BIN,
+                .res_click = 0,
+                .res_switch = 0,
+                .func_sta = FUNC_TIMER,
+            },
+            [3] = {
+                .idx    = 3,
+                .x      = 174+44/2-232/2,
+                .y      = 43+44/2-108/2,
+                .w      = 44,
+                .h      = 44,
+                .res    = UI_BUF_I330001_THEME_1_CALL_BIN,
+                .res_click = 0,
+                .res_switch = 0,
+                .func_sta = FUNC_CALL,
+            },
+        },
+    },
+};
+
+//获取卡片原始位置
+static int func_clock_sub_card_get_y_info(int card_compo_id)
+{
+    int ret = 0;
+
+    if (card_compo_id == ui_handle.card_clock_day.id) {
+        ret = ui_handle.card_clock_day.y;
+    }
+
+    if (card_compo_id == ui_handle.card1.id) {
+        ret = ui_handle.card1.y;
+    }
+    if (card_compo_id == ui_handle.card2.id) {
+        ret = ui_handle.card2.y;
+    }
+    if (card_compo_id == ui_handle.card3.id) {
+        ret = ui_handle.card3.y;
+    }
+    if (card_compo_id == ui_handle.card4.id) {
+        ret = ui_handle.card4.y;
+    }
+    if (card_compo_id == ui_handle.card5.id) {
+        ret = ui_handle.card5.y;
+    }
+    if (card_compo_id == ui_handle.card6.id) {
+        ret = ui_handle.card6.y;
+    }
+    if (card_compo_id == ui_handle.card7.id) {
+        ret = ui_handle.card7.y;
+    }
+    return ret;
+}
 
 //功能结构体
 typedef struct f_card_t_
 {
     s32 ofs_y;
     s32 ofs_y_drag;
-    s8 focus_card;                  //靠近屏幕中央的卡片序号
+    s16 focus_card;                  //靠近屏幕中央的卡片序号
     bool flag_drag;                 //开始拖动
     bool flag_move_auto;            //自动移到坐标
     s32 moveto_y;                   //设定自动移到的坐标
@@ -275,146 +844,214 @@ typedef struct f_card_t_
 //创建组件
 static void func_clock_sub_card_compo_create(compo_form_t *frm)
 {
-    compo_cardbox_t *cardbox;
-    compo_picturebox_t *pic;
-    compo_textbox_t *txt;
-    compo_datetime_t *dt;
+//    char txt_buf[20];
+//    uint32_t totalStepCnt = 0;
+//    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+//    uint16_t KM = uteModuleSportGetCurrDayDistanceData();
+//
+//    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+//    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
-    char txt_buf[20];
-    uint32_t totalStepCnt = 0;
-    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-    uint16_t KM = uteModuleSportGetCurrDayDistanceData();
+    ///卡片7
+    compo_cardbox_t* card7 = compo_cardbox_create(frm, 1, 4, 1, ui_handle.card7.w, ui_handle.card7.h);
+    compo_setid(card7, ui_handle.card7.id);
 
-    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
-    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+    compo_cardbox_rect_set_location(card7, ui_handle.card7.rect.idx, ui_handle.card7.rect.x, ui_handle.card7.rect.y, ui_handle.card7.rect.w, ui_handle.card7.rect.h, ui_handle.card7.rect.r);
+    compo_cardbox_rect_set_color(card7, ui_handle.card7.rect.idx, make_color(ui_handle.card7.rect.color.r, ui_handle.card7.rect.color.g, ui_handle.card7.rect.color.b));
 
-    //关机&语音助手
-    cardbox = compo_cardbox_create(frm, 2, 2, 2, CARD_WIDTH_ORG, POWEROFF_BG_H);
-    compo_setid(cardbox, COMPO_ID_CARD_POWEROFF_ASSISTANT);
-    compo_cardbox_rect_set_location(cardbox, 0, ASSISTANT_BG_X, ASSISTANT_BG_Y, ASSISTANT_BG_W, ASSISTANT_BG_H, 20);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_VOICE_BIN);
-    compo_cardbox_icon_set_location(cardbox, 0, ASSISTANT_ICON_X, ASSISTANT_ICON_Y, ASSISTANT_ICON_W, ASSISTANT_ICON_H);
-    compo_cardbox_text_set(cardbox, 0, i18n[STR_VOICE]);
-    compo_cardbox_text_set_location(cardbox, 0, ASSISTANT_TXT_X, ASSISTANT_TXT_Y, ASSISTANT_TXT_W, ASSISTANT_TXT_H);
-    compo_cardbox_text_map_center2left_location(cardbox, 0, ASSISTANT_TXT_X, ASSISTANT_TXT_Y, ASSISTANT_TXT_W, ASSISTANT_TXT_H);
+    compo_cardbox_text_set_font(card7, ui_handle.card7.text_last_use.idx, ui_handle.card7.text_last_use.res);
+    compo_cardbox_text_set_align_center(card7, ui_handle.card7.text_last_use.idx, ui_handle.card7.text_last_use.center);
+    widget_text_set_color(card7->text[ui_handle.card7.text_last_use.idx], make_color(ui_handle.card7.text_last_use.color.r, ui_handle.card7.text_last_use.color.g, ui_handle.card7.text_last_use.color.b));
+    compo_cardbox_text_set_location(card7, ui_handle.card7.text_last_use.idx, ui_handle.card7.text_last_use.x, ui_handle.card7.text_last_use.y, ui_handle.card7.text_last_use.w, ui_handle.card7.text_last_use.h);
+    compo_cardbox_text_set(card7, ui_handle.card7.text_last_use.idx, i18n[ui_handle.card7.text_last_use.str_id]);
 
-    compo_cardbox_rect_set_location(cardbox, 1, POWEROFF_BG_X, POWEROFF_BG_Y, POWEROFF_BG_W, POWEROFF_BG_H, 20);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_OFF_BIN);
-    compo_cardbox_icon_set_location(cardbox, 1, POWEROFF_ICON_X, POWEROFF_ICON_Y, POWEROFF_ICON_W, POWEROFF_ICON_H);
-    compo_cardbox_text_set(cardbox, 1, i18n[STR_SETTING_OFF]);
-    compo_cardbox_text_set_location(cardbox, 1, POWEROFF_TXT_X, POWEROFF_TXT_Y, POWEROFF_TXT_W, POWEROFF_TXT_H);
-    compo_cardbox_text_map_center2left_location(cardbox, 1, POWEROFF_TXT_X, POWEROFF_TXT_Y, POWEROFF_TXT_W, POWEROFF_TXT_H);
+    for (u8 i=0; i<sizeof(ui_handle.card7.pic_click)/sizeof(ui_handle.card7.pic_click[0]); i++) {
+        compo_cardbox_icon_set(card7, ui_handle.card7.pic_click[i].idx, ui_handle.card7.pic_click[i].res);
+        compo_cardbox_icon_set_location(card7, ui_handle.card7.pic_click[i].idx, ui_handle.card7.pic_click[i].x, ui_handle.card7.pic_click[i].y, ui_handle.card7.pic_click[i].w, ui_handle.card7.pic_click[i].h);
+    }
 
-    //音乐
-    cardbox = compo_cardbox_create(frm, 1, 3, 0, CARD_WIDTH_ORG, MUSIC_BG_H);
-    compo_setid(cardbox, COMPO_ID_CARD_MUSIC);
-    compo_cardbox_rect_set_location(cardbox, 0, MUSIC_BG_X, MUSIC_BG_Y, MUSIC_BG_W, MUSIC_BG_H, 20);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_MUSIC_PREV_BIN);
-    compo_cardbox_icon_set_location(cardbox, 0, MUSIC_PREV_X, MUSIC_PREV_Y, MUSIC_PREV_W, MUSIC_PREV_H);
-    compo_cardbox_icon_set(cardbox, 1, music_pp_test ? UI_BUF_MUSIC_PAUSE_BIN : UI_BUF_MUSIC_PLAY_BIN);   //播放/暂停--------->>>todo
-    compo_cardbox_icon_set_location(cardbox, 1, MUSIC_PP_X, MUSIC_PP_Y, MUSIC_PP_W, MUSIC_PP_H);
-    compo_cardbox_icon_set(cardbox, 2, UI_BUF_MUSIC_NEXT_BIN);
-    compo_cardbox_icon_set_location(cardbox, 2, MUSIC_NEXT_X, MUSIC_NEXT_Y, MUSIC_NEXT_W, MUSIC_NEXT_H);
-    //心率
-    cardbox = compo_cardbox_create(frm, 1, 2, 1, CARD_WIDTH_ORG, HEARTRATE_BG_H);
-    compo_setid(cardbox, COMPO_ID_CARD_HEARTRATE);
-    compo_cardbox_rect_set_location(cardbox, 0, HEARTRATE_BG_X, HEARTRATE_BG_Y, HEARTRATE_BG_W, HEARTRATE_BG_H, 20);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_HEART_RATE_HR_BG_BIN);
-    compo_cardbox_icon_set_location(cardbox, 0, HEARTRATE_LINE_X, HEARTRATE_LINE_Y, HEARTRATE_LINE_W, HEARTRATE_LINE_H);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_HEART_RATE_BIN);
-    compo_cardbox_icon_set_location(cardbox, 1, HEARTRATE_ICON_X, HEARTRATE_ICON_Y, HEARTRATE_ICON_W, HEARTRATE_ICON_H);
-    compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
-    compo_cardbox_text_set(cardbox, 0, txt_buf);   //心率值--------->>>todo
-    compo_cardbox_text_set_location(cardbox, 0, HEARTRATE_VALUE_X, HEARTRATE_VALUE_Y, HEARTRATE_VALUE_W, HEARTRATE_VALUE_H);
-    //睡眠
-    cardbox = compo_cardbox_create(frm, 1, 2, 5, CARD_WIDTH_ORG, SLEEP_BG_H);
-    compo_setid(cardbox, COMPO_ID_CARD_SLEEP);
-    compo_cardbox_rect_set_location(cardbox, 0, SLEEP_BG_X, SLEEP_BG_Y, SLEEP_BG_W, SLEEP_BG_H, 20);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_SLEEP_SLEEP_BIN);
-    compo_cardbox_icon_set_location(cardbox, 0, SLEEP_ICON_DEEP_X, SLEEP_ICON_DEEP_Y, SLEEP_ICON_DEEP_W, SLEEP_ICON_DEEP_H);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_SLEEP_LIGHT_SLEEP_BIN);
-    compo_cardbox_icon_set_location(cardbox, 1, SLEEP_ICON_LIGHT_X, SLEEP_ICON_LIGHT_Y, SLEEP_ICON_LIGHT_W, SLEEP_ICON_LIGHT_H);
-    compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    snprintf(txt_buf, sizeof(txt_buf), "%02d:%02d", sleep_data->totalSleepMin/60,sleep_data->totalSleepMin%60);///* 总睡眠小时*/
-    compo_cardbox_text_set(cardbox, 0, txt_buf);    //总时长--------->>>todo
-    compo_cardbox_text_set_location(cardbox, 0, SLEEP_TOTAL_X, SLEEP_TOTAL_Y, SLEEP_TOTAL_W, SLEEP_TOTAL_H);
-    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_BIN);
-    snprintf(txt_buf, sizeof(txt_buf), "%02dh", sleep_data->deepSleepMin/60);///* 深睡小时数据*/
-    compo_cardbox_text_set(cardbox, 1, txt_buf);      //深睡时长hour--------->>>todo
-    compo_cardbox_text_set_location(cardbox, 1, SLEEP_DEEP_H_X, SLEEP_DEEP_H_Y, SLEEP_DEEP_H_W, SLEEP_DEEP_H_H);
-    compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_BIN);
-    snprintf(txt_buf, sizeof(txt_buf), "%02dm",sleep_data->deepSleepMin%60);///* 深睡小时数据*/
-    compo_cardbox_text_set(cardbox, 2, txt_buf);      //深睡时长min--------->>>todo
-    compo_cardbox_text_set_location(cardbox, 2, SLEEP_DEEP_M_X, SLEEP_DEEP_M_Y, SLEEP_DEEP_M_W, SLEEP_DEEP_M_H);
-    compo_cardbox_text_set_font(cardbox, 3, UI_BUF_0FONT_FONT_BIN);
-    snprintf(txt_buf, sizeof(txt_buf), "%02dh", sleep_data->lightSleepMin/60);///* 浅睡小时数据*/
-    compo_cardbox_text_set(cardbox, 3, txt_buf);      //浅睡时长hour--------->>>todo
-    compo_cardbox_text_set_location(cardbox, 3, SLEEP_LIGHT_H_X, SLEEP_LIGHT_H_Y, SLEEP_LIGHT_H_W, SLEEP_LIGHT_H_H);
-    compo_cardbox_text_set_font(cardbox, 4, UI_BUF_0FONT_FONT_BIN);
-    snprintf(txt_buf, sizeof(txt_buf), "%02dm", sleep_data->lightSleepMin%60);///* 浅睡小时数据*/
-    compo_cardbox_text_set(cardbox, 4, txt_buf);      //浅睡时长min--------->>>todo
-    compo_cardbox_text_set_location(cardbox, 4, SLEEP_LIGHT_M_X, SLEEP_LIGHT_M_Y, SLEEP_LIGHT_M_W, SLEEP_LIGHT_M_H);
-    //活动记录
-    cardbox = compo_cardbox_create(frm, 1, 1, 3, CARD_WIDTH_ORG, ACTIVITY_BG_H);
-    compo_setid(cardbox, COMPO_ID_CARD_ACTIVITY);
-    compo_cardbox_rect_set_location(cardbox, 0, ACTIVITY_BG_X, ACTIVITY_BG_Y, ACTIVITY_BG_W, ACTIVITY_BG_H, 20);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_ACTIVITY_BIN);
-    compo_cardbox_icon_set_location(cardbox, 0, ACTIVITY_ICON_X, ACTIVITY_ICON_Y, ACTIVITY_ICON_W, ACTIVITY_ICON_H);
-    compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
-    compo_cardbox_text_set(cardbox, 0, txt_buf);    //步数--------->>>todo
-    compo_cardbox_text_set_forecolor(cardbox,0, make_color(26, 137, 255));
-    compo_cardbox_text_set_location(cardbox, 0, ACTIVITY_STEP_X, ACTIVITY_STEP_Y, ACTIVITY_STEP_W, ACTIVITY_STEP_H);
-    compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());
-    compo_cardbox_text_set(cardbox, 1,txt_buf);    //卡路里--------->>>todo
-    compo_cardbox_text_set_forecolor(cardbox,1, make_color(233, 16, 75));
-    compo_cardbox_text_set_location(cardbox, 1, ACTIVITY_CALORIE_X, ACTIVITY_CALORIE_Y, ACTIVITY_CALORIE_W, ACTIVITY_CALORIE_H);
-    compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/1000,KM/100,KM/10);
-    compo_cardbox_text_set(cardbox, 2,txt_buf);      //距离--------->>>todo
-    compo_cardbox_text_set_forecolor(cardbox,2, make_color(57, 255, 0));
-    compo_cardbox_text_set_location(cardbox, 2, ACTIVITY_DISTANCE_X, ACTIVITY_DISTANCE_Y, ACTIVITY_DISTANCE_W, ACTIVITY_DISTANCE_H);
-    //运动&指南针
-    cardbox = compo_cardbox_create(frm, 2, 2, 2, CARD_WIDTH_ORG, SPORT_BG_H);
-    compo_setid(cardbox, COMPO_ID_CARD_SPORT_COMPASS);
-    compo_cardbox_rect_set_location(cardbox, 0, COMPASS_BG_X, COMPASS_BG_Y, COMPASS_BG_W, COMPASS_BG_H, 20);
-    //compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_COMPASS_BIN);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_BLOOD_OXYGEN_BIN);
-    compo_cardbox_icon_set_location(cardbox, 0, COMPASS_ICON_X, COMPASS_ICON_Y, COMPASS_ICON_W, COMPASS_ICON_H);
-    compo_cardbox_text_set(cardbox, 0, i18n[STR_BLOOD_OXYGEN]);
-    compo_cardbox_text_set_location(cardbox, 0, COMPASS_TXT_X, COMPASS_TXT_Y, COMPASS_TXT_W, COMPASS_TXT_H);
-    compo_cardbox_text_map_center2left_location(cardbox, 0, COMPASS_TXT_X, COMPASS_TXT_Y, COMPASS_TXT_W, COMPASS_TXT_H);
+    ///卡片6
+    compo_cardbox_t* card6 = compo_cardbox_create(frm, 1, 3, 1, ui_handle.card6.w, ui_handle.card6.h);
+    compo_setid(card6, ui_handle.card6.id);
 
-    compo_cardbox_rect_set_location(cardbox, 1, SPORT_BG_X, SPORT_BG_Y, SPORT_BG_W, SPORT_BG_H, 20);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_SPORT_BIN);
-    compo_cardbox_icon_set_location(cardbox, 1, SPORT_ICON_X, SPORT_ICON_Y, SPORT_ICON_W, SPORT_ICON_H);
-    compo_cardbox_text_set(cardbox, 1, i18n[STR_SPORTS]);
-    compo_cardbox_text_set_location(cardbox, 1, SPORT_TXT_X, SPORT_TXT_Y, SPORT_TXT_W, SPORT_TXT_H);
-//    compo_cardbox_text_map_center2left_location(cardbox, 1, SPORT_TXT_X, SPORT_TXT_Y, SPORT_TXT_W, SPORT_TXT_H);
-    //时钟、日期
-    pic = compo_picturebox_create(frm, UI_BUF_PULLUP_DIALPLATE_BG_BIN); //时钟背景
-    compo_setid(pic, COMPO_ID_CLOCK_BG);
-    dt = compo_datetime_create(frm, UI_BUF_PULLUP_HOUR_BIN);            //时针
-    compo_setid(dt, COMPO_ID_CLOCK_H);
-    compo_datetime_set_center(dt, 0, CLOCK_POINTER_H_H / 2);
-    compo_datetime_set_start_angle(dt, 900);
-    compo_bonddata(dt, COMPO_BOND_HOUR);
-    dt = compo_datetime_create(frm, UI_BUF_PULLUP_MIN_BIN);             //分针
-    compo_setid(dt, COMPO_ID_CLOCK_M);
-    compo_datetime_set_center(dt, 0, CLOCK_POINTER_M_H /2);
-    compo_datetime_set_start_angle(dt, 900);
-    compo_bonddata(dt, COMPO_BOND_MINUTE);
-    txt = compo_textbox_create(frm, 5);                                 //日期
-    compo_setid(txt, COMPO_ID_DATE);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_bonddata(txt, COMPO_BOND_DATE);
-    txt = compo_textbox_create(frm, TXT_CNT_MAX);                       //星期
-    compo_setid(txt, COMPO_ID_WEEKDAY);
-    compo_bonddata(txt, COMPO_BOND_WEEKDAY);
+    compo_cardbox_rect_set_location(card6, ui_handle.card6.rect.idx, ui_handle.card6.rect.x, ui_handle.card6.rect.y, ui_handle.card6.rect.w, ui_handle.card6.rect.h, ui_handle.card6.rect.r);
+    compo_cardbox_rect_set_color(card6, ui_handle.card6.rect.idx, make_color(ui_handle.card6.rect.color.r, ui_handle.card6.rect.color.g, ui_handle.card6.rect.color.b));
 
-    ab_free(sleep_data);
+    compo_cardbox_text_set_font(card6, ui_handle.card6.text_comm_use.idx, ui_handle.card6.text_comm_use.res);
+    compo_cardbox_text_set_align_center(card6, ui_handle.card6.text_comm_use.idx, ui_handle.card6.text_comm_use.center);
+    widget_text_set_color(card6->text[ui_handle.card6.text_comm_use.idx], make_color(ui_handle.card6.text_comm_use.color.r, ui_handle.card6.text_comm_use.color.g, ui_handle.card6.text_comm_use.color.b));
+    compo_cardbox_text_set_location(card6, ui_handle.card6.text_comm_use.idx, ui_handle.card6.text_comm_use.x, ui_handle.card6.text_comm_use.y, ui_handle.card6.text_comm_use.w, ui_handle.card6.text_comm_use.h);
+    compo_cardbox_text_set(card6, ui_handle.card6.text_comm_use.idx, i18n[ui_handle.card6.text_comm_use.str_id]);
+
+    for (u8 i=0; i<sizeof(ui_handle.card6.pic_click)/sizeof(ui_handle.card6.pic_click[0]); i++) {
+        compo_cardbox_icon_set_location(card6, ui_handle.card6.pic_click[i].idx, ui_handle.card6.pic_click[i].x, ui_handle.card6.pic_click[i].y, ui_handle.card6.pic_click[i].w, ui_handle.card6.pic_click[i].h);
+        compo_cardbox_icon_set(card6, ui_handle.card6.pic_click[i].idx, ui_handle.card6.pic_click[i].res);
+    }
+
+
+    ///卡片5
+    compo_cardbox_t* card5 = compo_cardbox_create(frm, 1, 0, 2, ui_handle.card5.w, ui_handle.card5.h);
+    compo_setid(card5, ui_handle.card5.id);
+
+    compo_cardbox_rect_set_location(card5, ui_handle.card5.rect.idx, ui_handle.card5.rect.x, ui_handle.card5.rect.y, ui_handle.card5.rect.w, ui_handle.card5.rect.h, ui_handle.card5.rect.r);
+    compo_cardbox_rect_set_color(card5, ui_handle.card5.rect.idx, make_color(ui_handle.card5.rect.color.r, ui_handle.card5.rect.color.g, ui_handle.card5.rect.color.b));
+
+    compo_cardbox_text_set_font(card5, ui_handle.card5.text_stopwatch.idx, ui_handle.card5.text_stopwatch.res);
+    compo_cardbox_text_set_align_center(card5, ui_handle.card5.text_stopwatch.idx, ui_handle.card5.text_stopwatch.center);
+    widget_text_set_color(card5->text[ui_handle.card5.text_stopwatch.idx], make_color(ui_handle.card5.text_stopwatch.color.r, ui_handle.card5.text_stopwatch.color.g, ui_handle.card5.text_stopwatch.color.b));
+    compo_cardbox_text_set_location(card5, ui_handle.card5.text_stopwatch.idx, ui_handle.card5.text_stopwatch.x, ui_handle.card5.text_stopwatch.y, ui_handle.card5.text_stopwatch.w, ui_handle.card5.text_stopwatch.h);
+    compo_cardbox_text_set(card5, ui_handle.card5.text_stopwatch.idx, i18n[ui_handle.card5.text_stopwatch.str_id]);
+
+    compo_cardbox_text_set_font(card5, ui_handle.card5.text_time.idx, ui_handle.card5.text_time.res);
+    compo_cardbox_text_set_align_center(card5, ui_handle.card5.text_time.idx, ui_handle.card5.text_time.center);
+    widget_text_set_color(card5->text[ui_handle.card5.text_time.idx], make_color(ui_handle.card5.text_time.color.r, ui_handle.card5.text_time.color.g, ui_handle.card5.text_time.color.b));
+    compo_cardbox_text_set_location(card5, ui_handle.card5.text_time.idx, ui_handle.card5.text_time.x, ui_handle.card5.text_time.y, ui_handle.card5.text_time.w, ui_handle.card5.text_time.h);
+    compo_cardbox_text_set(card5, ui_handle.card5.text_time.idx, "00:00:00");
+
+    ///卡片4
+    compo_cardbox_t* card4 = compo_cardbox_create(frm, 1, 0, 2, ui_handle.card4.w, ui_handle.card4.h);
+    compo_setid(card4, ui_handle.card4.id);
+
+    compo_cardbox_rect_set_location(card4, ui_handle.card4.rect.idx, ui_handle.card4.rect.x, ui_handle.card4.rect.y, ui_handle.card4.rect.w, ui_handle.card4.rect.h, ui_handle.card4.rect.r);
+    compo_cardbox_rect_set_color(card4, ui_handle.card4.rect.idx, make_color(ui_handle.card4.rect.color.r, ui_handle.card4.rect.color.g, ui_handle.card4.rect.color.b));
+
+    compo_cardbox_text_set_font(card4, ui_handle.card4.text_timer.idx, ui_handle.card4.text_timer.res);
+    compo_cardbox_text_set_align_center(card4, ui_handle.card4.text_timer.idx, ui_handle.card4.text_timer.center);
+    widget_text_set_color(card4->text[ui_handle.card4.text_timer.idx], make_color(ui_handle.card4.text_timer.color.r, ui_handle.card4.text_timer.color.g, ui_handle.card4.text_timer.color.b));
+    compo_cardbox_text_set_location(card4, ui_handle.card4.text_timer.idx, ui_handle.card4.text_timer.x, ui_handle.card4.text_timer.y, ui_handle.card4.text_timer.w, ui_handle.card4.text_timer.h);
+    compo_cardbox_text_set(card4, ui_handle.card4.text_timer.idx, i18n[ui_handle.card4.text_timer.str_id]);
+
+    compo_cardbox_text_set_font(card4, ui_handle.card4.text_time.idx, ui_handle.card4.text_time.res);
+    compo_cardbox_text_set_align_center(card4, ui_handle.card4.text_time.idx, ui_handle.card4.text_time.center);
+    widget_text_set_color(card4->text[ui_handle.card4.text_time.idx], make_color(ui_handle.card4.text_time.color.r, ui_handle.card4.text_time.color.g, ui_handle.card4.text_time.color.b));
+    compo_cardbox_text_set_location(card4, ui_handle.card4.text_time.idx, ui_handle.card4.text_time.x, ui_handle.card4.text_time.y, ui_handle.card4.text_time.w, ui_handle.card4.text_time.h);
+    compo_cardbox_text_set(card4, ui_handle.card4.text_time.idx, "00:00:00");
+
+
+    ///卡片3
+    compo_cardbox_t* card3 = compo_cardbox_create(frm, 1, 3, 1, ui_handle.card3.w, ui_handle.card3.h);
+    compo_setid(card3, ui_handle.card3.id);
+
+    compo_cardbox_rect_set_location(card3, ui_handle.card3.rect.idx, ui_handle.card3.rect.x, ui_handle.card3.rect.y, ui_handle.card3.rect.w, ui_handle.card3.rect.h, ui_handle.card3.rect.r);
+    compo_cardbox_rect_set_color(card3, ui_handle.card3.rect.idx, make_color(ui_handle.card3.rect.color.r, ui_handle.card3.rect.color.g, ui_handle.card3.rect.color.b));
+
+    compo_cardbox_text_set_font(card3, ui_handle.card3.text_music.idx, ui_handle.card3.text_music.res);
+    compo_cardbox_text_set_align_center(card3, ui_handle.card3.text_music.idx, ui_handle.card3.text_music.center);
+    widget_text_set_color(card3->text[ui_handle.card3.text_music.idx], make_color(ui_handle.card3.text_music.color.r, ui_handle.card3.text_music.color.g, ui_handle.card3.text_music.color.b));
+    compo_cardbox_text_set_location(card3, ui_handle.card3.text_music.idx, ui_handle.card3.text_music.x, ui_handle.card3.text_music.y, ui_handle.card3.text_music.w, ui_handle.card3.text_music.h);
+    compo_cardbox_text_set(card3, ui_handle.card3.text_music.idx, i18n[ui_handle.card3.text_music.str_id]);
+
+    compo_cardbox_icon_set_location(card3, ui_handle.card3.pic_click_prev.idx, ui_handle.card3.pic_click_prev.x, ui_handle.card3.pic_click_prev.y, ui_handle.card3.pic_click_prev.w, ui_handle.card3.pic_click_prev.h);
+    compo_cardbox_icon_set(card3, ui_handle.card3.pic_click_prev.idx, ui_handle.card3.pic_click_prev.res);
+
+    compo_cardbox_icon_set_location(card3, ui_handle.card3.pic_click_next.idx, ui_handle.card3.pic_click_next.x, ui_handle.card3.pic_click_next.y, ui_handle.card3.pic_click_next.w, ui_handle.card3.pic_click_next.h);
+    compo_cardbox_icon_set(card3, ui_handle.card3.pic_click_next.idx, ui_handle.card3.pic_click_next.res);
+
+    compo_cardbox_icon_set_location(card3, ui_handle.card3.pic_click_play.idx, ui_handle.card3.pic_click_play.x, ui_handle.card3.pic_click_play.y, ui_handle.card3.pic_click_play.w, ui_handle.card3.pic_click_play.h);
+    compo_cardbox_icon_set(card3, ui_handle.card3.pic_click_play.idx, ui_handle.card3.pic_click_play.res);
+
+
+    ///卡片2
+    compo_cardbox_t* card2 = compo_cardbox_create(frm, 1, 0, 5, ui_handle.card2.w, ui_handle.card2.h);
+    compo_setid(card2, ui_handle.card2.id);
+
+    compo_cardbox_rect_set_location(card2, ui_handle.card2.rect.idx, ui_handle.card2.rect.x, ui_handle.card2.rect.y, ui_handle.card2.rect.w, ui_handle.card2.rect.h, ui_handle.card2.rect.r);
+    compo_cardbox_rect_set_color(card2, ui_handle.card2.rect.idx, make_color(ui_handle.card2.rect.color.r, ui_handle.card2.rect.color.g, ui_handle.card2.rect.color.b));
+
+    compo_cardbox_text_set_font(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.res);
+    compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.center);
+    widget_text_set_color(card2->text[ui_handle.card2.text_sleep.idx], make_color(ui_handle.card2.text_sleep.color.r, ui_handle.card2.text_sleep.color.g, ui_handle.card2.text_sleep.color.b));
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.x, ui_handle.card2.text_sleep.y, ui_handle.card2.text_sleep.w, ui_handle.card2.text_sleep.h);
+    compo_cardbox_text_set(card2, ui_handle.card2.text_sleep.idx, i18n[ui_handle.card2.text_sleep.str_id]);
+
+    compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.res);
+    compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
+    widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.x, ui_handle.card2.text_hour.y, ui_handle.card2.text_hour.w, ui_handle.card2.text_hour.h);
+    compo_cardbox_text_set(card2, ui_handle.card2.text_hour.idx, "--");
+
+    compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.res);
+    compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.center);
+    widget_text_set_color(card2->text[ui_handle.card2.text_hour_unit.idx], make_color(ui_handle.card2.text_hour_unit.color.r, ui_handle.card2.text_hour_unit.color.g, ui_handle.card2.text_hour_unit.color.b));
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.x, ui_handle.card2.text_hour_unit.y, ui_handle.card2.text_hour_unit.w, ui_handle.card2.text_hour_unit.h);
+    compo_cardbox_text_set(card2, ui_handle.card2.text_hour_unit.idx, i18n[ui_handle.card2.text_hour_unit.str_id]);
+
+    compo_cardbox_text_set_font(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.res);
+    compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.center);
+    widget_text_set_color(card2->text[ui_handle.card2.text_min.idx], make_color(ui_handle.card2.text_min.color.r, ui_handle.card2.text_min.color.g, ui_handle.card2.text_min.color.b));
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w, ui_handle.card2.text_min.h);
+    compo_cardbox_text_set(card2, ui_handle.card2.text_min.idx, "--");
+
+    compo_cardbox_text_set_font(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.res);
+    compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.center);
+    widget_text_set_color(card2->text[ui_handle.card2.text_min_unit.idx], make_color(ui_handle.card2.text_min_unit.color.r, ui_handle.card2.text_min_unit.color.g, ui_handle.card2.text_min_unit.color.b));
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.x, ui_handle.card2.text_min_unit.y, ui_handle.card2.text_min_unit.w, ui_handle.card2.text_min_unit.h);
+    compo_cardbox_text_set(card2, ui_handle.card2.text_min_unit.idx, i18n[ui_handle.card2.text_min_unit.str_id]);
+
+    ///卡片1
+    compo_cardbox_t* card1 = compo_cardbox_create(frm, 1, 3, 3, ui_handle.card1.w, ui_handle.card1.h);
+    compo_setid(card1, ui_handle.card1.id);
+
+    compo_cardbox_rect_set_location(card1, ui_handle.card1.rect.idx, ui_handle.card1.rect.x, ui_handle.card1.rect.y, ui_handle.card1.rect.w, ui_handle.card1.rect.h, ui_handle.card1.rect.r);
+    compo_cardbox_rect_set_color(card1, ui_handle.card1.rect.idx, make_color(ui_handle.card1.rect.color.r, ui_handle.card1.rect.color.g, ui_handle.card1.rect.color.b));
+
+    compo_cardbox_icon_set_location(card1, ui_handle.card1.pic_kcal.idx, ui_handle.card1.pic_kcal.x, ui_handle.card1.pic_kcal.y, ui_handle.card1.pic_kcal.w, ui_handle.card1.pic_kcal.h);
+    compo_cardbox_icon_set(card1, ui_handle.card1.pic_kcal.idx, ui_handle.card1.pic_kcal.res);
+    compo_cardbox_icon_set_location(card1, ui_handle.card1.pic_km.idx, ui_handle.card1.pic_km.x, ui_handle.card1.pic_km.y, ui_handle.card1.pic_km.w, ui_handle.card1.pic_km.h);
+    compo_cardbox_icon_set(card1, ui_handle.card1.pic_km.idx, ui_handle.card1.pic_km.res);
+    compo_cardbox_icon_set_location(card1, ui_handle.card1.pic_step.idx, ui_handle.card1.pic_step.x, ui_handle.card1.pic_step.y, ui_handle.card1.pic_step.w, ui_handle.card1.pic_step.h);
+    compo_cardbox_icon_set(card1, ui_handle.card1.pic_step.idx, ui_handle.card1.pic_step.res);
+
+    compo_cardbox_text_set_font(card1, ui_handle.card1.text_kcal.idx, ui_handle.card1.text_kcal.res);
+    compo_cardbox_text_set_align_center(card1, ui_handle.card1.text_kcal.idx, ui_handle.card1.text_kcal.center);
+    widget_text_set_color(card1->text[ui_handle.card1.text_kcal.idx], make_color(ui_handle.card1.text_kcal.color.r, ui_handle.card1.text_kcal.color.g, ui_handle.card1.text_kcal.color.b));
+    compo_cardbox_text_set_location(card1, ui_handle.card1.text_kcal.idx, ui_handle.card1.text_kcal.x, ui_handle.card1.text_kcal.y, ui_handle.card1.text_kcal.w, ui_handle.card1.text_kcal.h);
+    compo_cardbox_text_set(card1, ui_handle.card1.text_kcal.idx, "--");
+
+    compo_cardbox_text_set_font(card1, ui_handle.card1.text_km.idx, ui_handle.card1.text_km.res);
+    compo_cardbox_text_set_align_center(card1, ui_handle.card1.text_km.idx, ui_handle.card1.text_km.center);
+    widget_text_set_color(card1->text[ui_handle.card1.text_km.idx], make_color(ui_handle.card1.text_km.color.r, ui_handle.card1.text_km.color.g, ui_handle.card1.text_km.color.b));
+    compo_cardbox_text_set_location(card1, ui_handle.card1.text_km.idx, ui_handle.card1.text_km.x, ui_handle.card1.text_km.y, ui_handle.card1.text_km.w, ui_handle.card1.text_km.h);
+    compo_cardbox_text_set(card1, ui_handle.card1.text_km.idx, "--");
+
+    compo_cardbox_text_set_font(card1, ui_handle.card1.text_step.idx, ui_handle.card1.text_step.res);
+    compo_cardbox_text_set_align_center(card1, ui_handle.card1.text_step.idx, ui_handle.card1.text_step.center);
+    widget_text_set_color(card1->text[ui_handle.card1.text_step.idx], make_color(ui_handle.card1.text_step.color.r, ui_handle.card1.text_step.color.g, ui_handle.card1.text_step.color.b));
+    compo_cardbox_text_set_location(card1, ui_handle.card1.text_step.idx, ui_handle.card1.text_step.x, ui_handle.card1.text_step.y, ui_handle.card1.text_step.w, ui_handle.card1.text_step.h);
+    compo_cardbox_text_set(card1, ui_handle.card1.text_step.idx, "--");
+
+
+    ///时钟 日期
+    compo_picturebox_t* clock_bg = compo_picturebox_create(frm, ui_handle.card_clock_day.clock.bg_res);
+    compo_setid(clock_bg, ui_handle.card_clock_day.clock.id_bg);
+
+    compo_datetime_t* clock_h = compo_datetime_create(frm, ui_handle.card_clock_day.clock.h_res);
+    compo_setid(clock_h, ui_handle.card_clock_day.clock.id_h);
+    compo_datetime_set_center(clock_h, 0, ui_handle.card_clock_day.clock.h_h / 2);
+    compo_datetime_set_start_angle(clock_h, 900);
+    compo_bonddata(clock_h, ui_handle.card_clock_day.clock.h_bonddata);
+
+    compo_datetime_t* clock_m = compo_datetime_create(frm, ui_handle.card_clock_day.clock.m_res);
+    compo_setid(clock_m, ui_handle.card_clock_day.clock.id_min);
+    compo_datetime_set_center(clock_m, 0, ui_handle.card_clock_day.clock.m_h / 2);
+    compo_datetime_set_start_angle(clock_m, 900);
+    compo_bonddata(clock_m, ui_handle.card_clock_day.clock.m_bonddata);
+
+    compo_textbox_t* date = compo_textbox_create(frm, 5);                                 //日期
+    compo_setid(date, ui_handle.card_clock_day.date.id);
+    compo_textbox_set_font(date, ui_handle.card_clock_day.date.res);
+    compo_textbox_set_align_center(date, ui_handle.card_clock_day.date.center);
+    widget_text_set_color(date->txt, make_color(ui_handle.card_clock_day.date.color.r, ui_handle.card_clock_day.date.color.g, ui_handle.card_clock_day.date.color.b));
+    compo_bonddata(date, ui_handle.card_clock_day.date.bonddata);
+
+    compo_textbox_t* week = compo_textbox_create(frm, 20);                                 //日期
+    compo_setid(week, ui_handle.card_clock_day.week.id);
+    compo_textbox_set_font(week, ui_handle.card_clock_day.week.res);
+    compo_textbox_set_align_center(week, ui_handle.card_clock_day.week.center);
+    widget_text_set_color(week->txt, make_color(ui_handle.card_clock_day.week.color.r, ui_handle.card_clock_day.week.color.g, ui_handle.card_clock_day.week.color.b));
+    compo_bonddata(week, ui_handle.card_clock_day.week.bonddata);
+
+//    ab_free(sleep_data);
 
 }
 
@@ -431,97 +1068,160 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
         //获取初始值
         switch (compo->id)
         {
-            case COMPO_ID_CLOCK_BG:                                 //时钟
-                x = CLOCK_BG_X + CARD_CLOCK_X;
-                y = CLOCK_BG_Y + CARD_CLOCK_Y;
-                w = CLOCK_BG_W;
-                h = CLOCK_BG_H;
-                card_y = CARD_CLOCK_Y;
-                card_id = CARD_ID_CLOCK;
+            case COMPO_ID_CLOCK_BG:
+                if (ui_handle.card_clock_day.clock.id_bg != COMPO_ID_CLOCK_BG) {
+                    printf("COMPO_ID_CLOCK_BG ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card_clock_day.clock.bg_x + ui_handle.card_clock_day.x;
+                y = ui_handle.card_clock_day.clock.bg_y + ui_handle.card_clock_day.y;
+                w = ui_handle.card_clock_day.clock.bg_w;
+                h = ui_handle.card_clock_day.clock.bg_h;
+                card_y = ui_handle.card_clock_day.y;
+//                card_id = CARD_ID_CLOCK;
+                card_id = ui_handle.card_clock_day.id;
                 break;
 
             case COMPO_ID_CLOCK_H:
-                x = CLOCK_POINTER_H_X + CARD_CLOCK_X;
-                y = CLOCK_POINTER_H_Y + CARD_CLOCK_Y;
-                w = CLOCK_POINTER_H_W;
-                h = CLOCK_POINTER_H_H;
-                card_y = CARD_CLOCK_Y;
-                card_id = CARD_ID_CLOCK;
+                if (ui_handle.card_clock_day.clock.id_h != COMPO_ID_CLOCK_H) {
+                    printf("COMPO_ID_CLOCK_H ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card_clock_day.clock.h_x + ui_handle.card_clock_day.x;
+                y = ui_handle.card_clock_day.clock.h_y + ui_handle.card_clock_day.y;
+                w = ui_handle.card_clock_day.clock.h_w;
+                h = ui_handle.card_clock_day.clock.h_h;
+                card_y = ui_handle.card_clock_day.y;
+//                card_id = CARD_ID_CLOCK;
+                card_id = ui_handle.card_clock_day.id;
                 break;
 
             case COMPO_ID_CLOCK_M:
-                x = CLOCK_POINTER_M_X + CARD_CLOCK_X;
-                y = CLOCK_POINTER_M_Y + CARD_CLOCK_Y;
-                w = CLOCK_POINTER_M_W;
-                h = CLOCK_POINTER_M_H;
-                card_y = CARD_CLOCK_Y;
-                card_id = CARD_ID_CLOCK;
+                if (ui_handle.card_clock_day.clock.id_min != COMPO_ID_CLOCK_M) {
+                    printf("COMPO_ID_CLOCK_M ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card_clock_day.clock.m_x + ui_handle.card_clock_day.x;
+                y = ui_handle.card_clock_day.clock.m_y + ui_handle.card_clock_day.y;
+                w = ui_handle.card_clock_day.clock.m_w;
+                h = ui_handle.card_clock_day.clock.m_h;
+                card_y = ui_handle.card_clock_day.y;
+//                card_id = CARD_ID_CLOCK;
+                card_id = ui_handle.card_clock_day.id;
                 break;
 
             case COMPO_ID_DATE:
-                x = DATE_X + CARD_CLOCK_X;
-                y = DATE_Y + CARD_CLOCK_Y;
-                w = DATE_W;
-                h = DATE_H;
-                card_y = CARD_CLOCK_Y;
-                card_id = CARD_ID_CLOCK;
+                if (ui_handle.card_clock_day.date.id != COMPO_ID_DATE) {
+                    printf("COMPO_ID_DATE ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card_clock_day.date.x + ui_handle.card_clock_day.x;
+                y = ui_handle.card_clock_day.date.y + ui_handle.card_clock_day.y;
+                w = ui_handle.card_clock_day.date.w;
+                h = ui_handle.card_clock_day.date.h;
+                card_y = ui_handle.card_clock_day.y;
+//                card_id = CARD_ID_CLOCK;
+                card_id = ui_handle.card_clock_day.id;
                 break;
 
             case COMPO_ID_WEEKDAY:
-                x = WEEKDAY_X + CARD_CLOCK_X;
-                y = WEEKDAY_Y + CARD_CLOCK_Y;
-                w = WEEKDAY_W;
-                h = WEEKDAY_H;
-                card_y = CARD_CLOCK_Y;
-                card_id = CARD_ID_CLOCK;
+                if (ui_handle.card_clock_day.week.id != COMPO_ID_WEEKDAY) {
+                    printf("COMPO_ID_WEEKDAY ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card_clock_day.week.x + ui_handle.card_clock_day.x;
+                y = ui_handle.card_clock_day.week.y + ui_handle.card_clock_day.y;
+                w = ui_handle.card_clock_day.week.w;
+                h = ui_handle.card_clock_day.week.h;
+                card_y = ui_handle.card_clock_day.y;
+//                card_id = CARD_ID_CLOCK;
+                card_id = ui_handle.card_clock_day.id;
                 break;
 
-            case COMPO_ID_CARD_SPORT_COMPASS:                       //运动&指南针
-                x = CARD_SPORT_COMPASS_X;
-                y = card_y = CARD_SPORT_COMPASS_Y;
-                w = CARD_WIDTH_ORG;
-                h = SPORT_BG_H;
-                card_id = CARD_ID_SPORT_COMPASS;
+            case COMPO_ID_CARD_1:
+                if (ui_handle.card1.id != COMPO_ID_CARD_1) {
+                    printf("COMPO_ID_CARD_1 ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card1.x;
+                y = card_y = ui_handle.card1.y;
+                w = ui_handle.card1.w;
+                h = ui_handle.card1.h;
+                card_id = ui_handle.card1.id;
                 break;
 
-            case COMPO_ID_CARD_ACTIVITY:                            //活动记录
-                x = CARD_ACTIVITY_X;
-                y = card_y = CARD_ACTIVITY_Y;
-                w = ACTIVITY_BG_W;
-                h = ACTIVITY_BG_H;
-                card_id = CARD_ID_ACTIVITY;
+            case COMPO_ID_CARD_2:
+                if (ui_handle.card2.id != COMPO_ID_CARD_2) {
+                    printf("COMPO_ID_CARD_2 ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card2.x;
+                y = card_y = ui_handle.card2.y;
+                w = ui_handle.card2.w;
+                h = ui_handle.card2.h;
+                card_id = ui_handle.card2.id;
                 break;
 
-            case COMPO_ID_CARD_SLEEP:                               //睡眠
-                x = CARD_SLEEP_X;
-                y = card_y = CARD_SLEEP_Y;
-                w = SLEEP_BG_W;
-                h = SLEEP_BG_H;
-                card_id = CARD_ID_SLEEP;
+            case COMPO_ID_CARD_3:
+                if (ui_handle.card3.id != COMPO_ID_CARD_3) {
+                    printf("COMPO_ID_CARD_3 ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card3.x;
+                y = card_y = ui_handle.card3.y;
+                w = ui_handle.card3.w;
+                h = ui_handle.card3.h;
+                card_id = ui_handle.card3.id;
                 break;
 
-            case COMPO_ID_CARD_HEARTRATE:                           //心率
-                x = CARD_HEARTRATE_X;
-                y = card_y = CARD_HEARTRATE_Y;
-                w = HEARTRATE_BG_W;
-                h = HEARTRATE_BG_H;
-                card_id = CARD_ID_HEARTRATE;
+            case COMPO_ID_CARD_4:
+                if (ui_handle.card4.id != COMPO_ID_CARD_4) {
+                    printf("COMPO_ID_CARD_4 ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card4.x;
+                y = card_y = ui_handle.card4.y;
+                w = ui_handle.card4.w;
+                h = ui_handle.card4.h;
+                card_id = ui_handle.card4.id;
                 break;
 
-            case COMPO_ID_CARD_MUSIC:                               //音乐
-                x = CARD_MUSIC_X;
-                y = card_y = CARD_MUSIC_Y;
-                w = MUSIC_BG_W;
-                h = MUSIC_BG_H;
-                card_id = CARD_ID_MUSIC;
+            case COMPO_ID_CARD_5:
+                if (ui_handle.card5.id != COMPO_ID_CARD_5) {
+                    printf("COMPO_ID_CARD_5 ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card5.x;
+                y = card_y = ui_handle.card5.y;
+                w = ui_handle.card5.w;
+                h = ui_handle.card5.h;
+                card_id = ui_handle.card5.id;
                 break;
 
-            case COMPO_ID_CARD_POWEROFF_ASSISTANT:                  //关机&语音助手
-                x = CARD_POWEROFF_ASSISTANT_X;
-                y = card_y = CARD_POWEROFF_ASSISTANT_Y;
-                w = CARD_WIDTH_ORG;
-                h = POWEROFF_BG_H;
-                card_id = CARD_ID_POWEROFF_ASSISTANT;
+
+            case COMPO_ID_CARD_6:
+                if (ui_handle.card6.id != COMPO_ID_CARD_6) {
+                    printf("COMPO_ID_CARD_6 ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card6.x;
+                y = card_y = ui_handle.card6.y;
+                w = ui_handle.card6.w;
+                h = ui_handle.card6.h;
+                card_id = ui_handle.card6.id;
+                break;
+
+
+            case COMPO_ID_CARD_7:
+                if (ui_handle.card7.id != COMPO_ID_CARD_7) {
+                    printf("COMPO_ID_CARD_7 ERR\n");
+                    halt(HALT_GUI);
+                }
+                x = ui_handle.card7.x;
+                y = card_y = ui_handle.card7.y;
+                w = ui_handle.card7.w;
+                h = ui_handle.card7.h;
+                card_id = ui_handle.card7.id;
                 break;
 
             default:
@@ -589,18 +1289,18 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 compo_cardbox_set_visible(cardbox, true);
             }
 
-            if (card_id > COMPO_ID_CARD_SPORT_COMPASS)      //被覆盖的卡片不可见，降低element溢出概率
-            {
-                rect_t rect = compo_cardbox_get_location((compo_cardbox_t *)compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS + (card_id - CARD_ID_SPORT_COMPASS) - 1));
-                if (y <= rect.y)
-                {
-                    compo_cardbox_set_visible(cardbox, false);
-                }
-                else
-                {
-                    compo_cardbox_set_visible(cardbox, true);
-                }
-            }
+//            if (card_id > COMPO_CARD_END-1)      //被覆盖的卡片不可见，降低element溢出概率
+//            {
+//                rect_t rect = compo_cardbox_get_location((compo_cardbox_t *)compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS + (card_id - CARD_ID_SPORT_COMPASS) - 1));
+//                if (y <= rect.y)
+//                {
+//                    compo_cardbox_set_visible(cardbox, false);
+//                }
+//                else
+//                {
+//                    compo_cardbox_set_visible(cardbox, true);
+//                }
+//            }
 
         }
         else if (compo->type == COMPO_TYPE_PICTUREBOX)
@@ -673,7 +1373,8 @@ static u16 func_clock_sub_card_get_btn_id(point_t pt)
     compo_cardbox_t *cardbox;
     for(i=0; i<CARD_BTN_COUNT; i++)
     {
-        id = COMPO_ID_CARD_SPORT_COMPASS + i;
+//        id = COMPO_ID_CARD_SPORT_COMPASS + i;
+        id = COMPO_CARD_START + 1 + i;
         cardbox = compo_getobj_byid(id);
         rect = compo_cardbox_get_absolute(cardbox);
         if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
@@ -695,93 +1396,93 @@ static void func_clock_sub_card_click_handler(void)
     u16 compo_id = func_clock_sub_card_get_btn_id(pt);
     printf("click compo_id:%d\n", compo_id);
 
-    switch (compo_id)
-    {
-        case COMPO_ID_CARD_SPORT_COMPASS:
-            cardbox = compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS);
-            rect = compo_cardbox_get_rect_absolute(cardbox, 0); //指南针
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-            {
-                func_jump = FUNC_BLOOD_OXYGEN;//FUNC_COMPASS;
-            }
-            else
-            {
-                rect = compo_cardbox_get_rect_absolute(cardbox, 1); //运动
-                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-                {
-                    func_jump = FUNC_SPORT;
-                }
-            }
-            break;
+//    switch (compo_id)
+//    {
+//        case COMPO_ID_CARD_SPORT_COMPASS:
+//            cardbox = compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS);
+//            rect = compo_cardbox_get_rect_absolute(cardbox, 0); //指南针
+//            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+//            {
+//                func_jump = FUNC_BLOOD_OXYGEN;//FUNC_COMPASS;
+//            }
+//            else
+//            {
+//                rect = compo_cardbox_get_rect_absolute(cardbox, 1); //运动
+//                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+//                {
+//                    func_jump = FUNC_SPORT;
+//                }
+//            }
+//            break;
+//
+//        case COMPO_ID_CARD_ACTIVITY:
+//            func_jump = FUNC_ACTIVITY;
+//            break;
+//
+//        case COMPO_ID_CARD_SLEEP:
+//            func_jump = FUNC_SLEEP;
+//            break;
+//
+//        case COMPO_ID_CARD_HEARTRATE:
+//            func_jump = FUNC_HEARTRATE;
+//            break;
+//
+//        case COMPO_ID_CARD_MUSIC:
+//            cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
+//            rect = compo_cardbox_get_icon_absolute(cardbox, 0); //上一首
+//            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+//            {
+//                printf("music_prev?\n");                                                    //--------->>>todo
+//            }
+//            else
+//            {
+//                rect = compo_cardbox_get_icon_absolute(cardbox, 1); //播放/暂停
+//                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+//                {
+//                    music_pp_test = !music_pp_test;
+//                    printf("music_play/pause[%d]?\n", music_pp_test);                       //--------->>>todo
+//                }
+//                else
+//                {
+//                    rect = compo_cardbox_get_icon_absolute(cardbox, 2); //下一首
+//                    if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+//                    {
+//                        printf("music_next?\n");                                            //--------->>>todo
+//                    }
+//                    else
+//                    {
+//                        func_jump = FUNC_BT;
+//                    }
+//                }
+//            }
+//            break;
+//
+//        case COMPO_ID_CARD_POWEROFF_ASSISTANT:
+//            cardbox = compo_getobj_byid(COMPO_ID_CARD_POWEROFF_ASSISTANT);
+//            rect = compo_cardbox_get_rect_absolute(cardbox, 0); //语音助手
+//            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+//            {
+//                func_jump = FUNC_VOICE;
+//            }
+//            else
+//            {
+//                rect = compo_cardbox_get_rect_absolute(cardbox, 1); //关机
+//                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+//                {
+//                    func_jump = FUNC_OFF;
+//                }
+//            }
+//            break;
+//
+//        default:
+//            break;
+//    }
 
-        case COMPO_ID_CARD_ACTIVITY:
-            func_jump = FUNC_ACTIVITY;
-            break;
-
-        case COMPO_ID_CARD_SLEEP:
-            func_jump = FUNC_SLEEP;
-            break;
-
-        case COMPO_ID_CARD_HEARTRATE:
-            func_jump = FUNC_HEARTRATE;
-            break;
-
-        case COMPO_ID_CARD_MUSIC:
-            cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
-            rect = compo_cardbox_get_icon_absolute(cardbox, 0); //上一首
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-            {
-                printf("music_prev?\n");                                                    //--------->>>todo
-            }
-            else
-            {
-                rect = compo_cardbox_get_icon_absolute(cardbox, 1); //播放/暂停
-                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-                {
-                    music_pp_test = !music_pp_test;
-                    printf("music_play/pause[%d]?\n", music_pp_test);                       //--------->>>todo
-                }
-                else
-                {
-                    rect = compo_cardbox_get_icon_absolute(cardbox, 2); //下一首
-                    if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-                    {
-                        printf("music_next?\n");                                            //--------->>>todo
-                    }
-                    else
-                    {
-                        func_jump = FUNC_BT;
-                    }
-                }
-            }
-            break;
-
-        case COMPO_ID_CARD_POWEROFF_ASSISTANT:
-            cardbox = compo_getobj_byid(COMPO_ID_CARD_POWEROFF_ASSISTANT);
-            rect = compo_cardbox_get_rect_absolute(cardbox, 0); //语音助手
-            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-            {
-                func_jump = FUNC_VOICE;
-            }
-            else
-            {
-                rect = compo_cardbox_get_rect_absolute(cardbox, 1); //关机
-                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-                {
-                    func_jump = FUNC_OFF;
-                }
-            }
-            break;
-
-        default:
-            break;
-    }
-
-    if (func_jump != FUNC_NULL)
-    {
-        func_switch_to(func_jump, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);  //切换动画
-//        func_cb.sta = func_jump;  //直接跳转
-    }
+//    if (func_jump != FUNC_NULL)
+//    {
+//        func_switch_to(func_jump, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);  //切换动画
+////        func_cb.sta = func_jump;  //直接跳转
+//    }
 }
 
 //根据偏移位置把最近的卡片对齐到屏幕中央
@@ -798,32 +1499,38 @@ static s16 func_clock_sub_card_align_y(s16 ofs_y)
     {
         return DRAG_Y_MIN;
     }
-    for (i=0; i<CARD_COUNT; i++)
+//    for (i=0; i<CARD_COUNT; i++)
+    for (i=0; i<COMPO_CARD_END-COMPO_CARD_START-1; i++)
     {
-        dc = abs_s(card_y_info[i] + ofs_y - GUI_SCREEN_CENTER_Y);
+//        dc = abs_s(card_y_info[i] + ofs_y - GUI_SCREEN_CENTER_Y);
+        dc = abs_s(func_clock_sub_card_get_y_info(COMPO_CARD_START+1+i) + ofs_y - GUI_SCREEN_CENTER_Y);
         if (dc < dc_min)
         {
             nearest_id = i;
             dc_min = dc;
         }
     }
-    return (GUI_SCREEN_CENTER_Y - card_y_info[nearest_id]);
+//    return (GUI_SCREEN_CENTER_Y - card_y_info[nearest_id]);
+    return (GUI_SCREEN_CENTER_Y - func_clock_sub_card_get_y_info(COMPO_CARD_START+1+nearest_id));
 }
 
 //根据卡片序号对齐页面偏移位置到屏幕中央
 static s16 func_clock_sub_card_align_by_idx(s8 card_id)
 {
-    if (card_id <= CARD_ID_CLOCK)
+//    if (card_id <= CARD_ID_CLOCK)
+    if (card_id <= COMPO_CARD_START)
     {
         return DRAG_Y_MAX;
     }
-    else if (card_id > (CARD_COUNT - 1))
+//    else if (card_id > (CARD_COUNT - 1))
+    else if (card_id > (COMPO_CARD_END-COMPO_CARD_START-1 - 1))
     {
         return DRAG_Y_MIN;
     }
     else
     {
-        return (GUI_SCREEN_CENTER_Y - card_y_info[card_id]);
+//        return (GUI_SCREEN_CENTER_Y - card_y_info[card_id]);
+        return (GUI_SCREEN_CENTER_Y - func_clock_sub_card_get_y_info(COMPO_CARD_START+1+card_id));
     }
 }
 
@@ -846,10 +1553,10 @@ static void func_clock_sub_card_set_offs(s16 ofs_y)
 //时钟表盘上拉菜单数据更新----------------------------------------->todo
 static void func_clock_sub_card_data_update(void)
 {
-    compo_cardbox_t *cardbox;
+//    compo_cardbox_t *cardbox;
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     //活动记录
-    char step_str[8];
+//    char step_str[8];
 //    snprintf(step_str, sizeof(step_str), "%d", sc7a20_info.gsensor_data.step);
 //    cardbox = compo_getobj_byid(COMPO_ID_CARD_ACTIVITY);
 //    compo_cardbox_text_set(cardbox, 0, step_str);    //步数
@@ -868,13 +1575,13 @@ static void func_clock_sub_card_data_update(void)
 //    compo_cardbox_text_set(cardbox, 3, "05h");      //浅睡h
 //    compo_cardbox_text_set(cardbox, 4, "29m");      //浅睡m
 //    //心率
-    char hr_str[4];
-    snprintf(hr_str, sizeof(hr_str), "%d", uteModuleHeartGetHeartValue());
-    cardbox = compo_getobj_byid(COMPO_ID_CARD_HEARTRATE);
-    compo_cardbox_text_set(cardbox, 0, hr_str);       //心率值
-    //音乐
-    cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
-    compo_cardbox_icon_set(cardbox, 1, music_pp_test ? UI_BUF_MUSIC_PAUSE_BIN : UI_BUF_MUSIC_PLAY_BIN);  //播放/暂停
+//    char hr_str[4];
+//    snprintf(hr_str, sizeof(hr_str), "%d", uteModuleHeartGetHeartValue());
+//    cardbox = compo_getobj_byid(COMPO_ID_CARD_HEARTRATE);
+//    compo_cardbox_text_set(cardbox, 0, hr_str);       //心率值
+//    //音乐
+//    cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
+//    compo_cardbox_icon_set(cardbox, 1, music_pp_test ? UI_BUF_MUSIC_PAUSE_BIN : UI_BUF_MUSIC_PLAY_BIN);  //播放/暂停
 }
 
 //时钟表盘上拉菜单主要事件流程处理
@@ -904,7 +1611,8 @@ static void func_clock_sub_card_process(void)
         }
         for(u8 i=0; i<CARD_BTN_COUNT; i++)      //文本滚动
         {
-            u16 id = COMPO_ID_CARD_SPORT_COMPASS + i;
+//            u16 id = COMPO_ID_CARD_SPORT_COMPASS + i;
+            u16 id = COMPO_CARD_START + 1 + i;
             compo_cardbox_text_scroll_reset((compo_cardbox_t *)compo_getobj_byid(id));   //scroll test
             compo_cardbox_text_scroll_pause((compo_cardbox_t *)compo_getobj_byid(id), true);   //scroll test
         }
@@ -914,7 +1622,8 @@ static void func_clock_sub_card_process(void)
     {
         for(u8 i=0; i<CARD_BTN_COUNT; i++)      //文本滚动
         {
-            u16 id = COMPO_ID_CARD_SPORT_COMPASS + i;
+//            u16 id = COMPO_ID_CARD_SPORT_COMPASS + i;
+            u16 id = COMPO_CARD_START + 1 + i;
             compo_cardbox_text_scroll_pause((compo_cardbox_t *)compo_getobj_byid(id), false);   //scroll test
         }
 
@@ -976,7 +1685,7 @@ static void func_clock_sub_card_process(void)
 
     for(u8 i=0; i<CARD_BTN_COUNT; i++)      //文本滚动
     {
-        u16 id = COMPO_ID_CARD_SPORT_COMPASS + i;
+        u16 id = COMPO_CARD_START + 1 + i;
         compo_cardbox_text_scroll_process((compo_cardbox_t *)compo_getobj_byid(id), true);
     }
 }

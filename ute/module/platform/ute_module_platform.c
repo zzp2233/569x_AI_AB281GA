@@ -13,6 +13,10 @@
 #include "ute_task_application.h"
 #include "ute_module_systemtime.h"
 #include "ute_module_call.h"
+#include "ute_application_common.h"
+#include "ute_module_profile_ble.h"
+#include "ute_module_protocol.h"
+#include "ute_drv_motor.h"
 #include "include.h"
 
 ute_module_platform_adv_data_t uteModulePlatformAdvData;
@@ -1469,4 +1473,35 @@ uint32_t uteModulePlatformNotAllowSleep(void)
 void uteModulePlatformDlpsBitReset(void)
 {
     uteModulePlatformDlpsBit = 0;
+}
+
+/**
+*@brief   BLE拒接来电
+*@details
+*@author  casen
+*@date    2021-12-31
+*/
+void uteModulePlatformRejectIncall(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,quick.isRejectCall=%d",__func__,quick.isRejectCall);
+#if !UTE_BT30_CALL_CUST_NO_NEED_SUPPORT /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+    if (quick.isRejectCall)
+#endif
+    {
+        uint8_t hangUpCmd[2];
+        hangUpCmd[0] = CMD_SEND_KEYCODE;
+        hangUpCmd[1] = 0x02;
+        uteModuleProfileBleSendToPhone(&hangUpCmd[0], 2);
+        /*! Ancs Reject Incall*/
+        if (ble_ancs_is_connected())
+        {
+            ble_ancs_remote_action(ble_cb.ansc_uid, true);
+        }
+    }
+    if(uteDrvMotorGetRunningStatus())
+    {
+        uteDrvMotorStop();
+    }
 }

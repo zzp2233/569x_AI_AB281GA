@@ -149,12 +149,12 @@ void uteModuleFactoryTestInit(void)
 void uteModuleFactoryTestFillSupportFuntion0(uint8_t *funtion)
 {
     funtion[0] = 0;
-#if UTE_DRV_HEART_VCXX_SUPPORT
+#if 1//UTE_DRV_HEART_VCXX_SUPPORT
     funtion[0] |= 0x01;
 #endif
     funtion[0] |= 0x04;
     funtion[0] |= 0x08;
-    funtion[0] |= 0x10;
+    // funtion[0] |= 0x10; //macµØÖ·ÐÞ¸Ä
 #if UTE_FACTORY_TEST_AUDIO_RF_MODE_SUPPORT
     funtion[0] |= 0x20;
 #endif

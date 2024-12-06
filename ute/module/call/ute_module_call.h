@@ -239,7 +239,7 @@ void uteModuleCallClearNumberAndName(void);
 bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen);
 void uteModuleCallSetBeforeCallStatus(uint8_t status);
 void uteModuleCallUpdateCallingTimeSecond(uint32_t second);
-
+void uteModuleCallGetData(ute_bt_call_data_t *data);
 uint8_t uteModuleCallGetCallRecordsSize(ute_module_call_records_t *pData);
 bool uteModuleCallDeleteCallRecords(void);
 void uteModuleCallIsBtAutoCloseSaveConfig(void);
@@ -249,7 +249,6 @@ void uteModuleCallSyncSosContactStart(void);
 void uteModuleCallSyncSosContactData(uint8_t *receive,uint8_t length);
 uint16_t uteModuleCallGetSosContactSize(void);
 void uteModuleCallGetSosContact(ute_module_call_addressbook_t *pData);
-void uteModuleCallDialSos(bool isKeyEnter);
 #endif
 
 #endif //_UTE_MODULE_BT_AUDIO_H_

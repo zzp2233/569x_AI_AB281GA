@@ -6,6 +6,7 @@
 *@date       Jul 01, 2021
 *@version      v1.0
 */
+#include "include.h"
 #include "ute_module_log.h"
 #include "ute_application_common.h"
 #include "ute_module_message.h"
@@ -1727,6 +1728,7 @@ void uteApplicationCommonFactoryReset(void)
  */
 void uteApplicationCommonPoweroff(void)
 {
+    gui_sleep();
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT&&UTE_MODULE_SHIP_MODE_POWER_OFF_SUPPORT //关机进入船运模式
     ute_new_factory_test_data_t *data;
     uteModuleNewFactoryTestSetMode(&data);
@@ -1745,6 +1747,7 @@ void uteApplicationCommonRestart(void)
 {
 //    uteDrvScreenCommonDisplayOff();
     // uteApplicationCommonRealPowerOffMsg(); // 先保存数据再执行重启
+    gui_sleep();
     uteApplicationCommonStartPowerOffMsg();
     uteModulePlatformSystemReboot();
 }

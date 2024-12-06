@@ -467,16 +467,17 @@ void uteModuleNotifyAncsGetFlag(uint32_t *flag)
 */
 void uteModuleNotifyAncsStartPairHandlerMsg(void)
 {
-    UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s, ancs connected sta:%d", __func__, ble_ancs_is_connected());
-    if(!ble_ancs_is_connected())
+    UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s, ancsConnected:%d,BtConnected:%d,automaticPair:%d,HasConnection:%d", __func__, ble_ancs_is_connected(), uteModuleCallBtIsConnected(), uteModuleCallBtGetAutomaticPair(), uteModuleCallIsHasConnection());
+    if (!ble_ancs_is_connected() || (!uteModuleCallBtIsConnected() && uteModuleCallBtIsPowerOn()))
     {
-        if(!uteModuleCallBtGetAutomaticPair())
+        if (!uteModuleCallBtGetAutomaticPair())
         {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,ancs pair", __func__);
             ble_ancs_start();
         }
         else
         {
-            app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,one pair", __func__);
             bsp_change_bt_mac();
             ble_bt_connect();
         }
@@ -491,7 +492,7 @@ void uteModuleNotifyAncsStartPairHandlerMsg(void)
 */
 void uteModuleNotifyAncsStartPair(void)
 {
-    uteModulePlatformRestartTimer(&uteModuleNotifyAncsPairTimer,20000);
+    uteModulePlatformRestartTimer(&uteModuleNotifyAncsPairTimer,10000);
 }
 
 /**

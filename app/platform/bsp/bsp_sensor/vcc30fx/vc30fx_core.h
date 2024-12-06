@@ -99,7 +99,7 @@ typedef struct
 typedef struct
 {
     unsigned char current : 7;
-    unsigned char reserved : 1;
+    unsigned char tx_pullup : 1;
 }VC30Fx_PACKED core30fx_slot_cfg2bit;
 
 typedef struct
@@ -214,7 +214,7 @@ typedef struct
 {
     /* byte1 */
     unsigned char bio_freq : 2;
-    unsigned char bio_reserved_1 : 2;
+    unsigned char bio_pdsel : 2; /* 20241125.30fs-G function_reg */
     unsigned char bio_mode : 1;  /*  0：为TP⼯作在PS频率下; 1: 为TP⼯作在ppg频率下，少量多次求和，仍在PS频率下发出中断。 */
     unsigned char bio_infifo : 1;
     unsigned char bio_ext_en : 1;
@@ -229,10 +229,10 @@ typedef struct
 typedef struct
 {
     unsigned char temp_currset : 3;
-    unsigned char temp_reserved_1 : 1;
+    unsigned char env_cmpset0 : 1; /* env_cmpset,20241125 30fs-g */
     unsigned char temp_ext_en: 1;
     unsigned char temp_inn_en: 1;
-    unsigned char temp_reserved_2 : 2;
+    unsigned char env_cmpset21: 2;
 }VC30Fx_PACKED core30fx_temp_cfgbit;
 
 typedef struct
@@ -253,6 +253,13 @@ typedef struct
         core30fx_temp_cfgbit bits;
     } temp_cfg;
 }VC30Fx_PACKED core30fx_extra_config_t; //core30fx_extra_config_t
+typedef struct
+{
+    unsigned char slot2_oversample : 3;
+    unsigned char slot2_freqppg : 1;
+    unsigned char anti_txch: 2; /* need remap */
+    unsigned char slot2_txch: 2; /* need remap */
+}VC30Fx_PACKED core30fxG_slot2ppg_config_t;
 
 /****************************************************************
  * work_cmd & fifo_data structure

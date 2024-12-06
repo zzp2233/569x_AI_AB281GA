@@ -98,6 +98,7 @@ void ble_emit_notice(u8 evt, u8 *param)
             printf("ANCS connect\n");
         } else {
             ble_cb.ancs_connected = false;
+            ble_cb.ansc_uid = 0; // ute add
             printf("ANCS disconnect\n");
         }
         uteApplicationCommonSetBlePariring(ble_cb.ancs_connected);
@@ -160,15 +161,16 @@ void ble_bt_connect(void)
 //重置bt地址为bt_get_local_bd_addr的返回值
 void bsp_change_bt_mac(void)
 {
-    bool bt_dual = (bt_get_scan() == 0x3) ? true: false;
+    // bool bt_dual = (bt_get_scan() == 0x3) ? true: false;
 
     bt_reset_addr();
     delay_5ms(10);
-    bt_set_scan(0);
+    // bt_set_scan(0);
 
-    if (bt_dual) {
+    // if (bt_dual) 
+    {
         delay_5ms(10);
-        bt_set_scan(0x03);
+        // bt_set_scan(0x03);
     }
 }
 

@@ -23,7 +23,7 @@
 #define CHIP_5690G                      2           //QFN52
 #define CHIP_5690F                      3           //QFN52
 
-#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F                  //芯片封装选择 5691G/5691C_F
+#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691G                  //芯片封装选择 5691G/5691C_F
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
 #ifndef DEFAULT_BLE_DEV_NEME
@@ -1045,6 +1045,12 @@
 #define UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT 0
 #endif
 
+#define DRV_HEART_VCXX_LIGHT_I_MIN_VALUE 100
+#define DRV_HEART_VCXX_LIGHT_I_MAX_VALUE 120
+#define DRV_HEART_VCXX_LIGHT_LEAKGE_DIFF_VALUE 32
+#define DRV_HEART_VCXX_PS_MIN_VALUE 210
+#define DRV_HEART_VCXX_BIO_PASS_VALUE 60
+
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #ifndef UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7
@@ -1167,6 +1173,75 @@
 /* 音频调试，正常模式下不能打开 zn.zeng 2022-01-10*/
 #ifndef UTE_CONNECT_PC_AUDIO_TEST
 #define UTE_CONNECT_PC_AUDIO_TEST 0
+#endif
+
+/*! PWRKEY,wang.luo 2024-12-03 */
+#ifndef UTE_DRV_PWRKEY_SUPPORT
+#define UTE_DRV_PWRKEY_SUPPORT 1
+#endif
+
+/*! ADKEY,wang.luo 2024-12-03 */
+#ifndef UTE_DRV_ADCKEY_SUPPORT
+#define UTE_DRV_ADCKEY_SUPPORT 0
+#endif
+
+/*! IOKEY,wang.luo 2024-12-03 */
+#ifndef UTE_DRV_IOKEY_SUPPORT
+#define UTE_DRV_IOKEY_SUPPORT 0
+#endif
+
+#if UTE_DRV_PWRKEY_SUPPORT
+/*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
+#ifndef UTE_DRV_PWRKEY_MAX_CNT
+#define UTE_DRV_PWRKEY_MAX_CNT 1
+#elif (UTE_DRV_PWRKEY_MAX_CNT > 5)
+#error "UTE_DRV_PWRKEY_MAX_CNT must be less than 5"
+#endif
+#if (UTE_DRV_PWRKEY_MAX_CNT > 0)
+#ifndef UTE_DRV_PWRKEY_KEY0
+#define UTE_DRV_PWRKEY_KEY0 KEY_BACK
+#define UTE_DRV_PWRKEY_KEY0_MAX_ADC 0x08 // 0R
+#endif
+#else
+#define UTE_DRV_PWRKEY_KEY0 NO_KEY
+#define UTE_DRV_PWRKEY_KEY0_MAX_ADC 0x08 // 0R
+#endif
+#if (UTE_DRV_PWRKEY_MAX_CNT > 1)
+#ifndef UTE_DRV_PWRKEY_KEY1
+#define UTE_DRV_PWRKEY_KEY1 KEY_LEFT
+#define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x3A // 12K
+#endif
+#else
+#define UTE_DRV_PWRKEY_KEY1 NO_KEY
+#define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x3A // 12K
+#endif
+#if (UTE_DRV_PWRKEY_MAX_CNT > 2)
+#ifndef UTE_DRV_PWRKEY_KEY2
+#define UTE_DRV_PWRKEY_KEY2 KEY_RIGHT
+#define UTE_DRV_PWRKEY_KEY2_MAX_ADC 0x7B // 47K
+#endif
+#else
+#define UTE_DRV_PWRKEY_KEY2 NO_KEY
+#define UTE_DRV_PWRKEY_KEY2_MAX_ADC 0x7B // 47K
+#endif
+#if (UTE_DRV_PWRKEY_MAX_CNT > 3)
+#ifndef UTE_DRV_PWRKEY_KEY3
+#define UTE_DRV_PWRKEY_KEY3 KEY_VOL_UP
+#define UTE_DRV_PWRKEY_KEY3_MAX_ADC 0xCB // 200K
+#endif
+#else
+#define UTE_DRV_PWRKEY_KEY3 NO_KEY
+#define UTE_DRV_PWRKEY_KEY3_MAX_ADC 0xCB // 200K
+#endif
+#if (UTE_DRV_PWRKEY_MAX_CNT > 4)
+#ifndef UTE_DRV_PWRKEY_KEY4
+#define UTE_DRV_PWRKEY_KEY4 KEY_VOL_DOWN
+#define UTE_DRV_PWRKEY_KEY4_MAX_ADC 0xFF
+#endif
+#else
+#define UTE_DRV_PWRKEY_KEY4 NO_KEY
+#define UTE_DRV_PWRKEY_KEY4_MAX_ADC 0xFF
+#endif
 #endif
 
 #endif//_UTE_PROJECT_CONFIG_H_

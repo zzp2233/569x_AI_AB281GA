@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_log.h"
 #include "string.h"
+#include "ute_application_common.h"
 
 
 #if TRACE_EN
@@ -151,7 +152,10 @@ static void func_set_sub_about_message(size_msg_t msg)
 //            slp->flag_drag = true;
 
         case MSG_CTP_LONG:
-            func_switch_to(FUNC_TEST_MODE, NULL);
+            if (!uteApplicationCommonIsHasConnectOurApp())
+            {
+                func_switch_to(FUNC_TEST_MODE, 0);
+            }
             break;
         case KU_DELAY_BACK:
             break;

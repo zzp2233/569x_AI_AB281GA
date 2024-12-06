@@ -542,7 +542,7 @@ u8 bsp_key_scan(void)
         else
         {
             msg_enqueue(key);
-            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_KEY_HANDLER, key);
 #if UTE_LOG_KEYS_LVL
             printf(key_str, key);
 #endif

@@ -1,6 +1,8 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_call.h"
+#include "ute_module_platform.h"
+#include "ute_module_gui_common.h"
 
 enum
 {
@@ -58,7 +60,7 @@ compo_form_t *func_ble_call_form_create(void)
     return frm;
 }
 
-void bt_incall_time_update(void)
+void ble_incall_time_update(void)
 {
     f_ble_call_t *f_ble_call = (f_ble_call_t *)func_cb.f_cb;
     char *call_time_str = f_ble_call->call_time_str;
@@ -97,7 +99,8 @@ static void func_ble_call_click(void)
     {
 
         case COMPO_ID_BTN_REJECT:
-
+            uteModulePlatformRejectIncall();
+            uteModuleGuiCommonGoBackLastScreen();
             break;
 
         default:
@@ -117,8 +120,11 @@ static void func_ble_call_message(size_msg_t msg)
             func_ble_call_click();
             break;
         case MSG_SYS_1S:
-            bt_incall_time_update();
+            ble_incall_time_update();
             break;
+        case KL_BACK:
+            uteModulePlatformRejectIncall();
+            uteModuleGuiCommonGoBackLastScreen();
         default:
             func_message(msg);
             break;

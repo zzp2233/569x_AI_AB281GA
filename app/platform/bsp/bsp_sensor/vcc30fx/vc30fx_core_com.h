@@ -369,6 +369,7 @@ static inline int core30fx_set_bioslot_config(vc30fx_sample_info_t *psample_info
         }
 #endif
     }
+	if( VC30FS_FDY_VER_ID1==psample_info->ic_FICV && psample_info->ic_type==VC30Fx_IC_TYPE_VC30FS ) bio_time++; 
     return __core30fx_set_bioslot_config((VC30Fx_CFG_FUNC)psample_info->extra_result.bioinn_enwork,
                                          (VC30Fx_CFG_FUNC)psample_info->extra_result.bioext_enwork,
                                          (VC30Fx_STORE_FIFO)psample_info->extra_result.biodata_storefifo,
@@ -459,7 +460,8 @@ static inline int core30fx_sample_psslot2_config(vc30fx_sample_info_t *psample_i
     {
         deps_dirturb=3;
     }
-    if (2 == psample_info->slot_result[2].slot_enwork)
+		/* 新增VC30FS_FDY_VER_ID1[30FS-G]支持PS通道采集PPG */
+    if (2==psample_info->slot_result[2].slot_enwork || ( 1==psample_info->slot_result[2].slot_enwork && VC30FS_FDY_VER_ID1==psample_info->ic_FICV ) )
     {
         core30fx_set_ppgslot_current(VC30Fx_PPG_SLOT_2, psample_info->slot_result[2].slot_current);
         core30fx_set_ppgslot_resistance(VC30Fx_PPG_SLOT_2, psample_info->slot_result[2].slot_resistance, 0, psample_info->ic_type);
@@ -468,6 +470,16 @@ static inline int core30fx_sample_psslot2_config(vc30fx_sample_info_t *psample_i
         core30fx_set_enable_config(VC30Fx_PPG_SLOT_2, VC30Fx_CFG_ENABLE);
     }
     return 0;
+}
+static inline int core30fx_reset_slot2ppg_config(VC30Fx_PPG_TXCH_I slot2_tx, VC30Fx_PPG_TXCH_I anti_tx, unsigned char slot2_isppg, unsigned char oversample )
+{
+	extern CORE30Fx_FUNC_RAM_SECTION int __core30fx_reset_slot2ppg_config(VC30Fx_PPG_TXCH_I slot2_tx, VC30Fx_PPG_TXCH_I anti_tx, unsigned char slot2_isppg, unsigned char oversample );
+	return __core30fx_reset_slot2ppg_config( slot2_tx, anti_tx, slot2_isppg, oversample );
+}
+static inline int core30fx_disable_depsdirturb_config( unsigned char ic_type, unsigned char ic_ficv )
+{
+	extern CORE30Fx_FUNC_RAM_SECTION int __core30fx_disable_depsdirturb_config( unsigned char ic_type, unsigned char ic_ficv );
+	return __core30fx_disable_depsdirturb_config( ic_type, ic_ficv );
 }
 
 /*=====================================================================================================================================*/

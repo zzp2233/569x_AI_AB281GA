@@ -10,7 +10,7 @@
 #include "vc30fx_core.h"
 #include "vc30fx_core_com.h"
 
-static const char CORE30Fx_VERSION[] = "core30fx_v0.16";
+static const char CORE30Fx_VERSION[] = "core30fx_v0.20";
 /* rxgain+pdres ~ level */
 struct vc30fx_core_res_table
 {
@@ -199,6 +199,7 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_read_output( vc30fx_sample_info_t *psam
 	{
 		core30fx_reg_result_t reg_result = {0};
 		ret = vc30fx_read_register(read_addr, (unsigned char *)&reg_result, sizeof(core30fx_reg_result_t));
+		if( -1==ret )return -1;
 		psample_ret->slot_result[0].env_data = (reg_result.slot0_envh << 8) | reg_result.slot0_envl;
 		psample_ret->slot_result[1].env_data = (reg_result.slot1_envh << 8) | reg_result.slot1_envl;
 		psample_ret->slot_result[2].env_data = (reg_result.slot2_envh << 8) | reg_result.slot2_envl;
@@ -217,6 +218,7 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_read_output( vc30fx_sample_info_t *psam
 	{
 		core30fc_reg_result_t reg_result = {0};
 		ret = vc30fx_read_register(read_addr, (unsigned char *)&reg_result, sizeof(core30fc_reg_result_t));
+		if( -1==ret )return -1;
 		psample_ret->slot_result[0].env_data = reg_result.slot0_envl;
 		psample_ret->slot_result[1].env_data = reg_result.slot1_envl;
 		psample_ret->slot_result[2].env_data = reg_result.slot2_envl;
@@ -237,6 +239,8 @@ CORE30Fx_FUNC_RAM_SECTION static inline int fifo_calc_sample_slot_nums(vc30fx_sa
 	if (psample_ret->slot_result[0].slot_enwork == 1)
 		(*p_ppgfreq_slotnum)++;
 	if (psample_ret->slot_result[1].slot_enwork == 1)
+		(*p_ppgfreq_slotnum)++;
+	if (psample_ret->slot_result[2].slot_enwork == 1)
 		(*p_ppgfreq_slotnum)++;
 	/* 2 ps slot infomation */
 	if ((psample_ret->slot_result[2].slot_enwork == 2) && (psample_ret->slot_result[2].slot_storefifo == VC30Fx_IN_STORE))
@@ -355,13 +359,33 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_read_fifo_data(vc30fx_sample_info_t *ps
 	{
 		read_size=wait_size;
 	}
-	*pread_fifoaddr = ((rindex + read_size) >= addr_max) ? (rindex + read_size - addr_max) : (rindex + read_size);
-	vc30fx_write_register(CORE30Fx_FIFO_READADDR_INDEX, &rindex, 1);
 	if( read_size > sizeof(fifo_data) )
 	{
 		return -4;
 	}
-	vc30fx_read_register(CORE30Fx_FIFO_DATA_ADDR, &fifo_data[0], read_size);
+	*pread_fifoaddr = ((rindex + read_size) >= addr_max) ? (rindex + read_size - addr_max) : (rindex + read_size);
+	if(-1==vc30fx_write_register(CORE30Fx_FIFO_READADDR_INDEX, &rindex, 1))
+	{
+		return -6;
+	}
+	if(-1==vc30fx_read_register(CORE30Fx_FIFO_DATA_ADDR, &fifo_data[0], read_size))
+	{
+		return -6;
+	}
+#if VC30Fx_FIFO_BUFFER_CHECK /* 疑似出现操作数据得到异常时，多校验一次数据正确性 */
+	unsigned char check_data[128]={0};
+	ret = vc30fx_write_register(CORE30Fx_FIFO_READADDR_INDEX, &rindex, 1);
+	ret = vc30fx_read_register(CORE30Fx_FIFO_DATA_ADDR, &check_data[0], read_size);
+	if( read_size >=4 )
+	{
+		if( check_data[0]!=fifo_data[0] || check_data[1]!=fifo_data[1] || check_data[2]!=fifo_data[2] || check_data[3]!=fifo_data[3]
+			|| check_data[read_size-2]!=fifo_data[read_size-2] || check_data[read_size-1]!=fifo_data[read_size-1] )
+		{
+			CORE30Fx_DEBUG_ERR("check fifo data failed(I2C)\n");
+			return -5;
+		}
+	}
+#endif
 
 	CORE30Fx_DEBUG_LOG("[%x]-[%x],fifo_bytes=%d,", rindex, read_windex, read_size);
 	CORE30Fx_DEBUG_LOG("PPG_data[0- 8]:0x%02x,0x%02x,0x%02x,0x%02x,0x%02x,0x%02x,0x%02x,0x%02x", fifo_data[0], fifo_data[1], fifo_data[2], fifo_data[3], fifo_data[4], fifo_data[5], fifo_data[6], fifo_data[7]);
@@ -375,7 +399,7 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_read_fifo_data(vc30fx_sample_info_t *ps
 		/* ppg_freq array analysis*/
 		for (j = 0; j < ppg_ps_fifo_ratio; j++) /* j=0-n,每个群里面拥有的ppg_freq的组数轮询 */
 		{										/* 3.2.1.1 ppg_ppg_freq_cell 解析 */
-			for (slot_index = 0; slot_index < 2; slot_index++)
+			for (slot_index = 0; slot_index < 3; slot_index++)
 			{
 				if (1 == psample_ret->slot_result[slot_index].slot_enwork && VC30Fx_FREQ_PPG == psample_ret->slot_result[slot_index].slot_freq_sel)
 				{
@@ -536,6 +560,31 @@ unsigned char oversample_psdirturb, VC30Fx_SAMPLE_TIM sample_tim, unsigned char 
 	return ret;
 }
 
+CORE30Fx_FUNC_RAM_SECTION int __core30fx_disable_depsdirturb_config( unsigned char ic_type, unsigned char ic_ficv )
+{
+	int ret = 0;
+	core30fx_slot_config_t slotcfg = {0};
+	ret = vc30fx_read_register(0x48, (unsigned char *)&slotcfg.slot_cfg0, 1 );
+	if( VC30Fx_IC_TYPE_VC30FC==ic_type )
+	{
+		slotcfg.slot_cfg0.ps_bits.deps_enable  = VC30Fx_CFG_DISABLE;
+		slotcfg.slot_cfg0.ps_bits.deps_dirturb = 0;
+	}
+	else
+	{
+		if( ic_ficv == VC30FS_FDY_VER_ID0 )
+		{
+			slotcfg.slot_cfg0.ps_bits.deps_dirturb = 0;
+		}
+		else if( ic_ficv == VC30FS_FDY_VER_ID1 )
+		{
+			slotcfg.slot_cfg0.ps_bits.deps_enable  = 1; /* disEnDePs:20240719-Necchip(晶合)版本的30fs,为了向前兼容，0为使能，1为失能 */
+			slotcfg.slot_cfg0.ps_bits.deps_dirturb = 0;
+		}
+	}
+	ret = vc30fx_write_register(0x48, (unsigned char *)&slotcfg.slot_cfg0, 1 );
+	return ret;
+}
 CORE30Fx_FUNC_RAM_SECTION int __core30fx_set_psslot_storefifo_config(VC30Fx_STORE_FIFO infifo)
 {
 	int ret = 0;
@@ -586,8 +635,45 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_set_ppgslot_current(VC30Fx_PPG_SLOT_I s
 	int ret = 0;
 	core30fx_slot_config_t slotcfg = {0};
 	unsigned char cfg2_addr = CORE30Fx_CONFIG_SLOT_ADDR_BASE + (slot_index * CORE30Fx_CONFIG_SLOT_SIZE) + 2;
+	ret = vc30fx_read_register(cfg2_addr, (unsigned char *)&slotcfg.slot_cfg2, 1);
 	slotcfg.slot_cfg2.bits.current = (current >= MAX_CURRENT) ? MAX_CURRENT : current;
 	ret = vc30fx_write_register(cfg2_addr, (unsigned char *)&slotcfg.slot_cfg2, 1);
+#if 1 /* IC 内部逻辑通道设计错位处理 */
+	switch( slot_index )
+	{
+		case 0:
+			ret = vc30fx_read_register( 0x4A, (unsigned char *)&slotcfg.slot_cfg2, 1); /* slot0 ~ slot2_cfg = 0x4A */
+			slotcfg.slot_cfg2.bits.tx_pullup = VC30Fx_LEDTX0_PULL_UP_ENABLE;
+			ret = vc30fx_write_register( 0x4A, (unsigned char *)&slotcfg.slot_cfg2, 1);
+			break;
+		case 1:
+			ret = vc30fx_read_register( 0x46, (unsigned char *)&slotcfg.slot_cfg2, 1); /* slot1 ~ slot1_cfg = 0x46 */
+			slotcfg.slot_cfg2.bits.tx_pullup = VC30Fx_LEDTX1_PULL_UP_ENABLE;
+			ret = vc30fx_write_register( 0x46, (unsigned char *)&slotcfg.slot_cfg2, 1);
+			break;
+		case 2:
+			ret = vc30fx_read_register( 0x42, (unsigned char *)&slotcfg.slot_cfg2, 1); /* slot2 ~ slot0_cfg = 0x42 */
+			slotcfg.slot_cfg2.bits.tx_pullup = VC30Fx_LEDTX2_PULL_UP_ENABLE;
+			ret = vc30fx_write_register( 0x42, (unsigned char *)&slotcfg.slot_cfg2, 1);
+			break;
+		default: break;
+	}
+#else
+	switch( slot_index )
+	{
+		case 0:
+			slotcfg.slot_cfg2.bits.tx_pullup = VC30Fx_LEDTX0_PULL_UP_ENABLE;
+			break;
+		case 1:
+			slotcfg.slot_cfg2.bits.tx_pullup = VC30Fx_LEDTX1_PULL_UP_ENABLE;
+			break;
+		case 2:
+			slotcfg.slot_cfg2.bits.tx_pullup = VC30Fx_LEDTX2_PULL_UP_ENABLE;
+			break;
+		default: break;
+	}
+	ret = vc30fx_write_register(cfg2_addr, (unsigned char *)&slotcfg.slot_cfg2, 1);
+#endif
 	return ret;
 }
 
@@ -639,7 +725,7 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_set_common_config( vc30fx_sample_info_t
 	else if( psample_ret->ic_type==VC30Fx_IC_TYPE_VC30FS )
 	{
 		if( psample_ret->ic_FICV == VC30FS_FDY_VER_ID0 ) com_config.com_bit=0b10;
-		else if( psample_ret->ic_FICV == VC30FS_FDY_VER_ID1 ) com_config.com_bit=0b00; /* undefine */
+		else if( psample_ret->ic_FICV == VC30FS_FDY_VER_ID1 ) com_config.com_bit=0b10; /* undefine */
 	}
 	ret = vc30fx_write_register(0x4C, (unsigned char *)&com_config, sizeof(com_config));
 	return ret;
@@ -754,6 +840,7 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_set_bioslot_config(VC30Fx_CFG_FUNC bioi
 	bio_config0.bio_mode = biomode;
 
 	bio_config0.bio_freq = (biofreq > 3) ? 3 : biofreq;
+	bio_config0.bio_pdsel = VC30Fx_BIO_PDSEL; /* 20241125-仅对30FS-G有效，其他版本都是reserved */
 
 	bio_config1.bio_capadd = (biocap > 0x1f) ? (0x1f) : biocap;
 	bio_config1.bio_time = (biotime > 0x7) ? (0xf) : biotime;
@@ -779,6 +866,8 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_set_temperature_config(VC30Fx_CFG_FUNC 
 	temp_config.temp_inn_en = tempinn_en;
 	temp_config.temp_ext_en = tempext_en;
 	temp_config.temp_currset = (current >= 7) ? 7 : current;
+	temp_config.env_cmpset0  = 0B1; /*30FSG: 1.55~[2:0]=0B101, OTHER: 1.5~0B000 */
+	temp_config.env_cmpset21 = 0B10;
 	ret = vc30fx_write_register(0x55, (unsigned char *)&temp_config, sizeof(temp_config));
 	return ret;
 }
@@ -795,6 +884,27 @@ CORE30Fx_FUNC_RAM_SECTION int __core30fx_set_rcosc_frequency(unsigned char oscse
 		ret = vc30fx_write_register(0x53, &oscset, 1);
 	}
 	return ret;
+}
+CORE30Fx_FUNC_RAM_SECTION int __core30fx_reset_slot2ppg_config(VC30Fx_PPG_TXCH_I slot2_tx, VC30Fx_PPG_TXCH_I anti_tx, unsigned char slot2_isppg, unsigned char oversample )
+{
+	core30fxG_slot2ppg_config_t slo2ppg_cfg = {0};
+	switch( slot2_tx )
+	{
+		case VC30Fx_PPG_TXCH_2: slo2ppg_cfg.slot2_txch = 0b00; break;
+		case VC30Fx_PPG_TXCH_1: slo2ppg_cfg.slot2_txch = 0b01; break;
+		case VC30Fx_PPG_TXCH_0: slo2ppg_cfg.slot2_txch = 0b10; break;
+		default:break;
+	}
+	switch( anti_tx )
+	{
+		case VC30Fx_PPG_TXCH_2: slo2ppg_cfg.anti_txch = 0b00; break;
+		case VC30Fx_PPG_TXCH_1: slo2ppg_cfg.anti_txch = 0b01; break;
+		case VC30Fx_PPG_TXCH_0: slo2ppg_cfg.anti_txch = 0b10; break;
+		default:break;
+	}
+	slo2ppg_cfg.slot2_freqppg = slot2_isppg?1:0;
+	slo2ppg_cfg.slot2_oversample = (oversample>7)?7:oversample;
+	return vc30fx_write_register(0x57, (unsigned char*)&slo2ppg_cfg, 1);
 }
 /****************************************************************
  * CORE_API.write()/set()

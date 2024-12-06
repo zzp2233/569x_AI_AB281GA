@@ -703,7 +703,6 @@ void uteModuleFactoryTestStop(void)
     if(uteApplicationCommonIsPowerOn())
     {
         uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
-        uteModuleHeartStopSingleTesting(TYPE_FACTORY1);
         uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
     }
 }
@@ -711,14 +710,7 @@ void uteModuleFactoryTestStop(void)
 void uteModuleFactoryTestSetCheckLightMode(uint8_t mode)
 {
     uteModuleFactoryTestData.u.vcxx.testMode = mode;
-    if(mode != FACTORY_VCXX_TEST_MODE_INFRARED)
-    {
-        uteModuleHeartStartSingleTesting(TYPE_FACTORY0);
-    }
-    else
-    {
-        uteModuleHeartStartSingleTesting(TYPE_FACTORY1);
-    }
+    uteModuleHeartStartSingleTesting(TYPE_FACTORY0);
 #if (!UTE_DRV_HEART_VC9202_VP60A2_SUPPORT)&&(UTE_DRV_HEART_VC30S_SUPPORT&&CFG_FULL_FUNCTION)
     if(mode == FACTORY_VCXX_TEST_MODE_BIO_A)
     {

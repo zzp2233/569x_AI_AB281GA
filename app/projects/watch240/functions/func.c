@@ -1108,6 +1108,10 @@ void func_message(size_msg_t msg)
             if (func_cb.sta == FUNC_CLOCK || func_cb.flag_sort)
             {
                 func_switch_next(false, true);                    //切到下一个任务
+            } else {
+                if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0) {
+                    func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
+                }
             }
             break;
 

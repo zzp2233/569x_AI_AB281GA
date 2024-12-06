@@ -96,27 +96,27 @@ static compo_form_t *func_online_factory_test_check_light_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     // 创建文本
-    compo_textbox_t *textbox = compo_textbox_create(frm, 8);
+    compo_textbox_t *textbox = compo_textbox_create(frm, 40);
     compo_textbox_set(textbox, "漏光测试: 绿灯");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 1 / 6);
     compo_setid(textbox, COMPO_ID_TXT_TITLE);
 
-    textbox = compo_textbox_create(frm, 8);
+    textbox = compo_textbox_create(frm, 40);
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 2 / 6);
     compo_textbox_set(textbox, "preV: 0");
     compo_setid(textbox, COMPO_ID_TXT_VCXX_PRE);
 
-    textbox = compo_textbox_create(frm, 8);
+    textbox = compo_textbox_create(frm, 40);
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 3 / 6);
     compo_textbox_set(textbox, "curV: 0");
     compo_setid(textbox, COMPO_ID_TXT_VCXX_CUR);
 
-    textbox = compo_textbox_create(frm, 8);
+    textbox = compo_textbox_create(frm, 40);
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 4 / 6);
     compo_textbox_set(textbox, "psV: 0");
     compo_setid(textbox, COMPO_ID_TXT_VCXX_PS);
 
-    textbox = compo_textbox_create(frm, 8);
+    textbox = compo_textbox_create(frm, 40);
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 5 / 6);
     compo_textbox_set_forecolor(textbox, make_color(0xff, 0x00, 0x00));
     compo_textbox_set(textbox, "Fail");

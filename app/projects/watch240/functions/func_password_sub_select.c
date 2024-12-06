@@ -46,7 +46,7 @@ compo_form_t *func_password_sub_select_form_create(void)
 
     //创建按钮
     compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
     compo_setid(btn, COMPO_ID_BTN_NO);
     compo_button_set_pos(btn, 65, 249);
     compo_button_set_visible(btn, false);
@@ -55,7 +55,7 @@ compo_form_t *func_password_sub_select_form_create(void)
         compo_button_set_visible(btn, true);
     }
 
-    btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
     compo_setid(btn, COMPO_ID_BTN_YES);
     compo_button_set_pos(btn, 175, 249);
 

@@ -30,18 +30,17 @@ typedef struct f_dousing_list_t_
 
 static const compo_listbox_item_t tbl_dousing_list[] =
 {
-    {STR_FIVE_SEC,         .menu_style = COMPO_ID_BTN_NUM0},
-    {STR_TEN_SEC,          .menu_style = COMPO_ID_BTN_NUM1},
-    {STR_TWENTY_SEC,       .menu_style = COMPO_ID_BTN_NUM2},
-    {STR_THIRTY_SEC,       .menu_style = COMPO_ID_BTN_NUM3},
-    {STR_ONE_MIN,          .menu_style = COMPO_ID_BTN_NUM4},
-    // {STR_FIVE_MIN},     .menu_style = 1,
-    {STR_NEVER,            .menu_style = COMPO_ID_BTN_NUM5},
+    {STR_FIVE_SEC,         .vidx = COMPO_ID_BTN_NUM0},
+    {STR_TEN_SEC,          .vidx = COMPO_ID_BTN_NUM1},
+    {STR_TWENTY_SEC,       .vidx = COMPO_ID_BTN_NUM2},
+    {STR_THIRTY_SEC,       .vidx = COMPO_ID_BTN_NUM3},
+    {STR_ONE_MIN,          .vidx = COMPO_ID_BTN_NUM4},
+    // {STR_FIVE_MIN},     .vidx = 1,
+    {STR_LIGHT_ALWAYS,     .vidx = COMPO_ID_BTN_NUM5},
 };
 
 u8 func_sel_dousing_bit(uint n)
 {
-//    printf("n=%d\n",n);
     if(sys_cb.set_sleep_time_id == n)
     {
         return true;
@@ -66,17 +65,11 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_listbox_set(listbox, tbl_dousing_list, DOUSING_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
 
-    compo_listbox_set_sta_icon(listbox, UI_BUF_COMPO_SELECT_ADD_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_dousing_bit);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
-
-
-
-    compo_listbox_set_item_text(listbox, 120, gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei/2, GUI_SCREEN_WIDTH, 40, true);
-//    compo_listbox_set_focus_byidx(listbox, 1);
-//    compo_listbox_update(listbox);
-    uint8_t set_idx = COMPO_ID_BTN_NUM0;
+    uint8_t set_idx = 0;
     if (set_idx < 1)
     {
         set_idx = 1;

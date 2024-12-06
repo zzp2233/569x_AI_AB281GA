@@ -70,12 +70,12 @@ compo_form_t *func_modem_call_form_create(void)
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
 
     //挂断按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, 160, 313);
+    compo_button_set_pos(btn, 160, 240);
 
     //mic
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_MUTE_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_JINGYIN00_BIN);
     compo_setid(btn, COMPO_ID_BTN_MIC);
     compo_button_set_pos(btn, 49, 313);
 
@@ -96,9 +96,9 @@ compo_form_t *func_modem_outgoing_form_create(void)
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
     //挂断按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, 160, 313);
+    compo_button_set_pos(btn, 160, 240);
 
     return frm;
 }

@@ -34,11 +34,11 @@ compo_form_t *func_set_sub_rstfy_form_create(void)
 
     //创建按钮
     compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
     compo_setid(btn, COMPO_ID_BTN_NO);
     compo_button_set_pos(btn, 61, 300);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
     compo_setid(btn, COMPO_ID_BTN_YES);
     compo_button_set_pos(btn, 261, 300);
     return frm;

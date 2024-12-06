@@ -8,7 +8,7 @@
 #endif
 
 #define STOPWATCH_LIST_CNT                       ((int)(sizeof(tbl_stopwatch_list) / sizeof(tbl_stopwatch_list[0])))
-
+#define NUM_REC_COLOR               make_color(0xff, 0x83, 00)
 enum
 {
     COMPO_ID_LISTBOX = 1,
@@ -38,7 +38,7 @@ compo_form_t *func_stopwatch_sub_record_form_create(void)
     compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_STOPWATCH_LINE_BIN);
     compo_listbox_set_text_modify(listbox, tbl_stopwatch_txt_list);
 
     u8 min = 0;
@@ -49,8 +49,16 @@ compo_form_t *func_stopwatch_sub_record_form_create(void)
         min = ((sys_cb.stopwatch_rec_view[i] / 1000) % 3600) / 60;
         sec = (sys_cb.stopwatch_rec_view[i] / 1000) % 60;
         msec = sys_cb.stopwatch_rec_view[i] % 1000;
-        sprintf(tbl_stopwatch_txt_list[i].str_txt, "%2d. %02d:%02d:%02d", sys_cb.stopwatch_rec_cnt - i, min, sec, msec / 10);
+        sprintf(tbl_stopwatch_txt_list[i].str_txt, "%02d.  %02d:%02d:%02d", sys_cb.stopwatch_rec_cnt - i, min, sec, msec / 10);
+
     }
+
+    for(int i=0;i<LISTBOX_ITEM_CNT;i++)
+    {
+        widget_text_set_color(listbox->item_text[i], NUM_REC_COLOR);
+        widget_text_set_font(listbox->item_text[i], UI_BUF_0FONT_FONT_NUM_22_BIN);
+    }
+
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
 

@@ -33,7 +33,7 @@ compo_form_t *func_flashlight_form_create(void)
 
     //新建按钮
     compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_ICON_FLASHLIGHT_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN);
     compo_button_set_pos(btn, 160, 181);
 
     btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);

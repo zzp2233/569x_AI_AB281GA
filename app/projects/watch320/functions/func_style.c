@@ -44,7 +44,7 @@ compo_form_t *func_style_form_create(void)
     compo_form_set_title(frm, i18n[STR_STYLE]);
 
 	//创建按键
-    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_MENU_BIN);
+    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_THEME_BIN);
     compo_button_set_pos(btn, 160, 180);
 
 	compo_textbox_t *txt_style = compo_textbox_create(frm, 8);

@@ -368,7 +368,7 @@ static void func_timer_button_release_handle(void)
     }
     if ((btn = compo_getobj_byid(COMPO_ID_BTN_NO)) != NULL)
     {
-//        compo_button_set_bgimg(btn, UI_BUF_COMMON_NO_BIN);
+//        compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
     }
 }
 

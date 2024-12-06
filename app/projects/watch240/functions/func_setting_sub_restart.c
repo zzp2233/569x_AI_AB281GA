@@ -31,16 +31,16 @@ compo_form_t *func_set_sub_restart_form_create(void)
     //创建文本
     compo_textbox_t *txt_rst = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
 //    compo_textbox_set_align_center(txt_rst, false);
-    compo_textbox_set_pos(txt_rst, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_textbox_set_pos(txt_rst, GUI_SCREEN_CENTER_X, 128);
     compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
 
     //创建按钮
     compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
     compo_setid(btn, COMPO_ID_BTN_NO);
     compo_button_set_pos(btn, 65, 240);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
     compo_setid(btn, COMPO_ID_BTN_YES);
     compo_button_set_pos(btn, 175, 240);
 

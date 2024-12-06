@@ -197,7 +197,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_setid(cardbox, SIDEBAR_CARD_ID_TIMER);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 120);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_TIMER_BIN);  //图标
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I330001_THEME_1_TIMER_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 54-130, 270-296, 54, 54);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_TIMER]);    //计时器
     compo_cardbox_text_set_align_center(cardbox,0,false);
@@ -213,7 +213,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_setid(cardbox, SIDEBAR_CARD_ID_STOPWATCH);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_308_156_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH-10, 120);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_STOPWATCH_BIN);  //图标
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I330001_THEME_1_STOPWATCH_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 54-130, 440-466, 54, 54);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_STOP_WATCH]);    //秒表
     compo_cardbox_text_set_align_center(cardbox,0,false);
@@ -229,7 +229,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_setid(cardbox, SIDEBAR_CARD_ID_CALCULATOR);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_CALCULATOR_BIN);  //图标
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I330001_THEME_1_CALCULATOR_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 220-221, 612-631, 58, 58);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_CALCULATOR]);    //计算器
     compo_cardbox_text_set_location(cardbox, 0, 0, 675-631, 100, 30);
@@ -240,7 +240,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_setid(cardbox, SIDEBAR_CARD_ID_CALENDAR);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_CALENDAR_BIN);  //图标
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I330001_THEME_1_CALENDAR_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 220-221, 612-631,58, 58);
     compo_cardbox_text_set(cardbox, 0, i18n[STR_CALENDAR]);    //日历
     compo_cardbox_text_set_location(cardbox, 0, 0, 675-631, 90, 30);
@@ -251,7 +251,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_setid(cardbox, SIDEBAR_CARD_ID_GAME);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_GAME_BIN);  //图标
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I330001_THEME_1_GAME_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 220-221, 772-791, 58, 58);;
     compo_cardbox_text_set(cardbox, 0, i18n[STR_GAME]);    //游戏
     compo_cardbox_text_set_location(cardbox, 0, 0, 835-791, 90, 30);
@@ -262,9 +262,9 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_setid(cardbox, SIDEBAR_CARD_ID_BREATHE);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_SIDEBAR_BG_146_146_BIN);  //方框
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH/2-10, 120);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_BREATHE_BIN);  //图标
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I330001_THEME_1_BREATHE_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 220-221, 772-791,58, 58);
-    compo_cardbox_text_set(cardbox, 0, i18n[STR_BREATHE]);    //呼吸
+    compo_cardbox_text_set(cardbox, 0, i18n[STR_BREATHE_TRAIN]);    //呼吸
     compo_cardbox_text_set_location(cardbox, 0, 0, 835-791, 90, 30);
 //    compo_cardbox_text_map_center2left_location(cardbox, 0, 0, 835-791, 90, 30);
     //最近应用

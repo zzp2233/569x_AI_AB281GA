@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-02 10:01:37
+*@date   2024-12-06 15:04:21
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -59,10 +59,10 @@ enum
     STR_BLOOD_SUGAR, // 血糖
     STR_PRESSURE, // 压力
     STR_WEATHER, // 天气
-    STR_BREATHE, // 呼吸
+    STR_BREATHE_TRAIN, // 呼吸训练
     STR_BREATHE_INHALE, // 吸气
     STR_BREATHE_EXHALE, // 呼气
-    STR_ACTIVITY_RECORD, // 运动记录
+    STR_EVREY_DAY_ACTIVITY, // 每日活动
     STR_CONNECT_PHONE, // 连接手机
     STR_CALCULATOR, // 计算器
     STR_ALARM_CLOCK, // 闹钟
@@ -84,7 +84,7 @@ enum
     STR_STOP_WATCH_RECORD, // 秒表记录
     STR_CAMERA, // 遥控拍照
     STR_VOICE_ASSISTANT, // 语音助手
-    STR_FIND_PHONE, // 查找手机
+    STR_FIND_PHONE, // 找手机
     STR_FIND_PHONEING, // 正在响铃
     STR_GAME, // 游戏
     STR_SETTING, // 设置
@@ -96,7 +96,7 @@ enum
     STR_THIRTY_SEC, // 30秒
     STR_ONE_MIN, // 1分钟
     STR_FIVE_MIN, // 5分钟
-    STR_NEVER, // 永不熄屏
+    STR_LIGHT_ALWAYS, // 常亮
     STR_SETTING_UP, // 抬腕亮屏
     STR_SETTING_DISTURD, // 勿扰模式
     STR_DISTURD_ALL, // 全天开启
@@ -116,7 +116,7 @@ enum
     STR_LANGUAGE_RU, // Русский язык
     STR_LANGUAGE_AT, // Аргентинский язык
     STR_LANGUAGE_JP, // 日本語
-    STR_SETTING_TIME, // 时间设置
+    STR_BEATHER_DURATION, // 呼吸时长
     STR_CUSTOM_CALENDAR, // 日期
     STR_CUSTOM_TIME, // 时间
     STR_CUSTOM_DATA, // 时间制
@@ -186,7 +186,7 @@ enum
     STR_HOUR, // 时
     STR_MIN, // 分
     STR_SEC, // 秒
-    STR_START, // 开始测量
+    STR_START_MEASURING, // 开始测量
     STR_MEASURING, // 正在测量
     STR_WEAR_CHECK, // 请保持静止并紧贴皮肤佩戴
     STR_UNKNOWN, // 未知
@@ -298,6 +298,18 @@ enum
     STR_DEL, // 删除
     STR_CLEAR, // 清除
     STR_CLEAR_ALL, // 全部清除
+    STR_DIAL_SWICTH, // 表盘切换
+    STR_QRCODE, // 二维码
+    STR_START, // 开始
+    STR_STOP, // 停止
+    STR_CLICK_OPEN, // 点击屏幕打开
+    STR_CALENDAR_ONE, // 一
+    STR_CALENDAR_TWO, // 二
+    STR_CALENDAR_THREE, // 三
+    STR_CALENDAR_HOUR, // 四
+    STR_CALENDAR_FIVE, // 五
+    STR_CALENDAR_SIX, // 六
+    STR_CALENDAR_SEVEN, // 日
 };
 
 extern const char * const *i18n;

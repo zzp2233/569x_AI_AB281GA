@@ -55,10 +55,10 @@ typedef struct password_disp_pic_item_t_ {
 
 //图片item，创建时遍历一下
 static const password_disp_pic_item_t tbl_password_disp_pic_item[] = {
-    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_ZERO,        80,    40,    false},
-    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_ONE,         110,    40,    false},
-    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_TWS,         140,    40,    false},
-    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_THR,         170,    40,    false},
+//    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_ZERO,        80,    40,    false},
+//    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_ONE,         110,    40,    false},
+//    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_TWS,         140,    40,    false},
+//    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_THR,         170,    40,    false},
 };
 
 
@@ -73,17 +73,17 @@ typedef struct password_disp_btn_item_t_ {
 
 //按钮item，创建时遍历一下
 static const password_disp_btn_item_t tbl_password_disp_btn_item[] = {
-    {UI_BUF_COMMON_1_CLICK_BIN,             COMPO_ID_BTN_NUM1,         45,     84},
-    {UI_BUF_COMMON_2_CLICK_BIN,             COMPO_ID_BTN_NUM2,         120,    84},
-    {UI_BUF_COMMON_3_CLICK_BIN,             COMPO_ID_BTN_NUM3,         195,    84},
-    {UI_BUF_COMMON_4_CLICK_BIN,             COMPO_ID_BTN_NUM4,         45,     140},
-    {UI_BUF_COMMON_5_CLICK_BIN,             COMPO_ID_BTN_NUM5,         120,    140},
-    {UI_BUF_COMMON_6_CLICK_BIN,             COMPO_ID_BTN_NUM6,         195,    140},
-    {UI_BUF_SETTING_PASSWORD_7_CLICK_BIN,   COMPO_ID_BTN_NUM7,         45,     198},
-    {UI_BUF_COMMON_8_CLICK_BIN,             COMPO_ID_BTN_NUM8,         120,    198},
-    {UI_BUF_SETTING_PASSWORD_FRAME_755_BIN, COMPO_ID_BTN_NUM9,         195,    198},
-    {UI_BUF_SETTING_PASSWORD_9_CLICK_BIN,   COMPO_ID_BTN_NUM0,         120,    252},
-    {UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN, COMPO_ID_BTN_DEL_CLICK,    195,    252},
+//    {UI_BUF_COMMON_1_CLICK_BIN,             COMPO_ID_BTN_NUM1,         45,     84},
+//    {UI_BUF_COMMON_2_CLICK_BIN,             COMPO_ID_BTN_NUM2,         120,    84},
+//    {UI_BUF_COMMON_3_CLICK_BIN,             COMPO_ID_BTN_NUM3,         195,    84},
+//    {UI_BUF_COMMON_4_CLICK_BIN,             COMPO_ID_BTN_NUM4,         45,     140},
+//    {UI_BUF_COMMON_5_CLICK_BIN,             COMPO_ID_BTN_NUM5,         120,    140},
+//    {UI_BUF_COMMON_6_CLICK_BIN,             COMPO_ID_BTN_NUM6,         195,    140},
+////    {UI_BUF_SETTING_PASSWORD_7_CLICK_BIN,   COMPO_ID_BTN_NUM7,         45,     198},
+//    {UI_BUF_COMMON_8_CLICK_BIN,             COMPO_ID_BTN_NUM8,         120,    198},
+//    {UI_BUF_SETTING_PASSWORD_FRAME_755_BIN, COMPO_ID_BTN_NUM9,         195,    198},
+//    {UI_BUF_SETTING_PASSWORD_9_CLICK_BIN,   COMPO_ID_BTN_NUM0,         120,    252},
+//    {UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN, COMPO_ID_BTN_DEL_CLICK,    195,    252},
 };
 
 typedef struct password_num_item_t_ {

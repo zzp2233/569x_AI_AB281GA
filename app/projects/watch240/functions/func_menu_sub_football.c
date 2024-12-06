@@ -10,7 +10,7 @@
 #define TRACE(...)
 #endif
 
-#define FOOTBALL_RADIUS                          140
+#define FOOTBALL_RADIUS                          140*0.77
 #define MENU_FOOTBALL_ITEM_CNT                   ((int)(sizeof(tbl_menu_football) / sizeof(tbl_menu_football[0])))
 #define KALE_EDGE_SPACE                          2                                                              //边缘距离
 #define KALE_ICON_SPACE                          2                                                              //图标距离
@@ -33,35 +33,30 @@ typedef struct f_menu_football_t_
 //足球图标列表(固定20项)
 static const compo_football_item_t tbl_menu_football[] =
 {
-    {UI_BUF_ICON_FOOTBALL_STYLE_BIN,            FUNC_STYLE},
-    {UI_BUF_ICON_FOOTBALL_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
-    {UI_BUF_ICON_FOOTBALL_TIMER_BIN,            FUNC_TIMER},
-    //{UI_BUF_ICON_FOOTBALL_MAP_BIN,              FUNC_MAP},
-    {UI_BUF_ICON_FOOTBALL_LANGUAGE_BIN,         FUNC_LANGUAGE},
-    {UI_BUF_ICON_FOOTBALL_ALARM_CLOCK_BIN,      FUNC_ALARM_CLOCK},
-    {UI_BUF_ICON_FOOTBALL_VOLUME_BIN,           FUNC_VOLUME},
+    {UI_BUF_I330001_THEME_2_THEME_BIN,            FUNC_STYLE},
+    {UI_BUF_I330001_THEME_2_BRIGHTNESS_BIN,       FUNC_FLASHLIGHT},
+    {UI_BUF_I330001_THEME_2_TIMER_BIN,            FUNC_TIMER},
+    {UI_BUF_I330001_THEME_2_LANUAGE_BIN,          FUNC_LANGUAGE},
+    {UI_BUF_I330001_THEME_2_ALARM_BIN,            FUNC_ALARM_CLOCK},
 
-    {UI_BUF_ICON_FOOTBALL_CALL_BIN,             FUNC_CALL},
-    {UI_BUF_ICON_FOOTBALL_MUSIC_BIN,            FUNC_BT},
-    {UI_BUF_ICON_FOOTBALL_GAME_BIN,             FUNC_GAME},
-    {UI_BUF_ICON_FOOTBALL_BLOOD_OXYGEN_BIN,     FUNC_BLOOD_OXYGEN},
-    {UI_BUF_ICON_FOOTBALL_CALENDAR_BIN,         FUNC_CALENDAER},
-    //{UI_BUF_ICON_FOOTBALL_ALIPAY_BIN,           FUNC_NULL},
+    {UI_BUF_I330001_THEME_2_SOUND_BIN,            FUNC_VOLUME},
+    {UI_BUF_I330001_THEME_2_CALL_BIN,             FUNC_CALL},
+    {UI_BUF_I330001_THEME_2_MUSIC_BIN,            FUNC_BT},
+    {UI_BUF_I330001_THEME_2_GAME_BIN,             FUNC_GAME},
+    {UI_BUF_I330001_THEME_2_SPO2_BIN,             FUNC_BLOOD_OXYGEN},
 
+    {UI_BUF_I330001_THEME_2_CALENDAR_BIN,         FUNC_CALENDAER},
+    {UI_BUF_I330001_THEME_2_CONTACTS_BIN,         FUNC_ADDRESS_BOOK},
+    {UI_BUF_I330001_THEME_2_SLEEP_BIN,            FUNC_SLEEP},
+    {UI_BUF_I330001_THEME_2_CALCULATOR_BIN,       FUNC_CALCULATOR},
+    {UI_BUF_I330001_THEME_2_STOPWATCH_BIN,        FUNC_STOPWATCH},
 
-    {UI_BUF_ICON_FOOTBALL_WEATHER_BIN,          FUNC_ADDRESS_BOOK},
-    {UI_BUF_ICON_FOOTBALL_SLEEP_BIN,            FUNC_SLEEP},
-    {UI_BUF_ICON_FOOTBALL_CALCULATOR_BIN,       FUNC_CALCULATOR},
-    //{UI_BUF_ICON_FOOTBALL_COMPASS_BIN,          FUNC_COMPASS},
-    {UI_BUF_ICON_FOOTBALL_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
-    {UI_BUF_ICON_FOOTBALL_TIMER_BIN,            FUNC_TIMER},
+    {UI_BUF_I330001_THEME_2_SOPRT_BIN,            FUNC_SPORT},
+    {UI_BUF_I330001_THEME_2_HEART_BIN,            FUNC_HEARTRATE},
+    {UI_BUF_I330001_THEME_2_SETTINGS_BIN,         FUNC_SETTING},
+    {UI_BUF_I330001_THEME_2_ACTIVITY_BIN,         FUNC_ACTIVITY},
+    {UI_BUF_I330001_THEME_2_BREATHE_BIN,          FUNC_BREATHE},
 
-    {UI_BUF_ICON_FOOTBALL_STOPWATCH_BIN,        FUNC_STOPWATCH},
-    {UI_BUF_ICON_FOOTBALL_SPORT_BIN,            FUNC_SPORT},
-    {UI_BUF_ICON_FOOTBALL_HEART_RATE_BIN,       FUNC_HEARTRATE},
-    {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_SETTING},
-//    {UI_BUF_ICON_FOOTBALL_SETTING_BIN,          FUNC_PRESSURE},
-    // {UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},
 };
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -255,7 +250,6 @@ static void func_menu_sub_football_enter(void)
 void func_menu_sub_football(void)
 {
     printf("%s\n", __func__);
-    printf("w:%d  h%d\n",gui_image_get_size(UI_BUF_ICON_FOOTBALL_STYLE_BIN).wid,gui_image_get_size(UI_BUF_ICON_FOOTBALL_STYLE_BIN).hei);
     func_menu_sub_football_enter();
     while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_FOOTBALL)
     {

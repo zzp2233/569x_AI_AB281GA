@@ -24,16 +24,16 @@ enum
 //风格列表tbl
 static const compo_listbox_item_t tbl_style_list[] =
 {
-    {STR_STYLE_LIST_1,          UI_BUF_I330001_SLIDEMENU_ICON_THEME03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I330001_SLIDEMENU_ICON_THEME01_BIN,           .menu_style = MENU_STYLE_RING},             //宫格
-    {STR_STYLE_HONEYCOMB,       UI_BUF_I330001_SLIDEMENU_ICON_THEME00_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
-    {STR_SPHERE,                UI_BUF_I330001_SLIDEMENU_ICON_THEME07_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
-    {STR_CHECKERBOARD,          UI_BUF_I330001_SLIDEMENU_ICON_THEME06_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //棋盘
-    {STR_HALO,                  UI_BUF_I330001_SLIDEMENU_ICON_THEME02_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
-    {STR_STYLE_SKYRER,          UI_BUF_I330001_SLIDEMENU_ICON_THEME08_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
-    {STR_STYLE_GRID_2,          UI_BUF_I330001_SLIDEMENU_ICON_THEME09_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
-    {STR_SIX_PALACE_GRID,       UI_BUF_I330001_SLIDEMENU_ICON_THEME04_BIN,           .menu_style = MENU_STYLE_CUM_FOURGRID},     //六宫格
-    {STR_STYLE_WATERFALL,       UI_BUF_I330001_SLIDEMENU_ICON_THEME05_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+    {STR_STYLE_LIST_1,          UI_BUF_I330001_SETTINGS_THEME_03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
+    {STR_GONG_GE,               UI_BUF_I330001_SETTINGS_THEME_02_BIN,           .menu_style = MENU_STYLE_RING},             //宫格
+    {STR_STYLE_HONEYCOMB,       UI_BUF_I330001_SETTINGS_THEME_00_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_SPHERE,                UI_BUF_I330001_SETTINGS_THEME_07_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
+    {STR_CHECKERBOARD,          UI_BUF_I330001_SETTINGS_THEME_06_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //棋盘
+    {STR_HALO,                  UI_BUF_I330001_SETTINGS_THEME_01_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
+    {STR_STYLE_SKYRER,          UI_BUF_I330001_SETTINGS_THEME_08_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+    {STR_STYLE_GRID_1,          UI_BUF_I330001_SETTINGS_THEME_09_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
+    {STR_SIX_PALACE_GRID,       UI_BUF_I330001_SETTINGS_THEME_04_BIN,           .menu_style = MENU_STYLE_CUM_FOURGRID},     //六宫格
+    {STR_STYLE_WATERFALL,       UI_BUF_I330001_SETTINGS_THEME_05_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
 
 //    {STR_STYLE_SUDOKU_1,        UI_BUF_STYLE_01_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //九宫格
 //    //{STR_STYLE_SUDOKU_2,        UI_BUF_STYLE_02_BIN,           .menu_style = MENU_STYLE_SUDOKU_HRZ},       //九宫格(横向)
@@ -75,7 +75,7 @@ compo_form_t *func_style_form_create(void)
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_style_list, SET_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
-    compo_listbox_set_sta_icon(listbox, UI_BUF_COMPO_SELECT_ADD_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_style_bit);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 

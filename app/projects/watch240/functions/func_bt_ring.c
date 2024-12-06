@@ -52,14 +52,14 @@ compo_form_t *func_bt_ring_form_create(void)
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //接听
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_ANSWER_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_CALL_BIN);
     compo_setid(btn, COMPO_ID_BTN_ANSWER);
-    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/1.28, GUI_SCREEN_HEIGHT/1.37);
+    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/1.28, 240);
 
     //挂断
-    btn = compo_button_create_by_image(frm, UI_BUF_CALL_REJECT_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4.57, GUI_SCREEN_HEIGHT/1.37);
+    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4.57, 240);
 
     return frm;
 }

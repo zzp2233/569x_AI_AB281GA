@@ -193,7 +193,7 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
         btn = compo_button_create_by_image(frm, res_addr); //start/pause/again
         compo_setid(btn, COMPO_ID_BTN_START);
         compo_button_set_pos(btn, 233, 321);
-        btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);  //close
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);  //close
         compo_setid(btn, COMPO_ID_BTN_NO);
         compo_button_set_pos(btn, 87, 321);
         //新建数字
@@ -279,7 +279,7 @@ static void func_timer_button_release_handle(void)
         compo_button_set_bgimg(btn, res_addr);
     }
     if ((btn = compo_getobj_byid(COMPO_ID_BTN_NO)) != NULL) {
-        compo_button_set_bgimg(btn, UI_BUF_COMMON_NO_BIN);
+        compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
     }
 }
 

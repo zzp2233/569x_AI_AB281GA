@@ -71,32 +71,32 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, int mode, char ms
     //创建按钮
     switch (mode) {
     case MSGBOX_MODE_BTN_OK:
-        btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
         compo_setid(btn, COMPO_ID_BTN_OK);
         compo_button_set_pos(btn, 160, 300);
         break;
 
     case MSGBOX_MODE_BTN_OKCANCEL:
-        btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
         compo_setid(btn, COMPO_ID_BTN_CANCEL);
         compo_button_set_pos(btn, 61, 300);
 
-        btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
         compo_setid(btn, COMPO_ID_BTN_OK);
         compo_button_set_pos(btn, 261, 300);
         break;
 
     case MSGBOX_MODE_BTN_YESNO:
-        btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
         compo_setid(btn, COMPO_ID_BTN_NO);
         compo_button_set_pos(btn, 61, 300);
 
-        btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_YES_BIN);
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
         compo_setid(btn, COMPO_ID_BTN_YES);
         compo_button_set_pos(btn, 261, 300);
         break;
     case MSGBOX_MODE_BTN_DELETE:
-        btn = compo_button_create_by_image(frm, UI_BUF_COMMON_NO_BIN);  //需更替为删除图标
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);  //需更替为删除图标
         compo_setid(btn, COMPO_ID_BTN_NO);
         compo_button_set_pos(btn, 140, 300);
         break;

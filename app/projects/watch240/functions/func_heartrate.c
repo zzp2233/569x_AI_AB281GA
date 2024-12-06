@@ -55,16 +55,16 @@ compo_form_t *func_heartrate_form_create(void)
     textbox = compo_textbox_create(frm, 3 );///次/分 数据
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.75,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9);
-    compo_textbox_set(textbox,"---");
+    compo_textbox_set(textbox,"--");
     compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.75);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.75,58,28);
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.45,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.45,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2,48,23);
     compo_textbox_set(textbox,i18n[STR_HIGHEST]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
@@ -75,7 +75,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_setid(textbox,COMPO_ID_HEART_MAX_TXT);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X*1.05,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X*1.05,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2,48,23);
     compo_textbox_set(textbox,i18n[STR_LOWSET]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
@@ -162,7 +162,7 @@ static void func_heartrate_refresh(void)
             compo_textbox_set(textbox_min,txt_buf);
         }
 
-        if(bsp_sensor_hr_wear_sta_get() == true)  ///佩戴处理
+        if(bsp_sensor_hr_wear_sta_get() == true && bsp_sensor_hrs_data_get() > 0 && bsp_sensor_hrs_data_get() != 255)  ///佩戴处理
         {
             memset(txt_buf,0,sizeof(txt_buf));
             snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_hrs_data_get());

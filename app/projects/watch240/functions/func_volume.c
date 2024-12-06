@@ -51,7 +51,7 @@ compo_form_t *func_volume_form_create(void)
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
     compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 257);
-    compo_form_add_image(frm, UI_BUF_ICON_VOLUME_BIN, 120, 148);
+    compo_form_add_image(frm, UI_BUF_I330001_THEME_1_SOUND_BIN, 120, 148);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);

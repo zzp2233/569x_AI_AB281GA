@@ -48,9 +48,9 @@ compo_form_t *func_bloodpressure_form_create(void)
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_ICON_BLOOD_PRESSURE_BIN);
-    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, 126);
-    compo_setid(compo, COMPO_ID_PIC_BG);
+//    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_ICON_BLOOD_PRESSURE_BIN);
+//    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, 126);
+//    compo_setid(compo, COMPO_ID_PIC_BG);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);

@@ -5,6 +5,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_sleep.h"
 #include "ute_module_heart.h"
+#include "func_bt.h"
 
 #define TRACE_EN    0
 
@@ -14,7 +15,6 @@
 #define TRACE(...)
 #endif
 
-static bool music_pp_test = 0;
 
 #define CARD_SCALE_START_POS            190//265                                                                     //卡片开始缩小位置
 #define CARD_SCALE_STOP_POS             230//320                                                                     //卡片停止缩小位置
@@ -41,6 +41,29 @@ static bool music_pp_test = 0;
 #define EXIT_Y_MAX                      50//60                                                                      //下滑退出触摸点离屏幕顶部小于某值
 #define TXT_CNT_MAX                     8                                                                       //文本框最大字符数
 #define CARD_BTN_COUNT                  (COMPO_CARD_END - COMPO_CARD_START - 1)    //卡片（按钮）数量
+
+#define ARC_ANGLE_MAX           3600
+#define ARC_ROTATION_DEFAULT    2700   //库默认的 0°位置在3点钟方向，组件默认的0°位置在12点钟方向
+#define ARC_WID                        10
+#define KCAL_ARC_ARDUIS                100
+#define KM_ARC_ARDUIS                  78-2
+#define STEP_ARC_ARDUIS                54-2
+
+#define KCAL_ARC_COLOR                61861
+#define KM_ARC_COLOR                  65188
+#define STEP_ARC_COLOR                1946
+
+#define KCAL_ARC_COLOR_BG             31077
+#define KM_ARC_COLOR_BG               31587
+#define STEP_ARC_COLOR_BG             7117
+
+
+#define SEC_TO_HOUR(s)  (s / 3600)          //总秒数转换为时分秒（时）
+#define SEC_TO_MIN(s)   ((s % 3600) / 60)   //总秒数转换为时分秒（分）
+#define SEC_TO_SEC(s)   (s % 60)            //总秒数转换为时分秒（秒）
+
+#define DEFAULT_LATEST_TASK_NUM 5   //最近任务不足5个时默认值补上
+const u8 last_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_SLEEP, FUNC_SPORT, FUNC_HEARTRATE,FUNC_ACTIVITY,FUNC_WEATHER};
 
 ///卡片、组件原始位置（相对于卡片中心点）
 #define CARD_WIDTH_ORG                  232//308
@@ -124,6 +147,7 @@ typedef struct ui_handle_t_ {
             s16 x,y;
             u16 w,r;
             color_t color;
+            color_t bg_color;
             u16 zero_angle;
             u16 angle_min;
             u16 angle_max;
@@ -249,6 +273,15 @@ enum
     COMPO_ID_ARC_KCAL,
     COMPO_ID_ARC_KM,
     COMPO_ID_ARC_STEP,
+
+    COMPO_MUSIC_BTN_PREV,
+    COMPO_MUSIC_BTN_NEXT,
+    COMPO_MUSIC_BTN_PLAY,
+
+    COMPO_ID_APP1,
+    COMPO_ID_APP2,
+    COMPO_ID_APP3,
+    COMPO_ID_APP4,
 };
 
 
@@ -281,7 +314,7 @@ static const ui_handle_t ui_handle = {
             .center = false,
             .bonddata = COMPO_BOND_DATE,
             .color = {255,255,255},
-            .res = UI_BUF_0FONT_FONT_BIN,
+            .res = UI_BUF_0FONT_FONT_NUM_32_BIN,
         },
 
         .week = {
@@ -302,9 +335,9 @@ static const ui_handle_t ui_handle = {
             .id_min = COMPO_ID_CLOCK_M,
             .bg_x   = 130+100/2-232/2,
             .bg_y   = 0,
-            .h_x    = 130+100/2-232/2,
+            .h_x    = 130+96/2-232/2,
             .h_y    = 0,
-            .m_x    = 130+100/2-232/2,
+            .m_x    = 130+96/2-232/2,
             .m_y    = 0,
             .bg_w   = 100,
             .bg_h   = 100,
@@ -336,7 +369,6 @@ static const ui_handle_t ui_handle = {
             .r      = 16,
             .color  = {41,41,41},
         },
-
         .pic_kcal = {
             .idx    = 0,
             .x      = 10+18/2-232/2,
@@ -364,46 +396,48 @@ static const ui_handle_t ui_handle = {
 
         .arc_kcal = {
             .id     = COMPO_ID_ARC_KCAL,
-            .x      = 122+100/2-232/2,
-            .y      = 28+50/2-108/2,
+            .x      = 25,
+            .y      = 50,
             .w      = 10,
-            .r      = 50,
+            .r      = 100,
             .color  = {252,55,40},
+            .bg_color = {0x7f,0x6e,0x19},
             .zero_angle = 2700,
             .angle_min  = 0,
             .angle_max  = 1800,
         },
         .arc_km = {
             .id     = COMPO_ID_ARC_KM,
-            .x      = 122+100/2-232/2,
-            .y      = 28+50/2-108/2,
+            .x      = 25,
+            .y      = 50,
             .w      = 10,
-            .r      = 50,
+            .r      = 100-12,
             .color  = {255,212,0},
+            .bg_color = {0x19,0x7a,0x6f},
             .zero_angle = 2700,
             .angle_min  = 0,
             .angle_max  = 1800,
         },
         .arc_step = {
             .id     = COMPO_ID_ARC_STEP,
-            .x      = 122+100/2-232/2,
-            .y      = 28+50/2-108/2,
+            .x      = 25,
+            .y      = 50,
             .w      = 10,
-            .r      = 50,
+            .r      = 100-24,
             .color  = {0,242,214},
+            .bg_color = {0x7e,0x2f,0x29},
             .zero_angle = 2700,
             .angle_min  = 0,
             .angle_max  = 1800,
         },
-
         .text_kcal = {
             .idx    = 0,
             .x      = 34-232/2,
             .y      = 17-108/2,
             .w      = 80,
             .h      = 24,
-            .res    = UI_BUF_0FONT_FONT_BIN,
-            .str_id = STR_NULL,
+            .res    = UI_BUF_0FONT_FONT_NUM_24_BIN,
+            .str_id = 0,
             .center = false,
             .color  = {252,55,40},
         },
@@ -413,8 +447,8 @@ static const ui_handle_t ui_handle = {
             .y      = 42-108/2,
             .w      = 80,
             .h      = 24,
-            .res    = UI_BUF_0FONT_FONT_BIN,
-            .str_id = STR_NULL,
+            .res    = UI_BUF_0FONT_FONT_NUM_24_BIN,
+            .str_id = 1,
             .center = false,
             .color  = {255,212,0},
         },
@@ -424,8 +458,8 @@ static const ui_handle_t ui_handle = {
             .y      = 67-108/2,
             .w      = 80,
             .h      = 24,
-            .res    = UI_BUF_0FONT_FONT_BIN,
-            .str_id = STR_NULL,
+            .res    = UI_BUF_0FONT_FONT_NUM_24_BIN,
+            .str_id = 2,
             .center = false,
             .color  = {0,242,214},
         },
@@ -465,7 +499,7 @@ static const ui_handle_t ui_handle = {
             .y      = 38-108/2,
             .w      = 41,
             .h      = 46,
-            .res    = UI_BUF_0FONT_FONT_BIN,
+            .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
             .center = false,
             .color  = {255,255,255},
@@ -487,7 +521,7 @@ static const ui_handle_t ui_handle = {
             .y      = 38-108/2,
             .w      = 40,
             .h      = 46,
-            .res    = UI_BUF_0FONT_FONT_BIN,
+            .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
             .center = false,
             .color  = {255,255,255},
@@ -535,7 +569,7 @@ static const ui_handle_t ui_handle = {
         },
 
         .pic_click_prev = {
-            .idx    = 0,
+            .idx    = COMPO_MUSIC_BTN_PREV,
             .x      = 26+28/2-232/2,
             .y      = 52+28/2-108/2,
             .w      = 28,
@@ -546,7 +580,7 @@ static const ui_handle_t ui_handle = {
             .func_sta = 0,
         },
         .pic_click_next = {
-            .idx    = 1,
+            .idx    = COMPO_MUSIC_BTN_NEXT,
             .x      = 178+28/2-232/2,
             .y      = 52+28/2-108/2,
             .w      = 28,
@@ -557,7 +591,7 @@ static const ui_handle_t ui_handle = {
             .func_sta = 0,
         },
         .pic_click_play = {
-            .idx    = 2,
+            .idx    = COMPO_MUSIC_BTN_PLAY,
             .x      = 88+56/2-232/2,
             .y      = 38+56/2-108/2,
             .w      = 28,
@@ -592,7 +626,7 @@ static const ui_handle_t ui_handle = {
             .y      = 10-108/2,
             .w      = 100,
             .h      = 30,
-            .res    = UI_BUF_0FONT_FONT_BIN,
+            .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_TIMER,
             .center = false,
             .color  = {248,132,10},
@@ -603,7 +637,7 @@ static const ui_handle_t ui_handle = {
             .y      = 37-108/2,
             .w      = 200,
             .h      = 46,
-            .res    = UI_BUF_0FONT_FONT_BIN,
+            .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
             .center = false,
             .color  = {248,132,10},
@@ -633,7 +667,7 @@ static const ui_handle_t ui_handle = {
             .y      = 10-108/2,
             .w      = 100,
             .h      = 30,
-            .res    = UI_BUF_0FONT_FONT_BIN,
+            .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_STOP_WATCH,
             .center = false,
             .color  = {248,132,10},
@@ -644,7 +678,7 @@ static const ui_handle_t ui_handle = {
             .y      = 37-108/2,
             .w      = 200,
             .h      = 46,
-            .res    = UI_BUF_0FONT_FONT_BIN,
+            .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
             .center = false,
             .color  = {248,132,10},
@@ -675,7 +709,7 @@ static const ui_handle_t ui_handle = {
             .w      = 100,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
-            .str_id = STR_LATEST_APP,
+            .str_id = STR_COMMON_APP,
             .center = false,
             .color  = {255,255,255},
         },
@@ -748,7 +782,7 @@ static const ui_handle_t ui_handle = {
         },
         .pic_click = {
             [0] = {
-                .idx    = 0,
+                .idx    = COMPO_ID_APP1,
                 .x      = 12+44/2-232/2,
                 .y      = 43+44/2-108/2,
                 .w      = 44,
@@ -759,36 +793,36 @@ static const ui_handle_t ui_handle = {
                 .func_sta = FUNC_SPORT,
             },
             [1] = {
-                .idx    = 1,
+                .idx    = COMPO_ID_APP2,
                 .x      = 66+44/2-232/2,
                 .y      = 43+44/2-108/2,
                 .w      = 44,
                 .h      = 44,
                 .res    = UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,
-                .res_click = 0,
-                .res_switch = 0,
+                .res_click = 1,
+                .res_switch = 1,
                 .func_sta = FUNC_LIGHT,
             },
             [2] = {
-                .idx    = 2,
+                .idx    = COMPO_ID_APP3,
                 .x      = 120+44/2-232/2,
                 .y      = 43+44/2-108/2,
                 .w      = 44,
                 .h      = 44,
                 .res    = UI_BUF_I330001_THEME_1_TIMER_BIN,
-                .res_click = 0,
-                .res_switch = 0,
+                .res_click = 2,
+                .res_switch = 2,
                 .func_sta = FUNC_TIMER,
             },
             [3] = {
-                .idx    = 3,
+                .idx    = COMPO_ID_APP4,
                 .x      = 174+44/2-232/2,
                 .y      = 43+44/2-108/2,
                 .w      = 44,
                 .h      = 44,
                 .res    = UI_BUF_I330001_THEME_1_CALL_BIN,
-                .res_click = 0,
-                .res_switch = 0,
+                .res_click = 3,
+                .res_switch = 3,
                 .func_sta = FUNC_CALL,
             },
         },
@@ -839,18 +873,146 @@ typedef struct f_card_t_
     s32 moveto_y;                   //设定自动移到的坐标
     s16 moveto_card;                //设定自动移到的卡片序号
     u32 tick;
+    u32 activity_tick;
+    uint32_t arc_kcal_value;
+    uint32_t arc_km_value;
+    uint32_t arc_step_value;
+    u8 activity_state;
 } f_card_t;
+
+/// size, arc_w, rotation, s_angle, e_angle, content_color, bg_color
+static const int16_t activity_arc_info[][7] =
+{
+    {KCAL_ARC_ARDUIS, ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   KCAL_ARC_COLOR, KCAL_ARC_COLOR_BG},      //kcal
+    {KM_ARC_ARDUIS,   ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   KM_ARC_COLOR,   KM_ARC_COLOR_BG},      //steps
+    {STEP_ARC_ARDUIS, ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   STEP_ARC_COLOR, STEP_ARC_COLOR_BG},      //exervise
+};
+
+static void card1_updata_disp(void)
+{
+    f_card_t *f_activity = (f_card_t *)func_cb.f_cb;
+
+    if(tick_check_expire(f_activity->activity_tick, 10))
+    {
+        f_activity->activity_tick = tick_get();
+        char txt_buf[20];
+        uint32_t totalStepCnt = 0;
+        uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+
+        compo_arc_t *arc_kcal = compo_getobj_byid(COMPO_ID_ARC_KCAL);
+        compo_arc_t *arc_km   = compo_getobj_byid(COMPO_ID_ARC_KM);
+        compo_arc_t *arc_step = compo_getobj_byid(COMPO_ID_ARC_STEP);
+        compo_cardbox_t *cardbox = compo_getobj_byid(ui_handle.card1.id);
+//        compo_textbox_t *textbox_kcal = compo_getobj_byid(KCAL_TXT_VALUE_ID);
+//        compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
+//        compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
+
+        if(f_activity->activity_state == 0)
+        {
+
+            f_activity->arc_step_value+=10;
+
+            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
+            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
+            compo_arc_set_value(arc_step, f_activity->arc_step_value);
+
+            if(f_activity->arc_step_value >=ARC_VALUE_MAX)
+            {
+                f_activity->activity_state = 1;
+            }
+        }
+        else if(f_activity->activity_state == 1)
+        {
+
+            f_activity->arc_step_value-=10;
+
+            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
+            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
+            compo_arc_set_value(arc_step, f_activity->arc_step_value);
+
+            if(f_activity->arc_step_value <= totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt())
+            {
+                f_activity->activity_state = 2;
+            }
+
+        }
+        else
+        {
+
+            f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
+            f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
+            f_activity->arc_step_value =(uint32_t) (totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt());
+
+            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
+            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
+            compo_arc_set_value(arc_step, f_activity->arc_step_value);
+            memset(txt_buf,'\0',sizeof(txt_buf));
+
+            if(totalStepCnt){
+                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
+            }else{
+                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+            }
+            compo_cardbox_text_set(cardbox, 0, txt_buf);
+
+
+            memset(txt_buf,'\0',sizeof(txt_buf));
+            if(totalStepCnt){
+                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
+            }else{
+                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+            }
+            compo_cardbox_text_set(cardbox, 1, txt_buf);
+
+
+            memset(txt_buf,'\0',sizeof(txt_buf));
+            if(totalStepCnt){
+                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
+            }else{
+                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+            }
+            compo_cardbox_text_set(cardbox, 2, txt_buf);
+
+        }
+
+    }
+}
+//根据序号获取最近任务序号（idx=0为最近，无任务返回0）(idx<=3)
+static u8 card_get_latest_func(u8 idx)
+{
+    u8 i, j;
+    u8 latest_default_tmp[DEFAULT_LATEST_TASK_NUM] = {0};
+    u8 latest_cnt = latest_task_count();
+    if (latest_cnt > idx)
+    {
+        return latest_task_get(idx);
+    }
+    else
+    {
+        j = 0;
+        for (i = 0; i < DEFAULT_LATEST_TASK_NUM; i++)     //最近任务不足DEFAULT_LATEST_TASK_NUM个且包含默认值
+        {
+            if (latest_task_find(last_default[i]) == -1)
+            {
+                latest_default_tmp[j] = last_default[i];
+                j++;
+            }
+        }
+        return latest_default_tmp[idx - latest_cnt];
+    }
+}
+
+//根据序号获取最近任务图标资源地址
+static u32 card_get_latest_icon(u8 idx)
+{
+    return func_get_icon_addr(card_get_latest_func(idx));
+}
 
 //创建组件
 static void func_clock_sub_card_compo_create(compo_form_t *frm)
 {
-//    char txt_buf[20];
-//    uint32_t totalStepCnt = 0;
-//    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-//    uint16_t KM = uteModuleSportGetCurrDayDistanceData();
-//
-//    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
-//    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
+    char txt_buf[20];
+    compo_button_t *btn=NULL;
 
     ///卡片7
     compo_cardbox_t* card7 = compo_cardbox_create(frm, 1, 4, 1, ui_handle.card7.w, ui_handle.card7.h);
@@ -866,8 +1028,9 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set(card7, ui_handle.card7.text_last_use.idx, i18n[ui_handle.card7.text_last_use.str_id]);
 
     for (u8 i=0; i<sizeof(ui_handle.card7.pic_click)/sizeof(ui_handle.card7.pic_click[0]); i++) {
-        compo_cardbox_icon_set(card7, ui_handle.card7.pic_click[i].idx, ui_handle.card7.pic_click[i].res);
-        compo_cardbox_icon_set_location(card7, ui_handle.card7.pic_click[i].idx, ui_handle.card7.pic_click[i].x, ui_handle.card7.pic_click[i].y, ui_handle.card7.pic_click[i].w, ui_handle.card7.pic_click[i].h);
+        btn = compo_button_create_page_by_image(frm,card7->page,card_get_latest_icon(i));
+        compo_button_set_location(btn,ui_handle.card7.pic_click[i].x,ui_handle.card7.pic_click[i].y, ui_handle.card7.pic_click[i].w, ui_handle.card7.pic_click[i].h);
+        compo_setid(btn,ui_handle.card7.pic_click[i].idx);
     }
 
     ///卡片6
@@ -896,7 +1059,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_rect_set_location(card5, ui_handle.card5.rect.idx, ui_handle.card5.rect.x, ui_handle.card5.rect.y, ui_handle.card5.rect.w, ui_handle.card5.rect.h, ui_handle.card5.rect.r);
     compo_cardbox_rect_set_color(card5, ui_handle.card5.rect.idx, make_color(ui_handle.card5.rect.color.r, ui_handle.card5.rect.color.g, ui_handle.card5.rect.color.b));
 
-    compo_cardbox_text_set_font(card5, ui_handle.card5.text_stopwatch.idx, ui_handle.card5.text_stopwatch.res);
+//    compo_cardbox_text_set_font(card5, ui_handle.card5.text_stopwatch.idx, ui_handle.card5.text_stopwatch.res);
     compo_cardbox_text_set_align_center(card5, ui_handle.card5.text_stopwatch.idx, ui_handle.card5.text_stopwatch.center);
     widget_text_set_color(card5->text[ui_handle.card5.text_stopwatch.idx], make_color(ui_handle.card5.text_stopwatch.color.r, ui_handle.card5.text_stopwatch.color.g, ui_handle.card5.text_stopwatch.color.b));
     compo_cardbox_text_set_location(card5, ui_handle.card5.text_stopwatch.idx, ui_handle.card5.text_stopwatch.x, ui_handle.card5.text_stopwatch.y, ui_handle.card5.text_stopwatch.w, ui_handle.card5.text_stopwatch.h);
@@ -915,7 +1078,6 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_rect_set_location(card4, ui_handle.card4.rect.idx, ui_handle.card4.rect.x, ui_handle.card4.rect.y, ui_handle.card4.rect.w, ui_handle.card4.rect.h, ui_handle.card4.rect.r);
     compo_cardbox_rect_set_color(card4, ui_handle.card4.rect.idx, make_color(ui_handle.card4.rect.color.r, ui_handle.card4.rect.color.g, ui_handle.card4.rect.color.b));
 
-    compo_cardbox_text_set_font(card4, ui_handle.card4.text_timer.idx, ui_handle.card4.text_timer.res);
     compo_cardbox_text_set_align_center(card4, ui_handle.card4.text_timer.idx, ui_handle.card4.text_timer.center);
     widget_text_set_color(card4->text[ui_handle.card4.text_timer.idx], make_color(ui_handle.card4.text_timer.color.r, ui_handle.card4.text_timer.color.g, ui_handle.card4.text_timer.color.b));
     compo_cardbox_text_set_location(card4, ui_handle.card4.text_timer.idx, ui_handle.card4.text_timer.x, ui_handle.card4.text_timer.y, ui_handle.card4.text_timer.w, ui_handle.card4.text_timer.h);
@@ -941,17 +1103,21 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_location(card3, ui_handle.card3.text_music.idx, ui_handle.card3.text_music.x, ui_handle.card3.text_music.y, ui_handle.card3.text_music.w, ui_handle.card3.text_music.h);
     compo_cardbox_text_set(card3, ui_handle.card3.text_music.idx, i18n[ui_handle.card3.text_music.str_id]);
 
-    compo_cardbox_icon_set_location(card3, ui_handle.card3.pic_click_prev.idx, ui_handle.card3.pic_click_prev.x, ui_handle.card3.pic_click_prev.y, ui_handle.card3.pic_click_prev.w, ui_handle.card3.pic_click_prev.h);
-    compo_cardbox_icon_set(card3, ui_handle.card3.pic_click_prev.idx, ui_handle.card3.pic_click_prev.res);
+    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_prev.res);
+    compo_button_set_location(btn,ui_handle.card3.pic_click_prev.x, ui_handle.card3.pic_click_prev.y, ui_handle.card3.pic_click_prev.w, ui_handle.card3.pic_click_prev.h);
+    compo_setid(btn,ui_handle.card3.pic_click_prev.idx);
 
-    compo_cardbox_icon_set_location(card3, ui_handle.card3.pic_click_next.idx, ui_handle.card3.pic_click_next.x, ui_handle.card3.pic_click_next.y, ui_handle.card3.pic_click_next.w, ui_handle.card3.pic_click_next.h);
-    compo_cardbox_icon_set(card3, ui_handle.card3.pic_click_next.idx, ui_handle.card3.pic_click_next.res);
+    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_next.res);
+    compo_button_set_location(btn,ui_handle.card3.pic_click_next.x, ui_handle.card3.pic_click_next.y, ui_handle.card3.pic_click_next.w, ui_handle.card3.pic_click_next.h);
+    compo_setid(btn,ui_handle.card3.pic_click_next.idx);
 
-    compo_cardbox_icon_set_location(card3, ui_handle.card3.pic_click_play.idx, ui_handle.card3.pic_click_play.x, ui_handle.card3.pic_click_play.y, ui_handle.card3.pic_click_play.w, ui_handle.card3.pic_click_play.h);
-    compo_cardbox_icon_set(card3, ui_handle.card3.pic_click_play.idx, ui_handle.card3.pic_click_play.res);
-
+    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_play.res);
+    compo_button_set_pos(btn,ui_handle.card3.pic_click_play.x, ui_handle.card3.pic_click_play.y);
+    compo_setid(btn,ui_handle.card3.pic_click_play.idx);
 
     ///卡片2
+    ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
+    uteModuleSleepGetCurrDayDataDisplay(sleep_data);
     compo_cardbox_t* card2 = compo_cardbox_create(frm, 1, 0, 5, ui_handle.card2.w, ui_handle.card2.h);
     compo_setid(card2, ui_handle.card2.id);
 
@@ -968,7 +1134,13 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.x, ui_handle.card2.text_hour.y, ui_handle.card2.text_hour.w, ui_handle.card2.text_hour.h);
-    compo_cardbox_text_set(card2, ui_handle.card2.text_hour.idx, "--");
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(sleep_data->totalSleepMin) { ///是否有睡眠时长
+        snprintf(txt_buf, sizeof(txt_buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
+    }else{
+        snprintf(txt_buf, sizeof(txt_buf), "--");///* 总睡眠小时*/
+    }
+    compo_cardbox_text_set(card2, ui_handle.card2.text_hour.idx, txt_buf);
 
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.center);
@@ -980,7 +1152,12 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_min.idx], make_color(ui_handle.card2.text_min.color.r, ui_handle.card2.text_min.color.g, ui_handle.card2.text_min.color.b));
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w, ui_handle.card2.text_min.h);
-    compo_cardbox_text_set(card2, ui_handle.card2.text_min.idx, "--");
+    if(sleep_data->totalSleepMin){ ///是否有睡眠时长
+        snprintf(txt_buf, sizeof(txt_buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
+    }else{
+        snprintf(txt_buf, sizeof(txt_buf), "--");///* 总睡眠分钟*/
+    }
+    compo_cardbox_text_set(card2, ui_handle.card2.text_min.idx, txt_buf);
 
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.center);
@@ -1002,24 +1179,91 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_icon_set_location(card1, ui_handle.card1.pic_step.idx, ui_handle.card1.pic_step.x, ui_handle.card1.pic_step.y, ui_handle.card1.pic_step.w, ui_handle.card1.pic_step.h);
     compo_cardbox_icon_set(card1, ui_handle.card1.pic_step.idx, ui_handle.card1.pic_step.res);
 
+    uint16_t KM = uteModuleSportGetCurrDayDistanceData();
+    uint32_t totalStepCnt = 0;
+    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+
     compo_cardbox_text_set_font(card1, ui_handle.card1.text_kcal.idx, ui_handle.card1.text_kcal.res);
     compo_cardbox_text_set_align_center(card1, ui_handle.card1.text_kcal.idx, ui_handle.card1.text_kcal.center);
     widget_text_set_color(card1->text[ui_handle.card1.text_kcal.idx], make_color(ui_handle.card1.text_kcal.color.r, ui_handle.card1.text_kcal.color.g, ui_handle.card1.text_kcal.color.b));
     compo_cardbox_text_set_location(card1, ui_handle.card1.text_kcal.idx, ui_handle.card1.text_kcal.x, ui_handle.card1.text_kcal.y, ui_handle.card1.text_kcal.w, ui_handle.card1.text_kcal.h);
-    compo_cardbox_text_set(card1, ui_handle.card1.text_kcal.idx, "--");
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(uteModuleSportGetCurrDayKcalData()){
+        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());
+    }else{
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+    compo_cardbox_text_set(card1, ui_handle.card1.text_kcal.idx, txt_buf);
 
     compo_cardbox_text_set_font(card1, ui_handle.card1.text_km.idx, ui_handle.card1.text_km.res);
     compo_cardbox_text_set_align_center(card1, ui_handle.card1.text_km.idx, ui_handle.card1.text_km.center);
     widget_text_set_color(card1->text[ui_handle.card1.text_km.idx], make_color(ui_handle.card1.text_km.color.r, ui_handle.card1.text_km.color.g, ui_handle.card1.text_km.color.b));
     compo_cardbox_text_set_location(card1, ui_handle.card1.text_km.idx, ui_handle.card1.text_km.x, ui_handle.card1.text_km.y, ui_handle.card1.text_km.w, ui_handle.card1.text_km.h);
-    compo_cardbox_text_set(card1, ui_handle.card1.text_km.idx, "--");
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(KM){
+        snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/100%10,KM/10%10,KM%10);///公里数据
+    }else{
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+    compo_cardbox_text_set(card1, ui_handle.card1.text_km.idx,txt_buf);
 
     compo_cardbox_text_set_font(card1, ui_handle.card1.text_step.idx, ui_handle.card1.text_step.res);
     compo_cardbox_text_set_align_center(card1, ui_handle.card1.text_step.idx, ui_handle.card1.text_step.center);
     widget_text_set_color(card1->text[ui_handle.card1.text_step.idx], make_color(ui_handle.card1.text_step.color.r, ui_handle.card1.text_step.color.g, ui_handle.card1.text_step.color.b));
     compo_cardbox_text_set_location(card1, ui_handle.card1.text_step.idx, ui_handle.card1.text_step.x, ui_handle.card1.text_step.y, ui_handle.card1.text_step.w, ui_handle.card1.text_step.h);
-    compo_cardbox_text_set(card1, ui_handle.card1.text_step.idx, "--");
+    if(totalStepCnt){
+        snprintf(txt_buf,sizeof(txt_buf),"%ld",totalStepCnt);
+    }else{
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+    compo_cardbox_text_set(card1, ui_handle.card1.text_step.idx, txt_buf);
 
+    ///创建圆弧
+    for (u8 i = 0; i < sizeof(activity_arc_info) / sizeof(activity_arc_info[0]); i++)
+    {
+        compo_arc_t *compo_arc = compo_create(frm, COMPO_TYPE_ARC);
+        if (NULL == compo_arc) {
+            halt(HALT_GUI_COMPO_ARC_FAIL);
+        }
+        compo_arc->arc = widget_arc_create(card1->page);
+        compo_arc->prec = ARC_ANGLE_PREC_DEFAULT; //默认精度
+        compo_arc->rotation_offset = ARC_ROTATION_DEFAULT;
+        widget_arc_set_angles(compo_arc->arc, compo_arc->rotation_offset, compo_arc->rotation_offset);
+
+        compo_arc_set_alpha(compo_arc, 255, 0);
+        compo_arc_set_location(compo_arc, activity_arc_info[0][0]/2,activity_arc_info[0][0]/4, activity_arc_info[i][0], activity_arc_info[i][0]);
+        compo_arc_set_width(compo_arc, activity_arc_info[i][1]);
+        compo_arc_set_rotation(compo_arc, 2700);
+        compo_arc_set_angles(compo_arc, 0, 1800);
+        compo_arc_set_color(compo_arc, activity_arc_info[i][6], activity_arc_info[i][6]);
+        compo_arc_set_value(compo_arc, 1000);
+
+    }
+
+    printf("1:%d\n",make_color(ui_handle.card1.arc_kcal.bg_color.r,ui_handle.card1.arc_kcal.bg_color.g,ui_handle.card1.arc_kcal.bg_color.b));
+    printf("1:%d\n",make_color(ui_handle.card1.arc_km.bg_color.r,ui_handle.card1.arc_km.bg_color.g,ui_handle.card1.arc_km.bg_color.b));
+    printf("1:%d\n",make_color(ui_handle.card1.arc_step.bg_color.r,ui_handle.card1.arc_step.bg_color.g,ui_handle.card1.arc_step.bg_color.b));
+
+    ///创建圆弧
+    for (u8 i = 0; i < sizeof(activity_arc_info) / sizeof(activity_arc_info[0]); i++)
+    {
+        compo_arc_t *compo_arc = compo_create(frm, COMPO_TYPE_ARC);
+        if (NULL == compo_arc) {
+            halt(HALT_GUI_COMPO_ARC_FAIL);
+        }
+        compo_arc->arc = widget_arc_create(card1->page);
+        compo_arc->prec = ARC_ANGLE_PREC_DEFAULT; //默认精度
+        compo_arc->rotation_offset = ARC_ROTATION_DEFAULT;
+        widget_arc_set_angles(compo_arc->arc, compo_arc->rotation_offset, compo_arc->rotation_offset);
+        compo_setid(compo_arc, COMPO_ID_ARC_KCAL + i);
+        compo_arc_set_alpha(compo_arc, 255, 0);
+        compo_arc_set_location(compo_arc, activity_arc_info[0][0]/2,activity_arc_info[0][0]/4, activity_arc_info[i][0], activity_arc_info[i][0]);
+        compo_arc_set_width(compo_arc, activity_arc_info[i][1]);
+        compo_arc_set_rotation(compo_arc, 2700);
+        compo_arc_set_angles(compo_arc, 0, 1800);
+        compo_arc_set_color(compo_arc, activity_arc_info[i][5], activity_arc_info[i][5]);
+        compo_arc_set_value(compo_arc, 0);
+    }
 
     ///时钟 日期
     compo_picturebox_t* clock_bg = compo_picturebox_create(frm, ui_handle.card_clock_day.clock.bg_res);
@@ -1027,13 +1271,13 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
 
     compo_datetime_t* clock_h = compo_datetime_create(frm, ui_handle.card_clock_day.clock.h_res);
     compo_setid(clock_h, ui_handle.card_clock_day.clock.id_h);
-    compo_datetime_set_center(clock_h, 0, ui_handle.card_clock_day.clock.h_h / 2);
+    compo_datetime_set_center(clock_h, 13, ui_handle.card_clock_day.clock.h_h / 2);
     compo_datetime_set_start_angle(clock_h, 900);
     compo_bonddata(clock_h, ui_handle.card_clock_day.clock.h_bonddata);
 
     compo_datetime_t* clock_m = compo_datetime_create(frm, ui_handle.card_clock_day.clock.m_res);
     compo_setid(clock_m, ui_handle.card_clock_day.clock.id_min);
-    compo_datetime_set_center(clock_m, 0, ui_handle.card_clock_day.clock.m_h / 2);
+    compo_datetime_set_center(clock_m, 13, ui_handle.card_clock_day.clock.m_h / 2);
     compo_datetime_set_start_angle(clock_m, 900);
     compo_bonddata(clock_m, ui_handle.card_clock_day.clock.m_bonddata);
 
@@ -1051,7 +1295,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(week->txt, make_color(ui_handle.card_clock_day.week.color.r, ui_handle.card_clock_day.week.color.g, ui_handle.card_clock_day.week.color.b));
     compo_bonddata(week, ui_handle.card_clock_day.week.bonddata);
 
-//    ab_free(sleep_data);
+    ab_free(sleep_data);
 
 }
 
@@ -1389,13 +1633,76 @@ static u16 func_clock_sub_card_get_btn_id(point_t pt)
 //表盘上拉卡片菜单点击处理
 static void func_clock_sub_card_click_handler(void)
 {
-    compo_cardbox_t *cardbox;
-    rect_t rect;
+    compo_cardbox_t *cardbox = NULL;
+//    rect_t rect;
     u8 func_jump = FUNC_NULL;
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_clock_sub_card_get_btn_id(pt);
-    printf("click compo_id:%d\n", compo_id);
+//    printf("click compo_id:%d\n", compo_id);
+    int id = compo_get_button_id();
 
+    switch(compo_id)
+    {
+        case COMPO_ID_CARD_1 :
+            func_jump = FUNC_ACTIVITY;
+            break;
+        case COMPO_ID_CARD_2 :
+            func_jump = FUNC_SLEEP;
+            break;
+        case COMPO_ID_CARD_3 :
+            switch(id)
+            {
+            case COMPO_MUSIC_BTN_PREV:
+                if (bt_is_connected()){
+                    bt_music_prev();
+                }else if (ble_ams_is_connected()){
+                    ble_ams_remote_ctrl(AMS_REMOTE_CMD_PREV_TRACK);
+                }
+                break;
+            case COMPO_MUSIC_BTN_PLAY:
+                if (bt_is_connected()){
+                    bt_music_play_pause();
+                }else if (ble_ams_is_connected()){
+                    ble_ams_remote_ctrl(AMS_REMOTE_CMD_PLAY_PAUSE);
+                }
+                break;
+            case COMPO_MUSIC_BTN_NEXT:
+                if (bt_is_connected()){
+                    bt_music_next();
+                }else if (ble_ams_is_connected()){
+                    ble_ams_remote_ctrl(AMS_REMOTE_CMD_NEXT_TRACK);
+                }
+                break;
+            default:
+                func_jump = FUNC_BT;
+                break;
+            }
+            break;
+        case COMPO_ID_CARD_4 :
+            func_jump = FUNC_TIMER;
+            break;
+        case COMPO_ID_CARD_5 :
+            func_jump = FUNC_STOPWATCH;
+            break;
+        case COMPO_ID_CARD_6 :
+            cardbox = compo_getobj_byid(COMPO_ID_CARD_6);
+            for (u8 i=0; i<sizeof(ui_handle.card6.pic_click)/sizeof(ui_handle.card6.pic_click[0]); i++) {
+                rect_t rect = compo_cardbox_get_icon_absolute(cardbox, ui_handle.card6.pic_click[i].idx); //上一首
+                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+                {
+//                    printf("rect = [%d,%d,%d,%d]\n", rect.x, rect.y, rect.wid, rect.hei);
+                    func_cb.sta = ui_handle.card6.pic_click[i].func_sta;
+                }
+            }
+        break;
+        case COMPO_ID_CARD_7 :
+            func_jump = card_get_latest_func(id-COMPO_ID_APP1);
+            break;
+    }
+    if(func_jump!=FUNC_NULL)
+    {
+        func_cb.sta = func_jump;  //直接跳转
+    }
 //    switch (compo_id)
 //    {
 //        case COMPO_ID_CARD_SPORT_COMPASS:
@@ -1553,7 +1860,7 @@ static void func_clock_sub_card_set_offs(s16 ofs_y)
 //时钟表盘上拉菜单数据更新----------------------------------------->todo
 static void func_clock_sub_card_data_update(void)
 {
-//    compo_cardbox_t *cardbox;
+
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     //活动记录
 //    char step_str[8];
@@ -1582,6 +1889,22 @@ static void func_clock_sub_card_data_update(void)
 //    //音乐
 //    cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
 //    compo_cardbox_icon_set(cardbox, 1, music_pp_test ? UI_BUF_MUSIC_PAUSE_BIN : UI_BUF_MUSIC_PLAY_BIN);  //播放/暂停
+    compo_cardbox_t *cardbox = NULL;
+    char txt_buf[20];
+
+    card1_updata_disp();
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_HOUR(sys_cb.timer_left_sec),SEC_TO_MIN(sys_cb.timer_left_sec),SEC_TO_SEC(sys_cb.timer_left_sec));
+    cardbox = compo_getobj_byid(ui_handle.card4.id);
+    compo_cardbox_text_set(cardbox, ui_handle.card4.text_time.idx,txt_buf);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_HOUR(sys_cb.stopwatch_total_msec),SEC_TO_MIN(sys_cb.stopwatch_total_msec),SEC_TO_SEC(sys_cb.stopwatch_total_msec));
+    cardbox = compo_getobj_byid(ui_handle.card5.id);
+    compo_cardbox_text_set(cardbox, ui_handle.card5.text_time.idx,txt_buf);
+
+    compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY); //播放/暂停
+    compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY01_BIN);
 }
 
 //时钟表盘上拉菜单主要事件流程处理
@@ -1752,6 +2075,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
     {
         case MSG_CTP_CLICK:
             func_clock_sub_card_click_handler();
+            break;
             break;
 
         case MSG_CTP_SHORT_UP:

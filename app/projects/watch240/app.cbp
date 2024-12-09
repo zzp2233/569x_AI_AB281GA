@@ -1173,6 +1173,9 @@
 		<Unit filename="functions/func_password_sub_select.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_power_on.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_pressure.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -156,6 +156,7 @@ compo_form_t *func_weather_form_create(void)
 
     ///设置标题栏名字///
     txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
     compo_textbox_set(txt, i18n[STR_WEATHER]);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,FORM_TITLE_HEIGHT/2);
 
@@ -170,14 +171,25 @@ compo_form_t *func_weather_form_create(void)
     picbox = compo_picturebox_create(frm, weather_list[get_weather_id[0]].res_addr);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5);
 
-    if(weather_date.fristDayCurrTemperature == 0)weather_date.fristDayCurrTemperature = 0;
+//    if(weather_date.fristDayCurrTemperature == 0)weather_date.fristDayCurrTemperature = 0;
+    compo_number_t *num=NULL;
+    if(weather_date.fristDayCurrTemperature)
+    {
+        num = compo_number_create(frm,UI_BUF_I330001_WEATHER_NUM_BIN, 3);
+        compo_number_set_margin(num, -2);
+        compo_number_set_radix(num, 11, true);
+        compo_number_set(num, weather_date.fristDayCurrTemperature);
+        compo_number_set_align(num, 1 );
+        compo_number_set_pos(num, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
+    }else{
+        picbox = compo_picturebox_create(frm, UI_BUF_I330001_WEATHER_NUM_BIN);///背景图片
+        compo_picturebox_cut(picbox, 10, 11 );
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-gui_image_get_size(UI_BUF_I330001_WEATHER_NUM_BIN).wid/2+2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
 
-    compo_number_t *num = compo_number_create(frm,UI_BUF_I330001_WEATHER_NUM_BIN, 3);
-    compo_number_set_margin(num, -2);
-    compo_number_set_radix(num, 11, true);
-    compo_number_set(num, weather_date.fristDayCurrTemperature);
-    compo_number_set_align(num, 1 );
-    compo_number_set_pos(num, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
+        picbox = compo_picturebox_create(frm, UI_BUF_I330001_WEATHER_NUM_BIN);///背景图片
+        compo_picturebox_cut(picbox, 10, 11 );
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+gui_image_get_size(UI_BUF_I330001_WEATHER_NUM_BIN).wid/2-2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
+    }
 
     if(displayInfo.isFahrenheit)     ///是否为华氏度
     {
@@ -188,8 +200,11 @@ compo_form_t *func_weather_form_create(void)
         picbox = compo_picturebox_create(frm,UI_BUF_I330001_WEATHER_DC_BIN);///温度符号
     }
 
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X*1.15+compo_number_get_rel_location(num).wid/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);
-
+    if(weather_date.fristDayCurrTemperature){
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X*1.15+compo_number_get_rel_location(num).wid/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);
+    }else{
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X*1.15+gui_image_get_size(UI_BUF_I330001_WEATHER_NUM_BIN).wid, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);
+    }
     if(uteModuleWeatherGetCurrDay() == time.day)
     {
         snprintf(str_buff, sizeof(str_buff), "%s %d",i18n[STR_HIGHEST],weather_date.dayTemperatureMax[0]); ///今天 最高温度
@@ -199,8 +214,8 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff, sizeof(str_buff), "%s --",i18n[STR_HIGHEST]);
     }
     txt = compo_textbox_create(frm, strlen(str_buff));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.8,143/2,23);
     compo_textbox_set(txt, str_buff);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.8);
 
     if(uteModuleWeatherGetCurrDay() == time.day)
     {
@@ -211,8 +226,8 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff, sizeof(str_buff), "%s --",i18n[STR_LOWSET]);
     }
     txt = compo_textbox_create(frm, strlen(str_buff));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.8,143/2,23);
     compo_textbox_set(txt, str_buff);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.8);
 
     txt = compo_textbox_create(frm, strlen(i18n[weather_list[get_weather_id[0]].txt_num]));
     compo_textbox_set(txt, i18n[weather_list[get_weather_id[0]].txt_num]);

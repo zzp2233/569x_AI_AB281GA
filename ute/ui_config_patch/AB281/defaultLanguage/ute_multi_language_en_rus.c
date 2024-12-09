@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 英语(美国）
 *@author
-*@date   2024-12-06 15:04:22
+*@date   2024-12-09 16:39:07
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -307,5 +307,7 @@ const char * const i18n_en_rus[] =
      [STR_CALENDAR_FIVE] = "\x46\x00", // [294] F
      [STR_CALENDAR_SIX] = "\x53\x00", // [295] S
      [STR_CALENDAR_SEVEN] = "\x53\x00", // [296] S
+     [STR_MORE] = "\x6d\x6f\x72\x65\x00", // [297] more
+     [STR_COMMON_APP] = "\x43\x6f\x6d\x6d\x6f\x6e\x20\x61\x70\x70\x6c\x69\x63\x61\x74\x69\x6f\x6e\x73\x00", // [298] Common applications
 };
 

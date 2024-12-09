@@ -161,7 +161,7 @@ u32 func_sport_get_str(u8 sport_idx)
     }
     if (sport_idx == SPORT_TYPE_MAX - 1)
     {
-        return STR_MODERATE;
+        return STR_MORE;
     }
     return STR_NULL;
 }
@@ -174,7 +174,7 @@ u32 func_sport_get_ui(u8 sport_idx)
     }
     if (sport_idx == SPORT_TYPE_MAX - 1)
     {
-        return UI_BUF_SPORT_ICON_FREE_TRAINING_BIN;
+        return UI_BUF_I330001_SPORT_ICON_25_CAIDAN_BIN;
     }
     return 0;
 }

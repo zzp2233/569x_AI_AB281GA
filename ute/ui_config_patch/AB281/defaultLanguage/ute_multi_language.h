@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-06 15:04:21
+*@date   2024-12-09 16:39:06
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -310,6 +310,8 @@ enum
     STR_CALENDAR_FIVE, // 五
     STR_CALENDAR_SIX, // 六
     STR_CALENDAR_SEVEN, // 日
+    STR_MORE, // 更多
+    STR_COMMON_APP, // 常用应用
 };
 
 extern const char * const *i18n;

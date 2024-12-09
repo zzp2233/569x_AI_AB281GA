@@ -25,16 +25,15 @@ enum
 static const compo_listbox_item_t tbl_style_list[] =
 {
     {STR_STYLE_LIST_1,          UI_BUF_I330001_SETTINGS_THEME_03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I330001_SETTINGS_THEME_02_BIN,           .menu_style = MENU_STYLE_RING},             //宫格
+    {STR_GONG_GE,               UI_BUF_I330001_SETTINGS_THEME_02_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //宫格
     {STR_STYLE_HONEYCOMB,       UI_BUF_I330001_SETTINGS_THEME_00_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
     {STR_SPHERE,                UI_BUF_I330001_SETTINGS_THEME_07_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
-    {STR_CHECKERBOARD,          UI_BUF_I330001_SETTINGS_THEME_06_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //棋盘
+    {STR_CHECKERBOARD,          UI_BUF_I330001_SETTINGS_THEME_06_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
     {STR_HALO,                  UI_BUF_I330001_SETTINGS_THEME_01_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
     {STR_STYLE_SKYRER,          UI_BUF_I330001_SETTINGS_THEME_08_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
     {STR_STYLE_GRID_1,          UI_BUF_I330001_SETTINGS_THEME_09_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
     {STR_SIX_PALACE_GRID,       UI_BUF_I330001_SETTINGS_THEME_04_BIN,           .menu_style = MENU_STYLE_CUM_FOURGRID},     //六宫格
     {STR_STYLE_WATERFALL,       UI_BUF_I330001_SETTINGS_THEME_05_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
-
 //    {STR_STYLE_SUDOKU_1,        UI_BUF_STYLE_01_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //九宫格
 //    //{STR_STYLE_SUDOKU_2,        UI_BUF_STYLE_02_BIN,           .menu_style = MENU_STYLE_SUDOKU_HRZ},       //九宫格(横向)
 //    {STR_STYLE_DISK,            UI_BUF_STYLE_13_BIN,           .menu_style = MENU_STYLE_DISK},             //圆盘

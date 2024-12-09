@@ -920,8 +920,8 @@ static void func_set_sub_disturd_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_disturd_t));
     func_cb.frm_main = func_set_sub_disturd_form_create();
     f_disturd_t* f_disturd = (f_disturd_t*)func_cb.f_cb;
-    f_disturd->focus_y = DRAG_MIN_BACK_DISTANCE;
-    widget_page_set_client(func_cb.frm_main->page_body, 0, -f_disturd->focus_y);
+//    f_disturd->focus_y = DRAG_MIN_BACK_DISTANCE;
+//    widget_page_set_client(func_cb.frm_main->page_body, 0, -f_disturd->focus_y);
     f_disturd->time_scale = uteModuleSystemtime12HOn();
 }
 

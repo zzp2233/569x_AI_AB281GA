@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_findphone.h"
+#include "func_cover.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -14,7 +15,6 @@
 typedef struct f_findphone_t_
 {
     s16 angle;
-    bool flag_find;
 } f_findphone_t;
 
 enum
@@ -65,10 +65,12 @@ compo_form_t *func_findphone_form_create(void)
 static void func_findphone_process(void)
 {
     compo_picturebox_t *pic = compo_getobj_byid(COMPO_ID_PIC_FIND_BG);
+    compo_button_t * btn = compo_getobj_byid(COMPO_ID_BUTTON_FIND);
+    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
     f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
     static u32 ticks = 0;
 
-    if(f_findphone->flag_find)
+    if(uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
     {
         if (sys_cb.gui_sleep_sta)
         {
@@ -82,6 +84,13 @@ static void func_findphone_process(void)
             compo_picturebox_set_rotation(pic,f_findphone->angle*10);
             if(++f_findphone->angle == 360) f_findphone->angle = 0;
         }
+        compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
+        compo_textbox_set(txt, i18n[STR_STOP]);
+    }
+    else
+    {
+         compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN);
+         compo_textbox_set(txt, i18n[STR_START]);
     }
 
     func_process();
@@ -90,16 +99,14 @@ static void func_findphone_process(void)
 //查找手机按键事件处理
 static void func_findphone_button_touch_handle(void)
 {
-    f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
 
     int id = compo_get_button_id();
     if (COMPO_ID_BUTTON_FIND == id)
     {
-        f_findphone->flag_find = !f_findphone->flag_find;
         compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
         compo_button_t * btn = compo_getobj_byid(COMPO_ID_BUTTON_FIND);
 
-        if(f_findphone->flag_find)
+        if(uteModuleFindPhoneGetStatus() == FIND_PHONE_STOP)
         {
             compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
             uteModuleFindPhoneStartRing();
@@ -123,9 +130,17 @@ static void func_findphone_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-            func_findphone_button_touch_handle();
             break;
         case MSG_CTP_CLICK:
+            if (!ble_is_connect())
+            {
+                sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+                msgbox((char*)i18n[STR_VOICE_BT_NOT_CONNECT], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+            }
+            else
+            {
+                func_findphone_button_touch_handle();
+            }
             break;
 
         case MSG_CTP_SHORT_UP:
@@ -148,8 +163,6 @@ static void func_findphone_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_findphone_t));
     func_cb.frm_main = func_findphone_form_create();
-    f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
-    f_findphone->flag_find = 0;
 
     if(bt_a2dp_profile_completely_connected())
     {

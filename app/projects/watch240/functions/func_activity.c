@@ -104,7 +104,11 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_t *textbox;
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());///千卡数据
+    if(uteModuleSportGetCurrDayKcalData()){
+        snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());///千卡数据
+    }else{
+        snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+    }
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5);
@@ -116,7 +120,11 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_forecolor(textbox,KCAL_ARC_COLOR);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d",KM);///公里数据
+    if(KM){
+        snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/100%10,KM/10%10,KM%10);///公里数据
+    }else{
+        snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+    }
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5);
@@ -128,7 +136,11 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_forecolor(textbox,KM_ARC_COLOR);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
+    if(totalStepCnt){
+        snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
+    }else{
+        snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+    }
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/1.2);
@@ -165,7 +177,7 @@ static void func_activity_disp_handle(void)
         if(f_activity->activity_state == 0)
         {
 
-            f_activity->arc_step_value+=10;
+            f_activity->arc_step_value+=20;
 
             compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
             compo_arc_set_value(arc_km,   f_activity->arc_step_value);
@@ -179,15 +191,14 @@ static void func_activity_disp_handle(void)
         else if(f_activity->activity_state == 1)
         {
 
-            f_activity->arc_step_value-=10;
+            f_activity->arc_step_value-=20;
 
-            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
-            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
-            compo_arc_set_value(arc_step, f_activity->arc_step_value);
-
-            if(f_activity->arc_step_value <= totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt())
-            {
+            if(f_activity->arc_step_value <= totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt()){
                 f_activity->activity_state = 2;
+            }else{
+                compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
+                compo_arc_set_value(arc_km,   f_activity->arc_step_value);
+                compo_arc_set_value(arc_step, f_activity->arc_step_value);
             }
 
         }
@@ -203,15 +214,27 @@ static void func_activity_disp_handle(void)
             compo_arc_set_value(arc_step, f_activity->arc_step_value);
 
             memset(txt_buf,'\0',sizeof(txt_buf));
-            snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
+            if(totalStepCnt){
+                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
+            }else{
+                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+            }
             compo_textbox_set(textbox_step, txt_buf);
 
             memset(txt_buf,'\0',sizeof(txt_buf));
-            snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_km_value);
+            if(f_activity->arc_km_value){
+                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
+            }else{
+                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+            }
             compo_textbox_set(textbox_km, txt_buf);
 
             memset(txt_buf,'\0',sizeof(txt_buf));
-            snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
+            if(f_activity->arc_kcal_value){
+                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
+            }else{
+                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+            }
             compo_textbox_set(textbox_kcal, txt_buf);
         }
 

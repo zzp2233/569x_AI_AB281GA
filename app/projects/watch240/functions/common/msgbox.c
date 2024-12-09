@@ -145,7 +145,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             if (time != NULL)
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
-                compo_textbox_set_align_center(txt_time, true);
+                compo_textbox_set_align_center(txt_time, false);
                 compo_textbox_set_pos(txt_time, 10,
                                       func_cover_get_time_txt_y(msg_type));              //调整文本位置
                 compo_textbox_set(txt_time, time);

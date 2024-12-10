@@ -525,8 +525,9 @@ static void func_menu_sub_skyrer_process(void)
             if (f_menu->flag_drag)
             {
                 f_menu->diff_angle = compo_rings_touch_angle_diff(rings, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, f_menu->x, f_menu->y);
-                f_menu->diff_angle = (abs(f_menu->diff_angle) >= SKYRER_ANGLE_DIV) ? ((SKYRER_ANGLE_DIV - 1) * (f_menu->diff_angle / abs(f_menu->diff_angle))) : f_menu->diff_angle;
-
+                if (abs(f_menu->diff_angle) != 0) {
+                    f_menu->diff_angle = (abs(f_menu->diff_angle) >= SKYRER_ANGLE_DIV) ? ((SKYRER_ANGLE_DIV - 1) * (f_menu->diff_angle / abs(f_menu->diff_angle))) : f_menu->diff_angle;
+                }
                 if (f_menu->diff_angle != 0)
                 {
                     uint32_t ticks      = (uint32_t)(tick_get() - f_menu->ticks);

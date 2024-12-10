@@ -833,6 +833,11 @@ void func_switch_to_menu(void)
         {
             compo_rings_t *rings = (compo_rings_t *)compo;
             icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
+            if (icon == NULL) {
+                extern u8 func_menu_sub_skyrer_get_first_idx(void);
+                func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+                icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
+            }
         }
         else
         {
@@ -880,6 +885,11 @@ void func_switching_to_menu(void)
     {
         compo_rings_t *rings = (compo_rings_t *)compo;
         icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
+        if (icon == NULL) {
+            extern u8 func_menu_sub_skyrer_get_first_idx(void);
+            func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+            icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
+        }
     }
     else
     {
@@ -1185,16 +1195,18 @@ void func_message(size_msg_t msg)
             break;
 
         case KL_BACK:   //堆栈后台
-            if (func_cb.sta == FUNC_CLOCK)  //|| func_cb.flag_sort
-            {
-                f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
-                if (f_clk->sub_frm)
+            if (bt_cb.disp_status < BT_STA_INCOMING && func_cb.sta != FUNC_MENUSTYLE) {
+                if (func_cb.sta == FUNC_CLOCK)  //|| func_cb.flag_sort
                 {
-                    compo_form_destroy(f_clk->sub_frm);     //下拉界面存在双窗体
+                    f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
+                    if (f_clk->sub_frm)
+                    {
+                        compo_form_destroy(f_clk->sub_frm);     //下拉界面存在双窗体
+                    }
                 }
+                //func_switch_to(FUNC_SMARTSTACK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+                func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
             }
-            //func_switch_to(FUNC_SMARTSTACK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
-            func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
             break;
 
 

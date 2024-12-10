@@ -22,7 +22,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
     {UI_BUF_DIALPLATE_CUBE_MUSIC_BIN,            FUNC_BT},
     {UI_BUF_DIALPLATE_CUBE_SLEEP_BIN,            FUNC_SLEEP},
     {UI_BUF_DIALPLATE_CUBE_SPORT_BIN,            FUNC_SPORT},
-    {UI_BUF_DIALPLATE_CUBE_STEP_BIN,             FUNC_SLEEP},
+    {UI_BUF_DIALPLATE_CUBE_STEP_BIN,             FUNC_ACTIVITY},
 };
 
 

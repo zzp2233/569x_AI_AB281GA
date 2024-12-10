@@ -130,4 +130,6 @@ void compo_form_set_bg(compo_form_t *frm, u32 res_addr);
  **/
 void compo_form_set_title_icon(compo_form_t *frm, u32 res_addr);
 
+void compo_form_set_title_txt_color(compo_form_t *frm, u16 color);
+
 #endif

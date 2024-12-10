@@ -14,5 +14,8 @@ app/projects/*/Output/bin/xcfg.h
 app/projects/*/Output/bin/res/*
 app/projects/*/Output/bin/Settings/*
 app/projects/*/Output/bin/ui/*
+app/projects/*/Output/bin/ui.bin
+app/projects/*/Output/bin/ui.h
+app/projects/*/ui.h
 app/projects/*/Output/bin/ute_ui_coord_file.h
 .vscode/*

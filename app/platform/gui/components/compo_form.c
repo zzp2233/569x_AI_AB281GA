@@ -279,3 +279,12 @@ void compo_form_set_title_icon(compo_form_t *frm, u32 res_addr)
     compo_form_page_update(frm);
 }
 
+void compo_form_set_title_txt_color(compo_form_t *frm, u16 color)
+{
+    if (frm->title != NULL) {
+        if (widget_get_visble(frm->title->txt)) {
+            widget_text_set_color(frm->title->txt, color);
+        }
+    }
+}
+

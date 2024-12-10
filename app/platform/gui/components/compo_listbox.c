@@ -169,13 +169,22 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
         else
         {
             widget_set_size(listbox->item_page[i], listbox->item_width, listbox->line_height);
-            widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_center_y);
+
+            if (listbox->style == COMPO_LISTBOX_STYLE_CUM_SPORT_LIST) {
+                widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_height / 3);
+            } else {
+                widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_center_y);
+            }
 
             if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
             {
                 widget_set_location(listbox->item_text[i], font_x, font_y, font_w, listbox->line_height/2);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
                 widget_set_location(listbox->item_text2[i], font_x, font_y+listbox->line_height/2, font_w, listbox->line_height/2);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
                 //printf("item y [%d,%d] line[%d, %d, %d]\n", font_y, font_y*5, listbox->line_height, listbox->item_height, widget_get_location(listbox->item_bgimg[i]).hei);
+            } else if (listbox->style == COMPO_LISTBOX_STYLE_CUM_SPORT_LIST) {
+                font_x = icon_x - listbox->icon_area.wid/2;
+                font_y = listbox->line_height/3 + listbox->icon_area.hei/2 + 16;
+                widget_set_location(listbox->item_text[i], font_x, font_y, font_w, 30);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
             }
             else
             {
@@ -535,6 +544,7 @@ void compo_listbox_update(compo_listbox_t *listbox)
         switch (listbox->style)
         {
             case COMPO_LISTBOX_STYLE_MENU_NORMAL:
+            case COMPO_LISTBOX_STYLE_CUM_SPORT_LIST:
                 //普通菜单
                 flag_scale = (udy > udy_th);
                 break;

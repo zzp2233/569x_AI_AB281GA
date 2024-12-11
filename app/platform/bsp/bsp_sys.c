@@ -387,6 +387,15 @@ bool bsp_get_mute_sta(void)
     return sys_cb.mute;
 }
 
+//此接口用于更换不同规格晶振后出现的休眠蓝牙掉线问题，原因是驱动电流太小导致晶振稳定时间变长导致
+//解决办法是重定义以下接口以增加晶振的驱动电流，达到快速稳定的目的
+//50uA/step, 非线性, 档位越大, 逐渐变为20+uA/step, 默认是2, 即100ua
+//#define DI_XOSC_DRV(bit)                     XOSCCON = (XOSCCON & ~(31<<0)) | ((bit)<<0)
+//void xosc_driver_init(void)
+//{
+//     DI_XOSC_DRV(2);
+//}
+
 //是否使能船运模式
 AT(.text.bsp.sys)
 void bsp_set_shipping_mode(bool en)

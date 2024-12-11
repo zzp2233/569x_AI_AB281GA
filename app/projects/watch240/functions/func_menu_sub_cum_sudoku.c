@@ -229,10 +229,12 @@ static void func_menu_sub_cum_sudoku_entering(void)
                     rect.hei = muls_shift16(rect.hei, w_rate);
                 }
             }
-            if (idx == iconlist->idx_time)
-            {
-                widget_page_scale_to(iconlist->page_time, rect.wid, rect.hei);
-                widget_set_pos(iconlist->page_time, rect.x, rect.y);
+            if (iconlist->page_time != NULL) {
+                if (idx == iconlist->idx_time)
+                {
+                    widget_page_scale_to(iconlist->page_time, rect.wid, rect.hei);
+                    widget_set_pos(iconlist->page_time, rect.x, rect.y);
+                }
             }
             idx++;
             if (idx > 15)

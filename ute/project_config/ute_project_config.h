@@ -25,7 +25,7 @@
 
 //芯片封装选择 5691G/5691C_F
 #ifndef UTE_CHIP_PACKAGE_SELECT
-#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691G
+#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F
 #endif
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */

@@ -11,9 +11,6 @@
 
 #define LANGUAGE_LIST_CNT                       ((int)(sizeof(tbl_language_list) / sizeof(tbl_language_list[0])))
 
-#define CHINESE_ID   1
-#define ENGLISH_ID   2
-
 enum
 {
     COMPO_ID_LISTBOX = 1,
@@ -27,17 +24,34 @@ typedef struct f_language_list_t_
 
 static const compo_listbox_item_t tbl_language_list[] =
 {
-    {STR_LANGUAGE_CN,   .vidx = CHINESE_ID},
-    {STR_LANGUAGE_ENG,  .vidx = ENGLISH_ID},
-//    {STR_LANGUAGE_FN},
-//    {STR_LANGUAGE_RU},
-//    {STR_LANGUAGE_AT},
-//    {STR_LANGUAGE_JP},
-
+    #if SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT
+    {STR_LANGUAGE_CN,   .vidx = CHINESE_LANGUAGE_ID},
+    #endif
+    #if SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT
+    {STR_LANGUAGE_ENG,  .vidx = ENGLISH_LANGUAGE_ID},
+    #endif
+    #if SCREEN_TITLE_MULTIPLE_FRENCH_LANGUAGE_SUPPORT
+    {STR_LANGUAGE_FN,   .vidx = FRENCH_LANGUAGE_ID},
+    #endif
+    #if SCREEN_TITLE_MULTIPLE_RUSSIAN_LANGUAGE_SUPPORT
+    {STR_LANGUAGE_RU,   .vidx = RUSSIAN_LANGUAGE_ID},
+    #endif
+    #if SCREEN_TITLE_MULTIPLE_JAPANESE_LANGUAGE_SUPPORT
+    {STR_LANGUAGE_JP,   .vidx = JAPANESE_LANGUAGE_ID},
+    #endif
+    #if SCREEN_TITLE_MULTIPLE_ITALIAN_LANGUAGE_SUPPORT
+    {STR_LANGUAGE_JP,   .vidx = ITALIAN_LANGUAGE_ID},//意大利
+    #endif
+    #if SCREEN_TITLE_MULTIPLE_GERMAN_LANGUAGE_SUPPORT
+    {STR_LANGUAGE_JP,   .vidx = GERMAN_LANGUAGE_ID},//德文
+    #endif
+    #if SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT
+    {STR_LANGUAGE_JP,   .vidx = ARABIC_LANGUAGE_ID},//阿拉伯文
+    #endif
 };
-
 u8 func_sel_language_bit(uint n)
 {
+
     if(uteModuleSystemtimeReadLanguage() == n)
     {
         return true;
@@ -91,36 +105,8 @@ void func_set_sub_language_list_icon_click(void)
         return;
     }
     compo_listbox_update(listbox);
-    switch(icon_idx)
-    {
-        case 0:
-           uteModuleSystemtimeSetLanguage(CHINESE_LANGUAGE_ID);
-            break;
-        case 1:
-           uteModuleSystemtimeSetLanguage(ENGLISH_LANGUAGE_ID);
-            break;
-        default:
-            break;
-    }
-//    sys_cb.sta_old = func_cb.sta;
-//    sys_cb.refresh_language_flag = true;
-//    func_switch_to(FUNC_MAP, 0);
 
-//    compo_form_destroy(func_cb.frm_main);
-//    func_set_sub_language_exit();
-//    func_free(func_cb.f_cb);
-//    func_set_sub_language_enter();
-
-//    //根据图标索引获取应用ID
-//    func_sta = tbl_language_list[icon_idx].func_sta;
-//    //切入应用
-//
-//    if (func_sta > 0) {
-//        compo_form_t *frm = func_create_form(func_sta);
-//        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
-//        compo_form_destroy(frm);
-//        func_cb.sta = func_sta;
-//    }
+    uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
 }
 
 //语言设置功能事件处理

@@ -29,6 +29,7 @@ static const compo_listbox_item_t tbl_call_list[UTE_MODULE_CALL_ADDRESSBOOK_MAX_
 static ute_module_call_addressbook_t* address_book_tbl = NULL;            //电话簿数据
 static u16 address_book_cnt = 0;                                       //联系人个数
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //更新电话簿列表回调函数
 static bool address_book_update_callback(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index)
 {
@@ -172,7 +173,7 @@ void func_address_book_icon_click(void)
     }
     bt_call_redial_number();
 }
-
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //电话簿功能事件处理
 static void func_address_book_process(void)
 {

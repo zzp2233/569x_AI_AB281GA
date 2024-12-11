@@ -18,6 +18,8 @@ enum{
     COMPO_PIC_ID = 1,
 };
 
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)
 {
@@ -31,10 +33,12 @@ compo_form_t *func_power_on_form_create(void)
 
     return frm;
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //开机界面处理
 static void func_power_on_process(void)
 {
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_power_on_t* f_power_on = (f_power_on_t*)func_cb.f_cb;
     if(tick_check_expire(f_power_on->tick,200))
     {
@@ -52,7 +56,7 @@ static void func_power_on_process(void)
             func_cb.sta = FUNC_CLOCK;
         }
     }
-
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 

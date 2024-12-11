@@ -16,6 +16,7 @@ enum COMPO_LISTBOX_STYLE
     COMPO_LISTBOX_STYLE_LANGUAGE,               //语言选择模式, 列表文本不使用i18n的Radio模式
     COMPO_LISTBOX_STYLE_MENU_FOURGRID,          //四宫格列表菜单
     COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT,         //带Title的列表，头部不做缩放，两行Text
+    COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD,
 };
 
 enum COMPO_LISTBOX_ITEM_MODE

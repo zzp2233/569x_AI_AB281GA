@@ -94,6 +94,8 @@ static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
     return hour12;
 }
 
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //创建闹钟窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_form_create(void)
 {
@@ -191,7 +193,7 @@ compo_form_t *func_alarm_clock_form_create(void)
                 {
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {
-                        if(j!=0)
+                        if(*(buff_pt-1) != ':')
                         {
                             *buff_pt = ',';
                             buff_pt++;
@@ -302,6 +304,8 @@ static void func_alarm_clock_button_click(void)
 
     func_alarm_clock_button_release_handle();
 }
+
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //闹钟功能事件处理
 static void func_alarm_clock_process(void)

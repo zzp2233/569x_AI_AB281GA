@@ -26,6 +26,9 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201068AvcPowerOff(void)
 
 __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201068AvcSetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
 {
+    yStart += 12;
+    yEnd += 12;
+
     uint8_t data[4];
     data[0] = xStart >> 8;
     data[1] = xStart & 0xff;
@@ -37,12 +40,14 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201068AvcSetWindow(uint16_t xSt
     data[2] = yEnd >> 8;
     data[3] = yEnd & 0xff;
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2B, data, 4);
-    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
 }
 
 __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201068AvcInit(void)
 {
+    UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
     uint8_t tmp[34];
+    
     uteDrvScreenCommonSetPowerEnable(true);
     uteDrvScreenCommonSetResetPin(true);
     uteModulePlatformDelayUs(1000);
@@ -50,7 +55,7 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201068AvcInit(void)
     uteModulePlatformDelayUs(5000);
     uteDrvScreenCommonSetResetPin(true);
     uteModulePlatformDelayUs(120000);
-    //
+
     memcpy(&tmp[0], "\x06\x08", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xfd, &tmp[0], 2);
     memcpy(&tmp[0], "\x07\x04", 2);//06

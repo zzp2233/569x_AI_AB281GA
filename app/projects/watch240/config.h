@@ -36,7 +36,7 @@
 
 #define CHIP_PACKAGE_SELECT             UTE_CHIP_PACKAGE_SELECT                  //芯片封装选择 5691G/5691C_F
 
-#define GUI_SELECT                      GUI_TFT_JD9853//GUI_TFT_320_385_GV9B71                 //GUI Display Select
+#define GUI_SELECT                      DISPLAY_UTE//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 #define CTP_SELECT                      CTP_CST8X                   //CTP Select
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,

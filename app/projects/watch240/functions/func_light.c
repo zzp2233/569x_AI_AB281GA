@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_gui_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -210,6 +211,7 @@ static void func_light_enter(void)
 //退出亮度调节功能
 static void func_light_exit(void)
 {
+    uteModuleGuiCommonSetBackLightPercent(tft_cb.tft_bglight_duty);
     func_cb.last = FUNC_LIGHT;
 }
 

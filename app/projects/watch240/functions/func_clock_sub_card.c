@@ -1860,35 +1860,6 @@ static void func_clock_sub_card_set_offs(s16 ofs_y)
 //时钟表盘上拉菜单数据更新----------------------------------------->todo
 static void func_clock_sub_card_data_update(void)
 {
-
-#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
-    //活动记录
-//    char step_str[8];
-//    snprintf(step_str, sizeof(step_str), "%d", sc7a20_info.gsensor_data.step);
-//    cardbox = compo_getobj_byid(COMPO_ID_CARD_ACTIVITY);
-//    compo_cardbox_text_set(cardbox, 0, step_str);    //步数
-//    char cal_str[8];
-//    snprintf(cal_str, sizeof(cal_str), "%d", sc7a20_info.gsensor_data.cal);
-//    compo_cardbox_text_set(cardbox, 1, cal_str);    //卡路里
-//    char dist_str[8];
-//    snprintf(dist_str, sizeof(dist_str), "%d", sc7a20_info.gsensor_data.distance);
-//    compo_cardbox_text_set(cardbox, 2, dist_str);      //距离
-#endif
-    //睡眠
-//    cardbox = compo_getobj_byid(COMPO_ID_CARD_SLEEP);
-//    compo_cardbox_text_set(cardbox, 0, "07:36");    //总时长
-//    compo_cardbox_text_set(cardbox, 1, "02h");      //深睡h
-//    compo_cardbox_text_set(cardbox, 2, "07m");      //深睡m
-//    compo_cardbox_text_set(cardbox, 3, "05h");      //浅睡h
-//    compo_cardbox_text_set(cardbox, 4, "29m");      //浅睡m
-//    //心率
-//    char hr_str[4];
-//    snprintf(hr_str, sizeof(hr_str), "%d", uteModuleHeartGetHeartValue());
-//    cardbox = compo_getobj_byid(COMPO_ID_CARD_HEARTRATE);
-//    compo_cardbox_text_set(cardbox, 0, hr_str);       //心率值
-//    //音乐
-//    cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
-//    compo_cardbox_icon_set(cardbox, 1, music_pp_test ? UI_BUF_MUSIC_PAUSE_BIN : UI_BUF_MUSIC_PLAY_BIN);  //播放/暂停
     compo_cardbox_t *cardbox = NULL;
     char txt_buf[20];
 
@@ -1899,7 +1870,7 @@ static void func_clock_sub_card_data_update(void)
     compo_cardbox_text_set(cardbox, ui_handle.card4.text_time.idx,txt_buf);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_HOUR(sys_cb.stopwatch_total_msec),SEC_TO_MIN(sys_cb.stopwatch_total_msec),SEC_TO_SEC(sys_cb.stopwatch_total_msec));
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_MIN(sys_cb.stopwatch_total_msec/1000),SEC_TO_SEC(sys_cb.stopwatch_total_msec/1000),sys_cb.stopwatch_total_msec%100);
     cardbox = compo_getobj_byid(ui_handle.card5.id);
     compo_cardbox_text_set(cardbox, ui_handle.card5.text_time.idx,txt_buf);
 

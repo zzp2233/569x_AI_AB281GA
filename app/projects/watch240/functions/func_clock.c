@@ -125,6 +125,7 @@ enum
 
 };
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 int compo_get_animation_id(void);
 void compo_animation_manual_next(compo_animation_t *animation);
 void func_switch_to(u8 sta, u16 switch_mode);
@@ -518,7 +519,7 @@ void func_clock_butterfly_process(void)
     }
 #endif
 }
-
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //子功能公共事件处理
 void func_clock_sub_process(void)
 {

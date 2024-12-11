@@ -29,7 +29,7 @@ typedef struct f_about_t_
 compo_form_t *func_set_sub_about_form_create(void)
 {
     compo_textbox_t * txt;
-    compo_shape_t *shape;
+//    compo_shape_t *shape;
 
 //    uint8_t davName[40];
 //    uint8_t Ble_Address[6];

@@ -31,7 +31,8 @@ compo_form_t *func_set_sub_restart_form_create(void)
     //创建文本
     compo_textbox_t *txt_rst = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
 //    compo_textbox_set_align_center(txt_rst, false);
-    compo_textbox_set_pos(txt_rst, GUI_SCREEN_CENTER_X, 128);
+    compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
+    compo_textbox_set_location(txt_rst, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_rst->txt).hei);
     compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
 
     //创建按钮

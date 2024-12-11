@@ -82,7 +82,7 @@ compo_form_t *func_calculator_form_create(void)
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, false);
     compo_textbox_set(txt, gcal_get_show_str());
-    compo_textbox_set_pos(txt, 213-widget_text_get_area(txt->txt).wid,14);
+    compo_textbox_set_pos(txt, 208-widget_text_get_area(txt->txt).wid,14);
 
     return frm;
 }
@@ -196,7 +196,7 @@ static void func_calculator_button_click_handler(void)
     compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_NUM_DISP);
     gcalc_btn_click_handler(id);
     compo_textbox_set(txt, gcal_get_show_str());
-    compo_textbox_set_pos(txt, 213-widget_text_get_area(txt->txt).wid,14);
+    compo_textbox_set_pos(txt, 208-widget_text_get_area(txt->txt).wid,14);
     func_calculator_button_release_handle();
 }
 

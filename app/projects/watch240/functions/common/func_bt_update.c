@@ -3,7 +3,7 @@
 
 static void func_bt_update_enter(void)
 {
-
+    uteModuleGuiCommonDisplayOffAllowGoBack(false);
 }
 
 void func_bt_update_message(u16 msg)
@@ -13,6 +13,7 @@ void func_bt_update_message(u16 msg)
 
 static void func_bt_update_exit(void)
 {
+    uteModuleGuiCommonDisplayOffAllowGoBack(true);
     func_cb.last = FUNC_BT_UPDATE;
 }
 

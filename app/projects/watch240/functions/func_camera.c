@@ -37,6 +37,8 @@ typedef struct f_picture_t_
 
 #define JPEG_LOCAL_TEST     0
 
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 #if JPEG_LOCAL_TEST
 //AT(.jpeg_tbuf)
 u8 t_buf1[JPEG_RX_BUF_SIZE] =
@@ -211,6 +213,7 @@ compo_form_t *func_camera_form_create(void)
 
     return frm;
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //拍照事件处理
 static void func_camera_process(void)

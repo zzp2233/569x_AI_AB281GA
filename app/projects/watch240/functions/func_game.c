@@ -44,9 +44,11 @@ enum
 
 static Style game[GAME_NUM] =
 {
-    {"飞扬的小鸟", UI_BUF_GAME_GAME_BIRD_BIN, 1},
+    {"飞扬的小鸟", UI_BUF_I330001_GAME_BIRD2_BIN, 1},
     //{"俄罗斯方块", UI_BUF_TETRIS_16_1_BIN, 0},
 };
+
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建海拔窗体
 compo_form_t *func_game_form_create(void)
@@ -84,7 +86,7 @@ compo_form_t *func_game_form_create(void)
     printf("%s\n", __func__);
     return frm;
 }
-
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //海拔功能事件处理
 static void func_game_process(void)
 {

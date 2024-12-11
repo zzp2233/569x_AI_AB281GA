@@ -35,7 +35,8 @@ compo_form_t *func_flashlight_form_create(void)
 
   //创建文本
     compo_textbox_t *txt_idle = compo_textbox_create(frm, strlen(i18n[STR_CLICK_OPEN]));
-    compo_textbox_set_pos(txt_idle, GUI_SCREEN_CENTER_X, 183);
+    compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
+    compo_textbox_set_location(txt_idle, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/1.55,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_idle->txt).hei);
     compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
 
     compo_shape_t * shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
@@ -55,11 +56,15 @@ static void func_flashlight_button_click(void)
 
     if(f_flashlight->flashlight_flag == true)
     {
+        f_flashlight ->light_level = sys_cb.light_level;
+        sys_cb.light_level = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
+        tft_bglight_set_level(sys_cb.light_level,false);
         compo_shape_set_visible(shape, true);
     }
     else
     {
-
+        sys_cb.light_level = f_flashlight ->light_level;
+        tft_bglight_set_level(sys_cb.light_level,false);
         compo_shape_set_visible(shape, false);
     }
 }
@@ -100,10 +105,6 @@ static void func_flashlight_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_flashlight_t));
     func_cb.frm_main = func_flashlight_form_create();
 //    f_flashlight_t f * f_flashlight = (f_flashlight_t*)func_cb.f_cb;
-    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
-    f_flashlight ->light_level = sys_cb.light_level;
-    sys_cb.light_level = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
-    tft_bglight_set_level(sys_cb.light_level,false);
 }
 
 //退出手电筒功能

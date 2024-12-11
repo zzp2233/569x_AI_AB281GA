@@ -1,6 +1,6 @@
 #include "include.h"
 #include "bt_fota.h"
-#include "ute_application_common.h""
+//#include "ute_application_common.h""
 
 #if LE_AB_FOT_EN
 
@@ -300,12 +300,13 @@ void bsp_fot_exit(void)
     if (func_cb.sta == FUNC_OTA_MODE)
     {
         task_stack_init();
-        func_cb.sta = FUNC_CLOCK;           //OTA退出返回表盘
+//        func_cb.sta = FUNC_CLOCK;           //OTA退出返回表盘
+        func_cb.sta = FUNC_OTA_ERROR;         //OTA升级失败界面
     }
     else if (func_cb.sta == FUNC_OTA_UI_MODE)
     {
         task_stack_init();
-        func_cb.sta = FUNC_OTA_ERROR;       //UI OTA进入错误界面
+        func_cb.sta = FUNC_BT_UPDATE;       //UI OTA进入错误界面
     }
 }
 
@@ -398,6 +399,7 @@ static void fot_reply_update_request(void)
         // {
         //     addr = app_fota_get_curaddr();
         // }
+        extern bool uteApplicationCommonIsAppClosed(void);
         if(uteApplicationCommonIsAppClosed()) //如果是ute app连接，则不关机
         {
             printf("===================>func_cb.sta = FUNC_PWROFF\n");
@@ -771,13 +773,16 @@ void bsp_fot_process(void)
     {
         if(tick_check_expire(fot_var.tick,3000))
         {
+            extern void param_fot_hash_write(u8 *param);
+            extern void param_fot_remote_ver_write(u8 *param);
             param_fot_hash_write((u8*)&fot_var.hash);
             param_fot_remote_ver_write((u8*)&fot_var.remote_ver);
             param_sync();
 
             fot_flag &= ~FOT_FLAG_SYS_RESET;
             FOT_DEBUG("-->fota update ok,sys reset\n");
-            WDT_RST();
+            func_cb.sta = FUNC_OTA_SUCC;
+//            WDT_RST();
         }
     }
 

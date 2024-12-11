@@ -173,7 +173,7 @@ static void func_blood_oxygen_button_click(void)
 {
     return;
 }
-#endif
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //血氧界面刷新、事件处理
 static void func_blood_oxygen_process(void)

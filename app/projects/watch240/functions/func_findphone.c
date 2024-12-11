@@ -25,6 +25,10 @@ enum
 
 };
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //创建查找手机窗体
 compo_form_t *func_findphone_form_create(void)
 {

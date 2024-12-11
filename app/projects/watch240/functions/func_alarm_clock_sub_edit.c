@@ -419,7 +419,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
             {
                 if (ALARM_GET_CYCLE(i) & BIT(j))
                 {
-                    if(j!=0)
+                    if(*(buff_pt-1) != ':')
                     {
                         *buff_pt = ',';
                         buff_pt++;

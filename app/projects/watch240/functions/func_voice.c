@@ -76,6 +76,8 @@ static const ui_handle_t ui_handle = {
     },
 };
 
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //创建语音助手窗体
 compo_form_t *func_voice_form_create(void)
 {
@@ -154,6 +156,7 @@ static void func_voice_start_siri(void)
         msgbox((char*)i18n[STR_VOICE_BT_NOT_CONNECT], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
     }
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //语音助手功能事件处理
 static void func_voice_process(void)

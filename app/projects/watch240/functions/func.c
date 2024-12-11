@@ -24,7 +24,7 @@ extern void func_menu(void);
 extern void func_menustyle(void);
 extern void func_clock(void);
 extern void func_clock_preview(void);
-extern void func_clock_sub_sidebar(void);
+//extern void func_clock_sub_sidebar(void);
 extern void func_clock_sub_card(void);
 extern void func_heartrate(void);
 extern void func_compo_select(void);
@@ -48,7 +48,7 @@ extern void func_stopwatch(void);
 extern void func_stopwatch_sub_record(void);
 extern void func_weather(void);
 extern void func_sport(void);
-extern void func_sport_config(void);
+//extern void func_sport_config(void);
 extern void func_sport_sub_run(void);
 extern void func_sport_sort(void);
 extern void func_calendar(void);
@@ -74,7 +74,7 @@ extern void func_set_sub_language(void);
 extern void func_set_sub_wrist(void);
 extern void func_set_sub_time(void);
 extern void func_time_sub_custom(void);
-extern void func_set_sub_password(void);
+//extern void func_set_sub_password(void);
 extern void func_password_sub_disp(void);
 extern void func_password_sub_select(void);
 extern void func_set_sub_about(void);
@@ -87,7 +87,7 @@ extern void func_volume(void);
 extern void func_activity(void);
 extern void func_sport_switching(void);
 extern void func_bloodsugar(void);
-extern void func_bloodpressure(void);
+//extern void func_bloodpressure(void);
 extern void func_flashlight(void);
 extern void func_charge(void);
 extern void func_debug_info(void);
@@ -101,23 +101,23 @@ extern void func_bt_call(void);
 extern void func_bthid(void);
 extern void func_usbdev(void);
 extern void func_aux(void);
-extern void func_smartstack(void);
+//extern void func_smartstack(void);
 extern void func_modem_call(void);
 extern void func_modem_ring(void);
 extern void func_message_reply_info(void);
 // extern void func_mic_test(void);
-extern void func_tetris(void);
-extern void func_tetris_start(void);
+//extern void func_tetris(void);
+//extern void func_tetris_start(void);
 extern void func_bird(void);
 extern void func_ota_ui(void);
-extern void func_pressure(void);//压力
-extern void func_pressure_explain(void);//压力说明
+//extern void func_pressure(void);//压力
+//extern void func_pressure_explain(void);//压力说明
 extern void func_long_press(void);//关机 重启 SOS
 extern void func_ota_update(void);
 extern void func_ota_err(void);
 extern void func_ota_succ(void);
 extern void func_ble_call(void);
-extern void func_set_sub_sos(void);
+//extern void func_set_sub_sos(void);
 extern void func_power_on(void);//开机
 extern void func_test_mode(void);///*出厂测试模式选择*/
 extern void func_factory_testing(void);///*工厂测试*/
@@ -131,11 +131,11 @@ compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_ota_err_form_create(void);
 compo_form_t *func_ota_succ_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
-compo_form_t *func_pressure_explain_form_create(void);//压力说明
-compo_form_t *func_pressure_form_create(void);//压力
+//compo_form_t *func_pressure_explain_form_create(void);//压力说明
+//compo_form_t *func_pressure_form_create(void);//压力
 compo_form_t *func_menu_form_create(void);
 compo_form_t *func_clock_form_create(void);
-compo_form_t *func_clock_sub_sidebar_form_create(void);
+//compo_form_t *func_clock_sub_sidebar_form_create(void);
 compo_form_t *func_clock_sub_card_form_create(void);
 compo_form_t *func_heartrate_form_create(void);
 compo_form_t *func_bt_form_create(void);
@@ -157,7 +157,7 @@ compo_form_t *func_stopwatch_form_create(void);
 compo_form_t *func_stopwatch_sub_record_form_create(void);
 compo_form_t *func_weather_form_create(void);
 compo_form_t *func_sport_form_create(void);
-compo_form_t *func_sport_config_form_create(void);
+//compo_form_t *func_sport_config_form_create(void);
 compo_form_t *func_sport_sub_run_form_create(void);
 compo_form_t *func_sport_switching_form_create(void);
 compo_form_t *func_sport_sort_form_create(void);
@@ -184,7 +184,7 @@ compo_form_t *func_set_sub_dousing_form_create(void);
 compo_form_t *func_set_sub_language_form_create(void);
 compo_form_t *func_set_sub_time_form_create(void);
 compo_form_t *func_time_sub_custom_form_create(void);
-compo_form_t *func_set_sub_password_form_create(void);
+//compo_form_t *func_set_sub_password_form_create(void);
 compo_form_t *func_password_sub_disp_form_create(void);
 compo_form_t *func_password_sub_select_form_create(void);
 //compo_form_t *func_set_sub_4g_form_create(void);
@@ -195,24 +195,24 @@ compo_form_t *func_set_sub_off_form_create(void);
 compo_form_t *func_calender_form_create(void);
 compo_form_t *func_volume_form_create(void);
 compo_form_t *func_activity_form_create(void);
-compo_form_t *func_bloodsugar_form_create(void);
-compo_form_t *func_bloodpressure_form_create(void);
+//compo_form_t *func_bloodsugar_form_create(void);
+//compo_form_t *func_bloodpressure_form_create(void);
 compo_form_t *func_flashlight_form_create(void);
 compo_form_t *func_charge_form_create(void);
 compo_form_t *func_clock_preview_form_create(void);
 compo_form_t *func_compo_select_form_create(void);
 compo_form_t *func_compo_select_sub_form_create(void);
 compo_form_t *func_debug_info_form_create(void);
-compo_form_t * func_smartstack_form_create(void);
+//compo_form_t * func_smartstack_form_create(void);
 compo_form_t *func_music_form_create(void);
 compo_form_t *func_usbdev_form_create(void);
 compo_form_t *func_recorder_form_create(void);
 compo_form_t *func_message_reply_form_create(void);
 // compo_form_t *func_mic_test_form_create(void);
-compo_form_t *func_tetris_form_create(void);
-compo_form_t *func_tetris_start_form_create(void);
+//compo_form_t *func_tetris_form_create(void);
+//compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
-compo_form_t *func_set_sub_sos_form_create(void);
+//compo_form_t *func_set_sub_sos_form_create(void);
 
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_factory_testing_create(void);///*工厂测试*/
@@ -232,7 +232,7 @@ const func_t tbl_func_create[] =
     {FUNC_MENUSTYLE,                    NULL},
     {FUNC_CLOCK,                        func_clock_form_create},
     {FUNC_CLOCK_PREVIEW,                func_clock_preview_form_create},
-    {FUNC_SIDEBAR,                      func_clock_sub_sidebar_form_create},
+//    {FUNC_SIDEBAR,                      func_clock_sub_sidebar_form_create},
     {FUNC_CARD,                         func_clock_sub_card_form_create},
     {FUNC_HEARTRATE,                    func_heartrate_form_create},
     {FUNC_BT,                           func_bt_form_create},
@@ -244,11 +244,11 @@ const func_t tbl_func_create[] =
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit_form_create},
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop_form_create},
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
-    {FUNC_PRESSURE,                     func_pressure_form_create},//压力
-    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain_form_create},//压力说明
+//    {FUNC_PRESSURE,                     func_pressure_form_create},//压力
+//    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain_form_create},//压力说明
     {FUNC_LONG_PRESS,                   func_long_press_form_create},//关机 重启 SOS
-    {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
-    {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
+//    {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
+//    {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
     {FUNC_BREATHE,                      func_breathe_form_create},
     {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode_form_create},
     {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time_form_create},
@@ -260,7 +260,7 @@ const func_t tbl_func_create[] =
     {FUNC_STOPWATCH_SUB_RECORD,         func_stopwatch_sub_record_form_create},
     {FUNC_WEATHER,                      func_weather_form_create},
     {FUNC_SPORT,                        func_sport_form_create},
-    {FUNC_SPORT_CONFIG,                 func_sport_config_form_create},
+//    {FUNC_SPORT_CONFIG,                 func_sport_config_form_create},
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run_form_create},
     {FUNC_SPORT_SWITCH,                 func_sport_switching_form_create},
     {FUNC_SPORT_SORT,                   func_sport_sort_form_create},
@@ -291,7 +291,7 @@ const func_t tbl_func_create[] =
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
     {FUNC_SET_SUB_TIME,                 func_set_sub_time_form_create},
     {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom_form_create},
-    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
+//    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp_form_create},
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
     {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
@@ -302,7 +302,7 @@ const func_t tbl_func_create[] =
     {FUNC_SET_SUB_OFF,                  func_set_sub_off_form_create},
     {FUNC_CHARGE,                       func_charge_form_create},
     {FUNC_DEBUG_INFO,                   func_debug_info_form_create},
-    {FUNC_SMARTSTACK,                   func_smartstack_form_create},
+//    {FUNC_SMARTSTACK,                   func_smartstack_form_create},
 #if FUNC_MUSIC_EN
     {FUNC_MUSIC,                        func_music_form_create},
 #endif
@@ -320,9 +320,10 @@ const func_t tbl_func_create[] =
 #endif // MIC_TEST_EN
 
     {FUNC_BIRD,                         func_bird_form_create},
-    {FUNC_TETRIS,                       func_tetris_form_create},
-    {FUNC_TETRIS_START,                 func_tetris_start_form_create},
+//    {FUNC_TETRIS,                       func_tetris_form_create},
+//    {FUNC_TETRIS_START,                 func_tetris_start_form_create},
     {FUNC_OTA_MODE,                     func_ota_update_form_create},
+//    {FUNC_SET_SUB_SOS,                  func_set_sub_sos_form_create},
     {FUNC_OTA_ERROR,                    func_ota_err_form_create},
     {FUNC_OTA_SUCC,                     func_ota_succ_form_create},
     {FUNC_SET_SUB_SOS,                  func_set_sub_sos_form_create},
@@ -340,7 +341,7 @@ const func_t tbl_func_entry[] =
     {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
     {FUNC_CLOCK,                        func_clock},                    //时钟表盘
     {FUNC_CLOCK_PREVIEW,                func_clock_preview},            //时钟表盘预览
-    {FUNC_SIDEBAR,                      func_clock_sub_sidebar},        //表盘右滑
+//    {FUNC_SIDEBAR,                      func_clock_sub_sidebar},        //表盘右滑
     {FUNC_CARD,                         func_clock_sub_card},           //表盘上拉
     {FUNC_HEARTRATE,                    func_heartrate},                //心率
     {FUNC_ALARM_CLOCK,                  func_alarm_clock},              //闹钟
@@ -350,10 +351,10 @@ const func_t tbl_func_entry[] =
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop},      //闹钟--弹出
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
 //    {FUNC_PRESSURE,                     func_pressure},                 //压力
-    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
+//    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
     {FUNC_LONG_PRESS,                   func_long_press},               //关机 重启 SOS界面
 //    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
-    {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
+//    {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
     {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置
     {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time},         //呼吸--时间设置
@@ -368,7 +369,7 @@ const func_t tbl_func_entry[] =
     {FUNC_STOPWATCH_SUB_RECORD,         func_stopwatch_sub_record},     //秒表--秒表记录
     {FUNC_WEATHER,                      func_weather},                  //天气
     {FUNC_SPORT,                        func_sport},                    //运动
-    {FUNC_SPORT_CONFIG,                 func_sport_config},             //运动配置
+//    {FUNC_SPORT_CONFIG,                 func_sport_config},             //运动配置
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run},            //运动--室内跑步
     {FUNC_SPORT_SWITCH,                 func_sport_switching},          //运动开启动画
     {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
@@ -399,7 +400,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language},         //设置--语言
     {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
     {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间
-    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password},         //设置--密码锁
+//    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password},         //设置--密码锁
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp},        //设置--新密码锁设置
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select},      //设置--密码锁确认
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about},            //设置--关于
@@ -409,7 +410,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SET_SUB_OFF,                  func_set_sub_off},              //设置--关机
     {FUNC_CHARGE,                       func_charge},                   //充电
     {FUNC_DEBUG_INFO,                   func_debug_info},               //DEBUG
-    {FUNC_SMARTSTACK,                   func_smartstack},               //智能堆栈
+//    {FUNC_SMARTSTACK,                   func_smartstack},               //智能堆栈
 #if FUNC_BT_EN
     {FUNC_BT,                           func_bt},
     {FUNC_BT_RING,                      func_bt_ring},
@@ -443,13 +444,13 @@ const func_t tbl_func_entry[] =
     {FUNC_MIC_TEST,                     func_mic_test},
 #endif // MIC_TEST_EN
     {FUNC_BIRD,                         func_bird},
-    {FUNC_TETRIS,                       func_tetris},
-    {FUNC_TETRIS_START,                 func_tetris_start},
+//    {FUNC_TETRIS,                       func_tetris},
+//    {FUNC_TETRIS_START,                 func_tetris_start},
     {FUNC_OTA_MODE,                     func_ota_update},
     {FUNC_OTA_ERROR,                    func_ota_err},
     {FUNC_OTA_SUCC,                     func_ota_succ},
     {FUNC_BLE_CALL,                     func_ble_call},
-    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
+//    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
     {FUNC_POWER_ON,                     func_power_on},
     {FUNC_TEST_MODE,                    func_test_mode}, ///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing},///*工厂测试*/

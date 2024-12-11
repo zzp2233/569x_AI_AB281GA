@@ -65,7 +65,7 @@ compo_form_t *func_set_sub_time_form_create(void)
 
     //创建按钮
     compo_button_t *btn;
-    compo_picturebox_t *pic[3];
+//    compo_picturebox_t *pic[3];
     for (u8 idx_btn = 0; idx_btn < DISURD_DISP_BTN_ITEM_CNT; idx_btn++)
     {
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_FIRSTORDER_CARD_BIN);

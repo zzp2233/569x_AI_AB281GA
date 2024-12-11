@@ -123,7 +123,7 @@ static void func_call_sub_dial_button_touch_handle(void)
     int id = compo_get_button_id();
     switch (id) {
     case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_DEL:
-        printf("id=%d\n", id);
+//        printf("id=%d\n", id);
         compo_picturebox_set_visible(compo_getobj_byid(id+COMPO_ID_BTN_DEL), true);
         break;
     default:
@@ -274,6 +274,7 @@ static void func_call_sub_dial_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_RIGHT:
+            func_call_sub_dial_button_release_handle();
             if (func_cb.flag_sort)
             {
                 func_backing_to();
@@ -285,6 +286,7 @@ static void func_call_sub_dial_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_LEFT:
+            func_call_sub_dial_button_release_handle();
             if (func_cb.flag_sort)
             {
 
@@ -293,6 +295,11 @@ static void func_call_sub_dial_message(size_msg_t msg)
             {
                 func_message(msg);
             }
+            break;
+
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+            func_call_sub_dial_button_release_handle();
             break;
 
         default:

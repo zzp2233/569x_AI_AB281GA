@@ -312,10 +312,12 @@ static void func_menu_sub_waterfall_entering()
 
             rect.x = muls_shift16(rect.x, x_rate);
             widget_set_location(widget, rect.x, rect.y, rect.wid, rect.hei);
-            if (idx == iconlist->idx_time)
-            {
-                widget_page_scale_to(iconlist->page_time, rect.wid, rect.hei);
-                widget_set_pos(iconlist->page_time, rect.x, rect.y);
+            if (iconlist->page_time != NULL) {
+                if (idx == iconlist->idx_time)
+                {
+                    widget_page_scale_to(iconlist->page_time, rect.wid, rect.hei);
+                    widget_set_pos(iconlist->page_time, rect.x, rect.y);
+                }
             }
             idx++;
             if (idx >= 21)
@@ -643,9 +645,10 @@ static void func_menu_sub_waterfall_enter(void)
     f_menu->focus_y = iconlist->ofs_y;
     f_menu->moveto = compo_iconlist_align_xy(iconlist, 0, f_menu->focus_y);
     func_cb.enter_tick = tick_get();
+//    func_cb.flag_animation = 0;
     if (func_cb.flag_animation)
     {
-        func_cb.flag_animation = 0;
+        func_cb.flag_animation = 1;
         f_menu->animation_cnt = ENTERING_ANIMATION_TOTAL_CNT;
 #if (WATERFALL_ANIMATION_STYLE == 0)
         memset(f_menu->back_cnt, ENTERING_ANIMATION_BACK_CNT, sizeof(f_menu->back_cnt));

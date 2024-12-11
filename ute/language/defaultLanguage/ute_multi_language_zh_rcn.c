@@ -3,7 +3,7 @@
 *@brief utf8 words list c file
 *@details language: 中文(简体）
 *@author
-*@date   2024-12-06 15:04:21
+*@date   2024-12-09 16:39:06
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -307,5 +307,7 @@ const char * const i18n_zh_rcn[] =
      [STR_CALENDAR_FIVE] = "\xe4\xba\x94\x00", // [294] 五
      [STR_CALENDAR_SIX] = "\xe5\x85\xad\x00", // [295] 六
      [STR_CALENDAR_SEVEN] = "\xe6\x97\xa5\x00", // [296] 日
+     [STR_MORE] = "\xe6\x9b\xb4\xe5\xa4\x9a\x00", // [297] 更多
+     [STR_COMMON_APP] = "\xe5\xb8\xb8\xe7\x94\xa8\xe5\xba\x94\xe7\x94\xa8\x00", // [298] 常用应用
 };
 

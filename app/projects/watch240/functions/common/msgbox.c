@@ -145,7 +145,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             if (time != NULL)
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
-                compo_textbox_set_align_center(txt_time, true);
+                compo_textbox_set_align_center(txt_time, false);
                 compo_textbox_set_pos(txt_time, 10,
                                       func_cover_get_time_txt_y(msg_type));              //调整文本位置
                 compo_textbox_set(txt_time, time);
@@ -243,8 +243,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);  //需更替为删除图标
                 compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR]));
-                compo_textbox_set_location(text, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei/2 - 6,
-                                           gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei, gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei);
+                compo_textbox_set_location(text, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei/2 - 6,
+                                           gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei, gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei);
                 compo_textbox_set(text, i18n[STR_CLEAR]);
             }
             else

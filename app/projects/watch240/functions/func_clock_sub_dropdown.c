@@ -83,10 +83,10 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 static const compo_listbox_item_t dwon_tbl_style_list[] =
 {
     {STR_STYLE_LIST_1,          UI_BUF_I330001_SLIDEMENU_ICON_THEME03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I330001_SLIDEMENU_ICON_THEME01_BIN,           .menu_style = MENU_STYLE_RING},             //宫格
+    {STR_GONG_GE,               UI_BUF_I330001_SLIDEMENU_ICON_THEME01_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //宫格
     {STR_STYLE_HONEYCOMB,       UI_BUF_I330001_SLIDEMENU_ICON_THEME00_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
     {STR_SPHERE,                UI_BUF_I330001_SLIDEMENU_ICON_THEME07_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
-    {STR_CHECKERBOARD,          UI_BUF_I330001_SLIDEMENU_ICON_THEME06_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //棋盘
+    {STR_CHECKERBOARD,          UI_BUF_I330001_SLIDEMENU_ICON_THEME06_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
     {STR_HALO,                  UI_BUF_I330001_SLIDEMENU_ICON_THEME02_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
     {STR_STYLE_SKYRER,          UI_BUF_I330001_SLIDEMENU_ICON_THEME08_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
     {STR_STYLE_GRID_2,          UI_BUF_I330001_SLIDEMENU_ICON_THEME09_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
@@ -613,10 +613,13 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             break;
         case MSG_SYS_1S:
             #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-            func_clock_sub_dropdown_battery_pic_update();       //电量更新
+            func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
             func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
+            func_clock_sub_dropdown_bluetooth_btn_pic_update();////下拉蓝牙按钮更新
             func_clock_sub_dropdown_mute_pic_update();          //静音更新
+            func_clock_sub_dropdown_disturb_pic_update();       //勿扰
             func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
+            func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
             #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_QDEC_BACKWARD:

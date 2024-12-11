@@ -57,12 +57,12 @@ compo_form_t *compo_form_create(bool flag_top)
     compo_textbox_set_location(time, FORM_TITLE_RIGHT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, GUI_PAGE_TIME_WIDTH, FORM_TITLE_HEIGHT);
     compo_textbox_set_multiline(time, false);
     compo_textbox_set_autosize(time, false);
-    compo_textbox_set_font(time, UI_BUF_FONT_FORM_TIME);
     compo_textbox_set_visible(time, false);
     frm->time = time;
 
     compo_textbox_t *title = compo_textbox_create(frm, MAX_WORD_CNT);
     frm->page_body = page_body;
+    compo_textbox_set_font(title, UI_BUF_FONT_FORM_TIME);
     compo_textbox_set_align_center(title, false);
     compo_textbox_set_location(title, FORM_TITLE_LEFT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, GUI_PAGE_TITLE_WIDTH, FORM_TITLE_HEIGHT);
     compo_textbox_set_multiline(title, false);
@@ -277,5 +277,14 @@ void compo_form_set_title_icon(compo_form_t *frm, u32 res_addr)
 
     widget_icon_set(frm->title_icon, res_addr);
     compo_form_page_update(frm);
+}
+
+void compo_form_set_title_txt_color(compo_form_t *frm, u16 color)
+{
+    if (frm->title != NULL) {
+        if (widget_get_visble(frm->title->txt)) {
+            widget_text_set_color(frm->title->txt, color);
+        }
+    }
 }
 

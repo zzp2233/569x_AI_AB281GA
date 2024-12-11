@@ -67,14 +67,16 @@ void compo_arc_set_size(compo_arc_t *arc, s16 width, s16 height)
 /**
  * @brief 设置圆弧的范围(start_angle和end_angle可任意角度)
  * @param[in] arc : 圆弧指针
- * @param[in] start_angle : 相对于0°顺时针方向角度 0 ~ 3600°   
- * @param[in] end_angle : 相对于0°顺时针方向角度 0 ~ 3600°    
+ * @param[in] start_angle : 相对于0°顺时针方向角度 0 ~ 3600°
+ * @param[in] end_angle : 相对于0°顺时针方向角度 0 ~ 3600°
  * @return 无
  **/
-void compo_arc_set_angles(compo_arc_t *arc, u16 start_angle, s16 end_angle)
+void compo_arc_set_angles(compo_arc_t *arc, u16 start_angle, u16 end_angle)
 {
     arc->start_angle = start_angle;
     arc->end_angle = end_angle;
+    u16 init_angle = arc->start_angle + arc->rotation_offset;
+    widget_arc_set_angles(arc->arc, init_angle, init_angle);
 }
 
 /**
@@ -111,10 +113,7 @@ void compo_arc_set_value(compo_arc_t *arc, u16 value)
     }
     arc->value = value;
 
-    if (arc->start_angle == arc->end_angle || 0 == value) {
-        widget_arc_set_angles(arc->arc, arc->rotation_offset, arc->rotation_offset);
-        return ;
-    } else if (arc->start_angle < arc->end_angle) {
+    if (arc->start_angle < arc->end_angle) {
         s_angle = arc->start_angle;
         e_angle = arc->end_angle;
         e_angle = s_angle + (e_angle - s_angle) * value / ARC_VALUE_MAX;
@@ -123,8 +122,8 @@ void compo_arc_set_value(compo_arc_t *arc, u16 value)
         e_angle = arc->start_angle;
         s_angle = e_angle - (e_angle - s_angle) * value / ARC_VALUE_MAX;
     }
-    s_angle = s_angle + arc->rotation_offset % ARC_ANGLE_MAX; 
-    e_angle = e_angle + arc->rotation_offset % ARC_ANGLE_MAX; 
+    s_angle = s_angle + arc->rotation_offset;
+    e_angle = e_angle + arc->rotation_offset;
 
     if (ANGLE_PREC_1_1 == arc->prec) {
         s_angle = (s_angle / 10) * 10;

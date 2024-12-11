@@ -161,7 +161,7 @@ u32 func_sport_get_str(u8 sport_idx)
     }
     if (sport_idx == SPORT_TYPE_MAX - 1)
     {
-        return STR_MODERATE;
+        return STR_MORE;
     }
     return STR_NULL;
 }
@@ -174,7 +174,7 @@ u32 func_sport_get_ui(u8 sport_idx)
     }
     if (sport_idx == SPORT_TYPE_MAX - 1)
     {
-        return UI_BUF_SPORT_ICON_FREE_TRAINING_BIN;
+        return UI_BUF_I330001_SPORT_ICON_25_CAIDAN_BIN;
     }
     return 0;
 }
@@ -188,9 +188,10 @@ compo_form_t *func_sport_form_create(void)
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SPORTS]);
+    compo_form_set_title_txt_color(frm, make_color(169,255,0));
 
     //新建菜单列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_CUM_SPORT_LIST);
     compo_listbox_set(listbox, tbl_sport_list, MENU_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_SPORT_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);

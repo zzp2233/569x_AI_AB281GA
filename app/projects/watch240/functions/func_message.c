@@ -397,6 +397,8 @@ static void func_message_card_update(void)
         {
             compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_DEL+i);
             compo_button_set_visible(btn, false);
+            compo_textbox_t* text = compo_getobj_byid(COMPO_ID_TXT_DEL+i);
+            compo_textbox_set_visible(text, false);
         }
 
         //显示无消息页面
@@ -404,6 +406,8 @@ static void func_message_card_update(void)
         compo_textbox_set_visible(txt, true);
         compo_picturebox_t* pic = compo_getobj_byid(COMPO_ID_COVER_PIC);
         compo_picturebox_set_visible(pic, true);
+
+
 
         //更新拖动状态
         f_msg->flag_drag = false;

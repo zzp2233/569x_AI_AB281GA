@@ -30,63 +30,45 @@ compo_form_t *func_ble_call_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
 
-//    ute_bt_call_data_t callData;
-//    uteModuleCallGetData(&callData);
+    ute_bt_call_data_t callData;
+    uteModuleCallGetData(&callData);
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(name_txt, true);
-//    compo_textbox_set(name_txt, callData.name);
+    compo_textbox_set(name_txt, callData.name);
 //    compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(number_txt, true);
+    compo_textbox_set(number_txt, callData.number);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
-//    compo_textbox_set(number_txt,callData.number);
 
-    compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
-    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autosize(time_txt, true);
-    compo_setid(time_txt, COMPO_ID_TXT_TIME);
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6);
+    compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
-    //挂断按钮
+    //挂断
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 240);
+    compo_button_set_pos(btn, 120, 240);
+
 
 
     return frm;
 }
 
-void ble_incall_time_update(void)
-{
-    f_ble_call_t *f_ble_call = (f_ble_call_t *)func_cb.f_cb;
-    char *call_time_str = f_ble_call->call_time_str;
-
-#if !CALL_MGR_EN
-    u16 call_times = f_ble_call->times;
-#else
-    u16 call_times = bt_cb.times;
-#endif
-
-    uteModuleCallUpdateCallingTimeSecond(call_times);
-
-    u8 hours   = call_times / 3600;
-    u8 minutes = (call_times % 3600) / 60;
-    u8 seconds = call_times % 60;
-    sprintf(call_time_str, "%02d:%02d:%02d", hours, minutes, seconds);
-//    printf("call_time_str: %s\n", call_time_str);
-
-    compo_textbox_t *time_txt = compo_getobj_byid(COMPO_ID_TXT_TIME);
-    compo_textbox_set(time_txt, call_time_str);
-    compo_textbox_set_visible(time_txt, true);
-}
-
 
 void func_ble_call_process(void)
 {
+    if (sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
     func_process();
 }
 
@@ -118,9 +100,6 @@ static void func_ble_call_message(size_msg_t msg)
     {
         case MSG_CTP_CLICK:
             func_ble_call_click();
-            break;
-        case MSG_SYS_1S:
-            ble_incall_time_update();
             break;
         case KL_BACK:
             uteModulePlatformRejectIncall();

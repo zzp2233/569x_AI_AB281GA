@@ -44,7 +44,8 @@ enum
 
     IMG_BTN_ID_1,
     IMG_BTN_ID_2,
-    IMG_BTN_ID_3
+    IMG_BTN_ID_3,
+    CANCEL_BTN_ID,
 };
 
 //创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -60,6 +61,13 @@ compo_form_t *func_long_press_form_create(void)
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_CANCEL]);
+
+    s16 rel_x,rel_y;
+    area_t text_area = widget_text_get_area(frm->title->txt);
+    widget_text_get_client(frm->title->txt, &rel_x, &rel_y);
+    compo_button_t *btn = compo_button_create_page_by_image(frm,frm->page, 0);
+    compo_button_set_location(btn,rel_x+text_area.wid ,rel_y+text_area.hei ,text_area.wid ,text_area.hei );
+    compo_setid(btn,CANCEL_BTN_ID);
 
     /*创建三个底部椭圆*/
     compo_shape_t * rectangle;
@@ -144,7 +152,7 @@ static void func_long_press_event_handle(s32 distance, u16 id)
     #endif
                         {
                             bt_call_redial_number();
-                        }                        
+                        }
                     }
                     else
                     {
@@ -240,6 +248,17 @@ static void func_long_press_button(void)
         }
     }
 }
+static void func_long_press_click(void)
+{
+    int id = compo_get_button_id();
+
+    switch(id)
+    {
+    case CANCEL_BTN_ID:
+        func_switch_to_clock();
+        break;
+    }
+}
 
 
 static void func_long_press_message(size_msg_t msg)
@@ -248,6 +267,9 @@ static void func_long_press_message(size_msg_t msg)
     {
         case MSG_CTP_TOUCH:
             func_long_press_button();
+            break;
+        case MSG_CTP_CLICK:
+            func_long_press_click();
             break;
         case KU_BACK:
             func_switch_to_clock();

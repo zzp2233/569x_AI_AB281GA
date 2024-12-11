@@ -66,6 +66,7 @@ compo_form_t *func_sleep_form_create(void)
 
     ///设置标题栏名字///
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLEEP]));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
     compo_textbox_set(txt, i18n[STR_SLEEP]);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,FORM_TITLE_HEIGHT/2);
 

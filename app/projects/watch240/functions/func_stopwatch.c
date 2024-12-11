@@ -41,6 +41,8 @@ typedef struct stopwatch_num_item_t_
     bool visible_en;
 } stopwatch_num_item_t;
 
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //创建秒表窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_stopwatch_form_create(void)
 {
@@ -97,77 +99,6 @@ compo_form_t *func_stopwatch_form_create(void)
     return frm;
 }
 
-//触摸按钮效果处理
-static void func_stopwatch_button_touch_handle(void)
-{
-    u32 res_addr;
-    int id = compo_get_button_id();
-
-    //获取按钮组件的地址
-    compo_button_t *btn_start = compo_getobj_byid(COMPO_ID_BTN_START_REC);
-    compo_button_t *btn_afresh = compo_getobj_byid(COMPO_ID_BTN_AFRESH);
-    compo_button_t *btn_record = compo_getobj_byid(COMPO_ID_BTN_RECORD);
-    compo_button_t *btn_record1 = compo_getobj_byid(COMPO_ID_BTN_RECORD_VIEW);
-
-    //获取数字组件的地址
-    compo_textbox_t *num_rec = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_REC);
-    switch (id)
-    {
-        case COMPO_ID_BTN_RECORD_VIEW:
-            if (sys_cb.stopwatch_rec_cnt)
-            {
-                compo_button_set_bgimg(btn_record1, UI_BUF_I330001_STOPWATCH_BG_BIN);
-                compo_textbox_set_forecolor(num_rec, NUM_REC_COLOR);
-            }
-            break;
-
-        case COMPO_ID_BTN_RECORD:
-            compo_button_set_bgimg(btn_record, UI_BUF_I330001_PUBLIC_JICI_BIN);
-            if (sys_cb.stopwatch_rec_cnt && sys_cb.stopwatch_sta)
-            {
-                compo_textbox_set_forecolor(num_rec, NUM_REC_COLOR);
-            }
-            break;
-
-        case COMPO_ID_BTN_AFRESH:
-            compo_button_set_bgimg(btn_afresh, UI_BUF_I330001_PUBLIC_END_BIN);
-            break;
-
-        case COMPO_ID_BTN_START_REC:
-            res_addr = sys_cb.stopwatch_sta ? UI_BUF_I330001_PUBLIC_PAUSED_BIN: UI_BUF_I330001_PUBLIC_PLAY_BIN;
-            compo_button_set_bgimg(btn_start, res_addr);
-            break;
-
-        default:
-            break;
-    }
-}
-
-//释放按钮效果处理
-static void func_stopwatch_button_release_handle(void)
-{
-    //获取按钮组件的地址
-    compo_button_t *btn_start = compo_getobj_byid(COMPO_ID_BTN_START_REC);
-    compo_button_t *btn_afresh = compo_getobj_byid(COMPO_ID_BTN_AFRESH);
-    compo_button_t *btn_record = compo_getobj_byid(COMPO_ID_BTN_RECORD);
-    compo_button_t *btn_record1 = compo_getobj_byid(COMPO_ID_BTN_RECORD_VIEW);
-
-    u32 res_addr = sys_cb.stopwatch_sta ? UI_BUF_I330001_PUBLIC_PAUSED_BIN : UI_BUF_I330001_PUBLIC_PLAY_BIN;
-    compo_button_set_bgimg(btn_start, res_addr);
-    compo_button_set_bgimg(btn_afresh, UI_BUF_STOPWATCH_AFRESH_BIN);  //复位
-    compo_button_set_visible(btn_afresh, sys_cb.stopwatch_total_msec > 0 || sys_cb.stopwatch_sta);
-    compo_button_set_bgimg(btn_record, UI_BUF_STOPWATCH_RECORD_BIN);  //计次
-    compo_button_set_visible(btn_record, sys_cb.stopwatch_sta != 0);
-    compo_button_set_bgimg(btn_record1, UI_BUF_I330001_STOPWATCH_BG_BIN);    //计次详情
-    compo_button_set_visible(btn_record1, sys_cb.stopwatch_rec_cnt > 0);
-
-    //获取数字组件的地址
-    compo_textbox_t *num_rec = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_REC);
-
-    compo_textbox_set_forecolor(num_rec, NUM_REC_COLOR);
-    compo_textbox_set_visible(num_rec, sys_cb.stopwatch_rec_cnt > 0);
-}
-
 //50ms秒表毫秒刷新回调函数（10ms误差大）
 static void stopwatch_50ms_pro(co_timer_t *timer, void *param)
 {
@@ -186,14 +117,19 @@ static void stopwatch_50ms_pro(co_timer_t *timer, void *param)
 //单击按钮
 static void func_stopwatch_button_click(void)
 {
+    u32 res_addr;
     static co_timer_t stopwatch_timer;
     int id = compo_get_button_id();
     f_stopwatch_t *f_stopwatch = (f_stopwatch_t *)func_cb.f_cb;
     char str_buff[9];
 
     //获取数字组件的地址
+    compo_button_t *btn_start = compo_getobj_byid(COMPO_ID_BTN_START_REC);
     compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
     compo_textbox_t *num_rec = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_REC);
+    compo_button_t *btn_afresh = compo_getobj_byid(COMPO_ID_BTN_AFRESH);
+    compo_button_t *btn_record1 = compo_getobj_byid(COMPO_ID_BTN_RECORD_VIEW);
+    compo_button_t *btn_record = compo_getobj_byid(COMPO_ID_BTN_RECORD);
 
     switch (id)
     {
@@ -218,6 +154,8 @@ static void func_stopwatch_button_click(void)
                 snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
                 compo_textbox_set(num_rec, str_buff);
             }
+            compo_textbox_set_visible(num_rec, sys_cb.stopwatch_rec_cnt > 0);
+            compo_button_set_visible(btn_record1, sys_cb.stopwatch_sta != 0);
             break;
 
         case COMPO_ID_BTN_AFRESH:
@@ -238,19 +176,30 @@ static void func_stopwatch_button_click(void)
                 compo_textbox_set(num_time, "00:00:00");
                 compo_textbox_set(num_rec, "0");
             }
+            compo_button_set_visible(btn_record1, false);
+            compo_textbox_set_visible(num_rec, false);
+            compo_button_set_visible(btn_record, false);
+            res_addr = sys_cb.stopwatch_sta ? UI_BUF_I330001_PUBLIC_PAUSED_BIN: UI_BUF_I330001_PUBLIC_PLAY_BIN;
+            compo_button_set_bgimg(btn_start, res_addr);
             break;
 
         case COMPO_ID_BTN_START_REC:
+
             sys_cb.stopwatch_sta = !sys_cb.stopwatch_sta;
             if (sys_cb.stopwatch_sta && sys_cb.stopwatch_total_msec == 0)
             {
                 co_timer_set(&stopwatch_timer, 50, TIMER_REPEAT, LEVEL_LOW_PRI, stopwatch_50ms_pro, NULL);
             }
+            res_addr = sys_cb.stopwatch_sta ? UI_BUF_I330001_PUBLIC_PAUSED_BIN: UI_BUF_I330001_PUBLIC_PLAY_BIN;
+            compo_button_set_bgimg(btn_start, res_addr);
+            compo_button_set_visible(btn_afresh, true);
+            compo_button_set_visible(btn_record, true);
             break;
     }
 
-    func_stopwatch_button_release_handle();
 }
+
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //秒表功能事件处理
 static void func_stopwatch_process(void)
@@ -287,7 +236,7 @@ static void func_stopwatch_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-            func_stopwatch_button_touch_handle();
+//            func_stopwatch_button_touch_handle();
             break;
 
         case MSG_CTP_CLICK:
@@ -298,7 +247,6 @@ static void func_stopwatch_message(size_msg_t msg)
         case MSG_CTP_SHORT_DOWN:
         case MSG_CTP_SHORT_LEFT:
         case MSG_CTP_LONG:
-            func_stopwatch_button_release_handle();
             if (func_cb.flag_sort)
             {
                 func_message(msg);
@@ -306,7 +254,6 @@ static void func_stopwatch_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-            func_stopwatch_button_release_handle();
             func_message(msg);
             break;
 

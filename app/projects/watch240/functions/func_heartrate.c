@@ -34,7 +34,7 @@ typedef struct f_heartrate_t_
     u8 heart_pic_state;
 } f_heartrate_t;
 
-
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建心率窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_heartrate_form_create(void)
 {
@@ -207,7 +207,7 @@ static void func_heartrate_refresh(void)
     }
 
 }
-
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //心率功能事件处理
 static void func_heartrate_process(void)
 {

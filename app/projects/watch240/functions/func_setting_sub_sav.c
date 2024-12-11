@@ -51,28 +51,28 @@ enum
 
 typedef struct sav_disp_btn_item_t_
 {
-    u32 res_addr;
     u16 btn_id;
     s16 x;
     s16 y;
+    s16 w;
     s16 h;
-    s16 l;
 } sav_disp_btn_item_t;
 
 //按钮item，创建时遍历一下
 static const sav_disp_btn_item_t tbl_sav_disp_btn_item[] =
 {
-    {UI_BUF_COMMON_REDUCE_CLICK_BIN,    COMPO_ID_BIN_REDUCE_ONE,            40,      112,   30,  30},
-    {UI_BUF_COMMON_INCREASE_CLICK_BIN,  COMPO_ID_BIN_INCREASE_ONE,          200,     112,   30,  30},
-    {UI_BUF_COMMON_REDUCE_CLICK_BIN,    COMPO_ID_BIN_REDUCE_TWS,            40,      200,   30,  30},
-    {UI_BUF_COMMON_INCREASE_CLICK_BIN,  COMPO_ID_BIN_INCREASE_TWS,          200,     200,   30,  30},
-    {UI_BUF_COMMON_REDUCE_CLICK_BIN,    COMPO_ID_BIN_REDUCE_THR,            40,      276,   30,  30},
-    {UI_BUF_COMMON_INCREASE_CLICK_BIN,  COMPO_ID_BIN_INCREASE_THR,          200,     276,   30,  30},
+    {  COMPO_ID_BIN_REDUCE_ONE,            35,      112,   40,  40},
+    {  COMPO_ID_BIN_INCREASE_ONE,          205,     112,   40,  40},
+    {  COMPO_ID_BIN_REDUCE_TWS,            35,      200,   40,  40},
+    {  COMPO_ID_BIN_INCREASE_TWS,          205,     200,   40,  40},
+    {  COMPO_ID_BIN_REDUCE_THR,            35,      276,   40,  40},
+    {  COMPO_ID_BIN_INCREASE_THR,          205,     276,   40,  40},
 };
 
 typedef struct sav_disp_pic_item_t_
 {
     u32 res_addr;
+    u32 res_addr_bg;
     u16 pic_id;
     s16 x;
     s16 y;
@@ -84,35 +84,55 @@ typedef struct sav_disp_pic_item_t_
 //图片item，创建时遍历一下
 static const sav_disp_pic_item_t tbl_sav_disp_pic_item[] =
 {
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL1,          80,    112,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL2,          100,    112,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL3,          120,    112,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL4,          140,    112,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL5,          160,    112,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL6,          80,    200,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL7,          100,    200,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL8,          120,    200,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL9,          140,    200,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL10,         160,    200,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL11,         80,    276,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL12,         100,    276,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL13,         120,    276,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL14,         140,    276,    false},
-    {UI_BUF_COMMON_BG2_BIN,     COMPO_ID_PIC_LEVEL15,         160,    276,    false},
+    {UI_BUF_I330001_SETTINGS_SOUND_LEFT_GREEN_BIN,   UI_BUF_I330001_SETTINGS_SOUND_LEFT_GREY_BIN,    COMPO_ID_PIC_LEVEL1,          68,     112},
+    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL2,          68+21,    112},
+    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL3,          68+21*2,    112},
+    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL4,          68+21*3,    112},
+    {UI_BUF_I330001_SETTINGS_SOUND_RIGHT_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_RIGHT_GREY_BIN,   COMPO_ID_PIC_LEVEL5,          68+21*4,    112},
+    {UI_BUF_I330001_SETTINGS_SOUND_LEFT_GREEN_BIN,   UI_BUF_I330001_SETTINGS_SOUND_LEFT_GREY_BIN,    COMPO_ID_PIC_LEVEL6,          68,     200},
+    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL7,          68+21,    200},
+    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL8,          68+21*2,    200},
+    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL9,          68+21*3,    200},
+    {UI_BUF_I330001_SETTINGS_SOUND_RIGHT_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_RIGHT_GREY_BIN,   COMPO_ID_PIC_LEVEL10,         68+21*4,    200},
+//    {UI_BUF_I330001_SETTINGS_SOUND_LEFT_GREEN_BIN,   UI_BUF_I330001_SETTINGS_SOUND_LEFT_GREY_BIN,    COMPO_ID_PIC_LEVEL11,         68,     276},
+//    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL12,         68+21,    276},
+//    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL13,         68+21*2,    276},
+//    {UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_ZHONG_GREY_BIN,   COMPO_ID_PIC_LEVEL14,         68+21*3,    276},
+//    {UI_BUF_I330001_SETTINGS_SOUND_RIGHT_GREEN_BIN,  UI_BUF_I330001_SETTINGS_SOUND_RIGHT_GREY_BIN,   COMPO_ID_PIC_LEVEL15,         68+21*4,    276},
 };
 
 //声音与振动页面
 compo_form_t *func_set_sub_sav_form_create(void)
 {
+    int idx=0;
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
-    compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 112);
-    compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 200);
-    compo_form_add_image(frm, UI_BUF_COMMON_BG1_BIN, 120, 276);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_SAV]);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_SETTINGS_SOUND_BTN_BIN);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X ,tbl_sav_disp_btn_item[0].y );
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_SETTINGS_SOUND_BTN_BIN);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X ,tbl_sav_disp_btn_item[2].y );
+
+
+    for( idx=0; idx<SAV_DISP_BTN_ITEM_CNT; idx++)
+    {
+        compo_button_t * btn = compo_button_create(frm);
+        compo_button_set_location(btn, tbl_sav_disp_btn_item[idx].x,tbl_sav_disp_btn_item[idx].y, tbl_sav_disp_btn_item[idx].w,tbl_sav_disp_btn_item[idx].h);
+        compo_setid(btn,tbl_sav_disp_btn_item[idx].btn_id);
+    }
+
+    for( idx=0; idx<SAV_DISP_PIC_ITEM_CNT; idx++)
+    {
+        picbox = compo_picturebox_create(frm, tbl_sav_disp_pic_item[idx].res_addr_bg);
+        compo_picturebox_set_pos(picbox,tbl_sav_disp_pic_item[idx].x+10 ,tbl_sav_disp_pic_item[idx].y );
+        compo_setid(picbox,tbl_sav_disp_pic_item[idx].pic_id);
+    }
+
 
     //创建文本
     compo_textbox_t *txt_voice = compo_textbox_create(frm, 4);
@@ -130,60 +150,11 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_textbox_set_pos(txt_shake, 22, 232);
     compo_textbox_set(txt_shake, i18n[STR_SHK]);
 
-    //创建按钮
-    compo_button_t *btn;
-    for (u8 idx = 0; idx < SAV_DISP_BTN_ITEM_CNT; idx++)
-    {
-        btn = compo_button_create_by_image(frm, tbl_sav_disp_btn_item[idx].res_addr);
-        compo_setid(btn, tbl_sav_disp_btn_item[idx].btn_id);
-        compo_button_set_pos(btn, tbl_sav_disp_btn_item[idx].x, tbl_sav_disp_btn_item[idx].y);
-    }
 
-    //新建图像
-    compo_picturebox_t *pic_click[SAV_DISP_PIC_ITEM_CNT];
-    for (u8 idx = 0; idx < SAV_DISP_PIC_ITEM_CNT; idx++)
-    {
-        pic_click[idx] = compo_picturebox_create(frm, tbl_sav_disp_pic_item[idx].res_addr);
-        compo_setid(pic_click[idx], tbl_sav_disp_pic_item[idx].pic_id);
-        compo_picturebox_set_pos(pic_click[idx], tbl_sav_disp_pic_item[idx].x, tbl_sav_disp_pic_item[idx].y);
-        compo_picturebox_set_visible(pic_click[idx], tbl_sav_disp_pic_item[idx].visible_en);
-    }
 
-    compo_picturebox_set_visible(pic_click[0], true);
-    compo_picturebox_set_visible(pic_click[5], true);
-    compo_picturebox_set_visible(pic_click[10], true);
 
-    for (u8 i=0; i<VOL_MAX; i+=VOL_CHANGE)
-    {
-        if (i < sys_cb.vol)
-        {
-            compo_picturebox_set_visible(pic_click[i/VOL_CHANGE + 1], true);
-        }
-        else
-        {
-            compo_picturebox_set_visible(pic_click[i/VOL_CHANGE + 1], false);
-        }
-        if (i < sys_cb.hfp_vol)
-        {
-            compo_picturebox_set_visible(pic_click[i/VOL_CHANGE + 6], true);
-        }
-        else
-        {
-            compo_picturebox_set_visible(pic_click[i/VOL_CHANGE + 6], false);
-        }
-    }
 
-    for (u8 i=0; i<MOTOR_MAX_LEVEL; i+=1)
-    {
-        if (i < sys_cb.motor_level)
-        {
-            compo_picturebox_set_visible(pic_click[i + 11], true);
-        }
-        else
-        {
-            compo_picturebox_set_visible(pic_click[i + 11], false);
-        }
-    }
+
 #if UTE_DRV_MOTOR_PWM_MODE_SUPPORT
 
 #else
@@ -206,69 +177,28 @@ static void func_set_sub_sav_process(void)
 //更新显示界面
 static void func_set_sub_sav_disp(void)
 {
-    compo_picturebox_t *pic_level[SAV_DISP_PIC_ITEM_CNT];
-    for (int i=0; i<SAV_DISP_PIC_ITEM_CNT; i++)
-    {
-        pic_level[i] = compo_getobj_byid(COMPO_ID_PIC_LEVEL1 + i);
-    }
 
-    if (sys_cb.vol > VOL_MAX)
+    for(int idx=0; idx<10; idx++)
     {
-        sys_cb.vol = VOL_MAX;
-    }
-    else if (sys_cb.vol <0)
-    {
-        sys_cb.vol = 0;
-    }
+        compo_picturebox_t *picbox = compo_getobj_byid(tbl_sav_disp_pic_item[idx].pic_id);
 
-    if (sys_cb.hfp_vol > VOL_MAX)
-    {
-        sys_cb.hfp_vol = VOL_MAX;
-    }
-    else if (sys_cb.hfp_vol <0)
-    {
-        sys_cb.hfp_vol = 0;
-    }
+        if(idx<= 4)
+        {
+            if(sys_cb.vol/(4*(idx+1))){
+                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr);
+            }else{
+                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr_bg);
+            }
+        }
+        else if(idx<= 9)
+        {
+            if(sys_cb.hfp_vol/(4*(idx+1-5))){
+                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr);
+            }else{
+                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr_bg);
+            }
+        }
 
-    if (sys_cb.motor_level > MOTOR_MAX_LEVEL)
-    {
-        sys_cb.motor_level = MOTOR_MAX_LEVEL;
-    }
-    else if (sys_cb.motor_level <0)
-    {
-        sys_cb.motor_level = 0;
-    }
-
-    for (u8 i=0; i<VOL_MAX; i+=VOL_CHANGE)
-    {
-        if (i < sys_cb.vol)
-        {
-            compo_picturebox_set_visible(pic_level[i/VOL_CHANGE + 1], true);
-        }
-        else
-        {
-            compo_picturebox_set_visible(pic_level[i/VOL_CHANGE + 1], false);
-        }
-        if (i < sys_cb.hfp_vol)
-        {
-            compo_picturebox_set_visible(pic_level[i/VOL_CHANGE + 6], true);
-        }
-        else
-        {
-            compo_picturebox_set_visible(pic_level[i/VOL_CHANGE + 6], false);
-        }
-    }
-
-    for (u8 i=0; i<MOTOR_MAX_LEVEL; i+=1)
-    {
-        if (i < sys_cb.motor_level)
-        {
-            compo_picturebox_set_visible(pic_level[i + 11], true);
-        }
-        else
-        {
-            compo_picturebox_set_visible(pic_level[i + 11], false);
-        }
     }
 }
 
@@ -279,28 +209,28 @@ static void func_sav_button_click(void)
     switch(id)
     {
         case COMPO_ID_BIN_REDUCE_ONE:       //音频音量
-            if (sys_cb.vol > 0 && sys_cb.vol <= VOL_MAX)
+            if (sys_cb.vol > 0 && sys_cb.vol <= VOL_CHANGE*5)
             {
                 sys_cb.vol -= VOL_CHANGE;
             }
             break;
 
         case COMPO_ID_BIN_INCREASE_ONE:
-            if (sys_cb.vol >= 0 && sys_cb.vol <= VOL_MAX)
+            if (sys_cb.vol >= 0 && sys_cb.vol < VOL_CHANGE*5)
             {
                 sys_cb.vol += VOL_CHANGE;
             }
             break;
 
         case COMPO_ID_BIN_REDUCE_TWS:     //通话音量
-            if (sys_cb.hfp_vol > 0 && sys_cb.hfp_vol <= VOL_MAX)
+            if (sys_cb.hfp_vol > 0 && sys_cb.hfp_vol <= VOL_CHANGE*5)
             {
                 sys_cb.hfp_vol -= VOL_CHANGE;
             }
             break;
 
         case COMPO_ID_BIN_INCREASE_TWS:   //通话音量
-            if (sys_cb.hfp_vol >= 0 && sys_cb.hfp_vol <= VOL_MAX)
+            if (sys_cb.hfp_vol >= 0 && sys_cb.hfp_vol < VOL_CHANGE*5)
             {
                 sys_cb.hfp_vol += VOL_CHANGE;
             }
@@ -351,6 +281,7 @@ static void func_set_sub_sav_enter(void)
     f_sav_t *sav = (f_sav_t *)func_cb.f_cb;
     sav->shk_value = COMPO_ID_NUM_DISP_ONE;
     sav->vol_value = COMPO_ID_NUM_DISP_ONE;
+    func_set_sub_sav_disp();
 }
 
 //退出声音与振动功能

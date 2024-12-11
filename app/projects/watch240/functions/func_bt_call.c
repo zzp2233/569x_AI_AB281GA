@@ -62,7 +62,7 @@ void  func_bt_call_number_update(void)
     {
         compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
         compo_textbox_set(number_txt, hfp_get_last_call_number(0));
-        bt_pbap_lookup_number(hfp_get_last_call_number(0));
+        bt_pbap_lookup_number((char*)hfp_get_last_call_number(0));
     }
 }
 

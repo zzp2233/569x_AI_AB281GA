@@ -58,6 +58,7 @@ enum
 //计算下管道y坐标(中心参考点)
 #define CAL_PIPE_DOWM_Y_POS(pipe_down_cut)                   (BIRD_VALID_HEIGHT - (PIPE_PIC_HEIGHT / (pipe_down_cut)) / 2)
 
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建游戏界面
 compo_form_t *func_bird_form_create(void)
@@ -65,22 +66,22 @@ compo_form_t *func_bird_form_create(void)
     compo_form_t *frm;
     component_t *compo;
     uint8_t i;
-    uint32_t pipe_bin_addr[] = {UI_BUF_GAME_GAME_PIPE_UP_BIN, UI_BUF_GAME_GAME_PIPE_DOWN_BIN};
+    uint32_t pipe_bin_addr[] = {UI_BUF_I330001_GAME_ZHUZI1_BIN, UI_BUF_I330001_GAME_ZHUZI2_BIN};
 
     //新建窗体和背景
     frm = compo_form_create(true);
 
     //背景图
-    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_GAME_GAME_BG_BIN);
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_BG_BIN);
     compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
     //stop pic
-    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_GAME_GAME_START_BIN);
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_PLAY_BIN);
     compo_setid(compo, COMPO_ID_BIRD_STOP_PIC);
     compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
     //bird pic
-    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_GAME_GAME_BIRD_BIN);
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_BIRD2_BIN);
     compo_setid(compo, COMPO_ID_BIRD_BIRD_PIC);
     compo_picturebox_cut((compo_picturebox_t *)compo, 0, 3);
     compo_picturebox_set_pos((compo_picturebox_t *)compo, BIRD_X_POS, GUI_SCREEN_CENTER_Y);
@@ -94,13 +95,13 @@ compo_form_t *func_bird_form_create(void)
     }
 
     //fail pic
-    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_GAME_GAMEOVER_BIN);
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_WINDOW1_BIN);
     compo_setid(compo, COMPO_ID_BIRD_FAIL_PIC);
     compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
 
     //finish pic
-    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_GAME_GAME_FINISH_BIN);
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_WINDOW2_BIN);
     compo_setid(compo, COMPO_ID_BIRD_FINISH_PIC);
     compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
@@ -323,7 +324,7 @@ static void func_bird_finish(void)
         }
     }
 }
-
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //游戏过程状态机
 static void func_bird_process(void)

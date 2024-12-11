@@ -156,9 +156,19 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         case MSGBOX_MSG_TYPE_REMIND_COVER:
         {
             //图标
+            if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH)
+            {
+                compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_FINGWATCH_WATCH_BIN);
+                compo_animation_set_pos(animation,GUI_SCREEN_CENTER_X,func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
+                compo_animation_set_radix(animation,3);
+                compo_animation_set_interval(animation,20);
+            }
+            else
+            {
             compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
                                  GUI_SCREEN_CENTER_X,
                                  func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
+            }
 
             //msg1
             compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
@@ -439,7 +449,9 @@ static void msgbox_process(void)
         {
             msgbox_exit_time = UTE_LOCAL_ALARM_DEFAULT_RING_TIMES * 1000;
         }
-        else if (msg_cb->msg_type == MSGBOX_MSG_TYPE_DETAIL)
+        else if ((msg_cb->msg_type == MSGBOX_MSG_TYPE_DETAIL)   ||                                                      //详细消息界面弹窗
+                 (sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)    //查找手表
+        )
         {
             goto __exit;
         }

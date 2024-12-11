@@ -8,6 +8,11 @@
 #define TRACE(...)
 #endif
 
+enum {
+    COMPO_ID_TXT_OTA_ERR1 = 1,
+    COMPO_ID_TXT_OTA_ERR2,
+};
+
 typedef struct f_ota_err_t_
 {
 
@@ -18,6 +23,24 @@ compo_form_t *func_ota_err_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_02_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 35+112/2);
+
+    //TXT1 升级失败
+    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, COMPO_ID_TXT_OTA_ERR1);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 186+26/2, 196, 30);
+    widget_text_set_color(txt->txt, make_color(255,255,255));
+    compo_textbox_set(txt, "升级失败");
+
+    //TXT2 请连接App重试
+    txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, COMPO_ID_TXT_OTA_ERR2);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 215+26/2, 196, 30);
+    widget_text_set_color(txt->txt, make_color(128,128,128));
+    compo_textbox_set(txt, "请连接App重试");
+
     return frm;
 }
 
@@ -30,7 +53,25 @@ static void func_ota_err_process(void)
 //地图功能消息处理
 static void func_ota_err_message(size_msg_t msg)
 {
-    evt_message(msg);
+
+    switch (msg) {
+    case MSG_CTP_SHORT_LEFT:
+    case MSG_CTP_SHORT_UP:
+    case MSG_CTP_SHORT_RIGHT:
+    case MSG_CTP_SHORT_DOWN:
+
+        break;
+
+    case KU_BACK:
+        func_switch_to(FUNC_CLOCK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+        break;
+
+    default:
+        func_message(msg);
+        break;
+    }
+
+
 }
 
 //进入地图功能
@@ -45,7 +86,7 @@ static void func_ota_err_enter(void)
 static void func_ota_err_exit(void)
 {
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
-    func_cb.last = FUNC_IDLE;
+    func_cb.last = FUNC_OTA_ERROR;
 }
 
 //地图功能

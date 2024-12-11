@@ -71,6 +71,7 @@ static void func_menu_sub_list_battery_pic_update(void)
     {
         return;
     }
+    extern uint8_t uteDrvBatteryCommonGetBatteryIndex(uint8_t totalIndex);
     switch(uteDrvBatteryCommonGetBatteryIndex(5))
     {
         case 0:

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-09 16:39:06
+*@date   2024-12-11 17:03:38
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -115,7 +115,7 @@ enum
     STR_LANGUAGE_FN, // Français
     STR_LANGUAGE_RU, // Русский язык
     STR_LANGUAGE_AT, // Аргентинский язык
-    STR_LANGUAGE_JP, // 日本語
+    STR_LANGUAGE_JP, // 日語
     STR_BEATHER_DURATION, // 呼吸时长
     STR_CUSTOM_CALENDAR, // 日期
     STR_CUSTOM_TIME, // 时间
@@ -148,7 +148,7 @@ enum
     STR_COMPASS, // 指南针
     STR_FLASHLIGHT, // 手电筒
     STR_MAP, // 地图
-    STR_SCAN, // 扫一扫
+    STR_SCAN, // APP下载
     STR_STYLE, // 主题
     STR_VOICE, // 语音助手
     STR_VOLUME, // 音量调节
@@ -317,5 +317,11 @@ enum
 extern const char * const *i18n;
 extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
+extern const char * const i18n_ar_ril[];
+extern const char * const i18n_ru_rru[];
+extern const char * const i18n_ja_rjp[];
+extern const char * const i18n_de_rde[];
+extern const char * const i18n_fr_rfr[];
+extern const char * const i18n_it_rit[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

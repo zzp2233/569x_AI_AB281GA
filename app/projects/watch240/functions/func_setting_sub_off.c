@@ -31,7 +31,8 @@ compo_form_t *func_set_sub_off_form_create(void)
     //创建文本
     compo_textbox_t *txt_off = compo_textbox_create(frm, strlen(i18n[STR_SURE_OFF]));
     //compo_textbox_set_align_center(txt_off, false);
-    compo_textbox_set_pos(txt_off, GUI_SCREEN_CENTER_X, 128);
+    compo_textbox_set(txt_off, i18n[STR_SURE_OFF]);
+    compo_textbox_set_location(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_off->txt).hei);
     compo_textbox_set(txt_off, i18n[STR_SURE_OFF]);
 
     //创建按钮

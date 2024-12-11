@@ -135,6 +135,7 @@ enum
     FUNC_TETRIS_START,
     FUNC_OTA_MODE,         //OTA升级
     FUNC_OTA_ERROR,        //OTA升级失败界面
+    FUNC_OTA_SUCC,          //OTA升级成功界面
     FUNC_POWER_ON,         //开机
 
     FUNC_BLE_CALL,

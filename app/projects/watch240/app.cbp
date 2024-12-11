@@ -1164,6 +1164,9 @@
 		<Unit filename="functions/func_ota_err.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_ota_succ.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_ota_update.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -323,10 +323,8 @@ const func_t tbl_func_create[] =
 //    {FUNC_TETRIS,                       func_tetris_form_create},
 //    {FUNC_TETRIS_START,                 func_tetris_start_form_create},
     {FUNC_OTA_MODE,                     func_ota_update_form_create},
-//    {FUNC_SET_SUB_SOS,                  func_set_sub_sos_form_create},
     {FUNC_OTA_ERROR,                    func_ota_err_form_create},
     {FUNC_OTA_SUCC,                     func_ota_succ_form_create},
-    {FUNC_SET_SUB_SOS,                  func_set_sub_sos_form_create},
     {FUNC_POWER_ON,                     func_power_on_form_create},
     {FUNC_TEST_MODE,                    func_test_mode_form_create},///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/

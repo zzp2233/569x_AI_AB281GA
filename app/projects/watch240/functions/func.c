@@ -72,8 +72,8 @@ extern void func_set_sub_dousing(void);
 extern void func_set_sub_disturd(void);
 extern void func_set_sub_language(void);
 extern void func_set_sub_wrist(void);
-extern void func_set_sub_time(void);
-extern void func_time_sub_custom(void);
+//extern void func_set_sub_time(void);
+//extern void func_time_sub_custom(void);
 //extern void func_set_sub_password(void);
 extern void func_password_sub_disp(void);
 extern void func_password_sub_select(void);
@@ -182,8 +182,8 @@ compo_form_t *func_set_sub_wrist_form_create(void);
 compo_form_t *func_set_sub_sav_form_create(void);
 compo_form_t *func_set_sub_dousing_form_create(void);
 compo_form_t *func_set_sub_language_form_create(void);
-compo_form_t *func_set_sub_time_form_create(void);
-compo_form_t *func_time_sub_custom_form_create(void);
+//compo_form_t *func_set_sub_time_form_create(void);
+//compo_form_t *func_time_sub_custom_form_create(void);
 //compo_form_t *func_set_sub_password_form_create(void);
 compo_form_t *func_password_sub_disp_form_create(void);
 compo_form_t *func_password_sub_select_form_create(void);
@@ -289,8 +289,8 @@ const func_t tbl_func_create[] =
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd_form_create},
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set_form_create},
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
-    {FUNC_SET_SUB_TIME,                 func_set_sub_time_form_create},
-    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom_form_create},
+//    {FUNC_SET_SUB_TIME,                 func_set_sub_time_form_create},
+//    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom_form_create},
 //    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp_form_create},
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
@@ -396,8 +396,8 @@ const func_t tbl_func_entry[] =
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set},          //勿扰--时间设置
     {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language},         //设置--语言
-    {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
-    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间
+//    {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
+//    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间
 //    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password},         //设置--密码锁
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp},        //设置--新密码锁设置
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select},      //设置--密码锁确认

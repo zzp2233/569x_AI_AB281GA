@@ -109,13 +109,13 @@ compo_form_t *func_bird_form_create(void)
     //stop btn
     compo = (component_t *)compo_button_create(frm);
     compo_setid(compo, COMPO_ID_BIRD_STOP_BTN);
-    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X+50, GUI_SCREEN_CENTER_Y+5, 60, 60);
+    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X+50, GUI_SCREEN_CENTER_Y+35, 60, 60);
 //    compo_button_set_visible((compo_button_t *)compo, false);
 
     //start btn
     compo = (component_t *)compo_button_create(frm);
     compo_setid(compo, COMPO_ID_BIRD_START_BTN);
-    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X-50, GUI_SCREEN_CENTER_Y+5, 60, 60);
+    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X-50, GUI_SCREEN_CENTER_Y+35, 60, 60);
 //    compo_button_set_visible((compo_button_t *)compo, false);
 
     return frm;

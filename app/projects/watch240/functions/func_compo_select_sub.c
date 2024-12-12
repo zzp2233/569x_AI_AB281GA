@@ -257,6 +257,12 @@ compo_form_t *func_compo_select_sub_form_create(void)
         halt(HALT_GUI_COMPO_LISTBOX_CREATE);
     }
 
+//    printf("tbl_sort [");
+//    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++) {
+//        printf("%d ", func_cb.tbl_sort[i]);
+//    }
+//    printf("]\n");
+
     //控制位未加载时进行初始化
     bool bit_init = true;
     for (uint32_t i = SYS_CTL_FUNC_SPORT_ON; i <= SYS_CTL_FUNC_SETTINGS_ON; i++)
@@ -418,7 +424,11 @@ static void func_compo_select_sub_exit(void)
     compo_listbox_t *listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     func_free(listbox->mcb);
 
+
+
     u8 index = 1;
+    memset(&func_cb.tbl_sort[index], 0, sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]) - index);
+//    printf("exit add tbl_sort = [");
     for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++)
     {
         if (bsp_sys_get_ctlbit(list_data_sort[i]))
@@ -428,14 +438,24 @@ static void func_compo_select_sub_exit(void)
                 if (SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j] == list_data_sort[i])
                 {
                     func_cb.tbl_sort[index ++] = SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j + 1];
+//                    printf("%d ", func_cb.tbl_sort[index-1]);
                     break;
                 }
             }
         }
     }
+//    printf("]\n");
     func_cb.tbl_sort[index ++] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = index;
     func_cb.flag_sort = true;
+
+
+//    printf("EXIT tbl_sort [");
+//    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++) {
+//        printf("%d ", func_cb.tbl_sort[i]);
+//    }
+//    printf("]\n");
+
     // 保存排序
     uteModuleGuiCommonSavescreenTblSort(func_cb.tbl_sort, func_cb.sort_cnt);
 }

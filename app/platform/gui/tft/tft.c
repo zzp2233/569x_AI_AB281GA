@@ -111,19 +111,26 @@ void tft_frame_start(void)
     //3w-9bit 1line mode
     DESPICON = BIT(27) | BIT(18) | BIT(7) | BIT(0);     //[28:27]IN RGB565, [18]3w-9b despi mode enable, [7]IE, [3:2]1bit in, 1bit out, [0]EN
 #endif
-
+#if (GUI_SELECT == DISPLAY_UTE)
+    uteModulePlatformScreenWriteDataStart();
+#else
     //tft_write_cmd12(0x2C);      //TFT_RAMWR
     tft_write_data_start();
     // uteDrvScreenCommonSetWindow(0,0,UTE_DRV_SCREEN_WIDTH,UTE_DRV_SCREEN_HEIGHT);
 #if (GUI_SELECT == GUI_TFT_240_ST7789)
     TFT_SPI_DATA_EN();
 #endif
+#endif
 }
 
 AT(.com_text.tft_spi)
 void tft_frame_end(void)
 {
+#if (GUI_SELECT == DISPLAY_UTE)
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+#else
     tft_write_end();
+#endif
     tft_cb.flag_in_frame = false;
     if (tft_cb.tft_bglight_kick)
     {
@@ -179,11 +186,13 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
     tft_cb.tft_bglight_duty = duty;
     if (tft_cb.tft_bglight_last_duty != tft_cb.tft_bglight_duty)
     {
+#if (GUI_SELECT == DISPLAY_UTE)
+        uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
+#else
         bsp_pwm_freq_set(177);
         bsp_pwm_duty_set(PORT_TFT_BL, tft_cb.tft_bglight_duty, false);
-        // uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
+#endif
         tft_cb.tft_bglight_last_duty = tft_cb.tft_bglight_duty;
-        uteModuleGuiCommonSetBackLightPercent(tft_cb.tft_bglight_duty);
         sys_cb.light_level = tft_cb.tft_bglight_duty / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
     }
 }
@@ -210,7 +219,6 @@ void tft_bglight_frist_set_check(void)
     }
 #ifdef GUI_USE_TFT
     tft_bglight_set_level(tft_cb.tft_bglight_duty,true);
-    // uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
 #endif
 }
 
@@ -222,6 +230,7 @@ void tft_set_temode(u8 mode)
 
 void tft_init(void)
 {
+#if (GUI_SELECT != DISPLAY_UTE)
     //clk init
     CLKDIVCON2 = (CLKDIVCON2 & ~(BIT(4) * 0xF)) | BIT(4) * 2;   // TFTDE div
     CLKGAT2 |= BIT(4);
@@ -280,6 +289,7 @@ void tft_init(void)
     DESPIBAUD = 15;      //读ID建议在20M以内
     TRACE("TFT ID: %x\n", tft_read_id());
     DESPIBAUD = tft_cb.despi_baud;
+#endif
 
 #if (GUI_SELECT == GUI_TFT_320_ST77916)
     tft_320_st77916_init();
@@ -304,12 +314,15 @@ void tft_init(void)
 #elif (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
     tft_170_560_axs15231B_init();
 #elif (GUI_SELECT == DISPLAY_UTE)
+    uteDrvScreenCommonInit();
 #else
 #error "Please Select GUI Display"
 #endif
-
+#if (GUI_SELECT == DISPLAY_UTE)
+    uteDrvScreenCommonSetWindow(0,0,GUI_SCREEN_WIDTH,GUI_SCREEN_HEIGHT);
+#else
     tft_set_window(0, 0, GUI_SCREEN_WIDTH - 1, GUI_SCREEN_HEIGHT - 1);
-    // uteDrvScreenCommonSetWindow(0,0,UTE_DRV_SCREEN_WIDTH,UTE_DRV_SCREEN_HEIGHT);
+#endif
 
     tft_cb.tft_bglight_kick = true; //延时打开背光
 #ifdef GUI_USE_OLED
@@ -320,9 +333,11 @@ void tft_init(void)
 void tft_exit(void)
 {
 #ifdef GUI_USE_TFT
+#if (GUI_SELECT == DISPLAY_UTE)
+    uteDrvScreenCommonDisplayOff();
+#else
     bsp_pwm_disable(PORT_TFT_BL); //关背光
-    // uteDrvScreenCommonDisplayOff();
-    printf("%s:%d\n",__func__,__LINE__);
+#endif
 #endif
     port_tft_exit();
     port_irq_free(PORT_TFT_INT_VECTOR);

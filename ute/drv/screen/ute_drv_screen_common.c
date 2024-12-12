@@ -15,6 +15,8 @@
 #include "ute_drv_tft_s240x284_i18_st7789p3_xhl183ba2401.h"
 #elif UTE_DRV_TFT_S240X284_NV3030B_HY201068AVC_QSPI_SUPPORT
 #include "ute_drv_tft_s240x284_nv3030b_hy201068avc.h"
+#elif DRV_BOE_S240X284_I183_JD9853_WV018LZQ_QSPI_SUPPORT
+#include "ute_drv_boe_s240x284_i183_jd9853_wv018lzq_qspi.h"
 #endif
 
 /*! 配置屏的接口zn.zeng, 2021-09-06  */
@@ -43,6 +45,8 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft280X284St7789p3Xhl183ba2401Config;
 #elif UTE_DRV_TFT_S240X284_NV3030B_HY201068AVC_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Nv3030BHy201068AvcConfig;
+#elif DRV_BOE_S240X284_I183_JD9853_WV018LZQ_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenBoe240X284Wv018lzqConfig;
 #endif
 #if UTE_DRV_8080_FOR_SCREEN_SUPPORT
     uteModulePlatform8080Init();
@@ -64,6 +68,8 @@ void uteDrvScreenCommonInterfaceInit(void)
 void uteDrvScreenCommonInit(void)
 {
     uteDrvScreenCommonInterfaceInit();
+    uteDrvScreenCommonReadId();
+
     if(uteDrvScreenCommonFunction->init)
     {
         uteDrvScreenCommonFunction->init();
@@ -84,7 +90,7 @@ void uteDrvScreenCommonInit(void)
 *@author        zn.zeng
 *@date        2021-09-06
 */
-void uteDrvScreenCommonSetResetPin(bool isHeight)
+__SCREEN_COMMON void uteDrvScreenCommonSetResetPin(bool isHeight)
 {
     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_RST_GPIO_PIN,isHeight);
 }
@@ -136,12 +142,6 @@ void uteDrvScreenCommonSetPowerEnable(bool isEnable)
         uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_IM0_GPIO_PIN, !isEnable);
     }
 #endif
-#if UTE_DRV_SCREEN_TE_SIGNAL_SUPPORT
-    if (!isEnable)
-    {
-        uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_TE_SIGNAL_INT_GPIO_PIN, false);
-    }
-#endif
     if (!isEnable)
     {
         uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_RST_GPIO_PIN, false);
@@ -153,7 +153,7 @@ void uteDrvScreenCommonSetPowerEnable(bool isEnable)
 *@author        zn.zeng
 *@date        2021-09-07
 */
-void uteDrvScreenCommonSetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
+__SCREEN_COMMON void uteDrvScreenCommonSetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
 {
     uteDrvScreenCommonFunction->setWindow(xStart,yStart,xEnd-1,yEnd-1);
 }
@@ -246,7 +246,6 @@ void uteDrvScreenCommonOpenBacklight(uint8_t percent)
     {
 #if UTE_DRV_SCREEN_BACKLIGHT_PWM_SUPPORT
         uteModulePlatformPwmDisable(UTE_DRV_SCREEN_BACKLIGHT_PWM_ID,UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN);
-        uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN,false);
 #elif UTE_DRV_SCREEN_BACKLIGHT_ONE_LINE_PULSE_SGM3132YDE8G_SUPPORT
         uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN,false);
 #endif
@@ -267,17 +266,43 @@ void uteDrvScreenCommonDisplayOff(void)
     uteDrvScreenCommonData.isInit = false;
 }
 
+__SCREEN_COMMON void uteModulePlatformScreenWriteDataStart(void)
+{
 #if UTE_DRV_QSPI_FOR_SCREEN_SUPPORT
+    uteModulePlatformScreenQspiWriteGram(0x2c);
+#elif UTE_DRV_DSPI_FOR_SCREEN_SUPPORT
+    uteModulePlatformDspiWriteGram(0x2c);
+#endif
+}
+
+__SCREEN_COMMON uint32_t uteDrvScreenCommonReadId(void)
+{
+    uint32_t id = 0;
+#if UTE_DRV_QSPI_FOR_SCREEN_SUPPORT
+    id = uteDrvScreenCommonGc9c01QspiReadId();
+#elif UTE_DRV_DSPI_FOR_SCREEN_SUPPORT
+
+#endif
+    id = ((id & 0xFF000000) >> 24) |
+         ((id & 0x00FF0000) >> 8) |
+         ((id & 0x0000FF00) << 8) |
+         ((id & 0x000000FF) << 24);
+    UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s,id=0x%x", __func__,id);
+    return id;
+}
+
+#if UTE_DRV_QSPI_FOR_SCREEN_SUPPORT
+
 /**
 *@brief   gc9c01 qspi write
 *@details
 *@author        zn.zeng
 *@date        2021-10-12
 */
-void uteDrvScreenCommonGc9c01QspiWriteCmdParams(uint8_t cmd,uint8_t *data,uint8_t size)
+__SCREEN_COMMON void uteDrvScreenCommonGc9c01QspiWriteCmdParams(uint8_t cmd,uint8_t *data,uint8_t size)
 {
-    uint8_t sdat[36] = {0x12, 0x00, cmd, 0x00,};
-    sdat[0] = 0x12;
+    uint8_t sdat[36] = {0x02, 0x00, cmd, 0x00,};
+    sdat[0] = 0x02;
     sdat[1] = 0x00;
     sdat[2] = cmd;
     sdat[3] = 0x00;
@@ -298,7 +323,7 @@ void uteDrvScreenCommonGc9c01QspiWriteCmdParams(uint8_t cmd,uint8_t *data,uint8_
 *@author        zn.zeng
 *@date        2021-10-12
 */
-void uteDrvScreenCommonGc9c01QspiWriteCmdParam(uint8_t cmd,uint8_t data)
+__SCREEN_COMMON void uteDrvScreenCommonGc9c01QspiWriteCmdParam(uint8_t cmd,uint8_t data)
 {
     uint8_t sdata[2] = {0,0};
     sdata[0] = data;
@@ -310,7 +335,7 @@ void uteDrvScreenCommonGc9c01QspiWriteCmdParam(uint8_t cmd,uint8_t data)
 *@author        zn.zeng
 *@date        2022-04-19
 */
-void uteDrvScreenCommonFt2308QspiWrite16bitCmdParams(uint16_t cmd,uint8_t *data,uint8_t size)
+__SCREEN_COMMON void uteDrvScreenCommonFt2308QspiWrite16bitCmdParams(uint16_t cmd,uint8_t *data,uint8_t size)
 {
     uint8_t sdat[36] = {0x02, 0x00, cmd, 0x00,};
     sdat[0] = 0x02;
@@ -333,7 +358,7 @@ void uteDrvScreenCommonFt2308QspiWrite16bitCmdParams(uint16_t cmd,uint8_t *data,
 *@author        zn.zeng
 *@date        2022-04-19
 */
-void uteDrvScreenCommonFt2308QspiWrite8bitCmdParams(uint8_t cmd,uint8_t *data,uint8_t size)
+__SCREEN_COMMON void uteDrvScreenCommonFt2308QspiWrite8bitCmdParams(uint8_t cmd,uint8_t *data,uint8_t size)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(cmd,data,size);
 }
@@ -343,10 +368,18 @@ void uteDrvScreenCommonFt2308QspiWrite8bitCmdParams(uint8_t cmd,uint8_t *data,ui
 *@author        zn.zeng
 *@date        2022-04-19
 */
-void uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(uint8_t cmd,uint8_t *data,uint8_t size)
+__SCREEN_COMMON void uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(uint8_t cmd,uint8_t *data,uint8_t size)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(cmd,data,size);
 }
+
+__SCREEN_COMMON uint32_t uteDrvScreenCommonGc9c01QspiReadId(void)
+{
+    uint32_t id = 0;
+    uteModulePlatformScreenQspiReadCmd(0x04,(uint8_t *)&id,4);
+    return id;
+}
+
 #elif UTE_DRV_DSPI_FOR_SCREEN_SUPPORT
 /**
 *@brief   st7789p3 dspi write

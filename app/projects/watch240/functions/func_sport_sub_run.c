@@ -70,9 +70,9 @@ static const text_t sport_sub_run_text[] =
     {COMPO_ID_NUM_SPORT_KCAL,       42,     125,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,     "5000 KCAL"},
     {COMPO_ID_NUM_SPORT_HEARTRATE,  44,     237,    0,      0,  UI_BUF_0FONT_FONT_NUM_48_BIN,   false,  false,  {.r=255, .g=255, .b=255},       3,      "108"},
 
-    {COMPO_ID_TEXT_SPORT_KCAL,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
-    {COMPO_ID_TEXT_SPORT_STEP,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
     {COMPO_ID_TEXT_SPORT_KM,        0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KM"},
+    {COMPO_ID_TEXT_SPORT_STEP,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
+    {COMPO_ID_TEXT_SPORT_KCAL,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
     {COMPO_ID_TEXT_SPORT_HEARTRATE, 0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "MIN/Cnt"},
 };
 

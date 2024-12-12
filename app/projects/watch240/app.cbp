@@ -156,13 +156,10 @@
 		<Unit filename="../../../ute/drv/temperature/ute_drv_temperature_infrared_thermistor.h" />
 		<Unit filename="../../../ute/flashmap/ute_flash_64mbit_1024k_map.h" />
 		<Unit filename="../../../ute/flashmap/ute_flash_map_common.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language.h" />
-		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_en_rus.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_zh_rcn.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../../../ute/language/ute_language_common.c">
 			<Option compilerVar="CC" />
 		</Unit>

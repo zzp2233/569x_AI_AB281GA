@@ -41,8 +41,8 @@ typedef struct wrist_disp_pic_item_t_
 //图片item，创建时遍历一下
 static const wrist_disp_pic_item_t tbl_wrist_disp_pic_item[] =
 {
-    {UI_BUF_COMMON_ON_BIN,           COMPO_ID_PIC_WRIST_ON,         200,    160,    true},
-    {UI_BUF_COMMON_OFF_BIN,          COMPO_ID_PIC_WRIST_OFF,        200,    160,    true},
+    {UI_BUF_I330001_PUBLIC_SWITCH02_BIN,           COMPO_ID_PIC_WRIST_ON,         200,    160,    true},
+    {UI_BUF_I330001_PUBLIC_SWITCH00_BIN,          COMPO_ID_PIC_WRIST_OFF,        200,    160,    true},
 };
 
 static void switch_set_sub_wrist(void)

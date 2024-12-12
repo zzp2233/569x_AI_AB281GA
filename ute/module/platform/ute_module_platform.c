@@ -610,8 +610,7 @@ void uteModulePlatformMemoryFree(void * p)
 *@author        zn.zeng
 *@date        2021-09-07
 */
-AT(.com_text.ute_gpio)
-void uteModulePlatformOutputGpioSet(uint8_t pinNum, bool isHeight)
+__SCREEN_COMMON void uteModulePlatformOutputGpioSet(uint8_t pinNum, bool isHeight)
 {
     if(pinNum==0)
     {
@@ -740,8 +739,6 @@ void uteModulePlatformScreenQspiInit(void)
     DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
 
     sys_irq_init(IRQ_DESPI_VECTOR, 0, tft_spi_isr);
-
-    DESPIBAUD = tft_cb.despi_baud;
 }
 /**
 *@brief   qspi 写命令
@@ -749,16 +746,17 @@ void uteModulePlatformScreenQspiInit(void)
 *@author         zn.zeng
 *@date     2021-10-12
 */
-void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len)
+__SCREEN_COMMON void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len)
 {
     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
-    delay_us(1);
+    uteModulePlatformDelayUs(1);
     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
     DESPICON &= ~BIT(3);                        //1BIT
     for(uint32_t i=0; i<len; i++)
     {
         tft_spi_sendbyte(buf[i]);
     }
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
 }
 
 /**
@@ -767,30 +765,23 @@ void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len)
 *@author         zn.zeng
 *@date     2021-10-12
 */
-void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,uint8_t dummyClockByte)
+__SCREEN_COMMON void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len)
 {
     DESPIBAUD = 15;
     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
-    delay_us(1);
+    uteModulePlatformDelayUs(1);
     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
-
     DESPICON &= ~BIT(3);                        //1BIT
-
     tft_spi_sendbyte(0x03);
     tft_spi_sendbyte(0x00);
     tft_spi_sendbyte(cmd);
     tft_spi_sendbyte(0x00);
 
-    for(uint32_t i=0; i<dummyClockByte; i++)
-    {
-        delay_us(1);
-        tft_spi_getbyte();
-    }
     for(uint32_t i=0; i<len; i++)
     {
-        delay_us(1);
         buf[i] = tft_spi_getbyte();
     }
+
     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
     DESPIBAUD = tft_cb.despi_baud;
 }
@@ -801,18 +792,18 @@ void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,u
 *@author         zn.zeng
 *@date     2021-10-12
 */
-// void uteModulePlatformScreenQspiWriteGram(uint8_t cmd)
-// {
-//     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
-//     uteModulePlatformDelayUs(2);
-//     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
-//     DESPICON &= ~BIT(3);                        //1BIT
-//     tft_spi_sendbyte(0x12);
-//     DESPICON |= BIT(3);                         //4BIT
-//     tft_spi_sendbyte(0x00);
-//     tft_spi_sendbyte(cmd);
-//     tft_spi_sendbyte(0x00);
-// }
+__SCREEN_COMMON void uteModulePlatformScreenQspiWriteGram(uint8_t cmd)
+{
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+    uteModulePlatformDelayUs(1);
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
+    DESPICON &= ~BIT(3);                        //1BIT
+    tft_spi_sendbyte(0x12);
+    DESPICON |= BIT(3);                         //4BIT
+    tft_spi_sendbyte(0x00);
+    tft_spi_sendbyte(cmd);
+    tft_spi_sendbyte(0x00);
+}
 #elif UTE_DRV_DSPI_FOR_SCREEN_SUPPORT
 /**
 *@brief   dspi 初始化

@@ -249,6 +249,7 @@ static void func_clock_sub_dropdown_menu_pic_update(void)
     compo_button_set_bgimg(btn, dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].res_addr);
     if (func_cb.menu_style == MENU_STYLE_SKYRER)
     {
+        u8 func_menu_sub_skyrer_get_first_idx(void);
         func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
     }
     else

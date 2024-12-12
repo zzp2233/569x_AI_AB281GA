@@ -22,7 +22,6 @@ typedef void (*ute_drv_screen_common_set_BackLight_t)(uint8_t backLightPercent);
 typedef void (*ute_drv_screen_common_idle_mode_t)(bool enable);
 #endif
 
-
 typedef struct
 {
     const char*name;
@@ -46,9 +45,6 @@ typedef struct
     bool isInit;
 } ute_drv_screen_common_data_t;
 
-#if UTE_DRV_SCREEN_TE_SIGNAL_SUPPORT
-void uteDrvScreenCommonSetTeEnable(bool isEnable);
-#endif
 void uteDrvScreenCommonInit(void);
 void uteDrvScreenCommonSetResetPin(bool isHeight);
 void uteDrvScreenCommonSetPowerEnable(bool isEnable);
@@ -59,12 +55,15 @@ void uteDrvScreenCommonOpenBacklight(uint8_t percent);
 void uteDrvScreenCommonSetBacklightInIdleMode(void);
 void uteDrvScreenCommonIdleMode(bool enable);
 void uteDrvScreenCommonDisplayOff(void);
+uint32_t uteDrvScreenCommonReadId(void);
 #if UTE_DRV_QSPI_FOR_SCREEN_SUPPORT
 void uteDrvScreenCommonGc9c01QspiWriteCmdParams(uint8_t cmd,uint8_t *data,uint8_t size);
+void uteModulePlatformScreenWriteDataStart(void);
 void uteDrvScreenCommonGc9c01QspiWriteCmdParam(uint8_t cmd,uint8_t data);
 void uteDrvScreenCommonFt2308QspiWrite16bitCmdParams(uint16_t cmd,uint8_t *data,uint8_t size);
 void uteDrvScreenCommonFt2308QspiWrite8bitCmdParams(uint8_t cmd,uint8_t *data,uint8_t size);
 void uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(uint8_t cmd,uint8_t *data,uint8_t size);
+uint32_t uteDrvScreenCommonGc9c01QspiReadId(void);
 #elif UTE_DRV_DSPI_FOR_SCREEN_SUPPORT
 /**
 *@brief   st7789p3 qspi write

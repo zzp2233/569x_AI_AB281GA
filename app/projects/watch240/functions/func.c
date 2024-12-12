@@ -115,6 +115,7 @@ extern void func_ota_ui(void);
 extern void func_long_press(void);//关机 重启 SOS
 extern void func_ota_update(void);
 extern void func_ota_err(void);
+extern void func_ota_succ(void);
 extern void func_ble_call(void);
 //extern void func_set_sub_sos(void);
 extern void func_power_on(void);//开机
@@ -127,6 +128,8 @@ extern void func_online_factory_test(void);
 compo_form_t *func_power_on_form_create(void);//开机
 compo_form_t *func_ble_call_form_create(void);
 compo_form_t *func_ota_update_form_create(void);
+compo_form_t *func_ota_err_form_create(void);
+compo_form_t *func_ota_succ_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
 //compo_form_t *func_pressure_explain_form_create(void);//压力说明
 //compo_form_t *func_pressure_form_create(void);//压力
@@ -320,7 +323,8 @@ const func_t tbl_func_create[] =
 //    {FUNC_TETRIS,                       func_tetris_form_create},
 //    {FUNC_TETRIS_START,                 func_tetris_start_form_create},
     {FUNC_OTA_MODE,                     func_ota_update_form_create},
-//    {FUNC_SET_SUB_SOS,                  func_set_sub_sos_form_create},
+    {FUNC_OTA_ERROR,                    func_ota_err_form_create},
+    {FUNC_OTA_SUCC,                     func_ota_succ_form_create},
     {FUNC_POWER_ON,                     func_power_on_form_create},
     {FUNC_TEST_MODE,                    func_test_mode_form_create},///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/
@@ -442,6 +446,7 @@ const func_t tbl_func_entry[] =
 //    {FUNC_TETRIS_START,                 func_tetris_start},
     {FUNC_OTA_MODE,                     func_ota_update},
     {FUNC_OTA_ERROR,                    func_ota_err},
+    {FUNC_OTA_SUCC,                     func_ota_succ},
     {FUNC_BLE_CALL,                     func_ble_call},
 //    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
     {FUNC_POWER_ON,                     func_power_on},
@@ -1337,7 +1342,7 @@ void func_run(void)
 //    func_cb.tbl_sort[5] = FUNC_BT;
 //    func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
 //    func_cb.sort_cnt = 7;
-    func_cb.sta = FUNC_POWER_ON;//FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
+    func_cb.sta = FUNC_POWER_ON;//FUNC_OTA_SUCC;//FUNC_OTA_MODE;//FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
     // 获取自定义排序
     uteModuleGuiCommonGetScreenTblSort(func_cb.tbl_sort, &func_cb.sort_cnt);
 

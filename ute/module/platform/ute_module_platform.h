@@ -21,6 +21,7 @@
 #include "rt_thread.h"
 
 #define __STATIC_INLINE  static __inline
+#define __SCREEN_COMMON AT(.com_text.tft_spi)
 
 #define UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN        0x00000020
 #define UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR         0x00000040
@@ -302,7 +303,7 @@ void uteModulePlatformScreenQspiWriteCmd(uint8_t *buf, uint32_t len);
 *@author         zn.zeng
 *@date     2021-10-12
 */
-void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,uint8_t dummyClockByte);
+void uteModulePlatformScreenQspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len);
 /**
 *@brief   qspi 写gram数据
 *@details

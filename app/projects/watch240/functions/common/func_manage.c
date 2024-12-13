@@ -256,7 +256,7 @@ const static u8 latest_allowed_id[] =
     FUNC_MESSAGE,                       //消息
     FUNC_SCAN,                          //扫一扫
     FUNC_VOICE,                         //语音助手
-    FUNC_COMPASS,                       //指南针
+//    FUNC_COMPASS,                       //指南针
     FUNC_SPORT,                         //运动
     FUNC_CALL,                          //电话
     FUNC_FINDPHONE,                     //寻找手机

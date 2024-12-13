@@ -63,7 +63,7 @@ enum
     FUNC_MESSAGE,                       //消息
     FUNC_SCAN,                          //扫一扫
     FUNC_VOICE,                         //语音助手
-    FUNC_COMPASS,                       //指南针
+//    FUNC_COMPASS,                       //指南针
     FUNC_ADDRESS_BOOK,                  //电话簿
     FUNC_CALL_SUB_LINKMAN = FUNC_ADDRESS_BOOK,
     FUNC_SPORT,                         //运动

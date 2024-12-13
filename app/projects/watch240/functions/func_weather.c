@@ -25,6 +25,7 @@ enum
     CARBOX_LIST_1ID,
     CARBOX_LIST_2ID,
     COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
 };
 
 static const f_weather_t weather_list[] =
@@ -162,13 +163,11 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set_align_center(txt, false);
 
     ///设置标题栏时间///
-    memset(buf,0,sizeof(buf));
-    snprintf(buf, sizeof(buf), "%d:%02d",time.hour,time.min);///* 刷新标题栏时间*/
-    txt = compo_textbox_create(frm,5);
-    compo_textbox_set(txt, buf);
-    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/1.42,GUI_SCREEN_HEIGHT/(284/15),GUI_SCREEN_WIDTH/(240/52),GUI_SCREEN_HEIGHT/(284/23));
-    compo_textbox_set_align_center(txt, false);
-    compo_setid(txt,COMPO_ID_TITLE_TIME);
+    compo_textbox_t* time_title = compo_textbox_create(frm, 32);
+    compo_textbox_set_align_center(time_title, false);
+    compo_textbox_set_location(time_title, 168, 15, 52, 23);
+    compo_setid(time_title, COMPO_ID_TXT_TIME);
+    compo_bonddata(time_title, COMPO_BOND_HOURMIN_TXT);
 
     picbox = compo_picturebox_create(frm, weather_list[get_weather_id[0]].res_addr);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5);
@@ -273,13 +272,6 @@ static void func_weather_process(void)
 {
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
-    char buf[50];
-    compo_textbox_t * title = compo_getobj_byid(COMPO_ID_TITLE_TIME);
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-    memset(buf,0,sizeof(buf));
-    snprintf(buf, sizeof(buf), "%d:%02d",time.hour,time.min);///* 刷新标题栏时间*/
-    compo_textbox_set(title, buf);
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_page_move_process(f_weather->ptm);
     func_process();

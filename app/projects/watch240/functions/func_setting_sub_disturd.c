@@ -658,7 +658,7 @@ static void func_disturd_card_click(void)
         if (compo_id == ui_handle.disturd_all_card.id)              //全天勿扰
         {
             if (sys_cb.disturd_adl == 0) {
-                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK) {
+                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK) {
                     if (sys_cb.disturd_adl == 0)
                     {
                         sys_cb.disturd_adl = 1;
@@ -674,7 +674,7 @@ static void func_disturd_card_click(void)
         else if (compo_id == ui_handle.disturd_def_card.id)         //定时勿扰
         {
             if (sys_cb.disturd_tim == 0) {
-                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK) {
+                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK) {
                     if(sys_cb.disturd_tim == 0)
                     {
                         sys_cb.disturd_tim = 1;

@@ -22,6 +22,21 @@ compo_picturebox_t *compo_picturebox_create(compo_form_t *frm, u32 res_addr)
     picbox->radix = 1;
     return picbox;
 }
+/**
+ * @brief 创建一个图像框组件
+ * @param[in] frm : 窗体指针
+  * @param[in] page_body : 页面
+ * @param[in] res_addr : 图像资源地址
+ * @return 返回图像指针
+ **/
+compo_picturebox_t *compo_picturebox_create_for_page(compo_form_t *frm,widget_page_t *page_body,u32 res_addr)
+{
+    compo_picturebox_t *picbox = compo_create(frm, COMPO_TYPE_PICTUREBOX);
+    void *img = widget_image_create(page_body, res_addr);
+    picbox->img = img;
+    picbox->radix = 1;
+    return picbox;
+}
 
 /**
  * @brief 设置图像

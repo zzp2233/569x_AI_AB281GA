@@ -23,7 +23,7 @@ typedef struct f_call_list_t_
 static const compo_listbox_item_t tbl_call_list[] =
 {
     {STR_CALL_RECENT,      UI_BUF_I330001_CALL_CALLRECORDS_BIN,             .func_sta = FUNC_CALL_SUB_RECORD},
-    {STR_CONTACTS,         UI_BUF_I330001_CALL_CONTACTS_BIN,                .func_sta = FUNC_CALL_SUB_LINKMAN},
+    {STR_CALL_LINK,        UI_BUF_I330001_CALL_CONTACTS_BIN,                .func_sta = FUNC_CALL_SUB_LINKMAN},
     {STR_CALL_DIAL,        UI_BUF_I330001_CALL_DIALPAD_BIN,                 .func_sta = FUNC_CALL_SUB_DIAL},
 };
 

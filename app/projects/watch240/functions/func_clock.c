@@ -85,7 +85,7 @@ const u8 quick_btn_tbl[] =
 #else
     [21]    = FUNC_NULL,                    //支付宝
 #endif // SECURITY_PAY_EN
-    [22]    = FUNC_COMPASS,                 //指南针
+//    [22]    = FUNC_COMPASS,                 //指南针
     [23]    = FUNC_ADDRESS_BOOK,            //电话簿
     [24]    = FUNC_SPORT,                   //运动
     [25]    = FUNC_CALL,                    //电话

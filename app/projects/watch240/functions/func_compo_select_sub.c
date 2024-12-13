@@ -257,11 +257,11 @@ compo_form_t *func_compo_select_sub_form_create(void)
         halt(HALT_GUI_COMPO_LISTBOX_CREATE);
     }
 
-//    printf("tbl_sort [");
-//    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++) {
-//        printf("%d ", func_cb.tbl_sort[i]);
-//    }
-//    printf("]\n");
+    printf("tbl_sort [");
+    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++) {
+        printf("%d ", func_cb.tbl_sort[i]);
+    }
+    printf("]\n");
 
     //控制位未加载时进行初始化
     bool bit_init = true;
@@ -307,18 +307,18 @@ static void func_compo_select_sub_click(void)
     compo_listbox_t *listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     f_compo_select_sub_t *f_compo_select_sub = (f_compo_select_sub_t *)func_cb.f_cb;
 
-    bool del = false;
+    bool del = true;
     point_t cur_point = ctp_get_sxy();
 //    printf("%s->x:%d\n", __func__, cur_point.x);
-    if (cur_point.x < listbox->item_width - gui_image_get_size(listbox->res_sta_icon1).wid)
-    {
-        return ;
-    }
-    //点击删除按钮范围, 去掉向上了，直接就是180
-    if (cur_point.x >= listbox->item_width - gui_image_get_size(listbox->res_sta_icon1).wid)
-    {
-        del = true;
-    }
+//    if (cur_point.x < listbox->item_width - gui_image_get_size(listbox->res_sta_icon1).wid)
+//    {
+//        return ;
+//    }
+//    //点击删除按钮范围, 去掉向上了，直接就是180
+//    if (cur_point.x >= listbox->item_width - gui_image_get_size(listbox->res_sta_icon1).wid)
+//    {
+//        del = true;
+//    }
 
     int idx = compo_listbox_select(listbox, cur_point);
     if (idx < 0)
@@ -438,7 +438,7 @@ static void func_compo_select_sub_exit(void)
                 if (SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j] == list_data_sort[i])
                 {
                     func_cb.tbl_sort[index ++] = SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j + 1];
-//                    printf("%d ", func_cb.tbl_sort[index-1]);
+                    printf("%d ", func_cb.tbl_sort[index-1]);
                     break;
                 }
             }

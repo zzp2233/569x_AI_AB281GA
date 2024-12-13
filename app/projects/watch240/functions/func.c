@@ -60,11 +60,11 @@ extern void func_game(void);
 extern void func_style(void);
 extern void func_findphone(void);
 extern void func_altitude(void);
-extern void func_map(void);
+//extern void func_map(void);
 extern void func_message_info(void);
 extern void func_scan(void);
 extern void func_voice(void);
-extern void func_compass(void);
+//extern void func_compass(void);
 extern void func_address_book(void);
 extern void func_set_sub_list(void);
 extern void func_set_sub_sav(void);
@@ -171,11 +171,11 @@ compo_form_t *func_game_form_create(void);
 compo_form_t *func_style_form_create(void);
 compo_form_t *func_findphone_form_create(void);
 compo_form_t *func_altitude_form_create(void);
-compo_form_t *func_map_form_create(void);
+//compo_form_t *func_map_form_create(void);
 compo_form_t *func_message_form_create(void);
 compo_form_t *func_scan_form_create(void);
 compo_form_t *func_voice_form_create(void);
-compo_form_t *func_compass_form_create(void);
+//compo_form_t *func_compass_form_create(void);
 compo_form_t *func_address_book_form_create(void);
 compo_form_t *func_set_sub_list_form_create(void);
 compo_form_t *func_set_sub_wrist_form_create(void);
@@ -268,11 +268,11 @@ const func_t tbl_func_create[] =
     {FUNC_STYLE,                        func_style_form_create},
     {FUNC_FINDPHONE,                    func_findphone_form_create},
     {FUNC_ALTITUDE,                     func_altitude_form_create},
-    {FUNC_MAP,                          func_map_form_create},
+//    {FUNC_MAP,                          func_map_form_create},
     {FUNC_MESSAGE,                      func_message_form_create},
     {FUNC_SCAN,                         func_scan_form_create},
     {FUNC_VOICE,                        func_voice_form_create},
-    {FUNC_COMPASS,                      func_compass_form_create},
+//    {FUNC_COMPASS,                      func_compass_form_create},
     {FUNC_ADDRESS_BOOK,                 func_address_book_form_create},
     {FUNC_CALL,                         func_call_form_create},
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record_form_create},
@@ -375,11 +375,11 @@ const func_t tbl_func_entry[] =
     {FUNC_STYLE,                        func_style},                    //菜单风格
     {FUNC_ALTITUDE,                     func_altitude},                 //海拔
     {FUNC_FINDPHONE,                    func_findphone},                //寻找手机
-    {FUNC_MAP,                          func_map},                      //地图
+//    {FUNC_MAP,                          func_map},                      //地图
     {FUNC_MESSAGE,                      func_message_info},             //消息
     {FUNC_SCAN,                         func_scan},                     //扫一扫
     {FUNC_VOICE,                        func_voice},                    //语音助手
-    {FUNC_COMPASS,                      func_compass},                  //指南针
+//    {FUNC_COMPASS,                      func_compass},                  //指南针
     {FUNC_ADDRESS_BOOK,                 func_address_book},             //电话簿
     {FUNC_CALENDAER,                    func_calendar},                 //日历
     {FUNC_CALL,                         func_call},                     //电话

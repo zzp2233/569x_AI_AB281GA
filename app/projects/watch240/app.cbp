@@ -1297,16 +1297,6 @@
 		<Unit filename="functions/test_mode/func_test_mode.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="i18n/lang.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="i18n/lang.h" />
-		<Unit filename="i18n/lang_en.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="i18n/lang_zh.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -190,13 +190,20 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
         case COMPO_BOND_HOURMIN_TXT:
 //            value = tmp_time_hour / 10;
-            if (tm.hour >= 12)      //2 PM, 1 AM
+            if(uteModuleSystemtime12HOn()) 
             {
-                sprintf(value_str, "%s%02d:%02d", i18n[STR_PM], tmp_time_hour, tm.min);
-            }
-            else
+                if (tm.hour >= 12)      //2 PM, 1 AM
+                {
+                    sprintf(value_str, "%s%02d:%02d", i18n[STR_PM], tmp_time_hour, tm.min);
+                }
+                else
+                {
+                    sprintf(value_str, "%s%02d:%02d", i18n[STR_AM], tmp_time_hour, tm.min);
+                }
+            } 
+            else 
             {
-                sprintf(value_str, "%s%02d:%02d", i18n[STR_AM], tmp_time_hour, tm.min);
+                sprintf(value_str, "%02d:%02d", tmp_time_hour, tm.min);
             }
             break;
 

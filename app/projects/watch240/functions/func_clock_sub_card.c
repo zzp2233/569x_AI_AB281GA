@@ -42,22 +42,6 @@
 #define TXT_CNT_MAX                     8                                                                       //文本框最大字符数
 #define CARD_BTN_COUNT                  (COMPO_CARD_END - COMPO_CARD_START - 1)    //卡片（按钮）数量
 
-#define ARC_ANGLE_MAX           3600
-#define ARC_ROTATION_DEFAULT    2700   //库默认的 0°位置在3点钟方向，组件默认的0°位置在12点钟方向
-#define ARC_WID                        10
-#define KCAL_ARC_ARDUIS                100
-#define KM_ARC_ARDUIS                  78-2
-#define STEP_ARC_ARDUIS                54-2
-
-#define KCAL_ARC_COLOR                61861
-#define KM_ARC_COLOR                  65188
-#define STEP_ARC_COLOR                1946
-
-#define KCAL_ARC_COLOR_BG             31077
-#define KM_ARC_COLOR_BG               31587
-#define STEP_ARC_COLOR_BG             7117
-
-
 #define SEC_TO_HOUR(s)  (s / 3600)          //总秒数转换为时分秒（时）
 #define SEC_TO_MIN(s)   ((s % 3600) / 60)   //总秒数转换为时分秒（分）
 #define SEC_TO_SEC(s)   (s % 60)            //总秒数转换为时分秒（秒）
@@ -67,21 +51,6 @@ const u8 last_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_SLEEP, FUNC_SPORT, FUNC_H
 
 ///卡片、组件原始位置（相对于卡片中心点）
 #define CARD_WIDTH_ORG                  232//308
-
-//enum
-//{
-//    CARD_ID_CLOCK = 0,
-//    CARD_ID_SPORT_COMPASS,
-//    CARD_ID_ACTIVITY,
-//    CARD_ID_SLEEP,
-//    CARD_ID_HEARTRATE,
-//    CARD_ID_MUSIC,
-//    CARD_ID_POWEROFF_ASSISTANT,
-//
-//    CARD_COUNT,
-//};
-
-
 
 typedef struct ui_handle_t_ {
     struct card_clock_day_t {
@@ -283,19 +252,6 @@ enum
     COMPO_ID_APP3,
     COMPO_ID_APP4,
 };
-
-
-//卡片原始位置信息
-//static const s16 card_y_info[CARD_COUNT] =
-//{
-////    [CARD_ID_CLOCK]                 = CARD_CLOCK_Y,
-////    [CARD_ID_SPORT_COMPASS]         = CARD_SPORT_COMPASS_Y,
-////    [CARD_ID_ACTIVITY]              = CARD_ACTIVITY_Y,
-////    [CARD_ID_SLEEP]                 = CARD_SLEEP_Y,
-////    [CARD_ID_HEARTRATE]             = CARD_HEARTRATE_Y,
-////    [CARD_ID_MUSIC]                 = CARD_MUSIC_Y,
-////    [CARD_ID_POWEROFF_ASSISTANT]    = CARD_POWEROFF_ASSISTANT_Y,
-//};
 
 static const ui_handle_t ui_handle = {
     .card_clock_day = {
@@ -880,14 +836,6 @@ typedef struct f_card_t_
     u8 activity_state;
 } f_card_t;
 
-/// size, arc_w, rotation, s_angle, e_angle, content_color, bg_color
-static const int16_t activity_arc_info[][7] =
-{
-    {KCAL_ARC_ARDUIS, ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   KCAL_ARC_COLOR, KCAL_ARC_COLOR_BG},      //kcal
-    {KM_ARC_ARDUIS,   ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   KM_ARC_COLOR,   KM_ARC_COLOR_BG},      //steps
-    {STEP_ARC_ARDUIS, ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   STEP_ARC_COLOR, STEP_ARC_COLOR_BG},      //exervise
-};
-
 static void card1_updata_disp(void)
 {
     f_card_t *f_activity = (f_card_t *)func_cb.f_cb;
@@ -899,38 +847,34 @@ static void card1_updata_disp(void)
         uint32_t totalStepCnt = 0;
         uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
 
-        compo_arc_t *arc_kcal = compo_getobj_byid(COMPO_ID_ARC_KCAL);
-        compo_arc_t *arc_km   = compo_getobj_byid(COMPO_ID_ARC_KM);
-        compo_arc_t *arc_step = compo_getobj_byid(COMPO_ID_ARC_STEP);
+        compo_picturebox_t *arc_kcal = compo_getobj_byid(COMPO_ID_ARC_KCAL);
+        compo_picturebox_t *arc_km   = compo_getobj_byid(COMPO_ID_ARC_KM);
+        compo_picturebox_t *arc_step = compo_getobj_byid(COMPO_ID_ARC_STEP);
         compo_cardbox_t *cardbox = compo_getobj_byid(ui_handle.card1.id);
-//        compo_textbox_t *textbox_kcal = compo_getobj_byid(KCAL_TXT_VALUE_ID);
-//        compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
-//        compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
 
         if(f_activity->activity_state == 0)
         {
+            f_activity->arc_step_value+=18;
 
-            f_activity->arc_step_value+=10;
+            compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value );
+            compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
+            compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
 
-            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
-            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
-            compo_arc_set_value(arc_step, f_activity->arc_step_value);
-
-            if(f_activity->arc_step_value >=ARC_VALUE_MAX)
+            if(f_activity->arc_step_value >=1800)
             {
-                f_activity->activity_state = 1;
+                f_activity->activity_state =1;
             }
         }
         else if(f_activity->activity_state == 1)
         {
 
-            f_activity->arc_step_value-=10;
+            f_activity->arc_step_value-=18;
 
-            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
-            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
-            compo_arc_set_value(arc_step, f_activity->arc_step_value);
+            compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value );
+            compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
+            compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
 
-            if(f_activity->arc_step_value <= totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt())
+            if(f_activity->arc_step_value <= totalStepCnt*1800 / uteModuleSportGetStepsTargetCnt())
             {
                 f_activity->activity_state = 2;
             }
@@ -939,13 +883,13 @@ static void card1_updata_disp(void)
         else
         {
 
-            f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
-            f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
-            f_activity->arc_step_value =(uint32_t) (totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt());
+            f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData()*1.8;
+            f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData()*1.8;
+            f_activity->arc_step_value =(uint32_t) (totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt())*1.8;
 
-            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
-            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
-            compo_arc_set_value(arc_step, f_activity->arc_step_value);
+            compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value );
+            compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
+            compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
             memset(txt_buf,'\0',sizeof(txt_buf));
 
             if(totalStepCnt){
@@ -1218,52 +1162,29 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     }
     compo_cardbox_text_set(card1, ui_handle.card1.text_step.idx, txt_buf);
 
-    ///创建圆弧
-    for (u8 i = 0; i < sizeof(activity_arc_info) / sizeof(activity_arc_info[0]); i++)
-    {
-        compo_arc_t *compo_arc = compo_create(frm, COMPO_TYPE_ARC);
-        if (NULL == compo_arc) {
-            halt(HALT_GUI_COMPO_ARC_FAIL);
-        }
-        compo_arc->arc = widget_arc_create(card1->page);
-        compo_arc->prec = ARC_ANGLE_PREC_DEFAULT; //默认精度
-        compo_arc->rotation_offset = ARC_ROTATION_DEFAULT;
-        widget_arc_set_angles(compo_arc->arc, compo_arc->rotation_offset, compo_arc->rotation_offset);
+    area_t pic_bg_area = gui_image_get_size(UI_BUF_I330001_FIRSTORDER_ACTIVITY_BG_BIN);
+    widget_page_t * widget_page = widget_page_create(card1->page);///创建按键页面
+    widget_set_location(widget_page,52,0,pic_bg_area.wid,pic_bg_area.hei);
 
-        compo_arc_set_alpha(compo_arc, 255, 0);
-        compo_arc_set_location(compo_arc, activity_arc_info[0][0]/2,activity_arc_info[0][0]/4, activity_arc_info[i][0], activity_arc_info[i][0]);
-        compo_arc_set_width(compo_arc, activity_arc_info[i][1]);
-        compo_arc_set_rotation(compo_arc, 2700);
-        compo_arc_set_angles(compo_arc, 0, 1800);
-        compo_arc_set_color(compo_arc, activity_arc_info[i][6], activity_arc_info[i][6]);
-        compo_arc_set_value(compo_arc, 1000);
+    compo_picturebox_t *arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_BG_BIN);//彩虹背景
+    compo_picturebox_set_pos(arc_pic,pic_bg_area.wid/2,pic_bg_area.hei/2);
 
-    }
+    arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_RED_BIN);//圆弧红/
+    compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
+    compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_setid(arc_pic,COMPO_ID_ARC_KCAL);
+    arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_YELLOW_BIN);//圆弧黄/
+    compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
+    compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_setid(arc_pic,COMPO_ID_ARC_KM);
+    arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_BLUE_BIN);//圆弧绿/
+    compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
+    compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_setid(arc_pic,COMPO_ID_ARC_STEP);
 
-    printf("1:%d\n",make_color(ui_handle.card1.arc_kcal.bg_color.r,ui_handle.card1.arc_kcal.bg_color.g,ui_handle.card1.arc_kcal.bg_color.b));
-    printf("1:%d\n",make_color(ui_handle.card1.arc_km.bg_color.r,ui_handle.card1.arc_km.bg_color.g,ui_handle.card1.arc_km.bg_color.b));
-    printf("1:%d\n",make_color(ui_handle.card1.arc_step.bg_color.r,ui_handle.card1.arc_step.bg_color.g,ui_handle.card1.arc_step.bg_color.b));
 
-    ///创建圆弧
-    for (u8 i = 0; i < sizeof(activity_arc_info) / sizeof(activity_arc_info[0]); i++)
-    {
-        compo_arc_t *compo_arc = compo_create(frm, COMPO_TYPE_ARC);
-        if (NULL == compo_arc) {
-            halt(HALT_GUI_COMPO_ARC_FAIL);
-        }
-        compo_arc->arc = widget_arc_create(card1->page);
-        compo_arc->prec = ARC_ANGLE_PREC_DEFAULT; //默认精度
-        compo_arc->rotation_offset = ARC_ROTATION_DEFAULT;
-        widget_arc_set_angles(compo_arc->arc, compo_arc->rotation_offset, compo_arc->rotation_offset);
-        compo_setid(compo_arc, COMPO_ID_ARC_KCAL + i);
-        compo_arc_set_alpha(compo_arc, 255, 0);
-        compo_arc_set_location(compo_arc, activity_arc_info[0][0]/2,activity_arc_info[0][0]/4, activity_arc_info[i][0], activity_arc_info[i][0]);
-        compo_arc_set_width(compo_arc, activity_arc_info[i][1]);
-        compo_arc_set_rotation(compo_arc, 2700);
-        compo_arc_set_angles(compo_arc, 0, 1800);
-        compo_arc_set_color(compo_arc, activity_arc_info[i][5], activity_arc_info[i][5]);
-        compo_arc_set_value(compo_arc, 0);
-    }
+    arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_YUANJIAO_BIN);//圆弧角背景/
+    compo_picturebox_set_pos(arc_pic,52,pic_bg_area.hei-gui_image_get_size(UI_BUF_I330001_FIRSTORDER_ACTIVITY_YUANJIAO_BIN).hei );
 
     ///时钟 日期
     compo_picturebox_t* clock_bg = compo_picturebox_create(frm, ui_handle.card_clock_day.clock.bg_res);
@@ -1870,7 +1791,7 @@ static void func_clock_sub_card_data_update(void)
     compo_cardbox_text_set(cardbox, ui_handle.card4.text_time.idx,txt_buf);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_MIN(sys_cb.stopwatch_total_msec/1000),SEC_TO_SEC(sys_cb.stopwatch_total_msec/1000),sys_cb.stopwatch_total_msec%100);
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_MIN(sys_cb.stopwatch_total_msec/1000),SEC_TO_SEC(sys_cb.stopwatch_total_msec/1000),sys_cb.stopwatch_total_msec%1000/10);
     cardbox = compo_getobj_byid(ui_handle.card5.id);
     compo_cardbox_text_set(cardbox, ui_handle.card5.text_time.idx,txt_buf);
 

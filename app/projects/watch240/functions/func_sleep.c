@@ -25,6 +25,7 @@ enum
     COMPO_ID_CHART_SHALLOW,
     COMPO_ID_CHART_DEEP,
     COMPO_ID_TITLE_TIME,
+    COMPO_ID_TXT_TIME,
 };
 
 enum
@@ -71,17 +72,14 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH/(240/48),GUI_SCREEN_HEIGHT/(284/28));
     compo_textbox_set_align_center(txt, false);
 
-    ///设置标题栏时间///
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
-    memset(buf,0,sizeof(buf));
-    snprintf(buf, sizeof(buf), "%d:%02d",time.hour,time.min);///* 刷新标题栏时间*/
-    txt = compo_textbox_create(frm,5);
-    compo_textbox_set(txt, buf);
-    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/1.42,GUI_SCREEN_HEIGHT/(284/15),GUI_SCREEN_WIDTH/(240/52),GUI_SCREEN_HEIGHT/(284/23));
-    compo_textbox_set_align_center(txt, false);
-    compo_setid(txt,COMPO_ID_TITLE_TIME);
-
+    ///设置标题栏时间///
+    compo_textbox_t* time_title = compo_textbox_create(frm, 32);
+    compo_textbox_set_align_center(time_title, false);
+    compo_textbox_set_location(time_title, 168, 15, 52, 23);
+    compo_setid(time_title, COMPO_ID_TXT_TIME);
+    compo_bonddata(time_title, COMPO_BOND_HOURMIN_TXT);
 
     memset(buf,0,sizeof(buf));
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
@@ -348,13 +346,6 @@ static void func_sleep_process(void)
 {
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
-    char buf[50];
-    compo_textbox_t * title = compo_getobj_byid(COMPO_ID_TITLE_TIME);
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-    memset(buf,0,sizeof(buf));
-    snprintf(buf, sizeof(buf), "%d:%02d",time.hour,time.min);///* 刷新标题栏时间*/
-    compo_textbox_set(title, buf);
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_page_move_process(f_sleep->ptm);
     func_process();

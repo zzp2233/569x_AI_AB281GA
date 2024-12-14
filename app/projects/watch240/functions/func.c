@@ -60,11 +60,11 @@ extern void func_game(void);
 extern void func_style(void);
 extern void func_findphone(void);
 extern void func_altitude(void);
-extern void func_map(void);
+//extern void func_map(void);
 extern void func_message_info(void);
 extern void func_scan(void);
 extern void func_voice(void);
-extern void func_compass(void);
+//extern void func_compass(void);
 extern void func_address_book(void);
 extern void func_set_sub_list(void);
 extern void func_set_sub_sav(void);
@@ -72,8 +72,8 @@ extern void func_set_sub_dousing(void);
 extern void func_set_sub_disturd(void);
 extern void func_set_sub_language(void);
 extern void func_set_sub_wrist(void);
-extern void func_set_sub_time(void);
-extern void func_time_sub_custom(void);
+//extern void func_set_sub_time(void);
+//extern void func_time_sub_custom(void);
 //extern void func_set_sub_password(void);
 extern void func_password_sub_disp(void);
 extern void func_password_sub_select(void);
@@ -171,19 +171,19 @@ compo_form_t *func_game_form_create(void);
 compo_form_t *func_style_form_create(void);
 compo_form_t *func_findphone_form_create(void);
 compo_form_t *func_altitude_form_create(void);
-compo_form_t *func_map_form_create(void);
+//compo_form_t *func_map_form_create(void);
 compo_form_t *func_message_form_create(void);
 compo_form_t *func_scan_form_create(void);
 compo_form_t *func_voice_form_create(void);
-compo_form_t *func_compass_form_create(void);
+//compo_form_t *func_compass_form_create(void);
 compo_form_t *func_address_book_form_create(void);
 compo_form_t *func_set_sub_list_form_create(void);
 compo_form_t *func_set_sub_wrist_form_create(void);
 compo_form_t *func_set_sub_sav_form_create(void);
 compo_form_t *func_set_sub_dousing_form_create(void);
 compo_form_t *func_set_sub_language_form_create(void);
-compo_form_t *func_set_sub_time_form_create(void);
-compo_form_t *func_time_sub_custom_form_create(void);
+//compo_form_t *func_set_sub_time_form_create(void);
+//compo_form_t *func_time_sub_custom_form_create(void);
 //compo_form_t *func_set_sub_password_form_create(void);
 compo_form_t *func_password_sub_disp_form_create(void);
 compo_form_t *func_password_sub_select_form_create(void);
@@ -268,11 +268,11 @@ const func_t tbl_func_create[] =
     {FUNC_STYLE,                        func_style_form_create},
     {FUNC_FINDPHONE,                    func_findphone_form_create},
     {FUNC_ALTITUDE,                     func_altitude_form_create},
-    {FUNC_MAP,                          func_map_form_create},
+//    {FUNC_MAP,                          func_map_form_create},
     {FUNC_MESSAGE,                      func_message_form_create},
     {FUNC_SCAN,                         func_scan_form_create},
     {FUNC_VOICE,                        func_voice_form_create},
-    {FUNC_COMPASS,                      func_compass_form_create},
+//    {FUNC_COMPASS,                      func_compass_form_create},
     {FUNC_ADDRESS_BOOK,                 func_address_book_form_create},
     {FUNC_CALL,                         func_call_form_create},
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record_form_create},
@@ -289,8 +289,8 @@ const func_t tbl_func_create[] =
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd_form_create},
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set_form_create},
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
-    {FUNC_SET_SUB_TIME,                 func_set_sub_time_form_create},
-    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom_form_create},
+//    {FUNC_SET_SUB_TIME,                 func_set_sub_time_form_create},
+//    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom_form_create},
 //    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp_form_create},
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
@@ -375,11 +375,11 @@ const func_t tbl_func_entry[] =
     {FUNC_STYLE,                        func_style},                    //菜单风格
     {FUNC_ALTITUDE,                     func_altitude},                 //海拔
     {FUNC_FINDPHONE,                    func_findphone},                //寻找手机
-    {FUNC_MAP,                          func_map},                      //地图
+//    {FUNC_MAP,                          func_map},                      //地图
     {FUNC_MESSAGE,                      func_message_info},             //消息
     {FUNC_SCAN,                         func_scan},                     //扫一扫
     {FUNC_VOICE,                        func_voice},                    //语音助手
-    {FUNC_COMPASS,                      func_compass},                  //指南针
+//    {FUNC_COMPASS,                      func_compass},                  //指南针
     {FUNC_ADDRESS_BOOK,                 func_address_book},             //电话簿
     {FUNC_CALENDAER,                    func_calendar},                 //日历
     {FUNC_CALL,                         func_call},                     //电话
@@ -396,8 +396,8 @@ const func_t tbl_func_entry[] =
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set},          //勿扰--时间设置
     {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language},         //设置--语言
-    {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
-    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间
+//    {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
+//    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间
 //    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password},         //设置--密码锁
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp},        //设置--新密码锁设置
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select},      //设置--密码锁确认

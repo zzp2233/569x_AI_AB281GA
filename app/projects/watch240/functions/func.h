@@ -63,7 +63,7 @@ enum
     FUNC_MESSAGE,                       //消息
     FUNC_SCAN,                          //扫一扫
     FUNC_VOICE,                         //语音助手
-    FUNC_COMPASS,                       //指南针
+//    FUNC_COMPASS,                       //指南针
     FUNC_ADDRESS_BOOK,                  //电话簿
     FUNC_CALL_SUB_LINKMAN = FUNC_ADDRESS_BOOK,
     FUNC_SPORT,                         //运动
@@ -88,8 +88,8 @@ enum
     FUNC_SET_SUB_SAV,                   //设置--声音与振动
     FUNC_SET_SUB_LANGUAGE,              //设置--语言
     FUNC_LANGUAGE = FUNC_SET_SUB_LANGUAGE,
-    FUNC_SET_SUB_TIME,                  //设置--时间
-    FUNC_TIME_SUB_CUSTOM,               //调整日期
+//    FUNC_SET_SUB_TIME,                  //设置--时间
+//    FUNC_TIME_SUB_CUSTOM,               //调整日期
     FUNC_SET_SUB_PASSWORD,              //设置--密码锁
     FUNC_PASSWORD_SUB_DISP,             //新密码锁设置
     FUNC_PASSWORD_SUB_SELECT,           //确认密码锁

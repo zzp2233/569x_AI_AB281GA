@@ -64,15 +64,15 @@ typedef struct
 #define TEXT_CNT    ((int)(sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0])))
 static const text_t sport_sub_run_text[] =
 {
-    {COMPO_ID_NUM_SPORT_TIME,       10,     66,     0,      0,  UI_BUF_0FONT_FONT_NUM_46_BIN,   false,  false,  {.r=169, .g=255, .b=0},         20,    "02:38.58"},
-    {COMPO_ID_NUM_SPORT_KM,         45,     163,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=255, .b=255},       10,    "50 KM"},
-    {COMPO_ID_NUM_SPORT_STEP,       45,     201,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,    "20000 STEP"},
-    {COMPO_ID_NUM_SPORT_KCAL,       42,     125,    0,      0,  UI_BUF_0FONT_FONT_NUM_24_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,     "5000 KCAL"},
-    {COMPO_ID_NUM_SPORT_HEARTRATE,  44,     237,    0,      0,  UI_BUF_0FONT_FONT_NUM_48_BIN,   false,  false,  {.r=255, .g=255, .b=255},       3,      "108"},
+    {COMPO_ID_NUM_SPORT_TIME,       10,     66,     0,      0,  UI_BUF_0FONT_FONT_NUM_48_BIN,   false,  false,  {.r=169, .g=255, .b=0},         20,    "02:38.58"},
+    {COMPO_ID_NUM_SPORT_KM,         45,     163,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       10,    "50 KM"},
+    {COMPO_ID_NUM_SPORT_STEP,       45,     201,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,    "20000 STEP"},
+    {COMPO_ID_NUM_SPORT_KCAL,       42,     125,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,     "5000 KCAL"},
+    {COMPO_ID_NUM_SPORT_HEARTRATE,  44,     237,    0,      0,  UI_BUF_0FONT_FONT_NUM_38_BIN,   false,  false,  {.r=255, .g=255, .b=255},       3,      "108"},
 
-    {COMPO_ID_TEXT_SPORT_KCAL,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
-    {COMPO_ID_TEXT_SPORT_STEP,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
     {COMPO_ID_TEXT_SPORT_KM,        0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KM"},
+    {COMPO_ID_TEXT_SPORT_STEP,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
+    {COMPO_ID_TEXT_SPORT_KCAL,      0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
     {COMPO_ID_TEXT_SPORT_HEARTRATE, 0,      0,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "MIN/Cnt"},
 };
 
@@ -167,6 +167,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_t* time = compo_textbox_create(frm, 32);
     compo_textbox_set_align_center(time, false);
     compo_textbox_set_location(time, 168, 15, 52, 23);
+    compo_setid(time, COMPO_ID_TXT_TIME);
+    compo_bonddata(time, COMPO_BOND_HOURMIN_TXT);
+
+    time = compo_textbox_create(frm, 32);
+    compo_textbox_set_align_center(time, false);
+    compo_textbox_set_location(time, 168-GUI_SCREEN_WIDTH-GUI_SCREEN_CENTER_X/1.5, 15, 52, 23);
     compo_setid(time, COMPO_ID_TXT_TIME);
     compo_bonddata(time, COMPO_BOND_HOURMIN_TXT);
 
@@ -743,7 +749,7 @@ static void func_sport_sub_run_click_handler(void)
 //            {
 //                msg = i18n[STR_SPORT_EXIT_MSG3];
 //            }
-            int res = msgbox((char*)msg, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, 0);
+            int res = msgbox((char*)msg, NULL, NULL, MSGBOX_MODE_BTN_YESNO, 0);
             if (res == MSGBOX_RES_OK)
             {
 //                if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的

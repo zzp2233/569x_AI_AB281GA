@@ -104,7 +104,7 @@ compo_form_t *func_menu_sub_disk_form_create(void)
     compo_disklist_update_with_text_scroll_rst(disklist);
 
     //齿轮背景图
-    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_MENU_GEAR_BIN);
+    compo_picturebox_t *pic = compo_picturebox_create(frm, 0);
     compo_setid(pic, COMPO_ID_GEAR);
     compo_picturebox_set_size(pic, GUI_SCREEN_WIDTH/2, GUI_SCREEN_WIDTH/2);
     compo_picturebox_set_pos(pic, 0, GUI_SCREEN_CENTER_Y);

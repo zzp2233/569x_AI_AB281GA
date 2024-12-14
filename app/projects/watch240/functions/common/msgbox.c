@@ -242,7 +242,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4,
                                  GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei/2 - 10);
 
-            btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK00_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4,
                                  GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_OK01_BIN).hei/2 - 10);

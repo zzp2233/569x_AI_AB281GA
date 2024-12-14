@@ -40,13 +40,13 @@ static const compo_listbox_item_t tbl_language_list[] =
     {STR_LANGUAGE_JP,   .vidx = JAPANESE_LANGUAGE_ID},
     #endif
     #if SCREEN_TITLE_MULTIPLE_ITALIAN_LANGUAGE_SUPPORT
-    {STR_LANGUAGE_JP,   .vidx = ITALIAN_LANGUAGE_ID},//意大利
+    {STR_ITALY,   .vidx = ITALIAN_LANGUAGE_ID},//意大利
     #endif
     #if SCREEN_TITLE_MULTIPLE_GERMAN_LANGUAGE_SUPPORT
-    {STR_LANGUAGE_JP,   .vidx = GERMAN_LANGUAGE_ID},//德文
+    {STR_GERMAN,   .vidx = GERMAN_LANGUAGE_ID},//德文
     #endif
     #if SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT
-    {STR_LANGUAGE_JP,   .vidx = ARABIC_LANGUAGE_ID},//阿拉伯文
+    {STR_ARABIC,   .vidx = ARABIC_LANGUAGE_ID},//阿拉伯文
     #endif
 };
 u8 func_sel_language_bit(uint n)

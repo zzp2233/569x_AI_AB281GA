@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-11 17:03:38
+*@date   2024-12-13 17:58:30
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -15,13 +15,10 @@
 enum 
 {
     STR_NULL, // 
-    STR_CLOCK, // 表盘
     STR_CLOCK_PREVIEW, // 表盘预览
     STR_MESSAGE, // 消息
     STR_PHONE, // 电话
     STR_SPORTS, // 锻炼
-    STR_SPORTS_CONFIG, // 设置目标
-    STR_FOOTBALL, // 足球
     STR_SPORT_RUN, // 户外跑步
     STR_SPORT_RIDE_BIKE, // 骑行
     STR_SPORT_JUMP_ROPE, // 跳绳
@@ -49,21 +46,16 @@ enum
     STR_SPORT_FREE_TRAINING, // 自由训练
     STR_SPORT_EXIT_MSG1, // 运动结束
     STR_SPORT_EXIT_MSG2, // 本次运动量少数据将不会被保存是否结束
-    STR_SPORT_EXIT_MSG3, // 本次运动将不会被保存是否结束
     STR_STEP, // 计步
     STR_SLEEP, // 睡眠
     STR_MUSIC, // 音乐
     STR_HEART_RATE, // 心率
     STR_BLOOD_PRESSURE, // 血压
-    STR_BLOOD_OXYGEN, // 血氧
-    STR_BLOOD_SUGAR, // 血糖
-    STR_PRESSURE, // 压力
     STR_WEATHER, // 天气
     STR_BREATHE_TRAIN, // 呼吸训练
     STR_BREATHE_INHALE, // 吸气
     STR_BREATHE_EXHALE, // 呼气
     STR_EVREY_DAY_ACTIVITY, // 每日活动
-    STR_CONNECT_PHONE, // 连接手机
     STR_CALCULATOR, // 计算器
     STR_ALARM_CLOCK, // 闹钟
     STR_ALARM_CLOCK_EDIT, // 编辑闹钟
@@ -76,16 +68,12 @@ enum
     STR_ALARM_CLOCK_FRI, // 星期五
     STR_ALARM_CLOCK_SAT, // 星期六
     STR_ALARM_CLOCK_SUN, // 星期日
-    STR_ALARM_CLOCK1, // 闹钟一
-    STR_ALARM_CLOCK2, // 闹钟二
-    STR_ALARM_CLOCK3, // 闹钟三
     STR_TIMER, // 计时器
     STR_STOP_WATCH, // 秒表
     STR_STOP_WATCH_RECORD, // 秒表记录
     STR_CAMERA, // 遥控拍照
     STR_VOICE_ASSISTANT, // 语音助手
     STR_FIND_PHONE, // 找手机
-    STR_FIND_PHONEING, // 正在响铃
     STR_GAME, // 游戏
     STR_SETTING, // 设置
     STR_SETTING_LIGHT, // 亮度
@@ -101,7 +89,7 @@ enum
     STR_SETTING_DISTURD, // 勿扰模式
     STR_DISTURD_ALL, // 全天开启
     STR_DISTURD_TIM, // 定时开启
-    STR_DISTURD_TIM_CTT, // 开启后来电和通知静音且不震动(闹钟除外)抬腕不亮屏，是否开启？
+    STR_DISTURD_TIM_CTT, // 开启后，来电和通知不振动(闹钟除外)，抬腕不亮屏，是否开启？
     STR_DISTURD_TIM_START, // 开始时间
     STR_DISTURD_TIM_END, // 结束时间
     STR_SETTING_SAV, // 声音设置
@@ -114,12 +102,9 @@ enum
     STR_LANGUAGE_ENG, // English
     STR_LANGUAGE_FN, // Français
     STR_LANGUAGE_RU, // Русский язык
-    STR_LANGUAGE_AT, // Аргентинский язык
     STR_LANGUAGE_JP, // 日語
     STR_BEATHER_DURATION, // 呼吸时长
-    STR_CUSTOM_CALENDAR, // 日期
     STR_CUSTOM_TIME, // 时间
-    STR_CUSTOM_DATA, // 时间制
     STR_SETTING_CALENDAR, // 日历
     STR_SETTING_PASSWORD, // 密码
     STR_SETTING_ABOUT, // 关于
@@ -129,25 +114,8 @@ enum
     STR_CALL_RECENT, // 通话记录
     STR_CALL_LINK, // 联系人
     STR_CALL_DIAL, // 拨号盘
-    STR_ALIPAY, // 支付宝
-    STR_ALIPAY_BIND_TIP, // 使用支付宝扫码绑定
-    STR_ALIPAY_UNBIND_TIP, // 解绑后将无法使用支付宝各功能，确认解绑？
-    STR_ALIPAY_UNBIND_TIP2, // 设备侧已解绑，请在手机支付宝上解绑该设备，完成解绑
-    STR_CONFIMR, // 确认
     STR_CANCEL, // 取消
-    STR_BINDING, // 正在绑定
-    STR_BIND_FAILED, // 绑定失败
-    STR_BIND_SUCCESS, // 绑定成功
-    STR_PAYCODE, // 付款码
-    STR_HELP, // 帮助
-    STR_HELP_TILE, // 使用支付宝扫码求助
-    STR_SWITCH_QRCODE, // 切换二维码
-    STR_SWITCH_BARCODE, // 切换条形码
-    STR_UNBIND, // 解除绑定
-    STR_ALTITUDE, // 海拔
-    STR_COMPASS, // 指南针
     STR_FLASHLIGHT, // 手电筒
-    STR_MAP, // 地图
     STR_SCAN, // APP下载
     STR_STYLE, // 主题
     STR_VOICE, // 语音助手
@@ -157,9 +125,7 @@ enum
     STR_CALORIE, // 卡路里
     STR_STEPS, // 步数
     STR_DISTANCE, // 距离
-    STR_BAROMETER, // 气压计
     STR_RECORDER, // 录音机
-    STR_TEMPERATURE, // 温度
     STR_CELSIUS, // ℃
     STR_FAHRENHEIT, // ℉
     STR_YEAR, // 年
@@ -181,65 +147,40 @@ enum
     STR_WINDY, // 大风
     STR_HAZE, // 雾霾
     STR_KCAL, // 千卡
-    STR_KM, // 千米
+    STR_KM, // 公里
     STR_MILE, // 英里
     STR_HOUR, // 时
     STR_MIN, // 分
     STR_SEC, // 秒
-    STR_START_MEASURING, // 开始测量
-    STR_MEASURING, // 正在测量
     STR_WEAR_CHECK, // 请保持静止并紧贴皮肤佩戴
     STR_UNKNOWN, // 未知
     STR_COMPO_SELECT, // 组件选择
     STR_STYLE_SUDOKU_1, // 九宫格
-    STR_STYLE_SUDOKU_2, // 九宫格(横向)
-    STR_STYLE_SUDOKU_3, // 九宫格(缩放)
-    STR_STYLE_DISK, // 圆盘
     STR_STYLE_GRID_1, // 网格
     STR_STYLE_GRID_2, // 网格(缩放)
-    STR_STYLE_HEXAGON, // 六边形
     STR_STYLE_HONEYCOMB, // 蜂窝
-    STR_STYLE_KALEIDOSCOPE, // 万花筒
     STR_STYLE_LIST_1, // 列表
-    STR_STYLE_LIST_2, // 四宫格
-    STR_STYLE_RING, // 环形
     STR_STYLE_SKYRER, // 天圆地方
     STR_STYLE_WATERFALL, // 瀑布
-    STR_STYLE_FOOTBALL, // 足球
-    STR_STYLE_GRID_HONEYCOMB, // 网格蜂窝
     STR_DEV_NEME, // 设备名称
-    STR_BLE_MAC, // 蓝牙地址
-    STR_SYS_VERSION, // 系统版本
-    STR_SOOTHING, // 舒缓
+    STR_BLE_MAC, // Mac地址
+    STR_SYS_VERSION, // 版本号
     STR_SLOW, // 缓慢
     STR_FASTER, // 稍快
     STR_OK, // 确定
-    STR_MINUTE, // 分钟
     STR_SETTING_MODE, // 呼吸节奏
     STR_DRIZZLE, // 小雨
     STR_MODERATE_RAIN, // 阵雨
     STR_HEAVY_RAIN, // 大雨
     STR_SLEET, // 雨夹雪
-    STR_TOMORROW_NIGHT, // 明夜
-    STR_CLOUDY_NIGHT, // 云遮月
-    STR_RAINY_NIGHT, // 阵雨夜
     STR_RAINY_SHOWERS, // 雷阵雨
     STR_NO_MSG, // 无消息
     STR_FIND_WATCH, // 寻找手表
-    STR_SET_DATA_READ, // 当前设定时间如果已与App连接同步时间将会产生睡眠数据修改
     STR_SET_STEP_COUNT, // 步数
     STR_SET_DISTANCE, // 距离
     STR_SET_CALORIE, // 卡路里
-    STR_GOAL_ACHIEVE, // 目标达成！
+    STR_GOAL_ACHIEVE, // 目标达成
     STR_SEDENTARY_REMIND, // 久坐提醒
-    STR_UPGRADING, // 升级中
-    STR_UPGRADE_SUCCESSFUL, // 升级成功
-    STR_UPGRADE_FAILED, // 升级失败
-    STR_PRESSURE_EXPLAIN, // 压力在心理学上指精神上束缚和紧张的感受，适当压力有助于提高工作和学习的效率，压力过大则会影响到身心健康。压力指标是通过心率变异性(HRV)的数值变化进行计算，用来评定身体状态改变的指标。
-    STR_SEVERE, // 重度
-    STR_LIGHT, // 轻度
-    STR_MODERATE, // 中度
-    STR_RELAX, // 轻松
     STR_DEEP_SLEEP, // 深睡
     STR_LIGHT_SLEEP, // 浅睡
     STR_ALWAKE_SLEEP, // 清醒
@@ -249,21 +190,16 @@ enum
     STR_CUSTOM, // 自定义
     STR_ONCE, // 单次
     STR_EVERY_DAY, // 每天
-    STR_REPEAT, // 重复:
     STR_NO_CLOCK, // 无闹钟
-    STR_SURE_OFF, // 是否关机?
-    STR_SURE_RESET, // 是否恢复出厂设置?
-    STR_SURE_REBOOT, // 是否重启?
+    STR_SURE_OFF, // 确认关机?
+    STR_SURE_RESET, // 恢复出厂设置将清空数据，是否继续？
+    STR_SURE_REBOOT, // 确认重启？
     STR_FLY_BIRD, // 飞扬的小鸟
     STR_IN_CALL, // 呼叫中...
     STR_CALL_ME, // 来电
-    STR_REVISE_TIMR, // 更改时间
-    STR_SET_REPEAT, // 设置重复
-    STR_RETRY, // 重试
-    STR_CONTACTS, // 通讯录
     STR_ENTER_NUMBER, // 请输入电话号码！
     STR_VOICE_SPEAKER, // 请说话...
-    STR_VOICE_BT_NOT_CONNECT, // 蓝牙未连接
+    STR_VOICE_BT_NOT_CONNECT, // 未连接
     STR_VOICE_SIRI_START, // 点击屏幕开启SIRI
     STR_ADDRESS_BOOK_SYNC, // 请使用APP同步联系人！！
     STR_WEEK, // 星期:
@@ -281,7 +217,6 @@ enum
     STR_DO_PASS, // 是否通过？
     STR_AM, // 上午
     STR_PM, // 下午
-    STR_PLEASE_ENTER_SOS, // 请输入SOS电话号码
     STR_NO_CALL_RECORD, // 无通话记录
     STR_HIGHEST, // 最高
     STR_LOWSET, // 最低
@@ -298,7 +233,7 @@ enum
     STR_DEL, // 删除
     STR_CLEAR, // 清除
     STR_CLEAR_ALL, // 全部清除
-    STR_DIAL_SWICTH, // 表盘切换
+    STR_DIAL_SWICTH, // 更换表盘
     STR_QRCODE, // 二维码
     STR_START, // 开始
     STR_STOP, // 停止
@@ -312,6 +247,16 @@ enum
     STR_CALENDAR_SEVEN, // 日
     STR_MORE, // 更多
     STR_COMMON_APP, // 常用应用
+    STR_ITALY, // Italiann
+    STR_GERMAN, // Deutsche Sprache
+    STR_ARABIC, // اللغة العربية
+    STR_APP_DOWNLOAD, // 扫码下载APP或扫码配对
+    STR_BLOOD_OXYGEN, // 血氧
+    STR_BLOOD_SUGAR, // 血糖
+    STR_BAROMETER, // 气压计
+    STR_TEMPERATURE, // 温度
+    STR_ALTITUDE, // 海拔
+    STR_SOOTHING, // 舒缓
 };
 
 extern const char * const *i18n;

@@ -75,6 +75,9 @@ compo_form_t *func_bt_call_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
 
+//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+//    compo_form_set_title(frm, i18n[STR_HEART_RATE]);
+
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(name_txt, true);

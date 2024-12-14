@@ -83,9 +83,8 @@ enum COMPO_BOND_DATA
     COMPO_BOND_TEMPERATURE_UNIT,        //温度单位
     COMPO_BOND_ALTITUDE,                //海拔
     COMPO_BOND_DISTANCE_UNIT,           //距离单位
-    COMPO_BOND_REVERSE2,                //保留
     COMPO_BOND_BATTERY,                 //电池
-
+    COMPO_BOND_DISTANCE,                //距离
 
     COMPO_BOND_HOURMIN_TXT = 120,
 };

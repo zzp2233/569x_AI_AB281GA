@@ -5,6 +5,7 @@
 #include "ute_module_heart.h"
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_weather.h"
+#include "ute_language_common.h"
 
 #define TRACE_EN                1
 
@@ -117,7 +118,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
     sys_cb.temperature[0] = weatherData.dayTemperatureMin[0];
     sys_cb.temperature[1] = weatherData.dayTemperatureMax[0];
 
-    if (tm.hour >= 18 || tm.hour < 6)
+    if (uteModuleSystemtimeIsNight())
     {
         if (sys_cb.weather_idx == WEATHER_TYPE_SUNNY)
         {
@@ -153,7 +154,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         case COMPO_BOND_WEEKDAY:
             value = tm.weekday;
             sprintf(value_str, "%d", value);
-            strcpy(value_str, i18n[STR_SUNDAY + value]);
+            const u16 week_lang_id[] = {STR_SUNDAY, STR_MONDAY, STR_TUESDAY, STR_WEDNESDAY, STR_THURSDAY, STR_FRIDAY, STR_SATURDAY};
+            strcpy(value_str, i18n[week_lang_id[value]]);
             break;
 
         case COMPO_BOND_HOUR:
@@ -188,13 +190,13 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
         case COMPO_BOND_HOURMIN_TXT:
 //            value = tmp_time_hour / 10;
-            if (((tm.hour >= 12) ? 1 : 0) == 0)      //2 PM, 1 AM
+            if (tm.hour >= 12)      //2 PM, 1 AM
             {
-                sprintf(value_str, "%s%02d:%02d", i18n[STR_AM], tmp_time_hour, tm.min);
+                sprintf(value_str, "%s%02d:%02d", i18n[STR_PM], tmp_time_hour, tm.min);
             }
             else
             {
-                sprintf(value_str, "%s%02d:%02d", i18n[STR_PM], tmp_time_hour, tm.min);
+                sprintf(value_str, "%s%02d:%02d", i18n[STR_AM], tmp_time_hour, tm.min);
             }
             break;
 
@@ -298,7 +300,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
         case COMPO_BOND_WEATHER:
             value = sys_cb.weather_idx;
-            sprintf(value_str, "%s", i18n[STR_CLOUDY + value]);
+            const u16 weather_lang_id[] = {STR_UNKNOWN, STR_SUNNY, STR_CLOUDY, STR_OVERCAST, STR_MODERATE_RAIN, STR_RAINY_SHOWERS, STR_SLEET, STR_DRIZZLE, STR_HEAVY_RAIN, STR_SNOWY, STR_SAND_AND_DUST, STR_HAZE, STR_WINDY};
+            sprintf(value_str, "%s", i18n[weather_lang_id[weatherData.DayWeather[0]]]);
             break;
 
         case COMPO_BOND_ATMOMS:
@@ -307,9 +310,19 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_TEMPERATURE:
-            // value = (sys_cb.temperature[0] + sys_cb.temperature[1] + 1) / 2;  //平均温度
-            value = weatherData.fristDayCurrTemperature;
-            sprintf(value_str, "%d~%d℃", sys_cb.temperature[0], sys_cb.temperature[1]);  //温度范围
+            if (displayInfo.isFahrenheit)
+            {
+                value = (float)weatherData.fristDayCurrTemperature * 9.0f / 5.0f + 32;
+                if (value < -99)
+                {
+                    value = -99;
+                }
+            }
+            else
+            {
+                value = weatherData.fristDayCurrTemperature;
+            }
+            sprintf(value_str, "%d~%d%s", sys_cb.temperature[0], sys_cb.temperature[1], displayInfo.isFahrenheit ? "℉" : "℃"); // 温度范围
             break;
 
         case COMPO_BOND_ALTITUDE:
@@ -330,6 +343,11 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         case COMPO_BOND_DISTANCE_UNIT:
             value = uteModuleSystemtimeGetDistanceMiType() == true ? 1 : 0;              //0:km 1:mile
             //strcpy(value_str, i18n[STR_KM + value]);
+            break;
+
+        case COMPO_BOND_DISTANCE:
+            value = sys_cb.distance_cur;
+            sprintf(value_str, "%d.%d", value/100, value%100);
             break;
 
         case COMPO_BOND_TIME_WEEK: //图片 星期

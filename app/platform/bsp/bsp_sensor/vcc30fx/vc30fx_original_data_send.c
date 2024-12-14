@@ -89,7 +89,7 @@ void vc30fx_send_orginal_data(vcare_ppg_device_t *pdev, gsensor_axes *pgsensor, 
         /* 0-23,slot_ppg：3*8=24 */
         for (slot_k = 0; slot_k < 3; slot_k++)
         {
-            if (slot_k == 2)
+            if (slot_k == 2 && presult->slot_result[slot_k].slot_enwork==2)
             {
                 ble_buf[i * FRAME_SIZE + j++] = 0;
                 ble_buf[i * FRAME_SIZE + j++] = 0;
@@ -128,7 +128,7 @@ void vc30fx_send_orginal_data(vcare_ppg_device_t *pdev, gsensor_axes *pgsensor, 
             ble_buf[i * FRAME_SIZE + j++] = (presult->extra_result.bioext_data >> 8) & 0xff;
             ble_buf[i * FRAME_SIZE + j++] = (presult->extra_result.bioext_data >> 0) & 0xff;
         }
-        if (presult->slot_result[2].slot_storefifo)
+        if (presult->slot_result[2].slot_storefifo && presult->slot_result[2].slot_enwork==2 )
         {
             ble_buf[i * FRAME_SIZE + j++] = (presult->slot_result[2].ppg_buffer[psfreq_index] >> 8) & 0xff;
             ble_buf[i * FRAME_SIZE + j++] = (presult->slot_result[2].ppg_buffer[psfreq_index] >> 0) & 0xff;

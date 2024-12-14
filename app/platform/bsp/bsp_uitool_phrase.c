@@ -248,6 +248,16 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 max_cnt = 3;
                 break;
 
+            case COMPO_BOND_BATTERY:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
+
+            case COMPO_BOND_DISTANCE:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 5;
+                break;
+
             default:
                 bond_compo_type = COMPO_TYPE_NUMBER;
                 max_cnt = 2;
@@ -279,6 +289,16 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 {
                     compo_number_set_zfill(num, false);
                 }
+
+                if (uitool_res->bond_type == COMPO_BOND_DISTANCE)
+                {
+                    compo_number_set_float(num, true, 2);
+                }
+                else if (uitool_res->bond_type == COMPO_BOND_HEARTRATE || uitool_res->bond_type == COMPO_BOND_BLOOD_OXYGEN)
+                {
+                    compo_number_set_zero_replace(num, true);
+                }
+
                 compo_number_set_align(num, uitool_res->rsv);
                 //compo_number_set_visible(num, false);
                 compo_bonddata(num, uitool_res->bond_type);

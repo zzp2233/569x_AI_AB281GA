@@ -475,7 +475,14 @@ static int drv_calc_bioinn_auto_addcap(unsigned char status, vc30fx_sample_info_
         if( finished_mark ) /* 查找结束处理 */
         {
             drv_info_handle->optimal_cap = finished_set;
+			if( psample_info->ic_FICV==VC30FS_FDY_VER_ID0 )
+			{
             drv_info_handle->optimal_bio_gap = last_inn_bio_mid - psample_info->extra_result.bioext_data;
+			}
+			else if( psample_info->ic_FICV==VC30FS_FDY_VER_ID1 )
+			{
+				drv_info_handle->optimal_bio_gap = psample_info->extra_result.bioext_data;
+			}
             /* set optimal_cap */
             core30fx_set_bioinn_addcap(psample_info,drv_info_handle->optimal_cap);
             VCARE_DBG_LOG("optimal_cap=%d, optimal_bio_gap=%d", drv_info_handle->optimal_cap, drv_info_handle->optimal_bio_gap );
@@ -852,9 +859,16 @@ static int drv_calc_biology_sense_absolute(vc30fx_wear_info *pwear_info, vc30fx_
         pwear_info->last_ps_data[0] = ps_data;
     }
     /* bio 有效判断 */
-	if (bioinn_data>=1000 && bioext_data)
+	if (bioinn_data>=100 && bioext_data)
     {
+		if( presult->ic_FICV==VC30FS_FDY_VER_ID0 )
+		{
         bio_refence_base = bioinn_data - drv_info_handle->optimal_bio_gap;
+		}
+		else if( presult->ic_FICV==VC30FS_FDY_VER_ID1 )
+		{
+			bio_refence_base = drv_info_handle->optimal_bio_gap;
+		}
         VCARE_DBG_LOG("bio_gap=%d, bio_base=%d, bio_ext=%d, abs_gap(%d?[%d,%d])",
                       drv_info_handle->optimal_bio_gap, bio_refence_base,
                       bioext_data, VC_ABS(bioext_data, bio_refence_base), VC30Fx_WEAR_PARAM_BIO_ABS_DROP, VC30Fx_WEAR_PARAM_BIO_ABS_HOLD);
@@ -1267,8 +1281,8 @@ static int drv_calibration_oscclk_frequency(vc30fx_clk_info *pclk_info)
         pclk_info->count_index = 0;
         for (i = 0; i < 2; i++)
         {
-            count_vaild = count_vaild && (VC_ABS(VC_ABS_MAX(pclk_info->clk_count[2 * i + 2], pclk_info->clk_count[2 * i], 0xffff), VC_ABS_MAX(pclk_info->clk_count[2 * i + 3], pclk_info->clk_count[2 * i + 1], 0xffff)) < VC30Fx_CFG_CLK_CALC_DEVIATION);
-            count_vaild = count_vaild && (VC_ABS(VC_ABS_MAX(pclk_info->osc_count[2 * i + 2], pclk_info->osc_count[2 * i], VC30Fx_CFG_MCU_TICK_MAX), VC_ABS_MAX(pclk_info->osc_count[2 * i + 3], pclk_info->osc_count[2 * i + 1], VC30Fx_CFG_MCU_TICK_MAX)) < VC30Fx_CFG_CLK_CALC_DEVIATION);
+			count_vaild = count_vaild && (VC_ABS(VC_ABS_MAX(pclk_info->clk_count[2 * i + 2], pclk_info->clk_count[2 * i], VC30Fx_CFG_MCU_TICK_MAX), VC_ABS_MAX(pclk_info->clk_count[2 * i + 3], pclk_info->clk_count[2 * i + 1], VC30Fx_CFG_MCU_TICK_MAX)) < VC30Fx_CFG_CLK_CALC_DEVIATION);
+			count_vaild = count_vaild && (VC_ABS(VC_ABS_MAX(pclk_info->osc_count[2 * i + 2], pclk_info->osc_count[2 * i], 0xffff), VC_ABS_MAX(pclk_info->osc_count[2 * i + 3], pclk_info->osc_count[2 * i + 1], 0xffff)) < VC30Fx_CFG_CLK_CALC_DEVIATION);
             count_vaild = count_vaild && (!(pclk_info->clk_count[2 * i + 2] == pclk_info->clk_count[2 * i])); /* avoid divisor==0, diffCountIsOk set false */
             count_vaild = count_vaild && (!(pclk_info->osc_count[2 * i + 2] == pclk_info->osc_count[2 * i])); /* avoid divisor==0, diffCountIsOk set false */
         }
@@ -1277,7 +1291,7 @@ static int drv_calibration_oscclk_frequency(vc30fx_clk_info *pclk_info)
             for (i = 0; i < 2; i++)
             {
                 osc_frequency[i] = VC_ABS_MAX((unsigned int)pclk_info->osc_count[2 * i + 2], pclk_info->osc_count[2 * i], 0xffff) * VC30Fx_CFG_MCU_TICK_FREQUENCY / VC_ABS_MAX((unsigned int)pclk_info->clk_count[2 * i + 2], pclk_info->clk_count[2 * i], VC30Fx_CFG_MCU_TICK_MAX);
-                VCARE_DBG_LOG("f20kOsc[20K_%d]=(%d)\n", i, osc_frequency[i]);   //VCARE_DBG_LOG
+				VCARE_DBG_LOG("f20kOsc[20K_%d]=(%d)", i, osc_frequency[i]);
             }
             if (VC_ABS(osc_frequency[0], osc_frequency[1]) <= 20)
             {
@@ -1644,7 +1658,14 @@ static int drv_factory_mode_handler(const void *ops_self, vcare_ppg_device_t *pd
     {
         drv_calc_bioinn_auto_addcap(drv_info_handle->int_event, sample_result_ptr);
     }
+	if( sample_result_ptr->ic_FICV==VC30FS_FDY_VER_ID0 )
+	{
     base = sample_result_ptr->extra_result.bioinn_data - drv_info_handle->optimal_bio_gap;
+	}
+	else if( sample_result_ptr->ic_FICV==VC30FS_FDY_VER_ID1 )
+	{
+		base = drv_info_handle->optimal_bio_gap;
+	}
     sample_result_ptr->extra_result.bioabs_calc = VC_ABS( sample_result_ptr->extra_result.bioext_data, base );
     return ret;
 }

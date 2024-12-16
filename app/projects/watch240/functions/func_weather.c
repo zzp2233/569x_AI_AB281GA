@@ -174,7 +174,7 @@ compo_form_t *func_weather_form_create(void)
 
 //    if(weather_date.fristDayCurrTemperature == 0)weather_date.fristDayCurrTemperature = 0;
     compo_number_t *num=NULL;
-    if(weather_date.fristDayCurrTemperature)
+    if(uteModuleWeatherGetCurrDay() == time.day)
     {
         num = compo_number_create(frm,UI_BUF_I330001_WEATHER_NUM_BIN, 3);
         compo_number_set_margin(num, -2);
@@ -201,7 +201,7 @@ compo_form_t *func_weather_form_create(void)
         picbox = compo_picturebox_create(frm,UI_BUF_I330001_WEATHER_DC_BIN);///温度符号
     }
 
-    if(weather_date.fristDayCurrTemperature){
+    if(uteModuleWeatherGetCurrDay() == time.day){
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X*1.15+compo_number_get_rel_location(num).wid/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);
     }else{
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X*1.15+gui_image_get_size(UI_BUF_I330001_WEATHER_NUM_BIN).wid, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);

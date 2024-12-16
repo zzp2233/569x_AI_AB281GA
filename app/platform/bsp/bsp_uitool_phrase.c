@@ -14,6 +14,15 @@
 
 static u8 animation_id = 0;
 
+typedef struct
+{
+    bool is_hide;
+    compo_picturebox_t *pic;
+} default_lang_pic_info_t;
+static default_lang_pic_info_t *default_lang_pic_info = NULL;
+static u8 default_lang_pic_num = 0;
+#define MAX_DEFAULT_LANG_PIC_NUM 16 // 最多记录默认语言图片信息个数
+
 //表盘文本编号表
 const u16 text_str_tbl[] =
 {
@@ -145,25 +154,22 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_bonddata(pic, uitool_res->bond_type);
             TRACE("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
 
-            if(CHINESE_LANGUAGE_ID == uitool_res->rsv && uteModuleSystemtimeCompareLanguage(CHINESE_LANGUAGE_ID))
+            if (uteModuleSystemtimeCompareLanguage(uitool_res->rsv))
             {
                 compo_picturebox_set_visible(pic, true);
+                if(default_lang_pic_info)
+                {
+                    default_lang_pic_info[default_lang_pic_num].is_hide = true; // 找到比配语言的图片，隐藏语言图片
+                }
             }
-#if SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT
-            else if((ENGLISH_LANGUAGE_ID == uitool_res->rsv || 0 == uitool_res->rsv) && uteModuleSystemtimeCompareLanguage(ENGLISH_LANGUAGE_ID))
+            else if (uitool_res->rsv == 0)
             {
-                compo_picturebox_set_visible(pic, true);
-            }
-#endif
-#if SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT
-            else if (TRADITIONAL_CHINESE_ID == uitool_res->rsv && uteModuleSystemtimeCompareLanguage(TRADITIONAL_CHINESE_ID))
-            {
-                compo_picturebox_set_visible(pic, true);
-            }
-#endif
-            else if(uitool_res->rsv == 0)
-            {
-                compo_picturebox_set_visible(pic, true);
+                if(default_lang_pic_info && default_lang_pic_num < MAX_DEFAULT_LANG_PIC_NUM)
+                {
+                    default_lang_pic_info[default_lang_pic_num].pic = pic; // 记录默认语言图片指针
+                    default_lang_pic_num ++;                    
+                }
+                compo_picturebox_set_visible(pic, false); // 暂时隐藏
             }
             else
             {
@@ -248,6 +254,16 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 max_cnt = 3;
                 break;
 
+            case COMPO_BOND_BATTERY:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
+
+            case COMPO_BOND_DISTANCE:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 5;
+                break;
+
             default:
                 bond_compo_type = COMPO_TYPE_NUMBER;
                 max_cnt = 2;
@@ -279,6 +295,16 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 {
                     compo_number_set_zfill(num, false);
                 }
+
+                if (uitool_res->bond_type == COMPO_BOND_DISTANCE)
+                {
+                    compo_number_set_float(num, true, 2);
+                }
+                else if (uitool_res->bond_type == COMPO_BOND_HEARTRATE || uitool_res->bond_type == COMPO_BOND_BLOOD_OXYGEN)
+                {
+                    compo_number_set_zero_replace(num, true);
+                }
+
                 compo_number_set_align(num, uitool_res->rsv);
                 //compo_number_set_visible(num, false);
                 compo_bonddata(num, uitool_res->bond_type);
@@ -345,6 +371,13 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
 
     u32 user_addr = base_addr + sizeof(watchConfig_t);
 
+
+    if(!default_lang_pic_info)
+    {
+        default_lang_pic_info = (default_lang_pic_info_t *)ab_zalloc(sizeof(default_lang_pic_info_t) * MAX_DEFAULT_LANG_PIC_NUM);
+        default_lang_pic_num = 0;
+    }
+
     for(u16 i=0; i<compo_num; i++)
     {
         os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
@@ -376,6 +409,21 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
                 halt(HALT_GUI_DIALPLATE_TYPE);
                 break;
         }
+    }
+
+    for (u8 i = 0; i < default_lang_pic_num; i++)
+    {
+        if (default_lang_pic_info[i].pic)
+        {
+            compo_picturebox_set_visible(default_lang_pic_info[i].pic, !default_lang_pic_info[i].is_hide); // 恢复默认语言图片显示
+        }
+    }
+
+    if (default_lang_pic_info)
+    {
+        ab_free(default_lang_pic_info);
+        default_lang_pic_info = NULL;
+        default_lang_pic_num = 0;
     }
 }
 

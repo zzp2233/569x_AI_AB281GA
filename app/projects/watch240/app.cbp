@@ -118,6 +118,7 @@
 			<Add before="python ..\..\..\ute\ui_config_patch\build_cpy_res.py" />
 			<Add before="Output\bin\prebuild.bat $(PROJECT_NAME)" />
 			<Add after="Output\bin\postbuild.bat $(PROJECT_NAME)" />
+			<Add after="Output\bin\objdump.bat $(PROJECT_NAME)" />
 		</ExtraCommands>
 		<Unit filename="../../../libs/gui/spiflash/spiflash.h" />
 		<Unit filename="../../../ute/application/ute_application_common.c">
@@ -1294,16 +1295,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/test_mode/func_test_mode.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="i18n/lang.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="i18n/lang.h" />
-		<Unit filename="i18n/lang_en.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="i18n/lang_zh.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="main.c">

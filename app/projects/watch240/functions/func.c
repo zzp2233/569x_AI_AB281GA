@@ -1265,7 +1265,7 @@ void func_message(size_msg_t msg)
 //            func_cb.frm_main = func_create_form(func_cb.sta);
             sys_cb.sta_old = func_cb.sta;
             sys_cb.refresh_language_flag = true;
-            func_switch_to(FUNC_MAP, 0);
+            func_switch_to(FUNC_CLOCK, 0);
             break;
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃

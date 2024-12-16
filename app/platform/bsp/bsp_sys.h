@@ -163,10 +163,10 @@ typedef struct
     //运动
     u32 step_cur;
     u32 step_goal;
-    u8 distance_cur;
-    u8 distance_goal;
-    u8 kcal_cur;
-    u8 kcal_goal;
+    u16 distance_cur;
+    u16 distance_goal;
+    u16 kcal_cur;
+    u16 kcal_goal;
     u8 sport_app_disconnect;                             //1:暂停   0:开始
     char outgoing_number[16];
     //运动记录

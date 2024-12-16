@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_application_common.h"
 #include "ute_module_call.h"
+#include "func_cover.h"
 
 #define TRACE_EN    0
 
@@ -59,7 +60,8 @@ compo_form_t *func_long_press_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE);
     compo_form_set_title(frm, i18n[STR_CANCEL]);
 
     s16 rel_x,rel_y;
@@ -158,11 +160,16 @@ static void func_long_press_event_handle(s32 distance, u16 id)
                     {
                         if(uteModuleCallBtIsConnected())
                         {
-                            msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+                            //请前往App设置SOS号码
+//                            msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+                            msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_NONE);
                         }
                         else
                         {
-                            msgbox((char *)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+//                            msgbox((char *)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+                            //蓝牙未连接弹窗
+                            sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+                            msgbox((char*)i18n[STR_VOICE_BT_NOT_CONNECT], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
                         }
                     }
                     break;

@@ -161,7 +161,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_FINGWATCH_WATCH_BIN);
                 compo_animation_set_pos(animation,GUI_SCREEN_CENTER_X,func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
                 compo_animation_set_radix(animation,3);
-                compo_animation_set_interval(animation,20);
+                compo_animation_set_interval(animation,30);
             }
             else
             {

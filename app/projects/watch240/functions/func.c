@@ -1342,7 +1342,7 @@ void func_run(void)
 //    func_cb.tbl_sort[5] = FUNC_BT;
 //    func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
 //    func_cb.sort_cnt = 7;
-    func_cb.sta = FUNC_POWER_ON;//FUNC_OTA_SUCC;//FUNC_OTA_MODE;//FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
+    func_cb.sta =FUNC_POWER_ON;//FUNC_OTA_SUCC;//FUNC_OTA_MODE;//FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
     // 获取自定义排序
     uteModuleGuiCommonGetScreenTblSort(func_cb.tbl_sort, &func_cb.sort_cnt);
 

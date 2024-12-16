@@ -8,6 +8,10 @@
 #define TRACE(...)
 #endif
 
+#define KCAL_ARC_COLOR                61861
+#define KM_ARC_COLOR                  65188
+#define STEP_ARC_COLOR                1946
+
 enum
 {
     ARC_ANIM_STATUS_START = 0,
@@ -38,25 +42,7 @@ typedef struct f_activity_t_
 } f_activity_t;
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-#define ARC_WID                        20
-#define KCAL_ARC_ARDUIS                222-ARC_WID/2
-#define KM_ARC_ARDUIS                  172-ARC_WID/2
-#define STEP_ARC_ARDUIS                122-ARC_WID/2
-
-#define KCAL_ARC_COLOR                61861
-#define KM_ARC_COLOR                  65188
-#define STEP_ARC_COLOR                1946
-
 #define TXT_SPACING_Y                 widget_text_get_height()+4
-
-/// size, arc_w, rotation, s_angle, e_angle, content_color, bg_color
-static const int16_t activity_arc_info[][7] =
-{
-    {KCAL_ARC_ARDUIS, ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   KCAL_ARC_COLOR, KCAL_ARC_COLOR},      //kcal
-    {KM_ARC_ARDUIS,   ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   KM_ARC_COLOR,   KM_ARC_COLOR},      //steps
-    {STEP_ARC_ARDUIS, ARC_WID, 3600/4*3,  3600/4*3,    3600/4*1,   STEP_ARC_COLOR, STEP_ARC_COLOR},      //exervise
-};
 
 ///创建活动记录窗体
 compo_form_t *func_activity_form_create(void)
@@ -69,32 +55,12 @@ compo_form_t *func_activity_form_create(void)
     compo_form_set_title(frm, i18n[STR_EVREY_DAY_ACTIVITY]);
 
     ///创建圆弧
-    for (u8 i = 0; i < sizeof(activity_arc_info) / sizeof(activity_arc_info[0]); i++)
-    {
-        compo_arc_t *arc = compo_arc_create(frm);
-        compo_arc_set_alpha(arc, 80, 0);
-        compo_arc_set_location(arc, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/10, activity_arc_info[i][0], activity_arc_info[i][0]);
-        compo_arc_set_width(arc, activity_arc_info[i][1]);
-        compo_arc_set_rotation(arc, 2700);
-        compo_arc_set_angles(arc, 0, 1800);
-        compo_arc_set_color(arc, activity_arc_info[i][5], activity_arc_info[i][6]);
-        compo_arc_set_value(arc, 1000);
-
-    }
-
-    ///创建圆弧
-    for (u8 i = 0; i < sizeof(activity_arc_info) / sizeof(activity_arc_info[0]); i++)
-    {
-        compo_arc_t *arc = compo_arc_create(frm);
-        compo_setid(arc, KCAL_ARC_ID + i);
-        compo_arc_set_alpha(arc, 255, 0);
-        compo_arc_set_location(arc, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/10, activity_arc_info[i][0], activity_arc_info[i][0]);
-        compo_arc_set_width(arc, activity_arc_info[i][1]);
-        compo_arc_set_rotation(arc, 2700);
-        compo_arc_set_angles(arc, 0, 1800);
-        compo_arc_set_color(arc, activity_arc_info[i][5], activity_arc_info[i][6]);
-        compo_arc_set_value(arc, 0);
-    }
+    widget_page_t *widget_page = widget_page_create(frm->page_body);
+    widget_page_set_client(widget_page, 0, 0);
+    widget_set_location(widget_page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/10, gui_image_get_size(UI_BUF_I330001_ACTIVITY_BG_BIN).wid, gui_image_get_size(UI_BUF_I330001_ACTIVITY_BG_BIN).wid);
+//    printf("");
+//    compo_picturebox_t *pic_arc = compo_picturebox_create(widget_page,UI_BUF_I330001_ACTIVITY_BG_BIN);
+//    compo_picturebox_set_pos(pic_arc, gui_image_get_size(UI_BUF_I330001_ACTIVITY_BG_BIN).wid/2, gui_image_get_size(UI_BUF_I330001_ACTIVITY_BG_BIN).wid/2);
 
     char txt_buf[20];
     uint16_t KM = uteModuleSportGetCurrDayDistanceData();
@@ -160,85 +126,85 @@ static void func_activity_disp_handle(void)
 {
     f_activity_t *f_activity = (f_activity_t *)func_cb.f_cb;
 
-    if(tick_check_expire(f_activity->tick, 10))
-    {
-        f_activity->tick = tick_get();
-        char txt_buf[20];
-        uint32_t totalStepCnt = 0;
-        uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-
-        compo_arc_t *arc_kcal = compo_getobj_byid(KCAL_ARC_ID);
-        compo_arc_t *arc_km   = compo_getobj_byid(KM_ARC_ID);
-        compo_arc_t *arc_step = compo_getobj_byid(STEP_ARC_ID);
-        compo_textbox_t *textbox_kcal = compo_getobj_byid(KCAL_TXT_VALUE_ID);
-        compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
-        compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
-
-        if(f_activity->activity_state == 0)
-        {
-
-            f_activity->arc_step_value+=20;
-
-            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
-            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
-            compo_arc_set_value(arc_step, f_activity->arc_step_value);
-
-            if(f_activity->arc_step_value >=ARC_VALUE_MAX)
-            {
-                f_activity->activity_state = 1;
-            }
-        }
-        else if(f_activity->activity_state == 1)
-        {
-
-            f_activity->arc_step_value-=20;
-
-            if(f_activity->arc_step_value <= totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt()){
-                f_activity->activity_state = 2;
-            }else{
-                compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
-                compo_arc_set_value(arc_km,   f_activity->arc_step_value);
-                compo_arc_set_value(arc_step, f_activity->arc_step_value);
-            }
-
-        }
-        else
-        {
-
-            f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
-            f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
-            f_activity->arc_step_value =(uint32_t) (totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt());
-
-            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
-            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
-            compo_arc_set_value(arc_step, f_activity->arc_step_value);
-
-            memset(txt_buf,'\0',sizeof(txt_buf));
-            if(totalStepCnt){
-                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
-            }else{
-                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
-            }
-            compo_textbox_set(textbox_step, txt_buf);
-
-            memset(txt_buf,'\0',sizeof(txt_buf));
-            if(f_activity->arc_km_value){
-                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
-            }else{
-                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
-            }
-            compo_textbox_set(textbox_km, txt_buf);
-
-            memset(txt_buf,'\0',sizeof(txt_buf));
-            if(f_activity->arc_kcal_value){
-                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
-            }else{
-                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
-            }
-            compo_textbox_set(textbox_kcal, txt_buf);
-        }
-
-    }
+//    if(tick_check_expire(f_activity->tick, 10))
+//    {
+//        f_activity->tick = tick_get();
+//        char txt_buf[20];
+//        uint32_t totalStepCnt = 0;
+//        uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+//
+//        compo_arc_t *arc_kcal = compo_getobj_byid(KCAL_ARC_ID);
+//        compo_arc_t *arc_km   = compo_getobj_byid(KM_ARC_ID);
+//        compo_arc_t *arc_step = compo_getobj_byid(STEP_ARC_ID);
+//        compo_textbox_t *textbox_kcal = compo_getobj_byid(KCAL_TXT_VALUE_ID);
+//        compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
+//        compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
+//
+//        if(f_activity->activity_state == 0)
+//        {
+//
+//            f_activity->arc_step_value+=20;
+//
+//            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
+//            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
+//            compo_arc_set_value(arc_step, f_activity->arc_step_value);
+//
+//            if(f_activity->arc_step_value >=ARC_VALUE_MAX)
+//            {
+//                f_activity->activity_state = 1;
+//            }
+//        }
+//        else if(f_activity->activity_state == 1)
+//        {
+//
+//            f_activity->arc_step_value-=20;
+//
+//            if(f_activity->arc_step_value <= totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt()){
+//                f_activity->activity_state = 2;
+//            }else{
+//                compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
+//                compo_arc_set_value(arc_km,   f_activity->arc_step_value);
+//                compo_arc_set_value(arc_step, f_activity->arc_step_value);
+//            }
+//
+//        }
+//        else
+//        {
+//
+//            f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
+//            f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
+//            f_activity->arc_step_value =(uint32_t) (totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt());
+//
+//            compo_arc_set_value(arc_kcal, f_activity->arc_step_value);
+//            compo_arc_set_value(arc_km,   f_activity->arc_step_value);
+//            compo_arc_set_value(arc_step, f_activity->arc_step_value);
+//
+//            memset(txt_buf,'\0',sizeof(txt_buf));
+//            if(totalStepCnt){
+//                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
+//            }else{
+//                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+//            }
+//            compo_textbox_set(textbox_step, txt_buf);
+//
+//            memset(txt_buf,'\0',sizeof(txt_buf));
+//            if(f_activity->arc_km_value){
+//                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
+//            }else{
+//                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+//            }
+//            compo_textbox_set(textbox_km, txt_buf);
+//
+//            memset(txt_buf,'\0',sizeof(txt_buf));
+//            if(f_activity->arc_kcal_value){
+//                snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
+//            }else{
+//                snprintf((char *)txt_buf, sizeof(txt_buf),"--");
+//            }
+//            compo_textbox_set(textbox_kcal, txt_buf);
+//        }
+//
+//    }
     func_process();
 }
 

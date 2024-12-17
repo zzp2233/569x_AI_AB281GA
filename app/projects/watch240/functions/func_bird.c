@@ -289,6 +289,7 @@ static void func_bird_fail(void)
 
     compo = compo_getobj_byid(COMPO_ID_BIRD_BIRD_PIC);
     if(compo) {
+        compo_picturebox_set_visible(compo, false);
         compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 130);
     }
 

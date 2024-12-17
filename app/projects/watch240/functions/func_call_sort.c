@@ -21,7 +21,7 @@
 #define CARD1_RECT0_DATA          0,       0,      0,      CARD1_WIDTH,            CARD1_HEIGHT,           20
 
 //图标                            id       x             y                  w       h       res                                   保留位
-#define CARD1_ICON0_DATA          0,       8+44/2-109/2, 8+44/2-102/2,      44,     44,     UI_BUF_I330001_CALL_CONTACTS_BIN,         0
+#define CARD1_ICON0_DATA          0,       8+44/2-109/2, 8+44/2-102/2,      36,     36,     UI_BUF_I330001_CALL_CONTACTS_BIN,         0
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r    g    b    对应STR_XXX
 #define CARD1_TEXT0_DATA          0,      8-109/2,    63-102/2,     86,     23,     NULL,   UI_BUF_0FONT_FONT_BIN,    false,  false,     255, 255, 255, STR_CALL_LINK
@@ -38,7 +38,7 @@
 #define CARD2_RECT0_DATA          0,       0,      0,      CARD1_WIDTH,            CARD1_HEIGHT,           20
 
 //图标                            id       x             y                  w       h       res                           保留位
-#define CARD2_ICON0_DATA          0,       8+44/2-109/2, 8+44/2-102/2,      44,     44,     UI_BUF_I330001_CALL_CALLRECORDS_BIN,         0
+#define CARD2_ICON0_DATA          0,       8+44/2-109/2, 8+44/2-102/2,      36,     36,     UI_BUF_I330001_CALL_CALLRECORDS_BIN,         0
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r      g     b    对应STR_XXX
 #define CARD2_TEXT0_DATA          0,      8-109/2,    63-102/2,     86,     23,     NULL,   UI_BUF_0FONT_FONT_BIN,    false,  false,     255,   255,  255, STR_CALL_RECENT
@@ -56,7 +56,7 @@
 #define CARD3_RECT0_DATA          0,       0,      0,      CARD1_WIDTH,            CARD1_HEIGHT,           20
 
 //图标                            id       x             y                  w       h       res                               保留位
-#define CARD3_ICON0_DATA          0,       8+44/2-109/2, 8+44/2-102/2,      44,     44,     UI_BUF_I330001_CALL_DIALPAD_BIN
+#define CARD3_ICON0_DATA          0,       8+44/2-109/2, 8+44/2-102/2,      36,     36,     UI_BUF_I330001_CALL_DIALPAD_BIN
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r      g      b     对应STR_XXX
 #define CARD3_TEXT0_DATA          0,      8-109/2,    63-102/2,     86,     23,     NULL,   UI_BUF_0FONT_FONT_BIN,    false,  false,     255,   255,   255,  STR_CALL_DIAL

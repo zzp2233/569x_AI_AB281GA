@@ -110,7 +110,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_SAV]);
+    compo_form_set_title(frm, i18n[STR_VOL]);
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_SETTINGS_SOUND_BTN_BIN);
     compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X ,tbl_sav_disp_btn_item[0].y );

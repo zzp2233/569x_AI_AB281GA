@@ -30,11 +30,11 @@ typedef struct f_dousing_list_t_
 
 static const compo_listbox_item_t tbl_dousing_list[] =
 {
-    {STR_FIVE_SEC,         .vidx = COMPO_ID_BTN_NUM0},
-    {STR_TEN_SEC,          .vidx = COMPO_ID_BTN_NUM1},
-    {STR_TWENTY_SEC,       .vidx = COMPO_ID_BTN_NUM2},
-    {STR_THIRTY_SEC,       .vidx = COMPO_ID_BTN_NUM3},
-    {STR_ONE_MIN,          .vidx = COMPO_ID_BTN_NUM4},
+    {STR_SEC,         .vidx = COMPO_ID_BTN_NUM0},
+    {STR_SEC,          .vidx = COMPO_ID_BTN_NUM1},
+    {STR_SEC,       .vidx = COMPO_ID_BTN_NUM2},
+    {STR_MIN,       .vidx = COMPO_ID_BTN_NUM3},
+    {STR_MIN,          .vidx = COMPO_ID_BTN_NUM4},
     // {STR_FIVE_MIN},     .vidx = 1,
     {STR_LIGHT_ALWAYS,     .vidx = COMPO_ID_BTN_NUM5},
 };

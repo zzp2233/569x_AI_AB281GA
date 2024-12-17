@@ -151,7 +151,6 @@ compo_form_t *func_weather_form_create(void)
     //设置标题栏
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
 //    compo_form_set_title(frm, i18n[STR_WEATHER]);
-    char buf[50];
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_WEATHER_BG_BIN);///* 背景图*/
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
@@ -159,15 +158,16 @@ compo_form_t *func_weather_form_create(void)
     txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
     compo_textbox_set(txt, i18n[STR_WEATHER]);
-    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH/(240/48),GUI_SCREEN_HEIGHT/(284/28));
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
+    compo_textbox_set(txt, i18n[STR_WEATHER]);
     compo_textbox_set_align_center(txt, false);
 
     ///设置标题栏时间///
-    compo_textbox_t* time_title = compo_textbox_create(frm, 32);
-    compo_textbox_set_align_center(time_title, false);
-    compo_textbox_set_location(time_title, 168, 15, 52, 23);
-    compo_setid(time_title, COMPO_ID_TXT_TIME);
-    compo_bonddata(time_title, COMPO_BOND_HOURMIN_TXT);
+//    compo_textbox_t* time_title = compo_textbox_create(frm, 32);
+//    compo_textbox_set_align_center(time_title, false);
+//    compo_textbox_set_location(time_title, 168, 15, 52, 23);
+//    compo_setid(time_title, COMPO_ID_TXT_TIME);
+//    compo_bonddata(time_title, COMPO_BOND_HOURMIN_TXT);
 
     picbox = compo_picturebox_create(frm, weather_list[get_weather_id[0]].res_addr);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5);

@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_application_common.h"
+#include "ute_module_systemtime.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -18,12 +19,21 @@ void *barcode_creat(void *parent, char *str, int x, int y, int h, u8 length, boo
 //创建扫一扫窗体
 compo_form_t *func_scan_form_create(void)
 {
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+    if(time.AppSetlanguageId == false)
+    {
+        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
+        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
+        compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
+    }
 
     //创建按键
     //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_QR_BIN);
@@ -37,7 +47,6 @@ compo_form_t *func_scan_form_create(void)
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
     uteModulePlatformMemoryFree(qr_str);
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
-
     return frm;
 }
 
@@ -50,23 +59,40 @@ static void func_scan_process(void)
 //扫一扫功能消息处理
 static void func_scan_message(size_msg_t msg)
 {
-    switch (msg)
+
+    if(sys_cb.power_on_state==false)
     {
-        case MSG_CTP_CLICK:
+        switch (msg)
+        {
+            case MSG_CTP_SHORT_RIGHT:
+                    func_cb.sta = FUNC_SET_SUB_LANGUAGE;
             break;
+            case MSG_CTP_SHORT_LEFT:
+                    func_cb.sta = FUNC_SET_SUB_ABOUT;
+            break;
+        }
+    }
+    else
+    {
+        switch (msg)
+        {
 
-        case MSG_CTP_SHORT_UP:
-            break;
+            case MSG_CTP_CLICK:
+                break;
 
-        case MSG_CTP_SHORT_DOWN:
-            break;
+            case MSG_CTP_SHORT_UP:
+                break;
 
-        case MSG_CTP_LONG:
-            break;
+            case MSG_CTP_SHORT_DOWN:
+                break;
 
-        default:
-            func_message(msg);
-            break;
+            case MSG_CTP_LONG:
+                break;
+
+            default:
+                    func_message(msg);
+                break;
+        }
     }
 }
 

@@ -104,9 +104,14 @@ void func_set_sub_language_list_icon_click(void)
     {
         return;
     }
+    if(sys_cb.power_on_state==false)
+    {
+        func_cb.sta = FUNC_SCAN;
+    }
     compo_listbox_update(listbox);
-
     uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
+
+
 }
 
 //语言设置功能事件处理
@@ -122,11 +127,14 @@ static void func_set_sub_language_list_message(size_msg_t msg)
 {
     f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
 
     if (compo_listbox_message(listbox, msg))
     {
         return;                                         //处理列表框信息
     }
+
 
     switch (msg)
     {
@@ -138,24 +146,17 @@ static void func_set_sub_language_list_message(size_msg_t msg)
         case MSG_CTP_LONG:
             break;
 
-//        case KU_DELAY_BACK:
-//            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
-//            {
-//
-//            }
-            break;
 
-//    case MSG_CHECK_LANGUAGE://APP语言切换
-//        compo_form_destroy(func_cb.frm_main);
-//        func_set_sub_language_exit();
-//        func_free(func_cb.f_cb);
-//        func_set_sub_language_enter();
-//        break;
+            break;
 
         default:
-            func_message(msg);
+            if(time.isWatchSetLangage == true)
+            {
+                func_message(msg);
+            }
             break;
     }
+
 }
 
 //进入语言设置功能

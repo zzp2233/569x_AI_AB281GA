@@ -77,7 +77,7 @@ enum
     FUNC_CALL_SORT,                     //通话-一级界面
     FUNC_FINDPHONE,                     //寻找手机
     FUNC_CALENDAER,                     //日历
-    FUNC_VOLUME,                        //音量
+//    FUNC_SET_SUB_SAV,                        //音量
     FUNC_ACTIVITY,                      //活动记录
     FUNC_FLASHLIGHT,                    //手电筒
     FUNC_SETTING,                       //设置

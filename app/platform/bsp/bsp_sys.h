@@ -208,6 +208,7 @@ typedef struct
 
     char sos_call_number[11];
     bool sos_open_flag;
+    bool power_on_state;
 
 } sys_cb_t;
 extern sys_cb_t sys_cb;

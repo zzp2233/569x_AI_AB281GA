@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_systemtime.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -53,7 +54,14 @@ static void func_power_on_process(void)
         }
         else
         {
-            func_cb.sta = FUNC_CLOCK;
+            sys_cb.power_on_state = false;
+            ute_module_systemtime_time_t time;
+            uteModuleSystemtimeGetTime(&time);
+            func_cb.sta = FUNC_SCAN;
+            if(time.isWatchSetLangage == false)
+            {
+                func_cb.sta = FUNC_SET_SUB_LANGUAGE;
+            }
         }
     }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

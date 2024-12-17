@@ -13,7 +13,7 @@
 #define SEC_TO_MIN(s)   ((s % 3600) / 60)   //总秒数转换为时分秒（分）
 #define SEC_TO_SEC(s)   (s % 60)            //总秒数转换为时分秒（秒）
 
-#define PAGE_LOCATION_LAST            -173-44
+#define PAGE_LOCATION_LAST            -173-54
 #define PAGE_HEIGHT                   338
 #define CONTROL_LENGTH                10
 #define TIME_SET_TXT_SPACING          43
@@ -229,6 +229,11 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             if (func_cb.sta == FUNC_TIMER) {
                     func_timer_setting_date_init();
                 }
+            compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN);
+            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
+            picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN);
+            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
+
             for(int i=0;i<TIMER_BTN_ITEM_CNT;i++)
             {
                 txt = compo_textbox_create(frm, 2);

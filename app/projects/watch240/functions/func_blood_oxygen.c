@@ -160,13 +160,8 @@ static void func_blood_oxygen_button_click(void)
     {
         case COMPO_ID_AGAIN_BTN:
         {
-            if(uteModuleBloodoxygenIsWear() == true){
-                uteModuleBloodoxygenStartSingleTesting(); /// 开启测试
-                f_bo->blood_oxygen_state = BO_STA_TESTING;
-            }else{
-                msgbox((char *)i18n[STR_PLEASE_WEAR], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
-                f_bo->blood_oxygen_state = BO_STA_IDLE;
-            }
+            uteModuleBloodoxygenStartSingleTesting(); /// 开启测试
+            f_bo->blood_oxygen_state = BO_STA_TESTING;
         }
         break;
     }
@@ -248,10 +243,6 @@ static void func_blood_oxygen_enter(void)
     f_bo->blood_oxygen_state = BO_STA_IDLE;
     f_bo->need_auto_test_flag = true;
     func_cb.frm_main = func_blood_oxygen_form_create();
-    if(uteModuleBloodoxygenIsWear() == false){
-        msgbox((char *)i18n[STR_PLEASE_WEAR], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
-        f_bo->blood_oxygen_state = BO_STA_IDLE;
-    }
 }
 
 //退出血氧功能

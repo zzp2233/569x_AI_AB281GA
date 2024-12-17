@@ -50,6 +50,7 @@ typedef struct _motor_t {
     u8 motor_sta;
     u32 interval;
     u8 duty;
+    u16 time_cnt;
 }motor_t;
 
 /**

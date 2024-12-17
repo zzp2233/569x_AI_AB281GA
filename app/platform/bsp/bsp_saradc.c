@@ -46,7 +46,7 @@ static void bsp_saradc_kick_process(void)
         saradc_kick_start(0, 0);                                    //每5毫秒启动全部ADC通路转换一次
         adc_cb.tmr1ms_cnt = 0;
     } else {
-        if ((adc_cb.tmr1ms_cnt % 5000) == 0) {                      //充电状态, 每5s采样一次VBAT, 停10ms
+        if ((adc_cb.tmr1ms_cnt % 10000) == 0) {                      //充电状态, 每5s采样一次VBAT, 停10ms
             adc_cb.tmr1ms_cnt = 0;
             if(sys_cb.chg_on){
                 gradient_process(1);
@@ -56,7 +56,7 @@ static void bsp_saradc_kick_process(void)
             saradc_adc15_analog_select(ADCCH15_ANA_BG);             //参考信号需要与vbat一起ADC转换
             saradc_kick_start(0, 1);                                //全部ADC通路转换一次
         } else {
-            if((adc_cb.tmr1ms_cnt % 5000) == 4990){
+            if((adc_cb.tmr1ms_cnt % 10000) == 9000){
                 if(sys_cb.chg_on){
                     gradient_process(1);
                     RTCCON8 |= BIT(1);                              //charge stop

@@ -98,9 +98,13 @@ void vc30fx_pwr_dis(void)       //PF5
     i2c_gsensor_init();
     uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);
 #endif
+#if (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
     uteModulePlatformOutputGpioSet(IO_PE4,false);
     uteModulePlatformOutputGpioSet(IO_PE5,false);
-
+#elif (CHIP_PACKAGE_SELECT == CHIP_5691G)
+    uteModulePlatformOutputGpioSet(IO_PE1,false);
+    uteModulePlatformOutputGpioSet(IO_PE2,false);
+#endif
     // vc30fx_msg_set_look(false);
 
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠

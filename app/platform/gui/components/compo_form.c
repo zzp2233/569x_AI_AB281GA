@@ -180,6 +180,10 @@ static void compo_form_page_update(compo_form_t *frm)
 //        widget_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
         compo_textbox_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
         widget_set_visible(frm->title_icon, (frm->mode & COMPO_FORM_MODE_SHOW_ICON) != 0);
+//        if (frm->mode & COMPO_FORM_MODE_SHOW_TIME) {
+//            widget_set_visible(frm->time, true);
+//            compo_cb.rtc_update = true;
+//        }
         widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_PAGE_BODY_CENTER_Y, GUI_SCREEN_WIDTH, GUI_PAGE_BODY_HEIGHT);
         widget_page_set_client(frm->page_body, 0, -GUI_PAGE_HEAD_HEIGHT);
     }

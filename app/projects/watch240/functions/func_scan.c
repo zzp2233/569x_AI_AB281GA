@@ -65,10 +65,19 @@ static void func_scan_message(size_msg_t msg)
         switch (msg)
         {
             case MSG_CTP_SHORT_RIGHT:
-                    func_cb.sta = FUNC_SET_SUB_LANGUAGE;
+//                    func_cb.sta = FUNC_SET_SUB_LANGUAGE;
+                    func_switch_to(FUNC_SET_SUB_LANGUAGE, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
             break;
             case MSG_CTP_SHORT_LEFT:
-                    func_cb.sta = FUNC_SET_SUB_ABOUT;
+//                    func_cb.sta = FUNC_SET_SUB_ABOUT;
+                    func_switch_to(FUNC_SET_SUB_ABOUT, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+            break;
+            case MSG_CTP_LONG:
+                    task_stack_init();  //任务堆栈
+                    latest_task_init(); //最近任务
+                    sys_cb.power_on_state=true;
+//                    func_cb.sta = FUNC_CLOCK;
+                    func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
             break;
         }
     }

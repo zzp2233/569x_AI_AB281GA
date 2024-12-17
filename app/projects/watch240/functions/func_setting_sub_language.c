@@ -106,7 +106,8 @@ void func_set_sub_language_list_icon_click(void)
     }
     if(sys_cb.power_on_state==false)
     {
-        func_cb.sta = FUNC_SCAN;
+        func_switch_to(FUNC_SCAN, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+//        func_cb.sta = FUNC_SCAN;
     }
     compo_listbox_update(listbox);
     uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
@@ -127,8 +128,6 @@ static void func_set_sub_language_list_message(size_msg_t msg)
 {
     f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
 
     if (compo_listbox_message(listbox, msg))
     {
@@ -150,7 +149,7 @@ static void func_set_sub_language_list_message(size_msg_t msg)
             break;
 
         default:
-            if(time.isWatchSetLangage == true)
+            if(sys_cb.power_on_state == true)
             {
                 func_message(msg);
             }

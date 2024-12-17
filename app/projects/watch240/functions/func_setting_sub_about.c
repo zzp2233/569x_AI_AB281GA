@@ -149,13 +149,8 @@ static void func_set_sub_about_message(size_msg_t msg)
         switch (msg)
         {
             case MSG_CTP_SHORT_RIGHT:
-                    func_cb.sta = FUNC_SCAN;
-            break;
-            case MSG_CTP_SHORT_LEFT:
-                    task_stack_init();  //任务堆栈
-                    latest_task_init(); //最近任务
-                    sys_cb.power_on_state=true;
-                    func_cb.sta = FUNC_CLOCK;
+//                    func_cb.sta = FUNC_SCAN;
+                    func_switch_to(FUNC_SCAN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
             break;
         }
     }

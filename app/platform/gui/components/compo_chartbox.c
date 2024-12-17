@@ -132,6 +132,17 @@ void compo_chartbox_set_value(compo_chartbox_t *chartbox, u8 id, chart_t chart_i
     u16 width = chart_info.width;    //柱子宽度
     u16 height = chart_info.height;  //柱子高度
 
+    //防止用户超出边界
+    rect_t rect = widget_get_location(chartbox->chart);
+
+    if (((x + width) > rect.wid) || (y > rect.hei)) {
+        return;
+    }
+
+    if ((y+height) > rect.hei) {
+        height = rect.hei - y;
+    }
+
     //详细介绍在api_gui.h中
     widget_chart_set_value(chartbox->chart, id, x, x + width, y, y + height, color);
 }

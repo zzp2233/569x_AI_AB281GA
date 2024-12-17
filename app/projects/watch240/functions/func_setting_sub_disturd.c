@@ -236,7 +236,7 @@ static const ui_handle_t ui_handle = {
                 .idx    = 1,
                 .x      = 10 - 232/2,
                 .y      = 40 - 72/2,
-                .w      = 52,
+                .w      = 60,
                 .h      = 26,
                 .str_id = STR_NULL,
                 .res    = UI_BUF_0FONT_FONT_BIN,
@@ -300,7 +300,7 @@ static const ui_handle_t ui_handle = {
                 .idx    = 1,
                 .x      = 10 - 232/2,
                 .y      = 40 - 72/2,
-                .w      = 52,
+                .w      = 60,
                 .h      = 26,
                 .str_id = STR_NULL,
                 .res    = UI_BUF_0FONT_FONT_BIN,
@@ -579,7 +579,7 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         }
     }
 
-    widget_page_set_client(func_cb.frm_main->page_body, 0, DRAG_MIN_BACK_DISTANCE);
+    widget_page_set_client(func_cb.frm_main->page_body, 0, -DRAG_MIN_BACK_DISTANCE);
     return frm;
 }
 
@@ -851,6 +851,13 @@ static void func_set_sub_disturd_process(void)
 
 
     func_set_sub_disturd_disp_update();
+
+    //卡片文本滚动
+    for(u8 i=0; i<CARD_ID_END - CARD_ID_START - 1; i++)      //文本滚动
+    {
+        u16 id = CARD_ID_START + 1 + i;
+        compo_cardbox_text_scroll_process((compo_cardbox_t *)compo_getobj_byid(id), true);
+    }
     func_process();
 }
 
@@ -920,8 +927,10 @@ static void func_set_sub_disturd_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_disturd_t));
     func_cb.frm_main = func_set_sub_disturd_form_create();
     f_disturd_t* f_disturd = (f_disturd_t*)func_cb.f_cb;
-//    f_disturd->focus_y = DRAG_MIN_BACK_DISTANCE;
-//    widget_page_set_client(func_cb.frm_main->page_body, 0, -f_disturd->focus_y);
+    memset(f_disturd, 0, sizeof(f_disturd_t));
+
+    f_disturd->focus_y = DRAG_MIN_BACK_DISTANCE;
+    widget_page_set_client(func_cb.frm_main->page_body, 0, -f_disturd->focus_y);
     f_disturd->time_scale = uteModuleSystemtime12HOn();
 }
 

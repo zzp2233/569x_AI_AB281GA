@@ -173,9 +173,9 @@ static const disturd_set_pic_bg_t tbl_disturd_set_pic_bg =
         .id = COMPO_ID_PIC_BG_HOUR,
         .x  = 4+100/2, //91+58/2  54,120,66
         .y  = 62+130/2,
-        .res_24_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_BIG_BIN,
+        .res_24_bright  = UI_BUF_I330001_PUBLIC_KUANG_BLUE_BIG_BIN,
         .res_24_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_BIG_BIN,
-        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
+        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_BLUE_BIN,
         .res_12_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_SMALL_BIN,
     },
 
@@ -183,9 +183,9 @@ static const disturd_set_pic_bg_t tbl_disturd_set_pic_bg =
         .id = COMPO_ID_PIC_BG_MIN,
         .x  = 136+100/2,    //178+58/2  186,207,21
         .y  = 62+130/2,
-        .res_24_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_BIG_BIN,
+        .res_24_bright  = UI_BUF_I330001_PUBLIC_KUANG_BLUE_BIG_BIN,
         .res_24_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_BIG_BIN,
-        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
+        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_BLUE_BIN,
         .res_12_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_SMALL_BIN,
     },
 
@@ -195,7 +195,7 @@ static const disturd_set_pic_bg_t tbl_disturd_set_pic_bg =
         .y  = 62+130/2,//127
         .res_24_bright  = 0,
         .res_24_destory = 0,
-        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
+        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_BLUE_BIN,
         .res_12_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_SMALL_BIN,
     },
 

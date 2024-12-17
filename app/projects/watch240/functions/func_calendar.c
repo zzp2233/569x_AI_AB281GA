@@ -201,7 +201,7 @@ compo_form_t *func_calender_form_create(void)
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_CALENDAR]);
 
     //新建日历文本内容

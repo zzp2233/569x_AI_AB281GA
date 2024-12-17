@@ -245,7 +245,7 @@ void compo_bonddata(void *compo, u8 bond_data)
         halt(HALT_GUI_COMPO_POOL_BONDDATA);
     }
     ((component_t *)compo)->bond_data = bond_data;
-    compo_cb.rtc_update = true;
+//    compo_cb.rtc_update = true;
 }
 
 //设置组件ID

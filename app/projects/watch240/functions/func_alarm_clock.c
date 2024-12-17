@@ -187,7 +187,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             }
             else
             {
-                snprintf(str_buff, sizeof(str_buff), i18n[STR_WEEK]);
+                snprintf(str_buff, sizeof(str_buff), i18n[STR_EVERY_DAY]);
                 char *buff_pt = str_buff + strlen(str_buff);
                 for (u8 j=0; j<7; j++)
                 {

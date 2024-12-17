@@ -50,7 +50,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_PHONE,                  UI_BUF_I330001_THEME_1_CALL_BIN,              .func_sta = FUNC_CALL},                 //电话
     {STR_MUSIC,                  UI_BUF_I330001_THEME_1_MUSIC_BIN,             .func_sta = FUNC_BT},                   //音乐
     {STR_WEATHER,                UI_BUF_I330001_THEME_1_WEATHER_BIN,           .func_sta = FUNC_WEATHER},              //天气
-    {STR_BEATHER_DURATION,       UI_BUF_I330001_THEME_1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
+    {STR_BREATHE_TRAIN,          UI_BUF_I330001_THEME_1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
     {STR_CALCULATOR,             UI_BUF_I330001_THEME_1_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器
     {STR_ALARM_CLOCK,            UI_BUF_I330001_THEME_1_ALARM_BIN,             .func_sta = FUNC_ALARM_CLOCK},          //闹钟
     {STR_TIMER,                  UI_BUF_I330001_THEME_1_TIMER_BIN,             .func_sta = FUNC_TIMER},                //定时器
@@ -61,7 +61,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_FIND_PHONE,             UI_BUF_I330001_THEME_1_FINDPHONE_BIN,         .func_sta = FUNC_FINDPHONE},            //查找手机
     {STR_GAME,                   UI_BUF_I330001_THEME_1_GAME_BIN,              .func_sta = FUNC_GAME},                 //游戏
     {STR_SETTING,                UI_BUF_I330001_THEME_1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
-    {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
+//    {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
 };
 
 //菜单栏自定义图标更新

@@ -83,7 +83,7 @@ extern void func_set_sub_rstfy(void);
 extern void func_set_sub_off(void);
 //extern void func_set_sub_4g(void);
 extern void func_switching_to_menu(void);
-extern void func_volume(void);
+//extern void func_volume(void);
 extern void func_activity(void);
 extern void func_sport_switching(void);
 extern void func_bloodsugar(void);
@@ -193,7 +193,7 @@ compo_form_t *func_set_sub_restart_form_create(void);
 compo_form_t *func_set_sub_rstfy_form_create(void);
 compo_form_t *func_set_sub_off_form_create(void);
 compo_form_t *func_calender_form_create(void);
-compo_form_t *func_volume_form_create(void);
+//compo_form_t *func_volume_form_create(void);
 compo_form_t *func_activity_form_create(void);
 //compo_form_t *func_bloodsugar_form_create(void);
 //compo_form_t *func_bloodpressure_form_create(void);
@@ -280,7 +280,7 @@ const func_t tbl_func_create[] =
     {FUNC_CALL_SORT,                    func_call_sort_form_create},
     {FUNC_SETTING,                      func_set_sub_list_form_create},
     {FUNC_CALENDAER,                    func_calender_form_create},
-    {FUNC_VOLUME,                       func_volume_form_create},
+//    {FUNC_SET_SUB_SAV,                       func_volume_form_create},
     {FUNC_ACTIVITY,                     func_activity_form_create},
     {FUNC_FLASHLIGHT,                   func_flashlight_form_create},
     {FUNC_LIGHT,                        func_light_form_create},
@@ -386,7 +386,7 @@ const func_t tbl_func_entry[] =
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record},          //电话--最近通话
     {FUNC_CALL_SUB_DIAL,                func_call_sub_dial},            //电话--拨号
     {FUNC_CALL_SORT,                    func_call_sort},                //电话--一级界面
-    {FUNC_VOLUME,                       func_volume},                   //音量调节
+//    {FUNC_SET_SUB_SAV,                       func_volume},                   //音量调节
     {FUNC_ACTIVITY,                     func_activity},                 //活动记录
     {FUNC_FLASHLIGHT,                   func_flashlight},               //手电筒
     {FUNC_SETTING,                      func_set_sub_list},             //设置

@@ -11,38 +11,20 @@
 
 typedef struct f_wrist_t_
 {
-    u8 value;
+    bool value;
 } f_wrist_t;
 
 enum
 {
-    //数字
-    COMPO_ID_NUM_DISP_ONE = 1,
-    COMPO_ID_NUM_DISP_TWS,
-
-    //按钮
-    COMPO_ID_BIN_WRIST,
-    //图片
-    COMPO_ID_PIC_WRIST_ON,
-    COMPO_ID_PIC_WRIST_OFF,
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
 };
 
-typedef struct wrist_disp_pic_item_t_
-{
-    u32 res_addr;
-    u16 pic_id;
-    s16 x;
-    s16 y;
-    bool visible_en;
-} wrist_disp_pic_item_t;
-
-#define WRIST_DISP_PIC_ITEM_CNT             ((int)(sizeof(tbl_wrist_disp_pic_item) / sizeof(tbl_wrist_disp_pic_item[0])))
-
-//图片item，创建时遍历一下
-static const wrist_disp_pic_item_t tbl_wrist_disp_pic_item[] =
-{
-    {UI_BUF_I330001_PUBLIC_SWITCH02_BIN,           COMPO_ID_PIC_WRIST_ON,         200,    160,    true},
-    {UI_BUF_I330001_PUBLIC_SWITCH00_BIN,          COMPO_ID_PIC_WRIST_OFF,        200,    160,    true},
+static const u32 tbl_wrist_switch_res[] = {
+    UI_BUF_I330001_PUBLIC_SWITCH02_BIN,         //ON
+    UI_BUF_I330001_PUBLIC_SWITCH00_BIN,         //OFF
 };
 
 static void switch_set_sub_wrist(void)
@@ -67,49 +49,32 @@ compo_form_t *func_set_sub_wrist_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_UP]);
 
-    compo_textbox_t *txt_shake = compo_textbox_create(frm, 4);
-    compo_textbox_set_align_center(txt_shake, false);
-    compo_textbox_set_pos(txt_shake, 22, 150);
-    compo_textbox_set(txt_shake, i18n[STR_SETTING_UP]);
+    //创建卡片
+    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 232, 72);
+    compo_cardbox_set_visible(card, true);
+    compo_cardbox_set_location(card, 4 + 232/2, 54 + 72/2, 232, 72);
+    compo_setid(card, COMPO_CARD_1);
 
-    //新建图像
-    compo_picturebox_t *pic_click;
-    for (u8 idx = 0; idx < WRIST_DISP_PIC_ITEM_CNT; idx++)
-    {
-        pic_click = compo_picturebox_create(frm, tbl_wrist_disp_pic_item[idx].res_addr);
-        compo_setid(pic_click, tbl_wrist_disp_pic_item[idx].pic_id);
-        compo_picturebox_set_pos(pic_click, tbl_wrist_disp_pic_item[idx].x, tbl_wrist_disp_pic_item[idx].y);
+    compo_cardbox_rect_set_color(card, 0, make_color(41,41,41));
+    compo_cardbox_rect_set_location(card, 0, 0, 0, 232, 72, 16);
 
-        if(idx == 0)
-        {
-            if(uteModuleSportGetIsOpenHandScreenOn())
-            {
-                compo_picturebox_set_visible(pic_click, true);
-            }
-            else
-            {
-                compo_picturebox_set_visible(pic_click, false);
-            }
-        }
-        else
-        {
-            if(uteModuleSportGetIsOpenHandScreenOn())
-            {
-                compo_picturebox_set_visible(pic_click, false);
-            }
-            else
-            {
-                compo_picturebox_set_visible(pic_click, true);
-            }
-        }
+    compo_cardbox_icon_set_location(card, 0,
+                                    232/2 - 5 - gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
+                                    0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
 
+    if(uteModuleSportGetIsOpenHandScreenOn()) {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
+    } else {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
     }
 
-    //创建按钮
-    compo_button_t *btn;
-    btn = compo_button_create(frm);
-    compo_setid(btn, COMPO_ID_BIN_WRIST);
-    compo_button_set_location(btn, 200, 160, 60, 30);
+    compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
+    compo_cardbox_text_set_location(card, 0, 10-232/2, -14,
+                                    232 - gui_image_get_size(tbl_wrist_switch_res[0]).wid - 10,
+                                    30);
+    compo_cardbox_text_set_align_center(card, 0, false);
+    widget_text_set_color(card->text[0], make_color(255,255,255));
+    compo_cardbox_text_set(card, 0, i18n[STR_SETTING_UP]);
 
     return frm;
 }
@@ -117,28 +82,34 @@ compo_form_t *func_set_sub_wrist_form_create(void)
 //抬腕亮屏事件处理
 static void func_set_sub_wrist_process(void)
 {
+    for(u8 i=0; i<COMPO_CARD_END-COMPO_CARD_START-1; i++)      //文本滚动
+    {
+        u16 id = COMPO_CARD_START + 1 + i;
+        compo_cardbox_text_scroll_process((compo_cardbox_t *)compo_getobj_byid(id), true);
+    }
+
     func_process();
 }
 
-//更新显示界面
-static void func_set_sub_wrist_disp(void)
+//获取点击卡片的id
+static u16 func_wrist_card_get_id(point_t pt)
 {
-    f_wrist_t *wrs = (f_wrist_t *)func_cb.f_cb;
-
-    //获取图片组件的地址
-    compo_picturebox_t *pic_wrs_on  = compo_getobj_byid(COMPO_ID_PIC_WRIST_ON);
-    compo_picturebox_t *pic_wrs_off = compo_getobj_byid(COMPO_ID_PIC_WRIST_OFF);
-
-    if (wrs->value == COMPO_ID_NUM_DISP_TWS)
-    {
-        compo_picturebox_set_visible(pic_wrs_on, true);
-        compo_picturebox_set_visible(pic_wrs_off, false);
+    u16 i, id;
+    u16 ret = 0;
+    rect_t rect;
+    compo_cardbox_t* cardbox = NULL;
+    for(i = 0; i<COMPO_CARD_END-COMPO_CARD_START-1; i++) {
+        id = COMPO_CARD_START + 1 + i;
+        cardbox = compo_getobj_byid(id);
+        rect = compo_cardbox_get_absolute(cardbox);
+        if (compo_cardbox_get_visible(cardbox) && abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+        {
+            ret = id;
+            break;
+        }
     }
-    else if (wrs->value == COMPO_ID_NUM_DISP_ONE)
-    {
-        compo_picturebox_set_visible(pic_wrs_on, false);
-        compo_picturebox_set_visible(pic_wrs_off, true);
-    }
+
+    return ret;
 }
 
 //单击按钮
@@ -146,31 +117,35 @@ static void func_wrist_button_click(void)
 {
     u8 ret = 0;
     f_wrist_t *wrs = (f_wrist_t *)func_cb.f_cb;
-    int id = compo_get_button_id();
 
-    switch(id)
+    point_t pt = ctp_get_sxy();
+    u16 compo_id = func_wrist_card_get_id(pt);
+    if (compo_id <= 0 || compo_id > COMPO_CARD_END - 1) {
+        return;
+    }
+    printf("click compo_id:%d\n", compo_id);
+
+    compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
+    if (compo_cardbox_get_visible(cardbox))
     {
-        case COMPO_ID_BIN_WRIST:
+        if (compo_id == COMPO_CARD_1)
+        {
             ret = msgbox((char *)i18n[STR_SETTING_UP], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
             if (ret == MSGBOX_RES_OK)
             {
-                if (wrs->value == COMPO_ID_NUM_DISP_ONE)
-                {
-                    wrs->value = COMPO_ID_NUM_DISP_TWS;
-                }
-                else
-                {
-                    wrs->value = COMPO_ID_NUM_DISP_ONE;
+                if (wrs->value) {
+                    wrs->value = false;
+                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[1]);
+                } else {
+                    wrs->value = true;
+                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);
                 }
                 switch_set_sub_wrist();
             }
-            break;
-
-        default:
-            break;
+        }
     }
-    func_set_sub_wrist_disp();
+
 }
 
 //抬腕亮屏功能消息处理
@@ -200,11 +175,11 @@ static void func_set_sub_wrist_enter(void)
 
     if(uteModuleSportGetIsOpenHandScreenOn())
     {
-        wrs->value = COMPO_ID_NUM_DISP_TWS;
+        wrs->value = true;
     }
     else
     {
-        wrs->value = COMPO_ID_NUM_DISP_ONE;
+        wrs->value = false;
     }
 }
 

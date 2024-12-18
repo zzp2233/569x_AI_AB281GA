@@ -586,7 +586,13 @@ static void func_message_exit(void)
         ab_free(f_msg->ute_msg);
         f_msg->ute_msg = NULL;
     }
-    func_cb.last = FUNC_MESSAGE;
+    if (func_cb.left_sta == FUNC_MESSAGE) {
+        if (sys_cb.refresh_language_flag == false) {
+            func_cb.last = FUNC_MESSAGE;
+        }
+    } else {
+        func_cb.last = FUNC_MESSAGE;
+    }
 }
 
 //消息功能

@@ -10,6 +10,7 @@
 #include "ute_drv_temperature_infrared_thermistor.h"
 #include "ute_project_config.h"
 #include "include.h"
+#include <math.h>
 
 #if UTE_DRV_TEMPERATURE_INFRARED_THERMISTOR_SUPPORT
 float uteDrvTemperatureInfraredThermistorAmbient = 0;
@@ -19,17 +20,17 @@ bool uteDrvTemperatureInfraredThermistorIsRegAdc = false;
 bool uteDrvTemperatureInfraredThermistorIsOnlyOneTime = false;
 
 // 泰勒级数近似 log(x)
-float taylorLog(float x, int terms)
-{
-    float result = 0.0f;
-    float term = x - 1.0f;
-    for (int i = 1; i <= terms; i++)
-    {
-        result += term / i;
-        term *= (x - 1.0f);
-    }
-    return result;
-}
+// float taylorLog(float x, int terms)
+// {
+//     float result = 0.0f;
+//     float term = x - 1.0f;
+//     for (int i = 1; i <= terms; i++)
+//     {
+//         result += term / i;
+//         term *= (x - 1.0f);
+//     }
+//     return result;
+// }
 
 /**
 *@brief         串联模式下，从adc值转换成温度值
@@ -64,8 +65,8 @@ float uteDrvTemperatureInfraredThermistorSeriesConversionTemperature(uint16_t vd
     double RTk = adc*RS*1.0f/(vddAdc-adc);
 #endif
     double logvalue = (double)(RT/RTk);
-    double lnvalue = taylorLog(logvalue, 5);
-    // double lnvalue = log(logvalue);
+    // double lnvalue = taylorLog(logvalue, 5);
+    double lnvalue = log(logvalue);
     float tk = b*t/(b-t*lnvalue);
     tk = tk-273.15f;
     return tk;
@@ -107,7 +108,9 @@ void uteDrvTemperatureInfraredThermistorStartSample(void)
     saradc_set_channel(BIT(UTE_DRV_TEMPERATURE_INFRARED_THERMISTOR_VDD_ADC));
     vddAdc = saradc_get_value10(UTE_DRV_TEMPERATURE_INFRARED_THERMISTOR_VDD_ADC);
 #else
-    vddAdc = 3300;
+    saradc_set_channel(ADCCH15_ANA_BG);
+    // adc_cb.bg = saradc_get_value10(ADCCH_BGOP);
+    vddAdc =  sys_trim.vbg_volt * 1024 / adc_cb.bg / 10;
 #endif
 
     ambientAdc = ambientAdc * vddAdc / 1024;

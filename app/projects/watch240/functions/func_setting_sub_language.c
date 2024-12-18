@@ -104,9 +104,15 @@ void func_set_sub_language_list_icon_click(void)
     {
         return;
     }
+    if(sys_cb.power_on_state==false)
+    {
+        func_switch_to(FUNC_SCAN, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+//        func_cb.sta = FUNC_SCAN;
+    }
     compo_listbox_update(listbox);
-
     uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
+
+
 }
 
 //语言设置功能事件处理
@@ -128,6 +134,7 @@ static void func_set_sub_language_list_message(size_msg_t msg)
         return;                                         //处理列表框信息
     }
 
+
     switch (msg)
     {
         case MSG_CTP_CLICK:
@@ -138,24 +145,17 @@ static void func_set_sub_language_list_message(size_msg_t msg)
         case MSG_CTP_LONG:
             break;
 
-//        case KU_DELAY_BACK:
-//            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
-//            {
-//
-//            }
-            break;
 
-//    case MSG_CHECK_LANGUAGE://APP语言切换
-//        compo_form_destroy(func_cb.frm_main);
-//        func_set_sub_language_exit();
-//        func_free(func_cb.f_cb);
-//        func_set_sub_language_enter();
-//        break;
+            break;
 
         default:
-            func_message(msg);
+            if(sys_cb.power_on_state == true)
+            {
+                func_message(msg);
+            }
             break;
     }
+
 }
 
 //进入语言设置功能

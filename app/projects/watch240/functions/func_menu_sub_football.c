@@ -39,7 +39,7 @@ static const compo_football_item_t tbl_menu_football[] =
     {UI_BUF_I330001_THEME_2_LANUAGE_BIN,          FUNC_LANGUAGE},
     {UI_BUF_I330001_THEME_2_ALARM_BIN,            FUNC_ALARM_CLOCK},
 
-    {UI_BUF_I330001_THEME_2_SOUND_BIN,            FUNC_VOLUME},
+    {UI_BUF_I330001_THEME_2_SOUND_BIN,            FUNC_SET_SUB_SAV},
     {UI_BUF_I330001_THEME_2_CALL_BIN,             FUNC_CALL},
     {UI_BUF_I330001_THEME_2_MUSIC_BIN,            FUNC_BT},
     {UI_BUF_I330001_THEME_2_GAME_BIN,             FUNC_GAME},

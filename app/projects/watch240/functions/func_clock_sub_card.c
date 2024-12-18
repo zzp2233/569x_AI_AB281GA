@@ -595,7 +595,7 @@ static const ui_handle_t ui_handle = {
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
             .center = false,
-            .color  = {248,132,10},
+            .color  = {255,255,255},
         },
     },
 
@@ -636,7 +636,7 @@ static const ui_handle_t ui_handle = {
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
             .center = false,
-            .color  = {248,132,10},
+            .color  = {255,255,255},
         },
     },
 
@@ -839,7 +839,7 @@ static void card1_updata_disp(void)
 {
     f_card_t *f_activity = (f_card_t *)func_cb.f_cb;
 
-    if(tick_check_expire(f_activity->activity_tick, 10))
+    if(tick_check_expire(f_activity->activity_tick, 5))
     {
         f_activity->activity_tick = tick_get();
         char txt_buf[20];
@@ -1188,6 +1188,11 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_textbox_set_align_center(week, ui_handle.card_clock_day.week.center);
     widget_text_set_color(week->txt, make_color(ui_handle.card_clock_day.week.color.r, ui_handle.card_clock_day.week.color.g, ui_handle.card_clock_day.week.color.b));
     compo_bonddata(week, ui_handle.card_clock_day.week.bonddata);
+
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 6, 36, 6);
+    compo_shape_set_color(shape, make_color(0X4C,0X4C,0X4C));
+    compo_shape_set_radius(shape, 35);
 
     ab_free(sleep_data);
 

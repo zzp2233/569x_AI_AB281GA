@@ -139,7 +139,7 @@ static void func_findphone_message(size_msg_t msg)
             if (!ble_is_connect())
             {
                 sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
-                msgbox((char*)i18n[STR_VOICE_BT_NOT_CONNECT], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+                msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
             }
             else
             {

@@ -20,6 +20,8 @@ typedef struct f_flashlight_t_
     u8 light_level;
 } f_flashlight_t;
 
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建手电筒窗体
 compo_form_t *func_flashlight_form_create(void)
 {
@@ -68,10 +70,39 @@ static void func_flashlight_button_click(void)
         compo_shape_set_visible(shape, false);
     }
 }
+#else
+static compo_form_t *func_flashlight_form_create(void)
+{
+    //新建窗体
+    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+    f_flashlight->flashlight_flag = true;
+
+    f_flashlight ->light_level = sys_cb.light_level;
+    sys_cb.light_level = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
+    tft_bglight_set_level(sys_cb.light_level,false);
+
+    compo_form_t *frm = compo_form_create(true);
+    compo_shape_t * shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_shape_set_color(shape, COLOR_WHITE);
+    compo_setid(shape,COMPO_ID_BG_SHAPE);
+    return frm;
+}
+
+static void func_flashlight_button_click(void)
+{
+    return;
+}
+#endif
 
 //手电筒功能事件处理
 static void func_flashlight_process(void)
 {
+    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+    if(f_flashlight->flashlight_flag == true)
+    {
+        reset_guioff_delay();
+    }
     func_process();
 }
 
@@ -104,7 +135,6 @@ static void func_flashlight_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_flashlight_t));
     func_cb.frm_main = func_flashlight_form_create();
-//    f_flashlight_t f * f_flashlight = (f_flashlight_t*)func_cb.f_cb;
 }
 
 //退出手电筒功能

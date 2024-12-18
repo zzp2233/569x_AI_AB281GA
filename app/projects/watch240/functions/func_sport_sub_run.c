@@ -396,12 +396,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_location(text, -140-120/2, 134+23/2,
                                gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).wid - gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei,
                                gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
-    compo_textbox_set(text, "暂停");
+    compo_textbox_set(text, i18n[STR_PAUSE]);
 
     text = compo_textbox_create(frm, 32);
     compo_textbox_set_location(text, -140-120/2, 248+23/2, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).wid - gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei,
                                gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
-    compo_textbox_set(text, "关闭");
+    compo_textbox_set(text, i18n[STR_CLOSE]);
 
     return frm;
 }
@@ -733,8 +733,10 @@ static void func_sport_sub_run_click_handler(void)
         case COMPO_ID_BTN_SPORT_EXIT:
         {
             const char* msg = NULL;
-            int res;
-            if (uteModuleSportMoreSportsIsLessData())
+            int res=0;
+            bool sport_flag = uteModuleSportMoreSportsIsLessData();
+
+            if (sport_flag)
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, 0);
             }
@@ -752,7 +754,10 @@ static void func_sport_sub_run_click_handler(void)
 //                    task_stack_pop();
 //                    func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
 //                }
-                func_switch_to(FUNC_SPORT_FINISH, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+                if (!sport_flag)
+                {
+                    func_switch_to(FUNC_SPORT_FINISH, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+                }
             }
             else if (res == MSGBOX_RES_CANCEL)
             {

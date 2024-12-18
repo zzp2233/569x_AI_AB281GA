@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 英语(美国）
 *@author
-*@date   2024-12-18 17:55:41
+*@date   2024-12-18 19:45:31
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -237,6 +237,8 @@ const char * const i18n_en_rus[] =
      [STR_CLICK_START_PIC] = "\x54\x61\x70\x20\x74\x68\x65\x20\x73\x63\x72\x65\x65\x6e\x20\x74\x6f\x20\x74\x61\x6b\x65\x20\x61\x20\x70\x68\x6f\x74\x6f\x2e\x00", // [221] Tap the screen to take a photo.
      [STR_SPORT_FINISH_APP] = "\x50\x6c\x65\x61\x73\x65\x20\x67\x6f\x20\x74\x6f\x20\x41\x70\x70\x20\x66\x6f\x72\x20\x6d\x6f\x72\x65\x20\x64\x65\x74\x61\x69\x6c\x73\x2e\x00", // [222] Please go to App for more details.
      [STR_SPORT_ORDER] = "\x74\x69\x6d\x65\x73\x00", // [223] times
+     [STR_PAUSE] = "\x50\x61\x75\x73\x65\x00", // [224] Pause
+     [STR_CLOSE] = "\x4f\x66\x66\x00", // [225] Off
 };
 
 #endif

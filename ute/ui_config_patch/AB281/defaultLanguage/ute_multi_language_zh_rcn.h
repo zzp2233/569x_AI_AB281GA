@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2024-12-18 17:55:40
+*@date   2024-12-18 19:45:31
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -237,6 +237,8 @@ const char * const i18n_zh_rcn[] =
      [STR_CLICK_START_PIC] = "\xe7\x82\xb9\xe5\x87\xbb\xe5\xbc\x80\xe5\xa7\x8b\xe6\x8b\x8d\xe7\x85\xa7\x00", // [221] 点击开始拍照
      [STR_SPORT_FINISH_APP] = "\xe6\x9b\xb4\xe5\xa4\x9a\xe8\xaf\xa6\xe6\x83\x85\xe8\xaf\xb7\xe5\x89\x8d\xe5\xbe\x80\x41\x50\x50\xe6\x9f\xa5\xe7\x9c\x8b\x00", // [222] 更多详情请前往APP查看
      [STR_SPORT_ORDER] = "\xe6\xac\xa1\x00", // [223] 次
+     [STR_PAUSE] = "\xe6\x9a\x82\xe5\x81\x9c\x00", // [224] 暂停
+     [STR_CLOSE] = "\xe5\x85\xb3\xe9\x97\xad\x00", // [225] 关闭
 };
 
 #endif

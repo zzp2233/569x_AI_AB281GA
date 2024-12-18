@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-18 17:55:40
+*@date   2024-12-18 19:45:30
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -237,6 +237,8 @@ enum
     STR_CLICK_START_PIC, // 点击开始拍照
     STR_SPORT_FINISH_APP, // 更多详情请前往APP查看
     STR_SPORT_ORDER, // 次
+    STR_PAUSE, // 暂停
+    STR_CLOSE, // 关闭
 };
 
 extern const char * const *i18n;

@@ -269,6 +269,8 @@ static void func_long_press_click(void)
 
 static void func_long_press_message(size_msg_t msg)
 {
+
+
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -279,6 +281,12 @@ static void func_long_press_message(size_msg_t msg)
             break;
         case KU_BACK:
             func_switch_to_clock();
+            break;
+        case K_BACK:
+            if(sys_cb.power_on_state==false)
+            {
+                func_switch_to(FUNC_SCAN, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            }
             break;
         default:
             //func_message(msg);

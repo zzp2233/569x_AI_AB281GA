@@ -131,19 +131,25 @@ compo_form_t *func_alarm_clock_form_create(void)
     }
 
     //闹钟选项卡
-    char str_buff[32];
+    char str_buff[50];
     compo_cardbox_t *cardbox;
+    int buf_num=0;
+    int str_week_buf[7]={
+        STR_MONDAY, // 周一
+        STR_TUESDAY, // 周二
+        STR_WEDNESDAY, // 周三
+        STR_THURSDAY, // 周四
+        STR_FRIDAY, // 周五
+        STR_SATURDAY, // 周六
+        STR_SUNDAY, // 周日
+    };
+
     if (ALARM_ENABLE_CNT())
     {
         for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
         {
-
-//            if(i == ALARM_ENABLE_CNT()-1  && !ALARM_GET_SWITCH(ALARM_ENABLE_CNT()-1))///开启新闹钟
-//            {
-//                ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
-//            }
-
-
+            memset(str_buff,0,sizeof(str_buff));
+            buf_num=0;
             cardbox = compo_cardbox_create(frm, 1, 1, 3, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
@@ -177,6 +183,9 @@ compo_form_t *func_alarm_clock_form_create(void)
                 compo_cardbox_text_set(cardbox, 2, i18n[STR_PM]);
             }
 
+
+            memset(str_buff,0,sizeof(str_buff));
+
             if (ALARM_GET_CYCLE(i) & BIT(7))
             {
                 snprintf(str_buff, sizeof(str_buff), i18n[STR_ONCE]);
@@ -187,25 +196,23 @@ compo_form_t *func_alarm_clock_form_create(void)
             }
             else
             {
-                snprintf(str_buff, sizeof(str_buff), i18n[STR_EVERY_DAY]);
-                char *buff_pt = str_buff + strlen(str_buff);
                 for (u8 j=0; j<7; j++)
                 {
+                    char string_handle[50];
+                    memset(string_handle,0,sizeof(string_handle));
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {
-                        if(*(buff_pt-1) != ':')
+                        snprintf(string_handle, sizeof(string_handle),i18n[str_week_buf[j]]);
+                        for(int k=0;k<strlen(i18n[str_week_buf[j]]);k++)
                         {
-                            *buff_pt = ',';
-                            buff_pt++;
+                            str_buff[buf_num] = string_handle[k];
+                            buf_num++;
                         }
-
-                        *buff_pt = '0' + j + 1;
-                        buff_pt++;
+                        str_buff[buf_num] = ' ';
+                        buf_num++;
                     }
                 }
-                *buff_pt = '\0';
             }
-//            compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
             compo_cardbox_text_set_forecolor(cardbox, 1, MAKE_GRAY(128));
             compo_cardbox_text_set(cardbox, 1, str_buff);
             compo_cardbox_text_set_align_center(cardbox, 1, false);

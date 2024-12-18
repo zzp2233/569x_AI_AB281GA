@@ -312,7 +312,7 @@ static const ui_handle_t ui_handle = {
     .card1 = {
         .id = COMPO_ID_CARD_1,
         .x  = 4+232/2,
-        .y  = 136+108/2,
+        .y  = 190,
         .w  = 232,
         .h  = 108,
 
@@ -424,7 +424,7 @@ static const ui_handle_t ui_handle = {
     .card2 = {
         .id = COMPO_ID_CARD_2,
         .x  = 4+232/2,
-        .y  = 250+108/2,
+        .y  = 190+(108+6)*1,
         .w  = 232,
         .h  = 108,
         .rect = {
@@ -497,7 +497,7 @@ static const ui_handle_t ui_handle = {
     .card3 = {
         .id = COMPO_ID_CARD_3,
         .x  = 4+232/2,
-        .y  = 360+108/2,
+        .y  = 190+(108+6)*2,
         .w  = 232,
         .h  = 108,
 
@@ -561,7 +561,7 @@ static const ui_handle_t ui_handle = {
     .card4 = {
         .id = COMPO_ID_CARD_4,
         .x  = 4+232/2,
-        .y  = 470+108/2,
+        .y  = 190+(108+6)*3,
         .w  = 232,
         .h  = 108,
 
@@ -602,7 +602,7 @@ static const ui_handle_t ui_handle = {
     .card5 = {
         .id = COMPO_ID_CARD_5,
         .x  = 4+232/2,
-        .y  = 580+108/2,
+        .y  = 190+(108+6)*4,
         .w  = 232,
         .h  = 108,
 
@@ -643,7 +643,7 @@ static const ui_handle_t ui_handle = {
     .card6 = {
         .id = COMPO_ID_CARD_6,
         .x  = 4+232/2,
-        .y  = 690+108/2,
+        .y  = 190+(108+6)*5,
         .w  = 232,
         .h  = 108,
 
@@ -710,7 +710,7 @@ static const ui_handle_t ui_handle = {
     .card7 = {
         .id = COMPO_ID_CARD_7,
         .x  = 4+232/2,
-        .y  = 808+108/2,
+        .y  = 190+(108+6)*6+7,
         .w  = 232,
         .h  = 108,
 

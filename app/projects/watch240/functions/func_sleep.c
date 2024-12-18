@@ -80,7 +80,6 @@ compo_form_t *func_sleep_form_create(void)
 //    compo_textbox_set_location(time_title, 168, 15, 52, 23);
 //    compo_setid(time_title, COMPO_ID_TXT_TIME);
 //    compo_bonddata(time_title, COMPO_BOND_HOURMIN_TXT);
-sleep_data->totalSleepMin = 138;
     memset(buf,0,sizeof(buf));
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
     {

@@ -472,7 +472,7 @@ static void func_sport_sub_run_updata(void)
                     break;
                 }
             }
-            compo_textbox_set(txt_heartrate_unit, "次/分");
+            compo_textbox_set(txt_heartrate_unit,i18n[STR_PER_MINUTE]);
 
 
             //更新卡路里
@@ -733,23 +733,16 @@ static void func_sport_sub_run_click_handler(void)
         case COMPO_ID_BTN_SPORT_EXIT:
         {
             const char* msg = NULL;
-            //退出按钮
-//            if (uteModuleSportMoreSportIsAppStart())   //多运动是手机端开启的
-//            {
+            int res;
             if (uteModuleSportMoreSportsIsLessData())
             {
-                msg = i18n[STR_SPORT_EXIT_MSG2];
+                res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, 0);
             }
             else
             {
-                msg = i18n[STR_SPORT_EXIT_MSG1];
+                 res = msgbox(i18n[STR_SPORT_EXIT_MSG1], NULL, NULL, MSGBOX_MODE_BTN_YESNO, 0);
             }
-//            }
-//            else
-//            {
-//                msg = i18n[STR_SPORT_EXIT_MSG3];
-//            }
-            int res = msgbox((char*)msg, NULL, NULL, MSGBOX_MODE_BTN_YESNO, 0);
+
             if (res == MSGBOX_RES_OK)
             {
 //                if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
@@ -759,10 +752,7 @@ static void func_sport_sub_run_click_handler(void)
 //                    task_stack_pop();
 //                    func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
 //                }
-                if (uteModuleSportMoreSportsIsLessData())
-                {
-
-                }
+                func_switch_to(FUNC_SPORT_FINISH, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
             }
             else if (res == MSGBOX_RES_CANCEL)
             {

@@ -71,6 +71,7 @@ enum
     FUNC_SPORT_SUB_RUN,                 //运动--室内跑步
     FUNC_SPORT_SWITCH,                  //运动开启
     FUNC_SPORT_SORT,                    //运动边菜单
+    FUNC_SPORT_FINISH,                  //运动结束
     FUNC_CALL,                          //电话
     FUNC_CALL_SUB_RECORD,               //电话-最近通话
     FUNC_CALL_SUB_DIAL,                 //电话-拨打电话

@@ -379,7 +379,7 @@ const static ui_handle_t ui_handle = {
         .w  = 144,
         .h  = 28,
         .center = true,
-        .str_id1 = STR_START,
+        .str_id1 = STR_CLICK_START_PIC,
     },
 };
 

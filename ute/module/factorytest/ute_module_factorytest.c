@@ -26,9 +26,6 @@
 
 ute_module_factory_test_data_t uteModuleFactoryTestData;
 
-#define UTE_MOUDLE_SCREENS_FACTORY_TEST_ID FUNC_ONLINE_FACTORY_TEST
-#define UTE_MOUDLE_SCREENS_WATCHMAIN_ID FUNC_CLOCK
-
 /**
 *@brief  工厂测试每秒处理函数
 *@details

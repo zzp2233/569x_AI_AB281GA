@@ -101,6 +101,7 @@ enum
     FUNC_RSTFY = FUNC_SET_SUB_RSTFY,
     FUNC_SET_SUB_OFF,                   //设置--关机
     FUNC_OFF = FUNC_SET_SUB_OFF,        //关机
+    FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,
 #endif

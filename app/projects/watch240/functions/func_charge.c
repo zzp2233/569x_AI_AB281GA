@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_drv_battery_common.h"
 
 #define TRACE_EN    1
 
@@ -26,7 +27,7 @@ enum
     COMPO_ID_RECT_BAT_5,
 };
 
-#define BAT_PERCENT_VALUE       sys_cb.vbat_percent  //电量百分比数值
+#define BAT_PERCENT_VALUE       uteDrvBatteryCommonGetLvl()  //电量百分比数值
 
 //typedef struct
 //{
@@ -201,10 +202,10 @@ void func_charge_update(void)
 
     //更新bat Value
     compo_number_t* bat_value = compo_getobj_byid(ui_handle.bat_value.id);
-    compo_number_set(bat_value, sys_cb.vbat_percent);
+    compo_number_set(bat_value, BAT_PERCENT_VALUE);
 
     //更新bat rect
-    u8 bright_value = (sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0])) * sys_cb.vbat_percent / 100;      //等级
+    u8 bright_value = (sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0])) * BAT_PERCENT_VALUE / 100;      //等级
 
     //熄灭的
     for(int i=0; i<(sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0])); i++)
@@ -310,7 +311,8 @@ static void func_charge_process(void)
 
     if (bsp_charge_sta_get() == 0)
     {
-        func_cb.sta = FUNC_CLOCK;
+        // func_cb.sta = FUNC_CLOCK;
+        uteModuleGuiCommonGoBackLastScreen();
     }
 
     func_process();

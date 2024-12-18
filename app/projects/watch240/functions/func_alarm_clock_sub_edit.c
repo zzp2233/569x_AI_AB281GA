@@ -299,6 +299,18 @@ static const ui_handle_t ui_handle = {
 //创建闹钟窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 {
+
+    int buf_num=0;
+    int str_week_buf[7]={
+        STR_MONDAY, // 周一
+        STR_TUESDAY, // 周二
+        STR_WEDNESDAY, // 周三
+        STR_THURSDAY, // 周四
+        STR_FRIDAY, // 周五
+        STR_SATURDAY, // 周六
+        STR_SUNDAY, // 周日
+    };
+
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
@@ -401,35 +413,35 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         compo_cardbox_text_set_location(card_day, ui_handle.card_day.text[i].idx, ui_handle.card_day.text[i].x, ui_handle.card_day.text[i].y,
                                         ui_handle.card_day.text[i].w, ui_handle.card_day.text[i].h);
 
-        char str_buff[32];
+        char str_buff[50];
         memset(str_buff, '\0', sizeof(str_buff));
-        if (ALARM_GET_CYCLE(i) & BIT(7))
+        if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(7))
         {
             snprintf(str_buff, sizeof(str_buff), i18n[STR_ONCE]);
         }
-        else if (ALARM_GET_CYCLE(i) == 0x7f)
+        else if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) == 0x7f)
         {
             snprintf(str_buff, sizeof(str_buff), i18n[STR_EVERY_DAY]);
         }
         else
         {
-            snprintf(str_buff, sizeof(str_buff), i18n[STR_EVERY_DAY]);
-            char *buff_pt = str_buff + strlen(str_buff);
             for (u8 j=0; j<7; j++)
             {
-                if (ALARM_GET_CYCLE(i) & BIT(j))
+                char string_handle[50];
+                memset(string_handle,0,sizeof(string_handle));
+                if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(j))
                 {
-                    if(*(buff_pt-1) != ':')
+                    snprintf(string_handle, sizeof(string_handle),i18n[str_week_buf[j]]);
+                    for(int k=0;k<strlen(i18n[str_week_buf[j]]);k++)
                     {
-                        *buff_pt = ',';
-                        buff_pt++;
+                        str_buff[buf_num] = string_handle[k];
+                        buf_num++;
                     }
-
-                    *buff_pt = '0' + j + 1;
-                    buff_pt++;
+                    str_buff[buf_num] = ' ';
+                    buf_num++;
                 }
             }
-            *buff_pt = '\0';
+
         }
 
         if (ui_handle.card_day.text[i].idx == 0) {      //周 1 2 3 4 5 6 7

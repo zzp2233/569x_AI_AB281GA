@@ -127,8 +127,8 @@ extern void func_ageing(void);///*老化测试*/
 extern void func_audio(void);///*音频测试*/
 extern void func_online_factory_test(void);
 extern void func_empty(void);
-
-
+extern void func_sport_finish(void);
+compo_form_t *func_sport_finish_form_create(void);
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 compo_form_t *func_power_on_form_create(void);//开机
 #endif
@@ -270,6 +270,7 @@ const func_t tbl_func_create[] =
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run_form_create},
     {FUNC_SPORT_SWITCH,                 func_sport_switching_form_create},
     {FUNC_SPORT_SORT,                   func_sport_sort_form_create},
+    {FUNC_SPORT_FINISH,                 func_sport_finish_form_create},
     {FUNC_GAME,                         func_game_form_create},
     {FUNC_STYLE,                        func_style_form_create},
     {FUNC_FINDPHONE,                    func_findphone_form_create},
@@ -380,6 +381,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run},            //运动--室内跑步
     {FUNC_SPORT_SWITCH,                 func_sport_switching},          //运动开启动画
     {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
+    {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
     {FUNC_GAME,                         func_game},                     //游戏
     {FUNC_STYLE,                        func_style},                    //菜单风格
     {FUNC_ALTITUDE,                     func_altitude},                 //海拔

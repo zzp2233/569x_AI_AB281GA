@@ -274,7 +274,13 @@ void bsp_hw_i2c_rx_buf(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u8 *buf, u16 len
 
 static void i2cx_init(void)
 {
-
+#if (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
+    uteModulePlatformOutputGpioSet(IO_PE4,false);
+    uteModulePlatformOutputGpioSet(IO_PE5,false);
+#elif (CHIP_PACKAGE_SELECT == CHIP_5691G)
+    uteModulePlatformOutputGpioSet(IO_PE1,false);
+    uteModulePlatformOutputGpioSet(IO_PE2,false);
+#endif
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
     CLKCON1 |= BIT(7);      //x26m_clkdiv8
     CLKGAT2 |= BIT(0);      //en iic0 clk
@@ -335,6 +341,13 @@ AT(.text.bsp.i2c)
 void i2c_gsensor_init(void)
 {
     sys_cb.gsensor_iic_en = true;
+#if (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
+    uteModulePlatformOutputGpioSet(IO_PE1,false);
+    uteModulePlatformOutputGpioSet(IO_PE2,false);
+#elif (CHIP_PACKAGE_SELECT == CHIP_5691G)
+    uteModulePlatformOutputGpioSet(IO_PF1,false);
+    uteModulePlatformOutputGpioSet(IO_PF2,false);
+#endif
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
     CLKCON1 |= BIT(7);      //x26m_clkdiv8
     CLKGAT2 |= BIT(0);      //en iic0 clk

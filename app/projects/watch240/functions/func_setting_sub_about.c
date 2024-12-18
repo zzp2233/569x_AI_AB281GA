@@ -3,6 +3,7 @@
 #include "ute_module_log.h"
 #include "string.h"
 #include "ute_application_common.h"
+#include "ute_module_systemtime.h"
 
 
 #if TRACE_EN
@@ -142,27 +143,31 @@ static void func_set_sub_about_message(size_msg_t msg)
 {
 //    f_about_t *slp = (f_about_t *)func_cb.f_cb;
 
-    switch (msg)
+//    printf("sys_cb.power_on_state = %d\n",sys_cb.power_on_state);
+    if(sys_cb.power_on_state==false)
     {
-
-        case MSG_CTP_CLICK:
+        switch (msg)
+        {
+            case MSG_CTP_SHORT_RIGHT:
+//                    func_cb.sta = FUNC_SCAN;
+                    func_switch_to(FUNC_SCAN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
             break;
-//        case MSG_CTP_SHORT_UP:
-//        case MSG_CTP_SHORT_DOWN:
-//            slp->flag_drag = true;
-
-        case MSG_CTP_LONG:
-            if (!uteApplicationCommonIsHasConnectOurApp())
-            {
-                func_switch_to(FUNC_TEST_MODE, 0);
-            }
-            break;
-        case KU_DELAY_BACK:
-            break;
-
-        default:
-            func_message(msg);
-            break;
+        }
+    }
+    else
+    {
+        switch (msg)
+        {
+            case MSG_CTP_LONG:
+                if (!uteApplicationCommonIsHasConnectOurApp())
+                {
+                    func_switch_to(FUNC_TEST_MODE, 0);
+                }
+                break;
+            default:
+                    func_message(msg);
+                break;
+        }
     }
 }
 

@@ -74,7 +74,7 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
 
     {UI_BUF_I330001_THEME_1_CALL_BIN,                      FUNC_CALL},
     {UI_BUF_I330001_THEME_1_THEME_BIN,                      FUNC_STYLE},
-    {UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                FUNC_FLASHLIGHT},
+    {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
     {UI_BUF_I330001_THEME_1_FINDPHONE_BIN,                 FUNC_FINDPHONE},
     {UI_BUF_I330001_THEME_1_GAME_BIN,                      FUNC_GAME},
     ////{UI_BUF_ICON_ALTITUDE_BIN,                  FUNC_ALTITUDE},
@@ -82,7 +82,7 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
     {UI_BUF_I330001_THEME_1_ALARM_BIN,               FUNC_ALARM_CLOCK},
     {UI_BUF_I330001_THEME_1_RETRY_BIN,           FUNC_RSTFY},
     {UI_BUF_I330001_THEME_1_LANUAGE_BIN,                  FUNC_LANGUAGE},
-    {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                     FUNC_LIGHT},
+    {UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
 //    {UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
 
 
@@ -94,7 +94,7 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
     {UI_BUF_I330001_THEME_1_SETTINGS_BIN,                   FUNC_SETTING},
 
     {UI_BUF_I330001_THEME_1_SLEEP_BIN,                     FUNC_SLEEP},
-    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_VOLUME},
+    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_SET_SUB_SAV},
     {UI_BUF_I330001_THEME_1_SOPRT_BIN,                     FUNC_SPORT},
     {UI_BUF_I330001_THEME_1_STOPWATCH_BIN,                 FUNC_STOPWATCH},
     {UI_BUF_I330001_THEME_1_PHOTO_BIN,                    FUNC_CAMERA},

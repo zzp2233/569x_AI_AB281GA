@@ -32,7 +32,7 @@ enum
 
 
     COMPO_ID_NUM_DISP_ZERO,
-    COMPO_ID_PIC_NUM,
+//    COMPO_ID_PIC_NUM,
 
 
 };
@@ -97,13 +97,13 @@ compo_form_t *func_call_sub_dial_form_create(void)
     }
 
     //创建文本
-    compo_textbox_t *txt_title = compo_textbox_create(frm, strlen(i18n[STR_ENTER_NUMBER]));
-    compo_setid(txt_title, COMPO_ID_PIC_NUM);
-    //compo_textbox_set_align_center(txt_title, false);
-    compo_textbox_set_pos(txt_title, 10, 18);
-    compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, widget_text_get_height());
-    //compo_textbox_set_autoroll_mode(txt_title,1);
-    compo_textbox_set(txt_title, i18n[STR_ENTER_NUMBER]);
+//    compo_textbox_t *txt_title = compo_textbox_create(frm, strlen(i18n[STR_ENTER_NUMBER]));
+//    compo_setid(txt_title, COMPO_ID_PIC_NUM);
+//    //compo_textbox_set_align_center(txt_title, false);
+//    compo_textbox_set_pos(txt_title, 10, 18);
+//    compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, widget_text_get_height());
+//    //compo_textbox_set_autoroll_mode(txt_title,1);
+//    compo_textbox_set(txt_title, i18n[STR_ENTER_NUMBER]);
 
     //创建数字
     compo_textbox_t *txt_num;
@@ -145,7 +145,7 @@ static void func_call_sub_dial_button_click(void)
 {
     int id = compo_get_button_id();
     //获取文本组件的地址
-    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_PIC_NUM);
+//    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_PIC_NUM);
 
     //获取数字组件地址
     char buf[34];
@@ -156,7 +156,7 @@ static void func_call_sub_dial_button_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_NUM9:
-            compo_textbox_set_visible(txt, false);
+//            compo_textbox_set_visible(txt, false);
             if(call->phone_number_cnt < 11)
             {
                 call->phone_number[call->phone_number_cnt++] = id+0x30 - 1;
@@ -183,7 +183,7 @@ static void func_call_sub_dial_button_click(void)
             break;
 
         case COMPO_ID_BTN_DEL:
-            compo_textbox_set_visible(txt, false);
+//            compo_textbox_set_visible(txt, false);
             if(call->phone_number_cnt > 0)
             {
                 call->phone_number[--call->phone_number_cnt] = '\0';
@@ -208,7 +208,7 @@ static void func_call_sub_dial_button_long(void)
 {
     int id = compo_get_button_id();
     //获取文本组件的地址
-    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_PIC_NUM);
+//    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_PIC_NUM);
 
     //获取数字组件地址
     char buf[34];
@@ -219,21 +219,21 @@ static void func_call_sub_dial_button_long(void)
     switch (id)
     {
         case COMPO_ID_BTN_NUM7:
-            compo_textbox_set_visible(txt, false);
+//            compo_textbox_set_visible(txt, false);
             if(call->phone_number_cnt < 11)
             {
                 call->phone_number[call->phone_number_cnt++] = '*';
             }
             break;
         case COMPO_ID_BTN_NUM9:
-            compo_textbox_set_visible(txt, false);
+//            compo_textbox_set_visible(txt, false);
             if(call->phone_number_cnt < 11)
             {
                 call->phone_number[call->phone_number_cnt++] = '#';
             }
             break;
         case COMPO_ID_BTN_NUM0:
-            compo_textbox_set_visible(txt, false);
+//            compo_textbox_set_visible(txt, false);
             if(call->phone_number_cnt < 11)
             {
                 call->phone_number[call->phone_number_cnt++] = '+';

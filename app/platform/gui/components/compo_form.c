@@ -178,7 +178,7 @@ static void compo_form_page_update(compo_form_t *frm)
     {
         compo_textbox_set_visible(frm->title, (frm->mode & COMPO_FORM_MODE_SHOW_TITLE) != 0);
 //        widget_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
-        compo_textbox_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
+//        compo_textbox_set_visible(frm->time, (frm->mode & COMPO_FORM_MODE_SHOW_TIME) != 0);
         widget_set_visible(frm->title_icon, (frm->mode & COMPO_FORM_MODE_SHOW_ICON) != 0);
 //        if (frm->mode & COMPO_FORM_MODE_SHOW_TIME) {
 //            widget_set_visible(frm->time, true);

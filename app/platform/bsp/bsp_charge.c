@@ -4,7 +4,7 @@
 
 #if CHARGE_EN
 
-#define TRACE_EN                0
+#define TRACE_EN                1
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -169,6 +169,7 @@ static void charge_timer_callback (co_timer_t *timer, void *param)
 #if TS_MODE_EN
     adc_cb.ntc_temp = ts_adc2ntc(adc_cb.vts);
     ambientTemperature = adc_cb.ntc_temp;
+    TRACE("VTS:%d NTC:%d\n", adc_cb.vts, ambientTemperature);
 #elif UTE_DRV_BATTERY_CE_AUTH_SUPPORT
     if(uteDrvTemperatureCommonIsInitSuccessful())
     {
@@ -180,9 +181,10 @@ static void charge_timer_callback (co_timer_t *timer, void *param)
     {
         ambientTemperature = 25;
     }
+    TRACE("NTC:%d\n", ambientTemperature);
 #endif // TS_MODE_EN
 
-    TRACE("DC_IN:%d charge_sta:%d VBAT:%d VBAT2:%d VTS:%d NTC:%d\n", CHARGE_DC_IN(), sys_cb.charge_sta, adc_cb.vbat_val, adc_cb.vbat2, adc_cb.vts, ambientTemperature);
+    TRACE("DC_IN:%d charge_sta:%d VBAT:%d VBAT2:%d\n", CHARGE_DC_IN(), sys_cb.charge_sta, adc_cb.vbat_val, adc_cb.vbat2);
 
     switch(sys_cb.charge_sta)
     {

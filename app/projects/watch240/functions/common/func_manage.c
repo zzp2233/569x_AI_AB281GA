@@ -42,14 +42,14 @@ const static func_item_info_t func_item_tbl[] =
 //    {FUNC_ALTITUDE,                 UI_BUF_ICON_ALTITUDE_BIN,                   STR_ALTITUDE},              //海拔
 //    {FUNC_MAP,                      UI_BUF_ICON_MAP_BIN,                        STR_MAP},                   //地图
     {FUNC_MESSAGE,                  UI_BUF_I330001_THEME_1_MESSAGE_BIN,                    STR_MESSAGE},               //消息
-    {FUNC_SCAN,                     UI_BUF_I330001_THEME_1_QR_BIN,                       STR_SCAN},                  //扫一扫
+    {FUNC_SCAN,                     UI_BUF_I330001_THEME_1_QR_BIN,                       STR_QRCODE},                  //扫一扫
     {FUNC_VOICE,                    UI_BUF_I330001_THEME_1_VIOCE_BIN,                      STR_VOICE},                 //语音助手
 //    {FUNC_COMPASS,                  UI_BUF_ICON_COMPASS_BIN,                    STR_COMPASS},               //指南针
     {FUNC_SPORT,                    UI_BUF_I330001_THEME_1_SOPRT_BIN,                      STR_SPORTS},                //运动
     {FUNC_CALL,                     UI_BUF_I330001_THEME_1_CALL_BIN,                       STR_PHONE},                 //电话
     {FUNC_FINDPHONE,                UI_BUF_I330001_THEME_1_FINDPHONE_BIN,                  STR_FIND_PHONE},            //寻找手机
     {FUNC_CALENDAER,                UI_BUF_I330001_THEME_1_CALENDAR_BIN,                   STR_CALENDAR},              //日历
-    {FUNC_VOLUME,                   UI_BUF_I330001_THEME_1_SOUND_BIN,                     STR_VOLUME},                //音量
+    {FUNC_SET_SUB_SAV,                   UI_BUF_I330001_THEME_1_SOUND_BIN,                     STR_VOL},                //音量
     {FUNC_ACTIVITY,                 UI_BUF_I330001_THEME_1_ACTIVITY_BIN,                   STR_EVREY_DAY_ACTIVITY},       //活动记录
 //    {FUNC_FLASHLIGHT,               UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                 STR_FLASHLIGHT},            //手电筒
     {FUNC_SETTING,                  UI_BUF_I330001_THEME_1_SETTINGS_BIN,                    STR_SETTING},               //设置
@@ -261,7 +261,7 @@ const static u8 latest_allowed_id[] =
     FUNC_CALL,                          //电话
     FUNC_FINDPHONE,                     //寻找手机
     FUNC_CALENDAER,                     //日历
-    FUNC_VOLUME,                        //音量
+    FUNC_SET_SUB_SAV,                        //音量
     FUNC_ACTIVITY,                      //活动记录
     FUNC_FLASHLIGHT,                    //手电筒
     FUNC_SETTING,                       //设置

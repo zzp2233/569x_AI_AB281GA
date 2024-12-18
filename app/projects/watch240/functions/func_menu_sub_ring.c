@@ -92,7 +92,7 @@ const menu_hc_item_t tbl_menu_ring[] =
     {UI_BUF_I330001_THEME_1_SETTINGS_BIN,                   FUNC_SETTING},
 
     {UI_BUF_I330001_THEME_1_SLEEP_BIN,                     FUNC_SLEEP},
-    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_VOLUME},
+    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_SET_SUB_SAV},
     {UI_BUF_I330001_THEME_1_SOPRT_BIN,                         FUNC_SPORT},
 
     {UI_BUF_I330001_THEME_1_STOPWATCH_BIN,                 FUNC_STOPWATCH},

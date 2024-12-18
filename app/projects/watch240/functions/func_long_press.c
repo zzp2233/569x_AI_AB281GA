@@ -74,33 +74,33 @@ compo_form_t *func_long_press_form_create(void)
     /*创建三个底部椭圆*/
     compo_shape_t * rectangle;
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_1,RECT_WIDTH, IMG_WIDTH+6);
+    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_1,RECT_WIDTH+8, IMG_WIDTH+8);
     compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_2,RECT_WIDTH,IMG_WIDTH+6);
+    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_2,RECT_WIDTH+8,IMG_WIDTH+8);
     compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_3,RECT_WIDTH, IMG_WIDTH+6);
+    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_3,RECT_WIDTH+8, IMG_WIDTH+8);
     compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     /*创建三个文本*/
     compo_textbox_t *txt;
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_CALL]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3 ,RECT_WIDTH-50,widget_text_get_height());
     compo_textbox_set(txt,i18n[STR_SLIDE_CALL]);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3 );
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_OFF]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_2 ,RECT_WIDTH-50,widget_text_get_height());
     compo_textbox_set(txt,i18n[STR_SLIDE_OFF]);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1, RECT_Y_2);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_REST]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_1 ,RECT_WIDTH-50,widget_text_get_height());
     compo_textbox_set(txt,i18n[STR_SLIDE_REST]);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1, RECT_Y_1);
 
     /*创建一个椭圆用于滑动时覆盖字体*/
     rect_cover = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
@@ -160,18 +160,16 @@ static void func_long_press_event_handle(s32 distance, u16 id)
                     {
                         if(uteModuleCallBtIsConnected())
                         {
-                            //请前往App设置SOS号码
-//                            msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
                             msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_NONE);
                         }
                         else
                         {
-//                            msgbox((char *)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
-                            //蓝牙未连接弹窗
+
                             sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
-                            msgbox((char*)i18n[STR_VOICE_BT_NOT_CONNECT], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+                            msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
                         }
                     }
+
                     break;
                 case IMG_BTN_ID_2://关机
                     uteApplicationCommonPoweroff();
@@ -182,6 +180,7 @@ static void func_long_press_event_handle(s32 distance, u16 id)
                 default:
                     break;
             }
+            return;
         }
     }
 }

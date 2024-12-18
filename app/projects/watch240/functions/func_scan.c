@@ -79,6 +79,9 @@ static void func_scan_message(size_msg_t msg)
 //                    func_cb.sta = FUNC_CLOCK;
                     func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
             break;
+            case KL_BACK:
+                func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+                break;
         }
     }
     else

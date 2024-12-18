@@ -401,6 +401,12 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
 {
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
+
+    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    {
+        return;
+    }
+
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s,isAllClear = %d", __func__,isAllClear);
     if (isAllClear)
     {
@@ -741,9 +747,13 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 {
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
+
+    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    {
+        return;
+    }
     
     func_directly_back_to();
-    // func_switch_prev(true);
 }
 
 /**
@@ -757,9 +767,15 @@ void uteTaskGuiStartScreen(uint8_t screenId)
 {
     if(sys_cb.gui_sleep_sta)
     {
-        sys_cb.gui_need_wakeup = true;;
+        sys_cb.gui_need_wakeup = true;
     }
     reset_sleep_delay_all();
+
+    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    {
+        return;
+    }
+    
     if(func_cb.sta != screenId)
     {
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
@@ -782,12 +798,17 @@ void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
 {
     if(sys_cb.gui_sleep_sta)
     {
-        sys_cb.gui_need_wakeup = true;;
+        sys_cb.gui_need_wakeup = true;
     }
     reset_sleep_delay_all();
+
+    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    {
+        return;
+    }
+
     if(func_cb.sta != screenId)
     {
-
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
         msg_enqueue(EVT_MSGBOX_EXIT);
         func_cb.sta = screenId;
@@ -846,6 +867,18 @@ int uteModuleGuiCommonGetCurrentScreenId(void)
 {
     return func_cb.sta;//gui_get_stack_top();
 }
+
+/**
+*@brief        获取上个显示界面的ID
+*@details
+*@author       xjc
+*@date       2022-01-11
+*/
+int uteModuleGuiCommonGetLastScreenId(void)
+{
+    return task_stack_get_last();//gui_get_stack_top();
+}
+
 
 #if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
 /**

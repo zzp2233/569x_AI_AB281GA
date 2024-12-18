@@ -851,7 +851,7 @@ void bsp_sys_init(void)
     bsp_i2c_init();
     bsp_sensor_hr_init(0);
 #endif
-    bsp_vbat_percent_init();            //放最后电压稍微稳定点
+    // bsp_vbat_percent_init();            //放最后电压稍微稳定点
 
 #if (FUNC_MUSIC_EN || FUNC_RECORDER_EN) && SD_SOFT_DETECT_EN
     CLKGAT0 |= BIT(14);

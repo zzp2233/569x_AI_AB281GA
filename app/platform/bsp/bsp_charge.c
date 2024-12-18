@@ -4,7 +4,7 @@
 
 #if CHARGE_EN
 
-#define TRACE_EN                1
+#define TRACE_EN                0
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -46,12 +46,14 @@ void bsp_charge_sta(u8 sta)
         //充电开启
         sys_cb.charge_sta = 1;
         sys_cb.charge_bled_flag = 0;
+#if !UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT        
         if (bt_cb.disp_status <= BT_STA_PLAYING && func_cb.sta != FUNC_OTA_UI_MODE && is_fot_start() == 0)
         {
             msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
             msg_enqueue(EVT_MSGBOX_EXIT);
             func_cb.sta = FUNC_CHARGE;
         }
+#endif
         TRACE(charge_on_str);
     }
     else

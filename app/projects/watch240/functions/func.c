@@ -118,14 +118,20 @@ extern void func_ota_err(void);
 extern void func_ota_succ(void);
 extern void func_ble_call(void);
 //extern void func_set_sub_sos(void);
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
 extern void func_power_on(void);//开机
+#endif
 extern void func_test_mode(void);///*出厂测试模式选择*/
 extern void func_factory_testing(void);///*工厂测试*/
 extern void func_ageing(void);///*老化测试*/
 extern void func_audio(void);///*音频测试*/
 extern void func_online_factory_test(void);
+extern void func_empty(void);
 
+
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
 compo_form_t *func_power_on_form_create(void);//开机
+#endif
 compo_form_t *func_ble_call_form_create(void);
 compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_ota_err_form_create(void);
@@ -213,7 +219,7 @@ compo_form_t *func_message_reply_form_create(void);
 //compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
 //compo_form_t *func_set_sub_sos_form_create(void);
-
+compo_form_t *func_empty_form_create(void);
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_factory_testing_create(void);///*工厂测试*/
 compo_form_t *func_ageing_create(void);///*老化测试*/
@@ -325,12 +331,15 @@ const func_t tbl_func_create[] =
     {FUNC_OTA_MODE,                     func_ota_update_form_create},
     {FUNC_OTA_ERROR,                    func_ota_err_form_create},
     {FUNC_OTA_SUCC,                     func_ota_succ_form_create},
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
     {FUNC_POWER_ON,                     func_power_on_form_create},
+#endif
     {FUNC_TEST_MODE,                    func_test_mode_form_create},///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/
     {FUNC_AGEING,                       func_ageing_create},///*老化测试*/
     {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test_form_create},
+    {FUNC_EMPTY,                        func_empty_form_create},
 };
 
 const func_t tbl_func_entry[] =
@@ -449,12 +458,15 @@ const func_t tbl_func_entry[] =
     {FUNC_OTA_SUCC,                     func_ota_succ},
     {FUNC_BLE_CALL,                     func_ble_call},
 //    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
     {FUNC_POWER_ON,                     func_power_on},
+#endif
     {FUNC_TEST_MODE,                    func_test_mode}, ///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing},///*工厂测试*/
     {FUNC_AGEING,                       func_ageing},///*老化测试*/
     {FUNC_AUDIO,                        func_audio},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test},
+    {FUNC_EMPTY,                        func_empty},
 };
 
 AT(.text.func.process)
@@ -1334,15 +1346,8 @@ void func_run(void)
     void (*func_entry)(void) = NULL;
     printf("%s\n", __func__);
     memset(func_cb.tbl_sort, 0, sizeof(func_cb.tbl_sort));
-//    func_cb.tbl_sort[0] = FUNC_CLOCK;
-//    func_cb.tbl_sort[1] = FUNC_ACTIVITY;
-//    func_cb.tbl_sort[2] = FUNC_HEARTRATE;
-//    func_cb.tbl_sort[3] = FUNC_SLEEP;
-//    func_cb.tbl_sort[4] = FUNC_BLOOD_OXYGEN;
-//    func_cb.tbl_sort[5] = FUNC_BT;
-//    func_cb.tbl_sort[6] = FUNC_COMPO_SELECT;
-//    func_cb.sort_cnt = 7;
-    func_cb.sta =FUNC_POWER_ON;//FUNC_OTA_SUCC;//FUNC_OTA_MODE;//FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
+    //默认跳转空白界面，具体开机跳转界面在uteApplicationCommonStartupSecond
+    func_cb.sta = FUNC_EMPTY;//FUNC_OTA_SUCC;//FUNC_OTA_MODE;//FUNC_CLOCK;//FUNC_OTA_UI_MODE;//FUNC_OTA_MODE;//;//
     // 获取自定义排序
     uteModuleGuiCommonGetScreenTblSort(func_cb.tbl_sort, &func_cb.sort_cnt);
 

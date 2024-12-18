@@ -1,5 +1,6 @@
 #include "include.h"
 #include "ute_module_systemtime.h"
+#include "ute_drv_battery_common.h"
 
 #if VBAT_DETECT_EN
 
@@ -165,6 +166,10 @@ static const u16 vbat_percent_table[11] =
 static u16 vbat_percent_convert(u16 adc_value)
 {
     u16 pervent = 0;
+#if UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
+    pervent = uteDrvBatteryCommonGetLvl();
+    TRACE("battery percent:%d\n", pervent);
+#else
     u8 i = 0;
 
     if(adc_value >= vbat_percent_table[10])
@@ -186,6 +191,7 @@ static u16 vbat_percent_convert(u16 adc_value)
     }
 
     pervent = (adc_value - vbat_percent_table[i-1]) * 10 / (vbat_percent_table[i] - vbat_percent_table[i-1]) + (i-1)*10;
+#endif
     return pervent;
 }
 
@@ -194,7 +200,7 @@ static u16 vbat_percent_convert(u16 adc_value)
  * 电池电量标定回调执行，充电和放电都在这里处理了，10s执行一次（修改在bsp_vbat_percent_init函数）
  */
 // static void vbat_percent_process(co_timer_t *timer, void *param)
-static void vbat_percent_process(void)
+void vbat_percent_process(void)
 {
     if(vbat_cb.vbat_adc_last == 0)
     {
@@ -257,7 +263,7 @@ void bsp_vbat_percent_init(void)
 
     // 改为放到1s定时器中执行
     vbat_percent_process();
-    uteModuleSystemtimeRegisterSecond(vbat_percent_process);
+    // uteModuleSystemtimeRegisterSecond(vbat_percent_process);
 }
 
 

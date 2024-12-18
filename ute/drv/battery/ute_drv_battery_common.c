@@ -27,6 +27,7 @@
 ute_drv_battery_common_data_t uteDrvBatteryCommonData;
 
 #if UTE_MODULE_BATTERY_RECORD_BAT_LVL_SUPPORT
+
 /**
 *@brief         读取电池config
 *@details
@@ -250,9 +251,6 @@ uint8_t uteDrvBatteryCommonCalibrationBatLvl(uint16_t voltage,int16_t current,ut
         if(status==BAT_STATUS_CHARGED)
         {
             uteDrvBatteryCommonData.chargedTimeSecond++;
-//                   #if GUI_SCREEN_SIZE_240X280RGB_I257001_SUPPORT
-//                    lvl = 100;
-//                   #endif
         }
         else
         {
@@ -298,15 +296,19 @@ uint8_t uteDrvBatteryCommonCalibrationBatLvl(uint16_t voltage,int16_t current,ut
 void uteDrvBatteryCommonUpdateBatteryInfo(void)
 {
 #if CHARGE_EN
-    uteDrvBatteryCommonData.lvl = bsp_vbat_percent_get();
-    uteDrvBatteryCommonData.voltage = sys_cb.vbat;
-    if(uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_080)
+    uteDrvBatteryCommonData.lvl = sys_cb.vbat_percent;
+    uteDrvBatteryCommonData.voltage = sys_cb.vbat;//vbat_cb.vbat_adc_last;
+    if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_090)
     {
-        uteDrvBatteryCommonData.current = CHARGE_TRICKLE_CURR;
+        uteDrvBatteryCommonData.current = CHARGE_TRICKLE_CURR * 5 + 5;
+    }
+    else if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_080)
+    {
+        uteDrvBatteryCommonData.current = (CHARGE_CONSTANT_CURR * 5 + 5) * 0.8;
     }
     else
     {
-        uteDrvBatteryCommonData.current = CHARGE_CONSTANT_CURR;
+        uteDrvBatteryCommonData.current = CHARGE_CONSTANT_CURR * 5 + 5;
     }
 #endif
 
@@ -401,7 +403,7 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
     uteDrvBatteryCommonSaveBatteryLvl();
 #endif
 }
-#if UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+#if 0//UTE_DRV_BATTERY_CE_AUTH_SUPPORT
 /**
 *@brief    电池CE认证流程
 *@details
@@ -625,6 +627,9 @@ void uteDrvBatteryCommonEverySecond(void)
     uteModuleSystemtimeGetTime(&time);
     bool isStartAutoPowerOff = false;
 
+    vbat_percent_process();
+    // charge_timer_callback();
+
 #if CHARGE_EN
     if(uteDrvBatteryCommonData.chargerStatus != bsp_charge_sta_get())
     {
@@ -650,7 +655,7 @@ void uteDrvBatteryCommonEverySecond(void)
     }
     if(!isStartAutoPowerOff)
     {
-#if UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+#if 0 //UTE_DRV_BATTERY_CE_AUTH_SUPPORT
         if(uteApplicationCommonIsPowerOn()||uteDrvBatteryCommonData.ceParam.isChecking)
         {
             uteDrvBatteryCommonCEAuthHandler(time);
@@ -696,6 +701,9 @@ void uteDrvBatteryCommonEverySecond(void)
 void uteDrvBatteryCommonInit(void)
 {
     bool isFastPlugIn = false;
+
+    bsp_vbat_percent_init();
+
     if(uteDrvBatteryCommonData.isPlugIn)
     {
         isFastPlugIn = true;
@@ -708,6 +716,7 @@ void uteDrvBatteryCommonInit(void)
 #if UTE_MODULE_BATTERY_RECORD_BAT_LVL_SUPPORT
     uteDrvBatteryCommonCompareBatLvl();
 #endif
+    sys_cb.vbat_percent = uteDrvBatteryCommonData.lastLvl;
     uteDrvBatteryCommonData.isDelayDisplayCharger = false;
     uteDrvBatteryCommonData.startChargerLvl = 0;
     uteDrvBatteryCommonData.chargerTimeSecond = -1;
@@ -719,7 +728,7 @@ void uteDrvBatteryCommonInit(void)
         uteDrvBatteryCommonData.isPlugIn = true;
         uteDrvBatteryCommonData.isDelayDisplayCharger = true;
     }
-    UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s", __func__);
+    UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s, lastLvl:%d", __func__, uteDrvBatteryCommonData.lastLvl);
 }
 /**
 *@brief 获取当前电压
@@ -791,13 +800,10 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
             return;
         }
 #endif
-        // if(uteApplicationCommonIsStartupFinish() && !uteModuleGuiCommonIsCurrNotifyScreen())
-        // {
-        // ute_task_gui_message_t msg;
-        // msg.screenId = UTE_MOUDLE_SCREENS_CHARGER_ID;
-        // msg.type = MSG_TYPE_MODULE_GUI_GO_BACK_LAST;
-        // uteTaskGuiSendMsg(&msg);
-        // }
+        if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CHARGER_ID)
+        {
+            uteModuleGuiCommonGoBackLastScreen();
+        }
     }
     else
     {
@@ -809,7 +815,7 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
         {
             if(uteApplicationCommonIsStartupFinish())
             {
-                // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             }
             else
@@ -958,6 +964,9 @@ void uteDrvBatteryCommonEverySecond(void)
     uteModuleSystemtimeGetTime(&time);
     //bool isStartAutoPowerOff = false;
 
+    vbat_percent_process();
+    // charge_timer_callback();
+
     if(uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
     {
         if((time.sec%10)==0)
@@ -981,6 +990,7 @@ void uteDrvBatteryCommonEverySecond(void)
 void uteDrvBatteryCommonInit(void)
 {
     uteModuleSystemtimeRegisterSecond(uteDrvBatteryCommonEverySecond);
+    bsp_vbat_percent_init();
     UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s", __func__);
 }
 

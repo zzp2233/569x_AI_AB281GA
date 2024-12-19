@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 俄语(俄罗斯）
 *@author
-*@date   2024-12-19 19:09:34
+*@date   2024-12-19 20:21:24
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -241,6 +241,7 @@ const char * const i18n_ru_rru[] =
      [STR_CLOSE] = "\xd0\x92\xd1\x8b\xd0\xba\xd0\xbb\xd1\x8e\xd1\x87\xd0\xb8\xd1\x82\xd1\x8c\x00", // [225] Выключить
      [STR_MIN_JOINT] = "\x23\x23\xd0\xbc\xd0\xb8\xd0\xbd\x00", // [226] ##мин
      [STR_SECOND_JOINT] = "\x23\x23\xd1\x81\xd0\xb5\xd0\xba\x00", // [227] ##сек
+     [STR_TRADITIONAL_CHINESE] = "\xe7\xb9\x81\xe9\xab\x94\xe4\xb8\xad\xe6\x96\x87\x00", // [228] 繁體中文
 };
 
 #endif

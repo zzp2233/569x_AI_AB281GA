@@ -48,6 +48,9 @@ static const compo_listbox_item_t tbl_language_list[] =
     #if SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT
     {STR_ARABIC,   .vidx = ARABIC_LANGUAGE_ID},//阿拉伯文
     #endif
+    #if SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT
+    {STR_TRADITIONAL_CHINESE,  .vidx = TRADITIONAL_CHINESE_ID},
+    #endif
 };
 u8 func_sel_language_bit(uint n)
 {

@@ -21,6 +21,7 @@ void bsp_vbat_lpwr_process(void);
  */
 void bsp_vbat_percent_init(void);
 
+void vbat_percent_process(void);
 
 /**
  * 获取电池电量百分比 

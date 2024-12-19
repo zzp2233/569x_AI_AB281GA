@@ -313,13 +313,15 @@ void uteApplicationCommonStartupSecond(void)
         // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isDelayDisplayCharger=%d", __func__,uteDrvBatteryCommonIsDelayDisplayCharger());
 
         // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,HasBindingBefore=%d , HasConnectOurApp = %d", __func__,uteModuleAppBindingGetHasBindingBefore(),uteApplicationCommonIsHasConnectOurApp());
-        if(1)
-            // {}
-            // else if(uteDrvBatteryCommonIsDelayDisplayCharger())
-            // {
-            //     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
-            // }
-            // else if(uteDrvBatteryCommonGetLvl()>=UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL)
+        if(0)
+#if UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
+        {}
+        else if(uteDrvBatteryCommonIsDelayDisplayCharger())
+        {
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
+        }
+        else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL)
+#endif
         {
 #if UTE_MODULE_NEW_FACTORY_TEST_JUST_CROSS_SUPPORT
             ute_new_factory_test_data_t *data;
@@ -370,13 +372,14 @@ void uteApplicationCommonStartupSecond(void)
 #endif
             else
             {
-                // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
             }
 #endif
 #endif
         }
         else
         {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,vbat is too low!!",__func__);
             uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
         }
 #if UTE_MODULE_MOTOR_POWER_STATUS_SAVE_SUPPORT

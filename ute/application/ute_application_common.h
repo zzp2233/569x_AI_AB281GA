@@ -119,13 +119,10 @@ typedef struct
     // 新增变量必须加在最后面
     uint32_t userId;
     gsensor_offset_data_t gSensorCalibrationData; // g-sensor 校验数据
-#if 1//UTE_DRV_GSENSOR_SC7A20H_SUPPORT
     uint8_t sc7a20hRetReadValue;
     uint8_t sc7a20hTempBuffer[29];
-#endif
-#if 1//UTE_DRV_HEART_VC30FX_SUPPORT
     uint8_t bioSaveBuf[10];
-#endif
+    uint8_t beforeFactoryBatLvl;
 } ute_application_sn_data_t;
 
 typedef void (*ute_module_sync_data_reg_func_t)(void);

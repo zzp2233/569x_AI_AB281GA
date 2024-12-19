@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-19 11:06:09
+*@date   2024-12-19 19:09:32
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -239,8 +239,8 @@ enum
     STR_SPORT_ORDER, // 次
     STR_PAUSE, // 暂停
     STR_CLOSE, // 关闭
-    STR_MIN_JOINT, // #分钟
-    STR_SECOND_JOINT, // #秒
+    STR_MIN_JOINT, // ##分钟
+    STR_SECOND_JOINT, // ##秒
 };
 
 extern const char * const *i18n;
@@ -252,5 +252,6 @@ extern const char * const i18n_ja_rjp[];
 extern const char * const i18n_de_rde[];
 extern const char * const i18n_fr_rfr[];
 extern const char * const i18n_it_rit[];
+extern const char * const i18n_zh_rtw[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

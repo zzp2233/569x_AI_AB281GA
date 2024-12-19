@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_charencode.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -24,19 +25,26 @@ enum
 
 typedef struct f_dousing_list_t_
 {
+    char str[30];
     compo_listbox_t *listbox;
 
 } f_dousing_list_t;
 
 static const compo_listbox_item_t tbl_dousing_list[] =
 {
-    {STR_SEC,         .vidx = COMPO_ID_BTN_NUM0},
-    {STR_SEC,          .vidx = COMPO_ID_BTN_NUM1},
-    {STR_SEC,       .vidx = COMPO_ID_BTN_NUM2},
-    {STR_MIN,       .vidx = COMPO_ID_BTN_NUM3},
-    {STR_MIN,          .vidx = COMPO_ID_BTN_NUM4},
-    // {STR_FIVE_MIN},     .vidx = 1,
-    {STR_LIGHT_ALWAYS,     .vidx = COMPO_ID_BTN_NUM5},
+//    {STR_SEC,         .vidx = COMPO_ID_BTN_NUM0},
+//    {STR_SEC,          .vidx = COMPO_ID_BTN_NUM1},
+//    {STR_SEC,       .vidx = COMPO_ID_BTN_NUM2},
+//    {STR_MIN,       .vidx = COMPO_ID_BTN_NUM3},
+//    {STR_MIN,          .vidx = COMPO_ID_BTN_NUM4},
+//    {STR_LIGHT_ALWAYS,     .vidx = COMPO_ID_BTN_NUM5},
+
+    {     .vidx = COMPO_ID_BTN_NUM0},
+    {     .vidx = COMPO_ID_BTN_NUM1},
+    {     .vidx = COMPO_ID_BTN_NUM2},
+    {     .vidx = COMPO_ID_BTN_NUM3},
+    {     .vidx = COMPO_ID_BTN_NUM4},
+    {     .vidx = COMPO_ID_BTN_NUM5},
 };
 
 u8 func_sel_dousing_bit(uint n)
@@ -49,20 +57,30 @@ u8 func_sel_dousing_bit(uint n)
     return false;
 }
 
+static compo_listbox_custom_item_t tbl_list_dousing[6]={0};
+
+
 char *back_string(char *num,char*txt)
 {
-    char str[50];
-    return str;
+    if(func_cb.sta == FUNC_SET_SUB_DOUSING)
+    {
+    f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
+    memset(f_set->str,0,sizeof(f_set->str));
+    uteModuleCharencodeReplaceSubString(txt, f_set->str,"##",num);
+    return f_set->str;
+    }
+    return NULL;
 }
-
 
 //熄屏设置页面
 compo_form_t *func_set_sub_dousing_form_create(void)
 {
-    compo_listbox_custom_item_t tbl_stopwatch_txt_list[STOPWATCH_REC_NUM_MAX]={};
-
-    back_string("12","你#好");
-
+    snprintf(tbl_list_dousing[0].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("5",i18n[STR_SECOND_JOINT]));
+    snprintf(tbl_list_dousing[1].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("10",i18n[STR_SECOND_JOINT]));
+    snprintf(tbl_list_dousing[2].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("20",i18n[STR_SECOND_JOINT]));
+    snprintf(tbl_list_dousing[3].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("30",i18n[STR_SECOND_JOINT]));
+    snprintf(tbl_list_dousing[4].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("1",i18n[STR_MIN_JOINT]));
+    snprintf(tbl_list_dousing[5].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",i18n[STR_LIGHT_ALWAYS]);
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -75,7 +93,7 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_dousing_list, DOUSING_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
-
+    compo_listbox_set_text_modify(listbox, tbl_list_dousing);
     compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_dousing_bit);
 
@@ -99,8 +117,6 @@ void func_set_sub_dousing_list_icon_click(void)
     int icon_idx;
     f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
-//    compo_form_t *frm = NULL;
-//    bool res = false;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
     if (icon_idx < 0 || icon_idx >= DOUSING_LIST_CNT)
@@ -210,7 +226,6 @@ static void func_set_sub_dousing_enter(void)
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    //compo_listbox_move_init(listbox);
 
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, DOUSING_LIST_CNT - 2));
     func_cb.enter_tick = tick_get();

@@ -16,3 +16,5 @@
 
 #include "ute_multi_language_it_rit.h"
 
+#include "ute_multi_language_zh_rtw.h"
+

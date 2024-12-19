@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 俄语(俄罗斯）
 *@author
-*@date   2024-12-19 11:06:10
+*@date   2024-12-19 19:09:34
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -239,8 +239,8 @@ const char * const i18n_ru_rru[] =
      [STR_SPORT_ORDER] = "\xd0\xa0\xd0\xb0\xd0\xb7\x00", // [223] Раз
      [STR_PAUSE] = "\xd0\x9f\xd0\xb0\xd1\x83\xd0\xb7\xd0\xb0\x00", // [224] Пауза
      [STR_CLOSE] = "\xd0\x92\xd1\x8b\xd0\xba\xd0\xbb\xd1\x8e\xd1\x87\xd0\xb8\xd1\x82\xd1\x8c\x00", // [225] Выключить
-     [STR_MIN_JOINT] = "\x23\xd0\xbc\xd0\xb8\xd0\xbd\x00", // [226] #мин
-     [STR_SECOND_JOINT] = "\x23\xd1\x81\xd0\xb5\xd0\xba\x00", // [227] #сек
+     [STR_MIN_JOINT] = "\x23\x23\xd0\xbc\xd0\xb8\xd0\xbd\x00", // [226] ##мин
+     [STR_SECOND_JOINT] = "\x23\x23\xd1\x81\xd0\xb5\xd0\xba\x00", // [227] ##сек
 };
 
 #endif

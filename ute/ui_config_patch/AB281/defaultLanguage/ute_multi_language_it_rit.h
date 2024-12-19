@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 意大利语(意大利）
 *@author
-*@date   2024-12-19 19:09:35
+*@date   2024-12-19 20:21:26
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -241,6 +241,7 @@ const char * const i18n_it_rit[] =
      [STR_CLOSE] = "\x53\x70\x65\x6e\x74\x6f\x00", // [225] Spento
      [STR_MIN_JOINT] = "\x23\x23\x6d\x69\x6e\x00", // [226] ##min
      [STR_SECOND_JOINT] = "\x23\x23\x73\x65\x63\x00", // [227] ##sec
+     [STR_TRADITIONAL_CHINESE] = "\xe7\xb9\x81\xe9\xab\x94\xe4\xb8\xad\xe6\x96\x87\x00", // [228] 繁體中文
 };
 
 #endif

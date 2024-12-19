@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_log.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -8,7 +9,7 @@
 #endif
 
 #define SET_LIST_CNT                       ((int)(sizeof(tbl_list_data) / sizeof(tbl_list_data[0])))
-
+#define LIST_ITEM_CNT_MAX                  (sizeof(tbl_list_data) / sizeof(tbl_list_data[0]))
 
 typedef struct f_compo_select_sub_t_
 {
@@ -82,7 +83,6 @@ const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
 //    SYS_CTL_FUNC_SETTINGS_ON,       FUNC_SETTING,
 };
 
-#define LIST_ITEM_CNT_MAX (sizeof(tbl_list_data) / sizeof(tbl_list_data[0]))
 static u8 list_data_sort[LIST_ITEM_CNT_MAX] =
 {
     SYS_CTL_FUNC_ACTIVITY_ON,
@@ -116,6 +116,105 @@ static const compo_listbox_item_t *get_tbl_list_data_by_vidx(u16 vidx)
     }
 
     return NULL;
+}
+
+//通过界面id获取SYS_CTL_ON_TO_FUNC_STA_TABLE中对应的控制位
+static s16 get_sys_ctl_by_func(u8 func)
+{
+    for (size_t i = 0; i < ARRAY_SIZE(SYS_CTL_ON_TO_FUNC_STA_TABLE); i += 2)
+    {
+        if (SYS_CTL_ON_TO_FUNC_STA_TABLE[i + 1] == func)
+        {
+            return SYS_CTL_ON_TO_FUNC_STA_TABLE[i];
+        }
+    }
+    return -1; // 返回 -1 表示未找到
+}
+
+// 查询界面id的位置
+static s16 get_func_index(int func)
+{
+    for (size_t i = 0; i < ARRAY_SIZE(SYS_CTL_ON_TO_FUNC_STA_TABLE); i += 2)
+    {
+        if (SYS_CTL_ON_TO_FUNC_STA_TABLE[i + 1] == func)
+        {
+            return i + 1; // 返回 FUNC 值的位置
+        }
+    }
+    return -1; // 返回 -1 表示未找到
+}
+
+//根据实际界面重新排序list_data_sort
+void reorder_list_data_sort(void)
+{
+    u8 *tmp_list_data_sort = ab_zalloc(LIST_ITEM_CNT_MAX);
+    u8 tmp_sort_cnt = 0;
+    // 查询当前界面排序对应的控制位
+    for (uint8_t i = 0; i < MAX_FUNC_SORT_CNT; i++)
+    {
+        if (tmp_sort_cnt >= LIST_ITEM_CNT_MAX)
+        {
+            break;
+        }
+        if (func_cb.tbl_sort[i])
+        {
+            s16 index = get_sys_ctl_by_func(func_cb.tbl_sort[i]);
+            TRACE("index:%d\n", index);
+            if (index >= 0)
+            {
+                tmp_list_data_sort[tmp_sort_cnt] = index;
+                tmp_sort_cnt += 1;
+                // 根据实际界面打开控制位
+                u16 func_index = get_func_index(func_cb.tbl_sort[i]);
+                if (func_index > 0)
+                {
+                    bsp_sys_set_ctlbit(SYS_CTL_ON_TO_FUNC_STA_TABLE[func_index - 1], true);
+                }
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    // 重新排序list_data_sort
+    if (tmp_sort_cnt == 0)
+    {
+        return;
+    }
+    else if (tmp_sort_cnt == LIST_ITEM_CNT_MAX)
+    {
+        memcpy(list_data_sort, tmp_list_data_sort, LIST_ITEM_CNT_MAX);
+    }
+    else
+    {
+        u8 *result_array = ab_zalloc(LIST_ITEM_CNT_MAX);
+        u8 *used_flags = ab_zalloc(LIST_ITEM_CNT_MAX);
+        u8 result_index = 0;
+        for (u8 i = 0; i < tmp_sort_cnt; i++)
+        {
+            for (u8 j = 0; j < LIST_ITEM_CNT_MAX; j++)
+            {
+                if (!used_flags[j] && list_data_sort[j] == tmp_list_data_sort[i])
+                {
+                    result_array[result_index++] = list_data_sort[j];
+                    used_flags[j] = 1; // 标记为已使用
+                    break;
+                }
+            }
+        }
+        for (u8 j = 0; j < LIST_ITEM_CNT_MAX; j++)
+        {
+            if (!used_flags[j])
+            {
+                result_array[result_index++] = list_data_sort[j];
+            }
+        }
+        memcpy(list_data_sort, result_array, LIST_ITEM_CNT_MAX);
+        ab_free(result_array);
+        ab_free(used_flags);
+    }
+    ab_free(tmp_list_data_sort);
 }
 
 //根据排序表更新list_data
@@ -263,31 +362,6 @@ compo_form_t *func_compo_select_sub_form_create(void)
     }
     printf("]\n");
 
-    //控制位未加载时进行初始化
-    bool bit_init = true;
-    for (uint32_t i = SYS_CTL_FUNC_SPORT_ON; i <= SYS_CTL_FUNC_SETTINGS_ON; i++)
-    {
-        if (bsp_sys_get_ctlbit(i))
-        {
-            bit_init = false;
-            break;
-        }
-    }
-    if (bit_init)
-    {
-        for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++)
-        {
-            for (u8 j = 0; j < sizeof(SYS_CTL_ON_TO_FUNC_STA_TABLE) / 2; j++)
-            {
-                if (SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j + 1] == func_cb.tbl_sort[i])
-                {
-                    bsp_sys_set_ctlbit(SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j], true);
-                    break;
-//                    printf("sort [%d] -> [%d]\n", index, SYS_CTL_ON_TO_FUNC_STA_TABLE[2 * j]);
-                }
-            }
-        }
-    }
     compo_listbox_set_bithook(listbox, bsp_sys_get_ctlbit);
 
     return frm;
@@ -385,6 +459,9 @@ static void func_compo_select_sub_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_compo_select_sub_t));
     func_cb.frm_main = func_compo_select_sub_form_create();
 
+    //根据实际显示界面重新排序
+    reorder_list_data_sort();
+
     f_compo_select_sub_t *f_compo_select_sub = (f_compo_select_sub_t *)func_cb.f_cb;
     f_compo_select_sub->p_list_data = func_zalloc(LIST_ITEM_CNT_MAX * sizeof(compo_listbox_item_t));
     if (NULL == f_compo_select_sub->p_list_data)
@@ -424,8 +501,6 @@ static void func_compo_select_sub_exit(void)
     compo_listbox_t *listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     func_free(listbox->mcb);
 
-
-
     u8 index = 1;
     memset(&func_cb.tbl_sort[index], 0, sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]) - index);
 //    printf("exit add tbl_sort = [");
@@ -448,7 +523,6 @@ static void func_compo_select_sub_exit(void)
     func_cb.tbl_sort[index ++] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = index;
     func_cb.flag_sort = true;
-
 
 //    printf("EXIT tbl_sort [");
 //    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++) {

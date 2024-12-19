@@ -1,12 +1,15 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_systemtime.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
 #define TRACE(...)
 #endif
+
+#if UTE_MODULE_SCREENS_POWERON_SUPPORT
 
 #define POWER_TIME_SEC  3
 
@@ -54,13 +57,17 @@ static void func_power_on_process(void)
         }
         else
         {
-            sys_cb.power_on_state = false;
-            ute_module_systemtime_time_t time;
-            uteModuleSystemtimeGetTime(&time);
-            func_cb.sta = FUNC_SCAN;
-            if(time.isWatchSetLangage == false)
+            func_cb.sta = FUNC_CLOCK;
+            if(!uteApplicationCommonIsHasConnectOurApp())
             {
-                func_cb.sta = FUNC_SET_SUB_LANGUAGE;
+                sys_cb.power_on_state = false;
+                ute_module_systemtime_time_t time;
+                uteModuleSystemtimeGetTime(&time);
+                func_cb.sta = FUNC_SCAN;
+                if(time.isWatchSetLangage == false)
+                {
+                    func_cb.sta = FUNC_SET_SUB_LANGUAGE;
+                }                
             }
         }
     }
@@ -91,7 +98,8 @@ static void func_power_on_enter(void)
 //退出开机界面
 static void func_power_on_exit(void)
 {
-    func_cb.last = FUNC_POWER_ON;
+    task_stack_init();  //任务堆栈
+    latest_task_init(); //最近任务
 }
 
 //开机界面
@@ -105,3 +113,5 @@ void func_power_on(void)
     }
     func_power_on_exit();
 }
+
+#endif

@@ -15,6 +15,11 @@
 #include "typedef.h"
 #include "include.h"
 
+#define UTE_MOUDLE_SCREENS_FACTORY_TEST_ID FUNC_ONLINE_FACTORY_TEST
+#define UTE_MOUDLE_SCREENS_WATCHMAIN_ID FUNC_CLOCK
+#define UTE_MOUDLE_SCREENS_CHARGER_ID FUNC_CHARGE
+#define UTE_MOUDLE_SCREENS_POWERON_ID FUNC_POWER_ON
+
 /*! 控制显示内容相关参数zn.zeng, 2021-08-18  */
 typedef struct
 {
@@ -79,6 +84,7 @@ void uteModuleGuiCommonGoToMenuScreen(void);
 bool uteModuleGuiCommonIsDisplayOn(void);
 void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear);
 int uteModuleGuiCommonGetCurrentScreenId(void);
+int uteModuleGuiCommonGetLastScreenId(void);
 void uteTaskGuiStartScreen(uint8_t screenId);
 void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory);
 

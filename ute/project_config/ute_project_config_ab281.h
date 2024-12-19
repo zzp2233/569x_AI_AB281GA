@@ -119,6 +119,10 @@
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
 
+#define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      1
+
+#define UTE_MODULE_SCREENS_POWERON_SUPPORT 1 //开机logo界面
+
 /*! 支持的运动数量, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_MAX_SPORT_NUM 25
 #define UTE_MODULE_SPORT_RUNNING_SUPPORT                1 //跑步
@@ -146,8 +150,6 @@
 #define UTE_MODULE_SPORT_BOATING_SUPPORT                1 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          1 //自由训练
-
-#define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      1
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

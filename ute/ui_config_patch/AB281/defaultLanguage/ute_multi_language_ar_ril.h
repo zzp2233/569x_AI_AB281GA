@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 阿拉伯语(以色列）
 *@author
-*@date   2024-12-18 19:45:31
+*@date   2024-12-19 11:06:10
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -239,6 +239,8 @@ const char * const i18n_ar_ril[] =
      [STR_SPORT_ORDER] = "\xd9\x85\xd8\xb1\xd8\xa7\xd8\xaa\x00", // [223] مرات
      [STR_PAUSE] = "\xd8\xa5\xd9\x8a\xd9\x82\xd8\xa7\xd9\x81\x20\xd9\x85\xd8\xa4\xd9\x82\xd8\xaa\x00", // [224] إيقاف مؤقت
      [STR_CLOSE] = "\xd8\xa5\xd8\xba\xd9\x84\xd8\xa7\xd9\x82\x00", // [225] إغلاق
+     [STR_MIN_JOINT] = "\x23\xd8\xa7\xd9\x84\xd8\xad\xd8\xaf\x20\xd8\xa7\xd9\x84\xd8\xa3\xd8\xaf\xd9\x86\xd9\x89\x00", // [226] #الحد الأدنى
+     [STR_SECOND_JOINT] = "\x23\xd8\xab\xd8\xa7\xd9\x86\xd9\x8a\xd9\x87\x00", // [227] #ثانيه
 };
 
 #endif

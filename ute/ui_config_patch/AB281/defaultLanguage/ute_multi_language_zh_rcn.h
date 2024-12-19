@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2024-12-18 19:45:31
+*@date   2024-12-19 11:06:09
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -239,6 +239,8 @@ const char * const i18n_zh_rcn[] =
      [STR_SPORT_ORDER] = "\xe6\xac\xa1\x00", // [223] 次
      [STR_PAUSE] = "\xe6\x9a\x82\xe5\x81\x9c\x00", // [224] 暂停
      [STR_CLOSE] = "\xe5\x85\xb3\xe9\x97\xad\x00", // [225] 关闭
+     [STR_MIN_JOINT] = "\x23\xe5\x88\x86\xe9\x92\x9f\x00", // [226] #分钟
+     [STR_SECOND_JOINT] = "\x23\xe7\xa7\x92\x00", // [227] #秒
 };
 
 #endif

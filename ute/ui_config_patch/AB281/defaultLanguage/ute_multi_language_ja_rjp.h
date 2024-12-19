@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 日语(日本）
 *@author
-*@date   2024-12-18 19:45:32
+*@date   2024-12-19 11:06:10
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -239,6 +239,8 @@ const char * const i18n_ja_rjp[] =
      [STR_SPORT_ORDER] = "\xe5\x9b\x9e\x00", // [223] 回
      [STR_PAUSE] = "\xe4\xb8\x80\xe6\x99\x82\xe5\x81\x9c\xe6\xad\xa2\x00", // [224] 一時停止
      [STR_CLOSE] = "\xe3\x82\xaa\xe3\x83\x95\x00", // [225] オフ
+     [STR_MIN_JOINT] = "\x23\xe5\x88\x86\x00", // [226] #分
+     [STR_SECOND_JOINT] = "\x23\xe7\xa7\x92\x00", // [227] #秒
 };
 
 #endif

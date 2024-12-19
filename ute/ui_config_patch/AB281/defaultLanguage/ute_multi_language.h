@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-18 19:45:30
+*@date   2024-12-19 11:06:09
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -239,6 +239,8 @@ enum
     STR_SPORT_ORDER, // 次
     STR_PAUSE, // 暂停
     STR_CLOSE, // 关闭
+    STR_MIN_JOINT, // #分钟
+    STR_SECOND_JOINT, // #秒
 };
 
 extern const char * const *i18n;

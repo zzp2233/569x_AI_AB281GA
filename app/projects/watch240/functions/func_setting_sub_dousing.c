@@ -49,10 +49,21 @@ u8 func_sel_dousing_bit(uint n)
     return false;
 }
 
+char *back_string(char *num,char*txt)
+{
+    char str[50];
+    return str;
+}
+
 
 //熄屏设置页面
 compo_form_t *func_set_sub_dousing_form_create(void)
 {
+    compo_listbox_custom_item_t tbl_stopwatch_txt_list[STOPWATCH_REC_NUM_MAX]={};
+
+    back_string("12","你#好");
+
+
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 

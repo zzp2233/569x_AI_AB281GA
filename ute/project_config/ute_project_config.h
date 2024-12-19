@@ -121,7 +121,7 @@
 /*! 使用ute电池百分比计算方式，反之使用原厂百分比计算,wang.luo 2024-11-02 */
 #ifndef UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
 #define UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT 1
-#endif // !1
+#endif
 
 /*! 每次恢复出厂设置前保存电量信息,下次开机时恢复当前电量,xjc 2023-02-03*/
 #ifndef UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT

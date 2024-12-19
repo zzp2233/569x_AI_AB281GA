@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 德语(德国）
 *@author
-*@date   2024-12-19 19:09:34
+*@date   2024-12-19 20:21:25
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -241,6 +241,7 @@ const char * const i18n_de_rde[] =
      [STR_CLOSE] = "\x41\x75\x73\x00", // [225] Aus
      [STR_MIN_JOINT] = "\x23\x23\x4d\x69\x6e\x2e\x00", // [226] ##Min.
      [STR_SECOND_JOINT] = "\x23\x23\x73\x00", // [227] ##s
+     [STR_TRADITIONAL_CHINESE] = "\xe7\xb9\x81\xe9\xab\x94\xe4\xb8\xad\xe6\x96\x87\x00", // [228] 繁體中文
 };
 
 #endif

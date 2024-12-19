@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(台湾）
 *@author
-*@date   2024-12-19 19:09:35
+*@date   2024-12-19 20:21:26
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -83,7 +83,7 @@ const char * const i18n_zh_rtw[] =
      [STR_MEDIA_VOL] = "\xe5\xaa\x92\xe9\xab\x94\xe9\x9f\xb3\xe9\x87\x8f\x00", // [67] 媒體音量
      [STR_CALL_VOL] = "\xe9\x80\x9a\xe8\xa9\xb1\xe9\x9f\xb3\xe9\x87\x8f\x00", // [68] 通話音量
      [STR_SETTING_LANGUAGE] = "\xe8\xaa\x9e\xe8\xa8\x80\xe9\x81\xb8\xe6\x93\x87\x00", // [69] 語言選擇
-     [STR_LANGUAGE_CN] = "\xe7\xb0\xa1\xe9\xab\x94\xe4\xb8\xad\xe6\x96\x87\x00", // [70] 簡體中文
+     [STR_LANGUAGE_CN] = "\xe7\xae\x80\xe4\xbd\x93\xe4\xb8\xad\xe6\x96\x87\x00", // [70] 简体中文
      [STR_LANGUAGE_ENG] = "\x45\x6e\x67\x6c\x69\x73\x68\x00", // [71] English
      [STR_LANGUAGE_FN] = "\x46\x72\x61\x6e\xc3\xa7\x61\x69\x73\x00", // [72] Français
      [STR_LANGUAGE_RU] = "\xd0\xa0\xd1\x83\xd1\x81\xd1\x81\xd0\xba\xd0\xb8\xd0\xb9\x00", // [73] Русский
@@ -241,6 +241,7 @@ const char * const i18n_zh_rtw[] =
      [STR_CLOSE] = "\xe9\x97\x9c\xe9\x96\x89\x00", // [225] 關閉
      [STR_MIN_JOINT] = "\x23\x23\xe5\x88\x86\xe9\x90\x98\x00", // [226] ##分鐘
      [STR_SECOND_JOINT] = "\x23\x23\xe7\xa7\x92\x00", // [227] ##秒
+     [STR_TRADITIONAL_CHINESE] = "\xe7\xb9\x81\xe9\xab\x94\xe4\xb8\xad\xe6\x96\x87\x00", // [228] 繁體中文
 };
 
 #endif

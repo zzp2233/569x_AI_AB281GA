@@ -106,5 +106,6 @@ void uteModuleCharencodeArabicUnicodeStringConversion(uint16_t *input,uint32_t *
 bool uteModuleCharencodeIsDevanagariChar(uint16_t unicode);
 bool uteModuleCharencodeDevanagariUnicodeStringConversion(uint16_t *input,uint32_t *inputSize);
 #endif
+void uteModuleCharencodeReplaceSubString(const char *original, char *result, char *replace, char *replacement);
 #endif //_UTE_MODULE_CHARENCODE_H_
 

@@ -9,6 +9,7 @@
 
 #include "ute_module_charencode.h"
 #include "ute_module_log.h"
+#include "include.h"
 #if UTE_THRID_CHAR_ENCODE_THAI_SUPPORT
 #include"Lang_Thai_Arialuni.h"
 #endif
@@ -1149,3 +1150,36 @@ bool uteModuleCharencodeDevanagariUnicodeStringConversion(uint16_t *input,uint32
 }
 #endif
 
+/**
+ * @brief        替换子字符串
+ * @details      
+ * @param[in]    original 原始字符串 
+ * @param[in]    replace 需要替换的原始子字符串 
+ * @param[in]    replacement 替换后的子字符串
+ * @param[out]   result 替换后的字符串 
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2024-12-19
+ */
+void uteModuleCharencodeReplaceSubString(const char *original, char *result, char *replace, char *replacement)
+{
+    const char *pos = original; // 用于遍历原始字符串
+    uint8_t replaceLen = strlen(replace);
+
+    // 清空结果字符串
+    result[0] = '\0';
+
+    while ((pos = strstr(pos, replace)) != NULL)
+    {
+        // 复制替换子字符串之前的部分
+        strncat(result, original, pos - original);
+        // 复制替换的子字符串
+        strcat(result, replacement);
+        // 更新原始字符串指针
+        pos += replaceLen;
+        original = pos;
+    }
+
+    // 复制剩余部分
+    strcat(result, original);
+}

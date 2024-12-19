@@ -65,8 +65,7 @@ static void func_flashlight_button_click(void)
     }
     else
     {
-        sys_cb.light_level = f_flashlight ->light_level;
-        tft_bglight_set_level(sys_cb.light_level,false);
+        tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
         compo_shape_set_visible(shape, false);
     }
 }
@@ -140,9 +139,7 @@ static void func_flashlight_enter(void)
 //退出手电筒功能
 static void func_flashlight_exit(void)
 {
-    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
-    sys_cb.light_level = f_flashlight ->light_level;
-    tft_bglight_set_level(sys_cb.light_level,false);
+    tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
     func_cb.last = FUNC_FLASHLIGHT;
 }
 

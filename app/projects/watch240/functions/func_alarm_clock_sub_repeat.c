@@ -105,7 +105,7 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
     compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 5);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 15);
 
     //新建图像
 //    compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_COMMON_NO_CLICK_BIN);
@@ -115,12 +115,12 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 
     compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
     compo_setid(pic_click, COMPO_ID_PIC_REPETAT_YES_CLICK);
-    compo_picturebox_set_pos(pic_click, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei / 2 - 5);
+    compo_picturebox_set_pos(pic_click, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei / 2 - 15);
     compo_picturebox_set_visible(pic_click, false);
 
     //确定文本
     compo_textbox_t* yes_txt = compo_textbox_create_for_page(frm, frm->page, strlen(i18n[STR_OK]));
-    compo_textbox_set_location(yes_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 5,
+    compo_textbox_set_location(yes_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 15,
                                gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
                                gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
     compo_textbox_set(yes_txt, i18n[STR_OK]);

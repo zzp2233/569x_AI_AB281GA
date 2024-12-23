@@ -7,6 +7,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+
 #if (USE_APP_TYPE == USE_AB_APP)
 #define ALARM_IS_FREE(idx)              alarm_is_free(idx)
 #define ALARM_EDIT(...)                 alarm_clock_edit(__VA_ARGS__)
@@ -931,13 +933,6 @@ static void alarm_clock_set_num_pos_cal(s32 dy, u8 id, bool press)
     }
 
     last_dy = dy;
-
-//    printf("===============================\n");
-//    for(int i=0; i<5; i++) {
-//        printf("[%d] id:[%d], vis:[%d], xy:[%d,%d], ret:[%d], dir[%d], press:[%d], hcnt:[%d], mcnt[%d]\n", time_item[i].num_id, time_item[i].load_id,
-//                time_item[i].visible_en, time_item[i].x, time_item[i].y, 0, dir, press, f_alarm_set->hcnt, f_alarm_set->mcnt);
-//    }
-//    printf("===============================\n");
 }
 
 static void alarm_clock_ampm_set_num_pos_cal(s32 dy, bool press)
@@ -1068,12 +1063,6 @@ static void alarm_clock_ampm_set_num_pos_cal(s32 dy, bool press)
     {
         compo_textbox_t *txt_num = compo_getobj_byid(time_item[i].num_id);
 
-        //if (time_item[i].load_id == COMPO_ID_NUM_CENTER) {
-        //    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
-        //} else {
-        //    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_BIN);
-        //}
-
         compo_textbox_set_align_center(txt_num, true);
         compo_textbox_set_visible(txt_num, time_item[i].visible_en);
         compo_textbox_set_alpha(txt_num, time_item[i].alpha);
@@ -1083,13 +1072,6 @@ static void alarm_clock_ampm_set_num_pos_cal(s32 dy, bool press)
     }
 
     last_dy = dy;
-
-    //printf("===============================\n");
-    //for(int i=0; i<5; i++) {
-    //    printf("[%d] id:[%d], vis:[%d], xy:[%d,%d], ret:[%d], dir[%d], press:[%d], hcnt:[%d], am_pm_cnt[%d]\n", time_item[i].num_id, time_item[i].load_id,
-    //            time_item[i].visible_en, time_item[i].x, time_item[i].y, ret, dir, press, f_set->hcnt, f_set->am_pm_cnt);
-    //}
-    //printf("===============================\n");
 }
 
 static void func_alarm_clock_set_move_handle(u8 id)
@@ -1218,24 +1200,6 @@ static void func_alarm_clock_set_move_handle(u8 id)
                 }
             }
         }
-
-//        compo_textbox_t* am_pm_txt = compo_getobj_byid(COMPO_ID_TXT_AM_PM);
-//        u8 am_pm = func_alarm_convert_to_12hour(func_alarm_clock_get_time_cal(hour_disp, 1, 0)).am_pm;
-//        if (am_pm != 0 && am_pm_last != am_pm)
-//        {
-//            am_pm_last = am_pm;
-//            if (am_pm_txt != NULL)
-//            {
-//                if (am_pm_last == 1)                //AM
-//                {
-//                    compo_textbox_set(am_pm_txt, i18n[STR_AM]);
-//                }
-//                else if (am_pm_last == 2)           //PM
-//                {
-//                    compo_textbox_set(am_pm_txt, i18n[STR_PM]);
-//                }
-//            }
-//        }
 
         if (!flag_press)
         {
@@ -1566,3 +1530,4 @@ void func_alarm_clock_sub_set(void)
     }
     func_alarm_clock_sub_set_exit();
 }
+#endif

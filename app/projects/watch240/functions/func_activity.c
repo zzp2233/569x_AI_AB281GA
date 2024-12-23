@@ -113,12 +113,12 @@ compo_form_t *func_activity_form_create(void)
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set(textbox, txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/1.2);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/1.28);
     compo_setid(textbox,STEP_TXT_VALUE_ID);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));///步数
     compo_textbox_set(textbox, i18n[STR_STEP]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/1.2+TXT_SPACING_Y);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/1.28+TXT_SPACING_Y);
     compo_textbox_set_forecolor(textbox,STEP_ARC_COLOR);
 
     return frm;

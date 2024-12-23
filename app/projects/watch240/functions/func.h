@@ -89,6 +89,8 @@ enum
     FUNC_SET_SUB_SAV,                   //设置--声音与振动
     FUNC_SET_SUB_LANGUAGE,              //设置--语言
     FUNC_LANGUAGE = FUNC_SET_SUB_LANGUAGE,
+    FUNC_POWER_ON_LANGUAGE,
+    FUNC_POWER_ON_SCAN,
 //    FUNC_SET_SUB_TIME,                  //设置--时间
 //    FUNC_TIME_SUB_CUSTOM,               //调整日期
     FUNC_SET_SUB_PASSWORD,              //设置--密码锁

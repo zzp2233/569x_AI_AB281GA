@@ -167,7 +167,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
             compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
                                  GUI_SCREEN_CENTER_X,
-                                 func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
+                                 func_cover_get_pic_y(msg_type)-20);  //需要更替为弹窗图标
             }
 
             //msg1
@@ -275,12 +275,13 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 //            btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
             btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_SOON_BIN);
             compo_setid(btn, COMPO_ID_BTN_REMIND_LATER);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_SOON_BIN).hei/2 - 10);
+            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei/2 - 20);
+
 
             //btn = compo_button_create_by_image(frm, UI_BUF_POP_UP_CLOSE_BIN);
             btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei/2 - 10);
+            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_SOON_BIN).hei/2 - 20);
             break;
         case MSGBOX_MODE_BTN_FACTORR:///工厂测试
         {

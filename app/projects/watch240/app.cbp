@@ -1180,6 +1180,12 @@
 		<Unit filename="functions/func_power_on.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_power_on_language.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_power_on_scan.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_pressure.c">
 			<Option compilerVar="CC" />
 		</Unit>

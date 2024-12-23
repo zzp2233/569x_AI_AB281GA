@@ -2,6 +2,8 @@
 #include "func.h"
 #include "ute_module_systemtime.h"
 
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -110,10 +112,10 @@ compo_form_t *func_alarm_clock_form_create(void)
     if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
     {
         icon_add = widget_icon_create(frm->page, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
-        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 10);
+        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
 
         //page_body结合compo_page_move实现列表滑动（先绘制所有组件，再将page平均分段）
-        widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 42 / 100, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT * 6 / 10);//208);
+        widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 42 / 100+15, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT * 6 / 10);//208);
     }
     else
     {
@@ -124,10 +126,10 @@ compo_form_t *func_alarm_clock_form_create(void)
 //    compo_textbox_t* icon_add_txt = compo_textbox_create(frm, strlen(i18n[STR_ADD_CLOCK]));
     if (icon_add) {
         compo_textbox_t* icon_add_txt = compo_textbox_create_for_page(frm, frm->page, 50);
-        compo_textbox_set_location(icon_add_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 10,
+        compo_textbox_set_location(icon_add_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
                                    gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
                                    gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
-        compo_textbox_set(icon_add_txt, "添加闹钟");
+        compo_textbox_set(icon_add_txt, i18n[STR_ADD_CLOCK]);
     }
 
     //闹钟选项卡
@@ -224,17 +226,23 @@ compo_form_t *func_alarm_clock_form_create(void)
     }
     else
     {
-        cardbox = compo_cardbox_create(frm, 1, 0, 1, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
-        compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4);
-        compo_setid(cardbox, COMPO_ID_CARD_0);
+        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_NO_CLOCK]));
+        compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_24_BIN);
+        compo_textbox_set_align_center(textbox, false);
+        compo_textbox_set(textbox, i18n[STR_NO_CLOCK]);
+        compo_textbox_set_location(textbox, 84, 108, 72,28 );
 
-        snprintf(str_buff, sizeof(str_buff), i18n[STR_NO_CLOCK]);
-        compo_cardbox_text_set_forecolor(cardbox, 0, MAKE_GRAY(128));
-        compo_cardbox_text_set(cardbox, 0, str_buff);
-        compo_cardbox_text_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH - 10, widget_text_get_height());
-
-        compo_cardbox_rect_set_color(cardbox, 0, MAKE_GRAY(26));
-        compo_cardbox_rect_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4, 20);
+//        cardbox = compo_cardbox_create(frm, 1, 0, 1, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
+//        compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4);
+//        compo_setid(cardbox, COMPO_ID_CARD_0);
+//
+//        snprintf(str_buff, sizeof(str_buff), i18n[STR_NO_CLOCK]);
+////        compo_cardbox_text_set_forecolor(cardbox, 0, MAKE_GRAY(128));
+//        compo_cardbox_text_set(cardbox, 0, str_buff);
+//        compo_cardbox_text_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH - 10, widget_text_get_height());
+//
+//        compo_cardbox_rect_set_color(cardbox, 0, MAKE_GRAY(26));
+//        compo_cardbox_rect_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4, 20);
     }
     return frm;
 }
@@ -317,26 +325,32 @@ static void func_alarm_clock_button_click(void)
 //闹钟功能事件处理
 static void func_alarm_clock_process(void)
 {
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
     compo_page_move_process(f_aclock->ptm);
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
     func_process();
 
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)      //文本滚动
     {
         compo_cardbox_t* cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
         compo_cardbox_text_scroll_process(cardbox, true);
+
+        compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I330001_PUBLIC_SWITCH01_BIN : UI_BUF_I330001_PUBLIC_SWITCH00_BIN);
+        compo_cardbox_icon_set_pos(cardbox, 0,
+                                   (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_I330001_PUBLIC_SWITCH01_BIN).wid / 2 - 2, 0);
     }
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 
 //闹钟功能消息处理
 static void func_alarm_clock_message(size_msg_t msg)
 {
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
-
-
-
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -394,6 +408,7 @@ static void func_alarm_clock_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 }
 
@@ -403,6 +418,7 @@ static void func_alarm_clock_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_alarm_clock_t));
     func_cb.frm_main = func_alarm_clock_form_create();
 
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
     f_aclock->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
@@ -420,16 +436,20 @@ static void func_alarm_clock_enter(void)
 
     //当前显示的时间制
     f_aclock->time_scale = uteModuleSystemtime12HOn();
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //退出闹钟功能
 static void func_alarm_clock_exit(void)
 {
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
     if (f_aclock->ptm)
     {
         func_free(f_aclock->ptm);
     }
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+    func_cb.last = FUNC_ALARM_CLOCK;
 }
 
 //闹钟功能
@@ -444,3 +464,4 @@ void func_alarm_clock(void)
     }
     func_alarm_clock_exit();
 }
+#endif

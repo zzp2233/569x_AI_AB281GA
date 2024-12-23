@@ -217,7 +217,7 @@ static void func_long_press_slide_disp_handle()
         }
 
         compo_button_set_pos(img_btn, distance,y);
-        compo_shape_set_location(rect_cover,distance/2+IMG_WIDTH/2-IMG_WIDTH/19,y,distance, IMG_WIDTH);
+        compo_shape_set_location(rect_cover,distance/2+IMG_WIDTH/2-5,y,distance, IMG_WIDTH);
     }
 }
 

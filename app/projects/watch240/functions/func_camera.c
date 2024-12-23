@@ -3,6 +3,10 @@
 #include "ute_module_sport.h"
 #include "ute_module_message.h"
 
+
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+
+
 #if FUNC_CAMERA_TRANS_EN
 
 #if TRACE_EN
@@ -502,3 +506,4 @@ void func_camera(void)
 }
 
 #endif
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT

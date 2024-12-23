@@ -22,8 +22,8 @@ typedef struct f_call_list_t_
 
 static const compo_listbox_item_t tbl_call_list[] =
 {
-    {STR_CALL_RECENT,      UI_BUF_I330001_CALL_CALLRECORDS_BIN,             .func_sta = FUNC_CALL_SUB_RECORD},
     {STR_CALL_LINK,        UI_BUF_I330001_CALL_CONTACTS_BIN,                .func_sta = FUNC_CALL_SUB_LINKMAN},
+    {STR_CALL_RECENT,      UI_BUF_I330001_CALL_CALLRECORDS_BIN,             .func_sta = FUNC_CALL_SUB_RECORD},
     {STR_CALL_DIAL,        UI_BUF_I330001_CALL_DIALPAD_BIN,                 .func_sta = FUNC_CALL_SUB_DIAL},
 };
 
@@ -43,7 +43,7 @@ compo_form_t *func_call_form_create(void)
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    compo_listbox_set_focus(listbox, 108);
+    compo_listbox_set_focus(listbox, 102);
     compo_listbox_update(listbox);
     return frm;
 }
@@ -123,6 +123,9 @@ static void func_call_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init(listbox);
+//    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, CALL_LIST_CNT - 2));
+//    compo_listbox_move_control(listbox, COMPO_LISTBOX_MOVE_CMD_DRAG);
+//    compo_listbox_update(listbox);
     func_cb.enter_tick = tick_get();
 }
 

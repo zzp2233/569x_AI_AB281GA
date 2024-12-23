@@ -1,6 +1,9 @@
 #include "include.h"
 #include "func.h"
 
+
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+
 #define TRACE_EN    1
 
 #if TRACE_EN
@@ -478,9 +481,13 @@ static void func_timer_button_click(void)
                     else if (sys_cb.timer_sta == TIMER_STA_DONE)
                     {
                         count_100ms = 0;
-                        sys_cb.timer_left_sec = sys_cb.timer_total_sec;
-                        sys_cb.timer_sta = TIMER_STA_RESET;
-                        uteModuleGuiCommonDisplayOffAllowGoBack(true);
+                        co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
+//                        count_100ms = 0;
+//                        sys_cb.timer_left_sec = sys_cb.timer_total_sec;
+//                        sys_cb.timer_sta = TIMER_STA_RESET;
+//                        uteModuleGuiCommonDisplayOffAllowGoBack(true);
+                        uteModuleGuiCommonDisplayOffAllowGoBack(false);
+                        sys_cb.timer_sta = TIMER_STA_WORKING;
                     }
                     else
                     {
@@ -491,6 +498,8 @@ static void func_timer_button_click(void)
                         }
                         sys_cb.timer_sta = TIMER_STA_WORKING;
                         uteModuleGuiCommonDisplayOffAllowGoBack(false);
+
+
                     }
                     break;
 
@@ -528,6 +537,7 @@ static void func_timer_button_click(void)
 //定时器功能事件处理
 static void func_timer_process(void)
 {
+    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     u8 hour, min, sec;
     char str_buff[24];
     compo_textbox_t *txt_num;
@@ -640,8 +650,18 @@ static void func_timer_process(void)
             }
             if (sys_cb.timer_sta == TIMER_STA_DONE)
             {
+                sys_cb.timer_left_sec = sys_cb.timer_total_sec;
+                hour = SEC_TO_HOUR(sys_cb.timer_left_sec);
+                min = SEC_TO_MIN(sys_cb.timer_left_sec);
+                sec = SEC_TO_SEC(sys_cb.timer_left_sec);
+
+
                 btn = compo_getobj_byid(COMPO_ID_BTN_START);
                 compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RETRY_BIN);
+
+                txt_num = compo_getobj_byid(COMPO_ID_NUM_COUNTDOWN);
+                snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", f_timer->hour, f_timer->min, f_timer->sec);
+                compo_textbox_set(txt_num, str_buff);
             }
             break;
         case TIMER_PAGE_SELECT:
@@ -677,18 +697,19 @@ static void func_timer_process(void)
         default:
             break;
     }
-
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 
 //定时器功能消息处理
 static void func_timer_message(size_msg_t msg)
 {
+    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-            #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
             if(f_timer->page_disp  == TIMER_PAGE_SELECT)
             {
                 f_timer->touch_flag = true;
@@ -739,7 +760,7 @@ static void func_timer_message(size_msg_t msg)
                 f_timer->touch_flag = true;
             }
             func_timer_button_touch_handle();
-            #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
             break;
 
         case MSG_CTP_CLICK:
@@ -766,6 +787,7 @@ static void func_timer_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //进入定时器功能
@@ -773,15 +795,18 @@ static void func_timer_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_timer_t));
     func_cb.frm_main = func_timer_form_create();
-
+    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
     f_timer->page_disp = sys_cb.timer_sta == TIMER_STA_IDLE ? TIMER_PAGE_SELECT : TIMER_PAGE_COUNTDOWN;
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //退出定时器功能
 static void func_timer_exit(void)
 {
+    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_cb.last = FUNC_TIMER;
 }
 
@@ -797,3 +822,5 @@ void func_timer(void)
     }
     func_timer_exit();
 }
+
+#endif

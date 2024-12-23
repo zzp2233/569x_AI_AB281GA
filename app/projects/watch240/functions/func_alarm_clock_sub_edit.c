@@ -383,6 +383,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 //                compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, i18n[ui_handle.card_time.text[i].rev]);
             }
         } else if (ui_handle.card_time.text[i].str_id == STR_NULL && ui_handle.card_time.text[i].idx == 0) {
+                compo_cardbox_text_set_font(card_time, ui_handle.card_time.text[i].idx, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, aclock_str);
         } else if (ui_handle.card_time.text[i].str_id != STR_NULL && ui_handle.card_time.text[i].idx == 1) {
             compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, i18n[ui_handle.card_time.text[i].str_id]);

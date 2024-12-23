@@ -31,7 +31,7 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_BREATHE,                  UI_BUF_I330001_THEME_1_BREATHE_BIN,                    STR_BREATHE_TRAIN},               //呼吸
     {FUNC_CALCULATOR,               UI_BUF_I330001_THEME_1_CALCULATOR_BIN,                 STR_CALCULATOR},            //计算器
     {FUNC_CAMERA,                   UI_BUF_I330001_THEME_1_PHOTO_BIN,                     STR_CAMERA},                //相机
-    {FUNC_LIGHT,                    UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                      STR_SETTING_LIGHT},         //亮度调节
+    {FUNC_LIGHT,                    UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                      STR_SETTING_LIGHT},         //亮度调节
     {FUNC_TIMER,                    UI_BUF_I330001_THEME_1_TIMER_BIN,                      STR_TIMER},                 //定时器
     {FUNC_SLEEP,                    UI_BUF_I330001_THEME_1_SLEEP_BIN,                      STR_SLEEP},                 //睡眠
     {FUNC_STOPWATCH,                UI_BUF_I330001_THEME_1_STOPWATCH_BIN,                  STR_STOP_WATCH},            //秒表
@@ -51,7 +51,7 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_CALENDAER,                UI_BUF_I330001_THEME_1_CALENDAR_BIN,                   STR_CALENDAR},              //日历
     {FUNC_SET_SUB_SAV,                   UI_BUF_I330001_THEME_1_SOUND_BIN,                     STR_VOL},                //音量
     {FUNC_ACTIVITY,                 UI_BUF_I330001_THEME_1_ACTIVITY_BIN,                   STR_EVREY_DAY_ACTIVITY},       //活动记录
-//    {FUNC_FLASHLIGHT,               UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                 STR_FLASHLIGHT},            //手电筒
+    {FUNC_FLASHLIGHT,               UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                 STR_FLASHLIGHT},            //手电筒
     {FUNC_SETTING,                  UI_BUF_I330001_THEME_1_SETTINGS_BIN,                    STR_SETTING},               //设置
     {FUNC_LANGUAGE,                 UI_BUF_I330001_THEME_1_LANUAGE_BIN,                   STR_SETTING_LANGUAGE},      //设置--语言
     {FUNC_RESTART,                  UI_BUF_I330001_THEME_1_BOOT_BIN,                    STR_SETTING_RESTART},       //重启

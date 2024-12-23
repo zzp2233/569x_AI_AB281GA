@@ -123,7 +123,15 @@
 
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      1
 
-#define UTE_MODULE_SCREENS_POWERON_SUPPORT 1 //开机logo界面
+#define UTE_MODULE_SCREENS_POWERON_SUPPORT            1 //开机logo界面
+#define UTE_MODULE_SCREENS_UP_MENU_SUPPORT            1 //上拉菜单
+#define UTE_MODULE_SCREENS_DWON_MENU_SUPPORT          1 //下拉菜单
+#define UTE_MODULE_SCREENS_LINK_MAN_SUPPORT           1 //联系人
+#define UTE_MODULE_SCREENS_TIMER_SUPPORT              1 //计时器
+#define UTE_MODULE_SCREENS_CAMERA_SUPPORT             1 //遥控拍照
+#define UTE_MODULE_SCREENS_STOPWATCH_SUPPORT          1 //秒表
+#define UTE_MODULE_SCREENS_VOICE_SUPPORT              1 //语音
+#define UTE_MODULE_SCREENS_ALARM_SUPPORT              1 //闹钟
 
 /*! 支持的运动数量, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_MAX_SPORT_NUM 25

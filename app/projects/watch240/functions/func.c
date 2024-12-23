@@ -25,7 +25,9 @@ extern void func_menustyle(void);
 extern void func_clock(void);
 extern void func_clock_preview(void);
 //extern void func_clock_sub_sidebar(void);
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
 extern void func_clock_sub_card(void);
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
 extern void func_heartrate(void);
 extern void func_compo_select(void);
 extern void func_compo_select_sub(void);
@@ -121,6 +123,8 @@ extern void func_ble_call(void);
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 extern void func_power_on(void);//开机
 #endif
+extern void func_power_on_scan(void);
+extern void func_power_on_language(void);
 extern void func_test_mode(void);///*出厂测试模式选择*/
 extern void func_factory_testing(void);///*工厂测试*/
 extern void func_ageing(void);///*老化测试*/
@@ -128,6 +132,9 @@ extern void func_audio(void);///*音频测试*/
 extern void func_online_factory_test(void);
 extern void func_empty(void);
 extern void func_sport_finish(void);
+
+compo_form_t *func_power_on_language_form_create(void);
+compo_form_t *func_power_on_scan_form_create(void);
 compo_form_t *func_sport_finish_form_create(void);
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 compo_form_t *func_power_on_form_create(void);//开机
@@ -142,7 +149,9 @@ compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
 compo_form_t *func_menu_form_create(void);
 compo_form_t *func_clock_form_create(void);
 //compo_form_t *func_clock_sub_sidebar_form_create(void);
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
 compo_form_t *func_clock_sub_card_form_create(void);
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
 compo_form_t *func_heartrate_form_create(void);
 compo_form_t *func_bt_form_create(void);
 compo_form_t *func_alarm_clock_form_create(void);
@@ -239,9 +248,13 @@ const func_t tbl_func_create[] =
     {FUNC_CLOCK,                        func_clock_form_create},
     {FUNC_CLOCK_PREVIEW,                func_clock_preview_form_create},
 //    {FUNC_SIDEBAR,                      func_clock_sub_sidebar_form_create},
+    #if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_CARD,                         func_clock_sub_card_form_create},
+    #endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_HEARTRATE,                    func_heartrate_form_create},
     {FUNC_BT,                           func_bt_form_create},
+    {FUNC_POWER_ON_SCAN,                func_power_on_scan_form_create},
+    {FUNC_POWER_ON_LANGUAGE,            func_power_on_language_form_create},
     {FUNC_COMPO_SELECT,                 func_compo_select_form_create},
     {FUNC_COMPO_SELECT_SUB,             func_compo_select_sub_form_create},
     {FUNC_ALARM_CLOCK,                  func_alarm_clock_form_create},
@@ -350,7 +363,9 @@ const func_t tbl_func_entry[] =
     {FUNC_CLOCK,                        func_clock},                    //时钟表盘
     {FUNC_CLOCK_PREVIEW,                func_clock_preview},            //时钟表盘预览
 //    {FUNC_SIDEBAR,                      func_clock_sub_sidebar},        //表盘右滑
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_CARD,                         func_clock_sub_card},           //表盘上拉
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_HEARTRATE,                    func_heartrate},                //心率
     {FUNC_ALARM_CLOCK,                  func_alarm_clock},              //闹钟
     {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set},      //闹钟--设置
@@ -364,6 +379,8 @@ const func_t tbl_func_entry[] =
 //    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
 //    {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
+    {FUNC_POWER_ON_SCAN,                func_power_on_scan},             //开机二维码
+    {FUNC_POWER_ON_LANGUAGE,            func_power_on_language},        //开机语言
     {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置
     {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time},         //呼吸--时间设置
     {FUNC_COMPO_SELECT,                 func_compo_select},             //组件选择

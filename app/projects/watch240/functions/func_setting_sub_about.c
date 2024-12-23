@@ -141,16 +141,13 @@ compo_form_t *func_set_sub_about_form_create(void)
 //关于功能消息处理
 static void func_set_sub_about_message(size_msg_t msg)
 {
-//    f_about_t *slp = (f_about_t *)func_cb.f_cb;
 
-//    printf("sys_cb.power_on_state = %d\n",sys_cb.power_on_state);
     if(sys_cb.power_on_state==false)
     {
         switch (msg)
         {
-            case MSG_CTP_SHORT_RIGHT:
-//                    func_cb.sta = FUNC_SCAN;
-                    func_switch_to(FUNC_SCAN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+        case MSG_CTP_SHORT_RIGHT:
+            func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
             break;
         }
     }
@@ -169,6 +166,7 @@ static void func_set_sub_about_message(size_msg_t msg)
                 break;
         }
     }
+
 }
 
 //进入关于功能

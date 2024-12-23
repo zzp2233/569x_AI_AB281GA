@@ -1,4 +1,3 @@
-#if 1
 #include "include.h"
 #include "func.h"
 #include "func_clock.h"
@@ -6,6 +5,8 @@
 #include "ute_module_sleep.h"
 #include "ute_module_heart.h"
 #include "func_bt.h"
+
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
 
 #define TRACE_EN    0
 
@@ -265,12 +266,12 @@ static const ui_handle_t ui_handle = {
             .id = COMPO_ID_DATE,
             .x  = 12-232/2,
             .y  = 41-136/2,
-            .w  = 80,
-            .h  = 38,
+            .w  = 80+20,
+            .h  = 40,
             .center = false,
             .bonddata = COMPO_BOND_DATE,
             .color = {255,255,255},
-            .res = UI_BUF_0FONT_FONT_NUM_32_BIN,
+            .res = UI_BUF_0FONT_FONT_NUM_38_BIN,
         },
 
         .week = {
@@ -452,7 +453,7 @@ static const ui_handle_t ui_handle = {
             .idx    = 1,
             .x      = 12-232/2,
             .y      = 38-108/2,
-            .w      = 41,
+            .w      = 41+15,
             .h      = 46,
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
@@ -474,7 +475,7 @@ static const ui_handle_t ui_handle = {
             .idx    = 3,
             .x      = 97-232/2,
             .y      = 38-108/2,
-            .w      = 40,
+            .w      = 40+15,
             .h      = 46,
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
@@ -839,7 +840,7 @@ static void card1_updata_disp(void)
 {
     f_card_t *f_activity = (f_card_t *)func_cb.f_cb;
 
-    if(tick_check_expire(f_activity->activity_tick, 5))
+    if(tick_check_expire(f_activity->activity_tick, 2))
     {
         f_activity->activity_tick = tick_get();
         char txt_buf[20];
@@ -998,7 +999,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_align_center(card5, ui_handle.card5.text_time.idx, ui_handle.card5.text_time.center);
     widget_text_set_color(card5->text[ui_handle.card5.text_time.idx], make_color(ui_handle.card5.text_time.color.r, ui_handle.card5.text_time.color.g, ui_handle.card5.text_time.color.b));
     compo_cardbox_text_set_location(card5, ui_handle.card5.text_time.idx, ui_handle.card5.text_time.x, ui_handle.card5.text_time.y, ui_handle.card5.text_time.w, ui_handle.card5.text_time.h);
-    compo_cardbox_text_set(card5, ui_handle.card5.text_time.idx, "00:00:00");
+    compo_cardbox_text_set(card5, ui_handle.card5.text_time.idx, "00:00.00");
 
     ///卡片4
     compo_cardbox_t* card4 = compo_cardbox_create(frm, 1, 0, 2, ui_handle.card4.w, ui_handle.card4.h);
@@ -1759,17 +1760,21 @@ static void func_clock_sub_card_set_offs(s16 ofs_y)
 //时钟表盘上拉菜单数据更新----------------------------------------->todo
 static void func_clock_sub_card_data_update(void)
 {
+    f_card_t *f_activity = (f_card_t *)func_cb.f_cb;
     compo_cardbox_t *cardbox = NULL;
     char txt_buf[20];
 
     card1_updata_disp();
+
+    if(f_activity->activity_state != 2) return;
+
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_HOUR(sys_cb.timer_left_sec),SEC_TO_MIN(sys_cb.timer_left_sec),SEC_TO_SEC(sys_cb.timer_left_sec));
     cardbox = compo_getobj_byid(ui_handle.card4.id);
     compo_cardbox_text_set(cardbox, ui_handle.card4.text_time.idx,txt_buf);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_MIN(sys_cb.stopwatch_total_msec/1000),SEC_TO_SEC(sys_cb.stopwatch_total_msec/1000),sys_cb.stopwatch_total_msec%1000/10);
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld.%02ld",SEC_TO_MIN(sys_cb.stopwatch_total_msec/1000),SEC_TO_SEC(sys_cb.stopwatch_total_msec/1000),sys_cb.stopwatch_total_msec%1000/10);
     cardbox = compo_getobj_byid(ui_handle.card5.id);
     compo_cardbox_text_set(cardbox, ui_handle.card5.text_time.idx,txt_buf);
 
@@ -2020,4 +2025,4 @@ void func_clock_sub_card(void)
     }
     func_clock_sub_card_exit();
 }
-#endif
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT

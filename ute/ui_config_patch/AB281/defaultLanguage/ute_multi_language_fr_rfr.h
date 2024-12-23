@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 法语(法国）
 *@author
-*@date   2024-12-19 20:21:25
+*@date   2024-12-20 17:10:31
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -241,7 +241,8 @@ const char * const i18n_fr_rfr[] =
      [STR_CLOSE] = "\x4f\x66\x66\x00", // [225] Off
      [STR_MIN_JOINT] = "\x23\x23\x6d\x69\x6e\x00", // [226] ##min
      [STR_SECOND_JOINT] = "\x23\x23\x73\x65\x63\x00", // [227] ##sec
-     [STR_TRADITIONAL_CHINESE] = "\xe7\xb9\x81\xe9\xab\x94\xe4\xb8\xad\xe6\x96\x87\x00", // [228] 繁體中文
+     [STR_ADD_CLOCK] = "\x41\x6a\x6f\x75\x74\x65\x72\x20\x75\x6e\x65\x20\x61\x6c\x61\x72\x6d\x65\x00", // [228] Ajouter une alarme
+     [STR_TRADITIONAL_CHINESE] = "\xe7\xb9\x81\xe9\xab\x94\xe4\xb8\xad\xe6\x96\x87\x00", // [229] 繁體中文
 };
 
 #endif

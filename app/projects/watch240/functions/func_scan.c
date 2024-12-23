@@ -28,12 +28,12 @@ compo_form_t *func_scan_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_QRCODE]);
 
-    if(sys_cb.power_on_state == false)
-    {
-        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
-        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
-        compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
-    }
+//    if(sys_cb.power_on_state == false)
+//    {
+//        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
+//        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
+//        compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
+//    }
 
     //创建按键
     //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_QR_BIN);
@@ -60,51 +60,24 @@ static void func_scan_process(void)
 static void func_scan_message(size_msg_t msg)
 {
 
-    if(sys_cb.power_on_state==false)
+    switch (msg)
     {
-        switch (msg)
-        {
-            case MSG_CTP_SHORT_RIGHT:
-//                    func_cb.sta = FUNC_SET_SUB_LANGUAGE;
-                    func_switch_to(FUNC_SET_SUB_LANGUAGE, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+
+        case MSG_CTP_CLICK:
             break;
-            case MSG_CTP_SHORT_LEFT:
-//                    func_cb.sta = FUNC_SET_SUB_ABOUT;
-                    func_switch_to(FUNC_SET_SUB_ABOUT, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+
+        case MSG_CTP_SHORT_UP:
             break;
-            case MSG_CTP_LONG:
-                    task_stack_init();  //任务堆栈
-                    latest_task_init(); //最近任务
-                    sys_cb.power_on_state=true;
-//                    func_cb.sta = FUNC_CLOCK;
-                    func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+
+        case MSG_CTP_SHORT_DOWN:
             break;
-            case KL_BACK:
-                func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
-                break;
-        }
-    }
-    else
-    {
-        switch (msg)
-        {
 
-            case MSG_CTP_CLICK:
-                break;
+        case MSG_CTP_LONG:
+            break;
 
-            case MSG_CTP_SHORT_UP:
-                break;
-
-            case MSG_CTP_SHORT_DOWN:
-                break;
-
-            case MSG_CTP_LONG:
-                break;
-
-            default:
-                    func_message(msg);
-                break;
-        }
+        default:
+                func_message(msg);
+            break;
     }
 }
 

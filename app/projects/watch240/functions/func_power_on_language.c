@@ -9,20 +9,20 @@
 #define TRACE(...)
 #endif
 
-#define LANGUAGE_LIST_CNT                       ((int)(sizeof(tbl_language_list) / sizeof(tbl_language_list[0])))
+#define LANGUAGE_LIST_CNT                       ((int)(sizeof(tbl_power_on_language_list) / sizeof(tbl_power_on_language_list[0])))
 
 enum
 {
     COMPO_ID_LISTBOX = 1,
 };
 
-typedef struct f_language_list_t_
+typedef struct f_power_on_language_list_t_
 {
     compo_listbox_t *listbox;
 
-} f_language_list_t;
+} f_power_on_language_list_t;
 
-static const compo_listbox_item_t tbl_language_list[] =
+static const compo_listbox_item_t tbl_power_on_language_list[] =
 {
     #if SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT
     {STR_LANGUAGE_CN,   .vidx = CHINESE_LANGUAGE_ID},
@@ -52,19 +52,11 @@ static const compo_listbox_item_t tbl_language_list[] =
     {STR_TRADITIONAL_CHINESE,  .vidx = TRADITIONAL_CHINESE_ID},
     #endif
 };
-u8 func_sel_language_bit(uint n)
-{
+extern u8 func_sel_language_bit(uint n);
 
-    if(uteModuleSystemtimeReadLanguage() == n)
-    {
-        return true;
-    }
-
-    return false;
-}
 
 //语言设置页面
-compo_form_t *func_set_sub_language_form_create(void)
+compo_form_t *func_power_on_language_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -75,7 +67,7 @@ compo_form_t *func_set_sub_language_form_create(void)
 
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
-    compo_listbox_set(listbox, tbl_language_list, LANGUAGE_LIST_CNT);
+    compo_listbox_set(listbox, tbl_power_on_language_list, LANGUAGE_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
 
     compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
@@ -95,10 +87,10 @@ compo_form_t *func_set_sub_language_form_create(void)
 }
 
 //点进图标进入应用
-void func_set_sub_language_list_icon_click(void)
+void func_power_on_language_list_icon_click(void)
 {
     int icon_idx;
-    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    f_power_on_language_list_t *f_set = (f_power_on_language_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
@@ -107,22 +99,27 @@ void func_set_sub_language_list_icon_click(void)
     {
         return;
     }
+
+    func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+
     compo_listbox_update(listbox);
-    uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
+    uteModuleSystemtimeSetLanguage(tbl_power_on_language_list[icon_idx].vidx);
+
+
 }
 
 //语言设置功能事件处理
-static void func_set_sub_language_list_process(void)
+static void func_power_on_language_list_process(void)
 {
-    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    f_power_on_language_list_t *f_set = (f_power_on_language_list_t *)func_cb.f_cb;
     compo_listbox_move(f_set->listbox);
     func_process();
 }
 
 //语言设置功能消息处理
-static void func_set_sub_language_list_message(size_msg_t msg)
+static void func_power_on_language_list_message(size_msg_t msg)
 {
-    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    f_power_on_language_list_t *f_set = (f_power_on_language_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
 
     if (compo_listbox_message(listbox, msg))
@@ -134,30 +131,19 @@ static void func_set_sub_language_list_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
-            func_set_sub_language_list_icon_click();                //单击图标
-            break;
-
-
-        case MSG_CTP_LONG:
-            break;
-
-
-            break;
-
-        default:
-            func_message(msg);
+            func_power_on_language_list_icon_click();                //单击图标
             break;
     }
 
 }
 
 //进入语言设置功能
-static void func_set_sub_language_enter(void)
+static void func_power_on_language_enter(void)
 {
-    func_cb.f_cb = func_zalloc(sizeof(f_language_list_t));
-    func_cb.frm_main = func_set_sub_language_form_create();
+    func_cb.f_cb = func_zalloc(sizeof(f_power_on_language_list_t));
+    func_cb.frm_main = func_power_on_language_form_create();
 
-    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    f_power_on_language_list_t *f_set = (f_power_on_language_list_t *)func_cb.f_cb;
     f_set->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_set->listbox;
     if (listbox->type != COMPO_TYPE_LISTBOX)
@@ -174,23 +160,23 @@ static void func_set_sub_language_enter(void)
 }
 
 //退出语言设置功能
-static void func_set_sub_language_exit(void)
+static void func_power_on_language_exit(void)
 {
-    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    f_power_on_language_list_t *f_set = (f_power_on_language_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
     func_free(listbox->mcb);                                            //释放移动控制块
-    func_cb.last = FUNC_SET_SUB_LANGUAGE;
+    func_cb.last = FUNC_POWER_ON_LANGUAGE;
 }
 
 //语言设置功能
-void func_set_sub_language(void)
+void func_power_on_language(void)
 {
     printf("%s\n", __func__);
-    func_set_sub_language_enter();
-    while (func_cb.sta == FUNC_SET_SUB_LANGUAGE)
+    func_power_on_language_enter();
+    while (func_cb.sta == FUNC_POWER_ON_LANGUAGE)
     {
-        func_set_sub_language_list_process();
-        func_set_sub_language_list_message(msg_dequeue());
+        func_power_on_language_list_process();
+        func_power_on_language_list_message(msg_dequeue());
     }
-    func_set_sub_language_exit();
+    func_power_on_language_exit();
 }

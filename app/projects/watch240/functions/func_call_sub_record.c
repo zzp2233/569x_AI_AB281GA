@@ -92,7 +92,21 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
             {
                 str_txt1_len = record_tbl[index].numberAsciiLen;
             }
-            memcpy(str_txt1, record_tbl[index].numberAscii, str_txt1_len);
+//            memset(sys_cb.pbap_result_Name,'\0',sizeof(sys_cb.pbap_result_Name));
+//            bt_pbap_lookup_number((char*)record_tbl[index].numberAscii);
+
+//            printf("number=%s\n",record_tbl[index].numberAscii);
+//            printf("name=%s\n",sys_cb.pbap_result_Name);
+            if(sys_cb.pbap_result_Name[0] !='\0')
+            {
+//                printf("111111111\n");
+                memcpy(str_txt1, sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
+            }
+            else
+            {
+                memcpy(str_txt1, record_tbl[index].numberAscii, str_txt1_len);
+            }
+            memset(sys_cb.pbap_result_Name,'\0',sizeof(sys_cb.pbap_result_Name));
 //            printf("####[%d,%d,%d]->[%s] [%s]\n", record_tbl[index].nameUnicodeLen, record_tbl[index].numberAsciiLen, str_txt1_len, str_txt1, record_tbl[index].numberAscii);
         }
         else
@@ -165,11 +179,14 @@ compo_form_t *func_call_sub_record_form_create(void)
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
     compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_CALL_RECORD]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH / 2, widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH / 1.2, widget_text_get_height());
     compo_textbox_set_visible(txt, false);
     compo_textbox_set(txt, i18n[STR_NO_CALL_RECORD]);
     compo_setid(txt, COMPO_ID_COVER_TXT);
 
+//    memset(sys_cb.pbap_result_Name,'\0',sizeof(sys_cb.pbap_result_Name));
+//    bt_pbap_lookup_number("10086");
+//    printf("name:%s\n",sys_cb.pbap_result_Name);
 
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT);

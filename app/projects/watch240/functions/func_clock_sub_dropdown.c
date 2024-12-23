@@ -9,6 +9,8 @@
 #include "func_menu.h"
 #include "ute_module_call.h"
 
+#if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
+
 #define PAGE_HEIGHT     GUI_SCREEN_HEIGHT - GUI_SCREEN_HEIGHT/3.7
 #define  BT_ON_PIC_BIN       UI_BUF_I330001_SLIDEMENU_ICON_TELEPHONE_GROUP_898_BIN    ///BT 连接状态图片
 #define  BT_OFF_PIC_BIN      UI_BUF_I330001_SLIDEMENU_ICON_TELEPHONE_FRAME_1389_BIN   ///BT 断开状态图片
@@ -689,3 +691,4 @@ void func_clock_sub_dropdown(void)
     }
     func_clock_sub_dropdown_exit();
 }
+#endif // UTE_MODULE_SCREENS_DWON_MENU_SUPPORT

@@ -14,14 +14,15 @@ enum
     MSGBOX_MSG_TYPE_WECHAT=1,   //微信消息
 };
 
-#define MSG_MAX_LIST_CNT    (CARD_TOTAL_CNT-1)  //最多保存多少条消息
+#define MSG_MAX_LIST_CNT    (CARD_TOTAL_CNT - COMPO_CARD_START -1)  //最多保存多少条消息
 
 #define MSG_MAX_CONTENT     64  //消息保存的最大内容
 
 enum
 {
-    COMPO_ID_CARD_MSG1 = 1,
-    COMPO_ID_CARD_MSGn = UTE_MODULE_NOTIFY_SAVE_CNT,
+    COMPO_CARD_START = 200,
+    COMPO_ID_CARD_MSG1,
+    COMPO_ID_CARD_MSGn = COMPO_CARD_START + UTE_MODULE_NOTIFY_SAVE_CNT,
 
     CARD_TOTAL_CNT,
 
@@ -185,7 +186,7 @@ typedef struct f_message_t_
     ute_module_notify_data_t *ute_msg;
 } f_message_t;
 
-static void func_message_card_update(void);
+static void func_message_card_update(bool fist);
 //创建消息窗体
 compo_form_t *func_message_form_create(void)
 {
@@ -238,9 +239,9 @@ compo_form_t *func_message_form_create(void)
     compo_textbox_set_visible(txt, false);
     compo_setid(txt, COMPO_ID_COVER_TXT);
 
-    if (func_cb.sta == FUNC_MESSAGE) {
-        func_message_card_update();
-    }
+//    if (func_cb.sta == FUNC_MESSAGE) {
+        func_message_card_update(true);
+//    }
 
     return frm;
 }
@@ -289,7 +290,7 @@ static void func_message_card_click(void)
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_message_card_get_btn_id(pt);
-    if (compo_id <= 0 || compo_id > MSG_MAX_LIST_CNT)
+    if (compo_id <= 0 || compo_id > CARD_TOTAL_CNT - 1)
     {
         return;
     }
@@ -297,17 +298,20 @@ static void func_message_card_click(void)
     compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
     if (compo_cardbox_get_visible(cardbox))
     {
-        char *msg = (char*)f_msg->ute_msg->historyNotify[compo_id-1].content;
+        uteModuleNotifyGetData(f_msg->ute_msg);
+        u16 msg_id = compo_id - COMPO_CARD_START - 1;
+        char *msg = (char*)f_msg->ute_msg->historyNotify[msg_id].content;
         char time[30]= {0};
-//        sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[compo_id-1].year, f_msg->ute_msg->historyNotify[compo_id-1].month,
-//                f_msg->ute_msg->historyNotify[compo_id-1].day, f_msg->ute_msg->historyNotify[compo_id-1].hour, f_msg->ute_msg->historyNotify[compo_id-1].min);
-        sprintf(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[compo_id-1].year, f_msg->ute_msg->historyNotify[compo_id-1].month,
-                f_msg->ute_msg->historyNotify[compo_id-1].day);
-        sys_cb.msg_index = f_msg->ute_msg->historyNotify[compo_id-1].type;
+        printf("msg:%s\n", msg);
+//        sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
+//                f_msg->ute_msg->historyNotify[msg_id].day, f_msg->ute_msg->historyNotify[msg_id].hour, f_msg->ute_msg->historyNotify[msg_id].min);
+        sprintf(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
+                f_msg->ute_msg->historyNotify[msg_id].day);
+        sys_cb.msg_index = f_msg->ute_msg->historyNotify[msg_id].type;
         int res = msgbox(msg, NULL, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
         if (res == MSGBOX_RES_DELETE)
         {
-            uteModuleNotifySetDisplayIndex(compo_id-1);
+            uteModuleNotifySetDisplayIndex(msg_id);
             uteModuleNotifyDelAllHistoryData(false);
             uteModuleNotifyGetData(f_msg->ute_msg);
         }
@@ -325,10 +329,20 @@ static u32 func_message_card_get_icon(u8 type)
 }
 
 //更新消息卡片
-static void func_message_card_update(void)
+static void func_message_card_update(bool first_update)
 {
-    f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
-
+    f_message_t *f_msg = NULL;
+    if (first_update == true && func_cb.sta != FUNC_MESSAGE) {
+        f_msg = ab_zalloc(sizeof(f_message_t));
+        f_msg->ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
+        if (f_msg->ute_msg == NULL)
+        {
+            printf("%s malloc err\n", __func__);
+            halt(0x1010);
+        }
+    } else if (func_cb.sta == FUNC_MESSAGE) {
+        f_msg = (f_message_t *)func_cb.f_cb;
+    }
     //更新卡片
     uteModuleNotifyGetData(f_msg->ute_msg);
     s32 card_y = 0;
@@ -426,6 +440,20 @@ static void func_message_card_update(void)
         //更新拖动状态
         f_msg->flag_drag = false;
     }
+
+
+    if (first_update == true && func_cb.sta != FUNC_MESSAGE) {
+        if (f_msg != NULL) {
+            if (f_msg->ute_msg != NULL)
+            {
+                ab_free(f_msg->ute_msg);
+                f_msg->ute_msg = NULL;
+            }
+            ab_free(f_msg);
+            f_msg = NULL;
+        }
+    }
+
 }
 
 //消息功能事件处理
@@ -433,7 +461,7 @@ static void func_message_process(void)
 {
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
 
-    func_message_card_update();
+    func_message_card_update(false);
 
     s32 dx,dy;
     //开始拖动页面
@@ -593,6 +621,7 @@ static void func_message_exit(void)
     } else {
         func_cb.last = FUNC_MESSAGE;
     }
+    func_cb.left_sta = FUNC_NULL;
 }
 
 //消息功能

@@ -101,15 +101,22 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
         }
     }
 
+
     if (textbox->multiline && rel_textbox_area.hei < rel_text_area.hei && rel_textbox_area.hei != 0 && !widget_text_get_ellipsis(txt))
     {
+        if (textbox->roll_cb.is_drag) {
+            textbox->roll_cb.is_drag = true;
+        }
         textbox->roll_cb.direction = -1;
         compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_SROLL);
         widget_text_set_client(txt, 0, client_y);
-
     }
     else
     {
+        if (textbox->multiline && (rel_textbox_area.hei >= rel_text_area.hei || rel_textbox_area.hei == 0)) {
+            textbox->roll_cb.is_drag = false;
+        }
+
         if (rel_text_area.wid > rel_textbox_area.wid)
         {
             textbox->roll_cb.direction = widget_text_get_right_align(txt) ? COMPO_TEXTBOX_DIR_RL : COMPO_TEXTBOX_DIR_LR;

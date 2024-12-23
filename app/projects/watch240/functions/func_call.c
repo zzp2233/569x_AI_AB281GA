@@ -67,9 +67,9 @@ void func_call_icon_click(void)
     //切入应用
     if (func_sta > 0)
     {
-        compo_form_t *frm = func_create_form(func_sta);
-        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
-        compo_form_destroy(frm);
+//        compo_form_t *frm = func_create_form(func_sta);
+//        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
+//        compo_form_destroy(frm);
         func_cb.sta = func_sta;
     }
 }

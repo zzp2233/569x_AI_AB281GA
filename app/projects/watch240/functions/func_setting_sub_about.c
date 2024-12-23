@@ -158,7 +158,7 @@ static void func_set_sub_about_message(size_msg_t msg)
             case MSG_CTP_LONG:
                 if (!uteApplicationCommonIsHasConnectOurApp())
                 {
-                    func_switch_to(FUNC_TEST_MODE, 0);
+                    // func_switch_to(FUNC_TEST_MODE, 0); //未实现，暂时屏蔽
                 }
                 break;
             default:

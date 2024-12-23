@@ -61,7 +61,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_FIND_PHONE,             UI_BUF_I330001_THEME_1_FINDPHONE_BIN,         .func_sta = FUNC_FINDPHONE},            //查找手机
     {STR_GAME,                   UI_BUF_I330001_THEME_1_GAME_BIN,              .func_sta = FUNC_GAME},                 //游戏
     {STR_SETTING,                UI_BUF_I330001_THEME_1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
-//    {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
+    {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
 };
 
 //菜单栏自定义图标更新

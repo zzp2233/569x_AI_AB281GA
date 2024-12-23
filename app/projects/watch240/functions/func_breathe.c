@@ -101,7 +101,7 @@ compo_form_t *func_breathe_form_create(void)
     compo_picturebox_t *pic;
     pic = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_BG_BIN);
     compo_setid(pic, COMPO_ID_PIC_BREATHE);
-    compo_picturebox_set_pos(pic, 120, 146);
+    compo_picturebox_set_pos(pic, 120, 133);
 
     //创建文本
     compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_START]));

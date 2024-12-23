@@ -58,16 +58,21 @@ static void func_power_on_process(void)
         else
         {
             func_cb.sta = FUNC_CLOCK;
+            sys_cb.power_on_state=true;
             if(!uteApplicationCommonIsHasConnectOurApp())
             {
-                sys_cb.power_on_state = false;
+                sys_cb.power_on_state=false;
                 ute_module_systemtime_time_t time;
                 uteModuleSystemtimeGetTime(&time);
-                func_cb.sta = FUNC_SCAN;
+
                 if(time.isWatchSetLangage == false)
                 {
-                    func_cb.sta = FUNC_SET_SUB_LANGUAGE;
-                }                
+                    func_cb.sta = FUNC_POWER_ON_LANGUAGE;
+                }
+                else
+                {
+                    func_cb.sta = FUNC_POWER_ON_SCAN;
+                }
             }
         }
     }

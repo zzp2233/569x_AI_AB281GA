@@ -2,6 +2,8 @@
 #include "func.h"
 #include "func_cover.h"
 
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -111,33 +113,6 @@ static void func_voice_animation_playing(bool en)
 {
     compo_animation_t *animation = compo_getobj_byid(ui_handle.animation.id);
     compo_animation_set_interval(animation, en*ui_handle.animation.interval);
-//    if (animation->interval == 0)
-//    {
-//        return;
-//    }
-
-//    static s32 dx;
-//    static u32 tick;
-//    if (en)
-//    {
-////        if (tick_check_expire(tick, animation->interval))
-////        {
-////            tick = tick_get();
-////            dx--;
-////            if (dx < -(animation->wid * animation->radix))
-////            {
-////                dx = 0;
-////            }
-////            widget_page_set_client(animation->page, dx, 0);
-////        }
-////        compo_animation_process(animation);
-//
-//    }
-//    else
-//    {
-////        widget_page_set_client(animation->page, 0, 0);
-////        compo_animation_set_interval(animation, 0);
-//    }
 }
 
 static void func_voice_start_siri(void)
@@ -161,6 +136,7 @@ static void func_voice_start_siri(void)
 //语音助手功能事件处理
 static void func_voice_process(void)
 {
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     static u8 siri_cnt = 0;
 
@@ -234,13 +210,14 @@ static void func_voice_process(void)
             }
         }
     }
-
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 
 //语音助手功能消息处理
 static void func_voice_message(size_msg_t msg)
 {
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     //f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     switch (msg)
     {
@@ -261,6 +238,7 @@ static void func_voice_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //进入语音助手功能
@@ -268,9 +246,10 @@ static void func_voice_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_voice_t));
     func_cb.frm_main = func_voice_form_create();
-
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     f_voice->siri_en = false;
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 }
 
@@ -292,3 +271,4 @@ void func_voice(void)
     }
     func_voice_exit();
 }
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT

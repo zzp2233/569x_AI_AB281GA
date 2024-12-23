@@ -48,7 +48,7 @@ static bool stopwatch_set_text_callback(u32 item_cnt, char* str_txt1, u16 str_tx
         msec = sys_cb.stopwatch_rec_view[index] % 1000;
 
         sprintf(str_txt1, "%02d.", sys_cb.stopwatch_rec_cnt - index);
-        sprintf(str_txt2, "%02d:%02d:%02d", min, sec, msec / 10);
+        sprintf(str_txt2, "%02d:%02d.%02d", min, sec, msec / 10);
 
         return true;
     }

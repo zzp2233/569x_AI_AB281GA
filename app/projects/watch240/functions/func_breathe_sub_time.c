@@ -67,23 +67,43 @@ static const breathe_set_num_item_t tbl_breathe_set_num_item[] = {
 //获取分 上一个和下一个的数字
 static u8 func_breathe_get_time_cal(s8 num, u8 mode)
 {
-    if (num < 0) {
+//    if (num < 0) {
+//        num += 60;
+//    }
+//
+//    if (mode == 1) {
+//        if (num == 0 || num > 59) {
+//            return 59;
+//        }
+//        return num - 1;
+//    } else if (mode == 2){
+//        if (num >= 59) {
+//            return 0;
+//        }
+//        return num + 1;
+//    } else {
+//        if (num > 59) {
+//            return 59;
+//        }
+//        return num;
+//    }
+    if (num < 1) {
         num += 60;
     }
 
     if (mode == 1) {
-        if (num == 0 || num > 59) {
-            return 59;
+        if (num == 1 || num > 60) {
+            return 60;
         }
         return num - 1;
     } else if (mode == 2){
-        if (num >= 59) {
-            return 0;
+        if (num >= 60) {
+            return 1;
         }
         return num + 1;
     } else {
-        if (num > 59) {
-            return 59;
+        if (num > 60) {
+            return 60;
         }
         return num;
     }

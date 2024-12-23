@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-19 20:21:21
+*@date   2024-12-20 17:10:29
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -241,7 +241,8 @@ enum
     STR_CLOSE, // 关闭
     STR_MIN_JOINT, // ##分钟
     STR_SECOND_JOINT, // ##秒
-    STR_TRADITIONAL_CHINESE, // 繁體中文
+    STR_ADD_CLOCK, // 添加闹钟
+    STR_TRADITIONAL_CHINESE, // 繁体中文
 };
 
 extern const char * const *i18n;

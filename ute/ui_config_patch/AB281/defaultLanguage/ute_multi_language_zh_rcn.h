@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2024-12-19 20:21:22
+*@date   2024-12-20 17:10:29
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -241,7 +241,8 @@ const char * const i18n_zh_rcn[] =
      [STR_CLOSE] = "\xe5\x85\xb3\xe9\x97\xad\x00", // [225] 关闭
      [STR_MIN_JOINT] = "\x23\x23\xe5\x88\x86\xe9\x92\x9f\x00", // [226] ##分钟
      [STR_SECOND_JOINT] = "\x23\x23\xe7\xa7\x92\x00", // [227] ##秒
-     [STR_TRADITIONAL_CHINESE] = "\xe7\xb9\x81\xe9\xab\x94\xe4\xb8\xad\xe6\x96\x87\x00", // [228] 繁體中文
+     [STR_ADD_CLOCK] = "\xe6\xb7\xbb\xe5\x8a\xa0\xe9\x97\xb9\xe9\x92\x9f\x00", // [228] 添加闹钟
+     [STR_TRADITIONAL_CHINESE] = "\xe7\xb9\x81\xe4\xbd\x93\xe4\xb8\xad\xe6\x96\x87\x00", // [229] 繁体中文
 };
 
 #endif

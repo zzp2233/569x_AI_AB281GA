@@ -1,6 +1,9 @@
 #include "include.h"
 #include "func.h"
 
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+
+
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -85,7 +88,7 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_TIME);
     compo_textbox_set_pos(txt_num, GUI_SCREEN_CENTER_X, 128);
     compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_48_BIN);
-    snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", min, sec, msec / 10);
+    snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
     compo_textbox_set(txt_num, str_buff);
     txt_num = compo_textbox_create(frm, 2);     //记录数
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
@@ -155,7 +158,8 @@ static void func_stopwatch_button_click(void)
                 compo_textbox_set(num_rec, str_buff);
             }
             compo_textbox_set_visible(num_rec, sys_cb.stopwatch_rec_cnt > 0);
-            compo_button_set_visible(btn_record1, sys_cb.stopwatch_sta != 0);
+//            compo_button_set_visible(btn_record1, sys_cb.stopwatch_sta != 0);
+            compo_button_set_visible(btn_record1, true);
             break;
 
         case COMPO_ID_BTN_AFRESH:
@@ -173,7 +177,7 @@ static void func_stopwatch_button_click(void)
                 sys_cb.stopwatch_rec_cnt = 0;
                 sys_cb.stopwatch_total_msec = 0;
 
-                compo_textbox_set(num_time, "00:00:00");
+                compo_textbox_set(num_time, "00:00.00");
                 compo_textbox_set(num_rec, "0");
             }
             compo_button_set_visible(btn_record1, false);
@@ -204,6 +208,7 @@ static void func_stopwatch_button_click(void)
 //秒表功能事件处理
 static void func_stopwatch_process(void)
 {
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     if (sys_cb.stopwatch_sta)
     {
         reset_sleep_delay_all();        //计时的时候不许休眠
@@ -226,13 +231,14 @@ static void func_stopwatch_process(void)
             compo_textbox_set(num_time, str_buff);
         }
     }
-
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 
 //秒表功能消息处理
 static void func_stopwatch_message(size_msg_t msg)
 {
+    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -261,6 +267,7 @@ static void func_stopwatch_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //进入秒表功能
@@ -290,3 +297,4 @@ void func_stopwatch(void)
     }
     func_stopwatch_exit();
 }
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT

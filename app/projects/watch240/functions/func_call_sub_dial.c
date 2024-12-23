@@ -180,6 +180,7 @@ static void func_call_sub_dial_button_click(void)
             {
                 bt_call_redial_number();
             }
+            printf("name:%s\n",sys_cb.pbap_result_Name);
             break;
 
         case COMPO_ID_BTN_DEL:

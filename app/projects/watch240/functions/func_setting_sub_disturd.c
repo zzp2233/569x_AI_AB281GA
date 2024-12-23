@@ -404,6 +404,8 @@ compo_form_t *func_set_sub_disturd_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_DISTURD]);
 
+    widget_page_set_client(frm->page_body, 0, -DRAG_MIN_BACK_DISTANCE);
+
     func_set_sub_disturd_state_update();
 
     ///创建全天勿扰卡片
@@ -578,8 +580,6 @@ compo_form_t *func_set_sub_disturd_form_create(void)
             compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
         }
     }
-
-    widget_page_set_client(func_cb.frm_main->page_body, 0, -DRAG_MIN_BACK_DISTANCE);
     return frm;
 }
 
@@ -873,7 +873,7 @@ static void func_set_sub_disturd_message(size_msg_t msg)
 
         case MSG_CTP_SHORT_UP:
         case MSG_CTP_SHORT_DOWN:
-        case MSG_CTP_TOUCH:
+//        case MSG_CTP_TOUCH:
             f_disturd->flag_drag = true;
             f_disturd->flag_move_auto = true;
             break;

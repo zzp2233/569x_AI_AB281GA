@@ -32,6 +32,9 @@ compo_form_t *func_bt_ring_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_PHONE]);
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
@@ -41,25 +44,25 @@ compo_form_t *func_bt_ring_form_create(void)
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH, 50);
     compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16,GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //接听
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_CALL_BIN);
     compo_setid(btn, COMPO_ID_BTN_ANSWER);
-    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/1.28, 240);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2 , 240);
 
     //挂断
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4.57, 240);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, 240);
 
     return frm;
 }

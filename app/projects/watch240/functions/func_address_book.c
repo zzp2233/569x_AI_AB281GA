@@ -33,31 +33,6 @@ static u16 address_book_cnt = 0;                                       //联系�
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
-char *get_address_name(char *number)
-{
-    static char name_utf8_buf[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH+5] = {0};
-    uint16_t name_utf8_len = 0;
-
-//    printf("1:%s 2:%s\n",number,address_book_tbl[0].numberAscii)
-    memset(name_utf8_buf, 0, sizeof(name_utf8_buf));
-    for(int i;i<address_book_cnt;i++)
-    {
-        if(*number == address_book_tbl[i].numberAscii)
-        {
-            uteModuleCharencodeUnicodeConversionUtf8(address_book_tbl[i].nameUnicode,
-            address_book_tbl[i].nameUnicodeLen,
-            (uint8_t*)name_utf8_buf,
-            &name_utf8_len,
-            sizeof(name_utf8_buf));
-
-            return name_utf8_buf;
-        }
-    }
-
-    return number;
-}
-
-
 //更新电话簿列表回调函数
 static bool address_book_update_callback(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index)
 {
@@ -142,7 +117,7 @@ static u8 func_address_book_update(void)
 //创建电话簿窗体
 compo_form_t *func_address_book_form_create(void)
 {
-    printf("name=%s",get_address_name("10086"));
+//    printf("name=%s",get_address_name(address_book_tbl[0].numberAscii));
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 

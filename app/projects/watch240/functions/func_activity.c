@@ -136,7 +136,7 @@ static void func_activity_disp_handle(void)
         char txt_buf[20];
         uint32_t totalStepCnt = 0;
         uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-
+        totalStepCnt = 565;
         compo_picturebox_t *arc_kcal = compo_getobj_byid(KCAL_ARC_ID);
         compo_picturebox_t *arc_km   = compo_getobj_byid(KM_ARC_ID);
         compo_picturebox_t *arc_step = compo_getobj_byid(STEP_ARC_ID);
@@ -175,10 +175,11 @@ static void func_activity_disp_handle(void)
         }
         else
         {
-
             f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
             f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
             f_activity->arc_step_value =(uint32_t) (totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt());
+
+            f_activity->arc_step_value = 567;
 
             compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value*1.8 );
             compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value*1.8 );

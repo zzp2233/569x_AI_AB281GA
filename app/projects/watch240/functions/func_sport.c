@@ -223,9 +223,9 @@ static void func_sport_list_icon_click(void)
     //切入应用
     if (func_sta > 0 && !listbox->flag_area)
     {
-        compo_form_t *frm = func_create_form(func_sta);
-        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
-        compo_form_destroy(frm);
+//        compo_form_t *frm = func_create_form(func_sta);
+//        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
+//        compo_form_destroy(frm);
         func_cb.sta = func_sta;
         sys_cb.sport_idx = listbox->focus_icon_idx;                //记住当前编号
 //        printf("sport_idx=%d\n", sys_cb.sport_idx);

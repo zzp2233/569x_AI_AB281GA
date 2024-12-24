@@ -54,6 +54,12 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
     compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
     compo_shape_set_alpha(masklayer, 255);
 
+    //创建遮罩层2
+    compo_shape_t *masklayer2 = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_color(masklayer, COLOR_BLACK);
+    compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_shape_set_alpha(masklayer, 255);
+
     //消息推送弹框使用，根据消息类型创建对应消息图标
     switch(msg_type)
     {
@@ -87,8 +93,9 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                                            GUI_SCREEN_WIDTH-10, 128);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
+//                compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);
-                compo_textbox_set_autoroll_mode(txt_msg, 2);
+//                compo_textbox_set_autoroll_mode(txt_msg, 2);
             }
 
             //time
@@ -107,11 +114,18 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         case MSGBOX_MSG_TYPE_BRIEF:                   //简略消息弹窗
         {
             printf("MSGBOX_MSG_TYPE_BRIEF\n");
-            //设置遮罩
+
+            //设置遮罩底层
             compo_shape_set_radius(masklayer, 20);
-            compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT/2);
-            compo_shape_set_color(masklayer, make_color(41,41,41));
-            compo_shape_set_alpha(masklayer, 200);
+            compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+            compo_shape_set_color(masklayer, make_color(0,0,0));
+            compo_shape_set_alpha(masklayer, 230);
+
+            //设置遮罩2
+            compo_shape_set_radius(masklayer2, 20);
+            compo_shape_set_location(masklayer2, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT/2);
+            compo_shape_set_color(masklayer2, make_color(41,41,41));
+            compo_shape_set_alpha(masklayer2, 200);
 
             //图标
             compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),

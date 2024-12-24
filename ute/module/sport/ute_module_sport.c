@@ -3624,7 +3624,7 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
         uteModuleSprotData.sportsHistoryRecord.displayIndex = 0;
 #endif
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);     //运动完成数据界面
-        func_cb.sta = FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
+        func_cb.sta = FUNC_SPORT_FINISH;//FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
 //        sys_cb.cover_index = REMIND_COVER_GOAL;
 //        sys_cb.remind_tag = true;
 #endif

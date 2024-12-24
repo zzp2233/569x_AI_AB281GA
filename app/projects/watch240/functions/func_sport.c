@@ -228,7 +228,7 @@ static void func_sport_list_icon_click(void)
         compo_form_destroy(frm);
         func_cb.sta = func_sta;
         sys_cb.sport_idx = listbox->focus_icon_idx;                //记住当前编号
-        printf("sport_idx=%d\n", sys_cb.sport_idx);
+//        printf("sport_idx=%d\n", sys_cb.sport_idx);
     }
 
     if(listbox->flag_area)

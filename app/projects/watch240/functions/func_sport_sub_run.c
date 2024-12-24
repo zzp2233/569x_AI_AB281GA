@@ -64,16 +64,16 @@ typedef struct
 #define TEXT_CNT    ((int)(sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0])))
 static const text_t sport_sub_run_text[] =
 {
-    {COMPO_ID_NUM_SPORT_TIME,       10,     66,     0,      0,  UI_BUF_0FONT_FONT_NUM_48_BIN,   false,  false,  {.r=169, .g=255, .b=0},         20,    "02:38.58"},
-    {COMPO_ID_NUM_SPORT_KM,         45,     163+6,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       10,    "50 KM"},
-    {COMPO_ID_NUM_SPORT_STEP,       45,     201+6,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,    "20000 STEP"},
-    {COMPO_ID_NUM_SPORT_KCAL,       42,     125+6,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,     "5000 KCAL"},
-    {COMPO_ID_NUM_SPORT_HEARTRATE,  44,     237+10,    0,      0,  UI_BUF_0FONT_FONT_NUM_38_BIN,   false,  false,  {.r=255, .g=255, .b=255},       3,      "108"},
+    {COMPO_ID_NUM_SPORT_TIME,       10,     66+6,     0,      0,  UI_BUF_0FONT_FONT_NUM_48_BIN,   false,  false,  {.r=169, .g=255, .b=0},         20,    "02:38.58"},
+    {COMPO_ID_NUM_SPORT_KM,         45,     163+6-3,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       10,    "50 KM"},
+    {COMPO_ID_NUM_SPORT_STEP,       45,     201+6-3,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,    "20000 STEP"},
+    {COMPO_ID_NUM_SPORT_KCAL,       42,     125+6-3,    0,      0,  UI_BUF_0FONT_FONT_NUM_28_BIN,   false,  false,  {.r=255, .g=255, .b=255},       20,     "5000 KCAL"},
+    {COMPO_ID_NUM_SPORT_HEARTRATE,  44,     237+6-3,    0,      0,  UI_BUF_0FONT_FONT_NUM_38_BIN,   false,  false,  {.r=255, .g=255, .b=255},       3,      "108"},
 
-    {COMPO_ID_TEXT_SPORT_KM,        45,      163,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KM"},
-    {COMPO_ID_TEXT_SPORT_STEP,      45,      201,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
-    {COMPO_ID_TEXT_SPORT_KCAL,      42,      125,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
-    {COMPO_ID_TEXT_SPORT_HEARTRATE, 44,      237+10,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "MIN/Cnt"},
+    {COMPO_ID_TEXT_SPORT_KM,        45,      163-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KM"},
+    {COMPO_ID_TEXT_SPORT_STEP,      45,      201-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
+    {COMPO_ID_TEXT_SPORT_KCAL,      42,      125-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
+    {COMPO_ID_TEXT_SPORT_HEARTRATE, 44,      237+6-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "MIN/Cnt"},
 };
 
 typedef struct
@@ -89,10 +89,10 @@ typedef struct
 static const picture_t sport_sub_run_picture[] =
 {
     {COMPO_ID_PIC_SPORT_TYPE,   10+56/2,  12+56/2,    56,   56,       0},
-    {COMPO_ID_PIC_SPORT_KM,     10+24/2,  169+24/2,   24,  24,      UI_BUF_I330001_SPORT_ICON2_DIS_BIN},
-    {COMPO_ID_PIC_SPORT_STEP,   10+24/2,  207+24/2,   24,  24,      UI_BUF_I330001_SPORT_ICON2_STEP_BIN},
-    {COMPO_ID_PIC_SPORT_KCAL,   10+24/2,  131+24/2,   24,  24,      UI_BUF_I330001_SPORT_ICON2_CALORIES_BIN},
-    {COMPO_ID_PIC_SPORT_HEART,  10+24/2,  251+24/2,   24,  24,      UI_BUF_I330001_SPORT_ICON2_HR_BIN},
+    {COMPO_ID_PIC_SPORT_KM,     10+24/2,  169+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_DIS_BIN},
+    {COMPO_ID_PIC_SPORT_STEP,   10+24/2,  207+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_STEP_BIN},
+    {COMPO_ID_PIC_SPORT_KCAL,   10+24/2,  131+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_CALORIES_BIN},
+    {COMPO_ID_PIC_SPORT_HEART,  10+24/2,  251+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_HR_BIN},
 };
 
 #if USE_GOAL_ARC
@@ -140,7 +140,12 @@ typedef struct f_sport_sub_run_t_
     u32 tick;
 
     bool sport_run_state;
+
+    bool heart_pic_state;
+    u8 heart_pic_size;
 } f_sport_sub_run_t;
+
+u8 sport_finish_mode=0;
 
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_sub_run_form_create(void)
@@ -170,11 +175,11 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_setid(time, COMPO_ID_TXT_TIME);
     compo_bonddata(time, COMPO_BOND_HOURMIN_TXT);
 
-    time = compo_textbox_create(frm, 32);
-    compo_textbox_set_align_center(time, false);
-    compo_textbox_set_location(time, 168-GUI_SCREEN_WIDTH-GUI_SCREEN_CENTER_X/1.5-52, 15, 52+52, 23);
-    compo_setid(time, COMPO_ID_TXT_TIME);
-    compo_bonddata(time, COMPO_BOND_HOURMIN_TXT);
+//    time = compo_textbox_create(frm, 32);
+//    compo_textbox_set_align_center(time, false);
+//    compo_textbox_set_location(time, 168-GUI_SCREEN_WIDTH-GUI_SCREEN_CENTER_X/1.5-52, 15, 52+52, 23);
+//    compo_setid(time, COMPO_ID_TXT_TIME);
+//    compo_bonddata(time, COMPO_BOND_HOURMIN_TXT);
 
 
     switch(func_sport_get_current_idx())
@@ -185,12 +190,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
             sport_flag[2] = true;//卡路里
             break;
         case 1://骑行
-            sport_flag[0] = true;//公里
+            sport_flag[0] = false;//公里
             sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 2://跳绳
-            sport_flag[0] = false;//公里
+            sport_flag[0] = true;//公里
             sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
@@ -201,7 +206,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
             break;
         case 4://羽毛球
             sport_flag[0] = false;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 5://乒乓球
@@ -211,12 +216,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
             break;
         case 6://网球
             sport_flag[0] = false;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 7://爬山
-            sport_flag[0] = true;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 8://徒步
@@ -226,12 +231,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
             break;
         case 9://篮球
             sport_flag[0] = false;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 10://足球
-            sport_flag[0] = true;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 11://棒球
@@ -250,13 +255,13 @@ compo_form_t *func_sport_sub_run_form_create(void)
             sport_flag[2] = true;//卡路里
             break;
         case 14://橄榄球
-            sport_flag[0] = true;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 15://曲棍球
-            sport_flag[0] = true;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 16://跳舞
@@ -265,7 +270,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
             sport_flag[2] = true;//卡路里
             break;
         case 17://动感单车
-            sport_flag[0] = true;//公里
+            sport_flag[0] = false;//公里
             sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
@@ -286,7 +291,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
             break;
         case 21://体操
             sport_flag[0] = false;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 22://划船
@@ -300,13 +305,26 @@ compo_form_t *func_sport_sub_run_form_create(void)
             sport_flag[2] = true;//卡路里
             break;
         case 24://自由训练
-            sport_flag[0] = true;//公里
-            sport_flag[1] = true;//步数
+            sport_flag[0] = false;//公里
+            sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
     }
 
     sport_flag[3] = true;   //心率
+
+    if(sport_flag[1] == true)
+    {
+        sport_finish_mode = 0;
+    }
+    else if(func_sport_get_current_idx() == 2 || func_sport_get_current_idx() == 3)
+    {
+        sport_finish_mode = 1;
+    }
+    else
+    {
+        sport_finish_mode = 2;
+    }
 
     //不同运行界面不同数据,用户自己添加 --> todo
 
@@ -373,6 +391,14 @@ compo_form_t *func_sport_sub_run_form_create(void)
             compo_picturebox_set_size(pic, sport_sub_run_picture[i].w, sport_sub_run_picture[i].h);
         }
         compo_setid(pic, sport_sub_run_picture[i].id);
+
+        if(func_sport_get_current_idx() == 3 || func_sport_get_current_idx() == 2)
+        {
+            if(sport_sub_run_picture[i].res == UI_BUF_I330001_SPORT_ICON2_DIS_BIN)
+            {
+                compo_picturebox_set(pic, UI_BUF_I330001_SPORT_ICON2_TIMES_BIN);
+            }
+        }
 
         if(i>=1)
         {
@@ -520,13 +546,22 @@ static void func_sport_sub_run_updata(void)
                     break;
                 }
             }
-            compo_textbox_set(txt_step_unit, i18n[STR_SET_STEP_COUNT]);
+            compo_textbox_set(txt_step_unit, i18n[STR_STEP]);
 
             //更新距离
             f_sport_sub_run->km_integer = data->saveData.sportDistanceInteger;
             f_sport_sub_run->km_decimals = data->saveData.sportDistanceDecimals;
             memset(buf, 0, sizeof(buf));
-            snprintf(buf, sizeof(buf), "%d.%02d", f_sport_sub_run->km_integer, f_sport_sub_run->km_decimals);
+            if(func_sport_get_current_idx() == 3 || func_sport_get_current_idx() == 2)//运动次数
+            {
+                ute_module_more_sports_data_t sport_data;
+                uteModuleSportGetMoreSportsDatas(&sport_data);
+                snprintf(buf,sizeof(buf),"%d",sport_data.saveData.sportTimes);
+            }
+            else
+            {
+                snprintf(buf, sizeof(buf), "%d.%02d", f_sport_sub_run->km_integer, f_sport_sub_run->km_decimals);
+            }
             compo_textbox_t* txt_km = NULL;
             for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
                 if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KM) {
@@ -544,7 +579,33 @@ static void func_sport_sub_run_updata(void)
                     break;
                 }
             }
-            compo_textbox_set(txt_km_unit, i18n[STR_SET_DISTANCE]);
+            if(func_sport_get_current_idx() == 3 || func_sport_get_current_idx() == 2)//运动次数
+            {
+                compo_textbox_set(txt_km_unit, i18n[STR_SPORT_ORDER]);
+            }
+            else
+            {
+                compo_textbox_set(txt_km_unit, i18n[STR_KM]);
+            }
+
+
+
+        compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_SPORT_HEART);
+        area_t pic_size = gui_image_get_size(UI_BUF_I330001_SPORT_ICON2_HR_BIN);
+
+        if(f_sport_sub_run->heart_pic_size <= 72){
+            f_sport_sub_run->heart_pic_state = true;
+        }else if(f_sport_sub_run->heart_pic_size >= 110){
+            f_sport_sub_run->heart_pic_state = false;
+        }
+
+        if(f_sport_sub_run->heart_pic_state == true)
+        {
+            f_sport_sub_run->heart_pic_size ++ ;
+        }else{
+            f_sport_sub_run->heart_pic_size -- ;
+        }
+        compo_picturebox_set_size(picbox,f_sport_sub_run->heart_pic_size*pic_size.wid/100,f_sport_sub_run->heart_pic_size*pic_size.hei/100);
 
 #if USE_GOAL_ARC
             //更新圆弧
@@ -736,6 +797,7 @@ static void func_sport_sub_run_click_handler(void)
             int res=0;
             bool sport_flag = uteModuleSportMoreSportsIsLessData();
 
+//            sport_flag ^=1;
             if (sport_flag)
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, 0);
@@ -837,6 +899,7 @@ static void func_sport_sub_run_enter(void)
         uteModuleSportSetCountZeroIndex(0);
         TRACE("【本地】开始运动:%d\n",func_sport_get_current_idx()+1);
     }
+    f_sport_sub_run->heart_pic_size = 100;
 
 }
 

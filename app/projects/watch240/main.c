@@ -8,7 +8,7 @@ const u8 tbl_despi_clk1[] =
     [SYS_132M] = 6,         //20M
     [SYS_144M] = 7,         //20M
     [SYS_176M] = 8,         //20M
-    [SYS_192M] = 15,         //20M
+    [SYS_192M] = 4,         //20M
 };
 const u8 tbl_despi_clk2[] =
 {
@@ -16,7 +16,7 @@ const u8 tbl_despi_clk2[] =
     [SYS_132M] = 6,         //20M
     [SYS_144M] = 7,         //20M
     [SYS_176M] = 8,         //20M
-    [SYS_192M] = 15,         //20M
+    [SYS_192M] = 4,         //20M
 };
 #else
 //320x385 60Hz 数据量为14.784MByte

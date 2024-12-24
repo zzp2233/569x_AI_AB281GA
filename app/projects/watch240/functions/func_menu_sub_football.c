@@ -16,9 +16,9 @@
 #define KALE_ICON_SPACE                          2                                                              //图标距离
 #define KALE_ICON_OUTER_SIZE                     (gui_image_get_size(tbl_menu_football[0].res_addr).wid)    //外圈图标大小
 #define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
-#define KALE_REFRASH_EXPIRE                      4                                                              //刷新间隔 uint：ms
+#define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
 #define KALE_SWITCH_DR                           2                                                              //单次变更R值
-#define KALE_ROTATE_ANGLE                        25                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
+#define KALE_ROTATE_ANGLE                        35                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 
 enum
 {

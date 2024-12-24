@@ -21,6 +21,7 @@ typedef struct f_bt_call_t_
     u32 clcc_tick;              //主动查询号码计时
     u32 exit_tick;              //页面退出计时
     bool call_mute_flag;
+    char pbap_result_Name[50];//存放来电与接听联系人名字
 } f_bt_call_t;
 
 static void func_bt_call_back_to(void)
@@ -69,31 +70,35 @@ void  func_bt_call_number_update(void)
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_bt_call_form_create(void)
 {
+
 //    bt_pbap_lookup_number(hfp_get_last_call_number(0));
     //printf("%s\n", __func__);
     //新建窗体, 通话页面
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_PHONE]);
 
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
 //    compo_form_set_title(frm, i18n[STR_HEART_RATE]);
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autosize(name_txt, true);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH/1.2, 50);
+//    compo_textbox_set_autosize(name_txt, true);
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
 //    compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autosize(number_txt, true);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
+//    compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
     compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
-    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autosize(time_txt, true);
+    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
+//    compo_textbox_set_autosize(time_txt, true);
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
 
     //挂断按钮
@@ -113,28 +118,33 @@ compo_form_t *func_bt_call_form_create(void)
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_bt_outgoing_form_create(void)
 {
+
 //    bt_pbap_lookup_number(hfp_get_last_call_number(0));
 //    新建窗体, 呼出页面
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
 
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_PHONE]);
+
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autosize(name_txt, true);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH/1.2, 50);
+//    compo_textbox_set_autosize(name_txt, true);
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
     //compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autosize(number_txt, true);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
+//    compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_IN_CALL]));
     compo_textbox_set(txt, i18n[STR_IN_CALL]);
-    compo_textbox_set_autosize(number_txt, true);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X*1.1,GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6);
+//    compo_textbox_set_autosize(number_txt, true);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16,GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //挂断按钮
@@ -198,8 +208,15 @@ static void func_bt_call_exit_process(void)
 }
 void func_bt_call_up_date_process(void)
 {
-    compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
-    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+
+//    printf("name:%s name:%s\n",f_bt_call->pbap_result_Name , sys_cb.pbap_result_Name);
+    if(strcmp(f_bt_call->pbap_result_Name , sys_cb.pbap_result_Name)!=0)
+    {
+        memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+        compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
+        compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    }
 }
 void func_bt_call_process(void)
 {
@@ -333,11 +350,14 @@ void func_bt_call_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_bt_call_t));
     func_cb.frm_main = func_bt_outgoing_form_create();
+    func_bt_call_number_update();
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+
+   memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+//   printf("name:%s  name:%s\n",sys_cb.pbap_result_Name,f_bt_call->pbap_result_Name);
 
     f_bt_call->call_mute_flag =false;
     func_cb.mp3_res_play = func_bt_mp3_res_play;
-
     bsp_bt_call_enter();
     if (sys_cb.gui_sleep_sta)
     {

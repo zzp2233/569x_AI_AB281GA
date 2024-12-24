@@ -27,6 +27,11 @@ typedef struct f_sport_finish_t_
 
 } f_sport_finish_t;
 
+extern u8 sport_finish_mode;
+extern u32 func_sport_get_current_idx(void);
+extern u32 func_sport_get_str(u8 sport_idx);
+extern u32 func_sport_get_ui(u8 sport_idx);
+
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_finish_form_create(void)
 {
@@ -35,7 +40,7 @@ compo_form_t *func_sport_finish_form_create(void)
 
     if (func_cb.sta == FUNC_SPORT_FINISH) {
         f_sport_finish_t *f_sport_finish = (f_sport_finish_t*)func_cb.f_cb;
-        printf("sport = %d\n",f_sport_finish->sport_finish_state);
+//        printf("sport = %d\n",f_sport_finish->sport_finish_state);
         ute_module_more_sports_data_t sport_data;
         uteModuleSportGetMoreSportsDatas(&sport_data);
         ute_module_systemtime_time_t time;
@@ -45,47 +50,47 @@ compo_form_t *func_sport_finish_form_create(void)
 //        f_sport_finish->sport_finish_state = COMPO_WALK_STATE;
         switch(f_sport_finish->sport_finish_state)
         {
-        case COMPO_WALK_STATE://户外跑步
+        case COMPO_WALK_STATE://户外跑步类别
             {
                 //运动类型图片
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON_00_PAOBU_BIN);
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
                 compo_picturebox_set_pos(picbox, 10+56/2, 12+56/2);
 
                 //运动类型名称
-                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_RUN]));
+                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 10, 73);
-                compo_textbox_set(textbox, i18n[STR_SPORT_RUN]);
+                compo_textbox_set_pos(textbox, 10, 5+73);
+                compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
 
                 //时间日期
                 snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",time.year,time.month,time.day,time.hour,time.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 10, 105);
+                compo_textbox_set_pos(textbox, 10, 5+105);
                 compo_textbox_set(textbox, txt_buf);
 
                 //运动数据图标
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_TIME_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_CALORIES_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_DIS_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40*2);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40*2);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_STEP_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40*3);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40*3);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_HR_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40*4);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40*4);
 
 
                 /*运动数据*/
                 memset(txt_buf,0,sizeof(txt_buf));//运动时长
-                snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",sport_data.totalSportTime/60/60,sport_data.totalSportTime/60,sport_data.totalSportTime);
+                snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",sport_data.totalSportTime/60/60,sport_data.totalSportTime/60%60,sport_data.totalSportTime%60);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142);
+                compo_textbox_set_pos(textbox, 44,5+142);
                 compo_textbox_set(textbox, txt_buf);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动卡路里
@@ -93,12 +98,12 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40);
+                compo_textbox_set_pos(textbox, 44,5+142+40);
                 compo_textbox_set(textbox, txt_buf);
                 area_t txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184);
                 compo_textbox_set(textbox, i18n[STR_KCAL]);
 
                 memset(txt_buf,0,sizeof(txt_buf)); //运动公里
@@ -106,12 +111,12 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40*2);
+                compo_textbox_set_pos(textbox, 44,5+142+40*2);
                 compo_textbox_set(textbox, txt_buf);
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_KM]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184+40);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40);
                 compo_textbox_set(textbox, i18n[STR_KM]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动步数
@@ -119,12 +124,12 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40*3);
+                compo_textbox_set_pos(textbox, 44,5+142+40*3);
                 compo_textbox_set(textbox, txt_buf);
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_STEP]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184+40*2);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*2);
                 compo_textbox_set(textbox, i18n[STR_STEP]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动心率
@@ -132,69 +137,69 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40*4);
+                compo_textbox_set_pos(textbox, 44,5+142+40*4);
                 compo_textbox_set(textbox, txt_buf);
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184+40*3);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*3);
                 compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
                 /*运动数据*/
 
                 compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_BIN);
-                compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 184+40*5);
+                compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 5+184+40*5);
                 compo_setid(btn,COMPO_BTN_SURE);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_OK]));
                 compo_textbox_set_forecolor(textbox, COLOR_BLACK);
-                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 184+40*5,GUI_SCREEN_CENTER_X,28);
+                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*5,GUI_SCREEN_CENTER_X,28);
                 compo_textbox_set(textbox, i18n[STR_OK]);
 
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
                 compo_textbox_set_align_center(textbox, true);
                 compo_textbox_set_multiline(textbox, true);
-                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 184+40*7,GUI_SCREEN_CENTER_X*1.7,28*2);
+                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*7,GUI_SCREEN_CENTER_X*1.7,28*2);
                 compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
             }
             break;
-        case COMPO_SWIMING_STATE://游泳
+        case COMPO_SWIMING_STATE://游泳 跳绳
             {
                 //运动类型图片
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON_03_YOUYONG_BIN);
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
                 compo_picturebox_set_pos(picbox, 10+56/2, 12+56/2);
 
                 //运动类型名称
-                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_SWIMMING]));
+                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 10, 73);
-                compo_textbox_set(textbox, i18n[STR_SPORT_SWIMMING]);
+                compo_textbox_set_pos(textbox, 10, 5+73);
+                compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
 
                 //时间日期
                 snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",time.year,time.month,time.day,time.hour,time.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 10, 105);
+                compo_textbox_set_pos(textbox, 10, 5+105);
                 compo_textbox_set(textbox, txt_buf);
 
                 //运动数据图标
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_TIME_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_CALORIES_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_TIMES_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40*2);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40*2);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_HR_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40*3);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40*3);
 
 
                 /*运动数据*/
                 memset(txt_buf,0,sizeof(txt_buf));//运动时长
-                snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",sport_data.totalSportTime/60/60,sport_data.totalSportTime/60,sport_data.totalSportTime);
+                snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",sport_data.totalSportTime/60/60,sport_data.totalSportTime/60%60,sport_data.totalSportTime%60);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142);
+                compo_textbox_set_pos(textbox, 44,5+142);
                 compo_textbox_set(textbox, txt_buf);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动卡路里
@@ -202,12 +207,12 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40);
+                compo_textbox_set_pos(textbox, 44,5+142+40);
                 compo_textbox_set(textbox, txt_buf);
                 area_t txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184);
                 compo_textbox_set(textbox, i18n[STR_KCAL]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动次数
@@ -215,12 +220,12 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40*2);
+                compo_textbox_set_pos(textbox, 44,5+142+40*2);
                 compo_textbox_set(textbox, txt_buf);
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_ORDER]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184+40*1);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*1);
                 compo_textbox_set(textbox, i18n[STR_SPORT_ORDER]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动心率
@@ -228,66 +233,66 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40*3);
+                compo_textbox_set_pos(textbox, 44,5+142+40*3);
                 compo_textbox_set(textbox, txt_buf);
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184+40*2);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*2);
                 compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
                 /*运动数据*/
 
                 compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_BIN);
-                compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 184+40*4);
+                compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 5+184+40*4);
                 compo_setid(btn,COMPO_BTN_SURE);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_OK]));
                 compo_textbox_set_forecolor(textbox, COLOR_BLACK);
-                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 184+40*4,GUI_SCREEN_CENTER_X,28);
+                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*4,GUI_SCREEN_CENTER_X,28);
                 compo_textbox_set(textbox, i18n[STR_OK]);
 
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
                 compo_textbox_set_align_center(textbox, true);
                 compo_textbox_set_multiline(textbox, true);
-                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 184+40*6,GUI_SCREEN_CENTER_X*1.7,28*2);
+                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*6,GUI_SCREEN_CENTER_X*1.7,28*2);
                 compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
             }
             break;
         case COMPO_OTHER_STATE://其他
             {
                 //运动类型图片
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON_24_ZIYOUXUNLIAN_BIN);
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
                 compo_picturebox_set_pos(picbox, 10+56/2, 12+56/2);
 
                 //运动类型名称
-                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FREE_TRAINING]));
+                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 10, 73);
-                compo_textbox_set(textbox, i18n[STR_SPORT_FREE_TRAINING]);
+                compo_textbox_set_pos(textbox, 10, 5+73);
+                compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
 
                 //时间日期
                 snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",time.year,time.month,time.day,time.hour,time.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 10, 105);
+                compo_textbox_set_pos(textbox, 10, 5+105);
                 compo_textbox_set(textbox, txt_buf);
 
                 //运动数据图标
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_TIME_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_CALORIES_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40);
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_HR_BIN);
-                compo_picturebox_set_pos(picbox, 12+21/2, 145+21/2+40*2);
+                compo_picturebox_set_pos(picbox, 12+21/2, 5+145+21/2+40*2);
 
                 /*运动数据*/
                 memset(txt_buf,0,sizeof(txt_buf));//运动时长
-                snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",sport_data.totalSportTime/60/60,sport_data.totalSportTime/60,sport_data.totalSportTime);
+                snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",sport_data.totalSportTime/60/60,sport_data.totalSportTime/60%60,sport_data.totalSportTime%60);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142);
+                compo_textbox_set_pos(textbox, 44,5+142);
                 compo_textbox_set(textbox, txt_buf);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动卡路里
@@ -295,12 +300,12 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40);
+                compo_textbox_set_pos(textbox, 44,5+142+40);
                 compo_textbox_set(textbox, txt_buf);
                 area_t txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184);
                 compo_textbox_set(textbox, i18n[STR_KCAL]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动心率
@@ -308,27 +313,27 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 40, 142+40*2);
+                compo_textbox_set_pos(textbox, 44,5+142+40*2);
                 compo_textbox_set(textbox, txt_buf);
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 184+40*1);
+                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*1);
                 compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
                 /*运动数据*/
 
                 compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_BIN);
-                compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 184+40*3);
+                compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 5+184+40*3);
                 compo_setid(btn,COMPO_BTN_SURE);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_OK]));
                 compo_textbox_set_forecolor(textbox, COLOR_BLACK);
-                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 184+40*3,GUI_SCREEN_CENTER_X,28);
+                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*3,GUI_SCREEN_CENTER_X,28);
                 compo_textbox_set(textbox, i18n[STR_OK]);
 
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
                 compo_textbox_set_align_center(textbox, true);
                 compo_textbox_set_multiline(textbox, true);
-                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 184+40*5,GUI_SCREEN_CENTER_X*1.7,28*2);
+                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*5,GUI_SCREEN_CENTER_X*1.7,28*2);
                 compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
             }
             break;
@@ -382,17 +387,17 @@ static void func_sport_finish_enter(void)
     f_sport_finish_t *f_sport_finish = (f_sport_finish_t*)func_cb.f_cb;
 
     int page_length=0;
-    switch(sys_cb.sport_idx)
+    switch(sport_finish_mode)
     {
     case 0:
         f_sport_finish->sport_finish_state = COMPO_WALK_STATE;
         page_length = 524;
         break;
-    case 3:
+    case 1:
         f_sport_finish->sport_finish_state = COMPO_SWIMING_STATE;
         page_length = 524-24*2;
         break;
-    default:
+    case 2:
         f_sport_finish->sport_finish_state = COMPO_OTHER_STATE;
         page_length = 524-24*4;
         break;
@@ -402,7 +407,7 @@ static void func_sport_finish_enter(void)
     f_sport_finish->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {
-        .page_size = page_length,
+        .page_size = page_length+5,
         .page_count = 1,
         .up_over_perc = 5,
         .down_over_perc = 5,

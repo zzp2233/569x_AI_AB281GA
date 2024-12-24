@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_call.h"
 #include "ute_module_charencode.h"
+#include "ute_module_systemtime.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -29,6 +30,76 @@ typedef struct f_call_list_t_
 static const compo_listbox_item_t tbl_record_list[UTE_MODULE_CALL_RECORDS_MAX_COUNT] = {0};
 static ute_module_call_records_t* record_tbl = NULL;            //通话记录数据
 static u16 record_cnt = 0;                                       //通话记录个数
+
+static ute_module_call_addressbook_t* address_book_tb2 = NULL;            //电话簿数据
+static u16 address_book_cnt2 = 0;                                       //联系人个数
+
+//input电话号码返回联系人，无联系人返回号码
+char *get_address_name(char *number)
+{
+    static char name_utf8_buf[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH+5] = {0};
+    uint16_t name_utf8_len = 0;
+    memset(name_utf8_buf, 0, sizeof(name_utf8_buf));
+    bool match_flag = true;
+
+    uint8_t numberAscii[UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH];
+    uint8_t input_numberAscii[UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH];
+
+    memset(numberAscii,0,sizeof(numberAscii));
+    snprintf(numberAscii,sizeof(numberAscii),"%s",number);
+
+    for(int i=0;i<address_book_cnt2;i++)
+    {
+        memset(input_numberAscii,0,sizeof(input_numberAscii));
+        snprintf(input_numberAscii,sizeof(input_numberAscii),"%s", address_book_tb2[i].numberAscii);
+
+        for(int j=0;j<UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH;j++)
+        {
+            if(numberAscii[j] != input_numberAscii[j])
+            {
+                match_flag = false;
+            }
+        }
+
+        if(match_flag)
+        {
+            uteModuleCharencodeUnicodeConversionUtf8(address_book_tb2[i].nameUnicode,
+            address_book_tb2[i].nameUnicodeLen,
+            (uint8_t*)name_utf8_buf,
+            &name_utf8_len,
+            sizeof(name_utf8_buf));
+            return name_utf8_buf;
+        }
+    }
+    return number;
+}
+
+static u8 func_record_book_update(void)
+{
+    //获取通讯录联系人
+    if (address_book_cnt2 != uteModuleCallGetAddressBookSize())
+    {
+        address_book_cnt2 = uteModuleCallGetAddressBookSize();
+        printf("address_book_cnt:%d\n", address_book_cnt2);
+//        if (func_cb.sta == FUNC_ADDRESS_BOOK) {
+        if (address_book_tb2 != NULL)
+        {
+            ab_free(address_book_tb2);
+            address_book_tb2 = NULL;
+        }
+        address_book_tb2 = ab_zalloc(sizeof(ute_module_call_addressbook_t)*address_book_cnt2);
+        if (address_book_tb2 != NULL)
+        {
+            printf("update address\n");
+            uteModuleCallGetAllAddressBookContactContent(address_book_cnt2, address_book_tb2);
+            return true;
+        }
+//        }
+    }
+
+    return false;
+}
+
 
 //设置已接、未接电话颜色
 static u32 call_record_set_text1_callback(u32 index)
@@ -77,11 +148,15 @@ static u32 call_record_set_icon_callback(u32 index)
 //更新通话记录回调函数
 static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index)
 {
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
+
     if (index < item_cnt && index < record_cnt)
     {
         //需要使用静态数组作为中间变量，以防占用堆栈内存
         //中间缓存大小要比实际获取的名字要大
         //方便再接受到的名字过长时，方便后面使用uteModuleCharencodeGetUtf8String转换的时候可以自动加入省略号
+        u8 time_disp_state = 0;
         static u8 str_txt2_time[30] = {0};
         memset(str_txt2_time, 0, sizeof(str_txt2_time));
 
@@ -92,21 +167,12 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
             {
                 str_txt1_len = record_tbl[index].numberAsciiLen;
             }
-//            memset(sys_cb.pbap_result_Name,'\0',sizeof(sys_cb.pbap_result_Name));
-//            bt_pbap_lookup_number((char*)record_tbl[index].numberAscii);
 
-//            printf("number=%s\n",record_tbl[index].numberAscii);
-//            printf("name=%s\n",sys_cb.pbap_result_Name);
-            if(sys_cb.pbap_result_Name[0] !='\0')
-            {
-//                printf("111111111\n");
-                memcpy(str_txt1, sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
-            }
-            else
-            {
-                memcpy(str_txt1, record_tbl[index].numberAscii, str_txt1_len);
-            }
-            memset(sys_cb.pbap_result_Name,'\0',sizeof(sys_cb.pbap_result_Name));
+
+
+        memcpy(str_txt1, get_address_name(record_tbl[index].numberAscii), strlen(get_address_name(record_tbl[index].numberAscii)));
+
+
 //            printf("####[%d,%d,%d]->[%s] [%s]\n", record_tbl[index].nameUnicodeLen, record_tbl[index].numberAsciiLen, str_txt1_len, str_txt1, record_tbl[index].numberAscii);
         }
         else
@@ -123,18 +189,47 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
             str_txt2_len = sizeof(str_txt2_time);
         }
 
+        if(time.year > record_tbl[index].callTime.year){
+            time_disp_state = 0;
+        }else if(time.day > record_tbl[index].callTime.day && time.month >= record_tbl[index].callTime.month){
+            time_disp_state = 1;
+        }else {
+            time_disp_state = 2;
+        }
+
+        switch(time_disp_state)
+        {
+        case 0:
+            sprintf((char*)str_txt2_time, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+            record_tbl[index].callTime.year,
+            record_tbl[index].callTime.month,
+            record_tbl[index].callTime.day);
+            break;
+        case 1:
+            sprintf((char*)str_txt2_time, "%02d/%02d", //record_tbl[index].callTime.year,
+            record_tbl[index].callTime.month,
+            record_tbl[index].callTime.day);
+            break;
+        case 2:
+            sprintf((char*)str_txt2_time, "%02d:%02d", //record_tbl[index].callTime.year,
+            record_tbl[index].callTime.hour,
+            record_tbl[index].callTime.min);
+            break;
+        }
         //"2024-11-11 09:10:50"
-        sprintf((char*)str_txt2_time, "%02d/%02d %02d:%02d:%02d", //record_tbl[index].callTime.year,
-                record_tbl[index].callTime.month,
-                record_tbl[index].callTime.day,
-                record_tbl[index].callTime.hour,
-                record_tbl[index].callTime.min,
-                record_tbl[index].callTime.sec);
+//        sprintf((char*)str_txt2_time, "%02d/%02d %02d:%02d:%02d", //record_tbl[index].callTime.year,
+//                record_tbl[index].callTime.month,
+//                record_tbl[index].callTime.day,
+//                record_tbl[index].callTime.hour,
+//                record_tbl[index].callTime.min,
+//                record_tbl[index].callTime.sec);
         memcpy(str_txt2, str_txt2_time, str_txt2_len);
+
+
+
 //        printf("####[%s]\n", str_txt2_time);
         return true;
     }
-
     return false;
 }
 
@@ -165,6 +260,8 @@ static u8 func_call_sub_record_update(void)
 //创建通话记录窗体
 compo_form_t *func_call_sub_record_form_create(void)
 {
+//    printf("name:%s\n",get_address_name(address_book_tb2[0].numberAscii));
+
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
@@ -346,6 +443,7 @@ static void func_set_sub_record_list_message(size_msg_t msg)
 static void func_call_sub_record_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_call_list_t));
+    func_record_book_update();
     func_cb.frm_main = func_call_sub_record_form_create();
 
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
@@ -358,6 +456,7 @@ static void func_call_sub_record_enter(void)
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1));
     func_cb.enter_tick = tick_get();
+
 
 
 }
@@ -374,6 +473,13 @@ static void func_call_sub_record_exit(void)
         record_tbl = NULL;
     }
     record_cnt = 0;
+
+    if (address_book_tb2 != NULL)
+    {
+        ab_free(address_book_tb2);
+        address_book_tb2 = NULL;
+    }
+    address_book_cnt2 = 0;
 
     func_free(listbox->mcb);                                            //释放移动控制块
     func_cb.last = FUNC_CALL_SUB_RECORD;

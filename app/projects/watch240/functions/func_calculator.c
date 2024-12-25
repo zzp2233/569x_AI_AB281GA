@@ -30,8 +30,8 @@ typedef struct calculator_disp_btn_item_t_
     u16 btn_id;
     s16 x;
     s16 y;
-    u16 click_btn_id;
-    u16 num_btn_id;
+    u16 num_btn_old;
+    u16 hold_btn_old;
 } calculator_disp_btn_item_t;
 
 //按钮item，创建时遍历一下
@@ -98,84 +98,52 @@ static void func_calculator_process(void)
 static void func_calculator_button_Refresh_disp(void)
 {
     calculator_disp_btn_item_t *calculator_disp_btn_item = (calculator_disp_btn_item_t *)func_cb.f_cb;
-    compo_button_t *btn  = NULL;
 
-    if(calculator_disp_btn_item->num_btn_id)
+    if(calculator_disp_btn_item->num_btn_old)
     {
-        switch(calculator_disp_btn_item->num_btn_id)
-        {
-        case BTN_ADD:
-        case BTN_SUB:
-        case BTN_MUL:
-        case BTN_DIV:
-            break;
-        default:
-            btn = compo_getobj_byid(calculator_disp_btn_item->num_btn_id);
-            compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[calculator_disp_btn_item->num_btn_id-1].res_addr);
-            break;
-        }
-        calculator_disp_btn_item->num_btn_id = 0;
+        compo_button_t *btn = compo_getobj_byid(calculator_disp_btn_item->num_btn_old);
+        compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[calculator_disp_btn_item->num_btn_old-1].res_addr);
     }
+
 }
 
 //按钮触摸效果
 static void func_calculator_button_press_handle(void)
 {
     calculator_disp_btn_item_t *calculator_disp_btn_item = (calculator_disp_btn_item_t *)func_cb.f_cb;
-    compo_button_t *btn  = NULL;
-
-    if(calculator_disp_btn_item->click_btn_id)
-    {
-        switch(calculator_disp_btn_item->click_btn_id)
-        {
-        case BTN_ADD:
-        case BTN_SUB:
-        case BTN_MUL:
-        case BTN_DIV:
-            btn = compo_getobj_byid(calculator_disp_btn_item->click_btn_id);
-            compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[calculator_disp_btn_item->click_btn_id-1].res_addr);
-            break;
-        default:
-            btn = compo_getobj_byid(calculator_disp_btn_item->click_btn_id);
-            compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[calculator_disp_btn_item->click_btn_id-1].res_addr);
-            break;
-        }
-    }
-    if(calculator_disp_btn_item->num_btn_id)
-    {
-        switch(calculator_disp_btn_item->num_btn_id)
-        {
-        case BTN_ADD:
-        case BTN_SUB:
-        case BTN_MUL:
-        case BTN_DIV:
-            break;
-        default:
-            btn = compo_getobj_byid(calculator_disp_btn_item->num_btn_id);
-            compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[calculator_disp_btn_item->num_btn_id-1].res_addr);
-            break;
-        }
-        calculator_disp_btn_item->num_btn_id = 0;
-    }
-
-
     int id = compo_get_button_id();
-    btn = compo_getobj_byid(id);
-    if (id)
+    if(id && id!=BTN_ADD && id!=BTN_SUB && id!=BTN_MUL && id!=BTN_DIV)
     {
-        calculator_disp_btn_item->num_btn_id = id;
+        compo_button_t *btn = NULL;
+        if(calculator_disp_btn_item->num_btn_old != id && calculator_disp_btn_item->num_btn_old)
+        {
+            btn = compo_getobj_byid(calculator_disp_btn_item->num_btn_old);
+            compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[calculator_disp_btn_item->num_btn_old-1].res_addr);
+        }
+        calculator_disp_btn_item->num_btn_old = id;
+        btn = compo_getobj_byid(id);
         compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[id-1].res_addr_dwon);
     }
+
 }
 
-//按钮释放效果
+//符号按钮释放效果
 static void func_calculator_button_release_handle(void)
 {
     calculator_disp_btn_item_t *calculator_disp_btn_item = (calculator_disp_btn_item_t *)func_cb.f_cb;
     u16 hold_id = gcal_get_holding_operator();
     component_t *compo = (component_t *)compo_pool_get_top();
 
-    func_calculator_button_press_handle();
+//    printf("btn:%d  btn:%d\n",calculator_disp_btn_item->hold_btn_old,hold_id );
+    if(calculator_disp_btn_item->hold_btn_old!=hold_id)
+    {
+        if(calculator_disp_btn_item->hold_btn_old != 0)
+        {
+            compo_button_t *btn = compo_getobj_byid(calculator_disp_btn_item->hold_btn_old);
+            compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[calculator_disp_btn_item->hold_btn_old-1].res_addr);
+        }
+        calculator_disp_btn_item->hold_btn_old = hold_id;
+    }
 
     while (compo != NULL)
     {
@@ -183,7 +151,6 @@ static void func_calculator_button_release_handle(void)
         {
             compo_button_t *btn = (compo_button_t *)compo;
             compo_button_set_bgimg(btn, tbl_calculator_disp_btn_item[compo->id-1].res_addr_dwon);
-            calculator_disp_btn_item->click_btn_id = hold_id;
         }
         compo = compo_get_next(compo);
     }
@@ -193,8 +160,8 @@ static void func_calculator_button_release_handle(void)
 static void func_calculator_button_click_handler(void)
 {
     int id = compo_get_button_id();
-    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_NUM_DISP);
     gcalc_btn_click_handler(id);
+    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_NUM_DISP);
     compo_textbox_set(txt, gcal_get_show_str());
     compo_textbox_set_pos(txt, 208-widget_text_get_area(txt->txt).wid,14);
     func_calculator_button_release_handle();
@@ -206,7 +173,7 @@ static void func_calculator_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-            func_calculator_button_release_handle();
+            func_calculator_button_press_handle();
             break;
         case MSG_SYS_500MS:
             func_calculator_button_Refresh_disp();
@@ -215,16 +182,10 @@ static void func_calculator_message(size_msg_t msg)
         case MSG_CTP_SHORT_DOWN:
         case MSG_CTP_SHORT_LEFT:
         case MSG_CTP_LONG:
-//            func_calculator_button_release_handle();
             if (func_cb.flag_sort)
             {
                 func_message(msg);
             }
-            break;
-
-        case MSG_CTP_SHORT_RIGHT:
-//            func_calculator_button_release_handle();
-            func_message(msg);
             break;
 
         case MSG_CTP_CLICK:
@@ -244,8 +205,8 @@ static void func_calculator_enter(void)
     func_cb.frm_main = func_calculator_form_create();
 
     calculator_disp_btn_item_t *calculator_disp_btn_item = (calculator_disp_btn_item_t *)func_cb.f_cb;
-    calculator_disp_btn_item->num_btn_id = 0;
-    calculator_disp_btn_item->click_btn_id = 0;
+    calculator_disp_btn_item->num_btn_old = 0;
+    calculator_disp_btn_item->hold_btn_old = 0;
     if (gcal_cb_init() == false)
     {
         halt(HALT_MALLOC);

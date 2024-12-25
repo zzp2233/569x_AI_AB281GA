@@ -358,17 +358,22 @@ void app_ute_msg_pop_up(uint8_t index)
         char *msg = (char*)ble_msg->currNotify.content;
         char *title = NULL;
         char time[30]= {0};
-        sprintf(time, "%04d-%02d-%02d %02d:%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day, ble_msg->currNotify.hour,
-                ble_msg->currNotify.min);
-        int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
-        if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
+
+
+       //是否打开全天勿扰    //是否打开定时勿扰
+        if(sys_cb.disturd_adl==0 && sys_cb.disturd_tim==0)
         {
-            printf("enter MSGBOX_RES_ENTER_DETAIL_MSG\n");
-            int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
-            if (res == MSGBOX_RES_DELETE)
+            sprintf(time, "%04d-%02d-%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
+            int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
+            if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
             {
-                uteModuleNotifySetDisplayIndex(0);
-                uteModuleNotifyDelAllHistoryData(false);
+                printf("enter MSGBOX_RES_ENTER_DETAIL_MSG\n");
+                int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
+                if (res == MSGBOX_RES_DELETE)
+                {
+                    uteModuleNotifySetDisplayIndex(0);
+                    uteModuleNotifyDelAllHistoryData(false);
+                }
             }
         }
         ab_free(ble_msg);
@@ -455,12 +460,24 @@ void gui_set_cover_index(uint8_t index)
                         snprintf(title, sizeof(title), "%02d:%02d", alarm_p->hour, alarm_p->min);
                     }
                 }
+                if (bt_is_connected())//暂停音乐
+                {
+                    bt_music_pause();
+                }
+                else if (ble_ams_is_connected())
+                {
+                    ble_ams_remote_ctrl(AMS_REMOTE_CMD_PAUSE);
+                }
                 //开启马达 喇叭
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
             }
             else if (sys_cb.cover_index == REMIND_COVER_HEALTH_SEDENTARY)           //久坐提醒
             {
+                if(!bsp_sensor_hr_wear_sta_get())
+                {
+                 return;
+                }
 //                tm_t tm = time_to_tm(RTCCNT);
 //                snprintf(title, sizeof(title), "%02d:%02d", tm.hour, tm.min);
             }

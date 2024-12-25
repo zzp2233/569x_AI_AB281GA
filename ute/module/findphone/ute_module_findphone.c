@@ -86,6 +86,7 @@ void uteModuleFindPhoneStopRing(void)
     uteApplicationCommonGetBleConnectionState(&connectStatus);
     if (connectStatus.isConnected)
     {
+        uteModuleFindPhoneSetStatus(FIND_PHONE_STOP);
         uint8_t response[4];
         response[0] = CMD_SEND_KEYCODE;
         response[1] = 0x0A;

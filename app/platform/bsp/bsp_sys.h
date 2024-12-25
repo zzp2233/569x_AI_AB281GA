@@ -39,7 +39,7 @@ enum sys_ctl_bits
 #define SYS_CTL_TOTAL_BYTES             ((SYS_CTL_TOTAL_BITS + 7) / 8)      //系统控制位
 
 //功能
-#define STOPWATCH_REC_NUM_MAX           10              //秒表最大数量，需要同步修改列表item
+#define STOPWATCH_REC_NUM_MAX           20              //秒表最大数量，需要同步修改列表item
 #define WEATHER_CNT                     8               //天气类型数量
 
 #define TITLE_BUF_LEN     128   //歌词buffer长度

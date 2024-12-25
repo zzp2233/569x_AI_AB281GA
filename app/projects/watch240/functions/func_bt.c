@@ -418,7 +418,7 @@ compo_form_t *func_bt_form_create(void)
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME01_BIN);///音量减
     }
     compo_setid(btn, COMPO_ID_BTN_VOL_DOWN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3);
 
     if(bt_is_connected())
     {
@@ -429,16 +429,16 @@ compo_form_t *func_bt_form_create(void)
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME03_BIN);///音量加
     }
     compo_setid(btn, COMPO_ID_BTN_VOL_UP);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3);
 
     compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);///音量进度条背景
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2, PROGRESS_BAR_LENGTH, 6 );
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3, PROGRESS_BAR_LENGTH, 6 );
     compo_shape_set_radius(shape, 3);
     compo_shape_set_color(shape,make_color(0x33,0x33,0x33) );
 
     shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);///音量进度条
     compo_setid(shape, COMPO_ID_SHAPE_MUSIC_VOL);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2, PROGRESS_BAR_LENGTH, 6 );
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3, PROGRESS_BAR_LENGTH, 6 );
     compo_shape_set_radius(shape, 3);
     if(bt_is_connected())
     {

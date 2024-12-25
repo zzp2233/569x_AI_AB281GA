@@ -172,6 +172,7 @@ static void func_calender_refresh(uint16_t year, uint8_t month, uint8_t today_da
                     }
                     compo_label_set_forecolor((compo_label_t *)comop, COLOR_GRAY);
                     compo_label_set((compo_label_t *)comop, buf);
+//                    compo_label_set_visible((compo_label_t *)comop,false);
                 }
 
                 day ++;
@@ -189,13 +190,13 @@ compo_form_t *func_calender_form_create(void)
     s16 y_pos = CALE_CONTEXT_y_START_GAP + CALE_CONTEXT_HEIGHT / 2;
 
     u16 week_text[7][2] = {
+        {STR_CALENDAR_SEVEN,COLOR_GRAY},// 日
         {STR_CALENDAR_ONE,COLOR_GRAY}, // 一
         {STR_CALENDAR_TWO,COLOR_WHITE},// 二
         {STR_CALENDAR_THREE,COLOR_WHITE},// 三
         {STR_CALENDAR_HOUR,COLOR_WHITE},// 四
         {STR_CALENDAR_FIVE,COLOR_WHITE},// 五
         {STR_CALENDAR_SIX,COLOR_WHITE},// 六
-        {STR_CALENDAR_SEVEN,COLOR_GRAY},// 日
     };
     // u16 week_text_idx[7] = {STR_SUNDAY, STR_MONDAY, STR_TUESDAY, STR_WEDNESDAY, STR_THURSDAY, STR_FRIDAY, STR_SATURDAY};
 
@@ -240,7 +241,7 @@ compo_form_t *func_calender_form_create(void)
     char date_str[6] = {0};
     //year_text
     cale_label = compo_label_create(frm, 4);
-    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_22_BIN);
+    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X - 20, CALE_CONTEXT_y_START_GAP - 80-3);
     sprintf(date_str, "%04d", time.year);
     compo_label_set(cale_label, date_str);
@@ -248,7 +249,7 @@ compo_form_t *func_calender_form_create(void)
 
     //mon_text
     cale_label = compo_label_create(frm, 2);
-    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_22_BIN);
+    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X + 40, CALE_CONTEXT_y_START_GAP - 80-3);
     sprintf(date_str, "%02d", time.month);
     compo_label_set(cale_label, date_str);

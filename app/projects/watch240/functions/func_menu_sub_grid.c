@@ -57,7 +57,7 @@ static const menu_hc_item_t tbl_menu_grid[] =
     {UI_BUF_I330001_THEME_1_ALARM_BIN,               FUNC_ALARM_CLOCK},
     {UI_BUF_I330001_THEME_1_HEART_BIN,                FUNC_HEARTRATE},
     {UI_BUF_I330001_THEME_1_LANUAGE_BIN,                  FUNC_LANGUAGE},
-    {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                     FUNC_LIGHT},
+    {UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
     ////{UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
     {UI_BUF_I330001_THEME_1_MESSAGE_BIN,                   FUNC_MESSAGE},
 

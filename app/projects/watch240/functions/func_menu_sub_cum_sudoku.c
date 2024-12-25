@@ -79,7 +79,7 @@ const menu_hc_item_t tbl_menu_cum_sudoku[] =
     {UI_BUF_I330001_THEME_1_RETRY_BIN,           FUNC_RSTFY},
     {UI_BUF_I330001_THEME_1_LANUAGE_BIN,                  FUNC_LANGUAGE},
 
-    {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                     FUNC_LIGHT},
+    {UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
     ////{UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
 
     {UI_BUF_I330001_THEME_1_CALCULATOR_BIN,                FUNC_CALCULATOR},

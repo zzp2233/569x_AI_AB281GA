@@ -29,12 +29,12 @@ enum
 #define CALE_CONTEXT_WIDTH          ((GUI_SCREEN_WIDTH - 6*CALE_CONTEXT_X_GAP - 2*CALE_CONTEXT_X_START_GAP) / 7) //宽度
 
 #define CALE_CONTEXT_y_START_GAP    140//170 //y方向上边界间隙
-#define CALE_CONTEXT_y_GAP          11//14  //间隔间隙
+#define CALE_CONTEXT_y_GAP          7//14  //间隔间隙
 #define CALE_CONTEXT_HEIGHT         18  //字高
 
-#define CALE_CONTEXT_DATA_Y_GAP     -10  //数据y轴微调宏
+#define CALE_CONTEXT_DATA_Y_GAP     -19  //数据y轴微调宏
 
-#define CALE_CONTEXT_MAX            35
+#define CALE_CONTEXT_MAX            7*6
 #define CALE_CONTEXT_NUM_COUNT_MAX  2
 
 
@@ -221,7 +221,7 @@ compo_form_t *func_calender_form_create(void)
 
     //新建（日 一 二 三 四 五 六）文本
     x_pos = CALE_CONTEXT_X_START_GAP + CALE_CONTEXT_WIDTH / 2;
-    y_pos = CALE_CONTEXT_y_START_GAP - 40;
+    y_pos = CALE_CONTEXT_y_START_GAP - 48;
     for(i = 0; i < 7; i++)
     {
         cale_label = compo_label_create(frm, strlen(i18n[week_text[i][0]]));
@@ -240,16 +240,16 @@ compo_form_t *func_calender_form_create(void)
     char date_str[6] = {0};
     //year_text
     cale_label = compo_label_create(frm, 4);
-    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X - 20, CALE_CONTEXT_y_START_GAP - 80);
+    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_22_BIN);
+    compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X - 20, CALE_CONTEXT_y_START_GAP - 80-3);
     sprintf(date_str, "%04d", time.year);
     compo_label_set(cale_label, date_str);
     compo_setid(cale_label, COMPO_ID_YEAR_TEXT);
 
     //mon_text
     cale_label = compo_label_create(frm, 2);
-    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X + 40, CALE_CONTEXT_y_START_GAP - 80);
+    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_22_BIN);
+    compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X + 40, CALE_CONTEXT_y_START_GAP - 80-3);
     sprintf(date_str, "%02d", time.month);
     compo_label_set(cale_label, date_str);
     compo_setid(cale_label, COMPO_ID_MON_TEXT);

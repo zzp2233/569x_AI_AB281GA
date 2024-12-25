@@ -45,6 +45,11 @@ compo_form_t *func_sport_finish_form_create(void)
         uteModuleSportGetMoreSportsDatas(&sport_data);
         ute_module_systemtime_time_t time;
         uteModuleSystemtimeGetTime(&time);//获取系统时间
+        if(uteModuleSystemtime12HOn())
+        {
+            time.hour %=12;
+            time.min  %=12;
+        }
         char txt_buf[50];
         memset(txt_buf,0,sizeof(txt_buf));
 //        f_sport_finish->sport_finish_state = COMPO_WALK_STATE;

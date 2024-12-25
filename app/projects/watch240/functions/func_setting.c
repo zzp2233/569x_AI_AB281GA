@@ -89,10 +89,11 @@ static void func_set_sub_list_icon_click(void)
     //切入应用
     if (func_sta > 0)
     {
-        compo_form_t *frm = func_create_form(func_sta);
-        func_switching(FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO, listbox->sel_icon);
-        compo_form_destroy(frm);
-        func_cb.sta = func_sta;
+        func_switch_to(func_sta, FUNC_SWITCH_UD_ZOOM_UP | FUNC_SWITCH_AUTO);
+//        compo_form_t *frm = func_create_form(func_sta);
+//        func_switching(FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO, listbox->sel_icon);
+//        compo_form_destroy(frm);
+//        func_cb.sta = func_sta;
         sys_cb.set_idx = listbox->focus_icon_idx;
     }
 }

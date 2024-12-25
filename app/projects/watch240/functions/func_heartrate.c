@@ -67,7 +67,7 @@ compo_form_t *func_heartrate_form_create(void)
         textbox = compo_textbox_create(frm, 3 );///次/分 数据
         compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
         compo_textbox_set_align_center(textbox, false);
-        compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2.3-CONTROL_Y);
+        compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.2+2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2.3-CONTROL_Y);
         compo_textbox_set(textbox,"--");
         compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
     }

@@ -62,6 +62,17 @@ compo_form_t *func_findphone_form_create(void)
     compo_textbox_set(txt, i18n[STR_START]);
     compo_setid(txt, COMPO_ID_TEXT_FIND);
 
+    if(uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
+    {
+        compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
+        compo_textbox_set(txt, i18n[STR_STOP]);
+    }
+    else
+    {
+         compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN);
+         compo_textbox_set(txt, i18n[STR_START]);
+    }
+
     return frm;
 }
 

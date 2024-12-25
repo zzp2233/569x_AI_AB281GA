@@ -60,7 +60,7 @@ const menu_hc_item_t tbl_menu_hexagon[] =
     {UI_BUF_I330001_THEME_1_ACTIVITY_BIN,                  FUNC_ACTIVITY},
     {UI_BUF_I330001_THEME_1_SPO2_BIN,              FUNC_BLOOD_OXYGEN},
 
-    {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                     FUNC_LIGHT},
+    {UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
     //{UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
     {UI_BUF_I330001_THEME_1_BREATHE_BIN,                   FUNC_BREATHE},
     {UI_BUF_I330001_THEME_1_MUSIC_BIN,                     FUNC_BT},

@@ -57,7 +57,7 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
     {UI_BUF_I330001_THEME_1_RETRY_BIN,           FUNC_RSTFY},
 
 
-    {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                     FUNC_LIGHT},
+    {UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
     ////{UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
     {UI_BUF_I330001_THEME_1_MESSAGE_BIN,                   FUNC_MESSAGE},
     {UI_BUF_I330001_THEME_1_CALCULATOR_BIN,                FUNC_CALCULATOR},

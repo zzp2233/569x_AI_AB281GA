@@ -16,10 +16,10 @@ enum {
     MENU_STYLE_WATERFALL,               //瀑布流
     MENU_STYLE_LIST,                    //菜单列表
     MENU_STYLE_FOOTBALL,                //足球
-    MENU_STYLE_GRID,                    //网格
+    MENU_STYLE_GRID,                    //棋盘
     MENU_STYLE_KALE,                    //万花筒
     MENU_STYLE_SKYRER,                  //天圆地方
-    MENU_STYLE_CUM_FOURGRID,            //四宫格列表
+    MENU_STYLE_CUM_FOURGRID,            //六宫格
     MENU_STYLE_CUM_SUDOKU,              //九宫格(上下边缘图标自动缩放)
     MENU_STYLE_CUM_GRID,                //华为风格网格
 

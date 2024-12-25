@@ -66,15 +66,16 @@ static void func_off_button_click(void)
             break;
 
         case COMPO_ID_BTN_NO:
-            task_stack_pop();
-            if(func_cb.last == FUNC_SETTING)
-            {
-                func_cb.sta = FUNC_SETTING;
-            }
-            else
-            {
-                func_cb.sta = FUNC_MENU;
-            }
+//            task_stack_pop();
+            func_back_to();
+//            if(func_cb.last == FUNC_SETTING)
+//            {
+//                func_cb.sta = FUNC_SETTING;
+//            }
+//            else
+//            {
+//                func_cb.sta = FUNC_MENU;
+//            }
             break;
 
         default:

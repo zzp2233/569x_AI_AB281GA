@@ -66,14 +66,17 @@ compo_form_t *func_activity_form_create(void)
     compo_picturebox_set_pos(arc_pic,pic_bg_area.wid/2,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
     compo_setid(arc_pic,KCAL_ARC_ID);
+    compo_picturebox_set_visible(arc_pic,false);
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_ACTIVITY_DISTANCE_BIN);//圆弧黄/
     compo_picturebox_set_pos(arc_pic,pic_bg_area.wid/2,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
     compo_setid(arc_pic,KM_ARC_ID);
+    compo_picturebox_set_visible(arc_pic,false);
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_ACTIVITY_STEPS_BIN);//圆弧绿/
     compo_picturebox_set_pos(arc_pic,pic_bg_area.wid/2,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
     compo_setid(arc_pic,STEP_ARC_ID);
+    compo_picturebox_set_visible(arc_pic,false);
 
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_ACTIVITY_YUANJIAO_BIN);//圆弧角背景/
     compo_picturebox_set_pos(arc_pic,pic_bg_area.wid/2,pic_bg_area.hei-gui_image_get_size(UI_BUF_I330001_ACTIVITY_YUANJIAO_BIN).hei/2);
@@ -135,8 +138,14 @@ static void func_activity_disp_handle(void)
         f_activity->tick = tick_get();
         char txt_buf[20];
         uint32_t totalStepCnt = 0;
+        uint32_t Step_value = 0;
         uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-        totalStepCnt = 565;
+        Step_value = totalStepCnt;
+        if(Step_value>uteModuleSportGetStepsTargetCnt())
+        {
+            Step_value = uteModuleSportGetStepsTargetCnt();
+        }
+
         compo_picturebox_t *arc_kcal = compo_getobj_byid(KCAL_ARC_ID);
         compo_picturebox_t *arc_km   = compo_getobj_byid(KM_ARC_ID);
         compo_picturebox_t *arc_step = compo_getobj_byid(STEP_ARC_ID);
@@ -144,8 +153,12 @@ static void func_activity_disp_handle(void)
         compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
         compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
 
+
         if(f_activity->activity_state == 0)
         {
+            compo_picturebox_set_visible(arc_kcal,true);
+            compo_picturebox_set_visible(arc_km,true);
+            compo_picturebox_set_visible(arc_step,true);
 
             f_activity->arc_step_value+=18;
 
@@ -167,7 +180,7 @@ static void func_activity_disp_handle(void)
             compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
             compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
 
-            if(f_activity->arc_step_value <= totalStepCnt*1800 / uteModuleSportGetStepsTargetCnt())
+            if(f_activity->arc_step_value <= Step_value*1800 /uteModuleSportGetStepsTargetCnt())
             {
                 f_activity->activity_state = 2;
             }
@@ -177,9 +190,7 @@ static void func_activity_disp_handle(void)
         {
             f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
             f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
-            f_activity->arc_step_value =(uint32_t) (totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt());
-
-            f_activity->arc_step_value = 567;
+            f_activity->arc_step_value =(uint32_t) (Step_value*1000 / uteModuleSportGetStepsTargetCnt());
 
             compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value*1.8 );
             compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value*1.8 );

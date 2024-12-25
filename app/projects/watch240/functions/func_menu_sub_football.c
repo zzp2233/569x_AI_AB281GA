@@ -34,7 +34,7 @@ typedef struct f_menu_football_t_
 static const compo_football_item_t tbl_menu_football[] =
 {
     {UI_BUF_I330001_THEME_2_THEME_BIN,            FUNC_STYLE},
-    {UI_BUF_I330001_THEME_2_BRIGHTNESS_BIN,       FUNC_FLASHLIGHT},
+    {UI_BUF_I330001_THEME_2_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
     {UI_BUF_I330001_THEME_2_TIMER_BIN,            FUNC_TIMER},
     {UI_BUF_I330001_THEME_2_LANUAGE_BIN,          FUNC_LANGUAGE},
     {UI_BUF_I330001_THEME_2_ALARM_BIN,            FUNC_ALARM_CLOCK},
@@ -244,6 +244,7 @@ static void func_menu_sub_football_enter(void)
         halt(HALT_GUI_COMPO_FOOTBALL_TYPE);
     }
     func_cb.enter_tick = tick_get();
+    tft_set_temode(0);
 }
 
 //主菜单功能

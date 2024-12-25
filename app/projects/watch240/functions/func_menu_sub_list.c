@@ -107,6 +107,7 @@ compo_form_t *func_menu_sub_list_form_create(void)
     {
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_FOURGRID);
         compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
+        func_menu_sub_list_battery_pic_update();
         //电池电量
         compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
         compo_textbox_set_pos(battery_txt, 43, 25);
@@ -155,7 +156,6 @@ compo_form_t *func_menu_sub_list_form_create(void)
         compo_scroll_set_value(scroll, 0);
         compo_scroll_set_edge_circle(scroll, true);
     }
-
     return frm;
 }
 
@@ -325,7 +325,7 @@ static void func_menu_sub_list_process(void)
             compo_scroll_t* scroll = compo_getobj_byid(COMPO_ID_SCROLLBAR);
             compo_scroll_set_value(scroll, value);
         }
-
+//        printf("length:%d\n",f_menu->listbox->ofs_y);
         compo_listbox_move(f_menu->listbox);
     }
     func_process();
@@ -367,6 +367,18 @@ static void func_menu_sub_list_message(size_msg_t msg)
                 break;
 
             case MSG_CTP_SHORT_RIGHT:
+//                if(func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
+//                {
+//                    if(f_menu->listbox->ofs_y <= 90)
+//                    {
+//                        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+//                        {
+//                            func_menu_sub_list_switch_to_clock();       //返回时钟表盘界面
+//                        }
+//                    }
+//                }
+//
+//                break;
             case KU_DELAY_BACK:
                 if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
                 {

@@ -109,6 +109,16 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
     sys_cb.step_cur = totalStepCnt;
     sys_cb.step_goal = uteModuleSportGetStepsTargetCnt();
 
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
+    ute_module_target_notify_data_t targetNotifyData;
+    uteModuleSportGetTodayTargetNotifyData(&targetNotifyData);
+    sys_cb.kcal_goal = targetNotifyData.todayKcalTarget;
+    sys_cb.distance_goal = targetNotifyData.todayDistanceTarget;
+#else
+    sys_cb.kcal_goal = sys_cb.step_goal;
+    sys_cb.distance_goal = sys_cb.step_goal;
+#endif
+
     ute_display_ctrl_t displayInfo;
     uteModuleGuiCommonGetDisplayInfo(&displayInfo);
 
@@ -241,21 +251,37 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
         case COMPO_BOND_DISTANCE_PROGRESS:
             value = 0;
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
             if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.distance_goal)
             {
                 value = ((compo_picturebox_t*)compo)->radix * sys_cb.distance_cur / sys_cb.distance_goal;
                 value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
             }
+#else
+            if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.step_goal)
+            {
+                value = ((compo_picturebox_t*)compo)->radix * sys_cb.step_cur / sys_cb.step_goal;
+                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
+            }
+#endif
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_KCAL_PROGRESS:
             value = 0;
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
             if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.kcal_goal)
             {
                 value = ((compo_picturebox_t*)compo)->radix * sys_cb.kcal_cur / sys_cb.kcal_goal;
                 value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
             }
+#else
+            if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.step_goal)
+            {
+                value = ((compo_picturebox_t*)compo)->radix * sys_cb.step_cur / sys_cb.step_goal;
+                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
+            }
+#endif
             sprintf(value_str, "%d", value);
             break;
 

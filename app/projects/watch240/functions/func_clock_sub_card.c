@@ -1196,10 +1196,10 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(week->txt, make_color(ui_handle.card_clock_day.week.color.r, ui_handle.card_clock_day.week.color.g, ui_handle.card_clock_day.week.color.b));
     compo_bonddata(week, ui_handle.card_clock_day.week.bonddata);
 
-    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 6, 36, 6);
-    compo_shape_set_color(shape, make_color(0X4C,0X4C,0X4C));
-    compo_shape_set_radius(shape, 35);
+//    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+//    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 6, 36, 6);
+//    compo_shape_set_color(shape, make_color(0X4C,0X4C,0X4C));
+//    compo_shape_set_radius(shape, 35);
 
     ab_free(sleep_data);
 

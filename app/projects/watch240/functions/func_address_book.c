@@ -200,7 +200,7 @@ static void func_address_book_process(void)
             {
                 compo_listbox_set_visible(f_book->listbox, true);
                 compo_listbox_set(f_book->listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
-                compo_listbox_set_alike_icon(f_book->listbox, UI_BUF_I330001_THEME_1_CONTACTS_BIN);
+                compo_listbox_set_alike_icon(f_book->listbox, UI_BUF_I330001_CALL_CALL_LOG_CONTACTS_BIN);
                 compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1));
                 compo_listbox_update_with_text_scroll_rst(f_book->listbox);
                 compo_listbox_set_bgimg(f_book->listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);

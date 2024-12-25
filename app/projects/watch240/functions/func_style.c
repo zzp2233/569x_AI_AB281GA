@@ -78,7 +78,7 @@ compo_form_t *func_style_form_create(void)
     compo_listbox_set_bithook(listbox, func_sel_style_bit);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    uint8_t set_idx = sys_cb.set_idx;
+    uint8_t set_idx = 0;//sys_cb.set_idx;
     if (set_idx < 1)
     {
         set_idx = 1;

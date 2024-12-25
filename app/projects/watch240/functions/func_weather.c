@@ -49,6 +49,22 @@ static const f_weather_t weather_list[] =
 
 };
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+static bool isFahrenheit_flag = false;
+
+static void weather_refresh(void)
+{
+    f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
+    ute_display_ctrl_t displayInfo;
+    uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
+
+    if(displayInfo.isFahrenheit != isFahrenheit_flag)    //是否为华氏度
+    {
+        isFahrenheit_flag = displayInfo.isFahrenheit;
+        msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
+    }
+}
+
+
 //创建天气窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_weather_form_create(void)
 {
@@ -274,6 +290,7 @@ static void func_weather_process(void)
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_page_move_process(f_weather->ptm);
+    weather_refresh();
     func_process();
 }
 

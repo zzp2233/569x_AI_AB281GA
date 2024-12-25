@@ -20,7 +20,7 @@ enum
 
 enum
 {
-    COMPO_CARD_START = 200,
+    COMPO_CARD_START = FUNC_MAX_NUM,
     COMPO_ID_CARD_MSG1,
     COMPO_ID_CARD_MSGn = COMPO_CARD_START + UTE_MODULE_NOTIFY_SAVE_CNT,
 
@@ -161,7 +161,7 @@ const CARD_T(msg) card =
         ///文本
         //id      x                 y       w       h       str                                res                         center  wordwrap   r  g  b
         {0,      -15,               -38,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      false,   false,  148, 148, 148},
-        {1,      3+36/2-228/2,      -10,    212,    55,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   255, 255, 255},
+        {1,      3+36/2-228/2,      -10,    205,    55,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   255, 255, 255},
     },
 };
 
@@ -406,15 +406,17 @@ static void func_message_card_update(bool first_update)
         compo_textbox_set_visible(txt, false);
         compo_picturebox_t* pic = compo_getobj_byid(COMPO_ID_COVER_PIC);
         compo_picturebox_set_visible(pic, false);
-
-        //更新拖动范围
-        f_msg->y_min = -(btn_y - (GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[0].res).hei) + 32);
-        f_msg->y_max = -(card.h + 10) / 2;
-        if (btn_y + gui_image_get_size(message_btn[0].res).hei / 2 <= GUI_SCREEN_HEIGHT || uteModuleNotifyGetTotalNotifyCnt() == 1)
+        if (first_update == false && func_cb.sta == FUNC_MESSAGE)
         {
-            //f_msg->flag_drag = false;
-            f_msg->y_min = f_msg->y_max;
-            widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_max);
+            //更新拖动范围
+            f_msg->y_min = -(btn_y - (GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[0].res).hei) + 32);
+            f_msg->y_max = -(card.h + 10) / 2;
+            if (btn_y + gui_image_get_size(message_btn[0].res).hei / 2 <= GUI_SCREEN_HEIGHT || uteModuleNotifyGetTotalNotifyCnt() == 1)
+            {
+                //f_msg->flag_drag = false;
+                f_msg->y_min = f_msg->y_max;
+                widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_max);
+            }
         }
         //printf("drag=>[%d,%d] -> [%d,%d,%d]\n", f_msg->y_min, f_msg->y_max, btn_y, card_y, (GUI_SCREEN_HEIGHT - message_btn[0].w / 2));
     }

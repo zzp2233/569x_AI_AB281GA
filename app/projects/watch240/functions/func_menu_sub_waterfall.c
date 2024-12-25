@@ -76,7 +76,7 @@ const menu_hc_item_t tbl_menu_waterfall[] =
     {UI_BUF_I330001_THEME_1_BREATHE_BIN,                   FUNC_BREATHE},
     {UI_BUF_I330001_THEME_1_MUSIC_BIN,                     FUNC_BT},
     {UI_BUF_I330001_THEME_1_CALL_BIN,                      FUNC_CALL},
-    {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                     FUNC_LIGHT},
+    {UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
 
 
     {UI_BUF_I330001_THEME_1_THEME_BIN,                      FUNC_STYLE},

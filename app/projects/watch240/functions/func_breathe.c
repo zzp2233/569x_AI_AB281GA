@@ -27,7 +27,7 @@ enum
 #define BREATHE_FINISH_TIME     500  //出场动画持续时间
 #define BREATHE_RHYTHM0         3000  //呼/吸气时间（慢）
 #define BREATHE_RHYTHM1         2000  //中
-#define BREATHE_RHYTHM2         1000  //快
+#define BREATHE_RHYTHM2         1500  //快
 
 //呼吸检测状态
 enum

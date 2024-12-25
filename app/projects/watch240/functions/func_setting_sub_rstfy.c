@@ -67,14 +67,15 @@ static void func_rstfy_button_click(void)
             break;
 
         case COMPO_ID_BTN_NO:
-            if(func_cb.last == FUNC_SETTING)
-            {
-                func_cb.sta = FUNC_SETTING;
-            }
-            else
-            {
-                func_cb.sta = FUNC_MENU;
-            }
+            func_back_to();
+//            if(func_cb.last == FUNC_SETTING)
+//            {
+//                func_cb.sta = FUNC_SETTING;
+//            }
+//            else
+//            {
+//                func_cb.sta = FUNC_MENU;
+//            }
             break;
 
         default:

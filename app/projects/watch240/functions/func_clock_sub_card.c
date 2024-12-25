@@ -845,7 +845,13 @@ static void card1_updata_disp(void)
         f_activity->activity_tick = tick_get();
         char txt_buf[20];
         uint32_t totalStepCnt = 0;
+        uint32_t Step_value = 0;
         uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+        Step_value = totalStepCnt;
+        if(Step_value>uteModuleSportGetStepsTargetCnt())
+        {
+            Step_value = uteModuleSportGetStepsTargetCnt();
+        }
 
         compo_picturebox_t *arc_kcal = compo_getobj_byid(COMPO_ID_ARC_KCAL);
         compo_picturebox_t *arc_km   = compo_getobj_byid(COMPO_ID_ARC_KM);
@@ -874,7 +880,7 @@ static void card1_updata_disp(void)
             compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
             compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
 
-            if(f_activity->arc_step_value <= totalStepCnt*1800 / uteModuleSportGetStepsTargetCnt())
+            if(f_activity->arc_step_value <= Step_value*1800 / uteModuleSportGetStepsTargetCnt())
             {
                 f_activity->activity_state = 2;
             }
@@ -885,7 +891,7 @@ static void card1_updata_disp(void)
 
             f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
             f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
-            f_activity->arc_step_value =(uint32_t) (totalStepCnt*ARC_VALUE_MAX / uteModuleSportGetStepsTargetCnt());
+            f_activity->arc_step_value =(uint32_t) (Step_value*1000 / uteModuleSportGetStepsTargetCnt());
 
             compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value*1.8 );
             compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value*1.8 );
@@ -893,7 +899,7 @@ static void card1_updata_disp(void)
 
             memset(txt_buf,'\0',sizeof(txt_buf));
             snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
-            compo_cardbox_text_set(cardbox, 0, txt_buf);
+            compo_cardbox_text_set(cardbox, 2, txt_buf);
 
             memset(txt_buf,'\0',sizeof(txt_buf));
             snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
@@ -901,7 +907,7 @@ static void card1_updata_disp(void)
 
             memset(txt_buf,'\0',sizeof(txt_buf));
             snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
-            compo_cardbox_text_set(cardbox, 2, txt_buf);
+            compo_cardbox_text_set(cardbox, 0, txt_buf);
 
         }
 

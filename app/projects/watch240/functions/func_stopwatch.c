@@ -81,15 +81,16 @@ compo_form_t *func_stopwatch_form_create(void)
     char str_buff[9];
     u8 min, sec;
     u16 msec;
-    min = ((sys_cb.stopwatch_total_msec / 1000) % 3600) / 60;
+    min = ((sys_cb.stopwatch_total_msec / 1000) % 6000) / 60;
     sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
     msec = sys_cb.stopwatch_total_msec % 1000;
     txt_num = compo_textbox_create(frm, 8);     //当前计时
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_TIME);
-    compo_textbox_set_pos(txt_num, GUI_SCREEN_CENTER_X, 128);
+    compo_textbox_set_pos(txt_num, GUI_SCREEN_CENTER_X/3, 110);
     compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_48_BIN);
     snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
     compo_textbox_set(txt_num, str_buff);
+    compo_textbox_set_align_center(txt_num, false);
     txt_num = compo_textbox_create(frm, 2);     //记录数
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
     compo_textbox_set_location(txt_num, 131, 85, 226, widget_text_get_height());

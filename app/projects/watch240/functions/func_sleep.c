@@ -57,6 +57,12 @@ compo_form_t *func_sleep_form_create(void)
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
+//    sleep_data->totalSleepMin = 480;
+//    sleep_data->fallAsSleepTime.hour =0;
+//    sleep_data->fallAsSleepTime.min =0;
+//    sleep_data->getUpSleepTime.hour =8;
+//    sleep_data->getUpSleepTime.min = 0;
+
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
     //设置标题栏
@@ -130,7 +136,7 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:-- - --:--");///* 睡-起 点*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.7,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2-CONTROL_Y);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3+6,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2-CONTROL_Y);
     compo_textbox_set(txt, buf);
 
     ///* 第二页*/
@@ -261,12 +267,24 @@ compo_form_t *func_sleep_form_create(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     uint16_t width = 236;    // 总宽度
     uint8_t fillRect_h = 21; // 绘制单个高度
-    uint16_t startX = 6;     // 相对坐标
+    uint16_t startX = 12;     // 相对坐标
     uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1;
 
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, fillRect_y + fillRect_h+1, GUI_SCREEN_WIDTH-10, 1);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, fillRect_y + fillRect_h+12, GUI_SCREEN_WIDTH-10, 1);
     compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
+
+//    sleep_data->recordCnt = 5;
+//    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+//    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+//    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+//    sleep_data->sleep_record[2].state = REM_SLEEP;
+//    sleep_data->sleep_record[4].state = DEEP_SLEEP;
+//    sleep_data->sleep_record[0].period = 40;
+//    sleep_data->sleep_record[1].period = 200;
+//    sleep_data->sleep_record[2].period = 120;
+//    sleep_data->sleep_record[3].period = 60;
+//    sleep_data->sleep_record[4].period = 60;
 
     if(sleep_data->totalSleepMin)///是否有睡眠时长
     {
@@ -294,22 +312,22 @@ compo_form_t *func_sleep_form_create(void)
             shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE); /// 创建显示块矩形
             if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
             {
-                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y - fillRect_h * 2, fillRect_w, fillRect_h);
-                compo_shape_set_color(shape, make_color(0x78, 0x35, 0xf7));
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y + fillRect_h, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0x69, 0x7e, 0xff));
             }
             else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
             {
-                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y - fillRect_h, fillRect_w, fillRect_h);
-                compo_shape_set_color(shape, make_color(0xad, 0x86, 0xfc));
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_color(shape, make_color(0x36, 0xb7, 0xff));
             }
             else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
             {
-                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y - fillRect_h * 2, fillRect_w, fillRect_h);
                 compo_shape_set_color(shape, make_color(0xff, 0x87, 0x0f));
             }
             else if (sleep_data->sleep_record[i].state == REM_SLEEP)
             {
-                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y + fillRect_h, fillRect_w, fillRect_h);
+                compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y - fillRect_h, fillRect_w, fillRect_h);
                 compo_shape_set_color(shape, make_color(0x00, 0xf7, 0xd6));
             }
 
@@ -409,7 +427,7 @@ static void func_sleep_enter(void)
     {
         .page_size = GUI_SCREEN_HEIGHT,
         .page_count = 2,
-        .jump_perc = 20,
+        .jump_perc = 10,
         .quick_jump_perc = 100,
         .up_over_perc = 10,
         .down_over_perc = 10,

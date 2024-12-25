@@ -350,7 +350,11 @@ void app_ute_msg_pop_up(uint8_t index)
             return;
         }
         uteModuleNotifyGetData(ble_msg);
-
+        if(uteModuleSystemtime12HOn())
+        {
+            ble_msg->currNotify.hour %=12;
+            ble_msg->currNotify.min  %=12;
+        }
         char *msg = (char*)ble_msg->currNotify.content;
         char *title = NULL;
         char time[30]= {0};
@@ -431,11 +435,25 @@ void gui_set_cover_index(uint8_t index)
 //                alarm_p = &alarm;
                 if (alarm_p->isRepeatRemindOpen)
                 {
-                    snprintf(title, sizeof(title), "%02d:%02d", alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
+                    if(uteModuleSystemtime12HOn())
+                    {
+                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->repeatRemindHour%12, alarm_p->repeatRemindMin);
+                    }
+                    else
+                    {
+                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
+                    }
                 }
                 else
                 {
-                    snprintf(title, sizeof(title), "%02d:%02d", alarm_p->hour, alarm_p->min);
+                    if(uteModuleSystemtime12HOn())
+                    {
+                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->hour%12, alarm_p->min);
+                    }
+                    else
+                    {
+                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->hour, alarm_p->min);
+                    }
                 }
                 //开启马达 喇叭
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);

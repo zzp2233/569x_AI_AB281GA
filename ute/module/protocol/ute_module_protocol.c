@@ -290,10 +290,28 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
 *@author       zn.zeng
 *@date       2021-08-20
 */
-void uteModuleProtocolFactoryReset(uint8_t*receive,uint8_t length)
+void uteModuleProtocolFactoryReset(uint8_t *receive, uint8_t length)
 {
-    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"---->uteModuleProtocolFactoryReset!!!!!!!!");
-
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "---->uteModuleProtocolFactoryReset!!!!!!!!");
+#if UTE_USER_ID_FOR_BINDING_SUPPORT
+    uteModuleAppBindingClearUserId();
+#endif
+    uteModuleFilesystemDelAllData();
+#if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
+    uteDrvBatteryCommonSaveLastLvlToSN1();
+#endif
+    bsp_rtc_recode_set(1);
+    if (length == 1)
+    {
+        uteModulePlatformSystemReboot();
+    }
+    else if (receive[1] == 0x01)
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF, 0);
+#if UTE_MODULE_SHIP_MODE_SUPPORT
+        uteModuleShipModeEnter();
+#endif
+    }
 }
 
 /**

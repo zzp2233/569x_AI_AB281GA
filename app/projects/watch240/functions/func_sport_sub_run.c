@@ -735,6 +735,15 @@ static void func_sport_sub_run_process(void)
         func_sport_sub_run_updata();
     }
 
+    compo_textbox_t* time = compo_getobj_byid(COMPO_ID_TXT_TIME);
+    if(uteModuleSystemtime12HOn())
+    {
+        compo_textbox_set_location(time, 168-52, 15, 52+52, 23);
+    }
+    else
+    {
+        compo_textbox_set_location(time, 168, 15, 52+52, 23);
+    }
 
     func_process();
 }

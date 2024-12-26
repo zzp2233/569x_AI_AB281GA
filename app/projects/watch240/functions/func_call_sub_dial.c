@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "func_cover.h"
 
 enum
 {
@@ -171,6 +172,11 @@ static void func_call_sub_dial_button_click(void)
             {
                 sys_cb.outgoing_number[i] = call->phone_number[i];
             }
+            if(!uteModuleCallBtIsConnected())
+            {
+                sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+                msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+            }
 #if MODEM_CAT1_EN
             if (bsp_modem_get_init_flag())
             {
@@ -181,7 +187,7 @@ static void func_call_sub_dial_button_click(void)
             {
                 bt_call_redial_number();
             }
-            printf("name:%s\n",sys_cb.pbap_result_Name);
+//            printf("name:%s\n",sys_cb.pbap_result_Name);
             break;
 
         case COMPO_ID_BTN_DEL:

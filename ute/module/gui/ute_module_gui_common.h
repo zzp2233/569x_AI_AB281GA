@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        gui ¹«¹²²ã
+*@brief        gui å…¬å…±å±‚
 *@details
 *@author       zn.zeng
 *@date       2021-09-03
@@ -19,15 +19,16 @@
 #define UTE_MOUDLE_SCREENS_WATCHMAIN_ID FUNC_CLOCK
 #define UTE_MOUDLE_SCREENS_CHARGER_ID FUNC_CHARGE
 #define UTE_MOUDLE_SCREENS_POWERON_ID FUNC_POWER_ON
+#define UTE_MOUDLE_SCREENS_SYNC_WATCH_ONLINE_ID FUNC_UP_WATCH_DIAL
 
-/*! ¿ØÖÆÏÔÊ¾ÄÚÈİÏà¹Ø²ÎÊızn.zeng, 2021-08-18  */
+/*! æ§åˆ¶æ˜¾ç¤ºå†…å®¹ç›¸å…³å‚æ•°zn.zeng, 2021-08-18  */
 typedef struct
 {
     uint8_t displayOffTimeSecond;
     uint8_t backLightPercent;
     bool isFahrenheit;
-    uint8_t currWatchIndex; //µ±Ç°±íÅÌµÄÅäÖÃË÷Òı
-    uint8_t currWatchMaxIndex; //±íÅÌ×Ü¸öÊıÅäÖÃ
+    uint8_t currWatchIndex; //å½“å‰è¡¨ç›˜çš„é…ç½®ç´¢å¼•
+    uint8_t currWatchMaxIndex; //è¡¨ç›˜æ€»ä¸ªæ•°é…ç½®
     uint8_t screenTblSort[MAX_FUNC_SORT_CNT];
     uint8_t screenSortCnt;
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
@@ -41,7 +42,7 @@ typedef struct
     bool isDisplayOn;
     bool isGoBackDisplay;
     ute_display_ctrl_t displayCtrl;
-    int themeTypeId;//Ö÷ÌâÀàĞÍ,·äÎÑ,ÁĞ±í,×ªÈ¦µÈ
+    int themeTypeId;//ä¸»é¢˜ç±»å‹,èœ‚çª,åˆ—è¡¨,è½¬åœˆç­‰
     bool isPowerSavingOpen;
 } ute_module_gui_common_t;
 

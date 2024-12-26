@@ -38,7 +38,7 @@ typedef struct f_menu_list_t_
 static const compo_listbox_item_t tbl_menu_list[] =
 {
 //    {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
-    {STR_SPORTS,                 UI_BUF_I330001_THEME_1_SOPRT_BIN,             .func_sta = FUNC_SPORT},                //运动
+    {STR_SPORTS,                 UI_BUF_I330001_THEME_1_SOPRT_BIN,             .func_sta = FUNC_UP_WATCH_DIAL},                //运动
 //    {STR_PRESSURE,               UI_BUF_ICON_PRESSURE_BIN,          .func_sta = FUNC_PRESSURE},             //压力
 //    {STR_STEP,                   UI_BUF_ICON_STEP_BIN,            .func_sta = FUNC_NULL},                 //计步
     {STR_SLEEP,                  UI_BUF_I330001_THEME_1_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠

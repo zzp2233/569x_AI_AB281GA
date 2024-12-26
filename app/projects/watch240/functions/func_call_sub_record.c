@@ -3,6 +3,7 @@
 #include "ute_module_call.h"
 #include "ute_module_charencode.h"
 #include "ute_module_systemtime.h"
+#include "func_cover.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -321,7 +322,11 @@ static void func_call_sub_record_icon_click(void)
     {
         return;
     }
-
+    if(!uteModuleCallBtIsConnected())
+    {
+        sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+        msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+    }
     if (bt_is_connected())
     {
         memset(sys_cb.outgoing_number, 0, 16);

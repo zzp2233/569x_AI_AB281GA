@@ -267,7 +267,7 @@ compo_form_t *func_weather_form_create(void)
 
         if(uteModuleWeatherGetCurrDay() == time.day)
         {
-            snprintf(str_buff, sizeof(str_buff), "%02d~%02d℃",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i]);//一周 小~大 温度
+            snprintf(str_buff, sizeof(str_buff), "%02d/%02d℃",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i]);//一周 小~大 温度
         }
         else
         {

@@ -452,8 +452,8 @@ static const ui_handle_t ui_handle = {
         .text_hour = {
             .idx    = 1,
             .x      = 12-232/2,
-            .y      = 38-108/2,
-            .w      = 41+15,
+            .y      = 38-108/2+6,
+            .w      = 41+23,
             .h      = 46,
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
@@ -474,8 +474,8 @@ static const ui_handle_t ui_handle = {
         .text_min = {
             .idx    = 3,
             .x      = 97-232/2,
-            .y      = 38-108/2,
-            .w      = 40+15,
+            .y      = 38-108/2+6,
+            .w      = 40+23,
             .h      = 46,
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_NULL,
@@ -741,8 +741,8 @@ static const ui_handle_t ui_handle = {
                 .idx    = COMPO_ID_APP1,
                 .x      = 12+44/2-232/2,
                 .y      = 43+44/2-108/2,
-                .w      = 44,
-                .h      = 44,
+                .w      = 45,
+                .h      = 45,
                 .res    = UI_BUF_I330001_THEME_1_SOPRT_BIN,
                 .res_click = 0,
                 .res_switch = 0,
@@ -752,8 +752,8 @@ static const ui_handle_t ui_handle = {
                 .idx    = COMPO_ID_APP2,
                 .x      = 66+44/2-232/2,
                 .y      = 43+44/2-108/2,
-                .w      = 44,
-                .h      = 44,
+                .w      = 45,
+                .h      = 45,
                 .res    = UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,
                 .res_click = 1,
                 .res_switch = 1,
@@ -763,8 +763,8 @@ static const ui_handle_t ui_handle = {
                 .idx    = COMPO_ID_APP3,
                 .x      = 120+44/2-232/2,
                 .y      = 43+44/2-108/2,
-                .w      = 44,
-                .h      = 44,
+                .w      = 45,
+                .h      = 45,
                 .res    = UI_BUF_I330001_THEME_1_TIMER_BIN,
                 .res_click = 2,
                 .res_switch = 2,
@@ -774,8 +774,8 @@ static const ui_handle_t ui_handle = {
                 .idx    = COMPO_ID_APP4,
                 .x      = 174+44/2-232/2,
                 .y      = 43+44/2-108/2,
-                .w      = 44,
-                .h      = 44,
+                .w      = 45,
+                .h      = 45,
                 .res    = UI_BUF_I330001_THEME_1_CALL_BIN,
                 .res_click = 3,
                 .res_switch = 3,
@@ -1065,7 +1065,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(card2->text[ui_handle.card2.text_sleep.idx], make_color(ui_handle.card2.text_sleep.color.r, ui_handle.card2.text_sleep.color.g, ui_handle.card2.text_sleep.color.b));
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.x, ui_handle.card2.text_sleep.y, ui_handle.card2.text_sleep.w, ui_handle.card2.text_sleep.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_sleep.idx, i18n[ui_handle.card2.text_sleep.str_id]);
-
+    sleep_data->totalSleepMin =  200;
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
@@ -1087,7 +1087,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_min.idx], make_color(ui_handle.card2.text_min.color.r, ui_handle.card2.text_min.color.g, ui_handle.card2.text_min.color.b));
-    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w, ui_handle.card2.text_min.h);
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w*3, ui_handle.card2.text_min.h);
     if(sleep_data->totalSleepMin){ ///是否有睡眠时长
         snprintf(txt_buf, sizeof(txt_buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
     }else{
@@ -1196,10 +1196,10 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(week->txt, make_color(ui_handle.card_clock_day.week.color.r, ui_handle.card_clock_day.week.color.g, ui_handle.card_clock_day.week.color.b));
     compo_bonddata(week, ui_handle.card_clock_day.week.bonddata);
 
-    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 6, 36, 6);
-    compo_shape_set_color(shape, make_color(0X4C,0X4C,0X4C));
-    compo_shape_set_radius(shape, 35);
+//    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+//    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 6, 36, 6);
+//    compo_shape_set_color(shape, make_color(0X4C,0X4C,0X4C));
+//    compo_shape_set_radius(shape, 35);
 
     ab_free(sleep_data);
 

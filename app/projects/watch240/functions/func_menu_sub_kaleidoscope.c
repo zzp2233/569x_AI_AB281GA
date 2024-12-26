@@ -80,6 +80,7 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
     {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
     {UI_BUF_I330001_THEME_1_FINDPHONE_BIN,                 FUNC_FINDPHONE},
     {UI_BUF_I330001_THEME_1_GAME_BIN,                      FUNC_GAME},
+    {UI_BUF_I330001_THEME_1_ALARM_BIN,               FUNC_ALARM_CLOCK},
 };
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

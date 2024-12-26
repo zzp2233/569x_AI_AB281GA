@@ -107,7 +107,8 @@ compo_form_t *func_stopwatch_form_create(void)
 static void stopwatch_50ms_pro(co_timer_t *timer, void *param)
 {
     static u32 real_total_msec;
-    if (sys_cb.stopwatch_sta && !sys_cb.gui_sleep_sta)      //休眠不计时
+//    if (sys_cb.stopwatch_sta && !sys_cb.gui_sleep_sta)      //休眠不计时
+    if (sys_cb.stopwatch_sta)      //休眠不计时
     {
         if (sys_cb.stopwatch_total_msec == 0)
         {

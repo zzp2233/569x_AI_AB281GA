@@ -63,34 +63,60 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_SETTING,                UI_BUF_I330001_THEME_1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
     {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
 };
-
+#define  BATTERY_PIC_0_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
+#define  BATTERY_PIC_1_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1
+#define  BATTERY_PIC_2_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
+#define  BATTERY_PIC_3_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
+#define  BATTERY_PIC_4_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
 //菜单栏自定义图标更新
 static void func_menu_sub_list_battery_pic_update(void)
 {
-    if (func_cb.frm_main == NULL)
-    {
-        return;
-    }
-    extern uint8_t uteDrvBatteryCommonGetBatteryIndex(uint8_t totalIndex);
+//    if (func_cb.frm_main == NULL)
+//    {
+//        return;
+//    }
+//    extern uint8_t uteDrvBatteryCommonGetBatteryIndex(uint8_t totalIndex);
+//    switch(uteDrvBatteryCommonGetBatteryIndex(5))
+//    {
+//        case 0:
+//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_0_BIN);
+//            break;
+//        case 1:
+//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_1_BIN);
+//            break;
+//        case 2:
+//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_2_BIN);
+//            break;
+//        case 3:
+//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_3_BIN);
+//            break;
+//        case 4:
+//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_4_BIN);
+//            break;
+//        default:
+//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_4_BIN);
+//            break;
+//    }
+    compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
     switch(uteDrvBatteryCommonGetBatteryIndex(5))
     {
         case 0:
-            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_0_BIN);
+            compo_picturebox_set(battery_pic, BATTERY_PIC_0_BIN);
             break;
         case 1:
-            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_1_BIN);
+            compo_picturebox_set(battery_pic, BATTERY_PIC_1_BIN);
             break;
         case 2:
-            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_2_BIN);
+            compo_picturebox_set(battery_pic, BATTERY_PIC_2_BIN);
             break;
         case 3:
-            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_3_BIN);
+            compo_picturebox_set(battery_pic, BATTERY_PIC_3_BIN);
             break;
         case 4:
-            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_4_BIN);
+            compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
             break;
         default:
-            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_4_BIN);
+            compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
             break;
     }
 }
@@ -106,13 +132,17 @@ compo_form_t *func_menu_sub_list_form_create(void)
     if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
     {
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_FOURGRID);
-        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
-        func_menu_sub_list_battery_pic_update();
+//        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
         //电池电量
-        compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
-        compo_textbox_set_pos(battery_txt, 43, 25);
-//        compo_textbox_set_autosize(battery_txt, true);
-        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
+//        compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
+//        compo_textbox_set_pos(battery_txt, 43, 25);
+////        compo_textbox_set_autosize(battery_txt, true);
+//        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
+    //电池
+        compo_picturebox_t *battery_pic = compo_picturebox_create(frm, BATTERY_PIC_4_BIN);
+        compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
+        compo_picturebox_set_pos(battery_pic, 43, 25);
+        func_menu_sub_list_battery_pic_update();
 
         if (menu_idx < 3)
         {

@@ -39,6 +39,7 @@ typedef struct menu_hc_item_t_
 //全部图标资源tbl, 最大可以显示81个图标
 static const menu_hc_item_t tbl_menu_grid[] =
 {
+    {UI_BUF_I330001_THEME_1_RETRY_BIN,           FUNC_RSTFY},
 //    {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
     {UI_BUF_I330001_THEME_1_ACTIVITY_BIN,                  FUNC_ACTIVITY},
     {UI_BUF_I330001_THEME_1_SPO2_BIN,              FUNC_BLOOD_OXYGEN},

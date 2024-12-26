@@ -69,7 +69,7 @@ static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
 typedef struct f_call_sub_dial_t_
 {
     u8 phone_number_cnt;
-    u8 phone_number[11];
+    u8 phone_number[16];
 } f_call_sub_dial_t;
 
 //打电话页面
@@ -107,11 +107,12 @@ compo_form_t *func_call_sub_dial_form_create(void)
 
     //创建数字
     compo_textbox_t *txt_num;
-    txt_num = compo_textbox_create(frm, 11);
+    txt_num = compo_textbox_create(frm, 16);
     compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_setid(txt_num, COMPO_ID_NUM_DISP_ZERO);
     compo_textbox_set_align_center(txt_num, true);
-    compo_textbox_set_pos(txt_num, 112, 30);
+    compo_textbox_set_location(txt_num, GUI_SCREEN_CENTER_X, 30, GUI_SCREEN_WIDTH/1.2, 40);
+//    compo_textbox_set_pos(txt_num, , 30);
     compo_textbox_set(txt_num, "");
 
     return frm;
@@ -157,7 +158,7 @@ static void func_call_sub_dial_button_click(void)
     {
         case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_NUM9:
 //            compo_textbox_set_visible(txt, false);
-            if(call->phone_number_cnt < 11)
+            if(call->phone_number_cnt <= 16)
             {
                 call->phone_number[call->phone_number_cnt++] = id+0x30 - 1;
             }

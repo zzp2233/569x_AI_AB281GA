@@ -59,7 +59,6 @@ compo_form_t *func_game_form_create(void)
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_GAME]);
-
     for(int i=0; i<GAME_NUM; i++)
     {
         //矩形框
@@ -71,7 +70,8 @@ compo_form_t *func_game_form_create(void)
 
         //文本
         compo_textbox_t * txt = compo_textbox_create(frm, strlen(i18n[STR_FLY_BIRD]));
-        compo_textbox_set_location(txt, 150-35, 100 + i*72, 180, 35);
+        compo_textbox_set_align_center(txt, false);
+        compo_textbox_set_location(txt, 82, 100-8 + i*72, 140, 35);
 //        compo_textbox_set(txt, game[i].name);
         compo_textbox_set(txt, i18n[STR_FLY_BIRD]);
         compo_textbox_set_visible(txt, 1);
@@ -83,6 +83,7 @@ compo_form_t *func_game_form_create(void)
         compo_picturebox_set_pos(pic, 50, 100 + i*72);
     }
 
+    widget_page_set_client(frm->page_body, 0, -65);
     printf("%s\n", __func__);
     return frm;
 }
@@ -103,7 +104,7 @@ static void func_game_process(void)
         {
             f_game->ofs_y = f_game->focus_y - dy;
             int iy = -45 - f_game->ofs_y;
-            widget_page_set_client(func_cb.frm_main->page_body, 0, iy);
+//            widget_page_set_client(func_cb.frm_main->page_body, 0, iy);
 
             int kidx;
 
@@ -181,7 +182,7 @@ static void func_game_process(void)
 
             f_game->ofs_y = f_game->focus_y - dy;
             int iy = -45 - f_game->ofs_y;
-            widget_page_set_client(func_cb.frm_main->page_body, 0, iy);
+//            widget_page_set_client(func_cb.frm_main->page_body, 0, iy);
         }
     }
     func_process();

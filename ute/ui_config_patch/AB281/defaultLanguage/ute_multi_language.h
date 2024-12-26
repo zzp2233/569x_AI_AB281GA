@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-20 17:10:29
+*@date   2024-12-26 17:36:29
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -243,6 +243,16 @@ enum
     STR_SECOND_JOINT, // ##秒
     STR_ADD_CLOCK, // 添加闹钟
     STR_TRADITIONAL_CHINESE, // 繁体中文
+    STR_TO_DAY, // 今天
+    STR_END, // 结束
+    STR_NO_GET_WEATHER, // 未获取到天气，请连接APP后重试。
+    STR_CONTINUE, // 继续
+    STR_UPGRADING, // 升级中...
+    STR_UPDATED, // 升级成功
+    STR_UPDATE_FAILED, // 升级失败
+    STR_APP_AGIAN, // 请连接App重试
+    STR_WATCH_RESTART, // 手表即将进入重启
+    STR_UP_WATCHING, // 表盘正在传输中，请保持APP和设备连接
 };
 
 extern const char * const *i18n;

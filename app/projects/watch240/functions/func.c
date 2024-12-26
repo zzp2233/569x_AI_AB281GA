@@ -132,7 +132,9 @@ extern void func_audio(void);///*音频测试*/
 extern void func_online_factory_test(void);
 extern void func_empty(void);
 extern void func_sport_finish(void);
+extern void func_up_watch_dial(void);
 
+compo_form_t *func_up_watch_dial_form_create(void);
 compo_form_t *func_power_on_language_form_create(void);
 compo_form_t *func_power_on_scan_form_create(void);
 compo_form_t *func_sport_finish_form_create(void);
@@ -251,6 +253,7 @@ const func_t tbl_func_create[] =
     #if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_CARD,                         func_clock_sub_card_form_create},
     #endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+    {FUNC_UP_WATCH_DIAL,                func_up_watch_dial_form_create},     //在线表盘
     {FUNC_HEARTRATE,                    func_heartrate_form_create},
     {FUNC_BT,                           func_bt_form_create},
     {FUNC_POWER_ON_SCAN,                func_power_on_scan_form_create},
@@ -378,6 +381,7 @@ const func_t tbl_func_entry[] =
     {FUNC_LONG_PRESS,                   func_long_press},               //关机 重启 SOS界面
 //    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
 //    {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
+    {FUNC_UP_WATCH_DIAL,                func_up_watch_dial},             //在线表盘
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
     {FUNC_POWER_ON_SCAN,                func_power_on_scan},             //开机二维码
     {FUNC_POWER_ON_LANGUAGE,            func_power_on_language},        //开机语言

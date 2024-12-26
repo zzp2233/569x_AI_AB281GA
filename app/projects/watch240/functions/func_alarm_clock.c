@@ -317,7 +317,7 @@ static void func_alarm_clock_button_click(void)
         }
     }
 
-    func_alarm_clock_button_release_handle();
+//    func_alarm_clock_button_release_handle();
 }
 
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

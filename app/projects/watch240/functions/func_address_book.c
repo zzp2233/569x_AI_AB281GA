@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_call.h"
 #include "ute_module_charencode.h"
+#include "func_cover.h"
 
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 
@@ -172,12 +173,20 @@ void func_address_book_icon_click(void)
         return;
     }
 
-    memset(sys_cb.outgoing_number, 0, 16);
-    for (i = 0; i < 16; i++)
+    if(!uteModuleCallBtIsConnected())
     {
-        sys_cb.outgoing_number[i] = address_book_tbl[icon_idx].numberAscii[i];
+        sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+        msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
     }
-    bt_call_redial_number();
+    if (bt_is_connected())
+    {
+        memset(sys_cb.outgoing_number, 0, 16);
+        for (i = 0; i < 16; i++)
+        {
+            sys_cb.outgoing_number[i] = address_book_tbl[icon_idx].numberAscii[i];
+        }
+        bt_call_redial_number();
+    }
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //电话簿功能事件处理

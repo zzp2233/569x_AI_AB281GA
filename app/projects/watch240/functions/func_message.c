@@ -227,14 +227,14 @@ compo_form_t *func_message_form_create(void)
 
 
     //创建无消息界面
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_THEME_1_MESSAGE_BIN);
-    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_NOTIFICATION_NO_DATA_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
-    compo_textbox_t* txt = compo_textbox_create(frm, 6);
+    compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
     compo_textbox_set(txt, i18n[STR_NO_MSG]);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, 0, 0);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 184, 0, 0);
     compo_textbox_set_autosize(txt, true);
     compo_textbox_set_visible(txt, false);
     compo_setid(txt, COMPO_ID_COVER_TXT);

@@ -165,6 +165,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_align_center(txt_time, false);
                 compo_textbox_set_pos(txt_time, gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 52,GUI_SCREEN_CENTER_Y/3.5);//调整文本位置
                 compo_textbox_set(txt_time, time);
+                compo_textbox_set_forecolor(txt_time, COLOR_GRAY);
             }
         }
         break;
@@ -467,8 +468,8 @@ static void msgbox_process(void)
             msgbox_exit_time = UTE_LOCAL_ALARM_DEFAULT_RING_TIMES * 1000;
         }
         else if ((msg_cb->msg_type == MSGBOX_MSG_TYPE_DETAIL)   ||                                                      //详细消息界面弹窗
-                 (sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER) ||    //查找手表
-                 (msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
+                 (sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)     //查找手表
+//                 ||(msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
         )
         {
             goto __exit;

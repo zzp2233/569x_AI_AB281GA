@@ -17,6 +17,8 @@ typedef struct f_weather_t_
     u32 res_addr;
     u8 mode_num;
     page_tp_move_t *ptm;
+    uint16_t DayWeather[7];
+    bool isFahrenheit_flag;
 } f_weather_t;
 
 enum
@@ -49,27 +51,59 @@ static const f_weather_t weather_list[] =
 
 };
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-static bool isFahrenheit_flag = false;
+
+static int16_t page_y = 0;
 
 static void weather_refresh(void)
 {
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     ute_display_ctrl_t displayInfo;
+    ute_module_weather_data_t  weather_date;
     uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
-
-    if(displayInfo.isFahrenheit != isFahrenheit_flag)    //是否为华氏度
+    bool weather_flag = false;
+    for(int i=0;i<7;i++)
     {
-        isFahrenheit_flag = displayInfo.isFahrenheit;
+         if(f_weather->DayWeather[i] != weather_date.DayWeather[i])
+         {
+           weather_flag = true;
+           break;
+         }
+    }
+
+    if(displayInfo.isFahrenheit != f_weather->isFahrenheit_flag || weather_flag == true)    //是否为华氏度
+    {
+        f_weather->isFahrenheit_flag = displayInfo.isFahrenheit;
         msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
     }
 }
 
+static void weather_data_Init(void)
+{
+    f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
+    ute_module_systemtime_time_t time;
+    ute_module_weather_data_t  weather_date;
+    ute_display_ctrl_t displayInfo;
+
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
+     if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
+    {
+        uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
+        uteModuleWeatherGetData(&weather_date);//获取天气状态
+
+        f_weather->isFahrenheit_flag = displayInfo.isFahrenheit;
+        for(int i=0;i<7;i++)
+        {
+         f_weather->DayWeather[i] = weather_date.DayWeather[i];
+        }
+    }
+}
 
 //创建天气窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_weather_form_create(void)
 {
     compo_textbox_t *txt;
     compo_picturebox_t * picbox;
+    bool weather_no_data_flag = true;
 
     ute_module_systemtime_time_t time;
     ute_module_weather_data_t  weather_date;
@@ -124,6 +158,15 @@ compo_form_t *func_weather_form_create(void)
 
         for(int i=0; i<7; i++) //获取一周的天气
         {
+            if(weather_date.DayWeather[i] != WEATHER_TYPE_UNKNOWN)
+            {
+                weather_no_data_flag = false;
+                break;
+            }
+        }
+
+        for(int i=0; i<7; i++) //获取一周的天气
+        {
             if(uteModuleSystemtimeIsNight()) //是否为夜间
             {
                 switch(get_weather_id[0])
@@ -167,6 +210,36 @@ compo_form_t *func_weather_form_create(void)
     //设置标题栏
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
 //    compo_form_set_title(frm, i18n[STR_WEATHER]);
+
+
+    if(weather_no_data_flag)
+    {
+        ///设置标题栏名字///
+        txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
+        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
+        compo_textbox_set(txt, i18n[STR_WEATHER]);
+        compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
+        compo_textbox_set(txt, i18n[STR_WEATHER]);
+        compo_textbox_set_align_center(txt, false);
+
+        picbox = compo_picturebox_create(frm,UI_BUF_I330001_WEATHER_NO_DATA_BIN);///背景图片
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,84+50/2);
+
+        txt = compo_textbox_create(frm,strlen(i18n[STR_NO_GET_WEATHER]));
+        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,160+56/2, GUI_SCREEN_WIDTH,56);
+        compo_textbox_set_multiline(txt, true);
+        compo_textbox_set_align_center(txt, true);
+        compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);
+
+        return frm;
+    }
+
+    ///设置标题栏时间///
+//    compo_textbox_t* time_title = compo_textbox_create(frm, 32);
+//    compo_textbox_set_align_center(time_title, false);
+//    compo_textbox_set_location(time_title, 168, 15, 52, 23);
+//    compo_setid(time_title, COMPO_ID_TXT_TIME);
+//    compo_bonddata(time_title, COMPO_BOND_HOURMIN_TXT);
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_WEATHER_BG_BIN);///* 背景图*/
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
@@ -177,13 +250,6 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
     compo_textbox_set(txt, i18n[STR_WEATHER]);
     compo_textbox_set_align_center(txt, false);
-
-    ///设置标题栏时间///
-//    compo_textbox_t* time_title = compo_textbox_create(frm, 32);
-//    compo_textbox_set_align_center(time_title, false);
-//    compo_textbox_set_location(time_title, 168, 15, 52, 23);
-//    compo_setid(time_title, COMPO_ID_TXT_TIME);
-//    compo_bonddata(time_title, COMPO_BOND_HOURMIN_TXT);
 
     picbox = compo_picturebox_create(frm, weather_list[get_weather_id[0]].res_addr);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5);
@@ -255,15 +321,20 @@ compo_form_t *func_weather_form_create(void)
     for(int i=0; i<7; i++)
     {
         txt = compo_textbox_create(frm,strlen(i18n[STR_SUNDAY+week_sort[i]]));
-        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
-        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X/6,GUI_SCREEN_HEIGHT+30+(i*36)-8,GUI_SCREEN_WIDTH/5,widget_text_get_area(txt->txt).hei);
+//        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X/6,GUI_SCREEN_HEIGHT+30+(i*36)-8,GUI_SCREEN_WIDTH/5,widget_text_get_height());
         compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
         compo_textbox_set_align_center(txt,false);
+        if(i==0)
+        {
+            compo_textbox_set(txt,i18n[STR_TO_DAY]);/// 星期
+        }
+
 
         picbox = compo_picturebox_create(frm,weather_list[get_weather_id[i]].res_addr);/// 天气
         compo_picturebox_set_size(picbox,gui_image_get_size( weather_list[get_weather_id[i]].res_addr).wid/3,\
                                   gui_image_get_size( weather_list[get_weather_id[i]].res_addr).hei/3);
-        compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/10,GUI_SCREEN_HEIGHT+30+(i*36));
+        compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/10-6,GUI_SCREEN_HEIGHT+30+(i*36));
 
         if(uteModuleWeatherGetCurrDay() == time.day)
         {
@@ -279,6 +350,7 @@ compo_form_t *func_weather_form_create(void)
         compo_textbox_set_align_center(txt, false);
 
     }
+    widget_page_set_client(frm->page_body, 0, page_y);
 
     return frm;
 }
@@ -290,7 +362,8 @@ static void func_weather_process(void)
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_page_move_process(f_weather->ptm);
-    weather_refresh();
+//    printf("page:%d\n",compo_page_move_get_offset(f_weather->ptm));
+    page_y = compo_page_move_get_offset(f_weather->ptm);
     func_process();
 }
 
@@ -302,7 +375,26 @@ static void func_weather_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-            compo_page_move_touch_handler(f_weather->ptm);
+            {
+                ute_module_weather_data_t  weather_date;
+                uteModuleWeatherGetData(&weather_date);//获取天气状态
+                bool weather_no_data_flag = true;
+                for(int i=0; i<7; i++) //获取一周的天气
+                {
+                    if(weather_date.DayWeather[i] != WEATHER_TYPE_UNKNOWN)
+                    {
+                        weather_no_data_flag = false;
+                        break;
+                    }
+                }
+                if(weather_no_data_flag == false)
+                {
+                    compo_page_move_touch_handler(f_weather->ptm);
+                }
+            }
+            break;
+        case MSG_SYS_500MS:
+             weather_refresh();
             break;
         case MSG_CTP_CLICK:
 //            if(++(f_weather->mode_num) == WHEATHER_CNT) {
@@ -332,12 +424,16 @@ static void func_weather_enter(void)
         .page_size = GUI_SCREEN_HEIGHT,
         .page_count = 2,
         .jump_perc = 20,
-        .quick_jump_perc = 100,
+        .quick_jump_perc = GUI_SCREEN_HEIGHT,
         .up_over_perc = 10,
         .down_over_perc = 10,
     };
-    compo_page_move_init(f_weather->ptm, func_cb.frm_main->page_body, &info);
+//    f_weather->ptm->move_offset = -296;
 
+    compo_page_move_init(f_weather->ptm, func_cb.frm_main->page_body, &info);
+//    compo_page_move_set_by_pages(f_weather->ptm, 1);
+    weather_data_Init();
+    f_weather->ptm->move_offset = page_y;
 }
 
 //退出天气功能
@@ -345,6 +441,10 @@ static void func_weather_exit(void)
 {
     f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
     func_cb.last = FUNC_WEATHER;
+    if(sys_cb.refresh_language_flag == false)
+    {
+        page_y = 0;
+    }
     if (f_weather->ptm)
     {
         func_free(f_weather->ptm);

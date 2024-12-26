@@ -225,38 +225,47 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
         return;
     }
 
-    /*! 末尾增加“...”zn.zeng, 2021-08-24  */
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,uteModuleNotifyData.currNotify.size = %d,mAXsize = %d,", __func__,uteModuleNotifyData.currNotify.size,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-    if(uteModuleNotifyData.currNotify.size>=(UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-6))
-    {
-        memcpy(&uteModuleNotifyData.currNotify.content[(UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-6)],"\x00\x2e\x00\x2e\x00\x2e",6);
-        uteModuleNotifyData.currNotify.size = UTE_NOTIFY_MSG_CONTENT_MAX_SIZE;
-    }
-    UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,", __func__);
-    UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-
     uint8_t *utf8StrTemp = uteModulePlatformMemoryAlloc(UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
     memset(utf8StrTemp,0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
     uint16_t utf8StrLen = 0;
 
-    uteModuleCharencodeUnicodeConversionUtf8(uteModuleNotifyData.currNotify.content,uteModuleNotifyData.currNotify.size,utf8StrTemp,&utf8StrLen,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-
-    memset(uteModuleNotifyData.currNotify.content,0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-
-    if (utf8StrLen <= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+    /*! 末尾增加“...”zn.zeng, 2021-08-24  */
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,uteModuleNotifyData.currNotify.size = %d,mAXsize = %d,", __func__,uteModuleNotifyData.currNotify.size,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+    if(ble_ancs_is_connected()) // ios消息是utf8编码，不需要处理
     {
-        memcpy(uteModuleNotifyData.currNotify.content,utf8StrTemp,utf8StrLen);
-        uteModuleNotifyData.currNotify.size = utf8StrLen;
+        memcpy(&utf8StrTemp[0],&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
+        memset(&uteModuleNotifyData.currNotify.content[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+        uteModuleCharencodeGetUtf8String(&utf8StrTemp[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE,&uteModuleNotifyData.currNotify.content[0],&uteModuleNotifyData.currNotify.size);
     }
     else
     {
-        uteModuleCharencodeGetUtf8String(&utf8StrTemp[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE,&uteModuleNotifyData.currNotify.content[0],&uteModuleNotifyData.currNotify.size);
+        if(uteModuleNotifyData.currNotify.size>=(UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-6))
+        {
+            memcpy(&uteModuleNotifyData.currNotify.content[(UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-6)],"\x00\x2e\x00\x2e\x00\x2e",6);
+            uteModuleNotifyData.currNotify.size = UTE_NOTIFY_MSG_CONTENT_MAX_SIZE;
+        }
+        UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,", __func__);
+        UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
+
+        uteModuleCharencodeUnicodeConversionUtf8(uteModuleNotifyData.currNotify.content,uteModuleNotifyData.currNotify.size,utf8StrTemp,&utf8StrLen,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+
+        memset(uteModuleNotifyData.currNotify.content,0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+
+        if (utf8StrLen <= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+        {
+            memcpy(uteModuleNotifyData.currNotify.content,utf8StrTemp,utf8StrLen);
+            uteModuleNotifyData.currNotify.size = utf8StrLen;
+        }
+        else
+        {
+            uteModuleCharencodeGetUtf8String(&utf8StrTemp[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE,&uteModuleNotifyData.currNotify.content[0],&uteModuleNotifyData.currNotify.size);
+        }
+
+        UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL,"%s,currNotify.size=%d",__func__,uteModuleNotifyData.currNotify.size);
+        UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);      
     }
 
-    UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL,"%s,currNotify.size=%d",__func__,uteModuleNotifyData.currNotify.size);
-    UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-
-    uteModulePlatformMemoryFree(utf8StrTemp);
+    uteModulePlatformMemoryFree(utf8StrTemp);  
 
     /*! 来电提醒不保存 zn.zeng, 2021-08-25  */
     if(uteModuleNotifyData.currNotify.type!=MSG_CALL)
@@ -344,13 +353,10 @@ void uteModuleNotifyAncsPushContect(uint8_t *buff,uint16_t length,bool isTitle)
 
     if(hasSize >= size)
     {
-        memcpy(&uteModuleNotifyData.currNotify.content[uteModuleNotifyData.currNotify.size],&buff[startIndex],size);
         hasSize = size;
     }
-    else
-    {
-        uteModuleCharencodeGetUtf8String(&buff[startIndex],hasSize,&uteModuleNotifyData.currNotify.content[uteModuleNotifyData.currNotify.size],&hasSize);
-    }
+
+    memcpy(&uteModuleNotifyData.currNotify.content[uteModuleNotifyData.currNotify.size],&buff[startIndex],hasSize);
 
     UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,hasSize=%d", __func__,hasSize);
     UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,&uteModuleNotifyData.currNotify.content[uteModuleNotifyData.currNotify.size],hasSize);

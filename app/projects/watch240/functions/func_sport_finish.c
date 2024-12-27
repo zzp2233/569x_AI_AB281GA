@@ -75,6 +75,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+105);
                 compo_textbox_set(textbox, txt_buf);
+                compo_textbox_set_forecolor(textbox, COLOR_GREEN);
 
                 //运动数据图标
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_TIME_BIN);
@@ -108,7 +109,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 area_t txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184);
                 compo_textbox_set(textbox, i18n[STR_KCAL]);
 
                 memset(txt_buf,0,sizeof(txt_buf)); //运动公里
@@ -121,7 +122,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_KM]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40);
                 compo_textbox_set(textbox, i18n[STR_KM]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动步数
@@ -134,7 +135,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_STEP]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*2);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40*2);
                 compo_textbox_set(textbox, i18n[STR_STEP]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动心率
@@ -147,7 +148,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*3);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40*3);
                 compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
                 /*运动数据*/
 
@@ -186,6 +187,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+105);
                 compo_textbox_set(textbox, txt_buf);
+                compo_textbox_set_forecolor(textbox, COLOR_GREEN);
 
                 //运动数据图标
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_TIME_BIN);
@@ -217,7 +219,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 area_t txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184);
                 compo_textbox_set(textbox, i18n[STR_KCAL]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动次数
@@ -230,7 +232,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_ORDER]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*1);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40*1);
                 compo_textbox_set(textbox, i18n[STR_SPORT_ORDER]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动心率
@@ -243,7 +245,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*2);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40*2);
                 compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
                 /*运动数据*/
 
@@ -282,6 +284,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+105);
                 compo_textbox_set(textbox, txt_buf);
+                compo_textbox_set_forecolor(textbox, COLOR_GREEN);
 
                 //运动数据图标
                 picbox = compo_picturebox_create(frm, UI_BUF_I330001_SPORT_ICON2_TIME_BIN);
@@ -310,7 +313,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 area_t txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184);
                 compo_textbox_set(textbox, i18n[STR_KCAL]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动心率
@@ -323,7 +326,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 44+txt_leng.wid, 5+184+40*1);
+                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40*1);
                 compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
                 /*运动数据*/
 

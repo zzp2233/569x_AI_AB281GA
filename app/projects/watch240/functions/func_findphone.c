@@ -123,12 +123,17 @@ static void func_findphone_button_touch_handle(void)
 
         if(uteModuleFindPhoneGetStatus() == FIND_PHONE_STOP)
         {
+            if(bt_a2dp_profile_completely_connected())
+            {
+                bt_a2dp_profile_dis();
+            }
             compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
             uteModuleFindPhoneStartRing();
             compo_textbox_set(txt, i18n[STR_STOP]);
         }
         else
         {
+            bt_a2dp_profile_en();
             compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN);
             uteModuleFindPhoneStopRing();
             compo_textbox_set(txt, i18n[STR_START]);
@@ -179,10 +184,10 @@ static void func_findphone_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_findphone_t));
     func_cb.frm_main = func_findphone_form_create();
 
-    if(bt_a2dp_profile_completely_connected())
-    {
-        bt_a2dp_profile_dis();
-    }
+//    if(bt_a2dp_profile_completely_connected())
+//    {
+//        bt_a2dp_profile_dis();
+//    }
 //    ab_app_search_phone(true);
 }
 

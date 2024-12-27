@@ -123,25 +123,30 @@ static void func_wrist_button_click(void)
     if (compo_id <= 0 || compo_id > COMPO_CARD_END - 1) {
         return;
     }
-    printf("click compo_id:%d\n", compo_id);
+//    printf("click compo_id:%d\n", compo_id);
 
     compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
     if (compo_cardbox_get_visible(cardbox))
     {
         if (compo_id == COMPO_CARD_1)
         {
-            ret = msgbox((char *)i18n[STR_SETTING_UP], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+//            ret = msgbox((char *)i18n[STR_SETTING_UP], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
-            if (ret == MSGBOX_RES_OK)
-            {
-                if (wrs->value) {
-                    wrs->value = false;
-                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[1]);
-                } else {
-                    wrs->value = true;
-                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);
-                }
+//            if (ret == MSGBOX_RES_OK)
+//            {
+//                if (wrs->value) {
+//                    wrs->value = false;
+//                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[1]);
+//                } else {
+//                    wrs->value = true;
+//                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);
+//                }
                 switch_set_sub_wrist();
+//            }
+            if(uteModuleSportGetIsOpenHandScreenOn()) {
+                compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);
+            } else {
+                compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[1]);
             }
         }
     }

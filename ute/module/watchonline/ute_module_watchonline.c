@@ -161,22 +161,22 @@ void uteModuleWatchOnlineOneSecMsgHandler(void)
             uteModuleWatchOnlineUpddateDefaultWatchIndex();
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
             /**同步表盘超时时候，出现超时，则退出表盘界面，防止APP同步表盘时退出未被杀死，导致卡在表盘同步界面**/
-            if((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_INCOMING_ID ))
-            {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CALL_INCOMING_ID);
-            }
-            else if((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID ))
-            {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID);
-            }
-            else if((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_ING_ID ))
-            {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CALL_ING_ID);
-            }
-            else
-            {
+//            if((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_INCOMING_ID ))
+//            {
+//                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CALL_INCOMING_ID);
+//            }
+//            else if((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID ))
+//            {
+//                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID);
+//            }
+//            else if((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_ING_ID ))
+//            {
+//                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CALL_ING_ID);
+//            }
+//            else
+//            {
                 uteModuleGuiCommonGoBackLastScreen();
-            }
+//            }
 #endif
             uteModuleWatchOnlineData.receiveTimeout = 0;
         }

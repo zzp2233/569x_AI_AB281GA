@@ -1284,6 +1284,9 @@
 		<Unit filename="functions/func_timer.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_up_watch_dial.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_usbdev.c">
 			<Option compilerVar="CC" />
 		</Unit>

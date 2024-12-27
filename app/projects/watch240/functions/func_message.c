@@ -227,14 +227,14 @@ compo_form_t *func_message_form_create(void)
 
 
     //创建无消息界面
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_THEME_1_MESSAGE_BIN);
-    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_NOTIFICATION_NO_DATA_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
-    compo_textbox_t* txt = compo_textbox_create(frm, 6);
+    compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
     compo_textbox_set(txt, i18n[STR_NO_MSG]);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, 0, 0);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 184, 0, 0);
     compo_textbox_set_autosize(txt, true);
     compo_textbox_set_visible(txt, false);
     compo_setid(txt, COMPO_ID_COVER_TXT);
@@ -257,7 +257,12 @@ static void func_message_btn_click(void)
             //清除消息
             uteModuleNotifyDelAllHistoryData(true);
             memset(f_msg->ute_msg, 0, sizeof(ute_module_notify_data_t));
-            widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_max);
+//            f_msg->y_pos = 0;
+//            f_msg->y = 0;
+//            f_msg->y_max = 0;
+//            card_y += (card.h+10);
+//            f_msg->y_max = ;
+            widget_page_set_client(func_cb.frm_main->page_body, 0, -(card.h + 10) / 4);
             break;
     }
 
@@ -294,7 +299,7 @@ static void func_message_card_click(void)
     {
         return;
     }
-    printf("click compo_id:%d\n", compo_id);
+//    printf("click compo_id:%d\n", compo_id);
     compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
     if (compo_cardbox_get_visible(cardbox))
     {
@@ -302,7 +307,7 @@ static void func_message_card_click(void)
         u16 msg_id = compo_id - COMPO_CARD_START - 1;
         char *msg = (char*)f_msg->ute_msg->historyNotify[msg_id].content;
         char time[30]= {0};
-        printf("msg:%s\n", msg);
+//        printf("msg:%s\n", msg);
 //        sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
 //                f_msg->ute_msg->historyNotify[msg_id].day, f_msg->ute_msg->historyNotify[msg_id].hour, f_msg->ute_msg->historyNotify[msg_id].min);
         sprintf(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
@@ -314,6 +319,11 @@ static void func_message_card_click(void)
             uteModuleNotifySetDisplayIndex(msg_id);
             uteModuleNotifyDelAllHistoryData(false);
             uteModuleNotifyGetData(f_msg->ute_msg);
+
+            if(compo_id == 1)
+            {
+                widget_page_set_client(func_cb.frm_main->page_body, 0, -(card.h + 10) / 4);
+            }
         }
     }
 
@@ -381,14 +391,21 @@ static void func_message_card_update(bool first_update)
 
     if (card_y)
     {
+//        printf("card_y=%d\n",card_y);
+////        if(card_y<=GUI_SCREEN_WIDTH/2)
+////        {
+////            card_y-=40;
+////        }
+//        card_y-=40;
+//        printf("card_y=%d\n",card_y);
         //更新按钮
         s32 btn_y  = 0;
         for (int i=0; i<MSG_BTN_CNT; i++)
         {
             btn_y = card_y + (card.h + 10) / 2 + gui_image_get_size(message_btn[i].res).hei/2 + 10;
 //            printf("btn_y [%d,%d]\n", btn_y, GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2);
-            if (btn_y < GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2 + 20) { // 按钮位置小于屏幕底部特殊处理
-                btn_y = GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2 + 20;
+            if (btn_y < GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2) { // 按钮位置小于屏幕底部特殊处理
+                btn_y = GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2;
             }
 
             compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_DEL+i);

@@ -53,5 +53,8 @@ void bt_aiaec_dnn_init(void *alg_cb) {}
 void bt_aiaec_dnn_exit(void) {}
 void bt_aiaec_dnn_nr_process(void) {}
 void bt_aiaec_dnn_process(void) {}
+void pink_noise_proc(s16 *pink_buf, s16 *mic_in) {}
+void aiaec_pink_generation_init(s32 plfsr_val) {}
+s16 pink_gen_buf[0] AT(.aiaec_dnn_buf.sta);
 #endif
 

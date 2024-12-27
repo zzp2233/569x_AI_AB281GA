@@ -42,7 +42,7 @@ compo_form_t *func_ota_update_form_create(void)
     compo_textbox_t* txt = compo_textbox_create(frm, 20);
     compo_setid(txt, UPDATING_TXT_ID);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 186+26/2, 196, 30);
-    compo_textbox_set(txt, "升级中...");
+    compo_textbox_set(txt, i18n[STR_UPGRADING]);
 
     return frm;
 }

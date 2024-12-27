@@ -94,7 +94,7 @@ compo_form_t *func_stopwatch_form_create(void)
     txt_num = compo_textbox_create(frm, 2);     //记录数
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
     compo_textbox_set_location(txt_num, 131, 85, 226, widget_text_get_height());
-    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_22_BIN);
+//    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_22_BIN);
     snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
     compo_textbox_set(txt_num, str_buff);
     compo_textbox_set_forecolor(txt_num, NUM_REC_COLOR);

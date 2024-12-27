@@ -422,7 +422,7 @@ static void func_clock_sub_dropdown_slide_handle(void)
         }
         if(old_dx == 0 || old_dx == -GUI_SCREEN_WIDTH) touch_state = 0;
 
-        if(tick_check_expire(tick, 10))
+        if(tick_check_expire(tick, 3))
         {
             tick = tick_get();
             switch(touch_state)

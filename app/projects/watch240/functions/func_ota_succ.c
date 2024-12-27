@@ -32,14 +32,14 @@ compo_form_t *func_ota_succ_form_create(void)
     compo_setid(txt, COMPO_ID_TXT_OTA_SUCC1);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 186+26/2, 196, 30);
     widget_text_set_color(txt->txt, make_color(255,255,255));
-    compo_textbox_set(txt, "升级成功");
+    compo_textbox_set(txt, i18n[STR_UPDATED]);
 
     //TXT2 手表即将进入重启
     txt = compo_textbox_create(frm, 20);
     compo_setid(txt, COMPO_ID_TXT_OTA_SUCC2);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 215+26/2, 196, 30);
     widget_text_set_color(txt->txt, make_color(128,128,128));
-    compo_textbox_set(txt, "手表即将进入重启");
+    compo_textbox_set(txt, i18n[STR_WATCH_RESTART]);
 
     return frm;
 }

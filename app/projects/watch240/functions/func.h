@@ -148,6 +148,7 @@ enum
     FUNC_AGEING,         ///*老化测试*/
     FUNC_AUDIO,         ///*音频测试*/
     FUNC_ONLINE_FACTORY_TEST, /*在线工厂测试*/
+    FUNC_UP_WATCH_DIAL,
 
     FUNC_MAX_NUM,           //用于计数
 };

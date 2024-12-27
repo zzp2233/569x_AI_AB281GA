@@ -497,11 +497,11 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         widget_text_set_color(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], make_color(ui_handle.disturd_start_time.text[i].color.r, ui_handle.disturd_start_time.text[i].color.g, ui_handle.disturd_start_time.text[i].color.b));
         compo_cardbox_text_set_location(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].x, ui_handle.disturd_start_time.text[i].y,
                                         ui_handle.disturd_start_time.text[i].w, ui_handle.disturd_start_time.text[i].h);
-        if(sys_cb.disturd_tim == 0)
-        {
-            sys_cb.disturd_start_time_sec = 0;
-            sys_cb.disturd_end_time_sec = 0;
-        }
+//        if(sys_cb.disturd_tim == 0)
+//        {
+//            sys_cb.disturd_start_time_sec = 0;
+//            sys_cb.disturd_end_time_sec = 0;
+//        }
         u8 hour = sys_cb.disturd_start_time_sec / 3600;
         u8 min  = (sys_cb.disturd_start_time_sec % 3600) / 60;
         u8 am_pm = 0;
@@ -551,11 +551,11 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         compo_cardbox_text_set_location(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].x, ui_handle.disturd_end_time.text[i].y,
                                         ui_handle.disturd_end_time.text[i].w, ui_handle.disturd_end_time.text[i].h);
 
-        if(sys_cb.disturd_tim == 0)
-        {
-            sys_cb.disturd_start_time_sec = 0;
-            sys_cb.disturd_end_time_sec = 0;
-        }
+//        if(sys_cb.disturd_tim == 0)
+//        {
+//            sys_cb.disturd_start_time_sec = 0;
+//            sys_cb.disturd_end_time_sec = 0;
+//        }
         u8 hour   = sys_cb.disturd_end_time_sec / 3600;
         u8 min  = (sys_cb.disturd_end_time_sec % 3600) / 60;
         u8 am_pm = 0;
@@ -650,7 +650,7 @@ static void func_disturd_card_click(void)
     {
         return;
     }
-    printf("click compo_id:%d\n", compo_id);
+//    printf("click compo_id:%d\n", compo_id);
 
     compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
     if (compo_cardbox_get_visible(cardbox))
@@ -684,6 +684,13 @@ static void func_disturd_card_click(void)
             } else {
                 sys_cb.disturd_tim = 0;
                 uteModuleNotDisturbScheduledSwitch();
+                uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
+                uteModuleNotDisturbSetTime(23*60);
+                uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_END_TIME);
+                uteModuleNotDisturbSetTime(7*60);
+                sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
+                sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
+                msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
             }
         }
         else if (compo_id == ui_handle.disturd_start_time.id)      //开始时间
@@ -925,6 +932,16 @@ static void func_set_sub_disturd_message(size_msg_t msg)
 static void func_set_sub_disturd_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_disturd_t));
+    if (sys_cb.disturd_tim == 0)
+    {
+        uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
+        uteModuleNotDisturbSetTime(23*60);
+        uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_END_TIME);
+        uteModuleNotDisturbSetTime(7*60);
+    }
+    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
+    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
+
     func_cb.frm_main = func_set_sub_disturd_form_create();
     f_disturd_t* f_disturd = (f_disturd_t*)func_cb.f_cb;
     memset(f_disturd, 0, sizeof(f_disturd_t));

@@ -56,6 +56,7 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_LANGUAGE,                 UI_BUF_I330001_THEME_1_LANUAGE_BIN,                   STR_SETTING_LANGUAGE},      //设置--语言
     {FUNC_RESTART,                  UI_BUF_I330001_THEME_1_BOOT_BIN,                    STR_SETTING_RESTART},       //重启
     {FUNC_RSTFY,                    UI_BUF_I330001_THEME_1_RETRY_BIN,            STR_SETTING_RSTFY},         //设置--恢复出厂
+    {FUNC_SET_SUB_ABOUT,            UI_BUF_I330001_THEME_1_GUANYU_BIN,            STR_SETTING_ABOUT},         //设置--关于
 //    {FUNC_OFF,                      UI_BUF_ICON_OFF_BIN,                        STR_SETTING_OFF},           //关机
 };
 
@@ -269,6 +270,7 @@ const static u8 latest_allowed_id[] =
     FUNC_RESTART,                       //重启
     FUNC_RSTFY,                         //设置--恢复出厂
     FUNC_OFF,                           //关机
+    FUNC_SET_SUB_ABOUT,                 //关于
 };
 
 /**

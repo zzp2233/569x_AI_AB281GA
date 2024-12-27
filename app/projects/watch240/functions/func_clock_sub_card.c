@@ -840,9 +840,9 @@ static void card1_updata_disp(void)
 {
     f_card_t *f_activity = (f_card_t *)func_cb.f_cb;
 
-    if(tick_check_expire(f_activity->activity_tick, 2))
-    {
-        f_activity->activity_tick = tick_get();
+//    if(tick_check_expire(f_activity->activity_tick, ))
+//    {
+//        f_activity->activity_tick = tick_get();
         char txt_buf[20];
         uint32_t totalStepCnt = 0;
         uint32_t Step_value = 0;
@@ -911,7 +911,7 @@ static void card1_updata_disp(void)
 
         }
 
-    }
+//    }
 }
 //根据序号获取最近任务序号（idx=0为最近，无任务返回0）(idx<=3)
 static u8 card_get_latest_func(u8 idx)
@@ -1065,7 +1065,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(card2->text[ui_handle.card2.text_sleep.idx], make_color(ui_handle.card2.text_sleep.color.r, ui_handle.card2.text_sleep.color.g, ui_handle.card2.text_sleep.color.b));
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.x, ui_handle.card2.text_sleep.y, ui_handle.card2.text_sleep.w, ui_handle.card2.text_sleep.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_sleep.idx, i18n[ui_handle.card2.text_sleep.str_id]);
-    sleep_data->totalSleepMin =  200;
+//    sleep_data->totalSleepMin =  200;
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
@@ -1766,13 +1766,16 @@ static void func_clock_sub_card_set_offs(s16 ofs_y)
 //时钟表盘上拉菜单数据更新----------------------------------------->todo
 static void func_clock_sub_card_data_update(void)
 {
-    f_card_t *f_activity = (f_card_t *)func_cb.f_cb;
+    f_card_t *f_card = (f_card_t *)func_cb.f_cb;
     compo_cardbox_t *cardbox = NULL;
     char txt_buf[20];
 
-    card1_updata_disp();
+    if(f_card->flag_drag == 0)
+    {
+        card1_updata_disp();
+    }
 
-    if(f_activity->activity_state != 2) return;
+//    if(f_activity->activity_state != 2) return;
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",SEC_TO_HOUR(sys_cb.timer_left_sec),SEC_TO_MIN(sys_cb.timer_left_sec),SEC_TO_SEC(sys_cb.timer_left_sec));

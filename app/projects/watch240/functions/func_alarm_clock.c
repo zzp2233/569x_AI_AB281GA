@@ -354,7 +354,7 @@ static void func_alarm_clock_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-            func_alarm_clock_button_touch_handle();
+//            func_alarm_clock_button_touch_handle();
             compo_page_move_touch_handler(f_aclock->ptm);
             break;
 

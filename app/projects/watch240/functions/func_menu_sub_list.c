@@ -38,7 +38,7 @@ typedef struct f_menu_list_t_
 static const compo_listbox_item_t tbl_menu_list[] =
 {
 //    {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
-    {STR_SPORTS,                 UI_BUF_I330001_THEME_1_SOPRT_BIN,             .func_sta = FUNC_UP_WATCH_DIAL},                //运动
+    {STR_SPORTS,                 UI_BUF_I330001_THEME_1_SOPRT_BIN,             .func_sta = FUNC_SPORT},                //运动
 //    {STR_PRESSURE,               UI_BUF_ICON_PRESSURE_BIN,          .func_sta = FUNC_PRESSURE},             //压力
 //    {STR_STEP,                   UI_BUF_ICON_STEP_BIN,            .func_sta = FUNC_NULL},                 //计步
     {STR_SLEEP,                  UI_BUF_I330001_THEME_1_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
@@ -62,6 +62,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_GAME,                   UI_BUF_I330001_THEME_1_GAME_BIN,              .func_sta = FUNC_GAME},                 //游戏
     {STR_SETTING,                UI_BUF_I330001_THEME_1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
     {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
+    {STR_SETTING_ABOUT,          UI_BUF_I330001_THEME_1_GUANYU_BIN,            .func_sta = FUNC_SET_SUB_ABOUT},        //关于
 };
 #define  BATTERY_PIC_0_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
 #define  BATTERY_PIC_1_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1

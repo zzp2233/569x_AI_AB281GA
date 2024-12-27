@@ -257,7 +257,12 @@ static void func_message_btn_click(void)
             //清除消息
             uteModuleNotifyDelAllHistoryData(true);
             memset(f_msg->ute_msg, 0, sizeof(ute_module_notify_data_t));
-            widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_max);
+//            f_msg->y_pos = 0;
+//            f_msg->y = 0;
+//            f_msg->y_max = 0;
+//            card_y += (card.h+10);
+//            f_msg->y_max = ;
+            widget_page_set_client(func_cb.frm_main->page_body, 0, -(card.h + 10) / 4);
             break;
     }
 
@@ -294,7 +299,7 @@ static void func_message_card_click(void)
     {
         return;
     }
-    printf("click compo_id:%d\n", compo_id);
+//    printf("click compo_id:%d\n", compo_id);
     compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
     if (compo_cardbox_get_visible(cardbox))
     {
@@ -302,7 +307,7 @@ static void func_message_card_click(void)
         u16 msg_id = compo_id - COMPO_CARD_START - 1;
         char *msg = (char*)f_msg->ute_msg->historyNotify[msg_id].content;
         char time[30]= {0};
-        printf("msg:%s\n", msg);
+//        printf("msg:%s\n", msg);
 //        sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
 //                f_msg->ute_msg->historyNotify[msg_id].day, f_msg->ute_msg->historyNotify[msg_id].hour, f_msg->ute_msg->historyNotify[msg_id].min);
         sprintf(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
@@ -314,6 +319,11 @@ static void func_message_card_click(void)
             uteModuleNotifySetDisplayIndex(msg_id);
             uteModuleNotifyDelAllHistoryData(false);
             uteModuleNotifyGetData(f_msg->ute_msg);
+
+            if(compo_id == 1)
+            {
+                widget_page_set_client(func_cb.frm_main->page_body, 0, -(card.h + 10) / 4);
+            }
         }
     }
 
@@ -381,14 +391,21 @@ static void func_message_card_update(bool first_update)
 
     if (card_y)
     {
+//        printf("card_y=%d\n",card_y);
+////        if(card_y<=GUI_SCREEN_WIDTH/2)
+////        {
+////            card_y-=40;
+////        }
+//        card_y-=40;
+//        printf("card_y=%d\n",card_y);
         //更新按钮
         s32 btn_y  = 0;
         for (int i=0; i<MSG_BTN_CNT; i++)
         {
             btn_y = card_y + (card.h + 10) / 2 + gui_image_get_size(message_btn[i].res).hei/2 + 10;
 //            printf("btn_y [%d,%d]\n", btn_y, GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2);
-            if (btn_y < GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2 + 20) { // 按钮位置小于屏幕底部特殊处理
-                btn_y = GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2 + 20;
+            if (btn_y < GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2) { // 按钮位置小于屏幕底部特殊处理
+                btn_y = GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2;
             }
 
             compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_DEL+i);

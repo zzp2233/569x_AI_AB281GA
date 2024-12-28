@@ -51,7 +51,10 @@ static u8 get_pwrkey(void)
 #if UTE_LOG_KEYS_LVL
     else
     {
-        printf(key_val_str, key_val);
+        if(key_val != 0xff)
+        {
+            printf(key_val_str, key_val);
+        }
     }
 #endif
     while ((u8)key_val > pwrkey_table[num].adc_val)

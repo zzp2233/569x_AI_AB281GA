@@ -195,12 +195,23 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             compo_textbox_set_multiline(txt_msg, true);
             compo_textbox_set(txt_msg, msg);
 
+
             //title
             compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
             compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,
                                   func_cover_get_title_txt_y(msg_type));
             compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
             compo_textbox_set(txt_title, title);
+
+            if(sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
+            {
+                compo_textbox_set_multiline(txt_msg, false);
+                compo_textbox_set_align_center(txt_msg, false);
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,
+                                           func_cover_get_title_txt_y(msg_type)-(widget_text_get_area(txt_title->txt).hei-widget_text_get_height()),
+                                           widget_text_get_area(txt_msg->txt).wid,
+                                           widget_text_get_height()); //调整文本位置
+            }
         }
         break;
 
@@ -210,11 +221,15 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //msg
             compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
             compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,
-                                       GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT/2.5);              //调整文本位置
-//            compo_textbox_set_multiline(txt_msg, true);
-//            compo_textbox_set(txt_msg, msg);
-//            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,
-//                                       widget_text_get_area(txt_msg->txt).wid, widget_text_get_area(txt_msg->txt).hei);              //调整文本位置
+                                       GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);              //调整文本位置
+            compo_textbox_set_multiline(txt_msg, true);
+            compo_textbox_set(txt_msg, msg);
+            area_t txt_leng = widget_text_get_area(txt_msg->txt);
+            if(txt_leng.hei>GUI_SCREEN_HEIGHT/2.5)
+            {
+                txt_leng.hei = GUI_SCREEN_HEIGHT/2.5;
+            }
+            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-widget_text_get_height(),txt_leng.wid,txt_leng.hei);              //调整文本位置
             compo_textbox_set_multiline(txt_msg, true);
             compo_textbox_set(txt_msg, msg);
 
@@ -226,7 +241,22 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 
         }
         break;
+        case MSGBOX_MSG_TYPE_SPORT:
+        {
+            //msg
+            compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.2,
+                                       GUI_SCREEN_WIDTH, GUI_SCREEN_CENTER_Y);              //调整文本位置
+            compo_textbox_set_multiline(txt_msg, true);
+            compo_textbox_set(txt_msg, msg);
 
+            //title
+            compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+            compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4);
+            compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+            compo_textbox_set(txt_title, title);
+        }
+            break;
         default:
             break;
     }

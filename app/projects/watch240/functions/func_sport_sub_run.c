@@ -735,6 +735,15 @@ static void func_sport_sub_run_process(void)
         func_sport_sub_run_updata();
     }
 
+    compo_textbox_t* time = compo_getobj_byid(COMPO_ID_TXT_TIME);
+    if(uteModuleSystemtime12HOn())
+    {
+        compo_textbox_set_location(time, 168-52, 15, 52+52, 23);
+    }
+    else
+    {
+        compo_textbox_set_location(time, 168, 15, 52+52, 23);
+    }
 
     func_process();
 }
@@ -784,11 +793,11 @@ static void func_sport_sub_run_click_handler(void)
 //            sport_flag ^=1;
             if (sport_flag)
             {
-                res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, 0);
+                res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_SPORT);
             }
             else
             {
-                 res = msgbox(i18n[STR_SPORT_EXIT_MSG1], NULL, NULL, MSGBOX_MODE_BTN_YESNO, 0);
+                 res = msgbox(i18n[STR_SPORT_EXIT_MSG1], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE);
             }
 
             if (res == MSGBOX_RES_OK)

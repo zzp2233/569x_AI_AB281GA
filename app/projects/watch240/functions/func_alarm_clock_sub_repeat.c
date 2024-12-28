@@ -105,7 +105,7 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
     compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 15);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
 
     //新建图像
 //    compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_COMMON_NO_CLICK_BIN);
@@ -113,14 +113,14 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 //    compo_picturebox_set_pos(pic_click, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_COMMON_NO_CLICK_BIN).hei / 2 - 5);
 //    compo_picturebox_set_visible(pic_click, false);
 
-    compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
-    compo_setid(pic_click, COMPO_ID_PIC_REPETAT_YES_CLICK);
-    compo_picturebox_set_pos(pic_click, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei / 2 - 15);
-    compo_picturebox_set_visible(pic_click, false);
+//    compo_picturebox_t *pic_click = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
+//    compo_setid(pic_click, COMPO_ID_PIC_REPETAT_YES_CLICK);
+//    compo_picturebox_set_pos(pic_click, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei / 2 - 20);
+//    compo_picturebox_set_visible(pic_click, false);
 
     //确定文本
-    compo_textbox_t* yes_txt = compo_textbox_create_for_page(frm, frm->page, strlen(i18n[STR_OK]));
-    compo_textbox_set_location(yes_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 15,
+    compo_textbox_t* yes_txt = compo_textbox_create(frm, strlen(i18n[STR_OK]));
+    compo_textbox_set_location(yes_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
                                gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
                                gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
     compo_textbox_set(yes_txt, i18n[STR_OK]);
@@ -135,7 +135,7 @@ static void func_alarm_clock_sub_repeat_button_touch_handle(void)
 
     int id = compo_get_button_id();
 //    compo_picturebox_t *pic_no_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK);
-    compo_picturebox_t *pic_yes_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK);
+//    compo_picturebox_t *pic_yes_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK);
 
     switch (id)
     {
@@ -143,7 +143,7 @@ static void func_alarm_clock_sub_repeat_button_touch_handle(void)
 //            compo_picturebox_set_visible(pic_no_click, true);
 //            break;
         case COMPO_ID_BTN_REPETAT_YES:
-            compo_picturebox_set_visible(pic_yes_click, true);
+//            compo_picturebox_set_visible(pic_yes_click, true);
             break;
 
         default:
@@ -156,9 +156,9 @@ static void func_alarm_clock_sub_repeat_button_touch_handle(void)
 static void func_alarm_clock_sub_repeat_button_release_handle(void)
 {
 //    compo_picturebox_t *pic_no_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK);
-    compo_picturebox_t *pic_yes_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK);
+//    compo_picturebox_t *pic_yes_click = compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK);
 //    compo_picturebox_set_visible(pic_no_click, false);
-    compo_picturebox_set_visible(pic_yes_click, false);
+//    compo_picturebox_set_visible(pic_yes_click, false);
 }
 
 //单击按钮
@@ -213,8 +213,27 @@ static void func_alarm_clock_sub_repeat_button_click(void)
                 func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
                 break;
             }
-
-
+//            u8 time_hour = sys_cb.alarm_edit_hour;
+//
+//            if (digit == 1)
+//            {
+//                if (time_hour == 12)
+//                {
+//                    time_hour = 12; // 下午12点保持为12
+//                }
+//                else
+//                {
+//                    time_hour += 12;
+//                }
+//            }
+//            else
+//            {
+//                if (time_hour == 12)
+//                {
+//                    time_hour = 0; // 上午12点转换为0
+//                }
+//            }
+//            printf("hour:%d min:%d",sys_cb.alarm_edit_hour,sys_cb.alarm_edit_min);
             ALARM_SET(sys_cb.alarm_edit_idx, true, sys_cb.alarm_edit_cycle, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min, 0, 0);
             func_cb.sta = FUNC_ALARM_CLOCK;
             break;

@@ -253,13 +253,13 @@ compo_form_t *func_weather_form_create(void)
 
     picbox = compo_picturebox_create(frm, weather_list[get_weather_id[0]].res_addr);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5);
-
+//    weather_date.fristDayCurrTemperature = 44;
 //    if(weather_date.fristDayCurrTemperature == 0)weather_date.fristDayCurrTemperature = 0;
     compo_number_t *num=NULL;
     if(uteModuleWeatherGetCurrDay() == time.day)
     {
         num = compo_number_create(frm,UI_BUF_I330001_WEATHER_NUM_BIN, 3);
-        compo_number_set_margin(num, -2);
+        compo_number_set_margin(num, 0);
         compo_number_set_radix(num, 11, true);
         compo_number_set(num, weather_date.fristDayCurrTemperature);
         compo_number_set_align(num, 1 );

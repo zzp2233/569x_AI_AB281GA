@@ -428,8 +428,10 @@ void gui_set_cover_index(uint8_t index)
         //char *msg = (char *)i18n[tbl_cover_remind_item[sys_cb.cover_index - 1].str_idx];
         char *msg = (char *)i18n[func_cover_get_str_idx(MSGBOX_MSG_TYPE_REMIND_COVER)];
         char title[8] = {'\0'};
+        char txt[50] = {'\0'};
         if ((sys_cb.cover_index >= REMIND_COVER_ALARM) && (sys_cb.cover_index <= REMIND_COVER_HEALTH_DRINK))
         {
+
             if (sys_cb.cover_index == REMIND_COVER_ALARM)                   //用户闹钟
             {
                 //获取用户闹钟
@@ -437,12 +439,30 @@ void gui_set_cover_index(uint8_t index)
                 {
                     uteModuleSystemtimeGetAlarm(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 }
+                u8 hour_num=alarm_p->repeatRemindHour;
+                if(uteModuleSystemtime12HOn())
+                {
+                    hour_num%=12;
+                    if(hour_num==0)
+                    {
+                        hour_num = 12;
+                    }
+                }
+
 //                alarm_p = &alarm;
                 if (alarm_p->isRepeatRemindOpen)
                 {
                     if(uteModuleSystemtime12HOn())
                     {
-                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->repeatRemindHour%12, alarm_p->repeatRemindMin);
+                        snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
+                        if(alarm_p->repeatRemindHour>12)
+                        {
+                            snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
+                        }
+                        else
+                        {
+                            snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
+                        }
                     }
                     else
                     {
@@ -453,11 +473,21 @@ void gui_set_cover_index(uint8_t index)
                 {
                     if(uteModuleSystemtime12HOn())
                     {
-                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->hour%12, alarm_p->min);
+
+
+                        snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
+                        if(alarm_p->repeatRemindHour>12)
+                        {
+                            snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
+                        }
+                        else
+                        {
+                            snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
+                        }
                     }
                     else
                     {
-                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->hour, alarm_p->min);
+                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
                     }
                 }
                 if (bt_is_connected())//暂停音乐
@@ -482,8 +512,19 @@ void gui_set_cover_index(uint8_t index)
 //                snprintf(title, sizeof(title), "%02d:%02d", tm.hour, tm.min);
             }
         }
+        int res=0;
 
-        int res = msgbox(msg, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
+        if(uteModuleSystemtime12HOn() && sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
+        {
+            res = msgbox(txt, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
+            printf("clock=%s\n",txt);
+        }
+        else
+        {
+            res = msgbox(msg, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
+            printf("1111=%s\n",msg);
+        }
+
 
         if (res == MSGBOX_RES_REMIND_LATER)         //稍后提醒
         {

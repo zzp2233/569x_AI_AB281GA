@@ -728,7 +728,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
 
     //建立确定按钮 - 未按下图片
     compo_button_t* add_btn = compo_button_create_by_image(frm, tbl_aclock_set_pic_bg.btn_ok.res1);
-    compo_button_set_pos(add_btn, tbl_aclock_set_pic_bg.btn_ok.x, tbl_aclock_set_pic_bg.btn_ok.y);
+    compo_button_set_pos(add_btn, tbl_aclock_set_pic_bg.btn_ok.x, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
     if (ALARM_IS_FREE(sys_cb.alarm_edit_idx))   //add
     {
         compo_setid(add_btn, tbl_aclock_set_pic_bg.btn_ok.id1);
@@ -739,17 +739,17 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     }
 
     //建立确定按钮图像 - 按下图片
-    compo_picturebox_t *pic_click = compo_picturebox_create(frm, tbl_aclock_set_pic_bg.btn_ok.res2);
-    compo_picturebox_set_pos(pic_click, tbl_aclock_set_pic_bg.btn_ok.x, tbl_aclock_set_pic_bg.btn_ok.y);
-    compo_picturebox_set_visible(pic_click, false);
-    if (ALARM_IS_FREE(sys_cb.alarm_edit_idx))   //add
-    {
-        compo_setid(pic_click, tbl_aclock_set_pic_bg.btn_ok.id1_click);
-    }
-    else        //edit
-    {
-        compo_setid(pic_click, tbl_aclock_set_pic_bg.btn_ok.id2_click);
-    }
+//    compo_picturebox_t *pic_click = compo_picturebox_create(frm, tbl_aclock_set_pic_bg.btn_ok.res2);
+//    compo_picturebox_set_pos(pic_click, tbl_aclock_set_pic_bg.btn_ok.x, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
+//    compo_picturebox_set_visible(pic_click, false);
+//    if (ALARM_IS_FREE(sys_cb.alarm_edit_idx))   //add
+//    {
+//        compo_setid(pic_click, tbl_aclock_set_pic_bg.btn_ok.id1_click);
+//    }
+//    else        //edit
+//    {
+//        compo_setid(pic_click, tbl_aclock_set_pic_bg.btn_ok.id2_click);
+//    }
 
     //建立 :
     compo_picturebox_t *bg_colon = compo_picturebox_create(frm, tbl_aclock_set_pic_bg.bg_colon.res);
@@ -758,7 +758,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
 
     //建立确定按钮文本
     compo_textbox_t* btn_str = compo_textbox_create(frm, strlen(i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]));
-    compo_textbox_set_location(btn_str, tbl_aclock_set_pic_bg.btn_ok.x, tbl_aclock_set_pic_bg.btn_ok.y,
+    compo_textbox_set_location(btn_str, tbl_aclock_set_pic_bg.btn_ok.x,GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
                                tbl_aclock_set_pic_bg.btn_ok.font_w, tbl_aclock_set_pic_bg.btn_ok.font_h);
     compo_textbox_set(btn_str, i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]);
 
@@ -1360,7 +1360,7 @@ static void func_alarm_clock_sub_set_button_touch_handle(void)
     switch (id)
     {
         case COMPO_ID_BTN_CONTINUE:
-            compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_CONTINUE_CLICK), true);
+//            compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_CONTINUE_CLICK), true);
             break;
 
 //        case COMPO_ID_BTN_REPETAT_NO:
@@ -1368,7 +1368,7 @@ static void func_alarm_clock_sub_set_button_touch_handle(void)
 //            break;
 
         case COMPO_ID_BTN_REPETAT_YES:
-            compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK), true);
+//            compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK), true);
             break;
 
         case COMPO_ID_BTN_ACLOCK_HOUR:
@@ -1394,12 +1394,12 @@ static void func_alarm_clock_sub_set_button_release_handle(void)
 {
     if (ALARM_IS_FREE(sys_cb.alarm_edit_idx))   //add
     {
-        compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_CONTINUE_CLICK), false);
+//        compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_CONTINUE_CLICK), false);
     }
     else        //edit
     {
 //        compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK), false);
-        compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK), false);
+//        compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK), false);
     }
 }
 

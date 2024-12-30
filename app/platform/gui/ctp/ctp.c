@@ -1,7 +1,8 @@
 #include "include.h"
 #include "ute_module_message.h"
+#include "ute_module_log.h"
 
-#define TRACE_EN                0
+#define TRACE_EN                UTE_LOG_DRV_TP_LVL
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

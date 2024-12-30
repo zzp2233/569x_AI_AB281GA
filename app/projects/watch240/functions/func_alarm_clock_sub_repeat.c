@@ -213,27 +213,7 @@ static void func_alarm_clock_sub_repeat_button_click(void)
                 func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
                 break;
             }
-//            u8 time_hour = sys_cb.alarm_edit_hour;
-//
-//            if (digit == 1)
-//            {
-//                if (time_hour == 12)
-//                {
-//                    time_hour = 12; // 下午12点保持为12
-//                }
-//                else
-//                {
-//                    time_hour += 12;
-//                }
-//            }
-//            else
-//            {
-//                if (time_hour == 12)
-//                {
-//                    time_hour = 0; // 上午12点转换为0
-//                }
-//            }
-//            printf("hour:%d min:%d",sys_cb.alarm_edit_hour,sys_cb.alarm_edit_min);
+//            printf("hour:%d min:%d\n",sys_cb.alarm_edit_hour,sys_cb.alarm_edit_min);
             ALARM_SET(sys_cb.alarm_edit_idx, true, sys_cb.alarm_edit_cycle, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min, 0, 0);
             func_cb.sta = FUNC_ALARM_CLOCK;
             break;

@@ -100,6 +100,7 @@ compo_form_t *func_bt_call_form_create(void)
     compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
 //    compo_textbox_set_autosize(time_txt, true);
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
+    compo_textbox_set_forecolor(time_txt, COLOR_GREEN);
 
     //挂断按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);

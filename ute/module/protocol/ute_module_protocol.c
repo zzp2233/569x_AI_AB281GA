@@ -2310,6 +2310,65 @@ void uteModuleProtocolFactoryTest(uint8_t*receive,uint8_t length)
     uteModuleFactoryTestProtocol(receive,length);
 }
 
+/**
+*@brief     debug数据
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       zn.zeng
+*@date       2022-03-16
+*/
+void uteModuleProtocolDebugData(uint8_t*receive,uint8_t length)
+{
+    uint8_t response[10];
+    memset(response, 0, sizeof(response));
+#if UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
+    if(receive[1]==0x06)
+    {
+        if(receive[2]==0x01)
+        {
+            uteModuleHardfaultStartSendlogData();
+        }
+    }
+#endif
+#if UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT
+    if(receive[1]==0x07)
+    {
+        if(receive[2]==0x01)
+        {
+            uteModuleSleepStartSendSleepLogData();
+        }
+    }
+#endif
+#if UTE_MODULE_RUNING_LOG_SUPPORT && UTE_MODULE_LOG_SUPPORT
+    if(receive[1]==0x08)
+    {
+        if(receive[2]==0x01 || receive[2]==0x00)
+        {
+            uteModuleLogSetSendRuningLogSwitch(receive[2]);
+            response[0] = receive[0];
+            response[1] = receive[1];
+            response[2] = receive[2];
+            uteModuleProfileBleSendToPhone(&response[0],3);
+        }
+    }
+#endif
+#if APP_DBG_GSENSOR_DATA
+    if(receive[1] == 0x04)
+    {
+        if(receive[2] == 0x00)
+        {
+            uteModuleSportSetAppDebugGsensorDataSwitch(false);
+        }
+        else if(receive[2] == 0x01)
+        {
+            uteModuleSportSetAppDebugGsensorDataSwitch(true);
+        }
+    }
+#endif
+}
+
+
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 {
@@ -2364,7 +2423,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 #if UTE_MODULE_UNIT_TEST_FUNCTION_DATAS_SUPPORT
     {.privateCmd = CMD_DEBUG_TEST_DATA,.publicCmd=CMD_DEBUG_TEST_DATA,.function=uteModuleUnitTestDatasReceiveHandler},
 #else
-    // {.privateCmd = CMD_DEBUG_TEST_DATA,.publicCmd=CMD_DEBUG_TEST_DATA,.function=uteModuleProtocolDebugData},
+    {.privateCmd = CMD_DEBUG_TEST_DATA,.publicCmd=CMD_DEBUG_TEST_DATA,.function=uteModuleProtocolDebugData},
 #endif
     {.privateCmd = CMD_QUICK_REPLY_GET_PHONE_NUMBER,.publicCmd=CMD_QUICK_REPLY_GET_PHONE_NUMBER,.function=uteModuleProtocolQuickReply},
     {.privateCmd = CMD_QUICK_REPLY_CONTENT,.publicCmd=CMD_QUICK_REPLY_CONTENT,.function=uteModuleProtocolQuickReply},

@@ -70,7 +70,7 @@ compo_form_t *func_set_sub_wrist_form_create(void)
 
     compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
     compo_cardbox_text_set_location(card, 0, 10-232/2, -14,
-                                    232 - gui_image_get_size(tbl_wrist_switch_res[0]).wid - 10,
+                                    232 - gui_image_get_size(tbl_wrist_switch_res[0]).wid - 50,
                                     30);
     compo_cardbox_text_set_align_center(card, 0, false);
     widget_text_set_color(card->text[0], make_color(255,255,255));

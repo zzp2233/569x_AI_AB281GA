@@ -35,6 +35,8 @@
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_NFC_SWITCH "systemparam/nfcSwitch"
 /*! 写入一级界显示开关、顺序,wang.luo 2024-11-16 */
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_SCREEN_TBL_SORT "systemparam/screenTblSort"
+/*! 写入重启原因,wang.luo 2024-12-30 */
+#define UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR "restartInfo"
 
 /*快捷开关表! zn.zeng, 2021-08-24  */
 #define    QUICK_SWITCH_FINDBAND   0x01000000
@@ -241,6 +243,8 @@ void uteApplicationCommonRestart(void);
 void uteApplicationCommonSetAncsConnStatus(bool isConnected);
 bool uteApplicationCommonGetAncsConnStatus(void);
 uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len);
+void uteModuleHardfaultInfoSave(void);
+void uteModuleHardfaultStartSendlogData(void);
 
 float ExactDecimalPoint(float data,uint8_t bit);
 

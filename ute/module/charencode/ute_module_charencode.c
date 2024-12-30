@@ -1165,6 +1165,14 @@ void uteModuleCharencodeReplaceSubString(const char *original, char *result, cha
 {
     const char *pos = original; // 用于遍历原始字符串
     uint8_t replaceLen = strlen(replace);
+    uint8_t replacementLen = strlen(replacement);
+
+    // 如果 replacement 长度超过 replace 长度，则截断 replacement
+    if (replacementLen > replaceLen)
+    {
+        replacement[replaceLen] = '\0';
+        replacementLen = replaceLen;
+    }
 
     // 清空结果字符串
     result[0] = '\0';

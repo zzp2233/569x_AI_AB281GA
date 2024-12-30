@@ -57,7 +57,11 @@ void uteModulePlatformDelayMs(uint32_t ms)
 void uteModulePlatformSystemReboot(void)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s",__func__);
-    WDT_RST();
+    // WDT_RST();
+    //主动写入软件复位原因
+    LVDCON &= ~(0x1f << 8);
+    LVDCON |= BIT(12);
+    LVDCON |= (1 << 8);
 }
 static ute_module_platform_timer_t uteModulePlatformTimerData[UTE_MODULE_PLATFORM_TIMER_MAX] AT(.disp.ute);
 uint8_t uteModulePlatformTimerCounter = 0;

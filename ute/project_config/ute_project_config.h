@@ -1183,6 +1183,18 @@
 #define UTE_CONNECT_PC_AUDIO_TEST 0
 #endif
 
+/*! hardfault info to flash zn.zeng,2022-03-10*/
+#if UTE_MODULE_LOG_SUPPORT
+#define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 0
+#else
+#define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 1
+#endif
+
+/*! 保存重启信息最大数量,wang.luo 2024-12-30 */
+#ifndef UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT
+#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 5
+#endif
+
 /*! PWRKEY,wang.luo 2024-12-03 */
 #ifndef UTE_DRV_PWRKEY_SUPPORT
 #define UTE_DRV_PWRKEY_SUPPORT 1

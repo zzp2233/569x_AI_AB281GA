@@ -1229,7 +1229,7 @@ static void func_alarm_clock_set_move_handle(u8 id)
 
             sys_cb.alarm_edit_hour = hour;
             sys_cb.alarm_edit_min = min;
-            printf("alarm%d_edit[%02d:%02d]\n", sys_cb.alarm_edit_idx, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min);
+//            printf("alarm%d_edit[%02d:%02d]\n", sys_cb.alarm_edit_idx, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min);
             break;
         }
         evt_message(msg_dequeue());

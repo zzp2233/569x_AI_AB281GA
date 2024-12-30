@@ -229,7 +229,7 @@ static void func_stopwatch_process(void)
             f_stopwatch->sec = sec;
             f_stopwatch->msec = msec;
 
-            snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", min, sec, msec / 10);
+            snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
             compo_textbox_set(num_time, str_buff);
         }
     }

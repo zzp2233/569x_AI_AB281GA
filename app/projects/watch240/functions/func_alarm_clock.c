@@ -108,30 +108,6 @@ compo_form_t *func_alarm_clock_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK]);
 
-    //添加闹钟按钮图标
-    if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
-    {
-        icon_add = widget_icon_create(frm->page, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
-        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
-
-        //page_body结合compo_page_move实现列表滑动（先绘制所有组件，再将page平均分段）
-        widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 42 / 100+15, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT * 6 / 10);//208);
-    }
-    else
-    {
-        icon_add = NULL;
-    }
-
-    //添加闹钟按钮文字
-//    compo_textbox_t* icon_add_txt = compo_textbox_create(frm, strlen(i18n[STR_ADD_CLOCK]));
-    if (icon_add) {
-        compo_textbox_t* icon_add_txt = compo_textbox_create_for_page(frm, frm->page, 50);
-        compo_textbox_set_location(icon_add_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
-                                   gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
-                                   gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
-        compo_textbox_set(icon_add_txt, i18n[STR_ADD_CLOCK]);
-    }
-
     //闹钟选项卡
     char str_buff[50];
     compo_cardbox_t *cardbox;
@@ -218,7 +194,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_text_set_forecolor(cardbox, 1, MAKE_GRAY(128));
             compo_cardbox_text_set(cardbox, 1, str_buff);
             compo_cardbox_text_set_align_center(cardbox, 1, false);
-            compo_cardbox_text_set_location(cardbox, 1, -100, 10, 180, 40);
+            compo_cardbox_text_set_location(cardbox, 1, -100, 10, 160, 40);
 
             compo_cardbox_rect_set_color(cardbox, 0, MAKE_GRAY(26));
             compo_cardbox_rect_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4, 20);
@@ -244,6 +220,31 @@ compo_form_t *func_alarm_clock_form_create(void)
 //        compo_cardbox_rect_set_color(cardbox, 0, MAKE_GRAY(26));
 //        compo_cardbox_rect_set_location(cardbox, 0, 0, 0, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4, 20);
     }
+
+        //添加闹钟按钮图标
+    if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
+    {
+        icon_add = widget_icon_create(frm->page, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
+        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
+
+        //page_body结合compo_page_move实现列表滑动（先绘制所有组件，再将page平均分段）
+        widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 42 / 100+15, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT * 6 / 10);//208);
+    }
+    else
+    {
+        icon_add = NULL;
+    }
+
+    //添加闹钟按钮文字
+//    compo_textbox_t* icon_add_txt = compo_textbox_create(frm, strlen(i18n[STR_ADD_CLOCK]));
+    if (icon_add) {
+        compo_textbox_t* icon_add_txt = compo_textbox_create_for_page(frm, frm->page, 50);
+        compo_textbox_set_location(icon_add_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
+                                   gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
+                                   gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
+        compo_textbox_set(icon_add_txt, i18n[STR_ADD_CLOCK]);
+    }
+
     return frm;
 }
 

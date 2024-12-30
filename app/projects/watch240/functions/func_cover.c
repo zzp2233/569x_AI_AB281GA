@@ -27,7 +27,7 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
     /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
     [REMIND_COVER_ALARM]            = {UI_BUF_I330001_THEME_1_ALARM_BIN,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5,  GUI_SCREEN_CENTER_Y},
     [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I330001_REPEAT_LONG_SIT_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
-    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I330001_REPEAT_LONG_SIT_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+//    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I330001_REPEAT_LONG_SIT_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
 //    [REMIND_COVER_HEALTH_DRINK]     = {UI_BUF_POP_UP_WATER_CLOCK_BIN,             STR_DRINK_REMIND,       102,            190},
     [REMIND_COVER_FIND_WATCH]       = {UI_BUF_I330001_FINGWATCH_WATCH_BIN,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_GOAL]             = {UI_BUF_I330001_REPEAT_GOAL_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
@@ -440,55 +440,47 @@ void gui_set_cover_index(uint8_t index)
                     uteModuleSystemtimeGetAlarm(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 }
                 u8 hour_num=alarm_p->repeatRemindHour;
-                if(uteModuleSystemtime12HOn())
-                {
-                    hour_num%=12;
-                    if(hour_num==0)
-                    {
-                        hour_num = 12;
-                    }
-                }
-
+                printf("hour=%d min=%d\n",alarm_p->repeatRemindHour,alarm_p->repeatRemindMin);
 //                alarm_p = &alarm;
                 if (alarm_p->isRepeatRemindOpen)
                 {
-                    if(uteModuleSystemtime12HOn())
+                    if (hour_num >= 12)
                     {
-                        snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
-                        if(alarm_p->repeatRemindHour>12)
+                        if(hour_num !=12)
                         {
-                            snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
+                            hour_num -=12;
                         }
-                        else
-                        {
-                            snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
-                        }
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
                     }
                     else
                     {
-                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
+                        if(hour_num==0)
+                        {
+                            hour_num = 12;
+                        }
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
                     }
+                    snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
                 }
                 else
                 {
-                    if(uteModuleSystemtime12HOn())
+                    if (hour_num >= 12)
                     {
-
-
-                        snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
-                        if(alarm_p->repeatRemindHour>12)
+                        if(hour_num !=12)
                         {
-                            snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
+                            hour_num -=12;
                         }
-                        else
-                        {
-                            snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
-                        }
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
                     }
                     else
                     {
-                        snprintf(title, sizeof(title), "%02d:%02d", alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
+                        if(hour_num==0)
+                        {
+                            hour_num = 12;
+                        }
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
                     }
+                    snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
                 }
                 if (bt_is_connected())//暂停音乐
                 {

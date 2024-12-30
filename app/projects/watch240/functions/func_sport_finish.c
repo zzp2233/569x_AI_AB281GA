@@ -43,13 +43,19 @@ compo_form_t *func_sport_finish_form_create(void)
 //        printf("sport = %d\n",f_sport_finish->sport_finish_state);
         ute_module_more_sports_data_t sport_data;
         uteModuleSportGetMoreSportsDatas(&sport_data);
-        ute_module_systemtime_time_t time;
-        uteModuleSystemtimeGetTime(&time);//获取系统时间
+//        ute_module_systemtime_time_t time;
+//        uteModuleSystemtimeGetTime(&time);//获取系统时间
+
         if(uteModuleSystemtime12HOn())
         {
-            time.hour %=12;
-            time.min  %=12;
+            sport_data.saveData.startSportTime.hour %=12;
+            if(sport_data.saveData.startSportTime.hour == 0)
+            {
+                sport_data.saveData.startSportTime.hour = 12;
+            }
+//            sport_data.saveData.startSportTime.min  %=12;
         }
+//        sport_data.totalSportTime = 51564;
         char txt_buf[50];
         memset(txt_buf,0,sizeof(txt_buf));
 //        f_sport_finish->sport_finish_state = COMPO_WALK_STATE;
@@ -69,7 +75,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
 
                 //时间日期
-                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",time.year,time.month,time.day,time.hour,time.min);
+                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);
@@ -181,7 +187,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
 
                 //时间日期
-                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",time.year,time.month,time.day,time.hour,time.min);
+                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);
@@ -278,7 +284,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
 
                 //时间日期
-                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",time.year,time.month,time.day,time.hour,time.min);
+                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);

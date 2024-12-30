@@ -151,11 +151,15 @@ void uteModuleFilesystemDelAllData(void)
 *@author        zn.zeng
 *@date        Jul 01, 2021
 */
+
+// static uint32_t fs_tick = 0;
 void uteModuleFilesystemInit(void)
 {
     // mount the filesystem
-    uteModulePlatformWdgDisable();
+    uteModulePlatformWdgFeed();
+    
 
+    // fs_tick =  tick_get();
     int err = lfs_mount(&uteModuleLfs, &uteModuleFilesystemFsConfig);
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,module err=%d", __func__,err);
     // reformat if we can't mount the filesystem
@@ -165,6 +169,7 @@ void uteModuleFilesystemInit(void)
         lfs_format(&uteModuleLfs, &uteModuleFilesystemFsConfig);
         lfs_mount(&uteModuleLfs, &uteModuleFilesystemFsConfig);
     }
+    // printf("fs_tick = %d\n", tick_get() - fs_tick);
 
 #if UTE_MODULE_ALI_UPAY_SUPPORT
     //mount the aliUpay filesystem
@@ -179,7 +184,7 @@ void uteModuleFilesystemInit(void)
     }
 
 #endif
-    uteModulePlatformWdgStart();
+    // uteModulePlatformWdgStart();
     uteModulePlatformCreateMutex(&uteModuleFilesystemMute);
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,free space= %dbyte", __func__, uteModuleFilesystemGetFreeByte());
 }

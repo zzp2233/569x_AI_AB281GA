@@ -14,14 +14,7 @@
 
 static u8 animation_id = 0;
 
-typedef struct
-{
-    bool is_hide;
-    compo_picturebox_t *pic;
-} default_lang_pic_info_t;
-static default_lang_pic_info_t *default_lang_pic_info = NULL;
-static u8 default_lang_pic_num = 0;
-#define MAX_DEFAULT_LANG_PIC_NUM 16 // 最多记录默认语言图片信息个数
+static bool has_default_lang_pic = false;
 
 //表盘文本编号表
 const u16 text_str_tbl[] =
@@ -146,6 +139,8 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
         case COMPO_BOND_TIME_AMPM:
         case COMPO_BOND_TIME_WEEK:
         case COMPO_BOND_TIME_MONTH:
+        case COMPO_BOND_DISTANCE_UNIT:
+        case COMPO_BOND_TEMPERATURE_UNIT:
         {
             compo_picturebox_t *pic;
             pic = compo_picturebox_create(frm, res_addr);
@@ -153,23 +148,21 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
             TRACE("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
-
+            TRACE("has_default_lang_pic:%d",has_default_lang_pic);
             if (uteModuleSystemtimeCompareLanguage(uitool_res->rsv))
             {
                 compo_picturebox_set_visible(pic, true);
-                if(default_lang_pic_info)
-                {
-                    default_lang_pic_info[default_lang_pic_num].is_hide = true; // 找到比配语言的图片，隐藏语言图片
-                }
             }
             else if (uitool_res->rsv == 0)
             {
-                if(default_lang_pic_info && default_lang_pic_num < MAX_DEFAULT_LANG_PIC_NUM)
+                if(has_default_lang_pic)
                 {
-                    default_lang_pic_info[default_lang_pic_num].pic = pic; // 记录默认语言图片指针
-                    default_lang_pic_num ++;                    
+                    compo_picturebox_set_visible(pic, false);
                 }
-                compo_picturebox_set_visible(pic, false); // 暂时隐藏
+                else
+                {
+                    compo_picturebox_set_visible(pic, true); 
+                }
             }
             else
             {
@@ -371,11 +364,31 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
 
     u32 user_addr = base_addr + sizeof(watchConfig_t);
 
+    has_default_lang_pic = false;
 
-    if(!default_lang_pic_info)
+    for (u16 i = 0; i < compo_num; i++)
     {
-        default_lang_pic_info = (default_lang_pic_info_t *)ab_zalloc(sizeof(default_lang_pic_info_t) * MAX_DEFAULT_LANG_PIC_NUM);
-        default_lang_pic_num = 0;
+        if(has_default_lang_pic)
+        {
+            break;
+        }
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        switch (uitool_res.bond_type)
+        {
+        case COMPO_BOND_COMM_UNIT:
+        case COMPO_BOND_TIME_AMPM:
+        case COMPO_BOND_TIME_WEEK:
+        case COMPO_BOND_TIME_MONTH:
+        case COMPO_BOND_DISTANCE_UNIT:
+        case COMPO_BOND_TEMPERATURE_UNIT:
+            if (uteModuleSystemtimeCompareLanguage(uitool_res.rsv))
+            {
+                has_default_lang_pic = true;
+            }
+            break;
+        default:
+            break;
+        }
     }
 
     for(u16 i=0; i<compo_num; i++)
@@ -409,21 +422,6 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
                 halt(HALT_GUI_DIALPLATE_TYPE);
                 break;
         }
-    }
-
-    for (u8 i = 0; i < default_lang_pic_num; i++)
-    {
-        if (default_lang_pic_info[i].pic)
-        {
-            compo_picturebox_set_visible(default_lang_pic_info[i].pic, !default_lang_pic_info[i].is_hide); // 恢复默认语言图片显示
-        }
-    }
-
-    if (default_lang_pic_info)
-    {
-        ab_free(default_lang_pic_info);
-        default_lang_pic_info = NULL;
-        default_lang_pic_num = 0;
     }
 }
 

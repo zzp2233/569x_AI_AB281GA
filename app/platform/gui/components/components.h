@@ -71,6 +71,8 @@ enum COMPO_BOND_DATA
 
     COMPO_BOND_TIME_WEEK = 37,          //星期
     COMPO_BOND_TIME_MONTH,              //月份
+    COMPO_BOND_TEMPERATURE_UNIT,        //温度单位
+    COMPO_BOND_DISTANCE_UNIT,           //距离单位
 
     COMPO_BOND_KCAL = 64,               //卡路里
     COMPO_BOND_STEP,                    //步数
@@ -80,10 +82,10 @@ enum COMPO_BOND_DATA
     COMPO_BOND_WEATHER,                 //天气
     COMPO_BOND_ATMOMS,                  //气压
     COMPO_BOND_TEMPERATURE,             //温度
-    COMPO_BOND_TEMPERATURE_UNIT,        //温度单位
-    COMPO_BOND_ALTITUDE,                //海拔
-    COMPO_BOND_DISTANCE_UNIT,           //距离单位
-    COMPO_BOND_BATTERY,                 //电池
+    // COMPO_BOND_TEMPERATURE_UNIT,        //温度单位
+    COMPO_BOND_ALTITUDE = 73,           //海拔
+    // COMPO_BOND_DISTANCE_UNIT,           //距离单位
+    COMPO_BOND_BATTERY = 75,            //电池
     COMPO_BOND_DISTANCE,                //距离
 
     COMPO_BOND_HOURMIN_TXT = 120,

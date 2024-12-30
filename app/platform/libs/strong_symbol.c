@@ -515,4 +515,11 @@ bool web_stream_seek(unsigned int ofs, int whence)
 {
     return false;
 }
+
+AT(.com_text.stack.thread)
+bool thread_btstack_get_wdt_clr_en(void)
+{
+    return false;
+}
+
 #endif

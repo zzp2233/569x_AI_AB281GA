@@ -81,8 +81,8 @@ u32 ble_get_adv_data(u8 *adv_buf, u32 buf_size)
 *   ble tx buf set
 */
 
-#define MAX_NOTIFY_NUM          4
-#define MAX_NOTIFY_LEN          247     //max=247
+#define MAX_NOTIFY_NUM          5
+#define MAX_NOTIFY_LEN          256     //max=247
 #define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
 
 AT(.ble_cache.att)

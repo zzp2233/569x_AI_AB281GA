@@ -153,7 +153,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_align_center(txt_msg, false);
                 compo_textbox_set_location(txt_msg, gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 52,
                                            GUI_SCREEN_CENTER_Y/3.5-widget_text_get_height()-2,
-                                           160,widget_text_get_height());              //调整文本位置
+                                           145,widget_text_get_height());              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);
             }

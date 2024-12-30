@@ -420,7 +420,13 @@ static void msgbox_message(size_msg_t msg)
             {
                 if (msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
                 {
-                    msg_cb->res = MSGBOX_RES_ENTER_DETAIL_MSG;
+                    point_t pt = ctp_get_sxy();
+                    if (abs_s(pt.y - GUI_SCREEN_CENTER_Y/3.5) * 2 <= GUI_SCREEN_HEIGHT/5) //简略消息位置判断
+                    {
+                        msg_cb->res = MSGBOX_RES_ENTER_DETAIL_MSG;
+                    } else {
+
+                    }
                     msg_cb->flag_animation = true;
                     msg_cb->flag_entering = false;
                 }

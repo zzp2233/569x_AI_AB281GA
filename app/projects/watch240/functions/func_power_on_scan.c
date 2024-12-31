@@ -41,6 +41,10 @@ compo_form_t *func_power_on_scan_form_create(void)
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
     uteModulePlatformMemoryFree(qr_str);
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_MORE_BIN);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X , GUI_SCREEN_HEIGHT/1.15);
+
     return frm;
 }
 

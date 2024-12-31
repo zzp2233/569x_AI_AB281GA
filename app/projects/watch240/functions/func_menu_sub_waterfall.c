@@ -645,10 +645,11 @@ static void func_menu_sub_waterfall_enter(void)
     f_menu->focus_y = iconlist->ofs_y;
     f_menu->moveto = compo_iconlist_align_xy(iconlist, 0, f_menu->focus_y);
     func_cb.enter_tick = tick_get();
+    f_menu->animation_cnt = 0;
 //    func_cb.flag_animation = 0;
     if (func_cb.flag_animation)
     {
-        func_cb.flag_animation = 1;
+        func_cb.flag_animation = 0;
         f_menu->animation_cnt = ENTERING_ANIMATION_TOTAL_CNT;
 #if (WATERFALL_ANIMATION_STYLE == 0)
         memset(f_menu->back_cnt, ENTERING_ANIMATION_BACK_CNT, sizeof(f_menu->back_cnt));

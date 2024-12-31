@@ -3947,6 +3947,10 @@ void uteModuleSportSedentaryMsg(void)
 {
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
     // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SEDENTARY_REMIND_ID);           //久坐提醒界面
+    if(!uteModuleHeartIsWear())
+    {
+        return;
+    }
     sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
     sys_cb.remind_tag = true;
     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);

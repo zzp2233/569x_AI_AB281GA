@@ -280,12 +280,15 @@ static void func_long_press_message(size_msg_t msg)
             func_long_press_click();
             break;
         case KU_BACK:
-            func_switch_to_clock();
+            if(sys_cb.power_on_state==true)
+            {
+                func_switch_to_clock();
+            }
             break;
         case K_BACK:
             if(sys_cb.power_on_state==false)
             {
-                func_switch_to(FUNC_SCAN, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+                func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
             }
             break;
         default:

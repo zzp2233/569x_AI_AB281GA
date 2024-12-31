@@ -628,7 +628,7 @@ static void func_clock_message(size_msg_t msg)
         case MSG_CTP_SHORT_RIGHT:
 //        func_clock_sub_side();                  //右拉边菜单
 //            func_switch_to(FUNC_SIDEBAR, FUNC_SWITCH_LR_ZOOM_RIGHT);  //右滑界面
-            printf("%s -> MSG_CTP_SHORT_RIGHT\n");
+            printf("%s -> MSG_CTP_SHORT_RIGHT\n", __func__);
             func_cb.left_sta = FUNC_MESSAGE;
             func_switch_to(FUNC_MESSAGE, FUNC_SWITCH_LR_ZOOM_RIGHT);
             break;

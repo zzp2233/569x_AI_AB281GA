@@ -118,12 +118,14 @@ void uteApplicationCommonStartupFrist(void)
     uteModuleFilesystemInit();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_LOG_DIR);
+    uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR);
 #if UTE_MODULE_LOG_SUPPORT
     uteModuleFilesystemLs("./", NULL, NULL);
 #endif
 #if UTE_MODULE_LOG_SUPPORT
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR, NULL, NULL);
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_LOG_DIR,NULL, NULL);
+    uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR,NULL, NULL);
 #endif
     uteModuleSystemtimeInit();
     //bat
@@ -170,6 +172,9 @@ void uteApplicationCommonStartupSecond(void)
     if (!uteApplicationCommonData.isStartupFristFinish)
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
+
+        uteModuleHardfaultInfoSave();
+
         uteApplicationCommonData.isStartupFristFinish = true;
         //其他硬件初始化
         uteDrvMotorInit();
@@ -1820,4 +1825,217 @@ float ExactDecimalPoint(float data,uint8_t bit)
     tmp = (data * multiple);//取整
     dst = (float)tmp/multiple;
     return dst;
+}
+
+/**
+ * @brief        保存重启信息
+ * @details      
+ * @author       Wang.Luo
+ * @date         2024-12-30
+ */
+void uteModuleHardfaultInfoSave(void)
+{
+    u8 cause = exception_restart_cause();
+    if (cause == RESTART_VUSB || cause == RESTART_WKUP || cause == RESTART_FIRST_ON || cause == RESTART_SW || cause == RESTART_UNKNOWN)
+    {
+        printf("restart reason: %d\n", cause);
+        return;
+    }
+    tm_t rtc_tm;
+    rtc_tm = time_to_tm(RTCCNT);
+    char *buf = (char *)uteModulePlatformMemoryAlloc(1024);
+    memset(buf,0,1024);
+    // print_r32(exception_debug_info_get(),32);
+    sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d\n", rtc_tm.year, rtc_tm.mon, rtc_tm.day, rtc_tm.hour, rtc_tm.min, rtc_tm.sec);
+    u32 cpu_gprs[32];
+    u32 halt_err[16];
+    memcpy(cpu_gprs, exception_debug_info_get(), sizeof(cpu_gprs));
+    memcpy(halt_err, halt_err_debug_info_get(), sizeof(halt_err));
+    strcat(buf, "Cause:\n");
+    switch (cause)
+    {
+    case RESTART_WDT:
+        strcat(buf, "RESTART_WDT\n");
+        break;
+    case RESTART_SW:
+        strcat(buf, "RESTART_SW\n");
+        break;
+    case RESTART_WK10S:
+        strcat(buf, "RESTART_WK10S\n");
+        break;
+    case RESTART_VUSB:
+        strcat(buf, "RESTART_VUSB\n");
+        break;
+    case RESTART_WKUP:
+        strcat(buf, "RESTART_WKUP\n");
+        break;
+    case RESTART_FIRST_ON:
+        strcat(buf, "RESTART_FIRST_ON\n");
+        break;
+    default:
+        strcat(buf, "RESTART_UNKNOWN\n");
+        printf("unknown restart cause: %d\n", cause);
+        break;
+    }
+    strcat(buf, "cpu_gprs[]:\n");
+    for (u8 i = 0; i < 32; i++)
+    {
+        char tmp[48];
+        sprintf(tmp, "[%02d]%08lx ", i, cpu_gprs[i]);
+        strcat(buf, tmp);
+    }
+    strcat(buf, "\n");
+    strcat(buf, "halt_err[]:\n");
+    for (u8 i = 0; i < 16; i++)
+    {
+        char tmp[48];
+        sprintf(tmp, "[%02d]%08lx ", i, halt_err[i]);
+        strcat(buf, tmp);
+    }
+    strcat(buf, "\n");
+
+    printf("%s\n",buf);
+
+#if UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
+    uint8_t path[42];
+    memset(&path[0], 0, sizeof(path));
+    ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
+    uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, dirInfo, NULL);
+    if (dirInfo->filesCnt >= UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT)
+    {
+        memset(&path[0], 0, sizeof(path));
+        sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, &dirInfo->filesName[0][0]);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,del file=%s", __func__, &path[0]);
+        uteModuleFilesystemDelFile((char *)&path[0]);
+    }
+    memset(&path[0], 0, 42);
+    sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, rtc_tm.year, rtc_tm.mon, rtc_tm.day, rtc_tm.hour, rtc_tm.min);
+    void *file;
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT))
+    {
+        uteModuleFilesystemSeek(file, 0, FS_SEEK_SET);
+        uteModuleFilesystemWriteData(file, &buf[0], strlen(buf));
+        uteModuleFilesystemCloseFile(file);
+    }
+    uteModulePlatformMemoryFree(dirInfo);
+#endif
+    uteModulePlatformMemoryFree(buf);
+}
+
+/*! 
+1、APP发送0xfe0601 开始采集数据，0x33F2 会先返回0xfe0601+4byte(log size)
+2、0x34F2 开始不断返回：0xfe0601+2byete(序号)+数据(MTU-5)byte 
+3、固件每发送64个包,等待120ms这时APP通过0x33F1 发送0xFE0602+2byte（接收到的最新序号）。
+4、0x33F1 返回0xFE0601FD 表示返回数据结束。
+*/
+static void uteModuleHardfaultSendlogData(void)
+{
+    ute_application_sync_data_param_t *sendParam;
+    uteApplicationCommonGetSyncDataParam(&sendParam);  
+
+    sendParam->currSendMtuSize = uteApplicationCommonGetMtuSize();
+    sendParam->dataBuffSize = sendParam->currSendMtuSize - 5;
+    uint16_t sendSize = 0;
+    uint8_t *response = (uint8_t *)uteModulePlatformMemoryAlloc(sendParam->currSendMtuSize);
+    response[0] = CMD_DEBUG_TEST_DATA;
+    response[1] = 0x06;
+    response[2] = 0x01;
+    response[3] = sendParam->currSendMaxIndex >> 8 & 0xFF;
+    response[4] = sendParam->currSendMaxIndex & 0xFF;
+    
+    char path[42];
+    memset(&path[0], 0, sizeof(path));
+
+    if (sendParam->dirInfo.filesCnt > 0 && sendParam->currSendFileIndex < sendParam->dirInfo.filesCnt)
+    {
+        void *file;
+        sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, &sendParam->dirInfo.filesName[sendParam->currSendFileIndex][0]);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,read file=%s", __func__, &path[0]);
+
+        if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY))
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,filesCnt=%d,currSendFileIndex=%d", __func__, sendParam->dirInfo.filesCnt, sendParam->currSendFileIndex);
+            sendParam->currSendFileSize = uteModuleFilesystemGetFileSize(file);
+            uteModuleFilesystemSeek(file, sendParam->currSendFileDataOffset, FS_SEEK_SET);
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,currSendFileSize=%d,currSendFileDataOffset=%d,currSendMtuSize=%d,dataBuffSize=%d", __func__, sendParam->currSendFileSize, sendParam->currSendFileDataOffset, sendParam->currSendMtuSize, sendParam->dataBuffSize);
+
+            if (sendParam->currSendFileDataOffset + sendParam->dataBuffSize <= sendParam->currSendFileSize)
+            {
+                uteModuleFilesystemReadData(file, &response[5], sendParam->dataBuffSize);
+                uteModuleFilesystemCloseFile(file);
+                sendParam->currSendFileDataOffset += sendParam->dataBuffSize;
+            }
+            else
+            {
+                sendParam->dataBuffSize = sendParam->currSendFileSize - sendParam->currSendFileDataOffset;
+                uteModuleFilesystemReadData(file, &response[5], sendParam->dataBuffSize);
+                uteModuleFilesystemCloseFile(file);
+                sendParam->currSendFileDataOffset = 0;
+                sendParam->currSendFileIndex++;
+            }
+            sendSize = sendParam->dataBuffSize + 5;
+
+            sendParam->currSendMaxIndex++;
+        }
+    }
+    else
+    {
+        sendParam->currSendFileIndex = sendParam->dirInfo.filesCnt;
+    }
+
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,sendParam->currSendMaxIndex:%d",__func__,sendParam->currSendMaxIndex);
+
+    if(sendParam->currSendFileIndex == sendParam->dirInfo.filesCnt)
+    {
+        response[3] = 0xfd;
+        sendSize = 4;
+        uteApplicationCommonSyncDataTimerStop();
+    }
+
+    uteModuleProfileBle50SendToPhone(response, sendSize);
+
+    uteModulePlatformMemoryFree(response);
+}
+
+/**
+ * @brief        开始发送Hardfault信息
+ * @details      
+ * @author       Wang.Luo
+ * @date         2024-12-30
+ */
+void uteModuleHardfaultStartSendlogData(void)
+{
+    ute_application_sync_data_param_t *param;
+    uteApplicationCommonGetSyncDataParam(&param);
+    param->crc = 0;
+    param->currSendFileIndex = 0;
+    param->currSendFileIndex = 0;
+    param->currSendFileSize = 0;
+    param->currSendFileDataOffset = 0;
+    param->currSendMaxIndex = 1;
+    param->currSendMtuSize = uteApplicationCommonGetMtuSize();
+    uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, &param->dirInfo, NULL);
+
+    uint8_t response[] = {CMD_DEBUG_TEST_DATA, 0x06, 0x01, 0x00, 0x00, 0x00, 0x00};
+    if (param->dirInfo.filesCnt > 0)
+    {
+        void *file;
+        char path[42];
+        sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, &param->dirInfo.filesName[0][0]);
+        if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
+        {
+            uint32_t fileSize = 0;
+            fileSize = uteModuleFilesystemGetFileSize(file) * param->dirInfo.filesCnt;
+            uteModuleFilesystemCloseFile(file);
+            response[3] = (fileSize >> 24) & 0xFF;
+            response[4] = (fileSize >> 16) & 0xFF;
+            response[5] = (fileSize >> 8) & 0xFF;
+            response[6] = fileSize & 0xFF;
+        }
+    }
+    uteModuleProfileBle50SendToPhone(response, sizeof(response));
+
+    uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleHardfaultSendlogData);
+    uteApplicationCommonSyncDataTimerStart();
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
 }

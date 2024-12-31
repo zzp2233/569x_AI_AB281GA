@@ -332,13 +332,27 @@ compo_form_t *func_bt_form_create(void)
         compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
         compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
-        compo_textbox_set_forecolor(name_txt, COLOR_GRAY );
+        compo_textbox_set_forecolor(name_txt, COLOR_GRAY);
+        if (sys_cb.music_artist_init)
+        {
+            compo_textbox_set(name_txt, sys_cb.artist_buf);
+        }
+
+
         //歌词
         compo_textbox_t *lyric_txt = compo_textbox_create(frm, 50);
         compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
         compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
         compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
+
+        if (sys_cb.music_title_init)
+        {
+            compo_textbox_set(lyric_txt, sys_cb.title_buf);
+        }
+
+
+
     }
     else
     {
@@ -497,7 +511,7 @@ static void func_bt_music_vol_btnpic_refresh(u8 vol)
 {
     if(vol>16)vol=16;
     compo_shape_t *shape = compo_getobj_byid(COMPO_ID_SHAPE_MUSIC_VOL);
-    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2,vol*(PROGRESS_BAR_LENGTH/16), 6 );
+    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/16), 6 );
 }
 extern void btstack_ble_sm_req_for_android(void);
 
@@ -543,7 +557,7 @@ static void func_bt_button_release_handle()
         case COMPO_ID_BTN_PLAY:
             if (bt_cb.music_playing == false)
             {
-                compo_button_set_bgimg(btn_play,UI_BUF_I330001_MUSIC_PLAY02_BIN );
+//                compo_button_set_bgimg(btn_play,UI_BUF_I330001_MUSIC_PLAY02_BIN );
             }
             break;
         case COMPO_ID_BTN_VOL_UP:

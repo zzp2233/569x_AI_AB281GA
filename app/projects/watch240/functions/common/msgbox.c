@@ -153,7 +153,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_align_center(txt_msg, false);
                 compo_textbox_set_location(txt_msg, gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 52,
                                            GUI_SCREEN_CENTER_Y/3.5-widget_text_get_height()-2,
-                                           145,widget_text_get_height());              //调整文本位置
+                                           145,widget_text_get_height()+3);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);
             }
@@ -163,7 +163,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
                 compo_textbox_set_align_center(txt_time, false);
-                compo_textbox_set_pos(txt_time, gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 52,GUI_SCREEN_CENTER_Y/3.5);//调整文本位置
+                compo_textbox_set_pos(txt_time, gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 52,GUI_SCREEN_CENTER_Y/3.5+3);//调整文本位置
                 compo_textbox_set(txt_time, time);
                 compo_textbox_set_forecolor(txt_time, COLOR_GRAY);
             }
@@ -229,9 +229,18 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 txt_leng.hei = GUI_SCREEN_HEIGHT/2.5;
             }
-            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-widget_text_get_height(),txt_leng.wid,txt_leng.hei);              //调整文本位置
-            compo_textbox_set_multiline(txt_msg, true);
-            compo_textbox_set(txt_msg, msg);
+            if(msg == i18n[STR_ADDRESS_BOOK_SYNC])
+            {
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,txt_leng.wid,txt_leng.hei);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set(txt_msg, msg);
+            }
+            else
+            {
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-widget_text_get_height(),txt_leng.wid,txt_leng.hei);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set(txt_msg, msg);
+            }
 
             //title
             compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
@@ -420,7 +429,13 @@ static void msgbox_message(size_msg_t msg)
             {
                 if (msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
                 {
-                    msg_cb->res = MSGBOX_RES_ENTER_DETAIL_MSG;
+                    point_t pt = ctp_get_sxy();
+                    if (abs_s(pt.y - GUI_SCREEN_CENTER_Y/3.5) * 2 <= GUI_SCREEN_HEIGHT/5) //简略消息位置判断
+                    {
+                        msg_cb->res = MSGBOX_RES_ENTER_DETAIL_MSG;
+                    } else {
+
+                    }
                     msg_cb->flag_animation = true;
                     msg_cb->flag_entering = false;
                 }

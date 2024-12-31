@@ -133,6 +133,9 @@ static void func_power_on_language_list_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_power_on_language_list_icon_click();                //单击图标
             break;
+        case KL_BACK:
+            func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+        break;
     }
 
 }

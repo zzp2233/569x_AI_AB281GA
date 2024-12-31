@@ -111,6 +111,159 @@ static bool func_switching_fade(u16 switch_mode, bool flag_auto)
     return true;
 }
 
+//左右切换任务 可以設置透明度
+static bool func_switching_lr_alpha(u16 switch_mode, bool flag_auto, void* param)
+{
+    compo_form_t *frm_last = compo_pool_get_bottom();
+    compo_form_t *frm_cur = compo_pool_get_top();
+    bool flag_press = !flag_auto;
+    u8 flag_pos;                            //当前坐标状态
+    bool flag_change;
+    s32 dx = 0;
+    int dx_auto;
+    u32 tick = tick_get();
+    s32 xpos1 = GUI_SCREEN_CENTER_X;
+    s32 xpos2, xpos2_start;
+    s32 x_distance;
+    u8 lr_alpha = SWITCHING_LR_ALPHA;
+    if (param != NULL) {
+        lr_alpha = *((u8*)param);
+    }
+    if (frm_last == NULL || frm_cur == NULL) {
+        halt(HALT_FUNC_SWITCH_LR_PTR);
+    }
+
+    if (switch_mode == FUNC_SWITCH_LR_ZOOM_LEFT || switch_mode == FUNC_SWITCH_LR_ZOOM_RIGHT) {
+        x_distance = SWITCHING_LR_DISTANCE;     //带缩放的切换，两个场景中心距离要稍微近一点
+    } else {
+        x_distance = GUI_SCREEN_WIDTH;          //平移切换，按屏幕宽度做中心距离
+    }
+    switch (switch_mode) {
+    case FUNC_SWITCH_LR_LEFT:
+    case FUNC_SWITCH_LR_ZOOM_LEFT:
+        //左划，右侧任务向左移入
+        xpos2_start = GUI_SCREEN_CENTER_X + x_distance;
+        dx_auto = -SWITCHING_LR_STEP;
+        break;
+
+    case FUNC_SWITCH_LR_RIGHT:
+    case FUNC_SWITCH_LR_ZOOM_RIGHT:
+        //右划，左侧任务向右移入
+        xpos2_start = GUI_SCREEN_CENTER_X - x_distance;
+        dx_auto = SWITCHING_LR_STEP;
+        break;
+
+    default:
+        halt(HALT_FUNC_SWITCH_LR_MODE);
+        return false;
+    }
+    compo_form_set_pos(frm_cur, xpos2_start, GUI_SCREEN_CENTER_Y);
+    compo_form_scale_to(frm_cur, SWITCHING_LR_WIDTH, SWITCHING_LR_HEIGHT);
+    compo_form_set_alpha(frm_cur, lr_alpha);
+    for (;;) {
+        flag_pos = FLAG_POS_NORM;
+        flag_change = false;
+        if (flag_press) {
+            s32 dy;
+            flag_press = ctp_get_dxy(&dx, &dy);
+            if (flag_press) {
+                if (tick_check_expire(tick, SWITCHING_TICK_AUTO)) {
+                    switch (switch_mode) {
+                    case FUNC_SWITCH_LR_LEFT:
+                    case FUNC_SWITCH_LR_ZOOM_LEFT:
+                        //下拉往上, 上拉往上
+                        if (dx <= -SWITCHING_LR_DRAG_THRESHOLD) {
+                            dx_auto = -SWITCHING_LR_STEP;
+                        } else {
+                            dx_auto = SWITCHING_LR_STEP;
+                        }
+                        break;
+
+                    case FUNC_SWITCH_LR_RIGHT:
+                    case FUNC_SWITCH_LR_ZOOM_RIGHT:
+                        //下拉往下, 上拉往下
+                        if (dx >= SWITCHING_LR_DRAG_THRESHOLD) {
+                            dx_auto = SWITCHING_LR_STEP;
+                        } else {
+                            dx_auto = -SWITCHING_LR_STEP;
+                        }
+                        break;
+
+                    default:
+                        halt(HALT_FUNC_SWITCH_MENU_MODE);
+                        return false;
+                    }
+                }
+            }
+            flag_change = true;
+        } else if (tick_check_expire(tick, SWITCHING_TICK_EXPIRE)) {
+            tick = tick_get();
+            dx += dx_auto;
+            flag_change = true;
+        }
+
+        if (flag_change) {
+            switch (switch_mode) {
+            case FUNC_SWITCH_LR_LEFT:
+            case FUNC_SWITCH_LR_ZOOM_LEFT:
+                //左划，右侧任务向左移入
+                if (dx >= 0) {
+                    dx = 0;
+                    flag_pos = FLAG_POS_START;
+                } else if (dx <= -x_distance) {
+                    dx = -x_distance;
+                    flag_pos = FLAG_POS_END;
+                }
+                break;
+
+            case FUNC_SWITCH_LR_RIGHT:
+            case FUNC_SWITCH_LR_ZOOM_RIGHT:
+                //右划，左侧任务向右移入
+                if (dx <= 0) {
+                    dx = 0;
+                    flag_pos = FLAG_POS_START;
+                } else if (dx >= x_distance) {
+                    dx = x_distance;
+                    flag_pos = FLAG_POS_END;
+                }
+                break;
+
+            default:
+                halt(HALT_FUNC_SWITCH_LR_MODE);
+                return false;
+            }
+            xpos1 = GUI_SCREEN_CENTER_X + dx;
+            xpos2 = xpos2_start + dx;
+            compo_form_set_pos(frm_last, xpos1, GUI_SCREEN_CENTER_Y);
+            compo_form_set_pos(frm_cur, xpos2, GUI_SCREEN_CENTER_Y);
+            if (switch_mode == FUNC_SWITCH_LR_ZOOM_LEFT || switch_mode == FUNC_SWITCH_LR_ZOOM_RIGHT) {
+                s32 abs_dx = abs_s(dx);
+                s32 dw = (GUI_SCREEN_WIDTH - SWITCHING_LR_WIDTH) * abs_dx / x_distance;
+                s32 xw1 = GUI_SCREEN_WIDTH - dw;
+                s32 xw2 = SWITCHING_LR_WIDTH + dw;
+                s32 dh = (GUI_SCREEN_HEIGHT - SWITCHING_LR_HEIGHT) * abs_dx / x_distance;
+                s32 xh1 = GUI_SCREEN_HEIGHT - dh;
+                s32 xh2 = SWITCHING_LR_HEIGHT + dh;
+                u8 da = (255 - lr_alpha) * abs_dx / x_distance;
+                u8 xa1 = 255 - da;
+                u8 xa2 = lr_alpha + da;
+                compo_form_scale_to(frm_last, xw1, xh1);
+                compo_form_scale_to(frm_cur, xw2, xh2);
+                compo_form_set_alpha(frm_last, xa1);
+                compo_form_set_alpha(frm_cur, xa2);
+            }
+        }
+        func_process();
+        if (!flag_auto) {
+            func_switching_message(msg_dequeue());
+        }
+        if (!flag_press && flag_pos != FLAG_POS_NORM) {
+            break;
+        }
+    }
+    return (flag_pos == FLAG_POS_END);
+}
+
 //左右切换任务
 static bool func_switching_lr(u16 switch_mode, bool flag_auto)
 {
@@ -940,7 +1093,11 @@ bool func_switching(u16 switch_mode, void *param)
     if (switch_mode < FUNC_SWITCH_LR) {
         res = func_switching_fade(switch_mode, flag_auto);                     //淡入淡出
     } else if (switch_mode < FUNC_SWITCH_UD) {
-        res = func_switching_lr(switch_mode, flag_auto);                       //左右切换任务
+        if (param != NULL) {
+            res = func_switching_lr_alpha(switch_mode, flag_auto, param);                       //左右切换任务
+        } else {
+            res = func_switching_lr(switch_mode, flag_auto);                       //左右切换任务
+        }
     } else if (switch_mode < FUNC_SWITCH_MENU) {
         res = func_switching_ud(switch_mode, flag_auto);                       //上下切换任务
     } else if (switch_mode < FUNC_SWITCH_ZOOM) {

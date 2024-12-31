@@ -27,6 +27,7 @@
 #include "ute_module_liftwrist.h"
 #include "ute_drv_temperature_common.h"
 #include "ute_module_factorytest.h"
+#include "ute_module_music.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -37,7 +38,6 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_call.h"
 #include "ute_module_ota.h"
-#include "ute_module_music.h"
 #include "ute_module_stopwatch.h"
 #include "ute_module_breathtraining.h"
 #include "ute_module_countdown.h"
@@ -247,7 +247,7 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleSleepInit();
         uteModuleCallInit();
         //uteModuleOtaInit();
-        //uteModuleMusicInit();
+        uteModuleMusicInit();
         //uteModuleStopWatchInit();
         //uteModuleCountDownInit();
         //uteModuleBreathTrainingInit();

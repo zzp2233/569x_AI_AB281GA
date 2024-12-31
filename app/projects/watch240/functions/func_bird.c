@@ -101,10 +101,10 @@ compo_form_t *func_bird_form_create(void)
     compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
 
     //finish pic
-    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_WINDOW2_BIN);
-    compo_setid(compo, COMPO_ID_BIRD_FINISH_PIC);
-    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+//    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_WINDOW2_BIN);
+//    compo_setid(compo, COMPO_ID_BIRD_FINISH_PIC);
+//    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+//    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
 
     //stop btn
     compo = (component_t *)compo_button_create(frm);
@@ -134,10 +134,10 @@ static void func_bird_init(void)
         compo_picturebox_set_visible(compo, false);
     }
 
-    compo = compo_getobj_byid(COMPO_ID_BIRD_FINISH_PIC);
-    if(compo) {
-        compo_picturebox_set_visible(compo, false);
-    }
+//    compo = compo_getobj_byid(COMPO_ID_BIRD_FINISH_PIC);
+//    if(compo) {
+//        compo_picturebox_set_visible(compo, false);
+//    }
 
     compo = compo_getobj_byid(COMPO_ID_BIRD_STOP_PIC);
     if(compo) {
@@ -303,28 +303,28 @@ static void func_bird_fail(void)
 
 
 //游戏成功
-static void func_bird_finish(void)
-{
-    compo_picturebox_t *compo;
-    uint8_t i;
-
-    compo = compo_getobj_byid(COMPO_ID_BIRD_FINISH_PIC);
-    if(compo) {
-        compo_picturebox_set_visible(compo, true);
-    }
-
-    compo = compo_getobj_byid(COMPO_ID_BIRD_BIRD_PIC);
-    if(compo) {
-        compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 100);
-    }
-
-    for(i = 0; i < 4; i++) {
-        compo = compo_getobj_byid(COMPO_ID_BIRD_PIPE_PIC_START + i);
-        if(compo) {
-            compo_picturebox_set_visible(compo, false);
-        }
-    }
-}
+//static void func_bird_finish(void)
+//{
+//    compo_picturebox_t *compo;
+//    uint8_t i;
+//
+//    compo = compo_getobj_byid(COMPO_ID_BIRD_FINISH_PIC);
+//    if(compo) {
+//        compo_picturebox_set_visible(compo, true);
+//    }
+//
+//    compo = compo_getobj_byid(COMPO_ID_BIRD_BIRD_PIC);
+//    if(compo) {
+//        compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 100);
+//    }
+//
+//    for(i = 0; i < 4; i++) {
+//        compo = compo_getobj_byid(COMPO_ID_BIRD_PIPE_PIC_START + i);
+//        if(compo) {
+//            compo_picturebox_set_visible(compo, false);
+//        }
+//    }
+//}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //游戏过程状态机
@@ -348,14 +348,15 @@ static void func_bird_process(void)
             break;
 
         case BIRD_STATUS_BIRDOVER:
+        case BIRD_STATUS_FINISH:
             func_bird_fail();
             bird->status = BIRD_STATUS_RESULT_WAIT;
             break;
 
-        case BIRD_STATUS_FINISH:
-            func_bird_finish();
-            bird->status = BIRD_STATUS_RESULT_WAIT;
-            break;
+//        case BIRD_STATUS_FINISH:
+//            func_bird_finish();
+//            bird->status = BIRD_STATUS_RESULT_WAIT;
+//            break;
 
         default:
             break;

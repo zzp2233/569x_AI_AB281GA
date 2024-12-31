@@ -23,8 +23,8 @@
 #define CARD_WIDTH_MIN                  150//200                                                                     //卡片缩小的最小宽度
 #define CARD_UNVISIBLE_POS_TOP          (-100)//(-160)                                                                  //卡片超出屏幕顶部某位置后设为不可见
 #define CARD_UNVISIBLE_POS_BOTTOM       (CARD_SCALE_STOP_Y + 156)                                               //卡片缩到最小后实际位置大于某值设为不可见
-#define CARD_BG_GRAY_START              70                                                                      //卡片开始缩小位置处背景的灰度
-#define CARD_BG_GRAY_STOP               20                                                                      //卡片停止缩小位置处背景的灰度
+#define CARD_BG_GRAY_START              41                                                                      //卡片开始缩小位置处背景的灰度
+#define CARD_BG_GRAY_STOP               10                                                                      //卡片停止缩小位置处背景的灰度
 #define GRAY_LV(x)                      make_color(x, x, x)                                                     //生成灰度颜色值（0:黑 255:白）
 
 #define SPRING_Y_MAX                    0                                                                       //回弹到顶部时的ofs_y
@@ -763,8 +763,8 @@ static const ui_handle_t ui_handle = {
                 .idx    = COMPO_ID_APP3,
                 .x      = 120+44/2-232/2,
                 .y      = 43+44/2-108/2,
-                .w      = 45,
-                .h      = 45,
+                .w      = 46,
+                .h      = 46,
                 .res    = UI_BUF_I330001_THEME_1_TIMER_BIN,
                 .res_click = 2,
                 .res_switch = 2,
@@ -774,8 +774,8 @@ static const ui_handle_t ui_handle = {
                 .idx    = COMPO_ID_APP4,
                 .x      = 174+44/2-232/2,
                 .y      = 43+44/2-108/2,
-                .w      = 45,
-                .h      = 45,
+                .w      = 46,
+                .h      = 46,
                 .res    = UI_BUF_I330001_THEME_1_CALL_BIN,
                 .res_click = 3,
                 .res_switch = 3,
@@ -1039,15 +1039,15 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_location(card3, ui_handle.card3.text_music.idx, ui_handle.card3.text_music.x, ui_handle.card3.text_music.y, ui_handle.card3.text_music.w, ui_handle.card3.text_music.h);
     compo_cardbox_text_set(card3, ui_handle.card3.text_music.idx, i18n[ui_handle.card3.text_music.str_id]);
 
-    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_prev.res);
+    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_prev.res_click);
     compo_button_set_location(btn,ui_handle.card3.pic_click_prev.x, ui_handle.card3.pic_click_prev.y, ui_handle.card3.pic_click_prev.w, ui_handle.card3.pic_click_prev.h);
     compo_setid(btn,ui_handle.card3.pic_click_prev.idx);
 
-    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_next.res);
+    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_next.res_click);
     compo_button_set_location(btn,ui_handle.card3.pic_click_next.x, ui_handle.card3.pic_click_next.y, ui_handle.card3.pic_click_next.w, ui_handle.card3.pic_click_next.h);
     compo_setid(btn,ui_handle.card3.pic_click_next.idx);
 
-    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_play.res);
+    btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_play.res_click);
     compo_button_set_pos(btn,ui_handle.card3.pic_click_play.x, ui_handle.card3.pic_click_play.y);
     compo_setid(btn,ui_handle.card3.pic_click_play.idx);
 
@@ -1065,11 +1065,12 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(card2->text[ui_handle.card2.text_sleep.idx], make_color(ui_handle.card2.text_sleep.color.r, ui_handle.card2.text_sleep.color.g, ui_handle.card2.text_sleep.color.b));
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.x, ui_handle.card2.text_sleep.y, ui_handle.card2.text_sleep.w, ui_handle.card2.text_sleep.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_sleep.idx, i18n[ui_handle.card2.text_sleep.str_id]);
+
 //    sleep_data->totalSleepMin =  200;
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
-    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.x, ui_handle.card2.text_hour.y, ui_handle.card2.text_hour.w, ui_handle.card2.text_hour.h);
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.x+4, ui_handle.card2.text_hour.y, ui_handle.card2.text_hour.w, ui_handle.card2.text_hour.h);
     memset(txt_buf,0,sizeof(txt_buf));
     if(sleep_data->totalSleepMin) { ///是否有睡眠时长
         snprintf(txt_buf, sizeof(txt_buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
@@ -1081,7 +1082,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour_unit.idx], make_color(ui_handle.card2.text_hour_unit.color.r, ui_handle.card2.text_hour_unit.color.g, ui_handle.card2.text_hour_unit.color.b));
-    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.x, ui_handle.card2.text_hour_unit.y, ui_handle.card2.text_hour_unit.w, ui_handle.card2.text_hour_unit.h);
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.x+4, ui_handle.card2.text_hour_unit.y, ui_handle.card2.text_hour_unit.w, ui_handle.card2.text_hour_unit.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_hour_unit.idx, i18n[ui_handle.card2.text_hour_unit.str_id]);
 
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.res);
@@ -1544,7 +1545,7 @@ static void func_clock_sub_card_click_handler(void)
     u8 func_jump = FUNC_NULL;
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_clock_sub_card_get_btn_id(pt);
-//    printf("click compo_id:%d\n", compo_id);
+    printf("click compo_id:%d\n", compo_id);
     int id = compo_get_button_id();
 
     switch(compo_id)
@@ -1559,24 +1560,39 @@ static void func_clock_sub_card_click_handler(void)
             switch(id)
             {
             case COMPO_MUSIC_BTN_PREV:
-                if (bt_is_connected()){
-                    bt_music_prev();
-                }else if (ble_ams_is_connected()){
-                    ble_ams_remote_ctrl(AMS_REMOTE_CMD_PREV_TRACK);
+                {
+                    if (bt_is_connected()){
+                        bt_music_prev();
+                    }else if (ble_ams_is_connected()){
+                        ble_ams_remote_ctrl(AMS_REMOTE_CMD_PREV_TRACK);
+                    }
+                    compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
+                    compo_button_set_bgimg(btn,ui_handle.card3.pic_click_prev.res);
                 }
                 break;
             case COMPO_MUSIC_BTN_PLAY:
-                if (bt_is_connected()){
-                    bt_music_play_pause();
-                }else if (ble_ams_is_connected()){
-                    ble_ams_remote_ctrl(AMS_REMOTE_CMD_PLAY_PAUSE);
+                {
+                    if (bt_is_connected()){
+                        bt_music_play_pause();
+                    }else if (ble_ams_is_connected()){
+                        ble_ams_remote_ctrl(AMS_REMOTE_CMD_PLAY_PAUSE);
+                    }
+                    if(bt_cb.music_playing == false)
+                    {
+                        compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY);
+                        compo_button_set_bgimg(btn, ui_handle.card3.pic_click_play.res_click);
+                    }
                 }
                 break;
             case COMPO_MUSIC_BTN_NEXT:
-                if (bt_is_connected()){
-                    bt_music_next();
-                }else if (ble_ams_is_connected()){
-                    ble_ams_remote_ctrl(AMS_REMOTE_CMD_NEXT_TRACK);
+                {
+                    if (bt_is_connected()){
+                        bt_music_next();
+                    }else if (ble_ams_is_connected()){
+                        ble_ams_remote_ctrl(AMS_REMOTE_CMD_NEXT_TRACK);
+                    }
+                    compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_NEXT);
+                    compo_button_set_bgimg(btn, ui_handle.card3.pic_click_next.res);
                 }
                 break;
             default:
@@ -1602,100 +1618,17 @@ static void func_clock_sub_card_click_handler(void)
             }
         break;
         case COMPO_ID_CARD_7 :
-            func_jump = card_get_latest_func(id-COMPO_ID_APP1);
+            printf("id : %d\n", id);
+            if (id != ID_NULL) {
+                func_jump = card_get_latest_func(id-COMPO_ID_APP1);
+            }
             break;
     }
-    if(func_jump!=FUNC_NULL)
+    if(func_jump != FUNC_NULL)
     {
+        printf("func_jump=%d\n", func_jump);
         func_cb.sta = func_jump;  //直接跳转
     }
-//    switch (compo_id)
-//    {
-//        case COMPO_ID_CARD_SPORT_COMPASS:
-//            cardbox = compo_getobj_byid(COMPO_ID_CARD_SPORT_COMPASS);
-//            rect = compo_cardbox_get_rect_absolute(cardbox, 0); //指南针
-//            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-//            {
-//                func_jump = FUNC_BLOOD_OXYGEN;//FUNC_COMPASS;
-//            }
-//            else
-//            {
-//                rect = compo_cardbox_get_rect_absolute(cardbox, 1); //运动
-//                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-//                {
-//                    func_jump = FUNC_SPORT;
-//                }
-//            }
-//            break;
-//
-//        case COMPO_ID_CARD_ACTIVITY:
-//            func_jump = FUNC_ACTIVITY;
-//            break;
-//
-//        case COMPO_ID_CARD_SLEEP:
-//            func_jump = FUNC_SLEEP;
-//            break;
-//
-//        case COMPO_ID_CARD_HEARTRATE:
-//            func_jump = FUNC_HEARTRATE;
-//            break;
-//
-//        case COMPO_ID_CARD_MUSIC:
-//            cardbox = compo_getobj_byid(COMPO_ID_CARD_MUSIC);
-//            rect = compo_cardbox_get_icon_absolute(cardbox, 0); //上一首
-//            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-//            {
-//                printf("music_prev?\n");                                                    //--------->>>todo
-//            }
-//            else
-//            {
-//                rect = compo_cardbox_get_icon_absolute(cardbox, 1); //播放/暂停
-//                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-//                {
-//                    music_pp_test = !music_pp_test;
-//                    printf("music_play/pause[%d]?\n", music_pp_test);                       //--------->>>todo
-//                }
-//                else
-//                {
-//                    rect = compo_cardbox_get_icon_absolute(cardbox, 2); //下一首
-//                    if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-//                    {
-//                        printf("music_next?\n");                                            //--------->>>todo
-//                    }
-//                    else
-//                    {
-//                        func_jump = FUNC_BT;
-//                    }
-//                }
-//            }
-//            break;
-//
-//        case COMPO_ID_CARD_POWEROFF_ASSISTANT:
-//            cardbox = compo_getobj_byid(COMPO_ID_CARD_POWEROFF_ASSISTANT);
-//            rect = compo_cardbox_get_rect_absolute(cardbox, 0); //语音助手
-//            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-//            {
-//                func_jump = FUNC_VOICE;
-//            }
-//            else
-//            {
-//                rect = compo_cardbox_get_rect_absolute(cardbox, 1); //关机
-//                if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
-//                {
-//                    func_jump = FUNC_OFF;
-//                }
-//            }
-//            break;
-//
-//        default:
-//            break;
-//    }
-
-//    if (func_jump != FUNC_NULL)
-//    {
-//        func_switch_to(func_jump, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);  //切换动画
-////        func_cb.sta = func_jump;  //直接跳转
-//    }
 }
 
 //根据偏移位置把最近的卡片对齐到屏幕中央
@@ -1786,9 +1719,6 @@ static void func_clock_sub_card_data_update(void)
     snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld.%02ld",SEC_TO_MIN(sys_cb.stopwatch_total_msec/1000),SEC_TO_SEC(sys_cb.stopwatch_total_msec/1000),sys_cb.stopwatch_total_msec%1000/10);
     cardbox = compo_getobj_byid(ui_handle.card5.id);
     compo_cardbox_text_set(cardbox, ui_handle.card5.text_time.idx,txt_buf);
-
-    compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY); //播放/暂停
-    compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY01_BIN);
 }
 
 //时钟表盘上拉菜单主要事件流程处理
@@ -1947,7 +1877,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
                     f_card->moveto_y = func_clock_sub_card_align_by_idx(f_card->moveto_card);
                 }
                 break;
-
+            break;
             default:
                 evt_message(msg);
                 break;
@@ -2001,7 +1931,18 @@ static void func_clock_sub_card_message(size_msg_t msg)
         case KU_BACK:
             func_clock_sub_card_switch_to_clock(true);  //单击BACK键返回到时钟主界面
             break;
+        case MSG_SYS_500MS:
+        {
+//            printf("11111111111111111111111\n");
+            compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY); //播放/暂停
+            compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : ui_handle.card3.pic_click_play.res);
 
+            btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
+            compo_button_set_bgimg(btn, ui_handle.card3.pic_click_prev.res_click);
+
+            btn = compo_getobj_byid(COMPO_MUSIC_BTN_NEXT);
+            compo_button_set_bgimg(btn, ui_handle.card3.pic_click_next.res_click);
+        }
         default:
             func_message(msg);
             break;

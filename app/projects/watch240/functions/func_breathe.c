@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_heart.h"
 
 #define TRACE_EN    1
 
@@ -527,11 +528,14 @@ static void func_breathe_enter(void)
 
     sys_cb.breathe_mode = MIN(sys_cb.breathe_mode, BREATHE_MODE_FAST);
     sys_cb.breathe_duration = MAX(BREATHE_TIME_MIN, MIN(BREATHE_TIME_MAX, sys_cb.breathe_duration));
+
+    uteModuleHeartStartSingleTesting(TYPE_HEART);  //开启心率
 }
 
 //退出呼吸功能
 static void func_breathe_exit(void)
 {
+    uteModuleHeartStopSingleTesting(TYPE_HEART);  //关闭心率
     func_cb.last = FUNC_BREATHE;
 }
 

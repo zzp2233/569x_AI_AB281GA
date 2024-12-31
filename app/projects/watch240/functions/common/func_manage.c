@@ -241,8 +241,8 @@ const static u8 latest_allowed_id[] =
     FUNC_BT,                            //蓝牙播放器(控制手机音乐)
     FUNC_ALARM_CLOCK,                   //闹钟
     FUNC_BLOOD_OXYGEN,                  //血氧
-    FUNC_BLOODSUGAR,                    //血糖
-    FUNC_BLOOD_PRESSURE,                //血压
+//    FUNC_BLOODSUGAR,                    //血糖
+//    FUNC_BLOOD_PRESSURE,                //血压
     FUNC_BREATHE,                       //呼吸
     FUNC_CALCULATOR,                    //计算器
     FUNC_CAMERA,                        //相机
@@ -252,8 +252,8 @@ const static u8 latest_allowed_id[] =
     FUNC_STOPWATCH,                     //秒表
     FUNC_WEATHER,                       //天气
     FUNC_GAME,                          //游戏
-    FUNC_ALTITUDE,                      //海拔
-    FUNC_MAP,                           //地图
+//    FUNC_ALTITUDE,                      //海拔
+//    FUNC_MAP,                           //地图
     FUNC_MESSAGE,                       //消息
     FUNC_SCAN,                          //扫一扫
     FUNC_VOICE,                         //语音助手
@@ -269,7 +269,7 @@ const static u8 latest_allowed_id[] =
     FUNC_LANGUAGE,                      //设置--语言
     FUNC_RESTART,                       //重启
     FUNC_RSTFY,                         //设置--恢复出厂
-    FUNC_OFF,                           //关机
+//    FUNC_OFF,                           //关机
     FUNC_SET_SUB_ABOUT,                 //关于
 };
 

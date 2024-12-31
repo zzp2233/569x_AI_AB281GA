@@ -207,17 +207,20 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
             if (iconlist->style == ICONLIST_STYLE_HONEYCOMB)
             {
                 iconlist->icon_org_size -= 5;
+                iconlist->icon_zoomout_size = iconlist->icon_org_size * 9 / 20;
+                iconlist->ratio_base = iconlist->icon_org_size * 9 / 16;        //基础缩小速度，越大缩的越快
+                iconlist->icon_space = iconlist->icon_org_size / 7;
+                iconlist->icon_total_size = iconlist->icon_org_size + iconlist->icon_space;
             }
             else if (iconlist->style == ICONLIST_STYLE_WATERFALL)
             {
-                //iconlist->icon_org_size -= 5;
+                iconlist->icon_org_size += 3;
+                iconlist->icon_zoomout_size = iconlist->icon_org_size * 9 / 20;
+                iconlist->ratio_base = iconlist->icon_org_size * 9 / 12;        //基础缩小速度，越大缩的越快
+                iconlist->icon_space = iconlist->icon_org_size / 7;
+                iconlist->icon_total_size = iconlist->icon_org_size + iconlist->icon_space;
             }
-            iconlist->icon_zoomout_size = iconlist->icon_org_size * 9 / 20;
-            iconlist->ratio_base = iconlist->icon_org_size * 9 / 16;        //基础缩小速度，越大缩的越快
-            iconlist->icon_space = iconlist->icon_org_size / 7;
-            iconlist->icon_total_size = iconlist->icon_org_size + iconlist->icon_space;
             compo_iconlist_set_iconsize(iconlist, iconlist->icon_org_size);
-
         }
         else if (iconlist->style == ICONLIST_STYLE_CUM_HONEYGRID)           //参考原始蜂窝做的华为风格
         {
@@ -465,8 +468,11 @@ void compo_iconlist_set_iconsize(compo_iconlist_t *iconlist, s16 icon_size)
     switch (iconlist->style)
     {
         case ICONLIST_STYLE_HONEYCOMB:
-        case ICONLIST_STYLE_WATERFALL:
             iconlist->icon_space = icon_size / 7;
+        case ICONLIST_STYLE_WATERFALL:
+            if (iconlist->style == ICONLIST_STYLE_WATERFALL) {
+                iconlist->icon_space = icon_size / 10;
+            }
             iconlist->icon_total_size = icon_size + iconlist->icon_space;
             iconlist->icon_size = icon_size << ICON_SIZE_Q;
             iconlist->icon_widhalf = (iconlist->icon_total_size << (ICON_SIZE_Q - 1));

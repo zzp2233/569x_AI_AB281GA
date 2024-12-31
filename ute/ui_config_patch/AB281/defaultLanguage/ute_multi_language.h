@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-26 17:36:29
+*@date   2024-12-31 18:04:40
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -136,7 +136,7 @@ enum
     STR_SEC, // 秒
     STR_WEAR_CHECK, // 请系紧佩戴，确保手表背面紧贴手腕，并保持静止。
     STR_UNKNOWN, // 未知
-    STR_COMPO_SELECT, // 组件添加
+    STR_COMPO_SELECT, // 添加组件
     STR_STYLE_GRID_1, // 网格
     STR_STYLE_HONEYCOMB, // 蜂窝
     STR_STYLE_LIST_1, // 列表
@@ -228,9 +228,6 @@ enum
     STR_ARABIC, // العربية
     STR_APP_DOWNLOAD, // 扫码下载APP或扫码配对
     STR_BLOOD_OXYGEN, // 血氧
-    STR_BLOOD_SUGAR, // 血糖
-    STR_BAROMETER, // 气压计
-    STR_TEMPERATURE, // 温度
     STR_ALTITUDE, // 海拔
     STR_SOOTHING, // 舒缓
     STR_PLEASE_WEAR, // 请佩戴手表测量
@@ -253,6 +250,7 @@ enum
     STR_APP_AGIAN, // 请连接App重试
     STR_WATCH_RESTART, // 手表即将进入重启
     STR_UP_WATCHING, // 表盘正在传输中，请保持APP和设备连接
+    STR_NO_CONTACTS, // 没有联系人
 };
 
 extern const char * const *i18n;

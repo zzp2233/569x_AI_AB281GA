@@ -69,7 +69,7 @@ compo_form_t *func_sport_finish_form_create(void)
 
                 //运动类型名称
                 compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
-                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
+//                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+73);
                 compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
@@ -181,7 +181,7 @@ compo_form_t *func_sport_finish_form_create(void)
 
                 //运动类型名称
                 compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
-                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
+//                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+73);
                 compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
@@ -278,7 +278,7 @@ compo_form_t *func_sport_finish_form_create(void)
 
                 //运动类型名称
                 compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
-                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
+//                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+73);
                 compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);

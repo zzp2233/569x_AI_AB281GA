@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_music.h"
 
 #define TRACE_EN                0
 
@@ -95,6 +96,7 @@ void bt_id3_tag_callback(u8 packet_type, u8 *buf, u16 size)
                 memset(sys_cb.title_buf, 0, sizeof(sys_cb.title_buf));
                 memcpy(sys_cb.title_buf, (char *)&buf[offset], sizeof(sys_cb.title_buf)-1);
                 sys_cb.music_title_init = true;
+                uteModuleMusicSetPlayerTitle(&buf[offset], length);
                 break;
 
             case BT_ID3_ARTIST:
@@ -106,6 +108,7 @@ void bt_id3_tag_callback(u8 packet_type, u8 *buf, u16 size)
                 memset(sys_cb.artist_buf, 0, sizeof(sys_cb.artist_buf));
                 memcpy(sys_cb.artist_buf, (char *)&buf[offset], sizeof(sys_cb.artist_buf)-1);
                 sys_cb.music_artist_init = true;
+                uteModuleMusicSetPlayerArtist(&buf[offset], length);
                 break;
 
             default:
@@ -129,13 +132,23 @@ void bt_get_paly_status_info_callback(u8 *buf, u16 size)
 
     tmp = big_endian_read_32(buf, 0);
     TRACE("song time[%2d:%2d]", (tmp / 1000 / 60), (tmp / 1000 % 60));
+    uteModuleMusicSetPlayerTotalTime(tmp);
 
     tmp = big_endian_read_32(buf, 4);
     TRACE("--->[%2d:%2d]", (tmp / 1000 / 60), (tmp / 1000 % 60));
+    uteModuleMusicSetPlayerCurrTime(tmp);
 
     tmp = buf[8];
     bt_set_music_sta(tmp);
     TRACE(" sta[%d]\n", tmp);
+    if(tmp == 0x01)
+    {
+        uteModuleMusicSetPlayerPaused(false, 0);
+    }
+    else
+    {
+        uteModuleMusicSetPlayerPaused(true, 0);
+    }
 }
 
 #endif

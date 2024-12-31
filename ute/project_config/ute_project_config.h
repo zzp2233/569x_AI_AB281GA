@@ -430,6 +430,15 @@
 
 #define DRV_TFT_S280X284_I18_ST7789P3_XHL183BA2401_DSPI_SUPPORT 0
 
+/*! 最大title的字节数 zn.zeng, 2021-11-20  */
+#ifndef UTE_MUSIC_TITLE_MAX_SIZE
+#define UTE_MUSIC_TITLE_MAX_SIZE  52
+#endif
+/*! 最大歌词的字节数 zn.zeng, 2021-11-20  */
+#ifndef UTE_MUSIC_ARTLIST_MAX_SIZE
+#define UTE_MUSIC_ARTLIST_MAX_SIZE  103
+#endif
+
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE
 #define DEFAULT_LANGUAGE 0x02//ENGLISH_LANGUAGE_ID
@@ -1176,6 +1185,11 @@
 /*! 最大支持SOS联系人数量,xjc 2022-07-06  */
 #ifndef UTE_MODUEL_CALL_SOS_CONTACT_MAX
 #define UTE_MODUEL_CALL_SOS_CONTACT_MAX 1
+#endif
+
+/*电话本名字长度扩展到40byte(unicode)*/
+#ifndef UTE_MODUEL_CALL_ADDRESSBOOK_EXPANSION_LENGTH_SUPPORT
+#define UTE_MODUEL_CALL_ADDRESSBOOK_EXPANSION_LENGTH_SUPPORT 1
 #endif
 
 /* 音频调试，正常模式下不能打开 zn.zeng 2022-01-10*/

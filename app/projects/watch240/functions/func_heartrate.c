@@ -54,7 +54,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_setid(picbox,COMPO_ID_HEART_PIC);
 
     compo_textbox_t *textbox;
-    if(bsp_sensor_hr_wear_sta_get() == true && bsp_sensor_hrs_data_get() > 0 && bsp_sensor_hrs_data_get() != 255){  ///佩戴处理
+    if(uteModuleHeartIsWear() == true && bsp_sensor_hrs_data_get() > 0 && bsp_sensor_hrs_data_get() != 255){  ///佩戴处理
         memset(txt_buf,0,sizeof(txt_buf));
         snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_hrs_data_get());
         textbox = compo_textbox_create(frm, 3 );///次/分 数据
@@ -179,7 +179,7 @@ static void func_heartrate_refresh(void)
 
         pic_size = gui_image_get_size(UI_BUF_I330001_HEART_ICON_BIN);
 
-        if(bsp_sensor_hr_wear_sta_get() == true){  ///佩戴处理
+        if(uteModuleHeartIsWear() == true){  ///佩戴处理
             if(f_heartrate->heart_pic_size <= 72){
                 f_heartrate->heart_pic_state = true;
             }else if(f_heartrate->heart_pic_size >= 110){
@@ -210,7 +210,7 @@ static void func_heartrate_refresh(void)
             compo_textbox_set(textbox_min,txt_buf);
         }
 
-        if(bsp_sensor_hr_wear_sta_get() == true && bsp_sensor_hrs_data_get() > 0 && bsp_sensor_hrs_data_get() != 255)  ///佩戴处理
+        if(uteModuleHeartIsWear() == true && bsp_sensor_hrs_data_get() > 0 && bsp_sensor_hrs_data_get() != 255)  ///佩戴处理
         {
             memset(txt_buf,0,sizeof(txt_buf));
             snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_hrs_data_get());

@@ -297,19 +297,23 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff, sizeof(str_buff), "%s --",i18n[STR_HIGHEST]);
     }
     txt = compo_textbox_create(frm, strlen(str_buff));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.8,143/1.9,23);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-4-92, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,92,24);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_align_center(txt, false);
     compo_textbox_set(txt, str_buff);
 
     if(uteModuleWeatherGetCurrDay() == time.day)
     {
-        snprintf(str_buff, sizeof(str_buff), "%s%d",i18n[STR_LOWSET],weather_date.dayTemperatureMin[0]); ///今天 最低温度
+        snprintf(str_buff, sizeof(str_buff), "%s %d",i18n[STR_LOWSET],weather_date.dayTemperatureMin[0]); ///今天 最低温度
     }
     else
     {
         snprintf(str_buff, sizeof(str_buff), "%s --",i18n[STR_LOWSET]);
     }
     txt = compo_textbox_create(frm, strlen(str_buff));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.8,143/2,23);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+4, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,92,24);
+    compo_textbox_set_right_align(txt, false);
+    compo_textbox_set_align_center(txt, false);
     compo_textbox_set(txt, str_buff);
 
     txt = compo_textbox_create(frm, strlen(i18n[weather_list[get_weather_id[0]].txt_num]));

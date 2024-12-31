@@ -107,7 +107,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                 icon_x = listbox->item_width / 2;
                 icon_y = listbox->item_width / 2;
                 font_x = listbox->item_width / 2;
-                font_y = listbox->line_center_y + listbox->icon_area.wid + font_height / 2;
+                font_y = listbox->line_center_y + listbox->icon_area.wid + font_height / 2 + 5;
                 font_w = listbox->item_width;
                 font_h = font_height;
             }

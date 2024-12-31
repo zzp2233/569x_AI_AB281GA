@@ -85,27 +85,37 @@ static void func_findphone_process(void)
     f_findphone_t *f_findphone = (f_findphone_t *)func_cb.f_cb;
     static u32 ticks = 0;
 
-    if(uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
-    {
-        if (sys_cb.gui_sleep_sta)
+    if (ble_is_connect()) {
+        if(uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
         {
-            sys_cb.gui_need_wakeup = 1;
-        }
-        reset_sleep_delay_all();
-        if (tick_check_expire(ticks, 50))
-        {
-            ticks = tick_get();
+            if (sys_cb.gui_sleep_sta)
+            {
+                sys_cb.gui_need_wakeup = 1;
+            }
+            reset_sleep_delay_all();
+            if (tick_check_expire(ticks, 50))
+            {
+                ticks = tick_get();
 
-            compo_picturebox_set_rotation(pic,f_findphone->angle*10);
-            if(++f_findphone->angle == 360) f_findphone->angle = 0;
+                compo_picturebox_set_rotation(pic,f_findphone->angle*10);
+                if(++f_findphone->angle == 360) f_findphone->angle = 0;
+            }
+            compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
+            compo_textbox_set(txt, i18n[STR_STOP]);
         }
-        compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
-        compo_textbox_set(txt, i18n[STR_STOP]);
-    }
-    else
-    {
-         compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN);
-         compo_textbox_set(txt, i18n[STR_START]);
+        else
+        {
+             compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN);
+             compo_textbox_set(txt, i18n[STR_START]);
+        }
+    } else {
+        if (uteModuleFindPhoneGetStatus() == FIND_PHONE_RING) {
+            compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_RECTANGLE01_BIN);
+            uteModuleFindPhoneSetStatus(FIND_PHONE_STOP);
+            compo_textbox_set(txt, i18n[STR_START]);
+            sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+            msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+        }
     }
 
     func_process();

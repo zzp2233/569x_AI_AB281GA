@@ -496,10 +496,6 @@ void gui_set_cover_index(uint8_t index)
             }
             else if (sys_cb.cover_index == REMIND_COVER_HEALTH_SEDENTARY)           //久坐提醒
             {
-                if(!bsp_sensor_hr_wear_sta_get())
-                {
-                 return;
-                }
 //                tm_t tm = time_to_tm(RTCCNT);
 //                snprintf(title, sizeof(title), "%02d:%02d", tm.hour, tm.min);
             }
@@ -509,12 +505,12 @@ void gui_set_cover_index(uint8_t index)
         if(uteModuleSystemtime12HOn() && sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
         {
             res = msgbox(txt, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
-            printf("clock=%s\n",txt);
+//            printf("clock=%s\n",txt);
         }
         else
         {
             res = msgbox(msg, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
-            printf("1111=%s\n",msg);
+//            printf("1111=%s\n",msg);
         }
 
 

@@ -149,6 +149,9 @@ static void func_set_sub_about_message(size_msg_t msg)
         case MSG_CTP_SHORT_RIGHT:
             func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
             break;
+        case KL_BACK:
+            func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+        break;
         }
     }
     else

@@ -763,8 +763,8 @@ static const ui_handle_t ui_handle = {
                 .idx    = COMPO_ID_APP3,
                 .x      = 120+44/2-232/2,
                 .y      = 43+44/2-108/2,
-                .w      = 45,
-                .h      = 45,
+                .w      = 46,
+                .h      = 46,
                 .res    = UI_BUF_I330001_THEME_1_TIMER_BIN,
                 .res_click = 2,
                 .res_switch = 2,
@@ -774,8 +774,8 @@ static const ui_handle_t ui_handle = {
                 .idx    = COMPO_ID_APP4,
                 .x      = 174+44/2-232/2,
                 .y      = 43+44/2-108/2,
-                .w      = 45,
-                .h      = 45,
+                .w      = 46,
+                .h      = 46,
                 .res    = UI_BUF_I330001_THEME_1_CALL_BIN,
                 .res_click = 3,
                 .res_switch = 3,
@@ -1428,8 +1428,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                        ) : \
                        CARD_BG_GRAY_START;
 //            TRACE("gray[%d]\n", level);
-            compo_cardbox_rect_set_color(cardbox, 0, GRAY_LV(level));   //背景颜色
-            compo_cardbox_rect_set_color(cardbox, 1, GRAY_LV(level));
+            compo_cardbox_rect_set_color(cardbox, 0, GRAY_LV(level-20));   //背景颜色
+            compo_cardbox_rect_set_color(cardbox, 1, GRAY_LV(level-20));
             if (unvisible)
             {
                 compo_cardbox_set_visible(cardbox, false);

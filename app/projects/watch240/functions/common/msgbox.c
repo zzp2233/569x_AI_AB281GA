@@ -229,9 +229,18 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 txt_leng.hei = GUI_SCREEN_HEIGHT/2.5;
             }
-            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-widget_text_get_height(),txt_leng.wid,txt_leng.hei);              //调整文本位置
-            compo_textbox_set_multiline(txt_msg, true);
-            compo_textbox_set(txt_msg, msg);
+            if(msg == i18n[STR_ADDRESS_BOOK_SYNC])
+            {
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,txt_leng.wid,txt_leng.hei);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set(txt_msg, msg);
+            }
+            else
+            {
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-widget_text_get_height(),txt_leng.wid,txt_leng.hei);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set(txt_msg, msg);
+            }
 
             //title
             compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本

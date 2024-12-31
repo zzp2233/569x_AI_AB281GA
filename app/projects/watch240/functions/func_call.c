@@ -80,10 +80,10 @@ static void func_call_list_message(size_msg_t msg)
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_call->listbox;
 
-    if (compo_listbox_message(listbox, msg))
-    {
-        return;                                         //处理列表框信息
-    }
+//    if (compo_listbox_message(listbox, msg))
+//    {
+//        return;                                         //处理列表框信息
+//    }
     switch (msg)
     {
         case MSG_CTP_CLICK:

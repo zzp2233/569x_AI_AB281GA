@@ -149,8 +149,8 @@ static const timer_btn_item_t tbl_timer_btn_item[] =
     {"02",         COMPO_ID_HOUR_1,      33,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING*2},
     {"01",         COMPO_ID_HOUR_2,      33,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING},
     {"00",         COMPO_ID_HOUR_3,      33,                         GUI_SCREEN_CENTER_Y},
-    {"24",         COMPO_ID_HOUR_4,      33,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING},
-    {"23",         COMPO_ID_HOUR_5,      33,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING*2},
+    {"23",         COMPO_ID_HOUR_4,      33,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING},
+    {"22",         COMPO_ID_HOUR_5,      33,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING*2},
 };
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -159,7 +159,7 @@ static void func_timer_setting_date_init(void)
 {
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
     char time_setting[5]={2,1,0,59,58};
-    char time_setting_hour[5]={2,1,0,24,23};
+    char time_setting_hour[5]={2,1,0,23,22};
 
     for(int i=0;i<5;i++)
     {
@@ -588,8 +588,8 @@ static void func_timer_process(void)
                     case 1:
                        for(int i=0;i<5;i++)
                        {
-                           f_timer->set_time_buf[i] =25+f_timer->hour_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
-                           f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%25;
+                           f_timer->set_time_buf[i] =24+f_timer->hour_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
+                           f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%24;
 
                            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_HOUR_1+i);
                            compo_textbox_set_pos(txt,tbl_timer_btn_item[i+10].x,tbl_timer_btn_item[i+10].y-TIME_SET_TXT_SPACING_SHIFT+f_timer->moveto.y);

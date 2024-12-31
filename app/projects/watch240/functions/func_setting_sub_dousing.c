@@ -64,10 +64,10 @@ char *back_string(char *num,char*txt)
 {
     if(func_cb.sta == FUNC_SET_SUB_DOUSING)
     {
-    f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
-    memset(f_set->str,0,sizeof(f_set->str));
-    uteModuleCharencodeReplaceSubString(txt, f_set->str,"##",num);
-    return f_set->str;
+        f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
+        memset(f_set->str,0,sizeof(f_set->str));
+        uteModuleCharencodeReplaceSubString(txt, f_set->str,"##",num);
+        return f_set->str;
     }
     return NULL;
 }
@@ -75,6 +75,33 @@ char *back_string(char *num,char*txt)
 //熄屏设置页面
 compo_form_t *func_set_sub_dousing_form_create(void)
 {
+
+    switch (uteModuleGuiCommonGetDisplayOffTime()) {
+    case 5:
+        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM0;
+        break;
+
+    case 10:
+        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM1;
+        break;
+
+    case 20:
+        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM2;
+        break;
+
+    case 30:
+        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM3;
+        break;
+
+    case 60:
+        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM4;
+        break;
+
+    case 0:
+        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM5;
+        break;
+    }
+
     snprintf(tbl_list_dousing[0].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("5",i18n[STR_SECOND_JOINT]));
     snprintf(tbl_list_dousing[1].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("10",i18n[STR_SECOND_JOINT]));
     snprintf(tbl_list_dousing[2].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("20",i18n[STR_SECOND_JOINT]));

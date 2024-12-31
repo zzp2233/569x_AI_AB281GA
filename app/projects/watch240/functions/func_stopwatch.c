@@ -160,8 +160,7 @@ static void func_stopwatch_button_click(void)
 
                 snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
                 compo_textbox_set(num_rec, str_buff);
-            }
-            compo_textbox_set_visible(num_rec, sys_cb.stopwatch_rec_cnt > 0);
+                compo_textbox_set_visible(num_rec, sys_cb.stopwatch_rec_cnt > 0);
 //            compo_button_set_visible(btn_record1, sys_cb.stopwatch_sta != 0);
             if(sys_cb.stopwatch_sta)
             {
@@ -209,7 +208,7 @@ static void func_stopwatch_button_click(void)
             }
             compo_button_set_bgimg(btn_start, res_addr);
             compo_button_set_visible(btn_afresh, true);
-            compo_button_set_visible(btn_record, true);
+            compo_button_set_visible(btn_record, sys_cb.stopwatch_sta > 0 ? true : false);
             break;
     }
 

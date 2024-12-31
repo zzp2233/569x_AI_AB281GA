@@ -802,7 +802,13 @@ void func_switch_next(bool flag_auto, bool flag_loop)
 void func_switch_to(u8 sta, u16 switch_mode)
 {
     compo_form_t *frm = func_create_form(sta);                                  //创建下一个任务的窗体
-    bool res = func_switching(switch_mode, NULL);                               //切换动画
+    bool res = 0;
+    u8 alph = 255;
+    if (sta == FUNC_CARD && switch_mode == FUNC_SWITCH_LR_ZOOM_RIGHT) {
+        res = func_switching(switch_mode, &alph);                               //切换动画
+    } else {
+        res = func_switching(switch_mode, NULL);                               //切换动画
+    }
     compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体
     if (res)
     {

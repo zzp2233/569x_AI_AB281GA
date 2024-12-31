@@ -543,7 +543,7 @@ static void func_bt_button_release_handle()
         case COMPO_ID_BTN_PLAY:
             if (bt_cb.music_playing == false)
             {
-                compo_button_set_bgimg(btn_play,UI_BUF_I330001_MUSIC_PLAY02_BIN );
+//                compo_button_set_bgimg(btn_play,UI_BUF_I330001_MUSIC_PLAY02_BIN );
             }
             break;
         case COMPO_ID_BTN_VOL_UP:

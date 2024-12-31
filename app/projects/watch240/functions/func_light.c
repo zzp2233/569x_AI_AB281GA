@@ -62,11 +62,11 @@ compo_form_t *func_light_form_create(void)
 	compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_LESS_BIN);
     compo_setid(btn, COMPO_ID_BTN_REDUCE);
-    compo_button_set_pos(btn, 39, 176);
+    compo_button_set_pos(btn, 39, GUI_SCREEN_CENTER_Y);
 
 	btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_PLUS_BIN);
     compo_setid(btn, COMPO_ID_BTN_INCREASE);
-    compo_button_set_pos(btn, 201, 176);
+    compo_button_set_pos(btn, 201, GUI_SCREEN_CENTER_Y);
 
     //新建图像
     compo_picturebox_t *pic_level[LIGHT_PIC_ITEM_CNT];

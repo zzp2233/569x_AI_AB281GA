@@ -873,24 +873,26 @@ static void func_sport_sub_run_enter(void)
     func_cb.frm_main = func_sport_sub_run_form_create();
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     f_sport_sub_run->sport_run_state = true;
-    if (uteModuleSportMoreSportIsAppStart())
-    {
-        //uteModuleSportStartMoreSports(uteModuleSportMoreSportGetType(), 1, 1);
-        if (func_cb.last != FUNC_SPORT_SWITCH)
+    if (func_cb.last != FUNC_CAMERA) {
+        if (uteModuleSportMoreSportIsAppStart())
         {
-            func_cb.sta = FUNC_SPORT_SWITCH;
+            //uteModuleSportStartMoreSports(uteModuleSportMoreSportGetType(), 1, 1);
+            if (func_cb.last != FUNC_SPORT_SWITCH)
+            {
+                func_cb.sta = FUNC_SPORT_SWITCH;
+            }
+            else
+            {
+                uteModuleSportSetCountZeroIndex(0);
+            }
+            TRACE("【APP】开始运动\n");
         }
         else
         {
+            uteModuleSportStartMoreSports(func_sport_get_current_idx()+1, 1, 0);
             uteModuleSportSetCountZeroIndex(0);
+            TRACE("【本地】开始运动:%d\n",func_sport_get_current_idx()+1);
         }
-        TRACE("【APP】开始运动\n");
-    }
-    else
-    {
-        uteModuleSportStartMoreSports(func_sport_get_current_idx()+1, 1, 0);
-        uteModuleSportSetCountZeroIndex(0);
-        TRACE("【本地】开始运动:%d\n",func_sport_get_current_idx()+1);
     }
     f_sport_sub_run->heart_pic_size = 100;
 
@@ -900,9 +902,11 @@ static void func_sport_sub_run_enter(void)
 static void func_sport_sub_run_exit(void)
 {
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
-    if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-    {
-        task_stack_pop();
+    if (func_cb.sta != FUNC_CAMERA) {
+        if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
+        {
+            task_stack_pop();
+        }
     }
     func_cb.last = FUNC_SPORT_SUB_RUN;
 }

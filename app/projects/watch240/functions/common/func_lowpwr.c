@@ -849,6 +849,14 @@ void func_pwroff(int pwroff_tone_en)
     }
 }
 
+//主动写入 软件 复位原因
+void sw_reset_kick(uint8_t source)
+{
+    LVDCON &= ~(0x1f << 8);
+    LVDCON |= BIT(12);
+    LVDCON |= (source << 8);
+}
+
 /****************************************************************************************************************
 * Deepsleep mode模式
 * VDDCORE关闭、VDDIO用ano电源域、lp_top用vrtc11供电、关掉VDDBT、模拟模块置成复位状态

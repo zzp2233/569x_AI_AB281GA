@@ -161,6 +161,15 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_ar_ril.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_de_rde.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_en_rus.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_fr_rfr.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_it_rit.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_ja_rjp.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_ru_rru.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_zh_rcn.h" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_zh_rtw.h" />
 		<Unit filename="../../../ute/language/ute_language_common.c">
 			<Option compilerVar="CC" />
 		</Unit>

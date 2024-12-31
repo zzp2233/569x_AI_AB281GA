@@ -1544,7 +1544,7 @@ static void func_clock_sub_card_click_handler(void)
     u8 func_jump = FUNC_NULL;
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_clock_sub_card_get_btn_id(pt);
-//    printf("click compo_id:%d\n", compo_id);
+    printf("click compo_id:%d\n", compo_id);
     int id = compo_get_button_id();
 
     switch(compo_id)
@@ -1602,11 +1602,15 @@ static void func_clock_sub_card_click_handler(void)
             }
         break;
         case COMPO_ID_CARD_7 :
-            func_jump = card_get_latest_func(id-COMPO_ID_APP1);
+            printf("id : %d\n", id);
+            if (id != ID_NULL) {
+                func_jump = card_get_latest_func(id-COMPO_ID_APP1);
+            }
             break;
     }
-    if(func_jump!=FUNC_NULL)
+    if(func_jump != FUNC_NULL)
     {
+        printf("func_jump=%d\n", func_jump);
         func_cb.sta = func_jump;  //直接跳转
     }
 //    switch (compo_id)

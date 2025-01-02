@@ -98,13 +98,14 @@ void uteModuleMusicSetPlayerArtist(uint8_t *data,uint16_t size);
 void uteModuleMusicSetPlayerTitle(uint8_t *data,uint16_t size);
 void uteModuleMusicSetPlayerVolume(uint8_t volume);
 void uteModuleMusicGetPlayerTitle(uint8_t *data,uint16_t *size);
+void uteModuleMusicGetPlayerArtistSize(uint8_t *data,uint16_t *size);
 void uteModuleMusicGetPlayerData(ute_module_music_data_t *data);
 void uteModuleMusicSetPlayerData(ute_module_music_data_t data);
 void uteModuleMusicResetPlayStatus(void);
 void uteModuleMusicCtrlPaused(bool isNeedVibration);
 void uteModuleMusicCtrl(bool isCutNext,bool isCutManual,bool isNeedShake); //add by pcm  2022-07-30
-void uteModuleMusicCtrlVolumeIncrease(void);
-void uteModuleMusicCtrlVolumeDecrease(void);
+void uteModuleMusicCtrlVolumeIncrease(bool isNeedShake);
+void uteModuleMusicCtrlVolumeDecrease(bool isNeedShake);
 void uteModuleMusicAvrcpConnCmpl(void);
 bool uteModuleMusicIsSetMaxVolume(void);
 ute_module_music_play_channel_t uteModuleMusicGetPlayChannel(void);

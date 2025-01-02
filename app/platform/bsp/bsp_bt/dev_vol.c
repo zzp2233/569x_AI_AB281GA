@@ -1,5 +1,6 @@
 #include "include.h"
 #include "api.h"
+#include "ute_module_music.h"
 
 #define TRACE_EN                0
 
@@ -19,6 +20,8 @@ bool dev_vol_set_cb(uint8_t dev_vol, uint8_t media_index, uint8_t setting_type)
         sys_cb.hfp_vol = dev_vol;
     } else {
         sys_cb.vol = a2dp_vol_conver(dev_vol);
+        uint8_t volume = sys_cb.vol * 6.25;
+        uteModuleMusicSetPlayerVolume(volume);
     }
 
     TRACE("dev_vol_set_cb: %d(%x, %d, %d)\n", sys_cb.vol, dev_vol, media_index, setting_type);

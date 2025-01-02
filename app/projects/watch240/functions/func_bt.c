@@ -107,14 +107,19 @@ static void bt_control_play_pause(void)
 {
     //f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
 
-    if (bt_is_connected())
+//    if (bt_is_connected())
+//    {
+//        bt_music_play_pause();
+//    }
+//    else if (ble_ams_is_connected())
+//    {
+//        ble_ams_remote_ctrl(AMS_REMOTE_CMD_PLAY_PAUSE);
+//    }
+    if (bt_is_connected() || ble_ams_is_connected())
     {
-        bt_music_play_pause();
+        uteModuleMusicCtrlPaused(!uteModuleMusicGetPlayerPaused());
     }
-    else if (ble_ams_is_connected())
-    {
-        ble_ams_remote_ctrl(AMS_REMOTE_CMD_PLAY_PAUSE);
-    }
+
 }
 
 //切换上一曲

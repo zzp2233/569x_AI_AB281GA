@@ -153,6 +153,7 @@ void uteModuleNotDisturbGetParam(ute_module_not_disturb_data_t *param)
 bool uteModuleNotDisturbIsTimeBucket(void)
 {
     bool isNotDisturbTimeNow = false;
+    uint16_t hourMin = 0;
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT
     if(uteModuleNotDisturbData.isScheduledOpen)
 #else
@@ -161,7 +162,7 @@ bool uteModuleNotDisturbIsTimeBucket(void)
     {
         ute_module_systemtime_time_t time;
         uteModuleSystemtimeGetTime(&time);
-        uint16_t hourMin = time.hour<<8|time.min;
+        hourMin = time.hour*60+time.min;
         if(uteModuleNotDisturbData.startHourMin<uteModuleNotDisturbData.endHourMin)
         {
             if((hourMin>=uteModuleNotDisturbData.startHourMin)&&(hourMin<=uteModuleNotDisturbData.endHourMin))
@@ -177,6 +178,7 @@ bool uteModuleNotDisturbIsTimeBucket(void)
             }
         }
     }
+
     return isNotDisturbTimeNow;
 }
 /**

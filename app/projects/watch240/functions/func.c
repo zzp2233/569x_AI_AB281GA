@@ -620,6 +620,8 @@ void func_process(void)
     if (sys_cb.timer_done)
     {
         sys_cb.timer_done = false;
+        msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+        msg_enqueue(EVT_MSGBOX_EXIT);
         msg_enqueue(EVT_WATCH_TIMER_DONE);
         printf(">>>TIMER DONE\n");
     }
@@ -1312,6 +1314,9 @@ void func_message(size_msg_t msg)
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
+            func_cb.sta = FUNC_TIMER;
+//            func_switch_to(FUNC_STOPWATCH, FUNC_SWITCH_FADE | FUNC_SWITCH_AUTO);
+//            msgbox("计时已经结束",NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_RES_NONE);
             break;
 
         default:

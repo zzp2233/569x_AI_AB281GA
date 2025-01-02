@@ -1556,7 +1556,7 @@ static void func_clock_sub_card_click_handler(void)
         case COMPO_ID_CARD_2 :
             func_jump = FUNC_SLEEP;
             break;
-        case COMPO_ID_CARD_3 :
+        case COMPO_ID_CARD_3:
             switch(id)
             {
             case COMPO_MUSIC_BTN_PREV:
@@ -1619,9 +1619,11 @@ static void func_clock_sub_card_click_handler(void)
         break;
         case COMPO_ID_CARD_7 :
             printf("id : %d\n", id);
-            if (id != ID_NULL) {
+            if (id >= COMPO_ID_APP1) {
                 func_jump = card_get_latest_func(id-COMPO_ID_APP1);
             }
+            break;
+        default:
             break;
     }
     if(func_jump != FUNC_NULL)

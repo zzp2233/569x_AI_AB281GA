@@ -1,5 +1,6 @@
 #include "include.h"
 #include "ute_module_music.h"
+#include "ute_application_common.h"
 
 #define TRACE_EN                0
 
@@ -141,13 +142,17 @@ void bt_get_paly_status_info_callback(u8 *buf, u16 size)
     tmp = buf[8];
     bt_set_music_sta(tmp);
     TRACE(" sta[%d]\n", tmp);
-    if(tmp == 0x01)
+
+    if (uteApplicationCommonIsAppClosed() && !ble_ams_is_connected()) //优先使用app返回的状态
     {
-        uteModuleMusicSetPlayerPaused(false, 0);
-    }
-    else
-    {
-        uteModuleMusicSetPlayerPaused(true, 0);
+        if (tmp == 0x01)
+        {
+            uteModuleMusicSetPlayerPaused(false, 0);
+        }
+        else
+        {
+            uteModuleMusicSetPlayerPaused(true, 0);
+        }
     }
 }
 

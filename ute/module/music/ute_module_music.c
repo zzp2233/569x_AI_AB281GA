@@ -161,7 +161,7 @@ void uteModuleMusicSetPlayerVolume(uint8_t volume)
     UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL,"%s,uteModuleMusicData.volume=%d", __func__,uteModuleMusicData.volume);
 }
 /**
-*@brief  设置歌词
+*@brief  设置歌手/歌词
 *@details  输入编码为utf-8
 *@param[in] uint8_t *data,数据
 *@param[in] uint16_t size,长度
@@ -174,7 +174,7 @@ void uteModuleMusicSetPlayerArtist(uint8_t *data,uint16_t size)
     uteModuleMusicData.playerArtistSize = UTE_MUSIC_ARTLIST_MAX_SIZE;
     memset(&uteModuleMusicData.playerArtist[0],0,UTE_MUSIC_ARTLIST_MAX_SIZE);
     // uteModuleCharencodeUtf8ConversionUnicode(&uteModuleMusicData.playerArtist[0],&uteModuleMusicData.playerArtistSize,data,size);
-    uteModuleMusicData.playerArtistSize = size > UTE_MUSIC_ARTLIST_MAX_SIZE ? UTE_MUSIC_ARTLIST_MAX_SIZE : size;
+    uteModuleMusicData.playerArtistSize = size > UTE_MUSIC_ARTLIST_MAX_SIZE - 1 ? UTE_MUSIC_ARTLIST_MAX_SIZE - 1 : size;
     memcpy(&uteModuleMusicData.playerArtist[0],data,uteModuleMusicData.playerArtistSize);
     UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL,"%s,artist:", __func__);
     UTE_MODULE_LOG_BUFF(UTE_LOG_MUSIC_LVL,&uteModuleMusicData.playerArtist[0],uteModuleMusicData.playerArtistSize);
@@ -195,7 +195,7 @@ void uteModuleMusicSetPlayerTitle(uint8_t *data,uint16_t size)
     uteModuleMusicData.playerTitleSize = UTE_MUSIC_TITLE_MAX_SIZE;
     memset(&uteModuleMusicData.playerTitle[0],0,UTE_MUSIC_TITLE_MAX_SIZE);
     // uteModuleCharencodeUtf8ConversionUnicode(&uteModuleMusicData.playerTitle[0],&uteModuleMusicData.playerTitleSize,data,size);
-    uteModuleMusicData.playerTitleSize = size > UTE_MUSIC_TITLE_MAX_SIZE ? UTE_MUSIC_TITLE_MAX_SIZE : size;
+    uteModuleMusicData.playerTitleSize = size > UTE_MUSIC_TITLE_MAX_SIZE - 1 ? UTE_MUSIC_TITLE_MAX_SIZE -1 : size;
     memcpy(&uteModuleMusicData.playerTitle[0],data,uteModuleMusicData.playerTitleSize);
     UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL,"%s,title:", __func__);
     UTE_MODULE_LOG_BUFF(UTE_LOG_MUSIC_LVL,&uteModuleMusicData.playerTitle[0],uteModuleMusicData.playerTitleSize);
@@ -217,6 +217,23 @@ void uteModuleMusicGetPlayerTitle(uint8_t *data,uint16_t *size)
     *size = uteModuleMusicData.playerTitleSize;
     uteModulePlatformGiveMutex(uteModuleMusicMute);
 }
+
+/**
+*@brief  获取歌手信息
+*@details  输入编码为utf-8
+*@param[in] uint8_t *data,数据
+*@param[in] uint16_t size,长度
+*@author        pcm
+*@date        2022-7-30
+*/
+void uteModuleMusicGetPlayerArtistSize(uint8_t *data,uint16_t *size)
+{
+    uteModulePlatformTakeMutex(uteModuleMusicMute);
+    memcpy(data,&uteModuleMusicData.playerArtist[0],uteModuleMusicData.playerArtistSize);
+    *size = uteModuleMusicData.playerArtistSize;
+    uteModulePlatformGiveMutex(uteModuleMusicMute);
+}
+
 /**
 *@brief  获取数据
 *@details
@@ -271,7 +288,19 @@ void uteModuleMusicCtrlPaused(bool isNeedVibration)
     uint8_t response[2];
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
+#if BT_ID3_TAG_EN
+    if (bt_is_connected())
+    {
+        if(isNeedVibration)
+        {
+            uteDrvMotorStart(200, UTE_MOTOR_INTERVAL_TIME, 1);
+        }
+        bt_music_play_pause();
+    }
+    else if (status.isConnected)
+#else
     if (status.isConnected)
+#endif
     {
         if(isNeedVibration)
         {
@@ -317,7 +346,26 @@ void uteModuleMusicCtrl(bool isCutNext,bool isCutManual,bool isNeedShake)
     uint8_t response[2];
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
+#if BT_ID3_TAG_EN
+    if (bt_is_connected())
+    {
+        if (isNeedShake)
+        {
+            uteDrvMotorStart(200, UTE_MOTOR_INTERVAL_TIME, 1);
+        }
+        if(isCutNext)
+        {
+            bt_music_next();
+        }
+        else
+        {
+            bt_music_prev();
+        }
+    }
+    else if (status.isConnected)
+#else
     if (status.isConnected)
+#endif
     {
         if (isNeedShake)
         {
@@ -343,17 +391,30 @@ void uteModuleMusicCtrl(bool isCutNext,bool isCutManual,bool isNeedShake)
 *@author        dengli.lu
 *@date        2021-12-02
 */
-void uteModuleMusicCtrlVolumeIncrease(void)
+void uteModuleMusicCtrlVolumeIncrease(bool isNeedShake)
 {
     ute_ble_connect_state_t status;
     uint8_t response[2];
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
-    if (status.isConnected)
+#if BT_ID3_TAG_EN
+    if (bt_is_connected())
     {
-#if (!UTE_MODULE_MUSIC_CONTROL_VOLUME_NO_MOTOR_SUPPORT)
-        uteDrvMotorStart(200, UTE_MOTOR_INTERVAL_TIME, 1);
+        if(isNeedShake)
+        {
+            uteDrvMotorStart(200, UTE_MOTOR_INTERVAL_TIME, 1);
+        }
+        bt_volume_up();
+    }
+    else if (status.isConnected)
+#else
+    if (status.isConnected)
 #endif
+    {
+        if(isNeedShake)
+        {
+            uteDrvMotorStart(200, UTE_MOTOR_INTERVAL_TIME, 1);
+        }
         ble_ams_remote_ctrl(AMS_REMOTE_CMD_VOL_UP);
         response[1] = 0x0D;
         uteModuleProfileBleSendToPhone(&response[0], 2);
@@ -365,17 +426,30 @@ void uteModuleMusicCtrlVolumeIncrease(void)
 *@author        dengli.lu
 *@date        2021-12-02
 */
-void uteModuleMusicCtrlVolumeDecrease(void)
+void uteModuleMusicCtrlVolumeDecrease(bool isNeedShake)
 {
     ute_ble_connect_state_t status;
     uint8_t response[2];
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
-    if (status.isConnected)
+#if BT_ID3_TAG_EN
+    if (bt_is_connected())
     {
-#if (!UTE_MODULE_MUSIC_CONTROL_VOLUME_NO_MOTOR_SUPPORT)
-        uteDrvMotorStart(200, UTE_MOTOR_INTERVAL_TIME, 1);
+        if(isNeedShake)
+        {
+            uteDrvMotorStart(200, UTE_MOTOR_INTERVAL_TIME, 1);
+        }
+        bt_volume_down();
+    }
+    else if (status.isConnected)
+#else
+    if (status.isConnected)
 #endif
+    {
+        if(isNeedShake)
+        {
+            uteDrvMotorStart(200, UTE_MOTOR_INTERVAL_TIME, 1);
+        }
         ble_ams_remote_ctrl(AMS_REMOTE_CMD_VOL_DOWN);
         response[1] = 0x0E;
         uteModuleProfileBleSendToPhone(&response[0], 2);

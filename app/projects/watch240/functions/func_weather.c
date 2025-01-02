@@ -216,7 +216,7 @@ compo_form_t *func_weather_form_create(void)
     {
         ///设置标题栏名字///
         txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
-        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
+//        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
         compo_textbox_set(txt, i18n[STR_WEATHER]);
         compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
         compo_textbox_set(txt, i18n[STR_WEATHER]);
@@ -245,7 +245,7 @@ compo_form_t *func_weather_form_create(void)
 
     ///设置标题栏名字///
     txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
+//    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
     compo_textbox_set(txt, i18n[STR_WEATHER]);
     compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
     compo_textbox_set(txt, i18n[STR_WEATHER]);

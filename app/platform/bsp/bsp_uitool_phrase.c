@@ -24,10 +24,10 @@ const u16 text_str_tbl[] =
     STR_DISTANCE,
     STR_HEART_RATE,
     STR_BLOOD_OXYGEN,
-    STR_BLOOD_SUGAR,
+//    STR_BLOOD_SUGAR,
     STR_WEATHER,
-    STR_BAROMETER,
-    STR_TEMPERATURE,
+//    STR_BAROMETER,
+//    STR_TEMPERATURE,
 //    STR_CELSIUS,
     STR_ALTITUDE,
     STR_SPORTS,
@@ -161,7 +161,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
                 }
                 else
                 {
-                    compo_picturebox_set_visible(pic, true); 
+                    compo_picturebox_set_visible(pic, true);
                 }
             }
             else

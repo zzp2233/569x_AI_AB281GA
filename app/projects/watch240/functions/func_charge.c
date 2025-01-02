@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_drv_battery_common.h"
+#include "ute_drv_motor.h"
 
 #define TRACE_EN    1
 
@@ -352,6 +353,8 @@ static void func_charge_enter(void)
     f_charge_t *f_charge = (f_charge_t *)func_cb.f_cb;
     f_charge->percent_bkp = BAT_PERCENT_VALUE;
     func_cb.enter_tick = tick_get();
+
+    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
 }
 
 //退出充电功能

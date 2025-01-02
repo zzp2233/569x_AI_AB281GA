@@ -12,6 +12,8 @@ enum
 {
     //按键
     COMPO_ID_BG_SHAPE = 1,
+    COMPO_ID_TXT,
+    COMPO_ID_PIC,
 };
 
 typedef struct f_flashlight_t_
@@ -34,12 +36,16 @@ compo_form_t *func_flashlight_form_create(void)
 //
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_FLASHLIGHT_ICON_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 106);
+    compo_picturebox_set_visible(picbox, true);
+    compo_setid(picbox,COMPO_ID_PIC);
 
   //创建文本
     compo_textbox_t *txt_idle = compo_textbox_create(frm, strlen(i18n[STR_CLICK_OPEN]));
     compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
     compo_textbox_set_location(txt_idle, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/1.55,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_idle->txt).hei);
     compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
+    compo_textbox_set_visible(txt_idle, true);
+    compo_setid(txt_idle,COMPO_ID_TXT);
 
     compo_shape_t * shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
@@ -54,6 +60,8 @@ static void func_flashlight_button_click(void)
 {
     f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
     compo_shape_t * shape = compo_getobj_byid(COMPO_ID_BG_SHAPE);
+    compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_PIC);
+    compo_textbox_t *txt_idle = compo_getobj_byid(COMPO_ID_TXT);
     f_flashlight->flashlight_flag = !f_flashlight->flashlight_flag;
 
     if(f_flashlight->flashlight_flag == true)
@@ -62,11 +70,15 @@ static void func_flashlight_button_click(void)
         sys_cb.light_level = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
         tft_bglight_set_level(sys_cb.light_level,false);
         compo_shape_set_visible(shape, true);
+        compo_picturebox_set_visible(picbox, false);
+        compo_textbox_set_visible(txt_idle, false);
     }
     else
     {
         tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
         compo_shape_set_visible(shape, false);
+        compo_picturebox_set_visible(picbox, true);
+        compo_textbox_set_visible(txt_idle, true);
     }
 }
 #else

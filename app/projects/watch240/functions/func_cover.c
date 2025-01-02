@@ -361,9 +361,9 @@ void app_ute_msg_pop_up(uint8_t index)
 
 
        //是否打开全天勿扰    //是否打开定时勿扰
-        if(sys_cb.disturd_adl==0 && sys_cb.disturd_tim==0)
-        {
-            sprintf(time, "%04d-%02d-%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
+//        if(sys_cb.disturd_adl==0 && sys_cb.disturd_tim==0)
+//        {
+            sprintf(time, "%04d/%02d/%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
             int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
             if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
             {
@@ -375,7 +375,7 @@ void app_ute_msg_pop_up(uint8_t index)
                     uteModuleNotifyDelAllHistoryData(false);
                 }
             }
-        }
+//        }
         ab_free(ble_msg);
     }
 }

@@ -83,6 +83,7 @@ enum
     COMPO_ID_BTN_NO,
     //数字
     COMPO_ID_NUM_COUNTDOWN,
+    COMPO_ID_COUNT_FINSH,
 };
 
 typedef struct f_timer_t_
@@ -294,6 +295,13 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
             compo_textbox_set(txt, str_buff);
+
+            txt = compo_textbox_create(frm, strlen("计时结束"));
+            compo_setid(txt, COMPO_ID_COUNT_FINSH);
+            compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X/1.5);
+            compo_textbox_set(txt, "计时结束");
+            compo_textbox_set_visible(txt, sys_cb.timer_sta == TIMER_STA_DONE);
+
             break;
 
         default:
@@ -391,6 +399,11 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     }
     if (count && sys_cb.timer_sta == TIMER_STA_WORKING /*&& !sys_cb.gui_sleep_sta*/)    //休眠不计时
     {
+        if (func_cb.sta == FUNC_TIMER) {
+            //隐藏
+            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
+            compo_textbox_set_visible(txt, false);
+        }
         if (sys_cb.timer_left_sec == 0)
         {
             done = true;
@@ -409,6 +422,11 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
         printf(">>>TIMER_DONE\n");
         sys_cb.timer_done = true;
         sys_cb.timer_sta = TIMER_STA_DONE;
+        if (func_cb.sta == FUNC_TIMER) {
+            //显示
+            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
+            compo_textbox_set_visible(txt, true);
+        }
     }
 }
 

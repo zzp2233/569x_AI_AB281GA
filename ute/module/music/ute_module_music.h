@@ -97,6 +97,7 @@ void uteModuleMusicSetPlayerTotalTime(uint32_t ms);
 void uteModuleMusicSetPlayerArtist(uint8_t *data,uint16_t size);
 void uteModuleMusicSetPlayerTitle(uint8_t *data,uint16_t size);
 void uteModuleMusicSetPlayerVolume(uint8_t volume);
+uint8_t uteModuleMusicGetPlayerVolume(void);
 void uteModuleMusicGetPlayerTitle(uint8_t *data,uint16_t *size);
 void uteModuleMusicGetPlayerArtistSize(uint8_t *data,uint16_t *size);
 void uteModuleMusicGetPlayerData(ute_module_music_data_t *data);

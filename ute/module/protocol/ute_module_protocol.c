@@ -30,6 +30,7 @@
 #include "ute_module_findphone.h"
 #include "ute_module_watchonline.h"
 #include "ute_module_factorytest.h"
+#include "ute_module_music.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -1105,11 +1106,11 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
     {
         if(receive[2] == 0x01)
         {
-            // uteModuleMusicSetPlayerPaused(false,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
+            uteModuleMusicSetPlayerPaused(false,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
         }
         else if(receive[2] == 0x02)
         {
-            // uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
+            uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
         }
         receive[2] = 0x00;
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],3);
@@ -1118,7 +1119,7 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
     {
         if(receive[2] <= 100)
         {
-            // uteModuleMusicSetPlayerVolume(receive[2]);
+            uteModuleMusicSetPlayerVolume(receive[2]);
         }
     }
 
@@ -1944,14 +1945,8 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolMusicCtrl(uint8_t*receive,uint8_t length)
 {
-#if 0
     ute_module_music_data_t musicData;
     uteModuleMusicGetPlayerData(&musicData);
-//    if(receive[1]==0x00)
-//    {
-//        musicData.androidCrc = 0;
-//    }
-//    else
     if(receive[1]==0x01)
     {
         musicData.androidCrc = 0;
@@ -2037,7 +2032,6 @@ void uteModuleProtocolMusicCtrl(uint8_t*receive,uint8_t length)
         uteModuleMusicSetPlayerData(musicData);
         musicData.androidCrc = 0;
     }
-#endif
 }
 
 /**
@@ -2625,7 +2619,7 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #endif
     data[6]|= 0x01;
     data[6]|= 0x08;  //支持应用通知开关选择显示
-    // data[6]|= 0x10; //安卓音乐信息
+    data[6]|= 0x10; //安卓音乐信息
 #if UTE_BT30_CALL_SUPPORT
     data[6]|= 0x20;
 #endif

@@ -1961,6 +1961,7 @@ static void func_clock_sub_card_enter(void)
 //时钟表盘上拉菜单退出处理
 static void func_clock_sub_card_exit(void)
 {
+    func_cb.last = FUNC_CARD;
 }
 
 //时钟表盘上拉菜单

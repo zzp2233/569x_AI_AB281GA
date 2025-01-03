@@ -546,7 +546,7 @@ void func_clock_sub_message(size_msg_t msg)
 
 static int rp = 0;
 static int ra = 0;
-
+#define CUBE_HALF_CIRCUM(x)                 ((int)(M_PI * x))         //圆周一半
 //时钟表盘功能事件处理
 static void func_clock_process(void)
 {
@@ -557,19 +557,21 @@ static void func_clock_process(void)
         compo_cube_move(cube);
 
 //        s32 dx, dy, ax, ay;
-//        mcb->flag_drag = ctp_get_dxy(&dx, &dy);
+//        ctp_get_dxy(&dx, &dy);
 //        //拖动菜单图标
 //        ax = dx * 1800 / CUBE_HALF_CIRCUM(cube->radius);
 //        ay = dy * 1800 / CUBE_HALF_CIRCUM(cube->radius);
 //        int rp = sqrt64(ax * ax + ay * ay);
 //        int ra = ARCTAN2(-ay, ax);
-        rp+=3;
-        if(rp==3600)rp=0;
-        ra+=3;
-        if(ra==3600)ra=0;
-
-        compo_cube_roll_from(cube, rp, ra);
-        compo_cube_update(cube);
+//
+//        printf("rp=%d  ra=%d\n",rp,ra);
+////        rp+=3;
+////        if(rp==3600)rp=0;
+////        ra+=3;
+////        if(ra==3600)ra=0;
+//
+//        compo_cube_roll_from(cube, rp, ra);
+//        compo_cube_update(cube);
 
     }
 #endif

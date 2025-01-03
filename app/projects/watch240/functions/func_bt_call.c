@@ -145,7 +145,7 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_IN_CALL]));
     compo_textbox_set(txt, i18n[STR_IN_CALL]);
 //    compo_textbox_set_autosize(number_txt, true);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16,GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1,GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16,GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //挂断按钮

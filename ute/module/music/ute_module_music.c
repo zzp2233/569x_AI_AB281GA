@@ -161,6 +161,16 @@ void uteModuleMusicSetPlayerVolume(uint8_t volume)
     UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL,"%s,uteModuleMusicData.volume=%d", __func__,uteModuleMusicData.volume);
 }
 /**
+*@brief  获取音量
+*@details
+*@author        zn.zeng
+*@date        2021-11-20
+*/
+uint8_t uteModuleMusicGetPlayerVolume(void)
+{
+    return uteModuleMusicData.volume;
+}
+/**
 *@brief  设置歌手/歌词
 *@details  输入编码为utf-8
 *@param[in] uint8_t *data,数据

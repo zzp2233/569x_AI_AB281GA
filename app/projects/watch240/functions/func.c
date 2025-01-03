@@ -133,7 +133,9 @@ extern void func_online_factory_test(void);
 extern void func_empty(void);
 extern void func_sport_finish(void);
 extern void func_up_watch_dial(void);
+extern void func_breathe_finish(void);
 
+compo_form_t *func_breathe_finish_form_create(void);
 compo_form_t *func_up_watch_dial_form_create(void);
 compo_form_t *func_power_on_language_form_create(void);
 compo_form_t *func_power_on_scan_form_create(void);
@@ -254,6 +256,7 @@ const func_t tbl_func_create[] =
     {FUNC_CARD,                         func_clock_sub_card_form_create},
     #endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_UP_WATCH_DIAL,                func_up_watch_dial_form_create},     //在线表盘
+    {FUNC_BREATHE_FINISH,               func_breathe_finish_form_create},
     {FUNC_HEARTRATE,                    func_heartrate_form_create},
     {FUNC_BT,                           func_bt_form_create},
     {FUNC_POWER_ON_SCAN,                func_power_on_scan_form_create},
@@ -369,6 +372,7 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_CARD,                         func_clock_sub_card},           //表盘上拉
 #endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+    {FUNC_BREATHE_FINISH,               func_breathe_finish},
     {FUNC_HEARTRATE,                    func_heartrate},                //心率
     {FUNC_ALARM_CLOCK,                  func_alarm_clock},              //闹钟
     {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set},      //闹钟--设置
@@ -620,6 +624,8 @@ void func_process(void)
     if (sys_cb.timer_done)
     {
         sys_cb.timer_done = false;
+        msg_enqueue(EVT_MSGBOX_EXIT);
+        msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
         msg_enqueue(EVT_WATCH_TIMER_DONE);
         printf(">>>TIMER DONE\n");
     }
@@ -1312,6 +1318,9 @@ void func_message(size_msg_t msg)
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
+            func_cb.sta = FUNC_TIMER;
+//            func_switch_to(FUNC_STOPWATCH, FUNC_SWITCH_FADE | FUNC_SWITCH_AUTO);
+//            msgbox("计时已经结束",NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_RES_NONE);
             break;
 
         default:

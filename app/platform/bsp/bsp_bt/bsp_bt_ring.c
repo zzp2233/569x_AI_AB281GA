@@ -119,6 +119,11 @@ void bsp_bt_ring_process(void)
     func_process();
     func_bt_sub_process();
 
+//    printf("bt_music = %d\n",uteModuleNotDisturbIsAllowLocalRingtone());
+    if(uteModuleNotDisturbIsAllowLocalRingtone() == false)
+    {
+        return;
+    }
 #if WARNING_BT_INCALL
     if (bt_is_ring() && (get_music_dec_sta() == MUSIC_STOP) && (bt_cb.disp_status == BT_STA_INCOMING) && (!bt_cb.ring_stop)) {
         if (!f_bt_ring.play.inband_ring_sta) {

@@ -360,6 +360,8 @@ static void func_breathe_process(void)
                         {
                             func_breathe_disp_init(BREATHE_STA_IDLE);
                             f_breathe->sta = BREATHE_STA_IDLE;
+                            func_cb.sta = FUNC_BREATHE_FINISH;
+                            printf("1111111111111111111111111111111111111\n");
                         }
                         break;
 
@@ -378,46 +380,6 @@ static void func_breathe_process(void)
     func_process();
 }
 
-////触摸按钮效果处理
-//static void func_breathe_button_touch_handle(void)
-//{
-//    int id = compo_get_button_id();
-//    compo_picturebox_t *pic_start_click = compo_getobj_byid(COMPO_ID_PIC_START_CLICK);
-//    compo_picturebox_t *pic_time_click = compo_getobj_byid(COMPO_ID_PIC_TIME_CLICK);
-//    compo_picturebox_t *pic_mode_click = compo_getobj_byid(COMPO_ID_PIC_MODE_CLICK);
-//
-//    switch (id)
-//    {
-//        case COMPO_ID_BTN_START:
-//            compo_picturebox_set_visible(pic_start_click, true);
-//            break;
-//
-//        case COMPO_ID_BTN_TIME:
-//            compo_picturebox_set_visible(pic_time_click, true);
-//            break;
-//
-//        case COMPO_ID_BTN_MODE:
-//            compo_picturebox_set_visible(pic_mode_click, true);
-//            break;
-//
-//        default:
-//            break;
-//    }
-//
-//}
-
-////释放按钮效果处理
-//static void func_breathe_button_release_handle(void)
-//{
-//    compo_picturebox_t *pic_start_click = compo_getobj_byid(COMPO_ID_PIC_START_CLICK);
-//    compo_picturebox_t *pic_time_click = compo_getobj_byid(COMPO_ID_PIC_TIME_CLICK);
-//    compo_picturebox_t *pic_mode_click = compo_getobj_byid(COMPO_ID_PIC_MODE_CLICK);
-//
-//    compo_picturebox_set_visible(pic_start_click, false);
-//    compo_picturebox_set_visible(pic_time_click, false);
-//    compo_picturebox_set_visible(pic_mode_click, false);
-//}
-
 
 //单击按钮
 static void func_breathe_button_click(void)
@@ -435,25 +397,16 @@ static void func_breathe_button_click(void)
             break;
 
         case COMPO_ID_BTN_TIME:
-//            sys_cb.breathe_duration += (sys_cb.breathe_duration == BREATHE_TIME_MIN ? 4 : 5) * 60 *1000;
-//            if (sys_cb.breathe_duration > BREATHE_TIME_MAX) {
-//                sys_cb.breathe_duration = BREATHE_TIME_MIN;
-//            }
-//            printf(">>>breathe_duration:%ds\n", sys_cb.breathe_duration / 1000);
             func_cb.sta = FUNC_BREATHE_SUB_TIME;
             break;
 
         case COMPO_ID_BTN_MODE:
-//            sys_cb.breathe_mode++;
-//            sys_cb.breathe_mode %= BREATHE_MODE_FAST + 1;
-//            printf(">>>breathe_mode:%d\n", sys_cb.breathe_mode);
             func_cb.sta = FUNC_BREATHE_SUB_MODE;
             break;
 
         default:
             break;
     }
-//    func_breathe_button_release_handle();
 }
 
 //呼吸功能消息处理
@@ -465,7 +418,6 @@ static void func_breathe_message(size_msg_t msg)
         switch (msg)
         {
             case MSG_CTP_TOUCH:
-//                func_breathe_button_touch_handle();
                 break;
 
             case MSG_CTP_CLICK:
@@ -476,7 +428,6 @@ static void func_breathe_message(size_msg_t msg)
             case MSG_CTP_SHORT_DOWN:
             case MSG_CTP_SHORT_LEFT:
             case MSG_CTP_LONG:
-//                func_breathe_button_release_handle();
                 if (func_cb.flag_sort)
                 {
                     func_message(msg);
@@ -484,7 +435,6 @@ static void func_breathe_message(size_msg_t msg)
                 break;
 
             case MSG_CTP_SHORT_RIGHT:
-//                func_breathe_button_release_handle();
                 func_message(msg);
                 break;
 

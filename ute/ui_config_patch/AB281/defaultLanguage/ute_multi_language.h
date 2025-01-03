@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2024-12-31 18:04:40
+*@date   2025-01-03 18:29:32
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -251,6 +251,9 @@ enum
     STR_WATCH_RESTART, // 手表即将进入重启
     STR_UP_WATCHING, // 表盘正在传输中，请保持APP和设备连接
     STR_NO_CONTACTS, // 没有联系人
+    STR_BREATHE_FINISH, // 训练完成
+    STR_BREATHE_TIME, // 训练时长
+    STR_LOW_BATTERY, // 电量过低
 };
 
 extern const char * const *i18n;

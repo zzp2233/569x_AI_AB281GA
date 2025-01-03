@@ -99,6 +99,7 @@ static void func_calculator_button_Refresh_disp(void)
 {
     calculator_disp_btn_item_t *calculator_disp_btn_item = (calculator_disp_btn_item_t *)func_cb.f_cb;
 
+//    printf("num_btn_old = %d\n", calculator_disp_btn_item->num_btn_old);
     if(calculator_disp_btn_item->num_btn_old)
     {
         compo_button_t *btn = compo_getobj_byid(calculator_disp_btn_item->num_btn_old);
@@ -110,6 +111,7 @@ static void func_calculator_button_Refresh_disp(void)
 //按钮触摸效果
 static void func_calculator_button_press_handle(void)
 {
+//    printf("%s\n", __func__);
     calculator_disp_btn_item_t *calculator_disp_btn_item = (calculator_disp_btn_item_t *)func_cb.f_cb;
     int id = compo_get_button_id();
     if(id && id!=BTN_ADD && id!=BTN_SUB && id!=BTN_MUL && id!=BTN_DIV)
@@ -165,6 +167,7 @@ static void func_calculator_button_click_handler(void)
     compo_textbox_set(txt, gcal_get_show_str());
     compo_textbox_set_pos(txt, 208-widget_text_get_area(txt->txt).wid,14);
     func_calculator_button_release_handle();
+    func_calculator_button_Refresh_disp();
 }
 
 //计算器功能消息处理
@@ -175,17 +178,24 @@ static void func_calculator_message(size_msg_t msg)
         case MSG_CTP_TOUCH:
             func_calculator_button_press_handle();
             break;
-        case MSG_SYS_500MS:
-            func_calculator_button_Refresh_disp();
-            break;
+//        case MSG_SYS_500MS:
+//            func_calculator_button_Refresh_disp();
+//            break;
         case MSG_CTP_SHORT_UP:
         case MSG_CTP_SHORT_DOWN:
         case MSG_CTP_SHORT_LEFT:
         case MSG_CTP_LONG:
+//            printf("MSG_CTP_SHORT_LEFT\n");
+            func_calculator_button_Refresh_disp();
             if (func_cb.flag_sort)
             {
                 func_message(msg);
             }
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            func_calculator_button_Refresh_disp();
+            func_message(msg);
             break;
 
         case MSG_CTP_CLICK:

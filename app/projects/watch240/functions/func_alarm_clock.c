@@ -137,16 +137,16 @@ compo_form_t *func_alarm_clock_form_create(void)
                                        (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_I330001_PUBLIC_SWITCH01_BIN).wid / 2 - 2, 0);
 
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d", func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).hour, ALARM_GET_MIN(i));
-            compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
+            compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_32_BIN);
             compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
             compo_cardbox_text_set(cardbox, 0, str_buff);
             compo_cardbox_text_set_align_center(cardbox, 0, false);
-            compo_cardbox_text_set_location(cardbox, 0, -100, -35, 180, 50);
+            compo_cardbox_text_set_location(cardbox, 0, -100, -30, 180, 50);
 
             compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_BIN);
             compo_cardbox_text_set_forecolor(cardbox, 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
             compo_cardbox_text_set_align_center(cardbox, 2, false);
-            compo_cardbox_text_set_location(cardbox, 2, -20, -30, 80, 50);
+            compo_cardbox_text_set_location(cardbox, 2, -35, -25, 80, 50);
             compo_cardbox_text_set_visible(cardbox, 2, true);
             if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 0)
             {
@@ -309,6 +309,9 @@ static void func_alarm_clock_button_click(void)
             if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_I330001_PUBLIC_SWITCH01_BIN).wid))   //开关
             {
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
+                //刷新
+                compo_cardbox_text_set_forecolor(compo_getobj_byid(COMPO_ID_CARD_0 + i), 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+                compo_cardbox_text_set_forecolor(compo_getobj_byid(COMPO_ID_CARD_0 + i), 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
             }
             else        //编辑
             {

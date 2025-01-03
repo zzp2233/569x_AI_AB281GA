@@ -784,13 +784,24 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/gui/ctp/axs5106/axs5106.h" />
+		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_comp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_comp.h" />
+		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_flash_boot.h" />
+		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_main.h" />
+		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_platform.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_platform.h" />
+		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_ramcode.h" />
 		<Unit filename="../../platform/gui/ctp/ctp.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/gui/ctp/ctp.h" />
-		<Unit filename="../../platform/gui/ctp/ctp_chsc6x.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="../../platform/gui/ctp/ctp_cst8x.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -184,6 +184,9 @@ typedef struct f_message_t_
 
     //message_info_t msg[MSG_MAX_LIST_CNT];
     ute_module_notify_data_t *ute_msg;
+
+    char tmp_msg[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+4];
+
 } f_message_t;
 
 static void func_message_card_update(bool fist);
@@ -307,13 +310,30 @@ static void func_message_card_click(void)
         u16 msg_id = compo_id - COMPO_CARD_START - 1;
         char *msg = (char*)f_msg->ute_msg->historyNotify[msg_id].content;
         char time[30]= {0};
-//        printf("msg:%s\n", msg);
+
+//        printf("===================================================>>>>>>>\n");
+//        print_r(msg, UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+//        printf("===================================================>>>>>>>\n");
+
+        memset(f_msg->tmp_msg, '\0', sizeof(f_msg->tmp_msg));
+        memcpy(f_msg->tmp_msg, msg, strlen(msg));
+        //消息内容超过UTE_NOTIFY_MSG_CONTENT_MAX_SIZE补充省略号
+        if (strlen(msg) >= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-2) {
+            memset(&f_msg->tmp_msg[strlen(msg)], '.', 3);
+            f_msg->tmp_msg[strlen(msg)+3] = '\0';
+        }
+
+//        printf("===================================================>>>>>>>\n");
+//        print_r(f_msg->tmp_msg, UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+//        printf("===================================================>>>>>>>\n");
+
+        printf("msg[%d]:%s\n", strlen(msg), f_msg->tmp_msg);
 //        sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
 //                f_msg->ute_msg->historyNotify[msg_id].day, f_msg->ute_msg->historyNotify[msg_id].hour, f_msg->ute_msg->historyNotify[msg_id].min);
         sprintf(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
                 f_msg->ute_msg->historyNotify[msg_id].day);
         sys_cb.msg_index = f_msg->ute_msg->historyNotify[msg_id].type;
-        int res = msgbox(msg, NULL, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
+        int res = msgbox(f_msg->tmp_msg, NULL, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
         if (res == MSGBOX_RES_DELETE)
         {
             uteModuleNotifySetDisplayIndex(msg_id);

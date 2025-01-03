@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func_cover.h"
+#include "ute_project_config.h"
+
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -85,7 +87,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //msg
             if (msg != NULL)
             {
-                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+3);
 //                compo_textbox_set_align_center(txt_msg, true);
                 compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,

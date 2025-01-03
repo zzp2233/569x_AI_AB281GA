@@ -325,7 +325,7 @@ void uteApplicationCommonStartupSecond(void)
         {
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
         }
-        else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL)
+        else //if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL)
 #endif
         {
 #if UTE_MODULE_NEW_FACTORY_TEST_JUST_CROSS_SUPPORT
@@ -382,11 +382,11 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #endif
         }
-        else
-        {
-            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,vbat is too low!!",__func__);
-            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
-        }
+        // else
+        // {
+        //     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,vbat is too low!!",__func__);
+        //     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
+        // }
 #if UTE_MODULE_MOTOR_POWER_STATUS_SAVE_SUPPORT
         if(!uteModuleMotorGetVibrationSwitchStatus())
         {

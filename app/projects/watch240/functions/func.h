@@ -62,6 +62,7 @@ enum
     FUNC_MAP,                           //地图
     FUNC_MESSAGE,                       //消息
     FUNC_SCAN,                          //扫一扫
+    FUNC_BREATHE_FINISH,
     FUNC_VOICE,                         //语音助手
 //    FUNC_COMPASS,                       //指南针
     FUNC_ADDRESS_BOOK,                  //电话簿

@@ -51,7 +51,7 @@ compo_form_t *func_bt_ring_form_create(void)
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16,GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16,GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //接听
@@ -144,11 +144,14 @@ void func_bt_ring_enter(void)
     {
         sys_cb.gui_need_wakeup = 1;
     }
+
+    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
 }
 
 void func_bt_ring_exit(void)
 {
     bsp_bt_ring_exit();
+    uteDrvMotorStop();
 }
 
 void func_bt_ring(void)

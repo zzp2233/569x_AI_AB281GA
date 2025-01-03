@@ -834,6 +834,7 @@ typedef struct f_card_t_
     uint32_t arc_km_value;
     uint32_t arc_step_value;
     u8 activity_state;
+    co_timer_t music_refresh;
 } f_card_t;
 
 static void card1_updata_disp(void)
@@ -1556,41 +1557,33 @@ static void func_clock_sub_card_click_handler(void)
         case COMPO_ID_CARD_2 :
             func_jump = FUNC_SLEEP;
             break;
-        case COMPO_ID_CARD_3 :
+        case COMPO_ID_CARD_3:
             switch(id)
             {
             case COMPO_MUSIC_BTN_PREV:
                 {
-                    if (bt_is_connected()){
-                        bt_music_prev();
-                    }else if (ble_ams_is_connected()){
-                        ble_ams_remote_ctrl(AMS_REMOTE_CMD_PREV_TRACK);
-                    }
+                    uteModuleMusicCtrl(false,true,false);
                     compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
                     compo_button_set_bgimg(btn,ui_handle.card3.pic_click_prev.res);
                 }
                 break;
             case COMPO_MUSIC_BTN_PLAY:
                 {
-                    if (bt_is_connected()){
-                        bt_music_play_pause();
-                    }else if (ble_ams_is_connected()){
-                        ble_ams_remote_ctrl(AMS_REMOTE_CMD_PLAY_PAUSE);
-                    }
-                    if(bt_cb.music_playing == false)
+                    uteModuleMusicCtrlPaused(false);
+                    if(ble_is_connect())
                     {
-                        compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY);
-                        compo_button_set_bgimg(btn, ui_handle.card3.pic_click_play.res_click);
+                        bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
                     }
+//                    if(bt_cb.music_playing)
+//                    {
+//                        compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY);
+//                        compo_button_set_bgimg(btn, ui_handle.card3.pic_click_play.res_click);
+//                    }
                 }
                 break;
             case COMPO_MUSIC_BTN_NEXT:
                 {
-                    if (bt_is_connected()){
-                        bt_music_next();
-                    }else if (ble_ams_is_connected()){
-                        ble_ams_remote_ctrl(AMS_REMOTE_CMD_NEXT_TRACK);
-                    }
+                    uteModuleMusicCtrl(true,true,false);
                     compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_NEXT);
                     compo_button_set_bgimg(btn, ui_handle.card3.pic_click_next.res);
                 }
@@ -1619,9 +1612,11 @@ static void func_clock_sub_card_click_handler(void)
         break;
         case COMPO_ID_CARD_7 :
             printf("id : %d\n", id);
-            if (id != ID_NULL) {
+            if (id >= COMPO_ID_APP1) {
                 func_jump = card_get_latest_func(id-COMPO_ID_APP1);
             }
+            break;
+        default:
             break;
     }
     if(func_jump != FUNC_NULL)
@@ -1933,11 +1928,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
             break;
         case MSG_SYS_500MS:
         {
-//            printf("11111111111111111111111\n");
-            compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY); //播放/暂停
-            compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : ui_handle.card3.pic_click_play.res);
-
-            btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
+            compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
             compo_button_set_bgimg(btn, ui_handle.card3.pic_click_prev.res_click);
 
             btn = compo_getobj_byid(COMPO_MUSIC_BTN_NEXT);
@@ -1949,11 +1940,23 @@ static void func_clock_sub_card_message(size_msg_t msg)
     }
 }
 
+void music_data_refresh(void)
+{
+    if(ble_is_connect()){
+        bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
+    }
+    compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY); //播放/暂停
+    compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : ui_handle.card3.pic_click_play.res);
+}
+
 //时钟表盘上拉菜单进入处理
 static void func_clock_sub_card_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_card_t));
     func_cb.frm_main = func_clock_sub_card_form_create();
+
+    f_card_t *f_card = (f_card_t *)func_cb.f_cb;
+    co_timer_set(&f_card->music_refresh, 50, TIMER_REPEAT, LEVEL_LOW_PRI, music_data_refresh, NULL);
 
     func_clock_sub_card_set_offs(SPRING_Y_MAX);
 }
@@ -1961,6 +1964,9 @@ static void func_clock_sub_card_enter(void)
 //时钟表盘上拉菜单退出处理
 static void func_clock_sub_card_exit(void)
 {
+    f_card_t *f_card = (f_card_t *)func_cb.f_cb;
+    co_timer_del(&f_card->music_refresh);
+    func_cb.last = FUNC_CARD;
 }
 
 //时钟表盘上拉菜单

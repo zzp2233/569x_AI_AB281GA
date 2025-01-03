@@ -188,8 +188,8 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                 widget_set_location(listbox->item_text[i], font_x, font_y, font_w, 30);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
             }
             else if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD) {
-                widget_set_location(listbox->item_text[i],  10, font_y, 64-10, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
-                widget_set_location(listbox->item_text2[i], 64, font_y, GUI_SCREEN_WIDTH-64, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+                widget_set_location(listbox->item_text[i],  10, font_y-listbox->line_space/2, 64-10, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+                widget_set_location(listbox->item_text2[i], 64, font_y-listbox->line_space/2, GUI_SCREEN_WIDTH-64, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
             }
             else
             {

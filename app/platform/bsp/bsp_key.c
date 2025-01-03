@@ -451,7 +451,7 @@ u8 get_double_key_time(void)
 
 #if UTE_LOG_KEYS_LVL
 AT(.com_rodata.bsp.key)
-const char key_str[] = "enqueue: %04x\n";
+const char key_str[] = "key enqueue: %04x\n";
 #endif
 
 AT(.com_text.bsp.key)

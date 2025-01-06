@@ -662,32 +662,32 @@ static void func_sport_sub_run_process(void)
     compo_textbox_t* txt = compo_getobj_byid(COMPO_ID_BTN_SPORT_PAUSE);
     if (btn != NULL)
     {
-        if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
+//        if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
+//        {
+        u8 ute_sport_status = uteModuleSportMoreSportGetStatus();
+
+        switch (ute_sport_status)
         {
-            u8 ute_sport_status = uteModuleSportMoreSportGetStatus();
+            case ALL_SPORT_STATUS_CLOSE:
+            case ALL_SPORT_STATUS_PAUSE:
+                compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
+                compo_textbox_set(txt, i18n[STR_CONTINUE]);
+                f_sport_sub_run->sport_run_state = false;
+                TRACE("【APP连接】运动停止/退出\n");
+                break;
 
-            switch (ute_sport_status)
-            {
-                case ALL_SPORT_STATUS_CLOSE:
-                case ALL_SPORT_STATUS_PAUSE:
-                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
-                    compo_textbox_set(txt, i18n[STR_CONTINUE]);
-                    f_sport_sub_run->sport_run_state = false;
-                    TRACE("【APP连接】运动停止/退出\n");
-                    break;
+            case ALL_SPORT_STATUS_OPEN:
+            case ALL_SPORT_STATUS_CONTINUE:
+                compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
+                compo_textbox_set(txt, i18n[STR_PAUSE]);
+                f_sport_sub_run->sport_run_state = true;
+                TRACE("【APP连接】运动开始/继续\n");
+                break;
 
-                case ALL_SPORT_STATUS_OPEN:
-                case ALL_SPORT_STATUS_CONTINUE:
-                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
-                    compo_textbox_set(txt, i18n[STR_PAUSE]);
-                    f_sport_sub_run->sport_run_state = true;
-                    TRACE("【APP连接】运动开始/继续\n");
-                    break;
-
-                default:
-                    break;
-            }
+            default:
+                break;
         }
+//        }
     }
 
     if (f_sport_sub_run->flag_drag)

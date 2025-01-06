@@ -2906,6 +2906,7 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
         uteModuleSportStopMoreSportsMsgHandler();
 #if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
         sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
+        sys_cb.remind_tag = true;
 //        msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
 #else
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);              //低电停止运动返回表盘

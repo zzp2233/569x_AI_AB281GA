@@ -199,15 +199,30 @@ static void func_heartrate_refresh(void)
 
         compo_picturebox_set_size(picbox,f_heartrate->heart_pic_size*pic_size.wid/100,f_heartrate->heart_pic_size*pic_size.hei/100);
 
-        if(uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
+        if(uteModuleHeartGetMinHeartValue() == 0 || uteModuleHeartGetMinHeartValue() == 255)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%s","--");
+            compo_textbox_set(textbox_min,txt_buf);
+        }
+        else
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetMinHeartValue());
+            compo_textbox_set(textbox_min,txt_buf);
+        }
+
+        if(uteModuleHeartGetMaxHeartValue() == 0 || uteModuleHeartGetMaxHeartValue() == 255)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%s","--");
+            compo_textbox_set(textbox_max,txt_buf);
+        }
+        else
         {
             memset(txt_buf,0,sizeof(txt_buf));
             snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetMaxHeartValue());
             compo_textbox_set(textbox_max,txt_buf);
-
-            memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetMinHeartValue());
-            compo_textbox_set(textbox_min,txt_buf);
         }
 
         if(uteModuleHeartIsWear() == true && bsp_sensor_hrs_data_get() > 0 && bsp_sensor_hrs_data_get() != 255)  ///佩戴处理

@@ -191,12 +191,12 @@ compo_form_t *func_calender_form_create(void)
 
     u16 week_text[7][2] = {
         {STR_CALENDAR_SEVEN,COLOR_GRAY},// 日
-        {STR_CALENDAR_ONE,COLOR_GRAY}, // 一
+        {STR_CALENDAR_ONE,COLOR_WHITE}, // 一
         {STR_CALENDAR_TWO,COLOR_WHITE},// 二
         {STR_CALENDAR_THREE,COLOR_WHITE},// 三
         {STR_CALENDAR_HOUR,COLOR_WHITE},// 四
         {STR_CALENDAR_FIVE,COLOR_WHITE},// 五
-        {STR_CALENDAR_SIX,COLOR_WHITE},// 六
+        {STR_CALENDAR_SIX,COLOR_GRAY},// 六
     };
     // u16 week_text_idx[7] = {STR_SUNDAY, STR_MONDAY, STR_TUESDAY, STR_WEDNESDAY, STR_THURSDAY, STR_FRIDAY, STR_SATURDAY};
 

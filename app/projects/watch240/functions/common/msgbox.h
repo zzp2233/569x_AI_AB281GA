@@ -34,6 +34,7 @@ enum
 {
     MSGBOX_MSG_TYPE_NONE,
     MSGBOX_MSG_TYPE_SPORT,    //运动
+    MSGBOX_MSG_TYPE_LOW_BATTERY,    //低电提醒
     MSGBOX_MSG_TYPE_DETAIL,   //详细消息显示弹窗
     MSGBOX_MSG_TYPE_BRIEF,    //简略消息显示弹窗
     MSGBOX_MSG_TYPE_REMIND_COVER,    //提醒弹窗消息

@@ -18,7 +18,7 @@
 #define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
 #define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
 #define KALE_SWITCH_DR                           2                                                              //单次变更R值
-#define KALE_ROTATE_ANGLE                        35                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
+#define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 
 enum
 {
@@ -124,7 +124,8 @@ static void func_menu_sub_football_process(void)
     compo_football_t *ball = f_menu->ball;
     s32 dx, dy, ax, ay;
 //    printf("touch=%d\n",f_menu->cube_touch);
-     if(f_menu->cube_touch == true){
+    if(f_menu->cube_touch == true)
+    {
         f_menu->cube_touch = ctp_get_dxy(&dx, &dy);
         //拖动菜单图标
         ax = dx * 1800 / FOOTBALL_HALF_CIRCUM;
@@ -132,17 +133,19 @@ static void func_menu_sub_football_process(void)
         f_menu->cube_rp = sqrt64(ax * ax + ay * ay);
         f_menu->cube_ra = ARCTAN2(-ay, ax);
         compo_football_move(ball);
-     }else{
-            if(tick_check_expire(f_menu->tick, 5))
-            {
-                f_menu->tick = tick_get();
-                f_menu->cube_rp+=3;
-                if(f_menu->cube_rp==3600)f_menu->cube_rp=0;
-                compo_football_roll_from(ball,f_menu->cube_rp, f_menu->cube_ra);
-                compo_football_update(ball);
-                ball->move_cb.flag_drag = false;
-                ball->move_cb.flag_move_auto = false;
-            }
+    }
+    else
+    {
+        if(tick_check_expire(f_menu->tick, 5))
+        {
+            f_menu->tick = tick_get();
+            f_menu->cube_rp+=3;
+            if(f_menu->cube_rp==3600)f_menu->cube_rp=0;
+            compo_football_roll_from(ball,f_menu->cube_rp, f_menu->cube_ra);
+            compo_football_update(ball);
+            ball->move_cb.flag_drag = false;
+            ball->move_cb.flag_move_auto = false;
+        }
     }
     func_process();
 }
@@ -232,7 +235,8 @@ static void func_menu_sub_football_message(size_msg_t msg)
     compo_football_t *ball = f_menu->ball;
     u8 sta = compo_football_get_sta(ball);
 
-    if (MSG_CTP_TOUCH == msg){
+    if (MSG_CTP_TOUCH == msg)
+    {
         f_menu->cube_touch = true;
     }
 
@@ -274,7 +278,6 @@ static void func_menu_sub_football_enter(void)
         halt(HALT_GUI_COMPO_FOOTBALL_TYPE);
     }
     func_cb.enter_tick = tick_get();
-    tft_set_temode(0);
     f_menu->cube_ra = 1300;
     f_menu->cube_rp = 0;
     f_menu->cube_touch = false;

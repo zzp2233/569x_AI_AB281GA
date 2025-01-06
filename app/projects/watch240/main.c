@@ -34,7 +34,7 @@ const u8 tbl_despi_clk2[] =
     [SYS_132M] = 4,         //26.4M
     [SYS_144M] = 4,         //28.8M
     [SYS_176M] = 5,         //29.3M
-    [SYS_192M] = 6,         //27.4M
+    [SYS_192M] = 15,         //27.4M
 };
 #endif
 //设置DESPI CLK接口

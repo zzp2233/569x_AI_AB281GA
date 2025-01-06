@@ -172,7 +172,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     compo_textbox_t* time = compo_textbox_create(frm, 32);
     compo_textbox_set_align_center(time, false);
-    compo_textbox_set_location(time, 168-52, 15, 52+52, 23);
+    compo_textbox_set_location(time, 168-52, 15, GUI_SCREEN_CENTER_X, 23);
     compo_setid(time, COMPO_ID_TXT_TIME);
     compo_bonddata(time, COMPO_BOND_HOURMIN_TXT);
 
@@ -761,7 +761,7 @@ static void func_sport_sub_run_process(void)
     compo_textbox_t* time = compo_getobj_byid(COMPO_ID_TXT_TIME);
     if(uteModuleSystemtime12HOn())
     {
-        compo_textbox_set_location(time, 168-52, 15, 52+52, 23);
+        compo_textbox_set_location(time, 168-52, 15, GUI_SCREEN_CENTER_X, 23);
     }
     else
     {
@@ -938,7 +938,7 @@ static void func_sport_sub_run_exit(void)
     if(sys_cb.refresh_language_flag == false)//刷新语言时不清除数据
     {
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (func_cb.sta != FUNC_CAMERA)
+        if (func_cb.sta != FUNC_CAMERA && func_cb.sta != FUNC_CHARGE)
         {
             if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
             {

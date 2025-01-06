@@ -71,7 +71,7 @@ compo_form_t *func_game_form_create(void)
         //文本
         compo_textbox_t * txt = compo_textbox_create(frm, strlen(i18n[STR_FLY_BIRD]));
         compo_textbox_set_align_center(txt, false);
-        compo_textbox_set_location(txt, 82, 100 + i*72-widget_text_get_height()/2, 140, widget_text_get_height());
+        compo_textbox_set_location(txt, 82, 100 + i*72-widget_text_get_height()/2, 140, widget_text_get_height()+8);
 //        compo_textbox_set(txt, game[i].name);
         compo_textbox_set(txt, i18n[STR_FLY_BIRD]);
         compo_textbox_set_visible(txt, 1);

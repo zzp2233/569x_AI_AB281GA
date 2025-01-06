@@ -1,12 +1,13 @@
 #ifndef _FUNC_CALCULATOR_ALG_H
 #define _FUNC_CALCULATOR_ALG_H
 
-#define INPUT_NUM_LEN                   10                                              //输入最大字符数
+#define INPUT_NUM_LEN                   9                                              //输入最大字符数
 #define DECIMAL_DIGITS_RESERVED         6                                               //保留的小数位
 #define RESULT_NUM_LEN                  (INPUT_NUM_LEN + DECIMAL_DIGITS_RESERVED + 5)   //计算结果长度（5：小数点+负号+安全余量；长度过长转换为科学记数法）
 #define MEDIAN_NUM_LEN                  (INPUT_NUM_LEN * 10)                            //计算中间值长度
 
-enum {
+enum
+{
     BTN_NULL,
     BTN_0,
     BTN_1,
@@ -30,12 +31,14 @@ enum {
     BTN_EQUAL,
 };
 
-enum {
+enum
+{
     NUM1,
     NUM2
 };
 
-typedef struct {
+typedef struct
+{
     char num1[RESULT_NUM_LEN];          //第一个操作数
     char num2[RESULT_NUM_LEN];          //第二个操作数
     char result[RESULT_NUM_LEN];        //计算结果

@@ -33,6 +33,7 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
     [REMIND_COVER_GOAL]             = {UI_BUF_I330001_REPEAT_GOAL_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I330001_PUBLIC_NOT_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
 //    [REMIND_GCOVER_APP_CONNECT]     = {UI_BUF_POP_UP_APP_CONNECTION_BIN,          STR_APP_CONNECT,        175,            290},
+    [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},      //msgbox内部自定义，这里的参数没有作用
 };
 
 ///消息弹窗界面（简略）
@@ -360,31 +361,32 @@ void app_ute_msg_pop_up(uint8_t index)
         char time[30]= {0};
 
 
-       //是否打开全天勿扰    //是否打开定时勿扰
+        //是否打开全天勿扰    //是否打开定时勿扰
 //        if(sys_cb.disturd_adl==0 && sys_cb.disturd_tim==0)
 //        {
 
-            static char tmp_msg[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+3];
-            memset(tmp_msg, '\0', sizeof(tmp_msg));
-            memcpy(tmp_msg, msg, strlen(msg));
-            //消息内容超过UTE_NOTIFY_MSG_CONTENT_MAX_SIZE补充省略号
-            if (strlen(msg) >= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-2) {
-                memset(&tmp_msg[strlen(msg)], '.', 3);
-                tmp_msg[strlen(msg)+3] = '\0';
-            }
+        static char tmp_msg[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+3];
+        memset(tmp_msg, '\0', sizeof(tmp_msg));
+        memcpy(tmp_msg, msg, strlen(msg));
+        //消息内容超过UTE_NOTIFY_MSG_CONTENT_MAX_SIZE补充省略号
+        if (strlen(msg) >= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-2)
+        {
+            memset(&tmp_msg[strlen(msg)], '.', 3);
+            tmp_msg[strlen(msg)+3] = '\0';
+        }
 
-            sprintf(time, "%04d/%02d/%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
-            int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
-            if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
+        sprintf(time, "%04d/%02d/%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
+        int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
+        if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
+        {
+            printf("enter MSGBOX_RES_ENTER_DETAIL_MSG\n");
+            int res = msgbox(tmp_msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
+            if (res == MSGBOX_RES_DELETE)
             {
-                printf("enter MSGBOX_RES_ENTER_DETAIL_MSG\n");
-                int res = msgbox(tmp_msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
-                if (res == MSGBOX_RES_DELETE)
-                {
-                    uteModuleNotifySetDisplayIndex(0);
-                    uteModuleNotifyDelAllHistoryData(false);
-                }
+                uteModuleNotifySetDisplayIndex(0);
+                uteModuleNotifyDelAllHistoryData(false);
             }
+        }
 //        }
         ab_free(ble_msg);
     }
@@ -411,7 +413,8 @@ static co_timer_t alarm_clock_timer;
 
 void start_music(void)
 {
-    if (sys_cb.gui_sleep_sta){
+    if (sys_cb.gui_sleep_sta)
+    {
         sys_cb.gui_need_wakeup = 1;
     }
     reset_sleep_delay_all();

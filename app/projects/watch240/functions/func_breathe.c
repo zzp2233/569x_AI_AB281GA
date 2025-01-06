@@ -306,6 +306,10 @@ static void func_breathe_process(void)
                         {
                             f_breathe->time_past = 0;
                             f_breathe->animation_sta = ANIMATION_FINISH;
+
+                            func_cb.sta = FUNC_BREATHE_FINISH;
+                            f_breathe->sta = BREATHE_STA_IDLE;
+
                         }
                         break;
 
@@ -359,9 +363,9 @@ static void func_breathe_process(void)
                         else
                         {
                             func_breathe_disp_init(BREATHE_STA_IDLE);
+//                            func_cb.sta = FUNC_BREATHE_FINISH;
                             f_breathe->sta = BREATHE_STA_IDLE;
-                            func_cb.sta = FUNC_BREATHE_FINISH;
-                            printf("1111111111111111111111111111111111111\n");
+//                            printf("1111111111111111111111111111111111111\n");
                         }
                         break;
 

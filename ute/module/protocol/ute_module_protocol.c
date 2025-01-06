@@ -31,6 +31,7 @@
 #include "ute_module_watchonline.h"
 #include "ute_module_factorytest.h"
 #include "ute_module_music.h"
+#include "func_cover.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -1845,7 +1846,8 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
         if(batLvl < UTE_DRV_BATTERY_LOW_POWER_PERECNT)
         {
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
+            sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
+//            msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
             return;
         }
 #endif

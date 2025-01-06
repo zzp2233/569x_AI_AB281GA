@@ -61,13 +61,13 @@ static void weather_refresh(void)
     ute_module_weather_data_t  weather_date;
     uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
     bool weather_flag = false;
-    for(int i=0;i<7;i++)
+    for(int i=0; i<7; i++)
     {
-         if(f_weather->DayWeather[i] != weather_date.DayWeather[i])
-         {
-           weather_flag = true;
-           break;
-         }
+        if(f_weather->DayWeather[i] != weather_date.DayWeather[i])
+        {
+            weather_flag = true;
+            break;
+        }
     }
 
     if(displayInfo.isFahrenheit != f_weather->isFahrenheit_flag || weather_flag == true)    //是否为华氏度
@@ -85,15 +85,15 @@ static void weather_data_Init(void)
     ute_display_ctrl_t displayInfo;
 
     uteModuleSystemtimeGetTime(&time);//获取系统时间
-     if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
+    if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
     {
         uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
         uteModuleWeatherGetData(&weather_date);//获取天气状态
 
         f_weather->isFahrenheit_flag = displayInfo.isFahrenheit;
-        for(int i=0;i<7;i++)
+        for(int i=0; i<7; i++)
         {
-         f_weather->DayWeather[i] = weather_date.DayWeather[i];
+            f_weather->DayWeather[i] = weather_date.DayWeather[i];
         }
     }
 }
@@ -264,7 +264,9 @@ compo_form_t *func_weather_form_create(void)
         compo_number_set(num, weather_date.fristDayCurrTemperature);
         compo_number_set_align(num, 1 );
         compo_number_set_pos(num, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
-    }else{
+    }
+    else
+    {
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_WEATHER_NUM_BIN);///背景图片
         compo_picturebox_cut(picbox, 10, 11 );
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-gui_image_get_size(UI_BUF_I330001_WEATHER_NUM_BIN).wid/2+2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/5);
@@ -283,9 +285,12 @@ compo_form_t *func_weather_form_create(void)
         picbox = compo_picturebox_create(frm,UI_BUF_I330001_WEATHER_DC_BIN);///温度符号
     }
 
-    if(uteModuleWeatherGetCurrDay() == time.day){
+    if(uteModuleWeatherGetCurrDay() == time.day)
+    {
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X*1.15+compo_number_get_rel_location(num).wid/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);
-    }else{
+    }
+    else
+    {
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X*1.15+gui_image_get_size(UI_BUF_I330001_WEATHER_NUM_BIN).wid, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/12);
     }
     if(uteModuleWeatherGetCurrDay() == time.day)
@@ -342,7 +347,14 @@ compo_form_t *func_weather_form_create(void)
 
         if(uteModuleWeatherGetCurrDay() == time.day)
         {
-            snprintf(str_buff, sizeof(str_buff), "%02d/%02d℃",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i]);//一周 小~大 温度
+            if(displayInfo.isFahrenheit)     ///是否为华氏度
+            {
+                snprintf(str_buff, sizeof(str_buff), "%02d/%02d℉",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i]);//一周 小~大 温度
+            }
+            else
+            {
+                snprintf(str_buff, sizeof(str_buff), "%02d/%02d℃",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i]);//一周 小~大 温度
+            }
         }
         else
         {
@@ -379,26 +391,26 @@ static void func_weather_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
+        {
+            ute_module_weather_data_t  weather_date;
+            uteModuleWeatherGetData(&weather_date);//获取天气状态
+            bool weather_no_data_flag = true;
+            for(int i=0; i<7; i++) //获取一周的天气
             {
-                ute_module_weather_data_t  weather_date;
-                uteModuleWeatherGetData(&weather_date);//获取天气状态
-                bool weather_no_data_flag = true;
-                for(int i=0; i<7; i++) //获取一周的天气
+                if(weather_date.DayWeather[i] != WEATHER_TYPE_UNKNOWN)
                 {
-                    if(weather_date.DayWeather[i] != WEATHER_TYPE_UNKNOWN)
-                    {
-                        weather_no_data_flag = false;
-                        break;
-                    }
-                }
-                if(weather_no_data_flag == false)
-                {
-                    compo_page_move_touch_handler(f_weather->ptm);
+                    weather_no_data_flag = false;
+                    break;
                 }
             }
-            break;
+            if(weather_no_data_flag == false)
+            {
+                compo_page_move_touch_handler(f_weather->ptm);
+            }
+        }
+        break;
         case MSG_SYS_500MS:
-             weather_refresh();
+            weather_refresh();
             break;
         case MSG_CTP_CLICK:
 //            if(++(f_weather->mode_num) == WHEATHER_CNT) {

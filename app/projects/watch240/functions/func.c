@@ -252,9 +252,9 @@ const func_t tbl_func_create[] =
     {FUNC_CLOCK,                        func_clock_form_create},
     {FUNC_CLOCK_PREVIEW,                func_clock_preview_form_create},
 //    {FUNC_SIDEBAR,                      func_clock_sub_sidebar_form_create},
-    #if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+#if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_CARD,                         func_clock_sub_card_form_create},
-    #endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
+#endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_UP_WATCH_DIAL,                func_up_watch_dial_form_create},     //在线表盘
     {FUNC_BREATHE_FINISH,               func_breathe_finish_form_create},
     {FUNC_HEARTRATE,                    func_heartrate_form_create},
@@ -670,8 +670,11 @@ void func_process(void)
                     }
                     reset_sleep_delay_all();
                 }
-                msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
-                msg_enqueue(EVT_MSGBOX_EXIT);
+                if (func_cb.sta != FUNC_CHARGE)
+                {
+                    msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+                    msg_enqueue(EVT_MSGBOX_EXIT);
+                }
                 func_cb.sta = FUNC_CHARGE;
             }
         }
@@ -810,9 +813,12 @@ void func_switch_to(u8 sta, u16 switch_mode)
     compo_form_t *frm = func_create_form(sta);                                  //创建下一个任务的窗体
     bool res = 0;
     u8 alph = 255;
-    if (sta == FUNC_CARD && switch_mode == FUNC_SWITCH_LR_ZOOM_RIGHT) {
+    if (sta == FUNC_CARD && switch_mode == FUNC_SWITCH_LR_ZOOM_RIGHT)
+    {
         res = func_switching(switch_mode, &alph);                               //切换动画
-    } else {
+    }
+    else
+    {
         res = func_switching(switch_mode, NULL);                               //切换动画
     }
     compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体
@@ -885,7 +891,8 @@ void func_switch_to_menu(void)
         {
             compo_rings_t *rings = (compo_rings_t *)compo;
             icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
-            if (icon == NULL) {
+            if (icon == NULL)
+            {
                 extern u8 func_menu_sub_skyrer_get_first_idx(void);
                 func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
                 icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
@@ -937,7 +944,8 @@ void func_switching_to_menu(void)
     {
         compo_rings_t *rings = (compo_rings_t *)compo;
         icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
-        if (icon == NULL) {
+        if (icon == NULL)
+        {
             extern u8 func_menu_sub_skyrer_get_first_idx(void);
             func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
             icon = compo_rings_select_byidx(rings, func_cb.menu_idx);
@@ -1170,15 +1178,19 @@ void func_message(size_msg_t msg)
             if (func_cb.sta == FUNC_CLOCK || func_cb.flag_sort)
             {
                 func_switch_next(false, true);                    //切到下一个任务
-            } else {
-                if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0) {
+            }
+            else
+            {
+                if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0)
+                {
                     func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
                 }
             }
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-            if (func_cb.left_sta == func_cb.sta) {
+            if (func_cb.left_sta == func_cb.sta)
+            {
                 break;
             }
             if (func_cb.flag_sort)
@@ -1247,7 +1259,8 @@ void func_message(size_msg_t msg)
             break;
 
         case KL_BACK:   //堆栈后台
-            if (bt_cb.disp_status < BT_STA_INCOMING && func_cb.sta != FUNC_MENUSTYLE) {
+            if (bt_cb.disp_status < BT_STA_INCOMING && func_cb.sta != FUNC_MENUSTYLE)
+            {
                 if (func_cb.sta == FUNC_CLOCK)  //|| func_cb.flag_sort
                 {
                     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
@@ -1317,7 +1330,10 @@ void func_message(size_msg_t msg)
             break;
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
+            uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+//            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
             func_cb.sta = FUNC_TIMER;
 //            func_switch_to(FUNC_STOPWATCH, FUNC_SWITCH_FADE | FUNC_SWITCH_AUTO);
 //            msgbox("计时已经结束",NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_RES_NONE);

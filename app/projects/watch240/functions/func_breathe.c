@@ -294,10 +294,12 @@ static void func_breathe_process(void)
                             if (abs_s(f_breathe->icon_size - BREATHE_ICON_SIZE_MAX) < abs_s(f_breathe->icon_size - BREATHE_ICON_SIZE_MIN))
                             {
                                 compo_textbox_set(txt, i18n[STR_BREATHE_EXHALE]);  //呼气
+                                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                             }
                             else
                             {
                                 compo_textbox_set(txt, i18n[STR_BREATHE_INHALE]);  //吸气
+                                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                             }
                             TRACE("total:%ds past:%ds\n", sys_cb.breathe_duration / 1000, f_breathe->time_past / 1000);
 //                    TRACE("deg[%d] size[%d] degstep[%d] sizestep[%d]\n", f_breathe->icon_deg, f_breathe->icon_size, deg_step, size_step);

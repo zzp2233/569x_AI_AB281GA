@@ -53,13 +53,16 @@ const u8 last_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_SLEEP, FUNC_SPORT, FUNC_H
 ///卡片、组件原始位置（相对于卡片中心点）
 #define CARD_WIDTH_ORG                  232//308
 
-typedef struct ui_handle_t_ {
-    struct card_clock_day_t {
+typedef struct ui_handle_t_
+{
+    struct card_clock_day_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
 
-        struct date_t {
+        struct date_t
+        {
             u16 id;
             s16 x,y;
             u16 w,h;
@@ -69,7 +72,8 @@ typedef struct ui_handle_t_ {
             u32 res;
         } date;
 
-        struct week_t {
+        struct week_t
+        {
             u16 id;
             s16 x,y;
             u16 w,h;
@@ -79,7 +83,8 @@ typedef struct ui_handle_t_ {
             u32 res;
         } week;
 
-        struct clock_t {
+        struct clock_t
+        {
             u16 id_bg;
             u16 id_h;
             u16 id_min;
@@ -90,12 +95,14 @@ typedef struct ui_handle_t_ {
         } clock;
     } card_clock_day;
 
-    struct card1_t {
+    struct card1_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
 
-        struct rect_t {
+        struct rect_t
+        {
             u16 idx;
             s16 x,y;
             u16 w,h;
@@ -103,7 +110,8 @@ typedef struct ui_handle_t_ {
             color_t color;
         } rect;
 
-        struct pic_t {
+        struct pic_t
+        {
             u16 idx;
             s16 x,y;
             u16 w,h;
@@ -112,7 +120,8 @@ typedef struct ui_handle_t_ {
         struct pic_t pic_km;
         struct pic_t pic_step;
 
-        struct sport_arc_t {
+        struct sport_arc_t
+        {
             u16 id;
             s16 x,y;
             u16 w,r;
@@ -125,7 +134,8 @@ typedef struct ui_handle_t_ {
         struct sport_arc_t arc_km;
         struct sport_arc_t arc_step;
 
-        struct text_t {
+        struct text_t
+        {
             u16 idx;
             s16 x,y;
             u16 w,h;
@@ -138,7 +148,8 @@ typedef struct ui_handle_t_ {
         struct text_t text_step;
     } card1;
 
-    struct card2_t {
+    struct card2_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -152,7 +163,8 @@ typedef struct ui_handle_t_ {
         struct text_t text_min_unit;
     } card2;
 
-    struct card3_t {
+    struct card3_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -161,7 +173,8 @@ typedef struct ui_handle_t_ {
 
         struct text_t text_music;
 
-        struct pic_click_t {
+        struct pic_click_t
+        {
             u16 idx;
             s16 x,y;
             u16 w,h;
@@ -174,7 +187,8 @@ typedef struct ui_handle_t_ {
         struct pic_click_t pic_click_play;
     } card3;
 
-    struct card4_t {
+    struct card4_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -185,7 +199,8 @@ typedef struct ui_handle_t_ {
         struct text_t text_time;
     } card4;
 
-    struct card5_t {
+    struct card5_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -196,7 +211,8 @@ typedef struct ui_handle_t_ {
         struct text_t text_time;
     } card5;
 
-    struct card6_t {
+    struct card6_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -207,7 +223,8 @@ typedef struct ui_handle_t_ {
         struct pic_click_t pic_click[3];
     } card6;
 
-    struct card7_t {
+    struct card7_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -254,7 +271,8 @@ enum
     COMPO_ID_APP4,
 };
 
-static const ui_handle_t ui_handle = {
+static const ui_handle_t ui_handle =
+{
     .card_clock_day = {
         .id = COMPO_CARD_START,
         .x  = GUI_SCREEN_CENTER_X,
@@ -308,7 +326,7 @@ static const ui_handle_t ui_handle = {
             .h_bonddata = COMPO_BOND_HOUR,
             .m_bonddata = COMPO_BOND_MINUTE,
         },
-    } ,
+    },
 
     .card1 = {
         .id = COMPO_ID_CARD_1,
@@ -617,7 +635,7 @@ static const ui_handle_t ui_handle = {
             .color  = {41,41,41},
         },
 
-       .text_stopwatch = {
+        .text_stopwatch = {
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
@@ -790,29 +808,37 @@ static int func_clock_sub_card_get_y_info(int card_compo_id)
 {
     int ret = 0;
 
-    if (card_compo_id == ui_handle.card_clock_day.id) {
+    if (card_compo_id == ui_handle.card_clock_day.id)
+    {
         ret = ui_handle.card_clock_day.y;
     }
 
-    if (card_compo_id == ui_handle.card1.id) {
+    if (card_compo_id == ui_handle.card1.id)
+    {
         ret = ui_handle.card1.y;
     }
-    if (card_compo_id == ui_handle.card2.id) {
+    if (card_compo_id == ui_handle.card2.id)
+    {
         ret = ui_handle.card2.y;
     }
-    if (card_compo_id == ui_handle.card3.id) {
+    if (card_compo_id == ui_handle.card3.id)
+    {
         ret = ui_handle.card3.y;
     }
-    if (card_compo_id == ui_handle.card4.id) {
+    if (card_compo_id == ui_handle.card4.id)
+    {
         ret = ui_handle.card4.y;
     }
-    if (card_compo_id == ui_handle.card5.id) {
+    if (card_compo_id == ui_handle.card5.id)
+    {
         ret = ui_handle.card5.y;
     }
-    if (card_compo_id == ui_handle.card6.id) {
+    if (card_compo_id == ui_handle.card6.id)
+    {
         ret = ui_handle.card6.y;
     }
-    if (card_compo_id == ui_handle.card7.id) {
+    if (card_compo_id == ui_handle.card7.id)
+    {
         ret = ui_handle.card7.y;
     }
     return ret;
@@ -834,7 +860,7 @@ typedef struct f_card_t_
     uint32_t arc_km_value;
     uint32_t arc_step_value;
     u8 activity_state;
-    co_timer_t music_refresh;
+//    co_timer_t music_refresh;
 } f_card_t;
 
 static void card1_updata_disp(void)
@@ -844,73 +870,73 @@ static void card1_updata_disp(void)
 //    if(tick_check_expire(f_activity->activity_tick, ))
 //    {
 //        f_activity->activity_tick = tick_get();
-        char txt_buf[20];
-        uint32_t totalStepCnt = 0;
-        uint32_t Step_value = 0;
-        uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-        Step_value = totalStepCnt;
-        if(Step_value>uteModuleSportGetStepsTargetCnt())
+    char txt_buf[20];
+    uint32_t totalStepCnt = 0;
+    uint32_t Step_value = 0;
+    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+    Step_value = totalStepCnt;
+    if(Step_value>uteModuleSportGetStepsTargetCnt())
+    {
+        Step_value = uteModuleSportGetStepsTargetCnt();
+    }
+
+    compo_picturebox_t *arc_kcal = compo_getobj_byid(COMPO_ID_ARC_KCAL);
+    compo_picturebox_t *arc_km   = compo_getobj_byid(COMPO_ID_ARC_KM);
+    compo_picturebox_t *arc_step = compo_getobj_byid(COMPO_ID_ARC_STEP);
+    compo_cardbox_t *cardbox = compo_getobj_byid(ui_handle.card1.id);
+
+    if(f_activity->activity_state == 0)
+    {
+        f_activity->arc_step_value+=18;
+
+        compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value );
+        compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
+        compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
+
+        if(f_activity->arc_step_value >=1800)
         {
-            Step_value = uteModuleSportGetStepsTargetCnt();
+            f_activity->activity_state =1;
+        }
+    }
+    else if(f_activity->activity_state == 1)
+    {
+
+        f_activity->arc_step_value-=18;
+
+        compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value );
+        compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
+        compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
+
+        if(f_activity->arc_step_value <= Step_value*1800 / uteModuleSportGetStepsTargetCnt())
+        {
+            f_activity->activity_state = 2;
         }
 
-        compo_picturebox_t *arc_kcal = compo_getobj_byid(COMPO_ID_ARC_KCAL);
-        compo_picturebox_t *arc_km   = compo_getobj_byid(COMPO_ID_ARC_KM);
-        compo_picturebox_t *arc_step = compo_getobj_byid(COMPO_ID_ARC_STEP);
-        compo_cardbox_t *cardbox = compo_getobj_byid(ui_handle.card1.id);
+    }
+    else
+    {
 
-        if(f_activity->activity_state == 0)
-        {
-            f_activity->arc_step_value+=18;
+        f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
+        f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
+        f_activity->arc_step_value =(uint32_t) (Step_value*1000 / uteModuleSportGetStepsTargetCnt());
 
-            compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value );
-            compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
-            compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
+        compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value*1.8 );
+        compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value*1.8 );
+        compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value*1.8 );
 
-            if(f_activity->arc_step_value >=1800)
-            {
-                f_activity->activity_state =1;
-            }
-        }
-        else if(f_activity->activity_state == 1)
-        {
+        memset(txt_buf,'\0',sizeof(txt_buf));
+        snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
+        compo_cardbox_text_set(cardbox, 2, txt_buf);
 
-            f_activity->arc_step_value-=18;
+        memset(txt_buf,'\0',sizeof(txt_buf));
+        snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
+        compo_cardbox_text_set(cardbox, 1, txt_buf);
 
-            compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value );
-            compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value );
-            compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value );
+        memset(txt_buf,'\0',sizeof(txt_buf));
+        snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
+        compo_cardbox_text_set(cardbox, 0, txt_buf);
 
-            if(f_activity->arc_step_value <= Step_value*1800 / uteModuleSportGetStepsTargetCnt())
-            {
-                f_activity->activity_state = 2;
-            }
-
-        }
-        else
-        {
-
-            f_activity->arc_kcal_value =(uint32_t) uteModuleSportGetCurrDayKcalData();
-            f_activity->arc_km_value   =(uint32_t) uteModuleSportGetCurrDayDistanceData();
-            f_activity->arc_step_value =(uint32_t) (Step_value*1000 / uteModuleSportGetStepsTargetCnt());
-
-            compo_picturebox_set_rotation(arc_kcal, 1800+f_activity->arc_step_value*1.8 );
-            compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value*1.8 );
-            compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value*1.8 );
-
-            memset(txt_buf,'\0',sizeof(txt_buf));
-            snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
-            compo_cardbox_text_set(cardbox, 2, txt_buf);
-
-            memset(txt_buf,'\0',sizeof(txt_buf));
-            snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
-            compo_cardbox_text_set(cardbox, 1, txt_buf);
-
-            memset(txt_buf,'\0',sizeof(txt_buf));
-            snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
-            compo_cardbox_text_set(cardbox, 0, txt_buf);
-
-        }
+    }
 
 //    }
 }
@@ -964,7 +990,8 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_location(card7, ui_handle.card7.text_last_use.idx, ui_handle.card7.text_last_use.x, ui_handle.card7.text_last_use.y, ui_handle.card7.text_last_use.w, ui_handle.card7.text_last_use.h);
     compo_cardbox_text_set(card7, ui_handle.card7.text_last_use.idx, i18n[ui_handle.card7.text_last_use.str_id]);
 
-    for (u8 i=0; i<sizeof(ui_handle.card7.pic_click)/sizeof(ui_handle.card7.pic_click[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.card7.pic_click)/sizeof(ui_handle.card7.pic_click[0]); i++)
+    {
         btn = compo_button_create_page_by_image(frm,card7->page,card_get_latest_icon(i));
         compo_button_set_location(btn,ui_handle.card7.pic_click[i].x,ui_handle.card7.pic_click[i].y, ui_handle.card7.pic_click[i].w, ui_handle.card7.pic_click[i].h);
         compo_setid(btn,ui_handle.card7.pic_click[i].idx);
@@ -983,7 +1010,8 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_location(card6, ui_handle.card6.text_comm_use.idx, ui_handle.card6.text_comm_use.x, ui_handle.card6.text_comm_use.y, ui_handle.card6.text_comm_use.w, ui_handle.card6.text_comm_use.h);
     compo_cardbox_text_set(card6, ui_handle.card6.text_comm_use.idx, i18n[ui_handle.card6.text_comm_use.str_id]);
 
-    for (u8 i=0; i<sizeof(ui_handle.card6.pic_click)/sizeof(ui_handle.card6.pic_click[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.card6.pic_click)/sizeof(ui_handle.card6.pic_click[0]); i++)
+    {
         compo_cardbox_icon_set_location(card6, ui_handle.card6.pic_click[i].idx, ui_handle.card6.pic_click[i].x, ui_handle.card6.pic_click[i].y, ui_handle.card6.pic_click[i].w, ui_handle.card6.pic_click[i].h);
         compo_cardbox_icon_set(card6, ui_handle.card6.pic_click[i].idx, ui_handle.card6.pic_click[i].res);
     }
@@ -1071,11 +1099,14 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
-    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.x+4, ui_handle.card2.text_hour.y, ui_handle.card2.text_hour.w, ui_handle.card2.text_hour.h);
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.x, ui_handle.card2.text_hour.y, ui_handle.card2.text_hour.w, ui_handle.card2.text_hour.h);
     memset(txt_buf,0,sizeof(txt_buf));
-    if(sleep_data->totalSleepMin) { ///是否有睡眠时长
+    if(sleep_data->totalSleepMin)   ///是否有睡眠时长
+    {
         snprintf(txt_buf, sizeof(txt_buf), "%02d", sleep_data->totalSleepMin/60);///* 总睡眠小时*/
-    }else{
+    }
+    else
+    {
         snprintf(txt_buf, sizeof(txt_buf), "--");///* 总睡眠小时*/
     }
     compo_cardbox_text_set(card2, ui_handle.card2.text_hour.idx, txt_buf);
@@ -1083,16 +1114,19 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour_unit.idx], make_color(ui_handle.card2.text_hour_unit.color.r, ui_handle.card2.text_hour_unit.color.g, ui_handle.card2.text_hour_unit.color.b));
-    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.x+4, ui_handle.card2.text_hour_unit.y, ui_handle.card2.text_hour_unit.w, ui_handle.card2.text_hour_unit.h);
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_hour_unit.idx, ui_handle.card2.text_hour_unit.x+6, ui_handle.card2.text_hour_unit.y, ui_handle.card2.text_hour_unit.w, ui_handle.card2.text_hour_unit.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_hour_unit.idx, i18n[ui_handle.card2.text_hour_unit.str_id]);
 
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_min.idx], make_color(ui_handle.card2.text_min.color.r, ui_handle.card2.text_min.color.g, ui_handle.card2.text_min.color.b));
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w*3, ui_handle.card2.text_min.h);
-    if(sleep_data->totalSleepMin){ ///是否有睡眠时长
+    if(sleep_data->totalSleepMin)  ///是否有睡眠时长
+    {
         snprintf(txt_buf, sizeof(txt_buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
-    }else{
+    }
+    else
+    {
         snprintf(txt_buf, sizeof(txt_buf), "--");///* 总睡眠分钟*/
     }
     compo_cardbox_text_set(card2, ui_handle.card2.text_min.idx, txt_buf);
@@ -1100,7 +1134,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_min_unit.idx], make_color(ui_handle.card2.text_min_unit.color.r, ui_handle.card2.text_min_unit.color.g, ui_handle.card2.text_min_unit.color.b));
-    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.x, ui_handle.card2.text_min_unit.y, ui_handle.card2.text_min_unit.w, ui_handle.card2.text_min_unit.h);
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min_unit.idx, ui_handle.card2.text_min_unit.x+6, ui_handle.card2.text_min_unit.y, ui_handle.card2.text_min_unit.w, ui_handle.card2.text_min_unit.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_min_unit.idx, i18n[ui_handle.card2.text_min_unit.str_id]);
 
     ///卡片1
@@ -1221,7 +1255,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
         switch (compo->id)
         {
             case COMPO_ID_CLOCK_BG:
-                if (ui_handle.card_clock_day.clock.id_bg != COMPO_ID_CLOCK_BG) {
+                if (ui_handle.card_clock_day.clock.id_bg != COMPO_ID_CLOCK_BG)
+                {
                     printf("COMPO_ID_CLOCK_BG ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1235,7 +1270,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_CLOCK_H:
-                if (ui_handle.card_clock_day.clock.id_h != COMPO_ID_CLOCK_H) {
+                if (ui_handle.card_clock_day.clock.id_h != COMPO_ID_CLOCK_H)
+                {
                     printf("COMPO_ID_CLOCK_H ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1249,7 +1285,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_CLOCK_M:
-                if (ui_handle.card_clock_day.clock.id_min != COMPO_ID_CLOCK_M) {
+                if (ui_handle.card_clock_day.clock.id_min != COMPO_ID_CLOCK_M)
+                {
                     printf("COMPO_ID_CLOCK_M ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1263,7 +1300,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_DATE:
-                if (ui_handle.card_clock_day.date.id != COMPO_ID_DATE) {
+                if (ui_handle.card_clock_day.date.id != COMPO_ID_DATE)
+                {
                     printf("COMPO_ID_DATE ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1277,7 +1315,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_WEEKDAY:
-                if (ui_handle.card_clock_day.week.id != COMPO_ID_WEEKDAY) {
+                if (ui_handle.card_clock_day.week.id != COMPO_ID_WEEKDAY)
+                {
                     printf("COMPO_ID_WEEKDAY ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1291,7 +1330,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_CARD_1:
-                if (ui_handle.card1.id != COMPO_ID_CARD_1) {
+                if (ui_handle.card1.id != COMPO_ID_CARD_1)
+                {
                     printf("COMPO_ID_CARD_1 ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1303,7 +1343,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_CARD_2:
-                if (ui_handle.card2.id != COMPO_ID_CARD_2) {
+                if (ui_handle.card2.id != COMPO_ID_CARD_2)
+                {
                     printf("COMPO_ID_CARD_2 ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1315,7 +1356,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_CARD_3:
-                if (ui_handle.card3.id != COMPO_ID_CARD_3) {
+                if (ui_handle.card3.id != COMPO_ID_CARD_3)
+                {
                     printf("COMPO_ID_CARD_3 ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1327,7 +1369,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_CARD_4:
-                if (ui_handle.card4.id != COMPO_ID_CARD_4) {
+                if (ui_handle.card4.id != COMPO_ID_CARD_4)
+                {
                     printf("COMPO_ID_CARD_4 ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1339,7 +1382,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 break;
 
             case COMPO_ID_CARD_5:
-                if (ui_handle.card5.id != COMPO_ID_CARD_5) {
+                if (ui_handle.card5.id != COMPO_ID_CARD_5)
+                {
                     printf("COMPO_ID_CARD_5 ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1352,7 +1396,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
 
 
             case COMPO_ID_CARD_6:
-                if (ui_handle.card6.id != COMPO_ID_CARD_6) {
+                if (ui_handle.card6.id != COMPO_ID_CARD_6)
+                {
                     printf("COMPO_ID_CARD_6 ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1365,7 +1410,8 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
 
 
             case COMPO_ID_CARD_7:
-                if (ui_handle.card7.id != COMPO_ID_CARD_7) {
+                if (ui_handle.card7.id != COMPO_ID_CARD_7)
+                {
                     printf("COMPO_ID_CARD_7 ERR\n");
                     halt(HALT_GUI);
                 }
@@ -1560,14 +1606,14 @@ static void func_clock_sub_card_click_handler(void)
         case COMPO_ID_CARD_3:
             switch(id)
             {
-            case COMPO_MUSIC_BTN_PREV:
+                case COMPO_MUSIC_BTN_PREV:
                 {
                     uteModuleMusicCtrl(false,true,false);
                     compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
                     compo_button_set_bgimg(btn,ui_handle.card3.pic_click_prev.res);
                 }
                 break;
-            case COMPO_MUSIC_BTN_PLAY:
+                case COMPO_MUSIC_BTN_PLAY:
                 {
                     uteModuleMusicCtrlPaused(false);
                     if(ble_is_connect())
@@ -1581,16 +1627,16 @@ static void func_clock_sub_card_click_handler(void)
 //                    }
                 }
                 break;
-            case COMPO_MUSIC_BTN_NEXT:
+                case COMPO_MUSIC_BTN_NEXT:
                 {
                     uteModuleMusicCtrl(true,true,false);
                     compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_NEXT);
                     compo_button_set_bgimg(btn, ui_handle.card3.pic_click_next.res);
                 }
                 break;
-            default:
-                func_jump = FUNC_BT;
-                break;
+                default:
+                    func_jump = FUNC_BT;
+                    break;
             }
             break;
         case COMPO_ID_CARD_4 :
@@ -1601,7 +1647,8 @@ static void func_clock_sub_card_click_handler(void)
             break;
         case COMPO_ID_CARD_6 :
             cardbox = compo_getobj_byid(COMPO_ID_CARD_6);
-            for (u8 i=0; i<sizeof(ui_handle.card6.pic_click)/sizeof(ui_handle.card6.pic_click[0]); i++) {
+            for (u8 i=0; i<sizeof(ui_handle.card6.pic_click)/sizeof(ui_handle.card6.pic_click[0]); i++)
+            {
                 rect_t rect = compo_cardbox_get_icon_absolute(cardbox, ui_handle.card6.pic_click[i].idx); //上一首
                 if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
                 {
@@ -1609,10 +1656,11 @@ static void func_clock_sub_card_click_handler(void)
                     func_cb.sta = ui_handle.card6.pic_click[i].func_sta;
                 }
             }
-        break;
+            break;
         case COMPO_ID_CARD_7 :
             printf("id : %d\n", id);
-            if (id >= COMPO_ID_APP1) {
+            if (id >= COMPO_ID_APP1)
+            {
                 func_jump = card_get_latest_func(id-COMPO_ID_APP1);
             }
             break;
@@ -1840,6 +1888,24 @@ static void func_clock_sub_card_switch_to_clock(bool auto_switch)
     compo_form_destroy(frm_clock);
 }
 
+void music_data_refresh(void)
+{
+    if(ble_is_connect())
+    {
+        bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
+    }
+
+    compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY); //播放/暂停
+    if(ble_is_connect() || uteModuleCallBtIsConnected())
+    {
+        compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : ui_handle.card3.pic_click_play.res);
+    }
+    else
+    {
+        compo_button_set_bgimg(btn,ui_handle.card3.pic_click_play.res_click);
+    }
+}
+
 //时钟表盘上拉菜单功能消息处理
 static void func_clock_sub_card_message(size_msg_t msg)
 {
@@ -1872,7 +1938,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
                     f_card->moveto_y = func_clock_sub_card_align_by_idx(f_card->moveto_card);
                 }
                 break;
-            break;
+                break;
             default:
                 evt_message(msg);
                 break;
@@ -1929,10 +1995,26 @@ static void func_clock_sub_card_message(size_msg_t msg)
         case MSG_SYS_500MS:
         {
             compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
-            compo_button_set_bgimg(btn, ui_handle.card3.pic_click_prev.res_click);
+            if(uteModuleCallBtIsConnected() || ble_is_connect())
+            {
+                compo_button_set_bgimg(btn, ui_handle.card3.pic_click_prev.res_click);
+            }
+            else
+            {
+                compo_button_set_bgimg(btn, ui_handle.card3.pic_click_prev.res);
+            }
 
             btn = compo_getobj_byid(COMPO_MUSIC_BTN_NEXT);
-            compo_button_set_bgimg(btn, ui_handle.card3.pic_click_next.res_click);
+            if(uteModuleCallBtIsConnected() || ble_is_connect())
+            {
+                compo_button_set_bgimg(btn, ui_handle.card3.pic_click_next.res_click);
+            }
+            else
+            {
+                compo_button_set_bgimg(btn, ui_handle.card3.pic_click_next.res);
+            }
+
+            music_data_refresh();
         }
         default:
             func_message(msg);
@@ -1940,14 +2022,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
     }
 }
 
-void music_data_refresh(void)
-{
-    if(ble_is_connect()){
-        bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
-    }
-    compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY); //播放/暂停
-    compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : ui_handle.card3.pic_click_play.res);
-}
+
 
 //时钟表盘上拉菜单进入处理
 static void func_clock_sub_card_enter(void)
@@ -1956,7 +2031,7 @@ static void func_clock_sub_card_enter(void)
     func_cb.frm_main = func_clock_sub_card_form_create();
 
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
-    co_timer_set(&f_card->music_refresh, 50, TIMER_REPEAT, LEVEL_LOW_PRI, music_data_refresh, NULL);
+//    co_timer_set(&f_card->music_refresh, 50, TIMER_REPEAT, LEVEL_LOW_PRI, music_data_refresh, NULL);
 
     func_clock_sub_card_set_offs(SPRING_Y_MAX);
 }
@@ -1965,7 +2040,7 @@ static void func_clock_sub_card_enter(void)
 static void func_clock_sub_card_exit(void)
 {
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
-    co_timer_del(&f_card->music_refresh);
+//    co_timer_del(&f_card->music_refresh);
     func_cb.last = FUNC_CARD;
 }
 

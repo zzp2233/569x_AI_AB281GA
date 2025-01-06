@@ -233,6 +233,11 @@
 #define UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND 10
 #endif
 
+/*! Chsc64x TP升级版本校验功能默认打开，针对chsc64x TP升级版本校验功能，置false则不对比TP项目版本进行强制升级 lkl 2025-1-6  */
+#ifndef DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
+#define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN true
+#endif
+
 /*! 默认抬手亮屏开关zn.zeng, 2021-08-20  */
 #ifndef DEFAULT_HAND_SCREEN_ON_OPEN
 #define DEFAULT_HAND_SCREEN_ON_OPEN true

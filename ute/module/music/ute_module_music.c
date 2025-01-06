@@ -209,7 +209,7 @@ void uteModuleMusicSetPlayerTitle(uint8_t *data, uint16_t size)
     uteModulePlatformTakeMutex(uteModuleMusicMute);
     uteModuleMusicData.playerTitleSize = size > UTE_MUSIC_TITLE_MAX_SIZE - 1 ? UTE_MUSIC_TITLE_MAX_SIZE - 1 : size;
 #if BT_ID3_TAG_EN // 防止切换歌曲后歌手信息没更新
-    if (!memcmp(uteModuleMusicData.playerTitle, &data, uteModuleMusicData.playerTitleSize))
+    if (memcmp(uteModuleMusicData.playerTitle, data, uteModuleMusicData.playerTitleSize))
     {
         uteModuleMusicData.playerArtistSize = 0;
         memset(&uteModuleMusicData.playerArtist[0], 0, UTE_MUSIC_ARTLIST_MAX_SIZE);

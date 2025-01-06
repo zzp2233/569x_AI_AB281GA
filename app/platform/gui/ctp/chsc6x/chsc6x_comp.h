@@ -28,7 +28,7 @@ extern int chsc6x_tp_dect(struct ts_fw_infos *pfw_infos, unsigned char *update_r
    PARM fw_len: total size of the upgrade firmware array
    RETURN NULL
 */
-extern void chsc6x_ota_upgrade_tp_fw(struct ts_fw_infos *pfw_infos, unsigned char* p_fw_upd, unsigned int fw_len);
+// extern void chsc6x_ota_upgrade_tp_fw(struct ts_fw_infos *pfw_infos, unsigned char* p_fw_upd, unsigned int fw_len);
 
 
 /* FUNC: get fw info in struct ts_fw_infos you can call this func anytime.

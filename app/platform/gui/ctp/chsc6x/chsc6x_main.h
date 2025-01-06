@@ -1,9 +1,10 @@
+
 #ifndef __CHSC6X_MAIN_H__
 #define __CHSC6X_MAIN_H__
-//#include <stdint.h>
+// #include <stdint.h>
 
-#define OS_OK                    (0)
-//#define OS_ERROR                 (1)
+// #define OS_OK                    (0)
+//#define OS_TPERROR                 (1)
 #define TP_RETRY_CNT             (2)
 #define TP_RETRY_CNT2            (3)
 #define TP_RETRY_CNT3            (5)
@@ -15,6 +16,17 @@ typedef struct sm_touch_dev
     int int_pin;
     int rst_pin;
 }sm_touch_dev, *psm_touch_dev;
+
+
+typedef enum 
+{
+    OS_OK = 0,
+    OS_TPERROR = 1,
+    OS_ERR_DCHECK = 2,
+    OS_ERR_TIMEOUT = 3,
+    OS_ERR_COUNT = 4,
+    OS_ERR_X = 5,
+}err_TypeID;
 
 struct ts_event {
      uint16_t x; /*x coordinate */

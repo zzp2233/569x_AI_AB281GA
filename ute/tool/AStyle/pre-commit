@@ -26,13 +26,13 @@ echo ".h file has astyle cnt is ${hcharCnt}"
 
 # 处理 .c 文件
 for var in ${cchararray[@]}; do
-    ./tools/AStyle/AStyle.exe --style=allman -s4 -S -N -L -m0 -M40 --convert-tabs --suffix=none $var
+    ./ute/tool/AStyle/AStyle.exe --style=allman -s4 -S -N -L -m0 -M40 --convert-tabs --suffix=none $var
     git add $var
 done
 
 # 处理 .h 文件
 for var in ${hchararray[@]}; do
-    ./tools/AStyle/AStyle.exe --style=allman -s4 -S -N -L -m0 -M40 --convert-tabs --suffix=none $var
+    ./ute/tool/AStyle/AStyle.exe --style=allman -s4 -S -N -L -m0 -M40 --convert-tabs --suffix=none $var
     git add $var
 done
 

@@ -3,7 +3,9 @@
 #include "chsc6x_ramcode.h"
 #include "chsc6x_platform.h"
 // #include "chsc6x_flash_boot.h"
-#include "YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" //801
+
+// #include "YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" //801
+#include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
 #include "chsc6x_main.h"
 
 #define TXRX_ADDR       (0x9000)
@@ -20,9 +22,9 @@
 // struct ts_fw_infos *g_pfw_infos;
 
 
-static uint32_t g_chsc6x_cfg_ver = 0; 
+static uint32_t g_chsc6x_cfg_ver = 0;
 static uint32_t g_chsc6x_boot_ver = 0;
-static uint8_t g_cfg_update_flag = 0; 
+static uint8_t g_cfg_update_flag = 0;
 static uint8_t g_boot_update_flag = 0;
 static uint8_t g_no_upd_req_flag = 0;//no updatae require
 static uint8_t g_force_update_flag = 0;
@@ -36,7 +38,8 @@ uint32_t BOOTCRC = 0;
 #define ABS(a)   (((a)>0)?((a)):(-(a)))
 
 
-struct chsc6x_updfile_header {
+struct chsc6x_updfile_header
+{
     unsigned int sig;
     unsigned int resv;
     unsigned int n_cfg;
@@ -53,7 +56,8 @@ typedef enum
     RESET_MAX
 } chsc6x_reset_e;
 
-typedef struct _test_cmd_wr {
+typedef struct _test_cmd_wr
+{
     /* offset 0; */
     unsigned char id;    /* cmd_id; */
     unsigned char idv;    /* inverse of cmd_id */
@@ -68,7 +72,8 @@ typedef struct _test_cmd_wr {
     unsigned short s2Pad1;    /*  */
 } ctp_tst_wr_t;
 
-typedef struct _test_cmd_rd {
+typedef struct _test_cmd_rd
+{
     /* offset 0; */
     unsigned char id;    /* cmd_id; */
     unsigned char cc;    /* complete code */
@@ -77,10 +82,10 @@ typedef struct _test_cmd_rd {
     unsigned short chk;    /* 16 bit checksum */
 } ctp_tst_rd_t;
 
-typedef enum 
+typedef enum
 {
     CMD_DUT_CLK_CALIB   = 0x95,
-}cmdTypeID;
+} cmdTypeID;
 static ctp_tst_rd_t chsc_rsp_buffer = {0};
 ctp_tst_rd_t* const pRsp = &chsc_rsp_buffer;
 
@@ -99,73 +104,87 @@ static unsigned char cmd_2dma_42bd[6] = { /*0x42, 0xbd, */ 0x28, 0x35, 0xc1, 0x0
 /* RETURN:0->pass else->fail */
 static int chsc6x_read_bytes_u16addr(unsigned char id, unsigned short adr, unsigned char *rxbuf, unsigned short lenth)
 {
-	int ret = 0;
+    int ret = 0;
     int retry;
     unsigned short ofs_adr;
     int len = lenth;
     int rd_len = 0;
-	int offset = 0;
+    int offset = 0;
 
-	while (len > 0) {
+    while (len > 0)
+    {
         ofs_adr = adr + offset;
-		if (len > MAX_IIC_RD_LEN) {
-			rd_len = MAX_IIC_RD_LEN;
-			len -= MAX_IIC_RD_LEN;
-		} else {
-			rd_len = len;
-			len = 0;
-		}
+        if (len > MAX_IIC_RD_LEN)
+        {
+            rd_len = MAX_IIC_RD_LEN;
+            len -= MAX_IIC_RD_LEN;
+        }
+        else
+        {
+            rd_len = len;
+            len = 0;
+        }
 
-		retry = 0;
-		while (chsc6x_read_bytes_u16addr_sub(id, ofs_adr, &rxbuf[offset], rd_len) != 0) {
-			if (retry++ == 3) {
-				ret = -1;
-				break;
-			}
-		}
-		offset += MAX_IIC_RD_LEN;
-		if (ret < 0) {
-			break;
-		}
-	}
+        retry = 0;
+        while (chsc6x_read_bytes_u16addr_sub(id, ofs_adr, &rxbuf[offset], rd_len) != 0)
+        {
+            if (retry++ == 3)
+            {
+                ret = -1;
+                break;
+            }
+        }
+        offset += MAX_IIC_RD_LEN;
+        if (ret < 0)
+        {
+            break;
+        }
+    }
 
-	return ret;
+    return ret;
 }
 
 /* RETURN:0->pass else->fail */
 static int chsc6x_write_bytes_u16addr(unsigned char id, unsigned short adr, unsigned char *rxbuf, unsigned short lenth)
 {
-	int ret = 0;
+    int ret = 0;
     int retry;
     unsigned short ofs_adr;
     int len = lenth;
     int wr_len = 0;
-	int offset = 0;
+    int offset = 0;
 
-	while (len > 0) {
+    while (len > 0)
+    {
         ofs_adr = adr + offset;
-		if (len > MAX_IIC_WR_LEN) {
-			wr_len = MAX_IIC_WR_LEN;
-			len -= MAX_IIC_WR_LEN;
-		} else {
-			wr_len = len;
-			len = 0;
-		}
+        if (len > MAX_IIC_WR_LEN)
+        {
+            wr_len = MAX_IIC_WR_LEN;
+            len -= MAX_IIC_WR_LEN;
+        }
+        else
+        {
+            wr_len = len;
+            len = 0;
+        }
 
-		retry = 0;
-		while (chsc6x_write_bytes_u16addr_sub(id, ofs_adr, &rxbuf[offset], wr_len) != 0) {
-			if (retry++ == 3) {
-				ret = -1;
-				break;
-			}
-		}
-		offset += MAX_IIC_WR_LEN;
-		if (ret < 0) {
-			break;
-		}
-	}
+        retry = 0;
+        while (chsc6x_write_bytes_u16addr_sub(id, ofs_adr, &rxbuf[offset], wr_len) != 0)
+        {
+            if (retry++ == 3)
+            {
+                ret = -1;
+                break;
+            }
+        }
+        offset += MAX_IIC_WR_LEN;
+        if (ret < 0)
+        {
+            break;
+        }
+    }
 
-	return ret;
+    return ret;
 }
 
 
@@ -265,7 +284,8 @@ int chsc6x_bulk_down_check(uint8_t *pbuf, uint16_t addr, uint16_t len)
             {
                 break;    /* match */
             }
-        } while (++retry < 3);
+        }
+        while (++retry < 3);
 
         if (j < k)
         {
@@ -367,9 +387,10 @@ static int chsc6x_download_ramcode(const uint8_t *pcode, uint16_t len)
         do
         {
             ret = chsc6x_write_bytes_u16addr(g_i2c_addr, 0x0602, &dwr, 1);
-        } while ((++retry < 3) && (ret != 0));
+        }
+        while ((++retry < 3) && (ret != 0));
     }
-    
+
     chsc6x_msleep(30);// let caller decide the delay time ?
 
     return ret;
@@ -573,23 +594,27 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
 
     u32tmp = ptcfg[1];
     u32tmp = (u32tmp << 16) | ptcfg[0];
+#if DEFAULT_TP_FORCE_UPDATE_ON_OPEN
     if (((g_chsc6x_cfg_ver & 0x3ffffff) != (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
     {
         chsc6x_info("chsc6x: prj info not match,now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
         return 0;
     }
+#endif
 
     vnow = (g_chsc6x_cfg_ver >> 26) & 0x3f;
     vbuild = (u32tmp >> 26) & 0x3f;
     chsc6x_info("chsc6x: cfg_vnow: 0x%x,cfg_vbuild: 0x%x \r\n", vnow, vbuild);
+#if DEFAULT_TP_FORCE_UPDATE_ON_OPEN
     if (0 == g_upgrade_flag && vbuild <= vnow)
     {
         return 0; //driver init upgrade, must vbuild > vnow
     }
     if(1 == g_upgrade_flag && vbuild == vnow)
     {
-        return 0; //OTA upgrade just vbuild != vnow 
+        return 0; //OTA upgrade just vbuild != vnow
     }
+#endif
 
     return 1;
 }
@@ -672,7 +697,8 @@ static int chsc6x_get_running_cfg(uint16_t *ptcfg, uint16_t addr)
             continue;
         }
 
-        if (0 == is_valid_cfg_data(ptcfg)) {
+        if (0 == is_valid_cfg_data(ptcfg))
+        {
             chsc6x_set_dd_mode();
             err_type = 1;    /* data error or no data */
             chsc6x_msleep(20);
@@ -680,7 +706,7 @@ static int chsc6x_get_running_cfg(uint16_t *ptcfg, uint16_t addr)
         }
         break;
     }
-    
+
     return err_type;
 
 }
@@ -741,7 +767,7 @@ static int chsc6x_cfg_update(uint16_t *parray, uint32_t cfg_num)
     if (new_idx_active < 0)
     {
         chsc6x_info("chsc6x: 3536 cfg not need update! \r\n");
-		g_no_upd_req_flag = 1;
+        g_no_upd_req_flag = 1;
         return -OS_TPERROR;
     }
 
@@ -774,7 +800,8 @@ static int chsc6x_boot_ver_comp(uint32_t ver)
     {
         return 1; //driver init upgrade, must vbuild > vnow
     }
-    if (1 == g_upgrade_flag && ver != g_chsc6x_boot_ver ) {
+    if (1 == g_upgrade_flag && ver != g_chsc6x_boot_ver )
+    {
         return 1; //OTA upgrade just vbuild != vnow */
     }
     return 0; //no-need update boot
@@ -794,7 +821,7 @@ static int chsc6x_boot_update(uint8_t *pdata, uint16_t boot_len)
         g_no_upd_req_flag = 1;
         return 0;
     }
-    
+
     return  chsc6x_update_fcomp_boot(pdata, boot_len);
 }
 
@@ -807,7 +834,7 @@ static int chsc6x_update_compat_ctl(uint8_t *pupd, int len)
     uint32_t offset;
     uint32_t *vlist;
 
-    int ret = -1;	
+    int ret = -1;
     struct chsc6x_updfile_header *upd_header;
 
     if (len < sizeof(struct chsc6x_updfile_header))
@@ -867,10 +894,10 @@ static int chsc6x_update_compat_ctl(uint8_t *pupd, int len)
 /*return: 0 SUCESS else FAIL*/
 static int chsc6x_do_update_ifneed(uint8_t* p_fw_upd, uint32_t fw_len)
 {
-    const uint8_t *fupd; 
+    const uint8_t *fupd;
     uint32_t fw_size;
     int ret = -1;
-    
+
 #if CHSC6X_MUL_VENDOR_UPGRADE
     if(41 == g_pfw_infos->chsc6x_vendor_id && 27 == g_pfw_infos->chsc6x_project_id)
     {
@@ -885,10 +912,13 @@ static int chsc6x_do_update_ifneed(uint8_t* p_fw_upd, uint32_t fw_len)
         ret = chsc6x_update_compat_ctl((uint8_t *) fupd, fw_size);
     }
 #else
-    if(1 == g_upgrade_flag) { //ota upgrade
+    if(1 == g_upgrade_flag)   //ota upgrade
+    {
         fupd = p_fw_upd;
         fw_size = fw_len;
-    }else{
+    }
+    else
+    {
         fupd = chsc_boot;
         fw_size = sizeof(chsc_boot);
     }
@@ -930,7 +960,8 @@ static void chsc6x_tp_mccode(void)
         }
     }
     else
-    {    /* none code */
+    {
+        /* none code */
         tmp[0] = 0;
         if (chsc6x_read_bytes_u16addr(g_i2c_addr, 0x09, (uint8_t *) tmp, 3))
         {
@@ -1006,14 +1037,14 @@ void chsc6x_get_chip_info(struct ts_fw_infos *infos)
 {
     int ret, cnt = 0;
     uint8_t data_t[4] = {0};
-    
+
     for(cnt=0; cnt<TP_RETRY_CNT2; cnt++)
     {
         chsc6x_tp_reset_delay(HW_CMD_RESET);
         ret = chsc6x_set_dd_mode();
         if(0 != ret)
         {
-            chsc6x_err("chsc6x: Change to dd mode failed! \r\n");       
+            chsc6x_err("chsc6x: Change to dd mode failed! \r\n");
         }
         ret = chsc6x_read_bytes_u16addr(g_i2c_addr, 0x9e00, data_t, 4);
         if ((0 != ret) || (0x0 == data_t[0]) || (0x0 == data_t[2]))
@@ -1036,7 +1067,7 @@ void chsc6x_get_chip_info(struct ts_fw_infos *infos)
         }
         else
         {
-            chsc6x_err("chsc6x: Get boot_ver failed! \r\n"); 
+            chsc6x_err("chsc6x: Get boot_ver failed! \r\n");
             continue;
         }
         chsc6x_msleep(2);
@@ -1049,7 +1080,7 @@ void chsc6x_get_chip_info(struct ts_fw_infos *infos)
         }
         else
         {
-            chsc6x_err("chsc6x: Get rpt_lcd_x & rpt_lcd_y failed! \r\n"); 
+            chsc6x_err("chsc6x: Get rpt_lcd_x & rpt_lcd_y failed! \r\n");
             continue;
         }
         chsc6x_msleep(2);
@@ -1062,7 +1093,7 @@ void chsc6x_get_chip_info(struct ts_fw_infos *infos)
         }
         else
         {
-            chsc6x_err("chsc6x: Get chsc6x_chip_id & chsc6x_chip_type failed! \r\n"); 
+            chsc6x_err("chsc6x: Get chsc6x_chip_id & chsc6x_chip_type failed! \r\n");
             continue;
         }
         break;
@@ -1070,26 +1101,26 @@ void chsc6x_get_chip_info(struct ts_fw_infos *infos)
     chsc6x_tp_reset_delay(HW_CMD_RESET);
     if(cnt >= 3)
     {
-        chsc6x_err("chsc6x: Get chip_info failed! \r\n");    
+        chsc6x_err("chsc6x: Get chip_info failed! \r\n");
     }
 }
 
 int chsc_flash_bulk_write( uint16_t adr, uint8_t* data,uint16_t len )
 {
-	if (chsc6x_download_ramcode(fw_fcode_burn, sizeof(fw_fcode_burn)))
+    if (chsc6x_download_ramcode(fw_fcode_burn, sizeof(fw_fcode_burn)))
     {
-		chsc6x_err("chsc_flash_bulk_write: ram-code error! \r\n");
-		return -OS_TPERROR;
+        chsc6x_err("chsc_flash_bulk_write: ram-code error! \r\n");
+        return -OS_TPERROR;
     }
     if (chsc6x_write_burn_space((uint8_t *)data, adr, len))
     {
         chsc6x_err("chsc6x: write addr %x fail! \r\n", adr);
         return -OS_TPERROR;
     }
-        return OS_OK;
+    return OS_OK;
 }
 
- int chsc_flash_bulk_read(uint16_t adr, uint8_t* data, uint16_t len )
+int chsc_flash_bulk_read(uint16_t adr, uint8_t* data, uint16_t len )
 {
     if (chsc6x_download_ramcode(fw_fcode_burn, sizeof(fw_fcode_burn)))
     {
@@ -1105,7 +1136,7 @@ int chsc_flash_bulk_write( uint16_t adr, uint8_t* data,uint16_t len )
     return OS_OK;
 }
 
- int lib_3536_alg_reg_sw(uint8_t addr, uint8_t data)
+int lib_3536_alg_reg_sw(uint8_t addr, uint8_t data)
 {
     uint16_t ustmp = 0, uschk = 0;
 
@@ -1128,7 +1159,7 @@ int chsc_flash_bulk_write( uint16_t adr, uint8_t* data,uint16_t len )
     {
         return -OS_TPERROR;
     }
-    
+
     uschk = 0x60;
     //Hal_Write_Packet( 0xba, (uint8_t *)&uschk, 1);
     chsc6x_write_bytes_u16addr(g_i2c_addr, 0xba, (uint8_t *)&uschk, 1);
@@ -1139,7 +1170,7 @@ int chsc_flash_bulk_write( uint16_t adr, uint8_t* data,uint16_t len )
         chsc6x_read_bytes_u16addr(g_i2c_addr, 0xba, (uint8_t *)&uschk, 1);
         if(0 == (uschk & 1))break;
     }
-    
+
     return OS_OK;
 
 }
@@ -1165,7 +1196,7 @@ int lib_3536_alg_reg_sr(uint8_t addr, uint8_t *pdata)
     {
         return -OS_TPERROR;
     }
-    
+
     uschk = 0x40;
     //Hal_Write_Packet(0xba, (uint8_t *)&uschk, 1);
     chsc6x_write_bytes_u16addr(g_i2c_addr, 0xba, (uint8_t *)&uschk, 1);
@@ -1201,7 +1232,7 @@ uint32_t GetOscTrimTick3536( uint8_t osc48_trim, uint32_t dutTrimTick )
     lib_3536_alg_reg_sr(0x03, (unsigned char *)&osc48_chk);
     if(osc48_trim != osc48_chk)
     {
-       return 0;
+        return 0;
     }
 
     //Hal_Read_Packet(0x0620, (uint8_t*)&reg, 1);
@@ -1229,7 +1260,7 @@ uint32_t GetOscTrimTick3536( uint8_t osc48_trim, uint32_t dutTrimTick )
     //Hal_Write_Packet(0x0620, (uint8_t *)&reg, 1);
     chsc6x_write_bytes_u16addr(g_i2c_addr, 0x0620, (uint8_t *)&reg, 1);
 
-    //Hal_Read_Packet(0x0634, (uint8_t *)&trimTick, 4); 
+    //Hal_Read_Packet(0x0634, (uint8_t *)&trimTick, 4);
     chsc6x_read_bytes_u16addr(g_i2c_addr, 0x0634, (uint8_t *)&trimTick, 4);
 
     return trimTick;
@@ -1305,7 +1336,7 @@ int Cmd_Tp_Calibrate3536(ctp_tst_wr_t* ptrWr)
 
     trimTickBackUp = trimTick;
     osc48_trimBackUp = osc48_trim;
-    
+
     if( trimTick > dutTrimTick )
     {
         osc48_trim = osc48_trim + 1;
@@ -1349,7 +1380,7 @@ int Cmd_Tp_Calibrate3536(ctp_tst_wr_t* ptrWr)
 int chsc_6400_osc_trim(uint32_t target, uint8_t* ptrim_value)
 {
     int iRet = OS_OK;
-    uint8_t osc_trim = 0 ,diff = 0;
+    uint8_t osc_trim = 0,diff = 0;
     short osc_trim1 = 0, osc_trim2 = 0;
     ctp_tst_wr_t chsc_m_cmd;
     uint8_t bulk_read[16] = {0};
@@ -1372,13 +1403,13 @@ int chsc_6400_osc_trim(uint32_t target, uint8_t* ptrim_value)
     if(iRet != OS_OK) return iRet;
 
     osc_trim1 = pRsp->d0 & 0xff;
-    chsc6x_info( "chsc: osc_trim1 = 0x%2x\r\n" ,osc_trim1);
+    chsc6x_info( "chsc: osc_trim1 = 0x%2x\r\n",osc_trim1);
 
     iRet = Cmd_Tp_Calibrate3536(&chsc_m_cmd);
     if(iRet != OS_OK) return iRet;
 
     osc_trim2 = pRsp->d0 & 0xff;
-    chsc6x_info( "chsc: osc_trim2 = 0x%2x\r\n" ,osc_trim2);
+    chsc6x_info( "chsc: osc_trim2 = 0x%2x\r\n",osc_trim2);
 
     if((osc_trim1 - osc_trim2) * (osc_trim1 - osc_trim2) > 49)
     {
@@ -1391,8 +1422,8 @@ int chsc_6400_osc_trim(uint32_t target, uint8_t* ptrim_value)
 
     if(osc_trim <= 0x50 || osc_trim>=0xcf)
     {
-       iRet = -OS_ERR_DCHECK; 
-       return iRet;
+        iRet = -OS_ERR_DCHECK;
+        return iRet;
     }
 
     diff =  bulk_read[0] > osc_trim ? bulk_read[0] - osc_trim : osc_trim - bulk_read[0];
@@ -1403,19 +1434,19 @@ int chsc_6400_osc_trim(uint32_t target, uint8_t* ptrim_value)
             if((bulk_read[0]!=0x5a) && (bulk_read[0]!=0xa5))
             {
                 *ptrim_value = bulk_read[0];
-                chsc6x_info( "chsc: |Valid OSTrim = 0x%2x - Current OSTrim = 0x%2x|<7\r\n" ,bulk_read[0],osc_trim);
+                chsc6x_info( "chsc: |Valid OSTrim = 0x%2x - Current OSTrim = 0x%2x|<7\r\n",bulk_read[0],osc_trim);
                 return iRet;
             }
 
         }
         else
         {
-            chsc6x_info( "chsc: 0x%2x + 0x%2x !=0xff\r\n" ,bulk_read[0] , bulk_read[1]);
+            chsc6x_info( "chsc: 0x%2x + 0x%2x !=0xff\r\n",bulk_read[0], bulk_read[1]);
         }
     }
     else
     {
-        chsc6x_info( "chsc: |Valid OSTrim = 0x%2x - Current OSTrim = 0x%2x|>=7\r\n" ,bulk_read[0],osc_trim);
+        chsc6x_info( "chsc: |Valid OSTrim = 0x%2x - Current OSTrim = 0x%2x|>=7\r\n",bulk_read[0],osc_trim);
     }
 
     bulk_read[0] = osc_trim;
@@ -1436,7 +1467,7 @@ int chsc_6400_osc_trim(uint32_t target, uint8_t* ptrim_value)
 
     iRet = chsc_flash_bulk_read( 0xe000, bulk_read, 16 );
     if(iRet != OS_OK) return iRet;
-     chsc6x_info( "chsc: write at 0xe000 OSTrim = 0x%2x \r\n" ,bulk_read[0]);
+    chsc6x_info( "chsc: write at 0xe000 OSTrim = 0x%2x \r\n",bulk_read[0]);
     *ptrim_value = bulk_read[0];
 
     return iRet;
@@ -1445,24 +1476,24 @@ int chsc_6400_osc_trim(uint32_t target, uint8_t* ptrim_value)
 int chsc6x_osc_trim(void)
 {
     int ret = -OS_TPERROR;
-	int i;
+    int i;
 
     chsc6x_info("enter chsc6x_osc_trim. \r\n");
 
     for(i = 0; i < TP_RETRY_CNT3; i++)
     {
         unsigned char trim_value = 0xff;
-        ret = chsc_6400_osc_trim( 607500 , &trim_value);
-        if(OS_OK == ret) 
+        ret = chsc_6400_osc_trim( 607500, &trim_value);
+        if(OS_OK == ret)
         {
             if(trim_value>0x50 && trim_value < 0xcf)
             {
-                chsc6x_info( "chsc: osc trim value = 0x%2x\r\n" ,trim_value);
+                chsc6x_info( "chsc: osc trim value = 0x%2x\r\n",trim_value);
                 break;
-            } 
+            }
             else
             {
-                chsc6x_info( "chsc: osc trim value = 0x%2x Not in scope 0x50-0xcf\r\n" ,trim_value);
+                chsc6x_info( "chsc: osc trim value = 0x%2x Not in scope 0x50-0xcf\r\n",trim_value);
             }
         }
     }
@@ -1472,7 +1503,7 @@ int chsc6x_osc_trim(void)
 }
 
 
-/* FUNC In your systerm init process,Must call this interface function to detec if the TP IC is Chipsemi corp'. 
+/* FUNC In your systerm init process,Must call this interface function to detec if the TP IC is Chipsemi corp'.
  PARM pfw_infos: to get top 5 fw info in struct ts_fw_infos.
  PARM update_ret_flag: point value=1 update succeed; point value=0 update failed, If opend CHSC6X_AUTO_UPGRADE macro.
  RETURN 1:is chsc chip, 0:is not chsc chip
@@ -1506,7 +1537,7 @@ int chsc6x_tp_dect(struct ts_fw_infos *pfw_infos, uint8_t *update_ret_flag)
     if(try_cnt >= TP_RETRY_CNT2)
     {
         chsc6x_info("chsc6x: chsc6x_set_dd_mode failed! \r\n");//get chip id fail exit drivers init
-		return 0;
+        return 0;
     }
     chsc6x_tp_mccode();    /* MUST: call this function there!!! */
     chsc6x_info("chsc6x: g_mccode is 0x%x \r\n",g_mccode);
@@ -1531,9 +1562,9 @@ int chsc6x_tp_dect(struct ts_fw_infos *pfw_infos, uint8_t *update_ret_flag)
         g_pfw_infos->chsc6x_chip_id = buf_tmpcfg[53]&0xff;
         g_pfw_infos->chsc6x_chip_type = (buf_tmpcfg[53]>>8)&0xf;
         chsc6x_info("chsc6x: vid=%d,pid=%d,boot_ver=0x%x,cfg_ver=%d,chip_id=0x%x\r\n", \
-            g_pfw_infos->chsc6x_vendor_id,g_pfw_infos->chsc6x_project_id,g_pfw_infos->chsc6x_boot_version, \
-            g_pfw_infos->chsc6x_cfg_version,g_pfw_infos->chsc6x_chip_id \
-        );
+                    g_pfw_infos->chsc6x_vendor_id,g_pfw_infos->chsc6x_project_id,g_pfw_infos->chsc6x_boot_version, \
+                    g_pfw_infos->chsc6x_cfg_version,g_pfw_infos->chsc6x_chip_id \
+                   );
     }
     else
     {
@@ -1562,25 +1593,25 @@ int chsc6x_tp_dect(struct ts_fw_infos *pfw_infos, uint8_t *update_ret_flag)
             }
             *update_ret_flag = 1;
             chsc6x_info("chsc6x: vid=%d,pid=%d,boot_ver=0x%x,cfg_ver=%d,chip_id=0x%x\r\n", \
-                g_pfw_infos->chsc6x_vendor_id,g_pfw_infos->chsc6x_project_id, \
-                g_pfw_infos->chsc6x_boot_version,g_pfw_infos->chsc6x_cfg_version,g_pfw_infos->chsc6x_chip_id \
-            );
+                        g_pfw_infos->chsc6x_vendor_id,g_pfw_infos->chsc6x_project_id, \
+                        g_pfw_infos->chsc6x_boot_version,g_pfw_infos->chsc6x_cfg_version,g_pfw_infos->chsc6x_chip_id \
+                       );
         }
         else if(g_no_upd_req_flag)
         {
             *update_ret_flag = 2;
         }
     }
-#endif  
+#endif
     chsc6x_tp_reset_delay(HW_CMD_RESET);
 
     return 1;
 }
 
-/* FUNC You can call this interfacce function to realize upgrade TP Firmware by OTA. 
+/* FUNC You can call this interfacce function to realize upgrade TP Firmware by OTA.
  PARM pfw_infos: to get top 6 fw infos in struct ts_fw_infos, after ota upgrade.
- PARM p_fw_upd: array address of the upgrade firmware array 
- PARM fw_len: total size of the upgrade firmware array 
+ PARM p_fw_upd: array address of the upgrade firmware array
+ PARM fw_len: total size of the upgrade firmware array
  RETURN NULL
 */
 // void chsc6x_ota_upgrade_tp_fw(struct ts_fw_infos *pfw_infos, uint8_t* p_fw_upd, uint32_t fw_len)
@@ -1651,7 +1682,7 @@ int chsc6x_tp_dect(struct ts_fw_infos *pfw_infos, uint8_t *update_ret_flag)
 
 //     if (0 == g_chsc6x_cfg_ver)
 //     {
-//         chsc6x_err("chsc6x: get tp-info fail! \r\n");		
+//         chsc6x_err("chsc6x: get tp-info fail! \r\n");
 //         goto exit;
 //     }
 

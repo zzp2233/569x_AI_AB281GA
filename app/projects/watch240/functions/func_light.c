@@ -9,27 +9,30 @@
 #endif
 
 //组件ID
-enum {
+enum
+{
     //按键
     COMPO_ID_BTN_REDUCE = 1,
     COMPO_ID_BTN_INCREASE,
 
     //图像
-	COMPO_ID_PIC_LEVEL1,            //亮度等级 1~5
-	COMPO_ID_PIC_LEVEL2,
-	COMPO_ID_PIC_LEVEL3,
-	COMPO_ID_PIC_LEVEL4,
-	COMPO_ID_PIC_LEVEL5,
-	COMPO_ID_PIC_REDUCE_CLICK,      //按钮触摸效果图
-	COMPO_ID_PIC_INCREASE_CLICK,
+    COMPO_ID_PIC_LEVEL1,            //亮度等级 1~5
+    COMPO_ID_PIC_LEVEL2,
+    COMPO_ID_PIC_LEVEL3,
+    COMPO_ID_PIC_LEVEL4,
+    COMPO_ID_PIC_LEVEL5,
+    COMPO_ID_PIC_REDUCE_CLICK,      //按钮触摸效果图
+    COMPO_ID_PIC_INCREASE_CLICK,
 };
 
-typedef struct f_light_t_ {
+typedef struct f_light_t_
+{
     int last_y_move;
     u8 light_level;
 } f_light_t;
 
-typedef struct light_pic_item_t_ {
+typedef struct light_pic_item_t_
+{
     u32 res_addr;
     u16 pic_id;
     s16 x;
@@ -39,7 +42,8 @@ typedef struct light_pic_item_t_ {
 #define LIGHT_PIC_ITEM_CNT    ((int)(sizeof(tbl_light_pic_item) / sizeof(tbl_light_pic_item[0])))
 
 //图片item，创建时遍历一下
-static const light_pic_item_t tbl_light_pic_item[] = {
+static const light_pic_item_t tbl_light_pic_item[] =
+{
     {UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN,     COMPO_ID_PIC_LEVEL1,         120,     82   },
     {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL2,         120,     123    },
     {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL3,         120,     164    },
@@ -58,19 +62,20 @@ compo_form_t *func_light_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_LIGHT]);
 
-	//新建按钮
-	compo_button_t *btn;
+    //新建按钮
+    compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_LESS_BIN);
     compo_setid(btn, COMPO_ID_BTN_REDUCE);
-    compo_button_set_pos(btn, 39, GUI_SCREEN_CENTER_Y);
+    compo_button_set_pos(btn, 39, 164);
 
-	btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_PLUS_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_PLUS_BIN);
     compo_setid(btn, COMPO_ID_BTN_INCREASE);
-    compo_button_set_pos(btn, 201, GUI_SCREEN_CENTER_Y);
+    compo_button_set_pos(btn, 201, 164);
 
     //新建图像
     compo_picturebox_t *pic_level[LIGHT_PIC_ITEM_CNT];
-    for (u8 idx = 0; idx < LIGHT_PIC_ITEM_CNT; idx++) {
+    for (u8 idx = 0; idx < LIGHT_PIC_ITEM_CNT; idx++)
+    {
         pic_level[idx] = compo_picturebox_create(frm, tbl_light_pic_item[idx].res_addr);
         compo_setid(pic_level[idx], tbl_light_pic_item[idx].pic_id);
         compo_picturebox_set_pos(pic_level[idx], tbl_light_pic_item[idx].x, tbl_light_pic_item[idx].y);
@@ -89,41 +94,41 @@ static void func_light_disp_Refresh(void)
 
     switch(sys_cb.light_level)
     {
-    case 1:
-        compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-        compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-        compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-        compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-        compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-        break;
-    case 2:
-        compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-        compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-        compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-        compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-        break;
-    case 3:
-        compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-        compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-        compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-        break;
-    case 4:
-        compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-        compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-        break;
-    case 5:
-        compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_03_BIN);
-        compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-        compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-        break;
+        case 1:
+            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
+            break;
+        case 2:
+            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
+            break;
+        case 3:
+            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
+            break;
+        case 4:
+            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
+            break;
+        case 5:
+            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_03_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
+            break;
     }
 }
 
@@ -132,21 +137,24 @@ static void func_light_button_click(void)
 {
     int id = compo_get_button_id();
 
-    switch (id) {
-    case COMPO_ID_BTN_REDUCE:
-        if (sys_cb.light_level > DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE && sys_cb.light_level <= DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE) {
-            sys_cb.light_level--;
-        }
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_REDUCE:
+            if (sys_cb.light_level > DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE && sys_cb.light_level <= DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
+            {
+                sys_cb.light_level--;
+            }
+            break;
 
-    case COMPO_ID_BTN_INCREASE:
-        if (sys_cb.light_level >= DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE && sys_cb.light_level < DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE) {
-            sys_cb.light_level++;
-        }
-        break;
+        case COMPO_ID_BTN_INCREASE:
+            if (sys_cb.light_level >= DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE && sys_cb.light_level < DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
+            {
+                sys_cb.light_level++;
+            }
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
     func_light_disp_Refresh();
 }
@@ -162,41 +170,42 @@ static void func_light_process(void)
 static void func_light_message(size_msg_t msg)
 {
 
-    switch (msg) {
-	case MSG_CTP_CLICK:
-        func_light_button_click();
-        uint8_t level_tmp = sys_cb.light_level;
-        if(level_tmp < DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
-        {
-            level_tmp = DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
-        }
-        else if(level_tmp > DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
-        {
-            level_tmp = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
-        }
-        tft_bglight_set_level(level_tmp,false);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_light_button_click();
+            uint8_t level_tmp = sys_cb.light_level;
+            if(level_tmp < DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
+            {
+                level_tmp = DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
+            }
+            else if(level_tmp > DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
+            {
+                level_tmp = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
+            }
+            tft_bglight_set_level(level_tmp,false);
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
 
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        func_light_disp_Refresh();
-        break;
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_light_disp_Refresh();
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_light_disp_Refresh();
-        func_message(msg);
-        break;
+        case MSG_CTP_SHORT_RIGHT:
+            func_light_disp_Refresh();
+            func_message(msg);
+            break;
 
-    case MSG_QDEC_FORWARD:
-    case MSG_QDEC_BACKWARD:
-        break;
+        case MSG_QDEC_FORWARD:
+        case MSG_QDEC_BACKWARD:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -220,7 +229,8 @@ void func_light(void)
 {
     printf("%s\n", __func__);
     func_light_enter();
-    while (func_cb.sta == FUNC_LIGHT) {
+    while (func_cb.sta == FUNC_LIGHT)
+    {
         func_light_process();
         func_light_message(msg_dequeue());
     }

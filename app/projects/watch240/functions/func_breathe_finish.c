@@ -9,7 +9,7 @@
 
 typedef struct f_breathe_finish_t_
 {
-
+    char str[30];
 } f_breathe_finish_t;
 
 enum
@@ -17,11 +17,23 @@ enum
     COMPO_ID_BTN_OK=1,
 };
 
-extern char *back_string(char *num,char*txt);
+//char *breathe_back_string(char *num,char*txt)
+//{
+//    if(func_cb.sta == FUNC_SET_SUB_DOUSING)
+//    {
+//        f_breathe_finish_t *f_breathe_finish = (f_breathe_finish_t *)func_cb.f_cb;
+//        memset(f_breathe_finish->str,0,sizeof(f_breathe_finish->str));
+//        uteModuleCharencodeReplaceSubString(txt, f_breathe_finish->str,"##",num);
+//        return f_breathe_finish->str;
+//    }
+//    return NULL;
+//}
 
 compo_form_t *func_breathe_finish_form_create(void)
 {
     char txt_buf[50];
+    char time_buf[30];
+    char time_num[10];
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
@@ -29,7 +41,7 @@ compo_form_t *func_breathe_finish_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_BREATHE_FINISH]);
 
-   //设置图片
+    //设置图片
     compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_00_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/5);
 
@@ -40,8 +52,14 @@ compo_form_t *func_breathe_finish_form_create(void)
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/5);
     compo_textbox_set(textbox,txt_buf);
 
+    printf("breathe->time:%d\n",sys_cb.breathe_duration);
+    memset(time_num,0,sizeof(time_num));
+    snprintf(time_num,sizeof(time_num),"%d",sys_cb.breathe_duration / 60000);
+
+    memset(time_buf,0,sizeof(time_buf));
+    uteModuleCharencodeReplaceSubString(i18n[STR_MIN_JOINT], time_buf,"##",time_num);
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%s:%s",i18n[STR_BREATHE_TIME],back_string(sys_cb.breathe_duration / 6000,i18n[STR_MIN_JOINT]));
+    snprintf(txt_buf,sizeof(txt_buf),"%s:%s",i18n[STR_BREATHE_TIME],time_buf);
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+30, GUI_SCREEN_WIDTH, 30);
     compo_textbox_set(textbox,txt_buf);
@@ -76,7 +94,7 @@ static void func_breathe_finish_message(size_msg_t msg)
             }
             break;
         default:
-                func_message(msg);
+            func_message(msg);
             break;
     }
 }

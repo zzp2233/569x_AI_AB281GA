@@ -13,7 +13,7 @@
 #endif // TRACE_EN
 
 
-//���������Ļص�����, setting_type: 0=ͬ������, 1=�ֻ���������, 2=������������
+//设置音量的回调函数, setting_type: 0=同步音量, 1=手机设置音量, 2=按键设置音量
 bool dev_vol_set_cb(uint8_t dev_vol, uint8_t media_index, uint8_t setting_type)
 {
     if(setting_type & BIT(3))

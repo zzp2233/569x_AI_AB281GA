@@ -81,6 +81,7 @@ void uteModuleMusicInit(void)
 void uteModuleMusicSetPlayerPaused(bool isPaused,ute_module_music_play_channel_t chn)
 {
     uteModuleMusicData.isPaused = isPaused;
+    bt_set_music_sta(!isPaused);
     UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL, "%s,.isPaused=%d", __func__, uteModuleMusicData.isPaused);
 }
 
@@ -92,6 +93,12 @@ void uteModuleMusicSetPlayerPaused(bool isPaused,ute_module_music_play_channel_t
 */
 bool uteModuleMusicGetPlayerPaused(void)
 {
+#if BT_ID3_TAG_EN
+    if (bt_is_connected())
+    {
+        bt_music_paly_status_info();
+    }
+#endif
     return  uteModuleMusicData.isPaused;
 }
 

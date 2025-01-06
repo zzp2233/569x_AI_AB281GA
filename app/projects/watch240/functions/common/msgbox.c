@@ -267,6 +267,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
             compo_textbox_set(txt_title, title);
         }
+        break;
         case MSGBOX_MSG_TYPE_LOW_BATTERY:
             {
                 compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_04_BIN);

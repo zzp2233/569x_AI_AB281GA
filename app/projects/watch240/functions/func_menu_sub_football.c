@@ -28,6 +28,10 @@ enum
 typedef struct f_menu_football_t_
 {
     compo_football_t *ball;
+    int  cube_rp ;
+    int  cube_ra ;
+    bool cube_touch;
+    uint32_t tick;
 } f_menu_football_t;
 
 //足球图标列表(固定20项)
@@ -112,13 +116,34 @@ static void func_menu_sub_football_switch_to_clock(void)
     func_cb.menu_idx = 0;
     func_cb.flag_animation = true;
 }
-
+#define FOOTBALL_HALF_CIRCUM            ((int)(M_PI * FOOTBALL_RADIUS))     //圆周一半
 //主菜单功能事件处理
 static void func_menu_sub_football_process(void)
 {
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     compo_football_t *ball = f_menu->ball;
-    compo_football_move(ball);
+    s32 dx, dy, ax, ay;
+//    printf("touch=%d\n",f_menu->cube_touch);
+     if(f_menu->cube_touch == true){
+        f_menu->cube_touch = ctp_get_dxy(&dx, &dy);
+        //拖动菜单图标
+        ax = dx * 1800 / FOOTBALL_HALF_CIRCUM;
+        ay = dy * 1800 / FOOTBALL_HALF_CIRCUM;
+        f_menu->cube_rp = sqrt64(ax * ax + ay * ay);
+        f_menu->cube_ra = ARCTAN2(-ay, ax);
+        compo_football_move(ball);
+     }else{
+            if(tick_check_expire(f_menu->tick, 5))
+            {
+                f_menu->tick = tick_get();
+                f_menu->cube_rp+=3;
+                if(f_menu->cube_rp==3600)f_menu->cube_rp=0;
+                compo_football_roll_from(ball,f_menu->cube_rp, f_menu->cube_ra);
+                compo_football_update(ball);
+                ball->move_cb.flag_drag = false;
+                ball->move_cb.flag_move_auto = false;
+            }
+    }
     func_process();
 }
 
@@ -206,6 +231,11 @@ static void func_menu_sub_football_message(size_msg_t msg)
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     compo_football_t *ball = f_menu->ball;
     u8 sta = compo_football_get_sta(ball);
+
+    if (MSG_CTP_TOUCH == msg){
+        f_menu->cube_touch = true;
+    }
+
     switch (sta)
     {
         case COMPO_FOOTBALL_STA_IDLE:
@@ -245,6 +275,9 @@ static void func_menu_sub_football_enter(void)
     }
     func_cb.enter_tick = tick_get();
     tft_set_temode(0);
+    f_menu->cube_ra = 1300;
+    f_menu->cube_rp = 0;
+    f_menu->cube_touch = false;
 }
 
 //主菜单功能

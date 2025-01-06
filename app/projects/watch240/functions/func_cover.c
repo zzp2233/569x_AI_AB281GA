@@ -364,7 +364,6 @@ void app_ute_msg_pop_up(uint8_t index)
 //        if(sys_cb.disturd_adl==0 && sys_cb.disturd_tim==0)
 //        {
 
-            //
             static char tmp_msg[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+3];
             memset(tmp_msg, '\0', sizeof(tmp_msg));
             memcpy(tmp_msg, msg, strlen(msg));
@@ -412,6 +411,10 @@ static co_timer_t alarm_clock_timer;
 
 void start_music(void)
 {
+    if (sys_cb.gui_sleep_sta){
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
     func_bt_mp3_res_play(RES_BUF_RING_RING_MP3, RES_LEN_RING_RING_MP3);
 }
 
@@ -458,7 +461,7 @@ void gui_set_cover_index(uint8_t index)
                     uteModuleSystemtimeGetAlarm(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 }
                 u8 hour_num=alarm_p->repeatRemindHour;
-                printf("hour=%d min=%d\n",alarm_p->repeatRemindHour,alarm_p->repeatRemindMin);
+//                printf("hour=%d min=%d\n",alarm_p->repeatRemindHour,alarm_p->repeatRemindMin);
 //                alarm_p = &alarm;
                 if (alarm_p->isRepeatRemindOpen)
                 {
@@ -508,10 +511,10 @@ void gui_set_cover_index(uint8_t index)
                 {
                     ble_ams_remote_ctrl(AMS_REMOTE_CMD_PAUSE);
                 }
-                //开启马达 喇叭
+                start_music();
                 uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
-
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
+                //开启马达 喇叭
                 co_timer_set(&alarm_clock_timer, 2500, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
                 mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
             }

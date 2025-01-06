@@ -146,10 +146,13 @@ compo_form_t *func_bt_form_create(void)
         compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
         compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
-        if(title_size_leng){
-                compo_textbox_set(name_txt,artist_buf);
-        }else{
-                compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
+        if(title_size_leng)
+        {
+            compo_textbox_set(name_txt,artist_buf);
+        }
+        else
+        {
+            compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
         }
         compo_textbox_set_forecolor(name_txt, COLOR_GRAY);
 
@@ -158,10 +161,13 @@ compo_form_t *func_bt_form_create(void)
         compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
         compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
-        if(artist_size_leng){
-                compo_textbox_set(lyric_txt,title_buf);
-        }else{
-                compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
+        if(artist_size_leng)
+        {
+            compo_textbox_set(lyric_txt,title_buf);
+        }
+        else
+        {
+            compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
         }
 
     }
@@ -210,7 +216,8 @@ compo_form_t *func_bt_form_create(void)
     {
         bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
     }
-    if(bt_cb.music_playing){
+    if(bt_cb.music_playing)
+    {
         compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PAUSED_BIN);
     }
     else
@@ -297,24 +304,28 @@ static void func_bt_music_refresh_disp(void)
 
     bt_music_paly_status_info();
 
-    if(strcmp(f_bt->title_buf , f_bt->title_buf_old)!=0)//歌名刷新
+    if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
     {
         memcpy(f_bt->title_buf_old, f_bt->title_buf, sizeof(f_bt->title_buf));
         compo_textbox_t *tilte_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_LYRIC);
         compo_textbox_set(tilte_txt, f_bt->title_buf);
-        if(title_size_leng == 0){
+        if(title_size_leng == 0)
+        {
             compo_textbox_set(tilte_txt, i18n[STR_UNKNOWN]);
         }
-
+//        printf("name=%s\n", f_bt->title_buf);
     }
-    if(strcmp(f_bt->artist_buf , f_bt->artist_buf_old)!=0)//歌手刷新
+//     printf("artist=%s leng=%d\n", f_bt->artist_buf ,artist_size_leng);
+    if(strcmp(f_bt->artist_buf, f_bt->artist_buf_old)!=0 || artist_size_leng==0) //歌手刷新
     {
         memcpy(f_bt->artist_buf_old, f_bt->artist_buf, sizeof(f_bt->artist_buf));
         compo_textbox_t *tilte_art_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_NAME);
         compo_textbox_set(tilte_art_txt, f_bt->artist_buf);
-        if(artist_size_leng == 0){
+        if(artist_size_leng == 0)
+        {
             compo_textbox_set(tilte_art_txt, i18n[STR_UNKNOWN]);
         }
+
     }
 
     if(ble_is_connect())
@@ -323,9 +334,12 @@ static void func_bt_music_refresh_disp(void)
     }
 //    printf("500ms->bt_cb.music_playing=%d\n",bt_cb.music_playing);
     compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_PLAY);
-    if(bt_cb.music_playing){
+    if(bt_cb.music_playing)
+    {
         compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PAUSED_BIN);
-    }else{
+    }
+    else
+    {
         compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY01_BIN);
     }
     if(vol>100)vol=100;
@@ -456,6 +470,7 @@ static void func_bt_message_do(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
+            if(!uteModuleCallBtIsConnected() && !ble_is_connect()) return;
             func_bt_button_click();                         //单击按钮
             func_bt_music_refresh_disp();
             break;

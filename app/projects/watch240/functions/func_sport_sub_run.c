@@ -172,7 +172,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     compo_textbox_t* time = compo_textbox_create(frm, 32);
     compo_textbox_set_align_center(time, false);
-    compo_textbox_set_location(time, 168-52, 15, 52+52, 23);
+    compo_textbox_set_location(time, 168-52, 15, GUI_SCREEN_CENTER_X, 23);
     compo_setid(time, COMPO_ID_TXT_TIME);
     compo_bonddata(time, COMPO_BOND_HOURMIN_TXT);
 
@@ -466,8 +466,10 @@ static void func_sport_sub_run_updata(void)
             //更新时间
             char buf[14];
             compo_textbox_t *txt_time = NULL;
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_TIME) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_TIME)
+                {
                     txt_time = compo_getobj_byid(sport_sub_run_text[i].id);
                     break;
                 }
@@ -484,8 +486,10 @@ static void func_sport_sub_run_updata(void)
             memset(buf, 0, sizeof(buf));
             snprintf(buf, sizeof(buf), "%d", f_sport_sub_run->heartrate);
             compo_textbox_t* txt_heartrate = NULL;
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_HEARTRATE) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_HEARTRATE)
+                {
                     txt_heartrate = compo_getobj_byid(sport_sub_run_text[i].id);
                     break;
                 }
@@ -494,8 +498,10 @@ static void func_sport_sub_run_updata(void)
 
             compo_textbox_t* txt_heartrate_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_HEARTRATE);
             area_t rel_text_area = widget_text_get_area(txt_heartrate->txt);
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_HEARTRATE) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_HEARTRATE)
+                {
                     compo_textbox_set_location(txt_heartrate_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+8, 0, 0);
                     break;
                 }
@@ -509,8 +515,10 @@ static void func_sport_sub_run_updata(void)
 //        snprintf(buf, sizeof(buf), "%dKCAL", f_sport_sub_run->kcal);
             snprintf(buf, sizeof(buf), "%d", f_sport_sub_run->kcal);
             compo_textbox_t* txt_kcal = NULL;
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KCAL) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KCAL)
+                {
                     txt_kcal = compo_getobj_byid(sport_sub_run_text[i].id);
                     break;
                 }
@@ -519,8 +527,10 @@ static void func_sport_sub_run_updata(void)
 
             compo_textbox_t* txt_kcal_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_KCAL);
             rel_text_area = widget_text_get_area(txt_kcal->txt);
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KCAL) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KCAL)
+                {
                     compo_textbox_set_location(txt_kcal_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2, 0, 0);
                     break;
                 }
@@ -532,8 +542,10 @@ static void func_sport_sub_run_updata(void)
             memset(buf, 0, sizeof(buf));
             snprintf(buf, sizeof(buf), "%d", f_sport_sub_run->step);
             compo_textbox_t* txt_step = NULL;
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP)
+                {
                     txt_step = compo_getobj_byid(sport_sub_run_text[i].id);
                     break;
                 }
@@ -542,8 +554,10 @@ static void func_sport_sub_run_updata(void)
 
             compo_textbox_t* txt_step_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_STEP);
             rel_text_area = widget_text_get_area(txt_step->txt);
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP)
+                {
                     compo_textbox_set_location(txt_step_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2, 0, 0);
                     break;
                 }
@@ -565,8 +579,10 @@ static void func_sport_sub_run_updata(void)
                 snprintf(buf, sizeof(buf), "%d.%02d", f_sport_sub_run->km_integer, f_sport_sub_run->km_decimals);
             }
             compo_textbox_t* txt_km = NULL;
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KM) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KM)
+                {
                     txt_km = compo_getobj_byid(sport_sub_run_text[i].id);
                     break;
                 }
@@ -575,8 +591,10 @@ static void func_sport_sub_run_updata(void)
 
             compo_textbox_t* txt_km_unit = compo_getobj_byid(COMPO_ID_TEXT_SPORT_KM);
             rel_text_area = widget_text_get_area(txt_km->txt);
-            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++) {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KM) {
+            for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
+            {
+                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_KM)
+                {
                     compo_textbox_set_location(txt_km_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2, 0, 0);
                     break;
                 }
@@ -592,22 +610,27 @@ static void func_sport_sub_run_updata(void)
 
 
 
-        compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_SPORT_HEART);
-        area_t pic_size = gui_image_get_size(UI_BUF_I330001_SPORT_ICON2_HR_BIN);
+            compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_SPORT_HEART);
+            area_t pic_size = gui_image_get_size(UI_BUF_I330001_SPORT_ICON2_HR_BIN);
 
-        if(f_sport_sub_run->heart_pic_size <= 72){
-            f_sport_sub_run->heart_pic_state = true;
-        }else if(f_sport_sub_run->heart_pic_size >= 110){
-            f_sport_sub_run->heart_pic_state = false;
-        }
+            if(f_sport_sub_run->heart_pic_size <= 72)
+            {
+                f_sport_sub_run->heart_pic_state = true;
+            }
+            else if(f_sport_sub_run->heart_pic_size >= 110)
+            {
+                f_sport_sub_run->heart_pic_state = false;
+            }
 
-        if(f_sport_sub_run->heart_pic_state == true)
-        {
-            f_sport_sub_run->heart_pic_size ++ ;
-        }else{
-            f_sport_sub_run->heart_pic_size -- ;
-        }
-        compo_picturebox_set_size(picbox,f_sport_sub_run->heart_pic_size*pic_size.wid/100,f_sport_sub_run->heart_pic_size*pic_size.hei/100);
+            if(f_sport_sub_run->heart_pic_state == true)
+            {
+                f_sport_sub_run->heart_pic_size ++ ;
+            }
+            else
+            {
+                f_sport_sub_run->heart_pic_size -- ;
+            }
+            compo_picturebox_set_size(picbox,f_sport_sub_run->heart_pic_size*pic_size.wid/100,f_sport_sub_run->heart_pic_size*pic_size.hei/100);
 
 #if USE_GOAL_ARC
             //更新圆弧
@@ -738,7 +761,7 @@ static void func_sport_sub_run_process(void)
     compo_textbox_t* time = compo_getobj_byid(COMPO_ID_TXT_TIME);
     if(uteModuleSystemtime12HOn())
     {
-        compo_textbox_set_location(time, 168-52, 15, 52+52, 23);
+        compo_textbox_set_location(time, 168-52, 15, GUI_SCREEN_CENTER_X, 23);
     }
     else
     {
@@ -797,7 +820,7 @@ static void func_sport_sub_run_click_handler(void)
             }
             else
             {
-                 res = msgbox(i18n[STR_SPORT_EXIT_MSG1], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE);
+                res = msgbox(i18n[STR_SPORT_EXIT_MSG1], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE);
             }
 
             if (res == MSGBOX_RES_OK)
@@ -880,7 +903,8 @@ static void func_sport_sub_run_enter(void)
     if(sport_refresh == true)
     {
         f_sport_sub_run->sport_run_state = sport_start_flag;
-        if (func_cb.last != FUNC_CAMERA) {
+        if (func_cb.last != FUNC_CAMERA)
+        {
             if (uteModuleSportMoreSportIsAppStart())
             {
                 //uteModuleSportStartMoreSports(uteModuleSportMoreSportGetType(), 1, 1);
@@ -914,7 +938,8 @@ static void func_sport_sub_run_exit(void)
     if(sys_cb.refresh_language_flag == false)//刷新语言时不清除数据
     {
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (func_cb.sta != FUNC_CAMERA) {
+        if (func_cb.sta != FUNC_CAMERA)
+        {
             if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
             {
                 task_stack_pop();

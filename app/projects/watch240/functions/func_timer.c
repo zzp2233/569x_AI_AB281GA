@@ -159,10 +159,10 @@ static const timer_btn_item_t tbl_timer_btn_item[] =
 static void func_timer_setting_date_init(void)
 {
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
-    char time_setting[5]={2,1,0,59,58};
-    char time_setting_hour[5]={2,1,0,23,22};
+    char time_setting[5]= {2,1,0,59,58};
+    char time_setting_hour[5]= {2,1,0,23,22};
 
-    for(int i=0;i<5;i++)
+    for(int i=0; i<5; i++)
     {
         f_timer->sec_buf[i]=time_setting[i];
         f_timer->min_buf[i]=time_setting[i];
@@ -179,7 +179,8 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
     compo_textbox_t *txt;
 
     f_timer_t *f_timer = NULL;
-    if (func_cb.sta == FUNC_TIMER) {
+    if (func_cb.sta == FUNC_TIMER)
+    {
         f_timer = (f_timer_t*)func_cb.f_cb;
     }
 
@@ -196,49 +197,51 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
     switch (page_type)
     {
         case TIMER_PAGE_SELECT:
-            {
+        {
 //                widget_page_t* page = widget_page_create(frm->page);
-                widget_page_t* page = frm->page_body;//frm_main->page_body;
-                widget_page_set_client(page, 0, 0);
-                widget_set_location(page, GUI_SCREEN_CENTER_X,PAGE_HEIGHT/2 ,GUI_SCREEN_WIDTH,PAGE_HEIGHT);
+            widget_page_t* page = frm->page_body;//frm_main->page_body;
+            widget_page_set_client(page, 0, 0);
+            widget_set_location(page, GUI_SCREEN_CENTER_X,PAGE_HEIGHT/2,GUI_SCREEN_WIDTH,PAGE_HEIGHT);
 
-                //创建文本->按钮
-                for (u8 idx = 0; idx < TIMER_TXT_ITEM_CNT; idx++)
-                {
-                    btn = compo_button_create_page_by_image(frm, page, tbl_timer_txt_item[idx].res_addr);
-                    compo_setid(btn, tbl_timer_txt_item[idx].btn_id);
-                    compo_button_set_pos(btn, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
+            //创建文本->按钮
+            for (u8 idx = 0; idx < TIMER_TXT_ITEM_CNT; idx++)
+            {
+                btn = compo_button_create_page_by_image(frm, page, tbl_timer_txt_item[idx].res_addr);
+                compo_setid(btn, tbl_timer_txt_item[idx].btn_id);
+                compo_button_set_pos(btn, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
 
-                    txt = compo_textbox_create_for_page(frm, page, strlen(tbl_timer_txt_item[idx].text));
-                    compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
-                    compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
-                }
-                btn = compo_button_create_page_by_image(frm, page, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
-                compo_setid(btn, COMPO_ID_BTN_CUSTOM);
-                compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.74*4+CONTROL_LENGTH);
-
-                txt = compo_textbox_create_for_page(frm, page, strlen(i18n[STR_CUSTOM]));
-                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.74*4+CONTROL_LENGTH);
-                compo_textbox_set(txt, i18n[STR_CUSTOM]);
-
-                if (func_cb.sta == FUNC_TIMER) {
-                    f_timer->page_sub = page;
-                }
-                compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-                compo_form_set_title(frm, i18n[STR_TIMER]);
+                txt = compo_textbox_create_for_page(frm, page, strlen(tbl_timer_txt_item[idx].text));
+                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
+                compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
             }
-            break;
+            btn = compo_button_create_page_by_image(frm, page, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
+            compo_setid(btn, COMPO_ID_BTN_CUSTOM);
+            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.74*4+CONTROL_LENGTH);
+
+            txt = compo_textbox_create_for_page(frm, page, strlen(i18n[STR_CUSTOM]));
+            compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.74*4+CONTROL_LENGTH);
+            compo_textbox_set(txt, i18n[STR_CUSTOM]);
+
+            if (func_cb.sta == FUNC_TIMER)
+            {
+                f_timer->page_sub = page;
+            }
+            compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+            compo_form_set_title(frm, i18n[STR_TIMER]);
+        }
+        break;
 
         case TIMER_PAGE_CUSTOM:
-            if (func_cb.sta == FUNC_TIMER) {
-                    func_timer_setting_date_init();
-                }
+            if (func_cb.sta == FUNC_TIMER)
+            {
+                func_timer_setting_date_init();
+            }
             compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN);
             compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
             picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN);
             compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
 
-            for(int i=0;i<TIMER_BTN_ITEM_CNT;i++)
+            for(int i=0; i<TIMER_BTN_ITEM_CNT; i++)
             {
                 txt = compo_textbox_create(frm, 2);
                 compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_28_BIN);
@@ -247,15 +250,15 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
                 compo_textbox_set_pos(txt,tbl_timer_btn_item[i].x,tbl_timer_btn_item[i].y-TIME_SET_TXT_SPACING_SHIFT);
             }
             btn = compo_button_create_by_image(frm, UI_BUF_I330001_TIMER_BOX01_BIN);
-            compo_button_set_pos(btn,tbl_timer_btn_item[2].x ,tbl_timer_btn_item[2].y -TIME_SET_TXT_SPACING_SHIFT);
+            compo_button_set_pos(btn,tbl_timer_btn_item[2].x,tbl_timer_btn_item[2].y -TIME_SET_TXT_SPACING_SHIFT);
             compo_setid(btn,COMPO_ID_SEC_IMG_BTN);
 
             btn = compo_button_create_by_image(frm, UI_BUF_I330001_TIMER_BOX01_BIN);
-            compo_button_set_pos(btn,tbl_timer_btn_item[7].x ,tbl_timer_btn_item[7].y -TIME_SET_TXT_SPACING_SHIFT);
+            compo_button_set_pos(btn,tbl_timer_btn_item[7].x,tbl_timer_btn_item[7].y -TIME_SET_TXT_SPACING_SHIFT);
             compo_setid(btn,COMPO_ID_MIN_IMG_BTN);
 
             btn = compo_button_create_by_image(frm, UI_BUF_I330001_TIMER_BOX01_BIN);
-            compo_button_set_pos(btn,tbl_timer_btn_item[12].x ,tbl_timer_btn_item[12].y -TIME_SET_TXT_SPACING_SHIFT);
+            compo_button_set_pos(btn,tbl_timer_btn_item[12].x,tbl_timer_btn_item[12].y -TIME_SET_TXT_SPACING_SHIFT);
             compo_setid(btn,COMPO_ID_HOUR_IMG_BTN);
 
             compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
@@ -399,7 +402,8 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     }
     if (count && sys_cb.timer_sta == TIMER_STA_WORKING /*&& !sys_cb.gui_sleep_sta*/)    //休眠不计时
     {
-        if (func_cb.sta == FUNC_TIMER) {
+        if (func_cb.sta == FUNC_TIMER)
+        {
             //隐藏
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
             compo_textbox_set_visible(txt, false);
@@ -422,7 +426,8 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
         printf(">>>TIMER_DONE\n");
         sys_cb.timer_done = true;
         sys_cb.timer_sta = TIMER_STA_DONE;
-        if (func_cb.sta == FUNC_TIMER) {
+        if (func_cb.sta == FUNC_TIMER)
+        {
             //显示
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
             compo_textbox_set_visible(txt, true);
@@ -555,7 +560,7 @@ static void func_timer_button_click(void)
 //定时器功能事件处理
 static void func_timer_process(void)
 {
-    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     u8 hour, min, sec;
     char str_buff[24];
     compo_textbox_t *txt_num;
@@ -577,68 +582,68 @@ static void func_timer_process(void)
 
                     switch(f_timer->set_time_flag)
                     {
-                    case 3:
-                       for(int i=0;i<5;i++)
-                       {
-                           f_timer->set_time_buf[i] =60+f_timer->sec_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
-                           f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%60;
+                        case 3:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] =60+f_timer->sec_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
+                                f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%60;
 
-                           compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_SEC_1+i);
-                           compo_textbox_set_pos(txt,tbl_timer_btn_item[i].x,tbl_timer_btn_item[i].y-TIME_SET_TXT_SPACING_SHIFT+f_timer->moveto.y);
-                           memset(str_buff,0,sizeof(str_buff));
-                           snprintf(str_buff,sizeof(str_buff),"%02d",f_timer->set_time_buf[i]);
-                           compo_textbox_set(txt,str_buff);
-                       }
-                       break;
-                    case 2:
-                       for(int i=0;i<5;i++)
-                       {
-                           f_timer->set_time_buf[i] =60+f_timer->min_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
-                           f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%60;
+                                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_SEC_1+i);
+                                compo_textbox_set_pos(txt,tbl_timer_btn_item[i].x,tbl_timer_btn_item[i].y-TIME_SET_TXT_SPACING_SHIFT+f_timer->moveto.y);
+                                memset(str_buff,0,sizeof(str_buff));
+                                snprintf(str_buff,sizeof(str_buff),"%02d",f_timer->set_time_buf[i]);
+                                compo_textbox_set(txt,str_buff);
+                            }
+                            break;
+                        case 2:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] =60+f_timer->min_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
+                                f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%60;
 
-                           compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_MIN_1+i);
-                           compo_textbox_set_pos(txt,tbl_timer_btn_item[i+5].x,tbl_timer_btn_item[i+5].y-TIME_SET_TXT_SPACING_SHIFT+f_timer->moveto.y);
-                           memset(str_buff,0,sizeof(str_buff));
-                           snprintf(str_buff,sizeof(str_buff),"%02d",f_timer->set_time_buf[i]);
-                           compo_textbox_set(txt,str_buff);
-                       }
-                        break;
-                    case 1:
-                       for(int i=0;i<5;i++)
-                       {
-                           f_timer->set_time_buf[i] =24+f_timer->hour_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
-                           f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%24;
+                                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_MIN_1+i);
+                                compo_textbox_set_pos(txt,tbl_timer_btn_item[i+5].x,tbl_timer_btn_item[i+5].y-TIME_SET_TXT_SPACING_SHIFT+f_timer->moveto.y);
+                                memset(str_buff,0,sizeof(str_buff));
+                                snprintf(str_buff,sizeof(str_buff),"%02d",f_timer->set_time_buf[i]);
+                                compo_textbox_set(txt,str_buff);
+                            }
+                            break;
+                        case 1:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] =24+f_timer->hour_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
+                                f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%24;
 
-                           compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_HOUR_1+i);
-                           compo_textbox_set_pos(txt,tbl_timer_btn_item[i+10].x,tbl_timer_btn_item[i+10].y-TIME_SET_TXT_SPACING_SHIFT+f_timer->moveto.y);
-                           memset(str_buff,0,sizeof(str_buff));
-                           snprintf(str_buff,sizeof(str_buff),"%02d",f_timer->set_time_buf[i]);
-                           compo_textbox_set(txt,str_buff);
-                       }
-                        break;
+                                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_HOUR_1+i);
+                                compo_textbox_set_pos(txt,tbl_timer_btn_item[i+10].x,tbl_timer_btn_item[i+10].y-TIME_SET_TXT_SPACING_SHIFT+f_timer->moveto.y);
+                                memset(str_buff,0,sizeof(str_buff));
+                                snprintf(str_buff,sizeof(str_buff),"%02d",f_timer->set_time_buf[i]);
+                                compo_textbox_set(txt,str_buff);
+                            }
+                            break;
                     }
                 }
                 else
                 {
-                    for(int i=0;i<5;i++)
+                    for(int i=0; i<5; i++)
                     {
                         switch(f_timer->set_time_flag)
                         {
-                        case 3:
+                            case 3:
                             {
                                 f_timer->sec_buf[i] = f_timer->set_time_buf[i];
                                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_SEC_1+i);
                                 compo_textbox_set_pos(txt,tbl_timer_btn_item[i].x,tbl_timer_btn_item[i].y-TIME_SET_TXT_SPACING_SHIFT);
                             }
                             break;
-                        case 2:
+                            case 2:
                             {
                                 f_timer->min_buf[i] = f_timer->set_time_buf[i];
                                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_MIN_1+i);
                                 compo_textbox_set_pos(txt,tbl_timer_btn_item[5+i].x,tbl_timer_btn_item[5+i].y-TIME_SET_TXT_SPACING_SHIFT);
                             }
                             break;
-                        case 1:
+                            case 1:
                             {
                                 f_timer->hour_buf[i] = f_timer->set_time_buf[i];
                                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_HOUR_1+i);
@@ -715,14 +720,14 @@ static void func_timer_process(void)
         default:
             break;
     }
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 
 //定时器功能消息处理
 static void func_timer_message(size_msg_t msg)
 {
-    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
     switch (msg)
     {
@@ -743,36 +748,36 @@ static void func_timer_message(size_msg_t msg)
                 {
                     switch(id)
                     {
-                    case COMPO_ID_HOUR_IMG_BTN:
-                        for(int i=0;i<5;i++)
-                        {
-                             f_timer->set_time_buf[i] = f_timer->hour_buf[i];
-                        }
-                        compo_button_set_bgimg(btn_hour,UI_BUF_I330001_TIMER_BOX00_BIN );
-                        compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX01_BIN );
-                        compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX01_BIN );
-                        f_timer->set_time_flag = 1;
-                        break;
-                    case COMPO_ID_MIN_IMG_BTN:
-                        for(int i=0;i<5;i++)
-                        {
-                             f_timer->set_time_buf[i] = f_timer->min_buf[i];
-                        }
-                        compo_button_set_bgimg(btn_hour,UI_BUF_I330001_TIMER_BOX01_BIN );
-                        compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX00_BIN );
-                        compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX01_BIN );
-                        f_timer->set_time_flag = 2;
-                        break;
-                    case COMPO_ID_SEC_IMG_BTN:
-                        for(int i=0;i<5;i++)
-                        {
-                             f_timer->set_time_buf[i] = f_timer->sec_buf[i];
-                        }
-                        compo_button_set_bgimg(btn_hour,UI_BUF_I330001_TIMER_BOX01_BIN );
-                        compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX01_BIN );
-                        compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX00_BIN );
-                        f_timer->set_time_flag = 3;
-                        break;
+                        case COMPO_ID_HOUR_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->hour_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I330001_TIMER_BOX00_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX01_BIN );
+                            compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX01_BIN );
+                            f_timer->set_time_flag = 1;
+                            break;
+                        case COMPO_ID_MIN_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->min_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I330001_TIMER_BOX01_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX00_BIN );
+                            compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX01_BIN );
+                            f_timer->set_time_flag = 2;
+                            break;
+                        case COMPO_ID_SEC_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->sec_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I330001_TIMER_BOX01_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX01_BIN );
+                            compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX00_BIN );
+                            f_timer->set_time_flag = 3;
+                            break;
                     }
                 }
                 f_timer->touch_flag = true;
@@ -805,7 +810,7 @@ static void func_timer_message(size_msg_t msg)
             func_message(msg);
             break;
     }
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //进入定时器功能
@@ -813,18 +818,19 @@ static void func_timer_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_timer_t));
     func_cb.frm_main = func_timer_form_create();
-    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
     f_timer->page_disp = sys_cb.timer_sta == TIMER_STA_IDLE ? TIMER_PAGE_SELECT : TIMER_PAGE_COUNTDOWN;
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //退出定时器功能
 static void func_timer_exit(void)
 {
-    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_cb.last = FUNC_TIMER;
 }
 

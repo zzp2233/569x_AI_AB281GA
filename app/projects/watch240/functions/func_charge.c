@@ -333,12 +333,14 @@ static void func_charge_message(size_msg_t msg)
         case MSG_CTP_LONG:
             break;
 
+        case KU_BACK:
+        case KL_BACK:
         case MSG_QDEC_FORWARD:
         case MSG_QDEC_BACKWARD:
             break;
 
         default:
-            evt_message(msg);
+            func_message(msg);
             break;
     }
 }
@@ -354,12 +356,15 @@ static void func_charge_enter(void)
     f_charge->percent_bkp = BAT_PERCENT_VALUE;
     func_cb.enter_tick = tick_get();
 
-    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
+//    uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
+//    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+//    uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
 }
 
 //退出充电功能
 static void func_charge_exit(void)
 {
+    printf("%s\n", __func__);
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
     func_cb.last = FUNC_CHARGE;
 }

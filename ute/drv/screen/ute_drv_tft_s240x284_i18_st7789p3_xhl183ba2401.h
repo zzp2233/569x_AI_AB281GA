@@ -27,15 +27,15 @@ __STATIC_INLINE void drvScreenTft280X284St7789p3Xhl183ba2401PowerOff(void)
 __STATIC_INLINE void drvScreenTft280X284St7789p3Xhl183ba2401SetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
 {
     uint8_t data[4];
-    data[1] = xStart >> 8;
-    data[0] = xStart & 0xff;
-    data[3] = xEnd >> 8;
-    data[2] = xEnd & 0xff;
+    data[0] = xStart >> 8;
+    data[1] = xStart & 0xff;
+    data[2] = xEnd >> 8;
+    data[3] = xEnd & 0xff;
     uteDrvScreenCommonSt7789p3DspiWriteCmdParams(0x2A, data, 4);
-    data[1] = yStart >> 8;
-    data[0] = yStart & 0xff;
-    data[3] = yEnd >> 8;
-    data[2] = yEnd & 0xff;
+    data[0] = yStart >> 8;
+    data[1] = yStart & 0xff;
+    data[2] = yEnd >> 8;
+    data[3] = yEnd & 0xff;
     uteDrvScreenCommonSt7789p3DspiWriteCmdParams(0x2B, data, 4);
     uteModulePlatformDspiWriteGram(0x2c);
 }

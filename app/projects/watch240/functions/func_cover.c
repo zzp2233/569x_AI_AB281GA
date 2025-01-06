@@ -33,7 +33,6 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
     [REMIND_COVER_GOAL]             = {UI_BUF_I330001_REPEAT_GOAL_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I330001_PUBLIC_NOT_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
 //    [REMIND_GCOVER_APP_CONNECT]     = {UI_BUF_POP_UP_APP_CONNECTION_BIN,          STR_APP_CONNECT,        175,            290},
-    [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},      //msgbox内部自定义，这里的参数没有作用
 };
 
 ///消息弹窗界面（简略）
@@ -515,7 +514,6 @@ void gui_set_cover_index(uint8_t index)
                     ble_ams_remote_ctrl(AMS_REMOTE_CMD_PAUSE);
                 }
                 start_music();
-                uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 //开启马达 喇叭
                 co_timer_set(&alarm_clock_timer, 2500, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
@@ -570,7 +568,6 @@ void gui_set_cover_index(uint8_t index)
                     printf("repeat alarm[%d] ring, [%02d:%02d]\n", uteModuleSystemtimeGetAlarmRingIndex(), alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
                 }
                 //关闭 喇叭 马达
-                uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
                 uteDrvMotorStop();
                 bt_audio_bypass();
                 mp3_res_play_exit();
@@ -583,7 +580,6 @@ void gui_set_cover_index(uint8_t index)
             {
                 printf("COVER_ALARM MSGBOX_RES_EXIT\n");
                 //关闭 喇叭 马达
-                uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
                 uteDrvMotorStop();
                 bt_audio_bypass();
                 mp3_res_play_exit();
@@ -596,7 +592,6 @@ void gui_set_cover_index(uint8_t index)
             {
                 printf("COVER_ALARM MSGBOX_RES_TIMEOUT_EXIT\n");
                 //关闭 喇叭 马达
-                uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
                 uteDrvMotorStop();
                 bt_audio_bypass();
                 mp3_res_play_exit();
@@ -610,7 +605,6 @@ void gui_set_cover_index(uint8_t index)
                 alarm_p->isRepeatRemindOpen = false;
                 uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 //关闭 喇叭 马达
-                uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
                 uteDrvMotorStop();
                 bt_audio_bypass();
                 mp3_res_play_exit();

@@ -14,6 +14,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_sport.h"
 #include "ute_module_liftwrist.h"
+#include "func_cover.h"
 
 /* NotDisturb 互斥量 zn.zeng 2022-02-14*/
 void *uteModuleNotDisturbMute;
@@ -252,7 +253,8 @@ bool uteModuleNotDisturbIsAllowVibration(void)
     }
 #endif
 #if UTE_ALARM_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT//勿扰时闹钟允许振动
-    if(uteModuleGuiCommonGetCurrentScreenId()==UTE_MOUDLE_SCREENS_ALARM_CLOCK_ID)
+//    if(uteModuleGuiCommonGetCurrentScreenId()==UTE_MOUDLE_SCREENS_ALARM_CLOCK_ID)
+    if (sys_cb.cover_index == REMIND_COVER_ALARM)
     {
         isAllow = true;
     }

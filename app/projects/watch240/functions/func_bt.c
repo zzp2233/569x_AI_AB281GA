@@ -305,7 +305,7 @@ static void func_bt_music_refresh_disp(void)
 
     bt_music_paly_status_info();
 
-    if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0) //歌名刷新
+    if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
     {
         memcpy(f_bt->title_buf_old, f_bt->title_buf, sizeof(f_bt->title_buf));
         compo_textbox_t *tilte_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_LYRIC);
@@ -314,9 +314,10 @@ static void func_bt_music_refresh_disp(void)
         {
             compo_textbox_set(tilte_txt, i18n[STR_UNKNOWN]);
         }
-
+//        printf("name=%s\n", f_bt->title_buf);
     }
-    if(strcmp(f_bt->artist_buf, f_bt->artist_buf_old)!=0) //歌手刷新
+//     printf("artist=%s leng=%d\n", f_bt->artist_buf ,artist_size_leng);
+    if(strcmp(f_bt->artist_buf, f_bt->artist_buf_old)!=0 || artist_size_leng==0) //歌手刷新
     {
         memcpy(f_bt->artist_buf_old, f_bt->artist_buf, sizeof(f_bt->artist_buf));
         compo_textbox_t *tilte_art_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_NAME);
@@ -325,6 +326,7 @@ static void func_bt_music_refresh_disp(void)
         {
             compo_textbox_set(tilte_art_txt, i18n[STR_UNKNOWN]);
         }
+
     }
 
     if(ble_is_connect())
@@ -469,6 +471,7 @@ static void func_bt_message_do(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
+            if(!uteModuleCallBtIsConnected() && !ble_is_connect()) return;
             func_bt_button_click();                         //单击按钮
             func_bt_music_refresh_disp();
             break;

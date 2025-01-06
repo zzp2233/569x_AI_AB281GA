@@ -3,7 +3,7 @@
 
 #if (CTP_SELECT == CTP_CHSC6X)
 
-#define CHSC6X_I2C_DEVICE               (0x5C) //7bit
+#define CHSC6X_I2C_DEVICE               (0x2E) //7bit
 #define I2C_WRITE_ADDR(ADDR)     		 ((ADDR) << 1)				//CTP IIC写地址
 #define I2C_READ_ADDR(ADDR)      		 ((ADDR) << 1 | 1)			//CTP IIC读地址
 

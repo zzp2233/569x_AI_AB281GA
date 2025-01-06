@@ -13,12 +13,15 @@
 #endif // TRACE_EN
 
 
-//ÉèÖÃÒôÁ¿µÄ»Øµ÷º¯Êı, setting_type: 0=Í¬²½ÒôÁ¿, 1=ÊÖ»úÉèÖÃÒôÁ¿, 2=°´¼üÉèÖÃÒôÁ¿
+//è®¾ç½®éŸ³é‡çš„å›è°ƒå‡½æ•°, setting_type: 0=åŒæ­¥éŸ³é‡, 1=æ‰‹æœºè®¾ç½®éŸ³é‡, 2=æŒ‰é”®è®¾ç½®éŸ³é‡
 bool dev_vol_set_cb(uint8_t dev_vol, uint8_t media_index, uint8_t setting_type)
 {
-    if(setting_type & BIT(3)) {
+    if(setting_type & BIT(3))
+    {
         sys_cb.hfp_vol = dev_vol;
-    } else {
+    }
+    else
+    {
         sys_cb.vol = a2dp_vol_conver(dev_vol);
         uint8_t volume = sys_cb.vol * 6.25;
         uteModuleMusicSetPlayerVolume(volume);
@@ -26,10 +29,33 @@ bool dev_vol_set_cb(uint8_t dev_vol, uint8_t media_index, uint8_t setting_type)
 
     TRACE("dev_vol_set_cb: %d(%x, %d, %d)\n", sys_cb.vol, dev_vol, media_index, setting_type);
 
-    if(setting_type & BIT(3)) {
-        msg_enqueue(EVT_HFP_SET_VOL);
-    } else {
-        msg_enqueue(EVT_A2DP_SET_VOL);
+    if(setting_type & BIT(3))
+    {
+        TRACE("dev_vol_set_cb  EVT_HFP_SET_VOL\n");
+        // msg_enqueue(EVT_HFP_SET_VOL);
+        if(sys_cb.incall_flag & INCALL_FLAG_SCO)
+        {
+            bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
+            dac_fade_in();
+            printf("HFP SET VOL: %d\n", sys_cb.hfp_vol);
+        }
+    }
+    else
+    {
+        TRACE("dev_vol_set_cb  EVT_A2DP_SET_VOL\n");
+        // msg_enqueue(EVT_A2DP_SET_VOL);
+        if ((sys_cb.incall_flag & INCALL_FLAG_SCO) == 0)
+        {
+            printf("A2DP SET VOL: %d\n", sys_cb.vol);
+            bsp_change_volume(sys_cb.vol);
+            param_sys_vol_write();
+            sys_cb.cm_times = 0;
+            sys_cb.cm_vol_change = 1;
+            if (bt_cb.music_playing)
+            {
+                dac_fade_in();
+            }
+        }
     }
 
     return true;

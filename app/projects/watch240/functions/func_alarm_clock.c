@@ -147,7 +147,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_BIN);
             compo_cardbox_text_set_forecolor(cardbox, 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
             compo_cardbox_text_set_align_center(cardbox, 2, false);
-            compo_cardbox_text_set_location(cardbox, 2, -15, -25, 80, 50);
+            compo_cardbox_text_set_location(cardbox, 2, -100 + widget_text_get_area(cardbox->text[0]).wid + 10, -25, 80, 50);
             compo_cardbox_text_set_visible(cardbox, 2, true);
             if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 0)
             {

@@ -363,12 +363,22 @@ void app_ute_msg_pop_up(uint8_t index)
        //是否打开全天勿扰    //是否打开定时勿扰
 //        if(sys_cb.disturd_adl==0 && sys_cb.disturd_tim==0)
 //        {
+
+            static char tmp_msg[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+3];
+            memset(tmp_msg, '\0', sizeof(tmp_msg));
+            memcpy(tmp_msg, msg, strlen(msg));
+            //消息内容超过UTE_NOTIFY_MSG_CONTENT_MAX_SIZE补充省略号
+            if (strlen(msg) >= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-2) {
+                memset(&tmp_msg[strlen(msg)], '.', 3);
+                tmp_msg[strlen(msg)+3] = '\0';
+            }
+
             sprintf(time, "%04d/%02d/%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
             int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
             if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
             {
                 printf("enter MSGBOX_RES_ENTER_DETAIL_MSG\n");
-                int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
+                int res = msgbox(tmp_msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
                 if (res == MSGBOX_RES_DELETE)
                 {
                     uteModuleNotifySetDisplayIndex(0);
@@ -401,6 +411,10 @@ static co_timer_t alarm_clock_timer;
 
 void start_music(void)
 {
+    if (sys_cb.gui_sleep_sta){
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
     func_bt_mp3_res_play(RES_BUF_RING_RING_MP3, RES_LEN_RING_RING_MP3);
 }
 
@@ -447,7 +461,7 @@ void gui_set_cover_index(uint8_t index)
                     uteModuleSystemtimeGetAlarm(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 }
                 u8 hour_num=alarm_p->repeatRemindHour;
-                printf("hour=%d min=%d\n",alarm_p->repeatRemindHour,alarm_p->repeatRemindMin);
+//                printf("hour=%d min=%d\n",alarm_p->repeatRemindHour,alarm_p->repeatRemindMin);
 //                alarm_p = &alarm;
                 if (alarm_p->isRepeatRemindOpen)
                 {
@@ -497,10 +511,10 @@ void gui_set_cover_index(uint8_t index)
                 {
                     ble_ams_remote_ctrl(AMS_REMOTE_CMD_PAUSE);
                 }
-                //开启马达 喇叭
+                start_music();
                 uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
-
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
+                //开启马达 喇叭
                 co_timer_set(&alarm_clock_timer, 2500, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
                 mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
             }

@@ -1845,7 +1845,7 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
         if(batLvl < UTE_DRV_BATTERY_LOW_POWER_PERECNT)
         {
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_LOW_BATTERY_NOTIFY_ID);
+            msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
             return;
         }
 #endif

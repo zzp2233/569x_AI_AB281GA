@@ -15,8 +15,10 @@
 #include "ute_module_message.h"
 // #include "ute_module_temperature.h"
 // #include "ute_drv_temperature_common.h"
-//#include "ute_module_sport.h"
-// #include "ute_module_music.h"
+#include "include.h"
+#include "msgbox.h"
+#include "ute_module_sport.h"
+#include "ute_module_music.h"
 #include "ute_module_protocol.h"
 #include "ute_module_call.h"
 // #include "ute_module_newFactoryTest.h"
@@ -556,7 +558,7 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
 #else
         (uteApplicationCommonGetSystemPowerOnSecond()>8) &&
 #endif
-        (uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_POWEROFF_ID)&&
+        // (uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_POWEROFF_ID)&&
         (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)&&
         (!uteModuleSportMoreSportIsRuning()) /*! 运动中在运动处理函数跳转到低电界面，xjc 2022-02-18*/
     )
@@ -588,7 +590,7 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
                 uteModuleSportStopMoreSports();
             }
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_LOW_BATTERY_NOTIFY_ID);
+            msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
             uteDrvBatteryCommonData.isHasLowPowerNotify = true;
 #if SET_THE_LOW_BATTERY_POPUP_TIME
             uteApplicationCommonSetlowBatterySecond(0);

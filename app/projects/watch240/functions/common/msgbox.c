@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func_cover.h"
+#include "ute_project_config.h"
+
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -85,7 +87,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //msg
             if (msg != NULL)
             {
-                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+3);
 //                compo_textbox_set_align_center(txt_msg, true);
                 compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
@@ -265,6 +267,24 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
             compo_textbox_set(txt_title, title);
         }
+        break;
+        case MSGBOX_MSG_TYPE_LOW_BATTERY:
+            {
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_04_BIN);
+                compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
+
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,GUI_SCREEN_WIDTH/1.2,30);//调整文本位置
+                compo_textbox_set(txt_msg, i18n[STR_LOW_BATTERY]);
+                //title
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/4.5,60,30);//调整文本位置
+                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_32_BIN);
+                char level[4];
+                memset(level,0,sizeof(level));
+                sprintf(level,"%d%%",uteDrvBatteryCommonGetLvl());
+                compo_textbox_set(txt_title, level);
+            }
             break;
         default:
             break;

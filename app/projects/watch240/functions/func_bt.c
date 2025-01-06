@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_bt.h"
+#include "ute_module_music.h"
 
 #define TRACE_EN    0
 
@@ -49,8 +50,8 @@ typedef struct f_bt_t_
 //static void func_bt_music_play_btnpic_refresh(u8 sta);
 //static void func_bt_music_vol_btnpic_refresh(u8 vol);
 
-static void bt_id3_tag_update_handle(u8 type, char *str)
-{
+// static void bt_id3_tag_update_handle(u8 type, char *str)
+// {
 //    f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
 //    if (BT_ID3_TAG_TITLE == type)
 //    {
@@ -62,7 +63,7 @@ static void bt_id3_tag_update_handle(u8 type, char *str)
 //        memcpy(f_bt->artist_buf, str, ARTIST_BUF_LEN-1);
 //        msg_enqueue(EVT_ID3_ARTIST_UPDATE);
 //    }
-}
+// }
 
 /*****************************************************************************
  *          BT or BLE interface
@@ -588,7 +589,10 @@ void func_bt_enter(void)
 //    }
 //    ble_ams_sta_update_cb_reg(ble_ams_sta_update_handle);
 //#endif
-    bt_id3_tag_update_cb_reg(bt_id3_tag_update_handle);
+    // bt_id3_tag_update_cb_reg(bt_id3_tag_update_handle);
+#if BT_ID3_TAG_EN
+    bt_music_get_id3_tag();
+#endif
 
 #if !BT_BACKSTAGE_MUSIC_EN
     func_bt_init();

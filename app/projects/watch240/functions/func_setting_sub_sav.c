@@ -113,10 +113,10 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_form_set_title(frm, i18n[STR_VOL]);
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_SETTINGS_SOUND_BTN_BIN);
-    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X ,tbl_sav_disp_btn_item[0].y );
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,tbl_sav_disp_btn_item[0].y );
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_SETTINGS_SOUND_BTN_BIN);
-    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X ,tbl_sav_disp_btn_item[2].y );
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,tbl_sav_disp_btn_item[2].y );
 
 
     for( idx=0; idx<SAV_DISP_BTN_ITEM_CNT; idx++)
@@ -129,23 +129,23 @@ compo_form_t *func_set_sub_sav_form_create(void)
     for( idx=0; idx<SAV_DISP_PIC_ITEM_CNT; idx++)
     {
         picbox = compo_picturebox_create(frm, tbl_sav_disp_pic_item[idx].res_addr_bg);
-        compo_picturebox_set_pos(picbox,tbl_sav_disp_pic_item[idx].x+10 ,tbl_sav_disp_pic_item[idx].y );
+        compo_picturebox_set_pos(picbox,tbl_sav_disp_pic_item[idx].x+10,tbl_sav_disp_pic_item[idx].y );
         compo_setid(picbox,tbl_sav_disp_pic_item[idx].pic_id);
     }
 
 
     //创建文本
-    compo_textbox_t *txt_voice = compo_textbox_create(frm, 4);
+    compo_textbox_t *txt_voice = compo_textbox_create(frm, 20);
     compo_textbox_set_align_center(txt_voice, false);
     compo_textbox_set_pos(txt_voice, 22, 62);
     compo_textbox_set(txt_voice, i18n[STR_MEDIA_VOL]);
 
-    compo_textbox_t *txt_call = compo_textbox_create(frm, 4);
+    compo_textbox_t *txt_call = compo_textbox_create(frm, 20);
     compo_textbox_set_align_center(txt_call, false);
     compo_textbox_set_pos(txt_call, 22, 148);
     compo_textbox_set(txt_call, i18n[STR_CALL_VOL]);
 
-    compo_textbox_t *txt_shake = compo_textbox_create(frm, 2);
+    compo_textbox_t *txt_shake = compo_textbox_create(frm, 20);
     compo_textbox_set_align_center(txt_shake, false);
     compo_textbox_set_pos(txt_shake, 22, 232);
     compo_textbox_set(txt_shake, i18n[STR_SHK]);
@@ -184,17 +184,23 @@ static void func_set_sub_sav_disp(void)
 
         if(idx<= 4)
         {
-            if(sys_cb.vol/(4*(idx+1))){
+            if(sys_cb.vol/(4*(idx+1)))
+            {
                 compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr);
-            }else{
+            }
+            else
+            {
                 compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr_bg);
             }
         }
         else if(idx<= 9)
         {
-            if(sys_cb.hfp_vol/(4*(idx+1-5))){
+            if(sys_cb.hfp_vol/(4*(idx+1-5)))
+            {
                 compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr);
-            }else{
+            }
+            else
+            {
                 compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr_bg);
             }
         }

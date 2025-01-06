@@ -312,7 +312,8 @@ static void func_menu_sub_waterfall_entering()
 
             rect.x = muls_shift16(rect.x, x_rate);
             widget_set_location(widget, rect.x, rect.y, rect.wid, rect.hei);
-            if (iconlist->page_time != NULL) {
+            if (iconlist->page_time != NULL)
+            {
                 if (idx == iconlist->idx_time)
                 {
                     widget_page_scale_to(iconlist->page_time, rect.wid, rect.hei);
@@ -647,7 +648,7 @@ static void func_menu_sub_waterfall_enter(void)
     func_cb.enter_tick = tick_get();
     f_menu->animation_cnt = 0;
 //    func_cb.flag_animation = 0;
-    if (func_cb.flag_animation)
+    if (func_cb.flag_animation && func_cb.menu_idx <= 8)
     {
         func_cb.flag_animation = 0;
         f_menu->animation_cnt = ENTERING_ANIMATION_TOTAL_CNT;

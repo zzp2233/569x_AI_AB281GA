@@ -303,7 +303,7 @@ static void func_bt_music_refresh_disp(void)
     uteModuleMusicGetPlayerTitle(f_bt->title_buf,&title_size_leng);
     uteModuleMusicGetPlayerArtistSize(f_bt->artist_buf,&artist_size_leng);
 
-    bt_music_paly_status_info();
+//    bt_music_paly_status_info();
 
     if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
     {
@@ -482,7 +482,7 @@ static void func_bt_message_do(size_msg_t msg)
 //            if (bt_is_connected() && !sys_cb.gui_sleep_sta)
 //            {
 //#if BT_ID3_TAG_EN
-//                bt_music_paly_status_info();
+            bt_music_paly_status_info();
 //#endif
 //                if (f_bt->bt_play_sta != bt_cb.music_playing)
 //                {

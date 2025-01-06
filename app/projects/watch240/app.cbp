@@ -784,6 +784,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/gui/ctp/axs5106/axs5106.h" />
+		<Unit filename="../../platform/gui/ctp/chsc6x/YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" />
 		<Unit filename="../../platform/gui/ctp/chsc6x/chsc6x_comp.c">
 			<Option compilerVar="CC" />
 		</Unit>

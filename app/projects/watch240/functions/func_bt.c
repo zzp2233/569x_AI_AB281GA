@@ -481,9 +481,12 @@ static void func_bt_message_do(size_msg_t msg)
 //            func_bt_music_refresh_disp();
 //            if (bt_is_connected() && !sys_cb.gui_sleep_sta)
 //            {
-//#if BT_ID3_TAG_EN
-            bt_music_paly_status_info();
-//#endif
+#if BT_ID3_TAG_EN
+            if (bt_is_connected())
+            {
+                bt_music_paly_status_info();
+            }
+#endif
 //                if (f_bt->bt_play_sta != bt_cb.music_playing)
 //                {
 //                    f_bt->bt_play_sta = bt_cb.music_playing;

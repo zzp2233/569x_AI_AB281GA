@@ -1994,7 +1994,12 @@ static void func_clock_sub_card_message(size_msg_t msg)
             break;
         case MSG_SYS_500MS:
         {
-            bt_music_paly_status_info();
+#if BT_ID3_TAG_EN
+            if (bt_is_connected())
+            {
+                bt_music_paly_status_info();
+            }
+#endif
             compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
             if(uteModuleCallBtIsConnected() || ble_is_connect())
             {

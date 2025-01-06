@@ -21,13 +21,13 @@ extern char *back_string(char *num,char*txt);
 
 compo_form_t *func_breathe_finish_form_create(void)
 {
-    char txt_buf[20];
+    char txt_buf[50];
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_QRCODE]);
+    compo_form_set_title(frm, i18n[STR_BREATHE_FINISH]);
 
    //设置图片
     compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_00_BIN);

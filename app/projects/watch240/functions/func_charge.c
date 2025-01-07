@@ -355,10 +355,6 @@ static void func_charge_enter(void)
     f_charge_t *f_charge = (f_charge_t *)func_cb.f_cb;
     f_charge->percent_bkp = BAT_PERCENT_VALUE;
     func_cb.enter_tick = tick_get();
-
-//    uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
-//    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-//    uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
 }
 
 //退出充电功能

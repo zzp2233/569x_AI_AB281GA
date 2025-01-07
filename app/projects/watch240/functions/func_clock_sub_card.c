@@ -289,7 +289,7 @@ static const ui_handle_t ui_handle =
             .center = false,
             .bonddata = COMPO_BOND_DATE,
             .color = {255,255,255},
-            .res = UI_BUF_0FONT_FONT_NUM_38_BIN,
+            .res = UI_BUF_0FONT_FONT_NUM_32_BIN,
         },
 
         .week = {
@@ -460,7 +460,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_SLEEP,
@@ -534,7 +534,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_MUSIC,
@@ -598,7 +598,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_TIMER,
@@ -639,7 +639,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_STOP_WATCH,
@@ -680,7 +680,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_COMMON_APP,
@@ -747,7 +747,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_LATEST_APP,
@@ -1994,6 +1994,12 @@ static void func_clock_sub_card_message(size_msg_t msg)
             break;
         case MSG_SYS_500MS:
         {
+#if BT_ID3_TAG_EN
+            if (bt_is_connected())
+            {
+                bt_music_paly_status_info();
+            }
+#endif
             compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
             if(uteModuleCallBtIsConnected() || ble_is_connect())
             {

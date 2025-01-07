@@ -26,9 +26,9 @@ enum
 #define BREATHE_ICON_SIZE_MAX   170
 #define BREATHE_PREPARE_TIME    1800  //入场动画持续时间
 #define BREATHE_FINISH_TIME     500  //出场动画持续时间
-#define BREATHE_RHYTHM0         3000  //呼/吸气时间（慢）
-#define BREATHE_RHYTHM1         2000  //中
-#define BREATHE_RHYTHM2         1500  //快
+#define BREATHE_RHYTHM0         525*8  //呼/吸气时间（慢）
+#define BREATHE_RHYTHM1         525*7  //中
+#define BREATHE_RHYTHM2         525*6  //快
 
 //呼吸检测状态
 enum

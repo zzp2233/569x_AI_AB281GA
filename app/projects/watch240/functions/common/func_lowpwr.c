@@ -431,6 +431,7 @@ static void sfunc_sleep(void)
 
         if(sys_cb.hand_screen_on)
         {
+            sys_cb.hand_screen_on = false;
             printf("ute hand wakeup\n");
             gui_need_wkp = true;
             break;
@@ -561,6 +562,14 @@ bool sleep_process(is_sleep_func is_sleep)
         gui_wakeup();                   //按键亮屏
         reset_sleep_delay_all();
         sys_cb.gui_need_wakeup = 0;
+        return false;
+    }
+
+    if(sys_cb.hand_screen_on && sys_cb.gui_sleep_sta)
+    {
+        gui_wakeup();                   //按键亮屏
+        reset_sleep_delay_all();
+        sys_cb.hand_screen_on = 0;
         return false;
     }
 

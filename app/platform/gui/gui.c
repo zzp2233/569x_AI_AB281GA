@@ -72,6 +72,7 @@ void gui_sleep(void)
         ctp_exit();
         power_gate_3v3_off();
         sys_cb.gui_sleep_sta = 1;
+        tft_cb.tft_bglight_first_set = false;
         uteModuleGuiCommonDisplayOff(true);
         //printf("gui_sleep\n");
     }

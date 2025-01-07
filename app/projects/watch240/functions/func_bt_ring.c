@@ -12,7 +12,7 @@ enum
 
 typedef struct f_bt_call_t_
 {
-
+    char pbap_result_Name[50];//存放来电与接听联系人名字
 } f_bt_ring_t;
 
 void func_bt_ring_number_update(void)
@@ -38,14 +38,14 @@ compo_form_t *func_bt_ring_form_create(void)
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autosize(name_txt, true);
+//    compo_textbox_set_autosize(name_txt, true);
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
 //    compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH, 50);
-    compo_textbox_set_autosize(number_txt, true);
+//    compo_textbox_set_autosize(number_txt, true);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
@@ -68,8 +68,18 @@ compo_form_t *func_bt_ring_form_create(void)
 }
 void func_bt_ring_up_date_process(void)
 {
-    compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
-    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+//    compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
+//    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+
+    f_bt_ring_t *f_bt_ring = (f_bt_ring_t*)func_cb.f_cb;
+
+    if(strcmp(f_bt_ring->pbap_result_Name, sys_cb.pbap_result_Name)!=0)
+    {
+        memcpy(f_bt_ring->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+        compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
+        compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    }
+
 }
 void func_bt_ring_process(void)
 {

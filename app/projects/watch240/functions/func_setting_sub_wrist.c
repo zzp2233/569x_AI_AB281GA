@@ -22,7 +22,8 @@ enum
     COMPO_CARD_END,
 };
 
-static const u32 tbl_wrist_switch_res[] = {
+static const u32 tbl_wrist_switch_res[] =
+{
     UI_BUF_I330001_PUBLIC_SWITCH02_BIN,         //ON
     UI_BUF_I330001_PUBLIC_SWITCH00_BIN,         //OFF
 };
@@ -62,9 +63,12 @@ compo_form_t *func_set_sub_wrist_form_create(void)
                                     232/2 - 5 - gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
                                     0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
 
-    if(uteModuleSportGetIsOpenHandScreenOn()) {
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
         compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
-    } else {
+    }
+    else
+    {
         compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
     }
 
@@ -82,6 +86,18 @@ compo_form_t *func_set_sub_wrist_form_create(void)
 //抬腕亮屏事件处理
 static void func_set_sub_wrist_process(void)
 {
+
+    compo_cardbox_t * card = compo_getobj_byid(COMPO_CARD_1);
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
+    }
+    else
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
+    }
+
+
     for(u8 i=0; i<COMPO_CARD_END-COMPO_CARD_START-1; i++)      //文本滚动
     {
         u16 id = COMPO_CARD_START + 1 + i;
@@ -98,7 +114,8 @@ static u16 func_wrist_card_get_id(point_t pt)
     u16 ret = 0;
     rect_t rect;
     compo_cardbox_t* cardbox = NULL;
-    for(i = 0; i<COMPO_CARD_END-COMPO_CARD_START-1; i++) {
+    for(i = 0; i<COMPO_CARD_END-COMPO_CARD_START-1; i++)
+    {
         id = COMPO_CARD_START + 1 + i;
         cardbox = compo_getobj_byid(id);
         rect = compo_cardbox_get_absolute(cardbox);
@@ -120,7 +137,8 @@ static void func_wrist_button_click(void)
 
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_wrist_card_get_id(pt);
-    if (compo_id <= 0 || compo_id > COMPO_CARD_END - 1) {
+    if (compo_id <= 0 || compo_id > COMPO_CARD_END - 1)
+    {
         return;
     }
 //    printf("click compo_id:%d\n", compo_id);
@@ -141,11 +159,14 @@ static void func_wrist_button_click(void)
 //                    wrs->value = true;
 //                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);
 //                }
-                switch_set_sub_wrist();
+            switch_set_sub_wrist();
 //            }
-            if(uteModuleSportGetIsOpenHandScreenOn()) {
+            if(uteModuleSportGetIsOpenHandScreenOn())
+            {
                 compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);
-            } else {
+            }
+            else
+            {
                 compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[1]);
             }
         }

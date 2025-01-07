@@ -8,6 +8,9 @@
 #define TRACE(...)
 #endif
 
+#define ROTARY_ITEM_CNT                     ((rotary->item_cnt >= ROTARY_ITEM_CNT_MAX) ? ROTARY_ITEM_CNT_MAX : rotary->item_cnt)                  //转盘个数, 根据传入要显示的个数和最大可以显示的个数去自动适配
+#define ROTARY_ITEM_ANGLE                   ((3600 + ROTARY_ITEM_CNT - 1) / ROTARY_ITEM_CNT)
+
 #define ROTARY_SIGHT_DISTANCE           1280                            //视距
 #define ROTARY_OVERLOOK                 150                             //默认视角15度
 #define ROTARY_RADIUS                   112                             //转盘半径

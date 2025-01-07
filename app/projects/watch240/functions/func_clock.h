@@ -11,7 +11,8 @@
 #define DP_RES_HEADER      sizeof(dp_res_t)
 #define UI_BUF_WATCH_DIY   0xffffffff
 
-enum {
+enum
+{
     FUNC_CLOCK_MAIN,
     FUNC_CLOCK_SUB_DROPDOWN,
     FUNC_CLOCK_SUB_PULLUP,
@@ -19,7 +20,8 @@ enum {
     FUNC_CLOCK_SUB_ROTARY,
 };
 
-typedef struct f_clock_t_ {
+typedef struct f_clock_t_
+{
     u8 sta;
     u8 switch_to;
     u8 animation_id;
@@ -30,6 +32,7 @@ typedef struct f_clock_t_ {
     int  cube_ra ;
     bool cube_touch;
     uint32_t tick;
+    u16 cube_touch_time;
 } f_clock_t;
 
 //主窗体

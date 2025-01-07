@@ -504,7 +504,7 @@ static const ui_handle_t ui_handle =
             .idx    = 4,
             .x      = 140-232/2,
             .y      = 53-108/2,
-            .w      = 30,
+            .w      = 30+30,
             .h      = 28,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_MIN,
@@ -1095,7 +1095,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.x, ui_handle.card2.text_sleep.y, ui_handle.card2.text_sleep.w, ui_handle.card2.text_sleep.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_sleep.idx, i18n[ui_handle.card2.text_sleep.str_id]);
 
-//    sleep_data->totalSleepMin =  200;
+//    sleep_data->totalSleepMin =  9;
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
@@ -1120,7 +1120,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_min.idx], make_color(ui_handle.card2.text_min.color.r, ui_handle.card2.text_min.color.g, ui_handle.card2.text_min.color.b));
-    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w*3, ui_handle.card2.text_min.h);
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w, ui_handle.card2.text_min.h);
     if(sleep_data->totalSleepMin)  ///是否有睡眠时长
     {
         snprintf(txt_buf, sizeof(txt_buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
@@ -1758,8 +1758,17 @@ static void func_clock_sub_card_data_update(void)
     cardbox = compo_getobj_byid(ui_handle.card4.id);
     compo_cardbox_text_set(cardbox, ui_handle.card4.text_time.idx,txt_buf);
 
+    u8 min = ((sys_cb.stopwatch_total_msec / 1000) / 60) % 100;
+    u8 sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
+    u16 msec = sys_cb.stopwatch_total_msec % 1000;
+    if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
+    {
+        min  = 99;
+        sec  = 59;
+        msec = 999;
+    }
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld.%02ld",SEC_TO_MIN(sys_cb.stopwatch_total_msec/1000),SEC_TO_SEC(sys_cb.stopwatch_total_msec/1000),sys_cb.stopwatch_total_msec%1000/10);
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld.%02ld",min,sec,msec/10);
     cardbox = compo_getobj_byid(ui_handle.card5.id);
     compo_cardbox_text_set(cardbox, ui_handle.card5.text_time.idx,txt_buf);
 }

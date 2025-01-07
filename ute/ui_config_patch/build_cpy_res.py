@@ -58,6 +58,28 @@ def get_ute_project(filename):
         #print("ute_name is default")
     return ute_name
 
+def get_ute_custom_patch(filename):
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            content = file.read()
+    except Exception as e:
+        print(f"Error: An error occurred while reading the file {filename}: {e}")
+        return ""
+    
+    pattern = r'#define\s+UTE_UI_CONFIG_PATCH\s+"([^"]+)"'
+    try:
+        match = re.search(pattern, content)
+    except re.error as e:
+        print(f"Error: A regex error occurred: {e}")
+        return ""
+    
+    if match:
+        print("UTE_UI_CONFIG_PATCH macro found:", match.group(1))
+        return match.group(1)
+    else:
+        print("UTE_UI_CONFIG_PATCH macro not found.")
+        return ""
+
 def panic(err_msg):
     print('Error: %s\n' %err_msg)
     sys.exit(1)
@@ -73,9 +95,13 @@ def main(argv):
         print('config_file:',config_file)
     project_name = get_ute_project(config_file)
     print('project_name:',project_name)
-    project_dir = current_dir[0:index]+"ute\\ui_config_patch\\"+project_name
-    if not os.path.exists(project_dir):
-        project_dir = current_dir[0:index]+"ute\\ui_config_patch\\default"
+    custom_patch = get_ute_custom_patch(current_dir[0:index] + 'ute\\project_config\\' + 'ute_project_config_' + project_name.lower() + '.h')
+    if custom_patch != '':
+        project_dir = current_dir[0:index] + "ute\\ui_config_patch\\" + custom_patch
+    else:
+        project_dir = current_dir[0:index]+"ute\\ui_config_patch\\"+project_name
+        if not os.path.exists(project_dir):
+            project_dir = current_dir[0:index]+"ute\\ui_config_patch\\default"
 
     print('project_dir:',project_dir)
     

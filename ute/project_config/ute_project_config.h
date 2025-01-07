@@ -9,10 +9,13 @@
 #ifndef _UTE_PROJECT_CONFIG_H_
 #define _UTE_PROJECT_CONFIG_H_
 
-#define PROJECT_AB281_SUPPORT       1
+#define PROJECT_AB281_SUPPORT        1
+#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
+#elif PROJECT_AB281A_SUPPORT
+#include"ute_project_config_ab281a.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0

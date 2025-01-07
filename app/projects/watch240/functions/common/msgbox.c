@@ -216,6 +216,32 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 sprintf(level,"%d%%",uteDrvBatteryCommonGetLvl());
                 compo_textbox_set(txt_title, level);
             }
+            else if(sys_cb.cover_index == REMIND_COVER_STOPWATCH_FINISH)//计时器结束
+            {
+#define SEC_TO_HOUR(s)  (s / 3600)          //总秒数转换为时分秒（时）
+#define SEC_TO_MIN(s)   ((s % 3600) / 60)   //总秒数转换为时分秒（分）
+#define SEC_TO_SEC(s)   (s % 60)            //总秒数转换为时分秒（秒）
+                u8 hour, min, sec;
+                compo_button_t *btn;
+                compo_textbox_t *txt;
+                char str_buff[24];
+                btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE01_BIN);  //close
+                compo_setid(btn, COMPO_ID_BTN_DELETE);
+                compo_button_set_pos(btn, 63, GUI_SCREEN_CENTER_X);
+                //新建数字
+                hour = SEC_TO_HOUR(sys_cb.timer_left_sec);
+                min = SEC_TO_MIN(sys_cb.timer_left_sec);
+                sec = SEC_TO_SEC(sys_cb.timer_left_sec);
+                txt = compo_textbox_create(frm, 12);
+                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 128);
+                compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+                snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
+                compo_textbox_set(txt, str_buff);
+
+                txt = compo_textbox_create(frm, strlen(i18n[STR_TIMER_FINIFH]));
+                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X/1.5);
+                compo_textbox_set(txt, i18n[STR_TIMER_FINIFH]);
+            }
             else if (sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
             {
 

@@ -514,6 +514,7 @@ void gui_set_cover_index(uint8_t index)
                 {
                     ble_ams_remote_ctrl(AMS_REMOTE_CMD_PAUSE);
                 }
+                bt_audio_bypass();      //闹钟有铃声，断开蓝牙音频
                 start_music();
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 //开启马达 喇叭
@@ -570,7 +571,7 @@ void gui_set_cover_index(uint8_t index)
                 }
                 //关闭 喇叭 马达
                 uteDrvMotorStop();
-                bt_audio_bypass();
+                bt_audio_enable();
                 mp3_res_play_exit();
                 co_timer_del(&alarm_clock_timer);
             }
@@ -582,7 +583,7 @@ void gui_set_cover_index(uint8_t index)
                 printf("COVER_ALARM MSGBOX_RES_EXIT\n");
                 //关闭 喇叭 马达
                 uteDrvMotorStop();
-                bt_audio_bypass();
+                bt_audio_enable();
                 mp3_res_play_exit();
                 co_timer_del(&alarm_clock_timer);
             }
@@ -594,7 +595,7 @@ void gui_set_cover_index(uint8_t index)
                 printf("COVER_ALARM MSGBOX_RES_TIMEOUT_EXIT\n");
                 //关闭 喇叭 马达
                 uteDrvMotorStop();
-                bt_audio_bypass();
+                bt_audio_enable();
                 mp3_res_play_exit();
                 co_timer_del(&alarm_clock_timer);
             }
@@ -607,7 +608,7 @@ void gui_set_cover_index(uint8_t index)
                 uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 //关闭 喇叭 马达
                 uteDrvMotorStop();
-                bt_audio_bypass();
+                bt_audio_enable();
                 mp3_res_play_exit();
                 co_timer_del(&alarm_clock_timer);
             }

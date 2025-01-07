@@ -147,6 +147,7 @@ static void func_stopwatch_button_click(void)
             break;
 
         case COMPO_ID_BTN_RECORD:
+            if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)return;
             //插入记录到头部
             if (sys_cb.stopwatch_sta)
             {
@@ -220,7 +221,7 @@ static void func_stopwatch_button_click(void)
 //秒表功能事件处理
 static void func_stopwatch_process(void)
 {
-    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     if (sys_cb.stopwatch_sta)
     {
         reset_sleep_delay_all();        //计时的时候不许休眠
@@ -260,14 +261,14 @@ static void func_stopwatch_process(void)
             compo_textbox_set(num_time, str_buff);
         }
     }
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 
 //秒表功能消息处理
 static void func_stopwatch_message(size_msg_t msg)
 {
-    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -296,7 +297,7 @@ static void func_stopwatch_message(size_msg_t msg)
             func_message(msg);
             break;
     }
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //进入秒表功能

@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_drv_battery_common.h"
 #include "ute_drv_motor.h"
+#include "ute_module_systemtime.h"
 
 #define TRACE_EN    1
 
@@ -363,6 +364,26 @@ static void func_charge_exit(void)
     printf("%s\n", __func__);
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
     func_cb.last = FUNC_CHARGE;
+
+    if(sys_cb.power_on_flag == true) return;
+
+    sys_cb.power_on_state=true;
+    if(!uteApplicationCommonIsHasConnectOurApp())
+    {
+        sys_cb.power_on_state=false;
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+
+        if(time.isWatchSetLangage == false)
+        {
+            func_cb.sta = FUNC_POWER_ON_LANGUAGE;
+        }
+        else
+        {
+            func_cb.sta = FUNC_POWER_ON_SCAN;
+        }
+    }
+    sys_cb.power_on_flag = true;
 }
 
 //充电功能

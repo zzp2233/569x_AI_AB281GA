@@ -117,34 +117,35 @@ compo_form_t *func_weather_form_create(void)
     memset(get_weather_id,0,sizeof(get_weather_id));
 
     uteModuleSystemtimeGetTime(&time);//获取系统时间
+//    printf("week:%d\n",time.week);
     week_day = time.week; //获取星期
     for(int i=0; i<=6; i++) //星期排序
     {
-        switch(week_day)
-        {
-            case 0 :
-                week_sort[i] = 6;
-                break;
-            case 1 :
-                week_sort[i] = 0;
-                break;
-            case 2 :
-                week_sort[i] = 1;
-                break;
-            case 3 :
-                week_sort[i] = 2;
-                break;
-            case 4 :
-                week_sort[i] = 3;
-                break;
-            case 5 :
-                week_sort[i] = 4;
-                break;
-            case 6 :
-                week_sort[i] = 5;
-                break;
-        }
-
+//        switch(week_day)
+//        {
+//            case 0 :
+//                week_sort[i] = 6;
+//                break;
+//            case 1 :
+//                week_sort[i] = 0;
+//                break;
+//            case 2 :
+//                week_sort[i] = 1;
+//                break;
+//            case 3 :
+//                week_sort[i] = 2;
+//                break;
+//            case 4 :
+//                week_sort[i] = 3;
+//                break;
+//            case 5 :
+//                week_sort[i] = 4;
+//                break;
+//            case 6 :
+//                week_sort[i] = 5;
+//                break;
+//        }
+        week_sort[i] = week_day;
         if(++week_day==7)
         {
             week_day = 0;
@@ -155,6 +156,7 @@ compo_form_t *func_weather_form_create(void)
     {
         uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
         uteModuleWeatherGetData(&weather_date);//获取天气状态
+//        printf("year:%d mon:%d day:%d hour:%d min:%d sec:%d\n",weather_date.updateTime.year,weather_date.updateTime.month,weather_date.updateTime.day,weather_date.updateTime.hour,weather_date.updateTime.min,weather_date.updateTime.sec);
 
         for(int i=0; i<7; i++) //获取一周的天气
         {
@@ -164,12 +166,13 @@ compo_form_t *func_weather_form_create(void)
                 break;
             }
         }
-
+//        int pic_num=3;
         for(int i=0; i<7; i++) //获取一周的天气
         {
+//            printf("weather:%d\n",weather_date.DayWeather[i]>>8);
             if(uteModuleSystemtimeIsNight()) //是否为夜间
             {
-                switch(get_weather_id[0])
+                switch(get_weather_id[i])
                 {
                     case WEATHER_TYPE_SUNNY:
                         get_weather_id[i] = 13;
@@ -339,7 +342,7 @@ compo_form_t *func_weather_form_create(void)
             compo_textbox_set(txt,i18n[STR_TO_DAY]);/// 星期
         }
 
-
+//        printf("weather_id=%d\n",get_weather_id[i]);
         picbox = compo_picturebox_create(frm,weather_list[get_weather_id[i]].res_addr);/// 天气
         compo_picturebox_set_size(picbox,gui_image_get_size( weather_list[get_weather_id[i]].res_addr).wid/3,\
                                   gui_image_get_size( weather_list[get_weather_id[i]].res_addr).hei/3);

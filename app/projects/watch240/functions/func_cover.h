@@ -18,6 +18,7 @@ enum
     REMIND_GCOVER_APP_CONNECT,
 
     REMIND_COVER_LOW_BATTERY,    //低电提醒
+    REMIND_COVER_STOPWATCH_FINISH,    //秒表计时结束
 };
 
 /////消息弹窗界面

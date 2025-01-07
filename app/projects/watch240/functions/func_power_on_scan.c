@@ -43,7 +43,7 @@ compo_form_t *func_power_on_scan_form_create(void)
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_MORE_BIN);
-    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X , GUI_SCREEN_HEIGHT/1.15);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/1.15);
 
     return frm;
 }
@@ -63,17 +63,17 @@ static void func_power_on_scan_message(size_msg_t msg)
         switch (msg)
         {
             case MSG_CTP_SHORT_RIGHT:
-                    func_switch_to(FUNC_POWER_ON_LANGUAGE, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
-            break;
-            case MSG_CTP_SHORT_LEFT:
-                    func_switch_to(FUNC_SET_SUB_ABOUT, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
-            break;
+                func_switch_to(FUNC_POWER_ON_LANGUAGE, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+                break;
+            case MSG_CTP_SHORT_UP:
+                func_switch_to(FUNC_SET_SUB_ABOUT, FUNC_SWITCH_UD_ZOOM_UP | FUNC_SWITCH_AUTO);
+                break;
             case MSG_CTP_LONG:
-                    task_stack_init();  //任务堆栈
-                    latest_task_init(); //最近任务
-                    func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
-                    sys_cb.power_on_state=true;
-            break;
+                task_stack_init();  //任务堆栈
+                latest_task_init(); //最近任务
+                func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+                sys_cb.power_on_state=true;
+                break;
             case KL_BACK:
                 func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
                 break;

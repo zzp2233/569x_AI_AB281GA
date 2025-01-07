@@ -51,12 +51,12 @@ compo_form_t *func_up_watch_dial_form_create(void)
     compo_progressbar_set_color(bar, make_color(35,141,255), make_color(51,51,51));
 
     //TXT1 升级中
-    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_textbox_t* txt = compo_textbox_create(frm, 40);
     compo_setid(txt, UPDATING_TXT_ID);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 186+26/2, 196, 30);
-    compo_textbox_set(txt, i18n[STR_UP_WATCHING]);
+    compo_textbox_set(txt, i18n[STR_INS]);
 
-    txt = compo_textbox_create(frm, 20);
+    txt = compo_textbox_create(frm,  40);
     compo_setid(txt, UPDATING_TXT_TIP_ID);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 224+10/2, 196, 30);
     compo_textbox_set(txt, i18n[STR_APP_AGIAN]);
@@ -98,7 +98,7 @@ static void func_up_watch_dial_disp(void)
                 progress=1000;
                 f_up_watch_dial->state  = UPGRADE_SUCCESSFUL;
 //                compo_textbox_set_visible(txt_tip, true);
-                compo_textbox_set(txt_state, i18n[STR_UPDATED]);
+                compo_textbox_set(txt_state, i18n[STR_SYNC_SUC]);
                 compo_picturebox_set(picbox, UI_BUF_I330001_OTA_00_BIN);
                 compo_progressbar_set_color(bar, make_color(0,0,0), make_color(0,0,0));
                 f_up_watch_dial->switch_page_time = tick_get();
@@ -109,7 +109,7 @@ static void func_up_watch_dial_disp(void)
         {
             f_up_watch_dial->state  = UPGRADE_FAILED;
             compo_textbox_set_visible(txt_tip, true);
-            compo_textbox_set(txt_state, i18n[STR_UPDATE_FAILED]);
+            compo_textbox_set(txt_state, i18n[STR_SYNC_FAIL]);
             compo_picturebox_set(picbox, UI_BUF_I330001_OTA_02_BIN);
             compo_progressbar_set_color(bar, make_color(0,0,0), make_color(0,0,0));
             f_up_watch_dial->switch_page_time = tick_get();

@@ -630,11 +630,6 @@ void func_process(void)
         printf(">>>TIMER DONE\n");
     }
 
-    if(sys_cb.hand_screen_on) //抬手亮屏
-    {
-        sys_cb.hand_screen_on = false;
-    }
-
 #if VBAT_DETECT_EN
     bsp_vbat_lpwr_process();
 #endif
@@ -1333,8 +1328,10 @@ void func_message(size_msg_t msg)
             uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
+            sys_cb.cover_index = REMIND_COVER_STOPWATCH_FINISH;
+            sys_cb.remind_tag = true;
 //            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
-            func_cb.sta = FUNC_TIMER;
+//            func_cb.sta = FUNC_TIMER;
 //            func_switch_to(FUNC_STOPWATCH, FUNC_SWITCH_FADE | FUNC_SWITCH_AUTO);
 //            msgbox("计时已经结束",NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_RES_NONE);
             break;

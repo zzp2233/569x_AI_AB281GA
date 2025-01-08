@@ -13,6 +13,7 @@ enum
 typedef struct f_bt_call_t_
 {
     char pbap_result_Name[50];//存放来电与接听联系人名字
+    char tmp_pbap_result_Name[50];//存放来电与接听联系人名字
 } f_bt_ring_t;
 
 void func_bt_ring_number_update(void)
@@ -66,6 +67,65 @@ compo_form_t *func_bt_ring_form_create(void)
 
     return frm;
 }
+
+
+// 判断从指定位置开始的字节序列是否是一个完整的UTF - 8字符
+static int is_complete_utf8_char(const char *str, int pos)
+{
+    unsigned char byte = str[pos];
+    if ((byte & 0x80) == 0)
+    {
+        // 单字节字符，肯定是完整的
+        return 1;
+    }
+    int num_bytes = 0;
+    if ((byte & 0xE0) == 0xC0)
+    {
+        num_bytes = 2;
+    }
+    else if ((byte & 0xF0) == 0xE0)
+    {
+        num_bytes = 3;
+    }
+    else if ((byte & 0xF8) == 0xF0)
+    {
+        num_bytes = 4;
+    }
+    for (int i = 1; i < num_bytes; i++)
+    {
+        if ((str[pos + i] & 0xC0)!= 0x80)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// 截取有用数据并在尾部补上三个...
+static void truncate_and_append(const char *src, char *dst, int dst_size)
+{
+    int i = 0;
+    int j = 0;
+    while (i < strlen(src) && j < dst_size - 1)
+    {
+        if (is_complete_utf8_char(src, i))
+        {
+            dst[j++] = src[i++];
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (j < dst_size - 3)
+    {
+        dst[j++] = '.';
+        dst[j++] = '.';
+        dst[j++] = '.';
+    }
+    dst[j] = '\0';
+}
+
 void func_bt_ring_up_date_process(void)
 {
 //    compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
@@ -76,8 +136,12 @@ void func_bt_ring_up_date_process(void)
     if(strcmp(f_bt_ring->pbap_result_Name, sys_cb.pbap_result_Name)!=0)
     {
         memcpy(f_bt_ring->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+
+        memset(f_bt_ring->tmp_pbap_result_Name, '\0', sizeof(f_bt_ring->tmp_pbap_result_Name));
+        truncate_and_append(sys_cb.pbap_result_Name, f_bt_ring->tmp_pbap_result_Name, sizeof(f_bt_ring->tmp_pbap_result_Name));
+
         compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
-        compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+        compo_textbox_set(name_txt, f_bt_ring->tmp_pbap_result_Name);
     }
 
 }

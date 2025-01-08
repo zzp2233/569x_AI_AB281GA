@@ -885,6 +885,11 @@ static void card1_updata_disp(void)
     compo_picturebox_t *arc_step = compo_getobj_byid(COMPO_ID_ARC_STEP);
     compo_cardbox_t *cardbox = compo_getobj_byid(ui_handle.card1.id);
 
+    compo_picturebox_set_visible(arc_kcal, true);
+    compo_picturebox_set_visible(arc_km, true);
+    compo_picturebox_set_visible(arc_step, true);
+
+
     if(f_activity->activity_state == 0)
     {
         f_activity->arc_step_value+=18;
@@ -1188,14 +1193,17 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_RED_BIN);//圆弧红/
     compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_picturebox_set_visible(arc_pic, false);
     compo_setid(arc_pic,COMPO_ID_ARC_KCAL);
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_YELLOW_BIN);//圆弧黄/
     compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_picturebox_set_visible(arc_pic, false);
     compo_setid(arc_pic,COMPO_ID_ARC_KM);
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_BLUE_BIN);//圆弧绿/
     compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_picturebox_set_visible(arc_pic, false);
     compo_setid(arc_pic,COMPO_ID_ARC_STEP);
 
 

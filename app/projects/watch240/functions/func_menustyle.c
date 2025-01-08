@@ -10,15 +10,18 @@
 
 #define TBL_ROTARY_ITEM_CNT                     ((int)(sizeof(tbl_rotary_item) / sizeof(tbl_rotary_item[0])))
 
-enum {
+enum
+{
     COMPO_ID_ROTARY = 1,
 };
 
-typedef struct f_menustyle_t_ {
+typedef struct f_menustyle_t_
+{
     compo_rotary_t *rotary;
 } f_menustyle_t;
 
-static const compo_rotary_item_t tbl_rotary_item[] = {
+static const compo_rotary_item_t tbl_rotary_item[] =
+{
     [MENU_STYLE_LIST]               = {UI_BUF_I330001_THEME_PREVIEW_00_BIN,           STR_STYLE_LIST_1},
     [MENU_STYLE_GRID]               = {UI_BUF_I330001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
     [MENU_STYLE_KALE]               = {UI_BUF_I330001_THEME_PREVIEW_02_BIN,           STR_HALO},
@@ -61,7 +64,8 @@ static void func_menustyle_process(void)
     compo_rotary_t *rotary = f_menustyle->rotary;
     compo_rotary_move(rotary);
     func_process();
-    if (compo_rotary_get_sta(rotary) == COMPO_ROTARY_STA_EXIT) {
+    if (compo_rotary_get_sta(rotary) == COMPO_ROTARY_STA_EXIT)
+    {
         func_cb.sta = FUNC_MENU;
     }
 }
@@ -72,32 +76,36 @@ static void func_menustyle_message(size_msg_t msg)
     f_menustyle_t *f_menustyle = (f_menustyle_t *)func_cb.f_cb;
     compo_rotary_t *rotary = f_menustyle->rotary;
 
-    switch (msg) {
-    case KU_BACK:
-        func_cb.menu_style = compo_rotary_get_idx(rotary);
-        uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
-        break;
+    switch (msg)
+    {
+        case KU_BACK:
+            func_cb.menu_style = compo_rotary_get_idx(rotary);
+            uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
-    if (compo_rotary_message(rotary, msg)) {
+    if (compo_rotary_message(rotary, msg))
+    {
         return;                                         //处理列表框信息
     }
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        //单击屏幕
-        func_cb.menu_style = compo_rotary_get_idx(rotary);
-        compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
-        uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            //单击屏幕
+            func_cb.menu_style = compo_rotary_get_idx(rotary);
+            compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
+            uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
+static bool menustyle_refresh = true;
 //进入主菜单样式列表
 static void func_menustyle_enter(void)
 {
@@ -108,17 +116,22 @@ static void func_menustyle_enter(void)
     f_menustyle_t *f_menustyle = (f_menustyle_t *)func_cb.f_cb;
     f_menustyle->rotary = compo_getobj_byid(COMPO_ID_ROTARY);
     compo_rotary_t *rotary = f_menustyle->rotary;
-    if (rotary->type != COMPO_TYPE_ROTARY) {
+    if (rotary->type != COMPO_TYPE_ROTARY)
+    {
         halt(HALT_GUI_COMPO_ROTARY_TYPE);
     }
     compo_rotary_set_rotation_byidx(rotary, func_cb.menu_style);
     compo_rotary_update(rotary);
-    compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_ENTERING);      //入场
+    if(menustyle_refresh == true)
+    {
+        compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_ENTERING);      //入场
+    }
 }
 
 //退出主菜单样式列表
 static void func_menustyle_exit(void)
 {
+    menustyle_refresh = !sys_cb.refresh_language_flag;
     tft_set_temode(DEFAULT_TE_MODE);
 }
 
@@ -127,7 +140,8 @@ void func_menustyle(void)
 {
     printf("%s\n", __func__);
     func_menustyle_enter();
-    while (func_cb.sta == FUNC_MENUSTYLE) {
+    while (func_cb.sta == FUNC_MENUSTYLE)
+    {
         func_menustyle_process();
         func_menustyle_message(msg_dequeue());
     }

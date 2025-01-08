@@ -227,7 +227,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 char str_buff[24];
                 btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE01_BIN);  //close
                 compo_setid(btn, COMPO_ID_BTN_DELETE);
-                compo_button_set_pos(btn, 63, GUI_SCREEN_CENTER_X);
+                compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,246 );
                 //新建数字
                 hour = SEC_TO_HOUR(sys_cb.timer_left_sec);
                 min = SEC_TO_MIN(sys_cb.timer_left_sec);

@@ -582,7 +582,7 @@ static void func_clock_process(void)
             f_clock->cube_rp = sqrt64(ax * ax + ay * ay);
             f_clock->cube_ra = ARCTAN2(-ay, ax);
 
-            printf("rp:%d ra:%d\n",f_clock->cube_rp, f_clock->cube_ra);
+//            printf("rp:%d ra:%d\n",f_clock->cube_rp, f_clock->cube_ra);
             compo_cube_move(cube);
         }
         else

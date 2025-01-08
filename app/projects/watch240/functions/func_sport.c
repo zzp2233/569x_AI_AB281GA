@@ -2,6 +2,8 @@
 #include "func.h"
 #include "ute_all_sports_int_algorithms.h"
 #include "ute_module_sport.h"
+#include "ute_drv_battery_common.h"
+#include "func_cover.h"
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -216,7 +218,13 @@ static void func_sport_list_icon_click(void)
     {
         return;
     }
-
+    uint8_t batLvl = uteDrvBatteryCommonGetLvl();
+    if(batLvl < UTE_DRV_BATTERY_LOW_POWER_PERECNT)
+    {
+        sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
+        sys_cb.remind_tag = true;
+        return;
+    }
     //根据图标索引获取应用ID
     func_sta = tbl_sport_list[icon_idx].func_sta;
 

@@ -35,6 +35,7 @@ typedef struct f_bt_t_
     char artist_buf[ARTIST_BUF_LEN];
     char title_buf_old[TITLE_BUF_LEN];
     char artist_buf_old[ARTIST_BUF_LEN];
+    bool refresh_data;
 } f_bt_t;
 
 /*****************************************************************************
@@ -295,7 +296,43 @@ compo_form_t *func_bt_form_create(void)
 static void func_bt_music_refresh_disp(void)
 {
     f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
+    compo_button_t *btn_prev = compo_getobj_byid(COMPO_ID_BTN_PREV);
+    compo_button_t *btn_next = compo_getobj_byid(COMPO_ID_BTN_NEXT);
+    compo_button_t *btn_play = compo_getobj_byid(COMPO_ID_BTN_PLAY);
+    compo_button_t *btn_up   = compo_getobj_byid(COMPO_ID_BTN_VOL_UP);
+    compo_button_t *btn_down = compo_getobj_byid(COMPO_ID_BTN_VOL_DOWN);
+    compo_textbox_t *tilte_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_LYRIC);
+    compo_textbox_t *tilte_art_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_NAME);
+    compo_shape_t *shape = compo_getobj_byid(COMPO_ID_SHAPE_MUSIC_VOL);
+
+    if(!bt_is_connected() && !ble_is_connect())
+    {
+        compo_textbox_set_visible(tilte_art_txt, false);
+
+        compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_autoroll_mode(tilte_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
+        compo_textbox_set(tilte_txt, i18n[STR_VOICE_BT_NOT_CONNECT]);
+        compo_setid(tilte_txt, COMPO_ID_TXT_MUSIC_LYRIC);
+        compo_shape_set_visible(shape,false);
+        compo_button_set_bgimg(btn_play, UI_BUF_I330001_MUSIC_PLAY02_BIN);
+        compo_button_set_bgimg(btn_next, UI_BUF_I330001_MUSIC_NEXTSONG01_BIN);
+        compo_button_set_bgimg(btn_prev, UI_BUF_I330001_MUSIC_PREVIOUSSONG01_BIN);
+        compo_button_set_bgimg(btn_up,   UI_BUF_I330001_MUSIC_VOLUME03_BIN);
+        compo_button_set_bgimg(btn_down, UI_BUF_I330001_MUSIC_VOLUME01_BIN);
+        memset(f_bt->title_buf,1,sizeof(f_bt->title_buf_old));
+        memset(f_bt->artist_buf,1,sizeof(f_bt->artist_buf_old));
+        f_bt->refresh_data = true;
+        return;
+    }
+    else
+    {
+        compo_shape_set_visible(shape,true);
+        compo_textbox_set_visible(tilte_art_txt, true);
+        compo_textbox_set_location(tilte_art_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
+    }
     uint8_t vol = uteModuleMusicGetPlayerVolume();
+//    vol = vol/6*6;
     uint16_t title_size_leng  = 0;
     uint16_t artist_size_leng = 0;
     memset(f_bt->title_buf,0,sizeof(f_bt->title_buf));
@@ -303,24 +340,23 @@ static void func_bt_music_refresh_disp(void)
     uteModuleMusicGetPlayerTitle(f_bt->title_buf,&title_size_leng);
     uteModuleMusicGetPlayerArtistSize(f_bt->artist_buf,&artist_size_leng);
 
-//    bt_music_paly_status_info();
 
-    if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
+    if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0 || f_bt->refresh_data) //歌名刷新
     {
+        f_bt->refresh_data = false;
+//        printf("1111111111111111111111111111\n");
         memcpy(f_bt->title_buf_old, f_bt->title_buf, sizeof(f_bt->title_buf));
-        compo_textbox_t *tilte_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_LYRIC);
         compo_textbox_set(tilte_txt, f_bt->title_buf);
         if(title_size_leng == 0)
         {
             compo_textbox_set(tilte_txt, i18n[STR_UNKNOWN]);
         }
-//        printf("name=%s\n", f_bt->title_buf);
     }
-//     printf("artist=%s leng=%d\n", f_bt->artist_buf ,artist_size_leng);
-    if(strcmp(f_bt->artist_buf, f_bt->artist_buf_old)!=0 || artist_size_leng==0) //歌手刷新
+    if(strcmp(f_bt->artist_buf, f_bt->artist_buf_old)!=0 || artist_size_leng==0 || f_bt->refresh_data) //歌手刷新
     {
+        f_bt->refresh_data = false;
+//        printf("2222222222222222222222222222\n");
         memcpy(f_bt->artist_buf_old, f_bt->artist_buf, sizeof(f_bt->artist_buf));
-        compo_textbox_t *tilte_art_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_NAME);
         compo_textbox_set(tilte_art_txt, f_bt->artist_buf);
         if(artist_size_leng == 0)
         {
@@ -333,18 +369,15 @@ static void func_bt_music_refresh_disp(void)
     {
         bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
     }
-//    printf("500ms->bt_cb.music_playing=%d\n",bt_cb.music_playing);
-    compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_PLAY);
     if(bt_cb.music_playing)
     {
-        compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PAUSED_BIN);
+        compo_button_set_bgimg(btn_play, UI_BUF_I330001_MUSIC_PAUSED_BIN);
     }
     else
     {
-        compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY01_BIN);
+        compo_button_set_bgimg(btn_play, UI_BUF_I330001_MUSIC_PLAY01_BIN);
     }
     if(vol>100)vol=100;
-    compo_shape_t *shape = compo_getobj_byid(COMPO_ID_SHAPE_MUSIC_VOL);
     compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/100)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/100), 6 );
 }
 
@@ -362,7 +395,7 @@ static void func_bt_button_release_handle()
     compo_button_t *btn_up   = compo_getobj_byid(COMPO_ID_BTN_VOL_UP);
     compo_button_t *btn_down = compo_getobj_byid(COMPO_ID_BTN_VOL_DOWN);
 
-    func_bt_music_refresh_disp();
+//    func_bt_music_refresh_disp();
 
     if(f_bt->tick <= tick_get()-BTN_REST_DISP_TIME)
     {
@@ -473,12 +506,12 @@ static void func_bt_message_do(size_msg_t msg)
         case MSG_CTP_CLICK:
             if(!uteModuleCallBtIsConnected() && !ble_is_connect()) return;
             func_bt_button_click();                         //单击按钮
-            func_bt_music_refresh_disp();
+//            func_bt_music_refresh_disp();
             break;
 
         case MSG_SYS_500MS:
 //            printf("1111111111111111111111\n");
-//            func_bt_music_refresh_disp();
+            func_bt_music_refresh_disp();
 //            if (bt_is_connected() && !sys_cb.gui_sleep_sta)
 //            {
 #if BT_ID3_TAG_EN

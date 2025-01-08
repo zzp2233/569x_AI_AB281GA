@@ -132,7 +132,7 @@ static u32 call_record_set_icon_callback(u32 index)
             return  UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN;//UI_BUF_I330001_THEME_1_CALL_BIN;
 
         case CALL_RECEIVED:                 //接听电话时要显示的图标
-            return  UI_BUF_I330001_CALL_CALL_LOG_DEENERGIZE_BIN;
+            return  UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN;
 
         case CALL_DIALED:                   //拨出电话时要显示的图标
             return  UI_BUF_I330001_CALL_CALL_LOG_DEENERGIZE_BIN;

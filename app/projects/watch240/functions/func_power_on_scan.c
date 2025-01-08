@@ -77,6 +77,16 @@ static void func_power_on_scan_message(size_msg_t msg)
             case KL_BACK:
                 func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
                 break;
+            case MSG_SYS_500MS:
+                if(uteApplicationCommonIsHasConnectOurApp())
+                {
+                    task_stack_init();  //任务堆栈
+                    latest_task_init(); //最近任务
+                    func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+                    sys_cb.power_on_state=true;
+                }
+                break;
+
         }
     }
 }

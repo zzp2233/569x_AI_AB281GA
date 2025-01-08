@@ -776,11 +776,13 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
 {
     ute_module_notify_data_t *notifyPointer = NULL;
     uteModuleNotifyGetDataPointer(&notifyPointer);
+    static bool isReceiving = false;
     uint8_t response[4];
     if(receive[0]==CMD_MSG_CONTENT_MODE0)
     {
         if(receive[1]==0x00)
         {
+            isReceiving = true;
             notifyPointer->currNotify.type = receive[2];
             notifyPointer->currNotify.size = length-4;
             memset(&notifyPointer->currNotify.content[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
@@ -795,17 +797,18 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
             response[1] = receive[1];
             response[2] = notifyPointer->currNotify.type;
             response[3] = notifyPointer->currNotify.size;
-            if(notifyPointer->currNotify.type!=MSG_MMS)
+            if(isReceiving && notifyPointer->currNotify.type!=MSG_MMS)
             {
                 uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
             }
             uteModuleProfileBleSendToPhone(&response[0],4);
+            isReceiving = false;
         }
         else
         {
             response[0] = receive[0];
             response[1] = receive[1];
-            if((notifyPointer->currNotify.size+length-2)<=UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+            if(isReceiving && (notifyPointer->currNotify.size+length-2)<=UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
             {
                 memcpy(&notifyPointer->currNotify.content[notifyPointer->currNotify.size],&receive[2],length-2);
                 notifyPointer->currNotify.size = notifyPointer->currNotify.size+length-2;
@@ -817,10 +820,13 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
     {
         if(receive[1]==0x00)
         {
-            notifyPointer->currNotify.type = receive[2];
-            notifyPointer->currNotify.titleSize = length-4;
-            memset(&notifyPointer->titleBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-            memcpy(&notifyPointer->titleBuff[0],&receive[4],length-4);
+            if(!isReceiving)
+            {
+                notifyPointer->currNotify.type = receive[2];
+                notifyPointer->currNotify.titleSize = length-4;
+                memset(&notifyPointer->titleBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+                memcpy(&notifyPointer->titleBuff[0],&receive[4],length-4);
+            }
             response[0] = receive[0];
             response[1] = receive[1];
             uteModuleProfileBleSendToPhone(&response[0],2);
@@ -832,28 +838,31 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
             response[2] = notifyPointer->currNotify.type;
             response[3] = notifyPointer->currNotify.titleSize;
             uteModuleProfileBleSendToPhone(&response[0],4);
-            notifyPointer->titleBuff[notifyPointer->currNotify.titleSize] = 0x00;
-            notifyPointer->titleBuff[notifyPointer->currNotify.titleSize+1] = 0x3a;
-            notifyPointer->currNotify.titleSize +=2;
-            //title+nontent ,单单针对短信
-            uint8_t cpySize = notifyPointer->currNotify.size;
-            uint8_t tmpBuff[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE];
-            memset(&tmpBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-            if((cpySize+notifyPointer->currNotify.titleSize)>UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+            if(!isReceiving)
             {
-                cpySize = UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-notifyPointer->currNotify.titleSize;
+                notifyPointer->titleBuff[notifyPointer->currNotify.titleSize] = 0x00;
+                notifyPointer->titleBuff[notifyPointer->currNotify.titleSize+1] = 0x3a;
+                notifyPointer->currNotify.titleSize +=2;
+                //title+nontent ,单单针对短信
+                uint8_t cpySize = notifyPointer->currNotify.size;
+                uint8_t tmpBuff[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE];
+                memset(&tmpBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+                if((cpySize+notifyPointer->currNotify.titleSize)>UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+                {
+                    cpySize = UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-notifyPointer->currNotify.titleSize;
+                }
+                memcpy(&tmpBuff[0],&notifyPointer->titleBuff[0],notifyPointer->currNotify.titleSize);
+                memcpy(&tmpBuff[notifyPointer->currNotify.titleSize],&notifyPointer->currNotify.content[0],cpySize);
+                notifyPointer->currNotify.size = cpySize+notifyPointer->currNotify.titleSize;
+                memcpy(&notifyPointer->currNotify.content[0],&tmpBuff[0],notifyPointer->currNotify.size);
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
             }
-            memcpy(&tmpBuff[0],&notifyPointer->titleBuff[0],notifyPointer->currNotify.titleSize);
-            memcpy(&tmpBuff[notifyPointer->currNotify.titleSize],&notifyPointer->currNotify.content[0],cpySize);
-            notifyPointer->currNotify.size = cpySize+notifyPointer->currNotify.titleSize;
-            memcpy(&notifyPointer->currNotify.content[0],&tmpBuff[0],notifyPointer->currNotify.size);
-            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
         }
         else
         {
             response[0] = receive[0];
             response[1] = receive[1];
-            if((notifyPointer->currNotify.titleSize+length-2)<=UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+            if(!isReceiving && (notifyPointer->currNotify.titleSize+length-2)<=UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
             {
                 memcpy(&notifyPointer->titleBuff[notifyPointer->currNotify.titleSize],&receive[2],length-2);
                 notifyPointer->currNotify.titleSize = notifyPointer->currNotify.titleSize+length-2;

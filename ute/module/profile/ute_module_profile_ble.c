@@ -81,7 +81,7 @@ u32 ble_get_adv_data(u8 *adv_buf, u32 buf_size)
 *   ble tx buf set
 */
 
-#define MAX_NOTIFY_NUM          5
+#define MAX_NOTIFY_NUM          8
 #define MAX_NOTIFY_LEN          256     //max=247
 #define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
 
@@ -318,7 +318,7 @@ static int uteModuleProfileBleWriteCallback(uint16_t con_handle, uint16_t handle
 {
     u8 wptr = ble_cmd_cb.cmd_wptr & BLE_CMD_BUF_MASK;
 
-//    printf("BLE_RX len[%d] handle[%d]\n", len, handle);
+//    printf("BLE_RX len[%d] handle[%d],wptr:%d,cmd_wptr:%d\n", len, handle,wptr,ble_cmd_cb.cmd_wptr);
 //    print_r(ptr, len);
 
     ble_cmd_cb.cmd_wptr++;
@@ -432,7 +432,10 @@ void ble_app_watch_process(void)
         }
 #endif
         uteModuleProfileSetPublicProtocol(isPublic);
-        uteModuleProtocolFromPhone(ptr, len, isPublic);
+        if(len > 0)
+        {
+            uteModuleProtocolFromPhone(ptr, len, isPublic);
+        }
     }
 }
 

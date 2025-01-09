@@ -219,7 +219,7 @@ void uteModuleNotifySaveNotifycationData(void)
 */
 void uteModuleNotifyNotifycationHandlerMsg(void)
 {
-    if(!uteModuleNotDisturbIsAllowNotify())
+    if(!uteModuleNotDisturbIsAllowNotify() && uteModuleNotifyData.currNotify.type == MSG_CALL)
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
         return;
@@ -262,10 +262,10 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
         }
 
         UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL,"%s,currNotify.size=%d",__func__,uteModuleNotifyData.currNotify.size);
-        UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);      
+        UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
     }
 
-    uteModulePlatformMemoryFree(utf8StrTemp);  
+    uteModulePlatformMemoryFree(utf8StrTemp);
 
     /*! 来电提醒不保存 zn.zeng, 2021-08-25  */
     if(uteModuleNotifyData.currNotify.type!=MSG_CALL)
@@ -273,6 +273,13 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
         uteModuleNotifySaveNotifycationData();
         uteModuleNotifyData.isNewNotify = true;
         uteModuleNotifyData.displayIndex = 0;
+
+        if(!uteModuleNotDisturbIsAllowNotify())
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
+            return;
+        }
+
 #if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
         if(uteModuleGuiCommonIsDontNeedNotificationGuiScreen())
         {
@@ -533,7 +540,7 @@ void uteModuleNotifyAncsTimerConnectHandler(bool isConnected)
         {
             uteModulePlatformStopTimer(&uteModuleNotifyAncsPairTimer);
             uteModulePlatformDeleteTimer(&uteModuleNotifyAncsPairTimer);
-            uteModuleNotifyAncsPairTimer = NULL;            
+            uteModuleNotifyAncsPairTimer = NULL;
         }
     }
 }

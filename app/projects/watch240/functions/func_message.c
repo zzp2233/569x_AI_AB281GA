@@ -243,7 +243,7 @@ compo_form_t *func_message_form_create(void)
     compo_setid(txt, COMPO_ID_COVER_TXT);
 
 //    if (func_cb.sta == FUNC_MESSAGE) {
-        func_message_card_update(true);
+    func_message_card_update(true);
 //    }
 
     return frm;
@@ -318,7 +318,8 @@ static void func_message_card_click(void)
         memset(f_msg->tmp_msg, '\0', sizeof(f_msg->tmp_msg));
         memcpy(f_msg->tmp_msg, msg, strlen(msg));
         //消息内容超过UTE_NOTIFY_MSG_CONTENT_MAX_SIZE补充省略号
-        if (strlen(msg) >= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-2) {
+        if (strlen(msg) >= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-2)
+        {
             memset(&f_msg->tmp_msg[strlen(msg)], '.', 3);
             f_msg->tmp_msg[strlen(msg)+3] = '\0';
         }
@@ -362,7 +363,8 @@ static u32 func_message_card_get_icon(u8 type)
 static void func_message_card_update(bool first_update)
 {
     f_message_t *f_msg = NULL;
-    if (first_update == true && func_cb.sta != FUNC_MESSAGE) {
+    if (first_update == true && func_cb.sta != FUNC_MESSAGE)
+    {
         f_msg = ab_zalloc(sizeof(f_message_t));
         f_msg->ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
         if (f_msg->ute_msg == NULL)
@@ -370,7 +372,9 @@ static void func_message_card_update(bool first_update)
             printf("%s malloc err\n", __func__);
             halt(0x1010);
         }
-    } else if (func_cb.sta == FUNC_MESSAGE) {
+    }
+    else if (func_cb.sta == FUNC_MESSAGE)
+    {
         f_msg = (f_message_t *)func_cb.f_cb;
     }
     //更新卡片
@@ -424,7 +428,8 @@ static void func_message_card_update(bool first_update)
         {
             btn_y = card_y + (card.h + 10) / 2 + gui_image_get_size(message_btn[i].res).hei/2 + 10;
 //            printf("btn_y [%d,%d]\n", btn_y, GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2);
-            if (btn_y < GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2) { // 按钮位置小于屏幕底部特殊处理
+            if (btn_y < GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2)   // 按钮位置小于屏幕底部特殊处理
+            {
                 btn_y = GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[i].res).hei/2;
             }
 
@@ -481,8 +486,10 @@ static void func_message_card_update(bool first_update)
     }
 
 
-    if (first_update == true && func_cb.sta != FUNC_MESSAGE) {
-        if (f_msg != NULL) {
+    if (first_update == true && func_cb.sta != FUNC_MESSAGE)
+    {
+        if (f_msg != NULL)
+        {
             if (f_msg->ute_msg != NULL)
             {
                 ab_free(f_msg->ute_msg);
@@ -653,14 +660,22 @@ static void func_message_exit(void)
         ab_free(f_msg->ute_msg);
         f_msg->ute_msg = NULL;
     }
-    if (func_cb.left_sta == FUNC_MESSAGE) {
-        if (sys_cb.refresh_language_flag == false) {
+    if (func_cb.left_sta == FUNC_MESSAGE)
+    {
+        if (sys_cb.refresh_language_flag == false)
+        {
             func_cb.last = FUNC_MESSAGE;
+            func_cb.left_sta = FUNC_NULL;
         }
-    } else {
-        func_cb.last = FUNC_MESSAGE;
     }
-    func_cb.left_sta = FUNC_NULL;
+    else
+    {
+        func_cb.last = FUNC_MESSAGE;
+        func_cb.left_sta = FUNC_NULL;
+    }
+
+
+
 }
 
 //消息功能

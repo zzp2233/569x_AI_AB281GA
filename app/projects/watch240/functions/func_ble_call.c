@@ -38,14 +38,14 @@ compo_form_t *func_ble_call_form_create(void)
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH/1.2, 50);
-    compo_textbox_set_autosize(name_txt, true);
+//    compo_textbox_set_autosize(name_txt, true);
     compo_textbox_set(name_txt, (char*)callData.name);
 //    compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
-    compo_textbox_set_autosize(number_txt, true);
+//    compo_textbox_set_autosize(number_txt, true);
     compo_textbox_set(number_txt, (char*)callData.number);
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
 

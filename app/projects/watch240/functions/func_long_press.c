@@ -68,7 +68,7 @@ compo_form_t *func_long_press_form_create(void)
     area_t text_area = widget_text_get_area(frm->title->txt);
     widget_text_get_client(frm->title->txt, &rel_x, &rel_y);
     compo_button_t *btn = compo_button_create_page_by_image(frm,frm->page, 0);
-    compo_button_set_location(btn,rel_x+text_area.wid ,rel_y+text_area.hei ,text_area.wid ,text_area.hei );
+    compo_button_set_location(btn,rel_x+text_area.wid,rel_y+text_area.hei,text_area.wid,text_area.hei );
     compo_setid(btn,CANCEL_BTN_ID);
 
     /*创建三个底部椭圆*/
@@ -91,15 +91,15 @@ compo_form_t *func_long_press_form_create(void)
     /*创建三个文本*/
     compo_textbox_t *txt;
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_CALL]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3 ,RECT_WIDTH-50,widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3,RECT_WIDTH-50,widget_text_get_height());
     compo_textbox_set(txt,i18n[STR_SLIDE_CALL]);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_OFF]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_2 ,RECT_WIDTH-50,widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_2,RECT_WIDTH-50,widget_text_get_height());
     compo_textbox_set(txt,i18n[STR_SLIDE_OFF]);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_REST]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_1 ,RECT_WIDTH-50,widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_1,RECT_WIDTH-50,widget_text_get_height());
     compo_textbox_set(txt,i18n[STR_SLIDE_REST]);
 
     /*创建一个椭圆用于滑动时覆盖字体*/
@@ -145,13 +145,13 @@ static void func_long_press_event_handle(s32 distance, u16 id)
                     if(strlen((const char *)sosData.numberAscii) && uteModuleCallBtIsConnected())
                     {
                         memcpy(sys_cb.outgoing_number, sosData.numberAscii, strlen((const char *)sosData.numberAscii));
-    #if MODEM_CAT1_EN
+#if MODEM_CAT1_EN
                         if (bsp_modem_get_init_flag())
                         {
                             modem_call_dial(sys_cb.outgoing_number);
                         }
                         else
-    #endif
+#endif
                         {
                             bt_call_redial_number();
                         }
@@ -164,7 +164,7 @@ static void func_long_press_event_handle(s32 distance, u16 id)
                         }
                         else
                         {
-
+                            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                             sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
                             msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
                         }
@@ -260,9 +260,9 @@ static void func_long_press_click(void)
 
     switch(id)
     {
-    case CANCEL_BTN_ID:
-        func_switch_to_clock();
-        break;
+        case CANCEL_BTN_ID:
+            func_switch_to_clock();
+            break;
     }
 }
 

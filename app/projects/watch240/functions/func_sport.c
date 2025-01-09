@@ -221,6 +221,7 @@ static void func_sport_list_icon_click(void)
     uint8_t batLvl = uteDrvBatteryCommonGetLvl();
     if(batLvl < UTE_DRV_BATTERY_LOW_POWER_PERECNT)
     {
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
         sys_cb.remind_tag = true;
         return;

@@ -391,6 +391,7 @@ static void func_call_sub_record_icon_click(void)
     }
     if(!uteModuleCallBtIsConnected())
     {
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
         msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
     }

@@ -202,6 +202,12 @@ static void func_bt_ring_message(size_msg_t msg)
             reset_sleep_delay_all();                           //来电不休眠
             break;
 
+        case MSG_QDEC_FORWARD:
+        case MSG_QDEC_BACKWARD:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_LEFT:
+            break;
+
         default:
             func_message(msg);
             break;

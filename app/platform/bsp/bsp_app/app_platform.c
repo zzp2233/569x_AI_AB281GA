@@ -45,7 +45,7 @@ static bool ute_alarm_check(tm_t *now_time)
         goto __err;
     }
 
-    for (uint8_t i = 0; i < ALARM_NUM_MAX; i++)
+    for (uint8_t i = 0; i < uteModuleSystemtimeGetAlarmMaxCnt(); i++)
     {
 
         //获取用户闹钟
@@ -64,7 +64,7 @@ static bool ute_alarm_check(tm_t *now_time)
         }
 
         TRACE("i[%d] num[%d] cycle[0x%02x] mask[0x%02x] alarm[%02d:%02d] now[%02d:%02d] repeat[%02d,%02d,%d] \n", \
-              i, ALARM_NUM_MAX, cycle, week_mask, alarm_p->hour, alarm_p->min, now_time->hour, now_time->min,
+              i, uteModuleSystemtimeGetAlarmMaxCnt(), cycle, week_mask, alarm_p->hour, alarm_p->min, now_time->hour, now_time->min,
               alarm_p->repeatRemindHour, alarm_p->repeatRemindMin, alarm_p->isRepeatRemindOpen);
         if ((cycle & week_mask) > 0 || (cycle >> 7))  //当天或者只提醒一次
         {

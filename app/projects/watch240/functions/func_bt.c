@@ -129,8 +129,8 @@ compo_form_t *func_bt_form_create(void)
     uint16_t artist_size_leng = 0;
     memset(title_buf,0,sizeof(title_buf));
     memset(artist_buf,0,sizeof(artist_buf));
-    uteModuleMusicGetPlayerTitle(title_buf,&title_size_leng);
-    uteModuleMusicGetPlayerArtistSize(artist_buf,&artist_size_leng);
+    uteModuleMusicGetPlayerTitle((uint8_t *)title_buf,&title_size_leng);
+    uteModuleMusicGetPlayerArtistSize((uint8_t *)artist_buf,&artist_size_leng);
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -286,9 +286,9 @@ compo_form_t *func_bt_form_create(void)
     {
         compo_shape_set_visible(shape,false);
     }
-    uint8_t vol = uteModuleMusicGetPlayerVolume();
-    if(vol>100)vol=100;
-    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/100)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/100), 6 );
+    uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
+    if(vol>16)vol=16;
+    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/16), 6 );
 
     return frm;
 }
@@ -331,14 +331,14 @@ static void func_bt_music_refresh_disp(void)
         compo_textbox_set_location(tilte_art_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
         compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
     }
-    uint8_t vol = uteModuleMusicGetPlayerVolume();
+    uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
 //    vol = vol/6*6;
     uint16_t title_size_leng  = 0;
     uint16_t artist_size_leng = 0;
     memset(f_bt->title_buf,0,sizeof(f_bt->title_buf));
     memset(f_bt->artist_buf,0,sizeof(f_bt->artist_buf));
-    uteModuleMusicGetPlayerTitle(f_bt->title_buf,&title_size_leng);
-    uteModuleMusicGetPlayerArtistSize(f_bt->artist_buf,&artist_size_leng);
+    uteModuleMusicGetPlayerTitle((uint8_t *)f_bt->title_buf,&title_size_leng);
+    uteModuleMusicGetPlayerArtistSize((uint8_t *)f_bt->artist_buf,&artist_size_leng);
 
 
     if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0 || f_bt->refresh_data) //歌名刷新
@@ -377,8 +377,8 @@ static void func_bt_music_refresh_disp(void)
     {
         compo_button_set_bgimg(btn_play, UI_BUF_I330001_MUSIC_PLAY01_BIN);
     }
-    if(vol>100)vol=100;
-    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/100)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/100), 6 );
+    if(vol>16)vol=16;
+    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/16), 6 );
 }
 
 ///按钮释放

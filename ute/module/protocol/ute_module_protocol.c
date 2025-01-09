@@ -1125,14 +1125,20 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
         receive[2] = 0x00;
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],3);
     }
-    else if(receive[1] == 0x0D || receive[1] == 0x0E) //volume increase decrease
+    else if (receive[1] == 0x0D || receive[1] == 0x0E) // volume increase decrease
     {
-        if(receive[2] <= 100)
+        if (receive[2] <= 100)
         {
+#if BT_ID3_TAG_EN
+            if (!bt_is_connected())
+            {
+                uteModuleMusicSetPlayerVolume(receive[2]);
+            }
+#else
             uteModuleMusicSetPlayerVolume(receive[2]);
+#endif
         }
     }
-
 }
 /**
 *@brief       iOS ANCS消息推送开关设置

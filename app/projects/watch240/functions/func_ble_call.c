@@ -107,6 +107,13 @@ static void func_ble_call_message(size_msg_t msg)
         case KL_BACK:
             uteModulePlatformRejectIncall();
             uteModuleGuiCommonGoBackLastScreen();
+
+        case MSG_QDEC_FORWARD:
+        case MSG_QDEC_BACKWARD:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_LEFT:
+            break;
+
         default:
             func_message(msg);
             break;

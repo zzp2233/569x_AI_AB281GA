@@ -172,6 +172,7 @@ static void func_bt_call_interface(void)
         if (func_cb.frm_main != NULL)
         {
             compo_form_destroy(func_cb.frm_main);
+            memset(f_bt_call->pbap_result_Name, '\0', sizeof(f_bt_call->pbap_result_Name));
         }
 
         func_cb.frm_main = func_bt_call_form_create();
@@ -280,6 +281,8 @@ void func_bt_call_up_date_process(void)
         memset(f_bt_call->tmp_pbap_result_Name, '\0', sizeof(f_bt_call->tmp_pbap_result_Name));
         truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
 
+
+        printf("tmp_pbap_result_Name [%s]\n", f_bt_call->tmp_pbap_result_Name);
         compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
         compo_textbox_set(name_txt, f_bt_call->tmp_pbap_result_Name);
     }

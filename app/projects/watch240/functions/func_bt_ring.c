@@ -140,6 +140,8 @@ void func_bt_ring_up_date_process(void)
         memset(f_bt_ring->tmp_pbap_result_Name, '\0', sizeof(f_bt_ring->tmp_pbap_result_Name));
         truncate_and_append(sys_cb.pbap_result_Name, f_bt_ring->tmp_pbap_result_Name, sizeof(f_bt_ring->tmp_pbap_result_Name));
 
+        printf("tmp_pbap_result_Name [%s]\n", f_bt_ring->tmp_pbap_result_Name);
+
         compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
         compo_textbox_set(name_txt, f_bt_ring->tmp_pbap_result_Name);
     }

@@ -142,7 +142,7 @@ static const gatts_uuid_base_st gatt_ute_ble_notify_base =
 };
 static const gatts_uuid_base_st gatt_ute_ble_read_write_base =
 {
-    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_WRITE | ATT_READ,
+    .props = ATT_WRITE | ATT_READ,
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = ute_ble_read_write_uuid,
 };
@@ -161,7 +161,7 @@ static const gatts_uuid_base_st gatt_ute_ble5_notify_base =
 };
 static const gatts_uuid_base_st gatt_ute_ble5_read_write_base =
 {
-    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_WRITE | ATT_READ,
+    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_READ,
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = ute_ble5_read_write_uuid,
 };
@@ -195,7 +195,7 @@ static const gatts_uuid_base_st gatt_ute_ble_public_notify_base =
 };
 static const gatts_uuid_base_st gatt_ute_ble_public_read_write_base =
 {
-    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_WRITE | ATT_READ
+    .props = ATT_WRITE | ATT_READ
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = ute_ble_public_read_write_uuid,
 };
@@ -214,7 +214,7 @@ static const gatts_uuid_base_st gatt_ute_ble5_public_notify_base =
 };
 static const gatts_uuid_base_st gatt_ute_ble5_public_read_write_base =
 {
-    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_WRITE | ATT_READ
+    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_READ
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = ute_ble5_public_read_write_uuid,
 };

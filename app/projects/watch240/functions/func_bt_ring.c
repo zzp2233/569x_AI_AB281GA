@@ -119,9 +119,12 @@ static void truncate_and_append(const char *src, char *dst, int dst_size)
     }
     if (j < dst_size - 3)
     {
-        dst[j++] = '.';
-        dst[j++] = '.';
-        dst[j++] = '.';
+        if (strlen(src) > PBAP_MAX_NAME_LEN)
+        {
+            dst[j++] = '.';
+            dst[j++] = '.';
+            dst[j++] = '.';
+        }
     }
     dst[j] = '\0';
 }
@@ -234,6 +237,8 @@ void func_bt_ring_exit(void)
 {
     bsp_bt_ring_exit();
     uteDrvMotorStop();
+
+    func_cb.last = FUNC_BT_RING;
 }
 
 void func_bt_ring(void)

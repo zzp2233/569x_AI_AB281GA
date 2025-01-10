@@ -102,6 +102,30 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_textbox_set_forecolor(txt_num, NUM_REC_COLOR);
     compo_textbox_set_visible(txt_num, sys_cb.stopwatch_rec_cnt > 0);
 
+
+    min = ((sys_cb.stopwatch_total_msec / 1000) / 60) % 100;
+    sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
+    msec = sys_cb.stopwatch_total_msec % 1000;
+
+    if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
+    {
+        compo_button_t *btn_start = compo_getobj_byid(COMPO_ID_BTN_START_REC);
+        compo_button_set_bgimg(btn_start, UI_BUF_I330001_PUBLIC_PLAY_GRAY_BIN);
+
+        min  = 99;
+        sec  = 59;
+        msec = 999;
+        co_timer_del(&stopwatch_timer);
+        memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
+        sys_cb.stopwatch_rec_cnt = 0;
+        //获取数字组件的地址
+        compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
+        memset(str_buff,0,sizeof(str_buff));
+        snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
+        compo_textbox_set(num_time, str_buff);
+    }
+
+
     return frm;
 }
 
@@ -147,6 +171,7 @@ static void func_stopwatch_button_click(void)
             break;
 
         case COMPO_ID_BTN_RECORD:
+            if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)return;
             //插入记录到头部
             if (sys_cb.stopwatch_sta)
             {
@@ -195,6 +220,7 @@ static void func_stopwatch_button_click(void)
             break;
 
         case COMPO_ID_BTN_START_REC:
+            if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100) return;
 
             sys_cb.stopwatch_sta = !sys_cb.stopwatch_sta;
             if (sys_cb.stopwatch_sta && sys_cb.stopwatch_total_msec == 0)
@@ -220,7 +246,7 @@ static void func_stopwatch_button_click(void)
 //秒表功能事件处理
 static void func_stopwatch_process(void)
 {
-    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     if (sys_cb.stopwatch_sta)
     {
         reset_sleep_delay_all();        //计时的时候不许休眠
@@ -260,14 +286,14 @@ static void func_stopwatch_process(void)
             compo_textbox_set(num_time, str_buff);
         }
     }
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 
 //秒表功能消息处理
 static void func_stopwatch_message(size_msg_t msg)
 {
-    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -296,7 +322,7 @@ static void func_stopwatch_message(size_msg_t msg)
             func_message(msg);
             break;
     }
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //进入秒表功能

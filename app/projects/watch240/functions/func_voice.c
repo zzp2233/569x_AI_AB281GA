@@ -35,8 +35,10 @@ enum
     FUNC_SIRI_STATUS_SPEAKER,
 };
 
-typedef struct ui_handle_t_ {
-    struct animation_t {
+typedef struct ui_handle_t_
+{
+    struct animation_t
+    {
         u16 id;
         s16 x,y;
         u8 radix;
@@ -44,7 +46,8 @@ typedef struct ui_handle_t_ {
         u32 res;
     } animation;
 
-    struct text_t {
+    struct text_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -55,7 +58,8 @@ typedef struct ui_handle_t_ {
     } text;
 } ui_handle_t;
 
-static const ui_handle_t ui_handle = {
+static const ui_handle_t ui_handle =
+{
     .animation = {
         .id = COMPO_ID_PIC_VOICE,
         .x  = 240/2,
@@ -127,6 +131,7 @@ static void func_voice_start_siri(void)
     else
     {
         f_voice->siri_en = false;
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
         msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
     }
@@ -136,7 +141,7 @@ static void func_voice_start_siri(void)
 //语音助手功能事件处理
 static void func_voice_process(void)
 {
-    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     static u8 siri_cnt = 0;
 
@@ -210,14 +215,14 @@ static void func_voice_process(void)
             }
         }
     }
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 
 //语音助手功能消息处理
 static void func_voice_message(size_msg_t msg)
 {
-    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     //f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     switch (msg)
     {
@@ -238,7 +243,7 @@ static void func_voice_message(size_msg_t msg)
             func_message(msg);
             break;
     }
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //进入语音助手功能
@@ -246,10 +251,10 @@ static void func_voice_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_voice_t));
     func_cb.frm_main = func_voice_form_create();
-    #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     f_voice->siri_en = false;
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 }
 

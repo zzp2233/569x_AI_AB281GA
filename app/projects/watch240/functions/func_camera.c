@@ -343,9 +343,11 @@ typedef struct f_camera_t_
 
 } f_camera_t;
 
-typedef struct ui_handle_t_ {
+typedef struct ui_handle_t_
+{
 
-    struct btn_t {
+    struct btn_t
+    {
         u16 id;
         u16 click_id;
         s16 x,y;
@@ -354,7 +356,8 @@ typedef struct ui_handle_t_ {
         u32 click_res;
     } btn;
 
-    struct text_t {
+    struct text_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -364,7 +367,8 @@ typedef struct ui_handle_t_ {
     } text;
 } ui_handle_t;
 
-const static ui_handle_t ui_handle = {
+const static ui_handle_t ui_handle =
+{
     .btn = {
         .id = START_BTN_ID,
         .click_id = START_BTN_CLICK_ID,
@@ -429,12 +433,16 @@ static void func_camera_button_handle(void)
 
     if(id == START_BTN_ID)
     {
-        if (ble_is_connect()) {
+        if (ble_is_connect())
+        {
             if(uteModuleSportIsTakePicture())
             {
                 uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
             }
-        } else {
+        }
+        else
+        {
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
             msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
         }

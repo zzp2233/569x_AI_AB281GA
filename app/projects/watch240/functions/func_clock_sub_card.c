@@ -289,7 +289,7 @@ static const ui_handle_t ui_handle =
             .center = false,
             .bonddata = COMPO_BOND_DATE,
             .color = {255,255,255},
-            .res = UI_BUF_0FONT_FONT_NUM_38_BIN,
+            .res = UI_BUF_0FONT_FONT_NUM_32_BIN,
         },
 
         .week = {
@@ -460,7 +460,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_SLEEP,
@@ -504,7 +504,7 @@ static const ui_handle_t ui_handle =
             .idx    = 4,
             .x      = 140-232/2,
             .y      = 53-108/2,
-            .w      = 30,
+            .w      = 30+30,
             .h      = 28,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_MIN,
@@ -534,7 +534,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_MUSIC,
@@ -598,7 +598,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_TIMER,
@@ -639,7 +639,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_NUM_38_BIN,
             .str_id = STR_STOP_WATCH,
@@ -680,7 +680,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_COMMON_APP,
@@ -747,7 +747,7 @@ static const ui_handle_t ui_handle =
             .idx    = 0,
             .x      = 12-232/2,
             .y      = 10-108/2,
-            .w      = 100,
+            .w      = 200,
             .h      = 30,
             .res    = UI_BUF_0FONT_FONT_BIN,
             .str_id = STR_LATEST_APP,
@@ -884,6 +884,11 @@ static void card1_updata_disp(void)
     compo_picturebox_t *arc_km   = compo_getobj_byid(COMPO_ID_ARC_KM);
     compo_picturebox_t *arc_step = compo_getobj_byid(COMPO_ID_ARC_STEP);
     compo_cardbox_t *cardbox = compo_getobj_byid(ui_handle.card1.id);
+
+    compo_picturebox_set_visible(arc_kcal, true);
+    compo_picturebox_set_visible(arc_km, true);
+    compo_picturebox_set_visible(arc_step, true);
+
 
     if(f_activity->activity_state == 0)
     {
@@ -1095,7 +1100,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.x, ui_handle.card2.text_sleep.y, ui_handle.card2.text_sleep.w, ui_handle.card2.text_sleep.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_sleep.idx, i18n[ui_handle.card2.text_sleep.str_id]);
 
-//    sleep_data->totalSleepMin =  200;
+//    sleep_data->totalSleepMin =  9;
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
@@ -1120,7 +1125,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_min.idx], make_color(ui_handle.card2.text_min.color.r, ui_handle.card2.text_min.color.g, ui_handle.card2.text_min.color.b));
-    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w*3, ui_handle.card2.text_min.h);
+    compo_cardbox_text_set_location(card2, ui_handle.card2.text_min.idx, ui_handle.card2.text_min.x, ui_handle.card2.text_min.y, ui_handle.card2.text_min.w, ui_handle.card2.text_min.h);
     if(sleep_data->totalSleepMin)  ///是否有睡眠时长
     {
         snprintf(txt_buf, sizeof(txt_buf), "%02d", sleep_data->totalSleepMin%60);///* 总睡眠分钟*/
@@ -1188,14 +1193,17 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_RED_BIN);//圆弧红/
     compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_picturebox_set_visible(arc_pic, false);
     compo_setid(arc_pic,COMPO_ID_ARC_KCAL);
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_YELLOW_BIN);//圆弧黄/
     compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_picturebox_set_visible(arc_pic, false);
     compo_setid(arc_pic,COMPO_ID_ARC_KM);
     arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I330001_FIRSTORDER_ACTIVITY_BLUE_BIN);//圆弧绿/
     compo_picturebox_set_pos(arc_pic,50,pic_bg_area.hei);
     compo_picturebox_set_rotation(arc_pic, 1800 );
+    compo_picturebox_set_visible(arc_pic, false);
     compo_setid(arc_pic,COMPO_ID_ARC_STEP);
 
 
@@ -1758,8 +1766,17 @@ static void func_clock_sub_card_data_update(void)
     cardbox = compo_getobj_byid(ui_handle.card4.id);
     compo_cardbox_text_set(cardbox, ui_handle.card4.text_time.idx,txt_buf);
 
+    u8 min = ((sys_cb.stopwatch_total_msec / 1000) / 60) % 100;
+    u8 sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
+    u16 msec = sys_cb.stopwatch_total_msec % 1000;
+    if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
+    {
+        min  = 99;
+        sec  = 59;
+        msec = 999;
+    }
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld.%02ld",SEC_TO_MIN(sys_cb.stopwatch_total_msec/1000),SEC_TO_SEC(sys_cb.stopwatch_total_msec/1000),sys_cb.stopwatch_total_msec%1000/10);
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld.%02ld",min,sec,msec/10);
     cardbox = compo_getobj_byid(ui_handle.card5.id);
     compo_cardbox_text_set(cardbox, ui_handle.card5.text_time.idx,txt_buf);
 }
@@ -1994,6 +2011,12 @@ static void func_clock_sub_card_message(size_msg_t msg)
             break;
         case MSG_SYS_500MS:
         {
+#if BT_ID3_TAG_EN
+            if (bt_is_connected())
+            {
+                bt_music_paly_status_info();
+            }
+#endif
             compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PREV);
             if(uteModuleCallBtIsConnected() || ble_is_connect())
             {

@@ -50,9 +50,10 @@ static const gui_init_param_t tbl_gui_init_param =
 //GUI相关初始化
 void gui_init(void)
 {
-    power_gate_3v3_on();
-    ctp_init();
-    tft_init();
+    //放到ute任务点亮屏幕
+    // power_gate_3v3_on();
+    // ctp_init();
+    // tft_init();
     // uteDrvScreenCommonInit();
 #if FLASH_EXTERNAL_EN
     bsp_spi1flash_init();
@@ -60,7 +61,7 @@ void gui_init(void)
     os_gui_init(&tbl_gui_init_param);
     compos_init();
     sys_cb.sleep_en = 1;            //允许进休眠
-    sys_cb.gui_sleep_sta = 0;
+    // sys_cb.gui_sleep_sta = 0;
 }
 
 void gui_sleep(void)
@@ -72,6 +73,7 @@ void gui_sleep(void)
         ctp_exit();
         power_gate_3v3_off();
         sys_cb.gui_sleep_sta = 1;
+        tft_cb.tft_bglight_first_set = false;
         uteModuleGuiCommonDisplayOff(true);
         //printf("gui_sleep\n");
     }

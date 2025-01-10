@@ -244,7 +244,7 @@ static const disturd_set_pic_bg_t tbl_disturd_set_pic_bg =
 #define DISTURD_SET_NUM_ITEM_CNT            ((int)(sizeof(tbl_disturd_set_num_item) / sizeof(tbl_disturd_set_num_item[0])))
 
 #define DISTURD_TXT_ITEM_H_X                  51
-#define DISTURD_TXT_ITEM_M_X                  181
+#define DISTURD_TXT_ITEM_M_X                  185
 #define DISTURD_TXT_ITEM_Y                    -25
 #define DISTURD_TXT_ITEM_Y_OFFSET             45
 
@@ -696,7 +696,7 @@ compo_form_t *func_disturd_sub_set_form_create(void)
     }
     compo_setid(btn_am_pm, tbl_disturd_set_pic_bg.btn_am_pm.id);
 
-        //建立确定按钮 - 未按下图片
+    //建立确定按钮 - 未按下图片
     compo_button_t* add_btn = compo_button_create_by_image(frm, tbl_disturd_set_pic_bg.btn_ok.res1);
     compo_button_set_pos(add_btn, tbl_disturd_set_pic_bg.btn_ok.x, tbl_disturd_set_pic_bg.btn_ok.y);
     compo_setid(add_btn, tbl_disturd_set_pic_bg.btn_ok.id1);
@@ -1420,7 +1420,7 @@ static void func_disturd_sub_set_button_touch_handle(void)
 //释放按钮效果处理
 static void func_disturd_sub_set_button_release_handle(void)
 {
-        compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_CONTINUE_CLICK), false);
+    compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_CONTINUE_CLICK), false);
 //        compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_REPETAT_NO_CLICK), false);
 //        compo_picturebox_set_visible(compo_getobj_byid(COMPO_ID_PIC_REPETAT_YES_CLICK), false);
 }

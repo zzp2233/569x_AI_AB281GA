@@ -79,7 +79,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
                 compo_textbox_set_align_center(txt_title, false);
                 compo_textbox_set_pos(txt_title, 10,
-                                     GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei/2 - 20);
+                                      GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN).hei/2 - 20);
                 //compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
                 compo_textbox_set(txt_title, title);
             }
@@ -181,38 +181,116 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_animation_set_pos(animation,GUI_SCREEN_CENTER_X,func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
                 compo_animation_set_radix(animation,3);
                 compo_animation_set_interval(animation,30);
+
+                //msg1
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
+                                           func_cover_get_txt_y(msg_type),
+                                           GUI_SCREEN_WIDTH, 50);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set(txt_msg, msg);
+
+                //title
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,
+                                      func_cover_get_title_txt_y(msg_type));
+                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set(txt_title, title);
+
+
             }
-            else
+            else if (sys_cb.cover_index == REMIND_COVER_LOW_BATTERY)  //低电提醒
             {
-            compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
-                                 GUI_SCREEN_CENTER_X,
-                                 func_cover_get_pic_y(msg_type)-20);  //需要更替为弹窗图标
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_04_BIN);
+                compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
+
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,GUI_SCREEN_WIDTH/1.2,30);//调整文本位置
+                compo_textbox_set(txt_msg, i18n[STR_LOW_BATTERY]);
+                //title
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/4.5,60,30);//调整文本位置
+                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_32_BIN);
+                char level[4];
+                memset(level,0,sizeof(level));
+                sprintf(level,"%d%%",uteDrvBatteryCommonGetLvl());
+                compo_textbox_set(txt_title, level);
             }
-
-            //msg1
-            compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
-                                       func_cover_get_txt_y(msg_type),
-                                       GUI_SCREEN_WIDTH, 50);              //调整文本位置
-            compo_textbox_set_multiline(txt_msg, true);
-            compo_textbox_set(txt_msg, msg);
-
-
-            //title
-            compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-            compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,
-                                  func_cover_get_title_txt_y(msg_type));
-            compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
-            compo_textbox_set(txt_title, title);
-
-            if(sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
+            else if(sys_cb.cover_index == REMIND_COVER_STOPWATCH_FINISH)//计时器结束
             {
+#define SEC_TO_HOUR(s)  (s / 3600)          //总秒数转换为时分秒（时）
+#define SEC_TO_MIN(s)   ((s % 3600) / 60)   //总秒数转换为时分秒（分）
+#define SEC_TO_SEC(s)   (s % 60)            //总秒数转换为时分秒（秒）
+                u8 hour, min, sec;
+                compo_button_t *btn;
+                compo_textbox_t *txt;
+                char str_buff[24];
+                btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE01_BIN);  //close
+                compo_setid(btn, COMPO_ID_BTN_DELETE);
+                compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,246 );
+                //新建数字
+                hour = SEC_TO_HOUR(sys_cb.timer_left_sec);
+                min = SEC_TO_MIN(sys_cb.timer_left_sec);
+                sec = SEC_TO_SEC(sys_cb.timer_left_sec);
+                txt = compo_textbox_create(frm, 12);
+                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 128);
+                compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+                snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
+                compo_textbox_set(txt, str_buff);
+
+                txt = compo_textbox_create(frm, strlen(i18n[STR_TIMER_FINIFH]));
+                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X/1.5);
+                compo_textbox_set(txt, i18n[STR_TIMER_FINIFH]);
+            }
+            else if (sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
+            {
+
+                compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
+                                     GUI_SCREEN_CENTER_X,
+                                     func_cover_get_pic_y(msg_type)-20);  //需要更替为弹窗图标
+
+                //msg1
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
+                                           func_cover_get_txt_y(msg_type),
+                                           GUI_SCREEN_WIDTH, 50);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set(txt_msg, msg);
+
+                //title
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,
+                                      func_cover_get_title_txt_y(msg_type));
+                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set(txt_title, title);
+
                 compo_textbox_set_multiline(txt_msg, false);
                 compo_textbox_set_align_center(txt_msg, false);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,
                                            func_cover_get_title_txt_y(msg_type)-(widget_text_get_area(txt_title->txt).hei-widget_text_get_height()),
                                            widget_text_get_area(txt_msg->txt).wid,
                                            widget_text_get_height()); //调整文本位置
+            }
+            else
+            {
+                compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
+                                     GUI_SCREEN_CENTER_X,
+                                     func_cover_get_pic_y(msg_type)-20);  //需要更替为弹窗图标
+
+                //msg1
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
+                                           func_cover_get_txt_y(msg_type),
+                                           GUI_SCREEN_WIDTH, 50);              //调整文本位置
+                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set(txt_msg, msg);
+
+                //title
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,
+                                      func_cover_get_title_txt_y(msg_type));
+                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set(txt_title, title);
             }
         }
         break;
@@ -268,24 +346,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             compo_textbox_set(txt_title, title);
         }
         break;
-        case MSGBOX_MSG_TYPE_LOW_BATTERY:
-            {
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_04_BIN);
-                compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
 
-                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,GUI_SCREEN_WIDTH/1.2,30);//调整文本位置
-                compo_textbox_set(txt_msg, i18n[STR_LOW_BATTERY]);
-                //title
-                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/4.5,60,30);//调整文本位置
-                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_32_BIN);
-                char level[4];
-                memset(level,0,sizeof(level));
-                sprintf(level,"%d%%",uteDrvBatteryCommonGetLvl());
-                compo_textbox_set(txt_title, level);
-            }
-            break;
         default:
             break;
     }
@@ -453,7 +514,9 @@ static void msgbox_message(size_msg_t msg)
                     if (abs_s(pt.y - GUI_SCREEN_CENTER_Y/3.5) * 2 <= GUI_SCREEN_HEIGHT/5) //简略消息位置判断
                     {
                         msg_cb->res = MSGBOX_RES_ENTER_DETAIL_MSG;
-                    } else {
+                    }
+                    else
+                    {
 
                     }
                     msg_cb->flag_animation = true;
@@ -535,7 +598,7 @@ static void msgbox_process(void)
         else if ((msg_cb->msg_type == MSGBOX_MSG_TYPE_DETAIL)   ||                                                      //详细消息界面弹窗
                  (sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)     //查找手表
 //                 ||(msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
-        )
+                )
         {
             goto __exit;
         }

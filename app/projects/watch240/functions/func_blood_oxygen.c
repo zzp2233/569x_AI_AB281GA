@@ -207,6 +207,7 @@ static void func_blood_oxygen_process(void)
         else if (!uteModuleBloodoxygenIsTesting())
         {
             f_bo->blood_oxygen_state = BO_STA_IDLE;
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         }
     }
     else

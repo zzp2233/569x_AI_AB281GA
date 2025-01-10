@@ -2795,6 +2795,10 @@ void uteModuleSportMoreSportsGetDataFormAlgo(ute_module_systemtime_time_t *time)
 void uteModuleSportMoreSportsHeartDataHandler(void)
 {
 #if UTE_MODULE_HEART_SUPPORT
+    if(!vc30fx_usr_get_work_status() || uteModuleHeartGetWorkMode() != WORK_MODE_HR)
+    {
+        uteModuleHeartStartSingleTesting(TYPE_HEART);
+    }
     uint16_t saveTimeInterval = uteModuleSprotData.moreSportData.saveData.startInterval*10;
     uint8_t heart = (uint8_t)uteModuleHeartGetHeartValue();
     if((uteModuleSprotData.moreSportData.totalSportTime%saveTimeInterval==0 )&&
@@ -3569,6 +3573,12 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
     uteModuleSportMoreSportsGetDataFormAlgo(&time);
 #else
     disableUTESport();
+#endif
+#if UTE_MODULE_HEART_SUPPORT
+    if (vc30fx_usr_get_work_status() && uteModuleHeartGetWorkMode() == WORK_MODE_HR)
+    {
+        uteModuleHeartStopSingleTesting(TYPE_HEART);
+    }
 #endif
     if(!uteModuleSportMoreSportsIsLessData())
     {

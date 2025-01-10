@@ -630,11 +630,6 @@ void func_process(void)
         printf(">>>TIMER DONE\n");
     }
 
-    if(sys_cb.hand_screen_on) //抬手亮屏
-    {
-        sys_cb.hand_screen_on = false;
-    }
-
 #if VBAT_DETECT_EN
     bsp_vbat_lpwr_process();
 #endif
@@ -704,6 +699,7 @@ void func_process(void)
 //根据任务名创建窗体。此处调用的创建窗体函数不要调用子任务的控制结构体
 compo_form_t *func_create_form(u8 sta)
 {
+    // printf("%s->sta:%d\n", __func__, sta);
     compo_form_t *frm = NULL;
     compo_form_t *(*func_create)(void) = NULL;
     for (int i = 0; i < FUNC_CREATE_CNT; i++)
@@ -720,6 +716,7 @@ compo_form_t *func_create_form(u8 sta)
     }
     if (frm == NULL)
     {
+        // printf("halt %s->sta:%d\n", __func__, sta);
         halt(HALT_FUNC_SORT);
     }
     return frm;
@@ -1326,15 +1323,15 @@ void func_message(size_msg_t msg)
 //            func_cb.frm_main = func_create_form(func_cb.sta);
             sys_cb.sta_old = func_cb.sta;
             sys_cb.refresh_language_flag = true;
-            func_switch_to(FUNC_CLOCK, 0);
+//            func_switch_to(FUNC_CLOCK, 0);
+            func_cb.sta = FUNC_NULL;
             break;
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃
-            uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
-//            uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
-            func_cb.sta = FUNC_TIMER;
+            sys_cb.cover_index = REMIND_COVER_STOPWATCH_FINISH;
+            sys_cb.remind_tag = true;
+//            func_cb.sta = FUNC_TIMER;
 //            func_switch_to(FUNC_STOPWATCH, FUNC_SWITCH_FADE | FUNC_SWITCH_AUTO);
 //            msgbox("计时已经结束",NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_RES_NONE);
             break;
@@ -1412,7 +1409,9 @@ void func_run(void)
     {
         if(sys_cb.refresh_language_flag) //刷新语言
         {
-            func_switch_to(sys_cb.sta_old, 0);
+            // printf("sta_old = %d\n", sys_cb.sta_old);
+//            func_switch_to(sys_cb.sta_old, 0);
+            func_cb.sta = sys_cb.sta_old;
             sys_cb.refresh_language_flag = false;
         }
 

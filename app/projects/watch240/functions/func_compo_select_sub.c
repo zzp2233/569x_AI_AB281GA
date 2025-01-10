@@ -357,7 +357,8 @@ compo_form_t *func_compo_select_sub_form_create(void)
     }
 
     printf("tbl_sort [");
-    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++) {
+    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++)
+    {
         printf("%d ", func_cb.tbl_sort[i]);
     }
     printf("]\n");
@@ -480,7 +481,7 @@ static void func_compo_select_sub_enter(void)
         menu_idx = 1;
     }
     compo_listbox_set_focus_byidx(listbox, menu_idx);
-    compo_listbox_set_sta_icon(listbox,UI_BUF_I330001_FIRSTORDER_DELETE_BIN , UI_BUF_I330001_FIRSTORDER_ADD_BIN);
+    compo_listbox_set_sta_icon(listbox,UI_BUF_I330001_FIRSTORDER_DELETE_BIN, UI_BUF_I330001_FIRSTORDER_ADD_BIN);
     compo_listbox_update(listbox);
 
     compo_listbox_move(listbox);
@@ -522,7 +523,10 @@ static void func_compo_select_sub_exit(void)
 //    printf("]\n");
     func_cb.tbl_sort[index ++] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = index;
-    func_cb.flag_sort = true;
+    if (sys_cb.refresh_language_flag == false)
+    {
+        func_cb.flag_sort = true;
+    }
 
 //    printf("EXIT tbl_sort [");
 //    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++) {

@@ -28,6 +28,7 @@
 #include "ute_drv_temperature_common.h"
 #include "ute_module_factorytest.h"
 #include "ute_module_music.h"
+#include "ute_module_gui_common.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -35,7 +36,6 @@
 #include "ute_module_breathrate.h"
 #include "ute_module_screens_common.h"
 #include "ute_task_gui.h"
-#include "ute_module_gui_common.h"
 #include "ute_module_call.h"
 #include "ute_module_ota.h"
 #include "ute_module_stopwatch.h"
@@ -393,6 +393,12 @@ void uteApplicationCommonStartupSecond(void)
             uteModuleMotorSetIsOpenVibrationStatus(true);
         }
 #endif
+        power_gate_3v3_on();
+        ctp_init();
+        tft_init();
+        sys_cb.gui_sleep_sta = 0;
+        uteModuleGuiCommonDisplayOff(false);
+
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         uteApplicationCommonData.isStartupSecondFinish = true;
         uteApplicationCommonData.isPowerOn = true;
@@ -496,6 +502,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     {
         // uteModulePlatformSetFastAdvertisingTimeCnt(0);
         // uteModulePlaformUpdateConnectParam(12,36,55000);
+        ble_update_conn_param(12,0,500);
     }
     uteModuleCallBleConnectState(isConnected);
 }
@@ -878,7 +885,12 @@ void uteApplicationCommonStartPowerOffMsg(void)
 #endif
     uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);
 #endif
-    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+    // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+
+    uteDrvMotorEnable();
+    delay_5ms(UTE_MOTOR_DURATION_TIME / 5);
+    uteDrvMotorDisable();
+
     // uteModulePlatformSetFastAdvertisingTimeCnt(0);
 
 #if UTE_MODULE_SHIP_MODE_SUPPORT
@@ -1829,7 +1841,7 @@ float ExactDecimalPoint(float data,uint8_t bit)
 
 /**
  * @brief        保存重启信息
- * @details      
+ * @details
  * @author       Wang.Luo
  * @date         2024-12-30
  */
@@ -1854,28 +1866,28 @@ void uteModuleHardfaultInfoSave(void)
     strcat(buf, "Cause:\n");
     switch (cause)
     {
-    case RESTART_WDT:
-        strcat(buf, "RESTART_WDT\n");
-        break;
-    case RESTART_SW:
-        strcat(buf, "RESTART_SW\n");
-        break;
-    case RESTART_WK10S:
-        strcat(buf, "RESTART_WK10S\n");
-        break;
-    case RESTART_VUSB:
-        strcat(buf, "RESTART_VUSB\n");
-        break;
-    case RESTART_WKUP:
-        strcat(buf, "RESTART_WKUP\n");
-        break;
-    case RESTART_FIRST_ON:
-        strcat(buf, "RESTART_FIRST_ON\n");
-        break;
-    default:
-        strcat(buf, "RESTART_UNKNOWN\n");
-        printf("unknown restart cause: %d\n", cause);
-        break;
+        case RESTART_WDT:
+            strcat(buf, "RESTART_WDT\n");
+            break;
+        case RESTART_SW:
+            strcat(buf, "RESTART_SW\n");
+            break;
+        case RESTART_WK10S:
+            strcat(buf, "RESTART_WK10S\n");
+            break;
+        case RESTART_VUSB:
+            strcat(buf, "RESTART_VUSB\n");
+            break;
+        case RESTART_WKUP:
+            strcat(buf, "RESTART_WKUP\n");
+            break;
+        case RESTART_FIRST_ON:
+            strcat(buf, "RESTART_FIRST_ON\n");
+            break;
+        default:
+            strcat(buf, "RESTART_UNKNOWN\n");
+            printf("unknown restart cause: %d\n", cause);
+            break;
     }
     strcat(buf, "cpu_gprs[]:\n");
     for (u8 i = 0; i < 32; i++)
@@ -1922,16 +1934,16 @@ void uteModuleHardfaultInfoSave(void)
     uteModulePlatformMemoryFree(buf);
 }
 
-/*! 
+/*!
 1、APP发送0xfe0601 开始采集数据，0x33F2 会先返回0xfe0601+4byte(log size)
-2、0x34F2 开始不断返回：0xfe0601+2byete(序号)+数据(MTU-5)byte 
+2、0x34F2 开始不断返回：0xfe0601+2byete(序号)+数据(MTU-5)byte
 3、固件每发送64个包,等待120ms这时APP通过0x33F1 发送0xFE0602+2byte（接收到的最新序号）。
 4、0x33F1 返回0xFE0601FD 表示返回数据结束。
 */
 static void uteModuleHardfaultSendlogData(void)
 {
     ute_application_sync_data_param_t *sendParam;
-    uteApplicationCommonGetSyncDataParam(&sendParam);  
+    uteApplicationCommonGetSyncDataParam(&sendParam);
 
     sendParam->currSendMtuSize = uteApplicationCommonGetMtuSize();
     sendParam->dataBuffSize = sendParam->currSendMtuSize - 5;
@@ -1942,7 +1954,7 @@ static void uteModuleHardfaultSendlogData(void)
     response[2] = 0x01;
     response[3] = sendParam->currSendMaxIndex >> 8 & 0xFF;
     response[4] = sendParam->currSendMaxIndex & 0xFF;
-    
+
     char path[42];
     memset(&path[0], 0, sizeof(path));
 
@@ -1999,7 +2011,7 @@ static void uteModuleHardfaultSendlogData(void)
 
 /**
  * @brief        开始发送Hardfault信息
- * @details      
+ * @details
  * @author       Wang.Luo
  * @date         2024-12-30
  */

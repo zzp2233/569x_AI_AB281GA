@@ -22,7 +22,7 @@
 #include "ute_module_protocol.h"
 #include "ute_module_call.h"
 // #include "ute_module_newFactoryTest.h"
-
+#include "func_cover.h"
 
 #if UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
 
@@ -590,7 +590,9 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
                 uteModuleSportStopMoreSports();
             }
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
+            sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
+            sys_cb.remind_tag = true;
+            //msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
             uteDrvBatteryCommonData.isHasLowPowerNotify = true;
 #if SET_THE_LOW_BATTERY_POPUP_TIME
             uteApplicationCommonSetlowBatterySecond(0);

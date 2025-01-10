@@ -22,6 +22,7 @@ typedef struct f_bt_call_t_
     u32 exit_tick;              //页面退出计时
     bool call_mute_flag;
     char pbap_result_Name[50];//存放来电与接听联系人名字
+    char tmp_pbap_result_Name[50];
 } f_bt_call_t;
 
 static void func_bt_call_back_to(void)
@@ -171,6 +172,7 @@ static void func_bt_call_interface(void)
         if (func_cb.frm_main != NULL)
         {
             compo_form_destroy(func_cb.frm_main);
+            memset(f_bt_call->pbap_result_Name, '\0', sizeof(f_bt_call->pbap_result_Name));
         }
 
         func_cb.frm_main = func_bt_call_form_create();
@@ -207,16 +209,82 @@ static void func_bt_call_exit_process(void)
             func_bt_call_back_to();
         }
 }
+
+
+// 判断从指定位置开始的字节序列是否是一个完整的UTF - 8字符
+static int is_complete_utf8_char(const char *str, int pos)
+{
+    unsigned char byte = str[pos];
+    if ((byte & 0x80) == 0)
+    {
+        // 单字节字符，肯定是完整的
+        return 1;
+    }
+    int num_bytes = 0;
+    if ((byte & 0xE0) == 0xC0)
+    {
+        num_bytes = 2;
+    }
+    else if ((byte & 0xF0) == 0xE0)
+    {
+        num_bytes = 3;
+    }
+    else if ((byte & 0xF8) == 0xF0)
+    {
+        num_bytes = 4;
+    }
+    for (int i = 1; i < num_bytes; i++)
+    {
+        if ((str[pos + i] & 0xC0)!= 0x80)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// 截取有用数据并在尾部补上三个...
+static void truncate_and_append(const char *src, char *dst, int dst_size)
+{
+    int i = 0;
+    int j = 0;
+    while (i < strlen(src) && j < dst_size - 1)
+    {
+        if (is_complete_utf8_char(src, i))
+        {
+            dst[j++] = src[i++];
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (j < dst_size - 3)
+    {
+        dst[j++] = '.';
+        dst[j++] = '.';
+        dst[j++] = '.';
+    }
+    dst[j] = '\0';
+}
+
 void func_bt_call_up_date_process(void)
 {
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
 //    printf("name:%s name:%s\n",f_bt_call->pbap_result_Name , sys_cb.pbap_result_Name);
-    if(strcmp(f_bt_call->pbap_result_Name , sys_cb.pbap_result_Name)!=0)
+
+    if(strcmp(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name)!=0)
     {
         memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+
+        memset(f_bt_call->tmp_pbap_result_Name, '\0', sizeof(f_bt_call->tmp_pbap_result_Name));
+        truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
+
+
+        printf("tmp_pbap_result_Name [%s]\n", f_bt_call->tmp_pbap_result_Name);
         compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
-        compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+        compo_textbox_set(name_txt, f_bt_call->tmp_pbap_result_Name);
     }
 }
 void func_bt_call_process(void)
@@ -341,6 +409,12 @@ static void func_bt_call_message(size_msg_t msg)
             reset_sleep_delay_all();                           //来电不休眠
             break;
 
+        case MSG_QDEC_FORWARD:
+        case MSG_QDEC_BACKWARD:
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_LEFT:
+            break;
+
         default:
             func_message(msg);
             break;
@@ -354,7 +428,7 @@ void func_bt_call_enter(void)
     func_bt_call_number_update();
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
-   memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+    memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
 //   printf("name:%s  name:%s\n",sys_cb.pbap_result_Name,f_bt_call->pbap_result_Name);
 
     f_bt_call->call_mute_flag =false;

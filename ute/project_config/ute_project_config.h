@@ -9,10 +9,13 @@
 #ifndef _UTE_PROJECT_CONFIG_H_
 #define _UTE_PROJECT_CONFIG_H_
 
-#define PROJECT_AB281_SUPPORT       1
+#define PROJECT_AB281_SUPPORT        1
+#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
+#elif PROJECT_AB281A_SUPPORT
+#include"ute_project_config_ab281a.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
@@ -862,6 +865,14 @@
 /*! 快速眼动,wang.luo 2024-11-13 */
 #ifndef UTE_REM_SLEEP_SUPPORT
 #define UTE_REM_SLEEP_SUPPORT 1
+#endif
+/* 睡眠数据采样支持 zn.zeng 2021-12-29*/
+#ifndef UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT
+#define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 0
+#endif
+/*gesnsor 采集原始数据*/
+#ifndef APP_DBG_GSENSOR_DATA
+#define APP_DBG_GSENSOR_DATA 0
 #endif
 /* 多运动步数数据累加到状态界面 xjc, 2022-01-08 */
 #ifndef UTE_MODULE_SPORT_TODAY_ADD_ALL_SPORT_DATA_SUPPORT

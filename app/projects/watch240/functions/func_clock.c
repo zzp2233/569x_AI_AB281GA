@@ -251,6 +251,12 @@ compo_form_t *func_clock_cube_form_create(void)
     compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
     compo_setid(cube, COMPO_ID_CUBE);
 
+    s32 ax, ay;
+    ax = 0;
+    ay = 1400;
+    compo_cube_roll_from(cube, ax, ay);
+    compo_cube_update(cube);
+
     //新建文本
     compo_textbox_t *txt = compo_textbox_create(frm, 2);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
@@ -547,6 +553,7 @@ void func_clock_sub_message(size_msg_t msg)
 //static int rp = 0;
 //static int ra = 1300;
 #define CUBE_HALF_CIRCUM(x)                 ((int)(M_PI * x))         //圆周一半
+#define CUBE_TOUCH_TIME  2000
 //时钟表盘功能事件处理
 static void func_clock_process(void)
 {
@@ -557,17 +564,32 @@ static void func_clock_process(void)
         s32 dx, dy, ax, ay;
 
         compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
-        if(f_clock->cube_touch == true){
+        if(f_clock->cube_touch == true)
+        {
             f_clock->cube_touch = ctp_get_dxy(&dx, &dy);
+
+            if(f_clock->cube_touch)
+            {
+                f_clock->cube_touch_time = 5;
+            }
+            else
+            {
+                f_clock->cube_touch_time = 2000;
+            }
             //拖动菜单图标
             ax = dx * 1800 / CUBE_HALF_CIRCUM(cube->radius);
             ay = dy * 1800 / CUBE_HALF_CIRCUM(cube->radius);
             f_clock->cube_rp = sqrt64(ax * ax + ay * ay);
             f_clock->cube_ra = ARCTAN2(-ay, ax);
+
+//            printf("rp:%d ra:%d\n",f_clock->cube_rp, f_clock->cube_ra);
             compo_cube_move(cube);
-        }else{
-            if(tick_check_expire(f_clock->tick, 5))
+        }
+        else
+        {
+            if(tick_check_expire(f_clock->tick, f_clock->cube_touch_time))
             {
+                f_clock->cube_touch_time = 5;
                 f_clock->tick = tick_get();
                 f_clock->cube_rp+=3;
                 if(f_clock->cube_rp==3600)f_clock->cube_rp=0;
@@ -735,9 +757,17 @@ static void func_clock_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
     f_clock_t *f_clock = (f_clock_t*)func_cb.f_cb;
-    f_clock->cube_ra = 1300;
-    f_clock->cube_rp = 0;
-    f_clock->cube_touch = false;
+
+    if(sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
+    {
+        compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+        f_clock->cube_touch_time = 5;
+//        f_clock->cube_ra = cube->move_cb.focus_sph.azimuth;
+//        f_clock->cube_rp = cube->move_cb.focus_sph.rotation;
+        f_clock->cube_ra = 1400;
+        f_clock->cube_rp = 0;
+        f_clock->cube_touch = false;
+    }
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {

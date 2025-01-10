@@ -285,8 +285,11 @@ void hfp_hf_call_notice(uint32_t evt)
             bt_cb.call_type = CALL_TYPE_NONE;
 
             //保存通话记录
-            memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
-            uteModuleCallUpdateRecordsData();
+            if (sys_cb.refresh_language_flag == false)    //切换语言的时候不保存
+            {
+                memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
+                uteModuleCallUpdateRecordsData();
+            }
 
 #if CALL_MGR_EN
             bt_cb.incall_flag = 0;

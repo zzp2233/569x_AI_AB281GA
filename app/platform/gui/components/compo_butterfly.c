@@ -26,7 +26,8 @@
 #define FOCUS_AUTO_STEP_DIV                 16
 #define DRAG_AUTO_SPEED                     (BUTTERFLY_ITEM_ANGLE * 80)  //拖动松手后的速度
 
-enum{
+enum
+{
     BUTTERFLY_STA_FLY_FORWARD = 1,
     BUTTERFLY_STA_FLY_BACKWARD,
 };
@@ -60,7 +61,7 @@ compo_butterfly_t *compo_butterfly_create(compo_form_t *frm, compo_butterfly_res
     img = widget_image3d_create(page, res->res_body);
     widget_image3d_set_axis(img, axis);
     btfly->img_body = img;
-    widget_set_pos(img, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    widget_set_pos(img, GUI_SCREEN_CENTER_X+5, GUI_SCREEN_CENTER_Y+5);
     widget_image3d_set_rotation_center(img, 12, 63);
     widget_image3d_set_polar(img, 900);
     widget_image3d_set_azimuth(img, 900);
@@ -118,7 +119,8 @@ void compo_butterfly_update(compo_butterfly_t *btfly)
     int wing_up_angle = btfly->wing_up_angle;
     int wing_down_angle = btfly->wing_down_angle;
     widget_image3d_t *img;
-    if (!btfly->flag_need_update) {
+    if (!btfly->flag_need_update)
+    {
         return;
     }
     btfly->flag_need_update = false;
@@ -135,12 +137,16 @@ void compo_butterfly_update(compo_butterfly_t *btfly)
 
     widget_axis3d_t *axis = btfly->axis;
 
-    if (rotation_bak != rotation) {
+    if (rotation_bak != rotation)
+    {
         rotation_bak = rotation;
-        if ((rotation > 0 && rotation <= 900) || (rotation > 2700 && rotation < 3600)) {
+        if ((rotation > 0 && rotation <= 900) || (rotation > 2700 && rotation < 3600))
+        {
             btfly->z -= 1;
             btfly->overlook -= 1;
-        } else if (rotation > 900 && rotation < 2700){
+        }
+        else if (rotation > 900 && rotation < 2700)
+        {
             btfly->z += 1;
             btfly->overlook += 1;
         }
@@ -149,14 +155,19 @@ void compo_butterfly_update(compo_butterfly_t *btfly)
 
     widget_axis3d_set_overlook(axis, btfly->overlook);
     widget_axis3d_set_pos(btfly->axis, 0, 0, btfly->z);
-    if (rotation >= 450 && rotation <= 1350) {
+    if (rotation >= 450 && rotation <= 1350)
+    {
         flag_top_body = true;
         flag_top_ur = true;
         flag_top_dr = true;
-    } else if (rotation > 1350 && rotation < 2250) {
+    }
+    else if (rotation > 1350 && rotation < 2250)
+    {
         flag_top_ul = true;
         flag_top_ur = true;
-    } else if (rotation >= 2250 && rotation <= 3150) {
+    }
+    else if (rotation >= 2250 && rotation <= 3150)
+    {
         flag_top_body = true;
         flag_top_ul = true;
         flag_top_dl = true;
@@ -196,13 +207,16 @@ void compo_butterfly_update(compo_butterfly_t *btfly)
  **/
 s32 compo_butterfly_set_rotation(compo_butterfly_t *btfly, s32 angle)
 {
-    if (angle < 0) {
+    if (angle < 0)
+    {
         angle = 3600 - (-angle % 3600);
     }
-    if (angle >= 3600) {
+    if (angle >= 3600)
+    {
         angle = angle % 3600;
     }
-    if (btfly->rotation != angle) {
+    if (btfly->rotation != angle)
+    {
         btfly->rotation = angle;
         btfly->flag_need_update = true;
     }
@@ -216,7 +230,8 @@ s32 compo_butterfly_set_rotation(compo_butterfly_t *btfly, s32 angle)
  **/
 s16 compo_butterfly_set_overlook(compo_butterfly_t *btfly, s16 overlook)
 {
-    if (btfly->overlook != overlook) {
+    if (btfly->overlook != overlook)
+    {
         btfly->overlook = overlook;
         btfly->flag_need_update = true;
     }
@@ -230,7 +245,8 @@ s16 compo_butterfly_set_overlook(compo_butterfly_t *btfly, s16 overlook)
  **/
 s16 compo_butterfly_set_z(compo_butterfly_t *btfly, s16 z)
 {
-    if (btfly->z != z) {
+    if (btfly->z != z)
+    {
         btfly->z = z;
         btfly->flag_need_update = true;
     }
@@ -264,7 +280,8 @@ s16 compo_butterfly_get_z(compo_butterfly_t *btfly)
  **/
 void compo_butterfly_flap(compo_butterfly_t *btfly, s16 angle)
 {
-    if (angle >= BUTTERFLY_MAX_FLAP) {
+    if (angle >= BUTTERFLY_MAX_FLAP)
+    {
         return;
     }
     int wing_up_angle = btfly->wing_up_angle;
@@ -273,33 +290,46 @@ void compo_butterfly_flap(compo_butterfly_t *btfly, s16 angle)
     int wing_down_step1 = angle * 3 / 4;
     int wing_down_step2 = angle * 7 / 8;
     int wing_delta_step = wing_down_step1 / 2;
-    if (btfly->wing_dir) {
-        if (wing_up_angle >= wing_down_angle) {
+    if (btfly->wing_dir)
+    {
+        if (wing_up_angle >= wing_down_angle)
+        {
             wing_up_angle += wing_up_step;
             wing_down_angle += wing_down_step1;
-        } else {
+        }
+        else
+        {
             wing_down_angle -= wing_down_step2;
-            if (wing_down_angle <= BUTTERFLY_MIN_WING) {
+            if (wing_down_angle <= BUTTERFLY_MIN_WING)
+            {
                 wing_down_angle = BUTTERFLY_MIN_WING;
             }
             wing_up_angle += wing_delta_step;
         }
-        if (wing_up_angle >= BUTTERFLY_MAX_WING) {
+        if (wing_up_angle >= BUTTERFLY_MAX_WING)
+        {
             wing_up_angle = BUTTERFLY_MAX_WING;
             btfly->wing_dir = 0;
         }
-    } else {
-        if (wing_up_angle <= wing_down_angle) {
+    }
+    else
+    {
+        if (wing_up_angle <= wing_down_angle)
+        {
             wing_up_angle -= wing_up_step;
             wing_down_angle -= wing_down_step2;
-        } else {
+        }
+        else
+        {
             wing_down_angle += wing_down_step1;
-            if (wing_down_angle >= BUTTERFLY_MAX_WING) {
+            if (wing_down_angle >= BUTTERFLY_MAX_WING)
+            {
                 wing_down_angle = BUTTERFLY_MAX_WING;
             }
             wing_up_angle -= wing_delta_step;
         }
-        if (wing_up_angle <= BUTTERFLY_MIN_WING) {
+        if (wing_up_angle <= BUTTERFLY_MIN_WING)
+        {
             wing_up_angle = BUTTERFLY_MIN_WING;
             btfly->wing_dir = 1;
         }
@@ -317,14 +347,20 @@ void compo_butterfly_flap(compo_butterfly_t *btfly, s16 angle)
 u8 compo_butterfly_get_sta(compo_butterfly_t *btfly)
 {
     compo_butterfly_move_cb_t *mcb = &btfly->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return COMPO_BUTTERFLY_STA_IDLE;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
         return COMPO_BUTTERFLY_STA_DARG;
-    } else if (mcb->flag_move_auto || mcb->flag_move_z_auto == BUTTERFLY_STA_FLY_FORWARD) {
+    }
+    else if (mcb->flag_move_auto || mcb->flag_move_z_auto == BUTTERFLY_STA_FLY_FORWARD)
+    {
         return COMPO_BUTTERFLY_STA_MOVE;
-    } else {
+    }
+    else
+    {
         return COMPO_BUTTERFLY_STA_IDLE;
     }
 }
@@ -336,19 +372,24 @@ u8 compo_butterfly_get_sta(compo_butterfly_t *btfly)
 void compo_butterfly_move(compo_butterfly_t *btfly)
 {
     compo_butterfly_move_cb_t *mcb = &btfly->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
 //        s32 dx, dy, da, di;
 //        mcb->flag_drag = ctp_get_dxy(&dx, &dy);
-        if (mcb->flag_drag) {
+        if (mcb->flag_drag)
+        {
             //拖动菜单图标
 //            da = dx * 1800 / BUTTERFLY_HALF_CIRCUM;
 //            di = dy * 1800 / BUTTERFLY_HALF_CIRCUM;
             //compo_butterfly_set_rotation(btfly, mcb->focus_a - da);
             compo_butterfly_update(btfly);
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
 //            s32 last_dx;
 //            last_dx = ctp_get_last_dxy().x;
@@ -358,33 +399,46 @@ void compo_butterfly_move(compo_butterfly_t *btfly)
             mcb->tick = tick_get();
         }
     }
-    if (mcb->flag_move_auto) {
+    if (mcb->flag_move_auto)
+    {
         //自动移动
-        if (mcb->focus_a == mcb->moveto_a) {
+        if (mcb->focus_a == mcb->moveto_a)
+        {
             mcb->flag_move_auto = false;              //移动完成
             compo_butterfly_update(btfly);
-        } else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+        {
             s32 da = 0;
             mcb->tick = tick_get();
             da = mcb->moveto_a - mcb->focus_a;
-			da = da > 0 ? 10 : -10;
+            da = da > 0 ? 10 : -10;
             mcb->focus_a += da;
             compo_butterfly_set_rotation(btfly, mcb->focus_a);
             compo_butterfly_update(btfly);
         }
-    } else {
+    }
+    else
+    {
 
-        if (mcb->flag_move_z_auto) {
+        if (mcb->flag_move_z_auto)
+        {
             //自动移动
-            if (mcb->focus_z == mcb->moveto_z) {
+            if (mcb->focus_z == mcb->moveto_z)
+            {
                 compo_butterfly_update(btfly);
                 mcb->moveto_z = 0;
-                if (mcb->flag_move_z_auto == 1) {
+                if (mcb->flag_move_z_auto == 1)
+                {
                     mcb->flag_move_z_auto = 2;
-                } else if (mcb->flag_move_z_auto == 2) {
+                }
+                else if (mcb->flag_move_z_auto == 2)
+                {
                     mcb->flag_move_z_auto = 0;              //移动完成
                 }
-            } else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE)) {
+            }
+            else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+            {
                 s32 da = 0;
                 mcb->tick = tick_get();
                 da = mcb->moveto_z - mcb->focus_z;
@@ -406,55 +460,60 @@ void compo_butterfly_move(compo_butterfly_t *btfly)
 void compo_butterfly_move_control(compo_butterfly_t *btfly, int cmd)
 {
     compo_butterfly_move_cb_t *mcb = &btfly->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    switch (cmd) {
-    case COMPO_BUTTERFLY_MOVE_CMD_DRAG:
-        //开始拖动
+    switch (cmd)
+    {
+        case COMPO_BUTTERFLY_MOVE_CMD_DRAG:
+            //开始拖动
 //        mcb->flag_drag = true;
 //        mcb->flag_move_auto = false;
 //        mcb->focus_a = btfly->rotation;
-        break;
+            break;
 
-    case COMPO_BUTTERFLY_MOVE_CMD_LEFT:
-        //向左滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->focus_a = btfly->rotation;
-            mcb->moveto_a = mcb->focus_a;
-            mcb->moveto_a = -BUTTERFLY_ITEM_ANGLE;
-        }
+        case COMPO_BUTTERFLY_MOVE_CMD_LEFT:
+            //向左滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->focus_a = btfly->rotation;
+                mcb->moveto_a = mcb->focus_a;
+                mcb->moveto_a = -BUTTERFLY_ITEM_ANGLE;
+            }
 
-        break;
+            break;
 
-    case COMPO_BUTTERFLY_MOVE_CMD_LOOP:
-        //向前滚动
+        case COMPO_BUTTERFLY_MOVE_CMD_LOOP:
+            //向前滚动
 
-        if (!mcb->flag_move_z_auto) {
-            mcb->flag_move_z_auto = BUTTERFLY_STA_FLY_FORWARD;
-            mcb->focus_z = 0;
-            mcb->moveto_z = mcb->focus_z;
-            mcb->moveto_z = -BUTTERFLY_ITEM_FORWARD;
-        }
+            if (!mcb->flag_move_z_auto)
+            {
+                mcb->flag_move_z_auto = BUTTERFLY_STA_FLY_FORWARD;
+                mcb->focus_z = 0;
+                mcb->moveto_z = mcb->focus_z;
+                mcb->moveto_z = -BUTTERFLY_ITEM_FORWARD;
+            }
 
 
-        break;
+            break;
 
-    case COMPO_BUTTERFLY_MOVE_CMD_RIGHT:
-        //向右滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->focus_a = btfly->rotation;
-            mcb->moveto_a = mcb->focus_a;
-            mcb->moveto_a = BUTTERFLY_ITEM_ANGLE;
-        }
+        case COMPO_BUTTERFLY_MOVE_CMD_RIGHT:
+            //向右滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->focus_a = btfly->rotation;
+                mcb->moveto_a = mcb->focus_a;
+                mcb->moveto_a = BUTTERFLY_ITEM_ANGLE;
+            }
 
-        break;
+            break;
 
-    default:
-        halt(HALT_GUI_COMPO_BUTTERFLY_MOVE_CMD);
-        break;
+        default:
+            halt(HALT_GUI_COMPO_BUTTERFLY_MOVE_CMD);
+            break;
     }
 }
 

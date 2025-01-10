@@ -189,7 +189,8 @@ compo_form_t *func_calender_form_create(void)
     s16 x_pos = CALE_CONTEXT_X_START_GAP + CALE_CONTEXT_WIDTH / 2;
     s16 y_pos = CALE_CONTEXT_y_START_GAP + CALE_CONTEXT_HEIGHT / 2;
 
-    u16 week_text[7][2] = {
+    u16 week_text[7][2] =
+    {
         {STR_CALENDAR_SEVEN,COLOR_GRAY},// 日
         {STR_CALENDAR_ONE,COLOR_WHITE}, // 一
         {STR_CALENDAR_TWO,COLOR_WHITE},// 二
@@ -296,11 +297,11 @@ static void func_calendar_date_update(bool next)
     }
 
     comop = compo_getobj_byid(COMPO_ID_YEAR_TEXT);
-    snprintf(buf, sizeof(buf), "%d", time->update_year);
+    snprintf(buf, sizeof(buf), "%04d", time->update_year);
     compo_label_set((compo_label_t *)comop, buf);
 
     comop = compo_getobj_byid(COMPO_ID_MON_TEXT);
-    snprintf(buf, sizeof(buf), "%d", time->update_mon);
+    snprintf(buf, sizeof(buf), "%02d", time->update_mon);
     compo_label_set((compo_label_t *)comop, buf);
 
     //刷新当前日期

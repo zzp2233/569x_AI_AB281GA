@@ -1,11 +1,12 @@
 #ifndef _COMPO_ROTARY_H
 #define _COMPO_ROTARY_H
 
-#define ROTARY_ITEM_CNT                     7                   //转盘个数
-#define ROTARY_ITEM_ANGLE                   ((3600 + ROTARY_ITEM_CNT - 1) / ROTARY_ITEM_CNT)
+#define ROTARY_ITEM_CNT_MAX                     7
+
 
 //转盘移动控制命令
-enum COMPO_ROTARY_MOVE_CMD {
+enum COMPO_ROTARY_MOVE_CMD
+{
     COMPO_ROTARY_MOVE_CMD_NONE,
     COMPO_ROTARY_MOVE_CMD_ENTERING,             //入场动画
     COMPO_ROTARY_MOVE_CMD_EXITING,              //出场动画
@@ -15,7 +16,8 @@ enum COMPO_ROTARY_MOVE_CMD {
 };
 
 //转盘当前状态
-enum COMPO_ROTARY_STA {
+enum COMPO_ROTARY_STA
+{
     COMPO_ROTARY_STA_IDLE,                      //空闲状态
     COMPO_ROTARY_STA_ENTERING,                  //入场中
     COMPO_ROTARY_STA_EXITING,                   //出场中
@@ -25,13 +27,15 @@ enum COMPO_ROTARY_STA {
 };
 
 //转盘项定义
-typedef struct compo_rotary_item_t_ {
+typedef struct compo_rotary_item_t_
+{
     u32 res_addr;               //图标
     u32 str_idx;                //文字
 } compo_rotary_item_t;
 
 //列表移动控制
-typedef struct compo_rotary_move_cb_t_ {
+typedef struct compo_rotary_move_cb_t_
+{
     u32 tick;
     s32 focus_a;
     int moveto_idx;                     //设定自动移到的目标菜单
@@ -42,7 +46,8 @@ typedef struct compo_rotary_move_cb_t_ {
     u8 animation_cnt;
 } compo_rotary_move_cb_t;
 
-typedef struct compo_rotary_t_ {
+typedef struct compo_rotary_t_
+{
     COMPO_STRUCT_COMMON;
     compo_rotary_move_cb_t move_cb;     //移动和拖动处理
     widget_page_t *page;
@@ -55,7 +60,7 @@ typedef struct compo_rotary_t_ {
     u16 radius;
 
     compo_rotary_item_t const *item;
-    widget_image_t *item_img[ROTARY_ITEM_CNT];
+    widget_image_t *item_img[ROTARY_ITEM_CNT_MAX];
     widget_text_t *item_title;
 } compo_rotary_t;
 

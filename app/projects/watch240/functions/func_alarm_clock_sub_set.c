@@ -247,7 +247,7 @@ static const aclock_set_pic_bg_t tbl_aclock_set_pic_bg =
 //#define ALARM_NUM_PIC_CENTER_Y              126
 
 #define ALARM_TXT_ITEM_H_X                  51//71
-#define ALARM_TXT_ITEM_M_X                  181//171
+#define ALARM_TXT_ITEM_M_X                  185//171
 #define ALARM_TXT_ITEM_Y                    -25//48
 #define ALARM_TXT_ITEM_Y_OFFSET             45
 

@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_drv_battery_common.h"
 #include "ute_drv_motor.h"
+#include "ute_module_systemtime.h"
 
 #define TRACE_EN    1
 
@@ -355,10 +356,6 @@ static void func_charge_enter(void)
     f_charge_t *f_charge = (f_charge_t *)func_cb.f_cb;
     f_charge->percent_bkp = BAT_PERCENT_VALUE;
     func_cb.enter_tick = tick_get();
-
-//    uteDrvMotorSetIsAllowMotorVibration(true);///开启马达
-//    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-//    uteDrvMotorSetIsAllowMotorVibration(false);///关闭马达
 }
 
 //退出充电功能
@@ -367,6 +364,26 @@ static void func_charge_exit(void)
     printf("%s\n", __func__);
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
     func_cb.last = FUNC_CHARGE;
+
+    if(sys_cb.power_on_flag == true) return;
+
+    sys_cb.power_on_state=true;
+    if(!uteApplicationCommonIsHasConnectOurApp())
+    {
+        sys_cb.power_on_state=false;
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+
+        if(time.isWatchSetLangage == false)
+        {
+            func_cb.sta = FUNC_POWER_ON_LANGUAGE;
+        }
+        else
+        {
+            func_cb.sta = FUNC_POWER_ON_SCAN;
+        }
+    }
+    sys_cb.power_on_flag = true;
 }
 
 //充电功能

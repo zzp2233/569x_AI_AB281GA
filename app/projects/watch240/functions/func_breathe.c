@@ -21,7 +21,7 @@ enum
     BREATHE_MODE_FAST,          //稍快
 };
 
-#define ANIMATION_TICK_EXPIRE   20  //动画帧间隔，ms
+#define ANIMATION_TICK_EXPIRE   40  //动画帧间隔，ms
 #define BREATHE_ICON_SIZE_MIN   45  //图标缩放最小尺寸
 #define BREATHE_ICON_SIZE_MAX   170
 #define BREATHE_PREPARE_TIME    1800  //入场动画持续时间

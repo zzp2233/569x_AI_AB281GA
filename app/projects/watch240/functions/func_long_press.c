@@ -91,15 +91,15 @@ compo_form_t *func_long_press_form_create(void)
     /*创建三个文本*/
     compo_textbox_t *txt;
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_CALL]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3,RECT_WIDTH-50,widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3,RECT_WIDTH-50,IMG_WIDTH);
     compo_textbox_set(txt,i18n[STR_SLIDE_CALL]);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_OFF]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_2,RECT_WIDTH-50,widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_2,RECT_WIDTH-50,IMG_WIDTH);
     compo_textbox_set(txt,i18n[STR_SLIDE_OFF]);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_REST]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_1,RECT_WIDTH-50,widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_1,RECT_WIDTH-50,IMG_WIDTH);
     compo_textbox_set(txt,i18n[STR_SLIDE_REST]);
 
     /*创建一个椭圆用于滑动时覆盖字体*/

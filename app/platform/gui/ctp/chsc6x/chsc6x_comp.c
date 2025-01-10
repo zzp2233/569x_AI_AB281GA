@@ -3,9 +3,11 @@
 #include "chsc6x_ramcode.h"
 #include "chsc6x_platform.h"
 // #include "chsc6x_flash_boot.h"
-
-// #include "YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" //801
+#if PROJECT_AB281B_SUPPORT
+#include "YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" //801
+#else
 #include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
+#endif
 #include "chsc6x_main.h"
 
 #define TXRX_ADDR       (0x9000)
@@ -919,8 +921,13 @@ static int chsc6x_do_update_ifneed(uint8_t* p_fw_upd, uint32_t fw_len)
     }
     else
     {
+#ifdef UTE_DRV_TP_FIRMWARE_ADDRESS
+        fupd = (const uint8_t *)UTE_DRV_TP_FIRMWARE_ADDRESS;
+        fw_size = UTE_DRV_TP_FIRMWARE_SIZE;
+#else
         fupd = chsc_boot;
         fw_size = sizeof(chsc_boot);
+#endif
     }
     ret = chsc6x_update_compat_ctl((uint8_t *) fupd, fw_size);
 #endif

@@ -35,10 +35,69 @@ static u16 record_cnt = 0;                                       //通话记录�
 static ute_module_call_addressbook_t* address_book_tb2 = NULL;            //电话簿数据
 static u16 address_book_cnt2 = 0;                                       //联系人个数
 
+
+// 判断从指定位置开始的字节序列是否是一个完整的UTF - 8字符
+static int is_complete_utf8_char(const char *str, int pos)
+{
+    unsigned char byte = str[pos];
+    if ((byte & 0x80) == 0)
+    {
+        // 单字节字符，肯定是完整的
+        return 1;
+    }
+    int num_bytes = 0;
+    if ((byte & 0xE0) == 0xC0)
+    {
+        num_bytes = 2;
+    }
+    else if ((byte & 0xF0) == 0xE0)
+    {
+        num_bytes = 3;
+    }
+    else if ((byte & 0xF8) == 0xF0)
+    {
+        num_bytes = 4;
+    }
+    for (int i = 1; i < num_bytes; i++)
+    {
+        if ((str[pos + i] & 0xC0)!= 0x80)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// 截取有用数据并在尾部补上三个...
+static void truncate_and_append(const char *src, char *dst, int dst_size)
+{
+    int i = 0;
+    int j = 0;
+    while (i < strlen(src) && j < dst_size - 1)
+    {
+        if (is_complete_utf8_char(src, i))
+        {
+            dst[j++] = src[i++];
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (j < dst_size - 3)
+    {
+        dst[j++] = '.';
+        dst[j++] = '.';
+        dst[j++] = '.';
+    }
+    dst[j] = '\0';
+}
+
 //input电话号码返回联系人，无联系人返回号码
 char *get_address_name(char *number)
 {
     static char name_utf8_buf[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH+5] = {0};
+    static char tmp_name_utf8_buf[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH+5] = {0};
     uint16_t name_utf8_len = 0;
     memset(name_utf8_buf, 0, sizeof(name_utf8_buf));
     bool match_flag = true;
@@ -69,7 +128,10 @@ char *get_address_name(char *number)
                     (uint8_t*)name_utf8_buf,
                     &name_utf8_len,
                     sizeof(name_utf8_buf));
-            return name_utf8_buf;
+
+            truncate_and_append(name_utf8_buf, tmp_name_utf8_buf, sizeof(tmp_name_utf8_buf));
+
+            return tmp_name_utf8_buf;
         }
     }
     return number;
@@ -169,20 +231,20 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
                 str_txt1_len = record_tbl[index].numberAsciiLen;
             }
 
-
-
             memcpy(str_txt1, get_address_name(record_tbl[index].numberAscii), strlen(get_address_name(record_tbl[index].numberAscii)));
-
 
 //            printf("####[%d,%d,%d]->[%s] [%s]\n", record_tbl[index].nameUnicodeLen, record_tbl[index].numberAsciiLen, str_txt1_len, str_txt1, record_tbl[index].numberAscii);
         }
         else
         {
-            if (str_txt1_len > record_tbl[index].nameUnicodeLen)
-            {
-                str_txt1_len = record_tbl[index].nameUnicodeLen;
-            }
-            memcpy(str_txt1, record_tbl[index].nameUnicode, str_txt1_len);
+//            if (str_txt1_len > record_tbl[index].nameUnicodeLen)
+//            {
+//                str_txt1_len = record_tbl[index].nameUnicodeLen;
+//            }
+
+            truncate_and_append(record_tbl[index].nameUnicode, str_txt1, str_txt1_len);
+
+//            memcpy(str_txt1, record_tbl[index].nameUnicode, str_txt1_len);
         }
 
         if (str_txt2_len > sizeof(str_txt2_time))
@@ -329,6 +391,7 @@ static void func_call_sub_record_icon_click(void)
     }
     if(!uteModuleCallBtIsConnected())
     {
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
         msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
     }

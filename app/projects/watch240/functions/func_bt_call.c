@@ -261,9 +261,12 @@ static void truncate_and_append(const char *src, char *dst, int dst_size)
     }
     if (j < dst_size - 3)
     {
-        dst[j++] = '.';
-        dst[j++] = '.';
-        dst[j++] = '.';
+        if (strlen(src) > PBAP_MAX_NAME_LEN)
+        {
+            dst[j++] = '.';
+            dst[j++] = '.';
+            dst[j++] = '.';
+        }
     }
     dst[j] = '\0';
 }
@@ -451,6 +454,8 @@ void func_bt_call_exit(void)
             WDT_CLR();
         }
     }
+
+    func_cb.last = FUNC_BT_CALL;
 }
 
 void func_bt_call(void)

@@ -468,6 +468,9 @@ static void func_sport_sub_run_updata(void)
         //否则采用默认运行界面
         default:
         {
+            //更新运动类型
+
+
             //更新时间
             char buf[14];
             compo_textbox_t *txt_time = NULL;
@@ -667,6 +670,8 @@ static void func_sport_sub_run_process(void)
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_SPORT_STOP);
     compo_textbox_t* txt = compo_getobj_byid(COMPO_ID_BTN_SPORT_PAUSE);
+
+
     if (btn != NULL)
     {
 //        if (uteModuleSportMoreSportIsAppStart())                        //多运动是手机端开启的
@@ -898,6 +903,8 @@ static void func_sport_sub_run_message(size_msg_t msg)
 static bool sport_refresh = true;
 static bool sport_start_flag = false;
 
+static u16 cur_sport_type = 0;
+
 //进入室内跑步功能
 static void func_sport_sub_run_enter(void)
 {
@@ -909,11 +916,12 @@ static void func_sport_sub_run_enter(void)
     if(sport_refresh == true)
     {
         f_sport_sub_run->sport_run_state = sport_start_flag;
-        if (func_cb.last != FUNC_CAMERA && func_cb.last != FUNC_CHARGE)
+        if (func_cb.last != FUNC_CAMERA && func_cb.last != FUNC_CHARGE && func_cb.last != FUNC_LONG_PRESS && func_cb.last != FUNC_BT_CALL && func_cb.last != FUNC_BT_RING)
         {
             if (uteModuleSportMoreSportIsAppStart())
             {
                 //uteModuleSportStartMoreSports(uteModuleSportMoreSportGetType(), 1, 1);
+                printf("func_cb.last = %d\n", func_cb.last);
                 if (func_cb.last != FUNC_SPORT_SWITCH)
                 {
                     func_cb.sta = FUNC_SPORT_SWITCH;
@@ -933,6 +941,7 @@ static void func_sport_sub_run_enter(void)
         }
     }
     f_sport_sub_run->heart_pic_size = 100;
+    cur_sport_type = uteModuleSportMoreSportGetType();
 
     func_cb.frm_main = func_sport_sub_run_form_create();
 
@@ -946,13 +955,15 @@ static void func_sport_sub_run_exit(void)
     if(sys_cb.refresh_language_flag == false)//刷新语言时不清除数据
     {
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (func_cb.sta != FUNC_CAMERA && func_cb.sta != FUNC_CHARGE)
+        if (func_cb.sta != FUNC_CAMERA && func_cb.sta != FUNC_CHARGE && func_cb.sta != FUNC_LONG_PRESS && func_cb.sta != FUNC_BT_CALL && func_cb.sta != FUNC_BT_RING)
         {
             if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
             {
                 task_stack_pop();
             }
         }
+        sport_start_flag = false;
+        sport_refresh = true;
     }
     else
     {
@@ -971,6 +982,10 @@ void func_sport_sub_run(void)
     {
         func_sport_sub_run_message(msg_dequeue());
         func_sport_sub_run_process();
+        if (cur_sport_type != uteModuleSportMoreSportGetType())         //运动种类改变，直接退出，重新进去对应的运动界面
+        {
+            break;
+        }
     }
     func_sport_sub_run_exit();
 }

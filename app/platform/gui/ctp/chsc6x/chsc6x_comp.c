@@ -195,11 +195,13 @@ void chsc6x_tp_reset_delay(chsc6x_reset_e type)
     switch (type)
     {
         case HW_CMD_RESET:
-            chsc6x_msleep(30);
+            // chsc6x_msleep(30);
+            chsc6x_tp_reset();
             break;
 
         case HW_ACTIVE_RESET:
-            chsc6x_msleep(2);
+            // chsc6x_msleep(2);
+            chsc6x_tp_reset_active();
             break;
 
         default:
@@ -325,6 +327,7 @@ static uint32_t chsc6x_checksumEx(uint8_t *buf, uint16_t length)
     checkEx = 0;
     for (k = 0; k < length; k++)
     {
+        WDT_CLR();
         check += buf[k];
         checkEx += (uint16_t) (k * buf[k]);
     }

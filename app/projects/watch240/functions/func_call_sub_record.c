@@ -86,9 +86,12 @@ static void truncate_and_append(const char *src, char *dst, int dst_size)
     }
     if (j < dst_size - 3)
     {
-        dst[j++] = '.';
-        dst[j++] = '.';
-        dst[j++] = '.';
+        if (strlen(src) > PBAP_MAX_NAME_LEN)
+        {
+            dst[j++] = '.';
+            dst[j++] = '.';
+            dst[j++] = '.';
+        }
     }
     dst[j] = '\0';
 }

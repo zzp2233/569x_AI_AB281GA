@@ -206,6 +206,7 @@ void uteModuleHeartEverySecond(void)
         if(!uteModuleBloodoxygenIsTesting() &&
            (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
            && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
+           && uteModuleHeartGetWorkMode() != WORK_MODE_HR
           )
         {
             if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)

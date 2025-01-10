@@ -336,6 +336,7 @@ void uteModuleSportUpdateGsensorIdAccRange(void);
 void uteModuleSportStepTypeSetStep(void);
 void uteModuleSportStepTypeSetSleep(void);
 void uteModuleSportStepTypeSetNone(void);
+ute_module_sport_step_type uteModuleSportGetStepType(void);
 void uteModuleSprotResetRovllverScreenMode(void);
 void uteModuleSportInputDataBeforeAlgo(void);
 void uteModuleSportSendRealTimeStepInfo(void);

@@ -67,7 +67,8 @@ typedef enum
     TYPE_BREATHRATE,
     TYPE_EMOTION_PRESSURE,
     TYPE_FACTORY0,
-	TYPE_FACTORY1,
+    TYPE_FACTORY1,
+    TYPE_WEAR,
 } ute_module_heart_type_t;
 /*! 心率数据结构zn.zeng, 2021-07-13  */
 typedef struct

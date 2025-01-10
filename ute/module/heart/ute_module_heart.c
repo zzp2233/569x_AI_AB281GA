@@ -500,6 +500,10 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
     {
         bsp_sensor_hr_init(WORK_MODE_FACTORY1);
     }
+    else if (uteModuleHeartData.type == TYPE_WEAR)
+    {
+        bsp_sensor_hr_init(WORK_MODE_WEAR);
+    }
     else
     {
         if(uteModuleHeartData.type==TYPE_BREATHRATE)

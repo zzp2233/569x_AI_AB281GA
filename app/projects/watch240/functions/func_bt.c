@@ -148,11 +148,9 @@ compo_form_t *func_bt_form_create(void)
         compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
         compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
+
+        compo_textbox_set(name_txt,artist_buf);
         if(title_size_leng)
-        {
-            compo_textbox_set(name_txt,artist_buf);
-        }
-        else
         {
             compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
         }
@@ -163,15 +161,13 @@ compo_form_t *func_bt_form_create(void)
         compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
         compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
+
+
+        compo_textbox_set(lyric_txt,title_buf);
         if(artist_size_leng)
-        {
-            compo_textbox_set(lyric_txt,title_buf);
-        }
-        else
         {
             compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
         }
-
     }
     else
     {

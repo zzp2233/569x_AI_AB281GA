@@ -4,7 +4,7 @@
 
 #if (CTP_SELECT == CTP_CHSC6X)
 
-#define TRACE_EN                1
+#define TRACE_EN                0
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -18,7 +18,8 @@ const char chsc6x_str_point[] = "chsc6x[%d]:  X:%d, Y:%d, point_num:%d,flag:%d, 
 #define TRACE(...)
 #endif
 
-struct ts_event {
+struct ts_event
+{
     unsigned short x; /*x coordinate */
     unsigned short y; /*y coordinate */
     int flag; /* touch event flag: 0 -- down; 1-- up; 2 -- contact */
@@ -39,26 +40,36 @@ void chsc6x_read_touch_info(void)
     unsigned char read_buf[6];
 //    struct ts_event events[CHSC6X_MAX_POINTS_NUM];
 
-    if(1 == CHSC6X_MAX_POINTS_NUM) {
+    if(1 == CHSC6X_MAX_POINTS_NUM)
+    {
         rd_len = 3;
-    } else if(2 == CHSC6X_MAX_POINTS_NUM) {
-        if ((CHSC6X_RES_MAX_X < 255) && (CHSC6X_RES_MAX_Y < 255) ) {
+    }
+    else if(2 == CHSC6X_MAX_POINTS_NUM)
+    {
+        if ((CHSC6X_RES_MAX_X < 255) && (CHSC6X_RES_MAX_Y < 255) )
+        {
             rd_len = 5;
-        } else {
+        }
+        else
+        {
             rd_len = 6;
         }
-    } else {
+    }
+    else
+    {
         TRACE(chsc6x_str_err1);
         return;
     }
 
     ret = chsc6x_i2c_read(CHSC6X_I2C_ID, read_buf, rd_len);
 //    ret = chsc6x_read_bytes_u16addr_sub(CHSC6X_I2C_ID, 0x00, read_buf, rd_len);
-    if(rd_len == ret) {
+    if(rd_len == ret)
+    {
 #if TRACE_EN
         point_num = read_buf[0] & 0x03;
 #endif
-        if(1 == CHSC6X_MAX_POINTS_NUM) {
+        if(1 == CHSC6X_MAX_POINTS_NUM)
+        {
             events[0].x = (unsigned short)(((read_buf[0] & 0x40) >> 6) << 8) | (unsigned short)read_buf[1];
             events[0].y = (unsigned short)(((read_buf[0] & 0x80) >> 7) << 8) | (unsigned short)read_buf[2];
 
@@ -66,8 +77,11 @@ void chsc6x_read_touch_info(void)
             events[0].id = (read_buf[0] >>2) & 0x01;
             TRACE(chsc6x_str_point, 0, events[0].x, events[0].y, point_num, events[0].flag, events[0].id);
 
-        } else if(2 == CHSC6X_MAX_POINTS_NUM) {
-            if ((CHSC6X_RES_MAX_X > 255) || (CHSC6X_RES_MAX_Y > 255) ) {
+        }
+        else if(2 == CHSC6X_MAX_POINTS_NUM)
+        {
+            if ((CHSC6X_RES_MAX_X > 255) || (CHSC6X_RES_MAX_Y > 255) )
+            {
                 events[0].x = (unsigned short)((read_buf[5] & 0x01) << 8) | (unsigned short)read_buf[1];
                 events[0].y = (unsigned short)((read_buf[5] & 0x02) << 7) | (unsigned short)read_buf[2];
 
@@ -81,7 +95,9 @@ void chsc6x_read_touch_info(void)
                 events[1].flag = (read_buf[0] >> 6) & 0x03;
                 events[1].id = (read_buf[0] >>3) & 0x01;
                 TRACE(chsc6x_str_point, 2, events[0].x, events[0].y, point_num, events[0].flag, events[0].id);
-            } else {
+            }
+            else
+            {
                 events[0].x = read_buf[1];
                 events[0].y = read_buf[2];
 
@@ -97,7 +113,9 @@ void chsc6x_read_touch_info(void)
                 TRACE(chsc6x_str_point, 4, events[0].x, events[0].y, point_num, events[0].flag, events[0].id);
             }
         }
-    } else {
+    }
+    else
+    {
         TRACE(chsc6x_str_err2, rd_len, ret);
     }
 }
@@ -140,9 +158,12 @@ void chsc6x_suspend(void)
     int ret = -1;
     chsc6x_tp_reset();
     ret = chsc6x_write_bytes_u16addr_sub(CHSC6X_I2C_ID, 0xa503, buft, 0);
-    if(ret == 0) {
+    if(ret == 0)
+    {
         chsc6x_info("touch_suspend OK \r\n");
-    }else{
+    }
+    else
+    {
         chsc6x_info("touch_suspend failed \r\n");
     }
 }
@@ -164,9 +185,12 @@ void chsc6x_dbcheck(void)
     int ret = -1;
     chsc6x_tp_reset();
     ret = chsc6x_write_bytes_u16addr_sub(CHSC6X_I2C_ID, 0xd001, buft, 0);   //0xd001 close
-    if(ret == 0) {
+    if(ret == 0)
+    {
         chsc6x_info("Enable dbcheck OK \r\n");
-    }else{
+    }
+    else
+    {
         chsc6x_info("Enable dbcheck failed \r\n");
     }
 }
@@ -177,9 +201,12 @@ void chsc6x_palmcheck(void)
     int ret = -1;
     chsc6x_tp_reset();
     ret = chsc6x_write_bytes_u16addr_sub(CHSC6X_I2C_ID, 0xd101, buft, 0);   //0xd100 close
-    if(ret == 0) {
+    if(ret == 0)
+    {
         chsc6x_info("Enable palmcheck OK \r\n");
-    }else{
+    }
+    else
+    {
         chsc6x_info("Enable palmcheck failed \r\n");
     }
 }
@@ -191,21 +218,28 @@ bool ctp_chsc6x_init(void)
     unsigned char fw_update_ret_flag = 0; //1:update OK, !0 fail
     struct ts_fw_infos fw_infos;
 
-    for(i = 0; i < 3; i++) {
+    for(i = 0; i < 3; i++)
+    {
         ret = chsc6x_tp_dect(&fw_infos, &fw_update_ret_flag);
-        if(1 == ret) {
-          #if CHSC6X_AUTO_UPGRADE /* If need update FW */
+        if(1 == ret)
+        {
+#if CHSC6X_AUTO_UPGRADE /* If need update FW */
             printf("chsc6x_tp_dect succeed!\r\n");
-            if(1 == fw_update_ret_flag) {
+            if(1 == fw_update_ret_flag)
+            {
                 printf("update fw succeed! \r\n");
                 break;
-            } else {
+            }
+            else
+            {
                 printf("update fw failed! \r\n");
             }
-          #else
+#else
             break;
-          #endif
-        }else {
+#endif
+        }
+        else
+        {
             printf("chsc6x_tp_dect failed! i = %d \r\n", i);
         }
     }
@@ -214,7 +248,7 @@ bool ctp_chsc6x_init(void)
     return true;
 }
 #else
-void chsc6x_gestrue(void){}
-void chsc6x_dbcheck(void){}
-void chsc6x_suspend(void){}
+void chsc6x_gestrue(void) {}
+void chsc6x_dbcheck(void) {}
+void chsc6x_suspend(void) {}
 #endif  //(CTP_SELECT == CTP_CHSC6X)

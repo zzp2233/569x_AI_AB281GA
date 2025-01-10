@@ -229,9 +229,9 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_setid(btn, COMPO_ID_BTN_DELETE);
                 compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,246 );
                 //新建数字
-                hour = SEC_TO_HOUR(sys_cb.timer_left_sec);
-                min = SEC_TO_MIN(sys_cb.timer_left_sec);
-                sec = SEC_TO_SEC(sys_cb.timer_left_sec);
+                hour = SEC_TO_HOUR(sys_cb.timer_custom_sec);
+                min = SEC_TO_MIN(sys_cb.timer_custom_sec);
+                sec = SEC_TO_SEC(sys_cb.timer_custom_sec);
                 txt = compo_textbox_create(frm, 12);
                 compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 128);
                 compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);

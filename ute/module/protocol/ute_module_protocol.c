@@ -1131,12 +1131,10 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
         {
 #if BT_ID3_TAG_EN
             if (!bt_is_connected())
+#endif
             {
                 uteModuleMusicSetPlayerVolume(receive[2]);
             }
-#else
-            uteModuleMusicSetPlayerVolume(receive[2]);
-#endif
         }
     }
 }

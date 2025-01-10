@@ -90,7 +90,8 @@ compo_form_t *func_call_sub_dial_form_create(void)
 //    printf("W:%d H:%d\n",gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).wid,gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).hei);
 
     //创建点击按钮变色图片
-    for (u8 i=0; i<CALL_DISP_BTN_ITEM_CNT; i++) {
+    for (u8 i=0; i<CALL_DISP_BTN_ITEM_CNT; i++)
+    {
         compo_picturebox_t* pic = compo_picturebox_create(frm, tbl_call_disp_btn_item[i].res_click);
         compo_setid(pic, tbl_call_disp_btn_item[i].btn_click_id);
         compo_picturebox_set_pos(pic, tbl_call_disp_btn_item[i].x, tbl_call_disp_btn_item[i].y);
@@ -123,20 +124,22 @@ compo_form_t *func_call_sub_dial_form_create(void)
 static void func_call_sub_dial_button_touch_handle(void)
 {
     int id = compo_get_button_id();
-    switch (id) {
-    case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_DEL:
+    switch (id)
+    {
+        case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_DEL:
 //        printf("id=%d\n", id);
-        compo_picturebox_set_visible(compo_getobj_byid(id+COMPO_ID_BTN_DEL), true);
-        break;
-    default:
-        break;
+            compo_picturebox_set_visible(compo_getobj_byid(id+COMPO_ID_BTN_DEL), true);
+            break;
+        default:
+            break;
     }
 }
 
 ///释放按钮效果处理
 static void func_call_sub_dial_button_release_handle(void)
 {
-    for (u8 i=0; i<CALL_DISP_BTN_ITEM_CNT; i++) {
+    for (u8 i=0; i<CALL_DISP_BTN_ITEM_CNT; i++)
+    {
         compo_picturebox_t* pic = compo_getobj_byid(tbl_call_disp_btn_item[i].btn_click_id);
         compo_picturebox_set_visible(pic, false);       //触摸效果图设置不可见
     }
@@ -174,6 +177,7 @@ static void func_call_sub_dial_button_click(void)
             }
             if(!uteModuleCallBtIsConnected())
             {
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                 sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
                 msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
             }

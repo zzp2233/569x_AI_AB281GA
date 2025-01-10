@@ -455,7 +455,7 @@ static void func_timer_button_click(void)
                 case COMPO_ID_BTN_5MIN:
                 case COMPO_ID_BTN_10MIN:
                 case COMPO_ID_BTN_30MIN:
-                    sys_cb.timer_left_sec = sys_cb.timer_total_sec = id * 60;
+                    sys_cb.timer_custom_sec = sys_cb.timer_left_sec = sys_cb.timer_total_sec = id * 60;
                     sys_cb.timer_sta = TIMER_STA_RESET;
                     page_next = TIMER_PAGE_COUNTDOWN;
                     break;

@@ -59,11 +59,11 @@ compo_form_t *func_sleep_form_create(void)
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
-////    sleep_data->totalSleepMin = 480;
-////    sleep_data->fallAsSleepTime.hour =0;
-////    sleep_data->fallAsSleepTime.min =0;
-////    sleep_data->getUpSleepTime.hour =8;
-////    sleep_data->getUpSleepTime.min = 0;
+//    sleep_data->totalSleepMin = 480;
+//    sleep_data->fallAsSleepTime.hour =0;
+//    sleep_data->fallAsSleepTime.min =0;
+//    sleep_data->getUpSleepTime.hour =8;
+//    sleep_data->getUpSleepTime.min = 0;
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
@@ -274,7 +274,7 @@ compo_form_t *func_sleep_form_create(void)
     uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1;
 
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, fillRect_y + fillRect_h+12, GUI_SCREEN_WIDTH-10, 1);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X+startX/2, fillRect_y + fillRect_h+12, GUI_SCREEN_WIDTH-10, 1);
     compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
 
 //    sleep_data->recordCnt = 5;

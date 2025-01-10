@@ -953,6 +953,8 @@ static void func_sport_sub_run_exit(void)
                 task_stack_pop();
             }
         }
+        sport_start_flag = false;
+        sport_refresh = true;
     }
     else
     {

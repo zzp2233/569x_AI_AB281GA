@@ -516,7 +516,6 @@ void gui_set_cover_index(uint8_t index)
                 {
                     ble_ams_remote_ctrl(AMS_REMOTE_CMD_PAUSE);
                 }
-                bt_audio_bypass();      //闹钟有铃声，断开蓝牙音频
                 start_music();
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 //开启马达 喇叭
@@ -574,9 +573,8 @@ void gui_set_cover_index(uint8_t index)
                 //关闭 喇叭 马达
                 uteDrvMotorStop();
                 sys_cb.cover_index = REMIND_COVER_NONE;
-                bt_audio_enable();
-                mp3_res_play_exit();
                 co_timer_del(&alarm_clock_timer);
+                music_control(MUSIC_MSG_STOP);
             }
         }
         else if (res == MSGBOX_RES_EXIT)                   //强制退出弹窗
@@ -587,9 +585,8 @@ void gui_set_cover_index(uint8_t index)
                 //关闭 喇叭 马达
                 uteDrvMotorStop();
                 sys_cb.cover_index = REMIND_COVER_NONE;
-                bt_audio_enable();
-                mp3_res_play_exit();
                 co_timer_del(&alarm_clock_timer);
+                music_control(MUSIC_MSG_STOP);
             }
         }
         else if (res == MSGBOX_RES_TIMEOUT_EXIT)            //提醒界面超时退出
@@ -600,9 +597,8 @@ void gui_set_cover_index(uint8_t index)
                 //关闭 喇叭 马达
                 uteDrvMotorStop();
                 sys_cb.cover_index = REMIND_COVER_NONE;
-                bt_audio_enable();
-                mp3_res_play_exit();
                 co_timer_del(&alarm_clock_timer);
+                music_control(MUSIC_MSG_STOP);
             }
         }
         else
@@ -614,9 +610,8 @@ void gui_set_cover_index(uint8_t index)
                 //关闭 喇叭 马达
                 uteDrvMotorStop();
                 sys_cb.cover_index = REMIND_COVER_NONE;
-                bt_audio_enable();
-                mp3_res_play_exit();
                 co_timer_del(&alarm_clock_timer);
+                music_control(MUSIC_MSG_STOP);
             }
         }
 

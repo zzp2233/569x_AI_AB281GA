@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_sport.h"
 
 sensor_sta_t bsensor;
 //获得外设初始化状态
@@ -69,9 +70,18 @@ u8 bsp_sensor_hr_stop(void)
 #if UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT
     vc30fx_data.work_mode = WORK_MODE_WEAR;
     vc30fx_usr_device_init(&vc30fx_data);
+#elif UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT
+    if(uteModuleSystemtimeIsNight() && uteModuleSportGetStepType() == STEP_TYPE_SLEEP)
+    {
+        vc30fx_data.work_mode = WORK_MODE_WEAR;
+        vc30fx_usr_device_init(&vc30fx_data);
+    }
+    else
 #else
-    stop = vc30fx_usr_stop_work();
-    vc30fx_pwr_dis();
+    {
+        stop = vc30fx_usr_stop_work();
+        vc30fx_pwr_dis();
+    }
 #endif
 #endif
 

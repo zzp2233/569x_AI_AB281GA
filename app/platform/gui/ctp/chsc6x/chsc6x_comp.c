@@ -3,9 +3,11 @@
 #include "chsc6x_ramcode.h"
 #include "chsc6x_platform.h"
 // #include "chsc6x_flash_boot.h"
-
-// #include "YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" //801
+#if PROJECT_AB281B_SUPPORT
+#include "YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" //801
+#else
 #include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
+#endif
 #include "chsc6x_main.h"
 
 #define TXRX_ADDR       (0x9000)
@@ -594,7 +596,7 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
 
     u32tmp = ptcfg[1];
     u32tmp = (u32tmp << 16) | ptcfg[0];
-#if DEFAULT_TP_FORCE_UPDATE_ON_OPEN
+#if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
     if (((g_chsc6x_cfg_ver & 0x3ffffff) != (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
     {
         chsc6x_info("chsc6x: prj info not match,now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
@@ -605,7 +607,7 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
     vnow = (g_chsc6x_cfg_ver >> 26) & 0x3f;
     vbuild = (u32tmp >> 26) & 0x3f;
     chsc6x_info("chsc6x: cfg_vnow: 0x%x,cfg_vbuild: 0x%x \r\n", vnow, vbuild);
-#if DEFAULT_TP_FORCE_UPDATE_ON_OPEN
+#if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
     if (0 == g_upgrade_flag && vbuild <= vnow)
     {
         return 0; //driver init upgrade, must vbuild > vnow
@@ -919,8 +921,13 @@ static int chsc6x_do_update_ifneed(uint8_t* p_fw_upd, uint32_t fw_len)
     }
     else
     {
+#ifdef UTE_DRV_TP_FIRMWARE_ADDRESS
+        fupd = (const uint8_t *)UTE_DRV_TP_FIRMWARE_ADDRESS;
+        fw_size = UTE_DRV_TP_FIRMWARE_SIZE;
+#else
         fupd = chsc_boot;
         fw_size = sizeof(chsc_boot);
+#endif
     }
     ret = chsc6x_update_compat_ctl((uint8_t *) fupd, fw_size);
 #endif

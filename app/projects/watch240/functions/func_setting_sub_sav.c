@@ -177,35 +177,41 @@ static void func_set_sub_sav_process(void)
 //更新显示界面
 static void func_set_sub_sav_disp(void)
 {
-
-    for(int idx=0; idx<10; idx++)
+    uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
+    switch(vol)
     {
-        compo_picturebox_t *picbox = compo_getobj_byid(tbl_sav_disp_pic_item[idx].pic_id);
-
-        if(idx<= 4)
-        {
-            if(sys_cb.vol/(4*(idx+1)))
-            {
-                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr);
-            }
-            else
-            {
-                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr_bg);
-            }
-        }
-        else if(idx<= 9)
-        {
-            if(sys_cb.hfp_vol/(4*(idx+1-5)))
-            {
-                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr);
-            }
-            else
-            {
-                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr_bg);
-            }
-        }
-
+        case 0:
+            break;
     }
+
+//    for(int idx=0; idx<10; idx++)
+//    {
+//        compo_picturebox_t *picbox = compo_getobj_byid(tbl_sav_disp_pic_item[idx].pic_id);
+//
+//        if(idx<= 4)
+//        {
+//            if(sys_cb.vol/(4*(idx+1)))
+//            {
+//                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr);
+//            }
+//            else
+//            {
+//                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr_bg);
+//            }
+//        }
+//        else if(idx<= 9)
+//        {
+//            if(sys_cb.hfp_vol/(4*(idx+1-5)))
+//            {
+//                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr);
+//            }
+//            else
+//            {
+//                compo_picturebox_set(picbox,tbl_sav_disp_pic_item[idx].res_addr_bg);
+//            }
+//        }
+//
+//    }
 }
 
 //单击按钮
@@ -215,17 +221,19 @@ static void func_sav_button_click(void)
     switch(id)
     {
         case COMPO_ID_BIN_REDUCE_ONE:       //音频音量
-            if (sys_cb.vol > 0 && sys_cb.vol <= VOL_CHANGE*5)
-            {
-                sys_cb.vol -= VOL_CHANGE;
-            }
+            uteModuleMusicCtrlVolumeDecrease(false);
+//            if (sys_cb.vol > 0 && sys_cb.vol <= VOL_CHANGE*5)
+//            {
+//                sys_cb.vol -= VOL_CHANGE;
+//            }
             break;
 
         case COMPO_ID_BIN_INCREASE_ONE:
-            if (sys_cb.vol >= 0 && sys_cb.vol < VOL_CHANGE*5)
-            {
-                sys_cb.vol += VOL_CHANGE;
-            }
+            uteModuleMusicCtrlVolumeIncrease(false);
+//            if (sys_cb.vol >= 0 && sys_cb.vol < VOL_CHANGE*5)
+//            {
+//                sys_cb.vol += VOL_CHANGE;
+//            }
             break;
 
         case COMPO_ID_BIN_REDUCE_TWS:     //通话音量

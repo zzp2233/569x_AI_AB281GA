@@ -332,6 +332,7 @@ static void func_bt_music_refresh_disp(void)
         compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
     }
     uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
+//    printf("value:%d\n",vol);
 //    vol = vol/6*6;
     uint16_t title_size_leng  = 0;
     uint16_t artist_size_leng = 0;

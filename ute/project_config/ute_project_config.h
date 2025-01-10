@@ -11,11 +11,14 @@
 
 #define PROJECT_AB281_SUPPORT        1
 #define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
+#define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
 #elif PROJECT_AB281A_SUPPORT
 #include"ute_project_config_ab281a.h"
+#elif PROJECT_AB281B_SUPPORT
+#include"ute_project_config_ab281b.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
@@ -29,6 +32,11 @@
 //芯片封装选择 5691G/5691C_F
 #ifndef UTE_CHIP_PACKAGE_SELECT
 #define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F
+#endif
+
+/*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
+#ifndef UTE_DRV_CTP_SELECT
+#define UTE_DRV_CTP_SELECT             CTP_CST8X
 #endif
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
@@ -1222,7 +1230,7 @@
 
 /*! 保存重启信息最大数量,wang.luo 2024-12-30 */
 #ifndef UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT
-#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 5
+#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 4
 #endif
 
 /*! PWRKEY,wang.luo 2024-12-03 */

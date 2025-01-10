@@ -886,7 +886,9 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig )
     switch (pinitconfig->work_mode)
     {
         case WORK_MODE_HR:
+            bsp_sensor_hrs_data_save(0);
         case WORK_MODE_SPO2:
+            bsp_sensor_spo2_data_save(0);
         case WORK_MODE_WEAR:
         case WORK_MODE_FACTORY0:
         case WORK_MODE_FACTORY1:

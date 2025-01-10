@@ -4,18 +4,20 @@
 #if (CTP_SELECT == CTP_CHSC6X)
 
 #define CHSC6X_I2C_DEVICE               (0x2E) //7bit
-#define I2C_WRITE_ADDR(ADDR)     		 ((ADDR) << 1)				//CTP IIC写地址
-#define I2C_READ_ADDR(ADDR)      		 ((ADDR) << 1 | 1)			//CTP IIC读地址
+#define I2C_WRITE_ADDR(ADDR)             ((ADDR) << 1)              //CTP IIC写地址
+#define I2C_READ_ADDR(ADDR)              ((ADDR) << 1 | 1)          //CTP IIC读地址
 
 #if (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-static i2c_t __CHSC6XX_IIC1 = {
+static i2c_t __CHSC6XX_IIC1 =
+{
     .sfr         = (i2c_sfr_t *) &IIC1CON0,
     .map         = (i2c_map_t *) &FUNCMCON2,
 };
 i2c_t *CHSC6XX_IICx = &__CHSC6XX_IIC1;
 
 #elif ((CHIP_PACKAGE_SELECT == CHIP_5681C) || (CHIP_PACKAGE_SELECT == CHIP_5682B))
-static i2c_t __CHSC6XX_IIC0 = {
+static i2c_t __CHSC6XX_IIC0 =
+{
     .sfr         = (i2c_sfr_t *) &IIC0CON0,
     .map         = (i2c_map_t *) &FUNCMCON2,
 };
@@ -37,18 +39,22 @@ void tp_i2c_write(uint16_t subAddr, const uint8_t *write_data, u16 len, u8 addr_
 {
     u32 ticks;
 
-    if (len == 0) {
+    if (len == 0)
+    {
         CHSC6XX_IICx->sfr->IICxCMDA = ((subAddr & 0xff) << 8) | I2C_WRITE_ADDR(CHSC6X_I2C_DEVICE);
         CHSC6XX_IICx->sfr->IICxCON1 = BIT(12) | BIT(11)  | BIT(10) | BIT(5) | BIT(4) | BIT(3) ;
         uint8_t data[1];
         data[0] = (subAddr & 0xff00) >> 8;
         CHSC6XX_IICx->sfr->IICxDMAADR = DMA_ADR(data);
         CHSC6XX_IICx->sfr->IICxDMACNT = (0 << 16) | BIT(1) |BIT(0);
-    } else {
+    }
+    else
+    {
         CHSC6XX_IICx->sfr->IICxCMDA =  (subAddr << 8) | I2C_WRITE_ADDR(CHSC6X_I2C_DEVICE);
 
         CHSC6XX_IICx->sfr->IICxCON1 = BIT(12) | BIT(11)  | BIT(10) | BIT(5) | BIT(4) | BIT(3) ;
-        if (addr_is_16bit) {
+        if (addr_is_16bit)
+        {
             CHSC6XX_IICx->sfr->IICxCON1 |= BIT(6);
         }
         CHSC6XX_IICx->sfr->IICxDMAADR = DMA_ADR(write_data);
@@ -59,8 +65,10 @@ void tp_i2c_write(uint16_t subAddr, const uint8_t *write_data, u16 len, u8 addr_
     delay_ms(2);
 
     ticks = tick_get();
-    while (!(CHSC6XX_IICx->sfr->IICxCON0 & BIT(31))) {
-        if (tick_check_expire(ticks, 20)) {
+    while (!(CHSC6XX_IICx->sfr->IICxCON0 & BIT(31)))
+    {
+        if (tick_check_expire(ticks, 20))
+        {
             printf("tp_i2c_write time out ERROR\n");
             return;
         }
@@ -82,7 +90,8 @@ static void tp_i2c_read(uint16_t subAddr, uint8_t *read_data, u16 len, u8 addr_i
     CHSC6XX_IICx->sfr->IICxCMDA = (I2C_READ_ADDR(CHSC6X_I2C_DEVICE) << 24) | (subAddr << 8) | I2C_WRITE_ADDR(CHSC6X_I2C_DEVICE);
 
     CHSC6XX_IICx->sfr->IICxCON1 = BIT(12) | BIT(11) | BIT(9) | BIT(8) | BIT(7) | BIT(5) | BIT(4) | BIT(3) | len;
-    if (addr_is_16bit) {
+    if (addr_is_16bit)
+    {
         CHSC6XX_IICx->sfr->IICxCON1 |= BIT(6);
     }
 
@@ -91,14 +100,17 @@ static void tp_i2c_read(uint16_t subAddr, uint8_t *read_data, u16 len, u8 addr_i
     CHSC6XX_IICx->sfr->IICxCON0 |= BIT(28);                //KICK
 
     ticks = tick_get();
-    while (!(CHSC6XX_IICx->sfr->IICxCON0 & BIT(31))) {
-        if (tick_check_expire(ticks, 20)) {
+    while (!(CHSC6XX_IICx->sfr->IICxCON0 & BIT(31)))
+    {
+        if (tick_check_expire(ticks, 20))
+        {
             printf("tp_i2c_read time out ERROR\n");
             return;
         }
     }
 
-    if (!chsc6x_is_inited()) {
+    if (!chsc6x_is_inited())
+    {
         CHSC6XX_IICx->sfr->IICxCON0 |= BIT(29);                //Clear Pending
     }
 }
@@ -160,7 +172,8 @@ int chsc6x_write_bytes_u16addr_sub(unsigned char id, unsigned short adr, unsigne
     uint16_t buffer = 0;
     uint8_t *txbuf_p = txbuf;
 
-    if ((u32)txbuf > 0x10000000) {                                       //flash addr, 临时拷贝
+    if ((u32)txbuf > 0x10000000)                                         //flash addr, 临时拷贝
+    {
         memcpy(txbuf_tmp, txbuf, lenth);
         txbuf_p = txbuf_tmp;
     }
@@ -179,21 +192,30 @@ void chsc6x_msleep(int ms)
 
 void chsc6x_tp_reset(void)
 {
+    PORT_CTP_RST_L();
+    delay_ms(30);
+    PORT_CTP_RST_H();
+    delay_ms(30);
 //    pd7_out0();
 //    tl_delay(950);//30ms
 //    pd7_out1();
 //    tl_delay(950);//30ms
 
-    ctp_reset();
+    // ctp_reset();
 }
 
 void chsc6x_tp_reset_active(void)
 {
+    PORT_CTP_RST_L();
+    delay_ms(2);
+    PORT_CTP_RST_H();
+    delay_ms(21);
+
 //    pd7_out0();
 //    tl_delay(950);//30ms
 //    pd7_out1();
 
-    ctp_reset();
+    // ctp_reset();
 }
 
 #endif //(CTP_SELECT == CTP_CHSC6X)

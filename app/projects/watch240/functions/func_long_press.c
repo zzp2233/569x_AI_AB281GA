@@ -261,7 +261,9 @@ static void func_long_press_click(void)
     switch(id)
     {
         case CANCEL_BTN_ID:
-            func_switch_to_clock();
+//            func_back_to();
+            func_directly_back_to();
+            //func_switch_to_clock();
             break;
     }
 }
@@ -282,7 +284,9 @@ static void func_long_press_message(size_msg_t msg)
         case KU_BACK:
             if(sys_cb.power_on_state==true)
             {
-                func_switch_to_clock();
+//                func_back_to();
+                func_directly_back_to();
+                //func_switch_to_clock();
             }
             break;
         case K_BACK:

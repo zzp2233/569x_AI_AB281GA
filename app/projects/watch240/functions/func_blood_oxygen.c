@@ -33,6 +33,7 @@ enum
 typedef struct f_blood_oxygen_t_
 {
     uint32_t tick;
+    uint32_t tick_start;
     u8 blood_oxygen_state;
     u8 pic_type;
     bool pop_disp_flag;
@@ -63,14 +64,14 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2.3-CONTROL_Y);
     char txt_buf[5];
-    if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%s","--");
-    }
-    else
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleBloodoxygenGetValue());//血氧值
-    }
+//    if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
+//    {
+    snprintf(txt_buf,sizeof(txt_buf),"%s","--");
+//    }
+//    else
+//    {
+//        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleBloodoxygenGetValue());//血氧值
+//    }
     compo_textbox_set(textbox,txt_buf);
     compo_setid(textbox,COMPO_ID_TXT_VALUE);
 
@@ -87,6 +88,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
 
     compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_BLOODOXYGEN_ICON_DETECTION_BIN);///重新测量按钮
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.5,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.5-CONTROL_Y);
+//    compo_button_set_visible(btn, false);
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
     return frm;
@@ -101,14 +103,12 @@ static void func_blood_oxygen_disp_handle(void)
     compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TXT_VALUE);
     compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
     char txt_buf[20];
-
     // 仅进入界面时自动发起一次测量
-    if(f_bo->need_auto_test_flag && !uteModuleBloodoxygenIsTesting())
+    if(f_bo->need_auto_test_flag && !uteModuleBloodoxygenIsTesting() && f_bo->need_auto_test_flag == true && f_bo->tick_start <= tick_get()-1000)
     {
         uteModuleBloodoxygenStartSingleTesting();
         f_bo->need_auto_test_flag = false;
     }
-
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
     {
@@ -244,6 +244,7 @@ static void func_blood_oxygen_enter(void)
     f_bo->blood_oxygen_state = BO_STA_IDLE;
     f_bo->need_auto_test_flag = true;
     func_cb.frm_main = func_blood_oxygen_form_create();
+    f_bo->tick_start = tick_get();
 }
 
 //退出血氧功能

@@ -232,21 +232,21 @@ static void func_call_sub_dial_button_long(void)
     {
         case COMPO_ID_BTN_NUM7:
 //            compo_textbox_set_visible(txt, false);
-            if(call->phone_number_cnt < 11)
+            if(call->phone_number_cnt < 16)
             {
                 call->phone_number[call->phone_number_cnt++] = '*';
             }
             break;
         case COMPO_ID_BTN_NUM9:
 //            compo_textbox_set_visible(txt, false);
-            if(call->phone_number_cnt < 11)
+            if(call->phone_number_cnt < 16)
             {
                 call->phone_number[call->phone_number_cnt++] = '#';
             }
             break;
         case COMPO_ID_BTN_NUM0:
 //            compo_textbox_set_visible(txt, false);
-            if(call->phone_number_cnt < 11)
+            if(call->phone_number_cnt < 16)
             {
                 call->phone_number[call->phone_number_cnt++] = '+';
             }

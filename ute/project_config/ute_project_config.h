@@ -9,9 +9,9 @@
 #ifndef _UTE_PROJECT_CONFIG_H_
 #define _UTE_PROJECT_CONFIG_H_
 
-#define PROJECT_AB281_SUPPORT        0
+#define PROJECT_AB281_SUPPORT        1
 #define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
-#define PROJECT_AB281B_SUPPORT       1 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
+#define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -1230,7 +1230,7 @@
 
 /*! 保存重启信息最大数量,wang.luo 2024-12-30 */
 #ifndef UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT
-#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 5
+#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 4
 #endif
 
 /*! PWRKEY,wang.luo 2024-12-03 */

@@ -239,6 +239,14 @@
 #define DEFAULT_SCREEN_ON_TIME_SECOND 10
 #endif
 
+/*! 不同TE模式下的spiclk,用于优化撕裂,spiclk : baud = sys_clk / (div +1),wang.luo 2025-01-11 */
+#ifndef UTE_DRV_SCREEN_1TE_SPI_CLK
+#define UTE_DRV_SCREEN_1TE_SPI_CLK 27000000 // 27Mhz
+#endif
+#ifndef UTE_DRV_SCREEN_2TE_SPI_CLK
+#define UTE_DRV_SCREEN_2TE_SPI_CLK 12000000 // 12Mhz
+#endif
+
 /*! 灭屏后延时清除显示深度，返回时间界面，默认时间 zn.zeng, 2021-11-03  */
 #ifndef UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND
 #define UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND 10

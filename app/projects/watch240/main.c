@@ -37,10 +37,52 @@ const u8 tbl_despi_clk2[] =
     [SYS_192M] = 15,         //27.4M
 };
 #endif
+
+//根据波特率和系统时钟计算DIV
+u8 sys_get_despi_div(u32 baud, u32 sys_clk)
+{
+    u32 sys_clk_freq = 0;
+    switch (sys_clk)
+    {
+        case SYS_48M:
+            sys_clk_freq = 48000000;
+            break;
+        case SYS_88M:
+            sys_clk_freq = 88000000;
+            break;
+        case SYS_132M:
+            sys_clk_freq = 132000000;
+            break;
+        case SYS_144M:
+            sys_clk_freq = 144000000;
+            break;
+        case SYS_176M:
+            sys_clk_freq = 176000000;
+            break;
+        case SYS_192M:
+            sys_clk_freq = 192000000;
+            break;
+        default:
+            return 0;
+    }
+    u8 div = 0;
+    if (sys_clk_freq >= baud)
+    {
+        div = sys_clk_freq / baud - 1;
+    }
+    return div;
+}
+
 //设置DESPI CLK接口
 void sys_set_despi_baud_hook(u32 sys_clk)
 {
+#if (GUI_SELECT == DISPLAY_UTE)
+    u8 despi_clk1 = sys_get_despi_div(UTE_DRV_SCREEN_1TE_SPI_CLK, sys_clk);
+    u8 despi_clk2 = sys_get_despi_div(UTE_DRV_SCREEN_2TE_SPI_CLK, sys_clk);
+    tft_set_baud(despi_clk1, despi_clk2);
+#else
     tft_set_baud(tbl_despi_clk1[sys_clk], tbl_despi_clk2[sys_clk]);
+#endif
 }
 
 const uint8_t *bt_rf_get_inq_param(void)

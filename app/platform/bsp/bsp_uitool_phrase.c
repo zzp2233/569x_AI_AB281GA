@@ -234,7 +234,7 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
 
             case COMPO_BOND_KCAL:
                 bond_compo_type = COMPO_TYPE_NUMBER;
-                max_cnt = 3;
+                max_cnt = 4;
                 break;
 
             case COMPO_BOND_STEP:
@@ -375,19 +375,19 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
         os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
         switch (uitool_res.bond_type)
         {
-        case COMPO_BOND_COMM_UNIT:
-        case COMPO_BOND_TIME_AMPM:
-        case COMPO_BOND_TIME_WEEK:
-        case COMPO_BOND_TIME_MONTH:
-        case COMPO_BOND_DISTANCE_UNIT:
-        case COMPO_BOND_TEMPERATURE_UNIT:
-            if (uteModuleSystemtimeCompareLanguage(uitool_res.rsv))
-            {
-                has_default_lang_pic = true;
-            }
-            break;
-        default:
-            break;
+            case COMPO_BOND_COMM_UNIT:
+            case COMPO_BOND_TIME_AMPM:
+            case COMPO_BOND_TIME_WEEK:
+            case COMPO_BOND_TIME_MONTH:
+            case COMPO_BOND_DISTANCE_UNIT:
+            case COMPO_BOND_TEMPERATURE_UNIT:
+                if (uteModuleSystemtimeCompareLanguage(uitool_res.rsv))
+                {
+                    has_default_lang_pic = true;
+                }
+                break;
+            default:
+                break;
         }
     }
 

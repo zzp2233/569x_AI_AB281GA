@@ -13,24 +13,28 @@
 
 #define MSG_MAX_CONTENT     64  //消息保存的最大内容
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
 };
 
-enum{
+enum
+{
     //数字
     COMPO_ID_NUM_DISP_ONE = 1,
     COMPO_ID_NUM_DISP_TWS,
     COMPO_ID_NUM_DISP_THR,
 };
 
-enum {
+enum
+{
     MSG_STA_NULL,
     MSG_STA_SHOW_DETAIL,
     MSG_STA_SHOW_LIST,
 };
 
-typedef struct f_message_t_ {
+typedef struct f_message_t_
+{
     compo_listbox_t *listbox;
     u8 msg_sta;
     u8 date[16];
@@ -38,7 +42,8 @@ typedef struct f_message_t_ {
 } f_message_t;
 
 #if MSG_DEBUG_EN
-    char test_data[MSG_MAX_LIST_CNT][MSG_MAX_CONTENT] = {
+char test_data[MSG_MAX_LIST_CNT][MSG_MAX_CONTENT] =
+{
     {"张三:你好！"},
     {"李四:how are you?"},
     {"陈:1244342343294798732897929"},
@@ -47,7 +52,8 @@ typedef struct f_message_t_ {
 };
 #endif
 
-static const compo_listbox_item_t tbl_message_list[MSG_MAX_LIST_CNT] = {
+static const compo_listbox_item_t tbl_message_list[MSG_MAX_LIST_CNT] =
+{
     {.res_addr = UI_BUF_SETTING_LIGHT_BIN},
     {.res_addr = UI_BUF_SETTING_LIGHT_BIN},
     {.res_addr = UI_BUF_SETTING_LIGHT_BIN},
@@ -74,12 +80,16 @@ compo_form_t *func_message_form_create(void)
     u16 len = 0;
     ble_ancs_msg_cb_t *ancs_msg = ble_app_ancs_get_msg();
 
-    for (u8 i = 0; i < MSG_MAX_LIST_CNT; i++) {
-        if (strlen((char *)ancs_msg->msg_content[i]) > LISTBOX_TEXT_LEN) {
+    for (u8 i = 0; i < MSG_MAX_LIST_CNT; i++)
+    {
+        if (strlen((char *)ancs_msg->msg_content[i]) > LISTBOX_TEXT_LEN)
+        {
             len = LISTBOX_TEXT_LEN;
             memcpy(tbl_message_txt_list[i].str_txt, ancs_msg->msg_content[i], len - 1);
             tbl_message_txt_list[i].str_txt[len - 1] = '\0';
-        } else {
+        }
+        else
+        {
             len = strlen((char *)ancs_msg->msg_content[i]);
             memcpy(tbl_message_txt_list[i].str_txt, ancs_msg->msg_content[i], len);
         }
@@ -109,7 +119,8 @@ static void func_message_icon_click(void)
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_msg->listbox;
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= MSG_MAX_LIST_CNT) {
+    if (icon_idx < 0 || icon_idx >= MSG_MAX_LIST_CNT)
+    {
         return;
     }
 
@@ -121,7 +132,8 @@ static void func_message_icon_click(void)
     title = (char *)&ancs_msg->msg_title[icon_idx];
 #endif
     int res = msgbox(msg, title, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_WECHAT);
-    if (res == MSGBOX_RES_DELETE) {
+    if (res == MSGBOX_RES_DELETE)
+    {
         //TODO: delete msg
     }
 
@@ -141,27 +153,29 @@ static void func_message_message(size_msg_t msg)
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_msg->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_message_icon_click();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_message_icon_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -175,11 +189,13 @@ static void func_message_enter(void)
     f_message_t * f_msg = (f_message_t *)func_cb.f_cb;
     f_msg->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_msg->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init_modify(listbox, 127, compo_listbox_gety_byidx(listbox, MSG_MAX_LIST_CNT - 2));
+    tft_set_temode(0);
 }
 
 //退出消息功能
@@ -189,6 +205,7 @@ static void func_message_exit(void)
     compo_listbox_t *listbox = f_msg->listbox;
     func_free(listbox->mcb);
     func_cb.last = FUNC_MESSAGE;
+    tft_set_temode(DEFAULT_TE_MODE);
 }
 
 //消息功能
@@ -196,7 +213,8 @@ void func_message_info(void)
 {
     printf("%s\n", __func__);
     func_message_enter();
-    while (func_cb.sta == FUNC_MESSAGE) {
+    while (func_cb.sta == FUNC_MESSAGE)
+    {
         func_message_process();
         func_message_message(msg_dequeue());
     }

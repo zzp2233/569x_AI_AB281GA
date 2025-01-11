@@ -20,4 +20,7 @@ app/projects/*/Output/bin/ui.h
 app/projects/*/ui.h
 app/projects/*/Output/bin/ute_ui_coord_file.h
 ute/language/defaultLanguage/*
+app/projects/*/Output/bin/res.bin
+app/projects/*/Output/bin/res.h
+app/projects/*/res.h
 .vscode/*

@@ -104,7 +104,7 @@ static void func_blood_oxygen_disp_handle(void)
     compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
     char txt_buf[20];
     // 仅进入界面时自动发起一次测量
-    if(f_bo->need_auto_test_flag && !uteModuleBloodoxygenIsTesting() && f_bo->need_auto_test_flag == true && f_bo->tick_start <= tick_get()-1000)
+    if(f_bo->need_auto_test_flag && !uteModuleBloodoxygenIsTesting() && f_bo->need_auto_test_flag == true && f_bo->tick_start <= tick_get()-500)
     {
         uteModuleBloodoxygenStartSingleTesting();
         f_bo->need_auto_test_flag = false;

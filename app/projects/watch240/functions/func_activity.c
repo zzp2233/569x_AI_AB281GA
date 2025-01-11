@@ -101,7 +101,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_forecolor(textbox,KCAL_ARC_COLOR);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/100%10,KM/10%10,KM%10);///公里数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d",KM/100, KM%100);///公里数据
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5);
@@ -201,7 +201,7 @@ static void func_activity_disp_handle(void)
             compo_textbox_set(textbox_step, txt_buf);
 
             memset(txt_buf,'\0',sizeof(txt_buf));
-            snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
+            snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d",f_activity->arc_km_value/100, f_activity->arc_km_value%100);
             compo_textbox_set(textbox_km, txt_buf);
 
             memset(txt_buf,'\0',sizeof(txt_buf));

@@ -92,10 +92,11 @@ static void func_up_watch_dial_disp(void)
         compo_picturebox_t * picbox = compo_getobj_byid(ROCKET_ID);
         if(ble_is_connect())//ble状态
         {
-            uint32_t progress = uteModuleWatchOnlineGetSynchronizeWatchSize()*1000/uteModuleWatchOnlineGetTotileWatchSize();
-            if (progress>=1000)
+            uint32_t progress = uteModuleWatchOnlineGetSynchronizeWatchSize()*100/uteModuleWatchOnlineGetTotileWatchSize();
+            printf("progress:%d,SynchronizeWatchSize:%d,TotileWatchSize:%d\n",progress,uteModuleWatchOnlineGetSynchronizeWatchSize(),uteModuleWatchOnlineGetTotileWatchSize());
+            if (progress>=100)
             {
-                progress=1000;
+                progress=100;
                 f_up_watch_dial->state  = UPGRADE_SUCCESSFUL;
 //                compo_textbox_set_visible(txt_tip, true);
                 compo_textbox_set(txt_state, i18n[STR_SYNC_SUC]);

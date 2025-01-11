@@ -175,7 +175,7 @@ void uteModuleWatchOnlineOneSecMsgHandler(void)
 //            }
 //            else
 //            {
-                uteModuleGuiCommonGoBackLastScreen();
+            uteModuleGuiCommonGoBackLastScreen();
 //            }
 #endif
             uteModuleWatchOnlineData.receiveTimeout = 0;
@@ -218,7 +218,8 @@ void uteModuleWatchOnlineUpateConfigFromFlash(void)
     for (uint8_t i = 0; i < uteModuleWatchOnlineData.supportMultipleMaxCnt; i++)
     {
         uteModulePlatformFlashNorRead((uint8_t *)&config, uteModuleWatchOnlineMultipleBaseAddress[i], watchConfigSize);
-        if (config.isWatchVaild == 0)
+        uint16_t headerNum = bsp_uitool_header_phrase(uteModuleWatchOnlineMultipleBaseAddress[i]);
+        if (config.isWatchVaild == 0 && headerNum)
         {
             if(isConnectOurApp)
             {
@@ -560,7 +561,8 @@ uint8_t uteModuleWatchOnlineGetWatchindex(uint8_t index)
     for (uint8_t i = 0; i < uteModuleWatchOnlineData.supportMultipleMaxCnt; i++)
     {
         uteModulePlatformFlashNorRead((uint8_t *)&config, uteModuleWatchOnlineMultipleBaseAddress[i], watchConfigSize);
-        if (config.isWatchVaild == 0)
+        uint16_t headerNum = bsp_uitool_header_phrase(uteModuleWatchOnlineMultipleBaseAddress[i]);
+        if (config.isWatchVaild == 0 && headerNum)
         {
             if(isConnectOurApp)
             {

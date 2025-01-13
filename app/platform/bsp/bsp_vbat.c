@@ -28,6 +28,18 @@ u16 bsp_vbat_get_voltage(u32 rst_flag)
     u32 vbat2 = saradc_get_value10(VBAT2_ADCCH);
     vbat = saradc_vbat_get_calc_value(vbat2, adc_cb.bg, adc_cb.vrtc_val, adc_cb.vrtc_first);
 
+    if(sys_cb.gui_sleep_sta || adc_cb.vbat_gui_sleep == 0) // ute 记录熄屏时的电压，亮屏时做补偿
+    {
+        adc_cb.vbat_gui_sleep = vbat;
+    }
+    else
+    {
+        if(adc_cb.vbat_gui_sleep > vbat && (adc_cb.vbat_gui_sleep - vbat) < 200)
+        {
+            vbat += adc_cb.vbat_gui_sleep - vbat;
+        }
+    }
+
     if (rst_flag)
     {
         adc_cb.vbat_bak = 0;

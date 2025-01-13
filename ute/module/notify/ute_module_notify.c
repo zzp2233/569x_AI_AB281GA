@@ -121,12 +121,10 @@ void uteModuleNotifyCallDisableHandlerMsg(void)
     else
 #endif
     {
-        // if (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_INCOMING_ID ||
-        //     uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_ING_ID ||
-        //     uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID)
-        // {
-        //     uteModuleGuiCommonGoBackLastScreen();
-        // }
+        if (uteModuleGuiCommonGetCurrentScreenId() == FUNC_BLE_CALL)
+        {
+            uteModuleGuiCommonGoBackLastScreen();
+        }
 
         if(uteDrvMotorGetRunningStatus())
         {

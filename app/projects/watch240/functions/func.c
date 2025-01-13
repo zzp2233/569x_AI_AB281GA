@@ -69,7 +69,7 @@ extern void func_voice(void);
 //extern void func_compass(void);
 extern void func_address_book(void);
 extern void func_set_sub_list(void);
-extern void func_set_sub_sav(void);
+//extern void func_set_sub_sav(void);
 extern void func_set_sub_dousing(void);
 extern void func_set_sub_disturd(void);
 extern void func_set_sub_language(void);
@@ -306,7 +306,7 @@ const func_t tbl_func_create[] =
     {FUNC_CALL_SORT,                    func_call_sort_form_create},
     {FUNC_SETTING,                      func_set_sub_list_form_create},
     {FUNC_CALENDAER,                    func_calender_form_create},
-//    {FUNC_SET_SUB_SAV,                       func_volume_form_create},
+////    {FUNC_SET_SUB_SAV,                       func_volume_form_create},
     {FUNC_ACTIVITY,                     func_activity_form_create},
     {FUNC_FLASHLIGHT,                   func_flashlight_form_create},
     {FUNC_LIGHT,                        func_light_form_create},
@@ -320,7 +320,7 @@ const func_t tbl_func_create[] =
 //    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp_form_create},
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
-    {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
+//    {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about_form_create},
 //    {FUNC_SET_SUB_4G,                   func_set_sub_4g_form_create},
     {FUNC_SET_SUB_RESTART,              func_set_sub_restart_form_create},
@@ -430,7 +430,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SET_SUB_WRIST,                func_set_sub_wrist},            //设置--抬腕
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd},          //设置--勿扰
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set},          //勿扰--时间设置
-    {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动
+//    {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language},         //设置--语言
 //    {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
 //    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间

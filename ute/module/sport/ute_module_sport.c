@@ -1334,6 +1334,23 @@ void uteModuleSportEverySecond(void)
     }
     uteModuleSleepDataInputSecond(&mStepSleepParam,time,isStepping);
 
+#if (UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT && !UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT)
+    if (isStepping)
+    {
+        if(vc30fx_usr_get_work_status() && uteModuleHeartGetWorkMode() == WORK_MODE_WEAR)
+        {
+            uteModuleHeartStopSingleTesting(TYPE_WEAR);
+        }
+    }
+    else
+    {
+        if(uteModuleSystemtimeIsNight() && !vc30fx_usr_get_work_status())
+        {
+            uteModuleHeartStartSingleTesting(TYPE_WEAR);
+        }
+    }
+#endif
+
     uteModuleSportReadCurrDayStepCnt(time);
     if(uteModuleSprotData.stepType == STEP_TYPE_NONE)
     {
@@ -1573,12 +1590,6 @@ void uteModuleSportStepTypeSetStep(void)
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,uteModuleSprotData.stepType=%d", __func__,uteModuleSprotData.stepType);
     if(uteModuleSprotData.stepType!=STEP_TYPE_STEP)
     {
-#if UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT
-        if(vc30fx_usr_get_work_status() && uteModuleHeartGetWorkMode() == WORK_MODE_WEAR)
-        {
-            uteModuleHeartStopSingleTesting(TYPE_WEAR);
-        }
-#endif
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
         uteModuleSprotData.stepType = STEP_TYPE_STEP;
         uteModuleSprotData.lastStepType = STEP_TYPE_STEP;
@@ -1602,12 +1613,6 @@ void uteModuleSportStepTypeSetSleep(void)
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,uteModuleSprotData.stepType=%d", __func__,uteModuleSprotData.stepType);
     if(uteModuleSprotData.stepType!=STEP_TYPE_SLEEP)
     {
-#if UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT
-        if(uteModuleSystemtimeIsNight() && !vc30fx_usr_get_work_status())
-        {
-            uteModuleHeartStartSingleTesting(TYPE_WEAR);
-        }
-#endif
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
         uteModuleSprotData.stepType = STEP_TYPE_SLEEP;
         uteModuleSprotData.lastStepType = STEP_TYPE_SLEEP;

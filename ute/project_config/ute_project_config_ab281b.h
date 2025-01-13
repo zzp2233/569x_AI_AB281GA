@@ -9,7 +9,7 @@
 #ifndef _UTE_PROJECT_CONFIG_AB281B_H_
 #define _UTE_PROJECT_CONFIG_AB281B_H_
 
-#define DEFAULT_BLE_DEV_NEME "AB281B"
+#define DEFAULT_BLE_DEV_NEME "UTE801"
 #define UTE_SW_VERSION "AB281BV000012"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
@@ -95,20 +95,22 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      200 //mAh
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
+/*! 电池最大电压值zn.zeng, 2021-11-09  */
+#define UTE_DRV_BATTERY_MAX_VOLTAGE 4350
 
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3472
-#define UTE_DRV_BATTERY_010      3682
-#define UTE_DRV_BATTERY_020      3730
-#define UTE_DRV_BATTERY_030      3757
-#define UTE_DRV_BATTERY_040      3776
-#define UTE_DRV_BATTERY_050      3798
-#define UTE_DRV_BATTERY_060      3838
-#define UTE_DRV_BATTERY_070      3900
-#define UTE_DRV_BATTERY_080      3958
-#define UTE_DRV_BATTERY_090      4030
-#define UTE_DRV_BATTERY_100      4115
+#define UTE_DRV_BATTERY_000      3572
+#define UTE_DRV_BATTERY_010      3684
+#define UTE_DRV_BATTERY_020      3736
+#define UTE_DRV_BATTERY_030      3766
+#define UTE_DRV_BATTERY_040      3795
+#define UTE_DRV_BATTERY_050      3831
+#define UTE_DRV_BATTERY_060      3896
+#define UTE_DRV_BATTERY_070      3968
+#define UTE_DRV_BATTERY_080      4064
+#define UTE_DRV_BATTERY_090      4162
+#define UTE_DRV_BATTERY_100      4272
 
 #define UTE_DRV_TP_X_AXIS_EXCHANGE 0 // 交换X轴左右坐标
 #define UTE_DRV_TP_Y_AXIS_EXCHANGE 0 // 交换Y轴上下坐标

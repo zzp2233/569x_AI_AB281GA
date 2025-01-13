@@ -100,7 +100,7 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
 
     {UI_BUF_I330001_THEME_1_SETTINGS_BIN,                   FUNC_SETTING},
     {UI_BUF_I330001_THEME_1_SLEEP_BIN,                     FUNC_SLEEP},
-    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_SET_SUB_SAV},
+//    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_SET_SUB_SAV},
     {UI_BUF_I330001_THEME_1_SOPRT_BIN,                         FUNC_SPORT},
     {UI_BUF_I330001_THEME_1_STOPWATCH_BIN,                 FUNC_STOPWATCH},
     {UI_BUF_I330001_THEME_1_PHOTO_BIN,                    FUNC_CAMERA},
@@ -525,7 +525,8 @@ static void func_menu_sub_skyrer_process(void)
             if (f_menu->flag_drag)
             {
                 f_menu->diff_angle = compo_rings_touch_angle_diff(rings, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, f_menu->x, f_menu->y);
-                if (abs(f_menu->diff_angle) != 0) {
+                if (abs(f_menu->diff_angle) != 0)
+                {
                     f_menu->diff_angle = (abs(f_menu->diff_angle) >= SKYRER_ANGLE_DIV) ? ((SKYRER_ANGLE_DIV - 1) * (f_menu->diff_angle / abs(f_menu->diff_angle))) : f_menu->diff_angle;
                 }
                 if (f_menu->diff_angle != 0)

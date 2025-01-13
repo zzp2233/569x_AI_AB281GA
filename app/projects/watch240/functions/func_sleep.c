@@ -270,11 +270,11 @@ compo_form_t *func_sleep_form_create(void)
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     uint16_t width = 236;    // 总宽度
     uint8_t fillRect_h = 21; // 绘制单个高度
-    uint16_t startX = 12;     // 相对坐标
+    uint16_t startX = 2;     // 相对坐标
     uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1;
 
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X+startX/2, fillRect_y + fillRect_h+12, GUI_SCREEN_WIDTH-10, 1);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, fillRect_y + fillRect_h+12, width, 1);
     compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
 
 //    sleep_data->recordCnt = 5;
@@ -319,12 +319,6 @@ compo_form_t *func_sleep_form_create(void)
                 }
             }
 
-            // 不为0的数据最少显示1像素宽
-            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
-            {
-                fillRect_w = 1;
-            }
-
             // 最后一段画满图表
             if (i == sleep_data->recordCnt - 1)
             {
@@ -332,6 +326,12 @@ compo_form_t *func_sleep_form_create(void)
                 {
                     fillRect_w = width - fillRect_x;
                 }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
             }
 
             // 设置矩形位置和颜色

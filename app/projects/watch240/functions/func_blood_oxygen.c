@@ -64,14 +64,14 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2.3-CONTROL_Y);
     char txt_buf[5];
-//    if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
-//    {
-    snprintf(txt_buf,sizeof(txt_buf),"%s","--");
-//    }
-//    else
-//    {
-//        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleBloodoxygenGetValue());//血氧值
-//    }
+    if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%s","--");
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleBloodoxygenGetValue());//血氧值
+    }
     compo_textbox_set(textbox,txt_buf);
     compo_setid(textbox,COMPO_ID_TXT_VALUE);
 

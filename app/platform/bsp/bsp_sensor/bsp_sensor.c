@@ -77,12 +77,11 @@ u8 bsp_sensor_hr_stop(void)
         vc30fx_usr_device_init(&vc30fx_data);
     }
     else
-#else
+#endif
     {
         stop = vc30fx_usr_stop_work();
         vc30fx_pwr_dis();
     }
-#endif
 #endif
 
     // if (!stop) bsp_sensor_init_sta_clr(SENSOR_INIT_HR);

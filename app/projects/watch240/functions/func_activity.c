@@ -82,7 +82,7 @@ compo_form_t *func_activity_form_create(void)
     compo_picturebox_set_pos(arc_pic,pic_bg_area.wid/2,pic_bg_area.hei-gui_image_get_size(UI_BUF_I330001_ACTIVITY_YUANJIAO_BIN).hei/2);
 
     char txt_buf[20];
-    uint16_t KM = uteModuleSportGetCurrDayDistanceData();
+    uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
 
@@ -101,14 +101,22 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_forecolor(textbox,KCAL_ARC_COLOR);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d",KM/100, KM%100);///公里数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d",distance/100, distance%100);///公里数据
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5);
     compo_setid(textbox,KM_TXT_VALUE_ID);
 
-    textbox = compo_textbox_create(frm,strlen(i18n[STR_KM]));///公里
-    compo_textbox_set(textbox, i18n[STR_KM]);
+    if(uteModuleSystemtimeGetDistanceMiType())
+    {
+        textbox = compo_textbox_create(frm,strlen(i18n[STR_MILE]));//英里
+        compo_textbox_set(textbox, i18n[STR_MILE]);
+    }
+    else
+    {
+        textbox = compo_textbox_create(frm,strlen(i18n[STR_KM]));//公里
+        compo_textbox_set(textbox, i18n[STR_KM]);
+    }
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5+TXT_SPACING_Y);
     compo_textbox_set_forecolor(textbox,KM_ARC_COLOR);
 

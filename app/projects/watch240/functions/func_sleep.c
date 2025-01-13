@@ -294,30 +294,47 @@ compo_form_t *func_sleep_form_create(void)
         TRACE("SLEEP={state[%d] data[%d]}\n",sleep_data->sleep_record[k].state,sleep_data->sleep_record[k].period);
     }
 
-    if(sleep_data->totalSleepMin)///是否有睡眠时长
+    if (sleep_data->totalSleepMin) //是否有睡眠时长
     {
-        compo_shape_t *shape;
-        uint16_t realTimeInterval;
+        uint16_t fillRect_x = 0;
         uint16_t startTime = sleep_data->fallAsSleepTime.hour * 60 + sleep_data->fallAsSleepTime.min; // 终止时间23:00
         uint16_t endTime = sleep_data->getUpSleepTime.hour * 60 + sleep_data->getUpSleepTime.min;     // 起始时间8:00
         uint16_t timeInterval = (endTime + 24 * 60 - startTime) % (24 * 60);                          // 总时间间隔（分钟）
-        uint16_t sumInterval = 0;                                                                     // 累积间隔
-        realTimeInterval = ((sleep_data->sleep_record[0].startTime.hour * 60 +
-                             sleep_data->sleep_record[0].startTime.min) +
-                            24 * 60 - startTime) %
-                           (24 * 60); // 实时间隔
         if (timeInterval == 0)
             timeInterval = 24 * 60;
-        uint16_t fillRect_x = (width * realTimeInterval) / timeInterval;                   // 绘制的起始点
-        uint16_t fillRect_w = (width * sleep_data->sleep_record[0].period) / timeInterval; // 绘制图的总宽度
-        if (fillRect_w < 1 && sleep_data->sleep_record[0].period != 0)                     // 起始点宽度不为0的数据最少显示1像素宽
-        {
-            fillRect_w = 1;
-        }
 
         for (uint16_t i = 0; i < sleep_data->recordCnt; i++)
         {
-            shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE); /// 创建显示块矩形
+            compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE); // 创建显示块矩形
+
+            uint16_t fillRect_w = (width * sleep_data->sleep_record[i].period) / timeInterval; // 当前段的宽度
+
+            // 先检查是否超出总宽度
+            if (fillRect_x + fillRect_w > width)
+            {
+                fillRect_w = width - fillRect_x;
+                if (i < sleep_data->recordCnt - 1)
+                {
+                    TRACE("Warning===>i=%d,recordCnt=%dfillRect_x=%d,fillRect_w=%d,width=%d\n",i,sleep_data->recordCnt,fillRect_x,fillRect_w,width);
+                }
+            }
+
+            // 不为0的数据最少显示1像素宽
+            if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)
+            {
+                fillRect_w = 1;
+            }
+
+            // 最后一段画满图表
+            if (i == sleep_data->recordCnt - 1)
+            {
+                if (fillRect_x + fillRect_w < width)
+                {
+                    fillRect_w = width - fillRect_x;
+                }
+            }
+
+            // 设置矩形位置和颜色
             if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
             {
                 compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y + fillRect_h, fillRect_w, fillRect_h);
@@ -339,29 +356,10 @@ compo_form_t *func_sleep_form_create(void)
                 compo_shape_set_color(shape, make_color(0x00, 0xf7, 0xd6));
             }
 
-            if (i < sleep_data->recordCnt - 1) // 超出段数范围减1
-            {
-                fillRect_x += fillRect_w;
-                sumInterval += sleep_data->sleep_record[i + 1].period;
-                fillRect_w = (width * sumInterval) / timeInterval - fillRect_x;
-                if (fillRect_w < 1 && sleep_data->sleep_record[i + 1].period != 0) // 不为0的数据最少显示1像素宽
-                {
-                    fillRect_w = 1;
-                }
-            }
+            // 更新起始点
+            fillRect_x += fillRect_w;
 
-            if ((fillRect_x - startX) + fillRect_w > width)
-            {
-                fillRect_w = width - (fillRect_x - startX);
-            }
-
-            if (i == sleep_data->recordCnt - 1)
-            {
-                if ((fillRect_x - startX) + fillRect_w < width)
-                {
-                    fillRect_w = width - (fillRect_x - startX);
-                }
-            }
+            TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
         }
     }
 

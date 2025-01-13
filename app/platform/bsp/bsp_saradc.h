@@ -1,7 +1,8 @@
 #ifndef _BSP_SARADC_H
 #define _BSP_SARADC_H
 
-typedef struct {
+typedef struct
+{
     u16 vrtc_first;
     u16 vrtc_val;
     u16 bg;
@@ -18,6 +19,7 @@ typedef struct {
     u16 mic_volt;
     u32 vbat_total;
     u32 tmr1ms_cnt;
+    u16 vbat_gui_sleep;
 } adc_cb_t;
 extern adc_cb_t adc_cb;
 

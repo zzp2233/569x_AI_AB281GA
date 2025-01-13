@@ -21,14 +21,14 @@ enum
     BREATHE_MODE_FAST,          //稍快
 };
 
-#define ANIMATION_TICK_EXPIRE   40  //动画帧间隔，ms
+#define ANIMATION_TICK_EXPIRE   20  //动画帧间隔，ms
 #define BREATHE_ICON_SIZE_MIN   45  //图标缩放最小尺寸
 #define BREATHE_ICON_SIZE_MAX   170
 #define BREATHE_PREPARE_TIME    1800  //入场动画持续时间
 #define BREATHE_FINISH_TIME     500  //出场动画持续时间
-#define BREATHE_RHYTHM0         525*8  //呼/吸气时间（慢）
-#define BREATHE_RHYTHM1         525*7  //中
-#define BREATHE_RHYTHM2         525*6  //快
+#define BREATHE_RHYTHM0         5000  //呼/吸气时间（慢）
+#define BREATHE_RHYTHM1         4300  //中
+#define BREATHE_RHYTHM2         3800  //快
 
 //呼吸检测状态
 enum
@@ -248,7 +248,7 @@ static void func_breathe_process(void)
                             frames = (rhythm / ANIMATION_TICK_EXPIRE);
                             deg_step = 1800 / frames;  //呼吸各半圈
                             temp = BREATHE_ICON_SIZE_MAX - BREATHE_ICON_SIZE_MIN;
-                            size_step = (temp + frames / 2) / frames;
+                            size_step = ((temp + frames) / 2) / frames;
                             if (size_step == 0)
                             {
                                 size_step_time = ANIMATION_TICK_EXPIRE * ((frames + temp / 2) / temp);
@@ -299,7 +299,7 @@ static void func_breathe_process(void)
                             else
                             {
                                 compo_textbox_set(txt, i18n[STR_BREATHE_INHALE]);  //吸气
-                                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+//                                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                             }
                             TRACE("total:%ds past:%ds\n", sys_cb.breathe_duration / 1000, f_breathe->time_past / 1000);
 //                    TRACE("deg[%d] size[%d] degstep[%d] sizestep[%d]\n", f_breathe->icon_deg, f_breathe->icon_size, deg_step, size_step);

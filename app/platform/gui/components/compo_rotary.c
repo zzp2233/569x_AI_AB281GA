@@ -64,9 +64,8 @@ compo_rotary_t *compo_rotary_create(compo_form_t *frm, compo_rotary_item_t const
         widget_image3d_set_r(img, rotary->radius);
     }
     widget_text_t *txt = widget_text_create(page, 32);
-//    widget_text_set_autosize(txt, true);
-//    widget_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - 48);
-    widget_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - 48, GUI_SCREEN_WIDTH/1.1, 60);
+    widget_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - 48, GUI_SCREEN_WIDTH/1.1, 30);
+    widget_text_set_autoroll_mode(txt, 2);
     rotary->item_title = txt;
     rotary->img_area = gui_image_get_size(item[0].res_addr);
     return rotary;

@@ -92,7 +92,7 @@ const menu_hc_item_t tbl_menu_ring[] =
     {UI_BUF_I330001_THEME_1_SETTINGS_BIN,                   FUNC_SETTING},
 
     {UI_BUF_I330001_THEME_1_SLEEP_BIN,                     FUNC_SLEEP},
-    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_SET_SUB_SAV},
+//    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_SET_SUB_SAV},
     {UI_BUF_I330001_THEME_1_SOPRT_BIN,                         FUNC_SPORT},
 
     {UI_BUF_I330001_THEME_1_STOPWATCH_BIN,                 FUNC_STOPWATCH},
@@ -230,7 +230,8 @@ static void func_menu_sub_ring_entering(void)
                     rect.hei = muls_shift16(rect.hei, w_rate);
                 }
             }
-            if (iconlist->page_time != NULL) {
+            if (iconlist->page_time != NULL)
+            {
                 if (idx == iconlist->idx_time)
                 {
                     widget_page_scale_to(iconlist->page_time, rect.wid, rect.hei);

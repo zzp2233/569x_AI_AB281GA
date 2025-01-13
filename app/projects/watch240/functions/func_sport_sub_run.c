@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_all_sports_int_algorithms.h"
 #include "ute_module_sport.h"
+#include "ute_module_heart.h"
 
 #define TRACE_EN        0
 
@@ -623,24 +624,27 @@ static void func_sport_sub_run_updata(void)
             compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_SPORT_HEART);
             area_t pic_size = gui_image_get_size(UI_BUF_I330001_SPORT_ICON2_HR_BIN);
 
-            if(f_sport_sub_run->heart_pic_size <= 72)
+            if(uteModuleHeartIsWear() == true)   ///佩戴处理
             {
-                f_sport_sub_run->heart_pic_state = true;
-            }
-            else if(f_sport_sub_run->heart_pic_size >= 110)
-            {
-                f_sport_sub_run->heart_pic_state = false;
-            }
+                if(f_sport_sub_run->heart_pic_size <= 72)
+                {
+                    f_sport_sub_run->heart_pic_state = true;
+                }
+                else if(f_sport_sub_run->heart_pic_size >= 110)
+                {
+                    f_sport_sub_run->heart_pic_state = false;
+                }
 
-            if(f_sport_sub_run->heart_pic_state == true)
-            {
-                f_sport_sub_run->heart_pic_size ++ ;
+                if(f_sport_sub_run->heart_pic_state == true)
+                {
+                    f_sport_sub_run->heart_pic_size ++ ;
+                }
+                else
+                {
+                    f_sport_sub_run->heart_pic_size -- ;
+                }
+                compo_picturebox_set_size(picbox,f_sport_sub_run->heart_pic_size*pic_size.wid/100,f_sport_sub_run->heart_pic_size*pic_size.hei/100);
             }
-            else
-            {
-                f_sport_sub_run->heart_pic_size -- ;
-            }
-            compo_picturebox_set_size(picbox,f_sport_sub_run->heart_pic_size*pic_size.wid/100,f_sport_sub_run->heart_pic_size*pic_size.hei/100);
 
 #if USE_GOAL_ARC
             //更新圆弧
@@ -944,7 +948,7 @@ static void func_sport_sub_run_enter(void)
     cur_sport_type = uteModuleSportMoreSportGetType();
 
     func_cb.frm_main = func_sport_sub_run_form_create();
-
+    uteModuleHeartStartSingleTesting(TYPE_HEART);
 }
 
 //退出室内跑步功能
@@ -971,6 +975,7 @@ static void func_sport_sub_run_exit(void)
         sport_start_flag = f_sport_sub_run->sport_run_state;
     }
     func_cb.last = FUNC_SPORT_SUB_RUN;
+    uteModuleHeartStopSingleTesting(TYPE_HEART);
 }
 
 //室内跑步功能

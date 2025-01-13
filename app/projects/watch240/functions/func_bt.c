@@ -13,7 +13,7 @@
 
 #define TITLE_BUF_LEN     UTE_MUSIC_TITLE_MAX_SIZE   //歌名buf长度
 #define ARTIST_BUF_LEN    UTE_MUSIC_ARTLIST_MAX_SIZE     //歌手/歌手buf长度
-#define PROGRESS_BAR_LENGTH GUI_SCREEN_WIDTH/1.65
+#define PROGRESS_BAR_LENGTH 146
 #define BTN_REST_DISP_TIME 300   //按钮释放时间 ms 级别
 
 enum
@@ -123,8 +123,8 @@ void func_bt_chk_off(void)
 //创建蓝牙音乐播放器窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_bt_form_create(void)
 {
-    static char title_buf[TITLE_BUF_LEN];
-    static char artist_buf[ARTIST_BUF_LEN];
+    char title_buf[TITLE_BUF_LEN];
+    char artist_buf[ARTIST_BUF_LEN];
     uint16_t title_size_leng  = 0;
     uint16_t artist_size_leng = 0;
     memset(title_buf,0,sizeof(title_buf));
@@ -150,7 +150,7 @@ compo_form_t *func_bt_form_create(void)
         compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
 
         compo_textbox_set(name_txt,artist_buf);
-        if(title_size_leng)
+        if(title_size_leng == 0)
         {
             compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
         }
@@ -164,7 +164,7 @@ compo_form_t *func_bt_form_create(void)
 
 
         compo_textbox_set(lyric_txt,title_buf);
-        if(artist_size_leng)
+        if(artist_size_leng == 0)
         {
             compo_textbox_set(lyric_txt, i18n[STR_UNKNOWN]);
         }

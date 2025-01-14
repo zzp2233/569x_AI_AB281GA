@@ -310,7 +310,7 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
         case ICONLIST_STYLE_SUDOKU:
         case ICONLIST_STYLE_SUDOKU_HRZ:
         case ICONLIST_STYLE_RING:
-            iconlist->total_line = (iconlist->total_cnt + 2) / 3;
+            iconlist->total_line = (iconlist->total_cnt + 3) / 3;
             if (iconlist->style == ICONLIST_STYLE_RING)
             {
                 iconlist->ofs_max = (iconlist->total_line - 1) * iconlist->ln_hei;
@@ -323,7 +323,7 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
             break;
 
         case ICONLIST_STYLE_CUM_SUDOKU:
-            iconlist->total_line = (iconlist->total_cnt + 2) / 3;
+            iconlist->total_line = (iconlist->total_cnt + 3) / 3;
             iconlist->ofs_max = (iconlist->total_line - 1) * (iconlist->icon_size + iconlist->icon_space_y);
             iconlist->slide_max = iconlist->ofs_max + (iconlist->icon_size + iconlist->icon_space_y) / 2;
             break;
@@ -364,7 +364,7 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
             break;
 
         case ICONLIST_STYLE_CUM_HEXAGON:
-            iconlist->total_line = (iconlist->total_cnt + 2) / 3;
+            iconlist->total_line = (iconlist->total_cnt + 3) / 3;
             iconlist->ofs_max = (iconlist->total_line - 1) * iconlist->icon_total_size;
             iconlist->slide_max = iconlist->ofs_max + iconlist->icon_total_size / 2;
             break;
@@ -470,7 +470,8 @@ void compo_iconlist_set_iconsize(compo_iconlist_t *iconlist, s16 icon_size)
         case ICONLIST_STYLE_HONEYCOMB:
             iconlist->icon_space = icon_size / 7;
         case ICONLIST_STYLE_WATERFALL:
-            if (iconlist->style == ICONLIST_STYLE_WATERFALL) {
+            if (iconlist->style == ICONLIST_STYLE_WATERFALL)
+            {
                 iconlist->icon_space = icon_size / 10;
             }
             iconlist->icon_total_size = icon_size + iconlist->icon_space;

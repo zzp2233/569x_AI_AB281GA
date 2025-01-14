@@ -99,7 +99,7 @@ void func_ota_ui_message(u16 msg)
 static void func_ota_ui_exit(void)
 {
     uteModuleGuiCommonDisplayOffAllowGoBack(true);
-    func_cb.last = FUNC_IDLE;
+    func_cb.last = FUNC_OTA_UI_MODE;
 }
 
 AT(.text.func.idle)

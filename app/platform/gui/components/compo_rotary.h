@@ -61,7 +61,8 @@ typedef struct compo_rotary_t_
 
     compo_rotary_item_t const *item;
     widget_image_t *item_img[ROTARY_ITEM_CNT_MAX];
-    widget_text_t *item_title;
+//    widget_text_t *item_title;
+    compo_textbox_t *item_title;
 } compo_rotary_t;
 
 /**

@@ -56,6 +56,9 @@ typedef struct f_breathe_sub_time_t_
 #define BREATHE_CLOCK_SET_NUM_POS_Y_START                 BREATHE_TXT_ITEM_Y
 #define BREATHE_CLOCK_SET_NUM_POS_Y(y_start,space,cnt)    ((y_start)+(space)*(cnt))
 
+#define BREATHE_SUB_TIME_MIN                  1
+#define BREATHE_SUB_TIME_MAX                  5
+
 //搞个数字item，创建时遍历一下
 static const breathe_set_num_item_t tbl_breathe_set_num_item[] =
 {
@@ -91,32 +94,32 @@ static u8 func_breathe_get_time_cal(s8 num, u8 mode)
 //        }
 //        return num;
 //    }
-    if (num < 1)
+    if (num < BREATHE_SUB_TIME_MIN)
     {
-        num += 5;
+        num += BREATHE_SUB_TIME_MAX;
     }
 
-    if (mode == 1)
+    if (mode == BREATHE_SUB_TIME_MIN)
     {
-        if (num == 1 || num > 5)
+        if (num == BREATHE_SUB_TIME_MIN || num > BREATHE_SUB_TIME_MAX)
         {
-            return 5;
+            return BREATHE_SUB_TIME_MAX;
         }
         return num - 1;
     }
     else if (mode == 2)
     {
-        if (num >= 5)
+        if (num >= BREATHE_SUB_TIME_MAX)
         {
-            return 1;
+            return BREATHE_SUB_TIME_MIN;
         }
         return num + 1;
     }
     else
     {
-        if (num > 5)
+        if (num > BREATHE_SUB_TIME_MAX)
         {
-            return 5;
+            return BREATHE_SUB_TIME_MAX;
         }
         return num;
     }
@@ -378,7 +381,8 @@ static void func_breathe_move_handle(void)
         //printf("x:%d, y:%d\n",dx, dy);
 
         breathe_set_num_pos_cal(dy, flag_press);
-        min_disp = (min - f_set->mcnt) % 60;
+//        min_disp = (min - f_set->mcnt) % 60;
+        min_disp = (min - f_set->mcnt) % BREATHE_SUB_TIME_MAX;
 
         for (int idx = 0; idx < 5; idx++)
         {

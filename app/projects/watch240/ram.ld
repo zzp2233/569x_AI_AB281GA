@@ -381,7 +381,6 @@ SECTIONS
 
     .bram __bram_vma (NOLOAD) : {
         __bram_start = .;
-        *(.rtc_cache)
         *(.btmem.bthw)
         *(.btmem*)
         *(.btstack_hci.buf)
@@ -389,6 +388,7 @@ SECTIONS
         *(.ble_cache*)
         *(.ancs_client*)
         *(.ams_client*)
+        *(.rtc_cache)
         __bram_end = .;
     } > bram
     __bram_size = __bram_end - __bram_start;

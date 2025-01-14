@@ -2,6 +2,7 @@
 #include "ute_module_platform.h"
 #include "ute_drv_screen_common.h"
 #include "ute_module_gui_common.h"
+#include "ute_application_common.h"
 
 #define TRACE_EN                1
 
@@ -203,6 +204,10 @@ void tft_bglight_frist_set_check(void)
     if(!tft_cb.tft_bglight_first_set)
     {
         return ;
+    }
+    if(!uteApplicationCommonIsPowerOn())
+    {
+        return;
     }
     extern bool msgbox_frist_set_check(void);
     if (msgbox_frist_set_check())

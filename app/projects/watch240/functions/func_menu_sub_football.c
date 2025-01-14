@@ -36,7 +36,7 @@ typedef struct f_menu_football_t_
 } f_menu_football_t;
 
 //足球图标列表(固定20项)
-static const compo_football_item_t tbl_menu_football[] =
+static const compo_football_item_t tbl_menu_football[20] =
 {
     {UI_BUF_I330001_THEME_2_THEME_BIN,            FUNC_STYLE},
     {UI_BUF_I330001_THEME_2_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
@@ -45,7 +45,6 @@ static const compo_football_item_t tbl_menu_football[] =
     {UI_BUF_I330001_THEME_2_ALARM_BIN,            FUNC_ALARM_CLOCK},
 
     {UI_BUF_I330001_THEME_2_CALL_BIN,             FUNC_CALL},
-    {UI_BUF_I330001_THEME_2_CONTACTS_BIN,         FUNC_ADDRESS_BOOK},
 //    {UI_BUF_I330001_THEME_2_SOUND_BIN,            FUNC_SET_SUB_SAV},
     {UI_BUF_I330001_THEME_2_CALL_BIN,             FUNC_CALL},
     {UI_BUF_I330001_THEME_2_MUSIC_BIN,            FUNC_BT},

@@ -170,7 +170,11 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleNotifyAncsStartPairHandlerMsg();
         }
         break;
-
+        case MSG_TYPE_CALL_DISABLE_NOTIFY:
+        {
+            uteModuleNotifyCallDisableHandlerMsg();
+        }
+        break;
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

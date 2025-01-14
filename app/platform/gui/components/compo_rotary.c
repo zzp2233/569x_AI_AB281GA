@@ -63,9 +63,12 @@ compo_rotary_t *compo_rotary_create(compo_form_t *frm, compo_rotary_item_t const
         widget_set_pos(img, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
         widget_image3d_set_r(img, rotary->radius);
     }
-    widget_text_t *txt = widget_text_create(page, 32);
-    widget_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - 48, GUI_SCREEN_WIDTH/1.1, 30);
-    widget_text_set_autoroll_mode(txt, 2);
+//    widget_text_t *txt = widget_text_create(page, 32);
+//    widget_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - 48, GUI_SCREEN_WIDTH/1.1, 30);
+//    widget_text_set_autoroll_mode(txt, 2);
+//    rotary->item_title = txt;
+    compo_textbox_t* txt = compo_textbox_create(frm, 32);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - 48, GUI_SCREEN_WIDTH - 20, widget_text_get_height() + 5);
     rotary->item_title = txt;
     rotary->img_area = gui_image_get_size(item[0].res_addr);
     return rotary;
@@ -103,7 +106,8 @@ void compo_rotary_update(compo_rotary_t *rotary)
         widget_image3d_set_azimuth(img, angle);
         if (abs(angle) < ROTARY_ITEM_ANGLE / 2)
         {
-            widget_text_set(rotary->item_title, i18n[item->str_idx]);
+//            widget_text_set(rotary->item_title, i18n[item->str_idx]);
+            compo_textbox_set(rotary->item_title, i18n[item->str_idx]);
         }
     }
 }
@@ -267,7 +271,8 @@ void compo_rotary_move(compo_rotary_t *rotary)
                 if (mcb->animation_cnt >= ANIMATION_CNT_ENTERING)
                 {
                     mcb->sta = COMPO_ROTARY_STA_IDLE;
-                    widget_set_visible(rotary->item_title, true);
+//                    widget_set_visible(rotary->item_title, true);
+                    compo_textbox_set_visible(rotary->item_title, true);
                 }
             }
             return;
@@ -392,7 +397,8 @@ void compo_rotary_move_control(compo_rotary_t *rotary, int cmd)
             wid = GUI_SCREEN_WIDTH * GUI_SCREEN_WIDTH / rotary->img_area.wid;
             hei = GUI_SCREEN_HEIGHT * GUI_SCREEN_HEIGHT / rotary->img_area.hei;
             widget_page_scale_to(rotary->page, wid, hei);
-            widget_set_visible(rotary->item_title, false);
+//            widget_set_visible(rotary->item_title, false);
+            compo_textbox_set_visible(rotary->item_title, false);
             compo_rotary_set_overlook(rotary, 0);
             mcb->sta = COMPO_ROTARY_STA_ENTERING;
             mcb->animation_cnt = 0;
@@ -400,7 +406,8 @@ void compo_rotary_move_control(compo_rotary_t *rotary, int cmd)
             break;
 
         case COMPO_ROTARY_MOVE_CMD_EXITING:
-            widget_set_visible(rotary->item_title, false);
+//            widget_set_visible(rotary->item_title, false);
+            compo_textbox_set_visible(rotary->item_title, false);
             mcb->sta = COMPO_ROTARY_STA_EXITING;
             mcb->animation_cnt = 0;
             mcb->tick = tick_get();

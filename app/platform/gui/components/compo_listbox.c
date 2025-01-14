@@ -99,7 +99,8 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
             if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID)
             {
                 listbox->line_height = listbox->icon_area.wid + font_height * 2+16;
-                listbox->item_width = listbox->icon_area.wid;
+//                listbox->item_width = listbox->icon_area.wid;
+                listbox->item_width = 74;
                 listbox->line_space = GUI_SCREEN_WIDTH / 2 - listbox->icon_area.wid * 3 / 2-13;
                 listbox->line_height_total = listbox->line_space + listbox->icon_area.wid;
                 listbox->total_height = listbox->line_height_total * (listbox->item_cnt - 1) + listbox->line_height;
@@ -108,8 +109,8 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                 icon_y = listbox->item_width / 2;
                 font_x = listbox->item_width / 2;
                 font_y = listbox->line_center_y + listbox->icon_area.wid + font_height / 2+6;
-//                font_w = listbox->item_width;
-                font_w = 76;
+                font_w = listbox->item_width;
+//                font_w = 76;
                 font_h = font_height;
             }
             else
@@ -714,14 +715,18 @@ void compo_listbox_update(compo_listbox_t *listbox)
             if (widget_get_visble(txt))
             {
                 area_t text_area = widget_text_get_area(txt);
-                rect_t textbox_rect = widget_get_location(txt);
+//                rect_t textbox_rect = widget_get_location(txt);
+                area_t textbox_rect = widget_text_get_box_area_rel(txt);
                 if (text_area.wid > textbox_rect.wid)
                 {
                     listbox->roll_cb[i].mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;
                     listbox->roll_cb[i].direction = -1;
                     if (widget_get_align_center(txt))
                     {
-                        listbox->roll_cb[i].offset = (text_area.wid - textbox_rect.wid) / 2;
+                        if(listbox->roll_cb[i].mode != TEXT_AUTOROLL_MODE_SROLL_CIRC)
+                        {
+                            listbox->roll_cb[i].offset = (text_area.wid - textbox_rect.wid) / 2;
+                        }
                     }
                     widget_text_set_autoroll_mode(listbox->item_text[i], TEXT_AUTOROLL_MODE_SROLL_CIRC);
                 }

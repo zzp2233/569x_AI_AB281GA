@@ -393,11 +393,6 @@ void uteApplicationCommonStartupSecond(void)
             uteModuleMotorSetIsOpenVibrationStatus(true);
         }
 #endif
-        power_gate_3v3_on();
-        ctp_init();
-        tft_init();
-        sys_cb.gui_sleep_sta = 0;
-        uteModuleGuiCommonDisplayOff(false);
 
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         uteApplicationCommonData.isStartupSecondFinish = true;

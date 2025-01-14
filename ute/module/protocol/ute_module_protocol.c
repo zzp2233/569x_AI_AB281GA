@@ -720,7 +720,6 @@ void uteModuleProtocolReadQuickSwitchStatus(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
 {
-#if 0
     uint8_t response[2];
     response[0] = receive[0];
     response[1] = receive[1];
@@ -730,12 +729,9 @@ void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
     }
     else if(receive[1] == 0x05)/*! 未接电话zn.zeng, 2021-08-24  */
     {
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_CALL_UNANSWERED_NOTIFY,0);
+        // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_CALL_UNANSWERED_NOTIFY,0);
     }
     uteModuleProfileBleSendToPhone(&response[0],2);
-
-#endif
-
 }
 /**
 *@brief        摇一摇拍照状态控制

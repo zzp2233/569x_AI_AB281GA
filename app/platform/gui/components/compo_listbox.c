@@ -714,7 +714,8 @@ void compo_listbox_update(compo_listbox_t *listbox)
             if (widget_get_visble(txt))
             {
                 area_t text_area = widget_text_get_area(txt);
-                rect_t textbox_rect = widget_get_location(txt);
+//                rect_t textbox_rect = widget_get_location(txt);
+                area_t textbox_rect = widget_text_get_box_area_rel(txt);
                 if (text_area.wid > textbox_rect.wid)
                 {
                     listbox->roll_cb[i].mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;

@@ -57,13 +57,11 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BHy139071aInit(void)
     uteDrvScreenCommonSetResetPin(true);
     uteModulePlatformDelayUs(120000);
 
-//    WriteComm(0xfe);
-//    WriteComm(0xef);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xfe, NULL, 0);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xef, NULL, 0);
 
     memcpy(tmp, "\x11", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x80, tmp, 1);
-//    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xfe, tmp, 1);
-//    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xef, tmp, 1);
     memcpy(tmp, "\x30", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x81, tmp, 1);
     memcpy(tmp, "\x09", 1);
@@ -192,23 +190,8 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BHy139071aInit(void)
     memcpy(tmp, "\x00\x90", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x44, tmp, 2);
 
-//    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xfe, tmp, 2);
-//    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xee, tmp, 2);
-//    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11, tmp, 2);
-//    WriteComm(0xfe);
-//    WriteComm(0xee);
-//    WriteComm(0x11);
-//    DelayMs(120);
-//    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x44, tmp, 2);
-//    WriteComm(0x29);
-//    DelayMs(120);
-    uteModulePlatformDelayUs(120000);
-    memcpy(tmp, "\x00\x00\x00\x00", 4);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2C, tmp, 4);
-    memcpy(tmp, "\x00\x00\x00\x00", 4);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2C, tmp, 4);
-//    DelayMs(120);
-    uteModulePlatformDelayUs(120000);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xfe, NULL, 0);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xee, NULL, 0);
 }
 
 const ute_drv_screen_common_config_t uteDrvScreenTft360X360Nv3030BHy139071aConfig =

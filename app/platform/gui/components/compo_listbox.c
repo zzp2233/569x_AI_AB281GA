@@ -100,7 +100,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
             {
                 listbox->line_height = listbox->icon_area.wid + font_height * 2+16;
 //                listbox->item_width = listbox->icon_area.wid;
-                listbox->item_width = 74;
+                listbox->item_width = 70;
                 listbox->line_space = GUI_SCREEN_WIDTH / 2 - listbox->icon_area.wid * 3 / 2-13;
                 listbox->line_height_total = listbox->line_space + listbox->icon_area.wid;
                 listbox->total_height = listbox->line_height_total * (listbox->item_cnt - 1) + listbox->line_height;

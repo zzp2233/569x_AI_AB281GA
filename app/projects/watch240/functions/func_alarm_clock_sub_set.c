@@ -73,6 +73,11 @@ enum
     COMPO_ID_PIC_BG_MIN,
     COMPO_ID_PIC_BG_AM_PM,
     COMPO_ID_PIC_COLON,
+
+    COMPO_ID_PIC_AM_BG,
+    COMPO_ID_PIC_PM_BG,
+    COMPO_ID_TXT_AM,
+    COMPO_ID_TXT_PM,
 };
 
 typedef struct aclock_set_num_item_t_
@@ -561,57 +566,57 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
 
     //创建数字 ampm
     //创建数字 -> 使用数字进行映射: 0 -> 上午, 1 -> 下午；
-    s8 am_pm = func_alarm_convert_to_12hour(hour).am_pm;
-    s8 am_pm_conv = am_pm - 1;
-    if (func_cb.sta == FUNC_ALARM_CLOCK_SUB_SET)
-    {
-        f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
-        f_alarm_set->time_am_pm = am_pm_conv;
-    }
-    if (am_pm_conv >= 0)
-    {
-        for (u8 idx = 0; idx < ALARM_SET_AMPM_ITEM_CNT; idx++)
-        {
-            compo_textbox_t *txt_str = compo_textbox_create_for_page(frm, page, tbl_aclock_set_ampm_item[idx].num_cnt);
-            compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_BIN);
-            compo_setid(txt_str, tbl_aclock_set_ampm_item[idx].num_id);
-            compo_textbox_set_align_center(txt_str, true);
-            compo_textbox_set_location(txt_str, tbl_aclock_set_ampm_item[idx].x, tbl_aclock_set_ampm_item[idx].y,
-                                       gui_image_get_size(tbl_aclock_set_pic_bg.bg_hour.res_12_bright).wid, ALARM_CLOCK_FONT_AMPM_HEIGHT);
-            if (uteModuleSystemtime12HOn())
-            {
-                compo_textbox_set_visible(txt_str, tbl_aclock_set_ampm_item[idx].visible_en);
-            }
-            else
-            {
-                compo_textbox_set_visible(txt_str, false);
-            }
-            compo_textbox_set_alpha(txt_str, tbl_aclock_set_ampm_item[idx].alpha);
-            memset(buf, 0, sizeof(buf));
-            if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_UU)
-            {
-                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(func_alarm_ampm_get_str_cal(am_pm_conv, 1), 1)].str_id]);
-            }
-            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_UP)
-            {
-                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(am_pm_conv, 1)].str_id]);
-            }
-            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_CENTER)
-            {
-                //compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_NUM_24_BIN);
-                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[am_pm_conv].str_id]);
-            }
-            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_DOWN)
-            {
-                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(am_pm_conv, 2)].str_id]);
-            }
-            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_DD)
-            {
-                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(func_alarm_ampm_get_str_cal(am_pm_conv, 2), 2)].str_id]);
-            }
-            compo_textbox_set(txt_str, buf);
-        }
-    }
+//    s8 am_pm = func_alarm_convert_to_12hour(hour).am_pm;
+//    s8 am_pm_conv = am_pm - 1;
+//    if (func_cb.sta == FUNC_ALARM_CLOCK_SUB_SET)
+//    {
+//        f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
+//        f_alarm_set->time_am_pm = am_pm_conv;
+//    }
+//    if (am_pm_conv >= 0)
+//    {
+//        for (u8 idx = 0; idx < ALARM_SET_AMPM_ITEM_CNT; idx++)
+//        {
+//            compo_textbox_t *txt_str = compo_textbox_create_for_page(frm, page, tbl_aclock_set_ampm_item[idx].num_cnt);
+//            compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_BIN);
+//            compo_setid(txt_str, tbl_aclock_set_ampm_item[idx].num_id);
+//            compo_textbox_set_align_center(txt_str, true);
+//            compo_textbox_set_location(txt_str, tbl_aclock_set_ampm_item[idx].x, tbl_aclock_set_ampm_item[idx].y,
+//                                       gui_image_get_size(tbl_aclock_set_pic_bg.bg_hour.res_12_bright).wid, ALARM_CLOCK_FONT_AMPM_HEIGHT);
+//            if (uteModuleSystemtime12HOn())
+//            {
+//                compo_textbox_set_visible(txt_str, tbl_aclock_set_ampm_item[idx].visible_en);
+//            }
+//            else
+//            {
+//                compo_textbox_set_visible(txt_str, false);
+//            }
+//            compo_textbox_set_alpha(txt_str, tbl_aclock_set_ampm_item[idx].alpha);
+//            memset(buf, 0, sizeof(buf));
+//            if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_UU)
+//            {
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(func_alarm_ampm_get_str_cal(am_pm_conv, 1), 1)].str_id]);
+//            }
+//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_UP)
+//            {
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(am_pm_conv, 1)].str_id]);
+//            }
+//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_CENTER)
+//            {
+//                //compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_NUM_24_BIN);
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[am_pm_conv].str_id]);
+//            }
+//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_DOWN)
+//            {
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(am_pm_conv, 2)].str_id]);
+//            }
+//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_DD)
+//            {
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(func_alarm_ampm_get_str_cal(am_pm_conv, 2), 2)].str_id]);
+//            }
+//            compo_textbox_set(txt_str, buf);
+//        }
+//    }
 
 //    for (int i=0; i<ALARM_SET_AMPM_ITEM_CNT; i++) {
 //        compo_textbox_t* txt_am_pm = compo_getobj_byid(tbl_aclock_set_ampm_item[i].num_id);
@@ -651,19 +656,19 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     compo_picturebox_set_pos(bg_min, tbl_aclock_set_pic_bg.bg_min.x + func_alarm_get_ofs_x(2), tbl_aclock_set_pic_bg.bg_min.y);
     compo_setid(bg_min, tbl_aclock_set_pic_bg.bg_min.id);
 
-    compo_picturebox_t *bg_am_pm = compo_picturebox_create(frm, 0);
-    if(uteModuleSystemtime12HOn())
-    {
-        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory);
-        compo_picturebox_set_visible(bg_am_pm, true);
-    }
-    else
-    {
-        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_destory);
-        compo_picturebox_set_visible(bg_am_pm, false);
-    }
-    compo_picturebox_set_pos(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y);
-    compo_setid(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.id);
+//    compo_picturebox_t *bg_am_pm = compo_picturebox_create(frm, 0);
+//    if(uteModuleSystemtime12HOn())
+//    {
+//        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory);
+//        compo_picturebox_set_visible(bg_am_pm, true);
+//    }
+//    else
+//    {
+//        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_destory);
+//        compo_picturebox_set_visible(bg_am_pm, false);
+//    }
+//    compo_picturebox_set_pos(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y);
+//    compo_setid(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.id);
 
     ///创建滑动检测按钮
     //hour
@@ -693,19 +698,19 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     }
     compo_setid(btn_min, tbl_aclock_set_pic_bg.btn_min.id);
     //ampm
-    compo_button_t* btn_am_pm = compo_button_create(frm);
-    if(uteModuleSystemtime12HOn())
-    {
-        compo_button_set_location(btn_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y, gui_image_get_size(tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory).wid,
-                                  gui_image_get_size(tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory).hei);
-        compo_button_set_visible(btn_am_pm, true);
-    }
-    else
-    {
-        compo_button_set_location(btn_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y, 0, 0);
-        compo_button_set_visible(btn_am_pm, false);
-    }
-    compo_setid(btn_am_pm, tbl_aclock_set_pic_bg.btn_am_pm.id);
+//    compo_button_t* btn_am_pm = compo_button_create(frm);
+//    if(uteModuleSystemtime12HOn())
+//    {
+//        compo_button_set_location(btn_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y, gui_image_get_size(tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory).wid,
+//                                  gui_image_get_size(tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory).hei);
+//        compo_button_set_visible(btn_am_pm, true);
+//    }
+//    else
+//    {
+//        compo_button_set_location(btn_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y, 0, 0);
+//        compo_button_set_visible(btn_am_pm, false);
+//    }
+//    compo_setid(btn_am_pm, tbl_aclock_set_pic_bg.btn_am_pm.id);
 
     //新建按钮
 //    compo_button_t *btn;
@@ -761,6 +766,84 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     compo_textbox_set_location(btn_str, tbl_aclock_set_pic_bg.btn_ok.x,GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
                                tbl_aclock_set_pic_bg.btn_ok.font_w, tbl_aclock_set_pic_bg.btn_ok.font_h);
     compo_textbox_set(btn_str, i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]);
+
+    if(uteModuleSystemtime12HOn())
+    {
+        //创建数字 ampm
+        //创建数字 -> 使用数字进行映射: 0 -> 上午, 1 -> 下午；
+        s8 am_pm = func_alarm_convert_to_12hour(hour).am_pm;
+        s8 am_pm_conv = am_pm - 1;
+
+        if(func_cb.sta == FUNC_ALARM_CLOCK_SUB_SET )
+        {
+            f_alarm_clock_sub_set_t *f_set = (f_alarm_clock_sub_set_t*)func_cb.f_cb;
+            if(am_pm_conv == 0)
+            {
+                if(sys_cb.alarm_edit_hour>12)
+                {
+                    sys_cb.alarm_edit_hour -=12;
+                }
+                else if(sys_cb.alarm_edit_hour==12)
+                {
+                    sys_cb.alarm_edit_hour = 0;
+                }
+                f_set->time_am_pm = 0;
+            }
+            else
+            {
+                if(sys_cb.alarm_edit_hour<12)
+                {
+                    sys_cb.alarm_edit_hour +=12;
+                }
+                f_set->time_am_pm = 1;
+            }
+        }
+
+
+//        printf("clock=%d\n",am_pm_conv);
+
+        compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I330001_ALARM_01_BIN);
+        compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43);
+        if(am_pm_conv == 1)
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I330001_ALARM_00_BIN);
+        }
+        else
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I330001_ALARM_01_BIN);
+        }
+        compo_setid(btn,COMPO_ID_PIC_AM_BG);
+
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_ALARM_00_BIN);
+        compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3);
+        if(am_pm_conv == 0)
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I330001_ALARM_00_BIN);
+        }
+        else
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I330001_ALARM_01_BIN);
+        }
+        compo_setid(btn,COMPO_ID_PIC_PM_BG);
+
+        compo_textbox_t *txt_am_pm = compo_textbox_create(frm,strlen(i18n[STR_AM]));//上午
+        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43,gui_image_get_size(UI_BUF_I330001_ALARM_00_BIN).wid,gui_image_get_size(UI_BUF_I330001_ALARM_00_BIN).hei);
+        compo_textbox_set(txt_am_pm, i18n[STR_AM]);
+        if(am_pm_conv == 1)
+        {
+            compo_textbox_set_forecolor(txt_am_pm, COLOR_GRAY);
+        }
+        compo_setid(txt_am_pm,COMPO_ID_TXT_AM);
+
+        txt_am_pm = compo_textbox_create(frm,strlen(i18n[STR_PM]));//下午
+        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3,gui_image_get_size(UI_BUF_I330001_ALARM_00_BIN).wid,gui_image_get_size(UI_BUF_I330001_ALARM_00_BIN).hei);
+        compo_textbox_set(txt_am_pm, i18n[STR_PM]);
+        if(am_pm_conv == 0)
+        {
+            compo_textbox_set_forecolor(txt_am_pm, COLOR_GRAY);
+        }
+        compo_setid(txt_am_pm,COMPO_ID_TXT_PM);
+    }
 
     return frm;
 }
@@ -1087,20 +1170,20 @@ static void func_alarm_clock_set_move_handle(u8 id)
 
     compo_picturebox_t *bg_hour = compo_getobj_byid(COMPO_ID_PIC_BG_HOUR);
     compo_picturebox_t *bg_min = compo_getobj_byid(COMPO_ID_PIC_BG_MIN);
-    compo_picturebox_t *bg_am_pm = compo_getobj_byid(COMPO_ID_PIC_BG_AM_PM);
+//    compo_picturebox_t *bg_am_pm = compo_getobj_byid(COMPO_ID_PIC_BG_AM_PM);
     if (id == COMPO_ID_BTN_ACLOCK_HOUR)
     {
         if(uteModuleSystemtime12HOn())
         {
             compo_picturebox_set(bg_hour, tbl_aclock_set_pic_bg.bg_hour.res_12_bright);
             compo_picturebox_set(bg_min, tbl_aclock_set_pic_bg.bg_min.res_12_destory);
-            compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory);
+//            compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory);
         }
         else
         {
             compo_picturebox_set(bg_hour, tbl_aclock_set_pic_bg.bg_hour.res_24_bright);
             compo_picturebox_set(bg_min, tbl_aclock_set_pic_bg.bg_min.res_24_destory);
-            compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_destory);
+//            compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_destory);
         }
         time_item = &f_alarm_set->set_num_item[0];
     }
@@ -1110,13 +1193,13 @@ static void func_alarm_clock_set_move_handle(u8 id)
         {
             compo_picturebox_set(bg_hour, tbl_aclock_set_pic_bg.bg_hour.res_12_destory);
             compo_picturebox_set(bg_min, tbl_aclock_set_pic_bg.bg_min.res_12_bright);
-            compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory);
+//            compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory);
         }
         else
         {
             compo_picturebox_set(bg_hour, tbl_aclock_set_pic_bg.bg_hour.res_24_destory);
             compo_picturebox_set(bg_min, tbl_aclock_set_pic_bg.bg_min.res_24_bright);
-            compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_destory);
+//            compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_destory);
         }
         time_item = &f_alarm_set->set_num_item[5];
     }
@@ -1253,19 +1336,19 @@ static u8 func_alarm_clock_sub_set_ampm_move_handle(u8 am_pm)
 
     compo_picturebox_t *bg_hour = compo_getobj_byid(COMPO_ID_PIC_BG_HOUR);
     compo_picturebox_t *bg_min = compo_getobj_byid(COMPO_ID_PIC_BG_MIN);
-    compo_picturebox_t *bg_am_pm = compo_getobj_byid(COMPO_ID_PIC_BG_AM_PM);
+//    compo_picturebox_t *bg_am_pm = compo_getobj_byid(COMPO_ID_PIC_BG_AM_PM);
 
     if(uteModuleSystemtime12HOn())
     {
         compo_picturebox_set(bg_hour, tbl_aclock_set_pic_bg.bg_hour.res_12_destory);
         compo_picturebox_set(bg_min, tbl_aclock_set_pic_bg.bg_min.res_12_destory);
-        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_bright);
+//        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_bright);
     }
     else
     {
         compo_picturebox_set(bg_hour, tbl_aclock_set_pic_bg.bg_hour.res_24_destory);
         compo_picturebox_set(bg_min, tbl_aclock_set_pic_bg.bg_min.res_24_destory);
-        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_bright);
+//        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_bright);
     }
 
 //
@@ -1406,10 +1489,59 @@ static void func_alarm_clock_sub_set_button_release_handle(void)
 //单击按钮
 static void func_alarm_clock_sub_set_button_click(void)
 {
+    f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
     int id = compo_get_button_id();
 
+    compo_button_t * btn_am = NULL;
+    compo_button_t * btn_pm = NULL;
+    compo_textbox_t *txt_am = NULL;
+    compo_textbox_t *txt_pm = NULL;
+
+    if(uteModuleSystemtime12HOn())
+    {
+        btn_am = compo_getobj_byid(COMPO_ID_PIC_AM_BG);
+        btn_pm = compo_getobj_byid(COMPO_ID_PIC_PM_BG);
+        txt_am = compo_getobj_byid(COMPO_ID_TXT_AM);
+        txt_pm = compo_getobj_byid(COMPO_ID_TXT_PM);
+    }
+
+//    printf("id=%d\n",id);
+//    printf("hour=%d\n",sys_cb.alarm_edit_hour);
     switch (id)
     {
+        case COMPO_ID_PIC_AM_BG:
+//            printf("am\n");
+//            if(btn_am == NULL)return;
+            f_alarm_set->time_am_pm = 0;
+            compo_button_set_bgimg(btn_am, UI_BUF_I330001_ALARM_01_BIN);
+            compo_button_set_bgimg(btn_pm, UI_BUF_I330001_ALARM_00_BIN);
+            compo_textbox_set_forecolor(txt_am, COLOR_WHITE);
+            compo_textbox_set_forecolor(txt_pm, COLOR_GRAY);
+
+            if(sys_cb.alarm_edit_hour>12)
+            {
+                sys_cb.alarm_edit_hour -=12;
+            }
+            else if(sys_cb.alarm_edit_hour==12)
+            {
+                sys_cb.alarm_edit_hour = 0;
+            }
+
+            break;
+        case COMPO_ID_PIC_PM_BG:
+//            printf("pm\n");
+//            if(btn_am == NULL)return;
+            f_alarm_set->time_am_pm = 1;
+            compo_button_set_bgimg(btn_pm, UI_BUF_I330001_ALARM_01_BIN);
+            compo_button_set_bgimg(btn_am, UI_BUF_I330001_ALARM_00_BIN);
+            compo_textbox_set_forecolor(txt_pm, COLOR_WHITE);
+            compo_textbox_set_forecolor(txt_am, COLOR_GRAY);
+
+            if(sys_cb.alarm_edit_hour<12)
+            {
+                sys_cb.alarm_edit_hour += 12;
+            }
+            break;
         case COMPO_ID_BTN_CONTINUE:
             func_cb.sta = FUNC_ALARM_CLOCK_SUB_REPEAT;
             break;

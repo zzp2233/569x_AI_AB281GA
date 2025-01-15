@@ -1,6 +1,7 @@
 #include "include.h"
 #include "chsc6x_comp.h"
 #include "chsc6x_platform.h"
+#include "ute_application_common.h"
 
 #if (CTP_SELECT == CTP_CHSC6X)
 
@@ -217,6 +218,11 @@ bool ctp_chsc6x_init(void)
     int ret = 0;
     unsigned char fw_update_ret_flag = 0; //1:update OK, !0 fail
     struct ts_fw_infos fw_infos;
+
+    if (uteApplicationCommonGetSystemPowerOnSecond() > 5) //chsc6x 获取TP信息太慢，影响亮屏速度，只在开机时获取一次
+    {
+        return true;
+    }
 
     for(i = 0; i < 3; i++)
     {

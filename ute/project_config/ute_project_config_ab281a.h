@@ -10,10 +10,15 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NEME "T62"
-#define UTE_SW_VERSION "AB281AV000010"
+#define UTE_SW_VERSION "AB281AV000014"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281"
+
+/* 睡眠数据采样支持 zn.zeng 2021-12-29*/
+#define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
+/*gesnsor 采集原始数据*/
+#define APP_DBG_GSENSOR_DATA 1
 
 #define UTE_DRV_DSPI_FOR_SCREEN_SUPPORT 0
 #define UTE_DRV_QSPI_FOR_SCREEN_SUPPORT 1

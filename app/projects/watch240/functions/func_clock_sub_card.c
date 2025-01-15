@@ -934,7 +934,7 @@ static void card1_updata_disp(void)
         compo_cardbox_text_set(cardbox, 2, txt_buf);
 
         memset(txt_buf,'\0',sizeof(txt_buf));
-        snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld%ld",f_activity->arc_km_value/100%10,f_activity->arc_km_value/10%10,f_activity->arc_km_value%10);
+        snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d",f_activity->arc_km_value/100, f_activity->arc_km_value%100);
         compo_cardbox_text_set(cardbox, 1, txt_buf);
 
         memset(txt_buf,'\0',sizeof(txt_buf));
@@ -1173,7 +1173,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(card1->text[ui_handle.card1.text_km.idx], make_color(ui_handle.card1.text_km.color.r, ui_handle.card1.text_km.color.g, ui_handle.card1.text_km.color.b));
     compo_cardbox_text_set_location(card1, ui_handle.card1.text_km.idx, ui_handle.card1.text_km.x, ui_handle.card1.text_km.y, ui_handle.card1.text_km.w, ui_handle.card1.text_km.h);
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d%d",KM/100%10,KM/10%10,KM%10);///公里数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d",KM/100, KM%100);///公里数据
     compo_cardbox_text_set(card1, ui_handle.card1.text_km.idx,txt_buf);
 
     compo_cardbox_text_set_font(card1, ui_handle.card1.text_step.idx, ui_handle.card1.text_step.res);

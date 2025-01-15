@@ -320,13 +320,13 @@ compo_form_t *func_sleep_form_create(void)
             }
 
             // 最后一段画满图表
-            if (i == sleep_data->recordCnt - 1)
-            {
-                if (fillRect_x + fillRect_w < width)
-                {
-                    fillRect_w = width - fillRect_x;
-                }
-            }
+            // if (i == sleep_data->recordCnt - 1)
+            // {
+            //     if (fillRect_x + fillRect_w < width)
+            //     {
+            //         fillRect_w = width - fillRect_x;
+            //     }
+            // }
 
             // 不为0的数据最少显示1像素宽
             if (fillRect_w < 1 && sleep_data->sleep_record[i].period != 0)

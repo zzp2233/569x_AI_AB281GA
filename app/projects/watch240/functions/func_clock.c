@@ -673,7 +673,12 @@ static void func_clock_message(size_msg_t msg)
         }
 
     }
-
+#if UTE_LOG_DRV_TP_LVL
+    if(msg >= MSG_CTP_TOUCH && msg <= MSG_CTP_COVER)
+    {
+        printf("%s -> msg:0x%x\n", __func__, msg);
+    }
+#endif
     switch (msg)
     {
         case MSG_CTP_SHORT_UP:

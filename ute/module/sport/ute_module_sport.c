@@ -3049,7 +3049,8 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                     {
                         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID); //退回运动列表
                         void func_switch_to(u8 sta, u16 switch_mode);
-                        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+//                        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+                        func_cb.sta = FUNC_SPORT;
                     }
                     else
                     {
@@ -3063,12 +3064,13 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
 //                            extern u8 task_stack_pop(void);
 //                            task_stack_pop();
                             void func_switch_to(u8 sta, u16 switch_mode);
-                            func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+//                            func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+                            func_cb.sta = FUNC_SPORT;
                         }
                         else
                         {
                             // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);     //运动完成数据弹窗
-                            func_cb.sta = FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
+                            func_cb.sta = FUNC_SPORT_FINISH;       //todo 结束报告界面，暂时没有做，直接返回运动列表
 //                            sys_cb.cover_index = REMIND_COVER_GOAL;
 //                            sys_cb.remind_tag = true;
 
@@ -3656,7 +3658,8 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
     if(uteModuleSportMoreSportsIsLessData())
     {
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);      //运动列表
-        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+//        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+        func_cb.sta = FUNC_SPORT;
     }
     else
     {

@@ -850,7 +850,8 @@ static void func_sport_sub_run_click_handler(void)
 //                }
                 if (!sport_flag)
                 {
-                    func_switch_to(FUNC_SPORT_FINISH, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+//                    func_switch_to(FUNC_SPORT_FINISH, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+                    func_cb.sta = FUNC_SPORT_FINISH;
                 }
             }
             else if (res == MSGBOX_RES_CANCEL)

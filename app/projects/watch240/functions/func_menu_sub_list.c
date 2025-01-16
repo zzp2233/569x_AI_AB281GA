@@ -53,7 +53,9 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_BREATHE_TRAIN,          UI_BUF_I330001_THEME_1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
     {STR_CALCULATOR,             UI_BUF_I330001_THEME_1_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器
     {STR_ALARM_CLOCK,            UI_BUF_I330001_THEME_1_ALARM_BIN,             .func_sta = FUNC_ALARM_CLOCK},          //闹钟
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {STR_TIMER,                  UI_BUF_I330001_THEME_1_TIMER_BIN,             .func_sta = FUNC_TIMER},                //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     {STR_STOP_WATCH,             UI_BUF_I330001_THEME_1_STOPWATCH_BIN,         .func_sta = FUNC_STOPWATCH},            //秒表
     {STR_CALENDAR,               UI_BUF_I330001_THEME_1_CALENDAR_BIN,          .func_sta = FUNC_CALENDAER},            //日历
     {STR_CAMERA,                 UI_BUF_I330001_THEME_1_PHOTO_BIN,             .func_sta = FUNC_CAMERA},               //相机
@@ -139,7 +141,7 @@ compo_form_t *func_menu_sub_list_form_create(void)
 //        compo_textbox_set_pos(battery_txt, 43, 25);
 ////        compo_textbox_set_autosize(battery_txt, true);
 //        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
-    //电池
+        //电池
         compo_picturebox_t *battery_pic = compo_picturebox_create(frm, BATTERY_PIC_4_BIN);
         compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
         compo_picturebox_set_pos(battery_pic, 43, 25);

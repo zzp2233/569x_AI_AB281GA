@@ -44,7 +44,9 @@ extern void func_breathe_sub_time(void);
 extern void func_calculator(void);
 extern void func_camera(void);
 extern void func_light(void);
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
 extern void func_timer(void);
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
 extern void func_sleep(void);
 extern void func_stopwatch(void);
 extern void func_stopwatch_sub_record(void);
@@ -67,7 +69,9 @@ extern void func_message_info(void);
 extern void func_scan(void);
 extern void func_voice(void);
 //extern void func_compass(void);
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 extern void func_address_book(void);
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 extern void func_set_sub_list(void);
 //extern void func_set_sub_sav(void);
 extern void func_set_sub_dousing(void);
@@ -168,7 +172,9 @@ compo_form_t *func_breathe_form_create(void);
 compo_form_t *func_breathe_sub_mode_form_create(void);
 compo_form_t *func_breathe_sub_time_form_create(void);
 compo_form_t *func_calculator_form_create(void);
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
 compo_form_t *func_camera_form_create(void);
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
 compo_form_t *func_light_form_create(void);
 compo_form_t *func_timer_form_create(void);
 compo_form_t *func_sleep_form_create(void);
@@ -279,7 +285,9 @@ const func_t tbl_func_create[] =
     {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time_form_create},
     {FUNC_CALCULATOR,                   func_calculator_form_create},
     {FUNC_CAMERA,                       func_camera_form_create},
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {FUNC_TIMER,                        func_timer_form_create},
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     {FUNC_SLEEP,                        func_sleep_form_create},
     {FUNC_STOPWATCH,                    func_stopwatch_form_create},
     {FUNC_STOPWATCH_SUB_RECORD,         func_stopwatch_sub_record_form_create},
@@ -299,7 +307,9 @@ const func_t tbl_func_create[] =
     {FUNC_SCAN,                         func_scan_form_create},
     {FUNC_VOICE,                        func_voice_form_create},
 //    {FUNC_COMPASS,                      func_compass_form_create},
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {FUNC_ADDRESS_BOOK,                 func_address_book_form_create},
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {FUNC_CALL,                         func_call_form_create},
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record_form_create},
     {FUNC_CALL_SUB_DIAL,                func_call_sub_dial_form_create},
@@ -396,7 +406,9 @@ const func_t tbl_func_entry[] =
     {FUNC_CALCULATOR,                   func_calculator},               //计算器
     {FUNC_CAMERA,                       func_camera},                   //相机
     {FUNC_LIGHT,                        func_light},                    //亮度调节
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {FUNC_TIMER,                        func_timer},                    //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     {FUNC_SLEEP,                        func_sleep},                    //睡眠
     {FUNC_STOPWATCH,                    func_stopwatch},                //秒表
     {FUNC_STOPWATCH_SUB_RECORD,         func_stopwatch_sub_record},     //秒表--秒表记录
@@ -416,7 +428,9 @@ const func_t tbl_func_entry[] =
     {FUNC_SCAN,                         func_scan},                     //扫一扫
     {FUNC_VOICE,                        func_voice},                    //语音助手
 //    {FUNC_COMPASS,                      func_compass},                  //指南针
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {FUNC_ADDRESS_BOOK,                 func_address_book},             //电话簿
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {FUNC_CALENDAER,                    func_calendar},                 //日历
     {FUNC_CALL,                         func_call},                     //电话
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record},          //电话--最近通话

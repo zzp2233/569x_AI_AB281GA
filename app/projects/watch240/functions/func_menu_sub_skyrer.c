@@ -104,8 +104,12 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
     {UI_BUF_I330001_THEME_1_SOPRT_BIN,                         FUNC_SPORT},
     {UI_BUF_I330001_THEME_1_STOPWATCH_BIN,                 FUNC_STOPWATCH},
     {UI_BUF_I330001_THEME_1_PHOTO_BIN,                    FUNC_CAMERA},
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {UI_BUF_I330001_THEME_1_TIMER_BIN,                     FUNC_TIMER},
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {UI_BUF_I330001_THEME_1_CONTACTS_BIN,              FUNC_ADDRESS_BOOK},
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 };
 //SIZE保留区域
 static const int16_t tbl_keep_angle[] =

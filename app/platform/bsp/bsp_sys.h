@@ -29,7 +29,9 @@ enum sys_ctl_bits
     SYS_CTL_FUNC_GAME_ON,               //游戏功能界面选择
     SYS_CTL_FUNC_CALCUL_ON,             //计算器功能界面选择
     SYS_CTL_FUNC_ALARM_ON,              //闹钟功能界面选择
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     SYS_CTL_FUNC_TIMER_ON,              //定时器功能界面选择
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     SYS_CTL_FUNC_STODWATCH_ON,          //秒表功能界面选择
     SYS_CTL_FUNC_SETTINGS_ON,           //设置功能界面选择
     SYS_CTL_FUNC_SPORT_RECORD_ON,       //运动记录功能界面选择

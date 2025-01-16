@@ -165,6 +165,12 @@ static void func_menu_sub_football_drag_message(size_msg_t msg)
 {
     switch (msg)
     {
+        case KU_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面
+            }
+            break;
         default:
             evt_message(msg);
             break;
@@ -179,6 +185,12 @@ static void func_menu_sub_football_move_message(size_msg_t msg)
 
     switch (msg)
     {
+        case KU_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面
+            }
+            break;
         case MSG_CTP_TOUCH:
             //移动过程中，触屏停止。重新进入到开始拖动模式
             compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_DRAG);
@@ -225,7 +237,8 @@ static void func_menu_sub_football_normal_message(size_msg_t msg)
             compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_BACKWARD);
             break;
 
-        case KU_DELAY_BACK:
+//        case KU_DELAY_BACK:
+        case KU_BACK:
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
                 func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面

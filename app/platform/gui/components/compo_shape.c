@@ -127,7 +127,23 @@ bool compo_shape_get_visible(compo_shape_t *shape)
  **/
 void compo_shape_set_radius(compo_shape_t *shape, u16 r)
 {
-    if (shape->shape_type == COMPO_SHAPE_TYPE_RECTANGLE) {
+    if (shape->shape_type == COMPO_SHAPE_TYPE_RECTANGLE)
+    {
         widget_rect_set_radius(shape->rect, r);
     }
+}
+/**
+ * @brief 创建一个形状
+ * @param[in] frm : 窗体指针
+ * @param[in] shape_type : COMPO_SHAPE_TYPE_RECTANGLE 矩形
+ * @param[in] page : 页面指针
+ * @return 返回矩形指针
+ **/
+compo_shape_t *compo_shape_create_for_page(compo_form_t *frm, void* page, u8 shape_type)
+{
+    compo_shape_t *shape = compo_create(frm, COMPO_TYPE_SHAPE);
+    void *rect = widget_rect_create(page);
+    shape->rect = rect;
+    shape->shape_type = shape_type;
+    return shape;
 }

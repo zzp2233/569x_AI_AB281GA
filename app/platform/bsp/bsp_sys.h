@@ -211,6 +211,8 @@ typedef struct
     bool power_on_state;
     bool power_on_flag;
 
+    bool ancs_missed_call;
+
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

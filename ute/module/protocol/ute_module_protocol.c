@@ -338,14 +338,6 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                 sys_cb.cover_index = REMIND_COVER_FIND_WATCH;
                 sys_cb.remind_tag = true;
 
-                /************************/
-                //一件双连测试代码
-                // printf("==============>bsp_change_bt_mac\n");
-                // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
-                // bsp_change_bt_mac();
-                // ble_bt_connect();
-                /************************/
-
                 if(0)
                 {}
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
@@ -390,7 +382,12 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
             }
             else
             {
-#if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
+#if UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT
+                if(receive[5] != 0x01) //消息提醒震动
+                {
+                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
+                }
+#elif UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
                 if(receive[5] == 0x01) //消息提醒震动
                 {
                     if(!uteModuleGuiCommonIsDontNeedNotificationGuiScreen())

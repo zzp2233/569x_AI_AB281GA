@@ -474,6 +474,13 @@ static void sfunc_sleep(void)
             printf("ute_wakeup:%04x\n",uteModulePlatformNotAllowSleep());
             break;
         }
+
+        if(sys_cb.gui_need_wakeup)
+        {
+            sys_cb.gui_need_wakeup = 0;
+            gui_need_wkp = true;
+            printf("gui_need_wakeup\n");
+        }
     }
 
     RTCCON9 = BIT(7) | BIT(5) | BIT(2);         //clr port, bt, wko wakeup pending

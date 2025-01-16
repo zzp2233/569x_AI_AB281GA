@@ -3,6 +3,7 @@
 #include "ute_module_call.h"
 #include "ute_module_platform.h"
 #include "ute_module_gui_common.h"
+#include "ute_drv_motor.h"
 
 enum
 {
@@ -124,12 +125,13 @@ void func_ble_call_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_ble_call_t));
     func_cb.frm_main = func_ble_call_form_create();
-
+    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 0xff);
 }
 
 void func_ble_call_exit(void)
 {
 //    f_ble_call_t *f_ble_call = (f_ble_call_t *)func_cb.f_cb;
+    uteDrvMotorStop();
     func_cb.last = FUNC_BLE_CALL;
 }
 

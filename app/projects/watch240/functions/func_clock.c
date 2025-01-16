@@ -79,7 +79,9 @@ const u8 quick_btn_tbl[] =
     [8]     = FUNC_CALCULATOR,              //计算器
 
     [9]     = FUNC_CAMERA,                  //相机
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     [10]    = FUNC_TIMER,                   //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     [11]    = FUNC_SLEEP,                   //睡眠
     [12]    = FUNC_STOPWATCH,               //秒表
     [13]    = FUNC_WEATHER,                 //天气
@@ -96,7 +98,9 @@ const u8 quick_btn_tbl[] =
     [21]    = FUNC_NULL,                    //支付宝
 #endif // SECURITY_PAY_EN
 //    [22]    = FUNC_COMPASS,                 //指南针
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     [23]    = FUNC_ADDRESS_BOOK,            //电话簿
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     [24]    = FUNC_SPORT,                   //运动
     [25]    = FUNC_CALL,                    //电话
     [26]    = FUNC_FINDPHONE,               //寻找手机

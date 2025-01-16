@@ -67,7 +67,9 @@ static const compo_disklist_item_t tbl_menu_disk[] =
     {STR_BEATHER_DURATION,                UI_BUF_I330001_THEME_1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
     {STR_CALCULATOR,             UI_BUF_I330001_THEME_1_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器
     {STR_ALARM_CLOCK,            UI_BUF_I330001_THEME_1_ALARM_BIN,       .func_sta = FUNC_ALARM_CLOCK},          //闹钟
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {STR_TIMER,                  UI_BUF_I330001_THEME_1_TIMER_BIN,             .func_sta = FUNC_TIMER},                //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     {STR_STOP_WATCH,             UI_BUF_I330001_THEME_1_STOPWATCH_BIN,         .func_sta = FUNC_STOPWATCH},            //秒表
     {STR_CAMERA,                 UI_BUF_I330001_THEME_1_PHOTO_BIN,            .func_sta = FUNC_CAMERA},               //相机
     {STR_VOICE_ASSISTANT,        UI_BUF_I330001_THEME_1_VIOCE_BIN,             .func_sta = FUNC_VOICE},                //语音助手

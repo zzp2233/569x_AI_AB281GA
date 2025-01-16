@@ -77,6 +77,10 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_setid(btn, COMPO_ID_BTN_RECORD_VIEW);
     compo_button_set_pos(btn, 120, 85);
     compo_button_set_visible(btn, sys_cb.stopwatch_rec_cnt > 0);
+    if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
+    {
+        compo_button_set_visible(btn, true);
+    }
 
     //创建数字文本
     compo_textbox_t *txt_num;
@@ -101,7 +105,10 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_textbox_set(txt_num, str_buff);
     compo_textbox_set_forecolor(txt_num, NUM_REC_COLOR);
     compo_textbox_set_visible(txt_num, sys_cb.stopwatch_rec_cnt > 0);
-
+    if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
+    {
+        compo_textbox_set_visible(txt_num, true);
+    }
 
     min = ((sys_cb.stopwatch_total_msec / 1000) / 60) % 100;
     sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
@@ -116,8 +123,8 @@ compo_form_t *func_stopwatch_form_create(void)
         sec  = 59;
         msec = 999;
         co_timer_del(&stopwatch_timer);
-        memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
-        sys_cb.stopwatch_rec_cnt = 0;
+//        memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
+//        sys_cb.stopwatch_rec_cnt = 0;
         //获取数字组件的地址
         compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
         memset(str_buff,0,sizeof(str_buff));
@@ -265,9 +272,8 @@ static void func_stopwatch_process(void)
             sec  = 59;
             msec = 999;
             co_timer_del(&stopwatch_timer);
-            memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
-            sys_cb.stopwatch_rec_cnt = 0;
-            sys_cb.stopwatch_rec_cnt = 0;
+//            memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
+//            sys_cb.stopwatch_rec_cnt = 0;
 //            sys_cb.stopwatch_total_msec = 0;
         }
 

@@ -10,7 +10,7 @@
 
 #define ANIMATION_TICK_EXPIRE           18                          //对话框动画切换单位时间(ms)
 #define ANIMATION_STEP                  (GUI_SCREEN_WIDTH / 8)      //步进
-#define MSGBOX_MAX_TXT_LEN              64
+#define MSGBOX_MAX_TXT_LEN              100
 #define MSGBOX_EXIT_TICK_EXPIRE         5000                        //定时退出单位时间(ms)
 
 //组件ID
@@ -201,6 +201,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             }
             else if (sys_cb.cover_index == REMIND_COVER_LOW_BATTERY)  //低电提醒
             {
+#if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
                 compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_04_BIN);
                 compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
 
@@ -215,6 +216,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 memset(level,0,sizeof(level));
                 sprintf(level,"%d%%",uteDrvBatteryCommonGetLvl());
                 compo_textbox_set(txt_title, level);
+#endif // UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
             }
             else if(sys_cb.cover_index == REMIND_COVER_STOPWATCH_FINISH)//计时器结束
             {
@@ -595,6 +597,16 @@ static void msgbox_process(void)
         {
             msgbox_exit_time = UTE_LOCAL_ALARM_DEFAULT_RING_TIMES * 1000;
         }
+        else if (msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER && sys_cb.cover_index == REMIND_GCOVER_BT_NOT_CONNECT)  //蓝牙未连接弹窗
+        {
+            if (bt_is_connected())              //蓝牙连接后立刻退出这个弹窗
+            {
+                msg_cb->flag_animation = true;
+                msg_cb->flag_entering = false;
+                msg_cb->res = MSGBOX_RES_TIMEOUT_EXIT;
+                goto __exit;
+            }
+        }
         else if ((msg_cb->msg_type == MSGBOX_MSG_TYPE_DETAIL)   ||                                                      //详细消息界面弹窗
                  (sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)     //查找手表
 //                 ||(msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
@@ -602,6 +614,7 @@ static void msgbox_process(void)
         {
             goto __exit;
         }
+
 
         if (tick_check_expire(msg_cb->exit_tick, msgbox_exit_time))   //定时退出
         {

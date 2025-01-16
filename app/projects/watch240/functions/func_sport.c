@@ -273,7 +273,8 @@ static void func_sport_message(size_msg_t msg)
 
         case MSG_CTP_LONG:
             break;
-
+        case MSG_CTP_SHORT_LEFT:
+            break;
         case MSG_CTP_SHORT_RIGHT:
             if (func_cb.flag_sort)
             {

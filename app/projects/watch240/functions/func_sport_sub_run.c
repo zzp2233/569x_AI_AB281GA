@@ -426,13 +426,14 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     compo_textbox_t* text = compo_textbox_create(frm, 32);
     compo_textbox_set_location(text, -140-120/2, 134+23/2,
-                               gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).wid - gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei,
+                               GUI_SCREEN_WIDTH/1.1,
                                gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
     compo_textbox_set(text, i18n[STR_PAUSE]);
     compo_setid(text,COMPO_ID_BTN_SPORT_PAUSE);
 
     text = compo_textbox_create(frm, 32);
-    compo_textbox_set_location(text, -140-120/2, 248+23/2, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).wid - gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei,
+    compo_textbox_set_location(text, -140-120/2, 248+23/2,
+                               GUI_SCREEN_WIDTH/1.1,
                                gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
     compo_textbox_set(text, i18n[STR_END]);
 

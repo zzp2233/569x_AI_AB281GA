@@ -236,9 +236,8 @@ compo_form_t *func_message_form_create(void)
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
     compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 184, GUI_SCREEN_WIDTH/1.1, 30);
     compo_textbox_set(txt, i18n[STR_NO_MSG]);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 184, 0, 0);
-    compo_textbox_set_autosize(txt, true);
     compo_textbox_set_visible(txt, false);
     compo_setid(txt, COMPO_ID_COVER_TXT);
 

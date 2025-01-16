@@ -206,8 +206,8 @@ compo_form_t *func_alarm_clock_form_create(void)
         compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_NO_CLOCK]));
 //        compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_24_BIN);
         compo_textbox_set_align_center(textbox, false);
+        compo_textbox_set_location(textbox, 84, 108, GUI_SCREEN_WIDTH/1.1,28 );
         compo_textbox_set(textbox, i18n[STR_NO_CLOCK]);
-        compo_textbox_set_location(textbox, 84, 108, 72,28 );
 
 //        cardbox = compo_cardbox_create(frm, 1, 0, 1, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
 //        compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4);

@@ -71,6 +71,8 @@ compo_rotary_t *compo_rotary_create(compo_form_t *frm, compo_rotary_item_t const
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - 48, GUI_SCREEN_WIDTH - 20, widget_text_get_height() + 5);
     rotary->item_title = txt;
     rotary->img_area = gui_image_get_size(item[0].res_addr);
+
+    rotary->txt_vis_idx = -1;
     return rotary;
 }
 
@@ -106,8 +108,12 @@ void compo_rotary_update(compo_rotary_t *rotary)
         widget_image3d_set_azimuth(img, angle);
         if (abs(angle) < ROTARY_ITEM_ANGLE / 2)
         {
-//            widget_text_set(rotary->item_title, i18n[item->str_idx]);
-            compo_textbox_set(rotary->item_title, i18n[item->str_idx]);
+            if (rotary->txt_vis_idx != idx)
+            {
+                rotary->txt_vis_idx = idx;
+                //            widget_text_set(rotary->item_title, i18n[item->str_idx]);
+                compo_textbox_set(rotary->item_title, i18n[item->str_idx]);
+            }
         }
     }
 }

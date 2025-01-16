@@ -10,7 +10,7 @@
 
 #define ANIMATION_TICK_EXPIRE           18                          //对话框动画切换单位时间(ms)
 #define ANIMATION_STEP                  (GUI_SCREEN_WIDTH / 8)      //步进
-#define MSGBOX_MAX_TXT_LEN              64
+#define MSGBOX_MAX_TXT_LEN              100
 #define MSGBOX_EXIT_TICK_EXPIRE         5000                        //定时退出单位时间(ms)
 
 //组件ID

@@ -37,26 +37,26 @@ typedef struct calculator_disp_btn_item_t_
 //按钮item，创建时遍历一下
 static const calculator_disp_btn_item_t tbl_calculator_disp_btn_item[] =
 {
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_00_BIN,       UI_BUF_I330001_CALCULATOR_STATE_00_BIN,        BTN_0,              92,    257},
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_00_BIN,       UI_BUF_I330001_CALCULATOR_STATE_00_BIN,        BTN_0,              91,    257},
     {UI_BUF_I330001_CALCULATOR_DEFAULT_01_BIN,       UI_BUF_I330001_CALCULATOR_STATE_01_BIN,        BTN_1,              32,     213},
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_02_BIN,       UI_BUF_I330001_CALCULATOR_STATE_02_BIN,        BTN_2,              92,    213},
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_02_BIN,       UI_BUF_I330001_CALCULATOR_STATE_02_BIN,        BTN_2,              91,    213},
     {UI_BUF_I330001_CALCULATOR_DEFAULT_03_BIN,       UI_BUF_I330001_CALCULATOR_STATE_03_BIN,        BTN_3,              149,    213},
     {UI_BUF_I330001_CALCULATOR_DEFAULT_04_BIN,       UI_BUF_I330001_CALCULATOR_STATE_04_BIN,        BTN_4,              32,     169},//
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_05_BIN,       UI_BUF_I330001_CALCULATOR_STATE_05_BIN,        BTN_5,              92,    169},//
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_05_BIN,       UI_BUF_I330001_CALCULATOR_STATE_05_BIN,        BTN_5,              91,    169},//
     {UI_BUF_I330001_CALCULATOR_DEFAULT_06_BIN,       UI_BUF_I330001_CALCULATOR_STATE_06_BIN,        BTN_6,              149,    169},//
     {UI_BUF_I330001_CALCULATOR_DEFAULT_07_BIN,       UI_BUF_I330001_CALCULATOR_STATE_07_BIN,        BTN_7,              32,     125},
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_08_BIN,       UI_BUF_I330001_CALCULATOR_STATE_08_BIN,        BTN_8,              92,    125},
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_08_BIN,       UI_BUF_I330001_CALCULATOR_STATE_08_BIN,        BTN_8,              91,    125},
     {UI_BUF_I330001_CALCULATOR_DEFAULT_09_BIN,       UI_BUF_I330001_CALCULATOR_STATE_09_BIN,        BTN_9,              149,    125},
     {UI_BUF_I330001_CALCULATOR_DEFAULT_DIAN_BIN,     UI_BUF_I330001_CALCULATOR_STATE_DIAN_BIN,      BTN_POINT,          149,    257},
     {UI_BUF_I330001_CALCULATOR_DEFAULT_JIAJIAN_BIN,  UI_BUF_I330001_CALCULATOR_STATE_JIAJIAN_BIN,   BTN_OPPOSITE,       32,     257},
     {UI_BUF_I330001_CALCULATOR_DEFAULT_CE_BIN,       UI_BUF_I330001_CALCULATOR_STATE_CE_BIN,        BTN_CE,             32,     81},
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_AC_BIN,       UI_BUF_I330001_CALCULATOR_STATE_AC_BIN,        BTN_C,              92,    81},
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_AC_BIN,       UI_BUF_I330001_CALCULATOR_STATE_AC_BIN,        BTN_C,              91,    81},
     {UI_BUF_I330001_CALCULATOR_DEFAULT_DELETE_BIN,   UI_BUF_I330001_CALCULATOR_STATE_DELETE_BIN,    BTN_DEL,            149,    81},
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_CHU_BIN,      UI_BUF_I330001_CALCULATOR_STATE_CHU_BIN,       BTN_DIV,            207,    81},
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_CHENG_BIN,    UI_BUF_I330001_CALCULATOR_STATE_CHENG_BIN,     BTN_MUL,            207,    125},
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_JIAN_BIN,     UI_BUF_I330001_CALCULATOR_STATE_JIAN_BIN,      BTN_SUB,            207,    213},
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_JIA_BIN,      UI_BUF_I330001_CALCULATOR_STATE_JIA_BIN,       BTN_ADD,            207,    169},//
-    {UI_BUF_I330001_CALCULATOR_DEFAULT_DENG_BIN,     UI_BUF_I330001_CALCULATOR_STATE_DENG_BIN,      BTN_EQUAL,          207,    257},
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_CHU_BIN,      UI_BUF_I330001_CALCULATOR_STATE_CHU_BIN,       BTN_DIV,            208,    81},
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_CHENG_BIN,    UI_BUF_I330001_CALCULATOR_STATE_CHENG_BIN,     BTN_MUL,            208,    125},
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_JIAN_BIN,     UI_BUF_I330001_CALCULATOR_STATE_JIAN_BIN,      BTN_SUB,            208,    213},
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_JIA_BIN,      UI_BUF_I330001_CALCULATOR_STATE_JIA_BIN,       BTN_ADD,            208,    169},//
+    {UI_BUF_I330001_CALCULATOR_DEFAULT_DENG_BIN,     UI_BUF_I330001_CALCULATOR_STATE_DENG_BIN,      BTN_EQUAL,          208,    257},
 };
 //创建计算器窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_calculator_form_create(void)
@@ -90,6 +90,11 @@ compo_form_t *func_calculator_form_create(void)
 //计算器功能事件处理
 static void func_calculator_process(void)
 {
+    if (sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
     func_process();
 }
 
@@ -221,6 +226,11 @@ static void func_calculator_enter(void)
     {
         halt(HALT_MALLOC);
     }
+    if (sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
 }
 
 //退出计算器功能

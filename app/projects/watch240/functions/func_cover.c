@@ -420,7 +420,7 @@ void start_music(void)
         sys_cb.gui_need_wakeup = 1;
     }
     reset_sleep_delay_all();
-    func_bt_mp3_res_play(RES_BUF_RING_RING_MP3, RES_LEN_RING_RING_MP3);
+    func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
 }
 
 void gui_set_cover_index(uint8_t index)
@@ -519,7 +519,7 @@ void gui_set_cover_index(uint8_t index)
                 start_music();
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 //开启马达 喇叭
-                co_timer_set(&alarm_clock_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
+                co_timer_set(&alarm_clock_timer, 15000, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
                 mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
             }
             else if (sys_cb.cover_index == REMIND_COVER_HEALTH_SEDENTARY)           //久坐提醒
@@ -571,10 +571,11 @@ void gui_set_cover_index(uint8_t index)
                     printf("repeat alarm[%d] ring, [%02d:%02d]\n", uteModuleSystemtimeGetAlarmRingIndex(), alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
                 }
                 //关闭 喇叭 马达
+                printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
                 sys_cb.cover_index = REMIND_COVER_NONE;
                 co_timer_del(&alarm_clock_timer);
-                // music_control(MUSIC_MSG_STOP);
+                music_control(MUSIC_MSG_STOP);
             }
         }
         else if (res == MSGBOX_RES_EXIT)                   //强制退出弹窗
@@ -583,10 +584,11 @@ void gui_set_cover_index(uint8_t index)
             {
                 printf("COVER_ALARM MSGBOX_RES_EXIT\n");
                 //关闭 喇叭 马达
+                printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
                 sys_cb.cover_index = REMIND_COVER_NONE;
                 co_timer_del(&alarm_clock_timer);
-                // music_control(MUSIC_MSG_STOP);
+                music_control(MUSIC_MSG_STOP);
             }
         }
         else if (res == MSGBOX_RES_TIMEOUT_EXIT)            //提醒界面超时退出
@@ -595,10 +597,11 @@ void gui_set_cover_index(uint8_t index)
             {
                 printf("COVER_ALARM MSGBOX_RES_TIMEOUT_EXIT\n");
                 //关闭 喇叭 马达
+                printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
                 sys_cb.cover_index = REMIND_COVER_NONE;
                 co_timer_del(&alarm_clock_timer);
-                // music_control(MUSIC_MSG_STOP);
+                music_control(MUSIC_MSG_STOP);
             }
         }
         else
@@ -608,10 +611,11 @@ void gui_set_cover_index(uint8_t index)
                 alarm_p->isRepeatRemindOpen = false;
                 uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 //关闭 喇叭 马达
+                printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
                 sys_cb.cover_index = REMIND_COVER_NONE;
                 co_timer_del(&alarm_clock_timer);
-                // music_control(MUSIC_MSG_STOP);
+                music_control(MUSIC_MSG_STOP);
             }
         }
 

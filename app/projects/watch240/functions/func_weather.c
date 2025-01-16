@@ -229,7 +229,7 @@ compo_form_t *func_weather_form_create(void)
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,84+50/2);
 
         txt = compo_textbox_create(frm,strlen(i18n[STR_NO_GET_WEATHER]));
-        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,160+56/2, GUI_SCREEN_WIDTH,56);
+        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,160+56/2, GUI_SCREEN_WIDTH,GUI_SCREEN_HEIGHT-(GUI_SCREEN_CENTER_X,160+56/2));
         compo_textbox_set_multiline(txt, true);
         compo_textbox_set_align_center(txt, true);
         compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);

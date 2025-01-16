@@ -201,6 +201,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             }
             else if (sys_cb.cover_index == REMIND_COVER_LOW_BATTERY)  //低电提醒
             {
+#if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
                 compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_04_BIN);
                 compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
 
@@ -215,6 +216,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 memset(level,0,sizeof(level));
                 sprintf(level,"%d%%",uteDrvBatteryCommonGetLvl());
                 compo_textbox_set(txt_title, level);
+#endif // UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
             }
             else if(sys_cb.cover_index == REMIND_COVER_STOPWATCH_FINISH)//计时器结束
             {

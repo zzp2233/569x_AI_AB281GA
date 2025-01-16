@@ -526,6 +526,11 @@
 #define UTE_MODULE_NOTIFY_SAVE_CNT 8
 #endif
 
+/*! 消息推送马达震动在消息提醒界面手动开启，防止中科平台休眠时震动时长不固定,wang.luo 2025-01-16 */
+#ifndef UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT
+#define UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT 1
+#endif
+
 /* 支持应用通知选择显示功能 必须支持的三样 xjc, 2022-01-08 */
 #define SOCIAL_APP_MMS_SUPPORT     1
 #define SOCIAL_APP_CALL_SUPPORT    1
@@ -1243,7 +1248,7 @@
 
 /*! 保存重启信息最大数量,wang.luo 2024-12-30 */
 #ifndef UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT
-#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 4
+#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 6
 #endif
 
 /*! PWRKEY,wang.luo 2024-12-03 */

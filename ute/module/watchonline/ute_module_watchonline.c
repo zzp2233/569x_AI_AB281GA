@@ -350,7 +350,7 @@ void uteModuleWatchOnlineReadyStart(void)
             func_clock_recreate_dial();
             if(sys_cb.gui_sleep_sta)
             {
-                sys_cb.gui_need_wakeup = true;;
+                sys_cb.gui_need_wakeup = true;
             }
             reset_sleep_delay_all();
         }
@@ -502,7 +502,7 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
             func_clock_recreate_dial();
             if(sys_cb.gui_sleep_sta)
             {
-                sys_cb.gui_need_wakeup = true;;
+                sys_cb.gui_need_wakeup = true;
             }
             reset_sleep_delay_all();
         }

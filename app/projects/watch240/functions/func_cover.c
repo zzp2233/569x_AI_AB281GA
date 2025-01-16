@@ -362,6 +362,9 @@ void app_ute_msg_pop_up(uint8_t index)
         char *title = NULL;
         char time[30]= {0};
 
+#if UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+#endif
 
         //是否打开全天勿扰    //是否打开定时勿扰
 //        if(sys_cb.disturd_adl==0 && sys_cb.disturd_tim==0)

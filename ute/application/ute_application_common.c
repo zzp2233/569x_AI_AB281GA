@@ -325,8 +325,8 @@ void uteApplicationCommonStartupSecond(void)
         {
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
         }
-        else //if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL)
 #endif
+        else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL || ((RTCCON >> 20) & 0x01)) //USB插入
         {
 #if UTE_MODULE_NEW_FACTORY_TEST_JUST_CROSS_SUPPORT
             ute_new_factory_test_data_t *data;
@@ -382,11 +382,11 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #endif
         }
-        // else
-        // {
-        //     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,vbat is too low!!",__func__);
-        //     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
-        // }
+        else
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,vbat is too low!!",__func__);
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
+        }
 #if UTE_MODULE_MOTOR_POWER_STATUS_SAVE_SUPPORT
         if(!uteModuleMotorGetVibrationSwitchStatus())
         {
@@ -840,6 +840,11 @@ void uteApplicationCommonStartPowerOffMsg(void)
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
 
+    if(!sys_cb.gui_sleep_sta)
+    {
+        gui_sleep();
+    }
+
     // uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
     // uteModuleSportSaveStepData();
@@ -882,9 +887,12 @@ void uteApplicationCommonStartPowerOffMsg(void)
 #endif
     // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
 
-    uteDrvMotorEnable();
-    delay_5ms(UTE_MOTOR_DURATION_TIME / 5);
-    uteDrvMotorDisable();
+    if(uteDrvBatteryCommonGetLvl() >= 10)
+    {
+        uteDrvMotorEnable();
+        delay_5ms(UTE_MOTOR_DURATION_TIME / 5);
+        uteDrvMotorDisable();
+    }
 
     // uteModulePlatformSetFastAdvertisingTimeCnt(0);
 
@@ -1743,7 +1751,6 @@ void uteApplicationCommonFactoryReset(void)
  */
 void uteApplicationCommonPoweroff(void)
 {
-    gui_sleep();
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT&&UTE_MODULE_SHIP_MODE_POWER_OFF_SUPPORT //关机进入船运模式
     ute_new_factory_test_data_t *data;
     uteModuleNewFactoryTestSetMode(&data);
@@ -1762,7 +1769,6 @@ void uteApplicationCommonRestart(void)
 {
 //    uteDrvScreenCommonDisplayOff();
     // uteApplicationCommonRealPowerOffMsg(); // 先保存数据再执行重启
-    gui_sleep();
     uteApplicationCommonStartPowerOffMsg();
     uteModulePlatformSystemReboot();
 }
@@ -1997,6 +2003,7 @@ static void uteModuleHardfaultSendlogData(void)
         response[3] = 0xfd;
         sendSize = 4;
         uteApplicationCommonSyncDataTimerStop();
+        uteModuleFilesystemDelDirectoryAllFiles(UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR);
     }
 
     uteModuleProfileBle50SendToPhone(response, sendSize);

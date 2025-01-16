@@ -119,6 +119,17 @@ static void func_voice_animation_playing(bool en)
     compo_animation_set_interval(animation, en*ui_handle.animation.interval);
 }
 
+static void func_voice_frist_check(void)
+{
+    f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
+    if (bt_is_connected() == false)
+    {
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+        msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+    }
+}
+
 static void func_voice_start_siri(void)
 {
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
@@ -131,9 +142,10 @@ static void func_voice_start_siri(void)
     else
     {
         f_voice->siri_en = false;
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-        sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
-        msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+//        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+//        sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+//        msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+        func_voice_frist_check();
     }
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -144,7 +156,7 @@ static void func_voice_process(void)
 #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     static u8 siri_cnt = 0;
-
+    static bool bt_connect_status = false;
     compo_textbox_t* txt = compo_getobj_byid(ui_handle.text.id);
 
     if (!bt_is_connected())
@@ -179,6 +191,25 @@ static void func_voice_process(void)
     {
         f_voice->siri_en = true;
         siri_cnt = 0;
+    }
+
+    //BT变化弹窗
+    if (bt_is_connected())
+    {
+        if (bt_connect_status == false)
+        {
+            printf("bt_connect_status true\n");
+            bt_connect_status = true;
+        }
+    }
+    else
+    {
+        if (bt_connect_status == true)
+        {
+            printf("bt_connect_status false\n");
+            func_voice_frist_check();
+            bt_connect_status = false;
+        }
     }
 
 
@@ -254,6 +285,7 @@ static void func_voice_enter(void)
 #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     f_voice->siri_en = false;
+    func_voice_frist_check();
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 }

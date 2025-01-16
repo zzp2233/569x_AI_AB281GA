@@ -43,7 +43,7 @@ static bool stopwatch_set_text_callback(u32 item_cnt, char* str_txt1, u16 str_tx
 
     if (index < item_cnt && index < sys_cb.stopwatch_rec_cnt)
     {
-        min = ((sys_cb.stopwatch_rec_view[index] / 1000) % 3600) / 60;
+        min = ((sys_cb.stopwatch_rec_view[index] / 1000) / 60) % 100;
         sec = (sys_cb.stopwatch_rec_view[index] / 1000) % 60;
         msec = sys_cb.stopwatch_rec_view[index] % 1000;
 

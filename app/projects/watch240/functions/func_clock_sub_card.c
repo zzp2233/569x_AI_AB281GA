@@ -786,7 +786,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_THEME_1_TIMER_BIN,
                 .res_click = 2,
                 .res_switch = 2,
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
                 .func_sta = FUNC_TIMER,
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
             },
             [3] = {
                 .idx    = COMPO_ID_APP4,
@@ -1648,7 +1650,9 @@ static void func_clock_sub_card_click_handler(void)
             }
             break;
         case COMPO_ID_CARD_4 :
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
             func_jump = FUNC_TIMER;
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
             break;
         case COMPO_ID_CARD_5 :
             func_jump = FUNC_STOPWATCH;

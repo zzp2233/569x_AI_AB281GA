@@ -29,7 +29,9 @@ enum sys_ctl_bits
     SYS_CTL_FUNC_GAME_ON,               //游戏功能界面选择
     SYS_CTL_FUNC_CALCUL_ON,             //计算器功能界面选择
     SYS_CTL_FUNC_ALARM_ON,              //闹钟功能界面选择
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     SYS_CTL_FUNC_TIMER_ON,              //定时器功能界面选择
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     SYS_CTL_FUNC_STODWATCH_ON,          //秒表功能界面选择
     SYS_CTL_FUNC_SETTINGS_ON,           //设置功能界面选择
     SYS_CTL_FUNC_SPORT_RECORD_ON,       //运动记录功能界面选择
@@ -126,6 +128,7 @@ typedef struct
     u8 timer_sta;                                   //计时器工作状态（0:未开启 1:正在计时 2:暂停 3:结束 4:复位）
     u8 timer_done;                                //计时器到时
     u32 timer_total_sec;                            //当前计时器总时间 （单位：秒）
+    u32 timer_start_rtc;                            //开始计时的RTC值
     u32 timer_left_sec;                             //当前计时器剩余时间 （单位：秒）
     u32 timer_custom_sec;                           //计时器自定义时间记忆值
     //密码锁

@@ -51,7 +51,9 @@ enum
     FUNC_CALCULATOR,                    //计算器
     FUNC_CAMERA,                        //相机
     FUNC_LIGHT,                         //亮度调节
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     FUNC_TIMER,                         //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     FUNC_SLEEP,                         //睡眠
     FUNC_STOPWATCH,                     //秒表
     FUNC_STOPWATCH_SUB_RECORD,          //秒表--秒表记录
@@ -65,7 +67,9 @@ enum
     FUNC_BREATHE_FINISH,
     FUNC_VOICE,                         //语音助手
 //    FUNC_COMPASS,                       //指南针
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     FUNC_ADDRESS_BOOK,                  //电话簿
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     FUNC_CALL_SUB_LINKMAN = FUNC_ADDRESS_BOOK,
     FUNC_SPORT,                         //运动
     FUNC_SPORT_CONFIG,                  //运动配置

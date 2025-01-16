@@ -40,11 +40,14 @@ static const compo_football_item_t tbl_menu_football[20] =
 {
     {UI_BUF_I330001_THEME_2_THEME_BIN,            FUNC_STYLE},
     {UI_BUF_I330001_THEME_2_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {UI_BUF_I330001_THEME_2_TIMER_BIN,            FUNC_TIMER},
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     {UI_BUF_I330001_THEME_2_LANUAGE_BIN,          FUNC_LANGUAGE},
     {UI_BUF_I330001_THEME_2_ALARM_BIN,            FUNC_ALARM_CLOCK},
-
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {UI_BUF_I330001_THEME_2_CONTACTS_BIN,         FUNC_ADDRESS_BOOK},
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 //    {UI_BUF_I330001_THEME_2_SOUND_BIN,            FUNC_SET_SUB_SAV},
     {UI_BUF_I330001_THEME_2_CALL_BIN,             FUNC_CALL},
     {UI_BUF_I330001_THEME_2_MUSIC_BIN,            FUNC_BT},
@@ -52,7 +55,7 @@ static const compo_football_item_t tbl_menu_football[20] =
     {UI_BUF_I330001_THEME_2_SPO2_BIN,             FUNC_BLOOD_OXYGEN},
 
     {UI_BUF_I330001_THEME_2_CALENDAR_BIN,         FUNC_CALENDAER},
-    {UI_BUF_I330001_THEME_2_CONTACTS_BIN,         FUNC_ADDRESS_BOOK},
+    {UI_BUF_I330001_THEME_2_WEATHER_BIN,          FUNC_WEATHER},
     {UI_BUF_I330001_THEME_2_SLEEP_BIN,            FUNC_SLEEP},
     {UI_BUF_I330001_THEME_2_CALCULATOR_BIN,       FUNC_CALCULATOR},
     {UI_BUF_I330001_THEME_2_STOPWATCH_BIN,        FUNC_STOPWATCH},
@@ -165,6 +168,12 @@ static void func_menu_sub_football_drag_message(size_msg_t msg)
 {
     switch (msg)
     {
+        case KU_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面
+            }
+            break;
         default:
             evt_message(msg);
             break;
@@ -179,6 +188,12 @@ static void func_menu_sub_football_move_message(size_msg_t msg)
 
     switch (msg)
     {
+        case KU_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
+                func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面
+            }
+            break;
         case MSG_CTP_TOUCH:
             //移动过程中，触屏停止。重新进入到开始拖动模式
             compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_DRAG);
@@ -225,7 +240,8 @@ static void func_menu_sub_football_normal_message(size_msg_t msg)
             compo_football_move_control(ball, COMPO_FOOTBALL_MOVE_CMD_BACKWARD);
             break;
 
-        case KU_DELAY_BACK:
+//        case KU_DELAY_BACK:
+        case KU_BACK:
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
                 func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面

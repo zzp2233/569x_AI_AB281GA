@@ -394,45 +394,119 @@ static void func_timer_button_release_handle(void)
 //100ms计时器秒数刷新回调函数
 static void timer_100ms_pro(co_timer_t *timer, void *param)
 {
-    u8 *count = NULL;
+//    u8 *count = NULL;
+//    bool done = false;
+//    if (param)
+//    {
+//        count = (u8 *)param;
+//    }
+//    if (count && sys_cb.timer_sta == TIMER_STA_WORKING /*&& !sys_cb.gui_sleep_sta*/)    //休眠不计时
+//    {
+////        if (func_cb.sta == FUNC_TIMER)
+////        {
+////            //隐藏
+////            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
+////            compo_textbox_set_visible(txt, false);
+////        }
+//        if (sys_cb.timer_left_sec == 0)
+//        {
+//            done = true;
+//        }
+//        if (++(*count) >= 10)   //1s
+//        {
+//            *count = 0;
+//            if (--sys_cb.timer_left_sec == 0)
+//            {
+//                done = true;
+//            }
+//        }
+//    }
+//    if (done)
+//    {
+//        printf(">>>TIMER_DONE\n");
+//        sys_cb.timer_done = true;
+//        sys_cb.timer_sta = TIMER_STA_DONE;
+////        if (func_cb.sta == FUNC_TIMER)
+////        {
+////            //显示
+////            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
+////            compo_textbox_set_visible(txt, true);
+////        }
+//    }
+
     bool done = false;
+    u8 *count = NULL;
+    static bool lowpwr_sta_bkp;
+    static u8 rtc_cal_cnt_bkp;
+    static u32 rtccnt_tmp;
+    u16 sec_past;
+    bool lowpwr_sta = bsp_system_is_sleep() /*| sys_cb.idle_sta*/;
+    static u8 cnt = 0;
+
     if (param)
     {
         count = (u8 *)param;
     }
-    if (count && sys_cb.timer_sta == TIMER_STA_WORKING /*&& !sys_cb.gui_sleep_sta*/)    //休眠不计时
+
+    if (count && sys_cb.timer_sta == TIMER_STA_WORKING)    //休眠不计时
     {
-//        if (func_cb.sta == FUNC_TIMER)
-//        {
-//            //隐藏
-//            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
-//            compo_textbox_set_visible(txt, false);
-//        }
-        if (sys_cb.timer_left_sec == 0)
-        {
-            done = true;
-        }
         if (++(*count) >= 10)   //1s
         {
             *count = 0;
-            if (--sys_cb.timer_left_sec == 0)
+        }
+
+        if (!lowpwr_sta)
+        {
+            if (rtccnt_tmp != RTCCNT)
             {
-                done = true;
+                rtccnt_tmp = RTCCNT;
+                *count = 0;
             }
         }
+        else            //省电/休眠模式，RTC已休眠
+        {
+            if (lowpwr_sta_bkp == false)      //初次进入
+            {
+                rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
+            }
+            if (rtc_cal_cnt_bkp != sys_cb.rtc_cal_cnt)      //RTC已校准，同步校准
+            {
+                rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
+                rtccnt_tmp = RTCCNT;
+                printf("calibrated!\n");
+            }
+            else if (*count == 0)
+            {
+                rtccnt_tmp++;
+            }
+        }
+
+
+        sec_past = rtccnt_tmp - sys_cb.timer_start_rtc;
+        if (sec_past < sys_cb.timer_total_sec)
+        {
+            sys_cb.timer_left_sec = sys_cb.timer_total_sec - sec_past;
+//            printf("countdown-->[%d/%d][%d %d]\n", sec_past, sys_cb.timer_total_sec, rtccnt_tmp, RTCCNT);
+        }
+        else
+        {
+            sys_cb.timer_left_sec = 0;
+            done = true;
+        }
     }
+
+
     if (done)
     {
-        printf(">>>TIMER_DONE\n");
-        sys_cb.timer_done = true;
+        printf(">>>COUNTDOWN_FINISH\n");
         sys_cb.timer_sta = TIMER_STA_DONE;
-//        if (func_cb.sta == FUNC_TIMER)
-//        {
-//            //显示
-//            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
-//            compo_textbox_set_visible(txt, true);
-//        }
+        if (sys_cb.timer_done == false)
+        {
+            sys_cb.timer_done = true;
+        }
     }
+
+    lowpwr_sta_bkp = lowpwr_sta;
 }
 
 //单击按钮
@@ -503,6 +577,7 @@ static void func_timer_button_click(void)
                     }
                     else if (sys_cb.timer_sta == TIMER_STA_DONE)
                     {
+                        sys_cb.timer_start_rtc = compo_cb.rtc_cnt;
                         count_100ms = 0;
                         co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
 //                        count_100ms = 0;
@@ -516,13 +591,12 @@ static void func_timer_button_click(void)
                     {
                         if (sys_cb.timer_sta == TIMER_STA_RESET)
                         {
+                            sys_cb.timer_start_rtc = compo_cb.rtc_cnt;
                             count_100ms = 0;
                             co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
                         }
                         sys_cb.timer_sta = TIMER_STA_WORKING;
                         uteModuleGuiCommonDisplayOffAllowGoBack(false);
-
-
                     }
                     break;
 

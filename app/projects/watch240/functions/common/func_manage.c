@@ -32,7 +32,9 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_CALCULATOR,               UI_BUF_I330001_THEME_1_CALCULATOR_BIN,                 STR_CALCULATOR},            //计算器
     {FUNC_CAMERA,                   UI_BUF_I330001_THEME_1_PHOTO_BIN,                     STR_CAMERA},                //相机
     {FUNC_LIGHT,                    UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                      STR_SETTING_LIGHT},         //亮度调节
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {FUNC_TIMER,                    UI_BUF_I330001_THEME_1_TIMER_BIN,                      STR_TIMER},                 //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     {FUNC_SLEEP,                    UI_BUF_I330001_THEME_1_SLEEP_BIN,                      STR_SLEEP},                 //睡眠
     {FUNC_STOPWATCH,                UI_BUF_I330001_THEME_1_STOPWATCH_BIN,                  STR_STOP_WATCH},            //秒表
     {FUNC_WEATHER,                  UI_BUF_I330001_THEME_1_WEATHER_BIN,                    STR_WEATHER},               //天气
@@ -247,7 +249,9 @@ const static u8 latest_allowed_id[] =
     FUNC_CALCULATOR,                    //计算器
     FUNC_CAMERA,                        //相机
     FUNC_LIGHT,                         //亮度调节
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
     FUNC_TIMER,                         //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
     FUNC_SLEEP,                         //睡眠
     FUNC_STOPWATCH,                     //秒表
     FUNC_WEATHER,                       //天气

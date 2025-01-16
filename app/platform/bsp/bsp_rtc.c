@@ -130,4 +130,5 @@ tm_t rtc_clock_get(void)
 AT(.sleep_text.rtc)
 void rtc_clock_calc_notify(void)
 {
+    sys_cb.rtc_cal_cnt++;
 }

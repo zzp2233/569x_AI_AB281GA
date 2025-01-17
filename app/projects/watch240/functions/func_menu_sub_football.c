@@ -155,7 +155,7 @@ static void func_menu_sub_football_process(void)
             f_menu->cube_touch_time = 5;
             f_menu->tick = tick_get();
             f_menu->cube_rp+=3;
-            if(f_menu->cube_rp==3600)f_menu->cube_rp=0;
+            if(f_menu->cube_rp>3600)f_menu->cube_rp=0;
             compo_football_roll_from(ball,f_menu->cube_rp, f_menu->cube_ra);
             compo_football_update(ball);
         }
@@ -168,7 +168,7 @@ static void func_menu_sub_football_drag_message(size_msg_t msg)
 {
     switch (msg)
     {
-        case KU_BACK:
+        case KU_DELAY_BACK:
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
                 func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面
@@ -188,7 +188,7 @@ static void func_menu_sub_football_move_message(size_msg_t msg)
 
     switch (msg)
     {
-        case KU_BACK:
+        case KU_DELAY_BACK:
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
                 func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面
@@ -241,7 +241,7 @@ static void func_menu_sub_football_normal_message(size_msg_t msg)
             break;
 
 //        case KU_DELAY_BACK:
-        case KU_BACK:
+        case KU_DELAY_BACK:
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
                 func_menu_sub_football_switch_to_clock();       //返回时钟表盘界面

@@ -44,7 +44,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_text_set(cardbox,0,i18n[STR_MEDIA_VOL]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
     compo_cardbox_icon_set_location(cardbox, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
-    compo_cardbox_icon_set(cardbox,0,OFF_PIC);
+    compo_cardbox_icon_set(cardbox,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
 
     cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
     compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+62+6,GUI_SCREEN_WIDTH,62);
@@ -60,16 +60,28 @@ compo_form_t *func_set_sub_sav_form_create(void)
     return frm;
 }
 
-//声音与振动事件处理
-static void func_set_sub_sav_process(void)
-{
-    func_process();
-}
-
 //更新显示界面
 static void func_set_sub_sav_disp(void)
 {
+    compo_cardbox_t *cardbox_sav  = compo_getobj_byid(COMPO_ID_SAV);
+    compo_cardbox_t *cardbox_mute = compo_getobj_byid(COMPO_ID_MUTE);
 
+    compo_cardbox_icon_set_location(cardbox_sav, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
+    compo_cardbox_icon_set(cardbox_sav,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
+//    if(uteModuleCallIsEntertranmentVoiceOn()){
+//        compo_cardbox_icon_set(cardbox_sav,0, ON_PIC);
+//    }else{
+//        compo_cardbox_icon_set(cardbox_sav,0, OFF_PIC);
+//    }
+
+
+}
+
+//声音与振动事件处理
+static void func_set_sub_sav_process(void)
+{
+    func_set_sub_sav_disp();
+    func_process();
 }
 
 //获取点击的卡片组件id
@@ -103,18 +115,14 @@ static void func_sav_button_click(void)
         return;
     }
 
-    compo_cardbox_t *cardbox_sav  = compo_getobj_byid(COMPO_ID_SAV);
-    compo_cardbox_t *cardbox_mute = compo_getobj_byid(COMPO_ID_MUTE);
-
     switch(compo_id)
     {
         case COMPO_ID_SAV:
-            compo_cardbox_icon_set_location(cardbox_sav, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
-            compo_cardbox_icon_set(cardbox_sav,0,ON_PIC);
+            uteModuleCallChangeEntertranmentVoiceSwitchStatus();
             break;
         case COMPO_ID_MUTE:
-            compo_cardbox_icon_set_location(cardbox_mute, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
-            compo_cardbox_icon_set(cardbox_mute,0,ON_PIC);
+//            compo_cardbox_icon_set_location(cardbox_mute, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
+//            compo_cardbox_icon_set(cardbox_mute,0,ON_PIC);
             break;
         default:
             break;

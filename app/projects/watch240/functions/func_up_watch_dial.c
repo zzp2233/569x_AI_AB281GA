@@ -38,7 +38,7 @@ compo_form_t *func_up_watch_dial_form_create(void)
 {
     compo_form_t *frm = compo_form_create(true);
 
-    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_01_BIN);
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_00_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 35+112/2);
     compo_setid(picbox,ROCKET_ID);
 

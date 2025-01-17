@@ -617,7 +617,16 @@ static void func_sport_sub_run_updata(void)
             }
             else
             {
-                compo_textbox_set(txt_km_unit, i18n[STR_KM]);
+
+                if(uteModuleSystemtimeGetDistanceMiType())//英里
+                {
+                    compo_textbox_set(txt_km_unit, i18n[STR_MILE]);
+                }
+                else
+                {
+                    compo_textbox_set(txt_km_unit, i18n[STR_KM]);
+                }
+
             }
 
 

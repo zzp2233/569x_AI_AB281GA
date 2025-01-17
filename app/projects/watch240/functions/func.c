@@ -1344,7 +1344,7 @@ void func_message(size_msg_t msg)
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             if(func_cb.sta != FUNC_TIMER)
             {
-                sys_cb.cover_index = REMIND_COVER_STOPWATCH_FINISH;
+                sys_cb.cover_index = REMIND_COVER_TIMER_FINISH;
                 sys_cb.remind_tag = true;
             }
             sys_cb.timer_left_sec = sys_cb.timer_custom_sec;

@@ -207,7 +207,7 @@ void uteModuleMusicSetPlayerTitle(uint8_t *data, uint16_t size)
     {
         uteModuleMusicData.playerArtistSize = 0;
         memset(&uteModuleMusicData.playerArtist[0], 0, UTE_MUSIC_ARTLIST_MAX_SIZE);
-        if (bt_is_connected())
+        if (bt_a2dp_profile_completely_connected())
         {
             bt_music_get_id3_tag();
         }
@@ -307,7 +307,7 @@ void uteModuleMusicCtrlPaused(bool isNeedVibration)
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
 #if BT_ID3_TAG_EN
-    if (bt_is_connected())
+    if (bt_a2dp_profile_completely_connected())
     {
         if(isNeedVibration)
         {
@@ -365,7 +365,7 @@ void uteModuleMusicCtrl(bool isCutNext,bool isCutManual,bool isNeedShake)
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
 #if BT_ID3_TAG_EN
-    if (bt_is_connected())
+    if (bt_a2dp_profile_completely_connected())
     {
         if (isNeedShake)
         {
@@ -416,7 +416,7 @@ void uteModuleMusicCtrlVolumeIncrease(bool isNeedShake)
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
 #if BT_ID3_TAG_EN
-    if (bt_is_connected())
+    if (bt_a2dp_profile_completely_connected())
     {
         if(isNeedShake)
         {
@@ -451,7 +451,7 @@ void uteModuleMusicCtrlVolumeDecrease(bool isNeedShake)
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
 #if BT_ID3_TAG_EN
-    if (bt_is_connected())
+    if (bt_a2dp_profile_completely_connected())
     {
         if(isNeedShake)
         {

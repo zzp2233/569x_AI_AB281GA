@@ -8,6 +8,7 @@
 #include "ute_module_sport.h"
 #include "func_menu.h"
 #include "ute_module_call.h"
+#include "ute_module_localRingtone.h"
 
 #if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
 
@@ -154,7 +155,8 @@ static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 static void func_clock_sub_dropdown_mute_pic_update(void)
 {
     compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_MUTE);
-    if(sys_cb.mute)
+    // if(sys_cb.mute)
+    if(uteModuleLocalRingtoneGetMuteStatus())
     {
         compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES01_BIN);
     }
@@ -234,7 +236,7 @@ static void func_clock_sub_dropdown_disturb_pic_update(void)
 static void get_menu_idx_update(void)
 {
     dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
-    for(int i=0;i<MENU_CNT;i++)
+    for(int i=0; i<MENU_CNT; i++)
     {
         if(dwon_tbl_style_list[i].menu_style == func_cb.menu_style)
         {
@@ -306,11 +308,11 @@ static void func_clock_sub_dropdown_form_create(void)
 
     ///创建页码点
     compo_picturebox_t *picbox = compo_picturebox_create(frm, PAGE_NUM_WHITE_BIN);
-    compo_picturebox_set_pos(picbox,114 , 278);
+    compo_picturebox_set_pos(picbox,114, 278);
     compo_setid(picbox,COMPO_ID_PIC_WHITE);
 
     picbox = compo_picturebox_create(frm, PAGE_NUM_GREY_BIN);
-    compo_picturebox_set_pos(picbox,126 , 278);
+    compo_picturebox_set_pos(picbox,126, 278);
     compo_setid(picbox,COMPO_ID_PIC_GREY);
 
     ///创建按钮
@@ -405,8 +407,10 @@ static void func_clock_sub_dropdown_slide_handle(void)
                 {
                     touch_state = 2;
                     disp_flag = true;
-                }else {
-                        touch_state = 3;
+                }
+                else
+                {
+                    touch_state = 3;
                 }
             }
             else
@@ -415,7 +419,9 @@ static void func_clock_sub_dropdown_slide_handle(void)
                 {
                     touch_state = 4;
                     disp_flag = false;
-                }else {
+                }
+                else
+                {
                     touch_state = 5;
                 }
             }
@@ -427,45 +433,45 @@ static void func_clock_sub_dropdown_slide_handle(void)
             tick = tick_get();
             switch(touch_state)
             {
-            case 2:
-                old_dx -=MOVE_DISP_PIXEL;
-                if(old_dx<=-GUI_SCREEN_WIDTH)
-                {
-                    touch_state = 0;
-                    old_dx=-GUI_SCREEN_WIDTH;
-                    compo_picturebox_set(picbox_white,PAGE_NUM_GREY_BIN);
-                    compo_picturebox_set(picbox_grey,PAGE_NUM_WHITE_BIN);
-                }
-                break;
-            case 3:
-                old_dx+=MOVE_DISP_PIXEL;
-                if(old_dx >= 0)
-                {
-                    touch_state = 0;
-                    old_dx = 0;
-                }
-                break;
-            case 4:
-                old_dx+=MOVE_DISP_PIXEL;
-                if(old_dx >= 0)
-                {
-                    touch_state = 0;
-                    old_dx = 0;
-                    compo_picturebox_set(picbox_white,PAGE_NUM_WHITE_BIN);
-                    compo_picturebox_set(picbox_grey,PAGE_NUM_GREY_BIN);
-                }
-                break;
-            case 5:
-                old_dx -=MOVE_DISP_PIXEL;
-                if(old_dx <= -GUI_SCREEN_WIDTH)
-                {
-                    touch_state = 0;
-                    old_dx = -GUI_SCREEN_WIDTH;
-                }
-                break;
+                case 2:
+                    old_dx -=MOVE_DISP_PIXEL;
+                    if(old_dx<=-GUI_SCREEN_WIDTH)
+                    {
+                        touch_state = 0;
+                        old_dx=-GUI_SCREEN_WIDTH;
+                        compo_picturebox_set(picbox_white,PAGE_NUM_GREY_BIN);
+                        compo_picturebox_set(picbox_grey,PAGE_NUM_WHITE_BIN);
+                    }
+                    break;
+                case 3:
+                    old_dx+=MOVE_DISP_PIXEL;
+                    if(old_dx >= 0)
+                    {
+                        touch_state = 0;
+                        old_dx = 0;
+                    }
+                    break;
+                case 4:
+                    old_dx+=MOVE_DISP_PIXEL;
+                    if(old_dx >= 0)
+                    {
+                        touch_state = 0;
+                        old_dx = 0;
+                        compo_picturebox_set(picbox_white,PAGE_NUM_WHITE_BIN);
+                        compo_picturebox_set(picbox_grey,PAGE_NUM_GREY_BIN);
+                    }
+                    break;
+                case 5:
+                    old_dx -=MOVE_DISP_PIXEL;
+                    if(old_dx <= -GUI_SCREEN_WIDTH)
+                    {
+                        touch_state = 0;
+                        old_dx = -GUI_SCREEN_WIDTH;
+                    }
+                    break;
             }
-             widget_page_set_client(widget, old_dx, 0);
-             widget_page_update();
+            widget_page_set_client(widget, old_dx, 0);
+            widget_page_update();
         }
     }
 }
@@ -540,13 +546,21 @@ static void func_clock_sub_dropdown_click_handler(void)
         }
         break;
         case COMPO_ID_BTN_MUTE:
-            if(sys_cb.mute)
+            // if(sys_cb.mute)
+            // {
+            //     bsp_sys_unmute();
+            // }
+            // else
+            // {
+            //     bsp_sys_mute();
+            // }
+            if(uteModuleLocalRingtoneGetMuteStatus())
             {
-                bsp_sys_unmute();
+                uteModuleLocalRingtoneSetMuteStatus(false,true);
             }
             else
             {
-                bsp_sys_mute();
+                uteModuleLocalRingtoneSetMuteStatus(true,true);
             }
             func_clock_sub_dropdown_mute_pic_update();          //静音更新
             break;
@@ -567,11 +581,12 @@ static void func_clock_sub_dropdown_click_handler(void)
             switch_set_sub_wrist();
             break;
         case COMPO_ID_BTN_MENU:
-            if(++dropdown_disp_btn_item->sel_idx==MENU_CNT){
+            if(++dropdown_disp_btn_item->sel_idx==MENU_CNT)
+            {
                 dropdown_disp_btn_item->sel_idx = 0;
             }
-           func_cb.menu_style = dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style;
-           func_clock_sub_dropdown_menu_pic_update();
+            func_cb.menu_style = dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style;
+            func_clock_sub_dropdown_menu_pic_update();
 //           printf("1:%d  2:%d\n",func_cb.menu_style, dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style);
             break;
         default:
@@ -582,9 +597,9 @@ static void func_clock_sub_dropdown_click_handler(void)
 //时钟表盘主要事件流程处理
 static void func_clock_sub_dropdown_process(void)
 {
-    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_clock_sub_dropdown_slide_handle();
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_clock_sub_process();
 }
 
@@ -595,9 +610,9 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
-            #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             func_clock_sub_dropdown_click_handler();
-            #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_CTP_SHORT_LEFT:
             break;
@@ -615,7 +630,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             f_clk->sta = FUNC_CLOCK_MAIN;                       //单击BACK键返回到时钟主界面
             break;
         case MSG_SYS_1S:
-            #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
             func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
             func_clock_sub_dropdown_bluetooth_btn_pic_update();////下拉蓝牙按钮更新
@@ -623,7 +638,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             func_clock_sub_dropdown_disturb_pic_update();       //勿扰
             func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
             func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
-            #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_QDEC_BACKWARD:
             printf("MSG_QDEC_BACKWARD\n");
@@ -657,9 +672,9 @@ static void func_clock_sub_dropdown_enter(void)
 
     func_clock_butterfly_set_light_visible(false);
     get_menu_idx_update();
-    #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_clock_sub_dropdown_form_create();
-    #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     if (!func_switching(FUNC_SWITCH_MENU_DROPDOWN_DOWN, NULL))
     {
         return;                                             //下拉到一半取消

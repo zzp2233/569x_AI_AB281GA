@@ -21,7 +21,7 @@
 ute_local_ringtone_data_t uteModuleLocalRingtoneData;
 void *uteModuleLocalRingtonePlayRingTimer = NULL;
 
-const ute_local_ringtone_res_addr_t ring_num_tbl[] = UTE_MODULE_LOCAL_DEFAULT_RINGTONE;
+// const ute_local_ringtone_res_addr_t uteModuleLocalRingtoneNumTbl[] = UTE_MODULE_LOCAL_DEFAULT_RINGTONE;
 
 /**
 *@brief  初始化函数
@@ -158,7 +158,7 @@ void uteModuleLocalRingtoneSaveData(void)
 void uteModuleLocalRingtoneSetVolume(uint8_t localRingtoneVolume)
 {
     uteModuleLocalRingtoneData.localRingtoneVolume = localRingtoneVolume;
-    xcfg_cb.warning_volume = localRingtoneVolume;
+    // xcfg_cb.warning_volume = localRingtoneVolume;
 }
 /**
 *@brief  获取音量
@@ -248,13 +248,15 @@ ute_local_ringtone_type uteModuleLocalRingtoneGetPlayRingType(void)
 void uteModuleLocalRingtonePlayRingDetail(void)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
+#if 0
     // app_audio_tone_play(uteModuleLocalRingtoneData.ringResourceIndex, false, false);
-    if(uteModuleLocalRingtoneData.ringResourceIndex > sizeof(ring_num_tbl)/sizeof(ring_num_tbl[0]) - 1)
+    if(uteModuleLocalRingtoneData.ringResourceIndex > sizeof(uteModuleLocalRingtoneNumTbl)/sizeof(uteModuleLocalRingtoneNumTbl[0]) - 1)
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, ringResourceIndex is error!", __func__);
         uteModuleLocalRingtoneData.ringResourceIndex = 0;
     }
-    func_bt_mp3_res_play(ring_num_tbl[uteModuleLocalRingtoneData.ringResourceIndex].ptr, ring_num_tbl[uteModuleLocalRingtoneData.ringResourceIndex].len);
+    func_bt_mp3_res_play(uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.ringResourceIndex].ptr, uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.ringResourceIndex].len);
+#endif
 }
 
 /**
@@ -266,6 +268,7 @@ void uteModuleLocalRingtonePlayRingDetail(void)
 void uteModuleLocalRingtoneStopRingDetail(void)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
+#if 0
     uteModuleLocalRingtonePlayRingTimerStop();
     uteModuleLocalRingtoneSetPlayRingType(RINGTON_TYPE_NONE);
 
@@ -276,7 +279,7 @@ void uteModuleLocalRingtoneStopRingDetail(void)
     }
 
     music_control(MUSIC_MSG_STOP);
-
+#endif
 }
 
 /**
@@ -452,26 +455,28 @@ void uteModuleLocalSetRingtoneInfo(ute_local_ringtone_type ringType,ute_local_ri
  */
 void uteModuleLocalGetRingtoneResInfo(ute_local_ringtone_type ringType, uint32_t *resAddr, uint32_t *resLen)
 {
+#if 0
     if (ringType == RINGTON_TYPE_CALL)
     {
-        *resAddr = ring_num_tbl[uteModuleLocalRingtoneData.callSetInfo.index].ptr;
-        *resLen = ring_num_tbl[uteModuleLocalRingtoneData.callSetInfo.index].len;
+        *resAddr = uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.callSetInfo.index].ptr;
+        *resLen = uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.callSetInfo.index].len;
     }
     else if (ringType == RINGTON_TYPE_ALARM)
     {
-        *resAddr = ring_num_tbl[uteModuleLocalRingtoneData.alarmSetInfo.index].ptr;
-        *resLen = ring_num_tbl[uteModuleLocalRingtoneData.alarmSetInfo.index].len;
+        *resAddr = uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.alarmSetInfo.index].ptr;
+        *resLen = uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.alarmSetInfo.index].len;
     }
     else if (ringType == RINGTON_TYPE_FIND)
     {
-        *resAddr = ring_num_tbl[uteModuleLocalRingtoneData.findSetInfo.index].ptr;
-        *resLen = ring_num_tbl[uteModuleLocalRingtoneData.findSetInfo.index].len;
+        *resAddr = uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.findSetInfo.index].ptr;
+        *resLen = uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.findSetInfo.index].len;
     }
     else if (ringType == RINGTON_TYPE_FACTORY)
     {
-        *resAddr = ring_num_tbl[uteModuleLocalRingtoneData.factorySetInfo.index].ptr;
-        *resLen = ring_num_tbl[uteModuleLocalRingtoneData.factorySetInfo.index].len;
+        *resAddr = uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.factorySetInfo.index].ptr;
+        *resLen = uteModuleLocalRingtoneNumTbl[uteModuleLocalRingtoneData.factorySetInfo.index].len;
     }
+#endif
 }
 
 /*! 其他铃声的开关状态,包括查找手机、闹钟铃声开关 pcm, 2022-11-11  */

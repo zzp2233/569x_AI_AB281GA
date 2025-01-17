@@ -218,7 +218,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set(txt_title, level);
 #endif // UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
             }
-            else if(sys_cb.cover_index == REMIND_COVER_STOPWATCH_FINISH)//计时器结束
+            else if(sys_cb.cover_index == REMIND_COVER_TIMER_FINISH)//计时器结束
             {
 #define SEC_TO_HOUR(s)  (s / 3600)          //总秒数转换为时分秒（时）
 #define SEC_TO_MIN(s)   ((s % 3600) / 60)   //总秒数转换为时分秒（分）

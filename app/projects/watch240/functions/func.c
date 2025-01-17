@@ -999,7 +999,7 @@ void func_backing_to(void)
         stack_top = FUNC_CLOCK;                                 //异常返回表盘
     }
 
-    if (stack_top == FUNC_MENU)
+    if (stack_top == FUNC_MENU || FUNC_MENUSTYLE == stack_top)
     {
         func_switching_to_menu();                               //右滑缓慢退出任务
     }

@@ -3023,14 +3023,14 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
             {
                 uteModuleSportStopMoreSportsMsgHandler();
                 // 下一秒开始的参数
-                uteModuleSprotData.moreSportData.status = ALL_SPORT_STATUS_OPEN;
-                uteModuleSprotData.moreSportData.countZeroIndex = 0;
-                uteModuleSprotData.moreSportData.saveData.avgHeartRate = 0;
-                uteModuleSprotData.moreSportData.saveData.maxHeartRate = 0;
-                uteModuleSprotData.moreSportData.saveData.minHeartRate = 0xff;
-                uteModuleSprotData.moreSportData.heartTotalSum = 0;
-                uteModuleSprotData.moreSportData.heartTotalCnt = 0;
-                uteModuleSprotData.moreSportData.totalSportTime = 0;
+                // uteModuleSprotData.moreSportData.status = ALL_SPORT_STATUS_OPEN;
+                // uteModuleSprotData.moreSportData.countZeroIndex = 0;
+                // uteModuleSprotData.moreSportData.saveData.avgHeartRate = 0;
+                // uteModuleSprotData.moreSportData.saveData.maxHeartRate = 0;
+                // uteModuleSprotData.moreSportData.saveData.minHeartRate = 0xff;
+                // uteModuleSprotData.moreSportData.heartTotalSum = 0;
+                // uteModuleSprotData.moreSportData.heartTotalCnt = 0;
+                // uteModuleSprotData.moreSportData.totalSportTime = 0;
             }
             /*! 发送实时数据到app zn.zeng, 2021-11-11  */
             uteModuleSportMoreSportsSendRealTimeData();

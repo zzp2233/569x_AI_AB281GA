@@ -1603,6 +1603,16 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
     if(receive[1]==0x11)
     {
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        {
+            uint8_t stopCmd[5];
+            stopCmd[0] =CMD_SPO2_TEST;
+            stopCmd[1] =0x00;
+            stopCmd[2] =0xff;
+            stopCmd[3] =0xff;
+            uteModuleProfileBleSendToPhone(&stopCmd[0],4);
+            return;
+        }
         //每次测量重新开始，以防用户想测试低氧下不来
         if(uteModuleBloodoxygenIsTesting())
         {
@@ -1858,6 +1868,13 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
             return;
         }
 #endif
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        {
+            // memcpy(&response[0],&receive[0],4);
+            // response[1] = ALL_SPORT_STATUS_CLOSE;
+            // uteModuleProfileBleSendToPhone(&response[0],4);
+            return;
+        }
         uteModuleSportStartMoreSports(receive[2],receive[3],true);
     }
     else if(receive[1]==0x00)//close sport

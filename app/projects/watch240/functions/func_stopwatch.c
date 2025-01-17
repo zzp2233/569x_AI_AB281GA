@@ -155,11 +155,20 @@ static void stopwatch_50ms_pro(co_timer_t *timer, void *param)
     }
 }
 
+
 //单击按钮
-static void func_stopwatch_button_click(void)
+static void func_stopwatch_button_click(u32 key_flag)
 {
     u32 res_addr;
-    int id = compo_get_button_id();
+    int id = ID_NULL;
+    if (key_flag != 0)
+    {
+        id = key_flag;
+    }
+    else
+    {
+        id = compo_get_button_id();
+    }
     f_stopwatch_t *f_stopwatch = (f_stopwatch_t *)func_cb.f_cb;
     char str_buff[9];
 
@@ -310,7 +319,7 @@ static void func_stopwatch_message(size_msg_t msg)
             break;
 
         case MSG_CTP_CLICK:
-            func_stopwatch_button_click();
+            func_stopwatch_button_click(0);
             break;
 
         case MSG_CTP_SHORT_UP:
@@ -321,6 +330,10 @@ static void func_stopwatch_message(size_msg_t msg)
             {
                 func_message(msg);
             }
+            break;
+
+        case KU_BACK:
+            func_stopwatch_button_click(COMPO_ID_BTN_START_REC);
             break;
 
         case MSG_CTP_SHORT_RIGHT:

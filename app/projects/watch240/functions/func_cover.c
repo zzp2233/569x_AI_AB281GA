@@ -532,6 +532,7 @@ void gui_set_cover_index(uint8_t index)
             }
         }
         int res=0;
+        u8 cover_index_last = sys_cb.cover_index;
 
         if(uteModuleSystemtime12HOn() && sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
         {
@@ -547,7 +548,7 @@ void gui_set_cover_index(uint8_t index)
 
         if (res == MSGBOX_RES_REMIND_LATER)         //稍后提醒
         {
-            if (sys_cb.cover_index == REMIND_COVER_ALARM)
+            if (cover_index_last == REMIND_COVER_ALARM)
             {
                 printf("COVER_ALARM MSGBOX_RES_REMIND_LATER\n");
                 //开启配置贪睡时钟 参数
@@ -576,47 +577,59 @@ void gui_set_cover_index(uint8_t index)
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
-                sys_cb.cover_index = REMIND_COVER_NONE;
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
                 co_timer_del(&alarm_clock_timer);
                 music_control(MUSIC_MSG_STOP);
             }
         }
         else if (res == MSGBOX_RES_EXIT)                   //强制退出弹窗
         {
-            if (sys_cb.cover_index == REMIND_COVER_ALARM)
+            if (cover_index_last == REMIND_COVER_ALARM)
             {
                 printf("COVER_ALARM MSGBOX_RES_EXIT\n");
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
-                sys_cb.cover_index = REMIND_COVER_NONE;
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
                 co_timer_del(&alarm_clock_timer);
                 music_control(MUSIC_MSG_STOP);
             }
         }
         else if (res == MSGBOX_RES_TIMEOUT_EXIT)            //提醒界面超时退出
         {
-            if (sys_cb.cover_index == REMIND_COVER_ALARM)
+            if (cover_index_last == REMIND_COVER_ALARM)
             {
                 printf("COVER_ALARM MSGBOX_RES_TIMEOUT_EXIT\n");
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
-                sys_cb.cover_index = REMIND_COVER_NONE;
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
                 co_timer_del(&alarm_clock_timer);
                 music_control(MUSIC_MSG_STOP);
             }
         }
         else
         {
-            if (sys_cb.cover_index == REMIND_COVER_ALARM)
+            if (cover_index_last == REMIND_COVER_ALARM)
             {
                 alarm_p->isRepeatRemindOpen = false;
                 uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
-                sys_cb.cover_index = REMIND_COVER_NONE;
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
                 co_timer_del(&alarm_clock_timer);
                 music_control(MUSIC_MSG_STOP);
             }

@@ -20,6 +20,7 @@
 #include "ute_module_watchonline.h"
 #include "ute_module_factorytest.h"
 #include "ute_module_call.h"
+#include "ute_module_localRingtone.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -188,6 +189,16 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         }
         break;
 #endif
+        case TO_APP_TASK_PLAY_RING:
+        {
+            uteModuleLocalRingtonePlayRingDetail();
+        }
+        break;
+        case TO_APP_TASK_STOP_RING:
+        {
+            uteModuleLocalRingtoneStopRingDetail();
+        }
+        break;
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

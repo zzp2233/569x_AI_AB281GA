@@ -114,22 +114,25 @@ compo_form_t *func_stopwatch_form_create(void)
     sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
     msec = sys_cb.stopwatch_total_msec % 1000;
 
-    if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
+    if (func_cb.sta == FUNC_STOPWATCH)
     {
-        compo_button_t *btn_start = compo_getobj_byid(COMPO_ID_BTN_START_REC);
-        compo_button_set_bgimg(btn_start, UI_BUF_I330001_PUBLIC_PLAY_GRAY_BIN);
+        if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
+        {
+            compo_button_t *btn_start = compo_getobj_byid(COMPO_ID_BTN_START_REC);
+            compo_button_set_bgimg(btn_start, UI_BUF_I330001_PUBLIC_PLAY_GRAY_BIN);
 
-        min  = 99;
-        sec  = 59;
-        msec = 999;
-        co_timer_del(&stopwatch_timer);
-//        memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
-//        sys_cb.stopwatch_rec_cnt = 0;
-        //获取数字组件的地址
-        compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
-        memset(str_buff,0,sizeof(str_buff));
-        snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
-        compo_textbox_set(num_time, str_buff);
+            min  = 99;
+            sec  = 59;
+            msec = 999;
+            co_timer_del(&stopwatch_timer);
+            //        memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
+            //        sys_cb.stopwatch_rec_cnt = 0;
+            //获取数字组件的地址
+            compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
+            memset(str_buff,0,sizeof(str_buff));
+            snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
+            compo_textbox_set(num_time, str_buff);
+        }
     }
 
 

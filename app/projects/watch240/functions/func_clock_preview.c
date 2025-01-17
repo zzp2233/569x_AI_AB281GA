@@ -162,7 +162,10 @@ static void func_clock_preview_enter(void)
     }
     compo_rotary_set_rotation_byidx(rotary, sys_cb.dialplate_index);
     compo_rotary_update(rotary);
-    compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_ENTERING);      //入场
+    if (func_cb.last == FUNC_CLOCK)
+    {
+        compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_ENTERING);      //入场
+    }
 }
 
 //退出表盘预览功能

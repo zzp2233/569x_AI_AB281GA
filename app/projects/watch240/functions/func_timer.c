@@ -323,6 +323,7 @@ compo_form_t *func_timer_form_create(void)
     {
         case TIMER_STA_IDLE:
             frm = func_timer_form_create_by_type(TIMER_PAGE_SELECT);
+            // printf("11111111111111111111111111111\n");
             break;
 
         case TIMER_STA_WORKING:
@@ -330,6 +331,7 @@ compo_form_t *func_timer_form_create(void)
         case TIMER_STA_PAUSE:
         case TIMER_STA_DONE:
         case TIMER_STA_RESET:
+            // printf("22222222222222222222222222222222222\n");
             frm = func_timer_form_create_by_type(TIMER_PAGE_COUNTDOWN);
             break;
 
@@ -395,47 +397,7 @@ static void func_timer_button_release_handle(void)
 //100ms计时器秒数刷新回调函数
 static void timer_100ms_pro(co_timer_t *timer, void *param)
 {
-//    u8 *count = NULL;
 //    bool done = false;
-//    if (param)
-//    {
-//        count = (u8 *)param;
-//    }
-//    if (count && sys_cb.timer_sta == TIMER_STA_WORKING /*&& !sys_cb.gui_sleep_sta*/)    //休眠不计时
-//    {
-////        if (func_cb.sta == FUNC_TIMER)
-////        {
-////            //隐藏
-////            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
-////            compo_textbox_set_visible(txt, false);
-////        }
-//        if (sys_cb.timer_left_sec == 0)
-//        {
-//            done = true;
-//        }
-//        if (++(*count) >= 10)   //1s
-//        {
-//            *count = 0;
-//            if (--sys_cb.timer_left_sec == 0)
-//            {
-//                done = true;
-//            }
-//        }
-//    }
-//    if (done)
-//    {
-//        printf(">>>TIMER_DONE\n");
-//        sys_cb.timer_done = true;
-//        sys_cb.timer_sta = TIMER_STA_DONE;
-////        if (func_cb.sta == FUNC_TIMER)
-////        {
-////            //显示
-////            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_COUNT_FINSH);
-////            compo_textbox_set_visible(txt, true);
-////        }
-//    }
-
-    bool done = false;
     u8 *count = NULL;
     static bool lowpwr_sta_bkp;
     static u8 rtc_cal_cnt_bkp;
@@ -474,7 +436,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
             {
                 rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
                 rtccnt_tmp = RTCCNT;
-                printf("calibrated!\n");
+                // printf("calibrated!\n");
             }
             else if (*count == 0)
             {
@@ -487,27 +449,38 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
         if (sec_past < sys_cb.timer_total_sec)
         {
             sys_cb.timer_left_sec = sys_cb.timer_total_sec - sec_past;
-//            printf("countdown-->[%d/%d][%d %d]\n", sec_past, sys_cb.timer_total_sec, rtccnt_tmp, RTCCNT);
+            // printf("countdown-->[%d/%d][%d %d]\n", sec_past, sys_cb.timer_total_sec, rtccnt_tmp, RTCCNT);
         }
         else
         {
             sys_cb.timer_left_sec = 0;
-            done = true;
+            // printf(">>>COUNTDOWN_FINISH\n");
+
+            if(func_cb.sta == FUNC_TIMER)
+            {
+                sys_cb.timer_sta = TIMER_STA_DONE;
+            }
+            else
+            {
+                sys_cb.timer_sta = TIMER_STA_IDLE;
+            }
+            if (sys_cb.timer_done == false)
+            {
+                sys_cb.timer_done = true;
+            }
         }
     }
 
 
-    if (done)
-    {
-        printf(">>>COUNTDOWN_FINISH\n");
-        sys_cb.timer_sta = TIMER_STA_DONE;
-//        if (func_cb.sta != FUNC_TIMER) {            //再定时器界面结束后不弹弹窗
-        if (sys_cb.timer_done == false)
-        {
-            sys_cb.timer_done = true;
-        }
+//    if (done)
+//    {
+//        printf(">>>COUNTDOWN_FINISH\n");
+//        sys_cb.timer_sta = TIMER_STA_DONE;
+//        if (sys_cb.timer_done == false)
+//        {
+//            sys_cb.timer_done = true;
 //        }
-    }
+//    }
 
     lowpwr_sta_bkp = lowpwr_sta;
 }

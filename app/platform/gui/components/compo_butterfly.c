@@ -61,8 +61,8 @@ compo_butterfly_t *compo_butterfly_create(compo_form_t *frm, compo_butterfly_res
     img = widget_image3d_create(page, res->res_body);
     widget_image3d_set_axis(img, axis);
     btfly->img_body = img;
-    widget_set_pos(img, GUI_SCREEN_CENTER_X+5, GUI_SCREEN_CENTER_Y+5);
-    widget_image3d_set_rotation_center(img, 12, 63);
+    widget_set_pos(img, GUI_SCREEN_CENTER_X+2, GUI_SCREEN_CENTER_Y);
+    widget_image3d_set_rotation_center(img, 12-3, 63-10);
     widget_image3d_set_polar(img, 900);
     widget_image3d_set_azimuth(img, 900);
     widget_image3d_set_rotation(img, 1800);

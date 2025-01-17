@@ -204,6 +204,20 @@ static void func_activity_disp_handle(void)
             compo_picturebox_set_rotation(arc_km,   1800+f_activity->arc_step_value*1.8 );
             compo_picturebox_set_rotation(arc_step, 1800+f_activity->arc_step_value*1.8 );
 
+            if(f_activity->arc_step_value)
+            {
+                compo_picturebox_set_visible(arc_kcal,true);
+                compo_picturebox_set_visible(arc_km,true);
+                compo_picturebox_set_visible(arc_step,true);
+            }
+            else
+            {
+                compo_picturebox_set_visible(arc_kcal,false);
+                compo_picturebox_set_visible(arc_km,false);
+                compo_picturebox_set_visible(arc_step,false);
+            }
+
+
             memset(txt_buf,'\0',sizeof(txt_buf));
             snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
             compo_textbox_set(textbox_step, txt_buf);

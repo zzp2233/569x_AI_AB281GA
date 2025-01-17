@@ -198,6 +198,12 @@ static void func_sport_switching_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_sport_switching_t));
     func_cb.frm_main = func_sport_switching_form_create();
 
+    //亮屏
+    if (sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
 }
 
 //退出运动开始功能

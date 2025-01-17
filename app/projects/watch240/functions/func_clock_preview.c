@@ -173,6 +173,7 @@ static void func_clock_preview_exit(void)
 {
     tft_set_temode(DEFAULT_TE_MODE);
     func_cb.last = FUNC_CLOCK_PREVIEW;
+    task_stack_pop();
 }
 
 //表盘预览功能

@@ -27,7 +27,7 @@ static const compo_listbox_item_t tbl_setting_list[] =
     {STR_SETTING_DOUSING,                UI_BUF_I330001_SETTINGS_ICON_TIME_BIN,             .func_sta = FUNC_SET_SUB_DOUSING},  //息屏时长
     {STR_SETTING_UP,                     UI_BUF_I330001_SETTINGS_ICON_TAIWAN_BIN,           .func_sta = FUNC_SET_SUB_WRIST},    //抬腕亮屏
     {STR_SETTING_DISTURD,                UI_BUF_I330001_SETTINGS_ICON_DND_BIN,              .func_sta = FUNC_SET_SUB_DISTURD},  //勿扰模式
-//    {STR_VOL ,                           UI_BUF_I330001_SETTINGS_ICON_SOUND_BIN,            .func_sta = FUNC_SET_SUB_SAV},      //声音
+    {STR_VOL,                           UI_BUF_I330001_SETTINGS_ICON_SOUND_BIN,            .func_sta = FUNC_SET_SUB_SAV},       //声音
     {STR_SETTING_LANGUAGE,               UI_BUF_I330001_SETTINGS_ICON_LANUAGE_BIN,          .func_sta = FUNC_SET_SUB_LANGUAGE}, //语言设置
     {STR_STYLE,                          UI_BUF_I330001_SETTINGS_ICON_THEME_BIN,            .func_sta = FUNC_STYLE}, //主题
     //{STR_BEATHER_DURATION,                   UI_BUF_SETTING_TIME_BIN,                       .func_sta = FUNC_SET_SUB_TIME},     //时间设置
@@ -89,7 +89,8 @@ static void func_set_sub_list_icon_click(void)
     //切入应用
     if (func_sta > 0)
     {
-        func_switch_to(func_sta, FUNC_SWITCH_UD_ZOOM_UP | FUNC_SWITCH_AUTO);
+//        func_switch_to(func_sta, FUNC_SWITCH_UD_ZOOM_UP | FUNC_SWITCH_AUTO);
+        func_switch_to(func_sta, FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO);
 //        compo_form_t *frm = func_create_form(func_sta);
 //        func_switching(FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO, listbox->sel_icon);
 //        compo_form_destroy(frm);

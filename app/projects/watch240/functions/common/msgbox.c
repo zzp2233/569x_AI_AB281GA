@@ -177,6 +177,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //图标
             if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH)
             {
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_FINGWATCH_WATCH_BIN);
                 compo_animation_set_pos(animation,GUI_SCREEN_CENTER_X,func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
                 compo_animation_set_radix(animation,3);
@@ -650,6 +651,7 @@ static void msgbox_exit(void)
     compo_form_destroy(msg_cb->frm);
     func_free(msg_cb);
     func_cb.msg_cb = NULL;
+    uteDrvMotorStop();
 }
 
 //对话框

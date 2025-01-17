@@ -73,7 +73,7 @@ extern void func_voice(void);
 extern void func_address_book(void);
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 extern void func_set_sub_list(void);
-//extern void func_set_sub_sav(void);
+extern void func_set_sub_sav(void);
 extern void func_set_sub_dousing(void);
 extern void func_set_sub_disturd(void);
 extern void func_set_sub_language(void);
@@ -330,7 +330,7 @@ const func_t tbl_func_create[] =
 //    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp_form_create},
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
-//    {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
+    {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about_form_create},
 //    {FUNC_SET_SUB_4G,                   func_set_sub_4g_form_create},
     {FUNC_SET_SUB_RESTART,              func_set_sub_restart_form_create},
@@ -436,7 +436,6 @@ const func_t tbl_func_entry[] =
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record},          //电话--最近通话
     {FUNC_CALL_SUB_DIAL,                func_call_sub_dial},            //电话--拨号
     {FUNC_CALL_SORT,                    func_call_sort},                //电话--一级界面
-//    {FUNC_SET_SUB_SAV,                       func_volume},                   //音量调节
     {FUNC_ACTIVITY,                     func_activity},                 //活动记录
     {FUNC_FLASHLIGHT,                   func_flashlight},               //手电筒
     {FUNC_SETTING,                      func_set_sub_list},             //设置
@@ -444,7 +443,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SET_SUB_WRIST,                func_set_sub_wrist},            //设置--抬腕
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd},          //设置--勿扰
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set},          //勿扰--时间设置
-//    {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动
+    {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language},         //设置--语言
 //    {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
 //    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间
@@ -1343,11 +1342,12 @@ void func_message(size_msg_t msg)
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            sys_cb.cover_index = REMIND_COVER_TIMER_FINISH;
-            sys_cb.remind_tag = true;
+            if(func_cb.sta != FUNC_TIMER)
+            {
+                sys_cb.cover_index = REMIND_COVER_TIMER_FINISH;
+                sys_cb.remind_tag = true;
+            }
             sys_cb.timer_left_sec = sys_cb.timer_custom_sec;
-//            func_cb.sta = FUNC_TIMER;
-//            func_switch_to(FUNC_STOPWATCH, FUNC_SWITCH_FADE | FUNC_SWITCH_AUTO);
 //            msgbox("计时已经结束",NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_RES_NONE);
             break;
 

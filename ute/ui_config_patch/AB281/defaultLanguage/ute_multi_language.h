@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-01-07 16:44:11
+*@date   2025-01-17 15:49:12
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -175,7 +175,7 @@ enum
     STR_FLY_BIRD, // 飞鸟游戏
     STR_IN_CALL, // 正在呼出...
     STR_CALL_ME, // 来电
-    STR_VOICE_SPEAKER, // 请说话...
+    STR_VOICE_SPEAKER, // 倾听中...
     STR_VOICE_BT_NOT_CONNECT, // 未连接
     STR_VOICE_SIRI_START, // 点击屏幕开始对话
     STR_ADDRESS_BOOK_SYNC, // 请前往APP设置SOS号码

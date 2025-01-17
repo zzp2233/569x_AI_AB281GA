@@ -30,6 +30,7 @@ enum
     KCAL_ARC_ID,
     KM_ARC_ID,
     STEP_ARC_ID,
+    KM_TXT_UNIT_ID,
 };
 
 typedef struct f_activity_t_
@@ -119,6 +120,7 @@ compo_form_t *func_activity_form_create(void)
     }
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5+TXT_SPACING_Y);
     compo_textbox_set_forecolor(textbox,KM_ARC_COLOR);
+    compo_setid(textbox,KM_TXT_UNIT_ID);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
@@ -160,7 +162,16 @@ static void func_activity_disp_handle(void)
         compo_textbox_t *textbox_kcal = compo_getobj_byid(KCAL_TXT_VALUE_ID);
         compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
         compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
+        compo_textbox_t *textbox_km_unit = compo_getobj_byid(KM_TXT_UNIT_ID);
 
+        if(uteModuleSystemtimeGetDistanceMiType())//英里
+        {
+            compo_textbox_set(textbox_km_unit, i18n[STR_MILE]);
+        }
+        else
+        {
+            compo_textbox_set(textbox_km_unit, i18n[STR_KM]);
+        }
 
         if(f_activity->activity_state == 0)
         {
@@ -223,7 +234,7 @@ static void func_activity_disp_handle(void)
             compo_textbox_set(textbox_step, txt_buf);
 
             memset(txt_buf,'\0',sizeof(txt_buf));
-            snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%d",f_activity->arc_km_value/100, f_activity->arc_km_value%100);
+            snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%ld",f_activity->arc_km_value/100, f_activity->arc_km_value%100);
             compo_textbox_set(textbox_km, txt_buf);
 
             memset(txt_buf,'\0',sizeof(txt_buf));

@@ -596,7 +596,7 @@ static void func_clock_process(void)
                 f_clock->cube_touch_time = 5;
                 f_clock->tick = tick_get();
                 f_clock->cube_rp+=3;
-                if(f_clock->cube_rp==3600)f_clock->cube_rp=0;
+                if(f_clock->cube_rp>3600)f_clock->cube_rp=0;
                 compo_cube_roll_from(cube, f_clock->cube_rp, f_clock->cube_ra);
                 compo_cube_update(cube);
             }

@@ -943,6 +943,19 @@ static void card1_updata_disp(void)
         snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",f_activity->arc_kcal_value);
         compo_cardbox_text_set(cardbox, 0, txt_buf);
 
+
+        if(f_activity->arc_step_value)
+        {
+            compo_picturebox_set_visible(arc_kcal,true);
+            compo_picturebox_set_visible(arc_km,true);
+            compo_picturebox_set_visible(arc_step,true);
+        }
+        else
+        {
+            compo_picturebox_set_visible(arc_kcal,false);
+            compo_picturebox_set_visible(arc_km,false);
+            compo_picturebox_set_visible(arc_step,false);
+        }
     }
 
 //    }

@@ -87,6 +87,7 @@
 			<Add directory="../../../ute/module/factorytest" />
 			<Add directory="../../../ute/module/micrecord" />
 			<Add directory="../../../ute/module/music" />
+			<Add directory="../../../ute/module/localRingtone" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -215,6 +216,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/liftwrist/ute_module_liftwrist.h" />
+		<Unit filename="../../../ute/module/localRingtone/ute_module_localRingtone.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/localRingtone/ute_module_localRingtone.h" />
 		<Unit filename="../../../ute/module/log/ute_module_log.c">
 			<Option compilerVar="CC" />
 		</Unit>

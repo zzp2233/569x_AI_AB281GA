@@ -19,6 +19,7 @@
 #include "ute_module_heart.h"
 #include "ute_module_watchonline.h"
 #include "ute_module_factorytest.h"
+#include "ute_module_call.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -175,6 +176,18 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleNotifyCallDisableHandlerMsg();
         }
         break;
+#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
+        case TO_APP_TASK_CONNECT_A2DP:
+        {
+            uteModuleCallConnectA2DPProfile();
+        }
+        break;
+        case TO_APP_TASK_DISCONNECT_A2DP:
+        {
+            uteModuleCallDisconnectA2DPProfile();
+        }
+        break;
+#endif
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

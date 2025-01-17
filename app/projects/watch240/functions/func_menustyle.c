@@ -124,7 +124,10 @@ static void func_menustyle_enter(void)
     compo_rotary_update(rotary);
     if(menustyle_refresh == true)
     {
-        compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_ENTERING);      //入场
+        if (func_cb.last == FUNC_MENU)
+        {
+            compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_ENTERING);      //入场
+        }
     }
 }
 
@@ -133,6 +136,7 @@ static void func_menustyle_exit(void)
 {
     menustyle_refresh = !sys_cb.refresh_language_flag;
     tft_set_temode(DEFAULT_TE_MODE);
+    task_stack_pop();
 }
 
 //主菜单样式列表

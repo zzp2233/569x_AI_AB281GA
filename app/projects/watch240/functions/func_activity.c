@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+
 #define KCAL_ARC_COLOR                61861
 #define KM_ARC_COLOR                  65188
 #define STEP_ARC_COLOR                1946
@@ -312,4 +314,4 @@ void func_activity(void)
     }
     func_activity_exit();
 }
-
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT

@@ -27,12 +27,24 @@ extern u16 func_clock_preview_get_type(void);
 
 static const compo_cube_item_t tbl_menu_cube[] =
 {
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {UI_BUF_I330001_WATCH4_MF_00_BIN,            FUNC_ACTIVITY},
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {UI_BUF_I330001_WATCH4_MF_03_BIN,            FUNC_SLEEP},
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I330001_WATCH4_MF_04_BIN,            FUNC_WEATHER},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {UI_BUF_I330001_WATCH4_MF_01_BIN,            FUNC_BLOOD_OXYGEN},
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {UI_BUF_I330001_WATCH4_MF_02_BIN,            FUNC_HEARTRATE},
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
     {UI_BUF_I330001_WATCH4_MF_05_BIN,            FUNC_BT},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
 };
 
 
@@ -69,29 +81,54 @@ u32 dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + UTE_MODULE_WATCHONLINE_MUL
 const u8 quick_btn_tbl[] =
 {
     [0]     = FUNC_NULL,                    //空
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     [1]     = FUNC_HEARTRATE,               //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
     [2]     = FUNC_BT,                      //音乐
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     [3]     = FUNC_ALARM_CLOCK,             //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     [4]     = FUNC_BLOOD_OXYGEN,            //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     [5]     = FUNC_NULL,                    //血糖
     [6]     = FUNC_BLOOD_PRESSURE,          //血压
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     [7]     = FUNC_BREATHE,                 //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
     [8]     = FUNC_CALCULATOR,              //计算器
-
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     [9]     = FUNC_CAMERA,                  //相机
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
     [10]    = FUNC_TIMER,                   //定时器
 #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     [11]    = FUNC_SLEEP,                   //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     [12]    = FUNC_STOPWATCH,               //秒表
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     [13]    = FUNC_WEATHER,                 //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
     [14]    = FUNC_GAME,                    //游戏
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
     [15]    = FUNC_STYLE,                   //菜单风格
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     [16]    = FUNC_ALTITUDE,                //海拔
     [17]    = FUNC_MAP,                     //地图
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     [18]    = FUNC_MESSAGE,                 //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     [19]    = FUNC_SCAN,                    //扫一扫
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
     [20]    = FUNC_VOICE,                   //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 #if SECURITY_PAY_EN
     [21]    = FUNC_ALIPAY,                  //支付宝
 #else
@@ -101,12 +138,18 @@ const u8 quick_btn_tbl[] =
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     [23]    = FUNC_ADDRESS_BOOK,            //电话簿
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
     [24]    = FUNC_SPORT,                   //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
     [25]    = FUNC_CALL,                    //电话
     [26]    = FUNC_FINDPHONE,               //寻找手机
     [27]    = FUNC_CALENDAER,               //日历
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     [28]    = FUNC_ACTIVITY,                //活动记录
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     [29]    = FUNC_FLASHLIGHT,              //手电筒
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     [30]    = FUNC_SETTING,                 //设置
 };
 
@@ -699,8 +742,10 @@ static void func_clock_message(size_msg_t msg)
 //        func_clock_sub_side();                  //右拉边菜单
 //            func_switch_to(FUNC_SIDEBAR, FUNC_SWITCH_LR_ZOOM_RIGHT);  //右滑界面
             printf("%s -> MSG_CTP_SHORT_RIGHT\n", __func__);
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
             func_cb.left_sta = FUNC_MESSAGE;
             func_switch_to(FUNC_MESSAGE, FUNC_SWITCH_LR_ZOOM_RIGHT);
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
             break;
 
         case MSG_CTP_SHORT_DOWN:

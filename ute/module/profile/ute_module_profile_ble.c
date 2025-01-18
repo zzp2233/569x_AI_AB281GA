@@ -388,6 +388,7 @@ static ble_gatt_characteristic_cb_info_t gatts_app_protocol_tx_cb_info =
 
 void ble_app_blue_fit_rx_callback(u8 *ptr, u16 len)
 {
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if FUNC_CAMERA_TRANS_EN
     if (func_cb.sta == FUNC_CAMERA)
     {
@@ -395,6 +396,7 @@ void ble_app_blue_fit_rx_callback(u8 *ptr, u16 len)
     }
     else
 #endif
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {
         printf("app_rx len[%d]:\n", len);
         print_r(ptr, len);

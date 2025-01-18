@@ -931,7 +931,11 @@ static void func_sport_sub_run_enter(void)
     if(sport_refresh == true)
     {
         f_sport_sub_run->sport_run_state = sport_start_flag;
-        if (func_cb.last != FUNC_CAMERA && func_cb.last != FUNC_CHARGE && func_cb.last != FUNC_LONG_PRESS && func_cb.last != FUNC_BT_CALL && func_cb.last != FUNC_BT_RING)
+        if (
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+            func_cb.last != FUNC_CAMERA
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+            && func_cb.last != FUNC_CHARGE && func_cb.last != FUNC_LONG_PRESS && func_cb.last != FUNC_BT_CALL && func_cb.last != FUNC_BT_RING)
         {
             if (uteModuleSportMoreSportIsAppStart())
             {
@@ -970,7 +974,11 @@ static void func_sport_sub_run_exit(void)
     if(sys_cb.refresh_language_flag == false)//刷新语言时不清除数据
     {
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (func_cb.sta != FUNC_CAMERA && func_cb.sta != FUNC_CHARGE && func_cb.sta != FUNC_LONG_PRESS && func_cb.sta != FUNC_BT_CALL && func_cb.sta != FUNC_BT_RING)
+        if (
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+            func_cb.sta != FUNC_CAMERA
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+            && func_cb.sta != FUNC_CHARGE && func_cb.sta != FUNC_LONG_PRESS && func_cb.sta != FUNC_BT_CALL && func_cb.sta != FUNC_BT_RING)
         {
             if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
             {

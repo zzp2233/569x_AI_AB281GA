@@ -2,6 +2,8 @@
 #include "func.h"
 #include "ute_module_heart.h"
 
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+
 #define TRACE_EN    1
 
 #if TRACE_EN
@@ -72,6 +74,8 @@ typedef struct f_breathe_t_
     u16 icon_size;
     s16 icon_deg;
 } f_breathe_t;
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建呼吸窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_breathe_form_create(void)
@@ -472,6 +476,8 @@ static void func_breathe_message(size_msg_t msg)
     }
 }
 
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //进入呼吸功能
 static void func_breathe_enter(void)
 {
@@ -507,3 +513,5 @@ void func_breathe(void)
     }
     func_breathe_exit();
 }
+
+#endif

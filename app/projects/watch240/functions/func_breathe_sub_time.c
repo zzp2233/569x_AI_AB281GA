@@ -460,6 +460,7 @@ static void func_breathe_sub_time_button_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_OK:
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
             if (func_cb.last == FUNC_BREATHE)
             {
                 func_cb.sta = FUNC_BREATHE;
@@ -468,6 +469,7 @@ static void func_breathe_sub_time_button_click(void)
             }
 
             func_cb.sta = FUNC_BREATHE;
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
             break;
 
         default:

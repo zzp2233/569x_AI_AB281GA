@@ -215,7 +215,9 @@ static void func_alarm_clock_sub_repeat_button_click(void)
             }
 //            printf("hour:%d min:%d\n",sys_cb.alarm_edit_hour,sys_cb.alarm_edit_min);
             ALARM_SET(sys_cb.alarm_edit_idx, true, sys_cb.alarm_edit_cycle, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min, 0, 0);
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
             func_cb.sta = FUNC_ALARM_CLOCK;
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
             break;
 
         default:

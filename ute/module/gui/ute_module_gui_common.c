@@ -752,7 +752,7 @@ void uteModuleGuiCommonGoBackLastScreen(void)
     {
         return;
     }
-    
+
     func_directly_back_to();
 }
 
@@ -775,7 +775,7 @@ void uteTaskGuiStartScreen(uint8_t screenId)
     {
         return;
     }
-    
+
     if(func_cb.sta != screenId)
     {
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
@@ -1135,10 +1135,10 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
         }
 #endif
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-        if(id == UTE_MOUDLE_SCREENS_FLASHLIGHT_ID)
-        {
-            return false;
-        }
+//        if(id == UTE_MOUDLE_SCREENS_FLASHLIGHT_ID)
+//        {
+//            return false;
+//        }
 #endif
 #if UTE_MODULE_SCREENS_OTA_SUPPORT
         if(id == UTE_MOUDLE_SCREENS_OTA_ID)
@@ -1167,7 +1167,11 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
 #if UTE_MODULE_SCREENS_FIND_PHONE_SUPPORT
         ute_ble_connect_state_t connectStatus;
         uteApplicationCommonGetBleConnectionState(&connectStatus);
-        if((id == UTE_MOUDLE_SCREENS_FIND_PHONE_ID) && (uteModuleFindPhoneGetStatus() == FIND_PHONE_RING) && (connectStatus.isConnected))
+        if((id == UTE_MOUDLE_SCREENS_FIND_PHONE_ID) &&
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+           (uteModuleFindPhoneGetStatus() == FIND_PHONE_RING) &&
+#endif // UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+           (connectStatus.isConnected))
         {
             return false;
         }

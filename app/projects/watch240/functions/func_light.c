@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
+
 //组件ID
 enum
 {
@@ -50,6 +52,8 @@ static const light_pic_item_t tbl_light_pic_item[] =
     {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL4,         120,     205    },
     {UI_BUF_I330001_SETTINGS_BRIGHTNESS_00_BIN,     COMPO_ID_PIC_LEVEL5,         120,     246    },
 };
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_light_form_create(void)
@@ -159,6 +163,7 @@ static void func_light_button_click(void)
     func_light_disp_Refresh();
 }
 
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //亮度调节功能事件处理
 static void func_light_process(void)
@@ -236,3 +241,5 @@ void func_light(void)
     }
     func_light_exit();
 }
+
+#endif

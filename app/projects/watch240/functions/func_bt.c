@@ -11,6 +11,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+
 #define TITLE_BUF_LEN     UTE_MUSIC_TITLE_MAX_SIZE   //歌名buf长度
 #define ARTIST_BUF_LEN    UTE_MUSIC_ARTLIST_MAX_SIZE     //歌手/歌手buf长度
 #define PROGRESS_BAR_LENGTH 146
@@ -116,7 +118,7 @@ void func_bt_chk_off(void)
     }
 }
 
-
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 /*****************************************************************************
  *          func_bt_music(UI)
 *****************************************************************************/
@@ -471,6 +473,7 @@ static void func_bt_button_click(void)
             break;
     }
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 void func_bt_sub_process(void)
 {
@@ -687,3 +690,5 @@ void func_bt(void)
     }
     func_bt_exit();
 }
+
+#endif

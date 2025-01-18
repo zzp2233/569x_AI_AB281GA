@@ -697,7 +697,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_FIRSTORDER_FIXED_SPORT_BIN,
                 .res_click = 0,
                 .res_switch = 0,
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
                 .func_sta = FUNC_SPORT,
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
             },
 
             [1] = {
@@ -709,7 +711,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_FIRSTORDER_FIXED_MSM_BIN,
                 .res_click = 0,
                 .res_switch = 0,
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
                 .func_sta = FUNC_MESSAGE,
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
             },
 
             [2] = {
@@ -764,7 +768,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_THEME_1_SOPRT_BIN,
                 .res_click = 0,
                 .res_switch = 0,
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
                 .func_sta = FUNC_SPORT,
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
             },
             [1] = {
                 .idx    = COMPO_ID_APP2,
@@ -775,7 +781,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,
                 .res_click = 1,
                 .res_switch = 1,
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
                 .func_sta = FUNC_LIGHT,
+#endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
             },
             [2] = {
                 .idx    = COMPO_ID_APP3,
@@ -1621,10 +1629,14 @@ static void func_clock_sub_card_click_handler(void)
     switch(compo_id)
     {
         case COMPO_ID_CARD_1 :
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
             func_jump = FUNC_ACTIVITY;
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
             break;
         case COMPO_ID_CARD_2 :
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
             func_jump = FUNC_SLEEP;
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
             break;
         case COMPO_ID_CARD_3:
             switch(id)
@@ -1658,7 +1670,9 @@ static void func_clock_sub_card_click_handler(void)
                 }
                 break;
                 default:
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
                     func_jump = FUNC_BT;
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
                     break;
             }
             break;
@@ -1668,7 +1682,9 @@ static void func_clock_sub_card_click_handler(void)
 #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
             break;
         case COMPO_ID_CARD_5 :
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
             func_jump = FUNC_STOPWATCH;
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
             break;
         case COMPO_ID_CARD_6 :
             cardbox = compo_getobj_byid(COMPO_ID_CARD_6);

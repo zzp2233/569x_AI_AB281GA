@@ -11,6 +11,7 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
 
 #define SET_LIST_CNT                       ((int)(sizeof(tbl_style_list) / sizeof(tbl_style_list[0])))
 
@@ -60,6 +61,7 @@ u8 func_sel_style_bit(uint n)
     return false;
 }
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建菜单风格窗体
 compo_form_t *func_style_form_create(void)
 {
@@ -137,6 +139,7 @@ static void func_set_sub_list_switch_to_clock(void)
     func_cb.sta = func_sta;
     sys_cb.set_idx = 0;
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 
 //菜单风格功能事件处理
@@ -227,3 +230,5 @@ void func_style(void)
     }
     func_style_exit();
 }
+
+#endif

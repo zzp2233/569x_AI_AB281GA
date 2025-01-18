@@ -7,6 +7,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+
 #define GAME_NUM                    1
 
 typedef struct f_game_t_
@@ -88,7 +90,7 @@ compo_form_t *func_game_form_create(void)
     return frm;
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-//海拔功能事件处理
+//事件处理
 static void func_game_process(void)
 {
     f_game_t *f_game = (f_game_t *)func_cb.f_cb;
@@ -259,3 +261,5 @@ void func_game(void)
     }
     func_game_exit();
 }
+
+#endif

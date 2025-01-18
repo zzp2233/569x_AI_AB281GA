@@ -10,6 +10,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+
 #define MENU_LIST_CNT                       ((int)(sizeof(tbl_sport_list) / sizeof(tbl_sport_list[0])))
 
 enum
@@ -338,3 +340,5 @@ void func_sport(void)
     }
     func_sport_exit();
 }
+
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT

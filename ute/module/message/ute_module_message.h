@@ -52,6 +52,8 @@ enum
     MSG_TYPE_CALL_DISABLE_NOTIFY,
     TO_APP_TASK_CONNECT_A2DP,
     TO_APP_TASK_DISCONNECT_A2DP,
+    TO_APP_TASK_PLAY_RING,
+    TO_APP_TASK_STOP_RING,
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

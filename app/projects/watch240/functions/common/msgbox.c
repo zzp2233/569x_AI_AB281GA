@@ -550,6 +550,7 @@ static void msgbox_message(size_msg_t msg)
     }
 }
 
+
 //对话框事件处理
 static void msgbox_process(void)
 {
@@ -654,9 +655,24 @@ static void msgbox_exit(void)
     uteDrvMotorStop();
 }
 
+
+//界面sta切换到下列ID强制退出弹窗
+static void msgbox_check_force_exit(void)
+{
+    msg_cb_t *msg_cb = func_cb.msg_cb;
+    if (func_cb.msgbox_enter_sta != func_cb.sta)
+    {
+        printf("%s -> EVT_MSGBOX_EXIT\n", __func__);
+        msg_cb->res = MSGBOX_RES_EXIT;
+        msg_cb->show = false;
+    }
+}
+
 //对话框
 int msgbox(char *msg, char *title, char* time, int mode, char msg_type)
 {
+    func_cb.msgbox_enter_sta = func_cb.sta;
+
     msg_cb_t *msg_cb;
     msgbox_enter(msgbox_frm_create(msg, title, time, mode, msg_type));
     msg_cb = func_cb.msg_cb;
@@ -666,9 +682,11 @@ int msgbox(char *msg, char *title, char* time, int mode, char msg_type)
     {
         msgbox_message(msg_dequeue());
         msgbox_process();
+        msgbox_check_force_exit();
     }
     int res = msg_cb->res;
     msgbox_exit();                      //这里释放到msg_cb结构体
+    func_cb.msgbox_enter_sta = 0;
     return res;
 }
 

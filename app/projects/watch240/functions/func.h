@@ -214,6 +214,7 @@ typedef struct
     u8 sort_cnt;                                    //快捷任务个数
     u8 tbl_sort[MAX_FUNC_SORT_CNT];                 //快捷任务表
     u16 left_sta;                                   //CLOCK左边菜单
+    u8 msgbox_enter_sta;                            //弹窗进入之前的界面任务
     u8  flag_sort       : 1,                        //已进入快捷任务
     flag_animation  : 1;                        //入场动画
 

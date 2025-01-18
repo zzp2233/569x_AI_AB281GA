@@ -8,6 +8,7 @@
 #include "ute_module_sport.h"
 #include "func_menu.h"
 #include "ute_module_call.h"
+#include "ute_module_localRingtone.h"
 
 #if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
 
@@ -154,7 +155,8 @@ static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 static void func_clock_sub_dropdown_mute_pic_update(void)
 {
     compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_MUTE);
-    if(sys_cb.mute)
+    // if(sys_cb.mute)
+    if(uteModuleLocalRingtoneGetMuteStatus())
     {
         compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES01_BIN);
     }
@@ -544,13 +546,21 @@ static void func_clock_sub_dropdown_click_handler(void)
         }
         break;
         case COMPO_ID_BTN_MUTE:
-            if(sys_cb.mute)
+            // if(sys_cb.mute)
+            // {
+            //     bsp_sys_unmute();
+            // }
+            // else
+            // {
+            //     bsp_sys_mute();
+            // }
+            if(uteModuleLocalRingtoneGetMuteStatus())
             {
-                bsp_sys_unmute();
+                uteModuleLocalRingtoneSetMuteStatus(false,true);
             }
             else
             {
-                bsp_sys_mute();
+                uteModuleLocalRingtoneSetMuteStatus(true,true);
             }
             func_clock_sub_dropdown_mute_pic_update();          //静音更新
             break;

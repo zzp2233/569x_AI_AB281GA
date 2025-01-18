@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_call.h"
+#include "ute_module_localRingtone.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -56,7 +58,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_text_set(cardbox,0,i18n[STR_VOL]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
     compo_cardbox_icon_set_location(cardbox, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
-    compo_cardbox_icon_set(cardbox,0,OFF_PIC);
+    compo_cardbox_icon_set(cardbox,0,uteModuleLocalRingtoneGetMuteStatus() ? OFF_PIC : ON_PIC);
     compo_cardbox_text_scroll_process(cardbox, true);
 
     return frm;
@@ -70,13 +72,7 @@ static void func_set_sub_sav_disp(void)
 
     compo_cardbox_icon_set_location(cardbox_sav, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
     compo_cardbox_icon_set(cardbox_sav,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
-//    if(uteModuleCallIsEntertranmentVoiceOn()){
-//        compo_cardbox_icon_set(cardbox_sav,0, ON_PIC);
-//    }else{
-//        compo_cardbox_icon_set(cardbox_sav,0, OFF_PIC);
-//    }
-
-
+    compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus() ? OFF_PIC : ON_PIC);
 }
 
 //声音与振动事件处理
@@ -125,6 +121,14 @@ static void func_sav_button_click(void)
         case COMPO_ID_MUTE:
 //            compo_cardbox_icon_set_location(cardbox_mute, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
 //            compo_cardbox_icon_set(cardbox_mute,0,ON_PIC);
+            if(uteModuleLocalRingtoneGetMuteStatus())
+            {
+                uteModuleLocalRingtoneSetMuteStatus(false,true);
+            }
+            else
+            {
+                uteModuleLocalRingtoneSetMuteStatus(true,true);
+            }
             break;
         default:
             break;

@@ -838,7 +838,7 @@ void uteModuleCallEntertranmentVoiceSwitchReadConfig(void)
 void uteModuleCallChangeEntertranmentVoiceSwitchStatus(void)
 {
     uteModuleCallData.isEntertranmentVoiceOn = !uteModuleCallData.isEntertranmentVoiceOn;
-    if(uteModuleCallBtIsPowerOn())
+    // if(uteModuleCallBtIsPowerOn())
     {
         if(uteModuleCallData.isEntertranmentVoiceOn)
         {

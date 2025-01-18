@@ -522,7 +522,7 @@ void gui_set_cover_index(uint8_t index)
                 start_music();
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 //开启马达 喇叭
-                co_timer_set(&alarm_clock_timer, 15000, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
+                co_timer_set(&alarm_clock_timer, 13000, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
                 mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
             }
             else if (sys_cb.cover_index == REMIND_COVER_HEALTH_SEDENTARY)           //久坐提醒

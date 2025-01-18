@@ -1127,7 +1127,7 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
         if (receive[2] <= 100)
         {
 #if BT_ID3_TAG_EN
-            if (!bt_is_connected())
+            if (!bt_a2dp_profile_completely_connected())
 #endif
             {
                 uteModuleMusicSetPlayerVolume(receive[2]);

@@ -143,7 +143,7 @@ compo_form_t *func_bt_form_create(void)
     compo_form_add_image(frm, UI_BUF_I330001_MUSIC_BG_BIN, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y );
 
 
-    if(bt_is_connected() || ble_is_connect())
+    if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
         //歌词/歌手
         compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
@@ -190,7 +190,7 @@ compo_form_t *func_bt_form_create(void)
 
     //新建按钮
     compo_button_t *btn;
-    if(bt_is_connected() || ble_is_connect())
+    if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PREVIOUSSONG02_BIN);///上一曲
     }
@@ -201,7 +201,7 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(btn, COMPO_ID_BTN_PREV);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.5, GUI_SCREEN_CENTER_Y);
 
-    if(bt_is_connected() || ble_is_connect())
+    if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PLAY01_BIN);///暂停 播放
     }
@@ -222,7 +222,7 @@ compo_form_t *func_bt_form_create(void)
     }
     else
     {
-        if(bt_is_connected() || ble_is_connect())
+        if(bt_a2dp_profile_completely_connected() || ble_is_connect())
         {
             compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY01_BIN);
         }
@@ -233,7 +233,7 @@ compo_form_t *func_bt_form_create(void)
     }
 
 
-    if(bt_is_connected() || ble_is_connect())
+    if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_NEXTSONG02_BIN);///下一曲
     }
@@ -245,7 +245,7 @@ compo_form_t *func_bt_form_create(void)
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.5, GUI_SCREEN_CENTER_Y);
 
 
-    if(bt_is_connected() || ble_is_connect())
+    if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME02_BIN);///音量减
     }
@@ -256,7 +256,7 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(btn, COMPO_ID_BTN_VOL_DOWN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3);
 
-    if(bt_is_connected() || ble_is_connect())
+    if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME04_BIN);///音量加
     }
@@ -276,7 +276,7 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(shape, COMPO_ID_SHAPE_MUSIC_VOL);
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3, PROGRESS_BAR_LENGTH, 6 );
     compo_shape_set_radius(shape, 3);
-    if(bt_is_connected() || ble_is_connect())
+    if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
         compo_shape_set_visible(shape,true);
     }
@@ -303,7 +303,7 @@ static void func_bt_music_refresh_disp(void)
     compo_textbox_t *tilte_art_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_NAME);
     compo_shape_t *shape = compo_getobj_byid(COMPO_ID_SHAPE_MUSIC_VOL);
 
-    if(!bt_is_connected() && !ble_is_connect())
+    if(!bt_a2dp_profile_completely_connected() && !ble_is_connect())
     {
         compo_textbox_set_visible(tilte_art_txt, false);
 
@@ -383,7 +383,7 @@ static void func_bt_music_refresh_disp(void)
 ///按钮释放
 static void func_bt_button_release_handle()
 {
-    if(!bt_is_connected() && !ble_is_connect())return;
+    if(!bt_a2dp_profile_completely_connected() && !ble_is_connect())return;
 
     f_bt_t *f_bt = (f_bt_t *)func_cb.f_cb;
     s32 dx, dy;
@@ -512,10 +512,10 @@ static void func_bt_message_do(size_msg_t msg)
         case MSG_SYS_500MS:
 //            printf("1111111111111111111111\n");
             func_bt_music_refresh_disp();
-//            if (bt_is_connected() && !sys_cb.gui_sleep_sta)
+//            if (bt_a2dp_profile_completely_connected() && !sys_cb.gui_sleep_sta)
 //            {
 #if BT_ID3_TAG_EN
-            if (bt_is_connected())
+            if (bt_a2dp_profile_completely_connected())
             {
                 bt_music_paly_status_info();
             }
@@ -627,7 +627,10 @@ void func_bt_enter(void)
 //#endif
     // bt_id3_tag_update_cb_reg(bt_id3_tag_update_handle);
 #if BT_ID3_TAG_EN
-    bt_music_get_id3_tag();
+    if(bt_a2dp_profile_completely_connected())
+    {
+        bt_music_get_id3_tag();
+    }
 #endif
 
 #if !BT_BACKSTAGE_MUSIC_EN

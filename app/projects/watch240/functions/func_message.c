@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+
 enum
 {
     //MSGBOX_MSG_TYPE_NONE,
@@ -190,6 +192,8 @@ typedef struct f_message_t_
 } f_message_t;
 
 static void func_message_card_update(bool fist);
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建消息窗体
 compo_form_t *func_message_form_create(void)
 {
@@ -500,6 +504,7 @@ static void func_message_card_update(bool first_update)
     }
 
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //消息功能事件处理
 static void func_message_process(void)
@@ -691,4 +696,4 @@ void func_message_info(void)
 }
 
 
-
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT

@@ -3050,7 +3050,9 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID); //退回运动列表
                         void func_switch_to(u8 sta, u16 switch_mode);
 //                        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
                         func_cb.sta = FUNC_SPORT;
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
                     }
                     else
                     {
@@ -3065,7 +3067,9 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
 //                            task_stack_pop();
                             void func_switch_to(u8 sta, u16 switch_mode);
 //                            func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
                             func_cb.sta = FUNC_SPORT;
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
                         }
                         else
                         {
@@ -3659,7 +3663,9 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
     {
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);      //运动列表
 //        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
         func_cb.sta = FUNC_SPORT;
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
     }
     else
     {
@@ -3993,13 +3999,13 @@ void uteModuleSportSedentaryMsg(void)
 {
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
     // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SEDENTARY_REMIND_ID);           //久坐提醒界面
+//    if(!uteModuleHeartIsWear())
+//    {
+//        return;
+//    }
     sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
     sys_cb.remind_tag = true;
-    if(!uteModuleHeartIsWear())
-    {
-        return;
-    }
-    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);
+    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
 }
 /**
 *@brief    从未佩戴到佩戴切换

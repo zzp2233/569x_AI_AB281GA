@@ -7,6 +7,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+
 //组件ID
 enum
 {
@@ -39,7 +41,7 @@ compo_form_t *func_flashlight_form_create(void)
     compo_picturebox_set_visible(picbox, true);
     compo_setid(picbox,COMPO_ID_PIC);
 
-  //创建文本
+    //创建文本
     compo_textbox_t *txt_idle = compo_textbox_create(frm, strlen(i18n[STR_CLICK_OPEN]));
     compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
     compo_textbox_set_location(txt_idle, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/1.55,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_idle->txt).hei);
@@ -167,3 +169,5 @@ void func_flashlight(void)
     }
     func_flashlight_exit();
 }
+
+#endif

@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+
 #define CONTROL_Y  8
 
 //血氧检测状态
@@ -270,3 +272,5 @@ void func_blood_oxygen(void)
     }
     func_blood_oxygen_exit();
 }
+
+#endif

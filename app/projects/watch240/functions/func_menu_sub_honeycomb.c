@@ -63,26 +63,47 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
 {
 
     {UI_BUF_I330001_THEME_CLOCK_CLOCK_BG_BIN,                  FUNC_CLOCK},//
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {UI_BUF_I330001_THEME_1_HEART_BIN,                FUNC_HEARTRATE},
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {UI_BUF_I330001_THEME_1_ACTIVITY_BIN,                  FUNC_ACTIVITY},
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {UI_BUF_I330001_THEME_1_SPO2_BIN,              FUNC_BLOOD_OXYGEN},
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     //{UI_BUF_ICON_PRESSURE_BIN,                  FUNC_PRESSURE},//压力
 //    {UI_BUF_ICON_BLOODSUGAR_BIN,                FUNC_BLOODSUGAR},
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {UI_BUF_I330001_THEME_1_BREATHE_BIN,                   FUNC_BREATHE},
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
     {UI_BUF_I330001_THEME_1_MUSIC_BIN,                     FUNC_BT},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {UI_BUF_I330001_THEME_1_MESSAGE_BIN,                   FUNC_MESSAGE},
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
 
     {UI_BUF_I330001_THEME_1_CALL_BIN,                      FUNC_CALL},
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
     {UI_BUF_I330001_THEME_1_THEME_BIN,                      FUNC_STYLE},
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     {UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     {UI_BUF_I330001_THEME_1_FINDPHONE_BIN,                 FUNC_FINDPHONE},
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
     {UI_BUF_I330001_THEME_1_GAME_BIN,                      FUNC_GAME},
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
     ////{UI_BUF_ICON_ALTITUDE_BIN,                  FUNC_ALTITUDE},
-
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {UI_BUF_I330001_THEME_1_ALARM_BIN,               FUNC_ALARM_CLOCK},
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
     {UI_BUF_I330001_THEME_1_RETRY_BIN,           FUNC_RSTFY},
     {UI_BUF_I330001_THEME_1_LANUAGE_BIN,                  FUNC_LANGUAGE},
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
     {UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
+#endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
 //    {UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
 
 
@@ -92,12 +113,19 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
     {UI_BUF_I330001_THEME_1_CALENDAR_BIN,                  FUNC_CALENDAER},
     {UI_BUF_I330001_THEME_1_QR_BIN,                      FUNC_SCAN},
     {UI_BUF_I330001_THEME_1_SETTINGS_BIN,                   FUNC_SETTING},
-
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {UI_BUF_I330001_THEME_1_SLEEP_BIN,                     FUNC_SLEEP},
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
 ////    {UI_BUF_I330001_THEME_1_SOUND_BIN,                    FUNC_SET_SUB_SAV},
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {UI_BUF_I330001_THEME_1_SOPRT_BIN,                     FUNC_SPORT},
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {UI_BUF_I330001_THEME_1_STOPWATCH_BIN,                 FUNC_STOPWATCH},
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {UI_BUF_I330001_THEME_1_PHOTO_BIN,                    FUNC_CAMERA},
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {UI_BUF_I330001_THEME_1_TIMER_BIN,                     FUNC_TIMER},
 #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
@@ -105,8 +133,12 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {UI_BUF_I330001_THEME_1_CONTACTS_BIN,              FUNC_ADDRESS_BOOK},
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {UI_BUF_I330001_THEME_1_VIOCE_BIN,                     FUNC_VOICE},
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I330001_THEME_1_WEATHER_BIN,                   FUNC_WEATHER},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 //    {UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},
     ////{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
 };
@@ -246,12 +278,12 @@ static void func_menu_sub_honeycomb_switch_to_clock(void)
     widget_icon_t *icon = compo_iconlist_select_byidx(iconlist, 0);
     rect_t rect = widget_get_location(icon);
     u8 func_sta = FUNC_CLOCK;
-    int switch_mode = FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO;
+//    int switch_mode = FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO;
     compo_form_t *frm = func_create_form(func_sta);
-    if (rect.wid < 10)
-    {
-        switch_mode = FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO;
-    }
+//    if (rect.wid < 10)
+//    {
+    int switch_mode = FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO;
+//    }
     func_switching(switch_mode, icon);
     compo_form_destroy(frm);
     func_cb.sta = func_sta;
@@ -578,6 +610,7 @@ static void func_menu_sub_honeycomb_normal_message(size_msg_t msg)
             break;
 
         case KU_DELAY_BACK:
+            printf("1111111111111111111111111\n");
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
                 func_menu_sub_honeycomb_switch_to_clock();      //返回时钟表盘界面

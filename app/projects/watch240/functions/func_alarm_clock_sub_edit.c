@@ -67,10 +67,12 @@ static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
     return hour12;
 }
 
-typedef struct ui_handle_t_ {
+typedef struct ui_handle_t_
+{
 
     ///删除按钮
-    struct btn_t {
+    struct btn_t
+    {
         u16 id;
         u16 id_click;
         s16 x,y;
@@ -80,7 +82,8 @@ typedef struct ui_handle_t_ {
     } del_btn;
 
     ///删除按钮文本
-    struct btn_txt_t {
+    struct btn_txt_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -89,12 +92,14 @@ typedef struct ui_handle_t_ {
     } del_btn_txt;
 
     ///时间设置卡片
-    struct card_time_t {
+    struct card_time_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
 
-        struct card_rect_t {
+        struct card_rect_t
+        {
             u8 idx;
             s16 x,y;
             u16 w,h;
@@ -108,7 +113,8 @@ typedef struct ui_handle_t_ {
 //            u16 res;
 //        } icon[0];
 
-        struct card_text_t {
+        struct card_text_t
+        {
             u8 idx;
             s16 x,y;
             u16 w,h;
@@ -122,7 +128,8 @@ typedef struct ui_handle_t_ {
     } card_time;
 
     ///日期设置
-    struct card_day_t {
+    struct card_day_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -160,7 +167,8 @@ enum
     COMPO_ID_TEXT_BTN_DEL,W
 };
 
-static const ui_handle_t ui_handle = {
+static const ui_handle_t ui_handle =
+{
     ///删除按钮
     .del_btn = {
         .id     = COMPO_ID_BTN_DEL,
@@ -301,7 +309,8 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 {
 
     int buf_num=0;
-    int str_week_buf[7]={
+    int str_week_buf[7]=
+    {
         STR_MONDAY, // 周一
         STR_TUESDAY, // 周二
         STR_WEDNESDAY, // 周三
@@ -342,20 +351,22 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 
     //时间卡片
     compo_cardbox_t* card_time = compo_cardbox_create(frm,
-                                                      sizeof(ui_handle.card_time.rect)/sizeof(ui_handle.card_time.rect[0]),
-                                                      0,
-                                                      sizeof(ui_handle.card_time.text)/sizeof(ui_handle.card_time.text[0]),
-                                                      ui_handle.card_time.w, ui_handle.card_time.h);
+                                 sizeof(ui_handle.card_time.rect)/sizeof(ui_handle.card_time.rect[0]),
+                                 0,
+                                 sizeof(ui_handle.card_time.text)/sizeof(ui_handle.card_time.text[0]),
+                                 ui_handle.card_time.w, ui_handle.card_time.h);
     compo_cardbox_set_visible(card_time, true);
     compo_cardbox_set_location(card_time, ui_handle.card_time.x, ui_handle.card_time.y, ui_handle.card_time.w, ui_handle.card_time.h);
     compo_setid(card_time, ui_handle.card_time.id);
-    for (u8 i=0; i<sizeof(ui_handle.card_time.rect)/sizeof(ui_handle.card_time.rect[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.card_time.rect)/sizeof(ui_handle.card_time.rect[0]); i++)
+    {
         compo_cardbox_rect_set_location(card_time, ui_handle.card_time.rect[i].idx, ui_handle.card_time.rect[i].x, ui_handle.card_time.rect[i].y,
                                         ui_handle.card_time.rect[i].w, ui_handle.card_time.rect[i].h, ui_handle.card_time.rect[i].r);
         compo_cardbox_rect_set_color(card_time, ui_handle.card_time.rect[i].idx, make_color(41, 41, 41));
     }
 
-    for (u8 i=0; i<sizeof(ui_handle.card_time.text)/sizeof(ui_handle.card_time.text[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.card_time.text)/sizeof(ui_handle.card_time.text[0]); i++)
+    {
         compo_cardbox_text_set_font(card_time, ui_handle.card_time.text[i].idx, ui_handle.card_time.text[i].res);
         widget_text_set_ellipsis(card_time->text[ui_handle.card_time.text[i].idx], false);
         compo_cardbox_text_set_align_center(card_time, ui_handle.card_time.text[i].idx, ui_handle.card_time.text[i].center);
@@ -373,39 +384,51 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         char aclock_str[20] = {0};
         memset(aclock_str, '\0', sizeof(aclock_str));
         sprintf(aclock_str, "%02d:%02d", hour, min);
-        if (ui_handle.card_time.text[i].str_id == STR_AM && ui_handle.card_time.text[i].rev == STR_PM && ui_handle.card_time.text[i].idx == 2) {
+        if (ui_handle.card_time.text[i].str_id == STR_AM && ui_handle.card_time.text[i].rev == STR_PM && ui_handle.card_time.text[i].idx == 2)
+        {
 
-            if(am_pm == 1) {    //AM
+            if(am_pm == 1)      //AM
+            {
                 compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, i18n[ui_handle.card_time.text[i].str_id]);
-            } else if (am_pm == 2) {
+            }
+            else if (am_pm == 2)
+            {
                 compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, i18n[ui_handle.card_time.text[i].rev]);
-            } else {
+            }
+            else
+            {
 //                compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, i18n[ui_handle.card_time.text[i].rev]);
             }
-        } else if (ui_handle.card_time.text[i].str_id == STR_NULL && ui_handle.card_time.text[i].idx == 0) {
-                compo_cardbox_text_set_font(card_time, ui_handle.card_time.text[i].idx, UI_BUF_0FONT_FONT_NUM_28_BIN);
-                compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, aclock_str);
-        } else if (ui_handle.card_time.text[i].str_id != STR_NULL && ui_handle.card_time.text[i].idx == 1) {
+        }
+        else if (ui_handle.card_time.text[i].str_id == STR_NULL && ui_handle.card_time.text[i].idx == 0)
+        {
+            compo_cardbox_text_set_font(card_time, ui_handle.card_time.text[i].idx, UI_BUF_0FONT_FONT_NUM_28_BIN);
+            compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, aclock_str);
+        }
+        else if (ui_handle.card_time.text[i].str_id != STR_NULL && ui_handle.card_time.text[i].idx == 1)
+        {
             compo_cardbox_text_set(card_time, ui_handle.card_time.text[i].idx, i18n[ui_handle.card_time.text[i].str_id]);
         }
     }
 
     //日期卡片
     compo_cardbox_t* card_day = compo_cardbox_create(frm,
-                                                      sizeof(ui_handle.card_day.rect)/sizeof(ui_handle.card_day.rect[0]),
-                                                      0,
-                                                      sizeof(ui_handle.card_day.text)/sizeof(ui_handle.card_day.text[0]),
-                                                      ui_handle.card_day.w, ui_handle.card_day.h);
+                                sizeof(ui_handle.card_day.rect)/sizeof(ui_handle.card_day.rect[0]),
+                                0,
+                                sizeof(ui_handle.card_day.text)/sizeof(ui_handle.card_day.text[0]),
+                                ui_handle.card_day.w, ui_handle.card_day.h);
     compo_cardbox_set_visible(card_day, true);
     compo_cardbox_set_location(card_day, ui_handle.card_day.x, ui_handle.card_day.y, ui_handle.card_day.w, ui_handle.card_day.h);
     compo_setid(card_day, ui_handle.card_day.id);
-    for (u8 i=0; i<sizeof(ui_handle.card_day.rect)/sizeof(ui_handle.card_day.rect[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.card_day.rect)/sizeof(ui_handle.card_day.rect[0]); i++)
+    {
         compo_cardbox_rect_set_location(card_day, ui_handle.card_day.rect[i].idx, ui_handle.card_day.rect[i].x, ui_handle.card_day.rect[i].y,
                                         ui_handle.card_day.rect[i].w, ui_handle.card_day.rect[i].h, ui_handle.card_day.rect[i].r);
         compo_cardbox_rect_set_color(card_day, ui_handle.card_day.rect[i].idx, make_color(41, 41, 41));
     }
 
-    for (u8 i=0; i<sizeof(ui_handle.card_day.text)/sizeof(ui_handle.card_day.text[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.card_day.text)/sizeof(ui_handle.card_day.text[0]); i++)
+    {
         compo_cardbox_text_set_font(card_day, ui_handle.card_day.text[i].idx, ui_handle.card_day.text[i].res);
         widget_text_set_ellipsis(card_day->text[ui_handle.card_day.text[i].idx], false);
         compo_cardbox_text_set_align_center(card_day, ui_handle.card_day.text[i].idx, ui_handle.card_day.text[i].center);
@@ -433,7 +456,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
                 if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(j))
                 {
                     snprintf(string_handle, sizeof(string_handle),i18n[str_week_buf[j]]);
-                    for(int k=0;k<strlen(i18n[str_week_buf[j]]);k++)
+                    for(int k=0; k<strlen(i18n[str_week_buf[j]]); k++)
                     {
                         str_buff[buf_num] = string_handle[k];
                         buf_num++;
@@ -445,9 +468,12 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 
         }
 
-        if (ui_handle.card_day.text[i].idx == 0) {      //周 1 2 3 4 5 6 7
+        if (ui_handle.card_day.text[i].idx == 0)        //周 1 2 3 4 5 6 7
+        {
             compo_cardbox_text_set(card_day, ui_handle.card_day.text[i].idx, str_buff);
-        } else if (ui_handle.card_day.text[i].idx == 1) {  //重复
+        }
+        else if (ui_handle.card_day.text[i].idx == 1)      //重复
+        {
             compo_cardbox_text_set(card_day, ui_handle.card_day.text[i].idx, i18n[ui_handle.card_day.text[i].str_id]);
         }
     }
@@ -511,7 +537,9 @@ static void func_alarm_clock_sub_edit_card_click(void)
     {
         case COMPO_ID_BTN_DEL:
             ALARM_DELETE(sys_cb.alarm_edit_idx);
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
             func_cb.sta = FUNC_ALARM_CLOCK;
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
             break;
 
 //        case COMPO_ID_BTN_SET:
@@ -522,7 +550,8 @@ static void func_alarm_clock_sub_edit_card_click(void)
 //            func_cb.sta = FUNC_ALARM_CLOCK_SUB_REPEAT;
 //            break;
 
-        default: {
+        default:
+        {
             point_t pt = ctp_get_sxy();
             u16 compo_id = func_alarm_clcok_sub_edit_card_get_btn_id(pt);
             if (compo_id <= 0 || compo_id > CARD_ID_END-1)
@@ -543,7 +572,8 @@ static void func_alarm_clock_sub_edit_card_click(void)
                     func_cb.sta = FUNC_ALARM_CLOCK_SUB_REPEAT;
                 }
             }
-        } break;
+        }
+        break;
     }
 
     func_alarm_clock_sub_edit_button_release_handle();

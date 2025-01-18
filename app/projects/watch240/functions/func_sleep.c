@@ -10,6 +10,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+
 #define FINT_HEIGHT 24
 #define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
 #define GUI_PAGE_BODY_HEIGHT            (GUI_SCREEN_HEIGHT - GUI_PAGE_HEAD_HEIGHT)
@@ -471,3 +473,5 @@ void func_sleep(void)
     }
     func_sleep_exit();
 }
+
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT

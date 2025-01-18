@@ -3,6 +3,8 @@
 #include "ute_module_systemtime.h"
 #include "ute_language_common.h"
 
+#if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -24,33 +26,33 @@ typedef struct f_language_list_t_
 
 static const compo_listbox_item_t tbl_language_list[] =
 {
-    #if SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT
+#if SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT
     {STR_LANGUAGE_CN,   .vidx = CHINESE_LANGUAGE_ID},
-    #endif
-    #if SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT
+#endif
+#if SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT
     {STR_LANGUAGE_ENG,  .vidx = ENGLISH_LANGUAGE_ID},
-    #endif
-    #if SCREEN_TITLE_MULTIPLE_FRENCH_LANGUAGE_SUPPORT
+#endif
+#if SCREEN_TITLE_MULTIPLE_FRENCH_LANGUAGE_SUPPORT
     {STR_LANGUAGE_FN,   .vidx = FRENCH_LANGUAGE_ID},
-    #endif
-    #if SCREEN_TITLE_MULTIPLE_RUSSIAN_LANGUAGE_SUPPORT
+#endif
+#if SCREEN_TITLE_MULTIPLE_RUSSIAN_LANGUAGE_SUPPORT
     {STR_LANGUAGE_RU,   .vidx = RUSSIAN_LANGUAGE_ID},
-    #endif
-    #if SCREEN_TITLE_MULTIPLE_JAPANESE_LANGUAGE_SUPPORT
+#endif
+#if SCREEN_TITLE_MULTIPLE_JAPANESE_LANGUAGE_SUPPORT
     {STR_LANGUAGE_JP,   .vidx = JAPANESE_LANGUAGE_ID},
-    #endif
-    #if SCREEN_TITLE_MULTIPLE_ITALIAN_LANGUAGE_SUPPORT
+#endif
+#if SCREEN_TITLE_MULTIPLE_ITALIAN_LANGUAGE_SUPPORT
     {STR_ITALY,   .vidx = ITALIAN_LANGUAGE_ID},//意大利
-    #endif
-    #if SCREEN_TITLE_MULTIPLE_GERMAN_LANGUAGE_SUPPORT
+#endif
+#if SCREEN_TITLE_MULTIPLE_GERMAN_LANGUAGE_SUPPORT
     {STR_GERMAN,   .vidx = GERMAN_LANGUAGE_ID},//德文
-    #endif
-    #if SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT
+#endif
+#if SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT
     {STR_ARABIC,   .vidx = ARABIC_LANGUAGE_ID},//阿拉伯文
-    #endif
-    #if SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT
+#endif
+#if SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT
     {STR_TRADITIONAL_CHINESE,  .vidx = TRADITIONAL_CHINESE_ID},
-    #endif
+#endif
 };
 u8 func_sel_language_bit(uint n)
 {
@@ -63,6 +65,7 @@ u8 func_sel_language_bit(uint n)
     return false;
 }
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //语言设置页面
 compo_form_t *func_set_sub_language_form_create(void)
 {
@@ -110,6 +113,7 @@ void func_set_sub_language_list_icon_click(void)
     compo_listbox_update(listbox);
     uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //语言设置功能事件处理
 static void func_set_sub_language_list_process(void)
@@ -194,3 +198,5 @@ void func_set_sub_language(void)
     }
     func_set_sub_language_exit();
 }
+
+#endif

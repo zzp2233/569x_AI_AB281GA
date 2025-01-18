@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
+
 #define SWITCH_TIME      2000
 
 enum
@@ -33,7 +35,7 @@ typedef struct f_up_watch_dial_t_
 } f_up_watch_dial_t;
 
 
-
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 compo_form_t *func_up_watch_dial_form_create(void)
 {
     compo_form_t *frm = compo_form_create(true);
@@ -117,6 +119,7 @@ static void func_up_watch_dial_disp(void)
         }
     }
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 
 //刷新显示
@@ -155,3 +158,4 @@ void func_up_watch_dial(void)
     }
     func_up_watch_dial_exit();
 }
+#endif

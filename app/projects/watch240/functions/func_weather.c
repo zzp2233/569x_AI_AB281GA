@@ -9,6 +9,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+
 #define WHEATHER_CNT                         ((int)((sizeof(weather_list) / sizeof(weather_list[0]))))
 
 typedef struct f_weather_t_
@@ -482,3 +484,5 @@ void func_weather(void)
     }
     func_weather_exit();
 }
+
+#endif

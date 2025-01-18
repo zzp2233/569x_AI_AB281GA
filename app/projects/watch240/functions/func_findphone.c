@@ -9,6 +9,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+
 #define FINDPHONE_POS_Y_MAX        170// 240
 #define FINDPHONE_POS_Y_MIN        108// 140
 
@@ -26,8 +28,6 @@ enum
 };
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建查找手机窗体
 compo_form_t *func_findphone_form_create(void)
@@ -75,10 +75,12 @@ compo_form_t *func_findphone_form_create(void)
 
     return frm;
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //查找手机功能事件处理
 static void func_findphone_process(void)
 {
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_picturebox_t *pic = compo_getobj_byid(COMPO_ID_PIC_FIND_BG);
     compo_button_t * btn = compo_getobj_byid(COMPO_ID_BUTTON_FIND);
     compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_FIND);
@@ -122,7 +124,7 @@ static void func_findphone_process(void)
             msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
         }
     }
-
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
 
@@ -234,3 +236,5 @@ void func_findphone(void)
     }
     func_findphone_exit();
 }
+
+#endif

@@ -746,7 +746,9 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
         uteModuleNotifyAncsClearQueueRestart();
 #endif
         uteModuleSportSetTakePictureEnable(true);
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
         uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
     }
     else
     {
@@ -1086,7 +1088,9 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
                 uint8_t response[4];
                 if (receive[3] == 0x01)
                 {
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
                     uteModuleFindPhoneSetStatus(FIND_PHONE_RING);
+#endif // UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
                 }
                 else if (receive[3] == 0x00)
                 {

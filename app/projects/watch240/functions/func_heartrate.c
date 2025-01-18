@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+
 #define FINT_HEIGHT 24*2+8
 
 #define FUNC_HR_SIMULATE_DATA_EN  0
@@ -334,3 +336,5 @@ void func_heartrate(void)
     }
     func_heartrate_exit();
 }
+
+#endif

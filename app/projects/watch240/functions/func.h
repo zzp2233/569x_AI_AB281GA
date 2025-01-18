@@ -28,50 +28,80 @@ enum
     FUNC_CLOCK_PREVIEW,                 //时钟表盘预览
     FUNC_SIDEBAR,                       //表盘右滑
     FUNC_CARD,                          //表盘上拉
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     FUNC_HEARTRATE,                     //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
     FUNC_BT,                            //蓝牙播放器(控制手机音乐)
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
     FUNC_COMPO_SELECT,                  //组件选择
     FUNC_COMPO_SELECT_SUB,              //组件选择子界面
     FUNC_BT_RING,                       //来电界面
     FUNC_BT_CALL,                       //通话界面
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     FUNC_ALARM_CLOCK,                   //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
     FUNC_ALARM_CLOCK_SUB_SET,           //闹钟--设置
     FUNC_ALARM_CLOCK_SUB_REPEAT,        //闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑
     FUNC_ALARM_CLOCK_SUB_POP,           //闹钟--弹出
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     FUNC_BLOOD_OXYGEN,                  //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     FUNC_PRESSURE,                      //压力
     FUNC_PRESSURE_EXPLAIN,              //压力说明
     FUNC_LONG_PRESS,                    //关机 重启 SOS
     FUNC_BLOODSUGAR,                    //血糖
     FUNC_BLOOD_PRESSURE,                //血压
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     FUNC_BREATHE,                       //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
     FUNC_BREATHE_SUB_MODE,              //呼吸--模式设置
     FUNC_BREATHE_SUB_TIME,              //呼吸--时间设置
     FUNC_CALCULATOR,                    //计算器
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     FUNC_CAMERA,                        //相机
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
     FUNC_LIGHT,                         //亮度调节
+#endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
     FUNC_TIMER,                         //定时器
 #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     FUNC_SLEEP,                         //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     FUNC_STOPWATCH,                     //秒表
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     FUNC_STOPWATCH_SUB_RECORD,          //秒表--秒表记录
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     FUNC_WEATHER,                       //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
     FUNC_GAME,                          //游戏
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
     FUNC_STYLE,                         //菜单风格
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     FUNC_ALTITUDE,                      //海拔
     FUNC_MAP,                           //地图
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     FUNC_MESSAGE,                       //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     FUNC_SCAN,                          //扫一扫
     FUNC_BREATHE_FINISH,
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
     FUNC_VOICE,                         //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 //    FUNC_COMPASS,                       //指南针
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     FUNC_ADDRESS_BOOK,                  //电话簿
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     FUNC_CALL_SUB_LINKMAN = FUNC_ADDRESS_BOOK,
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
     FUNC_SPORT,                         //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
     FUNC_SPORT_CONFIG,                  //运动配置
     FUNC_SPORT_SUB_RUN,                 //运动--室内跑步
     FUNC_SPORT_SWITCH,                  //运动开启
@@ -84,16 +114,22 @@ enum
     FUNC_FINDPHONE,                     //寻找手机
     FUNC_CALENDAER,                     //日历
 //    FUNC_SET_SUB_SAV,                        //音量
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     FUNC_ACTIVITY,                      //活动记录
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     FUNC_FLASHLIGHT,                    //手电筒
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     FUNC_SETTING,                       //设置
     FUNC_SET_SUB_DOUSING,               //设置--熄屏
     FUNC_SET_SUB_WRIST,                 //设置--抬腕
     FUNC_SET_SUB_DISTURD,               //设置--勿扰
     FUNC_DISTURD_SUB_SET,               //勿扰--时间设置
     FUNC_SET_SUB_SAV,                   //设置--声音与振动
+#if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     FUNC_SET_SUB_LANGUAGE,              //设置--语言
     FUNC_LANGUAGE = FUNC_SET_SUB_LANGUAGE,
+#endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     FUNC_POWER_ON_LANGUAGE,
     FUNC_POWER_ON_SCAN,
 //    FUNC_SET_SUB_TIME,                  //设置--时间
@@ -105,8 +141,10 @@ enum
     FUNC_SET_SUB_SOS,                   //SOS
     FUNC_SET_SUB_RESTART,               //设置--重启
     FUNC_RESTART = FUNC_SET_SUB_RESTART,//重启
+#if UTE_MODULE_SCREENS_RESFY_SUPPORT
     FUNC_SET_SUB_RSTFY,                 //设置--恢复出厂
     FUNC_RSTFY = FUNC_SET_SUB_RSTFY,
+#endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
     FUNC_SET_SUB_OFF,                   //设置--关机
     FUNC_OFF = FUNC_SET_SUB_OFF,        //关机
     FUNC_EMPTY,                         //空白界面
@@ -153,7 +191,9 @@ enum
     FUNC_AGEING,         ///*老化测试*/
     FUNC_AUDIO,         ///*音频测试*/
     FUNC_ONLINE_FACTORY_TEST, /*在线工厂测试*/
+#if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
     FUNC_UP_WATCH_DIAL,
+#endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 
     FUNC_MAX_NUM,           //用于计数
 };

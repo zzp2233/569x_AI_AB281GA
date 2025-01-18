@@ -374,7 +374,9 @@ static void func_sport_sort_card_click(void)
         else if (compo_id == COMPO_ID_CARD_4)           //更多运动
         {
             sys_cb.sport_idx = 0;
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
             func_cb.sta = FUNC_SPORT;
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
         }
     }
 }

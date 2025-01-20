@@ -725,7 +725,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_FIRSTORDER_FIXED_CALL_BIN,
                 .res_click = 0,
                 .res_switch = 0,
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
                 .func_sta = FUNC_CALL,
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
             },
         },
     },
@@ -807,7 +809,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_THEME_1_CALL_BIN,
                 .res_click = 3,
                 .res_switch = 3,
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
                 .func_sta = FUNC_CALL,
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
             },
         },
     },

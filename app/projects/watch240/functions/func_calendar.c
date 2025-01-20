@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_systemtime.h"
 
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 
 typedef struct f_calendar_t_
 {
@@ -181,6 +182,7 @@ static void func_calender_refresh(uint16_t year, uint8_t month, uint8_t today_da
     }
 }
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建日历主界面
 compo_form_t *func_calender_form_create(void)
 {
@@ -268,6 +270,7 @@ compo_form_t *func_calender_form_create(void)
 
     return frm;
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //切换日期并刷新
 static void func_calendar_date_update(bool next)
@@ -400,3 +403,4 @@ void func_calendar(void)
 }
 
 
+#endif

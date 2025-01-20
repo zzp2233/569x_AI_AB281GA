@@ -83,8 +83,9 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {UI_BUF_I330001_THEME_1_MESSAGE_BIN,                   FUNC_MESSAGE},
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
-
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     {UI_BUF_I330001_THEME_1_CALL_BIN,                      FUNC_CALL},
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     {UI_BUF_I330001_THEME_1_THEME_BIN,                      FUNC_STYLE},
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
@@ -106,13 +107,20 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
 //    {UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
 
-
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {UI_BUF_I330001_THEME_1_CALCULATOR_BIN,                FUNC_CALCULATOR},
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 //    {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
     {UI_BUF_I330001_THEME_1_BOOT_BIN,                   FUNC_RESTART},
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {UI_BUF_I330001_THEME_1_CALENDAR_BIN,                  FUNC_CALENDAER},
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     {UI_BUF_I330001_THEME_1_QR_BIN,                      FUNC_SCAN},
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {UI_BUF_I330001_THEME_1_SETTINGS_BIN,                   FUNC_SETTING},
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {UI_BUF_I330001_THEME_1_SLEEP_BIN,                     FUNC_SLEEP},
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
@@ -610,7 +618,7 @@ static void func_menu_sub_honeycomb_normal_message(size_msg_t msg)
             break;
 
         case KU_DELAY_BACK:
-            printf("1111111111111111111111111\n");
+//            printf("1111111111111111111111111\n");
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
                 func_menu_sub_honeycomb_switch_to_clock();      //返回时钟表盘界面

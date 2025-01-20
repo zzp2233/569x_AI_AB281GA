@@ -28,7 +28,7 @@ typedef struct f_clock_t_
     compo_form_t *sub_frm;
     void *sub_cb;
     compo_shape_t *masklayer;
-    int  cube_rp ;
+    volatile int  cube_rp ;
     int  cube_ra ;
     bool cube_touch;
     uint32_t tick;

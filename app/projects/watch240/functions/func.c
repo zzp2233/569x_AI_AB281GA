@@ -49,7 +49,9 @@ extern void func_breathe(void);
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
 extern void func_breathe_sub_mode(void);
 extern void func_breathe_sub_time(void);
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 extern void func_calculator(void);
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
 extern void func_camera(void);
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -76,7 +78,9 @@ extern void func_sport(void);
 extern void func_sport_sub_run(void);
 extern void func_sport_sort(void);
 extern void func_calendar(void);
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
 extern void func_call(void);
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
 extern void func_call_sub_record(void);
 extern void func_call_sub_dial(void);
 extern void func_call_sort(void);
@@ -90,7 +94,9 @@ extern void func_findphone(void);
 extern void func_altitude(void);
 //extern void func_map(void);
 extern void func_message_info(void);
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
 extern void func_scan(void);
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
 extern void func_voice(void);
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
@@ -112,7 +118,9 @@ extern void func_set_sub_wrist(void);
 extern void func_password_sub_disp(void);
 extern void func_password_sub_select(void);
 extern void func_set_sub_about(void);
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 extern void func_set_sub_restart(void);
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 #if UTE_MODULE_SCREENS_RESFY_SUPPORT
 extern void func_set_sub_rstfy(void);
 #endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
@@ -333,7 +341,9 @@ const func_t tbl_func_create[] =
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode_form_create},
     {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time_form_create},
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {FUNC_CALCULATOR,                   func_calculator_form_create},
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {FUNC_CAMERA,                       func_camera_form_create},
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -370,7 +380,9 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {FUNC_MESSAGE,                      func_message_form_create},
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     {FUNC_SCAN,                         func_scan_form_create},
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {FUNC_VOICE,                        func_voice_form_create},
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
@@ -378,12 +390,18 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {FUNC_ADDRESS_BOOK,                 func_address_book_form_create},
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_CALL,                         func_call_form_create},
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record_form_create},
     {FUNC_CALL_SUB_DIAL,                func_call_sub_dial_form_create},
     {FUNC_CALL_SORT,                    func_call_sort_form_create},
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {FUNC_SETTING,                      func_set_sub_list_form_create},
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {FUNC_CALENDAER,                    func_calender_form_create},
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 ////    {FUNC_SET_SUB_SAV,                       func_volume_form_create},
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {FUNC_ACTIVITY,                     func_activity_form_create},
@@ -409,10 +427,12 @@ const func_t tbl_func_create[] =
     {FUNC_SET_SUB_SAV,                  func_set_sub_sav_form_create},
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about_form_create},
 //    {FUNC_SET_SUB_4G,                   func_set_sub_4g_form_create},
-#if UTE_MODULE_SCREENS_RESFY_SUPPORT
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
     {FUNC_SET_SUB_RESTART,              func_set_sub_restart_form_create},
-#endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
+#if UTE_MODULE_SCREENS_RESFY_SUPPORT
     {FUNC_SET_SUB_RSTFY,                func_set_sub_rstfy_form_create},
+#endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
     {FUNC_SET_SUB_OFF,                  func_set_sub_off_form_create},
     {FUNC_CHARGE,                       func_charge_form_create},
     {FUNC_DEBUG_INFO,                   func_debug_info_form_create},
@@ -491,7 +511,9 @@ const func_t tbl_func_entry[] =
     {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time},         //呼吸--时间设置
     {FUNC_COMPO_SELECT,                 func_compo_select},             //组件选择
     {FUNC_COMPO_SELECT_SUB,             func_compo_select_sub},         //组件选择子界面
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {FUNC_CALCULATOR,                   func_calculator},               //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {FUNC_CAMERA,                       func_camera},                   //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -531,7 +553,9 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {FUNC_MESSAGE,                      func_message_info},             //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     {FUNC_SCAN,                         func_scan},                     //扫一扫
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {FUNC_VOICE,                        func_voice},                    //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
@@ -539,8 +563,12 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {FUNC_ADDRESS_BOOK,                 func_address_book},             //电话簿
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {FUNC_CALENDAER,                    func_calendar},                 //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_CALL,                         func_call},                     //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_CALL_SUB_RECORD,              func_call_sub_record},          //电话--最近通话
     {FUNC_CALL_SUB_DIAL,                func_call_sub_dial},            //电话--拨号
     {FUNC_CALL_SORT,                    func_call_sort},                //电话--一级界面
@@ -550,7 +578,9 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     {FUNC_FLASHLIGHT,                   func_flashlight},               //手电筒
 #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {FUNC_SETTING,                      func_set_sub_list},             //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
     {FUNC_SET_SUB_DOUSING,              func_set_sub_dousing},          //设置--熄屏
     {FUNC_SET_SUB_WRIST,                func_set_sub_wrist},            //设置--抬腕
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd},          //设置--勿扰
@@ -566,7 +596,9 @@ const func_t tbl_func_entry[] =
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select},      //设置--密码锁确认
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about},            //设置--关于
 //    {FUNC_SET_SUB_4G,                   func_set_sub_4g},               //设置--4G
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
     {FUNC_SET_SUB_RESTART,              func_set_sub_restart},          //设置--重启
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
 #if UTE_MODULE_SCREENS_RESFY_SUPPORT
     {FUNC_SET_SUB_RSTFY,                func_set_sub_rstfy},            //设置--恢复出厂
 #endif // UTE_MODULE_SCREENS_RESFY_SUPPORT

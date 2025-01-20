@@ -485,6 +485,7 @@ void func_bt_sub_process(void)
 
 void func_bt_process(void)
 {
+    printf("1111111111111111111111\n");
     func_bt_button_release_handle();
     func_process();
     func_bt_sub_process();

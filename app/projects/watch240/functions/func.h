@@ -58,7 +58,9 @@ enum
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
     FUNC_BREATHE_SUB_MODE,              //呼吸--模式设置
     FUNC_BREATHE_SUB_TIME,              //呼吸--时间设置
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     FUNC_CALCULATOR,                    //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     FUNC_CAMERA,                        //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -89,7 +91,9 @@ enum
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     FUNC_MESSAGE,                       //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     FUNC_SCAN,                          //扫一扫
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
     FUNC_BREATHE_FINISH,
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     FUNC_VOICE,                         //语音助手
@@ -107,12 +111,16 @@ enum
     FUNC_SPORT_SWITCH,                  //运动开启
     FUNC_SPORT_SORT,                    //运动边菜单
     FUNC_SPORT_FINISH,                  //运动结束
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     FUNC_CALL,                          //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
     FUNC_CALL_SUB_RECORD,               //电话-最近通话
     FUNC_CALL_SUB_DIAL,                 //电话-拨打电话
     FUNC_CALL_SORT,                     //通话-一级界面
     FUNC_FINDPHONE,                     //寻找手机
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     FUNC_CALENDAER,                     //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 //    FUNC_SET_SUB_SAV,                        //音量
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     FUNC_ACTIVITY,                      //活动记录
@@ -120,7 +128,9 @@ enum
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     FUNC_FLASHLIGHT,                    //手电筒
 #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     FUNC_SETTING,                       //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
     FUNC_SET_SUB_DOUSING,               //设置--熄屏
     FUNC_SET_SUB_WRIST,                 //设置--抬腕
     FUNC_SET_SUB_DISTURD,               //设置--勿扰
@@ -139,8 +149,10 @@ enum
     FUNC_PASSWORD_SUB_SELECT,           //确认密码锁
     FUNC_SET_SUB_ABOUT,                 //设置--关于
     FUNC_SET_SUB_SOS,                   //SOS
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
     FUNC_SET_SUB_RESTART,               //设置--重启
     FUNC_RESTART = FUNC_SET_SUB_RESTART,//重启
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
 #if UTE_MODULE_SCREENS_RESFY_SUPPORT
     FUNC_SET_SUB_RSTFY,                 //设置--恢复出厂
     FUNC_RSTFY = FUNC_SET_SUB_RSTFY,

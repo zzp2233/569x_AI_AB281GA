@@ -135,23 +135,23 @@ typedef struct timer_btn_item_t_
 #define TIMER_BTN_ITEM_CNT  ((int)(sizeof(tbl_timer_btn_item) / sizeof(tbl_timer_btn_item[0])))
 static const timer_btn_item_t tbl_timer_btn_item[] =
 {
-    {"02",         COMPO_ID_SEC_1,      207,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING*2},
-    {"01",         COMPO_ID_SEC_2,      207,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING},
+    {"58",         COMPO_ID_SEC_1,      207,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING*2},
+    {"59",         COMPO_ID_SEC_2,      207,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING},
     {"00",         COMPO_ID_SEC_3,      207,                         GUI_SCREEN_CENTER_Y},
-    {"59",         COMPO_ID_SEC_4,      207,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING},
-    {"58",         COMPO_ID_SEC_5,      207,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING*2},
+    {"01",         COMPO_ID_SEC_4,      207,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING},
+    {"02",         COMPO_ID_SEC_5,      207,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING*2},
 
-    {"02",         COMPO_ID_MIN_1,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING*2},
-    {"01",         COMPO_ID_MIN_2,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING},
+    {"58",         COMPO_ID_MIN_1,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING*2},
+    {"59",         COMPO_ID_MIN_2,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING},
     {"00",         COMPO_ID_MIN_3,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y},
-    {"59",         COMPO_ID_MIN_4,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING},
-    {"58",         COMPO_ID_MIN_5,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING*2},
+    {"01",         COMPO_ID_MIN_4,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING},
+    {"02",         COMPO_ID_MIN_5,      GUI_SCREEN_CENTER_X,         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING*2},
 
-    {"02",         COMPO_ID_HOUR_1,      33,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING*2},
-    {"01",         COMPO_ID_HOUR_2,      33,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING},
+    {"22",         COMPO_ID_HOUR_1,      33,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING*2},
+    {"23",         COMPO_ID_HOUR_2,      33,                         GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING},
     {"00",         COMPO_ID_HOUR_3,      33,                         GUI_SCREEN_CENTER_Y},
-    {"23",         COMPO_ID_HOUR_4,      33,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING},
-    {"22",         COMPO_ID_HOUR_5,      33,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING*2},
+    {"01",         COMPO_ID_HOUR_4,      33,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING},
+    {"02",         COMPO_ID_HOUR_5,      33,                         GUI_SCREEN_CENTER_Y+TIME_SET_TXT_SPACING*2},
 };
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -159,8 +159,8 @@ static const timer_btn_item_t tbl_timer_btn_item[] =
 static void func_timer_setting_date_init(void)
 {
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
-    char time_setting[5]= {2,1,0,59,58};
-    char time_setting_hour[5]= {2,1,0,23,22};
+    char time_setting[5]= {58,59,0,01,02};
+    char time_setting_hour[5]= {22,23,0,01,02};
 
     for(int i=0; i<5; i++)
     {
@@ -635,7 +635,7 @@ static void func_timer_process(void)
                         case 3:
                             for(int i=0; i<5; i++)
                             {
-                                f_timer->set_time_buf[i] =60+f_timer->sec_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
+                                f_timer->set_time_buf[i] =60+f_timer->sec_buf[i]-(f_timer->old_y/TIME_SET_TXT_SPACING);
                                 f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%60;
 
                                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_SEC_1+i);
@@ -648,7 +648,7 @@ static void func_timer_process(void)
                         case 2:
                             for(int i=0; i<5; i++)
                             {
-                                f_timer->set_time_buf[i] =60+f_timer->min_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
+                                f_timer->set_time_buf[i] =60+f_timer->min_buf[i]-(f_timer->old_y/TIME_SET_TXT_SPACING);
                                 f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%60;
 
                                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_MIN_1+i);
@@ -661,7 +661,7 @@ static void func_timer_process(void)
                         case 1:
                             for(int i=0; i<5; i++)
                             {
-                                f_timer->set_time_buf[i] =24+f_timer->hour_buf[i]+(f_timer->old_y/TIME_SET_TXT_SPACING);
+                                f_timer->set_time_buf[i] =24+f_timer->hour_buf[i]-(f_timer->old_y/TIME_SET_TXT_SPACING);
                                 f_timer->set_time_buf[i] =f_timer->set_time_buf[i]%24;
 
                                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_HOUR_1+i);

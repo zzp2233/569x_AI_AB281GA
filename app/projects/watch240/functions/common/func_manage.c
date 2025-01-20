@@ -39,7 +39,9 @@ const static func_item_info_t func_item_tbl[] =
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {FUNC_BREATHE,                  UI_BUF_I330001_THEME_1_BREATHE_BIN,                    STR_BREATHE_TRAIN},               //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {FUNC_CALCULATOR,               UI_BUF_I330001_THEME_1_CALCULATOR_BIN,                 STR_CALCULATOR},            //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {FUNC_CAMERA,                   UI_BUF_I330001_THEME_1_PHOTO_BIN,                     STR_CAMERA},                //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -68,7 +70,9 @@ const static func_item_info_t func_item_tbl[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {FUNC_MESSAGE,                  UI_BUF_I330001_THEME_1_MESSAGE_BIN,                    STR_MESSAGE},               //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     {FUNC_SCAN,                     UI_BUF_I330001_THEME_1_QR_BIN,                       STR_QRCODE},                  //扫一扫
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {FUNC_VOICE,                    UI_BUF_I330001_THEME_1_VIOCE_BIN,                      STR_VOICE},                 //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
@@ -76,9 +80,13 @@ const static func_item_info_t func_item_tbl[] =
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {FUNC_SPORT,                    UI_BUF_I330001_THEME_1_SOPRT_BIN,                      STR_SPORTS},                //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_CALL,                     UI_BUF_I330001_THEME_1_CALL_BIN,                       STR_PHONE},                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
     {FUNC_FINDPHONE,                UI_BUF_I330001_THEME_1_FINDPHONE_BIN,                  STR_FIND_PHONE},            //寻找手机
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {FUNC_CALENDAER,                UI_BUF_I330001_THEME_1_CALENDAR_BIN,                   STR_CALENDAR},              //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {FUNC_SET_SUB_SAV,                   UI_BUF_I330001_THEME_1_SOUND_BIN,                     STR_VOL},                //音量
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {FUNC_ACTIVITY,                 UI_BUF_I330001_THEME_1_ACTIVITY_BIN,                   STR_EVREY_DAY_ACTIVITY},       //活动记录
@@ -86,7 +94,9 @@ const static func_item_info_t func_item_tbl[] =
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     {FUNC_FLASHLIGHT,               UI_BUF_I330001_THEME_1_FLASHLIGHT_BIN,                 STR_FLASHLIGHT},            //手电筒
 #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {FUNC_SETTING,                  UI_BUF_I330001_THEME_1_SETTINGS_BIN,                    STR_SETTING},               //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
     {FUNC_LANGUAGE,                 UI_BUF_I330001_THEME_1_LANUAGE_BIN,                   STR_SETTING_LANGUAGE},      //设置--语言
     {FUNC_RESTART,                  UI_BUF_I330001_THEME_1_BOOT_BIN,                    STR_SETTING_RESTART},       //重启
     {FUNC_RSTFY,                    UI_BUF_I330001_THEME_1_RETRY_BIN,            STR_SETTING_RSTFY},         //设置--恢复出厂
@@ -288,7 +298,9 @@ const static u8 latest_allowed_id[] =
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     FUNC_BREATHE,                       //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     FUNC_CALCULATOR,                    //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     FUNC_CAMERA,                        //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -315,7 +327,9 @@ const static u8 latest_allowed_id[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     FUNC_MESSAGE,                       //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     FUNC_SCAN,                          //扫一扫
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     FUNC_VOICE,                         //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
@@ -323,9 +337,13 @@ const static u8 latest_allowed_id[] =
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     FUNC_SPORT,                         //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     FUNC_CALL,                          //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
     FUNC_FINDPHONE,                     //寻找手机
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     FUNC_CALENDAER,                     //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     FUNC_SET_SUB_SAV,                        //音量
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     FUNC_ACTIVITY,                      //活动记录
@@ -333,7 +351,9 @@ const static u8 latest_allowed_id[] =
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     FUNC_FLASHLIGHT,                    //手电筒
 #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     FUNC_SETTING,                       //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
     FUNC_LANGUAGE,                      //设置--语言
     FUNC_RESTART,                       //重启
     FUNC_RSTFY,                         //设置--恢复出厂

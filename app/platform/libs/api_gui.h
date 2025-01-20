@@ -1,23 +1,24 @@
 #ifndef _API_GUI_H
 #define _API_GUI_H
 
-enum {
-    FONT_TYPE_NORMAL = 0,       	//完整字体，或拼接的第一个
-    FONT_TYPE_HALF_FOLLOW,      	//半型连体
-    FONT_TYPE_FOLLOW,           	//连体
-    FONT_TYPE_FOLLOW_EN,        	//英文连体,需要保留x_ofs
-    FONT_TYPE_PART,             	//偏旁
-    FONT_TYPE_PART_LEFT,        	//偏旁居左
-    FONT_TYPE_PART_MID,         	//偏旁居中
-    FONT_TYPE_PART_RIGHT,       	//偏旁居右
-    FONT_TYPE_PART_RIGHT_CROSS, 	//偏旁越过居右
-    FONT_TYPE_PART_HEAD,        	//头
+enum
+{
+    FONT_TYPE_NORMAL = 0,           //完整字体，或拼接的第一个
+    FONT_TYPE_HALF_FOLLOW,          //半型连体
+    FONT_TYPE_FOLLOW,               //连体
+    FONT_TYPE_FOLLOW_EN,            //英文连体,需要保留x_ofs
+    FONT_TYPE_PART,                 //偏旁
+    FONT_TYPE_PART_LEFT,            //偏旁居左
+    FONT_TYPE_PART_MID,             //偏旁居中
+    FONT_TYPE_PART_RIGHT,           //偏旁居右
+    FONT_TYPE_PART_RIGHT_CROSS,     //偏旁越过居右
+    FONT_TYPE_PART_HEAD,            //头
     FONT_TYPE_PART_HEAD_FOLLOW,
-    FONT_TYPE_PART_FOOT,        	//足
-    FONT_TYPE_PART_MID_UP,      	//偏旁原本位置抬高自身高度一半
+    FONT_TYPE_PART_FOOT,            //足
+    FONT_TYPE_PART_MID_UP,          //偏旁原本位置抬高自身高度一半
     FONT_TYPE_PART_FOLLOW_CENTER,   //连体并且高度居中
-    FONT_TYPE_PART_LEFT_UP,			//偏旁水平居左并且高度抬高自身高度一半
-    FONT_TYPE_PART_DOWN,      	    //偏旁原本位置降低自身高度一半
+    FONT_TYPE_PART_LEFT_UP,         //偏旁水平居左并且高度抬高自身高度一半
+    FONT_TYPE_PART_DOWN,            //偏旁原本位置降低自身高度一半
 };
 
 typedef struct
@@ -27,25 +28,29 @@ typedef struct
     u8 b;
 } color_t;
 
-typedef struct rect_t_ {
+typedef struct rect_t_
+{
     s16 x;
     s16 y;
     s16 wid;
     s16 hei;
 } rect_t;
 
-typedef struct point_t_ {
+typedef struct point_t_
+{
     s16 x;
     s16 y;
 } point_t;
 
-typedef struct area_t_ {
+typedef struct area_t_
+{
     s16 wid;
     s16 hei;
 } area_t;
 
 //球坐标
-typedef struct sph_t_ {
+typedef struct sph_t_
+{
     s16 r;
     s16 polar;
     s16 azimuth;
@@ -85,7 +90,8 @@ typedef void widget_bar_t;
 
 //=== GUI ===
 //GUI初始化参数
-typedef struct gui_init_param_t_ {
+typedef struct gui_init_param_t_
+{
     u16 screen_width;               //屏幕宽
     u16 screen_height;              //屏幕高
     u8 *element_buf;                //element与widget缓存
@@ -112,14 +118,15 @@ void gui_set_te_margin(u8 margin);                      //设置TE时隙
 void gui_widget_refresh(void);                          //刷新widget
 void os_gui_draw_w4_done(void);                         //等待当前帧刷完
 area_t gui_image_get_size(u32 res_addr);                //获取图像尺寸
-area_t widget_image_get_size(widget_image_t *img);		//根据控件获取图像尺寸
+area_t widget_image_get_size(widget_image_t *img);      //根据控件获取图像尺寸
 
-typedef enum WGT_CHART_TYPE_ {
+typedef enum WGT_CHART_TYPE_
+{
     CHART_TYPE_BAR,                     //直角柱形
     CHART_TYPE_BAR_ARC,                 //圆角柱形,上下都是圆角
     CHART_TYPE_BAR_ARC_U,               //圆角柱形上圆；下直角
     CHART_TYPE_BAR_ARC_D,               //圆角柱形上直角；下圆
-}WGT_CHART_TYPE;
+} WGT_CHART_TYPE;
 
 
 /**
@@ -317,7 +324,8 @@ void widget_page_update(void);
 
 //============= Widget Image ==============//
 
-enum {
+enum
+{
     ROT_MODE_NORMAL,        //普通旋转模式
     ROT_MODE_X,             //只旋转X (平行四边形, 2.5D效果)
 };
@@ -784,6 +792,13 @@ u16 widget_text_get_autoroll_circ_pixel(widget_text_t *txt);
 u8 widget_text_get_height(void);
 
 /**
+ * @brief 获取系统字高(最大值) 用于换行等高
+ * @param[in] 无
+ * @return 系统字库字体字高
+ **/
+u8 widget_text_get_max_height(void);
+
+/**
  * @brief 设置排版方向
  * @param[in] right_align:排版方向是否右对齐
  * @return 无
@@ -848,7 +863,8 @@ void widget_rect_set_radius(widget_rect_t *rect, u16 r);
 
 //============= Widget QRCode ==============//
 
-enum {
+enum
+{
     QRCODE_TYPE_2D,                 //二维码
     QRCODE_TYPE_HORIZONTAL,         //横向条形码
     QRCODE_TYPE_VERTICAL,           //竖向条形码

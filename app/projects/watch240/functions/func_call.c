@@ -7,6 +7,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+
 #define CALL_LIST_CNT                       ((int)(sizeof(tbl_call_list) / sizeof(tbl_call_list[0])))
 
 enum
@@ -26,6 +28,8 @@ static const compo_listbox_item_t tbl_call_list[] =
     {STR_CALL_RECENT,      UI_BUF_I330001_CALL_CALLRECORDS_BIN,             .func_sta = FUNC_CALL_SUB_RECORD},
     {STR_CALL_DIAL,        UI_BUF_I330001_CALL_DIALPAD_BIN,                 .func_sta = FUNC_CALL_SUB_DIAL},
 };
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //电话页面
 compo_form_t *func_call_form_create(void)
@@ -73,6 +77,7 @@ void func_call_icon_click(void)
         func_cb.sta = func_sta;
     }
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //电话功能消息处理
 static void func_call_list_message(size_msg_t msg)
@@ -150,3 +155,5 @@ void func_call(void)
     }
     func_call_exit();
 }
+
+#endif

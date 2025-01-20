@@ -298,11 +298,11 @@ compo_form_t *func_clock_cube_form_create(void)
     compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
     compo_setid(cube, COMPO_ID_CUBE);
 
-    s32 ax, ay;
-    ax = 0;
-    ay = 1400;
-    compo_cube_roll_from(cube, ax, ay);
-    compo_cube_update(cube);
+//    s32 ax, ay;
+//    ax = 0;
+//    ay = 1400;
+//    compo_cube_roll_from(cube, ax, ay);
+//    compo_cube_update(cube);
 
     //新建文本
     compo_textbox_t *txt = compo_textbox_create(frm, 2);
@@ -331,7 +331,7 @@ compo_form_t *func_clock_cube_form_create(void)
     compo_textbox_set(txt, ":");
     compo_setid(txt, COMPO_ID_TIME_DOT);
 
-    //compo_cube_update(cube);
+//    compo_cube_update(cube);
     return frm;
 }
 
@@ -819,7 +819,7 @@ static void func_clock_enter(void)
 //        f_clock->cube_ra = cube->move_cb.focus_sph.azimuth;
 //        f_clock->cube_rp = cube->move_cb.focus_sph.rotation;
         f_clock->cube_ra = 1400;
-        f_clock->cube_rp = 0;
+        f_clock->cube_rp = 550;
         f_clock->cube_touch = false;
     }
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
@@ -842,6 +842,8 @@ static void func_clock_exit(void)
     }
 #endif
     func_cb.last = FUNC_CLOCK;
+
+
 }
 
 //时钟表盘功能

@@ -50,22 +50,26 @@ enum
 };
 
 
-typedef struct ui_handle_t_ {
+typedef struct ui_handle_t_
+{
 
     ///全天勿扰
-    struct card1_t {
+    struct card1_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
 
-        struct card_rect_t {
+        struct card_rect_t
+        {
             u8 idx;
             s16 x,y;
             s16 w,h;
             u16 r;
         } rect[1];
 
-        struct card_icon_t {
+        struct card_icon_t
+        {
             u8 idx;
             s16 x,y;
             u16 w,h;
@@ -73,7 +77,8 @@ typedef struct ui_handle_t_ {
             u32 res_off;
         } icon[1];
 
-        struct card_text_t {
+        struct card_text_t
+        {
             u8 idx;
             s16 x,y;
             u16 w,h;
@@ -90,7 +95,8 @@ typedef struct ui_handle_t_ {
     struct card1_t disturd_def_card;
 
     ///开始时间
-    struct card2_t {
+    struct card2_t
+    {
         u16 id;
         s16 x,y;
         u16 w,h;
@@ -104,7 +110,8 @@ typedef struct ui_handle_t_ {
 
 } ui_handle_t;
 
-static const ui_handle_t ui_handle = {
+static const ui_handle_t ui_handle =
+{
     .disturd_all_card = {
         .id = COMPO_ID_CARD_DISTURD_ALL,
         .x  = 4+232/2,
@@ -410,27 +417,30 @@ compo_form_t *func_set_sub_disturd_form_create(void)
 
     ///创建全天勿扰卡片
     compo_cardbox_t* disturd_all_card = compo_cardbox_create(frm,
-                                                      sizeof(ui_handle.disturd_all_card.rect)/sizeof(ui_handle.disturd_all_card.rect[0]),
-                                                      sizeof(ui_handle.disturd_all_card.icon)/sizeof(ui_handle.disturd_all_card.icon[0]),
-                                                      sizeof(ui_handle.disturd_all_card.text)/sizeof(ui_handle.disturd_all_card.text[0]),
-                                                      ui_handle.disturd_all_card.w, ui_handle.disturd_all_card.h);
+                                        sizeof(ui_handle.disturd_all_card.rect)/sizeof(ui_handle.disturd_all_card.rect[0]),
+                                        sizeof(ui_handle.disturd_all_card.icon)/sizeof(ui_handle.disturd_all_card.icon[0]),
+                                        sizeof(ui_handle.disturd_all_card.text)/sizeof(ui_handle.disturd_all_card.text[0]),
+                                        ui_handle.disturd_all_card.w, ui_handle.disturd_all_card.h);
     compo_cardbox_set_visible(disturd_all_card, true);
     compo_cardbox_set_location(disturd_all_card, ui_handle.disturd_all_card.x, ui_handle.disturd_all_card.y, ui_handle.disturd_all_card.w, ui_handle.disturd_all_card.h);
     compo_setid(disturd_all_card, ui_handle.disturd_all_card.id);
-    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.rect)/sizeof(ui_handle.disturd_all_card.rect[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.rect)/sizeof(ui_handle.disturd_all_card.rect[0]); i++)
+    {
         compo_cardbox_rect_set_location(disturd_all_card, ui_handle.disturd_all_card.rect[i].idx, ui_handle.disturd_all_card.rect[i].x, ui_handle.disturd_all_card.rect[i].y,
                                         ui_handle.disturd_all_card.rect[i].w, ui_handle.disturd_all_card.rect[i].h, ui_handle.disturd_all_card.rect[i].r);
         compo_cardbox_rect_set_color(disturd_all_card, ui_handle.disturd_all_card.rect[i].idx, make_color(41, 41, 41));
     }
 
-    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.icon)/sizeof(ui_handle.disturd_all_card.icon[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.icon)/sizeof(ui_handle.disturd_all_card.icon[0]); i++)
+    {
         compo_cardbox_icon_set_location(disturd_all_card, ui_handle.disturd_all_card.icon[i].idx, ui_handle.disturd_all_card.icon[i].x, ui_handle.disturd_all_card.icon[i].y,
                                         ui_handle.disturd_all_card.icon[i].w, ui_handle.disturd_all_card.icon[i].h);
         compo_cardbox_icon_set(disturd_all_card, ui_handle.disturd_all_card.icon[i].idx,
                                sys_cb.disturd_adl > 0 ? ui_handle.disturd_all_card.icon[i].res_on : ui_handle.disturd_all_card.icon[i].res_off);
     }
 
-    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.text)/sizeof(ui_handle.disturd_all_card.text[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.text)/sizeof(ui_handle.disturd_all_card.text[0]); i++)
+    {
         compo_cardbox_text_set_font(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, ui_handle.disturd_all_card.text[i].res);
         widget_text_set_ellipsis(disturd_all_card->text[ui_handle.disturd_all_card.text[i].idx], false);
         compo_cardbox_text_set_align_center(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, ui_handle.disturd_all_card.text[i].center);
@@ -443,27 +453,30 @@ compo_form_t *func_set_sub_disturd_form_create(void)
 
     ///创建定时勿扰卡片
     compo_cardbox_t* disturd_def_card = compo_cardbox_create(frm,
-                                                      sizeof(ui_handle.disturd_def_card.rect)/sizeof(ui_handle.disturd_def_card.rect[0]),
-                                                      sizeof(ui_handle.disturd_def_card.icon)/sizeof(ui_handle.disturd_def_card.icon[0]),
-                                                      sizeof(ui_handle.disturd_def_card.text)/sizeof(ui_handle.disturd_def_card.text[0]),
-                                                      ui_handle.disturd_def_card.w, ui_handle.disturd_def_card.h);
+                                        sizeof(ui_handle.disturd_def_card.rect)/sizeof(ui_handle.disturd_def_card.rect[0]),
+                                        sizeof(ui_handle.disturd_def_card.icon)/sizeof(ui_handle.disturd_def_card.icon[0]),
+                                        sizeof(ui_handle.disturd_def_card.text)/sizeof(ui_handle.disturd_def_card.text[0]),
+                                        ui_handle.disturd_def_card.w, ui_handle.disturd_def_card.h);
     compo_cardbox_set_visible(disturd_def_card, true);
     compo_cardbox_set_location(disturd_def_card, ui_handle.disturd_def_card.x, ui_handle.disturd_def_card.y, ui_handle.disturd_def_card.w, ui_handle.disturd_def_card.h);
     compo_setid(disturd_def_card, ui_handle.disturd_def_card.id);
-    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.rect)/sizeof(ui_handle.disturd_def_card.rect[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.rect)/sizeof(ui_handle.disturd_def_card.rect[0]); i++)
+    {
         compo_cardbox_rect_set_location(disturd_def_card, ui_handle.disturd_def_card.rect[i].idx, ui_handle.disturd_def_card.rect[i].x, ui_handle.disturd_def_card.rect[i].y,
                                         ui_handle.disturd_def_card.rect[i].w, ui_handle.disturd_def_card.rect[i].h, ui_handle.disturd_def_card.rect[i].r);
         compo_cardbox_rect_set_color(disturd_def_card, ui_handle.disturd_def_card.rect[i].idx, make_color(41, 41, 41));
     }
 
-    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.icon)/sizeof(ui_handle.disturd_def_card.icon[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.icon)/sizeof(ui_handle.disturd_def_card.icon[0]); i++)
+    {
         compo_cardbox_icon_set_location(disturd_def_card, ui_handle.disturd_def_card.icon[i].idx, ui_handle.disturd_def_card.icon[i].x, ui_handle.disturd_def_card.icon[i].y,
                                         ui_handle.disturd_def_card.icon[i].w, ui_handle.disturd_def_card.icon[i].h);
         compo_cardbox_icon_set(disturd_def_card, ui_handle.disturd_def_card.icon[i].idx,
                                sys_cb.disturd_tim > 0 ? ui_handle.disturd_def_card.icon[i].res_on : ui_handle.disturd_def_card.icon[i].res_off);
     }
 
-    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.text)/sizeof(ui_handle.disturd_def_card.text[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.text)/sizeof(ui_handle.disturd_def_card.text[0]); i++)
+    {
         compo_cardbox_text_set_font(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, ui_handle.disturd_def_card.text[i].res);
         widget_text_set_ellipsis(disturd_def_card->text[ui_handle.disturd_def_card.text[i].idx], false);
         compo_cardbox_text_set_align_center(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, ui_handle.disturd_def_card.text[i].center);
@@ -476,20 +489,22 @@ compo_form_t *func_set_sub_disturd_form_create(void)
 
     ///创建开始时间卡片
     compo_cardbox_t* disturd_start_time = compo_cardbox_create(frm,
-                                                      sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]),
-                                                      0,
-                                                      sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]),
-                                                      ui_handle.disturd_start_time.w, ui_handle.disturd_start_time.h);
+                                          sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]),
+                                          0,
+                                          sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]),
+                                          ui_handle.disturd_start_time.w, ui_handle.disturd_start_time.h);
     compo_cardbox_set_visible(disturd_start_time, sys_cb.disturd_tim > 0 ? true : false);
     compo_cardbox_set_location(disturd_start_time, ui_handle.disturd_start_time.x, ui_handle.disturd_start_time.y, ui_handle.disturd_start_time.w, ui_handle.disturd_start_time.h);
     compo_setid(disturd_start_time, ui_handle.disturd_start_time.id);
-    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]); i++)
+    {
         compo_cardbox_rect_set_location(disturd_start_time, ui_handle.disturd_start_time.rect[i].idx, ui_handle.disturd_start_time.rect[i].x, ui_handle.disturd_start_time.rect[i].y,
                                         ui_handle.disturd_start_time.rect[i].w, ui_handle.disturd_start_time.rect[i].h, ui_handle.disturd_start_time.rect[i].r);
         compo_cardbox_rect_set_color(disturd_start_time, ui_handle.disturd_start_time.rect[i].idx, make_color(41, 41, 41));
     }
 
-    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]); i++)
+    {
         compo_cardbox_text_set_font(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].res);
         widget_text_set_ellipsis(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], false);
         compo_cardbox_text_set_align_center(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].center);
@@ -512,37 +527,49 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         memset(aclock_str, '\0', sizeof(aclock_str));
         sprintf(aclock_str, "%02d:%02d", hour, min);
 
-        if (ui_handle.disturd_start_time.text[i].idx == 2) {
-            if(am_pm == 1) {    //AM
+        if (ui_handle.disturd_start_time.text[i].idx == 2)
+        {
+            if(am_pm == 1)      //AM
+            {
                 compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
-            } else if (am_pm == 2) {
+            }
+            else if (am_pm == 2)
+            {
                 compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
-            } else {
+            }
+            else
+            {
 //                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
             }
-        } else if (ui_handle.disturd_start_time.text[i].idx == 1) {
+        }
+        else if (ui_handle.disturd_start_time.text[i].idx == 1)
+        {
             compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, aclock_str);
-        } else if (ui_handle.disturd_start_time.text[i].idx == 0) {
+        }
+        else if (ui_handle.disturd_start_time.text[i].idx == 0)
+        {
             compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
         }
     }
 
     ///创建结束时间卡片
     compo_cardbox_t* disturd_end_time = compo_cardbox_create(frm,
-                                                      sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]),
-                                                      0,
-                                                      sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]),
-                                                      ui_handle.disturd_end_time.w, ui_handle.disturd_end_time.h);
+                                        sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]),
+                                        0,
+                                        sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]),
+                                        ui_handle.disturd_end_time.w, ui_handle.disturd_end_time.h);
     compo_cardbox_set_visible(disturd_end_time, sys_cb.disturd_tim > 0 ? true : false);
     compo_cardbox_set_location(disturd_end_time, ui_handle.disturd_end_time.x, ui_handle.disturd_end_time.y, ui_handle.disturd_end_time.w, ui_handle.disturd_end_time.h);
     compo_setid(disturd_end_time, ui_handle.disturd_end_time.id);
-    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]); i++)
+    {
         compo_cardbox_rect_set_location(disturd_end_time, ui_handle.disturd_end_time.rect[i].idx, ui_handle.disturd_end_time.rect[i].x, ui_handle.disturd_end_time.rect[i].y,
                                         ui_handle.disturd_end_time.rect[i].w, ui_handle.disturd_end_time.rect[i].h, ui_handle.disturd_end_time.rect[i].r);
         compo_cardbox_rect_set_color(disturd_end_time, ui_handle.disturd_end_time.rect[i].idx, make_color(41, 41, 41));
     }
 
-    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]); i++) {
+    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]); i++)
+    {
         compo_cardbox_text_set_font(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].res);
         widget_text_set_ellipsis(disturd_end_time->text[ui_handle.disturd_end_time.text[i].idx], false);
         compo_cardbox_text_set_align_center(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].center);
@@ -566,17 +593,27 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         memset(aclock_str, '\0', sizeof(aclock_str));
         sprintf(aclock_str, "%02d:%02d", hour, min);
 
-        if (ui_handle.disturd_end_time.text[i].idx == 2) {
-            if(am_pm == 1) {    //AM
+        if (ui_handle.disturd_end_time.text[i].idx == 2)
+        {
+            if(am_pm == 1)      //AM
+            {
                 compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
-            } else if (am_pm == 2) {
+            }
+            else if (am_pm == 2)
+            {
                 compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
-            } else {
+            }
+            else
+            {
 //                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
             }
-        } else if (ui_handle.disturd_end_time.text[i].idx == 1) {
-                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, aclock_str);
-        } else if (ui_handle.disturd_end_time.text[i].idx == 0) {
+        }
+        else if (ui_handle.disturd_end_time.text[i].idx == 1)
+        {
+            compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, aclock_str);
+        }
+        else if (ui_handle.disturd_end_time.text[i].idx == 0)
+        {
             compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
         }
     }
@@ -657,15 +694,19 @@ static void func_disturd_card_click(void)
     {
         if (compo_id == ui_handle.disturd_all_card.id)              //全天勿扰
         {
-            if (sys_cb.disturd_adl == 0) {
-                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK) {
+            if (sys_cb.disturd_adl == 0)
+            {
+                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+                {
                     if (sys_cb.disturd_adl == 0)
                     {
                         sys_cb.disturd_adl = 1;
                         uteModuleNotDisturbAllDaySwitch();
                     }
                 }
-            } else {
+            }
+            else
+            {
                 sys_cb.disturd_adl = 0;
                 uteModuleNotDisturbAllDaySwitch();
             }
@@ -673,15 +714,19 @@ static void func_disturd_card_click(void)
         }
         else if (compo_id == ui_handle.disturd_def_card.id)         //定时勿扰
         {
-            if (sys_cb.disturd_tim == 0) {
-                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK) {
+            if (sys_cb.disturd_tim == 0)
+            {
+                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+                {
                     if(sys_cb.disturd_tim == 0)
                     {
                         sys_cb.disturd_tim = 1;
                         uteModuleNotDisturbScheduledSwitch();
                     }
                 }
-            } else {
+            }
+            else
+            {
                 sys_cb.disturd_tim = 0;
                 uteModuleNotDisturbScheduledSwitch();
                 uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
@@ -700,7 +745,7 @@ static void func_disturd_card_click(void)
                 sys_cb.disturd_sel = 0;
                 func_cb.sta = FUNC_DISTURD_SUB_SET;
                 uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
-                task_stack_pop();
+//                task_stack_pop();
             }
         }
         else if (compo_id == ui_handle.disturd_end_time.id)      //结束时间
@@ -710,7 +755,7 @@ static void func_disturd_card_click(void)
                 sys_cb.disturd_sel = 1;
                 func_cb.sta = FUNC_DISTURD_SUB_SET;
                 uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_END_TIME);
-                task_stack_pop();
+//                task_stack_pop();
             }
         }
     }
@@ -721,7 +766,8 @@ static void func_disturd_card_click(void)
 static void func_set_sub_disturd_process(void)
 {
     f_disturd_t* f_disturd = (f_disturd_t*)func_cb.f_cb;
-    if (f_disturd->flag_drag) {
+    if (f_disturd->flag_drag)
+    {
 //        s32 dx = f_disturd->focus_dx;
 //        s32 dy = f_disturd->focus_dy;
         f_disturd->flag_drag = ctp_get_dxy(&f_disturd->focus_dx, &f_disturd->focus_dy);
@@ -733,17 +779,23 @@ static void func_set_sub_disturd_process(void)
             f_disturd->focus_ofsx = 0;
             f_disturd->focus_ofsy = f_disturd->focus_y - f_disturd->focus_dy;
 
-            if (sys_cb.disturd_tim == 1) {
-                if (f_disturd->focus_ofsy > DRAG_MAX_DISTANCE) {
+            if (sys_cb.disturd_tim == 1)
+            {
+                if (f_disturd->focus_ofsy > DRAG_MAX_DISTANCE)
+                {
                     f_disturd->focus_ofsy = DRAG_MAX_DISTANCE;
                 }
-            } else {
-                if (f_disturd->focus_ofsy > DRAG_MAX_DISTANCE1) {
+            }
+            else
+            {
+                if (f_disturd->focus_ofsy > DRAG_MAX_DISTANCE1)
+                {
                     f_disturd->focus_ofsy = DRAG_MAX_DISTANCE1;
                 }
             }
 
-            if (f_disturd->focus_ofsy < DRAG_MIN_DISTANCE) {
+            if (f_disturd->focus_ofsy < DRAG_MIN_DISTANCE)
+            {
                 f_disturd->focus_ofsy = DRAG_MIN_DISTANCE;
             }
 
@@ -764,17 +816,23 @@ static void func_set_sub_disturd_process(void)
             to_y = f_disturd->focus_y - (last_dxy.y * DRAG_AUTO_SPEED);
             f_disturd->moveto.x = to_x;
             f_disturd->moveto.y = to_y;
-            if (sys_cb.disturd_tim == 1) {
-                if (f_disturd->moveto.y > DRAG_MAX_DISTANCE) {
+            if (sys_cb.disturd_tim == 1)
+            {
+                if (f_disturd->moveto.y > DRAG_MAX_DISTANCE)
+                {
                     f_disturd->moveto.y = DRAG_MAX_DISTANCE;
                 }
-            } else {
-                if (f_disturd->moveto.y > DRAG_MAX_DISTANCE1) {
+            }
+            else
+            {
+                if (f_disturd->moveto.y > DRAG_MAX_DISTANCE1)
+                {
                     f_disturd->moveto.y = DRAG_MAX_DISTANCE1;
                 }
             }
 
-            if (f_disturd->moveto.y < DRAG_MIN_DISTANCE) {
+            if (f_disturd->moveto.y < DRAG_MIN_DISTANCE)
+            {
                 f_disturd->moveto.y = DRAG_MIN_DISTANCE;
             }
             f_disturd->tick = tick_get();
@@ -785,7 +843,8 @@ static void func_set_sub_disturd_process(void)
         //自动移动
         if (f_disturd->focus_x == f_disturd->moveto.x && f_disturd->focus_y == f_disturd->moveto.y)
         {
-            if (sys_cb.disturd_tim == 1) {
+            if (sys_cb.disturd_tim == 1)
+            {
                 if (f_disturd->focus_y < DRAG_MIN_BACK_DISTANCE)
                 {
                     f_disturd->moveto.y = DRAG_MIN_BACK_DISTANCE;
@@ -798,7 +857,9 @@ static void func_set_sub_disturd_process(void)
                 {
                     f_disturd->flag_move_auto = false;            //移动完成
                 }
-            } else {
+            }
+            else
+            {
                 if (f_disturd->focus_y < DRAG_MIN_BACK_DISTANCE)
                 {
                     f_disturd->moveto.y = DRAG_MIN_BACK_DISTANCE;

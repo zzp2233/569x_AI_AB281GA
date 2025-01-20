@@ -11,7 +11,7 @@ typedef bool (*is_sleep_func)(void);
 #define reset_pwroff_delay()    if(sys_cb.pwroff_delay != -1L) {sys_cb.pwroff_delay = sys_cb.pwroff_time;}
 #define reset_sleep_delay()     sys_cb.sleep_delay = sys_cb.sleep_time;
 #define reset_guioff_delay()    sys_cb.guioff_delay = (uteModuleGuiCommonGetDisplayOffTime() == 0 ? -1 : uteModuleGuiCommonGetDisplayOffTime()*10);//sys_cb.sleep_time;
-#define reset_sleep_delay_all() {sys_cb.sleep_delay = sys_cb.sleep_time; sys_cb.guioff_delay = ((uteModuleGuiCommonGetDisplayOffTime() == 0 ? -1 : uteModuleGuiCommonGetDisplayOffTime()*10));} //sys_cb.guioff_delay = sys_cb.sleep_time
+#define reset_sleep_delay_all() {/*printf("%s->%d\n", __func__,__LINE__);*/ sys_cb.sleep_delay = sys_cb.sleep_time; sys_cb.guioff_delay = ((uteModuleGuiCommonGetDisplayOffTime() == 0 ? -1 : uteModuleGuiCommonGetDisplayOffTime()*10));} //sys_cb.guioff_delay = sys_cb.sleep_time
 
 bool sleep_process(is_sleep_func is_sleep);
 void lowpwr_tout_ticks(void);

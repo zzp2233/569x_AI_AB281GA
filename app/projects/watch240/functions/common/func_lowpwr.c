@@ -213,7 +213,7 @@ static void sfunc_sleep(void)
     sys_cb.flag_sleep_ble_status = ble_is_connect();
 
 #if VBAT_DETECT_EN
-    if (bsp_vbat_get_lpwr_status())             //低电不进sniff mode
+    if (bsp_vbat_get_lpwr_status() == 2)             //低电不进sniff mode
     {
         return;
     }

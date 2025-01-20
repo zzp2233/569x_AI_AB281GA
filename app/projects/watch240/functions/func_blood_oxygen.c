@@ -111,6 +111,8 @@ static void func_blood_oxygen_disp_handle(void)
         uteModuleBloodoxygenStartSingleTesting();
         f_bo->need_auto_test_flag = false;
     }
+
+
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
     {
@@ -134,6 +136,7 @@ static void func_blood_oxygen_disp_handle(void)
             {
                 f_bo->pic_type=0;
             }
+            f_bo->need_auto_test_flag = false;
             compo_picturebox_cut(picbox, f_bo->pic_type, 16); ///图片动态显示
             compo_button_set_visible(btn, false);
         }

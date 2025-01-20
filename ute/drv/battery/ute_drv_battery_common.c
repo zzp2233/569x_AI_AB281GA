@@ -300,6 +300,10 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 #if CHARGE_EN
     uteDrvBatteryCommonData.lvl = sys_cb.vbat_percent;
     uteDrvBatteryCommonData.voltage = sys_cb.vbat;//vbat_cb.vbat_adc_last;
+    if(!sys_cb.chg_on || uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)
+    {
+        uteDrvBatteryCommonData.current = 0;
+    }
     if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_090)
     {
         uteDrvBatteryCommonData.current = CHARGE_TRICKLE_CURR * 5 + 5;

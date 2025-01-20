@@ -10,6 +10,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+
 enum
 {
     COMPO_ID_NUM_DISP = 128,
@@ -58,6 +60,8 @@ static const calculator_disp_btn_item_t tbl_calculator_disp_btn_item[] =
     {UI_BUF_I330001_CALCULATOR_DEFAULT_JIA_BIN,      UI_BUF_I330001_CALCULATOR_STATE_JIA_BIN,       BTN_ADD,            208,    169},//
     {UI_BUF_I330001_CALCULATOR_DEFAULT_DENG_BIN,     UI_BUF_I330001_CALCULATOR_STATE_DENG_BIN,      BTN_EQUAL,          208,    257},
 };
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建计算器窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_calculator_form_create(void)
 {
@@ -86,18 +90,6 @@ compo_form_t *func_calculator_form_create(void)
 
     return frm;
 }
-
-//计算器功能事件处理
-static void func_calculator_process(void)
-{
-    if (sys_cb.gui_sleep_sta)
-    {
-        sys_cb.gui_need_wakeup = 1;
-    }
-    reset_sleep_delay_all();
-    func_process();
-}
-
 
 //按钮触摸效果
 static void func_calculator_button_Refresh_disp(void)
@@ -173,6 +165,19 @@ static void func_calculator_button_click_handler(void)
     compo_textbox_set_pos(txt, 208-widget_text_get_area(txt->txt).wid,14);
     func_calculator_button_release_handle();
     func_calculator_button_Refresh_disp();
+}
+
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+//计算器功能事件处理
+static void func_calculator_process(void)
+{
+    if (sys_cb.gui_sleep_sta)
+    {
+        sys_cb.gui_need_wakeup = 1;
+    }
+    reset_sleep_delay_all();
+    func_process();
 }
 
 //计算器功能消息处理
@@ -251,3 +256,4 @@ void func_calculator(void)
     }
     func_calculator_exit();
 }
+#endif

@@ -154,6 +154,28 @@
 #define UTE_MODULE_SCREENS_ALARM_SUPPORT              1 //闹钟
 #define UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT  1 //在线表盘同步界面
 #define UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT 1 //低电提醒
+#define UTE_MODULE_SCREENS_WEATHER_SUPPORT            1 //天气
+#define UTE_MODULE_SCREENS_GAME_SUPPORT               1 //游戏
+#define UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT         1 //找手机
+#define UTE_MODULE_SCREENS_RESFY_SUPPORT              1 //恢复出厂
+#define UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT       1 //血氧
+#define UTE_MODULE_SCREENS_ACTIVITY_SUPPORT           1 //每日活动
+#define UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT         1 //手电筒
+#define UTE_MODULE_SCREENS_SPORT_SUPPORT              1 //运动
+#define UTE_MODULE_SCREENS_LANGUAGE_SUPPORT           1 //语言
+#define UTE_MODULE_SCREENS_BREATHE_SUPPORT            1 //呼吸
+#define UTE_MODULE_SCREENS_HEARTRATE_SUPPORT          1 //心率
+#define UTE_MODULE_SCREENS_STYLE_SUPPORT              1 //主题
+#define UTE_MODULE_SCREENS_SLEEP_SUPPORT              1 //睡眠
+#define UTE_MODULE_SCREENS_LIGHT_SUPPORT              1 //亮度调节
+#define UTE_MODULE_SCREENS_MUSIC_SUPPORT              1 //音乐
+#define UTE_MODULE_SCREENS_MESSAGE_SUPPORT            1 //信息
+#define UTE_MODULE_SCREENS_CALL_SUPPORT               1 //电话
+#define UTE_MODULE_SCREENS_SETTING_SUPPORT            1 //设置
+#define UTE_MODULE_SCREENS_CALCULATOR_SUPPORT         1 //计算器
+#define UTE_MODULE_SCREENS_RESTART_SUPPORT            1 //重启
+#define UTE_MODULE_SCREENS_CALENDAER_SUPPORT          1 //日历
+#define UTE_MODULE_SCREENS_SCAN_SUPPORT               1 //二维码
 
 /*! 支持的运动数量, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_MAX_SPORT_NUM 25

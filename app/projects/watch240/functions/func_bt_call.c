@@ -483,7 +483,9 @@ void func_bt_call_exit(void)
 {
     bsp_bt_call_exit();
 
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     if (func_cb.sta == FUNC_SCAN)
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
     {
         while (sys_cb.sco_state == true)          //等待SCO完全退出, 支付宝和扫一扫界面都使用二维码，二维码与通话复用
         {

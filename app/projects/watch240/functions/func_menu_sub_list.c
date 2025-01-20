@@ -59,7 +59,9 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {STR_MESSAGE,                UI_BUF_I330001_THEME_1_MESSAGE_BIN,           .func_sta = FUNC_MESSAGE},              //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     {STR_PHONE,                  UI_BUF_I330001_THEME_1_CALL_BIN,              .func_sta = FUNC_CALL},                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
 #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
     {STR_MUSIC,                  UI_BUF_I330001_THEME_1_MUSIC_BIN,             .func_sta = FUNC_BT},                   //音乐
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
@@ -69,7 +71,9 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {STR_BREATHE_TRAIN,          UI_BUF_I330001_THEME_1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {STR_CALCULATOR,             UI_BUF_I330001_THEME_1_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {STR_ALARM_CLOCK,            UI_BUF_I330001_THEME_1_ALARM_BIN,             .func_sta = FUNC_ALARM_CLOCK},          //闹钟
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
@@ -79,7 +83,9 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {STR_STOP_WATCH,             UI_BUF_I330001_THEME_1_STOPWATCH_BIN,         .func_sta = FUNC_STOPWATCH},            //秒表
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {STR_CALENDAR,               UI_BUF_I330001_THEME_1_CALENDAR_BIN,          .func_sta = FUNC_CALENDAER},            //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {STR_CAMERA,                 UI_BUF_I330001_THEME_1_PHOTO_BIN,             .func_sta = FUNC_CAMERA},               //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -90,7 +96,9 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {STR_GAME,                   UI_BUF_I330001_THEME_1_GAME_BIN,              .func_sta = FUNC_GAME},                 //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {STR_SETTING,                UI_BUF_I330001_THEME_1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT

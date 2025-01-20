@@ -9,6 +9,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
+
 typedef struct f_scan_t_
 {
 
@@ -16,6 +18,7 @@ typedef struct f_scan_t_
 
 void *barcode_creat(void *parent, char *str, int x, int y, int h, u8 length, bool dir);
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建扫一扫窗体
 compo_form_t *func_scan_form_create(void)
 {
@@ -50,6 +53,8 @@ compo_form_t *func_scan_form_create(void)
     return frm;
 }
 
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //扫一扫功能事件处理
 static void func_scan_process(void)
 {
@@ -76,7 +81,7 @@ static void func_scan_message(size_msg_t msg)
             break;
 
         default:
-                func_message(msg);
+            func_message(msg);
             break;
     }
 }
@@ -106,3 +111,5 @@ void func_scan(void)
     }
     func_scan_exit();
 }
+
+#endif

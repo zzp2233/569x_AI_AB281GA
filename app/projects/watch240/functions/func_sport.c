@@ -232,7 +232,8 @@ static void func_sport_list_icon_click(void)
     func_sta = tbl_sport_list[icon_idx].func_sta;
 
     //切入应用
-    if (func_sta > 0 && !listbox->flag_area)
+//    if (func_sta > 0 && !listbox->flag_area)
+    if (func_sta > 0)
     {
 //        compo_form_t *frm = func_create_form(func_sta);
 //        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
@@ -242,11 +243,11 @@ static void func_sport_list_icon_click(void)
 //        printf("sport_idx=%d\n", sys_cb.sport_idx);
     }
 
-    if(listbox->flag_area)
-    {
-        func_cb.sta = FUNC_SPORT_CONFIG;
-        listbox->flag_area = 0;
-    }
+//    if(listbox->flag_area)
+//    {
+//        func_cb.sta = FUNC_SPORT_CONFIG;
+//        listbox->flag_area = 0;
+//    }
 }
 
 //运动功能事件处理

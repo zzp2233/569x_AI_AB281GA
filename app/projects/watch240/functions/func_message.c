@@ -191,7 +191,7 @@ typedef struct f_message_t_
 
 } f_message_t;
 
-static void func_message_card_update(bool fist);
+static void func_message_card_update(bool fist, compo_form_t *frm);
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建消息窗体
@@ -245,8 +245,13 @@ compo_form_t *func_message_form_create(void)
     compo_textbox_set_visible(txt, false);
     compo_setid(txt, COMPO_ID_COVER_TXT);
 
+    if (func_cb.sta == FUNC_MESSAGE)
+    {
+        func_cb.frm_main = frm;
+    }
+
 //    if (func_cb.sta == FUNC_MESSAGE) {
-    func_message_card_update(true);
+    func_message_card_update(true, frm);
 //    }
 
     return frm;
@@ -363,7 +368,7 @@ static u32 func_message_card_get_icon(u8 type)
 }
 
 //更新消息卡片
-static void func_message_card_update(bool first_update)
+static void func_message_card_update(bool first_update, compo_form_t *frm)
 {
     f_message_t *f_msg = NULL;
     if (first_update == true && func_cb.sta != FUNC_MESSAGE)
@@ -451,18 +456,29 @@ static void func_message_card_update(bool first_update)
         compo_textbox_set_visible(txt, false);
         compo_picturebox_t* pic = compo_getobj_byid(COMPO_ID_COVER_PIC);
         compo_picturebox_set_visible(pic, false);
-        if (first_update == false && func_cb.sta == FUNC_MESSAGE)
+//        if (first_update == false && func_cb.sta == FUNC_MESSAGE)
+//        if (func_cb.sta == FUNC_MESSAGE)
+//        {
+        //更新拖动范围
+        f_msg->y_min = -(btn_y - (GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[0].res).hei) + 32);
+        f_msg->y_max = -65;//-(card.h + 10) / 2;
+        if (btn_y + gui_image_get_size(message_btn[0].res).hei / 2 <= GUI_SCREEN_HEIGHT || uteModuleNotifyGetTotalNotifyCnt() == 1 || first_update == true)
         {
-            //更新拖动范围
-            f_msg->y_min = -(btn_y - (GUI_SCREEN_HEIGHT - gui_image_get_size(message_btn[0].res).hei) + 32);
-            f_msg->y_max = -(card.h + 10) / 2;
-            if (btn_y + gui_image_get_size(message_btn[0].res).hei / 2 <= GUI_SCREEN_HEIGHT || uteModuleNotifyGetTotalNotifyCnt() == 1)
+            //f_msg->flag_drag = false;
+            f_msg->y_min = f_msg->y_max;
+            if (func_cb.sta == FUNC_MESSAGE)
             {
-                //f_msg->flag_drag = false;
-                f_msg->y_min = f_msg->y_max;
                 widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_max);
             }
+            else
+            {
+                if (frm != NULL)
+                {
+                    widget_page_set_client(frm->page_body, 0, f_msg->y_max);
+                }
+            }
         }
+//        }
         //printf("drag=>[%d,%d] -> [%d,%d,%d]\n", f_msg->y_min, f_msg->y_max, btn_y, card_y, (GUI_SCREEN_HEIGHT - message_btn[0].w / 2));
     }
     else
@@ -511,7 +527,7 @@ static void func_message_process(void)
 {
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
 
-    func_message_card_update(false);
+    func_message_card_update(false, NULL);
 
     s32 dx,dy;
     //开始拖动页面
@@ -608,6 +624,7 @@ static void func_message_process(void)
             }
             f_msg->y_pos +=dy;
             widget_page_set_client(func_cb.frm_main->page_body, 0, f_msg->y_pos);
+//            printf("moveto -> f_msg->y_pos = %d, %d\n", f_msg->y_pos, widget_text_get_max_height());
         }
     }
 

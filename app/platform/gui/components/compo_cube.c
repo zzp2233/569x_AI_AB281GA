@@ -32,14 +32,16 @@
 ////    {UI_BUF_ICON_CUBE_STEP_BIN,             FUNC_SLEEP},
 
 //极角
-static const u16 tbl_cube_polar[] = {
+static const u16 tbl_cube_polar[] =
+{
 //    372, 372, 372, 372, 372, 792, 792, 792, 792, 792,
 //    1008, 1008, 1008, 1008, 1008, 1428, 1428, 1428, 1428, 1428,
     0, 900, 900, 900, 900, 1799
 };
 
 //方位角
-static const u16 tbl_cube_azimuth[] = {
+static const u16 tbl_cube_azimuth[] =
+{
 //    0, 720, 1440, 2160, 2880, 0, 720, 1440, 2160, 2880,
 //    360, 1080, 1800, 2520, 3240, 360, 1080, 1800, 2520, 3240,
     1800, 900, 1800, 2700, 0, 0
@@ -54,7 +56,8 @@ static const u16 tbl_cube_azimuth[] = {
  **/
 compo_cube_t *compo_cube_create(compo_form_t *frm, s16 radius, compo_cube_item_t const *item, int item_cnt)
 {
-    if (item_cnt != CUBE_ITEM_CNT) {
+    if (item_cnt != CUBE_ITEM_CNT)
+    {
         halt(HALT_GUI_COMPO_CUBE_CREATE);
     }
     compo_cube_t *cube = compo_create(frm, COMPO_TYPE_CUBE);
@@ -67,7 +70,8 @@ compo_cube_t *compo_cube_create(compo_form_t *frm, s16 radius, compo_cube_item_t
     cube->flag_need_update = true;
     cube->axis = axis;
     cube->radius = radius;
-    for (i=0; i<CUBE_ITEM_CNT; i++) {
+    for (i=0; i<CUBE_ITEM_CNT; i++)
+    {
         widget_image3d_t *img = widget_image3d_create(page, item[i].res_addr);
         cube->item_img[i] = img;
 
@@ -80,9 +84,9 @@ compo_cube_t *compo_cube_create(compo_form_t *frm, s16 radius, compo_cube_item_t
     cube->img_area = gui_image_get_size(item[0].res_addr);
 
     //初始角度
-    cube->sph.rotation = 2250;
+    cube->sph.rotation = 0;//2250;
     cube->sph.polar = 550;
-    cube->sph.azimuth = 920;
+    cube->sph.azimuth = 1400;//920;
     compo_cube_update(cube);
     return cube;
 }
@@ -94,14 +98,16 @@ compo_cube_t *compo_cube_create(compo_form_t *frm, s16 radius, compo_cube_item_t
 void compo_cube_update(compo_cube_t *cube)
 {
     int i;
-    if (!cube->flag_need_update) {
+    if (!cube->flag_need_update)
+    {
         return;
     }
     widget_axis3d_t *axis = cube->axis;
     cube->flag_need_update = false;
 //    printf("cube: %d %d %d\n", cube->sph.polar, cube->sph.azimuth, cube->sph.rotation);
     widget_axis3d_set_sph(axis, cube->sph);
-    for (i=0; i<CUBE_ITEM_CNT; i++) {
+    for (i=0; i<CUBE_ITEM_CNT; i++)
+    {
         widget_image3d_t *img = cube->item_img[i];
         widget_set_visible(img, widget_image3d_get_front(img) >= 0);
     }
@@ -114,13 +120,16 @@ void compo_cube_update(compo_cube_t *cube)
  **/
 s32 compo_cube_set_rotation(compo_cube_t *cube, s32 angle)
 {
-    if (angle < 0) {
+    if (angle < 0)
+    {
         angle = 3600 - (-angle % 3600);
     }
-    if (angle >= 3600) {
+    if (angle >= 3600)
+    {
         angle = angle % 3600;
     }
-    if (cube->sph.rotation != angle) {
+    if (cube->sph.rotation != angle)
+    {
         cube->sph.rotation = angle;
         cube->flag_need_update = true;
     }
@@ -158,12 +167,16 @@ void compo_cube_roll_from(compo_cube_t *cube, s16 roll_polar, s16 roll_azimuth)
  **/
 s32 compo_cube_set_polar(compo_cube_t *cube, s32 angle)
 {
-    if (angle < CUBE_MIN_POLAR) {
+    if (angle < CUBE_MIN_POLAR)
+    {
         angle = CUBE_MIN_POLAR;
-    } else if (angle > CUBE_MAX_POLAR) {
+    }
+    else if (angle > CUBE_MAX_POLAR)
+    {
         angle = CUBE_MAX_POLAR;
     }
-    if (cube->sph.polar != angle) {
+    if (cube->sph.polar != angle)
+    {
         cube->sph.polar = angle;
         cube->flag_need_update = true;
     }
@@ -178,14 +191,20 @@ s32 compo_cube_set_polar(compo_cube_t *cube, s32 angle)
 u8 compo_cube_get_sta(compo_cube_t *cube)
 {
     compo_cube_move_cb_t *mcb = &cube->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return COMPO_CUBE_STA_IDLE;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
         return COMPO_CUBE_STA_DARG;
-    } else if (mcb->flag_move_auto) {
+    }
+    else if (mcb->flag_move_auto)
+    {
         return COMPO_CUBE_STA_MOVE;
-    } else {
+    }
+    else
+    {
         return COMPO_CUBE_STA_IDLE;
     }
 }
@@ -200,9 +219,11 @@ u8 compo_cube_get_sta(compo_cube_t *cube)
 int compo_cube_get_idx(compo_cube_t *cube, s16 x, s16 y)
 {
     int i;
-    for (i=0; i<CUBE_ITEM_CNT; i++) {
+    for (i=0; i<CUBE_ITEM_CNT; i++)
+    {
         widget_image3d_t *img = cube->item_img[i];
-        if (widget_image3d_get_front(img) >= 0 && widget_image3d_contains(img, x, y)) {
+        if (widget_image3d_get_front(img) >= 0 && widget_image3d_contains(img, x, y))
+        {
             return i;
         }
     }
@@ -216,13 +237,16 @@ int compo_cube_get_idx(compo_cube_t *cube, s16 x, s16 y)
 void compo_cube_move(compo_cube_t *cube)
 {
     compo_cube_move_cb_t *mcb = &cube->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
         s32 dx, dy, ax, ay;
         mcb->flag_drag = ctp_get_dxy(&dx, &dy);
-        if (mcb->flag_drag) {
+        if (mcb->flag_drag)
+        {
             //拖动菜单图标
             ax = dx * 1800 / CUBE_HALF_CIRCUM(cube->radius);
             ay = dy * 1800 / CUBE_HALF_CIRCUM(cube->radius);
@@ -235,7 +259,9 @@ void compo_cube_move(compo_cube_t *cube)
             compo_cube_set_rotation(cube, mcb->focus_sph.rotation - ax);
 #endif
             compo_cube_update(cube);
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
             point_t last_dxy = ctp_get_last_dxy();
             int da;
@@ -251,25 +277,38 @@ void compo_cube_move(compo_cube_t *cube)
             mcb->tick = tick_get();
         }
     }
-    if (mcb->flag_move_auto) {
+    if (mcb->flag_move_auto)
+    {
         //自动移动
-        if (mcb->start_a == mcb->moveto_a) {
+        if (mcb->start_a == mcb->moveto_a)
+        {
             mcb->flag_move_auto = false;              //移动完成
             compo_cube_update(cube);
-        } else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+        {
             s32 da;
             mcb->tick = tick_get();
             da = mcb->moveto_a - mcb->start_a;
-            if (da > 0) {
-                if (da > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (da > 0)
+            {
+                if (da > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     da = da / FOCUS_AUTO_STEP_DIV;
-                } else if (da > FOCUS_AUTO_STEP) {
+                }
+                else if (da > FOCUS_AUTO_STEP)
+                {
                     da = FOCUS_AUTO_STEP;
                 }
-            } else {
-                if (da < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else
+            {
+                if (da < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     da = da / FOCUS_AUTO_STEP_DIV;
-                } else if (da < -FOCUS_AUTO_STEP) {
+                }
+                else if (da < -FOCUS_AUTO_STEP)
+                {
                     da = -FOCUS_AUTO_STEP;
                 }
             }
@@ -292,42 +331,46 @@ void compo_cube_move(compo_cube_t *cube)
 void compo_cube_move_control(compo_cube_t *cube, int cmd)
 {
     compo_cube_move_cb_t *mcb = &cube->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    switch (cmd) {
-    case COMPO_CUBE_MOVE_CMD_DRAG:
-        //开始拖动
-        mcb->flag_drag = true;
-        mcb->flag_move_auto = false;
-        mcb->focus_sph = cube->sph;
-        break;
+    switch (cmd)
+    {
+        case COMPO_CUBE_MOVE_CMD_DRAG:
+            //开始拖动
+            mcb->flag_drag = true;
+            mcb->flag_move_auto = false;
+            mcb->focus_sph = cube->sph;
+            break;
 
-    case COMPO_CUBE_MOVE_CMD_FORWARD:
-        //向前滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->start_a = 0;
-            mcb->moveto_a = 0;
-            mcb->roll_azimuth = 0;
-        }
-        mcb->moveto_a += CUBE_ITEM_ANGLE;
-        break;
+        case COMPO_CUBE_MOVE_CMD_FORWARD:
+            //向前滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->start_a = 0;
+                mcb->moveto_a = 0;
+                mcb->roll_azimuth = 0;
+            }
+            mcb->moveto_a += CUBE_ITEM_ANGLE;
+            break;
 
-    case COMPO_CUBE_MOVE_CMD_BACKWARD:
-        //向后滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->start_a = 0;
-            mcb->moveto_a = 0;
-            mcb->roll_azimuth = 0;
-        }
-        mcb->moveto_a -= CUBE_ITEM_ANGLE;
-        break;
+        case COMPO_CUBE_MOVE_CMD_BACKWARD:
+            //向后滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->start_a = 0;
+                mcb->moveto_a = 0;
+                mcb->roll_azimuth = 0;
+            }
+            mcb->moveto_a -= CUBE_ITEM_ANGLE;
+            break;
 
-    default:
-        halt(HALT_GUI_COMPO_CUBE_MOVE_CMD);
-        break;
+        default:
+            halt(HALT_GUI_COMPO_CUBE_MOVE_CMD);
+            break;
     }
 }
 

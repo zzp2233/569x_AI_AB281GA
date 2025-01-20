@@ -576,7 +576,9 @@ static void func_clock_sub_dropdown_click_handler(void)
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
             break;
         case COMPO_ID_BTN_SETTING:
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
             func_cb.sta = FUNC_SETTING;
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
             break;
         case COMPO_ID_BTN_PHONE:
             func_cb.sta = FUNC_FINDPHONE;

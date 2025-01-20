@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
+
 typedef struct f_restart_t_
 {
 
@@ -18,6 +20,8 @@ enum
     COMPO_ID_BTN_NO = 1,
     COMPO_ID_BTN_YES,
 };
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //重启页面
 compo_form_t *func_set_sub_restart_form_create(void)
 {
@@ -46,12 +50,6 @@ compo_form_t *func_set_sub_restart_form_create(void)
     compo_button_set_pos(btn, 175, 240);
 
     return frm;
-}
-
-//重启功能事件处理
-static void func_set_sub_restart_process(void)
-{
-    func_process();
 }
 
 //按键事件处理
@@ -83,6 +81,13 @@ static void func_restart_button_click(void)
         default:
             break;
     }
+}
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+//重启功能事件处理
+static void func_set_sub_restart_process(void)
+{
+    func_process();
 }
 
 //重启功能消息处理
@@ -128,3 +133,5 @@ void func_set_sub_restart(void)
     }
     func_set_sub_restart_exit();
 }
+
+#endif

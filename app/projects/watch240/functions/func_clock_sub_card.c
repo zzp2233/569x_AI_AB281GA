@@ -725,7 +725,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_FIRSTORDER_FIXED_CALL_BIN,
                 .res_click = 0,
                 .res_switch = 0,
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
                 .func_sta = FUNC_CALL,
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
             },
         },
     },
@@ -807,7 +809,9 @@ static const ui_handle_t ui_handle =
                 .res    = UI_BUF_I330001_THEME_1_CALL_BIN,
                 .res_click = 3,
                 .res_switch = 3,
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
                 .func_sta = FUNC_CALL,
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
             },
         },
     },
@@ -2083,6 +2087,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
 //时钟表盘上拉菜单进入处理
 static void func_clock_sub_card_enter(void)
 {
+    tft_set_temode(3);
     func_cb.f_cb = func_zalloc(sizeof(f_card_t));
     func_cb.frm_main = func_clock_sub_card_form_create();
 
@@ -2098,6 +2103,7 @@ static void func_clock_sub_card_exit(void)
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
 //    co_timer_del(&f_card->music_refresh);
     func_cb.last = FUNC_CARD;
+    tft_set_temode(DEFAULT_TE_MODE);
 }
 
 //时钟表盘上拉菜单

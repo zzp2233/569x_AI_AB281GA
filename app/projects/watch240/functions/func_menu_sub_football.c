@@ -55,7 +55,9 @@ static const compo_football_item_t tbl_menu_football[20] =
     {UI_BUF_I330001_THEME_2_CONTACTS_BIN,         FUNC_ADDRESS_BOOK},
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 //    {UI_BUF_I330001_THEME_2_SOUND_BIN,            FUNC_SET_SUB_SAV},
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     {UI_BUF_I330001_THEME_2_CALL_BIN,             FUNC_CALL},
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
 #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
     {UI_BUF_I330001_THEME_2_MUSIC_BIN,            FUNC_BT},
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
@@ -65,15 +67,18 @@ static const compo_football_item_t tbl_menu_football[20] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {UI_BUF_I330001_THEME_2_SPO2_BIN,             FUNC_BLOOD_OXYGEN},
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {UI_BUF_I330001_THEME_2_CALENDAR_BIN,         FUNC_CALENDAER},
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I330001_THEME_2_WEATHER_BIN,          FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {UI_BUF_I330001_THEME_2_SLEEP_BIN,            FUNC_SLEEP},
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {UI_BUF_I330001_THEME_2_CALCULATOR_BIN,       FUNC_CALCULATOR},
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {UI_BUF_I330001_THEME_2_STOPWATCH_BIN,        FUNC_STOPWATCH},
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
@@ -84,7 +89,9 @@ static const compo_football_item_t tbl_menu_football[20] =
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {UI_BUF_I330001_THEME_2_HEART_BIN,            FUNC_HEARTRATE},
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {UI_BUF_I330001_THEME_2_SETTINGS_BIN,         FUNC_SETTING},
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {UI_BUF_I330001_THEME_2_ACTIVITY_BIN,         FUNC_ACTIVITY},
 #endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
@@ -180,7 +187,8 @@ static void func_menu_sub_football_process(void)
         {
             f_menu->cube_touch_time = 5;
             f_menu->tick = tick_get();
-            f_menu->cube_rp+=3;
+            f_menu->cube_rp+=2;
+            if(f_menu->cube_rp == 1800) f_menu->cube_rp+=2;
             if(f_menu->cube_rp>3600)f_menu->cube_rp=0;
             compo_football_roll_from(ball,f_menu->cube_rp, f_menu->cube_ra);
             compo_football_update(ball);

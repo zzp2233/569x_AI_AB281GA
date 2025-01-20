@@ -5,6 +5,7 @@
 #include "ute_module_watchonline.h"
 #include "ute_project_config.h"
 #include "ute_module_log.h"
+#include "ute_module_systemtime.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -98,7 +99,9 @@ const u8 quick_btn_tbl[] =
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     [7]     = FUNC_BREATHE,                 //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     [8]     = FUNC_CALCULATOR,              //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     [9]     = FUNC_CAMERA,                  //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -125,7 +128,9 @@ const u8 quick_btn_tbl[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     [18]    = FUNC_MESSAGE,                 //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     [19]    = FUNC_SCAN,                    //扫一扫
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     [20]    = FUNC_VOICE,                   //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
@@ -141,16 +146,22 @@ const u8 quick_btn_tbl[] =
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     [24]    = FUNC_SPORT,                   //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
     [25]    = FUNC_CALL,                    //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
     [26]    = FUNC_FINDPHONE,               //寻找手机
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     [27]    = FUNC_CALENDAER,               //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     [28]    = FUNC_ACTIVITY,                //活动记录
 #endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     [29]    = FUNC_FLASHLIGHT,              //手电筒
 #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
     [30]    = FUNC_SETTING,                 //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
 };
 
 enum
@@ -298,11 +309,11 @@ compo_form_t *func_clock_cube_form_create(void)
     compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
     compo_setid(cube, COMPO_ID_CUBE);
 
-    s32 ax, ay;
-    ax = 0;
-    ay = 1400;
-    compo_cube_roll_from(cube, ax, ay);
-    compo_cube_update(cube);
+//    s32 ax, ay;
+//    ax = 0;
+//    ay = 1400;
+//    compo_cube_roll_from(cube, ax, ay);
+//    compo_cube_update(cube);
 
     //新建文本
     compo_textbox_t *txt = compo_textbox_create(frm, 2);
@@ -617,7 +628,7 @@ static void func_clock_process(void)
 
             if(f_clock->cube_touch)
             {
-                f_clock->cube_touch_time = 5;
+                f_clock->cube_touch_time = 3;
             }
             else
             {
@@ -636,10 +647,11 @@ static void func_clock_process(void)
         {
             if(tick_check_expire(f_clock->tick, f_clock->cube_touch_time))
             {
-                f_clock->cube_touch_time = 5;
+                f_clock->cube_touch_time = 3;
                 f_clock->tick = tick_get();
-                f_clock->cube_rp+=3;
-                if(f_clock->cube_rp>3600)f_clock->cube_rp=0;
+                f_clock->cube_rp+=2;
+                if(f_clock->cube_rp == 1800) f_clock->cube_rp+=2;
+                if(f_clock->cube_rp>=3600)f_clock->cube_rp=0;
                 compo_cube_roll_from(cube, f_clock->cube_rp, f_clock->cube_ra);
                 compo_cube_update(cube);
             }
@@ -819,7 +831,7 @@ static void func_clock_enter(void)
 //        f_clock->cube_ra = cube->move_cb.focus_sph.azimuth;
 //        f_clock->cube_rp = cube->move_cb.focus_sph.rotation;
         f_clock->cube_ra = 1400;
-        f_clock->cube_rp = 0;
+        f_clock->cube_rp = 550;
         f_clock->cube_touch = false;
     }
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
@@ -842,6 +854,11 @@ static void func_clock_exit(void)
     }
 #endif
     func_cb.last = FUNC_CLOCK;
+
+    if(!uteApplicationCommonIsHasConnectOurApp())//防止上电直接进入表盘特殊情况
+    {
+        sys_cb.power_on_state=true;//开机绑定流程
+    }
 }
 
 //时钟表盘功能

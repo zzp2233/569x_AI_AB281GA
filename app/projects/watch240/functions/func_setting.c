@@ -7,6 +7,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+
 #define SET_LIST_CNT                       ((int)(sizeof(tbl_setting_list) / sizeof(tbl_setting_list[0])))
 
 enum
@@ -42,13 +44,19 @@ static const compo_listbox_item_t tbl_setting_list[] =
     {STR_SETTING_ABOUT,                  UI_BUF_I330001_SETTINGS_ICON_ABOUT_BIN,            .func_sta = FUNC_SET_SUB_ABOUT},    //关于
     // {STR_SETTING_4G,                     UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_4G},       //4G
 //    {STR_SETTING_ABOUT,                  UI_BUF_SETTING_RESTART_BIN,                    .func_sta = FUNC_SET_SUB_SOS},  //SOS
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
     {STR_QRCODE,                        UI_BUF_I330001_SETTINGS_ICON_QR_BIN,               .func_sta = FUNC_SCAN},    //二维码
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
     {STR_SETTING_RESTART,               UI_BUF_I330001_SETTINGS_ICON_BOOT_BIN,             .func_sta = FUNC_SET_SUB_RESTART},  //重启
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
     {STR_SETTING_OFF,                   UI_BUF_I330001_SETTINGS_ICON_SHUTDOWN_BIN,         .func_sta = FUNC_SET_SUB_OFF},      //关机
 #if UTE_MODULE_SCREENS_RESFY_SUPPORT
     {STR_SETTING_RSTFY,                 UI_BUF_I330001_SETTINGS_ICON_RETYR_BIN,            .func_sta = FUNC_SET_SUB_RSTFY},    //恢复出厂
 #endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
 };
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_set_sub_list_form_create(void)
@@ -97,12 +105,9 @@ static void func_set_sub_list_icon_click(void)
     //切入应用
     if (func_sta > 0)
     {
-//        func_switch_to(func_sta, FUNC_SWITCH_UD_ZOOM_UP | FUNC_SWITCH_AUTO);
-        func_switch_to(func_sta, FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO);
-//        compo_form_t *frm = func_create_form(func_sta);
-//        func_switching(FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO, listbox->sel_icon);
-//        compo_form_destroy(frm);
-//        func_cb.sta = func_sta;
+
+//        func_switch_to(func_sta, FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO);
+        func_cb.sta = func_sta;
         sys_cb.set_idx = listbox->focus_icon_idx;
     }
 }
@@ -120,6 +125,7 @@ static void func_set_sub_list_switch_to_clock(void)
     func_cb.sta = func_sta;
     sys_cb.set_idx = 0;
 }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //主菜单功能事件处理
 static void func_set_sub_list_process(void)
@@ -206,3 +212,4 @@ void func_set_sub_list(void)
     }
     func_set_sub_exit();
 }
+#endif

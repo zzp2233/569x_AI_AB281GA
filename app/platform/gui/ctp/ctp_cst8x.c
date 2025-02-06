@@ -268,18 +268,8 @@ void ctp_cst8x_readkick(void)
 AT(.com_text.ctp)
 bool ctp_cst8x_get_point(s32 *x, s32 *y)
 {
-#if (GUI_SELECT == GUI_TFT_320_385_GV9B71)
-    *x = GUI_SCREEN_WIDTH - (((ctp_cst8x_buf[0] & 0xf) << 8) + ctp_cst8x_buf[1]);
-#elif UTE_DRV_TP_X_AXIS_EXCHANGE
-    *x = GUI_SCREEN_WIDTH - (((ctp_cst8x_buf[0] & 0xf) << 8) + ctp_cst8x_buf[1]);
-#else
     *x = ((ctp_cst8x_buf[0] & 0xf) << 8) + ctp_cst8x_buf[1];
-#endif
-#if UTE_DRV_TP_Y_AXIS_EXCHANGE
-    *y = GUI_SCREEN_HEIGHT - (((ctp_cst8x_buf[2] & 0xf) << 8) + ctp_cst8x_buf[3]);
-#else
     *y = ((ctp_cst8x_buf[2] & 0xf) << 8) + ctp_cst8x_buf[3];
-#endif
     return ((ctp_cst8x_buf[0] & 0xC0) == 0x80);
 }
 

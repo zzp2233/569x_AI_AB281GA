@@ -251,13 +251,4 @@ uint16_t uteModuleCallGetSosContactSize(void);
 void uteModuleCallGetSosContact(ute_module_call_addressbook_t *pData);
 #endif
 
-#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
-void uteModuleCallConnectA2DPProfile(void);
-void uteModuleCallDisconnectA2DPProfile(void);
-void uteModuleCallEntertranmentVoiceSwitchSaveConfig(void);
-void uteModuleCallEntertranmentVoiceSwitchReadConfig(void);
-void uteModuleCallChangeEntertranmentVoiceSwitchStatus(void);
-bool uteModuleCallIsEntertranmentVoiceOn(void);
-#endif
-
 #endif //_UTE_MODULE_BT_AUDIO_H_

@@ -1,7 +1,8 @@
 #ifndef _COMPO_TEXTBOX_H
 #define _COMPO_TEXTBOX_H
 //
-enum {
+enum
+{
     TEXT_AUTOROLL_MODE_NULL,
     TEXT_AUTOROLL_MODE_SROLL_CIRC,      //文字环形循环滚动
     TEXT_AUTOROLL_MODE_SROLL,           //文字前后往返滚动
@@ -172,10 +173,4 @@ void compo_textbox_set_direction(compo_textbox_t *textbox, bool direction);
  **/
 bool compo_textbox_get_direction(compo_textbox_t *textbox);
 
-/**
- * @brief 设置文本框是否居顶
- * @param[in] textbox : 文本指针
- * @param[in] align_center : 是否居中
- **/
-void compo_textbox_set_align_center_top(compo_textbox_t *textbox, bool align_center);
 #endif

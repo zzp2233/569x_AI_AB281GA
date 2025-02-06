@@ -49,9 +49,6 @@ enum
     MSG_TYPE_MODULE_WATCHONLINE_ONESEC_TIMER,
     MSG_TYPE_DRV_KEY_HANDLER,
     MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR,
-    MSG_TYPE_CALL_DISABLE_NOTIFY,
-    TO_APP_TASK_CONNECT_A2DP,
-    TO_APP_TASK_DISCONNECT_A2DP,
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

@@ -9,19 +9,13 @@
 #ifndef _UTE_PROJECT_CONFIG_H_
 #define _UTE_PROJECT_CONFIG_H_
 
-#define PROJECT_AB281_SUPPORT        1
-#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
-#define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
+#define PROJECT_AB281_SUPPORT       1
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
-#elif PROJECT_AB281A_SUPPORT
-#include"ute_project_config_ab281a.h"
-#elif PROJECT_AB281B_SUPPORT
-#include"ute_project_config_ab281b.h"
 #endif
 /** Log模块控制开关*/
-#define UTE_MODULE_LOG_SUPPORT 0
+#define UTE_MODULE_LOG_SUPPORT 1
 
 /** 芯片选型 */
 #define CHIP_5691G                      0           //QFN40
@@ -31,12 +25,7 @@
 
 //芯片封装选择 5691G/5691C_F
 #ifndef UTE_CHIP_PACKAGE_SELECT
-#define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F
-#endif
-
-/*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
-#ifndef UTE_DRV_CTP_SELECT
-#define UTE_DRV_CTP_SELECT             CTP_CST8X
+#define UTE_CHIP_PACKAGE_SELECT             CHIP_5690F
 #endif
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
@@ -72,7 +61,7 @@
 #endif
 /** 默认系统时间*/
 #ifndef DEFAULT_SYSTEM_TIME_YEAR
-#define DEFAULT_SYSTEM_TIME_YEAR 2025
+#define DEFAULT_SYSTEM_TIME_YEAR 2024
 #define DEFAULT_SYSTEM_TIME_MONTH 1
 #define DEFAULT_SYSTEM_TIME_DAY 1
 #define DEFAULT_SYSTEM_TIME_HOUR 8
@@ -131,7 +120,7 @@
 
 /*! 使用ute电池百分比计算方式，反之使用原厂百分比计算,wang.luo 2024-11-02 */
 #ifndef UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
-#define UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT 1
+#define UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT 0
 #endif
 
 /*! 每次恢复出厂设置前保存电量信息,下次开机时恢复当前电量,xjc 2023-02-03*/
@@ -239,14 +228,6 @@
 #define DEFAULT_SCREEN_ON_TIME_SECOND 10
 #endif
 
-/*! 不同TE模式下的spiclk,用于优化撕裂,spiclk : baud = sys_clk / (div +1),wang.luo 2025-01-11 */
-#ifndef UTE_DRV_SCREEN_1TE_SPI_CLK
-#define UTE_DRV_SCREEN_1TE_SPI_CLK 27000000 // 27Mhz
-#endif
-#ifndef UTE_DRV_SCREEN_2TE_SPI_CLK
-#define UTE_DRV_SCREEN_2TE_SPI_CLK 12000000 // 12Mhz
-#endif
-
 /*! 灭屏后延时清除显示深度，返回时间界面，默认时间 zn.zeng, 2021-11-03  */
 #ifndef UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND
 #define UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND 10
@@ -314,12 +295,12 @@
 
 /*! 是否保存BK的PowerOn状态 xjc, 2022-04-07  */
 #ifndef UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT
-#define UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT 1
+#define UTE_MODULE_BT_POWER_STATUS_SAVE_SUPPORT 0
 #endif
 
 /*! 自动关闭bt功能, 2022-06-10  */
 #ifndef UTE_BT30_AUTO_POWRER_OFF_SUPPORT
-#define UTE_BT30_AUTO_POWRER_OFF_SUPPORT 1
+#define UTE_BT30_AUTO_POWRER_OFF_SUPPORT 0
 #endif
 /*! 自动休眠时间大于UTE_BT30_RETRY_CONNECT_TIME_SECOND, zn.zeng 2022-06-30  */
 #ifndef UTE_BT30_AUTO_POWRER_OFF_TIME_SECOND
@@ -375,6 +356,8 @@
 #define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PE6
 #elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
 #define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PE3
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5690F)
+#define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PF6
 #else
 #error CHIP ERR
 #endif
@@ -385,6 +368,8 @@
 #define UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN   IO_PE6
 #elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
 #define UTE_DRV_SCREEN_BACKLIGHT_GPIO_PIN   IO_PE3
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5690F)
+#define UTE_DRV_SCREEN_BACKLIGHT_PWM_ID GPIO_PF6
 #else
 #error CHIP ERR
 #endif
@@ -405,6 +390,8 @@
 #define UTE_DRV_MOTOR_GPIO_PIN IO_PE3
 #elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
 #define UTE_DRV_MOTOR_GPIO_PIN IO_PF3
+#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5690F)
+#define UTE_DRV_MOTOR_GPIO_PIN GPIO_PF6
 #else
 #error CHIP ERR
 #endif
@@ -524,11 +511,6 @@
 /*! 消息推送保存的最大条数zn.zeng, 2021-08-25  */
 #ifndef UTE_MODULE_NOTIFY_SAVE_CNT
 #define UTE_MODULE_NOTIFY_SAVE_CNT 8
-#endif
-
-/*! 消息推送马达震动在消息提醒界面手动开启，防止中科平台休眠时震动时长不固定,wang.luo 2025-01-16 */
-#ifndef UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT
-#define UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT 1
 #endif
 
 /* 支持应用通知选择显示功能 必须支持的三样 xjc, 2022-01-08 */
@@ -772,7 +754,7 @@
 #endif
 
 #ifndef UTE_MODULE_HEART_SUPPORT
-#define UTE_MODULE_HEART_SUPPORT 1
+#define UTE_MODULE_HEART_SUPPORT 0
 #endif
 /*! 默认心率报警是否打开 zn.zeng, 2021-08-20  */
 #ifndef DEFAULT_HEARTWARNING_IS_OPEN
@@ -814,7 +796,7 @@
 
 /*! 血氧功能zn.zeng, 2021-07-23  */
 #ifndef UTE_MODULE_BLOODOXYGEN_SUPPORT
-#define UTE_MODULE_BLOODOXYGEN_SUPPORT 1
+#define UTE_MODULE_BLOODOXYGEN_SUPPORT 0
 #endif
 /*! vcxx系列血氧功能 zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_BLOODOXYGEN_VCXX_SUPPORT
@@ -886,14 +868,6 @@
 /*! 快速眼动,wang.luo 2024-11-13 */
 #ifndef UTE_REM_SLEEP_SUPPORT
 #define UTE_REM_SLEEP_SUPPORT 1
-#endif
-/* 睡眠数据采样支持 zn.zeng 2021-12-29*/
-#ifndef UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT
-#define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 0
-#endif
-/*gesnsor 采集原始数据*/
-#ifndef APP_DBG_GSENSOR_DATA
-#define APP_DBG_GSENSOR_DATA 0
 #endif
 /* 多运动步数数据累加到状态界面 xjc, 2022-01-08 */
 #ifndef UTE_MODULE_SPORT_TODAY_ADD_ALL_SPORT_DATA_SUPPORT
@@ -1099,11 +1073,6 @@
 #define UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT 0
 #endif
 
-/*! 夜间开启佩戴检测优化睡眠监测,wang.luo 2025-01-10 */
-#ifndef UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT
-#define UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT 1
-#endif
-
 #define DRV_HEART_VCXX_LIGHT_I_MIN_VALUE 100
 #define DRV_HEART_VCXX_LIGHT_I_MAX_VALUE 120
 #define DRV_HEART_VCXX_LIGHT_LEAKGE_DIFF_VALUE 32
@@ -1123,7 +1092,7 @@
 
 /* 充电CE认证 zn.zeng 2022-01-03*/
 #ifndef UTE_DRV_BATTERY_CE_AUTH_SUPPORT
-#define UTE_DRV_BATTERY_CE_AUTH_SUPPORT 1
+#define UTE_DRV_BATTERY_CE_AUTH_SUPPORT 0
 #endif
 /* 充电CE认证允许充电温度 zn.zeng 2022-01-03*/
 #ifndef UTE_DRV_BATTERY_CE_AUTH_ALLOW_TEMPERATURE
@@ -1202,7 +1171,7 @@
 
 /*! 在线表盘功能 casen, 2021-11-26  */
 #ifndef UTE_MODULE_WATCHONLINE_SUPPORT
-#define UTE_MODULE_WATCHONLINE_SUPPORT    1
+#define UTE_MODULE_WATCHONLINE_SUPPORT    0
 #endif
 #ifndef UTE_MODULE_WATCHONLINNE_COMPATIBLE_LEVEL
 #define UTE_MODULE_WATCHONLINNE_COMPATIBLE_LEVEL    2
@@ -1239,27 +1208,6 @@
 #define UTE_CONNECT_PC_AUDIO_TEST 0
 #endif
 
-/*! 本地铃声音量设置(静音+音量加减) dengli.lu, 2022-04-24  */
-#ifndef UTE_MODULE_LOCAL_RINGTONE_VOLUME_SET
-#define UTE_MODULE_LOCAL_RINGTONE_VOLUME_SET 0
-#endif
-/*! 默认本地铃声音量值 dengli.lu, 2022-04-24  */
-#ifndef UTE_MODULE_LOCAL_RINGTONE_DEFAULT_VOLUME
-#define UTE_MODULE_LOCAL_RINGTONE_DEFAULT_VOLUME 8
-#endif
-/*! 本地铃声静音默认状态 dengli.lu, 2022-04-24  */
-#ifndef UTE_MODULE_LOCAL_RINGTONE_DEFAULT_MUTE
-#define UTE_MODULE_LOCAL_RINGTONE_DEFAULT_MUTE false
-#endif
-
-/*! 娱乐声音开关支持,xjc 2022-04-27*/
-#ifndef UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
-#define UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT 1
-#endif
-#ifndef UTE_MODULE_BT_ENTERTRANMENT_VOICE_DEFAULT
-#define UTE_MODULE_BT_ENTERTRANMENT_VOICE_DEFAULT false
-#endif
-
 /*! hardfault info to flash zn.zeng,2022-03-10*/
 #if UTE_MODULE_LOG_SUPPORT
 #define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 0
@@ -1269,7 +1217,7 @@
 
 /*! 保存重启信息最大数量,wang.luo 2024-12-30 */
 #ifndef UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT
-#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 6
+#define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 5
 #endif
 
 /*! PWRKEY,wang.luo 2024-12-03 */

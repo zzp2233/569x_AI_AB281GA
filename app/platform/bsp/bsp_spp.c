@@ -19,9 +19,11 @@ void bsp_aec_ack_param(u8 type)
     buf[9] = (u8)xcfg_cb.bt_far_offset;
 
 #if LE_AB_LINK_APP_EN
-    if (type) {
+    if (type)
+    {
         ble_app_ab_link_send_packet(buf, size);
-    } else
+    }
+    else
 #endif
     {
         bt_spp_tx(SPP_SERVICE_CH0, buf, size);
@@ -38,9 +40,11 @@ void bsp_aec_ack(u8 type)
     buf[4] = 'o';
     buf[5] = 'k';
 #if LE_AB_LINK_APP_EN
-    if (type) {
+    if (type)
+    {
         ble_app_ab_link_send_packet(buf, 6);
-    } else
+    }
+    else
 #endif
     {
         bt_spp_tx(SPP_SERVICE_CH0, buf, 6);
@@ -48,29 +52,52 @@ void bsp_aec_ack(u8 type)
 }
 #endif
 
-#if (EQ_DBG_IN_SPP && BT_SCO_APP_DBG_EN && BT_SPP_EN) 
+#if BT_SPP_EN
 
-#define MAX_SPP_TX_NUM          4
-#define MAX_SPP_TX_LEN          128     
-#define SPP_TX_POOL_SIZE       (MAX_SPP_TX_LEN + sizeof(struct txbuf_tag)) * MAX_SPP_TX_NUM
+#define SPP_TX_MTU          256     //max=512
 
-AT(.nr_buf.spp_tx)
-uint8_t spp_tx_pool[SPP_TX_POOL_SIZE];
+#define SPP_POOL_PAGE_NB     1
+#define SPP_POOL_SIZE        (SPP_TX_MTU*3)
+
+AT(.ble_buf.stack.spp)
+uint8_t spp_tx_buf[SPP_TX_MTU];
+
+AT(.ble_buf.stack.spp)
+uint8_t spp_pool_buf[SPP_POOL_SIZE];
+
+AT(.ble_buf.stack.spp)
+ring_buf_t spp_pool;
+
+AT(.rodata.ble.tbl)
+const rbuf_tbl_t spp_pool_tbl[SPP_POOL_PAGE_NB] =
+{
+    {
+        .buf = spp_pool_buf,
+        .size = SPP_POOL_SIZE,
+    },
+};
 
 void spp_txpkt_init(void)
 {
-    txpkt_init(&spp_tx_ch0, spp_tx_pool, MAX_SPP_TX_NUM, MAX_SPP_TX_LEN);
-    spp_tx_ch0.send_kick = spp_send_kick;
+    ring_buf_init(&spp_pool, spp_pool_tbl, SPP_POOL_PAGE_NB, 0);
+    txpkt_init(&spp_tx, spp_tx_buf, &spp_pool, SPP_TX_MTU, spp_send_kick);
 }
-#endif
+
+u16 get_spp_mtu_size(void)
+{
+    return SPP_TX_MTU;
+}
 
 void bt_spp_cmd_process(u8 *ptr, u16 size, u8 type)
 {
 #if EQ_DBG_IN_SPP
-    if (xcfg_cb.eq_dgb_spp_en) {
+    if (xcfg_cb.eq_dgb_spp_en)
+    {
         eq_spp_cb_t *p = &eq_dbg_cb.eq_spp_cb;
-        if ((ptr[0] == 'E' && ptr[1] == 'Q') || (ptr[0] == 'D' && ptr[1] == 'R')) {       //EQ消息
-            if (ptr[2] == '?') {
+        if ((ptr[0] == 'E' && ptr[1] == 'Q') || (ptr[0] == 'D' && ptr[1] == 'R'))         //EQ消息
+        {
+            if (ptr[2] == '?')
+            {
                 memcpy(eq_rx_buf, ptr, size);
                 msg_enqueue(EVT_ONLINE_SET_EQ);
                 return;
@@ -78,20 +105,25 @@ void bt_spp_cmd_process(u8 *ptr, u16 size, u8 type)
             u32 rx_size = little_endian_read_16(ptr, 4) + 6;
             memcpy(eq_rx_buf, ptr, size);
             p->rx_size = rx_size;
-            if (size < rx_size) {
+            if (size < rx_size)
+            {
                 p->remain = 1;
                 p->remian_ptr = size;
-            } else {
+            }
+            else
+            {
                 p->remain = 0;
                 p->remian_ptr = 0;
                 msg_enqueue(EVT_ONLINE_SET_EQ);
             }
             return;
         }
-        if (p->remain) {
+        if (p->remain)
+        {
             memcpy(&eq_rx_buf[p->remian_ptr], ptr, size);
             p->remian_ptr += size;
-            if (p->rx_size == p->remian_ptr) {
+            if (p->rx_size == p->remian_ptr)
+            {
                 msg_enqueue(EVT_ONLINE_SET_EQ);
                 memset(p, 0, sizeof(eq_spp_cb_t));
             }
@@ -104,13 +136,17 @@ void bt_spp_cmd_process(u8 *ptr, u16 size, u8 type)
 //    print_r(ptr, size);
 
 #if BT_SCO_DBG_EN
-    if (ptr[0] == 'a' && ptr[1] == 'e' && ptr[2] == 'c') {
-        if (ptr[0] == 'a' && ptr[1] == 'e' && ptr[2] == 'c') {
-            if (ptr[3] == '?') {
+    if (ptr[0] == 'a' && ptr[1] == 'e' && ptr[2] == 'c')
+    {
+        if (ptr[0] == 'a' && ptr[1] == 'e' && ptr[2] == 'c')
+        {
+            if (ptr[3] == '?')
+            {
                 bsp_aec_ack_param(type);
                 return;
             }
-            if (size == 12) {
+            if (size == 12)
+            {
 //                memcpy(eq_rx_buf, ptr, size);
 //                eq_dbg_cb.eq_spp_cb.rx_size = size;
 //                msg_enqueue(EVT_ONLINE_SET_AEC);
@@ -124,13 +160,16 @@ void bt_spp_cmd_process(u8 *ptr, u16 size, u8 type)
 #endif
 
     //BTControl APP测试命令
-    switch (ptr[0]) {
+    switch (ptr[0])
+    {
         case 0x01:
             //system control
-            if (size != 4) {
+            if (size != 4)
+            {
                 return;     //2byte data + 2byte crc16
             }
-            switch (ptr[1]) {
+            switch (ptr[1])
+            {
                 case 0x01:
                     bt_music_play_pause();
                     break;
@@ -178,3 +217,5 @@ void spp_disconnect_callback(uint8_t *bd_addr, uint8_t ch)
     spp_txpkt_init(); //clear spp tx buf
 #endif //BT_SPP_EN
 }
+
+#endif

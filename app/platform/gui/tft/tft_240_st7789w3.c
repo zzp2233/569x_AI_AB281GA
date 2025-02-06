@@ -1,7 +1,7 @@
 #include "include.h"
 
 //240*296
-#if GUI_TFT_240_ST7789W3 && (GUI_SELECT == GUI_TFT_240_ST7789W3)
+#if (GUI_SELECT == GUI_TFT_240_ST7789W3)
 
 
 #define WriteData(v) tft_write_data(v)
@@ -114,8 +114,10 @@ void st7789w3_display_point(uint16_t x1, uint16_t y1, uint16_t color)
     printf("st7789w3_display_point_test_nomal\n");
     tft_set_window(0, 0, x1, y1);
     tft_frame_start();
-    for (int x = 0;x <= x1; x++){
-        for (int y = 0; y <= y1; y++){
+    for (int x = 0; x <= x1; x++)
+    {
+        for (int y = 0; y <= y1; y++)
+        {
             WDT_CLR();
             WriteData(color >> 8);
             WriteData(color);
@@ -143,108 +145,108 @@ uint32_t tft_read_id(void)
 void tft_240_st7789w3_init(void)
 {
     printf("tft_240_st7789w3_init\n");
-   //HW_Reset();
-   delay_ms(120);
-   WriteComm(0x11);
-   delay_ms(120);
+    //HW_Reset();
+    delay_ms(120);
+    WriteComm(0x11);
+    delay_ms(120);
 
-   WriteComm(0x36);
-   WriteData(0x00);
+    WriteComm(0x36);
+    WriteData(0x00);
 
-   WriteComm(0x3A);
-   WriteData(0x05);
+    WriteComm(0x3A);
+    WriteData(0x05);
 
-   WriteComm(0xB2);
-   WriteData(0x0C);
-   WriteData(0x0C);
-   WriteData(0x00);
-   WriteData(0x33);
-   WriteData(0x33);
+    WriteComm(0xB2);
+    WriteData(0x0C);
+    WriteData(0x0C);
+    WriteData(0x00);
+    WriteData(0x33);
+    WriteData(0x33);
 
 //  WriteComm(0xB0);
 //  WriteData(0x00);
 //  WriteData(0xE0);
 
-   WriteComm(0xB7);
-   WriteData(0x14);
+    WriteComm(0xB7);
+    WriteData(0x14);
 
-   WriteComm(0xBB);
-   WriteData(0x17);
+    WriteComm(0xBB);
+    WriteData(0x17);
 
-   WriteComm(0xC0);
-   WriteData(0x2C);
+    WriteComm(0xC0);
+    WriteData(0x2C);
 
-   WriteComm(0xC2);
-   WriteData(0x01);
+    WriteComm(0xC2);
+    WriteData(0x01);
 
-   WriteComm(0xC3);
-   WriteData(0x05);
+    WriteComm(0xC3);
+    WriteData(0x05);
 
-   WriteComm(0xC6);
-   WriteData(0x0F);
+    WriteComm(0xC6);
+    WriteData(0x0F);
 
-   WriteComm(0xD0);
-   WriteData(0xA7);
+    WriteComm(0xD0);
+    WriteData(0xA7);
 
-   WriteComm(0xD0);
-   WriteData(0xA7);
-   WriteData(0xA1);
+    WriteComm(0xD0);
+    WriteData(0xA7);
+    WriteData(0xA1);
 
-   WriteComm(0xD6);
-   WriteData(0xA1);   //sleep in后，gate输出为GND
+    WriteComm(0xD6);
+    WriteData(0xA1);   //sleep in后，gate输出为GND
 
-   WriteComm(0xE0);
-   WriteData(0x0F);
-   WriteData(0x0E);
-   WriteData(0x10);
-   WriteData(0x01);
-   WriteData(0x01);
-   WriteData(0x00);
-   WriteData(0x25);
-   WriteData(0x33);
-   WriteData(0x3C);
-   WriteData(0x3B);
-   WriteData(0x19);
-   WriteData(0x17);
-   WriteData(0x26);
-   WriteData(0x27);
+    WriteComm(0xE0);
+    WriteData(0x0F);
+    WriteData(0x0E);
+    WriteData(0x10);
+    WriteData(0x01);
+    WriteData(0x01);
+    WriteData(0x00);
+    WriteData(0x25);
+    WriteData(0x33);
+    WriteData(0x3C);
+    WriteData(0x3B);
+    WriteData(0x19);
+    WriteData(0x17);
+    WriteData(0x26);
+    WriteData(0x27);
 
-   WriteComm(0xE1);
-   WriteData(0x0F);
-   WriteData(0x10);
-   WriteData(0x12);
-   WriteData(0x07);
-   WriteData(0x04);
-   WriteData(0x00);
-   WriteData(0x25);
-   WriteData(0x32);
-   WriteData(0x3B);
-   WriteData(0x3C);
-   WriteData(0x16);
-   WriteData(0x18);
-   WriteData(0x24);
-   WriteData(0x28);
+    WriteComm(0xE1);
+    WriteData(0x0F);
+    WriteData(0x10);
+    WriteData(0x12);
+    WriteData(0x07);
+    WriteData(0x04);
+    WriteData(0x00);
+    WriteData(0x25);
+    WriteData(0x32);
+    WriteData(0x3B);
+    WriteData(0x3C);
+    WriteData(0x16);
+    WriteData(0x18);
+    WriteData(0x24);
+    WriteData(0x28);
 
 //   WriteComm(0xE4);
 //   WriteData(0x26);
 //   WriteData(0x00);   //设定gate起点位置
 //  WriteData(0x00);   //当gate没有用完时，bit4(TMG)设为0
 
-   WriteComm(0xE7);
-   WriteData(0x10);  //2 data
+    WriteComm(0xE7);
+    WriteData(0x10);  //2 data
 
-   WriteComm(0x35);
-   WriteData(0x00);
+    WriteComm(0x35);
+    WriteData(0x00);
 
-   WriteComm(0x44);
-   WriteData(0x00);
-   WriteData(0x33);
+    WriteComm(0x44);
+    WriteData(0x00);
+    WriteData(0x33);
 
-   WriteComm(0x21);
+    WriteComm(0x21);
 
-   WriteComm(0x29);
+    WriteComm(0x29);
 
-   WriteComm(0x2C);
+    WriteComm(0x2C);
 }
 
 #endif

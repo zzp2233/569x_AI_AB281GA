@@ -9,7 +9,8 @@
 
 #define BIT(n)                  (1ul << (n))
 
-#define AT(x)                   __attribute__((section(#x)))
+#define STR(x)                  #x
+#define AT(x)                   __attribute__((section(STR(x))))
 #define ALIGNED(n)              __attribute__((aligned(n)))
 #define DMA_ADR(x)              ((u32)x)
 #define ALWAYS_INLINE           __attribute__((always_inline)) inline
@@ -43,6 +44,12 @@
 #define MIN(a,b)                ((a) < (b) ? (a) : (b))
 #define MAX(a,b)                ((a) > (b) ? (a) : (b))
 
-void wdt_clr(void);
+#define CONST_CAT(x, y)         x ## y
+#define SET_MACRO(x, y)         CONST_CAT(x, y)
 
+#define TEXT_ALIGNED_AT         .text.aligned.
+
+#define GLOBAL_ALIGNED(x)       AT(SET_MACRO(TEXT_ALIGNED_AT, x)) ALIGNED(x)
+
+void wdt_clr(void);
 #endif // _MACRO_H

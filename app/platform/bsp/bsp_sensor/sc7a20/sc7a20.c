@@ -17,15 +17,6 @@ unsigned char SL_SC7A20_I2cAddr_Read(unsigned char iic_addr, unsigned char reg, 
     return 0;
 }
 
-unsigned char SL_SC7A20_I2cAddr_Write(bool sl_spi_iic,unsigned char reg, unsigned char dat)
-{
-    // printf("%s\n", __func__);
-
-    uint32_t i2c_cfg = START_FLAG0 | DEV_ADDR0 | REG_ADDR_0 | WDATA | STOP_FLAG;
-    bsp_hw_i2c_tx_byte(i2c_cfg, SC7A20_WRITE_ADDR(SL_SC7A20_IIC_7BITS_ADDR), reg, dat);
-    return 0;
-}
-
 unsigned char SL_SC7A20_I2c_Spi_Write(bool sl_spi_iic,unsigned char reg, unsigned char dat)
 {
     // printf("%s\n", __func__);
@@ -96,7 +87,7 @@ void sc7a20_int_enable(void)
     bsensor.step.int_en = 1;
 
     bsensor.step.mutex = 1;
-    // SL_MCU_SLEEP_OPEN_SC7A20_INT();
+    SL_MCU_SLEEP_OPEN_SC7A20_INT();
     bsensor.step.mutex = 0;
 }
 
@@ -112,8 +103,8 @@ void sc7a20_int_disable(void)
     bsensor.step.int_en = 0;
 
     bsensor.step.mutex = 1;
-    // SL_MCU_WAKE_CLOSE_SC7A20_INT();
-    // SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_INT_SWAY_ALGO();
+    SL_MCU_WAKE_CLOSE_SC7A20_INT();
+    SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_INT_SWAY_ALGO();
     bsensor.step.mutex = 0;
 }
 
@@ -408,15 +399,17 @@ void sc7a20_sleep_1min_callback(co_timer_t *timer, void *param)
 AT(.text.lowpwr.sleep)
 void sc7a20_process_500ms_callback(co_timer_t *timer, void *param)
 {
-    // if (!bsp_sensor_init_sta_get(SENSOR_INIT_STEP)) {
-    //     return;
-    // }
+    if (!bsp_sensor_init_sta_get(SENSOR_INIT_STEP))
+    {
+        return;
+    }
 
-    // //互斥避免抢占死机
-    // if (!bsensor.step.int_en && !bsensor.step.mutex) {
-    // sl_data_update();
-    SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_ALGO();        //计步
-    // }
+    //互斥避免抢占死机
+    if (!bsensor.step.int_en && !bsensor.step.mutex)
+    {
+        sl_data_update();
+        SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_INT_SWAY_ALGO();        //计步
+    }
 }
 
 void sc7a20_init(void)
@@ -426,17 +419,20 @@ void sc7a20_init(void)
     sl_var_init();                                  //数据初始化
     gsensor_use_info_set(1, 22, 60, 170, 1);        //用户信息导入
 
-    //char sc7a20_id = SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_INIT();    //sc7a20库函数初始化
+    char sc7a20_id = SL_SC7A20_PEDO_KCAL_WRIST_SLEEP_SWAY_INIT();    //sc7a20库函数初始化
 
-    // if (sc7a20_id == SL_SC7A20_VERSION_VALUE || sc7a20_id == SL_SC7A20E_VERSION_VALUE) {
-    //     bsp_sensor_init_sta_set(SENSOR_INIT_STEP);
-    // } else {
-    //     bsp_sensor_init_sta_clr(SENSOR_INIT_STEP);
-    //     return;
-    // }
+    if (sc7a20_id == SL_SC7A20_VERSION_VALUE || sc7a20_id == SL_SC7A20E_VERSION_VALUE)
+    {
+        bsp_sensor_init_sta_set(SENSOR_INIT_STEP);
+    }
+    else
+    {
+        bsp_sensor_init_sta_clr(SENSOR_INIT_STEP);
+        return;
+    }
 
-    // extab_user_isr_set(IO_PE3, FALL_EDGE, IOUD_SEL_PU, sc7a20_isr);
-    // extab_user_isr_mode_set(IO_PE3, MODE_BOTH_AWAKEN_SLEEP);
+    extab_user_isr_set(IO_PE3, FALL_EDGE, IOUD_SEL_PU, sc7a20_isr);
+    extab_user_isr_mode_set(IO_PE3, MODE_BOTH_AWAKEN_SLEEP);
 
     bsp_sensor_step_wrist_set(true);                //抬腕亮屏
 
@@ -447,19 +443,5 @@ void sc7a20_init(void)
     co_timer_set(&sc7a20_sleep, 1000 * 60, TIMER_REPEAT, LEVEL_LOW_PRI, sc7a20_sleep_1min_callback, NULL);
     co_timer_set_sleep(&sc7a20_sleep, true);
 #endif
-}
-
-void sc7a20_500ms_callback_en(bool en)
-{
-    if (en)
-    {
-        i2c_gsensor_init();
-        co_timer_enable(&sc7a20_500ms, true);
-    }
-    else
-    {
-        co_timer_enable(&sc7a20_500ms, false);
-        bsp_i2c_init();
-    }
 }
 #endif //SENSOR_STEP_SEL

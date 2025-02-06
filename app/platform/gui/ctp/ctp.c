@@ -1,8 +1,6 @@
 #include "include.h"
-#include "ute_module_message.h"
-#include "ute_module_log.h"
 
-#define TRACE_EN                UTE_LOG_DRV_TP_LVL
+#define TRACE_EN                0
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -20,6 +18,11 @@ const char str_xy[] = "%d: %d, %d\n";
 #define CTP_CNT_LONG                     40                         //CTP长按时间阈值(CTP INT时钟个数)
 #define I2C_WRITE_ADDR(ADDR)             ((ADDR) << 1)              //CTP IIC写地址
 #define I2C_READ_ADDR(ADDR)              ((ADDR) << 1 | 1)          //CTP IIC读地址
+
+#if SECURITY_PAY_EN
+AT(.com_text.ctp_var)
+bool ctp_kick_status;
+#endif // SECURITY_PAY_EN
 
 enum
 {
@@ -214,8 +217,15 @@ void ctp_msg_deal(bool press)
         ctp_cb.cnt = 0;
         ctp_cb.sta = CTP_STA_IDLE;
     }
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
 }
+
+#if SECURITY_PAY_EN
+
+bool ctp_get_kick_status(void)
+{
+    return ctp_kick_status;
+}
+#endif // SECURITY_PAY_EN
 
 void sys_ctp_irq_enble(int vector)
 {
@@ -276,7 +286,9 @@ void ctp_isr(void)
 #endif
         TRACE_K(str_xy, press, ctp_cb.x, ctp_cb.y);
         ctp_msg_deal(press);
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
+#if SECURITY_PAY_EN
+        ctp_kick_status = false;
+#endif // SECURITY_PAY_EN
     }
 }
 
@@ -357,6 +369,9 @@ void ctp_iic_readkick(void *buf, u8 addr, int len)
     CTP_IIC->sfr->IICxDMAADR = DMA_ADR(buf);
     CTP_IIC->sfr->IICxDMACNT = ((len - 1) << 16) | BIT(0);
     CTP_IIC->sfr->IICxCON0 |= BIT(28);                //KICK
+#if SECURITY_PAY_EN
+    ctp_kick_status = true;
+#endif // SECURITY_PAY_EN
 }
 
 //读数据接口(开中断前)
@@ -415,6 +430,9 @@ void ctp_init(void)
 #endif
     CTP_IIC->sfr->IICxCON1 = BIT(12) | BIT(11) | BIT(9) | BIT(8) | BIT(7) | BIT(5) | BIT(4) | BIT(3) | 1;
 
+#if SECURITY_PAY_EN
+    CTP_IIC->sfr->IICxCON0 = BIT(10) | (26 << 4) | BIT(0);         //alipay不支持那么高速率
+#endif // SECURITY_PAY_EN
     //复位TP/等待模块使能
     ctp_reset();
 #if (CTP_SELECT == CTP_CST8X)

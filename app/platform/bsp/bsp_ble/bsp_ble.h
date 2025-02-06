@@ -6,11 +6,11 @@
 #include "bsp_ams.h"
 #include "bsp_ancs.h"
 
-typedef struct {
+typedef struct
+{
     bool ble_connected;
     bool ams_connected;
     bool ancs_connected;
-    u32 ansc_uid; // ute add
 } ble_cb_t;
 extern ble_cb_t ble_cb;
 

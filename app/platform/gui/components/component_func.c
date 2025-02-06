@@ -1,11 +1,4 @@
 #include "include.h"
-#include "ute_module_systemtime.h"
-#include "ute_module_sport.h"
-#include "ute_module_gui_common.h"
-#include "ute_module_heart.h"
-#include "ute_module_bloodoxygen.h"
-#include "ute_module_weather.h"
-#include "ute_language_common.h"
 
 #define TRACE_EN                1
 
@@ -88,62 +81,6 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
     char value_str[16];
     memset(value_str, '\0', 16);
 
-    u8 tmp_time_hour = tm.hour;
-    if(uteModuleSystemtime12HOn())
-    {
-        if(tmp_time_hour > 12)
-        {
-            tmp_time_hour = tmp_time_hour - 12;
-        }
-        else if (tmp_time_hour == 0)
-        {
-            tmp_time_hour = 12;
-        }
-    }
-
-    sys_cb.distance_cur = uteModuleSportGetCurrDayDistanceData();
-    sys_cb.kcal_cur = uteModuleSportGetCurrDayKcalData();
-
-    uint32_t totalStepCnt = 0;
-    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-    sys_cb.step_cur = totalStepCnt;
-    sys_cb.step_goal = uteModuleSportGetStepsTargetCnt();
-
-#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
-    ute_module_target_notify_data_t targetNotifyData;
-    uteModuleSportGetTodayTargetNotifyData(&targetNotifyData);
-    sys_cb.kcal_goal = targetNotifyData.todayKcalTarget;
-    sys_cb.distance_goal = targetNotifyData.todayDistanceTarget;
-#else
-    sys_cb.kcal_goal = sys_cb.step_goal;
-    sys_cb.distance_goal = sys_cb.step_goal;
-#endif
-
-    ute_display_ctrl_t displayInfo;
-    uteModuleGuiCommonGetDisplayInfo(&displayInfo);
-
-    ute_module_weather_data_t weatherData;
-    uteModuleWeatherGetData(&weatherData);
-    sys_cb.weather_idx = (uint8_t)weatherData.DayWeather[0];
-    sys_cb.temperature[0] = weatherData.dayTemperatureMin[0];
-    sys_cb.temperature[1] = weatherData.dayTemperatureMax[0];
-
-    if (uteModuleSystemtimeIsNight())
-    {
-        if (sys_cb.weather_idx == WEATHER_TYPE_SUNNY)
-        {
-            sys_cb.weather_idx = 13;
-        }
-        else if (sys_cb.weather_idx == WEATHER_TYPE_CLOUDY)
-        {
-            sys_cb.weather_idx = 14;
-        }
-        else if (sys_cb.weather_idx >= WEATHER_TYPE_SHOWER_RAIN && sys_cb.weather_idx <= WEATHER_TYPE_HEAVY_RAIN)
-        {
-            sys_cb.weather_idx = 15;
-        }
-    }
-
     switch (compo->bond_data)
     {
         case COMPO_BOND_YEAD:
@@ -164,13 +101,12 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         case COMPO_BOND_WEEKDAY:
             value = tm.weekday;
             sprintf(value_str, "%d", value);
-            const u16 week_lang_id[] = {STR_SUNDAY, STR_MONDAY, STR_TUESDAY, STR_WEDNESDAY, STR_THURSDAY, STR_FRIDAY, STR_SATURDAY};
-            strcpy(value_str, i18n[week_lang_id[value]]);
+            strcpy(value_str, i18n[STR_SUNDAY + value]);
             break;
 
         case COMPO_BOND_HOUR:
-            value = tmp_time_hour;
-            sprintf(value_str, "%02d", value);
+            value = tm.hour;
+            sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_MINUTE:
@@ -179,12 +115,12 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_HOUR_H:
-            value = tmp_time_hour / 10;
+            value = tm.hour / 10;
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_HOUR_L:
-            value = tmp_time_hour % 10;
+            value = tm.hour % 10;
             sprintf(value_str, "%d", value);
             break;
 
@@ -196,25 +132,6 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         case COMPO_BOND_MINUTE_L:
             value = tm.min % 10;
             sprintf(value_str, "%02d", value);
-            break;
-
-        case COMPO_BOND_HOURMIN_TXT:
-//            value = tmp_time_hour / 10;
-            if(uteModuleSystemtime12HOn())
-            {
-                if (tm.hour >= 12)      //2 PM, 1 AM
-                {
-                    sprintf(value_str, "%s %02d:%02d", i18n[STR_PM], tmp_time_hour, tm.min);
-                }
-                else
-                {
-                    sprintf(value_str, "%s %02d:%02d", i18n[STR_AM], tmp_time_hour, tm.min);
-                }
-            }
-            else
-            {
-                sprintf(value_str, "%02d:%02d", tmp_time_hour, tm.min);
-            }
             break;
 
         case COMPO_BOND_SECOND:
@@ -251,37 +168,21 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
         case COMPO_BOND_DISTANCE_PROGRESS:
             value = 0;
-#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
             if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.distance_goal)
             {
                 value = ((compo_picturebox_t*)compo)->radix * sys_cb.distance_cur / sys_cb.distance_goal;
                 value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
             }
-#else
-            if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.step_goal)
-            {
-                value = ((compo_picturebox_t*)compo)->radix * sys_cb.step_cur / sys_cb.step_goal;
-                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
-            }
-#endif
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_KCAL_PROGRESS:
             value = 0;
-#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
             if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.kcal_goal)
             {
                 value = ((compo_picturebox_t*)compo)->radix * sys_cb.kcal_cur / sys_cb.kcal_goal;
                 value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
             }
-#else
-            if (compo->type == COMPO_TYPE_PICTUREBOX && sys_cb.step_goal)
-            {
-                value = ((compo_picturebox_t*)compo)->radix * sys_cb.step_cur / sys_cb.step_goal;
-                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
-            }
-#endif
             sprintf(value_str, "%d", value);
             break;
 
@@ -307,22 +208,22 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
 
         case COMPO_BOND_KCAL:
-            value = sys_cb.kcal_cur;
+            value = 0;
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_STEP:
-            value = sys_cb.step_cur;
+            value = 0;
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_HEARTRATE:
-            value = uteModuleHeartGetHeartValue();
+            value = 0;
             sprintf(value_str, "%d", value);
             break;
 
         case COMPO_BOND_BLOOD_OXYGEN:
-            value = uteModuleBloodoxygenGetValue();
+            value = 0;
             sprintf(value_str, "%d", value);
             break;
 
@@ -333,8 +234,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
         case COMPO_BOND_WEATHER:
             value = sys_cb.weather_idx;
-            const u16 weather_lang_id[] = {STR_UNKNOWN, STR_SUNNY, STR_CLOUDY, STR_OVERCAST, STR_MODERATE_RAIN, STR_RAINY_SHOWERS, STR_SLEET, STR_DRIZZLE, STR_HEAVY_RAIN, STR_SNOWY, STR_SAND_AND_DUST, STR_HAZE, STR_WINDY};
-            sprintf(value_str, "%s", i18n[weather_lang_id[weatherData.DayWeather[0]]]);
+            sprintf(value_str, "%s", i18n[STR_CLOUDY + value]);
             break;
 
         case COMPO_BOND_ATMOMS:
@@ -343,19 +243,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_TEMPERATURE:
-            if (displayInfo.isFahrenheit)
-            {
-                value = (float)weatherData.fristDayCurrTemperature * 9.0f / 5.0f + 32;
-                if (value < -99)
-                {
-                    value = -99;
-                }
-            }
-            else
-            {
-                value = weatherData.fristDayCurrTemperature;
-            }
-            sprintf(value_str, "%d~%d%s", sys_cb.temperature[0], sys_cb.temperature[1], displayInfo.isFahrenheit ? "℉" : "℃"); // 温度范围
+            value = (sys_cb.temperature[0] + sys_cb.temperature[1] + 1) / 2;  //平均温度
+            sprintf(value_str, "%d~%d℃", sys_cb.temperature[0], sys_cb.temperature[1]);  //温度范围
             break;
 
         case COMPO_BOND_ALTITUDE:
@@ -369,30 +258,13 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_TEMPERATURE_UNIT:
-            value = displayInfo.isFahrenheit ? 1 : 0;              //0:℃ 1:℉
+            value = 0;              //0:℃ 1:℉
             //strcpy(value_str, i18n[STR_CELSIUS + value]);
             break;
 
         case COMPO_BOND_DISTANCE_UNIT:
-            value = uteModuleSystemtimeGetDistanceMiType() == true ? 1 : 0;              //0:km 1:mile
+            value = 0;              //0:km 1:mile
             //strcpy(value_str, i18n[STR_KM + value]);
-            break;
-
-        case COMPO_BOND_DISTANCE:
-            value = sys_cb.distance_cur;
-            sprintf(value_str, "%d.%d", value/100, value%100);
-            break;
-
-        case COMPO_BOND_TIME_WEEK: //图片 星期
-            value = tm.weekday; //0-6:SUN-SAT
-            break;
-
-        case COMPO_BOND_TIME_AMPM: //图片 am pm
-            value = tm.hour > 12 ? 1 : 0; // 0:AM 1:PM
-            break;
-
-        case COMPO_BOND_TIME_MONTH: //图片 月份
-            value = tm.mon - 1;
             break;
 
         default:
@@ -426,11 +298,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         else if (compo->type == COMPO_TYPE_PICTUREBOX)
         {
             compo_picturebox_t *pic = (compo_picturebox_t *)compo;
-            if (widget_get_visble(pic->img))
-            {
-                compo_picturebox_cut(pic, value, pic->radix);
-                // compo_picturebox_set_visible(pic, true);
-            }
+            compo_picturebox_cut(pic, value, pic->radix);
+            compo_picturebox_set_visible(pic, true);
         }
     }
 }
@@ -460,6 +329,7 @@ static void compo_set_roll(compo_roll_cb_t *rcb, widget_text_t *txt, bool multil
     bool txt_directoion = widget_text_get_right_align(txt);
     s16 client_x = 0, client_y = 0;
     widget_text_get_client(txt, &client_x, &client_y);
+
 
     flag_drag = ctp_get_dxy(&dx, &dy);
     if (flag_drag)      //按下
@@ -649,7 +519,7 @@ void compo_set_update(tm_t tm, u16 mtime)
 {
     component_t *compo = compo_get_head();
     s16 angle_h, angle_m, angle_s;
-    char time_str[20];
+    char time_str[8];
 
     angle_h = tm.hour * 300 + tm.min * 5 + tm.sec / 12;
     angle_m = tm.min * 60 + tm.sec;
@@ -753,59 +623,13 @@ void compo_set_update(tm_t tm, u16 mtime)
             }
             break;
 
-//        case COMPO_TYPE_DISKLIST:
-//            {
-//                compo_disklist_t *disklist = (compo_disklist_t *)compo;
-//                int i;
-//                for (i=0; i<DISKLIST_ITEM_CNT; i++) {
-//                    compo_set_roll(&disklist->roll_cb[i], disklist->item_text[i], false);     //滚动
-//                }
-//            }
-//            break;
-
-            case COMPO_TYPE_CARDBOX:
-            {
-                compo_cardbox_t *cardbox = (compo_cardbox_t *)compo;
-                for (int i=0; i<CARD_TEXT_MAX; i++)
-                {
-                    widget_text_t* txt = cardbox->text[i];
-                    compo_set_roll(&cardbox->roll_cb[i], txt, false);     //滚动
-                }
-            }
-            break;
-
             case COMPO_TYPE_FORM:
             {
                 compo_form_t *frm = (compo_form_t *)compo;
-                if (widget_get_visble(frm->time->txt))
+                if (widget_get_visble(frm->time))
                 {
-                    u8 tmp_time_hour = tm.hour;
-                    if(uteModuleSystemtime12HOn())
-                    {
-                        if(tmp_time_hour > 12)
-                        {
-                            tmp_time_hour = tmp_time_hour - 12;
-                        }
-                        else if (tmp_time_hour == 0)
-                        {
-                            tmp_time_hour = 12;
-                        }
-
-                        if (((tm.hour >= 12) ? 1 : 0) == 0)      //2 PM, 1 AM
-                        {
-                            sprintf(time_str, "%s%02d:%02d", i18n[STR_AM], tmp_time_hour, tm.min);
-                        }
-                        else
-                        {
-                            sprintf(time_str, "%s%02d:%02d", i18n[STR_PM], tmp_time_hour, tm.min);
-                        }
-                    }
-                    else
-                    {
-                        sprintf(time_str, "%02d:%02d", tmp_time_hour, tm.min);
-                    }
-
-                    compo_textbox_set(frm->time, time_str);
+                    sprintf(time_str, "%02d:%02d", tm.hour, tm.min);
+                    widget_text_set(frm->time, time_str);
                 }
             }
             break;
@@ -899,15 +723,6 @@ void compo_set_update(tm_t tm, u16 mtime)
 
             case COMPO_TYPE_DISKLIST:
             {
-                compo_disklist_t *disklist = (compo_disklist_t *)compo;
-                int i;
-                for (i=0; i<DISKLIST_ITEM_CNT; i++)
-                {
-                    compo_set_roll(&disklist->roll_cb[i], disklist->item_text[i], false);     //滚动
-                }
-            }
-
-            {
                 s16 angle = 0;
                 compo_disklist_t *disk = (compo_disklist_t*)compo;
                 if (disk->hour != NULL)
@@ -930,7 +745,6 @@ void compo_set_update(tm_t tm, u16 mtime)
                     widget_set_alpha(disk->page_time, widget_get_alpha(disk->time_bg));
                 }
             }
-
             break;
 
             default:
@@ -953,7 +767,7 @@ int compo_get_button_id(void)
         {
             compo_button_t *btn = (compo_button_t *)compo;
             rect_t rect = widget_get_absolute(btn->widget);
-            if ((widget_get_visble(btn->widget)) && (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei))
+            if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
             {
                 return btn->id;
             }

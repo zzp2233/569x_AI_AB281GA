@@ -1,20 +1,11 @@
 #include "include.h"
-#include "ute_module_call.h"
 
 static call_cfg_t bt_voice_cb AT(.sco_data);
-
-#if BT_VOIP_REJECT_EN
-//是否拒绝通话建立前的SCO连接请求，0-不拒绝，1-拒绝SCO建立，2-SCO建立后移除
-uint8_t cfg_bt_reject_sco_before_incall = 0;
-//是否拒绝网络通话SCO连接请求
-bool cfg_bt_reject_sco_with_voip = false;
-#endif
 
 void bt_call_init(call_cfg_t *p);
 void bt_call_exit(void);
 void bt_sco_magic_init(void);
 void bt_sco_magic_exit(void);
-bool hfp_hf_check_is_3way(void);
 
 AT(.rodata.mic_gain)
 const int mic_gain_tbl[16] =
@@ -182,24 +173,14 @@ static void bt_sco_eq_drc_init(call_cfg_t *p)
     mic_set_post_gain(mic_gain_tbl[xcfg_cb.mic_post_gain] << 8);
 
 #ifdef RES_BUF_EQ_CALL_NORMAL_EQ
-#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
-    if (!xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_spp_en)
-#endif
-    {
-        music_set_eq_by_res(RES_BUF_EQ_CALL_NORMAL_EQ, RES_LEN_EQ_CALL_NORMAL_EQ);
-    }
+    music_set_eq_by_res(RES_BUF_EQ_CALL_NORMAL_EQ, RES_LEN_EQ_CALL_NORMAL_EQ);
 #else
     music_eq_off();
 #endif
 #ifdef RES_BUF_DRC_CALL_DAC_DRC
-#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
-    if (!xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_spp_en)
-#endif
+    if (!music_set_drc_by_res(RES_BUF_DRC_CALL_DAC_DRC, RES_LEN_DRC_CALL_DAC_DRC))
     {
-        if (!music_set_drc_by_res(RES_BUF_DRC_CALL_DAC_DRC, RES_LEN_DRC_CALL_DAC_DRC))
-        {
-            music_drc_off();
-        }
+        music_drc_off();
     }
 #else
     music_drc_off();
@@ -216,6 +197,7 @@ static void bt_sco_eq_drc_exit(void)
 
 static void bt_call_alg_init(void)
 {
+    printf("bt_call_alg_init\n");
     u8 sysclk = SYS_24M;
     memset(&bt_voice_cb, 0, sizeof(call_cfg_t));
 
@@ -263,41 +245,8 @@ void hfp_hf_call_notice(uint32_t evt)
 {
     switch (evt)
     {
-        case BT_NOTICE_INCOMING:
-            printf("===>>> InComing, is 3way:%d\n", hfp_hf_check_is_3way());
-            bsp_call_mgr_send(CALL_MGR_BT_INCOM);
-            break;
-        case BT_NOTICE_OUTGOING:
-            printf("===>>> OutGoing, is 3way:%d\n", hfp_hf_check_is_3way());
-            bsp_call_mgr_send(CALL_MGR_BT_OUTGO);
-            break;
-        case BT_NOTICE_INCALL:
-            printf("===>>> InCall,   is 3way:%d\n", hfp_hf_check_is_3way());
-#if CALL_MGR_EN
-            bt_cb.incall_flag = 1;
-#endif
-            bsp_call_mgr_send(CALL_MGR_BT_INCALL);
-            break;
-        case BT_NOTICE_ENDCALL:
-            printf("===>>> EndCall\n");
-            bsp_call_mgr_send(CALL_MGR_BT_ENDCALL);
-            bt_cb.number_sta = false;
-            bt_cb.call_type = CALL_TYPE_NONE;
-
-            //保存通话记录
-            if (sys_cb.refresh_language_flag == false)    //切换语言的时候不保存
-            {
-                memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
-                uteModuleCallUpdateRecordsData();
-            }
-
-#if CALL_MGR_EN
-            bt_cb.incall_flag = 0;
-            bt_cb.times = 0;
-#endif
-            break;
         case BT_NOTICE_CALL_NUMBER:
-            printf("===>>> Number: %s\n", hfp_get_last_call_number(0));
+            printf("===>>> Number: %s\n", hfp_get_last_call_number(bt_call_get_hfp_index()));
             bt_cb.number_sta = true;
 #if CALL_MGR_EN
             // 三方来电 延迟更新号码
@@ -320,65 +269,6 @@ void bsp_bt_call_times_inc(void)
 #endif
 }
 
-void bsp_bt_call_process(bsp_call_mgr_msg_t msg)
-{
-#if CALL_MGR_EN
-    switch (msg)
-    {
-        case CALL_MGR_BT_INCOM:
-            bsp_iis_stop();
-            func_cb.sta = FUNC_BT_RING;
-            break;
-        case CALL_MGR_BT_OUTGO:
-            bsp_iis_stop();
-            func_cb.sta = FUNC_BT_CALL;
-            break;
-        case CALL_MGR_BT_INCALL:
-            func_cb.sta = FUNC_BT_CALL;
-            break;
-        case CALL_MGR_BT_ENDCALL:
-            break;
-        default:
-            break;
-    }
-#endif
-}
-
-#if BT_HFP_3WAY_CTRL_EN
-
-///三方来电号码更新控制
-bool hfp_hf_3way_number_update_control(void)
-{
-    return true;
-}
-
-/**
- * @brief clcc 解析回调
- *
- * @param idx 通话序列索引（下标从1开始）
- * @param dir 0:去电 1:来电
- * @param status 0:活动中
- *               1:挂起
- *               2:拨号中（仅去电）
- *               3:提醒中（仅去电）
- *               4:来电中（仅来电）
- *               5:等待中（仅来电）
- * @param mode 0:通话 1:数据 2:传真
- * @param mpty 0:不是多方呼叫 1:是多方呼叫
- * @param number 号码
- * @param type
- */
-void hfp_hf_parse_clcc_cb(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode, uint8_t mpty, char *number, uint8_t type)
-{
-    printf("===>>> clcc: idx:%d, dir:%d, status:%d, mode:%d, mpty:%d, number:%s, type:%d\n", idx, dir, status, mode, mpty, number, type);
-    if(mode == 0 && status != 1)
-    {
-        uteModuleCallSetBeforeCallStatus(dir);
-        uteModuleCallSetContactsNumberAndName((uint8_t*)number, strlen(number), (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
-    }
-}
-
-#endif //HFP_3WAY_CONTROL_EN
 
 ALIGNED(64)
 void sco_set_incall_flag(u8 bit)
@@ -404,10 +294,14 @@ bool sco_clr_incall_flag(u8 bit)
 
 void sco_audio_init(void)
 {
+    printf("sco_audio_init\n");
 #if BT_SCO_APP_DBG_EN
     CLKGAT1 |= BIT(27);
 #endif
 
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
     sco_set_incall_flag(INCALL_FLAG_SCO);
     bt_call_alg_init();
 
@@ -418,8 +312,7 @@ void sco_audio_init(void)
     dac_set_anl_offset(1);
     audio_path_init(AUDIO_PATH_BTMIC);
     audio_path_start(AUDIO_PATH_BTMIC);
-    // bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
-    bsp_change_volume(VOL_MAX);     //通话改成默认最大音量
+    bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
     dac_fade_in();
 }
 
@@ -432,7 +325,10 @@ void sco_audio_exit(void)
     dac_set_anl_offset(0);
     sco_clr_incall_flag(INCALL_FLAG_SCO);
     bsp_change_volume(sys_cb.vol);
-    // bsp_change_volume(VOL_MAX);             //通话改成默认最大音量
+
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_start();
+#endif
 
 #if BT_SCO_APP_DBG_EN
     CLKGAT1 &= ~BIT(27);
@@ -444,13 +340,11 @@ void modem_call_init(void)
     CLKGAT1 |= BIT(4)|BIT(5)|BIT(27);
     CLKGAT2 |= BIT(18);
 
-    sco_set_incall_flag(INCALL_FLAG_SCO);
     bt_call_alg_init();
     dac_set_anl_offset(1);
     audio_path_init(AUDIO_PATH_MODEMMIC);
     audio_path_start(AUDIO_PATH_MODEMMIC);
-    // bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
-    bsp_change_volume(VOL_MAX);             //通话改成默认最大音量
+    bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
     dac_fade_in();
 }
 
@@ -461,7 +355,6 @@ void modem_call_exit(void)
     audio_path_exit(AUDIO_PATH_MODEMMIC);
     bt_call_alg_exit();
     dac_set_anl_offset(0);
-    sco_clr_incall_flag(INCALL_FLAG_SCO);
     bsp_change_volume(sys_cb.vol);
 
     CLKGAT1 &= ~(BIT(4)|BIT(5)|BIT(27));
@@ -470,11 +363,11 @@ void modem_call_exit(void)
 
 void bsp_bt_call_enter(void)
 {
+    bsp_res_set_enable(true);
     sco_set_incall_flag(INCALL_FLAG_CALL);
     if(sys_cb.incall_flag == INCALL_FLAG_FADE)
     {
-        // bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
-        bsp_change_volume(VOL_MAX);                 //通话改成默认最大音量
+        bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
         dac_fade_in();
     }
 }
@@ -496,10 +389,6 @@ void bsp_bt_call_exit(void)
         }
         bsp_change_volume(sys_cb.vol);
     }
-
-#if !CALL_MGR_EN
-    hfp_hf_call_notice(BT_NOTICE_ENDCALL);
-#endif
 }
 
 #endif //FUNC_BT_EN

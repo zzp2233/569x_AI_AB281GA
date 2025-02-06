@@ -9,7 +9,8 @@
 #endif
 
 #define TABLE_SIZE 181
-static const int cos_table[TABLE_SIZE] = {
+static const int cos_table[TABLE_SIZE] =
+{
     10000, 9998, 9994, 9986, 9976, 9962, 9945, 9925, 9903, 9877, 9848, 9816, 9781, 9743, 9702, 9659, 9612, 9563,
     9511, 9455, 9397, 9336, 9272, 9205, 9135, 9063, 8988, 8910, 8829, 8746, 8660, 8571, 8480, 8386, 8290, 8191,
     8090, 7986, 7880, 7771, 7660, 7547, 7431, 7313, 7193, 7071, 6947, 6820, 6691, 6561, 6428, 6293, 6157, 6018,
@@ -33,22 +34,33 @@ int binarysearch(int value)
 {
     int low = 0;
     int high = TABLE_SIZE - 1;
-    while (low <= high) {
+    while (low <= high)
+    {
         int mid = adds(low, high) >> 1;
-        if (cos_table[mid] == value) {
+        if (cos_table[mid] == value)
+        {
             return mid;
-        } else if (cos_table[mid] < value) {
+        }
+        else if (cos_table[mid] < value)
+        {
             high = mid - 1;
-        } else {
+        }
+        else
+        {
             low = mid + 1;
         }
     }
 
-    if (low > TABLE_SIZE - 1) {
+    if (low > TABLE_SIZE - 1)
+    {
         return high;
-    } else if (high < 0) {
+    }
+    else if (high < 0)
+    {
         return low;
-    } else {
+    }
+    else
+    {
         return (subs(value, cos_table[high]) < subs(cos_table[low], value)) ? high : low;
     }
 }
@@ -78,12 +90,7 @@ int myrad(int cx, int cy, int x, int y)
 {
     int dx = subs(x, cx);
     int dy = subs(y, cy);
-//    int cos_value = (int)((int)muls(dx, COS_SCALE)) / (int)(sqrt64(muls(dx, dx) + muls(dy, dy)));
-    int div = (int)(sqrt64(muls(dx, dx) + muls(dy, dy)));
-    if (div == 0) {
-        return 0;
-    }
-    int cos_value = (int)((int)muls(dx, COS_SCALE)) / div;
+    int cos_value = (int)((int)muls(dx, COS_SCALE)) / (int)(sqrt64(muls(dx, dx) + muls(dy, dy)));
     return ACOS(cos_value);
 }
 
@@ -111,7 +118,8 @@ compo_rings_t *compo_rings_create(compo_form_t *frm)
  **/
 void compo_rings_set(compo_rings_t *rings, compo_rings_ele_t *ele)
 {
-    if (rings == NULL && (ele->loop_icon_num + ele->other_icon_num) > RINGS_MAX_ICON_CNT) {
+    if (rings == NULL && (ele->loop_icon_num + ele->other_icon_num) > RINGS_MAX_ICON_CNT)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_SET);
         return;
     }
@@ -137,14 +145,17 @@ void compo_rings_set(compo_rings_t *rings, compo_rings_ele_t *ele)
  **/
 compo_rings_icon_t *compo_rings_icon_add(compo_rings_t *rings, u32 res_addr, int idx, bool loop)
 {
-    if (rings == NULL) {
+    if (rings == NULL)
+    {
         halt(HALT_GUI_COMPO_ICONLIST_ADD);
     }
 
     compo_rings_icon_t *icon = NULL;
 
-    if (loop) {     //加载环形上的图标
-        if (rings->loop_icon_cnt < rings->ele.loop_icon_num) {
+    if (loop)       //加载环形上的图标
+    {
+        if (rings->loop_icon_cnt < rings->ele.loop_icon_num)
+        {
             widget_icon_t *widget = widget_icon_create(rings->page, res_addr);
             rect_t location = widget_get_location(widget);
             icon = &rings->icon[rings->loop_icon_cnt];
@@ -156,8 +167,11 @@ compo_rings_icon_t *compo_rings_icon_add(compo_rings_t *rings, u32 res_addr, int
             rings->loop_icon_cnt++;
             widget_set_visible(widget, false);
         }
-    } else {        //加载非环形上的图标
-        if (rings->other_icon_cnt < rings->ele.other_icon_num) {
+    }
+    else            //加载非环形上的图标
+    {
+        if (rings->other_icon_cnt < rings->ele.other_icon_num)
+        {
             widget_icon_t *widget = widget_icon_create(rings->page, res_addr);
             rect_t location = widget_get_location(widget);
             icon = &rings->icon[rings->ele.loop_icon_num + rings->other_icon_cnt];
@@ -190,34 +204,49 @@ int32_t compo_rings_touch_angle(compo_rings_t *rings, compo_rings_touch_t *touch
     int dy = -(y - cy);
     touch->angle = -1;
     //触摸点的象限
-    if (dx > 0 && dy > 0) {
+    if (dx > 0 && dy > 0)
+    {
         touch->quad = QUADRANT_1;
-    } else if (dx < 0 && dy > 0) {
+    }
+    else if (dx < 0 && dy > 0)
+    {
         touch->quad = QUADRANT_2;
-    } else if (dx < 0 && dy < 0) {
+    }
+    else if (dx < 0 && dy < 0)
+    {
         touch->quad = QUADRANT_3;
-    } else if (dx > 0 && dy < 0) {
+    }
+    else if (dx > 0 && dy < 0)
+    {
         touch->quad = QUADRANT_4;
     }
 
-    int res = myrad(cx, cy, x, y);
-    if (res != 0) {
-        //根据象限确定和正向Y轴的夹角 0~3600
-        if (touch->quad == QUADRANT_1 || touch->quad == QUADRANT_2) {
-            touch->angle = RINGS_GET_ANGLE((90 - res) * 10);
-        } else if (touch->quad == QUADRANT_3 || touch->quad == QUADRANT_4) {
-            touch->angle = RINGS_GET_ANGLE((90 + res) * 10);
-        }
+    //根据象限确定和正向Y轴的夹角 0~3600
+    if (touch->quad == QUADRANT_1 || touch->quad == QUADRANT_2)
+    {
+        touch->angle = RINGS_GET_ANGLE((90 - myrad(cx, cy, x, y)) * 10);
+    }
+    else if (touch->quad == QUADRANT_3 || touch->quad == QUADRANT_4)
+    {
+        touch->angle = RINGS_GET_ANGLE((90 + myrad(cx, cy, x, y)) * 10);
     }
 
-    if (touch->angle == -1) {
-        if ((dx == 0 && dy == 0) || (dx == 0 && dy > 0)) {
+    if (touch->angle == -1)
+    {
+        if ((dx == 0 && dy == 0) || (dx == 0 && dy > 0))
+        {
             touch->angle = 0;
-        } else if (dx > 0 && dy == 0) {
+        }
+        else if (dx > 0 && dy == 0)
+        {
             touch->angle = 900;
-        } else if (dx == 0 && dy < 0) {
+        }
+        else if (dx == 0 && dy < 0)
+        {
             touch->angle = 1800;
-        } else if (dx < 0 && dy == 0) {
+        }
+        else if (dx < 0 && dy == 0)
+        {
             touch->angle = 2700;
         }
     }
@@ -256,11 +285,16 @@ int32_t compo_rings_touch_angle_diff(compo_rings_t *rings, s16 cx, s16 cy, s16 x
     int32_t diff_angle = 0;
     if (rings->cur.angle == rings->pre.angle) return diff_angle;
 
-    if (rings->pre.quad == QUADRANT_2 && rings->cur.quad == QUADRANT_1) {           //临界区域 顺时针
+    if (rings->pre.quad == QUADRANT_2 && rings->cur.quad == QUADRANT_1)             //临界区域 顺时针
+    {
         diff_angle = rings->cur.angle + 3600 - rings->pre.angle;
-    } else if (rings->pre.quad == QUADRANT_1 && rings->cur.quad == QUADRANT_2) {    //临界区域 逆时针
+    }
+    else if (rings->pre.quad == QUADRANT_1 && rings->cur.quad == QUADRANT_2)        //临界区域 逆时针
+    {
         diff_angle = rings->cur.angle - 3600 - rings->pre.angle;
-    } else {
+    }
+    else
+    {
         diff_angle = rings->cur.angle - rings->pre.angle;
     }
 
@@ -323,7 +357,8 @@ void compo_rings_loop_icon_set_angle_diff(compo_rings_t *rings, int32_t diff_ang
 {
     if (id > RINGS_MAX_ICON_CNT) return;
     compo_rings_icon_t *icon = &rings->icon[id];
-    if (icon->widget) {
+    if (icon->widget)
+    {
         icon->angle += diff_angle;
         icon->angle = RINGS_GET_ANGLE(icon->angle);
     }
@@ -394,10 +429,13 @@ void compo_rings_set_res(compo_rings_t *rings, u32 res_addr, int id)
  **/
 void compo_rings_set_uidx_from_idx(compo_rings_t *rings, int uidx, int idx)
 {
-    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++) {
+    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++)
+    {
         compo_rings_icon_t *icon = &rings->icon[i];
-        if (icon->idx == idx) {
-            if (icon->widget) {
+        if (icon->idx == idx)
+        {
+            if (icon->widget)
+            {
                 icon->idx = uidx;
                 break;
             }
@@ -414,10 +452,13 @@ void compo_rings_set_uidx_from_idx(compo_rings_t *rings, int uidx, int idx)
  **/
 void compo_rings_set_res_from_idx(compo_rings_t *rings, u32 res_addr, int idx)
 {
-    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++) {
+    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++)
+    {
         compo_rings_icon_t *icon = &rings->icon[i];
-        if (icon->idx == idx) {
-            if (icon->widget) {
+        if (icon->idx == idx)
+        {
+            if (icon->widget)
+            {
                 widget_icon_set(icon->widget, res_addr);
                 break;
             }
@@ -437,10 +478,13 @@ void compo_rings_set_res_from_idx(compo_rings_t *rings, u32 res_addr, int idx)
  **/
 compo_rings_icon_t *compo_rings_set_location(compo_rings_t *rings, s16 x, s16 y, s16 width, s16 height, int idx)
 {
-    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++) {
+    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++)
+    {
         compo_rings_icon_t *icon = &rings->icon[i];
-        if (icon->widget) {
-            if (icon->idx == idx) {
+        if (icon->widget)
+        {
+            if (icon->idx == idx)
+            {
                 widget_set_visible(icon->widget, true);
                 widget_set_location(icon->widget, x, y, width, height);
                 return icon;
@@ -457,13 +501,16 @@ compo_rings_icon_t *compo_rings_set_location(compo_rings_t *rings, s16 x, s16 y,
  **/
 void compo_rings_update_loop(compo_rings_t *rings)
 {
-    if (rings == NULL) {
+    if (rings == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_UPDATE);
     }
     compo_rings_page_time0_vis(rings, false);
-    for (int i = 0; i < rings->ele.loop_icon_num; i++) {
+    for (int i = 0; i < rings->ele.loop_icon_num; i++)
+    {
         compo_rings_icon_t *icon = &rings->icon[i];
-        if (icon->widget) {
+        if (icon->widget)
+        {
             int ix = rings->ele.x + RINGS_GET_ICON_REL_X(rings->ele.r, icon->angle);
             int iy = rings->ele.y + RINGS_GET_ICON_REL_Y(rings->ele.r, icon->angle);
             widget_set_visible(icon->widget, true);
@@ -483,15 +530,19 @@ void compo_rings_update_loop(compo_rings_t *rings)
  **/
 compo_rings_sel_t *compo_rings_select(compo_rings_t *rings, int x, int y)
 {
-    if (rings == NULL) {
+    if (rings == NULL)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_SELECT);
     }
 
-    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++) {
+    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++)
+    {
         compo_rings_icon_t *icon = &rings->icon[i];
-        if (icon->widget) {
+        if (icon->widget)
+        {
             rect_t rect = widget_get_absolute(icon->widget);
-            if (abs_s(x - rect.x) * 2 <= rect.wid && abs_s(y - rect.y) * 2 <= rect.hei) {
+            if (abs_s(x - rect.x) * 2 <= rect.wid && abs_s(y - rect.y) * 2 <= rect.hei)
+            {
                 rings->sel.icon  = icon->widget;
                 rings->sel.idx   = icon->idx;
                 return &rings->sel;
@@ -512,10 +563,13 @@ compo_rings_sel_t *compo_rings_select(compo_rings_t *rings, int x, int y)
  **/
 widget_icon_t *compo_rings_select_byidx(compo_rings_t *rings, int idx)
 {
-    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++) {
+    for (int i = 0; i < RINGS_MAX_ICON_CNT; i++)
+    {
         compo_rings_icon_t *icon = &rings->icon[i];
-        if (icon->widget) {
-            if (icon->idx == idx) {
+        if (icon->widget)
+        {
+            if (icon->idx == idx)
+            {
                 rings->sel.icon = icon->widget;
                 rings->sel.idx  = idx;
                 return rings->sel.icon;
@@ -540,12 +594,14 @@ widget_icon_t *compo_rings_select_byidx(compo_rings_t *rings, int idx)
  **/
 void compo_rings_add_time(compo_rings_t *rings, u8 type, u32 res_addr, s16 cx, s16 cy, s16 iw)
 {
-    if (rings->time0.page_time == NULL) {
+    if (rings->time0.page_time == NULL)
+    {
         rings->time0.page_time = widget_page_create(rings->page);
         widget_set_location(rings->time0.page_time, 0, 0, iw, iw);
         widget_page_set_client(rings->time0.page_time, iw >> 1, iw >> 1);
     }
-    if (rings->time1.page_time == NULL) {
+    if (rings->time1.page_time == NULL)
+    {
         rings->time1.page_time = widget_page_create(rings->page);
         widget_set_location(rings->time1.page_time, 0, 0, iw, iw);
         widget_page_set_client(rings->time1.page_time, iw >> 1, iw >> 1);
@@ -554,25 +610,26 @@ void compo_rings_add_time(compo_rings_t *rings, u8 type, u32 res_addr, s16 cx, s
     widget_image_set_rotation_center(img0, cx, cy);
     widget_image_t *img1 = widget_image_create(rings->time1.page_time, res_addr);
     widget_image_set_rotation_center(img1, cx, cy);
-    switch (type) {
-    case COMPO_RINGS_TIME_TYPE_HOUR:
-        rings->time0.hour = img0;
-        rings->time1.hour = img1;
-        break;
+    switch (type)
+    {
+        case COMPO_RINGS_TIME_TYPE_HOUR:
+            rings->time0.hour = img0;
+            rings->time1.hour = img1;
+            break;
 
-    case COMPO_RINGS_TIME_TYPE_MIN:
-        rings->time0.min = img0;
-        rings->time1.min = img1;
-        break;
+        case COMPO_RINGS_TIME_TYPE_MIN:
+            rings->time0.min = img0;
+            rings->time1.min = img1;
+            break;
 
-    case COMPO_RINGS_TIME_TYPE_SEC:
-        rings->time0.sec = img0;
-        rings->time1.sec = img1;
-        break;
+        case COMPO_RINGS_TIME_TYPE_SEC:
+            rings->time0.sec = img0;
+            rings->time1.sec = img1;
+            break;
 
-    default:
-        halt(HALT_GUI_COMPO_ICONLIST_TIME_TYPE);
-        return;
+        default:
+            halt(HALT_GUI_COMPO_ICONLIST_TIME_TYPE);
+            return;
     }
     compo_cb.rtc_update = true;                 //创建时钟组件，需要同步更新时间
 }
@@ -584,7 +641,8 @@ void compo_rings_add_time(compo_rings_t *rings, u8 type, u32 res_addr, s16 cx, s
  **/
 void compo_rings_idx_time_set(compo_rings_t *rings, u8 idx)
 {
-    if (rings == NULL) {
+    if (rings == NULL)
+    {
         halt(HALT_GUI_COMPO_ICONLIST_TIME_IDX);
     }
     rings->time0.idx_time = idx;
@@ -610,7 +668,8 @@ void compo_rings_set_start_angle(compo_rings_t *rings, s16 angle)
  **/
 void compo_rings_page_time0_vis(compo_rings_t *rings, bool visible)
 {
-    if (rings->time0.page_time != NULL) {
+    if (rings->time0.page_time != NULL)
+    {
         widget_set_visible(rings->time0.page_time, visible);
     }
 }
@@ -623,7 +682,8 @@ void compo_rings_page_time0_vis(compo_rings_t *rings, bool visible)
  **/
 void compo_rings_page_time1_vis(compo_rings_t *rings, bool visible)
 {
-    if (rings->time1.page_time != NULL) {
+    if (rings->time1.page_time != NULL)
+    {
         widget_set_visible(rings->time1.page_time, visible);
     }
 }
@@ -636,7 +696,8 @@ void compo_rings_page_time1_vis(compo_rings_t *rings, bool visible)
  **/
 void compo_rings_page_time0_bg(compo_rings_t *rings, widget_t *widget, u8 idx)
 {
-    if (widget != NULL && idx == rings->time0.idx_time) {
+    if (widget != NULL && idx == rings->time0.idx_time)
+    {
         rings->time0.time_bg = widget;
     }
 }
@@ -649,7 +710,8 @@ void compo_rings_page_time0_bg(compo_rings_t *rings, widget_t *widget, u8 idx)
  **/
 void compo_rings_page_time1_bg(compo_rings_t *rings, widget_t *widget, u8 idx)
 {
-    if (widget != NULL && idx == rings->time1.idx_time) {
+    if (widget != NULL && idx == rings->time1.idx_time)
+    {
         rings->time1.time_bg = widget;
     }
 }
@@ -665,7 +727,8 @@ void compo_rings_page_time1_bg(compo_rings_t *rings, widget_t *widget, u8 idx)
  **/
 void compo_rings_page_time0_update(compo_rings_t *rings, s16 ix, s16 iy, s16 iw, u8 idx)
 {
-    if (rings->time0.page_time != NULL && idx == rings->time0.idx_time) {
+    if (rings->time0.page_time != NULL && idx == rings->time0.idx_time)
+    {
         compo_rings_page_time0_vis(rings, true);
         widget_page_scale_to(rings->time0.page_time, iw, iw);
         widget_set_pos(rings->time0.page_time, ix, iy);
@@ -683,7 +746,8 @@ void compo_rings_page_time0_update(compo_rings_t *rings, s16 ix, s16 iy, s16 iw,
  **/
 void compo_rings_page_time1_update(compo_rings_t *rings, s16 ix, s16 iy, s16 iw, u8 idx)
 {
-    if (rings->time1.page_time != NULL && idx == rings->time1.idx_time) {
+    if (rings->time1.page_time != NULL && idx == rings->time1.idx_time)
+    {
         compo_rings_page_time1_vis(rings, true);
         widget_page_scale_to(rings->time1.page_time, iw, iw);
         widget_set_pos(rings->time1.page_time, ix, iy);

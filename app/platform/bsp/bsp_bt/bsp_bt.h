@@ -3,6 +3,29 @@
 
 #include "pbap.h"
 
+#if BT_HID_TYPE == 5
+
+//抖音神器REPORT ID
+#define RPT_ID_DOUYIN_KBD           0x01
+#define RPT_ID_DOUYIN_FINGER        0x02
+#define RPT_ID_DOUYIN_POINTER       0x03
+#define RPT_ID_DOUYIN_MOUSE         0x04
+#define RPT_ID_DOUYIN_CONSUMER      0x05
+
+//base HID_TYPE_DOUYIN 的SIMPLE KEYBOARD
+#define HID_KBD_RELEASE  0x000
+#define HID_VOL_UP       0x001
+#define HID_VOL_DOWN     0x002
+#define HID_MENU         0x004
+#define HID_POWER        0x008
+#define HID_NEXT_TRACK   0x010
+#define HID_PREV_TRACK   0x020
+#define HID_AC_HOME      0x040
+#define HID_PLAY_PAUSE   0x080
+#define HID_FLASH_TEL    0x100
+
+#endif // BT_HID_TYPE
+
 //标准HID键
 #define HID_KEY_ENTER       0x28
 
@@ -20,21 +43,24 @@ typedef enum
     IMG_POINT_LEFT,             //左滑
     IMG_POINT_RIGHT,            //右滑
     IMG_POINT_DD,
-}img_point_type;
+} img_point_type;
 
-enum bt_call_type_t {
+enum bt_call_type_t
+{
     CALL_TYPE_NONE,                            //无
     CALL_TYPE_PHONE,                           //普通通话
     CALL_TYPE_NETWORK,                         //网络通话
 };
 
-enum bt_id3_tag_type_t {
+enum bt_id3_tag_type_t
+{
     BT_ID3_TAG_TITLE,
     BT_ID3_TAG_ARTIST,
     BT_ID3_TAG_ALBUM,
 };
 
-typedef struct{
+typedef struct
+{
     u16 warning_status;
     u8 disp_status;
     u8 hid_menu_flag;
@@ -49,8 +75,9 @@ typedef struct{
     u8 need_pairing : 1;
     u8 incall_flag  : 1;
 
-    u8 call_type;	            //通话类型
+    u8 call_type;               //通话类型
     u16 times;
+    u8 tws_status;
 } bsp_bt_t;
 extern bsp_bt_t bt_cb;
 extern uint8_t cfg_bt_sniff_clk_sel;
@@ -61,9 +88,12 @@ void bsp_bt_vol_change(void);
 void bsp_bt_hid_photo(void);
 bool bsp_bt_pwrkey5s_check(void);
 void bsp_bt_pwrkey5s_clr(void);
+//hid
 void bsp_bt_hid_tog_conn(void);
 void bsp_bt_hid_screen_left(void);
 void bsp_bt_hid_screen_right(void);
+void bsp_bt_hid_keyboard(u16 keycode);
+
 void bt_name_suffix_set(void);
 uint bsp_bt_get_hfp_vol(uint hfp_vol);
 u16 bsp_bt_chkclr_warning(u16 bits);
@@ -85,9 +115,9 @@ const char *bt_get_last_call_number(uint8_t index);
 
 /**
  * @brief 蓝牙调整手机通话音量级数
- * up_flag: 0:减一级; 1:加一级;
+ * KU_VOL_DOWN: 0:减一级; KU_VOL_UP:加一级;
 */
-void bt_call_volume_change(u8 up_flag);
+void bt_call_volume_change(u8 msg);
 
 /**
  * @brief 蓝牙设置手机音量加一级
@@ -119,6 +149,7 @@ void bsp_bt_ring_exit(void);                    //退出来电响铃页面调用
 void bsp_bt_ring_process(void);                 //来电响铃页面进程调用
 
 void bsp_bt_call_times_inc(void);
+uint hfp_get_bat_level_ex(void);
 
 #if BT_ID3_TAG_EN
 //id3

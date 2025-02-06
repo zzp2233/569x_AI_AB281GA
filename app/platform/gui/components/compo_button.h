@@ -65,13 +65,4 @@ void compo_button_set_visible(compo_button_t *btn, bool visible);
  **/
 void compo_button_set_bgimg(compo_button_t *btn, u32 addr);
 
-/**
- * @brief 根据图像在页面上创建一个按钮
- * @param[in] frm : 窗体指针
- * @param[in] widget : 页面
- * @param[in] res_addr : 图像资源的地址
- * @return 返回按钮指针
- **/
-compo_button_t *compo_button_create_page_by_image(compo_form_t *frm,widget_page_t *widget, u32 res_addr);
-
 #endif

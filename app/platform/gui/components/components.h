@@ -31,7 +31,7 @@ enum COMPO_TYPE
     COMPO_TYPE_CARDBOX,                 //卡片
     COMPO_TYPE_BUTTERFLY,               //蝴蝶
     COMPO_TYPE_SCROLLBAR,               //滚动条
-    COMPO_TYPE_PROGRESSBAR,             //进度条
+    COMPO_TYPE_BAR,                     //进度条
 };
 
 //绑定数据
@@ -66,13 +66,6 @@ enum COMPO_BOND_DATA
     COMPO_BOND_KCAL_PROGRESS,           //卡路里进度
     COMPO_BOND_STEPS_PROGRESS,          //步数进度
     COMPO_BOND_VBAT_PROGRESS,           //电量进度
-    COMPO_BOND_COMM_UNIT,               //单位
-    COMPO_BOND_TIME_AMPM,               //上午/下午
-
-    COMPO_BOND_TIME_WEEK = 37,          //星期
-    COMPO_BOND_TIME_MONTH,              //月份
-    COMPO_BOND_TEMPERATURE_UNIT,        //温度单位
-    COMPO_BOND_DISTANCE_UNIT,           //距离单位
 
     COMPO_BOND_KCAL = 64,               //卡路里
     COMPO_BOND_STEP,                    //步数
@@ -82,13 +75,11 @@ enum COMPO_BOND_DATA
     COMPO_BOND_WEATHER,                 //天气
     COMPO_BOND_ATMOMS,                  //气压
     COMPO_BOND_TEMPERATURE,             //温度
-    // COMPO_BOND_TEMPERATURE_UNIT,        //温度单位
-    COMPO_BOND_ALTITUDE = 73,           //海拔
-    // COMPO_BOND_DISTANCE_UNIT,           //距离单位
-    COMPO_BOND_BATTERY = 75,            //电池
-    COMPO_BOND_DISTANCE,                //距离
-
-    COMPO_BOND_HOURMIN_TXT = 120,
+    COMPO_BOND_TEMPERATURE_UNIT,        //温度单位
+    COMPO_BOND_ALTITUDE,                //海拔
+    COMPO_BOND_DISTANCE_UNIT,           //距离单位
+    COMPO_BOND_REVERSE2,                //保留
+    COMPO_BOND_BATTERY,                 //电池
 };
 
 #define COMPO_STRUCT_COMMON                                         \
@@ -164,5 +155,5 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num);
 #include "compo_move_ctr.h"
 #include "compo_butterfly.h"
 #include "compo_scrollbar.h"
-#include "compo_progressbar.h"
+#include "compo_bar.h"
 #endif

@@ -92,17 +92,3 @@ void compo_button_set_bgimg(compo_button_t *btn, u32 addr)
     widget_icon_set(btn->widget, addr);
 }
 
-/**
- * @brief 根据图像在页面上创建一个按钮
- * @param[in] frm : 窗体指针
- * @param[in] widget : 页面
- * @param[in] res_addr : 图像资源的地址
- * @return 返回按钮指针
- **/
-compo_button_t *compo_button_create_page_by_image(compo_form_t *frm,widget_page_t *widget, u32 res_addr)
-{
-    compo_button_t *btn = compo_create(frm, COMPO_TYPE_BUTTON);
-    widget_icon_t *img = widget_icon_create(widget, res_addr);
-    btn->widget = img;
-    return btn;
-}

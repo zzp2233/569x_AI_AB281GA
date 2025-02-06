@@ -4,7 +4,8 @@
 
 #if LE_AB_LINK_APP_EN
 ///////////////////////////////////////////////////////////////////////////
-const uint8_t adv_data_const[] = {
+const uint8_t adv_data_const[] =
+{
     // Flags general discoverable, BR/EDR not supported
     0x02, 0x01, 0x02,
     // Manufacturer Specific Data
@@ -13,7 +14,8 @@ const uint8_t adv_data_const[] = {
     0x09, 0xff, 'B', 'l', 'u', 'e', 't', 'r', 'u', 'm',
 };
 
-const uint8_t scan_data_const[] = {
+const uint8_t scan_data_const[] =
+{
     // Name
     0x08, 0x09, 'B', 'L', 'E', '-', 'B', 'O', 'X',
 };
@@ -27,7 +29,8 @@ u32 ble_get_scan_data(u8 *scan_buf, u32 buf_size)
     //读取BLE配置的蓝牙名称
     int len;
     len = strlen(xcfg_cb.le_name);
-    if (len > 0) {
+    if (len > 0)
+    {
         memcpy(&scan_buf[2], xcfg_cb.le_name, len);
         data_len = 2 + len;
         scan_buf[0] = len + 1;
@@ -52,20 +55,6 @@ u32 ble_get_adv_data(u8 *adv_buf, u32 buf_size)
     return data_len;
 }
 
-///////////////////////////////////////////////////////////////////////////
-#define MAX_NOTIFY_NUM          4
-#define MAX_NOTIFY_LEN          69     //max=247
-#define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
-
-AT(.ble_cache.att)
-uint8_t notify_tx_pool[NOTIFY_POOL_SIZE];
-
-void ble_txpkt_init(void)
-{
-    txpkt_init(&notify_tx, notify_tx_pool, MAX_NOTIFY_NUM, MAX_NOTIFY_LEN);
-    notify_tx.send_kick = ble_send_kick;
-}
-
 /***
 *
 */
@@ -73,13 +62,15 @@ void ble_txpkt_init(void)
 #define BLE_CMD_BUF_MASK    (BLE_CMD_BUF_LEN - 1)
 #define BLE_RX_BUF_LEN      20
 
-struct ble_cmd_t{
+struct ble_cmd_t
+{
     u8 len;
     u16 handle;
     u8 buf[BLE_RX_BUF_LEN];
 };
 
-static struct ble_cmd_cb_t {
+static struct ble_cmd_cb_t
+{
     struct ble_cmd_t cmd[BLE_CMD_BUF_LEN];
     u8 cmd_rptr;
     u8 cmd_wptr;
@@ -106,14 +97,16 @@ static struct ble_cmd_cb_t {
 
 //----------------------------------------------------------------------------
 //test service
-const uint8_t test_primay_uuid16[2]={0x10, 0xff};
-static const gatts_uuid_base_st uuid_test_primay_base = {
+const uint8_t test_primay_uuid16[2]= {0x10, 0xff};
+static const gatts_uuid_base_st uuid_test_primay_base =
+{
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = test_primay_uuid16,
 };
 
-const uint8_t test_uuid16[2]={0xf1, 0xff};
-static const gatts_uuid_base_st uuid_test_base = {
+const uint8_t test_uuid16[2]= {0xf1, 0xff};
+static const gatts_uuid_base_st uuid_test_base =
+{
     .props = ATT_NOTIFY|ATT_WRITE,
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = test_uuid16,
@@ -123,7 +116,8 @@ static gatts_service_base_st gatts_tests_base;
 bool ble_app_ab_link_send_packet(u8 *buf, u8 len)
 {
     u32 ble_tick = tick_get();
-    while (!tick_check_expire(ble_tick, 30)) {     //延时30ms再发
+    while (!tick_check_expire(ble_tick, 30))       //延时30ms再发
+    {
         delay_5ms(2);
     }
 
@@ -135,28 +129,32 @@ bool ble_app_ab_link_send_packet(u8 *buf, u8 len)
 
 //----------------------------------------------------------------------------
 //app service
-const uint8_t app_primay_uuid16[2]={0x12, 0xff};
-static const gatts_uuid_base_st uuid_app_primay_base = {
+const uint8_t app_primay_uuid16[2]= {0x12, 0xff};
+static const gatts_uuid_base_st uuid_app_primay_base =
+{
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = app_primay_uuid16,
 };
 
-const uint8_t app_write_uuid16[2]={0x13, 0xff};
-static const gatts_uuid_base_st uuid_app_write_base = {
+const uint8_t app_write_uuid16[2]= {0x13, 0xff};
+static const gatts_uuid_base_st uuid_app_write_base =
+{
     .props = ATT_WRITE,
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = app_write_uuid16,
 };
 
-const uint8_t app_notify_uuid16[2]={0x14, 0xff};
-static const gatts_uuid_base_st uuid_app_notify_base = {
+const uint8_t app_notify_uuid16[2]= {0x14, 0xff};
+static const gatts_uuid_base_st uuid_app_notify_base =
+{
     .props = ATT_NOTIFY,
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = app_notify_uuid16,
 };
 static gatts_service_base_st gatts_app_notify_base;
 
-static ble_gatt_characteristic_cb_info_t gatts_app_notify_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_app_notify_cb_info =
+{
     .client_config = GATT_CLIENT_CONFIG_NOTIFY,
 };
 
@@ -170,7 +168,8 @@ static int gatt_callback_app(uint16_t con_handle, uint16_t handle, uint32_t flag
     print_r(ptr, len);
 
     ble_cmd_cb.cmd_wptr++;
-    if (len > BLE_RX_BUF_LEN) {
+    if (len > BLE_RX_BUF_LEN)
+    {
         len = BLE_RX_BUF_LEN;
     }
     memcpy(ble_cmd_cb.cmd[wptr].buf, ptr, len);
@@ -181,12 +180,14 @@ static int gatt_callback_app(uint16_t con_handle, uint16_t handle, uint32_t flag
     return 0;
 }
 
-static ble_gatt_characteristic_cb_info_t gatts_test_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_test_cb_info =
+{
     .att_write_callback_func = gatt_callback_app,
     .client_config = GATT_CLIENT_CONFIG_NOTIFY,
 };
 
-static ble_gatt_characteristic_cb_info_t gatts_app_write_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_app_write_cb_info =
+{
     .att_write_callback_func = gatt_callback_app,
 };
 
@@ -195,14 +196,18 @@ void ble_app_btcontrol_tx_test(void)
 {
     int i;
     u8 ble_test_buf[66];
-    for (i = 1; i < 66; i++) {
+    for (i = 1; i < 66; i++)
+    {
         ble_test_buf[i-1] = i;
     }
-    for (i = 1; i < MAX_NOTIFY_LEN; i++) {
-        if (i > 200) {
+    for (i = 1; i < MAX_NOTIFY_LEN; i++)
+    {
+        if (i > 200)
+        {
             break;
         }
-        if (ble_is_connect()) {
+        if (ble_is_connect())
+        {
             ble_test_buf[0] = i;
             ble_app_ab_link_send_packet(ble_test_buf, i);
             delay_5ms(8);
@@ -213,16 +218,20 @@ void ble_app_btcontrol_tx_test(void)
 
 void ble_app_ab_link_rx_callback(u8 *ptr, u16 size)
 {
-    if ((size == 4) && (ptr[0] == 0x01) && (ptr[1] == 0x06)) {
+    if ((size == 4) && (ptr[0] == 0x01) && (ptr[1] == 0x06))
+    {
         ble_app_btcontrol_tx_test();
-    } else {
+    }
+    else
+    {
         bt_spp_cmd_process(ptr, size, 1);
     }
 }
 
 void ble_app_ab_link_process(void)
 {
-    if (ble_cmd_cb.cmd_rptr == ble_cmd_cb.cmd_wptr) {
+    if (ble_cmd_cb.cmd_rptr == ble_cmd_cb.cmd_wptr)
+    {
         ble_cmd_cb.wakeup = false;
         return;
     }
@@ -232,7 +241,8 @@ void ble_app_ab_link_process(void)
     u8 len = ble_cmd_cb.cmd[rptr].len;
     u16 handle = ble_cmd_cb.cmd[rptr].handle;
 
-    if (handle == gatts_tests_base.handle) {             //兼容旧版APP
+    if (handle == gatts_tests_base.handle)               //兼容旧版APP
+    {
         ble_app_ab_link_rx_callback(ptr, len);
     }
 }
@@ -245,8 +255,9 @@ bool ble_app_ab_link_need_wakeup(void)
 //----------------------------------------------------------------------------
 //FOTA
 #if LE_AB_FOT_EN
-const uint8_t fota_uuid16[2]={0x15, 0xff};
-static const gatts_uuid_base_st uuid_fota_base = {
+const uint8_t fota_uuid16[2]= {0x15, 0xff};
+static const gatts_uuid_base_st uuid_fota_base =
+{
     .props = ATT_READ|ATT_WRITE_WITHOUT_RESPONSE,
     .type  = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid  = fota_uuid16,
@@ -254,13 +265,15 @@ static const gatts_uuid_base_st uuid_fota_base = {
 
 static int gatt_callback_fota(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len)
 {
-    if(fot_app_connect_auth(ptr,len)){
+    if(fot_app_connect_auth(ptr,len))
+    {
         fot_recv_proc(ptr,len);
     }
     return 0;
 }
 
-static ble_gatt_characteristic_cb_info_t gatts_fota_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_fota_cb_info =
+{
     .att_write_callback_func = gatt_callback_fota,
 };
 
@@ -276,7 +289,7 @@ void ble_app_gatts_service_init(void)
 {
     int ret = 0;
 
-    ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name)+1);
+//    ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name)+1);
     //battery service
 //    ret = ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
 //                                uuid_battery_primay_base.uuid,
@@ -291,42 +304,43 @@ void ble_app_gatts_service_init(void)
 
     //Test Service
     ret |= ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
-                               uuid_test_primay_base.uuid,
-                               uuid_test_primay_base.type,
-                               NULL);            //PRIMARY
+                                 uuid_test_primay_base.uuid,
+                                 uuid_test_primay_base.type,
+                                 NULL);            //PRIMARY
 
     ret |= ble_gatts_characteristic_add(uuid_test_base.uuid,
-                                      uuid_test_base.type,
-                                      uuid_test_base.props,
-                                      &gatts_tests_base.handle,
-                                      &gatts_test_cb_info);      //characteristic
+                                        uuid_test_base.type,
+                                        uuid_test_base.props,
+                                        &gatts_tests_base.handle,
+                                        &gatts_test_cb_info);      //characteristic
 //APP Service
     ret |= ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
-                                uuid_app_primay_base.uuid,
-                                uuid_app_primay_base.type,
-                                NULL);            //PRIMARY
+                                 uuid_app_primay_base.uuid,
+                                 uuid_app_primay_base.type,
+                                 NULL);            //PRIMARY
 
     ret |= ble_gatts_characteristic_add(uuid_app_write_base.uuid,
-                                       uuid_app_write_base.type,
-                                       uuid_app_write_base.props,
-                                       NULL,
-                                       &gatts_app_write_cb_info);      //characteristic
+                                        uuid_app_write_base.type,
+                                        uuid_app_write_base.props,
+                                        NULL,
+                                        &gatts_app_write_cb_info);      //characteristic
 
     ret |= ble_gatts_characteristic_add(uuid_app_notify_base.uuid,
-                                       uuid_app_notify_base.type,
-                                       uuid_app_notify_base.props,
-                                       &gatts_app_notify_base.handle,
-                                       &gatts_app_notify_cb_info);      //characteristic
+                                        uuid_app_notify_base.type,
+                                        uuid_app_notify_base.props,
+                                        &gatts_app_notify_base.handle,
+                                        &gatts_app_notify_cb_info);      //characteristic
 
 #if LE_AB_FOT_EN
     ret |= ble_gatts_characteristic_add(uuid_fota_base.uuid,
-                                       uuid_fota_base.type,
-                                       uuid_fota_base.props,
-                                       NULL,
-                                       &gatts_fota_cb_info);      //characteristic
+                                        uuid_fota_base.type,
+                                        uuid_fota_base.props,
+                                        NULL,
+                                        &gatts_fota_cb_info);      //characteristic
 #endif
 
-    if(ret != BLE_GATTS_SUCCESS){
+    if(ret != BLE_GATTS_SUCCESS)
+    {
         printf("gatt err: %d\n", ret);
         return;
     }

@@ -82,71 +82,110 @@
 
 
 //call param
-enum NR_TYPE {
+enum NR_TYPE
+{
     NR_TYPE_NONE            = 0,
     NR_TYPE_AINS3,
     NR_TYPE_DNN,
+    NR_TYPE_AIAEC,
 };
 
-enum NR_CFG_EN {
+enum NR_CFG_EN
+{
     NR_CFG_FAR_EN           = BIT(0),           //使能远端降噪
     NR_CFG_SCO_FADE_EN      = BIT(3),           //使能通话前500ms淡入
 };
 
-typedef struct {
-	u16 nt;
-	u8  nt_post;
-	s16 exp_range_H;
-	s16 exp_range_L;
-	u8  model_select;
-	u16 min_value;
-	u16 nostation_floor;
-	u8  wind_thr;
-	u8  wind_en;
-	u8  noise_ps_rate;
-	u8  prior_opt_idx;
-	u8  prior_opt_ada_en;
+typedef struct
+{
+    s16 gamma;
+    u8  nlp_en;
+    u8  nlp_level;
+
+    s16 nt;
+    u8  music_lev;
+    s16 exp_range_H;
+    s16 exp_range_L;
+    u8  noise_ps_rate;
+    u8  prior_opt_idx;
+    u8  prior_opt_ada_en;
+    u8  wind_level;
+    u16 wind_range;
+    u16 mask_floor;
+    u16 low_fre_range;
+    u8  nn_only;
+    u16 nn_only_len;
+    u8  sin_gain_post_en;
+    u16 sin_gain_post_len;
+    u16 sin_gain_post_len_f;
+    u8  smooth_en;
+    u16 far_post_thr;
+    u32 dtd_post_thr;
+    u16 gain_assign;
+    u16 echo_gain_floor;
+    s16 dtd_smooth;
+    s16 single_floor;
+    s16 gain_assign_nlp;
+} dnn_aec_ns_cb_t;
+
+typedef struct
+{
+    u16 nt;
+    u8  nt_post;
+    s16 exp_range_H;
+    s16 exp_range_L;
+    u8  model_select;
+    u16 min_value;
+    u16 nostation_floor;
+    u8  wind_thr;
+    u8  wind_en;
+    u8  noise_ps_rate;
+    u8  prior_opt_idx;
+    u8  prior_opt_ada_en;
     u8  param_printf;                           //使能参数打印
     u8  wind_level;
-	u16 wind_range;
-	u16 low_fre_range;
-	u16 low_fre_range0;
-	u8  pitch_filter_en;
-	u16 mask_floor;
-	u8  mask_floor_r;
-	u8  music_lev;
-	u16 gain_expand;
+    u16 wind_range;
+    u16 low_fre_range;
+    u16 low_fre_range0;
+    u8  pitch_filter_en;
+    u16 mask_floor;
+    u8  mask_floor_r;
+    u8  music_lev;
+    u16 gain_expand;
     u8  nn_only;
-	u16 nn_only_len;
-	u16 gain_assign;
-	u8  preem_en;
+    u16 nn_only_len;
+    u16 gain_assign;
+    u8  preem_en;
 } dnn_cb_t;
 
-typedef struct {
+typedef struct
+{
     s16 nt;
     u8  prior_opt_idx;
-	u8	music_lev;
-	u16 music_lev_hi_range;
-	u16 music_lev_hi;
-	u16 ns_ps_rate;
-	u8	low_fre_lev;
-	u16 low_fre_range;
-	u16	ns_range_l;
-	u16	ns_range_h;
-	s32 noise_db;
-	s32 noise_db2;
-	s32 noise_db3;
-	u8 smooth_en;
+    u8  music_lev;
+    u16 music_lev_hi_range;
+    u16 music_lev_hi;
+    u16 ns_ps_rate;
+    u8  low_fre_lev;
+    u16 low_fre_range;
+    u16 ns_range_l;
+    u16 ns_range_h;
+    s32 noise_db;
+    s32 noise_db2;
+    s32 noise_db3;
+    u8 smooth_en;
 } ains3_cb_t;
 
-typedef struct {
+typedef struct
+{
     u8 enable;
     u8 level;
     u8 noise_thr;
     u8 resv;
 } far_nr_cfg_t;
 
-typedef struct {
+typedef struct
+{
     u8 nr_type;                                 //近端降噪类型
     u8 nr_cfg_en;                               //远端降噪、喇叭声降噪、500ms淡入等降噪配置
     u8 level;                                   //降噪强度
@@ -155,9 +194,12 @@ typedef struct {
     void *far_nr;                               //远端降噪算法配置
 } nr_cb_t;
 
-typedef struct {
-    union {
-        struct {
+typedef struct
+{
+    union
+    {
+        struct
+        {
             u32 aec_en          : 1;
             u32 nlp_bypass      : 1;        //aec nlp bypass
             u32 nlp_only        : 1;        //aec nlp only select
@@ -186,7 +228,8 @@ typedef struct {
     u8 rfu[2];
 } aec_cfg_t;
 
-typedef struct {
+typedef struct
+{
     u8 alc_en;
     u8 rfu[1];
     u8 fade_in_step;
@@ -196,7 +239,8 @@ typedef struct {
     s32 far_voice_thr;
 } alc_cb_t;
 
-typedef struct {
+typedef struct
+{
     aec_cfg_t aec;
     alc_cb_t  alc;
     nr_cb_t   nr;
@@ -222,4 +266,6 @@ void bt_ains3_init(void *alg_cb);
 void bt_ains3_exit(void);
 void bt_dnn_init(void *alg_cb);
 void bt_dnn_exit(void);
+void bt_aiaec_dnn_init(void *alg_cb);
+void bt_aiaec_dnn_exit(void);
 #endif // _API_NR_H

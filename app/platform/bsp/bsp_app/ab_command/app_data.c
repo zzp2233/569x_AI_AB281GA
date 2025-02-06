@@ -2,6 +2,9 @@
 #include "ab_common.h"
 
 #if (USE_APP_TYPE == USE_AB_APP)
+#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
+AT(.qr_buff)
+#endif
 app_data_t app_data;
 
 void sector0_var_init(void)

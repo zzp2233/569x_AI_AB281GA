@@ -1,8 +1,6 @@
 #ifndef __CONFIG_EXTRA_H__
 #define __CONFIG_EXTRA_H__
 
-#include "ute_project_config.h"
-
 /*****************************************************************************
  * Module    : 系统功能配置
  *****************************************************************************/
@@ -27,18 +25,13 @@
 #define SPIFLASH_SPEED_UP_EN         1
 #endif
 
-
-#ifndef WARNING_WAVRES_PLAY
-#define WARNING_WAVRES_PLAY              0
-#endif
-
 #ifndef MIC_EQ_EN
 #define MIC_EQ_EN                        0
 #endif
 
 #if (GUI_SELECT == GUI_TFT_320_ST77916)
-#define GUI_SCREEN_WIDTH                320
-#define GUI_SCREEN_HEIGHT               385
+#define GUI_SCREEN_WIDTH                240//320
+#define GUI_SCREEN_HEIGHT               296//385
 #define GUI_SCREEN_OFS_X                0
 #define GUI_SCREEN_OFS_Y                0
 #define GUI_USE_TFT
@@ -62,58 +55,28 @@
 #define GUI_USE_OLED
 #elif (GUI_SELECT == GUI_TFT_JD9853)
 #define GUI_SCREEN_WIDTH                240
-#define GUI_SCREEN_HEIGHT               284
+#define GUI_SCREEN_HEIGHT               296
 #define GUI_SCREEN_OFS_X                0
 #define GUI_SCREEN_OFS_Y                0
 #define GUI_USE_TFT
 #elif (GUI_SELECT == GUI_TFT_SPI)
-#if (TFT_SPI_DRIVER == SPI_GC9307_V1)
-#define GUI_SCREEN_WIDTH                SPI_GC9307_WIDTH
-#define GUI_SCREEN_HEIGHT               SPI_GC9307_HIGHT
-#define GUI_SCREEN_OFS_X                SPI_GC9307_OFS_X
-#define GUI_SCREEN_OFS_Y                SPI_GC9307_OFS_Y
-#define GUI_USE_TFT
-#elif (TFT_SPI_DRIVER == SPI_JD9853_V1)
-#define GUI_SCREEN_WIDTH                SPI_JD9853_WIDTH
-#define GUI_SCREEN_HEIGHT               SPI_JD9853_HIGHT
-#define GUI_SCREEN_OFS_X                SPI_JD9835_OFS_X
-#define GUI_SCREEN_OFS_Y                SPI_JD9835_OFS_Y
-#define GUI_USE_TFT
-#elif (TFT_SPI_DRIVER == SPI_ST7789_V1)
-#define GUI_SCREEN_WIDTH                SPI_ST7789_WIDTH
-#define GUI_SCREEN_HEIGHT               SPI_ST7789_HIGHT
-#define GUI_SCREEN_OFS_X                SPI_ST7789_OFS_X
-#define GUI_SCREEN_OFS_Y                SPI_ST7789_OFS_Y
-#define GUI_USE_TFT
-#endif  //#if (TFT_SPI_DRIVER == SPI_GC9307_V1)
+#define GUI_SCREEN_WIDTH                240//320
+#define GUI_SCREEN_HEIGHT               296
+#define GUI_SCREEN_OFS_X                0
+#define GUI_SCREEN_OFS_Y                0
 #elif (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
 #define GUI_SCREEN_WIDTH                120
 #define GUI_SCREEN_HEIGHT               480
 #define GUI_SCREEN_OFS_X                0//24
 #define GUI_SCREEN_OFS_Y                0//40
-#elif (GUI_SELECT == GUI_TFT_240_296_NV3030B)
+#elif (GUI_SELECT == GUI_TFT_240_JD9853W3)
 #define GUI_SCREEN_WIDTH                240
 #define GUI_SCREEN_HEIGHT               296
 #define GUI_SCREEN_OFS_X                0//24
-#define GUI_SCREEN_OFS_Y                12//40
-#define GUI_USE_TFT
-#elif (GUI_SELECT == GUI_TFT_320_385_GV9B71)
-#define GUI_SCREEN_WIDTH                320
-#define GUI_SCREEN_HEIGHT               386
-#define GUI_SCREEN_OFS_X                0//24
 #define GUI_SCREEN_OFS_Y                0//40
-#define GUI_USE_TFT
-#elif (GUI_SELECT == DISPLAY_UTE)
-#define GUI_SCREEN_WIDTH                UTE_DRV_SCREEN_WIDTH
-#define GUI_SCREEN_HEIGHT               UTE_DRV_SCREEN_HEIGHT
-#define GUI_SCREEN_OFS_X                0
-#define GUI_SCREEN_OFS_Y                0
-#define GUI_USE_TFT
 #else
-#define GUI_SCREEN_WIDTH                UTE_DRV_SCREEN_WIDTH
-#define GUI_SCREEN_HEIGHT               UTE_DRV_SCREEN_HEIGHT
-#define GUI_SCREEN_OFS_X                0
-#define GUI_SCREEN_OFS_Y                0
+#define GUI_SCREEN_WIDTH                0
+#define GUI_SCREEN_HEIGHT               0
 #define GUI_USE_TFT
 #endif
 
@@ -135,6 +98,33 @@
 #if MODEM_CAT1_EN
 #define CALL_MGR_EN 1
 #endif
+
+/*****************************************************************************
+ * Module    : 录音功能配置
+ *****************************************************************************/
+#if FUNC_RECORDER_EN
+#undef  FUNC_MUSIC_EN
+#define FUNC_MUSIC_EN              1
+#else
+#undef FUNC_REC_EN
+#define FUNC_REC_EN                0
+#endif
+
+#if !FUNC_REC_EN
+#undef  REC_FAST_PLAY
+#undef  BT_HFP_REC_EN
+#undef  REC_MP3_SUPPORT
+#undef  REC_WAV_SUPPORT
+#undef  REC_ADPCM_SUPPORT
+#undef  REC_SBC_SUPPORT
+
+#define REC_FAST_PLAY               0
+#define BT_HFP_REC_EN               0
+#define  REC_MP3_SUPPORT            0
+#define  REC_WAV_SUPPORT            0
+#define  REC_ADPCM_SUPPORT          0
+#define  REC_SBC_SUPPORT            0
+#endif //FUNC_REC_EN
 
 /*****************************************************************************
  * Module    : 音乐功能配置
@@ -161,31 +151,6 @@
 #define MUSIC_ID3_TAG_EN            0
 #define MUSIC_BREAKPOINT_EN         0
 #endif // FUNC_MUSIC_EN
-
-/*****************************************************************************
- * Module    : 录音功能配置
- *****************************************************************************/
-#if !FUNC_RECORDER_EN
-#undef FUNC_REC_EN
-#define FUNC_REC_EN                0
-#endif
-
-#if !FUNC_REC_EN
-#undef  REC_FAST_PLAY
-#undef  BT_HFP_REC_EN
-#undef  REC_MP3_SUPPORT
-#undef  REC_WAV_SUPPORT
-#undef  REC_ADPCM_SUPPORT
-#undef  REC_SBC_SUPPORT
-
-#define REC_FAST_PLAY               0
-#define BT_HFP_REC_EN               0
-#define  REC_MP3_SUPPORT            0
-#define  REC_WAV_SUPPORT            0
-#define  REC_ADPCM_SUPPORT          0
-#define  REC_SBC_SUPPORT            0
-#endif //FUNC_REC_EN
-
 
 #if !CHARGE_EN
 #undef  CHARGE_TRICK_EN
@@ -274,10 +239,6 @@
  *****************************************************************************/
 #ifndef BT_A2DP_RECON_EN
 #define BT_A2DP_RECON_EN            0
-#endif
-
-#ifndef BT_BACKSTAGE_EN
-#define BT_BACKSTAGE_EN             1   //蓝牙后台管理
 #endif
 
 #ifndef BT_BACKSTAGE_MUSIC_EN
@@ -487,7 +448,6 @@
 #define SENSOR_HR_EN                             0x200
 #define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)                       //天易合芯HRS3300心率血压传感器
 #define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)                       //天易合芯HX3605心率血氧传感器
-#define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
 
 #define SENSOR_GEO_NULL                           0
 #define SENSOR_GEO_EN                             0x300
@@ -497,6 +457,106 @@
 *****************************************************************************/
 #define SECURITY_VENDOR_HS                    0     //宏思
 #define SECURITY_VENDOR_HED                   1     //华大
+
+/*****************************************************************************
+ * Module    : 语音方案选择
+ *****************************************************************************/
+#define ASR_NULL                        0
+#define ASR_WS                          1 //华镇
+#define ASR_YJ                          2 //友杰
+
+/*****************************************************************************
+ * Module    : 友杰语音配置起始
+ *****************************************************************************/
+#define ET_CONFIG                       1
+#define ET_WAKEUP_EN                    1
+#define ET_ASR_EN                       1
+#define ET_VAD_CONTINUE_DELAY_EN        0
+#define ET_LOG_OPEN                     1
+#define ET_ASR_DUMP_EN                  0
+#define THIRD_UI_LIGHT_EN               1
+#define ET_WARNING_MP3_PLAY             1
+#define ET_WARNING_TONE_EN              1
+#define ET_ASR_MAIN_THREAD_EN           0 //识别在主线程中
+
+#define ET_LANG_CHINESE                 1   //1穿戴中文
+#define ET_LANG_ENGLISH                 2   ////1穿戴中文;2穿戴英文;
+
+#define ET_UI_PROJ_NAME  "C0XX"
+#define ET_UI_VERSION  "20240909132800"
+#define ET_MODE_LANG_CHOICE  ET_LANG_CHINESE  //选择当前模型语言
+
+/************ 友杰分贝VAD唤醒参数配置控制 **************************************/
+#define ET_ASR_VAD_EN  0   //是否打开分贝Vad
+#define ET_VAD_WAKE_WORD_HOLD_EN   1 //是否打开唤醒词激活30秒期间关闭分贝vad
+#if 0
+//根据麦克风灵敏度和识别需求距离调节
+#define VAD_POS_CNT_LIMT  55 //识别为人声的阈值，单位分贝DB,范围0到100
+#define VAD_NEG_CNT_LIMT  (VAD_POS_CNT_LIMT - 2) //识别为非人声的阈值，单位分贝DB,范围0到100
+#else
+//根据麦克风灵敏度和识别需求距离调节
+#define VAD_POS_CNT_LIMT  66 //识别为人声的阈值，单位分贝DB,范围0到100
+#define VAD_NEG_CNT_LIMT  (VAD_POS_CNT_LIMT - 2) //识别为非人声的阈值，单位分贝DB,范围0到100
+#endif // 0
+#define VAD_KWS_WORD_LIMT 320 //限制KWS唤醒的最长时间（单位：ms），300次*12ms = 3600ms = 3.6s
+
+/************ 友杰识别参数配置 *************************************************/
+#define ET_ASR_INIT_MAX_DELAY           3
+#define ET_ASR_CLOSE_MAX_DELAY          2 // 3s delay close
+#define ET_ASR_MUSIC_VOL_NDB            4
+#define ET_ASR_PHONE_RING_EN            1
+#define ET_ONLY_KEY_OPEN_ASR_MODE       0   //只能按键打开识别模式
+
+#define ET_OPEN_ASR_PREFETCH            1
+
+#if ET_MODE_LANG_CHOICE == ET_LANG_ENGLISH
+#define ET_USED_USBKEY  ET_LANG_ENGLISH  //类型:1穿戴中文;2穿戴英文;
+#elif ET_MODE_LANG_CHOICE == ET_LANG_CHINESE
+#define ET_USED_USBKEY  ET_LANG_CHINESE  //类型:1穿戴中文;2穿戴英文;
+#else
+#define ET_USED_USBKEY  0
+#endif // ET_MODE_LANG_CHOICE
+
+/************ 友杰唤醒词功能支持配置 ********************************************/
+#define ET_A_WAKE_WORD_EN               1  //开启唤醒词功能
+#define ET_WAKE_TIME_DEFAULT            15  //15秒
+
+/************ 友杰日志打印 *****************************************************/
+#if ET_LOG_OPEN
+#define DBG_SET                         1   // 是否开启ET打印
+#define ET_LOG(flags, fmt, arg...) \
+    do {                        \
+        if (flags)              \
+            printf(fmt, ##arg); \
+    } while (0)
+
+#define ET_LOGI(fmt, arg...)   ET_LOG(DBG_SET, "[ET I] "fmt, ##arg)
+//#define LOGW(fmt, arg...)   ET_LOG(DBG_SET, "[ET W] "fmt, ##arg)
+//#define LOGE(fmt, arg...)   ET_LOG(DBG_SET, "[ET E] "fmt, ##arg)
+#define ET_MONITOR_LOG                  1
+#else
+#define LOGI(fmt, arg...)
+#define LOGW(fmt, arg...)
+#define LOGE(fmt, arg...)
+#define ET_MONITOR_LOG                  0
+#endif // ET_LOG_OPEN
+
+/************ 友杰加密狗 *****************************************************/
+#if ET_USED_USBKEY == ET_LANG_CHINESE
+#define ET_USED_USBKEY_PSD              0xDD00348F
+#elif ET_USED_USBKEY == ET_LANG_ENGLISH
+#define ET_USED_USBKEY_PSD              0x6564CE1E
+#else
+#define ET_USED_USBKEY_PSD              0
+#endif //ET_USED_USBKEY
+
+#if (ASR_SELECT != ASR_YJ)
+#undef ET_USED_USBKEY_PSD
+#define ET_USED_USBKEY_PSD          0
+#endif
+/*****************************************************************************
+ * Module    : 友杰语音配置结束
+ *****************************************************************************/
 
 #endif // __CONFIG_EXTRA_H__
 

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-01-07 16:44:11
+*@date   2025-01-03 18:29:32
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -18,7 +18,7 @@ enum
     STR_MESSAGE, // 通知
     STR_PHONE, // 通话
     STR_SPORTS, // 运动
-    STR_SPORT_RUN, // 户外跑
+    STR_SPORT_RUN, // 户外跑步
     STR_SPORT_RIDE_BIKE, // 骑行
     STR_SPORT_JUMP_ROPE, // 跳绳
     STR_SPORT_SWIMMING, // 游泳
@@ -26,7 +26,7 @@ enum
     STR_SPORT_TABLE_TENNIS, // 乒乓球
     STR_SPORT_TENNIS, // 网球
     STR_SPORT_CLIMBING, // 登山
-    STR_SPORT_WALKING, // 健走
+    STR_SPORT_WALKING, // 徒步
     STR_SPORT_BASKETBALL, // 篮球
     STR_SPORT_FOOTBALL, // 足球
     STR_SPORT_BASEBALL, // 棒球
@@ -35,12 +35,12 @@ enum
     STR_SPORT_RUGBY, // 橄榄球
     STR_SPORT_HOCKEY, // 曲棍球
     STR_SPORT_DANCE, // 舞蹈
-    STR_SPORT_SPINNING, // 动感单车
+    STR_SPORT_SPINNING, // 室内单车
     STR_SPORT_YOGA, // 瑜伽
     STR_SPORT_SIT_UP, // 仰卧起坐
-    STR_SPORT_TREADMILL, // 室内跑
+    STR_SPORT_TREADMILL, // 跑步机
     STR_SPORT_GYMNASTICS, // 体操
-    STR_SPORT_BOATING, // 划船
+    STR_SPORT_BOATING, // 划船机
     STR_SPORT_JUMPING_JACK, // 开合跳
     STR_SPORT_FREE_TRAINING, // 自由训练
     STR_SPORT_EXIT_MSG1, // 运动结束
@@ -75,7 +75,7 @@ enum
     STR_SETTING_DISTURD, // 勿扰模式
     STR_DISTURD_ALL, // 全天勿扰
     STR_DISTURD_TIM, // 定时勿扰
-    STR_DISTURD_TIM_CTT, // 开启后，来电和通知静音且不振动(闹钟除外)，抬腕不亮屏，是否开启？
+    STR_DISTURD_TIM_CTT, // 开启后，来电和通知不振动(闹钟除外)，抬腕不亮屏，是否开启？
     STR_DISTURD_TIM_START, // 开始时间
     STR_DISTURD_TIM_END, // 结束时间
     STR_VOL, // 声音
@@ -173,7 +173,7 @@ enum
     STR_SURE_RESET, // 恢复出厂设置将清空数据，是否继续？
     STR_SURE_REBOOT, // 确认重启？
     STR_FLY_BIRD, // 飞鸟游戏
-    STR_IN_CALL, // 正在呼出...
+    STR_IN_CALL, // 正在呼出…
     STR_CALL_ME, // 来电
     STR_VOICE_SPEAKER, // 请说话...
     STR_VOICE_BT_NOT_CONNECT, // 未连接
@@ -254,10 +254,6 @@ enum
     STR_BREATHE_FINISH, // 训练完成
     STR_BREATHE_TIME, // 训练时长
     STR_LOW_BATTERY, // 电量过低
-    STR_TIMER_FINIFH, // 计时结束
-    STR_INS, // 同步中...
-    STR_SYNC_SUC, // 同步成功
-    STR_SYNC_FAIL, // 同步失败
 };
 
 extern const char * const *i18n;

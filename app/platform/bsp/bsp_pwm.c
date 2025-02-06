@@ -10,13 +10,14 @@
   PWM4:   PH1   PB2     PE6     PE4     PF4
   PWM5:   PH2   PB3     PE7     PE5     PF5
 */
-static const int pwm_gpio_reg[GPIO_PWM0_MAX] = {
+static const int pwm_gpio_reg[GPIO_PWM0_MAX] =
+{
     IO_PA0, IO_PH3, IO_PB4, IO_PE0, IO_PF0,
     IO_PA1, IO_PA7, IO_PB5, IO_PE1, IO_PF1,
-	IO_PF6,	IO_PB0,	IO_PB6, IO_PE2, IO_PF2,
-	IO_PH0,	IO_PB1,	IO_PB7, IO_PE3, IO_PF3,
-	IO_PH1,	IO_PB2,	IO_PE6, IO_PE4, IO_PF4,
-	IO_PH2,	IO_PB3,	IO_PE7, IO_PE5, IO_PF5,
+    IO_PF6, IO_PB0, IO_PB6, IO_PE2, IO_PF2,
+    IO_PH0, IO_PB1, IO_PB7, IO_PE3, IO_PF3,
+    IO_PH1, IO_PB2, IO_PE6, IO_PE4, IO_PF4,
+    IO_PH2, IO_PB3, IO_PE7, IO_PE5, IO_PF5,
 };
 
 static bool pwm_freq_is_init = 0;
@@ -59,15 +60,18 @@ bool bsp_pwm_duty_set(pwm_gpio gpio, u32 duty, bool invert)
     int group_num, group_id;
     volatile uint32_t *duty_reg;
 
-    if(gpio >= GPIO_PWM0_MAX){
+    if(gpio >= GPIO_PWM0_MAX)
+    {
         return false;
     }
 
-	if(duty > 100){
-		duty = 100;
-	}
+    if(duty > 100)
+    {
+        duty = 100;
+    }
 
-    if(pwm_freq_is_init == 0){
+    if(pwm_freq_is_init == 0)
+    {
         bsp_pwm_freq_set(20000);            //如果没初始化频率，默认设置为20K
     }
 
@@ -100,7 +104,8 @@ bool bsp_pwm_disable(pwm_gpio gpio)
     gpio_t gpio_reg;
     int pwm_num;
 
-    if(gpio >= GPIO_PWM0_MAX) {
+    if(gpio >= GPIO_PWM0_MAX)
+    {
         return false;
     }
 
@@ -119,50 +124,26 @@ bool bsp_pwm_disable(pwm_gpio gpio)
     return true;
 }
 
-//co_timer_callback_t bsp_motor_time_callback(co_timer_t *timer, void *param)
-//{
-//    static u32 time_cnt;
-//    time_cnt++;
-//    //震动时间
-//    if(motor_st.vibration_times == time_cnt && motor_st.motor_sta == true){
-//        bsp_pwm_disable(motor_st.gpio);
-//        motor_st.vibration_cnt--;
-//        time_cnt = 0;
-//        motor_st.motor_sta  = false;
-//    }
-//    if (motor_st.interval == time_cnt && motor_st.motor_sta == false) {
-//        bsp_pwm_duty_set(motor_st.gpio, motor_st.duty, false);
-//        time_cnt = 0;
-//        motor_st.motor_sta  = true;
-//    }
-//    if(motor_st.vibration_cnt == 0){
-//        bsp_pwm_disable(motor_st.gpio);
-//        co_timer_del(&motor_timer);
-//    }
-//    return 0;
-//}
-
 co_timer_callback_t bsp_motor_time_callback(co_timer_t *timer, void *param)
 {
-    motor_st.time_cnt++;
-    if(motor_st.motor_sta == true && motor_st.time_cnt >= motor_st.vibration_times){
-        if (motor_st.interval > 0) {
-            bsp_pwm_disable(motor_st.gpio);
-            motor_st.motor_sta = false;
-        } else {
-            motor_st.vibration_cnt--;
-        }
-        motor_st.time_cnt = 0;
-    }
-    if (motor_st.motor_sta == false && motor_st.time_cnt >= motor_st.interval) {
+    static u32 time_cnt;
+    time_cnt++;
+    //震动时间
+    if(motor_st.vibration_times == time_cnt && motor_st.motor_sta == true)
+    {
+        bsp_pwm_disable(motor_st.gpio);
         motor_st.vibration_cnt--;
-        if (motor_st.vibration_cnt) {
-            bsp_pwm_duty_set(motor_st.gpio, motor_st.duty, false);
-            motor_st.motor_sta = true;
-        }
-        motor_st.time_cnt = 0;
+        time_cnt = 0;
+        motor_st.motor_sta  = false;
     }
-    if(motor_st.vibration_cnt == 0){
+    if (motor_st.interval == time_cnt && motor_st.motor_sta == false)
+    {
+        bsp_pwm_duty_set(motor_st.gpio, motor_st.duty, false);
+        time_cnt = 0;
+        motor_st.motor_sta  = true;
+    }
+    if(motor_st.vibration_cnt == 0)
+    {
         bsp_pwm_disable(motor_st.gpio);
         co_timer_del(&motor_timer);
     }
@@ -180,7 +161,8 @@ co_timer_callback_t bsp_motor_time_callback(co_timer_t *timer, void *param)
  **/
 void bsp_motor_set(pwm_gpio gpio, u32 duty, u32 vibrationtimes, u32 interval, u32 cnt)
 {
-    if(cnt == 0 || vibrationtimes == 0) {
+    if(cnt == 0)
+    {
         return;
     }
     printf("%s: %d\n", __func__, duty);

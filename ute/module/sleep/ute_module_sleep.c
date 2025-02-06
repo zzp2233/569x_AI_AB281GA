@@ -646,16 +646,6 @@ void uteModuleSleepDataInputSecond(ute_step_sleep_param_t *sleepData, ute_module
                 oneMinHeartSun += uteModuleSleepData.oneMinHeartValue[i];
             }
             avgHeart = oneMinHeartSun / uteModuleSleepData.heartCnt;
-            //没有实时心率时不能传固定心率值
-            int random = rand() % 2;
-            if (random == 0)
-            {
-                avgHeart += 2;
-            }
-            else
-            {
-                avgHeart -= 2;
-            }
         }
         if (!uteModuleHeartIsWear())
         {

@@ -11,10 +11,13 @@
 #define TRACE_R(...)
 #endif
 
+#if 0
+
 static ble_hid_tasks_typedef ble_hid_tasks;
 static int hid_report_map_read_callback(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len);
 
-static u8 report_map_android[]={
+static u8 report_map_android[]=
+{
 #if LE_HID_CONSUMER
     0x05, 0x0C,         // Usage Page (Consumer)
     0x09, 0x01,         // Usage (Consumer Control)
@@ -101,7 +104,8 @@ static u8 report_map_android[]={
 #endif // LE_HID_KEYBOARD
 };
 
-static u8 report_map_ios[]={
+static u8 report_map_ios[]=
+{
 #if LE_HID_CONSUMER
     0x05, 0x0C,         // Usage Page (Consumer)
     0x09, 0x01,         // Usage (Consumer Control)
@@ -222,20 +226,23 @@ static u8 report_map_ios[]={
 
 // Device Information service
 static const uint8_t di_service_primay_uuid[2] = {0x0A, 0x18};
-static const gatts_uuid_base_st di_primary_base = {
+static const gatts_uuid_base_st di_primary_base =
+{
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = di_service_primay_uuid,
 };
 
 // PnP ID
 static const uint8_t pnp_id_uuid[2] = {0x50, 0x2A};
-static const gatts_uuid_base_st pnp_id_base = {
+static const gatts_uuid_base_st pnp_id_base =
+{
     .props = ATT_READ | ATT_INDICATE,
     .type  = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid  = pnp_id_uuid,
 };
 const uint8_t pnp_info[7] = {0x02, 0xAC, 0x05, 0x2C, 0x02, 0x01, 0x00};
-static ble_gatt_characteristic_cb_info_t gatts_pnp_id_base_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_pnp_id_base_cb_info =
+{
     .client_config = GATT_CLIENT_CONFIG_INDICATE,
     .value         = (uint8_t *)pnp_info,
     .value_len     = sizeof(pnp_info),
@@ -243,38 +250,44 @@ static ble_gatt_characteristic_cb_info_t gatts_pnp_id_base_cb_info = {
 
 // Human Interface Device service
 static const uint8_t hid_service_primay_uuid[2] = {0x12, 0x18};
-static const gatts_uuid_base_st hid_primary_base = {
+static const gatts_uuid_base_st hid_primary_base =
+{
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = hid_service_primay_uuid,
 };
 
 // HID Information
 static const uint8_t hid_information_uuid[2] = {0x4A, 0x2A};
-static const gatts_uuid_base_st hid_info_base = {
+static const gatts_uuid_base_st hid_info_base =
+{
     .props = ATT_READ | ATT_WRITE_WITHOUT_RESPONSE,
     .type  = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid  = hid_information_uuid,
 };
 const uint8_t hid_info[4] = {0x11, 0x01, 0x00, 0x00};
-static ble_gatt_characteristic_cb_info_t gatts_hid_information_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_hid_information_cb_info =
+{
     .value         = (uint8_t *)hid_info,
     .value_len     = sizeof(hid_info),
 };
 
 // Report Map
 static const uint8_t hid_report_map_uuid[2] = {0x4B, 0x2A};
-static const gatts_uuid_base_st hid_rpt_map_base = {
+static const gatts_uuid_base_st hid_rpt_map_base =
+{
     .props = ATT_READ | ATT_DYNAMIC | 0xF000,
     .type  = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid  = hid_report_map_uuid,
 };
-static ble_gatt_characteristic_cb_info_t gatts_hid_rpt_map_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_hid_rpt_map_cb_info =
+{
     .att_read_callback_func = hid_report_map_read_callback,
 };
 
 // HID Control Point
 static const uint8_t hid_control_point_uuid[2] = {0x4C, 0x2A};
-static const gatts_uuid_base_st hid_ctrl_base = {
+static const gatts_uuid_base_st hid_ctrl_base =
+{
     .props = ATT_WRITE_WITHOUT_RESPONSE,
     .type  = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid  = hid_control_point_uuid,
@@ -282,12 +295,14 @@ static const gatts_uuid_base_st hid_ctrl_base = {
 
 // Report
 static const uint8_t hid_report_uuid[2] = {0x4D, 0x2A};
-static const gatts_uuid_base_st hid_rpt_base = {
+static const gatts_uuid_base_st hid_rpt_base =
+{
     .props = ATT_READ | ATT_NOTIFY,
     .type  = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid  = hid_report_uuid,
 };
-static ble_gatt_characteristic_cb_info_t gatts_hid_rpt_base_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_hid_rpt_base_cb_info =
+{
     .client_config = GATT_CLIENT_CONFIG_NOTIFY,
 };
 
@@ -298,7 +313,8 @@ static gatts_service_base_st hid_rpt4_gatts;
 
 // Report Reference
 static const uint8_t report_reference_uuid[2] = {0x08, 0x29};
-static const gatts_uuid_base_st rpt_ref_base = {
+static const gatts_uuid_base_st rpt_ref_base =
+{
     .props = ATT_READ | ATT_NOTIFY | ATT_DYNAMIC,
     .uuid  = report_reference_uuid,
 };
@@ -307,22 +323,26 @@ const uint8_t rpt2_ref_data[2] = {0x02, 0x1};
 const uint8_t rpt3_ref_data[2] = {0x03, 0x1};
 const uint8_t rpt4_ref_data[2] = {0x04, 0x1};
 
-static ble_gatt_characteristic_cb_info_t gatts_rpt1_ref_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_rpt1_ref_cb_info =
+{
     .client_config = GATT_CLIENT_CONFIG_NOTIFY,
     .value         = (uint8_t *)rpt1_ref_data,
     .value_len     = sizeof(rpt1_ref_data),
 };
-static ble_gatt_characteristic_cb_info_t gatts_rpt2_ref_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_rpt2_ref_cb_info =
+{
     .client_config = GATT_CLIENT_CONFIG_NOTIFY,
     .value         = (uint8_t *)rpt2_ref_data,
     .value_len     = sizeof(rpt2_ref_data),
 };
-static ble_gatt_characteristic_cb_info_t gatts_rpt3_ref_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_rpt3_ref_cb_info =
+{
     .client_config = GATT_CLIENT_CONFIG_NOTIFY,
     .value         = (uint8_t *)rpt3_ref_data,
     .value_len     = sizeof(rpt3_ref_data),
 };
-static ble_gatt_characteristic_cb_info_t gatts_rpt4_ref_cb_info = {
+static ble_gatt_characteristic_cb_info_t gatts_rpt4_ref_cb_info =
+{
     .client_config = GATT_CLIENT_CONFIG_NOTIFY,
     .value         = (uint8_t *)rpt4_ref_data,
     .value_len     = sizeof(rpt4_ref_data),
@@ -334,17 +354,21 @@ static int hid_report_map_read_callback(uint16_t con_handle, uint16_t handle, ui
     u8 hid_report_map_len = 0;
     u8 *p_hid_report_map;
 
-    if (ble_hid_peer_device_is_ios()){
+    if (ble_hid_peer_device_is_ios())
+    {
         hid_report_map_len = sizeof(report_map_ios);
         p_hid_report_map = report_map_ios;
     }
-    else {
+    else
+    {
         hid_report_map_len = sizeof(report_map_android);
         p_hid_report_map = report_map_android;
     }
 
-    if (ptr) {
-        if (hid_report_map_len < len) {
+    if (ptr)
+    {
+        if (hid_report_map_len < len)
+        {
             hid_report_map_len = len;
         }
         memcpy(ptr, p_hid_report_map, hid_report_map_len);
@@ -448,10 +472,13 @@ bool ble_hid_task_enqueue(BLE_HID_CMD_ID_TYPEDEF id, u8 *buffer, u8 len)
 {
     u8 next_head = (ble_hid_tasks.head_idx + 1) % BLE_HID_CMD_QUEUE_SIZE;
 
-    if (next_head == ble_hid_tasks.rear_idx) {
+    if (next_head == ble_hid_tasks.rear_idx)
+    {
         /* Queue is full, do nothing. */
         return false;
-    } else {
+    }
+    else
+    {
         ble_hid_tasks.queue[ble_hid_tasks.head_idx].id = id;
         ble_hid_tasks.queue[ble_hid_tasks.head_idx].len = len;
         memcpy(ble_hid_tasks.queue[ble_hid_tasks.head_idx].buffer, buffer, len);
@@ -461,54 +488,57 @@ bool ble_hid_task_enqueue(BLE_HID_CMD_ID_TYPEDEF id, u8 *buffer, u8 len)
     return true;
 }
 
-// 循环中不断执行
+// ???????
 void ble_hid_service_proc(void)
 {
     static u32 delay_cnt;
 
-    if (tick_check_expire(delay_cnt, BLE_HID_POLLING_INTERVAL_MS)) {
-        if (ble_hid_tasks.head_idx != ble_hid_tasks.rear_idx) {
+    if (tick_check_expire(delay_cnt, BLE_HID_POLLING_INTERVAL_MS))
+    {
+        if (ble_hid_tasks.head_idx != ble_hid_tasks.rear_idx)
+        {
             delay_cnt = tick_get();
             ble_hid_cmd_typedef *ble_hid_cmd = &ble_hid_tasks.queue[ble_hid_tasks.rear_idx];
 
-            switch (ble_hid_cmd->id) {
+            switch (ble_hid_cmd->id)
+            {
 #if LE_HID_CONSUMER
-            case BLE_HID_CMD_ID_CONSUMER:
-                TRACE("[TASK] consumer report:");
-                TRACE_R(ble_hid_cmd->buffer, ble_hid_cmd->len);
-                printf("handle:%d\n",hid_rpt1_gatts.handle);
-                ble_tx_notify(hid_rpt1_gatts.handle, ble_hid_cmd->buffer, ble_hid_cmd->len);
-                break;
+                case BLE_HID_CMD_ID_CONSUMER:
+                    TRACE("[TASK] consumer report:");
+                    TRACE_R(ble_hid_cmd->buffer, ble_hid_cmd->len);
+                    printf("handle:%d\n",hid_rpt1_gatts.handle);
+                    ble_tx_notify(hid_rpt1_gatts.handle, ble_hid_cmd->buffer, ble_hid_cmd->len);
+                    break;
 #endif
 
 #if LE_HID_DIGITIZER
-            case BLE_HID_CMD_ID_DIGITIZER:
-                TRACE("[TASK] digitizer report:");
-                TRACE_R(ble_hid_cmd->buffer, ble_hid_cmd->len);
-                printf("handle:%d\n",hid_rpt2_gatts.handle);
-                ble_tx_notify(hid_rpt2_gatts.handle, ble_hid_cmd->buffer, ble_hid_cmd->len);
-                break;
+                case BLE_HID_CMD_ID_DIGITIZER:
+                    TRACE("[TASK] digitizer report:");
+                    TRACE_R(ble_hid_cmd->buffer, ble_hid_cmd->len);
+                    printf("handle:%d\n",hid_rpt2_gatts.handle);
+                    ble_tx_notify(hid_rpt2_gatts.handle, ble_hid_cmd->buffer, ble_hid_cmd->len);
+                    break;
 #endif
 
 #if LE_HID_MOUSE
-            case BLE_HID_CMD_ID_MOUSE:
-                TRACE("[TASK] mouse report:");
-                TRACE_R(ble_hid_cmd->buffer, ble_hid_cmd->len);
-                printf("handle:%d\n",hid_rpt3_gatts.handle);
-                ble_tx_notify(hid_rpt3_gatts.handle, ble_hid_cmd->buffer, ble_hid_cmd->len);
-                break;
+                case BLE_HID_CMD_ID_MOUSE:
+                    TRACE("[TASK] mouse report:");
+                    TRACE_R(ble_hid_cmd->buffer, ble_hid_cmd->len);
+                    printf("handle:%d\n",hid_rpt3_gatts.handle);
+                    ble_tx_notify(hid_rpt3_gatts.handle, ble_hid_cmd->buffer, ble_hid_cmd->len);
+                    break;
 #endif
 
 #if LE_HID_KEYBOARD
-            case BLE_HID_CMD_ID_KEYBOARD:
-                TRACE("[TASK] keyboard report:");
-                TRACE_R(ble_hid_cmd->buffer, ble_hid_cmd->len);
-                printf("handle:%d\n",hid_rpt4_gatts.handle);
-                ble_tx_notify(hid_rpt4_gatts.handle, ble_hid_cmd->buffer, ble_hid_cmd->len);
+                case BLE_HID_CMD_ID_KEYBOARD:
+                    TRACE("[TASK] keyboard report:");
+                    TRACE_R(ble_hid_cmd->buffer, ble_hid_cmd->len);
+                    printf("handle:%d\n",hid_rpt4_gatts.handle);
+                    ble_tx_notify(hid_rpt4_gatts.handle, ble_hid_cmd->buffer, ble_hid_cmd->len);
 #endif
 
-            default:
-                break;
+                default:
+                    break;
             }
 
             ble_hid_tasks.rear_idx = (ble_hid_tasks.rear_idx + 1) % BLE_HID_CMD_QUEUE_SIZE;
@@ -521,3 +551,4 @@ bool ble_hid_peer_device_is_ios(void)
     return true;
 }
 
+#endif

@@ -206,7 +206,6 @@ void uteModuleHeartEverySecond(void)
         if(!uteModuleBloodoxygenIsTesting() &&
            (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
            && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
-           && uteModuleHeartGetWorkMode() != WORK_MODE_HR
           )
         {
             if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
@@ -499,10 +498,6 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
     else if (uteModuleHeartData.type == TYPE_FACTORY1)
     {
         bsp_sensor_hr_init(WORK_MODE_FACTORY1);
-    }
-    else if (uteModuleHeartData.type == TYPE_WEAR)
-    {
-        bsp_sensor_hr_init(WORK_MODE_WEAR);
     }
     else
     {

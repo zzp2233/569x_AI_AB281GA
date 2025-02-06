@@ -1,14 +1,21 @@
+/*
+ * @brief:
+ * @LastEditors: ljf
+ * @LastEditTime: 2025-01-10 16:09:39
+ * @FilePath: \UTE_AB569x\app\platform\gui\ctp\chsc6x\chsc6x_platform.h
+ * @Date: 2025-01-08 16:13:46
+ */
 #ifndef __CHSC6X_PLATFORM_H__
 #define __CHSC6X_PLATFORM_H__
 //#include "printf.h"
 
-#define CHSC6X_INFO_EN    //是否打开驱动自带的打印
+#define CHSC6X_INFO_EN    0//是否打开驱动自带的打印
 
 #if 0
 #define chsc6x_info(x...) pr_notice("[chsc6x] " x)
 #define chsc6x_err(x...) pr_err("[chsc6x][error] " x)
 #else
-#ifdef CHSC6X_INFO_EN
+#if CHSC6X_INFO_EN
 #define chsc6x_info(...)              printf(__VA_ARGS__)
 #define chsc6x_err(...)              printf(__VA_ARGS__)
 #else
@@ -17,14 +24,14 @@
 #endif // CHSC6X_INFO_EN
 #endif
 
-#define FW_CHSC6410  		            0
-#define FW_CHSC6413 		            1
+#define FW_CHSC6410                     0
+#define FW_CHSC6413                     1
 
 #define CHSC6X_I2C_ID                   (0x5c) //8bit
 
 #define CHSC6X_MAX_POINTS_NUM           (1)
-#define CHSC6X_RES_MAX_X	            (370)
-#define CHSC6X_RES_MAX_Y	            (370)
+#define CHSC6X_RES_MAX_X                (370)
+#define CHSC6X_RES_MAX_Y                (370)
 
 /*MACRO SWITCH for driver update TP FW */
 #define CHSC6X_AUTO_UPGRADE             (1)
@@ -32,7 +39,7 @@
 /*MACRO SWITCH for multi TP_VENDOR Compatible update TP FW */
 #define CHSC6X_MUL_VENDOR_UPGRADE       (0)
 
-#define CHSC6X_TP_FW_SELECT    			 FW_CHSC6413
+#define CHSC6X_TP_FW_SELECT              FW_CHSC6413
 
 #define MAX_IIC_WR_LEN                  (8)
 #define MAX_IIC_RD_LEN                  (16)

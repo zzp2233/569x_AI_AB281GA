@@ -1,6 +1,6 @@
 #include "include.h"
 
-void mp3_res_play_kick(u32 addr, u32 len);
+bool mp3_res_play_kick(u32 addr, u32 len, bool kick);
 void wav_res_play_kick(u32 addr, u32 len);
 void wav_res_dec_process(void);
 bool wav_res_is_play(void);
@@ -11,132 +11,201 @@ void mp3_res_play_exit(void);
 static u8 msc_dnr_sta;
 #endif
 
-co_timer_t mute_timer;
-void loudspeaker_mute_callback(void)
+#if WARNING_MP3_EN
+void mp3_res_play(u32 addr, u32 len)
 {
-    bsp_loudspeaker_mute();
-    co_timer_del(&mute_timer);
-}
-
-u8 mp3_res_process(void)
-{
-    if (sys_cb.mp3_res_playing)
+#if QTEST_EN
+    if(qtest_get_mode())
     {
-        if (get_music_dec_sta() == MUSIC_STOP)
-        {
-            printf("mp3 ring stop:%d\n", sys_cb.mute);
-            sys_cb.mp3_res_playing = false;
-            music_control(MUSIC_MSG_STOP);
-            bsp_change_volume(sys_cb.vol);
-
-            if (music_set_eq_is_done())
-            {
-                music_set_eq_by_num(sys_cb.eq_mode); // 恢复 EQ
-            }
-            mp3_res_play_exit();
-
-            if (sys_cb.mute)
-            {
-                printf("co_timer_set(&mute_timer, 10, TIMER_ONE_SHOT, 0, loudspeaker_mute_callback, NULL);\n");
-                dac_fade_out();
-                co_timer_set(&mute_timer, 10, TIMER_ONE_SHOT, 0, loudspeaker_mute_callback, NULL);
-            }
-
-#if DAC_DNR_EN
-            dac_dnr_set_sta(msc_dnr_sta);
+        return;
+    }
 #endif
 
-            func_bt_mp3_play_restore();
-            return 0;
-        }
-
-    }
-    return 1;
-}
-
-void mp3_res_play_do(u32 addr, u32 len, bool sync)
-{
+    u16 msg;
+    u8 mute_bak;
+//    printf("%s: addr: %x, len: %x\n", __func__, addr, len);
     if (len == 0)
     {
         return;
     }
 
-    printf("mp3 ring: %x, %d\n", addr, sys_cb.mute);
-#if DAC_DNR_EN
-    msc_dnr_sta = dac_dnr_get_sta();
-    dac_dnr_set_sta(0);
+#if BT_BACKSTAGE_EN
+//    if (func_cb.sta_break != FUNC_NULL) {
+//        for (u32 i = 0; i < sizeof(res_addr) / sizeof(u32); i++) {
+//            if (*res_addr[i] == addr) {
+//                if (func_cb.sta != FUNC_BT) {
+//                    func_cb.sta_break = FUNC_NULL;
+//                }
+//                return;
+//            }
+//        }
+//    }
 #endif
 
+#if SYS_KARAOK_EN
+    u8 voice_bak = 0, func_sta = func_cb.sta;
+    if (karaok_get_voice_rm_sta())
+    {
+        voice_bak = 1;
+        karaok_voice_rm_disable();
+    }
+    bsp_karaok_exit(AUDIO_PATH_KARAOK);
+#endif
+
+    mute_bak = sys_cb.mute;
     if (sys_cb.mute)
     {
         bsp_loudspeaker_unmute();
     }
-
-    if (get_music_dec_sta() != MUSIC_STOP)   //避免来电响铃/报号未完成，影响get_music_dec_sta()状态
+    if(get_music_dec_sta() != MUSIC_STOP)   //避免来电响铃/报号未完成，影响get_music_dec_sta()状态
     {
         music_control(MUSIC_MSG_STOP);
     }
-
     bsp_change_volume(WARNING_VOLUME);
-    if (music_set_eq_is_done())
-    {
-        music_set_eq_by_num(0); // EQ 设置为 normal
-    }
 
-    mp3_res_play_kick(addr, len);
-    sys_cb.mp3_res_playing = true;
-}
+    mp3_res_play_kick(addr, len, true);
 
-void mp3_res_play(u32 addr, u32 len)
-{
-    mp3_res_play_do(addr, len, 0);
-}
-
-void mp3_res_play_block(u32 addr, u32 len)
-{
-    bt_audio_bypass();
-
-    mp3_res_play(addr, len);
-    while(mp3_res_process())
+    while (get_music_dec_sta() != MUSIC_STOP)
     {
         bt_thread_check_trigger();
         WDT_CLR();
+        msg = msg_dequeue();
+        if (sys_cb.voice_evt_brk_en)
+        {
+//            if (((msg == EVT_SD_INSERT) || (msg == EVT_UDISK_INSERT)) && (func_cb.sta != FUNC_MUSIC)) {
+//                func_message(msg);
+//                break;
+//            }
+        }
+#if LINEIN_DETECT_EN
+        if ((msg == EVT_LINEIN_INSERT) && ((sys_cb.voice_evt_brk_en) || (LINEIN_2_PWRDOWN_EN)))
+        {
+            func_message(msg);
+            break;
+        }
+#endif // LINEIN_DETECT_EN
+        if (msg != NO_MSG)
+        {
+            msg_enqueue(msg);       //还原未处理的消息
+        }
+#if BT_TWS_EN && WARNING_BREAK_EN
+        if(sys_cb.tws_res_brk)
+        {
+            sys_cb.tws_res_brk = 0;
+            break;
+        }
+#endif
+    }
+    music_control(MUSIC_MSG_STOP);
+    bsp_change_volume(sys_cb.vol);
+    mp3_res_play_exit();
+    sys_cb.mute = mute_bak;
+    if (sys_cb.mute)
+    {
+        printf(mute_str, 03);
+        bsp_loudspeaker_mute();
     }
 
-    bt_audio_enable();
+#if SYS_KARAOK_EN
+    if (voice_bak)
+    {
+        karaok_voice_rm_enable();
+    }
+    bsp_karaok_init(AUDIO_PATH_KARAOK, func_sta);
+#endif
 }
+#else
+void mp3_res_play(u32 addr, u32 len) {}
+#endif
 
-#if WARNING_WAVRES_PLAY
-void wav_res_play_do(u32 addr, u32 len, bool sync)
+#if WARNING_WAV_EN
+void wav_res_play(u32 addr, u32 len)
 {
     if (len == 0)
     {
         return;
     }
+    sys_clk_req(INDEX_RES_PLAY, SYS_120M);
 
-#if DAC_DNR_EN
-    u8 sta = dac_dnr_get_sta();
-    dac_dnr_set_sta(0);
-#endif
-
-    wav_res_play_kick(addr, len);
+    wav_res_play_kick(addr, len, 1);
     while (wav_res_is_play())
     {
         bt_thread_check_trigger();
         wav_res_dec_process();
         WDT_CLR();
+#if BT_TWS_EN && WARNING_BREAK_EN
+        if(sys_cb.tws_res_brk)
+        {
+            sys_cb.tws_res_brk = 0;
+            break;
+        }
+#endif
     }
     wav_res_stop();
-
-#if DAC_DNR_EN
-    dac_dnr_set_sta(sta);
-#endif
+    sys_clk_free(INDEX_RES_PLAY);
 }
+#endif
 
-void wav_res_play(u32 addr, u32 len)
+//提示音播报完毕，设置状态
+void bsp_res_play_exit_cb(uint8_t res_idx)
 {
-    wav_res_play_do(addr, len, 0);
+#if BT_LOW_LATENCY_EN
+    if (TWS_RES_MUSIC_MODE == res_idx)
+    {
+        printf("music mode\n");
+        bt_low_latency_disable();
+    }
+    else if (TWS_RES_GAME_MODE == res_idx)
+    {
+        printf("game mode\n");
+        bt_low_latency_enable();
+    }
+#endif
 }
 
-#endif
+#if !BT_TWS_EN
+uint8_t bsp_res_play(uint8_t res_idx)
+{
+    uint8_t res_type = tws_res_get_type(res_idx);
 
+    if (res_type != RES_TYPE_INVALID)
+    {
+        u32 addr, len;
+
+        tws_res_get_addr(res_idx, &addr, &len);
+        if (len != 0)
+        {
+            if(res_type == RES_TYPE_MP3)
+            {
+#if WARNING_MP3_EN
+                bt_audio_bypass();
+                mp3_res_play(addr, len);
+                bsp_res_play_exit_cb(res_idx);
+                bt_audio_enable();
+#endif
+#if WARNING_WSBC_EN
+            }
+            else if(res_type == RES_TYPE_WSBC)
+            {
+                wsbc_res_play(addr, len);
+#endif
+#if WARNING_WAV_EN
+            }
+            else if(res_type == RES_TYPE_WAV)
+            {
+                wav_res_play(addr, len);
+#endif
+#if WARNING_PIANO_EN
+            }
+            else if(res_type == RES_TYPE_PIANO || res_type == RES_TYPE_TONE)
+            {
+                int type = (res_type == RES_TYPE_TONE)? WARNING_TONE : WARNING_PIANO;
+                piano_res_play(type, (void *)addr);
+#endif
+            }
+        }
+    }
+
+    return RES_ERR_INVALID;
+}
+#endif

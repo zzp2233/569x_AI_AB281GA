@@ -37,7 +37,8 @@ void bsp_modem_sta_init(void)
 
 void bsp_modem_sleep_enter(void)
 {
-    if (bsp_modem_get_init_flag()) {
+    if (bsp_modem_get_init_flag())
+    {
         // close uart
         modem_huart_sleep();
         sleep_state = 1;
@@ -46,7 +47,8 @@ void bsp_modem_sleep_enter(void)
 
 void bsp_modem_sleep_exit(void)
 {
-    if (sleep_state) {
+    if (sleep_state)
+    {
         sleep_state = 0;
         modem_huart_wakeup();
         reset_sleep_delay();
@@ -89,6 +91,11 @@ void modem_sta_fall_isr(void)
     extab_user_isr_set(IO_PF1, RISE_EDGE, IOUD_SEL_PD, bsp_modem_sta_rise_isr);
     extab_user_isr_mode_set(IO_PF1, MODE_BOTH_AWAKEN_SLEEP_PWK);
     printf("%s\n", __func__);
+}
+
+u32 modem_sta_get_value(void)
+{
+    return (GPIOF & BIT(1));
 }
 
 #else

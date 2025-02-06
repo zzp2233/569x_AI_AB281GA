@@ -5,11 +5,11 @@
 #define TRACE_EN                1
 
 #if TRACE_EN
-    #define TRACE(...)              printf(__VA_ARGS__)
-    #define TRACE_R(...)            print_r(__VA_ARGS__)
+#define TRACE(...)              printf(__VA_ARGS__)
+#define TRACE_R(...)            print_r(__VA_ARGS__)
 #else
-    #define TRACE(...)
-    #define TRACE_R(...)
+#define TRACE(...)
+#define TRACE_R(...)
 #endif
 
 #define SPP_TX_BUF_LEN      128     //spp tx buff
@@ -21,7 +21,7 @@ AT(.text.sco_app.inf)
 static const uint8_t chip_type_inf[] = { 'A', 'B', '5', '6', '3', 'X' };
 
 AT(.text.sco_app.inf)
-static const uint8_t sdk_version_inf[] = { '8', '9', '2', 'X', 'A', '2', '.' , 'v' , '0' , '1' , 'x', ' ', '&', ' ', '5', '6', '3', 'x'};
+static const uint8_t sdk_version_inf[] = { '8', '9', '2', 'X', 'A', '2', '.', 'v', '0', '1', 'x', ' ', '&', ' ', '5', '6', '3', 'x'};
 
 void bt_sco_dbg_connect_ack(void)
 {
@@ -38,12 +38,6 @@ AT(.text.sco_app_dbg.app.mtu)
 u16 get_sco_spp_mtu_size(void)
 {
     return spp_tx_buff_get_len();
-}
-
-AT(.text.sco_app_dbg.sys_clk)
-u8 get_cur_sysclk(void)
-{
-    return SYS_CLK_SEL;
 }
 
 AT(.text.sco_app_dbg.app.mtu)
@@ -64,12 +58,14 @@ void sco_app_data_send(u8* buf, u16 len)
     u8 *p_data = buf;
     u16 send_len;
 
-    if(data_len > mtu){
+    if(data_len > mtu)
+    {
         total_frame = (data_len / mtu) + (data_len % mtu ? 1 : 0) - 1;
     }
     sco_app_cmd_send.cmd_head.frame_total = total_frame;
 
-    do{
+    do
+    {
         send_len = data_len > mtu ? mtu : data_len;
         sco_app_cmd_send.cmd_head.payload_len   = send_len;
         sco_app_cmd_send.cmd_head.frame_seq     = cur_frame++;
@@ -80,14 +76,16 @@ void sco_app_data_send(u8* buf, u16 len)
         sco_app_cmd_send.cmd_head.seq++;
         data_len    -= send_len;
         p_data      += send_len;
-    }while(total_frame--);
+    }
+    while(total_frame--);
 }
 
 AT(.text.sco_app_dbg.msg)
 void sco_app_msg_deal(u8 msg)
 {
     TRACE("sco_app_msg_deal:%d\n", msg);
-    switch (msg) {
+    switch (msg)
+    {
         case EVT_SCO_DBG_COMM_RSP:
             sco_app_data_send((u8*)&sco_app_cmd_send, SOC_APP_HEADER_LEN + 1);
             sco_app_request_tlv_payload_clear();
@@ -196,12 +194,15 @@ u16 sco_app_tx_tlv2tlv_fill(enum TLV_LAYER layer, enum SCO_INF_SEND inf, u16 len
     ret_payload[0] = inf;
     ret_payload[1] = len;
 
-    if (layer == TLV_LAYER0) {
+    if (layer == TLV_LAYER0)
+    {
         sco_app_cmd_send.total_len += 2;
         TRACE("payload tlv2tlv layer0 fill[%d]:\n", sco_app_cmd_send.total_len);
         TRACE_R(ret_payload, 2);
         return (2);
-    } else if (layer == TLV_LAYER1) {
+    }
+    else if (layer == TLV_LAYER1)
+    {
         ret_payload[2] = value;
         sco_app_cmd_send.total_len += len + 2;
         TRACE("payload tlv2tlv layer1 fill[%d]:\n", sco_app_cmd_send.total_len);
@@ -221,12 +222,15 @@ u16 sco_app_tx_tlv2tlv_fill_ptr(enum TLV_LAYER layer, enum SCO_INF_SEND inf, u16
     ret_payload[0] = inf;
     ret_payload[1] = len;
 
-    if (layer == TLV_LAYER0) {
+    if (layer == TLV_LAYER0)
+    {
         sco_app_cmd_send.total_len += 2;
         TRACE("payload tlv2tlv layer0 ptr fill[%d]:\n", sco_app_cmd_send.total_len);
         TRACE_R(ret_payload, 2);
         return (2);
-    } else if (layer == TLV_LAYER1) {
+    }
+    else if (layer == TLV_LAYER1)
+    {
         memcpy(&ret_payload[2], value, len);
         sco_app_cmd_send.total_len += len + 2;
         TRACE("payload tlv2tlv layer1 ptr fill[%d]:\n", sco_app_cmd_send.total_len);
@@ -246,10 +250,13 @@ void sco_app_tx_tlv2tlv_rewrite(enum TLV_LAYER layer, enum SCO_INF_SEND inf, u16
     ret_payload[0] = inf;
     ret_payload[1] = len;
 
-    if (layer == TLV_LAYER0) {
+    if (layer == TLV_LAYER0)
+    {
         TRACE("payload tlv2tlv layer0 rewrite[%d]:\n", sco_app_cmd_send.total_len);
         TRACE_R(ret_payload, 2);
-    } else if (layer == TLV_LAYER1) {
+    }
+    else if (layer == TLV_LAYER1)
+    {
         ret_payload[2] = value;
         TRACE("payload tlv2tlv layer1 rewrite[%d]:\n", sco_app_cmd_send.total_len);
         TRACE_R(ret_payload, len + 2);
@@ -384,25 +391,32 @@ static void sco_app_tx_post_eq_param(u8 *payload,u8 payload_len)
     u32 *post_eq_param = NULL;
     bool eq_msbc_en = TLV_SCO_CODEC_MSBC;
 
-    if (payload_len == 0) {     //当payload_len为空时，默认发MSBC的EQ曲线
+    if (payload_len == 0)       //当payload_len为空时，默认发MSBC的EQ曲线
+    {
         rx_tlv_type    = TLV_POST_EQ_MSBC;
         rx_tlv_val[0]  = TLV_SCO_CODEC_MSBC;
         payload_len = 1;
     }
 
-    while (read_len < payload_len) {
-        if (rx_tlv_type == TLV_POST_EQ_MSBC) {
-            if (rx_tlv_val[0] == TLV_SCO_CODEC_CVSD) {
+    while (read_len < payload_len)
+    {
+        if (rx_tlv_type == TLV_POST_EQ_MSBC)
+        {
+            if (rx_tlv_val[0] == TLV_SCO_CODEC_CVSD)
+            {
                 eq_msbc_en = TLV_SCO_CODEC_CVSD;
                 eq_param = &sco_app_var.post_eq_8k;
                 post_eq_param = sco_app_var.post_eq_8k_param;
-            } else if (rx_tlv_val[0] == TLV_SCO_CODEC_MSBC) {
+            }
+            else if (rx_tlv_val[0] == TLV_SCO_CODEC_MSBC)
+            {
                 eq_msbc_en = TLV_SCO_CODEC_MSBC;
                 eq_param = &sco_app_var.post_eq_16k;
                 post_eq_param = sco_app_var.post_eq_16k_param;
             }
 
-            if (eq_param != NULL) {
+            if (eq_param != NULL)
+            {
                 tx_trace_len = sco_app_tx_tlv2tlv_fill(TLV_LAYER0, CMD_SCO_INF_POST_EQ, 2, 0);
                 tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_EQ_EN, 1, (u8)bt_sco_dbg_get_alg_status(SCO_DBG_POST_EQ));
                 tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_EQ_MSBC, 1, eq_msbc_en);
@@ -410,7 +424,8 @@ static void sco_app_tx_post_eq_param(u8 *payload,u8 payload_len)
                 tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_EQ_VERSION, 1, eq_param->version);
 //                tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_EQ_SAMPLE_RATE, 1, eq_param->sample);
                 tx_tlv_len += sco_app_tx_tlv2tlv_fill_ptr(TLV_LAYER1, TLV_POST_EQ_GAIN, 4, (u8*)&post_eq_param[0]);
-                if (eq_param->band_cnt && (post_eq_param != NULL)) {
+                if (eq_param->band_cnt && (post_eq_param != NULL))
+                {
                     u16 param_len = (eq_param->band_cnt*5)*sizeof(u32);
                     tx_tlv_len += sco_app_tx_tlv2tlv_fill_ptr(TLV_LAYER1, TLV_POST_EQ_PARAM, param_len, (u8*)&post_eq_param[1]);
                 }
@@ -442,32 +457,40 @@ static void sco_app_tx_post_drc_param(u8 *payload,u8 payload_len)
     bool drc_msbc_en = TLV_SCO_CODEC_MSBC;
 //    u8 sample_rate = 0x00;
 
-    if (payload_len == 0) {     //当payload_len为空时，默认发MSBC的EQ曲线
+    if (payload_len == 0)       //当payload_len为空时，默认发MSBC的EQ曲线
+    {
         rx_tlv_type     = TLV_POST_DRC_MSBC;
         rx_tlv_val[0]   = TLV_SCO_CODEC_MSBC;
         payload_len     = 1;
     }
 
-    while (read_len < payload_len) {
-        if (rx_tlv_type == TLV_POST_DRC_MSBC) {
-            if (rx_tlv_val[0] == TLV_SCO_CODEC_CVSD) {
+    while (read_len < payload_len)
+    {
+        if (rx_tlv_type == TLV_POST_DRC_MSBC)
+        {
+            if (rx_tlv_val[0] == TLV_SCO_CODEC_CVSD)
+            {
                 drc_msbc_en = TLV_SCO_CODEC_CVSD;
 //                sample_rate = TLV_SCO_SAMPLE_RATE_8K;
                 post_drc_param = sco_app_var.post_drc_8k_res;
-            } else if (rx_tlv_val[0] == TLV_SCO_CODEC_MSBC) {
+            }
+            else if (rx_tlv_val[0] == TLV_SCO_CODEC_MSBC)
+            {
                 drc_msbc_en = TLV_SCO_CODEC_MSBC;
 //                sample_rate = TLV_SCO_SAMPLE_RATE_16K;
                 post_drc_param = sco_app_var.post_drc_16k_res;
             }
 
-            if (post_drc_param != NULL) {
+            if (post_drc_param != NULL)
+            {
                 tx_trace_len = sco_app_tx_tlv2tlv_fill(TLV_LAYER0, CMD_SCO_INF_POST_DRC, 2, 0);
                 tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_DRC_EN, 1, (u8)bt_sco_dbg_get_alg_status(SCO_DBG_POST_DRC));
                 tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_DRC_CNT, 1, 4);
                 tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_DRC_VERSION, 1, 0x03);
 //                tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_DRC_SAMPLE_RATE, 1, sample_rate);
                 tx_tlv_len += sco_app_tx_tlv2tlv_fill(TLV_LAYER1, TLV_POST_DRC_MSBC, 1, drc_msbc_en);
-                if (bt_sco_dbg_get_alg_status(SCO_DBG_POST_DRC)) {
+                if (bt_sco_dbg_get_alg_status(SCO_DBG_POST_DRC))
+                {
                     u16 param_len = sizeof(sco_app_var.post_drc_16k_res);
                     tx_tlv_len += sco_app_tx_tlv2tlv_fill_ptr(TLV_LAYER1, TLV_POST_DRC_PARAM, param_len, (u8*)post_drc_param);
                 }
@@ -583,15 +606,21 @@ static int get_inf_tx_func_api_idx(enum SCO_INF_SEND api_idx)
     api_len1 = CMD_SCO_INF_ENC_PARAM - CMD_SCO_INF_CHIP_TYPE + 1;
     api_len2 = api_len1 + (CMD_SCO_INF_POST_DRC - CMD_SCO_INF_PER_EQ + 1);
 
-    if (api_idx <= CMD_SCO_INF_ENC_PARAM) {
+    if (api_idx <= CMD_SCO_INF_ENC_PARAM)
+    {
         api_ret = (api_idx - (CMD_SCO_INF_CHIP_TYPE));
-    } else if (api_idx <= CMD_SCO_INF_POST_DRC) {
+    }
+    else if (api_idx <= CMD_SCO_INF_POST_DRC)
+    {
         api_ret = (api_idx - (CMD_SCO_INF_PER_EQ) + api_len1);
-    } else if (api_idx <= CMD_SCO_INF_DMDNN_PARAM) {
+    }
+    else if (api_idx <= CMD_SCO_INF_DMDNN_PARAM)
+    {
         api_ret = (api_idx - (CMD_SCO_INF_ANS_PARAM) + api_len2);
     }
 
-    if (api_ret > (sizeof(sco_app_inf_tx_func_api)/4)) {
+    if (api_ret > (sizeof(sco_app_inf_tx_func_api)/4))
+    {
         printf("api_ret: %d, range:[%d, %d]\n", api_ret, 0, sizeof(sco_app_inf_tx_func_api)/4);
         printf("sco app information tx api ERROR: api_id out of range.(sco_app_inf_tx_func_api)\n");
         return -1;
@@ -612,10 +641,12 @@ void sco_app_inf_send(u8 *payload,u8 payload_len)
     void (*inf_tx_func_api)(u8 *payload,u8 payload_len);
 
 //    sco_app_cmd_send.total_len = 0;
-    while (read_len < payload_len) {
+    while (read_len < payload_len)
+    {
         //TX API
         api_set = get_inf_tx_func_api_idx(tlv_type);
-        if (api_set >= 0) {
+        if (api_set >= 0)
+        {
             inf_tx_func_api = (void (*))sco_app_inf_tx_func_api[api_set];
             inf_tx_func_api(tlv_val, tlv_len);
         }
@@ -643,7 +674,8 @@ static void sco_app_request_receive_proc(u8 cmd,u8 *payload,u8 payload_len)
 
     //CMD API
     api_set = get_cmd_func_api_idx(cmd);
-    if (api_set >= 0) {
+    if (api_set >= 0)
+    {
         cmd_func_api = (void (*))sco_app_cmd_func_api[api_set];
         cmd_func_api(payload, payload_len);
     }
@@ -652,7 +684,8 @@ static void sco_app_request_receive_proc(u8 cmd,u8 *payload,u8 payload_len)
 AT(.text.sco_app_dbg.app)
 static void sco_app_receive_proc_do(void)
 {
-    switch(sco_app_cmd_recv.cmd_head.cmd_type){
+    switch(sco_app_cmd_recv.cmd_head.cmd_type)
+    {
         case SCO_CMD_TYPE_REQUEST:
             sco_app_request_receive_proc(sco_app_cmd_recv.cmd_head.cmd, sco_app_cmd_recv.payload, sco_app_cmd_recv.total_len);
             break;
@@ -671,33 +704,41 @@ bool bt_sco_app_dbg_proc(u8 *data,u8 len)
     u8 *p_data = &data[SOC_APP_PAYLOAD_POS];
     u8 payload_len = cmd_head->payload_len;
 
-    if(cmd_head->cmd_type > SCO_CMD_TYPE_NOTIFY){
+    if(cmd_head->cmd_type > SCO_CMD_TYPE_NOTIFY)
+    {
         return false;
     }
 
-    if(payload_len != (len - SOC_APP_HEADER_LEN)){
+    if(payload_len != (len - SOC_APP_HEADER_LEN))
+    {
         return false;
     }
 
-    if(sco_app_cmd_recv.next_header_seq != cmd_head->seq){
+    if(sco_app_cmd_recv.next_header_seq != cmd_head->seq)
+    {
         TRACE("--->header_seq_err:%d,%d\n",sco_app_cmd_recv.next_header_seq,cmd_head->seq);
         sco_app_cmd_recv.next_header_seq = cmd_head->seq;
     }
 
     sco_app_cmd_recv.next_header_seq++;
 
-    if(cmd_head->frame_total == 0){
+    if(cmd_head->frame_total == 0)
+    {
         TRACE("sco_app_receive[%d]:",len);
         TRACE_R(data,len);
-        if (payload_len > SCO_APP_RX_PAYLOAD_LEN) {
+        if (payload_len > SCO_APP_RX_PAYLOAD_LEN)
+        {
             TRACE("ERROR: rx payload_len overflow: [%d] > [%d]\n", payload_len, SCO_APP_RX_PAYLOAD_LEN);
         }
         memcpy(&sco_app_cmd_recv.cmd_head, cmd_head, SOC_APP_HEADER_LEN);
         memcpy(&sco_app_cmd_recv.payload, p_data, payload_len);
         sco_app_cmd_recv.total_len = payload_len;
         sco_app_receive_proc_do();
-    }else{
-        if(sco_app_cmd_recv.next_frame_seq != cmd_head->frame_seq){
+    }
+    else
+    {
+        if(sco_app_cmd_recv.next_frame_seq != cmd_head->frame_seq)
+        {
             TRACE("--->frame_seq_err\n");
             sco_app_cmd_recv.next_frame_seq = 0;
             return false;
@@ -705,7 +746,8 @@ bool bt_sco_app_dbg_proc(u8 *data,u8 len)
         sco_app_cmd_recv.next_frame_seq++;
         memcpy(&sco_app_cmd_recv.payload[sco_app_cmd_recv.recv_len], p_data, payload_len);
         sco_app_cmd_recv.recv_len += payload_len;
-        if(cmd_head->frame_seq == cmd_head->frame_total){
+        if(cmd_head->frame_seq == cmd_head->frame_total)
+        {
             memcpy(&sco_app_cmd_recv.cmd_head, cmd_head, SOC_APP_HEADER_LEN);
             sco_app_cmd_recv.total_len = sco_app_cmd_recv.recv_len;
             sco_app_cmd_recv.next_frame_seq = 0;

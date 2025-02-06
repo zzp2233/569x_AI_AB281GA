@@ -1,7 +1,8 @@
 #ifndef _COMPO_PICTUREBOX_H
 #define _COMPO_PICTUREBOX_H
 
-typedef struct compo_picturebox_t_ {
+typedef struct compo_picturebox_t_
+{
     COMPO_STRUCT_COMMON;
     u8 radix;
     widget_image_t *img;
@@ -14,14 +15,7 @@ typedef struct compo_picturebox_t_ {
  * @return 返回图像指针
  **/
 compo_picturebox_t *compo_picturebox_create(compo_form_t *frm, u32 res_addr);
-/**
- * @brief 创建一个图像框组件
- * @param[in] frm : 窗体指针
-  * @param[in] page_body : 页面
- * @param[in] res_addr : 图像资源地址
- * @return 返回图像指针
- **/
-compo_picturebox_t *compo_picturebox_create_for_page(compo_form_t *frm,widget_page_t *page_body,u32 res_addr);
+
 /**
  * @brief 设置图像
           用于改变图像组件中的图片

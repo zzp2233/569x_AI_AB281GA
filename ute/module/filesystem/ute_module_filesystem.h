@@ -55,8 +55,6 @@ void uteModuleFilesystemSeek(void *file,int32_t offset,int whence);
 bool uteModuleFilesystemDelFile(char *path);
 bool uteModuleFilesystemCreateDirectory(char *path);
 bool uteModuleFilesystemRenameFile(char *oldpath,char *newpath);
-bool uteModuleFilesystemRenameDirectory(char *oldpath, char *newpath, bool isDelOld);
-bool uteModuleFilesystemDelDirectoryAllFiles(char *path);
 
 #endif //_UTE_MODULE_FILESYSTEM_H_
 

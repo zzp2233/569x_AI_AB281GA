@@ -8,112 +8,60 @@
 
 #define WriteData(v) tft_write_data(v)
 #define CommEnd()    tft_write_end()
-// cmd 12h 1:cmd      4:addr/data
-// cmd 32h 1:cmd/addr 4:data
-// cmd 02h 1:cmd      1:addr/data
-#define WriteComm12(v) \
-({                   \
-    bsp_spide_cs(1);         \
-    bsp_spide_cs(0);         \
-    bsp_spide_bus_mode(SPIDE_1IO);   \
-    bsp_spide_snd_byte(0x12);\
-    bsp_spide_bus_mode(SPIDE_4IO);   \
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_snd_byte(v);   \
-    bsp_spide_snd_byte(0x00);\
-})
-#define WriteComm32(v) \
-({                   \
-    bsp_spide_cs(1);         \
-    bsp_spide_cs(0);         \
-    bsp_spide_bus_mode(SPIDE_1IO);   \
-    bsp_spide_snd_byte(0x32);\
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_snd_byte(v);   \
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_bus_mode(SPIDE_4IO);   \
-})
-#define WriteComm02(v) \
-({                   \
-    bsp_spide_cs(1);         \
-    bsp_spide_cs(0);         \
-    bsp_spide_bus_mode(SPIDE_1IO);   \
-    bsp_spide_snd_byte(0x02);\
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_snd_byte(v);   \
-    bsp_spide_snd_byte(0x00);\
-})
-#define ReadComm03(v) \
-({                   \
-    bsp_spide_cs(1);         \
-    bsp_spide_cs(0);         \
-    bsp_spide_bus_mode(SPIDE_1IO);   \
-    bsp_spide_snd_byte(0x03);\
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_snd_byte(v);   \
-    bsp_spide_snd_byte(0x00);\
-})
+
+void tft_write_cmd(u8 cmd);
+void tft_write_data(u8 data);
+void tft_write_end(void);
 
 AT(.com_text.tft_spi)
-bool tft_rgbw_is_support(void)
+void tft_write_end(void)
 {
-    return true;
+    TFT_SPI_CS_DIS();
 }
 
-//0x02: 1CMD 1ADDR 1DATA
 AT(.com_text.tft_spi)
 void tft_write_cmd(u8 cmd)
 {
     TFT_SPI_CS_DIS();
     delay_us(1);
     TFT_SPI_CS_EN();
-    DESPICON &= ~BIT(3);                        //1BIT
-    tft_spi_sendbyte(0x02);
-    tft_spi_sendbyte(0x00);
+
+    // BIT 3:2   0: 3wire mode 1 wire in 1 wrie out  1: 2wire mode 1wire in/out  2: 2bit bidirectional 3:4 bit bidirecional
+#if (GUI_MODE_SELECT != MODE_4WIRE_8BIT)
+    DESPICON &= ~(3<<2);
+    DESPICON |= BIT(18);                        //1BIT 3wire control singnal
+    DESPICON &= ~BIT(26);
+    DESPICON &= ~BIT(19);                       // DC为 0
+#elif (GUI_MODE_SELECT == MODE_4WIRE_8BIT)
+    DC_CMD_EN();
+    DESPICON &= ~(3<<2);
+#endif
     tft_spi_sendbyte(cmd);
-    tft_spi_sendbyte(0x00);
+    // delay_ms(1); //9853需要延时
+    //printf("DESPICON: %x cmd: %x \n", DESPICON, cmd);
 }
 
-//0x12: 1CMD 4ADDR 4DATA
 AT(.com_text.tft_spi)
-void tft_write_cmd12(u8 cmd)
+void tft_write_data(u8 data)
 {
-    TFT_SPI_CS_DIS();
-    delay_us(1);
     TFT_SPI_CS_EN();
-    DESPICON &= ~BIT(3);                        //1BIT
-    tft_spi_sendbyte(0x12);
-    DESPICON |= BIT(3);                         //4BIT
-    tft_spi_sendbyte(0x00);
-    tft_spi_sendbyte(cmd);
-    tft_spi_sendbyte(0x00);
+#if (GUI_MODE_SELECT != MODE_4WIRE_8BIT)
+    DESPICON |= BIT(19);
+#elif (GUI_MODE_SELECT == MODE_4WIRE_8BIT)
+    DC_DATA_EN();
+#endif
+    tft_spi_sendbyte(data);
+
+    TFT_SPI_CS_DIS();
 }
 
 //0x03: 1CMD 1ADDR 1DATA
 AT(.com_text.tft_spi)
 void tft_read_cmd(u8 cmd)
 {
-    TFT_SPI_CS_DIS();
-    delay_us(1);
-    TFT_SPI_CS_EN();
-    DESPICON &= ~BIT(3);                        //1BIT
-    tft_spi_sendbyte(0x03);
-    tft_spi_sendbyte(0x00);
-    tft_spi_sendbyte(cmd);
-    tft_spi_sendbyte(0x00);
+    tft_write_cmd(cmd);
 }
 
-AT(.com_text.tft_spi)
-void tft_write_data(u8 data)
-{
-    tft_spi_sendbyte(data);
-}
-
-AT(.com_text.tft_spi)
-void tft_write_end()
-{
-    TFT_SPI_CS_DIS();
-}
 
 AT(.com_text.tft_spi)
 void tft_set_window(u16 x0, u16 y0, u16 x1, u16 y1)
@@ -125,27 +73,34 @@ void tft_set_window(u16 x0, u16 y0, u16 x1, u16 y1)
 
     tft_write_cmd(0x2A);        //TFT_CASET
     tft_write_data(BYTE1(x0));
-    tft_write_data(BYTE0(x0));
+    tft_write_data(BYTE0(x0)&0XFF);
     tft_write_data(BYTE1(x1));
-    tft_write_data(BYTE0(x1));
+    tft_write_data(BYTE0(x1)&0XFF);
 
     tft_write_cmd(0x2B);        //TFT_PASET
     tft_write_data(BYTE1(y0));
-    tft_write_data(BYTE0(y0));
+    tft_write_data(BYTE0(y0)&0XFF);
     tft_write_data(BYTE1(y1));
-    tft_write_data(BYTE0(y1));
+    tft_write_data(BYTE0(y1)&0XFF);
     tft_write_end();
 }
 
 AT(.com_text.tft_spi)
 void tft_write_data_start(void)
 {
-    tft_write_cmd12(0x2C);      //TFT_RAMWR
+    tft_write_cmd(0x2C);
+#if (GUI_MODE_SELECT != MODE_4WIRE_8BIT)
+    DESPICON |= (2<<2);
+    //DESPICON &= ~(3<<2);
+    DESPICON |= BIT(18);
+    DESPICON |= BIT(26);
+    DESPICON |= BIT(19);
+#elif (GUI_MODE_SELECT == MODE_4WIRE_8BIT)
+    DC_DATA_EN();
+    DESPICON &= ~(3<<2);
+#endif
 }
 
-void tft_write_cmd(u8 cmd);
-void tft_write_data(u8 data);
-void tft_write_end(void);
 
 #define WriteComm(v) tft_write_cmd(v)
 #define ReadComm(v)  ReadComm03(v)
@@ -160,46 +115,6 @@ uint32_t tft_read_id(void)
     id = (id << 8) + tft_spi_getbyte();
     tft_write_end();
     return id;
-}
-
-
-void st7789_display_point(uint16_t x1, uint16_t y1, uint16_t color)
-{
-    TFT_SPI_DATA_EN();
-    delay_5ms(200);
-    printf("st7789_display_point_test_nomal\n");
-    tft_set_window(0, 0, x1, y1);
-    tft_frame_start();
-    for (int x = 0; x <= x1; x++)
-    {
-        for (int y = 0; y <= y1; y++)
-        {
-            WDT_CLR();
-            WriteData(color >> 8);
-            WriteData(color);
-        }
-    }
-    tft_write_end();
-
-}
-
-void HW_Reset(void)
-{
-
-    GPIOAFEN &= ~BIT(3);                            //RS
-    GPIOADE  |= BIT(3);
-    GPIOASET = BIT(3);
-    GPIOADIR &= ~BIT(3);
-
-    /*GPIOEFEN &= ~BIT(7);                            //RESET
-    GPIOEDE  |= BIT(7);
-    GPIOESET = BIT(7);
-    GPIOEDIR &= ~BIT(7);
-    delay_ms(10);
-    GPIOECLR = BIT(7);
-    delay_ms(20);
-    GPIOESET = BIT(7);
-    delay_ms(50);*/
 }
 
 
@@ -374,12 +289,14 @@ void tft_240_jd9853_init(void)
     WriteData(0x01);
     WriteData(0x27);
 
+
     WriteComm(0x11);
     CommEnd();
     delay_ms(120);
     WriteComm(0x29);
     delay_ms(50);
     CommEnd();
+
 
 }
 

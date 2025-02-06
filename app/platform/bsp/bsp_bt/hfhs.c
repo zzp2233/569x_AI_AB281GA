@@ -17,7 +17,8 @@ void bt_redial_reset(uint8_t index)
 
 void bt_update_redial_number(uint8_t index, char *buf, u32 len)
 {
-    if (len < 32) {
+    if (len < 32)
+    {
         memset(redial_buf[index], 0, 32);
         memcpy(redial_buf[index], buf, len);
     }
@@ -25,14 +26,18 @@ void bt_update_redial_number(uint8_t index, char *buf, u32 len)
 
 const char *bt_get_last_call_number(uint8_t index)
 {
-    if (redial_buf[index][0]) {
+    if (redial_buf[index][0])
+    {
         return (const char *)redial_buf[index];
-    } else {
+    }
+    else
+    {
         return NULL;
     }
 }
 
-const char *hfp_get_last_call_number(uint8_t index) {
+const char *hfp_get_last_call_number(uint8_t index)
+{
     return bt_get_last_call_number(index);
 }
 
@@ -60,7 +65,8 @@ void hfp_hf_emit_curr_calls(u8 idx, u8 type, const char * number, u32 len)
 //delay_5ms(10); //延迟一下，等它发送完毕
 //
 //此函数返回需要回拨的号码，例如“10086”
-char * hfp_get_outgoing_number(void) {
+char * hfp_get_outgoing_number(void)
+{
     //return "10086";
     return sys_cb.outgoing_number;
 }
@@ -69,8 +75,9 @@ char * hfp_get_outgoing_number(void) {
 //bt_hfp_send_at_cmd();
 //delay_5ms(10); //延迟一下，等它发送完毕
 //
- //此函数返回需要发送的ATCMD
-char * hfp_get_at_cmd(void) {
+//此函数返回需要发送的ATCMD
+char * hfp_get_at_cmd(void)
+{
 //    return "AT+VTS=1"; //例如，通话过程发起号码键"1"
     return "ATD10000;"; //也可以，发起回拨号码"10086"
 //    return "AT+CCLK?\r";//获取IOS手机时间（安卓暂不支持），获取回调函数hfp_get_time
@@ -94,28 +101,39 @@ uint hfp_get_spk_gain(void)
     return (sys_cb.hfp_vol>15)? 15 : sys_cb.hfp_vol;
 }
 
-#if BT_HFP_BAT_REPORT_EN
+#if (BT_HFP_BAT_REPORT_EN || SMART_VHOUSE_HOST_EN)
 uint hfp_get_bat_level(void)
 {
     //计算方法：level = (实测电压 - 关机电压) / ((满电电压 - 关机电压) / 10)
     u16 bat_off = LPWR_OFF_VBAT;
-    if (bat_off > sys_cb.vbat) {
+    if (bat_off > sys_cb.vbat)
+    {
         return 0;
     }
-    if (bat_off < 2800) {
+    if (bat_off < 2800)
+    {
         bat_off = 2800;
     }
     uint bat_level = (sys_cb.vbat - bat_off) / ((4200 - bat_off) / 10);
-    if (bat_level) {
+    if (bat_level)
+    {
         bat_level--;
     }
 //    printf("bat level: %d %d\n", sys_cb.vbat, bat_level);
     return bat_level;
 }
+
+uint hfp_get_bat_level_ex(void)
+{
+    uint level_bat;
+    level_bat = hfp_get_bat_level();
+    return (level_bat + 1) * 10;
+}
 #endif
 
 #if BT_MAP_EN
-char * hfp_get_at_cmd(void) {
+char * hfp_get_at_cmd(void)
+{
 //    return "AT+VTS=1;"; //例如，通话过程发起号码键"1"
 //    return "ATD10086;"; //也可以，发起回拨号码"10086"
     return "AT+CCLK?\r";//获取IOS手机时间（安卓暂不支持），获取回调函数hfp_get_time

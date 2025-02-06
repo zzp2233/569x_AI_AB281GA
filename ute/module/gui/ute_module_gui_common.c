@@ -9,12 +9,12 @@
 #include "include.h"
 #include "ute_module_log.h"
 #include "ute_module_message.h"
-#include "ute_drv_screen_common.h"
+// #include "ute_drv_screen_common.h"
 #include "ute_application_common.h"
 #include "ute_module_gui_common.h"
-#include "ute_module_heart.h"
-#include "ute_module_bloodoxygen.h"
-#include "ute_module_sport.h"
+// #include "ute_module_heart.h"
+// #include "ute_module_bloodoxygen.h"
+// #include "ute_module_sport.h"
 #include "ute_module_filesystem.h"
 #include "ute_module_watchonline.h"
 
@@ -366,7 +366,7 @@ void uteModuleGuiCommonInit(void)
     memset(&uteModuleGuiCommonData,0,sizeof(ute_module_gui_common_t));
     /*! 创建定时器 zn.zeng, 2021-09-03  */
     // uteModulePlatformCreateTimer(&displayOffTimerPointer, "display off",1, 5000, false, uteModuleGuiCommonDisplayOffTimerCallback);
-    uteModulePlatformCreateTimer(&clearDepthAfterOffTimerPointer, "clear depth",1, 5000, false, uteModuleGuiCommonClearDepthTimerCallback);
+    // uteModulePlatformCreateTimer(&clearDepthAfterOffTimerPointer, "clear depth",1, 5000, false, uteModuleGuiCommonClearDepthTimerCallback);
     uteModuleGuiCommonReadConfig();
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
     uteModuleGuiCommonScreenSaverConfigInit();
@@ -402,7 +402,10 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
 
-    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if (bt_cb.disp_status > BT_STA_PLAYING
+        // || func_cb.sta == FUNC_OTA_UI_MODE
+        // || is_fot_start()
+       )
     {
         return;
     }
@@ -606,7 +609,9 @@ void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
     sys_cb.dialplate_index = index;
     if(index >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
     {
+#if UTE_MODULE_WATCHONLINE_SUPPORT
         uteModuleWatchOnlineUpateConfigFromFlash();
+#endif
     }
     uteModuleGuiCommonSaveConfig();
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,index=%d",__func__,index);
@@ -748,11 +753,14 @@ void uteModuleGuiCommonGoBackLastScreen(void)
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
 
-    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if (bt_cb.disp_status > BT_STA_PLAYING
+        // || func_cb.sta == FUNC_OTA_UI_MODE
+        // || is_fot_start()
+       )
     {
         return;
     }
-    
+
     func_directly_back_to();
 }
 
@@ -771,11 +779,14 @@ void uteTaskGuiStartScreen(uint8_t screenId)
     }
     reset_sleep_delay_all();
 
-    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if (bt_cb.disp_status > BT_STA_PLAYING
+        // || func_cb.sta == FUNC_OTA_UI_MODE
+        // || is_fot_start()
+       )
     {
         return;
     }
-    
+
     if(func_cb.sta != screenId)
     {
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
@@ -802,7 +813,10 @@ void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
     }
     reset_sleep_delay_all();
 
-    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if (bt_cb.disp_status > BT_STA_PLAYING
+        // || func_cb.sta == FUNC_OTA_UI_MODE
+        // || is_fot_start()
+       )
     {
         return;
     }

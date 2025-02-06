@@ -7,29 +7,36 @@ void bsp_qdec_adc_process(u8 adc_val);
 AT(.com_text.saradc.process)
 bool bsp_saradc_process(u32 auto_en)
 {
-    if (!saradc_is_finish()) {
+    if (!saradc_is_finish())
+    {
         return false;
     }
-    if (saradc_adc15_is_vrtc()) {
+    if (saradc_adc15_is_vrtc())
+    {
         adc_cb.vrtc_val = saradc_get_value10(ADCCH_VRTC);
     }
-    if (saradc_adc15_is_bg()) {
+    if (saradc_adc15_is_bg())
+    {
         adc_cb.bg = saradc_get_value10(ADCCH_BGOP);
     }
-    if (saradc_adc15_is_mic()) {
+    if (saradc_adc15_is_mic())
+    {
         adc_cb.mic_volt = saradc_get_value10(ADCCH_MIC);
     }
 #if TS_MODE_EN
-    if (saradc_adc15_is_ts()) {
+    if (saradc_adc15_is_ts())
+    {
         adc_cb.vts = saradc_get_value10(ADCCH_VTS);
     }
 #endif
 #if VUSB_DETECT_EN
-    if (saradc_adc15_is_vusb()) {
+    if (saradc_adc15_is_vusb())
+    {
         adc_cb.vusb = saradc_get_value10(ADCCH_VUSB);
     }
 #endif
-    if (auto_en) {
+    if (auto_en)
+    {
         saradc_adc15_analog_next();
         saradc_kick_start(0, 0);                                    //启动下一次ADC转换
     }
@@ -42,22 +49,31 @@ AT(.com_text.saradc.process)
 static void bsp_saradc_kick_process(void)
 {
 #if CHARGE_VOL_DYNAMIC_DET
-    if (!DC_IN()) {
+    if (!DC_IN())
+    {
         saradc_kick_start(0, 0);                                    //每5毫秒启动全部ADC通路转换一次
         adc_cb.tmr1ms_cnt = 0;
-    } else {
-        if ((adc_cb.tmr1ms_cnt % 10000) == 0) {                      //充电状态, 每5s采样一次VBAT, 停10ms
+    }
+    else
+    {
+        if ((adc_cb.tmr1ms_cnt % 5000) == 0)                        //充电状态, 每5s采样一次VBAT, 停10ms
+        {
             adc_cb.tmr1ms_cnt = 0;
-            if(sys_cb.chg_on){
+            if(sys_cb.chg_on)
+            {
                 gradient_process(1);
                 RTCCON8 |= BIT(1);                                  //charge stop
                 adc_chstops_flag = true;                            //转换完成, 中断清变量
             }
             saradc_adc15_analog_select(ADCCH15_ANA_BG);             //参考信号需要与vbat一起ADC转换
             saradc_kick_start(0, 1);                                //全部ADC通路转换一次
-        } else {
-            if((adc_cb.tmr1ms_cnt % 10000) == 9000){
-                if(sys_cb.chg_on){
+        }
+        else
+        {
+            if((adc_cb.tmr1ms_cnt % 5000) == 4990)
+            {
+                if(sys_cb.chg_on)
+                {
                     gradient_process(1);
                     RTCCON8 |= BIT(1);                              //charge stop
                 }
@@ -73,19 +89,30 @@ static void bsp_saradc_kick_process(void)
 AT(.com_text.saradc.process)
 void bsp_saradc_tmr1ms_process(void)
 {
+#if ECIG_POWER_CONTROL
+    if (bsp_ecig_is_working())     //吸烟时屏蔽其他adc
+    {
+        return;
+    }
+#endif
     adc_cb.tmr1ms_cnt++;
 #if USER_ADKEY_QDEC_EN
-    if (bsp_saradc_process(0)) {
-        if ((adc_cb.tmr1ms_cnt % 5) == 0) {
+    if (bsp_saradc_process(0))
+    {
+        if ((adc_cb.tmr1ms_cnt % 5) == 0)
+        {
             saradc_adc15_analog_next();
             bsp_saradc_kick_process();
-        } else {
+        }
+        else
+        {
             saradc_kick_start_do(BIT(USER_QDEC_ADCH), 0, 0);        //仅QDEC ADC每毫秒采样一次
         }
         bsp_qdec_adc_process(saradc_get_value8(USER_QDEC_ADCH));
     }
 #else
-    if ((adc_cb.tmr1ms_cnt % 5) == 0) {
+    if ((adc_cb.tmr1ms_cnt % 5) == 0)
+    {
         bsp_saradc_process(0);
         saradc_adc15_analog_next();
         bsp_saradc_kick_process();
@@ -99,7 +126,9 @@ void bsp_saradc_init(void)
     u32 rtccon8 = RTCCON8;
     memset(&adc_cb, 0, sizeof(adc_cb));
     saradc_init();
-
+#if ECIG_POWER_CONTROL
+    saradc_set_baud(1); //6.5M/(2*(div + 1)) = 1.625M
+#endif
     //始化时采一次BG电压
     saradc_adc15_analog_select(ADCCH15_ANA_BG);
     delay_us(600);
@@ -148,7 +177,8 @@ u16 saradc_get_bg_volt_val(void)
 //
 #define NTC_ADC_TABLE_MAX           33
 
-static const int ntc_adc_value_table[NTC_ADC_TABLE_MAX][2] ={
+static const int ntc_adc_value_table[NTC_ADC_TABLE_MAX][2] =
+{
     {233,    -40},
     {237,    -35},
     {241,    -30},
@@ -192,16 +222,20 @@ s16 ts_adc2ntc(int adc_value)
 {
     int id, temp;
 
-    if(adc_value <= ntc_adc_value_table[0][0]){
+    if(adc_value <= ntc_adc_value_table[0][0])
+    {
         return ntc_adc_value_table[0][1];
     }
 
-    if(adc_value >= ntc_adc_value_table[NTC_ADC_TABLE_MAX-1][0]){
+    if(adc_value >= ntc_adc_value_table[NTC_ADC_TABLE_MAX-1][0])
+    {
         return ntc_adc_value_table[NTC_ADC_TABLE_MAX-1][1];
     }
 
-    for(id=0; id<NTC_ADC_TABLE_MAX; id++){
-        if(ntc_adc_value_table[id][0] >= adc_value){
+    for(id=0; id<NTC_ADC_TABLE_MAX; id++)
+    {
+        if(ntc_adc_value_table[id][0] >= adc_value)
+        {
             break;
         }
     }

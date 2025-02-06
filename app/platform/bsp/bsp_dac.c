@@ -5,7 +5,8 @@ uint8_t cfg_spk_mute_en = LOUDSPEAKER_MUTE_EN;
 const u8 *dac_dvol_table;
 
 AT(.rodata.dac)
-const u16 dac_dvol_tbl_db[61] = {
+const u16 dac_dvol_tbl_db[61] =
+{
     DIG_N0DB,  DIG_N1DB,  DIG_N2DB,  DIG_N3DB,  DIG_N4DB,  DIG_N5DB,  DIG_N6DB,  DIG_N7DB,
     DIG_N8DB,  DIG_N9DB,  DIG_N10DB, DIG_N11DB, DIG_N12DB, DIG_N13DB, DIG_N14DB, DIG_N15DB,
     DIG_N16DB, DIG_N17DB, DIG_N18DB, DIG_N19DB, DIG_N20DB, DIG_N21DB, DIG_N22DB, DIG_N23DB,
@@ -17,27 +18,48 @@ const u16 dac_dvol_tbl_db[61] = {
 };
 
 AT(.rodata.dac)
-const u8 dac_dvol_tbl_16[16 + 1] = {
+const u8 dac_dvol_tbl_16[16 + 1] =
+{
     60,  43,  32,  26,  24,  22,  20,  18, 16,
     14,  12,  10,  8,   6,   4,   2,   0,
 };
 
 AT(.rodata.dac)
-const u8 dac_dvol_tbl_32[32 + 1] = {
+const u8 dac_dvol_tbl_32[32 + 1] =
+{
     60,  50,  43,  38,  35,  30,  28,  26,
     24,  23,  22,  21,  20,  19,  18,  17,
     16,  15,  14,  13,  12,  11,  10,  9,
     8,   7,   6,   5,   4,   3,   2,   1,   0,
 };
 
+AT(.text.vol.convert)
+u16 bsp_volume_convert(u8 vol)
+{
+    u16 vol_set = 0;
+    u8 level = 0;
+    if (vol <= VOL_MAX)
+    {
+        level = dac_dvol_table[vol] + sys_cb.gain_offset;
+        if (level > 60)
+        {
+            level = 60;
+        }
+        vol_set = dac_dvol_tbl_db[level];
+    }
+    return vol_set;
+}
+
 AT(.text.bsp.dac)
 void bsp_change_volume(u8 vol)
 {
     u8 level = 0;
 
-    if (vol <= VOL_MAX) {
+    if (vol <= VOL_MAX)
+    {
         level = dac_dvol_table[vol] + sys_cb.gain_offset;
-        if (level > 60) {
+        if (level > 60)
+        {
             level = 60;
         }
         dac_set_dvol(dac_dvol_tbl_db[level]);
@@ -48,12 +70,14 @@ AT(.text.bsp.dac)
 bool bsp_set_volume(u8 vol)
 {
     bsp_change_volume(vol);
-    if (vol == sys_cb.vol) {
+    if (vol == sys_cb.vol)
+    {
 //        gui_box_show_vol();
         return false;
     }
 
-    if (vol <= VOL_MAX) {
+    if (vol <= VOL_MAX)
+    {
         sys_cb.vol = vol;
 //        gui_box_show_vol();
         param_sys_vol_write();
@@ -66,10 +90,16 @@ bool bsp_set_volume(u8 vol)
 AT(.com_text.dac)
 void dac_set_mute_callback(u8 mute_flag)
 {
-    if (mute_flag) {
+    if (mute_flag)
+    {
+        printf(mute_str, 00);
         bsp_loudspeaker_mute();
-    } else {
-        if (!sys_cb.mute) {
+
+    }
+    else
+    {
+        if (!sys_cb.mute)
+        {
             bsp_loudspeaker_unmute();
             //DAC延时淡入，防止UNMUTE时间太短导致喇叭声音不全的问题
             dac_unmute_set_delay(LOUDSPEAKER_UNMUTE_DELAY);
@@ -97,9 +127,12 @@ u8 bsp_volume_dec(u8 vol)
 AT(.text.dac)
 void dac_set_anl_offset(u8 bt_call_flag)
 {
-    if (bt_call_flag) {
+    if (bt_call_flag)
+    {
         sys_cb.gain_offset = BT_CALL_MAX_GAIN;
-    } else {
+    }
+    else
+    {
         sys_cb.gain_offset = DAC_MAX_GAIN;
     }
 }
@@ -107,9 +140,12 @@ void dac_set_anl_offset(u8 bt_call_flag)
 AT(.text.bsp.dac)
 static void dac_set_vol_table(u8 vol_max)
 {
-    if (vol_max == 16) {
+    if (vol_max == 16)
+    {
         dac_dvol_table = dac_dvol_tbl_16;
-    } else {
+    }
+    else
+    {
         dac_dvol_table = dac_dvol_tbl_32;
     }
 }

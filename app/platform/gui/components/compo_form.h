@@ -13,7 +13,6 @@ typedef struct compo_textbox_t_
     widget_text_t *txt;
     compo_roll_cb_t roll_cb;
     bool multiline;             //多行
-    bool center_top;            //居顶对齐
 } compo_textbox_t;
 
 
@@ -25,8 +24,7 @@ typedef struct compo_form_t_
     widget_icon_t *icon;
     widget_icon_t *title_icon;
     compo_textbox_t *title;
-//    widget_text_t *time;
-    compo_textbox_t *time;
+    widget_text_t *time;
     int mode;
 } compo_form_t;
 
@@ -129,7 +127,5 @@ void compo_form_set_bg(compo_form_t *frm, u32 res_addr);
  * @param[in] res_addr : 图片资源的地址
  **/
 void compo_form_set_title_icon(compo_form_t *frm, u32 res_addr);
-
-void compo_form_set_title_txt_color(compo_form_t *frm, u16 color);
 
 #endif

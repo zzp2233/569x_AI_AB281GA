@@ -22,21 +22,6 @@ compo_picturebox_t *compo_picturebox_create(compo_form_t *frm, u32 res_addr)
     picbox->radix = 1;
     return picbox;
 }
-/**
- * @brief 创建一个图像框组件
- * @param[in] frm : 窗体指针
-  * @param[in] page_body : 页面
- * @param[in] res_addr : 图像资源地址
- * @return 返回图像指针
- **/
-compo_picturebox_t *compo_picturebox_create_for_page(compo_form_t *frm,widget_page_t *page_body,u32 res_addr)
-{
-    compo_picturebox_t *picbox = compo_create(frm, COMPO_TYPE_PICTUREBOX);
-    void *img = widget_image_create(page_body, res_addr);
-    picbox->img = img;
-    picbox->radix = 1;
-    return picbox;
-}
 
 /**
  * @brief 设置图像
@@ -71,12 +56,13 @@ void compo_picturebox_set_ram(compo_picturebox_t *picbox, void *buf)
  **/
 void compo_picturebox_cut(compo_picturebox_t *picbox, u8 index, u8 total_cnt)
 {
-	if (total_cnt == 0) {
-		halt(HALT_GUI_COMPO);
-	}
+    if (total_cnt == 0)
+    {
+        halt(HALT_GUI_COMPO);
+    }
     area_t area = widget_image_get_size(picbox->img);
     widget_image_cut(picbox->img, 0, index * (area.hei / total_cnt), area.wid, area.hei / total_cnt);
-	picbox->radix = total_cnt;
+    picbox->radix = total_cnt;
 }
 
 /**

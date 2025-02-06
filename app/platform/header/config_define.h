@@ -13,6 +13,18 @@
 #define XOSC_CLK_HZ                     24000000
 
 /*****************************************************************************
+ * Module    : 芯片选型
+ *****************************************************************************/
+#define CHIP_5691G                      0           //QFN40
+#define CHIP_5691C_F                    1           //QFN40
+#define CHIP_5690G                      2           //QFN52
+#define CHIP_5690F                      3           //QFN52
+/*****************************************************************************
+ * Module    : 开发板选型
+ *****************************************************************************/
+#define DEVELOPMENT_BOARD_WATCH        0//手表
+#define DEVELOPMENT_BOARD_ECIG         1//电子烟
+/*****************************************************************************
  * Module    : 显示相关配置选择列表
  *****************************************************************************/
 //显示驱动屏选择
@@ -21,7 +33,6 @@
 #define DISPLAY_LCDSEG                  0x200                                   //选用断码屏做为显示驱动
 #define DISPLAY_LEDSEG                  0x400                                   //选用数码管做为显示驱动
 #define DISPLAY_TFT                     0x800                                   //选用彩屏做为显示驱动
-#define DISPLAY_UTE                     0x1000
 
 #define GUI_NO                          DISPLAY_NO                              //无主题，无显示
 #define GUI_TFT_320_ST77916             (DISPLAY_TFT | 0x01)                    //彩屏 320 * 385
@@ -30,33 +41,15 @@
 #define GUI_OLED_466_ICNA3310B          (DISPLAY_TFT | 0x04)                    //OLED彩屏 466 * 466
 #define GUI_TFT_JD9853                  (DISPLAY_TFT | 0x05)                    //JD9853  240*296 DSPI 屏
 #define GUI_TFT_170_560_AXS15231B       (DISPLAY_TFT | 0x06)                    //彩屏 170_560
-#define GUI_TFT_240_296_NV3030B         (DISPLAY_TFT | 0x07)                    //彩屏 240 *296
-#define GUI_TFT_320_385_GV9B71          (DISPLAY_TFT | 0x08)                    //彩屏 320 *385
+#define GUI_TFT_240_JD9853W3            (DISPLAY_TFT | 0x07)                    //彩屏 170_560
 #define GUI_TFT_SPI                     (DISPLAY_TFT | 0x10)                    //spi通用接口
 
 //当使用通用接口时
 #define SPI_DRIVER_NO                  0                                        //无QSPI显示驱动
 #define SPI_DRIVER_JD9853              0x100                                    //JD9853系列驱动
 #define SPI_JD9853_V1                  (SPI_DRIVER_JD9853 | 0x01)               //JD9853系列驱动版本选择V1
-#define SPI_JD9853_WIDTH               240
-#define SPI_JD9835_HIGHT               284
-#define SPI_JD9835_OFS_X               0
-#define SPI_JD9835_OFS_Y               20
-
 #define SPI_DRIVER_GC9307              0x200                                    //GC9307系列驱动
 #define SPI_GC9307_V1                  (SPI_DRIVER_GC9307 | 0x01)               //GC9307系列驱动版本选择V1
-#define SPI_GC9307_WIDTH               240
-#define SPI_GC9307_HIGHT               284
-#define SPI_GC9307_OFS_X               0
-#define SPI_GC9307_OFS_Y               20
-
-#define SPI_DRIVER_ST7789              0x300                                    //ST7789系列驱动
-#define SPI_ST7789_V1                  (SPI_DRIVER_ST7789 | 0x01)               //ST7789系列驱动版本选择V1   
-#define SPI_ST7789_WIDTH               240
-#define SPI_ST7789_HIGHT               296
-#define SPI_ST7789_OFS_X               0
-#define SPI_ST7789_OFS_Y               0
-
 //屏幕接口模式
 #define MODE_3WIRE_9BIT                 0                                       //屏幕3线9bit模式: 3线为SCLK CS D0; 9bit每次传输一个byte有效数据, 开头多1bit作为DC识别;
 #define MODE_3WIRE_9BIT_2LINE           1                                       //屏幕3线9bit 两线模式(despi): 写命令用3w-9b, 写数据为两线模式多了D1/DC, 3w-9b-2line;
@@ -74,7 +67,6 @@
 /*****************************************************************************
  * Module    : FLASH大小定义
  *****************************************************************************/
-#define FSIZE_16M                       0x1000000
 #define FSIZE_8M                        0x800000
 #define FSIZE_4M                        0x400000
 #define FSIZE_2M                        0x200000
@@ -88,6 +80,18 @@
 #define LANG_EN         0               //英文提示音
 #define LANG_ZH         1               //中文提示音
 #define LANG_EN_ZH      2               //英文、中文双语提示音
+
+/*****************************************************************************
+ * Module    : 提示音资源类型选择列表
+ *****************************************************************************/
+#define RES_TYPE_INVALID    0           //非法提示音
+#define RES_TYPE_TONE       1           //PIANO音调，可叠加到music
+#define RES_TYPE_PIANO      2           //PIANO提示音，可叠加到music
+#define RES_TYPE_MP3        3           //MP3提示音，不能叠加
+#define RES_TYPE_WAV        4           //WAV提示音，可叠加到music
+#define RES_TYPE_ESBC       5           //ESBC提示音（暂不支持）
+#define RES_TYPE_WSBC       6           //WSBC提示音，可叠加到music
+
 
 /*****************************************************************************
  * Module    : ADC通路选择列表
@@ -384,6 +388,13 @@
 *****************************************************************************/
 #define USE_NULL_APP                    0
 #define USE_AB_APP                      1   //bluefit app
-#define USE_UTE_APP                     2
+
+/*****************************************************************************
+ * Module    : 充电IC选择
+ *****************************************************************************/
+#define CHARGE_IC_NULL                  0
+#define CHARGE_IC_LP7812C               1
+#define CHARGE_IC_LX3318BS              2
+#define CHARGE_IC_SY8827                3
 
 #endif //CONFIG_DEFINE_H

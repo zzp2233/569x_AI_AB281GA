@@ -3,11 +3,10 @@
 #include "chsc6x_ramcode.h"
 #include "chsc6x_platform.h"
 // #include "chsc6x_flash_boot.h"
-#if PROJECT_AB281B_SUPPORT
-#include "YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" //801
-#else
-#include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
-#endif
+
+// #include "YCY_AB281_chsc6x_upd_[304_17]_V241_V2.h" //801
+// #include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
+#include "YCY_JLE012_MB_304_19_V242_V2.h"
 #include "chsc6x_main.h"
 
 #define TXRX_ADDR       (0x9000)
@@ -197,10 +196,10 @@ void chsc6x_tp_reset_delay(chsc6x_reset_e type)
         case HW_CMD_RESET:
             // chsc6x_msleep(30);
             chsc6x_tp_reset();
+
             break;
 
         case HW_ACTIVE_RESET:
-            // chsc6x_msleep(2);
             chsc6x_tp_reset_active();
             break;
 
@@ -221,7 +220,7 @@ static int chsc6x_get_i2cmode(void)
     {
         return -OS_TPERROR;
     }
-
+    // chsc6x_err("chsc6x: regData[0]=%X,regData[2]=%X \r\n",regData[0],regData[2]);
     if ((0x5c == regData[0]) && (regData[2] == 0X01))
     {
         return DIRECTLY_MODE;
@@ -330,6 +329,7 @@ static uint32_t chsc6x_checksumEx(uint8_t *buf, uint16_t length)
         WDT_CLR();
         check += buf[k];
         checkEx += (uint16_t) (k * buf[k]);
+        // printf("length %d k %d \n",length,k);
     }
     combChk = (checkEx << 16) | check;
 
@@ -599,7 +599,7 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
 
     u32tmp = ptcfg[1];
     u32tmp = (u32tmp << 16) | ptcfg[0];
-#if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
+#if 1//DEFAULT_TP_FORCE_UPDATE_ON_OPEN
     if (((g_chsc6x_cfg_ver & 0x3ffffff) != (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
     {
         chsc6x_info("chsc6x: prj info not match,now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
@@ -610,7 +610,7 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
     vnow = (g_chsc6x_cfg_ver >> 26) & 0x3f;
     vbuild = (u32tmp >> 26) & 0x3f;
     chsc6x_info("chsc6x: cfg_vnow: 0x%x,cfg_vbuild: 0x%x \r\n", vnow, vbuild);
-#if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
+#if 1//DEFAULT_TP_FORCE_UPDATE_ON_OPEN
     if (0 == g_upgrade_flag && vbuild <= vnow)
     {
         return 0; //driver init upgrade, must vbuild > vnow
@@ -879,9 +879,11 @@ static int chsc6x_update_compat_ctl(uint8_t *pupd, int len)
         {
             if ((vlist[k] == (g_chsc6x_cfg_ver & 0xffffff)) || g_force_update_flag)
             {
+                WDT_CLR();
                 BOOTCRC = chsc6x_checksumEx((pupd + offset), upd_header->len_boot);
-                chsc6x_info("chsc6x: boot checksum is %x. \r\n",BOOTCRC);
+                chsc6x_info("===chsc6x: boot checksum is %x %d %d \r\n",BOOTCRC,offset,upd_header->len_boot);
                 ret = chsc6x_boot_update((pupd + offset), upd_header->len_boot);
+                // chsc6x_info("chsc6x: boot checksum is >>>>> %x. \r\n",BOOTCRC);
                 if(0 == ret)
                 {
                     break;
@@ -902,7 +904,7 @@ static int chsc6x_do_update_ifneed(uint8_t* p_fw_upd, uint32_t fw_len)
     const uint8_t *fupd;
     uint32_t fw_size;
     int ret = -1;
-
+    WDT_CLR();
 #if CHSC6X_MUL_VENDOR_UPGRADE
     if(41 == g_pfw_infos->chsc6x_vendor_id && 27 == g_pfw_infos->chsc6x_project_id)
     {
@@ -924,13 +926,8 @@ static int chsc6x_do_update_ifneed(uint8_t* p_fw_upd, uint32_t fw_len)
     }
     else
     {
-#ifdef UTE_DRV_TP_FIRMWARE_ADDRESS
-        fupd = (const uint8_t *)UTE_DRV_TP_FIRMWARE_ADDRESS;
-        fw_size = UTE_DRV_TP_FIRMWARE_SIZE;
-#else
         fupd = chsc_boot;
         fw_size = sizeof(chsc_boot);
-#endif
     }
     ret = chsc6x_update_compat_ctl((uint8_t *) fupd, fw_size);
 #endif

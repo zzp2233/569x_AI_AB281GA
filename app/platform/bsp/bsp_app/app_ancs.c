@@ -13,7 +13,8 @@
 
 static ble_ancs_msg_cb_t ancs_msg_cb;
 
-const char * const appleAppID_table[] = {
+const char * const appleAppID_table[] =
+{
     [ANCS_TYPE_NULL]                = " ",
     [ANCS_TYPE_INCOMINGCALL]        = "com.apple.mobilephone",        //wakeUpAppID 01, Incoming Call (Apple)
     [ANCS_TYPE_MISSEDCALL]          = "com.apple.mobilephone",        //wakeUpAppID 02, Missed Call (Apple)
@@ -53,26 +54,33 @@ ble_ancs_msg_cb_t *ble_app_ancs_get_msg(void)
 
 void ble_app_watch_ancs_client_notifiy_process(u8 id, const char *att_name, const char *att_content)
 {
-    if (att_name == NULL || att_content == NULL) {
+    if (att_name == NULL || att_content == NULL)
+    {
         TRACE("%s:error!", __func__);
         return;
     }
 
-    if (ancs_msg_cb.msg_idx == ANCS_MSG_MAX_NUM) {
+    if (ancs_msg_cb.msg_idx == ANCS_MSG_MAX_NUM)
+    {
         ancs_msg_cb.msg_idx = 0;
     }
     u8 msg_idx = ancs_msg_cb.msg_idx;
 
-    if (id == ANCS_ATT_TYPE_APP_NAME) {                                             //app名称
+    if (id == ANCS_ATT_TYPE_APP_NAME)                                               //app名称
+    {
         int i = 0;
-        for (i = 0; i < ANCS_TYPE_MAX; i++) {
-            if (strcmp(att_content, appleAppID_table[i]) == 0) {
+        for (i = 0; i < ANCS_TYPE_MAX; i++)
+        {
+            if (strcmp(att_content, appleAppID_table[i]) == 0)
+            {
                 break;
             }
         }
         ancs_msg_cb.app_sw_flag = true;
         ancs_msg_cb.msg_type[msg_idx] = i;
-    } else if (ancs_msg_cb.app_sw_flag && id == ANCS_ATT_TYPE_TITLE) {               //消息标题
+    }
+    else if (ancs_msg_cb.app_sw_flag && id == ANCS_ATT_TYPE_TITLE)                   //消息标题
+    {
         char time[8];
         tm_t rtc_tm = rtc_clock_get();
         ancs_msg_cb.title_size = strlen(att_content);
@@ -82,10 +90,19 @@ void ble_app_watch_ancs_client_notifiy_process(u8 id, const char *att_name, cons
         // memset(ancs_msg_cb.msg_content[msg_idx], 0, ANCS_MSG_MAX_SIZE);
         memcpy(ancs_msg_cb.msg_title[msg_idx], time, sizeof(time));                 //时间作为一级标题
         memcpy(ancs_msg_cb.msg_content[msg_idx],(char *)att_content, ANCS_MSG_TITLE_SIZE);
-    } else if (ancs_msg_cb.app_sw_flag && id == ANCS_ATT_TYPE_MESSAGE) {             //消息内容
+    }
+    else if (ancs_msg_cb.app_sw_flag && id == ANCS_ATT_TYPE_MESSAGE)                 //消息内容
+    {
+        uint8_t message_len = strlen((char *)att_content);
+        if( message_len + ancs_msg_cb.title_size + 1 + 1 > ANCS_MSG_MAX_SIZE -3)
+        {
+            message_len = ANCS_MSG_MAX_SIZE - ancs_msg_cb.title_size - 5; // 减5留点余量
+        }
         ancs_msg_cb.msg_content[msg_idx][ancs_msg_cb.title_size] = ':';
-        memcpy(&ancs_msg_cb.msg_content[msg_idx][ancs_msg_cb.title_size + 1], (char *)att_content, strlen((char *)att_content) + 1);
-    } else if (ancs_msg_cb.app_sw_flag && id == ANCS_ATT_TYPE_DATE) {                //消息时间，单条完整消息接收完成，弹框显示
+        memcpy(&ancs_msg_cb.msg_content[msg_idx][ancs_msg_cb.title_size + 1], (char *)att_content, message_len + 1);
+    }
+    else if (ancs_msg_cb.app_sw_flag && id == ANCS_ATT_TYPE_DATE)                    //消息时间，单条完整消息接收完成，弹框显示
+    {
         TRACE("ancs_msg[%d]: time[%s] msg[%s]\n", msg_idx, ancs_msg_cb.msg_title[msg_idx], ancs_msg_cb.msg_content[msg_idx]);
         ancs_msg_cb.app_sw_flag = false;
         ancs_msg_cb.title_size = 0;
@@ -97,7 +114,8 @@ void ble_app_watch_ancs_client_notifiy_process(u8 id, const char *att_name, cons
 #endif
 
 #if (USE_APP_TYPE == USE_NULL_APP)
-        {   //仅无APP测试用
+        {
+            //仅无APP测试用
             tm_t tm;
             u32 date, time;
             sscanf(att_content, "%dT%d", &date, &time);

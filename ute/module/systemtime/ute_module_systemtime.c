@@ -1,3 +1,10 @@
+/*
+ * @brief:
+ * @LastEditors: ljf
+ * @LastEditTime: 2025-01-13 17:13:44
+ * @FilePath: \UTE_AB569x\ute\module\systemtime\ute_module_systemtime.c
+ * @Date: 2025-01-10 15:02:00
+ */
 /**
 *@file
 *@brief        系统时间模块
@@ -10,15 +17,15 @@
 #include "ute_module_systemtime.h"
 #include "ute_module_log.h"
 #include "ute_application_common.h"
-#include "ute_drv_battery_common.h"
+// #include "ute_drv_battery_common.h"
 // #include "ute_drv_keys_common.h"
 #include "ute_module_message.h"
 #include "ute_project_config.h"
-#include "ute_module_sleep.h"
-#include "ute_module_sport.h"
-#include "ute_module_heart.h"
-#include "ute_drv_motor.h"
-#include "ute_language_common.h"
+// #include "ute_module_sleep.h"
+// #include "ute_module_sport.h"
+// #include "ute_module_heart.h"
+// #include "ute_drv_motor.h"
+// #include "ute_language_common.h"
 // #include "ute_module_localRingtone.h"
 // #include "bt_hfp.h"
 #include "ute_module_filesystem.h"
@@ -45,19 +52,19 @@ void *uteModuleSystemtimeMute;
 *@author        zn.zeng
 *@date        Jun 29, 2021
 */
-
+extern void uteModuleInitdata(void);
 void uteModuleSystemtimeInit(void)
 {
+    printf("uteModuleSystemtimeInit\r\n");
     memset(&systemAlarms, 0, sizeof(ute_module_systemtime_alarm_t));
     systemAlarms.isRemindingIndex = 0xff;
-
     uteModulePlatformCreateMutex(&uteModuleSystemtimeMute);
     uteModulePlatformRtcInit();
     uteModulePlatformRtcStart();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR);
     uteModuleSystemtimeReadConfig();
     memset(&systemTimeRegisterData,0,sizeof(ute_module_systemtime_register_t));
-    uteLanguageCommonSelect(systemTime.languageId);
+    // uteLanguageCommonSelect(systemTime.languageId);//todo
 }
 
 /**
@@ -192,12 +199,12 @@ void uteModuleSystemtimeSetTime(ute_module_systemtime_time_t set)
 
     ute_module_systemtime_time_t oldTime;
     memcpy(&oldTime,&systemTime,sizeof(ute_module_systemtime_time_t));
-    uteModuleSleepSystemtimeChange(systemTime,set);
+    // uteModuleSleepSystemtimeChange(systemTime,set);//睡眠数据跨天清除
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     //sportSystemTimeChange 中有uteModuleCwmReadCurrDayStepFromFs 操作,所以这个放在它执行之前
     uteModuleCwmStepDataSystemtimeChange(systemTime,set);
 #endif
-    uteModuleSportSystemtimeChange(systemTime,set);
+    // uteModuleSportSystemtimeChange(systemTime,set);//运动数据跨天清除
     uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
     memcpy(&systemTime, &set, sizeof(ute_module_systemtime_time_t));
     uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
@@ -212,7 +219,9 @@ void uteModuleSystemtimeSetTime(ute_module_systemtime_time_t set)
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_MIN_REGISER,NULL);
     }
 #endif
+#if UTE_MODULE_HEART_SUPPORT
     uteModuleHeartSystemtimeChange(oldTime,set);
+#endif
 }
 /**
 *@brief  判断是否是闰年
@@ -279,6 +288,7 @@ static void uteModuleSystemtimeChange(ute_module_systemtime_time_t *time)
 */
 void uteModuleSystemtimeSecondCb(void)
 {
+    // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,now is setting time",__func__);
     if (uteApplicationCommonIsStartupFinish())
     {
         uteModuleSystemtimeChange(&systemTime);
@@ -299,10 +309,10 @@ void uteModuleSystemtimeSecondCb(void)
         {
             uteModuleSystemtimeSaveTimeInfo();
         }
-        for (uint8_t i = 0; i < systemTimeRegisterData.regCnt; i++)
-        {
-            uteModuleSystemtimeRegisterSecondCb(i);
-        }
+        // for (uint8_t i = 0; i < systemTimeRegisterData.regCnt; i++)
+        // {
+        //     uteModuleSystemtimeRegisterSecondCb(i);
+        // }
     }
     else
     {
@@ -601,12 +611,12 @@ void uteModuleSystemtimeSetTimeZone(int8_t zone)
 
 void uteModuleSystemtimeSetLanguage(uint16_t id)
 {
-    systemTime.languageId=id;
-    systemTime.isWatchSetLangage = true;
-    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,languageId=%d", __func__,systemTime.languageId);
-    uteModuleSystemtimeSaveTimeInfo();
-    uteLanguageCommonSelect(systemTime.languageId);
-    msg_enqueue(MSG_CHECK_LANGUAGE);
+    // systemTime.languageId=id;
+    // systemTime.isWatchSetLangage = true;
+    // UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,languageId=%d", __func__,systemTime.languageId);
+    // uteModuleSystemtimeSaveTimeInfo();
+    // uteLanguageCommonSelect(systemTime.languageId);
+    // msg_enqueue(MSG_CHECK_LANGUAGE);
 }
 /**
 *@brief  保存APP设计的语言

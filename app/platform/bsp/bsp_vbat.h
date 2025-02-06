@@ -3,7 +3,8 @@
 
 #define VBAT_PERCENT_STEP                               1  // 1mv步进
 
-typedef struct __attribute__((packed)) _vbat_cb_t {
+typedef struct __attribute__((packed)) _vbat_cb_t
+{
     u16 vbat_adc_curr;          //用于中间过渡的电压值
     u16 vbat_adc_last;          //上一次拿去实际显示的电压值
 } vbat_cb_t;
@@ -21,10 +22,9 @@ void bsp_vbat_lpwr_process(void);
  */
 void bsp_vbat_percent_init(void);
 
-void vbat_percent_process(void);
 
 /**
- * 获取电池电量百分比 
+ * 获取电池电量百分比
  * 返回: 0~100
  */
 u16 bsp_vbat_percent_get(void);

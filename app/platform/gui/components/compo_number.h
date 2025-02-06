@@ -26,12 +26,8 @@ typedef struct compo_number_t_
     u8 num_layout;              //0:横向排列  1:竖向排列
     u8 num_part;                //数字位分割, 个十百千万
     u8 radix;                   //裁剪个数 (默认为10，0~9数字裁剪，符号不算)，进制数，默认10进制
-    u8 znum;                    //高位0的个数
     widget_image_t *img_num[MAX_NUMBER_CNT];
     widget_image_t *img_sym;    //符号位
-    bool flag_float;            //是否是小数
-    u8 decimal_cnt;             //小数位数
-    bool flag_zero_replace;     //数据为0时替换为--
 } compo_number_t;
 
 /**
@@ -76,21 +72,6 @@ void compo_number_set(compo_number_t *num, int val);
  * @param[in] y : y轴坐标
  **/
 void compo_number_set_pos(compo_number_t *num, s16 x, s16 y);
-
-/**
- * @brief 设置是否为小数
- * @param[in] num : 数字指针
- * @param[in] flag_float : 是否为小数
- * @param[in] decimal_cnt : 保留小数位数
- **/
-void compo_number_set_float(compo_number_t *num, bool flag_float, u8 decimal_cnt);
-
-/**
- * @brief 设置是否替换数字0为-
- * @param[in] num : 数字指针
- * @param[in] replace : 是否替换
- **/
-void compo_number_set_zero_replace(compo_number_t *num, bool replace);
 
 /**
  * @brief 设置透明度
@@ -145,10 +126,4 @@ rect_t compo_number_get_location(compo_number_t *num);
  * @param[in] margin : 0  横向排列(默认); 1  竖向排列;
  **/
 void compo_number_set_layout(compo_number_t *num, u8 margin);
-/**
- * @brief 获取数字框位置和大小
- * @param[in] num : 数字指针
- * @return 返回数字框位置和大小
- **/
-rect_t compo_number_get_rel_location(compo_number_t *num);
 #endif

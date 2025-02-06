@@ -5,44 +5,44 @@
 #include "hrs3300/fit_hrs3300.h"
 #include "hx3605/fit_hx3605.h"
 #include "msa310/msa310.h"
-#include "vc30fx_user_app.h"
 #include "internal_sensor/bsp_internal_sensor.h"
 
-typedef enum {
+typedef enum
+{
     SENSOR_INIT_ALL  = 0xFF,
     SENSOR_INIT_STEP = BIT(0),
     SENSOR_INIT_HR   = BIT(1),
     SENSOR_INIT_GEO  = BIT(2),
-}sensor_init_type;
+} sensor_init_type;
 
-typedef struct {
+typedef struct
+{
     bool                                    int_en;
     bool                                    mutex;
     bool                                    isr_kick;
-}step_sta_t;
+} step_sta_t;
 
-typedef struct {
-	u8 back_bpm;
+typedef struct
+{
+    u8 back_bpm;
     u8 spo2_value;
     u8 sbp;
     u8 dbp;
-}hr_sta_t;
+} hr_sta_t;
 
-typedef struct {
+typedef struct
+{
 
-}geo_sta_t;
+} geo_sta_t;
 
-typedef struct sensor_sta_t_ {
+typedef struct sensor_sta_t_
+{
     step_sta_t                              step;
     hr_sta_t                                hr;
     geo_sta_t                               geo;
     u8                                      init;
-}sensor_sta_t;
+} sensor_sta_t;
 
-//vc30fx参数
-#if (SENSOR_HR_SEL == SENSOR_HR_VC30FX)
-extern InitParamTypeDef vc30fx_data;
-#endif
 //外设基础函数
 extern sensor_sta_t bsensor;
 //获得外设初始化状态
@@ -92,61 +92,61 @@ int sensor_step_cur_distance_get(void);
 
 //计步
 #if (SENSOR_STEP_SEL == SENSOR_STEP_SC7A20)
-    #define bsp_sensor_step_init()                      sc7a20_init()
-    #define bsp_sensor_step_stop()                      sensor_step_stop()
-    #define bsp_sensor_step_lowpwr_pro()                sc7a20_lowpwr_process()
-    #define bsp_sensor_step_pro_isr()                   sc7a20_isr_process()
-    #define bsp_sensor_step_wrist_set(x)                sc7a20_wrist_set(x)
-    #define bsp_sensor_step_wrist_get()                 sc7a20_wrist_get()
-    #define bsp_sensor_step_wkup_get()                  sc7a20_wkup_get()
-    #define bsp_sensor_step_sway_set(x)                 sc7a20_sway_set(x)          //注意启用摇晃功能会无计步，使用完需关闭
-    #define bsp_sensor_step_sway_get()                  sc7a20_sway_get()
-    #define bsp_sensor_step_sway_status_get()           sc7a20_sway_status_get()
-    #define bsp_sensor_step_cur_steps_get()             sc7a20_cur_steps_get()
-    #define bsp_sensor_step_cur_kcal_get()              sc7a20_cur_kcal_get()
-    #define bsp_sensor_step_cur_distance_get()          sc7a20_cur_distance_get()
+#define bsp_sensor_step_init()                      sc7a20_init()
+#define bsp_sensor_step_stop()                      sensor_step_stop()
+#define bsp_sensor_step_lowpwr_pro()                sc7a20_lowpwr_process()
+#define bsp_sensor_step_pro_isr()                   sc7a20_isr_process()
+#define bsp_sensor_step_wrist_set(x)                sc7a20_wrist_set(x)
+#define bsp_sensor_step_wrist_get()                 sc7a20_wrist_get()
+#define bsp_sensor_step_wkup_get()                  sc7a20_wkup_get()
+#define bsp_sensor_step_sway_set(x)                 sc7a20_sway_set(x)          //注意启用摇晃功能会无计步，使用完需关闭
+#define bsp_sensor_step_sway_get()                  sc7a20_sway_get()
+#define bsp_sensor_step_sway_status_get()           sc7a20_sway_status_get()
+#define bsp_sensor_step_cur_steps_get()             sc7a20_cur_steps_get()
+#define bsp_sensor_step_cur_kcal_get()              sc7a20_cur_kcal_get()
+#define bsp_sensor_step_cur_distance_get()          sc7a20_cur_distance_get()
 #elif (SENSOR_STEP_SEL == SENSOR_STEP_MSA310)
-    #define bsp_sensor_step_init()                      msa310_init()
-    #define bsp_sensor_step_stop()                      msa310_stop()
-    #define bsp_sensor_step_lowpwr_pro()                sensor_step_lowpwr_pro()
-    #define bsp_sensor_step_pro_isr()               	sensor_step_pro_isr()
-    #define bsp_sensor_step_wrist_set(x)                sensor_step_wrist_set(x)
-    #define bsp_sensor_step_wrist_get()                 sensor_step_wrist_get()
-    #define bsp_sensor_step_wkup_get()                  sensor_step_wkup_get()
-    #define bsp_sensor_step_sway_set(x)                 sensor_step_sway_set(x)
-    #define bsp_sensor_step_sway_get()                  sensor_step_sway_get()
-    #define bsp_sensor_step_sway_status_get()           sensor_step_sway_status_get()
-    #define bsp_sensor_step_cur_steps_get()             sensor_step_cur_steps_get()
-    #define bsp_sensor_step_cur_kcal_get()              sensor_step_cur_kcal_get()
-    #define bsp_sensor_step_cur_distance_get()          sensor_step_cur_distance_get()
+#define bsp_sensor_step_init()                      msa310_init()
+#define bsp_sensor_step_stop()                      msa310_stop()
+#define bsp_sensor_step_lowpwr_pro()                sensor_step_lowpwr_pro()
+#define bsp_sensor_step_pro_isr()                   sensor_step_pro_isr()
+#define bsp_sensor_step_wrist_set(x)                sensor_step_wrist_set(x)
+#define bsp_sensor_step_wrist_get()                 sensor_step_wrist_get()
+#define bsp_sensor_step_wkup_get()                  sensor_step_wkup_get()
+#define bsp_sensor_step_sway_set(x)                 sensor_step_sway_set(x)
+#define bsp_sensor_step_sway_get()                  sensor_step_sway_get()
+#define bsp_sensor_step_sway_status_get()           sensor_step_sway_status_get()
+#define bsp_sensor_step_cur_steps_get()             sensor_step_cur_steps_get()
+#define bsp_sensor_step_cur_kcal_get()              sensor_step_cur_kcal_get()
+#define bsp_sensor_step_cur_distance_get()          sensor_step_cur_distance_get()
 #elif (SENSOR_STEP_SEL == SENSOR_STEP_INTER)
-    #define bsp_sensor_step_init()                      bsp_internal_sensor_init()
-    #define bsp_sensor_step_stop()                      bsp_internal_sensor_stop()
-    #define bsp_sensor_step_lowpwr_pro()                sensor_step_lowpwr_pro()
-    #define bsp_sensor_step_pro_isr()               	sensor_step_pro_isr()
-    #define bsp_sensor_step_wrist_set(x)                sensor_step_wrist_set(x)
-    #define bsp_sensor_step_wrist_get()                 sensor_step_wrist_get()
-    #define bsp_sensor_step_wkup_get()                  sensor_step_wkup_get()
-    #define bsp_sensor_step_sway_set(x)                 sensor_step_sway_set(x)
-    #define bsp_sensor_step_sway_get()                  sensor_step_sway_get()
-    #define bsp_sensor_step_sway_status_get()           sensor_step_sway_status_get()
-    #define bsp_sensor_step_cur_steps_get()             sensor_step_cur_steps_get()
-    #define bsp_sensor_step_cur_kcal_get()              sensor_step_cur_kcal_get()
-    #define bsp_sensor_step_cur_distance_get()          sensor_step_cur_distance_get()
+#define bsp_sensor_step_init()                      bsp_internal_sensor_init()
+#define bsp_sensor_step_stop()                      bsp_internal_sensor_stop()
+#define bsp_sensor_step_lowpwr_pro()                sensor_step_lowpwr_pro()
+#define bsp_sensor_step_pro_isr()                   sensor_step_pro_isr()
+#define bsp_sensor_step_wrist_set(x)                sensor_step_wrist_set(x)
+#define bsp_sensor_step_wrist_get()                 sensor_step_wrist_get()
+#define bsp_sensor_step_wkup_get()                  sensor_step_wkup_get()
+#define bsp_sensor_step_sway_set(x)                 sensor_step_sway_set(x)
+#define bsp_sensor_step_sway_get()                  sensor_step_sway_get()
+#define bsp_sensor_step_sway_status_get()           sensor_step_sway_status_get()
+#define bsp_sensor_step_cur_steps_get()             sensor_step_cur_steps_get()
+#define bsp_sensor_step_cur_kcal_get()              sensor_step_cur_kcal_get()
+#define bsp_sensor_step_cur_distance_get()          sensor_step_cur_distance_get()
 #else
-    #define bsp_sensor_step_init()                      sensor_step_init()                              //初始化
-    #define bsp_sensor_step_stop()                      sensor_step_stop()                              //关闭
-    #define bsp_sensor_step_lowpwr_pro()                sensor_step_lowpwr_pro()                        //lowpwr处理
-    #define bsp_sensor_step_pro_isr()               	sensor_step_pro_isr()                           //中断处理
-    #define bsp_sensor_step_wrist_set(x)                sensor_step_wrist_set(x)                        //抬腕亮屏功能设置
-    #define bsp_sensor_step_wrist_get()                 sensor_step_wrist_get()                         //抬腕亮屏功能状态
-    #define bsp_sensor_step_wkup_get()                  sensor_step_wkup_get()                          //抬腕亮屏是否触发
-    #define bsp_sensor_step_sway_set(x)                 sensor_step_sway_set(x)                         //摇晃功能状态设置
-    #define bsp_sensor_step_sway_get()                  sensor_step_sway_get()                          //摇晃功能状态获取
-    #define bsp_sensor_step_sway_status_get()           sensor_step_sway_status_get()                   //摇晃状态获取
-    #define bsp_sensor_step_cur_steps_get()             sensor_step_cur_steps_get()                     //当前步数获取
-    #define bsp_sensor_step_cur_kcal_get()              sensor_step_cur_kcal_get()                      //当前卡路里获取
-    #define bsp_sensor_step_cur_distance_get()          sensor_step_cur_distance_get()                  //当前距离获取
+#define bsp_sensor_step_init()                      sensor_step_init()                              //初始化
+#define bsp_sensor_step_stop()                      sensor_step_stop()                              //关闭
+#define bsp_sensor_step_lowpwr_pro()                sensor_step_lowpwr_pro()                        //lowpwr处理
+#define bsp_sensor_step_pro_isr()                   sensor_step_pro_isr()                           //中断处理
+#define bsp_sensor_step_wrist_set(x)                sensor_step_wrist_set(x)                        //抬腕亮屏功能设置
+#define bsp_sensor_step_wrist_get()                 sensor_step_wrist_get()                         //抬腕亮屏功能状态
+#define bsp_sensor_step_wkup_get()                  sensor_step_wkup_get()                          //抬腕亮屏是否触发
+#define bsp_sensor_step_sway_set(x)                 sensor_step_sway_set(x)                         //摇晃功能状态设置
+#define bsp_sensor_step_sway_get()                  sensor_step_sway_get()                          //摇晃功能状态获取
+#define bsp_sensor_step_sway_status_get()           sensor_step_sway_status_get()                   //摇晃状态获取
+#define bsp_sensor_step_cur_steps_get()             sensor_step_cur_steps_get()                     //当前步数获取
+#define bsp_sensor_step_cur_kcal_get()              sensor_step_cur_kcal_get()                      //当前卡路里获取
+#define bsp_sensor_step_cur_distance_get()          sensor_step_cur_distance_get()                  //当前距离获取
 #endif
 
 

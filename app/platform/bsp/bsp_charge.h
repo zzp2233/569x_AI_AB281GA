@@ -4,9 +4,9 @@
 
 typedef enum
 {
-    CHARGE_NO_FULL = 0,         //ç”µæ± æ²¡æ»¡
-    CHARGE_FULL,                //ç”µæ± æ»¡äº†
-    CHARGE_REFILL               //ç”µæ± ç»­å……
+    CHARGE_NO_FULL = 0,         //µç³ØÃ»Âú
+    CHARGE_FULL,                //µç³ØÂúÁË
+    CHARGE_REFILL               //µç³ØĞø³ä
 } charge_sta_m;
 
 
@@ -18,14 +18,14 @@ void bsp_charge_sta(u8 sta);
 void bsp_charge_set_stop_time(u16 stop_time);
 void bsp_charge_bled_ctrl(void);
 void charge_set_detect_cnt(u8 value);
-bool charge_dc_change_detect(void);
+
 
 /**
- *   å……ç”µçŠ¶æ€å‡½æ•°
- *   è¿”å›å……ç”µçŠ¶æ€
- *   0 : 5Væ²¡æ¥ä¸Š
-     1 : å……ç”µä¸­
-     2 ï¼šå……æ»¡
+ *   ³äµç×´Ì¬º¯Êı
+ *   ·µ»Ø³äµç×´Ì¬
+ *   0 : 5VÃ»½ÓÉÏ
+     1 : ³äµçÖĞ
+     2 £º³äÂú
  */
 u8 bsp_charge_sta_get(void);
 

@@ -73,7 +73,7 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
     area_t rel_text_area = widget_text_get_area(txt);
     bool align_center = widget_get_align_center(txt);
     s16 client_y = 0;
-    u16 circ_pixel = textbox->roll_cb.mode ? widget_text_get_autoroll_circ_pixel(txt) : 0;
+
     rect_t textbox_rect = widget_get_location(txt);
     if (textbox_rect.wid && align_center)
     {
@@ -83,11 +83,7 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
             textbox_rect.y += rel_text_area.hei / 2;
             widget_set_pos(txt, textbox_rect.x, textbox_rect.y);
         }
-        else if (textbox->center_top)
-        {
-            ;
-        }
-        else                             //当文本框指定了高度且为多行居中时，内容上下也居中(视用户需要可屏蔽)
+        else                           //当文本框指定了高度且为多行居中时，内容上下也居中(视用户需要可屏蔽)
         {
             u8 line_cnt = widget_text_get_line_cnt(txt);
             if (textbox_rect.hei > rel_text_area.hei)
@@ -95,28 +91,20 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
                 if (line_cnt > 1 || (line_cnt <= 1 && textbox_rect.wid < rel_text_area.wid))
                 {
                     client_y = (textbox_rect.hei - rel_text_area.hei) >> 1;
-//                    printf("client_y [%d,%d]\n", line_cnt, client_y);
                 }
             }
         }
     }
 
-
     if (textbox->multiline && rel_textbox_area.hei < rel_text_area.hei && rel_textbox_area.hei != 0 && !widget_text_get_ellipsis(txt))
     {
-        if (textbox->roll_cb.is_drag) {
-            textbox->roll_cb.is_drag = true;
-        }
         textbox->roll_cb.direction = -1;
         compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_SROLL);
         widget_text_set_client(txt, 0, client_y);
+
     }
     else
     {
-        if (textbox->multiline && (rel_textbox_area.hei >= rel_text_area.hei || rel_textbox_area.hei == 0)) {
-            textbox->roll_cb.is_drag = false;
-        }
-
         if (rel_text_area.wid > rel_textbox_area.wid)
         {
             textbox->roll_cb.direction = widget_text_get_right_align(txt) ? COMPO_TEXTBOX_DIR_RL : COMPO_TEXTBOX_DIR_LR;
@@ -126,7 +114,7 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
             textbox->roll_cb.direction = 0;
         }
 
-        //textbox->roll_cb.sta = COMPO_ROLL_STA_IDLE;
+        textbox->roll_cb.sta = COMPO_ROLL_STA_IDLE;
 
         //未设置文本框宽度默认不滚动
         if (rel_textbox_area.wid)
@@ -139,42 +127,8 @@ void compo_textbox_set(compo_textbox_t *textbox, const char *text)
             {
                 textbox->roll_cb.offset = 0;
                 compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_NULL);
-            }
-        }
 
-        //居中对齐且存在滚动时从最左边开始滚动
-        if (textbox->roll_cb.direction && textbox->roll_cb.mode)
-        {
-            if (align_center)
-            {
-//                printf("align_center = %s\n", text);
-                if(textbox->roll_cb.direction == 1)
-                {
-                    textbox->roll_cb.offset = -(rel_text_area.wid + circ_pixel);
-                }
-                else
-                {
-                    if (rel_text_area.wid > rel_textbox_area.wid)
-                    {
-                        textbox->roll_cb.offset = 0;
-                    }
-                    else
-                    {
-                        textbox->roll_cb.offset = (rel_text_area.wid - rel_textbox_area.wid) / 2;
-                    }
-                }
             }
-//            else
-//            {
-//                if(textbox->roll_cb.direction == 1)
-//                {
-//                    textbox->roll_cb.offset = -(rel_text_area.wid + circ_pixel);
-//                }
-//                else
-//                {
-//                    textbox->roll_cb.offset = (textbox->roll_cb.direction && textbox->roll_cb.mode) ?  -(rel_text_area.wid +  circ_pixel): 0;
-//                }
-//            }
         }
 
         widget_text_set_client(txt, textbox->roll_cb.offset, client_y);
@@ -253,17 +207,6 @@ void compo_textbox_set_multiline(compo_textbox_t *textbox, bool multiline)
 void compo_textbox_set_align_center(compo_textbox_t *textbox, bool align_center)
 {
     widget_set_align_center(textbox->txt, align_center);
-}
-
-/**
- * @brief 设置文本框是否居顶
- * @param[in] textbox : 文本指针
- * @param[in] align_center : 是否居中
- **/
-void compo_textbox_set_align_center_top(compo_textbox_t *textbox, bool align_center)
-{
-    widget_set_align_center(textbox->txt, align_center);
-    textbox->center_top = align_center;
 }
 
 /**
@@ -404,6 +347,4 @@ void compo_textbox_set_multiline_drag(compo_textbox_t *textbox, bool is_drag)
 {
     textbox->roll_cb.is_drag = is_drag;
     textbox->roll_cb.tick = tick_get();
-
-    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
 }

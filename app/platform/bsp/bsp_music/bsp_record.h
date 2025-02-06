@@ -7,14 +7,16 @@
 #define REC_ENC_SIZE                 0x1A00              //录音压缩数据缓存BUF SIZE
 #define REC_SYNC_TIMES               5000                //间隔5S录音时间同步一次
 
-enum {
+enum
+{
     REC_STOP,
     REC_PAUSE,
     REC_RECORDING,
     REC_STARTING,
 };
 
-typedef struct {
+typedef struct
+{
     u8 spr;                         //采样率索引
     u8 nchannel;                    //channel number
     u8 rec_type;                    //录音音频格式
@@ -25,9 +27,10 @@ typedef struct {
 extern rec_src_t rec_src;
 
 ///通用数据流Buffer管理
-typedef struct {
+typedef struct
+{
     u32 size;                       //stream buf size
-volatile u32 len;                   //stream buf valid data bytes
+    volatile u32 len;                   //stream buf valid data bytes
     u8 *buf;                        //stream buf start address
     u8 *wptr;                       //stream buf write point
     u8 *rptr;                       //stream buf read point
@@ -35,14 +38,15 @@ volatile u32 len;                   //stream buf valid data bytes
 extern au_stm_t rec_enc_stm;
 extern au_stm_t rec_pcm_stm;
 
-typedef struct {
+typedef struct
+{
     u8 sta;                         //record state machine
     u8 flag_dir     : 1,            //目录已创建标志
-       flag_file    : 1,            //文件已创建并打开标志
-       flag_play    : 1,            //录音完是否跳到播放
-       pause        : 1,            //是否录音暂停
-       first_flag   : 1,
-       reserved     : 3;
+    flag_file    : 1,            //文件已创建并打开标志
+    flag_play    : 1,            //录音完是否跳到播放
+    pause        : 1,            //是否录音暂停
+    first_flag   : 1,
+    reserved     : 3;
     u16 trigger_len;
     u32 tick;                       //sync time控制
     int dig_gain;
@@ -62,4 +66,5 @@ bool bsp_record_start(void);
 void bsp_record_process(void);
 void bsp_record_stop(void);
 void bsp_record_var_init(void);
+u8 get_bsp_record_sta(void);
 #endif //_BSP_RECORD_H

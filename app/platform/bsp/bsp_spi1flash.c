@@ -20,7 +20,8 @@
 #define SPI1_RX()                SPI1CON |= BIT(4);  delay_us(5)
 
 
-struct _type_spi_cb {
+struct _type_spi_cb
+{
     u8 read_cmd[12];
     u8 read_cmd_cnt;
     u8 sf_read;
@@ -33,7 +34,8 @@ AT(.text.spi1flash)
 void spi1_delay(void)
 {
     uint cnt = 20;
-    while (cnt--) {
+    while (cnt--)
+    {
         asm("nop");
     }
 }
@@ -85,9 +87,11 @@ uint spi1flash_readssr(void)
 AT(.text.spi1flash)
 void spi1flash_waitbusy(void)
 {
-    do {
+    do
+    {
         spi1_delay();
-    } while (spi1flash_readssr() & 0x01);
+    }
+    while (spi1flash_readssr() & 0x01);
 }
 
 ///SPIFlash写状态寄存器
@@ -122,13 +126,16 @@ void spi1flash_init(u8 sf_read, u8 dummy, bool mode4io)
     spi1_cb.sf_read = sf_read;
     spi1_cb.dummy = dummy;
     spi1_cb.mode4io = mode4io;
-    if (mode4io) {
+    if (mode4io)
+    {
         spi1_cb.read_cmd[0] = ((sf_read & BIT(7)) >> 3) | ((sf_read & BIT(6)) >> 6);
         spi1_cb.read_cmd[1] = ((sf_read & BIT(5)) >> 1) | ((sf_read & BIT(4)) >> 4);
         spi1_cb.read_cmd[2] = ((sf_read & BIT(3)) << 1) | ((sf_read & BIT(2)) >> 2);
         spi1_cb.read_cmd[3] = ((sf_read & BIT(1)) << 3) | (sf_read & BIT(0));
         spi1_cb.read_cmd_cnt = 8 + dummy;
-    } else {
+    }
+    else
+    {
         spi1_cb.read_cmd[0] = sf_read;
         spi1_cb.read_cmd_cnt = 4 + dummy;
     }
@@ -157,7 +164,8 @@ AT(.text.spi1flash)
 void spi1flash_program(void *buf, u32 addr, uint len)
 {
 
-    if (NULL == buf || 0 == len) {
+    if (NULL == buf || 0 == len)
+    {
         return ;
     }
     uint32_t page_remain;
@@ -171,19 +179,20 @@ void spi1flash_program(void *buf, u32 addr, uint len)
     while(1)
     {
         WDT_CLR();
-        if (0 == page_remain) {
+        if (0 == page_remain)
+        {
             break;
         }
         spi1flash_program_do(buf,addr,page_remain);
 
         if(len == page_remain)
             break;
-         else
+        else
         {
-             buf += page_remain;
-             addr += page_remain;
+            buf += page_remain;
+            addr += page_remain;
 
-             len -= page_remain;
+            len -= page_remain;
             if(len > 256)
                 page_remain = 256;
             else
@@ -239,35 +248,20 @@ void bsp_spi1flash_init(void)
 
 }
 
-///SPIFlash读取
-AT(.com_text.spiflash)
-bool spi1flash_read(void *buf, u32 addr, uint len)
-{
-    SPI1_CS_EN();
-    SPI1_TX();
-    spi1_sendbyte(SF_READ);
-    spi1flash_sendaddr(addr);
-
-    SPI1_RX();                              //Set RX
-    SPI1DMAADR = DMA_ADR(buf);
-    SPI1DMACNT = len;
-    while (!(SPI1CON & BIT(16)));                   //Wait pending
-    SPI1_CS_DIS();
-
-    return true;
-}
-
 ///SPIFlash Read Kick
 AT(.com_text.spiflash)
 bool spi1flash_read_kick(void *buf, u32 addr, uint len)
 {
     SPI1_CS_EN();
-    if (spi1_cb.mode4io) {
+    if (spi1_cb.mode4io)
+    {
         SPI1CON |= BIT(9);                          //MultBits
         spi1_cb.read_cmd[4] = (u8)(addr >> 16);
         spi1_cb.read_cmd[5] = (u8)(addr >> 8);
         spi1_cb.read_cmd[6] = (u8)(addr);
-    } else {
+    }
+    else
+    {
         spi1_cb.read_cmd[1] = (u8)(addr >> 16);
         spi1_cb.read_cmd[2] = (u8)(addr >> 8);
         spi1_cb.read_cmd[3] = (u8)(addr);
@@ -292,6 +286,16 @@ bool spi1flash_read_wait(void)
     SPI1_CS_DIS();
     return true;
 }
+
+///SPIFlash读取
+AT(.com_text.spiflash)
+bool spi1flash_read(void *buf, u32 addr, uint len)
+{
+    spi1flash_read_kick(buf, addr, len);
+    spi1flash_read_wait();
+    return true;
+}
+
 
 #endif
 

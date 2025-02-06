@@ -4,49 +4,50 @@
 #define VOL_MAX                         xcfg_cb.vol_max   //最大音量级数
 
 //控制位汇总
-enum sys_ctl_bits
-{
-    SYS_CTL_BT = 0,                     //蓝牙开关
-    SYS_CTL_CALL_RING,                  //来电铃声
-    SYS_CTL_ACLOCK_MON,                 //闹钟设置星期一
-    SYS_CTL_ACLOCK_TUE,                 //闹钟设置星期二
-    SYS_CTL_ACLOCK_WED,                 //闹钟设置星期三
-    SYS_CTL_ACLOCK_THU,                 //闹钟设置星期四
-    SYS_CTL_ACLOCK_FRI,                 //闹钟设置星期五
-    SYS_CTL_ACLOCK_SAT,                 //闹钟设置星期六
-    SYS_CTL_ACLOCK_SUN,                 //闹钟设置星期日
-    SYS_CTL_FUNC_SPORT_ON,              //运动功能界面选择
-    SYS_CTL_FUNC_SLEEP_ON,              //睡眠功能界面选择
-    SYS_CTL_FUNC_ACTIVITY_ON,           //活动数据功能界面选择
-    SYS_CTL_FUNC_HEART_ON,              //心率功能界面选择
-    SYS_CTL_FUNC_SPO2_ON,               //血氧功能界面选择
-    SYS_CTL_FUNC_HRV_ON,                //血压功能界面选择b
-    SYS_CTL_FUNC_BT_CALL_ON,            //电话功能界面选择
-    SYS_CTL_FUNC_WEATHER_ON,            //天气功能界面选择
-    SYS_CTL_FUNC_MUSIC_ON,              //音乐功能界面选择
-    SYS_CTL_FUNC_BREATHE_ON,            //呼吸训练功能界面选择
-    SYS_CTL_FUNC_SMS_ON,                //消息功能界面选择
-    SYS_CTL_FUNC_GAME_ON,               //游戏功能界面选择
-    SYS_CTL_FUNC_CALCUL_ON,             //计算器功能界面选择
-    SYS_CTL_FUNC_ALARM_ON,              //闹钟功能界面选择
-#if UTE_MODULE_SCREENS_TIMER_SUPPORT
-    SYS_CTL_FUNC_TIMER_ON,              //定时器功能界面选择
-#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
-    SYS_CTL_FUNC_STODWATCH_ON,          //秒表功能界面选择
-    SYS_CTL_FUNC_SETTINGS_ON,           //设置功能界面选择
-    SYS_CTL_FUNC_SPORT_RECORD_ON,       //运动记录功能界面选择
+#define SYS_CTL_BT                      0               //蓝牙开关
+#define SYS_CTL_CALL_RING               1               //来电铃声
+#define SYS_CTL_ACLOCK_MON              2               //闹钟设置星期一
+#define SYS_CTL_ACLOCK_TUE              3               //闹钟设置星期二
+#define SYS_CTL_ACLOCK_WED              4               //闹钟设置星期三
+#define SYS_CTL_ACLOCK_THU              5               //闹钟设置星期四
+#define SYS_CTL_ACLOCK_FRI              6               //闹钟设置星期五
+#define SYS_CTL_ACLOCK_SAT              7               //闹钟设置星期六
+#define SYS_CTL_ACLOCK_SUN              8               //闹钟设置星期日
+#define SYS_CTL_ACLOCK1_ON              9               //闹钟1开关
+#define SYS_CTL_ACLOCK2_ON              10              //闹钟2开关
+#define SYS_CTL_ACLOCK3_ON              11              //闹钟3开关
+#define SYS_CTL_FUNC_SPORT_ON           12              //运动功能界面选择
+#define SYS_CTL_FUNC_SLEEP_ON           13              //睡眠功能界面选择
+#define SYS_CTL_FUNC_ACTIVITY_ON        14              //活动数据功能界面选择
+#define SYS_CTL_FUNC_HEART_ON           15              //心率功能界面选择
+#define SYS_CTL_FUNC_SPO2_ON            16              //血氧功能界面选择
+#define SYS_CTL_FUNC_HRV_ON             17              //血压功能界面选择b
+#define SYS_CTL_FUNC_BT_CALL_ON         18              //电话功能界面选择
+#define SYS_CTL_FUNC_WEATHER_ON         19              //天气功能界面选择
+#define SYS_CTL_FUNC_MUSIC_ON           20              //音乐功能界面选择
+#define SYS_CTL_FUNC_BREATHE_ON         21              //呼吸训练功能界面选择
+#define SYS_CTL_FUNC_SMS_ON             22              //消息功能界面选择
+#define SYS_CTL_FUNC_GAME_ON            23              //游戏功能界面选择
+#define SYS_CTL_FUNC_CALCUL_ON          24              //计算器功能界面选择
+#define SYS_CTL_FUNC_ALARM_ON           25              //闹钟功能界面选择
+#define SYS_CTL_FUNC_TIMER_ON           26              //定时器功能界面选择
+#define SYS_CTL_FUNC_STODWATCH_ON       27              //秒表功能界面选择
+#define SYS_CTL_FUNC_SETTINGS_ON        28              //设置功能界面选择
+#define SYS_CTL_FUNC_SPORT_RECORD_ON    29              //运动记录功能界面选择
 
-    SYS_CTL_TOTAL_BITS = 256,
-};
+
+
+
+#define SYS_CTL_TOTAL_BITS              256
 #define SYS_CTL_TOTAL_BYTES             ((SYS_CTL_TOTAL_BITS + 7) / 8)      //系统控制位
 
 //功能
-#define STOPWATCH_REC_NUM_MAX           20              //秒表最大数量，需要同步修改列表item
+#define ALARM_CLOCK_NUM_MAX             3               //闹钟最大数量，需要同步修改列表item
+#define STOPWATCH_REC_NUM_MAX           10              //秒表最大数量，需要同步修改列表item
 #define WEATHER_CNT                     8               //天气类型数量
 
 #define TITLE_BUF_LEN     128   //歌词buffer长度
 #define ARTIST_BUF_LEN    128   //歌名/歌手buffer长度
-
 typedef struct
 {
     //控制位
@@ -98,8 +99,8 @@ typedef struct
     cm_factory              : 1,   //是否第一次FLASH上电
     cm_vol_change           : 1,   //音量级数是否需要更新到FLASH
     port2led_en             : 1,   //1个IO推两个灯
-    voice_evt_brk_en        : 1;   //播放提示音时，U盘、SD卡、LINEIN等插入事件是否立即响应.
-
+    voice_evt_brk_en        : 1,  //播放提示音时，U盘、SD卡、LINEIN等插入事件是否立即响应.
+    tws_mute                : 1;  //系统连接上tws
     u8  sleep_en                : 1,   //用于控制是否进入sleep
     lowbat_flag             : 1,
     bt_reconn_flag          : 1,   //回连失败时候发起一键双连标志
@@ -128,13 +129,13 @@ typedef struct
     u8 timer_sta;                                   //计时器工作状态（0:未开启 1:正在计时 2:暂停 3:结束 4:复位）
     u8 timer_done;                                //计时器到时
     u32 timer_total_sec;                            //当前计时器总时间 （单位：秒）
-    u32 timer_start_rtc;                            //开始计时的RTC值
     u32 timer_left_sec;                             //当前计时器剩余时间 （单位：秒）
     u32 timer_custom_sec;                           //计时器自定义时间记忆值
     //密码锁
     u8 password_cnt;                                //密码有效长度
     u8 password_value[4];                           //密码有效值
     u8 password_change;                             //改密码锁
+    bool password_flag;                             //开启密码s
     //秒表
     u8 stopwatch_sta;                               //秒表工作状态（0:暂停/复位 1:正在计时）
     u32 stopwatch_total_msec;                       //当前秒表时间总计 （单位：毫秒）
@@ -145,11 +146,11 @@ typedef struct
     u8  mon;
     u8  day;
     //闹钟
-    u8 alarm_edit_idx;                              //当前编辑闹钟 idx:0,1,2
-    u8 alarm_edit_hour;                             //编辑闹钟时间（hour）
-    u8 alarm_edit_min;                              //编辑闹钟时间（min）
-    u8 alarm_edit_cycle;                            //编辑闹钟的星期选择（bit7:单次，bit6-bit0：日六五四三二一）
-    bool remind_tag;                                //闹钟提醒/健康提醒响起标志
+    u32 alarm_total_sec[ALARM_CLOCK_NUM_MAX];       //记录每个闹钟总秒数
+    u8 alarm_week_sel[ALARM_CLOCK_NUM_MAX];         //记录每个闹钟的星期选择
+    u8 alarm_idx;                                   //当前闹钟 idx:0,1,2
+    u8 alarm_enable_cnt;                            //闹钟使能的个数 0:无闹钟
+    u8 alarm_enable_sel;                            //使能闹钟选择
     //勿扰定时
     u32 disturd_start_time_sec;               //记录开始休眠的总秒数
     u32 disturd_end_time_sec;                 //记录结束休眠的总秒数
@@ -181,6 +182,7 @@ typedef struct
     bool sco_state;
     //通话
     u32 reject_tick;                                //通话挂断防呆计时，解决部分手机挂断状态更新慢的问题
+    volatile u8 key_wakeup_flag;
     //消息
     bool msg_tag;                                   //消息弹出标志
     u8 msg_index;                                   //消息类型
@@ -193,7 +195,7 @@ typedef struct
 
     //俄罗斯方块
     u32 max_score;
-
+    u8 is_recieve_uart;
     bool gsensor_iic_en; //用于记录当前iic配置是心率还是gsensor, ute add
     bool hand_screen_on; //抬手亮屏唤醒
     bool refresh_language_flag;
@@ -214,8 +216,31 @@ typedef struct
     bool power_on_state;
     bool power_on_flag;
 
-    bool ancs_missed_call;
-
+    //AI语音
+#if ASR_SELECT
+    bool asr_play;                                  //asr 指令响应状态
+    u8   asr_gain;                                  //asr 备份增益
+#endif
+#if BT_TWS_EN
+    u8 tws_left_channel;        //TWS左声道标志.
+    u8 name_suffix_en;          //TWS名称是否增加后缀名了
+    u8 tws_force_channel;       //1: 固定左声道, 2:固定右声道
+    u8 vusb_force_channel;      //VUSB UART固定的声道
+    u8 discon_reason;
+    u8  tws_res_brk;
+    u8  tws_res_wait;
+#endif // BT_TWS_EN
+#if ECIG_POWER_CONTROL
+    //电子烟
+    u8 resistance;                                  //阻值
+    u8 resistance_progress;                         //阻值进度条
+    u8 power;                                       //功率
+    u8 power_progress;                              //功率进度条
+    u16 smoke_time;                                 //吸烟时长
+    u8 smoke_oil;                                   //烟油
+    u8 smoke_index;                                 //吸烟类型
+#endif
+    bool bat_low;                                   //低电标志，低电时自动调低亮度
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

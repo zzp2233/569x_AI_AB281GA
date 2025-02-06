@@ -1,6 +1,5 @@
 #include "include.h"
 #include "bt_fota.h"
-//#include "ute_application_common.h""
 
 #if LE_AB_FOT_EN
 
@@ -54,8 +53,52 @@ u16 dev_version = 0x0001; //设备版本号
 AT(.com_text.const)
 static const u8 fot_auth_data[] = {0xCC, 0xAA, 0x55, 0xEE, 0x12, 0x19, 0xE4};
 
+typedef enum
+{
+    INFO_DEV_VER  = 1,
+    INFO_UPDATE_REQ,
+    INFO_DEV_FEATURE,
+    INFO_DEV_CONNECT_STA,
+    INFO_EDR_ADDR,
+    INFO_DEV_CHANNEL,
+} DEV_INFO_E;
+
+typedef struct __attribute__((packed))
+{
+    u16 remote_ver;
+    u32 total_len;
+    u32 remain_len;
+    u32 hash;
+    u16 data_pos;
+    u8 fot_recv_ok;
+    u32 addr;
+    u32 tick;
+    u8 type;
+    u8 sys_clk;
+    u32 ota_recv_size;      //ota接收大小
+    u32 ui_res_len;         //UI资源大小
+    u32 ui_updata_address;  //更新时使用的地址
+    u32 ui_recv_remain;     //256对齐
+    u8  is_ui_flag;         //是否是UI数据，1是，0不是
+    u32 code_res_len;       //代码区间大小
+}
+fot_s;
+
 fot_s fot_var;
 
+typedef enum
+{
+    FOT_FILE_TYPE_UI = 1,
+    FOT_FILE_TYPE_FOT,
+} FOT_FILE_TYPE;
+
+typedef struct
+{
+    FOT_FILE_TYPE  type;        //文件类型
+    u8  percent;                //文件进度百分比
+    u32 files_all_size;         //文件长度
+    u32 files_recv_size;        //文件接收长度
+} fot_progress_t;
 static fot_progress_t fot_progress;
 
 static u8 fot_data[FOT_BLOCK_LEN] AT(.fot_data.buf);
@@ -239,18 +282,6 @@ static void fot_dev_notify_sta(u8 sta)
     fot_sent_proc(buf,3);
 }
 
-AT(.text.fot.cache)
-static void fot_dev_notify_seq_err(u8 sta)
-{
-    u8 buf[3];
-
-    buf[0] = FOT_NOTIFY_STA;
-    buf[1] = fot_seq;
-    buf[2] = sta;
-
-    fot_sent_proc(buf,3);
-}
-
 AT(.text.fot.update)
 u8 is_fot_start(void)
 {
@@ -260,6 +291,10 @@ u8 is_fot_start(void)
 AT(.text.fot.update)
 void bsp_fot_init(void)
 {
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
+
     u8  dev_version_str[] = SW_VERSION;
     u16 version_temp = 0;
 
@@ -294,20 +329,11 @@ void bsp_fot_exit(void)
         sys_clk_set(fot_var.sys_clk);
     }
 
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_start();
+#endif
+
     unlock_code_fota();
-
-
-    if (func_cb.sta == FUNC_OTA_MODE)
-    {
-        task_stack_init();
-//        func_cb.sta = FUNC_CLOCK;           //OTA退出返回表盘
-        func_cb.sta = FUNC_OTA_ERROR;         //OTA升级失败界面
-    }
-    else if (func_cb.sta == FUNC_OTA_UI_MODE)
-    {
-        task_stack_init();
-        func_cb.sta = FUNC_BT_UPDATE;       //UI OTA进入错误界面
-    }
 }
 
 void fot_update_pause(void)
@@ -379,34 +405,16 @@ static void fot_reply_update_request(void)
     param_fot_remote_ver_read((u8*)&flash_remote_ver);
     param_fot_hash_read((u8*)&hash);
 
-    FOT_DEBUG("flash hash val:0x%x\n",hash);/*  */
+    FOT_DEBUG("flash hash val:0x%x\n",hash);
 
-    // if((fot_var.hash != 0xFFFFFFFF) && (flash_remote_ver == fot_var.remote_ver) && (hash == fot_var.hash))
-    // {
-    //     param_fot_type_read(&fot_var.type);
-    //     if(app_fota_breakpoint_info_read() == true)
-    //     {
-    //         addr = app_fota_get_curaddr();
-    //     }
-    //     printf("===================>func_cb.sta = FUNC_PWROFF;\n");
-    //     func_cb.sta = FUNC_PWROFF;
-    //     return;
-    // }
     if((fot_var.hash != 0xFFFFFFFF) && (flash_remote_ver == fot_var.remote_ver) && (hash == fot_var.hash))
     {
-        // param_fot_type_read(&fot_var.type);
-        // if(app_fota_breakpoint_info_read() == true)
-        // {
-        //     addr = app_fota_get_curaddr();
-        // }
-        extern bool uteApplicationCommonIsAppClosed(void);
-        if(uteApplicationCommonIsAppClosed()) //如果是ute app连接，则不关机
+        param_fot_type_read(&fot_var.type);
+        if(app_fota_breakpoint_info_read() == true)
         {
-            printf("===================>func_cb.sta = FUNC_PWROFF\n");
-            func_cb.sta = FUNC_PWROFF;
+            addr = app_fota_get_curaddr();
         }
     }
-
 
 fot_req_reply:
     data[0] = FOT_GET_INFO;
@@ -419,14 +427,6 @@ fot_req_reply:
     fot_sent_proc(data,14);
 }
 
-void ble_disconnect_callback(void)
-{
-#if LE_AB_FOT_EN
-
-    fot_ble_disconnect_callback();
-
-#endif
-}
 
 #if LE_AB_FOT_EN
 void fot_ble_disconnect_callback(void)
@@ -465,23 +465,14 @@ void fot_recv_proc(u8 *buf, u16 len)
 
     if(fot_remote_seq != buf[FOT_SEQ_POS])
     {
-        if(!memcmp(fot_auth_data,buf,7))
+        if(memcmp(fot_auth_data, buf, 7))       //接入码先过掉
         {
-            return;
+            FOT_DEBUG("remote seq err:%d,%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
+            fot_dev_notify_sta(FOT_ERR_SEQ);
+            fot_flag |= FOT_FLAG_UPDATE_EXIT;
         }
-        //printf("fot_remote_seq:%d, buf[FOT_SEQ_POS]:%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
-        fot_dev_notify_seq_err(FOT_ERR_SEQ);
         return;
     }
-
-    // if(fot_remote_seq != buf[FOT_SEQ_POS]){
-    //     if(memcmp(fot_auth_data, buf, 7)){      //接入码先过掉
-    //         FOT_DEBUG("remote seq err:%d,%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
-    //         fot_dev_notify_sta(FOT_ERR_SEQ);
-    //         fot_flag |= FOT_FLAG_UPDATE_EXIT;
-    //     }
-    //     return;
-    // }
 
     fot_remote_seq++;
 
@@ -728,15 +719,10 @@ void bsp_fot_process(void)
             }
             else
             {
-                if (func_cb.sta != FUNC_OTA_UI_MODE && func_cb.sta != FUNC_OTA_MODE)
-                {
-                    func_cb.sta = FUNC_OTA_MODE;         //进入OTA升级界面
-                }
                 app_fota_write(fot_data, app_fota_get_curaddr(), fot_var.total_len);
             }
             fot_var.ota_recv_size += fot_var.total_len;
 #else
-            func_cb.sta = FUNC_OTA_MODE;         //进入OTA升级界面
             app_fota_write(fot_data, app_fota_get_curaddr(), fot_var.total_len);
 #endif
             bsp_fot_progress_get();
@@ -773,22 +759,9 @@ void bsp_fot_process(void)
     {
         if(tick_check_expire(fot_var.tick,3000))
         {
-            extern void param_fot_hash_write(u8 *param);
-            extern void param_fot_remote_ver_write(u8 *param);
-            param_fot_hash_write((u8*)&fot_var.hash);
-            param_fot_remote_ver_write((u8*)&fot_var.remote_ver);
-            param_sync();
-
             fot_flag &= ~FOT_FLAG_SYS_RESET;
             FOT_DEBUG("-->fota update ok,sys reset\n");
-            if (func_cb.sta == FUNC_OTA_UI_MODE)
-            {
-                WDT_RST();
-            }
-            else
-            {
-                func_cb.sta = FUNC_OTA_SUCC;
-            }
+            WDT_RST();
         }
     }
 

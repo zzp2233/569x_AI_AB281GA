@@ -1,5 +1,4 @@
 #include "include.h"
-#include "ute_module_sport.h"
 
 sensor_sta_t bsensor;
 //获得外设初始化状态
@@ -39,17 +38,13 @@ void bsp_sensor_pe2_pwr_pg_off(void)
 //心率开启
 u8 bsp_sensor_hr_init(u8 mode)
 {
-    // if (bsp_sensor_init_sta_get(SENSOR_INIT_HR)) return true;
+    if (bsp_sensor_init_sta_get(SENSOR_INIT_HR)) return true;
 
     bool init = false;
 #if (SENSOR_HR_SEL == SENSOR_HR_TYHX_HX3605)
     init = sensor_hx3605_init(mode);
 #elif(SENSOR_HR_SEL == SENSOR_HR_TYHX_HRS3300)
     init = sensor_hrs3300_init(mode);
-#elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
-    vc30fx_pwr_en();
-    vc30fx_data.work_mode = mode;
-    init = vc30fx_usr_device_init(&vc30fx_data);
 #endif
 
     if (init) bsp_sensor_init_sta_set(SENSOR_INIT_HR);
@@ -60,37 +55,20 @@ u8 bsp_sensor_hr_init(u8 mode)
 //心率关闭
 u8 bsp_sensor_hr_stop(void)
 {
-    // if (!bsp_sensor_init_sta_get(SENSOR_INIT_HR)) return false;
+    if (!bsp_sensor_init_sta_get(SENSOR_INIT_HR)) return false;
     bool stop = true;
 #if (SENSOR_HR_SEL == SENSOR_HR_TYHX_HX3605)
     stop = sensor_hx3605_stop();
 #elif(SENSOR_HR_SEL == SENSOR_HR_TYHX_HRS3300)
     stop = sensor_hrs3300_stop();
-#elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
-#if UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT
-    vc30fx_data.work_mode = WORK_MODE_WEAR;
-    vc30fx_usr_device_init(&vc30fx_data);
-#elif UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT
-    if(uteModuleSystemtimeIsNight() && uteModuleSportGetStepType() == STEP_TYPE_SLEEP)
-    {
-        vc30fx_data.work_mode = WORK_MODE_WEAR;
-        vc30fx_usr_device_init(&vc30fx_data);
-    }
-    else
-#endif
-    {
-        stop = vc30fx_usr_stop_work();
-        vc30fx_pwr_dis();
-    }
 #endif
 
-    // if (!stop) bsp_sensor_init_sta_clr(SENSOR_INIT_HR);
+    if (!stop) bsp_sensor_init_sta_clr(SENSOR_INIT_HR);
 
     return stop;
 }
 
 //保存心率值
-AT(.com_text.vc30fx)
 void bsp_sensor_hrs_data_save(u8 bpm)
 {
     if (bsensor.hr.back_bpm != bpm)
@@ -154,8 +132,6 @@ bool bsp_sensor_hr_wear_sta_get(void)
     sta = sensor_hx3605_wear_sta_get();
 #elif(SENSOR_HR_SEL == SENSOR_HR_TYHX_HRS3300)
     sta = sensor_hx3300_wear_sta_get();
-#elif(SENSOR_HR_SEL == SENSOR_HR_VC30FX)
-    sta = vc30fx_usr_get_wear_status();
 #endif
 
     return sta;

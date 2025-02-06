@@ -28,7 +28,7 @@ bool mpa_encode_init(u32 spr, u32 nchannel, u32 bitrate)
 void mpa_encode_exit(void) {}
 #endif
 
-#if !REC_SBC_SUPPORT
+#if (!REC_SBC_SUPPORT)
 bool sbc_encode_init(u8 spr, u8 nch)
 {
     return false;
@@ -39,6 +39,21 @@ u16 sbc_encode_frame(u8 *buf, u16 len)
 }
 void sbc_encode_process(void) {}
 void sbc_encode_exit(void) {}
+AT(.com_text.bsp.emit)
+bool sbcen_puts_buf(u8 *buf, u16 len)
+{
+    return false;
+}
+AT(.com_text.bsp.emit)
+bool sbcen_gets_buf(u8 *buf, u16 len)
+{
+    return false;
+}
+AT(.com_text.bsp.emit)
+u16 sbcen_get_data_size(void)
+{
+    return 0;
+}
 #endif
 
 #if !REC_ADPCM_SUPPORT
@@ -246,18 +261,12 @@ void sdadc_pcm_peri_eq(u8 *ptr, u32 samples) {}
 #endif
 
 #if !WARNING_WAVRES_PLAY
-bool wav_res_stop(void)
-{
-    return false;
-}
-void wav_res_play_kick(u32 addr, u32 len) {}
-void wav_res_dec_process(void) {}
-bool wav_res_is_play(void)
-{
-    return false;
-}
-AT(.rodata.wavres.buf)
-const int wavres_cb = 0;
+//bool wav_res_stop(void){return false;}
+//void wav_res_play_kick(u32 addr, u32 len){}
+//void wav_res_dec_process(void){}
+//bool wav_res_is_play(void){return false;}
+//AT(.rodata.wavres.buf)
+//const int wavres_cb = 0;
 #endif
 
 #if !BT_HFP_MSBC_EN
@@ -401,14 +410,6 @@ u32 system_get_main_stack_size(void)
 }
 #endif // OS_THREAD_MAIN_STACK
 
-#if OS_THREAD_MAIN_PRIOPITY
-AT(.text.startup.init)
-u32 system_get_main_stack_priopity(void)
-{
-    return OS_THREAD_MAIN_PRIOPITY;
-}
-#endif // OS_THREAD_MAIN_PRIOPITY
-
 //MUSIC线程栈大小设置
 #if OS_THREAD_MUSIC_STACK
 AT(.text.startup.init)
@@ -485,41 +486,24 @@ bool de_line_spiflash_depar_kick_ex(void *raw_buf, int raw_len, void *par_buf, i
 }
 #endif
 
-void emit_timer_reset(void) {}
 
-#if !BT_PANU_EN
-void btstack_panu_connect(void) {}
-void btstack_panu_disconnect(void) {}
-void bnep_network_init(void) {}
-void bnep_network_up(bd_addr_t addr) {}
-void bnep_network_down(void) {}
-void bnep_network_process_packet(const uint8_t *packet, uint16_t size) {}
-AT(.com_text.stack.run_loop)
-void bnep_network_outgoing_process(void) {}
-void bnep_network_packet_sent(uint8_t *buf) {}
 
-u8 bnep_get_psm(void)
+#if !QTEST_EN
+AT(.com_text.weak.qtest)
+u8 qtest_get_mode(void)
 {
     return 0;
 }
+#endif
 
-void bnep_audio_init(void) {}
-void bnep_audio_exit(void) {}
-void bnep_audio_write(void *buf, unsigned int size) {}
-void bnep_audio_start(void) {}
-int web_stream_read(void *buf, unsigned int size)
+#if !BT_SPP_EN
+void spp_txpkt_init(void) {}
+AT(.com_text.weak.spp.send_req)
+void btstack_spp_send_req(void) {}
+int spp_send_packet_channel(void *context, void *buf)
 {
-    return 0;
+    return -1;
 }
-bool web_stream_seek(unsigned int ofs, int whence)
-{
-    return false;
-}
-
-AT(.com_text.stack.thread)
-bool thread_btstack_get_wdt_clr_en(void)
-{
-    return false;
-}
-
+AT(.com_text.weak.spp.event_send)
+void spp_event_send(uint16_t cid) {}
 #endif

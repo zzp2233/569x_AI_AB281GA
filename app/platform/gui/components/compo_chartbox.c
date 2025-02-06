@@ -65,12 +65,14 @@ void compo_chartbox_set_size(compo_chartbox_t *chartbox, s16 width, s16 height)
  **/
 void compo_chartbox_set_pixel(compo_chartbox_t *chartbox, u8 pixel)
 {
-    if (pixel == 0) {
+    if (pixel == 0)
+    {
         halt(HALT_GUI_COMPO_CHARTBOX_PIXEL);
     }
 
     rect_t rect_chart = widget_get_location(chartbox->chart);
-    if (rect_chart.wid == 0 || rect_chart.hei == 0) {
+    if (rect_chart.wid == 0 || rect_chart.hei == 0)
+    {
         halt(HALT_GUI_COMPO_CHARTBOX_NOSIZE);
     }
 
@@ -91,7 +93,8 @@ void compo_chartbox_set_pixel(compo_chartbox_t *chartbox, u8 pixel)
  **/
 void compo_chartbox_set_real_num(compo_chartbox_t *chartbox, u8 real_num)
 {
-    if (real_num > chartbox->max_num + 1) {
+    if (real_num > chartbox->max_num + 1)
+    {
         halt(HALT_GUI_COMPO_CHARTBOX_REALNUM);
     }
     chartbox->real_num = real_num;
@@ -131,17 +134,6 @@ void compo_chartbox_set_value(compo_chartbox_t *chartbox, u8 id, chart_t chart_i
     u16 y = chart_info.y;            //柱子左下角在y轴的位置
     u16 width = chart_info.width;    //柱子宽度
     u16 height = chart_info.height;  //柱子高度
-
-    //防止用户超出边界
-    rect_t rect = widget_get_location(chartbox->chart);
-
-    if (((x + width) > rect.wid) || (y > rect.hei)) {
-        return;
-    }
-
-    if ((y+height) > rect.hei) {
-        height = rect.hei - y;
-    }
 
     //详细介绍在api_gui.h中
     widget_chart_set_value(chartbox->chart, id, x, x + width, y, y + height, color);

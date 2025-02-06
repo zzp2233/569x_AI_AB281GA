@@ -1,40 +1,45 @@
 #ifndef __BSP_PBAP_H
 #define __BSP_PBAP_H
 
-#define PBAP_MAX_NAME_LEN		20
-#define PBAP_MAX_NUM_LEN		16
-#define PBAP_MAX_DATE_LEN		16
+#define PBAP_MAX_NAME_LEN       20
+#define PBAP_MAX_NUM_LEN        16
+#define PBAP_MAX_DATE_LEN       16
 
 typedef void (*pbap_sync_finish_cb_t)(void *info, u16 count);
 
-enum {
-    PBAP_SYNC_LOCAL,    //Í¬²½±¾»úÊı¾İ
-    PBAP_SYNC_SIM,      //Í¬²½sim¿¨Êı¾İ
+enum
+{
+    PBAP_SYNC_LOCAL,    //åŒæ­¥æœ¬æœºæ•°æ®
+    PBAP_SYNC_SIM,      //åŒæ­¥simå¡æ•°æ®
 };
 
-enum {
-    PBAP_OBJECT_PB,	    //Í¨Ñ¶Â¼
-    PBAP_OBJECT_FAV,    //ÊÕ²ØµÄÁªÏµÈË
-    PBAP_OBJECT_ICH,    //À´µç¼ÇÂ¼
-    PBAP_OBJECT_OCH,    //È¥µç¼ÇÂ¼
-    PBAP_OBJECT_MCH,    //Î´½ÓÀ´µç
-    PBAP_OBJECT_CCH,    //ËùÓĞµÄÍ¨»°¼ÇÂ¼
+enum
+{
+    PBAP_OBJECT_PB,     //é€šè®¯å½•
+    PBAP_OBJECT_FAV,    //æ”¶è—çš„è”ç³»äºº
+    PBAP_OBJECT_ICH,    //æ¥ç”µè®°å½•
+    PBAP_OBJECT_OCH,    //å»ç”µè®°å½•
+    PBAP_OBJECT_MCH,    //æœªæ¥æ¥ç”µ
+    PBAP_OBJECT_CCH,    //æ‰€æœ‰çš„é€šè¯è®°å½•
 };
 
-//btstack¸úappÍ¨Ñ¶ÓÃ£¬ÓÃ»§²»¿ÉĞŞ¸Ä
-typedef struct {
+//btstackè·Ÿappé€šè®¯ç”¨ï¼Œç”¨æˆ·ä¸å¯ä¿®æ”¹
+typedef struct
+{
     char name[160];
     char anum[20];
     char bnum[20];
 } pbap_data_cb_t;
 
-typedef struct {
+typedef struct
+{
     char name[PBAP_MAX_NAME_LEN];
     char num[PBAP_MAX_NUM_LEN];
     char date[PBAP_MAX_DATE_LEN];
 } pbap_pb_buf_t;
 
-typedef struct {
+typedef struct
+{
     u8 pb_size;
     u8 pb_idx;
     u16 pb_count;
@@ -48,17 +53,17 @@ void bt_pbap_data_callback(u8 type, void *item);
 void bt_pbap_event_handle(uint evt, u8 *params);
 void bt_pbap_param_reset(void);
 
-/** ÅĞ¶Ïµ±Ç°ÊÇ·ñÔÚ¶ÁÈ¡pbapÊı¾İ **/
+/** åˆ¤æ–­å½“å‰æ˜¯å¦åœ¨è¯»å–pbapæ•°æ® **/
 bool bt_pbap_is_syncing(void);
 
 /**
- * @brief ¿ªÊ¼Í¬²½»ñÈ¡pbapµÄÊı¾İ
- * @param[in] object : PBAP_OBJECT_ICH, À´µç¼ÇÂ¼
-                       PBAP_OBJECT_OCH, È¥µç¼ÇÂ¼
+ * @brief å¼€å§‹åŒæ­¥è·å–pbapçš„æ•°æ®
+ * @param[in] object : PBAP_OBJECT_ICH, æ¥ç”µè®°å½•
+                       PBAP_OBJECT_OCH, å»ç”µè®°å½•
                        ...
- * @param[in] buf :    ±£´æÊı¾İµÄbuf
- * @param[in] count :  Òª»ñÈ¡µÄÊı¾İÊıÁ¿
- * @param[in] finish_cb : pbapÊı¾İÍ¬²½ÍêºóµÄ»Øµ÷
+ * @param[in] buf :    ä¿å­˜æ•°æ®çš„buf
+ * @param[in] count :  è¦è·å–çš„æ•°æ®æ•°é‡
+ * @param[in] finish_cb : pbapæ•°æ®åŒæ­¥å®Œåçš„å›è°ƒ
  **/
 void bt_pbap_sync_start(u8 object, void *buf, u16 count, pbap_sync_finish_cb_t finish_cb);
 

@@ -8,36 +8,48 @@
 #include "music_res.h"
 #include "bsp_func_music.h"
 
-enum {
+enum
+{
     NORMAL_MODE,
     SINGLE_MODE,
     FLODER_MODE,
     RANDOM_MODE,
 };
 
-typedef struct {
+enum
+{
+    MUSIC_SRC_BT,
+    MUSIC_SRC_WATCH,
+    MUSIC_SRC_EARPHONE,
+
+};
+
+typedef struct
+{
     u8 min;                     //minute
     u8 sec;                     //second
 } msc_time_t;
 
-typedef struct {
+typedef struct
+{
     u32 frame_count;            //current frame count
     u32 file_ptr;               //file ptr of current frame
     u16 fname_crc;              //file name crc
 } msc_breakpiont_t;
 
-typedef struct {
+typedef struct
+{
     u8 pause        : 1,
-       file_change  : 1,
-       dev_change   : 2,
-       //cur_dev      : 2,
-       brkpt_flag   : 1,
-       prev_flag    : 1;
+    file_change  : 1,
+    dev_change   : 2,
+    //cur_dev      : 2,
+    brkpt_flag   : 1,
+    prev_flag    : 1;
     u8 cur_dev;
 
     u8 rec_type     : 1,
-       rec_scan     : 2,
-       encrypt      : 1;
+    rec_scan     : 2,
+    encrypt      : 1;
 
     u8 type;                    //音乐格式
     u32 bit_rate;               //音乐码率
@@ -47,8 +59,8 @@ typedef struct {
     msc_time_t alltime;         //music file total time
     msc_time_t curtime;         //music current playing time
 
-    u16 file_num;
-    u16 file_total;
+    u16 file_num;               //文件编号
+    u16 file_total;             //文件个数
 
     u16 dir_num;                //directory current number
     u16 dir_total;              //directory total number
@@ -63,7 +75,7 @@ typedef struct {
 #endif // MUSIC_LRC_EN
 
     u8 fname_update : 1,
-       lrc_update   : 1;
+    lrc_update   : 1;
 } bsp_msc_t;
 extern bsp_msc_t msc_cb;
 
@@ -89,6 +101,7 @@ void bsp_music_play_pause(void);                    //播放/暂停切换
 void bsp_music_breakpoint_init(void);
 void bsp_music_breakpoint_save(void);
 void bsp_music_breakpoint_clr(void);
+void bsp_music_process(void);
 
 #define music_breakpoint_init()     bsp_music_breakpoint_init()
 #define music_breakpoint_save()     bsp_music_breakpoint_save()

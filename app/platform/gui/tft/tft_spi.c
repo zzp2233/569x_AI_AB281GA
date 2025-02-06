@@ -184,7 +184,6 @@ void tft_write_data_start(void)
 #elif (GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
     tft_write_cmd(0x2C);
     DC_DATA_EN();
-    DC_DISABLE();
     //3w-9b 2line mode
     DESPICON |= BIT(26) | BIT(9) | BIT(3); //[26]dual en, [9]MultiBit, [3:2]2BIT data bus
 #elif (GUI_MODE_SELECT == MODE_4WIRE_8BIT)
@@ -255,12 +254,10 @@ uint32_t tft_read_id(void)
 
 void tft_spi_init(void)
 {
-#if (TFT_SPI_DRIVER == SPI_JD9853_V1)
+#if (TFT_SPI_DRIVER & SPI_DRIVER_JD9853)
     tft_spi_jd9853_init();
-#elif (TFT_SPI_DRIVER == SPI_GC9307_V1)
+#elif (TFT_SPI_DRIVER & SPI_DRIVER_GC9307)
     tft_spi_gc9307_init();
-#elif (TFT_SPI_DRIVER == SPI_ST7789_V1)
-    tft_240_st7789_init();
 #endif
 }
 

@@ -48,7 +48,6 @@ uint8_t bsp_i2c_rx_byte(void);
 bool bsp_i2c_rx_ack(void);
 void bsp_i2c_tx_ack(void);
 void bsp_i2c_tx_nack(void);
-void i2c_gsensor_init(void);
 
 void bsp_hw_i2c_rx_buf(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u8 *buf, u16 len);
 void bsp_hw_i2c_tx_buf(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u8 *buf, u16 len);
@@ -56,5 +55,11 @@ void bsp_hw_i2c_tx_byte(u32 i2c_cfg, u16 dev_addr, u16 reg_addr, u32 data);
 
 void os_i2c0_lock(uint32_t ms);
 void os_i2c0_unlock(void);
+
+#if SECURITY_PAY_EN
+void bsp_hs_i2c_tx_buf(u16 dev_addr, u8 *buf, u16 len);
+void bsp_hs_i2c_rx_buf(u16 dev_addr, u8 *buf, u16 len);
+void bsp_hs_i2c_rx_byte(u16 dev_addr, u8 *buf);
+#endif // SECURITY_PAY_EN
 
 #endif

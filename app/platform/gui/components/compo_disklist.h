@@ -32,13 +32,9 @@ typedef struct compo_disklist_t_
 
     bool focus_rem_en;              //焦点对360度取余，自动旋转结束后使能
 
-    int sidx;                       //起始编号
-    bool txt_roll_need_rst;         //文本滚动重置标志
-
     widget_icon_t *item_icon[DISKLIST_ITEM_CNT];
     widget_page_t *item_page_text[DISKLIST_ITEM_CNT];
     widget_text_t *item_text[DISKLIST_ITEM_CNT];
-    compo_roll_cb_t roll_cb[DISKLIST_ITEM_CNT];
     s16 item_idx[DISKLIST_ITEM_CNT];
 
 
@@ -93,12 +89,6 @@ void compo_disklist_set_focus_byidx(compo_disklist_t *disklist, int idx);
  * @param[in] disklist : 圆盘列表指针
  **/
 void compo_disklist_update(compo_disklist_t *disklist);
-
-/**
- * @brief 更新列表框Widget，同时重置所有文本滚动（item中str突变时需要调用，防止C208蓝屏）
- * @param[in] disklist : 圆盘列表指针
- **/
-void compo_disklist_update_with_text_scroll_rst(compo_disklist_t *disklist);
 
 /**
  * @brief 按坐标选择菜单项

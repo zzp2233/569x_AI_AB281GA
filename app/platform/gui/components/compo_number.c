@@ -51,8 +51,6 @@ compo_number_t *compo_number_create(compo_form_t *frm, u32 res_addr, int num_cnt
     num->img_sym = img_sym;
 
     num->flag_sym = false;      //默认不使用符号
-    num->flag_float = false;
-    num->flag_zero_replace = false;
     num->radix = 10;
     num->max_val--;
     compo_number_set_margin(num, num->num_wid / 8);
@@ -103,8 +101,6 @@ compo_number_t *compo_number_create_for_page(compo_form_t *frm, widget_page_t* p
     num->img_sym = img_sym;
 
     num->flag_sym = false;      //默认不使用符号
-    num->flag_float = false;
-    num->flag_zero_replace = false;
     num->radix = 10;
     num->max_val--;
     compo_number_set_margin(num, num->num_wid / 8);
@@ -119,11 +115,7 @@ compo_number_t *compo_number_create_for_page(compo_form_t *frm, widget_page_t* p
  **/
 void compo_number_set_radix(compo_number_t *num, u8 radix, bool type)
 {
-    if(radix == 14)
-    {
-        num->radix = radix;
-    }
-    else if (type)
+    if (type)
     {
         num->radix = radix-1;
     }
@@ -182,23 +174,8 @@ static void compo_number_update(compo_number_t *num)
         if (!num->flag_zfill)
         {
             char val_str[MAX_NUMBER_CNT + 1];
-            u8 val_len = 0;
-            if(num->flag_float)
-            {
-                val_len = num->decimal_cnt + 1;
-                u16 tmp = num->value / soft_pow(10,num->decimal_cnt);
-                sprintf(val_str, "%d", tmp);
-                val_len +=  strlen(val_str);
-            }
-            else if (num->flag_zero_replace && num->value == 0)
-            {
-                val_len = 2;
-            }
-            else
-            {
-                sprintf(val_str, "%d", num->value);
-                val_len = strlen(val_str);
-            }
+            sprintf(val_str, "%d", num->value);
+            u8 val_len = strlen(val_str);
 
             if (num->num_layout)
             {
@@ -226,30 +203,9 @@ static void compo_number_update(compo_number_t *num)
 
         for (i=znum; i>=0; i--)
         {
-            if(num->radix == 14) // 兼容 -./ 开头的切图
-            {
-                if(num->flag_float && ((num->num_cnt - 1) - num->decimal_cnt == i))
-                {
-                    widget_image_cut(num->img_num[i], 0, num->num_hei, num->num_wid, num->num_hei);
-                }
-                else if (num->flag_zero_replace && num->value == 0)
-                {
-                    widget_image_cut(num->img_num[i], 0, 0, num->num_wid, num->num_hei); 
-                }
-                else
-                {
-                    v = val % 10;
-                    val /= 10;
-                    widget_image_cut(num->img_num[i], 0, (v + 3) * num->num_hei, num->num_wid, num->num_hei);                           
-                }
-            }
-            else
-            {
-                v = val % num->radix;
-                val /= num->radix;
-                widget_image_cut(num->img_num[i], 0, v * num->num_hei, num->num_wid, num->num_hei);
-            }
-
+            v = val % num->radix;
+            val /= num->radix;
+            widget_image_cut(num->img_num[i], 0, v * num->num_hei, num->num_wid, num->num_hei);
             widget_set_pos(num->img_num[i], x, y);
             widget_set_visible(num->img_num[i], true);
 
@@ -267,68 +223,19 @@ static void compo_number_update(compo_number_t *num)
                 znum = i;
             }
         }
-        num->znum = znum;
         if (!num->flag_zfill)       //隐藏高位
         {
             for (i=0; i<znum; i++)
             {
-                uint16_t integer = 0;
-                if(num->flag_float && num->decimal_cnt > 0)
-                {
-                    integer = num->value / soft_pow(10,num->decimal_cnt);
-                }
-                if (num->radix == 14 && num->flag_float && integer == 0)
-                {
-                    if(i < (num->num_cnt - 1) - num->decimal_cnt - 1)
-                    {
-                        widget_set_visible(num->img_num[i], false);
-                    }
-                    else
-                    {
-                        widget_set_visible(num->img_num[i], true);
-                    }
-                }
-                else if (num->radix == 14 && num->flag_zero_replace && num->value == 0)
-                {
-                    if (num->num_cnt > 2)
-                    {
-                        if (i < num->num_cnt - 2)
-                        {
-                            widget_set_visible(num->img_num[i], false);
-                        }
-                        else
-                        {
-                            widget_set_visible(num->img_num[i], true);
-                        }
-                    }
-                    else
-                    {
-                        widget_set_visible(num->img_num[i], true);
-                    }
-                }
-                else 
-                {
-                    widget_set_visible(num->img_num[i], false);
-                }
+                widget_set_visible(num->img_num[i], false);
             }
-            if (num->radix == 14 && num->value < 0 && znum != 0)         //显示符号,只有负号才会显示符号位
-            {
-                widget_image_cut(num->img_num[i-1], 0, 0, num->num_wid, num->num_hei);
-                widget_set_visible(num->img_num[i-1], true);
-            }
-            else if (num->flag_sym && num->value < 0 && znum != 0)         //显示符号,只有负号才会显示符号位
+            if (num->flag_sym && num->value < 0 && znum != 0)         //显示符号,只有负号才会显示符号位
             {
                 widget_image_cut(num->img_num[i-1], 0, 10 * num->num_hei, num->num_wid, num->num_hei);
                 widget_set_visible(num->img_num[i-1], true);
             }
         }
-        if (num->radix == 14 && num->value < 0 && (znum == 0 || num->flag_zfill))         //显示符号,只有负号才会显示符号位
-        {
-            widget_image_cut(num->img_sym, 0, 0, num->num_wid, num->num_hei);
-            widget_set_pos(num->img_sym, x, y);
-            widget_set_visible(num->img_sym, true);
-        }
-        else if (num->flag_sym && num->value < 0 && (znum == 0 || num->flag_zfill))         //显示符号,只有负号才会显示符号位
+        if (num->flag_sym && num->value < 0 && (znum == 0 || num->flag_zfill))         //显示符号,只有负号才会显示符号位
         {
             widget_image_cut(num->img_sym, 0, 10 * num->num_hei, num->num_wid, num->num_hei);
             widget_set_pos(num->img_sym, x, y);
@@ -379,30 +286,6 @@ void compo_number_set_pos(compo_number_t *num, s16 x, s16 y)
 {
     num->x = x;
     num->y = y;
-    compo_number_update(num);
-}
-
-/**
- * @brief 设置是否为小数
- * @param[in] num : 数字指针
- * @param[in] flag_float : 是否为小数
- * @param[in] decimal_cnt : 保留小数位数
- **/
-void compo_number_set_float(compo_number_t *num, bool flag_float, u8 decimal_cnt)
-{
-    num->flag_float = flag_float;
-    num->decimal_cnt = decimal_cnt;
-    compo_number_update(num);
-}
-
-/**
- * @brief 设置是否替换数字0为-
- * @param[in] num : 数字指针
- * @param[in] replace : 是否替换
- **/
-void compo_number_set_zero_replace(compo_number_t *num, bool replace)
-{
-    num->flag_zero_replace = replace;
     compo_number_update(num);
 }
 
@@ -483,27 +366,6 @@ rect_t compo_number_get_location(compo_number_t *num)
     rect.x = num->x;
     rect.y = num->y;
     rect.wid = num->num_wid * num->num_cnt + num->x_margin * (num->num_cnt - 1);
-    rect.hei = num->num_hei;
-    return rect;
-}
-/**
- * @brief 获取数字框位置和大小
- * @param[in] num : 数字指针
- * @return 返回数字框位置和大小
- **/
-rect_t compo_number_get_rel_location(compo_number_t *num)
-{
-    rect_t rect = {0};
-    rect.x = num->x;
-    rect.y = num->y;
-    if (num->flag_sym && num->value < 0)
-    {
-        rect.wid = num->num_wid * (num->num_cnt - num->znum + 1) + num->x_margin * (num->num_cnt - num->znum + 1 - 1);
-    }
-    else
-    {
-        rect.wid = num->num_wid * (num->num_cnt - num->znum) + num->x_margin * (num->num_cnt - num->znum - 1);
-    }
     rect.hei = num->num_hei;
     return rect;
 }

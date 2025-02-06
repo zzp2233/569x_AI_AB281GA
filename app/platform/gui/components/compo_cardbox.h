@@ -12,7 +12,6 @@ typedef struct compo_cardbox_t_
     widget_rect_t *rect[CARD_RECT_MAX];
     widget_image_t *icon[CARD_ICON_MAX];    //icon已改为image，兼容旧版本，函数名不变
     widget_text_t *text[CARD_TEXT_MAX];
-    compo_roll_cb_t roll_cb[CARD_TEXT_MAX]; //卡片的text滚动控制器
 } compo_cardbox_t;
 
 /**
@@ -220,42 +219,5 @@ bool compo_cardbox_btn_is(compo_cardbox_t *cardbox, point_t pt);
 * @param[in] alpha : 透明度(0 ~ 0xff)
  **/
 void compo_cardbox_set_alpha(compo_cardbox_t *cardbox, u8 alpha);
-
-
-/**
- * @brief 卡片控件文本滚动刷新
-        注意：1.文本需要set_align_center为false，否则初始状态无法保证左对齐；
-        2.界面文本控件较多时可能出现C203蓝屏，需减小MAX_WORD_CNT或增大GUI_ELE_BUF_SIZE
- * @param[in] cardbox : 卡片指针
- * @return 无
- **/
-void compo_cardbox_text_scroll_process(compo_cardbox_t* cardbox, bool auto_scroll);
-
-/**
- * @brief 卡片控件文本0滚动暂停/继续
- * @param[in] cardbox : 卡片指针
- * @param[in] pause : true暂停，false继续
- * @return 无
- **/
-void compo_cardbox_text_scroll_pause(compo_cardbox_t *cardbox, bool pause);
-
-/**
- * @brief 卡片控件文本滚动重置（赋值后需要重新计算）
- * @param[in] cardbox : 卡片指针
- * @return 无
- **/
-void compo_cardbox_text_scroll_reset(compo_cardbox_t *cardbox);
-
-/**
- * @brief 卡片控件文本中心坐标映射到左上角
- * @param[in] cardbox : 卡片指针
-              idx : 卡片内容id
-              cx : 中心对其时的x坐标
-              cy : 中心对其时的y坐标
-              cwid : 文本框宽度
-              chei : 文本框高度
- * @return 无
- **/
-void compo_cardbox_text_map_center2left_location(compo_cardbox_t *cardbox, u8 idx, s16 cx, s16 cy, u16 cwid, u16 chei);
 
 #endif

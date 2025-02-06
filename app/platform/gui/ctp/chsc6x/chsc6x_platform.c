@@ -7,7 +7,7 @@
 #define I2C_WRITE_ADDR(ADDR)             ((ADDR) << 1)              //CTP IIC写地址
 #define I2C_READ_ADDR(ADDR)              ((ADDR) << 1 | 1)          //CTP IIC读地址
 
-#if (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
+#if (PORT_CTP_IIC_HW == 1)
 static i2c_t __CHSC6XX_IIC1 =
 {
     .sfr         = (i2c_sfr_t *) &IIC1CON0,
@@ -15,7 +15,7 @@ static i2c_t __CHSC6XX_IIC1 =
 };
 i2c_t *CHSC6XX_IICx = &__CHSC6XX_IIC1;
 
-#elif ((CHIP_PACKAGE_SELECT == CHIP_5681C) || (CHIP_PACKAGE_SELECT == CHIP_5682B))
+#elif (PORT_CTP_IIC_HW == 0)
 static i2c_t __CHSC6XX_IIC0 =
 {
     .sfr         = (i2c_sfr_t *) &IIC0CON0,

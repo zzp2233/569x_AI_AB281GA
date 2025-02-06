@@ -65,6 +65,4 @@ void compo_qrcodebox_set_level(compo_qrcodebox_t *qrcodebox, u8 level);
  **/
 void compo_barcode_set_type(compo_qrcodebox_t *qrcodebox, u8 type);
 
-
-void compo_qrcodebox_set_pos(compo_qrcodebox_t *qrcodebox, s16 x, s16 y);
 #endif

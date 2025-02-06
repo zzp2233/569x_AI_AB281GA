@@ -6,18 +6,18 @@
 *@date        2021-11-26
 *@version       v1.0
 */
-#include "ute_module_heart.h"
+// #include "ute_module_heart.h"
 #include "ute_module_systemtime.h"
 #include "ute_module_log.h"
 #include "ute_application_common.h"
-#include "ute_module_profile_ble.h"
+// #include "ute_module_profile_ble.h"
 #include "ute_module_watchonline.h"
-#include "ute_module_protocol.h"
+// #include "ute_module_protocol.h"
 #include "ute_module_crc.h"
 #include "ute_module_gui_common.h"
 #include "ute_module_platform.h"
-#include "ute_module_call.h"
-#include "ute_module_sport.h"
+// #include "ute_module_call.h"
+// #include "ute_module_sport.h"
 #include "ute_module_message.h"
 #include "include.h"
 
@@ -218,8 +218,7 @@ void uteModuleWatchOnlineUpateConfigFromFlash(void)
     for (uint8_t i = 0; i < uteModuleWatchOnlineData.supportMultipleMaxCnt; i++)
     {
         uteModulePlatformFlashNorRead((uint8_t *)&config, uteModuleWatchOnlineMultipleBaseAddress[i], watchConfigSize);
-        uint16_t headerNum = bsp_uitool_header_phrase(uteModuleWatchOnlineMultipleBaseAddress[i]);
-        if (config.isWatchVaild == 0 && headerNum)
+        if (config.isWatchVaild == 0)
         {
             if(isConnectOurApp)
             {
@@ -350,7 +349,7 @@ void uteModuleWatchOnlineReadyStart(void)
             func_clock_recreate_dial();
             if(sys_cb.gui_sleep_sta)
             {
-                sys_cb.gui_need_wakeup = true;
+                sys_cb.gui_need_wakeup = true;;
             }
             reset_sleep_delay_all();
         }
@@ -502,7 +501,7 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
             func_clock_recreate_dial();
             if(sys_cb.gui_sleep_sta)
             {
-                sys_cb.gui_need_wakeup = true;
+                sys_cb.gui_need_wakeup = true;;
             }
             reset_sleep_delay_all();
         }
@@ -561,8 +560,7 @@ uint8_t uteModuleWatchOnlineGetWatchindex(uint8_t index)
     for (uint8_t i = 0; i < uteModuleWatchOnlineData.supportMultipleMaxCnt; i++)
     {
         uteModulePlatformFlashNorRead((uint8_t *)&config, uteModuleWatchOnlineMultipleBaseAddress[i], watchConfigSize);
-        uint16_t headerNum = bsp_uitool_header_phrase(uteModuleWatchOnlineMultipleBaseAddress[i]);
-        if (config.isWatchVaild == 0 && headerNum)
+        if (config.isWatchVaild == 0)
         {
             if(isConnectOurApp)
             {

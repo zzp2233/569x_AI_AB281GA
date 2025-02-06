@@ -1,6 +1,4 @@
 #include "include.h"
-#include "ute_module_systemtime.h"
-#include "ute_drv_battery_common.h"
 
 #if VBAT_DETECT_EN
 
@@ -27,18 +25,6 @@ u16 bsp_vbat_get_voltage(u32 rst_flag)
     u32 vbat;
     u32 vbat2 = saradc_get_value10(VBAT2_ADCCH);
     vbat = saradc_vbat_get_calc_value(vbat2, adc_cb.bg, adc_cb.vrtc_val, adc_cb.vrtc_first);
-
-    if(sys_cb.gui_sleep_sta || adc_cb.vbat_gui_sleep == 0) // ute 记录熄屏时的电压，亮屏时做补偿
-    {
-        adc_cb.vbat_gui_sleep = vbat;
-    }
-    else
-    {
-        if(adc_cb.vbat_gui_sleep > vbat && (adc_cb.vbat_gui_sleep - vbat) < 200)
-        {
-            vbat += adc_cb.vbat_gui_sleep - vbat;
-        }
-    }
 
     if (rst_flag)
     {
@@ -73,7 +59,7 @@ u16 bsp_vbat_get_voltage(u32 rst_flag)
 void bsp_vbat_voltage_init(void)
 {
     sys_cb.vbat = bsp_vbat_get_voltage(1);
-    // sys_cb.vbat_percent = 0xff;
+    sys_cb.vbat_percent = 0xff;
 }
 
 int bsp_vbat_get_lpwr_status(void)
@@ -165,10 +151,7 @@ void bsp_vbat_lpwr_process(void)
 static const u16 vbat_percent_table[11] =
 {
 //   0%    10%   20%   30%   40%   50%   60%   70%   80%   90%   100%
-    UTE_DRV_BATTERY_000, UTE_DRV_BATTERY_010, UTE_DRV_BATTERY_020,
-    UTE_DRV_BATTERY_030, UTE_DRV_BATTERY_040, UTE_DRV_BATTERY_050,
-    UTE_DRV_BATTERY_060, UTE_DRV_BATTERY_070, UTE_DRV_BATTERY_080,
-    UTE_DRV_BATTERY_090, UTE_DRV_BATTERY_100
+    3450, 3500, 3550, 3600, 3650, 3700, 3750, 3800, 3850, 3902,  4050
 };
 
 
@@ -178,10 +161,6 @@ static const u16 vbat_percent_table[11] =
 static u16 vbat_percent_convert(u16 adc_value)
 {
     u16 pervent = 0;
-#if UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
-    pervent = uteDrvBatteryCommonGetLvl();
-    TRACE("battery percent:%d\n", pervent);
-#else
     u8 i = 0;
 
     if(adc_value >= vbat_percent_table[10])
@@ -203,7 +182,6 @@ static u16 vbat_percent_convert(u16 adc_value)
     }
 
     pervent = (adc_value - vbat_percent_table[i-1]) * 10 / (vbat_percent_table[i] - vbat_percent_table[i-1]) + (i-1)*10;
-#endif
     return pervent;
 }
 
@@ -211,22 +189,13 @@ static u16 vbat_percent_convert(u16 adc_value)
 /**
  * 电池电量标定回调执行，充电和放电都在这里处理了，10s执行一次（修改在bsp_vbat_percent_init函数）
  */
-// static void vbat_percent_process(co_timer_t *timer, void *param)
-void vbat_percent_process(void)
+static void vbat_percent_process(co_timer_t *timer, void *param)
 {
     if(vbat_cb.vbat_adc_last == 0)
     {
         sys_cb.vbat_percent = vbat_percent_convert(adc_cb.vbat_val);
         vbat_cb.vbat_adc_last = adc_cb.vbat_val;
         vbat_cb.vbat_adc_curr = adc_cb.vbat_val;
-        return;
-    }
-
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-
-    if (time.sec % 5 != 0) //放在1s定时器执行，5s才执行一次
-    {
         return;
     }
 
@@ -265,17 +234,13 @@ void vbat_percent_process(void)
  */
 void bsp_vbat_percent_init(void)
 {
-    // static co_timer_t vbat_timer;
+    static co_timer_t vbat_timer;
 
     memset(&vbat_cb, 0, sizeof(vbat_cb_t));
-    // vbat_percent_process(NULL, NULL);
+    vbat_percent_process(NULL, NULL);
 
-    // co_timer_set(&vbat_timer, 5000, TIMER_REPEAT, LEVEL_LOW_PRI, vbat_percent_process, NULL);
-    // co_timer_set_sleep(&vbat_timer, true);
-
-    // 改为放到1s定时器中执行
-    vbat_percent_process();
-    // uteModuleSystemtimeRegisterSecond(vbat_percent_process);
+    co_timer_set(&vbat_timer, 5000, TIMER_REPEAT, LEVEL_LOW_PRI, vbat_percent_process, NULL);
+    co_timer_set_sleep(&vbat_timer, true);
 }
 
 

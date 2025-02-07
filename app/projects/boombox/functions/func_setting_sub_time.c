@@ -57,7 +57,7 @@ compo_form_t *func_set_sub_time_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_TIME]);
+    // compo_form_set_title(frm, i18n[STR_SETTING_TIME]);
 
     //创建按钮
     compo_button_t *btn;
@@ -77,12 +77,12 @@ compo_form_t *func_set_sub_time_form_create(void)
     component_t *compo = (component_t *)compo_textbox_create(frm,2);
     compo_setid(compo, COMPO_ID_TEXT_CALENDE);
     compo_textbox_set_pos((compo_textbox_t *)compo, 40, 85);
-    compo_textbox_set((compo_textbox_t *)compo, i18n[STR_CUSTOM_CALENDAR]);
+    // compo_textbox_set((compo_textbox_t *)compo, i18n[STR_CUSTOM_CALENDAR]);
 
     component_t *compo_tws = (component_t *)compo_textbox_create(frm,3);
     compo_setid(compo_tws, COMPO_ID_TEXT_CALENDE);
     compo_textbox_set_pos((compo_textbox_t *)compo_tws, 55, 180);
-    compo_textbox_set((compo_textbox_t *)compo_tws, i18n[STR_CUSTOM_DATA]);
+    // compo_textbox_set((compo_textbox_t *)compo_tws, i18n[STR_CUSTOM_DATA]);
 
     component_t *compo_thr = (component_t *)compo_textbox_create(frm,2);
     compo_setid(compo_thr, COMPO_ID_TEXT_CALENDE);

@@ -21,7 +21,7 @@
 
 ute_module_platform_adv_data_t uteModulePlatformAdvData;
 
-uint32_t uteModulePlatformDlpsBit = 0;
+static uint32_t uteModulePlatformDlpsBit = 0;
 //AT(.sleep_text.ute_sleep_bit)
 
 /**
@@ -63,14 +63,13 @@ void uteModulePlatformSystemReboot(void)
     LVDCON |= BIT(12);
     LVDCON |= (1 << 8);
 }
-ute_module_platform_timer_t uteModulePlatformTimerData[UTE_MODULE_PLATFORM_TIMER_MAX] AT(.disp.ute);
+static ute_module_platform_timer_t uteModulePlatformTimerData[UTE_MODULE_PLATFORM_TIMER_MAX] AT(.disp.ute);
 uint8_t uteModulePlatformTimerCounter = 0;
-void uteModulePlatformTimerCallback(co_timer_t *timer, void *param)
+static void uteModulePlatformTimerCallback(co_timer_t *timer, void *param)
 {
     uteModulePlatformTimerCallback_t func = (uteModulePlatformTimerCallback_t)param;
     func(NULL);
 }
-
 /**
 *@brief   创建定时器
 *@details
@@ -84,7 +83,6 @@ bool uteModulePlatformCreateTimer(void **pp_handle, const char *p_timer_name, ui
     /*在创建的定时器指针要为NULL*/
     if(*pp_handle != NULL)
     {
-        printf("%s,LINE=%d\r\n",__func__,__LINE__);
         return false;
     }
     /*在timer 数为0时清空数据*/
@@ -118,8 +116,7 @@ bool uteModulePlatformCreateTimer(void **pp_handle, const char *p_timer_name, ui
                 {
                     result = co_timer_set(&uteModulePlatformTimerData[i].timer, interval_ms, TIMER_ONE_SHOT, LEVEL_LOW_PRI, uteModulePlatformTimerCallback,(void*)uteModulePlatformTimerData[i].currTimerCallback);
                 }
-                printf("%s,result=%d\r\n",__func__,result);
-                // co_timer_set_sleep(&uteModulePlatformTimerData[i].timer,true);
+                co_timer_set_sleep(&uteModulePlatformTimerData[i].timer,true);
                 co_timer_enable(&uteModulePlatformTimerData[i].timer,false);
                 break;
             }
@@ -261,7 +258,7 @@ void uteModulePlatformWdgFeed(void)
     WDT_CLR();
 }
 
-ute_module_platform_mutex_t uteModulePlatformMutexBuff[UTE_MODULE_PLATFORM_MUTEX_MAX] AT(.disp.ute);
+static ute_module_platform_mutex_t uteModulePlatformMutexBuff[UTE_MODULE_PLATFORM_MUTEX_MAX] AT(.disp.ute);
 uint8_t uteModulePlatformMutexCnt = 0;
 /**
 *@brief   创建互斥量
@@ -521,13 +518,6 @@ void uteModulePlatformRtcTimerHandler(void *pxTimer)
 {
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
 }
-
-
-static void stopwatch_test_pro(co_timer_t *timer, void *param)
-{
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
-}
-
 /**
 *@brief RTC初始化函数
 *@details RTC初始化函数，使用RTC，每秒产生一个消息，作为系统每秒的时间
@@ -1246,9 +1236,9 @@ uint8_t uteModulePlatformGetScanRspRemainLength(void)
 *@author        zn.zeng
 *@date        2021-08-18
 */
-uint8_t devName[32];
-uint8_t devNameSize=0;
-uint8_t devCompleteNameSize=0; // 带设备ID
+static uint8_t devName[32];
+static uint8_t devNameSize=0;
+static uint8_t devCompleteNameSize=0; // 带设备ID
 void uteModulePlatformUpdateDevName(void)
 {
     uint8_t name[32] ;
@@ -1326,7 +1316,7 @@ void uteModulePlatformUpdateDevName(void)
     devCompleteNameSize = size;
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,name =%s,size=%d", __func__, name,size);
     uteModulePlatformAdvDataModifySub(false, 0x09, name, size, ADV_REPLACE);
-    ble_set_gap_name((char *)name,size);
+    // ble_set_gap_name((char *)name,size);//todo
 #if UTE_BT30_CALL_SUPPORT
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
     uteModuleCallSetBtDevName(name,size);

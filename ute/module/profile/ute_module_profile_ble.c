@@ -81,18 +81,18 @@ u32 ble_get_adv_data(u8 *adv_buf, u32 buf_size)
 *   ble tx buf set
 */
 
-#define MAX_NOTIFY_NUM          5
-#define MAX_NOTIFY_LEN          256     //max=247
-#define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
+// #define MAX_NOTIFY_NUM          5
+// #define MAX_NOTIFY_LEN          256     //max=247
+// #define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
 
-AT(.ble_cache.att)
-uint8_t notify_tx_pool[NOTIFY_POOL_SIZE];
+// AT(.ble_cache.att)
+// uint8_t notify_tx_pool[NOTIFY_POOL_SIZE];
 
-void ble_txpkt_init(void)
-{
-    txpkt_init(&notify_tx, notify_tx_pool, MAX_NOTIFY_NUM, MAX_NOTIFY_LEN);
-    notify_tx.send_kick = ble_send_kick;
-}
+// void ble_txpkt_init(void)
+// {
+//     txpkt_init(&notify_tx, notify_tx_pool, MAX_NOTIFY_NUM, MAX_NOTIFY_LEN);
+//     notify_tx.send_kick = ble_send_kick;
+// }
 
 /***
 *   ble rx buf set
@@ -532,7 +532,7 @@ uint8_t uteModuleProfileBleAddService(void)
 {
     int ret = 0;
 
-    ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name) + 1);
+    // ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name) + 1);//todo
 
     // 55ff
     ret |= ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,

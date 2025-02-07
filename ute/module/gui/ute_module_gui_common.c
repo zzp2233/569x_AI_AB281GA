@@ -366,7 +366,7 @@ void uteModuleGuiCommonInit(void)
     memset(&uteModuleGuiCommonData,0,sizeof(ute_module_gui_common_t));
     /*! 创建定时器 zn.zeng, 2021-09-03  */
     // uteModulePlatformCreateTimer(&displayOffTimerPointer, "display off",1, 5000, false, uteModuleGuiCommonDisplayOffTimerCallback);
-    // uteModulePlatformCreateTimer(&clearDepthAfterOffTimerPointer, "clear depth",1, 5000, false, uteModuleGuiCommonClearDepthTimerCallback);
+    uteModulePlatformCreateTimer(&clearDepthAfterOffTimerPointer, "clear depth",1, 5000, false, uteModuleGuiCommonClearDepthTimerCallback);
     uteModuleGuiCommonReadConfig();
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
     uteModuleGuiCommonScreenSaverConfigInit();
@@ -480,7 +480,7 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         // uteDrvTpCommonSleep();
         uteModuleGuiCommonData.isDisplayOn = false;
         // uteModulePlatformStopTimer(&displayOffTimerPointer);
-        uteModuleSprotResetRovllverScreenMode();
+        // uteModuleSprotResetRovllverScreenMode();
 
     }
     else

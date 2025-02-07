@@ -1,5 +1,6 @@
 #include "include.h"
 #include "bsp_ams.h"
+// #include "ute_module_music.h"
 
 #define TRACE_EN    0
 
@@ -139,20 +140,30 @@ void ble_ams_entity_update_callback(uint8_t event_id, uint8_t attribute_id, uint
                     {
 
                         case AMS_PLAYBACKINFO_VALUE_STA_PAUSED:
+                        {
                             ble_ams_cb.play_state = 0;
                             if (ble_ams_sta_update_cb)
                             {
                                 ble_ams_sta_update_cb(BLE_AMS_STA_UPDATE_PAUSE, NULL, 0);
                             }
-                            break;
+                            uteModuleMusicSetPlayerPaused(true, 0);
+                            uint32_t time = uteModuleMusicAmsConversionPlayerTimeMs(&value[3],size-3);
+                            uteModuleMusicSetPlayerCurrTime(time);
+                        }
+                        break;
 
                         case AMS_PLAYBACKINFO_VALUE_STA_PLAYING:
+                        {
                             ble_ams_cb.play_state = 1;
                             if (ble_ams_sta_update_cb)
                             {
                                 ble_ams_sta_update_cb(BLE_AMS_STA_UPDATE_PLAYING, NULL, 0);
                             }
-                            break;
+                            uteModuleMusicSetPlayerPaused(false, 0);
+                            uint32_t time = uteModuleMusicAmsConversionPlayerTimeMs(&value[3],size-3);
+                            uteModuleMusicSetPlayerCurrTime(time);
+                        }
+                        break;
 
                         case AMS_PLAYBACKINFO_VALUE_STA_REWINDING:
                             if (ble_ams_sta_update_cb)
@@ -182,6 +193,7 @@ void ble_ams_entity_update_callback(uint8_t event_id, uint8_t attribute_id, uint
                     {
                         ble_ams_sta_update_cb(BLE_AMS_STA_UPDATE_VOLUME, &volume, sizeof(volume));
                     }
+                    uteModuleMusicSetPlayerVolume(volume / 100);
                 }
                 break;
 
@@ -219,6 +231,7 @@ void ble_ams_entity_update_callback(uint8_t event_id, uint8_t attribute_id, uint
                     {
                         ble_ams_sta_update_cb(BLE_AMS_STA_UPDATE_ARTIST, (char *)value, size);
                     }
+                    uteModuleMusicSetPlayerArtist(value, size);
                     break;
 
                 case AMS_TRACK_ATT_ID_ALBUM:
@@ -233,10 +246,15 @@ void ble_ams_entity_update_callback(uint8_t event_id, uint8_t attribute_id, uint
                     {
                         ble_ams_sta_update_cb(BLE_AMS_STA_UPDATE_TITLE, (char *)value, size);
                     }
+                    uteModuleMusicSetPlayerTitle(value, size);
                     break;
 
                 case AMS_TRACK_ATT_ID_DURATION:
-                    break;
+                {
+                    uint32_t time = uteModuleMusicAmsConversionPlayerTimeMs(&value[3],size-3);
+                    uteModuleMusicSetPlayerTotalTime(time);
+                }
+                break;
                 default:
                     break;
             }

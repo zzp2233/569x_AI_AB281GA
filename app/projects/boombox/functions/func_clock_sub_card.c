@@ -1,3 +1,10 @@
+/*
+ * @brief:
+ * @LastEditors: ljf
+ * @LastEditTime: 2025-02-06 16:22:45
+ * @FilePath: \AB5691_SDK\app\projects\boombox\functions\func_clock_sub_card.c
+ * @Date: 2025-02-06 11:39:33
+ */
 #if 1
 #include "include.h"
 #include "func.h"
@@ -354,7 +361,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_rect_set_location(cardbox, 0, COMPASS_BG_X, COMPASS_BG_Y, COMPASS_BG_W, COMPASS_BG_H, 20);
     compo_cardbox_icon_set(cardbox, 0, UI_BUF_ICON_COMPASS_BIN);
     compo_cardbox_icon_set_location(cardbox, 0, COMPASS_ICON_X, COMPASS_ICON_Y, COMPASS_ICON_W, COMPASS_ICON_H);
-    compo_cardbox_text_set(cardbox, 0, i18n[STR_COMPASS]);
+    // compo_cardbox_text_set(cardbox, 0, i18n[STR_COMPASS]);
     compo_cardbox_text_set_location(cardbox, 0, COMPASS_TXT_X, COMPASS_TXT_Y, COMPASS_TXT_W, COMPASS_TXT_H);
     compo_cardbox_rect_set_location(cardbox, 1, SPORT_BG_X, SPORT_BG_Y, SPORT_BG_W, SPORT_BG_H, 20);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_SPORT_BIN);

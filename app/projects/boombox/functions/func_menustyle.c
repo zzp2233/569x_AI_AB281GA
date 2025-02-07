@@ -10,31 +10,34 @@
 
 #define TBL_ROTARY_ITEM_CNT                     ((int)(sizeof(tbl_rotary_item) / sizeof(tbl_rotary_item[0])))
 
-enum {
+enum
+{
     COMPO_ID_ROTARY = 1,
 };
 
-typedef struct f_menustyle_t_ {
+typedef struct f_menustyle_t_
+{
     compo_rotary_t *rotary;
 } f_menustyle_t;
 
-static const compo_rotary_item_t tbl_rotary_item[] = {
+static const compo_rotary_item_t tbl_rotary_item[] =
+{
     [MENU_STYLE_HONEYCOMB]          = {UI_BUF_MENUSTYLE_HONEYCOMB_BIN,              STR_STYLE_HONEYCOMB},
     [MENU_STYLE_WATERFALL]          = {UI_BUF_MENUSTYLE_WATERFALL_BIN,              STR_STYLE_WATERFALL},
     [MENU_STYLE_CUM_HONEYGRID]      = {UI_BUF_MENUSTYLE_HONEYCOMB_BIN,              STR_STYLE_HONEYCOMB},
     [MENU_STYLE_LIST]               = {UI_BUF_MENUSTYLE_LIST_BIN,                   STR_STYLE_LIST_1},
-    [MENU_STYLE_FOOTBALL]           = {UI_BUF_MENUSTYLE_FOOTBALL_BIN,               STR_STYLE_FOOTBALL},
-    [MENU_STYLE_SUDOKU]             = {UI_BUF_MENUSTYLE_SUDOKU_BIN,                 STR_STYLE_SUDOKU_1},
-    [MENU_STYLE_SUDOKU_HRZ]         = {UI_BUF_MENUSTYLE_SUDOKU_BIN,                 STR_STYLE_SUDOKU_2},
+    [MENU_STYLE_FOOTBALL]           = {UI_BUF_MENUSTYLE_FOOTBALL_BIN,               STR_STYLE_LIST_1},
+    [MENU_STYLE_SUDOKU]             = {UI_BUF_MENUSTYLE_SUDOKU_BIN,                 STR_STYLE_LIST_1},
+    [MENU_STYLE_SUDOKU_HRZ]         = {UI_BUF_MENUSTYLE_SUDOKU_BIN,                 STR_STYLE_LIST_1},
     [MENU_STYLE_GRID]               = {UI_BUF_MENUSTYLE_GRID_BIN,                   STR_STYLE_GRID_1},
-    [MENU_STYLE_DISK]               = {UI_BUF_MENUSTYLE_DISK_BIN,                   STR_STYLE_DISK},
-    [MENU_STYLE_RING]               = {UI_BUF_MENUSTYLE_RING_BIN,                   STR_STYLE_RING},
-    [MENU_STYLE_KALE]               = {UI_BUF_MENUSTYLE_KALEIDOSCOPE_BIN,           STR_STYLE_KALEIDOSCOPE},
+    [MENU_STYLE_DISK]               = {UI_BUF_MENUSTYLE_DISK_BIN,                   STR_STYLE_LIST_1},
+    [MENU_STYLE_RING]               = {UI_BUF_MENUSTYLE_RING_BIN,                   STR_STYLE_LIST_1},
+    [MENU_STYLE_KALE]               = {UI_BUF_MENUSTYLE_KALEIDOSCOPE_BIN,           STR_STYLE_LIST_1},
     [MENU_STYLE_SKYRER]             = {UI_BUF_MENUSTYLE_SKYRER_BIN,                 STR_STYLE_SKYRER},
-    [MENU_STYLE_CUM_SUDOKU]         = {UI_BUF_MENUSTYLE_CUM_SUDOKU_BIN,             STR_STYLE_SUDOKU_3},
-    [MENU_STYLE_CUM_GRID]           = {UI_BUF_MENUSTYLE_CUM_GRID_BIN,               STR_STYLE_GRID_2},
-    [MENU_STYLE_CUM_HEXAGON]        = {UI_BUF_MENUSTYLE_HEXAGON_BIN,                STR_STYLE_HEXAGON},
-    [MENU_STYLE_CUM_FOURGRID]       = {UI_BUF_MENUSTYLE_LIST_FOURGRID_BIN,          STR_STYLE_LIST_2},
+    [MENU_STYLE_CUM_SUDOKU]         = {UI_BUF_MENUSTYLE_CUM_SUDOKU_BIN,             STR_STYLE_LIST_1},
+    [MENU_STYLE_CUM_GRID]           = {UI_BUF_MENUSTYLE_CUM_GRID_BIN,               STR_STYLE_LIST_1},
+    [MENU_STYLE_CUM_HEXAGON]        = {UI_BUF_MENUSTYLE_HEXAGON_BIN,                STR_STYLE_LIST_1},
+    [MENU_STYLE_CUM_FOURGRID]       = {UI_BUF_MENUSTYLE_LIST_FOURGRID_BIN,          STR_STYLE_LIST_1},
 };
 
 //创建转盘，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -61,7 +64,8 @@ static void func_menustyle_process(void)
     compo_rotary_t *rotary = f_menustyle->rotary;
     compo_rotary_move(rotary);
     func_process();
-    if (compo_rotary_get_sta(rotary) == COMPO_ROTARY_STA_EXIT) {
+    if (compo_rotary_get_sta(rotary) == COMPO_ROTARY_STA_EXIT)
+    {
         func_cb.sta = FUNC_MENU;
     }
 }
@@ -72,27 +76,30 @@ static void func_menustyle_message(size_msg_t msg)
     f_menustyle_t *f_menustyle = (f_menustyle_t *)func_cb.f_cb;
     compo_rotary_t *rotary = f_menustyle->rotary;
 
-    switch (msg) {
-    case KU_BACK:
-        func_cb.menu_style = compo_rotary_get_idx(rotary);
-        break;
+    switch (msg)
+    {
+        case KU_BACK:
+            func_cb.menu_style = compo_rotary_get_idx(rotary);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
-    if (compo_rotary_message(rotary, msg)) {
+    if (compo_rotary_message(rotary, msg))
+    {
         return;                                         //处理列表框信息
     }
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        //单击屏幕
-        func_cb.menu_style = compo_rotary_get_idx(rotary);
-        compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            //单击屏幕
+            func_cb.menu_style = compo_rotary_get_idx(rotary);
+            compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -106,7 +113,8 @@ static void func_menustyle_enter(void)
     f_menustyle_t *f_menustyle = (f_menustyle_t *)func_cb.f_cb;
     f_menustyle->rotary = compo_getobj_byid(COMPO_ID_ROTARY);
     compo_rotary_t *rotary = f_menustyle->rotary;
-    if (rotary->type != COMPO_TYPE_ROTARY) {
+    if (rotary->type != COMPO_TYPE_ROTARY)
+    {
         halt(HALT_GUI_COMPO_ROTARY_TYPE);
     }
     compo_rotary_set_rotation_byidx(rotary, func_cb.menu_style);
@@ -125,7 +133,8 @@ void func_menustyle(void)
 {
     printf("%s\n", __func__);
     func_menustyle_enter();
-    while (func_cb.sta == FUNC_MENUSTYLE) {
+    while (func_cb.sta == FUNC_MENUSTYLE)
+    {
         func_menustyle_process();
         func_menustyle_message(msg_dequeue());
     }

@@ -60,10 +60,10 @@ bool isHfpAndA2dpProfileBothConnected(void)
         result =bt_a2dp_profile_completely_connected();
     }
 #endif
-    if(bt_hfp_is_connected())
-    {
-        result = true;
-    }
+    // if(bt_hfp_is_connected())//todo
+    // {
+    //     result = true;
+    // }
     return result;
 }
 

@@ -33,6 +33,7 @@
 #define DISPLAY_LCDSEG                  0x200                                   //选用断码屏做为显示驱动
 #define DISPLAY_LEDSEG                  0x400                                   //选用数码管做为显示驱动
 #define DISPLAY_TFT                     0x800                                   //选用彩屏做为显示驱动
+#define DISPLAY_UTE                     0x1000
 
 #define GUI_NO                          DISPLAY_NO                              //无主题，无显示
 #define GUI_TFT_320_ST77916             (DISPLAY_TFT | 0x01)                    //彩屏 320 * 385
@@ -388,6 +389,7 @@
 *****************************************************************************/
 #define USE_NULL_APP                    0
 #define USE_AB_APP                      1   //bluefit app
+#define USE_UTE_APP                     2
 
 /*****************************************************************************
  * Module    : 充电IC选择

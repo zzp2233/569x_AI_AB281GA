@@ -7,11 +7,13 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_sport_config_t_ {
+typedef struct f_sport_config_t_
+{
 
 } f_sport_config_t;
 
-enum {
+enum
+{
     COMPO_ID_BTN_NUM0 = 1,
     COMPO_ID_BTN_NUM1,
     COMPO_ID_BTN_NUM2,
@@ -20,7 +22,8 @@ enum {
 };
 #define SPORT_DISP_BUT_ITEM_CNT    ((int)(sizeof(tbl_sport_disp_but_item) / sizeof(tbl_sport_disp_but_item[0])))
 
-typedef struct sport_disp_butt_item_t_ {
+typedef struct sport_disp_butt_item_t_
+{
     u32 res_addr;
     u16 btn_id;
     s16 x;
@@ -28,7 +31,8 @@ typedef struct sport_disp_butt_item_t_ {
 } sport_disp_butt_item_t;
 
 //图片item，创建时遍历一下
-static const sport_disp_butt_item_t tbl_sport_disp_but_item[] = {
+static const sport_disp_butt_item_t tbl_sport_disp_but_item[] =
+{
     {UI_BUF_SPORT_EXERCISING_KCAL_BIN,     COMPO_ID_BTN_NUM0,        60,  120},
     {UI_BUF_SPORT_EXERCISING_KM_BIN,       COMPO_ID_BTN_NUM1,        260, 120},
     {UI_BUF_SPORT_EXERCISING_STEP_BIN,     COMPO_ID_BTN_NUM2,        60,  260},
@@ -45,17 +49,18 @@ compo_form_t *func_sport_config_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SPORTS_CONFIG]);
+    // compo_form_set_title(frm, i18n[STR_SPORTS_CONFIG]);
 
     //新建按钮
-	compo_button_t *btn;
-    for (u8 idx = 0; idx < SPORT_DISP_BUT_ITEM_CNT; idx++) {
+    compo_button_t *btn;
+    for (u8 idx = 0; idx < SPORT_DISP_BUT_ITEM_CNT; idx++)
+    {
         btn = compo_button_create_by_image(frm, tbl_sport_disp_but_item[idx].res_addr);
         compo_setid(btn, tbl_sport_disp_but_item[idx].btn_id);
         compo_button_set_pos(btn, tbl_sport_disp_but_item[idx].x, tbl_sport_disp_but_item[idx].y);
     }
 
-	//创建文本
+    //创建文本
     compo_textbox_t *txt = compo_textbox_create(frm, 2);
     compo_textbox_set_pos(txt, 30, 160);
     compo_textbox_set_align_center(txt, false);
@@ -89,27 +94,28 @@ static void func_sport_config_process(void)
 static void func_sport_config_message(size_msg_t msg)
 {
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case MSG_QDEC_FORWARD:
-    case MSG_QDEC_BACKWARD:
-        break;
+        case MSG_QDEC_FORWARD:
+        case MSG_QDEC_BACKWARD:
+            break;
 
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -131,7 +137,8 @@ void func_sport_config(void)
 {
     printf("%s\n", __func__);
     func_sport_config_enter();
-    while (func_cb.sta == FUNC_SPORT_CONFIG) {
+    while (func_cb.sta == FUNC_SPORT_CONFIG)
+    {
         func_sport_config_process();
         func_sport_config_message(msg_dequeue());
     }

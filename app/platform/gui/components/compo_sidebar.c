@@ -263,7 +263,7 @@ compo_sidebar_t *compo_sidebar_create(compo_form_t *frm)
     compo_sidebar_txt_create(page, i18n[STR_CALCULATOR], 8, 98, 673, NULL);  //计算器
     compo_sidebar_txt_create(page, i18n[STR_CALENDAR], 8, 273, 673, NULL);  //日历
     compo_sidebar_txt_create(page, i18n[STR_GAME], 8, 113, 833, NULL);  //游戏
-    compo_sidebar_txt_create(page, i18n[STR_BREATHE], 8, 273, 833, NULL);  //呼吸
+    // compo_sidebar_txt_create(page, i18n[STR_BREATHE], 8, 273, 833, NULL);  //呼吸
     compo_sidebar_txt_create(page, i18n[STR_LATEST_APP], 8, 160, 903, NULL);  //最近应用
 
     sidebar->m_time_min = -1;

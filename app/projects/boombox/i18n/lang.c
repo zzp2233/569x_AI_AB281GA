@@ -7,25 +7,27 @@
 #else
 #define TRACE(...)
 #endif
-
+#if !UTE_MULTIPLE_LANGUAGE_SUPPORT
 extern const char * const i18n_zh[];
 extern const char * const i18n_en[];
 const char * const *i18n;
 
 void lang_select(int lang_id)
 {
-    switch (lang_id) {
-    case LANG_ZH:
-        i18n = i18n_zh;
-        break;
+    switch (lang_id)
+    {
+        case LANG_ZH:
+            i18n = i18n_zh;
+            break;
 
-    case LANG_EN:
-        i18n = i18n_en;
-        break;
+        case LANG_EN:
+            i18n = i18n_en;
+            break;
 
-    default:
-        TRACE("Language Select Error!\n");
-        halt(HALT_I18N_INIT);
-        break;
+        default:
+            TRACE("Language Select Error!\n");
+            halt(HALT_I18N_INIT);
+            break;
     }
 }
+#endif

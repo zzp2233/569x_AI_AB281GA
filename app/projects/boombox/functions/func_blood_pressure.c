@@ -14,24 +14,27 @@ static void sensor_blood_pressure_data_get(uint8_t *sbp, uint8_t *dbp);
 static bool sensor_blood_pressure_wear_sta_get(void);
 
 //血压检测状态
-enum {
-	BP_STA_IDLE,		    //空闲
-	BP_STA_WORKING,		    //检测中
-	BP_STA_UNWEAR,			//未佩戴
+enum
+{
+    BP_STA_IDLE,            //空闲
+    BP_STA_WORKING,         //检测中
+    BP_STA_UNWEAR,          //未佩戴
 };
 
 //组件ID
-enum {
-	COMPO_ID_BTN = 1,  
-    COMPO_ID_PIC_BG,        
-	COMPO_ID_PIC_CLICK,     
-	COMPO_ID_TXT_TIPS,	
+enum
+{
+    COMPO_ID_BTN = 1,
+    COMPO_ID_PIC_BG,
+    COMPO_ID_PIC_CLICK,
+    COMPO_ID_TXT_TIPS,
     COMPO_ID_TXT_RESULT,
-    COMPO_ID_PIC_UNWEAR,	
+    COMPO_ID_PIC_UNWEAR,
 };
 
-typedef struct f_bloodpressure_t_ {
-	uint8_t cur_sta;
+typedef struct f_bloodpressure_t_
+{
+    uint8_t cur_sta;
     uint8_t sbp;
     uint8_t dbp;
     bool touch;
@@ -53,8 +56,8 @@ compo_form_t *func_bloodpressure_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_BLOOD_PRESSURE]);
 
-	//图像按钮
-	compo = (component_t *)compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
+    //图像按钮
+    compo = (component_t *)compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_setid(compo, COMPO_ID_BTN);
     compo_button_set_pos((compo_button_t *)compo, GUI_SCREEN_CENTER_X, 336);
     compo = (component_t *)compo_picturebox_create(frm, UI_BUF_COMMON_BUTTON_CLICK_BIN);
@@ -78,7 +81,7 @@ compo_form_t *func_bloodpressure_form_create(void)
     compo = (component_t *)compo_picturebox_create(frm, UI_BUF_BLOOD_OXYGEN_EXPLAIN_BIN);
     compo_setid(compo, COMPO_ID_PIC_UNWEAR);
     compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);        
+    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
 
     return frm;
 }
@@ -89,14 +92,15 @@ static void func_bloodpressure_button_touch_handle(void)
     f_bloodpressure_t *f_bp = (f_bloodpressure_t *)func_cb.f_cb;
     int id = compo_get_button_id();
 
-    if (COMPO_ID_BTN != id) {
+    if (COMPO_ID_BTN != id)
+    {
         return ;
     }
-    
+
     //触摸效果图设置可见
     compo_picturebox_t *pic_click = compo_getobj_byid(COMPO_ID_PIC_CLICK);
-    compo_picturebox_set_visible(pic_click, true);    
-    f_bp->touch = true;   
+    compo_picturebox_set_visible(pic_click, true);
+    f_bp->touch = true;
 }
 
 //释放按钮效果处理
@@ -111,9 +115,10 @@ static void func_bloodpressure_button_click(void)
 {
     f_bloodpressure_t *f_bp = (f_bloodpressure_t *)func_cb.f_cb;
     component_t *compo;
-    
+
     //未佩戴下退出
-    if (BP_STA_UNWEAR == f_bp->cur_sta) {
+    if (BP_STA_UNWEAR == f_bp->cur_sta)
+    {
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
         compo = compo_getobj_byid(COMPO_ID_PIC_BG);
@@ -121,27 +126,33 @@ static void func_bloodpressure_button_click(void)
     }
 
     int id = compo_get_button_id();
-    if (COMPO_ID_BTN != id) {
+    if (COMPO_ID_BTN != id)
+    {
         return ;
     }
 
-    switch (f_bp->cur_sta) {
-        case BP_STA_IDLE: {
+    switch (f_bp->cur_sta)
+    {
+        case BP_STA_IDLE:
+        {
             sensor_blood_pressure_stop();
             sensor_blood_pressure_start();
             compo = compo_getobj_byid(COMPO_ID_TXT_TIPS);
-            compo_textbox_set((compo_textbox_t *)compo, i18n[STR_MEASURING]);
+            // compo_textbox_set((compo_textbox_t *)compo, i18n[STR_MEASURING]);
             f_bp->cur_sta = BP_STA_WORKING;
-        }break;
+        }
+        break;
 
-        case BP_STA_WORKING: 
-        case BP_STA_UNWEAR: {
+        case BP_STA_WORKING:
+        case BP_STA_UNWEAR:
+        {
             sensor_blood_pressure_stop();
             compo = compo_getobj_byid(COMPO_ID_TXT_TIPS);
             compo_textbox_set((compo_textbox_t *)compo, i18n[STR_START]);
             f_bp->cur_sta = BP_STA_IDLE;
-        }break;
-    }    
+        }
+        break;
+    }
 }
 
 //未佩戴和佩戴处理
@@ -150,7 +161,8 @@ static void func_bloodpressure_unwear_handle(bool wear)
     f_bloodpressure_t *f_bp = (f_bloodpressure_t *)func_cb.f_cb;
     component_t *compo;
 
-    if (wear) {
+    if (wear)
+    {
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
 
@@ -158,8 +170,10 @@ static void func_bloodpressure_unwear_handle(bool wear)
         compo_picturebox_set_visible((compo_picturebox_t *)compo, true);
 
         compo = compo_getobj_byid(COMPO_ID_TXT_TIPS);
-        compo_textbox_set((compo_textbox_t *)compo, i18n[STR_MEASURING]);
-    } else {
+        // compo_textbox_set((compo_textbox_t *)compo, i18n[STR_MEASURING]);
+    }
+    else
+    {
         compo = compo_getobj_byid(COMPO_ID_PIC_UNWEAR);
         compo_picturebox_set_visible((compo_picturebox_t *)compo, true);
 
@@ -183,21 +197,27 @@ static void func_bloodpressure_process(void)
     s32 dx, dy;
 
     //按钮释放效果
-    if (f_bp->touch && !ctp_get_dxy(&dx, &dy)) {
+    if (f_bp->touch && !ctp_get_dxy(&dx, &dy))
+    {
         f_bp->touch = false;
         func_bloodpressure_button_release_handle();
     }
 
-    if (BP_STA_WORKING == f_bp->cur_sta) {
-        if (!sensor_blood_pressure_wear_sta_get()) { //未佩戴检测 
+    if (BP_STA_WORKING == f_bp->cur_sta)
+    {
+        if (!sensor_blood_pressure_wear_sta_get())   //未佩戴检测
+        {
             func_bloodpressure_unwear_handle(false);
             f_bp->cur_sta = BP_STA_UNWEAR;
-        } else { 
+        }
+        else
+        {
             //出值结果刷新
             uint8_t sbp = 0, dbp = 0;
             sensor_blood_pressure_data_get(&sbp, &dbp);
             char buf[16] = {0};
-            if (f_bp->sbp != sbp || f_bp->dbp != dbp) {
+            if (f_bp->sbp != sbp || f_bp->dbp != dbp)
+            {
                 f_bp->sbp = sbp;
                 f_bp->dbp = dbp;
                 compo_textbox_t *compo_txt = compo_getobj_byid(COMPO_ID_TXT_RESULT);
@@ -206,8 +226,11 @@ static void func_bloodpressure_process(void)
                 compo_textbox_set(compo_txt, buf);
             }
         }
-    } else if(BP_STA_UNWEAR == f_bp->cur_sta) {    //佩戴检测
-        if (sensor_blood_pressure_wear_sta_get()) {
+    }
+    else if(BP_STA_UNWEAR == f_bp->cur_sta)        //佩戴检测
+    {
+        if (sensor_blood_pressure_wear_sta_get())
+        {
             func_bloodpressure_unwear_handle(true);
             f_bp->cur_sta = BP_STA_WORKING;
         }
@@ -219,18 +242,19 @@ static void func_bloodpressure_process(void)
 //血压功能消息处理
 static void func_bloodpressure_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_bloodpressure_button_touch_handle();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_bloodpressure_button_touch_handle();
+            break;
 
-	case MSG_CTP_CLICK:
-        func_bloodpressure_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_bloodpressure_button_click();
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -250,7 +274,8 @@ static void func_bloodpressure_exit(void)
     func_cb.last = FUNC_BLOOD_PRESSURE;
 
     f_bloodpressure_t *f_bp = (f_bloodpressure_t *)func_cb.f_cb;
-    if (BP_STA_IDLE != f_bp->cur_sta) {
+    if (BP_STA_IDLE != f_bp->cur_sta)
+    {
         sensor_blood_pressure_stop();
     }
     func_cb.last = FUNC_BLOOD_PRESSURE;
@@ -261,7 +286,8 @@ void func_bloodpressure(void)
 {
     printf("%s\n", __func__);
     func_bloodpressure_enter();
-    while (func_cb.sta == FUNC_BLOOD_PRESSURE) {
+    while (func_cb.sta == FUNC_BLOOD_PRESSURE)
+    {
         func_bloodpressure_process();
         func_bloodpressure_message(msg_dequeue());
     }

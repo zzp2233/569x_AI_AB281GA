@@ -7,7 +7,8 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_map_t_ {
+typedef struct f_map_t_
+{
 
 } f_map_t;
 
@@ -19,9 +20,9 @@ compo_form_t *func_map_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_MAP]);
+    // compo_form_set_title(frm, i18n[STR_MAP]);
 
-	//创建按键
+    //创建按键
     compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_MAP_BIN);
     compo_button_set_pos(btn, 160, 180);
 
@@ -38,22 +39,23 @@ static void func_map_process(void)
 //地图功能消息处理
 static void func_map_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -75,7 +77,8 @@ void func_map(void)
 {
     printf("%s\n", __func__);
     func_map_enter();
-    while (func_cb.sta == FUNC_MAP) {
+    while (func_cb.sta == FUNC_MAP)
+    {
         func_map_process();
         func_map_message(msg_dequeue());
     }

@@ -10,7 +10,8 @@
 #define TRACE(...)
 #endif
 
-enum{   //组件ID
+enum    //组件ID
+{
     COMPO_ID_BTN_DEL = 1,
     COMPO_ID_PIC_NONE_BG,
     COMPO_ID_CARD_UP_BK,
@@ -20,14 +21,16 @@ enum{   //组件ID
     COMPO_ID_CARD_DOWN_DISP,
 };
 
-enum {  //卡片位置
+enum    //卡片位置
+{
     CARD_POS_UP,
     CARD_POS_MID,
     CARD_POS_DOWN,
     CARD_POS_OVER,
 };
 
-enum {  //操作卡片
+enum    //操作卡片
+{
     CARD_DRAW_REFRESH,
     CARD_DRAW_MOVE_X,
     CARD_DRAW_MOVE_Y,
@@ -48,7 +51,8 @@ enum {  //操作卡片
 
 
 //功能结构体
-typedef struct f_smartstack_t_ {
+typedef struct f_smartstack_t_
+{
     s32 last_move_y;
     s32 last_move_x;
     s32 auto_move_y;
@@ -84,8 +88,10 @@ static void func_smartstack_sub_activity(compo_cardbox_t *cardbox, u8 icon_offse
 {
     u32 str_id[] = {STR_STEPS, STR_CALORIE, STR_DISTANCE};
 
-    for (u8 i = text_offset; i < sizeof(cardbox->text) / sizeof(cardbox->text[0]); i++) {
-        if ((i - text_offset) < (sizeof(str_id) / sizeof(str_id[0]))) {
+    for (u8 i = text_offset; i < sizeof(cardbox->text) / sizeof(cardbox->text[0]); i++)
+    {
+        if ((i - text_offset) < (sizeof(str_id) / sizeof(str_id[0])))
+        {
             char buf[16] = {0};
             snprintf(buf, sizeof(buf), "%s:99999", i18n[str_id[i - text_offset]]);
             compo_cardbox_text_set(cardbox, i, buf);
@@ -115,7 +121,8 @@ static void func_smartstack_sub_sleep(compo_cardbox_t *cardbox, u8 icon_offset, 
     u32 pic[] = {UI_BUF_SLEEP_LIGHT_SLEEP_BIN, UI_BUF_SLEEP_LIGHT_SLEEP_BIN};
 
     //icon
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < 2; i++)
+    {
         compo_cardbox_icon_set(cardbox, i + icon_offset, pic[i]);
         compo_cardbox_icon_set_location(cardbox, i + icon_offset, card_icon.x, card_icon.y + card_icon.hei * (i + icon_offset - 1), card_icon.wid, card_icon.hei);
         compo_cardbox_icon_set_visible(cardbox, i + icon_offset, true);
@@ -135,7 +142,7 @@ static void func_smartstack_sub_spo2(compo_cardbox_t *cardbox, u8 icon_offset, u
 {
     char buf[16] = {0};
 
-    snprintf(buf, sizeof(buf), "%s", i18n[STR_MEASURING]);
+    // snprintf(buf, sizeof(buf), "%s", i18n[STR_MEASURING]);
     compo_cardbox_text_set(cardbox, text_offset, buf);
     compo_cardbox_text_set_autosize(cardbox, text_offset, true);
     compo_cardbox_text_set_location(cardbox, text_offset, card_icon.x + card_icon.wid, card_icon.y + card_icon.hei * text_offset, 0, 0);
@@ -145,19 +152,22 @@ static void func_smartstack_sub_spo2(compo_cardbox_t *cardbox, u8 icon_offset, u
 //音乐详情页
 static void func_smartstack_sub_music(compo_cardbox_t *cardbox, u8 icon_offset, u8 text_offset)
 {
-    if (icon_offset < CARD_ICON_COUNT_MAX) {
+    if (icon_offset < CARD_ICON_COUNT_MAX)
+    {
         compo_cardbox_icon_set(cardbox, icon_offset, UI_BUF_MUSIC_PREV_BIN);
         compo_cardbox_icon_set_location(cardbox, icon_offset, card_icon.x, card_icon.y + card_icon.hei, card_icon.wid, card_icon.hei);
         compo_cardbox_icon_set_visible(cardbox, icon_offset, true);
     }
     icon_offset ++;
-    if (icon_offset < CARD_ICON_COUNT_MAX) {
+    if (icon_offset < CARD_ICON_COUNT_MAX)
+    {
         compo_cardbox_icon_set(cardbox, icon_offset, UI_BUF_MUSIC_PAUSE_BIN);
         compo_cardbox_icon_set_location(cardbox, icon_offset, 0, card_icon.y + card_icon.hei, card_icon.wid + 10, card_icon.hei + 10);
         compo_cardbox_icon_set_visible(cardbox, icon_offset, true);
     }
     icon_offset ++;
-    if (icon_offset < CARD_ICON_COUNT_MAX) {
+    if (icon_offset < CARD_ICON_COUNT_MAX)
+    {
         compo_cardbox_icon_set(cardbox, icon_offset, UI_BUF_MUSIC_NEXT_BIN);
         compo_cardbox_icon_set_location(cardbox, icon_offset, abs_s(card_icon.x), card_icon.y + card_icon.hei, card_icon.wid, card_icon.hei);
         compo_cardbox_icon_set_visible(cardbox, icon_offset, true);
@@ -175,11 +185,16 @@ static void func_smartstack_card_content_refresh(compo_cardbox_t *cardbox, u8 po
     compo_cardbox_set_visible(cardbox, true);
 
     //矩形框颜色
-    if (CARD_POS_UP == pos)  {
+    if (CARD_POS_UP == pos)
+    {
         compo_cardbox_rect_set_color(cardbox, 0, GRAY_LV(UP_GRAY_LV));
-    } else if (CARD_POS_MID == pos) {
+    }
+    else if (CARD_POS_MID == pos)
+    {
         compo_cardbox_rect_set_color(cardbox, 0, GRAY_LV(MID_GRAY_LV));
-    } else {
+    }
+    else
+    {
         compo_cardbox_rect_set_color(cardbox, 0, GRAY_LV(DOWN_GRAY_LV));
     }
 
@@ -197,14 +212,18 @@ static void func_smartstack_card_content_refresh(compo_cardbox_t *cardbox, u8 po
     //刷新内容
     u8 icon_offset = 2;
     u8 text_offset = 1;
-    for (i = icon_offset; i < CARD_ICON_COUNT_MAX; i++) {
+    for (i = icon_offset; i < CARD_ICON_COUNT_MAX; i++)
+    {
         compo_cardbox_icon_set_visible(cardbox, i, false);
     }
-    for (i = text_offset; i < CARD_TEXT_COUNT_MAX; i++) {
+    for (i = text_offset; i < CARD_TEXT_COUNT_MAX; i++)
+    {
         compo_cardbox_text_set_visible(cardbox, i, false);
     }
-    switch (func_sta) {
-        case FUNC_CLOCK:break;
+    switch (func_sta)
+    {
+        case FUNC_CLOCK:
+            break;
         case FUNC_ACTIVITY:
             func_smartstack_sub_activity(cardbox, icon_offset, text_offset);
             break;
@@ -229,7 +248,7 @@ static void func_smartstack_card_content_refresh(compo_cardbox_t *cardbox, u8 po
             break;
 
         case FUNC_GAME:
-        break;
+            break;
     }
 }
 
@@ -247,20 +266,24 @@ compo_form_t * func_smartstack_form_create(void)
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_SMARTSTACK_NULL_BIN);
     compo_setid(pic, COMPO_ID_PIC_NONE_BG);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-    if (total_cnt) {
+    if (total_cnt)
+    {
         compo_picturebox_set_visible(pic, false);
     }
 
     //创建卡片和设置背景框
-    for (u8 i = 0; i < sizeof(card_item) / sizeof(card_item[0]); i++) {
+    for (u8 i = 0; i < sizeof(card_item) / sizeof(card_item[0]); i++)
+    {
         cardbox = compo_cardbox_create(frm, CARD_RECT_COUNT_MAX, CARD_ICON_COUNT_MAX, CARD_TEXT_COUNT_MAX, card_bg[CARD_POS_MID].wid, card_bg[CARD_POS_MID].hei);
         compo_setid(cardbox, COMPO_ID_CARD_UP_BK + i);
         compo_cardbox_rect_set_location(cardbox, 0, 0, 0, card_bg[CARD_POS_MID].wid, card_bg[CARD_POS_MID].hei, 30);
         compo_cardbox_set_location(cardbox, card_bg[card_item[i]].x, card_bg[card_item[i]].y, card_bg[card_item[i]].wid, card_bg[card_item[i]].hei);
-        if ((func_start + i) > 0 && (func_start + i) < total_cnt) {
+        if ((func_start + i) > 0 && (func_start + i) < total_cnt)
+        {
             func_smartstack_card_content_refresh(cardbox, card_item[i], latest_task_get(func_start + i));
         }
-        if (!total_cnt) {
+        if (!total_cnt)
+        {
             compo_cardbox_set_visible(cardbox, false);
         }
     }
@@ -281,41 +304,56 @@ static rect_t func_smartstack_get_size_by_y(s16 y, u8 *color_level)
 
     rect.y = y;
     rect.x = GUI_SCREEN_CENTER_X;
-    if (y <= card_bg[CARD_POS_UP].y) {
+    if (y <= card_bg[CARD_POS_UP].y)
+    {
         rect = card_bg[CARD_POS_UP];
-    } else if (y <= card_bg[CARD_POS_MID].y) {
+    }
+    else if (y <= card_bg[CARD_POS_MID].y)
+    {
         rect.wid = card_bg[CARD_POS_UP].wid + ((y - card_bg[CARD_POS_UP].y) / 2);       //此处2为增量差值倍数，下同
-        if (rect.wid > card_bg[CARD_POS_MID].wid) {
+        if (rect.wid > card_bg[CARD_POS_MID].wid)
+        {
             rect.wid = card_bg[CARD_POS_MID].wid;
         }
         rect.hei = card_bg[CARD_POS_UP].hei + ((y - card_bg[CARD_POS_UP].y) / 2) + 4;   //此处4为增量差值倍数无法整除情况下的增益，下同
-        if (rect.hei > card_bg[CARD_POS_MID].hei) {
+        if (rect.hei > card_bg[CARD_POS_MID].hei)
+        {
             rect.hei = card_bg[CARD_POS_MID].hei;
         }
         *color_level = UP_GRAY_LV + (y - card_bg[CARD_POS_UP].y) / 5;
-        if (*color_level > MID_GRAY_LV) {
+        if (*color_level > MID_GRAY_LV)
+        {
             *color_level = MID_GRAY_LV;
         }
-    } else if (y <= card_bg[CARD_POS_DOWN].y) {
+    }
+    else if (y <= card_bg[CARD_POS_DOWN].y)
+    {
         rect.wid = card_bg[CARD_POS_MID].wid + ((y - card_bg[CARD_POS_MID].y) / 4);
-        if (rect.wid > card_bg[CARD_POS_DOWN].wid) {
+        if (rect.wid > card_bg[CARD_POS_DOWN].wid)
+        {
             rect.wid = card_bg[CARD_POS_DOWN].wid;
         }
         rect.hei = card_bg[CARD_POS_MID].hei + ((y - card_bg[CARD_POS_MID].y) / 2) + 2;
-        if (rect.hei > card_bg[CARD_POS_DOWN].hei) {
+        if (rect.hei > card_bg[CARD_POS_DOWN].hei)
+        {
             rect.hei = card_bg[CARD_POS_DOWN].hei;
         }
         *color_level = MID_GRAY_LV + (y - card_bg[CARD_POS_MID].y) / 9;
-        if (*color_level > DOWN_GRAY_LV) {
+        if (*color_level > DOWN_GRAY_LV)
+        {
             *color_level = DOWN_GRAY_LV;
         }
-    } else {
+    }
+    else
+    {
         rect.wid = card_bg[CARD_POS_DOWN].wid + ((y - card_bg[CARD_POS_DOWN].y) / 4);
-        if (rect.wid > GUI_SCREEN_WIDTH) {
+        if (rect.wid > GUI_SCREEN_WIDTH)
+        {
             rect.wid = GUI_SCREEN_WIDTH;
         }
         rect.hei = card_bg[CARD_POS_DOWN].hei + ((y - card_bg[CARD_POS_DOWN].y) / 2);
-        if (rect.hei > GUI_SCREEN_HEIGHT) {
+        if (rect.hei > GUI_SCREEN_HEIGHT)
+        {
             rect.hei = GUI_SCREEN_HEIGHT;
         }
         *color_level = DOWN_GRAY_LV + (y - card_bg[CARD_POS_DOWN].y) / 9;
@@ -331,7 +369,8 @@ static void func_smartstack_move_y_handle(compo_cardbox_t *cardbox, s32 dy)
     u8 color_level;
 
     rect.y += dy;
-    if (rect.y < card_bg[CARD_POS_UP].y) {
+    if (rect.y < card_bg[CARD_POS_UP].y)
+    {
         rect.y = card_bg[CARD_POS_UP].y;
     }
     rect = func_smartstack_get_size_by_y(rect.y, &color_level);
@@ -346,47 +385,61 @@ static void func_smartstack_move_x_handle(s32 move)
     compo_cardbox_t *cardbox = NULL;
     f_smartstack_t *f_smartstack = (f_smartstack_t *)func_cb.f_cb;
 
-    if (f_smartstack->last_move_x_card_id) {
+    if (f_smartstack->last_move_x_card_id)
+    {
         cardbox = compo_getobj_byid(f_smartstack->last_move_x_card_id);
-    } else {
+    }
+    else
+    {
         u8 max_cnt = sizeof(card_item) / sizeof(card_item[0]);
-        for (i = 0; i < max_cnt; i++) {
+        for (i = 0; i < max_cnt; i++)
+        {
             cardbox = compo_getobj_byid(COMPO_ID_CARD_UP_BK + max_cnt - i - 1);  //由于存在重叠，优先判断上面
-            if (!compo_cardbox_get_visible(cardbox)) {
+            if (!compo_cardbox_get_visible(cardbox))
+            {
                 continue ;
             }
             rect_t rect = compo_cardbox_get_absolute(cardbox);
             point_t point = ctp_get_sxy();
-            if (abs_s(point.y - rect.y) * 2 <= rect.hei) {
+            if (abs_s(point.y - rect.y) * 2 <= rect.hei)
+            {
                 f_smartstack->last_move_x_card_id = COMPO_ID_CARD_UP_BK + max_cnt - i - 1;
                 f_smartstack->del_index = f_smartstack->mid_index + (2 - i);
                 break;
-            } else {
+            }
+            else
+            {
                 cardbox = NULL;
             }
         }
     }
 
-    if (cardbox) {
+    if (cardbox)
+    {
         rect_t rect = compo_cardbox_get_location(cardbox);
         s16 last_x = rect.x;
         u8 color_level;
         rect = func_smartstack_get_size_by_y(rect.y, &color_level);
         last_x += move;
         rect.x = last_x;
-        if (rect.x > GUI_SCREEN_CENTER_X) {
+        if (rect.x > GUI_SCREEN_CENTER_X)
+        {
             rect.x = GUI_SCREEN_CENTER_X;
         }
-        if (rect.x < (card_bg[CARD_POS_UP].x - card_bg[CARD_POS_UP].wid / 2)) {
+        if (rect.x < (card_bg[CARD_POS_UP].x - card_bg[CARD_POS_UP].wid / 2))
+        {
             rect.x = card_bg[CARD_POS_UP].x - card_bg[CARD_POS_UP].wid / 2;
         }
         compo_cardbox_set_location(cardbox, rect.x, rect.y, rect.wid, rect.hei);
 
         //del btn
         compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_DEL);
-        if (rect.x >= GUI_SCREEN_CENTER_X) {
+        if (rect.x >= GUI_SCREEN_CENTER_X)
+        {
             compo_button_set_visible(btn, false);
-        } else {
+        }
+        else
+        {
             compo_button_set_visible(btn, true);
             compo_button_set_pos(btn, rect.x + rect.wid / 2, rect.y - rect.hei / 2);
         }
@@ -404,61 +457,88 @@ static void func_smartstack_card_refresh(u8 draw, s32 move)
     bool refresh_flag = false;
     u8 total_cnt = latest_task_count();
 
-    if (CARD_DRAW_MOVE_X == draw) {
+    if (CARD_DRAW_MOVE_X == draw)
+    {
         func_smartstack_move_x_handle(move);
         return ;
     }
 
-    if (CARD_DRAW_MOVE_Y == draw) {
-        if (f_smartstack->mid_index >= (total_cnt - 1) && move < 0) {
+    if (CARD_DRAW_MOVE_Y == draw)
+    {
+        if (f_smartstack->mid_index >= (total_cnt - 1) && move < 0)
+        {
             return ;
         }
-        if (f_smartstack->mid_index == 0 && move > 0) {
+        if (f_smartstack->mid_index == 0 && move > 0)
+        {
             return ;
         }
     }
 
-    for (int8_t i = start_index; i <= end_index; i++) {
+    for (int8_t i = start_index; i <= end_index; i++)
+    {
         compo_cardbox_t *cardbox = compo_getobj_byid(COMPO_ID_CARD_UP_BK + i - start_index);
-        if (NULL == cardbox) {
+        if (NULL == cardbox)
+        {
             continue ;
         }
-        if (i < 0) {
+        if (i < 0)
+        {
             compo_cardbox_set_visible(cardbox, false);
             continue ;
-        } else if (i >= total_cnt) {
+        }
+        else if (i >= total_cnt)
+        {
             compo_cardbox_set_visible(cardbox, false);
             break;
-        } else {
-            switch (draw) {
-                case CARD_DRAW_REFRESH: {
+        }
+        else
+        {
+            switch (draw)
+            {
+                case CARD_DRAW_REFRESH:
+                {
                     func_smartstack_card_content_refresh(cardbox, card_item[i - start_index], latest_task_get(i));
-                }break;
+                }
+                break;
 
-                case CARD_DRAW_MOVE_Y: {
-                    if (i == start_index) {
+                case CARD_DRAW_MOVE_Y:
+                {
+                    if (i == start_index)
+                    {
                         continue ;
-                    } else if (i < f_smartstack->mid_index) {
-                        if (mid_rect.y < card_bg[CARD_POS_MID].y) {
+                    }
+                    else if (i < f_smartstack->mid_index)
+                    {
+                        if (mid_rect.y < card_bg[CARD_POS_MID].y)
+                        {
                             continue ;
                         }
-                    } else {
+                    }
+                    else
+                    {
                         rect_t cur_rect = compo_cardbox_get_location(cardbox);
-                        if (cur_rect.y < card_bg[CARD_POS_DOWN].y) {
+                        if (cur_rect.y < card_bg[CARD_POS_DOWN].y)
+                        {
                             move *= 2;
                         }
-                        if (!refresh_flag && i == f_smartstack->mid_index) {
-                            if (mid_rect.y > card_bg[CARD_POS_UP].y && (mid_rect.y + move) <= card_bg[CARD_POS_UP].y) {
+                        if (!refresh_flag && i == f_smartstack->mid_index)
+                        {
+                            if (mid_rect.y > card_bg[CARD_POS_UP].y && (mid_rect.y + move) <= card_bg[CARD_POS_UP].y)
+                            {
                                 f_smartstack->mid_index ++;
                                 refresh_flag = true;
-                            } else if (mid_rect.y < card_bg[CARD_POS_DOWN].y && (mid_rect.y + move) >= card_bg[CARD_POS_DOWN].y) {
+                            }
+                            else if (mid_rect.y < card_bg[CARD_POS_DOWN].y && (mid_rect.y + move) >= card_bg[CARD_POS_DOWN].y)
+                            {
                                 f_smartstack->mid_index --;
                                 refresh_flag = true;
                             }
                         }
                     }
                     func_smartstack_move_y_handle(cardbox, move);
-                }break;
+                }
+                break;
 
                 default:
                     break;
@@ -466,7 +546,8 @@ static void func_smartstack_card_refresh(u8 draw, s32 move)
         }
     }
 
-    if (refresh_flag) {
+    if (refresh_flag)
+    {
         func_smartstack_card_refresh(CARD_DRAW_REFRESH, 0);
         return ;
     }
@@ -477,66 +558,89 @@ static void func_smartstack_move_process(void)
 {
     f_smartstack_t *f_smartstack = (f_smartstack_t *)func_cb.f_cb;
 
-    if (f_smartstack->flag_drag) {
+    if (f_smartstack->flag_drag)
+    {
         s32 dx, dy;
         bool move_y = false;
         f_smartstack->flag_drag = ctp_get_dxy(&dx, &dy);
         //拖拽判断
-        if (f_smartstack->flag_drag) {
+        if (f_smartstack->flag_drag)
+        {
             //左右上下滑动的判断
-            if (f_smartstack->last_move_y) {
+            if (f_smartstack->last_move_y)
+            {
                 move_y = true;
-            } else if (f_smartstack->last_move_x) {
+            }
+            else if (f_smartstack->last_move_x)
+            {
                 move_y = false;
-            } else {
-                if (abs_s(dx) < abs_s(dy)) {
+            }
+            else
+            {
+                if (abs_s(dx) < abs_s(dy))
+                {
                     move_y = true;
                 }
-                if (dx > 0) {
+                if (dx > 0)
+                {
                     move_y = true;
                 }
             }
-            if (f_smartstack->last_move_x_card_id) {
+            if (f_smartstack->last_move_x_card_id)
+            {
                 move_y = false;
             }
             //上下滑动处理
-            if (move_y && dy != f_smartstack->last_move_y) {
+            if (move_y && dy != f_smartstack->last_move_y)
+            {
                 func_smartstack_card_refresh(CARD_DRAW_MOVE_Y, dy - f_smartstack->last_move_y);
                 f_smartstack->auto_move_y = dy - f_smartstack->last_move_y;
                 f_smartstack->last_move_y = dy;
             }
             //左右滑动处理
-            if (!move_y && dx != f_smartstack->last_move_x) {
+            if (!move_y && dx != f_smartstack->last_move_x)
+            {
                 func_smartstack_card_refresh(CARD_DRAW_MOVE_X, dx - f_smartstack->last_move_x);
                 f_smartstack->last_move_x = dx;
             }
-        } else { //release
+        }
+        else     //release
+        {
             f_smartstack->flag_drag = false;
             f_smartstack->last_move_y = 0;
             f_smartstack->last_move_x = 0;
-            if (f_smartstack->last_move_x_card_id) {
+            if (f_smartstack->last_move_x_card_id)
+            {
                 compo_cardbox_t *cardbox = compo_getobj_byid(f_smartstack->last_move_x_card_id);
                 rect_t rect = compo_cardbox_get_location(cardbox);
-                if (rect.x == GUI_SCREEN_CENTER_X) {
+                if (rect.x == GUI_SCREEN_CENTER_X)
+                {
                     f_smartstack->last_move_x_card_id = 0;
                 }
             }
             f_smartstack->auto_move_y *= AUTO_ROLL_MOMENT;
         }
-    } else if (f_smartstack->auto_move_y) {
-        if (tick_check_expire(f_smartstack->last_tick, AUTO_TICK_EXPIRE)) {
+    }
+    else if (f_smartstack->auto_move_y)
+    {
+        if (tick_check_expire(f_smartstack->last_tick, AUTO_TICK_EXPIRE))
+        {
             s32 dy = 0;
             f_smartstack->last_tick = tick_get();
-            if (f_smartstack->auto_move_y > 0) {
+            if (f_smartstack->auto_move_y > 0)
+            {
                 dy = f_smartstack->auto_move_y > AUTO_MOVE_Y_EXPIRE ? AUTO_MOVE_Y_EXPIRE : f_smartstack->auto_move_y;
-            } else {
+            }
+            else
+            {
                 dy = f_smartstack->auto_move_y < -AUTO_MOVE_Y_EXPIRE / 2 ? -AUTO_MOVE_Y_EXPIRE / 2 : f_smartstack->auto_move_y;
             }
             f_smartstack->auto_move_y -= dy;
             func_smartstack_card_refresh(CARD_DRAW_MOVE_Y, dy);
             //滚动结束进行回正
 #if AUTO_RET_ONESELF_FLAG
-            if (!f_smartstack->auto_move_y) {
+            if (!f_smartstack->auto_move_y)
+            {
                 func_smartstack_card_refresh(CARD_DRAW_REFRESH, 0);
             }
 #endif
@@ -561,20 +665,28 @@ static void func_smartstack_click_handler(void)
     u8 total_cnt = latest_task_count();
 
     //del btn
-    if (f_smartstack->last_move_x_card_id) {
-        if(COMPO_ID_BTN_DEL == compo_get_button_id()) {
-            if (f_smartstack->del_index < total_cnt) {
+    if (f_smartstack->last_move_x_card_id)
+    {
+        if(COMPO_ID_BTN_DEL == compo_get_button_id())
+        {
+            if (f_smartstack->del_index < total_cnt)
+            {
                 compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_DEL);
                 compo_button_set_visible(btn, false);
                 latest_task_del(f_smartstack->del_index);
-                if (latest_task_count()) {
+                if (latest_task_count())
+                {
                     f_smartstack->mid_index --;
-                    if (f_smartstack->mid_index < 0) {
+                    if (f_smartstack->mid_index < 0)
+                    {
                         f_smartstack->mid_index = 0;
                     }
                     func_smartstack_card_refresh(CARD_DRAW_REFRESH, 0);
-                } else {
-                    for (i = 0; i < sizeof(card_item) / sizeof(card_item[0]); i++) {
+                }
+                else
+                {
+                    for (i = 0; i < sizeof(card_item) / sizeof(card_item[0]); i++)
+                    {
                         cardbox = compo_getobj_byid(COMPO_ID_CARD_UP_BK + i);
                         compo_cardbox_set_visible(cardbox, false);
                     }
@@ -589,14 +701,18 @@ static void func_smartstack_click_handler(void)
     }
 
     //card btn
-    for (i = 0; i < max_cnt; i++) {
+    for (i = 0; i < max_cnt; i++)
+    {
         cardbox = compo_getobj_byid(COMPO_ID_CARD_UP_BK + max_cnt - i - 1);
-        if (!compo_cardbox_get_visible(cardbox)) {
+        if (!compo_cardbox_get_visible(cardbox))
+        {
             continue ;
         }
-        if (compo_cardbox_btn_is(cardbox, ctp_get_sxy())) {
+        if (compo_cardbox_btn_is(cardbox, ctp_get_sxy()))
+        {
             int8_t index = f_smartstack->mid_index + (2 - i);
-            if (index < total_cnt) {
+            if (index < total_cnt)
+            {
                 func_switch_to(latest_task_get(index), FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
             }
             break;
@@ -609,7 +725,8 @@ static void func_smartstack_message(size_msg_t msg)
 {
     f_smartstack_t *f_smartstack = (f_smartstack_t *)func_cb.f_cb;
 
-    switch (msg) {
+    switch (msg)
+    {
         case MSG_CTP_TOUCH:
             f_smartstack->flag_drag = true;
             break;
@@ -627,10 +744,11 @@ static void func_smartstack_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-            if (f_smartstack->last_move_x_card_id) {
+            if (f_smartstack->last_move_x_card_id)
+            {
                 break;
             }
-            func_backing_to();	//右滑缓慢退出任务
+            func_backing_to();  //右滑缓慢退出任务
             break;
 
         case MSG_QDEC_FORWARD:
@@ -660,9 +778,12 @@ static void func_smartstack_enter(void)
 
     f_smartstack_t *f_smartstack = (f_smartstack_t *)func_cb.f_cb;
     u8 total_cnt = latest_task_count();
-    if (total_cnt == 1) {
+    if (total_cnt == 1)
+    {
         f_smartstack->mid_index = 0;
-    } else {
+    }
+    else
+    {
         f_smartstack->mid_index = total_cnt - MID_CARD_FUNC_INIT_INDEX;
     }
     func_smartstack_card_refresh(CARD_DRAW_REFRESH, 0);
@@ -679,7 +800,8 @@ void func_smartstack(void)
 {
     printf("%s\n", __func__);
     func_smartstack_enter();
-    while (func_cb.sta == FUNC_SMARTSTACK) {
+    while (func_cb.sta == FUNC_SMARTSTACK)
+    {
         func_smartstack_process();
         func_smartstack_message(msg_dequeue());
     }

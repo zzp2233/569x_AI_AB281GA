@@ -33,7 +33,7 @@
 #define GUI_SCREEN_WIDTH                240//320
 #define GUI_SCREEN_HEIGHT               296//385
 #define GUI_SCREEN_OFS_X                0
-#define GUI_SCREEN_OFS_Y                0
+#define GUI_SCREEN_OFS_Y                12
 #define GUI_USE_TFT
 #elif (GUI_SELECT == GUI_TFT_RGBW_320_ST77916)
 #define GUI_SCREEN_WIDTH                240
@@ -74,6 +74,12 @@
 #define GUI_SCREEN_HEIGHT               296
 #define GUI_SCREEN_OFS_X                0//24
 #define GUI_SCREEN_OFS_Y                0//40
+#elif (GUI_SELECT == DISPLAY_UTE)
+#define GUI_SCREEN_WIDTH                UTE_DRV_SCREEN_WIDTH
+#define GUI_SCREEN_HEIGHT               UTE_DRV_SCREEN_HEIGHT
+#define GUI_SCREEN_OFS_X                0
+#define GUI_SCREEN_OFS_Y                0
+#define GUI_USE_TFT
 #else
 #define GUI_SCREEN_WIDTH                0
 #define GUI_SCREEN_HEIGHT               0

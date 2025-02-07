@@ -27,8 +27,10 @@ void ble_app_set_message_switch(u8 sw)
 u8 get_contact_num(void)
 {
     u8 num = 0;
-    for (int i = 0; i < CONTACTS_MAX_NUM; i++) {
-        if (app_data.sector1.contact_info[i].num_len) {
+    for (int i = 0; i < CONTACTS_MAX_NUM; i++)
+    {
+        if (app_data.sector1.contact_info[i].num_len)
+        {
             num++;
         }
     }
@@ -50,13 +52,16 @@ u8 ble_upload_contacts_data(void)
     contact_info_t *contact_info;
     uint8_t upload_data_arr[100] = {0x00};
 
-    if (contact_num == 0) {
+    if (contact_num == 0)
+    {
         return CMD_RESULT_FAILE;
     }
 
-    for (int i = 0; i < CONTACTS_MAX_NUM; i++) {
+    for (int i = 0; i < CONTACTS_MAX_NUM; i++)
+    {
         contact_info = &app_data.sector1.contact_info[i];
-        if (contact_info->num_len) {
+        if (contact_info->num_len)
+        {
 //            upload_data_arr[0]     = ble_seq_num_get();
             upload_data_arr[1]     = 0xa4;
             upload_data_arr[2]     = 0x02;
@@ -89,8 +94,10 @@ u8 ble_upload_contacts_data(void)
 u8 get_contact_free_index(void)
 {
     u8 idx = 0xff;
-    for (int i = 0; i < CONTACTS_MAX_NUM; i++) {
-        if (app_data.sector1.contact_info[i].num_len == 0) {
+    for (int i = 0; i < CONTACTS_MAX_NUM; i++)
+    {
+        if (app_data.sector1.contact_info[i].num_len == 0)
+        {
             idx = i;
             break;
         }
@@ -162,12 +169,14 @@ u8 contact_info_delete(uint8_t index)
 {
     uint8_t idx = index;
 
-    if (idx > CONTACTS_MAX_NUM) {
+    if (idx > CONTACTS_MAX_NUM)
+    {
         return CMD_RESULT_IDX_INVALID;
     }
 
 //    TRACE("%s:idx[%d] num_len[%d]\n", __func__, idx, app_data.sector1.contact_info[idx].num_len);
-    if (app_data.sector1.contact_info[idx].num_len == 0) { //编号不存在
+    if (app_data.sector1.contact_info[idx].num_len == 0)   //编号不存在
+    {
         return CMD_RESULT_IDX_INVALID;
     }
 
@@ -194,28 +203,36 @@ u8 ble_weather_info_sync(uint8_t* protocol_data, uint16_t protocol_len)
     weather_condition_t *weather = &app_data.sector0.weather;
 
     date_type = *(protocol_data + offset++);
-    if (date_type == 2) {
+    if (date_type == 2)
+    {
         weather_day = &weather->third_day;
-    } else if (date_type == 1) {
+    }
+    else if (date_type == 1)
+    {
         weather_day = &weather->second_day;
-    } else {
+    }
+    else
+    {
         weather_day = &weather->first_day;
     }
 //    print_r(protocol_data, protocol_len);
 
-    while (offset < protocol_len) {
+    while (offset < protocol_len)
+    {
         cmd_type = *(protocol_data + offset++);
         len      = *(protocol_data + offset++);
 
-        if (cmd_type > 0x0b) {
+        if (cmd_type > 0x0b)
+        {
             return CMD_RESULT_CMD_INVALID;
         }
 
 //        printf("date_type[%d] cmd_type[%d] len[%d] offset[%d]\n", date_type, cmd_type, len, offset);
-        switch (cmd_type) {
+        switch (cmd_type)
+        {
             case 0x00://天气类型
-                weather_day->oneday_weather_type = protocol_data[offset];
-                printf("weather_day->oneday_weather_type[%d]\n", weather_day->oneday_weather_type);
+                // weather_day->oneday_weather_type = protocol_data[offset];
+                // printf("weather_day->oneday_weather_type[%d]\n", weather_day->oneday_weather_type);
                 break;
             case 0x01://当前温度
                 weather_day->current_temp = protocol_data[offset];
@@ -229,7 +246,8 @@ u8 ble_weather_info_sync(uint8_t* protocol_data, uint16_t protocol_len)
                 weather_day->max_temp = protocol_data[offset];
                 printf("weather_day->max_temp[%d]\n", weather_day->max_temp);
                 break;
-            case 0x04:{ //地点
+            case 0x04:  //地点
+            {
                 uint16_t length = len;
                 memset(weather->location, 0, sizeof(weather->location));
                 length = length > WEATHER_LOCATION_MAX? WEATHER_LOCATION_MAX : length;
@@ -286,10 +304,13 @@ void msg_tsdb_append_user(const char *name, const char *title, const char *messa
 
 static void msg_tsdb_read_do(u32 addr, u16 addr_len, char *buf, u16 len)
 {
-    if (addr_len > len) {
+    if (addr_len > len)
+    {
         os_spiflash_read(buf, addr, len);
         buf[len - 1] = '\0';
-    } else {
+    }
+    else
+    {
         os_spiflash_read(buf, addr, addr_len);
     }
 }
@@ -300,7 +321,8 @@ int msg_tsdb_read_init(u32 addr, struct msg_ctrl *msg)
     // printf("%x %x %x %x %x %x %x %x\n", addr, msg->num, msg->name.addr, msg->name.len, msg->title.addr, msg->title.len, msg->message.addr, msg->message.len);
     // print_r(msg, sizeof(struct msg_ctrl));
 
-    if (msg->num != 3) {
+    if (msg->num != 3)
+    {
         return -1;
     }
     return 0;

@@ -173,18 +173,17 @@ enum music_data
     MUSIC_DATA_CUR_TIME,
 };
 
-enum weather_type
-{
-    WEATHER_TYPE_CLOUDY,
-    WEATHER_TYPE_SUNSHINE,
-    WEATHER_TYPE_SNOW,
-    WEATHER_TYPE_RAIN,
-    WEATHER_TYPE_OVERCAST,
-    WEATHER_TYPE_SAND_AND_DUST,
-    WEATHER_TYPE_WINDY,
-    WEATHER_TYPE_HAZE,
-};
-typedef enum weather_type weather_type_t;
+// enum weather_type{
+//     WEATHER_TYPE_CLOUDY,
+//     WEATHER_TYPE_SUNSHINE,
+//     WEATHER_TYPE_SNOW,
+//     WEATHER_TYPE_RAIN,
+//     WEATHER_TYPE_OVERCAST,
+//     WEATHER_TYPE_SAND_AND_DUST,
+//     WEATHER_TYPE_WINDY,
+//     WEATHER_TYPE_HAZE,
+// };
+// typedef enum weather_type weather_type_t;
 
 enum sys_time_format
 {
@@ -240,7 +239,7 @@ struct weather_oneday_info
     int8_t           min_temp;                                           //最小温度
     int8_t           max_temp;                                           //最大温度
 
-    weather_type_t   oneday_weather_type;                                //天气类型
+    // weather_type_t   oneday_weather_type;                                //天气类型
 
 };
 typedef struct weather_oneday_info weather_oneday_info_t;
@@ -578,18 +577,17 @@ struct timestamp_data
 typedef struct timestamp_data timestamp_data_t;
 
 //睡眠
-struct sleep_record
-{
-    uint16_t                                 awake_min;     //清醒时长
-    uint16_t                                 light_min;     //浅睡时长
-    uint16_t                                 deep_min;      //深睡时长
-    uint8_t                                  wkup_time;     //醒来次数
+// struct sleep_record{
+//     uint16_t                                 awake_min;     //清醒时长
+//     uint16_t                                 light_min;     //浅睡时长
+//     uint16_t                                 deep_min;      //深睡时长
+//     uint8_t                                  wkup_time;     //醒来次数
 
-    uint8_t                                  index;
-    timestamp_data_t                         change[SLEEP_RECORD_MAX];
-    bool                                     remind_flag;                           //今日是否已提醒
-};
-typedef struct sleep_record sleep_record_t;
+//     uint8_t                                  index;
+//     timestamp_data_t                         change[SLEEP_RECORD_MAX];
+//     bool                                     remind_flag;                           //今日是否已提醒
+// };
+// typedef struct sleep_record sleep_record_t;
 
 ///心率
 struct heartrate
@@ -652,7 +650,7 @@ typedef struct flash_sector1
 
     social_switch_list_t                    social_sw;                                                  //社交开关扩展
     not_disturb                             not_disturb_info;                                           //勿扰模式
-    sleep_record_t                          sleep;                                                      //睡眠数据
+    // sleep_record_t                          sleep;                                                      //睡眠数据
     sleep_check_t                           sleep_check;                                                //自动睡眠检测设置
 } flash_sector1_t;
 

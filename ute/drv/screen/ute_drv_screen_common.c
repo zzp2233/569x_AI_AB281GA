@@ -9,6 +9,7 @@
 #include "ute_drv_screen_common.h"
 #include "ute_module_log.h"
 #include "gui.h"
+#include "ute_project_config.h"
 
 
 #if DRV_TFT_S280X284_I18_ST7789P3_XHL183BA2401_DSPI_SUPPORT

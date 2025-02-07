@@ -9,7 +9,8 @@
 
 #define DOUSING_LIST_CNT                       ((int)(sizeof(tbl_dousing_list) / sizeof(tbl_dousing_list[0])))
 
-enum {
+enum
+{
     COMPO_ID_BTN_NUM0 = 0,
     COMPO_ID_BTN_NUM1,
     COMPO_ID_BTN_NUM2,
@@ -21,19 +22,28 @@ enum {
     COMPO_ID_LISTBOX,
 };
 
-typedef struct f_dousing_list_t_ {
+typedef struct f_dousing_list_t_
+{
     compo_listbox_t *listbox;
 
 } f_dousing_list_t;
 
-static const compo_listbox_item_t tbl_dousing_list[] = {
-    {STR_FIVE_SEC},
-    {STR_TEN_SEC},
-    {STR_TWENTY_SEC},
-    {STR_THIRTY_SEC},
-    {STR_ONE_MIN},
-    {STR_FIVE_MIN},
-    {STR_NEVER},
+static const compo_listbox_item_t tbl_dousing_list[] =
+{
+    // {STR_FIVE_SEC},
+    // {STR_TEN_SEC},
+    // {STR_TWENTY_SEC},
+    // {STR_THIRTY_SEC},
+    // {STR_ONE_MIN},
+    // {STR_FIVE_MIN},
+    // {STR_NEVER},
+    {"5秒"},
+    {"10秒"},
+    {"20秒"},
+    {"30秒"},
+    {"1分钟"},
+    {"5分钟"},
+
 };
 
 //熄屏设置页面
@@ -69,39 +79,55 @@ void func_set_sub_dousing_list_icon_click(void)
     bool res = false;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= DOUSING_LIST_CNT) {
+    if (icon_idx < 0 || icon_idx >= DOUSING_LIST_CNT)
+    {
         return;
     }
 
     //切入应用
-    switch(icon_idx) {
-    case  COMPO_ID_BTN_NUM0...COMPO_ID_BTN_NUM6:
-        if (icon_idx==COMPO_ID_BTN_NUM0) {
-            sys_cb.sleep_time = 50;
-        } else if (icon_idx==COMPO_ID_BTN_NUM1) {
-            sys_cb.sleep_time = 100;
-        } else if (icon_idx==COMPO_ID_BTN_NUM2) {
-            sys_cb.sleep_time = 200;
-        } else if (icon_idx==COMPO_ID_BTN_NUM3) {
-            sys_cb.sleep_time = 300;
-        } else if (icon_idx==COMPO_ID_BTN_NUM4) {
-            sys_cb.sleep_time = 600;
-        } else if (icon_idx==COMPO_ID_BTN_NUM5) {
-            sys_cb.sleep_time = 3000;
-        } else if (icon_idx==COMPO_ID_BTN_NUM6) {
-            sys_cb.sleep_time = -1;
-        }
+    switch(icon_idx)
+    {
+        case  COMPO_ID_BTN_NUM0...COMPO_ID_BTN_NUM6:
+            if (icon_idx==COMPO_ID_BTN_NUM0)
+            {
+                sys_cb.sleep_time = 50;
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM1)
+            {
+                sys_cb.sleep_time = 100;
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM2)
+            {
+                sys_cb.sleep_time = 200;
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM3)
+            {
+                sys_cb.sleep_time = 300;
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM4)
+            {
+                sys_cb.sleep_time = 600;
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM5)
+            {
+                sys_cb.sleep_time = 3000;
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM6)
+            {
+                sys_cb.sleep_time = -1;
+            }
 
-        frm = func_create_form(FUNC_SETTING);
-        res = func_switching(FUNC_SWITCH_DIRECT,NULL);
-        compo_form_destroy(frm);             //切换完成或取消，销毁窗体
-        if (res)  {
-            func_cb.sta = FUNC_SETTING;
-        }
-        break;
+            frm = func_create_form(FUNC_SETTING);
+            res = func_switching(FUNC_SWITCH_DIRECT,NULL);
+            compo_form_destroy(frm);             //切换完成或取消，销毁窗体
+            if (res)
+            {
+                func_cb.sta = FUNC_SETTING;
+            }
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -119,27 +145,30 @@ static void func_set_sub_dousing_list_message(size_msg_t msg)
     f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_set_sub_dousing_list_icon_click();                //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_set_sub_dousing_list_icon_click();                //单击图标
+            break;
 
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
 
-        }
-        break;
+            }
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -152,7 +181,8 @@ static void func_set_sub_dousing_enter(void)
     f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
     f_set->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_set->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
@@ -176,7 +206,8 @@ void func_set_sub_dousing(void)
 {
     printf("%s\n", __func__);
     func_set_sub_dousing_enter();
-    while (func_cb.sta == FUNC_SET_SUB_DOUSING) {
+    while (func_cb.sta == FUNC_SET_SUB_DOUSING)
+    {
         func_set_sub_dousing_list_process();
         func_set_sub_dousing_list_message(msg_dequeue());
     }

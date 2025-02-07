@@ -59,7 +59,7 @@ compo_form_t *func_volume_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_VOLUME]);
+    // compo_form_set_title(frm, i18n[STR_VOLUME]);
 
     //新建按钮
     compo_button_t *btn;

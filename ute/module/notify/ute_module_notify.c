@@ -12,10 +12,10 @@
 #include "ute_module_filesystem.h"
 #include "ute_module_call.h"
 #include "ute_application_common.h"
-#include "ute_drv_motor.h"
+// #include "ute_drv_motor.h"
 #include "ute_module_message.h"
 #include "ute_module_charencode.h"
-#include "ute_module_notdisturb.h"
+// #include "ute_module_notdisturb.h"
 #include "func_cover.h"
 #include "ute_module_platform.h"
 
@@ -298,7 +298,7 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
 #endif
         {
             uteModuleCallSetInComingNumberName(NULL,0,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-            uteTaskGuiStartScreenWithoutHistory(FUNC_BLE_CALL, true);
+            // uteTaskGuiStartScreenWithoutHistory(FUNC_BLE_CALL, true);//todo
 
             //需要弹出来电界面
 

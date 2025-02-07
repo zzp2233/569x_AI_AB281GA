@@ -9,21 +9,24 @@
 
 #define LANGUAGE_LIST_CNT                       ((int)(sizeof(tbl_language_list) / sizeof(tbl_language_list[0])))
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
 };
 
-typedef struct f_language_list_t_ {
+typedef struct f_language_list_t_
+{
     compo_listbox_t *listbox;
 
 } f_language_list_t;
 
-static const compo_listbox_item_t tbl_language_list[] = {
+static const compo_listbox_item_t tbl_language_list[] =
+{
     {STR_LANGUAGE_CN},
     {STR_LANGUAGE_ENG},
     {STR_LANGUAGE_FN},
     {STR_LANGUAGE_RU},
-    {STR_LANGUAGE_AT},
+    // {STR_LANGUAGE_AT},
     {STR_LANGUAGE_JP},
 
 };
@@ -60,20 +63,23 @@ void func_set_sub_language_list_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx >= 0) {                                                                                //ls
+    if (icon_idx >= 0)                                                                                  //ls
+    {
         bsp_sys_reverse_ctlbit(tbl_language_list[icon_idx].vidx);
         compo_listbox_update(listbox);
         return;
     }
 
-    if (icon_idx < 0 || icon_idx >= LANGUAGE_LIST_CNT) {
+    if (icon_idx < 0 || icon_idx >= LANGUAGE_LIST_CNT)
+    {
         return;
     }
     //根据图标索引获取应用ID
     func_sta = tbl_language_list[icon_idx].func_sta;
     //切入应用
 
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
         compo_form_t *frm = func_create_form(func_sta);
         func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
         compo_form_destroy(frm);
@@ -95,28 +101,31 @@ static void func_set_sub_language_list_message(size_msg_t msg)
     f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_set_sub_language_list_icon_click();                //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_set_sub_language_list_icon_click();                //单击图标
+            break;
 
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
 
-        }
-        break;
+            }
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -129,11 +138,12 @@ static void func_set_sub_language_enter(void)
     f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
     f_set->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_set->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-   // compo_listbox_move_init(listbox);
+    // compo_listbox_move_init(listbox);
 
     compo_listbox_move_init_modify(listbox, 127, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
     func_cb.enter_tick = tick_get();
@@ -154,7 +164,8 @@ void func_set_sub_language(void)
 {
     printf("%s\n", __func__);
     func_set_sub_language_enter();
-    while (func_cb.sta == FUNC_SET_SUB_LANGUAGE) {
+    while (func_cb.sta == FUNC_SET_SUB_LANGUAGE)
+    {
         func_set_sub_language_list_process();
         func_set_sub_language_list_message(msg_dequeue());
     }

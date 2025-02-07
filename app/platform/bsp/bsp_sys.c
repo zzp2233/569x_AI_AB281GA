@@ -812,7 +812,9 @@ void bsp_sys_init(void)
 #endif
     uteTaskApplicationInit();
     gui_init();
+#if !UTE_MULTIPLE_LANGUAGE_SUPPORT
     lang_select(LANG_ZH);
+#endif
 
     mic_bias_trim_w4_done();
     dac_set_power_on_off(0);            //需要放到MIC TRIM后才能关DAC

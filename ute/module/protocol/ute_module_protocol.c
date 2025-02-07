@@ -14,23 +14,23 @@
 #include "ute_application_common.h"
 #include "ute_module_profile_ble.h"
 #include "ute_module_filesystem.h"
-#include "ute_module_gui_common.h"
+// #include "ute_module_gui_common.h"
 #include "ute_module_call.h"
-#include "ute_drv_motor.h"
+// #include "ute_drv_motor.h"
 #include "ute_module_notify.h"
 #include "ute_module_weather.h"
-#include "ute_module_heart.h"
+// #include "ute_module_heart.h"
 #include "func_cover.h"
-#include "ute_module_bloodoxygen.h"
-#include "ute_drv_battery_common.h"
-#include "ute_module_sport.h"
-#include "ute_module_sleep.h"
-#include "ute_module_notdisturb.h"
-#include "ute_drv_gsensor_common.h"
-#include "ute_module_findphone.h"
-#include "ute_module_watchonline.h"
-#include "ute_module_factorytest.h"
-#include "ute_module_music.h"
+// #include "ute_module_bloodoxygen.h"
+// #include "ute_drv_battery_common.h"
+// #include "ute_module_sport.h"
+// #include "ute_module_sleep.h"
+// #include "ute_module_notdisturb.h"
+// #include "ute_drv_gsensor_common.h"
+// #include "ute_module_findphone.h"
+// #include "ute_module_watchonline.h"
+// #include "ute_module_factorytest.h"
+// #include "ute_module_music.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -114,7 +114,7 @@ void uteModuleProtocolReadBatteryLvl(uint8_t*receive,uint8_t length)
 {
     uint8_t response[2]= {0};
     response[0] = receive[0];
-    response[1] = uteDrvBatteryCommonGetLvl();
+    response[1] = 80;//uteDrvBatteryCommonGetLvl();//todo
     uteModuleProfileBleSendToPhone(&response[0],2);
 }
 /**
@@ -254,6 +254,7 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_LOCAL_SET_LIFT_WRIST_SUPPORT
         isHandScreenOn = uteModuleSportGetIsOpenHandScreenOn();
 #endif
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandScreenOn,stepsTargetCnt);
         ute_module_heart_warning_t heartWarn;
         heartWarn.setMinHeart = receive[18];
@@ -276,6 +277,7 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
             }
         }
         uteModuleHeartSaveHeartWaringInfo(&heartWarn);
+#endif
         uteModuleProfileBleSendToPhone(&response[0],1);
     }
     else
@@ -299,7 +301,7 @@ void uteModuleProtocolFactoryReset(uint8_t *receive, uint8_t length)
 #endif
     uteModuleFilesystemDelAllData();
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
-    uteDrvBatteryCommonSaveLastLvlToSN1();
+    // uteDrvBatteryCommonSaveLastLvlToSN1();//todo
 #endif
     bsp_rtc_recode_set(1);
     if (length == 1)
@@ -373,7 +375,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                     uteModuleLocalRingtonePlayRing(RINGTON_TYPE_FIND);
                 }
 #else
-                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
+                // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);//todo
 #endif
 #if UTE_MODULE_FIND_WRISTAWAKE_SCREEN_SUPPORT
                 extern ute_module_gui_common_t uteModuleGuiCommonData;
@@ -402,7 +404,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
                 }
 #else
-                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
+                // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);//todo
 #endif
             }
         }
@@ -592,7 +594,7 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolReadReadlTimeStepInfo(uint8_t*receive,uint8_t length)
 {
-    uteModuleSportSendRealTimeStepInfo();
+    // uteModuleSportSendRealTimeStepInfo();
 }
 /**
 *@brief        发送计步历史数据
@@ -615,7 +617,7 @@ void uteModuleProtocolReadStepHistoryData(uint8_t*receive,uint8_t length)
         time.min = receive[7];
         time.sec = receive[8];
     }
-    uteModuleSportStartSendStepHistoryData(time);
+    // uteModuleSportStartSendStepHistoryData(time);
 }
 
 /**
@@ -751,16 +753,16 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
 #if DRV_HID_PHOTO
         uteModuleNotifyAncsClearQueueRestart();
 #endif
-        uteModuleSportSetTakePictureEnable(true);
-        uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
+        // uteModuleSportSetTakePictureEnable(true);  // todo
+        // uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
     }
     else
     {
-        if(uteModuleSportIsTakePicture())
-        {
-            uteModuleSportSetTakePictureEnable(false);
-            uteModuleGuiCommonGoBackLastScreen();
-        }
+        // if(uteModuleSportIsTakePicture())
+        // {
+        //     uteModuleSportSetTakePictureEnable(false);
+        //     uteModuleGuiCommonGoBackLastScreen();
+        // }
     }
 }
 /**
@@ -1083,11 +1085,11 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
                 uint8_t response[4];
                 if (receive[3] == 0x01)
                 {
-                    uteModuleFindPhoneSetStatus(FIND_PHONE_RING);
+                    // uteModuleFindPhoneSetStatus(FIND_PHONE_RING);//todo
                 }
                 else if (receive[3] == 0x00)
                 {
-                    uteModuleFindPhoneSetStatus(FIND_PHONE_STOP);
+                    // uteModuleFindPhoneSetStatus(FIND_PHONE_STOP);//todo
                 }
                 response[0] = receive[0];
                 response[1] = receive[1];
@@ -1106,11 +1108,11 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
     {
         if(receive[2] == 0x01)
         {
-            uteModuleMusicSetPlayerPaused(false,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
+            // uteModuleMusicSetPlayerPaused(false,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);todo
         }
         else if(receive[2] == 0x02)
         {
-            uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
+            // uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);todo
         }
         receive[2] = 0x00;
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],3);
@@ -1119,7 +1121,7 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
     {
         if(receive[2] <= 100)
         {
-            uteModuleMusicSetPlayerVolume(receive[2]);
+            // uteModuleMusicSetPlayerVolume(receive[2]);//todo
         }
     }
 
@@ -1343,6 +1345,7 @@ void uteModuleProtocolSocialAppSelectParam(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
 {
+#if UTE_MODULE_HEART_SUPPORT
     ute_module_sport_sedentary_param_t param;
     memset(&param,0,sizeof(ute_module_sport_sedentary_param_t));
     if(receive[1]==0x01)
@@ -1369,6 +1372,7 @@ void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
     }
     uteModuleProfileBleSendToPhone(&receive[0],2);
     uteModuleSportSaveSedentaryParam(&param);
+#endif
 }
 /**
 *@brief       设置勿扰参数
@@ -1380,6 +1384,7 @@ void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
 {
+#if 0 //todo
     ute_module_not_disturb_data_t param;
     memset(&param,0,sizeof(ute_module_not_disturb_data_t));
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT
@@ -1423,6 +1428,7 @@ void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
 #endif
     uteModuleProfileBleSendToPhone(&receive[0],length);
     uteModuleNotDisturbSaveParam(param);
+#endif
 }
 /**
 *@brief       应用端通知手环前后台状态
@@ -1446,6 +1452,7 @@ void uteModuleProtocolFormAppFrontOrBack(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 {
+#if UTE_MODULE_HEART_SUPPORT
     uint8_t response[3];
     response[0] = receive[0];
     response[1] = receive[1];
@@ -1469,6 +1476,7 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
         }
         uteModuleProfileBleSendToPhone(&response[0],3);
     }
+#endif
 }
 /**
 *@brief       gsenoser数据挤压检查指令
@@ -1480,6 +1488,7 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
 {
+#if 0
     uint8_t response[10];
     int16_t xx,yy,zz,accvalue;
     uteDrvGsensorCommonGetAccXyz(&xx,&yy,&zz);
@@ -1503,6 +1512,7 @@ void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
     response[8] = (accvalue>>8)&0xff;
     response[9] = accvalue&0xff;
     uteModuleProfileBleSendToPhone(&response[0],10);
+#endif
 }
 
 /**
@@ -1540,6 +1550,7 @@ void uteModuleProtocolSetPowerOff(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
 {
+#if UTE_MODULE_HEART_SUPPORT
     if(receive[1]==0x01)
     {
         uteModuleHeartSetAutoTesting(true);
@@ -1581,6 +1592,8 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
     {
         uteModuleHeartSendHistoryRestingHeartData();
     }
+#endif
+
 #endif
 }
 /**
@@ -1751,6 +1764,7 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSleepReadHistoryData(uint8_t*receive,uint8_t length)
 {
+#if UTE_MODULE_HEART_SUPPORT
     if(receive[1]==0x01)
     {
         ute_module_systemtime_time_t time;
@@ -1762,6 +1776,7 @@ void uteModuleProtocolSleepReadHistoryData(uint8_t*receive,uint8_t length)
     {
         uteModuleSleepStartSendSleepSampleData();
     }
+#endif
 #endif
 }
 
@@ -1834,6 +1849,7 @@ void uteModuleProtocolTemperatureCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
 {
+#if 0
     uint8_t response[20];
     memset(response,0x00,20);
     bool isAppStart = uteModuleSportMoreSportIsAppStart();
@@ -1927,11 +1943,13 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
         }
         uteModuleSportStartSendMoreSportHistoryData(time);
     }
+
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
     else if(receive[1]==0x48) /*! 自定义运动列表显示功能，xjc 2022-03-29*/
     {
         uteModuleSportHundredSportCmd(receive,length);
     }
+#endif
 #endif
 }
 
@@ -1945,6 +1963,7 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolMusicCtrl(uint8_t*receive,uint8_t length)
 {
+#if 0//todo
     ute_module_music_data_t musicData;
     uteModuleMusicGetPlayerData(&musicData);
     if(receive[1]==0x01)
@@ -2032,6 +2051,7 @@ void uteModuleProtocolMusicCtrl(uint8_t*receive,uint8_t length)
         uteModuleMusicSetPlayerData(musicData);
         musicData.androidCrc = 0;
     }
+#endif
 }
 
 /**
@@ -2301,7 +2321,7 @@ void uteModuleProtocolSyncAddressBook(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolFactoryTest(uint8_t*receive,uint8_t length)
 {
-    uteModuleFactoryTestProtocol(receive,length);
+    // uteModuleFactoryTestProtocol(receive,length);//todo
 }
 
 /**

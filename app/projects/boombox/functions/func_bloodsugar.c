@@ -8,30 +8,33 @@
 #endif
 
 //血糖检测状态
-enum {
-	BO_STA_IDLE,		    //空闲
-	BO_STA_WORKING,		    //检测中
-	BO_STA_DONE,			//完成
-	BO_STA_FAIL,			//失败
+enum
+{
+    BO_STA_IDLE,            //空闲
+    BO_STA_WORKING,         //检测中
+    BO_STA_DONE,            //完成
+    BO_STA_FAIL,            //失败
 };
 
 //组件ID
-enum {
+enum
+{
     //按键
-	COMPO_ID_BTN_IDLE = 1,  //无触摸
+    COMPO_ID_BTN_IDLE = 1,  //无触摸
 
-	//图像
-	COMPO_ID_PIC_CLICK,     //触摸
+    //图像
+    COMPO_ID_PIC_CLICK,     //触摸
 
-	//文本框
-	COMPO_ID_TXT_IDLE,		//"测量"
-	COMPO_ID_TXT_WORKING,   //"测量中"
-	COMPO_ID_TXT_DONE,      //"完成"
-	COMPO_ID_TXT_FAIL,      //"重试"
+    //文本框
+    COMPO_ID_TXT_IDLE,      //"测量"
+    COMPO_ID_TXT_WORKING,   //"测量中"
+    COMPO_ID_TXT_DONE,      //"完成"
+    COMPO_ID_TXT_FAIL,      //"重试"
 };
 
-typedef struct f_bloodsugar_t_ {
-	u8 det_sta;
+typedef struct f_bloodsugar_t_
+{
+    u8 det_sta;
 } f_bloodsugar_t;
 
 
@@ -44,10 +47,10 @@ compo_form_t *func_bloodsugar_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_BLOOD_SUGAR]);
+    // compo_form_set_title(frm, i18n[STR_BLOOD_SUGAR]);
 
-	//新建按钮
-	compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
+    //新建按钮
+    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_setid(btn, COMPO_ID_BTN_IDLE);
     compo_button_set_pos(btn, 160, 336);
 
@@ -80,15 +83,17 @@ static void func_bloodsugar_button_touch_handle(void)
     compo_picturebox_t *pic_click = compo_getobj_byid(COMPO_ID_PIC_CLICK);
 
     printf("%s-->id:%x\n",__func__,id);
-    switch (id) {
-    case COMPO_ID_BTN_IDLE:
-        if (f_bo->det_sta == BO_STA_IDLE) {
-            compo_picturebox_set_visible(pic_click, true);       //触摸效果图设置可见
-        }
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_IDLE:
+            if (f_bo->det_sta == BO_STA_IDLE)
+            {
+                compo_picturebox_set_visible(pic_click, true);       //触摸效果图设置可见
+            }
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
 }
@@ -109,19 +114,21 @@ static void func_bloodsugar_button_click(void)
     compo_textbox_t *txt_working  = compo_getobj_byid(COMPO_ID_TXT_WORKING);
 
     printf("%s-->id:%x\n",__func__,id);
-    switch (id) {
-    case COMPO_ID_BTN_IDLE:
-        if (f_bo->det_sta == BO_STA_IDLE) {
-            f_bo->det_sta = BO_STA_WORKING;
+    switch (id)
+    {
+        case COMPO_ID_BTN_IDLE:
+            if (f_bo->det_sta == BO_STA_IDLE)
+            {
+                f_bo->det_sta = BO_STA_WORKING;
 
-            compo_textbox_set_visible(txt_idle, false);
-            compo_textbox_set_visible(txt_working, true);
-            func_bloodsugar_button_release_handle();      //触摸结束后，触摸效果图处理
-        }
-        break;
+                compo_textbox_set_visible(txt_idle, false);
+                compo_textbox_set_visible(txt_working, true);
+                func_bloodsugar_button_release_handle();      //触摸结束后，触摸效果图处理
+            }
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
@@ -135,30 +142,31 @@ static void func_bloodsugar_process(void)
 //血糖功能消息处理
 static void func_bloodsugar_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_TOUCH:
-        func_bloodsugar_button_touch_handle();
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+            func_bloodsugar_button_touch_handle();
+            break;
 
-	case MSG_CTP_CLICK:
-        func_bloodsugar_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_bloodsugar_button_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-    case MSG_CTP_SHORT_DOWN:
-    case MSG_CTP_SHORT_LEFT:
-    case MSG_CTP_LONG:
-        func_bloodsugar_button_release_handle();
-        break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_bloodsugar_button_release_handle();
+            break;
 
-    case MSG_CTP_SHORT_RIGHT:
-        func_bloodsugar_button_release_handle();
-        func_message(msg);
-        break;
+        case MSG_CTP_SHORT_RIGHT:
+            func_bloodsugar_button_release_handle();
+            func_message(msg);
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -181,7 +189,8 @@ void func_bloodsugar(void)
 {
     printf("%s\n", __func__);
     func_bloodsugar_enter();
-    while (func_cb.sta == FUNC_BLOODSUGAR) {
+    while (func_cb.sta == FUNC_BLOODSUGAR)
+    {
         func_bloodsugar_process();
         func_bloodsugar_message(msg_dequeue());
     }

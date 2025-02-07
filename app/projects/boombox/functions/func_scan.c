@@ -22,7 +22,7 @@ compo_form_t *func_scan_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SCAN]);
+    // compo_form_set_title(frm, i18n[STR_SCAN]);
 
     //创建按键
     //compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_ICON_SCAN_BIN);

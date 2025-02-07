@@ -36,9 +36,9 @@
 
 #define CHIP_PACKAGE_SELECT             CHIP_5690F//CHIP_5690G                  //芯片封装选择 5691G/5691C_F
 
-#define GUI_SELECT                      GUI_TFT_240_JD9853W3//GUI_TFT_JD9853//GUI_TFT_320_ST77916           //GUI Display Select
+#define GUI_SELECT                      GUI_TFT_320_ST77916//GUI_TFT_240_JD9853W3//GUI_TFT_JD9853//GUI_TFT_320_ST77916           //GUI Display Select
 #define CTP_SELECT                      CTP_CHSC6X//CTP_CST8X                   //CTP Select
-#define GUI_MODE_SELECT                 MODE_4WIRE_8BIT//MODE_3WIRE_9BIT_2LINE//MODE_4WIRE_8BIT             //屏幕接口选择
+// #define GUI_MODE_SELECT                 MODE_3WIRE_9BIT_2LINE//MODE_4WIRE_8BIT             //屏幕接口选择
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
 #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT             //屏幕接口选择
 #define TFT_SPI_DRIVER                  SPI_DRIVER_JD9853               //驱动选择
@@ -206,7 +206,7 @@
 
 //APP 功能相关(APP同时只能打开1个)
 #define LE_AB_LINK_APP_EN               0           //是否打开AB-LINK APP控制功能
-#define USE_APP_TYPE                    USE_AB_APP//USE_NULL_APP  //选择手表应用app类型
+#define USE_APP_TYPE                    USE_UTE_APP//USE_NULL_APP  //选择手表应用app类型
 
 //ANCS
 #define LE_ANCS_CLIENT_EN               0   //是否打开ANCS Clients

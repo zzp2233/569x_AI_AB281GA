@@ -9,23 +9,26 @@
 
 #define CALL_LIST_CNT                       ((int)(sizeof(tbl_call_list) / sizeof(tbl_call_list[0])))
 
-enum {
+enum
+{
     COMPO_ID_LISTBOX = 1,
 };
 
-typedef struct f_call_list_t_ {
+typedef struct f_call_list_t_
+{
     compo_listbox_t *listbox;
 
 } f_call_list_t;
 
-static const compo_listbox_item_t tbl_call_list[] = {
-    {STR_CALL_RECENT_ONE},
-    {STR_CALL_RECENT_TWS},
-    {STR_CALL_RECENT_THR},
-    {STR_CALL_RECENT_FOUR},
-    {STR_CALL_RECENT_FIVE},
-    {STR_CALL_RECENT_SIX},
-    {STR_CALL_RECENT_SEV},
+static const compo_listbox_item_t tbl_call_list[] =
+{
+    // {STR_CALL_RECENT_ONE},
+    // {STR_CALL_RECENT_TWS},
+    // {STR_CALL_RECENT_THR},
+    // {STR_CALL_RECENT_FOUR},
+    // {STR_CALL_RECENT_FIVE},
+    // {STR_CALL_RECENT_SIX},
+    // {STR_CALL_RECENT_SEV},
 };
 
 //创建通话记录窗体
@@ -59,14 +62,16 @@ void func_call_sub_record_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= CALL_LIST_CNT) {
+    if (icon_idx < 0 || icon_idx >= CALL_LIST_CNT)
+    {
         return;
     }
 
     //根据图标索引获取应用ID
     func_sta = tbl_call_list[icon_idx].func_sta;
     //切入应用
-    if (func_sta > 0) {
+    if (func_sta > 0)
+    {
         compo_form_t *frm = func_create_form(func_sta);
         func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
         compo_form_destroy(frm);
@@ -88,27 +93,30 @@ static void func_set_sub_record_list_message(size_msg_t msg)
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_call->listbox;
 
-    if (compo_listbox_message(listbox, msg)) {
+    if (compo_listbox_message(listbox, msg))
+    {
         return;                                         //处理列表框信息
     }
-    switch (msg) {
-    case MSG_CTP_CLICK:
-       // func_set_sub_language_list_icon_click();                //单击图标
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            // func_set_sub_language_list_icon_click();                //单击图标
+            break;
 
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case KU_DELAY_BACK:
-        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY)) {
+        case KU_DELAY_BACK:
+            if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
+            {
 
-        }
-        break;
+            }
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -121,7 +129,8 @@ static void func_call_sub_record_enter(void)
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
     f_call->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_call->listbox;
-    if (listbox->type != COMPO_TYPE_LISTBOX) {
+    if (listbox->type != COMPO_TYPE_LISTBOX)
+    {
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
@@ -143,7 +152,8 @@ void func_call_sub_record(void)
 {
     printf("%s\n", __func__);
     func_call_sub_record_enter();
-    while (func_cb.sta == FUNC_CALL_SUB_RECORD) {
+    while (func_cb.sta == FUNC_CALL_SUB_RECORD)
+    {
         func_set_sub_record_list_process();
         func_set_sub_record_list_message(msg_dequeue());
     }

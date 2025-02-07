@@ -13,7 +13,8 @@
 #define BREATHE_TIME_MAX    (30 * 60 * 1000)  //时间设置最大值
 
 //速度模式
-enum {
+enum
+{
     BREATHE_MODE_SLOW,          //缓慢
     BREATHE_MODE_MEDIUM,        //舒缓
     BREATHE_MODE_FAST,          //稍快
@@ -29,13 +30,15 @@ enum {
 #define BREATHE_RHYTHM2         1000  //快
 
 //呼吸检测状态
-enum {
-	BREATHE_STA_IDLE,		    //空闲
-	BREATHE_STA_WORKING,		//呼吸中
+enum
+{
+    BREATHE_STA_IDLE,           //空闲
+    BREATHE_STA_WORKING,        //呼吸中
 };
 
 //动画状态
-enum {
+enum
+{
     ANIMATION_PREPARE,          //入场动画
     ANIMATION_DELAY,            //保持静止
     ANIMATION_INHALE,           //吸气
@@ -44,23 +47,25 @@ enum {
     ANIMATION_FINISH,           //返回idle状态
 };
 
-enum {
+enum
+{
     //按键
-	COMPO_ID_BTN_START = 1,
-	COMPO_ID_BTN_MODE,
-	COMPO_ID_BTN_TIME,
+    COMPO_ID_BTN_START = 1,
+    COMPO_ID_BTN_MODE,
+    COMPO_ID_BTN_TIME,
 
-	//图像
-	COMPO_ID_PIC_BREATHE,
-	COMPO_ID_PIC_START_CLICK,
-	COMPO_ID_PIC_MODE_CLICK,
-	COMPO_ID_PIC_TIME_CLICK,
+    //图像
+    COMPO_ID_PIC_BREATHE,
+    COMPO_ID_PIC_START_CLICK,
+    COMPO_ID_PIC_MODE_CLICK,
+    COMPO_ID_PIC_TIME_CLICK,
 
-	//文本框
+    //文本框
     COMPO_ID_TXT_START,
 };
 
-typedef struct f_breathe_t_ {
+typedef struct f_breathe_t_
+{
     u8 sta;
     u32 tick;
     u32 time_past;
@@ -78,10 +83,10 @@ compo_form_t *func_breathe_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_BREATHE]);
+    // compo_form_set_title(frm, i18n[STR_BREATHE]);
 
-	//新建按钮
-	compo_button_t *btn;
+    //新建按钮
+    compo_button_t *btn;
     btn = compo_button_create_by_image(frm, UI_BUF_COMMON_BUTTON_BIN);
     compo_setid(btn, COMPO_ID_BTN_START);
     compo_button_set_pos(btn, 160, 336);
@@ -115,11 +120,11 @@ compo_form_t *func_breathe_form_create(void)
     compo_picturebox_set_pos(pic, 279, 172);
     compo_picturebox_set_visible(pic, false);
 
-	//创建文本
-	compo_textbox_t *txt_start = compo_textbox_create(frm, 2);
-	compo_textbox_set_pos(txt_start, 160, 336);
-	compo_setid(txt_start, COMPO_ID_TXT_START);
-	compo_textbox_set(txt_start, "开始");
+    //创建文本
+    compo_textbox_t *txt_start = compo_textbox_create(frm, 2);
+    compo_textbox_set_pos(txt_start, 160, 336);
+    compo_setid(txt_start, COMPO_ID_TXT_START);
+    compo_textbox_set(txt_start, "开始");
 
     return frm;
 }
@@ -131,37 +136,38 @@ static void func_breathe_disp_init(u8 page_sta)
     compo_button_t *btn = NULL;
     compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TXT_START);
     compo_picturebox_t *pic_breathe = compo_getobj_byid(COMPO_ID_PIC_BREATHE);
-    switch (page_sta) {
-    case BREATHE_STA_IDLE:
-        compo_textbox_set(txt, "开始");
-        btn = compo_getobj_byid(COMPO_ID_BTN_START);
-        compo_button_set_visible(btn, true);
-        btn = compo_getobj_byid(COMPO_ID_BTN_TIME);
-        compo_button_set_visible(btn, true);
-        btn = compo_getobj_byid(COMPO_ID_BTN_MODE);
-        compo_button_set_visible(btn, true);
-        f_breathe->sta = BREATHE_STA_IDLE;
-        break;
+    switch (page_sta)
+    {
+        case BREATHE_STA_IDLE:
+            compo_textbox_set(txt, "开始");
+            btn = compo_getobj_byid(COMPO_ID_BTN_START);
+            compo_button_set_visible(btn, true);
+            btn = compo_getobj_byid(COMPO_ID_BTN_TIME);
+            compo_button_set_visible(btn, true);
+            btn = compo_getobj_byid(COMPO_ID_BTN_MODE);
+            compo_button_set_visible(btn, true);
+            f_breathe->sta = BREATHE_STA_IDLE;
+            break;
 
-    case BREATHE_STA_WORKING:
-        compo_textbox_set(txt, "");
-        btn = compo_getobj_byid(COMPO_ID_BTN_START);
-        compo_button_set_visible(btn, false);
-        btn = compo_getobj_byid(COMPO_ID_BTN_TIME);
-        compo_button_set_visible(btn, false);
-        btn = compo_getobj_byid(COMPO_ID_BTN_MODE);
-        compo_button_set_visible(btn, false);
-        f_breathe->sta = BREATHE_STA_IDLE;
+        case BREATHE_STA_WORKING:
+            compo_textbox_set(txt, "");
+            btn = compo_getobj_byid(COMPO_ID_BTN_START);
+            compo_button_set_visible(btn, false);
+            btn = compo_getobj_byid(COMPO_ID_BTN_TIME);
+            compo_button_set_visible(btn, false);
+            btn = compo_getobj_byid(COMPO_ID_BTN_MODE);
+            compo_button_set_visible(btn, false);
+            f_breathe->sta = BREATHE_STA_IDLE;
 
-        f_breathe->animation_sta = ANIMATION_PREPARE;
-        f_breathe->time_past = 0;
-        f_breathe->icon_deg = 0;
-        f_breathe->icon_size = f_breathe->icon_org_size;
-        f_breathe->tick = tick_get();
-        break;
+            f_breathe->animation_sta = ANIMATION_PREPARE;
+            f_breathe->time_past = 0;
+            f_breathe->icon_deg = 0;
+            f_breathe->icon_size = f_breathe->icon_org_size;
+            f_breathe->tick = tick_get();
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
     compo_picturebox_set_size(pic_breathe, f_breathe->icon_org_size, f_breathe->icon_org_size);
     compo_picturebox_set_rotation(pic_breathe, 0);
@@ -177,161 +183,207 @@ static void func_breathe_process(void)
     compo_picturebox_t *pic_breathe = compo_getobj_byid(COMPO_ID_PIC_BREATHE);
     compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TXT_START);
 
-    switch (f_breathe->sta) {
-    case BREATHE_STA_IDLE:
-        break;
-    case BREATHE_STA_WORKING:
-        if (tick_check_expire(f_breathe->tick, ANIMATION_TICK_EXPIRE)) {
-            f_breathe->tick = tick_get();
-            f_breathe->time_past += ANIMATION_TICK_EXPIRE;
-            switch (f_breathe->animation_sta) {
-            case ANIMATION_PREPARE:
-                if (f_breathe->time_past <= ANIMATION_TICK_EXPIRE) {
-                    TRACE("BREATHE PREPARE\n");
-                    frames = (BREATHE_PREPARE_TIME / ANIMATION_TICK_EXPIRE / 2);
-                    deg_step = (-3600 - frames / 2) / frames;  //转1圈
-                    temp = (BREATHE_ICON_SIZE_MAX - f_breathe->icon_size) + (BREATHE_ICON_SIZE_MAX - BREATHE_ICON_SIZE_MIN);
-                    size_step = (temp + frames / 2) / frames;
-                    if (size_step == 0) {
-                        size_step_time = ANIMATION_TICK_EXPIRE * ((frames + temp / 2) / temp);
-                        size_step = 1;
-                    } else {
-                        size_step_time = ANIMATION_TICK_EXPIRE;
-                    }
-                }
-                f_breathe->icon_deg += deg_step;
-                if (f_breathe->time_past % size_step_time == 0) {
-                    f_breathe->icon_size += size_step;  //先放大后缩小
-                    if (f_breathe->icon_size >= BREATHE_ICON_SIZE_MAX) {
-                        size_step = -size_step;
-                    } else if (f_breathe->icon_size <= BREATHE_ICON_SIZE_MIN) {
-                        size_step = 0;
-                    }
-                }
-                if (--frames == 0) {
-                    f_breathe->icon_deg = 0;
-                    f_breathe->icon_size = BREATHE_ICON_SIZE_MIN;
-                    f_breathe->animation_sta = ANIMATION_DELAY;
-                    f_breathe->time_past = 0;
-                }
-//                TRACE("%d deg[%d] size[%d]\n", frames, f_breathe->icon_deg, f_breathe->icon_size);
-                break;
-
-            case ANIMATION_DELAY:
-                if (f_breathe->time_past <= ANIMATION_TICK_EXPIRE) {
-                    TRACE("BREATHE DELAY\n");
-                    frames = (BREATHE_PREPARE_TIME / ANIMATION_TICK_EXPIRE / 2);  //入场动画一半运动一半静止
-                }
-                if (--frames == 0) {
-                    f_breathe->animation_sta = ANIMATION_INHALE;
-                    f_breathe->time_past = 0;
-                }
-                break;
-
-            case ANIMATION_INHALE:
-//            case ANIMATION_EXHALE:
-                if (f_breathe->time_past <= ANIMATION_TICK_EXPIRE) {
-                    TRACE("BREATHE START\n");
-                    compo_textbox_set(txt, i18n[STR_BREATHE_INHALE]);
-                    rhythm = sys_cb.breathe_mode == BREATHE_MODE_SLOW ? BREATHE_RHYTHM0 : \
-                             (sys_cb.breathe_mode == BREATHE_MODE_FAST ? BREATHE_RHYTHM2 : BREATHE_RHYTHM1);
-                    frames = (rhythm / ANIMATION_TICK_EXPIRE);
-                    deg_step = 1800 / frames;  //呼吸各半圈
-                    temp = BREATHE_ICON_SIZE_MAX - BREATHE_ICON_SIZE_MIN;
-                    size_step = (temp + frames / 2) / frames;
-                    if (size_step == 0) {
-                        size_step_time = ANIMATION_TICK_EXPIRE * ((frames + temp / 2) / temp);
-                        size_step = 1;
-                    } else {
-                        size_step_time = ANIMATION_TICK_EXPIRE;
-                    }
-//                    TRACE("rhythm[%d] frames[%d] degstep[%d] sizestep[%d]\n", rhythm, frames, deg_step, size_step);
-                }
-                if (f_breathe->time_past % size_step_time == 0) {
-                    if (size_step > 0) {
-                        if (f_breathe->icon_size <= BREATHE_ICON_SIZE_MAX - size_step) {
-                            f_breathe->icon_size += size_step;
-    //                        f_breathe->icon_deg = (f_breathe->icon_deg + deg_step) % 3600;  //缩放旋转一起停
-                        } else {
-                            f_breathe->icon_size = BREATHE_ICON_SIZE_MAX;
+    switch (f_breathe->sta)
+    {
+        case BREATHE_STA_IDLE:
+            break;
+        case BREATHE_STA_WORKING:
+            if (tick_check_expire(f_breathe->tick, ANIMATION_TICK_EXPIRE))
+            {
+                f_breathe->tick = tick_get();
+                f_breathe->time_past += ANIMATION_TICK_EXPIRE;
+                switch (f_breathe->animation_sta)
+                {
+                    case ANIMATION_PREPARE:
+                        if (f_breathe->time_past <= ANIMATION_TICK_EXPIRE)
+                        {
+                            TRACE("BREATHE PREPARE\n");
+                            frames = (BREATHE_PREPARE_TIME / ANIMATION_TICK_EXPIRE / 2);
+                            deg_step = (-3600 - frames / 2) / frames;  //转1圈
+                            temp = (BREATHE_ICON_SIZE_MAX - f_breathe->icon_size) + (BREATHE_ICON_SIZE_MAX - BREATHE_ICON_SIZE_MIN);
+                            size_step = (temp + frames / 2) / frames;
+                            if (size_step == 0)
+                            {
+                                size_step_time = ANIMATION_TICK_EXPIRE * ((frames + temp / 2) / temp);
+                                size_step = 1;
+                            }
+                            else
+                            {
+                                size_step_time = ANIMATION_TICK_EXPIRE;
+                            }
                         }
-                    } else {
-                        if (f_breathe->icon_size >= BREATHE_ICON_SIZE_MIN - size_step) {
-                            f_breathe->icon_size += size_step;
-    //                        f_breathe->icon_deg = (f_breathe->icon_deg + deg_step) % 3600;
-                        } else {
+                        f_breathe->icon_deg += deg_step;
+                        if (f_breathe->time_past % size_step_time == 0)
+                        {
+                            f_breathe->icon_size += size_step;  //先放大后缩小
+                            if (f_breathe->icon_size >= BREATHE_ICON_SIZE_MAX)
+                            {
+                                size_step = -size_step;
+                            }
+                            else if (f_breathe->icon_size <= BREATHE_ICON_SIZE_MIN)
+                            {
+                                size_step = 0;
+                            }
+                        }
+                        if (--frames == 0)
+                        {
+                            f_breathe->icon_deg = 0;
                             f_breathe->icon_size = BREATHE_ICON_SIZE_MIN;
+                            f_breathe->animation_sta = ANIMATION_DELAY;
+                            f_breathe->time_past = 0;
                         }
-                    }
-                }
-                f_breathe->icon_deg = (f_breathe->icon_deg + deg_step) % 3600;  //缩放停止后继续旋转
-                if (f_breathe->time_past % rhythm == 0) {
-                    size_step = -size_step;
-                    if (abs_s(f_breathe->icon_size - BREATHE_ICON_SIZE_MAX) < abs_s(f_breathe->icon_size - BREATHE_ICON_SIZE_MIN)) {
-                        compo_textbox_set(txt, i18n[STR_BREATHE_EXHALE]);  //呼气
-                    } else {
-                        compo_textbox_set(txt, i18n[STR_BREATHE_INHALE]);  //吸气
-                    }
-                    TRACE("total:%ds past:%ds\n", sys_cb.breathe_duration / 1000, f_breathe->time_past / 1000);
-//                    TRACE("deg[%d] size[%d] degstep[%d] sizestep[%d]\n", f_breathe->icon_deg, f_breathe->icon_size, deg_step, size_step);
-                }
-                if (f_breathe->time_past >= sys_cb.breathe_duration) {
-                    f_breathe->time_past = 0;
-                    f_breathe->animation_sta = ANIMATION_FINISH;
-                }
-                break;
+//                TRACE("%d deg[%d] size[%d]\n", frames, f_breathe->icon_deg, f_breathe->icon_size);
+                        break;
 
-            case ANIMATION_FINISH:
-                if (f_breathe->time_past <= ANIMATION_TICK_EXPIRE) {
-                    TRACE("BREATHE FINISH\n");
-                    compo_textbox_set(txt, "");
-                    frames = BREATHE_FINISH_TIME / ANIMATION_TICK_EXPIRE;
-                    finish_deg = abs_s(0 - f_breathe->icon_deg) <= abs_s(3600 - f_breathe->icon_deg) ? 0 : 3600;
-                    temp = finish_deg - f_breathe->icon_deg;
-                    deg_step = (temp + (temp < 0 ? -(frames / 2) : (frames / 2))) / frames;
-                    if (deg_step == 0 && temp != 0) {
-                        deg_step = temp < 0 ? -1 : 1;
-                    }
-                    temp = f_breathe->icon_org_size - f_breathe->icon_size;
-                    size_step = (temp + (temp < 0 ? -(frames / 2) : (frames / 2))) / frames;
-                    if (size_step == 0 && temp != 0) {
-                        size_step = temp < 0 ? -1 : 1;
-                    }
-                }
+                    case ANIMATION_DELAY:
+                        if (f_breathe->time_past <= ANIMATION_TICK_EXPIRE)
+                        {
+                            TRACE("BREATHE DELAY\n");
+                            frames = (BREATHE_PREPARE_TIME / ANIMATION_TICK_EXPIRE / 2);  //入场动画一半运动一半静止
+                        }
+                        if (--frames == 0)
+                        {
+                            f_breathe->animation_sta = ANIMATION_INHALE;
+                            f_breathe->time_past = 0;
+                        }
+                        break;
+
+                    case ANIMATION_INHALE:
+//            case ANIMATION_EXHALE:
+                        if (f_breathe->time_past <= ANIMATION_TICK_EXPIRE)
+                        {
+                            TRACE("BREATHE START\n");
+                            compo_textbox_set(txt, i18n[STR_BREATHE_INHALE]);
+                            rhythm = sys_cb.breathe_mode == BREATHE_MODE_SLOW ? BREATHE_RHYTHM0 : \
+                                     (sys_cb.breathe_mode == BREATHE_MODE_FAST ? BREATHE_RHYTHM2 : BREATHE_RHYTHM1);
+                            frames = (rhythm / ANIMATION_TICK_EXPIRE);
+                            deg_step = 1800 / frames;  //呼吸各半圈
+                            temp = BREATHE_ICON_SIZE_MAX - BREATHE_ICON_SIZE_MIN;
+                            size_step = (temp + frames / 2) / frames;
+                            if (size_step == 0)
+                            {
+                                size_step_time = ANIMATION_TICK_EXPIRE * ((frames + temp / 2) / temp);
+                                size_step = 1;
+                            }
+                            else
+                            {
+                                size_step_time = ANIMATION_TICK_EXPIRE;
+                            }
+//                    TRACE("rhythm[%d] frames[%d] degstep[%d] sizestep[%d]\n", rhythm, frames, deg_step, size_step);
+                        }
+                        if (f_breathe->time_past % size_step_time == 0)
+                        {
+                            if (size_step > 0)
+                            {
+                                if (f_breathe->icon_size <= BREATHE_ICON_SIZE_MAX - size_step)
+                                {
+                                    f_breathe->icon_size += size_step;
+                                    //                        f_breathe->icon_deg = (f_breathe->icon_deg + deg_step) % 3600;  //缩放旋转一起停
+                                }
+                                else
+                                {
+                                    f_breathe->icon_size = BREATHE_ICON_SIZE_MAX;
+                                }
+                            }
+                            else
+                            {
+                                if (f_breathe->icon_size >= BREATHE_ICON_SIZE_MIN - size_step)
+                                {
+                                    f_breathe->icon_size += size_step;
+                                    //                        f_breathe->icon_deg = (f_breathe->icon_deg + deg_step) % 3600;
+                                }
+                                else
+                                {
+                                    f_breathe->icon_size = BREATHE_ICON_SIZE_MIN;
+                                }
+                            }
+                        }
+                        f_breathe->icon_deg = (f_breathe->icon_deg + deg_step) % 3600;  //缩放停止后继续旋转
+                        if (f_breathe->time_past % rhythm == 0)
+                        {
+                            size_step = -size_step;
+                            if (abs_s(f_breathe->icon_size - BREATHE_ICON_SIZE_MAX) < abs_s(f_breathe->icon_size - BREATHE_ICON_SIZE_MIN))
+                            {
+                                compo_textbox_set(txt, i18n[STR_BREATHE_EXHALE]);  //呼气
+                            }
+                            else
+                            {
+                                compo_textbox_set(txt, i18n[STR_BREATHE_INHALE]);  //吸气
+                            }
+                            TRACE("total:%ds past:%ds\n", sys_cb.breathe_duration / 1000, f_breathe->time_past / 1000);
+//                    TRACE("deg[%d] size[%d] degstep[%d] sizestep[%d]\n", f_breathe->icon_deg, f_breathe->icon_size, deg_step, size_step);
+                        }
+                        if (f_breathe->time_past >= sys_cb.breathe_duration)
+                        {
+                            f_breathe->time_past = 0;
+                            f_breathe->animation_sta = ANIMATION_FINISH;
+                        }
+                        break;
+
+                    case ANIMATION_FINISH:
+                        if (f_breathe->time_past <= ANIMATION_TICK_EXPIRE)
+                        {
+                            TRACE("BREATHE FINISH\n");
+                            compo_textbox_set(txt, "");
+                            frames = BREATHE_FINISH_TIME / ANIMATION_TICK_EXPIRE;
+                            finish_deg = abs_s(0 - f_breathe->icon_deg) <= abs_s(3600 - f_breathe->icon_deg) ? 0 : 3600;
+                            temp = finish_deg - f_breathe->icon_deg;
+                            deg_step = (temp + (temp < 0 ? -(frames / 2) : (frames / 2))) / frames;
+                            if (deg_step == 0 && temp != 0)
+                            {
+                                deg_step = temp < 0 ? -1 : 1;
+                            }
+                            temp = f_breathe->icon_org_size - f_breathe->icon_size;
+                            size_step = (temp + (temp < 0 ? -(frames / 2) : (frames / 2))) / frames;
+                            if (size_step == 0 && temp != 0)
+                            {
+                                size_step = temp < 0 ? -1 : 1;
+                            }
+                        }
 //                if (f_breathe->time_past % 100 == 0) {
 //                    TRACE("deg[%d] size[%d] degstep[%d] sizestep[%d]\n", f_breathe->icon_deg, f_breathe->icon_size, deg_step, size_step);
 //                }
-                if (f_breathe->icon_deg != finish_deg || f_breathe->icon_size != f_breathe->icon_org_size) {
-                    if (abs_s(finish_deg - f_breathe->icon_deg) <= abs_s(deg_step)) {
-                        f_breathe->icon_deg = finish_deg;
-                    } else {
-                        f_breathe->icon_deg += deg_step;
-                    }
-                    if (abs_s(f_breathe->icon_org_size - f_breathe->icon_size) <= abs_s(size_step)) {
-                        f_breathe->icon_size = f_breathe->icon_org_size;
-                    } else {
-                        f_breathe->icon_size += size_step;
-                    }
-                    if (f_breathe->time_past > BREATHE_FINISH_TIME * 2) {  //意外超时直接退出
-                        f_breathe->icon_deg = finish_deg;
-                        f_breathe->icon_size = f_breathe->icon_org_size;
-                    }
-                } else {
-                    func_breathe_disp_init(BREATHE_STA_IDLE);
-                    f_breathe->sta = BREATHE_STA_IDLE;
+                        if (f_breathe->icon_deg != finish_deg || f_breathe->icon_size != f_breathe->icon_org_size)
+                        {
+                            if (abs_s(finish_deg - f_breathe->icon_deg) <= abs_s(deg_step))
+                            {
+                                f_breathe->icon_deg = finish_deg;
+                            }
+                            else
+                            {
+                                f_breathe->icon_deg += deg_step;
+                            }
+                            if (abs_s(f_breathe->icon_org_size - f_breathe->icon_size) <= abs_s(size_step))
+                            {
+                                f_breathe->icon_size = f_breathe->icon_org_size;
+                            }
+                            else
+                            {
+                                f_breathe->icon_size += size_step;
+                            }
+                            if (f_breathe->time_past > BREATHE_FINISH_TIME * 2)    //意外超时直接退出
+                            {
+                                f_breathe->icon_deg = finish_deg;
+                                f_breathe->icon_size = f_breathe->icon_org_size;
+                            }
+                        }
+                        else
+                        {
+                            func_breathe_disp_init(BREATHE_STA_IDLE);
+                            f_breathe->sta = BREATHE_STA_IDLE;
+                        }
+                        break;
+
+                    default:
+                        break;
                 }
-                break;
-
-            default:
-                break;
+                compo_picturebox_set_size(pic_breathe, f_breathe->icon_size, f_breathe->icon_size);
+                compo_picturebox_set_rotation(pic_breathe, f_breathe->icon_deg);
             }
-            compo_picturebox_set_size(pic_breathe, f_breathe->icon_size, f_breathe->icon_size);
-            compo_picturebox_set_rotation(pic_breathe, f_breathe->icon_deg);
-        }
-        break;
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
     func_process();
@@ -345,21 +397,22 @@ static void func_breathe_button_touch_handle(void)
     compo_picturebox_t *pic_time_click = compo_getobj_byid(COMPO_ID_PIC_TIME_CLICK);
     compo_picturebox_t *pic_mode_click = compo_getobj_byid(COMPO_ID_PIC_MODE_CLICK);
 
-    switch (id) {
-    case COMPO_ID_BTN_START:
-        compo_picturebox_set_visible(pic_start_click, true);
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_START:
+            compo_picturebox_set_visible(pic_start_click, true);
+            break;
 
-    case COMPO_ID_BTN_TIME:
-        compo_picturebox_set_visible(pic_time_click, true);
-        break;
+        case COMPO_ID_BTN_TIME:
+            compo_picturebox_set_visible(pic_time_click, true);
+            break;
 
-    case COMPO_ID_BTN_MODE:
-        compo_picturebox_set_visible(pic_mode_click, true);
-        break;
+        case COMPO_ID_BTN_MODE:
+            compo_picturebox_set_visible(pic_mode_click, true);
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 
 }
@@ -382,9 +435,11 @@ static void func_breathe_button_click(void)
 {
     f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;
     int id = compo_get_button_id();
-    switch(id) {
+    switch(id)
+    {
         case COMPO_ID_BTN_START:
-            if (f_breathe->sta == BREATHE_STA_IDLE) {
+            if (f_breathe->sta == BREATHE_STA_IDLE)
+            {
                 func_breathe_disp_init(BREATHE_STA_WORKING);
                 f_breathe->sta = BREATHE_STA_WORKING;
             }
@@ -392,7 +447,8 @@ static void func_breathe_button_click(void)
 
         case COMPO_ID_BTN_TIME:
             sys_cb.breathe_duration += (sys_cb.breathe_duration == BREATHE_TIME_MIN ? 4 : 5) * 60 *1000;
-            if (sys_cb.breathe_duration > BREATHE_TIME_MAX) {
+            if (sys_cb.breathe_duration > BREATHE_TIME_MAX)
+            {
                 sys_cb.breathe_duration = BREATHE_TIME_MIN;
             }
             printf(">>>breathe_duration:%ds\n", sys_cb.breathe_duration / 1000);
@@ -414,52 +470,58 @@ static void func_breathe_button_click(void)
 static void func_breathe_message(size_msg_t msg)
 {
     f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;
-    if (f_breathe->sta == BREATHE_STA_IDLE) {
-        switch (msg) {
-        case MSG_CTP_TOUCH:
-            func_breathe_button_touch_handle();
-            break;
+    if (f_breathe->sta == BREATHE_STA_IDLE)
+    {
+        switch (msg)
+        {
+            case MSG_CTP_TOUCH:
+                func_breathe_button_touch_handle();
+                break;
 
-        case MSG_CTP_CLICK:
-            func_breathe_button_click();
-            break;
+            case MSG_CTP_CLICK:
+                func_breathe_button_click();
+                break;
 
-        case MSG_CTP_SHORT_UP:
-        case MSG_CTP_SHORT_DOWN:
-        case MSG_CTP_SHORT_LEFT:
-        case MSG_CTP_LONG:
-            func_breathe_button_release_handle();
-            if (func_cb.flag_sort) {
+            case MSG_CTP_SHORT_UP:
+            case MSG_CTP_SHORT_DOWN:
+            case MSG_CTP_SHORT_LEFT:
+            case MSG_CTP_LONG:
+                func_breathe_button_release_handle();
+                if (func_cb.flag_sort)
+                {
+                    func_message(msg);
+                }
+                break;
+
+            case MSG_CTP_SHORT_RIGHT:
+                func_breathe_button_release_handle();
                 func_message(msg);
-            }  
-            break;
+                break;
 
-        case MSG_CTP_SHORT_RIGHT:
-            func_breathe_button_release_handle();
-            func_message(msg);
-            break;
+            case MSG_QDEC_FORWARD:
+            case MSG_QDEC_BACKWARD:
+                break;
 
-        case MSG_QDEC_FORWARD:
-        case MSG_QDEC_BACKWARD:
-            break;
-
-        default:
-            func_message(msg);
-            break;
+            default:
+                func_message(msg);
+                break;
         }
-    } else {
-        switch (msg) {
-        case KU_BACK:
-            f_breathe->time_past = 0;
-            f_breathe->animation_sta = ANIMATION_FINISH;
-            break;
+    }
+    else
+    {
+        switch (msg)
+        {
+            case KU_BACK:
+                f_breathe->time_past = 0;
+                f_breathe->animation_sta = ANIMATION_FINISH;
+                break;
 
-        case MSG_CTP_SHORT_RIGHT:  //右滑不退出
-            break;
+            case MSG_CTP_SHORT_RIGHT:  //右滑不退出
+                break;
 
-        default:
-            func_message(msg);
-            break;
+            default:
+                func_message(msg);
+                break;
         }
     }
 }
@@ -489,7 +551,8 @@ void func_breathe(void)
 {
     printf("%s\n", __func__);
     func_breathe_enter();
-    while (func_cb.sta == FUNC_BREATHE) {
+    while (func_cb.sta == FUNC_BREATHE)
+    {
         func_breathe_process();
         func_breathe_message(msg_dequeue());
     }

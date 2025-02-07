@@ -1,5 +1,5 @@
 #include "include.h"
-
+#if !UTE_MULTIPLE_LANGUAGE_SUPPORT
 const char * const i18n_zh[] =
 {
     [STR_CLOCK]                         = "时钟",
@@ -195,3 +195,4 @@ const char * const i18n_zh[] =
 
     [STR_NULL]                          = " ",
 };
+#endif

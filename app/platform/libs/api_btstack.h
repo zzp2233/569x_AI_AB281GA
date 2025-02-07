@@ -399,6 +399,19 @@ enum
     LE_STA_CONNECTION,                          //已连接
 };
 
+//LE 通知
+enum
+{
+    LE_NOTICE_CONNECTED,                        //连接成功
+    LE_NOTICE_DISCONNECT,                       //断开成功
+    LE_NOTICE_CONN_PARAM_UPDATE,                //连接参数更新
+    LE_NOTICE_DATA_LEN_CHANGE,                  //收发长度改变
+    LE_NOTICE_CLINET_CFG,                       //客户端配置特性
+
+    LE_NOTICE_ANCS_CONN_EVT,                    //ancs client连接事件
+    LE_NOTICE_AMS_CONN_EVT,                     //ams  client连接事件
+};
+
 //LE GATT 服务相关
 /**
     BLE GATTS ERR return
@@ -480,10 +493,11 @@ typedef struct gatts_uuid_base
 */
 typedef struct
 {
-    uint16_t  client_config; // att config  1:notify enable  2:indicate enable
+    uint16_t client_config;                         // att config, 1:notify enable; 2:indicate enable;
     uint16_t value_len;
-    ble_gatt_callback_func att_callback_func;
-    uint8_t *value;         //read return data when att_callback_func is NULL
+    ble_gatt_callback_func att_write_callback_func; // 特征值的写操作回调
+    ble_gatt_callback_func att_read_callback_func;  // 特征值的读操作回调, 注意要设置value_len
+    uint8_t *value;                                 // read return data, when att_read_callback_func is NULL
 } ble_gatt_characteristic_cb_info_t;
 
 #define GATT_CLIENT_CONFIG_NOTIFY       1
@@ -995,6 +1009,7 @@ void ble_update_conn_param(u16 interval, u16 latency, u16 timeout);
 u8 ble_get_status(void);
 void ble_disconnect(void);
 bool ble_is_connect(void);
+
 
 void ble_init_att_for_handle(u16 handle, uint8_t *buf, uint16_t len);
 void ble_send_kick(void);

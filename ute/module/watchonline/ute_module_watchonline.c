@@ -10,13 +10,13 @@
 #include "ute_module_systemtime.h"
 #include "ute_module_log.h"
 #include "ute_application_common.h"
-// #include "ute_module_profile_ble.h"
+#include "ute_module_profile_ble.h"
 #include "ute_module_watchonline.h"
-// #include "ute_module_protocol.h"
+#include "ute_module_protocol.h"
 #include "ute_module_crc.h"
 #include "ute_module_gui_common.h"
 #include "ute_module_platform.h"
-// #include "ute_module_call.h"
+#include "ute_module_call.h"
 // #include "ute_module_sport.h"
 #include "ute_module_message.h"
 #include "include.h"
@@ -25,7 +25,7 @@
 
 const uint32_t uteModuleWatchOnlineMultipleBaseAddress[UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT] = UTE_MODULE_WATCHONLINE_MULTIPLE_BASE_ADDRESS_ARRAYS;
 
-extern void func_clock_recreate_dial(void);
+// extern void func_clock_recreate_dial(void);//todo
 
 /*! 在线表盘的数据 casen, 2021-11-27  */
 ute_module_watchonline_data_t uteModuleWatchOnlineData =
@@ -486,11 +486,11 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     }
     uteModuleWatchOnlineUpateConfigFromFlash();
     /*判断如果再运动中，则会=返回上个界面，防止运动被中断*/
-    if (uteModuleSportMoreSportIsRuning())
-    {
-        uteModuleGuiCommonGoBackLastScreen();
-    }
-    else
+    // if (uteModuleSportMoreSportIsRuning())//todo
+    // {
+    //     uteModuleGuiCommonGoBackLastScreen();
+    // }
+    // else
     {
         if(func_cb.sta != FUNC_CLOCK)
         {
@@ -498,7 +498,7 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
         }
         else
         {
-            func_clock_recreate_dial();
+            // func_clock_recreate_dial();//todo
             if(sys_cb.gui_sleep_sta)
             {
                 sys_cb.gui_need_wakeup = true;;

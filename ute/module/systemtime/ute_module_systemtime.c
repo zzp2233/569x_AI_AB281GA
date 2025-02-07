@@ -1,10 +1,4 @@
-/*
- * @brief:
- * @LastEditors: ljf
- * @LastEditTime: 2025-01-13 17:13:44
- * @FilePath: \UTE_AB569x\ute\module\systemtime\ute_module_systemtime.c
- * @Date: 2025-01-10 15:02:00
- */
+
 /**
 *@file
 *@brief        系统时间模块
@@ -25,7 +19,7 @@
 // #include "ute_module_sport.h"
 // #include "ute_module_heart.h"
 // #include "ute_drv_motor.h"
-// #include "ute_language_common.h"
+#include "ute_language_common.h"
 // #include "ute_module_localRingtone.h"
 // #include "bt_hfp.h"
 #include "ute_module_filesystem.h"
@@ -64,7 +58,7 @@ void uteModuleSystemtimeInit(void)
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_ALARMINFO_DIR);
     uteModuleSystemtimeReadConfig();
     memset(&systemTimeRegisterData,0,sizeof(ute_module_systemtime_register_t));
-    // uteLanguageCommonSelect(systemTime.languageId);//todo
+    uteLanguageCommonSelect(systemTime.languageId);
 }
 
 /**
@@ -611,12 +605,12 @@ void uteModuleSystemtimeSetTimeZone(int8_t zone)
 
 void uteModuleSystemtimeSetLanguage(uint16_t id)
 {
-    // systemTime.languageId=id;
-    // systemTime.isWatchSetLangage = true;
-    // UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,languageId=%d", __func__,systemTime.languageId);
-    // uteModuleSystemtimeSaveTimeInfo();
-    // uteLanguageCommonSelect(systemTime.languageId);
-    // msg_enqueue(MSG_CHECK_LANGUAGE);
+    systemTime.languageId=id;
+    systemTime.isWatchSetLangage = true;
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,languageId=%d", __func__,systemTime.languageId);
+    uteModuleSystemtimeSaveTimeInfo();
+    uteLanguageCommonSelect(systemTime.languageId);
+    msg_enqueue(MSG_CHECK_LANGUAGE);
 }
 /**
 *@brief  保存APP设计的语言

@@ -175,7 +175,7 @@ compo_form_t * func_clock_sub_sidebar_form_create(void)
     compo_cardbox_icon_set_location(cardbox, 0, 0, 0, 146, 146);
     compo_cardbox_icon_set(cardbox, 1, UI_BUF_ICON_BREATHE_BIN);  //图标
     compo_cardbox_icon_set_location(cardbox, 1, 220-241, 772-791, 72, 72);
-    compo_cardbox_text_set(cardbox, 0, i18n[STR_BREATHE]);    //呼吸
+    // compo_cardbox_text_set(cardbox, 0, i18n[STR_BREATHE]);    //呼吸
     compo_cardbox_text_set_location(cardbox, 0, 0, 835-791, 140, 30);
     //最近应用
     cardbox = compo_cardbox_create(frm, 0, 5, 1, 308, 156);

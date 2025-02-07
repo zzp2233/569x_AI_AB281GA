@@ -7,7 +7,8 @@
 #define TRACE(...)
 #endif
 
-typedef struct f_sport_sub_run_t_ {
+typedef struct f_sport_sub_run_t_
+{
     u8 sta;
     u8 min;                 //分
     u8 sec;                 //秒
@@ -15,10 +16,11 @@ typedef struct f_sport_sub_run_t_ {
     u32 total_msec;         //总毫秒
 } f_sport_sub_run_t;
 
-enum {
-	COMPO_ID_NUM_SPORT_MIN = 1,     //分
-	COMPO_ID_NUM_SPORT_SEC,         //秒
-	COMPO_ID_NUM_SPORT_MSEC,        //毫秒
+enum
+{
+    COMPO_ID_NUM_SPORT_MIN = 1,     //分
+    COMPO_ID_NUM_SPORT_SEC,         //秒
+    COMPO_ID_NUM_SPORT_MSEC,        //毫秒
 };
 
 #define SPORT_NUM_ITEM_CNT                       3
@@ -33,15 +35,16 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_INDOOR_RUN]);
+    compo_form_set_title(frm, i18n[STR_SPORT_TREADMILL]);
 
-	//创建数字
-	s16 txt_x = 50;
-	s16 txt_y = 50;
-	s16 txt_x_offset = 78;
-    for (u8 idx = 0; idx < SPORT_NUM_ITEM_CNT; idx++) {
+    //创建数字
+    s16 txt_x = 50;
+    s16 txt_y = 50;
+    s16 txt_x_offset = 78;
+    for (u8 idx = 0; idx < SPORT_NUM_ITEM_CNT; idx++)
+    {
         compo_textbox_t *txt = compo_textbox_create(frm, 2);
-		compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_46_BIN);
+        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_46_BIN);
         compo_setid(txt, COMPO_ID_NUM_SPORT_MIN + idx);
         compo_textbox_set_align_center(txt, false);
         compo_textbox_set_pos(txt, txt_x + (idx * txt_x_offset), txt_y);
@@ -63,7 +66,8 @@ static void func_sport_sub_run_process(void)
     char buf_min[4], buf_sec[4], buf_msec[6];
     static u32 sport_ticks = 0;
 
-    if (tick_check_expire(sport_ticks, 10)) {
+    if (tick_check_expire(sport_ticks, 10))
+    {
         sport_ticks = tick_get();
 
         f_sport_sub_run->total_msec += 10;
@@ -81,7 +85,7 @@ static void func_sport_sub_run_process(void)
         compo_textbox_set(txt_min, buf_min);
         compo_textbox_set(txt_sec, buf_sec);
         compo_textbox_set(txt_msec, buf_msec);
-  }
+    }
 
     func_process();
 }
@@ -90,30 +94,31 @@ static void func_sport_sub_run_process(void)
 static void func_sport_sub_run_message(size_msg_t msg)
 {
 
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case MSG_QDEC_FORWARD:
-    case MSG_QDEC_BACKWARD:
-        break;
+        case MSG_QDEC_FORWARD:
+        case MSG_QDEC_BACKWARD:
+            break;
 
-    case MSG_CTP_SHORT_LEFT:
-        break;
+        case MSG_CTP_SHORT_LEFT:
+            break;
 
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -135,7 +140,8 @@ void func_sport_sub_run(void)
 {
     printf("%s\n", __func__);
     func_sport_sub_run_enter();
-    while (func_cb.sta == FUNC_SPORT_SUB_RUN) {
+    while (func_cb.sta == FUNC_SPORT_SUB_RUN)
+    {
         func_sport_sub_run_process();
         func_sport_sub_run_message(msg_dequeue());
     }

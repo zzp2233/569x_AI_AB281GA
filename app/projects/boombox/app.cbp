@@ -30,6 +30,13 @@
 					<Add directory="../../../ute/language/defaultLanguage" />
 					<Add directory="../../platform/bsp/bsp_charge_ex" />
 					<Add directory="../../platform/modules" />
+					<Add directory="../../../ute/module/profile" />
+					<Add directory="../../../ute/module/protocol" />
+					<Add directory="../../../ute/module/charencode" />
+					<Add directory="../../../ute/module/call" />
+					<Add directory="../../../ute/module/notify" />
+					<Add directory="../../../ute/module/weather" />
+					<Add directory="../../../ute/drv/screen" />
 				</Compiler>
 				<Linker>
 					<Add library="../../platform/libs/alipay_secure_sdk/app/trans_code/lib/app_trans_code_rv32_bluetrum.lib" />
@@ -173,9 +180,18 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/application/ute_application_common.h" />
+		<Unit filename="../../../ute/drv/screen/ute_drv_boe_s240x284_i183_jd9853_wv018lzq_qspi.h" />
+		<Unit filename="../../../ute/drv/screen/ute_drv_screen_common.h" />
+		<Unit filename="../../../ute/drv/screen/ute_drv_tft_s240x284_i18_st7789p3_xhl183ba2401.h" />
+		<Unit filename="../../../ute/drv/screen/ute_drv_tft_s240x284_nv3030b_hy201068avc.h" />
+		<Unit filename="../../../ute/drv/screen/ute_drv_tft_s240x284_nv3030b_zd183g1196.h" />
+		<Unit filename="../../../ute/drv/screen/ute_drv_tft_s360X360_nv3030b_hy139071a.h" />
 		<Unit filename="../../../ute/flashmap/ute_flash_64mbit_1024k_map.h" />
 		<Unit filename="../../../ute/flashmap/ute_flash_map_common.h" />
 		<Unit filename="../../../ute/language/defaultLanguage/input.xlsx" />
+		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language.h" />
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_ar_ril.h" />
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_de_rde.h" />
@@ -186,7 +202,18 @@
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_ru_rru.h" />
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_zh_rcn.h" />
 		<Unit filename="../../../ute/language/defaultLanguage/ute_multi_language_zh_rtw.h" />
+		<Unit filename="../../../ute/language/ute_language_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../ute/language/ute_language_common.h" />
+		<Unit filename="../../../ute/module/call/ute_module_call.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/call/ute_module_call.h" />
+		<Unit filename="../../../ute/module/charencode/ute_module_charencode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/charencode/ute_module_charencode.h" />
 		<Unit filename="../../../ute/module/crc/ute_module_crc.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -207,10 +234,22 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/message/ute_module_message.h" />
+		<Unit filename="../../../ute/module/notify/ute_module_notify.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/notify/ute_module_notify.h" />
 		<Unit filename="../../../ute/module/platform/ute_module_platform.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/platform/ute_module_platform.h" />
+		<Unit filename="../../../ute/module/profile/ute_module_profile_ble.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/profile/ute_module_profile_ble.h" />
+		<Unit filename="../../../ute/module/protocol/ute_module_protocol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/protocol/ute_module_protocol.h" />
 		<Unit filename="../../../ute/module/systemtime/ute_module_systemtime.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -219,6 +258,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/watchonline/ute_module_watchonline.h" />
+		<Unit filename="../../../ute/module/weather/ute_module_weather.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/weather/ute_module_weather.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281.h" />
 		<Unit filename="../../../ute/task/ute_task_application.c">

@@ -33,11 +33,11 @@ typedef struct f_menu_list_t_
 
 static const compo_listbox_item_t tbl_menu_list[] =
 {
-    {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
+    {STR_SPORTS,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
     {STR_SPORTS,                 UI_BUF_ICON_SPORT_BIN,             .func_sta = FUNC_SPORT},                //运动
-//    {STR_STEP,                   UI_BUF_ICON_STEP_BIN,            .func_sta = FUNC_NULL},                 //计步
+    {STR_SPORTS,                   UI_BUF_ICON_STEP_BIN,            .func_sta = FUNC_NULL},                 //计步
     {STR_SLEEP,                  UI_BUF_ICON_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
-    {STR_ACTIVITY_RECORD,        UI_BUF_ICON_ACTIVITY_BIN,          .func_sta = FUNC_ACTIVITY},             //活动记录
+    {STR_HEART_RATE,             UI_BUF_ICON_ACTIVITY_BIN,          .func_sta = FUNC_ACTIVITY},             //活动记录
     {STR_HEART_RATE,             UI_BUF_ICON_HEART_RATE_BIN,        .func_sta = FUNC_HEARTRATE},            //心率
     {STR_BLOOD_PRESSURE,         UI_BUF_ICON_BLOOD_PRESSURE_BIN,    .func_sta = FUNC_BLOOD_PRESSURE},       //血压
     {STR_BLOOD_OXYGEN,           UI_BUF_ICON_BLOOD_OXYGEN_BIN,      .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
@@ -45,7 +45,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_PHONE,                  UI_BUF_ICON_CALL_BIN,              .func_sta = FUNC_CALL},                 //电话
     {STR_MUSIC,                  UI_BUF_ICON_MUSIC_BIN,             .func_sta = FUNC_BT},                   //音乐
     {STR_WEATHER,                UI_BUF_ICON_WEATHER_BIN,           .func_sta = FUNC_WEATHER},              //天气
-    {STR_BREATHE,                UI_BUF_ICON_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
+    {STR_WEATHER,                UI_BUF_ICON_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
     {STR_CALCULATOR,             UI_BUF_ICON_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器
     {STR_ALARM_CLOCK,            UI_BUF_ICON_ALARM_CLOCK_BIN,       .func_sta = FUNC_ALARM_CLOCK},          //闹钟
     {STR_TIMER,                  UI_BUF_ICON_TIMER_BIN,             .func_sta = FUNC_TIMER},                //定时器

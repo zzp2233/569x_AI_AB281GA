@@ -10,12 +10,14 @@
 #define FINDPHONE_POS_Y_MAX         240
 #define FINDPHONE_POS_Y_MIN         140
 
-typedef struct f_findphone_t_ {
+typedef struct f_findphone_t_
+{
     u16 pos_xy;
     u8 flag_find;
 } f_findphone_t;
 
-enum {
+enum
+{
     COMPO_ID_TEXT_FIND = 1,
     COMPO_ID_PIC_FIND,
 };
@@ -38,7 +40,7 @@ compo_form_t *func_findphone_form_create(void)
 
     //新建文字
     compo_label_t *txt = compo_label_create(frm, 10);
-    compo_label_set(txt, i18n[STR_FIND_PHONEING]);
+    // compo_label_set(txt, i18n[STR_FIND_PHONEING]);
     compo_label_set_pos(txt, 160, 320);
     compo_label_set_align_center(txt, true);
 
@@ -51,14 +53,19 @@ static void func_findphone_process(void)
     compo_picturebox_t *pic = compo_getobj_byid(COMPO_ID_PIC_FIND);
     f_findphone_t *f_act = (f_findphone_t *)func_cb.f_cb;
     static u32 ticks = 0;
-    if (tick_check_expire(ticks, 5)) {
+    if (tick_check_expire(ticks, 5))
+    {
         ticks = tick_get();
-        if (f_act->pos_xy <= FINDPHONE_POS_Y_MAX && f_act->flag_find) {
+        if (f_act->pos_xy <= FINDPHONE_POS_Y_MAX && f_act->flag_find)
+        {
             f_act->pos_xy++;
-        } else {
+        }
+        else
+        {
             f_act->flag_find = 0;
             f_act->pos_xy--;
-            if (f_act->pos_xy <= FINDPHONE_POS_Y_MIN) {
+            if (f_act->pos_xy <= FINDPHONE_POS_Y_MIN)
+            {
                 f_act->flag_find = 1;
             }
         }
@@ -70,22 +77,23 @@ static void func_findphone_process(void)
 //查找手机功能消息处理
 static void func_findphone_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -114,7 +122,8 @@ void func_findphone(void)
 {
     printf("%s\n", __func__);
     func_findphone_enter();
-    while (func_cb.sta == FUNC_FINDPHONE) {
+    while (func_cb.sta == FUNC_FINDPHONE)
+    {
         func_findphone_process();
         func_findphone_message(msg_dequeue());
     }

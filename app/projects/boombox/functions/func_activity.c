@@ -250,7 +250,7 @@ compo_form_t *func_activity_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_ACTIVITY_RECORD]);
+    // compo_form_set_title(frm, i18n[STR_ACTIVITY_RECORD]);
 
     //创建圆弧
     for (u8 i = 0; i < sizeof(activity_arc_info) / sizeof(activity_arc_info[0]); i++)

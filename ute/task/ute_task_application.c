@@ -227,7 +227,7 @@ void uteTaskApplicationMain(void *param)
         uteModulePlatformMemoryInitPool();
 #endif
         uteApplicationCommonStartupFrist();
-        // uteModuleGuiCommonInit();
+        uteModuleGuiCommonInit();
     }
     uteModulePlatformCreateTimer(&uteTaskApplicationHandle,"task",0,20,true,uteTaskApplicationWhileRun);
 }

@@ -26,10 +26,12 @@ extern void func_clock_sub_card(void);
 extern void func_heartrate(void);
 extern void func_compo_select(void);
 extern void func_compo_select_sub(void);
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
 extern void func_alarm_clock(void);
 extern void func_alarm_clock_sub_set(void);
 extern void func_alarm_clock_sub_repeat(void);
 extern void func_alarm_clock_sub_edit(void);
+#endif
 extern void func_disturd_sub_set(void);
 extern void func_blood_oxygen(void);
 extern void func_breathe(void);
@@ -119,10 +121,12 @@ compo_form_t *func_clock_sub_sidebar_form_create(void);
 compo_form_t *func_clock_sub_card_form_create(void);
 compo_form_t *func_heartrate_form_create(void);
 compo_form_t *func_bt_form_create(void);
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
 compo_form_t *func_alarm_clock_form_create(void);
 compo_form_t *func_alarm_clock_sub_set_form_create(void);
 compo_form_t *func_alarm_clock_sub_repeat_form_create(void);
 compo_form_t *func_alarm_clock_sub_edit_form_create(void);
+#endif
 compo_form_t *func_blood_oxygen_form_create(void);
 compo_form_t *func_breathe_form_create(void);
 compo_form_t *func_calculator_form_create(void);
@@ -215,10 +219,12 @@ const func_t tbl_func_create[] =
     {FUNC_BT,                           func_bt_form_create},
     {FUNC_COMPO_SELECT,                 func_compo_select_form_create},
     {FUNC_COMPO_SELECT_SUB,             func_compo_select_sub_form_create},
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {FUNC_ALARM_CLOCK,                  func_alarm_clock_form_create},
     {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set_form_create},
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat_form_create},
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit_form_create},
+#endif
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
     {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
@@ -310,10 +316,12 @@ const func_t tbl_func_entry[] =
     {FUNC_SIDEBAR,                      func_clock_sub_sidebar},        //表盘右滑
     {FUNC_CARD,                         func_clock_sub_card},           //表盘上拉
     {FUNC_HEARTRATE,                    func_heartrate},                //心率
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {FUNC_ALARM_CLOCK,                  func_alarm_clock},              //闹钟
     {FUNC_ALARM_CLOCK_SUB_SET,          func_alarm_clock_sub_set},      //闹钟--设置
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat},   //闹钟--重复
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
+#endif
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
     {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
     {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压

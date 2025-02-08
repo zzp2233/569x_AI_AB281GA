@@ -71,7 +71,7 @@
 #define GUI_FONT_H_SPACE                0                       //全局字的行间距,0:不设置, 其他:设置文本行最小间距
 #define GUI_USE_ARC                     1                       //是否使用圆弧控件
 
-#define FORM_TITLE_HEIGHT               28//32                      //窗体标题高度
+#define FORM_TITLE_HEIGHT               TITLE_BAR_HIGH                      //窗体标题高度
 #define FORM_TITLE_LEFT                 (GUI_SCREEN_WIDTH / 9)
 #define FORM_TITLE_RIGHT                (GUI_SCREEN_WIDTH -  GUI_SCREEN_WIDTH / 3 - 10)
 

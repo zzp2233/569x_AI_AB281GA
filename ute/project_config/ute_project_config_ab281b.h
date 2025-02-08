@@ -175,6 +175,12 @@
 #define UTE_MODULE_SCREENS_LIGHT_SUPPORT              1 //亮度调节
 #define UTE_MODULE_SCREENS_MUSIC_SUPPORT              1 //音乐
 #define UTE_MODULE_SCREENS_MESSAGE_SUPPORT            1 //信息
+#define UTE_MODULE_SCREENS_CALL_SUPPORT               1 //电话
+#define UTE_MODULE_SCREENS_SETTING_SUPPORT            1 //设置
+#define UTE_MODULE_SCREENS_CALCULATOR_SUPPORT         1 //计算器
+#define UTE_MODULE_SCREENS_RESTART_SUPPORT            1 //重启
+#define UTE_MODULE_SCREENS_CALENDAER_SUPPORT          1 //日历
+#define UTE_MODULE_SCREENS_SCAN_SUPPORT               1 //二维码
 
 /*! 支持的运动数量, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_MAX_SPORT_NUM 25

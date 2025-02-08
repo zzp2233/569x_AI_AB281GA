@@ -15,11 +15,7 @@
 #define ANIMATION_TICK_EXPIRE               12
 
 #define ENTERING_STYLE                      0               //入场动画风格 可选 0,1
-#define  BATTERY_PIC_0_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
-#define  BATTERY_PIC_1_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1
-#define  BATTERY_PIC_2_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
-#define  BATTERY_PIC_3_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
-#define  BATTERY_PIC_4_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
+
 enum
 {
     COMPO_ID_LISTBOX = 1,
@@ -35,14 +31,12 @@ typedef struct f_menu_list_t_
     u32 tick;
 } f_menu_list_t;
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static const compo_listbox_item_t tbl_menu_list[] =
 {
-//    {STR_CLOCK,                  UI_BUF_ICON_CLOCK_BG_BIN,          .func_sta = FUNC_CLOCK},                //时钟
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {STR_SPORTS,                 UI_BUF_I330001_THEME_1_SOPRT_BIN,             .func_sta = FUNC_SPORT},                //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
-//    {STR_PRESSURE,               UI_BUF_ICON_PRESSURE_BIN,          .func_sta = FUNC_PRESSURE},             //压力
-//    {STR_STEP,                   UI_BUF_ICON_STEP_BIN,            .func_sta = FUNC_NULL},                 //计步
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {STR_SLEEP,                  UI_BUF_I330001_THEME_1_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
@@ -109,35 +103,83 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #define  BATTERY_PIC_2_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
 #define  BATTERY_PIC_3_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
 #define  BATTERY_PIC_4_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+static const compo_listbox_item_t tbl_menu_list[] =
+{
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {STR_SPORTS,                 UI_BUF_I332001_THEME_ICON1_SOPRT_BIN,             .func_sta = FUNC_SPORT},                //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {STR_SLEEP,                  UI_BUF_I332001_THEME_ICON1_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {STR_EVREY_DAY_ACTIVITY,        UI_BUF_I332001_THEME_ICON1_ACTIVITY_BIN,          .func_sta = FUNC_ACTIVITY},             //活动记录
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {STR_HEART_RATE,             UI_BUF_I332001_THEME_ICON1_HEART_BIN,             .func_sta = FUNC_HEARTRATE},            //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+//    {STR_BLOOD_PRESSURE,         UI_BUF_ICON_BLOOD_PRESSURE_BIN,    .func_sta = FUNC_BLOOD_PRESSURE},       //血压
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {STR_BLOOD_OXYGEN,           UI_BUF_I332001_THEME_ICON1_SPO2_BIN,              .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {STR_MESSAGE,                UI_BUF_I332001_THEME_ICON1_MESSAGE_BIN,           .func_sta = FUNC_MESSAGE},              //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {STR_PHONE,                  UI_BUF_I332001_THEME_ICON1_CALL_BIN,              .func_sta = FUNC_CALL},                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {STR_MUSIC,                  UI_BUF_I332001_THEME_ICON1_MUSIC_BIN,             .func_sta = FUNC_BT},                   //音乐
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {STR_WEATHER,                UI_BUF_I332001_THEME_ICON1_WEATHER_BIN,           .func_sta = FUNC_WEATHER},              //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {STR_BREATHE_TRAIN,          UI_BUF_I332001_THEME_ICON1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {STR_CALCULATOR,             UI_BUF_I332001_THEME_ICON1_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {STR_ALARM_CLOCK,            UI_BUF_I332001_THEME_ICON1_ALARM_BIN,             .func_sta = FUNC_ALARM_CLOCK},          //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {STR_TIMER,                  UI_BUF_I332001_THEME_ICON1_TIMER_BIN,             .func_sta = FUNC_TIMER},                //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {STR_STOP_WATCH,             UI_BUF_I332001_THEME_ICON1_STOPWATCH_BIN,         .func_sta = FUNC_STOPWATCH},            //秒表
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {STR_CALENDAR,               UI_BUF_I332001_THEME_ICON1_CALENDAR_BIN,          .func_sta = FUNC_CALENDAER},            //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {STR_CAMERA,                 UI_BUF_I332001_THEME_ICON1_PHOTO_BIN,             .func_sta = FUNC_CAMERA},               //相机
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {STR_VOICE_ASSISTANT,        UI_BUF_I332001_THEME_ICON1_VIOCE_BIN,             .func_sta = FUNC_VOICE},                //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {STR_FIND_PHONE,             UI_BUF_I332001_THEME_ICON1_FINDPHONE_BIN,         .func_sta = FUNC_FINDPHONE},            //查找手机
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {STR_GAME,                   UI_BUF_I332001_THEME_ICON1_GAME_BIN,              .func_sta = FUNC_GAME},                 //游戏
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {STR_SETTING,                UI_BUF_I332001_THEME_ICON1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {STR_STYLE,                  UI_BUF_I332001_THEME_ICON1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {STR_SETTING_ABOUT,          UI_BUF_I332001_THEME_ICON1_GUANYU_BIN,            .func_sta = FUNC_SET_SUB_ABOUT},        //关于
+};
+#define  BATTERY_PIC_0_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
+#define  BATTERY_PIC_1_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1
+#define  BATTERY_PIC_2_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
+#define  BATTERY_PIC_3_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
+#define  BATTERY_PIC_4_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //菜单栏自定义图标更新
 static void func_menu_sub_list_battery_pic_update(void)
 {
-//    if (func_cb.frm_main == NULL)
-//    {
-//        return;
-//    }
-//    extern uint8_t uteDrvBatteryCommonGetBatteryIndex(uint8_t totalIndex);
-//    switch(uteDrvBatteryCommonGetBatteryIndex(5))
-//    {
-//        case 0:
-//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_0_BIN);
-//            break;
-//        case 1:
-//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_1_BIN);
-//            break;
-//        case 2:
-//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_2_BIN);
-//            break;
-//        case 3:
-//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_3_BIN);
-//            break;
-//        case 4:
-//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_4_BIN);
-//            break;
-//        default:
-//            compo_form_set_title_icon(func_cb.frm_main,BATTERY_PIC_4_BIN);
-//            break;
-//    }
     compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
     switch(uteDrvBatteryCommonGetBatteryIndex(5))
     {
@@ -192,7 +234,11 @@ compo_form_t *func_menu_sub_list_form_create(void)
     }
     else
     {
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
         if (menu_idx < 1)
         {
             menu_idx = 1;
@@ -219,13 +265,13 @@ compo_form_t *func_menu_sub_list_form_create(void)
 
     if (func_cb.menu_style == MENU_STYLE_LIST)
     {
-        compo_scroll_t* scroll = compo_scroll_create(frm, SCROLL_TYPE_VERTICAL);
-        compo_setid(scroll, COMPO_ID_SCROLLBAR);
-        compo_scroll_set_w_r(scroll, 10);
-        compo_scroll_set_range(scroll, 200);
-        compo_scroll_set_pos(scroll, 300, 90);
-        compo_scroll_set_value(scroll, 0);
-        compo_scroll_set_edge_circle(scroll, true);
+//        compo_scroll_t* scroll = compo_scroll_create(frm, SCROLL_TYPE_VERTICAL);
+//        compo_setid(scroll, COMPO_ID_SCROLLBAR);
+//        compo_scroll_set_w_r(scroll, 10);
+//        compo_scroll_set_range(scroll, 200);
+//        compo_scroll_set_pos(scroll, 300, 90);
+//        compo_scroll_set_value(scroll, 0);
+//        compo_scroll_set_edge_circle(scroll, true);
     }
     return frm;
 }
@@ -393,8 +439,8 @@ static void func_menu_sub_list_process(void)
             int value = (f_menu->listbox->ofs_y - f_menu->listbox->mcb->first_y) * 1000 / abs_s(f_menu->listbox->mcb->last_y - f_menu->listbox->mcb->first_y);
             //printf("value = %d, ofs_y=%d, first_y=%d, last_y=%d\n", value, f_menu->listbox->ofs_y,
             //                f_menu->listbox->mcb->first_y, f_menu->listbox->mcb->last_y);
-            compo_scroll_t* scroll = compo_getobj_byid(COMPO_ID_SCROLLBAR);
-            compo_scroll_set_value(scroll, value);
+//            compo_scroll_t* scroll = compo_getobj_byid(COMPO_ID_SCROLLBAR);
+//            compo_scroll_set_value(scroll, value);
         }
 //        printf("length:%d\n",f_menu->listbox->ofs_y);
         compo_listbox_move(f_menu->listbox);

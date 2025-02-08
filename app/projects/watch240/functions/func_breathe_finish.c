@@ -7,6 +7,8 @@
 #define TRACE(...)
 #endif
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 typedef struct f_breathe_finish_t_
 {
     char str[30];
@@ -16,18 +18,6 @@ enum
 {
     COMPO_ID_BTN_OK=1,
 };
-
-//char *breathe_back_string(char *num,char*txt)
-//{
-//    if(func_cb.sta == FUNC_SET_SUB_DOUSING)
-//    {
-//        f_breathe_finish_t *f_breathe_finish = (f_breathe_finish_t *)func_cb.f_cb;
-//        memset(f_breathe_finish->str,0,sizeof(f_breathe_finish->str));
-//        uteModuleCharencodeReplaceSubString(txt, f_breathe_finish->str,"##",num);
-//        return f_breathe_finish->str;
-//    }
-//    return NULL;
-//}
 
 compo_form_t *func_breathe_finish_form_create(void)
 {
@@ -74,7 +64,25 @@ compo_form_t *func_breathe_finish_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+typedef struct f_breathe_finish_t_
+{
+    char str[30];
+} f_breathe_finish_t;
 
+enum
+{
+    COMPO_ID_BTN_OK=1,
+};
+
+compo_form_t *func_breathe_finish_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    return frm;
+}
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 static void func_breathe_finish_process(void)
 {

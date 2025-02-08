@@ -43,6 +43,7 @@ typedef struct msg_cb_t_
     u8 enter_msg_sta;
 } msg_cb_t;
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建对话框窗体
 static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int mode, char msg_type)
 {
@@ -464,7 +465,13 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
     }
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+//创建对话框窗体
+static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int mode, char msg_type)
+{
 
+}
+#endif //
 //单击按钮
 static void msgbox_button_click(void)
 {

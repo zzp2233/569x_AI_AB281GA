@@ -26,6 +26,7 @@ extern u16 func_clock_preview_get_type(void);
 //    {UI_BUF_DIALPLATE_CUBE_STEP_BIN,             FUNC_ACTIVITY},
 //};
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static const compo_cube_item_t tbl_menu_cube[] =
 {
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
@@ -47,6 +48,29 @@ static const compo_cube_item_t tbl_menu_cube[] =
     {UI_BUF_I330001_WATCH4_MF_05_BIN,            FUNC_BT},
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
 };
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+static const compo_cube_item_t tbl_menu_cube[] =
+{
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {UI_BUF_I332001_WATCH4_MF_00_BIN,            FUNC_ACTIVITY},
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {UI_BUF_I332001_WATCH4_MF_03_BIN,            FUNC_SLEEP},
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_I332001_WATCH4_MF_04_BIN,            FUNC_WEATHER},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {UI_BUF_I332001_WATCH4_MF_01_BIN,            FUNC_BLOOD_OXYGEN},
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {UI_BUF_I332001_WATCH4_MF_02_BIN,            FUNC_HEARTRATE},
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {UI_BUF_I332001_WATCH4_MF_05_BIN,            FUNC_BT},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+};
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 
 //蝴蝶表盘
@@ -193,7 +217,6 @@ enum
 
 };
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 int compo_get_animation_id(void);
 void compo_animation_manual_next(compo_animation_t *animation);
 void func_switch_to(u8 sta, u16 switch_mode);
@@ -430,6 +453,7 @@ compo_form_t *func_clock_form_create(void)
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
         case DIALPLATE_BTF_IDX:
         {
+//            printf("1111111111111111111111\n");
             frm = func_clock_butterfly_form_create();
         }
         break;
@@ -437,12 +461,14 @@ compo_form_t *func_clock_form_create(void)
 #if UTE_WATCHS_CUBE_DIAL_SUPPORT
         case DIALPLATE_CUBE_IDX:
         {
+//             printf("2222222222222222222222222222\n");
             frm = func_clock_cube_form_create();
         }
         break;
 #endif
         default:
         {
+//             printf("33333333333333333333333333\n");
             u32 base_addr = dialplate_info[sys_cb.dialplate_index];
             u16 compo_num = bsp_uitool_header_phrase(base_addr);
             if (!compo_num)
@@ -595,7 +621,7 @@ void func_clock_butterfly_process(void)
     }
 #endif
 }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //子功能公共事件处理
 void func_clock_sub_process(void)
 {

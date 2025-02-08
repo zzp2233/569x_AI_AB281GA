@@ -44,7 +44,7 @@ compo_listbox_t *compo_listbox_create(compo_form_t *frm, u32 style)
     widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
     listbox->style = style;
     listbox->page = page;
-    listbox->item_width = GUI_SCREEN_WIDTH - 4;
+    listbox->item_width = GUI_SCREEN_WIDTH;
     for (i=0; i<LISTBOX_ITEM_CNT; i++)
     {
         widget_page_t *item_page = widget_page_create(page);
@@ -241,10 +241,12 @@ void compo_listbox_set_bgimg(compo_listbox_t *listbox, u32 res_addr)
     {
         halt(HALT_GUI_COMPO_LISTBOX_SET_BGIMG);
     }
+    listbox->item_width = gui_image_get_size(res_addr).wid;
     int i;
     for (i=0; i<LISTBOX_ITEM_CNT; i++)
     {
         widget_icon_set(listbox->item_bgimg[i], res_addr);
+        widget_set_pos(listbox->item_bgimg[i],0, 0);
     }
     compo_listbox_init_update(listbox);
 }
@@ -977,6 +979,14 @@ void compo_listbox_move(compo_listbox_t *listbox)
         {
             //拖动菜单图标
             mcb->focus_ystep = mcb->focus_dy - dy;
+            if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID)
+            {
+                int Max_x = (GUI_SCREEN_WIDTH/3*(listbox->item_cnt/2+listbox->item_cnt%2))-GUI_SCREEN_WIDTH;
+                if(mcb->focus_y > Max_x)
+                {
+                    mcb->focus_y = Max_x;
+                }
+            }
             compo_listbox_set_focus(listbox, mcb->focus_y - mcb->focus_dy);
             compo_listbox_update(listbox);
         }
@@ -1084,6 +1094,7 @@ void compo_listbox_move(compo_listbox_t *listbox)
             compo_listbox_update(listbox);
         }
     }
+
 }
 
 /**

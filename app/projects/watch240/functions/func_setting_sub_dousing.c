@@ -57,7 +57,7 @@ u8 func_sel_dousing_bit(uint n)
     return false;
 }
 
-static compo_listbox_custom_item_t tbl_list_dousing[6]={0};
+static compo_listbox_custom_item_t tbl_list_dousing[6]= {0};
 
 
 char *back_string(char *num,char*txt)
@@ -76,30 +76,31 @@ char *back_string(char *num,char*txt)
 compo_form_t *func_set_sub_dousing_form_create(void)
 {
 
-    switch (uteModuleGuiCommonGetDisplayOffTime()) {
-    case 5:
-        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM0;
-        break;
+    switch (uteModuleGuiCommonGetDisplayOffTime())
+    {
+        case 5:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM0;
+            break;
 
-    case 10:
-        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM1;
-        break;
+        case 10:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM1;
+            break;
 
-    case 20:
-        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM2;
-        break;
+        case 20:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM2;
+            break;
 
-    case 30:
-        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM3;
-        break;
+        case 30:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM3;
+            break;
 
-    case 60:
-        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM4;
-        break;
+        case 60:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM4;
+            break;
 
-    case 0:
-        sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM5;
-        break;
+        case 0:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM5;
+            break;
     }
 
     snprintf(tbl_list_dousing[0].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("5",i18n[STR_SECOND_JOINT]));
@@ -179,17 +180,6 @@ void func_set_sub_dousing_list_icon_click(void)
             {
                 uteModuleGuiCommonSetDisplayOffTime(0);
             }
-            // else if (icon_idx==COMPO_ID_BTN_NUM6) {
-            //     sys_cb.sleep_time = -1;
-            // }
-
-//            frm = func_create_form(FUNC_SETTING);
-//            res = func_switching(FUNC_SWITCH_DIRECT,NULL);
-//            compo_form_destroy(frm);             //切换完成或取消，销毁窗体
-//            if (res)
-//            {
-//                func_cb.sta = FUNC_SETTING;
-//            }
             compo_listbox_update(listbox);
             break;
 

@@ -60,6 +60,7 @@ compo_form_t *compo_form_create(bool flag_top)
     compo_textbox_set_visible(time, false);
     frm->time = time;
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_textbox_t *title = compo_textbox_create(frm, MAX_WORD_CNT);
     frm->page_body = page_body;
     compo_textbox_set_font(title, UI_BUF_FONT_FORM_TIME);
@@ -71,8 +72,14 @@ compo_form_t *compo_form_create(bool flag_top)
     compo_textbox_set_autoroll_mode(title, TEXT_AUTOROLL_MODE_NULL);
     compo_textbox_set_visible(title, true);
     frm->title = title;
-
-
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    compo_textbox_t *title = compo_textbox_create(frm, MAX_WORD_CNT);
+    frm->page_body = page_body;
+    compo_textbox_set_font(title, UI_BUF_FONT_FORM_TIME);
+    compo_textbox_set_location(title, GUI_SCREEN_CENTER_X, FORM_TITLE_HEIGHT-widget_text_get_max_height(), 120, 34);
+    compo_textbox_set_autoroll_mode(title, TEXT_AUTOROLL_MODE_NULL);
+    frm->title = title;
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
     widget_icon_t *title_icon = widget_icon_create(page, 0);
     widget_set_pos(title_icon, FORM_TITLE_LEFT + 10, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT / 2 - 2);
@@ -285,8 +292,10 @@ void compo_form_set_title_icon(compo_form_t *frm, u32 res_addr)
 
 void compo_form_set_title_txt_color(compo_form_t *frm, u16 color)
 {
-    if (frm->title != NULL) {
-        if (widget_get_visble(frm->title->txt)) {
+    if (frm->title != NULL)
+    {
+        if (widget_get_visble(frm->title->txt))
+        {
             widget_text_set_color(frm->title->txt, color);
         }
     }

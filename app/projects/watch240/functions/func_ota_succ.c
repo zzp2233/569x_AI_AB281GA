@@ -7,8 +7,10 @@
 #define TRACE(...)
 #endif
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
-enum {
+enum
+{
     COMPO_ID_TXT_OTA_SUCC1 = 1,
     COMPO_ID_TXT_OTA_SUCC2,
 };
@@ -43,12 +45,51 @@ compo_form_t *func_ota_succ_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+enum
+{
+    COMPO_ID_TXT_OTA_SUCC1 = 1,
+    COMPO_ID_TXT_OTA_SUCC2,
+};
+
+typedef struct f_ota_succ_t_
+{
+
+} f_ota_succ_t;
+
+//创建地图窗体
+compo_form_t *func_ota_succ_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+//    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_01_BIN);
+//    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 35+112/2);
+
+    //TXT1 升级成功
+    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, COMPO_ID_TXT_OTA_SUCC1);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 186+26/2, 196, 30);
+    widget_text_set_color(txt->txt, make_color(255,255,255));
+    compo_textbox_set(txt, i18n[STR_UPDATED]);
+
+    //TXT2 手表即将进入重启
+    txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, COMPO_ID_TXT_OTA_SUCC2);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 215+26/2, 196, 30);
+    widget_text_set_color(txt->txt, make_color(128,128,128));
+    compo_textbox_set(txt, i18n[STR_WATCH_RESTART]);
+
+    return frm;
+}
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //地图功能事件处理
 static void func_ota_succ_process(void)
 {
 
-    if (tick_check_expire(func_cb.enter_tick, 2000)) {
+    if (tick_check_expire(func_cb.enter_tick, 2000))
+    {
         WDT_RST();
     }
 

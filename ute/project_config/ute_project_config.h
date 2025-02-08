@@ -9,9 +9,10 @@
 #ifndef _UTE_PROJECT_CONFIG_H_
 #define _UTE_PROJECT_CONFIG_H_
 
-#define PROJECT_AB281_SUPPORT        0
-#define PROJECT_AB281A_SUPPORT       1 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
+#define PROJECT_AB281_SUPPORT        1
+#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
+#define PROJECT_AB281C_SUPPORT       0 /*! , TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -19,6 +20,8 @@
 #include"ute_project_config_ab281a.h"
 #elif PROJECT_AB281B_SUPPORT
 #include"ute_project_config_ab281b.h"
+#elif PROJECT_AB281C_SUPPORT
+#include"ute_project_config_ab281c.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
@@ -32,6 +35,14 @@
 //芯片封装选择 5691G/5691C_F
 #ifndef UTE_CHIP_PACKAGE_SELECT
 #define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F
+#endif
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#define TITLE_BAR_HIGH   28    ///标题栏高度
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#define TITLE_BAR_HIGH   64    ///标题栏高度
+#else
+#define TITLE_BAR_HIGH   28
 #endif
 
 /*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */

@@ -2,20 +2,20 @@
 #include "api.h"
 
 #if BT_FCC_TEST_EN
-    #undef WORK_MODE
-    #if LE_BQB_RF_EN
-        #define WORK_MODE           MODE_BQB_RF_BLE
-    #else
-        #define WORK_MODE           MODE_FCC_TEST
-    #endif
-#elif BT_BQB_RF_EN
-    #define WORK_MODE           MODE_BQB_RF_BREDR
-#elif LE_BQB_RF_EN
-    #define WORK_MODE           MODE_BQB_RF_BLE
-#elif BT_DUT_MODE_EN
-    #define WORK_MODE           MODE_NORMAL_DUT
+#undef WORK_MODE
+#if LE_BQB_RF_EN
+#define WORK_MODE           MODE_BQB_RF_BLE
 #else
-    #define WORK_MODE           MODE_NORMAL
+#define WORK_MODE           MODE_FCC_TEST
+#endif
+#elif BT_BQB_RF_EN
+#define WORK_MODE           MODE_BQB_RF_BREDR
+#elif LE_BQB_RF_EN
+#define WORK_MODE           MODE_BQB_RF_BLE
+#elif BT_DUT_MODE_EN
+#define WORK_MODE           MODE_NORMAL_DUT
+#else
+#define WORK_MODE           MODE_NORMAL
 #endif
 
 #define BT_PROFILE          (PROF_A2DP*BT_A2DP_EN) | \
@@ -94,25 +94,30 @@ void bb_rf_ext_ctl_cb(u32 rf_sta)
 {
 
 //    printf(w_str);
-	if(rf_sta & BIT(8)) {	//tx on
+    if(rf_sta & BIT(8))     //tx on
+    {
         PWRCON2 = (PWRCON2 & (~0xf)) | 0xa; //1.35V
-	}
-	if(rf_sta & BIT(9)){	//tx down
+    }
+    if(rf_sta & BIT(9))     //tx down
+    {
         PWRCON2 = (PWRCON2 & (~0xf)) | 0x7; //1.25V
-	}
-	if(rf_sta & BIT(10)){	//rx on
-	    PWRCON2 = (PWRCON2 & (~0xf)) | 0xa; //1.35V
-	}
-	if(rf_sta & BIT(11)){	//rx down
+    }
+    if(rf_sta & BIT(10))    //rx on
+    {
+        PWRCON2 = (PWRCON2 & (~0xf)) | 0xa; //1.35V
+    }
+    if(rf_sta & BIT(11))    //rx down
+    {
         PWRCON2 = (PWRCON2 & (~0xf)) | 0x7; //1.25V
-	}
+    }
 }
 #endif
 
 //自定义蓝牙类别图标，根据需要选择
 u32 bt_get_class_of_device(void)
 {
-    if(cfg_bt_work_mode == MODE_BQB_RF_BREDR) {
+    if(cfg_bt_work_mode == MODE_BQB_RF_BREDR)
+    {
         return 0x0000;
     }
 #if BT_HID_TYPE == 2
@@ -176,9 +181,12 @@ void bt_get_local_bd_addr(u8 *addr)
 {
 #if LE_SM_SC_EN
     memcpy(addr, xcfg_cb.bt_addr, 6);
-    if (!app_phone_type_get()) {
+#if UTE_MODULE_BT_CHANGE_MAC_SUPPORT
+    if (!app_phone_type_get())
+    {
         addr[5] ^= 0x55;
     }
+#endif
 #elif BT_LOCAL_ADDR
     param_random_key_read(&addr[2]);
     addr[0] = 0x41;
@@ -196,13 +204,16 @@ u32 bt_get_rand_seed(void)
 void bt_get_link_info(void *buf, u16 addr, u16 size)
 {
     //printf("bt_read: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
-    if ((addr + size) <= PAGE_DATA_SIZE) {
-    	cm_read(buf, BT_CM_PAGE(addr), size);
+    if ((addr + size) <= PAGE_DATA_SIZE)
+    {
+        cm_read(buf, BT_CM_PAGE(addr), size);
 #if BT_LINK_INFO_PAGE1_EN
-	} else {
+    }
+    else
+    {
         cm_read(buf, BT_CM_PAGE1(addr - link_info_page_size), size);
 #endif
-	}
+    }
     //print_r(buf, size);
 }
 
@@ -210,13 +221,16 @@ void bt_put_link_info(void *buf, u16 addr, u16 size)
 {
     //printf("bt_write: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
     //print_r(buf, size);
-    if ((addr + size) <= PAGE_DATA_SIZE) {
-    	cm_write(buf, BT_CM_PAGE(addr), size);
+    if ((addr + size) <= PAGE_DATA_SIZE)
+    {
+        cm_write(buf, BT_CM_PAGE(addr), size);
 #if BT_LINK_INFO_PAGE1_EN
-	} else {
-    	cm_write(buf, BT_CM_PAGE1(addr - link_info_page_size), size);
+    }
+    else
+    {
+        cm_write(buf, BT_CM_PAGE1(addr - link_info_page_size), size);
 #endif
-	}
+    }
 }
 
 void bt_get_ext_link_info(void *buf, u16 addr, u16 size)
@@ -240,34 +254,46 @@ void bt_sync_link_info(void)
 
 void bt_call_volume_change(u8 up_flag)
 {
-    if ((up_flag) && (sys_cb.hfp_vol < 15)) {
+    if ((up_flag) && (sys_cb.hfp_vol < 15))
+    {
         bt_ctrl_msg(BT_CTL_VOL_UP);
-    } else if ((!up_flag) && (sys_cb.hfp_vol > 0)) {
+    }
+    else if ((!up_flag) && (sys_cb.hfp_vol > 0))
+    {
         bt_ctrl_msg(BT_CTL_VOL_DOWN);
-    } else {
+    }
+    else
+    {
         return;
     }
 }
 
 void bt_volume_up(void)
 {
-    if (sys_cb.incall_flag) {
+    if (sys_cb.incall_flag)
+    {
         bt_call_volume_change(1);
-    } else {
+    }
+    else
+    {
         bsp_set_volume(bsp_volume_inc(sys_cb.vol));
         bsp_bt_vol_change();
         printf("volume: %d\n", sys_cb.vol);
     }
-    if (bt_cb.music_playing) {
+    if (bt_cb.music_playing)
+    {
         dac_fade_in();
     }
 }
 
 void bt_volume_down(void)
 {
-    if (sys_cb.incall_flag) {
+    if (sys_cb.incall_flag)
+    {
         bt_call_volume_change(0);
-    } else {
+    }
+    else
+    {
         bsp_set_volume(bsp_volume_dec(sys_cb.vol));
         bsp_bt_vol_change();
         printf("volume: %d\n", sys_cb.vol);
@@ -276,9 +302,12 @@ void bt_volume_down(void)
 
 void bt_set_music_sta(u8 status)
 {
-    if (status == 1) {
+    if (status == 1)
+    {
         bt_cb.music_playing = true;
-    } else {
+    }
+    else
+    {
         bt_cb.music_playing = false;
     }
 }
@@ -298,7 +327,8 @@ void bt_uart_init(void)
 #endif
 
 #if BT_FCC_TEST_EN || BT_DUT_MODE_EN
-uint8_t ble_set_delta_gain(void) {
+uint8_t ble_set_delta_gain(void)
+{
     return 0;           //设置BLE与BT的功率差值
 }
 #endif

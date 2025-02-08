@@ -8,7 +8,8 @@
 #endif
 
 //按钮
-enum{
+enum
+{
     COMPO_ID_BTN_NO = 1,
     COMPO_ID_BTN_YES,
 };
@@ -23,14 +24,15 @@ compo_form_t *func_password_sub_select_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_PASSWORD]);
 
-	//创建文本
+    //创建文本
     compo_textbox_t *txt_set = compo_textbox_create(frm, 8);
     compo_textbox_set_align_center(txt_set, false);
     compo_textbox_set_pos(txt_set, 30, 140);
     compo_textbox_set(txt_set, "确认设置密码吗？");
     compo_textbox_set_visible(txt_set, true);
 
-    if(sys_cb.password_change) {
+    if(sys_cb.password_change)
+    {
         compo_textbox_set_visible(txt_set, false);
     }
 
@@ -40,22 +42,24 @@ compo_form_t *func_password_sub_select_form_create(void)
     compo_textbox_set(txt_title, "修改密码成功！");
     compo_textbox_set_visible(txt_title, false);
 
-    if(sys_cb.password_change) {
+    if(sys_cb.password_change)
+    {
         compo_textbox_set_visible(txt_title, true);
     }
 
     //创建按钮
     compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
+//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
     compo_setid(btn, COMPO_ID_BTN_NO);
     compo_button_set_pos(btn, 65, 249);
     compo_button_set_visible(btn, false);
 
-    if(!sys_cb.password_change) {
+    if(!sys_cb.password_change)
+    {
         compo_button_set_visible(btn, true);
     }
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
+//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
     compo_setid(btn, COMPO_ID_BTN_YES);
     compo_button_set_pos(btn, 175, 249);
 
@@ -72,37 +76,39 @@ static void func_password_sub_select_process(void)
 static void func_select_button_click(void)
 {
     int id = compo_get_button_id();
-    switch (id) {
-    case COMPO_ID_BTN_YES:
-        func_cb.sta = FUNC_SET_SUB_PASSWORD;
-        break;
+    switch (id)
+    {
+        case COMPO_ID_BTN_YES:
+            func_cb.sta = FUNC_SET_SUB_PASSWORD;
+            break;
 
-    case COMPO_ID_BTN_NO:
-        sys_cb.password_cnt = 0;
-        func_cb.sta = FUNC_PASSWORD_SUB_DISP;
-        break;
+        case COMPO_ID_BTN_NO:
+            sys_cb.password_cnt = 0;
+            func_cb.sta = FUNC_PASSWORD_SUB_DISP;
+            break;
 
-    default:
-        break;
+        default:
+            break;
     }
 }
 
 //修改密码功能消息处理
 static void func_password_sub_select_message(size_msg_t msg)
 {
-    switch (msg) {
-    case MSG_CTP_CLICK:
-        func_select_button_click();                  //单击按钮
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_select_button_click();                  //单击按钮
+            break;
 
 
-    case MSG_QDEC_FORWARD:
-    case MSG_QDEC_BACKWARD:
-        break;
+        case MSG_QDEC_FORWARD:
+        case MSG_QDEC_BACKWARD:
+            break;
 
-    default:
-        func_message(msg);
-        break;
+        default:
+            func_message(msg);
+            break;
     }
 }
 
@@ -123,7 +129,8 @@ void func_password_sub_select(void)
 {
     printf("%s\n", __func__);
     func_password_sub_select_enter();
-    while (func_cb.sta == FUNC_PASSWORD_SUB_SELECT) {
+    while (func_cb.sta == FUNC_PASSWORD_SUB_SELECT)
+    {
         func_password_sub_select_process();
         func_password_sub_select_message(msg_dequeue());
     }

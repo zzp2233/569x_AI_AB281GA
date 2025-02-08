@@ -19,6 +19,7 @@ typedef struct
     u32 str_idx;
 } func_item_info_t;
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 #define FUNC_ITEM_CNT   (sizeof(func_item_tbl) / sizeof(func_item_tbl[0]))
 const static func_item_info_t func_item_tbl[] =
 {
@@ -103,6 +104,92 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_SET_SUB_ABOUT,            UI_BUF_I330001_THEME_1_GUANYU_BIN,            STR_SETTING_ABOUT},         //设置--关于
 //    {FUNC_OFF,                      UI_BUF_ICON_OFF_BIN,                        STR_SETTING_OFF},           //关机
 };
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#define FUNC_ITEM_CNT   (sizeof(func_item_tbl) / sizeof(func_item_tbl[0]))
+const static func_item_info_t func_item_tbl[] =
+{
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {FUNC_HEARTRATE,                UI_BUF_I332001_THEME_ICON1_HEART_BIN,                 STR_HEART_RATE},            //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {FUNC_BT,                       UI_BUF_I332001_THEME_ICON1_MUSIC_BIN,                      STR_MUSIC},                 //蓝牙播放器(控制手机音乐)
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {FUNC_ALARM_CLOCK,              UI_BUF_I332001_THEME_ICON1_ALARM_BIN,                STR_ALARM_CLOCK},           //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {FUNC_BLOOD_OXYGEN,             UI_BUF_I332001_THEME_ICON1_SPO2_BIN,               STR_BLOOD_OXYGEN},          //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+//    {FUNC_BLOODSUGAR,               UI_BUF_ICON_BLOODSUGAR_BIN,                 STR_BLOOD_SUGAR},           //血糖
+//    {FUNC_BLOOD_PRESSURE,           UI_BUF_ICON_BLOOD_PRESSURE_BIN,             STR_BLOOD_PRESSURE},        //血压
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {FUNC_BREATHE,                  UI_BUF_I332001_THEME_ICON1_BREATHE_BIN,                    STR_BREATHE_TRAIN},               //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {FUNC_CALCULATOR,               UI_BUF_I332001_THEME_ICON1_CALCULATOR_BIN,                 STR_CALCULATOR},            //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {FUNC_CAMERA,                   UI_BUF_I332001_THEME_ICON1_PHOTO_BIN,                     STR_CAMERA},                //相机
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
+    {FUNC_LIGHT,                    UI_BUF_I332001_THEME_ICON1_BRIGHTNESS_BIN,                      STR_SETTING_LIGHT},         //亮度调节
+#endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {FUNC_TIMER,                    UI_BUF_I332001_THEME_ICON1_TIMER_BIN,                      STR_TIMER},                 //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {FUNC_SLEEP,                    UI_BUF_I332001_THEME_ICON1_SLEEP_BIN,                      STR_SLEEP},                 //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {FUNC_STOPWATCH,                UI_BUF_I332001_THEME_ICON1_STOPWATCH_BIN,                  STR_STOP_WATCH},            //秒表
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {FUNC_WEATHER,                  UI_BUF_I332001_THEME_ICON1_WEATHER_BIN,                    STR_WEATHER},               //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+//    {FUNC_PRESSURE,                 UI_BUF_ICON_PRESSURE_BIN,                   STR_PRESSURE},              //压力
+
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {FUNC_GAME,                     UI_BUF_I332001_THEME_ICON1_GAME_BIN,                       STR_GAME},                  //游戏
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+//    {FUNC_ALTITUDE,                 UI_BUF_ICON_ALTITUDE_BIN,                   STR_ALTITUDE},              //海拔
+//    {FUNC_MAP,                      UI_BUF_ICON_MAP_BIN,                        STR_MAP},                   //地图
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {FUNC_MESSAGE,                  UI_BUF_I332001_THEME_ICON1_MESSAGE_BIN,                    STR_MESSAGE},               //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
+    {FUNC_SCAN,                     UI_BUF_I332001_THEME_ICON1_QR_BIN,                       STR_QRCODE},                  //扫一扫
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {FUNC_VOICE,                    UI_BUF_I332001_THEME_ICON1_VIOCE_BIN,                      STR_VOICE},                 //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+//    {FUNC_COMPASS,                  UI_BUF_ICON_COMPASS_BIN,                    STR_COMPASS},               //指南针
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {FUNC_SPORT,                    UI_BUF_I332001_THEME_ICON1_SOPRT_BIN,                      STR_SPORTS},                //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {FUNC_CALL,                     UI_BUF_I332001_THEME_ICON1_CALL_BIN,                       STR_PHONE},                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+    {FUNC_FINDPHONE,                UI_BUF_I332001_THEME_ICON1_FINDPHONE_BIN,                  STR_FIND_PHONE},            //寻找手机
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {FUNC_CALENDAER,                UI_BUF_I332001_THEME_ICON1_CALENDAR_BIN,                   STR_CALENDAR},              //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {FUNC_SET_SUB_SAV,                   UI_BUF_I332001_THEME_ICON1_SOUND_BIN,                     STR_VOL},                //音量
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {FUNC_ACTIVITY,                 UI_BUF_I332001_THEME_ICON1_ACTIVITY_BIN,                   STR_EVREY_DAY_ACTIVITY},       //活动记录
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {FUNC_FLASHLIGHT,               UI_BUF_I332001_THEME_ICON1_FLASHLIGHT_BIN,                 STR_FLASHLIGHT},            //手电筒
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {FUNC_SETTING,                  UI_BUF_I332001_THEME_ICON1_SETTINGS_BIN,                    STR_SETTING},               //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {FUNC_LANGUAGE,                 UI_BUF_I332001_THEME_ICON1_LANUAGE_BIN,                   STR_SETTING_LANGUAGE},      //设置--语言
+    {FUNC_RESTART,                  UI_BUF_I332001_THEME_ICON1_BOOT_BIN,                    STR_SETTING_RESTART},       //重启
+    {FUNC_RSTFY,                    UI_BUF_I332001_THEME_ICON1_RETRY_BIN,            STR_SETTING_RSTFY},         //设置--恢复出厂
+    {FUNC_SET_SUB_ABOUT,            UI_BUF_I332001_THEME_ICON1_GUANYU_BIN,            STR_SETTING_ABOUT},         //设置--关于
+//    {FUNC_OFF,                      UI_BUF_ICON_OFF_BIN,                        STR_SETTING_OFF},           //关机
+};
+#endif
 
 /**
  * @brief 获取任务图标资源地址

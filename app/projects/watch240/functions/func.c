@@ -118,9 +118,9 @@ extern void func_set_sub_wrist(void);
 extern void func_password_sub_disp(void);
 extern void func_password_sub_select(void);
 extern void func_set_sub_about(void);
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
 extern void func_set_sub_restart(void);
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
 #if UTE_MODULE_SCREENS_RESFY_SUPPORT
 extern void func_set_sub_rstfy(void);
 #endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
@@ -207,7 +207,9 @@ compo_form_t *func_clock_form_create(void);
 compo_form_t *func_clock_sub_card_form_create(void);
 #endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
 compo_form_t *func_heartrate_form_create(void);
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
 compo_form_t *func_bt_form_create(void);
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
 compo_form_t *func_alarm_clock_form_create(void);
 compo_form_t *func_alarm_clock_sub_set_form_create(void);
 compo_form_t *func_alarm_clock_sub_repeat_form_create(void);

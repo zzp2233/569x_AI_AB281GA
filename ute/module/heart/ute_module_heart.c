@@ -1230,7 +1230,7 @@ static bool uteModuleHeartLoadTodayHistoryData(uint8_t *heartHistoryGraph, uint8
 #if UTE_LOG_GUI_LVL // test
     for (uint8_t i = 0; i < 144; i++)
     {
-        heartHistoryData[i] = 50 + rand() % 150;
+        heartHistoryData[i] = 50 + get_random(150);
     }
 #endif
 

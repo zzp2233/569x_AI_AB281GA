@@ -282,35 +282,35 @@ compo_form_t *func_address_book_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_CALL_LINK]);
 
-//    //创建无消息界面
-//    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_CALL_NO_CONTACTS_BIN);
-//    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-//    compo_picturebox_set_visible(pic, false);
-//    compo_setid(pic, COMPO_ID_COVER_PIC);
-//
-//    compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_CONTACTS]));
-//    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH/1.2, widget_text_get_height());
-//    compo_textbox_set_visible(txt, false);
-//    compo_textbox_set(txt, i18n[STR_NO_CONTACTS]);
-//    compo_setid(txt, COMPO_ID_COVER_TXT);
-//
-//    //新建列表
-//    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT);
-//    compo_setid(listbox, COMPO_ID_LISTBOX);
-//    //更新联系人
-//    func_address_book_update();
-//    if (address_book_cnt)
-//    {
-//        compo_listbox_set(listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
-//    }
-//    compo_listbox_set_alike_icon(listbox, UI_BUF_I330001_CALL_CALL_LOG_CONTACTS_BIN);
-//    compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
-//    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
-//    compo_listbox_set_focus_byidx(listbox, 1);
-//    compo_listbox_update(listbox);
-//
-//    compo_textbox_set_visible(txt, address_book_cnt > 0 ? false : true);
-//    compo_picturebox_set_visible(pic, address_book_cnt > 0 ? false : true);
+    //创建无消息界面
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I332001_CALL_NO_CONTACTS_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_visible(pic, false);
+    compo_setid(pic, COMPO_ID_COVER_PIC);
+
+    compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_CONTACTS]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH/1.2, widget_text_get_height());
+    compo_textbox_set_visible(txt, false);
+    compo_textbox_set(txt, i18n[STR_NO_CONTACTS]);
+    compo_setid(txt, COMPO_ID_COVER_TXT);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    //更新联系人
+    func_address_book_update();
+    if (address_book_cnt)
+    {
+        compo_listbox_set(listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
+    }
+    compo_listbox_set_alike_icon(listbox, UI_BUF_I332001_CALL_CALL_LIST_CONTACTS_BIN);
+    compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I332001_FIRSTORDER_CARD_BIN);
+    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update(listbox);
+
+    compo_textbox_set_visible(txt, address_book_cnt > 0 ? false : true);
+    compo_picturebox_set_visible(pic, address_book_cnt > 0 ? false : true);
 
     return frm;
 }

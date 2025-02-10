@@ -1710,39 +1710,39 @@ static const aclock_set_pic_bg_t tbl_aclock_set_pic_bg =
 
     .bg_hour = {
         .id = COMPO_ID_PIC_BG_HOUR,
-        .x  = 4+100/2, //91+58/2  54,120,66
-        .y  = 62+130/2,
-//        .res_24_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_BIG_BIN,
-//        .res_24_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_BIG_BIN,
-//        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
-//        .res_12_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_SMALL_BIN,
+        .x  = 42+122/2, //91+58/2  54,120,66
+        .y  = 84+158/2,
+        .res_24_bright  = UI_BUF_I332001_PUBLIC_KUANG_YELLOW_BIG_BIN,
+        .res_24_destory = UI_BUF_I332001_PUBLIC_KUANG_GREY_BIG_BIN,
+        .res_12_bright  = UI_BUF_I332001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
+        .res_12_destory = UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN,
     },
 
     .bg_min = {
         .id = COMPO_ID_PIC_BG_MIN,
-        .x  = 136+100/2,    //178+58/2  186,207,21
-        .y  = 62+130/2,
-//        .res_24_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_BIG_BIN,
-//        .res_24_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_BIG_BIN,
-//        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
-//        .res_12_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_SMALL_BIN,
+        .x  = 237+39/2,    //178+58/2  186,207,21
+        .y  = 84+158/2,
+        .res_24_bright  = UI_BUF_I332001_PUBLIC_KUANG_YELLOW_BIG_BIN,
+        .res_24_destory = UI_BUF_I332001_PUBLIC_KUANG_GREY_BIG_BIN,
+        .res_12_bright  = UI_BUF_I332001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
+        .res_12_destory = UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN,
     },
 
     .bg_am_pm = {
         .id = COMPO_ID_PIC_BG_AM_PM,
         .x  = 4+58/2,
-        .y  = 62+130/2,//127
+        .y  = 84+158/2,
         .res_24_bright  = 0,
         .res_24_destory = 0,
-//        .res_12_bright  = UI_BUF_I330001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
-//        .res_12_destory = UI_BUF_I330001_PUBLIC_KUANG_GREY_SMALL_BIN,
+        .res_12_bright  = UI_BUF_I332001_PUBLIC_KUANG_YELLOW_SMALL_BIN,
+        .res_12_destory = UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN,
     },
 
     .bg_colon = {
         .id = COMPO_ID_PIC_COLON,
-        .x  = 116+6/2,  //160+6/2  119 163, 44
-        .y  = 113+24/2,//125
-//        .res    = UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN,
+        .x  = 164+32/2,  //160+6/2  119 163, 44
+        .y  = 84+158/2,//125
+        .res    = UI_BUF_I332001_PUBLIC_KUANG_COLON_BIN,
     },
 
     .btn_hour = {
@@ -1762,12 +1762,12 @@ static const aclock_set_pic_bg_t tbl_aclock_set_pic_bg =
         .id1_click = COMPO_ID_PIC_CONTINUE_CLICK,
         .id2 = COMPO_ID_BTN_REPETAT_YES,
         .id2_click = COMPO_ID_PIC_REPETAT_YES_CLICK,
-        .x  = 13+214/2,
-        .y  = 216+62/2,
+        .x  = 72+216/2,
+        .y  = 266+64/2,
         .w  = 0,
         .h  = 0,
-//        .res1 = UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN,
-//        .res2 = UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN,
+        .res1 = UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN,
+        .res2 = UI_BUF_I332001_PUBLIC_RECTANGLE00_BIN,
         .str_id = STR_OK,
         .font_w = 180,
         .font_h = 20,
@@ -1786,9 +1786,9 @@ static const aclock_set_pic_bg_t tbl_aclock_set_pic_bg =
 //#define ALARM_NUM_PIC_CENTER_X              120     //时间框的中心坐标
 //#define ALARM_NUM_PIC_CENTER_Y              126
 
-#define ALARM_TXT_ITEM_H_X                  51//71
-#define ALARM_TXT_ITEM_M_X                  185//171
-#define ALARM_TXT_ITEM_Y                    -25//48
+#define ALARM_TXT_ITEM_H_X                  (42+122/2)//51//71
+#define ALARM_TXT_ITEM_M_X                  (237+39/2)//185//171
+#define ALARM_TXT_ITEM_Y                    -13//-25//48
 #define ALARM_TXT_ITEM_Y_OFFSET             45
 
 #define ALARM_CLOCK_SET_NUM_POS_Y_START                 ALARM_TXT_ITEM_Y
@@ -2099,6 +2099,72 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_textbox_set(txt_num, buf);
     }
 
+    //创建数字 ampm
+    //创建数字 -> 使用数字进行映射: 0 -> 上午, 1 -> 下午；
+//    s8 am_pm = func_alarm_convert_to_12hour(hour).am_pm;
+//    s8 am_pm_conv = am_pm - 1;
+//    if (func_cb.sta == FUNC_ALARM_CLOCK_SUB_SET)
+//    {
+//        f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
+//        f_alarm_set->time_am_pm = am_pm_conv;
+//    }
+//    if (am_pm_conv >= 0)
+//    {
+//        for (u8 idx = 0; idx < ALARM_SET_AMPM_ITEM_CNT; idx++)
+//        {
+//            compo_textbox_t *txt_str = compo_textbox_create_for_page(frm, page, tbl_aclock_set_ampm_item[idx].num_cnt);
+//            compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_BIN);
+//            compo_setid(txt_str, tbl_aclock_set_ampm_item[idx].num_id);
+//            compo_textbox_set_align_center(txt_str, true);
+//            compo_textbox_set_location(txt_str, tbl_aclock_set_ampm_item[idx].x, tbl_aclock_set_ampm_item[idx].y,
+//                                       gui_image_get_size(tbl_aclock_set_pic_bg.bg_hour.res_12_bright).wid, ALARM_CLOCK_FONT_AMPM_HEIGHT);
+//            if (uteModuleSystemtime12HOn())
+//            {
+//                compo_textbox_set_visible(txt_str, tbl_aclock_set_ampm_item[idx].visible_en);
+//            }
+//            else
+//            {
+//                compo_textbox_set_visible(txt_str, false);
+//            }
+//            compo_textbox_set_alpha(txt_str, tbl_aclock_set_ampm_item[idx].alpha);
+//            memset(buf, 0, sizeof(buf));
+//            if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_UU)
+//            {
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(func_alarm_ampm_get_str_cal(am_pm_conv, 1), 1)].str_id]);
+//            }
+//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_UP)
+//            {
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(am_pm_conv, 1)].str_id]);
+//            }
+//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_CENTER)
+//            {
+//                //compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_NUM_24_BIN);
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[am_pm_conv].str_id]);
+//            }
+//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_DOWN)
+//            {
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(am_pm_conv, 2)].str_id]);
+//            }
+//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_DD)
+//            {
+//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(func_alarm_ampm_get_str_cal(am_pm_conv, 2), 2)].str_id]);
+//            }
+//            compo_textbox_set(txt_str, buf);
+//        }
+//    }
+
+//    for (int i=0; i<ALARM_SET_AMPM_ITEM_CNT; i++) {
+//        compo_textbox_t* txt_am_pm = compo_getobj_byid(tbl_aclock_set_ampm_item[i].num_id);
+//        if (uteModuleSystemtime12HOn())
+//        {
+//            compo_textbox_set_visible(txt_am_pm, true);
+//        }
+//        else
+//        {
+//            compo_textbox_set_visible(txt_am_pm, false);
+//        }
+//    }
+
     //创建时间设置背景框
     compo_picturebox_t *bg_hour = compo_picturebox_create(frm, 0);
     if(uteModuleSystemtime12HOn())
@@ -2166,28 +2232,75 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
                                   gui_image_get_size(tbl_aclock_set_pic_bg.bg_min.res_24_destory).hei);
     }
     compo_setid(btn_min, tbl_aclock_set_pic_bg.btn_min.id);
+    //ampm
+//    compo_button_t* btn_am_pm = compo_button_create(frm);
+//    if(uteModuleSystemtime12HOn())
+//    {
+//        compo_button_set_location(btn_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y, gui_image_get_size(tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory).wid,
+//                                  gui_image_get_size(tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory).hei);
+//        compo_button_set_visible(btn_am_pm, true);
+//    }
+//    else
+//    {
+//        compo_button_set_location(btn_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y, 0, 0);
+//        compo_button_set_visible(btn_am_pm, false);
+//    }
+//    compo_setid(btn_am_pm, tbl_aclock_set_pic_bg.btn_am_pm.id);
 
-    //建立确定按钮 - 未按下图片
-//    compo_button_t* add_btn = compo_button_create_by_image(frm, tbl_aclock_set_pic_bg.btn_ok.res1);
-//    compo_button_set_pos(add_btn, tbl_aclock_set_pic_bg.btn_ok.x, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
+    //新建按钮
+//    compo_button_t *btn;
 //    if (ALARM_IS_FREE(sys_cb.alarm_edit_idx))   //add
 //    {
-//        compo_setid(add_btn, tbl_aclock_set_pic_bg.btn_ok.id1);
+//        btn = compo_button_create_by_image(frm, UI_BUF_ALARM_CLOCK_CONTINUE_BIN);
+//        compo_setid(btn, COMPO_ID_BTN_CONTINUE);
+//        compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_ALARM_CLOCK_CONTINUE_BIN).hei / 2 - 10);
 //    }
 //    else        //edit
 //    {
-//        compo_setid(add_btn, tbl_aclock_set_pic_bg.btn_ok.id2);
+//        btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_CLOSE00_BIN);
+//        compo_setid(btn, COMPO_ID_BTN_REPETAT_NO);
+//        compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_CLOSE00_BIN).hei / 2 - 10);
+//
+//        btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_OK01_BIN);
+//        compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
+//        compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_OK01_BIN).hei / 2 - 10);
 //    }
+
+    //建立确定按钮 - 未按下图片
+    compo_button_t* add_btn = compo_button_create_by_image(frm, tbl_aclock_set_pic_bg.btn_ok.res1);
+    compo_button_set_pos(add_btn, tbl_aclock_set_pic_bg.btn_ok.x, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
+    if (ALARM_IS_FREE(sys_cb.alarm_edit_idx))   //add
+    {
+        compo_setid(add_btn, tbl_aclock_set_pic_bg.btn_ok.id1);
+    }
+    else        //edit
+    {
+        compo_setid(add_btn, tbl_aclock_set_pic_bg.btn_ok.id2);
+    }
+
+    //建立确定按钮图像 - 按下图片
+//    compo_picturebox_t *pic_click = compo_picturebox_create(frm, tbl_aclock_set_pic_bg.btn_ok.res2);
+//    compo_picturebox_set_pos(pic_click, tbl_aclock_set_pic_bg.btn_ok.x, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
+//    compo_picturebox_set_visible(pic_click, false);
+//    if (ALARM_IS_FREE(sys_cb.alarm_edit_idx))   //add
+//    {
+//        compo_setid(pic_click, tbl_aclock_set_pic_bg.btn_ok.id1_click);
+//    }
+//    else        //edit
+//    {
+//        compo_setid(pic_click, tbl_aclock_set_pic_bg.btn_ok.id2_click);
+//    }
+
     //建立 :
-//    compo_picturebox_t *bg_colon = compo_picturebox_create(frm, tbl_aclock_set_pic_bg.bg_colon.res);
-//    compo_picturebox_set_pos(bg_colon, tbl_aclock_set_pic_bg.bg_colon.x + func_alarm_get_ofs_x(0), tbl_aclock_set_pic_bg.bg_colon.y);
-//    compo_setid(bg_colon, tbl_aclock_set_pic_bg.bg_colon.id);
+    compo_picturebox_t *bg_colon = compo_picturebox_create(frm, tbl_aclock_set_pic_bg.bg_colon.res);
+    compo_picturebox_set_pos(bg_colon, tbl_aclock_set_pic_bg.bg_colon.x + func_alarm_get_ofs_x(0), tbl_aclock_set_pic_bg.bg_colon.y);
+    compo_setid(bg_colon, tbl_aclock_set_pic_bg.bg_colon.id);
 
     //建立确定按钮文本
-//    compo_textbox_t* btn_str = compo_textbox_create(frm, strlen(i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]));
-//    compo_textbox_set_location(btn_str, tbl_aclock_set_pic_bg.btn_ok.x,GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
-//                               tbl_aclock_set_pic_bg.btn_ok.font_w, tbl_aclock_set_pic_bg.btn_ok.font_h);
-//    compo_textbox_set(btn_str, i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]);
+    compo_textbox_t* btn_str = compo_textbox_create(frm, strlen(i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]));
+    compo_textbox_set_location(btn_str, tbl_aclock_set_pic_bg.btn_ok.x,GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
+                               tbl_aclock_set_pic_bg.btn_ok.font_w, tbl_aclock_set_pic_bg.btn_ok.font_h);
+    compo_textbox_set(btn_str, i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]);
 
     if(uteModuleSystemtime12HOn())
     {
@@ -2221,23 +2334,50 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
             }
         }
 
-//        compo_textbox_t *txt_am_pm = compo_textbox_create(frm,strlen(i18n[STR_AM]));//上午
-//        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43,gui_image_get_size(UI_BUF_I330001_ALARM_00_BIN).wid,gui_image_get_size(UI_BUF_I330001_ALARM_00_BIN).hei);
-//        compo_textbox_set(txt_am_pm, i18n[STR_AM]);
+
+//        printf("clock=%d\n",am_pm_conv);
+
+//        compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I332001_ALARM_01_BIN);
+//        compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43);
 //        if(am_pm_conv == 1)
 //        {
-//            compo_textbox_set_forecolor(txt_am_pm, COLOR_GRAY);
+//            compo_button_set_bgimg(btn, UI_BUF_I332001_ALARM_00_BIN);
 //        }
-//        compo_setid(txt_am_pm,COMPO_ID_TXT_AM);
+//        else
+//        {
+//            compo_button_set_bgimg(btn, UI_BUF_I332001_ALARM_01_BIN);
+//        }
+//        compo_setid(btn,COMPO_ID_PIC_AM_BG);
 //
-//        txt_am_pm = compo_textbox_create(frm,strlen(i18n[STR_PM]));//下午
-//        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3,gui_image_get_size(UI_BUF_I330001_ALARM_00_BIN).wid,gui_image_get_size(UI_BUF_I330001_ALARM_00_BIN).hei);
-//        compo_textbox_set(txt_am_pm, i18n[STR_PM]);
+//        btn = compo_button_create_by_image(frm, UI_BUF_I332001_ALARM_00_BIN);
+//        compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3);
 //        if(am_pm_conv == 0)
 //        {
-//            compo_textbox_set_forecolor(txt_am_pm, COLOR_GRAY);
+//            compo_button_set_bgimg(btn, UI_BUF_I332001_ALARM_00_BIN);
 //        }
-//        compo_setid(txt_am_pm,COMPO_ID_TXT_PM);
+//        else
+//        {
+//            compo_button_set_bgimg(btn, UI_BUF_I332001_ALARM_01_BIN);
+//        }
+//        compo_setid(btn,COMPO_ID_PIC_PM_BG);
+
+        compo_textbox_t *txt_am_pm = compo_textbox_create(frm,strlen(i18n[STR_AM]));//上午
+//        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43,gui_image_get_size(UI_BUF_I332001_ALARM_00_BIN).wid,gui_image_get_size(UI_BUF_I332001_ALARM_00_BIN).hei);
+        compo_textbox_set(txt_am_pm, i18n[STR_AM]);
+        if(am_pm_conv == 1)
+        {
+            compo_textbox_set_forecolor(txt_am_pm, COLOR_GRAY);
+        }
+        compo_setid(txt_am_pm,COMPO_ID_TXT_AM);
+
+        txt_am_pm = compo_textbox_create(frm,strlen(i18n[STR_PM]));//下午
+//        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3,gui_image_get_size(UI_BUF_I332001_ALARM_00_BIN).wid,gui_image_get_size(UI_BUF_I332001_ALARM_00_BIN).hei);
+        compo_textbox_set(txt_am_pm, i18n[STR_PM]);
+        if(am_pm_conv == 0)
+        {
+            compo_textbox_set_forecolor(txt_am_pm, COLOR_GRAY);
+        }
+        compo_setid(txt_am_pm,COMPO_ID_TXT_PM);
     }
 
     return frm;
@@ -2908,8 +3048,8 @@ static void func_alarm_clock_sub_set_button_click(void)
 //            printf("am\n");
 //            if(btn_am == NULL)return;
             f_alarm_set->time_am_pm = 0;
-//            compo_button_set_bgimg(btn_am, UI_BUF_I330001_ALARM_01_BIN);
-//            compo_button_set_bgimg(btn_pm, UI_BUF_I330001_ALARM_00_BIN);
+//            compo_button_set_bgimg(btn_am, UI_BUF_I332001_ALARM_01_BIN);
+//            compo_button_set_bgimg(btn_pm, UI_BUF_I332001_ALARM_00_BIN);
             compo_textbox_set_forecolor(txt_am, COLOR_WHITE);
             compo_textbox_set_forecolor(txt_pm, COLOR_GRAY);
 
@@ -2927,8 +3067,8 @@ static void func_alarm_clock_sub_set_button_click(void)
 //            printf("pm\n");
 //            if(btn_am == NULL)return;
             f_alarm_set->time_am_pm = 1;
-//            compo_button_set_bgimg(btn_pm, UI_BUF_I330001_ALARM_01_BIN);
-//            compo_button_set_bgimg(btn_am, UI_BUF_I330001_ALARM_00_BIN);
+//            compo_button_set_bgimg(btn_pm, UI_BUF_I332001_ALARM_01_BIN);
+//            compo_button_set_bgimg(btn_am, UI_BUF_I332001_ALARM_00_BIN);
             compo_textbox_set_forecolor(txt_pm, COLOR_WHITE);
             compo_textbox_set_forecolor(txt_am, COLOR_GRAY);
 

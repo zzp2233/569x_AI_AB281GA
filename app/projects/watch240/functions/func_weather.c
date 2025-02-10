@@ -351,7 +351,7 @@ compo_form_t *func_weather_form_create(void)
                                   gui_image_get_size( weather_list[get_weather_id[i]].res_addr).hei/3);
         compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/10-6,GUI_SCREEN_HEIGHT+30+(i*36));
 
-        if(uteModuleWeatherGetCurrDay() == time.day)
+        if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
         {
             if(displayInfo.isFahrenheit)     ///是否为华氏度
             {
@@ -445,7 +445,7 @@ enum
     SWITCH_NO,
     TOTCH_MOVE,
 };
-
+static int16_t page_y = 0;
 //滑动处理
 static void func_weather_move(void)
 {
@@ -577,6 +577,7 @@ static void func_weather_move(void)
                     }
                 }
                 f_sleep->page_old_y = f_sleep->move_offset;
+                page_y = f_sleep->move_offset;
                 widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
             }
         }
@@ -584,8 +585,6 @@ static void func_weather_move(void)
 
 //        printf("move_offset:%d\n",f_sleep->move_offset);
 }
-
-static int16_t page_y = 0;
 
 static void weather_refresh(void)
 {

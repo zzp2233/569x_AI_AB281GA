@@ -70,6 +70,7 @@ compo_form_t *func_ble_call_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#define TXT_X_MIN 20
 enum
 {
     COMPO_ID_TXT_NUMBER = 0x01,     //避免id被覆盖

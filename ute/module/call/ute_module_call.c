@@ -169,7 +169,14 @@ void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
 
     if(UTE_BT_POWER_OFF_AUTO != reason)
     {
-        uteModuleCallData.isBtAutoClose = false;
+        if(UTE_BT_POWER_OFF_APP_UNBIND == reason)
+        {
+            uteModuleCallData.isBtAutoClose = true;
+        }
+        else
+        {
+            uteModuleCallData.isBtAutoClose = false;
+        }
     }
     else
     {
@@ -380,14 +387,6 @@ void uteModuleCallInit(void)
 
 #if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
     uteModuleCallEntertranmentVoiceSwitchReadConfig();
-    if(uteModuleCallData.isEntertranmentVoiceOn)
-    {
-        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_CONNECT_A2DP,0);
-    }
-    else
-    {
-        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_DISCONNECT_A2DP,0);
-    }
 #endif
 
     if(uteModuleCallData.isPowerOn || uteModuleCallData.isBtAutoClose)
@@ -594,6 +593,7 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
             if(uteModuleCallBtIsPowerOn() ==false)
             {
                 uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
+                bt_abort_reconnect(); //终止回连
             }
 #endif
         }
@@ -659,6 +659,7 @@ void uteModuleCallBleConnectState(bool isConnected)
         if (!uteModuleCallBtIsPowerOn() && (uteModuleCallData.isBtAutoClose == true)) //&& memcmp(uteModuleCallData.address, "\x00\x00\x00\x00\x00\x00", 6)
         {
             uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
+            // bt_abort_reconnect(); //终止回连
             return;
         }
     }
@@ -775,7 +776,15 @@ bool uteModuleCallBtIsPowerOn(void)
 */
 void uteModuleCallConnectA2DPProfile(void)
 {
-    bt_a2dp_profile_en();
+    UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s", __func__);
+    if(bt_is_connected() && !bt_a2dp_profile_completely_connected())
+    {
+        bt_a2dp_profile_en();
+    }
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,bt_is_connected=%d,bt_a2dp_profile_completely_connected=%d", __func__,bt_is_connected(),bt_a2dp_profile_completely_connected());
+    }
 }
 
 /**
@@ -786,7 +795,11 @@ void uteModuleCallConnectA2DPProfile(void)
 */
 void uteModuleCallDisconnectA2DPProfile(void)
 {
-    bt_a2dp_profile_dis();
+    UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s", __func__);
+    if(bt_is_connected())
+    {
+        bt_a2dp_profile_dis();
+    }
 }
 
 /**

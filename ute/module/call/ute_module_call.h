@@ -220,6 +220,7 @@ bool uteModuleCallIsScoConnected(void);
 
 void uteModuleCallBtSetBondFlag(bool isSet);
 bool uteModuleCallBtIsPowerOn(void);
+bool uteModuleCallGetIsBtAutoClose(void);
 
 bool uteModuleCallIsCurrentConnectionIphone(void);
 bool uteModuleCallIsHasConnection(void);

@@ -713,6 +713,24 @@ static void func_alarm_clock_enter(void)
 
     //当前显示的时间制
     f_aclock->time_scale = uteModuleSystemtime12HOn();
+#elif  GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
+    f_aclock->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = true,
+        .page_size = 90,
+        .page_count = ALARM_ENABLE_CNT()+1,
+        .jump_perc = 20,
+        .quick_jump_perc = 200,
+        .up_over_perc = ALARM_ENABLE_CNT() ? 50 : 0,
+        .down_over_perc = ALARM_ENABLE_CNT() ? 50 : 0,
+        .down_spring_perc = icon_add ? 0 : 40,
+    };
+    compo_page_move_init(f_aclock->ptm, func_cb.frm_main->page_body, &info);
+
+    //当前显示的时间制
+    f_aclock->time_scale = uteModuleSystemtime12HOn();
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
@@ -720,6 +738,12 @@ static void func_alarm_clock_enter(void)
 static void func_alarm_clock_exit(void)
 {
 #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+    f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
+    if (f_aclock->ptm)
+    {
+        func_free(f_aclock->ptm);
+    }
+#elif  GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
     if (f_aclock->ptm)
     {

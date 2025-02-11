@@ -42,6 +42,8 @@ enum
     BIRD_STATUS_RESULT_WAIT,
 };
 
+
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 #define BIRD_DOWN_ACC_V                         1                           //向下加速度
 #define BIRD_UP_ACC_V                           5                           //向上加速度
 #define BIRD_X_POS                              (GUI_SCREEN_CENTER_X / 2)   //小鸟图X坐标
@@ -58,8 +60,6 @@ enum
 #define CAL_PIPE_UP_Y_POS(pipe_down_y_pos, pipe_down_cut)    ((pipe_down_y_pos) - (PIPE_PIC_HEIGHT / (pipe_down_cut) / 2) - (PIPE_PIC_HEIGHT / 2) - PIPE_Y_GAP)
 //计算下管道y坐标(中心参考点)
 #define CAL_PIPE_DOWM_Y_POS(pipe_down_cut)                   (BIRD_VALID_HEIGHT - (PIPE_PIC_HEIGHT / (pipe_down_cut)) / 2)
-
-#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建游戏界面
 compo_form_t *func_bird_form_create(void)
@@ -332,56 +332,76 @@ static void func_bird_fail(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#define BIRD_DOWN_ACC_V                         1                           //向下加速度
+#define BIRD_UP_ACC_V                           5                           //向上加速度
+#define BIRD_X_POS                              (GUI_SCREEN_CENTER_X / 2)   //小鸟图X坐标
+#define BIRD_WIDTH                              56
+#define BIRD_HEIGHT                             (132 / 3)
+#define PIPE_SPEED                              3                           //管道移动速度
+#define PIPE_X_GAP                              (GUI_SCREEN_CENTER_X + 80)  //管道水平间隔
+#define PIPE_Y_GAP                              130                         //管道纵向间隔
+#define PIPE_PIC_WIDTH                          57                          //管道图片宽度
+#define PIPE_PIC_HEIGHT                         168                         //管道图片高度
+#define BIRD_VALID_HEIGHT                       300                         //有效界面高度
+
+//计算上管道y坐标(中心参考点)
+#define CAL_PIPE_UP_Y_POS(pipe_down_y_pos, pipe_down_cut)    ((pipe_down_y_pos) - (PIPE_PIC_HEIGHT / (pipe_down_cut) / 2) - (PIPE_PIC_HEIGHT / 2) - PIPE_Y_GAP)
+//计算下管道y坐标(中心参考点)
+#define CAL_PIPE_DOWM_Y_POS(pipe_down_cut)                   (BIRD_VALID_HEIGHT - (PIPE_PIC_HEIGHT / (pipe_down_cut)) / 2)
+
 //创建游戏界面
 compo_form_t *func_bird_form_create(void)
 {
     compo_form_t *frm;
-//    component_t *compo;
-//    uint8_t i;
-//    uint32_t pipe_bin_addr[] = {UI_BUF_I330001_GAME_ZHUZI1_BIN, UI_BUF_I330001_GAME_ZHUZI2_BIN};
-//
-//    //新建窗体和背景
-//    frm = compo_form_create(true);
-//
-//    //背景图
-//    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_BG_BIN);
-//    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-//
-//    //stop pic
-//    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_PLAY_BIN);
-//    compo_setid(compo, COMPO_ID_BIRD_STOP_PIC);
-//    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-//
-//    //bird pic
-//    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_BIRD2_BIN);
-//    compo_setid(compo, COMPO_ID_BIRD_BIRD_PIC);
-//    compo_picturebox_cut((compo_picturebox_t *)compo, 0, 3);
-//    compo_picturebox_set_pos((compo_picturebox_t *)compo, BIRD_X_POS, GUI_SCREEN_CENTER_Y);
-//    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
-//
-//    //pipe pic
-//    for(i = 0; i < 4; i++) {
-//        compo = (component_t *)compo_picturebox_create(frm, pipe_bin_addr[i % 2]);
-//        compo_setid(compo, COMPO_ID_BIRD_PIPE_PIC_START + i);
-//        compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
-//    }
-//
-//    //fail pic
-//    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_WINDOW1_BIN);
-//    compo_setid(compo, COMPO_ID_BIRD_FAIL_PIC);
-//    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-//    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
-//
-//
-//    //stop btn
-//    compo = (component_t *)compo_button_create(frm);
-//    compo_setid(compo, COMPO_ID_BIRD_STOP_BTN);
-//    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X+50, GUI_SCREEN_CENTER_Y+35, 60, 60);
-//
-//    //start btn
-//    compo = (component_t *)compo_button_create(frm);
-//    compo_setid(compo, COMPO_ID_BIRD_START_BTN);
-//    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X-50, GUI_SCREEN_CENTER_Y+35, 60, 60);
+    component_t *compo;
+    uint8_t i;
+    uint32_t pipe_bin_addr[] = {UI_BUF_I332001_GAME_ZHUZI1_BIN, UI_BUF_I332001_GAME_ZHUZI2_BIN};
+
+    //新建窗体和背景
+    frm = compo_form_create(true);
+
+    //背景图
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I332001_GAME_BG_BIN);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+
+    //stop pic
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I332001_GAME_PLAY_BIN);
+    compo_setid(compo, COMPO_ID_BIRD_STOP_PIC);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+
+    //bird pic
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I332001_GAME_BIRD2_BIN);
+    compo_setid(compo, COMPO_ID_BIRD_BIRD_PIC);
+    compo_picturebox_cut((compo_picturebox_t *)compo, 0, 3);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, BIRD_X_POS, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+
+    //pipe pic
+    for(i = 0; i < 4; i++)
+    {
+        compo = (component_t *)compo_picturebox_create(frm, pipe_bin_addr[i % 2]);
+        compo_setid(compo, COMPO_ID_BIRD_PIPE_PIC_START + i);
+        compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+    }
+
+    //fail pic
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I332001_GAME_WINDOW1_BIN);
+    compo_setid(compo, COMPO_ID_BIRD_FAIL_PIC);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+
+
+    //stop btn
+    compo = (component_t *)compo_button_create(frm);
+//    compo = (component_t *)compo_button_create_by_image(frm, UI_BUF_I332001_SLEEP_BG_BIN);
+    compo_setid(compo, COMPO_ID_BIRD_STOP_BTN);
+    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X+70, GUI_SCREEN_CENTER_Y+18, 80, 80);
+
+    //start btn
+    compo = (component_t *)compo_button_create(frm);
+//    compo = (component_t *)compo_button_create_by_image(frm, UI_BUF_I332001_SLEEP_BG_BIN);
+    compo_setid(compo, COMPO_ID_BIRD_START_BTN);
+    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X-70, GUI_SCREEN_CENTER_Y+18, 80, 80);
 
     return frm;
 }

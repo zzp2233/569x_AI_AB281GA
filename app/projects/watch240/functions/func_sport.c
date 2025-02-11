@@ -421,7 +421,7 @@ compo_form_t *func_sport_form_create(void)
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_CUM_SPORT_LIST);
     compo_listbox_set(listbox, tbl_sport_list, MENU_LIST_CNT);
-//    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_SPORT_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I332001_SPORT_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     u8 sport_idx = sys_cb.sport_idx;

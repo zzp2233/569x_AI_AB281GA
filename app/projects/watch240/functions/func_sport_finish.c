@@ -84,7 +84,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]);
 
                 //时间日期
-                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
+                snprintf(txt_buf,sizeof(txt_buf),"%04d/%02d/%02d %02d:%02d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);
@@ -115,7 +115,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, txt_buf);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动卡路里
-                snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+                snprintf(txt_buf,sizeof(txt_buf),"%d",sport_data.saveData.sportCaloire);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
@@ -199,7 +199,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]);
 
                 //时间日期
-                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
+                snprintf(txt_buf,sizeof(txt_buf),"%04d/%02d/%02d %02d:%02d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);
@@ -228,7 +228,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, txt_buf);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动卡路里
-                snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+                snprintf(txt_buf,sizeof(txt_buf),"%d",sport_data.saveData.sportCaloire);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
@@ -299,7 +299,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]);
 
                 //时间日期
-                snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %d:%d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
+                snprintf(txt_buf,sizeof(txt_buf),"%04d/%02d/%02d %02d:%02d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_20_BIN);
                 compo_textbox_set_align_center(textbox, false);
@@ -325,7 +325,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set(textbox, txt_buf);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动卡路里
-                snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+                snprintf(txt_buf,sizeof(txt_buf),"%d",sport_data.saveData.sportCaloire);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);

@@ -1572,6 +1572,8 @@ void func_run(void)
 
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
+    sys_cb.sys_init_complete = true;
+
     for (;;)
     {
         if(sys_cb.refresh_language_flag) //刷新语言

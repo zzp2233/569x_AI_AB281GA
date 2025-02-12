@@ -313,6 +313,9 @@ void usr_tmr5ms_isr(void)
     {
         msg_enqueue(MSG_SYS_500MS);
         sys_cb.cm_times++;
+#if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
+#endif
     }
 
     //1s timer process
@@ -853,6 +856,8 @@ void bsp_sys_init(void)
     SD0_LDO_EN_EN();
     sd_soft_detect_poweron_check();
 #endif
+
+    sys_cb.sys_init_complete = false;
 
     uteTaskApplicationInit();
 

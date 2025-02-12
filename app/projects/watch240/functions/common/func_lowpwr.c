@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_message.h"
+#include "ute_project_config.h"
 
 bool power_off_check(void);
 void lock_code_pwrsave(void);
@@ -158,6 +160,10 @@ uint32_t sleep_timer(void)
         saradc_exit();
 #endif
     }
+
+#if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
+#endif
 
 #if CHARGE_EN
     if (xcfg_cb.charge_en)

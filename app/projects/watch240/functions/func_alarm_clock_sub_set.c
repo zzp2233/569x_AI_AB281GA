@@ -2337,43 +2337,43 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
 
 //        printf("clock=%d\n",am_pm_conv);
 
-//        compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I332001_ALARM_01_BIN);
-//        compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43);
-//        if(am_pm_conv == 1)
-//        {
-//            compo_button_set_bgimg(btn, UI_BUF_I332001_ALARM_00_BIN);
-//        }
-//        else
-//        {
-//            compo_button_set_bgimg(btn, UI_BUF_I332001_ALARM_01_BIN);
-//        }
-//        compo_setid(btn,COMPO_ID_PIC_AM_BG);
-//
-//        btn = compo_button_create_by_image(frm, UI_BUF_I332001_ALARM_00_BIN);
-//        compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3);
-//        if(am_pm_conv == 0)
-//        {
-//            compo_button_set_bgimg(btn, UI_BUF_I332001_ALARM_00_BIN);
-//        }
-//        else
-//        {
-//            compo_button_set_bgimg(btn, UI_BUF_I332001_ALARM_01_BIN);
-//        }
-//        compo_setid(btn,COMPO_ID_PIC_PM_BG);
+        compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
+        compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43);
+        if(am_pm_conv == 1)
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
+        }
+        else
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
+        }
+        compo_setid(btn,COMPO_ID_PIC_AM_BG);
+
+        btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
+        compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3);
+        if(am_pm_conv == 0)
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
+        }
+        else
+        {
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
+        }
+        compo_setid(btn,COMPO_ID_PIC_PM_BG);
 
         compo_textbox_t *txt_am_pm = compo_textbox_create(frm,strlen(i18n[STR_AM]));//上午
-//        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43,gui_image_get_size(UI_BUF_I332001_ALARM_00_BIN).wid,gui_image_get_size(UI_BUF_I332001_ALARM_00_BIN).hei);
+        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43,gui_image_get_size(UI_BUF_I332001_PUBLIC_SHANGWU01_BIN).wid,gui_image_get_size(UI_BUF_I332001_PUBLIC_SHANGWU01_BIN).hei);
         compo_textbox_set(txt_am_pm, i18n[STR_AM]);
-        if(am_pm_conv == 1)
+        if(am_pm_conv == 0)
         {
             compo_textbox_set_forecolor(txt_am_pm, COLOR_GRAY);
         }
         compo_setid(txt_am_pm,COMPO_ID_TXT_AM);
 
         txt_am_pm = compo_textbox_create(frm,strlen(i18n[STR_PM]));//下午
-//        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3,gui_image_get_size(UI_BUF_I332001_ALARM_00_BIN).wid,gui_image_get_size(UI_BUF_I332001_ALARM_00_BIN).hei);
+        compo_textbox_set_location(txt_am_pm,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3,gui_image_get_size(UI_BUF_I332001_PUBLIC_SHANGWU01_BIN).wid,gui_image_get_size(UI_BUF_I332001_PUBLIC_SHANGWU01_BIN).hei);
         compo_textbox_set(txt_am_pm, i18n[STR_PM]);
-        if(am_pm_conv == 0)
+        if(am_pm_conv == 1)
         {
             compo_textbox_set_forecolor(txt_am_pm, COLOR_GRAY);
         }
@@ -3048,8 +3048,8 @@ static void func_alarm_clock_sub_set_button_click(void)
 //            printf("am\n");
 //            if(btn_am == NULL)return;
             f_alarm_set->time_am_pm = 0;
-//            compo_button_set_bgimg(btn_am, UI_BUF_I332001_ALARM_01_BIN);
-//            compo_button_set_bgimg(btn_pm, UI_BUF_I332001_ALARM_00_BIN);
+            compo_button_set_bgimg(btn_am, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn_pm, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
             compo_textbox_set_forecolor(txt_am, COLOR_WHITE);
             compo_textbox_set_forecolor(txt_pm, COLOR_GRAY);
 
@@ -3067,8 +3067,8 @@ static void func_alarm_clock_sub_set_button_click(void)
 //            printf("pm\n");
 //            if(btn_am == NULL)return;
             f_alarm_set->time_am_pm = 1;
-//            compo_button_set_bgimg(btn_pm, UI_BUF_I332001_ALARM_01_BIN);
-//            compo_button_set_bgimg(btn_am, UI_BUF_I332001_ALARM_00_BIN);
+            compo_button_set_bgimg(btn_pm, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn_am, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
             compo_textbox_set_forecolor(txt_pm, COLOR_WHITE);
             compo_textbox_set_forecolor(txt_am, COLOR_GRAY);
 

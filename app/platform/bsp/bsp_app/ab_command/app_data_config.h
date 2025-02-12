@@ -29,7 +29,7 @@
 
 //app data define
 #define     RECENT_APP_NUM_MAX              4           //最近任务最大个数
-#define     ALARM_NUM_MAX                   3           //闹钟最大个数
+#define     ALARM_NUM_MAX                   5           //闹钟最大个数
 #define     REMIND_NUM_MAX                  10          //提醒最大个数
 #define     INTERVAL_REMIND_NUM_MAX         2           //间隔提醒最大个数
 #define     CONTACTS_MAX_NUM                8           //联系人最大个数

@@ -147,7 +147,7 @@ compo_form_t *func_stopwatch_sub_record_form_create(void)
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD);
     compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt);
     compo_setid(listbox, COMPO_ID_LISTBOX);
-//    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_STOPWATCH_LINE_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I332001_STOPWATCH_LINE_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, stopwatch_set_text_callback);
     compo_listbox_set_text1_color_callback(listbox, stopwatch_text1_callback);
     compo_listbox_set_text2_color_callback(listbox, stopwatch_text2_callback);

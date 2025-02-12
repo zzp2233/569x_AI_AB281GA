@@ -93,16 +93,16 @@ compo_form_t *func_flashlight_form_create(void)
 //    //设置标题栏
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
 //    compo_form_set_title(frm, i18n[STR_FLASHLIGHT]);
-//
-//    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_FLASHLIGHT_ICON_BIN);
-//    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 106);
-//    compo_picturebox_set_visible(picbox, true);
-//    compo_setid(picbox,COMPO_ID_PIC);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I332001_FLASHLIGHT_ICON_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 87/2+103);
+    compo_picturebox_set_visible(picbox, true);
+    compo_setid(picbox,COMPO_ID_PIC);
 
     //创建文本
     compo_textbox_t *txt_idle = compo_textbox_create(frm, strlen(i18n[STR_CLICK_OPEN]));
     compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
-    compo_textbox_set_location(txt_idle, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/1.55,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_idle->txt).hei);
+    compo_textbox_set_location(txt_idle, GUI_SCREEN_CENTER_X, 34/2+224,GUI_SCREEN_WIDTH/1.3,widget_text_get_area(txt_idle->txt).hei);
     compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
     compo_textbox_set_visible(txt_idle, true);
     compo_setid(txt_idle,COMPO_ID_TXT);

@@ -1353,7 +1353,12 @@
 
 /*! 重置BT地址，启用后BT和BLE地址会不同,wang.luo 2025-02-08 */
 #ifndef UTE_MODULE_BT_CHANGE_MAC_SUPPORT
-#define UTE_MODULE_BT_CHANGE_MAC_SUPPORT 0
+#define UTE_MODULE_BT_CHANGE_MAC_SUPPORT 1
+#endif
+
+/*! 是否创建1S定时器，用于计时和每秒钟任务，反之使用系统500ms任务执行，wang.luo 2024-12-30 */
+#ifndef UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
+#define UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT 0
 #endif
 
 /*! PWRKEY,wang.luo 2024-12-03 */

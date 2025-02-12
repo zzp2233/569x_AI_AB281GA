@@ -50,6 +50,18 @@ u8 task_stack_get_top(void);
  **/
 u8 task_stack_get_last(void);
 
+/**
+ * @brief 查找栈中是否存在某个界面
+ * @param[in] val : 要查找的值
+ * @return 存在返回true，不存在返回false
+ **/
+bool task_stack_contains(u8 val);
+
+/**
+ * @brief 删除栈中的某个界面
+ * @param[in] val : 要删除的值
+ **/
+void task_stack_remove(u8 val);
 
 ///----------------------最近任务列表----------------------
 /**

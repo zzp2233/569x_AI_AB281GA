@@ -30,7 +30,7 @@ ute_module_systemtime_time_t systemTime;
 static ute_module_systemtime_alarm_t systemAlarms;
 /*! 注册每秒回调函数数据结构zn.zeng, 2021-07-12  */
 ute_module_systemtime_register_t systemTimeRegisterData;
-
+static uint32_t systemTimeLastRtcCnt = 0;
 static uint8_t uteModuleSystemTimeLocalTimeStatus;
 /*! 平年每月天数 */
 const static uint8_t everyMonDays[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -235,6 +235,7 @@ static bool uteModuleSystemtimeIsLeapYear(uint16_t year)
 */
 static void uteModuleSystemtimeChange(ute_module_systemtime_time_t *time)
 {
+#if UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
     time->sec++;
     if (time->sec > 59)
     {
@@ -270,6 +271,16 @@ static void uteModuleSystemtimeChange(ute_module_systemtime_time_t *time)
             }
         }
     }
+#else
+    tm_t rtc_tm;
+    rtc_tm = time_to_tm(RTCCNT);
+    time->year = rtc_tm.year;
+    time->month = rtc_tm.mon;
+    time->day = rtc_tm.day;
+    time->hour = rtc_tm.hour;
+    time->min = rtc_tm.min;
+    time->sec = rtc_tm.sec;
+#endif
 }
 /**
 *@brief  系统时间每秒处理函数
@@ -279,6 +290,22 @@ static void uteModuleSystemtimeChange(ute_module_systemtime_time_t *time)
 */
 void uteModuleSystemtimeSecondCb(void)
 {
+    if (!sys_cb.sys_init_complete)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,sys_init_complete:%d",__func__,sys_cb.sys_init_complete);
+        return;
+    }
+    else if (RTCCNT != systemTimeLastRtcCnt)
+    {
+        systemTimeLastRtcCnt = RTCCNT;
+    }
+#if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_TIME_LVL,"%s,RTCCNT no change!",__func__);
+        return;
+    }
+#endif
     if (uteApplicationCommonIsStartupFinish())
     {
         uteModuleSystemtimeChange(&systemTime);

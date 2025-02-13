@@ -6,7 +6,7 @@
 *@date        2021-11-26
 *@version       v1.0
 */
-// #include "ute_module_heart.h"
+#include "ute_module_heart.h"
 #include "ute_module_systemtime.h"
 #include "ute_module_log.h"
 #include "ute_application_common.h"
@@ -17,7 +17,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_platform.h"
 #include "ute_module_call.h"
-// #include "ute_module_sport.h"
+#include "ute_module_sport.h"
 #include "ute_module_message.h"
 #include "include.h"
 
@@ -25,7 +25,7 @@
 
 const uint32_t uteModuleWatchOnlineMultipleBaseAddress[UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT] = UTE_MODULE_WATCHONLINE_MULTIPLE_BASE_ADDRESS_ARRAYS;
 
-// extern void func_clock_recreate_dial(void);//todo
+extern void func_clock_recreate_dial(void);
 
 /*! 在线表盘的数据 casen, 2021-11-27  */
 ute_module_watchonline_data_t uteModuleWatchOnlineData =
@@ -218,7 +218,8 @@ void uteModuleWatchOnlineUpateConfigFromFlash(void)
     for (uint8_t i = 0; i < uteModuleWatchOnlineData.supportMultipleMaxCnt; i++)
     {
         uteModulePlatformFlashNorRead((uint8_t *)&config, uteModuleWatchOnlineMultipleBaseAddress[i], watchConfigSize);
-        if (config.isWatchVaild == 0)
+        uint16_t headerNum = bsp_uitool_header_phrase(uteModuleWatchOnlineMultipleBaseAddress[i]);
+        if (config.isWatchVaild == 0 && headerNum)
         {
             if(isConnectOurApp)
             {
@@ -349,7 +350,7 @@ void uteModuleWatchOnlineReadyStart(void)
             func_clock_recreate_dial();
             if(sys_cb.gui_sleep_sta)
             {
-                sys_cb.gui_need_wakeup = true;;
+                sys_cb.gui_need_wakeup = true;
             }
             reset_sleep_delay_all();
         }
@@ -486,11 +487,13 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     }
     uteModuleWatchOnlineUpateConfigFromFlash();
     /*判断如果再运动中，则会=返回上个界面，防止运动被中断*/
-    // if (uteModuleSportMoreSportIsRuning())//todo
-    // {
-    //     uteModuleGuiCommonGoBackLastScreen();
-    // }
-    // else
+#if UTE_MODULE_SPORT_SUPPORT
+    if (uteModuleSportMoreSportIsRuning())
+    {
+        uteModuleGuiCommonGoBackLastScreen();
+    }
+    else
+#endif
     {
         if(func_cb.sta != FUNC_CLOCK)
         {
@@ -498,10 +501,10 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
         }
         else
         {
-            // func_clock_recreate_dial();//todo
+            func_clock_recreate_dial();
             if(sys_cb.gui_sleep_sta)
             {
-                sys_cb.gui_need_wakeup = true;;
+                sys_cb.gui_need_wakeup = true;
             }
             reset_sleep_delay_all();
         }
@@ -560,7 +563,8 @@ uint8_t uteModuleWatchOnlineGetWatchindex(uint8_t index)
     for (uint8_t i = 0; i < uteModuleWatchOnlineData.supportMultipleMaxCnt; i++)
     {
         uteModulePlatformFlashNorRead((uint8_t *)&config, uteModuleWatchOnlineMultipleBaseAddress[i], watchConfigSize);
-        if (config.isWatchVaild == 0)
+        uint16_t headerNum = bsp_uitool_header_phrase(uteModuleWatchOnlineMultipleBaseAddress[i]);
+        if (config.isWatchVaild == 0 && headerNum)
         {
             if(isConnectOurApp)
             {

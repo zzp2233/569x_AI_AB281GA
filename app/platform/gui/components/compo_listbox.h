@@ -1,7 +1,7 @@
 #ifndef _COMPO_LISTBOX_H
 #define _COMPO_LISTBOX_H
 
-#define LISTBOX_MAX_ITEM_CNT            40
+
 
 #define LISTBOX_ITEM_CNT                10       //每页列表，中心上下各保留3个进行滚动
 #define LISTBOX_TEXT_LEN                30      //自定义文字的长度
@@ -15,6 +15,9 @@ enum COMPO_LISTBOX_STYLE
     COMPO_LISTBOX_STYLE_SELECT,                 //选择模式
     COMPO_LISTBOX_STYLE_LANGUAGE,               //语言选择模式, 列表文本不使用i18n的Radio模式
     COMPO_LISTBOX_STYLE_MENU_FOURGRID,          //四宫格列表菜单
+    COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT,         //带Title的列表，头部不做缩放，两行Text
+    COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD,
+    COMPO_LISTBOX_STYLE_CUM_SPORT_LIST,         //客户自己运动界面列表
 };
 
 enum COMPO_LISTBOX_ITEM_MODE
@@ -56,6 +59,7 @@ typedef struct compo_listbox_item_t_
     union                                       //菜单参数
     {
         u8 func_sta;                            //普通菜单模式
+        u8 menu_style;                          //菜单选择
         u16 vidx;                               //选择开关Switch绑定的系统位变量vidx
     };
 } compo_listbox_item_t;
@@ -117,7 +121,7 @@ typedef struct compo_listbox_t_
     s16 focus_icon_idx;              //焦点的图标编号
     bool flag_sel_icon2;            //是否选中状态图标
     bool flag_text_center;          //是否居中文本
-    bool flag_text_modify;          //是否修改文本内容
+    u8 flag_text_modify;          //是否修改文本内容
     bool flag_cycle;                //是否循环滑动
 
     u8 flag_area;                   //是否点击特定区域
@@ -128,6 +132,7 @@ typedef struct compo_listbox_t_
     widget_icon_t *item_bgimg[LISTBOX_ITEM_CNT];
     widget_icon_t *item_icon[LISTBOX_ITEM_CNT];
     widget_text_t *item_text[LISTBOX_ITEM_CNT];
+    widget_text_t *item_text2[LISTBOX_ITEM_CNT];
     widget_icon_t *item_icon2[LISTBOX_ITEM_CNT];
     compo_roll_cb_t roll_cb[LISTBOX_ITEM_CNT];
     s16 item_idx[LISTBOX_ITEM_CNT];
@@ -140,6 +145,14 @@ typedef struct compo_listbox_t_
     widget_image_t *sec;
     s16 start_angle;
 
+    u32 alike_icon;
+    bool flag_alike_icon;
+
+    bool (*set_text_modify_by_idx_callback)(u32 item_cnt, char* str_txt, u16 index);
+    bool (*set_text_modify_by_idx_callback2)(u32 item_cnt, char* str_txt1, u16 str_txt1_len, char* str_txt2, u16 str_txt2_len, u16 index);
+    u32  (*set_icon_callback)(u32 index);
+    u16  (*set_text1_color_callback)(u32 index);
+    u16  (*set_text2_color_callback)(u32 index);
 } compo_listbox_t;
 
 /**
@@ -358,4 +371,55 @@ void compo_listbox_set_start_angle(compo_listbox_t *listbox, s16 angle);
  * @param[in] idx : 时钟序号
  **/
 void compo_listbox_set_time_idx(compo_listbox_t *listbox, u8 idx);
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text_modify_by_idx_callback(compo_listbox_t *listbox, void* callback);
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text_modify_by_idx_callback2(compo_listbox_t *listbox, void* callback);
+
+/**
+ * @brief 列表图标全部采用相同的
+ * @param[in] listbox : 图标集指针
+ * @param[in] res : 图片资源
+ **/
+void compo_listbox_set_alike_icon(compo_listbox_t *listbox, u32 res);
+
+/**
+ * @brief 列表是否可以显示
+ * @param[in] listbox : 图标集指针
+ * @param[in] visible : 是否可以显示
+ **/
+void compo_listbox_set_visible(compo_listbox_t *listbox, bool visible);
+
+/**
+ * @brief 设置列表控件图标区域
+ * @param[in] listbox : 列表指针
+ * @param[in] area : 区域大小
+ **/
+void compo_listbox_set_icon_area(compo_listbox_t *listbox, area_t area);
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的图标，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_icon_callback(compo_listbox_t *listbox, void* callback);
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符颜色，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text1_color_callback(compo_listbox_t *listbox, void* callback);
+void compo_listbox_set_text2_color_callback(compo_listbox_t *listbox, void* callback);
+
 #endif

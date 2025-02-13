@@ -1,4 +1,7 @@
 #include "include.h"
+#include "ute_drv_screen_common.h"
+#include "ute_module_log.h"
+#include "ute_module_gui_common.h"
 
 #define TRACE_EN                1
 
@@ -10,12 +13,9 @@
 
 //推屏缓存大小(双份)
 #define GUI_LINES_BUF_SIZE              (GUI_SCREEN_WIDTH * GUI_LINES_CNT * 2 * 2)
-#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
-#define GUI_ALI_LINES_BUF_SIZE          (GUI_SCREEN_WIDTH * 4 * 2 * 2)
-#endif
 
 //以下缓存大小一般情况下不需要修改
-#define GUI_ELE_BUF_SIZE                4096                    //element缓存
+#define GUI_ELE_BUF_SIZE                4096 + 2096                    //element缓存
 #define GUI_WGT_BUF_SIZE                16384                    //widget缓存
 #define GUI_MAXSIZE_TEMPBUF             0x7000                  //中间临时计算缓存14k
 #define GUI_MAXSIZE_PARBUF              8096                    //PAR解码缓存
@@ -47,59 +47,14 @@ static const gui_init_param_t tbl_gui_init_param =
     .font_hspace = GUI_FONT_H_SPACE,
 };
 
-
-#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
-static u8 gui_ali_lines_buf[GUI_ALI_LINES_BUF_SIZE] AT(.alipay_disp.line);      //推屏缓存(双份)
-static u8 gui_ali_temp_buf[0x3000] AT(.alipay_tmpbuf.buf);      //中间计算缓存
-static u8 gui_ali_element_buf[GUI_ELE_BUF_SIZE] AT(.alipay_disp.ele);      //Element Buf
-static u8 gui_ali_widget_buf[6144] AT(.alipay_disp.awgt);       //Widgets Buf
-
-//GUI初始化配置表
-static const gui_init_param_t tbl_gui_ali_init_param =
-{
-    .screen_width = GUI_SCREEN_WIDTH,
-    .screen_height = GUI_SCREEN_HEIGHT,
-    .element_buf = gui_ali_element_buf,
-    .widget_buf = gui_ali_widget_buf,
-    .element_buf_size = GUI_ELE_BUF_SIZE,
-    .widget_buf_size = GUI_WGT_BUF_SIZE,
-    .temp_buf = gui_ali_temp_buf,
-    .temp_buf_size = GUI_MAXSIZE_TEMPBUF,
-    .lines_buf = gui_ali_lines_buf,
-    .lines_buf_size = GUI_ALI_LINES_BUF_SIZE,
-    .lines_count = 1,
-    .maxsize_parbuf = GUI_MAXSIZE_PARBUF,
-    .font_res_addr = UI_BUF_FONT_SYS,
-    .max_font_size = GUI_MAX_FONT_SIZE,
-    .font_wspace = GUI_FONT_W_SPACE,
-    .font_hspace = GUI_FONT_H_SPACE,
-};
-
-void gui_ali_init(void)
-{
-
-    os_gui_init(&tbl_gui_ali_init_param);
-    printf("%s\n", __func__);
-}
-
-void gui_init_do(void)
-{
-    os_gui_init(&tbl_gui_init_param);
-    printf("%s\n", __func__);
-}
-#endif
-
-
 //GUI相关初始化
 void gui_init(void)
 {
     power_gate_3v3_on();
     hr_vdd_ldo_on();
-#if(DEVELOPMENT_BOARD_TYPE)
-    LCD_ON();
-#endif
     ctp_init();
     tft_init();
+    // uteDrvScreenCommonInit();
 #if FLASH_EXTERNAL_EN
     bsp_spi1flash_init();
 #endif
@@ -107,6 +62,7 @@ void gui_init(void)
     compos_init();
     sys_cb.sleep_en = 1;            //允许进休眠
     sys_cb.gui_sleep_sta = 0;
+    uteModuleGuiCommonDisplayOff(false);
 }
 
 void gui_sleep(void)
@@ -114,13 +70,14 @@ void gui_sleep(void)
     if (!sys_cb.gui_sleep_sta)
     {
         os_gui_draw_w4_done();      //关tft前要等当前帧刷完
+
         tft_exit();
         ctp_exit();
         power_gate_3v3_off();
-#if(DEVELOPMENT_BOARD_TYPE)
-        LCD_OFF();
-#endif
+        hr_vdd_ldo_off();
         sys_cb.gui_sleep_sta = 1;
+        tft_cb.tft_bglight_first_set = false;
+        uteModuleGuiCommonDisplayOff(true);
         //printf("gui_sleep\n");
     }
 }
@@ -130,14 +87,14 @@ void gui_wakeup(void)
     if (sys_cb.gui_sleep_sta)
     {
         power_gate_3v3_on();
-#if(DEVELOPMENT_BOARD_TYPE)
-        LCD_ON();
-#endif
+        hr_vdd_ldo_on();
         //tft_init();
         ctp_init();
         tft_init();
         gui_widget_refresh();
+        // uteDrvScreenCommonInit();
         sys_cb.gui_sleep_sta = 0;
+        uteModuleGuiCommonDisplayOff(false);
         //printf("gui_wakeup\n");
     }
 }
@@ -148,16 +105,16 @@ bool gui_get_auto_power_en(void)
     return GUI_AUTO_POWER_EN;
 }
 
-bool gui_font_get_align_top(void)
-{
-    return true;
-}
-
 ////是否打开字库打印
 //bool unicode_show_info(void)
 //{
 //    return true;
 //}
+
+bool gui_font_get_align_top(void)
+{
+    return true;
+}
 
 bool qr_encode_use_malloc(void)
 {
@@ -187,3 +144,30 @@ void gui_halt(u32 halt_no)
     }
     tft_frame_end();
 }
+
+#if 0 //UTE_LOG_GUI_LVL
+//打印刷屏时长
+AT(.com_text.gui)
+bool gui_get_tick(void)
+{
+    return true;
+}
+#endif
+
+// zzn add 20240401
+void gui_clear_screen(uint16_t color,uint32_t size)
+{
+    uint32_t section = size/GUI_SCREEN_WIDTH;
+    uint32_t lastPix = size%GUI_SCREEN_WIDTH;
+    for(uint32_t i=0; i<section; i++)
+    {
+        de_fill_rgb565(gui_lines_buf, color, GUI_SCREEN_WIDTH);
+        tft_spi_send(gui_lines_buf, GUI_SCREEN_WIDTH * 2);
+    }
+    if(lastPix!=0)
+    {
+        de_fill_rgb565(gui_lines_buf, color, lastPix);
+        tft_spi_send(gui_lines_buf, lastPix * 2);
+    }
+}
+// zzn add 20240401

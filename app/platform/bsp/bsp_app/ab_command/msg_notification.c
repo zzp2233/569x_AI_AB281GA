@@ -231,8 +231,8 @@ u8 ble_weather_info_sync(uint8_t* protocol_data, uint16_t protocol_len)
         switch (cmd_type)
         {
             case 0x00://天气类型
-                // weather_day->oneday_weather_type = protocol_data[offset];
-                // printf("weather_day->oneday_weather_type[%d]\n", weather_day->oneday_weather_type);
+                weather_day->oneday_weather_type = protocol_data[offset];
+                printf("weather_day->oneday_weather_type[%d]\n", weather_day->oneday_weather_type);
                 break;
             case 0x01://当前温度
                 weather_day->current_temp = protocol_data[offset];

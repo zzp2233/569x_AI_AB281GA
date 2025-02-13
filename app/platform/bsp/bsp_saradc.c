@@ -56,7 +56,7 @@ static void bsp_saradc_kick_process(void)
     }
     else
     {
-        if ((adc_cb.tmr1ms_cnt % 5000) == 0)                        //充电状态, 每5s采样一次VBAT, 停10ms
+        if ((adc_cb.tmr1ms_cnt % 10000) == 0)                        //充电状态, 每5s采样一次VBAT, 停10ms
         {
             adc_cb.tmr1ms_cnt = 0;
             if(sys_cb.chg_on)
@@ -70,7 +70,7 @@ static void bsp_saradc_kick_process(void)
         }
         else
         {
-            if((adc_cb.tmr1ms_cnt % 5000) == 4990)
+            if((adc_cb.tmr1ms_cnt % 10000) == 9000)
             {
                 if(sys_cb.chg_on)
                 {

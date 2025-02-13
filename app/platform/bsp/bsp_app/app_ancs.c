@@ -93,13 +93,8 @@ void ble_app_watch_ancs_client_notifiy_process(u8 id, const char *att_name, cons
     }
     else if (ancs_msg_cb.app_sw_flag && id == ANCS_ATT_TYPE_MESSAGE)                 //消息内容
     {
-        uint8_t message_len = strlen((char *)att_content);
-        if( message_len + ancs_msg_cb.title_size + 1 + 1 > ANCS_MSG_MAX_SIZE -3)
-        {
-            message_len = ANCS_MSG_MAX_SIZE - ancs_msg_cb.title_size - 5; // 减5留点余量
-        }
         ancs_msg_cb.msg_content[msg_idx][ancs_msg_cb.title_size] = ':';
-        memcpy(&ancs_msg_cb.msg_content[msg_idx][ancs_msg_cb.title_size + 1], (char *)att_content, message_len + 1);
+        memcpy(&ancs_msg_cb.msg_content[msg_idx][ancs_msg_cb.title_size + 1], (char *)att_content, strlen((char *)att_content) + 1);
     }
     else if (ancs_msg_cb.app_sw_flag && id == ANCS_ATT_TYPE_DATE)                    //消息时间，单条完整消息接收完成，弹框显示
     {

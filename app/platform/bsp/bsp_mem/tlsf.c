@@ -2,12 +2,7 @@
 #include <limits.h>
 #include "tlsf.h"
 
-// 根据需要修改!!!
-#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
-#define TLSF_MAX_POOL_SIZE (210*1024)
-#else
-#define TLSF_MAX_POOL_SIZE CUSTOMER_HEAP_SIZE
-#endif
+#define TLSF_MAX_POOL_SIZE CUSTOMER_HEAP_SIZE // 根据需要修改!!!
 
 #define UNUSED(...)
 

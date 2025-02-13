@@ -81,18 +81,18 @@ u32 ble_get_adv_data(u8 *adv_buf, u32 buf_size)
 *   ble tx buf set
 */
 
-// #define MAX_NOTIFY_NUM          5
-// #define MAX_NOTIFY_LEN          256     //max=247
-// #define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
+#define MAX_NOTIFY_NUM          8
+#define MAX_NOTIFY_LEN          256     //max=247
+#define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
 
-// AT(.ble_cache.att)
-// uint8_t notify_tx_pool[NOTIFY_POOL_SIZE];
+AT(.ble_cache.att)
+uint8_t notify_tx_pool[NOTIFY_POOL_SIZE];
 
-// void ble_txpkt_init(void)
-// {
-//     txpkt_init(&notify_tx, notify_tx_pool, MAX_NOTIFY_NUM, MAX_NOTIFY_LEN);
-//     notify_tx.send_kick = ble_send_kick;
-// }
+void ble_txpkt_init(void)
+{
+    txpkt_init(&notify_tx, notify_tx_pool, MAX_NOTIFY_NUM, MAX_NOTIFY_LEN);
+    notify_tx.send_kick = ble_send_kick;
+}
 
 /***
 *   ble rx buf set
@@ -142,7 +142,7 @@ static const gatts_uuid_base_st gatt_ute_ble_notify_base =
 };
 static const gatts_uuid_base_st gatt_ute_ble_read_write_base =
 {
-    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_WRITE | ATT_READ,
+    .props = ATT_WRITE | ATT_READ,
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = ute_ble_read_write_uuid,
 };
@@ -161,7 +161,7 @@ static const gatts_uuid_base_st gatt_ute_ble5_notify_base =
 };
 static const gatts_uuid_base_st gatt_ute_ble5_read_write_base =
 {
-    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_WRITE | ATT_READ,
+    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_READ,
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = ute_ble5_read_write_uuid,
 };
@@ -195,7 +195,7 @@ static const gatts_uuid_base_st gatt_ute_ble_public_notify_base =
 };
 static const gatts_uuid_base_st gatt_ute_ble_public_read_write_base =
 {
-    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_WRITE | ATT_READ
+    .props = ATT_WRITE | ATT_READ
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = ute_ble_public_read_write_uuid,
 };
@@ -214,7 +214,7 @@ static const gatts_uuid_base_st gatt_ute_ble5_public_notify_base =
 };
 static const gatts_uuid_base_st gatt_ute_ble5_public_read_write_base =
 {
-    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_WRITE | ATT_READ
+    .props = ATT_WRITE_WITHOUT_RESPONSE | ATT_READ
     .type = BLE_GATTS_UUID_TYPE_16BIT,
     .uuid = ute_ble5_public_read_write_uuid,
 };
@@ -318,7 +318,7 @@ static int uteModuleProfileBleWriteCallback(uint16_t con_handle, uint16_t handle
 {
     u8 wptr = ble_cmd_cb.cmd_wptr & BLE_CMD_BUF_MASK;
 
-//    printf("BLE_RX len[%d] handle[%d]\n", len, handle);
+//    printf("BLE_RX len[%d] handle[%d],wptr:%d,cmd_wptr:%d\n", len, handle,wptr,ble_cmd_cb.cmd_wptr);
 //    print_r(ptr, len);
 
     ble_cmd_cb.cmd_wptr++;
@@ -388,6 +388,7 @@ static ble_gatt_characteristic_cb_info_t gatts_app_protocol_tx_cb_info =
 
 void ble_app_blue_fit_rx_callback(u8 *ptr, u16 len)
 {
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if FUNC_CAMERA_TRANS_EN
     if (func_cb.sta == FUNC_CAMERA)
     {
@@ -395,6 +396,7 @@ void ble_app_blue_fit_rx_callback(u8 *ptr, u16 len)
     }
     else
 #endif
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {
         printf("app_rx len[%d]:\n", len);
         print_r(ptr, len);
@@ -432,7 +434,10 @@ void ble_app_watch_process(void)
         }
 #endif
         uteModuleProfileSetPublicProtocol(isPublic);
-        uteModuleProtocolFromPhone(ptr, len, isPublic);
+        if(len > 0)
+        {
+            uteModuleProtocolFromPhone(ptr, len, isPublic);
+        }
     }
 }
 
@@ -532,7 +537,7 @@ uint8_t uteModuleProfileBleAddService(void)
 {
     int ret = 0;
 
-    // ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name) + 1);//todo
+    ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name) + 1);
 
     // 55ff
     ret |= ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,

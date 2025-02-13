@@ -21,6 +21,13 @@ enum
     FONT_TYPE_PART_DOWN,            //偏旁原本位置降低自身高度一半
 };
 
+typedef struct
+{
+    u8 r;
+    u8 g;
+    u8 b;
+} color_t;
+
 typedef struct rect_t_
 {
     s16 x;
@@ -69,6 +76,7 @@ typedef void widget_bar_t;
 //=== 常用颜色，非常用颜色可以用make_color函数来生成 ===
 #define COLOR_WHITE             0xFFFF
 #define COLOR_BLACK             0
+#define COLOR_DGRAY             make_color(0X23,0X23,0X23) //  浅黑色
 #define COLOR_RED               0xF800
 #define COLOR_GREEN             0x07E0
 #define COLOR_BLUE              0x001F
@@ -782,6 +790,13 @@ u16 widget_text_get_autoroll_circ_pixel(widget_text_t *txt);
  * @return 系统字库字体字高
  **/
 u8 widget_text_get_height(void);
+
+/**
+ * @brief 获取系统字高(最大值) 用于换行等高
+ * @param[in] 无
+ * @return 系统字库字体字高
+ **/
+u8 widget_text_get_max_height(void);
 
 /**
  * @brief 设置排版方向

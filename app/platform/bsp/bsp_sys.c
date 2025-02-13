@@ -1,9 +1,8 @@
 #include "include.h"
-
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "ute_task_application.h"
-// #include "ute_drv_gsensor_common.h"
+#include "ute_drv_gsensor_common.h"
 #include "ute_module_message.h"
 
 #define TRACE_EN                0
@@ -30,10 +29,10 @@ extern u32 __bss_start, __bss_end, __bss_size;
 
 void sd_detect(void);
 void tbox_uart_isr(void);
-void tick_te_isr(void);
-
+#if USER_IO_QEDC_EN
+void bsp_qdec_io_process(void);
+#endif
 static u8 heap_func[HEAP_FUNC_SIZE] AT(.heap.func);
-
 
 #if TRACE_EN
 AT(.com_text.str_sddet)
@@ -247,10 +246,10 @@ void usr_tmr1ms_isr(void)
 #endif // LED_DISP_EN
 
     bsp_saradc_tmr1ms_process();
-
+#if USER_IO_QEDC_EN
+    bsp_qdec_io_process();
+#endif
     plugin_tmr1ms_isr();
-
-    tick_te_isr();
 }
 
 //timer tick interrupt(5ms)
@@ -286,8 +285,8 @@ void usr_tmr5ms_isr(void)
     //50ms timer process
     if ((tmr5ms_cnt % 10) == 0)
     {
-        ticks_50ms++;
         co_timer_pro(2);
+        ticks_50ms++;
 #if LED_DISP_EN
         led_scan();
 #endif
@@ -330,6 +329,7 @@ void bsp_loudspeaker_mute(void)
 {
     LOUDSPEAKER_MUTE();
     sys_cb.loudspeaker_mute = 1;
+    delay_5ms(4);
     dac_set_power_on_off(0);
 }
 
@@ -348,7 +348,6 @@ void bsp_sys_mute(void)
     {
         sys_cb.mute = 1;
         dac_fade_out();
-        printf(mute_str, 01);
         bsp_loudspeaker_mute();
 #if DAC_DNR_EN
         dac_dnr_set_sta(0);
@@ -387,6 +386,15 @@ bool bsp_get_mute_sta(void)
 {
     return sys_cb.mute;
 }
+
+//此接口用于更换不同规格晶振后出现的休眠蓝牙掉线问题，原因是驱动电流太小导致晶振稳定时间变长导致
+//解决办法是重定义以下接口以增加晶振的驱动电流，达到快速稳定的目的
+//50uA/step, 非线性, 档位越大, 逐渐变为20+uA/step, 默认是2, 即100ua
+//#define DI_XOSC_DRV(bit)                     XOSCCON = (XOSCCON & ~(31<<0)) | ((bit)<<0)
+//void xosc_driver_init(void)
+//{
+//     DI_XOSC_DRV(2);
+//}
 
 //是否使能船运模式
 AT(.text.bsp.sys)
@@ -571,7 +579,6 @@ static void bsp_var_init(void)
     msg_queue_init();
     saradc_var_init();
     sdadc_var_init();
-    bsp_res_init();
 
     dev_init();
 #if FUNC_REC_EN
@@ -741,7 +748,7 @@ void bsp_sys_init(void)
     bsp_var_init();
 
 #if USE_APP_TYPE
-    app_platform_init();
+    // app_platform_init();
 #endif
 
 #if !LP_XOSC_CLOCK_EN
@@ -788,6 +795,10 @@ void bsp_sys_init(void)
 
     bt_init();
 
+#if BT_BACKSTAGE_EN
+    func_bt_init();
+#endif
+
 #if CALL_MGR_EN
     bsp_call_mgr_init();
 #endif
@@ -796,10 +807,17 @@ void bsp_sys_init(void)
     bsp_change_volume(sys_cb.vol);
 
 #if WARNING_POWER_ON
-    mp3_res_play(RES_BUF_POWERON, RES_LEN_POWERON);
+    mp3_res_play(RES_BUF_POWERON_MP3, RES_LEN_POWERON_MP3);
 #endif // WARNING_POWER_ON
 
-//    func_cb.sta = FUNC_CLOCK;
+#if BT_BACKSTAGE_MUSIC_EN
+    bt_audio_enable();
+#if DAC_DNR_EN
+    dac_dnr_set_sta(1);
+    sys_cb.dnr_sta = 1;
+#endif
+#endif
+    func_cb.sta = FUNC_CLOCK;
 
 #if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
     eq_dbg_init();
@@ -810,21 +828,23 @@ void bsp_sys_init(void)
     contacts_kvdb_init();
     msg_tsdb_init();
 #endif
-    uteTaskApplicationInit();
-    gui_init();
-#if !UTE_MULTIPLE_LANGUAGE_SUPPORT
-    lang_select(LANG_ZH);
+
+#if BT_SCO_APP_DBG_EN
+    sco_audio_init();   //先初始化一遍通话参数
+    sco_audio_exit();
 #endif
 
     mic_bias_trim_w4_done();
     dac_set_power_on_off(0);            //需要放到MIC TRIM后才能关DAC
-#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
-    bsp_i2c_init();
+#if 0//(SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
+    i2c_gsensor_init();
     //bsp_sensor_pe2_pwr_pg_on();         //需放在IIC初始化之后，未使用外设时注意关闭
+    uteDrvGsensorCommonInit(UTE_DRV_GSENSOR_DEFAULT_ACC_RATE_VALUE,UTE_DRV_GSENSOR_DEFAULT_ACC_RANGE_VALUE);
     bsp_sensor_step_init();             //步数传感器初始化
-    bsp_sensor_hr_init(1);
+    bsp_i2c_init();
+    bsp_sensor_hr_init(0);
 #endif
-    bsp_vbat_percent_init();            //放最后电压稍微稳定点
+    // bsp_vbat_percent_init();            //放最后电压稍微稳定点
 
 #if (FUNC_MUSIC_EN || FUNC_RECORDER_EN) && SD_SOFT_DETECT_EN
     CLKGAT0 |= BIT(14);
@@ -834,25 +854,15 @@ void bsp_sys_init(void)
     sd_soft_detect_poweron_check();
 #endif
 
-#if ASR_SELECT
-    bsp_asr_init();                     //语音初始化
-#endif
-#if BT_BACKSTAGE_EN
-    func_bt_init();
-#endif
-#if BT_BACKSTAGE_MUSIC_EN
-    bt_audio_enable();
-#if DAC_DNR_EN
-    dac_dnr_set_sta(1);
-    sys_cb.dnr_sta = 1;
-#endif
-#endif
+    uteTaskApplicationInit();
+
+    gui_init();
 #if ECIG_POWER_CONTROL
     bsp_ecig_init();
 #endif
-#if 0
-    ble_adv_dis();
-    bt_scan_disable();
+#if !UTE_MULTIPLE_LANGUAGE_SUPPORT
+    lang_select(LANG_ZH);
 #endif
+
 }
 

@@ -16,14 +16,6 @@ enum
     RANDOM_MODE,
 };
 
-enum
-{
-    MUSIC_SRC_BT,
-    MUSIC_SRC_WATCH,
-    MUSIC_SRC_EARPHONE,
-
-};
-
 typedef struct
 {
     u8 min;                     //minute
@@ -59,8 +51,8 @@ typedef struct
     msc_time_t alltime;         //music file total time
     msc_time_t curtime;         //music current playing time
 
-    u16 file_num;               //文件编号
-    u16 file_total;             //文件个数
+    u16 file_num;
+    u16 file_total;
 
     u16 dir_num;                //directory current number
     u16 dir_total;              //directory total number
@@ -101,7 +93,6 @@ void bsp_music_play_pause(void);                    //播放/暂停切换
 void bsp_music_breakpoint_init(void);
 void bsp_music_breakpoint_save(void);
 void bsp_music_breakpoint_clr(void);
-void bsp_music_process(void);
 
 #define music_breakpoint_init()     bsp_music_breakpoint_init()
 #define music_breakpoint_save()     bsp_music_breakpoint_save()

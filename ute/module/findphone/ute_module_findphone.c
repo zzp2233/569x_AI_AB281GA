@@ -61,7 +61,9 @@ void uteModuleFindPhoneStartRing(void)
     uteApplicationCommonGetBleConnectionState(&connectStatus);
     if (connectStatus.isConnected)
     {
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
         uteModuleFindPhoneSetStatus(FIND_PHONE_RING);
+#endif // UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
 #if CUSTOMIZE_THE_NUMBER_OF_VIBRATIONS
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,6);
 #else

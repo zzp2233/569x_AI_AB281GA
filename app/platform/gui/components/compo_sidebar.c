@@ -68,13 +68,13 @@ static u32 sidebar_get_latest_icon(u8 idx)
     switch (idx)
     {
         case 0:
-            addr = UI_BUF_ICON_SLEEP_BIN;
+            addr = UI_BUF_I330001_THEME_1_SLEEP_BIN;
             break;
         case 1:
-            addr = UI_BUF_ICON_SPORT_BIN;
+            addr = UI_BUF_I330001_THEME_1_ACTIVITY_BIN;
             break;
         case 2:
-            addr = UI_BUF_ICON_HEART_RATE_BIN;
+            addr = UI_BUF_I330001_THEME_1_HEART_BIN;
             break;
     }
     return addr;
@@ -213,21 +213,21 @@ compo_sidebar_t *compo_sidebar_create(compo_form_t *frm)
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_SLAS_BIN, 94, 145, 0, 0, NULL);  //日期斜杠
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_DEGREE_BIN, 263, 175, 0, 0, NULL);  //摄氏度
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_BG_308_156_BIN, 160, 296, 0, 0, NULL);  //计时器方框
-    compo_sidebar_img_create(page, UI_BUF_ICON_TIMER_BIN, 54, 270, 64, 64, NULL);  //计时器
+    compo_sidebar_img_create(page, UI_BUF_I330001_THEME_1_TIMER_BIN, 54, 270, 64, 64, NULL);  //计时器
     compo_sidebar_img_create(page, UI_BUF_COMMON_COLON_NUM_16_24_BIN, 160, 330, 0, 0, NULL);  //计时器冒号
     compo_sidebar_img_create(page, UI_BUF_COMMON_COLON_NUM_16_24_BIN, 222, 330, 0, 0, NULL);
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_BG_308_156_BIN, 160, 466, 0, 0, NULL);  //秒表方框
-    compo_sidebar_img_create(page, UI_BUF_ICON_STOPWATCH_BIN, 54, 440, 64, 64, NULL);  //秒表
+    compo_sidebar_img_create(page, UI_BUF_I330001_THEME_1_STOPWATCH_BIN, 54, 440, 64, 64, NULL);  //秒表
     compo_sidebar_img_create(page, UI_BUF_COMMON_COLON_NUM_16_24_BIN, 160, 500, 0, 0, NULL);  //秒表冒号
     compo_sidebar_img_create(page, UI_BUF_COMMON_COLON_NUM_16_24_BIN, 222, 500, 0, 0, NULL);
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_BG_146_146_BIN, 81, 631, 0, 0, NULL);  //计算器方框
-    compo_sidebar_img_create(page, UI_BUF_ICON_CALCULATOR_BIN, 60, 612, 72, 72, NULL);  //计算器
+    compo_sidebar_img_create(page, UI_BUF_I330001_THEME_1_CALCULATOR_BIN, 60, 612, 72, 72, NULL);  //计算器
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_BG_146_146_BIN, 241, 631, 0, 0, NULL);  //日历方框
-    compo_sidebar_img_create(page, UI_BUF_ICON_CALENDAR_BIN, 220, 612, 72, 72, NULL);  //日历
+    compo_sidebar_img_create(page, UI_BUF_I330001_THEME_1_CALENDAR_BIN, 220, 612, 72, 72, NULL);  //日历
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_BG_146_146_BIN, 81, 791, 0, 0, NULL);  //游戏方框
-    compo_sidebar_img_create(page, UI_BUF_ICON_GAME_BIN, 60, 772, 72, 72, NULL);  //游戏
+    compo_sidebar_img_create(page, UI_BUF_I330001_THEME_1_GAME_BIN, 60, 772, 72, 72, NULL);  //游戏
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_BG_146_146_BIN, 241, 791, 0, 0, NULL);  //呼吸方框
-    compo_sidebar_img_create(page, UI_BUF_ICON_BREATHE_BIN, 220, 772, 72, 72, NULL);  //呼吸
+    compo_sidebar_img_create(page, UI_BUF_I330001_THEME_1_BREATHE_BIN, 220, 772, 72, 72, NULL);  //呼吸
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_BG_308_156_BIN, 160, 956, 0, 0, NULL);  //最近应用方框
     compo_sidebar_img_create(page, UI_BUF_SIDEBAR_TOP_308_50_BIN, 160, 903, 0, 0, NULL);  //最近应用方框头
     compo_sidebar_img_create(page, sidebar_get_latest_icon(0), 60, 979, 72, 72, &sidebar->icon_latest[0]);  //最近应用，只在创建时设置图片
@@ -263,7 +263,7 @@ compo_sidebar_t *compo_sidebar_create(compo_form_t *frm)
     compo_sidebar_txt_create(page, i18n[STR_CALCULATOR], 8, 98, 673, NULL);  //计算器
     compo_sidebar_txt_create(page, i18n[STR_CALENDAR], 8, 273, 673, NULL);  //日历
     compo_sidebar_txt_create(page, i18n[STR_GAME], 8, 113, 833, NULL);  //游戏
-    // compo_sidebar_txt_create(page, i18n[STR_BREATHE], 8, 273, 833, NULL);  //呼吸
+    compo_sidebar_txt_create(page, i18n[STR_BREATHE], 8, 273, 833, NULL);  //呼吸
     compo_sidebar_txt_create(page, i18n[STR_LATEST_APP], 8, 160, 903, NULL);  //最近应用
 
     sidebar->m_time_min = -1;

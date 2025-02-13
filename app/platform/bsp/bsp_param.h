@@ -34,8 +34,6 @@
 #define PARAM_RTC_CAL_ADDR          0xb5        //16BYTE
 #endif
 
-#define PARAM_ALI_FILE_VALID        0xcb        //1byte
-
 #define PARAM_FOT_TYPE              0xec        //1byte
 void param_init(bool reset);
 void param_sync(void);

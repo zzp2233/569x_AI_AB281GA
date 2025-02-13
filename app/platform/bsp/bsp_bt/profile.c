@@ -13,17 +13,6 @@ extern const uint8_t   sdp_hid_tscreen_service_record[];
 extern const uint8_t   sdp_hid_tscreen_ext_service_record[];
 extern const uint8_t   sdp_devic_id_service_record[];
 extern const uint8_t   sdp_gfps_spp_service_record[];
-extern const uint8_t   sdp_panu_service_record[];
-
-#if BT_HID_TYPE == 5
-extern const uint8_t   sdp_hid_douyin_service_record[];
-extern const uint8_t   sdp_hid_dy_pnp_service_record[];
-#endif // BT_HID_TYPE
-void sdp_rmv_service(uint32_t service_record_handle);
-
-
-
-void panu_setup(void);
 
 typedef struct
 {
@@ -46,6 +35,14 @@ service_record_item_t hfp_sdp_record_item =
 {
     .service_record_handle  = 0x00010002,
     .service_record         = (uint8_t *)sdp_hfp_service_record,
+};
+#endif
+
+#if BT_HSP_EN
+service_record_item_t hsp_sdp_record_item =
+{
+    .service_record_handle  = 0x00010008,
+    .service_record         = (uint8_t *)sdp_hsp_service_record,
 };
 #endif
 
@@ -84,8 +81,6 @@ service_record_item_t hid_sdp_record_item =
     .service_record         = (uint8_t *)sdp_hid_simple_keyboard_service_record,
 #elif (BT_HID_TYPE == 4)
     .service_record         = (uint8_t *)sdp_hid_service_buffer_finger_android,
-#elif (BT_HID_TYPE == 5)
-    .service_record         = (uint8_t *)sdp_hid_douyin_service_record,
 #else
     .service_record         = ...
 #endif
@@ -94,29 +89,9 @@ service_record_item_t hid_sdp_record_item =
 service_record_item_t device_id_sdp_record_item =
 {
     .service_record_handle  = 0x00010007,
-#if BT_HID_EN && (BT_HID_TYPE == 5)
-    .service_record         = (uint8_t *)sdp_hid_dy_pnp_service_record,
-#else
     .service_record         = (uint8_t *)sdp_devic_id_service_record,
-#endif
 };
 #endif // BT_HID_EN
-
-#if BT_HSP_EN
-service_record_item_t hsp_sdp_record_item =
-{
-    .service_record_handle  = 0x00010008,
-    .service_record         = (uint8_t *)sdp_hsp_service_record,
-};
-#endif
-
-#if BT_PANU_EN
-service_record_item_t panu_sdp_record_item =
-{
-    .service_record_handle  = 0x00010009,
-    .service_record         = (uint8_t *)sdp_panu_service_record,
-};
-#endif
 
 void bt_init_lib(void)
 {
@@ -190,11 +165,8 @@ void bt_init_lib(void)
     }
 #endif
 
-#if BT_PANU_EN
-    if (profile & PROF_PANU)
-    {
-        panu_setup();
-    }
+#if BT_HID_ONLY_FOR_IOS_EN
+    bt_deinit_lib_hid();
 #endif
 }
 

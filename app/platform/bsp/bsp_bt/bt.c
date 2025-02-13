@@ -50,11 +50,11 @@ uint8_t cfg_bt_rf_def_txpwr         = 0;        //降低预置参数RF发射功�
 uint8_t cfg_bt_page_txpwr           = 0;        //降低回连RF发射功率，单位3dbm
 uint8_t cfg_bt_inq_txpwr            = 0;        //降低搜索RF发射功率，单位3dbm
 uint8_t cfg_ble_page_txpwr          = 0;        //降低组队RF发射功率，单位3dbm
-uint8_t cfg_ble_page_rssi_thr       = 90;        //设置组队范围rssi
+uint8_t cfg_ble_page_rssi_thr       = 0;        //设置组队范围rssi
 
 ///stack
 uint8_t cfg_bt_work_mode            = WORK_MODE;
-uint8_t cfg_bt_max_acl_link         = 1;
+uint8_t cfg_bt_max_acl_link         = BT_2ACL_EN+1;
 uint8_t cfg_bt_sniff_clk_sel        = 3;        //3:31.25KHz RC, 4:31.25KHz XOSC, 5:31.25KHz LP_XOSC
 
 bool cfg_bt_dual_mode               = BT_DUAL_MODE_EN;
@@ -76,6 +76,9 @@ uint8_t cfg_bt_hid_type             = BT_HID_TYPE;
 uint8_t cfg_bt_connect_times        = 2;                                //按键回连重试次数, 5.12s * n
 uint8_t cfg_bt_pwrup_connect_times  = BT_POWER_UP_RECONNECT_TIMES;      //上电回连重试次数, 5.12s * n
 uint16_t cfg_bt_sup_to_connect_times = BT_TIME_OUT_RECONNECT_TIMES;     //超时断线回连重试次数, 5.12s * n, 设置(-1)为一直回连
+
+bool cfg_bt_voip_reject_en          = BT_VOIP_REJECT_EN;
+bool cfg_bt_hfp_switch_en           = BT_HFP_SWITCH_EN;
 
 #if BT_LINK_INFO_PAGE1_EN
 uint8_t const cfg_bt_link_info_items = 8;   //保存回连信息的个数（最小1，最大8）
@@ -123,7 +126,7 @@ u32 bt_get_class_of_device(void)
 //    return 0x002540;    //Keyboard          - 键盘图标，Android带显示电量，IOS不带电量显示。全部IOS均可连接HID拍照。
 //    return 0x240418;    //HeadPhone         - 耳机图标，Android和IOS均带电量显示。
 //    return 0x240404;    //WearableHeadset   - 耳机图标，Android和IOS均带电量显示。（默认使用）
-    return 0x240418;
+    return 0x240404;    //WearablePager     - 手表图标
 #endif
 }
 
@@ -147,6 +150,21 @@ u32 bt_get_class_of_device(void)
 //    return false;
 //}
 
+//自定义回连方式，order为回连信息序号
+//uint8_t connect_addr[6];
+//void bt_cocnnect_order(uint8_t order)
+//{
+//    if(bt_nor_get_link_info_addr(connect_addr, order)) {
+//        bt_connect_address();
+//    }
+//}
+//
+//uint8_t bt_get_connect_addr(uint8_t *bd_addr, uint16_t *times)
+//{
+//    *times = 2;       //n*5.12s
+//    memcpy(bd_addr, connect_addr, 6);
+//    return 1;
+//}
 
 //是否支持根据AVRCP快速上报播放暂停状态，避免支持播放暂停快速切换功能导致ios播放微信小视频无声
 //bool bt_emit_music_status_according_to_avrcp(void)
@@ -163,10 +181,12 @@ void bt_get_local_bd_addr(u8 *addr)
 {
 #if LE_SM_SC_EN
     memcpy(addr, xcfg_cb.bt_addr, 6);
+#if UTE_MODULE_BT_CHANGE_MAC_SUPPORT
     if (!app_phone_type_get())
     {
         addr[5] ^= 0x55;
     }
+#endif
 #elif BT_LOCAL_ADDR
     param_random_key_read(&addr[2]);
     addr[0] = 0x41;
@@ -232,13 +252,13 @@ void bt_sync_link_info(void)
     cm_sync();
 }
 
-void bt_call_volume_change(u8 msg)
+void bt_call_volume_change(u8 up_flag)
 {
-    if ((msg == KU_VOL_UP) && (sys_cb.hfp_vol < 15))
+    if ((up_flag) && (sys_cb.hfp_vol < 15))
     {
         bt_ctrl_msg(BT_CTL_VOL_UP);
     }
-    else if ((msg == KU_VOL_DOWN) && (sys_cb.hfp_vol > 0))
+    else if ((!up_flag) && (sys_cb.hfp_vol > 0))
     {
         bt_ctrl_msg(BT_CTL_VOL_DOWN);
     }
@@ -246,82 +266,37 @@ void bt_call_volume_change(u8 msg)
     {
         return;
     }
-
 }
 
 void bt_volume_up(void)
 {
-    if (func_cb.sta == FUNC_BT)
+    if (sys_cb.incall_flag)
     {
-        if (sys_cb.incall_flag)
-        {
-            bt_call_volume_change(KU_VOL_UP);
-        }
-        else
-        {
-#if BT_HID_VOL_CTRL_EN
-            if(bsp_bt_hid_vol_change(HID_KEY_VOL_UP))
-            {
-                return;
-            }
-#endif
-
-            bt_music_vol_up();
-//            printf("volume: %d\n", sys_cb.vol);
-#if WARNING_MAX_VOLUME
-            if (sys_cb.vol == VOL_MAX)
-            {
-                maxvol_tone_play();
-            }
-#endif
-        }
+        bt_call_volume_change(1);
     }
     else
     {
         bsp_set_volume(bsp_volume_inc(sys_cb.vol));
+        bsp_bt_vol_change();
+        printf("volume: %d\n", sys_cb.vol);
     }
-
-    if (func_cb.set_vol_callback)
+    if (bt_cb.music_playing)
     {
-        func_cb.set_vol_callback(1);
+        dac_fade_in();
     }
 }
 
 void bt_volume_down(void)
 {
-    if (func_cb.sta == FUNC_BT)
+    if (sys_cb.incall_flag)
     {
-        if (sys_cb.incall_flag)
-        {
-            bt_call_volume_change(KU_VOL_DOWN);
-        }
-        else
-        {
-#if BT_HID_VOL_CTRL_EN
-            if(bsp_bt_hid_vol_change(HID_KEY_VOL_DOWN))
-            {
-                return;
-            }
-#endif
-
-            bt_music_vol_down();
-//            printf("volume: %d\n", sys_cb.vol);
-#if WARNING_MIN_VOLUME
-            if (sys_cb.vol == 0)
-            {
-                minvol_tone_play();
-            }
-#endif
-        }
+        bt_call_volume_change(0);
     }
     else
     {
         bsp_set_volume(bsp_volume_dec(sys_cb.vol));
-    }
-
-    if (func_cb.set_vol_callback)
-    {
-        func_cb.set_vol_callback(0);
+        bsp_bt_vol_change();
+        printf("volume: %d\n", sys_cb.vol);
     }
 }
 
@@ -351,3 +326,9 @@ void bt_uart_init(void)
 }
 #endif
 
+#if BT_FCC_TEST_EN || BT_DUT_MODE_EN
+uint8_t ble_set_delta_gain(void)
+{
+    return 0;           //设置BLE与BT的功率差值
+}
+#endif

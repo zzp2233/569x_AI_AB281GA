@@ -93,11 +93,6 @@ void modem_sta_fall_isr(void)
     printf("%s\n", __func__);
 }
 
-u32 modem_sta_get_value(void)
-{
-    return (GPIOF & BIT(1));
-}
-
 #else
 void modem_pre_send_cmd(void) {}
 void bsp_modem_sleep_enter(void) {}

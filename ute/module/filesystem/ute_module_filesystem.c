@@ -654,5 +654,116 @@ bool uteModuleFilesystemRenameFile(char *oldpath,char *newpath)
     return uteModuleFilesystemRenameFileCommon(&uteModuleLfs,oldpath,newpath);
 }
 
+/**
+ * @brief        重命名目录
+ * @details
+ * @param[in]    oldPath 旧目录名,全路径
+ * @param[in]    newPath 旧目录名,全路径
+ * @param[in]    isDelOld 是否删除旧目录
+ * @return       true 为成功,false 为失败
+ * @author       Wang.Luo
+ * @date         2024-04-23
+ */
+bool uteModuleFilesystemRenameDirectory(char *oldpath, char *newpath, bool isDelOld)
+{
+    UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL,"%s,rename directory:%s->%s", __func__, oldpath, newpath);
+    uteModuleFilesystemCreateDirectory(newpath);
+    lfs_dir_t old_dir;
+    lfs_dir_t new_dir;
+    int err = lfs_dir_open(&uteModuleLfs, &old_dir, (const char *)oldpath);
+    if (err == LFS_ERR_OK)
+    {
+        uteModulePlatformTakeMutex(uteModuleFilesystemMute);
+        err = lfs_dir_open(&uteModuleLfs, &new_dir, (const char *)newpath);
+        if (err == LFS_ERR_OK)
+        {
+            struct lfs_info info;
+            while (lfs_dir_read(&uteModuleLfs, &old_dir, &info) > 0)
+            {
+                // 忽略. 和 .. 目录
+                if (strcmp(info.name, ".") == 0 || strcmp(info.name, "..") == 0)
+                {
+                    continue;
+                }
+                // 生成原路径和新路径
+                char *old_path = (char *)uteModulePlatformMemoryAlloc(strlen((const char *)oldpath) + strlen(info.name) + 2);
+                char *new_path = (char *)uteModulePlatformMemoryAlloc(strlen((const char *)newpath) + strlen(info.name) + 2);
+                sprintf(old_path, "/%s/%s", oldpath, info.name);
+                sprintf(new_path, "/%s/%s", newpath, info.name);
+                // 移动文件
+                err = lfs_rename(&uteModuleLfs, old_path, new_path);
+                UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL, "%s,rename sta:%d,old_path:%s,new_path:%s", __func__, err, old_path, new_path);
+                uteModulePlatformMemoryFree(old_path);
+                uteModulePlatformMemoryFree(new_path);
+            }
+            lfs_dir_close(&uteModuleLfs, &new_dir);
+        }
+        else
+        {
+            UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL, "%s,new dir open err:%d", __func__, err);
+        }
+        lfs_dir_close(&uteModuleLfs, &old_dir);
+        // 删除原目录
+        if (isDelOld)
+        {
+            err = lfs_remove(&uteModuleLfs, (const char *)oldpath);
+        }
+        uteModulePlatformGiveMutex(uteModuleFilesystemMute);
+    }
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL, "%s,old dir open err:%d", __func__, err);
+    }
+    return (err == LFS_ERR_OK ? true : false);
+}
+
+/**
+ * @brief        删除目录下的所有文件
+ * @details
+ * @param[in]    path 目录名,全路径
+ * @return       true 为成功,false 为失败
+ * @author       Wang.Luo
+ * @date         2024-04-24
+ */
+bool uteModuleFilesystemDelDirectoryAllFiles(char *path)
+{
+    UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL, "%s,del all files:%s", __func__, path);
+    // 声明目录句柄
+    lfs_dir_t dir;
+    // 打开目录
+    int err = lfs_dir_open(&uteModuleLfs, &dir, (const char *)path);
+    if (err == LFS_ERR_OK)
+    {
+        uteModulePlatformTakeMutex(uteModuleFilesystemMute);
+        // 读取目录中的文件并删除每个文件
+        struct lfs_info info;
+        while (lfs_dir_read(&uteModuleLfs, &dir, &info) > 0)
+        {
+            // 忽略 . 和 .. 目录
+            if (strcmp(info.name, ".") == 0 || strcmp(info.name, "..") == 0)
+            {
+                continue;
+            }
+            // 生成文件路径
+            char *file_path = (char *)uteModulePlatformMemoryAlloc(strlen((const char *)path) + strlen(info.name) + 2);
+            sprintf(file_path, "%s/%s", path, info.name);
+            // 删除文件
+            err = lfs_remove(&uteModuleLfs, file_path);
+            if (err)
+            {
+                UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL, "%s,%s,del err:%d", __func__, file_path, err);
+            }
+            uteModulePlatformMemoryFree(file_path);
+        }
+        // 关闭目录
+        lfs_dir_close(&uteModuleLfs, &dir);
+        uteModulePlatformGiveMutex(uteModuleFilesystemMute);
+    }
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_FILE_SYSTEM_LVL, "%s,%s,open dir err:%d", __func__, path, err);
+    }
+    return (err == LFS_ERR_OK ? true : false);
+}
 
 

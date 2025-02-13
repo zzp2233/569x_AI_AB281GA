@@ -33,23 +33,6 @@ const u8 dac_dvol_tbl_32[32 + 1] =
     8,   7,   6,   5,   4,   3,   2,   1,   0,
 };
 
-AT(.text.vol.convert)
-u16 bsp_volume_convert(u8 vol)
-{
-    u16 vol_set = 0;
-    u8 level = 0;
-    if (vol <= VOL_MAX)
-    {
-        level = dac_dvol_table[vol] + sys_cb.gain_offset;
-        if (level > 60)
-        {
-            level = 60;
-        }
-        vol_set = dac_dvol_tbl_db[level];
-    }
-    return vol_set;
-}
-
 AT(.text.bsp.dac)
 void bsp_change_volume(u8 vol)
 {
@@ -92,9 +75,7 @@ void dac_set_mute_callback(u8 mute_flag)
 {
     if (mute_flag)
     {
-        printf(mute_str, 00);
         bsp_loudspeaker_mute();
-
     }
     else
     {

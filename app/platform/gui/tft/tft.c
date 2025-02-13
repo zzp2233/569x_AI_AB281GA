@@ -1,11 +1,8 @@
-/*
- * @brief:
- * @LastEditors: ljf
- * @LastEditTime: 2025-01-08 16:06:18
- * @FilePath: \app\platform\gui\tft\tft.c
- * @Date: 2025-01-08 10:51:51
- */
 #include "include.h"
+#include "ute_module_platform.h"
+#include "ute_drv_screen_common.h"
+#include "ute_module_gui_common.h"
+#include "ute_application_common.h"
 
 #define TRACE_EN                1
 
@@ -15,30 +12,12 @@
 #define TRACE(...)
 #endif
 
-struct
-{
-    //TE控制相关
-    bool tft_bglight_kick;      //背光控制
-    u8   tft_bglight_duty;      //背光pwm占空比
-    u8   tft_bglight_last_duty; //背光pwm上一次占空比
-    u8 te_mode;
-    u8 te_mode_next;
-    bool tft_bglight_first_set;
-
-    u8 te_bglight_cnt;          //在收到需要打开背光控制时，推完第一帧数据后延时打开背光
-    u8 despi_baud;
-    u8 despi_baud1;
-    u8 despi_baud2;
-    u32 tick0;
-    u32 tick1;
-    bool flag_in_frame;
-    bool tft_set_baud_kick;     //需要切换时钟，等TFT_END后再切
-} tft_cb;
+tft_cb_t tft_cb;
 
 AT(.com_text.tft_spi)
 static void tft_te_refresh(void)
 {
-    tft_cb.tick0 = 0;
+    TICK0CNT = 0;
     compo_cb.rtc_cnt = RTCCNT;
     compo_cb.rtc_cnt2 = RTCCON2;
     compo_cb.rtc_update = true;
@@ -75,7 +54,8 @@ void tft_te_isr(void)
         if (tft_cb.te_mode == 1)
         {
             //1TE MODE
-            tft_cb.tick1 = tick_get();
+            TICK1CNT = 0;
+            TICK1CON |= BIT(0);         //TICK EN
         }
         else
         {
@@ -100,14 +80,11 @@ void tft_te_isr(void)
 AT(.com_text.tft_spi)
 void tick_te_isr(void)
 {
-    tft_cb.tick0++;
-    if (tft_cb.tick1)
+    if (TICK1CON & BIT(9))
     {
-        if (tick_check_expire(tft_cb.tick1, (int)TFT_TE_CYCLE_DELAY))
-        {
-            tft_te_refresh();
-            tft_cb.tick1 = 0;
-        }
+        TICK1CON &= ~BIT(0);
+        TICK1CPND = BIT(9);
+        tft_te_refresh();
     }
 }
 
@@ -115,17 +92,7 @@ void tick_te_isr(void)
 AT(.com_text.tft_spi)
 int tft_te_getnorm(void)
 {
-    int norm;
-    if (tft_cb.tick0 == 0)
-    {
-        norm = 0;
-    }
-    else
-    {
-        norm = tft_cb.tick0 * 100 / (int)TFT_TE_CYCLE;
-    }
-    return norm;
-//    return TICK0CNT * 100 * 64 / (int)((XOSC_CLK_HZ / 1000) * TFT_TE_CYCLE);
+    return TICK0CNT * 100 * 64 / (int)((XOSC_CLK_HZ / 1000) * TFT_TE_CYCLE);
 }
 
 //设置1TE / 2TE的波特率
@@ -140,27 +107,31 @@ void tft_set_baud(u8 baud1, u8 baud2)
 AT(.com_text.tft_spi)
 void tft_frame_start(void)
 {
-#if  (ASR_SELECT == ASR_YJ)
-    set_et_frame_refreshing(1);
-#endif
-
     tft_cb.flag_in_frame = true;
 #if (GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
     //3w-9bit 1line mode
     DESPICON = BIT(27) | BIT(18) | BIT(7) | BIT(0);     //[28:27]IN RGB565, [18]3w-9b despi mode enable, [7]IE, [3:2]1bit in, 1bit out, [0]EN
 #endif
-
+#if (GUI_SELECT == DISPLAY_UTE)
+    uteModulePlatformScreenWriteDataStart();
+#else
     //tft_write_cmd12(0x2C);      //TFT_RAMWR
     tft_write_data_start();
+    // uteDrvScreenCommonSetWindow(0,0,UTE_DRV_SCREEN_WIDTH,UTE_DRV_SCREEN_HEIGHT);
 #if (GUI_SELECT == GUI_TFT_240_ST7789)
     TFT_SPI_DATA_EN();
+#endif
 #endif
 }
 
 AT(.com_text.tft_spi)
 void tft_frame_end(void)
 {
+#if (GUI_SELECT == DISPLAY_UTE)
+    uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,true);
+#else
     tft_write_end();
+#endif
     tft_cb.flag_in_frame = false;
     if (tft_cb.tft_bglight_kick)
     {
@@ -172,9 +143,6 @@ void tft_frame_end(void)
         tft_cb.tft_set_baud_kick = false;
         DESPIBAUD = tft_cb.despi_baud;
     }
-#if  (ASR_SELECT == ASR_YJ)
-    set_et_frame_refreshing(0);
-#endif
 }
 
 
@@ -204,19 +172,29 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
 
     if(!stepless_en)
     {
-        level = level * (100 / 5);
+        level = level * (DEFAULT_BACK_LIGHT_PERCENT_MAX / (DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE));
     }
-    if(100 < level)
+    if(DEFAULT_BACK_LIGHT_PERCENT_MAX < level)
     {
-        level = 100;
+        level = DEFAULT_BACK_LIGHT_PERCENT_MAX;
     }
+    else if (DEFAULT_BACK_LIGHT_PERCENT_MIN > level)
+    {
+        level = DEFAULT_BACK_LIGHT_PERCENT_MIN;
+    }
+
     duty = base_duty + level;
     tft_cb.tft_bglight_duty = duty;
-
     if (tft_cb.tft_bglight_last_duty != tft_cb.tft_bglight_duty)
     {
+#if (GUI_SELECT == DISPLAY_UTE)
+        uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
+#else
+        bsp_pwm_freq_set(177);
         bsp_pwm_duty_set(PORT_TFT_BL, tft_cb.tft_bglight_duty, false);
+#endif
         tft_cb.tft_bglight_last_duty = tft_cb.tft_bglight_duty;
+        sys_cb.light_level = tft_cb.tft_bglight_duty / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
     }
 }
 
@@ -227,13 +205,22 @@ void tft_bglight_frist_set_check(void)
     {
         return ;
     }
+    if(!uteApplicationCommonIsPowerOn())
+    {
+        return;
+    }
+    extern bool msgbox_frist_set_check(void);
+    if (msgbox_frist_set_check())
+    {
+        return;
+    }
     tft_cb.tft_bglight_first_set = false;
 
     tft_cb.tft_bglight_last_duty = 0;
     //todo:后续根据客户定制调整
     if(0 == tft_cb.tft_bglight_duty)
     {
-        tft_cb.tft_bglight_duty = 100;
+        tft_cb.tft_bglight_duty = uteModuleGuiCommonGetBackLightPercent();
     }
 #ifdef GUI_USE_TFT
     tft_bglight_set_level(tft_cb.tft_bglight_duty,true);
@@ -248,6 +235,7 @@ void tft_set_temode(u8 mode)
 
 void tft_init(void)
 {
+#if (GUI_SELECT != DISPLAY_UTE)
     //clk init
     CLKDIVCON2 = (CLKDIVCON2 & ~(BIT(4) * 0xF)) | BIT(4) * 2;   // TFTDE div
     CLKGAT2 |= BIT(4);
@@ -259,8 +247,18 @@ void tft_init(void)
     port_irq_register(PORT_TFT_INT_VECTOR, tft_te_isr);
     port_wakeup_init(PORT_TFT_INT, 1, 1);               //开内部上拉, 下降沿唤醒
 
-    tft_cb.tick0 = 0;
-    tft_cb.tick1 = 0;
+    //TICK Timer init
+    CLKGAT0 |= BIT(28);
+    delay_us(1);                                        //set CLKGAT0需要时间生效
+    TICK0CON = BIT(6) | BIT(5) | BIT(2);                //div64[6:4], xosc26m[3:1]
+    TICK0PR = 0xFFFF;
+    TICK0CNT = 0;
+    TICK0CON |= BIT(0);                                 //TICK EN
+
+    TICK1CON = BIT(7) | BIT(6) | BIT(5) | BIT(2);       //TIE, div64[6:4], xosc26m[3:1]
+    TICK1PR = (int)((XOSC_CLK_HZ / 1000) * TFT_TE_CYCLE_DELAY) / 64;
+    TICK1CNT = 0;
+    sys_irq_init(IRQ_TE_TICK_VECTOR, 0, tick_te_isr);
 
     tft_cb.te_mode = 0;                             //初始化
     tft_cb.te_mode_next = 0;
@@ -273,11 +271,14 @@ void tft_init(void)
 #if (GUI_SELECT == GUI_TFT_240_ST7789)
     DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(0);                                  //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
 #elif (GUI_SELECT == GUI_TFT_JD9853)
-    DESPICON = BIT(27) | BIT(26) | BIT(18) | BIT(9) | BIT(7) | BIT(0);              //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2], [0]EN
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [9]MultiBit, [7]IE, [3:2], [0]EN
 #elif (GUI_SELECT == GUI_TFT_RGBW_320_ST77916)
     DESPICON = BIT(27) | BIT(25) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);      //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
+#elif (GUI_SELECT == GUI_TFT_240_296_NV3030B)
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
+#elif (GUI_SELECT == GUI_TFT_320_385_GV9B71)
+    DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
 #elif (GUI_SELECT == GUI_TFT_SPI)
-
     DESPICON = BIT(27) | BIT(7) | BIT(0);                                           //[28:27]IN RGB565, [7]IE, [3:2]1BIT in, 1BIT out, [0]EN
 #if (GUI_MODE_SELECT == MODE_3WIRE_9BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
     DESPICON |= BIT(18);                                                            //[18]3w-9b despi mode enable
@@ -293,6 +294,7 @@ void tft_init(void)
     DESPIBAUD = 15;      //读ID建议在20M以内
     TRACE("TFT ID: %x\n", tft_read_id());
     DESPIBAUD = tft_cb.despi_baud;
+#endif
 
 #if (GUI_SELECT == GUI_TFT_320_ST77916)
     tft_320_st77916_init();
@@ -308,18 +310,25 @@ void tft_init(void)
     tft_240_st7789_init();
 #elif (GUI_SELECT == GUI_TFT_240_ST7789W3)
     tft_240_st7789w3_init();
-#elif (GUI_SELECT == GUI_TFT_240_JD9853W3)
-    tft_240_jd9853w3_init();
+#elif (GUI_SELECT == GUI_TFT_240_296_NV3030B)
+    tft_spi_nv3030b_init();
+#elif (GUI_SELECT == GUI_TFT_320_385_GV9B71)
+    tft_spi_gc9b71_init();
 #elif (GUI_SELECT == GUI_TFT_SPI)
     tft_spi_init();
 #elif (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
     tft_170_560_axs15231B_init();
+#elif (GUI_SELECT == DISPLAY_UTE)
+    uteDrvScreenCommonInit();
 #else
 #error "Please Select GUI Display"
 #endif
-
+#if (GUI_SELECT == DISPLAY_UTE)
+    uteDrvScreenCommonSetWindow(0,12,GUI_SCREEN_WIDTH,GUI_SCREEN_HEIGHT+12);
+#else
     tft_set_window(0, 0, GUI_SCREEN_WIDTH - 1, GUI_SCREEN_HEIGHT - 1);
-    LCD_BL_EN();
+#endif
+
     tft_cb.tft_bglight_kick = true; //延时打开背光
 #ifdef GUI_USE_OLED
     oled_brightness_set_level(5, false);
@@ -329,16 +338,19 @@ void tft_init(void)
 void tft_exit(void)
 {
 #ifdef GUI_USE_TFT
+#if (GUI_SELECT == DISPLAY_UTE)
+    uteDrvScreenCommonDisplayOff();
+#else
     bsp_pwm_disable(PORT_TFT_BL); //关背光
-    printf("%s:%d\n",__func__,__LINE__);
+#endif
 #endif
     port_tft_exit();
     port_irq_free(PORT_TFT_INT_VECTOR);
     port_wakeup_exit(PORT_TFT_INT);
     DESPICON = 0;
-    tft_cb.tick0 = 0;
-    tft_cb.tick1 = 0;
-//    RSTCON0 &= ~BIT(8);
-//    CLKGAT2 &= ~BIT(4);
+    TICK0CON = 0;
+    TICK1CON = 0;
+    RSTCON0 &= ~BIT(8);
+    CLKGAT2 &= ~BIT(4);
 }
 

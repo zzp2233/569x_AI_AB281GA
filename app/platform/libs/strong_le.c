@@ -7,30 +7,6 @@
 
 
 void strong_le_include(void) {}
-#if !BT_ATT_EN
-void latt_establish_service_level_connection(uint8_t * bd_addr) {}
-void latt_release_service_level_connection(uint8_t * bd_addr) {}
-void latt_send_kick(void) {}
-void latt_att_profile_init(void * latt_con) {}
-int latt_tx_notify(uint16_t att_handle, const uint8_t *value, uint16_t value_len)
-{
-    return -1;
-}
-void * provide_latt_connection_context_for_bd_addr(void * bd_addr)
-{
-    return NULL;
-}
-void remove_latt_connection_context(void * latt_con) {}
-int latt_send_notify_packet(void *context, struct txbuf_tag *buf)
-{
-    return -1;
-}
-void latt_event_server_send(uint16_t cid) {}
-void btstack_latt_send(void) {}
-void latt_init_register_service(void) {}
-void latt_init_do(void) {}
-#endif
-
 #if !LE_EN
 void ble_txpkt_init(void) {}
 AT(.com_text.stack.ble.mtu)
@@ -54,7 +30,6 @@ void btstack_ble_init(void) {}
 void btstack_gatt_init(void) {}
 void btstack_ble_update_conn_param(void) {}
 void btstack_ble_set_adv_interval(void) {}
-void btstack_ble_set_addr(void) {}
 
 typedef uint8_t (*bb_msg_func_t)(uint16_t index, void const *param);
 typedef uint8_t (*bb_cmd_func_t)(uint16_t cmd, void const *param);
@@ -110,10 +85,6 @@ void ble_con_rx_end(uint8_t index, bool rx_ok, uint16_t rxchass) {}
 void aes_init(uint8_t init_type) {};
 void aes_result_handler(uint8_t status, uint8_t* result) {};
 void ble_ecpy(uint8_t *key, uint8_t *enc_data) {}
-int hci_le_create_con_cancel_cmd_func(void const *param, uint16_t id)
-{
-    return 0;
-}
 #endif
 
 #if !LE_PAIR_EN

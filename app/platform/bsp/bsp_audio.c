@@ -9,7 +9,6 @@ void usbmic_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 void recorder_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 void mic_test_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 u8 bsp_modem_get_spr(void);
-void bsp_speech_recognition_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 
 #if MIC_TEST_EN
 #define speaker_sdadc_callback  mic_test_sdadc_process
@@ -43,12 +42,6 @@ void bsp_speech_recognition_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 #define opus_sdadc_callback   sdadc_dummy
 #endif
 
-#if ASR_SELECT
-#define asr_sdadc_callback     bsp_speech_recognition_sdadc_process
-#else
-#define asr_sdadc_callback     sdadc_dummy
-#endif
-
 //MIC analog gain: 0~13(共14级), step 3DB (3db ~ +42db)
 //adadc digital gain: 0~63, step 0.5 DB, 保存在gain的低6bit
 const sdadc_cfg_t rec_cfg_tbl[] =
@@ -57,17 +50,16 @@ const sdadc_cfg_t rec_cfg_tbl[] =
     {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      240,    speaker_sdadc_callback},        /* SPEAKER */
     {CH_MIC_PF0,   SPR_8000,   (12 << 6),   ADC2DAC_EN,     0,      480,    bt_sdadc_callback},             /* BTMIC   */
     {CH_MIC_PF0,   SPR_48000,  (12 << 6),   ADC2DAC_EN,     0,      128,    usbmic_sdadc_callback},
-    {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      256,    recorder_sdadc_callback},       /* RECORDER*/
+    {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      256,    recorder_sdadc_callback},       /* RECORDER */
     {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      480,    bt_sdadc_callback},             /* IIS     */
-    {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      128,    opus_sdadc_callback},           /* opus    */
-    {CH_MIC_PF0,   SPR_16000,  ASR_GAIN,    ADC2DAC_EN,     0,      ASR_SAMPLE,     asr_sdadc_callback},    /* ASR     */
-
+    {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      128,    opus_sdadc_callback},           /* opus  */
 };
 
 void audio_path_init(u8 path_idx)
 {
     sdadc_cfg_t cfg;
     memcpy(&cfg, &rec_cfg_tbl[path_idx], sizeof(sdadc_cfg_t));
+
     if (path_idx == AUDIO_PATH_BTMIC)
     {
 
@@ -106,14 +98,6 @@ void audio_path_init(u8 path_idx)
 #if MODEM_CAT1_EN
         cfg.sample_rate = bsp_modem_get_spr();
 #endif
-        if (xcfg_cb.bt_aec_en)
-        {
-            cfg.gain = (u16)BT_ANL_GAIN << 6;                       //开AEC后，数字GAIN放到AEC里做。
-        }
-        else
-        {
-            cfg.gain = ((u16)BT_ANL_GAIN << 6) | BT_DIG_GAIN;
-        }
     }
 
     sdadc_init(&cfg);
@@ -139,6 +123,17 @@ void audio_path_exit(u8 path_idx)
     memcpy(&cfg, &rec_cfg_tbl[path_idx], sizeof(sdadc_cfg_t));
     sdadc_exit(cfg.channel);
     adpll_spr_set(DAC_OUT_SPR);
+}
+
+void bt_call_audio_path_start(void)
+{
+    sdadc_start(CH_MIC_PF0);
+}
+
+void bt_call_audio_path_exit(void)
+{
+    sdadc_exit(CH_MIC_PF0);
+    // adpll_spr_set(DAC_OUT_SPR);
 }
 
 u8 get_mic_dig_gain(void)

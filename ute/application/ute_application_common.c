@@ -1,10 +1,3 @@
-/*
- * @brief:
- * @LastEditors: ljf
- * @LastEditTime: 2025-01-13 17:15:42
- * @FilePath: \UTE_AB569x\ute\application\ute_application_common.c
- * @Date: 2025-01-10 11:05:52
- */
 /**
 *@file
 *@brief       application 公共层
@@ -14,28 +7,28 @@
 *@version      v1.0
 */
 #include "include.h"
-// #include "ute_module_log.h"
+#include "ute_module_log.h"
 #include "ute_application_common.h"
 #include "ute_module_message.h"
-// #include "ute_module_call.h"
-// #include "include.h"
-// #include "ute_drv_motor.h"
-// #include "ute_module_protocol.h"
-// #include "ute_module_profile_ble.h"
-// #include "ute_module_notify.h"
-// #include "ute_module_notdisturb.h"
-// #include "ute_module_weather.h"
-// #include "ute_module_heart.h"
-// #include "ute_module_bloodoxygen.h"
-// #include "ute_drv_battery_common.h"
-// #include "ute_module_sleep.h"
-// #include "ute_module_sport.h"
-// #include "ute_module_findphone.h"
-// #include "ute_module_liftwrist.h"
-// #include "ute_drv_temperature_common.h"
-// #include "ute_module_factorytest.h"
-// #include "ute_module_music.h"
-
+#include "ute_module_call.h"
+#include "include.h"
+#include "ute_drv_motor.h"
+#include "ute_module_protocol.h"
+#include "ute_module_profile_ble.h"
+#include "ute_module_notify.h"
+#include "ute_module_notdisturb.h"
+#include "ute_module_weather.h"
+#include "ute_module_heart.h"
+#include "ute_module_bloodoxygen.h"
+#include "ute_drv_battery_common.h"
+#include "ute_module_sleep.h"
+#include "ute_module_sport.h"
+#include "ute_module_findphone.h"
+#include "ute_module_liftwrist.h"
+#include "ute_drv_temperature_common.h"
+#include "ute_module_factorytest.h"
+#include "ute_module_music.h"
+#include "ute_module_gui_common.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -43,7 +36,6 @@
 #include "ute_module_breathrate.h"
 #include "ute_module_screens_common.h"
 #include "ute_task_gui.h"
-#include "ute_module_gui_common.h"
 #include "ute_module_call.h"
 #include "ute_module_ota.h"
 #include "ute_module_stopwatch.h"
@@ -117,7 +109,6 @@ void *uteApplicationCommonSyncDataTimer = NULL;
 */
 void uteApplicationCommonStartupFrist(void)
 {
-    printf("uteApplicationCommonStartupFrist\r\n");
     uteModulePlatformCreateMutex(&uteApplicationCommonMute);
     uteModulePlatformDlpsBitReset();
     memset(&uteApplicationCommonData,0,sizeof(ute_application_common_data_t));
@@ -138,7 +129,7 @@ void uteApplicationCommonStartupFrist(void)
 #endif
     uteModuleSystemtimeInit();
     //bat
-    // uteDrvBatteryCommonInit();
+    uteDrvBatteryCommonInit();
     //按键
     //uteDrvKeysCommonInit();
 #if UTE_MODULE_SHIP_MODE_SUPPORT
@@ -182,7 +173,7 @@ void uteApplicationCommonStartupSecond(void)
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
 
-        // uteModuleHardfaultInfoSave();
+        uteModuleHardfaultInfoSave();
 
         uteApplicationCommonData.isStartupFristFinish = true;
         //其他硬件初始化
@@ -204,17 +195,17 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleNewFactoryTestInit();
 #endif
 
-        // extern void app_ute_remind_init(void);
-        // app_ute_remind_init();
+        extern void app_ute_remind_init(void);
+        app_ute_remind_init();
 
 #if UTE_MODULE_HEART_SUPPORT
-        uteModuleHeartInit();
+        // uteModuleHeartInit();
 #endif
 #if UTE_MODULE_BLOODPRESSURE_SUPPORT
         uteModuleBloodpressureInit();
 #endif
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
-        uteModuleBloodoxygenInit();
+        // uteModuleBloodoxygenInit();
 #endif
 #if UTE_MODULE_BREATHRATE_SUPPORT
         uteModuleBreathrateInit();
@@ -222,8 +213,8 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_TEMPERATURE_SUPPORT
         uteModuleTemperatureInit();
 #elif UTE_DRV_BATTERY_CE_AUTH_SUPPORT
-        uteDrvTemperatureCommonInit();
-        uteDrvTemperatureCommonPowerOff();
+        // uteDrvTemperatureCommonInit();
+        // uteDrvTemperatureCommonPowerOff();
 #else
         //uteModuleTemperatureIoInit();
 #endif
@@ -250,29 +241,29 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_BLOODSUGAR_SUPPORT
         uteModuleBloodsugarInit();
 #endif
-        // uteModuleFactoryTestInit();
+        uteModuleFactoryTestInit();
         // uteModuleSportInit();
-        // uteModuleNotifyInit();
+        uteModuleNotifyInit();
         // uteModuleSleepInit();
-        // uteModuleCallInit();
-        // uteModuleOtaInit();
-        // uteModuleMusicInit();
-        // uteModuleStopWatchInit();
-        // uteModuleCountDownInit();
-        // uteModuleBreathTrainingInit();
+        uteModuleCallInit();
+        //uteModuleOtaInit();
+        uteModuleMusicInit();
+        //uteModuleStopWatchInit();
+        //uteModuleCountDownInit();
+        //uteModuleBreathTrainingInit();
 #if UTE_MODULE_MENSTRUAL_CYCLE_SUPPORT
         uteModuleMenstrualCycleInit();
 #endif
 #if UTE_MODULE_PLAYBACK_SUPPORT
         uteModuleMicRecordInit();
 #endif
-        // uteModuleFindPhoneInit();
+        uteModuleFindPhoneInit();
         //uteModuleGuiStringInit();
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
         uteModuleEmotionPressureInit();
 #endif
-        // uteModuleWeatherInit();
-        // uteModuleNotDisturbInit();
+        uteModuleWeatherInit();
+        uteModuleNotDisturbInit();
 #if UTE_MODULE_DRINK_WATER_NOTIFY_SCREEN_SUPPORT
         //uteModuleDrinkWaterInit();
 #endif
@@ -294,7 +285,7 @@ void uteApplicationCommonStartupSecond(void)
 #endif
         //系统参数配置
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
-        uteModuleBloodoxygenReadConfig();
+        // uteModuleBloodoxygenReadConfig();
 #endif
 #if UTE_MODULE_BREATHRATE_SUPPORT
         uteModuleBreathrateReadConfig();
@@ -313,7 +304,6 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 
         uteModulePlatformCreateTimer(&uteApplicationCommonSyncDataTimer, "SYNC DATA timer", 1, UTE_SEND_DATA_TO_PHONE_INVTERVAL, false, uteApplicationCommonSyncDataTimerCallback);
-
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_ADV_DATA,0);
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_DEV_NAME,0);
         //uteModulePlatformAdvertisingInit();
@@ -323,11 +313,12 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
         uteModuleEmotionPressureReadConfig();
 #endif
-
         uteModuleSystemtimeRegisterSecond(uteApplicationCommonEverySecond);
+
         // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isDelayDisplayCharger=%d", __func__,uteDrvBatteryCommonIsDelayDisplayCharger());
 
         // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,HasBindingBefore=%d , HasConnectOurApp = %d", __func__,uteModuleAppBindingGetHasBindingBefore(),uteApplicationCommonIsHasConnectOurApp());
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,uteDrvBatteryCommonGetLvl=%d", __func__,uteDrvBatteryCommonGetLvl());
         if(0)
 #if UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
         {}
@@ -335,8 +326,8 @@ void uteApplicationCommonStartupSecond(void)
         {
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
         }
-        else //if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL)
 #endif
+        else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL || ((RTCCON >> 20) & 0x01)) //USB插入
         {
 #if UTE_MODULE_NEW_FACTORY_TEST_JUST_CROSS_SUPPORT
             ute_new_factory_test_data_t *data;
@@ -387,23 +378,24 @@ void uteApplicationCommonStartupSecond(void)
 #endif
             else
             {
-                // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
             }
 #endif
 #endif
         }
-        // else
-        // {
-        //     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,vbat is too low!!",__func__);
-        //     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
-        // }
+        else
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,vbat is too low!!",__func__);
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF,0);
+        }
 #if UTE_MODULE_MOTOR_POWER_STATUS_SAVE_SUPPORT
         if(!uteModuleMotorGetVibrationSwitchStatus())
         {
             uteModuleMotorSetIsOpenVibrationStatus(true);
         }
 #endif
-        // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
         uteApplicationCommonData.isStartupSecondFinish = true;
         uteApplicationCommonData.isPowerOn = true;
         uteApplicationCommonData.systemPowerOnSecond = 0;
@@ -474,7 +466,9 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     }
     if(!uteApplicationCommonData.bleConnectState.isConnected)
     {
+#if UTE_MODULE_SPORT_SUPPORT
         uteModuleSportSetTakePictureEnable(false);
+#endif
         if(!uteApplicationCommonData.isPowerOn)
         {
             // uteModulePlatformSetFastAdvertisingTimeCnt(0);
@@ -483,7 +477,9 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
         // uteModuleOtaDisconectHandler();
         // uteModuleFactoryTestDisconnectHandler();
         // uteApplicationCommonSetHasUpdateConnectionParam(false);
+#if UTE_MODULE_SPORT_SUPPORT
         uteModuleSportDisconnectHandler();
+#endif
         // if(!uteModulePlatformGetFastAdvertisingTimeCnt())
         // {
         //     uteModulePlatformSetFastAdvertisingTimeCnt(UTE_FAST_ADVERTISE_TIMEOUT);
@@ -506,6 +502,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     {
         // uteModulePlatformSetFastAdvertisingTimeCnt(0);
         // uteModulePlaformUpdateConnectParam(12,36,55000);
+        ble_update_conn_param(12,0,500);
     }
     uteModuleCallBleConnectState(isConnected);
 }
@@ -517,13 +514,13 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
 */
 void uteApplicationCommonSetBlePariring(bool isSuccess)
 {
-    // uteApplicationCommonData.bleConnectState.isParired = isSuccess;
-    // uint8_t response[2] = {CMD_SET_ANCS_PARAM,0x01};
-    // if(!isSuccess)
-    // {
-    //     response[1] = 0x02;
-    // }
-    // uteModuleProfileBleSendToPhone(&response[0],2);
+    uteApplicationCommonData.bleConnectState.isParired = isSuccess;
+    uint8_t response[2] = {CMD_SET_ANCS_PARAM,0x01};
+    if(!isSuccess)
+    {
+        response[1] = 0x02;
+    }
+    uteModuleProfileBleSendToPhone(&response[0],2);
 
 }
 
@@ -840,14 +837,18 @@ void uteApplicationCommonSaveQuickSwitchInfo(void)
 */
 void uteApplicationCommonStartPowerOffMsg(void)
 {
-
-    // if (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_CHARGING)//todo
-    // {
-    //     uteModulePlatformSystemReboot();
-    //     return;
-    // }
+    if (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_CHARGING)
+    {
+        uteModulePlatformSystemReboot();
+        return;
+    }
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
+
+    if(!sys_cb.gui_sleep_sta)
+    {
+        gui_sleep();
+    }
 
     // uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
@@ -877,7 +878,9 @@ void uteApplicationCommonStartPowerOffMsg(void)
     {
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_STOP_ADV,0);
     }
+#if UTE_MODULE_HEART_SUPPORT
     uteModuleHeartPowerOff();
+#endif
     // uteModulePlatformQdecPowerOff();
     // uteModulePlatformPowerOffGpioConfig();
 #if UTE_BT30_CALL_SUPPORT
@@ -887,9 +890,17 @@ void uteApplicationCommonStartPowerOffMsg(void)
 #if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
     uteModuleCallIsBtAutoCloseSaveConfig();
 #endif
-    // uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);//todo
+    uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_SYSTEM_OFF);
 #endif
-    // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);//todo
+    // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+
+    if(uteDrvBatteryCommonGetLvl() >= 10)
+    {
+        uteDrvMotorEnable();
+        delay_5ms(UTE_MOTOR_DURATION_TIME / 5);
+        uteDrvMotorDisable();
+    }
+
     // uteModulePlatformSetFastAdvertisingTimeCnt(0);
 
 #if UTE_MODULE_SHIP_MODE_SUPPORT
@@ -1018,7 +1029,6 @@ void uteApplicationCommonSyncDataTimerMsg(void)
 */
 void uteApplicationCommonSendQuickSwitchStatus(void)
 {
-#if 0
     uint8_t response[20];
     uint32_t setFlag=0;
     memset(&response[0],0x00,20);
@@ -1083,7 +1093,6 @@ void uteApplicationCommonSendQuickSwitchStatus(void)
     response[4] = (setFlag>>8)&0xff;
     response[5] = (setFlag)&0xff;
     uteModuleProfileBleSendToPhone(&response[0],20);
-#endif
 }
 /**
 *@brief   设置快捷开关状态
@@ -1347,7 +1356,9 @@ void uteApplicationCommonSetAppClosed(bool isAppClosed)
     uteApplicationCommonData.isAppClosed = isAppClosed;
     if(isAppClosed)
     {
+#if UTE_MODULE_SPORT_SUPPORT
         uteModuleSportDisconnectHandler();
+#endif
     }
 }
 
@@ -1749,7 +1760,6 @@ void uteApplicationCommonFactoryReset(void)
  */
 void uteApplicationCommonPoweroff(void)
 {
-    gui_sleep();
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT&&UTE_MODULE_SHIP_MODE_POWER_OFF_SUPPORT //关机进入船运模式
     ute_new_factory_test_data_t *data;
     uteModuleNewFactoryTestSetMode(&data);
@@ -1768,7 +1778,6 @@ void uteApplicationCommonRestart(void)
 {
 //    uteDrvScreenCommonDisplayOff();
     // uteApplicationCommonRealPowerOffMsg(); // 先保存数据再执行重启
-    gui_sleep();
     uteApplicationCommonStartPowerOffMsg();
     uteModulePlatformSystemReboot();
 }
@@ -1943,7 +1952,6 @@ void uteModuleHardfaultInfoSave(void)
 */
 static void uteModuleHardfaultSendlogData(void)
 {
-#if 0
     ute_application_sync_data_param_t *sendParam;
     uteApplicationCommonGetSyncDataParam(&sendParam);
 
@@ -2004,14 +2012,14 @@ static void uteModuleHardfaultSendlogData(void)
         response[3] = 0xfd;
         sendSize = 4;
         uteApplicationCommonSyncDataTimerStop();
+        uteModuleFilesystemDelDirectoryAllFiles(UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR);
     }
 
     uteModuleProfileBle50SendToPhone(response, sendSize);
 
     uteModulePlatformMemoryFree(response);
-#endif
 }
-#if 0
+
 /**
  * @brief        开始发送Hardfault信息
  * @details
@@ -2054,4 +2062,3 @@ void uteModuleHardfaultStartSendlogData(void)
     uteApplicationCommonSyncDataTimerStart();
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s", __func__);
 }
-#endif

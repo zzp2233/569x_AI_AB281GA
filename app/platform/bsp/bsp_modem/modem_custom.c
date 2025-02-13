@@ -81,7 +81,6 @@ void modem_custom_cmd0(void)
     if (modem_check_can_send(10))
     {
         const char *cmd0 = "AT+CUSTOM0\r\n";
-        modem_pre_send_cmd();
         modem_raw_write(cmd0, strlen(cmd0));
         modem_aft_send_cmd();
     }

@@ -128,7 +128,9 @@ void uteModuleNotDisturbSaveParam(ute_module_not_disturb_data_t param)
 #endif
     quick.isRejectCall = uteModuleNotDisturbData.isRejectCall;
     uteApplicationCommonSetQuickSwitchStatus(&quick);
+#if UTE_MODULE_SPORT_SUPPORT
     uteModuleSprotResetRovllverScreenMode();
+#endif
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isOpen=%d,startHourMin=0x%02x,endHourMin=0x%02x", __func__, uteModuleNotDisturbData.isOpen,uteModuleNotDisturbData.startHourMin,uteModuleNotDisturbData.endHourMin);
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isNormalNotNotify=%d,isNormalNotVibration=%d,isRejectCall=%d", __func__, uteModuleNotDisturbData.isNormalNotNotify,uteModuleNotDisturbData.isNormalNotVibration,uteModuleNotDisturbData.isRejectCall);
 }

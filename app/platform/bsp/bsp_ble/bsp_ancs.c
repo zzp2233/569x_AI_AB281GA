@@ -18,15 +18,15 @@ void ble_ancs_notifiy_info_callback(uint32_t uid, uint8_t event_id, uint8_t even
     printf("uid:%x, event_id:%x, event_flags:%x, category_id:%x, category_count:%x\n", uid, event_id, event_flags, category_id, category_count);
     if(event_flags | (1 << 2) != 0x04)
     {
-        if(event_id == 2 && category_id == 1) //来电接听/挂断
+        if(event_id == 2 && category_id == 1) //鏉ョ數鎺ュ惉/鎸傛柇
         {
             uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_CALL_DISABLE_NOTIFY,0);
         }
-        else if (event_id == 0 && category_id == 1) //来电
+        else if (event_id == 0 && category_id == 1) //鏉ョ數
         {
             sys_cb.ancs_missed_call = false;
         }
-        else if (event_id == 0 && category_id == 2) //未接来电
+        else if (event_id == 0 && category_id == 2) //鏈帴鏉ョ數
         {
             sys_cb.ancs_missed_call = true;
         }

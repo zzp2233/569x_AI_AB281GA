@@ -66,5 +66,4 @@ bool bsp_record_start(void);
 void bsp_record_process(void);
 void bsp_record_stop(void);
 void bsp_record_var_init(void);
-u8 get_bsp_record_sta(void);
 #endif //_BSP_RECORD_H

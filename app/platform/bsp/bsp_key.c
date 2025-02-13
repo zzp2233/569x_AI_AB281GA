@@ -1,5 +1,9 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_log.h"
+#include "ute_module_platform.h"
+#include "ute_module_message.h"
+#include "ute_application_common.h"
 
 void bsp_qdec_init(void);
 void rtc_alarm_disable(void);
@@ -29,6 +33,10 @@ static u8 get_adkey(u8 key_val)
 #endif // USER_ADKEY
 
 #if USER_PWRKEY
+#if UTE_LOG_KEYS_LVL
+AT(.com_text.port.key.val)
+char key_val_str[]="key_val=0x%x\n";
+#endif
 AT(.com_text.port.key)
 static u8 get_pwrkey(void)
 {
@@ -40,6 +48,15 @@ static u8 get_pwrkey(void)
     {
         key_val = 0xff;
     }
+#if UTE_LOG_KEYS_LVL
+    else
+    {
+        if(key_val != 0xff)
+        {
+            printf(key_val_str, key_val);
+        }
+    }
+#endif
     while ((u8)key_val > pwrkey_table[num].adc_val)
     {
         num++;
@@ -133,7 +150,7 @@ bool power_off_check(void)
             dac_restart();
             bsp_change_volume(sys_cb.vol);
 #if WARNING_POWER_ON
-            mp3_res_play(RES_BUF_POWERON, RES_LEN_POWERON);
+            mp3_res_play(RES_BUF_POWERON_MP3, RES_LEN_POWERON_MP3);
 #endif // WARNING_POWER_ON
             func_cb.sta = FUNC_CLOCK;
             return true;
@@ -394,7 +411,7 @@ void key_init(void)
     saradc_set_channel(BIT(ADCCH_BGOP) | BIT(VBAT2_ADCCH));
 #endif
 
-#if USER_KEY_QDEC_EN || USER_ADKEY_QDEC_EN
+#if USER_KEY_QDEC_EN || USER_ADKEY_QDEC_EN || USER_IO_QEDC_EN
     bsp_qdec_init();                            //旋转编码器初始化
 #endif
 
@@ -432,11 +449,10 @@ u8 get_double_key_time(void)
     }
 }
 
-//AT(.com_rodata.bsp.key)
-//const char key_str[] = "enqueue: %04x\n";
-
+#if UTE_LOG_KEYS_LVL
 AT(.com_rodata.bsp.key)
-const char mute_str[] = "mute >>>>>  %04x\n";
+const char key_str[] = "key enqueue: %04x\n";
+#endif
 
 AT(.com_text.bsp.key)
 u16 bsp_key_process(u16 key_val)
@@ -450,12 +466,13 @@ u16 bsp_key_process(u16 key_val)
     key_return = key_multi_press_process(key_return);
     if (key != key_return && (key & KEY_TYPE_MASK) == KEY_SHORT_UP)
     {
-        if(!sys_cb.key_wakeup_flag)
+        if (sys_cb.gui_sleep_sta == 0)
         {
-            msg_enqueue(key);  //short up key
+            msg_enqueue(key);                   //short up key
+#if UTE_LOG_KEYS_LVL
+            printf(key_str, key);
+#endif
         }
-        sys_cb.key_wakeup_flag = 0;
-//        printf(key_str, key);
     }
 #endif
     return key_return;
@@ -517,12 +534,22 @@ u8 bsp_key_scan(void)
         {
             msg_queue_detach(key, 0);
         }
-//        printf(key_str, key);
+
         if (sys_cb.gui_sleep_sta)
         {
-            sys_cb.gui_need_wakeup = 1;
+            if ((key & KEY_TYPE_MASK) == KEY_SHORT_UP || (key & KEY_TYPE_MASK) == KEY_LONG_UP || (key & KEY_TYPE_MASK) == KEY_SHORT_UP_DELAY)
+            {
+                sys_cb.gui_need_wakeup = 1;
+            }
         }
-        msg_enqueue(key);
+        else
+        {
+            msg_enqueue(key);
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_KEY_HANDLER, key);
+#if UTE_LOG_KEYS_LVL
+            printf(key_str, key);
+#endif
+        }
         reset_sleep_delay_all();
     }
     return key_val;

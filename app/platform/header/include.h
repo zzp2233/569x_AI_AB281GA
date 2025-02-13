@@ -16,13 +16,8 @@
 //GUI
 #include "gui.h"
 
-//MOD
-#include "modules.h"
-
 //Functions头文件
 #include "func.h"
-
-#include "tws/tws.h"
 
 //多国语言
 #include "lang.h"
@@ -35,8 +30,9 @@
 #include "ui.h"
 #include "ui_external.h"
 
-//#ifndef sscanf
-//extern int sscanf(char *s, const char *format, ...);
-//#endif // sscanf
+
+#ifndef sscanf
+extern int sscanf(char *s, const char *format, ...);
+#endif // sscanf
 
 #endif // _INCLUDE_H

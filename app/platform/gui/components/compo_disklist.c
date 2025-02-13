@@ -298,9 +298,100 @@ void compo_disklist_update(compo_disklist_t *disklist)
             }
 //            TRACE("ptx[%d] pty[%d] pth[%d] tx[%d] ty[%d]\n", ptx, pty, pth, tx, ty);
             widget_set_location(disklist->item_page_text[i], ptx, pty, GUI_SCREEN_WIDTH, pth);
-            widget_set_location(disklist->item_text[i], tx, ty, GUI_SCREEN_WIDTH, font_height);
+            widget_set_location(disklist->item_text[i], tx, ty, GUI_SCREEN_WIDTH - ptx - tx, font_height);
         }
     }
+    if (sidx != disklist->sidx || disklist->txt_roll_need_rst)      //滚动控制器
+    {
+        u8 i = 0;
+        u8 i_end = 0;
+        int sidx_pre = disklist->sidx;
+        disklist->sidx = sidx;
+
+        if (!disklist->txt_roll_need_rst)
+        {
+            if  (sidx * sidx_pre < 0)    //边界处理
+            {
+                if (sidx < 0)
+                {
+                    sidx += disklist->item_cnt;
+                }
+                else
+                {
+                    sidx_pre += disklist->item_cnt;
+                }
+            }
+            if (sidx > sidx_pre)                        //向上滑动
+            {
+                int k = sidx - sidx_pre;                //向上滑动的列表行数
+                for (i=0; i<DISKLIST_ITEM_CNT-k; i++)   //将下一行列表项对应的滚动控制器 赋值给 上一行列表对应的滚动控制器
+                {
+                    disklist->roll_cb[i] = disklist->roll_cb[i + k];
+                }
+                i_end = DISKLIST_ITEM_CNT;
+            }
+            else if (sidx < sidx_pre)                               //向下滑动
+            {
+                int k = sidx_pre - sidx;                            //向下滑动的列表行数
+                for (i_end=DISKLIST_ITEM_CNT; i_end>k; i_end--)     //将上一行列表项对应的滚动控制器 赋值给 下一行列表对应的滚动控制器
+                {
+                    disklist->roll_cb[i_end - 1] = disklist->roll_cb[i_end - 1 - k];
+                }
+            }
+        }
+        else
+        {
+            i_end = DISKLIST_ITEM_CNT;
+            disklist->txt_roll_need_rst = false;
+        }
+
+        for (; i<i_end; i++)    //对移动超出列表项个数一半的滚动控制器重新赋值
+        {
+            memset(&disklist->roll_cb[i], 0, sizeof(compo_roll_cb_t));
+            disklist->roll_cb[i].tick = tick_get();
+            widget_text_set_autoroll_mode(disklist->item_text[i], TEXT_AUTOROLL_MODE_NULL);
+        }
+
+        for (i=0; i<DISKLIST_ITEM_CNT; i++)     //判断列表中的项是否可以滚动
+        {
+            widget_text_t *txt = disklist->item_text[i];
+            if (widget_get_visble(txt))
+            {
+                area_t text_area = widget_text_get_area(txt);
+                rect_t textbox_rect = widget_get_location(txt);
+                if (text_area.wid > textbox_rect.wid)
+                {
+                    disklist->roll_cb[i].mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;
+                    disklist->roll_cb[i].direction = -1;
+//                    disklist->roll_cb[i].tick = tick_get();
+                    if (widget_get_align_center(txt))
+                    {
+                        disklist->roll_cb[i].offset = (text_area.wid - textbox_rect.wid) / 2;
+                    }
+                    widget_text_set_autoroll_mode(disklist->item_text[i], TEXT_AUTOROLL_MODE_SROLL_CIRC);
+                }
+                else if (disklist->roll_cb[i].direction == 0)
+                {
+                    widget_text_set_autoroll_mode(disklist->item_text[i], TEXT_AUTOROLL_MODE_NULL);
+                }
+                else
+                {
+                    widget_text_set_autoroll_mode(disklist->item_text[i], TEXT_AUTOROLL_MODE_SROLL_CIRC);
+                }
+            }
+            widget_text_set_client(disklist->item_text[i], disklist->roll_cb[i].offset, 0);
+        }
+    }
+}
+
+/**
+ * @brief 更新列表框Widget，同时重置所有文本滚动（item中str突变时需要调用，防止C208蓝屏）
+ * @param[in] disklist : 圆盘列表指针
+ **/
+void compo_disklist_update_with_text_scroll_rst(compo_disklist_t *disklist)
+{
+    disklist->txt_roll_need_rst = true;
+    compo_disklist_update(disklist);
 }
 
 /**

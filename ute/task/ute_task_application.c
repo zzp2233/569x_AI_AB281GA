@@ -12,7 +12,7 @@
 #include "ute_module_message.h"
 #include "ute_module_systemtime.h"
 #include "ute_application_common.h"
-// #include "ute_module_gui_common.h"
+#include "ute_module_gui_common.h"
 
 #if UTE_TASK_USER_SUPPORT
 
@@ -84,7 +84,6 @@ bool uteTaskApplicationSendMsg(ute_task_application_message_t *pMsg)
 *@author       zn.zeng
 *@date       2023-03-25
 */
-u8 test_buf[UTE_TASK_APPLICATION_STACK_SIZE];
 void uteTaskApplicationInit(void)
 {
     uteTaskApplicationMsgQueueHandle = os_mq_create("ute_msg", sizeof(ute_task_application_message_t), UTE_TASK_APPLICATION_MESSAGE_MAX_CNT, OS_IPC_FLAG_FIFO);

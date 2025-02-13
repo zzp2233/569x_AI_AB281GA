@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_project_config.h"
 
 uint calc_crc(void *buf, uint len, uint seed);
 
@@ -39,12 +40,12 @@ uint32_t bsp_rtc_recode_get(void)
 void rtc_clock_init(void)
 {
     tm_t tm;
-    tm.year = 2023;
-    tm.mon  = 8;
-    tm.day = 18;
-    tm.hour = 10;
-    tm.min  = 8;
-    tm.sec  = 36;
+    tm.year = DEFAULT_SYSTEM_TIME_YEAR;
+    tm.mon  = DEFAULT_SYSTEM_TIME_MONTH;
+    tm.day  = DEFAULT_SYSTEM_TIME_DAY;
+    tm.hour = DEFAULT_SYSTEM_TIME_HOUR;
+    tm.min  = DEFAULT_SYSTEM_TIME_MIN;
+    tm.sec  = DEFAULT_SYSTEM_TIME_SEC;
     //tm.weekday = get_weekday(tm.year, tm.mon, tm.day);
     RTCCNT = tm_to_time(tm);
 }
@@ -129,4 +130,5 @@ tm_t rtc_clock_get(void)
 AT(.sleep_text.rtc)
 void rtc_clock_calc_notify(void)
 {
+    sys_cb.rtc_cal_cnt++;
 }

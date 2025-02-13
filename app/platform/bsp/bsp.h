@@ -29,9 +29,6 @@
 #include "bsp_opus.h"
 #include "bsp_call_mgr.h"
 #include "bsp_spi1flash.h"
-#include "bsp_uart.h"
-#include "bsp_asr.h"
-#include "bsp_charge_ex.h"
 
 #if ECIG_POWER_CONTROL
 #include "bsp_ecig.h"
@@ -63,5 +60,4 @@
 #define TICK_2_TICKN(tick, tickoff)     tick        //非TWS时tick和tickn相等
 #define TICKN_2_TICK(tickn, tickoff)    tickn       //非TWS时tick和tickn相等
 #endif // BT_TWS_EN
-
 #endif

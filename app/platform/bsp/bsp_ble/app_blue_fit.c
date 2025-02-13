@@ -1,10 +1,6 @@
 #include "include.h"
 #include "app_ab_link.h"
 
-#if SECURITY_PAY_EN
-#include "alipay_bind.h"
-#endif
-
 #if (USE_APP_TYPE == USE_AB_APP)
 ///////////////////////////////////////////////////////////////////////////
 #define AB_MATE_VID     2           //广播包协议版本号
@@ -36,9 +32,6 @@ const uint8_t scan_data_const[] =
 };
 
 void func_camera_jpeg_rx(u8 *buf, u16 len);
-#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
-void alipay_iot_socket_rx_callback(uint8_t *ptr, uint16_t len);
-#endif
 
 u32 ble_get_scan_data(u8 *scan_buf, u32 buf_size)
 {
@@ -121,15 +114,27 @@ u32 ble_get_adv_data(u8 *adv_buf, u32 buf_size)
     return data_len;
 }
 
+/***
+*   ble tx buf set
+*/
+
+#define MAX_NOTIFY_NUM          4
+#define MAX_NOTIFY_LEN          69     //max=247
+#define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
+
+AT(.ble_cache.att)
+uint8_t notify_tx_pool[NOTIFY_POOL_SIZE];
+
+void ble_txpkt_init(void)
+{
+    txpkt_init(&notify_tx, notify_tx_pool, MAX_NOTIFY_NUM, MAX_NOTIFY_LEN);
+    notify_tx.send_kick = ble_send_kick;
+}
 
 /***
 *   ble rx buf set
 */
-#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
-#define BLE_CMD_BUF_LEN     4
-#else
 #define BLE_CMD_BUF_LEN     8
-#endif
 #define BLE_CMD_BUF_MASK    (BLE_CMD_BUF_LEN - 1)
 #define BLE_RX_BUF_LEN      256
 
@@ -205,47 +210,41 @@ int app_protocol_tx(u8 *buf, u8 len)
     return ble_tx_notify(gatts_tx_base.handle, buf, len);
 }
 
-#if SECURITY_TRANSITCODE_EN
-int alipay_iot_socket_tx(u8 *buf, u8 len)
-{
-    return ble_tx_notify(gatts_tx_base.handle, buf, len);
-}
-#endif
-
 typedef int (*ble_gatt_callback_func)(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len);
 
-//static int gatt_callback_app(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len)
-//{
-//    u8 wptr = ble_cmd_cb.cmd_wptr & BLE_CMD_BUF_MASK;
-//
-////    printf("BLE_RX len[%d] handle[%d]\n", len, handle);
-////    print_r(ptr, len);
-//
-//    ble_cmd_cb.cmd_wptr++;
-//    if (len > BLE_RX_BUF_LEN) {
-//        len = BLE_RX_BUF_LEN;
-//    }
-//    memcpy(ble_cmd_cb.cmd[wptr].buf, ptr, len);
-//    ble_cmd_cb.cmd[wptr].len = len;
-//    ble_cmd_cb.cmd[wptr].handle = handle;
-//    ble_cmd_cb.wakeup = true;
-//
-//    return 0;
-//}
+static int gatt_callback_app(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len)
+{
+    u8 wptr = ble_cmd_cb.cmd_wptr & BLE_CMD_BUF_MASK;
 
-//static ble_gatt_characteristic_cb_info_t gatts_app_protocol_rx_cb_info = {
-//    .att_write_callback_func = gatt_callback_app,
-//};
-//
-//static ble_gatt_characteristic_cb_info_t gatts_app_protocol_tx_cb_info = {
-//    .client_config = GATT_CLIENT_CONFIG_NOTIFY,
-//};
+//    printf("BLE_RX len[%d] handle[%d]\n", len, handle);
+//    print_r(ptr, len);
 
+    ble_cmd_cb.cmd_wptr++;
+    if (len > BLE_RX_BUF_LEN)
+    {
+        len = BLE_RX_BUF_LEN;
+    }
+    memcpy(ble_cmd_cb.cmd[wptr].buf, ptr, len);
+    ble_cmd_cb.cmd[wptr].len = len;
+    ble_cmd_cb.cmd[wptr].handle = handle;
+    ble_cmd_cb.wakeup = true;
+
+    return 0;
+}
+
+static ble_gatt_characteristic_cb_info_t gatts_app_protocol_rx_cb_info =
+{
+    .att_write_callback_func = gatt_callback_app,
+};
+
+static ble_gatt_characteristic_cb_info_t gatts_app_protocol_tx_cb_info =
+{
+    .client_config = GATT_CLIENT_CONFIG_NOTIFY,
+};
 
 void ble_app_blue_fit_rx_callback(u8 *ptr, u16 len)
 {
-//    printf("--->app_rx len:%d:\n");
-//  print_r(ptr, len);
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if FUNC_CAMERA_TRANS_EN
     if (func_cb.sta == FUNC_CAMERA)
     {
@@ -253,92 +252,14 @@ void ble_app_blue_fit_rx_callback(u8 *ptr, u16 len)
     }
     else
 #endif
-#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
-        if (func_cb.sta == FUNC_ALIPAY)
-        {
-            alipay_iot_socket_rx_callback(ptr, len);
-        }
-        else
-#endif
-        {
-            ble_uart_service_write(ptr, len);
-        }
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {
+        printf("app_rx len[%d]:\n", len);
+        print_r(ptr, len);
+        ble_uart_service_write(ptr, len);
+    }
 
 }
-
-#if SECURITY_PAY_EN
-
-void gatt_alipay_rx(u8 *cmd, u16 len)
-{
-    if (func_cb.sta == FUNC_ALIPAY)
-    {
-        printf("%s: addr: 0x%x, len: %d\n",__func__, cmd, len);
-        print_r(cmd, len);
-        reset_sleep_delay();
-        alipay_ble_recv_data_handle(cmd, (u32)len);
-    }
-}
-
-//--------------------------------------------------------
-//支付宝
-static const uint8_t alipay_service_primay_uuid128[16]= {0xfb,0x34,0x9b,0x5f,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x02,0x38,0x00,0x00};
-const uint8_t alipay_tx_uuid128[16]= {0xfb,0x34,0x9b,0x5f,0x80,0x00,0x00,0x80,0x00,0x10,0x00,0x00,0x02,0x4a,0x00,0x00};
-
-static gatts_service_base_st alipay_gatts_tx_base;
-
-static ble_gatt_characteristic_cb_info_t gatts_alipay_cb_info =
-{
-    .att_write_callback_func = gatt_callback_app,
-};
-
-//支付宝
-static const gatts_uuid_base_st alipay_uuid_tx_primay_base =
-{
-    .type = BLE_GATTS_UUID_TYPE_128BIT,
-    .uuid = alipay_service_primay_uuid128,
-};
-
-static const gatts_uuid_base_st alipay_gatt_tx_base =
-{
-    .props = ATT_READ|ATT_WRITE|ATT_NOTIFY,
-    .type = BLE_GATTS_UUID_TYPE_128BIT,
-    .uuid = alipay_tx_uuid128,
-};
-
-u8 gatt_alipay_tx(u8 *buf, u16 len)
-{
-    printf("%s: %d\n",__func__, len);
-    if (!ble_is_connect() || func_cb.sta != FUNC_ALIPAY)
-    {
-        return false;
-    }
-    print_r(buf, len);
-    int res = ble_tx_notify(alipay_gatts_tx_base.handle, buf, len);
-    delay_5ms(30);
-    if (res == 0)
-    {
-        printf("ble_tx_notify success\n");
-    }
-    u8 timeout_cnt = 0;
-    //发送失败重发
-    while (res != 0)
-    {
-        timeout_cnt++;
-        WDT_CLR();
-        res = ble_tx_notify(alipay_gatts_tx_base.handle, buf, len);
-        delay_5ms(30);
-        printf("ble_tx_notify retry: %d\n", res);
-        if(timeout_cnt == 10)
-        {
-            printf("alipay ble tx error: %d\n", res);
-            break;
-        }
-    }
-
-    return res;
-}
-
-#endif // SECURITY_PAY_EN
 
 //----------------------------------------------------------------------------
 void ble_app_watch_process(void)
@@ -359,12 +280,6 @@ void ble_app_watch_process(void)
     {
         ble_app_blue_fit_rx_callback(ptr, len);
     }
-#if SECURITY_PAY_EN
-    if (handle == alipay_gatts_tx_base.handle)
-    {
-        gatt_alipay_rx(ptr, len);
-    }
-#endif // SECURITY_PAY_EN
 }
 
 bool ble_app_watch_need_wakeup(void)
@@ -376,10 +291,9 @@ bool ble_app_watch_need_wakeup(void)
 //
 void ble_app_gatts_service_init(void)
 {
-//    printf("%s,%d\n",__func__,__LINE__);
     int ret = 0;
 
-//    ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name)+1);
+    ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name)+1);
 
     ret |= ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
                                  uuid_tx_primay_base.uuid,
@@ -390,32 +304,14 @@ void ble_app_gatts_service_init(void)
                                         gatt_tx_base.type,
                                         gatt_tx_base.props,
                                         &gatts_tx_base.handle,
-                                        NULL);      //characteristic
+                                        &gatts_app_protocol_tx_cb_info);      //characteristic
 
     ret |= ble_gatts_characteristic_add(gatt_rx_base.uuid,
                                         gatt_rx_base.type,
                                         gatt_rx_base.props,
                                         &gatts_rx_base.handle,
-                                        NULL);      //characteristic
+                                        &gatts_app_protocol_rx_cb_info);      //characteristic
 
-#if SECURITY_PAY_EN
-//  alipay
-    ret |= ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
-                                 alipay_uuid_tx_primay_base.uuid,
-                                 alipay_uuid_tx_primay_base.type,
-                                 NULL);
-
-    ret |= ble_gatts_characteristic_add(alipay_gatt_tx_base.uuid,
-                                        alipay_gatt_tx_base.type,
-                                        alipay_gatt_tx_base.props,
-                                        &alipay_gatts_tx_base.handle,
-                                        &gatts_alipay_cb_info);      //characteristic
-#endif // SECURITY_PAY_EN
-
-#if LE_HID_EN
-    ret |= ble_hid_service_init();
-//    printf("%s,%d\n",__func__,__LINE__);
-#endif
 
     if(ret != BLE_GATTS_SUCCESS)
     {
@@ -446,13 +342,7 @@ void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
 {
     if (cfg)
     {
-#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
-        if (func_cb.sta != FUNC_ALIPAY)
-#endif
-        {
-            ab_app_sync_info();
-        }
-
+        ab_app_sync_info();
     }
 }
 

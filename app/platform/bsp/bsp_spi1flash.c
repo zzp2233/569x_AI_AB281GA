@@ -248,6 +248,24 @@ void bsp_spi1flash_init(void)
 
 }
 
+///SPIFlash读取
+AT(.com_text.spiflash)
+bool spi1flash_read(void *buf, u32 addr, uint len)
+{
+    SPI1_CS_EN();
+    SPI1_TX();
+    spi1_sendbyte(SF_READ);
+    spi1flash_sendaddr(addr);
+
+    SPI1_RX();                              //Set RX
+    SPI1DMAADR = DMA_ADR(buf);
+    SPI1DMACNT = len;
+    while (!(SPI1CON & BIT(16)));                   //Wait pending
+    SPI1_CS_DIS();
+
+    return true;
+}
+
 ///SPIFlash Read Kick
 AT(.com_text.spiflash)
 bool spi1flash_read_kick(void *buf, u32 addr, uint len)
@@ -286,16 +304,6 @@ bool spi1flash_read_wait(void)
     SPI1_CS_DIS();
     return true;
 }
-
-///SPIFlash读取
-AT(.com_text.spiflash)
-bool spi1flash_read(void *buf, u32 addr, uint len)
-{
-    spi1flash_read_kick(buf, addr, len);
-    spi1flash_read_wait();
-    return true;
-}
-
 
 #endif
 

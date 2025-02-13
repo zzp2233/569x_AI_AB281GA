@@ -81,6 +81,7 @@ void uteModuleMusicInit(void)
 void uteModuleMusicSetPlayerPaused(bool isPaused,ute_module_music_play_channel_t chn)
 {
     uteModuleMusicData.isPaused = isPaused;
+    bt_set_music_sta(!isPaused);
     UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL, "%s,.isPaused=%d", __func__, uteModuleMusicData.isPaused);
 }
 
@@ -181,9 +182,7 @@ uint8_t uteModuleMusicGetPlayerVolume(void)
 void uteModuleMusicSetPlayerArtist(uint8_t *data,uint16_t size)
 {
     uteModulePlatformTakeMutex(uteModuleMusicMute);
-    uteModuleMusicData.playerArtistSize = UTE_MUSIC_ARTLIST_MAX_SIZE;
     memset(&uteModuleMusicData.playerArtist[0],0,UTE_MUSIC_ARTLIST_MAX_SIZE);
-    // uteModuleCharencodeUtf8ConversionUnicode(&uteModuleMusicData.playerArtist[0],&uteModuleMusicData.playerArtistSize,data,size);
     uteModuleMusicData.playerArtistSize = size > UTE_MUSIC_ARTLIST_MAX_SIZE - 1 ? UTE_MUSIC_ARTLIST_MAX_SIZE - 1 : size;
     memcpy(&uteModuleMusicData.playerArtist[0],data,uteModuleMusicData.playerArtistSize);
     UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL,"%s,artist:", __func__);
@@ -199,16 +198,25 @@ void uteModuleMusicSetPlayerArtist(uint8_t *data,uint16_t size)
 *@author        zn.zeng
 *@date        2021-11-20
 */
-void uteModuleMusicSetPlayerTitle(uint8_t *data,uint16_t size)
+void uteModuleMusicSetPlayerTitle(uint8_t *data, uint16_t size)
 {
     uteModulePlatformTakeMutex(uteModuleMusicMute);
-    uteModuleMusicData.playerTitleSize = UTE_MUSIC_TITLE_MAX_SIZE;
-    memset(&uteModuleMusicData.playerTitle[0],0,UTE_MUSIC_TITLE_MAX_SIZE);
-    // uteModuleCharencodeUtf8ConversionUnicode(&uteModuleMusicData.playerTitle[0],&uteModuleMusicData.playerTitleSize,data,size);
-    uteModuleMusicData.playerTitleSize = size > UTE_MUSIC_TITLE_MAX_SIZE - 1 ? UTE_MUSIC_TITLE_MAX_SIZE -1 : size;
-    memcpy(&uteModuleMusicData.playerTitle[0],data,uteModuleMusicData.playerTitleSize);
-    UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL,"%s,title:", __func__);
-    UTE_MODULE_LOG_BUFF(UTE_LOG_MUSIC_LVL,&uteModuleMusicData.playerTitle[0],uteModuleMusicData.playerTitleSize);
+    uteModuleMusicData.playerTitleSize = size > UTE_MUSIC_TITLE_MAX_SIZE - 1 ? UTE_MUSIC_TITLE_MAX_SIZE - 1 : size;
+#if BT_ID3_TAG_EN // 防止切换歌曲后歌手信息没更新
+    if (memcmp(uteModuleMusicData.playerTitle, data, uteModuleMusicData.playerTitleSize))
+    {
+        uteModuleMusicData.playerArtistSize = 0;
+        memset(&uteModuleMusicData.playerArtist[0], 0, UTE_MUSIC_ARTLIST_MAX_SIZE);
+        if (bt_a2dp_profile_completely_connected())
+        {
+            bt_music_get_id3_tag();
+        }
+    }
+#endif
+    memset(&uteModuleMusicData.playerTitle[0], 0, UTE_MUSIC_TITLE_MAX_SIZE);
+    memcpy(&uteModuleMusicData.playerTitle[0], data, uteModuleMusicData.playerTitleSize);
+    UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL, "%s,title:", __func__);
+    UTE_MODULE_LOG_BUFF(UTE_LOG_MUSIC_LVL, &uteModuleMusicData.playerTitle[0], uteModuleMusicData.playerTitleSize);
     uteModulePlatformGiveMutex(uteModuleMusicMute);
 }
 
@@ -299,7 +307,7 @@ void uteModuleMusicCtrlPaused(bool isNeedVibration)
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
 #if BT_ID3_TAG_EN
-    if (bt_is_connected())
+    if (bt_a2dp_profile_completely_connected())
     {
         if(isNeedVibration)
         {
@@ -357,7 +365,7 @@ void uteModuleMusicCtrl(bool isCutNext,bool isCutManual,bool isNeedShake)
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
 #if BT_ID3_TAG_EN
-    if (bt_is_connected())
+    if (bt_a2dp_profile_completely_connected())
     {
         if (isNeedShake)
         {
@@ -408,7 +416,7 @@ void uteModuleMusicCtrlVolumeIncrease(bool isNeedShake)
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
 #if BT_ID3_TAG_EN
-    if (bt_is_connected())
+    if (bt_a2dp_profile_completely_connected())
     {
         if(isNeedShake)
         {
@@ -443,7 +451,7 @@ void uteModuleMusicCtrlVolumeDecrease(bool isNeedShake)
     response[0] = CMD_SEND_KEYCODE;
     uteApplicationCommonGetBleConnectionState(&status);
 #if BT_ID3_TAG_EN
-    if (bt_is_connected())
+    if (bt_a2dp_profile_completely_connected())
     {
         if(isNeedShake)
         {

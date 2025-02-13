@@ -100,6 +100,8 @@ void eq_tx_version(void)
     tx_ack(eq_tx_buf, 12);
 }
 
+extern bool mic_eq_drc_test;
+
 void eq_parse_cmd(void)
 {
     if (eq_rx_buf[0] == 'E' || eq_rx_buf[1] == 'Q')
@@ -163,11 +165,18 @@ void eq_parse_cmd(void)
 #endif
 
 #if MIC_EQ_EN
-        if(func_cb.sta == FUNC_SPEAKER)
+        if (sys_cb.incall_flag & BIT(1))                //通话模式
         {
-            mic_set_eq(band_cnt,(u32 *)&eq_rx_buf[14]);
+            if(mic_eq_drc_test)
+            {
+                mic_set_eq(band_cnt,(u32 *)&eq_rx_buf[14]);
+            }
+            else
+            {
+                music_set_eq(band_cnt, (u32 *)&eq_rx_buf[14]);
+            }
         }
-        else
+        else                                            //音乐模式
         {
             music_set_eq(band_cnt, (u32 *)&eq_rx_buf[14]);
         }
@@ -178,11 +187,18 @@ void eq_parse_cmd(void)
     else
     {
 #if MIC_EQ_EN
-        if(func_cb.sta == FUNC_SPEAKER)
+        if (sys_cb.incall_flag & BIT(1))                //通话模式
         {
-            mic_set_drc_by_online(band_cnt, (const u32 *)&eq_rx_buf[10]);
+            if(mic_eq_drc_test)
+            {
+                mic_set_drc_by_online(band_cnt, (const u32 *)&eq_rx_buf[10]);
+            }
+            else
+            {
+                music_set_drc_by_online(band_cnt, (const u32 *)&eq_rx_buf[10]);
+            }
         }
-        else
+        else                                            //音乐模式
         {
             music_set_drc_by_online(band_cnt, (const u32 *)&eq_rx_buf[10]);
         }

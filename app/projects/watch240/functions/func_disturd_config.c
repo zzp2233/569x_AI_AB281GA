@@ -1550,8 +1550,10 @@ static void func_disturd_sub_set_button_click(void)
         default:
             break;
     }
-
     func_disturd_sub_set_button_release_handle();
+    func_disturd_set_move_handle(COMPO_ID_BTN_ACLOCK_HOUR);
+    compo_picturebox_set(compo_getobj_byid(COMPO_ID_PIC_BG_HOUR), tbl_disturd_set_pic_bg.bg_hour.res_12_destory);
+
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 

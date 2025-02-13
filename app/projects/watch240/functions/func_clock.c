@@ -850,7 +850,7 @@ static void func_clock_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
     f_clock_t *f_clock = (f_clock_t*)func_cb.f_cb;
-
+    func_cb.flag_animation = true;///
     if(sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
     {
         compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);

@@ -537,6 +537,7 @@ static void func_menu_sub_list_enter(void)
     {
         func_cb.flag_animation = 0;
         f_menu->animation_cnt = ENTERING_ANIMATION_CNT;
+//        f_menu->animation_cnt = 0;
         f_menu->tick = tick_get();
     }
 }

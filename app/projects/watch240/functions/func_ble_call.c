@@ -49,11 +49,11 @@ compo_form_t *func_ble_call_form_create(void)
 //    compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
-    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
-//    compo_textbox_set_autosize(number_txt, true);
-    compo_textbox_set(number_txt, (char*)callData.number);
-    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+//    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+//    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
+////    compo_textbox_set_autosize(number_txt, true);
+//    compo_textbox_set(number_txt, (char*)callData.number);
+//    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
@@ -135,15 +135,15 @@ compo_form_t *func_ble_call_form_create(void)
 
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
-void func_ble_ring_number_update(void)
-{
-    if (bt_cb.number_sta)
-    {
-        compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
-        compo_textbox_set(number_txt, hfp_get_last_call_number(0));
-        bt_pbap_lookup_number((char*)hfp_get_last_call_number(0));
-    }
-}
+//void func_ble_ring_number_update(void)
+//{
+//    if (bt_cb.number_sta)
+//    {
+//        compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
+//        compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+//        bt_pbap_lookup_number((char*)hfp_get_last_call_number(0));
+//    }
+//}
 
 void func_ble_call_process(void)
 {
@@ -209,9 +209,9 @@ static void func_ble_call_message(size_msg_t msg)
         case KL_BACK:
             uteModulePlatformRejectIncall();
             uteModuleGuiCommonGoBackLastScreen();
-        case EVT_CALL_NUMBER_UPDATE:
-            func_ble_ring_number_update();
-            break;
+//        case EVT_CALL_NUMBER_UPDATE:
+//            func_ble_ring_number_update();
+//            break;
         case MSG_QDEC_FORWARD:
         case MSG_QDEC_BACKWARD:
         case MSG_CTP_SHORT_RIGHT:

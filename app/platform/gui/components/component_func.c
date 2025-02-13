@@ -421,7 +421,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         {
             compo_textbox_t *txt = (compo_textbox_t *)compo;
             compo_textbox_set(txt, value_str);
-            compo_textbox_set_visible(txt, true);
+            // compo_textbox_set_visible(txt, true);
         }
         else if (compo->type == COMPO_TYPE_PICTUREBOX)
         {

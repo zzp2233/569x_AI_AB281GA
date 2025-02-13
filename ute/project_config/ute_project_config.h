@@ -159,6 +159,11 @@
 #define UTE_DRV_BATTERY_LOW_POWER_PERECNT 13
 #endif
 
+/*! 电池百分比平滑掉电处理，每次更新百分比只允许掉1%,wang.luo 2025-02-13 */
+#ifndef UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
+#define UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT 1
+#endif
+
 /* 电池曲线 zn.zeng 2022-01-03*/
 #ifndef UTE_DRV_BATTERY_000
 #define UTE_DRV_BATTERY_000      3579

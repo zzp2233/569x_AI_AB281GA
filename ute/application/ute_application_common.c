@@ -492,6 +492,14 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
 #if (UTE_MODULE_CYWEE_MOTION_SUPPORT&&(UTE_MODULE_LOG_SUPPORT && UTE_MODULE_RUNING_LOG_SUPPORT))
         uteModuleLogSetSendRuningLogSwitch(false);
 #endif
+#if BT_ID3_TAG_EN
+        if(!bt_a2dp_profile_completely_connected())
+        {
+            uteModuleMusicResetPlayStatus();
+        }
+#else
+        uteModuleMusicResetPlayStatus();
+#endif
     }
     else
     {

@@ -9,8 +9,8 @@
 #ifndef _UTE_PROJECT_CONFIG_H_
 #define _UTE_PROJECT_CONFIG_H_
 
-#define PROJECT_AB281_SUPPORT        1
-#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
+#define PROJECT_AB281_SUPPORT        0
+#define PROJECT_AB281A_SUPPORT       1 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
 #define PROJECT_AB281C_SUPPORT       0 /*! , TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
 
@@ -62,8 +62,17 @@
 #define UTE_SERVICE_PUBLIC_BLE_SUPPORT 0
 #endif
 
+/*! 中科平台广播UUID,wang.luo 2025-02-13 */
+#ifndef UTE_SERVICE_APP_GLORY_ME_SUPPORT
+#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+#endif
+
 /*! gloryfit 广播数据标识 zn.zeng  modify Jul 05, 2021 */
+#if UTE_SERVICE_APP_GLORY_ME_SUPPORT
+#define UTE_ADVERTISE_DATA      "\x37\x55"
+#else
 #define UTE_ADVERTISE_DATA      "\x33\x55"
+#endif
 /*! 应用端识别是否在搜索界面显示蓝牙名zn.zeng  modify Jul 05, 2021 */
 #define UTE_APP_DISPLAY_BT_NAME_ADVERTISE_DATA       "\x22\x22"
 

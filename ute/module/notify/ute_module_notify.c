@@ -231,9 +231,12 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,uteModuleNotifyData.currNotify.size = %d,mAXsize = %d,", __func__,uteModuleNotifyData.currNotify.size,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
     if(ble_ancs_is_connected()) // ios消息是utf8编码，不需要处理
     {
-        memcpy(&utf8StrTemp[0],&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-        memset(&uteModuleNotifyData.currNotify.content[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-        uteModuleCharencodeGetUtf8String(&utf8StrTemp[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE,&uteModuleNotifyData.currNotify.content[0],&uteModuleNotifyData.currNotify.size);
+        if(uteModuleNotifyData.currNotify.size >= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+        {
+            memcpy(&utf8StrTemp[0],&uteModuleNotifyData.currNotify.content[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+            memset(&uteModuleNotifyData.currNotify.content[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+            uteModuleCharencodeGetUtf8String(&utf8StrTemp[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE,&uteModuleNotifyData.currNotify.content[0],&uteModuleNotifyData.currNotify.size);
+        }
     }
     else
     {

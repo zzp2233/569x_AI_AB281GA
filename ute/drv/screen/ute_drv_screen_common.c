@@ -76,8 +76,11 @@ void uteDrvScreenCommonInterfaceInit(void)
 void uteDrvScreenCommonInit(void)
 {
     uteDrvScreenCommonInterfaceInit();
+#if UTE_LOG_DRV_SCREEN_LVL
     uteDrvScreenCommonReadId();
-
+#else
+    DESPIBAUD = tft_cb.despi_baud;
+#endif
     if(uteDrvScreenCommonFunction->init)
     {
         uteDrvScreenCommonFunction->init();

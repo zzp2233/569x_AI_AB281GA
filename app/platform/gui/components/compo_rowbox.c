@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_watchonline.h"
 
 #define TRACE_EN                0
 
@@ -48,12 +49,16 @@ compo_rowbox_t *compo_rowbox_create(compo_form_t *frm)
 static u32 compo_rowbox_preview_style(u32 base_addr)
 {
     uitool_header_t uitool_header;
-    os_spiflash_read(&uitool_header, base_addr, UITOOL_HEADER);
+    u32 user_addr = base_addr;
+#if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
+    user_addr += sizeof(watchConfig_t);
+#endif
+    os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
     for(u16 i=0; i<uitool_header.num; i++)
     {
         uitool_res_t uitool_res = {0};
-        os_spiflash_read(&uitool_res, base_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
-        u32 res_addr = base_addr + uitool_res.res_addr;
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        u32 res_addr = user_addr + uitool_res.res_addr;
         //预览图
         if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW)
         {

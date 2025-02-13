@@ -9,7 +9,6 @@
 #include "ute_drv_screen_common.h"
 #include "ute_module_log.h"
 #include "gui.h"
-#include "ute_project_config.h"
 
 
 #if DRV_TFT_S280X284_I18_ST7789P3_XHL183BA2401_DSPI_SUPPORT
@@ -18,10 +17,14 @@
 #include "ute_drv_tft_s240x284_nv3030b_hy201068avc.h"
 #elif DRV_BOE_S240X284_I183_JD9853_WV018LZQ_QSPI_SUPPORT
 #include "ute_drv_boe_s240x284_i183_jd9853_wv018lzq_qspi.h"
+#elif DRV_BOE_S240X296_I183_JD9853_WV018LZQ_QSPI_SUPPORT
+#include "ute_drv_boe_s240x296_i183_jd9853_wv018lzq_qspi.h"
 #elif UTE_DRV_TFT_S240X284_NV3030B_ZD183G1196_QSPI_SUPPORT
 #include "ute_drv_tft_s240x284_nv3030b_zd183g1196.h"
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
 #include "ute_drv_tft_s360X360_nv3030b_hy139071a.h"
+#elif UTE_DRV_TFT_S240X296NV3030B_ZD183G1196_QSPI_SUPPORT
+#include "ute_drv_boe_s240x296_i183_jd9853_wv018lzq_qspi.h"
 #endif
 
 /*! 配置屏的接口zn.zeng, 2021-09-06  */
@@ -52,6 +55,10 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Nv3030BHy201068AvcConfig;
 #elif DRV_BOE_S240X284_I183_JD9853_WV018LZQ_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenBoe240X284Wv018lzqConfig;
+#elif DRV_BOE_S240X296_I183_JD9853_WV018LZQ_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenBoe240X296Wv018lzqConfig;
+#elif UTE_DRV_TFT_S240X296NV3030B_ZD183G1196_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenBoe240X296Wv018lzqConfig;
 #elif UTE_DRV_TFT_S240X284_NV3030B_ZD183G1196_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Nv3030BZd183g1196Config;
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT

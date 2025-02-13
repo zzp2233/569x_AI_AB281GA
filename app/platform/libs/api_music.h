@@ -66,5 +66,4 @@ void music_qskip(bool direct, u8 second);      //快进快退控制 direct = 1�
 void music_qskip_end(void);
 void music_set_jump(void *brkpt);
 void music_get_breakpiont(void *brkpt);
-void music_sync_kick(void);
 #endif // _API_MUSIC_H

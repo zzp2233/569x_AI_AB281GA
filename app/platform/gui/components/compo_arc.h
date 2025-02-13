@@ -16,7 +16,7 @@ enum e_ANGLE_PREC
 
 
 #define ARC_VALUE_MAX               1000               //设置圆弧的最大值
-#define ARC_ANGLE_PREC_DEFAULT      ANGLE_PREC_1_10    //默认精度0.1° 
+#define ARC_ANGLE_PREC_DEFAULT      ANGLE_PREC_1_10    //默认精度0.1°
 
 
 typedef struct compo_arc_t_
@@ -67,7 +67,7 @@ void compo_arc_set_size(compo_arc_t *arc, s16 width, s16 height);
  * @param[in] end_angle : 相对于0°顺时针方向角度 0 ~ 3600°
  * @return 无
  **/
-void compo_arc_set_angles(compo_arc_t *arc, u16 start_angle, s16 end_angle);
+void compo_arc_set_angles(compo_arc_t *arc, u16 start_angle, u16 end_angle);
 
 /**
  * @brief 修改圆弧的原点0°位置

@@ -6,9 +6,6 @@ uint calc_crc(void *buf, uint len, uint seed);
 
 #if FUNC_MUSIC_EN
 
-void func_music_file_new(void);
-void music_slot_kick(void);
-
 bsp_msc_t msc_cb AT(.buf.music);
 
 //扫描全盘文件
@@ -328,94 +325,6 @@ void bsp_music_play_pause(void)
         led_idle();
         printf("music pause\n");
     }
-}
-
-
-AT(.text.func.music)
-void bsp_music_device_new(void)
-{
-    u8 dev_change = msc_cb.dev_change;
-    if (msc_cb.dev_change)
-    {
-        msc_cb.dev_change = 0;
-        music_control(MUSIC_MSG_STOP);
-        if ((dev_change == 1) && (!bsp_music_switch_device(msc_cb.cur_dev)))
-        {
-            return;
-        }
-
-        led_music_busy();
-        fsdisk_callback_init(sys_cb.cur_dev);
-        if ((!fs_mount()) || (!pf_scan_music(1)))
-        {
-            //还原到原设备
-            sys_cb.cur_dev = msc_cb.cur_dev;
-            fsdisk_callback_init(sys_cb.cur_dev);
-            if ((!fs_mount()) || (!pf_scan_music(0)))
-            {
-                func_cb.sta = FUNC_NULL;
-                led_idle();
-                return;
-            }
-        }
-        led_idle();
-        msc_cb.cur_dev = sys_cb.cur_dev;
-        param_msc_num_read();
-        msc_cb.brkpt_flag = 1;
-        msc_cb.file_change = 1;
-    }
-}
-
-AT(.text.func.music)
-void bsp_music_get_curtime(void)
-{
-    u16 cur_sec, min, sec;
-    cur_sec = music_get_cur_time() / 10;
-    min = cur_sec / 60;
-    sec = cur_sec % 60;
-    if (msc_cb.curtime.min != min || msc_cb.curtime.sec != sec)
-    {
-        msc_cb.curtime.min = min;
-        msc_cb.curtime.sec = sec;
-    }
-}
-
-AT(.text.func.music)
-void bsp_music_process(void)
-{
-    bsp_music_get_curtime();
-    func_music_file_new();
-    music_slot_kick();
-
-    if ((get_music_dec_sta() == MUSIC_STOP) && (msc_cb.dev_change == 0))
-    {
-        if (dev_is_online(msc_cb.cur_dev))            //设备拔出结束解码不自动切换下一曲
-        {
-            music_breakpoint_clr();
-            if ((msc_cb.prev_flag) && ((msc_cb.alltime.min == 0xff)
-                                       || ((msc_cb.curtime.min == 0) && (msc_cb.curtime.sec == 0))))
-            {
-                //错误文件或播放小于2S保持切换方向
-                bsp_music_switch_file(0);
-            }
-            else
-            {
-                bsp_music_auto_next_file();
-            }
-        }
-    }
-
-    if (msc_cb.alltime.min == 0xff)
-    {
-        u16 total_time = music_get_total_time();
-        if (total_time != 0xffff)
-        {
-            msc_cb.alltime.min = total_time / 60;
-            msc_cb.alltime.sec = total_time % 60;
-            printf("[%s] total time: %02d:%02d\n\n", msc_cb.fname, msc_cb.alltime.min, msc_cb.alltime.sec);
-        }
-    }
-
 }
 
 #if MUSIC_BREAKPOINT_EN

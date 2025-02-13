@@ -16,7 +16,7 @@
 #include "ute_module_systemtime.h"
 #include "include.h"
 
-
+#if  UTE_MODULE_SPORT_SUPPORT
 /*! sport 计步数据保存目录 zn.zeng, 2021-08-23  */
 #define UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR "sportStep"
 /*!写入久坐提醒，抬手亮屏，目标步数信息参数 zn.zeng, 2021-08-20  */
@@ -336,6 +336,7 @@ void uteModuleSportUpdateGsensorIdAccRange(void);
 void uteModuleSportStepTypeSetStep(void);
 void uteModuleSportStepTypeSetSleep(void);
 void uteModuleSportStepTypeSetNone(void);
+ute_module_sport_step_type uteModuleSportGetStepType(void);
 void uteModuleSprotResetRovllverScreenMode(void);
 void uteModuleSportInputDataBeforeAlgo(void);
 void uteModuleSportSendRealTimeStepInfo(void);
@@ -481,5 +482,7 @@ void uteModuleSportClearGsensorRotateData(void);
 void uteModuleSportAlgoTimerStart(uint16_t ms);
 void uteModuleSprotAlgoTimerStop(void);
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void);
+
+#endif
 #endif //_UTE_MODULE_SPORT_H_
 

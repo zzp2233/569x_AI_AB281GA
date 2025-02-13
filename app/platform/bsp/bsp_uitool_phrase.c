@@ -1,5 +1,10 @@
 #include "include.h"
 #include "../gui/components/compo_form.h"
+#include "ute_module_systemtime.h"
+#include "ute_language_common.h"
+#include "ute_module_watchonline.h"
+
+#define TRACE_EN    0
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -9,18 +14,20 @@
 
 static u8 animation_id = 0;
 
+static bool has_default_lang_pic = false;
+
 //表盘文本编号表
-const u8 text_str_tbl[] =
+const u16 text_str_tbl[] =
 {
     [1] = STR_CALORIE,
     STR_STEPS,
     STR_DISTANCE,
     STR_HEART_RATE,
     STR_BLOOD_OXYGEN,
-    // STR_BLOOD_SUGAR,
+//    STR_BLOOD_SUGAR,
     STR_WEATHER,
-    // STR_BAROMETER,
-    // STR_TEMPERATURE,
+//    STR_BAROMETER,
+//    STR_TEMPERATURE,
 //    STR_CELSIUS,
     STR_ALTITUDE,
     STR_SPORTS,
@@ -57,7 +64,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
     s16 click_wid = (BYTE0(uitool_res->param2) << 8) | BYTE3(uitool_res->param1);
     s16 click_hei = (BYTE2(uitool_res->param2) << 8) | BYTE1(uitool_res->param2);
 
-    TRACE("UITOOL_TYPE_IMAGE:%d, res_addr:%x, x:%d, y:%d\n", uitool_res->bond_type, uitoolres->res_addr, uitool_res->x, uitool_res->y);
+    TRACE("UITOOL_TYPE_IMAGE:%d, res_addr:%x, x:%d, y:%d\n", uitool_res->bond_type, uitool_res->res_addr, uitool_res->x, uitool_res->y);
 
     switch (uitool_res->bond_type)
     {
@@ -124,7 +131,56 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
-            printf("type[%d]\n", uitool_res->bond_type);
+            TRACE("type[%d]\n", uitool_res->bond_type);
+        }
+        break;
+
+        case COMPO_BOND_COMM_UNIT:
+        case COMPO_BOND_TIME_AMPM:
+        case COMPO_BOND_TIME_WEEK:
+        case COMPO_BOND_TIME_MONTH:
+        case COMPO_BOND_DISTANCE_UNIT:
+        case COMPO_BOND_TEMPERATURE_UNIT:
+        {
+            compo_picturebox_t *pic;
+            pic = compo_picturebox_create(frm, res_addr);
+            compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
+            compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
+            compo_bonddata(pic, uitool_res->bond_type);
+            TRACE("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
+            TRACE("has_default_lang_pic:%d",has_default_lang_pic);
+            if (uteModuleSystemtimeCompareLanguage(uitool_res->rsv))
+            {
+                compo_picturebox_set_visible(pic, true);
+            }
+            else if (uitool_res->rsv == 0)
+            {
+                if(has_default_lang_pic)
+                {
+                    compo_picturebox_set_visible(pic, false);
+                }
+                else
+                {
+                    compo_picturebox_set_visible(pic, true);
+                }
+            }
+            else
+            {
+                TRACE("type[%d] rsv[%d] not support\n", uitool_res->bond_type, uitool_res->rsv);
+                compo_picturebox_set_visible(pic, false);
+            }
+
+            if(uitool_res->bond_type == COMPO_BOND_TIME_AMPM)
+            {
+                if(uteModuleSystemtime12HOn())
+                {
+                    compo_picturebox_set_visible(pic, true);
+                }
+                else
+                {
+                    compo_picturebox_set_visible(pic, false);
+                }
+            }
         }
         break;
 
@@ -176,6 +232,31 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 max_cnt = 4;
                 break;
 
+            case COMPO_BOND_KCAL:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 4;
+                break;
+
+            case COMPO_BOND_STEP:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 5;
+                break;
+
+            case COMPO_BOND_HEARTRATE:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
+
+            case COMPO_BOND_BATTERY:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
+
+            case COMPO_BOND_DISTANCE:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 5;
+                break;
+
             default:
                 bond_compo_type = COMPO_TYPE_NUMBER;
                 max_cnt = 2;
@@ -199,7 +280,25 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 num->num_part = num_part_en ? i + 1 : 0;
                 //个位中心坐标
                 compo_number_set_pos(num, uitool_res->x - delt_x * i, uitool_res->y + delt_y * i);
-                compo_number_set_zfill(num, true);
+                if(uitool_res->bond_type > COMPO_BOND_NONE && uitool_res->bond_type <= COMPO_BOND_DATE)
+                {
+                    compo_number_set_zfill(num, true);
+                }
+                else
+                {
+                    compo_number_set_zfill(num, false);
+                }
+
+                if (uitool_res->bond_type == COMPO_BOND_DISTANCE)
+                {
+                    compo_number_set_float(num, true, 2);
+                }
+                else if (uitool_res->bond_type == COMPO_BOND_HEARTRATE || uitool_res->bond_type == COMPO_BOND_BLOOD_OXYGEN)
+                {
+                    compo_number_set_zero_replace(num, true);
+                }
+
+                compo_number_set_align(num, uitool_res->rsv);
                 //compo_number_set_visible(num, false);
                 compo_bonddata(num, uitool_res->bond_type);
                 compo_set_bonddata((component_t *)num, time_to_tm(compo_cb.rtc_cnt));
@@ -241,14 +340,17 @@ void bsp_uitool_area_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res
 u16 bsp_uitool_header_phrase(u32 base_addr)
 {
     uitool_header_t uitool_header;
-
-    os_spiflash_read(&uitool_header, base_addr, UITOOL_HEADER);
+    u32 user_addr = base_addr;
+#if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
+    user_addr += sizeof(watchConfig_t);
+#endif
+    os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
     TRACE("sig:%x, ver:%d, size:%x, num:%x\n", uitool_header.sig, uitool_header.ver, uitool_header.size, uitool_header.num);
     TRACE("user id:%d, index:%d, wid:%d, hei:%d\n", uitool_header.user_id, uitool_header.index, uitool_header.wid, uitool_header.hei);
 //    print_r(uitool_header.user_extend, 32);
     if (uitool_header.sig != UITOOL_HEADER_FORMAT)
     {
-        printf("UITOOL Format Uncorrect:%x, %x\n", uitool_header.sig, UITOOL_HEADER_FORMAT);
+        TRACE("UITOOL Format Uncorrect:%x, %x\n", uitool_header.sig, UITOOL_HEADER_FORMAT);
         return false;
     }
     return uitool_header.num;
@@ -260,10 +362,39 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
     memset(&uitool_res, 0, sizeof(uitool_res_t));
     animation_id = 0;
 
+    u32 user_addr = base_addr + sizeof(watchConfig_t);
+
+    has_default_lang_pic = false;
+
+    for (u16 i = 0; i < compo_num; i++)
+    {
+        if(has_default_lang_pic)
+        {
+            break;
+        }
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        switch (uitool_res.bond_type)
+        {
+            case COMPO_BOND_COMM_UNIT:
+            case COMPO_BOND_TIME_AMPM:
+            case COMPO_BOND_TIME_WEEK:
+            case COMPO_BOND_TIME_MONTH:
+            case COMPO_BOND_DISTANCE_UNIT:
+            case COMPO_BOND_TEMPERATURE_UNIT:
+                if (uteModuleSystemtimeCompareLanguage(uitool_res.rsv))
+                {
+                    has_default_lang_pic = true;
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
     for(u16 i=0; i<compo_num; i++)
     {
-        os_spiflash_read(&uitool_res, base_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
-        u32 res_addr = base_addr + uitool_res.res_addr;
+        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+        u32 res_addr = user_addr + uitool_res.res_addr;
         switch (uitool_res.res_type)
         {
             case UITOOL_TYPE_POINTER:

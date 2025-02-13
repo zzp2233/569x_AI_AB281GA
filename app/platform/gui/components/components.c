@@ -9,7 +9,7 @@
 #endif
 
 compo_cb_t compo_cb AT(.disp.compo);
-static u8 compos_buf[COMPO_BUF_SIZE] AT(.disp.compo);              //Components Buf
+static u8 compos_buf[COMPO_BUF_SIZE] AT(.disp.buf);              //Components Buf
 
 //获取组件结构体Size
 static int compo_get_size(int type)
@@ -116,9 +116,11 @@ static int compo_get_size(int type)
         case COMPO_TYPE_SCROLLBAR:
             compo_size = sizeof(compo_scroll_t);
             break;
-        case COMPO_TYPE_BAR:
-            compo_size = sizeof(compo_bar_t);
+
+        case COMPO_TYPE_PROGRESSBAR:
+            compo_size = sizeof(compo_progressbar_t);
             break;
+
         default:
             TRACE("Unknow Compo Type: %d\n", type);
             halt(HALT_GUI_COMPO_UNKNOW_TYPE);
@@ -243,6 +245,7 @@ void compo_bonddata(void *compo, u8 bond_data)
         halt(HALT_GUI_COMPO_POOL_BONDDATA);
     }
     ((component_t *)compo)->bond_data = bond_data;
+//    compo_cb.rtc_update = true;
 }
 
 //设置组件ID

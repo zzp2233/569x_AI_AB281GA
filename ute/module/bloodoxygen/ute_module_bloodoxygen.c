@@ -214,7 +214,9 @@ void uteModuleBloodoxygenStartSingleTesting(void)
         uint8_t startCmdRsp[2] = {CMD_SPO2_TEST,0x11};
         uteModuleProfileBleSendToPhone(&startCmdRsp[0],2);
     }
+#if UTE_MODULE_HEART_SUPPORT
     uteModuleHeartStartSingleTesting(TYPE_BLOODOXYGEN);
+#endif
 }
 /**
 *@brief        结束单次测试
@@ -270,7 +272,9 @@ void uteModuleBloodoxygenStopSingleTesting(void)
     uteModuleBloodoxygenData.isSingleTesting = false;
     uteModuleBloodoxygenData.isBloodOxygenAutoTestFlag = false;
     uteModuleBloodoxygenData.testingSecond = 0;
+#if UTE_MODULE_HEART_SUPPORT
     uteModuleHeartStopSingleTesting(TYPE_BLOODOXYGEN);
+#endif
 }
 /**
 *@brief        是否佩戴

@@ -9,7 +9,7 @@ au_stm_t rec_pcm_stm AT(.buf.record);
 u8 rec_obuf[REC_OBUF_SIZE] AT(.rec_buf.obuf);
 u8 rec_encbuf[REC_ENC_SIZE] AT(.rec_buf.enc);
 
-extern char fname_buf[100];
+char fname_buf[100];
 void music_enc_control(u8 msg);
 bool sbc_encode_init(u8 spr, u8 nch);
 void sbc_encode_exit(void);
@@ -128,14 +128,6 @@ void bsp_record_process(void)
             }
         }
     }
-    ab_free(buf);
-}
-
-
-AT(.text.func.record)
-u8 get_bsp_record_sta(void)
-{
-    return rec_cb.sta;
 }
 
 void bsp_record_stop(void)
@@ -280,56 +272,6 @@ bool bsp_record_start(void)
     rec->sta = REC_RECORDING;
     return true;
 }
-
-void bsp_record_pause(void)
-{
-    rec_cb_t *rec = &rec_cb;
-    if (rec->sta != REC_RECORDING)
-    {
-        return;
-    }
-    printf("record pause\n");
-    if (rec->src)
-    {
-        rec->src->source_stop();
-    }
-    // if (rec->flag_file) {
-    //     record_file_close(rec->src->rec_type);
-    // }
-#if REC_MP3_SUPPORT
-    if (rec->src->rec_type == REC_MP3)
-    {
-        mpa_encode_exit();
-    }
-#endif
-#if REC_SBC_SUPPORT
-    if (rec->src->rec_type == REC_SBC)
-    {
-        sbc_encode_exit();
-    }
-#endif
-    // rec->flag_file = 0;
-    // rec->flag_dir = 0;
-    rec->src = 0;
-    rec->sta = REC_PAUSE;
-    rec->flag_play = 1;
-    if (dev_is_online(DEV_SDCARD))
-    {
-        printf("sd0 stop 1!\n");
-        sd0_stop(1);
-    }
-}
-
-AT(.text.func.record)
-void bsp_record_continue(void)
-{
-    if (rec_cb.sta == REC_PAUSE)
-    {
-        printf("record continue\n");
-        bsp_record_start();
-    }
-}
-
 
 void bsp_record_var_init(void)
 {

@@ -9,18 +9,6 @@
 #endif
 
 #define QRCODEBOX_PADDING       (GUI_SCREEN_WIDTH / 10)         //二维码和背景的间隙
-#if SECURITY_PAY_EN && SECURITY_TRANSITCODE_EN
-#define USR_MODE8_ONLY          1
-#else
-#define USR_MODE8_ONLY          0
-#endif
-
-#if !USR_MODE8_ONLY
-bool qr_encode_create_ex(const char *str, u8 *qr_buff, int str_len, u16 *symble_size, u8 level)
-{
-    return false;
-}
-#endif
 
 /**
  * @brief 创建一个码
@@ -49,6 +37,18 @@ compo_qrcodebox_t *compo_qrcodebox_create(compo_form_t *frm, u8 qr_type, u16 max
     return qrcodebox;
 }
 
+void compo_qrcodebox_set_pos(compo_qrcodebox_t *qrcodebox, s16 x, s16 y)
+{
+    if (qrcodebox == NULL)
+    {
+        halt(HALT_GUI_COMPO);
+    }
+    widget_set_pos(qrcodebox->qrcode, x, y);
+    rect_t rect = widget_get_location(qrcodebox->qrcode);
+    widget_set_location(qrcodebox->bg, rect.x, rect.y, rect.wid + QRCODEBOX_PADDING, rect.hei + QRCODEBOX_PADDING);
+
+}
+
 /**
  * @brief 设置码的内容
  * @param[in] qrcodebox : 码指针
@@ -65,12 +65,12 @@ void compo_qrcodebox_set(compo_qrcodebox_t *qrcodebox, const char *str)
  * @param[in] qrcodebox : 码指针
  * @param[in] code : 字符内容
  * @param[in] len : 长度
- *  使用的使用要把 USR_MODE8_ONLY 这个宏设置为1；为了让绝大部分不用的客户省flash和ram
  **/
 void compo_qrcodebox_2d_set(compo_qrcodebox_t *qrcodebox, const char *code, int len)
 {
     widget_qrcode_2d_set(qrcodebox->qrcode, code, len);
 }
+
 
 /**
  * @brief 设置码的内容

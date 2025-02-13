@@ -1,6 +1,6 @@
 #include "include.h"
 #include "bsp_ams.h"
-// #include "ute_module_music.h"
+#include "ute_module_music.h"
 
 #define TRACE_EN    0
 

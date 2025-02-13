@@ -12,11 +12,11 @@
 #include "ute_module_message.h"
 #include "ute_task_application.h"
 #include "ute_module_systemtime.h"
-// #include "ute_module_call.h"
+#include "ute_module_call.h"
 #include "ute_application_common.h"
-// #include "ute_module_profile_ble.h"
-// #include "ute_module_protocol.h"
-// #include "ute_drv_motor.h"
+#include "ute_module_profile_ble.h"
+#include "ute_module_protocol.h"
+#include "ute_drv_motor.h"
 #include "include.h"
 
 ute_module_platform_adv_data_t uteModulePlatformAdvData;
@@ -524,7 +524,6 @@ void uteModulePlatformRtcTimerHandler(void *pxTimer)
 *@author        zn.zeng
 *@date        Jun 29, 2021
 */
-
 void uteModulePlatformRtcInit(void)
 {
     uteModulePlatformCreateTimer(&uteModulePlatformRtcTimer,"rtc",0,1000,true,uteModulePlatformRtcTimerHandler);
@@ -654,6 +653,13 @@ __SCREEN_COMMON void uteModulePlatformOutputGpioSet(uint8_t pinNum, bool isHeigh
             GPIOFDIR &= ~BIT(pin);
             GPIOFSET = BIT(pin);
         }
+        else if(gprop==5)
+        {
+            GPIOHFEN &= ~BIT(pin);
+            GPIOHDE  |= BIT(pin);
+            GPIOHDIR &= ~BIT(pin);
+            GPIOHSET = BIT(pin);
+        }
 
     }
     else
@@ -686,6 +692,13 @@ __SCREEN_COMMON void uteModulePlatformOutputGpioSet(uint8_t pinNum, bool isHeigh
             GPIOFDIR &= ~BIT(pin);
             GPIOFCLR = BIT(pin);
         }
+        else if(gprop==5)
+        {
+            GPIOHFEN &= ~BIT(pin);
+            GPIOHDE  |= BIT(pin);
+            GPIOHDIR &= ~BIT(pin);
+            GPIOHCLR = BIT(pin);
+        }
     }
 }
 #if UTE_DRV_QSPI_FOR_SCREEN_SUPPORT
@@ -702,10 +715,11 @@ void uteModulePlatformScreenQspiInit(void)
     CLKGAT2 |= BIT(4);
     RSTCON0 |= BIT(8);
 
-    GPIOAFEN &= ~BIT(5);                        // CS
-    GPIOADE  |=  BIT(5);
-    GPIOASET  =  BIT(5);
-    GPIOADIR &= ~BIT(5);
+    GPIOHFEN &= ~BIT(6);                        // CS
+    GPIOHDE  |=  BIT(6);
+    GPIOHSET  =  BIT(6);
+    GPIOHDIR &= ~BIT(6);
+
 
     GPIOAFEN |=  BIT(4);                        // CLK
     GPIOADE  |=  BIT(4);
@@ -1316,7 +1330,7 @@ void uteModulePlatformUpdateDevName(void)
     devCompleteNameSize = size;
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,name =%s,size=%d", __func__, name,size);
     uteModulePlatformAdvDataModifySub(false, 0x09, name, size, ADV_REPLACE);
-    // ble_set_gap_name((char *)name,size);//todo
+    ble_set_gap_name((char *)name,size);
 #if UTE_BT30_CALL_SUPPORT
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
     uteModuleCallSetBtDevName(name,size);
@@ -1479,7 +1493,6 @@ void uteModulePlatformDlpsBitReset(void)
 */
 void uteModulePlatformRejectIncall(void)
 {
-#if 0
     ute_quick_switch_t quick;
     uteApplicationCommonGetQuickSwitchStatus(&quick);
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,quick.isRejectCall=%d",__func__,quick.isRejectCall);
@@ -1501,5 +1514,4 @@ void uteModulePlatformRejectIncall(void)
     {
         uteDrvMotorStop();
     }
-#endif
 }

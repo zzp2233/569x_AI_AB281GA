@@ -90,7 +90,13 @@ int myrad(int cx, int cy, int x, int y)
 {
     int dx = subs(x, cx);
     int dy = subs(y, cy);
-    int cos_value = (int)((int)muls(dx, COS_SCALE)) / (int)(sqrt64(muls(dx, dx) + muls(dy, dy)));
+//    int cos_value = (int)((int)muls(dx, COS_SCALE)) / (int)(sqrt64(muls(dx, dx) + muls(dy, dy)));
+    int div = (int)(sqrt64(muls(dx, dx) + muls(dy, dy)));
+    if (div == 0)
+    {
+        return 0;
+    }
+    int cos_value = (int)((int)muls(dx, COS_SCALE)) / div;
     return ACOS(cos_value);
 }
 
@@ -221,14 +227,18 @@ int32_t compo_rings_touch_angle(compo_rings_t *rings, compo_rings_touch_t *touch
         touch->quad = QUADRANT_4;
     }
 
-    //根据象限确定和正向Y轴的夹角 0~3600
-    if (touch->quad == QUADRANT_1 || touch->quad == QUADRANT_2)
+    int res = myrad(cx, cy, x, y);
+    if (res != 0)
     {
-        touch->angle = RINGS_GET_ANGLE((90 - myrad(cx, cy, x, y)) * 10);
-    }
-    else if (touch->quad == QUADRANT_3 || touch->quad == QUADRANT_4)
-    {
-        touch->angle = RINGS_GET_ANGLE((90 + myrad(cx, cy, x, y)) * 10);
+        //根据象限确定和正向Y轴的夹角 0~3600
+        if (touch->quad == QUADRANT_1 || touch->quad == QUADRANT_2)
+        {
+            touch->angle = RINGS_GET_ANGLE((90 - res) * 10);
+        }
+        else if (touch->quad == QUADRANT_3 || touch->quad == QUADRANT_4)
+        {
+            touch->angle = RINGS_GET_ANGLE((90 + res) * 10);
+        }
     }
 
     if (touch->angle == -1)

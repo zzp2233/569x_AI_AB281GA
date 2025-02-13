@@ -22,7 +22,7 @@
 #include "ute_module_protocol.h"
 #include "ute_module_call.h"
 // #include "ute_module_newFactoryTest.h"
-
+#include "func_cover.h"
 
 #if UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
 
@@ -300,6 +300,10 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 #if CHARGE_EN
     uteDrvBatteryCommonData.lvl = sys_cb.vbat_percent;
     uteDrvBatteryCommonData.voltage = sys_cb.vbat;//vbat_cb.vbat_adc_last;
+    if(!sys_cb.chg_on || uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)
+    {
+        uteDrvBatteryCommonData.current = 0;
+    }
     if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_090)
     {
         uteDrvBatteryCommonData.current = CHARGE_TRICKLE_CURR * 5 + 5;
@@ -559,8 +563,11 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
         (uteApplicationCommonGetSystemPowerOnSecond()>8) &&
 #endif
         // (uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_POWEROFF_ID)&&
-        (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)&&
-        (!uteModuleSportMoreSportIsRuning()) /*! 运动中在运动处理函数跳转到低电界面，xjc 2022-02-18*/
+        (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)
+#if UTE_MODULE_SPORT_SUPPORT
+        &&(!uteModuleSportMoreSportIsRuning()
+          ) /*! 运动中在运动处理函数跳转到低电界面，xjc 2022-02-18*/
+#endif
     )
     {
         if (!uteDrvBatteryCommonData.isHasLowPowerNotify)
@@ -584,13 +591,17 @@ void uteDrvBatteryCommonIsEnterLowBattery(void)
 #endif
 
             /*! 低电提醒之前结束运动再跳转到低电界面, xjc 2022-01-26*/
+#if UTE_MODULE_SPORT_SUPPORT
             if(uteModuleSportMoreSportIsRuning())
             {
                 uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CLOSE);
                 uteModuleSportStopMoreSports();
             }
+#endif
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
+            sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
+            sys_cb.remind_tag = true;
+            //msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
             uteDrvBatteryCommonData.isHasLowPowerNotify = true;
 #if SET_THE_LOW_BATTERY_POPUP_TIME
             uteApplicationCommonSetlowBatterySecond(0);

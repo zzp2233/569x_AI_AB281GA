@@ -82,11 +82,14 @@ void uteModuleFactoryTestEverySecond(void)
 
     if (uteModuleFactoryTestData.currItem == TEST_ITEM_AGING)
     {
+#if UTE_MODULE_HEART_SUPPORT
         if(!uteModuleHeartIsSingleTesting())
         {
+
             uteModuleHeartStartSingleTesting(TYPE_HEART);
+
         }
-        
+
         if (uteModuleHeartIsWear())
         {
             uteModuleFactoryTestData.u.aging.heart = (uint8_t)uteModuleHeartGetHeartValue();
@@ -107,6 +110,7 @@ void uteModuleFactoryTestEverySecond(void)
         uteDrvGsensorCommonXYZaxisDataBitChange(&bitChange, 1, GSENSOR_DATA_BIT_STEP);
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
         uteModuleFactoryTestData.u.aging.runningTimeSecond++;
+#endif
     }
     else if (uteModuleFactoryTestData.currItem == TEST_ITEM_BATTERY)
     {
@@ -223,7 +227,9 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
         uteModuleFactoryTestData.u.vcxx.testMode = FACTORY_VCXX_TEST_MODE_CROSSTALK;
         if(isOpen)
         {
+#if UTE_MODULE_HEART_SUPPORT
             uteModuleHeartStartSingleTesting(TYPE_FACTORY0);
+#endif
 //            uteDrvHeartVcxxStartCrosstalktest();
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
         }
@@ -237,7 +243,9 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
     {
         uteModuleFactoryTestData.u.aging.runningTimeSecond = 0;
         uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStartSingleTesting(TYPE_HEART);
+#endif
     }
     else if(item==TEST_ITEM_BATTERY)
     {
@@ -540,7 +548,9 @@ void uteModuleFactoryTestProtocol(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_TEMPERATURE_SUPPORT
         uteModuleTemperatureStopTesting();
 #endif
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStopSingleTesting(TYPE_HEART);
+#endif
         // uteDrvHeartVcxxStopSample();
         // uteDrvHeartVcxxStartSample();
 
@@ -699,7 +709,9 @@ void uteModuleFactoryTestStop(void)
     uteModuleFactoryTestData.isKeysTesting = false;
     if(uteApplicationCommonIsPowerOn())
     {
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
+#endif
         uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
     }
 }
@@ -707,7 +719,9 @@ void uteModuleFactoryTestStop(void)
 void uteModuleFactoryTestSetCheckLightMode(uint8_t mode)
 {
     uteModuleFactoryTestData.u.vcxx.testMode = mode;
+#if UTE_MODULE_HEART_SUPPORT
     uteModuleHeartStartSingleTesting(TYPE_FACTORY0);
+#endif
 #if (!UTE_DRV_HEART_VC9202_VP60A2_SUPPORT)&&(UTE_DRV_HEART_VC30S_SUPPORT&&CFG_FULL_FUNCTION)
     if(mode == FACTORY_VCXX_TEST_MODE_BIO_A)
     {

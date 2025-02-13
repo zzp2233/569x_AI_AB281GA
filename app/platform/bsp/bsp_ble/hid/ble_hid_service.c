@@ -11,8 +11,6 @@
 #define TRACE_R(...)
 #endif
 
-#if 0
-
 static ble_hid_tasks_typedef ble_hid_tasks;
 static int hid_report_map_read_callback(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len);
 
@@ -488,7 +486,7 @@ bool ble_hid_task_enqueue(BLE_HID_CMD_ID_TYPEDEF id, u8 *buffer, u8 len)
     return true;
 }
 
-// ???????
+// 循环中不断执行
 void ble_hid_service_proc(void)
 {
     static u32 delay_cnt;
@@ -551,4 +549,3 @@ bool ble_hid_peer_device_is_ios(void)
     return true;
 }
 
-#endif

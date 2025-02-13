@@ -10,15 +10,17 @@
 #include "ute_module_message.h"
 #include "ute_module_log.h"
 #include "ute_module_systemtime.h"
-// #include "ute_drv_motor.h"
-// #include "ute_module_notify.h"
-// #include "ute_application_common.h"
-// #include "ute_module_sport.h"
-// #include "ute_module_gui_common.h"
-// #include "ute_drv_gsensor_common.h"
-// #include "ute_module_heart.h"
-// #include "ute_module_watchonline.h"
-// #include "ute_module_factorytest.h"
+#include "ute_drv_motor.h"
+#include "ute_module_notify.h"
+#include "ute_application_common.h"
+#include "ute_module_sport.h"
+#include "ute_module_gui_common.h"
+#include "ute_drv_gsensor_common.h"
+#include "ute_module_heart.h"
+#include "ute_module_watchonline.h"
+#include "ute_module_factorytest.h"
+#include "ute_module_call.h"
+#include "ute_module_localRingtone.h"
 
 /**
 *@brief  消息模块消息处理函数
@@ -31,7 +33,7 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
 {
     uint16_t type = msg->type;
     uint32_t param = msg->param;
-    // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, msg,type=%d", __func__, type);
+
     switch (type)
     {
         case MSG_TYPE_SYSTEM_TIME_SEC_BASE:
@@ -41,42 +43,42 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         break;
         case MSG_TYPE_DRV_MOTOR_START:
         {
-            // uteDrvMotorStartHandlerMsg(param);
+            uteDrvMotorStartHandlerMsg(param);
         }
         break;
         case MSG_TYPE_DRV_MOTOR_STOP:
         {
-            // uteDrvMotorStopHandlerMsg();
+            uteDrvMotorStopHandlerMsg();
         }
         break;
         case MSG_TYPE_DRV_MOTOR_HANDLE_TIMER:
         {
-            // uteDrvMotorTimerHandlerMsg();
+            uteDrvMotorTimerHandlerMsg();
         }
         break;
         case MSG_TYPE_HNAD_SCREEN_ON_NOTIFY:
         {
-            // uteModuleGuiCommonHandScreenOnMsg();
+            uteModuleGuiCommonHandScreenOnMsg();
         }
         break;
         case MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY:
         {
-            // uteModuleGuiCommonHandScreenOffMsg();
+            uteModuleGuiCommonHandScreenOffMsg();
         }
         break;
         case MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION:
         {
-            // uteModuleNotifyNotifycationHandlerMsg();
+            uteModuleNotifyNotifycationHandlerMsg();
         }
         break;
         case MSG_TYPE_SYSTEM_START_POWER_OFF:
         {
-            // uteApplicationCommonStartPowerOffMsg();
+            uteApplicationCommonStartPowerOffMsg();
         }
         break;
         case MSG_TYPE_SYSTEM_REAL_POWER_OFF:
         {
-            // uteApplicationCommonRealPowerOffMsg();
+            uteApplicationCommonRealPowerOffMsg();
         }
         break;
         case MSG_TYPE_MODULE_GUI_CLEAR_DEPTH:
@@ -86,12 +88,14 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         break;
         case MSG_TYPE_SYNC_DATA_TIMER:
         {
-            // uteApplicationCommonSyncDataTimerMsg();
+            uteApplicationCommonSyncDataTimerMsg();
         }
         break;
         case MSG_TYPE_TAKE_PICTURE_NOTIFY:
         {
-            // uteModuleSportTakePictureHandlerMsg();
+#if UTE_MODULE_SPORT_SUPPORT
+            uteModuleSportTakePictureHandlerMsg();
+#endif
         }
         break;
         case MSG_TYPE_SEDENTARY_NOTIFY:
@@ -122,7 +126,9 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
 #if UTE_MODULE_SPORT_TAKE_PICTURE_OPEN_APP_SCREEN
         case MSG_TYPE_TAKE_PICTURE_OPEN_APP_SCREEN:
         {
-            // uteModuleSportOpenAppTakePictureScreenHandler();
+#if UTE_MODULE_SPORT_SUPPORT
+            uteModuleSportOpenAppTakePictureScreenHandler();
+#endif
         }
         break;
 #endif
@@ -144,33 +150,61 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         break;
         case MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE:
         {
-            // uteModuleSprotResetRovllverScreenMode();
+#if UTE_MODULE_SPORT_SUPPORT
+            uteModuleSprotResetRovllverScreenMode();
+#endif
         }
         break;
 #if UTE_MODULE_WATCHONLINE_SUPPORT
         case MSG_TYPE_MODULE_WATCHONLINE_RECVTIMEOUT_TIMER:
         {
-            // uteModuleWatchOnlineRecvTimeoutMsgHandler();
+            uteModuleWatchOnlineRecvTimeoutMsgHandler();
         }
         break;
         case MSG_TYPE_MODULE_WATCHONLINE_ONESEC_TIMER:
         {
-            // uteModuleWatchOnlineOneSecMsgHandler();
+            uteModuleWatchOnlineOneSecMsgHandler();
         }
         break;
 #endif
         case MSG_TYPE_DRV_KEY_HANDLER:
         {
-            // uteModuleFactoryTestKeysHandler(param);
-            // uteModuleWatchOnlineRecvTimeoutMsgHandler();
+            uteModuleFactoryTestKeysHandler(param);
+            uteModuleWatchOnlineRecvTimeoutMsgHandler();
         }
         break;
         case MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR:
         {
-            // uteModuleNotifyAncsStartPairHandlerMsg();
+            uteModuleNotifyAncsStartPairHandlerMsg();
         }
         break;
-
+        case MSG_TYPE_CALL_DISABLE_NOTIFY:
+        {
+            uteModuleNotifyCallDisableHandlerMsg();
+        }
+        break;
+#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
+        case TO_APP_TASK_CONNECT_A2DP:
+        {
+            uteModuleCallConnectA2DPProfile();
+        }
+        break;
+        case TO_APP_TASK_DISCONNECT_A2DP:
+        {
+            uteModuleCallDisconnectA2DPProfile();
+        }
+        break;
+#endif
+        case TO_APP_TASK_PLAY_RING:
+        {
+            uteModuleLocalRingtonePlayRingDetail();
+        }
+        break;
+        case TO_APP_TASK_STOP_RING:
+        {
+            uteModuleLocalRingtoneStopRingDetail();
+        }
+        break;
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

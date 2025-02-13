@@ -9,21 +9,21 @@ typedef void (*pbap_sync_finish_cb_t)(void *info, u16 count);
 
 enum
 {
-    PBAP_SYNC_LOCAL,    //åŒæ­¥æœ¬æœºæ•°æ®
-    PBAP_SYNC_SIM,      //åŒæ­¥simå¡æ•°æ®
+    PBAP_SYNC_LOCAL,    //Í¬²½±¾»úÊı¾İ
+    PBAP_SYNC_SIM,      //Í¬²½sim¿¨Êı¾İ
 };
 
 enum
 {
-    PBAP_OBJECT_PB,     //é€šè®¯å½•
-    PBAP_OBJECT_FAV,    //æ”¶è—çš„è”ç³»äºº
-    PBAP_OBJECT_ICH,    //æ¥ç”µè®°å½•
-    PBAP_OBJECT_OCH,    //å»ç”µè®°å½•
-    PBAP_OBJECT_MCH,    //æœªæ¥æ¥ç”µ
-    PBAP_OBJECT_CCH,    //æ‰€æœ‰çš„é€šè¯è®°å½•
+    PBAP_OBJECT_PB,     //Í¨Ñ¶Â¼
+    PBAP_OBJECT_FAV,    //ÊÕ²ØµÄÁªÏµÈË
+    PBAP_OBJECT_ICH,    //À´µç¼ÇÂ¼
+    PBAP_OBJECT_OCH,    //È¥µç¼ÇÂ¼
+    PBAP_OBJECT_MCH,    //Î´½ÓÀ´µç
+    PBAP_OBJECT_CCH,    //ËùÓĞµÄÍ¨»°¼ÇÂ¼
 };
 
-//btstackè·Ÿappé€šè®¯ç”¨ï¼Œç”¨æˆ·ä¸å¯ä¿®æ”¹
+//btstack¸úappÍ¨Ñ¶ÓÃ£¬ÓÃ»§²»¿ÉĞŞ¸Ä
 typedef struct
 {
     char name[160];
@@ -53,17 +53,17 @@ void bt_pbap_data_callback(u8 type, void *item);
 void bt_pbap_event_handle(uint evt, u8 *params);
 void bt_pbap_param_reset(void);
 
-/** åˆ¤æ–­å½“å‰æ˜¯å¦åœ¨è¯»å–pbapæ•°æ® **/
+/** ÅĞ¶Ïµ±Ç°ÊÇ·ñÔÚ¶ÁÈ¡pbapÊı¾İ **/
 bool bt_pbap_is_syncing(void);
 
 /**
- * @brief å¼€å§‹åŒæ­¥è·å–pbapçš„æ•°æ®
- * @param[in] object : PBAP_OBJECT_ICH, æ¥ç”µè®°å½•
-                       PBAP_OBJECT_OCH, å»ç”µè®°å½•
+ * @brief ¿ªÊ¼Í¬²½»ñÈ¡pbapµÄÊı¾İ
+ * @param[in] object : PBAP_OBJECT_ICH, À´µç¼ÇÂ¼
+                       PBAP_OBJECT_OCH, È¥µç¼ÇÂ¼
                        ...
- * @param[in] buf :    ä¿å­˜æ•°æ®çš„buf
- * @param[in] count :  è¦è·å–çš„æ•°æ®æ•°é‡
- * @param[in] finish_cb : pbapæ•°æ®åŒæ­¥å®Œåçš„å›è°ƒ
+ * @param[in] buf :    ±£´æÊı¾İµÄbuf
+ * @param[in] count :  Òª»ñÈ¡µÄÊı¾İÊıÁ¿
+ * @param[in] finish_cb : pbapÊı¾İÍ¬²½ÍêºóµÄ»Øµ÷
  **/
 void bt_pbap_sync_start(u8 object, void *buf, u16 count, pbap_sync_finish_cb_t finish_cb);
 

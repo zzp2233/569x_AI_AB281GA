@@ -204,12 +204,23 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
         }
         else if (iconlist->style == ICONLIST_STYLE_HONEYCOMB || iconlist->style == ICONLIST_STYLE_WATERFALL)      //蜂窝/瀑布流
         {
-            iconlist->icon_zoomout_size = iconlist->icon_org_size * 9 / 20;
-            iconlist->ratio_base = iconlist->icon_org_size * 9 / 16;        //基础缩小速度，越大缩的越快
-            iconlist->icon_space = iconlist->icon_org_size / 7;
-            iconlist->icon_total_size = iconlist->icon_org_size + iconlist->icon_space;
+            if (iconlist->style == ICONLIST_STYLE_HONEYCOMB)
+            {
+                iconlist->icon_org_size -= 5;
+                iconlist->icon_zoomout_size = iconlist->icon_org_size * 9 / 20;
+                iconlist->ratio_base = iconlist->icon_org_size * 9 / 16;        //基础缩小速度，越大缩的越快
+                iconlist->icon_space = iconlist->icon_org_size / 7;
+                iconlist->icon_total_size = iconlist->icon_org_size + iconlist->icon_space;
+            }
+            else if (iconlist->style == ICONLIST_STYLE_WATERFALL)
+            {
+                iconlist->icon_org_size += 3;
+                iconlist->icon_zoomout_size = iconlist->icon_org_size * 9 / 20;
+                iconlist->ratio_base = iconlist->icon_org_size * 9 / 12;        //基础缩小速度，越大缩的越快
+                iconlist->icon_space = iconlist->icon_org_size / 7;
+                iconlist->icon_total_size = iconlist->icon_org_size + iconlist->icon_space;
+            }
             compo_iconlist_set_iconsize(iconlist, iconlist->icon_org_size);
-
         }
         else if (iconlist->style == ICONLIST_STYLE_CUM_HONEYGRID)           //参考原始蜂窝做的华为风格
         {
@@ -224,7 +235,12 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
         {
             iconlist->icon_space_y = 20;
             iconlist->icon_size = (GUI_SCREEN_HEIGHT - 4 * iconlist->icon_space_y) / 4;
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+            iconlist->icon_space = 25;
+#else
             iconlist->icon_space = GUI_SCREEN_CENTER_X - 5 - (iconlist->icon_size * 3 / 2);
+#endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+
             iconlist->icon_total_size = iconlist->icon_size + iconlist->icon_space_y;
             iconlist->ln_hei = iconlist->icon_total_size * 2 + iconlist->icon_size;         //图标保持原大小区域
             iconlist->slide_min = -(iconlist->icon_total_size / 2);
@@ -299,7 +315,7 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
         case ICONLIST_STYLE_SUDOKU:
         case ICONLIST_STYLE_SUDOKU_HRZ:
         case ICONLIST_STYLE_RING:
-            iconlist->total_line = (iconlist->total_cnt + 2) / 3;
+            iconlist->total_line = (iconlist->total_cnt + 3) / 3;
             if (iconlist->style == ICONLIST_STYLE_RING)
             {
                 iconlist->ofs_max = (iconlist->total_line - 1) * iconlist->ln_hei;
@@ -312,7 +328,7 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
             break;
 
         case ICONLIST_STYLE_CUM_SUDOKU:
-            iconlist->total_line = (iconlist->total_cnt + 2) / 3;
+            iconlist->total_line = (iconlist->total_cnt + 3) / 3;
             iconlist->ofs_max = (iconlist->total_line - 1) * (iconlist->icon_size + iconlist->icon_space_y);
             iconlist->slide_max = iconlist->ofs_max + (iconlist->icon_size + iconlist->icon_space_y) / 2;
             break;
@@ -353,7 +369,7 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
             break;
 
         case ICONLIST_STYLE_CUM_HEXAGON:
-            iconlist->total_line = (iconlist->total_cnt + 2) / 3;
+            iconlist->total_line = (iconlist->total_cnt + 3) / 3;
             iconlist->ofs_max = (iconlist->total_line - 1) * iconlist->icon_total_size;
             iconlist->slide_max = iconlist->ofs_max + iconlist->icon_total_size / 2;
             break;
@@ -457,8 +473,12 @@ void compo_iconlist_set_iconsize(compo_iconlist_t *iconlist, s16 icon_size)
     switch (iconlist->style)
     {
         case ICONLIST_STYLE_HONEYCOMB:
-        case ICONLIST_STYLE_WATERFALL:
             iconlist->icon_space = icon_size / 7;
+        case ICONLIST_STYLE_WATERFALL:
+            if (iconlist->style == ICONLIST_STYLE_WATERFALL)
+            {
+                iconlist->icon_space = icon_size / 10;
+            }
             iconlist->icon_total_size = icon_size + iconlist->icon_space;
             iconlist->icon_size = icon_size << ICON_SIZE_Q;
             iconlist->icon_widhalf = (iconlist->icon_total_size << (ICON_SIZE_Q - 1));

@@ -5,6 +5,7 @@
 #include "hrs3300/fit_hrs3300.h"
 #include "hx3605/fit_hx3605.h"
 #include "msa310/msa310.h"
+#include "vc30fx_user_app.h"
 #include "internal_sensor/bsp_internal_sensor.h"
 
 typedef enum
@@ -43,6 +44,10 @@ typedef struct sensor_sta_t_
     u8                                      init;
 } sensor_sta_t;
 
+//vc30fx参数
+#if (SENSOR_HR_SEL == SENSOR_HR_VC30FX)
+extern InitParamTypeDef vc30fx_data;
+#endif
 //外设基础函数
 extern sensor_sta_t bsensor;
 //获得外设初始化状态

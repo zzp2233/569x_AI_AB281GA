@@ -40,6 +40,12 @@ u16 get_sco_spp_mtu_size(void)
     return spp_tx_buff_get_len();
 }
 
+AT(.text.sco_app_dbg.sys_clk)
+u8 get_cur_sysclk(void)
+{
+    return SYS_CLK_SEL;
+}
+
 AT(.text.sco_app_dbg.app.mtu)
 static u16 sco_app_mtu_get(void)
 {

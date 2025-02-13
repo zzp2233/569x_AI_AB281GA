@@ -13,10 +13,10 @@ void app_ab_data_storage_process(void);
 void app_ab_data_storage_init(void);
 #elif (USE_APP_TYPE == USE_UTE_APP)
 
-///---------ÄÖÖÓÌáĞÑ,½¡¿µÌáĞÑ---------
+///---------é—¹é’Ÿæé†’,å¥åº·æé†’---------
 co_timer_t ute_remind_timer;
 
-//ĞÇÆÚÈÕ,Ò»,¶ş,Èı,ËÄ,Îå,Áù -> BIT(6) BIT(0) BIT(1) BIT(2) BIT(3) BIT(4) BIT(5)
+//æ˜ŸæœŸæ—¥,ä¸€,äºŒ,ä¸‰,å››,äº”,å…­ -> BIT(6) BIT(0) BIT(1) BIT(2) BIT(3) BIT(4) BIT(5)
 static const uint8_t rtc_weak_mask[7] = {0x40, 0x01, 0x02, 0x04, 0x08, 0x10, 0x20};
 
 static uint8_t wday_rtc_to_proc(uint8_t wday)
@@ -48,11 +48,11 @@ static bool ute_alarm_check(tm_t *now_time)
     for (uint8_t i = 0; i < uteModuleSystemtimeGetAlarmMaxCnt(); i++)
     {
 
-        //»ñÈ¡ÓÃ»§ÄÖÖÓ
+        //è·å–ç”¨æˆ·é—¹é’Ÿ
         uteModuleSystemtimeGetAlarm(alarm_p, i);
 
         uint8_t cycle = uteModuleSystemtimeGetAlarmCycle(i);
-        if (alarm_p->durationTimeSec == 0)           //ÉèÖÃÏìÁåÄ¬ÈÏ×î´óÊ±¼äS
+        if (alarm_p->durationTimeSec == 0)           //è®¾ç½®å“é“ƒé»˜è®¤æœ€å¤§æ—¶é—´S
         {
             alarm_p->durationTimeSec = UTE_LOCAL_ALARM_DEFAULT_RING_TIMES;
         }
@@ -66,11 +66,11 @@ static bool ute_alarm_check(tm_t *now_time)
         TRACE("i[%d] num[%d] cycle[0x%02x] mask[0x%02x] alarm[%02d:%02d] now[%02d:%02d] repeat[%02d,%02d,%d] \n", \
               i, uteModuleSystemtimeGetAlarmMaxCnt(), cycle, week_mask, alarm_p->hour, alarm_p->min, now_time->hour, now_time->min,
               alarm_p->repeatRemindHour, alarm_p->repeatRemindMin, alarm_p->isRepeatRemindOpen);
-        if ((cycle & week_mask) > 0 || (cycle >> 7))  //µ±Ìì»òÕßÖ»ÌáĞÑÒ»´Î
+        if ((cycle & week_mask) > 0 || (cycle >> 7))  //å½“å¤©æˆ–è€…åªæé†’ä¸€æ¬¡
         {
-            if (alarm_p->isRepeatRemindOpen)        //Ì°Ë¯Ê±ÖÓ
+            if (alarm_p->isRepeatRemindOpen)        //è´ªç¡æ—¶é’Ÿ
             {
-                if ((alarm_p->repeatRemindHour == now_time->hour) && (alarm_p->repeatRemindMin == now_time->min))  //µ½Ê±¼ä
+                if ((alarm_p->repeatRemindHour == now_time->hour) && (alarm_p->repeatRemindMin == now_time->min))  //åˆ°æ—¶é—´
                 {
                     TRACE("repeat alarm[%d] ring, [%02d:%02d]\n", i, alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
                     uteModuleSystemtimeSetAlarmRingIndex(i);
@@ -79,9 +79,9 @@ static bool ute_alarm_check(tm_t *now_time)
                     goto __exit;
                 }
             }
-            else if (alarm_p->isOpen)     //ÓÃ»§ÄÖÖÓ
+            else if (alarm_p->isOpen)     //ç”¨æˆ·é—¹é’Ÿ
             {
-                if ((alarm_p->hour == now_time->hour) && (alarm_p->min == now_time->min))  //µ½Ê±¼ä
+                if ((alarm_p->hour == now_time->hour) && (alarm_p->min == now_time->min))  //åˆ°æ—¶é—´
                 {
                     TRACE("alarm[%d] ring, [%02d:%02d]\n", i, alarm_p->hour, alarm_p->min);
                     uteModuleSystemtimeSetAlarmRingIndex(i);
@@ -115,7 +115,7 @@ __err:
     return false;
 }
 
-//1sÄÖÖÓ¼ì²â»Øµ÷º¯Êı
+//1sé—¹é’Ÿæ£€æµ‹å›è°ƒå‡½æ•°
 //AT(.text.lowpwr.sleep)
 void ute_remind_check_1s_pro(void)
 {
@@ -130,13 +130,13 @@ void ute_remind_check_1s_pro(void)
     {
         rtccnt_tmp = RTCCNT;
     }
-    else        //Ê¡µç/ĞİÃßÄ£Ê½£¬RTCÒÑĞİÃß
+    else        //çœç”µ/ä¼‘çœ æ¨¡å¼ï¼ŒRTCå·²ä¼‘çœ 
     {
-        if (lowpwr_sta_bkp == false)      //³õ´Î½øÈë
+        if (lowpwr_sta_bkp == false)      //åˆæ¬¡è¿›å…¥
         {
             rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
         }
-        if (rtc_cal_cnt_bkp != sys_cb.rtc_cal_cnt)      //RTCÒÑĞ£×¼£¬Í¬²½Ğ£×¼
+        if (rtc_cal_cnt_bkp != sys_cb.rtc_cal_cnt)      //RTCå·²æ ¡å‡†ï¼ŒåŒæ­¥æ ¡å‡†
         {
             rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
             rtccnt_tmp = RTCCNT;
@@ -150,11 +150,11 @@ void ute_remind_check_1s_pro(void)
 
     tm_now = time_to_tm(rtccnt_tmp);
     TRACE("tm_now[%02d:%02d:%02d]\n", tm_now.hour, tm_now.min, tm_now.sec);
-    if (minute_bkp != tm_now.min && tm_now.sec == 0)   //1min¼ì²âÒ»´Î
+    if (minute_bkp != tm_now.min && tm_now.sec == 0)   //1minæ£€æµ‹ä¸€æ¬¡
     {
         TRACE("date_now[%d.%d.%d week%d]\n", tm_now.year, tm_now.mon, tm_now.day, tm_now.weekday);
         minute_bkp = tm_now.min;
-        if (((uteModuleSystemtimeGetAlarmTotalCnt()) && ute_alarm_check(&tm_now)))   //|| interval_remind_check(&tm_now)) {   //ÄÖÖÓÌáĞÑ //|| ½¡¿µÌáĞÑ
+        if (((uteModuleSystemtimeGetAlarmTotalCnt()) && ute_alarm_check(&tm_now)))   //|| interval_remind_check(&tm_now)) {   //é—¹é’Ÿæé†’ //|| å¥åº·æé†’
         {
             sys_cb.remind_tag = true;
         }
@@ -184,7 +184,7 @@ void app_platform_init(void)
     app_ab_data_storage_init();
 #endif
 
-    //¿ªÆôÄÖÖÓÌáĞÑÈí¼ş¶¨Ê±Æ÷
+    //å¼€å¯é—¹é’Ÿæé†’è½¯ä»¶å®šæ—¶å™¨
     // app_ute_remind_init();
 
 }

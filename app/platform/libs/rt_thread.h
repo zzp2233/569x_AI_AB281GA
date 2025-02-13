@@ -259,7 +259,6 @@ typedef os_thread_t (*os_thread_self_func)(void);
 typedef void (*os_thread_exit_func)(void);
 
 typedef os_err_t (*os_sem_init_func)(os_sem_t sem, const char *name, os_uint32_t value, os_uint8_t  flag);
-typedef os_err_t (*os_sem_detach_func)(os_sem_t sem);
 typedef os_sem_t (*os_sem_create_func)(const char *name, os_uint32_t value, os_uint8_t flag);
 typedef os_err_t (*os_sem_delete_func)(os_sem_t sem);
 typedef os_err_t (*os_sem_take_func)(os_sem_t sem, os_int32_t time);
@@ -268,7 +267,6 @@ typedef os_err_t (*os_sem_control_func)(os_sem_t sem, os_uint8_t cmd, void *arg)
 typedef os_err_t (*os_sem_release_func)(os_sem_t sem);
 
 typedef os_err_t (*os_mutex_init_func)(os_mutex_t mutex, const char *name, os_uint8_t flag);
-typedef os_err_t (*os_mutex_detach_func)(os_mutex_t mutex);
 typedef os_mutex_t (*os_mutex_create_func)(const char *name, os_uint8_t flag);
 typedef os_err_t (*os_mutex_delete_func)(os_mutex_t mutex);
 typedef os_err_t (*os_mutex_take_func)(os_mutex_t mutex, os_int32_t time);
@@ -343,7 +341,6 @@ typedef os_err_t (*os_sleep_func)(os_tick_t tick);
 #define     os_thread_exit                  ((os_thread_exit_func)(OS_FUNC_BASE5 + 32))
 
 #define     os_sem_init                     ((os_sem_init_func)(OS_FUNC_BASE6 + 0))
-#define     os_sem_detach                   ((os_sem_detach_func)(OS_FUNC_BASE6 + 4))
 #define     os_sem_create                   ((os_sem_create_func)(OS_FUNC_BASE6 + 8))
 #define     os_sem_delete                   ((os_sem_delete_func)(OS_FUNC_BASE6 + 12))
 #define     os_sem_take                     ((os_sem_take_func)(OS_FUNC_BASE6 + 16))
@@ -352,7 +349,6 @@ typedef os_err_t (*os_sleep_func)(os_tick_t tick);
 #define     os_sem_trytake                  ((os_sem_trytake_func)(OS_FUNC_BASE6 + 28))
 
 #define     os_mutex_init                   ((os_mutex_init_func)(OS_FUNC_BASE6 + 32))
-#define     os_mutex_detach                 ((os_mutex_detach_func)(OS_FUNC_BASE6 + 36))
 #define     os_mutex_create                 ((os_mutex_create_func)(OS_FUNC_BASE6 + 40))
 #define     os_mutex_delete                 ((os_mutex_delete_func)(OS_FUNC_BASE6 + 44))
 #define     os_mutex_take                   ((os_mutex_take_func)(OS_FUNC_BASE6 + 48))

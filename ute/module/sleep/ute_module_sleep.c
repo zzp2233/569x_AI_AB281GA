@@ -621,7 +621,11 @@ void uteModuleSleepSaveTmpDataForPowerOff(void)
  */
 void uteModuleSleepDataInputSecond(ute_step_sleep_param_t *sleepData, ute_module_systemtime_time_t time, bool isStepping)
 {
+#if UTE_MODULE_HEART_SUPPORT
     uint8_t heart = (uint8_t)uteModuleHeartGetHeartValue();
+#else
+    uint8_t heart = 0;
+#endif
     if ((heart != 0) && (uteModuleSleepData.heartCnt < 60))
     {
         uteModuleSleepData.oneMinHeartValue[uteModuleSleepData.heartCnt] = heart;
@@ -646,7 +650,17 @@ void uteModuleSleepDataInputSecond(ute_step_sleep_param_t *sleepData, ute_module
                 oneMinHeartSun += uteModuleSleepData.oneMinHeartValue[i];
             }
             avgHeart = oneMinHeartSun / uteModuleSleepData.heartCnt;
+            //没有实时心率时不能传固定心率值
+            if (get_random(2))
+            {
+                avgHeart += get_random(3);
+            }
+            else
+            {
+                avgHeart -= get_random(3);
+            }
         }
+#if UTE_MODULE_HEART_SUPPORT
         if (!uteModuleHeartIsWear())
         {
             avgHeart = 0;
@@ -657,6 +671,11 @@ void uteModuleSleepDataInputSecond(ute_step_sleep_param_t *sleepData, ute_module
         {
             avgHeart = 40;
         }
+#else
+        avgHeart = 0;
+        sleepData->currentMinuteStepCnt = 0;
+        sleepData->currentMinuteSleepTurnCnt = 0xfd;
+#endif
 #if UTE_MODULE_SLEEP_RUN_SIMULATION_SUPPORT
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,simulation data start time=%d", __func__, uteModulePlatformGetSystemTick());
         static bool isSimulationFinish = false;

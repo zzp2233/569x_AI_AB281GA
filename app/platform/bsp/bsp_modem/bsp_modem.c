@@ -3,6 +3,7 @@
 #include "api_modem.h"
 #include "api_iis.h"
 
+void mp3_res_play_kick(u32 addr, u32 len);
 
 void modem_call_init(void);
 void modem_call_exit(void);
@@ -17,6 +18,7 @@ int  bsp_modem_get_contains(u16 from, u16 to);
 int  bsp_modem_update_contains(void);
 void bsp_modem_sta_init(void);
 
+void bsp_modem_call_init(void);
 void bsp_modem_call_check_ok(bool is_ok);
 void modem_call_notice_state(void *param);
 void modem_call_notice_ring(void *param);
@@ -25,11 +27,7 @@ void modem_call_notice_current_call(void *param);
 bsp_modem_t modem_cb;
 
 #if MODEM_CAT1_EN
-
-#define FLAG_MODEM_INIT BIT(0)
-#define FLAG_MODEM_AUDIO BIT(1)
-
-static u8 modem_flag = 0;
+static u8 init_flag = 0;
 
 volatile bool modem_bypass_flag = true;
 
@@ -60,33 +58,11 @@ bool cat1_is_bypass(void)
 //     state++;
 // }
 
-AT(.com_text) NO_INLINE
-static void bsp_modem_set_flag(u8 flag)
-{
-    GLOBAL_INT_DISABLE();
-    modem_flag |= flag;
-    GLOBAL_INT_RESTORE();
-}
-
-AT(.com_text) NO_INLINE
-static void bsp_modem_clr_flag(u8 flag)
-{
-    GLOBAL_INT_DISABLE();
-    modem_flag &= ~flag;
-    GLOBAL_INT_RESTORE();
-}
-
-ALWAYS_INLINE
-static bool bsp_modem_get_flag(u8 flag)
-{
-    return (modem_flag & flag);
-}
-
 void bsp_modem_init(void)
 {
-    if (!bsp_modem_get_flag(FLAG_MODEM_INIT))
+    if (!init_flag)
     {
-        bsp_modem_set_flag(FLAG_MODEM_INIT);
+        init_flag         = 1;
         modem_bypass_flag = true;
         printf("%s\n", __func__);
 
@@ -97,6 +73,7 @@ void bsp_modem_init(void)
         GPIOF |= (BIT(3));
 
         modem_cb.spr = SPR_16000;
+        bsp_modem_call_init();
         bsp_modem_sta_init();
         modem_platform_init_end();
         printf("init end\n");
@@ -115,27 +92,54 @@ void bsp_modem_init(void)
 
 void bsp_modem_exit(void)
 {
-    if (bsp_modem_get_flag(FLAG_MODEM_INIT))
+    if (init_flag)
     {
-        bsp_modem_clr_flag(FLAG_MODEM_INIT);
+        init_flag = 0;
         SENDER_STA_DOWN();
         modem_platform_exit();
+        GPIOFFEN &= ~(BIT(3));
+        GPIOFDE |= (BIT(3));
+        GPIOFDIR &= ~(BIT(3));
+        GPIOFCLR = (BIT(3));
     }
-
-    GPIOFFEN &= ~(BIT(3));
-    GPIOFDE |= (BIT(3));
-    GPIOFDIR &= ~(BIT(3));
-    GPIOFCLR = (BIT(3));
 }
 
 int bsp_modem_get_init_flag(void)
 {
-    return bsp_modem_get_flag(FLAG_MODEM_INIT);
+    return init_flag;
 }
 
 u8 bsp_modem_get_spr(void)
 {
     return modem_cb.spr;
+}
+
+void modem_call_notice(uint evt, void *param, u8 type)
+{
+    // print_r(param, 24);
+
+    switch (evt)
+    {
+        case MODEM_CALL_NOTICE_INFO:
+            break;
+        case MODEM_CALL_NOTICE_STATE:
+            modem_call_notice_state(param);
+            break;
+        case MODEM_CALL_NOTICE_START:
+            break;
+        case MODEM_CALL_NOTICE_NET_CONN:
+            break;
+        case MODEM_CALL_NOTICE_CALL_CONN:
+            break;
+        case MODEM_CALL_NOTICE_END:
+            break;
+        case MODEM_CALL_NOTICE_RING:
+            modem_call_notice_ring(param);
+            break;
+        case MODEM_CALL_NOTICE_CURRENT_CALL:
+            modem_call_notice_current_call(param);
+            break;
+    }
 }
 
 void modem_sms_notice(uint evt, void *param, u8 type)
@@ -180,12 +184,6 @@ void modem_mtcas_notice(uint evt, void *param, u8 type)
         {
             struct mtcas_notice_req_sq *notice = param;
             printf("signal quality %d\n", notice->rssi);
-            break;
-        }
-        case MODME_MTCAS_NOTICE_HOT_PLUG:
-        {
-            struct mtcas_notice_hot_plug_report *notice = param;
-            printf("sim plug: %d %d\n", notice->slot, notice->slotstate);
             break;
         }
 
@@ -274,45 +272,19 @@ void modem_cmd_notice(bool is_ok, u32 error_code)
     bsp_modem_call_check_ok(is_ok);
 }
 
-void modem_send_timeout_cb(u32 n_5ms)
-{
-    printf("%s %d\n", __func__, n_5ms);
-}
-
-// bool modem_check_can_send_callback(modem_err_t err, u32 err_code)
-// {
-//     switch (err)
-//     {
-//     case MODEM_ETIMEOUT:
-//         // printf("Error: AT timeout\n");
-//         // 1. reset
-//         // modem_at_reset();
-//         // return true;
-
-//         // 2. 继续等
-//         return false;
-//     case MODEM_ENOINIT:
-//         printf("Error: AT no initialized\n");
-//         return false;
-//     case MODEM_RECV_ERROR:
-//         break;
-//     default:
-//         break;
-//     }
-//     return true;
-// }
-
 uint32_t iis_buf[60 * 4] AT(.sco_cache.buf);
 
-static void bsp_iis_init(u8 spr)
+void bsp_iis_init(u8 spr)
 {
     printf("%s\n", __func__);
 
+    bt_hfp_switch_to_phone();
     RSTCON0 &= ~BIT(1);
     RSTCON0 |= BIT(1);
 
     iis_spr_set(spr);
 
+    modem_bypass_flag = false;
     iis_base_init(1, true, false, false, true, true, false);
     IISCON0 |= BIT(18);
     IISCON0 |= BIT(19);
@@ -323,36 +295,27 @@ static void bsp_iis_init(u8 spr)
     aubuf0_gpdma_init(0);
 }
 
-static void bsp_iis_stop(void)
+void bsp_iis_stop(void)
 {
     iis_stop();
+    modem_bypass_flag = true;
 }
 
 void bsp_modem_audio_start(void)
 {
-    if (!bsp_modem_get_flag(FLAG_MODEM_AUDIO))
-    {
-        bsp_modem_set_flag(FLAG_MODEM_AUDIO);
-        modem_bypass_flag = false;
-        bt_audio_bypass();
-        bsp_change_volume(bsp_bt_get_hfp_vol(sys_cb.hfp_vol));
-        modem_call_init();
-        bsp_iis_init(modem_cb.spr);
-        iis_start();
-    }
+    bsp_iis_init(modem_cb.spr);
+    modem_call_init();
+    dac_spr_set(modem_cb.spr);
+    dac_fade_wait();
+    iis_start();
+    bsp_loudspeaker_unmute();
 }
 
 void bsp_modem_audio_stop(void)
 {
-    if (bsp_modem_get_flag(FLAG_MODEM_AUDIO))
-    {
-        bsp_modem_clr_flag(FLAG_MODEM_AUDIO);
-        bsp_iis_stop();
-        modem_call_exit();
-        bsp_change_volume(sys_cb.vol);
-        bt_audio_enable();
-        modem_bypass_flag = true;
-    }
+    bsp_loudspeaker_mute();
+    bsp_iis_stop();
+    modem_call_exit();
 }
 
 int bsp_modem_get_contains(u16 from, u16 to)
@@ -368,12 +331,6 @@ int bsp_modem_update_contains(void)
     u32 addr = FLASH_UI_BASE + FLASH_UI_SIZE + 512;
     contacts_kvdb_get_list(addr, 1024);
     return 0;
-}
-
-AT(.com_text)
-int get_modem_dig_gain(void)
-{
-    return AEC_DIG_P10DB;
 }
 #else
 AT(.com_text)

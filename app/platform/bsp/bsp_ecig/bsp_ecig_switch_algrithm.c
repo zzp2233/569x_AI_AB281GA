@@ -178,9 +178,9 @@ void timer_hot_dual_isr(void)//
                         ecig.timer_switch_adc_flag = false;
                         u32 adc_vbg = saradc_get_value10(ADCCH_BGOP);
                         u32 hot_voltage = saradc_get_value10(ecig.cfg->adc1_ch);
-                        ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 4 / 3 / ECIG_VBG_VOLTAGE_MULTIPLE;
+                        ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
                         ecig.AD_hot_voltage = (ecig.AD_hot_voltage_mv << 13) / 1000;
-                        //TRACE(hot_str, 77, ecig.AD_hot_voltage_mv,ecig.AD_BAT_voltage_mv );
+                        TRACE(hot_str, hot_voltage, ecig.AD_hot_voltage_mv,ecig.AD_BAT_voltage_mv );
                         if (ecig.AD_hot_voltage_mv * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv) <= ecig.cfg->short_res_prop)     //short circuit
                         {
                             ECIG_PWM1_OFF();

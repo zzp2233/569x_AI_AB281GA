@@ -124,23 +124,54 @@ bool bsp_pwm_disable(pwm_gpio gpio)
     return true;
 }
 
+//co_timer_callback_t bsp_motor_time_callback(co_timer_t *timer, void *param)
+//{
+//    static u32 time_cnt;
+//    time_cnt++;
+//    //震动时间
+//    if(motor_st.vibration_times == time_cnt && motor_st.motor_sta == true){
+//        bsp_pwm_disable(motor_st.gpio);
+//        motor_st.vibration_cnt--;
+//        time_cnt = 0;
+//        motor_st.motor_sta  = false;
+//    }
+//    if (motor_st.interval == time_cnt && motor_st.motor_sta == false) {
+//        bsp_pwm_duty_set(motor_st.gpio, motor_st.duty, false);
+//        time_cnt = 0;
+//        motor_st.motor_sta  = true;
+//    }
+//    if(motor_st.vibration_cnt == 0){
+//        bsp_pwm_disable(motor_st.gpio);
+//        co_timer_del(&motor_timer);
+//    }
+//    return 0;
+//}
+
 co_timer_callback_t bsp_motor_time_callback(co_timer_t *timer, void *param)
 {
-    static u32 time_cnt;
-    time_cnt++;
-    //震动时间
-    if(motor_st.vibration_times == time_cnt && motor_st.motor_sta == true)
+    motor_st.time_cnt++;
+    if(motor_st.motor_sta == true && motor_st.time_cnt >= motor_st.vibration_times)
     {
-        bsp_pwm_disable(motor_st.gpio);
-        motor_st.vibration_cnt--;
-        time_cnt = 0;
-        motor_st.motor_sta  = false;
+        if (motor_st.interval > 0)
+        {
+            bsp_pwm_disable(motor_st.gpio);
+            motor_st.motor_sta = false;
+        }
+        else
+        {
+            motor_st.vibration_cnt--;
+        }
+        motor_st.time_cnt = 0;
     }
-    if (motor_st.interval == time_cnt && motor_st.motor_sta == false)
+    if (motor_st.motor_sta == false && motor_st.time_cnt >= motor_st.interval)
     {
-        bsp_pwm_duty_set(motor_st.gpio, motor_st.duty, false);
-        time_cnt = 0;
-        motor_st.motor_sta  = true;
+        motor_st.vibration_cnt--;
+        if (motor_st.vibration_cnt)
+        {
+            bsp_pwm_duty_set(motor_st.gpio, motor_st.duty, false);
+            motor_st.motor_sta = true;
+        }
+        motor_st.time_cnt = 0;
     }
     if(motor_st.vibration_cnt == 0)
     {
@@ -161,7 +192,7 @@ co_timer_callback_t bsp_motor_time_callback(co_timer_t *timer, void *param)
  **/
 void bsp_motor_set(pwm_gpio gpio, u32 duty, u32 vibrationtimes, u32 interval, u32 cnt)
 {
-    if(cnt == 0)
+    if(cnt == 0 || vibrationtimes == 0)
     {
         return;
     }

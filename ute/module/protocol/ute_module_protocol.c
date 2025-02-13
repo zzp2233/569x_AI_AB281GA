@@ -14,23 +14,24 @@
 #include "ute_application_common.h"
 #include "ute_module_profile_ble.h"
 #include "ute_module_filesystem.h"
-// #include "ute_module_gui_common.h"
+#include "ute_module_gui_common.h"
 #include "ute_module_call.h"
-// #include "ute_drv_motor.h"
+#include "ute_drv_motor.h"
 #include "ute_module_notify.h"
 #include "ute_module_weather.h"
-// #include "ute_module_heart.h"
+#include "ute_module_heart.h"
 #include "func_cover.h"
-// #include "ute_module_bloodoxygen.h"
-// #include "ute_drv_battery_common.h"
-// #include "ute_module_sport.h"
-// #include "ute_module_sleep.h"
-// #include "ute_module_notdisturb.h"
-// #include "ute_drv_gsensor_common.h"
-// #include "ute_module_findphone.h"
-// #include "ute_module_watchonline.h"
-// #include "ute_module_factorytest.h"
-// #include "ute_module_music.h"
+#include "ute_module_bloodoxygen.h"
+#include "ute_drv_battery_common.h"
+#include "ute_module_sport.h"
+#include "ute_module_sleep.h"
+#include "ute_module_notdisturb.h"
+#include "ute_drv_gsensor_common.h"
+#include "ute_module_findphone.h"
+#include "ute_module_watchonline.h"
+#include "ute_module_factorytest.h"
+#include "ute_module_music.h"
+#include "func_cover.h"
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -114,7 +115,7 @@ void uteModuleProtocolReadBatteryLvl(uint8_t*receive,uint8_t length)
 {
     uint8_t response[2]= {0};
     response[0] = receive[0];
-    response[1] = 80;//uteDrvBatteryCommonGetLvl();//todo
+    response[1] = uteDrvBatteryCommonGetLvl();
     uteModuleProfileBleSendToPhone(&response[0],2);
 }
 /**
@@ -254,8 +255,10 @@ void uteModuleProtocolSetOtherParam(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_LOCAL_SET_LIFT_WRIST_SUPPORT
         isHandScreenOn = uteModuleSportGetIsOpenHandScreenOn();
 #endif
-#if UTE_MODULE_HEART_SUPPORT
+#if UTE_MODULE_SPORT_SUPPORT
         uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandScreenOn,stepsTargetCnt);
+#endif
+#if UTE_MODULE_HEART_SUPPORT
         ute_module_heart_warning_t heartWarn;
         heartWarn.setMinHeart = receive[18];
         heartWarn.setMaxHeart = receive[11];
@@ -301,7 +304,7 @@ void uteModuleProtocolFactoryReset(uint8_t *receive, uint8_t length)
 #endif
     uteModuleFilesystemDelAllData();
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
-    // uteDrvBatteryCommonSaveLastLvlToSN1();//todo
+    uteDrvBatteryCommonSaveLastLvlToSN1();
 #endif
     bsp_rtc_recode_set(1);
     if (length == 1)
@@ -339,14 +342,6 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                 sys_cb.cover_index = REMIND_COVER_FIND_WATCH;
                 sys_cb.remind_tag = true;
 
-                /************************/
-                //一件双连测试代码
-                // printf("==============>bsp_change_bt_mac\n");
-                // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
-                // bsp_change_bt_mac();
-                // ble_bt_connect();
-                /************************/
-
                 if(0)
                 {}
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
@@ -375,7 +370,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                     uteModuleLocalRingtonePlayRing(RINGTON_TYPE_FIND);
                 }
 #else
-                // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);//todo
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
 #endif
 #if UTE_MODULE_FIND_WRISTAWAKE_SCREEN_SUPPORT
                 extern ute_module_gui_common_t uteModuleGuiCommonData;
@@ -391,7 +386,12 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
             }
             else
             {
-#if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
+#if UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT
+                if(receive[5] != 0x01) //消息提醒震动
+                {
+                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
+                }
+#elif UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
                 if(receive[5] == 0x01) //消息提醒震动
                 {
                     if(!uteModuleGuiCommonIsDontNeedNotificationGuiScreen())
@@ -404,7 +404,7 @@ void uteModuleProtocolSetAlarmOrCtrlMotor(uint8_t*receive,uint8_t length)
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
                 }
 #else
-                // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);//todo
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,receive[5]);
 #endif
             }
         }
@@ -594,7 +594,9 @@ void uteModuleProtocolSetMultipleLanguage(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolReadReadlTimeStepInfo(uint8_t*receive,uint8_t length)
 {
-    // uteModuleSportSendRealTimeStepInfo();
+#if UTE_MODULE_SPORT_SUPPORT
+    uteModuleSportSendRealTimeStepInfo();
+#endif
 }
 /**
 *@brief        发送计步历史数据
@@ -617,7 +619,9 @@ void uteModuleProtocolReadStepHistoryData(uint8_t*receive,uint8_t length)
         time.min = receive[7];
         time.sec = receive[8];
     }
-    // uteModuleSportStartSendStepHistoryData(time);
+#if UTE_MODULE_SPORT_SUPPORT
+    uteModuleSportStartSendStepHistoryData(time);
+#endif
 }
 
 /**
@@ -721,7 +725,6 @@ void uteModuleProtocolReadQuickSwitchStatus(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
 {
-#if 0
     uint8_t response[2];
     response[0] = receive[0];
     response[1] = receive[1];
@@ -731,12 +734,9 @@ void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
     }
     else if(receive[1] == 0x05)/*! 未接电话zn.zeng, 2021-08-24  */
     {
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_CALL_UNANSWERED_NOTIFY,0);
+        // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_CALL_UNANSWERED_NOTIFY,0);
     }
     uteModuleProfileBleSendToPhone(&response[0],2);
-
-#endif
-
 }
 /**
 *@brief        摇一摇拍照状态控制
@@ -753,16 +753,22 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
 #if DRV_HID_PHOTO
         uteModuleNotifyAncsClearQueueRestart();
 #endif
-        // uteModuleSportSetTakePictureEnable(true);  // todo
-        // uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
+#if UTE_MODULE_SPORT_SUPPORT
+        uteModuleSportSetTakePictureEnable(true);
+#endif
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+        uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
     }
     else
     {
-        // if(uteModuleSportIsTakePicture())
-        // {
-        //     uteModuleSportSetTakePictureEnable(false);
-        //     uteModuleGuiCommonGoBackLastScreen();
-        // }
+#if UTE_MODULE_SPORT_SUPPORT
+        if(uteModuleSportIsTakePicture())
+        {
+            uteModuleSportSetTakePictureEnable(false);
+            uteModuleGuiCommonGoBackLastScreen();
+        }
+#endif
     }
 }
 /**
@@ -777,11 +783,13 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
 {
     ute_module_notify_data_t *notifyPointer = NULL;
     uteModuleNotifyGetDataPointer(&notifyPointer);
+    static bool isReceiving = false;
     uint8_t response[4];
     if(receive[0]==CMD_MSG_CONTENT_MODE0)
     {
         if(receive[1]==0x00)
         {
+            isReceiving = true;
             notifyPointer->currNotify.type = receive[2];
             notifyPointer->currNotify.size = length-4;
             memset(&notifyPointer->currNotify.content[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
@@ -796,17 +804,18 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
             response[1] = receive[1];
             response[2] = notifyPointer->currNotify.type;
             response[3] = notifyPointer->currNotify.size;
-            if(notifyPointer->currNotify.type!=MSG_MMS)
+            if(isReceiving && notifyPointer->currNotify.type!=MSG_MMS)
             {
                 uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
             }
             uteModuleProfileBleSendToPhone(&response[0],4);
+            isReceiving = false;
         }
         else
         {
             response[0] = receive[0];
             response[1] = receive[1];
-            if((notifyPointer->currNotify.size+length-2)<=UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+            if(isReceiving && (notifyPointer->currNotify.size+length-2)<=UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
             {
                 memcpy(&notifyPointer->currNotify.content[notifyPointer->currNotify.size],&receive[2],length-2);
                 notifyPointer->currNotify.size = notifyPointer->currNotify.size+length-2;
@@ -818,10 +827,13 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
     {
         if(receive[1]==0x00)
         {
-            notifyPointer->currNotify.type = receive[2];
-            notifyPointer->currNotify.titleSize = length-4;
-            memset(&notifyPointer->titleBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-            memcpy(&notifyPointer->titleBuff[0],&receive[4],length-4);
+            if(!isReceiving)
+            {
+                notifyPointer->currNotify.type = receive[2];
+                notifyPointer->currNotify.titleSize = length-4;
+                memset(&notifyPointer->titleBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+                memcpy(&notifyPointer->titleBuff[0],&receive[4],length-4);
+            }
             response[0] = receive[0];
             response[1] = receive[1];
             uteModuleProfileBleSendToPhone(&response[0],2);
@@ -833,28 +845,31 @@ void uteModuleProtocolMsgContent(uint8_t*receive,uint8_t length)
             response[2] = notifyPointer->currNotify.type;
             response[3] = notifyPointer->currNotify.titleSize;
             uteModuleProfileBleSendToPhone(&response[0],4);
-            notifyPointer->titleBuff[notifyPointer->currNotify.titleSize] = 0x00;
-            notifyPointer->titleBuff[notifyPointer->currNotify.titleSize+1] = 0x3a;
-            notifyPointer->currNotify.titleSize +=2;
-            //title+nontent ,单单针对短信
-            uint8_t cpySize = notifyPointer->currNotify.size;
-            uint8_t tmpBuff[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE];
-            memset(&tmpBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-            if((cpySize+notifyPointer->currNotify.titleSize)>UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+            if(!isReceiving)
             {
-                cpySize = UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-notifyPointer->currNotify.titleSize;
+                notifyPointer->titleBuff[notifyPointer->currNotify.titleSize] = 0x00;
+                notifyPointer->titleBuff[notifyPointer->currNotify.titleSize+1] = 0x3a;
+                notifyPointer->currNotify.titleSize +=2;
+                //title+nontent ,单单针对短信
+                uint8_t cpySize = notifyPointer->currNotify.size;
+                uint8_t tmpBuff[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE];
+                memset(&tmpBuff[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+                if((cpySize+notifyPointer->currNotify.titleSize)>UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+                {
+                    cpySize = UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-notifyPointer->currNotify.titleSize;
+                }
+                memcpy(&tmpBuff[0],&notifyPointer->titleBuff[0],notifyPointer->currNotify.titleSize);
+                memcpy(&tmpBuff[notifyPointer->currNotify.titleSize],&notifyPointer->currNotify.content[0],cpySize);
+                notifyPointer->currNotify.size = cpySize+notifyPointer->currNotify.titleSize;
+                memcpy(&notifyPointer->currNotify.content[0],&tmpBuff[0],notifyPointer->currNotify.size);
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
             }
-            memcpy(&tmpBuff[0],&notifyPointer->titleBuff[0],notifyPointer->currNotify.titleSize);
-            memcpy(&tmpBuff[notifyPointer->currNotify.titleSize],&notifyPointer->currNotify.content[0],cpySize);
-            notifyPointer->currNotify.size = cpySize+notifyPointer->currNotify.titleSize;
-            memcpy(&notifyPointer->currNotify.content[0],&tmpBuff[0],notifyPointer->currNotify.size);
-            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
         }
         else
         {
             response[0] = receive[0];
             response[1] = receive[1];
-            if((notifyPointer->currNotify.titleSize+length-2)<=UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+            if(!isReceiving && (notifyPointer->currNotify.titleSize+length-2)<=UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
             {
                 memcpy(&notifyPointer->titleBuff[notifyPointer->currNotify.titleSize],&receive[2],length-2);
                 notifyPointer->currNotify.titleSize = notifyPointer->currNotify.titleSize+length-2;
@@ -1085,11 +1100,13 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
                 uint8_t response[4];
                 if (receive[3] == 0x01)
                 {
-                    // uteModuleFindPhoneSetStatus(FIND_PHONE_RING);//todo
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+                    uteModuleFindPhoneSetStatus(FIND_PHONE_RING);
+#endif // UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
                 }
                 else if (receive[3] == 0x00)
                 {
-                    // uteModuleFindPhoneSetStatus(FIND_PHONE_STOP);//todo
+                    uteModuleFindPhoneSetStatus(FIND_PHONE_STOP);
                 }
                 response[0] = receive[0];
                 response[1] = receive[1];
@@ -1108,23 +1125,27 @@ void uteModuleProtocolSendKeycode(uint8_t*receive,uint8_t length)
     {
         if(receive[2] == 0x01)
         {
-            // uteModuleMusicSetPlayerPaused(false,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);todo
+            uteModuleMusicSetPlayerPaused(false,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
         }
         else if(receive[2] == 0x02)
         {
-            // uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);todo
+            uteModuleMusicSetPlayerPaused(true,UTE_MUSIC_PLAY_CHANNEL_PHONE_TO_SPEAKER);
         }
         receive[2] = 0x00;
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],3);
     }
-    else if(receive[1] == 0x0D || receive[1] == 0x0E) //volume increase decrease
+    else if (receive[1] == 0x0D || receive[1] == 0x0E) // volume increase decrease
     {
-        if(receive[2] <= 100)
+        if (receive[2] <= 100)
         {
-            // uteModuleMusicSetPlayerVolume(receive[2]);//todo
+#if BT_ID3_TAG_EN
+            if (!bt_a2dp_profile_completely_connected())
+#endif
+            {
+                uteModuleMusicSetPlayerVolume(receive[2]);
+            }
         }
     }
-
 }
 /**
 *@brief       iOS ANCS消息推送开关设置
@@ -1345,7 +1366,7 @@ void uteModuleProtocolSocialAppSelectParam(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
 {
-#if UTE_MODULE_HEART_SUPPORT
+#if UTE_MODULE_SPORT_SUPPORT
     ute_module_sport_sedentary_param_t param;
     memset(&param,0,sizeof(ute_module_sport_sedentary_param_t));
     if(receive[1]==0x01)
@@ -1384,7 +1405,6 @@ void uteModuleProtocolSetSedentaryRemind(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
 {
-#if 0 //todo
     ute_module_not_disturb_data_t param;
     memset(&param,0,sizeof(ute_module_not_disturb_data_t));
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT
@@ -1428,7 +1448,6 @@ void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
 #endif
     uteModuleProfileBleSendToPhone(&receive[0],length);
     uteModuleNotDisturbSaveParam(param);
-#endif
 }
 /**
 *@brief       应用端通知手环前后台状态
@@ -1452,20 +1471,24 @@ void uteModuleProtocolFormAppFrontOrBack(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 {
-#if UTE_MODULE_HEART_SUPPORT
     uint8_t response[3];
     response[0] = receive[0];
     response[1] = receive[1];
     if(receive[1]==0x11)
     {
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStartSingleTesting(TYPE_HEART);
+#endif
     }
     else if(receive[1]==0x00)
     {
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStopSingleTesting(TYPE_HEART);
+#endif
     }
     else if(receive[1]==0xaa)
     {
+#if UTE_MODULE_HEART_SUPPORT
         if(uteModuleHeartIsNeedTesting())
         {
             response[2] = 0x11;
@@ -1474,9 +1497,9 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
         {
             response[2] = 0xff;
         }
+#endif
         uteModuleProfileBleSendToPhone(&response[0],3);
     }
-#endif
 }
 /**
 *@brief       gsenoser数据挤压检查指令
@@ -1488,7 +1511,6 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
 {
-#if 0
     uint8_t response[10];
     int16_t xx,yy,zz,accvalue;
     uteDrvGsensorCommonGetAccXyz(&xx,&yy,&zz);
@@ -1512,7 +1534,6 @@ void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
     response[8] = (accvalue>>8)&0xff;
     response[9] = accvalue&0xff;
     uteModuleProfileBleSendToPhone(&response[0],10);
-#endif
 }
 
 /**
@@ -1550,15 +1571,18 @@ void uteModuleProtocolSetPowerOff(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
 {
-#if UTE_MODULE_HEART_SUPPORT
     if(receive[1]==0x01)
     {
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartSetAutoTesting(true);
+#endif
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
     }
     else if(receive[1]==0x02)
     {
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartSetAutoTesting(false);
+#endif
         uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
     }
     else if(receive[1]==0xfa)
@@ -1574,7 +1598,9 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
             time.min = receive[7];
             time.sec = receive[8];
         }
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStartSendHeartAutoTestHistoryData(time);
+#endif
     }
 #if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
     else if (receive[1] == 0x05)
@@ -1593,8 +1619,6 @@ void uteModuleProtocolHeartAutoTestHistoryData(uint8_t*receive,uint8_t length)
         uteModuleHeartSendHistoryRestingHeartData();
     }
 #endif
-
-#endif
 }
 /**
 *@brief       血氧控制和数据同步
@@ -1609,6 +1633,16 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
     if(receive[1]==0x11)
     {
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        {
+            uint8_t stopCmd[5];
+            stopCmd[0] =CMD_SPO2_TEST;
+            stopCmd[1] =0x00;
+            stopCmd[2] =0xff;
+            stopCmd[3] =0xff;
+            uteModuleProfileBleSendToPhone(&stopCmd[0],4);
+            return;
+        }
         //每次测量重新开始，以防用户想测试低氧下不来
         if(uteModuleBloodoxygenIsTesting())
         {
@@ -1764,7 +1798,6 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSleepReadHistoryData(uint8_t*receive,uint8_t length)
 {
-#if UTE_MODULE_HEART_SUPPORT
     if(receive[1]==0x01)
     {
         ute_module_systemtime_time_t time;
@@ -1776,7 +1809,6 @@ void uteModuleProtocolSleepReadHistoryData(uint8_t*receive,uint8_t length)
     {
         uteModuleSleepStartSendSleepSampleData();
     }
-#endif
 #endif
 }
 
@@ -1849,7 +1881,7 @@ void uteModuleProtocolTemperatureCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
 {
-#if 0
+#if UTE_MODULE_SPORT_SUPPORT
     uint8_t response[20];
     memset(response,0x00,20);
     bool isAppStart = uteModuleSportMoreSportIsAppStart();
@@ -1861,10 +1893,19 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
         if(batLvl < UTE_DRV_BATTERY_LOW_POWER_PERECNT)
         {
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
+            sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
+            sys_cb.remind_tag = true;
+//            msgbox((char*)i18n[STR_LOW_BATTERY], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_LOW_BATTERY);
             return;
         }
 #endif
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        {
+            // memcpy(&response[0],&receive[0],4);
+            // response[1] = ALL_SPORT_STATUS_CLOSE;
+            // uteModuleProfileBleSendToPhone(&response[0],4);
+            return;
+        }
         uteModuleSportStartMoreSports(receive[2],receive[3],true);
     }
     else if(receive[1]==0x00)//close sport
@@ -1943,7 +1984,6 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
         }
         uteModuleSportStartSendMoreSportHistoryData(time);
     }
-
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
     else if(receive[1]==0x48) /*! 自定义运动列表显示功能，xjc 2022-03-29*/
     {
@@ -1963,7 +2003,6 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolMusicCtrl(uint8_t*receive,uint8_t length)
 {
-#if 0//todo
     ute_module_music_data_t musicData;
     uteModuleMusicGetPlayerData(&musicData);
     if(receive[1]==0x01)
@@ -2051,7 +2090,6 @@ void uteModuleProtocolMusicCtrl(uint8_t*receive,uint8_t length)
         uteModuleMusicSetPlayerData(musicData);
         musicData.androidCrc = 0;
     }
-#endif
 }
 
 /**
@@ -2321,7 +2359,7 @@ void uteModuleProtocolSyncAddressBook(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolFactoryTest(uint8_t*receive,uint8_t length)
 {
-    // uteModuleFactoryTestProtocol(receive,length);//todo
+    uteModuleFactoryTestProtocol(receive,length);
 }
 
 /**

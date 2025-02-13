@@ -55,6 +55,20 @@ u32 ble_get_adv_data(u8 *adv_buf, u32 buf_size)
     return data_len;
 }
 
+///////////////////////////////////////////////////////////////////////////
+#define MAX_NOTIFY_NUM          4
+#define MAX_NOTIFY_LEN          69     //max=247
+#define NOTIFY_POOL_SIZE       (MAX_NOTIFY_LEN + sizeof(struct txbuf_tag)) * MAX_NOTIFY_NUM
+
+AT(.ble_cache.att)
+uint8_t notify_tx_pool[NOTIFY_POOL_SIZE];
+
+void ble_txpkt_init(void)
+{
+    txpkt_init(&notify_tx, notify_tx_pool, MAX_NOTIFY_NUM, MAX_NOTIFY_LEN);
+    notify_tx.send_kick = ble_send_kick;
+}
+
 /***
 *
 */
@@ -289,7 +303,7 @@ void ble_app_gatts_service_init(void)
 {
     int ret = 0;
 
-//    ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name)+1);
+    ble_set_gap_name(xcfg_cb.le_name, strlen(xcfg_cb.le_name)+1);
     //battery service
 //    ret = ble_gatts_service_add(BLE_GATTS_SRVC_TYPE_PRIMARY,
 //                                uuid_battery_primay_base.uuid,

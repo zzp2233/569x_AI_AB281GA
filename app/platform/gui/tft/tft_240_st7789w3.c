@@ -1,7 +1,7 @@
 #include "include.h"
 
 //240*296
-#if (GUI_SELECT == GUI_TFT_240_ST7789W3)
+#if GUI_TFT_240_ST7789W3 && (GUI_SELECT == GUI_TFT_240_ST7789W3)
 
 
 #define WriteData(v) tft_write_data(v)

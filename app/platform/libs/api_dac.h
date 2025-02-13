@@ -13,7 +13,6 @@ void dac_analog_fade_in(void);
 void dac_spr_set(uint spr);
 void dac_obuf_init(void);
 void dac_src1_init(void);
-void dac_src1_spr_set(uint spr);
 void dac_power_on(void);
 void dac_restart(void);
 void dac_power_off(void);

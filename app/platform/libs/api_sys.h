@@ -6,7 +6,6 @@
 #define IRQ_IRRX_VECTOR                 6
 #define IRQ_QDEC_VECTOR                 6
 #define IRQ_UART_VECTOR                 14
-#define IRQ_HSUART_VECTOR               15
 #define IRQ_TMR3_VECTOR                 16
 #define IRQ_TMR4_VECTOR                 17
 #define IRQ_TMR5_VECTOR                 18
@@ -160,12 +159,6 @@ void halt_err_set(u32 halt_no);
  * [7]、halt_err[0] 为其他，请在halt头文件中查询
  */
 u32* halt_err_debug_info_get(void);
-bool sbc_encode_init(u8 spr, u8 nch);
-
-void spiflash_lock(void);
-void spiflash_unlock(void);
-bool spiflash_read_kick(void *buf, u32 addr, uint len);
-bool spiflash_read_wait(void);
 
 #endif // _API_SYS_H_
 

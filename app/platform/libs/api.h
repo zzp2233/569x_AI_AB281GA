@@ -31,8 +31,5 @@
 #include "api_modem.h"
 #include "api_db.h"
 #include "api_jpeg.h"
-#include "rt_thread.h"
-#include "api_rt_thread.h"
-#include "api_tws.h"
 
 #endif //_API_H

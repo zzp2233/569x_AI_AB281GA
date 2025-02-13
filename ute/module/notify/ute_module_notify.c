@@ -12,10 +12,10 @@
 #include "ute_module_filesystem.h"
 #include "ute_module_call.h"
 #include "ute_application_common.h"
-// #include "ute_drv_motor.h"
+#include "ute_drv_motor.h"
 #include "ute_module_message.h"
 #include "ute_module_charencode.h"
-// #include "ute_module_notdisturb.h"
+#include "ute_module_notdisturb.h"
 #include "func_cover.h"
 #include "ute_module_platform.h"
 
@@ -121,12 +121,10 @@ void uteModuleNotifyCallDisableHandlerMsg(void)
     else
 #endif
     {
-        // if (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_INCOMING_ID ||
-        //     uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_ING_ID ||
-        //     uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID)
-        // {
-        //     uteModuleGuiCommonGoBackLastScreen();
-        // }
+        if (uteModuleGuiCommonGetCurrentScreenId() == FUNC_BLE_CALL)
+        {
+            uteModuleGuiCommonGoBackLastScreen();
+        }
 
         if(uteDrvMotorGetRunningStatus())
         {
@@ -219,7 +217,7 @@ void uteModuleNotifySaveNotifycationData(void)
 */
 void uteModuleNotifyNotifycationHandlerMsg(void)
 {
-    if(!uteModuleNotDisturbIsAllowNotify())
+    if(!uteModuleNotDisturbIsAllowNotify() && uteModuleNotifyData.currNotify.type == MSG_CALL)
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
         return;
@@ -273,6 +271,13 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
         uteModuleNotifySaveNotifycationData();
         uteModuleNotifyData.isNewNotify = true;
         uteModuleNotifyData.displayIndex = 0;
+
+        if(!uteModuleNotDisturbIsAllowNotify())
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not allow notify", __func__);
+            return;
+        }
+
 #if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
         if(uteModuleGuiCommonIsDontNeedNotificationGuiScreen())
         {
@@ -298,10 +303,7 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
 #endif
         {
             uteModuleCallSetInComingNumberName(NULL,0,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-            // uteTaskGuiStartScreenWithoutHistory(FUNC_BLE_CALL, true);//todo
-
-            //需要弹出来电界面
-
+            uteTaskGuiStartScreenWithoutHistory(FUNC_BLE_CALL, true);
         }
     }
 }
@@ -549,7 +551,7 @@ void uteModuleNotifyAncsTimerConnectHandler(bool isConnected)
 */
 void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
 {
-    if(uteModuleNotDisturbIsAllowNotify())
+    // if(uteModuleNotDisturbIsAllowNotify())
     {
         UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,.attId=%d,uteModuleNotifyData.ancsSetOpenFlag=0x%p", __func__,attId,uteModuleNotifyData.ancsSetOpenFlag);
 
@@ -587,6 +589,11 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
                 if(uteModuleNotifyData.ancsSetOpenFlag&ANCS_OPEN_INCALL)
                 {
                     uteModuleNotifyData.ancsHasOpen = true;
+                }
+                if(sys_cb.ancs_missed_call) //未接来电不提醒
+                {
+                    sys_cb.ancs_missed_call = false;
+                    uteModuleNotifyData.ancsHasOpen = false;
                 }
 #endif
                 uteModuleNotifyData.currNotify.type =MSG_CALL;
@@ -1441,10 +1448,8 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
                 }
 #else
                 if(uteModuleNotifyData.ancsSetOpenFlag&ANCS_OPEN_OTHER)
-
                 {
-
-
+                    uteModuleNotifyData.ancsHasOpen = true;
                 }
 #endif
                 uteModuleNotifyData.currNotify.type =MSG_OTHER;
@@ -1471,14 +1476,17 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
 #if UTE_BT30_CALL_SUPPORT
                     if(!uteModuleCallBtIsConnected())
                     {
+#if !UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT
 #if !UTE_MODULE_SCREENS_CALL_INCOMING_MOTOT_ALWAYS_ON_SUPPORT
                         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,10);
+#endif
 #endif
                     }
 #endif
                 }
                 else
                 {
+#if !UTE_MODULE_NOTIFY_START_MOTOR_INTO_SCREEN_SUPPORT
 #if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
                     if(!uteModuleGuiCommonIsDontNeedNotificationGuiScreen())
                     {
@@ -1486,6 +1494,7 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
                     }
 #else
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+#endif
 #endif
                     uteModuleNotifyAncsPushContect(buff,length,false);
                 }

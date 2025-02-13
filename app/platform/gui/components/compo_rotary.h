@@ -1,8 +1,8 @@
 #ifndef _COMPO_ROTARY_H
 #define _COMPO_ROTARY_H
 
-#define ROTARY_ITEM_CNT                     7                   //转盘个数
-#define ROTARY_ITEM_ANGLE                   ((3600 + ROTARY_ITEM_CNT - 1) / ROTARY_ITEM_CNT)
+#define ROTARY_ITEM_CNT_MAX                     7
+
 
 //转盘移动控制命令
 enum COMPO_ROTARY_MOVE_CMD
@@ -59,9 +59,12 @@ typedef struct compo_rotary_t_
     u8 item_cnt;                        //转盘图片数量
     u16 radius;
 
+    int txt_vis_idx;                    //要显示文本下标
+
     compo_rotary_item_t const *item;
-    widget_image_t *item_img[ROTARY_ITEM_CNT];
-    widget_text_t *item_title;
+    widget_image_t *item_img[ROTARY_ITEM_CNT_MAX];
+//    widget_text_t *item_title;
+    compo_textbox_t *item_title;
 } compo_rotary_t;
 
 /**

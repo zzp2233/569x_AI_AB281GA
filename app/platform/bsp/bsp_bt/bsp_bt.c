@@ -1,6 +1,7 @@
 #include "include.h"
 #include "api.h"
 #include "func.h"
+#include "ute_module_call.h"
 
 bsp_bt_t bt_cb;
 
@@ -37,45 +38,6 @@ void bsp_bt_init(void)
 #endif
     cfg_bt_dual_mode = BT_DUAL_MODE_EN * xcfg_cb.ble_en;
     cfg_bt_max_acl_link = BT_2ACL_EN + 1;
-#if BT_TWS_EN
-    cfg_bt_tws_mode = BT_TWS_EN * xcfg_cb.bt_tws_en;
-    if(xcfg_cb.bt_tws_en == 0)
-    {
-        cfg_bt_tws_feat      = 0;
-        cfg_bt_tws_pair_mode = 0;
-    }
-    else
-    {
-        cfg_bt_tws_pair_mode &= ~TWS_PAIR_OP_MASK;
-        cfg_bt_tws_pair_mode |= xcfg_cb.bt_tws_pair_mode & TWS_PAIR_OP_MASK;
-#if BT_TWS_PAIR_BONDING_EN
-        if(xcfg_cb.bt_tws_pair_bonding_en)
-        {
-            cfg_bt_tws_pair_mode |= TWS_PAIR_MS_BONDING;
-            cfg_bt_tws_feat |= TWS_FEAT_MS_BONDING;
-        }
-        else
-        {
-            cfg_bt_tws_pair_mode &= ~TWS_PAIR_MS_BONDING;
-        }
-#endif
-#if BT_TWS_MS_SWITCH_EN
-        if(xcfg_cb.bt_tswi_en)
-        {
-            cfg_bt_tws_feat |= TWS_FEAT_MS_SWITCH;
-        }
-        else
-        {
-            cfg_bt_tws_feat &= ~TWS_FEAT_MS_SWITCH;
-        }
-#endif
-        if(xcfg_cb.bt_tws_lr_mode > 8)  //开机时PWRKEY可能按住，先不检测
-        {
-            tws_lr_xcfg_sel();
-        }
-    }
-#endif // BT_TWS_EN
-
 #if BT_HFP_EN
     if(!xcfg_cb.bt_hfp_ring_number_en)
     {
@@ -106,7 +68,7 @@ void bsp_bt_close(void)
 void bsp_bt_vol_change(void)
 {
 #if BT_A2DP_VOL_CTRL_EN
-    if((xcfg_cb.bt_a2dp_vol_ctrl_en && (bt_get_status() >= BT_STA_CONNECTED))|| bt_tws_is_connected())
+    if((xcfg_cb.bt_a2dp_vol_ctrl_en && (bt_get_status() >= BT_STA_CONNECTED)))
     {
         bt_music_vol_change();     //通知手机音量已调整
     }
@@ -124,32 +86,18 @@ uint bsp_bt_get_hfp_vol(uint hfp_vol)
     return vol;
 }
 
-bool phone_conecting_flag = false;
 void bt_emit_notice(uint evt, void *params)
 {
     u8 *packet = params;
     u8 opcode = 0;
     u8 scan_status = 0x03;
 
-    printf("bt notice:0x%x\n", evt);
-
     switch(evt)
     {
         case BT_NOTICE_INIT_FINISH:
-            printf("BT_NOTICE_INIT_FINISH >>>>>>>>>>>> %d \n\n",xcfg_cb.bt_tws_pair_mode);
-#if BT_TWS_EN
-            if(xcfg_cb.bt_tws_pair_mode > 1)
-            {
-                bt_tws_set_scan(0x03);
-            }
-#endif
             if(cfg_bt_work_mode == MODE_BQB_RF_BREDR)
             {
                 opcode = 1;                     //测试模式，不回连，打开可被发现可被连接
-            }
-            else if(bt_nor_get_link_info(NULL))
-            {
-                scan_status = 0x02;         //有回连信息，不开可被发现
             }
             bt_start_work(opcode, scan_status);
             break;
@@ -158,15 +106,31 @@ void bt_emit_notice(uint evt, void *params)
             bt_cb.warning_status |= BT_WARN_DISCON;
             bt_redial_reset(((u8 *)params)[0] & 0x01);
 #if BT_HID_ONLY_FOR_IOS_EN
-            bt_init_lib_hid();
+            bt_deinit_lib_hid();
 #endif
             break;
 
         case BT_NOTICE_CONNECTED:
             bt_cb.warning_status |= BT_WARN_CON;
             bt_redial_reset(((u8 *)params)[0] & 0x01);
-#if BT_PANU_EN
-            bt_panu_network_connect();
+            //ute add
+            uint8_t mac[6];
+            if(bt_nor_get_link_info(mac))
+            {
+                uteModuleCallBtUpdateKeyConnectAddress(mac);
+            }
+#if BT_HID_ONLY_FOR_IOS_EN
+            bd_addr_t address_iphone;
+            bd_addr_t remote_address;
+            bt_get_ext_link_info(address_iphone, 0,6);
+            for(int i = 0; i < 6; i++)
+            {
+                remote_address[i] = ((u8 *)param)[i+2];
+            }
+            if (memcmp(address_iphone,remote_address,6) == 0 && !bt_hid_is_connected())
+            {
+                bt_hid_profile_en();
+            }
 #endif
             break;
 
@@ -250,6 +214,26 @@ void bt_emit_notice(uint evt, void *params)
 #endif // BT_HID_MENU_EN
             break;
 
+        case BT_NOTICE_A2DP_CONN_EVT:
+        {
+#if BT_HID_ONLY_FOR_IOS_EN
+            static bool first_a2dp_connected_flag = true;
+            u32 *conn_sta = (u32 *)params;
+            if (*conn_sta)
+            {
+                if (bt_is_ios_device() && first_a2dp_connected_flag && !bt_hid_is_connected())
+                {
+                    bt_hid_profile_en();
+                    first_a2dp_connected_flag = false;
+                }
+            }
+#endif
+        }
+        break;
+
+        case BT_NOTICE_HFP_CONN_EVT:
+            break;
+
         case BT_NOTICE_CONNECT_FAIL:
         {
 #if LE_SM_SC_EN
@@ -275,6 +259,15 @@ void bt_emit_notice(uint evt, void *params)
             bt_cb.call_type = CALL_TYPE_NONE;
             break;
 
+        case BT_NOTICE_NETWORK_CALL:
+            printf("BT_NOTICE_NETWORK_CALL\n");
+            bt_cb.call_type = CALL_TYPE_NETWORK;
+            break;
+        case BT_NOTICE_PHONE_CALL:
+            printf("BT_NOTICE_PHONE_CALL\n");
+            bt_cb.call_type = CALL_TYPE_PHONE;
+            break;
+
 #if BT_PBAP_EN
         case BT_NOTICE_PBAP_CONNECTED:
         case BT_NOTICE_PBAP_GET_PHONEBOOK_SIZE_COMPLETE:
@@ -283,87 +276,10 @@ void bt_emit_notice(uint evt, void *params)
             bt_pbap_event_handle(evt, params);
             break;
 #endif
-#if BT_TWS_EN
-        case BT_NOTICE_TWS_SEARCH_FAIL:
-            printf("BT_NOTICE_TWS_SEARCH_FAIL %x \n",((u8 *)params)[0]);
+// 1，表示play，2表示pause
+        case BT_NOTICE_FAST_MUSIC_STATUS:
+//        my_printf("fast music status(%d)\n",((u8 *)param)[0]);
             break;
-//    case BT_NOTICE_TWS_CONNECT_START:
-//        break;
-        case BT_NOTICE_TWS_DISCONNECT:
-            printf("BT_NOTICE_TWS_DISCONNECT >>> \n");
-            bsp_res_set_break(false);
-            bsp_sys_unmute();
-            bt_cb.tws_status = 0;
-            bt_cb.warning_status |= BT_WARN_TWS_DISCON;      //TWS断线不播报提示音，仅更改声道配置
-//        msg_enqueue(EVT_BLE_ADV0_BAT);
-//        app_tws_disconnect_callback();
-//        ring_tws_disconnect_cb();
-//        msg_enqueue(EVT_BT_UPDATE_STA);                 //刷新显示
-//      if(!bt_is_connected()){
-//          msg_enqueue(EVT_AUTO_PWFOFF_EN);
-//      }
-            break;
-        case BT_NOTICE_TWS_CONNECTED:
-            printf("BT_NOTICE_TWS_CONNECTED >>> \n");
-            printf(mute_str, 02);
-            bsp_sys_mute();
-            if(bt_tws_is_slave())
-            {
-                ble_adv_dis();          //副机关闭BLE广播
-                tws_res_cleanup();      //播tws提示音前先清一下单耳的提示音。不清会导致rpos慢主耳一步，导致一直w4
-                tws_res_reset_lable();  //避免lable不对导致副耳丢失提示音
-            }
-            bt_cb.tws_status = packet[0];
-            if(bt_cb.tws_status & FEAT_TWS_MUTE_FLAG)
-            {
-                bt_cb.warning_status |= BT_WARN_TWS_CON;     //无连接提示音，仅更改声道配置
-            }
-            else if(bt_cb.tws_status & FEAT_TWS_ROLE)
-            {
-                bt_cb.warning_status |= BT_WARN_TWS_SCON;    //TWS连接提示音
-            }
-            else
-            {
-                bt_cb.warning_status |= BT_WARN_TWS_MCON;    //TWS连接提示音
-            }
-//        app_tws_connect_callback();
-//        msg_enqueue(EVT_BT_UPDATE_STA);                 //刷新显示
-
-            bsp_res_set_break(true);                        //打断开机提示音
-
-//      if(bt_tws_is_slave()){
-//            msg_enqueue(EVT_AUTO_PWFOFF_DIS);
-//        }else{
-//            if(!bt_is_connected()){
-//                msg_enqueue(EVT_AUTO_PWFOFF_EN);
-//            }
-//        }
-            break;
-//    case BT_NOTICE_TWS_CONNECT_FAIL:
-//        break;
-        case BT_NOTICE_TWS_LOSTCONNECT:
-            break;
-
-        case BT_NOTICE_TWS_INIT_VOL:
-            sys_cb.vol = a2dp_vol_conver(packet[0]);
-            msg_enqueue(EVT_TWS_INIT_VOL);
-            break;
-
-        case BT_NOTICE_TWS_USER_KEY:
-            tws_user_key_process(params);
-            break;
-
-        case BT_NOTICE_TWS_STATUS_CHANGE:
-//        msg_enqueue(EVT_BT_UPDATE_STA);                 //刷新显示
-            break;
-
-        case BT_NOTICE_TWS_ROLE_CHANGE:
-//        if(packet[0] == 0) {
-//            bsp_res_set_break(false);
-//        }
-            break;
-
-#endif
 
         default:
             break;
@@ -386,101 +302,9 @@ u16 bsp_bt_chkclr_warning(u16 bits)
     return value;
 }
 
-void bsp_bt_warning_do(void)
+void bsp_bt_warning(void)
 {
-    if(bsp_bt_chkclr_warning(BT_WARN_TWS_DISCON | BT_WARN_TWS_CON))
-    {
-#if BT_TWS_EN
-        if(xcfg_cb.bt_tws_en)
-        {
-            if(xcfg_cb.bt_tws_lr_mode != 0)
-            {
-                bt_tws_set_channel();
-            }
-        }
-#endif
-    }
 
-    if(bsp_bt_chkclr_warning(BT_WARN_DISCON))
-    {
-#if WARNING_BT_DISCONNECT
-        if(!bt_tws_is_slave())
-        {
-            bsp_res_play(TWS_RES_DISCONNECT);
-            return;
-        }
-#endif // WARNING_BT_DISCONNECT
-    }
-
-    if(bsp_bt_chkclr_warning(BT_WARN_PAIRING))
-    {
-        if(!bt_tws_is_slave())
-        {
-            bsp_res_play(TWS_RES_PAIRING);
-            return;
-        }
-    }
-
-#if BT_TWS_EN
-    if(xcfg_cb.bt_tws_en)
-    {
-        u16 tws_warning = bsp_bt_chkclr_warning(BT_WARN_TWS_SCON | BT_WARN_TWS_MCON );
-        if(tws_warning != 0)
-        {
-            if (xcfg_cb.bt_tws_lr_mode != 0)
-            {
-                bt_tws_set_channel();
-            }
-            ///固定声道方案，TWS连接后异步播放声音提示音。否则同步播放连接提示音
-            if (xcfg_cb.bt_tws_lr_mode >= 8)
-            {
-                bt_tws_set_channel();
-                tws_get_lr_channel();
-
-                if (!bsp_res_is_playing())
-                {
-                    if(sys_cb.tws_left_channel)
-                    {
-                        func_cb.mp3_res_play(RES_BUF_LEFT_CH, RES_LEN_LEFT_CH);
-                    }
-                    else
-                    {
-                        bt_audio_bypass();
-                        u8 timer_cnt = 100;
-                        while (timer_cnt--)
-                        {
-                            bt_thread_check_trigger();
-                            bsp_res_process();
-                            delay_5ms(2);
-                            WDT_CLR();
-                        }
-                        func_cb.mp3_res_play(RES_BUF_RIGHT_CH, RES_LEN_RIGHT_CH);
-                        bt_audio_enable();
-                    }
-                }
-            }
-            else
-            {
-                if (tws_warning & BT_WARN_TWS_MCON)
-                {
-                    bsp_res_play(TWS_RES_CONNECTED);
-                    return;
-                }
-            }
-        }
-    }
-#endif
-
-    if(bsp_bt_chkclr_warning(BT_WARN_CON))
-    {
-#if WARNING_BT_CONNECT
-        if(!bt_tws_is_slave())
-        {
-            bsp_res_play(TWS_RES_CONNECTED);
-            return;
-        }
-#endif
-    }
 #if BT_HID_MENU_EN
     //按键手动断开HID Profile的提示音
     if (xcfg_cb.bt_hid_menu_en)
@@ -526,15 +350,6 @@ uint bsp_bt_disp_status(void)
         }
     }
     return bt_cb.disp_status;
-}
-
-AT(.text.func.bt)
-void bsp_bt_warning(void)
-{
-    if(bt_cb.warning_status != 0 && !bsp_res_is_full())
-    {
-        bsp_bt_warning_do();
-    }
 }
 
 AT(.text.func.bt)

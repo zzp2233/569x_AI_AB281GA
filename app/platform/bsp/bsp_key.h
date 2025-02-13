@@ -1,9 +1,7 @@
 #ifndef _BSP_KEY_H
 #define _BSP_KEY_H
 
-extern const char mute_str[];
-
-typedef u16 size_msg_t;                      //定义MSG的SIZE
+typedef u8 size_msg_t;                      //定义MSG的SIZE
 
 #define KEY_SCAN_TIMES          6           //按键防抖的扫描次数
 #define KEY_UP_TIMES            6           //抬键防抖的扫描次数
@@ -70,6 +68,8 @@ typedef u16 size_msg_t;                      //定义MSG的SIZE
 #define EVT_UDE_SET_VOL         0xe9
 #define EVT_CALL_NUMBER_UPDATE  0xe8
 #define EVT_READY_EXCHANGE_MTU  0xe7
+
+#define EVT_BT_CONNECT_ONCE     0xe5
 #define EVT_ID3_TITLE_UPDATE    0xe4
 #define EVT_ID3_ARTIST_UPDATE   0xe3
 #define EVT_HALT                0xe2
@@ -80,6 +80,7 @@ typedef u16 size_msg_t;                      //定义MSG的SIZE
 #define EVT_SCO_DBG_TLV_RSP     0xde
 #define EVT_SCO_DBG_NOTIFY      0xdd
 #endif // BT_SCO_APP_DBG_EN
+#define EVT_VC30FX_ISR          0xdc
 
 #define EVT_CLOCK_DROPDOWN_EXIT 0xc0
 #define EVT_WATCH_SET_COVER     0xc1
@@ -87,17 +88,8 @@ typedef u16 size_msg_t;                      //定义MSG的SIZE
 #define EVT_WATCH_MSG_POP_UP    0xc3
 #define EVT_WATCH_TIMER_DONE    0xc4
 
-#define EVT_TWS_INIT_VOL        0xdc       //TWS连接上同步音量
-#define EVT_TWS_SET_VOL         0xdb       //TWS按键调音量
-#define EVT_MSG_DMA_TWS_SYNC    0xda       //TWS连接上，用于主机发同步数据给附机
-#define EVT_TWS_LED_SYNC        0xd9
-#define EVT_LED_BT_IDLE         0xd8
 #define EVT_ECIG_SMOKE_REMINDER 0xd7
 
-
-
-
-#define EVT_UART_RX_DONE       0xd4
 
 //普通按键定义，可以支持短按，长按，双击等。范围：0 ~ 0xf
 #define NO_KEY                  0x00

@@ -46,6 +46,7 @@ enum sys_ctl_bits
 
 #define TITLE_BUF_LEN     128   //歌词buffer长度
 #define ARTIST_BUF_LEN    128   //歌名/歌手buffer长度
+
 typedef struct
 {
     //控制位
@@ -97,8 +98,8 @@ typedef struct
     cm_factory              : 1,   //是否第一次FLASH上电
     cm_vol_change           : 1,   //音量级数是否需要更新到FLASH
     port2led_en             : 1,   //1个IO推两个灯
-    voice_evt_brk_en        : 1,  //播放提示音时，U盘、SD卡、LINEIN等插入事件是否立即响应.
-    tws_mute                : 1;  //系统连接上tws
+    voice_evt_brk_en        : 1;   //播放提示音时，U盘、SD卡、LINEIN等插入事件是否立即响应.
+
     u8  sleep_en                : 1,   //用于控制是否进入sleep
     lowbat_flag             : 1,
     bt_reconn_flag          : 1,   //回连失败时候发起一键双连标志
@@ -134,7 +135,6 @@ typedef struct
     u8 password_cnt;                                //密码有效长度
     u8 password_value[4];                           //密码有效值
     u8 password_change;                             //改密码锁
-    bool password_flag;                             //开启密码s
     //秒表
     u8 stopwatch_sta;                               //秒表工作状态（0:暂停/复位 1:正在计时）
     u32 stopwatch_total_msec;                       //当前秒表时间总计 （单位：毫秒）
@@ -181,7 +181,6 @@ typedef struct
     bool sco_state;
     //通话
     u32 reject_tick;                                //通话挂断防呆计时，解决部分手机挂断状态更新慢的问题
-    volatile u8 key_wakeup_flag;
     //消息
     bool msg_tag;                                   //消息弹出标志
     u8 msg_index;                                   //消息类型
@@ -194,7 +193,7 @@ typedef struct
 
     //俄罗斯方块
     u32 max_score;
-    u8 is_recieve_uart;
+
     bool gsensor_iic_en; //用于记录当前iic配置是心率还是gsensor, ute add
     bool hand_screen_on; //抬手亮屏唤醒
     bool refresh_language_flag;
@@ -214,22 +213,9 @@ typedef struct
     bool sos_open_flag;
     bool power_on_state;
     bool power_on_flag;
+
     bool ancs_missed_call;
 
-    //AI语音
-#if ASR_SELECT
-    bool asr_play;                                  //asr 指令响应状态
-    u8   asr_gain;                                  //asr 备份增益
-#endif
-#if BT_TWS_EN
-    u8 tws_left_channel;        //TWS左声道标志.
-    u8 name_suffix_en;          //TWS名称是否增加后缀名了
-    u8 tws_force_channel;       //1: 固定左声道, 2:固定右声道
-    u8 vusb_force_channel;      //VUSB UART固定的声道
-    u8 discon_reason;
-    u8  tws_res_brk;
-    u8  tws_res_wait;
-#endif // BT_TWS_EN
 #if ECIG_POWER_CONTROL
     //电子烟
     u8 resistance;                                  //阻值
@@ -240,7 +226,7 @@ typedef struct
     u8 smoke_oil;                                   //烟油
     u8 smoke_index;                                 //吸烟类型
 #endif
-    bool bat_low;                                   //低电标志，低电时自动调低亮度
+
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

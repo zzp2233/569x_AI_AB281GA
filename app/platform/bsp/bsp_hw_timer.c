@@ -107,7 +107,7 @@ bool bsp_hw_timer_set(hw_timer_mode t_id, uint32_t delay, hw_timer_callback_t ca
     isr_cb[t_id]= callback;
 
     *timer_cnt  = 0;
-    *timer_pr   = 12 * delay - 1;
+    *timer_pr   = 13 * delay - 1;
     *timer_cpnd = BIT(9) | BIT(10) | BIT(12);
     *timer_con  = BIT(7) | (1<<4) | (2<<1)  | BIT(0);  // xosc26_div2
 

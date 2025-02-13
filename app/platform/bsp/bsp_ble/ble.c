@@ -140,15 +140,15 @@ void ble_att_exchange_mtu_finish_callback(uint16_t mtu)
 
 }
 
-// void ble_init_att(void)
-// {
-//     memset(&ble_cb, 0, sizeof(ble_cb));
-//     ble_gatts_init(gatts_profile_table, sizeof(gatts_profile_table),
-//                     characteristic_cb_info,
-//                     LE_ATT_NUM);
-//     ble_app_init();
-//     ble_ams_var_init();
-// }
+void ble_init_att(void)
+{
+    memset(&ble_cb, 0, sizeof(ble_cb));
+    ble_gatts_init(gatts_profile_table, sizeof(gatts_profile_table),
+                   characteristic_cb_info,
+                   LE_ATT_NUM);
+    ble_app_init();
+    ble_ams_var_init();
+}
 
 //可重定义该函数修改ble地址
 void ble_get_local_bd_addr(u8 *addr)
@@ -173,6 +173,7 @@ void ble_bt_connect(void)
 //重置bt地址为bt_get_local_bd_addr的返回值
 void bsp_change_bt_mac(void)
 {
+#if UTE_MODULE_BT_CHANGE_MAC_SUPPORT
     // bool bt_dual = (bt_get_scan() == 0x3) ? true: false;
 
     bt_reset_addr();
@@ -184,6 +185,7 @@ void bsp_change_bt_mac(void)
         delay_5ms(10);
         // bt_set_scan(0x03);
     }
+#endif
 }
 
 void ble_get_link_info(void *buf, u16 addr, u16 size)
@@ -209,51 +211,12 @@ void ble_sync_link_info(void)
 }
 #endif  //LE_SM_SC_EN
 
-///////////////////////////////////////////////////////////////////////////
-#if AB_MATE_APP_EN || LE_AB_LINK_APP_EN || LE_PRIV_EN || LE_EN
 
-#if AB_MATE_EQ_USE_DEVICE
-#define BLE_NOTIFY_MTU          256
-#else
-#define BLE_NOTIFY_MTU          185     //max=256
+#if BT_CONNECT_REQ_FROM_WATCH_EN
+void cross_transport_key_derivation_cb(void)
+{
+    msg_enqueue(EVT_BT_CONNECT_ONCE);
+}
 #endif
-
-#define NOTIFY_POOL_PAGE_NB     1
-#define NOTIFY_POOL_SIZE        (BLE_NOTIFY_MTU*4)
-
-AT(.ble_cache.att)
-uint8_t notify_tx_buf[BLE_NOTIFY_MTU];
-
-AT(.ble_cache.att)
-uint8_t notify_pool_buf[NOTIFY_POOL_SIZE];
-
-AT(.ble_cache.att)
-ring_buf_t notify_pool;
-
-AT(.rodata.ble.tbl)
-const rbuf_tbl_t notify_page_tbl[NOTIFY_POOL_PAGE_NB] =
-{
-    {
-        .buf = notify_pool_buf,
-        .size = NOTIFY_POOL_SIZE,
-    },
-};
-
-void ble_txpkt_init(void)
-{
-    ring_buf_init(&notify_pool, notify_page_tbl, NOTIFY_POOL_PAGE_NB, 0);
-    txpkt_init(&notify_tx, notify_tx_buf, &notify_pool, BLE_NOTIFY_MTU, ble_send_kick);
-}
-#endif // AB_MATE_APP_EN
-
-void ble_init_att(void)
-{
-    memset(&ble_cb, 0, sizeof(ble_cb));
-    ble_gatts_init(gatts_profile_table, sizeof(gatts_profile_table),
-                   characteristic_cb_info,
-                   LE_ATT_NUM);
-    ble_app_init();
-    ble_ams_var_init();
-}
 
 #endif  // LE_EN

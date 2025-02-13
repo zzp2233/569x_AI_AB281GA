@@ -52,41 +52,21 @@ void bsp_aec_ack(u8 type)
 }
 #endif
 
-#if BT_SPP_EN
+#if (EQ_DBG_IN_SPP && BT_SCO_APP_DBG_EN && BT_SPP_EN)
 
-#define SPP_TX_MTU          256     //max=512
+#define MAX_SPP_TX_NUM          4
+#define MAX_SPP_TX_LEN          128
+#define SPP_TX_POOL_SIZE       (MAX_SPP_TX_LEN + sizeof(struct txbuf_tag)) * MAX_SPP_TX_NUM
 
-#define SPP_POOL_PAGE_NB     1
-#define SPP_POOL_SIZE        (SPP_TX_MTU*3)
-
-AT(.ble_buf.stack.spp)
-uint8_t spp_tx_buf[SPP_TX_MTU];
-
-AT(.ble_buf.stack.spp)
-uint8_t spp_pool_buf[SPP_POOL_SIZE];
-
-AT(.ble_buf.stack.spp)
-ring_buf_t spp_pool;
-
-AT(.rodata.ble.tbl)
-const rbuf_tbl_t spp_pool_tbl[SPP_POOL_PAGE_NB] =
-{
-    {
-        .buf = spp_pool_buf,
-        .size = SPP_POOL_SIZE,
-    },
-};
+AT(.nr_buf.spp_tx)
+uint8_t spp_tx_pool[SPP_TX_POOL_SIZE];
 
 void spp_txpkt_init(void)
 {
-    ring_buf_init(&spp_pool, spp_pool_tbl, SPP_POOL_PAGE_NB, 0);
-    txpkt_init(&spp_tx, spp_tx_buf, &spp_pool, SPP_TX_MTU, spp_send_kick);
+    txpkt_init(&spp_tx_ch0, spp_tx_pool, MAX_SPP_TX_NUM, MAX_SPP_TX_LEN);
+    spp_tx_ch0.send_kick = spp_send_kick;
 }
-
-u16 get_spp_mtu_size(void)
-{
-    return SPP_TX_MTU;
-}
+#endif
 
 void bt_spp_cmd_process(u8 *ptr, u16 size, u8 type)
 {
@@ -217,5 +197,3 @@ void spp_disconnect_callback(uint8_t *bd_addr, uint8_t ch)
     spp_txpkt_init(); //clear spp tx buf
 #endif //BT_SPP_EN
 }
-
-#endif

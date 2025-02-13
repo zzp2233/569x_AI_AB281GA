@@ -14,8 +14,17 @@ struct tone_tbl_t
     u32 last_time;  //持续时间
 };
 
-#if WARNING_PIANO_EN
-//extern const u16 dac_dvol_table[16 + 1];
+struct warning_tone_tbl_t
+{
+    u32 len;
+    const struct tone_tbl_t *res_tbl;
+};
+
+struct warning_piano_tbl_t
+{
+    u32 len;
+    const u32 *res_tbl;
+};
 
 //频率：    380Hz  间隔40mS  380Hz
 //持续时间：103mS            103mS
@@ -92,27 +101,14 @@ static const struct tone_tbl_t tone_ring_tbl[2] =
     {0,                                 TONE_DELAY(20)},    //静音
 };
 
-////频率：    2600Hz
-////持续时间：100mS
-////窗函数：  fade out
-////窗调制：  1
-//AT(.piano_com.tbl)
-//static const struct tone_tbl_t tone_maxvol_tbl[1] = {
-//    {TONE_FREQUENCY(0x7ff, 2600),        TONE_DELAY(100)},
-//};
-
-//频率：    210Hz  间隔50mS  260Hz   间隔50mS  400Hz
-//持续时间：145mS            437mS             145mS
-//窗函数：  fade out         fade out          fade out
-//窗调制：  1                1                 1
+//频率：    2600Hz
+//持续时间：100mS
+//窗函数：  fade out
+//窗调制：  1
 AT(.piano_com.tbl)
-const struct tone_tbl_t tone_maxvol_tbl[5] =
+static const struct tone_tbl_t tone_maxvol_tbl[1] =
 {
-    {TONE_FREQUENCY(0x7ff, 210),        TONE_DELAY(145)},
-    {0,                                 TONE_DELAY(50)},    //静音
-    {TONE_FREQUENCY(0x7ff, 260),        TONE_DELAY(437)},
-    {0,                                 TONE_DELAY(50)},    //静音
-    {TONE_FREQUENCY(0x7ff, 400),        TONE_DELAY(145)},
+    {TONE_FREQUENCY(0x7ff, 2600),        TONE_DELAY(100)},
 };
 
 //频率：    848Hz  间隔50mS  639Hz
@@ -173,94 +169,67 @@ static const u32 piano_power_off_tbl[1] =
 };
 
 AT(.text.piano.table)
-const struct warning_tone_tbl_t warning_tone_tbl[] =
+static const struct warning_tone_tbl_t warning_tone_tbl[] =
 {
-    [TONE_POWER_ON]     = {sizeof(tone_power_on_tbl)  / sizeof(struct tone_tbl_t),       tone_power_on_tbl       },       //1
-    [TONE_POWER_OFF]    = {sizeof(tone_power_off_tbl) / sizeof(struct tone_tbl_t),       tone_power_off_tbl      },       //2
-    [TONE_PAIR]         = {sizeof(tone_pair_tbl)      / sizeof(struct tone_tbl_t),       tone_pair_tbl           },       //3
-    [TONE_BT_DISCONNECT] = {sizeof(tone_disconnected_tbl)  / sizeof(struct tone_tbl_t),   tone_disconnected_tbl   },       //4
-    [TONE_BT_CONNECT]   = {sizeof(tone_connected_tbl) / sizeof(struct tone_tbl_t),       tone_connected_tbl      },       //5
-    [TONE_BT_RING]      = {sizeof(tone_ring_tbl)      / sizeof(struct tone_tbl_t),       tone_ring_tbl           },       //6
-    [TONE_MAX_VOL]      = {sizeof(tone_maxvol_tbl)    / sizeof(struct tone_tbl_t),       tone_maxvol_tbl         },       //7
-    [TONE_LOW_BATTERY]  = {sizeof(tone_low_battery_tbl) / sizeof(struct tone_tbl_t),     tone_low_battery_tbl    },       //8
-    [TONE_REDIALING]    = {sizeof(tone_redialing_tbl) / sizeof(struct tone_tbl_t),       tone_redialing_tbl      },       //9
-    [TONE_BT_MODE]      = {sizeof(tone_bt_mode_tbl) / sizeof(struct tone_tbl_t),         tone_bt_mode_tbl        },       //10
+    {sizeof(tone_power_on_tbl)  / sizeof(struct tone_tbl_t),       tone_power_on_tbl       },       //1
+    {sizeof(tone_power_off_tbl) / sizeof(struct tone_tbl_t),       tone_power_off_tbl      },       //2
+    {sizeof(tone_pair_tbl)      / sizeof(struct tone_tbl_t),       tone_pair_tbl           },       //3
+    {sizeof(tone_disconnected_tbl)  / sizeof(struct tone_tbl_t),   tone_disconnected_tbl   },       //4
+    {sizeof(tone_connected_tbl) / sizeof(struct tone_tbl_t),       tone_connected_tbl      },       //5
+    {sizeof(tone_ring_tbl)      / sizeof(struct tone_tbl_t),       tone_ring_tbl           },       //6
+    {sizeof(tone_maxvol_tbl)    / sizeof(struct tone_tbl_t),       tone_maxvol_tbl         },       //7
+    {sizeof(tone_low_battery_tbl) / sizeof(struct tone_tbl_t),     tone_low_battery_tbl    },       //8
+    {sizeof(tone_redialing_tbl) / sizeof(struct tone_tbl_t),       tone_redialing_tbl      },       //9
+    {sizeof(tone_bt_mode_tbl) / sizeof(struct tone_tbl_t),         tone_bt_mode_tbl        },       //10
 };
 
 AT(.text.piano.table)
-const struct warning_piano_tbl_t warning_piano_tbl[] =
+static const struct warning_piano_tbl_t warning_piano_tbl[] =
 {
-    [PIANO_POWER_ON]    = {sizeof(piano_power_on_tbl) / 4,    piano_power_on_tbl},
-    [PIANO_POWER_OFF]   = {sizeof(piano_power_off_tbl) / 4,   piano_power_off_tbl},
-    [PIANO_BT_MODE]     = {sizeof(piano_bt_mode_tbl) / 4,     piano_bt_mode_tbl},
-    [PIANO_CAMERA_MODE] = {sizeof(piano_camera_mode_tbl) / 4, piano_camera_mode_tbl},
-    [PIANO_AUX_MODE]    = {sizeof(piano_aux_mode_tbl) / 4,    piano_aux_mode_tbl},
+    {sizeof(piano_power_on_tbl) / 4,    piano_power_on_tbl},
+    {sizeof(piano_power_off_tbl) / 4,   piano_power_off_tbl},
+    {sizeof(piano_bt_mode_tbl) / 4,     piano_bt_mode_tbl},
+    {sizeof(piano_camera_mode_tbl) / 4, piano_camera_mode_tbl},
+    {sizeof(piano_aux_mode_tbl) / 4,    piano_aux_mode_tbl},
 };
-
-AT(.text.piano)
-void piano_play_process(void)
-{
-    u16 msg;
-    WDT_CLR();
-    msg = msg_dequeue();
-    if ((msg != NO_MSG) && ((msg & KEY_TYPE_MASK) != KEY_HOLD))
-    {
-        msg_enqueue(msg);       //还原未处理的消息
-    }
-}
 
 //type:  0-->Piano,  1--> Tone
 AT(.text.piano)
 void bsp_piano_warning_play(uint type, uint index)
 {
     void *res;
-    u8 index_max;
 
     if (type == WARNING_PIANO)
     {
-        index_max = sizeof(warning_piano_tbl)/sizeof(warning_piano_tbl[0]);
-        if(index > index_max)
-        {
-            index = PIANO_POWER_ON;
-        }
         res = (void *)&warning_piano_tbl[index];
     }
     else
     {
-        index_max = sizeof(warning_tone_tbl)/sizeof(warning_tone_tbl[0]);
-        if(index > index_max)
-        {
-            index = TONE_MAX_VOL;
-        }
         res = (void *)&warning_tone_tbl[index];
     }
-    if (type == WARNING_TONE)
-    {
-        while (tone_is_playing())
-        {
-            bt_thread_check_trigger();
-            piano_play_process();
-            WDT_CLR();
-        }
-    }
-
-#if FUNC_AUX_EN
-    tone_play_kick(type, res, true);
-    while (tone_is_playing())
-    {
-        piano_play_process();
-    }
-    tone_play_end();
-#else
-    tone_play_kick(type, res, true);
-    while (tone_is_playing())
-    {
-        bt_thread_check_trigger();
-        piano_play_process();
-    }
-    tone_play_end();
-#endif // FUNC_AUX_EN
+    piano_warning_play(type, res, 0);
 }
-#else
-void bsp_piano_warning_play(uint type, uint index) {}
-#endif
+
+AT(.text.piano)
+void piano_play_process(void)
+{
+    WDT_CLR();
+}
+
+AT(.text.piano)
+void *bsp_piano_get_play_res(uint type, uint index)
+{
+    void *res;
+
+    if (type == WARNING_PIANO)
+    {
+        res = (void *)&warning_piano_tbl[index];
+    }
+    else
+    {
+        res = (void *)&warning_tone_tbl[index];
+    }
+    return res;
+}
+
+

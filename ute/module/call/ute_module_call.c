@@ -60,10 +60,10 @@ bool isHfpAndA2dpProfileBothConnected(void)
         result =bt_a2dp_profile_completely_connected();
     }
 #endif
-    // if(bt_hfp_is_connected())//todo
-    // {
-    //     result = true;
-    // }
+    if(bt_hfp_is_connected())
+    {
+        result = true;
+    }
     return result;
 }
 
@@ -377,6 +377,18 @@ void uteModuleCallInit(void)
     uteModuleCallIsBtAutoCloseReadConfig();
 
     bsp_change_bt_mac();
+
+#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
+    uteModuleCallEntertranmentVoiceSwitchReadConfig();
+    if(uteModuleCallData.isEntertranmentVoiceOn)
+    {
+        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_CONNECT_A2DP,0);
+    }
+    else
+    {
+        uteModulePlatformSendMsgToAppTask(TO_APP_TASK_DISCONNECT_A2DP,0);
+    }
+#endif
 
     if(uteModuleCallData.isPowerOn || uteModuleCallData.isBtAutoClose)
     {
@@ -753,6 +765,102 @@ bool uteModuleCallBtIsPowerOn(void)
 {
     return uteModuleCallData.isPowerOn;
 }
+
+#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
+/**
+*@brief     连接A2DP
+*@details
+*@author        xjc
+*@date        2022-04-27
+*/
+void uteModuleCallConnectA2DPProfile(void)
+{
+    bt_a2dp_profile_en();
+}
+
+/**
+*@brief     断开A2DP
+*@details
+*@author        xjc
+*@date        2022-04-27
+*/
+void uteModuleCallDisconnectA2DPProfile(void)
+{
+    bt_a2dp_profile_dis();
+}
+
+/**
+*@brief 娱乐声音开关参数保存
+*@details
+*@author        xjc
+*@date        2022-04-27
+*/
+void uteModuleCallEntertranmentVoiceSwitchSaveConfig(void)
+{
+    void *file;
+    uint8_t writebuff[2];
+    writebuff[0] = uteModuleCallData.isEntertranmentVoiceOn;
+    if( uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_ENTERTRANMENT_VOICE_ON_OFF_STATUS,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
+    {
+        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+        uteModuleFilesystemWriteData(file,&writebuff[0],1);
+        uteModuleFilesystemCloseFile(file);
+    }
+}
+
+/**
+*@brief  娱乐声音开关参数读取
+*@details
+*@author        xjc
+*@date        2022-04-27
+*/
+void uteModuleCallEntertranmentVoiceSwitchReadConfig(void)
+{
+    void *file;
+    uint8_t readbuff[2];
+    readbuff[0] = UTE_MODULE_BT_ENTERTRANMENT_VOICE_DEFAULT;
+    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_ENTERTRANMENT_VOICE_ON_OFF_STATUS,&file,FS_O_RDONLY))
+    {
+        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
+        uteModuleFilesystemReadData(file,&readbuff[0],1);
+        uteModuleFilesystemCloseFile(file);
+    }
+    uteModuleCallData.isEntertranmentVoiceOn = readbuff[0];
+    UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,.isEntertranmentVoiceOn=%d", __func__,uteModuleCallData.isEntertranmentVoiceOn);
+}
+
+/**
+*@brief     设置娱乐声音开关
+*@details
+*@author        xjc
+*@date        2022-04-27
+*/
+void uteModuleCallChangeEntertranmentVoiceSwitchStatus(void)
+{
+    uteModuleCallData.isEntertranmentVoiceOn = !uteModuleCallData.isEntertranmentVoiceOn;
+    // if(uteModuleCallBtIsPowerOn())
+    {
+        if(uteModuleCallData.isEntertranmentVoiceOn)
+        {
+            uteModulePlatformSendMsgToAppTask(TO_APP_TASK_CONNECT_A2DP,0);
+        }
+        else
+        {
+            uteModulePlatformSendMsgToAppTask(TO_APP_TASK_DISCONNECT_A2DP,0);
+        }
+    }
+}
+/**
+*@brief     获取娱乐声音开关
+*@details
+*@author        xjc
+*@date        2022-04-27
+*/
+bool uteModuleCallIsEntertranmentVoiceOn(void)
+{
+    return uteModuleCallData.isEntertranmentVoiceOn;
+}
+#endif
 
 /**
 *@brief  来电提醒填入号码和名字

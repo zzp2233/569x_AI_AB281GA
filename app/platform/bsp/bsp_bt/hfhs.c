@@ -101,7 +101,7 @@ uint hfp_get_spk_gain(void)
     return (sys_cb.hfp_vol>15)? 15 : sys_cb.hfp_vol;
 }
 
-#if (BT_HFP_BAT_REPORT_EN || SMART_VHOUSE_HOST_EN)
+#if BT_HFP_BAT_REPORT_EN
 uint hfp_get_bat_level(void)
 {
     //计算方法：level = (实测电压 - 关机电压) / ((满电电压 - 关机电压) / 10)
@@ -121,13 +121,6 @@ uint hfp_get_bat_level(void)
     }
 //    printf("bat level: %d %d\n", sys_cb.vbat, bat_level);
     return bat_level;
-}
-
-uint hfp_get_bat_level_ex(void)
-{
-    uint level_bat;
-    level_bat = hfp_get_bat_level();
-    return (level_bat + 1) * 10;
 }
 #endif
 

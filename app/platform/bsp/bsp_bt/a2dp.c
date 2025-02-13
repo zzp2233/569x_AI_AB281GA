@@ -94,4 +94,3 @@ uint8_t a2dp_vol_adj_cb(uint8_t a2dp_vol, bool up_flag)
     TRACE("adj_vol: %d(%x)\n", sys_cb.vol, a2dp_vol);
     return a2dp_vol_reverse(vol_set);
 }
-

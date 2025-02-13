@@ -9,12 +9,12 @@
 #include "include.h"
 #include "ute_module_log.h"
 #include "ute_module_message.h"
-// #include "ute_drv_screen_common.h"
+#include "ute_drv_screen_common.h"
 #include "ute_application_common.h"
 #include "ute_module_gui_common.h"
-// #include "ute_module_heart.h"
-// #include "ute_module_bloodoxygen.h"
-// #include "ute_module_sport.h"
+#include "ute_module_heart.h"
+#include "ute_module_bloodoxygen.h"
+#include "ute_module_sport.h"
 #include "ute_module_filesystem.h"
 #include "ute_module_watchonline.h"
 
@@ -402,10 +402,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
 
-    if (bt_cb.disp_status > BT_STA_PLAYING
-        // || func_cb.sta == FUNC_OTA_UI_MODE
-        // || is_fot_start()
-       )
+    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
         return;
     }
@@ -480,7 +477,9 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         // uteDrvTpCommonSleep();
         uteModuleGuiCommonData.isDisplayOn = false;
         // uteModulePlatformStopTimer(&displayOffTimerPointer);
-        // uteModuleSprotResetRovllverScreenMode();
+#if UTE_MODULE_SPORT_SUPPORT
+        uteModuleSprotResetRovllverScreenMode();
+#endif
 
     }
     else
@@ -609,9 +608,7 @@ void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
     sys_cb.dialplate_index = index;
     if(index >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
     {
-#if UTE_MODULE_WATCHONLINE_SUPPORT
         uteModuleWatchOnlineUpateConfigFromFlash();
-#endif
     }
     uteModuleGuiCommonSaveConfig();
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,index=%d",__func__,index);
@@ -753,10 +750,7 @@ void uteModuleGuiCommonGoBackLastScreen(void)
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
 
-    if (bt_cb.disp_status > BT_STA_PLAYING
-        // || func_cb.sta == FUNC_OTA_UI_MODE
-        // || is_fot_start()
-       )
+    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
         return;
     }
@@ -773,17 +767,17 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 */
 void uteTaskGuiStartScreen(uint8_t screenId)
 {
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,disp_status=%d,func_cb.sta=%d,is_fot_start=%d,func_cb.sta=%d,screenId=%d",
+                   __func__,bt_cb.disp_status,func_cb.sta,is_fot_start(),func_cb.sta,screenId);
     if(sys_cb.gui_sleep_sta)
     {
         sys_cb.gui_need_wakeup = true;
     }
     reset_sleep_delay_all();
 
-    if (bt_cb.disp_status > BT_STA_PLAYING
-        // || func_cb.sta == FUNC_OTA_UI_MODE
-        // || is_fot_start()
-       )
+    if ((bt_cb.disp_status > BT_STA_PLAYING&&bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return",__func__);
         return;
     }
 
@@ -813,10 +807,7 @@ void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
     }
     reset_sleep_delay_all();
 
-    if (bt_cb.disp_status > BT_STA_PLAYING
-        // || func_cb.sta == FUNC_OTA_UI_MODE
-        // || is_fot_start()
-       )
+    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
         return;
     }
@@ -1149,10 +1140,10 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
         }
 #endif
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-        if(id == UTE_MOUDLE_SCREENS_FLASHLIGHT_ID)
-        {
-            return false;
-        }
+//        if(id == UTE_MOUDLE_SCREENS_FLASHLIGHT_ID)
+//        {
+//            return false;
+//        }
 #endif
 #if UTE_MODULE_SCREENS_OTA_SUPPORT
         if(id == UTE_MOUDLE_SCREENS_OTA_ID)
@@ -1181,7 +1172,11 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
 #if UTE_MODULE_SCREENS_FIND_PHONE_SUPPORT
         ute_ble_connect_state_t connectStatus;
         uteApplicationCommonGetBleConnectionState(&connectStatus);
-        if((id == UTE_MOUDLE_SCREENS_FIND_PHONE_ID) && (uteModuleFindPhoneGetStatus() == FIND_PHONE_RING) && (connectStatus.isConnected))
+        if((id == UTE_MOUDLE_SCREENS_FIND_PHONE_ID) &&
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+           (uteModuleFindPhoneGetStatus() == FIND_PHONE_RING) &&
+#endif // UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+           (connectStatus.isConnected))
         {
             return false;
         }

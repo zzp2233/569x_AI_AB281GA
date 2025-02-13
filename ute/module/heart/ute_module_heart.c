@@ -206,6 +206,7 @@ void uteModuleHeartEverySecond(void)
         if(!uteModuleBloodoxygenIsTesting() &&
            (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
            && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
+           && uteModuleHeartGetWorkMode() != WORK_MODE_HR
           )
         {
             if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
@@ -227,13 +228,17 @@ void uteModuleHeartEverySecond(void)
                 && uteModuleGuiCommonGetCurrentScreenId() != FUNC_HEARTRATE
                )
             {
+#if UTE_MODULE_HEART_SUPPORT
                 uteModuleHeartStopSingleTesting(TYPE_HEART);
+#endif
                 uteModuleHeartData.isAutoTestFlag = false;
                 uteModuleHeartData.autoTestSecond = 0;
             }
             else if (!uteModuleHeartIsWear() && uteModuleHeartData.autoTestSecond >= 10)
             {
+#if UTE_MODULE_HEART_SUPPORT
                 uteModuleHeartStopSingleTesting(TYPE_HEART);
+#endif
                 uteModuleHeartData.isAutoTestFlag = false;
                 uteModuleHeartData.autoTestSecond = 0;
                 isNeedAutoTest = false;
@@ -470,7 +475,9 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,input type:%d, curr type:%d",__func__,type,uteModuleHeartData.type);
     if(uteModuleHeartData.type != type)
     {
+#if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStopSingleTesting(uteModuleHeartData.type);
+#endif
     }
     uteModuleHeartData.type = type;
     if(uteModuleHeartData.type==TYPE_BLOODOXYGEN)
@@ -498,6 +505,10 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
     else if (uteModuleHeartData.type == TYPE_FACTORY1)
     {
         bsp_sensor_hr_init(WORK_MODE_FACTORY1);
+    }
+    else if (uteModuleHeartData.type == TYPE_WEAR)
+    {
+        bsp_sensor_hr_init(WORK_MODE_WEAR);
     }
     else
     {
@@ -1119,8 +1130,8 @@ void uteModuleHeartPowerOff(void)
 #endif
     uteDrvHeartVcxxSetPowerEnable(false);
 #else
-    vc30fx_usr_stop_work();
-    vc30fx_pwr_dis();
+    // vc30fx_usr_stop_work();
+    // vc30fx_pwr_dis();
 #endif
 }
 
@@ -1225,7 +1236,7 @@ static bool uteModuleHeartLoadTodayHistoryData(uint8_t *heartHistoryGraph, uint8
 #if UTE_LOG_GUI_LVL // test
     for (uint8_t i = 0; i < 144; i++)
     {
-        heartHistoryData[i] = 50 + rand() % 150;
+        heartHistoryData[i] = 50 + get_random(150);
     }
 #endif
 

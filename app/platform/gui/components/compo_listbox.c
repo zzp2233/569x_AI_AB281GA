@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_call.h"
 
 #define TRACE_EN                1
 
@@ -12,7 +13,9 @@
 #define LISTBOX_ITEM_SIZE_THRESHOLD_CIRCLE      (GUI_SCREEN_HEIGHT / 6)     //弧线菜单大小保持区
 #define LISTBOX_STYLE_CIRCLE_R                  (GUI_SCREEN_WIDTH * 2)      //更表弧线半径
 
-#define MAX_WORD_CNT                            32                          //每条列表项最多32个字符
+#define LISTBOX_MAX_ITEM_CNT                    UTE_MODULE_CALL_ADDRESSBOOK_MAX_COUNT
+#define MIN_WORD_CNT                            32
+#define MAX_WORD_CNT                            MAX(MAX(MAX(MAX(MIN_WORD_CNT, UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH), UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH), UTE_CALL_DIAL_NUMBERS_MAX), UTE_CALL_NAME_MAX)                          //每条列表项最多32个字符
 #define LIST_CUSTOM_AREA_X_MIN                  90                          //点击列表中X坐标的最小差值
 #define LIST_CUSTOM_AREA_X_MAX                  140                         //点击列表中X坐标的最大差值
 #define LIST_CUSTOM_AREA_Y_MIN                 -110                         //点击列表中Y坐标的最小差值
@@ -41,23 +44,26 @@ compo_listbox_t *compo_listbox_create(compo_form_t *frm, u32 style)
     widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
     listbox->style = style;
     listbox->page = page;
-    listbox->item_width = GUI_SCREEN_WIDTH - 4;
+    listbox->item_width = GUI_SCREEN_WIDTH;
     for (i=0; i<LISTBOX_ITEM_CNT; i++)
     {
         widget_page_t *item_page = widget_page_create(page);
         widget_icon_t *item_bgimg = widget_icon_create(item_page, 0);
         widget_icon_t *item_icon = widget_icon_create(item_page, 0);
         widget_text_t *item_text = widget_text_create(item_page, MAX_WORD_CNT);
+        widget_text_t *item_text2 = widget_text_create(item_page, MAX_WORD_CNT);
         widget_icon_t *item_icon2 = widget_icon_create(item_page, 0);
 
         widget_set_align_center(item_bgimg, false);
         widget_set_pos(item_bgimg, 0, 0);
         widget_set_align_center(item_text, false);
+        widget_set_align_center(item_text2, false);
 
         listbox->item_page[i] = item_page;
         listbox->item_bgimg[i] = item_bgimg;
         listbox->item_icon[i] = item_icon;
         listbox->item_text[i] = item_text;
+        listbox->item_text2[i] = item_text2;
         listbox->item_icon2[i] = item_icon2;
     }
 
@@ -80,7 +86,7 @@ compo_listbox_t *compo_listbox_create(compo_form_t *frm, u32 style)
 static void compo_listbox_init_update(compo_listbox_t *listbox)
 {
     int i;
-    int font_height = widget_text_get_height();
+    int font_height = widget_text_get_height()+2;
     int font_x = (listbox->icon_area.wid >> 1) + (font_height >> 2) + listbox->line_center_y;
     int font_y = (listbox->line_height - font_height) >> 1;
     int icon_x, icon_y = 0;
@@ -92,23 +98,32 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
         {
             if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID)
             {
-                listbox->line_height = listbox->icon_area.wid + font_height * 2;
-                listbox->item_width = listbox->icon_area.wid;
-                listbox->line_space = GUI_SCREEN_WIDTH / 2 - listbox->icon_area.wid * 3 / 2;
+                listbox->line_height = listbox->icon_area.wid + font_height * 2+16;
+//                listbox->item_width = listbox->icon_area.wid;
+                listbox->item_width = 68;
+                listbox->line_space = GUI_SCREEN_WIDTH / 2 - listbox->icon_area.wid * 3 / 2-13;
                 listbox->line_height_total = listbox->line_space + listbox->icon_area.wid;
                 listbox->total_height = listbox->line_height_total * (listbox->item_cnt - 1) + listbox->line_height;
                 listbox->cycle_height = listbox->line_height_total * (listbox->item_cnt / 2 + 1);
                 icon_x = listbox->item_width / 2;
                 icon_y = listbox->item_width / 2;
                 font_x = listbox->item_width / 2;
-                font_y = listbox->line_center_y + listbox->icon_area.wid + font_height / 2;
+                font_y = listbox->line_center_y + listbox->icon_area.wid + font_height / 2+6;
                 font_w = listbox->item_width;
+//                font_w = 76;
                 font_h = font_height;
             }
             else
             {
                 rect_t location = widget_get_location(listbox->item_bgimg[i]);
-                listbox->line_height = max(max(max(font_height, listbox->item_height), listbox->icon_area.hei), location.hei);
+                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+                {
+                    listbox->line_height = max(max(max(font_height*2, listbox->item_height), listbox->icon_area.hei), location.hei);
+                }
+                else
+                {
+                    listbox->line_height = max(max(max(font_height, listbox->item_height), listbox->icon_area.hei), location.hei);
+                }
                 listbox->line_space = listbox->line_height / 8;
                 listbox->line_height_total = listbox->line_height + listbox->line_space;
                 listbox->line_center_y = listbox->line_height >> 1;
@@ -128,8 +143,21 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                     }
                 }
                 font_x = (listbox->icon_area.wid >> 1) + (font_height >> 2) + icon_x;
-                font_y = (listbox->line_height - font_height) >> 1;
+                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+                {
+                    font_y = (listbox->line_height/2 - font_height) >> 1;
+                }
+                else
+                {
+                    font_y = (listbox->line_height - font_height) >> 1;
+                }
                 font_w = listbox->item_width - font_x - (font_height >> 1);
+                if (listbox->res_sta_icon1)
+                {
+                    area_t area = gui_image_get_size(listbox->res_sta_icon1);
+//                    int icon_x = listbox->item_width - area.wid;
+                    font_w = font_w - area.wid;
+                }
             }
         }
 
@@ -143,8 +171,37 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
         else
         {
             widget_set_size(listbox->item_page[i], listbox->item_width, listbox->line_height);
-            widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_center_y);
-            widget_set_location(listbox->item_text[i], font_x, font_y, font_w, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+
+            if (listbox->style == COMPO_LISTBOX_STYLE_CUM_SPORT_LIST)
+            {
+                widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_height / 3);
+            }
+            else
+            {
+                widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_center_y);
+            }
+
+            if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+            {
+                widget_set_location(listbox->item_text[i], font_x, font_y, font_w, listbox->line_height/2);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+                widget_set_location(listbox->item_text2[i], font_x, font_y+listbox->line_height/2, font_w, listbox->line_height/2);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+                //printf("item y [%d,%d] line[%d, %d, %d]\n", font_y, font_y*5, listbox->line_height, listbox->item_height, widget_get_location(listbox->item_bgimg[i]).hei);
+            }
+            else if (listbox->style == COMPO_LISTBOX_STYLE_CUM_SPORT_LIST)
+            {
+                font_x = icon_x - listbox->icon_area.wid/2;
+                font_y = listbox->line_height/3 + listbox->icon_area.hei/2 + 16;
+                widget_set_location(listbox->item_text[i], font_x, font_y, font_w, 30);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+            }
+            else if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD)
+            {
+                widget_set_location(listbox->item_text[i],  10, font_y-listbox->line_space/2, 64-10, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+                widget_set_location(listbox->item_text2[i], 64, font_y-listbox->line_space/2, GUI_SCREEN_WIDTH-64, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+            }
+            else
+            {
+                widget_set_location(listbox->item_text[i], font_x, font_y, font_w, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+            }
         }
     }
     //listbox->sidx = INT_MIN;
@@ -184,10 +241,12 @@ void compo_listbox_set_bgimg(compo_listbox_t *listbox, u32 res_addr)
     {
         halt(HALT_GUI_COMPO_LISTBOX_SET_BGIMG);
     }
+    listbox->item_width = gui_image_get_size(res_addr).wid;
     int i;
     for (i=0; i<LISTBOX_ITEM_CNT; i++)
     {
         widget_icon_set(listbox->item_bgimg[i], res_addr);
+        widget_set_pos(listbox->item_bgimg[i],0, 0);
     }
     compo_listbox_init_update(listbox);
 }
@@ -225,11 +284,12 @@ void compo_listbox_set_sta_icon(compo_listbox_t *listbox, u32 res_addr1, u32 res
     if (res_addr1 != 0)
     {
         area_t area = gui_image_get_size(res_addr1);
-        int icon_x = listbox->item_width - area.wid;
+        int icon_x = listbox->item_width - area.wid/2 - 10;
         for (i=0; i<LISTBOX_ITEM_CNT; i++)
         {
             widget_set_pos(listbox->item_icon2[i], icon_x, listbox->line_center_y);
         }
+        compo_listbox_init_update(listbox);
     }
 }
 
@@ -379,12 +439,19 @@ void compo_listbox_update(compo_listbox_t *listbox)
         }
 
         compo_listbox_item_t const *item = &listbox->item[listbox->item_idx[i]];
-        widget_icon_set(listbox->item_icon[i], item->res_addr);
-        if (!listbox->flag_text_modify)         //默认用i18n里的文本内容
+        if (listbox->flag_alike_icon)           //使用同一图标
+        {
+            widget_icon_set(listbox->item_icon[i], listbox->alike_icon);
+        }
+        else
+        {
+            widget_icon_set(listbox->item_icon[i], item->res_addr);
+        }
+        if (listbox->flag_text_modify == 0)         //默认用i18n里的文本内容
         {
             widget_text_set(listbox->item_text[i], i18n[item->str_idx]);
         }
-        else
+        else if (listbox->flag_text_modify == 1)
         {
             if (listbox->flash_read_flag)
             {
@@ -393,7 +460,71 @@ void compo_listbox_update(compo_listbox_t *listbox)
             compo_listbox_custom_item_t *custom_item = &listbox->custom_item[listbox->item_idx[i] - local_num];
             widget_text_set(listbox->item_text[i], custom_item->str_txt);
         }
+        else if (listbox->flag_text_modify == 2)            //用于通话记录一行显示
+        {
+            static char str_txt[UTE_MODULE_CALL_ADDRESSBOOK_NAME_MAX_LENGTH + UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH] = {0};
+
+            if (listbox->set_icon_callback != NULL)
+            {
+                u32 icon_res = listbox->set_icon_callback(listbox->item_idx[i]);
+                widget_icon_set(listbox->item_icon[i], icon_res);
+            }
+
+            if (listbox->set_text_modify_by_idx_callback != NULL && str_txt != NULL)
+            {
+                if (listbox->set_text_modify_by_idx_callback(listbox->item_cnt, str_txt, listbox->item_idx[i]))
+                {
+                    widget_set_visible(listbox->item_page[i], true);
+                    widget_text_set(listbox->item_text[i], str_txt);
+                }
+                else
+                {
+                    widget_set_visible(listbox->item_page[i], false);
+                }
+            }
+        }
+        else if (listbox->flag_text_modify == 3)            //用于电话簿两行显示
+        {
+            static char str_txt_name[MAX_WORD_CNT+10] = {0};
+            static char str_txt_number[MAX(UTE_MODULE_CALL_ADDRESSBOOK_NUMBER_MAX_LENGTH, MIN_WORD_CNT)] = {0};
+            memset(str_txt_name, 0, sizeof(str_txt_name));
+            memset(str_txt_number, 0, sizeof(str_txt_number));
+
+            if (listbox->set_icon_callback != NULL)
+            {
+                u32 icon_res = listbox->set_icon_callback(listbox->item_idx[i]);
+                widget_icon_set(listbox->item_icon[i], icon_res);
+            }
+
+            if (listbox->set_text_modify_by_idx_callback2 != NULL && str_txt_name != NULL && str_txt_number != NULL)
+            {
+                if (listbox->set_text_modify_by_idx_callback2(listbox->item_cnt, str_txt_name, sizeof(str_txt_name), str_txt_number, sizeof(str_txt_number), listbox->item_idx[i]))
+                {
+                    widget_set_visible(listbox->item_page[i], true);
+                    widget_text_set(listbox->item_text[i], str_txt_name);
+                    if (listbox->set_text1_color_callback != NULL)
+                    {
+                        widget_text_set_color(listbox->item_text[i], listbox->set_text1_color_callback(listbox->item_idx[i]));
+                    }
+                    widget_text_set(listbox->item_text2[i], str_txt_number);
+                    if (listbox->set_text2_color_callback != NULL)
+                    {
+                        widget_text_set_color(listbox->item_text2[i], listbox->set_text2_color_callback(listbox->item_idx[i]));
+                    }
+                    else
+                    {
+                        widget_text_set_color(listbox->item_text2[i], COLOR_GRAY);
+                    }
+                }
+                else
+                {
+                    widget_set_visible(listbox->item_page[i], false);
+                }
+//                printf("[%d,%d] %s:%s\n", sizeof(str_txt_name), sizeof(str_txt_number), str_txt_name, str_txt_number);
+            }
+        }
         widget_set_align_center(listbox->item_text[i], listbox->flag_text_center);
+        widget_set_align_center(listbox->item_text2[i], listbox->flag_text_center);
         if (listbox->style != COMPO_LISTBOX_STYLE_SELECT && listbox->style != COMPO_LISTBOX_STYLE_LANGUAGE)
         {
             switch (item->item_mode)
@@ -427,6 +558,7 @@ void compo_listbox_update(compo_listbox_t *listbox)
         switch (listbox->style)
         {
             case COMPO_LISTBOX_STYLE_MENU_NORMAL:
+            case COMPO_LISTBOX_STYLE_CUM_SPORT_LIST:
                 //普通菜单
                 flag_scale = (udy > udy_th);
                 break;
@@ -439,6 +571,8 @@ void compo_listbox_update(compo_listbox_t *listbox)
                 break;
 
             case COMPO_LISTBOX_STYLE_TITLE:
+            case COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT:
+            case COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD:
                 //带标题的列表，只在底部做缩放
                 flag_scale = (dy > udy_th);
                 break;
@@ -583,14 +717,18 @@ void compo_listbox_update(compo_listbox_t *listbox)
             if (widget_get_visble(txt))
             {
                 area_t text_area = widget_text_get_area(txt);
-                rect_t textbox_rect = widget_get_location(txt);
+//                rect_t textbox_rect = widget_get_location(txt);
+                area_t textbox_rect = widget_text_get_box_area_rel(txt);
                 if (text_area.wid > textbox_rect.wid)
                 {
                     listbox->roll_cb[i].mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;
                     listbox->roll_cb[i].direction = -1;
                     if (widget_get_align_center(txt))
                     {
-                        listbox->roll_cb[i].offset = (text_area.wid - textbox_rect.wid) / 2;
+                        if(listbox->roll_cb[i].mode != TEXT_AUTOROLL_MODE_SROLL_CIRC)
+                        {
+                            listbox->roll_cb[i].offset = (text_area.wid - textbox_rect.wid) / 2;
+                        }
                     }
                     widget_text_set_autoroll_mode(listbox->item_text[i], TEXT_AUTOROLL_MODE_SROLL_CIRC);
                 }
@@ -841,6 +979,14 @@ void compo_listbox_move(compo_listbox_t *listbox)
         {
             //拖动菜单图标
             mcb->focus_ystep = mcb->focus_dy - dy;
+            if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID)
+            {
+                int Max_x = (GUI_SCREEN_WIDTH/3*(listbox->item_cnt/2+listbox->item_cnt%2))-GUI_SCREEN_WIDTH;
+                if(mcb->focus_y > Max_x)
+                {
+                    mcb->focus_y = Max_x;
+                }
+            }
             compo_listbox_set_focus(listbox, mcb->focus_y - mcb->focus_dy);
             compo_listbox_update(listbox);
         }
@@ -948,6 +1094,7 @@ void compo_listbox_move(compo_listbox_t *listbox)
             compo_listbox_update(listbox);
         }
     }
+
 }
 
 /**
@@ -1149,3 +1296,89 @@ void compo_listbox_set_time_idx(compo_listbox_t *listbox, u8 idx)
 
     listbox->idx_time = idx;
 }
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符，用于通话记录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text_modify_by_idx_callback(compo_listbox_t *listbox, void* callback)
+{
+    listbox->flag_text_modify = 2;
+    listbox->set_text_modify_by_idx_callback = callback;
+}
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text_modify_by_idx_callback2(compo_listbox_t *listbox, void* callback)
+{
+    listbox->flag_text_modify = 3;
+    listbox->set_text_modify_by_idx_callback2 = callback;
+}
+
+/**
+ * @brief 列表图标全部采用相同的
+ * @param[in] listbox : 图标集指针
+ * @param[in] res : 图片资源
+ **/
+void compo_listbox_set_alike_icon(compo_listbox_t *listbox, u32 res)
+{
+    listbox->flag_alike_icon = true;
+    listbox->icon_area = gui_image_get_size(res);
+    listbox->alike_icon = res;
+    compo_listbox_init_update(listbox);
+}
+
+/**
+ * @brief 列表是否可以显示
+ * @param[in] listbox : 图标集指针
+ * @param[in] visible : 是否可以显示
+ **/
+void compo_listbox_set_visible(compo_listbox_t *listbox, bool visible)
+{
+    widget_set_visible(listbox->page, visible);
+}
+
+/**
+ * @brief 设置列表控件图标区域
+ * @param[in] listbox : 列表指针
+ * @param[in] area : 区域大小
+ **/
+void compo_listbox_set_icon_area(compo_listbox_t *listbox, area_t area)
+{
+    if (listbox == NULL)
+    {
+        halt(HALT_GUI_COMPO_LISTBOX_SET);
+    }
+    listbox->icon_area = area;
+    compo_listbox_init_update(listbox);
+}
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的图标，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_icon_callback(compo_listbox_t *listbox, void* callback)
+{
+    listbox->set_icon_callback = callback;
+}
+
+/**
+ * @brief 通过回调函数传出的idx, 用户自行判断要传入显示的字符颜色，用于联系人通讯录场景
+ * @param[in] listbox : 图标集指针
+ * @param[in] callback : 回调函数
+ **/
+void compo_listbox_set_text1_color_callback(compo_listbox_t *listbox, void* callback)
+{
+    listbox->set_text1_color_callback = callback;
+}
+
+void compo_listbox_set_text2_color_callback(compo_listbox_t *listbox, void* callback)
+{
+    listbox->set_text2_color_callback = callback;
+}
+

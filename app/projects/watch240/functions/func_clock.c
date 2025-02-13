@@ -400,19 +400,22 @@ compo_form_t *func_clock_butterfly_form_create(void)
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_HOUR);
+    compo_textbox_set(txt, "00");
 
 
     txt = compo_textbox_create(frm, 2);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
-    compo_bonddata(txt, COMPO_BOND_MINUTE);
+    // compo_bonddata(txt, COMPO_BOND_MINUTE);
+    compo_textbox_set(txt, "00");
 
     txt = compo_textbox_create(frm, 10);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 70, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 60, 300, 70);
-    compo_bonddata(txt, COMPO_BOND_DATE);
+    // compo_bonddata(txt, COMPO_BOND_DATE);
+    compo_textbox_set(txt, "00");
 
     txt = compo_textbox_create(frm, 1);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);

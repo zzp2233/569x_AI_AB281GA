@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 日语(日本）
 *@author
-*@date   2025-01-17 15:49:14
+*@date   2025-02-13 16:58:52
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -258,6 +258,7 @@ const char * const i18n_ja_rjp[] =
     [STR_INS] = "\xe5\x90\x8c\xe6\x9c\x9f\xe4\xb8\xad\x2e\x2e\x2e\x00", // [242] 同期中...
     [STR_SYNC_SUC] = "\xe5\x90\x8c\xe6\x9c\x9f\xe5\xae\x8c\xe4\xba\x86\x00", // [243] 同期完了
     [STR_SYNC_FAIL] = "\xe5\x90\x8c\xe6\x9c\x9f\xe5\xa4\xb1\xe6\x95\x97\x00", // [244] 同期失敗
+    [STR_MUTE] = "\xe3\x82\xb5\xe3\x82\xa4\xe3\x83\xac\xe3\x83\xb3\xe3\x83\x88\x00", // [245] サイレント
 };
 
 #endif

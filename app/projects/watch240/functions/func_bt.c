@@ -142,11 +142,12 @@ compo_form_t *func_bt_form_create(void)
     compo_form_set_title(frm, i18n[STR_MUSIC]);
     compo_form_add_image(frm, UI_BUF_I330001_MUSIC_BG_BIN, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y );
 
+    compo_textbox_t *name_txt;
 
     if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
         //歌词/歌手
-        compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+        name_txt = compo_textbox_create(frm, 50);
         compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
         compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
@@ -173,7 +174,7 @@ compo_form_t *func_bt_form_create(void)
     }
     else
     {
-        compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+        name_txt = compo_textbox_create(frm, 50);
         compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
         compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
@@ -201,36 +202,24 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(btn, COMPO_ID_BTN_PREV);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.5, GUI_SCREEN_CENTER_Y);
 
+    btn = compo_button_create_by_image(frm, 0);///暂停 播放
     if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
-        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PLAY01_BIN);///暂停 播放
-    }
-    else
-    {
-        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_PLAY02_BIN);///暂停 播放
-    }
-    compo_setid(btn, COMPO_ID_BTN_PLAY);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-
-    if(ble_is_connect())
-    {
-        bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
-    }
-    if(bt_cb.music_playing)
-    {
-        compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PAUSED_BIN);
-    }
-    else
-    {
-        if(bt_a2dp_profile_completely_connected() || ble_is_connect())
+        if(bt_cb.music_playing)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PAUSED_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY02_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY01_BIN);
         }
     }
+    else
+    {
+        compo_button_set_bgimg(btn, UI_BUF_I330001_MUSIC_PLAY02_BIN);
+    }
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_setid(btn, COMPO_ID_BTN_PLAY);
 
 
     if(bt_a2dp_profile_completely_connected() || ble_is_connect())
@@ -288,6 +277,18 @@ compo_form_t *func_bt_form_create(void)
     if(vol>16)vol=16;
     compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/16), 6 );
 
+    if(name_txt != NULL && ble_is_connect())
+    {
+        if(!bt_a2dp_profile_completely_connected() )
+        {
+            compo_textbox_set_visible(name_txt, false);
+        }
+        else
+        {
+            compo_textbox_set_visible(name_txt, true);
+        }
+    }
+
     return frm;
 }
 
@@ -330,6 +331,17 @@ static void func_bt_music_refresh_disp(void)
         compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
     }
     uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
+    if(tilte_art_txt != NULL)
+    {
+        if(!bt_a2dp_profile_completely_connected() && ble_is_connect())
+        {
+            compo_textbox_set_visible(tilte_art_txt, false);
+        }
+        else
+        {
+            compo_textbox_set_visible(tilte_art_txt, true);
+        }
+    }
 //    printf("value:%d\n",vol);
 //    vol = vol/6*6;
     uint16_t title_size_leng  = 0;

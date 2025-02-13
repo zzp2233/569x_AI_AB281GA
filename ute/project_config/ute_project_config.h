@@ -10,9 +10,9 @@
 #define _UTE_PROJECT_CONFIG_H_
 
 #define PROJECT_AB281_SUPPORT        0
-#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
+#define PROJECT_AB281A_SUPPORT       1 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
-#define PROJECT_AB281C_SUPPORT       1 /*! , TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
+#define PROJECT_AB281C_SUPPORT       0 /*! , TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -157,6 +157,11 @@
 /*! 低电提醒时电量  xjc, 2021-12-27  */
 #ifndef UTE_DRV_BATTERY_LOW_POWER_PERECNT
 #define UTE_DRV_BATTERY_LOW_POWER_PERECNT 13
+#endif
+
+/*! 电池百分比平滑掉电处理，每次更新百分比只允许掉1%,wang.luo 2025-02-13 */
+#ifndef UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
+#define UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT 1
 #endif
 
 /* 电池曲线 zn.zeng 2022-01-03*/

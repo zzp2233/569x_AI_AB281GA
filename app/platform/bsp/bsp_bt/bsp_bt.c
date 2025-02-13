@@ -3,6 +3,7 @@
 #include "func.h"
 #include "ute_module_call.h"
 #include "ute_module_message.h"
+#include "ute_module_music.h"
 
 bsp_bt_t bt_cb;
 
@@ -109,6 +110,10 @@ void bt_emit_notice(uint evt, void *params)
 #if BT_HID_ONLY_FOR_IOS_EN
             bt_deinit_lib_hid();
 #endif
+            if(!ble_is_connect())
+            {
+                uteModuleMusicResetPlayStatus();
+            }
             break;
 
         case BT_NOTICE_CONNECTED:

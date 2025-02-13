@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-01-17 15:49:12
+*@date   2025-02-13 16:58:50
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -258,6 +258,7 @@ enum
     STR_INS, // 同步中...
     STR_SYNC_SUC, // 同步成功
     STR_SYNC_FAIL, // 同步失败
+    STR_MUTE, // 静音
 };
 
 extern const char * const *i18n;

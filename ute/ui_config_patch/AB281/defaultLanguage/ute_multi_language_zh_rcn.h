@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-01-17 15:49:12
+*@date   2025-02-13 16:58:51
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -258,6 +258,7 @@ const char * const i18n_zh_rcn[] =
     [STR_INS] = "\xe5\x90\x8c\xe6\xad\xa5\xe4\xb8\xad\x2e\x2e\x2e\x00", // [242] 同步中...
     [STR_SYNC_SUC] = "\xe5\x90\x8c\xe6\xad\xa5\xe6\x88\x90\xe5\x8a\x9f\x00", // [243] 同步成功
     [STR_SYNC_FAIL] = "\xe5\x90\x8c\xe6\xad\xa5\xe5\xa4\xb1\xe8\xb4\xa5\x00", // [244] 同步失败
+    [STR_MUTE] = "\xe9\x9d\x99\xe9\x9f\xb3\x00", // [245] 静音
 };
 
 #endif

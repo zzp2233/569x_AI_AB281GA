@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 法语(法国）
 *@author
-*@date   2025-01-17 15:49:15
+*@date   2025-02-13 16:58:53
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -258,6 +258,7 @@ const char * const i18n_fr_rfr[] =
     [STR_INS] = "\x53\x79\x6e\x63\x68\x72\x6f\x6e\x69\x73\x61\x74\x69\x6f\x6e\x20\x65\x6e\x20\x63\x6f\x75\x72\x73\x2e\x2e\x2e\x00", // [242] Synchronisation en cours...
     [STR_SYNC_SUC] = "\x53\x79\x6e\x63\x68\x72\x6f\x6e\x69\x73\xc3\xa9\x00", // [243] Synchronisé
     [STR_SYNC_FAIL] = "\xc3\x89\x63\x68\x65\x63\x20\x64\x65\x20\x6c\x61\x20\x73\x79\x6e\x63\x68\x72\x6f\x6e\x69\x73\x61\x74\x69\x6f\x6e\x00", // [244] Échec de la synchronisation
+    [STR_MUTE] = "\x4d\x75\x65\x74\x00", // [245] Muet
 };
 
 #endif

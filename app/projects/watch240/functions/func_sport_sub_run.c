@@ -580,6 +580,8 @@ static void func_sport_sub_run_updata(void)
             compo_textbox_set(txt_step_unit, i18n[STR_STEP]);
 
             //更新距离
+            // data->saveData.sportDistanceInteger = 5;
+            // data->saveData.sportDistanceDecimals = 0;
             f_sport_sub_run->km_integer = data->saveData.sportDistanceInteger;
             f_sport_sub_run->km_decimals = data->saveData.sportDistanceDecimals;
             memset(buf, 0, sizeof(buf));
@@ -592,6 +594,15 @@ static void func_sport_sub_run_updata(void)
             }
             else
             {
+                if(uteModuleSystemtimeGetDistanceMiType())//英里
+                {
+                    uint16_t distance = f_sport_sub_run->km_integer*1000+f_sport_sub_run->km_decimals*10;
+                    distance = distance*0.6213712;
+                    // distance = (uint16_t)ExactDecimalPoint(distance,2);
+                    // printf("distance:%d\n",distance);
+                    f_sport_sub_run->km_integer  = distance/1000;
+                    f_sport_sub_run->km_decimals = distance%1000/10;
+                }
                 snprintf(buf, sizeof(buf), "%d.%02d", f_sport_sub_run->km_integer, f_sport_sub_run->km_decimals);
             }
             compo_textbox_t* txt_km = NULL;
@@ -703,6 +714,7 @@ static void func_sport_sub_run_handle(void)
                 compo_textbox_set(txt, i18n[STR_CONTINUE]);
                 f_sport_sub_run->sport_run_state = false;
                 TRACE("【APP连接】运动停止/退出\n");
+                sport_start_flag = false;
                 break;
 
             case ALL_SPORT_STATUS_OPEN:
@@ -800,11 +812,10 @@ static void func_sport_sub_run_handle(void)
 static void func_sport_sub_run_init(void)
 {
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
-    f_sport_sub_run->sport_run_state = true;
 
-    if(sport_refresh == true)
+    if(sport_start_flag == false)
     {
-        f_sport_sub_run->sport_run_state = sport_start_flag;
+        sport_start_flag = true;
         if (
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
             func_cb.last != FUNC_CAMERA
@@ -832,41 +843,23 @@ static void func_sport_sub_run_init(void)
                 TRACE("【本地】开始运动:%d\n",func_sport_get_current_idx()+1);
             }
         }
+        f_sport_sub_run->heart_pic_size = 100;
+        cur_sport_type = uteModuleSportMoreSportGetType();
+        uteModuleHeartStartSingleTesting(TYPE_HEART);
     }
-    f_sport_sub_run->heart_pic_size = 100;
-    cur_sport_type = uteModuleSportMoreSportGetType();
-
     func_cb.frm_main = func_sport_sub_run_form_create();
-    uteModuleHeartStartSingleTesting(TYPE_HEART);
+
 }
 static void func_sport_sub_run_exit_data(void)
 {
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
 
-    if(sys_cb.refresh_language_flag == false)//刷新语言时不清除数据
+    if(sport_start_flag == false)
     {
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (
-#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-            func_cb.sta != FUNC_CAMERA
-#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
-            && func_cb.sta != FUNC_CHARGE && func_cb.sta != FUNC_LONG_PRESS && func_cb.sta != FUNC_BT_CALL && func_cb.sta != FUNC_BT_RING)
-        {
-            if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-            {
-                task_stack_pop();
-            }
-        }
-        sport_start_flag = false;
-        sport_refresh = true;
-    }
-    else
-    {
-        sport_refresh = false;
-        sport_start_flag = f_sport_sub_run->sport_run_state;
+        uteModuleHeartStopSingleTesting(TYPE_HEART);
     }
     func_cb.last = FUNC_SPORT_SUB_RUN;
-    uteModuleHeartStopSingleTesting(TYPE_HEART);
 }
 
 
@@ -935,6 +928,11 @@ static void func_sport_sub_run_click_handler(void)
                 {
 //                    func_switch_to(FUNC_SPORT_FINISH, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
                     func_cb.sta = FUNC_SPORT_FINISH;
+                }
+                sport_start_flag = false;
+                if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
+                {
+                    task_stack_pop();
                 }
             }
             else if (res == MSGBOX_RES_CANCEL)

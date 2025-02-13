@@ -1539,7 +1539,7 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
         {
             compo_picturebox_t *pic = (compo_picturebox_t *)compo;
             compo_picturebox_set_pos(pic, x, y);
-            compo_picturebox_set_size(pic, w, h);
+            // compo_picturebox_set_size(pic, w, h);
             if (unvisible)
             {
                 compo_picturebox_set_visible(pic, false);

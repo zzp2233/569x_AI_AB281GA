@@ -888,18 +888,18 @@ static void func_sport_sub_run_click_handler(void)
                 if (f_sport_sub_run->sport_run_state == true)
                 {
                     compo_textbox_set(txt, i18n[STR_CONTINUE]);
-//                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
-//                    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).wid, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).hei);
+                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
+                    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).wid, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).hei);
                     f_sport_sub_run->sport_run_state = false;
                     uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);   //通知APP暂停运动
                     printf("【APP连接】本地通知APP运动停止\n");
                 }
                 else if (f_sport_sub_run->sport_run_state == false)
                 {
-//                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
+                    compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
                     f_sport_sub_run->sport_run_state = true;
                     compo_textbox_set(txt, i18n[STR_PAUSE]);
-//                    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).wid, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).hei);
+                    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).wid, gui_image_get_size(UI_BUF_I330001_SPORT_BTN_PUSED_BIN).hei);
                     uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);   //通知APP继续运动
                     printf("【APP连接】本地通知APP运动继续\n");
                 }
@@ -959,13 +959,52 @@ static u16 cur_sport_type = 0;
 
 enum
 {
-    COMPO_SPORT_TIMER_TXT=1,
+    COMPO_ID_NUM_SPORT_TIME = 1,    //运动时间
+    COMPO_ID_NUM_SPORT_HEARTRATE,   //心率数据
+    COMPO_ID_NUM_SPORT_KCAL,        //卡路里数据
+    COMPO_ID_NUM_SPORT_TIME_DOWN,   //运动时间
+    COMPO_ID_NUM_SPORT_STEP,        //计步数据
+    COMPO_ID_NUM_SPORT_KM,          //距离数据
+    COMPO_ID_PIC_SPORT_STEP,        //计步图片
+    COMPO_ID_PIC_SPORT_KM,          //距离图片
+    COMPO_ID_UINT_SPORT_KM,         //距离单位
+    COMPO_ID_NUM_SPORT_COUNT,       //计次数据
+    COMPO_ID_PIC_SPORT_COUNT,       //计次图片
+    COMPO_ID_NUM_SPORT_TIME_RIGHT,  //运动时间
+    COMPO_ID_BTN_SPORT_PALY,        //暂停开始
+    COMPO_ID_BTN_SPORT_EXIT,        //结束退出
+    COMPO_ID_PIC_SPORT_TITLE,       //运动类型图片
+    COMPO_ID_SPOT_SPORT_SHAPE1,      //页码图片
+    COMPO_ID_SPOT_SPORT_SHAPE2,      //页码图片
 };
+
 typedef struct f_sport_sub_run_t_
 {
-
+    bool        touch_flag;
+    s32         move_offset;
+    s32         page_old_y;
+    u8          touch_state;
+    u8          page_num;
+    uint32_t    tick;
+    u8          switch_page_state;
 } f_sport_sub_run_t;
+enum
+{
+    TOUCH_FINISH_STATE=0,
+    AUTO_STATE,
 
+};
+enum
+{
+    PAGE_1=0,
+    PAGE_2,
+};
+enum
+{
+    SWITCH_YES=0,
+    SWITCH_NO,
+    TOTCH_MOVE,
+};
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_sub_run_form_create(void)
 {
@@ -1116,7 +1155,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
     compo_textbox_set(txt, txt_buf);
     compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
-    compo_setid(txt, COMPO_SPORT_TIMER_TXT);
+    compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
 
     txt = compo_textbox_create(frm, 50);///心率文本
     compo_textbox_set_location(txt, 154/2+32, 22/2+184, 154, 22);
@@ -1154,6 +1193,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     memset(txt_buf, 0, sizeof(txt_buf));
     snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
     compo_textbox_set(txt, txt_buf);
+    compo_setid(txt,COMPO_ID_NUM_SPORT_HEARTRATE);
 
     txt = compo_textbox_create(frm, 3);///卡路里数据文本
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
@@ -1162,15 +1202,294 @@ compo_form_t *func_sport_sub_run_form_create(void)
     memset(txt_buf, 0, sizeof(txt_buf));
     snprintf(txt_buf, sizeof(txt_buf), "%d", data->saveData.sportCaloire);
     compo_textbox_set(txt, txt_buf);
+    compo_setid(txt,COMPO_ID_NUM_SPORT_KCAL);
 
+    ///*右页*/
+    pic = compo_picturebox_create(frm, func_sport_get_ui(uteModuleSportMoreSportGetType() - 1));///运动类型图片
+    compo_picturebox_set_size(pic,70,70);
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,70/2+20);
+    compo_setid(pic,COMPO_ID_PIC_SPORT_TITLE);
+
+    txt = compo_textbox_create(frm, 8);///运动时长
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 58/2+126, 240, 60);
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+    compo_textbox_set(txt, txt_buf);
+    compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
+    compo_setid(txt,COMPO_ID_NUM_SPORT_TIME_RIGHT);
+
+    compo_button_t * btn =compo_button_create_by_image(frm,UI_BUF_I332001_SPORT_BTN_PUSED_BIN);
+    compo_setid(btn,COMPO_ID_BTN_SPORT_PALY);
+    compo_button_set_pos(btn,80/2+68,80/2+234);
+
+    btn =compo_button_create_by_image(frm,UI_BUF_I332001_SPORT_BTN_CLOSE_BIN);
+    compo_setid(btn,COMPO_ID_BTN_SPORT_EXIT);
+    compo_button_set_pos(btn,80/2+212,80/2+234);
+
+    ///*下页*/
+    if((uteModuleSportMoreSportGetType() - 1 == 2 || uteModuleSportMoreSportGetType() - 1 == 3) &&
+       (sport_flag[0] == false && sport_flag[0] == false) )
+    {
+        ab_free(data);
+        return frm;
+    }
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, 12/2+340, 12/2+165, 12, 12);
+    compo_setid(shape,COMPO_ID_SPOT_SPORT_SHAPE1);
+    compo_shape_set_color(shape, COLOR_WHITE);
+    compo_shape_set_radius(shape, 6);
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, 12/2+340, 12/2+165, 12, 12);
+    compo_setid(shape,COMPO_ID_SPOT_SPORT_SHAPE2);
+    compo_shape_set_color(shape, make_color(0x29,0x29,0x29));
+    compo_shape_set_radius(shape, 6);
+
+    txt = compo_textbox_create(frm, 8);///运动时长
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 58/2+26+360, 180, 60);
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+    compo_textbox_set(txt, txt_buf);
+    compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
+    compo_setid(txt,COMPO_ID_NUM_SPORT_TIME_DOWN);
+
+    if(!(uteModuleSportMoreSportGetType() - 1 == 2 || uteModuleSportMoreSportGetType() - 1 == 3))
+    {
+        if(sport_flag[0] == true)
+        {
+            txt = compo_textbox_create(frm, 50);///公里文本
+            compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 24);
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_KM],i18n[STR_KM]);
+            compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+            compo_textbox_set(txt, txt_buf);
+            compo_setid(txt,COMPO_ID_UINT_SPORT_KM);
+
+            shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);///灰色矩形
+            compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 48/2+130+360, 296, 48);
+            compo_shape_set_radius(shape, 48/2);
+            compo_shape_set_color(shape, make_color(0x29,0x29,0x29));
+
+            txt = compo_textbox_create(frm, 6);///公里数据文本
+            compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
+            compo_textbox_set_pos(txt, 43/2+167, 48/2+130+360);
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",  data->saveData.sportDistanceInteger,data->saveData.sportDistanceDecimals);
+            compo_textbox_set(txt, txt_buf);
+            compo_setid(txt,COMPO_ID_NUM_SPORT_KM);
+
+            pic = compo_picturebox_create(frm, UI_BUF_I332001_SPORT_ICON2_DIS_BIN);///公里图片
+            compo_picturebox_set_pos(pic,43/2+167-30-widget_text_get_area(txt->txt).wid/2,48/2+130+360);
+            compo_setid(txt,COMPO_ID_PIC_SPORT_KM);
+        }
+        if(sport_flag[1] == true)
+        {
+            txt = compo_textbox_create(frm, strlen(i18n[STR_STEPS]));///步数文本
+            compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 43/2+198+360, 240, 24);
+            compo_textbox_set(txt, i18n[STR_STEPS]);
+
+            shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);///灰色矩形
+            compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 48/2+232+360, 296, 48);
+            compo_shape_set_radius(shape, 48/2);
+            compo_shape_set_color(shape, make_color(0x29,0x29,0x29));
+
+            txt = compo_textbox_create(frm, 6);///步数数据文本
+            compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
+            compo_textbox_set_pos(txt, 43/2+167, 48/2+232+360);
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
+            compo_textbox_set(txt, txt_buf);
+            compo_setid(txt,COMPO_ID_NUM_SPORT_STEP);
+
+            pic = compo_picturebox_create(frm, UI_BUF_I332001_SPORT_ICON2_STEP_BIN);///步数图片
+            compo_picturebox_set_pos(pic,43/2+167-30-widget_text_get_area(txt->txt).wid/2,48/2+232+360);
+            compo_setid(txt,COMPO_ID_PIC_SPORT_STEP);
+        }
+    }
+    else
+    {
+        txt = compo_textbox_create(frm, 50);///计数文本
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 24);
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_NO_DATA],i18n[STR_SPORT_ORDER]);
+        compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+        compo_textbox_set(txt, txt_buf);
+
+        shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);///灰色矩形
+        compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 48/2+130+360, 296, 48);
+        compo_shape_set_radius(shape, 48/2);
+        compo_shape_set_color(shape, make_color(0x29,0x29,0x29));
+
+        txt = compo_textbox_create(frm, 6);///计数数据文本
+        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
+        compo_textbox_set_pos(txt, 43/2+167, 48/2+130+360);
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d",  data->saveData.sportTimes);
+        compo_textbox_set(txt, txt_buf);
+        compo_setid(txt,COMPO_ID_NUM_SPORT_COUNT);
+
+        pic = compo_picturebox_create(frm, UI_BUF_I332001_SPORT_ICON2_TIMES_BIN);///计数图片
+        compo_picturebox_set_pos(pic,43/2+167-30-widget_text_get_area(txt->txt).wid/2,48/2+130+360);
+        compo_setid(txt,COMPO_ID_PIC_SPORT_COUNT);
+    }
     ab_free(data);
     return frm;
+}
+static void func_soprt_run_move(void)
+{
+#define   PAGE_TWO_SIZE  360*2  //最底y轴
+#define   TOYCH_LAST_DY  40   //切换页滑动y
+#define   TICK_TIME      8   //步进y像素点时间
+#define   STEP_NUM       8    //步进y像素点
+    f_sport_sub_run_t *f_sleep = (f_sport_sub_run_t *)func_cb.f_cb;
+
+
+    if(f_sleep->page_num == PAGE_1)//第一页
+    {
+        if(f_sleep->touch_flag)//触摸状态
+        {
+            s32 dx, dy;
+            f_sleep->touch_flag = ctp_get_dxy(&dx, &dy);
+            f_sleep->move_offset = dy;
+            if(f_sleep->move_offset > 0)
+            {
+                f_sleep->move_offset = 0;
+            }
+            widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+
+            if(f_sleep->touch_flag == false)//松手触发自动移动页
+            {
+                f_sleep->touch_state = AUTO_STATE;
+                if(f_sleep->move_offset <= (-TOYCH_LAST_DY))//满足切换下一页
+                {
+                    f_sleep->switch_page_state = SWITCH_YES;
+                }
+                else
+                {
+                    f_sleep->switch_page_state = SWITCH_NO;
+                }
+            }
+        }
+        else
+        {
+            if(f_sleep->touch_state == AUTO_STATE)
+            {
+                if(tick_check_expire(f_sleep->tick, TICK_TIME))//自动滑动
+                {
+                    if(f_sleep->switch_page_state == SWITCH_YES)//满足切换下一页
+                    {
+                        f_sleep->tick = tick_get();
+                        f_sleep->move_offset-=STEP_NUM;
+
+                        if(f_sleep->move_offset <= -GUI_SCREEN_HEIGHT)
+                        {
+                            f_sleep->move_offset = -GUI_SCREEN_HEIGHT;
+                            f_sleep->page_num = PAGE_2;//第2页
+                            f_sleep->touch_state = TOUCH_FINISH_STATE;
+                            f_sleep->page_old_y = f_sleep->move_offset;
+                        }
+                    }
+                    else if(f_sleep->switch_page_state == SWITCH_NO)
+                    {
+                        f_sleep->move_offset+=STEP_NUM;
+
+                        if(f_sleep->move_offset >= 0)
+                        {
+                            f_sleep->move_offset = 0;
+                            f_sleep->touch_state = TOUCH_FINISH_STATE;
+                        }
+                    }
+                }
+                widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+            }
+        }
+
+    }
+    else if(f_sleep->page_num == PAGE_2)
+    {
+        if(f_sleep->touch_flag)//触摸状态
+        {
+            s32 dx, dy;
+            f_sleep->touch_flag = ctp_get_dxy(&dx, &dy);
+            f_sleep->move_offset = f_sleep->page_old_y+dy;
+            if(f_sleep->move_offset < -PAGE_TWO_SIZE)
+            {
+                f_sleep->move_offset = -PAGE_TWO_SIZE;
+            }
+            widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+
+            if(f_sleep->touch_flag == false)//松手触发自动移动页
+            {
+                f_sleep->touch_state = AUTO_STATE;
+                if(f_sleep->move_offset >= -(GUI_SCREEN_HEIGHT-TOYCH_LAST_DY))//满足切换下一页
+                {
+                    f_sleep->switch_page_state = SWITCH_YES;
+                }
+                else if(f_sleep->move_offset > -GUI_SCREEN_HEIGHT)
+                {
+                    f_sleep->switch_page_state = SWITCH_NO;
+                }
+                else
+                {
+                    f_sleep->switch_page_state = TOTCH_MOVE;
+                }
+            }
+        }
+        else
+        {
+            if(f_sleep->touch_state == AUTO_STATE)
+            {
+                if(tick_check_expire(f_sleep->tick, TICK_TIME))//自动滑动
+                {
+                    f_sleep->tick = tick_get();
+                    if(f_sleep->switch_page_state == SWITCH_YES)//满足切换下一页
+                    {
+                        f_sleep->move_offset+=STEP_NUM;
+
+                        if(f_sleep->move_offset >= 0)
+                        {
+                            f_sleep->move_offset = 0;
+                            f_sleep->page_num = PAGE_1;//第2页
+                            f_sleep->touch_state = TOUCH_FINISH_STATE;
+                        }
+                    }
+                    else if(f_sleep->switch_page_state == SWITCH_NO)
+                    {
+                        f_sleep->move_offset-=STEP_NUM;
+
+                        if(f_sleep->move_offset <= -(GUI_SCREEN_HEIGHT))
+                        {
+                            f_sleep->move_offset = -GUI_SCREEN_HEIGHT;
+                            f_sleep->touch_state = TOUCH_FINISH_STATE;
+                        }
+                    }
+                }
+                f_sleep->page_old_y = f_sleep->move_offset;
+                widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+            }
+        }
+    }
+
 }
 
 static void func_sport_sub_run_updata(void)
 {
-    f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t *)func_cb.f_cb;
+    compo_textbox_t* txt_time       = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME);
+    compo_textbox_t* txt_heart      = compo_getobj_byid(COMPO_ID_NUM_SPORT_HEARTRATE);
+    compo_textbox_t* txt_kcal       = compo_getobj_byid(COMPO_ID_NUM_SPORT_KCAL);
+    compo_textbox_t* txt_step       = compo_getobj_byid(COMPO_ID_NUM_SPORT_STEP);
+    compo_textbox_t* txt_km         = compo_getobj_byid(COMPO_ID_NUM_SPORT_KM);
+    compo_textbox_t* uint_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
+    compo_textbox_t* txt_count      = compo_getobj_byid(COMPO_ID_NUM_SPORT_COUNT);
+    compo_picturebox_t* pic_km      = compo_getobj_byid(COMPO_ID_PIC_SPORT_KM);
+    compo_picturebox_t* pic_step    = compo_getobj_byid(COMPO_ID_PIC_SPORT_STEP);
+    compo_picturebox_t* pic_count   = compo_getobj_byid(COMPO_ID_PIC_SPORT_COUNT);
 
+    compo_textbox_t* txt_time_down  = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME_DOWN);
+    compo_textbox_t* txt_time_right = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME_RIGHT);
 
 }
 //按键处理
@@ -1221,7 +1540,7 @@ static void func_sport_sub_run_process(void)
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_sport_sub_run_handle();
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-
+    func_soprt_run_move();
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }
@@ -1233,10 +1552,29 @@ static void func_sport_sub_run_message(size_msg_t msg)
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     switch (msg)
     {
+        case MSG_SYS_1S:
+
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+        {
+            compo_form_t *frm = func_cb.frm_main;
+            if (frm != NULL)
+            {
+                printf("11111111111\n");
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_sport_sub_run_form_create();
+        }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+        break;
+        case MSG_CTP_TOUCH:
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+            f_sport_sub_run->touch_flag = true;
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+            break;
         case MSG_CTP_CLICK:
             func_sport_sub_run_click_handler();
             break;
-
         case MSG_CTP_SHORT_UP:
             break;
 

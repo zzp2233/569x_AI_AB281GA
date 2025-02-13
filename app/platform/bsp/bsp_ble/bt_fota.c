@@ -781,6 +781,8 @@ void bsp_fot_process(void)
 
             fot_flag &= ~FOT_FLAG_SYS_RESET;
             FOT_DEBUG("-->fota update ok,sys reset\n");
+            ble_disconnect();
+            ble_adv_dis();
             if (func_cb.sta == FUNC_OTA_UI_MODE)
             {
                 WDT_RST();

@@ -175,12 +175,12 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
     if(uteModuleCallBtIsPowerOn())
     {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_I330001_SLIDEMENU_ICON_CALL01_BIN);
-        compo_picturebox_set_visible(bluetooth, true);
+        // compo_picturebox_set_visible(bluetooth, true);
     }
     else
     {
         compo_button_set_bgimg(bluetooth_pic,UI_BUF_I330001_SLIDEMENU_ICON_CALL00_BIN );
-        compo_picturebox_set_visible(bluetooth, false);
+        // compo_picturebox_set_visible(bluetooth, false);
 
     }
 }

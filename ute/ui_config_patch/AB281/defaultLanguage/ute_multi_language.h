@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-02-13 16:58:50
+*@date   2025-02-14 14:52:20
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -73,8 +73,8 @@ enum
     STR_LIGHT_ALWAYS, // 常亮
     STR_SETTING_UP, // 抬腕亮屏
     STR_SETTING_DISTURD, // 勿扰模式
-    STR_DISTURD_ALL, // 全天勿扰
-    STR_DISTURD_TIM, // 定时勿扰
+    STR_DISTURD_ALL, // 全天开启
+    STR_DISTURD_TIM, // 定时开启
     STR_DISTURD_TIM_CTT, // 开启后，来电和通知静音且不振动(闹钟除外)，抬腕不亮屏，是否开启？
     STR_DISTURD_TIM_START, // 开始时间
     STR_DISTURD_TIM_END, // 结束时间

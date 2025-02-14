@@ -854,7 +854,14 @@ compo_form_t *func_weather_form_create(void)
             compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
         }
 
-        txt = compo_textbox_create(frm,strlen(i18n[STR_SUNDAY+week_sort[i]]));
+        if(i==0)
+        {
+            txt = compo_textbox_create(frm,strlen(i18n[STR_TO_DAY]));
+        }
+        else
+        {
+            txt = compo_textbox_create(frm,strlen(i18n[STR_SUNDAY+week_sort[i]]));
+        }
 //        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
         compo_textbox_set_location(txt, 22,GUI_SCREEN_HEIGHT+95+(i*57),90,34);
         compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期

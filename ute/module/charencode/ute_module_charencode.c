@@ -180,12 +180,13 @@ bool uteModuleCharencodeGetUtf8String(uint8_t*input_utf8,int16_t len,uint8_t*out
 
 
     memcpy(output_utf8,input_utf8,new_utf8_len);
+    *utf8_len = new_utf8_len;
 
     // strncpy(&output_utf8[new_utf8_len],"...",3);
     // *utf8_len = new_utf8_len+3;
 //    memcpy(&output_utf8[new_utf8_len],"\x2e\x2e\x2e\x1e\x1e\x1e\x00",7);
-    memcpy(&output_utf8[new_utf8_len],"\x2e\x2e\x2e\x00",4);
-    *utf8_len = new_utf8_len+7;
+    // memcpy(&output_utf8[new_utf8_len],"\x2e\x2e\x2e\x00",4);
+    // *utf8_len = new_utf8_len+4;
 
 
     // UTE_MODULE_LOG_BUFF(UTE_LOG_NOTIFY_LVL,new_utf8,new_utf8_len);
@@ -1152,11 +1153,11 @@ bool uteModuleCharencodeDevanagariUnicodeStringConversion(uint16_t *input,uint32
 
 /**
  * @brief        替换子字符串
- * @details      
- * @param[in]    original 原始字符串 
- * @param[in]    replace 需要替换的原始子字符串 
+ * @details
+ * @param[in]    original 原始字符串
+ * @param[in]    replace 需要替换的原始子字符串
  * @param[in]    replacement 替换后的子字符串
- * @param[out]   result 替换后的字符串 
+ * @param[out]   result 替换后的字符串
  * @return       void*
  * @author       Wang.Luo
  * @date         2024-12-19

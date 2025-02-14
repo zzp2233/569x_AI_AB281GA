@@ -313,6 +313,7 @@ SECTIONS
 
         *(.irq_init.aligned)
         *(.text*)
+        __code_end_all = .; //USER_APP_USE
         *(.rodata*)
         *(.rela*)
         LONG(0)

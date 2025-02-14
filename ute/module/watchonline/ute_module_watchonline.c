@@ -469,8 +469,9 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     uteModuleWatchOnlineData.receiveTimeout = 0; // Casen add 20-10-28
     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,systemNotSaveVariable.watchParam.fileCrc32=0x%x", __func__, uteModuleWatchOnlineData.fileCrc32);
     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,systemNotSaveVariable.watchConfig.fileCrc32=0x%x", __func__, watchConfig.fileCrc);
-
-    if (uteModuleWatchOnlineData.fileCrc32 == watchConfig.fileCrc)
+    uint16_t headerNum = bsp_uitool_header_phrase(uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex]);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,headerNum=%d", __func__, headerNum);
+    if (uteModuleWatchOnlineData.fileCrc32 == watchConfig.fileCrc && headerNum > 0)
     {
         watchConfig.isWatchVaild = 0;
         uteModulePlatformFlashNorWrite((uint8_t *)&watchConfig, uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex], watchConfigSize);
@@ -529,6 +530,7 @@ uint8_t uteModuleWatchOnlineGetSupportMultipleCnt(void)
 */
 uint8_t uteModuleWatchOnlineGetVailWatchCnt(void)
 {
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL,"%s,multipleValidWatchCnt=%d",__func__,uteModuleWatchOnlineData.multipleValidWatchCnt);
     return uteModuleWatchOnlineData.multipleValidWatchCnt;
 }
 

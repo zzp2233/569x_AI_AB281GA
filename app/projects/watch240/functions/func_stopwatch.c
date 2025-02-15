@@ -75,7 +75,7 @@ compo_form_t *func_stopwatch_form_create(void)
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_JICI_BIN);    //计次
     compo_setid(btn, COMPO_ID_BTN_RECORD);
     compo_button_set_pos(btn, 194, 240);
-    compo_button_set_visible(btn, sys_cb.stopwatch_sta != 0);
+    compo_button_set_visible(btn, sys_cb.stopwatch_total_msec > 0);
     btn = compo_button_create_by_image(frm, UI_BUF_I330001_STOPWATCH_BG_BIN);    //计次详情
     compo_setid(btn, COMPO_ID_BTN_RECORD_VIEW);
     compo_button_set_pos(btn, 120, 85);
@@ -227,6 +227,7 @@ static void func_stopwatch_button_click(u32 key_flag)
             compo_button_set_visible(btn_record1, false);
             compo_textbox_set_visible(num_rec, false);
             compo_button_set_visible(btn_record, false);
+            compo_button_set_visible(btn_afresh, false);
             res_addr = sys_cb.stopwatch_sta ? UI_BUF_I330001_PUBLIC_PAUSED_BIN: UI_BUF_I330001_PUBLIC_PLAY_BIN;
             compo_button_set_bgimg(btn_start, res_addr);
             break;

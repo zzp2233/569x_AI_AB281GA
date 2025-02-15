@@ -158,14 +158,6 @@ def main():
         print("错误: key 目录下有多个 .key 文件。请确保只存在一个。")
         return 1
 
-    tmp_dcf_patch = os.path.join(downloader_dir, 'app.dcf')
-    if os.path.exists(tmp_dcf_patch):
-        if not remove_file(tmp_dcf_patch):
-            return 1
-
-    if not copy_file(app_dcf_path, tmp_dcf_patch):
-        return 1
-
     if os.path.exists(settings_target):
         shutil.rmtree(settings_target, ignore_errors=True)
 
@@ -227,9 +219,6 @@ def main():
         return 1
 
     print("成功生成:", code_prd_name)
-
-    if os.path.exists(tmp_dcf_patch):
-        remove_file(tmp_dcf_patch)
 
     if os.path.exists(settings_target):
         shutil.rmtree(settings_target, ignore_errors=True)

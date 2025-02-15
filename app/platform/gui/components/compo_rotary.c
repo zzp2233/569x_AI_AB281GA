@@ -286,7 +286,7 @@ void compo_rotary_move(compo_rotary_t *rotary)
         case COMPO_ROTARY_STA_EXITING:
             if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
             {
-                s16 cnt, wid, hei, swid, shei, angle;
+                static s16 cnt, wid, hei, swid, shei, angle = 0;
                 mcb->tick = tick_get();
                 mcb->animation_cnt++;
                 cnt = mcb->animation_cnt;

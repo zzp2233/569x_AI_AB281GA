@@ -134,7 +134,7 @@ typedef struct f_sport_sub_run_t_
 
     u8 heartrate;           //心率
     u16 kcal;               //卡路里
-    u16 step;               //计步
+    u32 step;               //计步
     u8 km_integer;                 //距离 整数
     u8 km_decimals;                     // 小数
 

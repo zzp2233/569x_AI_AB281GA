@@ -344,19 +344,23 @@ compo_form_t *func_clock_cube_form_create(void)
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_HOUR);
-
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 2);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_MINUTE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
 
     txt = compo_textbox_create(frm, 10);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 180, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + GUI_SCREEN_CENTER_X, 300, 70);
     compo_bonddata(txt, COMPO_BOND_DATE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
 
     txt = compo_textbox_create(frm, 1);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
@@ -400,18 +404,21 @@ compo_form_t *func_clock_butterfly_form_create(void)
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_HOUR);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 2);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_MINUTE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 10);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 70, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 60, 300, 70);
     compo_bonddata(txt, COMPO_BOND_DATE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 1);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
@@ -695,6 +702,10 @@ static void func_clock_process(void)
 //        compo_cube_roll_from(cube, rp, ra);
 //        compo_cube_update(cube);
 
+    }
+    else if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
+    {
+        func_clock_butterfly_process();
     }
 #endif
     func_process();                                  //刷新UI

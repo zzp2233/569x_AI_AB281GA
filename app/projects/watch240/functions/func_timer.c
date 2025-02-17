@@ -188,11 +188,11 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
     //设置标题栏
-    if(page_type != TIMER_PAGE_SELECT)
-    {
-        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-        compo_form_set_title(frm, i18n[STR_TIMER]);
-    }
+    // if(page_type != TIMER_PAGE_SELECT)
+    // {
+    //     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    //     compo_form_set_title(frm, i18n[STR_TIMER]);
+    // }
 
     switch (page_type)
     {
@@ -232,6 +232,9 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
         break;
 
         case TIMER_PAGE_CUSTOM:
+
+            compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+            compo_form_set_title(frm, i18n[STR_CUSTOM]);
             if (func_cb.sta == FUNC_TIMER)
             {
                 func_timer_setting_date_init();
@@ -280,6 +283,8 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             break;
 
         case TIMER_PAGE_COUNTDOWN:
+            compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+            compo_form_set_title(frm, i18n[STR_TIMER]);
             //新建按钮
             res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I330001_PUBLIC_PAUSED_BIN : (sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I330001_PUBLIC_RETRY_BIN : UI_BUF_I330001_PUBLIC_PLAY_BIN);
             btn = compo_button_create_by_image(frm, res_addr); //start/pause/again
@@ -601,6 +606,7 @@ static void func_timer_button_click(void)
         f_timer->page_disp = page_next;
         compo_form_destroy(func_cb.frm_main);
         func_cb.frm_main = func_timer_form_create_by_type(f_timer->page_disp);
+
     }
 
 //    TRACE("page[%d] sta[%d]\n", f_timer->page_disp, sys_cb.timer_sta);

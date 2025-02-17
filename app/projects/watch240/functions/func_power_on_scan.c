@@ -39,8 +39,6 @@ compo_form_t *func_power_on_scan_form_create(void)
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
     uteModulePlatformMemoryFree(qr_str);
 
-    compo_textbox_set(textbox,i18n[STR_DISTURD_TIM_CTT]);
-
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT

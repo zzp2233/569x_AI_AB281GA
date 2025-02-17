@@ -64,7 +64,6 @@ void compo_update(void)
     rtc_pr2 = (compo_cb.rtc_cnt2 & 0x1FFFF) + 1;
     compo_cb.rtc_update = false;
     GLOBAL_INT_RESTORE();
-    func_clock_butterfly_process();
 
     if (!rtc_update)
     {

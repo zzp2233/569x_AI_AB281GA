@@ -701,7 +701,7 @@ static void func_alarm_clock_enter(void)
     page_move_info_t info =
     {
         .title_used = true,
-        .page_size = 104,
+        .page_size = 74,
         .page_count = ALARM_ENABLE_CNT(),
         .jump_perc = 20,
         .quick_jump_perc = 200,

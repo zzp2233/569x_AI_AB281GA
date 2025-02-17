@@ -152,19 +152,10 @@ void uteModuleCallBtUpdateKeyConnectAddress(uint8_t *addr)
 void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,reason=%d",__func__,reason);
-    if(reason != UTE_BT_POWER_OFF_APP_UNBIND)
+    bsp_bt_trun_off();
+    if(reason == UTE_BT_POWER_OFF_APP_UNBIND)
     {
-        if (bt_is_connected())
-        {
-            bt_disconnect(0);
-        }
-        bt_scan_disable();
-    }
-    else
-    {
-        bt_disconnect(0);
         bt_nor_delete_link_info();
-        bt_scan_disable();
     }
 
     if(UTE_BT_POWER_OFF_AUTO != reason)
@@ -187,37 +178,6 @@ void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
     uteModuleCallData.callData.isAutoWakupFromBle = false;
 }
 
-//void bsp_bt_trun_off(void)
-//{
-//    printk("bsp_bt_trun_off\n");
-//    bt_onoff_timer_cnt = 5;
-//    bt_scan_disable();
-//    bt_onoff_timer_falg = false;
-//    if(bt_onoff_timer.en){
-//        co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
-//        bt_onoff_timer_sta = 1;
-//        printk("off 000 a2dp[%d] hfp[%d] hid[%d] hid_type_isAndroid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), hid_type_isAndroid);
-//
-//    }else{
-//        printk("off 111 \n");
-//        if (bt_onoff_timer_sta == 0) {
-//            printk("off 222 a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]hid_type_isAndroid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), a2dp_on_off_flag, hid_type_isAndroid);
-//            if (bt_disconnect_on_flag()) {
-//                printk("off 333 a2dp[%d] hfp[%d] hid[%d] hid_type_isAndroid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), hid_type_isAndroid);
-//                //bt_abort_reconnect(); //终止回连
-//                //bt_disconnect(0);
-//                bt_comm_msg(COMM_BT_DISCONNECT, 0xffff);
-//            }
-//            else {
-//                bt_onoff_timer_sta = 1;
-//                co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
-//            }
-//
-//
-//        }
-//    }
-//}
-
 /**
 *@brief  call bt开机，可连接
 *@details
@@ -229,11 +189,7 @@ void uteModuleCallBtPowerOn(ute_bt_power_on_type_t type)
     uteModuleCallData.powerOnType = type;
     if (type != UTE_BT_POWER_OFF)
     {
-        if (!bt_get_scan())
-        {
-            bt_scan_enable();
-            bt_connect();
-        }
+        bsp_bt_trun_on();
 
         uteModuleCallData.callData.isAppAudio = false;
         uteModuleCallData.callData.inOutToActiveRtc = 0;
@@ -321,10 +277,14 @@ void uteModuleCallEverySecond(void)
         // 防止状态错误
         if (!bt_get_scan())
         {
-            bt_scan_enable();
-            bt_connect();
+            bsp_bt_trun_on();
         }
-
+#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
+        if(!uteModuleCallIsEntertranmentVoiceOn() && bt_a2dp_profile_completely_connected())
+        {
+            bt_a2dp_profile_dis();
+        }
+#endif
         uteModuleCallData.powerOnTimeSecond++;
         if(isHfpAndA2dpProfileBothConnected())
         {
@@ -347,13 +307,9 @@ void uteModuleCallEverySecond(void)
     {
         uteModuleCallData.powerOnTimeSecond = 0;
         // 防止状态错误
-        if (isHfpAndA2dpProfileBothConnected())
-        {
-            bt_disconnect(0);
-        }
         if (bt_get_scan())
         {
-            bt_scan_disable();
+            bsp_bt_trun_off();
         }
     }
 }

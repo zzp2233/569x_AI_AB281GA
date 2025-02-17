@@ -20,21 +20,24 @@ typedef enum
     IMG_POINT_LEFT,             //左滑
     IMG_POINT_RIGHT,            //右滑
     IMG_POINT_DD,
-}img_point_type;
+} img_point_type;
 
-enum bt_call_type_t {
+enum bt_call_type_t
+{
     CALL_TYPE_NONE,                            //无
     CALL_TYPE_PHONE,                           //普通通话
     CALL_TYPE_NETWORK,                         //网络通话
 };
 
-enum bt_id3_tag_type_t {
+enum bt_id3_tag_type_t
+{
     BT_ID3_TAG_TITLE,
     BT_ID3_TAG_ARTIST,
     BT_ID3_TAG_ALBUM,
 };
 
-typedef struct{
+typedef struct
+{
     u16 warning_status;
     u8 disp_status;
     u8 hid_menu_flag;
@@ -49,7 +52,7 @@ typedef struct{
     u8 need_pairing : 1;
     u8 incall_flag  : 1;
 
-    u8 call_type;	            //通话类型
+    u8 call_type;               //通话类型
     u16 times;
 } bsp_bt_t;
 extern bsp_bt_t bt_cb;
@@ -128,5 +131,8 @@ void bt_id3_tag_update_cb_unreg(void);
 #define bt_id3_tag_update_cb_reg(x)
 #define bt_id3_tag_update_cb_unreg()
 #endif // BT_ID3_TAG_EN
+
+void bsp_bt_trun_off(void);
+void bsp_bt_trun_on(void);
 
 #endif //_BSP_BT_H

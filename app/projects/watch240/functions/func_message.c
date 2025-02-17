@@ -338,10 +338,44 @@ static void func_message_card_click(void)
 //        printf("===================================================>>>>>>>\n");
 
         printf("msg[%d]:%s\n", strlen(msg), f_msg->tmp_msg);
-//        sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
-//                f_msg->ute_msg->historyNotify[msg_id].day, f_msg->ute_msg->historyNotify[msg_id].hour, f_msg->ute_msg->historyNotify[msg_id].min);
-        sprintf(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
-                f_msg->ute_msg->historyNotify[msg_id].day);
+        // sprintf(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[msg_id].year, f_msg->ute_msg->historyNotify[msg_id].month,
+        //         f_msg->ute_msg->historyNotify[msg_id].day);
+        ute_module_systemtime_time_t time_data;
+        uteModuleSystemtimeGetTime(&time_data);//获取系统时间
+        u8 time_disp_state = 1;
+
+        if(time_data.year != f_msg->ute_msg->historyNotify[msg_id].year || time_data.month != f_msg->ute_msg->historyNotify[msg_id].month)
+        {
+            time_disp_state = 0;
+        }
+        else if(time_data.day > f_msg->ute_msg->historyNotify[msg_id].day && time_data.month == f_msg->ute_msg->historyNotify[msg_id].month)
+        {
+            time_disp_state = 1;
+        }
+        else
+        {
+            time_disp_state = 2;
+        }
+        switch(time_disp_state)
+        {
+            case 0:
+                sprintf((char*)time, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                        f_msg->ute_msg->historyNotify[msg_id].year,
+                        f_msg->ute_msg->historyNotify[msg_id].month,
+                        f_msg->ute_msg->historyNotify[msg_id].day);
+                break;
+            case 1:
+                sprintf((char*)time, "%02d/%02d", //record_tbl[index].callTime.year,
+                        f_msg->ute_msg->historyNotify[msg_id].month,
+                        f_msg->ute_msg->historyNotify[msg_id].day);
+                break;
+            case 2:
+                sprintf((char*)time, "%02d:%02d", //record_tbl[index].callTime.year,
+                        f_msg->ute_msg->historyNotify[msg_id].hour,
+                        f_msg->ute_msg->historyNotify[msg_id].min);
+                break;
+        }
+
         sys_cb.msg_index = f_msg->ute_msg->historyNotify[msg_id].type;
         int res = msgbox(f_msg->tmp_msg, NULL, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
         if (res == MSGBOX_RES_DELETE)
@@ -372,6 +406,7 @@ static u32 func_message_card_get_icon(u8 type)
 static void func_message_card_update(bool first_update, compo_form_t *frm)
 {
     f_message_t *f_msg = NULL;
+
     if (first_update == true && func_cb.sta != FUNC_MESSAGE)
     {
         f_msg = ab_zalloc(sizeof(f_message_t));
@@ -399,12 +434,46 @@ static void func_message_card_update(bool first_update, compo_form_t *frm)
 
             char* time = (char*)func_zalloc(30);
             char* msg = (char*)f_msg->ute_msg->historyNotify[i].content;
+            // sprint/f(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[i].year, f_msg->ute_msg->historyNotify[i].month,
+            // f_msg->ute_msg->historyNotify[i].day);
 
-            //memcpy(msg, f_msg->ute_msg->historyNotify[i].content, f_msg->ute_msg->historyNotify[i].size);
-//            sprintf(time, "%04d/%02d/%02d %02d:%02d", f_msg->ute_msg->historyNotify[i].year, f_msg->ute_msg->historyNotify[i].month,
-//                    f_msg->ute_msg->historyNotify[i].day, f_msg->ute_msg->historyNotify[i].hour, f_msg->ute_msg->historyNotify[i].min);
-            sprintf(time, "%04d/%02d/%02d", f_msg->ute_msg->historyNotify[i].year, f_msg->ute_msg->historyNotify[i].month,
-                    f_msg->ute_msg->historyNotify[i].day);
+            ute_module_systemtime_time_t time_data;
+            uteModuleSystemtimeGetTime(&time_data);//获取系统时间
+            u8 time_disp_state = 0;
+
+            if(time_data.year != f_msg->ute_msg->historyNotify[i].year || time_data.month != f_msg->ute_msg->historyNotify[i].month)
+            {
+                time_disp_state = 0;
+            }
+            else if(time_data.day > f_msg->ute_msg->historyNotify[i].day && time_data.month == f_msg->ute_msg->historyNotify[i].month)
+            {
+                time_disp_state = 1;
+            }
+            else
+            {
+                time_disp_state = 2;
+            }
+            switch(time_disp_state)
+            {
+                case 0:
+                    sprintf((char*)time, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                            f_msg->ute_msg->historyNotify[i].year,
+                            f_msg->ute_msg->historyNotify[i].month,
+                            f_msg->ute_msg->historyNotify[i].day);
+                    break;
+                case 1:
+                    sprintf((char*)time, "%02d/%02d", //record_tbl[index].callTime.year,
+                            f_msg->ute_msg->historyNotify[i].month,
+                            f_msg->ute_msg->historyNotify[i].day);
+                    break;
+                case 2:
+                    sprintf((char*)time, "%02d:%02d", //record_tbl[index].callTime.year,
+                            f_msg->ute_msg->historyNotify[i].hour,
+                            f_msg->ute_msg->historyNotify[i].min);
+                    break;
+            }
+
+
             card_y += (card.h+10);
             compo_cardbox_set_visible(cardbox, true);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, card_y);
@@ -1199,6 +1268,8 @@ static void func_message_exit(void)
         {
             func_cb.last = FUNC_MESSAGE;
             func_cb.left_sta = FUNC_NULL;
+            task_stack_init();  //任务堆栈
+            latest_task_init(); //最近任务
         }
     }
     else

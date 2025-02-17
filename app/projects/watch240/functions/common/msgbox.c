@@ -93,7 +93,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
                                            func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH-10, 128);              //调整文本位置
+                                           GUI_SCREEN_WIDTH-10, 128-20);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
 //                compo_textbox_set_align_center_top(txt_msg, true);
@@ -552,7 +552,12 @@ static void msgbox_message(size_msg_t msg)
             msg_cb->res = MSGBOX_RES_EXIT;
             msg_cb->show = false;
             break;
-
+        case MSG_CHECK_LANGUAGE:
+            printf("EVT_MSGBOX_EXIT\n");
+            msg_cb->res = MSGBOX_RES_EXIT;
+            msg_cb->show = false;
+            msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
+            break;
         default:
             evt_message(msg);
     }

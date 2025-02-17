@@ -24,3 +24,6 @@ app/projects/*/Output/bin/res.bin
 app/projects/*/Output/bin/res.h
 app/projects/*/res.h
 .vscode/*
+app/projects/*/Output/bin/Downloader/DebugDatas/*
+app/projects/*/Output/bin/Downloader/Settings/*
+app/projects/*/Output/bin/Output/*

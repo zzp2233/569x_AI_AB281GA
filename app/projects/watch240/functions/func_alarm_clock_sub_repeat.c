@@ -82,13 +82,26 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set(listbox, tbl_weeks_list, WEEKS_LIST_CNT);
-    compo_listbox_set_location(listbox, GUI_SCREEN_CENTER_X, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei - 5)/2 + SLEF_LIST_Y_OFFSET,
-                               GUI_SCREEN_WIDTH, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei-SLEF_LIST_HEI_OFFSET));
+    // compo_listbox_set_location(listbox, GUI_SCREEN_CENTER_X, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei - 5)/2 + SLEF_LIST_Y_OFFSET,
+    //                            GUI_SCREEN_WIDTH, (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_FIRSTORDER_CARD_BIN).hei-SLEF_LIST_HEI_OFFSET));
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_ALARM_SELECT01_BIN, UI_BUF_I330001_ALARM_SELECT00_BIN);
     compo_listbox_set_bithook(listbox, bsp_sys_get_ctlbit);
     compo_listbox_set_focus_byidx(listbox, 1);
+
+    s32 last_y = compo_listbox_gety_byidx(listbox, WEEKS_LIST_CNT );
+    //新建按钮
+    compo_button_t *btn;
+    btn = compo_button_create_page_by_image(frm,listbox->page, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,last_y);
+    //确定文本
+    compo_textbox_t* yes_txt = compo_textbox_create_for_page(frm,listbox->page, strlen(i18n[STR_OK]));
+    compo_textbox_set_location(yes_txt, GUI_SCREEN_CENTER_X, last_y,
+                               gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
+                               gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
+    compo_textbox_set(yes_txt, i18n[STR_OK]);
 
     for (int i=0; i<7; i++)         //获取当前闹钟设置的星期
     {
@@ -97,18 +110,7 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 
     compo_listbox_update(listbox);
 
-    //新建按钮
-    compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
-    compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
 
-    //确定文本
-    compo_textbox_t* yes_txt = compo_textbox_create(frm, strlen(i18n[STR_OK]));
-    compo_textbox_set_location(yes_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
-                               gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei,
-                               gui_image_get_size(UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN).hei);
-    compo_textbox_set(yes_txt, i18n[STR_OK]);
 
     return frm;
 }

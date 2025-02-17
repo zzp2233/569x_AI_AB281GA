@@ -147,6 +147,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_picturebox_cut(pic, 0, uitool_res->res_num); //默认第1张图
             compo_picturebox_set_pos(pic, uitool_res->x, uitool_res->y);
             compo_bonddata(pic, uitool_res->bond_type);
+            compo_set_bonddata((component_t *)pic, time_to_tm(compo_cb.rtc_cnt));
             TRACE("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
             TRACE("has_default_lang_pic:%d",has_default_lang_pic);
             if (uteModuleSystemtimeCompareLanguage(uitool_res->rsv))

@@ -466,7 +466,7 @@ static void func_sport_sub_run_updata(void)
             {
                 if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP)
                 {
-                    compo_textbox_set_location(txt_step_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2, 0, 0);
+                    compo_textbox_set_location(txt_step_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2, GUI_SCREEN_WIDTH/3, widget_text_get_max_height());
                     break;
                 }
             }

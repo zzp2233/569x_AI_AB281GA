@@ -337,7 +337,7 @@ compo_form_t *func_weather_form_create(void)
     {
         txt = compo_textbox_create(frm,strlen(i18n[STR_SUNDAY+week_sort[i]]));
 //        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
-        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X/6,GUI_SCREEN_HEIGHT+30+(i*36)-8,GUI_SCREEN_WIDTH/5,widget_text_get_height());
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X/6,GUI_SCREEN_HEIGHT+30+(i*36)-8,GUI_SCREEN_WIDTH/5,widget_text_get_max_height());
         compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
         compo_textbox_set_align_center(txt,false);
         if(i==0)

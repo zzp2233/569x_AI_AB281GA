@@ -313,9 +313,6 @@ void usr_tmr5ms_isr(void)
     {
         msg_enqueue(MSG_SYS_500MS);
         sys_cb.cm_times++;
-#if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
-#endif
     }
 
     //1s timer process
@@ -324,6 +321,9 @@ void usr_tmr5ms_isr(void)
         msg_enqueue(MSG_SYS_1S);
         tmr5ms_cnt = 0;
         sys_cb.lpwr_warning_cnt++;
+#if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
+#endif
     }
 }
 

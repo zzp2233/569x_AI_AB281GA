@@ -30,7 +30,6 @@ ute_module_systemtime_time_t systemTime;
 static ute_module_systemtime_alarm_t systemAlarms;
 /*! 注册每秒回调函数数据结构zn.zeng, 2021-07-12  */
 ute_module_systemtime_register_t systemTimeRegisterData;
-static uint32_t systemTimeLastRtcCnt = 0;
 static uint8_t uteModuleSystemTimeLocalTimeStatus;
 /*! 平年每月天数 */
 const static uint8_t everyMonDays[13] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
@@ -272,8 +271,41 @@ static void uteModuleSystemtimeChange(ute_module_systemtime_time_t *time)
         }
     }
 #else
+    bool lowpwr_sta = bsp_system_is_sleep();
+    static u8 rtc_cal_cnt_bkp = 0;
+    static bool lowpwr_sta_bkp = false;
+    uint32_t rtc_cnt = 0;
     tm_t rtc_tm;
-    rtc_tm = time_to_tm(RTCCNT);
+    bool allow_calibration = (time->sec % 10 != 0 && time->sec < 55 && time->sec > 5); //避免校准时间跳过关键时间点
+    rtc_tm.year = time->year;
+    rtc_tm.mon = time->month;
+    rtc_tm.day = time->day;
+    rtc_tm.hour = time->hour;
+    rtc_tm.min = time->min;
+    rtc_tm.sec = time->sec;
+    rtc_cnt = tm_to_time(rtc_tm);
+    if (!lowpwr_sta && allow_calibration)
+    {
+        rtc_cnt = RTCCNT;
+    }
+    else // 省电/休眠模式，RTC已休眠
+    {
+        if (lowpwr_sta_bkp == false) // 初次进入
+        {
+            rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
+        }
+        if (rtc_cal_cnt_bkp != sys_cb.rtc_cal_cnt && allow_calibration) // RTC已校准，同步校准
+        {
+            rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
+            rtc_cnt = RTCCNT;
+            UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,RTC calibrated,rtc_cal_cnt_bkp:%d,sys_cb.rtc_cal_cnt:%d", __func__, rtc_cal_cnt_bkp, sys_cb.rtc_cal_cnt);
+        }
+        else
+        {
+            rtc_cnt++;
+        }
+    }
+    rtc_tm = time_to_tm(rtc_cnt);
     time->year = rtc_tm.year;
     time->month = rtc_tm.mon;
     time->day = rtc_tm.day;
@@ -295,17 +327,6 @@ void uteModuleSystemtimeSecondCb(void)
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,sys_init_complete:%d",__func__,sys_cb.sys_init_complete);
         return;
     }
-    else if (RTCCNT != systemTimeLastRtcCnt)
-    {
-        systemTimeLastRtcCnt = RTCCNT;
-    }
-#if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
-    else
-    {
-        UTE_MODULE_LOG(UTE_LOG_TIME_LVL,"%s,RTCCNT no change!",__func__);
-        return;
-    }
-#endif
     if (uteApplicationCommonIsStartupFinish())
     {
         uteModuleSystemtimeChange(&systemTime);
@@ -315,11 +336,11 @@ void uteModuleSystemtimeSecondCb(void)
             systemTime.isSettingTime = false;
             UTE_MODULE_LOG(UTE_LOG_TIME_LVL,"%s,now is setting time",__func__);
         }
+#if 0//(UTE_LOG_TIME_LVL && UTE_MODULE_LOG_SUPPORT)
         else
         {
             uteModulePlatformCalibrationSystemTimer();
         }
-#if (UTE_LOG_TIME_LVL && UTE_MODULE_LOG_SUPPORT)
         UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,%04d-%02d-%02d %02d:%02d:%02d", __func__, systemTime.year, systemTime.month, systemTime.day, systemTime.hour, systemTime.min, systemTime.sec);
 #endif
         if (systemTime.sec == 0)

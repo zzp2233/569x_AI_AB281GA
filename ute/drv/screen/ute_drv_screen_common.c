@@ -312,7 +312,7 @@ __SCREEN_COMMON uint32_t uteDrvScreenCommonReadId(void)
 */
 __SCREEN_COMMON void uteDrvScreenCommonGc9c01QspiWriteCmdParams(uint8_t cmd,uint8_t *data,uint8_t size)
 {
-    uint8_t sdat[36] = {0x02, 0x00, cmd, 0x00,};
+    static uint8_t sdat[36];// = {0x02, 0x00, cmd, 0x00,};
     sdat[0] = 0x02;
     sdat[1] = 0x00;
     sdat[2] = cmd;
@@ -348,7 +348,7 @@ __SCREEN_COMMON void uteDrvScreenCommonGc9c01QspiWriteCmdParam(uint8_t cmd,uint8
 */
 __SCREEN_COMMON void uteDrvScreenCommonFt2308QspiWrite16bitCmdParams(uint16_t cmd,uint8_t *data,uint8_t size)
 {
-    uint8_t sdat[36] = {0x02, 0x00, cmd, 0x00,};
+    static uint8_t sdat[36];// = {0x02, 0x00, cmd, 0x00,};
     sdat[0] = 0x02;
     sdat[1] = 0x00;
     sdat[2] = cmd>>8&0xff;

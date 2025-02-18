@@ -76,6 +76,10 @@ static void func_ota_update_disp(void)
             compo_progressbar_t *bar = compo_getobj_byid(PROGRESS_BAR_ID);
             if(fot_data->percent)
             {
+                if(fot_data->percent == 99)
+                {
+                    fot_data->percent = 100;
+                }
                 compo_progressbar_set_value(bar,fot_data->percent);
             }
         }

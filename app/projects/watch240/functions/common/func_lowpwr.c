@@ -162,7 +162,10 @@ uint32_t sleep_timer(void)
     }
 
 #if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
+    if(sys_cb.sleep_counter % 2 == 0)
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
+    }
 #endif
 
 #if CHARGE_EN

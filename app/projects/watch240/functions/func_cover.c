@@ -52,7 +52,8 @@ const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
     [MSG_OTHER]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
     [MSG_Facebook]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
     [MSG_Twitter]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TWITTER_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
-    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    // [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_WHATSAPP_07_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
     [MSG_Skype]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
     [MSG_FacebookMessenger] = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
     [MSG_Hangouts]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
@@ -73,6 +74,7 @@ const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
     [MSG_Truecaller]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TRUECALLER_BIN,         GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Truecaller
     [MSG_Paytm]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_PAYTM_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Paytm
     [MSG_Zalo]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_ZALO_BIN,               GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Zalo
+    [MSG_WhatsApp_Business] = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
     [MSG_imo]               = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_imo
     [MSG_MicrosoftTeams]    = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_MicrosoftTeams
@@ -123,8 +125,8 @@ const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
     [MSG_Facebook]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FACEBOOK_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
     [MSG_Twitter]           = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TWITTER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
 //    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
-//    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_WHATSAPP_07_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
-    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_WHATSAPP_07_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+    // [MSG_WhatsApp]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
     [MSG_Skype]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_SKYPE_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
     [MSG_FacebookMessenger] = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
     [MSG_Hangouts]          = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_HANGOUTS_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts
@@ -145,6 +147,7 @@ const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
     [MSG_Truecaller]        = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_TRUECALLER_BIN,         8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Truecaller
     [MSG_Paytm]             = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_PAYTM_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Paytm
     [MSG_Zalo]              = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_ZALO_BIN,               8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Zalo
+    [MSG_WhatsApp_Business] = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp_Business
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
     [MSG_imo]               = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_imo
     [MSG_MicrosoftTeams]    = {UI_BUF_I330001_NOTIFICATION_ICON_MSG_MSG_OTHER_BIN,    8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_MicrosoftTeams
@@ -554,7 +557,43 @@ void app_ute_msg_pop_up(uint8_t index)
             tmp_msg[strlen(msg)+3] = '\0';
         }
 
-        sprintf(time, "%04d/%02d/%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
+        // sprintf(time, "%04d/%02d/%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
+        ute_module_systemtime_time_t time_data;
+        uteModuleSystemtimeGetTime(&time_data);//获取系统时间
+        u8 time_disp_state = 0;
+
+        if(time_data.year != ble_msg->currNotify.year || time_data.month != ble_msg->currNotify.month)
+        {
+            time_disp_state = 0;
+        }
+        else if(time_data.day >ble_msg->currNotify.day && time_data.month == ble_msg->currNotify.month)
+        {
+            time_disp_state = 1;
+        }
+        else
+        {
+            time_disp_state = 2;
+        }
+        switch(time_disp_state)
+        {
+            case 0:
+                sprintf((char*)time, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                        ble_msg->currNotify.year,
+                        ble_msg->currNotify.month,
+                        ble_msg->currNotify.day);
+                break;
+            case 1:
+                sprintf((char*)time, "%02d/%02d", //record_tbl[index].callTime.year,
+                        ble_msg->currNotify.month,
+                        ble_msg->currNotify.day);
+                break;
+            case 2:
+                sprintf((char*)time, "%02d:%02d", //record_tbl[index].callTime.year,
+                        ble_msg->currNotify.hour,
+                        ble_msg->currNotify.min);
+                break;
+        }
+
         int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
         if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
         {

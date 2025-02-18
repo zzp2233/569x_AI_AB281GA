@@ -374,15 +374,23 @@ bool task_stack_contains(u8 val)
  **/
 void task_stack_remove(u8 val)
 {
+    printf("%s:[", __func__);
     u8 write_idx = 0;
     for (u8 i = 0; i < task_stack.num; i++)
     {
         if (task_stack.task_tbl[i] != val)
         {
             task_stack.task_tbl[write_idx] = task_stack.task_tbl[i];
+            printf("%d ", task_stack.task_tbl[write_idx]);
             write_idx++;
         }
     }
+    printf("]");
+    if (task_stack.num > write_idx)
+    {
+        printf("-->[%d]", val);
+    }
+    printf("\n");
     task_stack.num = write_idx;
 }
 

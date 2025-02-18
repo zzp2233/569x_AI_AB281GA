@@ -53,6 +53,9 @@ static const compo_listbox_item_t tbl_language_list[] =
 #if SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT
     {STR_TRADITIONAL_CHINESE,  .vidx = TRADITIONAL_CHINESE_ID},
 #endif
+#if SCREEN_TITLE_MULTIPLE_THAI_LANGUAGE_SUPPORT
+    {STR_THAI,    .vidx = THAI_LANGUAGE_ID},
+#endif
 };
 u8 func_sel_language_bit(uint n)
 {

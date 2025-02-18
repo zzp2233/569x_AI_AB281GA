@@ -404,8 +404,8 @@ static void func_menu_sub_football_enter(void)
         halt(HALT_GUI_COMPO_FOOTBALL_TYPE);
     }
     func_cb.enter_tick = tick_get();
-    f_menu->cube_ra = 1300;
-    f_menu->cube_rp = 0;
+    f_menu->cube_ra = 900;
+    f_menu->cube_rp = 900;
     f_menu->cube_touch = false;
     f_menu->cube_touch_time = 5;
 }

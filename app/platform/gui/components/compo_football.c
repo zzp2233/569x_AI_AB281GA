@@ -25,13 +25,15 @@
 #define DRAG_AUTO_SPEED                     (FOOTBALL_ITEM_ANGLE * 80)  //拖动松手后的速度
 
 //极角
-static const u16 tbl_ball_polar[] = {
+static const u16 tbl_ball_polar[] =
+{
     372, 372, 372, 372, 372, 792, 792, 792, 792, 792,
     1008, 1008, 1008, 1008, 1008, 1428, 1428, 1428, 1428, 1428,
 };
 
 //方位角
-static const u16 tbl_ball_azimuth[] = {
+static const u16 tbl_ball_azimuth[] =
+{
     0, 720, 1440, 2160, 2880, 0, 720, 1440, 2160, 2880,
     360, 1080, 1800, 2520, 3240, 360, 1080, 1800, 2520, 3240,
 };
@@ -45,7 +47,8 @@ static const u16 tbl_ball_azimuth[] = {
  **/
 compo_football_t *compo_football_create(compo_form_t *frm, s16 radius, compo_football_item_t const *item, int item_cnt)
 {
-    if (item_cnt != FOOTBALL_ITEM_CNT) {
+    if (item_cnt != FOOTBALL_ITEM_CNT)
+    {
         halt(HALT_GUI_COMPO_FOOTBALL_CREATE);
     }
     compo_football_t *ball = compo_create(frm, COMPO_TYPE_FOOTBALL);
@@ -57,7 +60,8 @@ compo_football_t *compo_football_create(compo_form_t *frm, s16 radius, compo_foo
     ball->item = item;
     ball->flag_need_update = true;
     ball->axis = axis;
-    for (i=0; i<FOOTBALL_ITEM_CNT; i++) {
+    for (i=0; i<FOOTBALL_ITEM_CNT; i++)
+    {
         widget_image3d_t *img = widget_image3d_create(page, item[i].res_addr);
         ball->item_img[i] = img;
 
@@ -68,7 +72,7 @@ compo_football_t *compo_football_create(compo_form_t *frm, s16 radius, compo_foo
         widget_image3d_set_azimuth(img, tbl_ball_azimuth[i]);
     }
     ball->img_area = gui_image_get_size(item[0].res_addr);
-    ball->sph.rotation = 900;
+    ball->sph.rotation = 0;//900;
     ball->sph.polar = 900;
     ball->sph.azimuth = 900;
     compo_football_update(ball);
@@ -82,14 +86,16 @@ compo_football_t *compo_football_create(compo_form_t *frm, s16 radius, compo_foo
 void compo_football_update(compo_football_t *ball)
 {
     int i;
-    if (!ball->flag_need_update) {
+    if (!ball->flag_need_update)
+    {
         return;
     }
     widget_axis3d_t *axis = ball->axis;
     ball->flag_need_update = false;
     //printf("ball: %d %d %d\n", ball->sph.polar, ball->sph.azimuth, ball->sph.rotation);
     widget_axis3d_set_sph(axis, ball->sph);
-    for (i=0; i<FOOTBALL_ITEM_CNT; i++) {
+    for (i=0; i<FOOTBALL_ITEM_CNT; i++)
+    {
         widget_image3d_t *img = ball->item_img[i];
         widget_set_visible(img, widget_image3d_get_front(img) >= 0);
     }
@@ -102,13 +108,16 @@ void compo_football_update(compo_football_t *ball)
  **/
 s32 compo_football_set_rotation(compo_football_t *ball, s32 angle)
 {
-    if (angle < 0) {
+    if (angle < 0)
+    {
         angle = 3600 - (-angle % 3600);
     }
-    if (angle >= 3600) {
+    if (angle >= 3600)
+    {
         angle = angle % 3600;
     }
-    if (ball->sph.rotation != angle) {
+    if (ball->sph.rotation != angle)
+    {
         ball->sph.rotation = angle;
         ball->flag_need_update = true;
     }
@@ -146,12 +155,16 @@ void compo_football_roll_from(compo_football_t *ball, s16 roll_polar, s16 roll_a
  **/
 s32 compo_football_set_polar(compo_football_t *ball, s32 angle)
 {
-    if (angle < FOOTBALL_MIN_POLAR) {
+    if (angle < FOOTBALL_MIN_POLAR)
+    {
         angle = FOOTBALL_MIN_POLAR;
-    } else if (angle > FOOTBALL_MAX_POLAR) {
+    }
+    else if (angle > FOOTBALL_MAX_POLAR)
+    {
         angle = FOOTBALL_MAX_POLAR;
     }
-    if (ball->sph.polar != angle) {
+    if (ball->sph.polar != angle)
+    {
         ball->sph.polar = angle;
         ball->flag_need_update = true;
     }
@@ -166,14 +179,20 @@ s32 compo_football_set_polar(compo_football_t *ball, s32 angle)
 u8 compo_football_get_sta(compo_football_t *ball)
 {
     compo_football_move_cb_t *mcb = &ball->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return COMPO_FOOTBALL_STA_IDLE;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
         return COMPO_FOOTBALL_STA_DARG;
-    } else if (mcb->flag_move_auto) {
+    }
+    else if (mcb->flag_move_auto)
+    {
         return COMPO_FOOTBALL_STA_MOVE;
-    } else {
+    }
+    else
+    {
         return COMPO_FOOTBALL_STA_IDLE;
     }
 }
@@ -188,9 +207,11 @@ u8 compo_football_get_sta(compo_football_t *ball)
 int compo_football_get_idx(compo_football_t *ball, s16 x, s16 y)
 {
     int i;
-    for (i=0; i<FOOTBALL_ITEM_CNT; i++) {
+    for (i=0; i<FOOTBALL_ITEM_CNT; i++)
+    {
         widget_image3d_t *img = ball->item_img[i];
-        if (widget_image3d_get_front(img) >= 0 && widget_image3d_contains(img, x, y)) {
+        if (widget_image3d_get_front(img) >= 0 && widget_image3d_contains(img, x, y))
+        {
             return i;
         }
     }
@@ -204,13 +225,16 @@ int compo_football_get_idx(compo_football_t *ball, s16 x, s16 y)
 void compo_football_move(compo_football_t *ball)
 {
     compo_football_move_cb_t *mcb = &ball->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    if (mcb->flag_drag) {
+    if (mcb->flag_drag)
+    {
         s32 dx, dy, ax, ay;
         mcb->flag_drag = ctp_get_dxy(&dx, &dy);
-        if (mcb->flag_drag) {
+        if (mcb->flag_drag)
+        {
             //拖动菜单图标
             ax = dx * 1800 / FOOTBALL_HALF_CIRCUM;
             ay = dy * 1800 / FOOTBALL_HALF_CIRCUM;
@@ -223,7 +247,9 @@ void compo_football_move(compo_football_t *ball)
             compo_football_set_rotation(ball, mcb->focus_sph.rotation - ax);
 #endif
             compo_football_update(ball);
-        } else {
+        }
+        else
+        {
             //抬手后开始自动移动
             point_t last_dxy = ctp_get_last_dxy();
             int da;
@@ -239,25 +265,38 @@ void compo_football_move(compo_football_t *ball)
             mcb->tick = tick_get();
         }
     }
-    if (mcb->flag_move_auto) {
+    if (mcb->flag_move_auto)
+    {
         //自动移动
-        if (mcb->start_a == mcb->moveto_a) {
+        if (mcb->start_a == mcb->moveto_a)
+        {
             mcb->flag_move_auto = false;              //移动完成
             compo_football_update(ball);
-        } else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE)) {
+        }
+        else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+        {
             s32 da;
             mcb->tick = tick_get();
             da = mcb->moveto_a - mcb->start_a;
-            if (da > 0) {
-                if (da > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            if (da > 0)
+            {
+                if (da > FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     da = da / FOCUS_AUTO_STEP_DIV;
-                } else if (da > FOCUS_AUTO_STEP) {
+                }
+                else if (da > FOCUS_AUTO_STEP)
+                {
                     da = FOCUS_AUTO_STEP;
                 }
-            } else {
-                if (da < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV) {
+            }
+            else
+            {
+                if (da < -FOCUS_AUTO_STEP * FOCUS_AUTO_STEP_DIV)
+                {
                     da = da / FOCUS_AUTO_STEP_DIV;
-                } else if (da < -FOCUS_AUTO_STEP) {
+                }
+                else if (da < -FOCUS_AUTO_STEP)
+                {
                     da = -FOCUS_AUTO_STEP;
                 }
             }
@@ -280,42 +319,46 @@ void compo_football_move(compo_football_t *ball)
 void compo_football_move_control(compo_football_t *ball, int cmd)
 {
     compo_football_move_cb_t *mcb = &ball->move_cb;
-    if (mcb == NULL) {
+    if (mcb == NULL)
+    {
         return;
     }
-    switch (cmd) {
-    case COMPO_FOOTBALL_MOVE_CMD_DRAG:
-        //开始拖动
-        mcb->flag_drag = true;
-        mcb->flag_move_auto = false;
-        mcb->focus_sph = ball->sph;
-        break;
+    switch (cmd)
+    {
+        case COMPO_FOOTBALL_MOVE_CMD_DRAG:
+            //开始拖动
+            mcb->flag_drag = true;
+            mcb->flag_move_auto = false;
+            mcb->focus_sph = ball->sph;
+            break;
 
-    case COMPO_FOOTBALL_MOVE_CMD_FORWARD:
-        //向前滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->start_a = 0;
-            mcb->moveto_a = 0;
-            mcb->roll_azimuth = 0;
-        }
-        mcb->moveto_a += FOOTBALL_ITEM_ANGLE;
-        break;
+        case COMPO_FOOTBALL_MOVE_CMD_FORWARD:
+            //向前滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->start_a = 0;
+                mcb->moveto_a = 0;
+                mcb->roll_azimuth = 0;
+            }
+            mcb->moveto_a += FOOTBALL_ITEM_ANGLE;
+            break;
 
-    case COMPO_FOOTBALL_MOVE_CMD_BACKWARD:
-        //向后滚动
-        if (!mcb->flag_move_auto) {
-            mcb->flag_move_auto = true;
-            mcb->start_a = 0;
-            mcb->moveto_a = 0;
-            mcb->roll_azimuth = 0;
-        }
-        mcb->moveto_a -= FOOTBALL_ITEM_ANGLE;
-        break;
+        case COMPO_FOOTBALL_MOVE_CMD_BACKWARD:
+            //向后滚动
+            if (!mcb->flag_move_auto)
+            {
+                mcb->flag_move_auto = true;
+                mcb->start_a = 0;
+                mcb->moveto_a = 0;
+                mcb->roll_azimuth = 0;
+            }
+            mcb->moveto_a -= FOOTBALL_ITEM_ANGLE;
+            break;
 
-    default:
-        halt(HALT_GUI_COMPO_FOOTBALL_MOVE_CMD);
-        break;
+        default:
+            halt(HALT_GUI_COMPO_FOOTBALL_MOVE_CMD);
+            break;
     }
 }
 

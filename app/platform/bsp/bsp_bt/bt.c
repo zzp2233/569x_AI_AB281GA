@@ -73,7 +73,7 @@ uint8_t cfg_bt_hfp_feature1         = HFP_FEATURE1;
 
 uint8_t cfg_bt_hid_type             = BT_HID_TYPE;
 
-uint8_t cfg_bt_connect_times        = 2;                                //按键回连重试次数, 5.12s * n
+uint8_t cfg_bt_connect_times        = 1;                                //按键回连重试次数, 5.12s * n
 uint8_t cfg_bt_pwrup_connect_times  = BT_POWER_UP_RECONNECT_TIMES;      //上电回连重试次数, 5.12s * n
 uint16_t cfg_bt_sup_to_connect_times = BT_TIME_OUT_RECONNECT_TIMES;     //超时断线回连重试次数, 5.12s * n, 设置(-1)为一直回连
 

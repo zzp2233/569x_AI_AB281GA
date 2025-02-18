@@ -9,6 +9,12 @@ bsp_bt_t bt_cb;
 
 void dev_vol_set_cb(uint8_t dev_vol, uint8_t media_index, uint8_t setting_type);
 
+static co_timer_t bt_onoff_timer;
+static bool bt_onoff_timer_sta;
+static bool bt_onoff_timer_falg;
+static u8 bt_onoff_timer_cnt = 0;
+static bool a2dp_on_off_flag = false;
+
 void bsp_bt_init(void)
 {
     //更新配置工具的设置
@@ -375,5 +381,143 @@ void bsp_bt_status(void)
     bsp_bt_warning();
 }
 
+bool  bt_connect_on_flag(void)
+{
+    if (!bt_is_connected() && !bt_a2dp_profile_completely_connected() && !hfp_is_connect() && !bt_hid_is_connected() && (bt_get_status_do() < BT_STA_DISCONNECTING))
+    {
+        return true;
+    }
+    return false;
+}
 
+bool  bt_disconnect_on_flag(void)
+{
+    if ((bt_a2dp_profile_completely_connected() || !a2dp_on_off_flag) && hfp_is_connect() && (bt_hid_is_connected()))
+    {
+        return true;
+    }
+    return false;
+}
 
+static void bt_onoff_timer_callback(co_timer_t *timer, void *param)
+{
+    printk("bt_onoff_timer_callback[%d]\n", bt_onoff_timer_sta);
+    if (bt_onoff_timer_cnt)
+        bt_onoff_timer_cnt--;
+
+    if (bt_onoff_timer_sta)
+    {
+        printk("onoff 000 a2dp[%d] hfp[%d] hid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());
+        bt_onoff_timer_sta = 0;
+        if (bt_onoff_timer_falg)
+        {
+            printk("onoff 1111 a2dp[%d] hfp[%d] hid[%d] bt_get_status_do[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), bt_get_status_do());
+            if (bt_connect_on_flag())
+            {
+                bt_connect();
+                bt_onoff_timer_cnt = 0;
+            }
+            else
+            {
+                if (bt_onoff_timer_cnt > 0)
+                {
+                    bt_onoff_timer_sta = 1;
+                    co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
+                }
+                else
+                {
+                    bt_connect();
+                }
+            }
+        }
+        else
+        {
+            printk("onoff 222  a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), a2dp_on_off_flag);
+            if (bt_disconnect_on_flag())
+            {
+                printk("off 333  a2dp[%d] hfp[%d] hid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());
+                // bt_abort_reconnect(); //终止回连
+                // bt_disconnect(0);
+                bt_comm_msg(COMM_BT_DISCONNECT, 0xffff);
+                bt_onoff_timer_cnt = 0;
+            }
+            else
+            {
+                if (bt_onoff_timer_cnt > 0)
+                {
+                    bt_onoff_timer_sta = 1;
+                    co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
+                }
+                else
+                {
+                    bt_comm_msg(COMM_BT_DISCONNECT, 0xffff);
+                }
+            }
+        }
+    }
+}
+
+void bsp_bt_trun_on(void)
+{
+    printk("bsp_bt_trun_on >>>>>>>>>>>>>>>>>>>\n");
+    bt_scan_enable();
+    bt_onoff_timer_cnt = 5;
+    bt_onoff_timer_falg = true;
+    if (bt_onoff_timer.en)
+    {
+        printk("on 000 a2dp[%d] hfp[%d] hid[%d] \n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());
+        co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
+        bt_onoff_timer_sta = 1;
+    }
+    else
+    {
+        printk("on 111 a2dp[%d] hfp[%d] hid[%d] \n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());
+        if (bt_onoff_timer_sta == 0)
+        {
+            printk("on 222 a2dp[%d] hfp[%d] hid[%d] bt_get_status_do[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), bt_get_status_do());
+            if (bt_connect_on_flag())
+            {
+                bt_connect();
+            }
+            else
+            {
+                bt_onoff_timer_sta = 1;
+                co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
+            }
+        }
+    }
+}
+
+void bsp_bt_trun_off(void)
+{
+    printk("bsp_bt_trun_off\n");
+    bt_onoff_timer_cnt = 5;
+    bt_scan_disable();
+    bt_onoff_timer_falg = false;
+    if (bt_onoff_timer.en)
+    {
+        co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
+        bt_onoff_timer_sta = 1;
+        printk("off 000 a2dp[%d] hfp[%d] hid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());
+    }
+    else
+    {
+        printk("off 111 \n");
+        if (bt_onoff_timer_sta == 0)
+        {
+            printk("off 222 a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), a2dp_on_off_flag);
+            if (bt_disconnect_on_flag())
+            {
+                printk("off 333 a2dp[%d] hfp[%d] hid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());
+                // bt_abort_reconnect(); //终止回连
+                // bt_disconnect(0);
+                bt_comm_msg(COMM_BT_DISCONNECT, 0xffff);
+            }
+            else
+            {
+                bt_onoff_timer_sta = 1;
+                co_timer_set(&bt_onoff_timer, 1000, TIMER_ONE_SHOT, LEVEL_LOW_PRI, bt_onoff_timer_callback, NULL);
+            }
+        }
+    }
+}

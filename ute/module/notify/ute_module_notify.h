@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        ��Ϣ���Ѵ���ģ��ͷ�ļ�
+*@brief        消息提醒处理模块头文件
 *@details
 *@author       zn.zeng
 *@date       2021-08-24
@@ -12,12 +12,12 @@
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "ute_module_systemtime.h"
-/*! ��Ϣ�������ݱ���Ŀ¼ zn.zeng, 2021-08-24  */
+/*! 消息推送数据保存目录 zn.zeng, 2021-08-24  */
 #define UTE_MODULE_FILESYSTEM_NOTIFY_DIR "notify"
 #define UTE_MODULE_FILESYSTEM_NOTIFY_ANCS_DIR "ancs"
 #define UTE_MODULE_FILESYSTEM_NOTIFY_ANCS_FLAG "flag"
 
-/*! ��Ϣ�������ͱ� zn.zeng, 2021-08-25  */
+/*! 消息推送类型表 zn.zeng, 2021-08-25  */
 enum
 {
     MSG_CALL   = 0x00,
@@ -48,7 +48,6 @@ enum
     MSG_Truecaller =0x19,
     MSG_Paytm =0x1A,
     MSG_Zalo = 0x1b,
-    MSG_WhatsApp_Business =0x34,
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
     MSG_imo =0x1C,
     MSG_MicrosoftTeams =0x1D,
@@ -147,7 +146,7 @@ enum
 #define APP_ID_BookMyShow                    "BookMyShow.com"
 
 
-#define APP_ID_Calendar                      "mobilecal"   //ios:com.apple.mobilecal ��׿��com.google.android.calendar
+#define APP_ID_Calendar                      "mobilecal"   //ios:com.apple.mobilecal 安卓：com.google.android.calendar
 #define APP_ID_JioTv                         "jioplay"    // com.jio.jioplay
 #define APP_ID_MakeMyTrip                    "MMT"    //com.Iphone.MMT
 #define APP_ID_Netflix                       "Netflix"    // com.netflix.Netflix
@@ -157,16 +156,16 @@ enum
 #define APP_ID_YTMusic                       "youtubemusic"  //com.google.ios.youtubemusic
 
 //#define APP_ID_OT_Messager                   "ot.Messager"
-#define APP_ID_WhatsApp_Business             "whatsapp.WhatsAppSMB"  // iOS��net.whatsapp.WhatsAppSMB����׿��com.whatsapp.w4b
-#define APP_ID_Dunzo                         "in.dunzo.lattelite"  //Ios�� in.dunzo.lattelite����׿��com.dunzo.user
-#define APP_ID_Gaana                         "til.gaana"    //Ios��com.til.gaana  ��׿��com.gaana
-#define APP_ID_Google_Drive                  "google.Drive"  //Ios��com.google.Drive  ��׿��com.google.android.apps.docs
-#define APP_ID_googlechat                    "google.Dynamite"//iOS - com.google.Dynamite   ��׿com.google.android.apps.dynamite
-#define APP_ID_Wynkmusic                     "Bharti.AirtelMusicApp"  //ios��com.Bharti.AirtelMusicApp  ��׿��com.bsbportal.music
-#define APP_ID_Yahoo                         "yahoo.Aerogram"    //ios��com.yahoo.Aerogram  ��׿��com.yahoo.mobile.client.android.mail
-#define APP_ID_TitanSmartWorld               "titan.smartworld"   //ios��com.titan.smartworld  ��׿��com.titan.smartworld
-#define APP_ID_Slack                         "tinyspeck.chatlyio" //ios��com.tinyspeck.chatlyio����׿��com.Slack
-#define APP_ID_Spotify                       "spotify.client"  //ios��com.spotify.client ��׿��com.spotify.music
+#define APP_ID_WhatsApp_Business             "whatsapp.WhatsAppSMB"  // iOS：net.whatsapp.WhatsAppSMB，安卓：com.whatsapp.w4b
+#define APP_ID_Dunzo                         "in.dunzo.lattelite"  //Ios： in.dunzo.lattelite，安卓：com.dunzo.user
+#define APP_ID_Gaana                         "til.gaana"    //Ios：com.til.gaana  安卓：com.gaana
+#define APP_ID_Google_Drive                  "google.Drive"  //Ios：com.google.Drive  安卓：com.google.android.apps.docs
+#define APP_ID_googlechat                    "google.Dynamite"//iOS - com.google.Dynamite   安卓com.google.android.apps.dynamite
+#define APP_ID_Wynkmusic                     "Bharti.AirtelMusicApp"  //ios：com.Bharti.AirtelMusicApp  安卓：com.bsbportal.music
+#define APP_ID_Yahoo                         "yahoo.Aerogram"    //ios：com.yahoo.Aerogram  安卓：com.yahoo.mobile.client.android.mail
+#define APP_ID_TitanSmartWorld               "titan.smartworld"   //ios：com.titan.smartworld  安卓：com.titan.smartworld
+#define APP_ID_Slack                         "tinyspeck.chatlyio" //ios：com.tinyspeck.chatlyio，安卓：com.Slack
+#define APP_ID_Spotify                       "spotify.client"  //ios：com.spotify.client 安卓：com.spotify.music
 #endif
 
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
@@ -290,7 +289,7 @@ enum
 
 
 #endif
-/*! ��Ϣ�������ݽṹzn.zeng, 2021-11-09  */
+/*! 消息推送数据结构zn.zeng, 2021-11-09  */
 typedef struct
 {
     uint16_t size;
@@ -304,7 +303,7 @@ typedef struct
     uint8_t titleSize;
     uint8_t content[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE];
 } ute_module_notify_one_data_t;
-/*! ��Ϣ�������ݽṹzn.zeng, 2021-08-24  */
+/*! 消息推送数据结构zn.zeng, 2021-08-24  */
 typedef struct
 {
     ute_module_notify_one_data_t currNotify;

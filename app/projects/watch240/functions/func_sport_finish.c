@@ -773,6 +773,12 @@ static void func_sport_finish_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_sport_finish_t));
     f_sport_finish_t *f_sport_finish = (f_sport_finish_t*)func_cb.f_cb;
 
+    //防止跳回运动中界面
+    if(task_stack_contains(FUNC_SPORT_SUB_RUN))
+    {
+        task_stack_remove(FUNC_SPORT_SUB_RUN);
+    }
+
     int page_length=0;
     switch(sport_finish_mode)
     {

@@ -190,133 +190,26 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
 
 //    switch(func_sport_get_current_idx())
-    switch(uteModuleSportMoreSportGetType() - 1)
+    switch(uteModuleSportMoreSportGetType())
     {
-        case 0://跑步
+        case SPORT_TYPE_RUNNING:
+        case SPORT_TYPE_CLIMBING:
+        case SPORT_TYPE_WALKING:
+        case SPORT_TYPE_TREADMILL:
             sport_flag[0] = true;//公里
             sport_flag[1] = true;//步数
             sport_flag[2] = true;//卡路里
             break;
-        case 1://骑行
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 2://跳绳
+        case SPORT_TYPE_JUMP_ROPE://跳绳
+        case SPORT_TYPE_SWIMMING://游泳
             sport_flag[0] = true;//公里
             sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
-        case 3://游泳
-            sport_flag[0] = true;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 4://羽毛球
+        default:
             sport_flag[0] = false;//公里
             sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
-            break;
-        case 5://乒乓球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 6://网球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 7://爬山
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 8://徒步
-            sport_flag[0] = true;//公里
-            sport_flag[1] = true;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 9://篮球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 10://足球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 11://棒球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 12://排球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 13://板球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 14://橄榄球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 15://曲棍球
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 16://跳舞
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 17://动感单车
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 18://瑜伽
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 19://仰卧起坐
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 20://跑步机
-            sport_flag[0] = true;//公里
-            sport_flag[1] = true;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 21://体操
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 22://划船
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 23://开合跳
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
-        case 24://自由训练
-            sport_flag[0] = false;//公里
-            sport_flag[1] = false;//步数
-            sport_flag[2] = true;//卡路里
-            break;
     }
 
     sport_flag[3] = true;   //心率
@@ -573,7 +466,7 @@ static void func_sport_sub_run_updata(void)
             {
                 if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP)
                 {
-                    compo_textbox_set_location(txt_step_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2, 0, 0);
+                    compo_textbox_set_location(txt_step_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2, GUI_SCREEN_WIDTH/3, widget_text_get_max_height());
                     break;
                 }
             }

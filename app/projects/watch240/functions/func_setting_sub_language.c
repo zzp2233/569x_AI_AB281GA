@@ -11,7 +11,7 @@
 #define TRACE(...)
 #endif
 
-#define LANGUAGE_LIST_CNT                       ((int)(sizeof(tbl_language_list) / sizeof(tbl_language_list[0])))
+#define SET_LIST_CNT                       ((int)(sizeof(tbl_language_list) / sizeof(tbl_language_list[0])))
 
 enum
 {
@@ -78,7 +78,7 @@ compo_form_t *func_set_sub_language_form_create(void)
 
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
-    compo_listbox_set(listbox, tbl_language_list, LANGUAGE_LIST_CNT);
+    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
 
     compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
@@ -106,7 +106,7 @@ void func_set_sub_language_list_icon_click(void)
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
 
-    if (icon_idx < 0 || icon_idx >= LANGUAGE_LIST_CNT)
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
     {
         return;
     }
@@ -220,9 +220,11 @@ static void func_set_sub_language_enter(void)
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     // compo_listbox_move_init(listbox);
 
-    compo_listbox_move_init(listbox);
-//    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
-    //func_cb.enter_tick = tick_get();
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+#endif
 
 }
 

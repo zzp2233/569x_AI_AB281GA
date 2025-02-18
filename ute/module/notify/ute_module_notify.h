@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        ÏûÏ¢ÌáÐÑ´¦ÀíÄ£¿éÍ·ÎÄ¼þ
+*@brief        ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Ñ´ï¿½ï¿½ï¿½Ä£ï¿½ï¿½Í·ï¿½Ä¼ï¿½
 *@details
 *@author       zn.zeng
 *@date       2021-08-24
@@ -12,12 +12,12 @@
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "ute_module_systemtime.h"
-/*! ÏûÏ¢ÍÆËÍÊý¾Ý±£´æÄ¿Â¼ zn.zeng, 2021-08-24  */
+/*! ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½Ä¿Â¼ zn.zeng, 2021-08-24  */
 #define UTE_MODULE_FILESYSTEM_NOTIFY_DIR "notify"
 #define UTE_MODULE_FILESYSTEM_NOTIFY_ANCS_DIR "ancs"
 #define UTE_MODULE_FILESYSTEM_NOTIFY_ANCS_FLAG "flag"
 
-/*! ÏûÏ¢ÍÆËÍÀàÐÍ±í zn.zeng, 2021-08-25  */
+/*! ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í±ï¿½ zn.zeng, 2021-08-25  */
 enum
 {
     MSG_CALL   = 0x00,
@@ -48,6 +48,7 @@ enum
     MSG_Truecaller =0x19,
     MSG_Paytm =0x1A,
     MSG_Zalo = 0x1b,
+    MSG_WhatsApp_Business =0x34,
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
     MSG_imo =0x1C,
     MSG_MicrosoftTeams =0x1D,
@@ -146,7 +147,7 @@ enum
 #define APP_ID_BookMyShow                    "BookMyShow.com"
 
 
-#define APP_ID_Calendar                      "mobilecal"   //ios:com.apple.mobilecal °²×¿£ºcom.google.android.calendar
+#define APP_ID_Calendar                      "mobilecal"   //ios:com.apple.mobilecal ï¿½ï¿½×¿ï¿½ï¿½com.google.android.calendar
 #define APP_ID_JioTv                         "jioplay"    // com.jio.jioplay
 #define APP_ID_MakeMyTrip                    "MMT"    //com.Iphone.MMT
 #define APP_ID_Netflix                       "Netflix"    // com.netflix.Netflix
@@ -156,16 +157,16 @@ enum
 #define APP_ID_YTMusic                       "youtubemusic"  //com.google.ios.youtubemusic
 
 //#define APP_ID_OT_Messager                   "ot.Messager"
-#define APP_ID_WhatsApp_Business             "whatsapp.WhatsAppSMB"  // iOS£ºnet.whatsapp.WhatsAppSMB£¬°²×¿£ºcom.whatsapp.w4b
-#define APP_ID_Dunzo                         "in.dunzo.lattelite"  //Ios£º in.dunzo.lattelite£¬°²×¿£ºcom.dunzo.user
-#define APP_ID_Gaana                         "til.gaana"    //Ios£ºcom.til.gaana  °²×¿£ºcom.gaana
-#define APP_ID_Google_Drive                  "google.Drive"  //Ios£ºcom.google.Drive  °²×¿£ºcom.google.android.apps.docs
-#define APP_ID_googlechat                    "google.Dynamite"//iOS - com.google.Dynamite   °²×¿com.google.android.apps.dynamite
-#define APP_ID_Wynkmusic                     "Bharti.AirtelMusicApp"  //ios£ºcom.Bharti.AirtelMusicApp  °²×¿£ºcom.bsbportal.music
-#define APP_ID_Yahoo                         "yahoo.Aerogram"    //ios£ºcom.yahoo.Aerogram  °²×¿£ºcom.yahoo.mobile.client.android.mail
-#define APP_ID_TitanSmartWorld               "titan.smartworld"   //ios£ºcom.titan.smartworld  °²×¿£ºcom.titan.smartworld
-#define APP_ID_Slack                         "tinyspeck.chatlyio" //ios£ºcom.tinyspeck.chatlyio£¬°²×¿£ºcom.Slack
-#define APP_ID_Spotify                       "spotify.client"  //ios£ºcom.spotify.client °²×¿£ºcom.spotify.music
+#define APP_ID_WhatsApp_Business             "whatsapp.WhatsAppSMB"  // iOSï¿½ï¿½net.whatsapp.WhatsAppSMBï¿½ï¿½ï¿½ï¿½×¿ï¿½ï¿½com.whatsapp.w4b
+#define APP_ID_Dunzo                         "in.dunzo.lattelite"  //Iosï¿½ï¿½ in.dunzo.latteliteï¿½ï¿½ï¿½ï¿½×¿ï¿½ï¿½com.dunzo.user
+#define APP_ID_Gaana                         "til.gaana"    //Iosï¿½ï¿½com.til.gaana  ï¿½ï¿½×¿ï¿½ï¿½com.gaana
+#define APP_ID_Google_Drive                  "google.Drive"  //Iosï¿½ï¿½com.google.Drive  ï¿½ï¿½×¿ï¿½ï¿½com.google.android.apps.docs
+#define APP_ID_googlechat                    "google.Dynamite"//iOS - com.google.Dynamite   ï¿½ï¿½×¿com.google.android.apps.dynamite
+#define APP_ID_Wynkmusic                     "Bharti.AirtelMusicApp"  //iosï¿½ï¿½com.Bharti.AirtelMusicApp  ï¿½ï¿½×¿ï¿½ï¿½com.bsbportal.music
+#define APP_ID_Yahoo                         "yahoo.Aerogram"    //iosï¿½ï¿½com.yahoo.Aerogram  ï¿½ï¿½×¿ï¿½ï¿½com.yahoo.mobile.client.android.mail
+#define APP_ID_TitanSmartWorld               "titan.smartworld"   //iosï¿½ï¿½com.titan.smartworld  ï¿½ï¿½×¿ï¿½ï¿½com.titan.smartworld
+#define APP_ID_Slack                         "tinyspeck.chatlyio" //iosï¿½ï¿½com.tinyspeck.chatlyioï¿½ï¿½ï¿½ï¿½×¿ï¿½ï¿½com.Slack
+#define APP_ID_Spotify                       "spotify.client"  //iosï¿½ï¿½com.spotify.client ï¿½ï¿½×¿ï¿½ï¿½com.spotify.music
 #endif
 
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
@@ -289,7 +290,7 @@ enum
 
 
 #endif
-/*! ÏûÏ¢ÍÆËÍÊý¾Ý½á¹¹zn.zeng, 2021-11-09  */
+/*! ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½á¹¹zn.zeng, 2021-11-09  */
 typedef struct
 {
     uint16_t size;
@@ -303,7 +304,7 @@ typedef struct
     uint8_t titleSize;
     uint8_t content[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE];
 } ute_module_notify_one_data_t;
-/*! ÏûÏ¢ÍÆËÍÊý¾Ý½á¹¹zn.zeng, 2021-08-24  */
+/*! ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý½á¹¹zn.zeng, 2021-08-24  */
 typedef struct
 {
     ute_module_notify_one_data_t currNotify;

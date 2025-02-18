@@ -667,7 +667,7 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
 #endif
                 uteModuleNotifyData.currNotify.type =MSG_Twitter;
             }
-            else if(strstr((const char*)buff,APP_ID_WHATSAPP))//
+            else if(strstr((const char*)buff,APP_ID_WHATSAPP) && !strstr((const char*)buff,"whatsapp.WhatsAppSMB"))//
             {
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
                 if( ANCS_OPEN_WHATSAPP&uteModuleNotifyData.ancsAdditionalOpenFlag[17])

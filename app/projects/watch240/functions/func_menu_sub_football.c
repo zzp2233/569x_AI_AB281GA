@@ -33,6 +33,7 @@ typedef struct f_menu_football_t_
     bool cube_touch;
     uint32_t tick;
     u16 cube_touch_time;
+    bool touch_time_flag;
 } f_menu_football_t;
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -228,6 +229,7 @@ static void func_menu_sub_football_process(void)
     compo_football_t *ball = f_menu->ball;
     s32 dx, dy, ax, ay;
 //    printf("touch=%d\n",f_menu->cube_touch);
+
     if(f_menu->cube_touch == true)
     {
         f_menu->cube_touch = ctp_get_dxy(&dx, &dy);
@@ -358,10 +360,16 @@ static void func_menu_sub_football_normal_message(size_msg_t msg)
 static void func_menu_sub_football_message(size_msg_t msg)
 {
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
+
     compo_football_t *ball = f_menu->ball;
     u8 sta = compo_football_get_sta(ball);
 
-    if (MSG_CTP_TOUCH == msg)
+    if(MSG_SYS_1S  == msg)
+    {
+        f_menu->touch_time_flag = true;
+    }
+
+    if (MSG_CTP_TOUCH == msg && f_menu->touch_time_flag ==true)
     {
         f_menu->cube_touch = true;
     }
@@ -414,11 +422,14 @@ static void func_menu_sub_football_enter(void)
 void func_menu_sub_football(void)
 {
     printf("%s\n", __func__);
+    f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     func_menu_sub_football_enter();
     while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_FOOTBALL)
     {
+
         func_menu_sub_football_process();
         func_menu_sub_football_message(msg_dequeue());
+
     }
     func_menu_sub_exit();
 }

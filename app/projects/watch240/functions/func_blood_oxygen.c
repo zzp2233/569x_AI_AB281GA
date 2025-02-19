@@ -397,6 +397,7 @@ static void func_blood_oxygen_enter(void)
     f_bo->need_auto_test_flag = true;
     func_cb.frm_main = func_blood_oxygen_form_create();
     f_bo->tick_start = tick_get();
+    tft_set_temode(0);
 }
 
 //退出血氧功能
@@ -408,6 +409,7 @@ static void func_blood_oxygen_exit(void)
     }
     // f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
     func_cb.last = FUNC_BLOOD_OXYGEN;
+    tft_set_temode(DEFAULT_TE_MODE);
 }
 
 //血氧功能

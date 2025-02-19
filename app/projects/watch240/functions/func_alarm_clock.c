@@ -177,7 +177,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             {
                 for (u8 j=0; j<7; j++)
                 {
-                    char string_handle[50];
+                    char string_handle[100];
                     memset(string_handle,0,sizeof(string_handle));
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {
@@ -701,7 +701,7 @@ static void func_alarm_clock_enter(void)
     page_move_info_t info =
     {
         .title_used = true,
-        .page_size = 74,
+        .page_size = 80,
         .page_count = ALARM_ENABLE_CNT(),
         .jump_perc = 20,
         .quick_jump_perc = 200,

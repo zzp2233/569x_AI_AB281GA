@@ -138,7 +138,7 @@ compo_form_t *func_set_sub_language_form_create(void)
 
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
-    compo_listbox_set(listbox, tbl_language_list, LANGUAGE_LIST_CNT);
+    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I332001_FIRSTORDER_CARD_BIN);
 
     compo_listbox_set_sta_icon(listbox, UI_BUF_I332001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
@@ -166,7 +166,7 @@ void func_set_sub_language_list_icon_click(void)
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
 
-    if (icon_idx < 0 || icon_idx >= LANGUAGE_LIST_CNT)
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
     {
         return;
     }

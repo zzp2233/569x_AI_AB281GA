@@ -56,6 +56,15 @@ static const compo_listbox_item_t tbl_language_list[] =
 #if SCREEN_TITLE_MULTIPLE_THAI_LANGUAGE_SUPPORT
     {STR_THAI,    .vidx = THAI_LANGUAGE_ID},
 #endif
+#if SCREEN_TITLE_MULTIPLE_SPANISH_LANGUAGE_SUPPORT
+    {STR_SPANISH,    .vidx = SPANISH_LANGUAGE_ID},
+#endif
+#if SCREEN_TITLE_MULTIPLE_TURKISH_LANGUAGE_SUPPORT
+    {STR_TURKEY,    .vidx = TURKISH_LANGUAGE_ID},
+#endif
+#if SCREEN_TITLE_MULTIPLE_PORTUGUESE_LANGUAGE_SUPPORT
+    {STR_PORTUGUESE,    .vidx = PORTUGUESE_LANGUAGE_ID},
+#endif
 };
 u8 func_sel_language_bit(uint n)
 {

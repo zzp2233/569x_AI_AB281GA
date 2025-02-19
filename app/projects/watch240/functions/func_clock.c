@@ -190,7 +190,7 @@ const u8 quick_btn_tbl[] =
 
 enum
 {
-    COMPO_ID_BTFLY = 1,
+    COMPO_ID_BTFLY = 50,
     COMPO_ID_TIME_DOT,
     COMPO_ID_L_LIGHT1,
     COMPO_ID_L_LIGHT2,
@@ -806,12 +806,15 @@ static void func_clock_message(size_msg_t msg)
 
         case MSG_SYS_500MS: //秒跳动处理
         {
-            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
-            if(txt != NULL)
+            if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX || sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
             {
-                static bool time_visible = true;
-                compo_textbox_set_visible(txt, time_visible);
-                time_visible = !time_visible;
+                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
+                if (txt != NULL)
+                {
+                    static bool time_visible = true;
+                    compo_textbox_set_visible(txt, time_visible);
+                    time_visible = !time_visible;
+                }
             }
         }
         break;

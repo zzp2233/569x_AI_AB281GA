@@ -326,7 +326,7 @@ void uteApplicationCommonStartupSecond(void)
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
         }
 #endif
-        else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL || ((RTCCON >> 20) & 0x01)) //USB插入
+        else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL || CHARGE_DC_IN()) //USB插入
         {
 #if UTE_MODULE_NEW_FACTORY_TEST_JUST_CROSS_SUPPORT
             ute_new_factory_test_data_t *data;

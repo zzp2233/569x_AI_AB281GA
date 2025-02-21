@@ -278,7 +278,7 @@ void power_on_check(void)
 
 #if CHARGE_EN
         // 实时更新电池电压会有100mv的误差   否则在while(1)循环中电池电压更新慢且不准
-        if ((charge_cnt %5) == 0)
+        if (!CHARGE_DC_IN() && (charge_cnt %5) == 0)
         {
             saradc_kick_start_do(saradc_cb.channel | BIT(ADCCH_VBAT), 0, 0);
         }
@@ -540,12 +540,19 @@ u8 bsp_key_scan(void)
             if ((key & KEY_TYPE_MASK) == KEY_SHORT_UP || (key & KEY_TYPE_MASK) == KEY_LONG_UP || (key & KEY_TYPE_MASK) == KEY_SHORT_UP_DELAY)
             {
                 sys_cb.gui_need_wakeup = 1;
+                if(uteApplicationCommonIsPowerOn())
+                {
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
+                }
             }
         }
         else
         {
             msg_enqueue(key);
-            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_KEY_HANDLER, key);
+            if(uteApplicationCommonIsPowerOn())
+            {
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_KEY_HANDLER, key);
+            }
 #if UTE_LOG_KEYS_LVL
             printf(key_str, key);
 #endif

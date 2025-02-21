@@ -236,6 +236,9 @@ void tft_set_temode(u8 mode)
 
 void tft_init(void)
 {
+    void clr_tft_spi_timeout(void);
+    clr_tft_spi_timeout();
+
 #if (GUI_SELECT != DISPLAY_UTE)
     //clk init
     CLKDIVCON2 = (CLKDIVCON2 & ~(BIT(4) * 0xF)) | BIT(4) * 2;   // TFTDE div

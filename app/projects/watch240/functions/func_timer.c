@@ -200,7 +200,6 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
         {
 //                widget_page_t* page = widget_page_create(frm->page);
             widget_page_t* page = frm->page_body;//frm_main->page_body;
-            widget_page_set_client(page, 0, 0);
             widget_set_location(page, GUI_SCREEN_CENTER_X,PAGE_HEIGHT/2,GUI_SCREEN_WIDTH,PAGE_HEIGHT);
 
             //创建文本->按钮
@@ -228,6 +227,7 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             }
             compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
             compo_form_set_title(frm, i18n[STR_TIMER]);
+            widget_page_set_client(page, 0, -44);
         }
         break;
 

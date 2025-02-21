@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-02-18 17:30:18
+*@date   2025-02-19 14:23:40
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -259,6 +259,9 @@ enum
     STR_SYNC_SUC, // 同步成功
     STR_SYNC_FAIL, // 同步失败
     STR_MUTE, // 静音
+    STR_TURKEY, // Türkçe
+    STR_PORTUGUESE, // Português
+    STR_SPANISH, // Español
     STR_THAI, // ภาษาไทย
 };
 

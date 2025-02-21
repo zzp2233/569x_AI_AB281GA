@@ -356,10 +356,14 @@ void uteModuleSystemtimeSecondCb(void)
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,uteApplicationCommonStartupSecond",__func__);
         /*! 启动流程 读取电池电压 zn.zeng  modify Jul 01, 2021 */
-//        uteDrvBatteryCommonUpdateBatteryInfo();
-//        if(uteDrvBatteryCommonGetVoltage()>UTE_DRV_BATTERY_POWER_ON_VOLTAGE)
+        uteDrvBatteryCommonUpdateBatteryInfo();
+        if (uteDrvBatteryCommonGetVoltage() > UTE_DRV_BATTERY_POWER_ON_VOLTAGE)
         {
             uteApplicationCommonStartupSecond();
+        }
+        else
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,!!! battery voltage:%d", __func__, uteDrvBatteryCommonGetVoltage());
         }
     }
 }

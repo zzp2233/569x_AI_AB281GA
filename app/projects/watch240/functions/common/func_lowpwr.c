@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_message.h"
 #include "ute_project_config.h"
+#include "ute_module_sport.h"
 
 bool power_off_check(void);
 void lock_code_pwrsave(void);
@@ -165,6 +166,13 @@ uint32_t sleep_timer(void)
     if(sys_cb.sleep_counter % 2 == 0)
     {
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
+    }
+#endif
+
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+    if(uteModuleSportAlgoTimerIsRunning())
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER,0);
     }
 #endif
 

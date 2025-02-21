@@ -47,7 +47,11 @@ void *uteModuleSprotMute;
 /* 运动倒计时定时器 xjc 2022-05-31*/
 void *uteModuleSprotCountdownTimer = NULL;
 /*! 记步算法定时器,wang.luo 2023-05-05 */
+#if !UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
 void *uteModuleSportInputDataBeforeAlgoTimer = NULL;
+#else
+static bool enableSportAlgorithmsTimer = false;
+#endif
 /**
 *@brief  多运动模块初始化
 *@details  在gsensor初始化后执行
@@ -1359,10 +1363,8 @@ void uteModuleSportEverySecond(void)
     ute_ble_connect_state_t state;
     uteApplicationCommonGetBleConnectionState(&state);
     uteModuleSportUpdateAlgoParam(time);
-
-
     uteModuleSportStepTargetHandler();
-    if(uteModuleSprotData.stepType == STEP_TYPE_STEP)
+    if (uteModuleSprotData.stepType == STEP_TYPE_STEP)
     {
         /*! 发送实时计步数据给应用端zn.zeng, 2021-08-05  */
         if((uteModuleSprotData.lastHourStepCnt!=uteModuleSprotData.stepSleepData.currentHourStepCnt)&&
@@ -1381,6 +1383,10 @@ void uteModuleSportEverySecond(void)
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,lastHourStepCnt=%d",__func__,uteModuleSprotData.lastHourStepCnt);
         }
     }
+#if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT && UTE_LOG_STEP_LVL
+    uint8_t cur_sys_clk = sys_clk_get();
+    UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,cur_sys_clk=%d", __func__, cur_sys_clk);
+#endif
     uteModuleSportCheckTakePicture();
     uteModuleSportSedentaryHandler(time);
 }
@@ -1401,6 +1407,9 @@ void uteModuleSportInputDataBeforeAlgo(void)
     if(uteModuleSprotData.stepType == STEP_TYPE_NONE)
     {
         UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,STEP_TYPE_NONE", __func__);
+#if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
+        uteModuleSprotData.switchSysclkCountdown = 0;
+#endif
         return;
     }
     ute_drv_gsensor_common_axis_data_t *data = NULL;
@@ -1415,6 +1424,11 @@ void uteModuleSportInputDataBeforeAlgo(void)
     axisBitChange.outputYaxis = &y[0];
     axisBitChange.outputZaxis = &z[0];
     uteDrvGsensorCommonXYZaxisDataBitChange(&axisBitChange,frameCnt,GSENSOR_DATA_BIT_STEP);
+#if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
+    uint32_t accValueSum = 0;
+    uint8_t accValueCount = 0;
+    uint8_t accValueAvg = 0;
+#endif
     for(int i=0; i<frameCnt; i++)
     {
         if(uteDrvMotorGetRunningStatus())
@@ -1472,8 +1486,26 @@ void uteModuleSportInputDataBeforeAlgo(void)
                 uteRotateInputData(&x[i],&y[i],&z[i]);
             }
 #endif
+#if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
+            accValueSum += accValue;
+            accValueCount ++;
+#endif
         }
     }
+#if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
+    accValueAvg = accValueCount > 0 ? accValueSum / accValueCount : 0;
+    if (abs(accValueAvg - 127) > 10)
+    {
+        uteModuleSprotData.switchSysclkCountdown = 10;
+    }
+    else
+    {
+        if (uteModuleSprotData.switchSysclkCountdown > 0)
+        {
+            uteModuleSprotData.switchSysclkCountdown--;
+        }
+    }
+#endif
     if(uteModuleSprotData.isOpenHandScreenOn)
     {
         uint8_t rolloverHandScreenStatus = getHandRollVerScreenDisplayParam();
@@ -1749,9 +1781,11 @@ void uteModuleSportSendRealTimeStepInfo(void)
     response[17] = uteModuleSprotData.stepSleepData.current_hour_walk_stepCnt & 0xff;
 #if APP_DBG_GSENSOR_DATA
     // do nothings
-#else
-    uteModuleProfileBleSendToPhone(&response[0],18);
+    if(uteModuleSprotData.appDebugGsensorDataSwitch == false)
 #endif
+    {
+        uteModuleProfileBleSendToPhone(&response[0],18);
+    }
 #endif
 }
 /**
@@ -6522,10 +6556,12 @@ void uteModuleSportClearGsensorRotateData(void)
 }
 #endif
 
+#if !UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
 void uteModuleSprotInputDataBeforeAlgoTimerCallback(void *pxTimer)
 {
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER,0);
 }
+#endif
 
 AT(.com_text.ute_sport)
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
@@ -6534,12 +6570,16 @@ void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
     {
         return;
     }
-
-    // if (sleep_cb.sys_is_sleep)
-    // {
-    //     sleep_set_sysclk(SYS_176M);
-    // }
-
+#if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
+    uint8_t cur_sys_clk = sys_clk_get();
+    if (bsp_system_is_sleep())
+    {
+        if (cur_sys_clk == SYS_24M && uteModuleSprotData.switchSysclkCountdown)
+        {
+            sleep_set_sysclk(SYS_176M);
+        }
+    }
+#endif
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     uteModuleCwmtWearStatusSwitch(uteModuleHeartIsWear()); //
 #else
@@ -6556,10 +6596,15 @@ void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
 
 #endif
 #endif
-    // if (sleep_cb.sys_is_sleep)
-    // {
-    //     sleep_set_sysclk(SYS_24M);
-    // }
+#if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
+    if (bsp_system_is_sleep() && cur_sys_clk > SYS_24M)
+    {
+        if (uteModuleSprotData.switchSysclkCountdown == 0)
+        {
+            sleep_set_sysclk(SYS_24M);
+        }
+    }
+#endif
 }
 
 /**
@@ -6572,11 +6617,15 @@ void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
 void uteModuleSportAlgoTimerStart(uint16_t ms)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,ms=%d",__func__,ms);
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+    enableSportAlgorithmsTimer = true;
+#else
     if(uteModuleSportInputDataBeforeAlgoTimer == NULL)
     {
         uteModulePlatformCreateTimer(&uteModuleSportInputDataBeforeAlgoTimer, "sports input data before algo timer", 1, 400, true, uteModuleSprotInputDataBeforeAlgoTimerCallback);
     }
     uteModulePlatformRestartTimer(&uteModuleSportInputDataBeforeAlgoTimer, ms);
+#endif
 }
 /**
  * @brief        停止记步算法定时器
@@ -6586,10 +6635,34 @@ void uteModuleSportAlgoTimerStart(uint16_t ms)
  */
 void uteModuleSprotAlgoTimerStop(void)
 {
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s",__func__);
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+    enableSportAlgorithmsTimer = false;
+#else
     uteModulePlatformStopTimer(&uteModuleSportInputDataBeforeAlgoTimer);
     uteModulePlatformDeleteTimer(&uteModuleSportInputDataBeforeAlgoTimer);
     uteModuleSportInputDataBeforeAlgoTimer = NULL;
+#endif
 }
+
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+/**
+ * @brief        是否使用定时器运行运动算法
+ * @details
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-02-21
+ */
+AT(.com_text.ute_sport)
+bool uteModuleSportAlgoTimerIsRunning(void)
+{
+    if(!uteApplicationCommonIsPowerOn())
+    {
+        return false;
+    }
+    return enableSportAlgorithmsTimer;
+}
+#endif
 
 ute_module_more_sports_data_t uteModuleSportGetMoreData(void)
 {

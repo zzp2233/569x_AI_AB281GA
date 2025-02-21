@@ -316,6 +316,9 @@ typedef struct
 #if UTE_MODULE_WATCH_ROTATE_SUPPORT
     bool isGsensorRotateTesting;//手表旋转中
 #endif
+#if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
+    uint8_t switchSysclkCountdown; //切换系统时钟倒计时
+#endif
 } ute_module_sport_data_t;
 
 #if UTE_MODULE_SPORTS_HISTORY_HEART_ZONE_SUPPORT
@@ -481,6 +484,9 @@ void uteModuleSportClearGsensorRotateData(void);
 
 void uteModuleSportAlgoTimerStart(uint16_t ms);
 void uteModuleSprotAlgoTimerStop(void);
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+bool uteModuleSportAlgoTimerIsRunning(void);
+#endif
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void);
 #endif //_UTE_MODULE_SPORT_H_
 

@@ -163,7 +163,7 @@ const CARD_T(msg) card =
     {
         ///文本
         //id      x                 y       w       h       str                                res                         center  wordwrap   r  g  b
-        {0,      -15,               -38,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      false,   false,  148, 148, 148},
+        {0,      -18,               -38,    118,    55,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      false,   false,  148, 148, 148},
         {1,      3+36/2-228/2,      -10,    205,    55,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   255, 255, 255},
     },
 };
@@ -480,6 +480,7 @@ static void func_message_card_update(bool first_update, compo_form_t *frm)
             compo_cardbox_icon_set(cardbox, 0, func_message_card_get_icon(f_msg->ute_msg->historyNotify[i].type));
             compo_cardbox_icon_set_location(cardbox, card.icon[0].id, card.icon[0].x, card.icon[0].y, card.icon[0].w, card.icon[0].h);
             compo_cardbox_text_set(cardbox, 0, time);
+            widget_text_set_right_align(cardbox->text[0],true);
             compo_cardbox_text_set(cardbox, 1, msg);
 
             func_free(time);

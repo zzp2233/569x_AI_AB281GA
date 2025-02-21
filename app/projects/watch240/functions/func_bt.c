@@ -13,33 +13,6 @@
 
 #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
 
-#define TITLE_BUF_LEN     UTE_MUSIC_TITLE_MAX_SIZE   //歌名buf长度
-#define ARTIST_BUF_LEN    UTE_MUSIC_ARTLIST_MAX_SIZE     //歌手/歌手buf长度
-#define PROGRESS_BAR_LENGTH 146
-#define BTN_REST_DISP_TIME 300   //按钮释放时间 ms 级别
-
-enum
-{
-    COMPO_ID_BTN_PREV = 1,
-    COMPO_ID_BTN_NEXT,
-    COMPO_ID_BTN_PLAY,
-    COMPO_ID_BTN_VOL_UP,
-    COMPO_ID_BTN_VOL_DOWN,
-    COMPO_ID_TXT_MUSIC_NAME,
-    COMPO_ID_TXT_MUSIC_LYRIC,
-    COMPO_ID_PIC_MUSIC_VOL,
-};
-
-typedef struct f_bt_t_
-{
-    uint32_t tick;
-    char title_buf[TITLE_BUF_LEN];
-    char artist_buf[ARTIST_BUF_LEN];
-    char title_buf_old[TITLE_BUF_LEN];
-    char artist_buf_old[ARTIST_BUF_LEN];
-    bool refresh_data;
-} f_bt_t;
-
 /*****************************************************************************
  * 1.当BT连接时，优先同步id3信息，控制通道走BT
  * 2.当只连接BLE时，IOS走AMS服务，安卓走私有协议
@@ -119,6 +92,32 @@ void func_bt_chk_off(void)
 }
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#define TITLE_BUF_LEN     UTE_MUSIC_TITLE_MAX_SIZE   //歌名buf长度
+#define ARTIST_BUF_LEN    UTE_MUSIC_ARTLIST_MAX_SIZE     //歌手/歌手buf长度
+#define PROGRESS_BAR_LENGTH 146
+#define BTN_REST_DISP_TIME 300   //按钮释放时间 ms 级别
+
+enum
+{
+    COMPO_ID_BTN_PREV = 1,
+    COMPO_ID_BTN_NEXT,
+    COMPO_ID_BTN_PLAY,
+    COMPO_ID_BTN_VOL_UP,
+    COMPO_ID_BTN_VOL_DOWN,
+    COMPO_ID_TXT_MUSIC_NAME,
+    COMPO_ID_TXT_MUSIC_LYRIC,
+    COMPO_ID_PIC_MUSIC_VOL,
+};
+
+typedef struct f_bt_t_
+{
+    uint32_t tick;
+    char title_buf[TITLE_BUF_LEN];
+    char artist_buf[ARTIST_BUF_LEN];
+    char title_buf_old[TITLE_BUF_LEN];
+    char artist_buf_old[ARTIST_BUF_LEN];
+    bool refresh_data;
+} f_bt_t;
 /*****************************************************************************
  *          func_bt_music(UI)
 *****************************************************************************/
@@ -260,7 +259,7 @@ compo_form_t *func_bt_form_create(void)
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME01_BIN);///音量减
     }
     compo_setid(btn, COMPO_ID_BTN_VOL_DOWN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3, 28/2+247);
 
     if(bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
@@ -271,7 +270,7 @@ compo_form_t *func_bt_form_create(void)
         btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME03_BIN);///音量加
     }
     compo_setid(btn, COMPO_ID_BTN_VOL_UP);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.3,  28/2+247);
 
     if(name_txt != NULL && ble_is_connect())
     {
@@ -482,6 +481,32 @@ static void func_bt_button_click(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#define TITLE_BUF_LEN     UTE_MUSIC_TITLE_MAX_SIZE   //歌名buf长度
+#define ARTIST_BUF_LEN    UTE_MUSIC_ARTLIST_MAX_SIZE     //歌手/歌手buf长度
+#define PROGRESS_BAR_LENGTH 146
+#define BTN_REST_DISP_TIME 300   //按钮释放时间 ms 级别
+
+enum
+{
+    COMPO_ID_BTN_PREV = 1,
+    COMPO_ID_BTN_NEXT,
+    COMPO_ID_BTN_PLAY,
+    COMPO_ID_BTN_VOL_UP,
+    COMPO_ID_BTN_VOL_DOWN,
+    COMPO_ID_TXT_MUSIC_NAME,
+    COMPO_ID_TXT_MUSIC_LYRIC,
+    COMPO_ID_SHAPE_MUSIC_VOL,
+};
+
+typedef struct f_bt_t_
+{
+    uint32_t tick;
+    char title_buf[TITLE_BUF_LEN];
+    char artist_buf[ARTIST_BUF_LEN];
+    char title_buf_old[TITLE_BUF_LEN];
+    char artist_buf_old[ARTIST_BUF_LEN];
+    bool refresh_data;
+} f_bt_t;
 /*****************************************************************************
  *          func_bt_music(UI)
 *****************************************************************************/

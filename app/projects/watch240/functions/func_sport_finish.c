@@ -23,13 +23,15 @@ enum
 enum
 {
     COMPO_BTN_SURE=1,
+    COMPO_ID_KM_VALUE,
+    COMPO_ID_KM_UINT,
 };
 
 typedef struct f_sport_finish_t_
 {
     page_tp_move_t *ptm;
     u8 sport_finish_state;
-
+    bool uint_km;
 } f_sport_finish_t;
 
 extern u8 sport_finish_mode;
@@ -127,18 +129,40 @@ compo_form_t *func_sport_finish_form_create(void)
                 compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184);
                 compo_textbox_set(textbox, i18n[STR_KCAL]);
 
+                u8 km_integer=sport_data.saveData.sportDistanceInteger;                 //距离 整数
+                u8 km_decimals=sport_data.saveData.sportDistanceDecimals;                     // 小数
+                if(uteModuleSystemtimeGetDistanceMiType())//英里
+                {
+                    uint16_t distance = km_integer*1000+km_decimals*10;
+                    distance = distance*0.6213712;
+                    km_integer  = distance/1000;
+                    km_decimals = distance%1000/10;
+                }
                 memset(txt_buf,0,sizeof(txt_buf)); //运动公里
-                snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",sport_data.saveData.sportDistanceInteger,sport_data.saveData.sportDistanceDecimals);
+                snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",km_integer,km_decimals);
                 textbox = compo_textbox_create(frm, strlen(txt_buf));
                 compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 44,5+142+40*2);
                 compo_textbox_set(textbox, txt_buf);
+                compo_setid(textbox,COMPO_ID_KM_VALUE);
+
                 txt_leng = widget_text_get_area(textbox->txt);
-                textbox = compo_textbox_create(frm, strlen(i18n[STR_KM]));
-                compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40);
-                compo_textbox_set(textbox, i18n[STR_KM]);
+                if(uteModuleSystemtimeGetDistanceMiType())//英里
+                {
+                    textbox = compo_textbox_create(frm, strlen(i18n[STR_MILE]));
+                    compo_textbox_set_align_center(textbox, false);
+                    compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40);
+                    compo_textbox_set(textbox, i18n[STR_MILE]);
+                }
+                else
+                {
+                    textbox = compo_textbox_create(frm, strlen(i18n[STR_KM]));
+                    compo_textbox_set_align_center(textbox, false);
+                    compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40);
+                    compo_textbox_set(textbox, i18n[STR_KM]);
+                }
+                compo_setid(textbox,COMPO_ID_KM_UINT);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动步数
                 snprintf(txt_buf,sizeof(txt_buf),"%ld",sport_data.saveData.sportStep);
@@ -386,6 +410,7 @@ typedef struct f_sport_finish_t_
 {
     page_tp_move_t *ptm;
     u8 sport_finish_state;
+    bool uint_km;
 
 } f_sport_finish_t;
 
@@ -761,6 +786,13 @@ static void func_sport_finish_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_sport_finish_click();
             break;
+        case MSG_SYS_500MS:
+            if(f_sport_finish->uint_km != uteModuleSystemtimeGetDistanceMiType())
+            {
+                f_sport_finish->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
+                msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
+            }
+            break;
         default:
             func_message(msg);
             break;
@@ -808,6 +840,7 @@ static void func_sport_finish_enter(void)
     compo_page_move_init(f_sport_finish->ptm, func_cb.frm_main->page_body, &info);
 
     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+    f_sport_finish->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 }
 
 //退出室内跑步功能

@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_menu.h"
+#include "ute_module_message.h"
 
 #define TRACE_EN                0
 
@@ -33,7 +34,7 @@ typedef struct f_menu_football_t_
     bool cube_touch;
     uint32_t tick;
     u16 cube_touch_time;
-    bool touch_time_flag;
+    u8 touch_time_flag;
 } f_menu_football_t;
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -238,6 +239,8 @@ static void func_menu_sub_football_process(void)
         ay = dy * 1800 / FOOTBALL_HALF_CIRCUM;
         f_menu->cube_rp = sqrt64(ax * ax + ay * ay);
         f_menu->cube_ra = ARCTAN2(-ay, ax);
+        // printf("1 dx:%d dy:%d\n",dx,dy);
+        // printf("1 cube_rp:%d cube_ra:%d\n",f_menu->cube_rp,f_menu->cube_ra);
         compo_football_move(ball);
 
         if(f_menu->cube_touch)
@@ -251,6 +254,7 @@ static void func_menu_sub_football_process(void)
     }
     else
     {
+        // printf("2 cube_rp:%d cube_ra:%d\n",f_menu->cube_rp,f_menu->cube_ra);
         if(tick_check_expire(f_menu->tick, f_menu->cube_touch_time))
         {
             f_menu->cube_touch_time = 5;
@@ -364,15 +368,24 @@ static void func_menu_sub_football_message(size_msg_t msg)
     compo_football_t *ball = f_menu->ball;
     u8 sta = compo_football_get_sta(ball);
 
-    if(MSG_SYS_1S  == msg)
-    {
-        f_menu->touch_time_flag = true;
-    }
+    // if(MSG_SYS_1S  == msg && f_menu->touch_time_flag!=2)
+    // {
+    //     GLOBAL_INT_RESTORE();
+    //     if(++f_menu->touch_time_flag)
+    //     {
+    //         GLOBAL_INT_DISABLE();
+    //     }
+    // }
 
-    if (MSG_CTP_TOUCH == msg && f_menu->touch_time_flag ==true)
+    // if (MSG_CTP_TOUCH == msg && f_menu->touch_time_flag ==2)
+    // {
+    //     f_menu->cube_touch = true;
+    // }
+    if (MSG_CTP_TOUCH == msg)
     {
         f_menu->cube_touch = true;
     }
+
 
     switch (sta)
     {

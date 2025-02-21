@@ -9,9 +9,23 @@ void lock_code_pwrsave(void);
 void unlock_code_pwrsave(void);
 bool lp_xosc_check(void);
 
+AT(.com_text.tft_restore_printf)
+static const char tft_restore_printf[] = "GUI DESPI INIT ERR =======> To Do Restore TFT\n";
+
 AT(.com_text.sleep)
 void lowpwr_tout_ticks(void)
 {
+    //当屏幕初始化SPI等待不到pending，就重新断电再初始化一次屏幕
+    u8 get_tft_spi_timeout(void);
+    if (get_tft_spi_timeout())
+    {
+        printf(tft_restore_printf);
+        reset_sleep_delay_all();
+        gui_sleep();
+        delay_5ms(1);
+        gui_wakeup();
+    }
+
     if(sys_cb.sleep_delay != -1L && sys_cb.sleep_delay > 0)
     {
         sys_cb.sleep_delay--;

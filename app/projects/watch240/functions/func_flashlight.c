@@ -158,6 +158,20 @@ static void func_flashlight_process(void)
 //手电筒功能消息处理
 static void func_flashlight_message(size_msg_t msg)
 {
+    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+    compo_shape_t * shape = compo_getobj_byid(COMPO_ID_BG_SHAPE);
+    compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_PIC);
+    compo_textbox_t *txt_idle = compo_getobj_byid(COMPO_ID_TXT);
+    if (msg == MSG_CTP_SHORT_RIGHT)
+    {
+        f_flashlight->flashlight_flag = false;
+        tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
+        compo_shape_set_visible(shape, false);
+        compo_picturebox_set_visible(picbox, true);
+        compo_textbox_set_visible(txt_idle, true);
+
+    }
+
     switch (msg)
     {
         case MSG_CTP_CLICK:

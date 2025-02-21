@@ -47,9 +47,9 @@
 #define TICK0PR           SFR_RW (SFR0_BASE + 0x04*4)
 #define TICK1CON          SFR_RW (SFR0_BASE + 0x05*4)
 #define TICK1CPND         SFR_RW (SFR0_BASE + 0x06*4)
-    //#define FUNCMCON0         SFR_RW (SFR0_BASE + 0x07*4)
-    //#define FUNCMCON1         SFR_RW (SFR0_BASE + 0x08*4)
-    //#define FUNCMCON2         SFR_RW (SFR0_BASE + 0x09*4)
+//#define FUNCMCON0         SFR_RW (SFR0_BASE + 0x07*4)
+//#define FUNCMCON1         SFR_RW (SFR0_BASE + 0x08*4)
+//#define FUNCMCON2         SFR_RW (SFR0_BASE + 0x09*4)
 #define TICK1CNT          SFR_RW (SFR0_BASE + 0x0a*4)
 #define TICK1PR           SFR_RW (SFR0_BASE + 0x0b*4)
 #define VERSIONID         SFR_RW (SFR0_BASE + 0x0f*4)
@@ -69,7 +69,7 @@
 #define VBRSTCON          SFR_RW (SFR0_BASE + 0x1c*4)
 #define CLKCON1           SFR_RW (SFR0_BASE + 0x1d*4)
 #define RTCCPND           SFR_WO (SFR0_BASE + 0x1e*4)
-    //#define U0KEYCON          SFR_RW (SFR0_BASE + 0x1f*4)
+//#define U0KEYCON          SFR_RW (SFR0_BASE + 0x1f*4)
 
 #define SPI0CON           SFR_RW (SFR0_BASE + 0x2a*4)
 #define SPI0BUF           SFR_RW (SFR0_BASE + 0x2b*4)
@@ -82,7 +82,7 @@
 #define UART1CPND         SFR_WO (SFR0_BASE + 0x31*4)
 #define UART1BAUD         SFR_RW (SFR0_BASE + 0x32*4)
 #define UART1DATA         SFR_RW (SFR0_BASE + 0x33*4)
-    //#define U1KEYCON          SFR_RW (SFR0_BASE + 0x34*4)
+//#define U1KEYCON          SFR_RW (SFR0_BASE + 0x34*4)
 #define TMR1CON           SFR_RW (SFR0_BASE + 0x35*4)
 #define TMR1CPND          SFR_RW (SFR0_BASE + 0x36*4)
 #define TMR1CNT           SFR_RW (SFR0_BASE + 0x37*4)
@@ -100,7 +100,7 @@
 #define AUCON4          SFR_RW (SFR1_BASE + 0x24*4)
 #define AUDMAADR        SFR_RW (SFR1_BASE + 0x25*4)
 
-    //------------------------- SFR Group3 ---------------------------------------//
+//------------------------- SFR Group3 ---------------------------------------//
 #define USBCON0         SFR_RW (SFR3_BASE + 0x00*4)
 #define USBCON1         SFR_RW (SFR3_BASE + 0x01*4)
 #define USBCON2         SFR_RW (SFR3_BASE + 0x02*4)
@@ -144,8 +144,8 @@
 #define PWRCON2         SFR_RW (SFR3_BASE + 0x3e*4)
 #define CLKGAT1         SFR_RW (SFR3_BASE + 0x3f*4)
 
-    //------------------------- SFR Group4 ---------------------------------------//
-    //0x00~0x3f reserve for CPU
+//------------------------- SFR Group4 ---------------------------------------//
+//0x00~0x3f reserve for CPU
 #define PICCONCLR       SFR_WO (SFR4_BASE + 0x0c*4)
 #define PICCONSET       SFR_WO (SFR4_BASE + 0x0d*4)
 #define PICENCLR        SFR_WO (SFR4_BASE + 0x0e*4)
@@ -157,7 +157,7 @@
 #define PICADR          SFR_RW (SFR4_BASE + 0x13*4)
 #define PICPND          SFR_RW (SFR4_BASE + 0x14*4)
 
-    //------------------------- SFR Group5 ---------------------------------------//
+//------------------------- SFR Group5 ---------------------------------------//
 #define FUNCINCON       SFR_RW (SFR5_BASE + 0x07*4)
 #define FUNCOUTCON      SFR_RW (SFR5_BASE + 0x08*4)
 #define FUNCOUTMCON     SFR_RW (SFR5_BASE + 0x09*4)
@@ -195,7 +195,7 @@
 #define SADCST          SFR_WO (SFR5_BASE + 0x32*4)
 #define SADCBAUD        SFR_WO (SFR5_BASE + 0x33*4)
 
-    //------------------------- SFR Group6 ---------------------------------------//
+//------------------------- SFR Group6 ---------------------------------------//
 #define GPIOASET        LPSFR_WO (SFR6_BASE + 0x00*4)
 #define GPIOACLR        LPSFR_WO (SFR6_BASE + 0x01*4)
 #define GPIOA           LPSFR_RW (SFR6_BASE + 0x02*4)
@@ -252,7 +252,7 @@
 #define GPIOFPU300      LPSFR_RW (SFR6_BASE + 0x3b*4)
 #define GPIOFPD300      LPSFR_RW (SFR6_BASE + 0x3c*4)
 
-    //------------------------- SFR Group7 ---------------------------------------//
+//------------------------- SFR Group7 ---------------------------------------//
 #define GPIOGSET        LPSFR_WO (SFR7_BASE + 0x00*4)
 #define GPIOGCLR        LPSFR_WO (SFR7_BASE + 0x01*4)
 #define GPIOG           LPSFR_RW (SFR7_BASE + 0x02*4)
@@ -320,7 +320,7 @@
 #define VBATADCCNT      SFR_RW (SFR7_BASE + 0x3e*4)
 #define VBATADCVAL      SFR_RW (SFR7_BASE + 0x3f*4)
 
-    //------------------------- SFR Group8 ---------------------------------------//
+//------------------------- SFR Group8 ---------------------------------------//
 #define IIC0CON0        SFR_RW (SFR8_BASE + 0x00*4)
 #define IIC0CON1        SFR_RW (SFR8_BASE + 0x01*4)
 #define IIC0CMDA        SFR_RW (SFR8_BASE + 0x02*4)
@@ -350,23 +350,23 @@
 #define QDECCON         SFR_RW (SFR8_BASE + 0x31*4)
 #define QDECCPND        SFR_RW (SFR8_BASE + 0x32*4)
 
-    //------------------------- SFR Group9 ---------------------------------------//
+//------------------------- SFR Group9 ---------------------------------------//
 #define TMR3CON         SFR_RW (SFR9_BASE + 0x00*4)
 #define TMR3CPND        SFR_WO (SFR9_BASE + 0x01*4)
 #define TMR3CNT         SFR_RW (SFR9_BASE + 0x02*4)
 #define TMR3PR          SFR_RW (SFR9_BASE + 0x03*4)
 #define TMR3CPT         SFR_RO (SFR9_BASE + 0x04*4)
-    //#define TMR3DUTY0       SFR_WO (SFR9_BASE + 0x05*4)
-    //#define TMR3DUTY1       SFR_WO (SFR9_BASE + 0x06*4)
-    //#define TMR3DUTY2       SFR_WO (SFR9_BASE + 0x07*4)
+//#define TMR3DUTY0       SFR_WO (SFR9_BASE + 0x05*4)
+//#define TMR3DUTY1       SFR_WO (SFR9_BASE + 0x06*4)
+//#define TMR3DUTY2       SFR_WO (SFR9_BASE + 0x07*4)
 #define TMR4CON         SFR_RW (SFR9_BASE + 0x05*4)
 #define TMR4CPND        SFR_WO (SFR9_BASE + 0x06*4)
 #define TMR4CNT         SFR_RW (SFR9_BASE + 0x07*4)
 #define TMR4PR          SFR_RW (SFR9_BASE + 0x08*4)
 #define TMR4CPT         SFR_RO (SFR9_BASE + 0x09*4)
-    //#define TMR4DUTY0       SFR_WO (SFR9_BASE + 0x0d*4)
-    //#define TMR4DUTY1       SFR_WO (SFR9_BASE + 0x0e*4)
-    //#define TMR4DUTY2       SFR_WO (SFR9_BASE + 0x0f*4)
+//#define TMR4DUTY0       SFR_WO (SFR9_BASE + 0x0d*4)
+//#define TMR4DUTY1       SFR_WO (SFR9_BASE + 0x0e*4)
+//#define TMR4DUTY2       SFR_WO (SFR9_BASE + 0x0f*4)
 
 #define TMR5CON         SFR_RW (SFR9_BASE + 0x10*4)
 #define TMR5CPND        SFR_WO (SFR9_BASE + 0x11*4)
@@ -409,13 +409,20 @@
 #define RTCCON14        SFR_RW (SFR9_BASE + 0x3e*4)
 #define RTCCON15        SFR_RW (SFR9_BASE + 0x3f*4)
 
-    //------------------------- SFR Group10 --------------------------------------//
+//------------------------- SFR Group10 --------------------------------------//
 #define DESPICON        SFR_RW (SFR10_BASE + 0x20*4)
 #define DESPIBUF        SFR_RW (SFR10_BASE + 0x21*4)
 #define DESPIBAUD       SFR_RW (SFR10_BASE + 0x22*4)
 
+#define DESPICPND       SFR_RW (SFR10_BASE + 0x23*4)
+#define DESPIDMACNT     SFR_RW (SFR10_BASE + 0x24*4)
+#define DESPIDMAADR     SFR_RW (SFR10_BASE + 0x25*4)
+#define DESPIRGBWCON    SFR_RW (SFR10_BASE + 0x26*4)
+#define DESPITXPCNT     SFR_RW (SFR10_BASE + 0x27*4)
+
 #ifndef __ASSEMBLER__
-enum funo_select_tbl {
+enum funo_select_tbl
+{
     FO_T5PWM0              = 0,
     FO_T5PWM1,
     FO_T5PWM2,
@@ -433,7 +440,8 @@ enum funo_select_tbl {
     FO_I2C1SDA,
 };
 
-enum funo_io_tbl {
+enum funo_io_tbl
+{
     FO_PA0              = 1,
     FO_PA1,
     FO_PA2,
@@ -467,7 +475,8 @@ enum funo_io_tbl {
     FO_PF6,
 };
 
-enum funi_io_tbl {
+enum funi_io_tbl
+{
     FI_PA0              = 0,
     FI_PA1,
     FI_PA2,
@@ -498,23 +507,23 @@ enum funi_io_tbl {
     FI_PF3,
     FI_PF4,
     FI_PF5,
-	FI_PF6,
+    FI_PF6,
     FI_PG0              = 31,
     FI_PG1,
     FI_PG2,
     FI_PG3,
     FI_PG4,
     FI_PG5,
-	FI_PG6,
-	FI_PG7,
-	FI_PH0              = 39,
+    FI_PG6,
+    FI_PG7,
+    FI_PH0              = 39,
     FI_PH1,
     FI_PH2,
     FI_PH3,
     FI_PH4,
     FI_PH5,
-	FI_PH6,
-	FI_PH7,
+    FI_PH6,
+    FI_PH7,
 };
 #endif
 

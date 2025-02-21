@@ -1501,10 +1501,45 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
 #endif
                     uteModuleNotifyAncsPushContect(buff,length,false);
                 }
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
+                // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
             }
         }
+        else if (attId == ANCS_ATT_TYPE_DATE)
+        {
+            tm_t notifyTm;
+            u32 date, time;
+            uint32_t notifySecCnt = 0;
+            tm_t systemTm;
+            uint32_t systemSecCnt = 0;
+            ute_module_systemtime_time_t systemTime;
+            uteModuleSystemtimeGetTime(&systemTime);
 
+            sscanf(buff, "%dT%d", &date, &time);
+            notifyTm.year = date / 10000;
+            notifyTm.mon  = (date % 10000) / 100;
+            notifyTm.day  = date % 100;
+            notifyTm.hour = time / 10000;
+            notifyTm.min  = (time % 10000) / 100;
+            notifyTm.sec  = time % 100;
+            notifySecCnt = tm_to_time(notifyTm);
+
+            systemTm.year = systemTime.year;
+            systemTm.mon  = systemTime.month;
+            systemTm.day  = systemTime.day;
+            systemTm.hour = systemTime.hour;
+            systemTm.min  = systemTime.min;
+            systemTm.sec  = systemTime.sec;
+            systemSecCnt = tm_to_time(systemTm);
+
+            if(abs(systemSecCnt - notifySecCnt) < 60 * 5)
+            {
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
+            }
+            else
+            {
+                UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,message obsolete!!! systemSecCnt=%d, notifySecCnt=%d", __func__, systemSecCnt, notifySecCnt);
+            }
+        }
     }
 }
 

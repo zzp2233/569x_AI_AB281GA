@@ -428,7 +428,7 @@ bool uteApplicationCommonIsStartupFinish(void)
 *@author        zn.zeng
 *@date        2021-07-15
 */
-AT(.text.ute_app)
+AT(.com_text.ute_app)
 bool uteApplicationCommonIsPowerOn(void)
 {
     return uteApplicationCommonData.isPowerOn;

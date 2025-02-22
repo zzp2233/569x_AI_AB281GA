@@ -4,6 +4,7 @@
 #include "ute_task_application.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_message.h"
+#include "ute_module_sport.h"
 
 #define TRACE_EN                0
 
@@ -313,6 +314,12 @@ void usr_tmr5ms_isr(void)
     {
         msg_enqueue(MSG_SYS_500MS);
         sys_cb.cm_times++;
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+        if(uteModuleSportAlgoTimerIsRunning())
+        {
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER,0);
+        }
+#endif
     }
 
     //1s timer process

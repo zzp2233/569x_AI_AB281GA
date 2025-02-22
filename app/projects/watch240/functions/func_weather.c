@@ -23,6 +23,7 @@ typedef struct f_weather_t_
     page_tp_move_t *ptm;
     uint16_t DayWeather[7];
     bool isFahrenheit_flag;
+    bool no_weather_dada;
 } f_weather_t;
 
 enum
@@ -220,6 +221,11 @@ compo_form_t *func_weather_form_create(void)
 
     if(weather_no_data_flag)
     {
+        if(func_cb.sta == FUNC_WEATHER)
+        {
+            f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
+            f_weather->no_weather_dada = true;
+        }
         ///设置标题栏名字///
         txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
 //        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
@@ -332,18 +338,20 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.25);
     compo_textbox_set_forecolor(txt, make_color(0xc2,0xe1,0xf9));
 
+    // printf("height:%d\n",widget_text_get_max_height());
     //第二页
     for(int i=0; i<7; i++)
     {
         txt = compo_textbox_create(frm,strlen(i18n[STR_SUNDAY+week_sort[i]]));
 //        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
         compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X/6,GUI_SCREEN_HEIGHT+30+(i*36)-8,GUI_SCREEN_WIDTH/5,widget_text_get_max_height());
-        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
         compo_textbox_set_align_center(txt,false);
+        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
         if(i==0)
         {
             compo_textbox_set(txt,i18n[STR_TO_DAY]);/// 星期
         }
+        // printf("y:%d\n",GUI_SCREEN_HEIGHT+30+(i*36)-8);
 
 //        printf("weather_id=%d\n",get_weather_id[i]);
         picbox = compo_picturebox_create(frm,weather_list[get_weather_id[i]].res_addr);/// 天气
@@ -364,7 +372,7 @@ compo_form_t *func_weather_form_create(void)
         }
         else
         {
-            snprintf(str_buff, sizeof(str_buff), "      ---");
+            snprintf(str_buff, sizeof(str_buff), " --/--");
         }
         txt = compo_textbox_create(frm,strlen(str_buff));
         compo_textbox_set(txt,str_buff);
@@ -927,7 +935,10 @@ static void func_weather_message(size_msg_t msg)
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
             f_weather->touch_flag = true;
 #elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-            compo_page_move_touch_handler(f_weather->ptm);
+            if(!f_weather->no_weather_dada)
+            {
+                compo_page_move_touch_handler(f_weather->ptm);
+            }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_SYS_500MS:

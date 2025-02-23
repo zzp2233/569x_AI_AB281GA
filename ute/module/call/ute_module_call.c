@@ -57,7 +57,7 @@ bool isHfpAndA2dpProfileBothConnected(void)
 #if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
     if(uteModuleCallData.isEntertranmentVoiceOn)
     {
-        result =bt_a2dp_profile_completely_connected();
+        result = bt_a2dp_profile_completely_connected();
     }
 #endif
     if(bt_hfp_is_connected())
@@ -283,6 +283,10 @@ void uteModuleCallEverySecond(void)
         if(!uteModuleCallIsEntertranmentVoiceOn() && bt_a2dp_profile_completely_connected())
         {
             bt_a2dp_profile_dis();
+        }
+        else if (bt_hfp_is_connected() && uteModuleCallIsEntertranmentVoiceOn() && !bt_a2dp_profile_completely_connected())
+        {
+            bt_a2dp_profile_en();
         }
 #endif
         uteModuleCallData.powerOnTimeSecond++;
@@ -752,7 +756,7 @@ void uteModuleCallConnectA2DPProfile(void)
 void uteModuleCallDisconnectA2DPProfile(void)
 {
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s", __func__);
-    if(bt_is_connected())
+    if(bt_a2dp_profile_completely_connected())
     {
         bt_a2dp_profile_dis();
     }

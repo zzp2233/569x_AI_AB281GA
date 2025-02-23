@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_findphone.h"
 #include "func_cover.h"
+#include "ute_module_call.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -374,7 +375,10 @@ static void func_findphone_exit(void)
     }
 
 //    ab_app_search_phone(false);
-    bt_a2dp_profile_en();
+    if (bt_hfp_is_connected() && uteModuleCallIsEntertranmentVoiceOn() && !bt_a2dp_profile_completely_connected())
+    {
+        bt_a2dp_profile_en();
+    }
 }
 
 //查找手机功能

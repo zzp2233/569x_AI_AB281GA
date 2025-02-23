@@ -126,7 +126,7 @@
 #define BT_BQB_RF_EN                    0   //BR/EDR DUT测试模式，为方便测试不自动回连（仅用于BQB RF测试）
 #define BT_FCC_TEST_EN                  0   //蓝牙FCC测试使能，默认PB3 波特率1500000通信（仅用于FCC RF测试）
 #define BT_LINK_INFO_PAGE1_EN           0   //是否使用PAGE1回连信息（打开后可以最多保存8个回连信息）
-#define BT_POWER_UP_RECONNECT_TIMES     3   //上电回连次数
+#define BT_POWER_UP_RECONNECT_TIMES     0   //上电回连次数
 #define BT_TIME_OUT_RECONNECT_TIMES     20  //掉线回连次数
 #define BT_SIMPLE_PAIR_EN               1   //是否打开蓝牙简易配对功能（关闭时需要手机端输入PIN码）
 #define BT_DISCOVER_CTRL_EN             1   //是否使用按键打开可被发现（需自行添加配对键处理才能被连接配对）

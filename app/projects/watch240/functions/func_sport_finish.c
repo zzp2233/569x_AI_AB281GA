@@ -202,6 +202,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
                 compo_textbox_set_align_center(textbox, true);
                 compo_textbox_set_multiline(textbox, true);
+                compo_textbox_set_multiline_drag(textbox,true);
                 compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*7,GUI_SCREEN_CENTER_X*1.7,28*2);
                 compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
             }
@@ -302,6 +303,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
                 compo_textbox_set_align_center(textbox, true);
                 compo_textbox_set_multiline(textbox, true);
+                compo_textbox_set_multiline_drag(textbox,true);
                 compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*6,GUI_SCREEN_CENTER_X*1.7,28*2);
                 compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
             }
@@ -386,6 +388,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
                 compo_textbox_set_align_center(textbox, true);
                 compo_textbox_set_multiline(textbox, true);
+                compo_textbox_set_multiline_drag(textbox,true);
                 compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 5+184+40*5,GUI_SCREEN_CENTER_X*1.7,28*2);
                 compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
             }

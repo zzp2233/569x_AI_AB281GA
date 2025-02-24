@@ -13,7 +13,6 @@ static co_timer_t bt_onoff_timer;
 static bool bt_onoff_timer_sta;
 static bool bt_onoff_timer_falg;
 static u8 bt_onoff_timer_cnt = 0;
-static bool a2dp_on_off_flag = false;
 
 void bsp_bt_init(void)
 {
@@ -131,16 +130,6 @@ void bt_emit_notice(uint evt, void *params)
             {
                 uteModuleCallBtUpdateKeyConnectAddress(mac);
             }
-#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
-            if(uteModuleCallIsEntertranmentVoiceOn())
-            {
-                uteModulePlatformSendMsgToAppTask(TO_APP_TASK_CONNECT_A2DP,0);
-            }
-            else
-            {
-                uteModulePlatformSendMsgToAppTask(TO_APP_TASK_DISCONNECT_A2DP,0);
-            }
-#endif
 #if BT_HID_ONLY_FOR_IOS_EN
             bd_addr_t address_iphone;
             bd_addr_t remote_address;
@@ -392,7 +381,7 @@ bool  bt_connect_on_flag(void)
 
 bool  bt_disconnect_on_flag(void)
 {
-    if ((bt_a2dp_profile_completely_connected() || !a2dp_on_off_flag) && hfp_is_connect() && (bt_hid_is_connected()))
+    if ((bt_a2dp_profile_completely_connected() || !uteModuleCallIsEntertranmentVoiceOn()) && hfp_is_connect() && (bt_hid_is_connected()))
     {
         return true;
     }
@@ -432,7 +421,7 @@ static void bt_onoff_timer_callback(co_timer_t *timer, void *param)
         }
         else
         {
-            printk("onoff 222  a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), a2dp_on_off_flag);
+            printk("onoff 222  a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), uteModuleCallIsEntertranmentVoiceOn());
             if (bt_disconnect_on_flag())
             {
                 printk("off 333  a2dp[%d] hfp[%d] hid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());
@@ -505,7 +494,7 @@ void bsp_bt_trun_off(void)
         printk("off 111 \n");
         if (bt_onoff_timer_sta == 0)
         {
-            printk("off 222 a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), a2dp_on_off_flag);
+            printk("off 222 a2dp[%d] hfp[%d] hid[%d] a2dp_on_off_flag[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), uteModuleCallIsEntertranmentVoiceOn());
             if (bt_disconnect_on_flag())
             {
                 printk("off 333 a2dp[%d] hfp[%d] hid[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected());

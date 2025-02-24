@@ -386,6 +386,7 @@ void uteModuleGuiCommonInit(void)
 void uteModuleGuiCommonDisplayExternalClearDepth(void)
 {
     task_stack_init();
+    latest_task_init(); //最近任务
     task_stack_push(FUNC_CLOCK);
     func_cb.sta = FUNC_CLOCK;
 }
@@ -411,6 +412,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     if (isAllClear)
     {
         task_stack_init();
+        latest_task_init(); //最近任务
         task_stack_push(FUNC_CLOCK);
         func_cb.sta = FUNC_CLOCK;
     }

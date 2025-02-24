@@ -78,7 +78,7 @@ static const text_t sport_sub_run_text[] =
     {COMPO_ID_NUM_SPORT_HEARTRATE,  44,     237+6-3,    0,      0,  UI_BUF_0FONT_FONT_NUM_38_BIN,   false,  false,  {.r=255, .g=255, .b=255},       3,      "108"},
 
     {COMPO_ID_TEXT_SPORT_KM,        45,      163-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KM"},
-    {COMPO_ID_TEXT_SPORT_STEP,      45,      201-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
+    {COMPO_ID_TEXT_SPORT_STEP,      45,      201-3,      100,    26,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
     {COMPO_ID_TEXT_SPORT_KCAL,      42,      125-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
     {COMPO_ID_TEXT_SPORT_HEARTRATE, 44,      237+6-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "MIN/Cnt"},
 };
@@ -464,9 +464,9 @@ static void func_sport_sub_run_updata(void)
             rel_text_area = widget_text_get_area(txt_step->txt);
             for (u8 i=0; i<sizeof(sport_sub_run_text)/sizeof(sport_sub_run_text[0]); i++)
             {
-                if (sport_sub_run_text[i].id == COMPO_ID_NUM_SPORT_STEP)
+                if (sport_sub_run_text[i].id == COMPO_ID_TEXT_SPORT_STEP)
                 {
-                    compo_textbox_set_location(txt_step_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2, GUI_SCREEN_WIDTH/3, widget_text_get_max_height());
+                    compo_textbox_set_pos(txt_step_unit, sport_sub_run_text[i].x + rel_text_area.wid + 10, sport_sub_run_text[i].y+2);
                     break;
                 }
             }

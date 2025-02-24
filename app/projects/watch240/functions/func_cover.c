@@ -629,12 +629,19 @@ static co_timer_t alarm_clock_timer;
 
 void start_music(void)
 {
+    static u32 music_timer_sec = 0;
+    music_timer_sec++;
+
     if (sys_cb.gui_sleep_sta)
     {
         sys_cb.gui_need_wakeup = 1;
     }
     reset_sleep_delay_all();
-    func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
+
+    if (music_timer_sec % 13 == 0)          //13S重新轮询播放一次音乐，这里根据实际音乐长度调整
+    {
+        func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
+    }
 }
 
 void gui_set_cover_index(uint8_t index)
@@ -733,7 +740,7 @@ void gui_set_cover_index(uint8_t index)
                 start_music();
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 //开启马达 喇叭
-                co_timer_set(&alarm_clock_timer, 13000, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
+                co_timer_set(&alarm_clock_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
                 mode = MSGBOX_MODE_BTN_REMIND_LATER_CLOSE;
             }
             else if (sys_cb.cover_index == REMIND_COVER_HEALTH_SEDENTARY)           //久坐提醒

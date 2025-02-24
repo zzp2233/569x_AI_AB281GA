@@ -43,7 +43,7 @@
 #define DATA_CONTINUE_POS       2
 
 /**********************************************/
-#define FOT_BLOCK_LEN           1024        //压缩升级必须是512的倍数，目前只做了512倍数的处理
+#define FOT_BLOCK_LEN           8192        //压缩升级必须是512的倍数，目前只做了512倍数的处理
 
 
 extern bool ble_fot_send_packet(u8 *buf, u16 len);
@@ -361,7 +361,7 @@ static void fot_reply_update_request(void)
 #if LE_AB_FOT_EN
     if(ble_is_connect())
     {
-        ble_update_conn_param(16,0,400);
+        ble_update_conn_param(12,0,400);
     }
 #endif
 

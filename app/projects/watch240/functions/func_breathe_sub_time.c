@@ -473,7 +473,7 @@ static void func_breathe_sub_time_button_click(void)
 
 //    func_breathe_sub_time_button_release_handle();
 }
-#elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 //组件ID
 enum
 {

@@ -277,38 +277,23 @@ compo_form_t *func_heartrate_form_create(void)
     compo_setid(picbox,COMPO_ID_HEART_PIC);
 
     compo_textbox_t *textbox;
-//    if(uteModuleHeartIsWear() == true && bsp_sensor_hrs_data_get() > 0 && bsp_sensor_hrs_data_get() != 255){  ///佩戴处理
-//        memset(txt_buf,0,sizeof(txt_buf));
-//        snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_hrs_data_get());
-//        textbox = compo_textbox_create(frm, 3 );///次/分 数据
-//        compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
-//        compo_textbox_set_align_center(textbox, false);
-//        compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2.3-CONTROL_Y);
-//        compo_textbox_set(textbox,txt_buf);
-//        compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
-//    }else{
     textbox = compo_textbox_create(frm, 3 );///次/分 数据
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_pos(textbox,110,235);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.2+2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/2.3-CONTROL_Y);
     compo_textbox_set(textbox,"--");
     compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
-//    }
 
     area_t txt_leng = widget_text_get_area(textbox->txt);
-//    printf("leng:%d\n",txt_leng.wid);
-
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3+txt_leng.wid,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.75-CONTROL_Y,58,28);
+    compo_textbox_set_location(textbox,120+txt_leng.wid,258,58,22);
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
     compo_setid(textbox,COMPO_ID_HEART_BPM_TXT);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.45,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2-CONTROL_Y,50,23);
-    compo_textbox_set(textbox,i18n[STR_HIGHEST]);
-    compo_textbox_set_forecolor(textbox, COLOR_GRAY);
+    picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_SHANG_BIN);
+    compo_picturebox_set_pos(picbox, 93+28/2,304+22/2);
 
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
@@ -323,13 +308,11 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_MAX_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.45+26,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.4);
+    compo_textbox_set_pos(textbox,125,302);
     compo_textbox_set_align_center(textbox, false);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X*1.1,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2-CONTROL_Y,50,23);
-    compo_textbox_set(textbox,i18n[STR_LOWSET]);
-    compo_textbox_set_forecolor(textbox, COLOR_GRAY);
+    picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_XIA_BIN);
+    compo_picturebox_set_pos(picbox, 235+28/2,302+22/2);
 
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
@@ -344,7 +327,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_MIN_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X*1.1+26,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.4);
+    compo_textbox_set_pos(textbox,239,302);
     compo_textbox_set_align_center(textbox, false);
 
     ///*第二页*/
@@ -354,7 +337,7 @@ compo_form_t *func_heartrate_form_create(void)
 //    for (int i=0; i<24; i++)heart_date[i]=120;
 
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_MAP_BIN);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y/1.1);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y-40);
     ///创建图表
     compo_chartbox_t *chart = compo_chartbox_create(frm, CHART_TYPE_BAR, CHART_NUM);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/7, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y/1.15,196,153);
@@ -458,7 +441,7 @@ static void func_heartrate_refresh(void)
             compo_textbox_set(textbox_value,txt_buf);
         }
         area_t txt_leng = widget_text_get_area(textbox_value->txt);
-        compo_textbox_set_location(textbox_bpm,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.3+txt_leng.wid,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.75-CONTROL_Y,58,28);
+        compo_textbox_set_location(textbox_bpm,120+txt_leng.wid,258,58,22);
     }
 
 }

@@ -21,6 +21,8 @@
 #include "ute_drv_tft_s240x284_nv3030b_zd183g1196.h"
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
 #include "ute_drv_tft_s360X360_nv3030b_hy139071a.h"
+#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
+#include "ute_drv_tft_s360X360_nv3030b_zd138g1616.h"
 #endif
 
 /*! 配置屏的接口zn.zeng, 2021-09-06  */
@@ -55,6 +57,8 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Nv3030BZd183g1196Config;
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BHy139071aConfig;
+#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BZd138g1616Config;
 #endif
 #if UTE_DRV_8080_FOR_SCREEN_SUPPORT
     uteModulePlatform8080Init();

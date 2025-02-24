@@ -267,9 +267,9 @@ compo_form_t *func_heartrate_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-    //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_HEART_RATE]);
+    // //设置标题栏
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_HEART_RATE]);
 
     ///设置图片
     compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_ICON_BIN);
@@ -312,7 +312,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_align_center(textbox, false);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_XIA_BIN);
-    compo_picturebox_set_pos(picbox, 235+28/2,302+22/2);
+    compo_picturebox_set_pos(picbox, 235-28/2,302+22/2);
 
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
@@ -331,26 +331,32 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_align_center(textbox, false);
 
     ///*第二页*/
+
+    ///设置标题栏名字///
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_HEART_RATE]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_WIDTH/2,390+38/2,120,38);
+    compo_textbox_set(textbox, i18n[STR_HEART_RATE]);
+
     uint8_t heart_date[24];
     uteModuleHeartGetTodayHistoryData(heart_date,24);///获取一天的心率
 
-//    for (int i=0; i<24; i++)heart_date[i]=120;
+    for (int i=0; i<24; i++)heart_date[i]=120;
 
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_MAP_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y-40);
     ///创建图表
     compo_chartbox_t *chart = compo_chartbox_create(frm, CHART_TYPE_BAR, CHART_NUM);///图表内的柱形图
-    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/7, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y/1.15,196,153);
+    compo_chartbox_set_location(chart, 200, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y/1.15,238,157);
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(chart, COMPO_ID_CHART);
 
     chart_t chart_info;
     chart_info.y = 0;
-    chart_info.width = 7;   ///像素点
+    chart_info.width = 8;   ///像素点
     for (int i=0; i<CHART_NUM; i++)
     {
-        chart_info.x = i*chart_info.width + i;
-        chart_info.height = heart_date[i]/1.31;///心率数据转换为柱形条显示数据
+        chart_info.x = i*chart_info.width + i*2;
+        chart_info.height = heart_date[i]/1.04347;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
     }
 

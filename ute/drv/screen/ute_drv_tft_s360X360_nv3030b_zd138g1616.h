@@ -96,6 +96,7 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616Init(void)
     memcpy(tmp, "\x07", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEC, tmp, 1);
 
+    // 原代码 wd( 0x00 0x00); 有误，推测可能是两个 0x00
     memcpy(tmp, "\x01\x68\xD8\x00\x00\x4E\x00", 7);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x74, tmp, 7);
 
@@ -159,9 +160,9 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616Init(void)
     memcpy(tmp, "\xCC\x0C\xCC\x84\xCC\x04\x5F", 7);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x6C, tmp, 7);
 
-    // 原代码此处可能有误，推测是 wd(0x01)
-    memcpy(tmp, "\x01", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x7D, tmp, 1);
+    // 修正原代码错误，推测为 wd(0x01); wd(0x72);
+    memcpy(tmp, "\x01\x72", 2);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x7D, tmp, 2);
 
     memcpy(tmp, "\x0A", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB4, tmp, 1);
@@ -214,6 +215,7 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616Init(void)
     memcpy(tmp, "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11, tmp, 1);
     uteModulePlatformDelayMs(120);
+
 
     memcpy(tmp, "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29, tmp, 1);

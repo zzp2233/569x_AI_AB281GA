@@ -38,7 +38,7 @@ typedef struct msg_cb_t_
     bool flag_animation;
     bool flag_entering;
     u32 exit_tick;
-
+    u32 hand_exit_flag;
     char msg_type;
     u8 enter_msg_sta;
 } msg_cb_t;
@@ -959,6 +959,14 @@ static void msgbox_message(size_msg_t msg)
 
         case MSG_CTP_SHORT_RIGHT:
         case KU_BACK:
+            if (tick_check_expire(msg_cb->tick, 1000))  //1s钟后才能手动退出弹窗
+            {
+                msg_cb->hand_exit_flag =true;
+            }
+            if(msg_cb->hand_exit_flag == false)
+            {
+                return;
+            }
             printf("KU_BACK\n");
             msg_cb->flag_animation = true;
             msg_cb->flag_entering = false;
@@ -992,6 +1000,7 @@ static void msgbox_process(void)
         if (tick_check_expire(msg_cb->tick, ANIMATION_TICK_EXPIRE))
         {
             msg_cb->tick = tick_get();
+
             if (msg_cb->flag_entering)
             {
                 msg_cb->animation_dx += ANIMATION_STEP;
@@ -1036,12 +1045,13 @@ static void msgbox_process(void)
                 msg_cb->flag_animation = true;
                 msg_cb->flag_entering = false;
                 msg_cb->res = MSGBOX_RES_TIMEOUT_EXIT;
+
                 goto __exit;
             }
         }
         else if ((msg_cb->msg_type == MSGBOX_MSG_TYPE_DETAIL)   ||                                                      //详细消息界面弹窗
                  (sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)     //查找手表
-//                 ||(msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
+                 // ||(msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
                 )
         {
             goto __exit;

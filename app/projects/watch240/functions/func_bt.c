@@ -348,7 +348,6 @@ static void func_bt_music_refresh_disp(void)
     uteModuleMusicGetPlayerTitle((uint8_t *)f_bt->title_buf,&title_size_leng);
     uteModuleMusicGetPlayerArtistSize((uint8_t *)f_bt->artist_buf,&artist_size_leng);
 
-
     if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0 || f_bt->refresh_data) //歌名刷新
     {
         f_bt->refresh_data = false;

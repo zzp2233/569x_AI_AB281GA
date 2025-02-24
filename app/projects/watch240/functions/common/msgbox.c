@@ -763,9 +763,10 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         {
             //msg
             compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.2,
-                                       GUI_SCREEN_WIDTH, GUI_SCREEN_CENTER_Y);              //调整文本位置
+            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, 68/2+100,
+                                       250, 70);              //调整文本位置
             compo_textbox_set_multiline(txt_msg, true);
+            compo_textbox_set_multiline_drag(txt_msg, true);
             compo_textbox_set(txt_msg, msg);
 
             //title
@@ -805,13 +806,11 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         case MSGBOX_MODE_BTN_YESNO:         //确定与取消按钮2
             btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_CLOSE_BIN);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_CLOSE_BIN).hei/2 - 20);
+            compo_button_set_pos(btn,80/2+68,80/2+234);
 
             btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_OK01_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_OK01_BIN).hei/2 - 20);
+            compo_button_set_pos(btn,80/2+212,80/2+234);
             break;
 
         case MSGBOX_MODE_BTN_DELETE:        //删除按钮

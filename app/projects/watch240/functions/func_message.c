@@ -383,7 +383,8 @@ static void func_message_card_click(void)
             uteModuleNotifySetDisplayIndex(msg_id);
             uteModuleNotifyDelAllHistoryData(false);
             uteModuleNotifyGetData(f_msg->ute_msg);
-
+            f_msg->flag_drag = true;
+            f_msg->flag_move_auto = false;
             if(compo_id == 1)
             {
                 widget_page_set_client(func_cb.frm_main->page_body, 0, -(card.h + 10) / 4);

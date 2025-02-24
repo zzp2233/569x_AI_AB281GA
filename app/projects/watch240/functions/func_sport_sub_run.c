@@ -881,6 +881,7 @@ typedef struct f_sport_sub_run_t_
     uint32_t    tick;
     u8          switch_page_state;
     bool        direction;
+    uint32_t    updata_tick;
 } f_sport_sub_run_t;
 enum
 {
@@ -1484,26 +1485,18 @@ static void func_soprt_run_move(void)
 
                         if(f_sleep->move_offset_x <= 0)
                         {
+                            f_sleep->page_num = PAGE_1;//第1页
                             f_sleep->move_offset_x = 0;
-                            if(f_sleep->move_offset == 0)
-                            {
-                                f_sleep->page_num = PAGE_1;//第1页
-                            }
-                            else
-                            {
-                                f_sleep->page_num = PAGE_2;//第1页
-                            }
                             f_sleep->touch_state = TOUCH_FINISH_STATE;
-                            f_sleep->page_old_x = f_sleep->move_offset_x;
                         }
                     }
                     else if(f_sleep->switch_page_state == SWITCH_NO)
                     {
-                        f_sleep->move_offset_x-=STEP_NUM;
+                        f_sleep->move_offset_x+=STEP_NUM;
 
-                        if(f_sleep->move_offset_x <= 0)
+                        if(f_sleep->move_offset_x >= 360)
                         {
-                            f_sleep->move_offset_x = 0;
+                            f_sleep->move_offset_x = 360;
                             f_sleep->touch_state = TOUCH_FINISH_STATE;
                         }
                     }
@@ -1511,10 +1504,9 @@ static void func_soprt_run_move(void)
 
                 widget_page_set_client(func_cb.frm_main->page, f_sleep->move_offset_x, 0);
                 f_sleep->page_old_x = f_sleep->move_offset_x;
-                printf("px:%d py:%d\n",f_sleep->move_offset_x,f_sleep->move_offset);
             }
         }
-
+        // printf("px:%d py:%d\n",f_sleep->move_offset_x,f_sleep->move_offset);
     }
 
 
@@ -1522,122 +1514,140 @@ static void func_soprt_run_move(void)
 
 static void func_sport_sub_run_updata(void)
 {
-    char txt_buf[50];
+
     f_sport_sub_run_t *f_sleep = (f_sport_sub_run_t *)func_cb.f_cb;
-
-    compo_textbox_t* txt_time       = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME);
-    compo_textbox_t* txt_heart      = compo_getobj_byid(COMPO_ID_NUM_SPORT_HEARTRATE);
-    compo_textbox_t* txt_kcal       = compo_getobj_byid(COMPO_ID_NUM_SPORT_KCAL);
-    compo_textbox_t* txt_step       = compo_getobj_byid(COMPO_ID_NUM_SPORT_STEP);
-    compo_textbox_t* txt_km         = compo_getobj_byid(COMPO_ID_NUM_SPORT_KM);
-    compo_textbox_t* uint_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
-    compo_textbox_t* txt_count      = compo_getobj_byid(COMPO_ID_NUM_SPORT_COUNT);
-    compo_picturebox_t* pic_km      = compo_getobj_byid(COMPO_ID_PIC_SPORT_KM);
-    compo_picturebox_t* pic_step    = compo_getobj_byid(COMPO_ID_PIC_SPORT_STEP);
-    compo_picturebox_t* pic_count   = compo_getobj_byid(COMPO_ID_PIC_SPORT_COUNT);
-    compo_textbox_t* txt_time_down  = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME_DOWN);
-    compo_textbox_t* txt_time_right = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME_RIGHT);
-    compo_shape_t * page_point1     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE1);
-    compo_shape_t * page_point2     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE2);
-
-    ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
-    uteModuleSportGetMoreSportsDatas(data);
-
-    if(txt_time != NULL)
+    if(tick_check_expire(f_sleep->updata_tick, 200))
     {
-        memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
-        compo_textbox_set(txt_time, txt_buf);
-    }
+        f_sleep->updata_tick = tick_get();
+        char txt_buf[50];
+        compo_textbox_t* txt_time       = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME);
+        compo_textbox_t* txt_heart      = compo_getobj_byid(COMPO_ID_NUM_SPORT_HEARTRATE);
+        compo_textbox_t* txt_kcal       = compo_getobj_byid(COMPO_ID_NUM_SPORT_KCAL);
+        compo_textbox_t* txt_step       = compo_getobj_byid(COMPO_ID_NUM_SPORT_STEP);
+        compo_textbox_t* txt_km         = compo_getobj_byid(COMPO_ID_NUM_SPORT_KM);
+        compo_textbox_t* uint_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
+        compo_textbox_t* txt_count      = compo_getobj_byid(COMPO_ID_NUM_SPORT_COUNT);
+        compo_picturebox_t* pic_km      = compo_getobj_byid(COMPO_ID_PIC_SPORT_KM);
+        compo_picturebox_t* pic_step    = compo_getobj_byid(COMPO_ID_PIC_SPORT_STEP);
+        compo_picturebox_t* pic_count   = compo_getobj_byid(COMPO_ID_PIC_SPORT_COUNT);
+        compo_textbox_t* txt_time_down  = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME_DOWN);
+        compo_textbox_t* txt_time_right = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME_RIGHT);
+        compo_shape_t * page_point1     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE1);
+        compo_shape_t * page_point2     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE2);
+        compo_button_t * btn_play       = compo_getobj_byid(COMPO_ID_BTN_SPORT_PALY);
 
-    if(txt_heart != NULL)
-    {
-        memset(txt_buf, 0, sizeof(txt_buf));
-        snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
-        compo_textbox_set(txt_heart, txt_buf);
-    }
+        ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
+        uteModuleSportGetMoreSportsDatas(data);
 
-    if(txt_kcal != NULL)
-    {
-        memset(txt_buf, 0, sizeof(txt_buf));
-        snprintf(txt_buf, sizeof(txt_buf), "%d", data->saveData.sportCaloire);
-        compo_textbox_set(txt_kcal, txt_buf);
-    }
-
-    if(txt_step != NULL)
-    {
-        memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
-        compo_textbox_set(txt_step, txt_buf);
-    }
-
-    if(txt_km != NULL)
-    {
-        memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",  data->saveData.sportDistanceInteger,data->saveData.sportDistanceDecimals);
-        compo_textbox_set(txt_km, txt_buf);
-    }
-
-    if(txt_count != NULL)
-    {
-        memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%d",  data->saveData.sportTimes);
-        compo_textbox_set(txt_km, txt_buf);
-    }
-
-    if(pic_km != NULL)
-    {
-        compo_picturebox_set_pos(pic_km,43/2+167-30-widget_text_get_area(txt_km->txt).wid/2,48/2+130+360);
-    }
-
-    if(pic_step != NULL)
-    {
-        compo_picturebox_set_pos(pic_step,43/2+167-30-widget_text_get_area(txt_step->txt).wid/2,48/2+232+360);
-    }
-
-    if(pic_count != NULL)
-    {
-        compo_picturebox_set_pos(pic_count,43/2+167-30-widget_text_get_area(txt_count->txt).wid/2,48/2+130+360);
-    }
-
-    if(txt_time_down != NULL)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
-        compo_textbox_set(txt_time_down, txt_buf);
-    }
-
-    if(txt_time_right != NULL)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
-        compo_textbox_set(txt_time_right, txt_buf);
-    }
-
-    if(page_point1 != NULL)
-    {
-        if(f_sleep->page_num == PAGE_1)
+        if(btn_play != NULL)
         {
-            compo_shape_set_color(page_point1,COLOR_WHITE);
-        }
-        else
-        {
-            compo_shape_set_color(page_point1, make_color(0x29,0x29,0x29));
+            if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_OPEN)
+            {
+                compo_button_set_bgimg(btn_play,UI_BUF_I332001_SPORT_BTN_PUSED_BIN);
+            }
+            else if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_PAUSE)
+            {
+                compo_button_set_bgimg(btn_play,UI_BUF_I332001_SPORT_BTN_PLAY_BIN);
+            }
         }
 
-    }
 
-    if(page_point2 != NULL)
-    {
-        if(f_sleep->page_num == PAGE_2)
+        if(txt_time != NULL)
         {
-            compo_shape_set_color(page_point2,COLOR_WHITE);
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+            compo_textbox_set(txt_time, txt_buf);
         }
-        else
-        {
-            compo_shape_set_color(page_point2, make_color(0x29,0x29,0x29));
-        }
-    }
 
-    ab_free(data);
+        if(txt_heart != NULL)
+        {
+            memset(txt_buf, 0, sizeof(txt_buf));
+            snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
+            compo_textbox_set(txt_heart, txt_buf);
+        }
+
+        if(txt_kcal != NULL)
+        {
+            memset(txt_buf, 0, sizeof(txt_buf));
+            snprintf(txt_buf, sizeof(txt_buf), "%d", data->saveData.sportCaloire);
+            compo_textbox_set(txt_kcal, txt_buf);
+        }
+
+        if(txt_step != NULL)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
+            compo_textbox_set(txt_step, txt_buf);
+        }
+
+        if(txt_km != NULL)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",  data->saveData.sportDistanceInteger,data->saveData.sportDistanceDecimals);
+            compo_textbox_set(txt_km, txt_buf);
+        }
+
+        if(txt_count != NULL)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d",  data->saveData.sportTimes);
+            compo_textbox_set(txt_km, txt_buf);
+        }
+
+        if(pic_km != NULL)
+        {
+            compo_picturebox_set_pos(pic_km,43/2+167-30-widget_text_get_area(txt_km->txt).wid/2,48/2+130+360);
+        }
+
+        if(pic_step != NULL)
+        {
+            compo_picturebox_set_pos(pic_step,43/2+167-30-widget_text_get_area(txt_step->txt).wid/2,48/2+232+360);
+        }
+
+        if(pic_count != NULL)
+        {
+            compo_picturebox_set_pos(pic_count,43/2+167-30-widget_text_get_area(txt_count->txt).wid/2,48/2+130+360);
+        }
+
+        if(txt_time_down != NULL)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+            compo_textbox_set(txt_time_down, txt_buf);
+        }
+
+        if(txt_time_right != NULL)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+            compo_textbox_set(txt_time_right, txt_buf);
+        }
+
+        if(page_point1 != NULL)
+        {
+            if(f_sleep->page_num == PAGE_1)
+            {
+                compo_shape_set_color(page_point1,COLOR_WHITE);
+            }
+            else
+            {
+                compo_shape_set_color(page_point1, make_color(0x29,0x29,0x29));
+            }
+
+        }
+
+        if(page_point2 != NULL)
+        {
+            if(f_sleep->page_num == PAGE_2)
+            {
+                compo_shape_set_color(page_point2,COLOR_WHITE);
+            }
+            else
+            {
+                compo_shape_set_color(page_point2, make_color(0x29,0x29,0x29));
+            }
+        }
+
+        ab_free(data);
+    }
 }
 //按键处理
 static void func_sport_sub_run_click_handler(void)
@@ -1646,6 +1656,45 @@ static void func_sport_sub_run_click_handler(void)
     int id = compo_get_button_id();
     switch (id)
     {
+        case COMPO_ID_BTN_SPORT_PALY:
+            if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_OPEN)
+            {
+                uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
+            }
+            else if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_PAUSE)
+            {
+                uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
+            }
+            break;
+        case COMPO_ID_BTN_SPORT_EXIT:
+        {
+            int res=0;
+            bool sport_flag = uteModuleSportMoreSportsIsLessData();
+            //            sport_flag ^=1;
+            if (sport_flag)
+            {
+                res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_SPORT);
+            }
+            else
+            {
+                res = msgbox(i18n[STR_SPORT_EXIT_MSG1], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE);
+            }
+
+            if (res == MSGBOX_RES_OK)
+            {
+                uteModuleSportStopMoreSports();                             //通知APP退出运动
+                if (!sport_flag)
+                {
+                    func_cb.sta = FUNC_SPORT_FINISH;
+                }
+                sport_start_flag = false;
+                if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
+                {
+                    task_stack_pop();
+                }
+            }
+        }
+        break;
         default:
             break;
     }

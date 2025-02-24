@@ -981,7 +981,7 @@ void compo_listbox_move(compo_listbox_t *listbox)
             mcb->focus_ystep = mcb->focus_dy - dy;
             if (listbox->style == COMPO_LISTBOX_STYLE_MENU_FOURGRID)
             {
-                int Max_x = (GUI_SCREEN_WIDTH/3*(listbox->item_cnt/2+listbox->item_cnt%2))-GUI_SCREEN_WIDTH;
+                int Max_x = (GUI_SCREEN_WIDTH/3*(listbox->item_cnt/2+listbox->item_cnt%2))-GUI_SCREEN_CENTER_X;
                 if(mcb->focus_y > Max_x)
                 {
                     mcb->focus_y = Max_x;

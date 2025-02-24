@@ -657,7 +657,7 @@ compo_form_t *func_bt_form_create(void)
 
     compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);///音量进度条背景
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,302, 128, 4 );
-    compo_shape_set_radius(shape, 1);
+    compo_shape_set_radius(shape, 3);
     compo_shape_set_color(shape,make_color(0x33,0x33,0x33) );
 
     shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);///音量进度条
@@ -674,7 +674,7 @@ compo_form_t *func_bt_form_create(void)
     }
     uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
     if(vol>16)vol=16;
-    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,302,vol*(PROGRESS_BAR_LENGTH/16), 4 );
+    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/16), 6 );
 
     return frm;
 }

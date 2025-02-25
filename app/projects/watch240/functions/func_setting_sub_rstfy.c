@@ -62,14 +62,14 @@ compo_form_t *func_set_sub_rstfy_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_RSTFY]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_SETTING_RSTFY]);
 
     //创建文本
     compo_textbox_t *txt_off = compo_textbox_create(frm, strlen(i18n[STR_SURE_RESET]));
-    // compo_textbox_set_align_center(txt_off, false);
-    compo_textbox_set_location(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.2,GUI_SCREEN_HEIGHT/4);
+    compo_textbox_set_location(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.1,GUI_SCREEN_HEIGHT/4);
     compo_textbox_set_multiline(txt_off, true);
+    compo_textbox_set_multiline_drag(txt_off,true);
     compo_textbox_set_align_center(txt_off, true);
     compo_textbox_set(txt_off, i18n[STR_SURE_RESET]);
 

@@ -223,6 +223,12 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
         return;
     }
 
+    if(uteModuleNotifyData.currNotify.size == 0)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,currNotify.size=%d", __func__,uteModuleNotifyData.currNotify.size);
+        return;
+    }
+
     uint8_t *utf8StrTemp = uteModulePlatformMemoryAlloc(UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
     memset(utf8StrTemp,0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
     uint16_t utf8StrLen = 0;
@@ -1531,9 +1537,12 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
             systemTm.sec  = systemTime.sec;
             systemSecCnt = tm_to_time(systemTm);
 
-            if(abs(systemSecCnt - notifySecCnt) < 60 * 5)
+            if (ABS(systemSecCnt - notifySecCnt) < 60 * 5)
             {
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
+                if (uteModuleNotifyData.ancsHasOpen && uteModuleNotifyData.currNotify.size > 0)
+                {
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION, 0);
+                }
             }
             else
             {

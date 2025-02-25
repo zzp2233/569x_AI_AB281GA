@@ -396,8 +396,8 @@ static void func_sport_sort_card_update(void)
 #define CARD1_RECT_CNT      1
 #define CARD1_ICON_CNT      1
 #define CARD1_TEXT_CNT      1
-#define CARD1_X             102
-#define CARD1_Y             127
+#define CARD1_X             40+136/2
+#define CARD1_Y             40+136/2
 #define CARD1_WIDTH         136
 #define CARD1_HEIGHT        136
 
@@ -414,8 +414,8 @@ static void func_sport_sort_card_update(void)
 #define CARD2_RECT_CNT      1
 #define CARD2_ICON_CNT      1
 #define CARD2_TEXT_CNT      1
-#define CARD2_X             258
-#define CARD2_Y             127
+#define CARD2_X             184+136/2
+#define CARD2_Y             40+136/2
 #define CARD2_WIDTH         136
 #define CARD2_HEIGHT        136
 //矩形                            id       x       y       w                       h                       r
@@ -431,8 +431,8 @@ static void func_sport_sort_card_update(void)
 #define CARD3_RECT_CNT      1
 #define CARD3_ICON_CNT      1
 #define CARD3_TEXT_CNT      1
-#define CARD3_X             102
-#define CARD3_Y             270
+#define CARD3_X             40+136/2
+#define CARD3_Y             184+136/2
 #define CARD3_WIDTH         136
 #define CARD3_HEIGHT        136
 
@@ -449,8 +449,8 @@ static void func_sport_sort_card_update(void)
 #define CARD4_RECT_CNT      1
 #define CARD4_ICON_CNT      1
 #define CARD4_TEXT_CNT      1
-#define CARD4_X             258
-#define CARD4_Y             270
+#define CARD4_X             184+136/2
+#define CARD4_Y             184+136/2
 #define CARD4_WIDTH         136
 #define CARD4_HEIGHT        136
 

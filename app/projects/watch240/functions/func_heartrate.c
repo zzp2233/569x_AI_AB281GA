@@ -340,13 +340,13 @@ compo_form_t *func_heartrate_form_create(void)
     uint8_t heart_date[24];
     uteModuleHeartGetTodayHistoryData(heart_date,24);///获取一天的心率
 
-    for (int i=0; i<24; i++)heart_date[i]=120;
+    // for (int i=0; i<24; i++)heart_date[i]=120;
 
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_MAP_BIN);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y-40);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y+7);
     ///创建图表
     compo_chartbox_t *chart = compo_chartbox_create(frm, CHART_TYPE_BAR, CHART_NUM);///图表内的柱形图
-    compo_chartbox_set_location(chart, 200, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y/1.15,238,157);
+    compo_chartbox_set_location(chart, 200, GUI_SCREEN_HEIGHT+GUI_SCREEN_CENTER_Y+20,238,157);
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(chart, COMPO_ID_CHART);
 
@@ -489,8 +489,13 @@ static void func_heartrate_enter(void)
     f_heartrate->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
         .title_used = true,
         .page_size = GUI_SCREEN_HEIGHT - (GUI_SCREEN_HEIGHT / 8),
+#else
+        .title_used = false,
+        .page_size = GUI_SCREEN_HEIGHT,
+#endif
         .page_count = 2,
         .jump_perc = 20,
         .quick_jump_perc = 100,

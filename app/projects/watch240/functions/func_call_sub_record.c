@@ -413,7 +413,7 @@ static void func_call_sub_record_icon_click(void)
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 #define CALL_LIST_CNT                       ((int)(sizeof(tbl_record_list) / sizeof(tbl_record_list[0])))
-//#define CALL_TYPE_ICON_AREA                 (gui_image_get_size(UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN))                  //通话记录类型图标显示区域, 如果图片输入0表示图标所占区域为0
+#define CALL_TYPE_ICON_AREA                 (gui_image_get_size(UI_BUF_I332001_CALL_CALL_LOG_INCOMING_CALL_BIN))                  //通话记录类型图标显示区域, 如果图片输入0表示图标所占区域为0
 
 enum
 {
@@ -595,13 +595,13 @@ static u32 call_record_set_icon_callback(u32 index)
     switch (record_tbl[index].callType)
     {
         case CALL_MISSED:                   //未接电话时要显示的图标
-//            return  UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN;
+            return  UI_BUF_I332001_CALL_CALL_LOG_INCOMING_CALL_BIN;
 
         case CALL_RECEIVED:                 //接听电话时要显示的图标
-//            return  UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN;
+            return  UI_BUF_I332001_CALL_CALL_LOG_INCOMING_CALL_BIN;
 
         case CALL_DIALED:                   //拨出电话时要显示的图标
-//            return  UI_BUF_I330001_CALL_CALL_LOG_DEENERGIZE_BIN;
+            return  UI_BUF_I332001_CALL_CALL_LOG_DEENERGIZE_BIN;
 
         default:
             break;
@@ -742,10 +742,10 @@ compo_form_t *func_call_sub_record_form_create(void)
     compo_form_set_title(frm, i18n[STR_CALL_RECENT]);
 
 //    //创建无消息界面
-//    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_CALL_NO_LOG_BIN);
-//    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-//    compo_picturebox_set_visible(pic, false);
-//    compo_setid(pic, COMPO_ID_COVER_PIC);
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I332001_CALL_NO_LOG_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_visible(pic, false);
+    compo_setid(pic, COMPO_ID_COVER_PIC);
 
     compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_CALL_RECORD]));
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH / 1.2, widget_text_get_height());
@@ -766,17 +766,17 @@ compo_form_t *func_call_sub_record_form_create(void)
     {
         compo_listbox_set(listbox, tbl_record_list, (record_cnt < 2) ? 2 : record_cnt);
     }
-//    compo_listbox_set_icon_area(listbox, CALL_TYPE_ICON_AREA);
+    compo_listbox_set_icon_area(listbox, CALL_TYPE_ICON_AREA);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, call_record_update_callback);
     compo_listbox_set_icon_callback(listbox, call_record_set_icon_callback);
     compo_listbox_set_text1_color_callback(listbox, call_record_set_text1_callback);
-//    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
-//    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I332001_FIRSTORDER_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I332001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
 
     compo_textbox_set_visible(txt, record_cnt > 0 ? false : true);
-//    compo_picturebox_set_visible(pic, record_cnt > 0 ? false : true);
+    compo_picturebox_set_visible(pic, record_cnt > 0 ? false : true);
 
     return frm;
 }

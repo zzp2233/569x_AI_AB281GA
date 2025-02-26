@@ -245,6 +245,7 @@ void task_stack_init(void)
 {
     task_stack.num = 0;
     func_cb.flag_sort = 0;
+    func_cb.menu_idx = 0;
 }
 
 /**

@@ -97,53 +97,30 @@ compo_form_t *func_ble_call_form_create(void)
 
     //新建窗体, 通话页面
     compo_form_t *frm = compo_form_create(true);
-//    compo_button_t *btn;
-//
-//    ute_bt_call_data_t callData;
-//    uteModuleCallGetData(&callData);
-//    //设置标题栏
-//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-//    compo_form_set_title(frm, i18n[STR_PHONE]);
-//
-//    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-//    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH/1.2, 50);
-////    compo_textbox_set_autosize(name_txt, true);
-//    compo_textbox_set(name_txt, (char*)callData.name);
-////    compo_textbox_set(name_txt, "中国移动");
-//    compo_setid(name_txt, COMPO_ID_TXT_NAME);
-//
-//    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-//    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
-////    compo_textbox_set_autosize(number_txt, true);
-//    compo_textbox_set(number_txt, (char*)callData.number);
-//    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
-//
-//    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
-//    compo_textbox_set(txt, i18n[STR_CALL_ME]);
-//    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
-//    compo_textbox_set_forecolor(txt, COLOR_GREEN);
-//
-//    //挂断
-//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
-//    compo_setid(btn, COMPO_ID_BTN_REJECT);
-//    compo_button_set_pos(btn, 120, 240);
+
+    ute_bt_call_data_t callData;
+    uteModuleCallGetData(&callData);
+
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(name_txt, (char*)callData.name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
 
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set_forecolor(txt, COLOR_GREEN);
+
+    //挂断
+    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I332001_CALL_CALLING_END_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 279);
 
     return frm;
 }
 
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-//void func_ble_ring_number_update(void)
-//{
-//    if (bt_cb.number_sta)
-//    {
-//        compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
-//        compo_textbox_set(number_txt, hfp_get_last_call_number(0));
-//        bt_pbap_lookup_number((char*)hfp_get_last_call_number(0));
-//    }
-//}
 
 void func_ble_call_process(void)
 {

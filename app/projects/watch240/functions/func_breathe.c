@@ -488,30 +488,30 @@ compo_form_t *func_breathe_form_create(void)
 
     //新建按钮
     compo_button_t *btn;
-//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
-//    compo_setid(btn, COMPO_ID_BTN_START);
-//    compo_button_set_pos(btn, 120, 247);
-//
-//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_BREATHE_TIME_BIN);
-//    compo_setid(btn, COMPO_ID_BTN_TIME);
-//    compo_button_set_pos(btn, 32, 133);
-//
-//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_BREATHE_SPEED_BIN);
-////    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_BREATHE_TIME_BIN).wid, gui_image_get_size(UI_BUF_BREATHE_TIME_BIN).hei);
-//    compo_setid(btn, COMPO_ID_BTN_MODE);
-//    compo_button_set_pos(btn, 208, 133);
-//
-//    //新建图像
-//    compo_picturebox_t *pic;
-//    pic = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_BG_BIN);
-//    compo_setid(pic, COMPO_ID_PIC_BREATHE);
-//    compo_picturebox_set_pos(pic, 120, 133);
-//
-//    //创建文本
-//    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_START]));
-//    compo_textbox_set_pos(txt_start,120, 247);
-//    compo_setid(txt_start, COMPO_ID_TXT_START);
-//    compo_textbox_set(txt_start, i18n[STR_START]);
+    btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_RECTANGLE00_BIN);
+    compo_setid(btn, COMPO_ID_BTN_START);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 64/2+266);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I332001_BREATHE_TIME_BIN);
+    compo_setid(btn, COMPO_ID_BTN_TIME);
+    compo_button_set_pos(btn, 54/2+18, 54/2+153);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I332001_BREATHE_SPEED_BIN);
+//    widget_set_size(btn->widget, gui_image_get_size(UI_BUF_BREATHE_TIME_BIN).wid, gui_image_get_size(UI_BUF_BREATHE_TIME_BIN).hei);
+    compo_setid(btn, COMPO_ID_BTN_MODE);
+    compo_button_set_pos(btn, 54/2+288, 54/2+153);
+
+    //新建图像
+    compo_picturebox_t *pic;
+    pic = compo_picturebox_create(frm, UI_BUF_I332001_BREATHE_BG_BIN);
+    compo_setid(pic, COMPO_ID_PIC_BREATHE);
+    compo_picturebox_set_pos(pic, 186/2+87,186/2+79);
+
+    //创建文本
+    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_START]));
+    compo_textbox_set_pos(txt_start,GUI_SCREEN_CENTER_X, 64/2+266);
+    compo_setid(txt_start, COMPO_ID_TXT_START);
+    compo_textbox_set(txt_start, i18n[STR_START]);
 
     return frm;
 }

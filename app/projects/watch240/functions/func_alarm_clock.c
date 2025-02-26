@@ -109,7 +109,6 @@ compo_form_t *func_alarm_clock_form_create(void)
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK]);
 
     //闹钟选项卡
-
     compo_cardbox_t *cardbox;
     int buf_num=0;
     int str_week_buf[7]=
@@ -345,7 +344,7 @@ compo_form_t *func_alarm_clock_form_create(void)
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK]);
 
     //闹钟选项卡
-    char str_buff[50];
+    static char str_buff[300];
     compo_cardbox_t *cardbox;
     int buf_num=0;
     int str_week_buf[7]=
@@ -413,7 +412,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             {
                 for (u8 j=0; j<7; j++)
                 {
-                    char string_handle[50];
+                    static char string_handle[300];
                     memset(string_handle,0,sizeof(string_handle));
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {

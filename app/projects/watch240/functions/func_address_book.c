@@ -132,7 +132,7 @@ compo_form_t *func_address_book_form_create(void)
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
     compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_CONTACTS]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH/1.2, widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set_visible(txt, false);
     compo_textbox_set(txt, i18n[STR_NO_CONTACTS]);
     compo_setid(txt, COMPO_ID_COVER_TXT);
@@ -308,7 +308,7 @@ compo_form_t *func_address_book_form_create(void)
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
     compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_CONTACTS]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH/1.2, widget_text_get_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT*3/4, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set_visible(txt, false);
     compo_textbox_set(txt, i18n[STR_NO_CONTACTS]);
     compo_setid(txt, COMPO_ID_COVER_TXT);

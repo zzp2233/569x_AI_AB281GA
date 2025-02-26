@@ -673,7 +673,7 @@ compo_form_t *func_bt_form_create(void)
     }
     uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
     if(vol>16)vol=16;
-    compo_shape_set_location(shape, (GUI_SCREEN_WIDTH-PROGRESS_BAR_LENGTH)/2+vol*(PROGRESS_BAR_LENGTH/16)/2,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.3,vol*(PROGRESS_BAR_LENGTH/16), 6 );
+    compo_shape_set_location(shape,  (GUI_SCREEN_WIDTH-128)/2+vol*(128/16)/2,302,vol*(128/16), 4 );
 
     return frm;
 }

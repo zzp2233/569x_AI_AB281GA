@@ -383,8 +383,11 @@ static void func_message_card_click(void)
             uteModuleNotifySetDisplayIndex(msg_id);
             uteModuleNotifyDelAllHistoryData(false);
             uteModuleNotifyGetData(f_msg->ute_msg);
-            f_msg->flag_drag = true;
-            f_msg->flag_move_auto = false;
+            if (uteModuleNotifyGetTotalNotifyCnt() > 1)
+            {
+                f_msg->flag_drag = true;
+                f_msg->flag_move_auto = false;
+            }
             if(compo_id == 1)
             {
                 widget_page_set_client(func_cb.frm_main->page_body, 0, -(card.h + 10) / 4);
@@ -726,26 +729,26 @@ const CARD_T(msg) card =
 {
     CARD_MSG_X,
     CARD_MSG_START_Y,
-    228,//GUI_SCREEN_WIDTH-12,
-    110,//GUI_SCREEN_HEIGHT/3,
+    284,//GUI_SCREEN_WIDTH-12,
+    116+50,//GUI_SCREEN_HEIGHT/3,
 
     {
         ///矩形背景
         //id      x       y         w        h      r
-        {0,       0,      8,   228,    94,    16},
+        {0,       0,      0,   284,    116,    20},
     },
 
     {
         ///图标
         //id      x                   y               w       h       res
-        {0,       12+36/2-228/2,      36/2-110/2,      32,     32,     0},
+        {0,       -(284/2-43),      -(116/2),      46,     46,     0},
     },
 
     {
         ///文本
         //id      x                 y       w       h       str                                res                         center  wordwrap   r  g  b
-        {0,      -15,               -38,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      false,   false,  148, 148, 148},
-        {1,      3+36/2-228/2,      -10,    205,    55,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   255, 255, 255},
+        {0,      5,              -48,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      false,   false,  148, 148, 148},
+        {1,      -(284/2-23),      -10,    250,    72,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   255, 255, 255},
     },
 };
 
@@ -1005,13 +1008,7 @@ static void func_message_card_update(bool first_update, compo_form_t *frm)
 
     if (card_y)
     {
-//        printf("card_y=%d\n",card_y);
-////        if(card_y<=GUI_SCREEN_WIDTH/2)
-////        {
-////            card_y-=40;
-////        }
-//        card_y-=40;
-//        printf("card_y=%d\n",card_y);
+
         //更新按钮
         s32 btn_y  = 0;
         for (int i=0; i<MSG_BTN_CNT; i++)
@@ -1025,11 +1022,11 @@ static void func_message_card_update(bool first_update, compo_form_t *frm)
 
             compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_DEL+i);
             compo_button_set_visible(btn, true);
-            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, btn_y);
+            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, btn_y-8);
 
             compo_textbox_t* text = compo_getobj_byid(COMPO_ID_TXT_DEL+i);
             compo_textbox_set_visible(text, true);
-            compo_textbox_set_pos(text, GUI_SCREEN_CENTER_X, btn_y);
+            compo_textbox_set_pos(text, GUI_SCREEN_CENTER_X, btn_y-8);
 
         }
 

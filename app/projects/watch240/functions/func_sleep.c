@@ -441,11 +441,23 @@ compo_form_t *func_sleep_form_create(void)
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
-    sleep_data->totalSleepMin = 480;
-    sleep_data->fallAsSleepTime.hour =0;
-    sleep_data->fallAsSleepTime.min =0;
-    sleep_data->getUpSleepTime.hour =8;
-    sleep_data->getUpSleepTime.min = 0;
+    // sleep_data->totalSleepMin = 480;
+    // sleep_data->fallAsSleepTime.hour =0;
+    // sleep_data->fallAsSleepTime.min =0;
+    // sleep_data->getUpSleepTime.hour =8;
+    // sleep_data->getUpSleepTime.min = 0;
+
+    // sleep_data->recordCnt = 5;
+    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[2].state = REM_SLEEP;
+    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[0].period = 20;
+    // sleep_data->sleep_record[1].period = 100;
+    // sleep_data->sleep_record[2].period = 100;
+    // sleep_data->sleep_record[3].period = 120;
+    // sleep_data->sleep_record[4].period = 20;
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
@@ -523,7 +535,7 @@ compo_form_t *func_sleep_form_create(void)
     {
         txt = compo_textbox_create(frm,strlen(i18n[STR_NO_DATA]));
         compo_textbox_set(txt, i18n[STR_NO_DATA]);
-        compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y/3+GUI_SCREEN_HEIGHT);
+        compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,142+GUI_SCREEN_HEIGHT);
     }
 
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
@@ -578,13 +590,13 @@ compo_form_t *func_sleep_form_create(void)
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+343,100,32);
+    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+396,100,32);
     compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0xff, 0x87, 0x0f));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+396,100,32);
+    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+343,100,32);
     compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0x00, 0xf7, 0xd6));
 //////////////////////////////////////////////////////////////////////////////////
@@ -624,7 +636,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+341,112,36);
+    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+394,112,36);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
@@ -637,8 +649,15 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209,GUI_SCREEN_HEIGHT+394,122,36);
+    compo_textbox_set_location(txt, 209,GUI_SCREEN_HEIGHT+341,122,36);
     compo_textbox_set(txt, buf);
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+    for(int i=0; i<3; i++)
+    {
+        compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+        compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+279+i*53, 280, 1);
+        compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
+    }
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     uint16_t width = 280;    // 总宽度
     uint8_t fillRect_h = 28; // 绘制单个高度
@@ -648,18 +667,6 @@ compo_form_t *func_sleep_form_create(void)
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+190, width, 1);
     compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
-
-    sleep_data->recordCnt = 5;
-    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
-    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
-    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
-    sleep_data->sleep_record[2].state = REM_SLEEP;
-    sleep_data->sleep_record[4].state = DEEP_SLEEP;
-    sleep_data->sleep_record[0].period = 20;
-    sleep_data->sleep_record[1].period = 100;
-    sleep_data->sleep_record[2].period = 100;
-    sleep_data->sleep_record[3].period = 120;
-    sleep_data->sleep_record[4].period = 20;
 
     for(int k=0; k<sleep_data->recordCnt; k++)
     {
@@ -677,8 +684,8 @@ compo_form_t *func_sleep_form_create(void)
         widget_page_t *page = widget_page_create(frm->page_body);
         widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_WIDTH+129, width, fillRect_h*4);
 
-        compo_shape_t *shapes = compo_shape_create_for_page(frm,page,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
-        compo_shape_set_location(shapes, GUI_SCREEN_CENTER_X,fillRect_h*2,GUI_SCREEN_WIDTH,GUI_SCREEN_HEIGHT);
+        // compo_shape_t *shapes = compo_shape_create_for_page(frm,page,COMPO_SHAPE_TYPE_RECTANGLE);// 创建显示块矩形
+        // compo_shape_set_location(shapes, GUI_SCREEN_CENTER_X,fillRect_h*2,GUI_SCREEN_WIDTH,GUI_SCREEN_HEIGHT);
 
         fillRect_y = fillRect_h*2+fillRect_h/2;
         for (uint16_t i = 0; i < sleep_data->recordCnt; i++)

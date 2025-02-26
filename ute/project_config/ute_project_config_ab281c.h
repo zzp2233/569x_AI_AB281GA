@@ -107,7 +107,7 @@
 #define UTE_DRV_BATTERY_090      4030
 #define UTE_DRV_BATTERY_100      4115
 
-#define UTE_DRV_TP_X_AXIS_EXCHANGE 0 // 交换X轴左右坐标
+#define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */

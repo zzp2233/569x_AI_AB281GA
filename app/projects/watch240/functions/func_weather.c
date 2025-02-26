@@ -652,7 +652,7 @@ compo_form_t *func_weather_form_create(void)
     u8 week_sort[7];
     u8 week_day=0;
     u8 get_weather_id[7];//存放一个星期的排序
-    char str_buff[30];//用于存放打印数据
+    char str_buff[50];//用于存放打印数据
 
     memset(get_weather_id,0,sizeof(get_weather_id));
 
@@ -846,15 +846,7 @@ compo_form_t *func_weather_form_create(void)
             compo_shape_set_color(shape, make_color(0X3D,0X3D,0X3D));
         }
 
-        if(i==0)
-        {
-            txt = compo_textbox_create(frm,strlen(i18n[STR_TO_DAY]));
-        }
-        else
-        {
-            txt = compo_textbox_create(frm,strlen(i18n[STR_SUNDAY+week_sort[i]]));
-        }
-//        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
+        txt = compo_textbox_create(frm,20);
         compo_textbox_set_location(txt, 22,GUI_SCREEN_HEIGHT+95+(i*57),90,34);
         compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
         compo_textbox_set_align_center(txt,false);
@@ -863,7 +855,6 @@ compo_form_t *func_weather_form_create(void)
             compo_textbox_set(txt,i18n[STR_TO_DAY]);/// 星期
         }
 
-//        printf("weather_id=%d\n",get_weather_id[i]);
         picbox = compo_picturebox_create(frm,weather_list[get_weather_id[i]].res_addr);/// 天气
         compo_picturebox_set_size(picbox,32,32);
         compo_picturebox_set_pos(picbox, 163,GUI_SCREEN_HEIGHT+108+(i*57));
@@ -881,7 +872,7 @@ compo_form_t *func_weather_form_create(void)
         }
         else
         {
-            snprintf(str_buff, sizeof(str_buff), "      ---");
+            snprintf(str_buff, sizeof(str_buff), " --/-- ");
         }
         txt = compo_textbox_create(frm,strlen(str_buff));
         compo_textbox_set(txt,str_buff);

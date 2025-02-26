@@ -199,11 +199,11 @@ typedef struct light_pic_item_t_
 //图片item，创建时遍历一下
 static const light_pic_item_t tbl_light_pic_item[] =
 {
-//    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN,     COMPO_ID_PIC_LEVEL1,         120,     82   },
-//    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL2,         120,     123    },
-//    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL3,         120,     164    },
-//    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL4,         120,     205    },
-//    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_00_BIN,     COMPO_ID_PIC_LEVEL5,         120,     246    },
+    {UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN,     COMPO_ID_PIC_LEVEL1,         GUI_SCREEN_CENTER_X,     88+48/2   },
+    {UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL2,         GUI_SCREEN_CENTER_X,     137+48/2     },
+    {UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL3,         GUI_SCREEN_CENTER_X,     186+48/2     },
+    {UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL4,         GUI_SCREEN_CENTER_X,     235+48/2     },
+    {UI_BUF_I332001_SETTINGS_BRIGHTNESS_00_BIN,     COMPO_ID_PIC_LEVEL5,         GUI_SCREEN_CENTER_X,     284+48/2     },
 };
 //创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_light_form_create(void)
@@ -218,13 +218,13 @@ compo_form_t *func_light_form_create(void)
 
     //新建按钮
     compo_button_t *btn;
-//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_LESS_BIN);
-//    compo_setid(btn, COMPO_ID_BTN_REDUCE);
-//    compo_button_set_pos(btn, 39, 164);
-//
-//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_PLUS_BIN);
-//    compo_setid(btn, COMPO_ID_BTN_INCREASE);
-//    compo_button_set_pos(btn, 201, 164);
+    btn = compo_button_create_by_image(frm, UI_BUF_I332001_SETTINGS_BRIGHTNESS_LESS_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REDUCE);
+    compo_button_set_pos(btn, 62/2+41,62/2+159);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I332001_SETTINGS_BRIGHTNESS_PLUS_BIN);
+    compo_setid(btn, COMPO_ID_BTN_INCREASE);
+    compo_button_set_pos(btn,  62/2+257,62/2+159);
 
     //新建图像
     compo_picturebox_t *pic_level[LIGHT_PIC_ITEM_CNT];
@@ -248,41 +248,41 @@ static void func_light_disp_Refresh(void)
 
     switch(sys_cb.light_level)
     {
-//        case 1:
-//            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-//            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-//            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-//            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-//            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-//            break;
-//        case 2:
-//            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-//            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-//            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-//            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-//            break;
-//        case 3:
-//            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-//            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-//            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-//            break;
-//        case 4:
-//            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-//            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-//            break;
-//        case 5:
-//            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_03_BIN);
-//            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-//            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-//            break;
+        case 1:
+            compo_picturebox_set(pic_level[0], UI_BUF_I332001_SETTINGS_BRIGHTNESS_03_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I332001_SETTINGS_BRIGHTNESS_00_BIN);
+            break;
+        case 2:
+            compo_picturebox_set(pic_level[0], UI_BUF_I332001_SETTINGS_BRIGHTNESS_03_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I332001_SETTINGS_BRIGHTNESS_00_BIN);
+            break;
+        case 3:
+            compo_picturebox_set(pic_level[0], UI_BUF_I332001_SETTINGS_BRIGHTNESS_03_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I332001_SETTINGS_BRIGHTNESS_04_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I332001_SETTINGS_BRIGHTNESS_00_BIN);
+            break;
+        case 4:
+            compo_picturebox_set(pic_level[0], UI_BUF_I332001_SETTINGS_BRIGHTNESS_03_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I332001_SETTINGS_BRIGHTNESS_00_BIN);
+            break;
+        case 5:
+            compo_picturebox_set(pic_level[0], UI_BUF_I332001_SETTINGS_BRIGHTNESS_02_BIN);
+            compo_picturebox_set(pic_level[1], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[2], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[3], UI_BUF_I332001_SETTINGS_BRIGHTNESS_01_BIN);
+            compo_picturebox_set(pic_level[4], UI_BUF_I332001_SETTINGS_BRIGHTNESS_00_BIN);
+            break;
     }
 }
 

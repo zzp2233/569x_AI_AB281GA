@@ -439,7 +439,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         compo_cardbox_text_set_location(card_day, ui_handle.card_day.text[i].idx, ui_handle.card_day.text[i].x, ui_handle.card_day.text[i].y,
                                         ui_handle.card_day.text[i].w, ui_handle.card_day.text[i].h);
 
-        char str_buff[50];
+        static char str_buff[300];
         memset(str_buff, '\0', sizeof(str_buff));
         if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(7))
         {
@@ -453,7 +453,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         {
             for (u8 j=0; j<7; j++)
             {
-                char string_handle[50];
+                static char string_handle[300];
                 memset(string_handle,0,sizeof(string_handle));
                 if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(j))
                 {
@@ -992,7 +992,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         compo_cardbox_text_set_location(card_day, ui_handle.card_day.text[i].idx, ui_handle.card_day.text[i].x, ui_handle.card_day.text[i].y,
                                         ui_handle.card_day.text[i].w, ui_handle.card_day.text[i].h);
 
-        char str_buff[50];
+        static char str_buff[300];
         memset(str_buff, '\0', sizeof(str_buff));
         if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(7))
         {
@@ -1006,7 +1006,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         {
             for (u8 j=0; j<7; j++)
             {
-                char string_handle[50];
+                static char string_handle[300];
                 memset(string_handle,0,sizeof(string_handle));
                 if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(j))
                 {

@@ -8,7 +8,7 @@
 #define TRACE(...)
 #endif
 
-#define MAX_WORD_CNT                            32                          //每条列表项最多16个字符
+#define MAX_WORD_CNT                            50                          //每条列表项最多16个字符
 
 /**
  * @brief 创建一个卡片控件

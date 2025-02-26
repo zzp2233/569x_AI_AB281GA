@@ -322,6 +322,21 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         STR_SUNDAY, // 周日
     };
 
+    char *str_buff = NULL;
+    uint16_t str_buff_size = 0;
+
+    for (uint8_t i = 0; i < 7; i++)
+    {
+        str_buff_size += strlen(i18n[str_week_buf[i]]) + 2;
+    }
+
+    if(str_buff_size < MAX(strlen(i18n[STR_ONCE]) + 2, strlen(i18n[STR_EVERY_DAY]) + 2))
+    {
+        str_buff_size = MAX(strlen(i18n[STR_ONCE]) + 2, strlen(i18n[STR_EVERY_DAY]) + 2);
+    }
+
+    str_buff = (char *)uteModulePlatformMemoryAlloc(str_buff_size);
+
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
@@ -439,40 +454,42 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         compo_cardbox_text_set_location(card_day, ui_handle.card_day.text[i].idx, ui_handle.card_day.text[i].x, ui_handle.card_day.text[i].y,
                                         ui_handle.card_day.text[i].w, ui_handle.card_day.text[i].h);
 
-        char str_buff[50];
-        memset(str_buff, '\0', sizeof(str_buff));
+        memset(str_buff, '\0', str_buff_size);
         if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(7))
         {
-            snprintf(str_buff, sizeof(str_buff), i18n[STR_ONCE]);
+            snprintf(str_buff, str_buff_size, i18n[STR_ONCE]);
         }
         else if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) == 0x7f)
         {
-            snprintf(str_buff, sizeof(str_buff), i18n[STR_EVERY_DAY]);
+            snprintf(str_buff,str_buff_size, i18n[STR_EVERY_DAY]);
         }
         else
         {
+
             for (u8 j=0; j<7; j++)
             {
-                char string_handle[50];
-                memset(string_handle,0,sizeof(string_handle));
                 if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(j))
                 {
-                    snprintf(string_handle, sizeof(string_handle),i18n[str_week_buf[j]]);
-                    for(int k=0; k<strlen(i18n[str_week_buf[j]]); k++)
+                    const char *week_str = i18n[str_week_buf[j]];
+                    uint8_t week_str_len = strlen(week_str);
+                    if (buf_num + week_str_len + 1 <= str_buff_size)
                     {
-                        str_buff[buf_num] = string_handle[k];
-                        buf_num++;
+                        memcpy(&str_buff[buf_num], week_str, week_str_len);
+                        buf_num += week_str_len;
+                        str_buff[buf_num++] = ' ';
                     }
-                    str_buff[buf_num] = ' ';
-                    buf_num++;
                 }
             }
-
         }
 
         if (ui_handle.card_day.text[i].idx == 0)        //周 1 2 3 4 5 6 7
         {
-            compo_cardbox_text_set(card_day, ui_handle.card_day.text[i].idx, str_buff);
+            compo_textbox_t *textbox = compo_textbox_create_for_page(frm,card_day->page,strlen(str_buff));
+            compo_textbox_set_align_center(textbox, false);
+            compo_textbox_set_location(textbox, ui_handle.card_day.text[i].x, ui_handle.card_day.text[i].y,ui_handle.card_day.text[i].w, ui_handle.card_day.text[i].h);
+            compo_textbox_set(textbox,str_buff);
+            compo_textbox_set_forecolor(textbox, make_color(ui_handle.card_day.text[i].color.r, ui_handle.card_day.text[i].color.g, ui_handle.card_day.text[i].color.b));
+            // compo_cardbox_text_set(card_day, ui_handle.card_day.text[i].idx, str_buff);
         }
         else if (ui_handle.card_day.text[i].idx == 1)      //重复
         {
@@ -480,6 +497,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         }
     }
 
+    uteModulePlatformMemoryFree(str_buff);
     return frm;
 }
 

@@ -174,7 +174,7 @@ compo_form_t *func_sport_finish_form_create(void)
                 txt_leng = widget_text_get_area(textbox->txt);
                 textbox = compo_textbox_create(frm, strlen(i18n[STR_STEP]));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set_pos(textbox, 50+txt_leng.wid, 5+184+40*2);
+                compo_textbox_set_location(textbox, 50+txt_leng.wid, 5+184+40*2,100,widget_text_get_max_height());
                 compo_textbox_set(textbox, i18n[STR_STEP]);
 
                 memset(txt_buf,0,sizeof(txt_buf));//运动心率

@@ -109,7 +109,7 @@ compo_form_t *func_alarm_clock_form_create(void)
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK]);
 
     //闹钟选项卡
-    char str_buff[50];
+    static char str_buff[300];
     compo_cardbox_t *cardbox;
     int buf_num=0;
     int str_week_buf[7]=
@@ -177,7 +177,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             {
                 for (u8 j=0; j<7; j++)
                 {
-                    char string_handle[100];
+                    static char string_handle[300];
                     memset(string_handle,0,sizeof(string_handle));
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {
@@ -323,7 +323,7 @@ compo_form_t *func_alarm_clock_form_create(void)
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK]);
 
     //闹钟选项卡
-    char str_buff[50];
+    static char str_buff[300];
     compo_cardbox_t *cardbox;
     int buf_num=0;
     int str_week_buf[7]=
@@ -391,7 +391,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             {
                 for (u8 j=0; j<7; j++)
                 {
-                    char string_handle[50];
+                    static char string_handle[300];
                     memset(string_handle,0,sizeof(string_handle));
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {
@@ -544,7 +544,6 @@ static void func_alarm_clock_process(void)
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)      //文本滚动
     {
         compo_cardbox_t* cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
-//        printf("===========>cardbox[%d]\n", COMPO_ID_CARD_0+i);
         compo_cardbox_text_scroll_process(cardbox, true);
 
         compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I330001_PUBLIC_SWITCH01_BIN : UI_BUF_I330001_PUBLIC_SWITCH00_BIN);

@@ -544,6 +544,7 @@ static void func_alarm_clock_process(void)
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)      //文本滚动
     {
         compo_cardbox_t* cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
+//        printf("===========>cardbox[%d]\n", COMPO_ID_CARD_0+i);
         compo_cardbox_text_scroll_process(cardbox, true);
 
         compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I330001_PUBLIC_SWITCH01_BIN : UI_BUF_I330001_PUBLIC_SWITCH00_BIN);

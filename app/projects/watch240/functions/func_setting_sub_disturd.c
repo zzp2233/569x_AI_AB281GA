@@ -5,14 +5,7 @@
 
 static void func_set_sub_disturd_exit(void);
 static void func_set_sub_disturd_enter(void);
-#define         DRAG_AUTO_SPEED     10
-#define         DRAG_MAX_DISTANCE   151
-#define         DRAG_MAX_DISTANCE1  84
-#define         DRAG_MIN_DISTANCE   4
-#define         DRAG_MAX_BACK_DISTANCE      117
-#define         DRAG_MIN_BACK_DISTANCE      49
-#define         FOCUS_AUTO_STEP         5
-#define         FOCUS_AUTO_STEP_DIV     16
+
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -22,6 +15,14 @@ static void func_set_sub_disturd_enter(void);
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
+#define         DRAG_AUTO_SPEED     10
+#define         DRAG_MAX_DISTANCE   151
+#define         DRAG_MAX_DISTANCE1  84
+#define         DRAG_MIN_DISTANCE   4
+#define         DRAG_MAX_BACK_DISTANCE      117
+#define         DRAG_MIN_BACK_DISTANCE      49
+#define         FOCUS_AUTO_STEP         5
+#define         FOCUS_AUTO_STEP_DIV     16
 typedef struct f_disturd_t_
 {
     bool flag_drag;                 //开始拖动
@@ -756,6 +757,15 @@ static void func_disturd_card_click(void)
     func_set_sub_disturd_disp_update();
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+
+#define         DRAG_AUTO_SPEED     10
+#define         DRAG_MAX_DISTANCE   300
+#define         DRAG_MAX_DISTANCE1  85
+#define         DRAG_MIN_DISTANCE   5
+#define         DRAG_MAX_BACK_DISTANCE      220
+#define         DRAG_MIN_BACK_DISTANCE      49
+#define         FOCUS_AUTO_STEP         5
+#define         FOCUS_AUTO_STEP_DIV     16
 typedef struct f_disturd_t_
 {
     bool flag_drag;                 //开始拖动
@@ -849,18 +859,18 @@ static const ui_handle_t ui_handle =
 {
     .disturd_all_card = {
         .id = COMPO_ID_CARD_DISTURD_ALL,
-        .x  = 4+232/2,
-        .y  = 54+62/2,
-        .w  = 232,
-        .h  = 62,
+        .x  = GUI_SCREEN_CENTER_X,
+        .y  = 80/2+102,
+        .w  = 324,
+        .h  = 80,
 
         .rect = {
             [0] = {
                 .idx    = 0,
                 .x      = 0,
                 .y      = 0,
-                .w      = 232,
-                .h      = 62,
+                .w      = 324,
+                .h      = 80,
                 .r      = 16,
             },
         },
@@ -868,22 +878,22 @@ static const ui_handle_t ui_handle =
         .icon = {
             [0] = {
                 .idx    = 0,
-                .x      = 182+40/2 - 232/2,
-                .y      = 19+24/2 - 62/2,
-                .w      = 40,
-                .h      = 24,
-//                .res_on = UI_BUF_I330001_PUBLIC_SWITCH02_BIN,
-//                .res_off= UI_BUF_I330001_PUBLIC_SWITCH00_BIN,
+                .x      = 116,
+                .y      = 0,
+                .w      = 50,
+                .h      = 30,
+                .res_on = UI_BUF_I332001_PUBLIC_SWITCH02_BIN,
+                .res_off= UI_BUF_I332001_PUBLIC_SWITCH00_BIN,
             },
         },
 
         .text = {
             [0] = {
                 .idx    = 0,
-                .x      = 12 - 232/2,
-                .y      = 18 - 62/2,
-                .w      = 96,
-                .h      = 26,
+                .x      = 10-324/2,
+                .y      = -(34/2),
+                .w      = 200,
+                .h      = 30,
                 .str_id = STR_DISTURD_ALL,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
@@ -896,18 +906,18 @@ static const ui_handle_t ui_handle =
 
     .disturd_def_card = {
         .id = COMPO_ID_CARD_DISTURD_DEF,
-        .x  = 4+232/2,
-        .y  = 122+62/2,
-        .w  = 232,
-        .h  = 62,
+        .x  = GUI_SCREEN_CENTER_X,
+        .y  = 80/2+192,
+        .w  = 324,
+        .h  = 80,
 
         .rect = {
             [0] = {
                 .idx    = 0,
                 .x      = 0,
                 .y      = 0,
-                .w      = 232,
-                .h      = 62,
+                .w      = 324,
+                .h      = 80,
                 .r      = 16,
             },
         },
@@ -915,22 +925,22 @@ static const ui_handle_t ui_handle =
         .icon = {
             [0] = {
                 .idx    = 0,
-                .x      = 182+40/2 - 232/2,
-                .y      = 19+24/2 - 62/2,
-                .w      = 40,
-                .h      = 24,
-//                .res_on = UI_BUF_I330001_PUBLIC_SWITCH02_BIN,
-//                .res_off= UI_BUF_I330001_PUBLIC_SWITCH00_BIN,
+                .x      = 116,
+                .y      = 0,
+                .w      = 50,
+                .h      = 30,
+                .res_on = UI_BUF_I332001_PUBLIC_SWITCH02_BIN,
+                .res_off= UI_BUF_I332001_PUBLIC_SWITCH00_BIN,
             },
         },
 
         .text = {
             [0] = {
                 .idx    = 0,
-                .x      = 12 - 232/2,
-                .y      = 18 - 62/2,
-                .w      = 96,
-                .h      = 26,
+                .x      = 10-324/2,
+                .y      = -(34/2),
+                .w      = 200,
+                .h      = 30,
                 .str_id = STR_DISTURD_TIM,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
@@ -943,18 +953,18 @@ static const ui_handle_t ui_handle =
 
     .disturd_start_time = {
         .id = COMPO_ID_CARD_DISTURD_START_TIME,
-        .x  = 4+232/2,
-        .y  = 190+72/2,
-        .w  = 232,
-        .h  = 72,
+        .x  = GUI_SCREEN_CENTER_X,
+        .y  = 80/2+282,
+        .w  = 324,
+        .h  = 80,
 
         .rect = {
             [0] = {
                 .idx    = 0,
                 .x      = 0,
                 .y      = 0,
-                .w      = 232,
-                .h      = 72,
+                .w      = 324,
+                .h      = 80,
                 .r      = 16,
             },
         },
@@ -962,10 +972,10 @@ static const ui_handle_t ui_handle =
         .text = {
             [0] = {
                 .idx    = 0,
-                .x      = 10 - 232/2,
-                .y      = 10 - 72/2,
-                .w      = 96,
-                .h      = 26,
+                .x      = 10-324/2,
+                .y      = -25,
+                .w      = 200,
+                .h      = 30,
                 .str_id = STR_DISTURD_TIM_START,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
@@ -976,10 +986,10 @@ static const ui_handle_t ui_handle =
 
             [1] = {
                 .idx    = 1,
-                .x      = 10 - 232/2,
-                .y      = 40 - 72/2,
-                .w      = 60,
-                .h      = 26,
+                .x      = 10-324/2,
+                .y      = 5,
+                .w      = 70,
+                .h      = 30,
                 .str_id = STR_NULL,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
@@ -990,10 +1000,10 @@ static const ui_handle_t ui_handle =
 
             [2] = {
                 .idx    = 2,
-                .x      = 10 - 232/2 + 60,
-                .y      = 40 - 72/2,
-                .w      = 52,
-                .h      = 26,
+                .x      = 80-324/2,
+                .y      = 5,
+                .w      = 70,
+                .h      = 30,
                 .str_id = STR_AM,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
@@ -1007,18 +1017,18 @@ static const ui_handle_t ui_handle =
 
     .disturd_end_time = {
         .id = COMPO_ID_CARD_DISTURD_END_TIME,
-        .x  = 4+232/2,
-        .y  = 268+72/2,
-        .w  = 232,
-        .h  = 72,
+        .x  = GUI_SCREEN_CENTER_X,
+        .y  = 80/2+382-10,
+        .w  = 324,
+        .h  = 80,
 
         .rect = {
             [0] = {
                 .idx    = 0,
                 .x      = 0,
                 .y      = 0,
-                .w      = 232,
-                .h      = 72,
+                .w      = 324,
+                .h      = 80,
                 .r      = 16,
             },
         },
@@ -1026,10 +1036,10 @@ static const ui_handle_t ui_handle =
         .text = {
             [0] = {
                 .idx    = 0,
-                .x      = 10 - 232/2,
-                .y      = 10 - 72/2,
-                .w      = 96,
-                .h      = 26,
+                .x      = 10-324/2,
+                .y      = -25,
+                .w      = 200,
+                .h      = 30,
                 .str_id = STR_DISTURD_TIM_END,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
@@ -1040,10 +1050,10 @@ static const ui_handle_t ui_handle =
 
             [1] = {
                 .idx    = 1,
-                .x      = 10 - 232/2,
-                .y      = 40 - 72/2,
-                .w      = 60,
-                .h      = 26,
+                .x      = 10-324/2,
+                .y      = 5,
+                .w      = 70,
+                .h      = 30,
                 .str_id = STR_NULL,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
@@ -1054,10 +1064,10 @@ static const ui_handle_t ui_handle =
 
             [2] = {
                 .idx    = 2,
-                .x      = 10 - 232/2 + 60,
-                .y      = 40 - 72/2,
-                .w      = 52,
-                .h      = 26,
+                .x      = 80-324/2,
+                .y      = 5,
+                .w      = 70,
+                .h      = 30,
                 .str_id = STR_AM,
                 .res    = UI_BUF_0FONT_FONT_BIN,
                 .center = false,
@@ -1673,30 +1683,9 @@ static void func_set_sub_disturd_message(size_msg_t msg)
 
         case MSG_CTP_SHORT_UP:
         case MSG_CTP_SHORT_DOWN:
-//        case MSG_CTP_TOUCH:
             f_disturd->flag_drag = true;
             f_disturd->flag_move_auto = true;
             break;
-
-//        case MSG_QDEC_FORWARD:                              //向前滚动菜单
-//            f_disturd->flag_move_auto = true;
-//            f_disturd->moveto.x = 0;
-//            f_disturd->moveto.y++;
-////            if (f_disturd->moveto.y > 268+90) {
-////                f_disturd->moveto.y = 268+90;
-////            }
-//            break;
-//
-//        case MSG_QDEC_BACKWARD:
-//            f_disturd->flag_move_auto = true;
-//            f_disturd->moveto.x = 0;
-//            f_disturd->moveto.y--;
-//
-////            if (f_disturd->moveto.y < 0) {
-////                f_disturd->moveto.y = 0;
-////            }
-//
-//            break;
         case MSG_SYS_500MS:
 
             if (f_disturd->time_scale != uteModuleSystemtime12HOn())

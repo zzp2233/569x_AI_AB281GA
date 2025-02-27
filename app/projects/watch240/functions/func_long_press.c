@@ -224,9 +224,9 @@ static void func_long_press_slide_disp_handle()
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 //三个图标与矩形的Y轴
-#define RECT_Y_1 (GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y*0.4)
-#define RECT_Y_2 (GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y*0.1)
-#define RECT_Y_3 (GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y*0.6)
+#define RECT_Y_1 (72/2+60)
+#define RECT_Y_2 (72/2+144)
+#define RECT_Y_3 (72/2+228)
 
 //矩形的宽度
 #define RECT_WIDTH 270
@@ -265,15 +265,15 @@ compo_form_t *func_long_press_form_create(void)
 
     //设置标题栏
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE);
-    compo_form_set_title(frm, i18n[STR_CANCEL]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE);
+    // compo_form_set_title(frm, i18n[STR_CANCEL]);
 
-    s16 rel_x,rel_y;
-    area_t text_area = widget_text_get_area(frm->title->txt);
-    widget_text_get_client(frm->title->txt, &rel_x, &rel_y);
-    compo_button_t *btn = compo_button_create_page_by_image(frm,frm->page, 0);
-    compo_button_set_location(btn,rel_x+text_area.wid,rel_y+text_area.hei,text_area.wid,text_area.hei );
-    compo_setid(btn,CANCEL_BTN_ID);
+    // s16 rel_x,rel_y;
+    // area_t text_area = widget_text_get_area(frm->title->txt);
+    // widget_text_get_client(frm->title->txt, &rel_x, &rel_y);
+    // compo_button_t *btn = compo_button_create_page_by_image(frm,frm->page, 0);
+    // compo_button_set_location(btn,rel_x+text_area.wid,rel_y+text_area.hei,text_area.wid,text_area.hei );
+    // compo_setid(btn,CANCEL_BTN_ID);
 
     /*创建三个底部椭圆*/
     compo_shape_t * rectangle;

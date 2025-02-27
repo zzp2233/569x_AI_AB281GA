@@ -363,14 +363,6 @@ compo_form_t *func_call_sub_dial_form_create(void)
         compo_picturebox_set_visible(pic, false);
     }
 
-    //创建文本
-//    compo_textbox_t *txt_title = compo_textbox_create(frm, strlen(i18n[STR_ENTER_NUMBER]));
-//    compo_setid(txt_title, COMPO_ID_PIC_NUM);
-//    //compo_textbox_set_align_center(txt_title, false);
-//    compo_textbox_set_pos(txt_title, 10, 18);
-//    compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH, widget_text_get_height());
-//    //compo_textbox_set_autoroll_mode(txt_title,1);
-//    compo_textbox_set(txt_title, i18n[STR_ENTER_NUMBER]);
 
     //创建数字
     compo_textbox_t *txt_num;

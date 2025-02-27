@@ -11,15 +11,7 @@
 #define TRACE(...)
 #endif
 
-#define FOOTBALL_RADIUS                          140*0.77
-#define MENU_FOOTBALL_ITEM_CNT                   ((int)(sizeof(tbl_menu_football) / sizeof(tbl_menu_football[0])))
-#define KALE_EDGE_SPACE                          2                                                              //边缘距离
-#define KALE_ICON_SPACE                          2                                                              //图标距离
-#define KALE_ICON_OUTER_SIZE                     (gui_image_get_size(tbl_menu_football[0].res_addr).wid)    //外圈图标大小
-#define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
-#define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
-#define KALE_SWITCH_DR                           2                                                              //单次变更R值
-#define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
+
 
 enum
 {
@@ -38,6 +30,15 @@ typedef struct f_menu_football_t_
 } f_menu_football_t;
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#define FOOTBALL_RADIUS                          (GUI_SCREEN_WIDTH/2.2)
+#define MENU_FOOTBALL_ITEM_CNT                   ((int)(sizeof(tbl_menu_football) / sizeof(tbl_menu_football[0])))
+#define KALE_EDGE_SPACE                          2                                                              //边缘距离
+#define KALE_ICON_SPACE                          2                                                              //图标距离
+#define KALE_ICON_OUTER_SIZE                     (gui_image_get_size(tbl_menu_football[0].res_addr).wid)    //外圈图标大小
+#define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
+#define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
+#define KALE_SWITCH_DR                           2                                                              //单次变更R值
+#define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 //足球图标列表(固定20项)
 static const compo_football_item_t tbl_menu_football[20] =
 {
@@ -104,69 +105,78 @@ static const compo_football_item_t tbl_menu_football[20] =
 
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#define FOOTBALL_RADIUS                          (GUI_SCREEN_WIDTH/2.2-10)
+#define MENU_FOOTBALL_ITEM_CNT                   ((int)(sizeof(tbl_menu_football) / sizeof(tbl_menu_football[0])))
+#define KALE_EDGE_SPACE                          2                                                              //边缘距离
+#define KALE_ICON_SPACE                          2                                                              //图标距离
+#define KALE_ICON_OUTER_SIZE                     (gui_image_get_size(tbl_menu_football[0].res_addr).wid)    //外圈图标大小
+#define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
+#define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
+#define KALE_SWITCH_DR                           2                                                              //单次变更R值
+#define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 //足球图标列表(固定20项)
 static const compo_football_item_t tbl_menu_football[20] =
 {
-//#if UTE_MODULE_SCREENS_STYLE_SUPPORT
-//    {UI_BUF_I330001_THEME_2_THEME_BIN,            FUNC_STYLE},
-//#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
-//#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-//    {UI_BUF_I330001_THEME_2_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
-//#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-//#if UTE_MODULE_SCREENS_TIMER_SUPPORT
-//    {UI_BUF_I330001_THEME_2_TIMER_BIN,            FUNC_TIMER},
-//#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
-//    {UI_BUF_I330001_THEME_2_LANUAGE_BIN,          FUNC_LANGUAGE},
-//#if UTE_MODULE_SCREENS_ALARM_SUPPORT
-//    {UI_BUF_I330001_THEME_2_ALARM_BIN,            FUNC_ALARM_CLOCK},
-//#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
-//#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
-//    {UI_BUF_I330001_THEME_2_CONTACTS_BIN,         FUNC_ADDRESS_BOOK},
-//#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
-////    {UI_BUF_I330001_THEME_2_SOUND_BIN,            FUNC_SET_SUB_SAV},
-//#if UTE_MODULE_SCREENS_CALL_SUPPORT
-//    {UI_BUF_I330001_THEME_2_CALL_BIN,             FUNC_CALL},
-//#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
-//#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
-//    {UI_BUF_I330001_THEME_2_MUSIC_BIN,            FUNC_BT},
-//#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
-//#if UTE_MODULE_SCREENS_GAME_SUPPORT
-//    {UI_BUF_I330001_THEME_2_GAME_BIN,             FUNC_GAME},
-//#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
-//#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-//    {UI_BUF_I330001_THEME_2_SPO2_BIN,             FUNC_BLOOD_OXYGEN},
-//#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-//#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
-//    {UI_BUF_I330001_THEME_2_CALENDAR_BIN,         FUNC_CALENDAER},
-//#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
-//#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
-//    {UI_BUF_I330001_THEME_2_WEATHER_BIN,          FUNC_WEATHER},
-//#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
-//#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
-//    {UI_BUF_I330001_THEME_2_SLEEP_BIN,            FUNC_SLEEP},
-//#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
-//#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-//    {UI_BUF_I330001_THEME_2_CALCULATOR_BIN,       FUNC_CALCULATOR},
-//#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-//#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-//    {UI_BUF_I330001_THEME_2_STOPWATCH_BIN,        FUNC_STOPWATCH},
-//#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-//
-//#if UTE_MODULE_SCREENS_SPORT_SUPPORT
-//    {UI_BUF_I330001_THEME_2_SOPRT_BIN,            FUNC_SPORT},
-//#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
-//#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-//    {UI_BUF_I330001_THEME_2_HEART_BIN,            FUNC_HEARTRATE},
-//#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-//#if UTE_MODULE_SCREENS_SETTING_SUPPORT
-//    {UI_BUF_I330001_THEME_2_SETTINGS_BIN,         FUNC_SETTING},
-//#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
-//#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
-//    {UI_BUF_I330001_THEME_2_ACTIVITY_BIN,         FUNC_ACTIVITY},
-//#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
-//#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
-//    {UI_BUF_I330001_THEME_2_BREATHE_BIN,          FUNC_BREATHE},
-//#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_THEME_BIN,            FUNC_STYLE},
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_V_BIN,               FUNC_TIMER},
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_LANUAGE_BIN,          FUNC_LANGUAGE},
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_ALARM_BIN,            FUNC_ALARM_CLOCK},
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_CONTACTS_BIN,         FUNC_ADDRESS_BOOK},
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+//    {UI_BUF_I332001_THEME_ICON2_SOUND_BIN,            FUNC_SET_SUB_SAV},
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_CALL_BIN,             FUNC_CALL},
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_MUSIC_BIN,            FUNC_BT},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_GAME_BIN,             FUNC_GAME},
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_SPO2_BIN,             FUNC_BLOOD_OXYGEN},
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_CALENDAR_BIN,         FUNC_CALENDAER},
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_WEATHER_BIN,          FUNC_WEATHER},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_SLEEP_BIN,            FUNC_SLEEP},
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_CALCULATOR_BIN,       FUNC_CALCULATOR},
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_STOPWATCH_BIN,        FUNC_STOPWATCH},
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_SOPRT_BIN,            FUNC_SPORT},
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_HEART_BIN,            FUNC_HEARTRATE},
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_SETTINGS_BIN,         FUNC_SETTING},
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_ACTIVITY_BIN,         FUNC_ACTIVITY},
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {UI_BUF_I332001_THEME_ICON2_BREATHE_BIN,          FUNC_BREATHE},
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
 };
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

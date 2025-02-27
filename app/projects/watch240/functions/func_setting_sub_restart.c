@@ -93,22 +93,22 @@ compo_form_t *func_set_sub_restart_form_create(void)
     // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     // compo_form_set_title(frm, i18n[STR_SETTING_RESTART]);
 
-    //创建文本
-    compo_textbox_t *txt_rst = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
-//    compo_textbox_set_align_center(txt_rst, false);
-    compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
-    compo_textbox_set_location(txt_rst, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.8,GUI_SCREEN_WIDTH/1.3,widget_text_get_area(txt_rst->txt).hei);
-    compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
+    compo_textbox_t *txt_off = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
+    compo_textbox_set_location(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.1,GUI_SCREEN_HEIGHT/4);
+    compo_textbox_set_multiline(txt_off, true);
+    compo_textbox_set_multiline_drag(txt_off,true);
+    compo_textbox_set_align_center(txt_off, true);
+    compo_textbox_set(txt_off, i18n[STR_SURE_REBOOT]);
 
     //创建按钮
     compo_button_t *btn;
-//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_CLOSE_BIN);
     compo_setid(btn, COMPO_ID_BTN_NO);
-    compo_button_set_pos(btn, 65, 240);
+    compo_button_set_pos(btn, 68+80/2, 234+80/2);
 
-//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_OK01_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_OK01_BIN);
     compo_setid(btn, COMPO_ID_BTN_YES);
-    compo_button_set_pos(btn, 175, 240);
+    compo_button_set_pos(btn, 212+80/2, 234+80/2);
 
     return frm;
 }

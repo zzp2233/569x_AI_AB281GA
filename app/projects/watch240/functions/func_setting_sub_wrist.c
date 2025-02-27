@@ -100,8 +100,8 @@ enum
 
 static const u32 tbl_wrist_switch_res[] =
 {
-//    UI_BUF_I330001_PUBLIC_SWITCH02_BIN,         //ON
-//    UI_BUF_I330001_PUBLIC_SWITCH00_BIN,         //OFF
+    UI_BUF_I332001_PUBLIC_SWITCH02_BIN,         //ON
+    UI_BUF_I332001_PUBLIC_SWITCH00_BIN,         //OFF
 };
 
 static void switch_set_sub_wrist(void)
@@ -127,16 +127,16 @@ compo_form_t *func_set_sub_wrist_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_UP]);
 
     //创建卡片
-    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 232, 72);
+    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 324, 80);
     compo_cardbox_set_visible(card, true);
-    compo_cardbox_set_location(card, 4 + 232/2, 54 + 72/2, 232, 72);
+    compo_cardbox_set_location(card, GUI_SCREEN_CENTER_X, 80/2+102, 324, 80);
     compo_setid(card, COMPO_CARD_1);
 
     compo_cardbox_rect_set_color(card, 0, make_color(41,41,41));
-    compo_cardbox_rect_set_location(card, 0, 0, 0, 232, 72, 16);
+    compo_cardbox_rect_set_location(card, 0, 0, 0, 324, 80, 10);
 
     compo_cardbox_icon_set_location(card, 0,
-                                    232/2 - 5 - gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
+                                    254/2-36 + gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
                                     0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
 
     if(uteModuleSportGetIsOpenHandScreenOn())
@@ -149,9 +149,7 @@ compo_form_t *func_set_sub_wrist_form_create(void)
     }
 
     compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
-    compo_cardbox_text_set_location(card, 0, 10-232/2, -14,
-                                    232 - gui_image_get_size(tbl_wrist_switch_res[0]).wid - 50,
-                                    30);
+    compo_cardbox_text_set_location(card, 0, 10-324/2,-(34/2), 200, 30);
     compo_cardbox_text_set_align_center(card, 0, false);
     widget_text_set_color(card->text[0], make_color(255,255,255));
     compo_cardbox_text_set(card, 0, i18n[STR_SETTING_UP]);
@@ -224,19 +222,7 @@ static void func_wrist_button_click(void)
     {
         if (compo_id == COMPO_CARD_1)
         {
-//            ret = msgbox((char *)i18n[STR_SETTING_UP], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-
-//            if (ret == MSGBOX_RES_OK)
-//            {
-//                if (wrs->value) {
-//                    wrs->value = false;
-//                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[1]);
-//                } else {
-//                    wrs->value = true;
-//                    compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);
-//                }
             switch_set_sub_wrist();
-//            }
             if(uteModuleSportGetIsOpenHandScreenOn())
             {
                 compo_cardbox_icon_set(cardbox, 0, tbl_wrist_switch_res[0]);

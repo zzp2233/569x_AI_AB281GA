@@ -549,7 +549,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 
             //设置遮罩2
             compo_shape_set_radius(masklayer2, 15);
-            compo_shape_set_location(masklayer2, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/3.5, GUI_SCREEN_WIDTH/1.15, GUI_SCREEN_HEIGHT/5);
+            compo_shape_set_location(masklayer2, GUI_SCREEN_CENTER_X, 80, 240, 80);
             compo_shape_set_color(masklayer2, make_color(44,44,44));
             compo_shape_set_alpha(masklayer2, 255);
 
@@ -557,9 +557,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 //            compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
 //                                 gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 10,
 //                                 func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
-            compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
-                                 gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 28,
-                                 GUI_SCREEN_CENTER_Y/3.5);  //需要更替为弹窗图标
+            compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),97,80);  //需要更替为弹窗图标
 
             //title
             if (title != NULL)
@@ -577,9 +575,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
                 compo_textbox_set_align_center(txt_msg, false);
-                compo_textbox_set_location(txt_msg, gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 52,
-                                           GUI_SCREEN_CENTER_Y/3.5-widget_text_get_height()-2,
-                                           145,widget_text_get_height()+3);              //调整文本位置
+                compo_textbox_set_location(txt_msg,130,50,170,36);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);
             }
@@ -589,7 +585,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
                 compo_textbox_set_align_center(txt_time, false);
-                compo_textbox_set_pos(txt_time, gui_image_get_size(func_cover_get_pic_res_addr(msg_type)).wid/2 + 52,GUI_SCREEN_CENTER_Y/3.5+3);//调整文本位置
+                compo_textbox_set_pos(txt_time, 130,88);//调整文本位置
                 compo_textbox_set(txt_time, time);
                 compo_textbox_set_forecolor(txt_time, COLOR_GRAY);
             }
@@ -729,23 +725,24 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //msg
             compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
             compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,
-                                       GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);              //调整文本位置
+                                       258, GUI_SCREEN_HEIGHT);              //调整文本位置
             compo_textbox_set_multiline(txt_msg, true);
             compo_textbox_set(txt_msg, msg);
+            printf("data:%s\n",msg);
             area_t txt_leng = widget_text_get_area(txt_msg->txt);
-            if(txt_leng.hei>GUI_SCREEN_HEIGHT/2.5)
+            if(txt_leng.hei>136)
             {
-                txt_leng.hei = GUI_SCREEN_HEIGHT/2.5;
+                txt_leng.hei = 136;
             }
             if(msg == i18n[STR_ADDRESS_BOOK_SYNC])
             {
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,txt_leng.wid,txt_leng.hei);              //调整文本位置
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,258,txt_leng.hei);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);
             }
             else
             {
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-widget_text_get_height(),txt_leng.wid,txt_leng.hei);              //调整文本位置
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, 136/2+72,258,txt_leng.hei);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);
@@ -787,20 +784,17 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         case MSGBOX_MODE_BTN_OK:            //确定按钮
             btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_OK01_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
-            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_OK01_BIN).hei/2 - 10);
+            compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 234+40);
             break;
 
         case MSGBOX_MODE_BTN_OKCANCEL:      //确定与取消按钮1
             btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_CLOSE_BIN);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_CLOSE_BIN).hei/2 - 20);
+            compo_button_set_pos(btn, 68+40,234+40);
 
             btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_OK01_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_OK01_BIN).hei/2 - 20);
+            compo_button_set_pos(btn, 212+40,234+40);
             break;
 
         case MSGBOX_MODE_BTN_YESNO:         //确定与取消按钮2

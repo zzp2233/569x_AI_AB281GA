@@ -905,7 +905,6 @@ enum
 {
     SWITCH_YES=0,
     SWITCH_NO,
-    TOTCH_MOVE,
 };
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_sub_run_form_create(void)
@@ -1195,6 +1194,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
         {
             txt = compo_textbox_create(frm, strlen(i18n[STR_STEPS]));///步数文本
             compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 43/2+198+360, 240, 24);
+            compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
             compo_textbox_set(txt, i18n[STR_STEPS]);
 
             shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);///灰色矩形
@@ -1318,7 +1318,6 @@ static void func_soprt_run_move(void)
                                 f_sleep->move_offset = -GUI_SCREEN_HEIGHT;
                                 f_sleep->page_num = PAGE_2;//第2页
                                 f_sleep->touch_state = TOUCH_FINISH_STATE;
-                                f_sleep->page_old_y = f_sleep->move_offset;
                             }
                         }
                         else if(f_sleep->switch_page_state == SWITCH_NO)
@@ -1343,7 +1342,6 @@ static void func_soprt_run_move(void)
                                 f_sleep->move_offset_x = GUI_SCREEN_HEIGHT;
                                 f_sleep->page_num = PAGE_3;//第2页
                                 f_sleep->touch_state = TOUCH_FINISH_STATE;
-                                f_sleep->page_old_x = f_sleep->move_offset_x;
                             }
                         }
                         else if(f_sleep->switch_page_state == SWITCH_NO)
@@ -1357,7 +1355,8 @@ static void func_soprt_run_move(void)
                             }
                         }
                     }
-
+                    f_sleep->page_old_x = f_sleep->move_offset_x;
+                    f_sleep->page_old_y = f_sleep->move_offset;
                 }
                 if(f_sleep->direction == UP_DOWM_DIR)
                 {
@@ -1368,7 +1367,6 @@ static void func_soprt_run_move(void)
                     widget_page_set_client(func_cb.frm_main->page, f_sleep->move_offset_x, f_sleep->move_offset);
                 }
                 f_sleep->page_old_x = f_sleep->move_offset_x;
-                printf("px:%d py:%d\n",f_sleep->move_offset_x,f_sleep->move_offset);
             }
         }
 
@@ -1393,13 +1391,9 @@ static void func_soprt_run_move(void)
                 {
                     f_sleep->switch_page_state = SWITCH_YES;
                 }
-                else if(f_sleep->move_offset > -GUI_SCREEN_HEIGHT)
-                {
-                    f_sleep->switch_page_state = SWITCH_NO;
-                }
                 else
                 {
-                    f_sleep->switch_page_state = TOTCH_MOVE;
+                    f_sleep->switch_page_state = SWITCH_NO;
                 }
             }
         }
@@ -1670,7 +1664,7 @@ static void func_sport_sub_run_click_handler(void)
         {
             int res=0;
             bool sport_flag = uteModuleSportMoreSportsIsLessData();
-            //            sport_flag ^=1;
+            sport_flag=~sport_flag;
             if (sport_flag)
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_SPORT);
@@ -1751,10 +1745,14 @@ static void func_sport_sub_run_message(size_msg_t msg)
     {
         case MSG_CTP_TOUCH:
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-            f_sport_sub_run->touch_flag = true;
+            if(f_sport_sub_run->touch_state != AUTO_STATE)
+            {
+                f_sport_sub_run->touch_flag = true;
+            }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_SYS_500MS:
+            printf("page_num:%d touch_flag:%d\n",f_sport_sub_run->page_num,f_sport_sub_run->touch_flag);
             func_sport_sub_run_updata();
             break;
         case MSG_CTP_CLICK:
@@ -1772,6 +1770,24 @@ static void func_sport_sub_run_message(size_msg_t msg)
         case MSG_CTP_SHORT_RIGHT:
         case MSG_CTP_LONG_RIGHT:
             f_sport_sub_run->direction = LEFT_RIGHT_DIR;
+            break;
+        case KU_BACK:
+            switch(f_sport_sub_run->page_num)
+            {
+                case PAGE_1:
+                    widget_page_set_client(func_cb.frm_main->page, 360, 0);
+                    break;
+                case PAGE_2:
+                    widget_page_set_client(func_cb.frm_main->page_body,0, 0);
+                    widget_page_set_client(func_cb.frm_main->page, 360, 0);
+                    break;
+            }
+            f_sport_sub_run->page_old_y = 0;
+            f_sport_sub_run->move_offset = 0;
+            f_sport_sub_run->move_offset_x = 360;
+            f_sport_sub_run->page_old_x = 360;
+            f_sport_sub_run->page_num = PAGE_3;
+
             break;
 #endif
 

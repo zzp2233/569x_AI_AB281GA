@@ -327,7 +327,7 @@ void uteApplicationCommonStartupSecond(void)
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
         }
 #endif
-        else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL || ((RTCCON >> 20) & 0x01)) //USB插入
+        else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL || CHARGE_DC_IN()) //USB插入
         {
 #if UTE_MODULE_NEW_FACTORY_TEST_JUST_CROSS_SUPPORT
             ute_new_factory_test_data_t *data;
@@ -429,7 +429,7 @@ bool uteApplicationCommonIsStartupFinish(void)
 *@author        zn.zeng
 *@date        2021-07-15
 */
-AT(.text.ute_app)
+AT(.com_text.ute_app)
 bool uteApplicationCommonIsPowerOn(void)
 {
     return uteApplicationCommonData.isPowerOn;
@@ -496,6 +496,14 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
 #endif
 #if (UTE_MODULE_CYWEE_MOTION_SUPPORT&&(UTE_MODULE_LOG_SUPPORT && UTE_MODULE_RUNING_LOG_SUPPORT))
         uteModuleLogSetSendRuningLogSwitch(false);
+#endif
+#if BT_ID3_TAG_EN
+        if(!bt_a2dp_profile_completely_connected())
+        {
+            uteModuleMusicResetPlayStatus();
+        }
+#else
+        uteModuleMusicResetPlayStatus();
 #endif
     }
     else
@@ -856,9 +864,9 @@ void uteApplicationCommonStartPowerOffMsg(void)
         gui_sleep();
     }
 
-    // uteApplicationCommonSaveQuickSwitchInfo();
+    uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
-    // uteModuleSportSaveStepData();
+    uteModuleSportSaveStepData();
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT&&UTE_MODULE_NOT_DISTURB_POWER_OFF_SAVE_STATUS_SUPPORT
     ute_module_not_disturb_data_t param;
     uteModuleNotDisturbGetParam(&param);

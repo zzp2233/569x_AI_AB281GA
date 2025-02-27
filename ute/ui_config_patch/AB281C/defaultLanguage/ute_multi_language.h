@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-01-17 15:49:12
+*@date   2025-02-18 14:22:35
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -73,8 +73,8 @@ enum
     STR_LIGHT_ALWAYS, // 常亮
     STR_SETTING_UP, // 抬腕亮屏
     STR_SETTING_DISTURD, // 勿扰模式
-    STR_DISTURD_ALL, // 全天勿扰
-    STR_DISTURD_TIM, // 定时勿扰
+    STR_DISTURD_ALL, // 全天开启
+    STR_DISTURD_TIM, // 定时开启
     STR_DISTURD_TIM_CTT, // 开启后，来电和通知静音且不振动(闹钟除外)，抬腕不亮屏，是否开启？
     STR_DISTURD_TIM_START, // 开始时间
     STR_DISTURD_TIM_END, // 结束时间
@@ -258,6 +258,7 @@ enum
     STR_INS, // 同步中...
     STR_SYNC_SUC, // 同步成功
     STR_SYNC_FAIL, // 同步失败
+    STR_MUTE, // 静音
 };
 
 extern const char * const *i18n;
@@ -265,10 +266,14 @@ extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
 extern const char * const i18n_ar_ril[];
 extern const char * const i18n_ru_rru[];
+extern const char * const i18n_tr_rtr[];
 extern const char * const i18n_ja_rjp[];
 extern const char * const i18n_de_rde[];
+extern const char * const i18n_es_res[];
 extern const char * const i18n_fr_rfr[];
 extern const char * const i18n_it_rit[];
+extern const char * const i18n_pt_rpt[];
+extern const char * const i18n_th_rth[];
 extern const char * const i18n_zh_rtw[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

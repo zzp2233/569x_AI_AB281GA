@@ -170,7 +170,7 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         case MSG_TYPE_DRV_KEY_HANDLER:
         {
             uteModuleFactoryTestKeysHandler(param);
-            uteModuleWatchOnlineRecvTimeoutMsgHandler();
+            uteModuleSprotResetRovllverScreenMode();
         }
         break;
         case MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR:

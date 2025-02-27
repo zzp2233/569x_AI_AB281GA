@@ -904,6 +904,7 @@ static void func_compo_select_sub_enter(void)
 //退出组件选择功能
 static void func_compo_select_sub_exit(void)
 {
+//    printf("%s\n", __func__);
     func_cb.last = FUNC_COMPO_SELECT_SUB;
 
     f_compo_select_sub_t *f_compo_select_sub = (f_compo_select_sub_t *)func_cb.f_cb;
@@ -914,7 +915,7 @@ static void func_compo_select_sub_exit(void)
 
     u8 index = 1;
     memset(&func_cb.tbl_sort[index], 0, sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]) - index);
-//    printf("exit add tbl_sort = [");
+    printf("exit add tbl_sort = [");
     for (u8 i = 0; i < LIST_ITEM_CNT_MAX; i++)
     {
         if (bsp_sys_get_ctlbit(list_data_sort[i]))
@@ -930,10 +931,10 @@ static void func_compo_select_sub_exit(void)
             }
         }
     }
-//    printf("]\n");
+    printf("]\n");
     func_cb.tbl_sort[index ++] = FUNC_COMPO_SELECT;
     func_cb.sort_cnt = index;
-    if (sys_cb.refresh_language_flag == false)
+    if (sys_cb.refresh_language_flag == false && func_cb.sta != FUNC_CLOCK)
     {
         func_cb.flag_sort = true;
     }
@@ -943,6 +944,8 @@ static void func_compo_select_sub_exit(void)
 //        printf("%d ", func_cb.tbl_sort[i]);
 //    }
 //    printf("]\n");
+
+    printf("%s->index[%d], sort[%d]\n", __func__, index, func_cb.flag_sort);
 
     // 保存排序
     uteModuleGuiCommonSavescreenTblSort(func_cb.tbl_sort, func_cb.sort_cnt);

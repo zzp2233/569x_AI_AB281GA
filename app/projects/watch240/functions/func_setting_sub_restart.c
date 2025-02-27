@@ -90,14 +90,14 @@ compo_form_t *func_set_sub_restart_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_RESTART]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_SETTING_RESTART]);
 
     //创建文本
     compo_textbox_t *txt_rst = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
 //    compo_textbox_set_align_center(txt_rst, false);
     compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
-    compo_textbox_set_location(txt_rst, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_rst->txt).hei);
+    compo_textbox_set_location(txt_rst, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.8,GUI_SCREEN_WIDTH/1.3,widget_text_get_area(txt_rst->txt).hei);
     compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
 
     //创建按钮

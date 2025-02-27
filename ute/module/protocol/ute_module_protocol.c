@@ -162,6 +162,7 @@ void uteModuleProtocolSetDateTime(uint8_t*receive,uint8_t length)
             if(uteModuleCallBtIsPowerOn() == false)
             {
                 uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
+                bt_abort_reconnect(); //终止回连
             }
 #endif
         }

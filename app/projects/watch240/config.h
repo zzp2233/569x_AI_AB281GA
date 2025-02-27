@@ -49,7 +49,7 @@
 #endif
 
 #define CTP_SUPPORT_COVER               1                           //是否支持盖手息屏功能，需要确认屏幕是否支持
-#define DEFAULT_TE_MODE                 1                           //默认1 TE模式, 0为2 TE模式, 3为复杂界面专用模式
+#define DEFAULT_TE_MODE                 1                           //默认1 TE模式, 0为2 TE模式, 1为1 TE模式, 2为复杂界面专用模式
 #define UART0_PRINTF_SEL                PRINTF_PB3                  //选择UART打印信息输出IO，或关闭打印信息输出
 #define SYS_INIT_VOLUME                 xcfg_cb.sys_init_vol        //系统默认音量
 

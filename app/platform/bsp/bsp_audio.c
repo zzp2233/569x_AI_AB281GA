@@ -170,6 +170,17 @@ void bt_call_audio_path_exit(void)
     // adpll_spr_set(DAC_OUT_SPR);
 }
 
+void bt_call_audio_path_start(void)
+{
+    sdadc_start(CH_MIC_PF0);
+}
+
+void bt_call_audio_path_exit(void)
+{
+    sdadc_exit(CH_MIC_PF0);
+    // adpll_spr_set(DAC_OUT_SPR);
+}
+
 u8 get_mic_dig_gain(void)
 {
     return BT_DIG_GAIN;

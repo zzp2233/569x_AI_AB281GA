@@ -25,6 +25,8 @@
 #include "ute_drv_tft_s360X360_nv3030b_hy139071a.h"
 #elif UTE_DRV_TFT_S240X296NV3030B_ZD183G1196_QSPI_SUPPORT
 #include "ute_drv_boe_s240x296_i183_jd9853_wv018lzq_qspi.h"
+#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
+#include "ute_drv_tft_s360X360_nv3030b_zd138g1616.h"
 #endif
 
 /*! 配置屏的接口zn.zeng, 2021-09-06  */
@@ -63,6 +65,8 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Nv3030BZd183g1196Config;
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BHy139071aConfig;
+#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BZd138g1616Config;
 #endif
 #if UTE_DRV_8080_FOR_SCREEN_SUPPORT
     uteModulePlatform8080Init();
@@ -84,8 +88,11 @@ void uteDrvScreenCommonInterfaceInit(void)
 void uteDrvScreenCommonInit(void)
 {
     uteDrvScreenCommonInterfaceInit();
+#if UTE_LOG_DRV_SCREEN_LVL
     uteDrvScreenCommonReadId();
-
+#else
+    DESPIBAUD = tft_cb.despi_baud;
+#endif
     if(uteDrvScreenCommonFunction->init)
     {
         uteDrvScreenCommonFunction->init();
@@ -317,7 +324,7 @@ __SCREEN_COMMON uint32_t uteDrvScreenCommonReadId(void)
 */
 __SCREEN_COMMON void uteDrvScreenCommonGc9c01QspiWriteCmdParams(uint8_t cmd,uint8_t *data,uint8_t size)
 {
-    uint8_t sdat[36] = {0x02, 0x00, cmd, 0x00,};
+    static uint8_t sdat[36];// = {0x02, 0x00, cmd, 0x00,};
     sdat[0] = 0x02;
     sdat[1] = 0x00;
     sdat[2] = cmd;
@@ -353,7 +360,7 @@ __SCREEN_COMMON void uteDrvScreenCommonGc9c01QspiWriteCmdParam(uint8_t cmd,uint8
 */
 __SCREEN_COMMON void uteDrvScreenCommonFt2308QspiWrite16bitCmdParams(uint16_t cmd,uint8_t *data,uint8_t size)
 {
-    uint8_t sdat[36] = {0x02, 0x00, cmd, 0x00,};
+    static uint8_t sdat[36];// = {0x02, 0x00, cmd, 0x00,};
     sdat[0] = 0x02;
     sdat[1] = 0x00;
     sdat[2] = cmd>>8&0xff;

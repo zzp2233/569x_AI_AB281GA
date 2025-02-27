@@ -190,7 +190,7 @@ const u8 quick_btn_tbl[] =
 
 enum
 {
-    COMPO_ID_BTFLY = 1,
+    COMPO_ID_BTFLY = 50,
     COMPO_ID_TIME_DOT,
     COMPO_ID_L_LIGHT1,
     COMPO_ID_L_LIGHT2,
@@ -344,19 +344,23 @@ compo_form_t *func_clock_cube_form_create(void)
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_HOUR);
-
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 2);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_MINUTE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
 
     txt = compo_textbox_create(frm, 10);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 180, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + GUI_SCREEN_CENTER_X, 300, 70);
     compo_bonddata(txt, COMPO_BOND_DATE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
 
     txt = compo_textbox_create(frm, 1);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
@@ -400,19 +404,21 @@ compo_form_t *func_clock_butterfly_form_create(void)
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_HOUR);
-
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 2);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
     compo_bonddata(txt, COMPO_BOND_MINUTE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 10);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
 //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 70, 300, 70);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 60, 300, 70);
     compo_bonddata(txt, COMPO_BOND_DATE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 1);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
@@ -697,6 +703,10 @@ static void func_clock_process(void)
 //        compo_cube_update(cube);
 
     }
+    else if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
+    {
+        func_clock_butterfly_process();
+    }
 #endif
     func_process();                                  //刷新UI
 }
@@ -796,12 +806,15 @@ static void func_clock_message(size_msg_t msg)
 
         case MSG_SYS_500MS: //秒跳动处理
         {
-            compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
-            if(txt != NULL)
+            if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX || sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
             {
-                static bool time_visible = true;
-                compo_textbox_set_visible(txt, time_visible);
-                time_visible = !time_visible;
+                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
+                if (txt != NULL)
+                {
+                    static bool time_visible = true;
+                    compo_textbox_set_visible(txt, time_visible);
+                    time_visible = !time_visible;
+                }
             }
         }
         break;
@@ -835,6 +848,7 @@ static void func_clock_message(size_msg_t msg)
             {
                 func_switch_to(FUNC_CLOCK_PREVIEW, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);                    //切换回主时钟
             }
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             break;
 
         default:
@@ -849,7 +863,7 @@ static void func_clock_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
     f_clock_t *f_clock = (f_clock_t*)func_cb.f_cb;
-
+    func_cb.flag_animation = true;///
     if(sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
     {
         compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);

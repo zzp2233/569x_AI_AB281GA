@@ -45,9 +45,9 @@ enum
 
 static const u32 anim_addr_tbl[] =      //替换图片即可
 {
-    // UI_BUF_I330001_SPORT_COUNTDOWN_03_BIN,
-    // UI_BUF_I330001_SPORT_COUNTDOWN_02_BIN,
-    // UI_BUF_I330001_SPORT_COUNTDOWN_01_BIN,
+//    UI_BUF_I330001_SPORT_COUNTDOWN_03_BIN,
+//    UI_BUF_I330001_SPORT_COUNTDOWN_02_BIN,
+//    UI_BUF_I330001_SPORT_COUNTDOWN_01_BIN,
 };
 
 //创建运动开始界面窗体
@@ -121,7 +121,6 @@ static void func_sport_animation(void)
             case SPORT_ANIM_STA_DELAY:
                 if (++f_sport_switching->anim_delay > SPORT_ANIM_DELAY)
                 {
-#if  UTE_MODULE_SPORT_SUPPORT
                     if (uteModuleSportMoreSportIsAppStart())
                     {
                         if (f_sport_switching->anim_num != UTE_MODULE_SPROT_MORE_SPORT_COUNT_ZORE - uteModuleSportMoreSportGetCountZeroIndex())
@@ -130,7 +129,6 @@ static void func_sport_animation(void)
                         }
                     }
                     else
-#endif
                     {
                         f_sport_switching->anim_sta = SPORT_ANIM_STA_NEXT;
                     }
@@ -148,13 +146,11 @@ static void func_sport_animation(void)
 
                 if (rect_pic.y < 0)
                 {
-#if UTE_MODULE_SPORT_SUPPORT
                     if (uteModuleSportMoreSportIsAppStart())
                     {
                         f_sport_switching->anim_num = UTE_MODULE_SPROT_MORE_SPORT_COUNT_ZORE - uteModuleSportMoreSportGetCountZeroIndex();
                     }
                     else
-#endif
                     {
                         f_sport_switching->anim_num++;
                     }
@@ -214,9 +210,9 @@ enum
 
 static const u32 anim_addr_tbl[] =      //替换图片即可
 {
-//    UI_BUF_I330001_SPORT_COUNTDOWN_03_BIN,
-//    UI_BUF_I330001_SPORT_COUNTDOWN_02_BIN,
-//    UI_BUF_I330001_SPORT_COUNTDOWN_01_BIN,
+    UI_BUF_I332001_SPORT_COUNTDOWN_03_BIN,
+    UI_BUF_I332001_SPORT_COUNTDOWN_02_BIN,
+    UI_BUF_I332001_SPORT_COUNTDOWN_01_BIN,
 };
 
 //创建运动开始界面窗体

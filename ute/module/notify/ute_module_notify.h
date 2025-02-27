@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        ÏûÏ¢ÌáĞÑ´¦ÀíÄ£¿éÍ·ÎÄ¼ş
+*@brief        æ¶ˆæ¯æé†’å¤„ç†æ¨¡å—å¤´æ–‡ä»¶
 *@details
 *@author       zn.zeng
 *@date       2021-08-24
@@ -12,12 +12,12 @@
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "ute_module_systemtime.h"
-/*! ÏûÏ¢ÍÆËÍÊı¾İ±£´æÄ¿Â¼ zn.zeng, 2021-08-24  */
+/*! æ¶ˆæ¯æ¨é€æ•°æ®ä¿å­˜ç›®å½• zn.zeng, 2021-08-24  */
 #define UTE_MODULE_FILESYSTEM_NOTIFY_DIR "notify"
 #define UTE_MODULE_FILESYSTEM_NOTIFY_ANCS_DIR "ancs"
 #define UTE_MODULE_FILESYSTEM_NOTIFY_ANCS_FLAG "flag"
 
-/*! ÏûÏ¢ÍÆËÍÀàĞÍ±í zn.zeng, 2021-08-25  */
+/*! æ¶ˆæ¯æ¨é€ç±»å‹è¡¨ zn.zeng, 2021-08-25  */
 enum
 {
     MSG_CALL   = 0x00,
@@ -146,7 +146,7 @@ enum
 #define APP_ID_BookMyShow                    "BookMyShow.com"
 
 
-#define APP_ID_Calendar                      "mobilecal"   //ios:com.apple.mobilecal °²×¿£ºcom.google.android.calendar
+#define APP_ID_Calendar                      "mobilecal"   //ios:com.apple.mobilecal å®‰å“ï¼šcom.google.android.calendar
 #define APP_ID_JioTv                         "jioplay"    // com.jio.jioplay
 #define APP_ID_MakeMyTrip                    "MMT"    //com.Iphone.MMT
 #define APP_ID_Netflix                       "Netflix"    // com.netflix.Netflix
@@ -156,16 +156,16 @@ enum
 #define APP_ID_YTMusic                       "youtubemusic"  //com.google.ios.youtubemusic
 
 //#define APP_ID_OT_Messager                   "ot.Messager"
-#define APP_ID_WhatsApp_Business             "whatsapp.WhatsAppSMB"  // iOS£ºnet.whatsapp.WhatsAppSMB£¬°²×¿£ºcom.whatsapp.w4b
-#define APP_ID_Dunzo                         "in.dunzo.lattelite"  //Ios£º in.dunzo.lattelite£¬°²×¿£ºcom.dunzo.user
-#define APP_ID_Gaana                         "til.gaana"    //Ios£ºcom.til.gaana  °²×¿£ºcom.gaana
-#define APP_ID_Google_Drive                  "google.Drive"  //Ios£ºcom.google.Drive  °²×¿£ºcom.google.android.apps.docs
-#define APP_ID_googlechat                    "google.Dynamite"//iOS - com.google.Dynamite   °²×¿com.google.android.apps.dynamite
-#define APP_ID_Wynkmusic                     "Bharti.AirtelMusicApp"  //ios£ºcom.Bharti.AirtelMusicApp  °²×¿£ºcom.bsbportal.music
-#define APP_ID_Yahoo                         "yahoo.Aerogram"    //ios£ºcom.yahoo.Aerogram  °²×¿£ºcom.yahoo.mobile.client.android.mail
-#define APP_ID_TitanSmartWorld               "titan.smartworld"   //ios£ºcom.titan.smartworld  °²×¿£ºcom.titan.smartworld
-#define APP_ID_Slack                         "tinyspeck.chatlyio" //ios£ºcom.tinyspeck.chatlyio£¬°²×¿£ºcom.Slack
-#define APP_ID_Spotify                       "spotify.client"  //ios£ºcom.spotify.client °²×¿£ºcom.spotify.music
+#define APP_ID_WhatsApp_Business             "whatsapp.WhatsAppSMB"  // iOSï¼šnet.whatsapp.WhatsAppSMBï¼Œå®‰å“ï¼šcom.whatsapp.w4b
+#define APP_ID_Dunzo                         "in.dunzo.lattelite"  //Iosï¼š in.dunzo.latteliteï¼Œå®‰å“ï¼šcom.dunzo.user
+#define APP_ID_Gaana                         "til.gaana"    //Iosï¼šcom.til.gaana  å®‰å“ï¼šcom.gaana
+#define APP_ID_Google_Drive                  "google.Drive"  //Iosï¼šcom.google.Drive  å®‰å“ï¼šcom.google.android.apps.docs
+#define APP_ID_googlechat                    "google.Dynamite"//iOS - com.google.Dynamite   å®‰å“com.google.android.apps.dynamite
+#define APP_ID_Wynkmusic                     "Bharti.AirtelMusicApp"  //iosï¼šcom.Bharti.AirtelMusicApp  å®‰å“ï¼šcom.bsbportal.music
+#define APP_ID_Yahoo                         "yahoo.Aerogram"    //iosï¼šcom.yahoo.Aerogram  å®‰å“ï¼šcom.yahoo.mobile.client.android.mail
+#define APP_ID_TitanSmartWorld               "titan.smartworld"   //iosï¼šcom.titan.smartworld  å®‰å“ï¼šcom.titan.smartworld
+#define APP_ID_Slack                         "tinyspeck.chatlyio" //iosï¼šcom.tinyspeck.chatlyioï¼Œå®‰å“ï¼šcom.Slack
+#define APP_ID_Spotify                       "spotify.client"  //iosï¼šcom.spotify.client å®‰å“ï¼šcom.spotify.music
 #endif
 
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
@@ -289,7 +289,7 @@ enum
 
 
 #endif
-/*! ÏûÏ¢ÍÆËÍÊı¾İ½á¹¹zn.zeng, 2021-11-09  */
+/*! æ¶ˆæ¯æ¨é€æ•°æ®ç»“æ„zn.zeng, 2021-11-09  */
 typedef struct
 {
     uint16_t size;
@@ -303,7 +303,7 @@ typedef struct
     uint8_t titleSize;
     uint8_t content[UTE_NOTIFY_MSG_CONTENT_MAX_SIZE];
 } ute_module_notify_one_data_t;
-/*! ÏûÏ¢ÍÆËÍÊı¾İ½á¹¹zn.zeng, 2021-08-24  */
+/*! æ¶ˆæ¯æ¨é€æ•°æ®ç»“æ„zn.zeng, 2021-08-24  */
 typedef struct
 {
     ute_module_notify_one_data_t currNotify;

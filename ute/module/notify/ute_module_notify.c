@@ -223,6 +223,12 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
         return;
     }
 
+    if(uteModuleNotifyData.currNotify.size == 0)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,currNotify.size=%d", __func__,uteModuleNotifyData.currNotify.size);
+        return;
+    }
+
     uint8_t *utf8StrTemp = uteModulePlatformMemoryAlloc(UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
     memset(utf8StrTemp,0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
     uint16_t utf8StrLen = 0;
@@ -231,9 +237,12 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,uteModuleNotifyData.currNotify.size = %d,mAXsize = %d,", __func__,uteModuleNotifyData.currNotify.size,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
     if(ble_ancs_is_connected()) // ios消息是utf8编码，不需要处理
     {
-        memcpy(&utf8StrTemp[0],&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-        memset(&uteModuleNotifyData.currNotify.content[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
-        uteModuleCharencodeGetUtf8String(&utf8StrTemp[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE,&uteModuleNotifyData.currNotify.content[0],&uteModuleNotifyData.currNotify.size);
+        if(uteModuleNotifyData.currNotify.size >= UTE_NOTIFY_MSG_CONTENT_MAX_SIZE)
+        {
+            memcpy(&utf8StrTemp[0],&uteModuleNotifyData.currNotify.content[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+            memset(&uteModuleNotifyData.currNotify.content[0],0,UTE_NOTIFY_MSG_CONTENT_MAX_SIZE);
+            uteModuleCharencodeGetUtf8String(&utf8StrTemp[0],UTE_NOTIFY_MSG_CONTENT_MAX_SIZE,&uteModuleNotifyData.currNotify.content[0],&uteModuleNotifyData.currNotify.size);
+        }
     }
     else
     {
@@ -664,7 +673,7 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
 #endif
                 uteModuleNotifyData.currNotify.type =MSG_Twitter;
             }
-            else if(strstr((const char*)buff,APP_ID_WHATSAPP))//
+            else if(strstr((const char*)buff,APP_ID_WHATSAPP) && !strstr((const char*)buff,"whatsapp.WhatsAppSMB"))//
             {
 #if APP_DYNAMIC_ADDITIONAL_SOCIAL_APP_SUPPORT
                 if( ANCS_OPEN_WHATSAPP&uteModuleNotifyData.ancsAdditionalOpenFlag[17])
@@ -1498,10 +1507,48 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
 #endif
                     uteModuleNotifyAncsPushContect(buff,length,false);
                 }
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
+                // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION,0);
             }
         }
+        else if (attId == ANCS_ATT_TYPE_DATE)
+        {
+            tm_t notifyTm;
+            u32 date, time;
+            uint32_t notifySecCnt = 0;
+            tm_t systemTm;
+            uint32_t systemSecCnt = 0;
+            ute_module_systemtime_time_t systemTime;
+            uteModuleSystemtimeGetTime(&systemTime);
 
+            sscanf(buff, "%dT%d", &date, &time);
+            notifyTm.year = date / 10000;
+            notifyTm.mon  = (date % 10000) / 100;
+            notifyTm.day  = date % 100;
+            notifyTm.hour = time / 10000;
+            notifyTm.min  = (time % 10000) / 100;
+            notifyTm.sec  = time % 100;
+            notifySecCnt = tm_to_time(notifyTm);
+
+            systemTm.year = systemTime.year;
+            systemTm.mon  = systemTime.month;
+            systemTm.day  = systemTime.day;
+            systemTm.hour = systemTime.hour;
+            systemTm.min  = systemTime.min;
+            systemTm.sec  = systemTime.sec;
+            systemSecCnt = tm_to_time(systemTm);
+
+            if (ABS(systemSecCnt - notifySecCnt) < 60 * 5)
+            {
+                if (uteModuleNotifyData.ancsHasOpen && uteModuleNotifyData.currNotify.size > 0)
+                {
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_NOTIFYCATTION, 0);
+                }
+            }
+            else
+            {
+                UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,message obsolete!!! systemSecCnt=%d, notifySecCnt=%d", __func__, systemSecCnt, notifySecCnt);
+            }
+        }
     }
 }
 

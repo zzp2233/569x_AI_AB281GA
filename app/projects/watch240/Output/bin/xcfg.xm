@@ -55,9 +55,7 @@ config(CHECK, "来电报号功能", "是否支持来电报号功能", BT_HFP_RIN
 config(CHECK, "来电播放手机铃声", "打开此功能后，可以播放手机铃声，例如ios", BT_HFP_INBAND_RING_EN, 0, BT_SCO_EN);
 config(CHECK, "串口功能", "是否支持蓝牙串口的功能", BT_SPP_EN, 1);
 config(CHECK, "BLE控制功能", "是否支持BLE音乐控制的功能", BLE_EN, 0);
-config(LEVEL, 0x07);
 config(TEXT, "BLE名称", "手机上可以看到的BLE蓝牙名称", LE_NAME, 32, "LE-AB569X", BLE_EN);
-config(LEVEL, 0x03);
 
 config(SUB, "蓝牙RF配置", "蓝牙RF相关配置");
 config(BYTE, "PA_GAIN0",  "PA_GAIN0",  RF_PA_GAIN, 0, 7, 7);

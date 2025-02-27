@@ -27,6 +27,8 @@
 #define ALARM_GET_CYCLE(idx)            0
 #endif
 
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static void func_alarm_clock_sub_edit_enter(void);
 static void func_alarm_clock_sub_edit_exit(void);
 
@@ -66,8 +68,6 @@ static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
     hour12.am_pm = 0;
     return hour12;
 }
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 typedef struct ui_handle_t_
 {
@@ -322,6 +322,21 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         STR_SUNDAY, // 周日
     };
 
+    char *str_buff = NULL;
+    uint16_t str_buff_size = 0;
+
+    for (uint8_t i = 0; i < 7; i++)
+    {
+        str_buff_size += strlen(i18n[str_week_buf[i]]) + 2;
+    }
+
+    if(str_buff_size < MAX(strlen(i18n[STR_ONCE]) + 2, strlen(i18n[STR_EVERY_DAY]) + 2))
+    {
+        str_buff_size = MAX(strlen(i18n[STR_ONCE]) + 2, strlen(i18n[STR_EVERY_DAY]) + 2);
+    }
+
+    str_buff = (char *)uteModulePlatformMemoryAlloc(str_buff_size);
+
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
@@ -439,40 +454,42 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         compo_cardbox_text_set_location(card_day, ui_handle.card_day.text[i].idx, ui_handle.card_day.text[i].x, ui_handle.card_day.text[i].y,
                                         ui_handle.card_day.text[i].w, ui_handle.card_day.text[i].h);
 
-        char str_buff[50];
-        memset(str_buff, '\0', sizeof(str_buff));
+        memset(str_buff, '\0', str_buff_size);
         if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(7))
         {
-            snprintf(str_buff, sizeof(str_buff), i18n[STR_ONCE]);
+            snprintf(str_buff, str_buff_size, i18n[STR_ONCE]);
         }
         else if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) == 0x7f)
         {
-            snprintf(str_buff, sizeof(str_buff), i18n[STR_EVERY_DAY]);
+            snprintf(str_buff,str_buff_size, i18n[STR_EVERY_DAY]);
         }
         else
         {
+
             for (u8 j=0; j<7; j++)
             {
-                char string_handle[50];
-                memset(string_handle,0,sizeof(string_handle));
                 if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(j))
                 {
-                    snprintf(string_handle, sizeof(string_handle),i18n[str_week_buf[j]]);
-                    for(int k=0; k<strlen(i18n[str_week_buf[j]]); k++)
+                    const char *week_str = i18n[str_week_buf[j]];
+                    uint8_t week_str_len = strlen(week_str);
+                    if (buf_num + week_str_len + 1 <= str_buff_size)
                     {
-                        str_buff[buf_num] = string_handle[k];
-                        buf_num++;
+                        memcpy(&str_buff[buf_num], week_str, week_str_len);
+                        buf_num += week_str_len;
+                        str_buff[buf_num++] = ' ';
                     }
-                    str_buff[buf_num] = ' ';
-                    buf_num++;
                 }
             }
-
         }
 
         if (ui_handle.card_day.text[i].idx == 0)        //周 1 2 3 4 5 6 7
         {
-            compo_cardbox_text_set(card_day, ui_handle.card_day.text[i].idx, str_buff);
+            compo_textbox_t *textbox = compo_textbox_create_for_page(frm,card_day->page,strlen(str_buff));
+            compo_textbox_set_align_center(textbox, false);
+            compo_textbox_set_location(textbox, ui_handle.card_day.text[i].x, ui_handle.card_day.text[i].y,ui_handle.card_day.text[i].w, ui_handle.card_day.text[i].h);
+            compo_textbox_set(textbox,str_buff);
+            compo_textbox_set_forecolor(textbox, make_color(ui_handle.card_day.text[i].color.r, ui_handle.card_day.text[i].color.g, ui_handle.card_day.text[i].color.b));
+            // compo_cardbox_text_set(card_day, ui_handle.card_day.text[i].idx, str_buff);
         }
         else if (ui_handle.card_day.text[i].idx == 1)      //重复
         {
@@ -480,6 +497,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         }
     }
 
+    uteModulePlatformMemoryFree(str_buff);
     return frm;
 }
 
@@ -581,6 +599,47 @@ static void func_alarm_clock_sub_edit_card_click(void)
     func_alarm_clock_sub_edit_button_release_handle();
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+static void func_alarm_clock_sub_edit_enter(void);
+static void func_alarm_clock_sub_edit_exit(void);
+
+typedef struct f_alarm_clock_sub_edit_t_
+{
+    bool time_scale;        //时间制 0:24小时; 1:12小时
+    page_tp_move_t *ptm;
+} f_alarm_clock_sub_edit_t;
+
+typedef struct func_alarm_hour_format_t_
+{
+    u8 hour;
+    u8 am_pm;
+} func_alarm_hour_format_t;
+
+static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
+{
+    u8 am_pm = (hour24 >= 12) ? 2 : 1;    //2 PM, 1 AM
+    func_alarm_hour_format_t hour12;
+    if(uteModuleSystemtime12HOn())
+    {
+        if (hour24 == 0)
+        {
+            hour12.hour = 12;
+        }
+        else if (hour24 > 12)
+        {
+            hour12.hour = hour24 - 12;
+        }
+        else
+        {
+            hour12.hour = hour24;
+        }
+        hour12.am_pm = am_pm;
+        return hour12;
+    }
+    hour12.hour = hour24;
+    hour12.am_pm = 0;
+    return hour12;
+}
+
 typedef struct ui_handle_t_
 {
 
@@ -687,19 +746,19 @@ static const ui_handle_t ui_handle =
     .del_btn = {
         .id     = COMPO_ID_BTN_DEL,
         .id_click   = COMPO_ID_PIC_DEL_CLICK,
-        .x      = 14+212/2,
-        .y      = 216+62/2,
+        .x      = 72+216/2,
+        .y      = 324+64/2-50,
         .w      = 0,
         .h      = 0,
-//        .res    = UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN,
+        .res    = UI_BUF_I332001_PUBLIC_RECTANGLE00_BIN,
         .res_click = 0,
     },
 
     ///删除按钮文本
     .del_btn_txt = {
         .id     = COMPO_ID_TEXT_BTN_DEL,
-        .x      = 14+212/2,
-        .y      = 216+62/2,
+        .x      = 72+216/2,
+        .y      = 324+64/2-50,
         .w      = 0,
         .h      = 0,
         .str_id = STR_DEL,
@@ -709,18 +768,18 @@ static const ui_handle_t ui_handle =
     ///时间设置卡片
     .card_time = {
         .id     = COMPO_ID_CARD_SET_TIME,
-        .x      = 4 + 232/2,
-        .y      = 54 + 72/2,
-        .w      = 232,
-        .h      = 72,
+        .x      = 18 + 324/2,
+        .y      = 102 + 90/2-50,
+        .w      = 324,
+        .h      = 90,
 
         .rect  = {
             [0] = {
                 .idx    = 0,
                 .x      = 0,
                 .y      = 0,
-                .w      = 232,
-                .h      = 72,
+                .w      = 324,
+                .h      = 90,
                 .r      = 16,
             },
         },
@@ -728,7 +787,7 @@ static const ui_handle_t ui_handle =
         .text = {
             [0] = {
                 .idx    = 0,
-                .x      = 10 - 232/2,
+                .x      = 10 - 232/2-30,
                 .y      = 5 - 72/2,
                 .w      = 70,
                 .h      = 34,
@@ -741,7 +800,7 @@ static const ui_handle_t ui_handle =
 
             [1] = {
                 .idx    = 1,
-                .x      = 10 - 232/2,
+                .x      = 10 - 232/2-30,
                 .y      = 40 - 72/2,
                 .w      = 200,
                 .h      = 26,
@@ -754,7 +813,7 @@ static const ui_handle_t ui_handle =
 
             [2] = {
                 .idx    = 2,
-                .x      = 80 - 232/2,
+                .x      = 80 - 232/2-30,
                 .y      = 5 - 72/2,
                 .w      = 100,
                 .h      = 34,
@@ -771,18 +830,18 @@ static const ui_handle_t ui_handle =
     ///日期设置
     .card_day = {
         .id     = COMPO_ID_CARD_SET_DAY,
-        .x      = 4 + 232/2,
-        .y      = 132 + 72/2,
-        .w      = 232,
-        .h      = 72,
+        .x      = 18 + 324/2,
+        .y      = 202 + 90/2-50,
+        .w      = 324,
+        .h      = 90,
 
         .rect  = {
             [0] = {
                 .idx    = 0,
                 .x      = 0,
                 .y      = 0,
-                .w      = 232,
-                .h      = 72,
+                .w      = 324,
+                .h      = 90,
                 .r      = 16,
             },
         },
@@ -790,7 +849,7 @@ static const ui_handle_t ui_handle =
         .text = {
             [0] = {
                 .idx    = 0,
-                .x      = 10 - 232/2,
+                .x      = 10 - 232/2-30,
                 .y      = 10 - 72/2,
                 .w      = 200,
                 .h      = 26,
@@ -803,7 +862,7 @@ static const ui_handle_t ui_handle =
 
             [1] = {
                 .idx    = 1,
-                .x      = 10 - 232/2,
+                .x      = 10 - 232/2-30,
                 .y      = 40 - 72/2,
                 .w      = 200,
                 .h      = 26,
@@ -951,7 +1010,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         compo_cardbox_text_set_location(card_day, ui_handle.card_day.text[i].idx, ui_handle.card_day.text[i].x, ui_handle.card_day.text[i].y,
                                         ui_handle.card_day.text[i].w, ui_handle.card_day.text[i].h);
 
-        char str_buff[50];
+        static char str_buff[300];
         memset(str_buff, '\0', sizeof(str_buff));
         if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(7))
         {
@@ -965,7 +1024,7 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
         {
             for (u8 j=0; j<7; j++)
             {
-                char string_handle[50];
+                static char string_handle[300];
                 memset(string_handle,0,sizeof(string_handle));
                 if (ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) & BIT(j))
                 {
@@ -1103,7 +1162,10 @@ static void func_alarm_clock_sub_edit_process(void)
         u16 id = CARD_ID_START + 1 + i;
         compo_cardbox_text_scroll_process((compo_cardbox_t *)compo_getobj_byid(id), true);
     }
-
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    f_alarm_clock_sub_edit_t *f_alarm_clock_sub_edit = (f_alarm_clock_sub_edit_t*)func_cb.f_cb;
+//    compo_page_move_process(f_alarm_clock_sub_edit->ptm);
+#endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     func_process();
 }
 
@@ -1116,6 +1178,9 @@ static void func_alarm_clock_sub_edit_message(size_msg_t msg)
     {
         case MSG_CTP_TOUCH:
             func_alarm_clock_sub_edit_button_touch_handle();
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+            compo_page_move_touch_handler(f_alarm_clock_sub_edit->ptm);
+#endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
             break;
 
         case MSG_CTP_CLICK:
@@ -1166,12 +1231,30 @@ static void func_alarm_clock_sub_edit_enter(void)
     f_alarm_clock_sub_edit_t *f_alarm_clock_sub_edit = (f_alarm_clock_sub_edit_t*)func_cb.f_cb;
     f_alarm_clock_sub_edit->time_scale = uteModuleSystemtime12HOn();
 
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    f_alarm_clock_sub_edit->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .page_size = 360,
+        .page_count = 1,
+        .up_over_perc = 5,
+        .down_over_perc = 5,
+    };
+    compo_page_move_init(f_alarm_clock_sub_edit->ptm, func_cb.frm_main->page_body, &info);
+#endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 }
 
 //退出闹钟功能
 static void func_alarm_clock_sub_edit_exit(void)
 {
     func_cb.last = FUNC_ALARM_CLOCK_SUB_EDIT;
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    f_alarm_clock_sub_edit_t *f_alarm_clock_sub_edit = (f_alarm_clock_sub_edit_t*)func_cb.f_cb;
+    if (f_alarm_clock_sub_edit->ptm)
+    {
+        func_free(f_alarm_clock_sub_edit->ptm);
+    }
+#endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 }
 
 //闹钟功能

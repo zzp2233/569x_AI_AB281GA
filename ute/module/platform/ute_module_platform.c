@@ -513,11 +513,13 @@ void uteModulePlatformSendMsgToAppTask(uint16_t type, uint32_t param)
     }
 }
 uint64_t uteModulePlatformSystemTickCnt = 0;
+#if UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
 void *uteModulePlatformRtcTimer=NULL;
 void uteModulePlatformRtcTimerHandler(void *pxTimer)
 {
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
 }
+#endif
 /**
 *@brief RTC初始化函数
 *@details RTC初始化函数，使用RTC，每秒产生一个消息，作为系统每秒的时间
@@ -526,7 +528,9 @@ void uteModulePlatformRtcTimerHandler(void *pxTimer)
 */
 void uteModulePlatformRtcInit(void)
 {
+#if UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
     uteModulePlatformCreateTimer(&uteModulePlatformRtcTimer,"rtc",0,1000,true,uteModulePlatformRtcTimerHandler);
+#endif
 }
 /**
 *@brief RTC start函数
@@ -536,7 +540,9 @@ void uteModulePlatformRtcInit(void)
 */
 void uteModulePlatformRtcStart(void)
 {
+#if UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
     uteModulePlatformRestartTimer(&uteModulePlatformRtcTimer,1000);
+#endif
 }
 /**
 *@brief RTC 设置时间函数
@@ -750,10 +756,19 @@ void uteModulePlatformScreenQspiInit(void)
     TICK1CNT = 0;
     sys_irq_init(IRQ_TE_TICK_VECTOR, 0, tick_te_isr);
 
-    tft_cb.te_mode = 0;                             //初始化
-    tft_cb.te_mode_next = 0;
-
-    tft_set_temode(DEFAULT_TE_MODE);
+    static bool frist_init_flag = false;
+    if (frist_init_flag == false) // 第一次初始化tft
+    {
+        tft_cb.te_mode = 0; // 初始化
+        tft_cb.te_mode_next = 0;
+        tft_set_temode(DEFAULT_TE_MODE);
+    }
+    else
+    {
+        // 不是第一次初始化tft
+        tft_set_temode(tft_cb.te_mode); // 还原之前的TE
+    }
+    frist_init_flag = true;
 
     DESPICON = BIT(27) | BIT(9) | BIT(7) | BIT(3) | BIT(2) | BIT(0);                //[28:27]IN RGB565, [25]RGBW EN, [9]MultiBit, [7]IE, [3:2]1BIT, [0]EN
 

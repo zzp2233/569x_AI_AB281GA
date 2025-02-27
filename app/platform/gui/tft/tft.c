@@ -227,7 +227,7 @@ void tft_bglight_frist_set_check(void)
 #endif
 }
 
-//设置TE MODE
+//设置TE MODE, 0为2 TE模式, 1为1 TE模式, 2为复杂界面专用模式
 void tft_set_temode(u8 mode)
 {
     tft_cb.te_mode_next = mode;

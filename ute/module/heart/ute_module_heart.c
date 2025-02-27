@@ -699,7 +699,7 @@ bool uteModuleHeartIsWear(void)
         }
     }
 #endif
-    // UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,isWear:%d",__func__,isWear);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,isWear:%d",__func__,isWear);
     return isWear;
 }
 /**

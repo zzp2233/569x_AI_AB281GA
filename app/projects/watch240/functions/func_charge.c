@@ -676,10 +676,10 @@ void func_charge(void)
     {
         func_charge_process();
         func_charge_message(msg_dequeue());
-        if (bsp_charge_sta_get() && func_cb.sta != FUNC_OTA_UI_MODE && func_cb.sta != FUNC_OTA_MODE)
-        {
-            func_cb.sta = FUNC_CHARGE;
-        }
+        // if (bsp_charge_sta_get() && func_cb.sta != FUNC_OTA_UI_MODE && func_cb.sta != FUNC_OTA_MODE)
+        // {
+        //     func_cb.sta = FUNC_CHARGE;
+        // }
     }
     func_charge_exit();
 }

@@ -627,9 +627,9 @@ void gui_cover_msg_enqueue(uint8_t index)
 
 static co_timer_t alarm_clock_timer;
 
+static u32 music_timer_sec = 0;
 void start_music(void)
 {
-    static u32 music_timer_sec = 0;
     music_timer_sec++;
 
     if (sys_cb.gui_sleep_sta)
@@ -737,7 +737,9 @@ void gui_set_cover_index(uint8_t index)
                 {
                     ble_ams_remote_ctrl(AMS_REMOTE_CMD_PAUSE);
                 }
-                start_music();
+                music_timer_sec = 0;
+                // start_music();
+                func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 //开启马达 喇叭
                 co_timer_set(&alarm_clock_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, start_music, NULL);
@@ -800,7 +802,10 @@ void gui_set_cover_index(uint8_t index)
                     sys_cb.cover_index = REMIND_COVER_NONE;
                 }
                 co_timer_del(&alarm_clock_timer);
-                music_control(MUSIC_MSG_STOP);
+                if (sys_cb.mp3_res_playing)
+                {
+                    music_control(MUSIC_MSG_STOP);
+                }
             }
         }
         else if (res == MSGBOX_RES_EXIT)                   //强制退出弹窗
@@ -816,7 +821,10 @@ void gui_set_cover_index(uint8_t index)
                     sys_cb.cover_index = REMIND_COVER_NONE;
                 }
                 co_timer_del(&alarm_clock_timer);
-                music_control(MUSIC_MSG_STOP);
+                if (sys_cb.mp3_res_playing)
+                {
+                    music_control(MUSIC_MSG_STOP);
+                }
             }
         }
         else if (res == MSGBOX_RES_TIMEOUT_EXIT)            //提醒界面超时退出
@@ -832,7 +840,10 @@ void gui_set_cover_index(uint8_t index)
                     sys_cb.cover_index = REMIND_COVER_NONE;
                 }
                 co_timer_del(&alarm_clock_timer);
-                music_control(MUSIC_MSG_STOP);
+                if (sys_cb.mp3_res_playing)
+                {
+                    music_control(MUSIC_MSG_STOP);
+                }
             }
         }
         else
@@ -849,7 +860,10 @@ void gui_set_cover_index(uint8_t index)
                     sys_cb.cover_index = REMIND_COVER_NONE;
                 }
                 co_timer_del(&alarm_clock_timer);
-                music_control(MUSIC_MSG_STOP);
+                if (sys_cb.mp3_res_playing)
+                {
+                    music_control(MUSIC_MSG_STOP);
+                }
             }
         }
 

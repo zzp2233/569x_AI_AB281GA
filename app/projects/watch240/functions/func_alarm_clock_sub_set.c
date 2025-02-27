@@ -566,72 +566,6 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_textbox_set(txt_num, buf);
     }
 
-    //创建数字 ampm
-    //创建数字 -> 使用数字进行映射: 0 -> 上午, 1 -> 下午；
-//    s8 am_pm = func_alarm_convert_to_12hour(hour).am_pm;
-//    s8 am_pm_conv = am_pm - 1;
-//    if (func_cb.sta == FUNC_ALARM_CLOCK_SUB_SET)
-//    {
-//        f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
-//        f_alarm_set->time_am_pm = am_pm_conv;
-//    }
-//    if (am_pm_conv >= 0)
-//    {
-//        for (u8 idx = 0; idx < ALARM_SET_AMPM_ITEM_CNT; idx++)
-//        {
-//            compo_textbox_t *txt_str = compo_textbox_create_for_page(frm, page, tbl_aclock_set_ampm_item[idx].num_cnt);
-//            compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_BIN);
-//            compo_setid(txt_str, tbl_aclock_set_ampm_item[idx].num_id);
-//            compo_textbox_set_align_center(txt_str, true);
-//            compo_textbox_set_location(txt_str, tbl_aclock_set_ampm_item[idx].x, tbl_aclock_set_ampm_item[idx].y,
-//                                       gui_image_get_size(tbl_aclock_set_pic_bg.bg_hour.res_12_bright).wid, ALARM_CLOCK_FONT_AMPM_HEIGHT);
-//            if (uteModuleSystemtime12HOn())
-//            {
-//                compo_textbox_set_visible(txt_str, tbl_aclock_set_ampm_item[idx].visible_en);
-//            }
-//            else
-//            {
-//                compo_textbox_set_visible(txt_str, false);
-//            }
-//            compo_textbox_set_alpha(txt_str, tbl_aclock_set_ampm_item[idx].alpha);
-//            memset(buf, 0, sizeof(buf));
-//            if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_UU)
-//            {
-//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(func_alarm_ampm_get_str_cal(am_pm_conv, 1), 1)].str_id]);
-//            }
-//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_UP)
-//            {
-//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(am_pm_conv, 1)].str_id]);
-//            }
-//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_CENTER)
-//            {
-//                //compo_textbox_set_font(txt_str, UI_BUF_0FONT_FONT_NUM_24_BIN);
-//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[am_pm_conv].str_id]);
-//            }
-//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_DOWN)
-//            {
-//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(am_pm_conv, 2)].str_id]);
-//            }
-//            else if (tbl_aclock_set_ampm_item[idx].load_id == COMPO_ID_NUM_ACLOCK_SET_SCALE_DD)
-//            {
-//                snprintf(buf, sizeof(buf), "%s", i18n[aclock_str_ampm_tbl[func_alarm_ampm_get_str_cal(func_alarm_ampm_get_str_cal(am_pm_conv, 2), 2)].str_id]);
-//            }
-//            compo_textbox_set(txt_str, buf);
-//        }
-//    }
-
-//    for (int i=0; i<ALARM_SET_AMPM_ITEM_CNT; i++) {
-//        compo_textbox_t* txt_am_pm = compo_getobj_byid(tbl_aclock_set_ampm_item[i].num_id);
-//        if (uteModuleSystemtime12HOn())
-//        {
-//            compo_textbox_set_visible(txt_am_pm, true);
-//        }
-//        else
-//        {
-//            compo_textbox_set_visible(txt_am_pm, false);
-//        }
-//    }
-
     //创建时间设置背景框
     compo_picturebox_t *bg_hour = compo_picturebox_create(frm, 0);
     if(uteModuleSystemtime12HOn())
@@ -657,20 +591,6 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
     }
     compo_picturebox_set_pos(bg_min, tbl_aclock_set_pic_bg.bg_min.x + func_alarm_get_ofs_x(2), tbl_aclock_set_pic_bg.bg_min.y);
     compo_setid(bg_min, tbl_aclock_set_pic_bg.bg_min.id);
-
-//    compo_picturebox_t *bg_am_pm = compo_picturebox_create(frm, 0);
-//    if(uteModuleSystemtime12HOn())
-//    {
-//        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_12_destory);
-//        compo_picturebox_set_visible(bg_am_pm, true);
-//    }
-//    else
-//    {
-//        compo_picturebox_set(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.res_24_destory);
-//        compo_picturebox_set_visible(bg_am_pm, false);
-//    }
-//    compo_picturebox_set_pos(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.x, tbl_aclock_set_pic_bg.bg_am_pm.y);
-//    compo_setid(bg_am_pm, tbl_aclock_set_pic_bg.bg_am_pm.id);
 
     ///创建滑动检测按钮
     //hour

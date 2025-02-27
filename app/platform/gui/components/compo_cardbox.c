@@ -8,7 +8,7 @@
 #define TRACE(...)
 #endif
 
-#define MAX_WORD_CNT                            32                          //每条列表项最多16个字符
+#define MAX_WORD_CNT                            50                          //每条列表项最多16个字符
 
 /**
  * @brief 创建一个卡片控件
@@ -409,24 +409,30 @@ void compo_cardbox_text_scroll_process(compo_cardbox_t* cardbox, bool auto_scrol
     {
         widget_text_t* txt = cardbox->text[i];
 
+//        printf("[%d] txt[%x] ", i, txt);
         if (txt)
         {
-            rect_t rect_card = widget_get_location(cardbox->page);
+
+            rect_t rect_card = widget_get_absolute(cardbox->page);
             if (auto_scroll)
             {
+//                printf("reload[%d] ", rect_card.y < (-rect_card.hei / 2) || rect_card.y > (GUI_SCREEN_HEIGHT + rect_card.hei / 2));
                 if (rect_card.y < (-rect_card.hei / 2) || rect_card.y > (GUI_SCREEN_HEIGHT + rect_card.hei / 2))    //卡片超出屏幕，滚动重置
                 {
                     cardbox->roll_cb[i].mode = TEXT_AUTOROLL_MODE_NULL;
                     widget_text_set_client(txt, 0, 0);
-                    return;
+                    break;
                 }
             }
+//            printf("mode[%d] ", cardbox->roll_cb[i].mode);
             if (cardbox->roll_cb[i].mode == TEXT_AUTOROLL_MODE_NULL)    //重置
             {
+//                printf("visble[%d] ", widget_get_visble(txt));
                 if (widget_get_visble(txt))
                 {
                     area_t text_area = widget_text_get_area(txt);
                     rect_t textbox_rect = widget_get_location(txt);
+//                    printf("area[%d,%d] ", text_area.wid, textbox_rect.wid);
                     if (text_area.wid > textbox_rect.wid)
                     {
                         memset(&cardbox->roll_cb[i], 0, sizeof(compo_roll_cb_t));
@@ -447,7 +453,9 @@ void compo_cardbox_text_scroll_process(compo_cardbox_t* cardbox, bool auto_scrol
                 }
             }
         }
+//        printf("\n");
     }
+//    printf("\n");
 
 }
 

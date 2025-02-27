@@ -171,16 +171,16 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 {
     compo_button_t *bluetooth_pic = compo_getobj_byid(COMPO_ID_BTN_CONNECT);
     compo_picturebox_t *bluetooth = compo_getobj_byid(COMPO_ID_TXT_BTETOOTH_STA_PIC);
-    printf("bt_get_scan: 0x%x\n", bt_get_scan());
+    printf("bt_get_scan: 0x%x,bt_get_status:%d\n", bt_get_scan(),bt_get_status());
     if(uteModuleCallBtIsPowerOn())
     {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_I330001_SLIDEMENU_ICON_CALL01_BIN);
-        compo_picturebox_set_visible(bluetooth, true);
+        // compo_picturebox_set_visible(bluetooth, true);
     }
     else
     {
         compo_button_set_bgimg(bluetooth_pic,UI_BUF_I330001_SLIDEMENU_ICON_CALL00_BIN );
-        compo_picturebox_set_visible(bluetooth, false);
+        // compo_picturebox_set_visible(bluetooth, false);
 
     }
 }
@@ -342,7 +342,7 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_picturebox_set_pos(bluetooth_pic, GUI_SCREEN_WIDTH/2.8, GUI_SCREEN_CENTER_Y/8);
 
 
-    char txt_buf[30];
+    char txt_buf[50];
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);//获取系统时间
 

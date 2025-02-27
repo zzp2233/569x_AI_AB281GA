@@ -24,12 +24,12 @@ compo_form_t *func_power_on_scan_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_QRCODE]);
 
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_MORE_BIN);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X, 24/4+278-FORM_TITLE_HEIGHT);
+
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
     compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
-
-    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_MORE_BIN);
-    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/1.15);
 
     static const uint8_t maxSizeQrCodeLink = 140;
     char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
@@ -38,9 +38,6 @@ compo_form_t *func_power_on_scan_form_create(void)
     compo_qrcodebox_set(qrbox, qr_str);
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
     uteModulePlatformMemoryFree(qr_str);
-
-
-
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT

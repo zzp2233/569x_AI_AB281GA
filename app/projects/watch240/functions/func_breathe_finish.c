@@ -36,13 +36,22 @@ compo_form_t *func_breathe_finish_form_create(void)
     // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/5);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_hrs_data_get());
+    u8 heart_value = bsp_sensor_hrs_data_get();
+    if(heart_value != 0 && heart_value!= 255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",heart_value);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/5);
     compo_textbox_set(textbox,txt_buf);
 
-    printf("breathe->time:%d\n",sys_cb.breathe_duration);
+    // printf("breathe->time:%d\n",sys_cb.breathe_duration);
     memset(time_num,0,sizeof(time_num));
     snprintf(time_num,sizeof(time_num),"%d",sys_cb.breathe_duration / 60000);
 

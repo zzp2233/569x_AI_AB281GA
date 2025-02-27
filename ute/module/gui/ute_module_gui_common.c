@@ -386,6 +386,7 @@ void uteModuleGuiCommonInit(void)
 void uteModuleGuiCommonDisplayExternalClearDepth(void)
 {
     task_stack_init();
+    latest_task_init(); //最近任务
     task_stack_push(FUNC_CLOCK);
     func_cb.sta = FUNC_CLOCK;
 }
@@ -402,7 +403,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
 
-    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
         return;
     }
@@ -411,6 +412,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     if (isAllClear)
     {
         task_stack_init();
+        latest_task_init(); //最近任务
         task_stack_push(FUNC_CLOCK);
         func_cb.sta = FUNC_CLOCK;
     }
@@ -623,6 +625,7 @@ void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
 */
 void uteModuleGuiCommonWatchConfigInit(void)
 {
+    uteModuleWatchOnlineUpateConfigFromFlash();
     uteModuleGuiCommonSetCurrWatchIndex(uteModuleGuiCommonData.displayCtrl.currWatchIndex);
 }
 
@@ -751,7 +754,7 @@ void uteModuleGuiCommonGoBackLastScreen(void)
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
 
-    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
         return;
     }
@@ -776,7 +779,7 @@ void uteTaskGuiStartScreen(uint8_t screenId)
     }
     reset_sleep_delay_all();
 
-    if ((bt_cb.disp_status > BT_STA_PLAYING&&bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return",__func__);
         return;
@@ -808,7 +811,7 @@ void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
     }
     reset_sleep_delay_all();
 
-    if (bt_cb.disp_status > BT_STA_PLAYING || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
         return;
     }

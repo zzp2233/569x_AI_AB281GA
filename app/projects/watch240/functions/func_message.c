@@ -53,7 +53,7 @@ typedef struct message_btn_t_
 
 const message_btn_t message_btn[] =
 {
-    {COMPO_ID_BTN_DEL,  GUI_SCREEN_CENTER_X,  0,    70,      70,      UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN},
+    {COMPO_ID_BTN_DEL,  GUI_SCREEN_CENTER_X,  0,    70,      70,      UI_BUF_I332001_PUBLIC_RECTANGLE00_BIN},
 };
 //消息界面对应卡片结构
 typedef struct card_rect_t_
@@ -145,26 +145,26 @@ const CARD_T(msg) card =
 {
     CARD_MSG_X,
     CARD_MSG_START_Y,
-    228,//GUI_SCREEN_WIDTH-12,
-    110,//GUI_SCREEN_HEIGHT/3,
+    284,//GUI_SCREEN_WIDTH-12,
+    116+50,//GUI_SCREEN_HEIGHT/3,
 
     {
         ///矩形背景
         //id      x       y         w        h      r
-        {0,       0,      8,   228,    94,    16},
+        {0,       0,      0,   284,    116,    20},
     },
 
     {
         ///图标
         //id      x                   y               w       h       res
-        {0,       12+36/2-228/2,      36/2-110/2,      32,     32,     0},
+        {0,       -(284/2-43),      -(116/2),      46,     46,     0},
     },
 
     {
         ///文本
         //id      x                 y       w       h       str                                res                         center  wordwrap   r  g  b
-        {0,      -15,               -38,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      false,   false,  148, 148, 148},
-        {1,      3+36/2-228/2,      -10,    205,    55,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   255, 255, 255},
+        {0,      5,              -48,    0,      0,      "2024-10-28 19:08",                UI_BUF_0FONT_FONT_BIN,      false,   false,  148, 148, 148},
+        {1,      -(284/2-23),      -10,    250,    72,     "Hello! You are a good man ...",   UI_BUF_0FONT_FONT_BIN,     false,   true,   255, 255, 255},
     },
 };
 
@@ -235,13 +235,13 @@ compo_form_t *func_message_form_create(void)
 
 
     //创建无消息界面
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_NOTIFICATION_NO_DATA_BIN);
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I332001_NOTIFICATION_NO_DATA_BIN);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
     compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 184, GUI_SCREEN_WIDTH/1.1, 30);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 304, 150, 40);
     compo_textbox_set(txt, i18n[STR_NO_MSG]);
     compo_textbox_set_visible(txt, false);
     compo_setid(txt, COMPO_ID_COVER_TXT);
@@ -424,13 +424,7 @@ static void func_message_card_update(bool first_update, compo_form_t *frm)
 
     if (card_y)
     {
-//        printf("card_y=%d\n",card_y);
-////        if(card_y<=GUI_SCREEN_WIDTH/2)
-////        {
-////            card_y-=40;
-////        }
-//        card_y-=40;
-//        printf("card_y=%d\n",card_y);
+
         //更新按钮
         s32 btn_y  = 0;
         for (int i=0; i<MSG_BTN_CNT; i++)
@@ -444,11 +438,11 @@ static void func_message_card_update(bool first_update, compo_form_t *frm)
 
             compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_DEL+i);
             compo_button_set_visible(btn, true);
-            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, btn_y);
+            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, btn_y-8);
 
             compo_textbox_t* text = compo_getobj_byid(COMPO_ID_TXT_DEL+i);
             compo_textbox_set_visible(text, true);
-            compo_textbox_set_pos(text, GUI_SCREEN_CENTER_X, btn_y);
+            compo_textbox_set_pos(text, GUI_SCREEN_CENTER_X, btn_y-8);
 
         }
 
@@ -1034,6 +1028,8 @@ static void func_message_card_update(bool first_update, compo_form_t *frm)
 
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //消息功能事件处理
 static void func_message_process(void)
 {
@@ -1199,6 +1195,8 @@ static void func_message_exit(void)
         {
             func_cb.last = FUNC_MESSAGE;
             func_cb.left_sta = FUNC_NULL;
+            task_stack_init();  //任务堆栈
+            latest_task_init(); //最近任务
         }
     }
     else

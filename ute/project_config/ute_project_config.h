@@ -13,7 +13,7 @@
 #define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
 #define PROJECT_AB281C_SUPPORT       0 /*! , TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
-#define PROJECT_ABE012_SUPPORT       1 /*! , TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
+#define PROJECT_ABE012_SUPPORT       1
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -50,6 +50,14 @@
 #define TITLE_BAR_HIGH   28
 #endif
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#define TITLE_BAR_HIGH   28    ///标题栏高度
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#define TITLE_BAR_HIGH   64    ///标题栏高度
+#else
+#define TITLE_BAR_HIGH   28
+#endif
+
 /*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
 #ifndef UTE_DRV_CTP_SELECT
 #define UTE_DRV_CTP_SELECT             CTP_CHSC6X
@@ -67,8 +75,17 @@
 #define UTE_SERVICE_PUBLIC_BLE_SUPPORT 0
 #endif
 
+/*! 中科平台广播UUID,wang.luo 2025-02-13 */
+#ifndef UTE_SERVICE_APP_GLORY_ME_SUPPORT
+#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+#endif
+
 /*! gloryfit 广播数据标识 zn.zeng  modify Jul 05, 2021 */
+#if UTE_SERVICE_APP_GLORY_ME_SUPPORT
+#define UTE_ADVERTISE_DATA      "\x37\x55"
+#else
 #define UTE_ADVERTISE_DATA      "\x33\x55"
+#endif
 /*! 应用端识别是否在搜索界面显示蓝牙名zn.zeng  modify Jul 05, 2021 */
 #define UTE_APP_DISPLAY_BT_NAME_ADVERTISE_DATA       "\x22\x22"
 
@@ -162,6 +179,11 @@
 /*! 低电提醒时电量  xjc, 2021-12-27  */
 #ifndef UTE_DRV_BATTERY_LOW_POWER_PERECNT
 #define UTE_DRV_BATTERY_LOW_POWER_PERECNT 13
+#endif
+
+/*! 电池百分比平滑掉电处理，每次更新百分比只允许掉1%,wang.luo 2025-02-13 */
+#ifndef UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
+#define UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT 1
 #endif
 
 /* 电池曲线 zn.zeng 2022-01-03*/
@@ -1060,10 +1082,20 @@
 #define UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_SUPPORT 1
 #endif
 
+/*! 省略运动算法定时器,把运动算法丢到系统500ms定时器中,wang.luo 2025-02-21 */
+#ifndef UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+#define UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT 0
+#endif
+
 /*! 运动算法定时器时长,wang.luo 2024-11-12 */
 #ifndef UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION
 #define UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION 600
 #endif // !UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_
+
+/*! 运动计步算法自动切换主频以降低功耗,静止时降低主频,运动时提高主频,wang.luo 2025-02-21 */
+#ifndef UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
+#define UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT 1
+#endif
 
 /*! 打开拍照界面app也打开,dengli.lu 2022-08-18*/
 #ifndef UTE_MODULE_SPORT_TAKE_PICTURE_OPEN_APP_SCREEN
@@ -1368,7 +1400,12 @@
 
 /*! 重置BT地址，启用后BT和BLE地址会不同,wang.luo 2025-02-08 */
 #ifndef UTE_MODULE_BT_CHANGE_MAC_SUPPORT
-#define UTE_MODULE_BT_CHANGE_MAC_SUPPORT 0
+#define UTE_MODULE_BT_CHANGE_MAC_SUPPORT 1
+#endif
+
+/*! 是否创建1S定时器，用于计时和每秒钟任务，反之使用系统500ms任务执行，wang.luo 2024-12-30 */
+#ifndef UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
+#define UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT 0
 #endif
 
 /*! PWRKEY,wang.luo 2024-12-03 */

@@ -129,6 +129,7 @@
 			<Add before="Output\bin\prebuild.bat $(PROJECT_NAME)" />
 			<Add after="Output\bin\postbuild.bat $(PROJECT_NAME)" />
 			<Add after="Output\bin\objdump.bat $(PROJECT_NAME)" />
+			<Add after="python Output\bin\pack.py" />
 		</ExtraCommands>
 		<Unit filename="../../../libs/gui/spiflash/spiflash.h" />
 		<Unit filename="../../../ute/application/ute_application_common.c">

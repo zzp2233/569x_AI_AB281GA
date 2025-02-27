@@ -54,6 +54,7 @@ SECTIONS
         __comm_start = .;
         KEEP(*(.vector))
         *(.plt)
+        *(.com_text.tft_spi)
         *(.com_text*)
         *(.com_text.bb.leisr)
         *(.com_text.stack.handler)
@@ -329,6 +330,7 @@ SECTIONS
 
         *(.irq_init.aligned)
         *(.text*)
+        __code_end_all = .; //USER_APP_USE
         *(.rodata*)
         *(.rela*)
         LONG(0)

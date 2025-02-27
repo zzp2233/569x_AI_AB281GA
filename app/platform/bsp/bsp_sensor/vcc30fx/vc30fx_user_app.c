@@ -115,6 +115,10 @@ AT(.com_text.vc30fx)
 void uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData(void)
 {
     uint8_t sportType = uteModuleSportMoreSportGetType();
+    if (sportType == SPORT_TYPE_NONE)
+    {
+        sportType = SPORT_TYPE_PERIODIC_MONITORING;
+    }
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT /*! 运动模式适配心率, xjc 2022-08-31*/
     if (sportType > SPORT_TYPE_FREE_TRAINING)
     {
@@ -508,7 +512,7 @@ static int vc30fx_spo2_calculate(vcare_ppg_device_t *pdev)
     result_red = &result_info->slot_result[1]; /* 驱动中初始化slot1为红光ppg */
     for (int i = 0; i < result_ir->ppg_num; i++)
     {
-        spo2CalValue = spo2Algo_16bit(result_red->ppg_buffer[i], result_ir->ppg_buffer[i], 1);
+        spo2CalValue = spo2Algo_16bit(result_red->ppg_buffer[i], result_ir->ppg_buffer[i], vc30fx_dev.spo2_algo_mode);
 #if UTE_DRV_HEART_VCXX_ARM_XY_EXCHANGE||SC7A20H_ROLLOVER_HAND_SCREEN_XY_EXCHANGE_SUPPORT
         // sportFlag = vcSportMotionCalculate( vc30fx_gsensor_data.yData[i], vc30fx_gsensor_data.xData[i],vc30fx_gsensor_data.zData[i]);
 #else
@@ -879,7 +883,7 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig )
     extern unsigned short int VC30Fx_CFG_MCU_TICK_FREQUENCY; /* mcu tick frequency parameter */
     extern unsigned short int VC30Fx_WEAR_PARAM_BIO_ABS_HOLD; /* factory calibration parameter-hold */
     extern unsigned short int VC30Fx_WEAR_PARAM_BIO_ABS_DROP; /* factory calibration parameter-drop */
-    VC30Fx_CFG_MCU_TICK_FREQUENCY=32000;
+    VC30Fx_CFG_MCU_TICK_FREQUENCY=31250;
     VC30Fx_WEAR_PARAM_BIO_ABS_HOLD=200; /* save_diff*8/10 */
     VC30Fx_WEAR_PARAM_BIO_ABS_DROP=160; /* save_diff*5/10 */
 

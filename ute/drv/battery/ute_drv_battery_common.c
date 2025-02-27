@@ -73,18 +73,24 @@ void uteDrvBatteryCommonCompareBatLvl(void)
 {
     uteDrvBatteryCommonReadConfig();
     /****recordLvl必须是大于0，否则没有意义****/
-    if ((uteDrvBatteryCommonData.recordLvl < uteDrvBatteryCommonData.lastLvl)
-        &&(uteDrvBatteryCommonData.recordLvl >0))
+    if (uteDrvBatteryCommonData.recordLvl == 0)
     {
-        uteDrvBatteryCommonData.lastLvl = uteDrvBatteryCommonData.recordLvl;
+        uteDrvBatteryCommonData.recordLvl = uteDrvBatteryCommonData.lastLvl;
     }
-
-    if((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)||(uteApplicationCommonGetSystemPowerOnSecond()<5))
+    else
     {
-        /*! 读取到的电量比记录的电量大,并且在20以内,则认为是电量读取不准确,使用记录的值 xjc, 2022-01-25*/
-        if(
-            ((uteDrvBatteryCommonData.lastLvl - uteDrvBatteryCommonData.recordLvl) > 0)&&
-            ((uteDrvBatteryCommonData.lastLvl - uteDrvBatteryCommonData.recordLvl) < 20))
+        /*! 读取到的电量比记录的电量大,并且相差不超过20%，则认为是电量读取不准确,使用记录的值 xjc, 2022-01-25*/
+        uint8_t diff = 0;
+        if (uteDrvBatteryCommonData.lastLvl >= uteDrvBatteryCommonData.recordLvl)
+        {
+            diff = uteDrvBatteryCommonData.lastLvl - uteDrvBatteryCommonData.recordLvl;
+        }
+        else
+        {
+            diff = uteDrvBatteryCommonData.recordLvl - uteDrvBatteryCommonData.lastLvl;
+        }
+
+        if ((diff > 0) && (diff <= 20))
         {
             uteDrvBatteryCommonData.lastLvl = uteDrvBatteryCommonData.recordLvl;
         }
@@ -92,7 +98,7 @@ void uteDrvBatteryCommonCompareBatLvl(void)
 #if UTE_MODULE_BATTERY_SAVE_LAST_LVL_BEFORE_FACTORY_SUPPORT
     uteDrvBatteryCommonReadLastLvlFromSN1();
 #endif
-    UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,lastLvl=%d", __func__,uteDrvBatteryCommonData.lastLvl);
+    UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,lastLvl=%d", __func__, uteDrvBatteryCommonData.lastLvl);
 }
 
 /**
@@ -352,49 +358,67 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
         uteDrvBatteryCommonData.bat100PercentTimeout = (uteDrvBatteryCommonData.lvl == 100) ? 2 : 0;
     }
 #endif
-    if(uteApplicationCommonIsStartupFinish()&&(uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE))
+    if (uteApplicationCommonIsStartupFinish() && (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE))
     {
-        if(uteDrvBatteryCommonData.lvlCnt<UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX)
+        if (uteDrvBatteryCommonData.lvlCnt < UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX)
         {
             uteDrvBatteryCommonData.lvlBuff[uteDrvBatteryCommonData.lvlCnt] = uteDrvBatteryCommonData.lvl;
             uteDrvBatteryCommonData.lvlCnt++;
         }
         else
         {
-            uint32_t sum=0;
-            uint8_t minVaule=0xff;
-            uint8_t maxVaule=0;
-            uint8_t i=0;
-            uint8_t percent=0;
-            for(i=0; i<UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX; i++)
+            uint32_t sum = 0;
+            uint8_t minVaule = 0xff;
+            uint8_t maxVaule = 0;
+            uint8_t i = 0;
+            uint8_t percent = 0;
+            for (i = 0; i < UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX; i++)
             {
                 sum = sum + uteDrvBatteryCommonData.lvlBuff[i];
-                if(uteDrvBatteryCommonData.lvlBuff[i]<minVaule)
+                if (uteDrvBatteryCommonData.lvlBuff[i] < minVaule)
                 {
                     minVaule = uteDrvBatteryCommonData.lvlBuff[i];
                 }
-                if(uteDrvBatteryCommonData.lvlBuff[i]>maxVaule)
+                if (uteDrvBatteryCommonData.lvlBuff[i] > maxVaule)
                 {
                     maxVaule = uteDrvBatteryCommonData.lvlBuff[i];
                 }
             }
-            memset(&uteDrvBatteryCommonData.lvlBuff[0],0,UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX);
-            percent = (sum-minVaule-maxVaule)/(UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX-2);
-            UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,percent=%d,uteDrvBatteryCommonData.lastLvl=%d", __func__,percent,uteDrvBatteryCommonData.lastLvl);
-            if((percent<uteDrvBatteryCommonData.lastLvl)||(uteDrvBatteryCommonData.lastLvl==0))
+            memset(&uteDrvBatteryCommonData.lvlBuff[0], 0, UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX);
+            percent = (sum - minVaule - maxVaule) / (UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX - 2);
+            UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,percent=%d,uteDrvBatteryCommonData.lastLvl=%d", __func__, percent, uteDrvBatteryCommonData.lastLvl);
+            if ((percent < uteDrvBatteryCommonData.lastLvl) || (uteDrvBatteryCommonData.lastLvl == 0))
             {
 #if UTE_MODULE_BATTERY_LINEAR_CONSUME_SUPPORT
-                if(uteDrvBatteryCommonData.bat100PercentTimeout > 0)
+                if (uteDrvBatteryCommonData.bat100PercentTimeout > 0)
                 {
                     uteDrvBatteryCommonData.bat100PercentTimeout--;
                     uteDrvBatteryCommonData.lastLvl = 100;
                 }
                 else
                 {
-                    uteDrvBatteryCommonData.lastLvl = percent;
+#if UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
+                    if (uteDrvBatteryCommonData.lastLvl > percent)
+                    {
+                        uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
+                    }
+                    else
+#endif
+                    {
+                        uteDrvBatteryCommonData.lastLvl = percent;
+                    }
                 }
 #else
-                uteDrvBatteryCommonData.lastLvl = percent;
+#if UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
+                if (uteDrvBatteryCommonData.lastLvl > percent)
+                {
+                    uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
+                }
+                else
+#endif
+                {
+                    uteDrvBatteryCommonData.lastLvl = percent;
+                }
 #endif
             }
             uteDrvBatteryCommonData.lvlCnt = 0;

@@ -49,11 +49,11 @@ compo_form_t *func_ble_call_form_create(void)
 //    compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
-    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
-//    compo_textbox_set_autosize(number_txt, true);
-    compo_textbox_set(number_txt, (char*)callData.number);
-    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+//    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+//    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
+////    compo_textbox_set_autosize(number_txt, true);
+//    compo_textbox_set(number_txt, (char*)callData.number);
+//    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
@@ -70,6 +70,7 @@ compo_form_t *func_ble_call_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#define TXT_X_MIN 20
 enum
 {
     COMPO_ID_TXT_NUMBER = 0x01,     //避免id被覆盖
@@ -86,6 +87,40 @@ typedef struct f_ble_call_t_
     char tmp_pbap_result_Name[50];//存放来电与接听联系人名字
 } f_ble_call_t;
 
+
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_ble_call_form_create(void)
+{
+    //printf("%s\n", __func__);
+
+//    char txt_buf[20]="121353461";///假数据
+
+    //新建窗体, 通话页面
+    compo_form_t *frm = compo_form_create(true);
+
+    ute_bt_call_data_t callData;
+    uteModuleCallGetData(&callData);
+
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(name_txt, (char*)callData.name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
+
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set_forecolor(txt, COLOR_GREEN);
+
+    //挂断
+    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I332001_CALL_CALLING_END_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 279);
+
+    return frm;
+}
+
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_ble_call_form_create(void)
@@ -208,9 +243,9 @@ static void func_ble_call_message(size_msg_t msg)
         case KL_BACK:
             uteModulePlatformRejectIncall();
             uteModuleGuiCommonGoBackLastScreen();
-        case EVT_CALL_NUMBER_UPDATE:
-            func_ble_ring_number_update();
-            break;
+//        case EVT_CALL_NUMBER_UPDATE:
+//            func_ble_ring_number_update();
+//            break;
         case MSG_QDEC_FORWARD:
         case MSG_QDEC_BACKWARD:
         case MSG_CTP_SHORT_RIGHT:

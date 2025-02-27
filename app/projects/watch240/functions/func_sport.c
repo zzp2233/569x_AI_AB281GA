@@ -152,6 +152,37 @@ static const compo_listbox_item_t tbl_sport_list[] =
 #endif // UTE_MODULE_SPORT_HUNDRED_SUPPORT
 };
 
+#define SPORT_LIST_CNT                       ((int)(sizeof(tbl_sport_list_sort) / sizeof(tbl_sport_list_sort[0])))
+static const compo_listbox_item_t tbl_sport_list_sort[] =
+{
+    {STR_SPORT_RUN,           UI_BUF_I330001_SPORT_ICON_00_PAOBU_BIN,             .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_RIDE_BIKE,     UI_BUF_I330001_SPORT_ICON_01_QIXING_BIN,            .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_JUMP_ROPE,     UI_BUF_I330001_SPORT_ICON_03_TIAOSHEN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
+    // {STR_SPORT_SWIMMING,      UI_BUF_I330001_SPORT_ICON_04_YOUYONG_BIN,           .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_BADMINTON,     UI_BUF_I330001_SPORT_ICON_05_YUMAOQIU_BIN,          .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_TABLE_TENNIS,  UI_BUF_I330001_SPORT_ICON_06_PINGPANGQIU_BIN,       .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_TENNIS,        UI_BUF_I330001_SPORT_ICON_07_WANGQIU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_CLIMBING,      UI_BUF_I330001_SPORT_ICON_08_DENGSHAN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_WALKING,       UI_BUF_I330001_SPORT_ICON_02_JIANZOU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_BASKETBALL,    UI_BUF_I330001_SPORT_ICON_09_LANQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_FOOTBALL,      UI_BUF_I330001_SPORT_ICON_10_ZUQIU_BIN,             .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_BASEBALL,      UI_BUF_I330001_SPORT_ICON_11_BANGQIU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_VOLLEYBALL,    UI_BUF_I330001_SPORT_ICON_12_PAIQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_CRICKET,       UI_BUF_I330001_SPORT_ICON_13_BANQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_RUGBY,         UI_BUF_I330001_SPORT_ICON_14_GANLANQIU_BIN,         .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_HOCKEY,        UI_BUF_I330001_SPORT_ICON_15_QUGUNQIU_BIN,          .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_DANCE,         UI_BUF_I330001_SPORT_ICON_16_TIAOWU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_SPINNING,      UI_BUF_I330001_SPORT_ICON_17_DONGGANDANCHE_BIN,     .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_YOGA,          UI_BUF_I330001_SPORT_ICON_18_YUJIA_BIN,             .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_SIT_UP,        UI_BUF_I330001_SPORT_ICON_19_YANGWOQIZUO_BIN,       .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_TREADMILL,     UI_BUF_I330001_SPORT_ICON_20_SHINEIPAO_BIN,         .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_GYMNASTICS,    UI_BUF_I330001_SPORT_ICON_21_TICAO_BIN,             .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_BOATING,       UI_BUF_I330001_SPORT_ICON_22_HUACHUAN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_JUMPING_JACK,  UI_BUF_I330001_SPORT_ICON_23_KAIHETIAO_BIN,         .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_FREE_TRAINING, UI_BUF_I330001_SPORT_ICON_24_ZIYOUXUNLIAN_BIN,      .func_sta = FUNC_SPORT_SWITCH},
+};
+
+
 u32 func_sport_get_current_idx(void)
 {
     return sys_cb.sport_idx;
@@ -196,7 +227,7 @@ compo_form_t *func_sport_form_create(void)
 
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_CUM_SPORT_LIST);
-    compo_listbox_set(listbox, tbl_sport_list, MENU_LIST_CNT);
+    compo_listbox_set(listbox, tbl_sport_list_sort, SPORT_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_SPORT_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
@@ -216,7 +247,7 @@ static void func_sport_list_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= MENU_LIST_CNT)
+    if (icon_idx < 0 || icon_idx >= SPORT_LIST_CNT)
     {
         return;
     }
@@ -229,7 +260,7 @@ static void func_sport_list_icon_click(void)
         return;
     }
     //根据图标索引获取应用ID
-    func_sta = tbl_sport_list[icon_idx].func_sta;
+    func_sta = tbl_sport_list_sort[icon_idx].func_sta;
 
     //切入应用
 //    if (func_sta > 0 && !listbox->flag_area)
@@ -278,7 +309,7 @@ static const compo_listbox_item_t tbl_sport_list[] =
     UTE_SPORT_TYPE(SPORT_TYPE_BOATING)      = {STR_SPORT_BOATING,       UI_BUF_I332001_SPORT_ICON_22_HUACHUAN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
     UTE_SPORT_TYPE(SPORT_TYPE_JUMPING_JACK) = {STR_SPORT_JUMPING_JACK,  UI_BUF_I332001_SPORT_ICON_23_KAIHETIAO_BIN,         .func_sta = FUNC_SPORT_SWITCH},
     UTE_SPORT_TYPE(SPORT_TYPE_FREE_TRAINING)= {STR_SPORT_FREE_TRAINING, UI_BUF_I332001_SPORT_ICON_24_ZIYOUXUNLIAN_BIN,      .func_sta = FUNC_SPORT_SWITCH},
-
+    UTE_SPORT_TYPE(SPORT_TYPE_MAX)          = {STR_SPORT_FREE_TRAINING, UI_BUF_I332001_SPORT_ICON_25_CAIDAN_BIN,            .func_sta = FUNC_SPORT_SWITCH},
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
     UTE_SPORT_TYPE(SPORT_TYPE_INDOOR_WALK)          = {STR_SPORT_RUN,           UI_BUF_I332001_SPORT_ICON_25_CAIDAN_BIN,              .func_sta = FUNC_SPORT_SWITCH},
     UTE_SPORT_TYPE(SPORT_TYPE_INDOOR_RUN)           = {STR_SPORT_RUN,           UI_BUF_I332001_SPORT_ICON_25_CAIDAN_BIN,              .func_sta = FUNC_SPORT_SWITCH},
@@ -421,7 +452,7 @@ compo_form_t *func_sport_form_create(void)
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_CUM_SPORT_LIST);
     compo_listbox_set(listbox, tbl_sport_list, MENU_LIST_CNT);
-//    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_SPORT_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I332001_SPORT_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     u8 sport_idx = sys_cb.sport_idx;

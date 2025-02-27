@@ -476,6 +476,7 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         // uteDrvScreenCommonDisplayOff();
         // uteDrvTpCommonSleep();
         uteModuleGuiCommonData.isDisplayOn = false;
+        uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_ASR);
         // uteModulePlatformStopTimer(&displayOffTimerPointer);
 #if UTE_MODULE_SPORT_SUPPORT
         uteModuleSprotResetRovllverScreenMode();

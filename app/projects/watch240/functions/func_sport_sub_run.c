@@ -90,11 +90,11 @@ typedef struct
 #define PICTURE_CNT     ((int)(sizeof(sport_sub_run_picture)/sizeof(sport_sub_run_picture[0])))
 static const picture_t sport_sub_run_picture[] =
 {
-    {COMPO_ID_PIC_SPORT_TYPE,   10+56/2,  12+56/2,    56,   56,       0},
-    {COMPO_ID_PIC_SPORT_KM,     10+24/2,  169+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_DIS_BIN},
-    {COMPO_ID_PIC_SPORT_STEP,   10+24/2,  207+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_STEP_BIN},
-    {COMPO_ID_PIC_SPORT_KCAL,   10+24/2,  131+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_CALORIES_BIN},
-    {COMPO_ID_PIC_SPORT_HEART,  10+24/2,  251+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_HR_BIN},
+    // {COMPO_ID_PIC_SPORT_TYPE,   10+56/2,  12+56/2,    56,   56,       0},
+    // {COMPO_ID_PIC_SPORT_KM,     10+24/2,  169+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_DIS_BIN},
+    // {COMPO_ID_PIC_SPORT_STEP,   10+24/2,  207+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_STEP_BIN},
+    // {COMPO_ID_PIC_SPORT_KCAL,   10+24/2,  131+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_CALORIES_BIN},
+    // {COMPO_ID_PIC_SPORT_HEART,  10+24/2,  251+24/2-3,   24,  24,      UI_BUF_I330001_SPORT_ICON2_HR_BIN},
 };
 
 #if USE_GOAL_ARC
@@ -414,28 +414,28 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
 #endif
     //右滑退出界面
-    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
-    compo_button_set_pos(btn, -140-120/2, 62+68/2);
-    compo_button_set_visible(btn, true);
-    compo_setid(btn, COMPO_ID_BTN_SPORT_STOP);
+    // compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
+    // compo_button_set_pos(btn, -140-120/2, 62+68/2);
+    // compo_button_set_visible(btn, true);
+    // compo_setid(btn, COMPO_ID_BTN_SPORT_STOP);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_CLOSE_BIN);
-    compo_button_set_pos(btn, -140-120/2, 176+68/2);
-    compo_button_set_visible(btn, true);
-    compo_setid(btn, COMPO_ID_BTN_SPORT_EXIT);
+    // btn = compo_button_create_by_image(frm, UI_BUF_I330001_SPORT_BTN_CLOSE_BIN);
+    // compo_button_set_pos(btn, -140-120/2, 176+68/2);
+    // compo_button_set_visible(btn, true);
+    // compo_setid(btn, COMPO_ID_BTN_SPORT_EXIT);
 
-    compo_textbox_t* text = compo_textbox_create(frm, 32);
-    compo_textbox_set_location(text, -140-120/2, 134+23/2,
-                               GUI_SCREEN_WIDTH/1.1,
-                               gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
-    compo_textbox_set(text, i18n[STR_PAUSE]);
-    compo_setid(text,COMPO_ID_BTN_SPORT_PAUSE);
+    // compo_textbox_t* text = compo_textbox_create(frm, 32);
+    // compo_textbox_set_location(text, -140-120/2, 134+23/2,
+    //                            GUI_SCREEN_WIDTH/1.1,
+    //                            gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
+    // compo_textbox_set(text, i18n[STR_PAUSE]);
+    // compo_setid(text,COMPO_ID_BTN_SPORT_PAUSE);
 
-    text = compo_textbox_create(frm, 32);
-    compo_textbox_set_location(text, -140-120/2, 248+23/2,
-                               GUI_SCREEN_WIDTH/1.1,
-                               gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
-    compo_textbox_set(text, i18n[STR_END]);
+    // text = compo_textbox_create(frm, 32);
+    // compo_textbox_set_location(text, -140-120/2, 248+23/2,
+    //                            GUI_SCREEN_WIDTH/1.1,
+    //                            gui_image_get_size(UI_BUF_I330001_SPORT_BTN_CLOSE_BIN).hei);
+    // compo_textbox_set(text, i18n[STR_END]);
 
     return frm;
 }

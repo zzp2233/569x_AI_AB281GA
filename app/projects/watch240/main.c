@@ -100,6 +100,33 @@ const uint8_t *bt_rf_get_param(void)
     return (const uint8_t *)&xcfg_cb.rf_pa_gain;
 }
 
+//默认OS_THREAD_MAIN_PRIORITY 30
+#if ASR_SELECT
+AT(.text.startup.init)
+u32 system_get_main_stack_priopity(void)
+{
+    return 27;
+}
+#endif
+
+#if ASR_USBKEY_PSD
+// const u8 tbl_secret_key[16] = {0xA8, 0xE7, 0xB7, 0x74, 0xD1, 0x04, 0x97, 0x3E, 0x8E, 0xB4, 0x7E, 0x4A, 0x36, 0x99, 0xF2, 0xD7};
+// const u8 tbl_secret_key[16] = {0xF6, 0x7C, 0xB6, 0xBD, 0x50, 0xE8, 0x33, 0xAF, 0x05, 0x15, 0x12, 0x76, 0x18, 0x56, 0x90, 0x99};
+// const u8* get_alg_tbl(void)
+// {
+//     return tbl_secret_key;
+// }
+
+WEAK const u8* get_soft_key(void)
+{
+#if ASR_USBKEY_PSD
+    return xcfg_cb.asr_soft_key;
+#endif
+    return NULL;
+}
+#endif
+
+
 //正常启动Main函数
 int main(void)
 {
@@ -139,7 +166,9 @@ int main(void)
         // bsp_rtc_recode_set(1);
         printf("WDT reset\n");
     }
-
+#if ASR_SELECT
+    thread_asr_create();
+#endif //ASR_STACK_EN
     bsp_sys_init();
 //    GPIOEDIR &= ~(BIT(7) | BIT(2) | BIT(1));
 //    GPIOEFEN &= ~(BIT(7) | BIT(2) | BIT(1));

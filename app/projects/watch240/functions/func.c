@@ -189,6 +189,10 @@ extern void func_breathe_finish(void);
 extern void func_ecig_set_power(void);
 extern void func_ecig_reminder(void);
 #endif
+#if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
+extern void func_calendar_sub(void);
+#endif
+extern void func_ecig_vpae_sub(void);
 
 compo_form_t *func_breathe_finish_form_create(void);
 compo_form_t *func_up_watch_dial_form_create(void);
@@ -297,6 +301,10 @@ compo_form_t *func_factory_testing_create(void);///*工厂测试*/
 compo_form_t *func_ageing_create(void);///*老化测试*/
 compo_form_t *func_audio_create(void);///*音频测试*/
 compo_form_t *func_online_factory_test_form_create(void);
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+compo_form_t *func_calender_sub_form_create(void);
+#endif
+compo_form_t *func_ecig_vpae_sub_form_create(void);
 
 #if ECIG_POWER_CONTROL
 compo_form_t *func_ecig_set_power_form_create(void);
@@ -484,6 +492,10 @@ const func_t tbl_func_create[] =
     {FUNC_ECIG_SET_POWER,               func_ecig_set_power_form_create},
     {FUNC_ECIG_REMINDER,                func_ecig_reminder_form_create},
 #endif
+#if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
+    {FUNC_CALENDAER_SUB,                    func_calender_sub_form_create},
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {FUNC_ECIG_VPAE_SUB,                    func_ecig_vpae_sub_form_create},
 };
 
 const func_t tbl_func_entry[] =
@@ -678,6 +690,10 @@ const func_t tbl_func_entry[] =
     {FUNC_ECIG_SET_POWER,               func_ecig_set_power},
     {FUNC_ECIG_REMINDER,                func_ecig_reminder},
 #endif
+#if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
+    {FUNC_CALENDAER_SUB,                func_calendar_sub},
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {FUNC_ECIG_VPAE_SUB,                func_ecig_vpae_sub},
 };
 
 AT(.text.func.process)
@@ -878,6 +894,21 @@ void func_process(void)
         }
 #endif
     }
+#if ASR_SELECT
+    if(bsp_asr_init_sta())
+    {
+        delay_5ms(2);
+    }
+#endif
+#if (ASR_SELECT == ASR_YJ && ASR_DEAL_TYPE)
+    third_func_process();
+#endif
+#if (ASR_SELECT == ASR_WS && MONITOR_ASR_WAKEUP_EN)
+    asr_event_process();
+#endif
+#if (ASR_SELECT == ASR_WS_AIR && MONITOR_ASR_WAKEUP_EN)
+    asr_event_process();
+#endif
 }
 
 //根据任务名创建窗体。此处调用的创建窗体函数不要调用子任务的控制结构体
@@ -1046,7 +1077,11 @@ void func_switch_to_menu(void)
     {
         widget_icon_t *icon;
         compo_form_t *frm = func_create_form(FUNC_MENU);                        //创建下一个任务的窗体
+#if (ASR_SELECT && ASR_VOICE_BALL_ANIM)
+        component_t *compo = compo_get_next((component_t *)frm->anim);
+#else
         component_t *compo = compo_get_next((component_t *)frm->title);
+#endif
 
         if (compo->type == COMPO_TYPE_ICONLIST)
         {
@@ -1100,7 +1135,11 @@ void func_switching_to_menu(void)
     widget_icon_t *icon;
     u16 switch_mode;
     compo_form_t *frm = func_create_form(FUNC_MENU);                            //创建下一个任务的窗体
+#if (ASR_SELECT && ASR_VOICE_BALL_ANIM)
+    component_t *compo = compo_get_next((component_t *)frm->anim);
+#else
     component_t *compo = compo_get_next((component_t *)frm->title);
+#endif
     if (compo->type == COMPO_TYPE_ICONLIST)
     {
         compo_iconlist_t *iconlist = (compo_iconlist_t *)compo;
@@ -1552,6 +1591,9 @@ void func_message(size_msg_t msg)
             evt_message(msg);
             break;
     }
+#if (ASR_SELECT == ASR_YJ && !ASR_DEAL_TYPE)
+    third_func_message(msg);
+#endif
     //调节音量，3秒后写入flash
     if ((sys_cb.cm_vol_change) && (sys_cb.cm_times >= 6))
     {
@@ -1590,6 +1632,9 @@ void func_enter(void)
 AT(.text.func)
 void func_exit(void)
 {
+#if ASR_SELECT
+    bsp_asr_voice_wake_sta_clr();
+#endif
     //销毁窗体
     if (func_cb.frm_main != NULL)
     {
@@ -1617,6 +1662,7 @@ void func_run(void)
 
     task_stack_init();  //任务堆栈
     latest_task_init(); //最近任务
+    sys_cb.sys_init_complete = true;
     for (;;)
     {
         if(sys_cb.refresh_language_flag) //刷新语言

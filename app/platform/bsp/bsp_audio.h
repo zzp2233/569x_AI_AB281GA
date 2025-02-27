@@ -7,6 +7,7 @@
 #define AUDIO_PATH_RECORDER        3
 #define AUDIO_PATH_MODEMMIC        4
 #define AUDIO_PATH_OPUS            5
+#define AUDIO_PATH_ASR             6
 
 void audio_path_init(u8 path_idx);
 void audio_path_exit(u8 path_idx);

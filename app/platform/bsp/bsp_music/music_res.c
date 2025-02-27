@@ -47,6 +47,15 @@ u8 mp3_res_process(void)
 #endif
 
             func_bt_mp3_play_restore();
+
+#if (ASR_SELECT == ASR_YJ && ET_WAKEUP_EN)
+#if 1
+            et_start_asr();
+#else
+            set_et_play_tip_mode(0);
+#endif // 0
+#endif // ET_WAKEUP_EN
+
             return 0;
         }
 
@@ -56,8 +65,14 @@ u8 mp3_res_process(void)
 
 void mp3_res_play_do(u32 addr, u32 len, bool sync)
 {
-    if (len == 0)
+    if (len == 0 || sco_get_incall_flag(INCALL_FLAG_SCO))
     {
+#if ASR_SELECT && ASR_AND_SIRI_PARALLEL_EN
+        if (bsp_asr_init_sta())
+        {
+            sys_cb.asr_mp3_delay = true;
+        }
+#endif
         return;
     }
 
@@ -82,6 +97,14 @@ void mp3_res_play_do(u32 addr, u32 len, bool sync)
     {
         music_set_eq_by_num(0); // EQ 设置为 normal
     }
+
+#if (ASR_SELECT == ASR_YJ && ET_WAKEUP_EN)
+#if 1
+    et_stop_asr();
+#else
+    set_et_play_tip_mode(1);
+#endif // 0
+#endif // ET_WAKEUP_EN
 
     mp3_res_play_kick(addr, len);
     sys_cb.mp3_res_playing = true;
@@ -119,6 +142,14 @@ void wav_res_play_do(u32 addr, u32 len, bool sync)
     dac_dnr_set_sta(0);
 #endif
 
+#if (ASR_SELECT == ASR_YJ && ET_WAKEUP_EN)
+#if 1
+    et_stop_asr();
+#else
+    set_et_play_tip_mode(1);
+#endif // 0
+#endif // ET_WAKEUP_EN
+
     wav_res_play_kick(addr, len);
     while (wav_res_is_play())
     {
@@ -131,6 +162,13 @@ void wav_res_play_do(u32 addr, u32 len, bool sync)
 #if DAC_DNR_EN
     dac_dnr_set_sta(sta);
 #endif
+#if (ASR_SELECT == ASR_YJ && ET_WAKEUP_EN)
+#if 1
+    et_start_asr();
+#else
+    set_et_play_tip_mode(0);
+#endif // 0
+#endif // ET_WAKEUP_EN
 }
 
 void wav_res_play(u32 addr, u32 len)

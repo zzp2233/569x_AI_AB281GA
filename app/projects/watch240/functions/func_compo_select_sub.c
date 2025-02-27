@@ -22,12 +22,15 @@ enum
 {
     COMPO_ID_LISTBOX = 1,
 };
+#if 0
 const compo_listbox_item_t tbl_list_data[] =
 {
-    {STR_SPORTS,                           .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SPORT_ON},     //运动
-    {STR_SLEEP,                            .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SLEEP_ON},     //睡眠
+    {STR_SETTING_CALENDAR,                           .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SPORT_ON},     //运动
+    {STR_CALCULATOR,                            .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SLEEP_ON},     //睡眠
+#if 1//UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {STR_EVREY_DAY_ACTIVITY,               .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_ACTIVITY_ON},  //活动记录
-    {STR_HEART_RATE,                       .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_HEART_ON},     //心率
+#endif
+    {STR_ALARM_CLOCK,                       .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_HEART_ON},     //心率
     {STR_BLOOD_OXYGEN,                     .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SPO2_ON},      //血氧
     {STR_PHONE,                            .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_BT_CALL_ON},   //电话
     {STR_MUSIC,                            .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_MUSIC_ON},     //音乐
@@ -36,14 +39,14 @@ const compo_listbox_item_t tbl_list_data[] =
 };
 const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
 {
-#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
-    SYS_CTL_FUNC_ACTIVITY_ON,       FUNC_ACTIVITY,
+#if 1//UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    SYS_CTL_FUNC_ACTIVITY_ON,       FUNC_ECIG_SET_POWER,//FUNC_ACTIVITY,
 #endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    SYS_CTL_FUNC_HEART_ON,          FUNC_HEARTRATE,
+    SYS_CTL_FUNC_HEART_ON,          FUNC_ALARM_CLOCK,
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
-    SYS_CTL_FUNC_SLEEP_ON,          FUNC_SLEEP,
+    SYS_CTL_FUNC_SLEEP_ON,          FUNC_CALCULATOR,
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     SYS_CTL_FUNC_SPO2_ON,           FUNC_BLOOD_OXYGEN,
@@ -52,7 +55,7 @@ const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
     SYS_CTL_FUNC_MUSIC_ON,          FUNC_BT,
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
-    SYS_CTL_FUNC_SPORT_ON,          FUNC_SPORT_SORT,//FUNC_SPORT,
+    SYS_CTL_FUNC_SPORT_ON,          FUNC_CALENDAER,//FUNC_SPORT,
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
     SYS_CTL_FUNC_BT_CALL_ON,        FUNC_CALL_SORT,//FUNC_CALL,
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
@@ -63,7 +66,9 @@ const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
 
 static u8 list_data_sort[LIST_ITEM_CNT_MAX] =
 {
+#if 1//UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     SYS_CTL_FUNC_ACTIVITY_ON,
+#endif
     SYS_CTL_FUNC_HEART_ON,
     SYS_CTL_FUNC_SLEEP_ON,
     SYS_CTL_FUNC_SPO2_ON,
@@ -73,6 +78,51 @@ static u8 list_data_sort[LIST_ITEM_CNT_MAX] =
     SYS_CTL_FUNC_BT_CALL_ON,
     SYS_CTL_FUNC_WEATHER_ON,
 };
+#else
+
+const compo_listbox_item_t tbl_list_data[] =
+{
+    {STR_SETTING_CALENDAR,                 .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_CALENDAR_ON},     //运动
+    {STR_CALCULATOR,                       .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_CALCUL_ON},     //睡眠
+#if 1//UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {STR_ECIG_SET_POWER,               .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_SET_POWER_ON},  //活动记录
+#endif
+    {STR_ALARM_CLOCK,                       .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_ALARM_ON},     //心率
+    {STR_ECIG_RECORD,                     .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_ECIG_P_ON},      //血氧
+    {STR_PHONE,                            .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_BT_CALL_ON},   //电话
+    {STR_MUSIC,                            .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_MUSIC_ON},     //音乐
+    {STR_WEATHER,                          .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_FUNC_WEATHER_ON},   //天气
+
+};
+const u8 SYS_CTL_ON_TO_FUNC_STA_TABLE[] =
+{
+    SYS_CTL_FUNC_SET_POWER_ON,      FUNC_ECIG_SET_POWER,//FUNC_ACTIVITY,
+    SYS_CTL_FUNC_ALARM_ON,          FUNC_ALARM_CLOCK,
+    SYS_CTL_FUNC_CALCUL_ON,         FUNC_CALCULATOR,
+    SYS_CTL_FUNC_ECIG_P_ON,           FUNC_ECIG_VPAE_SUB,
+    SYS_CTL_FUNC_MUSIC_ON,          FUNC_BT,
+    SYS_CTL_FUNC_CALENDAR_ON,       FUNC_CALENDAER_SUB,//FUNC_SPORT,
+    SYS_CTL_FUNC_BT_CALL_ON,        FUNC_CALL_SORT,//FUNC_CALL,
+    SYS_CTL_FUNC_WEATHER_ON,        FUNC_WEATHER,
+
+};
+
+static u8 list_data_sort[LIST_ITEM_CNT_MAX] =
+{
+
+    SYS_CTL_FUNC_SET_POWER_ON,
+    SYS_CTL_FUNC_ALARM_ON,
+    SYS_CTL_FUNC_CALCUL_ON,
+    SYS_CTL_FUNC_ECIG_P_ON,
+    SYS_CTL_FUNC_MUSIC_ON,
+    SYS_CTL_FUNC_CALENDAR_ON,
+
+    SYS_CTL_FUNC_BT_CALL_ON,
+    SYS_CTL_FUNC_WEATHER_ON,
+};
+
+
+#endif
 
 //根据vidx信息获取list_data
 static const compo_listbox_item_t *get_tbl_list_data_by_vidx(u16 vidx)

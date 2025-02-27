@@ -109,6 +109,11 @@
 #define GUI_SCREEN_OFS_X                0
 #define GUI_SCREEN_OFS_Y                0
 #define GUI_USE_TFT
+#elif (GUI_SELECT == GUI_TFT_240_JD9853W3)
+#define GUI_SCREEN_WIDTH                240
+#define GUI_SCREEN_HEIGHT               296
+#define GUI_SCREEN_OFS_X                0//24
+#define GUI_SCREEN_OFS_Y                0//40
 #else
 #define GUI_SCREEN_WIDTH                UTE_DRV_SCREEN_WIDTH
 #define GUI_SCREEN_HEIGHT               UTE_DRV_SCREEN_HEIGHT
@@ -497,6 +502,128 @@
 *****************************************************************************/
 #define SECURITY_VENDOR_HS                    0     //宏思
 #define SECURITY_VENDOR_HED                   1     //华大
+
+/*****************************************************************************
+ * Module    : 友杰语音配置起始
+ *****************************************************************************/
+#define ET_CONFIG                       1
+#define ET_WAKEUP_EN                    1
+#define ET_ASR_EN                       1
+#define ET_VAD_CONTINUE_DELAY_EN        0
+#define ET_LOG_OPEN                     1
+#define ET_ASR_DUMP_EN                  0
+#define THIRD_UI_LIGHT_EN               1
+#define ET_WARNING_MP3_PLAY             1
+#define ET_WARNING_TONE_EN              1
+#define ET_ASR_MAIN_THREAD_EN           0 //识别在主线程中
+
+#define ET_LANG_CHINESE                 1   //1穿戴中文
+#define ET_LANG_ENGLISH                 2   ////1穿戴中文;2穿戴英文;
+
+#define ET_UI_PROJ_NAME                 "C0XX"
+#define ET_UI_VERSION                   "20240909132800"
+#define ET_MODE_LANG_CHOICE             ET_LANG_CHINESE  //选择当前模型语言
+
+/************ 友杰分贝VAD唤醒参数配置控制 **************************************/
+#define ET_ASR_VAD_EN  0   //是否打开分贝Vad
+#define ET_VAD_WAKE_WORD_HOLD_EN   1 //是否打开唤醒词激活30秒期间关闭分贝vad
+#if 0
+//根据麦克风灵敏度和识别需求距离调节
+#define VAD_POS_CNT_LIMT  55 //识别为人声的阈值，单位分贝DB,范围0到100
+#define VAD_NEG_CNT_LIMT  (VAD_POS_CNT_LIMT - 2) //识别为非人声的阈值，单位分贝DB,范围0到100
+#else
+//根据麦克风灵敏度和识别需求距离调节
+#define VAD_POS_CNT_LIMT  66 //识别为人声的阈值，单位分贝DB,范围0到100
+#define VAD_NEG_CNT_LIMT  (VAD_POS_CNT_LIMT - 2) //识别为非人声的阈值，单位分贝DB,范围0到100
+#endif // 0
+#define VAD_KWS_WORD_LIMT 320 //限制KWS唤醒的最长时间（单位：ms），300次*12ms = 3600ms = 3.6s
+
+/************ 友杰识别参数配置 *************************************************/
+#define ET_ASR_INIT_MAX_DELAY           3
+#define ET_ASR_CLOSE_MAX_DELAY          2 // 3s delay close
+#define ET_ASR_MUSIC_VOL_NDB            4
+#define ET_ASR_PHONE_RING_EN            1
+#define ET_ONLY_KEY_OPEN_ASR_MODE       0   //只能按键打开识别模式
+
+#define ET_OPEN_ASR_PREFETCH            1
+
+#if ET_MODE_LANG_CHOICE == ET_LANG_ENGLISH
+#define ET_USED_USBKEY  ET_LANG_ENGLISH  //类型:1穿戴中文;2穿戴英文;
+#elif ET_MODE_LANG_CHOICE == ET_LANG_CHINESE
+#define ET_USED_USBKEY  ET_LANG_CHINESE  //类型:1穿戴中文;2穿戴英文;
+#else
+#define ET_USED_USBKEY  0
+#endif // ET_MODE_LANG_CHOICE
+
+/************ 友杰唤醒词功能支持配置 ********************************************/
+#define ET_A_WAKE_WORD_EN               1  //开启唤醒词功能
+#define ET_WAKE_TIME_DEFAULT            15  //15秒
+
+/************ 友杰日志打印 *****************************************************/
+#if ET_LOG_OPEN
+#define DBG_SET                         1   // 是否开启ET打印
+#define ET_LOG(flags, fmt, arg...) \
+    do {                        \
+        if (flags)              \
+            printf(fmt, ##arg); \
+    } while (0)
+
+#define ET_LOGI(fmt, arg...)   ET_LOG(DBG_SET, "[ET I] "fmt, ##arg)
+//#define LOGW(fmt, arg...)   ET_LOG(DBG_SET, "[ET W] "fmt, ##arg)
+//#define LOGE(fmt, arg...)   ET_LOG(DBG_SET, "[ET E] "fmt, ##arg)
+#define ET_MONITOR_LOG                  1
+#else
+#define LOGI(fmt, arg...)
+#define LOGW(fmt, arg...)
+#define LOGE(fmt, arg...)
+#define ET_MONITOR_LOG                  0
+#endif // ET_LOG_OPEN
+
+/************ 友杰加密狗 *****************************************************/
+#if (ET_USED_USBKEY == ET_LANG_CHINESE)
+#define ET_USED_USBKEY_PSD              0xDD00348F
+#elif (ET_USED_USBKEY == ET_LANG_ENGLISH)
+#define ET_USED_USBKEY_PSD              0x6564CE1E
+#endif //ET_USED_USBKEY
+/*****************************************************************************
+ * Module    : 友杰语音配置结束
+ *****************************************************************************/
+
+/*****************************************************************************
+ * Module    : 华镇纯软语音配置
+ *****************************************************************************/
+#define MONITOR_ASR_WAKEUP_EN           1   // 语音唤醒
+#define MONITOR_ASR_WAKEUP_TIME         10  // 单位：秒
+#define WS_SOFT_USBKEY_PSD              0x89209F1F
+
+/*****************************************************************************
+ * Module    : 华镇空调伴侣语音配置
+ *****************************************************************************/
+#define IR_AIR_FUNC                     1   //空调伴侣
+#define MONITOR_ASR_WAKEUP_EN           1
+#define MONITOR_AIR_DEMO                1
+#define WS_AIR_SOFT_USBKEY_PSD          0xDDC431AA
+
+/*****************************************************************************
+ * Module    : 语音识别其他配置
+ *****************************************************************************/
+#if (ASR_SELECT == ASR_WS)
+#undef ASR_USBKEY_PSD
+#define ASR_USBKEY_PSD                  WS_SOFT_USBKEY_PSD
+#undef ASR_SIRI_AUTO_CLOSE_COUNTDOWN
+#define ASR_SIRI_AUTO_CLOSE_COUNTDOWN   MONITOR_ASR_WAKEUP_TIME
+#elif (ASR_SELECT == ASR_YJ)
+#undef ASR_USBKEY_PSD
+#define ASR_USBKEY_PSD                  ET_USED_USBKEY_PSD
+#undef ASR_SIRI_AUTO_CLOSE_COUNTDOWN
+#define ASR_SIRI_AUTO_CLOSE_COUNTDOWN   ET_WAKE_TIME_DEFAULT
+#elif (ASR_SELECT == ASR_WS_AIR)
+#undef ASR_USBKEY_PSD
+#define ASR_USBKEY_PSD                  WS_AIR_SOFT_USBKEY_PSD
+#undef ASR_SIRI_AUTO_CLOSE_COUNTDOWN
+#define ASR_SIRI_AUTO_CLOSE_COUNTDOWN   ET_WAKE_TIME_DEFAULT
+#endif
+
 
 #endif // __CONFIG_EXTRA_H__
 

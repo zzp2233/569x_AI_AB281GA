@@ -231,10 +231,16 @@ void tft_bglight_frist_set_check(void)
 void tft_set_temode(u8 mode)
 {
     tft_cb.te_mode_next = mode;
+    printf("tft_set_temode:%d\n",mode);
 }
 
 void tft_init(void)
 {
+#if 0
+    void clr_tft_spi_timeout(void);
+    clr_tft_spi_timeout();
+#endif
+
 #if (GUI_SELECT != DISPLAY_UTE)
     //clk init
     CLKDIVCON2 = (CLKDIVCON2 & ~(BIT(4) * 0xF)) | BIT(4) * 2;   // TFTDE div
@@ -260,10 +266,19 @@ void tft_init(void)
     TICK1CNT = 0;
     sys_irq_init(IRQ_TE_TICK_VECTOR, 0, tick_te_isr);
 
-    tft_cb.te_mode = 0;                             //初始化
-    tft_cb.te_mode_next = 0;
-
-    tft_set_temode(DEFAULT_TE_MODE);
+    static bool frist_init_flag = false;
+    if (frist_init_flag == false) // 第一次初始化tft
+    {
+        tft_cb.te_mode = 0; // 初始化
+        tft_cb.te_mode_next = 0;
+        tft_set_temode(DEFAULT_TE_MODE);
+    }
+    else
+    {
+        // 不是第一次初始化tft
+        tft_set_temode(tft_cb.te_mode); // 还原之前的TE
+    }
+    frist_init_flag = true;
 
     port_tft_reset();
 
@@ -318,6 +333,8 @@ void tft_init(void)
     tft_spi_init();
 #elif (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
     tft_170_560_axs15231B_init();
+#elif (GUI_SELECT == GUI_TFT_240_JD9853W3)
+    tft_240_jd9853w3_init();
 #elif (GUI_SELECT == DISPLAY_UTE)
     uteDrvScreenCommonInit();
 #else
@@ -328,7 +345,9 @@ void tft_init(void)
 #else
     tft_set_window(0, 0, GUI_SCREEN_WIDTH - 1, GUI_SCREEN_HEIGHT - 1);
 #endif
-
+#if (GUI_SELECT == GUI_TFT_240_JD9853W3)
+    LCD_BL_EN();
+#endif
     tft_cb.tft_bglight_kick = true; //延时打开背光
 #ifdef GUI_USE_OLED
     oled_brightness_set_level(5, false);

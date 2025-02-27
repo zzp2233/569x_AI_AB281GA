@@ -268,13 +268,14 @@ static void func_alarm_clock_button_release_handle(void)
         widget_icon_set(icon_add, UI_BUF_I330001_PUBLIC_RECTANGLE02_BIN);
     }
 }
-
+//是否从快捷一级界面点击进入
+bool  flag_sort_enter = false;
 //单击按钮
 static void func_alarm_clock_button_click(void)
 {
     rect_t rect;
     point_t pt = ctp_get_sxy();
-
+    printf("%s,func_cb.flag_sort=%d\n",__func__,func_cb.flag_sort);
     if (icon_add)
     {
         rect = widget_get_absolute(icon_add);
@@ -284,6 +285,12 @@ static void func_alarm_clock_button_click(void)
             {
                 sys_cb.alarm_edit_idx = ALARM_ENABLE_CNT();
                 func_cb.sta = FUNC_ALARM_CLOCK_SUB_SET;
+                if (func_cb.flag_sort==true)
+                {
+                    flag_sort_enter = true;
+                    func_cb.flag_sort = false;
+                }
+
                 return;
             }
         }
@@ -304,6 +311,11 @@ static void func_alarm_clock_button_click(void)
             else        //编辑
             {
                 sys_cb.alarm_edit_idx = i;
+                if (func_cb.flag_sort==true)
+                {
+                    flag_sort_enter = true;
+                    func_cb.flag_sort = false;
+                }
                 func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
             }
         }
@@ -639,6 +651,12 @@ static void func_alarm_clock_enter(void)
         .down_spring_perc = icon_add ? 0 : 40,
     };
     compo_page_move_init(f_aclock->ptm, func_cb.frm_main->page_body, &info);
+    if (flag_sort_enter)
+    {
+        flag_sort_enter = false;
+        func_cb.flag_sort = true;
+
+    }
 
     //当前显示的时间制
     f_aclock->time_scale = uteModuleSystemtime12HOn();

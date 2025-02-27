@@ -43,7 +43,7 @@
 #define DATA_CONTINUE_POS       2
 
 /**********************************************/
-#define FOT_BLOCK_LEN           1024        //压缩升级必须是512的倍数，目前只做了512倍数的处理
+#define FOT_BLOCK_LEN           8192        //压缩升级必须是512的倍数，目前只做了512倍数的处理
 
 
 extern bool ble_fot_send_packet(u8 *buf, u16 len);
@@ -260,6 +260,10 @@ u8 is_fot_start(void)
 AT(.text.fot.update)
 void bsp_fot_init(void)
 {
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
+
     u8  dev_version_str[] = SW_VERSION;
     u16 version_temp = 0;
 
@@ -361,7 +365,7 @@ static void fot_reply_update_request(void)
 #if LE_AB_FOT_EN
     if(ble_is_connect())
     {
-        ble_update_conn_param(16,0,400);
+        ble_update_conn_param(12,0,400);
     }
 #endif
 
@@ -781,6 +785,8 @@ void bsp_fot_process(void)
 
             fot_flag &= ~FOT_FLAG_SYS_RESET;
             FOT_DEBUG("-->fota update ok,sys reset\n");
+            ble_disconnect();
+            ble_adv_dis();
             if (func_cb.sta == FUNC_OTA_UI_MODE)
             {
                 WDT_RST();

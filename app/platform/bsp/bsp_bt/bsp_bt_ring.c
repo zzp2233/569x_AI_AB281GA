@@ -217,6 +217,10 @@ void bsp_bt_ring_process(void)
 
 void bsp_bt_ring_enter(void)
 {
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
+
 #if WARNING_BT_INCALL
     memset(&f_bt_ring.play, 0, sizeof(t_play_cb));
     f_bt_ring.play.gain_offset = sys_cb.gain_offset;
@@ -271,6 +275,13 @@ void bsp_bt_ring_exit(void)
     {
         //未接通时挂断
         hfp_hf_call_notice(BT_NOTICE_ENDCALL);
+    }
+#endif
+
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    if (bt_cb.disp_status != BT_STA_OUTGOING && bt_cb.disp_status != BT_STA_INCALL)
+    {
+        bsp_asr_start();
     }
 #endif
 }

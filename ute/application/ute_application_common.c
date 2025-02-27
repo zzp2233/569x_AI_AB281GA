@@ -637,6 +637,12 @@ void uteApplicationCommonEverySecond(void)
         uteApplicationCommonData.bleConnectState.connectedSecond++;
     }
     uteApplicationCommonData.systemPowerOnSecond++;
+    printf("%s,sys_clk_get=%d",__func__,sys_clk_get());
+
+#if ASR_SELECT
+    uteModuleAsrModeEverySecond();
+#endif
+
 #if SET_THE_LOW_BATTERY_POPUP_TIME
     uteApplicationCommonData.lowBatterySecond++;//hcj add 2022/09/08
 #endif

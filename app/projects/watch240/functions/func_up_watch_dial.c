@@ -239,7 +239,7 @@ void func_up_watch_dial(void)
     while (func_cb.sta == FUNC_UP_WATCH_DIAL)
     {
         func_up_watch_dial_process();
-        func_message(msg_dequeue());
+//        func_message(msg_dequeue());
     }
     func_up_watch_dial_exit();
 }

@@ -30,17 +30,17 @@ void timer_hot_dual_isr(void)//100us
         {
             if (ecig.timer_cycle_cnt < 6)
             {
-                ECIG_PWM2_ON();
+                ECIG_VEN_ON();
                 ECIG_PWM1_OFF();
                 ecig_res_proc();
                 caculate_res();
                 ecig.timer_cycle_cnt++;
                 ecig.hot_time_flag++;
-                ecig_adgnd_io_init();
+                ecig_adgnd_io_set_gnd();
             }
             else if (ecig.timer_cycle_cnt == 6)
             {
-                ECIG_PWM2_OFF();
+                ECIG_VEN_OFF();
                 ecig.timer_cycle_cnt++;
                 if (!ecig.hot_res)
                 {
@@ -151,7 +151,7 @@ void timer_hot_dual_isr(void)//100us
                         //TRACE(hot_str, 10, ecig.AD_hot_voltage_mv,ecig.AD_BAT_voltage_mv );
                     }
                     ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
-                    if (ecig.p_current >= ecig.cfg->aim_power * 100)
+                    if (ecig.p_current >= ecig.cfg->aim_power * ecig.timer_big_cycles_10ms)
                     {
                         if (ecig.power_on_flag)
                         {
@@ -227,7 +227,7 @@ void timer_hot_dual_isr(void)//100us
         }
         ecig_adgnd_io_deinit();
         ECIG_PWM1_OFF();
-        ECIG_PWM2_OFF();
+        ECIG_VEN_OFF();
     }
 }
 
@@ -240,7 +240,7 @@ void timer_hot_single_isr(void)//100us
     {
         ecig.hot_time_flag++;
         ecig.timer_cycle_cnt++;
-        ecig_adgnd_io_init();
+        ecig_adgnd_io_set_gnd();
         //第一个周期不开pwm，检验VBAT是否欠压
         if (ecig.timer_cycle_cnt <= 2)
         {
@@ -345,7 +345,7 @@ void timer_hot_single_isr(void)//100us
                     ecig.power_on_flag = 1;
                 }
                 ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
-                if (ecig.p_current >= ecig.cfg->aim_power * 100)
+                if (ecig.p_current >= ecig.cfg->aim_power * ecig.timer_big_cycles_10ms)
                 {
                     ECIG_PWM1_OFF();
                     ecig.power_on_flag = 0;

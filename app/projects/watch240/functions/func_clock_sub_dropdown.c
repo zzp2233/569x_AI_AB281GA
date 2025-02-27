@@ -1295,7 +1295,7 @@ static void func_clock_sub_dropdown_enter(void)
 }
 
 //时钟表盘下拉菜单退出处理
-static void func_clock_sub_dropdown_exit(void)
+/* static  */void func_clock_sub_dropdown_exit(void)
 {
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     compo_form_destroy(f_clk->sub_frm);

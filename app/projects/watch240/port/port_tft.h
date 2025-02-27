@@ -1,3 +1,5 @@
+
+
 #ifndef _PORT_TFT_H
 #define _PORT_TFT_H
 
@@ -29,22 +31,19 @@
 #error CHIP_PACKAGE_SELECT error!!!
 #endif
 
+//LCD-EN 外部供电给屏
+#define LCD_ON()          {GPIOHDIR &= ~BIT(7); GPIOHDE  |= BIT(7); GPIOHSET  = BIT(7);}
+#define LCD_OFF()         {GPIOHDIR &= ~BIT(7); GPIOHDE  |= BIT(7); GPIOHCLR  = BIT(7);}
+
 //RS
 #define TFT_SPI_DATA_EN()       GPIOASET = BIT(3);
 #define TFT_SPI_CMD_EN()        GPIOACLR = BIT(3);
-
 
 #if (GUI_MODE_SELECT == MODE_4WIRE_8BIT)
 #define   DC_ENABLE()           {GPIOAFEN &= ~BIT(3); GPIOADE |=  BIT(3);GPIOASET = BIT(3); GPIOADIR &= ~BIT(3);} // DC脚 设置输出
 #define   DC_CMD_EN()           TFT_SPI_CMD_EN();           // DC 拉低
 #define   DC_DATA_EN()          TFT_SPI_DATA_EN();          // DC 拉高
 #elif (GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
-// #define   DC_ENABLE()           {GPIOAFEN |= BIT(3); GPIOADE |=  BIT(3); GPIOADIR |= BIT(3);} //DC脚 设置输入
-#define   DC_ENABLE()           {GPIOAFEN &= ~BIT(3); GPIOADE |=  BIT(3);GPIOASET = BIT(3); GPIOADIR &= ~BIT(3);} // DC脚 设置输出
-#define   DC_CMD_EN()           {DESPICON &= ~BIT(19);}     // DC 拉低
-#define   DC_DATA_EN()          {DESPICON |= BIT(19);}      // DC 拉高
-#define   DC_DISABLE()          {GPIOAFEN |= BIT(3); GPIOADE |=  BIT(3); GPIOADIR |= BIT(3);} //DC脚 设置输入
-#elif (GUI_MODE_SELECT == MODE_3WIRE_9BIT)
 #define   DC_ENABLE()           {GPIOAFEN |= BIT(3); GPIOADE |=  BIT(3); GPIOADIR |= BIT(3);} //DC脚 设置输入
 #define   DC_CMD_EN()           {DESPICON &= ~BIT(19);}     // DC 拉低
 #define   DC_DATA_EN()          {DESPICON |= BIT(19);}      // DC 拉高

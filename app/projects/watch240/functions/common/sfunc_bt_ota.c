@@ -1,3 +1,4 @@
+
 #include "include.h"
 #include "func.h"
 #include "func_bt.h"
@@ -8,6 +9,9 @@ AT(.text.func.btring)
 void sfunc_bt_ota(void)
 {
     printf("%s\n", __func__);
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
     bt_audio_bypass();
     ota_enter();
     while (bt_get_status() == BT_STA_OTA)

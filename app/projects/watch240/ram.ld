@@ -311,6 +311,22 @@ SECTIONS
          . = ALIGN(512);
         __code_end_dnn = .;
 
+        #if (ASR_SELECT == ASR_WS_AIR)
+        __code_start_ir = .;
+        *(.kws_ir*)
+        . = ALIGN(512);
+        __code_end_ir = .;
+
+        *(.ws_text.tdnn_weight_1)
+        *(.ws_text.tdnn_weight_2)
+        *(.ws_text.tdnn_weight_2)
+        *(.ws_text.tdnn_weight_3)
+        *(.ws_text.tdnn_weight_4)
+        *(.ws_text.tdnn_weight_5)
+        *(.ws_text.tdnn_weight_6)
+        *(.ws_text.tdnn_weight_7)
+        #endif
+
         *(.irq_init.aligned)
         *(.text*)
         *(.rodata*)
@@ -375,9 +391,47 @@ SECTIONS
         . = ALIGN(512);
         __heap_custom_start = .;
         *(.heap.custom)
+
+         __asr_buf_start = .;
+        #if (ASR_SELECT == ASR_WS)
+            *(.ws_asr.buf)
+            *(.ws_asr.sum)
+            *(.ws_asr.feat)
+            *(.ws_asr*)
+            *(.asr_dump*)
+            *(.ws_asr.test)
+            *(.asr_record)
+            *(.asr_sco)
+            *(.ws_text.strong)
+        #elif (ASR_SELECT == ASR_YJ)
+            *(.asr.matrix)
+            *(.asr.buff)
+            *(.asr.pieces)
+            *(.asr.save)
+            *(.asr*)
+            *(.asr_record)
+	    	*(.asr_sco)
+        #elif (ASR_SELECT == ASR_WS_AIR)
+            *(.ws_asr.buf)
+            *(.ws_asr.sum)
+            *(.ws_asr.feat)
+            *(.ws_asr*)
+            *(.asr_dump*)
+            *(.ws_asr.test)
+            *(.asr_record)
+	    	*(.asr_sco)
+            *(.ws_text.strong)
+
+            *(.ir_prd.rcv)
+            *(.ir_rmt.dat)
+            *(.ir_pwm.out)
+        #endif
+        __asr_buf_end = .;
+
         __bss_end = .;
     } > sram
     __bss_size = __bss_end - __bss_start;
+    __asr_buf_size = __asr_buf_end - __asr_buf_start;
 
     .bram __bram_vma (NOLOAD) : {
         __bram_start = .;

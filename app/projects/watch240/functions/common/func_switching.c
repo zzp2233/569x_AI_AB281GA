@@ -1293,6 +1293,10 @@ bool func_switching(u16 switch_mode, void *param)
     {
         halt(HALT_FUNC_SWITCH_MODE);
     }
+
+#if ASR_SELECT
+    bsp_asr_pause();
+#endif
     func_switching_flag = true;
     bool flag_auto = ((switch_mode & FUNC_SWITCH_AUTO) != 0);
     switch_mode = switch_mode & 0x7FFF;
@@ -1329,5 +1333,8 @@ bool func_switching(u16 switch_mode, void *param)
         res = func_switching_zoom_fade(switch_mode, flag_auto);                //缩放加淡入淡出
     }
     func_switching_flag = false;
+#if ASR_SELECT
+    bsp_asr_start();
+#endif
     return res;
 }

@@ -35,6 +35,9 @@ enum sys_ctl_bits
     SYS_CTL_FUNC_STODWATCH_ON,          //秒表功能界面选择
     SYS_CTL_FUNC_SETTINGS_ON,           //设置功能界面选择
     SYS_CTL_FUNC_SPORT_RECORD_ON,       //运动记录功能界面选择
+    SYS_CTL_FUNC_CALENDAR_ON,           //日历功能界面选择
+    SYS_CTL_FUNC_SET_POWER_ON,           //设置电子烟功率
+    SYS_CTL_FUNC_ECIG_P_ON,           //电子烟口数记录界面
 
     SYS_CTL_TOTAL_BITS = 256,
 };
@@ -215,7 +218,17 @@ typedef struct
     bool power_on_flag;
 
     bool ancs_missed_call;
+    bool sys_init_complete; //系统初始化完成标志，用于互斥ute task和sys task，防止sys没初始化完成就执行ute task导致流程错误
+    bool need_wakeup_flag;
+#if ASR_SELECT
+    bool asr_play;                                  //asr 指令响应状态
+    u8   asr_gain;                                  //asr 备份增益
+    u32  asr_mp3_addr;                              //asr MP3缓冲地址
+    u32  asr_mp3_lens;                              //asr MP3缓冲长度
+    bool asr_mp3_delay;                             //asr MP3延迟播放标志位
 
+#endif
+    u8 audio_path;
 #if ECIG_POWER_CONTROL
     //电子烟
     u8 resistance;                                  //阻值

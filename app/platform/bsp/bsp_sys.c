@@ -4,6 +4,7 @@
 #include "ute_task_application.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_message.h"
+#include "ute_module_sport.h"
 
 #define TRACE_EN                0
 
@@ -313,6 +314,12 @@ void usr_tmr5ms_isr(void)
     {
         msg_enqueue(MSG_SYS_500MS);
         sys_cb.cm_times++;
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+        if(uteModuleSportAlgoTimerIsRunning())
+        {
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER,0);
+        }
+#endif
     }
 
     //1s timer process
@@ -321,6 +328,9 @@ void usr_tmr5ms_isr(void)
         msg_enqueue(MSG_SYS_1S);
         tmr5ms_cnt = 0;
         sys_cb.lpwr_warning_cnt++;
+#if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
+#endif
     }
 }
 
@@ -836,7 +846,7 @@ void bsp_sys_init(void)
 
     mic_bias_trim_w4_done();
     dac_set_power_on_off(0);            //需要放到MIC TRIM后才能关DAC
-#if 0//(SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
+#if (SENSOR_STEP_SEL != SENSOR_STEP_NULL || SENSOR_HR_SEL != SENSOR_HR_NULL || SENSOR_GEO_SEL != SENSOR_GEO_NULL)
     i2c_gsensor_init();
     //bsp_sensor_pe2_pwr_pg_on();         //需放在IIC初始化之后，未使用外设时注意关闭
     uteDrvGsensorCommonInit(UTE_DRV_GSENSOR_DEFAULT_ACC_RATE_VALUE,UTE_DRV_GSENSOR_DEFAULT_ACC_RANGE_VALUE);
@@ -854,9 +864,14 @@ void bsp_sys_init(void)
     sd_soft_detect_poweron_check();
 #endif
 
+    sys_cb.sys_init_complete = false;
+
     uteTaskApplicationInit();
 
     gui_init();
+#if ASR_SELECT
+    bsp_asr_init();                     //语音初始化
+#endif
 #if ECIG_POWER_CONTROL
     bsp_ecig_init();
 #endif

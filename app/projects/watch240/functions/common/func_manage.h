@@ -63,6 +63,12 @@ bool task_stack_contains(u8 val);
  **/
 void task_stack_remove(u8 val);
 
+/**
+ * @brief 在当前栈顶元素之前插入一个新界面
+ * @param[in] val : 要插入的值
+ **/
+void task_stack_insert_before_top(u8 val);
+
 ///----------------------最近任务列表----------------------
 /**
  * @brief 列表初始化

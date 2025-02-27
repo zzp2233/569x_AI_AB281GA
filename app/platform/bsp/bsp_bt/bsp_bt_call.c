@@ -402,12 +402,32 @@ bool sco_clr_incall_flag(u8 bit)
     return ret;
 }
 
+ALIGNED(64)
+bool sco_get_incall_flag(u8 bit)
+{
+    return (sys_cb.incall_flag & bit);
+}
+
+
 void sco_audio_init(void)
 {
 #if BT_SCO_APP_DBG_EN
     CLKGAT1 |= BIT(27);
 #endif
 
+#if (ASR_SELECT && ASR_FULL_SCENE)
+#if ASR_AND_SIRI_PARALLEL_EN
+    if (bt_get_siri_status())
+    {
+        audio_path_exit(AUDIO_PATH_ASR);
+        bt_siri_and_asr_parallel_en_setter(true);
+    }
+    else
+#endif
+    {
+        bsp_asr_stop();
+    }
+#endif
     sco_set_incall_flag(INCALL_FLAG_SCO);
     bt_call_alg_init();
 
@@ -432,7 +452,21 @@ void sco_audio_exit(void)
     dac_set_anl_offset(0);
     sco_clr_incall_flag(INCALL_FLAG_SCO);
     bsp_change_volume(sys_cb.vol);
-    // bsp_change_volume(VOL_MAX);             //通话改成默认最大音量
+
+#if (ASR_SELECT && ASR_FULL_SCENE)
+#if ASR_AND_SIRI_PARALLEL_EN
+    if (bt_get_siri_status())
+    {
+        audio_path_init(AUDIO_PATH_ASR);
+        audio_path_start(AUDIO_PATH_ASR);
+        bt_siri_and_asr_parallel_en_setter(false);
+    }
+    else
+#endif
+    {
+        bsp_asr_start();
+    }
+#endif
 
 #if BT_SCO_APP_DBG_EN
     CLKGAT1 &= ~BIT(27);
@@ -470,6 +504,9 @@ void modem_call_exit(void)
 
 void bsp_bt_call_enter(void)
 {
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
     sco_set_incall_flag(INCALL_FLAG_CALL);
     if(sys_cb.incall_flag == INCALL_FLAG_FADE)
     {
@@ -499,6 +536,9 @@ void bsp_bt_call_exit(void)
 
 #if !CALL_MGR_EN
     hfp_hf_call_notice(BT_NOTICE_ENDCALL);
+#endif
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_start();
 #endif
 }
 

@@ -91,6 +91,9 @@
 			<Add directory="../../../ute/module/micrecord" />
 			<Add directory="../../../ute/module/music" />
 			<Add directory="../../../ute/module/localRingtone" />
+			<Add directory="../../platform/modules/ws" />
+			<Add directory="../../platform/modules/ws_air" />
+			<Add directory="../../platform/modules/yj" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -117,6 +120,8 @@
 			<Add library="../../../ute/lib/libute_all_sports_int_algorithms3_0.a" />
 			<Add library="../../../ute/lib/libUTEsleepOnBandLib.a" />
 			<Add library="../../../ute/drv/gsensor/libSL_Acc_Mtp_WR.a" />
+			<Add library="../../platform/modules/asr_using/libasr.a" />
+			<Add library="../../platform/modules/asr_using/libasr_air.a" />
 			<Add directory="../../platform/libs" />
 		</Linker>
 		<ExtraCommands>
@@ -293,6 +298,7 @@
 		<Unit filename="../../../ute/module/weather/ute_module_weather.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_abe012.h" />
 		<Unit filename="../../../ute/task/ute_task_application.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -348,6 +354,10 @@
 		<Unit filename="../../platform/bsp/bsp_app/weak_symbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../platform/bsp/bsp_asr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_asr.h" />
 		<Unit filename="../../platform/bsp/bsp_audio.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -849,6 +859,9 @@
 		<Unit filename="../../platform/gui/tft/tft_170_560_axs15231B.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../platform/gui/tft/tft_240_JD9853w3.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../platform/gui/tft/tft_240_jd9853.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -928,6 +941,80 @@
 		<Unit filename="../../platform/libs/strong_symbol.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../platform/modules/ws/asr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws/asr.h" />
+		<Unit filename="../../platform/modules/ws/asr_prefetch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws/asr_process.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws/asr_strong_symbol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws/fst_graph.h" />
+		<Unit filename="../../platform/modules/ws/fst_words.h" />
+		<Unit filename="../../platform/modules/ws_air/air/asr_config.h" />
+		<Unit filename="../../platform/modules/ws_air/air/func_api_air.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/air/func_api_air.h" />
+		<Unit filename="../../platform/modules/ws_air/air/ir.h" />
+		<Unit filename="../../platform/modules/ws_air/air/ir_cap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/air/ir_cap.h" />
+		<Unit filename="../../platform/modules/ws_air/air/ir_code.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/air/ir_data_parse.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/air/ir_index #.h" />
+		<Unit filename="../../platform/modules/ws_air/air/ir_index.h" />
+		<Unit filename="../../platform/modules/ws_air/air/isd_pwm_ir_send.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/air/wanson_ir.h" />
+		<Unit filename="../../platform/modules/ws_air/asr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/asr.h" />
+		<Unit filename="../../platform/modules/ws_air/asr_prefetch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/asr_process.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/asr_strong_symbol.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/ws_air/fst_graph.h" />
+		<Unit filename="../../platform/modules/ws_air/fst_words.h" />
+		<Unit filename="../../platform/modules/yj/bsp_et_asr_ctrl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/yj/bsp_et_asr_ctrl.h" />
+		<Unit filename="../../platform/modules/yj/et_collects.h" />
+		<Unit filename="../../platform/modules/yj/et_keyword.h" />
+		<Unit filename="../../platform/modules/yj/et_kws_labels.h" />
+		<Unit filename="../../platform/modules/yj/et_thres_list.h" />
+		<Unit filename="../../platform/modules/yj/lib_et_asr.h" />
+		<Unit filename="../../platform/modules/yj/lib_et_ui_io.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/yj/lib_et_ui_io.h" />
+		<Unit filename="../../platform/modules/yj/third_bsp_sys.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/yj/third_bsp_sys.h" />
+		<Unit filename="../../platform/modules/yj/third_func.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/modules/yj/third_func.h" />
+		<Unit filename="../../platform/modules/yj/third_kws_event.h" />
 		<Unit filename="Output/bin/app.xm">
 			<Option compile="1" />
 			<Option compiler="riscv32-v2" use="1" buildCommand="$compiler $options $includes -E -P -x c -c $file -o $(TARGET_OUTPUT_DIR)appxm.o" />
@@ -1074,6 +1161,9 @@
 		<Unit filename="functions/func_calendar.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_calendar_them.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_call.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1140,6 +1230,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_ecig_set_power.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_ecig_vpae.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_empty.c">

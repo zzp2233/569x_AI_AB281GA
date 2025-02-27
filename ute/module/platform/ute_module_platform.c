@@ -489,7 +489,7 @@ void uteModulePlatformSendMsgToUteApplicationTask(uint16_t type, uint32_t param)
     bool isSend = uteTaskApplicationSendMsg(&p_msg);
     if (!isSend)
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,send msg fail,type=%d", __func__, type);
+        // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,send msg fail,type=%d", __func__, type);
     }
 }
 /**

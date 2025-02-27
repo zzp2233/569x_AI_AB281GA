@@ -283,6 +283,11 @@ static void uteModuleSystemtimeChange(ute_module_systemtime_time_t *time)
 */
 void uteModuleSystemtimeSecondCb(void)
 {
+    if (!sys_cb.sys_init_complete)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,sys_init_complete:%d",__func__,sys_cb.sys_init_complete);
+        return;
+    }
     if (uteApplicationCommonIsStartupFinish())
     {
         uteModuleSystemtimeChange(&systemTime);

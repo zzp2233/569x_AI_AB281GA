@@ -5,7 +5,7 @@
 #define COMPO_FORM_MODE_SHOW_TIME               BIT(1)          //标题栏显示时间
 #define COMPO_FORM_MODE_SHOW_ICON               BIT(2)          //标题栏显示自定义状态图标
 
-
+#include "compo_animation.h"
 
 typedef struct compo_textbox_t_
 {
@@ -28,6 +28,9 @@ typedef struct compo_form_t_
 //    widget_text_t *time;
     compo_textbox_t *time;
     int mode;
+#if (ASR_SELECT && ASR_VOICE_BALL_ANIM)
+    compo_animation_t *anim;
+#endif
 } compo_form_t;
 
 /**
@@ -131,5 +134,10 @@ void compo_form_set_bg(compo_form_t *frm, u32 res_addr);
 void compo_form_set_title_icon(compo_form_t *frm, u32 res_addr);
 
 void compo_form_set_title_txt_color(compo_form_t *frm, u16 color);
+/**
+ * @brief 语音悬浮球
+ * @param[in] sta: true:显示；flase：不显示
+ */
+void compo_form_set_ai_voice_anim(u8 sta);
 
 #endif

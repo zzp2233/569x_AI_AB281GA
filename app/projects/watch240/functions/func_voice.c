@@ -200,19 +200,19 @@ static const ui_handle_t ui_handle =
 {
     .animation = {
         .id = COMPO_ID_PIC_VOICE,
-        .x  = 240/2,
-        .y  = 228+ 28/2,
+        .x  = GUI_SCREEN_CENTER_X,
+        .y  = 314,
         .radix  = 16,
         .interval   = 5,
-//        .res    = UI_BUF_I330001_VOICE_GIF_BIN,
+        .res    = UI_BUF_I332001_VOICE_GIF_BIN,
     },
 
     .text = {
         .id = COMPO_ID_TXT_VOICE,
-        .x  = 16+208/2,
-        .y  = 122+26/2,
-        .w  = 208,
-        .h  = 26,
+        .x  = GUI_SCREEN_CENTER_X,
+        .y  = GUI_SCREEN_CENTER_Y,
+        .w  = 240,
+        .h  = 34,
         .res= UI_BUF_0FONT_FONT_BIN,
         .center = true,
         .str_id1 = STR_VOICE_SIRI_START,
@@ -227,16 +227,16 @@ compo_form_t *func_voice_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_VOICE]);
+//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+//    compo_form_set_title(frm, i18n[STR_VOICE]);
 
     //创建动画
     compo_animation_t *animation = compo_animation_create(frm, ui_handle.animation.res);
     compo_animation_set_pos(animation, ui_handle.animation.x, ui_handle.animation.y);
     compo_animation_set_radix(animation, ui_handle.animation.radix);
-//    compo_animation_set_interval(animation, ui_handle.animation.interval);
+    compo_animation_set_interval(animation, ui_handle.animation.interval);
     compo_setid(animation, ui_handle.animation.id);
-//    compo_animation_set_roll(animation, UI_BUF_I330001_VOICE_GIF_BIN);
+    compo_animation_set_roll(animation, UI_BUF_I332001_VOICE_GIF_BIN);
 
     //创建TEXT
     compo_textbox_t* txt = compo_textbox_create(frm, MAX(strlen(i18n[ui_handle.text.str_id1]), strlen(i18n[ui_handle.text.str_id2])));
@@ -278,9 +278,9 @@ static void func_voice_start_siri(void)
     else
     {
         f_voice->siri_en = false;
-//        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-//        sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
-//        msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+        msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
         func_voice_frist_check();
     }
 }
@@ -290,7 +290,7 @@ static void func_voice_start_siri(void)
 //语音助手功能事件处理
 static void func_voice_process(void)
 {
-#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     static u8 siri_cnt = 0;
     static bool bt_connect_status = false;
@@ -383,14 +383,13 @@ static void func_voice_process(void)
             }
         }
     }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
     func_process();
 }
 
 //语音助手功能消息处理
 static void func_voice_message(size_msg_t msg)
 {
-#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     //f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     switch (msg)
     {
@@ -411,7 +410,7 @@ static void func_voice_message(size_msg_t msg)
             func_message(msg);
             break;
     }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 }
 
 //进入语音助手功能

@@ -126,7 +126,7 @@
 #define BT_BQB_RF_EN                    0   //BR/EDR DUT测试模式，为方便测试不自动回连（仅用于BQB RF测试）
 #define BT_FCC_TEST_EN                  0   //蓝牙FCC测试使能，默认PB3 波特率1500000通信（仅用于FCC RF测试）
 #define BT_LINK_INFO_PAGE1_EN           0   //是否使用PAGE1回连信息（打开后可以最多保存8个回连信息）
-#define BT_POWER_UP_RECONNECT_TIMES     3   //上电回连次数
+#define BT_POWER_UP_RECONNECT_TIMES     0   //上电回连次数
 #define BT_TIME_OUT_RECONNECT_TIMES     20  //掉线回连次数
 #define BT_SIMPLE_PAIR_EN               1   //是否打开蓝牙简易配对功能（关闭时需要手机端输入PIN码）
 #define BT_DISCOVER_CTRL_EN             1   //是否使用按键打开可被发现（需自行添加配对键处理才能被连接配对）
@@ -492,7 +492,7 @@
 /*****************************************************************************
  * Module    :线程大小配置
  *****************************************************************************/
-#define MEM_HEAP_SIZE                   16*1024 + (2048 + 512) + UTE_TASK_APPLICATION_STACK_SIZE          //用于分配全部线程的总栈内存大小, 如果设置为 0, 采用中科平台库内置默认大小 16*1024
+#define MEM_HEAP_SIZE                   16*1024 + (2048+2048 + 512) + UTE_TASK_APPLICATION_STACK_SIZE          //用于分配全部线程的总栈内存大小, 如果设置为 0, 采用中科平台库内置默认大小 16*1024
 #define OS_THREAD_MAIN_STACK            2048 + 1536 + (2048 + 512)        //分配main线程栈内存大小, 如果设置为 0, 采用中科平台库内置默认大小 2048 + 1536
 #define OS_THREAD_MUSIC_STACK           896 + (512) * OPUS_ENC_EN
 
@@ -505,12 +505,97 @@
 #define MIC_TEST_BUF_SIZE               (15 * 1024)     //18k可录音530ms左右（复用aram）
 
 /*****************************************************************************
+ * Module    : 语音方案
+ *****************************************************************************/
+#define ASR_NULL                        0
+#define ASR_WS                          1 //华镇
+#define ASR_YJ                          2 //友杰
+#define ASR_WS_AIR                      3 //华镇空调伴侣
+
+/*****************************************************************************
+ * Module    : 语音方案选择
+ *****************************************************************************/
+#define ASR_SELECT                      ASR_YJ
+#define ASR_FULL_SCENE                  1               //全场景模式
+#define ASR_API_CHECK_TIME              0               //API执行时间检测
+#define ASR_SAMPLE                      240             //MIC采样率
+#define ASR_GAIN                        (12 << 6)       //MIC增益
+#define ASR_DEAL_TYPE                   1               //事件处理方式 1:轮询; 0:消息
+#define ASR_VOICE_BALL_ANIM             1               //悬浮球动画
+#define ASR_USBKEY_PSD                  0               //加密狗
+#define ASR_AND_SIRI_PARALLEL_EN        0               //语音SIRI融合功能，当siri开启时，mic数据同时送入siri和asr引擎
+#define ASR_SIRI_AUTO_CLOSE             1               //自动关闭siri
+#define ASR_SIRI_AUTO_CLOSE_COUNTDOWN   15              //多少秒后自动关闭siri
+#define ASR_SIRI_SCO_DELAY_EN           0               //SIRI 延时输出
+#define ASR_MIC_DATA_DUMP_EN            0               //语音识别，输出mic原始音频到bluetrum_voice_record
+#if ASR_SELECT
+#undef SYS_CLK_SEL
+#undef GUI_AUTO_POWER_EN
+#define SYS_CLK_SEL                 SYS_192M        //时钟设置为192M
+#define GUI_AUTO_POWER_EN           0               //关闭动态调节时钟
+#endif
+#if (ASR_SELECT == ASR_WS)
+#undef ASR_SAMPLE
+#undef ASR_GAIN
+#define ASR_SAMPLE                  120 * 2
+#define ASR_GAIN                    (12 << 6)
+#undef FLASH_CODE_SIZE
+#undef FLASH_UI_BASE
+#undef FLASH_UI_SIZE
+#define ASR_PREFETCH_EN             0                       //是否打开预取
+#if !ASR_PREFETCH_EN
+#define FLASH_CODE_SIZE             1004k                   //程序使用空间大小
+#define FLASH_UI_BASE               0xFB000                 //UI资源起始地址
+#define FLASH_UI_SIZE               0x300000                //UI资源大小
+#else
+#define FLASH_CODE_SIZE             784k                   //程序使用空间大小
+#define FLASH_UI_BASE               0xC4000                 //UI资源起始地址
+#define FLASH_UI_SIZE               0x337000                //UI资源大小
+#endif
+#endif
+#if (ASR_SELECT == ASR_YJ)
+#undef ASR_SAMPLE
+#undef ASR_GAIN
+#define ASR_SAMPLE                  160 * 2
+#define ASR_GAIN                    (6 << 6)
+// #undef FLASH_CODE_SIZE
+// #undef FLASH_UI_BASE
+// #undef FLASH_UI_SIZE
+// #define FLASH_CODE_SIZE             784k                    //程序使用空间大小
+// #define FLASH_UI_BASE               0xC4000                 //UI资源起始地址
+// #define FLASH_UI_SIZE               0x337000                //UI资源大小
+#endif
+#if (ASR_SELECT == ASR_WS_AIR)
+#undef ASR_SAMPLE
+#undef ASR_GAIN
+#define ASR_SAMPLE                  120 * 2
+#define ASR_GAIN                    (8 << 6)
+#undef FLASH_CODE_SIZE
+#undef FLASH_UI_BASE
+#undef FLASH_UI_SIZE
+#undef FLASH_SIZE
+#define FLASH_CODE_SIZE             2024K                   //程序使用空间大小
+#define FLASH_UI_BASE               0x1FA000                 //UI资源起始地址
+#define FLASH_UI_SIZE               0x348000                //UI资源大小
+#define FLASH_SIZE                  FSIZE_8M
+#endif
+
+/*****************************************************************************
+ * Module    : 分配asr线程栈内存大小
+ *****************************************************************************/
+#define OS_THREAD_ASR_PRIORITY          28         //优先级
+#define OS_THREAD_ASR_STACK             2048     //堆栈大小
+#define OS_THREAD_ASR_TICK              -1
+
+
+/*****************************************************************************
  * Module    : 电子烟功能配置
  *****************************************************************************/
 //开发板选型
 #define DEVELOPMENT_BOARD_WATCH        0//手表
 #define DEVELOPMENT_BOARD_ECIG         1//电子烟
-#define DEVELOPMENT_BOARD_TYPE          DEVELOPMENT_BOARD_ECIG
+#define DEVELOPMENT_BOARD_USER         2//用户板子
+#define DEVELOPMENT_BOARD_TYPE          DEVELOPMENT_BOARD_USER
 //
 #define ECIG_POWER_CONTROL              1               //是否开启恒功率控制
 #define ECIG_ADC2_EN                    1               //是否有ADC2通路

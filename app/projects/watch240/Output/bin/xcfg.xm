@@ -93,6 +93,12 @@ config(SUB, "产测参数", "产测校准的一些参数，不要改动！");
 config(KEEP);
 config(BYTE, "产测OSCI电容", "产测校准的24M晶振OSCI负载电容，单位0.25PF。不要改动默认值0。", OSCI_CAP, 0, 63, 0);
 config(BYTE, "产测OSCO电容", "产测校准的24M晶振OSCO负载电容，单位0.25PF。不要改动默认值0。", OSCO_CAP, 0, 63, 0);
+#if DONGLE_AUTH_EN
+config(BUF, "授权密钥", "程序运行需要判断的合法授权密钥", soft_key, 20);
+#endif
+#if ASR_USBKEY_PSD
+config(BUF, "语音识别授权密钥", "语音识别程序运行需要判断的合法授权密钥", asr_soft_key, 20);
+#endif
 config(KEEPEND)
 
 config(LEVEL, 0x100);

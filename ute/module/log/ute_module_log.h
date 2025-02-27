@@ -1,3 +1,10 @@
+/*
+ * @brief:
+ * @LastEditors: ljf
+ * @LastEditTime: 2025-02-25 17:31:57
+ * @FilePath: \AB5691_SDK\ute\module\log\ute_module_log.h
+ * @Date: 2025-02-13 10:22:32
+ */
 /**
 *@file
 *@brief     ute log 模块h文件
@@ -25,7 +32,7 @@
 #define UTE_LOG_WEATHER_LVL 0 //10
 #define UTE_LOG_BREATHRATE_LVL 0 //11
 #define UTE_LOG_GUI_LVL 0 //12
-#define UTE_LOG_DRV_SCREEN_LVL 13 //13
+#define UTE_LOG_DRV_SCREEN_LVL 0 //13
 #define UTE_LOG_DRV_TP_LVL 0 //14
 #define UTE_LOG_DRV_MOTOR_LVL 0 //15
 #define UTE_LOG_SLEEP_LVL 0 //16

@@ -184,8 +184,8 @@ compo_form_t *func_breathe_sub_mode_form_create(void)
     compo_button_set_location(btn, BREATHE_NUM_PIC_CENTER_X, BREATHE_NUM_PIC_CENTER_Y, GUI_SCREEN_WIDTH/3, BREATHE_TXT_ITEM_Y_OFFSET*3);
 
     //新建图像
-    compo_picturebox_t *pic_bg = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_BOX_BIN);
-    compo_picturebox_set_pos(pic_bg, GUI_SCREEN_CENTER_X, BREATHE_NUM_PIC_CENTER_Y);
+    // compo_picturebox_t *pic_bg = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_BOX_BIN);
+    // compo_picturebox_set_pos(pic_bg, GUI_SCREEN_CENTER_X, BREATHE_NUM_PIC_CENTER_Y);
 
     //创建TEXT
     compo_textbox_t *txt = compo_textbox_create(frm, 10);

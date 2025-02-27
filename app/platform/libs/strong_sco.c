@@ -32,20 +32,35 @@ void bt_ains3_exit(void) {}
 void bt_ains3_nr_process(void) {}
 #endif
 
-#if !BT_SCO_DNN_EN
-void bt_dnn_init(void *alg_cb) {}
-void bt_dnn_exit(void) {}
-void bt_dnn_nr_process(void) {}
+#if !BT_SCO_DNN_EN && !BT_SCO_AIAEC_DNN_EN
 AT(.com_text.bt_sco)
 bool bt_sco_dnn_is_en(void)
 {
     return false;
 }
 void dnn_far_upsample(s16 *out, s16 *in, u32 samples, u8 step) {}
+#endif
+#if !BT_SCO_DNN_EN && !BT_SCO_AIAEC_DNN_EN && (!ASR_AND_SIRI_PARALLEL_EN || !ASR_SELECT)
 u32 dnn_near_downsample(s16 *ptr, u32 samples)
 {
     return 0;
 }
+#endif
+
+#if !BT_SCO_DNN_EN
+void bt_dnn_init(void *alg_cb) {}
+void bt_dnn_exit(void) {}
+void bt_dnn_nr_process(void) {}
+// AT(.com_text.bt_sco)
+// bool bt_sco_dnn_is_en(void)
+// {
+//     return false;
+// }
+// void dnn_far_upsample(s16 *out, s16 *in, u32 samples, u8 step) {}
+// u32 dnn_near_downsample(s16 *ptr, u32 samples)
+// {
+//     return 0;
+// }
 #endif
 
 #if !BT_SCO_AIAEC_DNN_EN

@@ -35,20 +35,20 @@ typedef struct f_menu_list_t_
 static const compo_listbox_item_t tbl_menu_list[] =
 {
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
-    {STR_SPORTS,                 UI_BUF_I330001_THEME_1_SOPRT_BIN,             .func_sta = FUNC_SPORT},                //运动
+    // {STR_SPORTS,                 UI_BUF_I330001_THEME_1_SOPRT_BIN,             .func_sta = FUNC_SPORT},                //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
-    {STR_SLEEP,                  UI_BUF_I330001_THEME_1_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
+    // {STR_SLEEP,                  UI_BUF_I330001_THEME_1_SLEEP_BIN,             .func_sta = FUNC_SLEEP},                //睡眠
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {STR_EVREY_DAY_ACTIVITY,        UI_BUF_I330001_THEME_1_ACTIVITY_BIN,          .func_sta = FUNC_ACTIVITY},             //活动记录
 #endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {STR_HEART_RATE,             UI_BUF_I330001_THEME_1_HEART_BIN,             .func_sta = FUNC_HEARTRATE},            //心率
+    // {STR_HEART_RATE,             UI_BUF_I330001_THEME_1_HEART_BIN,             .func_sta = FUNC_HEARTRATE},            //心率
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 //    {STR_BLOOD_PRESSURE,         UI_BUF_ICON_BLOOD_PRESSURE_BIN,    .func_sta = FUNC_BLOOD_PRESSURE},       //血压
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    {STR_BLOOD_OXYGEN,           UI_BUF_I330001_THEME_1_SPO2_BIN,              .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
+    // {STR_BLOOD_OXYGEN,           UI_BUF_I330001_THEME_1_SPO2_BIN,              .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {STR_MESSAGE,                UI_BUF_I330001_THEME_1_MESSAGE_BIN,           .func_sta = FUNC_MESSAGE},              //消息
@@ -63,7 +63,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_WEATHER,                UI_BUF_I330001_THEME_1_WEATHER_BIN,           .func_sta = FUNC_WEATHER},              //天气
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
-    {STR_BREATHE_TRAIN,          UI_BUF_I330001_THEME_1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
+    // {STR_BREATHE_TRAIN,          UI_BUF_I330001_THEME_1_BREATHE_BIN,           .func_sta = FUNC_BREATHE},              //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {STR_CALCULATOR,             UI_BUF_I330001_THEME_1_CALCULATOR_BIN,        .func_sta = FUNC_CALCULATOR},           //计算器

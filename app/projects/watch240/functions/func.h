@@ -210,6 +210,10 @@ enum
     //电子烟功能
     FUNC_ECIG_SET_POWER,                //功率设置页面
     FUNC_ECIG_REMINDER,                 //页面提醒
+#if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
+    FUNC_CALENDAER_SUB,
+#endif
+    FUNC_ECIG_VPAE_SUB,
 
     FUNC_MAX_NUM,           //用于计数
 };

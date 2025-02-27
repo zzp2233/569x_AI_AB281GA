@@ -1,14 +1,32 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_message.h"
+#include "ute_project_config.h"
+#include "ute_module_sport.h"
 
 bool power_off_check(void);
 void lock_code_pwrsave(void);
 void unlock_code_pwrsave(void);
 bool lp_xosc_check(void);
 
+AT(.com_text.tft_restore_printf)
+static const char tft_restore_printf[] = "GUI DESPI INIT ERR =======> To Do Restore TFT\n";
+
 AT(.com_text.sleep)
 void lowpwr_tout_ticks(void)
 {
+    //当屏幕初始化SPI等待不到pending，就重新断电再初始化一次屏幕
+#if 0
+    u8 get_tft_spi_timeout(void);
+    if (get_tft_spi_timeout())
+    {
+        printf(tft_restore_printf);
+        reset_sleep_delay_all();
+        gui_sleep();
+        delay_5ms(1);
+        gui_wakeup();
+    }
+#endif
     if(sys_cb.sleep_delay != -1L && sys_cb.sleep_delay > 0)
     {
         sys_cb.sleep_delay--;
@@ -159,6 +177,20 @@ uint32_t sleep_timer(void)
 #endif
     }
 
+#if !UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
+    if(sys_cb.sleep_counter % 2 == 0)
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
+    }
+#endif
+
+#if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
+    if(uteModuleSportAlgoTimerIsRunning())
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_SPORT_ALGO_INPUT_DATA_TIMER,0);
+    }
+#endif
+
 #if CHARGE_EN
     if (xcfg_cb.charge_en)
     {
@@ -262,6 +294,9 @@ static void sfunc_sleep(void)
     bsp_loudspeaker_mute();
 #if ECIG_POWER_CONTROL
     bsp_ecig_exit();
+#endif
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
 #endif
     dac_power_off();                            //dac power down
 
@@ -568,8 +603,9 @@ static void sfunc_sleep(void)
     }
     else
     {
-        sys_clk_set(SYS_24M);
+        //sys_clk_set(SYS_24M);
     }
+
 
     sys_set_tmr_enable(1, 1);
 
@@ -582,6 +618,10 @@ static void sfunc_sleep(void)
 #endif
     dac_restart();
     bsp_change_volume(sys_cb.vol);
+
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_start();
+#endif
 #if DAC_DNR_EN
     dac_dnr_set_sta(sta);
 #endif
@@ -627,6 +667,7 @@ bool sleep_process(is_sleep_func is_sleep)
             reset_sleep_delay_all();
             return false;
         }
+
         if(uteModulePlatformNotAllowSleep()) //ute add
         {
             if ((uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN))
@@ -840,6 +881,10 @@ AT(.text.lowpwr.pwroff)
 void func_pwroff(int pwroff_tone_en)
 {
     printf("%s\n", __func__);
+
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
 
 #if !LP_XOSC_CLOCK_EN
     if (!sys_cb.flag_shipping_mode)

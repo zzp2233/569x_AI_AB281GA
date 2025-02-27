@@ -132,4 +132,7 @@ void bt_id3_tag_update_cb_unreg(void);
 #define bt_id3_tag_update_cb_unreg()
 #endif // BT_ID3_TAG_EN
 
+void bsp_bt_trun_off(void);
+void bsp_bt_trun_on(void);
+
 #endif //_BSP_BT_H

@@ -35,6 +35,11 @@
 #endif
 
 #define PARAM_FOT_TYPE              0xec        //1byte
+
+#if (ASR_SELECT == ASR_WS_AIR && IR_AIR_FUNC)
+#define PARAM_AIR_REMOTE            0xed        //12byte
+#endif
+
 void param_init(bool reset);
 void param_sync(void);
 void param_msc_num_write(void);

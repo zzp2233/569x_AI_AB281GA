@@ -523,3 +523,80 @@ bool thread_btstack_get_wdt_clr_en(void)
 }
 
 #endif
+
+
+#if 0
+
+static u32 tft_timeout_cnt = 0;
+
+AT(.com_text.tft_spi)
+void tft_spi_sendbyte(u8 val)
+{
+    DESPICON &= ~BIT(7);                        //IE DIS
+    DESPICON &= ~BIT(4);                        //TX
+    DESPIBUF = val;
+    u32 ticks = tick_get();
+    while (!(DESPICON & BIT(16)))                //Wait pending
+    {
+        if (tick_check_expire(ticks, 50))
+        {
+            tft_timeout_cnt++;
+            break;
+        }
+    }
+    DESPICPND = BIT(16);                        //Clear pending
+    DESPICON |= BIT(7);                         //IE EN
+}
+
+AT(.com_text.tft_spi)
+u8 tft_spi_getbyte(void)
+{
+    u8 val;
+    DESPICON &= ~BIT(7);                        //IE DIS
+    DESPICON |= BIT(4);                         //RX
+    DESPIBUF = 0xFF;
+    u32 ticks = tick_get();
+    while (!(DESPICON & BIT(16)))                //Wait pending
+    {
+        if (tick_check_expire(ticks, 50))
+        {
+            tft_timeout_cnt++;
+            break;
+        }
+    }
+    val = DESPIBUF;
+    DESPICPND = BIT(16);                        //Clear pending
+    DESPICON |= BIT(7);                         //IE EN
+    return val;
+}
+
+AT(.com_text.tft_spi)
+void tft_spi_send(void *buf, uint len)
+{
+    DESPICON &= ~BIT(7);                        //IE DIS
+    DESPIDMAADR = DMA_ADR(buf);
+    DESPIDMACNT = len;
+    u32 ticks = tick_get();
+    while ( !(DESPICON & BIT(16)) )
+    {
+        if (tick_check_expire(ticks, 50))
+        {
+            tft_timeout_cnt++;
+            break;
+        }
+    }
+    DESPICON |= BIT(7);                         //IE EN
+}
+
+AT(.com_text.tft_spi)
+u8 get_tft_spi_timeout(void)
+{
+    return tft_timeout_cnt;
+}
+
+AT(.com_text.tft_spi)
+void clr_tft_spi_timeout(void)
+{
+    tft_timeout_cnt = 0;
+}
+#endif

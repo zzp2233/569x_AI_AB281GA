@@ -28,7 +28,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
-    char buf[5] = {0};
+    char buf[20] = {0};
     compo_textbox_t *txt;
     txt = compo_textbox_create(frm, 20);
     compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/2);
@@ -50,11 +50,21 @@ compo_form_t *func_ecig_reminder_form_create(void)
         compo_textbox_set(txt, "插入...");
         txt = compo_textbox_create(frm, 20);
         compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/2 + 40);
+
+
         buf[0] = ecig_get_res() / 10 + '0';
         buf[1] = '.';
         buf[2] = ecig_get_res() % 10 + '0';
         buf[3] = 'R';
+        buf[4] = ' ';
+        buf[5] = ' ';
+        buf[6] = ' ';
+        buf[7] = ecig_get_res2() / 10 + '0';
+        buf[8] = '.';
+        buf[9] = ecig_get_res2() % 10 + '0';
+        buf[10] = 'R';
         compo_textbox_set(txt, buf);
+
     }
     else if(sys_cb.smoke_index == LOW_POWER)
     {
@@ -140,6 +150,7 @@ static void func_ecig_reminder_exit(void)
 {
     sys_cb.smoke_index = 0;
     func_cb.last = FUNC_ECIG_REMINDER;
+    ecig_clear_short_flag(0);
 }
 
 //功能

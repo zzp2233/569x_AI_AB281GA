@@ -24,7 +24,8 @@ void param_init(bool reset)
     sys_cb.rand_seed = sys_get_rand_key();
 
     param_sys_vol_read();
-    if (sys_cb.vol < SYS_LIMIT_VOLUME) {
+    if (sys_cb.vol < SYS_LIMIT_VOLUME)
+    {
         sys_cb.vol = SYS_INIT_VOLUME;
     }
     sys_cb.hfp_vol = sys_cb.vol / sys_cb.hfp2sys_mul;
@@ -52,7 +53,8 @@ void bsp_param_sync(void)
 AT(.text.bsp.param)
 void param_random_key_read(u8 *key)
 {
-    if (key == NULL) {
+    if (key == NULL)
+    {
         return;
     }
     param_read(key, PARAM_RANDOM_KEY, 4);
@@ -63,7 +65,8 @@ void param_random_key_write(void)
 {
     u32 key;
     param_random_key_read((u8*)&key);
-    if (key == 0 || key == UINT_MAX) {
+    if (key == 0 || key == UINT_MAX)
+    {
         key = sys_cb.rand_seed;
         param_write((u8 *)&key, PARAM_RANDOM_KEY, 4);
     }
@@ -110,11 +113,16 @@ u32 param_get_xosc_addr(void)
 AT(.text.bsp.param)
 void param_msc_num_write(void)
 {
-    if (msc_cb.cur_dev == DEV_SDCARD) {
+    if (msc_cb.cur_dev == DEV_SDCARD)
+    {
         param_write((u8 *)&msc_cb.file_num, PARAM_MSC_NUM_SD, 2);
-    } else if (msc_cb.cur_dev == DEV_SDCARD1) {
+    }
+    else if (msc_cb.cur_dev == DEV_SDCARD1)
+    {
         param_write((u8 *)&msc_cb.file_num, PARAM_MSC_NUM_SD1, 2);
-    } else {
+    }
+    else
+    {
         param_write((u8 *)&msc_cb.file_num, PARAM_MSC_NUM_USB, 2);
     }
 }
@@ -122,17 +130,24 @@ void param_msc_num_write(void)
 AT(.text.bsp.param)
 void param_msc_num_read(void)
 {
-    if (msc_cb.cur_dev == DEV_SDCARD) {
+    if (msc_cb.cur_dev == DEV_SDCARD)
+    {
         param_read((u8 *)&msc_cb.file_num, PARAM_MSC_NUM_SD, 2);
-    } else if (msc_cb.cur_dev == DEV_SDCARD1) {
+    }
+    else if (msc_cb.cur_dev == DEV_SDCARD1)
+    {
         param_read((u8 *)&msc_cb.file_num, PARAM_MSC_NUM_SD1, 2);
-    } else {
+    }
+    else
+    {
         param_read((u8 *)&msc_cb.file_num, PARAM_MSC_NUM_USB, 2);
     }
-    if (msc_cb.file_num > msc_cb.file_total) {
+    if (msc_cb.file_num > msc_cb.file_total)
+    {
         msc_cb.file_num = msc_cb.file_total;
     }
-    if (msc_cb.file_num < 1) {
+    if (msc_cb.file_num < 1)
+    {
         msc_cb.file_num = 1;
     }
 }
@@ -141,11 +156,16 @@ void param_msc_num_read(void)
 AT(.text.bsp.param)
 void param_msc_breakpoint_write(void)
 {
-    if (msc_cb.cur_dev == DEV_SDCARD) {
+    if (msc_cb.cur_dev == DEV_SDCARD)
+    {
         param_write((u8 *)&msc_cb.brkpt, PARAM_MSC_BRKPT_SD, 10);
-    } else if (msc_cb.cur_dev == DEV_SDCARD1) {
+    }
+    else if (msc_cb.cur_dev == DEV_SDCARD1)
+    {
         param_write((u8 *)&msc_cb.brkpt, PARAM_MSC_BRKPT_SD1, 10);
-    } else {
+    }
+    else
+    {
         param_write((u8 *)&msc_cb.brkpt, PARAM_MSC_BRKPT_USB, 10);
     }
 }
@@ -153,11 +173,16 @@ void param_msc_breakpoint_write(void)
 AT(.text.bsp.param)
 void param_msc_breakpoint_read(void)
 {
-    if (msc_cb.cur_dev == DEV_SDCARD) {
+    if (msc_cb.cur_dev == DEV_SDCARD)
+    {
         param_read((u8 *)&msc_cb.brkpt, PARAM_MSC_BRKPT_SD, 10);
-    } else if (msc_cb.cur_dev == DEV_SDCARD1) {
+    }
+    else if (msc_cb.cur_dev == DEV_SDCARD1)
+    {
         param_read((u8 *)&msc_cb.brkpt, PARAM_MSC_BRKPT_SD1, 10);
-    } else {
+    }
+    else
+    {
         param_read((u8 *)&msc_cb.brkpt, PARAM_MSC_BRKPT_USB, 10);
     }
 }
@@ -233,4 +258,35 @@ void param_fot_type_read(u8 *param)
 
 #endif
 
+#if (ASR_SELECT == ASR_WS_AIR && IR_AIR_FUNC)
+/*********************************************************************************
+ * ¿Õ°é£ºflash Êý¾Ý
+ *********************************************************************************/
+#include "../ws_air/air/asr_config.h"
+AT(.text.air.param)
+void air_flash_write(void)
+{
+    _ISD_REMOTE_DATA isd_remote_data_tmp;
+    isd_remote_data_tmp = isd_remote_data;
+    param_write(&isd_remote_data_tmp, PARAM_AIR_REMOTE, sizeof(_ISD_REMOTE_DATA));
+    param_sync();
+}
 
+AT(.text.air.param)
+int air_flash_read(void)
+{
+    _ISD_REMOTE_DATA isd_remote_data_tmp;
+    param_read(&isd_remote_data_tmp, PARAM_AIR_REMOTE, sizeof(_ISD_REMOTE_DATA));
+    isd_remote_data = isd_remote_data_tmp;
+
+    printf("read---> offset=%d, len=%d, brand=%d, index=%d \n",
+           isd_remote_data.offset, isd_remote_data.len,
+           isd_remote_data.brand_id, isd_remote_data.brand_index);
+
+    if(isd_remote_data.len == 0)
+    {
+        return -1;
+    }
+    return 0;
+}
+#endif

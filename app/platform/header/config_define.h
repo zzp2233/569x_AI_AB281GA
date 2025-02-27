@@ -32,6 +32,7 @@
 #define GUI_TFT_170_560_AXS15231B       (DISPLAY_TFT | 0x06)                    //彩屏 170_560
 #define GUI_TFT_240_296_NV3030B         (DISPLAY_TFT | 0x07)                    //彩屏 240 *296
 #define GUI_TFT_320_385_GV9B71          (DISPLAY_TFT | 0x08)                    //彩屏 320 *385
+#define GUI_TFT_240_JD9853W3            (DISPLAY_TFT | 0x09)                    //彩屏 240 *296
 #define GUI_TFT_SPI                     (DISPLAY_TFT | 0x10)                    //spi通用接口
 
 //当使用通用接口时

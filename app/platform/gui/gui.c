@@ -55,6 +55,9 @@ void gui_init(void)
     ctp_init();
     tft_init();
     // uteDrvScreenCommonInit();
+#if(DEVELOPMENT_BOARD_TYPE)
+    LCD_ON();
+#endif
 #if FLASH_EXTERNAL_EN
     bsp_spi1flash_init();
 #endif
@@ -70,7 +73,6 @@ void gui_sleep(void)
     if (!sys_cb.gui_sleep_sta)
     {
         os_gui_draw_w4_done();      //关tft前要等当前帧刷完
-
         tft_exit();
         ctp_exit();
         power_gate_3v3_off();
@@ -78,6 +80,7 @@ void gui_sleep(void)
         sys_cb.gui_sleep_sta = 1;
         tft_cb.tft_bglight_first_set = false;
         uteModuleGuiCommonDisplayOff(true);
+
         //printf("gui_sleep\n");
     }
 }
@@ -88,6 +91,9 @@ void gui_wakeup(void)
     {
         power_gate_3v3_on();
         hr_vdd_ldo_on();
+#if(DEVELOPMENT_BOARD_TYPE)
+        LCD_ON();
+#endif
         //tft_init();
         ctp_init();
         tft_init();

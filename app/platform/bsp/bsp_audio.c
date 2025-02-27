@@ -9,6 +9,10 @@ void usbmic_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 void recorder_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 void mic_test_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 u8 bsp_modem_get_spr(void);
+void bsp_speech_recognition_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
+
+void bt_sco_tx_delay_init(void);
+void bt_sco_tx_delay_set(void *p);
 
 #if MIC_TEST_EN
 #define speaker_sdadc_callback  mic_test_sdadc_process
@@ -42,6 +46,12 @@ u8 bsp_modem_get_spr(void);
 #define opus_sdadc_callback   sdadc_dummy
 #endif
 
+#if ASR_SELECT
+#define asr_sdadc_callback     bsp_speech_recognition_sdadc_process
+#else
+#define asr_sdadc_callback     sdadc_dummy
+#endif
+
 //MIC analog gain: 0~13(共14级), step 3DB (3db ~ +42db)
 //adadc digital gain: 0~63, step 0.5 DB, 保存在gain的低6bit
 const sdadc_cfg_t rec_cfg_tbl[] =
@@ -50,16 +60,18 @@ const sdadc_cfg_t rec_cfg_tbl[] =
     {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      240,    speaker_sdadc_callback},        /* SPEAKER */
     {CH_MIC_PF0,   SPR_8000,   (12 << 6),   ADC2DAC_EN,     0,      480,    bt_sdadc_callback},             /* BTMIC   */
     {CH_MIC_PF0,   SPR_48000,  (12 << 6),   ADC2DAC_EN,     0,      128,    usbmic_sdadc_callback},
-    {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      256,    recorder_sdadc_callback},       /* RECORDER */
+    {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      256,    recorder_sdadc_callback},       /* RECORDER*/
     {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      480,    bt_sdadc_callback},             /* IIS     */
-    {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      128,    opus_sdadc_callback},           /* opus  */
+    {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      128,    opus_sdadc_callback},           /* opus    */
+    {CH_MIC_PF0,   SPR_16000,  ASR_GAIN,    ADC2DAC_EN,     0,      ASR_SAMPLE,     asr_sdadc_callback},    /* ASR     */
+
 };
 
 void audio_path_init(u8 path_idx)
 {
     sdadc_cfg_t cfg;
     memcpy(&cfg, &rec_cfg_tbl[path_idx], sizeof(sdadc_cfg_t));
-
+    sys_cb.audio_path = path_idx;
     if (path_idx == AUDIO_PATH_BTMIC)
     {
 
@@ -80,7 +92,7 @@ void audio_path_init(u8 path_idx)
             {
                 cfg.callback = bt_adc_process;
             }
-        if (bt_sco_is_msbc() || bt_sco_dnn_is_en())                 //如果开了msbc或dnn，则采样率设为16k
+        if (bt_sco_is_msbc() || bt_sco_dnn_is_en() || bt_siri_and_asr_parallel_en())                 //如果开了msbc或dnn，则采样率设为16k
         {
             cfg.sample_rate = SPR_16000;
         }
@@ -92,18 +104,32 @@ void audio_path_init(u8 path_idx)
         {
             cfg.gain = ((u16)BT_ANL_GAIN << 6) | BT_DIG_GAIN;
         }
+#if ASR_SELECT && ASR_SIRI_SCO_DELAY_EN
+        if (bt_siri_and_asr_parallel_en())
+        {
+            bt_sco_tx_delay_init();
+        }
+#endif
     }
     else if (path_idx == AUDIO_PATH_MODEMMIC)
     {
 #if MODEM_CAT1_EN
         cfg.sample_rate = bsp_modem_get_spr();
 #endif
+        if (xcfg_cb.bt_aec_en)
+        {
+            cfg.gain = (u16)BT_ANL_GAIN << 6;                       //开AEC后，数字GAIN放到AEC里做。
+        }
+        else
+        {
+            cfg.gain = ((u16)BT_ANL_GAIN << 6) | BT_DIG_GAIN;
+        }
     }
 
     sdadc_init(&cfg);
     if (path_idx == AUDIO_PATH_BTMIC)
     {
-        if (!bt_sco_is_msbc() && bt_sco_dnn_is_en())                //dnn: 走窄带通话时，ADC为16K，DAC为8K
+        if (!bt_sco_is_msbc() && (bt_sco_dnn_is_en() || bt_siri_and_asr_parallel_en()))                //dnn: 走窄带通话时，ADC为16K，DAC为8K
         {
             dac_spr_set(SPR_8000);
         }
@@ -115,14 +141,22 @@ void audio_path_start(u8 path_idx)
     sdadc_cfg_t cfg;
     memcpy(&cfg, &rec_cfg_tbl[path_idx], sizeof(sdadc_cfg_t));
     sdadc_start(cfg.channel);
+    sys_cb.audio_path = path_idx;
 }
 
 void audio_path_exit(u8 path_idx)
 {
+#if ASR_SELECT && ASR_SIRI_SCO_DELAY_EN
+    if (path_idx == AUDIO_PATH_BTMIC)
+    {
+        bt_sco_tx_delay_set(NULL);
+    }
+#endif
     sdadc_cfg_t cfg;
     memcpy(&cfg, &rec_cfg_tbl[path_idx], sizeof(sdadc_cfg_t));
     sdadc_exit(cfg.channel);
     adpll_spr_set(DAC_OUT_SPR);
+    sys_cb.audio_path = path_idx;
 }
 
 void bt_call_audio_path_start(void)
@@ -147,4 +181,46 @@ void mic_mute(bool en)
     sdadc_analog_mic_mute(en);
 }
 
+//-------------------------------------------------------------------------------
 
+#if ASR_SELECT && ASR_SIRI_SCO_DELAY_EN
+
+#define SCO_TX_OBUF_LEN    4*1024
+
+typedef struct
+{
+    u32 sample;
+    int ch_mode;
+    u32 tick;
+    u16 delay;
+    au_stm_t *stm;
+    u8 *obuf;
+    u8 *temp;
+    u32 obuf_len;
+    u32 temp_len;
+} sco_tx_delay_t;
+
+sco_tx_delay_t sco_tx_delay AT(.asr_sco);
+au_stm_t sco_tx_stm AT(.asr_sco);
+u8 sco_tx_obuf[SCO_TX_OBUF_LEN] AT(.asr_sco);
+u8 sco_tx_temp[SCO_TX_OBUF_LEN >> 2] AT(.asr_sco);
+
+void bt_sco_tx_delay_init(void)
+{
+    memset(&sco_tx_obuf, 0, sizeof(sco_tx_obuf));
+    memset(&sco_tx_temp, 0, sizeof(sco_tx_temp));
+    memset(&sco_tx_delay, 0, sizeof(sco_tx_delay));
+    memset(&sco_tx_stm, 0, sizeof(sco_tx_stm));
+    sco_tx_stm.buf = sco_tx_stm.rptr = sco_tx_stm.wptr = sco_tx_obuf;
+    sco_tx_stm.size = SCO_TX_OBUF_LEN;
+    sco_tx_delay.temp_len = SCO_TX_OBUF_LEN >> 2;
+    sco_tx_delay.obuf_len = SCO_TX_OBUF_LEN;
+    sco_tx_delay.obuf = sco_tx_obuf;
+    sco_tx_delay.temp = sco_tx_temp;
+    sco_tx_delay.stm  = &sco_tx_stm;
+    sco_tx_delay.delay = 100;//ms
+    sco_tx_delay.tick = tick_get();
+    bt_sco_tx_delay_set(&sco_tx_delay);
+}
+
+#endif

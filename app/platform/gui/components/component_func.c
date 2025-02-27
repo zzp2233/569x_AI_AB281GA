@@ -64,7 +64,6 @@ void compo_update(void)
     rtc_pr2 = (compo_cb.rtc_cnt2 & 0x1FFFF) + 1;
     compo_cb.rtc_update = false;
     GLOBAL_INT_RESTORE();
-    func_clock_butterfly_process();
 
     if (!rtc_update)
     {
@@ -103,20 +102,18 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 #if UTE_MODULE_SPORT_SUPPORT
     sys_cb.distance_cur = uteModuleSportGetCurrDayDistanceData();
     sys_cb.kcal_cur = uteModuleSportGetCurrDayKcalData();
+
+    uint32_t totalStepCnt = 0;
+    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+    sys_cb.step_cur = totalStepCnt;
+    sys_cb.step_goal = uteModuleSportGetStepsTargetCnt();
 #else
     sys_cb.distance_cur = 0;
     sys_cb.kcal_cur = 0;
-#endif
-    uint32_t totalStepCnt = 0;
-#if UTE_MODULE_SPORT_SUPPORT
-    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-#endif
-    sys_cb.step_cur = totalStepCnt;
-#if UTE_MODULE_SPORT_SUPPORT
-    sys_cb.step_goal = uteModuleSportGetStepsTargetCnt();
-#else
+    sys_cb.step_cur = 0;
     sys_cb.step_goal = 0;
 #endif
+
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
     ute_module_target_notify_data_t targetNotifyData;
     uteModuleSportGetTodayTargetNotifyData(&targetNotifyData);
@@ -328,7 +325,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 #if UTE_MODULE_HEART_SUPPORT
             value = uteModuleHeartGetHeartValue();
 #else
-            value = 60;
+            value = 0;
 #endif
             sprintf(value_str, "%d", value);
             break;
@@ -337,7 +334,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
             value = uteModuleBloodoxygenGetValue();
 #else
-            value = 99;
+            value = 0;
 #endif
             sprintf(value_str, "%d", value);
             break;
@@ -437,7 +434,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         {
             compo_textbox_t *txt = (compo_textbox_t *)compo;
             compo_textbox_set(txt, value_str);
-            compo_textbox_set_visible(txt, true);
+            // compo_textbox_set_visible(txt, true);
         }
         else if (compo->type == COMPO_TYPE_PICTUREBOX)
         {

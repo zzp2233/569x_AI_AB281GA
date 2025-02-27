@@ -245,6 +245,7 @@ void task_stack_init(void)
 {
     task_stack.num = 0;
     func_cb.flag_sort = 0;
+    func_cb.menu_idx = 0;
 }
 
 /**
@@ -351,6 +352,48 @@ u8 task_stack_get_last(void)
     return 0;
 }
 
+/**
+ * @brief 查找栈中是否存在某个界面
+ * @param[in] val : 要查找的值
+ * @return 存在返回true，不存在返回false
+ **/
+bool task_stack_contains(u8 val)
+{
+    for (u8 i = 0; i < task_stack.num; i++)
+    {
+        if (task_stack.task_tbl[i] == val)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+/**
+ * @brief 删除栈中的某个界面
+ * @param[in] val : 要删除的值
+ **/
+void task_stack_remove(u8 val)
+{
+    printf("%s:[", __func__);
+    u8 write_idx = 0;
+    for (u8 i = 0; i < task_stack.num; i++)
+    {
+        if (task_stack.task_tbl[i] != val)
+        {
+            task_stack.task_tbl[write_idx] = task_stack.task_tbl[i];
+            printf("%d ", task_stack.task_tbl[write_idx]);
+            write_idx++;
+        }
+    }
+    printf("]");
+    if (task_stack.num > write_idx)
+    {
+        printf("-->[%d]", val);
+    }
+    printf("\n");
+    task_stack.num = write_idx;
+}
 
 /**
 * -----------------latest tasks manage-----------------

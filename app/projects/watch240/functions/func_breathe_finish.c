@@ -32,8 +32,8 @@ compo_form_t *func_breathe_finish_form_create(void)
     compo_form_set_title(frm, i18n[STR_BREATHE_FINISH]);
 
     //设置图片
-    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_00_BIN);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/5);
+    // compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_00_BIN);
+    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/3, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/5);
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d",bsp_sensor_hrs_data_get());

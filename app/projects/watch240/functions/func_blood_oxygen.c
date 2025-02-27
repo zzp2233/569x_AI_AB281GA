@@ -55,10 +55,10 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_form_set_title(frm, i18n[STR_BLOOD_OXYGEN]);
 
     ///设置图片
-    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_BLOODOXYGEN_GIF_BIN);
-    compo_picturebox_cut(picbox, 0, 16);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6);
-    compo_setid(picbox,COMPO_ID_PIC_BG);
+    // compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_BLOODOXYGEN_GIF_BIN);
+    // compo_picturebox_cut(picbox, 0, 16);
+    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6);
+    // compo_setid(picbox,COMPO_ID_PIC_BG);
 
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///血氧数据
@@ -82,9 +82,9 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_setid(textbox,COMPO_ID_TXT_VALUE);
 
     area_t txt_leng = widget_text_get_area(textbox->txt);
-    picbox = compo_picturebox_create(frm, UI_BUF_I330001_BLOODOXYGEN_PERCENT_BIN);///  % 图片
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.5+txt_leng.wid,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.55-CONTROL_Y);
-    compo_setid(picbox,COMPO_ID_PIC_UNIT);
+    // picbox = compo_picturebox_create(frm, UI_BUF_I330001_BLOODOXYGEN_PERCENT_BIN);///  % 图片
+    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.5+txt_leng.wid,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.55-CONTROL_Y);
+    // compo_setid(picbox,COMPO_ID_PIC_UNIT);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_BLOOD_OXYGEN_UINT]));///血氧和饱和度
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2.7,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.2-CONTROL_Y,140,40);
@@ -104,7 +104,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
 static void func_blood_oxygen_disp_handle(void)
 {
     f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
-    compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_BG);
+    // compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_BG);
     compo_picturebox_t * pic_uint = compo_getobj_byid(COMPO_ID_PIC_UNIT);
     compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TXT_VALUE);
     compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
@@ -146,7 +146,7 @@ static void func_blood_oxygen_disp_handle(void)
                 f_bo->pic_type=0;
             }
             f_bo->need_auto_test_flag = false;
-            compo_picturebox_cut(picbox, f_bo->pic_type, 16); ///图片动态显示
+            // compo_picturebox_cut(picbox, f_bo->pic_type, 16); ///图片动态显示
             compo_button_set_visible(btn, false);
         }
     }
@@ -157,7 +157,7 @@ static void func_blood_oxygen_disp_handle(void)
     }
     else
     {
-        compo_picturebox_cut(picbox, 0, 16); ///图片动态显示
+        // compo_picturebox_cut(picbox, 0, 16); ///图片动态显示
         compo_button_set_visible(btn, true);
     }
 
@@ -374,7 +374,7 @@ static void func_blood_oxygen_process(void)
         }
     }
 #endif
-    func_blood_oxygen_disp_handle();
+    // func_blood_oxygen_disp_handle();
     func_process();
 }
 

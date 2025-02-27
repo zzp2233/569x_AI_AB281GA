@@ -87,6 +87,23 @@ compo_form_t *compo_form_create(bool flag_top)
     widget_set_visible(title_icon, false);
     frm->title_icon = title_icon;
 
+#if (ASR_SELECT && ASR_VOICE_BALL_ANIM)
+    //语音悬浮球
+    frm->page_body = page;
+    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_ASR_VOICE_BIN);
+    frm->page_body = page_body;
+    compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, (GUI_SCREEN_HEIGHT - (GUI_SCREEN_HEIGHT >> 2)));
+    compo_animation_set_radix(animation, 5);
+    compo_animation_set_interval(animation, 10);
+    widget_set_top(animation->page, true);
+#if (ASR_SELECT == ASR_WS_AIR || ASR_SELECT == ASR_WS)
+    compo_animation_set_visible(animation, bsp_asr_voice_wake_sta_get());
+#else
+    compo_animation_set_visible(animation, false);
+#endif
+    frm->anim = animation;
+#endif
+
     return frm;
 }
 
@@ -300,4 +317,39 @@ void compo_form_set_title_txt_color(compo_form_t *frm, u16 color)
         }
     }
 }
+/**
+ * @brief 语音悬浮球
+ * @param[in] sta: true:显示；flase：不显示
+ */
+#if (ASR_SELECT && ASR_VOICE_BALL_ANIM)
+void compo_form_set_ai_voice_anim(u8 sta)
+{
+    if (func_cb.sta == FUNC_CLOCK)
+    {
+        f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
+        if (f_clk->sub_frm && f_clk->sta == FUNC_CLOCK_SUB_DROPDOWN)
+        {
+            if (f_clk->sub_frm->anim)
+            {
+                compo_animation_set_visible(f_clk->sub_frm->anim, sta);
+                if (func_cb.frm_main)
+                {
+                    if (func_cb.frm_main->anim)
+                    {
+                        compo_animation_set_visible(func_cb.frm_main->anim, sta);
+                    }
+                }
+            }
+        }
+    }
+
+    if (func_cb.frm_main)
+    {
+        if (func_cb.frm_main->anim)
+        {
+            compo_animation_set_visible(func_cb.frm_main->anim, sta);
+        }
+    }
+}
+#endif
 

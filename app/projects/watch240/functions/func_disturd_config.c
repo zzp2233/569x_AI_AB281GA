@@ -138,13 +138,13 @@ static void func_disturd_sub_time_init(void)
     if(sys_cb.disturd_sel)
     {
         f_disturd_set->hour = sys_cb.disturd_end_time_sec/3600;
-        f_disturd_set->min = sys_cb.disturd_end_time_sec%3600/36;
+        f_disturd_set->min = sys_cb.disturd_end_time_sec%3600/60;
 
     }
     else
     {
         f_disturd_set->hour = sys_cb.disturd_start_time_sec/3600;
-        f_disturd_set->min = sys_cb.disturd_start_time_sec%3600/36;
+        f_disturd_set->min = sys_cb.disturd_start_time_sec%3600/60;
     }
 
     if(f_disturd_set->time_scale)//12小时制
@@ -170,7 +170,7 @@ static void func_disturd_sub_time_init(void)
     {
         func_disturd_sub_set_refresh();
     }
-    printf("hour1:%d\n",sys_cb.disturd_start_time_sec);
+    // printf("hour1:%d\n",sys_cb.disturd_start_time_sec);
 }
 /*函数功能：设置勿扰时间*/
 static void func_disturd_sub_set_time(void)
@@ -204,7 +204,7 @@ static void func_disturd_sub_set_time(void)
         uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
         uteModuleNotDisturbSetTime(sys_cb.disturd_start_time_sec / 60);
     }
-    printf("hour2:%d\n",sys_cb.disturd_start_time_sec);
+    // printf("hour2:%d\n",sys_cb.disturd_start_time_sec);
 }
 
 /*函数功能：设置小时与分钟背景图片*/
@@ -419,7 +419,7 @@ static void func_disturd_sub_move(void)
 {
     f_disturd_sub_set_t *f_disturd_set = (f_disturd_sub_set_t*) func_cb.f_cb;
 
-    if(f_disturd_set->touch_flag = true)
+    if(f_disturd_set->touch_flag == true)
     {
         // printf("11111111111\n");
         s8 txt_buf[20];
@@ -671,13 +671,13 @@ static void func_disturd_sub_time_init(void)
     if(sys_cb.disturd_sel)
     {
         f_disturd_set->hour = sys_cb.disturd_end_time_sec/3600;
-        f_disturd_set->min = sys_cb.disturd_end_time_sec%3600/36;
+        f_disturd_set->min = sys_cb.disturd_end_time_sec%3600/60;
 
     }
     else
     {
         f_disturd_set->hour = sys_cb.disturd_start_time_sec/3600;
-        f_disturd_set->min = sys_cb.disturd_start_time_sec%3600/36;
+        f_disturd_set->min = sys_cb.disturd_start_time_sec%3600/60;
     }
 
     if(f_disturd_set->time_scale)//12小时制
@@ -703,7 +703,7 @@ static void func_disturd_sub_time_init(void)
     {
         func_disturd_sub_set_refresh();
     }
-    printf("hour1:%d\n",sys_cb.disturd_start_time_sec);
+    // printf("hour1:%d\n",f_disturd_set->hour_old);
 }
 /*函数功能：设置勿扰时间*/
 static void func_disturd_sub_set_time(void)
@@ -737,7 +737,7 @@ static void func_disturd_sub_set_time(void)
         uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
         uteModuleNotDisturbSetTime(sys_cb.disturd_start_time_sec / 60);
     }
-    printf("hour2:%d\n",sys_cb.disturd_start_time_sec);
+    // printf("hour2:%d\n",sys_cb.disturd_start_time_sec);
 }
 
 /*函数功能：设置小时与分钟背景图片*/
@@ -952,7 +952,7 @@ static void func_disturd_sub_move(void)
 {
     f_disturd_sub_set_t *f_disturd_set = (f_disturd_sub_set_t*) func_cb.f_cb;
 
-    if(f_disturd_set->touch_flag = true)
+    if(f_disturd_set->touch_flag == true)
     {
         // printf("11111111111\n");
         s8 txt_buf[20];
@@ -1071,6 +1071,7 @@ static void func_disturd_sub_set_button_click(void)
         default:
             break;
     }
+    // printf("min:%d\n",f_disturd_set->min_old);
     if(f_disturd_set->time_scale)
     {
         func_disturd_sub_set_refresh();

@@ -326,41 +326,65 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
 */
 void uteModuleNotifyAncsPushContect(uint8_t *buff,uint16_t length,bool isTitle)
 {
-    uint16_t size=0;
-    uint8_t startIndex=0;
-    /*! 标题后面添加：连接 xjc 2022-01-12*/
-    if(isTitle)
+    uint16_t size = length;
+    uint8_t startIndex = 0;
+
+    //跳过以 E2 80 开头的连续 3 字节控制字符
+    if (length > 2 && buff[0] == 0xE2 && buff[1] == 0x80)
     {
-        if(uteModuleNotifyData.currNotify.type!=MSG_CALL)
+        size -= 3;
+        startIndex += 3;
+        for (uint16_t i = 3; i + 2 < length; i += 3)
         {
-            buff[length] = ':';
-            length++;
+            if (buff[i] == 0xE2 && buff[i + 1] == 0x80)
+            {
+                size -= 3;
+                startIndex += 3;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (size > 2 && buff[length - 3] == 0xE2 && buff[length - 2] == 0x80)
+        {
+            size -= 3;
+        }
+    }
+
+    /*! 标题后面添加：连接 xjc 2022-01-12*/
+    if (isTitle)
+    {
+        if (uteModuleNotifyData.currNotify.type == MSG_Gmail) // replace '•' with '-'
+        {
+            for (int i = 0; i < length - 2; i++)
+            {
+                if (buff[i] == 0xe2 && buff[i + 1] == 0x80 && buff[i + 2] == 0xa2)
+                {
+                    buff[i] = '-';
+                    for (int j = i + 1; j < length - 2; j++)
+                    {
+                        buff[j] = buff[j + 2];
+                    }
+                    size -= 2;
+                    break;
+                }
+            }
+        }
+
+        if (uteModuleNotifyData.currNotify.type != MSG_CALL)
+        {
+            buff[startIndex + size] = ':';
+            size++;
 #if UTE_ANCS_NOTIFY_TITLE_ADD_SPACE_SUPPORT
-            buff[length] = ' ';
-            length++;
+            buff[startIndex + size] = ' ';
+            size++;
 #endif
         }
     }
 
-    if((buff[1]==0x80)&&(buff[2]==0xad))
-    {
-        size = length-6;
-        startIndex = 3;
-    }
-    else if((buff[0] == 0xE2) &&(buff[1]==0x80)&&(buff[2]==0xAA))
-    {
-        size = length-6;
-        startIndex = 3;
-    }
-    else
-    {
-        size = length;
-        startIndex = 0;
-    }
     uint16_t hasSize = UTE_NOTIFY_MSG_CONTENT_MAX_SIZE-uteModuleNotifyData.currNotify.size;
     UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,currNotify.size=%d,hasSize=%d,startIndex=%d,size=%d", __func__,uteModuleNotifyData.currNotify.size,hasSize,startIndex,size);
-
-    // uteModuleCharencodeUtf8ConversionUnicode(&uteModuleNotifyData.currNotify.content[uteModuleNotifyData.currNotify.size],&hasSize,&buff[startIndex],size);
 
     if(hasSize >= size)
     {
@@ -1537,7 +1561,8 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
             systemTm.sec  = systemTime.sec;
             systemSecCnt = tm_to_time(systemTm);
 
-            if (ABS(systemSecCnt - notifySecCnt) < 60 * 5)
+            // if (ABS(systemSecCnt - notifySecCnt) < 60 * 5)
+            if(systemSecCnt > notifySecCnt ? (systemSecCnt - notifySecCnt) : (notifySecCnt - systemSecCnt) < 60 * 5)
             {
                 if (uteModuleNotifyData.ancsHasOpen && uteModuleNotifyData.currNotify.size > 0)
                 {

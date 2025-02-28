@@ -1,7 +1,8 @@
 #ifndef _FUNC_MENU_H
 #define _FUNC_MENU_H
 
-enum {
+enum
+{
     MENU_CLARM,         //心率
     MENU_CLOCK,         //时钟表盘
     MENU_ACTIVITY,      //运动
@@ -10,7 +11,8 @@ enum {
 
 
 //MENU STYLE
-enum {
+enum
+{
 
     MENU_STYLE_HONEYCOMB,               //蜂窝
     MENU_STYLE_WATERFALL,               //瀑布流
@@ -19,10 +21,10 @@ enum {
     MENU_STYLE_GRID,                    //棋盘
     MENU_STYLE_KALE,                    //万花筒
     MENU_STYLE_SKYRER,                  //天圆地方
-    MENU_STYLE_CUM_FOURGRID,            //六宫格
     MENU_STYLE_CUM_SUDOKU,              //九宫格(上下边缘图标自动缩放)
     MENU_STYLE_CUM_GRID,                //华为风格网格
 
+    MENU_STYLE_CUM_FOURGRID,            //六宫格
     MENU_STYLE_SUDOKU,                  //九宫格
     MENU_STYLE_SUDOKU_HRZ,              //横向九宫格
     MENU_STYLE_DISK,                    //圆盘

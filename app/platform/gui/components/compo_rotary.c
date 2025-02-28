@@ -13,7 +13,7 @@
 
 #define ROTARY_SIGHT_DISTANCE           1280                            //视距
 #define ROTARY_OVERLOOK                 150                             //默认视角15度
-#define ROTARY_RADIUS                   112                             //转盘半径
+#define ROTARY_RADIUS                   GUI_SCREEN_WIDTH/2.143          //转盘半径
 #define ROTARY_HALF_CIRCUM              ((int)(M_PI * ROTARY_RADIUS))   //圆周一半
 #define ROTARY_FIX_ANGLE                845                             //从正前顺时针转过多少度后切图
 

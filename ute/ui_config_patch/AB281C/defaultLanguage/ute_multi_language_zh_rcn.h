@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-02-18 14:22:36
+*@date   2025-02-19 14:23:41
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -259,6 +259,10 @@ const char * const i18n_zh_rcn[] =
     [STR_SYNC_SUC] = "\xe5\x90\x8c\xe6\xad\xa5\xe6\x88\x90\xe5\x8a\x9f\x00", // [243] 同步成功
     [STR_SYNC_FAIL] = "\xe5\x90\x8c\xe6\xad\xa5\xe5\xa4\xb1\xe8\xb4\xa5\x00", // [244] 同步失败
     [STR_MUTE] = "\xe9\x9d\x99\xe9\x9f\xb3\x00", // [245] 静音
+    [STR_TURKEY] = "\x54\xc3\xbc\x72\x6b\xc3\xa7\x65\x00", // [246] Türkçe
+    [STR_PORTUGUESE] = "\x50\x6f\x72\x74\x75\x67\x75\xc3\xaa\x73\x00", // [247] Português
+    [STR_SPANISH] = "\x45\x73\x70\x61\xc3\xb1\x6f\x6c\x00", // [248] Español
+    [STR_THAI] = "\xe0\xb8\xa0\xe0\xb8\xb2\xe0\xb8\xa9\xe0\xb8\xb2\xe0\xb9\x84\xe0\xb8\x97\xe0\xb8\xa2\x00", // [249] ภาษาไทย
 };
 
 #endif

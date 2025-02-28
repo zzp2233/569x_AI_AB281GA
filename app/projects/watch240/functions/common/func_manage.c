@@ -396,6 +396,49 @@ void task_stack_remove(u8 val)
 }
 
 /**
+ * @brief 在当前栈顶元素之前插入一个新界面
+ * @param[in] val : 要插入的值
+ **/
+void task_stack_insert_before_top(u8 val)
+{
+    // 检查栈是否为空或只有一个元素
+    if (task_stack.num <= 1)
+    {
+        task_stack_push(val);
+        return;
+    }
+
+    // 检查栈是否已满
+    if (task_stack.num >= TASK_STACK_MAX)
+    {
+        printf("Failed: Stack is full. (%d/%d)\n", task_stack.num, TASK_STACK_MAX);
+        return;
+    }
+
+    // 当前栈顶位置
+    u8 top_idx = task_stack.num - 1;
+    // 栈顶前一个位置
+    u8 prev_idx = top_idx - 1;
+
+    // 将栈顶元素之后的元素后移一位
+    for (u8 i = task_stack.num; i > prev_idx + 1; i--)
+    {
+        task_stack.task_tbl[i] = task_stack.task_tbl[i - 1];
+    }
+
+    // 插入新值
+    task_stack.task_tbl[prev_idx + 1] = val;
+    task_stack.num++;
+
+    printf("Val %d inserted after prev. New stack: [", val);
+    for (u8 i = 0; i < task_stack.num; i++)
+    {
+        printf("%d ", task_stack.task_tbl[i]);
+    }
+    printf("]\n");
+}
+
+/**
 * -----------------latest tasks manage-----------------
                       历史任务管理
 **/

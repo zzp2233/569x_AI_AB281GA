@@ -1494,7 +1494,8 @@ void uteModuleSportInputDataBeforeAlgo(void)
     }
 #if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
     accValueAvg = accValueCount > 0 ? accValueSum / accValueCount : 0;
-    if (abs(accValueAvg - 127) > 10)
+    // if (abs(accValueAvg - 127) > 10)
+    if(accValueAvg > 127 ? (accValueAvg - 127) : (127 - accValueAvg) > 10)
     {
         uteModuleSprotData.switchSysclkCountdown = 10;
     }

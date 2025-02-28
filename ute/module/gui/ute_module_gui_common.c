@@ -17,6 +17,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_filesystem.h"
 #include "ute_module_watchonline.h"
+#include "ute_drv_battery_common.h"
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
@@ -412,9 +413,18 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     if (isAllClear)
     {
         task_stack_init();
-        latest_task_init(); //最近任务
-        task_stack_push(FUNC_CLOCK);
-        func_cb.sta = FUNC_CLOCK;
+        latest_task_init(); // 最近任务
+        if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return FUNC_CHARGE", __func__);
+            func_cb.sta = FUNC_CHARGE;
+            task_stack_push(FUNC_CHARGE);
+        }
+        else
+        {
+            task_stack_push(FUNC_CLOCK);
+            func_cb.sta = FUNC_CLOCK;
+        }
     }
     else
     {
@@ -481,6 +491,12 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         // uteModulePlatformStopTimer(&displayOffTimerPointer);
         uteModuleSprotResetRovllverScreenMode();
 
+        //充电中，返回充电界面
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE && func_cb.sta != FUNC_CHARGE)
+        {
+            func_cb.sta = FUNC_CHARGE;
+            task_stack_push(FUNC_CHARGE);
+        }
     }
     else
     {

@@ -333,7 +333,7 @@
 #define EQ_MODE_EN                      0           //是否调节EQ MODE (POP, Rock, Jazz, Classic, Country)
 #define MIC_EQ_EN                       UTE_CONNECT_PC_AUDIO_TEST           //是否调节MIC_EQ (通话模式)
 #define EQ_DBG_IN_UART                  UTE_CONNECT_PC_AUDIO_TEST           //是否使能UART在线调节EQ
-#define EQ_DBG_IN_SPP                   UTE_CONNECT_PC_AUDIO_TEST           //是否使能SPP在线调节EQ
+#define EQ_DBG_IN_SPP                   0//UTE_CONNECT_PC_AUDIO_TEST           //是否使能SPP在线调节EQ
 
 
 /*****************************************************************************

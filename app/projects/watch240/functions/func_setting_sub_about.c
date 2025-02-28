@@ -164,6 +164,12 @@ static void func_set_sub_about_message(size_msg_t msg)
             case KL_BACK:
                 func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
                 break;
+            case MSG_CTP_LONG:
+                if (!uteApplicationCommonIsHasConnectOurApp())
+                {
+                    func_switch_to(FUNC_TEST_MODE, 0); //未实现，暂时屏蔽
+                }
+                break;
         }
     }
     else
@@ -173,7 +179,7 @@ static void func_set_sub_about_message(size_msg_t msg)
             case MSG_CTP_LONG:
                 if (!uteApplicationCommonIsHasConnectOurApp())
                 {
-                    // func_switch_to(FUNC_TEST_MODE, 0); //未实现，暂时屏蔽
+                    func_switch_to(FUNC_TEST_MODE, 0); //未实现，暂时屏蔽
                 }
                 break;
             default:

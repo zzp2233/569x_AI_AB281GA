@@ -344,7 +344,8 @@ typedef struct func_alarm_hour_format_t_
 
 static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
 {
-    u8 am_pm = (hour24 >= 12 && hour24) ? 2 : 1;    //2 PM, 1 AM
+    // printf("time_apm%d\n",hour24);
+    u8 am_pm = (hour24 <= 12 && hour24) ? 2 : 1;    //1 PM, 2 AM
     func_alarm_hour_format_t hour12;
     if(uteModuleSystemtime12HOn())
     {
@@ -1087,7 +1088,7 @@ typedef struct func_alarm_hour_format_t_
 
 static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
 {
-    u8 am_pm = (hour24 >= 12) ? 2 : 1;    //2 PM, 1 AM
+    u8 am_pm = (hour24 <= 12 && hour24) ? 2 : 1;      //2 PM, 1 AM
     func_alarm_hour_format_t hour12;
     if(uteModuleSystemtime12HOn())
     {
@@ -1738,6 +1739,7 @@ static void func_set_sub_disturd_enter(void)
 static void func_set_sub_disturd_exit(void)
 {
     func_cb.last = FUNC_SET_SUB_DISTURD;
+    printf("hour3:%d\n",sys_cb.disturd_start_time_sec);
 }
 
 //勿扰模式功能

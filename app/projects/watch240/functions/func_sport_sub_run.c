@@ -1752,7 +1752,6 @@ static void func_sport_sub_run_message(size_msg_t msg)
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_SYS_500MS:
-            printf("page_num:%d touch_flag:%d\n",f_sport_sub_run->page_num,f_sport_sub_run->touch_flag);
             func_sport_sub_run_updata();
             break;
         case MSG_CTP_CLICK:

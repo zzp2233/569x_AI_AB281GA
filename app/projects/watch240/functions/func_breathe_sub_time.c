@@ -8,7 +8,7 @@
 #else
 #define TRACE(...)
 #endif
-
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //组件ID
@@ -1018,7 +1018,7 @@ void func_breathe_sub_time(void)
     }
     func_breathe_sub_time_exit();
 }
-
+#endif
 
 
 

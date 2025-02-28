@@ -866,7 +866,9 @@ void uteApplicationCommonStartPowerOffMsg(void)
 
     uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
+#if UTE_MODULE_SPORT_SUPPORT
     uteModuleSportSaveStepData();
+#endif
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT&&UTE_MODULE_NOT_DISTURB_POWER_OFF_SAVE_STATUS_SUPPORT
     ute_module_not_disturb_data_t param;
     uteModuleNotDisturbGetParam(&param);

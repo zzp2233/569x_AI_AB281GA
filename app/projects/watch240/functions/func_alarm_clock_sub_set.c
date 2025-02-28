@@ -37,10 +37,8 @@ static void func_alarm_clock_sub_set_exit(void);
 
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-<<<<<<< HEAD
-=======
 //组件ID
-    enum
+enum
 {
     //按键
     COMPO_ID_BTN_CONTINUE = 1,              //闹钟添加设置模式确定按钮（未按下状态）
@@ -1492,7 +1490,6 @@ static void func_alarm_clock_sub_set_button_click(void)
     func_alarm_clock_sub_set_button_release_handle();
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
->>>>>>> ccbf0ffc7ab1310b72cd86ee53a5ee1d0d3e0afd
 //组件ID
 enum
 {
@@ -4421,7 +4418,6 @@ static void func_alarm_clock_sub_set_button_click(void)
 
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //闹钟设置功能事件处理
 static void func_alarm_clock_sub_set_process(void)

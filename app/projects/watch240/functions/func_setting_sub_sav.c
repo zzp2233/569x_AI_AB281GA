@@ -57,7 +57,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_rect_set_location(cardbox,0,0,0,232,62,16);
     compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
     compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
-    compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
+    // compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
     compo_cardbox_icon_set_location(cardbox, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
     compo_cardbox_icon_set(cardbox,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);

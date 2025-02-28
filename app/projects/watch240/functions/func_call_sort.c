@@ -129,45 +129,45 @@ typedef struct card_##type##_t_ {   \
 #define CARD_T(type) card_##type##_t
 
 ///创建卡片
-// #define CREAT_CARD(compo_id, rect_cnt, icon_cnt, text_cnt, card0, ORG_W, ORG_H) \
-// {\
-//     compo_cardbox_t * cardbox = compo_cardbox_create(frm, rect_cnt, icon_cnt, text_cnt, ORG_W, ORG_H); \
-//     compo_cardbox_set_visible(cardbox, true); \
-//     compo_cardbox_set_location(cardbox, card0.x, card0.y, card0.w, card0.h);\
-//     compo_setid(cardbox, compo_id); \
-//     for (u8 i=0; i<rect_cnt; i++) { \
-//         compo_cardbox_rect_set_location(cardbox, card0.rect[i].id, card0.rect[i].x, card0.rect[i].y, card0.rect[i].w, card0.rect[i].h, card0.rect[i].r); \
-//         compo_cardbox_rect_set_color(cardbox, card0.rect[i].id, make_color(41,41,41)); \
-//     } \
-//     for (u8 i=0; i<icon_cnt; i++) { \
-//         if (card0.icon[i].res != 0) { \
-//             compo_cardbox_icon_set(cardbox, card0.icon[i].id, card0.icon[i].res); \
-//         } else { \
-//             extern u32 func_sport_get_ui(u8 sport_idx); \
-//             compo_cardbox_icon_set(cardbox, card0.icon[i].id, func_sport_get_ui(card0.icon[i].rev)); \
-//         } \
-//         compo_cardbox_icon_set_location(cardbox, card0.icon[i].id, card0.icon[i].x, card0.icon[i].y, card0.icon[i].w, card0.icon[i].h); \
-//     } \
-//     for (u8 i=0; i<text_cnt; i++) { \
-//         compo_cardbox_text_set_font(cardbox, card0.text[i].id, card0.text[i].res); \
-//         widget_text_set_ellipsis(cardbox->text[card0.text[i].id], false);   \
-//         if (card0.text[i].w == 0 || card0.text[i].h == 0) { \
-//             compo_cardbox_text_set_autosize(cardbox, card0.text[i].id, true); \
-//         } else { \
-//             compo_cardbox_text_set_autosize(cardbox, card0.text[i].id, false); \
-//         } \
-//         widget_set_align_center(cardbox->text[card0.text[i].id], card0.text[i].center); \
-//         widget_text_set_wordwrap(cardbox->text[card0.text[i].id], card0.text[i].wordwrap); \
-//         widget_text_set_color(cardbox->text[card0.text[i].id], make_color(card0.text[i].r, card0.text[i].g, card0.text[i].b)); \
-//         compo_cardbox_text_set_location(cardbox, card0.text[i].id, card0.text[i].x, card0.text[i].y, card0.text[i].w, card0.text[i].h); \
-//         extern u32 func_sport_get_str(u8 sport_idx); \
-//         if (card0.text[i].str != NULL) {    \
-//             compo_cardbox_text_set(cardbox, card0.text[i].id, card0.text[i].str); \
-//         } else { \
-//             compo_cardbox_text_set(cardbox, card0.text[i].id, i18n[card0.text[i].rev]); \
-//         } \
-//     }\
-// }
+#define CREAT_CARD(compo_id, rect_cnt, icon_cnt, text_cnt, card0, ORG_W, ORG_H) \
+{\
+    compo_cardbox_t * cardbox = compo_cardbox_create(frm, rect_cnt, icon_cnt, text_cnt, ORG_W, ORG_H); \
+    compo_cardbox_set_visible(cardbox, true); \
+    compo_cardbox_set_location(cardbox, card0.x, card0.y, card0.w, card0.h);\
+    compo_setid(cardbox, compo_id); \
+    for (u8 i=0; i<rect_cnt; i++) { \
+        compo_cardbox_rect_set_location(cardbox, card0.rect[i].id, card0.rect[i].x, card0.rect[i].y, card0.rect[i].w, card0.rect[i].h, card0.rect[i].r); \
+        compo_cardbox_rect_set_color(cardbox, card0.rect[i].id, make_color(41,41,41)); \
+    } \
+    for (u8 i=0; i<icon_cnt; i++) { \
+        if (card0.icon[i].res != 0) { \
+            compo_cardbox_icon_set(cardbox, card0.icon[i].id, card0.icon[i].res); \
+        } else { \
+            extern u32 func_sport_get_ui(u8 sport_idx); \
+            compo_cardbox_icon_set(cardbox, card0.icon[i].id, func_sport_get_ui(card0.icon[i].rev)); \
+        } \
+        compo_cardbox_icon_set_location(cardbox, card0.icon[i].id, card0.icon[i].x, card0.icon[i].y, card0.icon[i].w, card0.icon[i].h); \
+    } \
+    for (u8 i=0; i<text_cnt; i++) { \
+        compo_cardbox_text_set_font(cardbox, card0.text[i].id, card0.text[i].res); \
+        widget_text_set_ellipsis(cardbox->text[card0.text[i].id], false);   \
+        if (card0.text[i].w == 0 || card0.text[i].h == 0) { \
+            compo_cardbox_text_set_autosize(cardbox, card0.text[i].id, true); \
+        } else { \
+            compo_cardbox_text_set_autosize(cardbox, card0.text[i].id, false); \
+        } \
+        widget_set_align_center(cardbox->text[card0.text[i].id], card0.text[i].center); \
+        widget_text_set_wordwrap(cardbox->text[card0.text[i].id], card0.text[i].wordwrap); \
+        widget_text_set_color(cardbox->text[card0.text[i].id], make_color(card0.text[i].r, card0.text[i].g, card0.text[i].b)); \
+        compo_cardbox_text_set_location(cardbox, card0.text[i].id, card0.text[i].x, card0.text[i].y, card0.text[i].w, card0.text[i].h); \
+        extern u32 func_sport_get_str(u8 sport_idx); \
+        if (card0.text[i].str != NULL) {    \
+            compo_cardbox_text_set(cardbox, card0.text[i].id, card0.text[i].str); \
+        } else { \
+            compo_cardbox_text_set(cardbox, card0.text[i].id, i18n[card0.text[i].rev]); \
+        } \
+    }\
+}
 
 ///联系人卡片
 CARD_TYPEDEF_T(card1, CARD1_RECT_CNT, CARD1_ICON_CNT, CARD1_TEXT_CNT);
@@ -265,11 +265,11 @@ compo_form_t *func_call_sort_form_create(void)
     compo_form_set_title(frm, i18n[STR_PHONE]);
 
     //联系人
-//     CREAT_CARD(CARD_COMPO_ID(1), CARD_RECT_CNT(1), CARD_ICON_CNT(1), CARD_TEXT_CNT(1), CARD_HANDLE(1), CARD_HANDLE(1).w, CARD_HANDLE(1).h);
-// //  通话记录
-//     CREAT_CARD(CARD_COMPO_ID(2), CARD_RECT_CNT(2), CARD_ICON_CNT(2), CARD_TEXT_CNT(2), CARD_HANDLE(2), CARD_HANDLE(2).w, CARD_HANDLE(2).h);
-// //  拨号键盘
-//     CREAT_CARD(CARD_COMPO_ID(3), CARD_RECT_CNT(3), CARD_ICON_CNT(3), CARD_TEXT_CNT(3), CARD_HANDLE(3), CARD_HANDLE(3).w, CARD_HANDLE(3).h);
+    CREAT_CARD(CARD_COMPO_ID(1), CARD_RECT_CNT(1), CARD_ICON_CNT(1), CARD_TEXT_CNT(1), CARD_HANDLE(1), CARD_HANDLE(1).w, CARD_HANDLE(1).h);
+//  通话记录
+    CREAT_CARD(CARD_COMPO_ID(2), CARD_RECT_CNT(2), CARD_ICON_CNT(2), CARD_TEXT_CNT(2), CARD_HANDLE(2), CARD_HANDLE(2).w, CARD_HANDLE(2).h);
+//  拨号键盘
+    CREAT_CARD(CARD_COMPO_ID(3), CARD_RECT_CNT(3), CARD_ICON_CNT(3), CARD_TEXT_CNT(3), CARD_HANDLE(3), CARD_HANDLE(3).w, CARD_HANDLE(3).h);
 //    //更多运动
 //    CREAT_CARD(CARD_COMPO_ID(4), CARD_RECT_CNT(4), CARD_ICON_CNT(4), CARD_TEXT_CNT(4), CARD_HANDLE(4), CARD_HANDLE(4).w, CARD_HANDLE(4).h);
 

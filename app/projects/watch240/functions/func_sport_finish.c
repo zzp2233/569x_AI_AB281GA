@@ -11,7 +11,7 @@
 #else
 #define TRACE(...)
 #endif
-
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 enum
@@ -876,4 +876,4 @@ void func_sport_finish(void)
     func_sport_finish_exit();
 }
 
-
+#endif

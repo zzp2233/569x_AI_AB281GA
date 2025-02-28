@@ -16,7 +16,9 @@
 #define TRACE(...)
 #endif
 
-#if 0 //GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if 0
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 #define CARD_SCALE_START_POS            190//265                                                                     //卡片开始缩小位置
 #define CARD_SCALE_STOP_POS             230//320                                                                     //卡片停止缩小位置
@@ -5602,6 +5604,10 @@ void music_data_refresh(void)
         compo_button_set_bgimg(btn,ui_handle.card3.pic_click_play.res_click);
     }
 }
+
+#endif
+
+#if 0
 
 #elif 1
 #define CARD_SCALE_START_POS            190//265                                                                     //卡片开始缩小位置

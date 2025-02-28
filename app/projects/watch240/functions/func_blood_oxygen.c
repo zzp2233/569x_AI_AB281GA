@@ -55,10 +55,10 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_form_set_title(frm, i18n[STR_BLOOD_OXYGEN]);
 
     ///设置图片
-    // compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_BLOODOXYGEN_GIF_BIN);
-    // compo_picturebox_cut(picbox, 0, 16);
-    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6);
-    // compo_setid(picbox,COMPO_ID_PIC_BG);
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_BLOODOXYGEN_GIF_BIN);
+    compo_picturebox_cut(picbox, 0, 16);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6);
+    compo_setid(picbox,COMPO_ID_PIC_BG);
 
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///血氧数据
@@ -105,7 +105,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
 static void func_blood_oxygen_disp_handle(void)
 {
     f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
-    // compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_BG);
+    compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_BG);
     compo_picturebox_t * pic_uint = compo_getobj_byid(COMPO_ID_PIC_UNIT);
     compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TXT_VALUE);
     compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
@@ -157,7 +157,7 @@ static void func_blood_oxygen_disp_handle(void)
     }
     else
     {
-        // compo_picturebox_cut(picbox, 0, 16); ///图片动态显示
+        compo_picturebox_cut(picbox, 0, 16); ///图片动态显示
         compo_button_set_visible(btn, true);
     }
 
@@ -440,5 +440,7 @@ void func_blood_oxygen(void)
     }
     func_blood_oxygen_exit();
 }
+
+#endif
 
 #endif

@@ -11,7 +11,7 @@
 #else
 #define TRACE(...)
 #endif
-
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 u32 func_sport_get_current_idx(void);
 u32 func_sport_get_str(u8 sport_idx);
@@ -1860,5 +1860,5 @@ void func_sport_sub_run(void)
     }
     func_sport_sub_run_exit();
 }
-
+#endif
 

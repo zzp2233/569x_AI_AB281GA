@@ -6,7 +6,7 @@
 #else
 #define TRACE(...)
 #endif
-
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 #define SPORT_ANIM_AMP_STEP             2       //图片放大步进数
@@ -392,3 +392,4 @@ void func_sport_switching(void)
     }
     func_sport_switching_exit();
 }
+#endif

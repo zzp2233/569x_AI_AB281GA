@@ -159,16 +159,6 @@ void audio_path_exit(u8 path_idx)
     sys_cb.audio_path = path_idx;
 }
 
-void bt_call_audio_path_start(void)
-{
-    sdadc_start(CH_MIC_PF0);
-}
-
-void bt_call_audio_path_exit(void)
-{
-    sdadc_exit(CH_MIC_PF0);
-    // adpll_spr_set(DAC_OUT_SPR);
-}
 
 void bt_call_audio_path_start(void)
 {

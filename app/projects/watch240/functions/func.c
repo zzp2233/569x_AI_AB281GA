@@ -46,9 +46,10 @@ extern void func_blood_oxygen(void);
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
 extern void func_breathe(void);
-#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
 extern void func_breathe_sub_mode(void);
 extern void func_breathe_sub_time(void);
+extern void func_breathe_finish(void);
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 extern void func_calculator(void);
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
@@ -73,10 +74,13 @@ extern void func_weather(void);
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
 extern void func_sport(void);
-#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+
 //extern void func_sport_config(void);
 extern void func_sport_sub_run(void);
 extern void func_sport_sort(void);
+extern void func_sport_switching(void);
+extern void func_sport_finish(void);
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 extern void func_calendar(void);
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
 extern void func_call(void);
@@ -131,7 +135,7 @@ extern void func_switching_to_menu(void);
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
 extern void func_activity(void);
 #endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
-extern void func_sport_switching(void);
+
 extern void func_bloodsugar(void);
 //extern void func_bloodpressure(void);
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
@@ -179,11 +183,11 @@ extern void func_ageing(void);///*老化测试*/
 extern void func_audio(void);///*音频测试*/
 extern void func_online_factory_test(void);
 extern void func_empty(void);
-extern void func_sport_finish(void);
+
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 extern void func_up_watch_dial(void);
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
-extern void func_breathe_finish(void);
+
 
 #if ECIG_POWER_CONTROL
 extern void func_ecig_set_power(void);
@@ -198,7 +202,7 @@ compo_form_t *func_breathe_finish_form_create(void);
 compo_form_t *func_up_watch_dial_form_create(void);
 compo_form_t *func_power_on_language_form_create(void);
 compo_form_t *func_power_on_scan_form_create(void);
-compo_form_t *func_sport_finish_form_create(void);
+
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 compo_form_t *func_power_on_form_create(void);//开机
 #endif
@@ -238,11 +242,14 @@ compo_form_t *func_sleep_form_create(void);
 compo_form_t *func_stopwatch_form_create(void);
 compo_form_t *func_stopwatch_sub_record_form_create(void);
 compo_form_t *func_weather_form_create(void);
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
 compo_form_t *func_sport_form_create(void);
 //compo_form_t *func_sport_config_form_create(void);
 compo_form_t *func_sport_sub_run_form_create(void);
 compo_form_t *func_sport_switching_form_create(void);
 compo_form_t *func_sport_sort_form_create(void);
+compo_form_t *func_sport_finish_form_create(void);
+#endif
 compo_form_t *func_set_sub_disturd_form_create(void);
 compo_form_t *func_disturd_sub_set_form_create(void);
 compo_form_t *func_call_form_create(void);
@@ -330,7 +337,7 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
     {FUNC_UP_WATCH_DIAL,                func_up_watch_dial_form_create},     //在线表盘
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
-    {FUNC_BREATHE_FINISH,               func_breathe_finish_form_create},
+
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {FUNC_HEARTRATE,                    func_heartrate_form_create},
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
@@ -358,9 +365,11 @@ const func_t tbl_func_create[] =
 //    {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {FUNC_BREATHE,                      func_breathe_form_create},
-#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode_form_create},
     {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time_form_create},
+    {FUNC_BREATHE_FINISH,               func_breathe_finish_form_create},
+    {FUNC_BREATHE_FINISH,               func_breathe_finish},
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {FUNC_CALCULATOR,                   func_calculator_form_create},
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
@@ -382,15 +391,15 @@ const func_t tbl_func_create[] =
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {FUNC_SPORT,                        func_sport_form_create},
-#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 //    {FUNC_SPORT_CONFIG,                 func_sport_config_form_create},
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run_form_create},
     {FUNC_SPORT_SWITCH,                 func_sport_switching_form_create},
-#if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_SPORT_SORT,                   func_sport_sort_form_create},
-#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_SPORT_FINISH,                 func_sport_finish_form_create},
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game_form_create},
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     {FUNC_STYLE,                        func_style_form_create},
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
@@ -508,7 +517,7 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
     {FUNC_CARD,                         func_clock_sub_card},           //表盘上拉
 #endif // UTE_MODULE_SCREENS_UP_MENU_SUPPORT
-    {FUNC_BREATHE_FINISH,               func_breathe_finish},
+
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {FUNC_HEARTRATE,                    func_heartrate},                //心率
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
@@ -532,11 +541,12 @@ const func_t tbl_func_entry[] =
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
+    {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置
+    {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time},         //呼吸--时间设置
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {FUNC_POWER_ON_SCAN,                func_power_on_scan},             //开机二维码
     {FUNC_POWER_ON_LANGUAGE,            func_power_on_language},        //开机语言
-    {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置
-    {FUNC_BREATHE_SUB_TIME,             func_breathe_sub_time},         //呼吸--时间设置
+
     {FUNC_COMPO_SELECT,                 func_compo_select},             //组件选择
     {FUNC_COMPO_SELECT_SUB,             func_compo_select_sub},         //组件选择子界面
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
@@ -563,12 +573,13 @@ const func_t tbl_func_entry[] =
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {FUNC_SPORT,                        func_sport},                    //运动
-#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+
 //    {FUNC_SPORT_CONFIG,                 func_sport_config},             //运动配置
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run},            //运动--室内跑步
     {FUNC_SPORT_SWITCH,                 func_sport_switching},          //运动开启动画
     {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
     {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game},                     //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT

@@ -55,9 +55,10 @@ enum
     FUNC_BLOOD_PRESSURE,                //血压
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     FUNC_BREATHE,                       //呼吸
-#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
     FUNC_BREATHE_SUB_MODE,              //呼吸--模式设置
     FUNC_BREATHE_SUB_TIME,              //呼吸--时间设置
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     FUNC_CALCULATOR,                    //计算器
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT

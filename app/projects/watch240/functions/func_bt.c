@@ -1216,9 +1216,7 @@ static void func_bt_button_click(void)
     }
 }
 
-#endif UI控制宏
-
-#endif UI控制宏
+#endif
 
 void func_bt_sub_process(void)
 {

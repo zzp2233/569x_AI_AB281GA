@@ -170,7 +170,9 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         case MSG_TYPE_DRV_KEY_HANDLER:
         {
             uteModuleFactoryTestKeysHandler(param);
+#if UTE_MODULE_SPORT_SUPPORT
             uteModuleSprotResetRovllverScreenMode();
+#endif
         }
         break;
         case MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR:

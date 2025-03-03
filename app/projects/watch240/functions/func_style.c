@@ -82,13 +82,13 @@ compo_form_t *func_style_form_create(void)
     compo_listbox_set_bithook(listbox, func_sel_style_bit);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    uint8_t set_idx = 0;//sys_cb.set_idx;
-    if (set_idx < 1)
-    {
-        set_idx = 1;
-    }
+    // uint8_t set_idx = 0;//sys_cb.set_idx;
+    // if (set_idx < 1)
+    // {
+    //     set_idx = 1;
+    // }
 
-    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
 
     return frm;
@@ -123,7 +123,7 @@ static void func_set_sub_list_icon_click(void)
         {
             func_cb.menu_idx = 0;           //切换风格后进入回中心位置
         }
-        sys_cb.set_idx = listbox->focus_icon_idx;
+        // sys_cb.set_idx = listbox->focus_icon_idx;
         uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
     }
 }
@@ -139,7 +139,7 @@ static void func_set_sub_list_switch_to_clock(void)
     func_switching(FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO, icon);
     compo_form_destroy(frm);
     func_cb.sta = func_sta;
-    sys_cb.set_idx = 0;
+    // sys_cb.set_idx = 0;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 #define SET_LIST_CNT                       ((int)(sizeof(tbl_style_list) / sizeof(tbl_style_list[0])))
@@ -207,13 +207,13 @@ compo_form_t *func_style_form_create(void)
     compo_listbox_set_bithook(listbox, func_sel_style_bit);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    uint8_t set_idx = 0;//sys_cb.set_idx;
-    if (set_idx < 1)
-    {
-        set_idx = 1;
-    }
+    // uint8_t set_idx = 0;//sys_cb.set_idx;
+    // if (set_idx < 1)
+    // {
+    //     set_idx = 1;
+    // }
 
-    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
 
     return frm;
@@ -248,7 +248,7 @@ static void func_set_sub_list_icon_click(void)
         {
             func_cb.menu_idx = 0;           //切换风格后进入回中心位置
         }
-        sys_cb.set_idx = listbox->focus_icon_idx;
+        // sys_cb.set_idx = listbox->focus_icon_idx;
         uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
     }
 }
@@ -264,7 +264,7 @@ static void func_set_sub_list_switch_to_clock(void)
     func_switching(FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO, icon);
     compo_form_destroy(frm);
     func_cb.sta = func_sta;
-    sys_cb.set_idx = 0;
+    // sys_cb.set_idx = 0;
 }
 
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -302,7 +302,7 @@ static void func_style_message(size_msg_t msg)
 
         case MSG_CTP_SHORT_RIGHT:
             func_message(msg);
-            sys_cb.set_idx = 0;
+            // sys_cb.set_idx = 0;
             break;
 
         case KU_DELAY_BACK:

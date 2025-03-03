@@ -458,6 +458,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
         }
         else
         {
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             sys_cb.timer_left_sec = 0;
             // printf(">>>COUNTDOWN_FINISH\n");
 

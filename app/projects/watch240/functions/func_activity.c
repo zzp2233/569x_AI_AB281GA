@@ -489,7 +489,7 @@ static void func_activity_process(void)
     func_activity_disp_handle();
     func_process();
 }
-
+// #include "func_cover.h"
 //活动记录功能消息处理
 static void func_activity_message(size_msg_t msg)
 {
@@ -497,8 +497,10 @@ static void func_activity_message(size_msg_t msg)
     {
         case MSG_CTP_TOUCH:
             break;
-        case MSG_CTP_CLICK:
-            break;
+        // case MSG_CTP_CLICK:
+        //     sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
+        //     msgbox((char*)i18n[STR_SEDENTARY_REMIND], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+        //     break;
         default:
             func_message(msg);
             break;

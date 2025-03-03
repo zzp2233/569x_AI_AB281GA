@@ -66,14 +66,15 @@ enum
     COMPO_ID_TP_BTN_8,
     COMPO_ID_TP_BTN_9,
     // mic 按键
-	COMPO_ID_MIC_BTN_START,
-	COMPO_ID_MIC_BTN_PLAY,
-	COMPO_ID_MIC_RECT_START,
-	COMPO_ID_MIC_RECT_PLAY,
+    COMPO_ID_MIC_BTN_START,
+    COMPO_ID_MIC_BTN_PLAY,
+    COMPO_ID_MIC_RECT_START,
+    COMPO_ID_MIC_RECT_PLAY,
 };
 
 //mic录音状态
-enum {
+enum
+{
     MIC_TEST_STA_EMPTY,
     MIC_TEST_STA_RECORDING,
     MIC_TEST_STA_FULL,
@@ -812,7 +813,11 @@ static void func_online_factory_test_button_click(void)
     {
         uint8_t light_mode = uteModuleFactoryTestGetCheckLightMode();
         light_mode++;
+#if 0
         if (light_mode > FACTORY_VCXX_TEST_MODE_RED_LIGHT)
+#else
+        if (light_mode > FACTORY_VCXX_TEST_MODE_INFRARED)
+#endif
         {
             light_mode = FACTORY_VCXX_TEST_MODE_CROSSTALK;
         }
@@ -838,40 +843,40 @@ static void func_online_factory_test_message(size_msg_t msg)
     f_online_factory_test_t *f_online_factory_test = (f_online_factory_test_t *)func_cb.f_cb;
     switch (msg)
     {
-    case MSG_CTP_CLICK:
-        func_online_factory_test_button_click();
-        break;
+        case MSG_CTP_CLICK:
+            func_online_factory_test_button_click();
+            break;
 
-    case MSG_CTP_SHORT_UP:
-        break;
+        case MSG_CTP_SHORT_UP:
+            break;
 
-    case MSG_CTP_SHORT_DOWN:
-        break;
+        case MSG_CTP_SHORT_DOWN:
+            break;
 
-    case MSG_CTP_LONG:
-        break;
+        case MSG_CTP_LONG:
+            break;
 
-    case MSG_CTP_TOUCH:
-        if(f_online_factory_test->ptm)
+        case MSG_CTP_TOUCH:
+            if(f_online_factory_test->ptm)
+            {
+                compo_page_move_touch_handler(f_online_factory_test->ptm);
+            }
+            break;
+
+
+        case KL_BACK:
         {
-            compo_page_move_touch_handler(f_online_factory_test->ptm);
+            uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+            if (ret == MSGBOX_RES_OK)
+            {
+                uteModuleGuiCommonGoBackLastScreen();
+            }
         }
         break;
 
-
-    case KL_BACK:
-    {
-        uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-        if (ret == MSGBOX_RES_OK)
-        {
-            uteModuleGuiCommonGoBackLastScreen();
-        }
-    }
-    break;
-
-    default:
-        evt_message(msg);
-        break;
+        default:
+            evt_message(msg);
+            break;
     }
 }
 

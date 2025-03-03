@@ -316,6 +316,12 @@ typedef int (*ble_gatt_callback_func)(uint16_t con_handle, uint16_t handle, uint
 
 static int uteModuleProfileBleWriteCallback(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len)
 {
+    if(is_fot_start())
+    {
+        printf("fot_start,return\n");
+        return 0;
+    }
+
     u8 wptr = ble_cmd_cb.cmd_wptr & BLE_CMD_BUF_MASK;
 
 //    printf("BLE_RX len[%d] handle[%d],wptr:%d,cmd_wptr:%d\n", len, handle,wptr,ble_cmd_cb.cmd_wptr);

@@ -30,6 +30,9 @@
 #include "ui.h"
 #include "ui_external.h"
 
+//ute
+#include "ute_project_config.h"
+#include "ute_module_log.h"
 
 #ifndef sscanf
 extern int sscanf(char *s, const char *format, ...);

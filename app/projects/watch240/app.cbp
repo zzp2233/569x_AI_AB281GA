@@ -1347,6 +1347,9 @@
 		<Unit filename="functions/test_mode/func_test_mode.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/test_mode/func_test_mode_list.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="main.c">
 			<Option compilerVar="CC" />
 		</Unit>

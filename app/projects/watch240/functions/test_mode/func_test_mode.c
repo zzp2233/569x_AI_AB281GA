@@ -144,9 +144,17 @@ static void func_test_mode_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_test_mode_click();
             break;
-
+        case KL_BACK:
+        {
+            uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+            if (ret == MSGBOX_RES_OK)
+            {
+                uteApplicationCommonRestart();
+            }
+        }
+        break;
         default:
-            func_message(msg);
+            evt_message(msg);
             break;
     }
 }

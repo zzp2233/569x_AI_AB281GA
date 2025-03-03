@@ -285,8 +285,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
                                            func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH, 50);              //调整文本位置
-                compo_textbox_set_multiline(txt_msg, true);
+                                           GUI_SCREEN_WIDTH/1.1, widget_text_get_max_height());              //调整文本位置
                 compo_textbox_set(txt_msg, msg);
 
                 //title

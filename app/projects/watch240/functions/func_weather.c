@@ -63,6 +63,7 @@ static void weather_refresh(void)
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     ute_display_ctrl_t displayInfo;
     ute_module_weather_data_t  weather_date;
+    uteModuleWeatherGetData(weather_date);//获取天气状态
     uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
     bool weather_flag = false;
     for(int i=0; i<7; i++)
@@ -598,13 +599,17 @@ static void weather_refresh(void)
 {
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     ute_display_ctrl_t displayInfo;
-    ute_module_weather_data_t  weather_date;
+    ute_module_weather_data_t *weather_date = (ute_module_weather_data_t *)ab_zalloc(sizeof(ute_module_weather_data_t));
+    // ute_module_weather_data_t  weather_date;
+    uteModuleWeatherGetData(weather_date);//获取天气状态
     uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
     bool weather_flag = false;
     for(int i=0; i<7; i++)
     {
-        if(f_weather->DayWeather[i] != weather_date.DayWeather[i])
+        // printf(" f_weather->DayWeather[%d] = weather_date.DayWeather[%d]\n", f_weather->DayWeather[i] ,weather_date->DayWeather[i]);
+        if(f_weather->DayWeather[i] != weather_date->DayWeather[i])
         {
+            f_weather->DayWeather[i] = weather_date->DayWeather[i];
             weather_flag = true;
             break;
         }
@@ -612,9 +617,11 @@ static void weather_refresh(void)
 
     if(displayInfo.isFahrenheit != f_weather->isFahrenheit_flag || weather_flag == true)    //是否为华氏度
     {
+        // printf("displayInfo.isFahrenheit:%d f_weather->isFahrenheit_flag:%d weather_flag:%d\n",displayInfo.isFahrenheit,f_weather->isFahrenheit_flag,weather_flag);
         f_weather->isFahrenheit_flag = displayInfo.isFahrenheit;
         msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
     }
+    ab_free(weather_date);
 }
 
 static void weather_data_Init(void)
@@ -637,13 +644,13 @@ static void weather_data_Init(void)
         }
     }
 }
-
+static bool weather_no_data_flag = true;
 //创建天气窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_weather_form_create(void)
 {
     compo_textbox_t *txt;
     compo_picturebox_t * picbox;
-    bool weather_no_data_flag = true;
+
 
     ute_module_systemtime_time_t time;
     ute_module_weather_data_t  weather_date;
@@ -734,20 +741,16 @@ compo_form_t *func_weather_form_create(void)
     if(weather_no_data_flag)
     {
         ///设置标题栏名字///
-        txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
-//        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
-        compo_textbox_set(txt, i18n[STR_WEATHER]);
-        compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
-        compo_textbox_set(txt, i18n[STR_WEATHER]);
-        compo_textbox_set_align_center(txt, false);
-
+        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+        compo_form_set_title(frm, i18n[STR_WEATHER]);
+        printf("weather:nodata\n");
         picbox = compo_picturebox_create(frm,UI_BUF_I332001_WEATHER_NO_DATA_BIN);///背景图片
-        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,84+50/2);
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,94+50);
 
         txt = compo_textbox_create(frm,strlen(i18n[STR_NO_GET_WEATHER]));
-        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,160+56/2, GUI_SCREEN_WIDTH,GUI_SCREEN_HEIGHT-(GUI_SCREEN_CENTER_X,160+56/2));
+        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,228+68/2, 276,widget_text_get_max_height()*2);
         compo_textbox_set_multiline(txt, true);
-        compo_textbox_set_align_center(txt, true);
+        compo_textbox_set_multiline_drag(txt, true);
         compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);
 
         return frm;
@@ -908,7 +911,10 @@ static void func_weather_message(size_msg_t msg)
     {
         case MSG_CTP_TOUCH:
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-            f_weather->touch_flag = true;
+            if(!weather_no_data_flag)
+            {
+                f_weather->touch_flag = true;
+            }
 #elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             if(!f_weather->no_weather_dada)
             {

@@ -143,7 +143,7 @@ compo_form_t *func_alarm_clock_form_create(void)
         {
             memset(str_buff,0,str_buff_size);
             buf_num=0;
-            cardbox = compo_cardbox_create(frm, 1, 1, 3, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
+            cardbox = compo_cardbox_create(frm, 1, 1, 2, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
 
@@ -158,11 +158,11 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_text_set_align_center(cardbox, 0, false);
             compo_cardbox_text_set_location(cardbox, 0, -100, -30, 180, 50);
 
-            compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_BIN);
-            compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
-            compo_cardbox_text_set_align_center(cardbox, 1, false);
-            compo_cardbox_text_set_location(cardbox, 1, -100 + widget_text_get_area(cardbox->text[0]).wid + 10, -25, 80, 50);
-            compo_cardbox_text_set_visible(cardbox, 1, true);
+            // compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_BIN);
+            // compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+            // compo_cardbox_text_set_align_center(cardbox, 1, false);
+            // compo_cardbox_text_set_location(cardbox, 1, -100 + widget_text_get_area(cardbox->text[0]).wid + 10, -25, 80, 50);
+            // compo_cardbox_text_set_visible(cardbox, 1, true);
             if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 0)
             {
                 compo_cardbox_text_set_visible(cardbox, 1, false);
@@ -344,7 +344,6 @@ compo_form_t *func_alarm_clock_form_create(void)
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK]);
 
     //闹钟选项卡
-    static char str_buff[300];
     compo_cardbox_t *cardbox;
     int buf_num=0;
     int str_week_buf[7]=
@@ -358,79 +357,94 @@ compo_form_t *func_alarm_clock_form_create(void)
         STR_SUNDAY, // 周日
     };
 
+    char *str_buff = NULL;
+    uint16_t str_buff_size = 0;
+
+    for (uint8_t i = 0; i < 7; i++)
+    {
+        str_buff_size += strlen(i18n[str_week_buf[i]]) + 2;
+    }
+
+    if(str_buff_size < MAX(strlen(i18n[STR_ONCE]) + 2, strlen(i18n[STR_EVERY_DAY]) + 2))
+    {
+        str_buff_size = MAX(strlen(i18n[STR_ONCE]) + 2, strlen(i18n[STR_EVERY_DAY]) + 2);
+    }
+
+    str_buff = (char *)uteModulePlatformMemoryAlloc(str_buff_size);
+
     if (ALARM_ENABLE_CNT())
     {
         for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
         {
-            memset(str_buff,0,sizeof(str_buff));
+            memset(str_buff,0,str_buff_size);
             buf_num=0;
-            cardbox = compo_cardbox_create(frm, 1, 1, 3, 324, 90);
-            compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/3 + (GUI_SCREEN_HEIGHT/4 + 8) * i);
+            cardbox = compo_cardbox_create(frm, 1, 1, 2, 324, 90);
+            compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
 
             compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I332001_PUBLIC_SWITCH01_BIN : UI_BUF_I332001_PUBLIC_SWITCH00_BIN);
             compo_cardbox_icon_set_pos(cardbox, 0,
-                                       (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_I332001_PUBLIC_SWITCH01_BIN).wid / 2 -25, 0);
+                                       (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_I332001_PUBLIC_SWITCH01_BIN).wid / 2 - 2, 0);
 
-            snprintf(str_buff, sizeof(str_buff), "%02d:%02d", func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).hour, ALARM_GET_MIN(i));
+            snprintf(str_buff, str_buff_size, "%02d:%02d", func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).hour, ALARM_GET_MIN(i));
             compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_32_BIN);
             compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
             compo_cardbox_text_set(cardbox, 0, str_buff);
             compo_cardbox_text_set_align_center(cardbox, 0, false);
             compo_cardbox_text_set_location(cardbox, 0, -130, -30, 180, 50);
 
-            compo_cardbox_text_set_font(cardbox, 2, UI_BUF_0FONT_FONT_BIN);
-            compo_cardbox_text_set_forecolor(cardbox, 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
-            compo_cardbox_text_set_align_center(cardbox, 2, false);
-            compo_cardbox_text_set_location(cardbox, 2, -130 + widget_text_get_area(cardbox->text[0]).wid + 10, -25, 80, 50);
-            compo_cardbox_text_set_visible(cardbox, 2, true);
+            compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_BIN);
+            compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+            compo_cardbox_text_set_align_center(cardbox, 1, false);
+            compo_cardbox_text_set_location(cardbox, 1, -130 + widget_text_get_area(cardbox->text[0]).wid + 10, -25, 80, 50);
+            compo_cardbox_text_set_visible(cardbox, 1, true);
             if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 0)
             {
-                compo_cardbox_text_set_visible(cardbox, 2, false);
+                compo_cardbox_text_set_visible(cardbox, 1, false);
             }
             else if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 1)           //AM
             {
-                compo_cardbox_text_set(cardbox, 2, i18n[STR_AM]);
+                compo_cardbox_text_set(cardbox, 1, i18n[STR_AM]);
             }
             else if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 2)           //PM
             {
-                compo_cardbox_text_set(cardbox, 2, i18n[STR_PM]);
+                compo_cardbox_text_set(cardbox, 1, i18n[STR_PM]);
             }
 
 
-            memset(str_buff,0,sizeof(str_buff));
+            memset(str_buff,0,str_buff_size);
 
             if (ALARM_GET_CYCLE(i) & BIT(7))
             {
-                snprintf(str_buff, sizeof(str_buff), i18n[STR_ONCE]);
+                snprintf(str_buff, str_buff_size, i18n[STR_ONCE]);
             }
             else if (ALARM_GET_CYCLE(i) == 0x7f)
             {
-                snprintf(str_buff, sizeof(str_buff), i18n[STR_EVERY_DAY]);
+                snprintf(str_buff, str_buff_size, i18n[STR_EVERY_DAY]);
             }
             else
             {
-                for (u8 j=0; j<7; j++)
+                for (u8 j = 0; j < 7; j++)
                 {
-                    static char string_handle[300];
-                    memset(string_handle,0,sizeof(string_handle));
                     if (ALARM_GET_CYCLE(i) & BIT(j))
                     {
-                        snprintf(string_handle, sizeof(string_handle),i18n[str_week_buf[j]]);
-                        for(int k=0; k<strlen(i18n[str_week_buf[j]]); k++)
+                        const char *week_str = i18n[str_week_buf[j]];
+                        uint8_t week_str_len = strlen(week_str);
+                        if (buf_num + week_str_len + 1 <= str_buff_size)
                         {
-                            str_buff[buf_num] = string_handle[k];
-                            buf_num++;
+                            memcpy(&str_buff[buf_num], week_str, week_str_len);
+                            buf_num += week_str_len;
+                            str_buff[buf_num++] = ' ';
                         }
-                        str_buff[buf_num] = ' ';
-                        buf_num++;
                     }
                 }
             }
-            compo_cardbox_text_set_forecolor(cardbox, 1, MAKE_GRAY(128));
-            compo_cardbox_text_set(cardbox, 1, str_buff);
-            compo_cardbox_text_set_align_center(cardbox, 1, false);
-            compo_cardbox_text_set_location(cardbox, 1, -130, 10, 160, 40);
+
+            compo_textbox_t *textbox = compo_textbox_create_for_page(frm,cardbox->page,strlen(str_buff));
+            compo_textbox_set_align_center(textbox, false);
+            compo_textbox_set_location(textbox, -130, 10, 160, 40);
+            compo_textbox_set(textbox,str_buff);
+            compo_textbox_set_forecolor(textbox, MAKE_GRAY(128));
 
             compo_cardbox_rect_set_color(cardbox, 0, MAKE_GRAY(26));
             compo_cardbox_rect_set_location(cardbox, 0, 0, 0, 324, 90, 20);

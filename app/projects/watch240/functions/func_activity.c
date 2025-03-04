@@ -497,10 +497,11 @@ static void func_activity_message(size_msg_t msg)
     {
         case MSG_CTP_TOUCH:
             break;
-        // case MSG_CTP_CLICK:
-        //     sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
-        //     msgbox((char*)i18n[STR_SEDENTARY_REMIND], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
-        //     break;
+        case MSG_CTP_CLICK:
+            // sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
+            // msgbox((char*)i18n[STR_SEDENTARY_REMIND], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+            // func_cb.sta = FUNC_WOMEN_HEALTH;
+            break;
         default:
             func_message(msg);
             break;

@@ -399,13 +399,13 @@ static const charge_ui_handle_t ui_handle =
 
     .time_hour = {
         .id_hour = COMPO_ID_NUM_TIME_HOUR,
-        .x_hour = 122+78/2,
-        .y_hour = 35+94/2,
+        .x_hour = GUI_SCREEN_CENTER_X-76,
+        .y_hour = 84+96/2,
         .w_hour = 0,
         .h_hour = 0,
         .hour   = 0,
-//        .res    = UI_BUF_I330001_CHARGE_TIME_BIN,        //res不为0使用图库，为0使用字库
-        .num_layout = 1,
+        .res    = UI_BUF_I332001_CHARGE_TIME_BIN,        //res不为0使用图库，为0使用字库
+        .num_layout = 0,
         .num_align  = 0,
         .flag_zfill = true,
         .margin     = -5,
@@ -414,13 +414,13 @@ static const charge_ui_handle_t ui_handle =
 
     .time_min = {
         .id_min = COMPO_ID_NUM_TIME_MIN,
-        .x_min  = 122+78/2,
-        .y_min  = 153+94/2,
+        .x_min  = GUI_SCREEN_CENTER_X+76,
+        .y_min  = 84+96/2,
         .w_min  = 0,
         .h_min  = 0,
         .min    = 0,
-//        .res    = UI_BUF_I330001_CHARGE_TIME_BIN,        //res不为0使用图库，为0使用字库
-        .num_layout = 1,
+        .res    = UI_BUF_I332001_CHARGE_TIME_BIN,        //res不为0使用图库，为0使用字库
+        .num_layout = 0,
         .num_align  = 0,
         .flag_zfill = true,
         .margin     = -5,
@@ -429,23 +429,23 @@ static const charge_ui_handle_t ui_handle =
 
     .time_colon = {
         .id     = COMPO_ID_PIC_TIME_COLON,
-        .x      = 122+78/2,
-        .y      = 128+25/2,
+        .x      = GUI_SCREEN_CENTER_X,
+        .y      = 84+96/2,
         .w      = 0,
         .h      = 0,
-//        .bright_res     = UI_BUF_I330001_CHARGE_COLON2_BIN,
-//        .destroy_res    = UI_BUF_I330001_CHARGE_COLON1_BIN,
+        .bright_res     = UI_BUF_I332001_CHARGE_COLON2_BIN,
+        .destroy_res    = UI_BUF_I332001_CHARGE_COLON_BIN,
         .rev    = 0,
     },
 
     .bat_value = {
         .id     = COMPO_ID_NUM_BAT_VALUE,
-        .x      = 37+60/2,
-        .y      = 30+87/2,
+        .x      = 83,
+        .y      = 231+60/2,
         .w      = 0,
         .h      = 0,
-//        .res    = UI_BUF_I330001_CHARGE_POWER_BIN,        //res不为0使用图库，为0使用字库
-        .num_layout = 1,  //横向，竖向排列
+        .res    = UI_BUF_I332001_CHARGE_POWER_BIN,        //res不为0使用图库，为0使用字库
+        .num_layout = 0,  //横向，竖向排列
         .num_align  = 0,   //对其方式
         .flag_zfill = false,
         .margin     = -5,
@@ -454,20 +454,20 @@ static const charge_ui_handle_t ui_handle =
 
     .bat_percent = {
         .id     = COMPO_ID_PIC_BAT_PERCENT,
-        .x      = 37+60/2,
-        .y      = 30+87+48/2,
+        .x      = 83+74,
+        .y      = 231+60/2,
         .w      = 0,
         .h      = 0,
-//        .res    = UI_BUF_I330001_CHARGE_PERCENT_BIN,
+        .res    = UI_BUF_I332001_CHARGE_PERCENT_BIN,
         .rev    = 0,
     },
 
     .bat_rect = {
-        [0]     = {COMPO_ID_RECT_BAT_1,     37+60/2,    241+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-        [1]     = {COMPO_ID_RECT_BAT_2,     37+60/2,    223+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-        [2]     = {COMPO_ID_RECT_BAT_3,     37+60/2,    205+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-        [3]     = {COMPO_ID_RECT_BAT_4,     37+60/2,    187+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-        [4]     = {COMPO_ID_RECT_BAT_5,     37+60/2,    169+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
+        [0]     = {COMPO_ID_RECT_BAT_1,         108+14/2+78,   231+60/2,     14,  60,   0,  0,  {0,255,225}, {0,76,68}, 14/2},
+        [1]     = {COMPO_ID_RECT_BAT_2,         126+14/2+78,   231+60/2,     14,  60,   0,  0,  {0,255,225}, {0,76,68}, 14/2},
+        [2]     = {COMPO_ID_RECT_BAT_3,         144+14/2+78,   231+60/2,     14,  60,   0,  0,  {0,255,225}, {0,76,68}, 14/2},
+        [3]     = {COMPO_ID_RECT_BAT_4,         162+14/2+78,   231+60/2,     14,  60,   0,  0,  {0,255,225}, {0,76,68}, 14/2},
+        [4]     = {COMPO_ID_RECT_BAT_5,         180+14/2+78,   231+60/2,     14,  60,   0,  0,  {0,255,225}, {0,76,68}, 14/2},
     },
 
 
@@ -592,11 +592,11 @@ static void func_charge_process(void)
 
     func_charge_update();
 
-    if (bsp_charge_sta_get() == 0)
-    {
-        // func_cb.sta = FUNC_CLOCK;
-        uteModuleGuiCommonGoBackLastScreen();
-    }
+    // if (bsp_charge_sta_get() == 0)
+    // {
+    //     // func_cb.sta = FUNC_CLOCK;
+    //     uteModuleGuiCommonGoBackLastScreen();
+    // }
 
     func_process();
 }
@@ -622,7 +622,7 @@ static void func_charge_message(size_msg_t msg)
             break;
 
         default:
-            func_message(msg);
+            // func_message(msg);
             break;
     }
 }

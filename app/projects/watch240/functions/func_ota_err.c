@@ -96,12 +96,12 @@ static void func_ota_err_message(size_msg_t msg)
 
     switch (msg)
     {
-        case MSG_CTP_SHORT_LEFT:
-        case MSG_CTP_SHORT_UP:
-        case MSG_CTP_SHORT_RIGHT:
-        case MSG_CTP_SHORT_DOWN:
+        // case MSG_CTP_SHORT_LEFT:
+        // case MSG_CTP_SHORT_UP:
+        // case MSG_CTP_SHORT_RIGHT:
+        // case MSG_CTP_SHORT_DOWN:
 
-            break;
+        //     break;
 
         case KU_BACK:
             func_switch_to(FUNC_CLOCK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
@@ -118,7 +118,7 @@ static void func_ota_err_message(size_msg_t msg)
 //进入地图功能
 static void func_ota_err_enter(void)
 {
-    uteModuleGuiCommonDisplayOffAllowGoBack(false);
+    // uteModuleGuiCommonDisplayOffAllowGoBack(false);
     func_cb.f_cb = func_zalloc(sizeof(f_ota_err_t));
     func_cb.frm_main = func_ota_err_form_create();
 }
@@ -126,7 +126,7 @@ static void func_ota_err_enter(void)
 //退出地图功能
 static void func_ota_err_exit(void)
 {
-    uteModuleGuiCommonDisplayOffAllowGoBack(true);
+    // uteModuleGuiCommonDisplayOffAllowGoBack(true);
     func_cb.last = FUNC_OTA_ERROR;
 }
 

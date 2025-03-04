@@ -185,7 +185,9 @@ extern void func_sport_finish(void);
 extern void func_up_watch_dial(void);
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 extern void func_breathe_finish(void);
+extern void func_women_health(void);
 
+compo_form_t *func_women_health_form_create(void);
 compo_form_t *func_breathe_finish_form_create(void);
 compo_form_t *func_up_watch_dial_form_create(void);
 compo_form_t *func_power_on_language_form_create(void);
@@ -302,6 +304,7 @@ func_cb_t func_cb AT(.buf.func_cb);
 
 const func_t tbl_func_create[] =
 {
+    {FUNC_WOMEN_HEALTH,                 func_women_health_form_create},
     {FUNC_BLE_CALL,                     func_ble_call_form_create},
     {FUNC_MENU,                         func_menu_form_create},
     {FUNC_MENUSTYLE,                    NULL},
@@ -477,6 +480,7 @@ const func_t tbl_func_create[] =
 
 const func_t tbl_func_entry[] =
 {
+    {FUNC_WOMEN_HEALTH,                 func_women_health},
     {FUNC_MENU,                         func_menu},                     //主菜单(蜂窝)
     {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
     {FUNC_CLOCK,                        func_clock},                    //时钟表盘

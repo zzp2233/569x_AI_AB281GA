@@ -63,7 +63,7 @@ static void weather_refresh(void)
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     ute_display_ctrl_t displayInfo;
     ute_module_weather_data_t  weather_date;
-    uteModuleWeatherGetData(weather_date);//获取天气状态
+    uteModuleWeatherGetData(&weather_date);//获取天气状态
     uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
     bool weather_flag = false;
     for(int i=0; i<7; i++)

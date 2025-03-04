@@ -43,25 +43,20 @@ compo_form_t *func_bt_ring_form_create(void)
     s16 txt_x=0;
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 74-widget_text_get_height()/2, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 28/2+56, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
-    compo_textbox_set_align_center(name_txt, false);
+    // compo_textbox_set_align_center(name_txt, false);
     txt_leng = widget_text_get_area(name_txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_height()/2);
+    // compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_max_height()/2);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 106-widget_text_get_height()/2, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
-    compo_textbox_set_align_center(number_txt, false);
-    txt_leng = widget_text_get_area(number_txt->txt).wid;
-    txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-    if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    compo_textbox_set_pos(number_txt,txt_x,106-widget_text_get_height()/2);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
 //    compo_setid(txt, COMPO_ID_TXT_IN_CALL);

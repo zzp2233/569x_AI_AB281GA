@@ -125,30 +125,6 @@ compo_form_t *func_weather_form_create(void)
     week_day = time.week; //获取星期
     for(int i=0; i<=6; i++) //星期排序
     {
-//        switch(week_day)
-//        {
-//            case 0 :
-//                week_sort[i] = 6;
-//                break;
-//            case 1 :
-//                week_sort[i] = 0;
-//                break;
-//            case 2 :
-//                week_sort[i] = 1;
-//                break;
-//            case 3 :
-//                week_sort[i] = 2;
-//                break;
-//            case 4 :
-//                week_sort[i] = 3;
-//                break;
-//            case 5 :
-//                week_sort[i] = 4;
-//                break;
-//            case 6 :
-//                week_sort[i] = 5;
-//                break;
-//        }
         week_sort[i] = week_day;
         if(++week_day==7)
         {

@@ -1,5 +1,6 @@
 #include "include.h"
 #include "bt_fota.h"
+#include "ute_module_call.h"
 //#include "ute_application_common.h""
 
 #if LE_AB_FOT_EN
@@ -496,6 +497,7 @@ void fot_recv_proc(u8 *buf, u16 len)
     {
         case FOT_GET_INFO_TLV:
             fot_reply_info_tlv(&buf[2],len-2);
+            uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO); //音频解码和OTA复用内存
             break;
 
         case FOT_GET_INFO:

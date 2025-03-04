@@ -88,6 +88,7 @@ enum
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     FUNC_ALTITUDE,                      //海拔
     FUNC_MAP,                           //地图
+    FUNC_WOMEN_HEALTH,                  //女性健康
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     FUNC_MESSAGE,                       //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
@@ -198,6 +199,7 @@ enum
     FUNC_POWER_ON,         //开机
 
     FUNC_BLE_CALL,
+    FUNC_TEST_MODE_LIST,      ///*出厂测试模式选择*/
     FUNC_TEST_MODE,      ///*出厂测试模式选择*/
     FUNC_FACTORY_TESTING,///*工厂测试*/
     FUNC_AGEING,         ///*老化测试*/

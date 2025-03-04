@@ -174,6 +174,7 @@ extern void func_power_on(void);//开机
 extern void func_power_on_scan(void);
 extern void func_power_on_language(void);
 extern void func_test_mode(void);///*出厂测试模式选择*/
+extern void func_test_mode_list(void);///*出厂测试模式选择*/
 extern void func_factory_testing(void);///*工厂测试*/
 extern void func_ageing(void);///*老化测试*/
 extern void func_audio(void);///*音频测试*/
@@ -184,7 +185,9 @@ extern void func_sport_finish(void);
 extern void func_up_watch_dial(void);
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 extern void func_breathe_finish(void);
+extern void func_women_health(void);
 
+compo_form_t *func_women_health_form_create(void);
 compo_form_t *func_breathe_finish_form_create(void);
 compo_form_t *func_up_watch_dial_form_create(void);
 compo_form_t *func_power_on_language_form_create(void);
@@ -288,6 +291,7 @@ compo_form_t *func_bird_form_create(void);
 //compo_form_t *func_set_sub_sos_form_create(void);
 compo_form_t *func_empty_form_create(void);
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
+compo_form_t *func_test_mode_list_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_factory_testing_create(void);///*工厂测试*/
 compo_form_t *func_ageing_create(void);///*老化测试*/
 compo_form_t *func_audio_create(void);///*音频测试*/
@@ -300,6 +304,7 @@ func_cb_t func_cb AT(.buf.func_cb);
 
 const func_t tbl_func_create[] =
 {
+    {FUNC_WOMEN_HEALTH,                 func_women_health_form_create},
     {FUNC_BLE_CALL,                     func_ble_call_form_create},
     {FUNC_MENU,                         func_menu_form_create},
     {FUNC_MENUSTYLE,                    NULL},
@@ -465,6 +470,7 @@ const func_t tbl_func_create[] =
     {FUNC_POWER_ON,                     func_power_on_form_create},
 #endif
     {FUNC_TEST_MODE,                    func_test_mode_form_create},///*出厂测试模式选择*/
+    {FUNC_TEST_MODE_LIST,               func_test_mode_list_form_create},///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/
     {FUNC_AGEING,                       func_ageing_create},///*老化测试*/
     {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
@@ -474,6 +480,7 @@ const func_t tbl_func_create[] =
 
 const func_t tbl_func_entry[] =
 {
+    {FUNC_WOMEN_HEALTH,                 func_women_health},
     {FUNC_MENU,                         func_menu},                     //主菜单(蜂窝)
     {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
     {FUNC_CLOCK,                        func_clock},                    //时钟表盘
@@ -655,6 +662,7 @@ const func_t tbl_func_entry[] =
 #endif
     {FUNC_TEST_MODE,                    func_test_mode}, ///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing},///*工厂测试*/
+    {FUNC_TEST_MODE_LIST,               func_test_mode_list},///*出厂测试模式选择*/
     {FUNC_AGEING,                       func_ageing},///*老化测试*/
     {FUNC_AUDIO,                        func_audio},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test},
@@ -1494,8 +1502,8 @@ void func_message(size_msg_t msg)
             break;
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            if(func_cb.sta != FUNC_TIMER)
+            // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            if(func_cb.sta != FUNC_TIMER || !sys_cb.gui_need_wakeup)
             {
                 sys_cb.cover_index = REMIND_COVER_TIMER_FINISH;
                 sys_cb.remind_tag = true;

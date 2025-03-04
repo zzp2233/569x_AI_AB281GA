@@ -92,28 +92,23 @@ compo_form_t *func_bt_call_form_create(void)
     s16 txt_x=0;
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 74-widget_text_get_height()/2, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 28/2+56, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
-    compo_textbox_set_align_center(name_txt, false);
+    // compo_textbox_set_align_center(name_txt, false);
     txt_leng = widget_text_get_area(name_txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_height()/2);
+    // compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_max_height()/2);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 106-widget_text_get_height()/2, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
-    compo_textbox_set_align_center(number_txt, false);
-    txt_leng = widget_text_get_area(number_txt->txt).wid;
-    txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-    if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    compo_textbox_set_pos(number_txt,txt_x,106-widget_text_get_height()/2);
 
     compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
-    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
 //    compo_textbox_set_autosize(time_txt, true);
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
     compo_textbox_set_forecolor(time_txt, COLOR_GREEN);
@@ -148,36 +143,31 @@ compo_form_t *func_bt_outgoing_form_create(void)
     s16 txt_x=0;
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 74-widget_text_get_height()/2, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 28/2+56, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
-    compo_textbox_set_align_center(name_txt, false);
+    // compo_textbox_set_align_center(name_txt, false);
     txt_leng = widget_text_get_area(name_txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_height()/2);
+    // compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_max_height()/2);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 106-widget_text_get_height()/2, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
-    compo_textbox_set_align_center(number_txt, false);
-    txt_leng = widget_text_get_area(number_txt->txt).wid;
-    txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-    if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    compo_textbox_set_pos(number_txt,txt_x,106-widget_text_get_height()/2);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_IN_CALL]));
     compo_setid(txt, COMPO_ID_TXT_IN_CALL);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,138-widget_text_get_height()/2,GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-5, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(txt, i18n[STR_IN_CALL]);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
-    compo_textbox_set_align_center(txt, false);
+    // compo_textbox_set_align_center(txt, false);
     txt_leng = widget_text_get_area(txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    compo_textbox_set_pos(txt,txt_x,138-widget_text_get_height()/2);
+    // compo_textbox_set_pos(txt,txt_x,138-widget_text_get_max_height()/2);
 //    printf("x:%d leng:%d\n",txt_x,txt_leng);
 
     //挂断按钮
@@ -190,6 +180,16 @@ compo_form_t *func_bt_outgoing_form_create(void)
 //    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/3, 240);
 
     return frm;
+}
+
+static co_timer_t bt_call_time_count;
+static void bt_call_1s_time_back(void)
+{
+    if(func_cb.sta == FUNC_BT_CALL)
+    {
+        f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+        f_bt_call->times++;
+    }
 }
 
 AT(.text.func.bt)
@@ -205,8 +205,9 @@ static void func_bt_call_interface(void)
             compo_form_destroy(func_cb.frm_main);
             memset(f_bt_call->pbap_result_Name, '\0', sizeof(f_bt_call->pbap_result_Name));
         }
-
+        // printf("call_yes\n");
         func_cb.frm_main = func_bt_call_form_create();
+        co_timer_set(&bt_call_time_count, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, bt_call_1s_time_back, NULL);
         f_bt_call->sta = true;
     }
 }
@@ -318,14 +319,14 @@ void func_bt_call_up_date_process(void)
         truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
 
 
-//        printf("tmp_pbap_result_Name [%s]\n", f_bt_call->tmp_pbap_result_Name);
+        printf("tmp_pbap_result_Name [%s]\n", f_bt_call->tmp_pbap_result_Name);
         compo_textbox_t *name_txt     = compo_getobj_byid(COMPO_ID_TXT_NAME);
         compo_textbox_set(name_txt, f_bt_call->tmp_pbap_result_Name);
 
-        txt_leng = widget_text_get_area(name_txt->txt).wid;
-        txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-        if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-        compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_height()/2);
+        // txt_leng = widget_text_get_area(name_txt->txt).wid;
+        // txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
+        // if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
+        // compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_max_height()/2);
     }
 }
 void func_bt_call_process(void)
@@ -781,7 +782,7 @@ static void func_bt_call_message(size_msg_t msg)
             if (f_bt_call->sta == true)
             {
 #if !CALL_MGR_EN
-                f_bt_call->times++;
+                // f_bt_call->times++;
 #endif
                 bt_incall_time_update();
             }
@@ -818,7 +819,8 @@ void func_bt_call_enter(void)
     func_bt_call_number_update();
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
-    memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+    // memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+    memcpy(f_bt_call->pbap_result_Name,0, 50);
 //   printf("name:%s  name:%s\n",sys_cb.pbap_result_Name,f_bt_call->pbap_result_Name);
 
     f_bt_call->call_mute_flag =false;
@@ -832,8 +834,8 @@ void func_bt_call_enter(void)
 
 void func_bt_call_exit(void)
 {
+    co_timer_del(&bt_call_time_count);
     bsp_bt_call_exit();
-
 #if UTE_MODULE_SCREENS_SCAN_SUPPORT
     if (func_cb.sta == FUNC_SCAN)
 #endif // UTE_MODULE_SCREENS_SCAN_SUPPORT

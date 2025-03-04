@@ -1118,6 +1118,7 @@ static void func_disturd_sub_set_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_disturd_sub_set_t));
     func_cb.frm_main = func_disturd_sub_set_form_create();
     func_disturd_sub_time_init();
+    // printf("hour4:%d\n",sys_cb.disturd_start_time_sec);
 }
 
 //退出定时勿扰设置功能
@@ -1125,6 +1126,7 @@ static void func_disturd_sub_set_exit(void)
 {
     printf("%s\n",__func__);
     func_cb.last = FUNC_DISTURD_SUB_SET;
+    // printf("hour4:%d\n",sys_cb.disturd_start_time_sec);
 }
 
 //定时勿扰设置功能

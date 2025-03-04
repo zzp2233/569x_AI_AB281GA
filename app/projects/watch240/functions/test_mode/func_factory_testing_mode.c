@@ -276,8 +276,8 @@ compo_form_t * func_factory_testing_mode_1(void)
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, MODE_ONE_INTIAL_SPACING_Y+MODE_ONE_SPACING_Y*2);
     compo_textbox_set_forecolor(textbox, PURPLE_COLOR);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_DEV_NEME]));///版本号数据
-    compo_textbox_set(textbox, i18n[STR_DEV_NEME]);
+    textbox = compo_textbox_create(frm, strlen(UTE_SW_VERSION));///版本号数据
+    compo_textbox_set(textbox, UTE_SW_VERSION);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, MODE_ONE_INTIAL_SPACING_Y+MODE_ONE_SPACING_Y*3);
 
     uint8_t Ble_Address[6];//获取蓝牙地址数组

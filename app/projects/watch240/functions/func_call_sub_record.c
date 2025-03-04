@@ -155,6 +155,7 @@ static u8 func_record_book_update(void)
             ab_free(address_book_tb2);
             address_book_tb2 = NULL;
         }
+        printf("address_book_cnt:%d\n", address_book_cnt2);
         address_book_tb2 = ab_zalloc(sizeof(ute_module_call_addressbook_t)*address_book_cnt2);
         if (address_book_tb2 != NULL)
         {

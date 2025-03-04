@@ -88,6 +88,7 @@
 			<Add directory="../../../ute/module/micrecord" />
 			<Add directory="../../../ute/module/music" />
 			<Add directory="../../../ute/module/localRingtone" />
+			<Add directory="../../../ute/module/menstrualcycle" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -229,6 +230,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/mem/ute_module_mem.h" />
+		<Unit filename="../../../ute/module/menstrualcycle/ute_module_menstrualcycle.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/menstrualcycle/ute_module_menstrualcycle.h" />
 		<Unit filename="../../../ute/module/message/ute_module_message.c">
 			<Option compilerVar="CC" />
 		</Unit>

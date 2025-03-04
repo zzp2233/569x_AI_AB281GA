@@ -31,6 +31,7 @@
 #include "ute_module_watchonline.h"
 #include "ute_module_factorytest.h"
 #include "ute_module_music.h"
+#include "ute_module_menstrualcycle.h"
 #include "func_cover.h"
 
 /**
@@ -2323,6 +2324,43 @@ void uteModuleProtocolSyncAddressBook(uint8_t*receive,uint8_t length)
 }
 
 /**
+*@brief     女性生理周期控制指令
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author     dengli.lu
+*@date       2021-11-24
+*/
+#if UTE_MODULE_MENSTRUAL_CYCLE_SUPPORT
+void uteModuleProtocolWomenMenstrualCycle(uint8_t*receive,uint8_t length)
+{
+    ute_menstrual_cycle_param_t param;
+    memset(&param,0,sizeof(param));
+    switch(receive[1])
+    {
+        case 0x01: //open
+        {
+            param.reminderSwitch = true;
+            memcpy(&param.lastTimestamp[0],&receive[2],4);
+            param.keepDays = receive[6];
+            param.cycleDays = receive[7];
+        }
+        break;
+        case 0x00: //close
+        {
+            param.reminderSwitch = false;
+        }
+        break;
+        default :
+            break;
+    }
+    uteModuleMenstrualCycleSetParam(param);
+    uteModuleProfileBleSendToPhone(&receive[0],2);
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,receive = %d", __func__,receive[1]);
+}
+#endif
+
+/**
 *@brief       工厂测试模式
 *@details
 *@param[in] uint8_t*receive
@@ -2433,7 +2471,9 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_SLEEP_ON_BAND,.publicCmd=PUBLIC_CMD_SLEEP_ON_BAND,.function=uteModuleProtocolSleepReadHistoryData},
     {.privateCmd = CMD_SEND_SLEEP_ON_BAND_DATAS,.publicCmd=PUBLIC_CMD_SEND_SLEEP_ON_BAND_DATAS,.function=uteModuleProtocolSleepReadHistoryData},
     {.privateCmd = CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.publicCmd=PUBLIC_CMD_SPORT_MODE_AND_SPORT_HEART_RATE,.function=uteModuleProtocolMoreSportCtrl},
-    // {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
+#if UTE_MODULE_MENSTRUAL_CYCLE_SUPPORT
+    {.privateCmd = CMD_SET_WOMEN_MENSTRUAL_CYCLE,.publicCmd=CMD_SET_WOMEN_MENSTRUAL_CYCLE,.function=uteModuleProtocolWomenMenstrualCycle},
+#endif
     {.privateCmd = CMD_MUSIC_CONTENT_CTRL,.publicCmd=CMD_MUSIC_CONTENT_CTRL,.function=uteModuleProtocolMusicCtrl},
     {.privateCmd = CMD_FACTORY_TEST_MODE,.publicCmd=PUBLIC_CMD_FACTORY_TEST_MODE,.function=uteModuleProtocolFactoryTest},
     {.privateCmd = CMD_WATCH_ONLINE,.publicCmd=PUBLIC_CMD_WATCH_ONLINE,.function=uteModuleProtocolWatchOnlineCtrl},

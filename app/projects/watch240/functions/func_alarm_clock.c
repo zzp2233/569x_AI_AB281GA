@@ -143,7 +143,7 @@ compo_form_t *func_alarm_clock_form_create(void)
         {
             memset(str_buff,0,str_buff_size);
             buf_num=0;
-            cardbox = compo_cardbox_create(frm, 1, 1, 3, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
+            cardbox = compo_cardbox_create(frm, 1, 1, 2, GUI_SCREEN_WIDTH - 10, GUI_SCREEN_HEIGHT/4);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/4 + (GUI_SCREEN_HEIGHT/4 + 4) * i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
 
@@ -158,11 +158,11 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_text_set_align_center(cardbox, 0, false);
             compo_cardbox_text_set_location(cardbox, 0, -100, -30, 180, 50);
 
-            compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_BIN);
-            compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
-            compo_cardbox_text_set_align_center(cardbox, 1, false);
-            compo_cardbox_text_set_location(cardbox, 1, -100 + widget_text_get_area(cardbox->text[0]).wid + 10, -25, 80, 50);
-            compo_cardbox_text_set_visible(cardbox, 1, true);
+            // compo_cardbox_text_set_font(cardbox, 1, UI_BUF_0FONT_FONT_BIN);
+            // compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+            // compo_cardbox_text_set_align_center(cardbox, 1, false);
+            // compo_cardbox_text_set_location(cardbox, 1, -100 + widget_text_get_area(cardbox->text[0]).wid + 10, -25, 80, 50);
+            // compo_cardbox_text_set_visible(cardbox, 1, true);
             if (func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).am_pm == 0)
             {
                 compo_cardbox_text_set_visible(cardbox, 1, false);

@@ -97,6 +97,10 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     {STR_SETTING_ABOUT,          UI_BUF_I330001_THEME_1_GUANYU_BIN,            .func_sta = FUNC_SET_SUB_ABOUT},        //关于
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {STR_WOMEN_HEALTH,           UI_BUF_I330001_THEME_1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT    
+    {STR_WOMEN_HEALTH,           UI_BUF_I330001_THEME_1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},        //女性健康
 };
 #define  BATTERY_PIC_0_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
 #define  BATTERY_PIC_1_BIN   UI_BUF_I330001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1

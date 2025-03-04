@@ -86,7 +86,7 @@ void uteModuleFactoryTestEverySecond(void)
         {
             uteModuleHeartStartSingleTesting(TYPE_HEART);
         }
-        
+
         if (uteModuleHeartIsWear())
         {
             uteModuleFactoryTestData.u.aging.heart = (uint8_t)uteModuleHeartGetHeartValue();
@@ -700,7 +700,11 @@ void uteModuleFactoryTestStop(void)
     if(uteApplicationCommonIsPowerOn())
     {
         uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+
+        if(task_stack_contains(FUNC_TEST_MODE) == false)
+        {
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+        }
     }
 }
 

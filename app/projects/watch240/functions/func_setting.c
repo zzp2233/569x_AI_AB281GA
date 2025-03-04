@@ -123,7 +123,7 @@ static void func_set_sub_list_switch_to_clock(void)
     func_switching(FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO, icon);
     compo_form_destroy(frm);
     func_cb.sta = func_sta;
-    sys_cb.set_idx = 0;
+    // sys_cb.set_idx = 0;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 
@@ -294,7 +294,7 @@ static void func_set_sub_list_message(size_msg_t msg)
 
         case MSG_CTP_SHORT_RIGHT:
             func_message(msg);
-            sys_cb.set_idx = 0;
+            // sys_cb.set_idx = 0;
             break;
 
         case KU_DELAY_BACK:

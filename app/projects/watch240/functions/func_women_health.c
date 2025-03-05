@@ -30,6 +30,7 @@ enum
     SAFE_PERIOD,    //安全期
 };
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static const f_women_health_t    f_women_health[]=
 {
     [NO_DATA]          ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=48/2+96,  .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+175, .txt_w=224, .txt_h=40, .str_id=STR_PLEASE_APP_DATA, .res_addr=UI_BUF_I330001_PERIOD_PHONE_BIN},
@@ -65,6 +66,45 @@ compo_form_t *func_women_health_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+static const f_women_health_t    f_women_health[]=
+{
+    [NO_DATA]          ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=92/2+86,   .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+212, .txt_w=288, .txt_h=40, .str_id=STR_PLEASE_APP_DATA, .res_addr=UI_BUF_I332001_PERIOD_PHONE_BIN},
+    [MENSTRUAL_CYCLE]  ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_MENSTRUAL_CYCLE, .res_addr=UI_BUF_I332001_PERIOD_PERIOD_MP_BIN},
+    [PREGNANCY]        ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_PREGNANCY,       .res_addr=UI_BUF_I332001_PERIOD_PERIOD_FP_BIN},
+    [SAFE_PERIOD]      ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_SAFE_PERIOD,     .res_addr=UI_BUF_I332001_PERIOD_SAFE_MP_BIN},
+};
+
+//创建女性健康窗体
+compo_form_t *func_women_health_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    u8 state=0;
+
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        uteModuleMenstrualCycleGetStatus(&state);
+    }
+
+    if(state)
+    {
+        //设置标题栏
+        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+        compo_form_set_title(frm, i18n[STR_WOMEN_HEALTH]);
+    }
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm,f_women_health[state].res_addr);
+    compo_picturebox_set_pos(picbox,f_women_health[state].pic_x,f_women_health[state].pic_y);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[f_women_health[state].str_id]));
+    compo_textbox_set_location(textbox,f_women_health[state].txt_x,f_women_health[state].txt_y,f_women_health[state].txt_w,f_women_health[state].txt_h);
+    compo_textbox_set(textbox,i18n[f_women_health[state].str_id]);
+
+    return frm;
+}
+#endif
 
 //女性健康功能事件处理
 static void func_women_health_process(void)

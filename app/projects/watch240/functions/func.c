@@ -186,7 +186,9 @@ extern void func_up_watch_dial(void);
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 extern void func_breathe_finish(void);
 extern void func_women_health(void);
+extern void func_menu_football_list(void);
 
+compo_form_t *func_menu_football_list_form_create(void);
 compo_form_t *func_women_health_form_create(void);
 compo_form_t *func_breathe_finish_form_create(void);
 compo_form_t *func_up_watch_dial_form_create(void);
@@ -304,6 +306,7 @@ func_cb_t func_cb AT(.buf.func_cb);
 
 const func_t tbl_func_create[] =
 {
+    {FUNC_MENU_STYLE_FOOTBALL_LIST,     func_menu_football_list_form_create},
     {FUNC_WOMEN_HEALTH,                 func_women_health_form_create},
     {FUNC_BLE_CALL,                     func_ble_call_form_create},
     {FUNC_MENU,                         func_menu_form_create},
@@ -480,6 +483,7 @@ const func_t tbl_func_create[] =
 
 const func_t tbl_func_entry[] =
 {
+    {FUNC_MENU_STYLE_FOOTBALL_LIST,     func_menu_football_list},
     {FUNC_WOMEN_HEALTH,                 func_women_health},
     {FUNC_MENU,                         func_menu},                     //主菜单(蜂窝)
     {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
@@ -1503,7 +1507,7 @@ void func_message(size_msg_t msg)
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃
             // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            if(func_cb.sta != FUNC_TIMER || !sys_cb.gui_need_wakeup)
+            if(func_cb.sta != FUNC_TIMER || !sys_cb.gui_sleep_sta)
             {
                 sys_cb.cover_index = REMIND_COVER_TIMER_FINISH;
                 sys_cb.remind_tag = true;

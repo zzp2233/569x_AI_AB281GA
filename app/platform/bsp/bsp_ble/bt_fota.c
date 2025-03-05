@@ -878,11 +878,6 @@ fot_progress_t *bsp_fot_progress_get(void)
     return p;
 }
 
-u16 att_get_max_mtu(void)
-{
-    return 512;
-}
-
 #else
 WEAK void fot_update_pause(void)
 {

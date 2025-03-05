@@ -110,12 +110,15 @@ compo_form_t *func_ota_update_form_create(void)
 //    compo_setid(picbox,ROCKET_ID);
 
     //CODE 进度条
-    compo_progressbar_t * bar = compo_progressbar_create(frm, PROGRESSBAR_HORIZONTAL);
-    compo_setid(bar, PROGRESS_BAR_ID);
-    compo_progressbar_set_location(bar, GUI_SCREEN_CENTER_X, 224+10/2, 196, 10);
-    compo_progressbar_set_range(bar, 0, 100);
-    compo_progressbar_set_edge_circle(bar, 10/2);
-    compo_progressbar_set_color(bar, make_color(35,141,255), make_color(51,51,51));
+    // compo_progressbar_t * bar = compo_progressbar_create(frm, PROGRESSBAR_HORIZONTAL);
+    compo_arc_t *arc = compo_arc_create(frm);
+    compo_setid(arc, PROGRESS_BAR_ID);
+    compo_arc_set_location(arc, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-4, GUI_SCREEN_HEIGHT-4);
+    compo_arc_set_width(arc, 8);
+    // compo_progressbar_set_location(bar, GUI_SCREEN_CENTER_X, 224+10/2, 196, 10);
+    // compo_progressbar_set_range(bar, 0, 100);
+    // compo_progressbar_set_edge_circle(bar, 10/2);
+    // compo_progressbar_set_color(bar, make_color(35,141,255), make_color(51,51,51));
 
     //TXT1 升级中
     compo_textbox_t* txt = compo_textbox_create(frm, 20);

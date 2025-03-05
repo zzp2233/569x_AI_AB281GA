@@ -623,7 +623,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
 #if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
                 // printf("555555555555555555555555\n");
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I332001_PUBLIC_CLOSE_BIN);
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I332001_OTA_LOW_ELECTRICITY_BIN);
                 compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
 
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);

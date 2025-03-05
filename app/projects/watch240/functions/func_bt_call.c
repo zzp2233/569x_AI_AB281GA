@@ -436,6 +436,15 @@ static void func_bt_call_back_to(void)
     }
 }
 
+static co_timer_t bt_call_time_count;
+static void bt_call_1s_time_back(void)
+{
+    if(func_cb.sta == FUNC_BT_CALL)
+    {
+        f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+        f_bt_call->times++;
+    }
+}
 void bt_incall_time_update(void)
 {
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;

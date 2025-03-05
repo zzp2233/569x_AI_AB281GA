@@ -250,9 +250,9 @@ compo_form_t *func_blood_oxygen_form_create(void)
 //    compo_button_set_visible(btn, false);
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_BLOOD_OXYGEN_UINT]));///测量中...
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_START_MEASURING])+strlen(i18n[STR_MEASURING]));///测量中...
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,64/2+266,200,64);
-    compo_textbox_set(textbox,i18n[STR_BLOOD_OXYGEN_UINT]);
+    compo_textbox_set(textbox,i18n[STR_START_MEASURING]);
     compo_setid(textbox,COMPO_ID_TXT_GAUGE);
 
     return frm;
@@ -302,7 +302,7 @@ static void func_blood_oxygen_disp_handle(void)
             f_bo->need_auto_test_flag = false;
             compo_picturebox_cut(picbox, f_bo->pic_type, 16); ///图片动态显示
             compo_button_set_visible(btn, false);
-            compo_textbox_set(textbox_gauge,i18n[STR_BLOOD_OXYGEN_UINT]);
+            compo_textbox_set(textbox_gauge,i18n[STR_MEASURING]);
         }
     }
     else if (f_bo->blood_oxygen_state == BO_STA_UNWEAR)
@@ -314,7 +314,7 @@ static void func_blood_oxygen_disp_handle(void)
     {
         compo_picturebox_cut(picbox, 0, 16); ///图片动态显示
         compo_button_set_visible(btn, true);
-        compo_textbox_set(textbox_gauge,i18n[STR_NO_DATA]);
+        compo_textbox_set(textbox_gauge,i18n[STR_START_MEASURING]);
     }
 
 

@@ -181,6 +181,19 @@ compo_form_t *func_weather_form_create(void)
             {
                 weather_date.dayTemperatureMax[i]= weather_date.dayTemperatureMax[i]*9/5+32;
                 weather_date.dayTemperatureMin[i]= weather_date.dayTemperatureMin[i]*9/5+32;
+
+                // if(weather_date.dayTemperatureMax[i]<0){
+                //     weather_date.dayTemperatureMax[i]-=0.5;
+                // }else{
+                //     weather_date.dayTemperatureMax[i]+=0.5;
+                // }
+
+                // if(weather_date.dayTemperatureMin[i]<0){
+                //     weather_date.dayTemperatureMin[i]-=0.5;
+                // }else{
+                //     weather_date.dayTemperatureMin[i]+=0.5;
+                // }
+
                 if(weather_date.dayTemperatureMax[i]<(-99))  weather_date.dayTemperatureMax[i]=-99;
                 if(weather_date.dayTemperatureMin[i]<(-99))  weather_date.dayTemperatureMin[i]=-99;
             }

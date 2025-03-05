@@ -161,7 +161,8 @@ static void func_timer_setting_date_init(void)
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
     char time_setting[5]= {58,59,0,01,02};
     char time_setting_hour[5]= {22,23,0,01,02};
-
+    f_timer->old_y = 0;
+    f_timer->sec = 0;
     for(int i=0; i<5; i++)
     {
         f_timer->sec_buf[i]=time_setting[i];
@@ -235,10 +236,6 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
 
             compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
             compo_form_set_title(frm, i18n[STR_CUSTOM]);
-            if (func_cb.sta == FUNC_TIMER)
-            {
-                func_timer_setting_date_init();
-            }
             compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN);
             compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
             picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN);
@@ -602,6 +599,8 @@ static void func_timer_button_click(void)
 
     if (page_next != f_timer->page_disp)
     {
+        f_timer->touch_flag = false;
+        func_timer_setting_date_init();
         f_timer->old_y = 0;
         f_timer->moveto.y = 0;
         f_timer->page_disp = page_next;
@@ -1548,6 +1547,7 @@ static void func_timer_message(size_msg_t msg)
                             compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX01_BIN );
                             compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX01_BIN );
                             f_timer->set_time_flag = 1;
+                            f_timer->touch_flag = true;
                             break;
                         case COMPO_ID_MIN_IMG_BTN:
                             for(int i=0; i<5; i++)
@@ -1558,6 +1558,7 @@ static void func_timer_message(size_msg_t msg)
                             compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX00_BIN );
                             compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX01_BIN );
                             f_timer->set_time_flag = 2;
+                            f_timer->touch_flag = true;
                             break;
                         case COMPO_ID_SEC_IMG_BTN:
                             for(int i=0; i<5; i++)
@@ -1568,10 +1569,10 @@ static void func_timer_message(size_msg_t msg)
                             compo_button_set_bgimg(btn_min,UI_BUF_I330001_TIMER_BOX01_BIN );
                             compo_button_set_bgimg(btn_sec,UI_BUF_I330001_TIMER_BOX00_BIN );
                             f_timer->set_time_flag = 3;
+                            f_timer->touch_flag = true;
                             break;
                     }
                 }
-                f_timer->touch_flag = true;
             }
             func_timer_button_touch_handle();
 
@@ -1717,8 +1718,8 @@ void func_timer(void)
     func_timer_enter();
     while (func_cb.sta == FUNC_TIMER)
     {
-        func_timer_process();
         func_timer_message(msg_dequeue());
+        func_timer_process();
     }
     func_timer_exit();
 }

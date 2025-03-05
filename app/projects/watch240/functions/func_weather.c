@@ -63,7 +63,7 @@ static void weather_refresh(void)
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     ute_display_ctrl_t displayInfo;
     ute_module_weather_data_t  weather_date;
-    uteModuleWeatherGetData(weather_date);//获取天气状态
+    uteModuleWeatherGetData(&weather_date);//获取天气状态
     uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
     bool weather_flag = false;
     for(int i=0; i<7; i++)
@@ -182,6 +182,19 @@ compo_form_t *func_weather_form_create(void)
             {
                 weather_date.dayTemperatureMax[i]= weather_date.dayTemperatureMax[i]*9/5+32;
                 weather_date.dayTemperatureMin[i]= weather_date.dayTemperatureMin[i]*9/5+32;
+
+                // if(weather_date.dayTemperatureMax[i]<0){
+                //     weather_date.dayTemperatureMax[i]-=0.5;
+                // }else{
+                //     weather_date.dayTemperatureMax[i]+=0.5;
+                // }
+
+                // if(weather_date.dayTemperatureMin[i]<0){
+                //     weather_date.dayTemperatureMin[i]-=0.5;
+                // }else{
+                //     weather_date.dayTemperatureMin[i]+=0.5;
+                // }
+
                 if(weather_date.dayTemperatureMax[i]<(-99))  weather_date.dayTemperatureMax[i]=-99;
                 if(weather_date.dayTemperatureMin[i]<(-99))  weather_date.dayTemperatureMin[i]=-99;
             }

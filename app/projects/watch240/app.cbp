@@ -1340,6 +1340,9 @@
 		<Unit filename="functions/func_weather.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_women_health.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/test_mode/func_factory_testing_mode.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -93,14 +93,14 @@ typedef struct
     volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态，0关闭状态
 
     ///位变量不要用于需要在中断改值的变量。 请谨慎使用位变量，尽量少定义位变量。
-    u8  rtc_first_pwron         : 1,   //RTC是否第一次上电
+    u8  rtc_first_pwron     : 1,   //RTC是否第一次上电
     mute                    : 1,   //系统MUTE控制标志
     cm_factory              : 1,   //是否第一次FLASH上电
     cm_vol_change           : 1,   //音量级数是否需要更新到FLASH
     port2led_en             : 1,   //1个IO推两个灯
     voice_evt_brk_en        : 1;   //播放提示音时，U盘、SD卡、LINEIN等插入事件是否立即响应.
 
-    u8  sleep_en                : 1,   //用于控制是否进入sleep
+    u8  sleep_en            : 1,   //用于控制是否进入sleep
     lowbat_flag             : 1,
     bt_reconn_flag          : 1,   //回连失败时候发起一键双连标志
     flag_sleep_ble_status   : 1,   //用于未连接ble休眠后,当ble连接上后更新连接参数用

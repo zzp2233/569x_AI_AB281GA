@@ -163,6 +163,8 @@ void func_menu_sub_exit(void)
 //进入主菜单功能
 static void func_menu_enter(void)
 {
+    task_stack_init();  //任务堆栈
+    latest_task_init(); //最近任务
 }
 
 //退出主菜单功能
@@ -178,74 +180,62 @@ void func_menu(void)
     func_menu_enter();
     while (func_cb.sta == FUNC_MENU)
     {
+        printf("func_cb.menu_style:[%d]\n",func_cb.menu_style);
         switch (func_cb.menu_style)
         {
             case MENU_STYLE_CUM_HONEYGRID:
             case MENU_STYLE_HONEYCOMB:
-                printf("111111111111111111111111\n");
                 func_menu_sub_honeycomb();
                 break;
 
             case MENU_STYLE_WATERFALL:
-                printf("2222222222222222222222222\n");
                 func_menu_sub_waterfall();
                 break;
 
             case MENU_STYLE_FOOTBALL:
-                printf("33333333333333333333333333\n");
                 func_menu_sub_football();
                 break;
 
             case MENU_STYLE_LIST:
             case MENU_STYLE_CUM_FOURGRID:
-                printf("444444444444444444444444\n");
                 func_menu_sub_list();
                 break;
 
             case MENU_STYLE_SUDOKU:
             case MENU_STYLE_SUDOKU_HRZ:
-                printf("55555555555555555555555555555\n");
                 func_menu_sub_sudoku();
                 break;
 
             case MENU_STYLE_GRID:
             case MENU_STYLE_CUM_GRID:
-                printf("6666666666666666666666666666\n");
                 func_menu_sub_grid();
                 break;
 
             case MENU_STYLE_DISK:
-                printf("777777777777777777777777777777\n");
                 func_menu_sub_disk();
                 break;
 
             case MENU_STYLE_RING:
-                printf("88888888888888888888888888\n");
                 func_menu_sub_ring();
                 break;
 
             case MENU_STYLE_KALE:
-                printf("99999999999999999999999999\n");
                 func_menu_sub_kale();
                 break;
 
             case MENU_STYLE_SKYRER:
-                printf("aaaaaaaaaaaaaaaaaaaaaaaaaaaa\n");
                 func_menu_sub_skyrer();
                 break;
 
             case MENU_STYLE_CUM_SUDOKU:
-                printf("bbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n");
                 func_menu_sub_cum_sudoku();
                 break;
 
             case MENU_STYLE_CUM_HEXAGON:
-                printf("cccccccccccccccccccccccccccccc\n");
                 func_menu_sub_hexagon();
                 break;
 
             default:
-                printf("oooooooooooooooooooooooooooo\n");
                 halt(HALT_FUNC_MENU_SUBSTA);
                 break;
         }

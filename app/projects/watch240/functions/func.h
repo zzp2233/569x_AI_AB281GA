@@ -41,6 +41,7 @@ enum
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     FUNC_ALARM_CLOCK,                   //闹钟
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+    FUNC_MENU_STYLE_FOOTBALL_LIST,      //球型菜单更多显示
     FUNC_ALARM_CLOCK_SUB_SET,           //闹钟--设置
     FUNC_ALARM_CLOCK_SUB_REPEAT,        //闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑

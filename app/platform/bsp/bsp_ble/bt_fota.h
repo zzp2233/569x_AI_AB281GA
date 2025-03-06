@@ -54,6 +54,7 @@ void fot_update_continue(void);
 void fot_tws_connect_callback(void);
 void fot_tws_disconnect_callback(void);
 u8 is_fot_start(void);
+void bsp_fot_exit(void);
 bool bsp_fot_is_connect(void);
 u8 fot_app_connect_auth(uint8_t *packet, uint16_t size);
 void fot_spp_connect_callback(void);

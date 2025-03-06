@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-03-05 09:14:51
+*@date   2025-03-06 17:51:06
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -270,6 +270,12 @@ const char * const i18n_zh_rcn[] =
     [STR_MENSTRUAL_CYCLE] = "\xe6\x9c\x88\xe7\xbb\x8f\xe6\x9c\x9f\x00", // [254] 月经期
     [STR_PREGNANCY] = "\xe6\x98\x93\xe5\xad\x95\xe6\x9c\x9f\x00", // [255] 易孕期
     [STR_SAFE_PERIOD] = "\xe5\xae\x89\xe5\x85\xa8\xe6\x9c\x9f\x00", // [256] 安全期
+    [STR_ALL_STEP] = "\xe6\x80\xbb\xe6\xad\xa5\xe6\x95\xb0\x00", // [257] 总步数
+    [STR_AVERAGE] = "\xe5\xb9\xb3\xe5\x9d\x87\xe5\xbf\x83\xe7\x8e\x87\x00", // [258] 平均心率
+    [STR_ALL_TIMER] = "\xe6\x80\xbb\xe6\x97\xb6\xe9\x95\xbf\x00", // [259] 总时长
+    [STR_CALORIES] = "\xe6\x80\xbb\xe7\x83\xad\xe9\x87\x8f\x00", // [260] 总热量
+    [STR_TOTAL_DISTANCE] = "\xe6\x80\xbb\xe8\xb7\x9d\xe7\xa6\xbb\x00", // [261] 总距离
+    [STR_COUNT_NUM] = "\xe6\xac\xa1\xe6\x95\xb0\x00", // [262] 次数
 };
 
 #endif

@@ -290,6 +290,8 @@ void bsp_fot_exit(void)
     fot_remote_seq = 0;
     fot_flag &= ~FOT_FLAG_APP_CONNECT;
 
+    FOT_DEBUG("fot exit\n");
+
     if(fot_var.sys_clk)
     {
         sys_clk_set(fot_var.sys_clk);
@@ -464,14 +466,19 @@ void fot_recv_proc(u8 *buf, u16 len)
     u32 recv_data_len;
     u8 cmd;
 
+    FOT_DEBUG("====>fot_recv_proc,len=%d\n",len);
+    FOT_DEBUG_R(buf,len);
+    FOT_DEBUG("fot_remote_seq:%d, buf[FOT_SEQ_POS]:%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
+
     if(fot_remote_seq != buf[FOT_SEQ_POS])
     {
         if(!memcmp(fot_auth_data,buf,7))
         {
             return;
         }
-        //printf("fot_remote_seq:%d, buf[FOT_SEQ_POS]:%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
-        fot_dev_notify_seq_err(FOT_ERR_SEQ);
+        FOT_DEBUG("remote seq err:%d,%d\n",fot_remote_seq,buf[FOT_SEQ_POS]);
+        fot_dev_notify_sta(FOT_ERR_SEQ);
+        fot_flag |= FOT_FLAG_UPDATE_EXIT;
         return;
     }
 

@@ -665,6 +665,7 @@ void ble_app_watch_connect_callback(void)
 
 void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
 {
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,handle=0x%x,cfg=%d",__func__,handle,cfg);
     if (handle == gatts_ute_ble_read_write_base.handle || handle == gatts_ute_ble5_read_write_base.handle
 #if UTE_SERVICE_PUBLIC_BLE_SUPPORT
         || handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle
@@ -672,6 +673,10 @@ void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
        )
     {
         uteApplicationCommonSetAppClosed(cfg == 0 ? true : false);
+    }
+    else if (handle == gatts_app_notify_base.handle) // && cfg == 0
+    {
+        bsp_fot_exit();
     }
 }
 

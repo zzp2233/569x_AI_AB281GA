@@ -79,7 +79,7 @@ static const text_t sport_sub_run_text[] =
 
     {COMPO_ID_TEXT_SPORT_KM,        45,      163-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KM"},
     {COMPO_ID_TEXT_SPORT_STEP,      45,      201+3,      100,    26,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
-    {COMPO_ID_TEXT_SPORT_KCAL,      42,      125-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
+    {COMPO_ID_TEXT_SPORT_KCAL,      42,      125-5,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
     {COMPO_ID_TEXT_SPORT_HEARTRATE, 44,      237+6-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "MIN/Cnt"},
 };
 

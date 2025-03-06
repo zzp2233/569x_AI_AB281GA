@@ -47,7 +47,7 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_CAMERA,                   UI_BUF_I330001_THEME_1_PHOTO_BIN,                     STR_CAMERA},                //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if UTE_MODULE_SCREENS_LIGHT_SUPPORT
-    {FUNC_LIGHT,                    UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                      STR_SETTING_LIGHT},         //亮度调节
+    {FUNC_LIGHT,                    UI_BUF_I330001_THEME_1_BRIGHTNESS_BIN,                STR_SETTING_LIGHT},         //亮度调节
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {FUNC_TIMER,                    UI_BUF_I330001_THEME_1_TIMER_BIN,                      STR_TIMER},                 //定时器

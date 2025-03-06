@@ -274,6 +274,7 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 //    {UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},
     ////{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
+    {UI_BUF_I332001_THEME_ICON1_PERIOD_BIN,                   FUNC_WOMEN_HEALTH},
 };
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_sub_honeycomb_form_create(void)

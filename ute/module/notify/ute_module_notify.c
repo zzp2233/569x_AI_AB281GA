@@ -585,6 +585,7 @@ void uteModuleNotifyAncsTimerConnectHandler(bool isConnected)
 void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
 {
     // if(uteModuleNotDisturbIsAllowNotify())
+    if(length > 0)
     {
         UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,.attId=%d,uteModuleNotifyData.ancsSetOpenFlag=0x%p", __func__,attId,uteModuleNotifyData.ancsSetOpenFlag);
 
@@ -1562,7 +1563,8 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
             systemSecCnt = tm_to_time(systemTm);
 
             // if (ABS(systemSecCnt - notifySecCnt) < 60 * 5)
-            if(systemSecCnt > notifySecCnt ? (systemSecCnt - notifySecCnt) : (notifySecCnt - systemSecCnt) < 60 * 5)
+            uint32_t diff = systemSecCnt > notifySecCnt ? (systemSecCnt - notifySecCnt) : (notifySecCnt - systemSecCnt);
+            if(diff < 60 * 5)
             {
                 if (uteModuleNotifyData.ancsHasOpen && uteModuleNotifyData.currNotify.size > 0)
                 {

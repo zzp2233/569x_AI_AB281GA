@@ -33,6 +33,7 @@ static const compo_listbox_item_t online_factory_test_list[] =
 #define SET_LIST_CNT                       ((int)(sizeof(online_factory_test_list) / sizeof(online_factory_test_list[0])))
 static const compo_listbox_custom_item_t online_factory_test_list_txt[SET_LIST_CNT]= {/*"老化模式",*/"电量测试","RGB测试","漏光测试","九宫格测试","咪头喇叭测试"};
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 // 工厂测试选项
 compo_form_t *func_test_mode_list_form_create(void)
 {
@@ -51,6 +52,26 @@ compo_form_t *func_test_mode_list_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+// 工厂测试选项
+compo_form_t *func_test_mode_list_form_create(void)
+{
+    // 新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_set(listbox, online_factory_test_list, SET_LIST_CNT);
+//    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
+    compo_listbox_set_text_modify(listbox, online_factory_test_list_txt);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update(listbox);
+
+    return frm;
+}
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 ///测试功能事件处理
 static void func_test_mode_list_process(void)

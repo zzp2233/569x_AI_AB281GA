@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-03-05 09:14:50
+*@date   2025-03-06 17:51:06
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -270,6 +270,12 @@ enum
     STR_MENSTRUAL_CYCLE, // 月经期
     STR_PREGNANCY, // 易孕期
     STR_SAFE_PERIOD, // 安全期
+    STR_ALL_STEP, // 总步数
+    STR_AVERAGE, // 平均心率
+    STR_ALL_TIMER, // 总时长
+    STR_CALORIES, // 总热量
+    STR_TOTAL_DISTANCE, // 总距离
+    STR_COUNT_NUM, // 次数
 };
 
 extern const char * const *i18n;

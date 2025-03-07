@@ -79,7 +79,7 @@ static const text_t sport_sub_run_text[] =
 
     {COMPO_ID_TEXT_SPORT_KM,        45,      163-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KM"},
     {COMPO_ID_TEXT_SPORT_STEP,      45,      201+3,      100,    26,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "STEP"},
-    {COMPO_ID_TEXT_SPORT_KCAL,      42,      125-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
+    {COMPO_ID_TEXT_SPORT_KCAL,      42,      125-5,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "KCAL"},
     {COMPO_ID_TEXT_SPORT_HEARTRATE, 44,      237+6-3,      0,      0,  UI_BUF_0FONT_FONT_BIN,          false,  false,  {.r=255, .g=255, .b=255},       20,     "MIN/Cnt"},
 };
 
@@ -880,12 +880,14 @@ typedef struct f_sport_sub_run_t_
     u8          page_num;
     uint32_t    tick;
     u8          switch_page_state;
-    bool        direction;
+    u8          direction;
     uint32_t    updata_tick;
+    bool page2_move_flag;
 } f_sport_sub_run_t;
 enum
 {
-    UP_DOWM_DIR=0,
+    TOUCH_NULL=0,
+    UP_DOWM_DIR,
     LEFT_RIGHT_DIR,
 };
 
@@ -929,12 +931,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
             sport_flag[2] = true;//卡路里
             break;
         case 2://跳绳
-            sport_flag[0] = true;//公里
+            sport_flag[0] = false;//公里
             sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
         case 3://游泳
-            sport_flag[0] = true;//公里
+            sport_flag[0] = false;//公里
             sport_flag[1] = false;//步数
             sport_flag[2] = true;//卡路里
             break;
@@ -1045,6 +1047,20 @@ compo_form_t *func_sport_sub_run_form_create(void)
             break;
     }
 
+    if(sport_flag[1] == true)
+    {
+        sport_finish_mode = 0;
+    }
+    else if(uteModuleSportMoreSportGetType()==SPORT_TYPE_JUMP_ROPE)
+    {
+        sport_finish_mode = 1;
+    }
+    else
+    {
+        sport_finish_mode = 2;
+    }
+
+    printf("sport_num:%d\n",sport_finish_mode);
     compo_picturebox_t* pic = compo_picturebox_create(frm, func_sport_get_ui(uteModuleSportMoreSportGetType() - 1));///运动类型图片
     compo_picturebox_set_size(pic,70,70);
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,70/2+20);
@@ -1129,13 +1145,18 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_button_set_pos(btn,80/2+212-GUI_SCREEN_WIDTH,80/2+234);
 
     ///*下页*/
-    if((uteModuleSportMoreSportGetType() - 1 == 2 || uteModuleSportMoreSportGetType() - 1 == 3) &&
-       (sport_flag[0] == false && sport_flag[0] == false) )
+    if(sport_flag[0] == false && sport_flag[0] == false && uteModuleSportMoreSportGetType()!=SPORT_TYPE_JUMP_ROPE)
     {
         ab_free(data);
         return frm;
     }
 
+    if(func_cb.sta == FUNC_SPORT_SUB_RUN)
+    {
+        f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
+
+        f_sport_sub_run->page2_move_flag = true;
+    }
     widget_page_t *page = widget_page_create(frm->page);///创建页码页面
     widget_page_set_client(page, 0, 0);
     widget_set_location(page,12/2+340, 30/2+165,12,30);
@@ -1161,7 +1182,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME_DOWN);
 
-    if(!(uteModuleSportMoreSportGetType() - 1 == 2 || uteModuleSportMoreSportGetType() - 1 == 3))
+    if(uteModuleSportMoreSportGetType()!=SPORT_TYPE_JUMP_ROPE)
     {
         if(sport_flag[0] == true)
         {
@@ -1367,6 +1388,10 @@ static void func_soprt_run_move(void)
                     widget_page_set_client(func_cb.frm_main->page, f_sleep->move_offset_x, f_sleep->move_offset);
                 }
                 f_sleep->page_old_x = f_sleep->move_offset_x;
+                if(f_sleep->touch_state == TOUCH_FINISH_STATE)
+                {
+                    f_sleep->direction = TOUCH_NULL;
+                }
             }
         }
 
@@ -1428,6 +1453,10 @@ static void func_soprt_run_move(void)
                 }
                 f_sleep->page_old_y = f_sleep->move_offset;
                 widget_page_set_client(func_cb.frm_main->page_body, 0, f_sleep->move_offset);
+                if(f_sleep->touch_state == TOUCH_FINISH_STATE)
+                {
+                    f_sleep->direction = TOUCH_NULL;
+                }
             }
         }
     }
@@ -1498,6 +1527,10 @@ static void func_soprt_run_move(void)
 
                 widget_page_set_client(func_cb.frm_main->page, f_sleep->move_offset_x, 0);
                 f_sleep->page_old_x = f_sleep->move_offset_x;
+                if(f_sleep->touch_state == TOUCH_FINISH_STATE)
+                {
+                    f_sleep->direction = TOUCH_NULL;
+                }
             }
         }
         // printf("px:%d py:%d\n",f_sleep->move_offset_x,f_sleep->move_offset);
@@ -1585,7 +1618,7 @@ static void func_sport_sub_run_updata(void)
         {
             memset(txt_buf,0,sizeof(txt_buf));
             snprintf(txt_buf,sizeof(txt_buf),"%d",  data->saveData.sportTimes);
-            compo_textbox_set(txt_km, txt_buf);
+            compo_textbox_set(txt_count, txt_buf);
         }
 
         if(pic_km != NULL)
@@ -1664,7 +1697,7 @@ static void func_sport_sub_run_click_handler(void)
         {
             int res=0;
             bool sport_flag = uteModuleSportMoreSportsIsLessData();
-            sport_flag=~sport_flag;
+            // sport_flag ^= 1;
             if (sport_flag)
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_SPORT);
@@ -1762,13 +1795,19 @@ static void func_sport_sub_run_message(size_msg_t msg)
         case MSG_CTP_LONG_UP:
         case MSG_CTP_SHORT_DOWN:
         case MSG_CTP_LONG_DOWN:
-            f_sport_sub_run->direction = UP_DOWM_DIR;
+            if(f_sport_sub_run->page2_move_flag && f_sport_sub_run->direction==TOUCH_NULL)
+            {
+                f_sport_sub_run->direction = UP_DOWM_DIR;
+            }
             break;
         case MSG_CTP_SHORT_LEFT:
         case MSG_CTP_LONG_LEFT:
         case MSG_CTP_SHORT_RIGHT:
         case MSG_CTP_LONG_RIGHT:
-            f_sport_sub_run->direction = LEFT_RIGHT_DIR;
+            if(f_sport_sub_run->direction==TOUCH_NULL)
+            {
+                f_sport_sub_run->direction = LEFT_RIGHT_DIR;
+            }
             break;
         case KU_BACK:
             switch(f_sport_sub_run->page_num)

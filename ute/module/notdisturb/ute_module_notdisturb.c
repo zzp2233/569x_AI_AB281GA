@@ -344,6 +344,12 @@ bool uteModuleNotDisturbIsOpenOneKeyRejectCall(void)
 {
     return uteModuleNotDisturbData.isRejectCall;
 }
+
+void uteModuleNotDisturbSetOneKeyRejectCall(bool isOpen)
+{
+    uteModuleNotDisturbData.isRejectCall = isOpen;
+}
+
 #if UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT
 
 /**

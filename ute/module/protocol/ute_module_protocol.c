@@ -1609,7 +1609,7 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
     if(receive[1]==0x11)
     {
-        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE || uteModuleSportMoreSportGetStatus() != ALL_SPORT_STATUS_CLOSE)
         {
             uint8_t stopCmd[5];
             stopCmd[0] =CMD_SPO2_TEST;

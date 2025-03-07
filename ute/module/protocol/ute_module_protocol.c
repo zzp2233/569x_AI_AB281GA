@@ -1406,6 +1406,7 @@ void uteModuleProtocolSetNotDisturParam(uint8_t*receive,uint8_t length)
     {
         param.isRejectCall = false;
     }
+    uteModuleNotDisturbSetOneKeyRejectCall(param.isRejectCall);
 #if (!UTE_MODULE_LOCAL_SET_NOT_DISTURB_SUPPORT)
     if(receive[1]&0x04)
     {

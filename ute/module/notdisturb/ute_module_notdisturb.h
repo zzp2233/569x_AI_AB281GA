@@ -58,7 +58,7 @@ bool uteModuleNotDisturbIsAllowVibration(void);
 bool uteModuleNotDisturbIsAllowHandScreenOn(void);
 bool uteModuleNotDisturbIsOpenScheduled(void);
 void uteModuleNotDisturbSetScheduled(bool isopen);
-
+void uteModuleNotDisturbSetOneKeyRejectCall(bool isOpen);
 bool uteModuleNotDisturbIsAllowLocalRingtone(void);
 void uteModuleNotDisturbGetParam(ute_module_not_disturb_data_t *param);
 

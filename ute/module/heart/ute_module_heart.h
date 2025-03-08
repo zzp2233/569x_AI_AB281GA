@@ -134,6 +134,7 @@ uint8_t uteModuleHeartGetWorkMode(void);
 uint8_t uteModuleHeartGetHeartValueRange(uint8_t heart);
 uint8_t uteModuleHeartGetHeartWaringMaxValue(void);
 uint8_t uteModuleHeartGetHeartWaringMinValue(void);
+bool uteModuleHeartWaringOpenCtrl(bool isSet,bool isOpen);
 bool uteModuleHeartGetTodayHistoryData(uint8_t *heartHistoryGraph, uint8_t heartHistoryGraphCount);
 #if UTE_SPORTS_HEART_MAX_MIN_WARNING_NOTIFY_SUPPORT
 void uteModuleHeartReadSportHeartWaringInfo(void);

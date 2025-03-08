@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 日语(日本）
 *@author
-*@date   2025-03-05 09:14:52
+*@date   2025-03-06 17:51:08
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -270,6 +270,12 @@ const char * const i18n_ja_rjp[] =
     [STR_MENSTRUAL_CYCLE] = "\xe7\x94\x9f\xe7\x90\x86\xe6\x9c\x9f\xe9\x96\x93\x00", // [254] 生理期間
     [STR_PREGNANCY] = "\xe5\xa6\x8a\xe5\xa8\xa0\xe5\x8f\xaf\xe8\x83\xbd\xe3\x81\xaa\xe6\x99\x82\xe6\x9c\x9f\x00", // [255] 妊娠可能な時期
     [STR_SAFE_PERIOD] = "\xe5\xae\x89\xe5\x85\xa8\xe6\x9c\x9f\xe9\x96\x93\x00", // [256] 安全期間
+    [STR_ALL_STEP] = "\xe6\xad\xa9\xe6\x95\xb0\x00", // [257] 歩数
+    [STR_AVERAGE] = "\xe5\xb9\xb3\xe5\x9d\x87\xe5\xbf\x83\xe6\x8b\x8d\xe6\x95\xb0\x00", // [258] 平均心拍数
+    [STR_ALL_TIMER] = "\xe6\x99\x82\xe9\x96\x93\x00", // [259] 時間
+    [STR_CALORIES] = "\xe3\x82\xab\xe3\x83\xad\xe3\x83\xaa\xe3\x83\xbc\x00", // [260] カロリー
+    [STR_TOTAL_DISTANCE] = "\xe8\xb7\x9d\xe9\x9b\xa2\x00", // [261] 距離
+    [STR_COUNT_NUM] = "\xe9\xa0\xbb\xe5\xba\xa6\x00", // [262] 頻度
 };
 
 #endif

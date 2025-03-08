@@ -130,6 +130,7 @@ void uteModuleNotifyCallDisableHandlerMsg(void)
         {
             uteDrvMotorStop();
         }
+        uteModuleCallClearNumberAndName();
     }
 }
 /**

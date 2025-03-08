@@ -309,6 +309,12 @@ void uteModuleHeartEverySecond(void)
     uteModuleHeartSyncMaxMinAvgHeartValue(time);
     /*! 计算心率最大最小平均值 zn.zeng, 2021-07-16  */
     uteModuleHeartAvgHeartOfCurrentDayProcess((uint8_t)uteModuleHeartData.heartValue);
+#else
+    if (uteModuleGuiCommonGetCurrentScreenId() == FUNC_HEARTRATE && uteModuleHeartIsWear() && (uteModuleHeartData.type == TYPE_HEART))
+    {
+        /*! 同步手环和手机端的最大最小平均值 zn.zeng, 2021-07-16  */
+        uteModuleHeartSyncMaxMinAvgHeartValue(time);
+    }
 #endif
     /*! 换天清除心率最大最小平均值 zn.zeng, 2021-07-16  */
     uteModuleHeartClearAvgHeartOfCurrentDay(&time);

@@ -255,7 +255,7 @@ compo_form_t *func_message_form_create(void)
     if(msg_num == 0)
     {
         //创建无消息界面
-        compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I330001_NOTIFICATION_NO_DATA_BIN);
+        compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I332001_NOTIFICATION_NO_DATA_BIN);
         compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
 
         compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
@@ -299,9 +299,9 @@ compo_form_t *func_message_form_create(void)
 
         char* msg = (char*)ute_msg->historyNotify[i].content;
 
-        compo_cardbox_t *cardbox = compo_cardbox_create(frm,1,1,2,284,133);
+        compo_cardbox_t *cardbox = compo_cardbox_create(frm,1,1,2,284,173);
         compo_setid(cardbox,COMPO_ID_CARD_FIRST+i);
-        compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,109+136*i);
+        compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,141+176*i);
 
         compo_cardbox_rect_set_location(cardbox,0,message_card[0].rect_x,message_card[0].rect_y,message_card[0].rect_w,message_card[0].rect_h,message_card[0].rect_r);
         compo_cardbox_rect_set_color(cardbox,0, make_color(41,41,41));
@@ -323,13 +323,13 @@ compo_form_t *func_message_form_create(void)
     }
 
     //创建按钮
-    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,105+(136*msg_num));
+    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_RECTANGLE00_BIN);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,105+(176*msg_num));
     compo_setid(btn, COMPO_ID_ALL_DEL_BTN);
 
     //创建删除按钮文本
     compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR_ALL]));
-    compo_textbox_set_location(text, GUI_SCREEN_CENTER_X,105+(136*msg_num),200,62);
+    compo_textbox_set_location(text, GUI_SCREEN_CENTER_X,105+(176*msg_num),200,62);
     compo_textbox_set(text, i18n[STR_CLEAR_ALL]);
 
     ab_free(ute_msg);
@@ -346,7 +346,7 @@ static void func_message_card_init()
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->refresh_data = msg_num;
 
-    uint16_t page_height = msg_num*133+109;
+    uint16_t page_height = msg_num*176+141;
     if(page_height<GUI_SCREEN_HEIGHT)
     {
         page_height = GUI_SCREEN_HEIGHT;

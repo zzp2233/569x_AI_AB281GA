@@ -341,8 +341,8 @@ static void func_bird_fail(void)
 #define PIPE_X_GAP                              (GUI_SCREEN_CENTER_X + 80)  //管道水平间隔
 #define PIPE_Y_GAP                              130                         //管道纵向间隔
 #define PIPE_PIC_WIDTH                          57                          //管道图片宽度
-#define PIPE_PIC_HEIGHT                         168                         //管道图片高度
-#define BIRD_VALID_HEIGHT                       300                         //有效界面高度
+#define PIPE_PIC_HEIGHT                         213                         //管道图片高度
+#define BIRD_VALID_HEIGHT                       380                         //有效界面高度
 
 //计算上管道y坐标(中心参考点)
 #define CAL_PIPE_UP_Y_POS(pipe_down_y_pos, pipe_down_cut)    ((pipe_down_y_pos) - (PIPE_PIC_HEIGHT / (pipe_down_cut) / 2) - (PIPE_PIC_HEIGHT / 2) - PIPE_Y_GAP)

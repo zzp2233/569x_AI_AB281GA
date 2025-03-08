@@ -816,7 +816,7 @@ void uteApplicationCommonSaveQuickSwitchInfo(void)
     uint8_t writebuff[12];
     writebuff[0] = uteApplicationCommonData.quickSwitch.isFindband;
     writebuff[1] = uteApplicationCommonData.quickSwitch.isTurnTheWrist;
-    //writebuff[2] = uteApplicationCommonData.quickSwitch.isSedentary;
+    writebuff[2] = uteApplicationCommonData.quickSwitch.isSedentary;
     writebuff[3] = uteApplicationCommonData.quickSwitch.isNotDisturb;
     writebuff[4] = uteApplicationCommonData.quickSwitch.isFindPhone;
     writebuff[5] = uteApplicationCommonData.quickSwitch.isRejectCall;
@@ -824,8 +824,8 @@ void uteApplicationCommonSaveQuickSwitchInfo(void)
     writebuff[7] = uteApplicationCommonData.quickSwitch.isDisplayTime;
     writebuff[8] = uteApplicationCommonData.quickSwitch.isShockTime;
     writebuff[9] = uteApplicationCommonData.quickSwitch.isGoalReach;
-    //writebuff[10] = uteApplicationCommonData.quickSwitch.isDrinkWater;
-    //writebuff[11] = uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning;
+    writebuff[10] = uteApplicationCommonData.quickSwitch.isDrinkWater;
+    writebuff[11] = uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning;
     if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_QUICK_SWITCHINFO,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
     {
         uteModuleFilesystemWriteData(file,&writebuff[0],12);
@@ -847,12 +847,15 @@ void uteApplicationCommonStartPowerOffMsg(void)
     }
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
-
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID);
+#else
     if(!sys_cb.gui_sleep_sta)
     {
         gui_sleep();
     }
-
+    uteApplicationCommonData.isPowerOn = false;
+#endif
     uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
     uteModuleSportSaveStepData();
@@ -915,9 +918,7 @@ void uteApplicationCommonStartPowerOffMsg(void)
     // uteModuleFactoryTestStop();
     // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN|UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR|UTE_MODULE_PLATFORM_DLPS_BIT_KEYS|UTE_MODULE_PLATFORM_DLPS_BIT_UART);
 
-#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
-    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID);
-#else
+#if !UTE_MODULE_SCREENS_POWEROFF_SUPPORT
 //    uteModuleGuiCommonDisplayOff(true);
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
 #endif
@@ -1043,10 +1044,10 @@ void uteApplicationCommonSendQuickSwitchStatus(void)
     {
         setFlag|=QUICK_SWITCH_TURNTHEWRIST;
     }
-    // if(uteModuleSportSedentaryOpenCtrl(0,0))
-    // {
-    //     setFlag|=QUICK_SWITCH_SEDENTARY;
-    // }
+    if(uteModuleSportSedentaryOpenCtrl(0,0))
+    {
+        setFlag|=QUICK_SWITCH_SEDENTARY;
+    }
     if(uteApplicationCommonData.quickSwitch.isNotDisturb)
     {
         setFlag|=QUICK_SWITCH_NOT_DISTURB;
@@ -1079,10 +1080,10 @@ void uteApplicationCommonSendQuickSwitchStatus(void)
     // {
     //     setFlag|=QUICK_SWITCH_DRINK_WATER;
     // }
-    // if(uteModuleHeartWaringOpenCtrl(0,0))
-    // {
-    //     setFlag|=QUICK_SWITCH_HR_ABNORMAL_WARNING;
-    // }
+    if(uteModuleHeartWaringOpenCtrl(0,0))
+    {
+        setFlag|=QUICK_SWITCH_HR_ABNORMAL_WARNING;
+    }
 #if QUICK_SWITCH_LOCAL_IS24HOUR_SUPPORT
     if(uteModuleSystemtime12HOn()==false)
     {
@@ -1126,9 +1127,9 @@ void uteApplicationCommonSetQuickSwitchStatusFromApp(uint8_t *pData)
 
     uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_FINDBAND)?1:0;
     uteApplicationCommonData.quickSwitch.isTurnTheWrist = (setFlag&QUICK_SWITCH_TURNTHEWRIST)?1:0;
-    //uteApplicationCommonData.quickSwitch.is = (setFlag&QUICK_SWITCH_SEDENTARY)?1:0;
+    uteApplicationCommonData.quickSwitch.isSedentary = (setFlag&QUICK_SWITCH_SEDENTARY)?1:0;
 
-    // uteModuleSportSedentaryOpenCtrl(1,(setFlag&QUICK_SWITCH_SEDENTARY)?1:0);
+    uteModuleSportSedentaryOpenCtrl(1,(setFlag&QUICK_SWITCH_SEDENTARY)?1:0);
 
     uteApplicationCommonData.quickSwitch.isNotDisturb = (setFlag&QUICK_SWITCH_NOT_DISTURB)?1:0;
     uteApplicationCommonData.quickSwitch.isFindPhone = (setFlag&QUICK_SWITCH_ANTILOST)?1:0;
@@ -1138,10 +1139,10 @@ void uteApplicationCommonSetQuickSwitchStatusFromApp(uint8_t *pData)
     uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_SHOCK_TIME)?1:0;
     uteApplicationCommonData.quickSwitch.isFindband = (setFlag&QUICK_SWITCH_NOT_DISTURB_MODE)?1:0;
     uteApplicationCommonData.quickSwitch.isGoalReach = (setFlag&QUICK_SWITCH_GOAL_REACH)?1:0;
-    //uteApplicationCommonData.quickSwitch.isDrinkWater = (setFlag&QUICK_SWITCH_DRINK_WATER)?1:0;
+    uteApplicationCommonData.quickSwitch.isDrinkWater = (setFlag&QUICK_SWITCH_DRINK_WATER)?1:0;
     // uteModuleDrinkWaterOpenCtrl(1,(setFlag&QUICK_SWITCH_DRINK_WATER)?1:0);
-    // uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning = (setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0;
-    // uteModuleHeartWaringOpenCtrl(1,(setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0);
+    uteApplicationCommonData.quickSwitch.isHrAbnormalWarnning = (setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0;
+    uteModuleHeartWaringOpenCtrl(1,(setFlag&QUICK_SWITCH_HR_ABNORMAL_WARNING)?1:0);
     uteApplicationCommonSaveQuickSwitchInfo();
 }
 

@@ -995,7 +995,7 @@ void uteModuleSportSedentaryHandler(ute_module_systemtime_time_t time)
 {
     bool needNotify = false;
     /*! 运动中久坐提醒时间清零, xjc 2022-03-21*/
-    if(uteModuleSprotData.moreSportData.status!=ALL_SPORT_STATUS_CLOSE)
+    if(uteModuleSprotData.moreSportData.status!=ALL_SPORT_STATUS_CLOSE || !uteModuleHeartIsWear())
     {
         uteModuleSprotData.sedentary.sedentaryRemindSecCnt = 0;
         return;
@@ -4033,11 +4033,11 @@ void uteModuleSportDisconnectHandler(void)
 void uteModuleSportSedentaryMsg(void)
 {
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s", __func__);
+    if(!uteModuleHeartIsWear())
+    {
+        return;
+    }
     // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SEDENTARY_REMIND_ID);           //久坐提醒界面
-//    if(!uteModuleHeartIsWear())
-//    {
-//        return;
-//    }
     sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
     sys_cb.remind_tag = true;
     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);

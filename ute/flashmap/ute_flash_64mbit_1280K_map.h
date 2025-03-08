@@ -11,9 +11,9 @@
 #define UTE_CODE_ADDRESS                                0x00002000
 #define UTE_CODE_SIZE                                   0x00140000  //1280K Bytes
 #define UTE_UI_ADDRESS                                  0x00142000
-#define UTE_UI_SIZE                                     0x004E9000  //5028K Bytes
-#define UTE_OTA_TMP_ADDRESS                             0x0062B000
-#define UTE_OTA_TMP_SIZE                                0x000D0000  //832K Bytes  UTE_CODE_SIZE*0.65
+#define UTE_UI_SIZE                                     0x00519000  //5028K Bytes
+#define UTE_OTA_TMP_ADDRESS                             0x0065B000
+#define UTE_OTA_TMP_SIZE                                0x000A0000  //832K Bytes  UTE_CODE_SIZE*0.65
 #define UTE_MODULE_WATCHONLINE_START_ADDRESS            0x006FB000
 #define UTE_MODULE_WATCHONLINE_MAX_SIZE                 0x00080000  //512K Bytes
 #define UTE_MODULE_FILESYSTEM_START_ADDRESS             0x0077B000

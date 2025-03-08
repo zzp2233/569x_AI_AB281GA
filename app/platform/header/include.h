@@ -33,6 +33,7 @@
 //ute
 #include "ute_project_config.h"
 #include "ute_module_log.h"
+#include "ute_language_common.h"
 
 #ifndef sscanf
 extern int sscanf(char *s, const char *format, ...);

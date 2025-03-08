@@ -353,6 +353,7 @@ bool uteModuleSportIsTakePicture(void);
 void uteModuleSportSaveSedentaryParam(ute_module_sport_sedentary_param_t *param);
 void uteModuleSportReadSedentaryParam(ute_module_sport_sedentary_param_t *param);
 void uteModuleSportSaveHandScreenOnStepsTargetCnt(bool isHandOpen,uint32_t targetCnt);
+bool uteModuleSportSedentaryOpenCtrl(bool isSet,bool isOpen);
 void uteModuleSportReadConfig(void);
 void uteModuleSportGetCurrDayStepCnt(uint32_t *total,uint32_t *walk,uint32_t *run);
 uint32_t uteModuleSportGetStepsTargetCnt(void);

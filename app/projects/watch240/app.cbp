@@ -221,6 +221,7 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/heart/ute_module_heart.h" />
+		<Unit filename="../../../ute/module/heating_element/ute_module_heating_element.h" />
 		<Unit filename="../../../ute/module/liftwrist/ute_module_liftwrist.c">
 			<Option compilerVar="CC" />
 		</Unit>

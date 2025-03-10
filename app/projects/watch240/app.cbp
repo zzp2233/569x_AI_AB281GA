@@ -141,6 +141,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/drv/gsensor/ute_drv_gsensor_sc7a20h.h" />
+		<Unit filename="../../../ute/drv/gsensor/ute_drv_gsensor_stk8321.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../ute/drv/motor/ute_drv_motor.c">
 			<Option compilerVar="CC" />
 		</Unit>

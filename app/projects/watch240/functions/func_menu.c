@@ -163,8 +163,6 @@ void func_menu_sub_exit(void)
 //进入主菜单功能
 static void func_menu_enter(void)
 {
-    task_stack_init();  //任务堆栈
-    latest_task_init(); //最近任务
 }
 
 //退出主菜单功能

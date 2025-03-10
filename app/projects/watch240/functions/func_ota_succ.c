@@ -63,20 +63,20 @@ compo_form_t *func_ota_succ_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-//    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_01_BIN);
-//    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 35+112/2);
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I332001_OTA_01_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 60+150/2);
 
     //TXT1 升级成功
     compo_textbox_t* txt = compo_textbox_create(frm, 20);
     compo_setid(txt, COMPO_ID_TXT_OTA_SUCC1);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 186+26/2, 196, 30);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 250+32/2, 196, 30);
     widget_text_set_color(txt->txt, make_color(255,255,255));
     compo_textbox_set(txt, i18n[STR_UPDATED]);
 
     //TXT2 手表即将进入重启
     txt = compo_textbox_create(frm, 20);
     compo_setid(txt, COMPO_ID_TXT_OTA_SUCC2);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 215+26/2, 196, 30);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 293+32/2, 224, 30);
     widget_text_set_color(txt->txt, make_color(128,128,128));
     compo_textbox_set(txt, i18n[STR_WATCH_RESTART]);
 

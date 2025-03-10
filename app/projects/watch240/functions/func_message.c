@@ -226,8 +226,8 @@ static const f_message_card_t message_card[]=
     {
         .rect_x=0,     .rect_y=0,    .rect_w=284,  .rect_h=116, .rect_r=20,
         .pic_x=-84,    .pic_y=-58,   .pic_w=46,    .pic_h=46,
-        .time_x=5,     .time_y=-48,  .time_w=120,  .time_h=30,
-        .msg_x=-119,   .msg_y=-10,   .msg_w=250,   .msg_h=72,
+        .time_x=5,     .time_y=-51,  .time_w=120,  .time_h=30,
+        .msg_x=-119,   .msg_y=-20,   .msg_w=250,   .msg_h=72,
     },
 };
 
@@ -259,7 +259,7 @@ compo_form_t *func_message_form_create(void)
         compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
 
         compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
-        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 184, 230, 30);
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 212+16, 230, 30);
         compo_textbox_set(txt, i18n[STR_NO_MSG]);
 
         return frm;

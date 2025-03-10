@@ -155,31 +155,30 @@ static const compo_listbox_item_t tbl_sport_list[] =
 #define SPORT_LIST_CNT                       ((int)(sizeof(tbl_sport_list_sort) / sizeof(tbl_sport_list_sort[0])))
 static const compo_listbox_item_t tbl_sport_list_sort[] =
 {
-    {STR_SPORT_RUN,           UI_BUF_I330001_SPORT_ICON_00_PAOBU_BIN,             .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_RIDE_BIKE,     UI_BUF_I330001_SPORT_ICON_01_QIXING_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_JUMP_ROPE,     UI_BUF_I330001_SPORT_ICON_03_TIAOSHEN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    // {STR_SPORT_SWIMMING,      UI_BUF_I330001_SPORT_ICON_04_YOUYONG_BIN,           .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_BADMINTON,     UI_BUF_I330001_SPORT_ICON_05_YUMAOQIU_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_TABLE_TENNIS,  UI_BUF_I330001_SPORT_ICON_06_PINGPANGQIU_BIN,       .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_TENNIS,        UI_BUF_I330001_SPORT_ICON_07_WANGQIU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_CLIMBING,      UI_BUF_I330001_SPORT_ICON_08_DENGSHAN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_WALKING,       UI_BUF_I330001_SPORT_ICON_02_JIANZOU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_BASKETBALL,    UI_BUF_I330001_SPORT_ICON_09_LANQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_FOOTBALL,      UI_BUF_I330001_SPORT_ICON_10_ZUQIU_BIN,             .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_BASEBALL,      UI_BUF_I330001_SPORT_ICON_11_BANGQIU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_VOLLEYBALL,    UI_BUF_I330001_SPORT_ICON_12_PAIQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_CRICKET,       UI_BUF_I330001_SPORT_ICON_13_BANQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_RUGBY,         UI_BUF_I330001_SPORT_ICON_14_GANLANQIU_BIN,         .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_HOCKEY,        UI_BUF_I330001_SPORT_ICON_15_QUGUNQIU_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_DANCE,         UI_BUF_I330001_SPORT_ICON_16_TIAOWU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_SPINNING,      UI_BUF_I330001_SPORT_ICON_17_DONGGANDANCHE_BIN,     .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_YOGA,          UI_BUF_I330001_SPORT_ICON_18_YUJIA_BIN,             .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_SIT_UP,        UI_BUF_I330001_SPORT_ICON_19_YANGWOQIZUO_BIN,       .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_TREADMILL,     UI_BUF_I330001_SPORT_ICON_20_SHINEIPAO_BIN,         .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_GYMNASTICS,    UI_BUF_I330001_SPORT_ICON_21_TICAO_BIN,             .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_BOATING,       UI_BUF_I330001_SPORT_ICON_22_HUACHUAN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_JUMPING_JACK,  UI_BUF_I330001_SPORT_ICON_23_KAIHETIAO_BIN,         .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_FREE_TRAINING, UI_BUF_I330001_SPORT_ICON_24_ZIYOUXUNLIAN_BIN,      .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_RUN,           UI_BUF_I332001_SPORT_ICON_00_PAOBU_BIN,             .vidx = SPORT_TYPE_RUNNING       },
+    {STR_SPORT_RIDE_BIKE,     UI_BUF_I332001_SPORT_ICON_01_QIXING_BIN,            .vidx = SPORT_TYPE_RIDE_BIKE     },
+    {STR_SPORT_JUMP_ROPE,     UI_BUF_I332001_SPORT_ICON_03_TIAOSHEN_BIN,          .vidx = SPORT_TYPE_JUMP_ROPE     },
+    {STR_SPORT_BADMINTON,     UI_BUF_I332001_SPORT_ICON_05_YUMAOQIU_BIN,          .vidx = SPORT_TYPE_BADMINTON     },
+    {STR_SPORT_TABLE_TENNIS,  UI_BUF_I332001_SPORT_ICON_06_PINGPANGQIU_BIN,       .vidx = SPORT_TYPE_TABLE_TENNIS  },
+    {STR_SPORT_TENNIS,        UI_BUF_I332001_SPORT_ICON_07_WANGQIU_BIN,           .vidx = SPORT_TYPE_TENNIS        },
+    {STR_SPORT_CLIMBING,      UI_BUF_I332001_SPORT_ICON_08_DENGSHAN_BIN,          .vidx = SPORT_TYPE_CLIMBING      },
+    {STR_SPORT_WALKING,       UI_BUF_I332001_SPORT_ICON_02_JIANZOU_BIN,           .vidx = SPORT_TYPE_WALKING       },
+    {STR_SPORT_BASKETBALL,    UI_BUF_I332001_SPORT_ICON_09_LANQIU_BIN,            .vidx = SPORT_TYPE_BASKETBALL    },
+    {STR_SPORT_FOOTBALL,      UI_BUF_I332001_SPORT_ICON_10_ZUQIU_BIN,             .vidx = SPORT_TYPE_FOOTBALL      },
+    {STR_SPORT_BASEBALL,      UI_BUF_I332001_SPORT_ICON_11_BANGQIU_BIN,           .vidx = SPORT_TYPE_BASEBALL      },
+    {STR_SPORT_VOLLEYBALL,    UI_BUF_I332001_SPORT_ICON_12_PAIQIU_BIN,            .vidx = SPORT_TYPE_VOLLEYBALL    },
+    {STR_SPORT_CRICKET,       UI_BUF_I332001_SPORT_ICON_13_BANQIU_BIN,            .vidx = SPORT_TYPE_CRICKET       },
+    {STR_SPORT_RUGBY,         UI_BUF_I332001_SPORT_ICON_14_GANLANQIU_BIN,         .vidx = SPORT_TYPE_RUGBY         },
+    {STR_SPORT_HOCKEY,        UI_BUF_I332001_SPORT_ICON_15_QUGUNQIU_BIN,          .vidx = SPORT_TYPE_HOCKEY        },
+    {STR_SPORT_DANCE,         UI_BUF_I332001_SPORT_ICON_16_TIAOWU_BIN,            .vidx = SPORT_TYPE_DANCE         },
+    {STR_SPORT_SPINNING,      UI_BUF_I332001_SPORT_ICON_17_DONGGANDANCHE_BIN,     .vidx = SPORT_TYPE_SPINNING      },
+    {STR_SPORT_YOGA,          UI_BUF_I332001_SPORT_ICON_18_YUJIA_BIN,             .vidx = SPORT_TYPE_YOGA          },
+    {STR_SPORT_SIT_UP,        UI_BUF_I332001_SPORT_ICON_19_YANGWOQIZUO_BIN,       .vidx = SPORT_TYPE_SIT_UP        },
+    {STR_SPORT_TREADMILL,     UI_BUF_I332001_SPORT_ICON_20_SHINEIPAO_BIN,         .vidx = SPORT_TYPE_TREADMILL     },
+    {STR_SPORT_GYMNASTICS,    UI_BUF_I332001_SPORT_ICON_21_TICAO_BIN,             .vidx = SPORT_TYPE_GYMNASTICS    },
+    {STR_SPORT_BOATING,       UI_BUF_I332001_SPORT_ICON_22_HUACHUAN_BIN,          .vidx = SPORT_TYPE_BOATING       },
+    {STR_SPORT_JUMPING_JACK,  UI_BUF_I332001_SPORT_ICON_23_KAIHETIAO_BIN,         .vidx = SPORT_TYPE_JUMPING_JACK  },
+    {STR_SPORT_FREE_TRAINING, UI_BUF_I332001_SPORT_ICON_24_ZIYOUXUNLIAN_BIN,      .vidx = SPORT_TYPE_FREE_TRAINING },
 };
 
 
@@ -247,7 +246,7 @@ static void func_sport_list_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= SPORT_LIST_CNT)
+    if (icon_idx < 0 || icon_idx >= MENU_LIST_CNT)
     {
         return;
     }
@@ -260,25 +259,15 @@ static void func_sport_list_icon_click(void)
         return;
     }
     //根据图标索引获取应用ID
-    func_sta = tbl_sport_list_sort[icon_idx].func_sta;
+    func_sta = FUNC_SPORT_SWITCH;
 
     //切入应用
-//    if (func_sta > 0 && !listbox->flag_area)
     if (func_sta > 0)
     {
-//        compo_form_t *frm = func_create_form(func_sta);
-//        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
-//        compo_form_destroy(frm);
         func_cb.sta = func_sta;
-        sys_cb.sport_idx = listbox->focus_icon_idx;                //记住当前编号
-//        printf("sport_idx=%d\n", sys_cb.sport_idx);
+        sys_cb.sport_idx = tbl_sport_list_sort[icon_idx].vidx-1;
     }
 
-//    if(listbox->flag_area)
-//    {
-//        func_cb.sta = FUNC_SPORT_CONFIG;
-//        listbox->flag_area = 0;
-//    }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 #define UTE_SPORT_TYPE(type)        [type-1]
@@ -406,34 +395,34 @@ static const compo_listbox_item_t tbl_sport_list[] =
     UTE_SPORT_TYPE(SPORT_TYPE_CYWEE_SWIM)           = {STR_SPORT_RUN,           UI_BUF_I332001_SPORT_ICON_25_CAIDAN_BIN,              .func_sta = FUNC_SPORT_SWITCH},
 #endif // UTE_MODULE_SPORT_HUNDRED_SUPPORT
 };
+
 #define SPORT_LIST_CNT                       ((int)(sizeof(tbl_sport_list_sort) / sizeof(tbl_sport_list_sort[0])))
 static const compo_listbox_item_t tbl_sport_list_sort[] =
 {
-    {STR_SPORT_RUN,           UI_BUF_I332001_SPORT_ICON_00_PAOBU_BIN,             .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_RIDE_BIKE,     UI_BUF_I332001_SPORT_ICON_01_QIXING_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_JUMP_ROPE,     UI_BUF_I332001_SPORT_ICON_03_TIAOSHEN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    // {STR_SPORT_SWIMMING,      UI_BUF_I332001_SPORT_ICON_04_YOUYONG_BIN,           .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_BADMINTON,     UI_BUF_I332001_SPORT_ICON_05_YUMAOQIU_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_TABLE_TENNIS,  UI_BUF_I332001_SPORT_ICON_06_PINGPANGQIU_BIN,       .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_TENNIS,        UI_BUF_I332001_SPORT_ICON_07_WANGQIU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_CLIMBING,      UI_BUF_I332001_SPORT_ICON_08_DENGSHAN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_WALKING,       UI_BUF_I332001_SPORT_ICON_02_JIANZOU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_BASKETBALL,    UI_BUF_I332001_SPORT_ICON_09_LANQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_FOOTBALL,      UI_BUF_I332001_SPORT_ICON_10_ZUQIU_BIN,             .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_BASEBALL,      UI_BUF_I332001_SPORT_ICON_11_BANGQIU_BIN,           .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_VOLLEYBALL,    UI_BUF_I332001_SPORT_ICON_12_PAIQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_CRICKET,       UI_BUF_I332001_SPORT_ICON_13_BANQIU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_RUGBY,         UI_BUF_I332001_SPORT_ICON_14_GANLANQIU_BIN,         .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_HOCKEY,        UI_BUF_I332001_SPORT_ICON_15_QUGUNQIU_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_DANCE,         UI_BUF_I332001_SPORT_ICON_16_TIAOWU_BIN,            .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_SPINNING,      UI_BUF_I332001_SPORT_ICON_17_DONGGANDANCHE_BIN,     .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_YOGA,          UI_BUF_I332001_SPORT_ICON_18_YUJIA_BIN,             .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_SIT_UP,        UI_BUF_I332001_SPORT_ICON_19_YANGWOQIZUO_BIN,       .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_TREADMILL,     UI_BUF_I332001_SPORT_ICON_20_SHINEIPAO_BIN,         .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_GYMNASTICS,    UI_BUF_I332001_SPORT_ICON_21_TICAO_BIN,             .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_BOATING,       UI_BUF_I332001_SPORT_ICON_22_HUACHUAN_BIN,          .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_JUMPING_JACK,  UI_BUF_I332001_SPORT_ICON_23_KAIHETIAO_BIN,         .func_sta = FUNC_SPORT_SWITCH},
-    {STR_SPORT_FREE_TRAINING, UI_BUF_I332001_SPORT_ICON_24_ZIYOUXUNLIAN_BIN,      .func_sta = FUNC_SPORT_SWITCH},
+    {STR_SPORT_RUN,           UI_BUF_I332001_SPORT_ICON_00_PAOBU_BIN,             .vidx = SPORT_TYPE_RUNNING       },
+    {STR_SPORT_RIDE_BIKE,     UI_BUF_I332001_SPORT_ICON_01_QIXING_BIN,            .vidx = SPORT_TYPE_RIDE_BIKE     },
+    {STR_SPORT_JUMP_ROPE,     UI_BUF_I332001_SPORT_ICON_03_TIAOSHEN_BIN,          .vidx = SPORT_TYPE_JUMP_ROPE     },
+    {STR_SPORT_BADMINTON,     UI_BUF_I332001_SPORT_ICON_05_YUMAOQIU_BIN,          .vidx = SPORT_TYPE_BADMINTON     },
+    {STR_SPORT_TABLE_TENNIS,  UI_BUF_I332001_SPORT_ICON_06_PINGPANGQIU_BIN,       .vidx = SPORT_TYPE_TABLE_TENNIS  },
+    {STR_SPORT_TENNIS,        UI_BUF_I332001_SPORT_ICON_07_WANGQIU_BIN,           .vidx = SPORT_TYPE_TENNIS        },
+    {STR_SPORT_CLIMBING,      UI_BUF_I332001_SPORT_ICON_08_DENGSHAN_BIN,          .vidx = SPORT_TYPE_CLIMBING      },
+    {STR_SPORT_WALKING,       UI_BUF_I332001_SPORT_ICON_02_JIANZOU_BIN,           .vidx = SPORT_TYPE_WALKING       },
+    {STR_SPORT_BASKETBALL,    UI_BUF_I332001_SPORT_ICON_09_LANQIU_BIN,            .vidx = SPORT_TYPE_BASKETBALL    },
+    {STR_SPORT_FOOTBALL,      UI_BUF_I332001_SPORT_ICON_10_ZUQIU_BIN,             .vidx = SPORT_TYPE_FOOTBALL      },
+    {STR_SPORT_BASEBALL,      UI_BUF_I332001_SPORT_ICON_11_BANGQIU_BIN,           .vidx = SPORT_TYPE_BASEBALL      },
+    {STR_SPORT_VOLLEYBALL,    UI_BUF_I332001_SPORT_ICON_12_PAIQIU_BIN,            .vidx = SPORT_TYPE_VOLLEYBALL    },
+    {STR_SPORT_CRICKET,       UI_BUF_I332001_SPORT_ICON_13_BANQIU_BIN,            .vidx = SPORT_TYPE_CRICKET       },
+    {STR_SPORT_RUGBY,         UI_BUF_I332001_SPORT_ICON_14_GANLANQIU_BIN,         .vidx = SPORT_TYPE_RUGBY         },
+    {STR_SPORT_HOCKEY,        UI_BUF_I332001_SPORT_ICON_15_QUGUNQIU_BIN,          .vidx = SPORT_TYPE_HOCKEY        },
+    {STR_SPORT_DANCE,         UI_BUF_I332001_SPORT_ICON_16_TIAOWU_BIN,            .vidx = SPORT_TYPE_DANCE         },
+    {STR_SPORT_SPINNING,      UI_BUF_I332001_SPORT_ICON_17_DONGGANDANCHE_BIN,     .vidx = SPORT_TYPE_SPINNING      },
+    {STR_SPORT_YOGA,          UI_BUF_I332001_SPORT_ICON_18_YUJIA_BIN,             .vidx = SPORT_TYPE_YOGA          },
+    {STR_SPORT_SIT_UP,        UI_BUF_I332001_SPORT_ICON_19_YANGWOQIZUO_BIN,       .vidx = SPORT_TYPE_SIT_UP        },
+    {STR_SPORT_TREADMILL,     UI_BUF_I332001_SPORT_ICON_20_SHINEIPAO_BIN,         .vidx = SPORT_TYPE_TREADMILL     },
+    {STR_SPORT_GYMNASTICS,    UI_BUF_I332001_SPORT_ICON_21_TICAO_BIN,             .vidx = SPORT_TYPE_GYMNASTICS    },
+    {STR_SPORT_BOATING,       UI_BUF_I332001_SPORT_ICON_22_HUACHUAN_BIN,          .vidx = SPORT_TYPE_BOATING       },
+    {STR_SPORT_JUMPING_JACK,  UI_BUF_I332001_SPORT_ICON_23_KAIHETIAO_BIN,         .vidx = SPORT_TYPE_JUMPING_JACK  },
+    {STR_SPORT_FREE_TRAINING, UI_BUF_I332001_SPORT_ICON_24_ZIYOUXUNLIAN_BIN,      .vidx = SPORT_TYPE_FREE_TRAINING },
 };
 u32 func_sport_get_current_idx(void)
 {
@@ -512,25 +501,15 @@ static void func_sport_list_icon_click(void)
         return;
     }
     //根据图标索引获取应用ID
-    func_sta = tbl_sport_list_sort[icon_idx].func_sta;
+    func_sta = FUNC_SPORT_SWITCH;
 
     //切入应用
-//    if (func_sta > 0 && !listbox->flag_area)
     if (func_sta > 0)
     {
-//        compo_form_t *frm = func_create_form(func_sta);
-//        func_switching(FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO, listbox->sel_icon);
-//        compo_form_destroy(frm);
         func_cb.sta = func_sta;
-        sys_cb.sport_idx = listbox->focus_icon_idx;                //记住当前编号
-//        printf("sport_idx=%d\n", sys_cb.sport_idx);
+        sys_cb.sport_idx = tbl_sport_list_sort[icon_idx].vidx-1;                //记住当前编号
     }
 
-//    if(listbox->flag_area)
-//    {
-//        func_cb.sta = FUNC_SPORT_CONFIG;
-//        listbox->flag_area = 0;
-//    }
 }
 
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

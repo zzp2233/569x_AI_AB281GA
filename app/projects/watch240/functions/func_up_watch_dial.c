@@ -124,27 +124,31 @@ compo_form_t *func_up_watch_dial_form_create(void)
 {
     compo_form_t *frm = compo_form_create(true);
 
-//    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I330001_OTA_00_BIN);
-//    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 35+112/2);
-//    compo_setid(picbox,ROCKET_ID);
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I332001_OTA_00_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 60+150/2);
+    compo_setid(picbox,ROCKET_ID);
 
     //CODE 进度条
-    compo_progressbar_t * bar = compo_progressbar_create(frm, PROGRESSBAR_HORIZONTAL);
-    compo_setid(bar, PROGRESS_BAR_ID);
-    compo_progressbar_set_location(bar, GUI_SCREEN_CENTER_X, 224+10/2, 196, 10);
-    compo_progressbar_set_range(bar, 0, 100);
-    compo_progressbar_set_edge_circle(bar, 10/2);
-    compo_progressbar_set_color(bar, make_color(35,141,255), make_color(51,51,51));
+    compo_arc_t *arc = compo_arc_create(frm);
+    compo_setid(arc, PROGRESS_BAR_ID);
+    compo_arc_set_location(arc, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-5, GUI_SCREEN_HEIGHT-5);
+    compo_arc_set_rotation(arc, 0);
+    compo_arc_set_angles(arc, 0, 3600);
+    compo_arc_set_edge_circle(arc,true,true);
+    compo_arc_set_color(arc,make_color(0x23,0x8d,0xff),make_color(0x33,0x33,0x33));
+    compo_arc_set_alpha(arc,255,255);
+    compo_arc_set_value(arc,0);
+    compo_arc_set_width(arc, 10);
 
     //TXT1 升级中
     compo_textbox_t* txt = compo_textbox_create(frm, 40);
     compo_setid(txt, UPDATING_TXT_ID);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 186+26/2, 196, 30);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 250+32/2, 196, 30);
     compo_textbox_set(txt, i18n[STR_INS]);
 
     txt = compo_textbox_create(frm,  40);
     compo_setid(txt, UPDATING_TXT_TIP_ID);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 224+10/2, 196, 30);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 293+32/2, 224, 30);
     compo_textbox_set(txt, i18n[STR_APP_AGIAN]);
     compo_textbox_set_forecolor(txt, COLOR_GRAY);
     compo_textbox_set_visible(txt, false);
@@ -184,22 +188,21 @@ static void func_up_watch_dial_disp(void)
             {
                 progress=100;
                 f_up_watch_dial->state  = UPGRADE_SUCCESSFUL;
-//                compo_textbox_set_visible(txt_tip, true);
                 compo_textbox_set(txt_state, i18n[STR_SYNC_SUC]);
-//                compo_picturebox_set(picbox, UI_BUF_I330001_OTA_00_BIN);
-                compo_progressbar_set_color(bar, make_color(0,0,0), make_color(0,0,0));
                 f_up_watch_dial->switch_page_time = tick_get();
+                compo_arc_set_visible(bar,false);
+                compo_picturebox_set(picbox,UI_BUF_I332001_OTA_01_BIN);
             }
-            compo_progressbar_set_value(bar,progress);
+            compo_arc_set_value(bar,progress*10);
         }
         else
         {
             f_up_watch_dial->state  = UPGRADE_FAILED;
             compo_textbox_set_visible(txt_tip, true);
             compo_textbox_set(txt_state, i18n[STR_SYNC_FAIL]);
-//            compo_picturebox_set(picbox, UI_BUF_I330001_OTA_02_BIN);
-            compo_progressbar_set_color(bar, make_color(0,0,0), make_color(0,0,0));
             f_up_watch_dial->switch_page_time = tick_get();
+            compo_arc_set_visible(bar,false);
+            compo_picturebox_set(picbox,UI_BUF_I332001_OTA_02_BIN);
         }
     }
 }

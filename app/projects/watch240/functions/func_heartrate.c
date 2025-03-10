@@ -287,7 +287,7 @@ compo_form_t *func_heartrate_form_create(void)
     area_t txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,120+txt_leng.wid,258,58,22);
+    compo_textbox_set_location(textbox,120+txt_leng.wid,255,67, widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
     compo_setid(textbox,COMPO_ID_HEART_BPM_TXT);
@@ -312,7 +312,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_align_center(textbox, false);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_XIA_BIN);
-    compo_picturebox_set_pos(picbox, 235-28/2,302+22/2);
+    compo_picturebox_set_pos(picbox, 235-28/2,308+22/2);
 
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
@@ -447,7 +447,7 @@ static void func_heartrate_refresh(void)
             compo_textbox_set(textbox_value,txt_buf);
         }
         area_t txt_leng = widget_text_get_area(textbox_value->txt);
-        compo_textbox_set_location(textbox_bpm,120+txt_leng.wid,258,58,22);
+        compo_textbox_set_pos(textbox_bpm,120+txt_leng.wid,255);
     }
 
 }

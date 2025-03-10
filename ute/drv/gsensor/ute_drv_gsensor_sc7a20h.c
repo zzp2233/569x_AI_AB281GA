@@ -149,6 +149,10 @@ bool uteDrvGsensorSc7a20hAccInit(ute_drv_gsensor_acc_rate_t accRate,uint8_t accR
     {
         accPmSleepMs = SC7A20H_ACC_10MS;
     }
+
+    uteDrvGsensorSc7a20hWriteReg(0x68,0xa5);
+    uteModulePlatformDelayMs(200);
+
     uteDrvGsensorSc7a20hDeepSleep();
     //uteDrvGsensorSc7a20hSoftwareReset();
     if(accRange==8)

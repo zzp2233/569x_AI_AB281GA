@@ -23,6 +23,7 @@ const ute_drv_gsensor_common_config_t *uteDrvGsensorConfigList[]=
 #if UTE_DRV_STK8321_SUPPORT
     &drvGsensorStk8321Function,
     &drvGsensorStk8325Function,
+    &drvGsensorStk8327Function,
 #endif
 #if UTE_DRV_GSENSOR_SC7A20E_SUPPORT
     &drvGsensorSc7a20eFunction,
@@ -57,7 +58,8 @@ uint8_t uteDrvGsensorCommonReadId(uint8_t slaveAddress,uint8_t reg)
     {
         uteDrvGsensorStk8321WriteReg(0x14,0xB6);
         uteModulePlatformDelayUs(50000);
-        uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,slaveAddress,&reg,1,&readId,1);
+        // uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,slaveAddress,&reg,1,&readId,1);
+        bsp_hw_i2c_rx_buf(i2c_cfg, GSENSOR_READ_ADDR(slaveAddress), reg, &readId, 1);
     }
     if(readId == 0x26)/*STK8321系列的一款型号，ID也是0x26(和7A20E一样),可读0x28寄存器判断，dengli.lu 2024-03-18*/
     {
@@ -67,10 +69,19 @@ uint8_t uteDrvGsensorCommonReadId(uint8_t slaveAddress,uint8_t reg)
         {
             uteDrvGsensorStk8321WriteReg(0x14,0xB6);
             uteModulePlatformDelayUs(50000);
-            uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,slaveAddress,&reg,1,&readId,1);//原厂补充修改，在此改为重新读取一次ID dengli.lu 2024-04-17*/
+            // uteModulePlatformTwiWriteRead(UTE_DRV_GSENSOR_SPI_TWI_ID,slaveAddress,&reg,1,&readId,1);//原厂补充修改，在此改为重新读取一次ID dengli.lu 2024-04-17*/
+            bsp_hw_i2c_rx_buf(i2c_cfg, GSENSOR_READ_ADDR(slaveAddress), reg, &readId, 1);
         }
     }
+    if(readId == 0x26)/*8327与7A20E的ID冲突，8327改成自定义ID zwq 2024-6-20*/
+    {
+        readId = UTE_DRV_GSENSOR_ID_STK8327;
+    }
 #endif
+    if(readId==0)
+    {
+        readId = 0x23;/*! 如果读不到id，默认使用stk8321的驱动 zn.zeng, 2021-12-14  */
+    }
     return readId;
 }
 /**
@@ -149,17 +160,35 @@ void uteDrvGsensorCommonXYZaxisDataBitChange(ute_drv_gsensor_common_axis_bit_cha
     }
     for(uint8_t i =0 ; i<size; i++)
     {
-        if (offsetBit >= 0)
+        if(UTE_DRV_GSENSOR_ID_STK8327 == uteDrvGsensorCommonGetId())
         {
-            bitChange->outputXaxis[i] = bitChange->inputXaxis[i] >> offsetBit;
-            bitChange->outputYaxis[i] = bitChange->inputYaxis[i] >> offsetBit;
-            bitChange->outputZaxis[i] = bitChange->inputZaxis[i] >> offsetBit;
+            if (offsetBit >= 0)
+            {
+                bitChange->outputXaxis[i] = bitChange->inputXaxis[i] /58;
+                bitChange->outputYaxis[i] = bitChange->inputYaxis[i] /58;
+                bitChange->outputZaxis[i] = bitChange->inputZaxis[i] /58;
+            }
+            else
+            {
+                bitChange->outputXaxis[i] = bitChange->inputXaxis[i] << (-offsetBit);
+                bitChange->outputYaxis[i] = bitChange->inputYaxis[i] << (-offsetBit);
+                bitChange->outputZaxis[i] = bitChange->inputZaxis[i] << (-offsetBit);
+            }
         }
         else
         {
-            bitChange->outputXaxis[i] = bitChange->inputXaxis[i] << (-offsetBit);
-            bitChange->outputYaxis[i] = bitChange->inputYaxis[i] << (-offsetBit);
-            bitChange->outputZaxis[i] = bitChange->inputZaxis[i] << (-offsetBit);
+            if (offsetBit >= 0)
+            {
+                bitChange->outputXaxis[i] = bitChange->inputXaxis[i] >> offsetBit;
+                bitChange->outputYaxis[i] = bitChange->inputYaxis[i] >> offsetBit;
+                bitChange->outputZaxis[i] = bitChange->inputZaxis[i] >> offsetBit;
+            }
+            else
+            {
+                bitChange->outputXaxis[i] = bitChange->inputXaxis[i] << (-offsetBit);
+                bitChange->outputYaxis[i] = bitChange->inputYaxis[i] << (-offsetBit);
+                bitChange->outputZaxis[i] = bitChange->inputZaxis[i] << (-offsetBit);
+            }
         }
     }
 }

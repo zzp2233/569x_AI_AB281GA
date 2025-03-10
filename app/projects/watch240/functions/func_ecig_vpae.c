@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_systemtime.h"
 #include "api_gui.h"
+#include "../../../../ute/module/smoke/ute_module_smoke.h"
 #if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
 
 
@@ -35,6 +36,7 @@ typedef struct f_ecig_t_
 compo_form_t *func_ecig_vpae_sub_form_create(void)
 {
     char txt_buf[30];
+
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
@@ -98,7 +100,7 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     compo_textbox_set(textbox_p,txt_buf);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%d",20);
+    snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleGetSomkeSomkeCount());
     compo_textbox_t *textbox_num = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_font(textbox_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_align_center(textbox_num, false);
@@ -241,7 +243,9 @@ static void func_ecig_vpae_sub_message(size_msg_t msg)
 
 static void func_ecig_vpae_sub_enter(void)
 {
-    for (int i=0; i<24; i++)ecig_date[i]=5*i;
+    uint32_t smoking_counts[24];
+    uteModuleGetSmokingCountPerHour(smoking_counts);
+    for (int i=0; i<24; i++)ecig_date[i]=smoking_counts[i];
     func_cb.f_cb = func_zalloc(sizeof(f_ecig_t));
     func_cb.frm_main = func_ecig_vpae_sub_form_create();
     f_ecig_t *f_ecig = (f_ecig_t *)func_cb.f_cb;

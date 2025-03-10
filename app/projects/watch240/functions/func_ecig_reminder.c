@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_systemtime.h"
+#include "../../../../ute/module/smoke/ute_module_smoke.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -48,6 +50,18 @@ compo_form_t *func_ecig_reminder_form_create(void)
         compo_animation_set_interval(animation, 30);
         compo_setid(animation,COMPO_ID_PIC_SMOCKING);
         compo_textbox_set(txt, "吸烟中...");
+        uint32_t smokeing_count = uteModuleGetSomkeSomkeCount();
+        smokeing_count++;
+        uteModuleSetSomkeCount(smokeing_count);
+
+        // 获取当前时间
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+        int current_hour = time.hour;
+
+        // 更新对应小时的口数
+        uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
+        uteModuleSmokeDataSaveConfig();  // 保存配置
     }
     else if(sys_cb.smoke_index == SHORT_CIRCUIT)
     {

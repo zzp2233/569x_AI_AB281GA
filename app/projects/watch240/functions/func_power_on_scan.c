@@ -61,15 +61,19 @@ compo_form_t *func_power_on_scan_form_create(void)
     compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X, 360-32/2);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,282+22,261,22);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,302,230,widget_text_get_max_height()*2);
+    compo_textbox_set_multiline(textbox,true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
 
     static const uint8_t maxSizeQrCodeLink = 140;
     char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
     uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
     compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set_pos(qrbox,GUI_SCREEN_CENTER_X,90+82);
+    compo_qrcodebox_set_bitwid(qrbox, 100);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 120);
     compo_qrcodebox_set(qrbox, qr_str);
-    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
     uteModulePlatformMemoryFree(qr_str);
 
     return frm;

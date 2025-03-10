@@ -1075,14 +1075,14 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
 
     txt = compo_textbox_create(frm, 50);///心率文本
-    compo_textbox_set_location(txt, 154/2+32, 22/2+184, 154, 22);
+    compo_textbox_set_location(txt, 154/2+32, 22/2+184, 154, 30);
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_HEART_RATE],i18n[STR_PER_MINUTE]);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
 
     txt = compo_textbox_create(frm, 50);///卡路里文本
-    compo_textbox_set_location(txt, 154/2+196, 22/2+184, 154, 22);
+    compo_textbox_set_location(txt, 132/2+186, 22/2+184, 148, 30);
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_KCAL],i18n[STR_KCAL]);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
@@ -1187,7 +1187,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
         if(sport_flag[0] == true)
         {
             txt = compo_textbox_create(frm, 50);///公里文本
-            compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 24);
+            compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 30);
             memset(txt_buf,0,sizeof(txt_buf));
             snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_KM],i18n[STR_KM]);
             compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
@@ -1214,7 +1214,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
         if(sport_flag[1] == true)
         {
             txt = compo_textbox_create(frm, strlen(i18n[STR_STEPS]));///步数文本
-            compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 43/2+198+360, 240, 24);
+            compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 40/2+190+360, 240, 30);
             compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
             compo_textbox_set(txt, i18n[STR_STEPS]);
 
@@ -1239,7 +1239,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     else
     {
         txt = compo_textbox_create(frm, 50);///计数文本
-        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 24);
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 30);
         memset(txt_buf,0,sizeof(txt_buf));
         snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_NO_DATA],i18n[STR_SPORT_ORDER]);
         compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));

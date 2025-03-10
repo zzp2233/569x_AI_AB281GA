@@ -493,17 +493,13 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             printf("MSGBOX_MSG_TYPE_DETAIL\n");
             //图标
             compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
-                                 GUI_SCREEN_CENTER_X,
-                                 func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
+                                 GUI_SCREEN_CENTER_X,28+46/2);  //需要更替为弹窗图标
 
             //title
             if (title != NULL)
             {
                 compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_align_center(txt_title, false);
-                compo_textbox_set_pos(txt_title, 10,
-                                      GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE00_BIN).hei/2 - 20);
-                //compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,86+11);
                 compo_textbox_set(txt_title, title);
             }
 
@@ -513,23 +509,17 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+3);
 //                compo_textbox_set_align_center(txt_msg, true);
                 compo_textbox_set_align_center_top(txt_msg, true);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
-                                           func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH-10, 128-20);              //调整文本位置
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,130+96/2,300,96);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
-//                compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);
-//                compo_textbox_set_autoroll_mode(txt_msg, 2);
             }
 
             //time
             if (time != NULL)
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
-                compo_textbox_set_align_center(txt_time, true);
-                compo_textbox_set_pos(txt_time, GUI_SCREEN_CENTER_X,
-                                      func_cover_get_time_txt_y(msg_type));              //调整文本位置
+                compo_textbox_set_pos(txt_time, GUI_SCREEN_CENTER_X,86+11);
                 widget_text_set_color(txt_time->txt, make_color(128,128,128));
                 compo_textbox_set(txt_time, time);
             }
@@ -650,19 +640,19 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 char str_buff[24];
                 btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_CLOSE_BIN);  //close
                 compo_setid(btn, COMPO_ID_BTN_DELETE);
-                compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,246 );
+                compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,234+40);
                 //新建数字
                 hour = SEC_TO_HOUR(sys_cb.timer_custom_sec);
                 min = SEC_TO_MIN(sys_cb.timer_custom_sec);
                 sec = SEC_TO_SEC(sys_cb.timer_custom_sec);
                 txt = compo_textbox_create(frm, 12);
-                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 128);
+                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,28/2+146 );
                 compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
                 snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
                 compo_textbox_set(txt, str_buff);
 
                 txt = compo_textbox_create(frm, strlen(i18n[STR_TIMER_FINIFH]));
-                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X/1.5);
+                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,75+18);
                 compo_textbox_set(txt, i18n[STR_TIMER_FINIFH]);
             }
             else if (sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理

@@ -239,11 +239,11 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+txt_leng.wid/2+20,77/2+77/4+155);
     compo_setid(picbox,COMPO_ID_PIC_UNIT);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_BLOOD_OXYGEN_UINT]));///血氧和饱和度
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,22/2+234,140,24);
-    compo_textbox_set(textbox,i18n[STR_BLOOD_OXYGEN_UINT]);
-    compo_textbox_set_forecolor(textbox, COLOR_GRAY);
-    compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_SROLL_CIRC);
+    // textbox = compo_textbox_create(frm, strlen(i18n[STR_BLOOD_OXYGEN_UINT]));///血氧和饱和度
+    // compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,22/2+234,140,24);
+    // compo_textbox_set(textbox,i18n[STR_BLOOD_OXYGEN_UINT]);
+    // compo_textbox_set_forecolor(textbox, COLOR_GRAY);
+    // compo_textbox_set_autoroll_mode(textbox, TEXT_AUTOROLL_MODE_SROLL_CIRC);
 
     compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I332001_BLOODOXYGEN_CARD_BIN);///重新测量按钮
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,64/2+266);
@@ -307,7 +307,7 @@ static void func_blood_oxygen_disp_handle(void)
     }
     else if (f_bo->blood_oxygen_state == BO_STA_UNWEAR)
     {
-//        msgbox((char *)i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+        msgbox((char *)i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
         f_bo->blood_oxygen_state = BO_STA_IDLE;
     }
     else
@@ -379,6 +379,7 @@ static void func_blood_oxygen_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
+            msgbox((char *)i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
             func_blood_oxygen_button_click();
             break;
 

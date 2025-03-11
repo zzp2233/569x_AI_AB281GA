@@ -1,5 +1,7 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_systemtime.h"
+#include "../../../../ute/module/smoke/ute_module_smoke.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -7,16 +9,11 @@
 #define TRACE(...)
 #endif
 #if ECIG_POWER_CONTROL
-//组件ID
-//enum {
-//按键
-//COMPO_ID_BTN_FLASHON = 1,
-//COMPO_ID_BTN_FLASHOFF,
 
-//COMPO_ID_PIC_FLASHON,
-//COMPO_ID_PIC_FLASHOFF,
-//};
-
+enum
+{
+    COMPO_ID_PIC_SMOCKING = 1,
+};
 typedef struct f_ecig_reminder_t_
 {
     u8 ecig_reminder_flag;
@@ -31,10 +28,32 @@ compo_form_t *func_ecig_reminder_form_create(void)
     char buf[20] = {0};
     compo_textbox_t *txt;
     txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/2);
+    compo_picturebox_t *picbox ;
+    compo_animation_t *animation;
+    compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/2+20);
     if(sys_cb.smoke_index == SMOKING)
     {
+        animation = compo_animation_create(frm, UI_BUF_I330001_SMOKING_00_BIN);
+        compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+        compo_animation_set_radix(animation, 3);
+        compo_animation_set_interval(animation, 30);
+        compo_setid(animation,COMPO_ID_PIC_SMOCKING);
         compo_textbox_set(txt, "吸烟中...");
+        uint32_t smokeing_count = uteModuleGetSomkeSomkeCount();
+        smokeing_count++;
+        uteModuleSetSomkeCount(smokeing_count);
+
+        // 获取当前时间
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+        int current_hour = time.hour;
+
+        // 更新对应小时的口数
+        uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
+        // 更新本周对应日期的口数
+        int current_weekday = time.week; // 假设 time 结构体中有 weekday 成员
+        uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
+        uteModuleSmokeDataSaveConfig();  // 保存配置
     }
     else if(sys_cb.smoke_index == SHORT_CIRCUIT)
     {
@@ -43,13 +62,25 @@ compo_form_t *func_ecig_reminder_form_create(void)
     }
     else if(sys_cb.smoke_index == OPEN_CIRCUIT)
     {
+        picbox= compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_OUT_BIN);
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-40);
         compo_textbox_set(txt, "拔出...");
     }
     else if(sys_cb.smoke_index == IN_DEVICE)
     {
+        if(get_gear_func()==0)
+        {
+            picbox= compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_IN_DANG_BIN);
+            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-40);
+        }
+        else
+        {
+            picbox= compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_IN_SHUANG_BIN);
+            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-40);
+        }
         compo_textbox_set(txt, "插入...");
         txt = compo_textbox_create(frm, 20);
-        compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/2 + 40);
+        compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/2 + 50);
 
 
         buf[0] = ecig_get_res() / 10 + '0';

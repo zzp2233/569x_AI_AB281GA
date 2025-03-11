@@ -469,6 +469,11 @@ uint8_t uteModuleProfileBleSendNotify(uint8_t att_handle, void *p_value, uint16_
 bool uteModuleProfileBleSendToPhone(uint8_t *data,uint8_t size)
 {
     uint8_t isRet = false;
+    if(is_fot_start())
+    {
+        printf("fot_start,return\n");
+        return false;
+    }
     if (!ble_is_connect())
     {
         return false;
@@ -501,6 +506,11 @@ bool uteModuleProfileBleSendToPhone(uint8_t *data,uint8_t size)
 bool uteModuleProfileBle50SendToPhone(uint8_t *data,uint8_t size)
 {
     bool isRet = false;
+    if(is_fot_start())
+    {
+        printf("fot_start,return\n");
+        return false;
+    }
     if (!ble_is_connect())
     {
         return false;

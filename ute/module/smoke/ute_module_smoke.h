@@ -18,15 +18,12 @@
 
 typedef struct
 {
-    uint8_t somke_capacity_level;//
-    uint32_t total_smoking_times;//计算抽吸总时长
     uint32_t total_smoking_count; // 抽吸口数
     uint32_t smoking_count_per_hour[24];  // 存储每小时的口数
-    u8 total_smoking_wattage; // 抽吸功率
-    uint8_t total_smoking_resistance;  //电阻阻值
-
+    uint32_t smoking_count_per_day[7];
 } ute_module_smoke_data_t;
 extern ute_module_smoke_data_t uteModuleSmokeData;
+
 typedef struct
 {
     int power_curr_nubmer;
@@ -37,11 +34,13 @@ typedef struct
 
 static void uteModuleSmokeDataReadConfig(void);
 void uteModuleSmokeDataSaveConfig(void);
-void uteModuleSetSomkeTime(uint32_t time);
-uint32_t uteModuleGetSomkeSomkeTime(void);
-
-//抽吸口数
 void uteModuleSetSomkeCount(uint32_t count);
 uint32_t uteModuleGetSomkeSomkeCount(void);
 void uteModuleGetSmokingCountPerHour(uint32_t *counts);
+void uteModuleGetSmokingCountPerDay(uint32_t *counts);
+void check_and_update_day();
+void check_and_update_week();
+uint32_t get_today_smoking_count();
+uint32_t get_this_week_smoking_count();
+
 #endif

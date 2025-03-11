@@ -437,7 +437,6 @@ static void func_sport_finish_init(void)
     };
     compo_page_move_init(f_sport_finish->ptm, func_cb.frm_main->page_body, &info);
 
-    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     f_sport_finish->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT

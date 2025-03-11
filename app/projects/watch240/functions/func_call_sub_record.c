@@ -271,6 +271,29 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
             time_disp_state = 2;
         }
 
+        uint8_t hour=record_tbl[index].callTime.hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
+        uint8_t min =record_tbl[index].callTime.min;/*!系统时间，分钟，数值为0~59 */
+        uint8_t *str_am = (uint8_t *)ab_zalloc(sizeof(uint8_t));
+        memset(str_am,0,sizeof(str_am));
+        if(uteModuleSystemtime12HOn())
+        {
+
+            if(hour<=12 && hour!=0)
+            {
+                memcpy(&str_am[0],i18n[STR_AM],strlen(i18n[STR_AM])+1);
+            }
+            else
+            {
+                memcpy(&str_am[0],i18n[STR_PM],strlen(i18n[STR_AM])+1);
+            }
+
+            hour %= 12;
+            if(hour==0)
+            {
+                hour = 12;
+            }
+            // printf("TIME:%02d:%02d %s\n",hour,min,str_am);
+        }
         switch(time_disp_state)
         {
             case 0:
@@ -285,11 +308,12 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
                         record_tbl[index].callTime.day);
                 break;
             case 2:
-                sprintf((char*)str_txt2_time, "%02d:%02d", //record_tbl[index].callTime.year,
-                        record_tbl[index].callTime.hour,
-                        record_tbl[index].callTime.min);
+                sprintf((char*)str_txt2_time, "%02d:%02d %s", //record_tbl[index].callTime.year,
+                        hour,min, str_am);
+
                 break;
         }
+        ab_free(str_am);
         //"2024-11-11 09:10:50"
 //        sprintf((char*)str_txt2_time, "%02d/%02d %02d:%02d:%02d", //record_tbl[index].callTime.year,
 //                record_tbl[index].callTime.month,

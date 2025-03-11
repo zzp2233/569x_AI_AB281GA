@@ -151,23 +151,23 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     compo_textbox_set_forecolor(textbox_15today,make_color(0,242,214));
 
 
-    // picbox = compo_picturebox_create(frm, UI_BUF_I330001_VAPE_RECORD_GROUP_809_BIN);
-    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+156);
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_VAPE_RECORD_BG_WEEK_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT+156);
 
 // 创建本周口数图表
-    compo_chartbox_t *chart_weekly = compo_chartbox_create(frm, 0, 7);
+    compo_chartbox_t *chart_weekly = compo_chartbox_create(frm, 1, 7);
     compo_chartbox_set_location(chart_weekly, GUI_SCREEN_CENTER_X + 13, GUI_SCREEN_HEIGHT + 156, 228, 105);
     compo_chartbox_set_pixel(chart_weekly, 1);
     compo_setid(chart_weekly, COMPO_ID_CHART_WEEKLY);
 
     chart_t chart_info_weekly;
     chart_info_weekly.y = 8;
-    chart_info_weekly.width = 15;
+    chart_info_weekly.width = 6;
 
     for (int i = 0; i < 7; i++)
     {
-        int base_x = i * (chart_info_weekly.width + 11);
-        chart_info_weekly.x = base_x +15;
+        int base_x = i * (chart_info_weekly.width + 26);
+        chart_info_weekly.x = base_x +2;
         chart_info_weekly.height = uteModuleSmokeData.smoking_count_per_day[i] / 1.31;
         compo_chartbox_set_value(chart_weekly, i, chart_info_weekly, make_color(0, 242, 214));
     }

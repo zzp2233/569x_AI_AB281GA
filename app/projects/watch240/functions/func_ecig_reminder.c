@@ -51,9 +51,9 @@ compo_form_t *func_ecig_reminder_form_create(void)
         // 更新对应小时的口数
         uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
         // 更新本周对应日期的口数
-        int current_weekday = time.week; // 假设 time 结构体中有 weekday 成员
+        int current_weekday = time.week;
         uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
-        uteModuleSmokeDataSaveConfig();  // 保存配置
+        uteModuleSmokeDataSaveConfig();
     }
     else if(sys_cb.smoke_index == SHORT_CIRCUIT)
     {

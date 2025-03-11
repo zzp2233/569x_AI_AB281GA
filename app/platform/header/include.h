@@ -20,7 +20,7 @@
 #include "func.h"
 
 //多国语言
-#include "lang.h"
+//#include "lang.h"
 
 //扩展
 #include "plugin.h"

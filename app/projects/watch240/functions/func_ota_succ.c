@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -90,7 +91,8 @@ static void func_ota_succ_process(void)
 
     if (tick_check_expire(func_cb.enter_tick, 2000))
     {
-        WDT_RST();
+        // WDT_RST();
+        uteApplicationCommonRestart();
     }
 
     func_process();

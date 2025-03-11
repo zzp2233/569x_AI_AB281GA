@@ -20,7 +20,6 @@ enum
 };
 typedef struct f_message_t_
 {
-    u8 refresh_data;
     page_tp_move_t *ptm;
 } f_message_t;
 typedef struct f_message_card_t_
@@ -97,8 +96,30 @@ compo_form_t *func_message_form_create(void)
     uteModuleNotifyGetData(ute_msg);
     ute_module_systemtime_time_t time_data;
     uteModuleSystemtimeGetTime(&time_data);//获取系统时间
+
     for(int i=0; i<msg_num; i++)
     {
+        uint8_t hour=ute_msg->historyNotify[i].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
+        uint8_t min =ute_msg->historyNotify[i].min ;/*!系统时间，分钟，数值为0~59 */
+        uint8_t *str_am = (uint8_t *)ab_zalloc(sizeof(uint8_t));
+        memset(str_am,0,sizeof(str_am));
+        if(uteModuleSystemtime12HOn())
+        {
+            if(hour<=12 && hour!=0)
+            {
+                memcpy(&str_am[0],i18n[STR_AM],strlen(i18n[STR_AM])+1);
+            }
+            else
+            {
+                memcpy(&str_am[0],i18n[STR_PM],strlen(i18n[STR_AM])+1);
+            }
+            hour %= 12;
+            if(hour==0)
+            {
+                hour = 12;
+            }
+        }
+
         memset(time_buf,0,sizeof(time_buf));
         if(time_data.year != ute_msg->historyNotify[i].year || time_data.month != ute_msg->historyNotify[i].month)
         {
@@ -115,9 +136,8 @@ compo_form_t *func_message_form_create(void)
         }
         else
         {
-            sprintf((char*)time_buf, "%02d:%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].hour,
-                    ute_msg->historyNotify[i].min);
+            sprintf((char*)time_buf, "%02d:%02d %s", //record_tbl[index].callTime.year,
+                    hour,min,str_am);
         }
 
         char* msg = (char*)ute_msg->historyNotify[i].content;
@@ -144,7 +164,7 @@ compo_form_t *func_message_form_create(void)
         widget_text_set_wordwrap(cardbox->text[1], true);
         widget_text_set_ellipsis(cardbox->text[1], true);
     }
-
+    printf("11111111111111111111111111\n");
     //创建按钮
     compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,105+(133*msg_num));
@@ -167,7 +187,6 @@ static void func_message_card_init()
     f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
-    f_message->refresh_data = msg_num;
 
     uint16_t page_height = msg_num*133+109;
     if(page_height<GUI_SCREEN_HEIGHT)
@@ -371,8 +390,9 @@ static void func_message_card_update()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
 
-    if(f_message->refresh_data != uteModuleNotifyGetTotalNotifyCnt())
+    if(uteModuleNotifyIsNewNotifyDisplay())
     {
+        uteModuleNotifySetNewNotifyFlag(!uteModuleNotifyIsNewNotifyDisplay());
         msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
     }
 }
@@ -476,7 +496,7 @@ static void func_message_message(size_msg_t msg)
             break;
 
         case MSG_CTP_TOUCH:
-            if(f_message->refresh_data)
+            if(uteModuleNotifyGetTotalNotifyCnt())
             {
                 compo_page_move_touch_handler(f_message->ptm);
             }

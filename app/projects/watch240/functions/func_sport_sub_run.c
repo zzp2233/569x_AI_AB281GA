@@ -751,6 +751,7 @@ static void func_sport_sub_run_exit_data(void)
     {
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
         uteModuleHeartStopSingleTesting(TYPE_HEART);
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
     func_cb.last = FUNC_SPORT_SUB_RUN;
 }
@@ -810,16 +811,10 @@ static void func_sport_sub_run_click_handler(void)
 
             if (res == MSGBOX_RES_OK)
             {
-//                if (uteModuleSportMoreSportIsAppStart()) {                      //多运动是手机端开启的
                 uteModuleSportStopMoreSports();                             //通知APP退出运动
                 TRACE("【APP连接】本地通知APP运动退出\n");
-//                } else {
-//                    task_stack_pop();
-//                    func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
-//                }
                 if (!sport_flag)
                 {
-//                    func_switch_to(FUNC_SPORT_FINISH, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
                     func_cb.sta = FUNC_SPORT_FINISH;
                 }
                 sport_start_flag = false;
@@ -1753,6 +1748,7 @@ static void func_sport_sub_run_exit_data(void)
         {
             task_stack_pop();
         }
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
 }
 

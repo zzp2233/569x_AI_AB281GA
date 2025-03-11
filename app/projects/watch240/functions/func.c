@@ -1557,7 +1557,8 @@ void func_message(size_msg_t msg)
             if(func_cb.sta != FUNC_ECIG_REMINDER)
             {
                 printf(" func_cb.sta != FUNC_ECIG_REMINDER \n");
-                func_cb.sta = FUNC_ECIG_REMINDER;
+                // func_cb.sta = FUNC_ECIG_REMINDER;
+                uteTaskGuiStartScreen(FUNC_ECIG_REMINDER);
 
             }
             else

@@ -436,8 +436,8 @@ static void sfunc_sleep(void)
 #endif
 #if ECIG_POWER_CONTROL
         //吸烟唤醒
-#if (CHIP_PACKAGE_SELECT == CHIP_5690C_F)
-        if (wkpnd & BIT(PORT_INT7_VECTOR))
+#if (CHIP_PACKAGE_SELECT == CHIP_5690F)
+        if (wkpnd & BIT(ECIG_MIC_INT))
         {
 #elif (CHIP_PACKAGE_SELECT == CHIP_5690G)
         if (wkpnd & BIT(PORT_INT6_VECTOR))
@@ -454,6 +454,15 @@ static void sfunc_sleep(void)
 #endif
             printf("MIC wakeup: %x\n", wkpnd);
             //gui_need_wkp = true;
+            sys_cb.gui_need_wakeup = true;
+            break;
+        }
+
+        if (wkpnd & BIT(ECIG_DET1_INT) || wkpnd & BIT(ECIG_DET2_INT))
+        {
+
+            printf("DET wakeup: %x\n", wkpnd);
+            // gui_need_wkp = true;
             sys_cb.gui_need_wakeup = true;
             break;
         }

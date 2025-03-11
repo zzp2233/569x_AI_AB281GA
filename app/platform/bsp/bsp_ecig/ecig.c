@@ -409,8 +409,6 @@ void timer_hot_dual_caculate_res1(void)//
 {
     if (saradc_is_finish() && ecig.timer_switch_adc_flag)
     {
-        ecig.timer_switch_acc_cnt ++;
-
         ecig.timer_switch_adc_flag = false;
         ecig.adc1 = saradc_get_value10(ecig.cfg->adc1_ch);
         ecig.adc_res1 = saradc_get_value10(ecig.cfg->adc_res1_ch);
@@ -438,8 +436,6 @@ void timer_hot_dual_caculate_res2(void)//
 {
     if (saradc_is_finish() && ecig.timer_switch_adc_flag)
     {
-        ecig.timer_switch_acc_cnt ++;
-
         ecig.timer_switch_adc_flag = false;
         ecig.adc2 = saradc_get_value10(ecig.cfg->adc2_ch);
         ecig.adc_res2 = saradc_get_value10(ecig.cfg->adc_res2_ch);
@@ -462,46 +458,9 @@ void timer_hot_dual_caculate_res2(void)//
     }
 }
 
-
-
 AT(.com_text.isr)
-void ecigarette_isr(void)//50us
+bool timer_hot_det_res(void)
 {
-    if(TMR3CON & BIT(9))
-    {
-        TMR3CPND = BIT(9);
-    }
-    else
-    {
-        return;
-    }
-    if(sys_clk_get() < 2)
-    {
-        return;
-    }
-
-    static u16 cnt_20ms = 0;
-    if (mic_start_or_not() != ecig.mic_sta)
-    {
-        if (++cnt_20ms >= (ecig.timer_20ms_cnt))      //20ms
-        {
-            ecig.mic_sta = !ecig.mic_sta;
-        }
-    }
-    else
-    {
-        cnt_20ms = 0;
-    }
-    if (ecig.mic_sta)
-    {
-        if (++ecig.cnt_1s >= (ecig.timer_1s_cnt))     //1s
-        {
-            ecig.hot_time_cnt += (bool)ecig.hot_time_flag;
-            ecig.cnt_1s = 0;
-        }
-    }
-
-#if ECIG_DET_EN
     static u32 cnt_det_20ms = 0;
     static u32 cnt_det2_20ms = 0;
     //插拔检测
@@ -516,7 +475,7 @@ void ecigarette_isr(void)//50us
                 {
                     timer_hot_dual_caculate_res1();
                     ecig.timer_switch_acc_cnt++;
-                    return;
+                    return true;
                 }
                 else if(ecig.timer_switch_acc_cnt >= 6)
                 {
@@ -562,7 +521,7 @@ void ecigarette_isr(void)//50us
                 {
                     timer_hot_dual_caculate_res2();
                     ecig.timer_switch_acc_cnt++;
-                    return;
+                    return true;
                 }
                 else if(ecig.timer_switch_acc_cnt >= 6)
                 {
@@ -604,8 +563,55 @@ void ecigarette_isr(void)//50us
 #else
         timer_hot_single_data_init();
 #endif
-        return;
+        return true;
         ecig.short_circuit_flag = IDLE;
+    }
+    return false;
+}
+
+
+
+AT(.com_text.isr)
+void ecigarette_isr(void)//50us
+{
+    if(TMR3CON & BIT(9))
+    {
+        TMR3CPND = BIT(9);
+    }
+    else
+    {
+        return;
+    }
+    if(sys_clk_get() < 2)
+    {
+        return;
+    }
+
+    static u16 cnt_20ms = 0;
+    if (mic_start_or_not() != ecig.mic_sta)
+    {
+        if (++cnt_20ms >= (ecig.timer_20ms_cnt))      //20ms
+        {
+            ecig.mic_sta = !ecig.mic_sta;
+        }
+    }
+    else
+    {
+        cnt_20ms = 0;
+    }
+    if (ecig.mic_sta)
+    {
+        if (++ecig.cnt_1s >= (ecig.timer_1s_cnt))     //1s
+        {
+            ecig.hot_time_cnt += (bool)ecig.hot_time_flag;
+            ecig.cnt_1s = 0;
+        }
+    }
+
+#if ECIG_DET_EN
+    if(timer_hot_det_res())
+    {
+        return;
     }
 #endif
 

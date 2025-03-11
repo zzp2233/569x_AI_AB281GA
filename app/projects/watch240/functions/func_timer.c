@@ -807,7 +807,7 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
                 compo_button_set_pos(btn, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
 
                 txt = compo_textbox_create_for_page(frm, page, strlen(tbl_timer_txt_item[idx].text));
-                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
+                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y-5);
                 compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
             }
             btn = compo_button_create_page_by_image(frm, page, UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN);
@@ -828,10 +828,8 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
         break;
 
         case TIMER_PAGE_CUSTOM:
-            if (func_cb.sta == FUNC_TIMER)
-            {
-                func_timer_setting_date_init();
-            }
+            compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+            compo_form_set_title(frm, i18n[STR_CUSTOM]);
             compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I332001_PUBLIC_KUANG_COLON_BIN);
             compo_picturebox_set_pos(picbox, 125,tbl_timer_btn_item[2].y-TIME_SET_TXT_SPACING_SHIFT );
             picbox = compo_picturebox_create(frm, UI_BUF_I332001_PUBLIC_KUANG_COLON_BIN);
@@ -891,8 +889,8 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             txt = compo_textbox_create(frm, 12);
             compo_setid(txt, COMPO_ID_NUM_COUNTDOWN);
             compo_textbox_set_align_center(txt, false);     //左对齐显示
-            compo_textbox_set_pos(txt,63, 146);
-            compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+            compo_textbox_set_pos(txt, 63, 126);
+            compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
             compo_textbox_set(txt, str_buff);
 
@@ -944,7 +942,7 @@ static void func_timer_button_touch_handle(void)
             btn = compo_getobj_byid(COMPO_ID_BTN_START);
             if (sys_cb.timer_sta == TIMER_STA_WORKING)
             {
-//                compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_PAUSED_BIN);
+                //    compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_PAUSED_BIN);
             }
             else if (sys_cb.timer_sta == TIMER_STA_DONE)
             {
@@ -958,7 +956,7 @@ static void func_timer_button_touch_handle(void)
 
         case COMPO_ID_BTN_NO:
             btn = compo_getobj_byid(COMPO_ID_BTN_NO);
-//            compo_button_set_bgimg(btn, UI_BUF_COMMON_NO_CLICK_BIN);
+            //    compo_button_set_bgimg(btn, UI_BUF_COMMON_NO_CLICK_BIN);
             break;
 
         default:
@@ -975,7 +973,7 @@ static void func_timer_button_release_handle(void)
 
     if ((btn = compo_getobj_byid(COMPO_ID_BTN_START)) != NULL)
     {
-//        res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I330001_PUBLIC_PAUSED_BIN : (sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I330001_PUBLIC_RETRY_BIN : UI_BUF_I330001_PUBLIC_PLAY_BIN);
+        res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I332001_PUBLIC_PAUSED_SMALL_BIN : (sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I332001_PUBLIC_RETRY_BIN : UI_BUF_I332001_PUBLIC_PLAY_SMALL_BIN);
         compo_button_set_bgimg(btn, res_addr);
     }
     if ((btn = compo_getobj_byid(COMPO_ID_BTN_NO)) != NULL)
@@ -1174,6 +1172,8 @@ static void func_timer_button_click(void)
 
     if (page_next != f_timer->page_disp)
     {
+        f_timer->touch_flag = false;
+        func_timer_setting_date_init();
         f_timer->old_y = 0;
         f_timer->moveto.y = 0;
         f_timer->page_disp = page_next;

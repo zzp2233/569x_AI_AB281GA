@@ -31,10 +31,128 @@ void ecig_clear_short_flag(bool state)
 }
 
 AT(.com_text.isr)
+void timer_hot_hot_vol(void)//
+{
+    u32 adc_vbg = saradc_get_value10(ADCCH_BGOP);
+    u32 hot_voltage = saradc_get_value10(ecig.cfg->adc1_ch);
+    u32 hot_voltage2 = saradc_get_value10(ecig.cfg->adc2_ch);
+    TRACE(hot_str, adc_vbg,hot_voltage,hot_voltage2);
+#if DEVELOPMENT_BOARD_TYPE == DEVELOPMENT_BOARD_USER
+    ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
+    ecig.AD_hot_voltage_mv2 = (hot_voltage2 * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
+    TRACE(hot_str, 9999,ecig.AD_hot_voltage_mv,ecig.AD_hot_voltage_mv2);
+#else
+    ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 4 / 3 / ECIG_VBG_VOLTAGE_MULTIPLE;
+#endif
+    ecig.AD_hot_voltage = (ecig.AD_hot_voltage_mv << 13) / 1000;
+    ecig.AD_hot_voltage2 = (ecig.AD_hot_voltage_mv2 << 13) / 1000;
+}
+//获取电阻ADC
+AT(.com_text.isr)
+void timer_hot_res_kick(void)//
+{
+    if (!saradc_adc15_is_bg())
+    {
+        saradc_adc15_analog_select(ADCCH15_ANA_BG);
+    }
+    saradc_kick_start_do(BIT(ecig.cfg->adc1_ch) | BIT(ecig.cfg->adc_res1_ch)| BIT(ecig.cfg->adc2_ch) | BIT(ecig.cfg->adc_res2_ch) | SADCCH, 0, 0);
+}
+//电阻计算
+AT(.com_text.isr)
+void timer_hot_res_cul(void)//
+{
+    if (saradc_is_finish() && ecig.timer_switch_adc_flag)
+    {
+        ecig.timer_switch_acc_cnt ++;
+        ecig.timer_switch_adc_flag = false;
+        //电阻1
+        ecig.adc1 = saradc_get_value10(ecig.cfg->adc1_ch);
+        ecig.adc_res1 = saradc_get_value10(ecig.cfg->adc_res1_ch);
+        caculate_res();
+        //电阻2
+        ecig.adc2 = saradc_get_value10(ecig.cfg->adc2_ch);
+        ecig.adc_res2 = saradc_get_value10(ecig.cfg->adc_res2_ch);
+        caculate_res2();
+    }
+    else
+    {
+        ECIG_VEN_ON();
+        ECIG_PWM_OFF_FUNC();
+        ecig_adgnd_io_set_gnd();
+        if(!ecig.timer_switch_adc_flag)
+        {
+            timer_hot_res_kick();
+            ecig.timer_switch_adc_flag = true;
+        }
+    }
+}
+//计算电池电量
+AT(.com_text.isr)
+void timer_hot_bat_vol(void)//
+{
+    if (saradc_is_finish() && ecig.timer_switch_adc_flag)
+    {
+        ecig.timer_switch_acc_cnt ++;
+        ecig.timer_switch_adc_flag = false;
+
+        ecig.AD_BAT_voltage_mv = ecig_vbat_get();
+        if(ecig.AD_BAT_voltage_mv < 3300)                   //欠压保护
+        {
+            ECIG_PWM_OFF_FUNC();
+            ecig.smoke_sta = LOW_POWER;
+            ecig.power_on_flag = 0;
+            msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+            sys_cb.smoke_index = LOW_POWER;
+            printf(hot_str,13,ecig.AD_BAT_voltage_mv,0);
+        }
+        else
+        {
+            //ECIG_PWM1_ON();
+            ecig.smoke_sta = SMOKING;
+            ecig.power_on_flag = 1;
+            //printf(hot_str,14,ecig.AD_BAT_voltage_mv,0);
+        }
+        //printf(hot_str,55,ecig.AD_BAT_voltage_mv,ecig.timer_cycle_cnt);
+    }
+    else
+    {
+        if(!ecig.timer_switch_adc_flag)
+        {
+            ecig.timer_switch_adc_flag = true;
+            ECIG_PWM_OFF_FUNC();
+            if (!saradc_adc15_is_bg())
+            {
+                saradc_adc15_analog_select(ADCCH15_ANA_BG);
+            }
+            saradc_kick_start_do(BIT(ADCCH_VBAT) | BIT(ADCCH_BGOP) | SADCCH, 0, 0);
+        }
+
+        //printf(hot_str,66,ecig.AD_BAT_voltage_mv,ecig.timer_cycle_cnt);
+    }
+}
+
+
+//开始工作进行判断
+AT(.com_text.isr)
+bool timer_hot_mic_work(void)
+{
+    if (ecig.mic_sta //mic工作状态
+        && (ecig.hot_time_cnt < ecig.cfg->heat_time_max)//吸烟超时时间
+        && (ecig.smoke_sta != LOW_POWER) //低电量不工作
+        && (ecig.short_circuit_flag != SHORT_CIRCUIT) //短路不工作
+        &&  (ecig.short_circuit_flag != OPEN_CIRCUIT))//开路也不工作
+    {
+        return true;
+    }
+    return false;
+}
+
+
+
+AT(.com_text.isr)
 void timer_hot_dual_isr(void)//
 {
-    if (ecig.mic_sta && (ecig.hot_time_cnt < ecig.cfg->heat_time_max)  && (ecig.smoke_sta != LOW_POWER)
-        && (ecig.short_circuit_flag != SHORT_CIRCUIT) &&  (ecig.short_circuit_flag != OPEN_CIRCUIT))
+    if (timer_hot_mic_work())
     {
         if (ecig.mic_sta != ecig.mic_start)
         {
@@ -48,33 +166,8 @@ void timer_hot_dual_isr(void)//
                 case 3:
                 case 4:
                 case 5:
-                    if (saradc_is_finish() && ecig.timer_switch_adc_flag)
-                    {
-                        ecig.timer_switch_acc_cnt ++;
-
-                        ecig.timer_switch_adc_flag = false;
-                        ecig.adc1 = saradc_get_value10(ecig.cfg->adc1_ch);
-                        ecig.adc_res1 = saradc_get_value10(ecig.cfg->adc_res1_ch);
-                        caculate_res();
-                        ecig.adc2 = saradc_get_value10(ecig.cfg->adc2_ch);
-                        ecig.adc_res2 = saradc_get_value10(ecig.cfg->adc_res2_ch);
-                        caculate_res2();
-                    }
-                    else
-                    {
-                        ECIG_VEN_ON();
-                        ECIG_PWM_OFF_FUNC();
-                        ecig_adgnd_io_set_gnd();
-                        if(!ecig.timer_switch_adc_flag)
-                        {
-                            if (!saradc_adc15_is_bg())
-                            {
-                                saradc_adc15_analog_select(ADCCH15_ANA_BG);
-                            }
-                            saradc_kick_start_do(BIT(ecig.cfg->adc1_ch) | BIT(ecig.cfg->adc_res1_ch)| BIT(ecig.cfg->adc2_ch) | BIT(ecig.cfg->adc_res2_ch) | SADCCH, 0, 0);
-                            ecig.timer_switch_adc_flag = true;
-                        }
-                    }
+                    //电阻计算
+                    timer_hot_res_cul();
                     break;
                 case 6:
                 {
@@ -112,45 +205,7 @@ void timer_hot_dual_isr(void)//
                 case 1:
                 case 2:
                 {
-                    if (saradc_is_finish() && ecig.timer_switch_adc_flag)
-                    {
-                        ecig.timer_switch_acc_cnt ++;
-                        ecig.timer_switch_adc_flag = false;
-
-                        ecig.AD_BAT_voltage_mv = ecig_vbat_get();
-                        if(ecig.AD_BAT_voltage_mv < 3300)                   //欠压保护
-                        {
-                            ECIG_PWM_OFF_FUNC();
-                            ecig.smoke_sta = LOW_POWER;
-                            ecig.power_on_flag = 0;
-                            msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
-                            sys_cb.smoke_index = LOW_POWER;
-                            printf(hot_str,13,ecig.AD_BAT_voltage_mv,0);
-                        }
-                        else
-                        {
-                            //ECIG_PWM1_ON();
-                            ecig.smoke_sta = SMOKING;
-                            ecig.power_on_flag = 1;
-                            //printf(hot_str,14,ecig.AD_BAT_voltage_mv,0);
-                        }
-                        //printf(hot_str,55,ecig.AD_BAT_voltage_mv,ecig.timer_cycle_cnt);
-                    }
-                    else
-                    {
-                        if(!ecig.timer_switch_adc_flag)
-                        {
-                            ecig.timer_switch_adc_flag = true;
-                            ECIG_PWM_OFF_FUNC();
-                            if (!saradc_adc15_is_bg())
-                            {
-                                saradc_adc15_analog_select(ADCCH15_ANA_BG);
-                            }
-                            saradc_kick_start_do(BIT(ADCCH_VBAT) | BIT(ADCCH_BGOP) | SADCCH, 0, 0);
-                        }
-
-                        //printf(hot_str,66,ecig.AD_BAT_voltage_mv,ecig.timer_cycle_cnt);
-                    }
+                    timer_hot_bat_vol();
                 }
                 break;
                 case 3:////等一段时间电压稳定，做VDDIO校准
@@ -160,18 +215,7 @@ void timer_hot_dual_isr(void)//
                     if (saradc_is_finish() && ecig.timer_switch_adc_flag)
                     {
                         ecig.timer_switch_adc_flag = false;
-                        u32 adc_vbg = saradc_get_value10(ADCCH_BGOP);
-                        u32 hot_voltage = saradc_get_value10(ecig.cfg->adc1_ch);
-                        u32 hot_voltage2 = saradc_get_value10(ecig.cfg->adc2_ch);
-
-#if DEVELOPMENT_BOARD_TYPE == DEVELOPMENT_BOARD_USER
-                        ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
-                        ecig.AD_hot_voltage_mv2 = (hot_voltage2 * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
-#else
-                        ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 4 / 3 / ECIG_VBG_VOLTAGE_MULTIPLE;
-#endif
-                        ecig.AD_hot_voltage = (ecig.AD_hot_voltage_mv << 13) / 1000;
-                        ecig.AD_hot_voltage2 = (ecig.AD_hot_voltage_mv2 << 13) / 1000;
+                        timer_hot_hot_vol();
                         //TRACE(hot_str, ecig.timer_switch_acc_cnt, ecig.AD_hot_voltage_mv,ecig.AD_BAT_voltage_mv );
                         ecig.timer_switch_acc_cnt ++;
                     }
@@ -208,50 +252,40 @@ void timer_hot_dual_isr(void)//
                     {
                         ecig.timer_switch_acc_cnt  = 6;
                         ecig.timer_switch_adc_flag = false;
-                        u32 adc_vbg = saradc_get_value10(ADCCH_BGOP);
-                        u32 hot_voltage = saradc_get_value10(ecig.cfg->adc1_ch);
-                        u32 hot_voltage2 = saradc_get_value10(ecig.cfg->adc2_ch);
-#if DEVELOPMENT_BOARD_TYPE == DEVELOPMENT_BOARD_USER
-                        ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
-                        ecig.AD_hot_voltage_mv2 = (hot_voltage2 * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
-#else
-                        ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 4 / 3 / ECIG_VBG_VOLTAGE_MULTIPLE;
-#endif
-                        ecig.AD_hot_voltage = (ecig.AD_hot_voltage_mv << 13) / 1000;
-                        ecig.AD_hot_voltage2 = (ecig.AD_hot_voltage_mv2 << 13) / 1000;
+                        timer_hot_hot_vol();
                         //TRACE(hot_str, 77, ecig.AD_hot_voltage_mv,ecig.AD_BAT_voltage_mv );
                         if (( (ecig.AD_hot_voltage_mv * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv) <= ecig.cfg->short_res_prop) && (ecig.cfg->smoke_position_swich || ecig.cfg->smoke_res_swich))||
                             ((ecig.AD_hot_voltage_mv2 * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2) <= ecig.cfg->short_res_prop ) && (ecig.cfg->smoke_position_swich || !ecig.cfg->smoke_res_swich) ))     //short circuit
                         {
+                            //短路判断
                             ECIG_PWM_OFF_FUNC();
                             ecig.power_on_flag = 0;/*  */
                             ecig.smoke_sta = SHORT_CIRCUIT;
                             ecig.short_circuit_flag = ecig.smoke_sta;
                             msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                             sys_cb.smoke_index = SHORT_CIRCUIT;
-                            TRACE(hot_str, 7, ecig.AD_hot_voltage_mv,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
-                            TRACE(hot_str, 8, ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
-                            TRACE(hot_str, ecig.AD_hot_voltage_mv,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv),ecig.AD_hot_voltage_mv * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
-                            TRACE(hot_str, 77, ecig.AD_hot_voltage_mv2,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
-                            TRACE(hot_str, 88, ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv2 * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
-                            TRACE(hot_str, ecig.AD_hot_voltage_mv2,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2),ecig.AD_hot_voltage_mv2 * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
+                            TRACE(hot_str, 88,ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv);
+                            TRACE(hot_str,  ecig.cfg->smoke_res_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv),ecig.AD_hot_voltage_mv * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
+
+                            TRACE(hot_str, 888, ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv2);
+                            TRACE(hot_str, ecig.cfg->smoke_res_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2),ecig.AD_hot_voltage_mv2 * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
 
                         }
                         else if (((ecig.AD_hot_voltage_mv * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv) >= ecig.cfg->open_res_prop) && (ecig.cfg->smoke_position_swich || ecig.cfg->smoke_res_swich)) ||
                                  ((ecig.AD_hot_voltage_mv2 * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2) >= ecig.cfg->open_res_prop) && (ecig.cfg->smoke_position_swich || !ecig.cfg->smoke_res_swich)))     //检阻部分已有开路保护，可以屏蔽
                         {
+                            //开路判断
                             ECIG_PWM_OFF_FUNC();
                             ecig.power_on_flag = 0;/*  */
                             ecig.smoke_sta = OPEN_CIRCUIT;
                             ecig.short_circuit_flag = ecig.smoke_sta;
                             msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                             sys_cb.smoke_index = OPEN_CIRCUIT;
-                            TRACE(hot_str, 8, ecig.AD_hot_voltage_mv,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
-                            TRACE(hot_str, 9, ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
-                            TRACE(hot_str, ecig.AD_hot_voltage_mv,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv),ecig.AD_hot_voltage_mv * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
-                            TRACE(hot_str, 88, ecig.AD_hot_voltage_mv2,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
-                            TRACE(hot_str, 99, ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
-                            TRACE(hot_str, ecig.AD_hot_voltage_mv2,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2),ecig.AD_hot_voltage_mv2 * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
+                            TRACE(hot_str, 99,ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv);
+                            TRACE(hot_str,  ecig.cfg->smoke_res_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv),ecig.AD_hot_voltage_mv * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
+
+                            TRACE(hot_str, 999, ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv2);
+                            TRACE(hot_str, ecig.cfg->smoke_res_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2),ecig.AD_hot_voltage_mv2 * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
 
                         }
                         else
@@ -343,7 +377,7 @@ void timer_hot_dual_isr(void)//
             ecig.timer_cycle_cnt = 0;
             ecig.timer_switch_acc_cnt = 0;
             ecig.timer_switch_adc_flag = false;
-            if(ecig.short_circuit_flag != SHORT_CIRCUIT)
+            if(ecig.short_circuit_flag /* != SHORT_CIRCUIT */)
             {
                 ecig.short_circuit_flag = IDLE;
             }

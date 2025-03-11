@@ -46,7 +46,7 @@ void bsp_ecig_init(void)
     ecig_set_power(10);
     p->heat_time_max = 8;
     p->short_res_prop = 14;
-    p->open_res_prop = 200;
+    p->open_res_prop = 300;
     test_1st_gear_func();
     ecigarette_init(p); //需要用到硬件定时器TMR3
 }
@@ -75,13 +75,12 @@ u8 ecig_get_power(void)
 {
     return ecig_cfg.aim_power;
 }
-AT(.com_text.ecig.process)
+AT(.com_text.isr)
 void ecig_set_res(u8 value)
 {
     ecig_cfg.res_wire = value;
 }
-
-AT(.com_text.ecig.process)
+AT(.com_text.isr)
 void ecig_set_res2(u8 value)
 {
     ecig_cfg.res_wire2 = value;

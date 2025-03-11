@@ -77,6 +77,10 @@ void gui_sleep(void)
         ctp_exit();
         power_gate_3v3_off();
         hr_vdd_ldo_off();
+#if(DEVELOPMENT_BOARD_TYPE)
+        LCD_OFF();
+#endif
+
         sys_cb.gui_sleep_sta = 1;
         tft_cb.tft_bglight_first_set = false;
         uteModuleGuiCommonDisplayOff(true);
@@ -91,6 +95,7 @@ void gui_wakeup(void)
     {
         power_gate_3v3_on();
         hr_vdd_ldo_on();
+        ecig_pwm_io_init();
 #if(DEVELOPMENT_BOARD_TYPE)
         LCD_ON();
 #endif

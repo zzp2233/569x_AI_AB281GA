@@ -9,21 +9,10 @@
 #define TRACE(...)
 #endif
 #if ECIG_POWER_CONTROL
-//组件ID
-//enum {
-//按键
-//COMPO_ID_BTN_FLASHON = 1,
-//COMPO_ID_BTN_FLASHOFF,
 
-//COMPO_ID_PIC_FLASHON,
-//COMPO_ID_PIC_FLASHOFF,
-//};
 enum
 {
-
     COMPO_ID_PIC_SMOCKING = 1,
-
-
 };
 typedef struct f_ecig_reminder_t_
 {
@@ -61,6 +50,9 @@ compo_form_t *func_ecig_reminder_form_create(void)
 
         // 更新对应小时的口数
         uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
+        // 更新本周对应日期的口数
+        int current_weekday = time.week; // 假设 time 结构体中有 weekday 成员
+        uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
         uteModuleSmokeDataSaveConfig();  // 保存配置
     }
     else if(sys_cb.smoke_index == SHORT_CIRCUIT)

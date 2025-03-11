@@ -647,7 +647,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 sec = SEC_TO_SEC(sys_cb.timer_custom_sec);
                 txt = compo_textbox_create(frm, 12);
                 compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,28/2+146 );
-                compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+                compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
                 snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
                 compo_textbox_set(txt, str_buff);
 

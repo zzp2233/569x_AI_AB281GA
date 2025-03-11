@@ -330,6 +330,7 @@ compo_form_t *func_message_form_create(void)
 
         compo_cardbox_text_set_location(cardbox,0,message_card[0].time_x,message_card[0].time_y,message_card[0].time_w,message_card[0].time_h);
         widget_set_align_center(cardbox->text[0],false);
+        widget_text_set_font(cardbox->text[0],UI_BUF_0FONT_FONT_NUM_24_BIN);
         widget_text_set_color(cardbox->text[0],make_color(0x94,0x94,0x94));
         compo_cardbox_text_set(cardbox,0,time_buf);
         widget_text_set_right_align(cardbox->text[0],true);

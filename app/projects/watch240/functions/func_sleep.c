@@ -441,23 +441,29 @@ compo_form_t *func_sleep_form_create(void)
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
-    // sleep_data->totalSleepMin = 480;
-    // sleep_data->fallAsSleepTime.hour =0;
-    // sleep_data->fallAsSleepTime.min =0;
-    // sleep_data->getUpSleepTime.hour =8;
-    // sleep_data->getUpSleepTime.min = 0;
+    sleep_data->totalSleepMin = 480;
+    sleep_data->fallAsSleepTime.hour =0;
+    sleep_data->fallAsSleepTime.min =0;
+    sleep_data->getUpSleepTime.hour =8;
+    sleep_data->getUpSleepTime.min = 0;
 
-    // sleep_data->recordCnt = 5;
-    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
-    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
-    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
-    // sleep_data->sleep_record[2].state = REM_SLEEP;
-    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
-    // sleep_data->sleep_record[0].period = 20;
-    // sleep_data->sleep_record[1].period = 100;
-    // sleep_data->sleep_record[2].period = 100;
-    // sleep_data->sleep_record[3].period = 120;
-    // sleep_data->sleep_record[4].period = 20;
+    sleep_data->lightSleepMin= 480;
+    sleep_data->deepSleepMin= 480;
+    sleep_data->wakeSleepMin= 480;
+    sleep_data->RemSleepMin= 480;
+
+    sleep_data->recordCnt = 5;
+    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    sleep_data->sleep_record[2].state = REM_SLEEP;
+    sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    sleep_data->sleep_record[0].period = 20;
+    sleep_data->sleep_record[1].period = 100;
+    sleep_data->sleep_record[2].period = 100;
+    sleep_data->sleep_record[3].period = 120;
+    sleep_data->sleep_record[4].period = 20;
+
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
@@ -478,8 +484,8 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--");///* 总睡眠小时*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_location(txt,83,235,58,65);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(txt,83,228,58,65);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set(txt, buf);
 
@@ -498,14 +504,14 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--");///* 总睡眠分钟*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_location(txt,187,235,58,65);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(txt,187,228,58,65);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,248,258,30,34);
+    compo_textbox_set_location(txt,248,258,60,34);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_autoroll_mode(txt, 0);
     compo_textbox_set(txt, i18n[STR_MIN]);
@@ -520,7 +526,8 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:-- - --:--");///* 睡-起 点*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,307+15,140,30);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,307+15,150,30);
     compo_textbox_set(txt, buf);
 
     ///* 第二页*/
@@ -547,7 +554,8 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:--");///* 睡眠初始点*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_location(txt, 63,GUI_SCREEN_HEIGHT+206,47,24);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt, 63,GUI_SCREEN_HEIGHT+206,65,30);
     compo_textbox_set(txt, buf);
     compo_textbox_set_forecolor(txt, COLOR_GRAY);
 
@@ -560,7 +568,8 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:--");///* 睡眠结束点*/
     }
     txt = compo_textbox_create(frm,strlen(buf));
-    compo_textbox_set_location(txt, 295,GUI_SCREEN_HEIGHT+203,47,24);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt, 295,GUI_SCREEN_HEIGHT+203,65,30);
     compo_textbox_set(txt, buf);
     compo_textbox_set_forecolor(txt, COLOR_GRAY);
 
@@ -578,25 +587,25 @@ compo_form_t *func_sleep_form_create(void)
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_DEEP_SLEEP]));///* 深睡*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+237,100,32);
+    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+237,110,32);
     compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0x69, 0x7e, 0xff));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+290,100,32);
+    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+290,110,32);
     compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0x36, 0xb7, 0xff));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+396,100,32);
+    compo_textbox_set_location(txt, 58, GUI_SCREEN_HEIGHT+396,110,32);
     compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0xff, 0x87, 0x0f));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+343,100,32);
+    compo_textbox_set_location(txt, 58,GUI_SCREEN_HEIGHT+343,110,32);
     compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(0x00, 0xf7, 0xd6));
 //////////////////////////////////////////////////////////////////////////////////
@@ -617,7 +626,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+235,112,36);
+    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+235,120,36);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -639,7 +648,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+288,112,36);
+    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+288,120,36);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -660,7 +669,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+394,112,36);
+    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+394,120,36);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -681,7 +690,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209,GUI_SCREEN_HEIGHT+341,112,36);
+    compo_textbox_set_location(txt, 209,GUI_SCREEN_HEIGHT+341,120,36);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 /////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -866,13 +875,9 @@ static void func_sleep_move(void)
                 {
                     f_sleep->switch_page_state = SWITCH_YES;
                 }
-                else if(f_sleep->move_offset > -GUI_SCREEN_HEIGHT)
-                {
-                    f_sleep->switch_page_state = SWITCH_NO;
-                }
                 else
                 {
-                    f_sleep->switch_page_state = TOTCH_MOVE;
+                    f_sleep->switch_page_state = SWITCH_NO;
                 }
             }
         }
@@ -896,13 +901,7 @@ static void func_sleep_move(void)
                     }
                     else if(f_sleep->switch_page_state == SWITCH_NO)
                     {
-                        f_sleep->move_offset-=STEP_NUM;
-
-                        if(f_sleep->move_offset <= -(GUI_SCREEN_HEIGHT))
-                        {
-                            f_sleep->move_offset = -GUI_SCREEN_HEIGHT;
-                            f_sleep->touch_state = TOUCH_FINISH_STATE;
-                        }
+                        f_sleep->touch_state = TOUCH_FINISH_STATE;
                     }
                 }
                 f_sleep->page_old_y = f_sleep->move_offset;
@@ -911,7 +910,7 @@ static void func_sleep_move(void)
         }
     }
 
-//        printf("move_offset:%d\n",f_sleep->move_offset);
+    //    printf("move_offset:%d\n",f_sleep->move_offset);
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
@@ -937,7 +936,10 @@ static void func_sleep_message(size_msg_t msg)
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             compo_page_move_touch_handler(f_sleep->ptm);
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-            f_sleep->touch_flag = true;
+            if(f_sleep->touch_state == TOUCH_FINISH_STATE)
+            {
+                f_sleep->touch_flag = true;
+            }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
 

@@ -350,7 +350,7 @@ static void func_call_sort_card_update(void)
 #define CARD1_ICON0_DATA          0,       0,            -25,      50,     50,     UI_BUF_I332001_CALL_NO_CONTACTS_BIN,         0
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r    g    b    对应STR_XXX
-#define CARD1_TEXT0_DATA          0,      0,          25,           100,    30,     NULL,   UI_BUF_0FONT_FONT_BIN,    true,  false,     255, 255, 255, STR_CALL_LINK
+#define CARD1_TEXT0_DATA          0,      0,          25,           100,    30,     NULL,   UI_BUF_0FONT_FONT_NUM_24_BIN,    true,  false,     255, 255, 255, STR_CALL_LINK
 
 ///通话记录卡片
 #define CARD2_RECT_CNT      1
@@ -367,7 +367,7 @@ static void func_call_sort_card_update(void)
 #define CARD2_ICON0_DATA          0,       0,            -25,      50,     50,     UI_BUF_I332001_CALL_NO_LOG_BIN,         0
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r      g     b    对应STR_XXX
-#define CARD2_TEXT0_DATA          0,      0,          25,           100,    30,     NULL,   UI_BUF_0FONT_FONT_BIN,    true,  false,     255,   255,  255, STR_CALL_RECENT
+#define CARD2_TEXT0_DATA          0,      0,          25,           100,    30,     NULL,   UI_BUF_0FONT_FONT_NUM_24_BIN,    true,  false,     255,   255,  255, STR_CALL_RECENT
 
 ///拨号键盘卡片
 #define CARD3_RECT_CNT      1
@@ -385,7 +385,7 @@ static void func_call_sort_card_update(void)
 #define CARD3_ICON0_DATA          0,       0,            -25,      50,     50,     UI_BUF_I332001_CALL_CALL_LIST_DIALPAD_BIN
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r      g      b     对应STR_XXX
-#define CARD3_TEXT0_DATA          0,      0,          25,           100,    30,   NULL,   UI_BUF_0FONT_FONT_BIN,    true,  false,     255,   255,   255,  STR_CALL_DIAL
+#define CARD3_TEXT0_DATA          0,      0,          25,           100,    30,   NULL,   UI_BUF_0FONT_FONT_NUM_24_BIN,    true,  false,     255,   255,   255,  STR_CALL_DIAL
 
 typedef struct f_call_sort_t_
 {

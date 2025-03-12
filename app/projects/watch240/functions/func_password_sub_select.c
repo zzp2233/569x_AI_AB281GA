@@ -28,7 +28,7 @@ compo_form_t *func_password_sub_select_form_create(void)
     compo_textbox_t *txt_set = compo_textbox_create(frm, 8);
     compo_textbox_set_align_center(txt_set, false);
     compo_textbox_set_pos(txt_set, 30, 140);
-    compo_textbox_set(txt_set, "确认设置密码吗？");
+    compo_textbox_set(txt_set,  i18n[STR_SET_PASSWORD]);
     compo_textbox_set_visible(txt_set, true);
 
     if(sys_cb.password_change)
@@ -39,7 +39,7 @@ compo_form_t *func_password_sub_select_form_create(void)
     compo_textbox_t *txt_title = compo_textbox_create(frm, 7);
     compo_textbox_set_align_center(txt_title, false);
     compo_textbox_set_pos(txt_title, 30, 140);
-    compo_textbox_set(txt_title, "修改密码成功！");
+    compo_textbox_set(txt_title, i18n[STR_SUCCES_PASSWORD]);
     compo_textbox_set_visible(txt_title, false);
 
     if(sys_cb.password_change)

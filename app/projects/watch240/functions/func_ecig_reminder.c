@@ -58,13 +58,13 @@ compo_form_t *func_ecig_reminder_form_create(void)
     else if(sys_cb.smoke_index == SHORT_CIRCUIT)
     {
         compo_textbox_set_forecolor(txt, COLOR_RED);
-        compo_textbox_set(txt, "短路,请检查设备...");
+        compo_textbox_set(txt, i18n[STR_SHORT_CIR]);
     }
     else if(sys_cb.smoke_index == OPEN_CIRCUIT)
     {
         picbox= compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_OUT_BIN);
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-40);
-        compo_textbox_set(txt, "拔出...");
+        compo_textbox_set(txt, i18n[STR_PULL_OUT]);
     }
     else if(sys_cb.smoke_index == IN_DEVICE)
     {
@@ -78,7 +78,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
             picbox= compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_IN_SHUANG_BIN);
             compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-40);
         }
-        compo_textbox_set(txt, "插入...");
+        compo_textbox_set(txt, i18n[STR_INSERT]);
         txt = compo_textbox_create(frm, 20);
         compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/2 + 50);
 
@@ -99,12 +99,12 @@ compo_form_t *func_ecig_reminder_form_create(void)
     }
     else if(sys_cb.smoke_index == LOW_POWER)
     {
-        compo_textbox_set(txt, "低电量...");
+        compo_textbox_set(txt, i18n[STR_LOW_BATTERY]);
     }
     else if(sys_cb.smoke_index == SMOKE_TIMEOUT)
     {
         compo_textbox_set_forecolor(txt, COLOR_RED);
-        compo_textbox_set(txt, "吸烟超时...");
+        compo_textbox_set(txt, i18n[STR_SMOKING_OUT]);
     }
     return frm;
 }

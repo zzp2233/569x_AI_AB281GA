@@ -644,64 +644,27 @@ void func_clock_sub_message(size_msg_t msg)
 //static int ra = 1300;
 #define CUBE_HALF_CIRCUM(x)                 ((int)(M_PI * x))         //圆周一半
 #define CUBE_TOUCH_TIME  2000
+
+#define CUBE_DIAL_ANIMATION_TICK_EXPIRE               18                                  //动画单位时间Tick(ms)
+#define CUBE_DIAL_FOCUS_AUTO_STEP_DIV                 10
 //时钟表盘功能事件处理
 static void func_clock_process(void)
 {
 #if UTE_WATCHS_CUBE_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
     {
-        f_clock_t *f_clock = (f_clock_t*)func_cb.f_cb;
-        s32 dx, dy, ax, ay;
 
         compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
-        if(f_clock->cube_touch == true)
+        compo_cube_move(cube);
+        if (cube->move_cb.flag_move_auto==0)//滑动模式下，惯性停止时自动旋转
         {
-            f_clock->cube_touch = ctp_get_dxy(&dx, &dy);
-
-            if(f_clock->cube_touch)
+            if(tick_check_expire(cube->move_cb.tick, CUBE_DIAL_ANIMATION_TICK_EXPIRE))
             {
-                f_clock->cube_touch_time = 3;
-            }
-            else
-            {
-                f_clock->cube_touch_time = 2000;
-            }
-            //拖动菜单图标
-            ax = dx * 1800 / CUBE_HALF_CIRCUM(cube->radius);
-            ay = dy * 1800 / CUBE_HALF_CIRCUM(cube->radius);
-            f_clock->cube_rp = sqrt64(ax * ax + ay * ay);
-            f_clock->cube_ra = ARCTAN2(-ay, ax);
-
-//            printf("rp:%d ra:%d\n",f_clock->cube_rp, f_clock->cube_ra);
-            compo_cube_move(cube);
-        }
-        else
-        {
-            if(tick_check_expire(f_clock->tick, f_clock->cube_touch_time))
-            {
-                f_clock->cube_touch_time = 3;
-                f_clock->tick = tick_get();
-                f_clock->cube_rp+=2;
-                if(f_clock->cube_rp == 1800) f_clock->cube_rp+=2;
-                if(f_clock->cube_rp>=3600)f_clock->cube_rp=0;
-                compo_cube_roll_from(cube, f_clock->cube_rp, f_clock->cube_ra);
+                cube->move_cb.tick = tick_get();
+                compo_cube_roll(cube, CUBE_DIAL_FOCUS_AUTO_STEP_DIV);
                 compo_cube_update(cube);
             }
         }
-
-//
-//
-
-//
-//        printf("rp=%d  ra=%d\n",rp,ra);
-//        rp+=3;
-//        if(rp==3600)rp=0;
-////        ra+=3;
-////        if(ra==3600)ra=0;
-//        ra = 1300;
-//        compo_cube_roll_from(cube, rp, ra);
-//        compo_cube_update(cube);
-
     }
     else if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {

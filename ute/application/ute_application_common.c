@@ -177,7 +177,7 @@ void uteApplicationCommonStartupSecond(void)
 
         uteApplicationCommonData.isStartupFristFinish = true;
         //其他硬件初始化
-        // uteDrvMotorInit();
+        uteDrvMotorInit();
         // uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);
         //uteModulePlatformQdecInit();
 #if UTE_USER_ID_FOR_BINDING_SUPPORT||UTE_MODULE_SCREENS_APP_BINDING_SUPPORT
@@ -645,7 +645,7 @@ void uteApplicationCommonEverySecond(void)
         uteApplicationCommonData.bleConnectState.connectedSecond++;
     }
     uteApplicationCommonData.systemPowerOnSecond++;
-    printf("%s,sys_clk_get=%d",__func__,sys_clk_get());
+    // printf("%s,sys_clk_get=%d",__func__,sys_clk_get());
 
 #if ASR_SELECT
     uteModuleAsrModeEverySecond();

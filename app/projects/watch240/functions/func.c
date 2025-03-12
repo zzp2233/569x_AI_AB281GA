@@ -96,7 +96,7 @@ extern void func_style(void);
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
 extern void func_findphone(void);
 extern void func_altitude(void);
-//extern void func_map(void);
+extern void func_map(void);
 extern void func_message_info(void);
 #if UTE_MODULE_SCREENS_SCAN_SUPPORT
 extern void func_scan(void);
@@ -260,7 +260,7 @@ compo_form_t *func_game_form_create(void);
 compo_form_t *func_style_form_create(void);
 compo_form_t *func_findphone_form_create(void);
 compo_form_t *func_altitude_form_create(void);
-//compo_form_t *func_map_form_create(void);
+compo_form_t *func_map_form_create(void);
 compo_form_t *func_message_form_create(void);
 compo_form_t *func_scan_form_create(void);
 compo_form_t *func_voice_form_create(void);
@@ -405,7 +405,7 @@ const func_t tbl_func_create[] =
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     {FUNC_FINDPHONE,                    func_findphone_form_create},
     {FUNC_ALTITUDE,                     func_altitude_form_create},
-//    {FUNC_MAP,                          func_map_form_create},
+    {FUNC_MAP,                          func_map_form_create},
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {FUNC_MESSAGE,                      func_message_form_create},
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
@@ -588,7 +588,7 @@ const func_t tbl_func_entry[] =
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     {FUNC_ALTITUDE,                     func_altitude},                 //海拔
     {FUNC_FINDPHONE,                    func_findphone},                //寻找手机
-//    {FUNC_MAP,                          func_map},                      //地图
+    {FUNC_MAP,                          func_map},                      //地图
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {FUNC_MESSAGE,                      func_message_info},             //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
@@ -1558,14 +1558,31 @@ void func_message(size_msg_t msg)
             {
                 printf(" func_cb.sta != FUNC_ECIG_REMINDER \n");
                 // func_cb.sta = FUNC_ECIG_REMINDER;
-                uteTaskGuiStartScreen(FUNC_ECIG_REMINDER);
+                if(sys_cb.smoke_index == SMOKING)
+                {
+                    uteTaskGuiStartScreen(FUNC_MAP);
+                }
+                else
+                {
+                    uteTaskGuiStartScreen(FUNC_ECIG_REMINDER);
+                }
+
 
             }
             else
             {
-                printf(" func_cb.sta == FUNC_ECIG_REMINDER \n");
-                compo_form_destroy(func_cb.frm_main);
-                func_cb.frm_main = func_ecig_reminder_form_create();
+                if(sys_cb.smoke_index == SMOKING)
+                {
+                    compo_form_destroy(func_cb.frm_main);
+                    func_cb.frm_main = func_map_form_create();
+                }
+                else
+                {
+                    printf(" func_cb.sta == FUNC_ECIG_REMINDER \n");
+                    compo_form_destroy(func_cb.frm_main);
+                    func_cb.frm_main = func_ecig_reminder_form_create();
+                }
+
 
             }
 

@@ -603,7 +603,7 @@ static void func_sport_sub_run_handle(void)
         {
             case ALL_SPORT_STATUS_CLOSE:
             case ALL_SPORT_STATUS_PAUSE:
-//                compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
+                compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PLAY_BIN);
                 compo_textbox_set(txt, i18n[STR_CONTINUE]);
                 f_sport_sub_run->sport_run_state = false;
                 TRACE("【APP连接】运动停止/退出\n");
@@ -612,7 +612,7 @@ static void func_sport_sub_run_handle(void)
 
             case ALL_SPORT_STATUS_OPEN:
             case ALL_SPORT_STATUS_CONTINUE:
-//                compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
+                compo_button_set_bgimg(btn, UI_BUF_I330001_SPORT_BTN_PUSED_BIN);
                 compo_textbox_set(txt, i18n[STR_PAUSE]);
                 f_sport_sub_run->sport_run_state = true;
                 TRACE("【APP连接】运动开始/继续\n");
@@ -753,6 +753,10 @@ static void func_sport_sub_run_exit_data(void)
         uteModuleHeartStopSingleTesting(TYPE_HEART);
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
+    if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
+    {
+        task_stack_pop();
+    }
     func_cb.last = FUNC_SPORT_SUB_RUN;
 }
 
@@ -818,10 +822,6 @@ static void func_sport_sub_run_click_handler(void)
                     func_cb.sta = FUNC_SPORT_FINISH;
                 }
                 sport_start_flag = false;
-                if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-                {
-                    task_stack_pop();
-                }
             }
             else if (res == MSGBOX_RES_CANCEL)
             {

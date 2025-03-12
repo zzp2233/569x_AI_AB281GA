@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 葡萄牙语(葡萄牙）
 *@author
-*@date   2025-03-04 16:41:01
+*@date   2025-03-12 11:43:39
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -268,6 +268,7 @@ const char * const i18n_pt_rpt[] =
     [STR_MENSTRUAL_CYCLE] = "\x4d\x65\x6e\x73\x74\x72\x75\x61\xc3\xa7\xc3\xa3\x6f\x00", // [252] Menstruação
     [STR_PREGNANCY] = "\x50\x65\x72\xc3\xad\x6f\x64\x6f\x20\x66\xc3\xa9\x72\x74\x69\x6c\x00", // [253] Período fértil
     [STR_SAFE_PERIOD] = "\x50\x65\x72\xc3\xad\x6f\x64\x6f\x20\x73\x65\x67\x75\x72\x6f\x00", // [254] Período seguro
+    [STR_HEART_HIGHT] = "\x46\x72\x65\x71\x75\xc3\xaa\x6e\x63\x69\x61\x20\x63\x61\x72\x64\xc3\xad\x61\x63\x61\x20\x65\x6c\x65\x76\x61\x64\x61\x00", // [255] Frequência cardíaca elevada
 };
 
 #endif

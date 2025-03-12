@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-03-04 16:40:57
+*@date   2025-03-12 11:43:36
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -268,6 +268,7 @@ const char * const i18n_zh_rcn[] =
     [STR_MENSTRUAL_CYCLE] = "\xe6\x9c\x88\xe7\xbb\x8f\xe6\x9c\x9f\x00", // [252] 月经期
     [STR_PREGNANCY] = "\xe6\x98\x93\xe5\xad\x95\xe6\x9c\x9f\x00", // [253] 易孕期
     [STR_SAFE_PERIOD] = "\xe5\xae\x89\xe5\x85\xa8\xe6\x9c\x9f\x00", // [254] 安全期
+    [STR_HEART_HIGHT] = "\xe5\xbf\x83\xe7\x8e\x87\xe8\xbf\x87\xe9\xab\x98\x00", // [255] 心率过高
 };
 
 #endif

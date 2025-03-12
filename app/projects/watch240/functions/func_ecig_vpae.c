@@ -142,7 +142,7 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     compo_textbox_set(textbox2_num,txt_buf);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    sprintf(txt_buf, "%s", i18n[STR_ECIG_15_DAY]);//文字需替换成本周口数
+    sprintf(txt_buf, "%s", i18n[STR_ECIG_7_DAY]);
     compo_textbox_t *textbox_15today = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_font(textbox_15today, UI_BUF_0FONT_FONT_BIN);
     compo_textbox_set_align_center(textbox_15today, false);

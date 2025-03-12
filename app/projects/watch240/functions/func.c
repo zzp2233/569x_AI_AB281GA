@@ -925,7 +925,16 @@ void func_switch_prev(bool flag_auto)
     }
     u8 sta = func_cb.tbl_sort[idx - 1];
     compo_form_t *frm = func_create_form(sta);                                  //创建下一个任务的窗体
-    bool res = func_switching(switch_mode, NULL);                               //切换动画
+    u8 alpha = 255;
+    bool res = false;
+    if ((sta == FUNC_CLOCK || func_cb.sta == FUNC_CLOCK) && (switch_mode & 0x7FFF) == FUNC_SWITCH_LR_ZOOM_RIGHT)
+    {
+        res = func_switching(switch_mode, &alpha);                              //切换动画
+    }
+    else
+    {
+        res = func_switching(switch_mode, NULL);                                //切换动画
+    }
     compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体
     if (res)
     {
@@ -964,7 +973,16 @@ void func_switch_next(bool flag_auto, bool flag_loop)
     }
 
     compo_form_t *frm = func_create_form(sta);                                  //创建下一个任务的窗体
-    bool res = func_switching(switch_mode, NULL);                               //切换动画
+    u8 alpha = 255;
+    bool res = false;
+    if ((sta == FUNC_CLOCK || func_cb.sta == FUNC_CLOCK) && (switch_mode & 0x7FFF) == FUNC_SWITCH_LR_ZOOM_LEFT)
+    {
+        res = func_switching(switch_mode, &alpha);                              //切换动画
+    }
+    else
+    {
+        res = func_switching(switch_mode, NULL);                                //切换动画
+    }
     compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体
     if (res)
     {
@@ -987,7 +1005,7 @@ void func_switch_to(u8 sta, u16 switch_mode)
     compo_form_t *frm = func_create_form(sta);                                  //创建下一个任务的窗体
     bool res = 0;
     u8 alph = 255;
-    if (sta == FUNC_CARD && switch_mode == FUNC_SWITCH_LR_ZOOM_RIGHT)
+    if ((sta == FUNC_CARD || sta == FUNC_CLOCK || func_cb.sta == FUNC_CLOCK) && (switch_mode == FUNC_SWITCH_LR_ZOOM_RIGHT || switch_mode == FUNC_SWITCH_LR_ZOOM_LEFT))
     {
         res = func_switching(switch_mode, &alph);                               //切换动画
     }

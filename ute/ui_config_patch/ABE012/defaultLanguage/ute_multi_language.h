@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-02-27 10:09:46
+*@date   2025-03-12 15:57:16
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -262,7 +262,19 @@ enum
     STR_ECIG_RECORD, // 电子烟记录
     STR_ECIG_TODAT_P, // 今天口数
     STR_ECIG_P, // 口数
-    STR_ECIG_15_DAY, // 15天口数
+    STR_ECIG_7_DAY, // 7天口数
+    STR_SHORT_CIR, // 短路,请检查设备...
+    STR_PULL_OUT, // 拔出
+    STR_INSERT, // 插入
+    STR_SMOKING_OUT, // 吸烟超时
+    STR_RECORDING, // 录音
+    STR_PLAYING, // 播放
+    STR_ENTER_CUR, // 输入当前密码
+    STR_OLD_PASSWORD, // 输入旧密码
+    STR_NEW_PASSWORD, // 输入新密码
+    STR_ERROR_PASSWORD, // 密码错误
+    STR_SET_PASSWORD, // 确认设置密码吗？
+    STR_SUCCES_PASSWORD, // 修改密码成功！
 };
 
 extern const char * const *i18n;

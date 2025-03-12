@@ -118,16 +118,16 @@ compo_form_t *func_password_sub_disp_form_create(void)
     compo_setid(txt, COMPO_ID_TXT_NEWPASSWORD);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_pos(txt, 50, 34);
-    compo_textbox_set(txt, "输入当前密码");
+    compo_textbox_set(txt, i18n[STR_ENTER_CUR]);
     compo_textbox_set_visible(txt, true);
 
     if(sys_cb.password_cnt == 4 && sys_cb.password_change)
     {
-        compo_textbox_set(txt, "输入旧密码");
+        compo_textbox_set(txt, i18n[STR_OLD_PASSWORD]);
     }
     else if(sys_cb.password_cnt == 0 && !sys_cb.password_change)
     {
-        compo_textbox_set(txt, "输入新密码");
+        compo_textbox_set(txt, i18n[STR_NEW_PASSWORD]);
     }
 
     //新建图像
@@ -316,12 +316,12 @@ static void func_password_sub_disp_button_click(void)
         {
             sys_cb.password_cnt = 0;
             password->cnt = 0;
-            compo_textbox_set(txt, "输入新密码");
+            compo_textbox_set(txt, i18n[STR_NEW_PASSWORD]);
             compo_textbox_set_visible(txt, true);
         }
         else
         {
-            compo_textbox_set(txt, "密码错误");
+            compo_textbox_set(txt, i18n[STR_ERROR_PASSWORD]);
             compo_textbox_set_visible(txt, true);
             password->cnt = 0;
         }

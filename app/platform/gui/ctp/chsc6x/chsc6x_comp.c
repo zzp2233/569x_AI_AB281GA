@@ -7,7 +7,7 @@
 #include "YCY_AB281_801_chsc6x_upd_[304_17]_V241_V3.h" //801
 #else
 // #include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
-#include "YCY_JLE012_MB_304_19_V242_V2.h"
+#include "YCY_JLE012_MB_304_19__V243_V3.h"
 #endif
 #include "chsc6x_main.h"
 

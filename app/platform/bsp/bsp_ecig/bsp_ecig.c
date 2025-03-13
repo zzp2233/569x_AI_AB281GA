@@ -114,8 +114,16 @@ uint8_t ecig_get_res(void)
     printf("%s, data_temp1=%d,result=%lu\n", __func__,data_temp1, result);
     printf("%s, data=%d\n", __func__, data);
 #endif
+    if(get_gear_func()==0)
+    {
+        return data;
+    }
+    else
+    {
+        return data/2;
+    }
 
-    return data;
+
 }
 u8 ecig_get_res2(void)
 {

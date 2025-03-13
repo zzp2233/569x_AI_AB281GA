@@ -32,21 +32,7 @@ compo_form_t *func_map_form_create(void)
 
     compo_form_t * frm = func_3d_batter_form_create();
 
-    uint32_t smokeing_count = uteModuleGetSomkeSomkeCount();
-    smokeing_count++;
-    uteModuleSetSomkeCount(smokeing_count);
 
-    // 获取当前时间
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-    int current_hour = time.hour;
-
-    // 更新对应小时的口数
-    uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
-    // 更新本周对应日期的口数
-    int current_weekday = time.week;
-    uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
-    uteModuleSmokeDataSaveConfig();
 
     return frm;
 }

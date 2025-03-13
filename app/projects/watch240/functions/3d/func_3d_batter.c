@@ -22,12 +22,12 @@
 //立方体图标列表(固定6项)
 static const compo_cube_item_t tbl_menu_cube[] =
 {
-    {UI_BUF_I330001_3D_BATTER_ICON_BIN,             FUNC_NULL},
-    {UI_BUF_I330001_3D_BATTER_ICON_BIN,             FUNC_NULL},
-    {UI_BUF_I330001_3D_BATTER_ICON_BIN,             FUNC_NULL},
-    {UI_BUF_I330001_3D_BATTER_ICON_BIN,             FUNC_NULL},
-    {UI_BUF_I330001_3D_BATTER_ICON_BIN,             FUNC_NULL},
-    {UI_BUF_I330001_3D_BATTER_ICON_BIN,             FUNC_NULL},
+    {UI_BUF_I330001_3D_MENU_THEM_BIN,             FUNC_NULL},
+    {UI_BUF_I330001_3D_MENU_FINDPHONE_BIN,         FUNC_NULL},
+    {UI_BUF_I330001_3D_MENU_MUSIC_BIN,             FUNC_NULL},
+    {UI_BUF_I330001_3D_MENU_POWER_BIN,             FUNC_NULL},
+    {UI_BUF_I330001_3D_MENU_SETING_BIN,             FUNC_NULL},
+    {UI_BUF_I330001_3D_MENU_WEATHER_BIN,             FUNC_NULL},
 };
 
 enum

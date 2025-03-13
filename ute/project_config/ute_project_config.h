@@ -27,7 +27,7 @@
 #include"ute_project_config_abe012.h"
 #endif
 /** Log模块控制开关*/
-#define UTE_MODULE_LOG_SUPPORT 1
+#define UTE_MODULE_LOG_SUPPORT 0
 
 
 
@@ -1407,7 +1407,7 @@
 
 /*! 是否创建1S定时器，用于计时和每秒钟任务，反之使用系统500ms任务执行，wang.luo 2024-12-30 */
 #ifndef UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT
-#define UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT 0
+#define UTE_MODULE_CREATE_SYS_1S_TIMER_SUPPORT 1
 #endif
 
 /*! PWRKEY,wang.luo 2024-12-03 */

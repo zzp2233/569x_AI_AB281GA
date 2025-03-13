@@ -39,21 +39,21 @@ compo_form_t *func_ecig_reminder_form_create(void)
         compo_animation_set_interval(animation, 30);
         compo_setid(animation,COMPO_ID_PIC_SMOCKING);
         compo_textbox_set(txt, "吸烟中...");
-        // uint32_t smokeing_count = uteModuleGetSomkeSomkeCount();
-        // smokeing_count++;
-        // uteModuleSetSomkeCount(smokeing_count);
+        uint32_t smokeing_count = uteModuleGetSomkeSomkeCount();
+        smokeing_count++;
+        uteModuleSetSomkeCount(smokeing_count);
 
-        // // 获取当前时间
-        // ute_module_systemtime_time_t time;
-        // uteModuleSystemtimeGetTime(&time);
-        // int current_hour = time.hour;
+        // 获取当前时间
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+        int current_hour = time.hour;
 
-        // // 更新对应小时的口数
-        // uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
-        // // 更新本周对应日期的口数
-        // int current_weekday = time.week;
-        // uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
-        // uteModuleSmokeDataSaveConfig();
+        // 更新对应小时的口数
+        uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
+        // 更新本周对应日期的口数
+        int current_weekday = time.week;
+        uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
+        uteModuleSmokeDataSaveConfig();
     }
     else if(sys_cb.smoke_index == SHORT_CIRCUIT)
     {
@@ -87,13 +87,13 @@ compo_form_t *func_ecig_reminder_form_create(void)
         buf[1] = '.';
         buf[2] = ecig_get_res() % 10 + '0';
         buf[3] = 'R';
-        buf[4] = ' ';
-        buf[5] = ' ';
-        buf[6] = ' ';
-        buf[7] = ecig_get_res2() / 10 + '0';
-        buf[8] = '.';
-        buf[9] = ecig_get_res2() % 10 + '0';
-        buf[10] = 'R';
+        // buf[4] = ' ';
+        // buf[5] = ' ';
+        // buf[6] = ' ';
+        // buf[7] = ecig_get_res2() / 10 + '0';
+        // buf[8] = '.';
+        // buf[9] = ecig_get_res2() % 10 + '0';
+        // buf[10] = 'R';
         compo_textbox_set(txt, buf);
 
     }

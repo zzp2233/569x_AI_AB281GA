@@ -1558,11 +1558,11 @@ void func_message(size_msg_t msg)
             {
                 printf(" func_cb.sta != FUNC_ECIG_REMINDER \n");
                 // func_cb.sta = FUNC_ECIG_REMINDER;
-                if(sys_cb.smoke_index == SMOKING)
-                {
-                    uteTaskGuiStartScreen(FUNC_MAP);
-                }
-                else
+                // if(sys_cb.smoke_index == SMOKING)
+                // {
+                //     uteTaskGuiStartScreen(FUNC_MAP);
+                // }
+                // else
                 {
                     uteTaskGuiStartScreen(FUNC_ECIG_REMINDER);
                 }
@@ -1571,12 +1571,12 @@ void func_message(size_msg_t msg)
             }
             else
             {
-                if(sys_cb.smoke_index == SMOKING)
-                {
-                    compo_form_destroy(func_cb.frm_main);
-                    func_cb.frm_main = func_map_form_create();
-                }
-                else
+                // if(sys_cb.smoke_index == SMOKING)
+                // {
+                //     compo_form_destroy(func_cb.frm_main);
+                //     func_cb.frm_main = func_map_form_create();
+                // }
+                // else
                 {
                     printf(" func_cb.sta == FUNC_ECIG_REMINDER \n");
                     compo_form_destroy(func_cb.frm_main);

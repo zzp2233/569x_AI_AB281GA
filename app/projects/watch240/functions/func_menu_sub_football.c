@@ -19,7 +19,7 @@
 #define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
 #define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
 #define KALE_SWITCH_DR                           2                                                              //单次变更R值
-#define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
+#define KALE_ROTATE_ANGLE                        25                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 
 enum
 {
@@ -101,7 +101,27 @@ static const compo_football_item_t tbl_menu_football[20] =
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {UI_BUF_I330001_THEME_2_BREATHE_BIN,          FUNC_BREATHE},
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
-
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {UI_BUF_I330001_THEME_2_CALENDAR_BIN,         FUNC_CALENDAER},
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_I330001_THEME_2_WEATHER_BIN,          FUNC_WEATHER},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {UI_BUF_I330001_THEME_2_ALARM_BIN,            FUNC_ALARM_CLOCK},
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+    {UI_BUF_I330001_THEME_2_CONTACTS_BIN,         FUNC_ADDRESS_BOOK},
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {UI_BUF_I330001_THEME_2_THEME_BIN,            FUNC_STYLE},
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {UI_BUF_I330001_THEME_2_FLASHLIGHT_BIN,       FUNC_FLASHLIGHT},
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {UI_BUF_I330001_THEME_2_TIMER_BIN,            FUNC_TIMER},
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 //足球图标列表(固定20项)
@@ -226,6 +246,7 @@ static void func_menu_sub_football_switch_to_clock(void)
 //主菜单功能事件处理
 static void func_menu_sub_football_process(void)
 {
+#if  0
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     compo_football_t *ball = f_menu->ball;
     s32 dx, dy, ax, ay;
@@ -266,6 +287,13 @@ static void func_menu_sub_football_process(void)
             compo_football_update(ball);
         }
     }
+    func_process();
+#endif
+    f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
+    compo_football_t *ball = f_menu->ball;
+    compo_football_move(ball);
+
+
     func_process();
 }
 

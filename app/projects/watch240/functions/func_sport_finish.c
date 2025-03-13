@@ -745,8 +745,6 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, y+34+266,GUI_SCREEN_CENTER_X,64);
     compo_textbox_set(textbox, i18n[STR_OK]);
 
-
-
     return frm;
 }
 

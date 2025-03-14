@@ -399,6 +399,7 @@ compo_form_t *func_call_sub_record_form_create(void)
 //    compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update_with_text_scroll_rst(listbox);
     compo_listbox_update(listbox);
 
     compo_textbox_set_visible(txt, record_cnt > 0 ? false : true);

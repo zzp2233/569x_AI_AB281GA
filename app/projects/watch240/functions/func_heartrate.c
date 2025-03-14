@@ -278,8 +278,8 @@ compo_form_t *func_heartrate_form_create(void)
 
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///次/分 数据
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_pos(textbox,110,235);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_pos(textbox,110,220);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,"--");
     compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
@@ -287,7 +287,7 @@ compo_form_t *func_heartrate_form_create(void)
     area_t txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,120+txt_leng.wid,255,67, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,120+txt_leng.wid,250,67, widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
     compo_setid(textbox,COMPO_ID_HEART_BPM_TXT);
@@ -308,7 +308,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_MAX_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,125,302);
+    compo_textbox_set_pos(textbox,125,302-7);
     compo_textbox_set_align_center(textbox, false);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_XIA_BIN);
@@ -327,7 +327,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_MIN_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,239,302);
+    compo_textbox_set_pos(textbox,239,302-7);
     compo_textbox_set_align_center(textbox, false);
 
     ///*第二页*/
@@ -447,7 +447,7 @@ static void func_heartrate_refresh(void)
             compo_textbox_set(textbox_value,txt_buf);
         }
         area_t txt_leng = widget_text_get_area(textbox_value->txt);
-        compo_textbox_set_pos(textbox_bpm,120+txt_leng.wid,255);
+        compo_textbox_set_pos(textbox_bpm,120+txt_leng.wid,250);
     }
 
 }

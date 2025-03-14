@@ -150,6 +150,7 @@ compo_form_t *func_address_book_form_create(void)
     compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update_with_text_scroll_rst(listbox);
     compo_listbox_update(listbox);
 
     compo_textbox_set_visible(txt, address_book_cnt > 0 ? false : true);
@@ -404,7 +405,6 @@ static void func_address_book_process(void)
     }
 
     compo_listbox_move(f_book->listbox);
-    compo_listbox_update(f_book->listbox);
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     f_address_book_list_t *f_book = (f_address_book_list_t *)func_cb.f_cb;
 

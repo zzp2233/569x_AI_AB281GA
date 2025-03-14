@@ -342,6 +342,7 @@ uint bsp_bt_disp_status(void)
 
     if(bt_cb.disp_status != status)
     {
+        printf("%s,status:%d->%d\n",__func__, bt_cb.disp_status, status);
         bt_cb.disp_status = status;
         //if(!bt_is_connected()) {
         if (0)

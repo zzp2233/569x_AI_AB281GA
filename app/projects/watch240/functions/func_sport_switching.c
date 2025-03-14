@@ -91,9 +91,6 @@ static void func_sport_animation(void)
                 rect_pic.wid = rect_pic.hei * area_img.wid / area_img.hei;
                 compo_picturebox_set_size(f_sport_switching->pic, rect_pic.wid, rect_pic.hei);
                 compo_picturebox_set_visible(f_sport_switching->pic, true);
-
-//                printf("img-->w:%d, h:%d\n", area_img.wid, area_img.hei);
-//                printf("rect-->x:%d, y:%d, w:%d, h:%d\n", rect_pic.x, rect_pic.y, rect_pic.wid, rect_pic.hei);
                 f_sport_switching->anim_sta = SPORT_ANIM_STA_START;
                 break;
 
@@ -101,17 +98,14 @@ static void func_sport_animation(void)
                 rect_pic.hei += SPORT_ANIM_AMP_STEP;
                 rect_pic.wid = rect_pic.hei * area_img.wid / area_img.hei;
                 rect_pic.y -=  GUI_SCREEN_CENTER_Y * SPORT_ANIM_AMP_STEP / abs(SPORT_ANIM_ENTER_HEIGHT - area_img.hei);
-
                 compo_picturebox_set_pos(f_sport_switching->pic, rect_pic.x, rect_pic.y);
                 compo_picturebox_set_size(f_sport_switching->pic, rect_pic.wid, rect_pic.hei);
-//                printf("y:%d, w:%d, h:%d\n", rect_pic.y, rect_pic.wid, rect_pic.hei);
                 if (rect_pic.y < GUI_SCREEN_CENTER_Y)
                 {
                     rect_pic.hei = area_img.hei;
                     rect_pic.wid = area_img.wid;
                     rect_pic.x = GUI_SCREEN_CENTER_X;
                     rect_pic.y = GUI_SCREEN_CENTER_Y;
-
                     compo_picturebox_set_pos(f_sport_switching->pic, rect_pic.x, rect_pic.y);
                     compo_picturebox_set_size(f_sport_switching->pic, rect_pic.wid, rect_pic.hei);
                     f_sport_switching->anim_sta = SPORT_ANIM_STA_DELAY;
@@ -121,14 +115,7 @@ static void func_sport_animation(void)
             case SPORT_ANIM_STA_DELAY:
                 if (++f_sport_switching->anim_delay > SPORT_ANIM_DELAY)
                 {
-                    if (uteModuleSportMoreSportIsAppStart())
-                    {
-                        if (f_sport_switching->anim_num != UTE_MODULE_SPROT_MORE_SPORT_COUNT_ZORE - uteModuleSportMoreSportGetCountZeroIndex())
-                        {
-                            f_sport_switching->anim_sta = SPORT_ANIM_STA_NEXT;
-                        }
-                    }
-                    else
+                    if (f_sport_switching->anim_num != UTE_MODULE_SPROT_MORE_SPORT_COUNT_ZORE - uteModuleSportMoreSportGetCountZeroIndex())
                     {
                         f_sport_switching->anim_sta = SPORT_ANIM_STA_NEXT;
                     }
@@ -139,36 +126,28 @@ static void func_sport_animation(void)
                 rect_pic.hei -= SPORT_ANIM_RED_STEP;
                 rect_pic.wid = rect_pic.hei * area_img.wid / area_img.hei;
                 rect_pic.y -=  GUI_SCREEN_CENTER_Y * SPORT_ANIM_RED_STEP / abs(SPORT_ANIM_EXIT_HEIGHT - area_img.hei);
-//                printf("y:%d, w:%d, h:%d\n", rect_pic.y, rect_pic.wid, rect_pic.hei);
-
                 compo_picturebox_set_pos(f_sport_switching->pic, rect_pic.x, rect_pic.y);
                 compo_picturebox_set_size(f_sport_switching->pic, rect_pic.wid, rect_pic.hei);
 
                 if (rect_pic.y < 0)
                 {
-                    if (uteModuleSportMoreSportIsAppStart())
+                    // 检查是否已经跑完所有图片
+                    if (f_sport_switching->anim_num >= ANIM_MAX_CNT - 1) // 假设ANIM_MAX_CNT是3，索引从0开始
                     {
-                        f_sport_switching->anim_num = UTE_MODULE_SPROT_MORE_SPORT_COUNT_ZORE - uteModuleSportMoreSportGetCountZeroIndex();
+                        f_sport_switching->anim_sta = SPORT_ANIM_STA_END;
                     }
                     else
                     {
-                        f_sport_switching->anim_num++;
+                        f_sport_switching->anim_num++; // 切换到下一张图片
+                        f_sport_switching->anim_delay = 0;
+                        compo_picturebox_set_visible(f_sport_switching->pic, false);
+                        f_sport_switching->anim_sta = SPORT_ANIM_STA_IDLE;
                     }
-//                    if (++f_sport_switching->anim_num >= ANIM_MAX_CNT) {
-                    if (f_sport_switching->anim_num >= ANIM_MAX_CNT)
-                    {
-                        f_sport_switching->anim_sta = SPORT_ANIM_STA_END;
-                        break;
-                    }
-                    f_sport_switching->anim_delay = 0;
-                    compo_picturebox_set_visible(f_sport_switching->pic, false);
-                    f_sport_switching->anim_sta = SPORT_ANIM_STA_IDLE;
                 }
                 break;
 
             case SPORT_ANIM_STA_END:
-                func_cb.sta = FUNC_SPORT_SUB_RUN;
-                task_stack_pop();
+                uteTaskGuiStartScreen(FUNC_SPORT_SUB_RUN, 0, __func__);
                 break;
         }
     }
@@ -365,18 +344,12 @@ static void func_sport_switching_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_sport_switching_t));
     func_cb.frm_main = func_sport_switching_form_create();
-
-    //亮屏
-    if (sys_cb.gui_sleep_sta)
-    {
-        sys_cb.gui_need_wakeup = 1;
-    }
-    reset_sleep_delay_all();
 }
 
 //退出运动开始功能
 static void func_sport_switching_exit(void)
 {
+    task_stack_remove(FUNC_SPORT_SWITCH);
     func_cb.last = FUNC_SPORT_SWITCH;
 }
 

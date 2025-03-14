@@ -847,7 +847,7 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
         {
             if(uteApplicationCommonIsStartupFinish())
             {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             }
             else

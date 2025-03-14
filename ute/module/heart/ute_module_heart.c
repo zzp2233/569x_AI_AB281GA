@@ -779,7 +779,7 @@ void uteModuleHeartMinMaxWarningValueProcess(void)
                     if(uteModuleHeartWaringOpenCtrl(0, 0))
 #endif
                     {
-                        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_HEART_WARNING_SCREEN_ID);
+                        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_HEART_WARNING_SCREEN_ID, 0, __func__);
                         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
                     }
 #endif

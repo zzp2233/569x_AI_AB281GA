@@ -152,6 +152,15 @@ typedef struct card_##type##_t_ {   \
 ///创建卡片
 #define CREAT_CARD(compo_id, rect_cnt, icon_cnt, text_cnt, card0, ORG_W, ORG_H) \
 {\
+    u16 str_id = 0;\
+    u32 icon_addr = 0;\
+    extern bool func_sport_get_by_order(uint8_t sport_order, uint16_t *str_idx, uint32_t *icon_addr);\
+    if(compo_id > 3){\
+        str_id = STR_MORE;\
+        icon_addr = UI_BUF_I330001_SPORT_ICON_25_CAIDAN_BIN;\
+    } else {\
+        func_sport_get_by_order(compo_id, &str_id, &icon_addr);\
+    }\
     compo_cardbox_t * cardbox = compo_cardbox_create(frm, rect_cnt, icon_cnt, text_cnt, ORG_W, ORG_H); \
     compo_cardbox_set_visible(cardbox, true); \
     compo_cardbox_set_location(cardbox, card0.x, card0.y, card0.w, card0.h);\
@@ -162,8 +171,7 @@ typedef struct card_##type##_t_ {   \
     } \
     for (u8 i=0; i<icon_cnt; i++) { \
         compo_cardbox_icon_set(cardbox, card0.icon[i].id, card0.icon[i].res); \
-        extern u32 func_sport_get_ui(u8 sport_idx); \
-        compo_cardbox_icon_set(cardbox, card0.icon[i].id, func_sport_get_ui(card0.icon[i].rev)); \
+        compo_cardbox_icon_set(cardbox, card0.icon[i].id, icon_addr); \
         compo_cardbox_icon_set_location(cardbox, card0.icon[i].id, card0.icon[i].x, card0.icon[i].y, card0.icon[i].w, card0.icon[i].h); \
     } \
     for (u8 i=0; i<text_cnt; i++) { \
@@ -178,11 +186,11 @@ typedef struct card_##type##_t_ {   \
         widget_text_set_wordwrap(cardbox->text[card0.text[i].id], card0.text[i].wordwrap); \
         widget_text_set_color(cardbox->text[card0.text[i].id], make_color(card0.text[i].r, card0.text[i].g, card0.text[i].b)); \
         compo_cardbox_text_set_location(cardbox, card0.text[i].id, card0.text[i].x, card0.text[i].y, card0.text[i].w, card0.text[i].h); \
-        extern u32 func_sport_get_str(u8 sport_idx); \
+        u8 sport_mode = uteModuleSportFindHundredSportIndex(compo_id);\
         if (card0.text[i].str != NULL) {    \
             compo_cardbox_text_set(cardbox, card0.text[i].id, card0.text[i].str); \
-        } else if (func_sport_get_str(card0.text[i].rev) != STR_NULL) { \
-            compo_cardbox_text_set(cardbox, card0.text[i].id, i18n[func_sport_get_str(card0.text[i].rev)]); \
+        } else if (str_id != STR_NULL) { \
+            compo_cardbox_text_set(cardbox, card0.text[i].id, i18n[str_id]); \
         } \
     }\
 }
@@ -357,27 +365,19 @@ static void func_sport_sort_card_click(void)
     compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
     if (compo_cardbox_get_visible(cardbox))
     {
-        if (compo_id == COMPO_ID_CARD_1)
-        {
-            sys_cb.sport_idx = CARD_HANDLE(1).icon[0].rev;
-            func_cb.sta = FUNC_SPORT_SWITCH;
-        }
-        else if (compo_id == COMPO_ID_CARD_2)
-        {
-            sys_cb.sport_idx = CARD_HANDLE(2).icon[0].rev;
-            func_cb.sta = FUNC_SPORT_SWITCH;
-        }
-        else if (compo_id == COMPO_ID_CARD_3)
-        {
-            sys_cb.sport_idx = CARD_HANDLE(3).icon[0].rev;
-            func_cb.sta = FUNC_SPORT_SWITCH;
-        }
-        else if (compo_id == COMPO_ID_CARD_4)           //更多运动
+        if (compo_id == COMPO_ID_CARD_4)           //更多运动
         {
             sys_cb.sport_idx = 0;
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
             func_cb.sta = FUNC_SPORT;
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+        }
+        else
+        {
+            u8 sportMode = uteModuleSportFindHundredSportIndex(compo_id - 1);
+            printf("sportMode = %d\n", sportMode);
+            uteTaskGuiStartScreen(FUNC_SPORT_SWITCH, 0, __func__);
+            uteModuleSportStartMoreSports(sportMode, 1, 0);
         }
     }
 }
@@ -385,6 +385,17 @@ static void func_sport_sort_card_click(void)
 //更新卡片内容状态
 static void func_sport_sort_card_update(void)
 {
+#if UTE_MODULE_SPORT_HUNDRED_SUPPORT
+    if(uteModuleSportGetAppUpdateTrainingListFlag())
+    {
+        extern bool func_sport_get_by_order(uint8_t sport_order, uint16_t *str_idx, uint32_t *icon_addr) ;
+        u16 str_id = 0;
+        u32 icon_addr = 0;
+        func_sport_get_by_order(1, &str_id, &icon_addr);
+        msg_enqueue(MSG_CHECK_LANGUAGE);
+        return;
+    }
+#endif
     for(u8 i=0; i<CARD_TOTAL_CNT; i++)      //文本滚动
     {
         u16 id = COMPO_ID_CARD_1 + i;

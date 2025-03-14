@@ -323,7 +323,7 @@ void uteApplicationCommonStartupSecond(void)
         {}
         else if(uteDrvBatteryCommonIsDelayDisplayCharger())
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID, 0, __func__);
         }
 #endif
         else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL || CHARGE_DC_IN()) //USB插入
@@ -334,14 +334,14 @@ void uteApplicationCommonStartupSecond(void)
             data->mode = FACTORY_TEST_MODE_FACTORY;
             data->justDisplayCross = true;
             data->moduleType = FACTORY_MODULE_CROSS;
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID, 0, __func__);
 #elif UTE_MODULE_NEW_FACTORY_TEST_JUST_SCREEN_TP_SUPPORT
             ute_new_factory_test_data_t *data;
             uteModuleNewFactoryTestSetMode(&data);
             data->mode = FACTORY_TEST_MODE_FACTORY;
             data->justDisplayScreenTp = true;
             data->moduleType = FACTORY_MODULE_RGB;
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID, 0, __func__);
 #elif UTE_MODULE_NEW_FACTORY_TEST_JUST_HEART_CHECK_LIGHT_SUPPORT
             uteModuleNewFactoryTestInit();
             ute_new_factory_test_data_t *data;
@@ -352,10 +352,10 @@ void uteApplicationCommonStartupSecond(void)
             uteModuleNewFactoryTestSetCheckLightMode(NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK);
             uteModuleHeartStartSingleTesting(TYPE_HEART);
             uteDrvHeartVcxxStartCrosstalktest();
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID, 0, __func__);
 #else
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWERON_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWERON_ID, 0, __func__);
 #else
             if(0)
             {}
@@ -848,7 +848,7 @@ void uteApplicationCommonStartPowerOffMsg(void)
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
 #if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
-    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID);
+    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID, 0, __func__);
 #else
     if(!sys_cb.gui_sleep_sta)
     {

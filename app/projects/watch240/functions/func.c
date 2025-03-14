@@ -139,7 +139,7 @@ extern void func_flashlight(void);
 #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
 extern void func_charge(void);
 extern void func_debug_info(void);
-
+extern void func_heart_warning(void);
 extern void func_music(void);
 extern void func_idle(void);
 extern void func_bt_update(void);
@@ -188,6 +188,7 @@ extern void func_breathe_finish(void);
 extern void func_women_health(void);
 extern void func_menu_football_list(void);
 
+compo_form_t *func_heart_warning_form_create(void);
 compo_form_t *func_menu_football_list_form_create(void);
 compo_form_t *func_women_health_form_create(void);
 compo_form_t *func_breathe_finish_form_create(void);
@@ -426,6 +427,7 @@ const func_t tbl_func_create[] =
     {FUNC_SET_SUB_WRIST,                func_set_sub_wrist_form_create},
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd_form_create},
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set_form_create},
+    {FUNC_HEART_WARNING,                func_heart_warning_form_create},
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
@@ -617,6 +619,7 @@ const func_t tbl_func_entry[] =
 #endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
     {FUNC_SET_SUB_OFF,                  func_set_sub_off},              //设置--关机
     {FUNC_CHARGE,                       func_charge},                   //充电
+    {FUNC_HEART_WARNING,                func_heart_warning},
     {FUNC_DEBUG_INFO,                   func_debug_info},               //DEBUG
 //    {FUNC_SMARTSTACK,                   func_smartstack},               //智能堆栈
 #if FUNC_BT_EN
@@ -1525,11 +1528,11 @@ void func_message(size_msg_t msg)
 
         case EVT_WATCH_TIMER_DONE:      //计时器响铃
             // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            if(func_cb.sta != FUNC_TIMER || !sys_cb.gui_sleep_sta)
-            {
-                sys_cb.cover_index = REMIND_COVER_TIMER_FINISH;
-                sys_cb.remind_tag = true;
-            }
+            // if(func_cb.sta != FUNC_TIMER || !sys_cb.gui_sleep_sta)
+            // {
+            sys_cb.cover_index = REMIND_COVER_TIMER_FINISH;
+            sys_cb.remind_tag = true;
+            // }
             sys_cb.timer_left_sec = sys_cb.timer_custom_sec;
 //            msgbox("计时已经结束",NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_RES_NONE);
             break;

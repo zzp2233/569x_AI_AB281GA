@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 日语(日本）
 *@author
-*@date   2025-03-04 16:40:59
+*@date   2025-03-12 11:43:37
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -268,6 +268,7 @@ const char * const i18n_ja_rjp[] =
     [STR_MENSTRUAL_CYCLE] = "\xe7\x94\x9f\xe7\x90\x86\xe6\x9c\x9f\xe9\x96\x93\x00", // [252] 生理期間
     [STR_PREGNANCY] = "\xe5\xa6\x8a\xe5\xa8\xa0\xe5\x8f\xaf\xe8\x83\xbd\xe3\x81\xaa\xe6\x99\x82\xe6\x9c\x9f\x00", // [253] 妊娠可能な時期
     [STR_SAFE_PERIOD] = "\xe5\xae\x89\xe5\x85\xa8\xe6\x9c\x9f\xe9\x96\x93\x00", // [254] 安全期間
+    [STR_HEART_HIGHT] = "\xe9\xa0\xbb\xe8\x84\x88\x00", // [255] 頻脈
 };
 
 #endif

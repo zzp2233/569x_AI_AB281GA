@@ -101,17 +101,17 @@ compo_form_t *func_message_form_create(void)
     {
         uint8_t hour=ute_msg->historyNotify[i].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
         uint8_t min =ute_msg->historyNotify[i].min ;/*!系统时间，分钟，数值为0~59 */
-        uint8_t *str_am = (uint8_t *)ab_zalloc(sizeof(uint8_t));
+        uint8_t str_am[30];
         memset(str_am,0,sizeof(str_am));
         if(uteModuleSystemtime12HOn())
         {
             if(hour<=12 && hour!=0)
             {
-                memcpy(&str_am[0],i18n[STR_AM],strlen(i18n[STR_AM])+1);
+                memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
             }
             else
             {
-                memcpy(&str_am[0],i18n[STR_PM],strlen(i18n[STR_AM])+1);
+                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_AM])+1);
             }
             hour %= 12;
             if(hour==0)
@@ -164,7 +164,13 @@ compo_form_t *func_message_form_create(void)
         widget_text_set_wordwrap(cardbox->text[1], true);
         widget_text_set_ellipsis(cardbox->text[1], true);
     }
-    printf("11111111111111111111111111\n");
+    printf("create->year:%d mon:%d day:%d hour:%d min:%d\n",
+           ute_msg->historyNotify[0].year,
+           ute_msg->historyNotify[0].month,
+           ute_msg->historyNotify[0].day,
+           ute_msg->historyNotify[0].hour,
+           ute_msg->historyNotify[0].min
+          );
     //创建按钮
     compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,105+(133*msg_num));
@@ -330,6 +336,7 @@ compo_form_t *func_message_form_create(void)
 
         compo_cardbox_text_set_location(cardbox,0,message_card[0].time_x,message_card[0].time_y,message_card[0].time_w,message_card[0].time_h);
         widget_set_align_center(cardbox->text[0],false);
+        widget_text_set_font(cardbox->text[0],UI_BUF_0FONT_FONT_NUM_24_BIN);
         widget_text_set_color(cardbox->text[0],make_color(0x94,0x94,0x94));
         compo_cardbox_text_set(cardbox,0,time_buf);
         widget_text_set_right_align(cardbox->text[0],true);
@@ -442,6 +449,30 @@ static void func_message_click(void)
             ute_module_notify_data_t *ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
             uteModuleNotifyGetData(ute_msg);
             ute_module_systemtime_time_t time_data;
+            uteModuleSystemtimeGetTime(&time_data);//获取系统时间
+
+            uint8_t hour=ute_msg->historyNotify[compo_id].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
+            uint8_t min =ute_msg->historyNotify[compo_id].min ;/*!系统时间，分钟，数值为0~59 */
+            uint8_t str_am[30];
+            memset(str_am,0,sizeof(str_am));
+            if(uteModuleSystemtime12HOn())
+            {
+                if(hour<=12 && hour!=0)
+                {
+                    memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
+                }
+                else
+                {
+                    memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_AM])+1);
+                }
+                hour %= 12;
+                if(hour==0)
+                {
+                    hour = 12;
+                }
+            }
+
+            memset(time_buf,0,sizeof(time_buf));
             if(time_data.year != ute_msg->historyNotify[compo_id].year || time_data.month != ute_msg->historyNotify[compo_id].month)
             {
                 sprintf((char*)time_buf, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
@@ -457,10 +488,10 @@ static void func_message_click(void)
             }
             else
             {
-                sprintf((char*)time_buf, "%02d:%02d", //record_tbl[index].callTime.year,
-                        ute_msg->historyNotify[compo_id].hour,
-                        ute_msg->historyNotify[compo_id].min);
+                sprintf((char*)time_buf, "%02d:%02d %s", //record_tbl[index].callTime.year,
+                        hour,min,str_am);
             }
+
             char* msg = (char*)ute_msg->historyNotify[compo_id].content;
             sys_cb.msg_index = ute_msg->historyNotify[compo_id].type;
             int res = msgbox(msg, NULL, time_buf, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);

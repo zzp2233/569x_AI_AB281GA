@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 土耳其语(土耳其）
 *@author
-*@date   2025-03-04 16:40:58
+*@date   2025-03-12 11:43:37
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -268,6 +268,7 @@ const char * const i18n_tr_rtr[] =
     [STR_MENSTRUAL_CYCLE] = "\x41\x64\x65\x74\x20\x64\xc3\xb6\x6e\x65\x6d\x69\x00", // [252] Adet dönemi
     [STR_PREGNANCY] = "\x42\x65\x72\x65\x6b\x65\x74\x6c\x69\x20\x70\x65\x6e\x63\x65\x72\x65\x00", // [253] Bereketli pencere
     [STR_SAFE_PERIOD] = "\x47\xc3\xbc\x76\x65\x6e\x6c\x69\x20\x44\xc3\xb6\x6e\x65\x6d\x00", // [254] Güvenli Dönem
+    [STR_HEART_HIGHT] = "\x59\xc3\xbc\x6b\x73\x65\x6b\x20\x6b\x61\x6c\x70\x20\x61\x74\xc4\xb1\xc5\x9f\x20\x68\xc4\xb1\x7a\xc4\xb1\x00", // [255] Yüksek kalp atış hızı
 };
 
 #endif

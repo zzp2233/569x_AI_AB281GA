@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 英语(美国）
 *@author
-*@date   2025-03-04 16:40:58
+*@date   2025-03-12 11:43:36
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -268,6 +268,7 @@ const char * const i18n_en_rus[] =
     [STR_MENSTRUAL_CYCLE] = "\x4d\x65\x6e\x73\x74\x72\x75\x61\x6c\x20\x70\x65\x72\x69\x6f\x64\x00", // [252] Menstrual period
     [STR_PREGNANCY] = "\x46\x65\x72\x74\x69\x6c\x65\x20\x77\x69\x6e\x64\x6f\x77\x00", // [253] Fertile window
     [STR_SAFE_PERIOD] = "\x53\x61\x66\x65\x20\x50\x65\x72\x69\x6f\x64\x00", // [254] Safe Period
+    [STR_HEART_HIGHT] = "\x48\x69\x67\x68\x20\x68\x65\x61\x72\x74\x20\x72\x61\x74\x65\x00", // [255] High heart rate
 };
 
 #endif

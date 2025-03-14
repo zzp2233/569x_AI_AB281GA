@@ -419,7 +419,7 @@ static void func_sport_sort_card_update(void)
 #define CARD1_ICON0_DATA          0,       0, -25,      50,     50,     0,         UTE_SPORT_IDX(SPORT_TYPE_RUNNING)
 
 //文本                      id      x           y             w       h       str     res                       center  wordwrap   r    g    b    对应func_sport中的tbl_sport_list 的 idx
-#define CARD1_TEXT0_DATA          0,      0,    25,     100,     22,     NULL,   UI_BUF_0FONT_FONT_BIN,    true,  false,     255,   255,   255, UTE_SPORT_IDX(SPORT_TYPE_RUNNING)
+#define CARD1_TEXT0_DATA          0,      0,    25,     100,     30,     NULL,   UI_BUF_0FONT_FONT_NUM_24_BIN,    true,  false,     255,   255,   255, UTE_SPORT_IDX(SPORT_TYPE_RUNNING)
 
 ///户外骑行卡片
 #define CARD2_RECT_CNT      1
@@ -436,7 +436,7 @@ static void func_sport_sort_card_update(void)
 #define CARD2_ICON0_DATA          0,       0, -25,      50,     50,     0,         UTE_SPORT_IDX(SPORT_TYPE_RIDE_BIKE)
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r    g    b    对应func_sport中的tbl_sport_list 的 idx
-#define CARD2_TEXT0_DATA          0,      0,    25,     100,     30,    NULL,   UI_BUF_0FONT_FONT_BIN,    true,  false,     255,   255,   255, UTE_SPORT_IDX(SPORT_TYPE_RIDE_BIKE)
+#define CARD2_TEXT0_DATA          0,      0,    25,     100,     30,    NULL,   UI_BUF_0FONT_FONT_NUM_24_BIN,    true,  false,     255,   255,   255, UTE_SPORT_IDX(SPORT_TYPE_RIDE_BIKE)
 
 ///跑步机卡片
 #define CARD3_RECT_CNT      1
@@ -454,7 +454,7 @@ static void func_sport_sort_card_update(void)
 #define CARD3_ICON0_DATA          0,       0, -25,      50,     50,     0,         UTE_SPORT_IDX(SPORT_TYPE_TREADMILL)
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r    g    b    对应func_sport中的tbl_sport_list 的 idx
-#define CARD3_TEXT0_DATA          0,      0,    25,     100,     30,    NULL,   UI_BUF_0FONT_FONT_BIN,    true,  false,     255,   255,   255, UTE_SPORT_IDX(SPORT_TYPE_TREADMILL)
+#define CARD3_TEXT0_DATA          0,      0,    25,     100,     30,    NULL,   UI_BUF_0FONT_FONT_NUM_24_BIN,    true,  false,     255,   255,   255, UTE_SPORT_IDX(SPORT_TYPE_TREADMILL)
 
 ///更多运动卡片
 #define CARD4_RECT_CNT      1
@@ -472,7 +472,7 @@ static void func_sport_sort_card_update(void)
 #define CARD4_ICON0_DATA          0,       0, -25,      50,     50,     0,         UTE_SPORT_IDX(SPORT_TYPE_MAX)
 
 //文本                            id      x           y             w       h       str     res                       center  wordwrap   r    g    b    对应func_sport中的tbl_sport_list 的 idx
-#define CARD4_TEXT0_DATA          0,      0,    25,     100,     30,     NULL,   UI_BUF_0FONT_FONT_BIN,    true,  false,     255,   255,   255, UTE_SPORT_IDX(SPORT_TYPE_MAX)
+#define CARD4_TEXT0_DATA          0,      0,    25,     100,     30,     NULL,   UI_BUF_0FONT_FONT_NUM_24_BIN,    true,  false,     255,   255,   255, UTE_SPORT_IDX(SPORT_TYPE_MAX)
 
 typedef struct f_sport_sort_t_
 {

@@ -161,6 +161,7 @@ enum
 #endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
     FUNC_SET_SUB_OFF,                   //设置--关机
     FUNC_OFF = FUNC_SET_SUB_OFF,        //关机
+    FUNC_HEART_WARNING,
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,

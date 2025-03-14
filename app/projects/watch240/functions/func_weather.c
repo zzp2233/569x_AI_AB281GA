@@ -228,11 +228,11 @@ compo_form_t *func_weather_form_create(void)
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,84+50/2);
 
         txt = compo_textbox_create(frm,strlen(i18n[STR_NO_GET_WEATHER]));
-        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,160+56/2, GUI_SCREEN_WIDTH,GUI_SCREEN_HEIGHT-(GUI_SCREEN_CENTER_X,160+56/2));
+        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,160+56/2, GUI_SCREEN_WIDTH/1.1,widget_text_get_max_height()*2);
         compo_textbox_set_multiline(txt, true);
         compo_textbox_set_align_center(txt, true);
+        compo_textbox_set_multiline_drag(txt, false);      //避免既有滚动又有省略号的情况
         compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);
-
         return frm;
     }
 
@@ -535,13 +535,9 @@ static void func_weather_move(void)
                 {
                     f_sleep->switch_page_state = SWITCH_YES;
                 }
-                else if(f_sleep->move_offset > -GUI_SCREEN_HEIGHT)
-                {
-                    f_sleep->switch_page_state = SWITCH_NO;
-                }
                 else
                 {
-                    f_sleep->switch_page_state = TOTCH_MOVE;
+                    f_sleep->switch_page_state = SWITCH_NO;
                 }
             }
         }
@@ -565,13 +561,7 @@ static void func_weather_move(void)
                     }
                     else if(f_sleep->switch_page_state == SWITCH_NO)
                     {
-                        f_sleep->move_offset-=STEP_NUM;
-
-                        if(f_sleep->move_offset <= -(GUI_SCREEN_HEIGHT))
-                        {
-                            f_sleep->move_offset = -GUI_SCREEN_HEIGHT;
-                            f_sleep->touch_state = TOUCH_FINISH_STATE;
-                        }
+                        f_sleep->touch_state = TOUCH_FINISH_STATE;
                     }
                 }
                 f_sleep->page_old_y = f_sleep->move_offset;
@@ -581,7 +571,7 @@ static void func_weather_move(void)
         }
     }
 
-//        printf("move_offset:%d\n",f_sleep->move_offset);
+    //    printf("move_offset:%d\n",f_sleep->move_offset);
 }
 
 static void weather_refresh(void)
@@ -797,7 +787,7 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff, sizeof(str_buff), "%s --",i18n[STR_HIGHEST]);
     }
     txt = compo_textbox_create(frm, strlen(str_buff));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-4-92, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,92, widget_text_get_max_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-8-92, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,100, widget_text_get_max_height());
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set(txt, str_buff);
@@ -811,7 +801,7 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff, sizeof(str_buff), "%s --",i18n[STR_LOWSET]);
     }
     txt = compo_textbox_create(frm, strlen(str_buff));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+4, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,92, widget_text_get_max_height());
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+8, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,100, widget_text_get_max_height());
     compo_textbox_set_right_align(txt, false);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set(txt, str_buff);
@@ -900,7 +890,7 @@ static void func_weather_message(size_msg_t msg)
     {
         case MSG_CTP_TOUCH:
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-            if(!weather_no_data_flag)
+            if(!weather_no_data_flag && f_weather->touch_state == TOUCH_FINISH_STATE)
             {
                 f_weather->touch_flag = true;
             }

@@ -123,7 +123,8 @@ static const menu_hc_item_t tbl_menu_grid[] =
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I330001_THEME_1_WEATHER_BIN,                   FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
-    {UI_BUF_I330001_THEME_1_GUANJI_BIN,                 FUNC_SET_SUB_OFF},
+    // {UI_BUF_I330001_THEME_1_GUANJI_BIN,                 FUNC_SET_SUB_OFF},
+    {UI_BUF_I330001_THEME_1_PERIOD_BIN,                 FUNC_WOMEN_HEALTH},
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 //全部图标资源tbl, 最大可以显示81个图标

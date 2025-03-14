@@ -258,6 +258,10 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 max_cnt = 5;
                 break;
 
+            case COMPO_BOND_SMOKECOUNT:
+                bond_compo_type = COMPO_TYPE_NUMBER;
+                max_cnt = 3;
+                break;
             default:
                 bond_compo_type = COMPO_TYPE_NUMBER;
                 max_cnt = 2;

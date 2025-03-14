@@ -115,7 +115,9 @@ extern void func_set_sub_disturd(void);
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
 extern void func_set_sub_language(void);
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+#if GUI_MODULE_WRIST_SUPPORT
 extern void func_set_sub_wrist(void);
+#endif
 //extern void func_set_sub_time(void);
 //extern void func_time_sub_custom(void);
 //extern void func_set_sub_password(void);
@@ -267,7 +269,9 @@ compo_form_t *func_voice_form_create(void);
 //compo_form_t *func_compass_form_create(void);
 compo_form_t *func_address_book_form_create(void);
 compo_form_t *func_set_sub_list_form_create(void);
-compo_form_t *func_set_sub_wrist_form_create(void);
+#if GUI_MODULE_WRIST_SUPPORT
+//compo_form_t *func_set_sub_wrist_form_create(void);
+#endif
 compo_form_t *func_set_sub_sav_form_create(void);
 compo_form_t *func_set_sub_dousing_form_create(void);
 compo_form_t *func_set_sub_language_form_create(void);
@@ -442,7 +446,9 @@ const func_t tbl_func_create[] =
     {FUNC_LIGHT,                        func_light_form_create},
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
     {FUNC_SET_SUB_DOUSING,              func_set_sub_dousing_form_create},
+#if GUI_MODULE_WRIST_SUPPORT
     {FUNC_SET_SUB_WRIST,                func_set_sub_wrist_form_create},
+#endif
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd_form_create},
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set_form_create},
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
@@ -621,7 +627,9 @@ const func_t tbl_func_entry[] =
     {FUNC_SETTING,                      func_set_sub_list},             //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
     {FUNC_SET_SUB_DOUSING,              func_set_sub_dousing},          //设置--熄屏
+#if GUI_MODULE_WRIST_SUPPORT
     {FUNC_SET_SUB_WRIST,                func_set_sub_wrist},            //设置--抬腕
+#endif
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd},          //设置--勿扰
     {FUNC_DISTURD_SUB_SET,              func_disturd_sub_set},          //勿扰--时间设置
     {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动

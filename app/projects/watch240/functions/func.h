@@ -133,7 +133,9 @@ enum
     FUNC_SETTING,                       //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
     FUNC_SET_SUB_DOUSING,               //设置--熄屏
+#if GUI_MODULE_WRIST_SUPPORT
     FUNC_SET_SUB_WRIST,                 //设置--抬腕
+#endif
     FUNC_SET_SUB_DISTURD,               //设置--勿扰
     FUNC_DISTURD_SUB_SET,               //勿扰--时间设置
     FUNC_SET_SUB_SAV,                   //设置--声音与振动

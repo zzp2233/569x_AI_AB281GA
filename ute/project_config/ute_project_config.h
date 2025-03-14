@@ -64,7 +64,7 @@
 
 /*! 中科平台广播UUID,wang.luo 2025-02-13 */
 #ifndef UTE_SERVICE_APP_GLORY_ME_SUPPORT
-#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 1
 #endif
 
 /*! gloryfit 广播数据标识 zn.zeng  modify Jul 05, 2021 */
@@ -1039,7 +1039,7 @@
 4、默认运动的显示顺序,开了几个运动就按需要的顺序填写,不要重复,不显示的置0;
 */
 #ifndef UTE_MODULE_SPORT_HUNDRED_SUPPORT
-#define UTE_MODULE_SPORT_HUNDRED_SUPPORT 0
+#define UTE_MODULE_SPORT_HUNDRED_SUPPORT 1
 #endif
 /*! 支持的运动数量, xjc 2022-03-09  */
 #ifndef UTE_MODULE_SPORT_MAX_SPORT_NUM
@@ -1047,7 +1047,7 @@
 #endif
 /*! 多运动界面显示的最少运动数量, xjc 2022-03-29 */
 #ifndef UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM
-#define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM 1
+#define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM 4
 #endif
 /*! 多运动界面显示的最大运动数量, xjc 2022-03-29 */
 #ifndef UTE_MODULE_SPORT_DISPLAY_MAX_SPORT_NUM

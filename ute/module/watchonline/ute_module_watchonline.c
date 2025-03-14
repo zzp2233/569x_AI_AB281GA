@@ -336,14 +336,14 @@ void uteModuleWatchOnlineReadyStart(void)
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 //    if(/*isUpdateWatch||*/!uteModuleGuiCommonIsDisplayOn())
     {
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SYNC_WATCH_ONLINE_ID);
+        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SYNC_WATCH_ONLINE_ID, 0, __func__);
     }
 #else
     if(isUpdateWatch||!uteModuleGuiCommonIsDisplayOn())
     {
         if(func_cb.sta != FUNC_CLOCK)
         {
-            uteTaskGuiStartScreen(FUNC_CLOCK);
+            uteTaskGuiStartScreen(FUNC_CLOCK, 0, __func__);
         }
         else
         {
@@ -496,7 +496,7 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     {
         if(func_cb.sta != FUNC_CLOCK)
         {
-            uteTaskGuiStartScreen(FUNC_CLOCK);
+            uteTaskGuiStartScreen(FUNC_CLOCK, 0, __func__);
         }
         else
         {

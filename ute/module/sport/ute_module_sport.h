@@ -401,8 +401,9 @@ void uteModuleSprotCountdownTimerStart(uint16_t ms);
 void uteModuleSprotCountdownTimerStop(void);
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
 void uteModuleSportHundredSportCmd(uint8_t*receive,uint8_t length);
-int uteModuleSportFindHundredSportIndex(uint8_t sportOrder);
+sport_mode_type uteModuleSportFindHundredSportIndex(uint8_t sportOrder);
 uint8_t uteModuleSportGetRealIndex(uint8_t sportMode, const uint8_t *sportList);
+uint8_t uteModuleSportGetSportOrder(uint8_t sportMode);
 int uteModuleSportGetHundredSportValidNumber(void);
 bool uteModuleSportGetAppUpdateTrainingListFlag(void);
 void uteModuleSportSetAppUpdateTrainingListFlag(bool isUpdate);

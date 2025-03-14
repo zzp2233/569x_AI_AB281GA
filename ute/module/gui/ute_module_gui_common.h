@@ -86,8 +86,9 @@ bool uteModuleGuiCommonIsDisplayOn(void);
 void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear);
 int uteModuleGuiCommonGetCurrentScreenId(void);
 int uteModuleGuiCommonGetLastScreenId(void);
-void uteTaskGuiStartScreen(uint8_t screenId);
+void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *format, ...);
 void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory);
+void uteTaskGuiStackRemoveScreenId(uint8_t screenId);
 
 uint8_t uteModuleGuiCommonGetBackLightPercent(void);
 bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void);

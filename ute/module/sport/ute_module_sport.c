@@ -509,11 +509,11 @@ void uteModuleSportSaveHundredSportConfig(void)
 *@brief     根据数组序号获取实际运动
 *@details
 *@param[in]   uint8_t sportOrder 传入当前要查找第几个运动
-*@return     返回在列表中的序号
+*@return     返回运动类型
 *@author        xjc
 *@date       2022-03-30
 */
-int uteModuleSportFindHundredSportIndex(uint8_t sportOrder)
+sport_mode_type uteModuleSportFindHundredSportIndex(uint8_t sportOrder)
 {
     uint8_t tempSportOrder = sportOrder+1; //序号 = 1,2,3...,从1开始
     if (tempSportOrder > UTE_MODULE_SPORT_MAX_SPORT_NUM)
@@ -526,7 +526,7 @@ int uteModuleSportFindHundredSportIndex(uint8_t sportOrder)
         if (uteModuleSprotData.sportSort.sportListData[i].sportOrder == tempSportOrder)
         {
             UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,success, sportOrder = %d, sportIndex = %d!", __func__,tempSportOrder,i);
-            return i;
+            return uteModuleSprotData.sportSort.sportListData[i].sportMode;
         }
     }
     return 0;
@@ -552,6 +552,28 @@ uint8_t uteModuleSportGetRealIndex(uint8_t sportMode, const uint8_t *sportList)
         }
     }
     return 0;
+}
+
+/**
+ * @brief        根据实际运动获取数组序号
+ * @details
+ * @param[in]    sportMode 传入当前运动模式
+ * @return       返回对应的sportOrder，0为隐藏
+ * @author       Wang.Luo
+ * @date         2025-03-13
+ */
+uint8_t uteModuleSportGetSportOrder(uint8_t sportMode)
+{
+    for (uint8_t i = 0; i < UTE_MODULE_SPORT_MAX_SPORT_NUM; i++)
+    {
+        if (uteModuleSprotData.sportSort.sportListData[i].sportMode == sportMode && uteModuleSprotData.sportSort.sportListData[i].sportOnOff)
+        {
+            UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,success, sportMode = %d, sportOrder = %d!", __func__, sportMode, uteModuleSprotData.sportSort.sportListData[i].sportOrder);
+            return uteModuleSprotData.sportSort.sportListData[i].sportOrder;
+        }
+    }
+    UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,ERROR, sportMode not found!", __func__);
+    return 0; // 如果未找到，返回0或者根据需求处理
 }
 
 /**
@@ -3086,7 +3108,7 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                         void func_switch_to(u8 sta, u16 switch_mode);
 //                        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
-                        func_cb.sta = FUNC_SPORT;
+                        uteTaskGuiStartScreen(FUNC_SPORT, 0, __func__);
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
                     }
                     else
@@ -3100,21 +3122,20 @@ void uteModuleSportMoreSportsEverySecond(ute_module_systemtime_time_t *time)
                             // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);  //退回运动列表
 //                            extern u8 task_stack_pop(void);
 //                            task_stack_pop();
-                            void func_switch_to(u8 sta, u16 switch_mode);
-//                            func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
-                            func_cb.sta = FUNC_SPORT;
+                            uteTaskGuiStartScreen(FUNC_SPORT, 0, __func__);
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
                         }
                         else
                         {
                             // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);     //运动完成数据弹窗
-                            func_cb.sta = FUNC_SPORT_FINISH;       //todo 结束报告界面，暂时没有做，直接返回运动列表
+                            uteTaskGuiStartScreen(FUNC_SPORT_FINISH, 0, __func__);
 //                            sys_cb.cover_index = REMIND_COVER_GOAL;
 //                            sys_cb.remind_tag = true;
 
                         }
                     }
+                    uteTaskGuiStackRemoveScreenId(FUNC_SPORT_SUB_RUN);
                 }
             }
             else
@@ -3331,7 +3352,7 @@ void uteModuleSportStartMoreSportsMsgHandler(uint32_t param)
     /*! 跳转界面zn.zeng, 2021-11-11  */
     // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_DETAIL_ID);      //运动RUNING界面
     //func_switch_to(FUNC_SPORT_SUB_RUN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
-    func_cb.sta = FUNC_SPORT_SUB_RUN;
+    uteTaskGuiStartScreen(FUNC_SPORT_SWITCH, 0, __func__);
     sys_cb.sport_app_disconnect = false;
     if(sportsType==SPORT_TYPE_JUMP_ROPE)
     {
@@ -3699,7 +3720,7 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TRAINING_LIST_ID);      //运动列表
 //        func_switch_to(FUNC_SPORT, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
-        func_cb.sta = FUNC_SPORT;
+        uteTaskGuiStartScreen(FUNC_SPORT, 0, __func__);
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
     }
     else
@@ -3711,7 +3732,7 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
         uteModuleSprotData.sportsHistoryRecord.displayIndex = 0;
 #endif
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_REPORTS_ID);     //运动完成数据界面
-        func_cb.sta = FUNC_SPORT_FINISH;//FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
+        uteTaskGuiStartScreen(FUNC_SPORT_FINISH, 0, __func__);//FUNC_SPORT;       //todo 结束报告界面，暂时没有做，直接返回运动列表
 //        sys_cb.cover_index = REMIND_COVER_GOAL;
 //        sys_cb.remind_tag = true;
 #endif
@@ -3719,6 +3740,7 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
     uteModuleSportMoreSportsTargetInit();
 #endif
+    uteTaskGuiStackRemoveScreenId(FUNC_SPORT_SUB_RUN);
 }
 /**
 *@brief     app 同步运动数据到ble
@@ -4698,7 +4720,7 @@ void uteModuleSportTodayTargetHandler(void)
         if(quick.isGoalReach)
 #endif
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID, 0, __func__);
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,2);
         }
 #endif
@@ -4718,7 +4740,7 @@ void uteModuleSportTodayTargetHandler(void)
         if(quick.isGoalReach)
 #endif
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID, 0, __func__);
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,2);
         }
 #endif
@@ -4808,7 +4830,7 @@ void uteModuleSportTodayTargetHandler(void)
                     if(quick.isGoalReach)
 #endif
                     {
-                        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID);
+                        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID, 0, __func__);
                         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,2);
                     }
 #endif
@@ -4834,7 +4856,7 @@ void uteModuleSportTodayTargetHandler(void)
             if(quick.isGoalReach)
 #endif
             {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,2);
             }
 #endif
@@ -4860,7 +4882,7 @@ void uteModuleSportTodayTargetHandler(void)
         if(quick.isGoalReach)
 #endif
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TARGET_COMPLETED_ID, 0, __func__);
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,2);
         }
 #endif
@@ -6003,7 +6025,7 @@ void uteModuleSportMoreSportsTargetsProcess(void)
                 uteModuleSprotData.moreSportsTarget.isSportIntegerHourNotify = false;
                 uteModuleSprotData.moreSportsTarget.isSportKcalTargetNotify = false;
                 uteModuleSprotData.moreSportsTarget.isSportDistanceTargetNotify = false;
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);
                 uteModuleSprotData.moreSportsTarget.isSportIntegerKmHasNotify = true;
             }
@@ -6018,7 +6040,7 @@ void uteModuleSportMoreSportsTargetsProcess(void)
                 uteModuleSprotData.moreSportsTarget.isSportIntegerHourNotify = false;
                 uteModuleSprotData.moreSportsTarget.isSportKcalTargetNotify = false;
                 uteModuleSprotData.moreSportsTarget.isSportDistanceTargetNotify = false;
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);
                 uteModuleSprotData.moreSportsTarget.isSportTimeTargetHasNotify = true;
             }
@@ -6033,7 +6055,7 @@ void uteModuleSportMoreSportsTargetsProcess(void)
                 uteModuleSprotData.moreSportsTarget.isSportIntegerHourNotify = true;
                 uteModuleSprotData.moreSportsTarget.isSportKcalTargetNotify = false;
                 uteModuleSprotData.moreSportsTarget.isSportDistanceTargetNotify = false;
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);
                 uteModuleSprotData.moreSportsTarget.isSportIntegerHourHasNotify = true;
             }
@@ -6048,7 +6070,7 @@ void uteModuleSportMoreSportsTargetsProcess(void)
                 uteModuleSprotData.moreSportsTarget.isSportIntegerHourNotify = false;
                 uteModuleSprotData.moreSportsTarget.isSportKcalTargetNotify = true;
                 uteModuleSprotData.moreSportsTarget.isSportDistanceTargetNotify = false;
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);
                 uteModuleSprotData.moreSportsTarget.isSportKcalTargetHasNotify = true;
             }
@@ -6062,7 +6084,7 @@ void uteModuleSportMoreSportsTargetsProcess(void)
                 uteModuleSprotData.moreSportsTarget.isSportIntegerHourNotify = false;
                 uteModuleSprotData.moreSportsTarget.isSportKcalTargetNotify = false;
                 uteModuleSprotData.moreSportsTarget.isSportDistanceTargetNotify = true;
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORT_TARGET_NOTIFY_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,3);
                 uteModuleSprotData.moreSportsTarget.isSportDistanceTargetHasNotify = true;
             }
@@ -6090,7 +6112,7 @@ void uteModuleSportMoreSportsHeartWarningProcess(void)
                 warningSecond++;
                 if(warningSecond >= UTE_MODULE_HEART_MIN_MAX_WARNING_FRIST_SECOND_CNT)
                 {
-                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_HEART_WARNING_SCREEN_ID);
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_HEART_WARNING_SCREEN_ID, 0, __func__);
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,2);
                     warningSecond = 0;
                 }

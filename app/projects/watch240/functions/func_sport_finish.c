@@ -35,15 +35,17 @@ typedef struct f_sport_finish_t_
 } f_sport_finish_t;
 
 extern u8 sport_finish_mode;
-extern u32 func_sport_get_current_idx(void);
-extern u32 func_sport_get_str(u8 sport_idx);
-extern u32 func_sport_get_ui(u8 sport_idx);
 
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_finish_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
+
+    u16 str_id = 0;
+    u32 icon_addr = 0;
+    extern bool func_sport_get_sport_mode_info(uint8_t sport_mode, uint16_t *str_idx, uint32_t *icon_addr);
+    func_sport_get_sport_mode_info(uteModuleSportMoreSportGetType(),&str_id,&icon_addr);
 
     if (func_cb.sta == FUNC_SPORT_FINISH)
     {
@@ -73,17 +75,17 @@ compo_form_t *func_sport_finish_form_create(void)
             {
                 //运动类型图片
 //                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(uteModuleSportMoreSportGetType() - 1));
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, icon_addr);
                 compo_picturebox_set_pos(picbox, 10+56/2, 12+56/2);
 
                 //运动类型名称
 //                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
-                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]));
+                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[str_id]));
 //                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+73);
 //                compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
-                compo_textbox_set(textbox, i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]);
+                compo_textbox_set(textbox, i18n[str_id]);
 
                 //时间日期
                 snprintf(txt_buf,sizeof(txt_buf),"%04d/%02d/%02d %02d:%02d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
@@ -212,17 +214,17 @@ compo_form_t *func_sport_finish_form_create(void)
             {
                 //运动类型图片
 //                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(uteModuleSportMoreSportGetType() - 1));
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, icon_addr);
                 compo_picturebox_set_pos(picbox, 10+56/2, 12+56/2);
 
                 //运动类型名称
 //                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
-                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]));
+                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[str_id]));
 //                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+73);
 //                compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
-                compo_textbox_set(textbox, i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]);
+                compo_textbox_set(textbox, i18n[str_id]);
 
                 //时间日期
                 snprintf(txt_buf,sizeof(txt_buf),"%04d/%02d/%02d %02d:%02d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
@@ -314,17 +316,17 @@ compo_form_t *func_sport_finish_form_create(void)
             {
                 //运动类型图片
 //                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(uteModuleSportMoreSportGetType() - 1));
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, icon_addr);
                 compo_picturebox_set_pos(picbox, 10+56/2, 12+56/2);
 
                 //运动类型名称
 //                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
-                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]));
+                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[str_id]));
 //                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+73);
 //                compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
-                compo_textbox_set(textbox, i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]);
+                compo_textbox_set(textbox, i18n[str_id]);
 
                 //时间日期
                 snprintf(txt_buf,sizeof(txt_buf),"%04d/%02d/%02d %02d:%02d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);

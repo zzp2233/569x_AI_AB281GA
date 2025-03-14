@@ -504,6 +504,10 @@ void fot_recv_proc(u8 *buf, u16 len)
     {
         case FOT_GET_INFO_TLV:
             fot_reply_info_tlv(&buf[2],len-2);
+            if(bt_a2dp_profile_completely_connected())
+            {
+                bt_a2dp_profile_dis();
+            }
             if(uteModuleCallBtIsPowerOn())
             {
                 uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO); //音频解码和OTA复用内存

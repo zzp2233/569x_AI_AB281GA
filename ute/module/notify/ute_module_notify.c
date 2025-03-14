@@ -313,7 +313,7 @@ void uteModuleNotifyNotifycationHandlerMsg(void)
 #endif
         {
             uteModuleCallSetInComingNumberName(NULL,0,&uteModuleNotifyData.currNotify.content[0],uteModuleNotifyData.currNotify.size);
-            uteTaskGuiStartScreenWithoutHistory(FUNC_BLE_CALL, true);
+            uteTaskGuiStartScreen(FUNC_BLE_CALL, 0, __func__);
         }
     }
 }

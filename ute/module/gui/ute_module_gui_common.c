@@ -782,9 +782,23 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 *@author       zn.zeng
 *@date       2021-09-03
 */
-void uteTaskGuiStartScreen(uint8_t screenId)
+void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *format, ...)
 {
-    if(sys_cb.gui_sleep_sta)
+#if UTE_LOG_SYSTEM_LVL
+    if (format != NULL)
+    {
+        va_list args;
+        va_start(args, format);
+        char debugInfo[256];
+        vsnprintf(debugInfo, sizeof(debugInfo), format, args);
+        va_end(args);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s:%s", __func__, debugInfo);
+    }
+#endif
+
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,%d->%d,mode:%d", __func__, func_cb.sta, screenId, switchMode);
+
+    if (sys_cb.gui_sleep_sta)
     {
         sys_cb.gui_need_wakeup = true;
     }
@@ -795,13 +809,19 @@ void uteTaskGuiStartScreen(uint8_t screenId)
         return;
     }
 
-    if(func_cb.sta != screenId)
+    if (func_cb.sta != screenId)
     {
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
         msg_enqueue(EVT_MSGBOX_EXIT);
-        func_cb.sta = screenId;
-        //func_switch_to(screenId, 0);
-        task_stack_push(screenId);
+        if (switchMode != 0 && !(switchMode & FUNC_SWITCH_CANCEL) && !(switchMode & FUNC_SWITCH_DIRECT))
+        {
+            func_switch_to(screenId, switchMode);
+        }
+        else
+        {
+            func_cb.sta = screenId;
+            task_stack_push(screenId);
+        }
     }
 }
 
@@ -836,6 +856,21 @@ void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
         {
             task_stack_push(screenId);
         }
+    }
+}
+
+/**
+ * @brief        从栈中删除某个界面
+ * @param[in]    screenId 界面ID
+ * @author       Wang.Luo
+ * @date         2025-03-14
+ */
+void uteTaskGuiStackRemoveScreenId(uint8_t screenId)
+{
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,screenId;%d",__func__,screenId);
+    if(func_cb.sta != screenId && task_stack_contains(screenId))
+    {
+        task_stack_remove(screenId);
     }
 }
 

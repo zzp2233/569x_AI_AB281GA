@@ -1036,14 +1036,22 @@ static void msgbox_process(void)
                 goto __exit;
             }
         }
-        else if ((msg_cb->msg_type == MSGBOX_MSG_TYPE_DETAIL)   ||                                                      //详细消息界面弹窗
-                 (sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)     //查找手表
-                 // ||(msg_cb->msg_type == MSGBOX_MSG_TYPE_BRIEF)
-                )
+        else if (msg_cb->msg_type == MSGBOX_MSG_TYPE_DETAIL)
         {
             goto __exit;
         }
-
+        else if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)
+        {
+            // printf("11111111111111111111111\n");
+            if (tick_check_expire(msg_cb->exit_tick, 150*1000))    //查找手表
+            {
+                msg_cb->exit_tick = tick_get();
+                msg_cb->flag_animation = true;
+                msg_cb->flag_entering = false;
+                msg_cb->res = MSGBOX_RES_TIMEOUT_EXIT;
+            }
+            goto __exit;
+        }
 
         if (tick_check_expire(msg_cb->exit_tick, msgbox_exit_time))   //定时退出
         {

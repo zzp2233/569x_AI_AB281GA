@@ -22,15 +22,15 @@ enum
 
 typedef struct f_test_mode_t_
 {
-    u16 txt_num;
+    u8 str[3][50];
     page_tp_move_t *ptm;
 } f_test_mode_t;
 
 static const f_test_mode_t f_test_mode_list[] =
 {
-    {STR_MODE_SELECTION      },                ///模式选择
-    {STR_FACTORY_TESTING     },                ///工厂测试模式
-    {STR_AGING_TESTING       },                ///老化测试模式
+    {"模式选择"      },                ///模式选择
+    {"工厂测试"      },                ///工厂测试模式
+    {"老化测试"      },                ///老化测试模式
     // {STR_SHIPPING            },                ///船运模式
     // {STR_AUDIO               },                ///音频测试
 };
@@ -44,20 +44,29 @@ compo_form_t *func_test_mode_form_create(void)
     compo_textbox_t *textbox;
     compo_button_t *btn;
 
-    for(int i=MODE_TITLE_ID; i<=MODE_AGING_TESTING_ID; i++)
-    {
-        textbox = compo_textbox_create(frm, strlen(i18n[f_test_mode_list[i-1].txt_num]));
-        compo_textbox_set(textbox, i18n[f_test_mode_list[i-1].txt_num]);
-        compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6+SPACING_Y*(i-1));
-        if(i!=MODE_TITLE_ID)
-        {
-            compo_textbox_set_forecolor(textbox, COLOR_GREEN);
-        }
 
-        btn = compo_button_create(frm);///透明按钮
-        compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6+SPACING_Y*(i-1), widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
-        compo_setid(btn,i);
-    }
+    textbox = compo_textbox_create(frm, strlen("模式选择"));
+    compo_textbox_set(textbox, "模式选择");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6+SPACING_Y*(1-1));
+
+    textbox = compo_textbox_create(frm, strlen("工厂测试"));
+    compo_textbox_set(textbox, "工厂测试");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6+SPACING_Y*(2-1));
+    compo_textbox_set_forecolor(textbox,COLOR_GREEN);
+
+    btn = compo_button_create(frm);///透明按钮
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6+SPACING_Y*(2-1), widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,MODE_FACTORY_TESTING_ID);
+
+    textbox = compo_textbox_create(frm, strlen("老化测试"));
+    compo_textbox_set(textbox, "老化测试");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6+SPACING_Y*(3-1));
+    compo_textbox_set_forecolor(textbox,COLOR_GREEN);
+
+    btn = compo_button_create(frm);///透明按钮
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/6+SPACING_Y*(3-1), widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,MODE_AGING_TESTING_ID);
+
 
     return frm;
 }
@@ -78,16 +87,11 @@ static void func_test_mode_click(void)
     {
         return;
     }
-#define BUF_TXT_LEN     (strlen(i18n[STR_DO_WANT_IN])+strlen(i18n[f_test_mode_list[id-1].txt_num])+10)
-    char *buf_txt = func_zalloc(BUF_TXT_LEN);
 
     switch(id)
     {
         case MODE_FACTORY_TESTING_ID:///工厂测试
-//            printf("%s 0\n", __func__);
-            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_FACTORY_TESTING_ID-1].txt_num]);
-            ret = msgbox(buf_txt, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
-
+            ret = msgbox("工厂测试", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             if(ret == MSGBOX_RES_OK)
             {
                 // func_switch_to(FUNC_FACTORY_TESTING, 0);///跳转工厂测试界面
@@ -95,8 +99,7 @@ static void func_test_mode_click(void)
             }
             break;
         case MODE_AGING_TESTING_ID:///老化测试
-            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_AGING_TESTING_ID-1].txt_num]);
-            ret = msgbox(buf_txt, NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+            ret = msgbox("老化测试", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
             if(ret == MSGBOX_RES_OK)
             {
@@ -127,7 +130,6 @@ static void func_test_mode_click(void)
             break;
     }
 
-    func_free(buf_txt);
     printf("%s3\n", __func__);
 }
 

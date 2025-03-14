@@ -94,6 +94,8 @@
 			<Add directory="../../platform/modules/ws" />
 			<Add directory="../../platform/modules/ws_air" />
 			<Add directory="../../platform/modules/yj" />
+			<Add directory="functions/3d" />
+			<Add directory="../../../ute/module/smoke" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -1045,6 +1047,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="config.h" />
+		<Unit filename="functions/3d/func_3d_batter.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/3d/func_3d_batter.h" />
 		<Unit filename="functions/common/func_bt_update.c">
 			<Option compilerVar="CC" />
 		</Unit>

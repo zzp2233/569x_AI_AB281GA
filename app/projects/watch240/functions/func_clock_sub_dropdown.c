@@ -37,7 +37,9 @@ enum
     COMPO_ID_BTN_CONNECT,       //蓝牙连接开关
     COMPO_ID_BTN_MENU,          //菜单
     COMPO_ID_BTN_FLASHLIGHT,    //手电筒
+#if GUI_MODULE_WRIST_SUPPORT
     COMPO_ID_BTN_WIRST,         //抬婉亮屏
+#endif
     COMPO_ID_BTN_DISCURD,       //勿扰模式开关
     COMPO_ID_BTN_LIGHT,         //亮度调节
     COMPO_ID_BTN_MUTE,          //静音模式开关
@@ -74,13 +76,13 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
     {UI_BUF_I330001_SLIDEMENU_ICON_CALL00_BIN,          COMPO_ID_BTN_CONNECT,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  31},///蓝牙连接开关
     {UI_BUF_I330001_SLIDEMENU_ICON_THEME03_BIN,         COMPO_ID_BTN_MENU,             GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  31},///菜单
     {UI_BUF_I330001_SLIDEMENU_ICON_SHOUDIAN00_BIN,      COMPO_ID_BTN_FLASHLIGHT,       GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  62+31+4},///手电筒
-    {UI_BUF_I330001_SLIDEMENU_ICON_TAIWAN00_BIN,        COMPO_ID_BTN_WIRST,            GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  62+31+4},///抬婉亮屏
+    {UI_BUF_I330001_SLIDEMENU_ICON_SETTINGS_BIN,        COMPO_ID_BTN_SETTING,            GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  62+31+4},//设置
     {UI_BUF_I330001_SLIDEMENU_ICON_DND00_BIN,           COMPO_ID_BTN_DISCURD,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  62*2+31+8},///勿扰模式开关
     {UI_BUF_I330001_SLIDEMENU_ICON_BRIGHTNESS_BIN,      COMPO_ID_BTN_LIGHT,            GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  62*2+31+8},///亮度调节
     ///*第二页*/
     {UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES00_BIN,       COMPO_ID_BTN_MUTE,             GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  31},///静音模式开关
     {UI_BUF_I330001_SLIDEMENU_ICON_FINDPHONE_BIN,       COMPO_ID_BTN_PHONE,            GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  31},///查找手机
-    {UI_BUF_I330001_SLIDEMENU_ICON_SETTINGS_BIN,        COMPO_ID_BTN_SETTING,          GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  62+31+4},///设置
+    //  {UI_BUF_I330001_SLIDEMENU_ICON_SETTINGS_BIN,        COMPO_ID_BTN_SETTING,          GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  62+31+4},///设置
 };
 
 #define MENU_CNT    ((int)(sizeof(dwon_tbl_style_list) / sizeof(dwon_tbl_style_list[0])))
@@ -184,6 +186,7 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 
     }
 }
+#if GUI_MODULE_WRIST_SUPPORT
 //下拉抬婉亮屏按钮状态切换
 static void switch_set_sub_wrist(void)
 {
@@ -215,6 +218,7 @@ static void func_clock_sub_dropdown_wrist_pic_update(void)
     }
 
 }
+#endif
 //下拉勿扰按钮更新
 static void func_clock_sub_dropdown_disturb_pic_update(void)
 {
@@ -356,7 +360,9 @@ static void func_clock_sub_dropdown_form_create(void)
     func_clock_sub_dropdown_bluetooth_btn_pic_update();////下拉蓝牙按钮更新
     func_clock_sub_dropdown_mute_pic_update();          //静音更新
     func_clock_sub_dropdown_disturb_pic_update();       //勿扰
+#if GUI_MODULE_WRIST_SUPPORT
     func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
+#endif
     func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
 
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
@@ -585,9 +591,10 @@ static void func_clock_sub_dropdown_click_handler(void)
         case COMPO_ID_BTN_PHONE:
             func_cb.sta = FUNC_FINDPHONE;
             break;
+#if GUI_MODULE_WRIST_SUPPORT
         case COMPO_ID_BTN_WIRST:
             switch_set_sub_wrist();
-            break;
+#endif
         case COMPO_ID_BTN_MENU:
             if(++dropdown_disp_btn_item->sel_idx==MENU_CNT)
             {
@@ -772,6 +779,7 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
 
     }
 }
+#if GUI_MODULE_WRIST_SUPPORT
 //下拉抬婉亮屏按钮状态切换
 static void switch_set_sub_wrist(void)
 {
@@ -801,6 +809,7 @@ static void func_clock_sub_dropdown_wrist_pic_update(void)
     }
 
 }
+#endif
 //下拉勿扰按钮更新
 static void func_clock_sub_dropdown_disturb_pic_update(void)
 {
@@ -941,7 +950,9 @@ static void func_clock_sub_dropdown_form_create(void)
     func_clock_sub_dropdown_bluetooth_btn_pic_update();////下拉蓝牙按钮更新
     func_clock_sub_dropdown_mute_pic_update();          //静音更新
     func_clock_sub_dropdown_disturb_pic_update();       //勿扰
+#if GUI_MODULE_WRIST_SUPPORT
     func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
+#endif
     func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
 
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
@@ -1233,7 +1244,9 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             func_clock_sub_dropdown_bluetooth_btn_pic_update();////下拉蓝牙按钮更新
             func_clock_sub_dropdown_mute_pic_update();          //静音更新
             func_clock_sub_dropdown_disturb_pic_update();       //勿扰
+#if GUI_MODULE_WRIST_SUPPORT
             func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
+#endif
             func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
             func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
@@ -1241,7 +1254,9 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             func_clock_sub_dropdown_bluetooth_btn_pic_update();////下拉蓝牙按钮更新
             func_clock_sub_dropdown_mute_pic_update();          //静音更新
             func_clock_sub_dropdown_disturb_pic_update();       //勿扰
+#if GUI_MODULE_WRIST_SUPPORT
             func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
+#endif
             func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;

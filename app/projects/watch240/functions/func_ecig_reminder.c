@@ -36,9 +36,8 @@ compo_form_t *func_ecig_reminder_form_create(void)
         animation = compo_animation_create(frm, UI_BUF_I330001_SMOKING_00_BIN);
         compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
         compo_animation_set_radix(animation, 3);
-        compo_animation_set_interval(animation, 30);
+        compo_animation_set_interval(animation, 60);
         compo_setid(animation,COMPO_ID_PIC_SMOCKING);
-        compo_textbox_set(txt, "吸烟中...");
         uint32_t smokeing_count = uteModuleGetSomkeSomkeCount();
         smokeing_count++;
         uteModuleSetSomkeCount(smokeing_count);

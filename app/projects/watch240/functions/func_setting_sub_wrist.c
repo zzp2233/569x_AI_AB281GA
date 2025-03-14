@@ -8,7 +8,7 @@
 #else
 #define TRACE(...)
 #endif
-
+#if GUI_MODULE_WRIST_SUPPORT
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 typedef struct f_wrist_t_
@@ -312,3 +312,4 @@ void func_set_sub_wrist(void)
     }
     func_set_sub_wrist_exit();
 }
+#endif

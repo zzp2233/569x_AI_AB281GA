@@ -37,7 +37,7 @@ typedef struct f_ecig_t_
 
 compo_form_t *func_ecig_vpae_sub_form_create(void)
 {
-    char txt_buf[30];
+    char txt_buf[50];
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -92,7 +92,7 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     //当天口数  文字
     memset(txt_buf,0,sizeof(txt_buf));
     sprintf(txt_buf, "%s", i18n[STR_ECIG_P]);
-    compo_textbox_t *textbox_p = compo_textbox_create(frm,strlen(txt_buf));
+    compo_textbox_t *textbox_p = compo_textbox_create(frm,strlen(i18n[STR_ECIG_P]));
     compo_textbox_set_font(textbox_p, UI_BUF_0FONT_FONT_BIN);
     compo_textbox_set_align_center(textbox_p, false);
     compo_textbox_set_location(textbox_p,80, 62,64,36);
@@ -106,12 +106,12 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     compo_textbox_t *textbox_num = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_font(textbox_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_align_center(textbox_num, false);
-    compo_textbox_set_location(textbox_num,130, 63,64,36);
+    compo_textbox_set_location(textbox_num,130+20, 63,44,36);
     compo_textbox_set(textbox_num,txt_buf);
 
     memset(txt_buf,0,sizeof(txt_buf));
     sprintf(txt_buf, "%s", i18n[STR_ECIG_TODAT_P]);
-    compo_textbox_t *textbox_today = compo_textbox_create(frm,strlen(txt_buf));
+    compo_textbox_t *textbox_today = compo_textbox_create(frm,strlen(i18n[STR_ECIG_TODAT_P]));
     compo_textbox_set_font(textbox_today, UI_BUF_0FONT_FONT_BIN);
     compo_textbox_set_align_center(textbox_today, false);
     compo_textbox_set_location(textbox_today,72, 105,120,36);
@@ -124,7 +124,7 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     //本周口数  文字
     memset(txt_buf,0,sizeof(txt_buf));
     sprintf(txt_buf, "%s", i18n[STR_ECIG_P]);
-    compo_textbox_t *textbox2_p = compo_textbox_create(frm,strlen(txt_buf));
+    compo_textbox_t *textbox2_p = compo_textbox_create(frm,strlen(i18n[STR_ECIG_P]));
     compo_textbox_set_font(textbox2_p, UI_BUF_0FONT_FONT_BIN);
     compo_textbox_set_align_center(textbox2_p, false);
     compo_textbox_set_location(textbox2_p,80, GUI_SCREEN_HEIGHT+22,64,36);
@@ -138,12 +138,12 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     compo_textbox_t *textbox2_num = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_font(textbox2_num, UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_align_center(textbox2_num, false);
-    compo_textbox_set_location(textbox2_num,130, GUI_SCREEN_HEIGHT+23,64,36);
+    compo_textbox_set_location(textbox2_num,130+20, GUI_SCREEN_HEIGHT+23,44,36);
     compo_textbox_set(textbox2_num,txt_buf);
 
     memset(txt_buf,0,sizeof(txt_buf));
     sprintf(txt_buf, "%s", i18n[STR_ECIG_7_DAY]);
-    compo_textbox_t *textbox_15today = compo_textbox_create(frm,strlen(txt_buf));
+    compo_textbox_t *textbox_15today = compo_textbox_create(frm,strlen(i18n[STR_ECIG_7_DAY]));
     compo_textbox_set_font(textbox_15today, UI_BUF_0FONT_FONT_BIN);
     compo_textbox_set_align_center(textbox_15today, false);
     compo_textbox_set_location(textbox_15today,72, GUI_SCREEN_HEIGHT+65,120,36);

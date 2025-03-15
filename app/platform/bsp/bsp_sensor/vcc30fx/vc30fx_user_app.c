@@ -21,6 +21,7 @@
 #include "ute_module_message.h"
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_factorytest.h"
+#include "ute_module_newFactoryTest.h"
 
 #include "vc30fx_driver.h"
 extern vc30fx_clk_info clk_info;            /* oscclk_calibration_infomation */
@@ -150,7 +151,6 @@ void uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData(void)
     if(uteModuleNewFactoryTestGetMode()!= FACTORY_TEST_MODE_NULL)
     {
         // 工厂模式下，必须用1模式的测试血氧
-        UTE_MODULE_LOG(1, "gyj BloodOxygen mode 1",);
         vc30fx_usr_device_handler(sportType,1);
     }
     else

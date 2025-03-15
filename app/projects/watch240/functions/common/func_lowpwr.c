@@ -511,6 +511,7 @@ static void sfunc_sleep(void)
             sys_cb.gui_need_wakeup = 0;
             gui_need_wkp = true;
             printf("gui_need_wakeup\n");
+            break;
         }
     }
 

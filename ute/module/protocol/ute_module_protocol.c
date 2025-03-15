@@ -2432,6 +2432,68 @@ void uteModuleProtocolDebugData(uint8_t*receive,uint8_t length)
 #endif
 }
 
+/**
+*@brief       多运动之前可设置目标
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       dengli.lu
+*@date       2022-03-18
+*/
+void uteModuleProtocolSportsTargetSelect(uint8_t*receive,uint8_t length)
+{
+#if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
+    uint32_t sportDistanceTargetCnt = 0;
+    uint32_t sportTimeTargetSec = 0;
+    uint16_t sportKcalTarget = 0;
+    uint8_t response[3];
+    memset(response,0,3);
+    ute_module_sports_target_data_t sportsTargetData;
+    uteModuleSportGetMoreSportsTargetData(&sportsTargetData);
+    if(receive[1] == 0x01)//多运动心率预警设置
+    {
+#if UTE_SPORTS_HEART_MAX_MIN_WARNING_NOTIFY_SUPPORT
+        uteModuleHeartSetSportHeartWaringInfo(receive[2],receive[3],receive[4],receive[5]);
+        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,maxHeart = %d,isMaxHeartOpen = %d,minHeart = %d,isMinHeartOpen = %d",__func__,receive[2],receive[3],receive[4],receive[5]);
+#endif
+    }
+    if(receive[1] == 0x02)//多运动目标距离
+    {
+        sportDistanceTargetCnt = receive[2]<<24|receive[3]<<16|receive[4]<<8|receive[5];
+        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,sportDistanceTargetCnt = %d",__func__,sportDistanceTargetCnt);
+        if(sportDistanceTargetCnt > 0)
+        {
+            sportsTargetData.sportDistanceTargeCnt = sportDistanceTargetCnt;
+            sportsTargetData.isNoTarget = false;
+        }
+    }
+    else if(receive[1] == 0x03)//多运动目标时长
+    {
+        sportTimeTargetSec = receive[2]<<24|receive[3]<<16|receive[4]<<8|receive[5];
+        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,sportTimeTargetSec = %d",__func__,sportTimeTargetSec);
+        if(sportTimeTargetSec > 0)
+        {
+            sportsTargetData.sportTimeTargetSec = sportTimeTargetSec;
+            sportsTargetData.isNoTarget = false;
+        }
+    }
+    else if(receive[1] == 0x04)//多运动目标kcal
+    {
+        sportKcalTarget = receive[2]<<8|receive[3];
+        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,sportKcalTarget = %d",__func__,sportKcalTarget);
+        if(sportKcalTarget > 0)
+        {
+            sportsTargetData.sportKcalTarget = sportKcalTarget;
+            sportsTargetData.isNoTarget = false;
+        }
+    }
+    response[0] = receive[0];
+    response[1] = receive[1];
+    response[2] = 0xFD;
+    uteModuleProfileBleSendToPhone((uint8_t *)&response[0],3);
+    uteModuleSportSetMoreSportsTargetData(sportsTargetData);
+#endif
+}
 
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
@@ -2497,7 +2559,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     // {.privateCmd = CMD_SET_DRINK_WATER_PARAM,.publicCmd=CMD_SET_DRINK_WATER_PARAM,.function=uteModuleProtocolSetDrinkWater},
     {.privateCmd = CMD_TODAY_TARGET_CTRL,.publicCmd=CMD_TODAY_TARGET_CTRL,.function=uteModuleProtocolTodayTargetCtrl},
     // {.privateCmd = CMD_SYNC_CYWEE_SWIM_DATA,.publicCmd=CMD_SYNC_CYWEE_SWIM_DATA,.function=uteModuleProtocolSyncCyweeSwimData},
-    // {.privateCmd = CMD_SPORTS_TARGET_SELECT,.publicCmd=CMD_SPORTS_TARGET_SELECT,.function=uteModuleProtocolSportsTargetSelect},
+    {.privateCmd = CMD_SPORTS_TARGET_SELECT,.publicCmd=CMD_SPORTS_TARGET_SELECT,.function=uteModuleProtocolSportsTargetSelect},
     // {.privateCmd = CMD_CUST_DEFINE_CMD,.publicCmd=CMD_CUST_DEFINE_CMD,.function=uteModuleProtocolCustomF6CmdHandle},
     // {.privateCmd = CMD_GOTO_SCREEN,.publicCmd=CMD_GOTO_SCREEN,.function=uteModuleProtocolGotoScreenCmdHandle},
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT

@@ -699,7 +699,7 @@ bool uteModuleHeartIsWear(void)
         }
     }
 #endif
-    UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,isWear:%d",__func__,isWear);
+    UTE_MODULE_LOG(0,"%s,isWear:%d",__func__,isWear);
     return isWear;
 }
 /**
@@ -759,9 +759,10 @@ void uteModuleHeartClearAvgHeartOfCurrentDay(ute_module_systemtime_time_t *time)
 */
 void uteModuleHeartMinMaxWarningValueProcess(void)
 {
+#if 0//原始逻辑不适用于定时测量方案
 #if UTE_MODULE_HEART_MIN_MAX_WARNING_VALUE_SUPPORT
     uint8_t heart = uteModuleHeartData.heartValue;
-    UTE_MODULE_LOG(UTE_LOG_HEART_LVL,".warning.isOpen = %d",uteModuleHeartData.warning.isOpen);
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL,".warning.isOpen = %d, isAutoTesting = %d, heart = %d",uteModuleHeartData.warning.isOpen,uteModuleHeartData.isAutoTesting,heart);
     if(uteModuleHeartIsWear()&&(heart>0)&&uteModuleHeartData.warning.isOpen&&(heart!=255)&&uteModuleHeartData.isAutoTesting)
     {
         if((heart<uteModuleHeartData.warning.setMinHeart)||(heart>uteModuleHeartData.warning.setMaxHeart))
@@ -779,7 +780,7 @@ void uteModuleHeartMinMaxWarningValueProcess(void)
                     if(uteModuleHeartWaringOpenCtrl(0, 0))
 #endif
                     {
-                        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_HEART_WARNING_SCREEN_ID, 0, __func__);
+                        uteTaskGuiStartScreen(FUNC_HEART_WARNING, 0, __func__);
                         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,5);
                     }
 #endif
@@ -796,6 +797,42 @@ void uteModuleHeartMinMaxWarningValueProcess(void)
     {
         uteModuleHeartData.warning.warningSecond = 0;
     }
+#endif
+#else
+#if UTE_MODULE_HEART_MIN_MAX_WARNING_VALUE_SUPPORT
+    uint8_t heart = uteModuleHeartData.heartValue;
+    bool needRemind = false;
+    uteModuleHeartData.warning.warningSecond++;
+    if (uteModuleHeartData.warning.warningSecond >= UTE_MODULE_HEART_MIN_MAX_WARNING_RELOAD_SECOND_CNT)
+    {
+        needRemind = true;
+    }
+
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, ".warning.isOpen = %d, isAutoTestFlag = %d, heart = %d, needRemind = %d", uteModuleHeartData.warning.isOpen, uteModuleHeartData.isAutoTestFlag, heart, needRemind);
+
+    if (uteModuleHeartIsWear() && (heart > 0) && uteModuleHeartData.warning.isOpen && (heart != 255) && (uteModuleHeartData.isAutoTestFlag || uteModuleSportMoreSportGetStatus() != ALL_SPORT_STATUS_CLOSE))
+    {
+        if ((heart < uteModuleHeartData.warning.setMinHeart) || (heart > uteModuleHeartData.warning.setMaxHeart))
+        {
+            if (needRemind)
+            {
+                uteModuleHeartData.warning.warningSecond = 0;
+#if UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT
+#if QUICK_SWITCH_HR_ABNORMAL_WARNNING_SUPPORT
+                if (uteModuleHeartWaringOpenCtrl(0, 0))
+#endif
+                {
+                    if (uteModuleGuiCommonGetCurrentScreenId() != FUNC_HEART_WARNING)
+                    {
+                        uteTaskGuiStartScreen(FUNC_HEART_WARNING, 0, __func__);
+                        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 5);
+                    }
+                }
+#endif
+            }
+        }
+    }
+#endif
 #endif
 }
 /**

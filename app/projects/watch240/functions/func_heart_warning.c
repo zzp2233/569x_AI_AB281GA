@@ -7,6 +7,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT
+
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 typedef struct f_heart_warning_t_
 {
@@ -112,6 +114,7 @@ static void func_heart_warning_enter(void)
 static void func_heart_warning_exit(void)
 {
     func_cb.last = FUNC_HEART_WARNING;
+    uteTaskGuiStackRemoveScreenId(FUNC_HEART_WARNING);
 }
 
 //心率预警功能
@@ -126,3 +129,5 @@ void func_heart_warning(void)
     }
     func_heart_warning_exit();
 }
+
+#endif

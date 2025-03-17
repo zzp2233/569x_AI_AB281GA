@@ -346,8 +346,7 @@ static void sfunc_sleep(void)
     GPIOADE = 0;
     GPIOBDE = BIT(3);
     GPIOGDE = 0x3F;                             //MCP FLASH
-    GPIOHDE = 0;
-
+    GPIOHDE = 0| BIT(4);
 //    u32 pf_keep = 0;
 //     if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL)) {
 //        printf("bsp_sensor_init_sta_get\n");

@@ -27,7 +27,7 @@
 #include"ute_project_config_abe012.h"
 #endif
 /** Log模块控制开关*/
-#define UTE_MODULE_LOG_SUPPORT 0
+#define UTE_MODULE_LOG_SUPPORT 1
 
 
 
@@ -1478,5 +1478,7 @@
 #define UTE_DRV_PWRKEY_KEY4_MAX_ADC 0xFF
 #endif
 #endif
+
+
 
 #endif//_UTE_PROJECT_CONFIG_H_

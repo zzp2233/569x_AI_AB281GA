@@ -68,12 +68,12 @@ u32 ecig_vbat_get(void)
 
 void ecig_set_power(u8 value)
 {
-    ecig_cfg.aim_power = value;
+    ecig_cfg.aim_power = value-2;
 }
 
 u8 ecig_get_power(void)
 {
-    return ecig_cfg.aim_power;
+    return ecig_cfg.aim_power+2;
 }
 AT(.com_text.isr)
 void ecig_set_res(u8 value)

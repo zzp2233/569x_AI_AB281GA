@@ -875,6 +875,7 @@ void bsp_sys_init(void)
 #if ECIG_POWER_CONTROL
     bsp_ecig_init();
 #endif
+    uteModulePlatformOutputGpioSet(IO_PH4,true);
 #if !UTE_MULTIPLE_LANGUAGE_SUPPORT
     lang_select(LANG_ZH);
 #endif

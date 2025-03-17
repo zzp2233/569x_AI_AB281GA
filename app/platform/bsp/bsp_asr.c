@@ -134,7 +134,7 @@ void bsp_speech_recognition_sdadc_process(u8 *ptr, u32 samples, int ch_mode)
 //用于语音识别纯净mic数据采集
 void bsp_speech_recognition_enter(void)
 {
-    // printf(">>>enter %s\n", __func__);
+    printf(">>>enter %s\n", __func__);
 
     //数据流初始化
     memset(&record_pcm_stream, 0, sizeof(record_pcm_stream));

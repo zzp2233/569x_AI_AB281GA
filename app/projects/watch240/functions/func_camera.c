@@ -428,12 +428,9 @@ static void func_camera_button_handle(void)
     {
         if (ble_is_connect())
         {
-#if  UTE_MODULE_SPORT_SUPPORT
-            if(uteModuleSportIsTakePicture())
-            {
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
-            }
-#endif
+
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
+
         }
         else
         {
@@ -594,15 +591,8 @@ static void func_camera_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_camera_t));
     func_cb.frm_main = func_camera_form_create();
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_OPEN_APP_SCREEN,0);
 
-#if UTE_MODULE_SPORT_TAKE_PICTURE_OPEN_APP_SCREEN
-#if  UTE_MODULE_SPORT_SUPPORT
-    if(!uteModuleSportIsTakePicture())
-    {
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_OPEN_APP_SCREEN,0);
-    }
-#endif
-#endif
 
 }
 
@@ -610,12 +600,8 @@ static void func_camera_enter(void)
 static void func_camera_exit(void)
 {
     func_cb.last = FUNC_CAMERA;
-#if  UTE_MODULE_SPORT_SUPPORT
-    if(uteModuleSportIsTakePicture())
-    {
-        uteModuleSportExitTakePicture();
-    }
-#endif
+    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_CLOSE_APP_SCREEN,0);
+
 }
 
 //相机功能

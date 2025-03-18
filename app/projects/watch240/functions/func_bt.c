@@ -364,8 +364,8 @@ static void func_bt_music_refresh_disp(void)
     }
     else
     {
-        // compo_picturebox_set_visible(picbox, false);
-        // compo_picturebox_set_visible(picbox1, false);
+        compo_picturebox_set_visible(picbox, false);
+        compo_picturebox_set_visible(picbox1, false);
         // compo_shape_set_visible(shape, true);
         // 歌词，歌名
         //   compo_textbox_set_visible(tilte_art_txt, true);

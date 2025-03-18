@@ -7192,11 +7192,7 @@ static void func_clock_sub_card_click_handler(void)
                     {
                         bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
                     }
-//                    if(bt_cb.music_playing)
-//                    {
-//                        compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY);
-//                        compo_button_set_bgimg(btn, ui_handle.card3.pic_click_play.res_click);
-//                    }
+                    music_data_refresh();
                 }
                 break;
                 case COMPO_MUSIC_BTN_NEXT:
@@ -7599,7 +7595,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
 //                 compo_button_set_bgimg(btn, ui_handle.card3.pic_click_next.res);
 //             }
 
-//             music_data_refresh();
+            music_data_refresh();
         }
         default:
             func_message(msg);

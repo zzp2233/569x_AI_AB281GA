@@ -739,6 +739,49 @@ void uteModuleProtocolCallStatusCtrl(uint8_t*receive,uint8_t length)
     }
     uteModuleProfileBleSendToPhone(&response[0],2);
 }
+
+/**
+*@brief          摇一摇拍照消息处理
+*@details
+*@author
+*@date
+*/
+void uteModuleTakePictureHandlerMsg(void)
+{
+    uint8_t response[2] = {CMD_TAKE_PICTURE_MODE,0x02};
+    response[0] = CMD_TAKE_PICTURE_MODE;
+    uteModuleProfileBleSendToPhone(&response[0],2);
+}
+/**
+*@brief          摇一摇拍照打开app相机界面消息处理
+*@details
+*@author       dengli.lu
+*@date       2022-08-23
+*/
+
+void uteModuleSportOpenAppTakePictureScreenHandler(void)
+{
+    uint8_t response[2];
+    memset(&response[0],0,2);
+    response[0] = CMD_SEND_KEYCODE;
+    response[1] = 0x11;
+    uteModuleProfileBleSendToPhone(&response[0],2);
+}
+/**
+*@brief          摇一摇拍照退出app相机界面消息处理
+*@details
+*@author       dengli.lu
+*@date       2022-08-23
+*/
+
+void uteModuleSportCloseAppTakePictureScreenHandler(void)
+{
+    uint8_t response[2];
+    memset(&response[0],0,2);
+    response[0] = CMD_SEND_KEYCODE;
+    response[1] = 0x0F;
+    uteModuleProfileBleSendToPhone(&response[0],2);
+}
 /**
 *@brief        摇一摇拍照状态控制
 *@details
@@ -763,6 +806,7 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
     }
     else
     {
+        uteModuleGuiCommonGoBackLastScreen();
 #if UTE_MODULE_SPORT_SUPPORT
         if(uteModuleSportIsTakePicture())
         {

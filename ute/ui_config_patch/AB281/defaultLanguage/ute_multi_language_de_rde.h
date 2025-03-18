@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 德语(德国）
 *@author
-*@date   2025-03-12 11:43:37
+*@date   2025-03-17 09:20:52
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -269,6 +269,7 @@ const char * const i18n_de_rde[] =
     [STR_PREGNANCY] = "\x46\x72\x75\x63\x68\x74\x62\x61\x72\x65\x20\x54\x61\x67\x65\x00", // [253] Fruchtbare Tage
     [STR_SAFE_PERIOD] = "\x53\x69\x63\x68\x65\x72\x65\x72\x20\x5a\x65\x69\x74\x72\x61\x75\x6d\x00", // [254] Sicherer Zeitraum
     [STR_HEART_HIGHT] = "\x48\x6f\x68\x65\x20\x48\x65\x72\x7a\x66\x72\x65\x71\x75\x65\x6e\x7a\x00", // [255] Hohe Herzfrequenz
+    [STR_HEART_LOW] = "\x4e\x69\x65\x64\x72\x69\x67\x65\x20\x48\x65\x72\x7a\x66\x72\x65\x71\x75\x65\x6e\x7a\x00", // [256] Niedrige Herzfrequenz
 };
 
 #endif

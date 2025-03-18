@@ -34,7 +34,7 @@ typedef struct f_sport_finish_t_
     bool uint_km;
 } f_sport_finish_t;
 
-extern u8 sport_finish_mode;
+u8 sport_finish_mode;
 
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_finish_form_create(void)

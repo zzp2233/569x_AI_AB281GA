@@ -12,7 +12,79 @@
 
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
 
-#define MENU_LIST_CNT                       ((int)(sizeof(tbl_sport_list) / sizeof(tbl_sport_list[0])))
+#define MENU_LIST_CNT                       ((int)(sizeof(tbl_sport_list_data) / sizeof(tbl_sport_list_data[0])))
+static const compo_listbox_item_t tbl_sport_list_data[] =
+{
+    [SPORT_TYPE_RUNNING]      = {STR_SPORT_RUN,           UI_BUF_I330001_SPORT_ICON_00_PAOBU_BIN,          },
+    [SPORT_TYPE_RIDE_BIKE]    = {STR_SPORT_RIDE_BIKE,     UI_BUF_I330001_SPORT_ICON_01_QIXING_BIN,         },
+    [SPORT_TYPE_JUMP_ROPE]    = {STR_SPORT_JUMP_ROPE,     UI_BUF_I330001_SPORT_ICON_03_TIAOSHEN_BIN,       },
+    [SPORT_TYPE_SWIMMING]     = {STR_SPORT_SWIMMING,      UI_BUF_I330001_SPORT_ICON_04_YOUYONG_BIN,        },
+    [SPORT_TYPE_BADMINTON]    = {STR_SPORT_BADMINTON,     UI_BUF_I330001_SPORT_ICON_05_YUMAOQIU_BIN,       },
+    [SPORT_TYPE_TABLE_TENNIS] = {STR_SPORT_TABLE_TENNIS,  UI_BUF_I330001_SPORT_ICON_06_PINGPANGQIU_BIN,    },
+    [SPORT_TYPE_TENNIS]       = {STR_SPORT_TENNIS,        UI_BUF_I330001_SPORT_ICON_07_WANGQIU_BIN,        },
+    [SPORT_TYPE_CLIMBING]     = {STR_SPORT_CLIMBING,      UI_BUF_I330001_SPORT_ICON_08_DENGSHAN_BIN,       },
+    [SPORT_TYPE_WALKING]      = {STR_SPORT_WALKING,       UI_BUF_I330001_SPORT_ICON_02_JIANZOU_BIN,        },
+    [SPORT_TYPE_BASKETBALL]   = {STR_SPORT_BASKETBALL,    UI_BUF_I330001_SPORT_ICON_09_LANQIU_BIN,         },
+    [SPORT_TYPE_FOOTBALL]     = {STR_SPORT_FOOTBALL,      UI_BUF_I330001_SPORT_ICON_10_ZUQIU_BIN,          },
+    [SPORT_TYPE_BASEBALL]     = {STR_SPORT_BASEBALL,      UI_BUF_I330001_SPORT_ICON_11_BANGQIU_BIN,        },
+    [SPORT_TYPE_VOLLEYBALL]   = {STR_SPORT_VOLLEYBALL,    UI_BUF_I330001_SPORT_ICON_12_PAIQIU_BIN,         },
+    [SPORT_TYPE_CRICKET]      = {STR_SPORT_CRICKET,       UI_BUF_I330001_SPORT_ICON_13_BANQIU_BIN,         },
+    [SPORT_TYPE_RUGBY]        = {STR_SPORT_RUGBY,         UI_BUF_I330001_SPORT_ICON_14_GANLANQIU_BIN,      },
+    [SPORT_TYPE_HOCKEY]       = {STR_SPORT_HOCKEY,        UI_BUF_I330001_SPORT_ICON_15_QUGUNQIU_BIN,       },
+    [SPORT_TYPE_DANCE]        = {STR_SPORT_DANCE,         UI_BUF_I330001_SPORT_ICON_16_TIAOWU_BIN,         },
+    [SPORT_TYPE_SPINNING]     = {STR_SPORT_SPINNING,      UI_BUF_I330001_SPORT_ICON_17_DONGGANDANCHE_BIN,  },
+    [SPORT_TYPE_YOGA]         = {STR_SPORT_YOGA,          UI_BUF_I330001_SPORT_ICON_18_YUJIA_BIN,          },
+    [SPORT_TYPE_SIT_UP]       = {STR_SPORT_SIT_UP,        UI_BUF_I330001_SPORT_ICON_19_YANGWOQIZUO_BIN,    },
+    [SPORT_TYPE_TREADMILL]    = {STR_SPORT_TREADMILL,     UI_BUF_I330001_SPORT_ICON_20_SHINEIPAO_BIN,      },
+    [SPORT_TYPE_GYMNASTICS]   = {STR_SPORT_GYMNASTICS,    UI_BUF_I330001_SPORT_ICON_21_TICAO_BIN,          },
+    [SPORT_TYPE_BOATING]      = {STR_SPORT_BOATING,       UI_BUF_I330001_SPORT_ICON_22_HUACHUAN_BIN,       },
+    [SPORT_TYPE_JUMPING_JACK] = {STR_SPORT_JUMPING_JACK,  UI_BUF_I330001_SPORT_ICON_23_KAIHETIAO_BIN,      },
+    [SPORT_TYPE_FREE_TRAINING]= {STR_SPORT_FREE_TRAINING, UI_BUF_I330001_SPORT_ICON_24_ZIYOUXUNLIAN_BIN,   },
+    [SPORT_TYPE_MAX]          = {STR_MORE,                UI_BUF_I330001_SPORT_ICON_25_CAIDAN_BIN,         },
+};
+
+enum//对应运动中显示运动数据种类->不同项目可自行添加
+{
+    MULTIPLE_DATA=0,//多数据
+    MID_DATA,       //中数据
+    LESS_DATA,      //少数据
+};
+
+u32 func_sport_get_disp_mode(void)//对应运动中显示运动数据种类->不同项目可自行添加->用于运动中与运动结束
+{
+    switch(sys_cb.sport_idx)
+    {
+        case SPORT_TYPE_RUNNING:
+        case SPORT_TYPE_CLIMBING:
+        case SPORT_TYPE_WALKING:
+        case SPORT_TYPE_TREADMILL:
+            return MULTIPLE_DATA;
+        case SPORT_TYPE_JUMP_ROPE://跳绳
+        case SPORT_TYPE_SWIMMING://游泳
+            return MID_DATA;
+        default:
+            return LESS_DATA;
+    }
+}
+
+u32 func_sport_get_str(u8 sport_idx)
+{
+    if (sport_idx < MENU_LIST_CNT)
+    {
+        return tbl_sport_list_data[sport_idx].str_idx;
+    }
+    return 0;
+}
+
+u32 func_sport_get_ui(u8 sport_idx)
+{
+    if (sport_idx < MENU_LIST_CNT)
+    {
+        return tbl_sport_list_data[sport_idx].res_addr;
+    }
+    return 0;
+}
+
 
 enum
 {
@@ -88,8 +160,7 @@ compo_form_t *func_sport_form_create(void)
     compo_listbox_set_bgimg(listbox, UI_BUF_I330001_SPORT_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    u8 sport_idx = sys_cb.sport_idx;
-    compo_listbox_set_focus_byidx(listbox, sport_idx);
+    compo_listbox_set_focus_byidx(listbox, 0);
     compo_listbox_update(listbox);
 
     return frm;

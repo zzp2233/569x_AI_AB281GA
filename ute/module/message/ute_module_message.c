@@ -93,9 +93,7 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         break;
         case MSG_TYPE_TAKE_PICTURE_NOTIFY:
         {
-#if UTE_MODULE_SPORT_SUPPORT
-            uteModuleSportTakePictureHandlerMsg();
-#endif
+            uteModuleTakePictureHandlerMsg();
         }
         break;
         case MSG_TYPE_SEDENTARY_NOTIFY:
@@ -126,9 +124,16 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
 #if UTE_MODULE_SPORT_TAKE_PICTURE_OPEN_APP_SCREEN
         case MSG_TYPE_TAKE_PICTURE_OPEN_APP_SCREEN:
         {
-#if UTE_MODULE_SPORT_SUPPORT
+
             uteModuleSportOpenAppTakePictureScreenHandler();
-#endif
+
+        }
+        break;
+        case MSG_TYPE_TAKE_PICTURE_CLOSE_APP_SCREEN:
+        {
+
+            uteModuleSportCloseAppTakePictureScreenHandler();
+
         }
         break;
 #endif

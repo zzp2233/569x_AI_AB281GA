@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_heart.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -46,7 +47,7 @@ compo_form_t *func_heart_warning_form_create(void)
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_HIGHT]));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,26/2+168,230,widget_text_get_max_height());
-    if(uteModuleHeartGetMaxHeartValue()<bsp_sensor_hrs_data_get())
+    if(uteModuleHeartGetMaxHeartValue() < uteModuleHeartGetHeartValue())
     {
         compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
     }
@@ -65,13 +66,17 @@ compo_form_t *func_heart_warning_form_create(void)
 static void func_heart_warning_updata(void)
 {
     compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_UINT);
-    if(uteModuleHeartGetMaxHeartValue()<bsp_sensor_hrs_data_get())
+    if(uteModuleHeartGetHeartValue() > uteModuleHeartGetMaxHeartValue())
     {
         compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
     }
-    else
+    else if (uteModuleHeartGetHeartValue() > uteModuleHeartGetMinHeartValue())
     {
         compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
+    }
+    else
+    {
+        uteModuleGuiCommonGoBackLastScreen();
     }
 }
 

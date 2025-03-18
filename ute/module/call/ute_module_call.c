@@ -60,10 +60,7 @@ bool isHfpAndA2dpProfileBothConnected(void)
         result = bt_a2dp_profile_completely_connected();
     }
 #endif
-    if(bt_hfp_is_connected())
-    {
-        result = true;
-    }
+    result = hfp_is_connected();
     return result;
 }
 
@@ -624,7 +621,7 @@ void uteModuleCallBleConnectState(bool isConnected)
         }
     }
 #endif
-    if (isConnected && !bt_is_connected() && bt_get_status() == BT_STA_SCANNING) // 回连ble时回连BT
+    if (isConnected && !bt_is_connected() && bt_get_curr_scan() == BT_STA_SCANNING) // 回连ble时回连BT
     {
         bt_connect();
     }

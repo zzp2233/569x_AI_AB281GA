@@ -409,6 +409,12 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
         return;
     }
 
+    if(uteModuleSportMoreSportIsRuning() && func_cb.sta != FUNC_SPORT_SUB_RUN)
+    {
+        func_cb.sta = FUNC_SPORT_SUB_RUN;
+        return;
+    }
+
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s,isAllClear = %d", __func__,isAllClear);
     if (isAllClear)
     {

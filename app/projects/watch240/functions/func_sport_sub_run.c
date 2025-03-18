@@ -283,12 +283,6 @@ static void func_sport_sub_run_updata(void)
     {
         f_sport_sub_run->updata_tick = tick_get();
 
-        if (sys_cb.gui_sleep_sta)
-        {
-            sys_cb.gui_need_wakeup = 1;
-        }
-        reset_sleep_delay_all();
-
         char txt_buf[50];
         compo_textbox_t* txt_time       = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME);
         compo_textbox_t* txt_heart      = compo_getobj_byid(COMPO_ID_NUM_SPORT_HEARTRATE);
@@ -306,7 +300,6 @@ static void func_sport_sub_run_updata(void)
         compo_button_t* btn_exit         = compo_getobj_byid(COMPO_ID_BTN_SPORT_EXIT);
         compo_textbox_t* txt_stop        = compo_getobj_byid(COMPO_ID_TXT_SPORT_STOP);
         area_t txt_wid;
-
 
         ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
         uteModuleSportGetMoreSportsDatas(data);
@@ -608,12 +601,6 @@ static void func_sport_sub_run_init(void)
     if(sport_start_flag == false)///是否正常进入运动
     {
         sport_start_flag = true;
-        // if(uteModuleSportMoreSportIsAppStart())
-        // {
-        //     uteModuleSportStartMoreSports(sys_cb.sport_idx, 1, uteModuleSportMoreSportIsAppStart());
-        // }
-        uteModuleSportSetCountZeroIndex(0);
-        uteModuleHeartStartSingleTesting(TYPE_HEART);
     }
     f_sport_sub_run->sport_run_state = SPORT_RUN_STOP;
     f_sport_sub_run->sport_run_state_updata_flag = SPORT_RUN_STOP;
@@ -624,13 +611,7 @@ static void func_sport_sub_run_exit_data(void)
 {
     if(sys_cb.refresh_language_flag == false || sport_start_flag == true)//刷新语言时不清除数据
     {
-        uteModuleHeartStopSingleTesting(TYPE_HEART);
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-        {
-            task_stack_pop();
-        }
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
 }
 
@@ -680,15 +661,6 @@ static void func_sport_sub_run_click_handler(void)
             if (res == MSGBOX_RES_OK)
             {
                 uteModuleSportStopMoreSports();                             //通知APP退出运动
-                if (!sport_flag)
-                {
-                    func_cb.sta = FUNC_SPORT_FINISH;
-                }
-                sport_start_flag = false;
-                if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-                {
-                    task_stack_pop();
-                }
             }
         }
     }

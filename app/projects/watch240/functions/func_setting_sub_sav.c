@@ -23,7 +23,7 @@ typedef struct f_sav_t_
 enum
 {
     COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
+    //  COMPO_ID_MUTE,
 };
 
 #define  ON_PIC     UI_BUF_I330001_PUBLIC_SWITCH02_BIN
@@ -51,17 +51,17 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_icon_set(cardbox,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
     compo_cardbox_text_scroll_process(cardbox, true);
 
-    cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
-    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+62+6,GUI_SCREEN_WIDTH,62);
-    compo_setid(cardbox, COMPO_ID_MUTE);
-    compo_cardbox_rect_set_location(cardbox,0,0,0,232,62,16);
-    compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
-    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
-    // compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
-    compo_cardbox_text_set_align_center(cardbox, 0, false);
-    compo_cardbox_icon_set_location(cardbox, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
-    compo_cardbox_icon_set(cardbox,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
-    compo_cardbox_text_scroll_process(cardbox, true);
+//     cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
+//     compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+62+6,GUI_SCREEN_WIDTH,62);
+//     compo_setid(cardbox, COMPO_ID_MUTE);
+//     compo_cardbox_rect_set_location(cardbox,0,0,0,232,62,16);
+//     compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
+//     compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
+//    // compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
+//     compo_cardbox_text_set_align_center(cardbox, 0, false);
+//     compo_cardbox_icon_set_location(cardbox, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
+//     compo_cardbox_icon_set(cardbox,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
+//     compo_cardbox_text_scroll_process(cardbox, true);
 
     return frm;
 }
@@ -70,11 +70,11 @@ compo_form_t *func_set_sub_sav_form_create(void)
 static void func_set_sub_sav_disp(void)
 {
     compo_cardbox_t *cardbox_sav  = compo_getobj_byid(COMPO_ID_SAV);
-    compo_cardbox_t *cardbox_mute = compo_getobj_byid(COMPO_ID_MUTE);
+// compo_cardbox_t *cardbox_mute = compo_getobj_byid(COMPO_ID_MUTE);
 
     compo_cardbox_icon_set_location(cardbox_sav, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
     compo_cardbox_icon_set(cardbox_sav,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
-    compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
+//   compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
 }
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
@@ -160,7 +160,7 @@ static u16 func_setting_sav_card_get_btn_id(point_t pt)
     u16 ret = 0;
     rect_t rect;
     compo_cardbox_t *cardbox;
-    for(i=0; i<COMPO_ID_MUTE; i++)
+    for(i=0; i<COMPO_ID_SAV; i++)
     {
 //        id = COMPO_ID_CARD_SPORT_COMPASS + i;
         id = COMPO_ID_SAV+i;
@@ -179,28 +179,28 @@ static void func_sav_button_click(void)
 {
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_setting_sav_card_get_btn_id(pt);
-    if (compo_id <= 0 || compo_id > COMPO_ID_MUTE)
-    {
-        return;
-    }
+    // if (compo_id <= 0 || compo_id > COMPO_ID_MUTE)
+    // {
+    //     return;
+    // }
 
     switch(compo_id)
     {
         case COMPO_ID_SAV:
             uteModuleCallChangeEntertranmentVoiceSwitchStatus();
             break;
-        case COMPO_ID_MUTE:
-//            compo_cardbox_icon_set_location(cardbox_mute, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
-//            compo_cardbox_icon_set(cardbox_mute,0,ON_PIC);
-            if(uteModuleLocalRingtoneGetMuteStatus())
-            {
-                uteModuleLocalRingtoneSetMuteStatus(false,true);
-            }
-            else
-            {
-                uteModuleLocalRingtoneSetMuteStatus(true,true);
-            }
-            break;
+//         case COMPO_ID_MUTE:
+// //            compo_cardbox_icon_set_location(cardbox_mute, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
+// //            compo_cardbox_icon_set(cardbox_mute,0,ON_PIC);
+//             if(uteModuleLocalRingtoneGetMuteStatus())
+//             {
+//                 uteModuleLocalRingtoneSetMuteStatus(false,true);
+//             }
+//             else
+//             {
+//                 uteModuleLocalRingtoneSetMuteStatus(true,true);
+//             }
+//             break;
         default:
             break;
     }

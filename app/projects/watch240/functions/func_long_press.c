@@ -15,9 +15,9 @@
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //三个图标与矩形的Y轴
-#define RECT_Y_1 GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y*0.4
-#define RECT_Y_2 GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y*0.1
-#define RECT_Y_3 GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y*0.6
+#define RECT_Y_1 GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y*0.3
+#define RECT_Y_2 GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y*0.4
+//#define RECT_Y_3 GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y*0.6
 
 //矩形的宽度
 #define RECT_WIDTH GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6
@@ -45,7 +45,7 @@ enum
 {
     RECT_ID_1 = 1,
 
-    IMG_BTN_ID_1,
+    // IMG_BTN_ID_1,
     IMG_BTN_ID_2,
     IMG_BTN_ID_3,
     CANCEL_BTN_ID,
@@ -85,16 +85,16 @@ compo_form_t *func_long_press_form_create(void)
     compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
     compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
-    rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_3,RECT_WIDTH+8, IMG_WIDTH+8);
-    compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
-    compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
+    // rectangle = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
+    // compo_shape_set_location(rectangle,GUI_SCREEN_CENTER_X,RECT_Y_3,RECT_WIDTH+8, IMG_WIDTH+8);
+    // compo_shape_set_color(rectangle,make_color(0x33,0x33,0x33));
+    // compo_shape_set_radius(rectangle, GUI_SCREEN_HEIGHT/4/2);
 
     /*创建三个文本*/
     compo_textbox_t *txt;
-    txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_CALL]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3,RECT_WIDTH-50,IMG_WIDTH);
-    compo_textbox_set(txt,i18n[STR_SLIDE_CALL]);
+    // txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_CALL]));
+    // compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_3,RECT_WIDTH-50,IMG_WIDTH);
+    // compo_textbox_set(txt,i18n[STR_SLIDE_CALL]);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_SLIDE_OFF]));
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X*1.1,RECT_Y_2,RECT_WIDTH-50,IMG_WIDTH);
@@ -121,10 +121,10 @@ compo_form_t *func_long_press_form_create(void)
     widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
     compo_setid(img_btn, IMG_BTN_ID_2);
 
-    img_btn = compo_button_create_by_image(frm,UI_BUF_I330001_POWEROFF_ICON_SOS_BIN);
-    compo_button_set_pos(img_btn, IMG_BTN_FIRST_X,RECT_Y_3);
-    widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
-    compo_setid(img_btn, IMG_BTN_ID_1);
+    // img_btn = compo_button_create_by_image(frm,UI_BUF_I330001_POWEROFF_ICON_SOS_BIN);
+    // compo_button_set_pos(img_btn, IMG_BTN_FIRST_X,RECT_Y_3);
+    // widget_set_size(img_btn->widget, IMG_WIDTH, IMG_WIDTH);
+    // compo_setid(img_btn, IMG_BTN_ID_1);
 
 
     return frm;
@@ -139,40 +139,40 @@ static void func_long_press_event_handle(s32 distance, u16 id)
         {
             switch(id)
             {
-                case IMG_BTN_ID_1://SOS
-                    memset(sys_cb.outgoing_number, 0, sizeof(sys_cb.outgoing_number));
-                    ute_module_call_addressbook_t sosData;
-                    memset(&sosData, 0, sizeof(ute_module_call_addressbook_t));
-                    uteModuleCallGetSosContact(&sosData);
-                    if(strlen((const char *)sosData.numberAscii) && uteModuleCallBtIsConnected())
-                    {
-                        memcpy(sys_cb.outgoing_number, sosData.numberAscii, strlen((const char *)sosData.numberAscii));
-#if MODEM_CAT1_EN
-                        if (bsp_modem_get_init_flag())
-                        {
-                            modem_call_dial(sys_cb.outgoing_number);
-                        }
-                        else
-#endif
-                        {
-                            bt_call_redial_number();
-                        }
-                    }
-                    else
-                    {
-                        if(uteModuleCallBtIsConnected())
-                        {
-                            msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_NONE);
-                        }
-                        else
-                        {
-                            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-                            sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
-                            msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
-                        }
-                    }
+//                 case IMG_BTN_ID_1://SOS
+//                     memset(sys_cb.outgoing_number, 0, sizeof(sys_cb.outgoing_number));
+//                     ute_module_call_addressbook_t sosData;
+//                     memset(&sosData, 0, sizeof(ute_module_call_addressbook_t));
+//                     uteModuleCallGetSosContact(&sosData);
+//                     if(strlen((const char *)sosData.numberAscii) && uteModuleCallBtIsConnected())
+//                     {
+//                         memcpy(sys_cb.outgoing_number, sosData.numberAscii, strlen((const char *)sosData.numberAscii));
+// #if MODEM_CAT1_EN
+//                         if (bsp_modem_get_init_flag())
+//                         {
+//                             modem_call_dial(sys_cb.outgoing_number);
+//                         }
+//                         else
+// #endif
+//                         {
+//                             bt_call_redial_number();
+//                         }
+//                     }
+//                     else
+//                     {
+//                         if(uteModuleCallBtIsConnected())
+//                         {
+//                             msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_NONE);
+//                         }
+//                         else
+//                         {
+//                             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+//                             sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+//                             msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+//                         }
+//                     }
 
-                    break;
+//                     break;
                 case IMG_BTN_ID_2://关机
                     uteApplicationCommonPoweroff();
                     break;
@@ -443,7 +443,7 @@ static void func_long_press_button(void)
     f_long_press->touch_btn_id = compo_get_button_id();
     compo_shape_t  *rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
 
-    if( f_long_press->touch_btn_id >=IMG_BTN_ID_1 &&  f_long_press->touch_btn_id <=IMG_BTN_ID_3)    //触摸是否是按键图标
+    if( f_long_press->touch_btn_id >=IMG_BTN_ID_2 &&  f_long_press->touch_btn_id <=IMG_BTN_ID_3)    //触摸是否是按键图标
     {
         f_long_press->touch_flag = true;
 
@@ -455,9 +455,9 @@ static void func_long_press_button(void)
             case IMG_BTN_ID_2:
                 compo_shape_set_color(rect_cover,COLOR_WHITE);
                 break;
-            case IMG_BTN_ID_1:
-                compo_shape_set_color(rect_cover,make_color(0xff,0x39,0x10));
-                break;
+                // case IMG_BTN_ID_1:
+                //     compo_shape_set_color(rect_cover,make_color(0xff,0x39,0x10));
+                //     break;
         }
     }
 }

@@ -162,15 +162,15 @@ static void func_set_sub_about_message(size_msg_t msg)
         switch (msg)
         {
             case MSG_CTP_SHORT_DOWN:
-                func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_UD_ZOOM_DOWN | FUNC_SWITCH_AUTO);
+                uteTaskGuiStartScreen(FUNC_POWER_ON_SCAN, FUNC_SWITCH_UD_ZOOM_DOWN | FUNC_SWITCH_AUTO,__func__);
                 break;
             case KL_BACK:
-                func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+                uteTaskGuiStartScreen(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO,__func__);
                 break;
             case MSG_CTP_LONG:
                 if (!uteApplicationCommonIsHasConnectOurApp())
                 {
-                    func_switch_to(FUNC_TEST_MODE, 0); //未实现，暂时屏蔽
+                    uteTaskGuiStartScreen(FUNC_TEST_MODE, 0, __func__);
                 }
                 break;
         }
@@ -182,7 +182,7 @@ static void func_set_sub_about_message(size_msg_t msg)
             case MSG_CTP_LONG:
                 if (!uteApplicationCommonIsHasConnectOurApp())
                 {
-                    func_switch_to(FUNC_TEST_MODE, 0); //未实现，暂时屏蔽
+                    uteTaskGuiStartScreen(FUNC_TEST_MODE, 0, __func__);
                 }
                 break;
             default:

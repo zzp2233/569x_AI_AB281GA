@@ -22,6 +22,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_message.h"
 #include "ute_module_factoryTest.h"
+#include "ute_module_newFactoryTest.h"
 
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
@@ -206,6 +207,9 @@ void uteModuleHeartEverySecond(void)
         if(!uteModuleBloodoxygenIsTesting() &&
            (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
            && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+           && (uteModuleNewFactoryTestGetMode() == FACTORY_TEST_MODE_NULL)
+#endif
            && uteModuleHeartGetWorkMode() != WORK_MODE_HR
           )
         {

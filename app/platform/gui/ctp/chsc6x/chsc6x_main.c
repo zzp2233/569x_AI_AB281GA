@@ -2,6 +2,7 @@
 #include "chsc6x_comp.h"
 #include "chsc6x_platform.h"
 #include "ute_application_common.h"
+#include "ute_module_newFactoryTest.h"
 
 #if (CTP_SELECT == CTP_CHSC6X)
 
@@ -249,6 +250,10 @@ bool ctp_chsc6x_init(void)
             printf("chsc6x_tp_dect failed! i = %d \r\n", i);
         }
     }
+
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+    uteModuleNewFactoryTestSetTpVersion(fw_infos.chsc6x_cfg_version);
+#endif
 
     is_init = true;
     return true;

@@ -18,6 +18,7 @@
 #include "ute_module_sport.h"
 #include "ute_drv_battery_common.h"
 #include "ute_module_factoryTest.h"
+#include "ute_module_newFactoryTest.h"
 // #include "ute_drv_heart_vcxx_common.h"
 // #include "ute_module_emotionPressure.h"
 
@@ -172,6 +173,9 @@ void uteModuleBloodoxygenEverySecond(void)
             (!uteModuleSportMoreSportIsRuning()) &&
             (uteApplicationCommonGetSystemPowerOnSecond() > 5) &&
             (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE) &&
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+            (uteModuleNewFactoryTestGetMode() == FACTORY_TEST_MODE_NULL) &&
+#endif
             // (!uteModuleBreathrateIsTesting()) &&
             // (!uteModuleGetBreathTrainingStatus()) &&
             (!uteModuleHeartIsSingleTesting())

@@ -54,6 +54,7 @@ enum
     TO_APP_TASK_DISCONNECT_A2DP,
     TO_APP_TASK_PLAY_RING,
     TO_APP_TASK_STOP_RING,
+    MSG_TYPE_FACTORY_PLAY_SOUND_RECORDING,
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

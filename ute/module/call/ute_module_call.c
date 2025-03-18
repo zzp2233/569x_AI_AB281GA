@@ -624,7 +624,7 @@ void uteModuleCallBleConnectState(bool isConnected)
         }
     }
 #endif
-    if (isConnected && uteModuleCallBtIsPowerOn()) //回连ble时回连BT
+    if (isConnected && !bt_is_connected() && bt_get_status() == BT_STA_SCANNING) // 回连ble时回连BT
     {
         bt_connect();
     }

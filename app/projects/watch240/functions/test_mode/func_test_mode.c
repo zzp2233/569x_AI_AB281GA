@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_factorytest.h"
+#include "ute_module_newFactoryTest.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -94,8 +95,9 @@ static void func_test_mode_click(void)
             ret = msgbox("工厂测试", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             if(ret == MSGBOX_RES_OK)
             {
-                // func_switch_to(FUNC_FACTORY_TESTING, 0);///跳转工厂测试界面
-                func_switch_to(FUNC_TEST_MODE_LIST, 0);///跳转工厂测试界面
+
+                uteTaskGuiStartScreen(FUNC_FACTORY_TESTING,0,__func__);
+                // func_switch_to(FUNC_TEST_MODE_LIST, 0);///跳转工厂测试界面
             }
             break;
         case MODE_AGING_TESTING_ID:///老化测试
@@ -104,7 +106,8 @@ static void func_test_mode_click(void)
             if(ret == MSGBOX_RES_OK)
             {
                 uteModuleFactoryTestStartTestItem(TEST_ITEM_AGING,true);
-                func_cb.sta = FUNC_ONLINE_FACTORY_TEST;
+                // func_cb.sta = FUNC_ONLINE_FACTORY_TEST;
+                uteTaskGuiStartScreen(FUNC_ONLINE_FACTORY_TEST,0,__func__);
                 // func_switch_to(FUNC_AGEING, 0);///跳转老化测试界面
             }
             break;

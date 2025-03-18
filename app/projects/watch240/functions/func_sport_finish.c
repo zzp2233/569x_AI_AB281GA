@@ -34,7 +34,6 @@ typedef struct f_sport_finish_t_
     bool uint_km;
 } f_sport_finish_t;
 
-extern u8 sport_finish_mode;
 
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_finish_form_create(void)
@@ -50,11 +49,9 @@ compo_form_t *func_sport_finish_form_create(void)
     if (func_cb.sta == FUNC_SPORT_FINISH)
     {
         f_sport_finish_t *f_sport_finish = (f_sport_finish_t*)func_cb.f_cb;
-//        printf("sport = %d\n",f_sport_finish->sport_finish_state);
+
         ute_module_more_sports_data_t sport_data;
         uteModuleSportGetMoreSportsDatas(&sport_data);
-//        ute_module_systemtime_time_t time;
-//        uteModuleSystemtimeGetTime(&time);//获取系统时间
 
         if(uteModuleSystemtime12HOn())
         {
@@ -63,28 +60,21 @@ compo_form_t *func_sport_finish_form_create(void)
             {
                 sport_data.saveData.startSportTime.hour = 12;
             }
-//            sport_data.saveData.startSportTime.min  %=12;
         }
-//        sport_data.totalSportTime = 51564;
         char txt_buf[50];
         memset(txt_buf,0,sizeof(txt_buf));
-//        f_sport_finish->sport_finish_state = COMPO_WALK_STATE;
         switch(f_sport_finish->sport_finish_state)
         {
             case COMPO_WALK_STATE://户外跑步类别
             {
                 //运动类型图片
-//                compo_picturebox_t *picbox = compo_picturebox_create(frm, func_sport_get_ui(func_sport_get_current_idx()));
                 compo_picturebox_t *picbox = compo_picturebox_create(frm, icon_addr);
                 compo_picturebox_set_pos(picbox, 10+56/2, 12+56/2);
 
                 //运动类型名称
-//                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[func_sport_get_str(func_sport_get_current_idx())]));
                 compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[str_id]));
-//                compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_24_BIN);
                 compo_textbox_set_align_center(textbox, false);
                 compo_textbox_set_pos(textbox, 10, 5+73);
-//                compo_textbox_set(textbox, i18n[func_sport_get_str(func_sport_get_current_idx())]);
                 compo_textbox_set(textbox, i18n[str_id]);
 
                 //时间日期
@@ -402,6 +392,14 @@ compo_form_t *func_sport_finish_form_create(void)
     }
     return frm;
 }
+
+enum//对应运动中显示运动数据种类->不同项目可自行添加
+{
+    MULTIPLE_DATA=0,//多数据
+    MID_DATA,       //中数据
+    LESS_DATA,      //少数据
+};
+extern u32 func_sport_get_disp_mode(void);//对应运动中显示运动数据种类->不同项目可自行添加->用于运动中与运动结束
 static void func_sport_finish_init(void)
 {
     f_sport_finish_t *f_sport_finish = (f_sport_finish_t*)func_cb.f_cb;
@@ -412,17 +410,17 @@ static void func_sport_finish_init(void)
     }
 
     int page_length=0;
-    switch(sport_finish_mode)
+    switch(func_sport_get_disp_mode())
     {
-        case 0:
+        case MULTIPLE_DATA:
             f_sport_finish->sport_finish_state = COMPO_WALK_STATE;
             page_length = 524;
             break;
-        case 1:
+        case MID_DATA:
             f_sport_finish->sport_finish_state = COMPO_SWIMING_STATE;
             page_length = 524-24*2;
             break;
-        case 2:
+        case LESS_DATA:
             f_sport_finish->sport_finish_state = COMPO_OTHER_STATE;
             page_length = 524-24*4;
             break;

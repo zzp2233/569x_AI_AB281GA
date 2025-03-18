@@ -25,7 +25,7 @@ def get_ute_version(filename):
     else:
         print("version is null")
     return ute_version
-    
+
 def charToNumber(s):
     s = s[::-1]
     num = 0
@@ -65,14 +65,14 @@ def get_ute_custom_patch(filename):
     except Exception as e:
         print(f"Error: An error occurred while reading the file {filename}: {e}")
         return ""
-    
+
     pattern = r'#define\s+UTE_UI_CONFIG_PATCH\s+"([^"]+)"'
     try:
         match = re.search(pattern, content)
     except re.error as e:
         print(f"Error: A regex error occurred: {e}")
         return ""
-    
+
     if match:
         print("UTE_UI_CONFIG_PATCH macro found:", match.group(1))
         return match.group(1)
@@ -90,7 +90,7 @@ def main(argv):
     index = current_dir.find('app')
     if (index==-1):
         panic("path is error")
-    else:    
+    else:
         config_file = current_dir[0:index]+"ute\\project_config\\ute_project_config.h"
         print('config_file:',config_file)
     project_name = get_ute_project(config_file)
@@ -104,7 +104,7 @@ def main(argv):
             project_dir = current_dir[0:index]+"ute\\ui_config_patch\\default"
 
     print('project_dir:',project_dir)
-    
+
     if os.path.exists("Output\\bin\\res\\"):
        os.system('rmdir /s /q Output\\bin\\res\\')
     if os.path.exists("Output\\bin\\Settings\\"):
@@ -119,7 +119,7 @@ def main(argv):
     # language
     language_dir = os.path.join(project_dir, 'defaultLanguage')
     target_language_dir = project_dir = current_dir[0:index]+"ute\\language\\defaultLanguage"
-    
+
     # 检查源目录是否存在
     if os.path.exists(language_dir):
         # 如果目标目录存在，先删除
@@ -133,7 +133,7 @@ def main(argv):
 
     #git copy
     git_copy_file = current_dir[0:index]+"ute\\tool\\AStyle\\pre-commit"
-    git_copy_cmd = "copy /y "+git_copy_file+" ..\\..\\..\\.git\hooks"
+    git_copy_cmd = r"copy /y " + git_copy_file + r" ..\..\..\.git\hooks"
     print('git_copy_cmd:',git_copy_cmd)
     os.system(git_copy_cmd)
 

@@ -27,20 +27,14 @@
 #define MIC_TEST_VOL        (VOL_MAX / 2)
 #define MIC_BUF_IS_FULL     mic_cb.rec_buf_full
 
-//micÊý¾Ý»º³åÇø
-typedef struct {
-    u8 rec_buf[MIC_TEST_BUF_SIZE];
-    u32 rec_datalen;
-    bool rec_buf_full;
-    volatile u32 samples;
-    volatile int ch_mode;
-} mic_testbuf_t;
-
 AT(.mic_test_buf)
 mic_testbuf_t mic_cb;
 
 AT(.com_text.str)
 char mic_test_str[] = "data full!!!\n";
+
+static bool isPlaying = false;
+static bool isRecording = false;
 
 AT(.com_text.func.mic_test)
 bool put_mic_obuf(u8 *ptr, u32 samples, int ch_mode)
@@ -48,7 +42,8 @@ bool put_mic_obuf(u8 *ptr, u32 samples, int ch_mode)
     mic_cb.samples = samples;
     mic_cb.ch_mode = ch_mode;
 
-    if (mic_cb.rec_datalen > MIC_TEST_BUF_SIZE - samples * 2) {
+    if (mic_cb.rec_datalen > MIC_TEST_BUF_SIZE - samples * 2)
+    {
         TRACE(mic_test_str);
         return true;
     }
@@ -61,8 +56,10 @@ bool put_mic_obuf(u8 *ptr, u32 samples, int ch_mode)
 AT(.com_text.func.mic_test)
 void mic_test_sdadc_process(u8 *ptr, u32 samples, int ch_mode)
 {
-    if (mic_cb.rec_buf_full == false && put_mic_obuf(ptr, samples, ch_mode)) {
+    if (mic_cb.rec_buf_full == false && put_mic_obuf(ptr, samples, ch_mode))
+    {
         mic_cb.rec_buf_full = true;
+        isRecording = false;
     }
 }
 
@@ -95,15 +92,19 @@ void mic_test_outp(void)
     bool mute_bkp;
     bsp_change_volume(MIC_TEST_VOL);
     mute_bkp = bsp_get_mute_sta();
-    if (mute_bkp) {
+    if (mute_bkp)
+    {
         bsp_sys_unmute();
-    } else {
+    }
+    else
+    {
         dac_fade_in();
     }
     dac_spr_set(SPR_16000);
 
 //    u32 tick = tick_get();
-    for (int i = 0; i < mic_cb.rec_datalen; i += 2) { //×èÈû²¥·Å
+    for (int i = 0; i < mic_cb.rec_datalen; i += 2)   //×èÈû²¥·Å
+    {
         s16 *ptr16 = (s16 *)&mic_cb.rec_buf[i];
         obuf_put_one_sample(*ptr16, *ptr16);
     }
@@ -113,7 +114,8 @@ void mic_test_outp(void)
     dac_fade_wait();
 
     bsp_change_volume(sys_cb.vol);
-    if (mute_bkp) {
+    if (mute_bkp)
+    {
         bsp_sys_mute();
     }
 }
@@ -155,6 +157,7 @@ void uteModuleMicRecordFactoryExit(void)
 void uteModuleMicRecordFactoryStart(void)
 {
     UTE_MODULE_LOG(UTE_LOG_MICRECORD_LVL,"%s",__func__);
+    isRecording = true;
     mic_test_start();
 }
 
@@ -166,5 +169,22 @@ bool uteModuleMicRecordFactoryIsHaveData(void)
 void uteModuleMicRecordFactoryPlay(void)
 {
     UTE_MODULE_LOG(UTE_LOG_MICRECORD_LVL,"%s",__func__);
+    isPlaying = true;
     mic_test_outp();
+    isPlaying = false;
+}
+
+mic_testbuf_t *uteModuleMicRecordFactoryGetMicBuf(void)
+{
+    return &mic_cb;
+}
+
+bool uteModuleMicRecordFactoryIsPlaying(void)
+{
+    return isPlaying;
+}
+
+bool uteModuleMicRecordFactoryIsRecording(void)
+{
+    return isRecording;
 }

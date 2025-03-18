@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_newFactoryTest.h"
 
 #define TRACE_EN                1
 
@@ -255,6 +256,9 @@ bool ctp_cst8x_init(void)
     {
         return false;
     }
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+    uteModuleNewFactoryTestSetTpVersion(info[2]);
+#endif
     return true;
 }
 

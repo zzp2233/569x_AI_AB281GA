@@ -847,6 +847,14 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
         {
             if(uteApplicationCommonIsStartupFinish())
             {
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+                if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID||
+                   uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID||
+                   uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID)
+                {
+                    return;
+                }
+#endif
                 uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             }

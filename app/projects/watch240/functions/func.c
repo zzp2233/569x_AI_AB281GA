@@ -1428,7 +1428,6 @@ void func_message(size_msg_t msg)
             break;
 
         case KU_BACK:
-        case KU_DELAY_BACK:
             if (func_cb.flag_sort)
             {
                 func_switch_to_clock();                     //切换回主时钟

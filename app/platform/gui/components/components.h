@@ -87,6 +87,7 @@ enum COMPO_BOND_DATA
     // COMPO_BOND_DISTANCE_UNIT,           //距离单位
     COMPO_BOND_BATTERY = 75,            //电池
     COMPO_BOND_DISTANCE,                //距离
+    COMPO_BOND_SMOKEPOWER =78,                //抽烟功率
     COMPO_BOND_SMOKECOUNT =80,                //抽烟口数
     COMPO_BOND_HOURMIN_TXT = 120,
 };

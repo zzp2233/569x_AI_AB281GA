@@ -238,7 +238,6 @@ typedef struct
     u16 smoke_time;                                 //吸烟时长
     u8 smoke_oil;                                   //烟油
     u8 smoke_index;                                 //吸烟类型
-    u32 smoking_count;                              //抽烟口数
 #endif
 
 } sys_cb_t;

@@ -138,26 +138,33 @@ static void func_disturd_sub_time_init(void)
     if(sys_cb.disturd_sel)
     {
         f_disturd_set->hour = sys_cb.disturd_end_time_sec/3600;
-        f_disturd_set->min = sys_cb.disturd_end_time_sec%3600/36;
+        f_disturd_set->min = sys_cb.disturd_end_time_sec%3600/60;
 
     }
     else
     {
         f_disturd_set->hour = sys_cb.disturd_start_time_sec/3600;
-        f_disturd_set->min = sys_cb.disturd_start_time_sec%3600/36;
+        f_disturd_set->min = sys_cb.disturd_start_time_sec%3600/60;
     }
 
-    if(f_disturd_set->time_scale)//12小时制
+    if (f_disturd_set->time_scale)
     {
-        if(f_disturd_set->hour && f_disturd_set->hour<=12)
+        if (f_disturd_set->hour >= 12)
         {
-            f_disturd_set->am_pm_flag = true;
+            f_disturd_set->am_pm_flag = false;
+            if (f_disturd_set->hour > 12)
+            {
+                f_disturd_set->hour -= 12;
+            }
         }
         else
         {
-            f_disturd_set->am_pm_flag = false;
+            f_disturd_set->am_pm_flag = true;
+            if (f_disturd_set->hour == 0)
+            {
+                f_disturd_set->hour = 12;
+            }
         }
-        f_disturd_set->hour %=12;
     }
     else
     {
@@ -170,7 +177,8 @@ static void func_disturd_sub_time_init(void)
     {
         func_disturd_sub_set_refresh();
     }
-    printf("hour1:%d\n",sys_cb.disturd_start_time_sec);
+    printf("sys_cb.disturd_start_time_sec:%d\n hour:%d\n",sys_cb.disturd_start_time_sec,f_disturd_set->hour);
+    printf("am_pm_flag: %d, hour: %d\n", f_disturd_set->am_pm_flag, f_disturd_set->hour);
 }
 /*函数功能：设置勿扰时间*/
 static void func_disturd_sub_set_time(void)
@@ -182,13 +190,13 @@ static void func_disturd_sub_set_time(void)
 
     if(f_disturd_set->time_scale)
     {
-        if(f_disturd_set->am_pm_flag)
+        if (!f_disturd_set->am_pm_flag && hour != 12)
         {
-            if(hour==0)hour=12;
+            hour += 12;
         }
-        else
+        else if (f_disturd_set->am_pm_flag && hour == 12)
         {
-            if(hour!=0)hour+=12;
+            hour = 0;
         }
     }
 

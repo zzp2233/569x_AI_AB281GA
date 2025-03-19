@@ -134,6 +134,10 @@ static u8 func_ecig_set_power_get_cal(s8 num, bool hour_en, u8 mode)     //mode 
             {
                 return 30;
             }
+            if (num < 20)
+            {
+                return 20;
+            }
         }
 
         return num;
@@ -522,7 +526,12 @@ static void func_ecig_set_power_move_handle(u8 id)
         {
             f_ecig_set_power->pcnt = 0;
             power = func_ecig_set_power_get_cal(power_disp, 1, 0);
+            if (get_gear_func()==1)
+            {
+                //power = power/2;
+                power = power;
 
+            }
             ecig_set_power(power);
 
             printf("ecig_get_power() %d \n", ecig_get_power());

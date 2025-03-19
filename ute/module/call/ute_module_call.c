@@ -289,10 +289,24 @@ void uteModuleCallEverySecond(void)
         uteModuleCallData.powerOnTimeSecond++;
         if(isHfpAndA2dpProfileBothConnected())
         {
-            uteModuleCallData.powerOnTimeSecond =0;
+            uteModuleCallData.powerOnTimeSecond = 0;
+            uint disp_status = bsp_bt_disp_status();
+            if(disp_status == BT_STA_INCALL)
+            {
+                uteModuleCallData.callData.callingTimeSecond ++;
+            }
         }
         else
         {
+            if (uteModuleCallData.isBleLinkBackFlag) // 回连ble时回连BT
+            {
+                uteModuleCallData.isBleLinkBackFlag = false;
+                if(!bt_is_connected() && bt_get_curr_scan() == BT_STA_SCANNING)
+                {
+                    printf("%s,ble link back,bt connect\r\n", __func__);
+                    bt_connect();
+                }
+            }
             UTE_MODULE_LOG(UTE_LOG_BT_AUDIO_LVL, "%s,.powerOnTimeSecond = %d", __func__, uteModuleCallData.powerOnTimeSecond);
         }
 
@@ -623,7 +637,7 @@ void uteModuleCallBleConnectState(bool isConnected)
 #endif
     if (isConnected && !bt_is_connected() && bt_get_curr_scan() == BT_STA_SCANNING) // 回连ble时回连BT
     {
-        bt_connect();
+        uteModuleCallData.isBleLinkBackFlag = true;
     }
 }
 
@@ -1159,16 +1173,27 @@ void uteModuleCallSetBeforeCallStatus(uint8_t status)
 }
 
 /**
- * @brief        更新通话时长
+ * @brief        重置通话计时
  * @details
- * @param[in]    second 通话秒数.
  * @return       void*
  * @author       Wang.Luo
- * @date         2024-11-14
+ * @date         2025-03-19
  */
-void uteModuleCallUpdateCallingTimeSecond(uint32_t second)
+void uteModuleCallResetCallingTimeSecond(void)
 {
-    uteModuleCallData.callData.callingTimeSecond = second;
+    uteModuleCallData.callData.callingTimeSecond = 0;
+}
+
+/**
+ * @brief        获取当前通话时间
+ * @details
+ * @return       当前通话时间 秒数
+ * @author       Wang.Luo
+ * @date         2025-03-19
+ */
+uint32_t uteModuleCallGetCallingTimeSecond(void)
+{
+    return uteModuleCallData.callData.callingTimeSecond;
 }
 
 /**
@@ -1208,6 +1233,8 @@ void uteModuleCallUpdateRecordsData(void)
     {
         goto CALL_UPDATE_END;
     }
+    printf("===>%s,callType=%d\n", __func__, tempData.callType);
+    uteModuleCallData.callData.beforeCallStatus = CALL_INVALID;
 #endif
     if(uteModuleCallData.callData.numberSize!=0)
     {

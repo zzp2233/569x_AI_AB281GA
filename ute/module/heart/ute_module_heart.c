@@ -814,9 +814,18 @@ void uteModuleHeartMinMaxWarningValueProcess(void)
         needRemind = true;
     }
 
-    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, ".warning.isOpen = %d, isAutoTestFlag = %d, heart = %d, needRemind = %d", uteModuleHeartData.warning.isOpen, uteModuleHeartData.isAutoTestFlag, heart, needRemind);
+    bool autoTestFlag = false;
+    if(uteModuleHeartData.isAutoTestFlag)
+    {
+        if (uteModuleHeartData.autoTestSecond >= (UTE_MODULE_HEART_AUTO_TEST_TIMEOUT_SECOND - 10))
+        {
+            autoTestFlag = true;
+        }
+    }
 
-    if (uteModuleHeartIsWear() && (heart > 0) && uteModuleHeartData.warning.isOpen && (heart != 255) && (uteModuleHeartData.isAutoTestFlag || uteModuleSportMoreSportGetStatus() != ALL_SPORT_STATUS_CLOSE))
+    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, ".warning.isOpen = %d, isAutoTestFlag = %d, heart = %d, needRemind = %d", uteModuleHeartData.warning.isOpen, autoTestFlag, heart, needRemind);
+
+    if (uteModuleHeartIsWear() && (heart > 0) && uteModuleHeartData.warning.isOpen && (heart != 255) && (autoTestFlag || uteModuleSportMoreSportIsRuning()))
     {
         if ((heart < uteModuleHeartData.warning.setMinHeart) || (heart > uteModuleHeartData.warning.setMaxHeart))
         {

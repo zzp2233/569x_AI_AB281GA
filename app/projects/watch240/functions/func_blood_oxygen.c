@@ -379,7 +379,6 @@ static void func_blood_oxygen_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
-            msgbox((char *)i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
             func_blood_oxygen_button_click();
             break;
 

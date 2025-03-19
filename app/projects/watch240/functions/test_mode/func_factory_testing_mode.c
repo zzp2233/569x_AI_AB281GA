@@ -16,6 +16,7 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
 #define SIDEBAR_PAGE_HEIGHT GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3    ///长图总高度
 #define MODE_ONE_SPACING_Y          GUI_SCREEN_HEIGHT/11
 #define MODE_ONE_INTIAL_SPACING_Y   GUI_SCREEN_CENTER_Y/10
@@ -1778,3 +1779,14 @@ void func_factory_testing(void)
     }
     func_factory_testing_exit();
 }
+#else
+func_factory_testing(void)
+{
+
+}
+///创建工厂测试窗体
+compo_form_t *func_factory_testing_create(void)
+{
+
+}
+#endif

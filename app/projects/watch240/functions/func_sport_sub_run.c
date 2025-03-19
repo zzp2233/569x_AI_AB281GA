@@ -235,7 +235,14 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_pos(txt, 45,123+38*3);
     compo_textbox_set_align_center(txt,false);
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf, sizeof(txt_buf), "%d",data->saveData.avgHeartRate);
+    if(data->saveData.avgHeartRate!=0 && data->saveData.avgHeartRate!=255)
+    {
+        snprintf(txt_buf, sizeof(txt_buf), "%d",data->saveData.avgHeartRate);
+    }
+    else
+    {
+        snprintf(txt_buf, sizeof(txt_buf), "--");
+    }
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_HEARTRATE);
 
@@ -420,8 +427,14 @@ static void func_sport_sub_run_updata(void)
         if(txt_heart != NULL && uint_heart != NULL)
         {
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.avgHeartRate);
-            compo_textbox_set(txt_heart, txt_buf);
+            if(data->saveData.avgHeartRate!=0 && data->saveData.avgHeartRate!=255)
+            {
+                snprintf(txt_buf, sizeof(txt_buf), "%d",data->saveData.avgHeartRate);
+            }
+            else
+            {
+                snprintf(txt_buf, sizeof(txt_buf), "--");
+            }
 
             txt_wid = widget_text_get_area(txt_heart->txt);
             compo_textbox_set_pos(uint_heart,txt_wid.wid+50,131+38*3);
@@ -627,22 +640,25 @@ static void func_sport_sub_run_click_handler(void)
     int id = compo_get_button_id();
     switch (id)
     {
+
         case COMPO_ID_BTN_SPORT_STOP:
             f_sport_sub_run->page_num = PAGE_1;
             f_sport_sub_run->page_old_y = 0;
             f_sport_sub_run->move_offset = 0;
+
             widget_page_set_client(func_cb.frm_main->page_body,f_sport_sub_run->move_offset, 0);
 
-            if(f_sport_sub_run->sport_run_state == SPORT_RUN_START)
-            {
-                uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
-                f_sport_sub_run->sport_run_state = SPORT_RUN_STOP;
-            }
-            else if(f_sport_sub_run->sport_run_state == SPORT_RUN_STOP)
-            {
-                f_sport_sub_run->sport_run_state = SPORT_RUN_START;
-                uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
-            }
+            // if(f_sport_sub_run->sport_run_state == SPORT_RUN_START)
+            // {
+            //     uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
+            //     f_sport_sub_run->sport_run_state = SPORT_RUN_STOP;
+            // }
+            // else if(f_sport_sub_run->sport_run_state == SPORT_RUN_STOP)
+            // {
+            f_sport_sub_run->sport_run_state = SPORT_RUN_START;
+            uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
+            // }
+            //  printf("sport_xx:%d\n",f_sport_sub_run->sport_run_state);
             break;
         case COMPO_ID_BTN_SPORT_EXIT:
         {
@@ -652,16 +668,20 @@ static void func_sport_sub_run_click_handler(void)
             if (sport_flag)
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_SPORT);
+                if (res == MSGBOX_RES_OK)
+                {
+                    uteModuleSportStopMoreSports();                             //通知APP退出运动
+                }
             }
             else
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG1], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE);
+                if (res == MSGBOX_RES_OK)
+                {
+                    func_cb.sta = FUNC_SPORT_FINISH;
+                }
             }
 
-            if (res == MSGBOX_RES_OK)
-            {
-                uteModuleSportStopMoreSports();                             //通知APP退出运动
-            }
         }
     }
 }

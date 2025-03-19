@@ -15,6 +15,7 @@
 enum
 {
     COMPO_ID_TEXT_UINT=1,
+    COMPO_ID_TEXT_HEART_VALUE,
 };
 
 typedef struct f_heart_warning_t_
@@ -38,6 +39,7 @@ compo_form_t *func_heart_warning_form_create(void)
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
     compo_textbox_set_pos(textbox,44+88/2,85+72/2);
     compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,COMPO_ID_TEXT_HEART_VALUE);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
     compo_textbox_set_align_center(textbox,false);
@@ -65,14 +67,20 @@ compo_form_t *func_heart_warning_form_create(void)
 
 static void func_heart_warning_updata(void)
 {
-    compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_UINT);
-    if(uteModuleHeartGetHeartValue() > uteModuleHeartGetMaxHeartValue())
+    compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_HEART_VALUE);
+    char txt_buf[50];
+    memset(txt_buf, 0, sizeof(txt_buf));
+    snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
+    compo_textbox_set(textbox, txt_buf);
+
+    textbox = compo_getobj_byid(COMPO_ID_TEXT_UINT);
+    if (uteModuleHeartGetHeartValue() > uteModuleHeartGetMaxHeartValue())
     {
-        compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
+        compo_textbox_set(textbox, i18n[STR_HEART_HIGHT]);
     }
     else if (uteModuleHeartGetHeartValue() > uteModuleHeartGetMinHeartValue())
     {
-        compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
+        compo_textbox_set(textbox, i18n[STR_HEART_LOW]);
     }
     else
     {

@@ -459,7 +459,7 @@ typedef struct f_sport_finish_t_
 
 } f_sport_finish_t;
 
-extern u8 sport_finish_mode;
+u8 sport_finish_mode;
 extern u32 func_sport_get_current_idx(void);
 extern u32 func_sport_get_str(u8 sport_idx);
 extern u32 func_sport_get_ui(u8 sport_idx);

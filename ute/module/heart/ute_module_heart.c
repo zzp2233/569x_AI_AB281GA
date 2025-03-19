@@ -183,6 +183,8 @@ void uteModuleHeartEverySecond(void)
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,uteModuleHeartData.heartValue=%d", __func__,uteModuleHeartData.heartValue);
     }
 
+    // tlsf_walk_pool(tlsf_get_pool(sys_tlsf), NULL, NULL); //内存池信息打印
+
     /*! 每秒发一次心率值发给app端 zn.zeng, 2021-07-15   */
     uint8_t heartData[4] = {CMD_HEART_TEST,0x11,0,0};
     heartData[0] = CMD_HEART_TEST;
@@ -1372,30 +1374,30 @@ bool uteModuleHeartGetTodayHistoryData(uint8_t *heartHistoryGraph, uint8_t heart
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s", __func__);
     void *file;
     uint8_t path[40];
-    uint8_t *heartHistoryData = (uint8_t *)uteModulePlatformMemoryAlloc(144); //一天24h的数据，十分钟一条，一共144条
+    bool result = false;
+    uint8_t *heartHistoryData = (uint8_t *)uteModulePlatformMemoryAlloc(144); // 一天24h的数据，十分钟一条，一共144条
     ute_module_systemtime_time_t time;
     memset(heartHistoryData, 0, 144);
-    memset(heartHistoryGraph,0, heartHistoryGraphCount);
+    memset(heartHistoryGraph, 0, heartHistoryGraphCount);
     uteModuleSystemtimeGetTime(&time);
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_HEART_AUTO_DATA_DIR, time.year, time.month, time.day);
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,read file=%s", __func__, &path[0]);
     if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
     {
-        uteModuleFilesystemSeek(file,4,FS_SEEK_SET);
+        uteModuleFilesystemSeek(file, 4, FS_SEEK_SET);
         uteModuleFilesystemReadData(file, heartHistoryData, 144);
         uteModuleFilesystemCloseFile(file);
         uteModuleHeartLoadTodayHistoryData(heartHistoryGraph, heartHistoryGraphCount, heartHistoryData, 144);
-        uteModulePlatformMemoryFree(heartHistoryData);
-        return true;
+        result = true;
     }
     else
     {
 #if UTE_LOG_GUI_LVL // test
         uteModuleHeartLoadTodayHistoryData(heartHistoryGraph, heartHistoryGraphCount, heartHistoryData, 144);
-        uteModulePlatformMemoryFree(heartHistoryData);
 #endif
-        return false;
     }
+    uteModulePlatformMemoryFree(heartHistoryData);
+    return result;
 }
 
 #if UTE_SPORTS_HEART_MAX_MIN_WARNING_NOTIFY_SUPPORT

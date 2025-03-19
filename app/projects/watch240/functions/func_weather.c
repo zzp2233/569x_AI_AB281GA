@@ -57,7 +57,7 @@ static const f_weather_t weather_list[] =
 };
 
 static int16_t page_y = 0;
-
+bool weather_nodata_flag= true;
 static void weather_refresh(void)
 {
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
@@ -74,11 +74,12 @@ static void weather_refresh(void)
         }
     }
 
-    if(displayInfo.isFahrenheit != f_weather->isFahrenheit_flag || weather_flag == true)    //是否为华氏度
+    if(!weather_nodata_flag &&(displayInfo.isFahrenheit != f_weather->isFahrenheit_flag || weather_flag == true))    //是否为华氏度
     {
         f_weather->isFahrenheit_flag = displayInfo.isFahrenheit;
         msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
     }
+    printf("1111weather_nodata_flag =%d\n",weather_nodata_flag);
 }
 
 static void weather_data_Init(void)
@@ -167,6 +168,7 @@ compo_form_t *func_weather_form_create(void)
             if(weather_date.DayWeather[i] != WEATHER_TYPE_UNKNOWN)
             {
                 weather_no_data_flag = false;
+                weather_nodata_flag = false;
                 break;
             }
         }
@@ -221,6 +223,7 @@ compo_form_t *func_weather_form_create(void)
 
     if(weather_no_data_flag)
     {
+        printf("222222weather_nodata_flag =%d\n",weather_nodata_flag);
         if(func_cb.sta == FUNC_WEATHER)
         {
             f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;

@@ -2,7 +2,7 @@
 
 #if ECIG_POWER_CONTROL
 
-static ecig_cfg_t ecig_cfg;
+ecig_cfg_t ecig_cfg;
 
 void bsp_ecig_init(void)
 {
@@ -68,12 +68,12 @@ u32 ecig_vbat_get(void)
 
 void ecig_set_power(u8 value)
 {
-    ecig_cfg.aim_power = value-2;
+    ecig_cfg.aim_power = value - 2;
 }
 
 u8 ecig_get_power(void)
 {
-    return ecig_cfg.aim_power+2;
+    return ecig_cfg.aim_power +2 ;
 }
 AT(.com_text.isr)
 void ecig_set_res(u8 value)

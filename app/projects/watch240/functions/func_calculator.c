@@ -328,11 +328,11 @@ static void func_calculator_button_click_handler(void)
 //计算器功能事件处理
 static void func_calculator_process(void)
 {
-    if (sys_cb.gui_sleep_sta)
-    {
-        sys_cb.gui_need_wakeup = 1;
-    }
-    reset_sleep_delay_all();
+    // if (sys_cb.gui_sleep_sta)
+    // {
+    //     sys_cb.gui_need_wakeup = 1;
+    // }
+    // reset_sleep_delay_all();
     func_process();
 }
 

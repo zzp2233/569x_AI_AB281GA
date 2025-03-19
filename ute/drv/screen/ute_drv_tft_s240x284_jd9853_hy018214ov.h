@@ -1,13 +1,13 @@
-#ifndef _UTE_DRV_TFT_S240X284_NV3030B_HY018214_H_
-#define _UTE_DRV_TFT_S240X284_NV3030B_HY018214_H_
+#ifndef _UTE_DRV_TFT_S240X284_JD9853_HY018214OV_H_
+#define _UTE_DRV_TFT_S240X284_JD9853_HY018214OV_H_
 
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "ute_drv_screen_common.h"
 
-#if UTE_DRV_TFT_S240X284_NV3030B_HY018214_QSPI_SUPPORT
+#if UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT 
 
-__STATIC_INLINE void drvScreenTft240X284Nv3030BHy018214PowerOn(void)
+__STATIC_INLINE void drvScreenTft240X284Jd9853Hy018214OvPowerOn(void)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11,NULL,0);
     uteModulePlatformDelayMs(120);
@@ -15,7 +15,7 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy018214PowerOn(void)
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
-__STATIC_INLINE void drvScreenTft240X284Nv3030BHy018214PowerOff(void)
+__STATIC_INLINE void drvScreenTft240X284Jd9853Hy018214OvPowerOff(void)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x28,NULL,0);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x10,NULL,0);
@@ -24,7 +24,7 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy018214PowerOff(void)
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
-__STATIC_INLINE void drvScreenTft240X284Nv3030BHy018214SetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
+__STATIC_INLINE void drvScreenTft240X284Jd9853Hy018214OvSetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
 {
     yStart += 0;
     yEnd += 0;
@@ -43,20 +43,11 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy018214SetWindow(uint16_t xStart
     uteModulePlatformOutputGpioSet(UTE_DRV_SCREEN_CS_GPIO_PIN,false);
 }
 
-__STATIC_INLINE void drvScreenTft240X284Nv3030BHy018214Init(void)
+__STATIC_INLINE void drvScreenTft240X284Jd9853Hy018214OvInit(void)
 {
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
     uint8_t tmp[34];
 
-    uteDrvScreenCommonSetPowerEnable(true);
-    uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(1000);
-    uteDrvScreenCommonSetResetPin(false);
-    uteModulePlatformDelayUs(5000);
-    uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(120000);
-
-    uteModulePlatformDelayMs(10);
     memcpy(&tmp[0], "\x98\x53", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDF, &tmp[0], 2);
 
@@ -152,21 +143,15 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy018214Init(void)
 
     memcpy(&tmp[0], "\x00\x00\x01\x1B", 4);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2B, &tmp[0], 4);
-
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11, NULL, 0);
-    uteModulePlatformDelayMs(120);
-
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29, NULL, 0);
-    uteModulePlatformDelayMs(10);
 }
 
-const ute_drv_screen_common_config_t uteDrvScreenTft240X284Nv3030BHy018214Config =
+const ute_drv_screen_common_config_t uteDrvScreenTft240X284Jd9853Hy018214OvConfig =
 {
-    .name = "Tft240X284Nv3030BHy018214Qspi",
-    .init = drvScreenTft240X284Nv3030BHy018214Init,
-    .powerOn = drvScreenTft240X284Nv3030BHy018214PowerOn,
-    .powerOff = drvScreenTft240X284Nv3030BHy018214PowerOff,
-    .setWindow = drvScreenTft240X284Nv3030BHy018214SetWindow,
+    .name = "Tft240X284Jd9853Hy018214OvQspi",
+    .init = drvScreenTft240X284Jd9853Hy018214OvInit,
+    .powerOn = drvScreenTft240X284Jd9853Hy018214OvPowerOn,
+    .powerOff = drvScreenTft240X284Jd9853Hy018214OvPowerOff,
+    .setWindow = drvScreenTft240X284Jd9853Hy018214OvSetWindow,
     .setBackLight = NULL,
 };
 

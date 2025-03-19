@@ -188,8 +188,7 @@ void bt_pbap_report_card_result(const char *name)
     memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
     snprintf(sys_cb.pbap_result_Name, sizeof(sys_cb.pbap_result_Name),"%s",name);///* 获取名字*/
 
-    uteModuleCallSetContactsNumberAndName((uint8_t*)hfp_get_last_call_number(0), strlen(hfp_get_last_call_number(0)), (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
-
+    uteModuleCallSetContactsNumberAndName(NULL, 0, (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
 
 }
 

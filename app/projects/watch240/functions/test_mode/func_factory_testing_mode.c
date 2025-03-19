@@ -22,6 +22,8 @@
 #define PURPLE_COLOR                make_color(0x66,0x33,0xcc)
 #define RESULT_Y                    GUI_SCREEN_HEIGHT/10
 
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+
 static ute_new_factory_test_data_t *test_data;
 
 compo_form_t * func_factory_testing_drv_info(void);
@@ -1778,3 +1780,4 @@ void func_factory_testing(void)
     }
     func_factory_testing_exit();
 }
+#endif

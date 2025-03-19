@@ -164,13 +164,13 @@ compo_form_t *func_message_form_create(void)
         widget_text_set_wordwrap(cardbox->text[1], true);
         widget_text_set_ellipsis(cardbox->text[1], true);
     }
-    printf("create->year:%d mon:%d day:%d hour:%d min:%d\n",
-           ute_msg->historyNotify[0].year,
-           ute_msg->historyNotify[0].month,
-           ute_msg->historyNotify[0].day,
-           ute_msg->historyNotify[0].hour,
-           ute_msg->historyNotify[0].min
-          );
+    // printf("create->year:%d mon:%d day:%d hour:%d min:%d\n",
+    //        ute_msg->historyNotify[0].year,
+    //        ute_msg->historyNotify[0].month,
+    //        ute_msg->historyNotify[0].day,
+    //        ute_msg->historyNotify[0].hour,
+    //        ute_msg->historyNotify[0].min
+    //       );
     //创建按钮
     compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_RECTANGLE00_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,105+(133*msg_num));

@@ -32,8 +32,8 @@ def execute_downloader(downloader_path, app_dcf_path, watch_setting_path, key_fi
         app_dcf_path,
         "-s",
         watch_setting_path,
-        "-k",
-        key_file
+        # "-k",
+        # key_file
     ]
     try:
         subprocess.check_call(cmd, cwd=os.path.dirname(downloader_path))

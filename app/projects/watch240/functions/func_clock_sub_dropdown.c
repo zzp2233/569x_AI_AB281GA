@@ -73,7 +73,7 @@ typedef struct dropdown_disp_btn_item_t_
 static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 {
     ///*第一页*/
-    {UI_BUF_I330001_SLIDEMENU_ICON_CALL00_BIN,          COMPO_ID_BTN_CONNECT,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  31},///蓝牙连接开关
+    {UI_BUF_I330001_SLIDEMENU_ICON_BT_CLOSE1_BIN,          COMPO_ID_BTN_CONNECT,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  31},///蓝牙连接开关
     {UI_BUF_I330001_SLIDEMENU_ICON_THEME03_BIN,         COMPO_ID_BTN_MENU,             GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  31},///菜单
     {UI_BUF_I330001_SLIDEMENU_ICON_SHOUDIAN00_BIN,      COMPO_ID_BTN_FLASHLIGHT,       GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  62+31+4},///手电筒
     {UI_BUF_I330001_SLIDEMENU_ICON_SETTINGS_BIN,        COMPO_ID_BTN_SETTING,            GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  62+31+4},//设置
@@ -176,12 +176,12 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
     printf("bt_get_scan: 0x%x,bt_get_status:%d\n", bt_get_scan(),bt_get_status());
     if(uteModuleCallBtIsPowerOn())
     {
-        compo_button_set_bgimg(bluetooth_pic, UI_BUF_I330001_SLIDEMENU_ICON_CALL01_BIN);
+        compo_button_set_bgimg(bluetooth_pic, UI_BUF_I330001_SLIDEMENU_ICON_BT_OPEN1_BIN);
         // compo_picturebox_set_visible(bluetooth, true);
     }
     else
     {
-        compo_button_set_bgimg(bluetooth_pic,UI_BUF_I330001_SLIDEMENU_ICON_CALL00_BIN );
+        compo_button_set_bgimg(bluetooth_pic,UI_BUF_I330001_SLIDEMENU_ICON_BT_CLOSE1_BIN );
         // compo_picturebox_set_visible(bluetooth, false);
 
     }

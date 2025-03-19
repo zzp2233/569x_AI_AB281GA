@@ -522,7 +522,7 @@
 
 #define ET_UI_PROJ_NAME                 "C0XX"
 #define ET_UI_VERSION                   "20240909132800"
-#define ET_MODE_LANG_CHOICE             ET_LANG_CHINESE  //选择当前模型语言
+#define ET_MODE_LANG_CHOICE             ET_LANG_ENGLISH  //选择当前模型语言
 
 /************ 友杰分贝VAD唤醒参数配置控制 **************************************/
 #define ET_ASR_VAD_EN  0   //是否打开分贝Vad

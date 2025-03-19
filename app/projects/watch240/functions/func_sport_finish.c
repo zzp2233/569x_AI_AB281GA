@@ -33,6 +33,8 @@ typedef struct f_sport_finish_t_
     u8 sport_finish_state;
     bool uint_km;
 } f_sport_finish_t;
+extern u32 func_sport_get_str(u8 sport_idx);
+extern u32 func_sport_get_ui(u8 sport_idx);
 
 
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -41,10 +43,8 @@ compo_form_t *func_sport_finish_form_create(void)
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
-    u16 str_id = 0;
-    u32 icon_addr = 0;
-    extern bool func_sport_get_sport_mode_info(uint8_t sport_mode, uint16_t *str_idx, uint32_t *icon_addr);
-    func_sport_get_sport_mode_info(uteModuleSportMoreSportGetType(),&str_id,&icon_addr);
+    u16 str_id = func_sport_get_str(sys_cb.sport_idx);
+    u32 icon_addr = func_sport_get_ui(sys_cb.sport_idx);
 
     if (func_cb.sta == FUNC_SPORT_FINISH)
     {

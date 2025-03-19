@@ -596,6 +596,11 @@ uint32_t uteModulePlatformGetSystemTick(void)
 */
 void *uteModulePlatformMemoryAlloc(size_t size)
 {
+    if(size == 0)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,error size is 0", __func__);
+        return NULL;
+    }
     return ab_malloc(size);
 }
 /**

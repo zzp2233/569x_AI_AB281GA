@@ -348,6 +348,8 @@ static void func_sport_sub_run_updata(void)
 
             if(f_sport_sub_run->sport_run_state != f_sport_sub_run->sport_run_state_updata_flag)
             {
+                // printf("motor_on\n");
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                 f_sport_sub_run->sport_run_state_updata_flag = f_sport_sub_run->sport_run_state;
 
                 if(f_sport_sub_run->sport_run_state == SPORT_RUN_STOP)

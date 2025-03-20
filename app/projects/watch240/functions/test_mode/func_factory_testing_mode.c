@@ -1780,4 +1780,14 @@ void func_factory_testing(void)
     }
     func_factory_testing_exit();
 }
+#else
+func_factory_testing(void)
+{
+
+}
+///创建工厂测试窗体
+compo_form_t *func_factory_testing_create(void)
+{
+
+}
 #endif

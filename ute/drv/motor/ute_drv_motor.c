@@ -119,7 +119,6 @@ void uteDrvMotorEnable(void)
     uteModulePlatformPwmEnable(UTE_DRV_MOTOR_PWM_ID);
     uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR);
 #else
-    uteDrvMotorData.isRunning = true;
     uteModulePlatformOutputGpioSet(UTE_DRV_MOTOR_GPIO_PIN,true);
 #endif
 }
@@ -135,7 +134,6 @@ void uteDrvMotorDisable(void)
     uteModulePlatformPwmDisable(UTE_DRV_MOTOR_PWM_ID,UTE_DRV_MOTOR_GPIO_PIN);
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR);
 #endif
-    uteDrvMotorData.isRunning = false;
     uteModulePlatformOutputGpioSet(UTE_DRV_MOTOR_GPIO_PIN,false);
 }
 

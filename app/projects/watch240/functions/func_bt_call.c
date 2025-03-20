@@ -860,7 +860,17 @@ void func_bt_call_exit(void)
 
 void func_bt_call(void)
 {
+    u16 interval = 0, latency = 0, tout = 0;
+
     printf("%s\n", __func__);
+
+    if (ble_is_connect() && (ble_get_conn_interval() < 400))
+    {
+        interval = ble_get_conn_interval();
+        latency = ble_get_conn_latency();
+        tout = ble_get_conn_timeout();
+        ble_update_conn_param(480, 0, 500);
+    }
     func_bt_call_enter();
     while (func_cb.sta == FUNC_BT_CALL)
     {
@@ -868,4 +878,12 @@ void func_bt_call(void)
         func_bt_call_message(msg_dequeue());
     }
     func_bt_call_exit();
+
+    if (bt_cb.disp_status != BT_STA_INCALL)
+    {
+        if (interval | latency | tout)
+        {
+            ble_update_conn_param(interval, latency, tout);
+        }
+    }
 }

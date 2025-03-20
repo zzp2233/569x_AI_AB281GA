@@ -89,6 +89,7 @@
 			<Add directory="../../../ute/module/music" />
 			<Add directory="../../../ute/module/localRingtone" />
 			<Add directory="../../../ute/module/menstrualcycle" />
+			<Add directory="../../../ute/module/fifo" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -201,6 +202,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/factorytest/ute_module_factorytest.h" />
+		<Unit filename="../../../ute/module/fifo/ute_module_simple_fifo.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/fifo/ute_module_simple_fifo.h" />
 		<Unit filename="../../../ute/module/filesystem/ute_module_filesystem.c">
 			<Option compilerVar="CC" />
 		</Unit>

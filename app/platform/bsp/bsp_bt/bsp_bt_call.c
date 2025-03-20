@@ -238,9 +238,8 @@ static void bt_call_alg_init(void)
     bt_voice_cb.mic_mav_en = 1;
     bt_sco_magic_init();
 #endif
-
+    sysclk = SYS_192M;
     sys_clk_req(INDEX_VOICE, sysclk);
-
     bt_call_init(&bt_voice_cb);
 }
 

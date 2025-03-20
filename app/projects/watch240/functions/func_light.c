@@ -84,6 +84,7 @@ compo_form_t *func_light_form_create(void)
         compo_setid(pic_level[idx], tbl_light_pic_item[idx].pic_id);
         compo_picturebox_set_pos(pic_level[idx], tbl_light_pic_item[idx].x, tbl_light_pic_item[idx].y);
     }
+    printf("sys_cb.light_level=%d\n",sys_cb.light_level);
     return frm;
 }
 
@@ -369,6 +370,7 @@ static void func_light_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_light_t));
     func_cb.frm_main = func_light_form_create();
+    sys_cb.light_level = tft_cb.tft_bglight_duty / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
     func_light_disp_Refresh();
 }
 

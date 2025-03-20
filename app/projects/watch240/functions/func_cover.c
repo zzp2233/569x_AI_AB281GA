@@ -521,19 +521,14 @@ void app_ute_msg_pop_up(uint8_t index)
     if ((sys_cb.msg_index > MSG_CALL) && (sys_cb.msg_index < MSG_MAX_CNT))
     {
 
-        ute_module_notify_data_t *ble_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
-        if (ble_msg == NULL)
+        ute_module_notify_data_t *ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
+        if (ute_msg == NULL)
         {
             printf("%s malloc err!!\n", __func__);
             return;
         }
-        uteModuleNotifyGetData(ble_msg);
-        if(uteModuleSystemtime12HOn())
-        {
-            ble_msg->currNotify.hour %=12;
-            ble_msg->currNotify.min  %=12;
-        }
-        char *msg = (char*)ble_msg->currNotify.content;
+        uteModuleNotifyGetData(ute_msg);
+        char *msg = (char*)ute_msg->currNotify.content;
         char *title = NULL;
         char time[30]= {0};
 
@@ -555,42 +550,35 @@ void app_ute_msg_pop_up(uint8_t index)
             tmp_msg[strlen(msg)+3] = '\0';
         }
 
-        // sprintf(time, "%04d/%02d/%02d", ble_msg->currNotify.year, ble_msg->currNotify.month, ble_msg->currNotify.day);
         ute_module_systemtime_time_t time_data;
         uteModuleSystemtimeGetTime(&time_data);//获取系统时间
-        u8 time_disp_state = 0;
 
-        if(time_data.year != ble_msg->currNotify.year || time_data.month != ble_msg->currNotify.month)
+        int compo_id = 0;
+        uint8_t hour=ute_msg->historyNotify[compo_id].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
+        uint8_t min =ute_msg->historyNotify[compo_id].min ;/*!系统时间，分钟，数值为0~59 */
+        uint8_t str_am[30];
+        memset(str_am,0,sizeof(str_am));
+        if(uteModuleSystemtime12HOn())
         {
-            time_disp_state = 0;
+            if(hour<=12 && hour!=0)
+            {
+                memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
+            }
+            else
+            {
+                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_AM])+1);
+            }
+            hour %= 12;
+            if(hour==0)
+            {
+                hour = 12;
+            }
         }
-        else if(time_data.day >ble_msg->currNotify.day && time_data.month == ble_msg->currNotify.month)
-        {
-            time_disp_state = 1;
-        }
-        else
-        {
-            time_disp_state = 2;
-        }
-        switch(time_disp_state)
-        {
-            case 0:
-                sprintf((char*)time, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                        ble_msg->currNotify.year,
-                        ble_msg->currNotify.month,
-                        ble_msg->currNotify.day);
-                break;
-            case 1:
-                sprintf((char*)time, "%02d/%02d", //record_tbl[index].callTime.year,
-                        ble_msg->currNotify.month,
-                        ble_msg->currNotify.day);
-                break;
-            case 2:
-                sprintf((char*)time, "%02d:%02d", //record_tbl[index].callTime.year,
-                        ble_msg->currNotify.hour,
-                        ble_msg->currNotify.min);
-                break;
-        }
+
+        sprintf((char*)time, "%02d:%02d %s", //record_tbl[index].callTime.year,
+                hour,min,str_am);
+
+
 
         int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
         if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
@@ -604,7 +592,7 @@ void app_ute_msg_pop_up(uint8_t index)
             }
         }
 //        }
-        ab_free(ble_msg);
+        ab_free(ute_msg);
     }
 }
 

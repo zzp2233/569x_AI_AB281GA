@@ -178,7 +178,6 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //图标
             if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH)
             {
-                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
                 compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_FINGWATCH_WATCH_BIN);
                 compo_animation_set_pos(animation,GUI_SCREEN_CENTER_X,func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
                 compo_animation_set_radix(animation,3);
@@ -1043,6 +1042,11 @@ static void msgbox_process(void)
         else if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)
         {
             // printf("11111111111111111111111\n");
+            reset_sleep_delay_all();
+            if(uteDrvMotorGetRunningStatus() == false)
+            {
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            }
             if (tick_check_expire(msg_cb->exit_tick, 150*1000))    //查找手表
             {
                 msg_cb->exit_tick = tick_get();

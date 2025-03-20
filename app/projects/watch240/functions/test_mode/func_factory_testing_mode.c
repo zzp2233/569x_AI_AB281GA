@@ -16,12 +16,13 @@
 #define TRACE(...)
 #endif
 
-#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
 #define SIDEBAR_PAGE_HEIGHT GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3    ///长图总高度
 #define MODE_ONE_SPACING_Y          GUI_SCREEN_HEIGHT/11
 #define MODE_ONE_INTIAL_SPACING_Y   GUI_SCREEN_CENTER_Y/10
 #define PURPLE_COLOR                make_color(0x66,0x33,0xcc)
 #define RESULT_Y                    GUI_SCREEN_HEIGHT/10
+
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
 
 static ute_new_factory_test_data_t *test_data;
 

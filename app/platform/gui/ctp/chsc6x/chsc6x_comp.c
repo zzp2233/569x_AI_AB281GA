@@ -3,11 +3,14 @@
 #include "chsc6x_ramcode.h"
 #include "chsc6x_platform.h"
 // #include "chsc6x_flash_boot.h"
-#if PROJECT_AB281B_SUPPORT
+#if UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
+#include "YCY_AB281B_1805A_304_21_V241_V2.h" //801
+#elif UTE_DRV_TFT_S240X284_NV3030B_ZD183G1196_QSPI_SUPPORT
 #include "YCY_AB281_801_chsc6x_upd_[304_17]_V241_V3.h" //801
 #else
 #include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
 #endif
+
 #include "chsc6x_main.h"
 
 #define TXRX_ADDR       (0x9000)

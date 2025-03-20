@@ -31,7 +31,7 @@ typedef struct f_sport_sort_t_
     s32 card_pic_res;
     s32 card_txt_str;
 } f_sport_sort_t;
-3
+
 #define SOPRT_MENU_CNT                       ((int)(sizeof(f_sport_sort) / sizeof(f_sport_sort[0])))
 static const f_sport_sort_t f_sport_sort[]=
 {

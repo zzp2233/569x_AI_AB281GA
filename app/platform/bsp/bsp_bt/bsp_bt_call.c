@@ -264,14 +264,17 @@ void hfp_hf_call_notice(uint32_t evt)
     {
         case BT_NOTICE_INCOMING:
             printf("===>>> InComing, is 3way:%d\n", hfp_hf_check_is_3way());
+            uteModuleCallSetBeforeCallStatus(1);
             bsp_call_mgr_send(CALL_MGR_BT_INCOM);
             break;
         case BT_NOTICE_OUTGOING:
             printf("===>>> OutGoing, is 3way:%d\n", hfp_hf_check_is_3way());
+            uteModuleCallSetBeforeCallStatus(0);
             bsp_call_mgr_send(CALL_MGR_BT_OUTGO);
             break;
         case BT_NOTICE_INCALL:
             printf("===>>> InCall,   is 3way:%d\n", hfp_hf_check_is_3way());
+            uteModuleCallResetCallingTimeSecond();
 #if CALL_MGR_EN
             bt_cb.incall_flag = 1;
 #endif
@@ -297,6 +300,7 @@ void hfp_hf_call_notice(uint32_t evt)
             break;
         case BT_NOTICE_CALL_NUMBER:
             printf("===>>> Number: %s\n", hfp_get_last_call_number(0));
+            uteModuleCallSetContactsNumberAndName((uint8_t*)hfp_get_last_call_number(0), strlen(hfp_get_last_call_number(0)), NULL, 0);
             bt_cb.number_sta = true;
 #if CALL_MGR_EN
             // 三方来电 延迟更新号码
@@ -370,11 +374,6 @@ bool hfp_hf_3way_number_update_control(void)
 void hfp_hf_parse_clcc_cb(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode, uint8_t mpty, char *number, uint8_t type)
 {
     printf("===>>> clcc: idx:%d, dir:%d, status:%d, mode:%d, mpty:%d, number:%s, type:%d\n", idx, dir, status, mode, mpty, number, type);
-    if(mode == 0 && status != 1)
-    {
-        uteModuleCallSetBeforeCallStatus(dir);
-        uteModuleCallSetContactsNumberAndName((uint8_t*)number, strlen(number), (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
-    }
 }
 
 #endif //HFP_3WAY_CONTROL_EN

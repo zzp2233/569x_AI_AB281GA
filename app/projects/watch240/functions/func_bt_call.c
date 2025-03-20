@@ -378,6 +378,7 @@ static void func_bt_call_click(void)
 #else
                 audio_path_init(AUDIO_PATH_BTMIC);
                 audio_path_start(AUDIO_PATH_BTMIC);
+                bt_sco_pcm_set_dump_pass_cnt(5);
 #endif
                 compo_button_set_bgimg(btn,UI_BUF_I330001_CALL_CALLING_JINGYIN00_BIN);
             }

@@ -21,6 +21,7 @@ enum
 typedef struct f_message_t_
 {
     page_tp_move_t *ptm;
+    u8 msg_num;
 } f_message_t;
 typedef struct f_message_card_t_
 {
@@ -71,7 +72,7 @@ compo_form_t *func_message_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_MESSAGE]);
 
-    char time_buf[30];
+    char time_buf[60];
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
 
     if(msg_num == 0)
@@ -193,6 +194,7 @@ static void func_message_card_init()
     f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
+    f_message->msg_num = msg_num;
 
     uint16_t page_height = msg_num*133+109;
     if(page_height<GUI_SCREEN_HEIGHT)
@@ -402,6 +404,10 @@ static void func_message_card_update()
         uteModuleNotifySetNewNotifyFlag(!uteModuleNotifyIsNewNotifyDisplay());
         msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
     }
+    else if (f_message->msg_num != uteModuleNotifyGetTotalNotifyCnt())
+    {
+        msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
+    }
 }
 
 //获取点击的卡片组件id
@@ -445,7 +451,7 @@ static void func_message_click(void)
                 return;
             }
             compo_id-=1;
-            char time_buf[30];
+            char time_buf[60];
             ute_module_notify_data_t *ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
             uteModuleNotifyGetData(ute_msg);
             ute_module_systemtime_time_t time_data;

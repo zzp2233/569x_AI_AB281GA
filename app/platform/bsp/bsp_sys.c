@@ -352,10 +352,20 @@ void bsp_loudspeaker_mute(void)
 {
     LOUDSPEAKER_MUTE();
     sys_cb.loudspeaker_mute = 1;
-    // delay_5ms(4);
-    // dac_set_power_on_off(0);
-    sys_cb.loudspeaker_mute_flag = true;
-    sys_cb.loudspeaker_mute_countdown = 5; //延迟25ms再mute
+
+    extern bool isPlaying;
+    extern bool isRecording;
+
+    if(isPlaying || isRecording)
+    {
+        delay_5ms(4);
+        dac_set_power_on_off(0);
+    }
+    else
+    {
+        sys_cb.loudspeaker_mute_flag = true;
+        sys_cb.loudspeaker_mute_countdown = 4; //延迟25ms再mute
+    }
 }
 
 AT(.com_text.bsp.sys)

@@ -33,8 +33,8 @@ mic_testbuf_t mic_cb;
 AT(.com_text.str)
 char mic_test_str[] = "data full!!!\n";
 
-static bool isPlaying = false;
-static bool isRecording = false;
+bool isPlaying = false;
+bool isRecording = false;
 
 AT(.com_text.func.mic_test)
 bool put_mic_obuf(u8 *ptr, u32 samples, int ch_mode)

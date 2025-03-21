@@ -23,13 +23,13 @@
 // #include "ute_module_localRingtone.h"
 
 /*! zn.zeng,2022-03-16*/
- ute_new_factory_test_data_t uteModuleNewFactoryTestData;
+ute_new_factory_test_data_t uteModuleNewFactoryTestData;
 
 /**
 *@brief     发给对端的测试数据暂定32byte ascii 数据
 *@details   类型+测试结果+数据长度+内容
 */
- ute_new_factory_test_send_app_data_t uteModuleNewFactorySendAppData;
+ute_new_factory_test_send_app_data_t uteModuleNewFactorySendAppData;
 /**
 *@brief  初始化函数
 *@details
@@ -175,9 +175,8 @@ void uteModuleNewFactoryTestEverySecond(void)
         }
     }
 #endif
-    // if ((uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING) )&&
-    //     (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID)
-    if (uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING)
+    if ((uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING) &&
+        (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID))
     {
         if(uteModuleNewFactoryTestData.factoryAgingTestMode == FACTORY_AGING_TEST_MODE2) //老化测试模式2
         {
@@ -187,7 +186,7 @@ void uteModuleNewFactoryTestEverySecond(void)
                 if((uteModuleNewFactoryTestData.secondCount%(60*10) == 0) && (uteModuleNewFactoryTestData.secondCount>0))
                 {
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-                    // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID);
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID, 0, __func__);
                 }
                 //心率5分钟测一次，每次测1分钟
                 if(uteModuleNewFactoryTestData.secondCount%(60*5) == 0)

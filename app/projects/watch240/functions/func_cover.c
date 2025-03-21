@@ -528,7 +528,7 @@ void app_ute_msg_pop_up(uint8_t index)
             return;
         }
         uteModuleNotifyGetData(ute_msg);
-        char *msg = (char*)ute_msg->currNotify.content;
+        char *msg = (char*)ute_msg->historyNotify[0].content;
         char *title = NULL;
         char time[30]= {0};
 
@@ -553,9 +553,8 @@ void app_ute_msg_pop_up(uint8_t index)
         ute_module_systemtime_time_t time_data;
         uteModuleSystemtimeGetTime(&time_data);//获取系统时间
 
-        int compo_id = 0;
-        uint8_t hour=ute_msg->historyNotify[compo_id].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
-        uint8_t min =ute_msg->historyNotify[compo_id].min ;/*!系统时间，分钟，数值为0~59 */
+        uint8_t hour=ute_msg->historyNotify[0].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
+        uint8_t min =ute_msg->historyNotify[0].min ;/*!系统时间，分钟，数值为0~59 */
         uint8_t str_am[30];
         memset(str_am,0,sizeof(str_am));
         if(uteModuleSystemtime12HOn())

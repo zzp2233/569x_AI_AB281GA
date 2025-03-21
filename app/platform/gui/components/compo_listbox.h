@@ -4,7 +4,7 @@
 
 
 #define LISTBOX_ITEM_CNT                10       //每页列表，中心上下各保留3个进行滚动
-#define LISTBOX_TEXT_LEN                30      //自定义文字的长度
+#define LISTBOX_TEXT_LEN                60      //自定义文字的长度
 
 enum COMPO_LISTBOX_STYLE
 {

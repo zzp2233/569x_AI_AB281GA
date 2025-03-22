@@ -1184,6 +1184,10 @@ static void func_clock_sub_dropdown_click_handler(void)
             break;
     }
 }
+#else
+static void func_clock_sub_dropdown_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //时钟表盘主要事件流程处理
 static void func_clock_sub_dropdown_process(void)
@@ -1264,6 +1268,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
 //时钟表盘下拉菜单进入处理
 static void func_clock_sub_dropdown_enter(void)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     if(uteModuleNotDisturbGetOpenStatus() == true)
     {
         dropdown_disturb_sw = 1;
@@ -1272,6 +1277,7 @@ static void func_clock_sub_dropdown_enter(void)
     {
         dropdown_disturb_sw = 0;
     }
+#endif
 
     func_clock_butterfly_set_light_visible(false);
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

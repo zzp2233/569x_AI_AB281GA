@@ -185,6 +185,10 @@ static void func_findphone_button_touch_handle(void)
     }
 
 }
+#else
+compo_form_t *func_findphone_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //查找手机功能事件处理

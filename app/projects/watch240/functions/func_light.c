@@ -312,7 +312,22 @@ static void func_light_button_click(void)
     }
     func_light_disp_Refresh();
 }
+#else
+typedef struct f_light_t_
+{
+} f_light_t;
+//创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_light_form_create(void)
+{
 
+}
+//单击按钮
+static void func_light_button_click(void)
+{
+}
+static void func_light_disp_Refresh(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //亮度调节功能事件处理

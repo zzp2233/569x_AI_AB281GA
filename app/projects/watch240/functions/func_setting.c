@@ -85,46 +85,6 @@ compo_form_t *func_set_sub_list_form_create(void)
 
     return frm;
 }
-
-//点进图标进入应用
-static void func_set_sub_list_icon_click(void)
-{
-    int icon_idx;
-    f_set_list_t *f_set = (f_set_list_t *)func_cb.f_cb;
-    compo_listbox_t *listbox = f_set->listbox;
-    u8 func_sta;
-
-    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
-    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
-    {
-        return;
-    }
-
-    //根据图标索引获取应用ID
-    func_sta = tbl_setting_list[icon_idx].func_sta;
-    //切入应用
-    if (func_sta > 0)
-    {
-
-//        func_switch_to(func_sta, FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO);
-        func_cb.sta = func_sta;
-        sys_cb.set_idx = listbox->focus_icon_idx;
-    }
-}
-
-//切换到设置菜单页面
-static void func_set_sub_list_switch_to_clock(void)
-{
-    u8 func_sta = FUNC_CLOCK;
-    f_set_list_t *f_set = (f_set_list_t *)func_cb.f_cb;
-    compo_listbox_t *listbox = f_set->listbox;
-    widget_icon_t *icon = compo_listbox_select_byidx(listbox, 0);
-    compo_form_t *frm = func_create_form(func_sta);
-    func_switching(FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO, icon);
-    compo_form_destroy(frm);
-    func_cb.sta = func_sta;
-    // sys_cb.set_idx = 0;
-}
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 
 #define SET_LIST_CNT                       ((int)(sizeof(tbl_setting_list) / sizeof(tbl_setting_list[0])))
@@ -200,6 +160,46 @@ compo_form_t *func_set_sub_list_form_create(void)
 
     return frm;
 }
+#else
+#define SET_LIST_CNT                       ((int)(sizeof(tbl_setting_list) / sizeof(tbl_setting_list[0])))
+
+enum
+{
+    COMPO_ID_LISTBOX = 1,
+};
+
+typedef struct f_set_list_t_
+{
+    compo_listbox_t *listbox;
+
+} f_set_list_t;
+
+static const compo_listbox_item_t tbl_setting_list[] =
+{
+    {0},
+};
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_set_sub_list_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_set(listbox, tbl_setting_list, SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, 0);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    u8 set_idx = sys_cb.set_idx;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+    return frm;
+}
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //点进图标进入应用
 static void func_set_sub_list_icon_click(void)
@@ -238,11 +238,8 @@ static void func_set_sub_list_switch_to_clock(void)
     func_switching(FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO, icon);
     compo_form_destroy(frm);
     func_cb.sta = func_sta;
-    sys_cb.set_idx = 0;
+    // sys_cb.set_idx = 0;
 }
-
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
 //主菜单功能事件处理
 static void func_set_sub_list_process(void)
 {

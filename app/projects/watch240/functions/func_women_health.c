@@ -104,6 +104,13 @@ compo_form_t *func_women_health_form_create(void)
 
     return frm;
 }
+#else
+compo_form_t *func_women_health_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif
 
 //女性健康功能事件处理

@@ -9,9 +9,6 @@
 #endif
 
 #if UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
 enum
 {
     COMPO_ID_TEXT_UINT=1,
@@ -23,6 +20,7 @@ typedef struct f_heart_warning_t_
 
 } f_heart_warning_t;
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建心率预警窗体
 compo_form_t *func_heart_warning_form_create(void)
 {
@@ -53,7 +51,7 @@ compo_form_t *func_heart_warning_form_create(void)
     {
         compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
     }
-    else
+    else if (uteModuleHeartGetHeartValue() < uteModuleHeartGetMinHeartValue())
     {
         compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
     }
@@ -78,7 +76,7 @@ static void func_heart_warning_updata(void)
     {
         compo_textbox_set(textbox, i18n[STR_HEART_HIGHT]);
     }
-    else if (uteModuleHeartGetHeartValue() > uteModuleHeartGetMinHeartValue())
+    else if (uteModuleHeartGetHeartValue() < uteModuleHeartGetMinHeartValue())
     {
         compo_textbox_set(textbox, i18n[STR_HEART_LOW]);
     }
@@ -89,10 +87,6 @@ static void func_heart_warning_updata(void)
 }
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-typedef struct f_heart_warning_t_
-{
-
-} f_heart_warning_t;
 
 //创建心率预警窗体
 compo_form_t *func_heart_warning_form_create(void)
@@ -138,6 +132,16 @@ static void func_heart_warning_updata(void)
     {
         compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
     }
+}
+#else
+compo_form_t *func_heart_warning_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+static void func_heart_warning_updata(void)
+{
 }
 #endif
 

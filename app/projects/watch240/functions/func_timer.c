@@ -1183,7 +1183,27 @@ static void func_timer_button_click(void)
 
 //    TRACE("page[%d] sta[%d]\n", f_timer->page_disp, sys_cb.timer_sta);
 }
+#else
+typedef struct f_timer_t_
+{
+    widget_page_t *page_sub;///创建按键父局器页面
+    point_t moveto;
+    s16 old_y;
+    s16 disp_flag;
+    bool touch_flag;
+    u8 set_time_flag;
+    u8 page_disp;
+    s8 hour;
+    s8 min;
+    s8 sec;
+    u8 sec_buf[5];
+    u8 min_buf[5];
+    u8 hour_buf[5];
+    u8 set_time_buf[5];
+} f_timer_t;
 
+compo_form_t *func_timer_form_create(void)
+{}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //定时器功能事件处理

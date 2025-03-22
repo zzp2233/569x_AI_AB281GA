@@ -6,8 +6,6 @@
 #else
 #define TRACE(...)
 #endif
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 enum
 {
     ROCKET_ID=1,
@@ -22,6 +20,8 @@ typedef struct f_ota_update_t_
 } f_ota_update_t;
 
 
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 compo_form_t *func_ota_update_form_create(void)
 {
@@ -86,20 +86,6 @@ static void func_ota_update_disp(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-enum
-{
-    ROCKET_ID=1,
-    ROCKET_BASE_ID,
-    PROGRESS_BAR_ID,
-    UPDATING_TXT_ID,
-};
-
-typedef struct f_ota_update_t_
-{
-    u32 launch_roket_time;
-} f_ota_update_t;
-
-
 
 compo_form_t *func_ota_update_form_create(void)
 {
@@ -152,6 +138,14 @@ static void func_ota_update_disp(void)
         }
     }
 }
+#else
+compo_form_t *func_ota_update_form_create(void)
+{
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+static void func_ota_update_disp(void)
+{}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //刷新显示

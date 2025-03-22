@@ -1,8 +1,6 @@
 #include "include.h"
 #include "func.h"
 #include "func_bt.h"
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 enum
 {
     COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
@@ -23,6 +21,7 @@ void func_modem_ring_number_update(void)
     printf("num: [%s]", modem_cb.number);
     // }
 }
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_modem_ring_form_create(void)
@@ -51,27 +50,6 @@ compo_form_t *func_modem_ring_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-enum
-{
-    COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
-    COMPO_ID_BTN_ANSWER,
-    COMPO_ID_BTN_REJECT,
-};
-
-typedef struct f_modem_call_t_
-{
-
-} f_modem_ring_t;
-
-void func_modem_ring_number_update(void)
-{
-    // if (modem_cb.number_sta) {
-    compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
-    compo_textbox_set(number_txt, modem_cb.number);
-    printf("num: [%s]", modem_cb.number);
-    // }
-}
-
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_modem_ring_form_create(void)
 {
@@ -97,6 +75,11 @@ compo_form_t *func_modem_ring_form_create(void)
 //    compo_button_set_pos(btn, 70, 240);
 
     return frm;
+}
+#else
+
+compo_form_t *func_modem_ring_form_create(void)
+{
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 void func_modem_ring_process(void)

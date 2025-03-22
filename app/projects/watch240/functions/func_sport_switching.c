@@ -317,7 +317,54 @@ static void func_sport_animation(void)
         }
     }
 }
+#else
+#define SPORT_ANIM_AMP_STEP             2       //图片放大步进数
+#define SPORT_ANIM_RED_STEP             8       //图片缩小步进数
+#define SPORT_ANIM_DELAY                30      //图片等待时间
+#define SPORT_ANIM_ENTER_HEIGHT         50      //图片入场的高度
+#define SPORT_ANIM_EXIT_HEIGHT          20      //图片退出的高度
 
+
+typedef struct f_sport_switching_t_
+{
+    compo_picturebox_t *pic;
+    u8 anim_sta;
+    u8 anim_num;
+    u8 anim_delay;
+
+} f_sport_switching_t;
+
+//ID
+enum
+{
+    COMPO_ID_PIC = 1,
+};
+
+//动画状态
+enum
+{
+    SPORT_ANIM_STA_IDLE,        //空闲，获取图片信息
+    SPORT_ANIM_STA_START,       //开始入场
+    SPORT_ANIM_STA_DELAY,       //等待
+    SPORT_ANIM_STA_NEXT,        //跳转下一张图片
+    SPORT_ANIM_STA_END,         //结束
+};
+
+#define ANIM_MAX_CNT                       ((int)(sizeof(anim_addr_tbl) / sizeof(anim_addr_tbl[0])))
+
+static const u32 anim_addr_tbl[] =      //替换图片即可
+{
+    0,
+    0,
+    0,
+};
+
+//创建运动开始界面窗体
+compo_form_t *func_sport_switching_form_create(void)
+{
+}
+static void func_sport_animation()
+{}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //运动开始功能事件处理

@@ -786,6 +786,40 @@ static void func_sport_finish_init(void)
     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     f_sport_finish->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 }
+#else
+enum
+{
+    COMPO_SWIMING_STATE=1,
+    COMPO_WALK_STATE,
+    COMPO_OTHER_STATE,
+};
+enum
+{
+    COMPO_BTN_SURE=1,
+    COMPO_ID_KM_VALUE,
+    COMPO_ID_KM_UINT,
+};
+
+typedef struct f_sport_finish_t_
+{
+    page_tp_move_t *ptm;
+    u8 sport_finish_state;
+    bool uint_km;
+} f_sport_finish_t;
+extern u32 func_sport_get_str(u8 sport_idx);
+extern u32 func_sport_get_ui(u8 sport_idx);
+
+
+//创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sport_finish_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+static void func_sport_finish_init(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //功能事件处理
 static void func_sport_finish_process(void)

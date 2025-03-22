@@ -117,6 +117,10 @@ compo_form_t *func_bt_ring_form_create(void)
 
     return frm;
 }
+#else
+compo_form_t *func_bt_ring_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 

@@ -12,12 +12,12 @@
 #define TRACE(...)
 #endif
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-#define SHAPE_HEIGTH  GUI_SCREEN_HEIGHT/4.5
 typedef struct f_about_t_
 {
 
 } f_about_t;
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#define SHAPE_HEIGTH  GUI_SCREEN_HEIGHT/4.5
 
 //关于页面
 compo_form_t *func_set_sub_about_form_create(void)
@@ -83,10 +83,6 @@ compo_form_t *func_set_sub_about_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-typedef struct f_about_t_
-{
-
-} f_about_t;
 
 //关于页面
 compo_form_t *func_set_sub_about_form_create(void)
@@ -149,6 +145,10 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
 
     return frm;
+}
+#else
+compo_form_t *func_set_sub_about_form_create(void)
+{
 }
 #endif
 

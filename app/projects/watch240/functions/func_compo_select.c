@@ -76,6 +76,17 @@ static void func_compo_select_click(void)
         func_switch_to(FUNC_COMPO_SELECT_SUB, FUNC_SWITCH_DIRECT);
     }
 }
+#else
+compo_form_t *func_compo_select_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+static void func_compo_select_click(void)
+{
+
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //组件选择功能事件处理

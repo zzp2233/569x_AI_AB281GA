@@ -175,6 +175,21 @@ static const compo_football_item_t tbl_menu_football[20] =
 
     {UI_BUF_I332001_THEME_ICON2_MORE_BIN,              FUNC_MENU_STYLE_FOOTBALL_LIST},
 };
+#else
+#define FOOTBALL_RADIUS                          (GUI_SCREEN_WIDTH/2.2-10)
+#define MENU_FOOTBALL_ITEM_CNT                   ((int)(sizeof(tbl_menu_football) / sizeof(tbl_menu_football[0])))
+#define KALE_EDGE_SPACE                          2                                                              //边缘距离
+#define KALE_ICON_SPACE                          2                                                              //图标距离
+#define KALE_ICON_OUTER_SIZE                     (gui_image_get_size(tbl_menu_football[0].res_addr).wid)    //外圈图标大小
+#define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
+#define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
+#define KALE_SWITCH_DR                           2                                                              //单次变更R值
+#define KALE_ROTATE_ANGLE                        50
+//足球图标列表(固定20项)
+static const compo_football_item_t tbl_menu_football[20] =
+{
+    {0},
+};
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_sub_football_form_create(void)

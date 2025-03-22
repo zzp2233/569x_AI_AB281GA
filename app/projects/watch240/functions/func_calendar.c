@@ -362,7 +362,10 @@ compo_form_t *func_calender_form_create(void)
 
     return frm;
 }
-
+#else
+compo_form_t *func_calender_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //切换日期并刷新

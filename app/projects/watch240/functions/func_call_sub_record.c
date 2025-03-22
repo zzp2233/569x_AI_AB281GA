@@ -10,12 +10,6 @@
 #else
 #define TRACE(...)
 #endif
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-#define CALL_LIST_CNT                       ((int)(sizeof(tbl_record_list) / sizeof(tbl_record_list[0])))
-#define CALL_TYPE_ICON_AREA                 (gui_image_get_size(UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN))                  //通话记录类型图标显示区域, 如果图片输入0表示图标所占区域为0
-
 enum
 {
     COMPO_ID_LISTBOX = 1,
@@ -23,20 +17,23 @@ enum
     COMPO_ID_COVER_TXT,
 };
 
-typedef struct f_call_list_t_
-{
-    compo_listbox_t *listbox;
-    u32 tick;
-
-} f_call_list_t;
-
+#define CALL_LIST_CNT                       ((int)(sizeof(tbl_record_list) / sizeof(tbl_record_list[0])))
 static const compo_listbox_item_t tbl_record_list[UTE_MODULE_CALL_RECORDS_MAX_COUNT] = {0};
 static ute_module_call_records_t* record_tbl = NULL;            //通话记录数据
 static u16 record_cnt = 0;                                       //通话记录个数
 
 static ute_module_call_addressbook_t* address_book_tb2 = NULL;            //电话簿数据
 static u16 address_book_cnt2 = 0;                                       //联系人个数
+typedef struct f_call_list_t_
+{
+    compo_listbox_t *listbox;
+    u32 tick;
 
+} f_call_list_t;
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+
+#define CALL_TYPE_ICON_AREA                 (gui_image_get_size(UI_BUF_I330001_CALL_CALL_LOG_INCOMING_CALL_BIN))                  //通话记录类型图标显示区域, 如果图片输入0表示图标所占区域为0
 
 // 判断从指定位置开始的字节序列是否是一个完整的UTF - 8字符
 static int is_complete_utf8_char(const char *str, int pos)
@@ -438,30 +435,7 @@ static void func_call_sub_record_icon_click(void)
 
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-#define CALL_LIST_CNT                       ((int)(sizeof(tbl_record_list) / sizeof(tbl_record_list[0])))
 #define CALL_TYPE_ICON_AREA                 (gui_image_get_size(UI_BUF_I332001_CALL_CALL_LOG_INCOMING_CALL_BIN))                  //通话记录类型图标显示区域, 如果图片输入0表示图标所占区域为0
-
-enum
-{
-    COMPO_ID_LISTBOX = 1,
-    COMPO_ID_COVER_PIC,
-    COMPO_ID_COVER_TXT,
-};
-
-typedef struct f_call_list_t_
-{
-    compo_listbox_t *listbox;
-    u32 tick;
-
-} f_call_list_t;
-
-static const compo_listbox_item_t tbl_record_list[UTE_MODULE_CALL_RECORDS_MAX_COUNT] = {0};
-static ute_module_call_records_t* record_tbl = NULL;            //通话记录数据
-static u16 record_cnt = 0;                                       //通话记录个数
-
-static ute_module_call_addressbook_t* address_book_tb2 = NULL;            //电话簿数据
-static u16 address_book_cnt2 = 0;                                       //联系人个数
-
 
 // 判断从指定位置开始的字节序列是否是一个完整的UTF - 8字符
 static int is_complete_utf8_char(const char *str, int pos)
@@ -835,6 +809,26 @@ static void func_call_sub_record_icon_click(void)
         bt_call_redial_number();
     }
 
+}
+#else
+compo_form_t *func_call_sub_record_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    compo_listbox_set_bgimg(listbox, 0);
+    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update(listbox);
+    return frm;
+}
+static void func_call_sub_record_icon_click(void)
+{}
+static u8 func_call_sub_record_update(void)
+{
+}
+static u8 func_record_book_update(void)
+{
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 

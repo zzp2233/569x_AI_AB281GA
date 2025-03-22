@@ -326,7 +326,10 @@ void func_camera(void)
 #else
 
 #include "func_cover.h"
+typedef struct f_camera_t_
+{
 
+} f_camera_t;
 #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 ///非相机传输功能
 enum
@@ -336,11 +339,6 @@ enum
     START_TXT_ID,
 
 };
-
-typedef struct f_camera_t_
-{
-
-} f_camera_t;
 
 typedef struct ui_handle_t_
 {
@@ -451,10 +449,6 @@ enum
 
 };
 
-typedef struct f_camera_t_
-{
-
-} f_camera_t;
 
 typedef struct ui_handle_t_
 {
@@ -555,7 +549,17 @@ static void func_camera_button_handle(void)
         }
     }
 }
-
+#else
+//创建相机窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_camera_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+static void func_camera_button_handle(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //相机功能事件处理
 static void func_camera_process(void)

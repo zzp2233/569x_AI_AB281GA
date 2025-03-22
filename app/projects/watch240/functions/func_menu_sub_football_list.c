@@ -178,6 +178,30 @@ static void func_menu_football_list_switch_to_clock(void)
     func_cb.sta = func_sta;
     // sys_cb.set_idx = 0;
 }
+#else
+#define SET_LIST_CNT                       ((int)(sizeof(tbl_menu_football_list) / sizeof(tbl_menu_football_list[0])))
+
+enum
+{
+    COMPO_ID_LISTBOX = 1,
+};
+
+typedef struct f_menu_football_list_t_
+{
+    compo_listbox_t *listbox;
+
+} f_menu_football_list_t;
+
+static const compo_listbox_item_t tbl_menu_football_list[] =
+{
+    {0},
+};
+compo_form_t *func_menu_football_list_form_create(void)
+{
+}
+static void func_menu_football_list_icon_click(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //主菜单功能事件处理

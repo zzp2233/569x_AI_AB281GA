@@ -612,6 +612,45 @@ static void func_bird_fail(void)
         }
     }
 }
+#else
+#define BIRD_DOWN_ACC_V                         1                           //向下加速度
+#define BIRD_UP_ACC_V                           5                           //向上加速度
+#define BIRD_X_POS                              (GUI_SCREEN_CENTER_X / 2)   //小鸟图X坐标
+#define BIRD_WIDTH                              44
+#define BIRD_HEIGHT                             (96 / 3)
+#define PIPE_SPEED                              3                           //管道移动速度
+#define PIPE_X_GAP                              (GUI_SCREEN_CENTER_X + 80)  //管道水平间隔
+#define PIPE_Y_GAP                              100                         //管道纵向间隔
+#define PIPE_PIC_WIDTH                          50                          //管道图片宽度
+#define PIPE_PIC_HEIGHT                         168                         //管道图片高度
+#define BIRD_VALID_HEIGHT                       300                         //有效界面高度
+
+//计算上管道y坐标(中心参考点)
+#define CAL_PIPE_UP_Y_POS(pipe_down_y_pos, pipe_down_cut)    ((pipe_down_y_pos) - (PIPE_PIC_HEIGHT / (pipe_down_cut) / 2) - (PIPE_PIC_HEIGHT / 2) - PIPE_Y_GAP)
+//计算下管道y坐标(中心参考点)
+#define CAL_PIPE_DOWM_Y_POS(pipe_down_cut)                   (BIRD_VALID_HEIGHT - (PIPE_PIC_HEIGHT / (pipe_down_cut)) / 2)
+
+//创建游戏界面
+compo_form_t *func_bird_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    return frm;
+}
+//游戏初始化
+static void func_bird_init(void)
+{
+}
+//游戏中
+static void func_bird_runing(void)
+{
+}
+//游戏失败
+static void func_bird_fail(void)
+{
+
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //游戏过程状态机
@@ -639,11 +678,6 @@ static void func_bird_process(void)
             func_bird_fail();
             bird->status = BIRD_STATUS_RESULT_WAIT;
             break;
-
-//        case BIRD_STATUS_FINISH:
-//            func_bird_finish();
-//            bird->status = BIRD_STATUS_RESULT_WAIT;
-//            break;
 
         default:
             break;

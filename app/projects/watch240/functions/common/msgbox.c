@@ -875,6 +875,13 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
     }
     return frm;
 }
+#else
+//创建对话框窗体
+static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int mode, char msg_type)
+{
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif //
 //单击按钮
 static void msgbox_button_click(void)

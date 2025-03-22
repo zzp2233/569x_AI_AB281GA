@@ -7,8 +7,6 @@
 #else
 #define TRACE(...)
 #endif
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 enum
 {
     COMPO_ID_TXT_OTA_ERR1 = 1,
@@ -19,6 +17,8 @@ typedef struct f_ota_err_t_
 {
 
 } f_ota_err_t;
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建窗体
 compo_form_t *func_ota_err_form_create(void)
@@ -46,17 +46,6 @@ compo_form_t *func_ota_err_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-enum
-{
-    COMPO_ID_TXT_OTA_ERR1 = 1,
-    COMPO_ID_TXT_OTA_ERR2,
-};
-
-typedef struct f_ota_err_t_
-{
-
-} f_ota_err_t;
-
 //创建窗体
 compo_form_t *func_ota_err_form_create(void)
 {
@@ -81,6 +70,10 @@ compo_form_t *func_ota_err_form_create(void)
     compo_textbox_set(txt,i18n[STR_APP_AGIAN]);
 
     return frm;
+}
+#else
+compo_form_t *func_ota_err_form_create(void)
+{
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 

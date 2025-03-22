@@ -2,7 +2,6 @@
 #include "func.h"
 #include "func_bt.h"
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 enum
 {
     COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
@@ -19,6 +18,7 @@ typedef struct f_modem_call_t_
     u32 clcc_tick;              //主动查询号码计时
     u32 exit_tick;              //页面退出计时
 } f_modem_call_t;
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 static void func_modem_call_back_to(void)
 {
@@ -137,22 +137,6 @@ static void func_modem_call_exit_process(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-enum
-{
-    COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
-    COMPO_ID_TXT_TIME,
-    COMPO_ID_BTN_REJECT,
-    COMPO_ID_BTN_MIC,
-};
-
-typedef struct f_modem_call_t_
-{
-    bool sta;                   //0:呼出(outgoing); 1:通话(call);
-
-    char call_time_str[10];     //通话计时字符串
-    u32 clcc_tick;              //主动查询号码计时
-    u32 exit_tick;              //页面退出计时
-} f_modem_call_t;
 
 static void func_modem_call_back_to(void)
 {
@@ -269,6 +253,24 @@ static void func_modem_call_exit_process(void)
         f_modem_call->exit_tick = 0;
         func_modem_call_back_to();
     }
+}
+#else
+
+compo_form_t *func_modem_outgoing_form_create(void)
+{
+
+}
+void func_modem_call_number_update(void)
+{
+}
+void modem_incall_time_update(void)
+{
+}
+static void func_modem_call_interface(void)
+{
+}
+static void func_modem_call_exit_process(void)
+{
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 

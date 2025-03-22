@@ -2,6 +2,12 @@
 #include "func.h"
 #include "func_cover.h"
 
+
+typedef struct f_call_sub_dial_t_
+{
+    u8 phone_number_cnt;
+    u8 phone_number[16];
+} f_call_sub_dial_t;
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 enum
@@ -69,11 +75,6 @@ static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
     {UI_BUF_I330001_CALL_DIAL_CALL_BIN,                COMPO_ID_BTN_CALL,       0,                                     COMPO_ID_PIC_CLICK_CALL,     45,     252},
 };
 
-typedef struct f_call_sub_dial_t_
-{
-    u8 phone_number_cnt;
-    u8 phone_number[16];
-} f_call_sub_dial_t;
 
 //打电话页面
 compo_form_t *func_call_sub_dial_form_create(void)
@@ -332,12 +333,6 @@ static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
     {UI_BUF_I332001_CALL_DIAL_CALL_BIN,                 COMPO_ID_BTN_CALL,       0,                                     COMPO_ID_PIC_CLICK_CALL,     180-92,     183+124},
 };
 
-typedef struct f_call_sub_dial_t_
-{
-    u8 phone_number_cnt;
-    u8 phone_number[16];
-} f_call_sub_dial_t;
-
 //打电话页面
 compo_form_t *func_call_sub_dial_form_create(void)
 {
@@ -519,12 +514,20 @@ static void func_call_sub_dial_button_long(void)
     func_call_sub_dial_button_release_handle();
 
 }
+#else
+compo_form_t *func_call_sub_dial_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //电话消息处理
 static void func_call_sub_dial_message(size_msg_t msg)
 {
-
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     switch (msg)
     {
 
@@ -576,6 +579,14 @@ static void func_call_sub_dial_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#else
+    switch (msg)
+    {
+        default:
+            func_message(msg);
+            break;
+    }
+#endif
 }
 
 //进入打电话界面

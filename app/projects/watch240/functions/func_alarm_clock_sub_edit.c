@@ -26,17 +26,13 @@
 #define ALARM_GET_MIN(idx)              0
 #define ALARM_GET_CYCLE(idx)            0
 #endif
-
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-static void func_alarm_clock_sub_edit_enter(void);
-static void func_alarm_clock_sub_edit_exit(void);
-
 typedef struct f_alarm_clock_sub_edit_t_
 {
     bool time_scale;        //时间制 0:24小时; 1:12小时
 } f_alarm_clock_sub_edit_t;
-
+static void func_alarm_clock_sub_edit_enter(void);
+static void func_alarm_clock_sub_edit_exit(void);
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 typedef struct func_alarm_hour_format_t_
 {
     u8 hour;
@@ -1169,17 +1165,30 @@ static void func_alarm_clock_sub_edit_card_click(void)
 
     func_alarm_clock_sub_edit_button_release_handle();
 }
-
+#else
+compo_form_t *func_alarm_clock_sub_edit_form_create(void)
+{
+}
+static void func_alarm_clock_sub_edit_button_touch_handle(void)
+{
+}
+static void func_alarm_clock_sub_edit_card_click(void)
+{
+}
+static void func_alarm_clock_sub_edit_button_release_handle(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //闹钟功能事件处理
 static void func_alarm_clock_sub_edit_process(void)
 {
-
+#if GUI_SCREEN_SIZE_240RGB_I332001_SUPPORT
     for(u8 i=0; i<CARD_ID_END-CARD_ID_START-1; i++)      //文本滚动
     {
         u16 id = CARD_ID_START + 1 + i;
         compo_cardbox_text_scroll_process((compo_cardbox_t *)compo_getobj_byid(id), true);
     }
+#endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     f_alarm_clock_sub_edit_t *f_alarm_clock_sub_edit = (f_alarm_clock_sub_edit_t*)func_cb.f_cb;
 //    compo_page_move_process(f_alarm_clock_sub_edit->ptm);

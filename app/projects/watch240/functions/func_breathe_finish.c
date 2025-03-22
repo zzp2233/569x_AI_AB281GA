@@ -7,8 +7,6 @@
 #define TRACE(...)
 #endif
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
 typedef struct f_breathe_finish_t_
 {
     char str[30];
@@ -18,7 +16,7 @@ enum
 {
     COMPO_ID_BTN_OK=1,
 };
-
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 compo_form_t *func_breathe_finish_form_create(void)
 {
     char txt_buf[50];
@@ -74,15 +72,6 @@ compo_form_t *func_breathe_finish_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-typedef struct f_breathe_finish_t_
-{
-    char str[30];
-} f_breathe_finish_t;
-
-enum
-{
-    COMPO_ID_BTN_OK=1,
-};
 
 compo_form_t *func_breathe_finish_form_create(void)
 {
@@ -135,6 +124,15 @@ compo_form_t *func_breathe_finish_form_create(void)
     textbox = compo_textbox_create(frm, strlen(i18n[STR_OK]) );
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,64/2+266);
     compo_textbox_set(textbox,i18n[STR_OK]);
+
+    return frm;
+}
+
+#else
+compo_form_t *func_breathe_finish_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
 
     return frm;
 }

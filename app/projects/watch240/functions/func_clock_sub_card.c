@@ -3672,11 +3672,20 @@ void music_data_refresh(void)
         compo_button_set_bgimg(btn,ui_handle.card3.pic_click_play.res_click);
     }
 }
+#else
+typedef struct f_card_t_
+{
+} f_card_t;
+
+compo_form_t *func_clock_sub_card_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //时钟表盘上拉菜单主要事件流程处理
 static void func_clock_sub_card_process(void)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
 
     if (f_card->flag_drag)
@@ -3772,11 +3781,13 @@ static void func_clock_sub_card_process(void)
         u16 id = COMPO_CARD_START + 1 + i;
         compo_cardbox_text_scroll_process((compo_cardbox_t *)compo_getobj_byid(id), true);
     }
+#endif
 }
 
 //时钟表盘上拉菜单功能消息处理
 static void func_clock_sub_card_message(size_msg_t msg)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
 
     if (f_card->flag_drag)
@@ -3894,6 +3905,7 @@ static void func_clock_sub_card_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#endif
 }
 
 
@@ -3904,18 +3916,16 @@ static void func_clock_sub_card_enter(void)
     tft_set_temode(3);
     func_cb.f_cb = func_zalloc(sizeof(f_card_t));
     func_cb.frm_main = func_clock_sub_card_form_create();
-
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
-//    co_timer_set(&f_card->music_refresh, 50, TIMER_REPEAT, LEVEL_LOW_PRI, music_data_refresh, NULL);
-
     func_clock_sub_card_set_offs(SPRING_Y_MAX);
+#endif
 }
 
 //时钟表盘上拉菜单退出处理
 static void func_clock_sub_card_exit(void)
 {
     f_card_t *f_card = (f_card_t *)func_cb.f_cb;
-//    co_timer_del(&f_card->music_refresh);
     func_cb.last = FUNC_CARD;
     tft_set_temode(DEFAULT_TE_MODE);
 }

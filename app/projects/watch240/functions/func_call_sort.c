@@ -7,9 +7,16 @@
 #define TRACE(...)
 #endif
 
+
+typedef struct f_call_sort_t_
+{
+    s32 card_x;
+    s32 card_y;
+    s32 card_pic_res;
+    s32 card_txt_str;
+    u8 sta;
+} f_call_sort_t;
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-
 #define CARD_WIDTH         109 //卡片宽度
 #define CARD_HEIGHT        102 //卡片高度
 #define CARD_ROUND         20  //卡片圆角
@@ -22,15 +29,6 @@
 #define CARD_TXT_HEIGHT    30 //卡片文本高度
 #define CARD_TXT_X         (-46)
 #define CARD_TXT_Y         (12)
-
-typedef struct f_call_sort_t_
-{
-    s32 card_x;
-    s32 card_y;
-    s32 card_pic_res;
-    s32 card_txt_str;
-    u8 sta;
-} f_call_sort_t;
 
 #define CALL_MENU_CNT                       ((int)(sizeof(f_call_sort) / sizeof(f_call_sort[0])))
 static const f_call_sort_t f_call_sort[]=
@@ -114,15 +112,6 @@ static void func_call_sort_card_click(void)
 #define CARD_TXT_X         (0)
 #define CARD_TXT_Y         (25)
 
-typedef struct f_call_sort_t_
-{
-    s32 card_x;
-    s32 card_y;
-    s32 card_pic_res;
-    s32 card_txt_str;
-    u8 sta;
-} f_call_sort_t;
-
 #define CALL_MENU_CNT                       ((int)(sizeof(f_call_sort) / sizeof(f_call_sort[0])))
 static const f_call_sort_t f_call_sort[]=
 {
@@ -188,6 +177,10 @@ static void func_call_sort_card_click(void)
     func_cb.sta = f_call_sort[compo_id-1].sta;
 
 }
+#else
+compo_form_t *func_call_sort_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 static void func_call_sort_process(void)
@@ -197,6 +190,7 @@ static void func_call_sort_process(void)
 
 static void func_call_sort_message(size_msg_t msg)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     switch (msg)
     {
         case MSG_CTP_CLICK:
@@ -213,6 +207,7 @@ static void func_call_sort_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#endif
 }
 
 static void func_call_sort_enter(void)

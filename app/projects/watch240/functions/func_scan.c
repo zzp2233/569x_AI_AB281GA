@@ -86,7 +86,10 @@ compo_form_t *func_scan_form_create(void)
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
     return frm;
 }
-
+#else
+compo_form_t *func_scan_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //扫一扫功能事件处理

@@ -142,7 +142,37 @@ static void func_set_sub_sav_disp(void)
     compo_cardbox_icon_set(cardbox_sav,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
     compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus() ? ON_PIC : OFF_PIC);
 }
+#else
+#define VOL_CHANGE          4  //音量等级每次增加或者减少4
+#define MOTOR_MAX_LEVEL     4  //马达最大等级
 
+typedef struct f_sav_t_
+{
+    u8 vol_value;
+    u8 shk_value;
+} f_sav_t;
+
+enum
+{
+    COMPO_ID_SAV = 1,
+    COMPO_ID_MUTE,
+};
+
+#define  ON_PIC     UI_BUF_I332001_PUBLIC_SWITCH02_BIN
+#define  OFF_PIC    UI_BUF_I332001_PUBLIC_SWITCH00_BIN
+
+//声音与振动页面
+compo_form_t *func_set_sub_sav_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+
+//更新显示界面
+static void func_set_sub_sav_disp(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //声音与振动事件处理

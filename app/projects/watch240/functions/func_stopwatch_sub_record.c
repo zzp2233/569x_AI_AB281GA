@@ -157,7 +157,30 @@ compo_form_t *func_stopwatch_sub_record_form_create(void)
 
     return frm;
 }
+#else
+#define STOPWATCH_LIST_CNT                       ((int)(sizeof(tbl_stopwatch_list) / sizeof(tbl_stopwatch_list[0])))
+#define NUM_REC_COLOR               make_color(0xff, 0x83, 00)
+enum
+{
+    COMPO_ID_LISTBOX = 1,
+};
 
+typedef struct f_stopwatch_sub_record_t_
+{
+    compo_listbox_t *listbox;
+
+} f_stopwatch_sub_record_t;
+
+static const compo_listbox_item_t tbl_stopwatch_list[STOPWATCH_REC_NUM_MAX];
+
+
+//创建秒表记录窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_stopwatch_sub_record_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //秒表记录功能事件处理
 static void func_stopwatch_sub_record_process(void)

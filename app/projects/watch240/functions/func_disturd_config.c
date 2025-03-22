@@ -9,8 +9,6 @@
 #define TRACE(...)
 #endif
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
 //组件ID
 enum
 {
@@ -34,15 +32,6 @@ enum
     COMPO_ID_TXT_MIN_4,
     COMPO_ID_TXT_MIN_5,
 };
-#define TXT_SPACING    (105-62)
-#define CENTER_TXT_Y   (130/2)
-#define TXT_12_HOUR_X  (85+58/2)
-#define TXT_12_MIN_X   (172+58/2)
-#define TXT_24_HOUR_X  (4+100/2)
-#define TXT_24_MIN_X   (168+34/2)
-
-const uint16_t TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
-
 typedef struct f_disturd_sub_set_t_
 {
     bool time_scale;
@@ -58,6 +47,15 @@ typedef struct f_disturd_sub_set_t_
     u8 hour_old;
     u8 min_old;
 } f_disturd_sub_set_t;
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#define TXT_SPACING    (105-62)
+#define CENTER_TXT_Y   (130/2)
+#define TXT_12_HOUR_X  (85+58/2)
+#define TXT_12_MIN_X   (172+58/2)
+#define TXT_24_HOUR_X  (4+100/2)
+#define TXT_24_MIN_X   (168+34/2)
+
+const uint16_t TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
 
 /*函数功能：获取设置时间（上下 & 上上下下 ）的数*/
 /*入口参数：mode->时间参数 ，0为24小时制 ，1为12小时制*/
@@ -576,22 +574,6 @@ enum
 
 const uint16_t TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
 
-typedef struct f_disturd_sub_set_t_
-{
-    bool time_scale;
-    bool touch_flag;
-    bool set_hour_flag;
-    bool am_pm_flag;
-    u8 disturd_hour[5];
-    u8 disturd_min[5];
-    s32 move_dy;
-    s32 move_dy_data;
-    u8 hour;
-    u8 min;
-    u8 hour_old;
-    u8 min_old;
-} f_disturd_sub_set_t;
-
 /*函数功能：获取设置时间（上下 & 上上下下 ）的数*/
 /*入口参数：mode->时间参数 ，0为24小时制 ，1为12小时制*/
 /*入口参数：timer->设置时间*/
@@ -1077,7 +1059,27 @@ static void func_disturd_sub_set_button_click(void)
         func_disturd_sub_set_refresh();
     }
 }
-
+#else
+///创建定时勿扰设置窗体
+compo_form_t *func_disturd_sub_set_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+static void func_disturd_sub_move(void)
+{
+}
+//单击按钮
+static void func_disturd_sub_set_button_click(void)
+{
+}
+static void func_disturd_sub_set_timer_pic_bg(void)
+{
+}
+static void func_disturd_sub_time_init(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //定时勿扰设置功能事件处理

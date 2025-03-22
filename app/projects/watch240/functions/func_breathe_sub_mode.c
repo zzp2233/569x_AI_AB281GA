@@ -917,7 +917,17 @@ static void func_breathe_sub_mode_button_click(void)
 
 //    func_breathe_sub_mode_button_release_handle();
 }
+#else
+typedef struct f_breathe_sub_mode_t_
+{
 
+} f_breathe_sub_mode_t;
+compo_form_t *func_breathe_sub_mode_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    return;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //设置功能事件处理
@@ -929,7 +939,7 @@ static void func_breathe_sub_mode_process(void)
 //设置功能消息处理
 static void func_breathe_sub_mode_message(size_msg_t msg)
 {
-
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -960,6 +970,7 @@ static void func_breathe_sub_mode_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#endif
 }
 
 //进入设置功能
@@ -967,13 +978,14 @@ static void func_breathe_sub_mode_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_breathe_sub_mode_t));
     func_cb.frm_main = func_breathe_sub_mode_form_create();
-
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_breathe_sub_mode_t *f_set = (f_breathe_sub_mode_t*) func_cb.f_cb;
     memcpy(f_set->set_num_item, tbl_breathe_set_num_item, sizeof(tbl_breathe_set_num_item));
     //f_set->size = gui_image_get_size(UI_BUF_ALARM_CLOCK_NUM_BIN);
     f_set->num_height = widget_text_get_height();
 
     func_cb.enter_tick = tick_get();
+#endif
 }
 
 //退出设置功能

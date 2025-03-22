@@ -266,7 +266,52 @@ static void func_set_sub_list_switch_to_clock(void)
     func_cb.sta = func_sta;
     // sys_cb.set_idx = 0;
 }
+#else
 
+#define SET_LIST_CNT                       ((int)(sizeof(tbl_style_list) / sizeof(tbl_style_list[0])))
+
+u8 func_menu_sub_skyrer_get_first_idx(void);
+
+enum
+{
+    COMPO_ID_LISTBOX = 1,
+};
+
+//风格列表tbl
+static const compo_listbox_item_t tbl_style_list[] =
+{
+    {0},
+};
+
+typedef struct f_style_t_
+{
+    compo_listbox_t *listbox;
+    u8 sel_idx;
+    bool flags;
+} f_style_t;
+
+u8 func_sel_style_bit(uint n)
+{
+
+}
+//创建菜单风格窗体
+compo_form_t *func_style_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    return frm;
+}
+
+//点进图标进入对应的菜单风格
+static void func_set_sub_list_icon_click(void)
+{
+}
+
+//切换到设置时钟页面
+static void func_set_sub_list_switch_to_clock(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 

@@ -1041,6 +1041,7 @@ void func_switch_to_menu(void)
     u16 switch_mode;
     bool flag_frm_menu;                                                         //是否需要创建菜单窗体
     flag_frm_menu = true;
+
     if (func_cb.menu_style == MENU_STYLE_FOOTBALL)
     {
         switch_mode = FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO;;
@@ -1065,7 +1066,6 @@ void func_switch_to_menu(void)
         widget_icon_t *icon;
         compo_form_t *frm = func_create_form(FUNC_MENU);                        //创建下一个任务的窗体
         component_t *compo = compo_get_next((component_t *)frm->title);
-
         if (compo->type == COMPO_TYPE_ICONLIST)
         {
             compo_iconlist_t *iconlist = (compo_iconlist_t *)compo;
@@ -1428,6 +1428,10 @@ void func_message(size_msg_t msg)
             break;
 
         case KU_BACK:
+#if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT)
+            func_cb.menu_style = MENU_STYLE_LIST;
+            uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
+#endif
             if (func_cb.flag_sort)
             {
                 func_switch_to_clock();                     //切换回主时钟
@@ -1442,6 +1446,7 @@ void func_message(size_msg_t msg)
             }
             else
             {
+
                 func_back_to();                             //直接退出任务
             }
             break;

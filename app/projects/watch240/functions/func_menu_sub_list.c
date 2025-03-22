@@ -177,6 +177,80 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #define  BATTERY_PIC_2_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
 #define  BATTERY_PIC_3_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
 #define  BATTERY_PIC_4_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+static const compo_listbox_item_t tbl_menu_list[] =
+{
+
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {.func_sta=FUNC_ALARM_CLOCK,              .res_addr=UI_BUF_I335001_01_MENU_ALARM_CLOCK_BIN,                .str_idx=STR_ALARM_CLOCK},           //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT    
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_01_MENU_BLOOD_OXYGEN_BIN,               .str_idx=STR_BLOOD_OXYGEN},          //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+// #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_01_MENU_BLOOD_PRESSURE_BIN,             .str_idx=STR_BLOOD_OXYGEN},          //血压
+// #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {.func_sta=FUNC_BREATHE,                  .res_addr=UI_BUF_I335001_01_MENU_BREATH_TRAINING_BIN,            .str_idx=STR_BREATHE_TRAIN},         //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I335001_01_MENU_CALL_BIN,                       .str_idx=STR_PHONE},                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {.func_sta=FUNC_ACTIVITY,                 .res_addr=UI_BUF_I335001_01_MENU_DAILY_ACTIVITIES_BIN,           .str_idx=STR_EVREY_DAY_ACTIVITY},    //每日活动
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_01_MENU_FEMALE_HEALTH_BIN,              .str_idx=STR_WOMEN_HEALTH},          //女性健康
+// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_01_MENU_HEART_RATE_BIN,                 .str_idx=STR_HEART_RATE},            //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_01_MENU_MOOD_BIN,                       .str_idx=STR_HEART_RATE},            //情绪
+// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {.func_sta=FUNC_BT,                       .res_addr=UI_BUF_I335001_01_MENU_MUSIC_BIN,                      .str_idx=STR_MUSIC},                 //蓝牙播放器(控制手机音乐)
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {.func_sta=FUNC_MESSAGE,                  .res_addr=UI_BUF_I335001_01_MENU_NOTIFICATION_BIN,               .str_idx=STR_MESSAGE},               //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_01_MENU_SETTINGS_BIN,                   .str_idx=STR_SETTING},               //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_01_MENU_SLEEP_BIN,                      .str_idx=STR_SLEEP},                 //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_01_MENU_STRESS_BIN,                    .str_idx=STR_SLEEP},                 //压力
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_01_MENU_TOOLBOX_BIN,                    .str_idx=STR_SLEEP},                 //工具箱
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I335001_01_MENU_TRAINING_BIN,                   .str_idx=STR_SPORTS},                //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_01_MENU_VOICE_ASSISTANT_BIN,            .str_idx=STR_VOICE},                 //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {.func_sta=FUNC_WEATHER,                  .res_addr=UI_BUF_I335001_01_MENU_WEATHER_BIN,                    .str_idx=STR_WEATHER},               //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+};
+#define  BATTERY_PIC_0_BIN   0                ///电池电量图标0
+#define  BATTERY_PIC_1_BIN   0                ///电池电量图标1
+#define  BATTERY_PIC_2_BIN   0                ///电池电量图标2
+#define  BATTERY_PIC_3_BIN   0                ///电池电量图标3
+#define  BATTERY_PIC_4_BIN   0                ///电池电量图标4
+#else
+static const compo_listbox_item_t tbl_menu_list[] =
+{
+    {0},
+};
+#define  BATTERY_PIC_0_BIN   0                ///电池电量图标0
+#define  BATTERY_PIC_1_BIN   0                ///电池电量图标1
+#define  BATTERY_PIC_2_BIN   0                ///电池电量图标2
+#define  BATTERY_PIC_3_BIN   0                ///电池电量图标3
+#define  BATTERY_PIC_4_BIN   0                ///电池电量图标4
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //菜单栏自定义图标更新
@@ -217,13 +291,6 @@ compo_form_t *func_menu_sub_list_form_create(void)
     if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
     {
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_FOURGRID);
-//        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TIME|COMPO_FORM_MODE_SHOW_ICON);
-        //电池电量
-//        compo_textbox_t *battery_txt = compo_textbox_create(frm, 4);
-//        compo_textbox_set_pos(battery_txt, 43, 25);
-////        compo_textbox_set_autosize(battery_txt, true);
-//        compo_bonddata(battery_txt, COMPO_BOND_BATTERY);
-        //电池
         compo_picturebox_t *battery_pic = compo_picturebox_create(frm, BATTERY_PIC_4_BIN);
         compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
         compo_picturebox_set_pos(battery_pic, 43, 25);
@@ -240,40 +307,24 @@ compo_form_t *func_menu_sub_list_form_create(void)
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
+#else
+        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
         if (menu_idx < 1)
         {
             menu_idx = 1;
         }
     }
-
-    //compo_listbox_cycle_en(listbox, true);  //循环滑动
     compo_listbox_set(listbox, tbl_menu_list, MENU_LIST_CNT);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_focus_byidx(listbox, menu_idx);
-
-//    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_HOUR, UI_BUF_ICON_CLOCK_H_BIN, 1, 2);
-//    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_MIN, UI_BUF_ICON_CLOCK_M_BIN, 1, 2);
-//    compo_listbox_add_time(listbox, COMPO_LISTBOX_TIME_TYPE_SEC, UI_BUF_ICON_CLOCK_S_BIN, 9, 2);
-//    compo_listbox_set_start_angle(listbox, 900);
-//    compo_listbox_set_time_idx(listbox, 0);
 
     compo_listbox_update(listbox);
 
     if (func_cb.flag_animation)
     {
         widget_set_visible(listbox->page, false);
-    }
-
-    if (func_cb.menu_style == MENU_STYLE_LIST)
-    {
-//        compo_scroll_t* scroll = compo_scroll_create(frm, SCROLL_TYPE_VERTICAL);
-//        compo_setid(scroll, COMPO_ID_SCROLLBAR);
-//        compo_scroll_set_w_r(scroll, 10);
-//        compo_scroll_set_range(scroll, 200);
-//        compo_scroll_set_pos(scroll, 300, 90);
-//        compo_scroll_set_value(scroll, 0);
-//        compo_scroll_set_edge_circle(scroll, true);
     }
     return frm;
 }
@@ -439,12 +490,7 @@ static void func_menu_sub_list_process(void)
         if (func_cb.menu_style == MENU_STYLE_LIST)
         {
             int value = (f_menu->listbox->ofs_y - f_menu->listbox->mcb->first_y) * 1000 / abs_s(f_menu->listbox->mcb->last_y - f_menu->listbox->mcb->first_y);
-            //printf("value = %d, ofs_y=%d, first_y=%d, last_y=%d\n", value, f_menu->listbox->ofs_y,
-            //                f_menu->listbox->mcb->first_y, f_menu->listbox->mcb->last_y);
-//            compo_scroll_t* scroll = compo_getobj_byid(COMPO_ID_SCROLLBAR);
-//            compo_scroll_set_value(scroll, value);
         }
-//        printf("length:%d\n",f_menu->listbox->ofs_y);
         compo_listbox_move(f_menu->listbox);
     }
     func_process();
@@ -486,18 +532,6 @@ static void func_menu_sub_list_message(size_msg_t msg)
                 break;
 
             case MSG_CTP_SHORT_RIGHT:
-//                if(func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
-//                {
-//                    if(f_menu->listbox->ofs_y <= 90)
-//                    {
-//                        if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
-//                        {
-//                            func_menu_sub_list_switch_to_clock();       //返回时钟表盘界面
-//                        }
-//                    }
-//                }
-//
-//                break;
             case KU_DELAY_BACK:
                 if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
                 {
@@ -524,7 +558,6 @@ static void func_menu_sub_list_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_menu_list_t));
     func_cb.frm_main = func_menu_sub_list_form_create();
-
     f_menu_list_t *f_menu = (f_menu_list_t *)func_cb.f_cb;
     f_menu->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_menu->listbox;

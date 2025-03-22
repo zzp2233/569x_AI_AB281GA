@@ -216,6 +216,12 @@ static const menu_hc_item_t tbl_menu_grid[] =
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I332001_THEME_ICON1_GUANJI_BIN,                 FUNC_SET_SUB_OFF},
 };
+#else
+//全部图标资源tbl, 最大可以显示81个图标
+static const menu_hc_item_t tbl_menu_grid[] =
+{
+    {0},
+};
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //gridbox菜单控制结构体
 typedef struct f_menu_grid_t_

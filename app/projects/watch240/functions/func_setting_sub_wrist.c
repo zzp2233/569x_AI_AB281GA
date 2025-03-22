@@ -156,6 +156,39 @@ compo_form_t *func_set_sub_wrist_form_create(void)
 
     return frm;
 }
+#else
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    0,         //ON
+    0,         //OFF
+};
+
+static void switch_set_sub_wrist(void)
+{
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //抬腕亮屏事件处理
 static void func_set_sub_wrist_process(void)

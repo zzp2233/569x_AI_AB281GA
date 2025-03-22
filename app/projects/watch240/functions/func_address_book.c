@@ -81,7 +81,16 @@ static bool address_book_update_callback(u32 item_cnt, char* str_txt1, u16 str_t
 //            printf("****[%d] -> %s\n", name_utf8_len, name_utf8);
         }
 
-        memcpy(str_txt2, address_book_tbl[index].numberAscii, 14);
+        if (str_txt2_len > 14)
+        {
+            memcpy(str_txt2, address_book_tbl[index].numberAscii, 12);
+            memcpy(str_txt2 + 12, "...", 3);
+            str_txt2_len = 15;
+        }
+        else
+        {
+            memcpy(str_txt2, address_book_tbl[index].numberAscii, str_txt2_len);
+        }
         return true;
     }
     return false;

@@ -136,6 +136,7 @@ typedef struct
 #if UTE_MODULE_SCREENS_BT_DISCONNECT_NOTIFY_SUPPORT
     uint8_t needRemindBtDisconnectCnt;
 #endif
+    bool isBleLinkBackFlag;
 } ute_module_call_data_t;
 
 /**
@@ -161,6 +162,7 @@ typedef enum
 {
     CALL_OUTGOING = 0,
     CALL_INCOMING,
+    CALL_INVALID,
 } CALL_STATUS_T;
 
 /**
@@ -239,7 +241,8 @@ void uteModuleCallSyncAddressBookStart(void);
 void uteModuleCallClearNumberAndName(void);
 bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen);
 void uteModuleCallSetBeforeCallStatus(uint8_t status);
-void uteModuleCallUpdateCallingTimeSecond(uint32_t second);
+void uteModuleCallResetCallingTimeSecond(void);
+uint32_t uteModuleCallGetCallingTimeSecond(void);
 void uteModuleCallGetData(ute_bt_call_data_t *data);
 uint8_t uteModuleCallGetCallRecordsSize(ute_module_call_records_t *pData);
 bool uteModuleCallDeleteCallRecords(void);

@@ -45,9 +45,9 @@ compo_form_t *func_heart_warning_form_create(void)
     compo_textbox_set_forecolor(textbox,make_color(255,69,46));
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_HIGHT]));
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_HIGHT])+strlen(i18n[STR_HEART_LOW]));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,26/2+168,230,widget_text_get_max_height());
-    if(uteModuleHeartGetMaxHeartValue() < uteModuleHeartGetHeartValue())
+    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue())
     {
         compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
     }
@@ -55,7 +55,6 @@ compo_form_t *func_heart_warning_form_create(void)
     {
         compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
     }
-    compo_setid(textbox,COMPO_ID_TEXT_UINT);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_REPEAT_HEART_BIN);
     compo_picturebox_set_pos(picbox, 11+140, 98+14);
@@ -71,16 +70,7 @@ static void func_heart_warning_updata(void)
     snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
     compo_textbox_set(textbox, txt_buf);
 
-    textbox = compo_getobj_byid(COMPO_ID_TEXT_UINT);
-    if (uteModuleHeartGetHeartValue() > uteModuleHeartGetMaxHeartValue())
-    {
-        compo_textbox_set(textbox, i18n[STR_HEART_HIGHT]);
-    }
-    else if (uteModuleHeartGetHeartValue() < uteModuleHeartGetMinHeartValue())
-    {
-        compo_textbox_set(textbox, i18n[STR_HEART_LOW]);
-    }
-    else
+    if (uteModuleHeartGetHeartValue() < uteModuleHeartGetHeartWaringMaxValue() && uteModuleHeartGetHeartValue() > uteModuleHeartGetHeartWaringMinValue())
     {
         uteModuleGuiCommonGoBackLastScreen();
     }

@@ -187,6 +187,14 @@ typedef struct
     uint8_t sportOnOff; //运动开关
     uint8_t sportOrder; //运动序号
 } ute_sports_list_param_t;
+
+typedef struct
+{
+    sport_mode_type sportMode; //运动类型
+    uint16_t languageId; //词条ID
+    uint32_t iconAddr; //图标地址
+} ute_sports_list_display_param_t;
+
 typedef struct
 {
     ute_sports_list_param_t sportListData[UTE_MODULE_SPORT_MAX_SPORT_NUM];
@@ -196,6 +204,7 @@ typedef struct
     uint16_t minSportNum; //最少显示运动数量
     uint16_t maxSportNum; //最大显示运动数量
     bool appUpdateTrainingListFlag; //APP修改运动列表
+    ute_sports_list_display_param_t *sportListDisplayData; // 运动列表显示数据，方便多界面复用图标
 } ute_sports_hundred_sort_data_t;
 #endif
 
@@ -401,6 +410,8 @@ void uteModuleSprotCountdownTimerStart(uint16_t ms);
 void uteModuleSprotCountdownTimerStop(void);
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
 void uteModuleSportHundredSportCmd(uint8_t*receive,uint8_t length);
+void uteModuleSportHundredSportGetInfo(sport_mode_type mode, uint16_t *languageId, uint32_t *iconAddr);
+void uteModuleSportRegisterDisplayData(ute_sports_list_display_param_t *displayData, uint16_t dataSize);
 sport_mode_type uteModuleSportFindHundredSportIndex(uint8_t sportOrder);
 uint8_t uteModuleSportGetRealIndex(uint8_t sportMode, const uint8_t *sportList);
 uint8_t uteModuleSportGetSportOrder(uint8_t sportMode);

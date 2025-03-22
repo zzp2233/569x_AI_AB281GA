@@ -825,9 +825,10 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
 #endif
         uteDrvBatteryCommonData.chargerStatus = BAT_STATUS_NO_CHARGE;
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-        if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID||
-           uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID||
-           uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID)
+        if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID ||
+           uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID ||
+           uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID ||
+           uteModuleGuiCommonGetCurrentScreenId() == FUNC_ONLINE_FACTORY_TEST)
         {
             return;
         }
@@ -848,9 +849,10 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
             if(uteApplicationCommonIsStartupFinish())
             {
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-                if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID||
-                   uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID||
-                   uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID)
+                if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID ||
+                   uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID ||
+                   uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID ||
+                   uteModuleGuiCommonGetCurrentScreenId() == FUNC_ONLINE_FACTORY_TEST)
                 {
                     return;
                 }

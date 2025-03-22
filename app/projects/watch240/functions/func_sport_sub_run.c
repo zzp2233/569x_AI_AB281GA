@@ -235,9 +235,9 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_pos(txt, 45,123+38*3);
     compo_textbox_set_align_center(txt,false);
     memset(txt_buf,0,sizeof(txt_buf));
-    if(data->saveData.avgHeartRate!=0 && data->saveData.avgHeartRate!=255)
+    if(uteModuleHeartGetHeartValue() > 0 && uteModuleHeartGetHeartValue() < 255)
     {
-        snprintf(txt_buf, sizeof(txt_buf), "%d",data->saveData.avgHeartRate);
+        snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
     }
     else
     {
@@ -429,15 +429,16 @@ static void func_sport_sub_run_updata(void)
         if(txt_heart != NULL && uint_heart != NULL)
         {
             memset(txt_buf,0,sizeof(txt_buf));
-            if(data->saveData.avgHeartRate!=0 && data->saveData.avgHeartRate!=255)
+            if(uteModuleHeartGetHeartValue() > 0 && uteModuleHeartGetHeartValue() < 255)
             {
-                snprintf(txt_buf, sizeof(txt_buf), "%d",data->saveData.avgHeartRate);
+                snprintf(txt_buf, sizeof(txt_buf), "%d",uteModuleHeartGetHeartValue());
             }
             else
             {
                 snprintf(txt_buf, sizeof(txt_buf), "--");
             }
 
+            compo_textbox_set(txt_heart, txt_buf);
             txt_wid = widget_text_get_area(txt_heart->txt);
             compo_textbox_set_pos(uint_heart,txt_wid.wid+50,131+38*3);
         }

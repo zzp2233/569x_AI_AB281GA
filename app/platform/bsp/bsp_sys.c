@@ -332,6 +332,19 @@ void usr_tmr5ms_isr(void)
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_TIME_SEC_BASE, 0);
 #endif
     }
+
+    if (sys_cb.loudspeaker_mute_flag)
+    {
+        if (sys_cb.loudspeaker_mute_countdown > 0)
+        {
+            sys_cb.loudspeaker_mute_countdown--;
+        }
+        else
+        {
+            sys_cb.loudspeaker_mute_flag = false;
+            dac_set_power_on_off(0);
+        }
+    }
 }
 
 AT(.com_text.bsp.sys)
@@ -339,14 +352,27 @@ void bsp_loudspeaker_mute(void)
 {
     LOUDSPEAKER_MUTE();
     sys_cb.loudspeaker_mute = 1;
-    delay_5ms(4);
-    dac_set_power_on_off(0);
+
+    extern bool isPlaying;
+    extern bool isRecording;
+
+    if(isPlaying || isRecording)
+    {
+        delay_5ms(4);
+        dac_set_power_on_off(0);
+    }
+    else
+    {
+        sys_cb.loudspeaker_mute_flag = true;
+        sys_cb.loudspeaker_mute_countdown = 4; //延迟25ms再mute
+    }
 }
 
 AT(.com_text.bsp.sys)
 void bsp_loudspeaker_unmute(void)
 {
     sys_cb.loudspeaker_mute = 0;
+    sys_cb.loudspeaker_mute_flag = false;
     LOUDSPEAKER_UNMUTE();
 }
 

@@ -810,6 +810,74 @@ void uteModuleSportHundredSportCmd(uint8_t*receive,uint8_t length)
         uteModuleSportSetHundredData(receive,length);
     }
 }
+
+/**
+ * @brief        获取百种运动列表显示信息
+ * @details      通过运动类型获取运动列表显示信息，方便运动相关界面复用图片
+ * @param[in]    mode      运动类型
+ * @param[out]   *languageId      语言ID
+ * @param[out]   *iconAddr      图片地址
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-03-21
+ */
+void uteModuleSportHundredSportGetInfo(sport_mode_type mode, uint16_t *languageId, uint32_t *iconAddr)
+{
+    if (uteModuleSprotData.sportSort.sportListDisplayData == NULL)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,ERROR,sportListDisplayData is NULL!", __func__);
+        return;
+    }
+
+    if (mode <= SPORT_TYPE_NONE || mode >= SPORT_TYPE_MAX)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,ERROR,mode is error!", __func__);
+        return;
+    }
+
+    uint8_t i = 0;
+    for (i = 0; i < UTE_MODULE_SPORT_MAX_SPORT_NUM; i++)
+    {
+        if (uteModuleSprotData.sportSort.sportListDisplayData[i].sportMode == mode)
+        {
+            *languageId = uteModuleSprotData.sportSort.sportListDisplayData[i].languageId;
+            *iconAddr = uteModuleSprotData.sportSort.sportListDisplayData[i].iconAddr;
+            return;
+        }
+    }
+
+    if (i == UTE_MODULE_SPORT_MAX_SPORT_NUM)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,ERROR,mode is not found!", __func__);
+    }
+}
+
+/**
+ * @brief        注册百种运动列表显示信息
+ * @details      注册百种运动列表显示信息，方便运动相关界面复用图片
+ * @param[in]    *displayData      运动列表显示信息数组
+ * @param[in]    dataSize      运动列表显示信息数组大小
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-03-21
+ */
+void uteModuleSportRegisterDisplayData(ute_sports_list_display_param_t *displayData, uint16_t dataSize)
+{
+    if(displayData == NULL || dataSize == 0)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,ERROR,invalid displayData or dataSize!", __func__);
+        return;
+    }
+
+    if(sizeof(ute_sports_list_display_param_t) * UTE_MODULE_SPORT_MAX_SPORT_NUM != dataSize)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,ERROR,displayData size is error!", __func__);
+        return;
+    }
+
+    uteModuleSprotData.sportSort.sportListDisplayData = (ute_sports_list_display_param_t*)displayData;
+}
+
 #endif
 
 /**
@@ -4042,7 +4110,8 @@ void uteModuleSportDisconnectHandler(void)
         uteModuleSprotData.moreSportData.status = ALL_SPORT_STATUS_PAUSE;
         // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SPORTS_PAUSED_ID);          //跳到暂停界面，自动暂停运动，蓝牙连接才可继续跑
         //func_switch_to(FUNC_SPORT_SUB_RUN, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
-        func_cb.sta = FUNC_SPORT_SUB_RUN;
+        // func_cb.sta = FUNC_SPORT_SUB_RUN;
+        uteTaskGuiStartScreen(FUNC_SPORT_SUB_RUN,0,__func__);
         sys_cb.sport_app_disconnect = true;
     }
 }

@@ -30,6 +30,7 @@
 #include "ute_module_music.h"
 #include "ute_module_gui_common.h"
 #include "ute_module_menstrualcycle.h"
+#include "ute_module_newFactoryTest.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -46,7 +47,6 @@
 #include "ute_module_emotionPressure.h"
 #include "UTEsecurityCode.h"
 #include "ute_picture_font_common.h"
-#include "ute_module_newFactoryTest.h"
 #include "ute_module_lockScreen.h"
 #include "ute_module_game.h"
 #include "ute_module_calculator.h"

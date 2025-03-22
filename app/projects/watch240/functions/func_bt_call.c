@@ -45,12 +45,10 @@ void bt_incall_time_update(void)
     char *call_time_str = f_bt_call->call_time_str;
 
 #if !CALL_MGR_EN
-    u16 call_times = f_bt_call->times;
+    u16 call_times = uteModuleCallGetCallingTimeSecond();
 #else
     u16 call_times = bt_cb.times;
 #endif
-
-    uteModuleCallUpdateCallingTimeSecond(call_times);
 
     u8 hours   = call_times / 3600;
     u8 minutes = (call_times % 3600) / 60;
@@ -206,7 +204,6 @@ static void func_bt_call_interface(void)
         }
         // printf("call_yes\n");
         func_cb.frm_main = func_bt_call_form_create();
-        co_timer_set(&bt_call_time_count, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, bt_call_1s_time_back, NULL);
         f_bt_call->sta = true;
     }
 }
@@ -390,6 +387,7 @@ static void func_bt_call_click(void)
 #else
                 audio_path_init(AUDIO_PATH_BTMIC);
                 audio_path_start(AUDIO_PATH_BTMIC);
+                bt_sco_pcm_set_dump_pass_cnt(5);
 #endif
                 compo_button_set_bgimg(btn,UI_BUF_I330001_CALL_CALLING_JINGYIN00_BIN);
             }
@@ -435,12 +433,10 @@ void bt_incall_time_update(void)
     char *call_time_str = f_bt_call->call_time_str;
 
 #if !CALL_MGR_EN
-    u16 call_times = f_bt_call->times;
+    u16 call_times = uteModuleCallGetCallingTimeSecond();;
 #else
     u16 call_times = bt_cb.times;
 #endif
-
-    uteModuleCallUpdateCallingTimeSecond(call_times);
 
     u8 hours   = call_times / 3600;
     u8 minutes = (call_times % 3600) / 60;
@@ -838,7 +834,6 @@ void func_bt_call_enter(void)
 
 void func_bt_call_exit(void)
 {
-    co_timer_del(&bt_call_time_count);
     bsp_bt_call_exit();
 #if UTE_MODULE_SCREENS_SCAN_SUPPORT
     if (func_cb.sta == FUNC_SCAN)
@@ -855,7 +850,17 @@ void func_bt_call_exit(void)
 
 void func_bt_call(void)
 {
+    u16 interval = 0, latency = 0, tout = 0;
+
     printf("%s\n", __func__);
+
+    if (ble_is_connect() && (ble_get_conn_interval() < 400))
+    {
+        interval = ble_get_conn_interval();
+        latency = ble_get_conn_latency();
+        tout = ble_get_conn_timeout();
+        ble_update_conn_param(480, 0, 500);
+    }
     func_bt_call_enter();
     while (func_cb.sta == FUNC_BT_CALL)
     {
@@ -863,4 +868,12 @@ void func_bt_call(void)
         func_bt_call_message(msg_dequeue());
     }
     func_bt_call_exit();
+
+    if (bt_cb.disp_status != BT_STA_INCALL)
+    {
+        if (interval | latency | tout)
+        {
+            ble_update_conn_param(interval, latency, tout);
+        }
+    }
 }

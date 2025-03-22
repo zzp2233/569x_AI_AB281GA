@@ -8,7 +8,13 @@
 #else
 #define TRACE(...)
 #endif
-
+typedef struct f_sport_sort_t_
+{
+    s32 card_x;
+    s32 card_y;
+    s32 card_pic_res;
+    s32 card_txt_str;
+} f_sport_sort_t;
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 #define CARD_WIDTH         109 //卡片宽度
@@ -24,14 +30,6 @@
 #define CARD_TXT_X         (-46)
 #define CARD_TXT_Y         (12)
 
-typedef struct f_sport_sort_t_
-{
-    s32 card_x;
-    s32 card_y;
-    s32 card_pic_res;
-    s32 card_txt_str;
-} f_sport_sort_t;
-3
 #define SOPRT_MENU_CNT                       ((int)(sizeof(f_sport_sort) / sizeof(f_sport_sort[0])))
 static const f_sport_sort_t f_sport_sort[]=
 {
@@ -162,14 +160,6 @@ static void func_sport_sort_card_update(void)
 #define CARD_TXT_X         (0)
 #define CARD_TXT_Y         (25)
 
-typedef struct f_sport_sort_t_
-{
-    s32 card_x;
-    s32 card_y;
-    s32 card_pic_res;
-    s32 card_txt_str;
-} f_sport_sort_t;
-
 #define SOPRT_MENU_CNT                       ((int)(sizeof(f_sport_sort) / sizeof(f_sport_sort[0])))
 static const f_sport_sort_t f_sport_sort[]=
 {
@@ -281,6 +271,20 @@ static void func_sport_sort_card_update(void)
         return;
     }
 #endif
+}
+#else
+compo_form_t *func_sport_sort_form_create(void)
+{
+}
+static void func_sport_sort_card_update(void)
+{
+
+}
+static void func_sport_sort_card_click(void)
+{
+}
+static u16 func_sport_sort_card_get_btn_id(point_t pt)
+{
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 

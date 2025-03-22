@@ -12,7 +12,6 @@
 #define TRACE(...)
 #endif
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 extern bool func_switching_flag;
 enum
 {
@@ -28,7 +27,7 @@ typedef struct f_address_book_list_t_
     compo_listbox_t *listbox;
     u32 tick;
 } f_address_book_list_t;
-
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static const compo_listbox_item_t tbl_call_list[UTE_MODULE_CALL_ADDRESSBOOK_MAX_COUNT] = {0};       //list列表
 static ute_module_call_addressbook_t* address_book_tbl = NULL;            //电话簿数据
 static u16 address_book_cnt = 0;                                       //联系人个数
@@ -365,7 +364,12 @@ void func_address_book_icon_click(void)
         bt_call_redial_number();
     }
 }
-
+#else
+compo_form_t *func_address_book_form_create(void)
+{
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //电话簿功能事件处理
 static void func_address_book_process(void)
@@ -557,6 +561,13 @@ static void func_address_book_message(size_msg_t msg)
             }
             break;
 
+        default:
+            func_message(msg);
+            break;
+    }
+#else
+    switch (msg)
+    {
         default:
             func_message(msg);
             break;

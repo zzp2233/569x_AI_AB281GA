@@ -143,7 +143,14 @@ static void func_restart_button_click(void)
             break;
     }
 }
+#else
+compo_form_t *func_set_sub_restart_form_create(void)
+{
+}
+static void func_restart_button_click(void)
+{
 
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //重启功能事件处理

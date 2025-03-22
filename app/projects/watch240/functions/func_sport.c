@@ -361,6 +361,82 @@ static void func_sport_list_icon_click(void)
     uteModuleSportStartMoreSports(tbl_sport_list_sort[icon_idx].vidx, 1, 0);
     sys_cb.sport_idx = tbl_sport_list_sort[icon_idx].vidx;
 }
+#else
+#define MENU_LIST_CNT                       ((int)(sizeof(tbl_sport_list_data) / sizeof(tbl_sport_list_data[0])))
+static const compo_listbox_item_t tbl_sport_list_data[] =
+{
+    {0},
+};
+
+enum//对应运动中显示运动数据种类->不同项目可自行添加
+{
+    MULTIPLE_DATA=0,//多数据
+    MID_DATA,       //中数据
+    LESS_DATA,      //少数据
+};
+
+u32 func_sport_get_disp_mode(void)//对应运动中显示运动数据种类->不同项目可自行添加->用于运动中与运动结束
+{
+    switch(sys_cb.sport_idx)
+    {
+        case SPORT_TYPE_RUNNING:
+        case SPORT_TYPE_CLIMBING:
+        case SPORT_TYPE_WALKING:
+        case SPORT_TYPE_TREADMILL:
+            return MULTIPLE_DATA;
+        case SPORT_TYPE_JUMP_ROPE://跳绳
+        case SPORT_TYPE_SWIMMING://游泳
+            return MID_DATA;
+        default:
+            return LESS_DATA;
+    }
+}
+
+u32 func_sport_get_str(u8 sport_idx)
+{
+    if (sport_idx < MENU_LIST_CNT)
+    {
+        return tbl_sport_list_data[sport_idx].str_idx;
+    }
+    return 0;
+}
+
+u32 func_sport_get_ui(u8 sport_idx)
+{
+    if (sport_idx < MENU_LIST_CNT)
+    {
+        return tbl_sport_list_data[sport_idx].res_addr;
+    }
+    return 0;
+}
+
+static const compo_listbox_item_t tbl_sport_list[UTE_MODULE_SPORT_MAX_SPORT_NUM] =
+{
+    {0},
+};
+
+static compo_listbox_item_t tbl_sport_list_sort[UTE_MODULE_SPORT_MAX_SPORT_NUM];
+
+//创建运动窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sport_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_CUM_SPORT_LIST);
+    compo_listbox_set(listbox, tbl_sport_list_sort, 2);
+    compo_listbox_set_bgimg(listbox, 0);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    compo_listbox_set_focus_byidx(listbox, 0);
+    compo_listbox_update(listbox);
+    return frm;
+}
+
+//点进图标进入应用
+static void func_sport_list_icon_click(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT

@@ -84,7 +84,10 @@ compo_form_t *func_set_sub_rstfy_form_create(void)
     compo_button_set_pos(btn, 212+80/2, 234+80/2);
     return frm;
 }
-
+#else
+compo_form_t *func_set_sub_rstfy_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //恢复出厂功能事件处理

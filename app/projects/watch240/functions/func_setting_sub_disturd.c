@@ -13,6 +13,7 @@ static void func_set_sub_disturd_enter(void);
 #define TRACE(...)
 #endif
 
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 #define         DRAG_AUTO_SPEED     10
@@ -1734,14 +1735,37 @@ static void func_set_sub_disturd_enter(void)
     widget_page_set_client(func_cb.frm_main->page_body, 0, -f_disturd->focus_y);
     f_disturd->time_scale = uteModuleSystemtime12HOn();
 }
+#else
+typedef struct f_disturd_t_
+{
 
+} f_disturd_t;
+compo_form_t *func_set_sub_disturd_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+static void func_set_sub_disturd_message(size_msg_t msg)
+{
+}
+static void func_set_sub_disturd_process(void)
+{
+}
+static void func_set_sub_disturd_enter(void)
+{
+    func_cb.f_cb = func_zalloc(sizeof(f_disturd_t));
+    func_cb.frm_main = func_set_sub_disturd_form_create();
+
+}
+
+#endif
 //退出勿扰模式功能
 static void func_set_sub_disturd_exit(void)
 {
     func_cb.last = FUNC_SET_SUB_DISTURD;
     printf("hour3:%d\n",sys_cb.disturd_start_time_sec);
 }
-
 //勿扰模式功能
 void func_set_sub_disturd(void)
 {

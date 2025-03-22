@@ -7,9 +7,6 @@
 #else
 #define TRACE(...)
 #endif
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
 typedef struct f_off_t_
 {
 
@@ -20,6 +17,8 @@ enum
     COMPO_ID_BTN_NO = 1,
     COMPO_ID_BTN_YES,
 };
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 //关机页面
 compo_form_t *func_set_sub_off_form_create(void)
 {
@@ -50,16 +49,6 @@ compo_form_t *func_set_sub_off_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-typedef struct f_off_t_
-{
-
-} f_off_t;
-
-enum
-{
-    COMPO_ID_BTN_NO = 1,
-    COMPO_ID_BTN_YES,
-};
 //关机页面
 compo_form_t *func_set_sub_off_form_create(void)
 {
@@ -89,6 +78,14 @@ compo_form_t *func_set_sub_off_form_create(void)
 
     return frm;
 }
+#else
+//关机页面
+compo_form_t *func_set_sub_off_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //关机功能事件处理
@@ -104,21 +101,11 @@ static void func_off_button_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_YES:
-            // func_cb.sta = FUNC_PWROFF;
             uteApplicationCommonPoweroff();
             break;
 
         case COMPO_ID_BTN_NO:
-//            task_stack_pop();
             func_back_to();
-//            if(func_cb.last == FUNC_SETTING)
-//            {
-//                func_cb.sta = FUNC_SETTING;
-//            }
-//            else
-//            {
-//                func_cb.sta = FUNC_MENU;
-//            }
             break;
 
         default:

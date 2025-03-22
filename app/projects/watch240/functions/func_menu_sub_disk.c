@@ -175,6 +175,11 @@ static const compo_disklist_item_t tbl_menu_disk[] =
 //    {STR_STYLE,                  UI_BUF_I330001_THEME_1_THEME_BIN,              .func_sta = FUNC_STYLE},                //风格
 //#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
 };
+#else
+static const compo_disklist_item_t tbl_menu_disk[] =
+{
+    {0},
+};
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_sub_disk_form_create(void)

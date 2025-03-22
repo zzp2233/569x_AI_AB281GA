@@ -206,7 +206,13 @@ static void func_up_watch_dial_disp(void)
         }
     }
 }
-
+#else
+compo_form_t *func_up_watch_dial_form_create(void)
+{
+}
+static void func_up_watch_dial_disp(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 

@@ -189,6 +189,53 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_SET_SUB_ABOUT,            UI_BUF_I332001_THEME_ICON1_GUANYU_BIN,            STR_SETTING_ABOUT},         //设置--关于
 //    {FUNC_OFF,                      UI_BUF_ICON_OFF_BIN,                        STR_SETTING_OFF},           //关机
 };
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#define FUNC_ITEM_CNT   (sizeof(func_item_tbl) / sizeof(func_item_tbl[0]))
+const static func_item_info_t func_item_tbl[] =
+{
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {FUNC_HEARTRATE,                UI_BUF_I335001_01_MENU_HEART_RATE_BIN,                 STR_HEART_RATE},            //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {FUNC_BT,                       UI_BUF_I335001_01_MENU_MUSIC_BIN,                      STR_MUSIC},                 //蓝牙播放器(控制手机音乐)
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {FUNC_ALARM_CLOCK,              UI_BUF_I335001_01_MENU_ALARM_CLOCK_BIN,                STR_ALARM_CLOCK},           //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {FUNC_BLOOD_OXYGEN,             UI_BUF_I335001_01_MENU_BLOOD_OXYGEN_BIN,               STR_BLOOD_OXYGEN},          //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {FUNC_BREATHE,                  UI_BUF_I335001_01_MENU_BREATH_TRAINING_BIN,                    STR_BREATHE_TRAIN},               //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {FUNC_SLEEP,                    UI_BUF_I335001_01_MENU_SLEEP_BIN,                      STR_SLEEP},                 //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {FUNC_WEATHER,                  UI_BUF_I335001_01_MENU_WEATHER_BIN,                    STR_WEATHER},               //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {FUNC_MESSAGE,                  UI_BUF_I335001_01_MENU_NOTIFICATION_BIN,                    STR_MESSAGE},               //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {FUNC_VOICE,                    UI_BUF_I335001_01_MENU_VOICE_ASSISTANT_BIN,                      STR_VOICE},                 //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {FUNC_SPORT,                    UI_BUF_I335001_01_MENU_TRAINING_BIN,                      STR_SPORTS},                //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {FUNC_CALL,                     UI_BUF_I335001_01_MENU_CALL_BIN,                       STR_PHONE},                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {FUNC_SETTING,                  UI_BUF_I335001_01_MENU_SETTINGS_BIN,                    STR_SETTING},               //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+};
+#else
+#define FUNC_ITEM_CNT   (sizeof(func_item_tbl) / sizeof(func_item_tbl[0]))
+const static func_item_info_t func_item_tbl[] =
+{
+    {0,0,0},
+};
 #endif
 
 /**

@@ -5,9 +5,6 @@
 #include "ute_module_gui_common.h"
 #include "ute_drv_motor.h"
 
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-#define TXT_X_MIN 20
 enum
 {
     COMPO_ID_TXT_NUMBER = 0x01,     //避免id被覆盖
@@ -23,7 +20,8 @@ typedef struct f_ble_call_t_
     char pbap_result_Name[50];//存放来电与接听联系人名字
     char tmp_pbap_result_Name[50];//存放来电与接听联系人名字
 } f_ble_call_t;
-
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#define TXT_X_MIN 20
 
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_ble_call_form_create(void)
@@ -71,23 +69,6 @@ compo_form_t *func_ble_call_form_create(void)
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 #define TXT_X_MIN 20
-enum
-{
-    COMPO_ID_TXT_NUMBER = 0x01,     //避免id被覆盖
-    COMPO_ID_TXT_NAME,
-    COMPO_ID_TXT_TIME,
-    COMPO_ID_BTN_REJECT,
-};
-
-typedef struct f_ble_call_t_
-{
-    u16 times;                  //通话秒数
-    char call_time_str[10];     //通话计时字符串
-    char pbap_result_Name[50];//存放来电与接听联系人名字
-    char tmp_pbap_result_Name[50];//存放来电与接听联系人名字
-} f_ble_call_t;
-
-
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_ble_call_form_create(void)
 {
@@ -119,7 +100,15 @@ compo_form_t *func_ble_call_form_create(void)
 
     return frm;
 }
+#else
+#define TXT_X_MIN 20
+compo_form_t *func_ble_call_form_create(void)
+{
+    //新建窗体, 通话页面
+    compo_form_t *frm = compo_form_create(true);
 
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 void func_ble_call_process(void)

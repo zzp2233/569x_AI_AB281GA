@@ -493,7 +493,51 @@ static void func_stopwatch_button_click(u32 key_flag)
     }
 
 }
+#else
 
+#define NUM_REC_COLOR               make_color(0xff, 0x83, 00)
+
+//组件ID
+enum
+{
+    //按键
+    COMPO_ID_BTN_RECORD_VIEW = 1,       //查看记录
+    COMPO_ID_BTN_RECORD,                //记录当前时间
+    COMPO_ID_BTN_AFRESH,                //重新开始
+    COMPO_ID_BTN_START_REC,             //开始计时
+    //数字文本
+    COMPO_ID_NUM_STOPWATCH_TIME,        //当前计时
+    COMPO_ID_NUM_STOPWATCH_REC,         //记录数
+};
+
+typedef struct f_stopwatch_t_
+{
+    u8 min;                 //分
+    u8 sec;                 //秒
+    u16 msec;               //毫秒
+} f_stopwatch_t;
+
+typedef struct stopwatch_num_item_t_
+{
+    u32 res_addr;
+    int num_cnt;
+    u16 num_id;
+    int val;
+    s16 x;
+    s16 y;
+    bool zfill_en;
+    bool visible_en;
+} stopwatch_num_item_t;
+
+static co_timer_t stopwatch_timer;
+
+//创建秒表窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_stopwatch_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //秒表功能事件处理

@@ -3,6 +3,19 @@
 #include "func_bt.h"
 #include "ute_module_call.h"
 
+typedef struct f_bt_call_t_
+{
+    bool sta;                   //0:呼出(outgoing); 1:通话(call);
+
+    u16 times;                  //通话秒数
+    char call_time_str[10];     //通话计时字符串
+    u32 clcc_tick;              //主动查询号码计时
+    u32 exit_tick;              //页面退出计时
+    bool call_mute_flag;
+    char pbap_result_Name[50];//存放来电与接听联系人名字
+    char tmp_pbap_result_Name[50];
+} f_bt_call_t;
+static co_timer_t bt_call_time_count;
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 #define TXT_X_MIN 20
@@ -16,19 +29,6 @@ enum
     COMPO_ID_BTN_MIC,
     COMPO_ID_TXT_IN_CALL,
 };
-
-typedef struct f_bt_call_t_
-{
-    bool sta;                   //0:呼出(outgoing); 1:通话(call);
-
-    u16 times;                  //通话秒数
-    char call_time_str[10];     //通话计时字符串
-    u32 clcc_tick;              //主动查询号码计时
-    u32 exit_tick;              //页面退出计时
-    bool call_mute_flag;
-    char pbap_result_Name[50];//存放来电与接听联系人名字
-    char tmp_pbap_result_Name[50];
-} f_bt_call_t;
 
 static void func_bt_call_back_to(void)
 {
@@ -182,7 +182,6 @@ compo_form_t *func_bt_outgoing_form_create(void)
     return frm;
 }
 
-static co_timer_t bt_call_time_count;
 static void bt_call_1s_time_back(void)
 {
     if(func_cb.sta == FUNC_BT_CALL)
@@ -414,19 +413,6 @@ enum
     COMPO_ID_TXT_IN_CALL,
 };
 
-typedef struct f_bt_call_t_
-{
-    bool sta;                   //0:呼出(outgoing); 1:通话(call);
-
-    u16 times;                  //通话秒数
-    char call_time_str[10];     //通话计时字符串
-    u32 clcc_tick;              //主动查询号码计时
-    u32 exit_tick;              //页面退出计时
-    bool call_mute_flag;
-    char pbap_result_Name[50];//存放来电与接听联系人名字
-    char tmp_pbap_result_Name[50];
-} f_bt_call_t;
-
 static void func_bt_call_back_to(void)
 {
     u8 last_func = func_directly_back_to();
@@ -435,8 +421,6 @@ static void func_bt_call_back_to(void)
         func_directly_back_to();
     }
 }
-
-static co_timer_t bt_call_time_count;
 static void bt_call_1s_time_back(void)
 {
     if(func_cb.sta == FUNC_BT_CALL)
@@ -758,11 +742,21 @@ static void func_bt_call_click(void)
     }
 
 }
+#else
+compo_form_t *func_bt_outgoing_form_create(void)
+{
+}
+void func_bt_call_process(void)
+{}
+void  func_bt_call_number_update(void)
+{}
+
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //蓝牙音乐消息处理
 static void func_bt_call_message(size_msg_t msg)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
     switch (msg)
@@ -819,6 +813,7 @@ static void func_bt_call_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#endif
 }
 
 void func_bt_call_enter(void)

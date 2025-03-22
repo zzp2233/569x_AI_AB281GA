@@ -936,6 +936,17 @@ static void func_breathe_sub_time_button_click(void)
 
 //    func_breathe_sub_time_button_release_handle();
 }
+#else
+typedef struct f_breathe_sub_time_t_
+{
+} f_breathe_sub_time_t;
+//创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_breathe_sub_time_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // UTE_DRV_TFT_S240X284_NV3030B_HY201068AVC_QSPI_SUPPORT
 
 //设置功能事件处理
@@ -951,23 +962,23 @@ static void func_breathe_sub_time_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
             func_breathe_sub_time_button_touch_handle();
+#endif
             break;
 
         case MSG_CTP_CLICK:
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
             func_breathe_sub_time_button_click();
+#endif
             break;
-
         case MSG_CTP_SHORT_UP:
         case MSG_CTP_SHORT_DOWN:
         case MSG_CTP_SHORT_LEFT:
         case MSG_CTP_LONG:
-//        func_breathe_sub_time_button_release_handle();
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-//        func_breathe_sub_time_button_release_handle();
-            func_message(msg);
             break;
 
         case MSG_QDEC_BACKWARD:
@@ -985,13 +996,14 @@ static void func_breathe_sub_time_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_breathe_sub_time_t));
     func_cb.frm_main = func_breathe_sub_time_form_create();
-
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_breathe_sub_time_t *f_set = (f_breathe_sub_time_t*) func_cb.f_cb;
     memcpy(f_set->set_num_item, tbl_breathe_set_num_item, sizeof(tbl_breathe_set_num_item));
     //f_set->size = gui_image_get_size(UI_BUF_ALARM_CLOCK_NUM_BIN);
     f_set->num_height = widget_text_get_height();
 
     func_cb.enter_tick = tick_get();
+#endif
 }
 
 //退出设置功能

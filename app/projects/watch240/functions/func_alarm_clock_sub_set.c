@@ -3022,7 +3022,20 @@ static void func_alarm_clock_sub_set_button_click(void)
 
     func_alarm_clock_sub_set_button_release_handle();
 }
+#else
+typedef struct f_alarm_clock_sub_set_t_
+{
+} f_alarm_clock_sub_set_t;
+compo_form_t *func_alarm_clock_sub_set_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
 
+    return frm;
+}
+static void func_alarm_clock_sub_set_button_release_handle(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //闹钟设置功能事件处理
@@ -3038,11 +3051,15 @@ static void func_alarm_clock_sub_set_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
             func_alarm_clock_sub_set_button_touch_handle();
+#endif
             break;
 
         case MSG_CTP_CLICK:
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
             func_alarm_clock_sub_set_button_click();
+#endif
             break;
 
         case MSG_CTP_SHORT_UP:
@@ -3062,6 +3079,7 @@ static void func_alarm_clock_sub_set_message(size_msg_t msg)
             break;
 
         case MSG_SYS_500MS:
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
             if (f_alarm_set->time_scale != uteModuleSystemtime12HOn())
             {
                 if (func_cb.frm_main != NULL)
@@ -3076,6 +3094,7 @@ static void func_alarm_clock_sub_set_message(size_msg_t msg)
                 }
                 func_alarm_clock_sub_set_enter();
             }
+#endif
             break;
 
         default:
@@ -3091,6 +3110,7 @@ static void func_alarm_clock_sub_set_enter(void)
     func_cb.frm_main = func_alarm_clock_sub_set_form_create();
 
     f_alarm_clock_sub_set_t *f_alarm_set = (f_alarm_clock_sub_set_t*) func_cb.f_cb;
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     memcpy(f_alarm_set->set_num_item, tbl_aclock_set_num_item, sizeof(tbl_aclock_set_num_item));
     memcpy(f_alarm_set->set_ampm_item, tbl_aclock_set_ampm_item, sizeof(tbl_aclock_set_ampm_item));
     f_alarm_set->size = gui_image_get_size(tbl_aclock_set_pic_bg.bg_hour.res_24_destory);
@@ -3099,6 +3119,7 @@ static void func_alarm_clock_sub_set_enter(void)
     func_cb.enter_tick = tick_get();
 
     f_alarm_set->time_scale = uteModuleSystemtime12HOn();
+#endif
 }
 
 //退出闹钟设置功能

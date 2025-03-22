@@ -307,6 +307,15 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
     compo_iconlist_update(iconlist);
     return frm;
 }
+#else
+//蜂窝图标列表及顺序
+const menu_hc_item_t tbl_menu_honeycomb[] =
+{
+    {0},
+};
+compo_form_t *func_menu_sub_honeycomb_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 

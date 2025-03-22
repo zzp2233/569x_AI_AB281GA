@@ -31,6 +31,16 @@
 #endif
 
 #define WEEKS_LIST_CNT                  ((int)(sizeof(tbl_weeks_list) / sizeof(tbl_weeks_list[0])))
+static const compo_listbox_item_t tbl_weeks_list[] =
+{
+    {STR_MONDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_MON},
+    {STR_TUESDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_TUE},
+    {STR_WEDNESDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_WED},
+    {STR_THURSDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_THU},
+    {STR_FRIDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_FRI},
+    {STR_SATURDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SAT},
+    {STR_SUNDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SUN},
+};
 
 //组件ID
 enum
@@ -47,24 +57,12 @@ enum
     COMPO_ID_PIC_REPETAT_YES_CLICK,
 
 };
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 typedef struct f_alarm_clock_sub_repeat_t_
 {
     compo_listbox_t *listbox;
 
 } f_alarm_clock_sub_repeat_t;
-
-static const compo_listbox_item_t tbl_weeks_list[] =
-{
-    {STR_MONDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_MON},
-    {STR_TUESDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_TUE},
-    {STR_WEDNESDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_WED},
-    {STR_THURSDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_THU},
-    {STR_FRIDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_FRI},
-    {STR_SATURDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SAT},
-    {STR_SUNDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SUN},
-};
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建闹钟--重复窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
@@ -115,28 +113,6 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
     return frm;
 }
 
-//触摸按钮效果处理
-static void func_alarm_clock_sub_repeat_button_touch_handle(void)
-{
-
-    int id = compo_get_button_id();
-
-    switch (id)
-    {
-        case COMPO_ID_BTN_REPETAT_YES:
-            break;
-
-        default:
-            break;
-    }
-
-}
-
-//释放按钮效果处理
-static void func_alarm_clock_sub_repeat_button_release_handle(void)
-{
-}
-
 //单击按钮
 static void func_alarm_clock_sub_repeat_button_click(void)
 {
@@ -192,26 +168,8 @@ static void func_alarm_clock_sub_repeat_button_click(void)
             break;
     }
 
-    func_alarm_clock_sub_repeat_button_release_handle();
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-typedef struct f_alarm_clock_sub_repeat_t_
-{
-    compo_listbox_t *listbox;
-
-} f_alarm_clock_sub_repeat_t;
-
-static const compo_listbox_item_t tbl_weeks_list[] =
-{
-    {STR_MONDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_MON},
-    {STR_TUESDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_TUE},
-    {STR_WEDNESDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_WED},
-    {STR_THURSDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_THU},
-    {STR_FRIDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_FRI},
-    {STR_SATURDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SAT},
-    {STR_SUNDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SUN},
-};
-
 //创建闹钟--重复窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 {
@@ -259,28 +217,6 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
     return frm;
 }
 
-//触摸按钮效果处理
-static void func_alarm_clock_sub_repeat_button_touch_handle(void)
-{
-
-    int id = compo_get_button_id();
-
-    switch (id)
-    {
-        case COMPO_ID_BTN_REPETAT_YES:
-            break;
-
-        default:
-            break;
-    }
-
-}
-
-//释放按钮效果处理
-static void func_alarm_clock_sub_repeat_button_release_handle(void)
-{
-}
-
 //单击按钮
 static void func_alarm_clock_sub_repeat_button_click(void)
 {
@@ -336,9 +272,16 @@ static void func_alarm_clock_sub_repeat_button_click(void)
             break;
     }
 
-    func_alarm_clock_sub_repeat_button_release_handle();
-}
 
+}
+#else
+compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
+{
+}
+//单击按钮
+static void func_alarm_clock_sub_repeat_button_click(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //闹钟--重复功能事件处理
@@ -358,32 +301,15 @@ static void func_alarm_clock_sub_repeat_message(size_msg_t msg)
 
     if (compo_listbox_message(listbox, msg))
     {
-        func_alarm_clock_sub_repeat_button_release_handle();
         return;                                         //处理列表框信息
     }
     switch (msg)
     {
-        case MSG_CTP_TOUCH:
-            func_alarm_clock_sub_repeat_button_touch_handle();
-            break;
-
         case MSG_CTP_CLICK:
             func_alarm_clock_sub_repeat_button_click();
             break;
 
-        case MSG_CTP_SHORT_UP:
-        case MSG_CTP_SHORT_DOWN:
-        case MSG_CTP_SHORT_LEFT:
-        case MSG_CTP_LONG:
-            func_alarm_clock_sub_repeat_button_release_handle();
             break;
-
-        case MSG_CTP_SHORT_RIGHT:
-            func_alarm_clock_sub_repeat_button_release_handle();
-            func_message(msg);
-            break;
-
-
 
         default:
             func_message(msg);

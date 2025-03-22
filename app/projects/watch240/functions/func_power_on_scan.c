@@ -7,12 +7,11 @@
 #else
 #define TRACE(...)
 #endif
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 typedef struct f_power_on_scan_t_
 {
 
 } f_power_on_scan_t;
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建扫一扫窗体
 compo_form_t *func_power_on_scan_form_create(void)
@@ -42,10 +41,7 @@ compo_form_t *func_power_on_scan_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-typedef struct f_power_on_scan_t_
-{
 
-} f_power_on_scan_t;
 
 //创建扫一扫窗体
 compo_form_t *func_power_on_scan_form_create(void)
@@ -78,7 +74,13 @@ compo_form_t *func_power_on_scan_form_create(void)
 
     return frm;
 }
-
+#else
+compo_form_t *func_power_on_scan_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //扫一扫功能事件处理
 static void func_power_on_scan_process(void)

@@ -173,7 +173,13 @@ void func_set_sub_language_list_icon_click(void)
     compo_listbox_update(listbox);
     uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
 }
-
+#else
+compo_form_t *func_set_sub_language_form_create(void)
+{
+}
+void func_set_sub_language_list_icon_click(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //语言设置功能事件处理

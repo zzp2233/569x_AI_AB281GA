@@ -245,7 +245,12 @@ const menu_hc_item_t tbl_menu_waterfall[] =
     {UI_BUF_I332001_THEME_ICON1_WEATHER_BIN,                   FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 };
-
+#else
+//瀑布流图标列表及顺序
+const menu_hc_item_t tbl_menu_waterfall[] =
+{
+    {0},
+};
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

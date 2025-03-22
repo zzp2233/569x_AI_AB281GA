@@ -801,20 +801,31 @@ static void func_compo_select_sub_init(void)
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
 }
+#else
+//创建组件选择窗体
+compo_form_t *func_compo_select_sub_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //组件选择功能事件处理
 static void func_compo_select_sub_process(void)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     compo_listbox_t *listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_move(listbox);
     func_process();
+#endif
 }
 
 
 //组件选择功能消息处理
 static void func_compo_select_sub_message(size_msg_t msg)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     compo_listbox_t *listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     if (compo_listbox_message(listbox, msg))
     {
@@ -840,21 +851,31 @@ static void func_compo_select_sub_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#else
+    switch (msg)
+    {
+        default:
+            func_message(msg);
+            break;
+    }
+#endif
 }
 
 
 //进入组件选择功能
 static void func_compo_select_sub_enter(void)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     func_cb.f_cb = func_zalloc(sizeof(f_compo_select_sub_t));
     func_cb.frm_main = func_compo_select_sub_form_create();
     func_compo_select_sub_init();
+#endif
 }
 
 //退出组件选择功能
 static void func_compo_select_sub_exit(void)
 {
-//    printf("%s\n", __func__);
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     func_cb.last = FUNC_COMPO_SELECT_SUB;
 
     f_compo_select_sub_t *f_compo_select_sub = (f_compo_select_sub_t *)func_cb.f_cb;
@@ -888,17 +909,11 @@ static void func_compo_select_sub_exit(void)
     {
         func_cb.flag_sort = true;
     }
-
-//    printf("EXIT tbl_sort [");
-//    for(int i=0; i<sizeof(func_cb.tbl_sort)/sizeof(func_cb.tbl_sort[0]);  i++) {
-//        printf("%d ", func_cb.tbl_sort[i]);
-//    }
-//    printf("]\n");
-
     printf("%s->index[%d], sort[%d]\n", __func__, index, func_cb.flag_sort);
 
     // 保存排序
     uteModuleGuiCommonSavescreenTblSort(func_cb.tbl_sort, func_cb.sort_cnt);
+#endif
 }
 
 //组件选择功能

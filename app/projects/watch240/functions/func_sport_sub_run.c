@@ -649,18 +649,8 @@ static void func_sport_sub_run_click_handler(void)
             f_sport_sub_run->move_offset = 0;
 
             widget_page_set_client(func_cb.frm_main->page_body,f_sport_sub_run->move_offset, 0);
-
-            // if(f_sport_sub_run->sport_run_state == SPORT_RUN_START)
-            // {
-            //     uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
-            //     f_sport_sub_run->sport_run_state = SPORT_RUN_STOP;
-            // }
-            // else if(f_sport_sub_run->sport_run_state == SPORT_RUN_STOP)
-            // {
             f_sport_sub_run->sport_run_state = SPORT_RUN_START;
             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
-            // }
-            //  printf("sport_xx:%d\n",f_sport_sub_run->sport_run_state);
             break;
         case COMPO_ID_BTN_SPORT_EXIT:
         {
@@ -670,20 +660,15 @@ static void func_sport_sub_run_click_handler(void)
             if (sport_flag)
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_SPORT);
-                if (res == MSGBOX_RES_OK)
-                {
-                    uteModuleSportStopMoreSports();                             //通知APP退出运动
-                }
             }
             else
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG1], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_NONE);
-                if (res == MSGBOX_RES_OK)
-                {
-                    func_cb.sta = FUNC_SPORT_FINISH;
-                }
             }
-
+            if (res == MSGBOX_RES_OK)
+            {
+                uteModuleSportStopMoreSports();                             //通知APP退出运动
+            }
         }
     }
 }
@@ -1455,7 +1440,93 @@ static void func_sport_sub_run_exit_data(void)
     }
 
 }
+#else
+enum
+{
+    COMPO_ID_NUM_SPORT_TIME = 1,    //运动时间
+    COMPO_ID_NUM_SPORT_HEARTRATE,   //心率
+    COMPO_ID_NUM_SPORT_KCAL,        //卡路里
+    COMPO_ID_NUM_SPORT_STEP,        //计步
+    COMPO_ID_NUM_SPORT_KM,          //距离
+    COMPO_ID_NUM_SPORT_COUNT,       //计次
 
+    COMPO_ID_UINT_SPORT_TIME,        //运动时间
+    COMPO_ID_UINT_SPORT_HEARTRATE,   //心率
+    COMPO_ID_UINT_SPORT_KCAL,        //卡路里
+    COMPO_ID_UINT_SPORT_STEP,        //计步
+    COMPO_ID_UINT_SPORT_KM,          //距离
+    COMPO_ID_UINT_SPORT_COUNT,       //计次
+
+    COMPO_ID_PIC_SPORT_HEARTRATE,    //心率图片
+    COMPO_ID_TILTE_TIME,             // 标题栏时间
+
+    COMPO_ID_BTN_SPORT_STOP,         //暂停
+    COMPO_ID_BTN_SPORT_EXIT,         //退出
+
+    COMPO_ID_TXT_SPORT_STOP,         //暂停
+
+};
+enum//对应运动中显示运动数据种类->不同项目可自行添加
+{
+    MULTIPLE_DATA=0,//多数据
+    MID_DATA,       //中数据
+    LESS_DATA,      //少数据
+};
+
+typedef struct f_sport_sub_run_t_
+{
+    u8 heart_pic_size_perc;
+    bool heart_pic_size_add_flag;
+    u32 updata_tick;
+
+    bool        touch_flag;
+    s32         move_offset;
+    s32         page_old_y;
+    u8          touch_state;
+    u8          page_num;
+    uint32_t    tick;
+    u8          switch_page_state;
+    bool        sport_run_state;
+    bool        sport_run_state_updata_flag;
+    bool        sport_run_km_uint_updata_flag;
+} f_sport_sub_run_t;
+
+enum
+{
+    TOUCH_FINISH_STATE=0,
+    AUTO_STATE,
+
+};
+enum
+{
+    PAGE_1=0,
+    PAGE_2,
+};
+enum
+{
+    SWITCH_YES=0,
+    SWITCH_NO,
+    TOTCH_MOVE,
+};
+enum
+{
+    SPORT_RUN_STOP=false,
+    SPORT_RUN_START=true,
+};
+static bool sport_start_flag = false;
+extern u32 func_sport_get_disp_mode(void);//对应运动中显示运动数据种类->不同项目可自行添加->用于运动中与运动结束
+extern u32 func_sport_get_str(u8 sport_idx);
+extern u32 func_sport_get_ui(u8 sport_idx);
+//创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sport_sub_run_form_create(void)
+{
+}
+static void func_sport_sub_run_click_handler(void)
+{
+}
+static void func_sport_sub_run_updata(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //功能事件处理

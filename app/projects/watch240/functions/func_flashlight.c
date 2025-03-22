@@ -141,7 +141,13 @@ static void func_flashlight_button_click(void)
         compo_textbox_set_visible(txt_idle, true);
     }
 }
-
+#else
+compo_form_t *func_flashlight_form_create(void)
+{
+}
+static void func_flashlight_button_click(void)
+{
+}
 #endif
 
 //手电筒功能事件处理

@@ -304,6 +304,13 @@ void func_set_sub_dousing_list_icon_click(void)
             break;
     }
 }
+#else
+compo_form_t *func_set_sub_dousing_form_create(void)
+{
+}
+void func_set_sub_dousing_list_icon_click(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //熄屏时长功能事件处理

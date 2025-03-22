@@ -47,6 +47,19 @@ static const compo_rotary_item_t tbl_rotary_item[] =
     [MENU_STYLE_WATERFALL]          = {UI_BUF_I332001_THEME_PREVIEW_EN_08_BIN,           STR_STYLE_WATERFALL},
     [MENU_STYLE_FOOTBALL]           = {UI_BUF_I332001_THEME_PREVIEW_EN_09_BIN,           STR_SPHERE},
 };
+#else
+static const compo_rotary_item_t tbl_rotary_item[] =
+{
+    [MENU_STYLE_LIST]               = {0,           STR_STYLE_LIST_1},
+    [MENU_STYLE_GRID]               = {0,           STR_CHECKERBOARD},
+    [MENU_STYLE_KALE]               = {0,           STR_HALO},
+    [MENU_STYLE_SKYRER]             = {0,           STR_STYLE_SKYRER},
+    [MENU_STYLE_CUM_SUDOKU]         = {0,           STR_GONG_GE},
+    [MENU_STYLE_CUM_GRID]           = {0,           STR_STYLE_GRID_1},
+    [MENU_STYLE_HONEYCOMB]          = {0,           STR_STYLE_HONEYCOMB},
+    [MENU_STYLE_WATERFALL]          = {0,           STR_STYLE_WATERFALL},
+    [MENU_STYLE_FOOTBALL]           = {0,           STR_SPHERE},
+};
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建转盘，创建窗体中不要使用功能结构体 func_cb.f_cb
 static compo_form_t *func_menustyle_rotary_form_create(void)

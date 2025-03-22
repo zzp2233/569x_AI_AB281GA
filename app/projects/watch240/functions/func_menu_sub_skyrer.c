@@ -232,6 +232,12 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
     {UI_BUF_I332001_THEME_ICON1_CONTACTS_BIN,              FUNC_ADDRESS_BOOK},
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 };
+#else
+//天圆地方图标列表及顺序
+static const compo_rings_item_t tbl_menu_skyrer[] =
+{
+    {0},
+};
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //SIZE保留区域
 static const int16_t tbl_keep_angle[] =

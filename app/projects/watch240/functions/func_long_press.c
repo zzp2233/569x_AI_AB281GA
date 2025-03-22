@@ -425,7 +425,54 @@ static void func_long_press_slide_disp_handle()
         compo_shape_set_location(rect_cover,IMG_BTN_FIRST_X-IMG_WIDTH/2,y-IMG_WIDTH/2,distance-IMG_BTN_FIRST_X+IMG_WIDTH,IMG_WIDTH);
     }
 }
+#else
+//三个图标与矩形的Y轴
+#define RECT_Y_1 GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y*0.4
+#define RECT_Y_2 GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y*0.1
+#define RECT_Y_3 GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y*0.6
 
+//矩形的宽度
+#define RECT_WIDTH GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6
+
+//图标对应矩形X轴前部坐标
+#define IMG_BTN_FIRST_X GUI_SCREEN_CENTER_X - (GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6)/2 + gui_image_get_size(UI_BUF_I330001_POWEROFF_ICON_RESTART_BIN).wid/2+3
+#define IMG_BTN_LAST_X  GUI_SCREEN_CENTER_X + (GUI_SCREEN_WIDTH-GUI_SCREEN_WIDTH/6)/2 - gui_image_get_size(UI_BUF_I330001_POWEROFF_ICON_RESTART_BIN).wid/2-3
+
+//#define IMG_WIDTH    gui_image_get_size(UI_BUF_I330001_POWEROFF_ICON_RESTART_BIN).wid//图片宽度
+#define IMG_WIDTH  56//图片宽度
+
+//进度条前后点
+#define RIGHT_TOUCH  IMG_BTN_FIRST_X+IMG_WIDTH/2
+#define LENGTH_TOUCH IMG_BTN_FIRST_X-IMG_WIDTH/2
+
+typedef struct f_long_press_t_
+{
+    bool touch_flag; //触屏状态标志位
+    bool touch_btn_flag;//触屏按键状态标志位
+    u16  touch_btn_id; //触屏按键id状态
+} f_long_press_t;
+
+
+enum
+{
+    RECT_ID_1 = 1,
+
+    IMG_BTN_ID_1,
+    IMG_BTN_ID_2,
+    IMG_BTN_ID_3,
+    CANCEL_BTN_ID,
+};
+
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_long_press_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+}
+static void func_long_press_slide_disp_handle()
+{
+
+}
 #endif
 
 //长按滑动关机显示处理

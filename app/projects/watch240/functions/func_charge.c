@@ -12,6 +12,11 @@
 #define TRACE(...)
 #endif
 
+typedef struct f_charge_t_
+{
+    u8 percent_bkp;
+} f_charge_t;
+#define BAT_PERCENT_VALUE       uteDrvBatteryCommonGetLvl()  //电量百分比数值
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 enum
@@ -30,8 +35,6 @@ enum
     COMPO_ID_RECT_BAT_4,
     COMPO_ID_RECT_BAT_5,
 };
-
-#define BAT_PERCENT_VALUE       uteDrvBatteryCommonGetLvl()  //电量百分比数值
 
 typedef struct charge_ui_handle_t_
 {
@@ -188,11 +191,6 @@ static const charge_ui_handle_t ui_handle =
 
 };
 
-typedef struct f_charge_t_
-{
-    u8 percent_bkp;
-} f_charge_t;
-
 //电量更新
 void func_charge_update(void)
 {
@@ -316,7 +314,6 @@ enum
     COMPO_ID_RECT_BAT_5,
 };
 
-#define BAT_PERCENT_VALUE       uteDrvBatteryCommonGetLvl()  //电量百分比数值
 
 typedef struct charge_ui_handle_t_
 {
@@ -473,11 +470,6 @@ static const charge_ui_handle_t ui_handle =
 
 };
 
-typedef struct f_charge_t_
-{
-    u8 percent_bkp;
-} f_charge_t;
-
 //电量更新
 void func_charge_update(void)
 {
@@ -583,21 +575,23 @@ compo_form_t *func_charge_form_create(void)
 
     return frm;
 }
+#else
+//创建充电窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_charge_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
 
+    return frm;
+}
+void func_charge_update(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //充电功能事件处理
 static void func_charge_process(void)
 {
-//    f_charge_t *f_charge = (f_charge_t *)func_cb.f_cb;
-
     func_charge_update();
-
-    // if (bsp_charge_sta_get() == 0)
-    // {
-    //     // func_cb.sta = FUNC_CLOCK;
-    //     uteModuleGuiCommonGoBackLastScreen();
-    // }
-
     func_process();
 }
 

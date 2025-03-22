@@ -285,12 +285,78 @@ static void func_voice_start_siri(void)
     }
 }
 
+#else
+//组件ID
+enum
+{
+    //图像
+    COMPO_ID_PIC_VOICE = 1,
+
+    //TEXT
+    COMPO_ID_TXT_VOICE,
+};
+enum
+{
+    FUNC_SIRI_STATUS_NONE = 0,
+    FUNC_SIRI_STATUS_CLICK,
+    FUNC_SIRI_STATUS_CONNBT,
+    FUNC_SIRI_STATUS_SPEAKER,
+};
+typedef struct ui_handle_t_
+{
+    struct animation_t
+    {
+        u16 id;
+        s16 x,y;
+        u8 radix;
+        u32 interval;
+        u32 res;
+    } animation;
+
+    struct text_t
+    {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+        u32 res;
+        bool center;
+        u16 str_id1;
+        u16 str_id2;
+    } text;
+} ui_handle_t;
+
+static const ui_handle_t ui_handle =
+{
+};
+typedef struct f_voice_t_
+{
+    bool siri_en;
+    u8 siri_status;
+    u32 voice_over_tick;
+} f_voice_t;
+//创建语音助手窗体
+compo_form_t *func_voice_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+static void func_voice_start_siri(void)
+{
+}
+static void func_voice_animation_playing(bool en)
+{
+
+}
+static void func_voice_frist_check(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //语音助手功能事件处理
 static void func_voice_process(void)
 {
-
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     static u8 siri_cnt = 0;
     static bool bt_connect_status = false;
@@ -369,7 +435,6 @@ static void func_voice_process(void)
             {
                 func_voice_animation_playing(false);
                 f_voice->siri_status = FUNC_SIRI_STATUS_CONNBT;
-//                compo_textbox_set(txt, i18n[STR_VOICE_BT_NOT_CONNECT]);
                 compo_textbox_set(txt, i18n[ui_handle.text.str_id1]);
             }
         }
@@ -383,7 +448,7 @@ static void func_voice_process(void)
             }
         }
     }
-
+#endif
     func_process();
 }
 

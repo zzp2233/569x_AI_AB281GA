@@ -70,6 +70,28 @@ static const compo_cube_item_t tbl_menu_cube[] =
     {UI_BUF_I332001_WATCH4_MF_05_BIN,            FUNC_BT},
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
 };
+#else
+static const compo_cube_item_t tbl_menu_cube[] =
+{
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {0,            FUNC_ACTIVITY},
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {0,            FUNC_SLEEP},
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {0,            FUNC_WEATHER},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {0,            FUNC_BLOOD_OXYGEN},
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {0,            FUNC_HEARTRATE},
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {0,            FUNC_BT},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+};
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 
@@ -777,27 +799,29 @@ static void func_clock_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_SHORT_UP:
-//        func_clock_sub_pullup();                //上拉菜单
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
             func_clock_butterfly_set_light_visible(false);
             func_switch_to(FUNC_CARD, FUNC_SWITCH_MENU_PULLUP_UP);  //上拉卡片界面
             if (func_cb.sta == FUNC_CLOCK)
             {
                 func_clock_butterfly_set_light_visible(true);
             }
+#endif
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-//        func_clock_sub_side();                  //右拉边菜单
-//            func_switch_to(FUNC_SIDEBAR, FUNC_SWITCH_LR_ZOOM_RIGHT);  //右滑界面
-            printf("%s -> MSG_CTP_SHORT_RIGHT\n", __func__);
+// #if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
             func_cb.left_sta = FUNC_MESSAGE;
             func_switch_to(FUNC_MESSAGE, FUNC_SWITCH_LR_ZOOM_RIGHT);
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+// #endif
             break;
 
         case MSG_CTP_SHORT_DOWN:
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
             func_clock_sub_dropdown();              //下拉菜单
+#endif
             break;
 
         case MSG_CTP_CLICK:

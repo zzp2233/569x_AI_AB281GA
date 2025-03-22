@@ -28,14 +28,12 @@ enum
     //图像id
     COMPO_ID_PIC_ALARM = 1,
 };
-
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 typedef struct f_alarm_clock_sub_pop_t_
 {
     u32 tick;
     bool visible;
 } f_alarm_clock_sub_pop_t;
-
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建闹钟弹出窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_sub_pop_form_create(void)
 {
@@ -59,11 +57,6 @@ compo_form_t *func_alarm_clock_sub_pop_form_create(void)
     return frm;
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-typedef struct f_alarm_clock_sub_pop_t_
-{
-    u32 tick;
-    bool visible;
-} f_alarm_clock_sub_pop_t;
 
 //创建闹钟弹出窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_sub_pop_form_create(void)
@@ -87,7 +80,10 @@ compo_form_t *func_alarm_clock_sub_pop_form_create(void)
 
     return frm;
 }
-
+#else
+compo_form_t *func_alarm_clock_sub_pop_form_create(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //闹钟弹出功能事件处理
 static void func_alarm_clock_sub_pop_process(void)

@@ -8,9 +8,6 @@
 #endif
 
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
-
-#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
 #define GAME_NUM                    1
 
 typedef struct f_game_t_
@@ -45,15 +42,12 @@ enum
 };
 
 
-
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static Style game[GAME_NUM] =
 {
     {"飞扬的小鸟", UI_BUF_I330001_GAME_BIRD2_BIN, 1},
     //{"俄罗斯方块", UI_BUF_TETRIS_16_1_BIN, 0},
 };
-
-
-
 //创建海拔窗体
 compo_form_t *func_game_form_create(void)
 {
@@ -93,42 +87,6 @@ compo_form_t *func_game_form_create(void)
 }
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-
-#define GAME_NUM                    1
-
-typedef struct f_game_t_
-{
-    compo_button_t* rect[GAME_NUM];
-    compo_picturebox_t * pic[GAME_NUM];
-    compo_textbox_t* text[GAME_NUM];
-
-    bool drag_flag;
-    s32 ofs_y;
-    s32 focus_y;
-    bool                flag_move_auto;
-    s16                 focus_icon_idx;
-    int                 moveto_idx;
-    s32                 moveto_y;
-    int                 line_height;
-    uint32_t            tick;
-    int                 line_center_y;
-} f_game_t;
-
-typedef struct
-{
-    char name[20];
-    u32 res_addr;
-    bool cutflag;   //图片资源是否需要裁剪
-} Style;
-
-enum
-{
-    GAME_ID_BTN_ICON_1 = 1,
-    GAME_ID_BTN_ICON_2,
-};
-
-
-
 static Style game[GAME_NUM] =
 {
     {"飞扬的小鸟", UI_BUF_I332001_GAME_BIRD2_BIN, 1},
@@ -171,7 +129,14 @@ compo_form_t *func_game_form_create(void)
     printf("%s\n", __func__);
     return frm;
 }
+#else
 
+compo_form_t *func_game_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //事件处理
 static void func_game_process(void)

@@ -12,21 +12,10 @@
 
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-enum
-{
-    COMPO_ID_NUM_DISP = 128,
-};
-
 typedef struct f_calculator_t_
 {
 
 } f_calculator_t;
-
-#define CALCULATOR_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_calculator_disp_btn_item) / sizeof(tbl_calculator_disp_btn_item[0])))
-#define CALCULATOR_DISP_NUMBER_MAX      32                 //显示最大位数
-
 typedef struct calculator_disp_btn_item_t_
 {
     u32 res_addr;
@@ -37,6 +26,15 @@ typedef struct calculator_disp_btn_item_t_
     u16 num_btn_old;
     u16 hold_btn_old;
 } calculator_disp_btn_item_t;
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+enum
+{
+    COMPO_ID_NUM_DISP = 128,
+};
+
+#define CALCULATOR_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_calculator_disp_btn_item) / sizeof(tbl_calculator_disp_btn_item[0])))
+#define CALCULATOR_DISP_NUMBER_MAX      32                 //显示最大位数
 
 //按钮item，创建时遍历一下
 static const calculator_disp_btn_item_t tbl_calculator_disp_btn_item[] =
@@ -174,24 +172,8 @@ enum
     COMPO_ID_NUM_DISP = 128,
 };
 
-typedef struct f_calculator_t_
-{
-
-} f_calculator_t;
-
 #define CALCULATOR_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_calculator_disp_btn_item) / sizeof(tbl_calculator_disp_btn_item[0])))
 #define CALCULATOR_DISP_NUMBER_MAX      32                 //显示最大位数
-
-typedef struct calculator_disp_btn_item_t_
-{
-    u32 res_addr;
-    u32 res_addr_dwon;
-    u16 btn_id;
-    s16 x;
-    s16 y;
-    u16 num_btn_old;
-    u16 hold_btn_old;
-} calculator_disp_btn_item_t;
 
 //按钮item，创建时遍历一下
 static const calculator_disp_btn_item_t tbl_calculator_disp_btn_item[] =
@@ -318,6 +300,15 @@ static void func_calculator_button_click_handler(void)
     func_calculator_button_release_handle();
     func_calculator_button_Refresh_disp();
 }
+#else
+
+compo_form_t *func_calculator_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    return frm;
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //计算器功能事件处理
@@ -334,6 +325,7 @@ static void func_calculator_process(void)
 //计算器功能消息处理
 static void func_calculator_message(size_msg_t msg)
 {
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -367,6 +359,7 @@ static void func_calculator_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#endif
 }
 
 //进入计算器功能

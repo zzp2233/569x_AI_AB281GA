@@ -31,6 +31,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_menstrualcycle.h"
 #include "ute_module_newFactoryTest.h"
+#include "ute_module_localRingtone.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -50,7 +51,6 @@
 #include "ute_module_lockScreen.h"
 #include "ute_module_game.h"
 #include "ute_module_calculator.h"
-#include "ute_module_localRingtone.h"
 #include "ute_module_earphone.h"
 #include "ute_module_appbinding.h"
 #include "ute_module_quickReply.h"

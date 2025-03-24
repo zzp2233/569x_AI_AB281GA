@@ -15,7 +15,7 @@ typedef struct f_bt_call_t_
     char pbap_result_Name[50];//存放来电与接听联系人名字
     char tmp_pbap_result_Name[50];
 } f_bt_call_t;
-static co_timer_t bt_call_time_count;
+
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 #define TXT_X_MIN 20
@@ -180,15 +180,6 @@ compo_form_t *func_bt_outgoing_form_create(void)
     return frm;
 }
 
-static void bt_call_1s_time_back(void)
-{
-    if(func_cb.sta == FUNC_BT_CALL)
-    {
-        f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
-        f_bt_call->times++;
-    }
-}
-
 AT(.text.func.bt)
 static void func_bt_call_interface(void)
 {
@@ -307,9 +298,9 @@ void func_bt_call_up_date_process(void)
 
     if(strcmp(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name)!=0)
     {
-        s16 txt_leng;
-        s16 txt_x=0;
-        memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+        // s16 txt_leng;
+        // s16 txt_x=0;
+        memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, sizeof(f_bt_call->pbap_result_Name));
 
         memset(f_bt_call->tmp_pbap_result_Name, '\0', sizeof(f_bt_call->tmp_pbap_result_Name));
         truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
@@ -419,14 +410,7 @@ static void func_bt_call_back_to(void)
         func_directly_back_to();
     }
 }
-static void bt_call_1s_time_back(void)
-{
-    if(func_cb.sta == FUNC_BT_CALL)
-    {
-        f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
-        f_bt_call->times++;
-    }
-}
+
 void bt_incall_time_update(void)
 {
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
@@ -655,7 +639,7 @@ void func_bt_call_up_date_process(void)
     {
         s16 txt_leng;
         s16 txt_x=0;
-        memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
+        memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, sizeof(f_bt_call->pbap_result_Name));
 
         memset(f_bt_call->tmp_pbap_result_Name, '\0', sizeof(f_bt_call->tmp_pbap_result_Name));
         truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
@@ -820,7 +804,7 @@ void func_bt_call_enter(void)
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
     // memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, 50);
-    memcpy(f_bt_call->pbap_result_Name,0, 50);
+    memset(f_bt_call->pbap_result_Name,0, sizeof(f_bt_call->pbap_result_Name));
 //   printf("name:%s  name:%s\n",sys_cb.pbap_result_Name,f_bt_call->pbap_result_Name);
 
     f_bt_call->call_mute_flag =false;

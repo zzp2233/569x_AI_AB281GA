@@ -330,7 +330,7 @@ void uteModuleWatchOnlineReadyStart(void)
     uteModuleWatchOnlineData.receiveTimeout = 1; //Casen add 2020-10-26
     bool isUpdateWatch = uteModuleWatchOnlineUpddateDefaultWatchIndex();
 
-    UTE_MODULE_LOG(1, "%s,need erase lastEraseAddress=0x%x\r\n", __func__,uteModuleWatchOnlineData.lastEraseAddress);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,need erase lastEraseAddress=0x%x\r\n", __func__, uteModuleWatchOnlineData.lastEraseAddress);
 
     //先跳转到主表盘界面
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT

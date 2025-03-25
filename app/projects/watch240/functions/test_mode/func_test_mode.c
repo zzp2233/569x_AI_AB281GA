@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_factorytest.h"
 #include "ute_module_newFactoryTest.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -29,9 +30,9 @@ typedef struct f_test_mode_t_
 
 static const f_test_mode_t f_test_mode_list[] =
 {
-    {"模式选择"      },                ///模式选择
-    {"工厂测试"      },                ///工厂测试模式
-    {"老化测试"      },                ///老化测试模式
+    {"模式选择"},                ///模式选择
+    {"工厂测试"},                ///工厂测试模式
+    {"老化测试"},                ///老化测试模式
     // {STR_SHIPPING            },                ///船运模式
     // {STR_AUDIO               },                ///音频测试
 };

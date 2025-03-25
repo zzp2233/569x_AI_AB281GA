@@ -3,6 +3,7 @@
 #include "ute_module_call.h"
 #include "ute_module_charencode.h"
 #include "func_cover.h"
+#include "ute_drv_motor.h"
 
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 

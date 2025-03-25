@@ -3,6 +3,7 @@
 #include "ute_application_common.h"
 #include "ute_module_call.h"
 #include "func_cover.h"
+#include "ute_drv_motor.h"
 
 #define TRACE_EN    0
 

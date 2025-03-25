@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_charencode.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -51,7 +52,7 @@ compo_form_t *func_breathe_finish_form_create(void)
 
     // printf("breathe->time:%d\n",sys_cb.breathe_duration);
     memset(time_num,0,sizeof(time_num));
-    snprintf(time_num,sizeof(time_num),"%d",sys_cb.breathe_duration / 60000);
+    snprintf(time_num,sizeof(time_num),"%ld",sys_cb.breathe_duration / 60000);
 
     memset(time_buf,0,sizeof(time_buf));
     uteModuleCharencodeReplaceSubString(i18n[STR_MIN_JOINT], time_buf,"##",time_num);

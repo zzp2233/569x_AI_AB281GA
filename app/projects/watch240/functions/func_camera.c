@@ -2,7 +2,7 @@
 #include "func.h"
 #include "ute_module_sport.h"
 #include "ute_module_message.h"
-
+#include "ute_drv_motor.h"
 
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
 

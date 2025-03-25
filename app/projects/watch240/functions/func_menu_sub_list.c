@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_menu.h"
+#include "ute_drv_battery_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -37,7 +38,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
 
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {.func_sta=FUNC_ALARM_CLOCK,              .res_addr=UI_BUF_I335001_01_MENU_ALARM_CLOCK_BIN,                .str_idx=STR_ALARM_CLOCK},           //闹钟
-#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT    
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_01_MENU_BLOOD_OXYGEN_BIN,               .str_idx=STR_BLOOD_OXYGEN},          //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
@@ -489,7 +490,7 @@ static void func_menu_sub_list_process(void)
     {
         if (func_cb.menu_style == MENU_STYLE_LIST)
         {
-            int value = (f_menu->listbox->ofs_y - f_menu->listbox->mcb->first_y) * 1000 / abs_s(f_menu->listbox->mcb->last_y - f_menu->listbox->mcb->first_y);
+//            int value = (f_menu->listbox->ofs_y - f_menu->listbox->mcb->first_y) * 1000 / abs_s(f_menu->listbox->mcb->last_y - f_menu->listbox->mcb->first_y);
         }
         compo_listbox_move(f_menu->listbox);
     }

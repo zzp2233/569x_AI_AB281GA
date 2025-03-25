@@ -3,6 +3,7 @@
 #include "ute_module_findphone.h"
 #include "func_cover.h"
 #include "ute_module_call.h"
+#include "ute_drv_motor.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

@@ -24,6 +24,10 @@
 
 #include "third_bsp_sys.h"
 
+void et_ui_decoder_recheck_result()
+{
+}
+
 void et_func_kws_event(int event)
 {
 #if 1

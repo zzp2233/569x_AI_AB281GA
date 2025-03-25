@@ -47,13 +47,25 @@ static const gui_init_param_t tbl_gui_init_param =
     .font_hspace = GUI_FONT_H_SPACE,
 };
 
+void hr_vdd_ldo_noPB2_on(void)
+{
+    PWRCON3 =(PWRCON3 &~(0x1F<<13))|(28<<13);
+    PWRCON3= BIT(12);
+    PWRCON3 &= ~BIT(26);
+    PWRCON3=BIT(18);
+
+    delay_us(330);
+    PWRCON3 &= ~BIT(12);
+}
+
 //GUI相关初始化
 void gui_init(void)
 {
     power_gate_3v3_on();
-    hr_vdd_ldo_on();
+    hr_vdd_ldo_noPB2_on();
     ctp_init();
     tft_init();
+
     // uteDrvScreenCommonInit();
 #if(DEVELOPMENT_BOARD_TYPE)
     LCD_ON();
@@ -94,7 +106,7 @@ void gui_wakeup(void)
     if (sys_cb.gui_sleep_sta)
     {
         power_gate_3v3_on();
-        hr_vdd_ldo_on();
+        hr_vdd_ldo_noPB2_on();
         ecig_pwm_io_init();
 #if(DEVELOPMENT_BOARD_TYPE)
         LCD_ON();

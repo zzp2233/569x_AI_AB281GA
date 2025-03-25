@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NEME "R175"
-#define UTE_SW_VERSION "ABE012V000003"
+#define UTE_SW_VERSION "ABE012V000004"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "ABE012"
@@ -47,6 +47,8 @@
 #define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1
 
 #define UTE_TASK_USER_SUPPORT 1
+
+#define UTE_BINDING_QRENCODE_LINK "https://app.uteasy.com/download/romio-c-.html"
 
 /*! 抬手亮屏参数 zn.zeng, 2021-10-22  */
 #define ROLLOVER_HAND_SCREEN_X_MIN  -40

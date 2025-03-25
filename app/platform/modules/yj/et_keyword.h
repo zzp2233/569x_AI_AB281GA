@@ -6,30 +6,30 @@
 #if (ASR_SELECT == ASR_YJ)
 
 #define ET_ASR_KEYWORD_BIG_STR  "" \
-"(x;s) iao (l;n) an (x;s) iao (l;n) an,70,001,1,255\n" \
-"(d;t) a k ai (sh;s) e (zh;z) ix,70,002,2,255\n" \
-"(d;t) a k ai ii (in;ing) vv ve,70,003,3,255\n" \
-"(d;t) (uan;uang) (sh;s) ix p (in;ing) ii iao k ong,70,004,4,255\n" \
-"(d;t) a k ai (t;d) ian q i,70,005,5,255\n" \
-"(d;t) a k ai (x;s) ve ii iang,70,006,6,255\n" \
-"(d;t) a k ai (sh;s) ui m ian,70,007,7,255\n" \
-"(d;t) a k ai (n;l) ao (zh;z) ong,70,008,8,255\n" \
-"(d;t) a k ai (x;s) (in;ing) (l;n) v,70,009,9,255\n" \
-"(d;t) a k ai (zh;z) ix (f;h) u (b;p) ao,70,010,10,255\n" \
-"(d;t) a k ai uu ui (x;s) (in;ing) (zh;z) ix (f;h) u,70,011,11,255\n" \
-"(d;t) a k ai (sh;s) ou k (uan;uang) m a,70,012,12,255\n" \
-"(d;t) a k ai (ch;c) (eng;en) (ch;c) e m a,70,013,13,255\n" \
-"(d;t) a k ai vv v ii (in;ing) (zh;z) u (sh;s) ou,70,014,14,255\n" \
-"(d;t) a k ai j i p i (t;d) i,70,015,15,255\n" \
-"(d;t) a k ai vv vn (d;t) ong,70,016,16,255\n" \
-"(t;d) (ing;in) (zh;z) ix vv vn (d;t) ong,70,017,17,255\n" \
-"j i (x;s) v vv vn (d;t) ong,70,018,18,255\n" \
-"(z;zh) an (t;d) (ing;in) vv vn (d;t) ong,70,019,19,255\n" \
-"(d;t) a k ai (ch;c) ang (l;n) iang m o (sh;s) ix,70,020,20,255\n" \
-"g (uan;uang) (b;p) i (ch;c) ang (l;n) iang m o (sh;s) ix,70,021,21,255\n" \
-"(d;t) a k ai (s;sh) ao m a (l;n) ian j ie,70,022,22,255\n" \
-"(ch;c) a (zh;z) ao (sh;s) ou j i,70,023,23,255\n" \
-"(f;h) an (h;f) ui (b;p) iao p an,70,024,24,255\n" \
+"V EY P ER AE K T AH V EY T,70,001,1,255\n" \
+"T ER N AO F S K R IY N,100,002,2,255\n" \
+"AH N L AA K S K R IY N,100,003,3,255\n" \
+"V EY P ER AH N L AA K,100,004,4,255\n" \
+"L AA K V EY P ER,100,005,5,255\n" \
+"T ER N AA N B L UW T UW TH,70,006,6,255\n" \
+"S W IH CH AO F B L UW T UW TH,70,007,7,255\n" \
+"S IH NG G AH L M OW D,100,008,8,255\n" \
+"D UW AH L M OW D,100,009,9,255\n" \
+"S EH T P AH F S,100,010,10,255\n" \
+"K L IH R P AH F S,100,011,11,255\n" \
+"S M OW K AE N AH M EY SH AH N,70,012,12,255\n" \
+"F AY N D F OW N,100,013,13,255\n" \
+"OW P AH N M EH S AH JH AH Z,70,014,14,255\n" \
+"L AE NG G W AH JH S EH T IH NG,70,015,15,255\n" \
+"OW P AH N K AE L AH N D ER,70,016,16,255\n" \
+"M EY K AH K AO L,100,017,17,255\n" \
+"OW P AH N K AE L K Y AH L EY T ER,70,018,18,255\n" \
+"AH L AA R M S EH T IH NG,100,019,19,255\n" \
+"P L EY M Y UW Z IH K,100,020,20,255\n" \
+"T ER N AA N D IY EH N D IY,70,021,21,255\n" \
+"S W IH CH AO F D IY EH N D IY,70,022,22,255\n" \
+"S EH T T AY M,130,023,23,255\n" \
+"P L EY DH AH G EY M,100,024,24,255\n" \
 ""
 
 #endif //ASR_SELECT

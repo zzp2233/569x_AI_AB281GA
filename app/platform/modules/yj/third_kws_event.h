@@ -7,33 +7,63 @@
 
 #if THIRD_UI_LIGHT_EN
 
+// enum
+// {
+//     UI_EVENT_START=0x000,
+//     UI_EVENT_XIAO_LAN_XIAO_LAN, //Ð¡ï¿½ï¿½Ð¡ï¿½ï¿½  1
+//     UI_EVENT_DA_KAI_SHE_ZHI,    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  2
+//     UI_EVENT_DA_KAI_YIN_YUE,    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  3
+//     UI_EVENT_DUAN_SHI_PIN_YAO_KONG, //ï¿½ò¿ª¶ï¿½ï¿½ï¿½ÆµÒ£ï¿½ï¿½  4
+//     UI_EVENT_DA_KAI_TIAN_QI,    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  5
+//     UI_EVENT_DA_KAI_XUE_YANG,   //ï¿½ï¿½Ñªï¿½ï¿½  6
+//     UI_EVENT_DA_KAI_SHUI_MIAN,  //ï¿½ï¿½Ë¯ï¿½ï¿½  7
+//     UI_EVENT_DA_KAI_NAO_ZHONG,  //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  8
+//     UI_EVENT_DA_KAI_XIN_LV, //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  9
+//     UI_EVENT_DA_KAI_ZHI_FU_BAO, //ï¿½ï¿½Ö§ï¿½ï¿½ï¿½ï¿½  10
+//     UI_EVENT_DA_KAI_WEI_XIN_ZHI_FU, //ï¿½ï¿½Î¢ï¿½ï¿½Ö§ï¿½ï¿½  11
+//     UI_EVENT_DA_KAI_SHOU_KUAN_MA,   //ï¿½ï¿½ï¿½Õ¿ï¿½ï¿½ï¿½  12
+//     UI_EVENT_DA_KAI_CHENG_CHE_MA,   //ï¿½ò¿ª³Ë³ï¿½ï¿½ï¿½  13
+//     UI_EVENT_DA_KAI_YU_YIN_ZHU_SHOU,    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  14
+//     UI_EVENT_DA_KAI_JI_PI_TI,   //ï¿½ò¿ª¼Ç±ï¿½ï¿½ï¿½  15
+//     UI_EVENT_DA_KAI_YUN_DONG,   //ï¿½ï¿½ï¿½Ë¶ï¿½  16
+//     UI_EVENT_TING_ZHI_YUN_DONG, //Í£Ö¹ï¿½Ë¶ï¿½  17
+//     UI_EVENT_JI_XU_YUN_DONG,    //ï¿½ï¿½ï¿½ï¿½ï¿½Ë¶ï¿½  18
+//     UI_EVENT_ZAN_TING_YUN_DONG, //ï¿½ï¿½Í£ï¿½Ë¶ï¿½  19
+//     UI_EVENT_DA_KAI_CHANG_LIANG_MO_SHI, //ï¿½ò¿ª³ï¿½ï¿½ï¿½Ä£Ê½  20
+//     UI_EVENT_GUAN_BI_CHANG_LIANG_MO_SHI,    //ï¿½Ø±Õ³ï¿½ï¿½ï¿½Ä£Ê½  21
+//     UI_EVENT_DA_KAI_SAO_MA_LIAN_JIE,    //ï¿½ï¿½É¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½  22
+//     UI_EVENT_CHA_ZHAO_SHOU_JI,  //ï¿½ï¿½ï¿½ï¿½ï¿½Ö»ï¿½  23
+//     UI_EVENT_FAN_HUI_BIAO_PAN,  //ï¿½ï¿½ï¿½Ø±ï¿½ï¿½ï¿½  24
+//     UI_EVENT_MAX
+// };
+
 enum
 {
     UI_EVENT_START=0x000,
-    UI_EVENT_XIAO_LAN_XIAO_LAN, //Ð¡À¶Ð¡À¶  1
-    UI_EVENT_DA_KAI_SHE_ZHI,    //´ò¿ªÉèÖÃ  2
-    UI_EVENT_DA_KAI_YIN_YUE,    //´ò¿ªÒôÀÖ  3
-    UI_EVENT_DUAN_SHI_PIN_YAO_KONG, //´ò¿ª¶ÌÊÓÆµÒ£¿Ø  4
-    UI_EVENT_DA_KAI_TIAN_QI,    //´ò¿ªÌìÆø  5
-    UI_EVENT_DA_KAI_XUE_YANG,   //´ò¿ªÑªÑõ  6
-    UI_EVENT_DA_KAI_SHUI_MIAN,  //´ò¿ªË¯Ãß  7
-    UI_EVENT_DA_KAI_NAO_ZHONG,  //´ò¿ªÄÖÖÓ  8
-    UI_EVENT_DA_KAI_XIN_LV, //´ò¿ªÐÄÂÊ  9
-    UI_EVENT_DA_KAI_ZHI_FU_BAO, //´ò¿ªÖ§¸¶±¦  10
-    UI_EVENT_DA_KAI_WEI_XIN_ZHI_FU, //´ò¿ªÎ¢ÐÅÖ§¸¶  11
-    UI_EVENT_DA_KAI_SHOU_KUAN_MA,   //´ò¿ªÊÕ¿îÂë  12
-    UI_EVENT_DA_KAI_CHENG_CHE_MA,   //´ò¿ª³Ë³µÂë  13
-    UI_EVENT_DA_KAI_YU_YIN_ZHU_SHOU,    //´ò¿ªÓïÒôÖúÊÖ  14
-    UI_EVENT_DA_KAI_JI_PI_TI,   //´ò¿ª¼Ç±ÙÌé  15
-    UI_EVENT_DA_KAI_YUN_DONG,   //´ò¿ªÔË¶¯  16
-    UI_EVENT_TING_ZHI_YUN_DONG, //Í£Ö¹ÔË¶¯  17
-    UI_EVENT_JI_XU_YUN_DONG,    //¼ÌÐøÔË¶¯  18
-    UI_EVENT_ZAN_TING_YUN_DONG, //ÔÝÍ£ÔË¶¯  19
-    UI_EVENT_DA_KAI_CHANG_LIANG_MO_SHI, //´ò¿ª³£ÁÁÄ£Ê½  20
-    UI_EVENT_GUAN_BI_CHANG_LIANG_MO_SHI,    //¹Ø±Õ³£ÁÁÄ£Ê½  21
-    UI_EVENT_DA_KAI_SAO_MA_LIAN_JIE,    //´ò¿ªÉ¨ÂëÁ¬½Ó  22
-    UI_EVENT_CHA_ZHAO_SHOU_JI,  //²éÕÒÊÖ»ú  23
-    UI_EVENT_FAN_HUI_BIAO_PAN,  //·µ»Ø±íÅÌ  24
+    UI_EVENT_VAPORACTIVATE, //vaporactivate  1
+    UI_EVENT_TURNOFFSCREEN, //Turnoffscreen  2
+    UI_EVENT_UNLOCKSCREEN,  //Unlockscreen  3
+    UI_EVENT_VAPORUNLOCK,   //VaporUnlock  4
+    UI_EVENT_LOCKVAPOR, //LockVapor  5
+    UI_EVENT_TURNONBLUETOOTH,   //Turnonbluetooth  6
+    UI_EVENT_SWITCHOFFBLUETOOTH,    //Switchoffbluetooth  7
+    UI_EVENT_SINGLEMODE,    //Singlemode  8
+    UI_EVENT_DUALMODE,  //Dualmode  9
+    UI_EVENT_SETPUFFS,  //Setpuffs  10
+    UI_EVENT_CLEARPUFFS,    //Clearpuffs  11
+    UI_EVENT_SMOKEANIMATION,    //Smokeanimation  12
+    UI_EVENT_FINDPHONE, //Findphone  13
+    UI_EVENT_OPENMESSAGES,  //Openmessages  14
+    UI_EVENT_LANGUAGESETTING,   //Languagesetting  15
+    UI_EVENT_OPENCALENDAR,  //Opencalendar  16
+    UI_EVENT_MAKEACALL, //Makeacall  17
+    UI_EVENT_OPENCALCULATOR,    //Opencalculator  18
+    UI_EVENT_ALARMSETTING,  //Alarmsetting  19
+    UI_EVENT_PLAYMUSIC, //Playmusic  20
+    UI_EVENT_TURNONDND, //TurnonDND  21
+    UI_EVENT_SWITCHOFFDND,  //SwitchoffDND  22
+    UI_EVENT_SETTIME,   //Settime  23
+    UI_EVENT_PLAYTHEGAME,   //Playthegame  24
     UI_EVENT_MAX
 };
 

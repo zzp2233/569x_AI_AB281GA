@@ -36,9 +36,9 @@
 
 #define CHIP_PACKAGE_SELECT             UTE_CHIP_PACKAGE_SELECT                  //芯片封装选择 5691G/5691C_F
 
-#define GUI_SELECT                      DISPLAY_UTE//GUI_TFT_320_385_GV9B71                 //GUI Display Select
+#define GUI_SELECT                     GUI_TFT_240_JD9853W3// DISPLAY_UTE//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
-// #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT
+#define GUI_MODE_SELECT                 MODE_4WIRE_8BIT
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
 #define GUI_MODE_SELECT                 MODE_3WIRE_9BIT_2LINE             //屏幕接口选择
 #define TFT_SPI_DRIVER                  SPI_GC9307_V1           //驱动选择
@@ -523,7 +523,7 @@
 #define ASR_DEAL_TYPE                   1               //事件处理方式 1:轮询; 0:消息
 #define ASR_VOICE_BALL_ANIM             1               //悬浮球动画
 #define ASR_USBKEY_PSD                  0               //加密狗
-#define ASR_AND_SIRI_PARALLEL_EN        0               //语音SIRI融合功能，当siri开启时，mic数据同时送入siri和asr引擎
+#define ASR_AND_SIRI_PARALLEL_EN        1               //当siri开启时，mic数据同时送入siri和asr引擎
 #define ASR_SIRI_AUTO_CLOSE             1               //自动关闭siri
 #define ASR_SIRI_AUTO_CLOSE_COUNTDOWN   15              //多少秒后自动关闭siri
 #define ASR_SIRI_SCO_DELAY_EN           0               //SIRI 延时输出
@@ -601,6 +601,7 @@
 #define ECIG_ADC2_EN                    1               //是否有ADC2通路
 #define ECIG_DET_EN                     1               //是否有检测插拔电路
 #define ECIG_POLLING_CONTROL            1               //0:轮休判断，1：计数判断
+#define ECIG_TIME_BIG_CYCLES            10000
 #if ECIG_POLLING_CONTROL
 #define ECIG_TIMER_US                   50              //50us
 #else

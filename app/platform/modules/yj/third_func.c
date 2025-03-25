@@ -9,7 +9,9 @@
 #include "third_bsp_sys.h"
 #include "bsp_et_asr_ctrl.h"
 #include "third_kws_event.h"
-
+#include "ute_module_message.h"
+#include "ute_module_call.h"
+#include "ute_module_notdisturb.h"
 void play_sound(u32 eventId, u8 sound_en);
 void third_et_func_kws_deal(u32 event);
 void compo_form_set_ai_voice_anim(u8 sta);
@@ -32,7 +34,7 @@ void et_wake_clr(void)
         return;
     }
     //如果已经响应，则关闭唤醒状态
-    if ((et_kws_event > UI_EVENT_XIAO_LAN_XIAO_LAN && et_kws_event < UI_EVENT_MAX) || t_pwn.et_wake_kws_t_cnt)
+    if ((et_kws_event > UI_EVENT_VAPORACTIVATE && et_kws_event < UI_EVENT_MAX) || t_pwn.et_wake_kws_t_cnt)
     {
         t_pwn.et_wake_kws_en = 0;
         t_pwn.et_wake_kws_t_cnt = 0;
@@ -178,8 +180,8 @@ void third_et_func_kws_deal(u32 event)
     ET_LOGI("--kws_deal event:%d,:%x\n", event, event);
 #if ET_A_WAKE_WORD_EN
     //huanxingcichuli
-    if((event >= UI_EVENT_XIAO_LAN_XIAO_LAN && event <= UI_EVENT_XIAO_LAN_XIAO_LAN)
-       || event == UI_EVENT_XIAO_LAN_XIAO_LAN)
+    if((event >= UI_EVENT_VAPORACTIVATE && event <= UI_EVENT_VAPORACTIVATE)
+       || event == UI_EVENT_VAPORACTIVATE)
     {
         if(t_pwn.et_wake_kws_busy)
         {
@@ -218,7 +220,7 @@ void third_et_func_kws_deal(u32 event)
         compo_form_set_ai_voice_anim(true);
 #endif
 #if ET_WARNING_TONE_EN
-        play_sound(UI_EVENT_XIAO_LAN_XIAO_LAN, t_pwn.sound_en);
+        play_sound(UI_EVENT_VAPORACTIVATE, t_pwn.sound_en);
 #endif // ET_WARNING_TONE_EN
 
         t_pwn.et_wake_kws_t_cnt = ET_WAKE_TIME_DEFAULT;
@@ -241,8 +243,152 @@ void third_et_func_kws_deal(u32 event)
 
     switch(event)
     {
-
             break;
+
+        case UI_EVENT_TURNOFFSCREEN: // 关闭屏幕
+
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY,0);
+            // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HNAD_SCREEN_OFF_NOTIFY,0);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_TURNOFFSCREEN, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_UNLOCKSCREEN: //打开屏幕
+            gui_wakeup();
+            sys_cb.gui_need_wakeup = 0;
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_UNLOCKSCREEN, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_VAPORUNLOCK: //童锁关闭
+
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_VAPORUNLOCK, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_LOCKVAPOR: //童锁打开
+
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_LOCKVAPOR, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_TURNONBLUETOOTH: //打开蓝牙
+            uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_TURNONBLUETOOTH, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_SWITCHOFFBLUETOOTH: //关闭蓝牙
+            uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_BUTTON);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_SWITCHOFFBLUETOOTH, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_SINGLEMODE: //单发
+            test_1st_gear_func();
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_SINGLEMODE, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_DUALMODE: //双发
+            test_2st_gear_func();
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_DUALMODE, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_SETPUFFS: //口数设置
+
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_SETPUFFS, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_CLEARPUFFS: //口数清0
+
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_CLEARPUFFS, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_SMOKEANIMATION: //抽吸动画
+
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_SMOKEANIMATION, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_FINDPHONE: //查找手机
+            bsp_asr_func_switch(FUNC_FINDPHONE);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_FINDPHONE, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_OPENMESSAGES: //打开信息
+            bsp_asr_func_switch(FUNC_MESSAGE);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_OPENMESSAGES, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_LANGUAGESETTING: //语言设置
+            bsp_asr_func_switch(FUNC_SET_SUB_LANGUAGE);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_LANGUAGESETTING, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_OPENCALENDAR: //打开日历
+            bsp_asr_func_switch(FUNC_CALENDAER);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_OPENCALENDAR, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_MAKEACALL: //拨打电话
+            bsp_asr_func_switch(FUNC_CALL_SUB_DIAL);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_MAKEACALL, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_OPENCALCULATOR: //打开计算器
+            bsp_asr_func_switch(FUNC_CALCULATOR);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_OPENCALCULATOR, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_ALARMSETTING: //闹钟
+            bsp_asr_func_switch(FUNC_ALARM_CLOCK);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_ALARMSETTING, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_PLAYMUSIC: //打开音乐
+            bsp_asr_func_switch(FUNC_BT);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_PLAYMUSIC, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_TURNONDND: //勿扰开
+            uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_ALLDAY_OPEN);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_TURNONDND, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_SWITCHOFFDND: //勿扰关
+            uteModuleNotDisturbSetOpenStatus(NOT_DISTURB_ALLDAY_OPEN);
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_SWITCHOFFDND, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_SETTIME: //时间设置
+
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_SETTIME, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+        case UI_EVENT_PLAYTHEGAME: //打开游戏
+
+#if ET_WARNING_TONE_EN
+            play_sound(UI_EVENT_PLAYTHEGAME, t_pwn.sound_en);
+#endif // ET_WARNING_TONE_EN
+            break;
+
+
+#if  0
         case UI_EVENT_DA_KAI_SHE_ZHI:
         {
             ET_LOGI("UI_EVENT_DA_KAI_SHE_ZHI\n");
@@ -459,9 +605,12 @@ void third_et_func_kws_deal(u32 event)
 #endif // ET_WARNING_TONE_EN
         }
         break;
+
+#endif
         default:
             break;
     }
+
 }
 
 
@@ -476,7 +625,7 @@ void play_sound(u32 evendId, u8 sound_en)
 #if ET_WARNING_MP3_PLAY
     switch(evendId)
     {
-        case UI_EVENT_XIAO_LAN_XIAO_LAN:
+        case UI_EVENT_VAPORACTIVATE: //
             // bsp_asr_func_switch(FUNC_SETTING);
             gui_wakeup();
             reset_sleep_delay_all();
@@ -485,51 +634,47 @@ void play_sound(u32 evendId, u8 sound_en)
             //我在
             bsp_asr_tone_play(RES_BUF_ASR_K001_MP3, RES_LEN_ASR_K001_MP3);
             break;
-        case UI_EVENT_TING_ZHI_YUN_DONG:
-            //运动已停止
+        case UI_EVENT_TURNOFFSCREEN:
             bsp_asr_tone_play(RES_BUF_ASR_K002_MP3, RES_LEN_ASR_K002_MP3);
             break;
-        case UI_EVENT_JI_XU_YUN_DONG:
-            //运动已继续
+        case UI_EVENT_UNLOCKSCREEN:
             bsp_asr_tone_play(RES_BUF_ASR_K003_MP3, RES_LEN_ASR_K003_MP3);
             break;
-        case UI_EVENT_ZAN_TING_YUN_DONG:
-            //运动已暂停
+        case UI_EVENT_VAPORUNLOCK:
             bsp_asr_tone_play(RES_BUF_ASR_K004_MP3, RES_LEN_ASR_K004_MP3);
             break;
-        case UI_EVENT_DA_KAI_SHE_ZHI:
-        case UI_EVENT_DA_KAI_YIN_YUE:
-        case UI_EVENT_DUAN_SHI_PIN_YAO_KONG:
-        case UI_EVENT_DA_KAI_TIAN_QI:
-        case UI_EVENT_DA_KAI_XUE_YANG:
+        case UI_EVENT_LOCKVAPOR:
+            bsp_asr_tone_play(RES_BUF_ASR_K005_MP3, RES_LEN_ASR_K005_MP3);
+            break;
+
+
+
+        case UI_EVENT_TURNONBLUETOOTH:
+        case UI_EVENT_SETPUFFS:
+        case UI_EVENT_SMOKEANIMATION:
 #if 0
         case UI_EVENT_DA_KAI_XUE_YA:
 #endif // 0
-        case UI_EVENT_DA_KAI_SHUI_MIAN:
-        case UI_EVENT_DA_KAI_NAO_ZHONG:
-        case UI_EVENT_DA_KAI_XIN_LV:
-        case UI_EVENT_DA_KAI_ZHI_FU_BAO:
-        case UI_EVENT_DA_KAI_WEI_XIN_ZHI_FU:
-        case UI_EVENT_DA_KAI_SHOU_KUAN_MA:
-        case UI_EVENT_DA_KAI_CHENG_CHE_MA:
-        case UI_EVENT_DA_KAI_YU_YIN_ZHU_SHOU:
-        case UI_EVENT_DA_KAI_JI_PI_TI:
-        case UI_EVENT_DA_KAI_YUN_DONG:
-        case UI_EVENT_DA_KAI_CHANG_LIANG_MO_SHI:
-        case UI_EVENT_DA_KAI_SAO_MA_LIAN_JIE:
+        case UI_EVENT_FINDPHONE:
+        case UI_EVENT_OPENMESSAGES:
+        case UI_EVENT_LANGUAGESETTING:
+        case UI_EVENT_OPENCALENDAR:
+        case UI_EVENT_MAKEACALL:
+        case UI_EVENT_OPENCALCULATOR:
+        case UI_EVENT_ALARMSETTING:
+        case UI_EVENT_PLAYMUSIC:
+        case UI_EVENT_TURNONDND:
+        case UI_EVENT_SETTIME:
+        case UI_EVENT_PLAYTHEGAME:
             //已打开
-            bsp_asr_tone_play(RES_BUF_ASR_K005_MP3, RES_LEN_ASR_K005_MP3);
-            break;
-        case UI_EVENT_GUAN_BI_CHANG_LIANG_MO_SHI:
-            //已关闭
             bsp_asr_tone_play(RES_BUF_ASR_K006_MP3, RES_LEN_ASR_K006_MP3);
             break;
-        case UI_EVENT_CHA_ZHAO_SHOU_JI:
-            //为你查找手机
+        case UI_EVENT_SWITCHOFFBLUETOOTH:
+        case UI_EVENT_SWITCHOFFDND:
             bsp_asr_tone_play(RES_BUF_ASR_K007_MP3, RES_LEN_ASR_K007_MP3);
             break;
-        case UI_EVENT_FAN_HUI_BIAO_PAN:
-            //已返回
+        case     UI_EVENT_SINGLEMODE:   //Singlemode  8
+        case  UI_EVENT_DUALMODE:    //Dualmode  9:
             bsp_asr_tone_play(RES_BUF_ASR_K008_MP3, RES_LEN_ASR_K008_MP3);
             break;
         default:

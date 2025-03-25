@@ -74,10 +74,7 @@ static void func_power_on_disp_process(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-enum
-{
-    COMPO_PIC_ID = 1,
-};
+
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)
 {

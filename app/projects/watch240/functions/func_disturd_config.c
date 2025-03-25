@@ -543,28 +543,7 @@ static void func_disturd_sub_set_button_click(void)
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 //组件ID
-enum
-{
-    COMPO_ID_BTN_SURE=1,
-    COMPO_ID_BTN_AM_BG,
-    COMPO_ID_BTN_PM_BG,
-    COMPO_ID_TXT_AM_BG,
-    COMPO_ID_TXT_PM_BG,
-    COMPO_ID_BTN_HOUR_BG,
-    COMPO_ID_BTN_MIN_BG,
 
-    COMPO_ID_TXT_HOUR_1,
-    COMPO_ID_TXT_HOUR_2,
-    COMPO_ID_TXT_HOUR_3,
-    COMPO_ID_TXT_HOUR_4,
-    COMPO_ID_TXT_HOUR_5,
-
-    COMPO_ID_TXT_MIN_1,
-    COMPO_ID_TXT_MIN_2,
-    COMPO_ID_TXT_MIN_3,
-    COMPO_ID_TXT_MIN_4,
-    COMPO_ID_TXT_MIN_5,
-};
 #define TXT_SPACING    (142-89)
 #define CENTER_TXT_Y   (158/2)
 #define TXT_12_HOUR_X  (160+30/2)

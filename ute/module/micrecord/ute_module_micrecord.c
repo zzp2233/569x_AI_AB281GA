@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        Â¼ÒôÄ£¿é
+*@brief        Â¼ï¿½ï¿½Ä£ï¿½ï¿½
 *@details
 *@author       zn.zeng
 *@date       2021-12-21
@@ -66,7 +66,7 @@ void mic_test_sdadc_process(u8 *ptr, u32 samples, int ch_mode)
 void mic_test_init(void)
 {
     TRACE("-->%s\n",__func__);
-    bt_audio_bypass();  //¸´ÓÃaram£¬bypassÀ¶ÑÀÒôÀÖ
+    bt_audio_bypass();  //ï¿½ï¿½ï¿½ï¿½aramï¿½ï¿½bypassï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     memset(&mic_cb, 0, sizeof(mic_testbuf_t));
 }
 
@@ -103,21 +103,22 @@ void mic_test_outp(void)
     dac_spr_set(SPR_16000);
 
 //    u32 tick = tick_get();
-    for (int i = 0; i < mic_cb.rec_datalen; i += 2)   //×èÈû²¥·Å
+    for (int i = 0; i < mic_cb.rec_datalen; i += 2)   //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     {
         s16 *ptr16 = (s16 *)&mic_cb.rec_buf[i];
         obuf_put_one_sample(*ptr16, *ptr16);
     }
 //    printf("tick[%d]\n", tick_get() - tick);
 
-    dac_fade_out();
-    dac_fade_wait();
-
     bsp_change_volume(sys_cb.vol);
     if (mute_bkp)
     {
         bsp_sys_mute();
     }
+    // else {
+    //     dac_fade_out();
+    //     dac_fade_wait();
+    // }
 }
 
 #else
@@ -137,7 +138,7 @@ void uteModuleMicRecordFactoryEnter(void)
 }
 
 /**
-*@brief  ¹¤³§Ä£Ê½½áÊø²âÊÔ
+*@brief  ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 *@details
 *@author        zn.zeng
 *@date        2022-01-10
@@ -149,7 +150,7 @@ void uteModuleMicRecordFactoryExit(void)
 }
 
 /**
-*@brief  ¹¤³§Ä£Ê½¿ªÊ¼²âÊÔ
+*@brief  ï¿½ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
 *@details
 *@author        zn.zeng
 *@date        2021-12-21

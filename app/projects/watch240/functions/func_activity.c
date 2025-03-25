@@ -201,36 +201,6 @@ static void func_activity_disp_handle(void)
 #define KM_ARC_COLOR                  65188
 #define STEP_ARC_COLOR                1946
 
-enum
-{
-    ARC_ANIM_STATUS_START = 0,
-    ARC_ANIM_STATUS_FW,
-    ARC_ANIM_STATUS_BW,
-    ARC_ANIM_STATUS_END,
-};
-
-enum
-{
-    ///文本框
-    STEP_TXT_VALUE_ID=1,
-    KCAL_TXT_VALUE_ID,
-    KM_TXT_VALUE_ID,
-
-    KCAL_ARC_ID,
-    KM_ARC_ID,
-    STEP_ARC_ID,
-    KM_TXT_UNIT_ID,
-};
-
-typedef struct f_activity_t_
-{
-    uint32_t tick;
-    uint32_t arc_kcal_value;
-    uint32_t arc_km_value;
-    uint32_t arc_step_value;
-    u8 activity_state;
-} f_activity_t;
-
 #define TXT_SPACING_Y                 widget_text_get_height()+8
 ///创建活动记录窗体
 compo_form_t *func_activity_form_create(void)
@@ -660,9 +630,6 @@ static void func_activity_message(size_msg_t msg)
         case MSG_CTP_TOUCH:
             break;
         case MSG_CTP_CLICK:
-            // sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
-            // msgbox((char*)i18n[STR_SEDENTARY_REMIND], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
-            // func_cb.sta = FUNC_HEART_WARNING;
             break;
         default:
             func_message(msg);

@@ -187,7 +187,7 @@ static void func_heartrate_refresh(void)
     if(tick_check_expire(f_heartrate->tick, 10+(f_heartrate->heart_pic_size/20)))
     {
         f_heartrate->tick = tick_get();
-        area_t pic_size;
+//        area_t pic_size;
         char txt_buf[20];
         compo_textbox_t *textbox_max = compo_getobj_byid(COMPO_ID_HEART_MAX_TXT);
         compo_textbox_t *textbox_min = compo_getobj_byid(COMPO_ID_HEART_MIN_TXT);
@@ -675,7 +675,7 @@ static void func_heartrate_refresh(void)
 //心率功能事件处理
 static void func_heartrate_process(void)
 {
-    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
+//    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
 #elif (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
@@ -688,7 +688,7 @@ static void func_heartrate_process(void)
 //心率功能消息处理
 static void func_heartrate_message(size_msg_t msg)
 {
-    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
+//    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
 
     switch (msg)
     {

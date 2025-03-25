@@ -4,6 +4,7 @@
 #include "ute_module_charencode.h"
 #include "ute_module_systemtime.h"
 #include "func_cover.h"
+#include "ute_drv_motor.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -270,8 +271,8 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
 
         uint8_t hour=record_tbl[index].callTime.hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
         uint8_t min =record_tbl[index].callTime.min;/*!系统时间，分钟，数值为0~59 */
-        uint8_t *str_am = (uint8_t *)ab_zalloc(sizeof(uint8_t));
-        memset(str_am,0,sizeof(str_am));
+        uint8_t *str_am = (uint8_t *)ab_zalloc(strlen(i18n[STR_AM])+strlen(i18n[STR_PM]));
+        memset(str_am,0,strlen(i18n[STR_AM])+strlen(i18n[STR_PM]));
         if(uteModuleSystemtime12HOn())
         {
 
@@ -281,7 +282,7 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
             }
             else
             {
-                memcpy(&str_am[0],i18n[STR_PM],strlen(i18n[STR_AM])+1);
+                memcpy(&str_am[0],i18n[STR_PM],strlen(i18n[STR_PM])+1);
             }
 
             hour %= 12;

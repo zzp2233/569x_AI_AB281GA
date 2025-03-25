@@ -105,7 +105,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set(textbox, i18n[STR_KCAL]);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%02ld",km_integer, distance);///公里数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, distance);///公里数据
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_22_BIN);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-45,GUI_SCREEN_CENTER_Y+25,52,22);
@@ -188,11 +188,12 @@ static void func_activity_disp_handle(void)
     compo_textbox_set(textbox_step, txt_buf);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%02ld",km_integer, distance);///公里数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, distance);///公里数据
     compo_textbox_set(textbox_km, txt_buf);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());///千卡数据
+    compo_textbox_set(textbox_kcal, txt_buf);
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 

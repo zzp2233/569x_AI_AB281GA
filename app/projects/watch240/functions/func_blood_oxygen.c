@@ -1,6 +1,8 @@
 #include "include.h"
 #include "func.h"
 #include "ute_module_bloodoxygen.h"
+#include "ute_module_heart.h"
+#include "ute_drv_motor.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

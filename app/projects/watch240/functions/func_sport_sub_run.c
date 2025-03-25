@@ -116,7 +116,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_location(txt, 10,76,200,48);
     compo_textbox_set_align_center(txt,false);
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
     compo_textbox_set(txt, txt_buf);
     compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
@@ -190,7 +190,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
         compo_textbox_set_pos(txt, 45,128+38*2);
         compo_textbox_set_align_center(txt,false);
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
+        snprintf(txt_buf,sizeof(txt_buf),"%ld", data->saveData.sportStep);
         compo_textbox_set(txt, txt_buf);
         compo_setid(txt,COMPO_ID_NUM_SPORT_STEP);
 
@@ -375,7 +375,7 @@ static void func_sport_sub_run_updata(void)
         if(txt_time != NULL)
         {
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+            snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
             compo_textbox_set(txt_time, txt_buf);
         }
         if(txt_kcal != NULL && uint_kcal != NULL)
@@ -420,7 +420,7 @@ static void func_sport_sub_run_updata(void)
         if(txt_step != NULL && uint_step != NULL)
         {
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
+            snprintf(txt_buf,sizeof(txt_buf),"%ld", data->saveData.sportStep);
             compo_textbox_set(txt_step, txt_buf);
 
             txt_wid = widget_text_get_area(txt_step->txt);

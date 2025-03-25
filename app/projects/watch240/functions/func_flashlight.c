@@ -164,10 +164,6 @@ static void func_flashlight_process(void)
 //手电筒功能消息处理
 static void func_flashlight_message(size_msg_t msg)
 {
-    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
-    compo_shape_t * shape = compo_getobj_byid(COMPO_ID_BG_SHAPE);
-    compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_PIC);
-    compo_textbox_t *txt_idle = compo_getobj_byid(COMPO_ID_TXT);
 
     switch (msg)
     {

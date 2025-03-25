@@ -546,7 +546,7 @@ static void func_stopwatch_process(void)
 #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     if (sys_cb.stopwatch_sta)
     {
-        reset_sleep_delay_all();        //计时的时候不许休眠
+
         u8 min = ((sys_cb.stopwatch_total_msec / 1000) / 60) % 100;
         u8 sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
         u16 msec = sys_cb.stopwatch_total_msec % 1000;
@@ -565,6 +565,10 @@ static void func_stopwatch_process(void)
 //            memset(sys_cb.stopwatch_rec_view, 0, sizeof(sys_cb.stopwatch_rec_view));
 //            sys_cb.stopwatch_rec_cnt = 0;
 //            sys_cb.stopwatch_total_msec = 0;
+        }
+        else
+        {
+            reset_sleep_delay_all();        //计时的时候不许休眠
         }
 
         f_stopwatch_t *f_stopwatch = (f_stopwatch_t *)func_cb.f_cb;

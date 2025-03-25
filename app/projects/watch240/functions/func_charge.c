@@ -3,6 +3,7 @@
 #include "ute_drv_battery_common.h"
 #include "ute_drv_motor.h"
 #include "ute_module_systemtime.h"
+#include "ute_application_common.h"
 
 #define TRACE_EN    1
 

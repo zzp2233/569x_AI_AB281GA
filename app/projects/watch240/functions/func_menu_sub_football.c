@@ -457,7 +457,7 @@ static void func_menu_sub_football_enter(void)
 void func_menu_sub_football(void)
 {
     printf("%s\n", __func__);
-    f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
+//    f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     func_menu_sub_football_enter();
     while (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_FOOTBALL)
     {

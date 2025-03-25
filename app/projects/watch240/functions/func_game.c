@@ -153,7 +153,7 @@ static void func_game_process(void)
         if (f_game->drag_flag)
         {
             f_game->ofs_y = f_game->focus_y - dy;
-            int iy = -45 - f_game->ofs_y;
+//            int iy = -45 - f_game->ofs_y;
 //            widget_page_set_client(func_cb.frm_main->page_body, 0, iy);
 
             int kidx;
@@ -231,7 +231,7 @@ static void func_game_process(void)
             f_game->focus_y += dy;
 
             f_game->ofs_y = f_game->focus_y - dy;
-            int iy = -45 - f_game->ofs_y;
+//            int iy = -45 - f_game->ofs_y;
 //            widget_page_set_client(func_cb.frm_main->page_body, 0, iy);
         }
     }

@@ -72,6 +72,7 @@ typedef struct
     bool hot_det_flag;          //烟弹检测标志
 
     u8 aim_power;               //目标功率（W）
+    u8 smoke_power;               //抽烟功率（W）
     u8 heat_time_max;           //单次加热最长时间（s）
     u8 short_res_prop;          //短路保护，电热丝阻值和MOS内阻（100mΩ）的最小比例，阻值相近乘10提高精度，10--0.1Ω视作短路
     u16 open_res_prop;          //开路保护，电热丝阻值和MOS内阻（100mΩ）的最大比例，阻值相近乘10提高精度，200--2Ω视作开路（无ADC2通路时有效）
@@ -80,8 +81,9 @@ typedef struct
     bool smoke_res_swich;       //一档时候，吸一口换一路
     u8 smoke_position_swich;    //一档:0x00二档:0x01三档:0x02
     gpio_t ecig_gpio[ECIG_MAX_IO];
+    u32 smoking_count;                              //抽烟口数
 } ecig_cfg_t;
-
+extern ecig_cfg_t ecig_cfg;
 typedef struct
 {
     ecig_cfg_t *cfg;

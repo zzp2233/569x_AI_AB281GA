@@ -762,7 +762,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 58/2+100, 240, 60);
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
     compo_textbox_set(txt, txt_buf);
     compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
@@ -870,7 +870,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 58/2+26+360, 180, 60);
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
     compo_textbox_set(txt, txt_buf);
     compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME_DOWN);
@@ -1270,7 +1270,7 @@ static void func_sport_sub_run_updata(void)
         if(txt_time != NULL)
         {
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
             compo_textbox_set(txt_time, txt_buf);
         }
 
@@ -1326,13 +1326,13 @@ static void func_sport_sub_run_updata(void)
 
         if(txt_time_down != NULL)
         {
-            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
             compo_textbox_set(txt_time_down, txt_buf);
         }
 
         if(txt_time_right != NULL)
         {
-            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",data->totalSportTime / 3600,((data->totalSportTime) % 3600) / 60,(data->totalSportTime) % 60);
+            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
             compo_textbox_set(txt_time_right, txt_buf);
         }
 

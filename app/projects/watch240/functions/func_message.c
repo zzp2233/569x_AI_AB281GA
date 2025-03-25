@@ -550,7 +550,7 @@ static void func_message_card_init()
     f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
-    f_message->refresh_data = msg_num;
+    f_message->msg_num = msg_num;
 
     uint16_t page_height = msg_num*176+141;
     if(page_height<GUI_SCREEN_HEIGHT)

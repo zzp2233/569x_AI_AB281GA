@@ -1102,14 +1102,38 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_prev.res_click);
     compo_button_set_location(btn,ui_handle.card3.pic_click_prev.x, ui_handle.card3.pic_click_prev.y, ui_handle.card3.pic_click_prev.w, ui_handle.card3.pic_click_prev.h);
     compo_setid(btn,ui_handle.card3.pic_click_prev.idx);
+    if(ble_is_connect() || uteModuleCallBtIsConnected())
+    {
+        compo_button_set_bgimg(btn,ui_handle.card3.pic_click_prev.res_click);
+    }
+    else
+    {
+        compo_button_set_bgimg(btn,ui_handle.card3.pic_click_prev.res);
+    }
 
     btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_next.res_click);
     compo_button_set_location(btn,ui_handle.card3.pic_click_next.x, ui_handle.card3.pic_click_next.y, ui_handle.card3.pic_click_next.w, ui_handle.card3.pic_click_next.h);
     compo_setid(btn,ui_handle.card3.pic_click_next.idx);
+    if(ble_is_connect() || uteModuleCallBtIsConnected())
+    {
+        compo_button_set_bgimg(btn,ui_handle.card3.pic_click_next.res_click);
+    }
+    else
+    {
+        compo_button_set_bgimg(btn,ui_handle.card3.pic_click_next.res);
+    }
 
     btn = compo_button_create_page_by_image(frm,card3->page,ui_handle.card3.pic_click_play.res_click);
     compo_button_set_pos(btn,ui_handle.card3.pic_click_play.x, ui_handle.card3.pic_click_play.y);
     compo_setid(btn,ui_handle.card3.pic_click_play.idx);
+    if(ble_is_connect() || uteModuleCallBtIsConnected())
+    {
+        compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : ui_handle.card3.pic_click_play.res);
+    }
+    else
+    {
+        compo_button_set_bgimg(btn,ui_handle.card3.pic_click_play.res_click);
+    }
 
     ///卡片2
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));

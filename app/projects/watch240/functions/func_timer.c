@@ -1738,8 +1738,8 @@ void func_timer(void)
     func_timer_enter();
     while (func_cb.sta == FUNC_TIMER)
     {
-        func_timer_message(msg_dequeue());
         func_timer_process();
+        func_timer_message(msg_dequeue());
     }
     func_timer_exit();
 }

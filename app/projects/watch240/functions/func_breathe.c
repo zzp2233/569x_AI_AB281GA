@@ -75,7 +75,115 @@ typedef struct f_breathe_t_
     s16 icon_deg;
 } f_breathe_t;
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+compo_form_t *func_breathe_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,3,1,228,144);
+    compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,50+34);
+
+    compo_cardbox_icon_set_pos(cardbox,0,0,0);
+    compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_BREATH_TRAINING_BG_BIN);
+
+    compo_cardbox_icon_set_pos(cardbox,1,-72,0);
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I335001_BREATH_TRAINING_TIME_BIN);
+
+    compo_cardbox_icon_set_pos(cardbox,2,80,0);
+    compo_cardbox_icon_set(cardbox, 2, UI_BUF_I335001_BREATH_TRAINING_NEXT_BIN);
+
+    compo_cardbox_text_set_location(cardbox,0,-50,-10,110,30);
+    widget_set_align_center(cardbox->text[0],false);
+    compo_cardbox_text_set(cardbox,0,"2 min");
+
+    cardbox = compo_cardbox_create(frm,0,3,1,228,144);
+    compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,126+34);
+
+    compo_cardbox_icon_set_pos(cardbox,0,0,0);
+    compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_BREATH_TRAINING_BG_BIN);
+
+    compo_cardbox_icon_set_pos(cardbox,1,-72,0);
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I335001_BREATH_TRAINING_MODERATE_BIN);
+
+    compo_cardbox_icon_set_pos(cardbox,2,80,0);
+    compo_cardbox_icon_set(cardbox, 2, UI_BUF_I335001_BREATH_TRAINING_NEXT_BIN);
+
+    compo_cardbox_text_set_location(cardbox,0,-50,-10,110,30);
+    widget_set_align_center(cardbox->text[0],false);
+    compo_cardbox_text_set(cardbox,0,"Moderate");
+
+    //新建图像
+    // compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I330001_BREATHE_BG_BIN);
+    // compo_setid(pic, COMPO_ID_PIC_BREATHE);
+    // compo_picturebox_set_pos(pic, 120, 133);
+    // compo_picturebox_set_visible(pic, false);
+
+    //创建按钮
+    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_BREATH_TRAINING_PAUSE_BIN);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,52/2+222);
+    compo_setid(btn, COMPO_ID_BTN_START);
+
+    ///设置标题栏名字///
+    compo_textbox_t *txt = compo_textbox_create(frm,strlen("breath training"));
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
+    compo_textbox_set(txt, "breath training");
+    compo_textbox_set_align_center(txt, false);
+
+    return frm;
+}
+
+//单击按钮
+static void func_breathe_button_click(void)
+{
+    f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;
+    int id = compo_get_button_id();
+    compo_picturebox_t *pic = compo_getobj_byid(COMPO_ID_PIC_BREATHE);
+    compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_START);
+    switch(id)
+    {
+        case COMPO_ID_BTN_START:
+            // compo_picturebox_set_visible(pic, true);
+            // f_breathe->sta = BREATHE_STA_IDLE;
+            // f_breathe->animation_sta = ANIMATION_PREPARE;
+            // f_breathe->time_past = 0;
+            // f_breathe->icon_deg = 0;
+            // f_breathe->icon_size = f_breathe->icon_org_size;
+            // f_breathe->tick = tick_get();
+            if (f_breathe->sta == BREATHE_STA_IDLE)
+            {
+                f_breathe->sta = BREATHE_STA_WORKING;
+                compo_button_set_bgimg(btn,UI_BUF_I335001_BREATH_TRAINING_FINISH_BIN);
+            }
+            else
+            {
+                f_breathe->sta = BREATHE_STA_IDLE;
+                compo_button_set_bgimg(btn,UI_BUF_I335001_BREATH_TRAINING_PAUSE_BIN);
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+static void func_breathe_message(size_msg_t msg)
+{
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_breathe_button_click();
+            break;
+        default:
+            func_message(msg);
+            break;
+    }
+}
+static void func_breathe_process(void)
+{
+
+    func_process();
+}
+#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建呼吸窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_breathe_form_create(void)
@@ -874,99 +982,6 @@ static void func_breathe_message(size_msg_t msg)
         }
     }
 }
-#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-compo_form_t *func_breathe_form_create(void)
-{
-    //新建窗体
-    compo_form_t *frm = compo_form_create(true);
-
-    compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,3,1,228,144);
-    compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,50+34);
-
-    compo_cardbox_icon_set_pos(cardbox,0,0,0);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_BREATH_TRAINING_BG_BIN);
-
-    compo_cardbox_icon_set_pos(cardbox,1,-72,0);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I335001_BREATH_TRAINING_TIME_BIN);
-
-    compo_cardbox_icon_set_pos(cardbox,2,80,0);
-    compo_cardbox_icon_set(cardbox, 2, UI_BUF_I335001_BREATH_TRAINING_NEXT_BIN);
-
-    compo_cardbox_text_set_location(cardbox,0,-50,-10,110,30);
-    widget_set_align_center(cardbox->text[0],false);
-    compo_cardbox_text_set(cardbox,0,"2 min");
-
-    cardbox = compo_cardbox_create(frm,0,3,1,228,144);
-    compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,126+34);
-
-    compo_cardbox_icon_set_pos(cardbox,0,0,0);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_BREATH_TRAINING_BG_BIN);
-
-    compo_cardbox_icon_set_pos(cardbox,1,-72,0);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I335001_BREATH_TRAINING_MODERATE_BIN);
-
-    compo_cardbox_icon_set_pos(cardbox,2,80,0);
-    compo_cardbox_icon_set(cardbox, 2, UI_BUF_I335001_BREATH_TRAINING_NEXT_BIN);
-
-    compo_cardbox_text_set_location(cardbox,0,-50,-10,110,30);
-    widget_set_align_center(cardbox->text[0],false);
-    compo_cardbox_text_set(cardbox,0,"Moderate");
-
-    //创建按钮
-    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_BREATH_TRAINING_PAUSE_BIN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,52/2+222);
-    compo_setid(btn, COMPO_ID_BTN_START);
-
-    ///设置标题栏名字///
-    compo_textbox_t *txt = compo_textbox_create(frm,strlen("breath training"));
-    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
-    compo_textbox_set(txt, "breath training");
-    compo_textbox_set_align_center(txt, false);
-
-    return frm;
-}
-
-//单击按钮
-static void func_breathe_button_click(void)
-{
-    f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;
-    int id = compo_get_button_id();
-    compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_START);
-    switch(id)
-    {
-        case COMPO_ID_BTN_START:
-            if (f_breathe->sta == BREATHE_STA_IDLE)
-            {
-                f_breathe->sta = BREATHE_STA_WORKING;
-                compo_button_set_bgimg(btn,UI_BUF_I335001_BREATH_TRAINING_FINISH_BIN);
-            }
-            else
-            {
-                f_breathe->sta = BREATHE_STA_IDLE;
-                compo_button_set_bgimg(btn,UI_BUF_I335001_BREATH_TRAINING_PAUSE_BIN);
-            }
-            break;
-        default:
-            break;
-    }
-}
-
-static void func_breathe_message(size_msg_t msg)
-{
-    switch (msg)
-    {
-        case MSG_CTP_CLICK:
-            func_breathe_button_click();
-            break;
-        default:
-            func_message(msg);
-            break;
-    }
-}
-static void func_breathe_process(void)
-{
-    func_process();
-}
 #else
 compo_form_t *func_breathe_form_create(void)
 {
@@ -994,7 +1009,9 @@ static void func_breathe_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_breathe_t));
     func_cb.frm_main = func_breathe_form_create();
-#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+#elif (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;
     compo_picturebox_t *pic_breathe = compo_getobj_byid(COMPO_ID_PIC_BREATHE);
     f_breathe->icon_org_size = compo_picturebox_get_location(pic_breathe).wid;

@@ -62,7 +62,7 @@ const uint16_t TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CE
 /*入口参数：timer->设置时间*/
 /*入口参数：hour_flag->设置小时或分钟 0小时 1分钟*/
 /*返回参数：timer_data->返回timer（上下 & 上上下下 ）的时间1~5数组*/
-static void func_disturd_sub_get_timer(bool mode,bool hour_flag,u8 timer,u8 *timer_data)
+static void func_disturd_sub_get_timer(bool mode,bool hour_flag,u8 timer,s8 *timer_data)
 {
     s8 num=-2;
 
@@ -269,7 +269,7 @@ compo_form_t *func_disturd_sub_set_form_create(void)
 
     u8 hour ;
     u8 min  ;
-    s8 txt_buf[20];
+    char txt_buf[20];
     s8 hour_data[5];
     s8 min_data[5];
     if(sys_cb.disturd_sel)

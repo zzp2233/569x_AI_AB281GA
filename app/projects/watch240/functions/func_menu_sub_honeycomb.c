@@ -420,7 +420,7 @@ static void func_menu_sub_honeycomb_switch_to_clock(void)
     f_menu_hc_t *f_menu = (f_menu_hc_t *)func_cb.f_cb;
     compo_iconlist_t *iconlist = f_menu->iconlist;
     widget_icon_t *icon = compo_iconlist_select_byidx(iconlist, 0);
-    rect_t rect = widget_get_location(icon);
+//    rect_t rect = widget_get_location(icon);
     u8 func_sta = FUNC_CLOCK;
 //    int switch_mode = FUNC_SWITCH_ZOOM_ENTER | FUNC_SWITCH_AUTO;
     compo_form_t *frm = func_create_form(func_sta);

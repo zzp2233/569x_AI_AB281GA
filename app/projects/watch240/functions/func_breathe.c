@@ -138,7 +138,7 @@ static void func_breathe_button_click(void)
 {
     f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;
     int id = compo_get_button_id();
-    compo_picturebox_t *pic = compo_getobj_byid(COMPO_ID_PIC_BREATHE);
+//    compo_picturebox_t *pic = compo_getobj_byid(COMPO_ID_PIC_BREATHE);
     compo_button_t* btn = compo_getobj_byid(COMPO_ID_BTN_START);
     switch(id)
     {

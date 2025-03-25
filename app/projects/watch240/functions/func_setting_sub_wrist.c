@@ -239,8 +239,8 @@ static u16 func_wrist_card_get_id(point_t pt)
 //单击按钮
 static void func_wrist_button_click(void)
 {
-    u8 ret = 0;
-    f_wrist_t *wrs = (f_wrist_t *)func_cb.f_cb;
+//    u8 ret = 0;
+//    f_wrist_t *wrs = (f_wrist_t *)func_cb.f_cb;
 
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_wrist_card_get_id(pt);

@@ -198,21 +198,6 @@ void func_address_book_icon_click(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-extern bool func_switching_flag;
-enum
-{
-    COMPO_ID_LISTBOX = 1,
-
-    COMPO_ID_COVER_PIC,
-    COMPO_ID_COVER_TXT,
-
-};
-
-typedef struct f_address_book_list_t_
-{
-    compo_listbox_t *listbox;
-    u32 tick;
-} f_address_book_list_t;
 
 static const compo_listbox_item_t tbl_call_list[UTE_MODULE_CALL_ADDRESSBOOK_MAX_COUNT] = {0};       //list列表
 static ute_module_call_addressbook_t* address_book_tbl = NULL;            //电话簿数据

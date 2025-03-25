@@ -680,6 +680,7 @@ typedef struct f_sleep_t_
     u8          page_num;
     uint32_t    tick;
     u8          switch_page_state;
+    page_tp_move_t *ptm;
 } f_sleep_t;
 
 enum
@@ -710,28 +711,28 @@ compo_form_t *func_sleep_form_create(void)
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
-    sleep_data->totalSleepMin = 480;
-    sleep_data->fallAsSleepTime.hour =0;
-    sleep_data->fallAsSleepTime.min =0;
-    sleep_data->getUpSleepTime.hour =8;
-    sleep_data->getUpSleepTime.min = 0;
+    // sleep_data->totalSleepMin = 480;
+    // sleep_data->fallAsSleepTime.hour =0;
+    // sleep_data->fallAsSleepTime.min =0;
+    // sleep_data->getUpSleepTime.hour =8;
+    // sleep_data->getUpSleepTime.min = 0;
 
-    sleep_data->lightSleepMin= 480;
-    sleep_data->deepSleepMin= 480;
-    sleep_data->wakeSleepMin= 480;
-    sleep_data->RemSleepMin= 480;
+    // sleep_data->lightSleepMin= 480;
+    // sleep_data->deepSleepMin= 480;
+    // sleep_data->wakeSleepMin= 480;
+    // sleep_data->RemSleepMin= 480;
 
-    sleep_data->recordCnt = 5;
-    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
-    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
-    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
-    sleep_data->sleep_record[2].state = REM_SLEEP;
-    sleep_data->sleep_record[4].state = DEEP_SLEEP;
-    sleep_data->sleep_record[0].period = 20;
-    sleep_data->sleep_record[1].period = 100;
-    sleep_data->sleep_record[2].period = 100;
-    sleep_data->sleep_record[3].period = 120;
-    sleep_data->sleep_record[4].period = 20;
+    // sleep_data->recordCnt = 5;
+    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[2].state = REM_SLEEP;
+    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[0].period = 20;
+    // sleep_data->sleep_record[1].period = 100;
+    // sleep_data->sleep_record[2].period = 100;
+    // sleep_data->sleep_record[3].period = 120;
+    // sleep_data->sleep_record[4].period = 20;
 
 
     //新建窗体和背景

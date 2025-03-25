@@ -26,44 +26,18 @@
 #define ALARM_GET_MIN(idx)              0
 #define ALARM_GET_CYCLE(idx)            0
 #endif
+
 typedef struct f_alarm_clock_sub_edit_t_
 {
     bool time_scale;        //时间制 0:24小时; 1:12小时
+    page_tp_move_t *ptm;
 } f_alarm_clock_sub_edit_t;
-static void func_alarm_clock_sub_edit_enter(void);
-static void func_alarm_clock_sub_edit_exit(void);
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
 typedef struct func_alarm_hour_format_t_
 {
     u8 hour;
     u8 am_pm;
 } func_alarm_hour_format_t;
-
-static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
-{
-    u8 am_pm = (hour24 >= 12) ? 2 : 1;    //2 PM, 1 AM
-    func_alarm_hour_format_t hour12;
-    if(uteModuleSystemtime12HOn())
-    {
-        if (hour24 == 0)
-        {
-            hour12.hour = 12;
-        }
-        else if (hour24 > 12)
-        {
-            hour12.hour = hour24 - 12;
-        }
-        else
-        {
-            hour12.hour = hour24;
-        }
-        hour12.am_pm = am_pm;
-        return hour12;
-    }
-    hour12.hour = hour24;
-    hour12.am_pm = 0;
-    return hour12;
-}
 
 typedef struct ui_handle_t_
 {
@@ -146,7 +120,7 @@ typedef struct ui_handle_t_
 
 } ui_handle_t;
 
-///组件ID
+//组件ID
 enum
 {
     //按键
@@ -162,8 +136,38 @@ enum
     CARD_ID_END,
 
     //文本
-    COMPO_ID_TEXT_BTN_DEL,W
+    COMPO_ID_TEXT_BTN_DEL,
 };
+
+static void func_alarm_clock_sub_edit_enter(void);
+static void func_alarm_clock_sub_edit_exit(void);
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
+{
+    u8 am_pm = (hour24 >= 12) ? 2 : 1;    //2 PM, 1 AM
+    func_alarm_hour_format_t hour12;
+    if(uteModuleSystemtime12HOn())
+    {
+        if (hour24 == 0)
+        {
+            hour12.hour = 12;
+        }
+        else if (hour24 > 12)
+        {
+            hour12.hour = hour24 - 12;
+        }
+        else
+        {
+            hour12.hour = hour24;
+        }
+        hour12.am_pm = am_pm;
+        return hour12;
+    }
+    hour12.hour = hour24;
+    hour12.am_pm = 0;
+    return hour12;
+}
 
 static const ui_handle_t ui_handle =
 {
@@ -595,20 +599,6 @@ static void func_alarm_clock_sub_edit_card_click(void)
     func_alarm_clock_sub_edit_button_release_handle();
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-static void func_alarm_clock_sub_edit_enter(void);
-static void func_alarm_clock_sub_edit_exit(void);
-
-typedef struct f_alarm_clock_sub_edit_t_
-{
-    bool time_scale;        //时间制 0:24小时; 1:12小时
-    page_tp_move_t *ptm;
-} f_alarm_clock_sub_edit_t;
-
-typedef struct func_alarm_hour_format_t_
-{
-    u8 hour;
-    u8 am_pm;
-} func_alarm_hour_format_t;
 
 static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
 {
@@ -635,106 +625,6 @@ static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
     hour12.am_pm = 0;
     return hour12;
 }
-
-typedef struct ui_handle_t_
-{
-
-    ///删除按钮
-    struct btn_t
-    {
-        u16 id;
-        u16 id_click;
-        s16 x,y;
-        u16 w,h;
-        u32 res;
-        u32 res_click;
-    } del_btn;
-
-    ///删除按钮文本
-    struct btn_txt_t
-    {
-        u16 id;
-        s16 x,y;
-        u16 w,h;
-        u16 str_id;
-        color_t color;
-    } del_btn_txt;
-
-    ///时间设置卡片
-    struct card_time_t
-    {
-        u16 id;
-        s16 x,y;
-        u16 w,h;
-
-        struct card_rect_t
-        {
-            u8 idx;
-            s16 x,y;
-            u16 w,h;
-            u16 r;
-        } rect[1];
-
-//        struct card_icon_t {
-//            u8 idx;
-//            s16 x,y;
-//            u16 w,h;
-//            u16 res;
-//        } icon[0];
-
-        struct card_text_t
-        {
-            u8 idx;
-            s16 x,y;
-            u16 w,h;
-            u16 str_id;
-            u32 res;
-            bool center;
-            bool wordwrap;
-            color_t color;
-            u16 rev;
-        } text[3];
-    } card_time;
-
-    ///日期设置
-    struct card_day_t
-    {
-        u16 id;
-        s16 x,y;
-        u16 w,h;
-
-        struct card_rect_t rect[1];
-
-//        struct card_icon_t {
-//            u8 idx;
-//            s16 x,y;
-//            u16 w,h;
-//            u16 res;
-//        } icon[0];
-
-        struct card_text_t text[2];
-    } card_day;
-
-} ui_handle_t;
-
-///组件ID
-enum
-{
-    //按键
-    COMPO_ID_BTN_DEL = 1,
-
-    //图像
-    COMPO_ID_PIC_DEL_CLICK,
-
-    //卡片
-    CARD_ID_START,
-    COMPO_ID_CARD_SET_TIME,
-    COMPO_ID_CARD_SET_DAY,
-    CARD_ID_END,
-
-    //文本
-    COMPO_ID_TEXT_BTN_DEL,W
-};
 
 static const ui_handle_t ui_handle =
 {
@@ -1168,6 +1058,14 @@ static void func_alarm_clock_sub_edit_card_click(void)
 #else
 compo_form_t *func_alarm_clock_sub_edit_form_create(void)
 {
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_EDIT]);
+
+    return frm;
 }
 static void func_alarm_clock_sub_edit_button_touch_handle(void)
 {

@@ -445,18 +445,18 @@ void uteModuleSleepSaveLogData(ute_module_systemtime_time_t time)
         return;
     }
     void *file;
-    uint8_t path[30];
+    uint8_t path[40];
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_LOG_SLEEP_DEBUG_DATA_DIR);
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_LOG_SLEEP_DEBUG_DATA_DIR, dirInfo, NULL);
     if (dirInfo->filesCnt >= 24)
     {
-        memset(&path[0], 0, 30);
+        memset(&path[0], 0, sizeof(path));
         sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_LOG_SLEEP_DEBUG_DATA_DIR, &dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,del file=%s", __func__, &path[0]);
         uteModuleFilesystemDelFile((char *)&path[0]);
     }
-    memset(&path[0], 0, 30);
+    memset(&path[0], 0, sizeof(path));
     sprintf((char *)&path[0], "%s/%04d%02d%02d%02d",UTE_MODULE_FILESYSTEM_LOG_SLEEP_DEBUG_DATA_DIR,time.year, time.month, time.day, time.hour);
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,%s", __func__,&path[0]);
     if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT | FS_O_TRUNC))

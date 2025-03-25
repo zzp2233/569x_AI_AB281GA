@@ -570,11 +570,15 @@ void uteModulePlatformRtcSetTime(uint16_t year,uint8_t month,uint8_t day,uint8_t
 */
 void uteModulePlatformCalibrationSystemTimer(void)
 {
+#if UTE_LOG_TIME_LVL
     tm_t getRtcTime = rtc_clock_get();
     ute_module_systemtime_time_t getSystemTime;
     uteModuleSystemtimeGetTime(&getSystemTime);
     UTE_MODULE_LOG(UTE_LOG_TIME_LVL,"%s,rtc    %04d-%02d-%02d,%02d:%02d:%02d",__func__,getRtcTime.year,getRtcTime.mon,getRtcTime.day,getRtcTime.hour,getRtcTime.min,getRtcTime.sec);
     UTE_MODULE_LOG(UTE_LOG_TIME_LVL,"%s,system %04d-%02d-%02d,%02d:%02d:%02d",__func__,getSystemTime.year,getSystemTime.month,getSystemTime.day,getSystemTime.hour,getSystemTime.min,getSystemTime.sec);
+#else
+    return;
+#endif
 }
 /**
 *@brief 系统滴答计数

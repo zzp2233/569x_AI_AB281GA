@@ -63,7 +63,8 @@
 #define BT_INFO_TAG_USER                "USER"   //用户删除TWS配对信息
 
 //蓝牙状态
-enum {
+enum
+{
     BT_STA_OFF,                                 //蓝牙模块已关闭
     BT_STA_INITING,                             //初始化中
     BT_STA_IDLE,                                //蓝牙模块打开，未连接
@@ -81,7 +82,8 @@ enum {
 };
 
 //通话状态
-enum {
+enum
+{
     BT_CALL_IDLE,                               //
     BT_CALL_INCOMING,                           //来电响铃
     BT_CALL_OUTGOING,                           //正在呼出
@@ -90,7 +92,8 @@ enum {
 };
 
 //蓝牙通知
-enum {
+enum
+{
     BT_NOTICE_INIT_FINISH,                      //蓝牙初始化完成
     BT_NOTICE_CONNECT_START,                    //开始回连手机, param[0]=status, param[1]=reason, param[7:2]=bd_addr
     BT_NOTICE_CONNECT_FAIL,                     //回连手机失败, param[0]=reason, param[1]=reason, param[7:2]=bd_addr
@@ -150,7 +153,8 @@ enum
 };
 
 //控制消息
-enum {
+enum
+{
     BT_CTL_VOL_CHANGE               = 0,        //音量调整，之后通过回调函数设置音量
     BT_CTL_PLAY_PAUSE,                          //切换播放、暂停
     BT_CTL_VOL_UP,                              //音乐加音量，之后通过回调函数调节音量
@@ -234,7 +238,8 @@ enum {
     BT_CTL_NO                       = 0xffffff,
 };
 
-enum bt_msg_comm_t {
+enum bt_msg_comm_t
+{
     COMM_BT_CTL0,                               //无传参的消息
     COMM_BT_START_WORK,                         //蓝牙开始工作
     COMM_BT_SET_SCAN,                           //设置可被发现/可被连接
@@ -249,14 +254,16 @@ enum bt_msg_comm_t {
     COMM_BT_AUTO_SNIFF,
 };
 
-enum bt_msg_hid_t {
+enum bt_msg_hid_t
+{
     HID_KEYBOARD,
     HID_CONSUMER,
     HID_TOUCH_SCREEN,
     HID_MOUSE,
 };
 
-enum bt_msg_pbap_t {
+enum bt_msg_pbap_t
+{
     BT_PBAP_CTRL,
     BT_PBAP_SELECT_PHONEBOOK,
     BT_PBAP_GET_PHONEBOOK_SIZE,
@@ -265,7 +272,8 @@ enum bt_msg_pbap_t {
 };
 
 //蓝牙消息
-enum bt_msg_t {
+enum bt_msg_t
+{
     BT_MSG_CTRL                 = 0,            //蓝牙控制消息
     BT_MSG_COMM,
     BT_MSG_RES1,
@@ -282,7 +290,8 @@ enum bt_msg_t {
     BT_MSG_RES                  = 0xf0,         //0xf0~0xff保留给传参较多的api
 };
 
-enum sync_info_enum {
+enum sync_info_enum
+{
     SYNC_INFO_SETTING,                  //VOL/LANG/EQ/BAT/...
     SYNC_INFO_LEDCNT,                   //同步 led cnt
     SYNC_INFO_EQPARAM,
@@ -300,7 +309,8 @@ enum
 };
 
 //LE Addr Type, public or random(static or non resolvable or resolvable)
-enum {
+enum
+{
     GAP_RANDOM_ADDRESS_TYPE_OFF = 0,    //Public
     GAP_RANDOM_ADDRESS_TYPE_STATIC,
     GAP_RANDOM_ADDRESS_NON_RESOLVABLE,
@@ -308,14 +318,16 @@ enum {
 };
 
 //LE状态
-enum {
+enum
+{
     LE_STA_STANDBY,
     LE_STA_ADVERTISING,                         //正在广播
     LE_STA_CONNECTION,                          //已连接
 };
 
 //LE 通知
-enum{
+enum
+{
     LE_NOTICE_CONNECTED,                        //连接成功
     LE_NOTICE_DISCONNECT,                       //断开成功
     LE_NOTICE_CONN_PARAM_UPDATE,                //连接参数更新
@@ -358,7 +370,8 @@ enum{
 /**
     define group GATT Server Service Types
 */
-typedef enum {
+typedef enum
+{
     BLE_GATTS_SRVC_TYPE_PRIMARY  =   0x00,                //Primary Service
     BLE_GATTS_SRVC_TYPE_SEVONDARY=   0x01,                //Secondary Service
     BLE_GATTS_SRVC_TYPE_INCLUDE  =   0x02,                //include Type
@@ -367,7 +380,8 @@ typedef enum {
 /**
     define group GATT Server UUID Types
 */
-typedef enum {
+typedef enum
+{
     BLE_GATTS_UUID_TYPE_16BIT  =   0x00,                //UUID 16BIT
     BLE_GATTS_UUID_TYPE_128BIT =   0x01,                //UUID 128BIT
 } ble_gatts_uuid_type;
@@ -385,7 +399,8 @@ typedef int (*ble_gatt_callback_func)(uint16_t con_handle, uint16_t handle, uint
 /**
     define GATT service base
 */
-typedef struct gatts_service_base{
+typedef struct gatts_service_base
+{
     uint16_t handle;
 } gatts_service_base_st;
 
@@ -393,7 +408,8 @@ typedef struct gatts_service_base{
 /**
     define GATT service uuid
 */
-typedef struct gatts_uuid_base{
+typedef struct gatts_uuid_base
+{
     uint16_t props;
     uint8_t type;
     const uint8_t *uuid;
@@ -401,7 +417,8 @@ typedef struct gatts_uuid_base{
 /**
     define GATT service call back info
 */
-typedef struct {
+typedef struct
+{
     uint16_t client_config;                         // att config, 1:notify enable; 2:indicate enable;
     uint16_t value_len;
     ble_gatt_callback_func att_write_callback_func; // 特征值的写操作回调
@@ -415,7 +432,8 @@ typedef struct {
 /**
     define group GATT Server profile struct
 */
-typedef struct gatts_profile_list{
+typedef struct gatts_profile_list
+{
     void *item;
     uint16_t  profile_start_handle;
     uint16_t  profile_end_handle;
@@ -624,20 +642,21 @@ void ble_send_sm_req_for_android(void);
 #define bt_pbap_connect()                       bt_pbap_msg(BT_PBAP_CTRL, 1)
 #define bt_pbap_disconnect()                    bt_pbap_msg(BT_PBAP_CTRL, 0)
 #define bt_pbap_select_phonebook(book, sim)     bt_pbap_msg(BT_PBAP_SELECT_PHONEBOOK, (sim<<8) | (u8)book)
-                                                // sim - 1:选择SIM卡，0:本机
-                                                // book- 0:pb, 1:fav, 2-ich, 3:och, 4-mch, 5-cch, 6-spd
-                                                // 若不配置，则选择默认值为本机pb
+// sim - 1:选择SIM卡，0:本机
+// book- 0:pb, 1:fav, 2-ich, 3:och, 4-mch, 5-cch, 6-spd
+// 若不配置，则选择默认值为本机pb
 #define bt_pbap_get_phonebook_size()            bt_pbap_msg(BT_PBAP_GET_PHONEBOOK_SIZE, 0)
 #define bt_pbap_pull_phonebook_whole()          bt_pbap_msg(BT_PBAP_PULL_PHONEBOOK, 0)
 #define bt_pbap_pull_phonebook_single(idx)      bt_pbap_msg(BT_PBAP_PULL_PHONEBOOK, idx)
-                                                // 按编号获取联系人信息
-                                                // idx不为零，如果为零则直接获取整个电话本信息
+// 按编号获取联系人信息
+// idx不为零，如果为零则直接获取整个电话本信息
 #define bt_pbap_set_path()                      bt_pbap_msg(BT_PBAP_SET_PATH, 0)
 
 //pkt
 typedef void (*kick_func_t)(void);
 
-struct txbuf_tag {
+struct txbuf_tag
+{
     uint8_t *ptr;
     uint16_t len;
     uint16_t handle;
@@ -665,13 +684,15 @@ uint8_t sdp_add_service(void *item);
 void sdp_rmv_service(uint32_t service_record_handle);
 uint bt_get_hfp_feature(void);
 bool bt_hfp_is_connected(void);
+bool hfp_is_connected(void);
 
 //a2dp
 bool a2dp_is_playing_fast(void);
 uint8_t a2dp_vol_reverse(uint vol);                 //将系统音量转换为a2dp_vol
 uint8_t a2dp_vol_conver(uint8_t a2dp_vol);          //将a2dp_vol转换为系统音量级数
 //spp
-enum {
+enum
+{
     SPP_SERVICE_CH0,     //channel0，是默认SPP UUID 服务通路
     SPP_SERVICE_CH1,     //channel1，自定义UUID,默认用GFPS
     SPP_SERVICE_CH2,     //channel2, 自定义UUID，未使用
@@ -703,9 +724,9 @@ bool bt_hid_touch_screen_set_key(void *ts);
    注意:IOS 范围是-2047-2048 ，安卓是0-4096;
         IOS设备，x,y是相对位置，比如10,10是相对当前位置移动10,10;
         安卓设备，x，y是绝对位置，10,10是在手机10,10的位置上;
- * @param is_press	1按下，0抬起
- * @param x	模拟触点横坐标
- * @param y	模拟触点纵坐标
+ * @param is_press  1按下，0抬起
+ * @param x 模拟触点横坐标
+ * @param y 模拟触点纵坐标
  **/
 void bt_hid_point_pos(bool is_press, s16 x, s16 y);
 
@@ -719,7 +740,7 @@ u32 bt_pbap_get_sta(void);                      //获取电话本状态，0：ID
 void bt_pbap_lookup_number(char *phone_number); //根据电话号码获取联系人名字
 //map
 void map_client_init(void);
-void bt_map_start(void);                     	//MAP的获取
+void bt_map_start(void);                        //MAP的获取
 void bt_map_abort(void);                        //终止MAP的获取
 //hsp
 void hsp_hs_init(void);
@@ -765,9 +786,9 @@ bool ble_set_adv_data(const u8 *adv_buf, u32 size);
 void ble_send_sm_req(void);
 void ble_exchange_mtu_request(void);
 void ble_set_gap_name(char *gap_name, u8 len);
-u16 ble_get_conn_interval(void);		        //N*1.25ms
+u16 ble_get_conn_interval(void);                //N*1.25ms
 u16 ble_get_conn_latency(void);
-u16 ble_get_conn_timeout(void);			        //N*10ms
+u16 ble_get_conn_timeout(void);                 //N*10ms
 u16 ble_get_adv_interval(void);                 //N*625us
 
 //init gatt

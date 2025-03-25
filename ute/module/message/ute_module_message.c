@@ -21,6 +21,7 @@
 #include "ute_module_factorytest.h"
 #include "ute_module_call.h"
 #include "ute_module_localRingtone.h"
+#include "ute_module_micrecord.h"
 
 /**
 *@brief  消息模块消息处理函数

@@ -299,6 +299,18 @@ static bool func_switching_lr_alpha(u16 switch_mode, bool flag_auto, void* param
         {
             break;
         }
+        switch(msg_dequeue())
+        {
+            case EVT_MSGBOX_EXIT:
+            case EVT_CLOCK_DROPDOWN_EXIT:
+            case EVT_WATCH_TIMER_DONE:
+                compo_form_set_pos(frm_last, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+                compo_form_set_pos(frm_cur, GUI_SCREEN_WIDTH*2, GUI_SCREEN_CENTER_Y);
+                compo_form_scale_to(frm_last, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+                compo_form_set_alpha(frm_last, 255);
+                return (flag_pos == FLAG_POS_END);
+                break;
+        }
     }
     return (flag_pos == FLAG_POS_END);
 }

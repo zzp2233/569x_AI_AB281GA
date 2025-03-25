@@ -138,11 +138,7 @@ void func_menu_sub_message(size_msg_t msg)
         case KD_BACK:
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-                return;
-#endif
                 func_cb.sta = FUNC_MENUSTYLE;
-
             }
             break;
 

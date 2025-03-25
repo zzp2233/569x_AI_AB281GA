@@ -116,11 +116,11 @@ static void func_heart_warning_updata(void)
     compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_UINT);
     if(uteModuleHeartGetMaxHeartValue())
     {
-        compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
+        compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     }
     else
     {
-        compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
+        compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     }
 }
 #else

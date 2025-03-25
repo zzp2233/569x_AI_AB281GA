@@ -1546,7 +1546,7 @@ void uteModuleNotifySetAncsInfo(uint8_t attId,uint8_t *buff,uint16_t length)
             ute_module_systemtime_time_t systemTime;
             uteModuleSystemtimeGetTime(&systemTime);
 
-            sscanf(buff, "%dT%d", &date, &time);
+            sscanf((char*)buff, "%dT%d", &date, &time);
             notifyTm.year = date / 10000;
             notifyTm.mon  = (date % 10000) / 100;
             notifyTm.day  = date % 100;

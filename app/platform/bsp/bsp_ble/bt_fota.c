@@ -1,7 +1,7 @@
 #include "include.h"
 #include "bt_fota.h"
 #include "ute_module_call.h"
-#include "ute_application_common.h""
+#include "ute_application_common.h"
 
 #if LE_AB_FOT_EN
 

@@ -113,7 +113,8 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
     sys_cb.step_cur = 0;
     sys_cb.step_goal = 0;
 #endif
-    sys_cb.smoking_count = uteModuleGetSomkeSomkeCount();
+    ecig_cfg.smoke_power = ecig_get_power();
+    ecig_cfg.smoking_count = uteModuleGetSomkeSomkeCount();
 #if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
     ute_module_target_notify_data_t targetNotifyData;
     uteModuleSportGetTodayTargetNotifyData(&targetNotifyData);
@@ -152,7 +153,11 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
     switch (compo->bond_data)
     {
         case COMPO_BOND_SMOKECOUNT:
-            value = sys_cb.smoking_count;
+            value = ecig_cfg.smoking_count;
+            sprintf(value_str, "%d", value);
+            break;
+        case COMPO_BOND_SMOKEPOWER:
+            value = ecig_cfg.smoke_power;
             sprintf(value_str, "%d", value);
             break;
         case COMPO_BOND_YEAD:

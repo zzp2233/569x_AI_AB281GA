@@ -343,7 +343,7 @@ typedef struct func_alarm_hour_format_t_
 
 static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
 {
-    u8 am_pm = (hour24 >= 12 && hour24) ? 2 : 1;    //2 PM, 1 AM
+    u8 am_pm = (hour24 >= 12) ? 2 : 1;    // 2 PM, 1 AM
     func_alarm_hour_format_t hour12;
     if(uteModuleSystemtime12HOn())
     {
@@ -366,6 +366,7 @@ static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
     hour12.am_pm = 0;
     return hour12;
 }
+
 
 static void func_set_sub_disturd_state_update(void)
 {
@@ -496,13 +497,6 @@ compo_form_t *func_set_sub_disturd_form_create(void)
     compo_cardbox_set_visible(disturd_start_time, sys_cb.disturd_tim > 0 ? true : false);
     compo_cardbox_set_location(disturd_start_time, ui_handle.disturd_start_time.x, ui_handle.disturd_start_time.y, ui_handle.disturd_start_time.w, ui_handle.disturd_start_time.h);
     compo_setid(disturd_start_time, ui_handle.disturd_start_time.id);
-    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]); i++)
-    {
-        compo_cardbox_rect_set_location(disturd_start_time, ui_handle.disturd_start_time.rect[i].idx, ui_handle.disturd_start_time.rect[i].x, ui_handle.disturd_start_time.rect[i].y,
-                                        ui_handle.disturd_start_time.rect[i].w, ui_handle.disturd_start_time.rect[i].h, ui_handle.disturd_start_time.rect[i].r);
-        compo_cardbox_rect_set_color(disturd_start_time, ui_handle.disturd_start_time.rect[i].idx, make_color(41, 41, 41));
-    }
-
     for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]); i++)
     {
         compo_cardbox_text_set_font(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].res);
@@ -512,11 +506,7 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         widget_text_set_color(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], make_color(ui_handle.disturd_start_time.text[i].color.r, ui_handle.disturd_start_time.text[i].color.g, ui_handle.disturd_start_time.text[i].color.b));
         compo_cardbox_text_set_location(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].x, ui_handle.disturd_start_time.text[i].y,
                                         ui_handle.disturd_start_time.text[i].w, ui_handle.disturd_start_time.text[i].h);
-//        if(sys_cb.disturd_tim == 0)
-//        {
-//            sys_cb.disturd_start_time_sec = 0;
-//            sys_cb.disturd_end_time_sec = 0;
-//        }
+
         u8 hour = sys_cb.disturd_start_time_sec / 3600;
         u8 min  = (sys_cb.disturd_start_time_sec % 3600) / 60;
         u8 am_pm = 0;
@@ -527,16 +517,16 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         memset(aclock_str, '\0', sizeof(aclock_str));
         sprintf(aclock_str, "%02d:%02d", hour, min);
 
-        printf("pm_flag:%d\n",am_pm);
+        printf("pm_flag:%d\n", am_pm);
         if (ui_handle.disturd_start_time.text[i].idx == 2)
         {
-            if(am_pm == 2)      //AM
+            if(am_pm == 2)      // PM
             {
-                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
+                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
             }
             else if (am_pm == 1)
             {
-                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
+                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
             }
         }
         else if (ui_handle.disturd_start_time.text[i].idx == 1)
@@ -549,6 +539,7 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         }
     }
 
+
     ///创建结束时间卡片
     compo_cardbox_t* disturd_end_time = compo_cardbox_create(frm,
                                         sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]),
@@ -558,13 +549,6 @@ compo_form_t *func_set_sub_disturd_form_create(void)
     compo_cardbox_set_visible(disturd_end_time, sys_cb.disturd_tim > 0 ? true : false);
     compo_cardbox_set_location(disturd_end_time, ui_handle.disturd_end_time.x, ui_handle.disturd_end_time.y, ui_handle.disturd_end_time.w, ui_handle.disturd_end_time.h);
     compo_setid(disturd_end_time, ui_handle.disturd_end_time.id);
-    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]); i++)
-    {
-        compo_cardbox_rect_set_location(disturd_end_time, ui_handle.disturd_end_time.rect[i].idx, ui_handle.disturd_end_time.rect[i].x, ui_handle.disturd_end_time.rect[i].y,
-                                        ui_handle.disturd_end_time.rect[i].w, ui_handle.disturd_end_time.rect[i].h, ui_handle.disturd_end_time.rect[i].r);
-        compo_cardbox_rect_set_color(disturd_end_time, ui_handle.disturd_end_time.rect[i].idx, make_color(41, 41, 41));
-    }
-
     for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]); i++)
     {
         compo_cardbox_text_set_font(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].res);
@@ -575,11 +559,6 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         compo_cardbox_text_set_location(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].x, ui_handle.disturd_end_time.text[i].y,
                                         ui_handle.disturd_end_time.text[i].w, ui_handle.disturd_end_time.text[i].h);
 
-//        if(sys_cb.disturd_tim == 0)
-//        {
-//            sys_cb.disturd_start_time_sec = 0;
-//            sys_cb.disturd_end_time_sec = 0;
-//        }
         u8 hour   = sys_cb.disturd_end_time_sec / 3600;
         u8 min  = (sys_cb.disturd_end_time_sec % 3600) / 60;
         u8 am_pm = 0;
@@ -592,17 +571,13 @@ compo_form_t *func_set_sub_disturd_form_create(void)
 
         if (ui_handle.disturd_end_time.text[i].idx == 2)
         {
-            if(am_pm == 2)      //AM
-            {
-                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
-            }
-            else if (am_pm == 1)
+            if(am_pm == 2)      // PM
             {
                 compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
             }
-            else
+            else if (am_pm == 1)
             {
-//                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
+                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
             }
         }
         else if (ui_handle.disturd_end_time.text[i].idx == 1)
@@ -614,6 +589,7 @@ compo_form_t *func_set_sub_disturd_form_create(void)
             compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
         }
     }
+
     return frm;
 }
 

@@ -20,7 +20,7 @@ enum
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 compo_form_t *func_breathe_finish_form_create(void)
 {
-    char txt_buf[50];
+    char txt_buf[100];
     char time_buf[30];
     char time_num[10];
     //新建窗体

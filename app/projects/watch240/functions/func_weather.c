@@ -1238,29 +1238,24 @@ static void func_weather_enter(void)
 //退出天气功能
 static void func_weather_exit(void)
 {
-//    f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
+    f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
     func_cb.last = FUNC_WEATHER;
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-
-#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     if(sys_cb.refresh_language_flag == false)
     {
         page_y = 0;
-    }
-    if (f_weather->ptm)
-    {
-        func_free(f_weather->ptm);
     }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     if(sys_cb.refresh_language_flag == false)
     {
         page_y = 0;
     }
+#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
     if (f_weather->ptm)
     {
         func_free(f_weather->ptm);
     }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //天气功能

@@ -123,7 +123,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
     ute_module_weather_data_t weatherData;
     uteModuleWeatherGetData(&weatherData);
-    sys_cb.weather_idx = (uint8_t)weatherData.DayWeather[0];
+    sys_cb.weather_idx = (uint8_t)(weatherData.DayWeather[0] >> 8);
     sys_cb.temperature[0] = weatherData.dayTemperatureMin[0];
     sys_cb.temperature[1] = weatherData.dayTemperatureMax[0];
 
@@ -333,7 +333,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
         case COMPO_BOND_WEATHER:
             value = sys_cb.weather_idx;
             const u16 weather_lang_id[] = {STR_UNKNOWN, STR_SUNNY, STR_CLOUDY, STR_OVERCAST, STR_MODERATE_RAIN, STR_RAINY_SHOWERS, STR_SLEET, STR_DRIZZLE, STR_HEAVY_RAIN, STR_SNOWY, STR_SAND_AND_DUST, STR_HAZE, STR_WINDY};
-            sprintf(value_str, "%s", i18n[weather_lang_id[weatherData.DayWeather[0]]]);
+            sprintf(value_str, "%s", i18n[weather_lang_id[value]]);
             break;
 
         case COMPO_BOND_ATMOMS:

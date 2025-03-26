@@ -69,6 +69,10 @@ static u16 fot_connect_sta = 0;
 
 fot_progress_t *bsp_fot_progress_get(void);
 
+void *fot_wait_bt_off_timer = NULL;
+static uint8_t *reply_info_tmp_buff = NULL;
+static uint8_t reply_info_len = 0;
+
 u8 is_fot_update_en(void)
 {
     return 1;
@@ -460,6 +464,28 @@ void fot_spp_disconnect_callback(void)
 }
 
 AT(.text.fot.cache)
+void fot_wait_bt_off_timer_callback(void * pxTimer)
+{
+    if(bt_get_status() > BT_STA_SCANNING)
+    {
+        FOT_DEBUG("fot:bt on, wait...\n");
+        uteModulePlatformRestartTimer(&fot_wait_bt_off_timer, 100);
+    }
+    else
+    {
+        FOT_DEBUG("fot:bt off, start...\n");
+        fot_reply_info_tlv(&reply_info_tmp_buff[0],reply_info_len);
+
+        uteModulePlatformMemoryFree(reply_info_tmp_buff);
+        reply_info_tmp_buff = NULL;
+
+        uteModulePlatformStopTimer(&fot_wait_bt_off_timer);
+        uteModulePlatformDeleteTimer(&fot_wait_bt_off_timer);
+        fot_wait_bt_off_timer = NULL;
+    }
+}
+
+AT(.text.fot.cache)
 void fot_recv_proc(u8 *buf, u16 len)
 {
     u32 addr;
@@ -503,15 +529,44 @@ void fot_recv_proc(u8 *buf, u16 len)
     switch(cmd)
     {
         case FOT_GET_INFO_TLV:
-            fot_reply_info_tlv(&buf[2],len-2);
-            if(bt_a2dp_profile_completely_connected())
+            // fot_reply_info_tlv(&buf[2],len-2);
+
+            if (uteModuleCallBtIsPowerOn())
             {
-                bt_a2dp_profile_dis();
+                uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO); // 音频解码和OTA复用内存
             }
-            if(uteModuleCallBtIsPowerOn())
+
+            // 等待BT关闭
+            if (reply_info_tmp_buff == NULL)
             {
-                uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO); //音频解码和OTA复用内存
+                reply_info_tmp_buff = (uint8_t *)uteModulePlatformMemoryAlloc(len);
             }
+
+            if (reply_info_tmp_buff)
+            {
+                memset(reply_info_tmp_buff, 0, len);
+                reply_info_len = len - 2;
+                memcpy(reply_info_tmp_buff, &buf[2], reply_info_len);
+            }
+            else
+            {
+                FOT_DEBUG("fot_recv_proc: reply_info_tmp_buff malloc fail\n");
+                break;
+            }
+
+            if (fot_wait_bt_off_timer == NULL)
+            {
+                bool ret = uteModulePlatformCreateTimer(&fot_wait_bt_off_timer, "fot_wait_bt_off_timer", 1, 100, false, fot_wait_bt_off_timer_callback);
+                if (!ret)
+                {
+                    uteModulePlatformMemoryFree(reply_info_tmp_buff);
+                    reply_info_tmp_buff = NULL;
+                    FOT_DEBUG("fot_wait_bt_off_timer create fail\n");
+                    break;
+                }
+            }
+            uteModulePlatformRestartTimer(&fot_wait_bt_off_timer, 100);
+
             break;
 
         case FOT_GET_INFO:

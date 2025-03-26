@@ -5,6 +5,8 @@
 #include "ute_module_sleep.h"
 #include "ute_module_heart.h"
 #include "func_bt.h"
+#include "ute_module_call.h"
+#include "ute_module_music.h"
 
 #if UTE_MODULE_SCREENS_UP_MENU_SUPPORT
 
@@ -1223,7 +1225,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(card1->text[ui_handle.card1.text_km.idx], make_color(ui_handle.card1.text_km.color.r, ui_handle.card1.text_km.color.g, ui_handle.card1.text_km.color.b));
     compo_cardbox_text_set_location(card1, ui_handle.card1.text_km.idx, ui_handle.card1.text_km.x, ui_handle.card1.text_km.y, ui_handle.card1.text_km.w, ui_handle.card1.text_km.h);
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%02ld",KM/100, KM%100);///公里数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",KM/100, KM%100);///公里数据
     compo_cardbox_text_set(card1, ui_handle.card1.text_km.idx,txt_buf);
 
     compo_cardbox_text_set_font(card1, ui_handle.card1.text_step.idx, ui_handle.card1.text_step.res);
@@ -1836,7 +1838,7 @@ static void func_clock_sub_card_data_update(void)
         msec = 999;
     }
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld.%02ld",min,sec,msec/10);
+    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d.%02d",min,sec,msec/10);
     cardbox = compo_getobj_byid(ui_handle.card5.id);
     compo_cardbox_text_set(cardbox, ui_handle.card5.text_time.idx,txt_buf);
 }
@@ -3941,7 +3943,7 @@ static void func_clock_sub_card_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_card_t));
     func_cb.frm_main = func_clock_sub_card_form_create();
 #if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
-    f_card_t *f_card = (f_card_t *)func_cb.f_cb;
+//    f_card_t *f_card = (f_card_t *)func_cb.f_cb;
     func_clock_sub_card_set_offs(SPRING_Y_MAX);
 #endif
 }
@@ -3949,7 +3951,7 @@ static void func_clock_sub_card_enter(void)
 //时钟表盘上拉菜单退出处理
 static void func_clock_sub_card_exit(void)
 {
-    f_card_t *f_card = (f_card_t *)func_cb.f_cb;
+//    f_card_t *f_card = (f_card_t *)func_cb.f_cb;
     func_cb.last = FUNC_CARD;
     tft_set_temode(DEFAULT_TE_MODE);
 }

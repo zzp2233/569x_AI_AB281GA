@@ -116,8 +116,8 @@ compo_form_t *func_weather_form_create(void)
     ute_module_weather_data_t  weather_date;
     ute_display_ctrl_t displayInfo;
 
-    u8 week_sort[7];
-    u8 week_day=0;
+//    u8 week_sort[7];
+//    u8 week_day=0;
     u8 get_weather_id[7];//存放一个星期的排序
     char str_buff[50];//用于存放打印数据
 
@@ -1213,7 +1213,7 @@ static void func_weather_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_weather_t));
     func_cb.frm_main = func_weather_form_create();
-    f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
+//    f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 #elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_weather->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
@@ -1238,7 +1238,7 @@ static void func_weather_enter(void)
 //退出天气功能
 static void func_weather_exit(void)
 {
-    f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
+//    f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
     func_cb.last = FUNC_WEATHER;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 

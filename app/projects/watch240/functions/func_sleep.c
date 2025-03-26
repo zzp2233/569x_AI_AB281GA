@@ -1222,7 +1222,7 @@ compo_form_t *func_sleep_form_create(void)
 //睡眠功能消息处理
 static void func_sleep_process(void)
 {
-    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
+//    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
 #elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -1298,7 +1298,7 @@ static void func_sleep_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_sleep_t));
     func_cb.frm_main = func_sleep_form_create();
 
-    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
+//    f_sleep_t *f_sleep = (f_sleep_t *)func_cb.f_cb;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
 #elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

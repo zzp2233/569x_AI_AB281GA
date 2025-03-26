@@ -106,8 +106,6 @@ static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
 compo_form_t *func_alarm_clock_form_create(void)
 {
     char str_buff[30];
-    char *str;
-    int buf_num=0;
     const char str_week_buf[7][3]=
     {
         "S", // 周一
@@ -209,12 +207,6 @@ compo_form_t *func_alarm_clock_form_create(void)
 
     }
     return frm;
-}
-
-//触摸按钮效果处理
-static void func_alarm_clock_button_touch_handle(void)
-{
-
 }
 
 //释放按钮效果处理

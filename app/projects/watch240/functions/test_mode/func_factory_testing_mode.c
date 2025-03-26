@@ -570,7 +570,7 @@ compo_form_t * func_factory_testing_key(void)
 {
     ///新建窗体
     compo_form_t *frm = compo_form_create(true);
-    compo_button_t *btn;
+//    compo_button_t *btn;
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen("按键测试"));
     compo_textbox_set(textbox, "按键测试");
@@ -592,7 +592,7 @@ compo_form_t * func_factory_testing_motor(void)
 {
     ///新建窗体
     compo_form_t *frm = compo_form_create(true);
-    compo_button_t *btn;
+//    compo_button_t *btn;
 
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
     f_factory_testing->motor_flag = false;
@@ -617,7 +617,7 @@ compo_form_t * func_factory_testing_charging(void)
 {
     ///新建窗体
     compo_form_t *frm = compo_form_create(true);
-    compo_button_t *btn;
+//    compo_button_t *btn;
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen("充电测试"));
     compo_textbox_set(textbox, "充电测试");
@@ -805,8 +805,8 @@ static void func_mode_motor_click(void)
 static void func_mode_mic_speaker_click(void)
 {
     int id = compo_get_button_id();
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
+//    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+//    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
 
     switch(id)
     {
@@ -909,7 +909,7 @@ static void func_factory_testing_message(size_msg_t msg)
 ///*数据刷新*/
 static void func_mode_heart_process(void)
 {
-    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+//    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
     char txt_buf[50];
 
     if(uteModuleHeartIsWear())

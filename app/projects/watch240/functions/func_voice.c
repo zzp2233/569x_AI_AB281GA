@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_cover.h"
+#include "ute_drv_motor.h"
 
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
 

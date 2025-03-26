@@ -16,7 +16,7 @@
 #define TRACE(...)
 #endif
 
-#define SIDEBAR_PAGE_HEIGHT GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/3    ///长图总高度
+#define SIDEBAR_PAGE_HEIGHT (((sizeof(result_txt) / sizeof(result_txt[0]))))    ///长图总高度
 #define MODE_ONE_SPACING_Y          GUI_SCREEN_HEIGHT/11
 #define MODE_ONE_INTIAL_SPACING_Y   GUI_SCREEN_CENTER_Y/10
 #define PURPLE_COLOR                make_color(0x66,0x33,0xcc)
@@ -226,11 +226,16 @@ compo_form_t *func_factory_testing_create(void)
 static void func_result_long_pic(void)
 {
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-
     f_factory_testing->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+
+    uint16_t page_size = SIDEBAR_PAGE_HEIGHT*(GUI_SCREEN_HEIGHT/9);          //分页大小
+#if (UTE_DRV_SCREEN_SHAPE == 0)
+    page_size = page_size+(GUI_SCREEN_HEIGHT/7.2)*2;
+#endif
+
     page_move_info_t info =
     {
-        .page_size = SIDEBAR_PAGE_HEIGHT,
+        .page_size = page_size,
         .page_count = 1,
         .up_over_perc = 0,
         .down_over_perc = 0,
@@ -686,6 +691,10 @@ compo_form_t * func_factory_testing_mode_result(void)
     }
 
     func_result_long_pic();
+#if (UTE_DRV_SCREEN_SHAPE == 0)
+    widget_page_set_client(frm->page,0,(GUI_SCREEN_HEIGHT/7.2));
+#endif
+
     return frm;
 
 }

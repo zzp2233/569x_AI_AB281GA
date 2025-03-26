@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 日语(日本）
 *@author
-*@date   2025-03-06 17:51:08
+*@date   2025-03-26 17:31:34
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -276,6 +276,8 @@ const char * const i18n_ja_rjp[] =
     [STR_CALORIES] = "\xe3\x82\xab\xe3\x83\xad\xe3\x83\xaa\xe3\x83\xbc\x00", // [260] カロリー
     [STR_TOTAL_DISTANCE] = "\xe8\xb7\x9d\xe9\x9b\xa2\x00", // [261] 距離
     [STR_COUNT_NUM] = "\xe9\xa0\xbb\xe5\xba\xa6\x00", // [262] 頻度
+    [STR_HEART_HIGHT] = "\xe9\xa0\xbb\xe8\x84\x88\x00", // [263] 頻脈
+    [STR_HEART_LOW] = "\xe5\xbe\x90\xe8\x84\x88\x00", // [264] 徐脈
 };
 
 #endif

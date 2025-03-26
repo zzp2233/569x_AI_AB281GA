@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 英语(美国）
 *@author
-*@date   2025-03-06 17:51:07
+*@date   2025-03-26 17:31:33
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -276,6 +276,8 @@ const char * const i18n_en_rus[] =
     [STR_CALORIES] = "\x54\x6f\x74\x61\x6c\x20\x63\x61\x6c\x6f\x72\x69\x65\x73\x00", // [260] Total calories
     [STR_TOTAL_DISTANCE] = "\x54\x6f\x74\x61\x6c\x20\x64\x69\x73\x74\x61\x6e\x63\x65\x00", // [261] Total distance
     [STR_COUNT_NUM] = "\x4e\x75\x6d\x62\x65\x72\x20\x6f\x66\x20\x74\x69\x6d\x65\x73\x00", // [262] Number of times
+    [STR_HEART_HIGHT] = "\x48\x69\x67\x68\x20\x68\x65\x61\x72\x74\x20\x72\x61\x74\x65\x00", // [263] High heart rate
+    [STR_HEART_LOW] = "\x4c\x6f\x77\x20\x68\x65\x61\x72\x74\x20\x72\x61\x74\x65\x00", // [264] Low heart rate
 };
 
 #endif

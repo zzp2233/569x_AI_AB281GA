@@ -682,6 +682,11 @@ static void func_heartrate_process(void)
         compo_page_move_process(f_heartrate->ptm);
     }
 
+    if(vc30fx_usr_get_work_status() && uteModuleHeartGetWorkMode() == WORK_MODE_HR && uteModuleHeartGetHeartValue() == 0)
+    {
+        reset_guioff_delay();
+    }
+
     func_heartrate_refresh();
     func_process();
 }

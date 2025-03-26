@@ -319,7 +319,7 @@ static void func_factory_testing_pass_fail_bnt_create(compo_form_t *frm)
     compo_textbox_set_forecolor(textbox, COLOR_RED);
 
     compo_button_t *btn = compo_button_create(frm); // 按钮FALL
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6 - (widget_text_get_area(textbox->txt).hei / 2), (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
     compo_setid(btn, FALL_ID);
 
     textbox = compo_textbox_create(frm, strlen((const char *)"PASS")); // PASS
@@ -328,7 +328,7 @@ static void func_factory_testing_pass_fail_bnt_create(compo_form_t *frm)
     compo_textbox_set_forecolor(textbox, COLOR_GREEN);
 
     btn = compo_button_create(frm); // 按钮PASS
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6 -(widget_text_get_area(textbox->txt).hei / 2), (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
     compo_setid(btn, PASS_ID);
 }
 
@@ -708,7 +708,7 @@ static void func_mode_rgb_click(void)
         case 3:
             compo_shape_set_color(shape, COLOR_BLUE );
             break;
-        case 4:
+        default:
             func_factory_testing_pass_fail_pop_click();
             break;
     }

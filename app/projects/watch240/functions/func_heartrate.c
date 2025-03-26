@@ -675,12 +675,13 @@ static void func_heartrate_refresh(void)
 //心率功能事件处理
 static void func_heartrate_process(void)
 {
-//    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
 
-#elif (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
-    compo_page_move_process(f_heartrate->ptm);
-#endif
+    if(f_heartrate->ptm)
+    {
+        compo_page_move_process(f_heartrate->ptm);
+    }
+
     func_heartrate_refresh();
     func_process();
 }
@@ -688,16 +689,15 @@ static void func_heartrate_process(void)
 //心率功能消息处理
 static void func_heartrate_message(size_msg_t msg)
 {
-//    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
+    f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
 
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-
-#elif (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
-            compo_page_move_touch_handler(f_heartrate->ptm);
-#endif
+            if(f_heartrate->ptm)
+            {
+                compo_page_move_touch_handler(f_heartrate->ptm);
+            }
             break;
 
         default:

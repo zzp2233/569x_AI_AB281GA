@@ -686,7 +686,7 @@ void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
     }
     else if (handle == gatts_app_notify_base.handle) // && cfg == 0
     {
-        bsp_fot_exit();
+        fot_ble_disconnect_callback();
     }
 }
 

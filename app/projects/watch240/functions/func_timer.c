@@ -1,6 +1,6 @@
 #include "include.h"
 #include "func.h"
-
+#include "ute_drv_motor.h"
 
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
 
@@ -406,7 +406,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     static u32 rtccnt_tmp;
     u16 sec_past;
     bool lowpwr_sta = bsp_system_is_sleep() /*| sys_cb.idle_sta*/;
-    static u8 cnt = 0;
+//    static u8 cnt = 0;
 
     if (param)
     {

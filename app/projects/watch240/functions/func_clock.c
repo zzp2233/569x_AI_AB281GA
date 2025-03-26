@@ -6,6 +6,8 @@
 #include "ute_project_config.h"
 #include "ute_module_log.h"
 #include "ute_module_systemtime.h"
+#include "ute_drv_motor.h"
+#include "ute_application_common.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

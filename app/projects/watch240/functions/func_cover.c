@@ -3,6 +3,7 @@
 #include "func_cover.h"
 #include "ute_module_notify.h"
 #include "ute_drv_motor.h"
+#include "api_co_time.h"
 #define TRACE_EN    0
 
 #if TRACE_EN
@@ -34,7 +35,7 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
     [REMIND_COVER_FIND_WATCH]       = {0,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_GOAL]             = {0,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_GCOVER_BT_NOT_CONNECT]  = {0,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
-    [REMIND_COVER_LOW_BATTERY]          = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},        //自定义
     [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
 
 };
@@ -774,7 +775,7 @@ void app_ute_msg_pop_up(uint8_t index)
             }
         }
 
-        sprintf((char*)time, "%02d:%02d %s", //record_tbl[index].callTime.year,
+        sprintf((char*)time,sizeof(time),"%02d:%02d %s", //record_tbl[index].callTime.year,
                 hour,min,str_am);
 
 

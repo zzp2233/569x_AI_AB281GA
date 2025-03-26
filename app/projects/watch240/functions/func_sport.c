@@ -4,6 +4,7 @@
 #include "ute_module_sport.h"
 #include "ute_drv_battery_common.h"
 #include "func_cover.h"
+#include "ute_drv_motor.h"
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else

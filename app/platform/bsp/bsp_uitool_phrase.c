@@ -4,7 +4,7 @@
 #include "ute_language_common.h"
 #include "ute_module_watchonline.h"
 
-#define TRACE_EN    1
+#define TRACE_EN    0
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)

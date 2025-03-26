@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 意大利语(意大利）
 *@author
-*@date   2025-03-06 17:51:09
+*@date   2025-03-26 17:31:36
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -276,6 +276,8 @@ const char * const i18n_it_rit[] =
     [STR_CALORIES] = "\x43\x61\x6c\x6f\x72\x69\x65\x20\x74\x6f\x74\x61\x6c\x69\x00", // [260] Calorie totali
     [STR_TOTAL_DISTANCE] = "\x44\x69\x73\x74\x61\x6e\x7a\x61\x20\x74\x6f\x74\x61\x6c\x65\x00", // [261] Distanza totale
     [STR_COUNT_NUM] = "\x66\x72\x65\x71\x75\x65\x6e\x7a\x61\x00", // [262] frequenza
+    [STR_HEART_HIGHT] = "\x46\x72\x65\x71\x75\x65\x6e\x7a\x61\x20\x63\x61\x72\x64\x69\x61\x63\x61\x20\x61\x6c\x74\x61\x00", // [263] Frequenza cardiaca alta
+    [STR_HEART_LOW] = "\x46\x72\x65\x71\x75\x65\x6e\x7a\x61\x20\x63\x61\x72\x64\x69\x61\x63\x61\x20\x62\x61\x73\x73\x61\x00", // [264] Frequenza cardiaca bassa
 };
 
 #endif

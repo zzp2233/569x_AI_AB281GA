@@ -89,38 +89,47 @@ compo_form_t *func_heart_warning_form_create(void)
 
     char txt_buf[50];
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%d",150);
+    snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetHeartValue());
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_pos(textbox,44+88/2,85+72/2);
+    compo_textbox_set_pos(textbox,112/2+104,96/2+119);
     compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,COMPO_ID_TEXT_HEART_VALUE);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
-    compo_textbox_set_align_center(textbox,true);
-    compo_textbox_set_location(textbox,158,widget_text_get_max_height()/2+113,90,widget_text_get_max_height());
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,207,28+140,90,widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(255,69,46));
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[0]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,26/2+168,230,widget_text_get_max_height());
-    compo_textbox_set(textbox,i18n[0]);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_HIGHT])+strlen(i18n[STR_HEART_LOW]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,16+215,200,35);
+    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue())
+    {
+        compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
+    }
+    else if (uteModuleHeartGetHeartValue() < uteModuleHeartGetMinHeartValue())
+    {
+        compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
+    }
 
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_REPEAT_HEART_BIN);
-    compo_picturebox_set_pos(picbox, 11+140, 98+14);
+    compo_picturebox_set_pos(picbox, 28/2+207, 28/2+136);
 
     return frm;
 }
 
 static void func_heart_warning_updata(void)
 {
-    compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_UINT);
-    if(uteModuleHeartGetMaxHeartValue())
+    compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_HEART_VALUE);
+    char txt_buf[50];
+    memset(txt_buf, 0, sizeof(txt_buf));
+    snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
+    compo_textbox_set(textbox, txt_buf);
+
+    if (uteModuleHeartGetHeartValue() < uteModuleHeartGetHeartWaringMaxValue() && uteModuleHeartGetHeartValue() > uteModuleHeartGetHeartWaringMinValue())
     {
-        compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
-    }
-    else
-    {
-        compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
+        uteModuleGuiCommonGoBackLastScreen();
     }
 }
 #else

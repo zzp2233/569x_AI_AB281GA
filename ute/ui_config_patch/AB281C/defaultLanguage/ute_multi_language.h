@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-03-06 17:51:06
+*@date   2025-03-26 17:31:32
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -276,6 +276,8 @@ enum
     STR_CALORIES, // 总热量
     STR_TOTAL_DISTANCE, // 总距离
     STR_COUNT_NUM, // 次数
+    STR_HEART_HIGHT, // 心率过高
+    STR_HEART_LOW, // 心率过低
 };
 
 extern const char * const *i18n;

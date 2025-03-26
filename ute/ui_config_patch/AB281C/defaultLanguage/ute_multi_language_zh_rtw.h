@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(台湾）
 *@author
-*@date   2025-03-06 17:51:11
+*@date   2025-03-26 17:31:37
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -276,6 +276,8 @@ const char * const i18n_zh_rtw[] =
     [STR_CALORIES] = "\xe7\xb8\xbd\xe7\x86\xb1\xe9\x87\x8f\x00", // [260] 總熱量
     [STR_TOTAL_DISTANCE] = "\xe7\xb8\xbd\xe8\xb7\x9d\xe9\x9b\xa2\x00", // [261] 總距離
     [STR_COUNT_NUM] = "\xe6\xac\xa1\xe6\x95\xb8\x00", // [262] 次數
+    [STR_HEART_HIGHT] = "\xe5\xbf\x83\xe7\x8e\x87\xe9\x81\x8e\xe9\xab\x98\x00", // [263] 心率過高
+    [STR_HEART_LOW] = "\xe5\xbf\x83\xe7\x8e\x87\xe9\x81\x8e\xe4\xbd\x8e\x00", // [264] 心率過低
 };
 
 #endif

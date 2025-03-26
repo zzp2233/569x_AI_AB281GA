@@ -630,6 +630,7 @@ static void func_activity_message(size_msg_t msg)
         case MSG_CTP_TOUCH:
             break;
         case MSG_CTP_CLICK:
+            // func_cb.sta = FUNC_HEART_WARNING;
             break;
         default:
             func_message(msg);

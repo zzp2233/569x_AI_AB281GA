@@ -4,7 +4,7 @@
 #include "ute_language_common.h"
 #include "ute_module_watchonline.h"
 
-#define TRACE_EN    0
+#define TRACE_EN    1
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -125,6 +125,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
         case COMPO_BOND_KCAL_PROGRESS:
         case COMPO_BOND_STEPS_PROGRESS:
         case COMPO_BOND_VBAT_PROGRESS:
+        case COMPO_BOND_TEMPERATURE_UNIT:
         {
             compo_picturebox_t *pic;
             pic = compo_picturebox_create(frm, res_addr);
@@ -141,7 +142,6 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
         case COMPO_BOND_TIME_WEEK:
         case COMPO_BOND_TIME_MONTH:
         case COMPO_BOND_DISTANCE_UNIT:
-        case COMPO_BOND_TEMPERATURE_UNIT:
         {
             compo_picturebox_t *pic;
             pic = compo_picturebox_create(frm, res_addr);
@@ -150,7 +150,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
             compo_bonddata(pic, uitool_res->bond_type);
             compo_set_bonddata((component_t *)pic, time_to_tm(compo_cb.rtc_cnt));
             TRACE("type[%d] rsv[%d] curr_lang[%d]\n", uitool_res->bond_type, uitool_res->rsv, uteModuleSystemtimeReadLanguage());
-            TRACE("has_default_lang_pic:%d",has_default_lang_pic);
+            TRACE("has_default_lang_pic:%d\n",has_default_lang_pic);
             if (uteModuleSystemtimeCompareLanguage(uitool_res->rsv))
             {
                 compo_picturebox_set_visible(pic, true);
@@ -174,11 +174,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
 
             if(uitool_res->bond_type == COMPO_BOND_TIME_AMPM)
             {
-                if(uteModuleSystemtime12HOn())
-                {
-                    compo_picturebox_set_visible(pic, true);
-                }
-                else
+                if(!uteModuleSystemtime12HOn())
                 {
                     compo_picturebox_set_visible(pic, false);
                 }
@@ -383,7 +379,6 @@ void bsp_uitool_create(compo_form_t *frm, u32 base_addr, u16 compo_num)
             case COMPO_BOND_TIME_WEEK:
             case COMPO_BOND_TIME_MONTH:
             case COMPO_BOND_DISTANCE_UNIT:
-            case COMPO_BOND_TEMPERATURE_UNIT:
                 if (uteModuleSystemtimeCompareLanguage(uitool_res.rsv))
                 {
                     has_default_lang_pic = true;

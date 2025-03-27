@@ -62,7 +62,8 @@ void hr_vdd_ldo_noPB2_on(void)
 void gui_init(void)
 {
     power_gate_3v3_on();
-    hr_vdd_ldo_noPB2_on();
+    // hr_vdd_ldo_noPB2_on();
+    hr_vdd_ldo_on();
     ctp_init();
     tft_init();
 
@@ -106,7 +107,8 @@ void gui_wakeup(void)
     if (sys_cb.gui_sleep_sta)
     {
         power_gate_3v3_on();
-        hr_vdd_ldo_noPB2_on();
+        // hr_vdd_ldo_noPB2_on();
+        hr_vdd_ldo_on();
         ecig_pwm_io_init();
 #if(DEVELOPMENT_BOARD_TYPE)
         LCD_ON();

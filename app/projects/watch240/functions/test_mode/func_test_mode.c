@@ -24,18 +24,9 @@ enum
 
 typedef struct f_test_mode_t_
 {
-    u8 str[3][50];
     page_tp_move_t *ptm;
 } f_test_mode_t;
 
-static const f_test_mode_t f_test_mode_list[] =
-{
-    {"模式选择"},                ///模式选择
-    {"工厂测试"},                ///工厂测试模式
-    {"老化测试"},                ///老化测试模式
-    // {STR_SHIPPING            },                ///船运模式
-    // {STR_AUDIO               },                ///音频测试
-};
 
 ///创建测试窗体
 compo_form_t *func_test_mode_form_create(void)

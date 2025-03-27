@@ -66,7 +66,7 @@
 /*! PWRKEY,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_SUPPORT 1
 /*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
-#define UTE_DRV_PWRKEY_MAX_CNT 2
+#define UTE_DRV_PWRKEY_MAX_CNT 1
 
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1

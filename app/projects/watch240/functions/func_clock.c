@@ -483,7 +483,6 @@ compo_form_t *func_clock_form_create(void)
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
         case DIALPLATE_BTF_IDX:
         {
-//            printf("1111111111111111111111\n");
             frm = func_clock_butterfly_form_create();
         }
         break;
@@ -491,14 +490,12 @@ compo_form_t *func_clock_form_create(void)
 #if UTE_WATCHS_CUBE_DIAL_SUPPORT
         case DIALPLATE_CUBE_IDX:
         {
-//             printf("2222222222222222222222222222\n");
             frm = func_clock_cube_form_create();
         }
         break;
 #endif
         default:
         {
-//             printf("33333333333333333333333333\n");
             u32 base_addr = dialplate_info[sys_cb.dialplate_index];
             u16 compo_num = bsp_uitool_header_phrase(base_addr);
             if (!compo_num)

@@ -765,7 +765,7 @@ compo_form_t *func_disturd_sub_set_form_create(void)
 
     u8 hour ;
     u8 min  ;
-    s8 txt_buf[20];
+    char txt_buf[20];
     s8 hour_data[5];
     s8 min_data[5];
     if(sys_cb.disturd_sel)
@@ -916,7 +916,7 @@ static void func_disturd_sub_move(void)
     if(f_disturd_set->touch_flag == true)
     {
         // printf("11111111111\n");
-        s8 txt_buf[20];
+        char txt_buf[20];
         s32 dx, dy;
         f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
         if(f_disturd_set->touch_flag == true)//触摸状态

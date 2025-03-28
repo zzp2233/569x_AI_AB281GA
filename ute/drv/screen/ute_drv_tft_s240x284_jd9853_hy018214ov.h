@@ -154,3 +154,8 @@ const ute_drv_screen_common_config_t uteDrvScreenTft240X284Jd9853Hy018214OvConfi
     .setWindow = drvScreenTft240X284Jd9853Hy018214OvSetWindow,
     .setBackLight = NULL,
 };
+
+#endif
+#endif /* _UTE_DRV_TFT_S240X284_I18_ST7789P3_XHL183BA2401_QSPI_H_ */
+
+

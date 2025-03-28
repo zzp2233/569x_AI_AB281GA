@@ -28,11 +28,7 @@ typedef struct f_clock_t_
     compo_form_t *sub_frm;
     void *sub_cb;
     compo_shape_t *masklayer;
-    volatile int  cube_rp ;
-    int  cube_ra ;
-    bool cube_touch;
     uint32_t tick;
-    u16 cube_touch_time;
 } f_clock_t;
 
 //主窗体
@@ -47,8 +43,16 @@ void func_clock_sub_side(void);
 //蝴蝶表盘
 compo_form_t *func_clock_butterfly_form_create(void);
 void func_clock_butterfly_set_light_visible(bool visible);
+bool func_clock_butterfly_message(size_msg_t msg);
+void func_clock_butterfly_set_light_visible(bool visible);
+void func_clock_butterfly_process(void);
 
 //表盘转盘
 void func_clock_sub_rotary(void);
+
+// 立方体表盘
+compo_form_t *func_clock_cube_form_create(void);
+bool func_clock_cube_message(size_msg_t msg);
+void func_clock_cube_process(void);
 
 #endif

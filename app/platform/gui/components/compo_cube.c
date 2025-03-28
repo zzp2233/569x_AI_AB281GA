@@ -23,6 +23,13 @@
 #define FOCUS_AUTO_STEP_DIV                 16
 #define DRAG_AUTO_SPEED                     (CUBE_ITEM_ANGLE * 80)              //拖动松手后的速度
 
+#ifndef CUBE_TOUCH_STOP_WAIT_TIME
+#define CUBE_TOUCH_STOP_WAIT_TIME           2000  // 触摸后停止自转等待时间（毫秒,0为不停止）
+#endif
+
+#ifndef CUBE_AUTO_SPIN_SPEED
+#define CUBE_AUTO_SPIN_SPEED                FOCUS_AUTO_STEP // 自动旋转速度（0为不自转）
+#endif
 
 //    {UI_BUF_ICON_CUBE_CALL_BIN,             FUNC_CALL},
 //    {UI_BUF_ICON_CUBE_HEART_RATE_BIN,       FUNC_HEARTRATE},
@@ -87,6 +94,14 @@ compo_cube_t *compo_cube_create(compo_form_t *frm, s16 radius, compo_cube_item_t
     cube->sph.rotation = 0;//2250;
     cube->sph.polar = 550;
     cube->sph.azimuth = 1400;//920;
+#if CUBE_TOUCH_STOP_WAIT_TIME
+    cube->move_cb.flag_stop_wait = true;
+    cube->move_cb.flag_auto_spin = false;
+    cube->move_cb.stop_wait_tick = tick_get();
+#else
+    cube->move_cb.flag_auto_spin = true;
+    cube->move_cb.flag_stop_wait = false;
+#endif
     compo_cube_update(cube);
     return cube;
 }
@@ -241,13 +256,15 @@ void compo_cube_move(compo_cube_t *cube)
     {
         return;
     }
+
     if (mcb->flag_drag)
     {
+        // 拖动逻辑保持不变
         s32 dx, dy, ax, ay;
         mcb->flag_drag = ctp_get_dxy(&dx, &dy);
         if (mcb->flag_drag)
         {
-            //拖动菜单图标
+            // 拖动菜单图标
             ax = dx * 1800 / CUBE_HALF_CIRCUM(cube->radius);
             ay = dy * 1800 / CUBE_HALF_CIRCUM(cube->radius);
 #if CUBE_ROLL360_MODE
@@ -262,7 +279,7 @@ void compo_cube_move(compo_cube_t *cube)
         }
         else
         {
-            //抬手后开始自动移动
+            // 抬手后开始自动移动
             point_t last_dxy = ctp_get_last_dxy();
             int da;
 #if CUBE_ROLL360_MODE
@@ -277,13 +294,21 @@ void compo_cube_move(compo_cube_t *cube)
             mcb->tick = tick_get();
         }
     }
+
     if (mcb->flag_move_auto)
     {
-        //自动移动
+        // 自动移动逻辑
         if (mcb->start_a == mcb->moveto_a)
         {
-            mcb->flag_move_auto = false;              //移动完成
-            compo_cube_update(cube);
+            // 惯性减速完成，切换到停止等待状态
+#if CUBE_TOUCH_STOP_WAIT_TIME
+            mcb->flag_move_auto = false;
+            mcb->flag_stop_wait = true;
+#else
+            mcb->flag_stop_wait = false;
+            mcb->flag_auto_spin = true;
+#endif
+            mcb->stop_wait_tick = tick_get();
         }
         else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
         {
@@ -321,8 +346,36 @@ void compo_cube_move(compo_cube_t *cube)
             compo_cube_update(cube);
         }
     }
-}
 
+#if CUBE_AUTO_SPIN_SPEED
+#if CUBE_TOUCH_STOP_WAIT_TIME
+    if (mcb->flag_stop_wait)
+    {
+        // 停止等待逻辑
+        if (tick_check_expire(mcb->stop_wait_tick, CUBE_TOUCH_STOP_WAIT_TIME))
+        {
+            mcb->flag_stop_wait = false;
+            mcb->flag_auto_spin = true;
+            mcb->tick = tick_get();
+        }
+    }
+#endif
+    if (mcb->flag_auto_spin)
+    {
+        // 匀速自转逻辑
+        if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+        {
+            mcb->tick = tick_get();
+#if CUBE_ROLL360_MODE
+            compo_cube_roll(cube, CUBE_AUTO_SPIN_SPEED);
+#else
+            compo_cube_set_rotation(cube, cube->sph.rotation - CUBE_AUTO_SPIN_SPEED);
+#endif
+            compo_cube_update(cube);
+        }
+    }
+#endif
+}
 /**
  * @brief 立方体菜单拖动与移动控制
  * @param[in] cube : 立方体菜单指针
@@ -335,17 +388,20 @@ void compo_cube_move_control(compo_cube_t *cube, int cmd)
     {
         return;
     }
+
     switch (cmd)
     {
         case COMPO_CUBE_MOVE_CMD_DRAG:
-            //开始拖动
+            // 开始拖动
             mcb->flag_drag = true;
             mcb->flag_move_auto = false;
+            mcb->flag_auto_spin = false;
+            mcb->flag_stop_wait = false; // 退出所有自动状态
             mcb->focus_sph = cube->sph;
             break;
 
         case COMPO_CUBE_MOVE_CMD_FORWARD:
-            //向前滚动
+            // 向前滚动
             if (!mcb->flag_move_auto)
             {
                 mcb->flag_move_auto = true;
@@ -357,7 +413,7 @@ void compo_cube_move_control(compo_cube_t *cube, int cmd)
             break;
 
         case COMPO_CUBE_MOVE_CMD_BACKWARD:
-            //向后滚动
+            // 向后滚动
             if (!mcb->flag_move_auto)
             {
                 mcb->flag_move_auto = true;

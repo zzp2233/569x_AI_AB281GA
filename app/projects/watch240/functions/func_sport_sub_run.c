@@ -1459,7 +1459,7 @@ enum
     COMPO_ID_UINT_SPORT_COUNT,       //计次
 
     COMPO_ID_PIC_SPORT_HEARTRATE,    //心率图片
-    COMPO_ID_TILTE_TIME,             // 标题栏时间
+    COMPO_ID_TILTE_TIME,             //标题栏时间
 
     COMPO_ID_BTN_SPORT_STOP,         //暂停
     COMPO_ID_BTN_SPORT_EXIT,         //退出

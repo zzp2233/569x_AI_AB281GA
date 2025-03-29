@@ -860,6 +860,13 @@ void func_process(void)
     }
 #endif // CHARGE_EN
 
+#if VDDHR_TRIM_EN
+    bsp_vddhr_trim_save();
+#if VDDHR_TRIM_TEST_EN
+    bsp_vddhr_test();
+#endif
+#endif
+
     if(bt_cb.bt_is_inited)
     {
         bt_thread_check_trigger();

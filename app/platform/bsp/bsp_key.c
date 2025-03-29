@@ -417,6 +417,11 @@ void key_init(void)
 
     bsp_saradc_init();
     power_on_check();
+
+#if VDDHR_TRIM_EN
+    bsp_vddhr_trim_init();
+#endif
+
     CRSTPND = 0x1ff0000;                        //clear reset pending
 }
 
@@ -494,6 +499,10 @@ u8 bsp_key_scan(void)
 
 #if VUSB_DETECT_EN
     sys_cb.vusb = bsp_vusb_get_voltage();
+#endif
+
+#if VDDHR_TRIM_EN
+    bsp_vddhr_trim_proc();
 #endif
 
 #if USER_ADKEY

@@ -54,8 +54,8 @@
 #endif
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
-#ifndef DEFAULT_BLE_DEV_NEME
-#define DEFAULT_BLE_DEV_NEME "UTE"
+#ifndef DEFAULT_BLE_DEV_NAME
+#define DEFAULT_BLE_DEV_NAME "UTE"
 #endif
 #ifndef UTE_SW_VERSION
 #define UTE_SW_VERSION "ABxxxV000001"

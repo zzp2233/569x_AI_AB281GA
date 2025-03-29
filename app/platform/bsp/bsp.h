@@ -29,4 +29,5 @@
 #include "bsp_opus.h"
 #include "bsp_call_mgr.h"
 #include "bsp_spi1flash.h"
+#include "bsp_vddhr_trim.h"
 #endif

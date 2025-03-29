@@ -16,7 +16,8 @@
 #define IRQ_CTP_VECTOR                  30
 #define IRQ_TE_TICK_VECTOR              31
 
-typedef enum RESTART_CAUSE_TYPE_ {
+typedef enum RESTART_CAUSE_TYPE_
+{
     RESTART_WDT = 0,            //看门狗复位
     RESTART_SW,                 //软件复位
     RESTART_WK10S,              //长按10s复位
@@ -24,16 +25,18 @@ typedef enum RESTART_CAUSE_TYPE_ {
     RESTART_WKUP,               //按键开机
     RESTART_FIRST_ON,           //第一次上电开机
     RESTART_UNKNOWN,            //未知开机，保留项目
-}RESTART_CAUSE_TYPE;
+} RESTART_CAUSE_TYPE;
 
-typedef struct {
-    u8  vbg;                //trim到0.6V的寄存器配置值      RI_BGTRIM,      RTCCON8[28:24]
-    u8  vbat;               //trim到4.2V的寄存器配置值      RI_BGCH_TRIM,   RTCCON8[14 10]
-    u16 chg_icoef;          //充电电流换算系数
-    u16 vbg_volt;           //vbg目标值
+typedef struct
+{
+    u8 vbg;        // trim 到 0.6V 的寄存器配置值 RI_BGTRIM, RTCCON8[28:24]
+    u8 vbat;       // trim 到 4.2V 的寄存器配置值 RI_BGCH_TRIM, RTCCON8[14 10]
+    u16 chg_icoef; // 充电电流换算系数
+    u16 vbg_volt;  // vbg 目标值
     u16 vbat_coef;
-    u8  vbg_lv;             //vbg trim精度等级
-    u8  resv[3];
+    u8 vbg_lv; // vbg trim 精度等级
+    u8 vddhr;  // vddhr trim 值
+    u8 resv[2];
 } sys_trim_t;
 extern sys_trim_t sys_trim;
 
@@ -123,39 +126,39 @@ void halt_err_set(u32 halt_no);
  * 异常复位信息[1] - [6]如下
  * [1]、halt_err[0] 8001 CPU_ERR
  *      halt_err[1] = 1;该位为1时表示程序执行异常复位
- *      halt_err[2] 存储了复位的地方PC地址；      
+ *      halt_err[2] 存储了复位的地方PC地址；
  *      halt_err[3] 存储异常原因，可以来区分复位原因，比如除0，取指错误等
  *      halt_err[4] 存储PCERR寄存器,可以理解为出事前的位置
  *      halt_err[5] 存储PCST寄存器，可以理解为出事前前的位置
- * 
- * [2]、halt_err[0] 8001 CPU_ERR 
+ *
+ * [2]、halt_err[0] 8001 CPU_ERR
  *      halt_err[1] = 2;该值为2时表示中断执行函数位于flash异常复位 CACHE 中断IRQ异常
  *      halt_err[2] 是否在中断中 1:是，0:否
  *      halt_err[3] 断点异常
  *      halt_err[4] 异常PC地址
  *      halt_err[5] miss地址 flash 访问地址
- * 
+ *
  * [3]、halt_err[0] 8001 CPU_ERR
  *      halt_err[1] = 3;该值为3时表示关了全局中断后访问flash资源 CACHE 中断IRQ异常
  *      halt_err[2] 异常PC地址
  *      halt_err[2] miss地址 flash 访问地址
- * 
+ *
  * [4]、halt_err[0] 8002 表示看门狗复位
  *      halt_err[1] 存储PCERR寄存器,可以理解为出事前的位置
  *      halt_err[2] 存储PCST寄存器，可以理解为出事前前的位置
- * 
+ *
  * [5]、halt_err[0] 8101 CACHE CRC错误
  *      halt_err[1] 异常CRC校验值
  *      halt_err[2] 正确CRC校验值
  *      halt_err[3] cache地址
  *      halt_err[4] load代码地址
- * 
+ *
  * [6]、halt_err[0] 8102 堆栈空间容量不足
  *      halt_err[0] 内存大小
  *      halt_err[1] 内存池标号
  *
  * [7]、halt_err[0] 为其他，请在halt头文件中查询
- */ 
+ */
 u32* halt_err_debug_info_get(void);
 
 #endif // _API_SYS_H_

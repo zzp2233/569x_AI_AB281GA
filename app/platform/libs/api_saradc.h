@@ -7,7 +7,8 @@
 #define ADCCH15_ANA_VUSB    0x08
 #define ADCCH15_ANA_MIC     0x10
 
-typedef struct {
+typedef struct
+{
     psfr_t sfr;             //SADCDAT SFR
     u16 channel;
     u8 adc15_ana_en;
@@ -44,4 +45,5 @@ u32 saradc_vbat_get_calc_value(u32 vbat2, u32 bg, u32 vrtc_val, u32 vrtc_first);
 u32 saradc_vusb_get_calc_value(u32 vusb, u32 bg);               //根据ADC值计算VUSB电压
 void saradc_adc15_analog_channel_sleep(void);
 void mic_bias_trim_w4_done(void);
+u32 saradc_vddhr_get_calc_value(u32 vddhr2, u32 bg, u32 vrtc_val, u32 vrtc_first);
 #endif

@@ -30,9 +30,11 @@
 #define PARAM_FOT_HASH              0xb0        //4BYTE
 
 #if !LP_XOSC_CLOCK_EN
-#define PARAM_RTC_CAL_VALID         0xb4		//1BYTE
-#define PARAM_RTC_CAL_ADDR          0xb5		//16BYTE
+#define PARAM_RTC_CAL_VALID         0xb4        //1BYTE
+#define PARAM_RTC_CAL_ADDR          0xb5        //16BYTE
 #endif
+
+#define PARAM_VDDHR_TRIM_VAL        0xcc        //1byte
 
 #define PARAM_FOT_TYPE              0xec        //1byte
 void param_init(bool reset);
@@ -54,5 +56,7 @@ void param_spiflash_breakpoint_read(void);
 void param_fot_type_read(u8 *param);
 void param_fot_hash_read(u8 *param);
 void param_fot_remote_ver_read(u8 *param);
+void param_vddhr_trim_write(u8 *param);
+void param_vddhr_trim_read(u8 *param);
 #endif // __BSP_PARAM_H
 

@@ -403,6 +403,13 @@
 #define CHARGE_NTC_ADC_MAX_RE_TEMP      UTE_DRV_BATTERY_CE_AUTH_ALLOW_TEMPERATURE  //设置恢复温度 摄氏度     48
 #define CHARGE_NTC_ADC_MIN_TEMP         UTE_DRV_BATTERY_CE_AUTH_NOT_ALLOW_LOW_TEMPERATURE  //设置最高温度 摄氏度0
 #define CHARGE_NTC_ADC_MIN_RE_TEMP      UTE_DRV_BATTERY_CE_AUTH_ALLOW_LOW_TEMPERATURE  //设置恢复温度 摄氏度5
+
+/*****************************************************************************
+* Module : VDDHR 补偿配置
+*****************************************************************************/
+#define VDDHR_TRIM_EN 1 //校准使能
+#define VDDHR_TRIM_TEST_EN 0 //上电测试 默认关闭 生产时需要关闭
+
 /*****************************************************************************
  * Module    : 硬件I2C配置
  *****************************************************************************/

@@ -24,11 +24,11 @@
 #define DRAG_AUTO_SPEED                     (CUBE_ITEM_ANGLE * 80)              //拖动松手后的速度
 
 #ifndef CUBE_TOUCH_STOP_WAIT_TIME
-#define CUBE_TOUCH_STOP_WAIT_TIME           2000  // 触摸后停止自转等待时间（毫秒,0为不停止）
+#define CUBE_TOUCH_STOP_WAIT_TIME           1000  // 触摸后停止自转等待时间（毫秒,0为不停止）
 #endif
 
 #ifndef CUBE_AUTO_SPIN_SPEED
-#define CUBE_AUTO_SPIN_SPEED                FOCUS_AUTO_STEP // 自动旋转速度（0为不自转）
+#define CUBE_AUTO_SPIN_SPEED                7 // 自动旋转速度（0为不自转）
 #endif
 
 //    {UI_BUF_ICON_CUBE_CALL_BIN,             FUNC_CALL},
@@ -300,9 +300,11 @@ void compo_cube_move(compo_cube_t *cube)
         // 自动移动逻辑
         if (mcb->start_a == mcb->moveto_a)
         {
+            mcb->flag_move_auto = false;              //移动完成
+            compo_cube_update(cube);
             // 惯性减速完成，切换到停止等待状态
 #if CUBE_TOUCH_STOP_WAIT_TIME
-            mcb->flag_move_auto = false;
+            mcb->flag_auto_spin = false;
             mcb->flag_stop_wait = true;
 #else
             mcb->flag_stop_wait = false;
@@ -357,6 +359,12 @@ void compo_cube_move(compo_cube_t *cube)
             mcb->flag_stop_wait = false;
             mcb->flag_auto_spin = true;
             mcb->tick = tick_get();
+#if CUBE_ROLL360_MODE
+            if(mcb->roll_azimuth == 0)
+            {
+                mcb->roll_azimuth = 450;
+            }
+#endif
         }
     }
 #endif
@@ -376,6 +384,7 @@ void compo_cube_move(compo_cube_t *cube)
     }
 #endif
 }
+
 /**
  * @brief 立方体菜单拖动与移动控制
  * @param[in] cube : 立方体菜单指针

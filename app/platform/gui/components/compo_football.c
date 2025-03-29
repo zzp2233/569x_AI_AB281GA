@@ -24,6 +24,14 @@
 #define FOCUS_AUTO_STEP_DIV                 16
 #define DRAG_AUTO_SPEED                     (FOOTBALL_ITEM_ANGLE * 80)  //拖动松手后的速度
 
+#ifndef FOOTBALL_TOUCH_STOP_WAIT_TIME
+#define FOOTBALL_TOUCH_STOP_WAIT_TIME       1000  // 触摸后停止自转等待时间（毫秒,0为不停止）
+#endif
+
+#ifndef FOOTBALL_AUTO_SPIN_SPEED
+#define FOOTBALL_AUTO_SPIN_SPEED            7 // 自动旋转速度（0为不自转）
+#endif
+
 //极角
 static const u16 tbl_ball_polar[] =
 {
@@ -75,6 +83,14 @@ compo_football_t *compo_football_create(compo_form_t *frm, s16 radius, compo_foo
     ball->sph.rotation = 0;//900;
     ball->sph.polar = 900;
     ball->sph.azimuth = 900;
+#if FOOTBALL_TOUCH_STOP_WAIT_TIME
+    ball->move_cb.flag_stop_wait = true;
+    ball->move_cb.flag_auto_spin = false;
+    ball->move_cb.stop_wait_tick = tick_get();
+#else
+    ball->move_cb.flag_stop_wait = false;
+    ball->move_cb.flag_auto_spin = true;
+#endif
     compo_football_update(ball);
     return ball;
 }
@@ -272,6 +288,15 @@ void compo_football_move(compo_football_t *ball)
         {
             mcb->flag_move_auto = false;              //移动完成
             compo_football_update(ball);
+            // 惯性减速完成，切换到停止等待状态
+#if FOOTBALL_TOUCH_STOP_WAIT_TIME
+            mcb->flag_auto_spin = false;
+            mcb->flag_stop_wait = true;
+#else
+            mcb->flag_auto_spin = true;
+            mcb->flag_stop_wait = false;
+#endif
+            mcb->stop_wait_tick = tick_get();
         }
         else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
         {
@@ -309,6 +334,41 @@ void compo_football_move(compo_football_t *ball)
             compo_football_update(ball);
         }
     }
+
+#if FOOTBALL_AUTO_SPIN_SPEED
+#if FOOTBALL_TOUCH_STOP_WAIT_TIME
+    if (mcb->flag_stop_wait)
+    {
+        // 停止等待逻辑
+        if (tick_check_expire(mcb->stop_wait_tick, FOOTBALL_TOUCH_STOP_WAIT_TIME))
+        {
+            mcb->flag_stop_wait = false;
+            mcb->flag_auto_spin = true;
+            mcb->tick = tick_get();
+#if FOOTBALL_ROLL360_MODE
+            if(mcb->roll_azimuth == 0)
+            {
+                mcb->roll_azimuth = 450;
+            }
+#endif
+        }
+    }
+#endif
+    if (mcb->flag_auto_spin)
+    {
+        // 匀速自转逻辑
+        if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+        {
+            mcb->tick = tick_get();
+#if FOOTBALL_ROLL360_MODE
+            compo_football_roll(ball, FOOTBALL_AUTO_SPIN_SPEED);
+#else
+            compo_football_set_rotation(ball, ball->sph.rotation - FOOTBALL_AUTO_SPIN_SPEED);
+#endif
+            compo_football_update(ball);
+        }
+    }
+#endif
 }
 
 /**
@@ -329,6 +389,8 @@ void compo_football_move_control(compo_football_t *ball, int cmd)
             //开始拖动
             mcb->flag_drag = true;
             mcb->flag_move_auto = false;
+            mcb->flag_auto_spin = false;
+            mcb->flag_stop_wait = false; // 退出所有自动状态
             mcb->focus_sph = ball->sph;
             break;
 

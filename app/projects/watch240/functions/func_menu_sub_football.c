@@ -250,47 +250,10 @@ static void func_menu_sub_football_process(void)
 {
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     compo_football_t *ball = f_menu->ball;
-    s32 dx, dy, ax, ay;
-//    printf("touch=%d\n",f_menu->cube_touch);
+    compo_football_move(ball);
 
-    if(f_menu->cube_touch == true)
-    {
-        f_menu->cube_touch = ctp_get_dxy(&dx, &dy);
-        //拖动菜单图标
-        ax = dx * 1800 / FOOTBALL_HALF_CIRCUM;
-        ay = dy * 1800 / FOOTBALL_HALF_CIRCUM;
-        f_menu->cube_rp = sqrt64(ax * ax + ay * ay);
-        f_menu->cube_ra = ARCTAN2(-ay, ax);
-        // printf("1 dx:%d dy:%d\n",dx,dy);
-        // printf("1 cube_rp:%d cube_ra:%d\n",f_menu->cube_rp,f_menu->cube_ra);
-        compo_football_move(ball);
-
-        if(f_menu->cube_touch)
-        {
-            f_menu->cube_touch_time = 5;
-        }
-        else
-        {
-            f_menu->cube_touch_time = 2000;
-        }
-    }
-    else
-    {
-        // printf("2 cube_rp:%d cube_ra:%d\n",f_menu->cube_rp,f_menu->cube_ra);
-        if(tick_check_expire(f_menu->tick, f_menu->cube_touch_time))
-        {
-            f_menu->cube_touch_time = 5;
-            f_menu->tick = tick_get();
-            f_menu->cube_rp+=2;
-            if(f_menu->cube_rp == 1800) f_menu->cube_rp+=2;
-            if(f_menu->cube_rp>3600)f_menu->cube_rp=0;
-            compo_football_roll_from(ball,f_menu->cube_rp, f_menu->cube_ra);
-            compo_football_update(ball);
-        }
-    }
     func_process();
 }
-
 //拖动过程中，只响应部分消息
 static void func_menu_sub_football_drag_message(size_msg_t msg)
 {
@@ -447,10 +410,10 @@ static void func_menu_sub_football_enter(void)
         halt(HALT_GUI_COMPO_FOOTBALL_TYPE);
     }
     func_cb.enter_tick = tick_get();
-    f_menu->cube_ra = 900;
-    f_menu->cube_rp = 900;
-    f_menu->cube_touch = false;
-    f_menu->cube_touch_time = 5;
+    // f_menu->cube_ra = 900;
+    // f_menu->cube_rp = 900;
+    // f_menu->cube_touch = false;
+    // f_menu->cube_touch_time = 5;
 }
 
 //主菜单功能

@@ -4,7 +4,8 @@
 #define FOOTBALL_ITEM_CNT               20          //足球菜单项列表数量，必须是20项
 
 //足球菜单移动控制命令
-enum COMPO_FOOTBALL_MOVE_CMD {
+enum COMPO_FOOTBALL_MOVE_CMD
+{
     COMPO_FOOTBALL_MOVE_CMD_NONE,
     COMPO_FOOTBALL_MOVE_CMD_DRAG,                   //开始拖动
     COMPO_FOOTBALL_MOVE_CMD_FORWARD,                //向前滚动
@@ -12,7 +13,8 @@ enum COMPO_FOOTBALL_MOVE_CMD {
 };
 
 //足球菜单当前状态
-enum COMPO_FOOTBALL_STA {
+enum COMPO_FOOTBALL_STA
+{
     COMPO_FOOTBALL_STA_IDLE,                        //空闲状态
     COMPO_FOOTBALL_STA_DARG,                        //拖动中
     COMPO_FOOTBALL_STA_MOVE,                        //移动中
@@ -20,13 +22,15 @@ enum COMPO_FOOTBALL_STA {
 
 
 //足球菜单项定义
-typedef struct compo_football_item_t_ {
+typedef struct compo_football_item_t_
+{
     u32 res_addr;               //图标
     u8 func_sta;                //功能ID
 } compo_football_item_t;
 
 //足球菜单移动控制
-typedef struct compo_football_move_cb_t_ {
+typedef struct compo_football_move_cb_t_
+{
     u32 tick;
     sph_t focus_sph;                    //当前球坐标
     s32 start_a;                        //开始角度
@@ -36,9 +40,13 @@ typedef struct compo_football_move_cb_t_ {
     bool flag_move_auto;                //自动移到坐标
     u8 sta;
     u8 animation_cnt;
+    u32 stop_wait_tick;                 //停止等待定时器
+    bool flag_auto_spin;                //匀速自转标志
+    bool flag_stop_wait;                //停止等待标志
 } compo_football_move_cb_t;
 
-typedef struct compo_football_t_ {
+typedef struct compo_football_t_
+{
     COMPO_STRUCT_COMMON;
     compo_football_move_cb_t move_cb;   //移动和拖动处理
     widget_page_t *page;

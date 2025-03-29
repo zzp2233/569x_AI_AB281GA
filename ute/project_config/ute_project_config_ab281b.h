@@ -9,7 +9,7 @@
 #ifndef _UTE_PROJECT_CONFIG_AB281B_H_
 #define _UTE_PROJECT_CONFIG_AB281B_H_
 
-#define DEFAULT_BLE_DEV_NEME "UTE801"
+#define DEFAULT_BLE_DEV_NAME "UTE801"
 #define UTE_SW_VERSION "AB281BV000018"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */

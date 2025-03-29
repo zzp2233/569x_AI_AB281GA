@@ -9,7 +9,7 @@
 #ifndef _UTE_PROJECT_CONFIG_AB281_H_
 #define _UTE_PROJECT_CONFIG_AB281_H_
 
-#define DEFAULT_BLE_DEV_NEME "T60"
+#define DEFAULT_BLE_DEV_NAME "T60"
 #define UTE_SW_VERSION "AB281CV000029"
 
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/

@@ -1268,23 +1268,47 @@ void uteModulePlatformUpdateDevName(void)
     memset(name, 0, 32);
     memset(devName, 0, 32);
     devNameSize = 0;
-    uint8_t size=0;
+    uint8_t size = 0;
 #if UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
-    size = strlen(xcfg_cb.le_name);
-    // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,read size=%d",__func__,size);
-    // UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL,xcfg_cb.le_name,32);
-#endif
-    if(size==0)
+    uint16_t snDataLen = sizeof(ute_application_sn_data_t);
+    ute_application_sn_data_t *snData = uteModulePlatformMemoryAlloc(snDataLen);
+    memset(snData, 0, snDataLen);
+    uteModulePlatformFlashNorRead(snData, UTE_USER_PARAM_ADDRESS, snDataLen);
+    if (snData->bleDevNameLen > 0 && snData->bleDevNameLen <= sizeof(devName))
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,size is error", __func__);
-        memcpy(&name[0],DEFAULT_BLE_DEV_NEME,strlen(DEFAULT_BLE_DEV_NEME));
-        size = strlen(DEFAULT_BLE_DEV_NEME);
+        size = snData->bleDevNameLen;
     }
+#endif
+    if (size == 0)
+    {
+#if UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
+        size = strlen(xcfg_cb.le_name);
+        if (size > 0)
+        {
+            memcpy(&name[0], xcfg_cb.le_name, size);
+            memset(snData->bleDevName, 0, sizeof(snData->bleDevName));
+            memcpy(snData->bleDevName, xcfg_cb.le_name, size);
+            snData->bleDevNameLen = size;
+            uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
+            uteModulePlatformFlashNorWrite(snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,DevName from xcfg_cb, size=%d", __func__,size);
+        }
+        else
+#endif
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,size is error", __func__);
+            memcpy(&name[0], DEFAULT_BLE_DEV_NAME, strlen(DEFAULT_BLE_DEV_NAME));
+            size = strlen(DEFAULT_BLE_DEV_NAME);
+        }
+    }
+#if UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
     else
     {
-        memcpy(&name[0],xcfg_cb.le_name,size);
+        memcpy(&name[0], snData->bleDevName, size);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,DevName from flash, size=%d", __func__,size);
     }
-    // memcpy(devName,&name[0],size);
+    uteModulePlatformMemoryFree(snData);
+#endif
     devNameSize = size;
 #if UTE_APP_DISPLAY_NAME_ID_SUPPORT
     {
@@ -1302,7 +1326,6 @@ void uteModulePlatformUpdateDevName(void)
         }
         if((size+9+2)<=(remainLength))   //total char "(namelen+0x09)+...+(ID-XXXX)" 12byte
         {
-
             memcpy(&BleId[4],"(ID-",4);
             len = 9;
             memcpy(&name[size],&BleId[4],len-1);

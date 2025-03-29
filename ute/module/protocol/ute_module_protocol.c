@@ -190,11 +190,19 @@ void uteModuleProtocolSetDateTime(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSetBleName(uint8_t*receive,uint8_t length)
 {
-    if (length>1)
+    if (length > 1)
     {
-        memset(xcfg_cb.le_name, 0, sizeof(xcfg_cb.le_name));
-        memcpy(xcfg_cb.le_name, &receive[1], length - 1 < sizeof(xcfg_cb.le_name) ? length - 1 : sizeof(xcfg_cb.le_name));
-        uteModuleProfileBleSendToPhone(&receive[0],1);
+        uint16_t snDataLen = sizeof(ute_application_sn_data_t);
+        ute_application_sn_data_t *snData = uteModulePlatformMemoryAlloc(snDataLen);
+        memset(snData, 0, snDataLen);
+        uteModulePlatformFlashNorRead(snData, UTE_USER_PARAM_ADDRESS, snDataLen);
+        uint8_t nameLen = length - 1 < sizeof(snData->bleDevName) ? length - 1 : snData->bleDevName;
+        memcpy(snData->bleDevName, &receive[1], nameLen);
+        snData->bleDevNameLen = nameLen;
+        uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
+        uteModulePlatformFlashNorWrite(snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
+        uteModulePlatformMemoryFree(snData);
+        uteModuleProfileBleSendToPhone(&receive[0], 1);
     }
 }
 /**

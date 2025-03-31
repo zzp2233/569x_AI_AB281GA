@@ -312,21 +312,21 @@ compo_form_t *func_message_form_create(void)
         memset(time_buf,0,sizeof(time_buf));
         if(time_data.year != ute_msg->historyNotify[i].year || time_data.month != ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else if(time_data.day > ute_msg->historyNotify[i].day && time_data.month == ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf, "%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else
         {
-            sprintf((char*)time_buf, "%02d:%02d %s", //record_tbl[index].callTime.year,
-                    hour,min,str_am);
+            snprintf(time_buf,sizeof(time_buf), "%02d:%02d %s", //record_tbl[index].callTime.year,
+                     hour,min,str_am);
         }
 
         char* msg = (char*)ute_msg->historyNotify[i].content;

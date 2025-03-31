@@ -40,7 +40,9 @@ uint8_t g_i2c_addr = CHSC6X_I2C_ID ;
 uint32_t BOOTCRC = 0;
 
 #define LEN_CMD_CHK_TX_SCAP  10
+#ifndef ABS
 #define ABS(a)   (((a)>0)?((a)):(-(a)))
+#endif
 
 
 struct chsc6x_updfile_header

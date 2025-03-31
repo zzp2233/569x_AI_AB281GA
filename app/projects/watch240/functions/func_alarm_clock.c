@@ -386,7 +386,7 @@ compo_form_t *func_alarm_clock_form_create(void)
         compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.1,28);
         compo_textbox_set(textbox, i18n[STR_NO_CLOCK]);
     }
-    printf("week:%s\n",str_buff);
+    // printf("week:%s\n",str_buff);
     uteModulePlatformMemoryFree(str_buff);
 
     //添加闹钟按钮图标
@@ -473,14 +473,20 @@ static void func_alarm_clock_button_click(void)
     //编辑/开关闹钟
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
     {
-        if (compo_cardbox_btn_is(compo_getobj_byid(COMPO_ID_CARD_0 + i), pt))
+        compo_cardbox_t *cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
+        if(cardbox == NULL)
+        {
+            return;
+        }
+        if (compo_cardbox_btn_is(cardbox, pt))
         {
             if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_I330001_PUBLIC_SWITCH01_BIN).wid))   //开关
             {
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
                 //刷新
-                compo_cardbox_text_set_forecolor(compo_getobj_byid(COMPO_ID_CARD_0 + i), 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
-                compo_cardbox_text_set_forecolor(compo_getobj_byid(COMPO_ID_CARD_0 + i), 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+                compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+                compo_cardbox_text_set_forecolor(cardbox, 2, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+                compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I330001_PUBLIC_SWITCH01_BIN : UI_BUF_I330001_PUBLIC_SWITCH00_BIN);
             }
             else        //编辑
             {
@@ -902,7 +908,7 @@ static void func_alarm_clock_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_alarm_clock_t));
     func_cb.frm_main = func_alarm_clock_form_create();
-
+    sys_cb.alarm_edit_idx = ALARM_ENABLE_CNT();
 #if  GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
     f_aclock->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));

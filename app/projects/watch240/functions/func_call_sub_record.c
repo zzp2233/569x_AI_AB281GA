@@ -295,19 +295,19 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
         switch(time_disp_state)
         {
             case 0:
-                sprintf((char*)str_txt2_time, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                        record_tbl[index].callTime.year,
-                        record_tbl[index].callTime.month,
-                        record_tbl[index].callTime.day);
+                snprintf((char*)str_txt2_time,sizeof(str_txt2_time), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                         record_tbl[index].callTime.year,
+                         record_tbl[index].callTime.month,
+                         record_tbl[index].callTime.day);
                 break;
             case 1:
-                sprintf((char*)str_txt2_time, "%02d/%02d", //record_tbl[index].callTime.year,
-                        record_tbl[index].callTime.month,
-                        record_tbl[index].callTime.day);
+                snprintf((char*)str_txt2_time,sizeof(str_txt2_time), "%02d/%02d", //record_tbl[index].callTime.year,
+                         record_tbl[index].callTime.month,
+                         record_tbl[index].callTime.day);
                 break;
             case 2:
-                sprintf((char*)str_txt2_time, "%02d:%02d %s", //record_tbl[index].callTime.year,
-                        hour,min, str_am);
+                snprintf((char*)str_txt2_time,sizeof(str_txt2_time), "%02d:%02d %s", //record_tbl[index].callTime.year,
+                         hour,min, str_am);
 
                 break;
         }

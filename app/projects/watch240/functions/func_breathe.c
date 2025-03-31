@@ -1009,7 +1009,7 @@ static void func_breathe_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_breathe_t));
     func_cb.frm_main = func_breathe_form_create();
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
 #elif (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
     f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;

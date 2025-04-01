@@ -36,6 +36,7 @@ static const compo_listbox_item_t tbl_setting_list[] =
 #endif
     {STR_SETTING_DISTURD,                UI_BUF_I330001_SETTINGS_ICON_DND_BIN,              .func_sta = FUNC_SET_SUB_DISTURD},  //勿扰模式
     {STR_VOL,                           UI_BUF_I330001_SETTINGS_ICON_SOUND_BIN,            .func_sta = FUNC_SET_SUB_SAV},       //声音
+    {STR_SET_PUFFS,                           UI_BUF_I330001_SETTINGS_ICON_SOUND_BIN,            .func_sta = FUNC_SET_PUFFS},       //设置口数
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {STR_SETTING_LANGUAGE,               UI_BUF_I330001_SETTINGS_ICON_LANUAGE_BIN,          .func_sta = FUNC_SET_SUB_LANGUAGE}, //语言设置
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT

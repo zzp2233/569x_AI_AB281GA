@@ -751,9 +751,6 @@ void app_ute_msg_pop_up(uint8_t index)
             tmp_msg[strlen(msg)+3] = '\0';
         }
 
-        ute_module_systemtime_time_t time_data;
-        uteModuleSystemtimeGetTime(&time_data);//获取系统时间
-
         uint8_t hour=ute_msg->historyNotify[0].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
         uint8_t min =ute_msg->historyNotify[0].min ;/*!系统时间，分钟，数值为0~59 */
         uint8_t str_am[30];
@@ -774,11 +771,7 @@ void app_ute_msg_pop_up(uint8_t index)
                 hour = 12;
             }
         }
-
-        sprintf((char*)time,sizeof(time),"%02d:%02d %s", //record_tbl[index].callTime.year,
-                hour,min,str_am);
-
-
+        snprintf(time,sizeof(time),"%02d:%02d %s", hour,min,str_am);
 
         int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
         if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗

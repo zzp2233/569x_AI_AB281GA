@@ -103,12 +103,10 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
 
     for (int i=0; i<7; i++)         //获取当前闹钟设置的星期
     {
-        bsp_sys_set_ctlbit(SYS_CTL_ACLOCK_MON + i,false);
+        bsp_sys_set_ctlbit(SYS_CTL_ACLOCK_MON + i,(ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) >> i) & 1);
     }
 
     compo_listbox_update(listbox);
-
-
 
     return frm;
 }

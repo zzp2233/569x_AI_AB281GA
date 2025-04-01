@@ -215,6 +215,16 @@
 #define UTE_DRV_BATTERY_CHARGE_STOP_VOLT 0
 #endif
 
+/*! 是否使用代码定义的充电电流,打开这个宏使用代码设置的电流,关闭使用烧录工具设置的电流,wang.luo 2025-03-31 */
+#ifndef UTE_DRV_BATTERY_CUSTOM_CHARGE_CURRENT_SUPPORT
+#define UTE_DRV_BATTERY_CUSTOM_CHARGE_CURRENT_SUPPORT 1
+#endif
+
+/*! 充电电流,默认0.65C,wang.luo 2025-03-31 */
+#ifndef UTE_DRV_BATTERY_CHARGE_CURRENT
+#define UTE_DRV_BATTERY_CHARGE_CURRENT (UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH * 65 / 100) // 毫安 误差+-5ma
+#endif
+
 /*! 默认发送历史数据定时器间隔zn.zeng, 2021-08-23  */
 #ifndef UTE_SEND_DATA_TO_PHONE_INVTERVAL
 #define UTE_SEND_DATA_TO_PHONE_INVTERVAL 60 // ms

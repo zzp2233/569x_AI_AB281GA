@@ -13,6 +13,7 @@
 				<Option compiler="riscv32-v2" />
 				<Compiler>
 					<Add directory="../../platform/bsp/bsp_ecig" />
+					<Add directory="functions" />
 				</Compiler>
 				<Linker>
 					<Add library="../../platform/libs/libc.a" />
@@ -1367,6 +1368,12 @@
 		</Unit>
 		<Unit filename="functions/func_recorder.h" />
 		<Unit filename="functions/func_scan.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_set_puffs.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_set_target_puffs.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_setting.c">

@@ -173,9 +173,24 @@ void uteModuleGetSmokingCountPerDay(uint32_t *counts)
         counts[i] = uteModuleSmokeData.smoking_count_per_day[i];
     }
 }
+// 清除总抽吸口数并保存
+void uteModuleResetTotalSmokeCount(void)
+{
+    // 清除总口数
+    uteModuleSetSomkeCount(0);
+
+    memset(uteModuleSmokeData.smoking_count_per_hour, 0, sizeof(uteModuleSmokeData.smoking_count_per_hour));
+    memset(uteModuleSmokeData.smoking_count_per_day, 0, sizeof(uteModuleSmokeData.smoking_count_per_day));
+    uteModuleSmokeDataSaveConfig();
+}
 
 
-
+//目标口数
+void ecig_set_target_puffs(int puffs)
+{
+    uteModuleSmokeData.target_smoking_count = puffs;
+    printf("Set target puffs: %d\n", puffs);
+}
 
 
 

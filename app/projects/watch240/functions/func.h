@@ -139,6 +139,8 @@ enum
     FUNC_SET_SUB_DISTURD,               //设置--勿扰
     FUNC_DISTURD_SUB_SET,               //勿扰--时间设置
     FUNC_SET_SUB_SAV,                   //设置--声音与振动
+    FUNC_SET_PUFFS,                   //设置口数
+    FUNC_TARGET_PUFFS,                   //设置目标口数
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     FUNC_SET_SUB_LANGUAGE,              //设置--语言
     FUNC_LANGUAGE = FUNC_SET_SUB_LANGUAGE,

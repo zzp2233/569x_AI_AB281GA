@@ -272,8 +272,10 @@ static void func_clock_message(size_msg_t msg)
     {
         case MSG_CTP_SHORT_UP:
 #if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
-            func_clock_butterfly_set_light_visible(false);
             func_switch_to(FUNC_CARD, FUNC_SWITCH_MENU_PULLUP_UP);  //上拉卡片界面
+#endif
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
+            func_clock_butterfly_set_light_visible(false);
             if (func_cb.sta == FUNC_CLOCK)
             {
                 func_clock_butterfly_set_light_visible(true);

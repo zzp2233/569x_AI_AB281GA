@@ -134,7 +134,7 @@ void bsp_charge_init(void)
 #else
         p->const_curr = CHARGE_CONSTANT_CURR;
 #endif
-        printf("bsp_charge_init,const_curr:%d ma\n",p->const_curr*5);
+        printf("bsp_charge_init,const_curr:%d ma\n",p->const_curr*5+5);
         p->trick_curr = CHARGE_TRICKLE_CURR;
         p->stop_curr = CHARGE_STOP_CURR;
         p->stop_curr_thd = 80;

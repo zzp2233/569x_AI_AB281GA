@@ -711,7 +711,7 @@ compo_form_t *func_sleep_form_create(void)
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
-    // sleep_data->totalSleepMin = 480;
+    // sleep_data->totalSleepMin = 38;
     // sleep_data->fallAsSleepTime.hour =0;
     // sleep_data->fallAsSleepTime.min =0;
     // sleep_data->getUpSleepTime.hour =8;
@@ -755,12 +755,12 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
-    compo_textbox_set_location(txt,83,228,58,65);
+    compo_textbox_set_location(txt,83,228,66,65);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
-    compo_textbox_set_location(txt,145,258,30,34);
+    compo_textbox_set_location(txt,145,265,30,34);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set(txt, i18n[STR_HOUR]);
 
@@ -775,13 +775,13 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
-    compo_textbox_set_location(txt,187,228,58,65);
+    compo_textbox_set_location(txt,187,228,66,65);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,248,258,60,34);
+    compo_textbox_set_location(txt,248,265,60,34);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_autoroll_mode(txt, 0);
     compo_textbox_set(txt, i18n[STR_MIN]);

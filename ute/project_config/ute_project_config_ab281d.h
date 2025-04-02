@@ -126,6 +126,14 @@
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
 #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17312001_BIN, UI_BUF_DIALPLATE_D17196001_BIN, UI_BUF_DIALPLATE_D17195001_BIN, UI_BUF_DIALPLATE_D17194001_BIN, UI_BUF_DIALPLATE_BTF_BIN, UI_BUF_DIALPLATE_CUBE_BIN}
+/*! 表盘排序地址数组,wang.luo 2024-11-26 */
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17312001_BIN, \
+                                                UI_BUF_DIALPLATE_D17196001_BIN, \
+                                                UI_BUF_DIALPLATE_D17195001_BIN, \
+                                                UI_BUF_DIALPLATE_D17194001_BIN, \
+                                                UI_BUF_DIALPLATE_BTF_BIN, \
+                                                UI_BUF_DIALPLATE_CUBE_BIN}
+
 #define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
 #define UTE_WATCHS_CUBE_DIAL_SUPPORT 1      // 使用立方体表盘
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 4    // 蝴蝶表盘索引

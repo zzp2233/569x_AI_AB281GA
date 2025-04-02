@@ -1278,8 +1278,9 @@ static void func_clock_sub_dropdown_enter(void)
         dropdown_disturb_sw = 0;
     }
 #endif
-
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     func_clock_butterfly_set_light_visible(false);
+#endif
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     get_menu_idx_update();
     disp_flag=false;
@@ -1303,7 +1304,9 @@ static void func_clock_sub_dropdown_exit(void)
 {
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     compo_form_destroy(f_clk->sub_frm);
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     func_clock_butterfly_set_light_visible(true);
+#endif
     f_clk->sub_frm = NULL;
 }
 

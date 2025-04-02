@@ -319,9 +319,9 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
     {
         uteDrvBatteryCommonData.current = 0;
     }
-    if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_090)
+    else if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_090)
     {
-        uteDrvBatteryCommonData.current = CHARGE_STOP_CURR * 2.5f + 2.5f;
+        uteDrvBatteryCommonData.current = CHARGE_TRICKLE_CURR * 5 + 5;
     }
     else if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_080)
     {
@@ -352,21 +352,23 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
     }
     /*!xjc delete, 2022-05-04*/
 #if (!UTE_MODULE_BATTERY_CHARGED_DISPLAY_ON_SUPPORT)
-    if((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGING)&&(uteDrvBatteryCommonData.lvl == 100))
+    if ((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGING) && (uteDrvBatteryCommonData.lvl == 100))
     {
-        uteDrvBatteryCommonData.lvl = 99;
+#if UTE_MODULE_BATTERY_LINEAR_CONSUME_SUPPORT
+        if (uteDrvBatteryCommonData.bat100PercentTimeout == 0)
+#endif
+        {
+            uteDrvBatteryCommonData.lvl = 99;
+        }
     }
 #endif
-    if(uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGED)
+    if (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGED)
     {
         uteDrvBatteryCommonData.lvl = 100;
-    }
 #if UTE_MODULE_BATTERY_LINEAR_CONSUME_SUPPORT
-    if((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGING)||(uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGED))
-    {
-        uteDrvBatteryCommonData.bat100PercentTimeout = (uteDrvBatteryCommonData.lvl == 100) ? 2 : 0;
-    }
+        uteDrvBatteryCommonData.bat100PercentTimeout = 2;
 #endif
+    }
     if (uteApplicationCommonIsStartupFinish() && (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE))
     {
         if (uteDrvBatteryCommonData.lvlCnt < UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX)

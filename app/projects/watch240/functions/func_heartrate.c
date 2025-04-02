@@ -491,15 +491,16 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///次/分 数据
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_54_BIN);
-    compo_textbox_set_pos(textbox,110,220);
+    compo_textbox_set_location(textbox,104,250-37,80,65);
     compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_right_align(textbox, true);
     compo_textbox_set(textbox,"--");
     compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
 
     area_t txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,120+txt_leng.wid,250,67, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+10,250,67,34);
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
     compo_setid(textbox,COMPO_ID_HEART_BPM_TXT);
@@ -658,8 +659,8 @@ static void func_heartrate_refresh(void)
             snprintf(txt_buf,sizeof(txt_buf),"--");
             compo_textbox_set(textbox_value,txt_buf);
         }
-        area_t txt_leng = widget_text_get_area(textbox_value->txt);
-        compo_textbox_set_pos(textbox_bpm,120+txt_leng.wid,250);
+        // area_t txt_leng = widget_text_get_area(textbox_value->txt);
+        // compo_textbox_set_pos(textbox_bpm,120+txt_leng.wid,250);
     }
 
 }

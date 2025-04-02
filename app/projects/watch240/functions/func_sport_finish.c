@@ -470,6 +470,8 @@ compo_form_t *func_sport_finish_form_create(void)
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
+    u16 str_id = func_sport_get_str(sys_cb.sport_idx);
+    u32 icon_addr = func_sport_get_ui(sys_cb.sport_idx);
     char txt_buf[50];
     ute_module_more_sports_data_t sport_data;
     uteModuleSportGetMoreSportsDatas(&sport_data);
@@ -487,13 +489,13 @@ compo_form_t *func_sport_finish_form_create(void)
     area_t txt_leng;
 
     //设置标题栏名字//
-    textbox = compo_textbox_create(frm,strlen(i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]));
+    textbox = compo_textbox_create(frm,strlen(i18n[str_id]));
     compo_textbox_set_location(textbox,GUI_SCREEN_WIDTH/2,38/2,120,38);
-    compo_textbox_set(textbox, i18n[func_sport_get_str(uteModuleSportMoreSportGetType() - 1)]);
+    compo_textbox_set(textbox, i18n[str_id]);
 
     //第一页
     //运动类型图片
-    picbox = compo_picturebox_create(frm, func_sport_get_ui(uteModuleSportMoreSportGetType() - 1));
+    picbox = compo_picturebox_create(frm, icon_addr);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
     //时间日期
@@ -628,7 +630,7 @@ compo_form_t *func_sport_finish_form_create(void)
         compo_textbox_set_forecolor(textbox,make_color(0x80,0x80,0x80));
         /*心率->数据*/
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.avgHeartRate);
         textbox = compo_textbox_create(frm, strlen(txt_buf));
         compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
         compo_textbox_set_align_center(textbox, false);
@@ -734,7 +736,7 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, y+88/2+50);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, y+191,261,22);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, y+191,320,widget_text_get_max_height());
     compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
 
     compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I332001_SPORT_BTN_BIN);

@@ -632,8 +632,8 @@ static const ui_handle_t ui_handle =
     .del_btn = {
         .id     = COMPO_ID_BTN_DEL,
         .id_click   = COMPO_ID_PIC_DEL_CLICK,
-        .x      = 72+216/2,
-        .y      = 324+64/2-50,
+        .x      = GUI_SCREEN_CENTER_X,
+        .y      = 356,
         .w      = 0,
         .h      = 0,
         .res    = UI_BUF_I332001_PUBLIC_RECTANGLE00_BIN,
@@ -643,8 +643,8 @@ static const ui_handle_t ui_handle =
     ///删除按钮文本
     .del_btn_txt = {
         .id     = COMPO_ID_TEXT_BTN_DEL,
-        .x      = 72+216/2,
-        .y      = 324+64/2-50,
+        .x      = GUI_SCREEN_CENTER_X,
+        .y      = 356,
         .w      = 0,
         .h      = 0,
         .str_id = STR_DEL,
@@ -654,8 +654,8 @@ static const ui_handle_t ui_handle =
     ///时间设置卡片
     .card_time = {
         .id     = COMPO_ID_CARD_SET_TIME,
-        .x      = 18 + 324/2,
-        .y      = 102 + 90/2-50,
+        .x      = GUI_SCREEN_CENTER_X,
+        .y      = 150,
         .w      = 324,
         .h      = 90,
 
@@ -700,7 +700,7 @@ static const ui_handle_t ui_handle =
             [2] = {
                 .idx    = 2,
                 .x      = 80 - 232/2-30,
-                .y      = -72/2,
+                .y      = 5 - 72/2,
                 .w      = 100,
                 .h      = 34,
                 .str_id = STR_AM,
@@ -716,8 +716,8 @@ static const ui_handle_t ui_handle =
     ///日期设置
     .card_day = {
         .id     = COMPO_ID_CARD_SET_DAY,
-        .x      = 18 + 324/2,
-        .y      = 202 + 90/2-50,
+        .x      = GUI_SCREEN_CENTER_X,
+        .y      = 256,
         .w      = 324,
         .h      = 90,
 
@@ -1089,7 +1089,7 @@ static void func_alarm_clock_sub_edit_process(void)
 #endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     f_alarm_clock_sub_edit_t *f_alarm_clock_sub_edit = (f_alarm_clock_sub_edit_t*)func_cb.f_cb;
-//    compo_page_move_process(f_alarm_clock_sub_edit->ptm);
+    compo_page_move_process(f_alarm_clock_sub_edit->ptm);
 #endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     func_process();
 }
@@ -1160,7 +1160,8 @@ static void func_alarm_clock_sub_edit_enter(void)
     f_alarm_clock_sub_edit->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {
-        .page_size = 360,
+        .title_used = true,
+        .page_size = 418,
         .page_count = 1,
         .up_over_perc = 5,
         .down_over_perc = 5,

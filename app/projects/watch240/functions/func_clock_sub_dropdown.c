@@ -612,7 +612,7 @@ static void func_clock_sub_dropdown_click_handler(void)
 #define  BATTERY_PIC_4_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
 #define  PAGE_NUM_WHITE_BIN   UI_BUF_I332001_SLIDEMENU_DOT_01_BIN           ///底部页码点->白
 #define  PAGE_NUM_GREY_BIN    UI_BUF_I332001_SLIDEMENU_DOT_00_BIN           ///底部页码点->灰
-#define  PAGE_HEIGHT_ADJUST    -3   ///page 页面y轴调节
+#define  PAGE_HEIGHT_ADJUST    20   ///page 页面y轴调节
 
 static uint8_t dropdown_disturb_sw;     //功能未做，加个开关先放着
 
@@ -761,12 +761,12 @@ static void func_clock_sub_dropdown_bluetooth_btn_pic_update(void)
     if(uteModuleCallBtIsPowerOn())
     {
         compo_button_set_bgimg(bluetooth_pic, UI_BUF_I332001_SLIDEMENU_ICON_CALL01_BIN);
-        compo_picturebox_set_visible(bluetooth, true);
+        // compo_picturebox_set_visible(bluetooth, true);
     }
     else
     {
         compo_button_set_bgimg(bluetooth_pic,UI_BUF_I332001_SLIDEMENU_ICON_CALL00_BIN );
-        compo_picturebox_set_visible(bluetooth, false);
+        // compo_picturebox_set_visible(bluetooth, false);
 
     }
 }
@@ -894,11 +894,11 @@ static void func_clock_sub_dropdown_form_create(void)
 
     ///创建页码点
     compo_picturebox_t *picbox = compo_picturebox_create(frm, PAGE_NUM_WHITE_BIN);
-    compo_picturebox_set_pos(picbox,177, 344);
+    compo_picturebox_set_pos(picbox,189, 344);
     compo_setid(picbox,COMPO_ID_PIC_WHITE);
 
     picbox = compo_picturebox_create(frm, PAGE_NUM_GREY_BIN);
-    compo_picturebox_set_pos(picbox,189, 344);
+    compo_picturebox_set_pos(picbox,177, 344);
     compo_setid(picbox,COMPO_ID_PIC_GREY);
 
     ///创建按钮
@@ -931,7 +931,7 @@ static void func_clock_sub_dropdown_form_create(void)
 
     snprintf(txt_buf,sizeof(txt_buf),"%02d/%02d %s",time.month,time.day,i18n[STR_SUNDAY+time.week]);
     compo_textbox_t *textbox = compo_textbox_create(frm,strlen(txt_buf));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,65,170,40);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,68,170,40);
     compo_textbox_set(textbox,txt_buf );
 
     func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新

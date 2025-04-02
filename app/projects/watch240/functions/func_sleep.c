@@ -755,8 +755,9 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
-    compo_textbox_set_location(txt,83,228,66,65);
+    compo_textbox_set_location(txt,74,228,66,65);
     compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_HOUR]));
@@ -775,8 +776,9 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
-    compo_textbox_set_location(txt,187,228,66,65);
+    compo_textbox_set_location(txt,178,228,66,65);
     compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));

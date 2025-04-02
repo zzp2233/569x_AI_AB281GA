@@ -1880,7 +1880,7 @@ void music_data_refresh(void)
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 #define CARD_SCALE_START_POS            228//265                                                                     //卡片开始缩小位置
-#define CARD_SCALE_STOP_POS             94+236//320                                                                     //卡片停止缩小位置
+#define CARD_SCALE_STOP_POS             360//320                                                                     //卡片停止缩小位置
 #define CARD_SCALE_STOP_Y               (CARD_SCALE_STOP_POS + 200 * 2)                                         //卡片停止缩小实际位置（越大缩小越慢，可见叠加越多）
 #define CARD_WIDTH_MIN                  150//200                                                                     //卡片缩小的最小宽度
 #define CARD_UNVISIBLE_POS_TOP          (-100)//(-160)                                                                  //卡片超出屏幕顶部某位置后设为不可见
@@ -2155,7 +2155,7 @@ static const ui_handle_t ui_handle =
         .week = {
             .id = COMPO_ID_WEEKDAY,
             .x  = 12-232/2,
-            .y  = 79-136/2,
+            .y  = 69-136/2,
             .w  = 60,
             .h  = 32,
             .center = false,
@@ -2330,7 +2330,7 @@ static const ui_handle_t ui_handle =
         .text_hour = {
             .idx    = 1,
             .x      = -120,
-            .y      = -5,
+            .y      = -15,
             .w      = 60,
             .h      = 58,
             .res    = UI_BUF_0FONT_FONT_NUM_48_BIN,
@@ -2352,7 +2352,7 @@ static const ui_handle_t ui_handle =
         .text_min = {
             .idx    = 3,
             .x      = -20,
-            .y      = -5,
+            .y      = -15,
             .w      = 60,
             .h      = 58,
             .res    = UI_BUF_0FONT_FONT_NUM_48_BIN,
@@ -2468,7 +2468,7 @@ static const ui_handle_t ui_handle =
         .text_time = {
             .idx    = 1,
             .x      = 23-324/2,
-            .y      = -5,
+            .y      = -15,
             .w      = 180,
             .h      = 58,
             .res    = UI_BUF_0FONT_FONT_NUM_48_BIN,
@@ -2509,7 +2509,7 @@ static const ui_handle_t ui_handle =
         .text_time = {
             .idx    = 1,
             .x      = 23-324/2,
-            .y      = -5,
+            .y      = -15,
             .w      = 180,
             .h      = 58,
             .res    = UI_BUF_0FONT_FONT_NUM_48_BIN,
@@ -2987,7 +2987,7 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_cardbox_text_set_location(card2, ui_handle.card2.text_sleep.idx, ui_handle.card2.text_sleep.x, ui_handle.card2.text_sleep.y, ui_handle.card2.text_sleep.w, ui_handle.card2.text_sleep.h);
     compo_cardbox_text_set(card2, ui_handle.card2.text_sleep.idx, i18n[ui_handle.card2.text_sleep.str_id]);
 
-    sleep_data->totalSleepMin =  412;
+    // sleep_data->totalSleepMin =  412;
     compo_cardbox_text_set_font(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.res);
     compo_cardbox_text_set_align_center(card2, ui_handle.card2.text_hour.idx, ui_handle.card2.text_hour.center);
     widget_text_set_color(card2->text[ui_handle.card2.text_hour.idx], make_color(ui_handle.card2.text_hour.color.r, ui_handle.card2.text_hour.color.g, ui_handle.card2.text_hour.color.b));
@@ -3126,10 +3126,10 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     widget_text_set_color(week->txt, make_color(ui_handle.card_clock_day.week.color.r, ui_handle.card_clock_day.week.color.g, ui_handle.card_clock_day.week.color.b));
     compo_bonddata(week, ui_handle.card_clock_day.week.bonddata);
 
-//    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-//    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 6, 36, 6);
-//    compo_shape_set_color(shape, make_color(0X4C,0X4C,0X4C));
-//    compo_shape_set_radius(shape, 35);
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 13, 54, 6);
+    compo_shape_set_color(shape, make_color(76,76,76));
+    compo_shape_set_radius(shape, 35);
 
     ab_free(sleep_data);
 

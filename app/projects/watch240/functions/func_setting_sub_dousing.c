@@ -243,13 +243,7 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_listbox_set_bithook(listbox, func_sel_dousing_bit);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
-    uint8_t set_idx = 0;
-    if (set_idx < 1)
-    {
-        set_idx = 1;
-    }
-
-    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_set_focus(listbox, 80);
     compo_listbox_update(listbox);
 
 
@@ -369,7 +363,11 @@ static void func_set_sub_dousing_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
 
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, DOUSING_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, DOUSING_LIST_CNT - 2)+40);
+#endif
     func_cb.enter_tick = tick_get();
 }
 

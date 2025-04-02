@@ -350,15 +350,21 @@ compo_form_t *func_calender_form_create(void)
     compo_label_set(cale_label, date_str);
     compo_setid(cale_label, COMPO_ID_MON_TEXT);
 
+    widget_icon_t *img = widget_icon_create(frm->page_body, UI_BUF_I332001_CALENDAR_LEFT_BIN);
+    widget_set_pos(img, 60, 85);
+
+    img = widget_icon_create(frm->page_body, UI_BUF_I332001_CALENDAR_RIGHT_BIN);
+    widget_set_pos(img, 315, 85);
+
     //last_btn
-    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I332001_CALENDAR_LEFT_BIN);
+    compo_button_t *btn = compo_button_create(frm);
     compo_setid(btn, COMPO_ID_LAST_BTN);
-    compo_button_set_pos(btn, 60, 85);
+    compo_button_set_location(btn, 60, 85,60,60);
 
     //next_btn
-    btn = compo_button_create_by_image(frm, UI_BUF_I332001_CALENDAR_RIGHT_BIN);
+    btn = compo_button_create(frm);
     compo_setid(btn, COMPO_ID_NEXT_BTN);
-    compo_button_set_pos(btn,315, 85);
+    compo_button_set_location(btn,315, 85,60,60);
 
     return frm;
 }

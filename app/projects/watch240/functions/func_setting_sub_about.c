@@ -88,9 +88,7 @@ compo_form_t *func_set_sub_about_form_create(void)
 compo_form_t *func_set_sub_about_form_create(void)
 {
 #define SPACING  (164-82)
-
     compo_textbox_t * txt;
-
     char davName[40];
     memset(davName,'\0',sizeof(davName));
     uint8_t davNameLength = sizeof(davName);
@@ -113,34 +111,34 @@ compo_form_t *func_set_sub_about_form_create(void)
 
     //设备名称
     txt = compo_textbox_create(frm,strlen(i18n[STR_DEV_NEME]));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,34/2+82,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98,220,34);
     compo_textbox_set(txt, i18n[STR_DEV_NEME]);
 
     txt = compo_textbox_create(frm,strlen(davName));
     compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,34/2+126,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134,220,34);
     compo_textbox_set(txt, davName);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
 
     //系统版本
     txt = compo_textbox_create(frm,strlen(i18n[STR_SYS_VERSION]));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,34/2+82+SPACING,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98+SPACING,220,34);
     compo_textbox_set(txt, i18n[STR_SYS_VERSION]);
 
     txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
     compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,34/2+126+SPACING,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING,220,34);
     compo_textbox_set(txt, UTE_SW_VERSION);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
 
     //蓝牙地址
     txt = compo_textbox_create(frm,strlen(i18n[STR_BLE_MAC]));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,34/2+82+SPACING*2,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98+SPACING*2,220,34);
     compo_textbox_set(txt, i18n[STR_BLE_MAC]);
 
     txt = compo_textbox_create(frm,strlen(Ble_Address_str_buf));
     compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,34/2+126+SPACING*2,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING*2,220,34);
     compo_textbox_set(txt, (char*)Ble_Address_str_buf);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
 

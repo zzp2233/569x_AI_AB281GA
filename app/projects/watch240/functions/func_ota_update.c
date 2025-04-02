@@ -132,6 +132,10 @@ static void func_ota_update_disp(void)
         {
             if(fot_data->percent)
             {
+                if(fot_data->percent >= 97)
+                {
+                    fot_data->percent = 100;
+                }
                 compo_arc_t *bar = compo_getobj_byid(PROGRESS_BAR_ID);
                 compo_arc_set_value(bar,fot_data->percent*10);
             }

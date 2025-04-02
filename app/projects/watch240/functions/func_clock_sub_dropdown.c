@@ -925,7 +925,7 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_picturebox_set_pos(bluetooth_pic,146, 25);
 
 
-    char txt_buf[30];
+    char txt_buf[50];
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);//获取系统时间
 

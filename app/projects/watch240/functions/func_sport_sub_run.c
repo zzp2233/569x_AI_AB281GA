@@ -767,17 +767,17 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
 
-    txt = compo_textbox_create(frm, 50);///心率文本
-    compo_textbox_set_location(txt, 154/2+32, 22/2+184, 154, 30);
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_HEART_RATE],i18n[STR_PER_MINUTE]);
+    txt = compo_textbox_create(frm, strlen(txt_buf));///心率文本
+    compo_textbox_set_location(txt, 154/2+32, 22/2+184, 154, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
 
-    txt = compo_textbox_create(frm, 50);///卡路里文本
-    compo_textbox_set_location(txt, 132/2+186, 22/2+184, 148, 30);
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_KCAL],i18n[STR_KCAL]);
+    snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_CALORIE],i18n[STR_KCAL]);
+    txt = compo_textbox_create(frm, strlen(txt_buf));///卡路里文本
+    compo_textbox_set_location(txt, 132/2+186, 22/2+184, 148, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
 
@@ -877,10 +877,10 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     if(func_sport_get_disp_mode()==MULTIPLE_DATA)
     {
-        txt = compo_textbox_create(frm, 50);///公里文本
-        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 30);
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_KM],i18n[STR_KM]);
+        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_SET_DISTANCE] : i18n[STR_KM]);
+        txt = compo_textbox_create(frm, strlen(txt_buf));///公里文本
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 30);
         compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
         compo_textbox_set(txt, txt_buf);
         compo_setid(txt,COMPO_ID_UINT_SPORT_KM);
@@ -893,8 +893,18 @@ compo_form_t *func_sport_sub_run_form_create(void)
         txt = compo_textbox_create(frm, 6);///公里数据文本
         compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
         compo_textbox_set_pos(txt, 43/2+167, 48/2+130+360);
+        u8 km_integer = data->saveData.sportDistanceInteger;                 //距离 整数
+        u8 km_decimals = data->saveData.sportDistanceDecimals;               //距离 小数
+        if(uteModuleSystemtimeGetDistanceMiType())//英里
+        {
+            uint16_t distance = km_integer*1000+km_decimals*10;
+            distance = distance*0.6213712;
+            km_integer  = distance/1000;
+            km_decimals = distance%1000/10;
+        }
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",  data->saveData.sportDistanceInteger,data->saveData.sportDistanceDecimals);
+        snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",km_integer,km_decimals);
+        compo_textbox_set(txt, txt_buf);
         compo_textbox_set(txt, txt_buf);
         compo_setid(txt,COMPO_ID_NUM_SPORT_KM);
 
@@ -926,10 +936,10 @@ compo_form_t *func_sport_sub_run_form_create(void)
     }
     else if(func_sport_get_disp_mode()==MID_DATA)
     {
-        txt = compo_textbox_create(frm, 50);///计数文本
-        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 30);
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_NO_DATA],i18n[STR_SPORT_ORDER]);
+        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_COUNT_NUM],i18n[STR_SPORT_ORDER]);
+        txt = compo_textbox_create(frm, strlen(txt_buf));///计数文本
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 30);
         compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
         compo_textbox_set(txt, txt_buf);
 
@@ -1297,9 +1307,24 @@ static void func_sport_sub_run_updata(void)
 
         if(txt_km != NULL)
         {
+            u8 km_integer = data->saveData.sportDistanceInteger;                 //距离 整数
+            u8 km_decimals = data->saveData.sportDistanceDecimals;               //距离 小数
+            if(uteModuleSystemtimeGetDistanceMiType())//英里
+            {
+                uint16_t distance = km_integer*1000+km_decimals*10;
+                distance = distance*0.6213712;
+                km_integer  = distance/1000;
+                km_decimals = distance%1000/10;
+            }
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",  data->saveData.sportDistanceInteger,data->saveData.sportDistanceDecimals);
+            snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",km_integer,km_decimals);
             compo_textbox_set(txt_km, txt_buf);
+        }
+        if(uint_km != NULL)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_SET_DISTANCE] : i18n[STR_KM]);
+            compo_textbox_set(uint_km, txt_buf);
         }
 
         if(txt_count != NULL)

@@ -265,7 +265,7 @@ static void func_set_sub_list_enter(void)
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
 #endif
     func_cb.enter_tick = tick_get();
 }

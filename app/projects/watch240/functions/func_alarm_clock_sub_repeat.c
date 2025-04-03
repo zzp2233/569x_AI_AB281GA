@@ -33,13 +33,13 @@
 #define WEEKS_LIST_CNT                  ((int)(sizeof(tbl_weeks_list) / sizeof(tbl_weeks_list[0])))
 static const compo_listbox_item_t tbl_weeks_list[] =
 {
+    {STR_SUNDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SUN},
     {STR_MONDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_MON},
     {STR_TUESDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_TUE},
     {STR_WEDNESDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_WED},
     {STR_THURSDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_THU},
     {STR_FRIDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_FRI},
     {STR_SATURDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SAT},
-    {STR_SUNDAY, .item_mode = COMPO_LISTBOX_ITEM_MODE_SWITCH, .vidx = SYS_CTL_ACLOCK_SUN},
 };
 
 //组件ID
@@ -190,7 +190,7 @@ compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_sta_icon(listbox, UI_BUF_I332001_ALARM_SELECT01_BIN, UI_BUF_I332001_ALARM_SELECT00_BIN);
     compo_listbox_set_bithook(listbox, bsp_sys_get_ctlbit);
-    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_set_focus(listbox, 80);
 
     s32 last_y = compo_listbox_gety_byidx(listbox, WEEKS_LIST_CNT );
     //新建按钮
@@ -330,12 +330,16 @@ static void func_alarm_clock_sub_repeat_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
 
+
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     s32 first_y = compo_listbox_gety_byidx(listbox, 1);
     s32 last_y = compo_listbox_gety_byidx(listbox, WEEKS_LIST_CNT - 1);
     compo_listbox_move_init_modify(listbox, first_y, last_y);
-
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, WEEKS_LIST_CNT - 1)+40);
+#endif
     func_cb.enter_tick = tick_get();
-
 }
 
 //退出闹钟--重复功能

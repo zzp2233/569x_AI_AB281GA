@@ -232,10 +232,11 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {STR_SETTING,                UI_BUF_I332001_THEME_ICON1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
-#if UTE_MODULE_SCREENS_STYLE_SUPPORT
-    {STR_STYLE,                  UI_BUF_I332001_THEME_ICON1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
-#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
-    {STR_SETTING_ABOUT,          UI_BUF_I332001_THEME_ICON1_GUANYU_BIN,            .func_sta = FUNC_SET_SUB_ABOUT},        //关于
+// #if UTE_MODULE_SCREENS_STYLE_SUPPORT
+//     {STR_STYLE,                  UI_BUF_I332001_THEME_ICON1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
+// #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+//     {STR_SETTING_ABOUT,          UI_BUF_I332001_THEME_ICON1_GUANYU_BIN,            .func_sta = FUNC_SET_SUB_ABOUT},        //关于
+    {STR_WOMEN_HEALTH,          UI_BUF_I332001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
 };
 #define  BATTERY_PIC_0_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
 #define  BATTERY_PIC_1_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1

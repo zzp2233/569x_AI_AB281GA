@@ -8,7 +8,7 @@
 #define TRACE(...)
 #endif
 
-#define TBL_ROTARY_ITEM_CNT                     ((int)(sizeof(tbl_rotary_item) / sizeof(tbl_rotary_item[0])))
+#define TBL_ROTARY_ITEM_CNT                     ((int)(sizeof(tbl_rotary_item_en) / sizeof(tbl_rotary_item_en[0])))
 
 enum
 {
@@ -20,7 +20,21 @@ typedef struct f_menustyle_t_
     compo_rotary_t *rotary;
 } f_menustyle_t;
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-static const compo_rotary_item_t tbl_rotary_item[] =
+static const compo_rotary_item_t tbl_rotary_item_en[] =
+{
+    [MENU_STYLE_LIST]               = {UI_BUF_I330001_THEME_PREVIEW_EN_00_BIN,           STR_STYLE_LIST_1},
+    [MENU_STYLE_GRID]               = {UI_BUF_I330001_THEME_PREVIEW_EN_01_BIN,           STR_CHECKERBOARD},
+    [MENU_STYLE_KALE]               = {UI_BUF_I330001_THEME_PREVIEW_EN_02_BIN,           STR_HALO},
+    [MENU_STYLE_SKYRER]             = {UI_BUF_I330001_THEME_PREVIEW_EN_03_BIN,           STR_STYLE_SKYRER},
+    [MENU_STYLE_CUM_SUDOKU]         = {UI_BUF_I330001_THEME_PREVIEW_EN_04_BIN,           STR_GONG_GE},
+    [MENU_STYLE_CUM_GRID]           = {UI_BUF_I330001_THEME_PREVIEW_EN_05_BIN,           STR_STYLE_GRID_1},
+    // [MENU_STYLE_CUM_FOURGRID]       = {UI_BUF_I330001_THEME_PREV_ENIEW_06_BIN,           STR_SIX_PALACE_GRID},
+    [MENU_STYLE_HONEYCOMB]          = {UI_BUF_I330001_THEME_PREVIEW_EN_07_BIN,           STR_STYLE_HONEYCOMB},
+    [MENU_STYLE_WATERFALL]          = {UI_BUF_I330001_THEME_PREVIEW_EN_08_BIN,           STR_STYLE_WATERFALL},
+    [MENU_STYLE_FOOTBALL]           = {UI_BUF_I330001_THEME_PREVIEW_EN_09_BIN,           STR_SPHERE},
+};
+
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
 {
     [MENU_STYLE_LIST]               = {UI_BUF_I330001_THEME_PREVIEW_00_BIN,           STR_STYLE_LIST_1},
     [MENU_STYLE_GRID]               = {UI_BUF_I330001_THEME_PREVIEW_01_BIN,           STR_CHECKERBOARD},
@@ -34,7 +48,7 @@ static const compo_rotary_item_t tbl_rotary_item[] =
     [MENU_STYLE_FOOTBALL]           = {UI_BUF_I330001_THEME_PREVIEW_09_BIN,           STR_SPHERE},
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-static const compo_rotary_item_t tbl_rotary_item[] =
+static const compo_rotary_item_t tbl_rotary_item_en[] =
 {
     [MENU_STYLE_LIST]               = {UI_BUF_I332001_THEME_PREVIEW_EN_00_BIN,           STR_STYLE_LIST_1},
     [MENU_STYLE_GRID]               = {UI_BUF_I332001_THEME_PREVIEW_EN_01_BIN,           STR_CHECKERBOARD},
@@ -46,6 +60,19 @@ static const compo_rotary_item_t tbl_rotary_item[] =
     [MENU_STYLE_HONEYCOMB]          = {UI_BUF_I332001_THEME_PREVIEW_EN_07_BIN,           STR_STYLE_HONEYCOMB},
     [MENU_STYLE_WATERFALL]          = {UI_BUF_I332001_THEME_PREVIEW_EN_08_BIN,           STR_STYLE_WATERFALL},
     [MENU_STYLE_FOOTBALL]           = {UI_BUF_I332001_THEME_PREVIEW_EN_09_BIN,           STR_SPHERE},
+};
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
+{
+    [MENU_STYLE_LIST]               = {UI_BUF_I332001_THEME_PREVIEW_ZH_00_BIN,           STR_STYLE_LIST_1},
+    [MENU_STYLE_GRID]               = {UI_BUF_I332001_THEME_PREVIEW_ZH_01_BIN,           STR_CHECKERBOARD},
+    [MENU_STYLE_KALE]               = {UI_BUF_I332001_THEME_PREVIEW_ZH_02_BIN,           STR_HALO},
+    [MENU_STYLE_SKYRER]             = {UI_BUF_I332001_THEME_PREVIEW_ZH_03_BIN,           STR_STYLE_SKYRER},
+    [MENU_STYLE_CUM_SUDOKU]         = {UI_BUF_I332001_THEME_PREVIEW_ZH_04_BIN,           STR_GONG_GE},
+    [MENU_STYLE_CUM_GRID]           = {UI_BUF_I332001_THEME_PREVIEW_ZH_05_BIN,           STR_STYLE_GRID_1},
+    // [MENU_STYLE_CUM_FOURGRID]       = {UI_BUF_I332001_THEME_PREVIZH_EN_06_BIN,           STR_SIX_PALACE_GRID},
+    [MENU_STYLE_HONEYCOMB]          = {UI_BUF_I332001_THEME_PREVIEW_ZH_07_BIN,           STR_STYLE_HONEYCOMB},
+    [MENU_STYLE_WATERFALL]          = {UI_BUF_I332001_THEME_PREVIEW_ZH_08_BIN,           STR_STYLE_WATERFALL},
+    [MENU_STYLE_FOOTBALL]           = {UI_BUF_I332001_THEME_PREVIEW_ZH_09_BIN,           STR_SPHERE},
 };
 #else
 static const compo_rotary_item_t tbl_rotary_item[] =
@@ -72,7 +99,15 @@ static compo_form_t *func_menustyle_rotary_form_create(void)
     compo_shape_set_location(rect, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
 
     //创建转盘
-    compo_rotary_t *rotary = compo_rotary_create(frm, tbl_rotary_item, TBL_ROTARY_ITEM_CNT);
+    compo_rotary_t *rotary;
+    if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+    {
+        rotary = compo_rotary_create(frm, tbl_rotary_item_zh,TBL_ROTARY_ITEM_CNT);
+    }
+    else
+    {
+        rotary = compo_rotary_create(frm, tbl_rotary_item_en,TBL_ROTARY_ITEM_CNT);
+    }
     compo_setid(rotary, COMPO_ID_ROTARY);
     compo_rotary_update(rotary);
     return frm;

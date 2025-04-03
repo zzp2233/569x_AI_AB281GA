@@ -3093,8 +3093,8 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
     compo_picturebox_set_visible(arc_pic, false);
     compo_setid(arc_pic,COMPO_ID_ARC_STEP);
 
-    arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I332001_FIRSTORDER_ACTIVITY_YUANJIAO1_BIN);//圆弧角背景/
-    compo_picturebox_set_pos(arc_pic,pic_bg_area.wid/2,pic_bg_area.hei-gui_image_get_size(UI_BUF_I332001_FIRSTORDER_ACTIVITY_YUANJIAO1_BIN).hei );
+    arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I332001_FIRSTORDER_ACTIVITY_YUANJIAO_BIN);//圆弧角背景/
+    compo_picturebox_set_pos(arc_pic,pic_bg_area.wid/2,pic_bg_area.hei-gui_image_get_size(UI_BUF_I332001_FIRSTORDER_ACTIVITY_YUANJIAO_BIN).hei+1 );
 
     ///时钟 日期
     compo_picturebox_t* clock_bg = compo_picturebox_create(frm, ui_handle.card_clock_day.clock.bg_res);

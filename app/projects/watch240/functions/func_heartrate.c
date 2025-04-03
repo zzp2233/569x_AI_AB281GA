@@ -521,7 +521,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_MAX_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,125,302-7);
+    compo_textbox_set_pos(textbox,125,302);
     compo_textbox_set_align_center(textbox, false);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_HEART_XIA_BIN);
@@ -540,7 +540,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_MIN_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,239,302-7);
+    compo_textbox_set_pos(textbox,239,302);
     compo_textbox_set_align_center(textbox, false);
 
     ///*第二页*/

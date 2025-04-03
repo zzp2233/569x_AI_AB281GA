@@ -1055,16 +1055,15 @@ compo_form_t *func_weather_form_create(void)
 
     txt = compo_textbox_create(frm, strlen(i18n[weather_list[get_weather_id[0]].txt_num]));
     compo_textbox_set(txt, i18n[weather_list[get_weather_id[0]].txt_num]);
-    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.25);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.25,200,32);
     compo_textbox_set_forecolor(txt, make_color(0xc2,0xe1,0xf9));
 
     //第二页
 
     //设置标题栏名字//
-    txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
-    compo_textbox_set(txt, i18n[STR_WEATHER]);
+    txt = compo_textbox_create(frm,strlen(i18n[STR_FUTRUE_WEATHER]));
     compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/2,390+38/2,120,38);
-    compo_textbox_set(txt, i18n[STR_WEATHER]);
+    compo_textbox_set(txt, i18n[STR_FUTRUE_WEATHER]);
 
     for(int i=0; i<7; i++)
     {

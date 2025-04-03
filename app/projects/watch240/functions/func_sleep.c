@@ -898,7 +898,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+235,120,36);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+235,120,36);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -920,7 +920,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+288,120,36);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+288,120,36);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -941,7 +941,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209, GUI_SCREEN_HEIGHT+394,120,36);
+    compo_textbox_set_location(txt, 200, GUI_SCREEN_HEIGHT+394,120,36);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -962,7 +962,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 209,GUI_SCREEN_HEIGHT+341,120,36);
+    compo_textbox_set_location(txt, 200,GUI_SCREEN_HEIGHT+341,120,36);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 /////////////////////////////////////////////////////////////////////////////////////////////////////

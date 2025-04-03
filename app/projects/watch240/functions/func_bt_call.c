@@ -459,6 +459,7 @@ compo_form_t *func_bt_call_form_create(void)
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_font( number_txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
@@ -500,6 +501,7 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_font( number_txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);

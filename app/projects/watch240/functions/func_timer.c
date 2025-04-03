@@ -614,9 +614,9 @@ static void func_timer_button_click(void)
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 
-#define PAGE_LOCATION_LAST            -173-80
-#define PAGE_HEIGHT                   338
-#define CONTROL_LENGTH                10
+#define PAGE_LOCATION_LAST            (-316)
+#define PAGE_HEIGHT                   GUI_SCREEN_HEIGHT
+#define CONTROL_LENGTH                20
 #define TIME_SET_TXT_SPACING          43
 #define TIME_SET_TXT_SPACING_SHIFT    20
 //显示页面
@@ -712,12 +712,12 @@ typedef struct timer_txt_item_t_
 #define TIMER_TXT_ITEM_CNT  ((int)(sizeof(tbl_timer_txt_item) / sizeof(tbl_timer_txt_item[0])))
 static const timer_txt_item_t tbl_timer_txt_item[] =
 {
-    {"01:00",      COMPO_ID_BTN_1MIN,  GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,   GUI_SCREEN_HEIGHT/2.74,       UI_BUF_I332001_TIMER_BG_BIN},
-    {"02:00",      COMPO_ID_BTN_2MIN,  GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,   GUI_SCREEN_HEIGHT/2.74,       UI_BUF_I332001_TIMER_BG_BIN},
-    {"03:00",      COMPO_ID_BTN_3MIN,  GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,   GUI_SCREEN_HEIGHT/2.74*2+CONTROL_LENGTH,       UI_BUF_I332001_TIMER_BG_BIN},
-    {"05:00",      COMPO_ID_BTN_5MIN,  GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,   GUI_SCREEN_HEIGHT/2.74*2+CONTROL_LENGTH,       UI_BUF_I332001_TIMER_BG_BIN},
-    {"10:00",      COMPO_ID_BTN_10MIN, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,   GUI_SCREEN_HEIGHT/2.74*3+CONTROL_LENGTH*2,       UI_BUF_I332001_TIMER_BG_BIN},
-    {"30:00",      COMPO_ID_BTN_30MIN, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,   GUI_SCREEN_HEIGHT/2.74*3+CONTROL_LENGTH*2,       UI_BUF_I332001_TIMER_BG_BIN},
+    {"01:00",      COMPO_ID_BTN_1MIN,  GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,   160,       UI_BUF_I332001_TIMER_BG_BIN},
+    {"02:00",      COMPO_ID_BTN_2MIN,  GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,   160,       UI_BUF_I332001_TIMER_BG_BIN},
+    {"03:00",      COMPO_ID_BTN_3MIN,  GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,   160+140*1+CONTROL_LENGTH,       UI_BUF_I332001_TIMER_BG_BIN},
+    {"05:00",      COMPO_ID_BTN_5MIN,  GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,   160+140*1+CONTROL_LENGTH,       UI_BUF_I332001_TIMER_BG_BIN},
+    {"10:00",      COMPO_ID_BTN_10MIN, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,   160+140*2+CONTROL_LENGTH*2,       UI_BUF_I332001_TIMER_BG_BIN},
+    {"30:00",      COMPO_ID_BTN_30MIN, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,   160+140*2+CONTROL_LENGTH*2,       UI_BUF_I332001_TIMER_BG_BIN},
 };
 
 //item列表，创建时遍历一下
@@ -807,15 +807,16 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
                 compo_button_set_pos(btn, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
 
                 txt = compo_textbox_create_for_page(frm, page, strlen(tbl_timer_txt_item[idx].text));
-                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y-5);
+                compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_32_BIN);
+                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
                 compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
             }
             btn = compo_button_create_page_by_image(frm, page, UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN);
             compo_setid(btn, COMPO_ID_BTN_CUSTOM);
-            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.74*4+CONTROL_LENGTH);
+            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 582+64/2);
 
             txt = compo_textbox_create_for_page(frm, page, strlen(i18n[STR_CUSTOM]));
-            compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.74*4+CONTROL_LENGTH);
+            compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X,  582+64/2);
             compo_textbox_set(txt, i18n[STR_CUSTOM]);
 
             if (func_cb.sta == FUNC_TIMER)

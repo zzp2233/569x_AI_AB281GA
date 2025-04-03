@@ -431,7 +431,7 @@ static const f_message_card_t message_card[]=
     {
         .rect_x=0,     .rect_y=0,    .rect_w=284,  .rect_h=116, .rect_r=20,
         .pic_x=-84,    .pic_y=-58,   .pic_w=46,    .pic_h=46,
-        .time_x=5,     .time_y=-51,  .time_w=120,  .time_h=30,
+        .time_x=-15,     .time_y=-51,  .time_w=140,  .time_h=30,
         .msg_x=-119,   .msg_y=-20,   .msg_w=250,   .msg_h=72,
     },
 };
@@ -461,7 +461,7 @@ compo_form_t *func_message_form_create(void)
     {
         //创建无消息界面
         compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I332001_NOTIFICATION_NO_DATA_BIN);
-        compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
+        compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 135);
 
         compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
         compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 212+16, 230, 30);
@@ -479,29 +479,49 @@ compo_form_t *func_message_form_create(void)
     uteModuleNotifyGetData(ute_msg);
     ute_module_systemtime_time_t time_data;
     uteModuleSystemtimeGetTime(&time_data);//获取系统时间
+
     for(int i=0; i<msg_num; i++)
     {
+        uint8_t hour=ute_msg->historyNotify[i].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
+        uint8_t min =ute_msg->historyNotify[i].min ;/*!系统时间，分钟，数值为0~59 */
+        uint8_t str_am[30];
+        memset(str_am,0,sizeof(str_am));
+        if(uteModuleSystemtime12HOn())
+        {
+            if(hour<=12 && hour!=0)
+            {
+                memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
+            }
+            else
+            {
+                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_AM])+1);
+            }
+            hour %= 12;
+            if(hour==0)
+            {
+                hour = 12;
+            }
+        }
+
         memset(time_buf,0,sizeof(time_buf));
         if(time_data.year != ute_msg->historyNotify[i].year || time_data.month != ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else if(time_data.day > ute_msg->historyNotify[i].day && time_data.month == ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf, "%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else
         {
-            sprintf((char*)time_buf, "%02d:%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].hour,
-                    ute_msg->historyNotify[i].min);
+            snprintf(time_buf,sizeof(time_buf), "%02d:%02d %s", //record_tbl[index].callTime.year,
+                     hour,min,str_am);
         }
-
         char* msg = (char*)ute_msg->historyNotify[i].content;
 
         compo_cardbox_t *cardbox = compo_cardbox_create(frm,1,1,2,284,173);

@@ -970,14 +970,11 @@ compo_form_t *func_weather_form_create(void)
     if(weather_no_data_flag)
     {
         ///设置标题栏名字///
-        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-        compo_form_set_title(frm, i18n[STR_WEATHER]);
-        printf("weather:nodata\n");
         picbox = compo_picturebox_create(frm,UI_BUF_I332001_WEATHER_NO_DATA_BIN);///背景图片
-        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,94+50);
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,120);
 
         txt = compo_textbox_create(frm,strlen(i18n[STR_NO_GET_WEATHER]));
-        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,228+68/2, 276,widget_text_get_max_height()*2);
+        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,226, 276,widget_text_get_max_height()*2);
         compo_textbox_set_multiline(txt, true);
         compo_textbox_set_multiline_drag(txt, true);
         compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);
@@ -989,7 +986,7 @@ compo_form_t *func_weather_form_create(void)
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
     picbox = compo_picturebox_create(frm, weather_list[get_weather_id[0]].res_addr);///背景图片
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 92);
     compo_number_t *num=NULL;
     if(uteModuleWeatherGetCurrDay() == time.day)
     {

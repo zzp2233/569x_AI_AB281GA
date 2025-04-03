@@ -1682,15 +1682,15 @@ static const aclock_set_pic_bg_t tbl_aclock_set_pic_bg =
         .id1_click = COMPO_ID_PIC_CONTINUE_CLICK,
         .id2 = COMPO_ID_BTN_REPETAT_YES,
         .id2_click = COMPO_ID_PIC_REPETAT_YES_CLICK,
-        .x  = 72+216/2,
-        .y  = 266+64/2,
+        .x  = GUI_SCREEN_CENTER_X,
+        .y  = 292,
         .w  = 0,
         .h  = 0,
         .res1 = UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN,
         .res2 = UI_BUF_I332001_PUBLIC_RECTANGLE00_BIN,
         .str_id = STR_OK,
         .font_w = 180,
-        .font_h = 20,
+        .font_h = 30,
     },
 
 };
@@ -2188,7 +2188,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
 
     //建立确定按钮 - 未按下图片
     compo_button_t* add_btn = compo_button_create_by_image(frm, tbl_aclock_set_pic_bg.btn_ok.res1);
-    compo_button_set_pos(add_btn, tbl_aclock_set_pic_bg.btn_ok.x, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
+    compo_button_set_pos(add_btn, tbl_aclock_set_pic_bg.btn_ok.x, tbl_aclock_set_pic_bg.btn_ok.y);
     if (ALARM_IS_FREE(sys_cb.alarm_edit_idx))   //add
     {
         compo_setid(add_btn, tbl_aclock_set_pic_bg.btn_ok.id1);
@@ -2218,7 +2218,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
 
     //建立确定按钮文本
     compo_textbox_t* btn_str = compo_textbox_create(frm, strlen(i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]));
-    compo_textbox_set_location(btn_str, tbl_aclock_set_pic_bg.btn_ok.x,GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
+    compo_textbox_set_location(btn_str, tbl_aclock_set_pic_bg.btn_ok.x,tbl_aclock_set_pic_bg.btn_ok.y,
                                tbl_aclock_set_pic_bg.btn_ok.font_w, tbl_aclock_set_pic_bg.btn_ok.font_h);
     compo_textbox_set(btn_str, i18n[tbl_aclock_set_pic_bg.btn_ok.str_id]);
 

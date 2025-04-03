@@ -889,7 +889,7 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             txt = compo_textbox_create(frm, 12);
             compo_setid(txt, COMPO_ID_NUM_COUNTDOWN);
             compo_textbox_set_align_center(txt, false);     //左对齐显示
-            compo_textbox_set_pos(txt, 63, 126);
+            compo_textbox_set_pos(txt, 63, 120);
             compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
             compo_textbox_set(txt, str_buff);

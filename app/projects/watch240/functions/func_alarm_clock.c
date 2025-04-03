@@ -628,7 +628,7 @@ compo_form_t *func_alarm_clock_form_create(void)
     if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
     {
         icon_add = widget_icon_create(frm->page, UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN);
-        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20);
+        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, 292);
 
         //page_body结合compo_page_move实现列表滑动（先绘制所有组件，再将page平均分段）
         widget_set_location(frm->page_body, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 42 / 100+15, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT * 6 / 10);//208);
@@ -642,9 +642,7 @@ compo_form_t *func_alarm_clock_form_create(void)
     if (icon_add)
     {
         compo_textbox_t* icon_add_txt = compo_textbox_create_for_page(frm, frm->page, 50);
-        compo_textbox_set_location(icon_add_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei / 2 - 20,
-                                   gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).wid - gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei,
-                                   gui_image_get_size(UI_BUF_I332001_PUBLIC_RECTANGLE02_BIN).hei);
+        compo_textbox_set_location(icon_add_txt, GUI_SCREEN_CENTER_X, 292,210,40);
         compo_textbox_set(icon_add_txt, i18n[STR_ADD_CLOCK]);
     }
 

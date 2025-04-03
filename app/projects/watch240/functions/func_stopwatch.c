@@ -316,10 +316,10 @@ compo_form_t *func_stopwatch_form_create(void)
     btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_JICI_BIN);    //计次
     compo_setid(btn, COMPO_ID_BTN_RECORD);
     compo_button_set_pos(btn, 64/2+249, 98/2+230);
-    compo_button_set_visible(btn, sys_cb.stopwatch_sta != 0);
+    compo_button_set_visible(btn, sys_cb.stopwatch_rec_cnt > 0);
     btn = compo_button_create_by_image(frm, UI_BUF_I332001_STOPWATCH_BG_BIN);    //计次详情
     compo_setid(btn, COMPO_ID_BTN_RECORD_VIEW);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 100);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 94);
     compo_button_set_visible(btn, sys_cb.stopwatch_rec_cnt > 0);
 
     //创建数字文本
@@ -332,14 +332,14 @@ compo_form_t *func_stopwatch_form_create(void)
     msec = sys_cb.stopwatch_total_msec % 1000;
     txt_num = compo_textbox_create(frm, 8);     //当前计时
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_TIME);
-    compo_textbox_set_pos(txt_num, 63, 126);
+    compo_textbox_set_pos(txt_num, 63, 120);
     compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_64_BIN);
     snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
     compo_textbox_set(txt_num, str_buff);
     compo_textbox_set_align_center(txt_num, false);
     txt_num = compo_textbox_create(frm, 2);     //记录数
     compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
-    compo_textbox_set_pos(txt_num, 30/2+180, 95);
+    compo_textbox_set_pos(txt_num, 30/2+180, 91);
 //    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_22_BIN);
     snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
     compo_textbox_set(txt_num, str_buff);

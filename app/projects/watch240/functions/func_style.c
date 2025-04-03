@@ -207,13 +207,7 @@ compo_form_t *func_style_form_create(void)
     compo_listbox_set_bithook(listbox, func_sel_style_bit);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    // uint8_t set_idx = 0;//sys_cb.set_idx;
-    // if (set_idx < 1)
-    // {
-    //     set_idx = 1;
-    // }
-
-    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_set_focus(listbox, 80);
     compo_listbox_update(listbox);
 
     return frm;
@@ -377,7 +371,12 @@ static void func_style_enter(void)
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
+#endif
     func_cb.enter_tick = tick_get();
 }
 
@@ -387,7 +386,10 @@ static void func_style_exit(void)
     printf("%s exit\n", __func__);
     f_style_t *f_set = (f_style_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
-    func_free(listbox->mcb);
+    if(listbox->mcb != NULL)
+    {
+        func_free(listbox->mcb);
+    }
     func_cb.last = FUNC_STYLE;
 }
 

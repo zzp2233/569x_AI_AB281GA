@@ -496,6 +496,10 @@ static void func_voice_enter(void)
 static void func_voice_exit(void)
 {
     func_cb.last = FUNC_VOICE;
+    if (bt_get_force_siri_status()) // 防止内存复用导致进入其他界面重启
+    {
+        bt_hfp_siri_close();
+    }
 }
 
 //语音助手功能

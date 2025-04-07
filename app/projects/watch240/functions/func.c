@@ -1190,6 +1190,11 @@ void func_backing_to(void)
 
     u8 stack_top = task_stack_pop();
 
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
     if (!stack_top)
     {
         stack_top = FUNC_CLOCK;                                 //异常返回表盘
@@ -1219,6 +1224,11 @@ void func_back_to(void)
 
     u8 stack_top = task_stack_pop();
 
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
     if (!stack_top)
     {
         stack_top = FUNC_CLOCK;                                 //异常返回表盘
@@ -1242,6 +1252,16 @@ void func_back_to(void)
 u8 func_directly_back_to(void)
 {
     u8 stack_top = task_stack_pop();
+
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
+    if (!stack_top)
+    {
+        stack_top = FUNC_CLOCK;                                 //异常返回表盘
+    }
 
     func_cb.sta = stack_top;
 
@@ -1388,7 +1408,7 @@ void func_message(size_msg_t msg)
             else
             {
                 //     if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0)
-                if(func_cb.left_sta == FUNC_MESSAGE)
+                if(func_cb.left_sta == UTE_CUI_SCREEN_WATCHDIAL_LEFT)
                 {
                     func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
                 }

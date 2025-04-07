@@ -240,7 +240,7 @@ static void func_alarm_clock_button_click(void)
     {
         if (compo_cardbox_btn_is(compo_getobj_byid(COMPO_ID_CARD_0 + i), pt))
         {
-            if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_I330001_PUBLIC_SWITCH01_BIN).wid))   //开关
+            if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(0).wid))   //开关
             {
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
                 //刷新

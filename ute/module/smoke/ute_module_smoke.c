@@ -8,6 +8,7 @@
 */
 #include "ute_module_smoke.h"
 #include "ute_module_log.h"
+#include "func_cover.h"
 #include "ute_module_filesystem.h"
 #include "ute_module_charencode.h"
 ute_module_smoke_data_t uteModuleSmokeData;

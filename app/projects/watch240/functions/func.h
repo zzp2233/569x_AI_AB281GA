@@ -45,6 +45,7 @@ enum
     FUNC_ALARM_CLOCK_SUB_REPEAT,        //闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑
     FUNC_ALARM_CLOCK_SUB_POP,           //闹钟--弹出
+    FUNC_SMOKE_TARGET_SUB_POP,           //抽烟目标达成
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     FUNC_BLOOD_OXYGEN,                  //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
@@ -139,6 +140,8 @@ enum
     FUNC_SET_SUB_DISTURD,               //设置--勿扰
     FUNC_DISTURD_SUB_SET,               //勿扰--时间设置
     FUNC_SET_SUB_SAV,                   //设置--声音与振动
+    FUNC_SET_PUFFS,                   //设置口数
+    FUNC_TARGET_PUFFS,                   //设置目标口数
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     FUNC_SET_SUB_LANGUAGE,              //设置--语言
     FUNC_LANGUAGE = FUNC_SET_SUB_LANGUAGE,

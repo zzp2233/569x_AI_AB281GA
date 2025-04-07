@@ -31,11 +31,13 @@ static const compo_listbox_item_t tbl_setting_list[] =
     {STR_SETTING_LIGHT,                  UI_BUF_I330001_SETTINGS_ICON_RIGHTNESS_BIN,        .func_sta = FUNC_LIGHT},            //亮度调节
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
     {STR_SETTING_DOUSING,                UI_BUF_I330001_SETTINGS_ICON_TIME_BIN,             .func_sta = FUNC_SET_SUB_DOUSING},  //息屏时长
+    {STR_SETTING_PASSWORD,                     UI_BUF_I330001_SETTINGS_ICON_TAIWAN_BIN,           .func_sta = FUNC_SET_SUB_PASSWORD},    //密码
 #if GUI_MODULE_WRIST_SUPPORT
     //  {STR_SETTING_UP,                     UI_BUF_I330001_SETTINGS_ICON_TAIWAN_BIN,           .func_sta = FUNC_SET_SUB_WRIST},    //抬腕亮屏
 #endif
     {STR_SETTING_DISTURD,                UI_BUF_I330001_SETTINGS_ICON_DND_BIN,              .func_sta = FUNC_SET_SUB_DISTURD},  //勿扰模式
     {STR_VOL,                           UI_BUF_I330001_SETTINGS_ICON_SOUND_BIN,            .func_sta = FUNC_SET_SUB_SAV},       //声音
+    {STR_SET_PUFFS,                           UI_BUF_I330001_SETTINGS_ICON_SOUND_BIN,            .func_sta = FUNC_SET_PUFFS},       //设置口数
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {STR_SETTING_LANGUAGE,               UI_BUF_I330001_SETTINGS_ICON_LANUAGE_BIN,          .func_sta = FUNC_SET_SUB_LANGUAGE}, //语言设置
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT

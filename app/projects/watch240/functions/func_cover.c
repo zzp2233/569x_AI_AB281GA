@@ -38,6 +38,7 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
 //    [REMIND_GCOVER_APP_CONNECT]     = {UI_BUF_POP_UP_APP_CONNECTION_BIN,          STR_APP_CONNECT,        175,            290},
     [REMIND_COVER_LOW_BATTERY]          = {NULL, STR_NULL, 0, 0, 0},        //自定义
     [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
+    [REMIND_COVER_TARGET_SMOKE_FINISH]     = {UI_BUF_I330001_SET_PUFFS_OK01_BIN, STR_TARGET_PUFFS,  GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5, 0},        //目标口数达成
 
 };
 

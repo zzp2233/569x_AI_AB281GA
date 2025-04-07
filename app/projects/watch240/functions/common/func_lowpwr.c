@@ -347,29 +347,30 @@ static void sfunc_sleep(void)
     GPIOBDE = BIT(3);
     GPIOGDE = 0x3F;                             //MCP FLASH
     GPIOHDE = 0| BIT(4);
-//    u32 pf_keep = 0;
-//     if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL)) {
-//        printf("bsp_sensor_init_sta_get\n");
-//        GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
-//        pf_keep |= BIT(2);                      //SENSOR PG
-//     } else {
-//         GPIOEDE = 0;
-//     }
+    u32 pf_keep = 0;
+    if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL))
+    {
+        printf("bsp_sensor_init_sta_get\n");
+        GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
+        pf_keep |= BIT(2);                      //SENSOR PG
+    }
+    else
+    {
+        printf("bsp_sensor_init_sta_NO\n");
+        GPIOEDE = 0;
+    }
 
-#if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
-    GPIOFDE = 0 | BIT(2) | BIT(1);          //GSENSOR I2C
-    GPIOEDE = 0 ; //| BIT(2) | BIT(1);          //HR I2C
-    // GPIOFDE |= BIT(5);                      //HR POWER
-#elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
-    GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
-    GPIOEDE |= BIT(4) | BIT(5);             //HR I2C
-    GPIOFDE = 0 | BIT(5);                   //HR POWER
+#if MODEM_CAT1_EN
+    if (bsp_modem_get_init_flag())
+    {
+        pf_keep |= BIT(1) | BIT(2) | BIT(3);
+    }
+    else
+    {
+        pf_keep |= BIT(3);
+    }
 #endif
-
-//#if MODEM_CAT1_EN
-//    pf_keep |= BIT(1) | BIT(2) | BIT(3);
-//#endif
-//    GPIOFDE = pf_keep;
+    GPIOFDE = pf_keep;
 
     wkie = WKUPCON & BIT(16);
     WKUPCON &= ~BIT(16);                        //休眠时关掉WKIE
@@ -377,16 +378,6 @@ static void sfunc_sleep(void)
 
     sys_cb.sleep_counter = 0;
     sys_cb.sleep_wakeup_time = -1L;
-
-    // GPIOBFEN &= ~BIT(0);
-    // GPIOBDE  |=  BIT(0);
-    // GPIOBDIR &= ~BIT(0);
-    // GPIOBCLR = BIT(0);
-
-    // GPIOBFEN &= ~BIT(1);
-    // GPIOBDE  |=  BIT(1);
-    // GPIOBDIR &= ~BIT(1);
-    // GPIOBCLR = BIT(0);
 
     while(bt_is_sleep())
     {
@@ -552,6 +543,7 @@ static void sfunc_sleep(void)
             sys_cb.gui_need_wakeup = 0;
             gui_need_wkp = true;
             printf("gui_need_wakeup\n");
+            break;
         }
     }
 

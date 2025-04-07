@@ -21,6 +21,8 @@ void loudspeaker_mute_init(void);
 void loudspeaker_mute(void);
 void loudspeaker_unmute(void);
 void loudspeaker_disable(void);
+void *ab_zalloc(size_t size);
+void ab_free(void *ptr);
 
 void amp_sel_cfg_init(u8 io_num);
 void amp_sel_cfg_d(void);

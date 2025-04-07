@@ -40,6 +40,7 @@ extern void func_alarm_clock_sub_set(void);
 extern void func_alarm_clock_sub_repeat(void);
 extern void func_alarm_clock_sub_edit(void);
 extern void func_alarm_clock_sub_pop(void);
+extern void func_smoke_target_sub_pop(void);
 extern void func_disturd_sub_set(void);
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 extern void func_blood_oxygen(void);
@@ -122,7 +123,7 @@ extern void func_set_sub_wrist(void);
 #endif
 //extern void func_set_sub_time(void);
 //extern void func_time_sub_custom(void);
-//extern void func_set_sub_password(void);
+extern void func_set_sub_password(void);
 extern void func_password_sub_disp(void);
 extern void func_password_sub_select(void);
 extern void func_set_sub_about(void);
@@ -206,7 +207,7 @@ compo_form_t *func_breathe_finish_form_create(void);
 compo_form_t *func_up_watch_dial_form_create(void);
 compo_form_t *func_power_on_language_form_create(void);
 compo_form_t *func_power_on_scan_form_create(void);
-
+compo_form_t *func_set_sub_password_form_create(void);
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 compo_form_t *func_power_on_form_create(void);//开机
 #endif
@@ -232,6 +233,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void);
 compo_form_t *func_alarm_clock_sub_repeat_form_create(void);
 compo_form_t *func_alarm_clock_sub_edit_form_create(void);
 compo_form_t *func_alarm_clock_sub_pop_form_create(void);
+compo_form_t *func_smoke_target_sub_pop_form_create(void);
 compo_form_t *func_blood_oxygen_form_create(void);
 compo_form_t *func_breathe_form_create(void);
 compo_form_t *func_breathe_sub_mode_form_create(void);
@@ -363,6 +365,7 @@ const func_t tbl_func_create[] =
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat_form_create},
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit_form_create},
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop_form_create},
+    {FUNC_SMOKE_TARGET_SUB_POP,          func_smoke_target_sub_pop_form_create},
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
@@ -460,7 +463,7 @@ const func_t tbl_func_create[] =
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
 //    {FUNC_SET_SUB_TIME,                 func_set_sub_time_form_create},
 //    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom_form_create},
-//    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
+    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password_form_create},
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp_form_create},
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
     {FUNC_SET_SUB_SAV,                  func_target_puffs_form_create},
@@ -540,6 +543,7 @@ const func_t tbl_func_entry[] =
     {FUNC_ALARM_CLOCK_SUB_REPEAT,       func_alarm_clock_sub_repeat},   //闹钟--重复
     {FUNC_ALARM_CLOCK_SUB_EDIT,         func_alarm_clock_sub_edit},     //闹钟--编辑
     {FUNC_ALARM_CLOCK_SUB_POP,          func_alarm_clock_sub_pop},      //闹钟--弹出
+    {FUNC_SMOKE_TARGET_SUB_POP,          func_smoke_target_sub_pop},      //
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
@@ -646,7 +650,7 @@ const func_t tbl_func_entry[] =
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
 //    {FUNC_SET_SUB_TIME,                 func_set_sub_time},             //设置--时间
 //    {FUNC_TIME_SUB_CUSTOM,              func_time_sub_custom},          //设置--自定义时间
-//    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password},         //设置--密码锁
+    {FUNC_SET_SUB_PASSWORD,             func_set_sub_password},         //设置--密码锁
     {FUNC_PASSWORD_SUB_DISP,            func_password_sub_disp},        //设置--新密码锁设置
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select},      //设置--密码锁确认
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about},            //设置--关于

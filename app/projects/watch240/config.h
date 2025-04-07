@@ -39,6 +39,8 @@
 #define GUI_SELECT                      GUI_TFT_240_JD9853W3//DISPLAY_UTE//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
 #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT
+// #define GUI_SELECT                      DISPLAY_UTE//GUI_TFT_320_385_GV9B71                 //GUI Display Select
+// #define CTP_SELECT                      UTE_DRV_CTP_SELECT
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
 #define GUI_MODE_SELECT                 MODE_3WIRE_9BIT_2LINE             //屏幕接口选择
 #define TFT_SPI_DRIVER                  SPI_GC9307_V1           //驱动选择

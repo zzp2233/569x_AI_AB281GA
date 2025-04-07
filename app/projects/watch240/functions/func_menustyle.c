@@ -75,7 +75,7 @@ static const compo_rotary_item_t tbl_rotary_item_zh[] =
     [MENU_STYLE_FOOTBALL]           = {UI_BUF_I332001_THEME_PREVIEW_ZH_09_BIN,           STR_SPHERE},
 };
 #else
-static const compo_rotary_item_t tbl_rotary_item[] =
+static const compo_rotary_item_t tbl_rotary_item_en[] =
 {
     [MENU_STYLE_LIST]               = {0,           STR_STYLE_LIST_1},
     [MENU_STYLE_GRID]               = {0,           STR_CHECKERBOARD},
@@ -83,6 +83,20 @@ static const compo_rotary_item_t tbl_rotary_item[] =
     [MENU_STYLE_SKYRER]             = {0,           STR_STYLE_SKYRER},
     [MENU_STYLE_CUM_SUDOKU]         = {0,           STR_GONG_GE},
     [MENU_STYLE_CUM_GRID]           = {0,           STR_STYLE_GRID_1},
+    // [MENU_STYLE_CUM_FOURGRID]       0BIN,           STR_SIX_PALACE_GRID},
+    [MENU_STYLE_HONEYCOMB]          = {0,           STR_STYLE_HONEYCOMB},
+    [MENU_STYLE_WATERFALL]          = {0,           STR_STYLE_WATERFALL},
+    [MENU_STYLE_FOOTBALL]           = {0,           STR_SPHERE},
+};
+static const compo_rotary_item_t tbl_rotary_item_zh[] =
+{
+    [MENU_STYLE_LIST]               = {0,           STR_STYLE_LIST_1},
+    [MENU_STYLE_GRID]               = {0,           STR_CHECKERBOARD},
+    [MENU_STYLE_KALE]               = {0,           STR_HALO},
+    [MENU_STYLE_SKYRER]             = {0,           STR_STYLE_SKYRER},
+    [MENU_STYLE_CUM_SUDOKU]         = {0,           STR_GONG_GE},
+    [MENU_STYLE_CUM_GRID]           = {0,           STR_STYLE_GRID_1},
+    // [MENU_STYLE_CUM_FOURGRID]       0BIN,           STR_SIX_PALACE_GRID},
     [MENU_STYLE_HONEYCOMB]          = {0,           STR_STYLE_HONEYCOMB},
     [MENU_STYLE_WATERFALL]          = {0,           STR_STYLE_WATERFALL},
     [MENU_STYLE_FOOTBALL]           = {0,           STR_SPHERE},

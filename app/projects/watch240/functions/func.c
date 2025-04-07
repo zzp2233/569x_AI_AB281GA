@@ -1190,6 +1190,11 @@ void func_backing_to(void)
 
     u8 stack_top = task_stack_pop();
 
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
     if (!stack_top)
     {
         stack_top = FUNC_CLOCK;                                 //异常返回表盘
@@ -1219,6 +1224,11 @@ void func_back_to(void)
 
     u8 stack_top = task_stack_pop();
 
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
     if (!stack_top)
     {
         stack_top = FUNC_CLOCK;                                 //异常返回表盘
@@ -1242,6 +1252,16 @@ void func_back_to(void)
 u8 func_directly_back_to(void)
 {
     u8 stack_top = task_stack_pop();
+
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
+    if (!stack_top)
+    {
+        stack_top = FUNC_CLOCK;                                 //异常返回表盘
+    }
 
     func_cb.sta = stack_top;
 

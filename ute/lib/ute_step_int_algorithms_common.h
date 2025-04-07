@@ -180,7 +180,8 @@ void setCurrentStepSleepState(bool isStepingT, bool isSleepingT);
 *   2）result =false，心率不脱手；
 **/
 bool getIsNotWearQuietStateResult(void);
-
+#if UTE_MODULE_SLEEP
 uint16_t SqrtByBisection(uint32_t n);
+#endif
 #endif
 #endif

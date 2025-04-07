@@ -16,7 +16,7 @@
 #include "ute_all_sports_int_algorithms.h"
 #include "ute_module_systemtime.h"
 #include "include.h"
-
+#if UTE_MODULE_SLEEP
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
 #include "ute_module_CyweeMotion_inactivity.h"
 #endif
@@ -77,6 +77,7 @@ typedef struct
 void uteModuleSleepAnalysis(uteCwmSleepOnceData_t uteCwmSleepOnceData,bool isSleepMode);
 bool uteModuleSleepReadDayNapData(ute_module_sleep_nap_display_data_t *pread);
 void uteModuleSleepStartSendCwmNapSleepHistoryData(ute_module_systemtime_time_t time);
+#endif
 #endif
 #endif //_UTE_MODULE_SLEEP_H_
 

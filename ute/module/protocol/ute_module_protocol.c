@@ -1556,6 +1556,7 @@ void uteModuleProtocolHeartTestCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
 {
+#if UTE_MODULE_SLEEP
     uint8_t response[10];
     int16_t xx,yy,zz,accvalue;
     uteDrvGsensorCommonGetAccXyz(&xx,&yy,&zz);
@@ -1579,6 +1580,7 @@ void uteModuleProtocolCheckGsensorData(uint8_t*receive,uint8_t length)
     response[8] = (accvalue>>8)&0xff;
     response[9] = accvalue&0xff;
     uteModuleProfileBleSendToPhone(&response[0],10);
+#endif
 }
 
 /**
@@ -1843,6 +1845,7 @@ void uteModuleProtocolBreathrateCtrl(uint8_t*receive,uint8_t length)
 */
 void uteModuleProtocolSleepReadHistoryData(uint8_t*receive,uint8_t length)
 {
+#if UTE_MODULE_SLEEP
     if(receive[1]==0x01)
     {
         ute_module_systemtime_time_t time;
@@ -1854,6 +1857,7 @@ void uteModuleProtocolSleepReadHistoryData(uint8_t*receive,uint8_t length)
     {
         uteModuleSleepStartSendSleepSampleData();
     }
+#endif
 #endif
 }
 
@@ -2433,7 +2437,9 @@ void uteModuleProtocolDebugData(uint8_t*receive,uint8_t length)
     {
         if(receive[2]==0x01)
         {
+#if UTE_MODULE_SLEEP
             uteModuleSleepStartSendSleepLogData();
+#endif
         }
     }
 #endif

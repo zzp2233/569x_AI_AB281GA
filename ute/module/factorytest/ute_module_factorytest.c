@@ -486,6 +486,7 @@ void uteModuleFactoryTestProtocol(uint8_t*receive,uint8_t length)
     }
     else if(option==0x0014)
     {
+#if UTE_MODULE_SLEEP
         int16_t xx,yy,zz,accvalue;
         uteDrvGsensorCommonGetAccXyz(&xx,&yy,&zz);
         ute_drv_gsensor_common_axis_bit_change_t bitChange;
@@ -507,6 +508,7 @@ void uteModuleFactoryTestProtocol(uint8_t*receive,uint8_t length)
         response[10] = (accvalue>>8)&0xff;
         response[11] = accvalue&0xff;
         uteModuleProfileBleSendToPhone(&response[0],12);
+#endif
     }
     else if(option==0x0015)
     {

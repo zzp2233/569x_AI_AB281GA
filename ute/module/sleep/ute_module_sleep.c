@@ -18,6 +18,7 @@
 #include "ute_module_systemtime.h"
 #include "ute_module_platform.h"
 
+#if UTE_MODULE_SLEEP
 /*! 睡眠算法数据zn.zeng, 2021-10-26  */
 ute_sleep_data_t uteSleepAlgoData;
 ute_module_sleep_data_t uteModuleSleepData;
@@ -1563,4 +1564,5 @@ void uteModuleSleepStartSendCwmNapSleepHistoryData(ute_module_systemtime_time_t 
     UTE_MODULE_LOG(UTE_LOG_SLEEP_LVL, "%s,", __func__);
 }
 
+#endif
 #endif

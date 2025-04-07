@@ -230,10 +230,10 @@ void uteModuleAsrModeEverySecond(void)
     {
         Asr_cnt = 0;
     }
-    // printf(">>>>>>>>>>>>>Asr_cnt=%d\n",Asr_cnt);
+    printf(">>>>>>>>>>>>>Asr_cnt=%d\n",Asr_cnt);
     if (Asr_cnt>600)
     {
-        // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_ASR);
+        uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_ASR);
     }
 }
 //初始化
@@ -254,7 +254,7 @@ void bsp_asr_init(void)
 #if ASR_FULL_SCENE
     bsp_asr_start();
 #endif
-    // uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_ASR);
+    uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_ASR);
 }
 
 //开始

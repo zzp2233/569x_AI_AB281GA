@@ -191,7 +191,9 @@ void uteModuleSystemtimeSetTime(ute_module_systemtime_time_t set)
 
     ute_module_systemtime_time_t oldTime;
     memcpy(&oldTime,&systemTime,sizeof(ute_module_systemtime_time_t));
+#if UTE_MODULE_SLEEP
     uteModuleSleepSystemtimeChange(systemTime,set);
+#endif
 #if UTE_MODULE_CYWEE_MOTION_SUPPORT
     //sportSystemTimeChange 中有uteModuleCwmReadCurrDayStepFromFs 操作,所以这个放在它执行之前
     uteModuleCwmStepDataSystemtimeChange(systemTime,set);

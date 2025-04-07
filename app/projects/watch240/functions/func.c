@@ -1408,7 +1408,7 @@ void func_message(size_msg_t msg)
             else
             {
                 //     if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0)
-                if(func_cb.left_sta == FUNC_MESSAGE)
+                if(func_cb.left_sta == UTE_CUI_SCREEN_WATCHDIAL_LEFT)
                 {
                     func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
                 }

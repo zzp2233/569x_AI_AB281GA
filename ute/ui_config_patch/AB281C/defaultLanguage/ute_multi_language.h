@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-03-26 17:31:32
+*@date   2025-04-03 14:37:43
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -278,6 +278,7 @@ enum
     STR_COUNT_NUM, // 次数
     STR_HEART_HIGHT, // 心率过高
     STR_HEART_LOW, // 心率过低
+    STR_FUTRUE_WEATHER, // 未来天气
 };
 
 extern const char * const *i18n;

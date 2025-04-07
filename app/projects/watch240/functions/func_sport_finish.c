@@ -440,6 +440,12 @@ static void func_sport_finish_init(void)
     f_sport_finish->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+enum//对应运动中显示运动数据种类->不同项目可自行添加
+{
+    MULTIPLE_DATA=0,//多数据
+    MID_DATA,       //中数据
+    LESS_DATA,      //少数据
+};
 enum
 {
     COMPO_SWIMING_STATE=1,
@@ -459,7 +465,6 @@ typedef struct f_sport_finish_t_
 
 } f_sport_finish_t;
 
-u8 sport_finish_mode;
 extern u32 func_sport_get_current_idx(void);
 extern u32 func_sport_get_str(u8 sport_idx);
 extern u32 func_sport_get_ui(u8 sport_idx);
@@ -496,6 +501,7 @@ compo_form_t *func_sport_finish_form_create(void)
     //第一页
     //运动类型图片
     picbox = compo_picturebox_create(frm, icon_addr);
+    compo_picturebox_set_size(picbox, 120, 120);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
     //时间日期
@@ -549,7 +555,7 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_textbox_set_pos(textbox, 60+64+txt_leng.wid,GUI_SCREEN_HEIGHT+48+43+92);
     compo_textbox_set(textbox, i18n[STR_KCAL]);
     // printf("sport_num:%d\n",sport_finish_mode);
-    if(sport_finish_mode == 0)
+    if(func_sport_get_disp_mode() == MULTIPLE_DATA)
     {
         u8 km_integer=sport_data.saveData.sportDistanceInteger;                 //距离 整数
         u8 km_decimals=sport_data.saveData.sportDistanceDecimals;                     // 小数
@@ -644,7 +650,7 @@ compo_form_t *func_sport_finish_form_create(void)
         compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
 
     }
-    else if(sport_finish_mode == 1)
+    else if(func_sport_get_disp_mode() == MID_DATA)
     {
         /*次数->图片*/
         picbox = compo_picturebox_create(frm, UI_BUF_I332001_SPORT_ICON2_TIMES_BIN);
@@ -694,7 +700,7 @@ compo_form_t *func_sport_finish_form_create(void)
         compo_textbox_set_pos(textbox, 60+64+txt_leng.wid,2*GUI_SCREEN_HEIGHT+48+43);
         compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
     }
-    else if(sport_finish_mode == 2)
+    else if(func_sport_get_disp_mode() == LESS_DATA)
     {
         /*心率->图片*/
         picbox = compo_picturebox_create(frm, UI_BUF_I332001_SPORT_ICON2_HR_BIN);
@@ -721,13 +727,13 @@ compo_form_t *func_sport_finish_form_create(void)
         compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
     }
     u16 y;
-    switch(sport_finish_mode)
+    switch(func_sport_get_disp_mode())
     {
-        case 0:
-        case 1:
+        case MULTIPLE_DATA:
+        case MID_DATA:
             y = GUI_SCREEN_HEIGHT*3;
             break;
-        case 2:
+        case LESS_DATA:
             y = GUI_SCREEN_HEIGHT*2;
             break;
     }
@@ -758,15 +764,16 @@ static void func_sport_finish_init(void)
     {
         task_stack_remove(FUNC_SPORT_SUB_RUN);
     }
-
     int page_num=0;
-    switch(sport_finish_mode)
+    switch(func_sport_get_disp_mode())
     {
-        case 0:
-        case 1:
+        case MULTIPLE_DATA:
             page_num = 4;
             break;
-        case 2:
+        case MID_DATA:
+            page_num = 4;
+            break;
+        case LESS_DATA:
             page_num = 3;
             break;
     }

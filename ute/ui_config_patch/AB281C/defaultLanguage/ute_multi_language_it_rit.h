@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 意大利语(意大利）
 *@author
-*@date   2025-03-26 17:31:36
+*@date   2025-04-03 14:37:47
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -278,6 +278,7 @@ const char * const i18n_it_rit[] =
     [STR_COUNT_NUM] = "\x66\x72\x65\x71\x75\x65\x6e\x7a\x61\x00", // [262] frequenza
     [STR_HEART_HIGHT] = "\x46\x72\x65\x71\x75\x65\x6e\x7a\x61\x20\x63\x61\x72\x64\x69\x61\x63\x61\x20\x61\x6c\x74\x61\x00", // [263] Frequenza cardiaca alta
     [STR_HEART_LOW] = "\x46\x72\x65\x71\x75\x65\x6e\x7a\x61\x20\x63\x61\x72\x64\x69\x61\x63\x61\x20\x62\x61\x73\x73\x61\x00", // [264] Frequenza cardiaca bassa
+    [STR_FUTRUE_WEATHER] = "\x50\x72\x65\x76\x69\x73\x69\x6f\x6e\x69\x20\x6d\x65\x74\x65\x6f\x00", // [265] Previsioni meteo
 };
 
 #endif

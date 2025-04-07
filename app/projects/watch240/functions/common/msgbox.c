@@ -618,7 +618,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
 
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, 284+32/2,GUI_SCREEN_WIDTH,30);//调整文本位置
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, 284+32/2,140,30);//调整文本位置
                 compo_textbox_set(txt_msg, i18n[STR_LOW_BATTERY]);
                 //title
                 compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
@@ -658,24 +658,15 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             }
             else if (sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
             {
-
-                // compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
-                //                      GUI_SCREEN_CENTER_X,
-                //                      func_cover_get_pic_y(msg_type)-20);  //需要更替为弹窗图标
-
                 //msg1
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
-                                           func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH, 50);              //调整文本位置
-                compo_textbox_set_multiline(txt_msg, true);
+                compo_textbox_set_align_center(txt_msg, false);
                 compo_textbox_set(txt_msg, msg);
 
                 //title
                 compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,
-                                      func_cover_get_title_txt_y(msg_type));
-                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,150);
+                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_64_BIN);
                 compo_textbox_set(txt_title, title);
 
                 compo_textbox_t *txt_alarm_clock = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
@@ -683,12 +674,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set(txt_alarm_clock, i18n[STR_ALARM_CLOCK]);
                 compo_textbox_set_forecolor(txt_alarm_clock,make_color(0xff,0x83,0x00));
 
-                compo_textbox_set_multiline(txt_msg, false);
-                compo_textbox_set_align_center(txt_msg, false);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,
-                                           func_cover_get_title_txt_y(msg_type)-(widget_text_get_area(txt_title->txt).hei-widget_text_get_height()),
-                                           widget_text_get_area(txt_msg->txt).wid,
-                                           widget_text_get_height()); //调整文本位置
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,160,70,32); //调整文本位置
             }
             else
             {
@@ -796,7 +782,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
             compo_button_set_pos(btn,80/2+68,80/2+234);
 
-            btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_OK01_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I332001_PUBLIC_OK_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
             compo_button_set_pos(btn,80/2+212,80/2+234);
             break;

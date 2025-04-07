@@ -744,7 +744,7 @@ compo_form_t *func_call_sub_record_form_create(void)
 
 //    //创建无消息界面
     compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I332001_CALL_NO_LOG_BIN);
-    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-16);
     compo_picturebox_set_visible(pic, false);
     compo_setid(pic, COMPO_ID_COVER_PIC);
 
@@ -773,7 +773,7 @@ compo_form_t *func_call_sub_record_form_create(void)
     compo_listbox_set_text1_color_callback(listbox, call_record_set_text1_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_I332001_FIRSTORDER_CARD_BIN);
     compo_listbox_set_bgimg(listbox, UI_BUF_I332001_FIRSTORDER_CARD_BIN);
-    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_set_focus(listbox, 80);
     compo_listbox_update(listbox);
 
     compo_textbox_set_visible(txt, record_cnt > 0 ? false : true);
@@ -953,7 +953,7 @@ static void func_call_sub_record_enter(void)
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1));
+    compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+40);
     func_cb.enter_tick = tick_get();
 
 

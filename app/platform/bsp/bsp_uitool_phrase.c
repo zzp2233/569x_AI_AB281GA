@@ -260,7 +260,7 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
 
             case COMPO_BOND_SMOKECOUNT:
                 bond_compo_type = COMPO_TYPE_NUMBER;
-                max_cnt = 3;
+                max_cnt = 4;
                 break;
             case COMPO_BOND_SMOKEPOWER:
                 bond_compo_type = COMPO_TYPE_NUMBER;
@@ -290,6 +290,10 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 //个位中心坐标
                 compo_number_set_pos(num, uitool_res->x - delt_x * i, uitool_res->y + delt_y * i);
                 if(uitool_res->bond_type > COMPO_BOND_NONE && uitool_res->bond_type <= COMPO_BOND_DATE)
+                {
+                    compo_number_set_zfill(num, true);
+                }
+                else if(uitool_res->bond_type > COMPO_BOND_SMOKEPOWER && uitool_res->bond_type <= 81)
                 {
                     compo_number_set_zfill(num, true);
                 }

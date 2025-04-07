@@ -80,8 +80,8 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
     {UI_BUF_I330001_SLIDEMENU_ICON_DND00_BIN,           COMPO_ID_BTN_DISCURD,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  62*2+31+8},///勿扰模式开关
     {UI_BUF_I330001_SLIDEMENU_ICON_BRIGHTNESS_BIN,      COMPO_ID_BTN_LIGHT,            GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  62*2+31+8},///亮度调节
     ///*第二页*/
-    {UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES00_BIN,       COMPO_ID_BTN_MUTE,             GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  31},///静音模式开关
-    {UI_BUF_I330001_SLIDEMENU_ICON_FINDPHONE_BIN,       COMPO_ID_BTN_PHONE,            GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  31},///查找手机
+    {UI_BUF_I330001_SLIDEMENU_ICON_FINDPHONE_BIN,       COMPO_ID_BTN_PHONE,               GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  31},///静音模式开关
+    //  {UI_BUF_I330001_SLIDEMENU_ICON_FINDPHONE_BIN,       COMPO_ID_BTN_PHONE,            GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  31},///查找手机
     //  {UI_BUF_I330001_SLIDEMENU_ICON_SETTINGS_BIN,        COMPO_ID_BTN_SETTING,          GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  62+31+4},///设置
 };
 
@@ -156,16 +156,16 @@ static void func_clock_sub_dropdown_bluetooth_pic_update(void)
 //下拉静音图标更新
 static void func_clock_sub_dropdown_mute_pic_update(void)
 {
-    compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_MUTE);
-    // if(sys_cb.mute)
-    if(uteModuleLocalRingtoneGetMuteStatus())
-    {
-        compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES01_BIN);
-    }
-    else
-    {
-        compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES00_BIN);
-    }
+    // compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_MUTE);
+    // // if(sys_cb.mute)
+    // if(uteModuleLocalRingtoneGetMuteStatus())
+    // {
+    //     compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES01_BIN);
+    // }
+    // else
+    // {
+    //     compo_button_set_bgimg(mute_pic, UI_BUF_I330001_SLIDEMENU_ICON_VOLUMES00_BIN);
+    // }
 }
 
 ////下拉蓝牙按钮更新
@@ -358,7 +358,7 @@ static void func_clock_sub_dropdown_form_create(void)
     func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
     func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
     func_clock_sub_dropdown_bluetooth_btn_pic_update();////下拉蓝牙按钮更新
-    func_clock_sub_dropdown_mute_pic_update();          //静音更新
+    // func_clock_sub_dropdown_mute_pic_update();          //静音更新
     func_clock_sub_dropdown_disturb_pic_update();       //勿扰
 #if GUI_MODULE_WRIST_SUPPORT
     func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
@@ -553,25 +553,25 @@ static void func_clock_sub_dropdown_click_handler(void)
             func_clock_sub_dropdown_disturb_pic_update();
         }
         break;
-        case COMPO_ID_BTN_MUTE:
-            // if(sys_cb.mute)
-            // {
-            //     bsp_sys_unmute();
-            // }
-            // else
-            // {
-            //     bsp_sys_mute();
-            // }
-            if(uteModuleLocalRingtoneGetMuteStatus())
-            {
-                uteModuleLocalRingtoneSetMuteStatus(false,true);
-            }
-            else
-            {
-                uteModuleLocalRingtoneSetMuteStatus(true,true);
-            }
-            func_clock_sub_dropdown_mute_pic_update();          //静音更新
-            break;
+        // case COMPO_ID_BTN_MUTE:
+        //     // if(sys_cb.mute)
+        //     // {
+        //     //     bsp_sys_unmute();
+        //     // }
+        //     // else
+        //     // {
+        //     //     bsp_sys_mute();
+        //     // }
+        //     if(uteModuleLocalRingtoneGetMuteStatus())
+        //     {
+        //         uteModuleLocalRingtoneSetMuteStatus(false,true);
+        //     }
+        //     else
+        //     {
+        //         uteModuleLocalRingtoneSetMuteStatus(true,true);
+        //     }
+        //     func_clock_sub_dropdown_mute_pic_update();          //静音更新
+        //     break;
         //点击任务跳转
         case COMPO_ID_BTN_FLASHLIGHT:
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
@@ -1242,7 +1242,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
             func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
             func_clock_sub_dropdown_bluetooth_btn_pic_update();////下拉蓝牙按钮更新
-            func_clock_sub_dropdown_mute_pic_update();          //静音更新
+            //   func_clock_sub_dropdown_mute_pic_update();          //静音更新
             func_clock_sub_dropdown_disturb_pic_update();       //勿扰
 #if GUI_MODULE_WRIST_SUPPORT
             func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新

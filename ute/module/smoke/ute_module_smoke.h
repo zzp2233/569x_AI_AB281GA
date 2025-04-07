@@ -19,6 +19,7 @@
 typedef struct
 {
     uint32_t total_smoking_count; // 抽吸口数
+    uint32_t target_smoking_count; // 抽吸目标口数
     uint32_t smoking_count_per_hour[24];  // 存储每小时的口数
     uint32_t smoking_count_per_day[7];
 } ute_module_smoke_data_t;
@@ -42,5 +43,6 @@ void check_and_update_day();
 void check_and_update_week();
 uint32_t get_today_smoking_count();
 uint32_t get_this_week_smoking_count();
+void uteModuleResetTotalSmokeCount(void);
 
 #endif

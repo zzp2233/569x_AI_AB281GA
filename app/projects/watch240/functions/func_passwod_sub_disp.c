@@ -59,10 +59,10 @@ typedef struct password_disp_pic_item_t_
 //图片item，创建时遍历一下
 static const password_disp_pic_item_t tbl_password_disp_pic_item[] =
 {
-//    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_ZERO,        80,    40,    false},
-//    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_ONE,         110,    40,    false},
-//    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_TWS,         140,    40,    false},
-//    {UI_BUF_SETTING_PASSWORD_NUM_BIN,     COMPO_ID_PIC_PASSWORD_THR,         170,    40,    false},
+    {UI_BUF_I330001_CHILD_LOCK_00_BIN,     COMPO_ID_PIC_PASSWORD_ZERO,        80,    40,    false},
+    {UI_BUF_I330001_CHILD_LOCK_00_BIN,     COMPO_ID_PIC_PASSWORD_ONE,         110,    40,    false},
+    {UI_BUF_I330001_CHILD_LOCK_00_BIN,     COMPO_ID_PIC_PASSWORD_TWS,         140,    40,    false},
+    {UI_BUF_I330001_CHILD_LOCK_00_BIN,     COMPO_ID_PIC_PASSWORD_THR,         170,    40,    false},
 };
 
 
@@ -79,17 +79,17 @@ typedef struct password_disp_btn_item_t_
 //按钮item，创建时遍历一下
 static const password_disp_btn_item_t tbl_password_disp_btn_item[] =
 {
-//    {UI_BUF_COMMON_1_CLICK_BIN,             COMPO_ID_BTN_NUM1,         45,     84},
-//    {UI_BUF_COMMON_2_CLICK_BIN,             COMPO_ID_BTN_NUM2,         120,    84},
-//    {UI_BUF_COMMON_3_CLICK_BIN,             COMPO_ID_BTN_NUM3,         195,    84},
-//    {UI_BUF_COMMON_4_CLICK_BIN,             COMPO_ID_BTN_NUM4,         45,     140},
-//    {UI_BUF_COMMON_5_CLICK_BIN,             COMPO_ID_BTN_NUM5,         120,    140},
-//    {UI_BUF_COMMON_6_CLICK_BIN,             COMPO_ID_BTN_NUM6,         195,    140},
-////    {UI_BUF_SETTING_PASSWORD_7_CLICK_BIN,   COMPO_ID_BTN_NUM7,         45,     198},
-//    {UI_BUF_COMMON_8_CLICK_BIN,             COMPO_ID_BTN_NUM8,         120,    198},
-//    {UI_BUF_SETTING_PASSWORD_FRAME_755_BIN, COMPO_ID_BTN_NUM9,         195,    198},
-//    {UI_BUF_SETTING_PASSWORD_9_CLICK_BIN,   COMPO_ID_BTN_NUM0,         120,    252},
-//    {UI_BUF_SETTING_PASSWORD_DEL_CLICK_BIN, COMPO_ID_BTN_DEL_CLICK,    195,    252},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_01_BIN,             COMPO_ID_BTN_NUM1,         45,     84},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_02_BIN,             COMPO_ID_BTN_NUM2,         120,    84},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_03_BIN,             COMPO_ID_BTN_NUM3,         195,    84},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_04_BIN,             COMPO_ID_BTN_NUM4,         45,     140},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_05_BIN,             COMPO_ID_BTN_NUM5,         120,    140},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_06_BIN,             COMPO_ID_BTN_NUM6,         195,    140},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_07_BIN,   COMPO_ID_BTN_NUM7,         45,     198},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_08_BIN,             COMPO_ID_BTN_NUM8,         120,    198},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_09_BIN, COMPO_ID_BTN_NUM9,         195,    198},
+    {UI_BUF_I330001_CHILD_LOCK_NUM_00_BIN,   COMPO_ID_BTN_NUM0,         120,    252},
+    {UI_BUF_I330001_CHILD_LOCK_DELETE_BIN, COMPO_ID_BTN_DEL_CLICK,    195,    252},
 };
 
 typedef struct password_num_item_t_
@@ -176,23 +176,34 @@ static void func_password_sub_disp_process(void)
 {
     func_process();
 }
-
+void debug_print_password_info()
+{
+    printf("System password count: %d\n", sys_cb.password_cnt);
+    printf("System password value: ");
+    for(int i = 0; i < sys_cb.password_cnt; i++)
+    {
+        printf("%d ", sys_cb.password_value[i]);
+    }
+    printf("\n");
+}
 //单击按钮
+// 单击按钮
 static void func_password_sub_disp_button_click(void)
 {
     int id = compo_get_button_id();
     f_password_sub_disp_t *password = (f_password_sub_disp_t *)func_cb.f_cb;
     u8 psd_ctn = 0;
     char buf[13];
-    //获取数字组件的地址
+    // 获取数字组件的地址
     compo_textbox_t *txt_num  = compo_getobj_byid(COMPO_ID_NUM_DISP_ZERO);
-    //获取图片组件的地址
+    // 获取图片组件的地址
     compo_picturebox_t *pic_zer = compo_getobj_byid(COMPO_ID_PIC_PASSWORD_ZERO);
     compo_picturebox_t *pic_one = compo_getobj_byid(COMPO_ID_PIC_PASSWORD_ONE);
     compo_picturebox_t *pic_tws = compo_getobj_byid(COMPO_ID_PIC_PASSWORD_TWS);
     compo_picturebox_t *pic_thr = compo_getobj_byid(COMPO_ID_PIC_PASSWORD_THR);
 
     compo_textbox_t *txt  = compo_getobj_byid(COMPO_ID_TXT_NEWPASSWORD);
+    printf("Button clicked: id = %d\n", id); // 添加调试信息
     switch (id)
     {
         case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_NUM9:
@@ -200,9 +211,18 @@ static void func_password_sub_disp_button_click(void)
             compo_textbox_set_visible(txt, false);
             if(password->cnt < 4)
             {
-                password->value[password->cnt++] = id - 1;
+                // 确保索引不会越界
+                if (password->cnt >= 0 && password->cnt < 4)
+                {
+                    password->value[password->cnt++] = id - 1;
+                }
+                else
+                {
+                    printf("Invalid password count: %d\n", password->cnt);
+                }
             }
             compo_textbox_set_visible(txt_num, true);
+            printf("Password count after num click: %d\n", password->cnt); // 添加调试信息
             break;
 
         case COMPO_ID_BTN_DEL_CLICK:
@@ -211,13 +231,19 @@ static void func_password_sub_disp_button_click(void)
             {
                 password->cnt--;
             }
+            printf("Password count after del click: %d\n", password->cnt); // 添加调试信息
             break;
 
         default:
             compo_textbox_set_visible(txt, false);
             break;
     }
-
+// 新增状态检查提前返回
+    if (func_cb.sta != FUNC_PASSWORD_SUB_DISP)
+    {
+        return; // 状态已改变时立即退出
+    }
+    printf("Checking password count: %d\n", password->cnt); // 添加调试信息
     if(password->cnt == 1)
     {
         compo_picturebox_set_visible(pic_zer, false);
@@ -228,6 +254,7 @@ static void func_password_sub_disp_button_click(void)
         memset(buf, 0, sizeof(buf));
         snprintf(buf, sizeof(buf), "%d", password->value[0]);
         compo_textbox_set(txt_num, buf);
+        printf("Password count is 1, updated textbox\n"); // 添加调试信息
     }
     else if(password->cnt == 2)
     {
@@ -239,6 +266,7 @@ static void func_password_sub_disp_button_click(void)
         memset(buf, 0, sizeof(buf));
         snprintf(buf, sizeof(buf), "%d%d", password->value[0], password->value[1]);
         compo_textbox_set(txt_num, buf);
+        printf("Password count is 2, updated textbox\n"); // 添加调试信息
     }
     else if(password->cnt == 3)
     {
@@ -250,6 +278,7 @@ static void func_password_sub_disp_button_click(void)
         memset(buf, 0, sizeof(buf));
         snprintf(buf, sizeof(buf), "%d%d%d", password->value[0], password->value[1], password->value[2]);
         compo_textbox_set(txt_num, buf);
+        printf("Password count is 3, updated textbox\n"); // 添加调试信息
     }
     else if(password->cnt == 4)
     {
@@ -261,7 +290,8 @@ static void func_password_sub_disp_button_click(void)
         memset(buf, 0, sizeof(buf));
         snprintf(buf, sizeof(buf), "%d%d%d%d", password->value[0], password->value[1], password->value[2], password->value[3]);
         compo_textbox_set(txt_num, buf);
-
+        printf("Password count is 4, updated textbox\n"); // 添加调试信息
+        debug_print_password_info();
         if(sys_cb.password_cnt == 0 && password->cnt == 4 && !sys_cb.password_change)
         {
             sys_cb.password_cnt = password->cnt;
@@ -270,20 +300,33 @@ static void func_password_sub_disp_button_click(void)
                 sys_cb.password_value[i] = password->value[i];
             }
             func_cb.sta = FUNC_PASSWORD_SUB_SELECT;
+            printf("Case 1: Updated password and changed state\n"); // 添加调试信息
+            // 新增：清除UI状态后立即返回
+            compo_picturebox_set_visible(pic_zer, false);
+            compo_picturebox_set_visible(pic_one, false);
+            compo_picturebox_set_visible(pic_tws, false);
+            compo_picturebox_set_visible(pic_thr, false);
+            compo_textbox_set(txt_num, "");
+            return; // 关键修改：状态改变后立即退出
         }
         else if(sys_cb.password_cnt == 4 && password->cnt == 4 && !sys_cb.password_change)
         {
-            for(int j = 0; j <password->cnt; j++)
+            psd_ctn = 0;
+            // 使用独立循环进行验证
+            for(int j = 0; j < 4; j++)
             {
                 if(sys_cb.password_value[j] == password->value[j])
                 {
                     psd_ctn++;
                 }
-                if(psd_ctn == 4)
-                {
-                    sys_cb.password_cnt = 0;
-                    func_cb.sta = FUNC_SET_SUB_PASSWORD;
-                }
+            }
+            // 在循环结束后判断
+            if(psd_ctn == 4)
+            {
+                sys_cb.password_cnt = 0;
+                func_cb.sta = FUNC_SET_SUB_PASSWORD;
+                printf("Password matched, changed state\n");
+                return; // 立即退出
             }
         }
         else if(sys_cb.password_cnt == 0 && password->cnt == 4 && sys_cb.password_change)
@@ -294,16 +337,18 @@ static void func_password_sub_disp_button_click(void)
                 sys_cb.password_value[i] = password->value[i];
             }
             func_cb.sta = FUNC_PASSWORD_SUB_SELECT;
+            printf("Case 3: Updated password and changed state\n"); // 添加调试信息
         }
         else if(sys_cb.password_cnt == 4 && password->cnt == 4 && sys_cb.password_change)
         {
-            for(int j = 0; j <password->cnt; j++)
+            for(int j = 0; j < password->cnt; j++)
             {
                 if(sys_cb.password_value[j] == password->value[j])
                 {
                     psd_ctn++;
                 }
             }
+            printf("Case 4: Calculated match count: %d\n", psd_ctn); // 添加调试信息
         }
         compo_picturebox_set_visible(pic_zer, false);
         compo_picturebox_set_visible(pic_one, false);
@@ -318,12 +363,14 @@ static void func_password_sub_disp_button_click(void)
             password->cnt = 0;
             compo_textbox_set(txt, i18n[STR_NEW_PASSWORD]);
             compo_textbox_set_visible(txt, true);
+            printf("Password matched, reset and updated textbox\n"); // 添加调试信息
         }
         else
         {
             compo_textbox_set(txt, i18n[STR_ERROR_PASSWORD]);
             compo_textbox_set_visible(txt, true);
             password->cnt = 0;
+            printf("Password mismatched, reset and updated textbox\n"); // 添加调试信息
         }
     }
     else
@@ -334,6 +381,7 @@ static void func_password_sub_disp_button_click(void)
         compo_picturebox_set_visible(pic_thr, true);
 
         compo_textbox_set(txt_num, "");
+        printf("Password count is not 1-4, reset textbox and pictures\n"); // 添加调试信息
     }
 }
 

@@ -377,6 +377,17 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4,
                                  GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_OK01_BIN).hei/2 - 20);
             break;
+        case MSGBOX_MODE_BTN_OKCANCEL1:      //清除口数是否
+            btn = compo_button_create_by_image(frm, UI_BUF_I330001_SET_PUFFS_CANCEL00_BIN);
+            compo_setid(btn, COMPO_ID_BTN_CANCEL);
+            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4,
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_CLOSE00_BIN).hei/2 - 20);
+
+            btn = compo_button_create_by_image(frm, UI_BUF_I330001_SET_PUFFS_OK00_BIN);
+            compo_setid(btn, COMPO_ID_BTN_OK);
+            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4,
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I330001_PUBLIC_OK01_BIN).hei/2 - 20);
+            break;
 
         case MSGBOX_MODE_BTN_YESNO:         //确定与取消按钮2
             btn = compo_button_create_by_image(frm, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
@@ -458,6 +469,19 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             textbox = compo_textbox_create(frm, strlen(i18n[STR_OK]) );
             compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.4);
             compo_textbox_set(textbox,i18n[STR_OK]);
+        }
+        break;
+        case MSGBOX_MODE_BTN_DELETE_SUCCES://口数删除成功
+        {
+            compo_textbox_t *textbox;
+            textbox = compo_textbox_create(frm, strlen(i18n[STR_DELETE_SUCCES]));///PASS
+            compo_textbox_set(textbox, i18n[STR_DELETE_SUCCES]);
+            compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+60);
+            compo_textbox_set_forecolor(textbox, COLOR_WHITE);
+
+            compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_SET_PUFFS_OK01_BIN);
+            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-40);
+
         }
         break;
         default:

@@ -44,6 +44,8 @@ typedef struct f_blood_oxygen_t_
     u8 pic_type;
     bool pop_disp_flag;
     bool need_auto_test_flag;
+    bool Refresh_flag;
+    bool Refresh_old_flag;
 } f_blood_oxygen_t;
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
@@ -499,9 +501,14 @@ static void func_blood_oxygen_disp_handle(void)
                 f_bo->pic_type=0;
             }
             f_bo->need_auto_test_flag = false;
+            f_bo->Refresh_flag = true;
             compo_picturebox_cut(picbox, f_bo->pic_type, 16); ///图片动态显示
-            compo_button_set_visible(btn, false);
-            compo_textbox_set(textbox_gauge,i18n[STR_MEASURING]);
+            if(f_bo->Refresh_flag != f_bo->Refresh_old_flag)
+            {
+                f_bo->Refresh_old_flag = f_bo->Refresh_flag ;
+                compo_button_set_visible(btn, false);
+                compo_textbox_set(textbox_gauge,i18n[STR_MEASURING]);
+            }
         }
     }
     else if (f_bo->blood_oxygen_state == BO_STA_UNWEAR)
@@ -512,8 +519,14 @@ static void func_blood_oxygen_disp_handle(void)
     else
     {
         compo_picturebox_cut(picbox, 0, 16); ///图片动态显示
-        compo_button_set_visible(btn, true);
-        compo_textbox_set(textbox_gauge,i18n[STR_START_MEASURING]);
+        f_bo->Refresh_flag = false;
+        if(f_bo->Refresh_flag != f_bo->Refresh_old_flag)
+        {
+            f_bo->Refresh_old_flag = f_bo->Refresh_flag ;
+            compo_button_set_visible(btn, true);
+            compo_textbox_set(textbox_gauge,i18n[STR_START_MEASURING]);
+        }
+
     }
 
 

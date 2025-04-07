@@ -420,7 +420,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///血氧数据
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_54_BIN);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,77/2+155);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,77/2+153);
     char txt_buf[5];
     if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
     {
@@ -435,7 +435,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
 
     area_t txt_leng = widget_text_get_area(textbox->txt);
     picbox = compo_picturebox_create(frm, UI_BUF_I332001_BLOODOXYGEN_PERCENT_BIN);///  % 图片
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+txt_leng.wid/2+20,77/2+77/4+155);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+txt_leng.wid/2+18,77/2+77/4+155);
     compo_setid(picbox,COMPO_ID_PIC_UNIT);
 
     // textbox = compo_textbox_create(frm, strlen(i18n[STR_BLOOD_OXYGEN_UINT]));///血氧和饱和度

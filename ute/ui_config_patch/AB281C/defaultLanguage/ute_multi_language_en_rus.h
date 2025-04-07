@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 英语(美国）
 *@author
-*@date   2025-03-26 17:31:33
+*@date   2025-04-03 14:37:44
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -278,6 +278,7 @@ const char * const i18n_en_rus[] =
     [STR_COUNT_NUM] = "\x4e\x75\x6d\x62\x65\x72\x20\x6f\x66\x20\x74\x69\x6d\x65\x73\x00", // [262] Number of times
     [STR_HEART_HIGHT] = "\x48\x69\x67\x68\x20\x68\x65\x61\x72\x74\x20\x72\x61\x74\x65\x00", // [263] High heart rate
     [STR_HEART_LOW] = "\x4c\x6f\x77\x20\x68\x65\x61\x72\x74\x20\x72\x61\x74\x65\x00", // [264] Low heart rate
+    [STR_FUTRUE_WEATHER] = "\x57\x65\x61\x74\x68\x65\x72\x20\x46\x6f\x72\x65\x63\x61\x73\x74\x00", // [265] Weather Forecast
 };
 
 #endif

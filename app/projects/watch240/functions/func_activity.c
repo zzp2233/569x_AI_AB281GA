@@ -211,7 +211,7 @@ compo_form_t *func_activity_form_create(void)
     area_t pic_bg_area = gui_image_get_size(UI_BUF_I332001_ACTIVITY_BG_BIN);
     ///创建圆弧
     widget_page_t *widget_page = widget_page_create(frm->page_body);
-    widget_set_location(widget_page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/4.5, pic_bg_area.wid, pic_bg_area.hei);
+    widget_set_location(widget_page, GUI_SCREEN_CENTER_X, 114, pic_bg_area.wid, pic_bg_area.hei);
 
     compo_picturebox_t *arc_pic = compo_picturebox_create_for_page(frm,widget_page,UI_BUF_I332001_ACTIVITY_BG_BIN);
     compo_picturebox_set_pos(arc_pic, pic_bg_area.wid/2, pic_bg_area.hei/2);
@@ -245,20 +245,22 @@ compo_form_t *func_activity_form_create(void)
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());///千卡数据
     textbox = compo_textbox_create(frm,6);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set(textbox, txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,218);
     compo_setid(textbox,KCAL_TXT_VALUE_ID);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_KCAL]));///千卡
     compo_textbox_set(textbox, i18n[STR_KCAL]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5+TXT_SPACING_Y);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,218+47);
     compo_textbox_set_forecolor(textbox,KCAL_ARC_COLOR);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%02ld",distance/100, distance%100);///公里数据
     textbox = compo_textbox_create(frm,6);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set(textbox, txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,218);
     compo_setid(textbox,KM_TXT_VALUE_ID);
 
     if(uteModuleSystemtimeGetDistanceMiType())
@@ -271,20 +273,21 @@ compo_form_t *func_activity_form_create(void)
         textbox = compo_textbox_create(frm,strlen(i18n[STR_KM]));//公里
         compo_textbox_set(textbox, i18n[STR_KM]);
     }
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,GUI_SCREEN_HEIGHT/1.5+TXT_SPACING_Y);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,218+47);
     compo_textbox_set_forecolor(textbox,KM_ARC_COLOR);
     compo_setid(textbox,KM_TXT_UNIT_ID);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
     textbox = compo_textbox_create(frm,6);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set(textbox, txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/1.28);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,279);
     compo_setid(textbox,STEP_TXT_VALUE_ID);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));///步数
     compo_textbox_set(textbox, i18n[STR_STEP]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/1.28+TXT_SPACING_Y);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,279+47);
     compo_textbox_set_forecolor(textbox,STEP_ARC_COLOR);
 
     return frm;

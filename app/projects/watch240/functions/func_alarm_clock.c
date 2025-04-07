@@ -544,9 +544,12 @@ compo_form_t *func_alarm_clock_form_create(void)
         {
             memset(str_buff,0,str_buff_size);
             buf_num=0;
-            cardbox = compo_cardbox_create(frm, 1, 1, 2, 324, 90);
+            cardbox = compo_cardbox_create(frm, 1, 1, 2, 360, 90);
             compo_cardbox_set_pos(cardbox, GUI_SCREEN_CENTER_X, 130 + 106*i);
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
+
+            compo_cardbox_rect_set_color(cardbox, 0, MAKE_GRAY(26));
+            compo_cardbox_rect_set_location(cardbox, 0, 0, 0, 324, 90, 20);
 
             compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I332001_PUBLIC_SWITCH01_BIN : UI_BUF_I332001_PUBLIC_SWITCH00_BIN);
             compo_cardbox_icon_set_pos(cardbox, 0,
@@ -611,9 +614,6 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_textbox_set_location(textbox, -130, 10, 160, 40);
             compo_textbox_set(textbox,str_buff);
             compo_textbox_set_forecolor(textbox, MAKE_GRAY(128));
-
-            compo_cardbox_rect_set_color(cardbox, 0, MAKE_GRAY(26));
-            compo_cardbox_rect_set_location(cardbox, 0, 0, 0, 324, 90, 20);
         }
     }
     else
@@ -700,13 +700,13 @@ static void func_alarm_clock_button_click(void)
             }
         }
     }
-
     //编辑/开关闹钟
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
     {
         if (compo_cardbox_btn_is(compo_getobj_byid(COMPO_ID_CARD_0 + i), pt))
         {
-            if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_I332001_PUBLIC_SWITCH01_BIN).wid))   //开关
+            rect_t rect = compo_cardbox_get_icon_absolute(compo_getobj_byid(COMPO_ID_CARD_0 + i),0);
+            if (abs_s(pt.x - rect.x) * 2 <= rect.wid*1.5 && abs_s(pt.y - rect.y) * 2 <= rect.hei*2)  //开关
             {
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
                 //刷新

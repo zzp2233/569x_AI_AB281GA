@@ -300,7 +300,7 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
     }
     compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_HOUR, UI_BUF_I332001_THEME_CLOCK_CLOCK_H_BIN, 1, 2);
     compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_MIN, UI_BUF_I332001_THEME_CLOCK_CLOCK_M_BIN, 1, 2);
-    compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_SEC, UI_BUF_I332001_THEME_CLOCK_CLOCK_S_BIN, 9, 2);
+    compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_SEC, UI_BUF_I332001_THEME_CLOCK_CLOCK_S_BIN, 10, 3);
     compo_iconlist_set_start_angle(iconlist, 900);
 
     compo_iconlist_set_focus_byidx(iconlist, func_cb.menu_idx);

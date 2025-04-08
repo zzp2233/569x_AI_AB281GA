@@ -1456,7 +1456,7 @@ void func_message(size_msg_t msg)
 
         case KU_BACK:
 #if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT)
-            func_cb.menu_style = MENU_STYLE_LIST;
+            func_cb.menu_style = MENU_STYLE_HONEYCOMB;
             uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
 #endif
             if (func_cb.flag_sort)

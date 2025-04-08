@@ -1466,6 +1466,168 @@ static void func_sport_sub_run_exit_data(void)
     }
 
 }
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+enum
+{
+    COMPO_ID_NUM_SPORT_TIME = 1,    //运动时间
+    COMPO_ID_NUM_SPORT_HEARTRATE,   //心率
+    COMPO_ID_NUM_SPORT_KCAL,        //卡路里
+    COMPO_ID_NUM_SPORT_STEP,        //计步
+    COMPO_ID_NUM_SPORT_KM,          //距离
+    COMPO_ID_NUM_SPORT_COUNT,       //计次
+
+    COMPO_ID_UINT_SPORT_TIME,        //运动时间
+    COMPO_ID_UINT_SPORT_HEARTRATE,   //心率
+    COMPO_ID_UINT_SPORT_KCAL,        //卡路里
+    COMPO_ID_UINT_SPORT_STEP,        //计步
+    COMPO_ID_UINT_SPORT_KM,          //距离
+    COMPO_ID_UINT_SPORT_COUNT,       //计次
+
+    COMPO_ID_PIC_SPORT_HEARTRATE,                        //心率图片
+    COMPO_ID_PIC_SPORT_HEARTRATE_PERCENTAGE,             //心率指针百分比
+
+    COMPO_ID_BTN_SPORT_STOP,         //暂停
+    COMPO_ID_BTN_SPORT_EXIT,         //退出
+
+    COMPO_ID_TXT_SPORT_STOP,         //暂停
+
+};
+enum//对应运动中显示运动数据种类->不同项目可自行添加
+{
+    MULTIPLE_DATA=0,//多数据
+    MID_DATA,       //中数据
+    LESS_DATA,      //少数据
+};
+
+typedef struct f_sport_sub_run_t_
+{
+    u8 heart_pic_size_perc;
+    bool heart_pic_size_add_flag;
+    u32 updata_tick;
+
+    bool        touch_flag;
+    s32         move_offset;
+    s32         page_old_y;
+    u8          touch_state;
+    u8          page_num;
+    uint32_t    tick;
+    u8          switch_page_state;
+    bool        sport_run_state;
+    bool        sport_run_state_updata_flag;
+    bool        sport_run_km_uint_updata_flag;
+} f_sport_sub_run_t;
+
+enum
+{
+    TOUCH_FINISH_STATE=0,
+    AUTO_STATE,
+
+};
+enum
+{
+    PAGE_1=0,
+    PAGE_2,
+};
+enum
+{
+    SWITCH_YES=0,
+    SWITCH_NO,
+    TOTCH_MOVE,
+};
+enum
+{
+    SPORT_RUN_STOP=false,
+    SPORT_RUN_START=true,
+};
+static bool sport_start_flag = false;
+extern u32 func_sport_get_disp_mode(void);//对应运动中显示运动数据种类->不同项目可自行添加->用于运动中与运动结束
+extern u32 func_sport_get_str(u8 sport_idx);
+extern u32 func_sport_get_ui(u8 sport_idx);
+//创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sport_sub_run_form_create(void)
+{
+    char txt_buf[50];
+    ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
+    uteModuleSportGetMoreSportsDatas(data);
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    //设置标题栏
+    compo_form_set_title(frm, i18n[func_sport_get_str(sys_cb.sport_idx)]);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+
+    compo_textbox_t* txt = compo_textbox_create(frm, 8);///运动时长
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,78, 240, 60);
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
+    compo_textbox_set(txt, txt_buf);
+    compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
+
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_HEART_ICON_PIC26X22_X16_Y134_00_BIN);///心率图片
+    compo_picturebox_set_pos(pic,26/2+16,22/2+134);
+    compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE);
+
+    txt = compo_textbox_create(frm, 3);///心率数据文本
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_28_BIN);
+    compo_textbox_set_location(txt, 26+16+8,136, 60, 43);
+    compo_textbox_set_align_center(txt, false);
+    memset(txt_buf, 0, sizeof(txt_buf));
+    snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
+    compo_textbox_set(txt, txt_buf);
+    compo_setid(txt,COMPO_ID_NUM_SPORT_HEARTRATE);
+
+    area_t leng_size = widget_text_get_area(txt->txt);
+    txt = compo_textbox_create(frm, strlen(i18n[STR_HEART_RATE]));///心率文本
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 32+16+8+leng_size.wid,136, 130, 43);
+    compo_textbox_set(txt, i18n[STR_HEART_RATE]);
+    compo_setid(pic,COMPO_ID_UINT_SPORT_HEARTRATE);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_HEART_PROGRESS_ICON_PIC220X16_X10_Y168_00_BIN);///心率进度
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,176);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_ARROW_14X11_X26_X70_X114_X158_X200_Y183_BIN);///心率进度指针
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X+(44*(1-3)),176+15);
+    compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE);
+
+
+
+    ab_free(data);
+    return frm;
+}
+static void func_sport_sub_run_click_handler(void)
+{
+}
+static void func_sport_sub_run_updata(void)
+{
+}
+static void func_sport_sub_run_init(void)
+{
+    if(sport_start_flag == false)///是否正常进入运动
+    {
+        sport_start_flag = true;
+        uteModuleSportSetCountZeroIndex(0);
+        uteModuleHeartStartSingleTesting(TYPE_HEART);
+    }
+
+    func_cb.frm_main = func_sport_sub_run_form_create();
+}
+static void func_sport_sub_run_exit_data(void)
+{
+    f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
+
+    if(sys_cb.refresh_language_flag == false || sport_start_flag == true)//刷新语言时不清除数据
+    {
+        uteModuleHeartStopSingleTesting(TYPE_HEART);
+        uteModuleGuiCommonDisplayOffAllowGoBack(true);
+        if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
+        {
+            task_stack_pop();
+        }
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+    }
+
+}
 #else
 enum
 {
@@ -1551,6 +1713,12 @@ static void func_sport_sub_run_click_handler(void)
 {
 }
 static void func_sport_sub_run_updata(void)
+{
+}
+static void func_sport_sub_run_init(void)
+{
+}
+static void func_sport_sub_run_exit_data(void)
 {
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -1675,21 +1843,13 @@ static void func_sport_sub_run_enter(void)
 {
     uteModuleGuiCommonDisplayOffAllowGoBack(false);
     func_cb.f_cb = func_zalloc(sizeof(f_sport_sub_run_t));
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_sport_sub_run_init();
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-    func_sport_sub_run_init();
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //退出室内跑步功能
 static void func_sport_sub_run_exit(void)
 {
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_sport_sub_run_exit_data();
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-    func_sport_sub_run_exit_data();
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }
 
 //室内跑步功能

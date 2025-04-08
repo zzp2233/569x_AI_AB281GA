@@ -1483,8 +1483,8 @@ enum
     COMPO_ID_UINT_SPORT_KM,          //距离
     COMPO_ID_UINT_SPORT_COUNT,       //计次
 
-    COMPO_ID_PIC_SPORT_HEARTRATE,    //心率图片
-    COMPO_ID_TILTE_TIME,             //标题栏时间
+    COMPO_ID_PIC_SPORT_HEARTRATE,                        //心率图片
+    COMPO_ID_PIC_SPORT_HEARTRATE_PERCENTAGE,             //心率指针百分比
 
     COMPO_ID_BTN_SPORT_STOP,         //暂停
     COMPO_ID_BTN_SPORT_EXIT,         //退出
@@ -1557,30 +1557,40 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     compo_textbox_t* txt = compo_textbox_create(frm, 8);///运动时长
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 58/2+100, 240, 60);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,78, 240, 60);
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
     compo_textbox_set(txt, txt_buf);
-    compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
 
     compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_HEART_ICON_PIC26X22_X16_Y134_00_BIN);///心率图片
-    compo_picturebox_set_size(pic,70,70);
-    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,70/2+20);
+    compo_picturebox_set_pos(pic,26/2+16,22/2+134);
+    compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE);
 
-    memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_HEART_RATE],i18n[STR_PER_MINUTE]);
-    txt = compo_textbox_create(frm, strlen(txt_buf));///心率文本
-    compo_textbox_set_location(txt, 154/2+32, 22/2+184, 154, 30);
-    compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+    txt = compo_textbox_create(frm, 3);///心率数据文本
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_28_BIN);
+    compo_textbox_set_location(txt, 26+16+8,136, 60, 43);
+    compo_textbox_set_align_center(txt, false);
+    memset(txt_buf, 0, sizeof(txt_buf));
+    snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
     compo_textbox_set(txt, txt_buf);
+    compo_setid(txt,COMPO_ID_NUM_SPORT_HEARTRATE);
 
-    memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_CALORIE],i18n[STR_KCAL]);
-    txt = compo_textbox_create(frm, strlen(txt_buf));///卡路里文本
-    compo_textbox_set_location(txt, 132/2+186, 22/2+184, 148, 30);
-    compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
-    compo_textbox_set(txt, txt_buf);
+    area_t leng_size = widget_text_get_area(txt->txt);
+    txt = compo_textbox_create(frm, strlen(i18n[STR_HEART_RATE]));///心率文本
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 32+16+8+leng_size.wid,136, 130, 43);
+    compo_textbox_set(txt, i18n[STR_HEART_RATE]);
+    compo_setid(pic,COMPO_ID_UINT_SPORT_HEARTRATE);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_HEART_PROGRESS_ICON_PIC220X16_X10_Y168_00_BIN);///心率进度
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,176);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_ARROW_14X11_X26_X70_X114_X158_X200_Y183_BIN);///心率进度指针
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X+(44*(1-3)),176+15);
+    compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE);
+
+
 
     ab_free(data);
     return frm;

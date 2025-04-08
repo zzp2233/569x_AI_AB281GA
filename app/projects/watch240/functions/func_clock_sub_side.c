@@ -14,12 +14,13 @@ static void func_clock_sub_side_form_create(void)
     compo_shape_t *masklayer = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_color(masklayer, COLOR_BLACK);
     compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_CENTER_Y, GUI_SIDE_MENU_WIDTH, GUI_SCREEN_HEIGHT);
-    compo_shape_set_alpha(masklayer, 140);
+    compo_shape_set_alpha(masklayer, 255);
 
     //创建按钮
-    compo_button_t *btn_test = compo_button_create_by_image(frm, UI_BUF_I330001_THEME_1_GAME_BIN);
+    compo_button_t *btn_test = compo_button_create_by_image(frm, 0);
     compo_button_set_pos(btn_test, 60, 150);
     compo_button_set_alpha(btn_test, 200);
+
 
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sub_frm = frm;
@@ -44,7 +45,8 @@ static void func_clock_sub_side_message(size_msg_t msg)
                 f_clk->sta = FUNC_CLOCK_MAIN;                   //左滑返回到时钟主界面
             }
             break;
-
+        case MSG_CTP_SHORT_RIGHT:
+            break;
         case MSG_CTP_CLICK:
             if (ctp_get_sxy().x > GUI_SIDE_MENU_WIDTH)
             {

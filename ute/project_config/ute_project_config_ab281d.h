@@ -66,7 +66,7 @@
 /*! PWRKEY,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_SUPPORT 1
 /*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
-#define UTE_DRV_PWRKEY_MAX_CNT 2
+#define UTE_DRV_PWRKEY_MAX_CNT 1
 
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1
@@ -120,6 +120,10 @@
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 8
 #define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY, FUNC_BLOOD_OXYGEN, FUNC_HEARTRATE, FUNC_SLEEP, FUNC_WEATHER, FUNC_BT, FUNC_COMPO_SELECT}
+/*! 表盘左侧界面,wang.luo 2025-04-07 */
+#define UTE_CUI_SCREEN_WATCHDIAL_LEFT FUNC_NULL
+/*! 表盘上拉界面,wang.luo 2025-04-07 */
+#define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_MESSAGE
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 0
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */

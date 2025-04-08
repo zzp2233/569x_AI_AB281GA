@@ -37,6 +37,7 @@ typedef struct f_activity_t_
     uint32_t arc_km_value;
     uint32_t arc_step_value;
     u8 activity_state;
+    page_tp_move_t *ptm;
 } f_activity_t;
 
 
@@ -648,6 +649,19 @@ static void func_activity_enter(void)
     func_cb.frm_main = func_activity_form_create();
     f_activity_t *f_activity = (f_activity_t *)func_cb.f_cb;
     f_activity->activity_state = 0;
+
+    // f_activity->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    // page_move_info_t info =
+    // {
+    //     .title_used = true,
+    //     .page_size = 100,
+    //     .page_count = ALARM_ENABLE_CNT(),
+    //     .jump_perc = 20,
+    //     .quick_jump_perc = 200,
+    //     .up_over_perc = ALARM_ENABLE_CNT() ? 50 : 0,
+    //     .down_over_perc = ALARM_ENABLE_CNT() ? 50 : 0,
+    // };
+    // compo_page_move_init(f_activity->ptm, func_cb.frm_main->page_body, &info);
 }
 
 //退出活动记录功能

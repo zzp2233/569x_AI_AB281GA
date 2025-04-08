@@ -1,7 +1,8 @@
-#if 0
 #include "include.h"
 #include "func.h"
 #include "func_clock.h"
+
+#if UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT
 
 //创建边菜单
 static void func_clock_sub_side_form_create(void)
@@ -35,28 +36,31 @@ static void func_clock_sub_side_process(void)
 static void func_clock_sub_side_message(size_msg_t msg)
 {
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
-    switch (msg) {
-    case MSG_CTP_SHORT_LEFT:
-        if (func_switching(FUNC_SWITCH_MENU_SIDE_BACK, NULL)) {
-            f_clk->sta = FUNC_CLOCK_MAIN;                   //左滑返回到时钟主界面
-        }
-        break;
+    switch (msg)
+    {
+        case MSG_CTP_SHORT_LEFT:
+            if (func_switching(FUNC_SWITCH_MENU_SIDE_BACK, NULL))
+            {
+                f_clk->sta = FUNC_CLOCK_MAIN;                   //左滑返回到时钟主界面
+            }
+            break;
 
-    case MSG_CTP_CLICK:
-        if (ctp_get_sxy().x > GUI_SIDE_MENU_WIDTH) {
+        case MSG_CTP_CLICK:
+            if (ctp_get_sxy().x > GUI_SIDE_MENU_WIDTH)
+            {
+                func_switching(FUNC_SWITCH_MENU_SIDE_BACK | FUNC_SWITCH_AUTO, NULL);
+                f_clk->sta = FUNC_CLOCK_MAIN;                   //单击边栏右边空白返回到时钟主界面
+            }
+            break;
+
+        case KU_BACK:
             func_switching(FUNC_SWITCH_MENU_SIDE_BACK | FUNC_SWITCH_AUTO, NULL);
-            f_clk->sta = FUNC_CLOCK_MAIN;                   //单击边栏右边空白返回到时钟主界面
-        }
-        break;
+            f_clk->sta = FUNC_CLOCK_MAIN;                       //单击BACK键返回到时钟主界面
+            break;
 
-    case KU_BACK:
-        func_switching(FUNC_SWITCH_MENU_SIDE_BACK | FUNC_SWITCH_AUTO, NULL);
-        f_clk->sta = FUNC_CLOCK_MAIN;                       //单击BACK键返回到时钟主界面
-        break;
-
-    default:
-        func_clock_sub_message(msg);
-        break;
+        default:
+            func_clock_sub_message(msg);
+            break;
     }
 }
 
@@ -64,7 +68,11 @@ static void func_clock_sub_side_message(size_msg_t msg)
 static void func_clock_sub_side_enter(void)
 {
     func_clock_sub_side_form_create();
-    if (!func_switching(FUNC_SWITCH_MENU_SIDE_POP, NULL)) {
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
+    func_clock_butterfly_set_light_visible(false);
+#endif
+    if (!func_switching(FUNC_SWITCH_MENU_SIDE_POP, NULL))
+    {
         return;                                             //下拉到一半取消
     }
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
@@ -76,6 +84,9 @@ static void func_clock_sub_side_exit(void)
 {
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     compo_form_destroy(f_clk->sub_frm);
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
+    func_clock_butterfly_set_light_visible(true);
+#endif
     f_clk->sub_frm = NULL;
 }
 
@@ -83,10 +94,12 @@ static void func_clock_sub_side_exit(void)
 void func_clock_sub_side(void)
 {
     func_clock_sub_side_enter();
-    while (func_cb.sta == FUNC_CLOCK && ((f_clock_t *)func_cb.f_cb)->sta == FUNC_CLOCK_SUB_SIDE) {
+    while (func_cb.sta == FUNC_CLOCK && ((f_clock_t *)func_cb.f_cb)->sta == FUNC_CLOCK_SUB_SIDE)
+    {
         func_clock_sub_side_process();
         func_clock_sub_side_message(msg_dequeue());
     }
     func_clock_sub_side_exit();
 }
+
 #endif

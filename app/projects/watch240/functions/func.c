@@ -1663,6 +1663,9 @@ void func_run(void)
                 latest_task_add(func_cb.sta);
                 func_entry = tbl_func_entry[i].func;
                 func_entry();
+#if UTE_MODULE_SLIDE_BAR_SUPPORT
+                uteModuleSlideBarSetCurrentScreenIdToAppIds(func_cb.sta);
+#endif
                 break;
             }
         }

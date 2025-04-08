@@ -89,6 +89,8 @@ compo_form_t *func_clock_butterfly_form_create(void)
 
     compo_butterfly_t *btfly = compo_butterfly_create(frm, &btf_res);
     compo_butterfly_set_pos(btfly, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + BTF_Y_POS);
+    widget_image3d_set_rotation_center(btfly->img_body,gui_image_get_size(UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN).wid/2, gui_image_get_size(UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN).hei/2);
+    widget_set_pos(btfly->img_body, GUI_SCREEN_CENTER_X+4, GUI_SCREEN_CENTER_Y);
     compo_setid(btfly, COMPO_ID_BTFLY);
 
     // 新建光晕泡泡
@@ -102,30 +104,30 @@ compo_form_t *func_clock_butterfly_form_create(void)
 
     // 新建文本
     compo_textbox_t *txt = compo_textbox_create(frm, 2);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
     //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 120, 300, 70);
     compo_bonddata(txt, COMPO_BOND_HOUR);
     compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 2);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
     //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 100, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 120, 300, 70);
     compo_bonddata(txt, COMPO_BOND_MINUTE);
     compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 10);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 70, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 60, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 60, 290, 70);
     compo_bonddata(txt, COMPO_BOND_DATE);
     compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
 
     txt = compo_textbox_create(frm, 1);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
     //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 140, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 100, 260, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 120, 260, 70);
     compo_textbox_set(txt, ":");
     compo_setid(txt, COMPO_ID_TIME_DOT);
 

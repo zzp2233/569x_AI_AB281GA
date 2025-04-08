@@ -849,6 +849,14 @@ static void func_message_enter(void)
 static void func_message_exit(void)
 {
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
+    if (sys_cb.refresh_language_flag)
+    {
+        if(f_msg->ptm != NULL)
+        {
+            func_free(f_msg->ptm);
+        }
+        return;
+    }
     if (func_cb.left_sta == FUNC_MESSAGE)
     {
         task_stack_remove(FUNC_MESSAGE);

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-03-17 09:20:50
+*@date   2025-04-09 15:04:54
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -179,18 +179,6 @@ enum
     STR_VOICE_BT_NOT_CONNECT, // 未连接
     STR_VOICE_SIRI_START, // 点击屏幕开始对话
     STR_ADDRESS_BOOK_SYNC, // 请前往APP设置SOS号码
-    STR_DO_WANT_IN, // 是否进入
-    STR_MODE_SELECTION, // 模式选择
-    STR_FACTORY_TESTING, // 工厂测试模式
-    STR_AGING_TESTING, // 老化测试模式
-    STR_SHIPPING, // 船运模式
-    STR_AUDIO, // 音频测试
-    STR_AVERSION_MAC, // 版本号&MAC
-    STR_BATTERY_INFORMATION, // 电池信息
-    STR_TP_VERSION, // TP版本：
-    STR_PASS, // 通过
-    STR_FALL, // 不通过
-    STR_DO_PASS, // 是否通过？
     STR_AM, // 上午
     STR_PM, // 下午
     STR_NO_CALL_RECORD, // 没有通话记录
@@ -270,6 +258,12 @@ enum
     STR_SAFE_PERIOD, // 安全期
     STR_HEART_HIGHT, // 心率过高
     STR_HEART_LOW, // 心率过低
+    STR_PACE, // 配速
+    STR_KILOMETRE, // 千米
+    STR_STRESS, // 压力
+    STR_EMOTION, // 情绪
+    STR_TOOL_BOX, // 工具箱
+    STR_SOS, // SOS
 };
 
 extern const char * const *i18n;

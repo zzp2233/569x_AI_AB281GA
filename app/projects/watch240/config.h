@@ -350,9 +350,9 @@
 #define USER_ADKEY_QDEC_NO_STD          0           //是否使用非标准电平判断(适用编码器漏电平时)
 #define USER_QDEC_ADCH                  ADCCH_PA0   //选择旋钮的ADC通道
 
-#define USER_IO_QEDC_EN                 1           //旋钮, 使用两个普通IO方式
-#define QEDC_IO_A                       IO_PB0
-#define QEDC_IO_B                       IO_PB1
+#define USER_IO_QEDC_EN                 DRV_ENCODER_KEYS_SUPPORT           //旋钮, 使用两个普通IO方式
+#define QEDC_IO_A                       UTE_DRV_QDEC_Y_PHA_GPIO_PIN
+#define QEDC_IO_B                       UTE_DRV_QDEC_Y_PHB_GPIO_PIN
 
 #define USER_MULTI_PRESS_EN             1           //按键多击检测使能
 #define USER_MULTI_KEY_TIME             4           //按键多击响应时间（单位100ms）

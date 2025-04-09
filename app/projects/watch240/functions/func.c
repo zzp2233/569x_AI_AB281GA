@@ -1507,6 +1507,12 @@ void func_message(size_msg_t msg)
             }
             break;
 
+        case KU_LEFT:
+            if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL)
+            {
+                uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
+            }
+            break;
 
 //        case KU_LEFT:
 //            ble_bt_connect();               //ios一键双连测试

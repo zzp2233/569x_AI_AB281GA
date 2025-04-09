@@ -1,21 +1,23 @@
-#ifndef _UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_H_
-#define _UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_H_
+#ifndef _UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_H_
+#define _UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_H_
 
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "ute_drv_screen_common.h"
 
-#if UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
+#if UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
 
-__STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616PowerOn(void)
+__STATIC_INLINE void drvScreenTft360X360Gc9b71Zd138g1616PowerOn(void)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11,NULL,0);
     uteModulePlatformDelayMs(120);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29,NULL,0);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2c, (uint8_t *)"\x00\x00\x00\x00", 4);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2c, (uint8_t *)"\x00\x00\x00\x00", 4);
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
-__STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616PowerOff(void)
+__STATIC_INLINE void drvScreenTft360X360Gc9b71Zd138g1616PowerOff(void)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x28,NULL,0);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x10,NULL,0);
@@ -24,7 +26,7 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616PowerOff(void)
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
-__STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616SetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
+__STATIC_INLINE void drvScreenTft360X360Gc9b71Zd138g1616SetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
 {
     yStart += 0;
     yEnd += 0;
@@ -44,7 +46,7 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616SetWindow(uint16_t xSta
 
 }
 
-__STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616Init(void)
+__STATIC_INLINE void drvScreenTft360X360Gc9b71Zd138g1616Init(void)
 {
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
     uint8_t tmp[34];
@@ -59,31 +61,22 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616Init(void)
 
 
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xFE, tmp, 0);
-
-
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEF, tmp, 0);
 
     memcpy(tmp, "\x11", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x80, tmp, 1);
-
     memcpy(tmp, "\x30", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x81, tmp, 1);
-
     memcpy(tmp, "\x09", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x82, tmp, 1);
-
     memcpy(tmp, "\x03", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x83, tmp, 1);
-
-    memcpy(tmp, "\x72", 1);
+    memcpy(tmp, "\x72", 1); // b4 en
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x84, tmp, 1);
-
     memcpy(tmp, "\x18", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x89, tmp, 1);
-
     memcpy(tmp, "\x40", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x8A, tmp, 1);
-
     memcpy(tmp, "\x0A", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x8B, tmp, 1);
 
@@ -101,13 +94,11 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616Init(void)
 
     memcpy(tmp, "\x3E", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x98, tmp, 1);
-
     memcpy(tmp, "\x3E", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x99, tmp, 1);
 
     memcpy(tmp, "\x01\x04", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xA1, tmp, 2);
-
     memcpy(tmp, "\x01\x04", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xA2, tmp, 2);
 
@@ -125,6 +116,12 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616Init(void)
 
     memcpy(tmp, "\x0D\x0D", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB5, tmp, 2);
+
+    // 反扫 B6&EC需要一起修改
+    // memcpy(tmp, "\x00\x40", 2);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB6, tmp, 2);
+    // memcpy(tmp, "\x87", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEC, tmp, 1);
 
     memcpy(tmp, "\x01\x67", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEB, tmp, 2);
@@ -198,33 +195,19 @@ __STATIC_INLINE void drvScreenTft360X360Nv3030BZd138g1616Init(void)
     memcpy(tmp, "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x35, tmp, 1);
 
+    // memcpy(tmp, "\x00\x90", 2);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x44, tmp, 2);
 
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xFE, tmp, 0);
-
-
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEE, tmp, 0);
-
-
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11, tmp, 0);
-    uteModulePlatformDelayMs(120);
-
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29, tmp, 0);
-    uteModulePlatformDelayMs(120);
-
-    memcpy(tmp, "\x00\x00\x00\x00", 4);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2C, tmp, 4);
-
-    memcpy(tmp, "\x00\x00\x00\x00", 4);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2C, tmp, 4);
-
 }
-const ute_drv_screen_common_config_t uteDrvScreenTft360X360Nv3030BZd138g1616Config =
+const ute_drv_screen_common_config_t uteDrvScreenTft360X360Gc9b71Zd138g1616Config =
 {
-    .name = "Tft360X360Nv3030BZd138g1616Qspi",
-    .init = drvScreenTft360X360Nv3030BZd138g1616Init,
-    .powerOn = drvScreenTft360X360Nv3030BZd138g1616PowerOn,
-    .powerOff = drvScreenTft360X360Nv3030BZd138g1616PowerOff,
-    .setWindow = drvScreenTft360X360Nv3030BZd138g1616SetWindow,
+    .name = "Tft360X360Gc9b71Zd138g1616Qspi",
+    .init = drvScreenTft360X360Gc9b71Zd138g1616Init,
+    .powerOn = drvScreenTft360X360Gc9b71Zd138g1616PowerOn,
+    .powerOff = drvScreenTft360X360Gc9b71Zd138g1616PowerOff,
+    .setWindow = drvScreenTft360X360Gc9b71Zd138g1616SetWindow,
     .setBackLight = NULL,
 };
 

@@ -1259,33 +1259,31 @@ static void func_sleep_message(size_msg_t msg)
             break;
 
         case MSG_QDEC_BACKWARD:
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-
-#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             if (func_cb.flag_sort)      //快捷应用状态下不滚动页面
             {
                 func_message(msg);
             }
             else
             {
-                compo_page_move_set_by_pages(f_sleep->ptm, -1);
+                if(f_sleep->ptm)
+                {
+                    compo_page_move_set_by_pages(f_sleep->ptm, -1);
+                }
             }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
 
         case MSG_QDEC_FORWARD:
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-
-#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             if (func_cb.flag_sort)
             {
                 func_message(msg);
             }
             else
             {
-                compo_page_move_set_by_pages(f_sleep->ptm, 1);
+                if(f_sleep->ptm)
+                {
+                    compo_page_move_set_by_pages(f_sleep->ptm, 1);
+                }
             }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
 
         default:

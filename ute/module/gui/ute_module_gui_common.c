@@ -810,7 +810,7 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
     }
     reset_sleep_delay_all();
 
-    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start() || screenId == FUNC_NULL)
     {
         return;
     }

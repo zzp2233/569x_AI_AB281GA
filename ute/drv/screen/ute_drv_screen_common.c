@@ -21,8 +21,8 @@
 #include "ute_drv_tft_s240x284_nv3030b_zd183g1196.h"
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
 #include "ute_drv_tft_s360X360_nv3030b_hy139071a.h"
-#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
-#include "ute_drv_tft_s360X360_nv3030b_zd138g1616.h"
+#elif UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
+#include "ute_drv_tft_s360X360_gc9b71_zd138g1616.h"
 #elif UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
 #include "ute_drv_tft_s240x284_jd9853_hy018214ov.h"
 #endif
@@ -61,8 +61,8 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BHy139071aConfig;
 #elif UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd9853Hy018214OvConfig;
-#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BZd138g1616Config;
+#elif UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Gc9b71Zd138g1616Config;
 #endif
 #if UTE_DRV_8080_FOR_SCREEN_SUPPORT
     uteModulePlatform8080Init();

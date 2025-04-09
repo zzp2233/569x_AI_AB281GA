@@ -391,6 +391,7 @@ bool func_clock_cube_message(size_msg_t msg)
             flag_cube_touch = true;
             break;
 
+#if !DRV_ENCODER_KEYS_WATCHMAIN_SCREEN_SWITCHOVER_SUPPORT
         case MSG_QDEC_FORWARD: // 向前滚动菜单
         {
             compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
@@ -408,6 +409,7 @@ bool func_clock_cube_message(size_msg_t msg)
             flag_cube_touch = true;
         }
         break;
+#endif
 
         case MSG_SYS_500MS: // 秒跳动处理
         {

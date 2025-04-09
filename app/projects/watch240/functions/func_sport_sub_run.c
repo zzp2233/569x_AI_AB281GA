@@ -2448,6 +2448,12 @@ static void func_sport_sub_run_message(size_msg_t msg)
             break;
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
+        case KU_LEFT:
+            if (UTE_KEY_LEFT_SWITCH_SCREEN == FUNC_SPORT)
+            {
+                break;
+            }
+
         default:
             func_message(msg);
             break;

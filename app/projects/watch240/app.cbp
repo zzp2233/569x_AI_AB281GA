@@ -90,6 +90,7 @@
 			<Add directory="../../../ute/module/localRingtone" />
 			<Add directory="../../../ute/module/menstrualcycle" />
 			<Add directory="../../../ute/module/fifo" />
+			<Add directory="../../../ute/module/slideBar" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -282,6 +283,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/sleep/ute_module_sleep.h" />
+		<Unit filename="../../../ute/module/slideBar/ute_module_slideBar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/slideBar/ute_module_slideBar.h" />
 		<Unit filename="../../../ute/module/sport/ute_module_sport.c">
 			<Option compilerVar="CC" />
 		</Unit>

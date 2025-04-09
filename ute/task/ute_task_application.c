@@ -58,6 +58,9 @@ void uteTaskApplicationMain(void *param)
     }
 }
 
+AT(.com_text.ute_msg.val)
+char fail_str[]="%s,fail to queue,type=%d\n";
+
 /**
 *@brief        发送msg到ute app task
 *@detail
@@ -69,7 +72,7 @@ bool uteTaskApplicationSendMsg(ute_task_application_message_t *pMsg)
 {
     if(os_mq_send(uteTaskApplicationMsgQueueHandle, pMsg, sizeof(ute_task_application_message_t)) != OS_EOK)
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,fail to queue,type=%d",__func__,pMsg->type);
+        printf(fail_str,__func__,pMsg->type);
         return false;
     }
     else

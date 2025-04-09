@@ -1507,6 +1507,12 @@ void func_message(size_msg_t msg)
             }
             break;
 
+        case KU_LEFT:
+            if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL)
+            {
+                uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
+            }
+            break;
 
 //        case KU_LEFT:
 //            ble_bt_connect();               //ios一键双连测试
@@ -1663,6 +1669,9 @@ void func_run(void)
                 latest_task_add(func_cb.sta);
                 func_entry = tbl_func_entry[i].func;
                 func_entry();
+#if UTE_MODULE_SLIDE_BAR_SUPPORT
+                uteModuleSlideBarSetCurrentScreenIdToAppIds(func_cb.sta);
+#endif
                 break;
             }
         }

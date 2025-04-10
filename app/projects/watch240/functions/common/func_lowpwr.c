@@ -638,6 +638,7 @@ static void sfunc_sleep(void)
 #endif
     bt_exit_sleep();
     sleep_cb.sys_is_sleep = false;
+    func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
     printf("sleep_exit\n");
 }
 

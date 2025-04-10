@@ -37,8 +37,8 @@ compo_form_t *func_password_sub_select_form_create(void)
     }
 
     compo_textbox_t *txt_title = compo_textbox_create(frm, 7);
-    compo_textbox_set_align_center(txt_title, false);
-    compo_textbox_set_pos(txt_title, 30, 140);
+    compo_textbox_set_align_center(txt_title, true);
+    compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X, 120);
     compo_textbox_set(txt_title, i18n[STR_SUCCES_PASSWORD]);
     compo_textbox_set_visible(txt_title, false);
 

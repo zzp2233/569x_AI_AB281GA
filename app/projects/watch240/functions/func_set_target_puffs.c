@@ -19,7 +19,7 @@ enum
 
 #define TXT_SPACING    45
 #define CENTER_TXT_Y   130 / 2
-#define TXT_X          GUI_SCREEN_CENTER_X  // 使用统一的X坐标
+#define TXT_X          GUI_SCREEN_CENTER_X
 
 typedef struct target_puffs_sub_set_t_
 {
@@ -27,7 +27,7 @@ typedef struct target_puffs_sub_set_t_
     s32 move_dy;
     s32 move_dy_data;
     u8 current_index;  // 当前选中数字在数组中的索引
-    u16 target_puffs[3];  // 与数组类型一致
+    u16 target_puffs[3];
 } target_puffs_sub_set_t;
 
 // 目标口数数组
@@ -65,46 +65,54 @@ compo_form_t *func_target_puffs_form_create(void)
     return frm;
 }
 
-// 修改滑动处理逻辑
+#define HALF_SCREEN_HEIGHT (GUI_SCREEN_HEIGHT / 2)
+
+// 滑动处理
 static void func_target_puffs_sub_set_move(void)
 {
     target_puffs_sub_set_t *f_target_puffs = (target_puffs_sub_set_t *)func_cb.f_cb;
+
     if (f_target_puffs->touch_flag)
     {
         s32 dx, dy;
+
         f_target_puffs->touch_flag = ctp_get_dxy(&dx, &dy);
+
         if (f_target_puffs->touch_flag)
         {
             f_target_puffs->move_dy_data -= dy;
-            int offset = (int)((float)f_target_puffs->move_dy_data / TXT_SPACING + 0.5f);
-            int new_index = f_target_puffs->current_index + offset;
-            new_index = CLAMP(new_index, 0, TARGET_PUFFS_DATA_SIZE - 1); // 索引范围 [0, 14]
 
-            printf("[MOVE] new_index=%d, offset=%d\n", new_index, offset);
-
-            for (int i = 0; i < 3; i++)
+            // 计算滑动距离是否超过半个屏幕
+            if (abs(f_target_puffs->move_dy_data) >= HALF_SCREEN_HEIGHT)
             {
-                compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TXT_NUM_TOP + i);
-                int data_index = new_index - 1 + i;
-                if (data_index < 0 || data_index >= TARGET_PUFFS_DATA_SIZE)
+                int offset = (f_target_puffs->move_dy_data > 0)? 1 : -1;
+                int new_index = f_target_puffs->current_index + offset;
+                new_index = CLAMP(new_index, 0, TARGET_PUFFS_DATA_SIZE - 1);
+                printf("[MOVE] new_index=%d, offset=%d\n", new_index, offset);
+
+                for (int i = 0; i < 3; i++)
                 {
-                    compo_textbox_set(txt, "");
+                    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TXT_NUM_TOP + i);
+                    int data_index = new_index - 1 + i;
+                    if (data_index < 0 || data_index >= TARGET_PUFFS_DATA_SIZE)
+                    {
+                        compo_textbox_set(txt, "");
+                    }
+                    else
+                    {
+                        char buf[5];
+                        snprintf(buf, sizeof(buf), "%d", target_puffs_data[data_index]);
+                        printf("[BUF] i=%d, data_index=%d, buf='%s'\n", i, data_index, buf);
+                        compo_textbox_set(txt, buf);
+                    }
                 }
-                else
-                {
-                    char buf[5];
-                    snprintf(buf, sizeof(buf), "%d", target_puffs_data[data_index]);
-                    printf("[BUF] i=%d, data_index=%d, buf='%s'\n", i, data_index, buf);
-                    compo_textbox_set(txt, buf);
-                }
+
+                f_target_puffs->current_index = new_index;
+                f_target_puffs->move_dy_data = 0;
             }
         }
         else
         {
-            int offset = (int)((float)f_target_puffs->move_dy_data / TXT_SPACING + 0.5f);
-            int new_index = f_target_puffs->current_index + offset;
-            new_index = CLAMP(new_index, 0, TARGET_PUFFS_DATA_SIZE - 1);
-            f_target_puffs->current_index = new_index;
             f_target_puffs->move_dy_data = 0;
             for (int i = 0; i < 3; i++)
             {
@@ -118,15 +126,12 @@ static void func_target_puffs_sub_set_move(void)
                 {
                     char buf[5];
                     snprintf(buf, sizeof(buf), "%d", target_puffs_data[data_index]);
-                    printf("[BUF] i=%d, data_index=%d, buf='%s'\n", i, data_index, buf);
                     compo_textbox_set(txt, buf);
                 }
             }
         }
     }
 }
-
-
 // 单击按钮处理
 static void func_target_puffs_sub_set_button_click(void)
 {
@@ -139,12 +144,11 @@ static void func_target_puffs_sub_set_button_click(void)
         {
             u16 selected_puffs = target_puffs_data[selected_index];
             ecig_set_target_puffs(selected_puffs);
+            printf("Set target puffs: %d\n",selected_puffs);
             func_cb.sta = FUNC_SET_PUFFS;
         }
     }
 }
-
-
 
 // 目标口数选择功能消息处理
 static void func_target_puffs_sub_set_message(size_msg_t msg)
@@ -190,4 +194,3 @@ void func_target_puffs(void)
     }
     func_target_puffs_sub_set_exit();
 }
-

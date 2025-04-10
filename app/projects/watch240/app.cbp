@@ -715,6 +715,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/gui/components/compo_arc.h" />
+		<Unit filename="../../platform/gui/components/compo_bar.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/gui/components/compo_bar.h" />
 		<Unit filename="../../platform/gui/components/compo_butterfly.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1421,6 +1425,9 @@
 		<Unit filename="functions/func_smartstack.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_smoke_target_sub_pop.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_sport.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1471,6 +1478,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_volume.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_watch_clock.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_weather.c">

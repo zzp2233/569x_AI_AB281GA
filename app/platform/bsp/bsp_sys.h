@@ -138,6 +138,7 @@ typedef struct
     u8 password_cnt;                                //密码有效长度
     u8 password_value[4];                           //密码有效值
     u8 password_change;                             //改密码锁
+    bool password_flag;                             //开启密码
     //秒表
     u8 stopwatch_sta;                               //秒表工作状态（0:暂停/复位 1:正在计时）
     u32 stopwatch_total_msec;                       //当前秒表时间总计 （单位：毫秒）

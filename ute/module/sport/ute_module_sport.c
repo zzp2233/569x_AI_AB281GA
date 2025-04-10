@@ -5566,25 +5566,18 @@ void uteModuleSportSaveTodayEveryHourAllSportKcalData(void)
 /**
 *@brief     加载今日活动每个小时的步数柱状图
 *@details
-*@param[in] everyHourStepHistorygramGraph
-*@param[in] color 颜色
-*@param[in] x开始坐标
-*@param[in] y开始坐标
-*@param[in] drawWidth 宽度
-*@param[in] intervalWidth 之间的间隔
-*@param[in] hightRange 对应的像素高度
+*@param[out] uint32_t everyHourStep[24] 当天每小时步数
 *@return  uint32_t  当天最大数据的整1000倍数据，如2300，返回3000，最小返回1000
 *@author      dengli.lu
 *@date       2022-07-14
 */
-uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(UT_GraphsParam *everyHourStepHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange)
+uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(uint32_t *everyHourStep)
 {
     //step graph
     uint32_t maxStep = 0,everySportStep = 0;
     uint32_t intStep1000 = 0;
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
-    memset(everyHourStepHistorygramGraph,0, sizeof(UT_GraphsParam)*24);
     for(uint8_t i = 0; i < 24; i++)
     {
         everySportStep = 0;
@@ -5662,20 +5655,8 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(UT_GraphsParam *everyHo
         {
             step = 99999;
         }
-        UTE_MODULE_LOG(1,"%s,step[%d] = %d,hightRange = %d,hight = %d",__func__,i,step,hightRange,(step)*hightRange/intStep1000);
-        everyHourStepHistorygramGraph[i].colorData = color;
-        everyHourStepHistorygramGraph[i].width = drawWidth;
-#if ACTIVITY_DAY_STEP_MAX_INT1000_SUPPORT
-        everyHourStepHistorygramGraph[i].hight = (step)*hightRange/intStep1000;
-#else
-        everyHourStepHistorygramGraph[i].hight = (step)*hightRange/maxStep;
-#endif
-        if(everyHourStepHistorygramGraph[i].hight == 0 && (step!=0))
-        {
-            everyHourStepHistorygramGraph[i].hight = 1;
-        }
-        everyHourStepHistorygramGraph[i].x = x + (drawWidth + intervalWidth)*i;
-        everyHourStepHistorygramGraph[i].y = y - everyHourStepHistorygramGraph[i].hight;
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,step[%d] = %d,hightRange = %d,hight = %d",__func__,i,step,hightRange,(step)*hightRange/intStep1000);
+        everyHourStep[i] = step;
     }
 #if UTE_LOG_STEP_LVL
     for(uint8_t i=0; i<6; i++)
@@ -5689,7 +5670,7 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(UT_GraphsParam *everyHo
 /**
 *@brief     加载今日活动每个小时的Kcal柱状图
 *@details
-*@param[in] everyHourStepHistorygramGraph
+*@param[in] uint16_t everyHourKcal[24] 当天每小时卡路里
 *@param[in] color 颜色
 *@param[in] x开始坐标
 *@param[in] y开始坐标
@@ -5700,13 +5681,12 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(UT_GraphsParam *everyHo
 *@author      dengli.lu
 *@date       2022-07-14
 */
-bool uteModuleSportLoadTodayEveryHourKcalHistoryData(UT_GraphsParam *everyHourKcalHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange)
+bool uteModuleSportLoadTodayEveryHourKcalHistoryData(uint16_t *everyHourKcal)
 {
     uint16_t maxKcal = 0,everySportKcal = 0;
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
     uteModuleSportGetCurrDayEveryHourKcal();
-    memset(everyHourKcalHistorygramGraph,0, sizeof(UT_GraphsParam)*24);
     for(uint8_t i = 0; i < 24; i++)
     {
         everySportKcal = 0;
@@ -5761,39 +5741,24 @@ bool uteModuleSportLoadTodayEveryHourKcalHistoryData(UT_GraphsParam *everyHourKc
         {
             kcal = 9999;
         }
-        everyHourKcalHistorygramGraph[i].colorData = color;
-        everyHourKcalHistorygramGraph[i].width = drawWidth;
-        everyHourKcalHistorygramGraph[i].hight = (kcal)*hightRange/maxKcal;
-        if((everyHourKcalHistorygramGraph[i].hight == 0) && (kcal != 0))
-        {
-            everyHourKcalHistorygramGraph[i].hight = 1;
-        }
-        everyHourKcalHistorygramGraph[i].x = x + (drawWidth + intervalWidth)*i;
-        everyHourKcalHistorygramGraph[i].y = y - everyHourKcalHistorygramGraph[i].hight;
+        everyHourKcal[i] = kcal;
     }
     return true;
 }
 /**
 *@brief     加载今日活动每个小时的运动时长柱状图
 *@details
-*@param[in] everyHourStepHistorygramGraph
-*@param[in] color 颜色
-*@param[in] x开始坐标
-*@param[in] y开始坐标
-*@param[in] drawWidth 宽度
-*@param[in] intervalWidth 之间的间隔
-*@param[in] hightRange 对应的像素高度
+*@param[in] uint16_t everyHourSportTime[24] 当天每小时运动时长
 *@return    当天有数据返回true,没有则返回false
 *@author      dengli.lu
 *@date       2022-07-14
 */
-bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(UT_GraphsParam *everyHourSportTimeHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange)
+bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(uint16_t *everyHourSportTime)
 {
     uint16_t maxSportTime = 0;
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
     uteModuleSportGetCurrDayEveryHourSportTime();
-    memset(everyHourSportTimeHistorygramGraph,0, sizeof(UT_GraphsParam)*24);
     for(uint8_t i = 0; i < 24; i++)
     {
         if(i > time.hour)
@@ -5824,15 +5789,7 @@ bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(UT_GraphsParam *everyH
         {
             sportTime = 60;
         }
-        everyHourSportTimeHistorygramGraph[i].colorData = color;
-        everyHourSportTimeHistorygramGraph[i].width = drawWidth;
-        everyHourSportTimeHistorygramGraph[i].hight = (sportTime)*hightRange/maxSportTime;
-        if(everyHourSportTimeHistorygramGraph[i].hight == 0 && (sportTime != 0))
-        {
-            everyHourSportTimeHistorygramGraph[i].hight  = 1;
-        }
-        everyHourSportTimeHistorygramGraph[i].x = x + (drawWidth + intervalWidth)*i;
-        everyHourSportTimeHistorygramGraph[i].y = y - everyHourSportTimeHistorygramGraph[i].hight;
+        everyHourSportTime[i] = sportTime;
     }
     return true;
 }
@@ -5840,23 +5797,16 @@ bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(UT_GraphsParam *everyH
 /**
 *@brief     加载今日活动每个小时的站立时长柱状图
 *@details
-*@param[in] everyHourStepHistorygramGraph
-*@param[in] color 颜色
-*@param[in] x开始坐标
-*@param[in] y开始坐标
-*@param[in] drawWidth 宽度
-*@param[in] intervalWidth 之间的间隔
-*@param[in] hightRange 对应的像素高度
-*@return    当天有数据返回true,没有则返回false
+*@param[in] uint16_t everyHourStandTime[24] 当天每小时站立时长
+*@return    当天总站立时长
 *@author      dengli.lu
 *@date       2022-07-14
 */
-uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(UT_GraphsParam *everyHourStandTimeHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange)
+uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(uint16_t *everyHourStandTime)
 {
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
     uint16_t totalStandTimeMin = uteModuleSportGetCurrDayEveryHourStandTime();
-    memset(everyHourStandTimeHistorygramGraph,0,sizeof(UT_GraphsParam)*24);
     for(uint8_t i = 0; i < 24; i++)
     {
         uint16_t standTime = uteModuleSprotData.dailyActivity.everyHourStandTime[i];
@@ -5864,15 +5814,7 @@ uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(UT_GraphsParam *ev
         {
             standTime = 60;
         }
-        everyHourStandTimeHistorygramGraph[i].colorData = color;
-        everyHourStandTimeHistorygramGraph[i].width = drawWidth;
-        everyHourStandTimeHistorygramGraph[i].hight = (standTime)*hightRange/60;
-        if((everyHourStandTimeHistorygramGraph[i].hight == 0) && (standTime != 0))
-        {
-            everyHourStandTimeHistorygramGraph[i].hight = 1;
-        }
-        everyHourStandTimeHistorygramGraph[i].x = x + (drawWidth + intervalWidth)*i;
-        everyHourStandTimeHistorygramGraph[i].y = y - everyHourStandTimeHistorygramGraph[i].hight;
+        everyHourStandTime[i] = standTime;
     }
     return totalStandTimeMin;
 }
@@ -5880,19 +5822,13 @@ uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(UT_GraphsParam *ev
 /**
 *@brief     加载今日活动周每天的步数柱状图
 *@details
-*@param[in] weekDayStepHistorygramGraph
-*@param[in] color 颜色
-*@param[in] x开始坐标
-*@param[in] y开始坐标
-*@param[in] drawWidth 宽度
-*@param[in] intervalWidth 之间的间隔
-*@param[in] hightRange 对应的像素高度
+*@param[out] uint32_t weekDayStep[7] 7天每天的步数
 *@param[out] *totalStep 周步数总步数
 *@return  uint32_t  当周最大数据的整1000倍数据，如2300，返回3000，最小返回1000
 *@author      zn.zeng
 *@date       2022-09-02
 */
-uint32_t uteModuleSportLoadWeekDayStepHistoryData(UT_GraphsParam *weekDayStepHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange,uint32_t *totalStep)
+uint32_t uteModuleSportLoadWeekDayStepHistoryData(uint32_t *weekDayStep, uint32_t *totalStep)
 {
     //step graph
     uint32_t maxStep = 0;
@@ -5902,7 +5838,6 @@ uint32_t uteModuleSportLoadWeekDayStepHistoryData(UT_GraphsParam *weekDayStepHis
     uint32_t currTotal = 0;
     uteModuleSportGetCurrDayStepCnt(&currTotal,NULL,NULL);
     uteModuleSprotData.dailyActivity.weekDayTotalStep[time.week] = currTotal;
-    memset(weekDayStepHistorygramGraph,0, sizeof(UT_GraphsParam)*7);
     *totalStep = 0;
     for(uint8_t i = 0; i < 7; i++)
     {
@@ -5940,15 +5875,7 @@ uint32_t uteModuleSportLoadWeekDayStepHistoryData(UT_GraphsParam *weekDayStepHis
             {
                 step = 99999;
             }
-            weekDayStepHistorygramGraph[i].colorData = color;
-            weekDayStepHistorygramGraph[i].width = drawWidth;
-            weekDayStepHistorygramGraph[i].hight = (step)*hightRange / intStep1000;
-            if (weekDayStepHistorygramGraph[i].hight == 0 && (step != 0))
-            {
-                weekDayStepHistorygramGraph[i].hight = 2;
-            }
-            weekDayStepHistorygramGraph[i].x = x + (drawWidth + intervalWidth) * i;
-            weekDayStepHistorygramGraph[i].y = y - weekDayStepHistorygramGraph[i].hight;
+            weekDayStep[i] = step;
         }
     }
     return intStep1000;

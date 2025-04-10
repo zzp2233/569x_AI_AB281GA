@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-09 15:04:54
+*@date   2025-04-10 16:41:42
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -264,6 +264,9 @@ enum
     STR_EMOTION, // 情绪
     STR_TOOL_BOX, // 工具箱
     STR_SOS, // SOS
+    STR_RESTING_HEART, // 静息心率
+    STR_WEEK7_HEART, // 最近7天平均静息心率
+    STR_HEART_ABOUT, // 静息心率是指在清醒、不活跃的安静状态下，每分钟的心跳次数，是衡量心脏健康的重要指标之一可选择在清晨清醒后安静状态下测量，理想的静息心率是50~80次/分钟﻿
 };
 
 extern const char * const *i18n;

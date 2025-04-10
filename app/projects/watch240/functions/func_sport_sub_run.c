@@ -1967,7 +1967,7 @@ static void func_sport_sub_run_click_handler(void)
         {
             int res=0;
             bool sport_flag = uteModuleSportMoreSportsIsLessData();
-            sport_flag ^= 1;
+            // sport_flag ^= 1;
             if (sport_flag)
             {
                 res = msgbox(i18n[STR_SPORT_EXIT_MSG2], NULL, NULL, MSGBOX_MODE_BTN_YESNO, MSGBOX_MSG_TYPE_SPORT);

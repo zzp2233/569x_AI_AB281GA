@@ -210,7 +210,7 @@ static void func_message_card_init()
         .page_size = page_height,
         .page_count = 1,
         .jump_perc = 0,
-        .quick_jump_perc = 3,
+        .quick_jump_perc = 40,
         .up_over_perc   = 1,
         .down_over_perc = 1,
     };

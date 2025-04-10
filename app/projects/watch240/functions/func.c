@@ -21,7 +21,9 @@ typedef struct func_t_
 } func_t;
 
 extern void func_menu(void);
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
 extern void func_menustyle(void);
+#endif
 extern void func_clock(void);
 extern void func_clock_preview(void);
 //extern void func_clock_sub_sidebar(void);
@@ -311,7 +313,9 @@ const func_t tbl_func_create[] =
     {FUNC_WOMEN_HEALTH,                 func_women_health_form_create},
     {FUNC_BLE_CALL,                     func_ble_call_form_create},
     {FUNC_MENU,                         func_menu_form_create},
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
     {FUNC_MENUSTYLE,                    NULL},
+#endif
     {FUNC_CLOCK,                        func_clock_form_create},
     {FUNC_CLOCK_PREVIEW,                func_clock_preview_form_create},
 //    {FUNC_SIDEBAR,                      func_clock_sub_sidebar_form_create},
@@ -490,7 +494,9 @@ const func_t tbl_func_entry[] =
     {FUNC_MENU_STYLE_FOOTBALL_LIST,     func_menu_football_list},
     {FUNC_WOMEN_HEALTH,                 func_women_health},
     {FUNC_MENU,                         func_menu},                     //主菜单(蜂窝)
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
     {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
+#endif
     {FUNC_CLOCK,                        func_clock},                    //时钟表盘
     {FUNC_CLOCK_PREVIEW,                func_clock_preview},            //时钟表盘预览
 //    {FUNC_SIDEBAR,                      func_clock_sub_sidebar},        //表盘右滑

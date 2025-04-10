@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+
 #define TBL_ROTARY_ITEM_CNT                     ((int)(sizeof(tbl_rotary_item_en) / sizeof(tbl_rotary_item_en[0])))
 
 enum
@@ -231,3 +233,5 @@ void func_menustyle(void)
     }
     func_menustyle_exit();
 }
+
+#endif

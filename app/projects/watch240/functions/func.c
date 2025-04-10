@@ -189,6 +189,8 @@ extern void func_up_watch_dial(void);
 extern void func_breathe_finish(void);
 extern void func_women_health(void);
 extern void func_menu_football_list(void);
+extern void func_heart_about(void);
+
 
 compo_form_t *func_heart_warning_form_create(void);
 compo_form_t *func_menu_football_list_form_create(void);
@@ -301,6 +303,8 @@ compo_form_t *func_factory_testing_create(void);///*工厂测试*/
 compo_form_t *func_ageing_create(void);///*老化测试*/
 compo_form_t *func_audio_create(void);///*音频测试*/
 compo_form_t *func_online_factory_test_form_create(void);
+compo_form_t *func_heart_about_form_create(void);
+
 
 bool func_music_is_play(void);
 void func_music_play(bool sta);
@@ -434,6 +438,7 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT
     {FUNC_HEART_WARNING,                func_heart_warning_form_create},
 #endif
+    {FUNC_HEAR_ABOUT,                   func_heart_about_form_create},
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
@@ -564,6 +569,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SPORT_SWITCH,                 func_sport_switching},          //运动开启动画
     {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
     {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
+    {FUNC_HEAR_ABOUT,                   func_heart_about},               //
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game},                     //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT

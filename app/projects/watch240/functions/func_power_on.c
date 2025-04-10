@@ -31,8 +31,8 @@ compo_form_t *func_power_on_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I330001_KAIJI_ICON_LOGO_FRAME_1542_BIN);///背景图片
-    compo_picturebox_cut(pic, 0, 24 );
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I330001_KAIJI_ICON_LOGO_HELLO_BIN);///背景图片
+    // compo_picturebox_cut(pic, 0, 24 );
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_setid(pic, COMPO_PIC_ID);
 
@@ -48,11 +48,12 @@ static void func_power_on_disp_process(void)
         f_power_on->tick = tick_get();
         f_power_on->pic_num_disp ++;
 
-        if(f_power_on->pic_num_disp<24)
-        {
-            compo_picturebox_cut(pic, f_power_on->pic_num_disp, 24);
-        }
-        else
+        // if(f_power_on->pic_num_disp<24)
+        // {
+        //     //compo_picturebox_cut(pic, f_power_on->pic_num_disp, 24);
+        // }
+        // else
+        if(f_power_on->pic_num_disp>12)
         {
             func_cb.sta = FUNC_CLOCK;
             sys_cb.power_on_state=true;

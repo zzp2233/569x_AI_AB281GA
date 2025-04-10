@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-03-28 11:36:28
+*@date   2025-04-10 15:41:36
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -280,6 +280,10 @@ enum
     STR_TARGET_PUFFS, // 目标口数
     STR_DELETE_PUFFS, // 是否重置口数？目前抽吸次数将被清除
     STR_DELETE_SUCCES, // 清除成功
+    STR_PASSWORD_SWITCH, // 密码开关
+    STR_CHANGE_PASSWORD, // 更改密码
+    STR_SLIDE_UNLOCK, // 滑动解锁
+    STR_CHILD_LOCK, // 童锁已打开
 };
 
 extern const char * const *i18n;

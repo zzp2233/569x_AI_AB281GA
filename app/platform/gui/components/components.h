@@ -32,6 +32,7 @@ enum COMPO_TYPE
     COMPO_TYPE_BUTTERFLY,               //蝴蝶
     COMPO_TYPE_SCROLLBAR,               //滚动条
     COMPO_TYPE_PROGRESSBAR,             //进度条
+    COMPO_TYPE_BAR,                     //进度条
 };
 
 //绑定数据

@@ -86,7 +86,7 @@ typedef void widget_bar_t;
 #define COLOR_GRAY              0x8410
 #define COLOR_DARKGRAY          0xAD55
 #define COLOR_DIMGRAY           0x6B4D
-
+#define COLOR_BG           make_color(0X1C,0X1C,0X1C)
 
 //=== GUI ===
 //GUI初始化参数

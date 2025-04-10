@@ -113,6 +113,7 @@ extern void func_set_sub_list(void);
 extern void func_set_sub_sav(void);
 extern void func_set_puffs(void);
 extern void func_target_puffs(void);
+extern void func_sliding_unlcok_screen(void);
 extern void func_set_sub_dousing(void);
 extern void func_set_sub_disturd(void);
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
@@ -279,6 +280,7 @@ compo_form_t *func_set_sub_list_form_create(void);
 compo_form_t *func_set_sub_sav_form_create(void);
 compo_form_t *func_set_puffs_form_create(void);
 compo_form_t *func_target_puffs_form_create(void);
+compo_form_t *func_sliding_unlcok_screen_form_create(void);
 compo_form_t *func_set_sub_dousing_form_create(void);
 compo_form_t *func_set_sub_language_form_create(void);
 //compo_form_t *func_set_sub_time_form_create(void);
@@ -468,6 +470,7 @@ const func_t tbl_func_create[] =
     {FUNC_PASSWORD_SUB_SELECT,          func_password_sub_select_form_create},
     {FUNC_SET_SUB_SAV,                  func_target_puffs_form_create},
     {FUNC_TARGET_PUFFS,                  func_set_sub_sav_form_create},
+    {FUNC_SLIDING_UNLOCK_SCREEN,                  func_sliding_unlcok_screen_form_create},
     {FUNC_SET_PUFFS,                  func_set_puffs_form_create},
     {FUNC_SET_SUB_ABOUT,                func_set_sub_about_form_create},
 //    {FUNC_SET_SUB_4G,                   func_set_sub_4g_form_create},
@@ -645,6 +648,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SET_SUB_SAV,                  func_set_sub_sav},              //设置--声音与振动
     {FUNC_SET_PUFFS,                  func_set_puffs},              //设置口数
     {FUNC_TARGET_PUFFS,                  func_target_puffs},              //设置目标口数
+    {FUNC_SLIDING_UNLOCK_SCREEN,                  func_sliding_unlcok_screen},              //锁屏界面
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language},         //设置--语言
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT

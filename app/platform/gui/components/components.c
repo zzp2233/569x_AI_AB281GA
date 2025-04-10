@@ -1,5 +1,5 @@
 #include "include.h"
-
+#include "compo_bar.h"
 #define TRACE_EN                1
 
 #if TRACE_EN
@@ -117,6 +117,9 @@ static int compo_get_size(int type)
             compo_size = sizeof(compo_scroll_t);
             break;
 
+        case COMPO_TYPE_BAR:
+            compo_size = sizeof(compo_bar_t);
+            break;
         case COMPO_TYPE_PROGRESSBAR:
             compo_size = sizeof(compo_progressbar_t);
             break;

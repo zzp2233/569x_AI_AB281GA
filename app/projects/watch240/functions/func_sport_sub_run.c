@@ -1571,7 +1571,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
 
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_HEART_ICON_PIC26X22_X16_Y134_00_BIN);///心率图片
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_5_EXERCISING_HEART_ICON_PIC26X22_X16_Y134_00_BIN);///心率图片
     compo_picturebox_set_pos(pic,26/2+16,22/2+134);
     compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE);
 
@@ -1591,10 +1591,10 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set(txt, i18n[STR_HEART_RATE]);
     compo_setid(txt,COMPO_ID_UINT_SPORT_HEARTRATE);
 
-    pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_HEART_PROGRESS_ICON_PIC220X16_X10_Y168_00_BIN);///心率进度
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_5_EXERCISING_HEART_PROGRESS_ICON_PIC220X16_X10_Y168_00_BIN);///心率进度
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,176);
 
-    pic = compo_picturebox_create(frm, UI_BUF_I335001_5_EXERCISING_ARROW_14X11_X26_X70_X114_X158_X200_Y183_BIN);///心率进度指针
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_5_EXERCISING_ARROW_14X11_X26_X70_X114_X158_X200_Y183_BIN);///心率进度指针
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X+(44*(1-3)),176+15);
     compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE);
 

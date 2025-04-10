@@ -23,6 +23,7 @@
 #include "ute_module_message.h"
 #include "ute_module_factoryTest.h"
 #include "ute_module_newFactoryTest.h"
+#include "ute_module_sleep.h"
 
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
@@ -1629,41 +1630,6 @@ void uteModuleHeartWeekStaticSecond(ute_module_systemtime_time_t time)
     }
 }
 /**
-*@brief     加载周每天的静息心率柱状图
-*@details
-*@param[in] weekDayStaticHeartGraph
-*@param[in] color 颜色
-*@param[in] x开始坐标
-*@param[in] y开始坐标
-*@param[in] drawWidth 宽度
-*@param[in] intervalWidth 之间的间隔
-*@param[in] hightRange 对应的像素高度
-*@author      zn.zeng
-*@date       2022-09-04
-*/
-void uteModuleHeartLoadWeekDayStaticHeartData(UT_GraphsParam *weekDayStaticHeartGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange)
-{
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-    memset(weekDayStaticHeartGraph, 0, sizeof(UT_GraphsParam) * 7);
-#if UTE_LOG_GUI_LVL
-    for (uint8_t i = 0; i < 7; i++)
-    {
-        uteModuleHeartData.weekDayStaticHeart[i] = 80+rand()%20;
-    }
-#endif
-    for (uint8_t i = 0; i < 7; i++)
-    {
-        uint8_t heart = uteModuleHeartData.weekDayStaticHeart[i];
-        UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,heart=%d", __func__,heart);
-        weekDayStaticHeartGraph[i].colorData = color;
-        weekDayStaticHeartGraph[i].width = drawWidth;
-        weekDayStaticHeartGraph[i].hight = heart*hightRange / 120;
-        weekDayStaticHeartGraph[i].x = x + (drawWidth + intervalWidth) * i;
-        weekDayStaticHeartGraph[i].y = y - weekDayStaticHeartGraph[i].hight;
-    }
-}
-/**
 *@brief       读取静息心率历史数值
 *@details
 *@author      zn.zeng
@@ -1672,7 +1638,7 @@ void uteModuleHeartLoadWeekDayStaticHeartData(UT_GraphsParam *weekDayStaticHeart
 void uteModuleHeartrReadStaticHeartData(void)
 {
     void *file;
-    uint8_t path[30];
+    uint8_t path[40];
     ute_module_systemtime_time_t time, readTime;
     uteModuleSystemtimeGetTime(&time);
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,%04d%02d%02d,week=%d", __func__, time.year, time.month, time.day, time.week);
@@ -1682,7 +1648,7 @@ void uteModuleHeartrReadStaticHeartData(void)
         memcpy(&readTime, &time, sizeof(ute_module_systemtime_time_t));
         uteModuleSystemtimeInputDateIncreaseDecreaseDay(&readTime, i - 6);
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,readTime,%04d%02d%02d,week=%d", __func__, readTime.year, readTime.month, readTime.day, readTime.week);
-        memset(&path[0], 0, 30);
+        memset(&path[0], 0, 40);
         sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_DIR, readTime.year, readTime.month, readTime.day);
         if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
         {
@@ -1707,7 +1673,7 @@ void uteModuleHeartrReadStaticHeartData(void)
 void uteModuleHeartrSaveStaticHeartData(void)
 {
     void *file;
-    uint8_t path[30];
+    uint8_t path[40];
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
@@ -1716,12 +1682,12 @@ void uteModuleHeartrSaveStaticHeartData(void)
     if((dirInfo->filesCnt>=UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_MAX_FILE)&&(memcmp(&path[0],&dirInfo->filesName[0][0],8)!=0))
     {
         /*! 删除最旧一天的数据zn.zeng, 2022-09-15*/
-        memset(&path[0],0,30);
+        memset(&path[0],0,40);
         sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_DIR,&dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,del file=%s", __func__,&path[0]);
         uteModuleFilesystemDelFile((char *)&path[0]);
     }
-    memset(&path[0],0,30);
+    memset(&path[0],0,40);
     sprintf((char *)&path[0],"%s/%04d%02d%02d",UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_DIR,time.year,time.month,time.day);
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,dirInfo->filesCnt=%d", __func__,dirInfo->filesCnt);
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,save file=%s", __func__,&path[0]);
@@ -1766,6 +1732,19 @@ uint8_t uteModuleHeartrGetLast7DayAvgStaticHeartData(void)
     avg = sum/vail;
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,sum=%d,vail=%d,avg=%d", __func__,sum,vail,avg);
     return avg;
+}
+
+/**
+ * @brief        获取7天静息心率
+ * @details
+ * @param[out]   weekDayStaticHeart      7天静息心率
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-04-10
+ */
+void uteModuleHeartrGetWeekDayStaticHeartData(uint8_t *weekDayStaticHeart)
+{
+    memcpy(weekDayStaticHeart, &uteModuleHeartData.weekDayStaticHeart[0], 7);
 }
 #endif
 
@@ -1877,7 +1856,7 @@ void uteModuleHeartSendHistoryRestingHeartData(void)
 {
     uint8_t restingHRReport[20] = {0};
     void *file;
-    uint8_t path[30];
+    uint8_t path[40];
     ute_module_systemtime_time_t time, readTime;
     bool hasData = false;
     uint8_t sendLen = 0;
@@ -1892,7 +1871,7 @@ void uteModuleHeartSendHistoryRestingHeartData(void)
     {
         memcpy(&readTime, &time, sizeof(ute_module_systemtime_time_t));
         uteModuleSystemtimeInputDateIncreaseDecreaseDay(&readTime, i - 6);
-        memset(&path[0], 0, 30);
+        memset(&path[0], 0, 40);
         UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,year=%d,month=%d,day=%d", __func__,readTime.year,readTime.month,readTime.day);
         sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_WEEK_DAY_STATIC_HEART_DIR, readTime.year, readTime.month, readTime.day);
         if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))

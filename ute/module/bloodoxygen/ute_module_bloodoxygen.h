@@ -52,6 +52,7 @@ bool uteModuleBloodoxygenIsBloodOxygenAutoTesting(void);
 uint8_t uteModuleBloodoxygenGetTestingSecond(void);
 void uteModuleBloodoxygenSetFirstEnterAppFlag(bool flag);
 void uteModuleBloodoxygenGetMinMaxValue(uint8_t *min,uint8_t *max);
+bool uteModuleBloodoxygenGetTodayHistoryData(uint8_t *Bloodoxygen, uint8_t BloodoxygenCount);
 void uteModuleBloodoxygenSetBloodOxygenAutoTesting(bool isAutoTest);
 #endif //UTE_MODULE_BLOODOXYGEN_SUPPORT
 #endif //_UTE_MODULE_BLOODOXYGEN_H_

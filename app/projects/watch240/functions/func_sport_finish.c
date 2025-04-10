@@ -929,7 +929,7 @@ compo_form_t *func_sport_finish_form_create(void)
 
     /*运动卡路里->数据*/
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+    snprintf(txt_buf,sizeof(txt_buf),"%d",sport_data.saveData.sportCaloire);
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);
@@ -1190,7 +1190,7 @@ static void func_sport_finish_process(void)
 {
     f_sport_finish_t *f_sport_finish = (f_sport_finish_t*)func_cb.f_cb;
     compo_page_move_process(f_sport_finish->ptm);
-    printf("move_offset:%d\n",f_sport_finish->ptm->move_offset);
+    // printf("move_offset:%d\n",f_sport_finish->ptm->move_offset);
     func_process();
 }
 //室内跑步功能消息处理

@@ -1153,6 +1153,9 @@
 		<Unit filename="functions/func_game.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_heart_about .c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_heart_warning.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -801,7 +801,7 @@ static void func_heartrate_enter(void)
         .title_used = true,
         .page_size = 562,
         .page_count = 1,
-        .quick_jump_perc =10,
+        .quick_jump_perc = 40,
     };
     compo_page_move_init(f_heartrate->ptm, func_cb.frm_main->page_body, &info);
     func_cb.flag_animation = false;

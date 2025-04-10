@@ -716,6 +716,7 @@ static void func_activity_enter(void)
         .title_used = true,
         .page_size = 510,
         .page_count = 1,
+        .quick_jump_perc = 40,
     };
     compo_page_move_init(f_activity->ptm, func_cb.frm_main->page_body, &info);
     f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里

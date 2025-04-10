@@ -69,6 +69,8 @@
 
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1
+
+/*! 心率警告功能 zn.zeng, 2021-10-22  */
 #define UTE_MODULE_HEART_MIN_MAX_WARNING_VALUE_SUPPORT 1
 
 /*! 新工厂测试,xjc 2022-02-09*/
@@ -197,6 +199,7 @@
 #define UTE_MODULE_SCREENS_SCAN_SUPPORT               1 //二维码
 #define UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT      1 //心率预警
 #define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     0 //表盘侧边栏
+#define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   1 //菜单样式预览旋转界面
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

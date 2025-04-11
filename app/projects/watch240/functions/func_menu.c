@@ -136,10 +136,12 @@ void func_menu_sub_message(size_msg_t msg)
             break;
 
         case KD_BACK:
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
                 func_cb.sta = FUNC_MENUSTYLE;
             }
+#endif
             break;
 
         default:

@@ -75,22 +75,22 @@ static const compo_cube_item_t tbl_menu_cube[] =
 static const compo_cube_item_t tbl_menu_cube[] =
 {
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
-    {UI_BUF_I332001_WATCH4_MF_00_BIN, FUNC_ACTIVITY},
+    {UI_BUF_DIALPLATE_CUBE_00_BIN, FUNC_ACTIVITY},
 #endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
-    {UI_BUF_I332001_WATCH4_MF_03_BIN, FUNC_SLEEP},
+    {UI_BUF_DIALPLATE_CUBE_03_BIN, FUNC_SLEEP},
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
-    {UI_BUF_I332001_WATCH4_MF_04_BIN, FUNC_WEATHER},
+    {UI_BUF_DIALPLATE_CUBE_04_BIN, FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    {UI_BUF_I332001_WATCH4_MF_01_BIN, FUNC_BLOOD_OXYGEN},
+    {UI_BUF_DIALPLATE_CUBE_01_BIN, FUNC_BLOOD_OXYGEN},
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {UI_BUF_I332001_WATCH4_MF_02_BIN, FUNC_HEARTRATE},
+    {UI_BUF_DIALPLATE_CUBE_02_BIN, FUNC_HEARTRATE},
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
-    {UI_BUF_I332001_WATCH4_MF_05_BIN, FUNC_BT},
+    {UI_BUF_DIALPLATE_CUBE_05_BIN, FUNC_BT},
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
 
 // 时间数字字体
@@ -218,6 +218,7 @@ static void func_clock_cube_disk_icon_click(void)
     }
 
     compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+    if(cube == NULL) return;
     point_t pt = ctp_get_sxy();
 
     int icon_idx = compo_cube_get_idx(cube, pt.x, pt.y);
@@ -239,6 +240,51 @@ static void func_clock_cube_disk_icon_click(void)
     }
 }
 
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+// 立方体表盘
+compo_form_t *func_clock_cube_form_create(void)
+{
+    // 新建窗体
+    compo_form_t *frm = compo_form_create(true); // 菜单一般创建在底层
+
+    // 创建立方体菜单
+    compo_cube_t *cube = compo_cube_create(frm, CUBE_RADIUS, tbl_menu_cube, CUBE_ITEM_CNT);
+    compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
+    compo_setid(cube, COMPO_ID_CUBE);
+
+    // 新建文本
+    compo_textbox_t *txt = compo_textbox_create(frm, 2);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 120, 300, 70);
+    compo_bonddata(txt, COMPO_BOND_HOUR);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
+    txt = compo_textbox_create(frm, 2);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 120, 300, 70);
+    compo_bonddata(txt, COMPO_BOND_MINUTE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
+    txt = compo_textbox_create(frm, 10);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 70, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,320, 290, 70);
+    compo_bonddata(txt, COMPO_BOND_DATE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
+    txt = compo_textbox_create(frm, 1);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 140, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 120, 260, 70);
+    compo_textbox_set(txt, ":");
+    compo_setid(txt, COMPO_ID_TIME_DOT);
+
+    // compo_cube_update(cube);
+    return frm;
+}
+#elif   GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 // 立方体表盘
 compo_form_t *func_clock_cube_form_create(void)
 {
@@ -285,7 +331,16 @@ compo_form_t *func_clock_cube_form_create(void)
     // compo_cube_update(cube);
     return frm;
 }
+#else
+// 立方体表盘
+compo_form_t *func_clock_cube_form_create(void)
+{
+    // 新建窗体
+    compo_form_t *frm = compo_form_create(true); // 菜单一般创建在底层
 
+    return frm;
+}
+#endif
 // 地图功能事件处理
 void func_clock_cube_process(void)
 {
@@ -294,7 +349,11 @@ void func_clock_cube_process(void)
         return;
     }
     compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
-    compo_cube_move(cube);
+    if(cube != NULL)
+    {
+        compo_cube_move(cube);
+    }
+
 }
 
 // 地图功能消息处理
@@ -304,16 +363,16 @@ bool func_clock_cube_message(size_msg_t msg)
     bool flag_cube_touch = false;
 
     point_t pt = ctp_get_sxy();
-    s16 cube_limit_x = (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
-    s16 cube_limit_y = (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
-    bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
-    bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
+    s16 cube_limit_x = (GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X/2);
+    s16 cube_limit_y = (GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y/2);
+    bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + GUI_SCREEN_CENTER_X));
+    bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + GUI_SCREEN_CENTER_Y));
 
     if (sys_cb.dialplate_index == UTE_WATCHS_DIALPLATE_CUBE_INDEX && flag_cube_touch_x && flag_cube_touch_y)
     {
-        if (msg == MSG_CTP_TOUCH)
+        compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+        if (msg == MSG_CTP_TOUCH && cube != NULL)
         {
-            compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
             // 移动过程中，触屏停止。重新进入到开始拖动模式
             compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_DRAG);
             flag_cube_touch = true;
@@ -332,9 +391,11 @@ bool func_clock_cube_message(size_msg_t msg)
             flag_cube_touch = true;
             break;
 
+#if !DRV_ENCODER_KEYS_WATCHMAIN_SCREEN_SWITCHOVER_SUPPORT
         case MSG_QDEC_FORWARD: // 向前滚动菜单
         {
             compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+            if(cube == NULL) return;
             compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_FORWARD);
             flag_cube_touch = true;
         }
@@ -343,14 +404,17 @@ bool func_clock_cube_message(size_msg_t msg)
         case MSG_QDEC_BACKWARD: // 向后滚动菜单
         {
             compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+            if(cube == NULL) return;
             compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_BACKWARD);
             flag_cube_touch = true;
         }
         break;
+#endif
 
         case MSG_SYS_500MS: // 秒跳动处理
         {
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
+            if(txt == NULL) return;
             compo_textbox_set_visible(txt, time_visible);
             time_visible ^= 1;
             // flag_cube_touch = true;

@@ -1211,11 +1211,11 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         case MSGBOX_MODE_BTN_DELETE:        //删除按钮
             if (msg_type == MSGBOX_MSG_TYPE_DETAIL)
             {
-                btn = compo_button_create_by_image(frm, 0);  //需更替为删除图标
-                compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR]));
-                compo_textbox_set_location(text, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20,
-                                           gui_image_get_size(0).wid - gui_image_get_size(0).hei, gui_image_get_size(0).hei);
-                compo_textbox_set(text, i18n[STR_CLEAR]);
+                btn = compo_button_create_by_image(frm, UI_BUF_I335001_2_MESSAGE_LIST_ICON_DELETE_208X52_X16_Y521_BIN);  //需更替为删除图标
+                // compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR]));
+                // compo_textbox_set_location(text, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20,
+                //                            gui_image_get_size(0).wid - gui_image_get_size(0).hei, gui_image_get_size(0).hei);
+                // compo_textbox_set(text, i18n[STR_CLEAR]);
             }
             else
             {
@@ -1223,7 +1223,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 
             }
             compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20);
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I335001_2_MESSAGE_LIST_ICON_DELETE_208X52_X16_Y521_BIN).hei/2 - 20);
             compo_setid(btn, COMPO_ID_BTN_DELETE);
             break;
 

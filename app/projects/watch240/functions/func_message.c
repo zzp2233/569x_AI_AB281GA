@@ -44,9 +44,9 @@ typedef struct f_message_card_t_
 static const f_message_card_t message_card[]=
 {
     {
-        .pic_x=-85,    .pic_y=-53,   .pic_w=30,    .pic_h=30,
-        .time_x=-18,   .time_y=-64,  .time_w=118,  .time_h=25,
-        .msg_x=-100,   .msg_y=-30,   .msg_w=212,   .msg_h=93,
+        .pic_x=-85,    .pic_y=-35,   .pic_w=20,    .pic_h=20,
+        .time_x=-18,   .time_y=-44,  .time_w=118,  .time_h=25,
+        .msg_x=-100,   .msg_y=-15,   .msg_w=212,   .msg_h=93,
     },
 };
 
@@ -58,15 +58,24 @@ static u32 func_message_card_get_icon(u8 type)
     }
     return 0;
 }
+
 //创建消息窗体
 compo_form_t *func_message_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
+    compo_shape_t *shape = compo_shape_create_for_page(frm,frm->page, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_shape_set_color(shape, COLOR_BLACK);
+
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_MESSAGE]);
+    compo_textbox_t *title = compo_textbox_create_for_page(frm,frm->page,strlen(i18n[STR_MESSAGE]));
+    compo_textbox_set_align_center(title, false);
+    compo_textbox_set_location(title, 20, FORM_TITLE_HEIGHT/2-5, 210, FORM_TITLE_HEIGHT);
+    compo_textbox_set(title,i18n[STR_MESSAGE]);
 
     char time_buf[30];
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
@@ -120,36 +129,37 @@ compo_form_t *func_message_form_create(void)
         memset(time_buf,0,sizeof(time_buf));
         if(time_data.year != ute_msg->historyNotify[i].year || time_data.month != ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf,sizeof(time_buf), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else if(time_data.day > ute_msg->historyNotify[i].day && time_data.month == ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf,sizeof(time_buf), "%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else
         {
-            sprintf((char*)time_buf,sizeof(time_buf), "%02d:%02d %s", //record_tbl[index].callTime.year,
-                    hour,min,str_am);
+            snprintf(time_buf,sizeof(time_buf), "%02d:%02d %s", //record_tbl[index].callTime.year,
+                     hour,min,str_am);
         }
 
         char* msg = (char*)ute_msg->historyNotify[i].content;
 
         compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,2,2,228,144);
         compo_setid(cardbox,COMPO_ID_CARD_FIRST+i);
-        compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,107+149*i);
+        compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,107+125*i);
 
         compo_cardbox_icon_set_pos(cardbox,0,0,0);
-        compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_MESSAGE_BG_BIN);
+        compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_2_MESSAGE_LIST_ICON_BG_224X108_X8_Y48_X8_Y164_BIN);
 
         compo_cardbox_icon_set_location(cardbox,1,message_card[0].pic_x,message_card[0].pic_y,message_card[0].pic_w,message_card[0].pic_h);
         compo_cardbox_icon_set(cardbox, 1, func_message_card_get_icon(ute_msg->historyNotify[i].type));
 
         compo_cardbox_text_set_location(cardbox,0,message_card[0].time_x,message_card[0].time_y,message_card[0].time_w,message_card[0].time_h);
+        // compo_cardbox_text_set_location(cardbox,0,0,0,100,100);
         widget_set_align_center(cardbox->text[0],false);
         widget_text_set_color(cardbox->text[0],make_color(0x94,0x94,0x94));
         compo_cardbox_text_set(cardbox,0,time_buf);
@@ -169,14 +179,14 @@ compo_form_t *func_message_form_create(void)
     //        ute_msg->historyNotify[0].min
     //       );
     //创建按钮
-    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_MESSAGE_KEYBG_BIN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,149-(107-44)+(149*msg_num));
+    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_2_MESSAGE_LIST_ICON_DELETE_208X52_X16_Y521_BIN);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,149-(107-44)+(125*msg_num));
     compo_setid(btn, COMPO_ID_ALL_DEL_BTN);
 
-    //创建删除按钮文本
-    compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR_ALL]));
-    compo_textbox_set_location(text, GUI_SCREEN_CENTER_X,149-(107-44)+(149*msg_num),200,62);
-    compo_textbox_set(text, i18n[STR_CLEAR_ALL]);
+    // //创建删除按钮文本
+    // compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR_ALL]));
+    // compo_textbox_set_location(text, GUI_SCREEN_CENTER_X,149-(107-44)+(149*msg_num),200,62);
+    // compo_textbox_set(text, i18n[STR_CLEAR_ALL]);
 
     ab_free(ute_msg);
 
@@ -195,7 +205,7 @@ static void func_message_card_init()
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
 
-    uint16_t page_height = msg_num*149+149-(107-44);
+    uint16_t page_height = msg_num*135+149-(125-44);
     if(page_height<GUI_SCREEN_HEIGHT)
     {
         page_height = GUI_SCREEN_HEIGHT;

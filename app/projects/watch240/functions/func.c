@@ -190,8 +190,9 @@ extern void func_breathe_finish(void);
 extern void func_women_health(void);
 extern void func_menu_football_list(void);
 extern void func_heart_about(void);
+extern void func_oxygen_about(void);
 
-
+compo_form_t *func_oxygen_about_form_create(void);
 compo_form_t *func_heart_warning_form_create(void);
 compo_form_t *func_menu_football_list_form_create(void);
 compo_form_t *func_women_health_form_create(void);
@@ -439,6 +440,7 @@ const func_t tbl_func_create[] =
     {FUNC_HEART_WARNING,                func_heart_warning_form_create},
 #endif
     {FUNC_HEAR_ABOUT,                   func_heart_about_form_create},
+    {FUNC_OXYGEN_ABOUT,                 func_oxygen_about_form_create},
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
@@ -570,6 +572,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
     {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
     {FUNC_HEAR_ABOUT,                   func_heart_about},               //
+    {FUNC_OXYGEN_ABOUT,                 func_oxygen_about},
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game},                     //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
@@ -1420,7 +1423,7 @@ void func_message(size_msg_t msg)
             else
             {
                 //     if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0)
-                if(func_cb.left_sta == UTE_CUI_SCREEN_WATCHDIAL_LEFT)
+                if(func_cb.left_sta != FUNC_NULL && func_cb.left_sta == UTE_CUI_SCREEN_WATCHDIAL_LEFT)
                 {
                     func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
                 }

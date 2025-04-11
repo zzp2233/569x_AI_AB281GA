@@ -44,9 +44,9 @@ typedef struct f_message_card_t_
 static const f_message_card_t message_card[]=
 {
     {
-        .pic_x=-85,    .pic_y=-53,   .pic_w=30,    .pic_h=30,
-        .time_x=-18,   .time_y=-64,  .time_w=118,  .time_h=25,
-        .msg_x=-100,   .msg_y=-30,   .msg_w=212,   .msg_h=93,
+        .pic_x=-85,    .pic_y=-53+15,   .pic_w=26,    .pic_h=26,
+        .time_x=-18,   .time_y=-53+15,  .time_w=118,  .time_h=25,
+        .msg_x=-100,   .msg_y=-30+15,   .msg_w=212,   .msg_h=93,
     },
 };
 
@@ -74,7 +74,7 @@ compo_form_t *func_message_form_create(void)
     if(msg_num == 0)
     {
         //创建无消息界面
-        compo_picturebox_t* pic = compo_picturebox_create(frm, 0);
+        compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I335001_MESSAGE_NO_INFORMATION_ICON_92X76_X74_Y85_BIN);
         compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
 
         compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
@@ -139,12 +139,12 @@ compo_form_t *func_message_form_create(void)
 
         char* msg = (char*)ute_msg->historyNotify[i].content;
 
-        compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,2,2,228,144);
+        compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,2,2,224,108);
         compo_setid(cardbox,COMPO_ID_CARD_FIRST+i);
         compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,107+149*i);
 
         compo_cardbox_icon_set_pos(cardbox,0,0,0);
-        compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_MESSAGE_BG_BIN);
+        compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_MESSAGE_ICON_BG_224X108_X8_Y48_X8_Y164_BIN);
 
         compo_cardbox_icon_set_location(cardbox,1,message_card[0].pic_x,message_card[0].pic_y,message_card[0].pic_w,message_card[0].pic_h);
         compo_cardbox_icon_set(cardbox, 1, func_message_card_get_icon(ute_msg->historyNotify[i].type));
@@ -169,14 +169,10 @@ compo_form_t *func_message_form_create(void)
     //        ute_msg->historyNotify[0].min
     //       );
     //创建按钮
-    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_MESSAGE_KEYBG_BIN);
+    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_MESSAGE_ICON_DELETE_208X52_X16_Y521_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,149-(107-44)+(149*msg_num));
     compo_setid(btn, COMPO_ID_ALL_DEL_BTN);
 
-    //创建删除按钮文本
-    compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR_ALL]));
-    compo_textbox_set_location(text, GUI_SCREEN_CENTER_X,149-(107-44)+(149*msg_num),200,62);
-    compo_textbox_set(text, i18n[STR_CLEAR_ALL]);
 
     ab_free(ute_msg);
 

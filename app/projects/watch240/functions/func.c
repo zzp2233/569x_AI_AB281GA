@@ -169,7 +169,7 @@ extern void func_ota_update(void);
 extern void func_ota_err(void);
 extern void func_ota_succ(void);
 extern void func_ble_call(void);
-//extern void func_set_sub_sos(void);
+extern void func_set_sub_sos(void);
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 extern void func_power_on(void);//开机
 #endif
@@ -295,7 +295,7 @@ compo_form_t *func_message_reply_form_create(void);
 //compo_form_t *func_tetris_form_create(void);
 //compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
-//compo_form_t *func_set_sub_sos_form_create(void);
+compo_form_t *func_set_sub_sos_form_create(void);
 compo_form_t *func_empty_form_create(void);
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_test_mode_list_form_create(void);///*出厂测试模式选择*/
@@ -492,6 +492,7 @@ const func_t tbl_func_create[] =
     {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test_form_create},
     {FUNC_EMPTY,                        func_empty_form_create},
+    {FUNC_SET_SUB_SOS,                  func_set_sub_sos_form_create},//SOS
 };
 
 const func_t tbl_func_entry[] =
@@ -679,7 +680,7 @@ const func_t tbl_func_entry[] =
     {FUNC_OTA_ERROR,                    func_ota_err},
     {FUNC_OTA_SUCC,                     func_ota_succ},
     {FUNC_BLE_CALL,                     func_ble_call},
-//    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
+    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
     {FUNC_POWER_ON,                     func_power_on},
 #endif

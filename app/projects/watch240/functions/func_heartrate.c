@@ -204,7 +204,7 @@ compo_form_t *func_heartrate_form_create(void)
     uint8_t heart_week_date[7];
     uteModuleHeartrGetWeekDayStaticHeartData(heart_week_date);///获取心率
 
-    chart = compo_chartbox_create(frm, CHART_TYPE_BAR, 7);///图表内的柱形图
+    chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 7);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+13,512,190,94);
     compo_chartbox_set_pixel(chart, 1);
 
@@ -225,7 +225,7 @@ compo_form_t *func_heartrate_form_create(void)
 static void func_heartrate_refresh(void)
 {
     f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
-    if(tick_check_expire(f_heartrate->tick, 10+(f_heartrate->heart_pic_size/20)))
+    if(tick_check_expire(f_heartrate->tick, 100))
     {
         f_heartrate->tick = tick_get();
 //        area_t pic_size;
@@ -778,7 +778,7 @@ static void func_heartrate_message(size_msg_t msg)
         case MSG_SYS_1S:
             if(uteModuleHeartIsWear() == false)
             {
-                msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+                // msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
             }
             break;
         default:
@@ -801,7 +801,7 @@ static void func_heartrate_enter(void)
         .title_used = true,
         .page_size = 562,
         .page_count = 1,
-        .quick_jump_perc = 40,
+        .quick_jump_perc = 80,
     };
     compo_page_move_init(f_heartrate->ptm, func_cb.frm_main->page_body, &info);
     func_cb.flag_animation = false;

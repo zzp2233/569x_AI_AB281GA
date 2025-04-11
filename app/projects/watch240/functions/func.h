@@ -163,6 +163,7 @@ enum
     FUNC_OFF = FUNC_SET_SUB_OFF,        //关机
     FUNC_HEART_WARNING,
     FUNC_HEAR_ABOUT,
+    FUNC_OXYGEN_ABOUT,
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,

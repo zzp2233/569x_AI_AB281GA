@@ -700,7 +700,7 @@ bool uteModuleBloodoxygenSetBloodoxygenHistoryGraph(uint8_t *Bloodoxygen, uint8_
                 averageOxygenValueCnt++;
             }
         }
-        tempBloodxygenHistoryData[i] = oxygenValidValue / averageOxygenValueCnt;
+        tempBloodxygenHistoryData[i] = averageOxygenValueCnt>0 ? (oxygenValidValue / averageOxygenValueCnt):0;
     }
     memcpy(BloodoxygenHistoryData, tempBloodxygenHistoryData, BloodoxygenCount);
     for (uint8_t i = 0; i < BloodoxygenCount; i++)

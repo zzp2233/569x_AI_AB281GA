@@ -169,7 +169,7 @@ extern void func_ota_update(void);
 extern void func_ota_err(void);
 extern void func_ota_succ(void);
 extern void func_ble_call(void);
-//extern void func_set_sub_sos(void);
+extern void func_set_sub_sos(void);
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 extern void func_power_on(void);//开机
 #endif
@@ -189,6 +189,12 @@ extern void func_up_watch_dial(void);
 extern void func_breathe_finish(void);
 extern void func_women_health(void);
 extern void func_menu_football_list(void);
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+extern void func_system_sub_system(void);
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+extern void func_dial_and_theme(void);
+#endif
 extern void func_heart_about(void);
 extern void func_oxygen_about(void);
 
@@ -296,7 +302,7 @@ compo_form_t *func_message_reply_form_create(void);
 //compo_form_t *func_tetris_form_create(void);
 //compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
-//compo_form_t *func_set_sub_sos_form_create(void);
+compo_form_t *func_set_sub_sos_form_create(void);
 compo_form_t *func_empty_form_create(void);
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_test_mode_list_form_create(void);///*出厂测试模式选择*/
@@ -304,9 +310,9 @@ compo_form_t *func_factory_testing_create(void);///*工厂测试*/
 compo_form_t *func_ageing_create(void);///*老化测试*/
 compo_form_t *func_audio_create(void);///*音频测试*/
 compo_form_t *func_online_factory_test_form_create(void);
+compo_form_t *func_dial_and_theme_form_create(void);  //表盘与主题
+compo_form_t *func_system_sub_system_form_create(void); //系统
 compo_form_t *func_heart_about_form_create(void);
-
-
 bool func_music_is_play(void);
 void func_music_play(bool sta);
 
@@ -494,6 +500,13 @@ const func_t tbl_func_create[] =
     {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test_form_create},
     {FUNC_EMPTY,                        func_empty_form_create},
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+    {FUNC_SYSTEM,                       func_system_sub_system_form_create},//系统设置
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+    {FUNC_DIAL_AND_THEME,               func_dial_and_theme_form_create},//表盘&主题
+#endif
+    {FUNC_SET_SUB_SOS,                  func_set_sub_sos_form_create},//SOS
 };
 
 const func_t tbl_func_entry[] =
@@ -682,7 +695,7 @@ const func_t tbl_func_entry[] =
     {FUNC_OTA_ERROR,                    func_ota_err},
     {FUNC_OTA_SUCC,                     func_ota_succ},
     {FUNC_BLE_CALL,                     func_ble_call},
-//    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
+    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
     {FUNC_POWER_ON,                     func_power_on},
 #endif
@@ -693,6 +706,13 @@ const func_t tbl_func_entry[] =
     {FUNC_AUDIO,                        func_audio},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test},
     {FUNC_EMPTY,                        func_empty},
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+    {FUNC_SYSTEM,                        func_system_sub_system},//系统设置
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+    {FUNC_DIAL_AND_THEME,               func_dial_and_theme},//表盘&主题
+#endif
+
 };
 
 AT(.text.func.process)

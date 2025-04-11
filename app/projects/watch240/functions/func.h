@@ -163,6 +163,7 @@ enum
     FUNC_OFF = FUNC_SET_SUB_OFF,        //关机
     FUNC_HEART_WARNING,
     FUNC_DIAL_AND_THEME, //表盘&主题界面
+    FUNC_HEAR_ABOUT,
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,
@@ -230,7 +231,8 @@ typedef struct
     u8 sta_break;                                   //被中断的任务
     u8 sort_cnt;                                    //快捷任务个数
     u8 tbl_sort[MAX_FUNC_SORT_CNT];                 //快捷任务表
-    u16 left_sta;                                   //CLOCK左边菜单
+    u16 left_sta;                                   //CLOCK左边界面
+    u16 pullup_sta;                                 //CLOCK上拉界面
     u8 msgbox_enter_sta;                            //弹窗进入之前的界面任务
     u8  flag_sort       : 1,                        //已进入快捷任务
     flag_animation  : 1;                        //入场动画

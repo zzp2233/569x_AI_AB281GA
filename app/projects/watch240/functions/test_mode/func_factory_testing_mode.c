@@ -84,7 +84,11 @@ enum
     ANGLE_TXT_3_ID,
     ANGLE_TXT_4_ID,
     ///*按键测试*/
-    KEY_TXT_ID,
+    KEY_TXT_ID_0,
+    KEY_TXT_ID_1,
+    KEY_TXT_ID_2,
+    QDEC_FORWARD_TXT_ID,
+    QDEC_BACKWARD_TXT_ID,
     ///*马达测试*/
     MOTOR_TXT_ID,
     ///*充电测试*/
@@ -579,14 +583,48 @@ compo_form_t * func_factory_testing_key(void)
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen("按键测试"));
     compo_textbox_set(textbox, "按键测试");
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/2);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 1 / 8 - MODE_ONE_INTIAL_SPACING_Y);
 
     textbox = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH/3, GUI_SCREEN_HEIGHT/5);
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 2 / 8, GUI_SCREEN_WIDTH/3, GUI_SCREEN_HEIGHT/5);
     compo_textbox_set_multiline(textbox, true);
     compo_textbox_set(textbox, "按键: 0");
     compo_textbox_set_forecolor(textbox, COLOR_RED);
-    compo_setid(textbox,KEY_TXT_ID);
+    compo_setid(textbox,KEY_TXT_ID_0);
+
+#if UTE_DRV_PWRKEY_MAX_CNT > 1
+    textbox = compo_textbox_create(frm, 20);
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 3 / 8, GUI_SCREEN_WIDTH/3, GUI_SCREEN_HEIGHT/5);
+    compo_textbox_set_multiline(textbox, true);
+    compo_textbox_set(textbox, "按键: 1");
+    compo_textbox_set_forecolor(textbox, COLOR_RED);
+    compo_setid(textbox,KEY_TXT_ID_1);
+#endif
+
+#if UTE_DRV_PWRKEY_MAX_CNT > 2
+    textbox = compo_textbox_create(frm, 20);
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 4 / 8, GUI_SCREEN_WIDTH/3, GUI_SCREEN_HEIGHT/5);
+    compo_textbox_set_multiline(textbox, true);
+    compo_textbox_set(textbox, "按键: 2");
+    compo_textbox_set_forecolor(textbox, COLOR_RED);
+    compo_setid(textbox,KEY_TXT_ID_2);
+#endif
+
+#if DRV_ENCODER_KEYS_SUPPORT
+    textbox = compo_textbox_create(frm, 20);
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 5 / 8, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/5);
+    compo_textbox_set_multiline(textbox, true);
+    compo_textbox_set(textbox, "编码器: 上旋");
+    compo_textbox_set_forecolor(textbox, COLOR_RED);
+    compo_setid(textbox,QDEC_BACKWARD_TXT_ID);
+
+    textbox = compo_textbox_create(frm, 20);
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 6 / 8, GUI_SCREEN_WIDTH/2, GUI_SCREEN_HEIGHT/5);
+    compo_textbox_set_multiline(textbox, true);
+    compo_textbox_set(textbox, "编码器: 下旋");
+    compo_textbox_set_forecolor(textbox, COLOR_RED);
+    compo_setid(textbox,QDEC_FORWARD_TXT_ID);
+#endif
 
     func_factory_testing_pass_fail_bnt_create(frm);
 
@@ -891,11 +929,51 @@ static void func_factory_testing_message(size_msg_t msg)
         {
             if (test_data->moduleType == FACTORY_MODULE_KEY)
             {
-                compo_textbox_t *textbox1 = compo_getobj_byid(KEY_TXT_ID);
+                compo_textbox_t *textbox1 = compo_getobj_byid(KEY_TXT_ID_0);
                 compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
             }
         }
         break;
+        case K_LEFT:
+        {
+#if UTE_DRV_PWRKEY_MAX_CNT > 1
+            if (test_data->moduleType == FACTORY_MODULE_KEY)
+            {
+                compo_textbox_t *textbox1 = compo_getobj_byid(KEY_TXT_ID_1);
+                compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
+            }
+#endif
+        }
+        break;
+        case K_RIGHT:
+        {
+#if UTE_DRV_PWRKEY_MAX_CNT > 2
+            if (test_data->moduleType == FACTORY_MODULE_KEY)
+            {
+                compo_textbox_t *textbox1 = compo_getobj_byid(KEY_TXT_ID_2);
+                compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
+            }
+#endif
+        }
+        break;
+
+#if DRV_ENCODER_KEYS_SUPPORT
+        case MSG_QDEC_FORWARD: // 向前滚动菜单
+        {
+            msg_queue_detach(MSG_QDEC_FORWARD, 0);
+            compo_textbox_t *textbox1 = compo_getobj_byid(QDEC_FORWARD_TXT_ID);
+            compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
+        }
+        break;
+
+        case MSG_QDEC_BACKWARD: // 向后滚动菜单
+        {
+            msg_queue_detach(MSG_QDEC_BACKWARD, 0);
+            compo_textbox_t *textbox1 = compo_getobj_byid(QDEC_BACKWARD_TXT_ID);
+            compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
+        }
+        break;
+#endif
 
         case KL_BACK:
         {

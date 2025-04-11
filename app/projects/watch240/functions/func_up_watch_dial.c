@@ -75,11 +75,10 @@ static void func_up_watch_dial_disp(void)
 
     if(f_up_watch_dial->state  != UPGRADING)
     {
-        if(f_up_watch_dial->switch_page_time+SWITCH_TIME >= tick_get())
+        if(tick_get() > f_up_watch_dial->switch_page_time+SWITCH_TIME)
         {
-            func_cb.sta = FUNC_CLOCK;
+            uteTaskGuiStartScreen(FUNC_CLOCK,0,__func__);
         }
-
         return;
     }
 
@@ -163,11 +162,10 @@ static void func_up_watch_dial_disp(void)
 
     if(f_up_watch_dial->state  != UPGRADING)
     {
-        if(f_up_watch_dial->switch_page_time+SWITCH_TIME >= tick_get())
+        if(tick_get() > f_up_watch_dial->switch_page_time+SWITCH_TIME)
         {
-            func_cb.sta = FUNC_CLOCK;
+            uteTaskGuiStartScreen(FUNC_CLOCK,0,__func__);
         }
-
         return;
     }
 

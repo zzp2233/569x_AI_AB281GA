@@ -239,6 +239,13 @@ void func_clock_recreate_dial(void)
     {
         compo_form_destroy(func_cb.frm_main);
         func_cb.frm_main = func_clock_form_create();
+#if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
+        if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
+        {
+            sys_cb.dialplate_btf_ready = true;
+            tft_set_temode(0);
+        }
+#endif
     }
 }
 
@@ -271,9 +278,11 @@ static void func_clock_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_SHORT_UP:
-#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
-            func_switch_to(FUNC_CARD, FUNC_SWITCH_MENU_PULLUP_UP);  //上拉卡片界面
-#endif
+            if(UTE_CUI_SCREEN_WATCHDIAL_PULLUP != FUNC_NULL)
+            {
+                func_cb.pullup_sta = UTE_CUI_SCREEN_WATCHDIAL_PULLUP;
+                func_switch_to(UTE_CUI_SCREEN_WATCHDIAL_PULLUP, FUNC_SWITCH_MENU_PULLUP_UP);  //上拉卡片界面
+            }
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
             func_clock_butterfly_set_light_visible(false);
             if (func_cb.sta == FUNC_CLOCK)
@@ -296,7 +305,7 @@ static void func_clock_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_DOWN:
-#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I3350001_SUPPORT)
             func_clock_sub_dropdown();              //下拉菜单
 #endif
             break;
@@ -309,13 +318,36 @@ static void func_clock_message(size_msg_t msg)
 
             break;
 
+#if DRV_ENCODER_KEYS_WATCHMAIN_SCREEN_SWITCHOVER_SUPPORT
         case MSG_QDEC_FORWARD:                              //向前滚动菜单
-
-            break;
+        {
+            msg_queue_detach(MSG_QDEC_FORWARD, 0);  //防止不停滚动
+            sys_cb.dialplate_index ++;
+            if(sys_cb.dialplate_index > uteModuleGuiCommonGetCurrWatchMaxIndex() - 1)
+            {
+                sys_cb.dialplate_index = 0;
+            }
+            uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
+            func_clock_recreate_dial();
+        }
+        break;
 
         case MSG_QDEC_BACKWARD:                             //向后滚动菜单
-
-            break;
+        {
+            msg_queue_detach(MSG_QDEC_BACKWARD, 0);  //防止不停滚动
+            if(sys_cb.dialplate_index > 0)
+            {
+                sys_cb.dialplate_index --;
+            }
+            else
+            {
+                sys_cb.dialplate_index = uteModuleGuiCommonGetCurrWatchMaxIndex() - 1;
+            }
+            uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
+            func_clock_recreate_dial();
+        }
+        break;
+#endif
 
         case MSG_CTP_LONG:
             if (func_clock_preview_get_type() == PREVIEW_ROTARY_STYLE)
@@ -340,7 +372,9 @@ static void func_clock_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_clock_t));
     func_cb.frm_main = func_clock_form_create();
-    func_cb.flag_animation = true;///
+    func_cb.flag_animation = true;
+    func_cb.left_sta = FUNC_NULL;
+    func_cb.pullup_sta = FUNC_NULL;
 
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)

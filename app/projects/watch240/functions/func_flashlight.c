@@ -141,6 +141,67 @@ static void func_flashlight_button_click(void)
         compo_textbox_set_visible(txt_idle, true);
     }
 }
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+//创建手电筒窗体
+compo_form_t *func_flashlight_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+//    //设置标题栏
+//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+//    compo_form_set_title(frm, i18n[STR_FLASHLIGHT]);
+//
+    u32 res_addr;
+    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+    res_addr   = f_flashlight->flashlight_flag?UI_BUF_I335001_27_MORE_4_FLASHLIGHT_ICON_44X88_X98_Y98_01_BIN:UI_BUF_I335001_27_MORE_4_FLASHLIGHT_ICON_44X88_X98_Y98_00_BIN;
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, res_addr);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 98+88/2);
+    compo_picturebox_set_visible(picbox, true);
+    compo_setid(picbox,COMPO_ID_PIC);
+
+    //创建文本
+    compo_textbox_t *txt_idle = compo_textbox_create(frm, strlen(i18n[STR_CLICK_OPEN]));
+    compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
+    compo_textbox_set_location(txt_idle, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/1.55+20,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_idle->txt).hei);
+    compo_textbox_set(txt_idle,i18n[STR_CLICK_OPEN]);
+    compo_textbox_set_visible(txt_idle, true);
+    compo_setid(txt_idle,COMPO_ID_TXT);
+
+    compo_shape_t * shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_shape_set_color(shape, COLOR_WHITE);
+    compo_setid(shape,COMPO_ID_BG_SHAPE);
+    compo_shape_set_visible(shape, false);
+
+    return frm;
+}
+
+static void func_flashlight_button_click(void)
+{
+    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+    compo_shape_t * shape = compo_getobj_byid(COMPO_ID_BG_SHAPE);
+    compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_PIC);
+    compo_textbox_t *txt_idle = compo_getobj_byid(COMPO_ID_TXT);
+    f_flashlight->flashlight_flag = !f_flashlight->flashlight_flag;
+
+    if(f_flashlight->flashlight_flag == true)
+    {
+        f_flashlight ->light_level = sys_cb.light_level;
+        sys_cb.light_level = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
+        tft_bglight_set_level(sys_cb.light_level,false);
+        compo_shape_set_visible(shape, true);
+        compo_picturebox_set_visible(picbox, false);
+        compo_textbox_set_visible(txt_idle, false);
+    }
+    else
+    {
+        tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
+        compo_shape_set_visible(shape, false);
+        compo_picturebox_set_visible(picbox, true);
+        compo_textbox_set_visible(txt_idle, true);
+    }
+}
 #else
 compo_form_t *func_flashlight_form_create(void)
 {

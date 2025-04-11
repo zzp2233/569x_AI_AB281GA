@@ -1138,6 +1138,9 @@
 		<Unit filename="functions/func_debug_info.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_dial_and_theme.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_disturd_config.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1243,6 +1246,9 @@
 		<Unit filename="functions/func_ota_update.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_oxygen_about.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_passwod_sub_disp.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1342,6 +1348,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_style.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_system.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_tetris.c">

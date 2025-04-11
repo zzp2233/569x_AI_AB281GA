@@ -124,19 +124,6 @@ static void func_power_on_disp_process(void)
         }
     }
 }
-#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-//创建开机窗体
-compo_form_t *func_power_on_form_create(void)
-{
-    //新建窗体
-    compo_form_t *frm = compo_form_create(true);
-
-    return frm;
-}
-static void func_power_on_disp_process(void)
-{
-    func_cb.sta = FUNC_CLOCK;
-}
 #else
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)

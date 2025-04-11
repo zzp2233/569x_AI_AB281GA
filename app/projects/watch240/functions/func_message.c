@@ -83,7 +83,7 @@ compo_form_t *func_message_form_create(void)
     if(msg_num == 0)
     {
         //创建无消息界面
-        compo_picturebox_t* pic = compo_picturebox_create(frm, 0);
+        compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I335001_MESSAGE_NO_INFORMATION_ICON_92X76_X74_Y85_BIN);
         compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
 
         compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
@@ -148,7 +148,7 @@ compo_form_t *func_message_form_create(void)
 
         char* msg = (char*)ute_msg->historyNotify[i].content;
 
-        compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,2,2,228,144);
+        compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,2,2,224,108);
         compo_setid(cardbox,COMPO_ID_CARD_FIRST+i);
         compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,107+125*i);
 

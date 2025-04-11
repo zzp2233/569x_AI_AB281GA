@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-10 16:41:42
+*@date   2025-04-11 17:07:31
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -267,6 +267,18 @@ enum
     STR_RESTING_HEART, // 静息心率
     STR_WEEK7_HEART, // 最近7天平均静息心率
     STR_HEART_ABOUT, // 静息心率是指在清醒、不活跃的安静状态下，每分钟的心跳次数，是衡量心脏健康的重要指标之一可选择在清晨清醒后安静状态下测量，理想的静息心率是50~80次/分钟﻿
+    STR_SYSTEM_SET, // 系统设置
+    STR_UV, // 紫外线
+    STR_UV_VERY_WEAK, // 很弱
+    STR_UV_WEAK, // 弱
+    STR_UV_MODERATE, // 中等
+    STR_UV_STRONG, // 强
+    STR_UV_VERY_STRONG, // 很强
+    STR_HUMIDITY, // 湿度
+    STR_FUTURE_WEATHER, // 未来天气
+    STR_CALL_CLOSED_IS_OPEN, // 呼叫开关已禁用，您想打开它吗？
+    STR_WATCHFACE_AND_THEME, // 表盘&主题
+    STR_DIAL_SOS, // 拨打SOS？
 };
 
 extern const char * const *i18n;

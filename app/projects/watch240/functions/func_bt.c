@@ -108,6 +108,7 @@ enum
     COMPO_ID_TXT_MUSIC_NAME,
     COMPO_ID_TXT_MUSIC_LYRIC,
     COMPO_ID_SHAPE_MUSIC_VOL,
+    COMPO_ID_MUSIC_BG_FIG,
 };
 
 typedef struct f_bt_t_
@@ -129,7 +130,12 @@ compo_form_t *func_bt_form_create(void)
     uint16_t title_size_leng  = 0;
     memset(title_buf,0,sizeof(title_buf));
     uteModuleMusicGetPlayerTitle((uint8_t *)title_buf,&title_size_leng);
-    if(title_size_leng==0)
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        memset(title_buf,0,sizeof(title_buf));
+        snprintf(title_buf,sizeof(title_buf),"%s",i18n[STR_CONNECT_BLUETOOTH]);
+    }
+    else if(title_size_leng==0)
     {
         memset(title_buf,0,sizeof(title_buf));
         snprintf(title_buf,sizeof(title_buf),"%s",i18n[STR_UNKNOWN]);
@@ -140,44 +146,76 @@ compo_form_t *func_bt_form_create(void)
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_MUSIC]);
-    compo_form_add_image(frm, UI_BUF_I335001_MUSIC_BG_BIN, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y );
+
+    //bg
+    compo_picturebox_t *bg_pic = compo_picturebox_create(frm, UI_BUF_I335001_MUSIC_1_MUSIC_BG_240X210_X0_Y46_BIN);
+    compo_setid(bg_pic, COMPO_ID_MUSIC_BG_FIG);
+    compo_picturebox_set_pos(bg_pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_cut(bg_pic,0,2);
 
     //歌名
-    compo_textbox_t *lyric_txt = compo_textbox_create(frm, 50);
+    compo_textbox_t *lyric_txt = compo_textbox_create(frm, TITLE_BUF_LEN);
     compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X,44,96, 30);
     compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
     compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
     compo_textbox_set(lyric_txt,title_buf);
 
-    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_NEXT_SONG_BIN);///上一曲
+    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_28X30_X24_Y137_X188_Y137_PREVIOUS_SONG_BIN);///上一曲
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_BUTTON_28X30_X24_Y137_X188_Y137_PREVIOUS_SONG_BIN);///上一曲
+    }
     compo_setid(btn, COMPO_ID_BTN_PREV);
-    compo_button_set_pos(btn,51, 55);
+    compo_button_set_pos(btn,24+14, 137+15);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_PREVIOUS_SONG_BIN);///下一曲
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_BUTTON_28X30_X24_Y137_X188_Y137_NEXT_SONG_BIN);///下一曲
+    }
+    else
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_28X30_X24_Y137_X188_Y137_NEXT_SONG_BIN);///下一曲
+    }
     compo_setid(btn, COMPO_ID_BTN_NEXT);
-    compo_button_set_pos(btn,22, 81);
+    compo_button_set_pos(btn,188+14, 137+15);
 
     if(ble_is_connect())
     {
         bt_cb.music_playing = !uteModuleMusicGetPlayerPaused();
     }
-    btn = compo_button_create_by_image(frm,bt_cb.music_playing ? UI_BUF_I335001_MUSIC_PLAY_BACK_BIN:UI_BUF_I335001_MUSIC_PAUSE_BIN);///暂停 播放
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        // compo_button_set_bgimg(btn,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_96X96_X72_Y104_BIN);
+        btn = compo_button_create_by_image(frm,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_96X96_X72_Y104_BIN);///灰色的暂停按钮
+    }
+    else
+    {
+        btn = compo_button_create_by_image(frm,bt_cb.music_playing ? UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_96X96_X72_Y104_01_BIN:UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_96X96_X72_Y104_02_BIN);///暂停 播放
+    }
     compo_setid(btn, COMPO_ID_BTN_PLAY);
-    compo_button_set_pos(btn, 180, 138);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 152);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_REDUCTION_BIN);///音量减
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_1_MUSIC_ICON_26X22_X26_Y248_X192_Y248_REDUCTION_BIN);///音量减
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_26X22_X26_Y248_X192_Y248_REDUCTION_BIN);///音量减
+    }
     compo_setid(btn, COMPO_ID_BTN_VOL_DOWN);
-    compo_button_set_pos(btn, 34,250);
+    compo_button_set_pos(btn, 26+13,248+11);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_ADD_BIN);///音量加
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_1_MUSIC_ICON_26X22_X26_Y248_X192_Y248_ADD_BIN);///音量加
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_26X22_X26_Y248_X192_Y248_ADD_BIN);///音量加
+    }
     compo_setid(btn, COMPO_ID_BTN_VOL_UP);
-    compo_button_set_pos(btn, 205,250);
+    compo_button_set_pos(btn, 192+13,248+11);
 
     uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
     if(vol>16)vol=16;
 
-    compo_picturebox_t *pic = compo_picturebox_create(frm,UI_BUF_I335001_MUSIC_MUSIC_GIF_BIN);
-    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,276);
+    compo_picturebox_t *pic = compo_picturebox_create(frm,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_SOUND_120X4_X60_Y257_BIN);
+    compo_picturebox_set_pos(pic,60+60,257+2);
     compo_picturebox_cut(pic,vol,17);
     compo_setid(pic,COMPO_ID_SHAPE_MUSIC_VOL);
 
@@ -195,18 +233,53 @@ static void func_bt_music_refresh_disp(void)
     uint16_t title_size_leng  = 0;
     memset(title_buf,0,sizeof(title_buf));
     uteModuleMusicGetPlayerTitle((uint8_t *)title_buf,&title_size_leng);
-    if(title_size_leng==0)
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        memset(title_buf,0,sizeof(title_buf));
+        snprintf(title_buf,sizeof(title_buf),"%s",i18n[STR_CONNECT_BLUETOOTH]);
+    }
+    else if(title_size_leng==0)
     {
         memset(title_buf,0,sizeof(title_buf));
         snprintf(title_buf,sizeof(title_buf),"%s",i18n[STR_UNKNOWN]);
     }
-
-    compo_button_set_bgimg(btn_play,bt_cb.music_playing ? UI_BUF_I335001_MUSIC_PLAY_BACK_BIN:UI_BUF_I335001_MUSIC_PAUSE_BIN);///暂停 播放;
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_PLAY);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_96X96_X72_Y104_BIN);///灰色的暂停按钮
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_PREV);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_BUTTON_28X30_X24_Y137_X188_Y137_PREVIOUS_SONG_BIN);//上一首
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_NEXT);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_BUTTON_28X30_X24_Y137_X188_Y137_NEXT_SONG_BIN);//下一首
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_VOL_DOWN);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_26X22_X26_Y248_X192_Y248_REDUCTION_BIN);//音量减
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_VOL_UP);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_26X22_X26_Y248_X192_Y248_ADD_BIN);//音量加
+    }
+    else
+    {
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_PLAY);
+        compo_button_set_bgimg(btn_play,bt_cb.music_playing ? UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_96X96_X72_Y104_01_BIN:UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_96X96_X72_Y104_02_BIN);///暂停 播放
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_PREV);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_28X30_X24_Y137_X188_Y137_PREVIOUS_SONG_BIN);//上一首
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_NEXT);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_28X30_X24_Y137_X188_Y137_NEXT_SONG_BIN);//下一首
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_VOL_DOWN);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_26X22_X26_Y248_X192_Y248_REDUCTION_BIN);//音量减
+        btn_play   = compo_getobj_byid(COMPO_ID_BTN_VOL_UP);
+        compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_26X22_X26_Y248_X192_Y248_ADD_BIN);//音量加
+    }
     uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
     if(vol>16)vol=16;
     compo_picturebox_cut(pic,vol,17);
 
-    if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
+    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    {
+        memset(title_buf,0,sizeof(title_buf));
+        snprintf(title_buf,sizeof(title_buf),"%s",i18n[STR_CONNECT_BLUETOOTH]);
+        compo_textbox_set(tilte_txt, title_buf);
+    }
+    else if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
     {
         f_bt->refresh_data = false;
         memcpy(f_bt->title_buf_old, f_bt->title_buf, sizeof(f_bt->title_buf));

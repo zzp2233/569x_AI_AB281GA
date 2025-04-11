@@ -47,6 +47,24 @@ static const compo_listbox_item_t tbl_menu_list[] =
 // #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     // {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STRESS_BIN,                 .str_idx=STR_STRESS},              //压力
 // #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+// #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+//     {.func_sta=FUNC_BT,                       .res_addr=UI_BUF_I335001_01_MENU_MUSIC_BIN,                      .str_idx=STR_MUSIC},                 //蓝牙播放器(控制手机音乐)
+// #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+// #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+//     {.func_sta=FUNC_MESSAGE,                  .res_addr=UI_BUF_I335001_01_MENU_NOTIFICATION_BIN,               .str_idx=STR_MESSAGE},               //消息
+// #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+// #if UTE_MODULE_SCREENS_SETTING_SUPPORT
+//     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_01_MENU_SETTINGS_BIN,                   .str_idx=STR_SETTING},               //设置
+// #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+// #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+//     {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_01_MENU_SLEEP_BIN,                      .str_idx=STR_SLEEP},                 //睡眠
+// #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+// #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+//     {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_01_MENU_STRESS_BIN,                    .str_idx=STR_SLEEP},                 //压力
+// #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+// #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+//     {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I335001_01_MENU_TOOLBOX_BIN,                    .str_idx=STR_MORE},                 //工具箱
+// #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_EXERCISE_BIN,               .str_idx=STR_SPORTS},                //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT

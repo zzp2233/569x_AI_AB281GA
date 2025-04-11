@@ -79,7 +79,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_01_MENU_STRESS_BIN,                    .str_idx=STR_SLEEP},                 //压力
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
-    {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_01_MENU_TOOLBOX_BIN,                    .str_idx=STR_SLEEP},                 //工具箱
+    {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I335001_01_MENU_TOOLBOX_BIN,                    .str_idx=STR_MORE},                 //工具箱
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I335001_01_MENU_TRAINING_BIN,                   .str_idx=STR_SPORTS},                //运动

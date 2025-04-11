@@ -162,6 +162,7 @@ enum
     FUNC_SET_SUB_OFF,                   //设置--关机
     FUNC_OFF = FUNC_SET_SUB_OFF,        //关机
     FUNC_HEART_WARNING,
+    FUNC_DIAL_AND_THEME, //表盘&主题界面
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,
@@ -210,7 +211,7 @@ enum
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
     FUNC_UP_WATCH_DIAL,
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
-
+    FUNC_SYSTEM,    //系统设置列表界面
     FUNC_MAX_NUM,           //用于计数
 };
 

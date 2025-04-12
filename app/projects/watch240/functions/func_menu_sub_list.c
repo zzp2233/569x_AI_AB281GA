@@ -114,18 +114,18 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                .str_idx=STR_WOMEN_HEALTH},          //女性健康
 // #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-    {.func_sta=STR_STOP_WATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             .str_idx = STR_STOP_WATCH},          //秒表
+    {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             .str_idx = STR_STOP_WATCH},          //秒表
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
-    {.func_sta=STR_TIMER,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_TIMER_BIN,                 .str_idx = STR_TIMER},                //定时器
+    {.func_sta=FUNC_TIMER,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_TIMER_BIN,                 .str_idx = STR_TIMER},                //定时器
 #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
-    {.func_sta=STR_FIND_PHONE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FIND_PHONE_BIN,            .str_idx = STR_FIND_PHONE},           //查找手机
-    {.func_sta=STR_FLASHLIGHT,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FLASHLIGHT_BIN,            .str_idx = STR_FLASHLIGHT},           //手电筒
+    {.func_sta=FUNC_FINDPHONE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FIND_PHONE_BIN,            .str_idx = STR_FIND_PHONE},           //查找手机
+    {.func_sta=FUNC_FLASHLIGHT,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FLASHLIGHT_BIN,            .str_idx = STR_FLASHLIGHT},           //手电筒
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-    {.func_sta=STR_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         .str_idx = STR_CAMERA},               //相机
+    {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         .str_idx = STR_CAMERA},               //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {.func_sta=STR_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             .str_idx = STR_CALCULATOR},           //计算器
+    {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             .str_idx = STR_CALCULATOR},           //计算器
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 };
 #define  BATTERY_PIC_0_BIN   0                ///电池电量图标0

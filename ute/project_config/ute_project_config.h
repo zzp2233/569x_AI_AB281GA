@@ -89,6 +89,10 @@
 #define UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT 1
 #endif
 
+#ifndef HAS_BEEN_CONNECTED
+#define HAS_BEEN_CONNECTED 0x80
+#endif
+
 /** 默认系统支持是最大闹钟数量*/
 #ifndef SYSTEM_TIME_ALARMS_MAX_CNT
 #define SYSTEM_TIME_ALARMS_MAX_CNT 5

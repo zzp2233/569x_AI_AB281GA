@@ -5498,10 +5498,10 @@ uint32_t uteModuleSportReadAllStepWithTime(ute_module_systemtime_time_t time)
 {
     uint32_t totalStep = 0;
     void *file;
-    uint8_t path[20];
+    uint8_t path[30];
     uint16_t buffSize = 12 * 24 + 4;
     uint8_t *readBuff = uteModulePlatformMemoryAlloc(buffSize);
-    memset(&path[0], 0, 20);
+    memset(&path[0], 0, 30);
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR, time.year, time.month, time.day);
     // read
     if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))

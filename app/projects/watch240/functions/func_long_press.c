@@ -144,7 +144,9 @@ static void func_long_press_event_handle(s32 distance, u16 id)
                     memset(sys_cb.outgoing_number, 0, sizeof(sys_cb.outgoing_number));
                     ute_module_call_addressbook_t sosData;
                     memset(&sosData, 0, sizeof(ute_module_call_addressbook_t));
+#if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
                     uteModuleCallGetSosContact(&sosData);
+#endif
                     if(strlen((const char *)sosData.numberAscii) && uteModuleCallBtIsConnected())
                     {
                         memcpy(sys_cb.outgoing_number, sosData.numberAscii, strlen((const char *)sosData.numberAscii));

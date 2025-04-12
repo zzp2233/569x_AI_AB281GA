@@ -153,8 +153,8 @@
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
 #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17312001_BIN, UI_BUF_DIALPLATE_D17196001_BIN, UI_BUF_DIALPLATE_D17195001_BIN, UI_BUF_DIALPLATE_D17194001_BIN, UI_BUF_DIALPLATE_BTF_BIN, UI_BUF_DIALPLATE_CUBE_BIN}
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17312001_BIN, \
-                                                UI_BUF_DIALPLATE_D17196001_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17196001_BIN, \
+                                                UI_BUF_DIALPLATE_D17312001_BIN, \
                                                 UI_BUF_DIALPLATE_D17195001_BIN, \
                                                 UI_BUF_DIALPLATE_D17194001_BIN, \
                                                 UI_BUF_DIALPLATE_BTF_BIN, \

@@ -287,10 +287,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/sleep/ute_module_sleep.h" />
-		<Unit filename="../../../ute/module/slideBar/ute_module_slideBar.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../../ute/module/slideBar/ute_module_slideBar.h" />
 		<Unit filename="../../../ute/module/sport/ute_module_sport.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1380,6 +1376,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_volume.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_watchface_and_theme.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_weather.c">

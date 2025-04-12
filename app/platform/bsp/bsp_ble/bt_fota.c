@@ -567,6 +567,10 @@ void fot_recv_proc(u8 *buf, u16 len)
             }
             uteModulePlatformRestartTimer(&fot_wait_bt_off_timer, 100);
 
+#if UTE_USER_ID_FOR_BINDING_SUPPORT
+            uteModuleAppBindingSetOurAppConnection(true);
+#endif
+
             break;
 
         case FOT_GET_INFO:

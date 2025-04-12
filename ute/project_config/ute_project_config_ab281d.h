@@ -12,7 +12,7 @@
 #define DEFAULT_BLE_DEV_NAME "T62"
 #define UTE_SW_VERSION "AB281DV000033"
 //长沙调试用TP
-#define UTE_DRV_CTP_SELECT             CTP_CHSC6X
+// #define UTE_DRV_CTP_SELECT             CTP_CHSC6X
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
@@ -171,7 +171,7 @@
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      1
 
-#define UTE_DRV_CTP_SELECT              CTP_CHSC6X
+// #define UTE_DRV_CTP_SELECT              CTP_CHSC6X
 
 #define UTE_ALARM_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT 1 //勿扰模式闹钟开启马达震动
 
@@ -187,8 +187,10 @@
 #define UTE_DRV_SCREEN_HEIGHT 284
 #endif
 
+#define UTE_MODULE_POWERON_LANGUAGE_SELECT_SUPPORT 1
+
 #define UTE_MODULE_SCREENS_POWERON_SUPPORT            1 //开机logo界面
-#define UTE_MODULE_SCREENS_UP_MENU_SUPPORT            1 //上拉菜单
+#define UTE_MODULE_SCREENS_UP_MENU_SUPPORT            0 //上拉菜单
 #define UTE_MODULE_SCREENS_DWON_MENU_SUPPORT          1 //下拉菜单
 #define UTE_MODULE_SCREENS_LINK_MAN_SUPPORT           1 //联系人
 #define UTE_MODULE_SCREENS_TIMER_SUPPORT              1 //计时器
@@ -221,11 +223,19 @@
 #define UTE_MODULE_SCREENS_CALENDAER_SUPPORT          1 //日历
 #define UTE_MODULE_SCREENS_SCAN_SUPPORT               1 //二维码
 #define UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT      1 //心率预警
-#define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     0 //表盘侧边栏
 #define UTE_MODULE_SCREENS_SYSTEM_SUPPORT             1 //系统设置列表界面
 #define UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT     1//主题&表盘列表界面     
 #define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     1 //表盘侧边栏
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   0 //菜单样式预览旋转界面
+
+
+//未完善
+#define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/
+#define UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT 0 /*开机选择语言界面*/
+/*! 绑定功能宏 pcm, 2025-05-09  */
+#define UTE_USER_ID_FOR_BINDING_SUPPORT 0
+#define HAS_BEEN_CONNECTED 0x66
+#define UTE_VERIFY_OUR_APP_APK_DEFUALT_TIMEOUT 60
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

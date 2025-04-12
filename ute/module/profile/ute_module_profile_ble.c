@@ -478,6 +478,21 @@ bool uteModuleProfileBleSendToPhone(uint8_t *data,uint8_t size)
     {
         return false;
     }
+#if UTE_USER_ID_FOR_BINDING_SUPPORT
+    if(!uteModuleAppBindingGetOurAppConnection())
+    {
+        if((data[0] == CMD_USER_ID_FOR_BINDING)||(data[0] == PUBLIC_CMD_USER_ID_FOR_BINDING))
+        {
+            // binding
+            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,send data binding", __func__);
+        }
+        else
+        {
+            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,send data return", __func__);
+            return isRet;
+        }
+    }
+#endif
 #if UTE_SERVICE_PUBLIC_BLE_SUPPORT
     if(uteModuleProfileIsPublicProtocol)
     {

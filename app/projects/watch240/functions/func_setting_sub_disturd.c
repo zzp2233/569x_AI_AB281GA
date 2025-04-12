@@ -1758,8 +1758,10 @@ static void func_set_sub_disturd_enter(void)
     func_cb.frm_main = func_set_sub_disturd_form_create();
 
 }
-
 #endif
+
+
+
 //退出勿扰模式功能
 static void func_set_sub_disturd_exit(void)
 {

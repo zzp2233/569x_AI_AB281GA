@@ -42,7 +42,9 @@ compo_form_t *func_dial_and_theme_form_create(void)
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_dial_and_theme_list, DIAL_AND_THEME_LIST_CNT);
-    // compo_listbox_set_bithook(listbox,true);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_1_START_CARD_BIN);
+
+
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     compo_listbox_set_focus(listbox, 102);

@@ -152,10 +152,8 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17312001_BIN, UI_BUF_DIALPLATE_D17196001_BIN, UI_BUF_DIALPLATE_D17195001_BIN, UI_BUF_DIALPLATE_D17194001_BIN, UI_BUF_DIALPLATE_BTF_BIN, UI_BUF_DIALPLATE_CUBE_BIN}
-/*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17312001_BIN, \
-                                                UI_BUF_DIALPLATE_D17196001_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17196001_BIN, \
+                                                UI_BUF_DIALPLATE_D17312001_BIN, \
                                                 UI_BUF_DIALPLATE_D17195001_BIN, \
                                                 UI_BUF_DIALPLATE_D17194001_BIN, \
                                                 UI_BUF_DIALPLATE_BTF_BIN, \
@@ -225,7 +223,7 @@
 #define UTE_MODULE_SCREENS_SCAN_SUPPORT               1 //二维码
 #define UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT      1 //心率预警
 #define UTE_MODULE_SCREENS_SYSTEM_SUPPORT             1 //系统设置列表界面
-#define UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT     1 //主题&表盘列表界面     
+#define UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT     1 //主题&表盘列表界面
 #define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     1 //表盘侧边栏
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   0 //菜单样式预览旋转界面
 
@@ -300,7 +298,7 @@
 #define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          1 //自由训练
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_SUPPORT             0 //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_SUPPORT      0 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_SUPPORT          0 //0x1D,踏步
@@ -416,7 +414,7 @@
 #define UTE_MODULE_SPORT_BOATING_ON_OFF                 1 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_ON_OFF            1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_ON_OFF           1 //自由训练
-#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ON_OFF              0 //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ON_OFF       1 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_ON_OFF           1 //0x1D,踏步
@@ -533,7 +531,7 @@
 #define UTE_MODULE_SPORT_BOATING_ORDER                  22 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             23 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            24 //自由训练
-#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ORDER               0  //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ORDER        0 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_ORDER            0 //0x1D,踏步

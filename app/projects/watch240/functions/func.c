@@ -851,6 +851,7 @@ void func_process(void)
         sys_cb.timer_done = false;
         msg_enqueue(EVT_MSGBOX_EXIT);
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+        msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
         msg_enqueue(EVT_WATCH_TIMER_DONE);
         printf(">>>TIMER DONE\n");
     }

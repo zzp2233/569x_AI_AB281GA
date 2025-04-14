@@ -759,6 +759,7 @@ bool uteModuleBloodoxygenGetTodayHistoryData(uint8_t *Bloodoxygen, uint8_t Blood
     uint8_t tempBloodoxygenHistoryData[6 * 24 + 4];
     uint16_t buffSize = 6 * 24 + 4;
     ute_module_systemtime_time_t time;
+    memset(&Bloodoxygen[0], 0, BloodoxygenCount);
     memset(BloodoxygenHistoryData, 0, 144);
     uteModuleSystemtimeGetTime(&time);
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_BLOODOXYGEN_AUTO_DATA_DIR, time.year, time.month, time.day);

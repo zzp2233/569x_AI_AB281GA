@@ -403,6 +403,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
 {
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
 
     if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
@@ -772,6 +773,7 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 {
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
 
     if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
@@ -819,6 +821,7 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
     {
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
         msg_enqueue(EVT_MSGBOX_EXIT);
+        msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
         if (switchMode != 0 && !(switchMode & FUNC_SWITCH_CANCEL) && !(switchMode & FUNC_SWITCH_DIRECT))
         {
             func_switch_to(screenId, switchMode);
@@ -856,6 +859,7 @@ void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
     {
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
         msg_enqueue(EVT_MSGBOX_EXIT);
+        msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
         func_cb.sta = screenId;
         // func_switch_to(screenId, 0);
         if(!isWithoutHistory)

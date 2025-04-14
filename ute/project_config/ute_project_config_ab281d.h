@@ -9,8 +9,8 @@
 #ifndef _UTE_PROJECT_CONFIG_AB281A_H_
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
-#define DEFAULT_BLE_DEV_NAME "T62"
-#define UTE_SW_VERSION "AB281DV000033"
+#define DEFAULT_BLE_DEV_NAME "W12Y"
+#define UTE_SW_VERSION "AB281DV000034"
 //长沙调试用TP
 #define UTE_DRV_CTP_SELECT             CTP_CHSC6X
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */

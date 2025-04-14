@@ -303,6 +303,7 @@ static bool func_switching_lr_alpha(u16 switch_mode, bool flag_auto, void* param
         {
             case EVT_MSGBOX_EXIT:
             case EVT_CLOCK_DROPDOWN_EXIT:
+            case EVT_CLOCK_SUB_SIDE_EXIT:
             case EVT_WATCH_TIMER_DONE:
                 compo_form_set_pos(frm_last, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
                 compo_form_set_pos(frm_cur, GUI_SCREEN_WIDTH*2, GUI_SCREEN_CENTER_Y);
@@ -494,6 +495,7 @@ static bool func_switching_lr(u16 switch_mode, bool flag_auto)
         {
             case EVT_MSGBOX_EXIT:
             case EVT_CLOCK_DROPDOWN_EXIT:
+            case EVT_CLOCK_SUB_SIDE_EXIT:
             case EVT_WATCH_TIMER_DONE:
                 compo_form_set_pos(frm_last, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
                 compo_form_set_pos(frm_cur, GUI_SCREEN_WIDTH*2, GUI_SCREEN_CENTER_Y);

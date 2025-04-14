@@ -668,7 +668,7 @@ void latest_task_add(u8 func_sta)
             break;
         }
     }
-    if (id != FUNC_NULL)
+    if (id != FUNC_NULL && func_get_icon_addr(func_sta))
     {
         if (latest_list.num >= LATEST_TASK_MAX)    //添加
         {

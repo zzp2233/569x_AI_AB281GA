@@ -472,6 +472,12 @@ void uteModulePlatformFlashNorErase(uint32_t addr)
     }
     os_spiflash_erase(addr);
 }
+
+#if UTE_LOG_SYSTEM_LVL
+AT(.com_text.ute_msg.val)
+char ute_msg_fail_str[]="%s,send msg fail,type=%d\n";
+#endif
+
 /**
 * @brief   发送消息到app task
 *@param[in] uint16_t type ，消息类型
@@ -489,7 +495,9 @@ void uteModulePlatformSendMsgToUteApplicationTask(uint16_t type, uint32_t param)
     bool isSend = uteTaskApplicationSendMsg(&p_msg);
     if (!isSend)
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,send msg fail,type=%d", __func__, type);
+#if UTE_LOG_SYSTEM_LVL
+        printf(ute_msg_fail_str,"uteModulePlatformSendMsgToUteApplicationTask",type);
+#endif
     }
 }
 /**
@@ -509,7 +517,9 @@ void uteModulePlatformSendMsgToAppTask(uint16_t type, uint32_t param)
     bool isSend = uteTaskApplicationSendMsg(&p_msg);
     if (!isSend)
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,send msg fail,type=%d", __func__, type);
+#if UTE_LOG_SYSTEM_LVL
+        printf(ute_msg_fail_str,"uteModulePlatformSendMsgToAppTask",type);
+#endif
     }
 }
 uint64_t uteModulePlatformSystemTickCnt = 0;

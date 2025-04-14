@@ -16,11 +16,16 @@ typedef struct f_clock_sub_side_t_
 
 enum
 {
-    COMPO_ID_APP_1=1,
+    COMPO_ID_APP_NULL = 0,
+    COMPO_ID_APP_1,
     COMPO_ID_APP_2,
     COMPO_ID_APP_3,
     COMPO_ID_APP_4,
+    COMPO_ID_APP_5,
+    COMPO_ID_APP_6,
 };
+
+extern void compo_set_bonddata(component_t *compo, tm_t tm);
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 static const f_clock_sub_sider_t f_clock_sub_sider[] =
@@ -224,9 +229,9 @@ static void func_clock_sub_side_button_click(void)
 {
     int id = compo_get_button_id();
 
-    if(id)
+    if (id > COMPO_ID_APP_NULL && id < (COMPO_ID_APP_NULL + DEFAULT_LATEST_TASK_NUM + 1))
     {
-        uteTaskGuiStartScreen(side_get_latest_func(id), 0, __func__);
+        uteTaskGuiStartScreen(side_get_latest_func(id - COMPO_ID_APP_NULL - 1), 0, __func__);
     }
 }
 #else
@@ -276,6 +281,10 @@ static void func_clock_sub_side_message(size_msg_t msg)
         case KU_BACK:
             func_switching(FUNC_SWITCH_MENU_SIDE_BACK | FUNC_SWITCH_AUTO, NULL);
             f_clk->sta = FUNC_CLOCK_MAIN;                       //单击BACK键返回到时钟主界面
+            break;
+
+        case EVT_CLOCK_SUB_SIDE_EXIT:
+            f_clk->sta = FUNC_CLOCK_MAIN;                       //返回到时钟主界面
             break;
 
         default:

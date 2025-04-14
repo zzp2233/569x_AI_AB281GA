@@ -40,6 +40,7 @@ enum
 typedef struct f_blood_oxygen_t_
 {
     uint32_t tick;
+    uint32_t up_data_tick;
     uint32_t tick_start;
     u8 blood_oxygen_state;
     u8 pic_type;
@@ -190,55 +191,59 @@ static void func_blood_oxygen_disp_handle(void)
         f_bo->need_auto_test_flag = false;
     }
 
-    uint8_t oxygen_date[24]= {0};
-    uteModuleBloodoxygenGetTodayHistoryData(oxygen_date,24);///获取一天的血氧
-    chart_t chart_info;
-    chart_info.y = 0;
-    chart_info.width = 4;   ///像素点
-    for (int i=0; i<24; i++)
+    if(tick_check_expire(f_bo->up_data_tick, 1000))
     {
-        // oxygen_date[i] =100;
-        chart_info.x = i*chart_info.width + i*4;
-        chart_info.height = oxygen_date[i]*0.68;///心率数据转换为柱形条显示数据
-        compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
-    }
+        f_bo->up_data_tick = tick_get();
+        uint8_t oxygen_date[24]= {0};
+        uteModuleBloodoxygenGetTodayHistoryData(oxygen_date,24);///获取一天的血氧
+        chart_t chart_info;
+        chart_info.y = 0;
+        chart_info.width = 4;   ///像素点
+        for (int i=0; i<24; i++)
+        {
+            // oxygen_date[i] =100;
+            chart_info.x = i*chart_info.width + i*4;
+            chart_info.height = oxygen_date[i]*0.68;///心率数据转换为柱形条显示数据
+            compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
+        }
 
-    uteModuleBloodoxygenGetMinMaxValue(&oxygen_min,&oxygen_max);
-    memset(txt_buf,0,sizeof(txt_buf));
-    if(oxygen_max > 0 && oxygen_max != 255)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d%%",oxygen_max);
-    }
-    else
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"--%%");
-    }
-    compo_textbox_set(max_value,txt_buf);
+        uteModuleBloodoxygenGetMinMaxValue(&oxygen_min,&oxygen_max);
+        memset(txt_buf,0,sizeof(txt_buf));
+        if(oxygen_max > 0 && oxygen_max != 255)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%d%%",oxygen_max);
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"--%%");
+        }
+        compo_textbox_set(max_value,txt_buf);
 
-    if(oxygen_min > 0 && oxygen_min != 255)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d%%",oxygen_min);
-    }
-    else
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"--%%");
-    }
-    compo_textbox_set(min_value,txt_buf);
+        if(oxygen_min > 0 && oxygen_min != 255)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%d%%",oxygen_min);
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"--%%");
+        }
+        compo_textbox_set(min_value,txt_buf);
 
 
-    memset(txt_buf,0,sizeof(txt_buf));
-    if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%s","--");
-    }
-    else
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleBloodoxygenGetValue());//血氧值
-    }
-    compo_textbox_set(textbox,txt_buf);
+        memset(txt_buf,0,sizeof(txt_buf));
+        if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xff)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%s","--");
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleBloodoxygenGetValue());//血氧值
+        }
+        compo_textbox_set(textbox,txt_buf);
 
-    area_t txt_leng = widget_text_get_area(textbox->txt);
-    compo_textbox_set_pos(pic_uint,80+txt_leng.wid,80);
+        area_t txt_leng = widget_text_get_area(textbox->txt);
+        compo_textbox_set_pos(pic_uint,80+txt_leng.wid,80);
+    }
 
     if(f_bo->blood_oxygen_state == BO_STA_TESTING) ///血氧检测界面
     {
@@ -628,7 +633,9 @@ static void func_blood_oxygen_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_blood_oxygen_button_click();
             break;
+        case MSG_SYS_1S:
 
+            break;
         default:
             func_message(msg);
             break;

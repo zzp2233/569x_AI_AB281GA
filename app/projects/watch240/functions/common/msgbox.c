@@ -1178,11 +1178,23 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
     switch (mode)
     {
         case MSGBOX_MODE_BTN_OK:            //确定按钮
-            btn = compo_button_create_by_image(frm, 0);
+        {
+            uint32_t res_ok=0;
+            switch(func_cb.sta)
+            {
+                case FUNC_ALARM_CLOCK:
+                    res_ok = UI_BUF_I335001_20_ALARM_CLOCK_6_QUANTITY_LIMIT_REMINDER_ICON_YES_208X52_X16_Y222_BIN;
+                    break;
+                default:
+                    res_ok = UI_BUF_I335001_20_ALARM_CLOCK_6_QUANTITY_LIMIT_REMINDER_ICON_YES_208X52_X16_Y222_BIN;
+                    break;
+            }
+            btn = compo_button_create_by_image(frm, res_ok);
             compo_setid(btn, COMPO_ID_BTN_OK);
             compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 10);
-            break;
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(res_ok).hei/2 - 10);
+        }
+        break;
 
         case MSGBOX_MODE_BTN_OKCANCEL:      //确定与取消按钮1
             btn = compo_button_create_by_image(frm, 0);

@@ -624,6 +624,7 @@ void uteModuleSystemtimeSetTimeFormat(bool is12Hour,bool isMi)
     if(is12Hour != systemTime.is12HourTime)
     {
         systemTime.change12HourTime = true;
+        msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言消息更新界面
     }
     systemTime.isDistanceMi = isMi;
     systemTime.is12HourTime = is12Hour;

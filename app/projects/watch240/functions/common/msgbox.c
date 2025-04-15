@@ -1067,10 +1067,9 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             }
             else if (sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
             {
-
-                compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
-                                     GUI_SCREEN_CENTER_X,
-                                     func_cover_get_pic_y(msg_type)-20);  //需要更替为弹窗图标
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I335001_2_HONEYCOMB_ALARM_BIN);
+                compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y-40);
+                compo_picturebox_set_size(picbox,85,85);
 
                 //msg1
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
@@ -1082,15 +1081,14 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 
                 //title
                 compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,
-                                      func_cover_get_title_txt_y(msg_type));
-                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+60);
+                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set(txt_title, title);
 
                 compo_textbox_set_multiline(txt_msg, false);
                 compo_textbox_set_align_center(txt_msg, false);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,
-                                           func_cover_get_title_txt_y(msg_type)-(widget_text_get_area(txt_title->txt).hei-widget_text_get_height()),
+                                           GUI_SCREEN_CENTER_Y+50,
                                            widget_text_get_area(txt_msg->txt).wid,
                                            widget_text_get_height()); //调整文本位置
             }

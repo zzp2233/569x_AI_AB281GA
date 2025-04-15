@@ -63,7 +63,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
 
     // //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_HEART_RATE]);
+    compo_form_set_title(frm, i18n[STR_BLOOD_OXYGEN]);
 
     ///设置图片
     compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I335001_7_SPO2_1_SPO2_GIF_52X52_X10_Y62_BIN);

@@ -55,10 +55,6 @@ compo_form_t *func_activity_form_create(void)
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-    if(totalStepCnt>uteModuleSportGetStepsTargetCnt())
-    {
-        totalStepCnt = uteModuleSportGetStepsTargetCnt();
-    }
     u8 pic_dis =(totalStepCnt / uteModuleSportGetStepsTargetCnt());
     if(pic_dis>10)pic_dis=10;
     u8 km_integer  = distance/100;                //距离 整数
@@ -184,11 +180,11 @@ compo_form_t *func_activity_form_create(void)
     pic = compo_picturebox_create(frm, UI_BUF_I335001_5_ACTIVITY_STEP_DETAILS_DATE_BG_224X220_X8_Y555_BIN);
     compo_picturebox_set_pos(pic, 224/2+8, 220/2+555);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_SET_STEP_COUNT]));
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_STEP_DETAILS]));
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,15,563,150,25);
     compo_textbox_set_forecolor(textbox, make_color(0x12,0xa9,0x94));
-    compo_textbox_set(textbox, i18n[STR_SET_STEP_COUNT]);
+    compo_textbox_set(textbox, i18n[STR_STEP_DETAILS]);
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
@@ -236,11 +232,11 @@ compo_form_t *func_activity_form_create(void)
     uint32_t target_week_step = uteModuleSportLoadWeekDayStepHistoryData(week_step_date, &week_step_data);
     // target_week_step =18000;
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_WEEK7_HEART]));
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_WEEK_STEP]));
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,15,800,150,25);
     compo_textbox_set_forecolor(textbox, make_color(0x12,0xa9,0x94));
-    compo_textbox_set(textbox, i18n[STR_WEEK7_HEART]);
+    compo_textbox_set(textbox, i18n[STR_WEEK_STEP]);
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",week_step_data);///week步数数据
@@ -285,10 +281,6 @@ static void func_activity_disp_handle(void)
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-    if(totalStepCnt>uteModuleSportGetStepsTargetCnt())
-    {
-        totalStepCnt = uteModuleSportGetStepsTargetCnt();
-    }
     u8 pic_dis =(totalStepCnt / uteModuleSportGetStepsTargetCnt());
     if(pic_dis>10)pic_dis=10;
     u8 km_integer  = distance/100;                //距离 整数
@@ -305,7 +297,7 @@ static void func_activity_disp_handle(void)
     compo_picturebox_cut(arc_km,pic_dis,11);
     compo_picturebox_cut(arc_step,pic_dis,11);
 
-    if(f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType())
+    if(f_activity->uint_km != uteModuleSystemtimeGetDistanceMiType())
     {
         compo_textbox_set(textbox_km_unit, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     }

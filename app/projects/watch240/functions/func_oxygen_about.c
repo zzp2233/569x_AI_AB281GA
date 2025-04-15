@@ -21,33 +21,33 @@ compo_form_t *func_oxygen_about_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     u16 page_size=0;
 
-    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_RESTING_HEART]));
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_BLOOD_OXYGEN_UINT]));
     compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, 20, 230, 30);
-    compo_textbox_set(textbox,i18n[STR_RESTING_HEART]);
+    compo_textbox_set(textbox,i18n[STR_BLOOD_OXYGEN_UINT]);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_ABOUT]));
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_OXYGEN_ABOUT_1]));
     compo_textbox_set_align_center(textbox,false);
     compo_textbox_set_location(textbox,10, 43, 220, 280);
     compo_textbox_set_multiline(textbox, true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
-    compo_textbox_set(textbox,i18n[STR_HEART_ABOUT]);
+    compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_1]);
     compo_textbox_set_location(textbox,10, 43, 220, widget_text_get_area(textbox->txt).hei);
-    compo_textbox_set(textbox,i18n[STR_HEART_ABOUT]);
+    compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_1]);
     page_size=widget_text_get_area(textbox->txt).hei+43;
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I335001_7_SPO2_3_00_106X86_X16_Y205_BIN);
     compo_picturebox_set_pos(picbox,gui_image_get_size(UI_BUF_I335001_7_SPO2_3_00_106X86_X16_Y205_BIN).wid/2+10, widget_text_get_area(textbox->txt).hei+(gui_image_get_size(UI_BUF_I335001_7_SPO2_3_00_106X86_X16_Y205_BIN).hei)+5);
     page_size+=(gui_image_get_size(UI_BUF_I335001_7_SPO2_3_00_106X86_X16_Y205_BIN).hei+10);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_ABOUT]));
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_OXYGEN_ABOUT_2]));
     compo_textbox_set_align_center(textbox,false);
     compo_textbox_set_location(textbox,10, page_size, 220, 280);
     compo_textbox_set_multiline(textbox, true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
-    compo_textbox_set(textbox,i18n[STR_HEART_ABOUT]);
+    compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_2]);
     compo_textbox_set_location(textbox,10, page_size, 220, widget_text_get_area(textbox->txt).hei);
-    compo_textbox_set(textbox,i18n[STR_HEART_ABOUT]);
-    page_size+=widget_text_get_area(textbox->txt).hei+50;
+    compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_2]);
+    page_size+=widget_text_get_area(textbox->txt).hei+20;
 
     if(func_cb.sta == FUNC_OXYGEN_ABOUT)
     {

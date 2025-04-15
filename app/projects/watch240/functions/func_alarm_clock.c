@@ -130,16 +130,6 @@ compo_form_t *func_alarm_clock_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-    // uteModuleSystemtimeAlarmEdit(0,true,3,14,30,0,0);
-    uteModuleSystemtimeAlarmEdit(0,true,3,14,30,0,0);
-    uteModuleSystemtimeDeleteAlarm(1);
-    uteModuleSystemtimeDeleteAlarm(2);
-    uteModuleSystemtimeDeleteAlarm(3);
-    uteModuleSystemtimeDeleteAlarm(4);
-    // uteModuleSystemtimeAlarmEdit(1,true,0x80,14,30,0,0);
-    // uteModuleSystemtimeAlarmEdit(2,true,0x7f,14,30,0,0);
-    // uteModuleSystemtimeAlarmEdit(3,true,0x7f,14,30,0,0);
-    // uteModuleSystemtimeAlarmEdit(4,true,0x7f,14,30,0,0);
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK]);
@@ -237,7 +227,7 @@ static void func_alarm_clock_button_click(void)
         if (compo_cardbox_btn_is(cardbox, pt))
         {
             rect_t rect = compo_cardbox_get_icon_absolute(cardbox, 0); //上一首
-            if (abs_s(pt.x - rect.x) <= rect.wid*2 && abs_s(pt.y - rect.y)  <= rect.hei*2)
+            if (abs_s(pt.x - rect.x) <= rect.wid && abs_s(pt.y - rect.y)  <= rect.hei*2)
                 //if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ALARM_40X20_X176_Y65_X176_Y151_01_OPEN_BIN).wid))   //开关
             {
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
@@ -259,7 +249,7 @@ static void func_alarm_clock_button_click(void)
         case COMPO_ID_BTN_ADD:
             if(SYSTEM_TIME_ALARMS_MAX_CNT == ALARM_ENABLE_CNT())
             {
-                msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+                msgbox(i18n[STR_ADD_CLOCK_NO_MORE], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
                 return;
             }
             uteTaskGuiStartScreen(FUNC_ALARM_CLOCK_SUB_SET, 0, __func__);

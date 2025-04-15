@@ -299,6 +299,11 @@
 #define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN true
 #endif
 
+/*! TP固件升级功能开关*/
+#ifndef UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT
+#define UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT 0
+#endif
+
 /*! 默认抬手亮屏开关zn.zeng, 2021-08-20  */
 #ifndef DEFAULT_HAND_SCREEN_ON_OPEN
 #define DEFAULT_HAND_SCREEN_ON_OPEN true

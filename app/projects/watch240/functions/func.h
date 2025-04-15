@@ -150,7 +150,7 @@ enum
     FUNC_PASSWORD_SUB_DISP,             //新密码锁设置
     FUNC_PASSWORD_SUB_SELECT,           //确认密码锁
     FUNC_SET_SUB_ABOUT,                 //设置--关于
-    FUNC_SET_SUB_SOS,                   //SOS
+    FUNC_SUB_SOS,                       //SOS
 #if UTE_MODULE_SCREENS_RESTART_SUPPORT
     FUNC_SET_SUB_RESTART,               //设置--重启
     FUNC_RESTART = FUNC_SET_SUB_RESTART,//重启

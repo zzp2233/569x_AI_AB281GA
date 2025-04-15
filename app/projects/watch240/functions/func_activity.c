@@ -207,7 +207,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_forecolor(textbox, make_color(153,153,153));
     compo_textbox_set(textbox, txt_buf);
 
-    uint32_t step_date[24];
+    uint16_t step_date[24];
     uteModuleSportLoadTodayEveryHourSportTimeHistoryData(step_date);
     compo_chartbox_t*chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 24);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+12,698,212,94);

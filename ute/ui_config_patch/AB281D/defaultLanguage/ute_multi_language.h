@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-11 17:07:31
+*@date   2025-04-15 17:08:30
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -267,6 +267,12 @@ enum
     STR_RESTING_HEART, // 静息心率
     STR_WEEK7_HEART, // 最近7天平均静息心率
     STR_HEART_ABOUT, // 静息心率是指在清醒、不活跃的安静状态下，每分钟的心跳次数，是衡量心脏健康的重要指标之一可选择在清晨清醒后安静状态下测量，理想的静息心率是50~80次/分钟﻿
+    STR_OXYGEN_ABOUT_1, // 血氧饱和度(SpO2)是血液中氧合血红蛋(HbO2)的百分比，即血液中氧气的浓度，是维持人体正常机能的重要生理参数。
+    STR_OXYGEN_ABOUT_2, // 测量须知:1.本设备支持测量范围为70%-100%2.请确保手表佩戴在距离腕骨一指处，不要太靠下，并系紧表带。3.测量过程中请尽可能保持静止，保持表盘朝上。4.佩戴方式错误、测量过程中的晃动、双臂垂在两侧、手臂毛发、纹身或处于寒冷环境等因素影响测量精准度可能会下降。5.测量结果仅供参考，不做为医疗诊断依据。
+    STR_DO_DELAY_CLOCK, // 是否删除闹钟？
+    STR_ADD_CLOCK_NO_MORE, // 当前添加闹钟个数已达上限
+    STR_STEP_DETAILS, // 步数详情
+    STR_WEEK_STEP, // 本周步数
     STR_SYSTEM_SET, // 系统设置
     STR_UV, // 紫外线
     STR_UV_VERY_WEAK, // 很弱

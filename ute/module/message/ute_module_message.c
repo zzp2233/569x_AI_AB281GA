@@ -131,8 +131,7 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
 #endif
         case MSG_TYPE_HEART_ALGO_HANDLER:
         {
-            // vc30fx_usr_device_handler(0, 1);
-            uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData();
+            bsp_sensor_hr_algo_input_data_handle();
         }
         break;
         case MSG_TYPE_HEART_START_SINGLE_TESTING:

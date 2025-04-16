@@ -155,11 +155,11 @@ compo_form_t *func_factory_testing_create(void)
     compo_form_t *frm = NULL;
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
 
-    if(uteModuleHeartGetWorkMode() == WORK_MODE_HR)
+    if(uteModuleHeartGetWorkMode() == HR_WORK_MODE_HR)
     {
         uteModuleHeartStopSingleTesting(TYPE_HEART);
     }
-    else if (uteModuleHeartGetWorkMode() == WORK_MODE_SPO2)
+    else if (uteModuleHeartGetWorkMode() == HR_WORK_MODE_SPO2)
     {
         uteModuleHeartStopSingleTesting(TYPE_BLOODOXYGEN);
     }

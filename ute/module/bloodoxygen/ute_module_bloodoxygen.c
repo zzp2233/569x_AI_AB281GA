@@ -97,7 +97,7 @@ void uteModuleBloodoxygenEverySecond(void)
     {
         uteModuleBloodoxygenData.value = uteModuleHeartGetBloodOxygenValue();
         UTE_MODULE_LOG(UTE_LOG_OXYGEN_LVL,"%s,.value=%d",__func__,uteModuleBloodoxygenData.value);
-        if(uteModuleBloodoxygenIsWear() && (uteModuleHeartGetWorkMode() == WORK_MODE_SPO2) && vc30fx_usr_get_work_status())
+        if(uteModuleBloodoxygenIsWear() && (uteModuleHeartGetWorkMode() == HR_WORK_MODE_SPO2) && bsp_sensor_hr_work_status())
         {
 #if !DUG_VCXX_BLOOD_OXYGEN_SUPPORT
             UTE_MODULE_LOG(UTE_LOG_OXYGEN_LVL,"%s,testingSecond:%d",__func__,uteModuleBloodoxygenData.testingSecond);
@@ -204,7 +204,7 @@ void uteModuleBloodoxygenEverySecond(void)
 */
 void uteModuleBloodoxygenStartSingleTesting(void)
 {
-    if(vc30fx_usr_get_work_status() && uteModuleHeartGetWorkMode() == WORK_MODE_SPO2)
+    if(bsp_sensor_hr_work_status() && uteModuleHeartGetWorkMode() == HR_WORK_MODE_SPO2)
     {
         uteModuleBloodoxygenData.isSingleTesting = true;
         return;
@@ -229,7 +229,7 @@ void uteModuleBloodoxygenStartSingleTesting(void)
 void uteModuleBloodoxygenStopSingleTesting(void)
 {
     UTE_MODULE_LOG(UTE_LOG_OXYGEN_LVL,"%s",__func__);
-    if(uteModuleHeartGetWorkMode() != WORK_MODE_SPO2 || !vc30fx_usr_get_work_status())
+    if(uteModuleHeartGetWorkMode() != HR_WORK_MODE_SPO2 || !bsp_sensor_hr_work_status())
     {
         uteModuleBloodoxygenData.isSingleTesting = false;
         return;
@@ -780,7 +780,7 @@ bool uteModuleBloodoxygenGetTodayHistoryData(UT_GraphsParam *BloodoxygenHistoryG
     }
     else
     {
-#if UTE_LOG_GUI_LVL // test 
+#if UTE_LOG_GUI_LVL // test
         uteModuleBloodoxygenSetBloodoxygenHistoryGraph(BloodoxygenHistoryGraph, BloodoxygenHistoryGraphCount, BloodoxygenHistoryData, 144, x, y, drawWidth, intervalWidth, hightRange);
 #endif
         return false;

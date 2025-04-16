@@ -53,6 +53,11 @@
 #define UTE_DRV_CTP_SELECT             CTP_CST8X
 #endif
 
+/*! 心率sensor选择,wang.luo 2025-04-16 */
+#ifndef UTE_DRV_HR_SENSOR_SELECT
+#define UTE_DRV_HR_SENSOR_SELECT       SENSOR_HR_VC30FX
+#endif
+
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
 #ifndef DEFAULT_BLE_DEV_NAME
 #define DEFAULT_BLE_DEV_NAME "UTE"

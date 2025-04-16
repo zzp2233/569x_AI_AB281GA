@@ -177,7 +177,7 @@ void uteModuleHeartEverySecond(void)
     uteDrvHeartVcxxGetAlgoHrData(&uteModuleHeartData.heartValue);
 #endif
 
-    if(vc30fx_usr_get_work_status() && (vc30fx_usr_get_work_mode() == WORK_MODE_HR || vc30fx_usr_get_work_mode() == WORK_MODE_HRSPO2))
+    if(bsp_sensor_hr_work_status() && (uteModuleHeartGetWorkMode() == HR_WORK_MODE_HR || uteModuleHeartGetWorkMode() == HR_WORK_MODE_HRSPO2))
     {
         uteModuleHeartData.heartValue = bsp_sensor_hrs_data_get();
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,uteModuleHeartData.heartValue=%d", __func__,uteModuleHeartData.heartValue);
@@ -212,7 +212,7 @@ void uteModuleHeartEverySecond(void)
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
            && (uteModuleNewFactoryTestGetMode() == FACTORY_TEST_MODE_NULL)
 #endif
-           && uteModuleHeartGetWorkMode() != WORK_MODE_HR
+           && uteModuleHeartGetWorkMode() != HR_WORK_MODE_HR
           )
         {
             if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
@@ -492,7 +492,7 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
 #if UTE_DRV_HEART_VCXX_SUPPORT
         uteDrvHeartVcxxBloodoxygenStartSample();
 #else
-        bsp_sensor_hr_init(WORK_MODE_SPO2);
+        bsp_sensor_hr_init(HR_WORK_MODE_SPO2);
 #endif
     }
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
@@ -506,15 +506,15 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
 #endif
     else if (uteModuleHeartData.type == TYPE_FACTORY0)
     {
-        bsp_sensor_hr_init(WORK_MODE_FACTORY0);
+        bsp_sensor_hr_init(HR_WORK_MODE_FACTORY0);
     }
     else if (uteModuleHeartData.type == TYPE_FACTORY1)
     {
-        bsp_sensor_hr_init(WORK_MODE_FACTORY1);
+        bsp_sensor_hr_init(HR_WORK_MODE_FACTORY1);
     }
     else if (uteModuleHeartData.type == TYPE_WEAR)
     {
-        bsp_sensor_hr_init(WORK_MODE_WEAR);
+        bsp_sensor_hr_init(HR_WORK_MODE_WEAR);
     }
     else
     {
@@ -523,7 +523,7 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
 #if UTE_DRV_BREATHRATE_VCXX_SUPPORT
             uteDrvHeartVcxxStartBreathrate();
 #else
-            bsp_sensor_hr_init(WORK_MODE_HR);
+            bsp_sensor_hr_init(HR_WORK_MODE_HR);
 #endif
         }
         // if(uteModuleHeartData.isAutoTesting && uteModuleHeartData.isAutoTestFlag)
@@ -541,7 +541,7 @@ void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
             uteDrvHeartVcxxStartSample();
         }
 #else
-        bsp_sensor_hr_init(WORK_MODE_HR);
+        bsp_sensor_hr_init(HR_WORK_MODE_HR);
 #endif
         if(uteModuleHeartData.type==TYPE_HEART)
         {
@@ -690,7 +690,7 @@ bool uteModuleHeartIsWear(void)
 #if UTE_DRV_HEART_VCXX_SUPPORT
     isWear= uteDrvHeartVcxxIsWear();
 #else
-    if(vc30fx_usr_get_work_status())
+    if(bsp_sensor_hr_work_status())
     {
         isWear= bsp_sensor_hr_wear_sta_get();
         uteModuleHeartData.lastIsWear = isWear;
@@ -1199,7 +1199,7 @@ uint8_t uteModuleHeartGetWorkMode(void)
 #if UTE_DRV_HEART_VCXX_SUPPORT
     result = uteDrvHeartVcxxGetWorkMode();
 #else
-    result = vc30fx_usr_get_work_mode();
+    result = bsp_sensor_hr_get_work_mode();
 #endif
     return result ;
 }

@@ -793,7 +793,6 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
     {
         case TIMER_PAGE_SELECT:
         {
-//                widget_page_t* page = widget_page_create(frm->page);
             widget_page_t* page = frm->page_body;//frm_main->page_body;
             widget_set_location(page, GUI_SCREEN_CENTER_X,PAGE_HEIGHT/2,GUI_SCREEN_WIDTH,PAGE_HEIGHT);
 
@@ -877,11 +876,25 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
             compo_form_set_title(frm, i18n[STR_TIMER]);
             //新建按钮
-            res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN : (sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN : UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_REST_BIN);
-            btn = compo_button_create_by_image(frm, res_addr); //start/pause/again
+            if(sys_cb.timer_sta == TIMER_STA_WORKING)
+            {
+                res_addr=UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN;
+            }
+            else if(sys_cb.timer_sta == TIMER_STA_DONE)
+            {
+                res_addr=UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_REST_BIN;
+
+            }
+            else
+            {
+                res_addr=UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN;
+            }
+            res_addr = UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN;
+            // res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN : (sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_REST_BIN : UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN);
+            btn = compo_button_create_by_image(frm, res_addr); //pause //start//again
             compo_setid(btn, COMPO_ID_BTN_START);
             compo_button_set_pos(btn, 175, 246);
-            res2_addr =(sys_cb.timer_sta == TIMER_STA_WORKING ||sys_cb.timer_sta ==TIMER_STA_PAUSE)?UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_CLOSE_BIN:UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_NO_BIN;
+            res2_addr =sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_NO_BIN:UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_CLOSE_BIN;
             btn = compo_button_create_by_image(frm, res2_addr);  //close
             compo_setid(btn, COMPO_ID_BTN_NO);
             compo_button_set_pos(btn, 63, 246);
@@ -897,11 +910,11 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
             compo_textbox_set(txt, str_buff);
 
-//            txt = compo_textbox_create(frm, strlen("计时结束"));
-//            compo_setid(txt, COMPO_ID_COUNT_FINSH);
-//            compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X/1.5);
-//            compo_textbox_set(txt, "计时结束");
-//            compo_textbox_set_visible(txt, sys_cb.timer_sta == TIMER_STA_DONE);
+            //    txt = compo_textbox_create(frm, strlen("计时结束"));
+            //    compo_setid(txt, COMPO_ID_COUNT_FINSH);
+            //    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X/1.5);
+            //    compo_textbox_set(txt, "计时结束");
+            //    compo_textbox_set_visible(txt, sys_cb.timer_sta == TIMER_STA_DONE);
 
             break;
 
@@ -955,7 +968,7 @@ static void func_timer_button_touch_handle(void)
             }
             else if (sys_cb.timer_sta == TIMER_STA_DONE)
             {
-                ;
+                compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_REST_BIN);
             }
             else
             {

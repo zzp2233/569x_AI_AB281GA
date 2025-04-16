@@ -226,6 +226,7 @@
 #define UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT     1//主题&表盘列表界面     
 #define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     1 //表盘侧边栏
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   0 //菜单样式预览旋转界面
+#define UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT         1 //亮度设置列表界面
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

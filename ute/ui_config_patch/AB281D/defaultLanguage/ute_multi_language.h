@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-03-17 09:20:50
+*@date   2025-04-15 17:08:30
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -179,18 +179,6 @@ enum
     STR_VOICE_BT_NOT_CONNECT, // 未连接
     STR_VOICE_SIRI_START, // 点击屏幕开始对话
     STR_ADDRESS_BOOK_SYNC, // 请前往APP设置SOS号码
-    STR_DO_WANT_IN, // 是否进入
-    STR_MODE_SELECTION, // 模式选择
-    STR_FACTORY_TESTING, // 工厂测试模式
-    STR_AGING_TESTING, // 老化测试模式
-    STR_SHIPPING, // 船运模式
-    STR_AUDIO, // 音频测试
-    STR_AVERSION_MAC, // 版本号&MAC
-    STR_BATTERY_INFORMATION, // 电池信息
-    STR_TP_VERSION, // TP版本：
-    STR_PASS, // 通过
-    STR_FALL, // 不通过
-    STR_DO_PASS, // 是否通过？
     STR_AM, // 上午
     STR_PM, // 下午
     STR_NO_CALL_RECORD, // 没有通话记录
@@ -270,6 +258,33 @@ enum
     STR_SAFE_PERIOD, // 安全期
     STR_HEART_HIGHT, // 心率过高
     STR_HEART_LOW, // 心率过低
+    STR_PACE, // 配速
+    STR_KILOMETRE, // 千米
+    STR_STRESS, // 压力
+    STR_EMOTION, // 情绪
+    STR_TOOL_BOX, // 工具箱
+    STR_SOS, // SOS
+    STR_RESTING_HEART, // 静息心率
+    STR_WEEK7_HEART, // 最近7天平均静息心率
+    STR_HEART_ABOUT, // 静息心率是指在清醒、不活跃的安静状态下，每分钟的心跳次数，是衡量心脏健康的重要指标之一可选择在清晨清醒后安静状态下测量，理想的静息心率是50~80次/分钟﻿
+    STR_OXYGEN_ABOUT_1, // 血氧饱和度(SpO2)是血液中氧合血红蛋(HbO2)的百分比，即血液中氧气的浓度，是维持人体正常机能的重要生理参数。
+    STR_OXYGEN_ABOUT_2, // 测量须知:1.本设备支持测量范围为70%-100%2.请确保手表佩戴在距离腕骨一指处，不要太靠下，并系紧表带。3.测量过程中请尽可能保持静止，保持表盘朝上。4.佩戴方式错误、测量过程中的晃动、双臂垂在两侧、手臂毛发、纹身或处于寒冷环境等因素影响测量精准度可能会下降。5.测量结果仅供参考，不做为医疗诊断依据。
+    STR_DO_DELAY_CLOCK, // 是否删除闹钟？
+    STR_ADD_CLOCK_NO_MORE, // 当前添加闹钟个数已达上限
+    STR_STEP_DETAILS, // 步数详情
+    STR_WEEK_STEP, // 本周步数
+    STR_SYSTEM_SET, // 系统设置
+    STR_UV, // 紫外线
+    STR_UV_VERY_WEAK, // 很弱
+    STR_UV_WEAK, // 弱
+    STR_UV_MODERATE, // 中等
+    STR_UV_STRONG, // 强
+    STR_UV_VERY_STRONG, // 很强
+    STR_HUMIDITY, // 湿度
+    STR_FUTURE_WEATHER, // 未来天气
+    STR_CALL_CLOSED_IS_OPEN, // 呼叫开关已禁用，您想打开它吗？
+    STR_WATCHFACE_AND_THEME, // 表盘&主题
+    STR_DIAL_SOS, // 拨打SOS？
 };
 
 extern const char * const *i18n;

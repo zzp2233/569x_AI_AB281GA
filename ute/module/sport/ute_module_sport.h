@@ -450,12 +450,14 @@ void uteModuleSportSaveTodayEveryHourAllSportKcalData(void);
 uint32_t uteModuleSportGetCurrDayEveryHourSportTime(void);
 uint16_t uteModuleSportGetCurrDayEveryHourKcal(void);
 uint16_t uteModuleSportGetCurrDayEveryHourStandTime(void);
-uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(UT_GraphsParam *everyHourStepHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
-bool uteModuleSportLoadTodayEveryHourKcalHistoryData(UT_GraphsParam *everyHourKcalHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
-bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(UT_GraphsParam *everyHourSportTimeHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
-uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(UT_GraphsParam *everyHourStandTimeHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
+uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(uint32_t *everyHourStep);
+bool uteModuleSportLoadTodayEveryHourKcalHistoryData(uint16_t *everyHourKcal);
+bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(uint16_t *everyHourSportTime);
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
+uint16_t uteModuleSportLoadTodayEveryHourStandTimeHistoryData(uint16_t *everyHourStandTime);
+#endif
 void uteModuleSportReadWeekDayStep(void);
-uint32_t uteModuleSportLoadWeekDayStepHistoryData(UT_GraphsParam *weekDayStepHistorygramGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange,uint32_t *totalStep);
+uint32_t uteModuleSportLoadWeekDayStepHistoryData(uint32_t *weekDayStep, uint32_t *totalStep);
 #endif
 
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT

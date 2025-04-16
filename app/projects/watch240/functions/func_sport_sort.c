@@ -199,10 +199,10 @@ compo_form_t *func_sport_sort_form_create(void)
         compo_cardbox_icon_set(cardbox,0,icon_addr);
         compo_cardbox_icon_set_location(cardbox,0,CARD_PIC_X,CARD_PIC_Y,CARD_PIC_WIDTH,CARD_PIC_HEIGHT);
 
-        compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_24_BIN);
-        compo_cardbox_text_set_location(cardbox,0,CARD_TXT_X,CARD_TXT_Y,CARD_TXT_WIDTH,CARD_TXT_HEIGHT);
-        compo_cardbox_text_set(cardbox,0,i18n[str_id]);
-        compo_cardbox_text_scroll_process(cardbox, true);
+        compo_textbox_t *textbox = compo_textbox_create_for_page(frm,cardbox->page,strlen(i18n[str_id]));
+        compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_24_BIN);
+        compo_textbox_set_location(textbox,CARD_TXT_X,CARD_TXT_Y,CARD_TXT_WIDTH,CARD_TXT_HEIGHT);
+        compo_textbox_set(textbox,i18n[str_id]);
     }
     return frm;
 }

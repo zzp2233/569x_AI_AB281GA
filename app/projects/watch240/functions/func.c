@@ -21,7 +21,9 @@ typedef struct func_t_
 } func_t;
 
 extern void func_menu(void);
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
 extern void func_menustyle(void);
+#endif
 extern void func_clock(void);
 extern void func_clock_preview(void);
 //extern void func_clock_sub_sidebar(void);
@@ -167,7 +169,9 @@ extern void func_ota_update(void);
 extern void func_ota_err(void);
 extern void func_ota_succ(void);
 extern void func_ble_call(void);
-//extern void func_set_sub_sos(void);
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+extern void func_sub_sos(void);
+#endif
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 extern void func_power_on(void);//开机
 #endif
@@ -187,7 +191,19 @@ extern void func_up_watch_dial(void);
 extern void func_breathe_finish(void);
 extern void func_women_health(void);
 extern void func_menu_football_list(void);
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+extern void func_system_sub_system(void);
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+extern void func_dial_and_theme(void);
+#endif
+extern void func_heart_about(void);
+extern void func_oxygen_about(void);
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+extern void func_bright_set(void);
+#endif
 
+compo_form_t *func_oxygen_about_form_create(void);
 compo_form_t *func_heart_warning_form_create(void);
 compo_form_t *func_menu_football_list_form_create(void);
 compo_form_t *func_women_health_form_create(void);
@@ -291,7 +307,9 @@ compo_form_t *func_message_reply_form_create(void);
 //compo_form_t *func_tetris_form_create(void);
 //compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
-//compo_form_t *func_set_sub_sos_form_create(void);
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+compo_form_t *func_sub_sos_form_create(void);
+#endif
 compo_form_t *func_empty_form_create(void);
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_test_mode_list_form_create(void);///*出厂测试模式选择*/
@@ -299,7 +317,12 @@ compo_form_t *func_factory_testing_create(void);///*工厂测试*/
 compo_form_t *func_ageing_create(void);///*老化测试*/
 compo_form_t *func_audio_create(void);///*音频测试*/
 compo_form_t *func_online_factory_test_form_create(void);
-
+compo_form_t *func_dial_and_theme_form_create(void);  //表盘与主题
+compo_form_t *func_system_sub_system_form_create(void); //系统
+compo_form_t *func_heart_about_form_create(void);
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+compo_form_t *func_bright_set_form_create(void);
+#endif
 bool func_music_is_play(void);
 void func_music_play(bool sta);
 
@@ -311,7 +334,9 @@ const func_t tbl_func_create[] =
     {FUNC_WOMEN_HEALTH,                 func_women_health_form_create},
     {FUNC_BLE_CALL,                     func_ble_call_form_create},
     {FUNC_MENU,                         func_menu_form_create},
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
     {FUNC_MENUSTYLE,                    NULL},
+#endif
     {FUNC_CLOCK,                        func_clock_form_create},
     {FUNC_CLOCK_PREVIEW,                func_clock_preview_form_create},
 //    {FUNC_SIDEBAR,                      func_clock_sub_sidebar_form_create},
@@ -430,6 +455,8 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT
     {FUNC_HEART_WARNING,                func_heart_warning_form_create},
 #endif
+    {FUNC_HEAR_ABOUT,                   func_heart_about_form_create},
+    {FUNC_OXYGEN_ABOUT,                 func_oxygen_about_form_create},
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
@@ -483,6 +510,18 @@ const func_t tbl_func_create[] =
     {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test_form_create},
     {FUNC_EMPTY,                        func_empty_form_create},
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+    {FUNC_SYSTEM,                       func_system_sub_system_form_create},//系统设置
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+    {FUNC_DIAL_AND_THEME,               func_dial_and_theme_form_create},//表盘&主题
+#endif
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+    {FUNC_SUB_SOS,                  func_sub_sos_form_create},//SOS
+#endif
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+    {FUNC_BRIGHT_SET,                   func_bright_set_form_create},//亮度设置列表
+#endif
 };
 
 const func_t tbl_func_entry[] =
@@ -490,7 +529,9 @@ const func_t tbl_func_entry[] =
     {FUNC_MENU_STYLE_FOOTBALL_LIST,     func_menu_football_list},
     {FUNC_WOMEN_HEALTH,                 func_women_health},
     {FUNC_MENU,                         func_menu},                     //主菜单(蜂窝)
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
     {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
+#endif
     {FUNC_CLOCK,                        func_clock},                    //时钟表盘
     {FUNC_CLOCK_PREVIEW,                func_clock_preview},            //时钟表盘预览
 //    {FUNC_SIDEBAR,                      func_clock_sub_sidebar},        //表盘右滑
@@ -558,6 +599,8 @@ const func_t tbl_func_entry[] =
     {FUNC_SPORT_SWITCH,                 func_sport_switching},          //运动开启动画
     {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
     {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
+    {FUNC_HEAR_ABOUT,                   func_heart_about},               //
+    {FUNC_OXYGEN_ABOUT,                 func_oxygen_about},
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game},                     //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
@@ -667,7 +710,9 @@ const func_t tbl_func_entry[] =
     {FUNC_OTA_ERROR,                    func_ota_err},
     {FUNC_OTA_SUCC,                     func_ota_succ},
     {FUNC_BLE_CALL,                     func_ble_call},
-//    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+    {FUNC_SUB_SOS,                      func_sub_sos},
+#endif
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
     {FUNC_POWER_ON,                     func_power_on},
 #endif
@@ -678,6 +723,15 @@ const func_t tbl_func_entry[] =
     {FUNC_AUDIO,                        func_audio},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test},
     {FUNC_EMPTY,                        func_empty},
+#if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
+    {FUNC_SYSTEM,                        func_system_sub_system},//系统设置
+#endif
+#if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
+    {FUNC_DIAL_AND_THEME,               func_dial_and_theme},//表盘&主题
+#endif
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+    {FUNC_BRIGHT_SET,                   func_bright_set},//亮度设置列表
+#endif
 };
 
 AT(.text.func.process)
@@ -810,6 +864,7 @@ void func_process(void)
         sys_cb.timer_done = false;
         msg_enqueue(EVT_MSGBOX_EXIT);
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+        msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
         msg_enqueue(EVT_WATCH_TIMER_DONE);
         printf(">>>TIMER DONE\n");
     }
@@ -1190,6 +1245,11 @@ void func_backing_to(void)
 
     u8 stack_top = task_stack_pop();
 
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
     if (!stack_top)
     {
         stack_top = FUNC_CLOCK;                                 //异常返回表盘
@@ -1219,6 +1279,11 @@ void func_back_to(void)
 
     u8 stack_top = task_stack_pop();
 
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
     if (!stack_top)
     {
         stack_top = FUNC_CLOCK;                                 //异常返回表盘
@@ -1242,6 +1307,16 @@ void func_back_to(void)
 u8 func_directly_back_to(void)
 {
     u8 stack_top = task_stack_pop();
+
+    if(stack_top == FUNC_CHARGE && !bsp_charge_sta_get()) //上一级是充电界面，且没有充电，则再返回上一级
+    {
+        stack_top = task_stack_pop();
+    }
+
+    if (!stack_top)
+    {
+        stack_top = FUNC_CLOCK;                                 //异常返回表盘
+    }
 
     func_cb.sta = stack_top;
 
@@ -1388,7 +1463,7 @@ void func_message(size_msg_t msg)
             else
             {
                 //     if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0)
-                if(func_cb.left_sta == FUNC_MESSAGE)
+                if(func_cb.left_sta != FUNC_NULL && func_cb.left_sta == UTE_CUI_SCREEN_WATCHDIAL_LEFT)
                 {
                     func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
                 }
@@ -1435,10 +1510,6 @@ void func_message(size_msg_t msg)
             break;
 
         case KU_BACK:
-#if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT)
-            func_cb.menu_style = MENU_STYLE_LIST;
-            uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
-#endif
             if (func_cb.flag_sort)
             {
                 func_switch_to_clock();                     //切换回主时钟
@@ -1487,6 +1558,12 @@ void func_message(size_msg_t msg)
             }
             break;
 
+        case KU_LEFT:
+            if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL)
+            {
+                uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
+            }
+            break;
 
 //        case KU_LEFT:
 //            ble_bt_connect();               //ios一键双连测试
@@ -1643,6 +1720,9 @@ void func_run(void)
                 latest_task_add(func_cb.sta);
                 func_entry = tbl_func_entry[i].func;
                 func_entry();
+#if UTE_MODULE_SLIDE_BAR_SUPPORT
+                uteModuleSlideBarSetCurrentScreenIdToAppIds(func_cb.sta);
+#endif
                 break;
             }
         }

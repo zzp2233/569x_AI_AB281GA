@@ -19,6 +19,8 @@ typedef struct f_message_t_
 {
     page_tp_move_t *ptm;
     u8 msg_num;
+    bool flag_drag;                 //开始拖动
+    bool flag_init;
 } f_message_t;
 
 
@@ -42,9 +44,9 @@ typedef struct f_message_card_t_
 static const f_message_card_t message_card[]=
 {
     {
-        .pic_x=-85,    .pic_y=-53,   .pic_w=30,    .pic_h=30,
-        .time_x=-18,   .time_y=-64,  .time_w=118,  .time_h=25,
-        .msg_x=-100,   .msg_y=-30,   .msg_w=212,   .msg_h=93,
+        .pic_x=-85,    .pic_y=-35,   .pic_w=20,    .pic_h=20,
+        .time_x=-18,   .time_y=-44,  .time_w=118,  .time_h=25,
+        .msg_x=-100,   .msg_y=-15,   .msg_w=212,   .msg_h=93,
     },
 };
 
@@ -56,15 +58,24 @@ static u32 func_message_card_get_icon(u8 type)
     }
     return 0;
 }
+
 //创建消息窗体
 compo_form_t *func_message_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
+    compo_shape_t *shape = compo_shape_create_for_page(frm,frm->page, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_shape_set_color(shape, COLOR_BLACK);
+
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_MESSAGE]);
+    compo_textbox_t *title = compo_textbox_create_for_page(frm,frm->page,strlen(i18n[STR_MESSAGE]));
+    compo_textbox_set_align_center(title, false);
+    compo_textbox_set_location(title, 20, FORM_TITLE_HEIGHT/2-5, 210, FORM_TITLE_HEIGHT);
+    compo_textbox_set(title,i18n[STR_MESSAGE]);
 
     char time_buf[30];
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
@@ -72,7 +83,7 @@ compo_form_t *func_message_form_create(void)
     if(msg_num == 0)
     {
         //创建无消息界面
-        compo_picturebox_t* pic = compo_picturebox_create(frm, 0);
+        compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I335001_MESSAGE_NO_INFORMATION_ICON_92X76_X74_Y85_BIN);
         compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
 
         compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
@@ -118,36 +129,37 @@ compo_form_t *func_message_form_create(void)
         memset(time_buf,0,sizeof(time_buf));
         if(time_data.year != ute_msg->historyNotify[i].year || time_data.month != ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf,sizeof(time_buf), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else if(time_data.day > ute_msg->historyNotify[i].day && time_data.month == ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf,sizeof(time_buf), "%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else
         {
-            sprintf((char*)time_buf,sizeof(time_buf), "%02d:%02d %s", //record_tbl[index].callTime.year,
-                    hour,min,str_am);
+            snprintf(time_buf,sizeof(time_buf), "%02d:%02d %s", //record_tbl[index].callTime.year,
+                     hour,min,str_am);
         }
 
         char* msg = (char*)ute_msg->historyNotify[i].content;
 
-        compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,2,2,228,144);
+        compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,2,2,224,108);
         compo_setid(cardbox,COMPO_ID_CARD_FIRST+i);
-        compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,107+149*i);
+        compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,107+125*i);
 
         compo_cardbox_icon_set_pos(cardbox,0,0,0);
-        compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_MESSAGE_BG_BIN);
+        compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_2_MESSAGE_LIST_ICON_BG_224X108_X8_Y48_X8_Y164_BIN);
 
         compo_cardbox_icon_set_location(cardbox,1,message_card[0].pic_x,message_card[0].pic_y,message_card[0].pic_w,message_card[0].pic_h);
         compo_cardbox_icon_set(cardbox, 1, func_message_card_get_icon(ute_msg->historyNotify[i].type));
 
         compo_cardbox_text_set_location(cardbox,0,message_card[0].time_x,message_card[0].time_y,message_card[0].time_w,message_card[0].time_h);
+        // compo_cardbox_text_set_location(cardbox,0,0,0,100,100);
         widget_set_align_center(cardbox->text[0],false);
         widget_text_set_color(cardbox->text[0],make_color(0x94,0x94,0x94));
         compo_cardbox_text_set(cardbox,0,time_buf);
@@ -167,14 +179,14 @@ compo_form_t *func_message_form_create(void)
     //        ute_msg->historyNotify[0].min
     //       );
     //创建按钮
-    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_MESSAGE_KEYBG_BIN);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,149-(107-44)+(149*msg_num));
+    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_2_MESSAGE_LIST_ICON_DELETE_208X52_X16_Y521_BIN);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,149-(107-44)+(125*msg_num));
     compo_setid(btn, COMPO_ID_ALL_DEL_BTN);
 
-    //创建删除按钮文本
-    compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR_ALL]));
-    compo_textbox_set_location(text, GUI_SCREEN_CENTER_X,149-(107-44)+(149*msg_num),200,62);
-    compo_textbox_set(text, i18n[STR_CLEAR_ALL]);
+    // //创建删除按钮文本
+    // compo_textbox_t* text = compo_textbox_create(frm, strlen(i18n[STR_CLEAR_ALL]));
+    // compo_textbox_set_location(text, GUI_SCREEN_CENTER_X,149-(107-44)+(149*msg_num),200,62);
+    // compo_textbox_set(text, i18n[STR_CLEAR_ALL]);
 
     ab_free(ute_msg);
 
@@ -185,16 +197,22 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    if(!f_message->ptm)
+    {
+        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    }
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
 
-    uint16_t page_height = msg_num*149+149-(107-44);
+    uint16_t page_height = msg_num*135+149-(125-44);
     if(page_height<GUI_SCREEN_HEIGHT)
     {
         page_height = GUI_SCREEN_HEIGHT;
     }
+
+    f_message->flag_init = false;
+    f_message->flag_drag = false;
 
     page_move_info_t info =
     {
@@ -202,7 +220,7 @@ static void func_message_card_init()
         .page_size = page_height,
         .page_count = 1,
         .jump_perc = 0,
-        .quick_jump_perc = 3,
+        .quick_jump_perc = 40,
         .up_over_perc   = 1,
         .down_over_perc = 1,
     };
@@ -312,21 +330,21 @@ compo_form_t *func_message_form_create(void)
         memset(time_buf,0,sizeof(time_buf));
         if(time_data.year != ute_msg->historyNotify[i].year || time_data.month != ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else if(time_data.day > ute_msg->historyNotify[i].day && time_data.month == ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf, "%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else
         {
-            sprintf((char*)time_buf, "%02d:%02d %s", //record_tbl[index].callTime.year,
-                    hour,min,str_am);
+            snprintf(time_buf,sizeof(time_buf), "%02d:%02d %s", //record_tbl[index].callTime.year,
+                     hour,min,str_am);
         }
 
         char* msg = (char*)ute_msg->historyNotify[i].content;
@@ -379,8 +397,10 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-
+    if(!f_message->ptm)
+    {
+        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    }
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
 
@@ -390,13 +410,16 @@ static void func_message_card_init()
         page_height = GUI_SCREEN_HEIGHT;
     }
 
+    f_message->flag_init = false;
+    f_message->flag_drag = false;
+
     page_move_info_t info =
     {
         .title_used = true,
         .page_size = page_height,
         .page_count = 1,
         .jump_perc = 0,
-        .quick_jump_perc = 3,
+        .quick_jump_perc = 40,
         .up_over_perc   = 1,
         .down_over_perc = 1,
     };
@@ -431,7 +454,7 @@ static const f_message_card_t message_card[]=
     {
         .rect_x=0,     .rect_y=0,    .rect_w=284,  .rect_h=116, .rect_r=20,
         .pic_x=-84,    .pic_y=-58,   .pic_w=46,    .pic_h=46,
-        .time_x=5,     .time_y=-51,  .time_w=120,  .time_h=30,
+        .time_x=-15,     .time_y=-51,  .time_w=140,  .time_h=30,
         .msg_x=-119,   .msg_y=-20,   .msg_w=250,   .msg_h=72,
     },
 };
@@ -461,7 +484,7 @@ compo_form_t *func_message_form_create(void)
     {
         //创建无消息界面
         compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I332001_NOTIFICATION_NO_DATA_BIN);
-        compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X);
+        compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 135);
 
         compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
         compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 212+16, 230, 30);
@@ -479,29 +502,49 @@ compo_form_t *func_message_form_create(void)
     uteModuleNotifyGetData(ute_msg);
     ute_module_systemtime_time_t time_data;
     uteModuleSystemtimeGetTime(&time_data);//获取系统时间
+
     for(int i=0; i<msg_num; i++)
     {
+        uint8_t hour=ute_msg->historyNotify[i].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
+        uint8_t min =ute_msg->historyNotify[i].min ;/*!系统时间，分钟，数值为0~59 */
+        uint8_t str_am[30];
+        memset(str_am,0,sizeof(str_am));
+        if(uteModuleSystemtime12HOn())
+        {
+            if(hour<=12 && hour!=0)
+            {
+                memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
+            }
+            else
+            {
+                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_AM])+1);
+            }
+            hour %= 12;
+            if(hour==0)
+            {
+                hour = 12;
+            }
+        }
+
         memset(time_buf,0,sizeof(time_buf));
         if(time_data.year != ute_msg->historyNotify[i].year || time_data.month != ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else if(time_data.day > ute_msg->historyNotify[i].day && time_data.month == ute_msg->historyNotify[i].month)
         {
-            sprintf((char*)time_buf, "%02d/%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].month,
-                    ute_msg->historyNotify[i].day);
+            snprintf(time_buf,sizeof(time_buf), "%02d/%02d", //record_tbl[index].callTime.year,
+                     ute_msg->historyNotify[i].month,
+                     ute_msg->historyNotify[i].day);
         }
         else
         {
-            sprintf((char*)time_buf, "%02d:%02d", //record_tbl[index].callTime.year,
-                    ute_msg->historyNotify[i].hour,
-                    ute_msg->historyNotify[i].min);
+            snprintf(time_buf,sizeof(time_buf), "%02d:%02d %s", //record_tbl[index].callTime.year,
+                     hour,min,str_am);
         }
-
         char* msg = (char*)ute_msg->historyNotify[i].content;
 
         compo_cardbox_t *cardbox = compo_cardbox_create(frm,1,1,2,284,173);
@@ -547,7 +590,10 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    if(!f_message->ptm)
+    {
+        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    }
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
@@ -558,13 +604,16 @@ static void func_message_card_init()
         page_height = GUI_SCREEN_HEIGHT;
     }
 
+    f_message->flag_init = false;
+    f_message->flag_drag = false;
+
     page_move_info_t info =
     {
         .title_used = true,
         .page_size = page_height,
         .page_count = 1,
         .jump_perc = 0,
-        .quick_jump_perc = 3,
+        .quick_jump_perc = 40,
         .up_over_perc   = 1,
         .down_over_perc = 1,
     };
@@ -717,10 +766,45 @@ static void func_message_process(void)
     func_process();
 }
 
+//下拉返回表盘
+static void func_message_pullup_to_clock(bool auto_switch)
+{
+    printf("%s\n", __func__);
+    f_message_t *f_message = (f_message_t *)func_cb.f_cb;
+    u16 switch_mode = FUNC_SWITCH_MENU_PULLUP_DOWN | (auto_switch ? FUNC_SWITCH_AUTO : 0);
+    compo_form_destroy(func_cb.frm_main);
+    compo_form_t *frm_clock = func_create_form(FUNC_CLOCK);
+    compo_form_t *frm = func_message_form_create();
+    func_cb.frm_main = frm;
+
+    if (func_switching(switch_mode, NULL))
+    {
+        func_cb.sta = FUNC_CLOCK;
+    }
+    else
+    {
+        f_message->flag_init = true;
+        f_message->flag_drag = false;
+    }
+
+    compo_form_destroy(frm_clock);
+}
+
 //消息功能消息处理
 static void func_message_message(size_msg_t msg)
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
+
+    if (f_message->flag_drag)
+    {
+        evt_message(msg);  //拖动中，只处理部分消息
+        return;
+    }
+
+    if(f_message->flag_init)
+    {
+        func_message_card_init();
+    }
 
     switch (msg)
     {
@@ -737,6 +821,25 @@ static void func_message_message(size_msg_t msg)
 
         case MSG_CTP_LONG:
             break;
+
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+            if (func_cb.pullup_sta == FUNC_MESSAGE)
+            {
+                if (msg == MSG_CTP_SHORT_DOWN && f_message->ptm->move_offset >= 0)     //下滑返回到时钟主界面
+                {
+                    f_message->flag_drag = true;
+                    func_message_pullup_to_clock(false);
+                }
+                break;
+            }
+
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_SHORT_LEFT:
+            if (func_cb.pullup_sta == FUNC_MESSAGE)
+            {
+                break;
+            }
 
         default:
             func_message(msg);
@@ -756,21 +859,26 @@ static void func_message_enter(void)
 static void func_message_exit(void)
 {
     f_message_t *f_msg = (f_message_t *)func_cb.f_cb;
+    if (sys_cb.refresh_language_flag)
+    {
+        if(f_msg->ptm != NULL)
+        {
+            func_free(f_msg->ptm);
+        }
+        return;
+    }
     if (func_cb.left_sta == FUNC_MESSAGE)
     {
-        if (sys_cb.refresh_language_flag == false)
-        {
-            func_cb.last = FUNC_MESSAGE;
-            func_cb.left_sta = FUNC_NULL;
-            task_stack_init();  //任务堆栈
-            latest_task_init(); //最近任务
-        }
-    }
-    else
-    {
-        func_cb.last = FUNC_MESSAGE;
+        task_stack_remove(FUNC_MESSAGE);
         func_cb.left_sta = FUNC_NULL;
     }
+    else if (func_cb.pullup_sta == FUNC_MESSAGE)
+    {
+        task_stack_remove(FUNC_MESSAGE);
+        func_cb.pullup_sta = FUNC_NULL;
+    }
+    func_cb.last = FUNC_MESSAGE;
+
     if(f_msg->ptm != NULL)
     {
         func_free(f_msg->ptm);

@@ -150,7 +150,7 @@ enum
     FUNC_PASSWORD_SUB_DISP,             //新密码锁设置
     FUNC_PASSWORD_SUB_SELECT,           //确认密码锁
     FUNC_SET_SUB_ABOUT,                 //设置--关于
-    FUNC_SET_SUB_SOS,                   //SOS
+    FUNC_SUB_SOS,                       //SOS
 #if UTE_MODULE_SCREENS_RESTART_SUPPORT
     FUNC_SET_SUB_RESTART,               //设置--重启
     FUNC_RESTART = FUNC_SET_SUB_RESTART,//重启
@@ -162,6 +162,9 @@ enum
     FUNC_SET_SUB_OFF,                   //设置--关机
     FUNC_OFF = FUNC_SET_SUB_OFF,        //关机
     FUNC_HEART_WARNING,
+    FUNC_DIAL_AND_THEME, //表盘&主题界面
+    FUNC_HEAR_ABOUT,
+    FUNC_OXYGEN_ABOUT,
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,
@@ -210,7 +213,10 @@ enum
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
     FUNC_UP_WATCH_DIAL,
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
-
+    FUNC_SYSTEM,    //系统设置列表界面
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+    FUNC_BRIGHT_SET,    //亮度设置列表
+#endif
     FUNC_MAX_NUM,           //用于计数
 };
 
@@ -229,7 +235,8 @@ typedef struct
     u8 sta_break;                                   //被中断的任务
     u8 sort_cnt;                                    //快捷任务个数
     u8 tbl_sort[MAX_FUNC_SORT_CNT];                 //快捷任务表
-    u16 left_sta;                                   //CLOCK左边菜单
+    u16 left_sta;                                   //CLOCK左边界面
+    u16 pullup_sta;                                 //CLOCK上拉界面
     u8 msgbox_enter_sta;                            //弹窗进入之前的界面任务
     u8  flag_sort       : 1,                        //已进入快捷任务
     flag_animation  : 1;                        //入场动画

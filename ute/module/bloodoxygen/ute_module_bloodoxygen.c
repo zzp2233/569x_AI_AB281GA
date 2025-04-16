@@ -665,22 +665,20 @@ uint8_t uteModuleBloodoxygenGetTestingSecond(void)
 *@author       hcj
 *@date       2022-04-19
 */
-bool uteModuleBloodoxygenSetBloodoxygenHistoryGraph(UT_GraphsParam *BloodoxygenHistoryGraph, uint8_t BloodoxygenHistoryGraphCount,uint8_t *BloodoxygenHistoryData,uint8_t BloodoxygenHistoryDataLen,int16_t x,int16_t y,uint8_t drawWidth,uint8_t intervalWidth,uint16_t hightRange)
+bool uteModuleBloodoxygenSetBloodoxygenHistoryGraph(uint8_t *Bloodoxygen, uint8_t BloodoxygenCount, uint8_t *BloodoxygenHistoryData, uint8_t BloodoxygenHistoryDataLen)
 {
-    uint8_t BloodoxygenData = 0;
-    uint8_t rangeIndex = 0;
-    if(BloodoxygenHistoryGraphCount>BloodoxygenHistoryDataLen)
+    if (BloodoxygenCount > BloodoxygenHistoryDataLen)
     {
         return false;
     }
 #if UTE_LOG_GUI_LVL // test
-    for(uint8_t i=0; i<144; i++)
+    for (uint8_t i = 0; i < 144; i++)
     {
-        BloodoxygenHistoryData[i] = 80+rand()%20;
+        BloodoxygenHistoryData[i] = 80 + rand() % 20;
     }
 #endif
     uint8_t tempBloodxygenHistoryData[144];
-    uint8_t m = 144/BloodoxygenHistoryGraphCount;
+    uint8_t m = 144 / BloodoxygenCount;
     memset(tempBloodxygenHistoryData, 0, sizeof(tempBloodxygenHistoryData));
 #if !UTE_MODULE_BLOODGXYGEN_REAL_TIME_MAX_AND_MIN_VAULE_SUPPORT
     uteModuleBloodoxygenData.dayMaxValue = 0;
@@ -688,10 +686,10 @@ bool uteModuleBloodoxygenSetBloodoxygenHistoryGraph(UT_GraphsParam *BloodoxygenH
 #endif
     uint8_t dayMaxValue = 0;
     uint8_t dayMinValue = 100;
-    for (uint8_t i = 0; i < BloodoxygenHistoryGraphCount; i++)
+    for (uint8_t i = 0; i < BloodoxygenCount; i++)
     {
         uint8_t oxygenValue = 0;
-        uint16_t oxygenValidValue = 0; //总心率值
+        uint16_t oxygenValidValue = 0; // 总心率值
         uint8_t averageOxygenValueCnt = 0;
         for (int j = m; j > 0; j--)
         {
@@ -702,12 +700,13 @@ bool uteModuleBloodoxygenSetBloodoxygenHistoryGraph(UT_GraphsParam *BloodoxygenH
                 averageOxygenValueCnt++;
             }
         }
-        tempBloodxygenHistoryData[i] = oxygenValidValue/averageOxygenValueCnt;
+        tempBloodxygenHistoryData[i] = averageOxygenValueCnt>0 ? (oxygenValidValue / averageOxygenValueCnt):0;
     }
-    memcpy(BloodoxygenHistoryData, tempBloodxygenHistoryData, BloodoxygenHistoryGraphCount);
-    for(uint8_t i = 0; i<BloodoxygenHistoryGraphCount; i++)
+    memcpy(BloodoxygenHistoryData, tempBloodxygenHistoryData, BloodoxygenCount);
+    for (uint8_t i = 0; i < BloodoxygenCount; i++)
     {
-        if(BloodoxygenHistoryData[i]==0xFF)  BloodoxygenHistoryData[i]=0;
+        if (BloodoxygenHistoryData[i] == 0xFF)
+            BloodoxygenHistoryData[i] = 0;
 
         if (BloodoxygenHistoryData[i] != 0)
         {
@@ -720,14 +719,9 @@ bool uteModuleBloodoxygenSetBloodoxygenHistoryGraph(UT_GraphsParam *BloodoxygenH
                 dayMinValue = BloodoxygenHistoryData[i];
             }
         }
+        uint8_t BloodoxygenData = 0;
         BloodoxygenData = BloodoxygenHistoryData[i] > UTE_DISPLAY_BLOODGXYGEN_MINIMUM ? BloodoxygenHistoryData[i] - UTE_DISPLAY_BLOODGXYGEN_MINIMUM : 0;
-        BloodoxygenHistoryGraph[i].colorData = BLLODOXYGEN_LANGUAGE_24COLOR;
-
-        //宽高通过图片的对应比例算出.比如下面高度一共hightRange个像素点，心率范围值取0~200
-        BloodoxygenHistoryGraph[i].hight = BloodoxygenData*hightRange/(100-UTE_DISPLAY_BLOODGXYGEN_MINIMUM);
-        BloodoxygenHistoryGraph[i].width = drawWidth;
-        BloodoxygenHistoryGraph[i].x = x+i*drawWidth+i*intervalWidth;
-        BloodoxygenHistoryGraph[i].y = y - BloodoxygenHistoryGraph[i].hight;
+        Bloodoxygen[i] = BloodoxygenData;
     }
 #if UTE_MODULE_BLOODGXYGEN_REAL_TIME_MAX_AND_MIN_VAULE_SUPPORT
     if (uteModuleBloodoxygenData.dayMaxValue == 0 && dayMaxValue != 0)
@@ -736,7 +730,7 @@ bool uteModuleBloodoxygenSetBloodoxygenHistoryGraph(UT_GraphsParam *BloodoxygenH
         uteModuleBloodoxygenData.dayMinValue = dayMinValue;
         uteModuleBloodoxygenData.dayMaxValue = dayMaxValue;
     }
-    UTE_MODULE_LOG(UTE_LOG_OXYGEN_LVL, "%s,dayMaxValue = %d ,dayMinValue = %d", __func__,uteModuleBloodoxygenData.dayMaxValue,uteModuleBloodoxygenData.dayMinValue);
+    UTE_MODULE_LOG(UTE_LOG_OXYGEN_LVL, "%s,dayMaxValue = %d ,dayMinValue = %d", __func__, uteModuleBloodoxygenData.dayMaxValue, uteModuleBloodoxygenData.dayMinValue);
     return true;
 }
 /**
@@ -756,7 +750,7 @@ void uteModuleBloodoxygenGetMinMaxValue(uint8_t *min,uint8_t *max)
 *@author     xjc
 *@date       2021-12-22
 */
-bool uteModuleBloodoxygenGetTodayHistoryData(UT_GraphsParam *BloodoxygenHistoryGraph, uint8_t BloodoxygenHistoryGraphCount, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange)
+bool uteModuleBloodoxygenGetTodayHistoryData(uint8_t *Bloodoxygen, uint8_t BloodoxygenCount)
 {
     UTE_MODULE_LOG(UTE_LOG_OXYGEN_LVL, "%s", __func__);
     void *file;
@@ -765,8 +759,8 @@ bool uteModuleBloodoxygenGetTodayHistoryData(UT_GraphsParam *BloodoxygenHistoryG
     uint8_t tempBloodoxygenHistoryData[6 * 24 + 4];
     uint16_t buffSize = 6 * 24 + 4;
     ute_module_systemtime_time_t time;
+    memset(&Bloodoxygen[0], 0, BloodoxygenCount);
     memset(BloodoxygenHistoryData, 0, 144);
-    memset(BloodoxygenHistoryGraph,0, sizeof(UT_GraphsParam)*BloodoxygenHistoryGraphCount);
     uteModuleSystemtimeGetTime(&time);
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_BLOODOXYGEN_AUTO_DATA_DIR, time.year, time.month, time.day);
     UTE_MODULE_LOG(UTE_LOG_OXYGEN_LVL, "%s,read file=%s", __func__, &path[0]);
@@ -775,13 +769,13 @@ bool uteModuleBloodoxygenGetTodayHistoryData(UT_GraphsParam *BloodoxygenHistoryG
         uteModuleFilesystemReadData(file, tempBloodoxygenHistoryData, buffSize);
         uteModuleFilesystemCloseFile(file);
         memcpy(BloodoxygenHistoryData, &tempBloodoxygenHistoryData[4], 144);
-        uteModuleBloodoxygenSetBloodoxygenHistoryGraph(BloodoxygenHistoryGraph, BloodoxygenHistoryGraphCount, BloodoxygenHistoryData, 144, x, y, drawWidth, intervalWidth, hightRange);
+        uteModuleBloodoxygenSetBloodoxygenHistoryGraph(Bloodoxygen, BloodoxygenCount, BloodoxygenHistoryData, 144);
         return true;
     }
     else
     {
-#if UTE_LOG_GUI_LVL // test
-        uteModuleBloodoxygenSetBloodoxygenHistoryGraph(BloodoxygenHistoryGraph, BloodoxygenHistoryGraphCount, BloodoxygenHistoryData, 144, x, y, drawWidth, intervalWidth, hightRange);
+#if UTE_LOG_GUI_LVL // test 
+        uteModuleBloodoxygenSetBloodoxygenHistoryGraph(Bloodoxygen, BloodoxygenCount, BloodoxygenHistoryData, 144);
 #endif
         return false;
     }

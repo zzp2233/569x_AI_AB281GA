@@ -21,10 +21,14 @@
 #include "ute_drv_tft_s240x284_nv3030b_zd183g1196.h"
 #elif UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
 #include "ute_drv_tft_s360X360_nv3030b_hy139071a.h"
-#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
-#include "ute_drv_tft_s360X360_nv3030b_zd138g1616.h"
+#elif UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
+#include "ute_drv_tft_s360X360_gc9b71_zd138g1616.h"
 #elif UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
 #include "ute_drv_tft_s240x284_jd9853_hy018214ov.h"
+#elif UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT
+#include "ute_drv_tft_s240x284_i183_jd9853_0185A035_qspi.h"
+#elif UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT
+#include "ute_drv_tft_s240x296_gc9309_js202018a_qspi.h"
 #endif
 
 /*! 配置屏的接口zn.zeng, 2021-09-06  */
@@ -61,8 +65,14 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BHy139071aConfig;
 #elif UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd9853Hy018214OvConfig;
-#elif UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Nv3030BZd138g1616Config;
+#elif UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Gc9b71Zd138g1616Config;
+#elif UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd98530185A035Config;
+#elif UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft240X296Gc9309Js202018aConfig;
+#else
+#error "Please select a screen driver"
 #endif
 #if UTE_DRV_8080_FOR_SCREEN_SUPPORT
     uteModulePlatform8080Init();

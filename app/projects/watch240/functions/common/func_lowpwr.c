@@ -392,7 +392,7 @@ static void sfunc_sleep(void)
 
         if(status == 1)
         {
-            if(vc30fx_sleep_isr)
+            if(bsp_sensor_hr_interrupt_flag_get())
             {
                 sleep_set_sysclk(SYS_192M);
             }
@@ -412,16 +412,16 @@ static void sfunc_sleep(void)
         port_int_sleep_process(&wkpnd);
         // bsp_sensor_step_lowpwr_pro();
 
-        if(vc30fx_sleep_isr)
+        if(bsp_sensor_hr_interrupt_flag_get())
         {
             // GPIOBSET = BIT(0);
             // sleep_set_sysclk(SYS_176M);
             // printf("sleep hr enter\n");
             // vc30fx_usr_device_handler(0, 1);
-            uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData();
+            bsp_sensor_hr_algo_input_data_handle();
             // GPIOBCLR = BIT(0);
             // printf("sleep hr exit\n");
-            vc30fx_sleep_isr = false;
+            bsp_sensor_hr_interrupt_flag_set(false);
             sleep_set_sysclk(SYS_24M);
         }
 

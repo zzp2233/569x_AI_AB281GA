@@ -111,11 +111,11 @@
 			<Add library="../../platform/libs/libc.a" />
 			<Add library="../../platform/libs/libm.a" />
 			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_BIODetect_V141_codeBlock_Riscv_01.a" />
-			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_hr_vH102ed02_ZKLXRISCV32V2_NA_01.a" />
-			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_spo2_VC30FS_Int_ZhongKe5681_01.a" />
 			<Add library="../../../ute/lib/libute_all_sports_int_algorithms3_0.a" />
 			<Add library="../../../ute/lib/libUTEsleepOnBandLib.a" />
 			<Add library="../../../ute/drv/gsensor/libSL_Acc_Mtp_WR.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_hr.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_spo2.a" />
 			<Add directory="../../platform/libs" />
 		</Linker>
 		<ExtraCommands>
@@ -631,6 +631,9 @@
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/BIODetect_V14_1.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/StressEst.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/algo.h" />
+		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/module_heart_vc_int_10.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/spo2Algo_16bit.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vc30fx_core.c">
 			<Option compilerVar="CC" />
@@ -651,6 +654,13 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vc30fx_user_app.h" />
+		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcHr11DEBUG.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcHr11Hci.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcHr11Hci.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcSportMotionIntAlgo.h" />
 		<Unit filename="../../platform/bsp/bsp_sensor/vcc30fx/vcare_device_com.h" />
 		<Unit filename="../../platform/bsp/bsp_sleep.c">

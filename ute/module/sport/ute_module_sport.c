@@ -1431,14 +1431,14 @@ void uteModuleSportEverySecond(void)
 #if (UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT && !UTE_DRV_HEART_VCXX_REMAIN_POWER_SUPPORT)
     if (isStepping)
     {
-        if(vc30fx_usr_get_work_status() && uteModuleHeartGetWorkMode() == WORK_MODE_WEAR)
+        if(bsp_sensor_hr_work_status() && uteModuleHeartGetWorkMode() == WORK_MODE_WEAR)
         {
             uteModuleHeartStopSingleTesting(TYPE_WEAR);
         }
     }
     else
     {
-        if(uteModuleSystemtimeIsNight() && !vc30fx_usr_get_work_status())
+        if(uteModuleSystemtimeIsNight() && !bsp_sensor_hr_work_status())
         {
             uteModuleHeartStartSingleTesting(TYPE_WEAR);
         }
@@ -2950,7 +2950,7 @@ void uteModuleSportMoreSportsGetDataFormAlgo(ute_module_systemtime_time_t *time)
 void uteModuleSportMoreSportsHeartDataHandler(void)
 {
 #if UTE_MODULE_HEART_SUPPORT
-    if(!vc30fx_usr_get_work_status() || uteModuleHeartGetWorkMode() != WORK_MODE_HR)
+    if(!bsp_sensor_hr_work_status() || uteModuleHeartGetWorkMode() != HR_WORK_MODE_HR)
     {
         uteModuleHeartStartSingleTesting(TYPE_HEART);
     }
@@ -3735,7 +3735,7 @@ void uteModuleSportStopMoreSportsMsgHandler(void)
     disableUTESport();
 #endif
 #if UTE_MODULE_HEART_SUPPORT
-    if (vc30fx_usr_get_work_status() && uteModuleHeartGetWorkMode() == WORK_MODE_HR)
+    if (bsp_sensor_hr_work_status() && uteModuleHeartGetWorkMode() == HR_WORK_MODE_HR)
     {
         uteModuleHeartStopSingleTesting(TYPE_HEART);
     }
@@ -6658,7 +6658,7 @@ void uteModuleSprotInputDataBeforeAlgoTimerCallback(void *pxTimer)
 AT(.com_text.ute_sport)
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void)
 {
-    if (vc30fx_usr_get_work_status())
+    if (bsp_sensor_hr_work_status())
     {
         return;
     }

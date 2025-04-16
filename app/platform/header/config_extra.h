@@ -488,6 +488,7 @@
 #define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)                       //天易合芯HRS3300心率血压传感器
 #define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)                       //天易合芯HX3605心率血氧传感器
 #define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
+#define SENSOR_HR_VCLC09A                        (SENSOR_HR_EN | 0x4)
 
 #define SENSOR_GEO_NULL                           0
 #define SENSOR_GEO_EN                             0x300

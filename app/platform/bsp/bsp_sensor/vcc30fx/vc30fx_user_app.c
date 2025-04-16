@@ -111,66 +111,6 @@ void vc30fx_pwr_dis(void)       //PF5
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
 }
 
-AT(.com_text.vc30fx)
-void uteDrvHeartVC30FXHeartOrBloodOxygenAlgoInputData(void)
-{
-    uint8_t sportType = uteModuleSportMoreSportGetType();
-    if (sportType == SPORT_TYPE_NONE)
-    {
-        sportType = SPORT_TYPE_PERIODIC_MONITORING;
-    }
-#if UTE_MODULE_SPORT_HUNDRED_SUPPORT /*! 运动模式适配心率, xjc 2022-08-31*/
-    if (sportType > SPORT_TYPE_FREE_TRAINING)
-    {
-        if ((sportType == SPORT_TYPE_INDOOR_WALK) ||
-            (sportType == SPORT_TYPE_STEP_TRAINING) ||
-            (sportType == SPORT_TYPE_OUTDOOR_WALK) ||
-            (sportType == SPORT_TYPE_HIKING)) // 室内走路/踏步/户外健走/徒步
-        {
-            sportType = SPORT_TYPE_WALKING;
-        }
-        else if ((sportType == SPORT_TYPE_INDOOR_RUN) ||
-                 (sportType == SPORT_TYPE_PARKOUR) ||
-                 (sportType == SPORT_TYPE_MARATHON)) // 室内跑步/跑酷/马拉松
-        {
-            sportType = SPORT_TYPE_RUNNING;
-        }
-        else
-        {
-            sportType = SPORT_TYPE_FREE_TRAINING;
-        }
-    }
-    if (!uteModuleSportMoreSportIsRuning())
-    {
-        sportType = SPORT_TYPE_INDOOR_WALK; // SPORT_TYPE_NONE;
-    }
-
-#endif
-// get_vc30fx_device();
-#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-    if(uteModuleNewFactoryTestGetMode()!= FACTORY_TEST_MODE_NULL)
-    {
-        // 工厂模式下，必须用1模式的测试血氧
-        vc30fx_usr_device_handler(sportType,1);
-    }
-    else
-#endif
-    {
-#if UTE_MODULE_BLOODOXYGEN_SUPPORT
-        if (uteModuleBloodoxygenIsBloodOxygenAutoTesting())
-        {
-            //定时测试时候，使用模式2测试血氧，即切换动态测试
-            vc30fx_usr_device_handler(sportType,2);
-        }
-        else
-#endif
-        {
-            //手动测试时候，使用模式1测试血氧，即切换静态测试
-            vc30fx_usr_device_handler(sportType,1);
-        }
-    }
-}
-
 /****************************************************************************
  * @description: 驱动参数保存/读取
  * @param {unsigned int} size
@@ -833,7 +773,7 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
     // GPIOBSET = BIT(0);
 }
 
-bool vc30fx_sleep_isr = false;
+// bool vc30fx_sleep_isr = false;
 
 AT(.com_text.vc30fx)
 void vc30fx_isr(void)
@@ -857,7 +797,7 @@ void vc30fx_isr(void)
     // }
     if (vc30fx_clk_calc_status() == 1 && sleep_cb.sys_is_sleep)
     {
-        vc30fx_sleep_isr = true;
+        bsp_sensor_hr_interrupt_flag_set(true);
     }
     // vc30fx_usr_device_handler(0, 1);
 }

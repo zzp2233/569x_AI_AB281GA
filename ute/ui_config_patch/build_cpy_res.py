@@ -65,6 +65,16 @@ def get_ute_custom_patch(filename):
     except Exception as e:
         print(f"Error: An error occurred while reading the file {filename}: {e}")
         return ""
+    
+    # 移除注释（单行//和多行/*...*/）
+    try:
+        # 移除单行注释（// 开头到行尾）
+        content = re.sub(r'\/\/.*', '', content)
+        # 移除多行注释（/*...*/）
+        content = re.sub(r'\/\*[\s\S]*?\*\/', '', content)
+    except re.error as e:
+        print(f"Error: A regex error occurred while removing comments: {e}")
+        return ""
 
     pattern = r'#define\s+UTE_UI_CONFIG_PATCH\s+"([^"]+)"'
     try:
@@ -78,6 +88,39 @@ def get_ute_custom_patch(filename):
         return match.group(1)
     else:
         print("UTE_UI_CONFIG_PATCH macro not found.")
+        return ""
+    
+def get_ute_vcxx_drv(filename):
+    print('get_ute_vcxx_drv filename:', filename)
+    try:
+        with open(filename, 'r', encoding='utf-8') as file:
+            content = file.read()
+    except Exception as e:
+        print(f"Error: An error occurred while reading the file {filename}: {e}")
+        return ""
+
+    # 移除注释（单行//和多行/*...*/）
+    try:
+        # 移除单行注释（// 开头到行尾）
+        content = re.sub(r'\/\/.*', '', content)
+        # 移除多行注释（/*...*/）
+        content = re.sub(r'\/\*[\s\S]*?\*\/', '', content)
+    except re.error as e:
+        print(f"Error: A regex error occurred while removing comments: {e}")
+        return ""
+
+    pattern = r'#define\s+UTE_DRV_HR_SENSOR_SELECT\s+([^\s]+)'
+    try:
+        match = re.search(pattern, content)
+    except re.error as e:
+        print(f"Error: A regex error occurred: {e}")
+        return ""
+
+    if match:
+        print("vcxx_drv macro found:", match.group(1))
+        return match.group(1)
+    else:
+        print("vcxx_drv macro not found.")
         return ""
 
 def panic(err_msg):
@@ -133,9 +176,60 @@ def main(argv):
 
     #git copy
     git_copy_file = current_dir[0:index]+"ute\\tool\\AStyle\\pre-commit"
-    git_copy_cmd = r"copy /y " + git_copy_file + r" ..\..\..\.git\hooks"
+    git_copy_cmd = "copy /y "+git_copy_file+" ..\\..\\..\\.git\\hooks"
     print('git_copy_cmd:',git_copy_cmd)
     os.system(git_copy_cmd)
+
+    # vcxx_lib
+    vcxx_drv = get_ute_vcxx_drv(current_dir[0:index] + 'ute\\project_config\\' + 'ute_project_config_' + project_name.lower() + '.h')
+    print("vcxx_drv:",vcxx_drv)
+
+    # if vcxx_drv != '':
+    vcxx_lib_dir = current_dir[0:index] + "ute\\ui_config_patch\\vk_heart_lib\\"
+    target_vcxx_lib_dir =  current_dir[0:index] + "\\app\\platform\\bsp\\bsp_sensor\\vcc30fx"
+
+    if vcxx_drv == 'SENSOR_HR_VCLC09A':
+        vcxx_lib_dir += 'vclc09a'
+    elif vcxx_drv == 'SENSOR_HR_VC30FX':
+        vcxx_lib_dir += 'vc30fx'
+    else:
+        vcxx_lib_dir += 'vc30fx'
+        print("default vcxx lib")
+
+    print("vcxx_lib_dir:",vcxx_lib_dir)
+
+    if os.path.isdir(vcxx_lib_dir):  # 检查路径是否存在且为目录
+        for entry in os.listdir(vcxx_lib_dir):
+            entry_path = os.path.join(vcxx_lib_dir, entry)
+            if os.path.isfile(entry_path): 
+                base_name, ext = os.path.splitext(entry)
+                if "lib_hr" in base_name.lower():
+                    new_base = "lib_hr"
+                elif "lib_spo2" in base_name.lower():
+                    new_base = "lib_spo2"
+                else:
+                    new_base = base_name
+                
+                new_filename = f"{new_base}{ext}"
+                target_path = os.path.join(target_vcxx_lib_dir, new_filename)
+                
+                if os.path.exists(target_path):
+                    try:
+                        os.remove(target_path)
+                        print(f"-> Removed old: {target_path}")
+                    except Exception as e:
+                        print(f"-> Error removing {target_path}: {e}")
+                        continue
+                try:
+                    shutil.copy(entry_path, target_path)
+                    print(f"-> Copied: {entry_path} -> {target_path}")
+                except Exception as e:
+                    print(f"-> Error copying {entry_path}: {e}")
+            else:
+                print(f"Skipping non-file: {entry}")
+    else:
+        print(f"Error: {vcxx_lib_dir} is not a valid directory")
+
 
     return 0
 

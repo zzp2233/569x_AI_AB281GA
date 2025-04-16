@@ -416,7 +416,8 @@ void uteModuleNewFactoryTestSetCheckLightMode(uint8_t mode)
     uteModuleNewFactoryTestData.u.vcxx.testMode = mode;
     if(mode!=NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
     {
-        uteDrvHeartVcxxStartCrosstalktest();
+        //uteDrvHeartVcxxStartCrosstalktest();
+        uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
     }
 #if !UTE_DRV_HEART_VC9202_VP60A2_SUPPORT
     if(mode == NEW_FACTORY_VCXX_TEST_MODE_BIO_A)

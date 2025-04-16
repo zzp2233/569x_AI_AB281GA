@@ -166,6 +166,10 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             sprintf(value_str, "%d", value);
 #endif
             break;
+        case COMPO_BOND_SMOKERESVAL:
+            value = ecig_get_res();
+            sprintf(value_str, "%d", value);
+            break;
         case COMPO_BOND_YEAD:
             value = tm.year;
             sprintf(value_str, "%d", value);
@@ -311,6 +315,24 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             {
                 value = ((compo_picturebox_t*)compo)->radix * sys_cb.step_cur / sys_cb.step_goal;
                 value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
+            }
+            sprintf(value_str, "%d", value);
+            break;
+        case COMPO_BOND_RESISTANCE_VALUE:
+            value = 0;
+            if (compo->type == COMPO_TYPE_PICTUREBOX)
+            {
+                if(ecig_get_res()==4)
+                    value = 1;
+                else if(ecig_get_res()==6)
+                    value = 2;
+                else if(ecig_get_res()==8)
+                    value = 3;
+                else if(ecig_get_res()==12)
+                    value = 4;
+                else
+                    value = 0;
+
             }
             sprintf(value_str, "%d", value);
             break;

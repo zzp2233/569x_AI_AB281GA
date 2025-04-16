@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(台湾）
 *@author
-*@date   2025-04-10 15:41:40
+*@date   2025-04-11 15:59:32
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -284,6 +284,8 @@ const char * const i18n_zh_rtw[] =
     [STR_CHANGE_PASSWORD] = "\xe6\x9b\xb4\xe6\x94\xb9\xe5\xaf\x86\xe7\xa2\xbc\x00", // [268] 更改密碼
     [STR_SLIDE_UNLOCK] = "\xe6\xbb\x91\xe5\x8b\x95\xe8\xa7\xa3\xe9\x8e\x96\x00", // [269] 滑動解鎖
     [STR_CHILD_LOCK] = "\xe7\xab\xa5\xe9\x8e\x96\xe5\xb7\xb2\xe6\x89\x93\xe9\x96\x8b\x00", // [270] 童鎖已打開
+    [STR_SINGLE] = "\xe5\x96\xae\xe7\x99\xbc\x00", // [271] 單發
+    [STR_DUAL] = "\xe9\x9b\x99\xe7\x99\xbc\x00", // [272] 雙發
 };
 
 #endif

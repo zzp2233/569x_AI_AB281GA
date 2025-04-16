@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-10 15:41:36
+*@date   2025-04-11 15:59:28
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -284,6 +284,8 @@ enum
     STR_CHANGE_PASSWORD, // 更改密码
     STR_SLIDE_UNLOCK, // 滑动解锁
     STR_CHILD_LOCK, // 童锁已打开
+    STR_SINGLE, // 单发
+    STR_DUAL, // 双发
 };
 
 extern const char * const *i18n;

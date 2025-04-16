@@ -69,7 +69,7 @@ enum COMPO_BOND_DATA
     COMPO_BOND_VBAT_PROGRESS,           //电量进度
     COMPO_BOND_COMM_UNIT,               //单位
     COMPO_BOND_TIME_AMPM,               //上午/下午
-
+    COMPO_BOND_RESISTANCE_VALUE = 34,               //阻值进度条
     COMPO_BOND_TIME_WEEK = 37,          //星期
     COMPO_BOND_TIME_MONTH,              //月份
     COMPO_BOND_TEMPERATURE_UNIT,        //温度单位
@@ -89,6 +89,7 @@ enum COMPO_BOND_DATA
     COMPO_BOND_BATTERY = 75,            //电池
     COMPO_BOND_DISTANCE,                //距离
     COMPO_BOND_SMOKEPOWER =78,                //抽烟功率
+    COMPO_BOND_SMOKERESVAL =79,                //抽烟阻值
     COMPO_BOND_SMOKECOUNT =80,                //抽烟口数
     COMPO_BOND_HOURMIN_TXT = 120,
 };

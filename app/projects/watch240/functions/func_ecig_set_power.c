@@ -87,10 +87,12 @@ compo_form_t *func_ecig_set_power_form_create(void)
     compo_button_t *btn1 = compo_button_create(frm);
     compo_button_set_location(btn1, 43, 46, 50, 50);
     compo_setid(btn1, COMPO_ID_BTN_ECIG_SET_D_D);
+    compo_button_set_visible(btn1, get_gear_func() == 0 ? true : false);
 
     compo_button_t *btn2 = compo_button_create(frm);
     compo_button_set_location(btn2, 197, 46, 50, 50);
     compo_setid(btn2, COMPO_ID_BTN_ECIG_SET_S_D);
+    compo_button_set_visible(btn2, get_gear_func() == 1 ? true : false);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_01_BIN);
     compo_picturebox_set_pos(picbox, 43, 46);
@@ -145,6 +147,17 @@ compo_form_t *func_ecig_set_power_form_create(void)
     compo_picturebox_set_visible(picbox, false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_SET_DEL1);
 
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_SINGLE]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt,33-10, 35,43,45);
+    // compo_textbox_set_pos(txt_onoff, 30, 90-17);
+    compo_textbox_set(txt, i18n[STR_SINGLE]);
+
+    txt = compo_textbox_create(frm, strlen(i18n[STR_DUAL]));
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_location(txt, 187-10, 35,43,45);
+    // compo_textbox_set_pos(txt_onoff, 30, 90-17);
+    compo_textbox_set(txt, i18n[STR_DUAL]);
     return frm;
 }
 
@@ -153,7 +166,8 @@ static void func_ecig_set_power_button_touch_handle(void)
 {
     int id = compo_get_button_id();
     f_setpower_t *f_setpower = (f_setpower_t *)func_cb.f_cb;
-
+    compo_button_t *btn_s = (compo_button_t *)compo_getobj_byid(COMPO_ID_BTN_ECIG_SET_S_D);
+    compo_button_t *btn_d = (compo_button_t *)compo_getobj_byid(COMPO_ID_BTN_ECIG_SET_D_D);
     compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_BTN_ECIG_SET_S_D1);
     compo_picturebox_t *picbox1 = compo_getobj_byid(COMPO_ID_BTN_ECIG_SET_D_D1);
     compo_picturebox_t *picbox2 = compo_getobj_byid(COMPO_ID_BTN_ECIG_BG_NUM);
@@ -166,6 +180,8 @@ static void func_ecig_set_power_button_touch_handle(void)
     {
         case COMPO_ID_BTN_ECIG_SET_S_D:
             test_2st_gear_func();
+            compo_button_set_visible(btn_d, false); // 隐藏单发按钮
+            compo_button_set_visible(btn_s, true);  // 显示双发按钮
             compo_picturebox_set_visible(picbox1, false);
             compo_picturebox_set_visible(picbox, true);
             compo_picturebox_set_visible(picbox2, false);
@@ -180,11 +196,13 @@ static void func_ecig_set_power_button_touch_handle(void)
             f_setpower->current_power = 25;
             compo_picturebox_cut(picbox3, f_setpower->current_index, 11);
 
-            printf("Switched to Double mode: total_cnt = 11, current_index = %d, current_power = %d\n",
+            printf("111Switched to Double mode: total_cnt = 11, current_index = %d, current_power = %d\n",
                    f_setpower->current_index, f_setpower->current_power);
             break;
         case COMPO_ID_BTN_ECIG_SET_D_D:
             test_1st_gear_func();
+            compo_button_set_visible(btn_s, false); // 隐藏双发按钮
+            compo_button_set_visible(btn_d, true);  // 显示单发按钮
             compo_picturebox_set_visible(picbox, false);
             compo_picturebox_set_visible(picbox1, true);
             compo_picturebox_set_visible(picbox3, false);
@@ -195,7 +213,7 @@ static void func_ecig_set_power_button_touch_handle(void)
             f_setpower->current_power = 15;
             compo_picturebox_cut(picbox2, f_setpower->current_index, 9);
             ecig_set_power(f_setpower->current_power);
-            printf("Switched to Single mode: total_cnt = 9, current_index = %d, current_power = %d\n",
+            printf("222Switched to Single mode: total_cnt = 9, current_index = %d, current_power = %d\n",
                    f_setpower->current_index, f_setpower->current_power);
             break;
         case COMPO_ID_BTN_ECIG_SET_ADD:
@@ -220,7 +238,7 @@ static void func_ecig_set_power_button_touch_handle(void)
                 }
             }
 
-            printf("Power increased: Mode %s, total_cnt = %d, current_index = %d, current_power = %d\n",
+            printf("333Power increased: Mode %s, total_cnt = %d, current_index = %d, current_power = %d\n",
                    get_gear_func() == 0 ? "Single" : "Double",
                    get_gear_func() == 0 ? 9 : 11, f_setpower->current_index, f_setpower->current_power);
             break;
@@ -247,7 +265,7 @@ static void func_ecig_set_power_button_touch_handle(void)
                 }
             }
 
-            printf("Power decreased: Mode %s, total_cnt = %d, current_index = %d, current_power = %d\n",
+            printf("444Power decreased: Mode %s, total_cnt = %d, current_index = %d, current_power = %d\n",
                    get_gear_func() == 0 ? "Single" : "Double",
                    get_gear_func() == 0 ? 9 : 11, f_setpower->current_index, f_setpower->current_power);
             break;
@@ -324,6 +342,12 @@ static void func_ecig_set_power_process(void)
 static void func_ecig_set_power_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_setpower_t));
+    f_setpower_t *f_setpower = (f_setpower_t *)func_cb.f_cb;
+    if (f_setpower)
+    {
+        memset(f_setpower, 0, sizeof(f_setpower_t)); // 显式初始化内存
+        load_power_and_index(&f_setpower->current_power, &f_setpower->current_index);
+    }
     func_cb.frm_main = func_ecig_set_power_form_create();
 }
 

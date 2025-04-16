@@ -124,6 +124,7 @@ void bsp_uitool_image_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 re
         case COMPO_BOND_DISTANCE_PROGRESS:
         case COMPO_BOND_KCAL_PROGRESS:
         case COMPO_BOND_STEPS_PROGRESS:
+        case COMPO_BOND_RESISTANCE_VALUE:
         case COMPO_BOND_VBAT_PROGRESS:
         {
             compo_picturebox_t *pic;
@@ -293,7 +294,7 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
                 {
                     compo_number_set_zfill(num, true);
                 }
-                else if(uitool_res->bond_type > COMPO_BOND_SMOKEPOWER && uitool_res->bond_type <= 81)
+                else if(uitool_res->bond_type == COMPO_BOND_SMOKECOUNT)
                 {
                     compo_number_set_zfill(num, true);
                 }

@@ -53,6 +53,7 @@ void bsp_charge_sta(u8 sta)
             {
                 msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
                 msg_enqueue(EVT_MSGBOX_EXIT);
+                msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
             }
             func_cb.sta = FUNC_CHARGE;
         }

@@ -139,18 +139,18 @@ compo_form_t *func_heartrate_form_create(void)
         compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
     }
 ////////////////////////////////////////////////////////////////
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///静态心率
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_RESTING_HEART]) );///静态心率
     compo_textbox_set_location(textbox,14,285,88, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox,i18n[STR_LOWSET]);
+    compo_textbox_set(textbox,i18n[STR_RESTING_HEART]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
 
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_6_HEART_1_1_ICON_ABOUT_18X18_X176_Y299_BIN);
-    compo_picturebox_set_pos(picbox,100,295);
+    compo_picturebox_set_pos(picbox,115,295);
 
     compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn,100,295,30,30);
+    compo_button_set_location(btn,115,295,30,30);
     compo_setid(btn,COMPO_ID_HEART_BTN_ABOUT);
 
     memset(txt_buf,0,sizeof(txt_buf));
@@ -172,10 +172,10 @@ compo_form_t *func_heartrate_form_create(void)
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_6_HEART_1_1_ICON_BG_DATA_RESTING_HEART_BG_224X220_X8_Y373_BIN);
     compo_picturebox_set_pos(picbox, 120,480);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///7天平均静态心率
-    compo_textbox_set_location(textbox,14,380,88, widget_text_get_max_height());
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_WEEK7_HEART]) );///7天平均静态心率
+    compo_textbox_set_location(textbox,14,380,205, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox,i18n[STR_LOWSET]);
+    compo_textbox_set(textbox,i18n[STR_WEEK7_HEART]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
     memset(txt_buf,0,sizeof(txt_buf));

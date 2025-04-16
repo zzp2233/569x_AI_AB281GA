@@ -712,6 +712,7 @@ void app_msg_pop_up(uint8_t index)
 
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
     msg_enqueue(EVT_WATCH_MSG_POP_UP);
 }
 
@@ -803,6 +804,7 @@ void gui_cover_msg_enqueue(uint8_t index)
     sys_cb.cover_index = index;
     msg_enqueue(EVT_MSGBOX_EXIT);
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
     msg_enqueue(EVT_WATCH_SET_COVER);
 }
 

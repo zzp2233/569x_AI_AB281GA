@@ -16,11 +16,16 @@ typedef struct f_clock_sub_side_t_
 
 enum
 {
-    COMPO_ID_APP_1=1,
+    COMPO_ID_APP_NULL = 0,
+    COMPO_ID_APP_1,
     COMPO_ID_APP_2,
     COMPO_ID_APP_3,
     COMPO_ID_APP_4,
+    COMPO_ID_APP_5,
+    COMPO_ID_APP_6,
 };
+
+extern void compo_set_bonddata(component_t *compo, tm_t tm);
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 static const f_clock_sub_sider_t f_clock_sub_sider[] =
@@ -48,9 +53,9 @@ static const f_clock_sub_sider_t f_clock_sub_sider[] =
 static const f_clock_sub_sider_t f_clock_sub_sider_app[] =
 {
     {.last_app_x=GUI_SIDE_CENTER_X-28, .last_app_y =120/2+154-28, .last_app_id=COMPO_ID_APP_1 },
-    {.last_app_x=GUI_SIDE_CENTER_X+28, .last_app_y =120/2+154-28, .last_app_id=COMPO_ID_APP_1 },
-    {.last_app_x=GUI_SIDE_CENTER_X-28, .last_app_y =120/2+154+28, .last_app_id=COMPO_ID_APP_1 },
-    {.last_app_x=GUI_SIDE_CENTER_X+28, .last_app_y =120/2+154+28, .last_app_id=COMPO_ID_APP_1 },
+    {.last_app_x=GUI_SIDE_CENTER_X+28, .last_app_y =120/2+154-28, .last_app_id=COMPO_ID_APP_2 },
+    {.last_app_x=GUI_SIDE_CENTER_X-28, .last_app_y =120/2+154+28, .last_app_id=COMPO_ID_APP_3 },
+    {.last_app_x=GUI_SIDE_CENTER_X+28, .last_app_y =120/2+154+28, .last_app_id=COMPO_ID_APP_4 },
 };
 
 
@@ -185,6 +190,23 @@ static void func_clock_sub_side_form_create(void)
             snprintf(txt_buf,sizeof(txt_buf),"%d℃",weather_date.fristDayCurrTemperature);
         }
     }
+    else
+    {
+        picbox = compo_picturebox_create(frm, f_clock_sub_sider[0].wether_res);
+        compo_picturebox_set_pos(picbox,GUI_SIDE_CENTER_X-30,44/2+104);
+        compo_picturebox_set_size(picbox,30,30);
+
+        memset(txt_buf,0,sizeof(txt_buf));
+        if(displayInfo.isFahrenheit)    //是否为华氏度
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%s℉","--");
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%s℃","--");
+        }
+    }
+
     textbox = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_location(textbox,GUI_SIDE_CENTER_X+25,44/2+104,45,30);
     compo_textbox_set(textbox,txt_buf );
@@ -197,7 +219,6 @@ static void func_clock_sub_side_form_create(void)
         compo_setid(btn_app,f_clock_sub_sider_app[i].last_app_id);
     }
 
-
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sub_frm = frm;
     f_clk->masklayer = masklayer;
@@ -208,9 +229,9 @@ static void func_clock_sub_side_button_click(void)
 {
     int id = compo_get_button_id();
 
-    if(id)
+    if (id > COMPO_ID_APP_NULL && id < (COMPO_ID_APP_NULL + DEFAULT_LATEST_TASK_NUM + 1))
     {
-        uteTaskGuiStartScreen(side_get_latest_func(id), 0, __func__);
+        uteTaskGuiStartScreen(side_get_latest_func(id - COMPO_ID_APP_NULL - 1), 0, __func__);
     }
 }
 #else
@@ -260,6 +281,10 @@ static void func_clock_sub_side_message(size_msg_t msg)
         case KU_BACK:
             func_switching(FUNC_SWITCH_MENU_SIDE_BACK | FUNC_SWITCH_AUTO, NULL);
             f_clk->sta = FUNC_CLOCK_MAIN;                       //单击BACK键返回到时钟主界面
+            break;
+
+        case EVT_CLOCK_SUB_SIDE_EXIT:
+            f_clk->sta = FUNC_CLOCK_MAIN;                       //返回到时钟主界面
             break;
 
         default:

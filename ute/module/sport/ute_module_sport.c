@@ -5252,8 +5252,8 @@ uint32_t uteModuleSportGetCurrDayEveryHourSportTime(void)
 
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
-    uint8_t currDayPath[8];
-    memset(&currDayPath[0],0,8);
+    uint8_t currDayPath[12];
+    memset(&currDayPath[0],0,12);
     sprintf((char *)&currDayPath[0],"%04d%02d%02d",time.year,time.month,time.day);
 
     UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,dirInfo->filesCnt = %d,", __func__,dirInfo->filesCnt);
@@ -5498,10 +5498,10 @@ uint32_t uteModuleSportReadAllStepWithTime(ute_module_systemtime_time_t time)
 {
     uint32_t totalStep = 0;
     void *file;
-    uint8_t path[20];
+    uint8_t path[30];
     uint16_t buffSize = 12 * 24 + 4;
     uint8_t *readBuff = uteModulePlatformMemoryAlloc(buffSize);
-    memset(&path[0], 0, 20);
+    memset(&path[0], 0, 30);
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_SPORT_STEP_DIR, time.year, time.month, time.day);
     // read
     if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
@@ -5578,6 +5578,7 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(uint32_t *everyHourStep
     uint32_t intStep1000 = 0;
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
+    memset(&everyHourStep[0], 0, 24 * sizeof(uint32_t));
     for(uint8_t i = 0; i < 24; i++)
     {
         everySportStep = 0;
@@ -5655,7 +5656,7 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(uint32_t *everyHourStep
         {
             step = 99999;
         }
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,step[%d] = %d,hightRange = %d,hight = %d",__func__,i,step,hightRange,(step)*hightRange/intStep1000);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,step[%d] = %d",__func__,i,step);
         everyHourStep[i] = step;
     }
 #if UTE_LOG_STEP_LVL
@@ -5687,6 +5688,7 @@ bool uteModuleSportLoadTodayEveryHourKcalHistoryData(uint16_t *everyHourKcal)
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
     uteModuleSportGetCurrDayEveryHourKcal();
+    memset(&everyHourKcal[0], 0, sizeof(uint16_t) * 24);
     for(uint8_t i = 0; i < 24; i++)
     {
         everySportKcal = 0;
@@ -5759,6 +5761,7 @@ bool uteModuleSportLoadTodayEveryHourSportTimeHistoryData(uint16_t *everyHourSpo
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);
     uteModuleSportGetCurrDayEveryHourSportTime();
+    memset(&everyHourSportTime[0], 0, sizeof(uint16_t) * 24);
     for(uint8_t i = 0; i < 24; i++)
     {
         if(i > time.hour)
@@ -5838,6 +5841,7 @@ uint32_t uteModuleSportLoadWeekDayStepHistoryData(uint32_t *weekDayStep, uint32_
     uint32_t currTotal = 0;
     uteModuleSportGetCurrDayStepCnt(&currTotal,NULL,NULL);
     uteModuleSprotData.dailyActivity.weekDayTotalStep[time.week] = currTotal;
+    memset(&weekDayStep[0], 0, sizeof(uint32_t) * 7);
     *totalStep = 0;
     for(uint8_t i = 0; i < 7; i++)
     {

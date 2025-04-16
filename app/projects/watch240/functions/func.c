@@ -169,7 +169,9 @@ extern void func_ota_update(void);
 extern void func_ota_err(void);
 extern void func_ota_succ(void);
 extern void func_ble_call(void);
-extern void func_set_sub_sos(void);
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+extern void func_sub_sos(void);
+#endif
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 extern void func_power_on(void);//开机
 #endif
@@ -305,8 +307,8 @@ compo_form_t *func_message_reply_form_create(void);
 //compo_form_t *func_tetris_form_create(void);
 //compo_form_t *func_tetris_start_form_create(void);
 compo_form_t *func_bird_form_create(void);
-#if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
-compo_form_t *func_set_sub_sos_form_create(void);
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+compo_form_t *func_sub_sos_form_create(void);
 #endif
 compo_form_t *func_empty_form_create(void);
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
@@ -514,8 +516,8 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT
     {FUNC_DIAL_AND_THEME,               func_dial_and_theme_form_create},//表盘&主题
 #endif
-#if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
-    {FUNC_SET_SUB_SOS,                  func_set_sub_sos_form_create},//SOS
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+    {FUNC_SUB_SOS,                  func_sub_sos_form_create},//SOS
 #endif
 #if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
     {FUNC_BRIGHT_SET,                   func_bright_set_form_create},//亮度设置列表
@@ -708,8 +710,8 @@ const func_t tbl_func_entry[] =
     {FUNC_OTA_ERROR,                    func_ota_err},
     {FUNC_OTA_SUCC,                     func_ota_succ},
     {FUNC_BLE_CALL,                     func_ble_call},
-#if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
-    {FUNC_SET_SUB_SOS,                  func_set_sub_sos},
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+    {FUNC_SUB_SOS,                      func_sub_sos},
 #endif
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
     {FUNC_POWER_ON,                     func_power_on},
@@ -862,6 +864,7 @@ void func_process(void)
         sys_cb.timer_done = false;
         msg_enqueue(EVT_MSGBOX_EXIT);
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+        msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
         msg_enqueue(EVT_WATCH_TIMER_DONE);
         printf(">>>TIMER DONE\n");
     }
@@ -1507,10 +1510,6 @@ void func_message(size_msg_t msg)
             break;
 
         case KU_BACK:
-#if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT)
-            func_cb.menu_style = MENU_STYLE_LIST;
-            uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
-#endif
             if (func_cb.flag_sort)
             {
                 func_switch_to_clock();                     //切换回主时钟

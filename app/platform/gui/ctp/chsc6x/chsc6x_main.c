@@ -132,11 +132,26 @@ AT(.com_text.ctp)
 bool ctp_chsc6x_get_point(s32 *x, s32 *y)
 {
 #if CTP_POINT_FLIP
-    *x = COMPO_GET_POS_X(events[0].x, events[0].y);
-    *y = COMPO_GET_POS_Y(events[0].x, events[0].y);
+    s32 tempX = COMPO_GET_POS_X(events[0].x, events[0].y);
+    s32 tempY = COMPO_GET_POS_Y(events[0].x, events[0].y);
 #else
-    *x = events[0].x;
-    *y = events[0].y;
+    s32 tempX = events[0].x;
+    s32 tempY = events[0].y;
+#endif
+#if UTE_DRV_TP_SWAP_XY_AXIS_EXCHANGE
+    s32 temp = tempX;
+    tempX = tempY;
+    tempY = temp;
+#endif
+#if UTE_DRV_TP_X_AXIS_EXCHANGE
+    *x = GUI_SCREEN_WIDTH - tempX;
+#else
+    *x = tempX;
+#endif
+#if UTE_DRV_TP_Y_AXIS_EXCHANGE
+    *y = GUI_SCREEN_HEIGHT - tempY;
+#else
+    *y = tempY;
 #endif
 
     return ((events[0].flag & 0x2) >> 1);

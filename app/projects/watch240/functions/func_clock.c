@@ -305,7 +305,7 @@ static void func_clock_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_DOWN:
-#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I3350001_SUPPORT)
+#if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
             func_clock_sub_dropdown();              //下拉菜单
 #endif
             break;

@@ -120,6 +120,8 @@
 
 /*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
 #define UTE_DRV_CTP_SELECT             CTP_CHSC6X
+/*! TP固件升级功能开关*/
+#define UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT 1
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 8

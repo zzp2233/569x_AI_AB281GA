@@ -105,19 +105,27 @@ static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
 //创建闹钟窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_form_create(void)
 {
-    char str_buff[30];
-    const char str_week_buf[7][3]=
+    char str_buff[50];
+    const uint32_t clock_off_day[7]=
     {
-        "S", // 周一
-        "M", // 周二
-        "T", // 周三
-        "W", // 周四
-        "T", // 周五
-        "F", // 周六
-        "S", // 周日
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_00_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_01_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_02_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_03_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_04_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_05_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_06_BIN,
     };
-
-    /*demo 功能未完整*/
+    const uint32_t clock_on_day[7]=
+    {
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_07_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_08_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_09_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_10_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_11_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_12_BIN,
+        UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_CHAR_WEEK_22X22_X20_Y97_X46_Y97_X72_Y97_X98_Y97_X124_Y97_X150_Y97_X176_Y97_13_BIN,
+    };
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -130,18 +138,19 @@ compo_form_t *func_alarm_clock_form_create(void)
     {
         for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
         {
-            compo_cardbox_t *cardbox = compo_cardbox_create(frm,0,2,1,228,144);
+            compo_cardbox_t *cardbox = compo_cardbox_create(frm,1,1,1,228,80);
             compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,84+(i*86));
             compo_setid(cardbox, COMPO_ID_CARD_0 + i);
 
-            compo_cardbox_icon_set_pos(cardbox,0,0,0);
-            compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_ALARM_CLOCK_BG_BIN);
+            compo_cardbox_rect_set_location(cardbox,0,0,0,228,80,10);
+            compo_cardbox_rect_set_color(cardbox, 0,make_color(36,36,36));
 
-            compo_cardbox_icon_set_pos(cardbox,1,80,-15);
-            compo_cardbox_icon_set(cardbox, 1,  ALARM_GET_SWITCH(i) ? UI_BUF_I335001_ALARM_CLOCK_01_BIN:UI_BUF_I335001_ALARM_CLOCK_00_BIN);
+            compo_cardbox_icon_set_pos(cardbox,0,80,-15);
+            compo_cardbox_icon_set(cardbox, 0,  ALARM_GET_SWITCH(i) ? UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ALARM_40X20_X176_Y65_X176_Y151_01_OPEN_BIN:UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ALARM_40X20_X176_Y65_X176_Y151_00_CLOSE_BIN);
 
             memset(str_buff,0,sizeof(str_buff));
-            snprintf(str_buff, sizeof(str_buff), "%02d:%02d", func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).hour, ALARM_GET_MIN(i));
+            func_alarm_hour_format_t clock_time = func_alarm_convert_to_12hour(ALARM_GET_HOUR(i));
+            snprintf(str_buff, sizeof(str_buff), "%02d:%02d %s", clock_time.hour, ALARM_GET_MIN(i),clock_time.am_pm ? (clock_time.am_pm ==1 ? i18n[STR_AM] : i18n[STR_PM]) : " ");
             compo_cardbox_text_set_location(cardbox,0,WEEK_LOCATION_X-10,-30,110,33);
             compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
             compo_cardbox_text_set_font(0,0, UI_BUF_0FONT_FONT_NUM_32_BIN);
@@ -151,68 +160,59 @@ compo_form_t *func_alarm_clock_form_create(void)
 
             if (ALARM_GET_CYCLE(i) & BIT(7))
             {
-                compo_textbox_t *textbox = compo_textbox_create_for_page(frm,cardbox->page,strlen("Single time"));
+                compo_textbox_t *textbox = compo_textbox_create_for_page(frm,cardbox->page,strlen(i18n[STR_ONCE]));
                 compo_textbox_set_pos(textbox, WEEK_LOCATION_X-8, WEEK_LOCATION_Y-15);
                 compo_textbox_set_forecolor(textbox, MAKE_GRAY(128));
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set(textbox,"Single time");
+                compo_textbox_set(textbox,i18n[STR_ONCE]);
             }
             else if (ALARM_GET_CYCLE(i) == 0x7f)
             {
-                compo_textbox_t *textbox = compo_textbox_create_for_page(frm,cardbox->page,strlen("every day"));
+                compo_textbox_t *textbox = compo_textbox_create_for_page(frm,cardbox->page,strlen(i18n[STR_EVERY_DAY]));
                 compo_textbox_set_forecolor(textbox, MAKE_GRAY(128));
                 compo_textbox_set_pos(textbox, WEEK_LOCATION_X-8, WEEK_LOCATION_Y-15);
                 compo_textbox_set_align_center(textbox, false);
-                compo_textbox_set(textbox,"every day");
+                compo_textbox_set(textbox,i18n[STR_EVERY_DAY]);
             }
             else
             {
-
                 for (u8 j = 0; j < 7; j++)
                 {
 
-                    compo_picturebox_t *picbox = compo_picturebox_create_for_page(frm,cardbox->page,UI_BUF_I335001_ALARM_CLOCK_SELECT_BIN);
+                    compo_picturebox_t *picbox = compo_picturebox_create_for_page(frm,cardbox->page,0);
                     compo_picturebox_set_pos(picbox, WEEK_LOCATION_X+(WEEK_SPACING_X*j), WEEK_LOCATION_Y);
+                    compo_picturebox_set(picbox,(ALARM_GET_CYCLE(i) & BIT(j)) ? clock_on_day[j] : clock_off_day[j]);
 
-                    compo_textbox_t *textbox = compo_textbox_create_for_page(frm,cardbox->page,1);
-                    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_12_BIN);
-                    compo_textbox_set_pos(textbox, WEEK_LOCATION_X+(WEEK_SPACING_X*j), WEEK_LOCATION_Y);
-                    compo_textbox_set(textbox,str_week_buf[j]);
-                    printf("alarm:%s\n",str_week_buf[j]);
-
-                    if (!(ALARM_GET_CYCLE(i) & BIT(j)))
-                    {
-                        compo_textbox_set_forecolor(textbox, make_color(0xaa,0xaa,0xaa));
-                        compo_picturebox_set(picbox, UI_BUF_I335001_ALARM_CLOCK_UNSELECT_BIN);
-                    }
                 }
             }
         }
+
+        // widget_page_t *page = widget_page_create(frm->page);
+        // widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT-40, GUI_SCREEN_WIDTH, 80);
+
+        // compo_shape_t * shape = compo_shape_create_for_page(frm,page,COMPO_SHAPE_TYPE_RECTANGLE);
+        // compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 45, GUI_SCREEN_WIDTH, 80);
+        // compo_shape_set_color(shape,COLOR_BLACK);
+
+        compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ADD_208X52_X16_Y222_BIN);
+        compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,84+(ALARM_ENABLE_CNT()*86)-5);
+        compo_setid(btn,COMPO_ID_BTN_ADD);
+
     }
     else
     {
-        compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_NO_CLOCK]));
-        compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.1,28);
-        compo_textbox_set(textbox, i18n[STR_NO_CLOCK]);
-    }
-    //添加闹钟按钮图标
-    if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
-    {
-        compo_shape_t *shape = compo_shape_create_for_page(frm,frm->page,COMPO_SHAPE_TYPE_RECTANGLE);
-        compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I335001_ALARM_CLOCK_ICON_BIN).hei / 2, GUI_SCREEN_WIDTH, 70);
-        compo_shape_set_color(shape, COLOR_BLACK);
+        compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I335001_20_ALARM_CLOCK_1_ADD_ALARM_ICON_ADD_ALARM_100X100_X70_Y76_BIN);
+        compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,50+76);
+        compo_setid(btn,COMPO_ID_BTN_ADD);
 
-        icon_add = widget_icon_create(frm->page, UI_BUF_I335001_ALARM_CLOCK_ICON_BIN);
-        widget_set_pos(icon_add, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I335001_ALARM_CLOCK_ICON_BIN).hei / 2 - 10);
-
+        compo_textbox_t *textbox = compo_textbox_create(frm,strlen(i18n[STR_ADD_CLOCK]));
+        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,213,230,25);
+        compo_textbox_set(textbox,i18n[STR_ADD_CLOCK]);
     }
+
+
+
     return frm;
-}
-
-//释放按钮效果处理
-static void func_alarm_clock_button_release_handle(void)
-{
-
 }
 
 //单击按钮
@@ -220,39 +220,43 @@ static void func_alarm_clock_button_click(void)
 {
     rect_t rect;
     point_t pt = ctp_get_sxy();
-
-    if (icon_add)
-    {
-        rect = widget_get_absolute(icon_add);
-        if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)   //添加闹钟
-        {
-            if (ALARM_ENABLE_CNT() < ALARM_CLOCK_NUM_MAX)
-            {
-                sys_cb.alarm_edit_idx = ALARM_ENABLE_CNT();
-                func_cb.sta = FUNC_ALARM_CLOCK_SUB_SET;
-                return;
-            }
-        }
-    }
-
     //编辑/开关闹钟
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
     {
-        if (compo_cardbox_btn_is(compo_getobj_byid(COMPO_ID_CARD_0 + i), pt))
+        compo_cardbox_t *cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
+        if (compo_cardbox_btn_is(cardbox, pt))
         {
-            if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(0).wid))   //开关
+            rect_t rect = compo_cardbox_get_icon_absolute(cardbox, 0); //上一首
+            if (abs_s(pt.x - rect.x) <= rect.wid && abs_s(pt.y - rect.y)  <= rect.hei*2)
+                //if (pt.x > (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ALARM_40X20_X176_Y65_X176_Y151_01_OPEN_BIN).wid))   //开关
             {
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
                 //刷新
-                compo_cardbox_text_set_forecolor(compo_getobj_byid(COMPO_ID_CARD_0 + i), 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
-                compo_cardbox_icon_set(compo_getobj_byid(COMPO_ID_CARD_0 + i), 1,  ALARM_GET_SWITCH(i) ?UI_BUF_I335001_ALARM_CLOCK_01_BIN:UI_BUF_I335001_ALARM_CLOCK_00_BIN);
+                compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+                compo_cardbox_icon_set(cardbox, 0,  ALARM_GET_SWITCH(i) ? UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ALARM_40X20_X176_Y65_X176_Y151_01_OPEN_BIN:UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ALARM_40X20_X176_Y65_X176_Y151_00_CLOSE_BIN);
             }
             else        //编辑
             {
                 sys_cb.alarm_edit_idx = i;
-                func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
+                uteTaskGuiStartScreen(FUNC_ALARM_CLOCK_SUB_EDIT, 0, __func__);
             }
         }
+    }
+
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_ADD:
+            if(SYSTEM_TIME_ALARMS_MAX_CNT == ALARM_ENABLE_CNT())
+            {
+                msgbox(i18n[STR_ADD_CLOCK_NO_MORE], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+                return;
+            }
+            uteTaskGuiStartScreen(FUNC_ALARM_CLOCK_SUB_SET, 0, __func__);
+            break;
+
+        default:
+            break;
     }
 
 }
@@ -737,14 +741,11 @@ compo_form_t *func_alarm_clock_form_create(void)
 //闹钟功能事件处理
 static void func_alarm_clock_process(void)
 {
-#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
-    compo_page_move_process(f_aclock->ptm);
-#elif  GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-    f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
-    compo_page_move_process(f_aclock->ptm);
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
+    if(f_aclock->ptm)
+    {
+        compo_page_move_process(f_aclock->ptm);
+    }
     func_process();
 
 #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -772,8 +773,9 @@ static void func_alarm_clock_process(void)
 //闹钟功能消息处理
 static void func_alarm_clock_message(size_msg_t msg)
 {
-#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
+#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -832,7 +834,6 @@ static void func_alarm_clock_message(size_msg_t msg)
             break;
     }
 #elif  GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-    f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
     switch (msg)
     {
         case MSG_CTP_TOUCH:
@@ -893,6 +894,17 @@ static void func_alarm_clock_message(size_msg_t msg)
 #else
     switch (msg)
     {
+        case MSG_CTP_TOUCH:
+            if(f_aclock->ptm)
+            {
+                compo_page_move_touch_handler(f_aclock->ptm);
+            }
+            break;
+        case MSG_CTP_CLICK:
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+            func_alarm_clock_button_click();
+#endif
+            break;
         default:
             func_message(msg);
             break;
@@ -913,13 +925,11 @@ static void func_alarm_clock_enter(void)
     page_move_info_t info =
     {
         .title_used = true,
-        .page_size = 100,
-        .page_count = ALARM_ENABLE_CNT(),
-        .jump_perc = 20,
-        .quick_jump_perc = 200,
-        .up_over_perc = ALARM_ENABLE_CNT() ? 50 : 0,
-        .down_over_perc = ALARM_ENABLE_CNT() ? 50 : 0,
-        .down_spring_perc = icon_add ? 0 : 40,
+        .page_size = ((ALARM_ENABLE_CNT()+1)*86)+10,
+        .page_count = 1,
+        .quick_jump_perc = 40,
+        .up_over_perc = ALARM_ENABLE_CNT() ? 1 : 0,
+        .down_over_perc = ALARM_ENABLE_CNT() ? 1 : 0,
     };
     compo_page_move_init(f_aclock->ptm, func_cb.frm_main->page_body, &info);
 
@@ -967,19 +977,11 @@ static void func_alarm_clock_enter(void)
 //退出闹钟功能
 static void func_alarm_clock_exit(void)
 {
-#if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
     if (f_aclock->ptm)
     {
         func_free(f_aclock->ptm);
     }
-#elif  GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-    f_alarm_clock_t *f_aclock = (f_alarm_clock_t *)func_cb.f_cb;
-    if (f_aclock->ptm)
-    {
-        func_free(f_aclock->ptm);
-    }
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_cb.last = FUNC_ALARM_CLOCK;
 }
 

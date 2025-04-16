@@ -1044,6 +1044,9 @@
 		<Unit filename="functions/func_breathe_sub_time.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_bright_set.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_bt.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1239,6 +1242,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_ota_update.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_oxygen_about.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_passwod_sub_disp.c">

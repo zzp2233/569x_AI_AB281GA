@@ -90,6 +90,8 @@
 			<Add directory="../../../ute/module/localRingtone" />
 			<Add directory="../../../ute/module/menstrualcycle" />
 			<Add directory="../../../ute/module/fifo" />
+			<Add directory="../../../ute/module/slideBar" />
+			<Add directory="../../../ute/module/appbinding" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -182,6 +184,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/language/ute_language_common.h" />
+		<Unit filename="../../../ute/module/appbinding/ute_module_appbinding.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../../ute/module/bloodoxygen/ute_module_bloodoxygen.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1306,9 +1311,6 @@
 		<Unit filename="functions/func_setting_sub_sav.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions/func_setting_sub_sos.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="functions/func_setting_sub_time.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1346,6 +1348,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_style.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_sub_sos.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_system.c">

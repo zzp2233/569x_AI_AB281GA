@@ -190,13 +190,14 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
             else if (listbox->style == COMPO_LISTBOX_STYLE_CUM_SPORT_LIST)
             {
                 font_x = icon_x - listbox->icon_area.wid/2;
-                font_y = listbox->line_height/3 + listbox->icon_area.hei/2 + 16;
+                font_y =  listbox->line_height / 3 + listbox->icon_area.hei/2 +(GUI_SCREEN_HEIGHT/14);
                 widget_set_location(listbox->item_text[i], font_x, font_y, font_w, widget_text_get_max_height());//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
             }
             else if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD)
             {
-                widget_set_location(listbox->item_text[i],  10, font_y-listbox->line_space/2, 64-10, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
-                widget_set_location(listbox->item_text2[i], 64, font_y-listbox->line_space/2, GUI_SCREEN_WIDTH-64, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+                widget_set_location(listbox->item_text[i],  0, font_y-listbox->line_space/2, widget_get_location(listbox->item_bgimg[i]).wid, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+                widget_set_location(listbox->item_text2[i], 0, font_y-listbox->line_space/2, widget_get_location(listbox->item_bgimg[i]).wid, listbox->line_height);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
+                widget_text_set_right_align(listbox->item_text2[i], true);
             }
             else
             {

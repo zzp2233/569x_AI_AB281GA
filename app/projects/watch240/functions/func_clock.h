@@ -44,7 +44,6 @@ void func_clock_sub_side(void);
 compo_form_t *func_clock_butterfly_form_create(void);
 void func_clock_butterfly_set_light_visible(bool visible);
 bool func_clock_butterfly_message(size_msg_t msg);
-void func_clock_butterfly_set_light_visible(bool visible);
 void func_clock_butterfly_process(void);
 
 //表盘转盘
@@ -54,5 +53,9 @@ void func_clock_sub_rotary(void);
 compo_form_t *func_clock_cube_form_create(void);
 bool func_clock_cube_message(size_msg_t msg);
 void func_clock_cube_process(void);
+
+#if UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT
+void func_clock_sub_side(void);
+#endif
 
 #endif

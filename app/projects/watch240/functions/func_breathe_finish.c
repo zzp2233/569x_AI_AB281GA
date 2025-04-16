@@ -102,9 +102,9 @@ compo_form_t *func_breathe_finish_form_create(void)
     }
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(txt_buf));
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_64_BIN);
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,123);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,108);
     compo_textbox_set(textbox,txt_buf);
 
     memset(time_num,0,sizeof(time_num));

@@ -325,8 +325,6 @@ void uteModuleWatchOnlineReadyStart(void)
     uteModuleWatchOnlineData.lastReceiveIndex = -1;
     uteModuleWatchOnlineData.lastEraseAddress = uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex];
     if(uteModuleWatchOnlineData.multipleValidWatchCnt)uteModuleWatchOnlineData.multipleValidWatchCnt--;// cxd add 2022-08-24
-    //Casen add 2020-02-24
-    uteModulePlatformFlashNorErase(uteModuleWatchOnlineData.lastEraseAddress);
     uteModuleWatchOnlineData.receiveTimeout = 1; //Casen add 2020-10-26
     bool isUpdateWatch = uteModuleWatchOnlineUpddateDefaultWatchIndex();
 
@@ -341,9 +339,9 @@ void uteModuleWatchOnlineReadyStart(void)
 #else
     if(isUpdateWatch||!uteModuleGuiCommonIsDisplayOn())
     {
-        if(func_cb.sta != FUNC_CLOCK)
+        if(uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_WATCHMAIN_ID)
         {
-            uteTaskGuiStartScreen(FUNC_CLOCK, 0, __func__);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
         }
         else
         {
@@ -356,6 +354,8 @@ void uteModuleWatchOnlineReadyStart(void)
         }
     }
 #endif
+    //Casen add 2020-02-24
+    uteModulePlatformFlashNorErase(uteModuleWatchOnlineData.lastEraseAddress);
 }
 
 uint8_t uteModuleWatchOnlineDataWrite(const uint8_t *data, uint32_t size)
@@ -494,9 +494,9 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     }
     else
     {
-        if(func_cb.sta != FUNC_CLOCK)
+        if(uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_WATCHMAIN_ID)
         {
-            uteTaskGuiStartScreen(FUNC_CLOCK, 0, __func__);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
         }
         else
         {

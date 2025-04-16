@@ -3,12 +3,17 @@
 #include "chsc6x_ramcode.h"
 #include "chsc6x_platform.h"
 // #include "chsc6x_flash_boot.h"
+
+#if UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT
 #if UTE_DRV_TFT_S240X284_JD9853_HY018214OV_QSPI_SUPPORT
-#include "YCY_AB281B_1805A_304_21_V241_V2.h" //801
+#include "YCY_AB281B_1805A_304_21_V241_V2.h" //801 new
 #elif UTE_DRV_TFT_S240X284_NV3030B_ZD183G1196_QSPI_SUPPORT
 #include "YCY_AB281_801_chsc6x_upd_[304_17]_V241_V3.h" //801
+#elif UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT
+#include "YCY_W26Y_W12Y_304_23_V242_V2.h"
 #else
 #include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
+#endif
 #endif
 
 #include "chsc6x_main.h"
@@ -40,7 +45,9 @@ uint8_t g_i2c_addr = CHSC6X_I2C_ID ;
 uint32_t BOOTCRC = 0;
 
 #define LEN_CMD_CHK_TX_SCAP  10
+#ifndef ABS
 #define ABS(a)   (((a)>0)?((a)):(-(a)))
+#endif
 
 
 struct chsc6x_updfile_header
@@ -752,6 +759,7 @@ static int chsc6x_find_ver(void)
 }
 #endif
 
+#if CHSC6X_AUTO_UPGRADE
 static int chsc6x_cfg_update(uint16_t *parray, uint32_t cfg_num)
 {
     uint32_t  k;
@@ -940,6 +948,7 @@ static int chsc6x_do_update_ifneed(uint8_t* p_fw_upd, uint32_t fw_len)
 
     return ret;
 }
+#endif
 
 static void chsc6x_tp_mccode(void)
 {

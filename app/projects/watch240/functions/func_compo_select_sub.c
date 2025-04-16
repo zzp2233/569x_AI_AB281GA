@@ -728,8 +728,9 @@ compo_form_t *func_compo_select_sub_form_create(void)
         printf("%d ", func_cb.tbl_sort[i]);
     }
     printf("]\n");
-
     compo_listbox_set_bithook(listbox, bsp_sys_get_ctlbit);
+    compo_listbox_set_focus(listbox, 80);
+    compo_listbox_update(listbox);
 
     return frm;
 }
@@ -797,9 +798,14 @@ static void func_compo_select_sub_init(void)
     compo_listbox_set_sta_icon(listbox,UI_BUF_I332001_FIRSTORDER_DELETE_BIN, UI_BUF_I332001_FIRSTORDER_ADD_BIN);
     compo_listbox_update(listbox);
 
-    compo_listbox_move(listbox);
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
+    compo_listbox_set_focus(listbox, 80);
+#endif
+    func_cb.enter_tick = tick_get();
 }
 #else
 //创建组件选择窗体

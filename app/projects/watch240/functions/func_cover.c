@@ -34,7 +34,7 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
     [REMIND_COVER_HEALTH_SEDENTARY] = {0,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_FIND_WATCH]       = {0,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_GOAL]             = {0,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
-    [REMIND_GCOVER_BT_NOT_CONNECT]  = {0,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I335001_22_VOICE_ASSISTANT_3_BLUETOOTH_NOT_CONNECTED_ICON_NOT_CONNECTED_72X74_X84_Y74_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},        //自定义
     [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
 
@@ -712,6 +712,7 @@ void app_msg_pop_up(uint8_t index)
 
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
     msg_enqueue(EVT_WATCH_MSG_POP_UP);
 }
 
@@ -751,9 +752,6 @@ void app_ute_msg_pop_up(uint8_t index)
             tmp_msg[strlen(msg)+3] = '\0';
         }
 
-        ute_module_systemtime_time_t time_data;
-        uteModuleSystemtimeGetTime(&time_data);//获取系统时间
-
         uint8_t hour=ute_msg->historyNotify[0].hour;/*!系统时间，24小时格式的小时格式，数值为0~23 */
         uint8_t min =ute_msg->historyNotify[0].min ;/*!系统时间，分钟，数值为0~59 */
         uint8_t str_am[30];
@@ -774,11 +772,7 @@ void app_ute_msg_pop_up(uint8_t index)
                 hour = 12;
             }
         }
-
-        sprintf((char*)time,sizeof(time),"%02d:%02d %s", //record_tbl[index].callTime.year,
-                hour,min,str_am);
-
-
+        snprintf(time,sizeof(time),"%02d:%02d %s", hour,min,str_am);
 
         int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
         if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
@@ -810,6 +804,7 @@ void gui_cover_msg_enqueue(uint8_t index)
     sys_cb.cover_index = index;
     msg_enqueue(EVT_MSGBOX_EXIT);
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
     msg_enqueue(EVT_WATCH_SET_COVER);
 }
 

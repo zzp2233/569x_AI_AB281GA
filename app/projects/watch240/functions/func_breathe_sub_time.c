@@ -972,14 +972,6 @@ static void func_breathe_sub_time_message(size_msg_t msg)
             func_breathe_sub_time_button_click();
 #endif
             break;
-        case MSG_CTP_SHORT_UP:
-        case MSG_CTP_SHORT_DOWN:
-        case MSG_CTP_SHORT_LEFT:
-        case MSG_CTP_LONG:
-            break;
-
-        case MSG_CTP_SHORT_RIGHT:
-            break;
 
         case MSG_QDEC_BACKWARD:
         case MSG_QDEC_FORWARD:

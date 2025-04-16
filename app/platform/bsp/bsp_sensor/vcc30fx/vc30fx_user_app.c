@@ -191,11 +191,11 @@ int vc30fx_write_register(unsigned char regaddr, unsigned char *pbuf, unsigned s
     return 0;
 }
 
-AT(.com_text.vc30fx)
-static void vc30fx_timer_count(void)
-{
-    hw_timer_count++;
-}
+// AT(.com_text.vc30fx)
+// static void vc30fx_timer_count(void)
+// {
+//     hw_timer_count++;
+// }
 
 unsigned int vc30fx_get_cputimer_tick(void)
 {

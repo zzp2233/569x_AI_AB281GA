@@ -151,9 +151,9 @@ void uteModuleHeartSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
 void uteModuleHeartrReadStaticHeartData(void);
 void uteModuleHeartrSaveStaticHeartData(void);
 void uteModuleHeartWeekStaticSecond(ute_module_systemtime_time_t time);
-void uteModuleHeartLoadWeekDayStaticHeartData(UT_GraphsParam *weekDayStaticHeartGraph,uint32_t color, int16_t x, int16_t y, uint8_t drawWidth, uint8_t intervalWidth, uint16_t hightRange);
 uint8_t uteModuleHeartrGetCurrDayStaticHeartData(void);
 uint8_t uteModuleHeartrGetLast7DayAvgStaticHeartData(void);
+void uteModuleHeartrGetWeekDayStaticHeartData(uint8_t *weekDayStaticHeart);
 #endif
 #if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
 void uteModuleHeartRestingHeartrateSend(void);

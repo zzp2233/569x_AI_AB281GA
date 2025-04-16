@@ -59,6 +59,8 @@ void func_clock_butterfly_click(void)
 
     s32 sx, sy, x, y;
     compo_butterfly_t *btfly = compo_getobj_byid(COMPO_ID_BTFLY);
+    if(btfly == NULL)return;
+
     ctp_get_cur_point(&sx, &sy, &x, &y);
     if (sx < BTF_LEFT_EDGE)
     {
@@ -75,6 +77,66 @@ void func_clock_butterfly_click(void)
     }
 }
 
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+// 蝴表盘
+compo_form_t *func_clock_butterfly_form_create(void)
+{
+    tft_set_temode(0);
+    // 新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_butterfly_res_t btf_res;
+    btf_res.res_body = UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN;
+    btf_res.res_wing_down = UI_BUF_DIALPLATE_BUTTERFLY_DOWN_BIN;
+    btf_res.res_wing_up = UI_BUF_DIALPLATE_BUTTERFLY_UP_BIN;
+
+    compo_butterfly_t *btfly = compo_butterfly_create(frm, &btf_res);
+    compo_butterfly_set_pos(btfly, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + BTF_Y_POS);
+    widget_image3d_set_rotation_center(btfly->img_body,gui_image_get_size(UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN).wid/2, gui_image_get_size(UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN).hei/2);
+    widget_set_pos(btfly->img_body, GUI_SCREEN_CENTER_X+4, GUI_SCREEN_CENTER_Y);
+    compo_setid(btfly, COMPO_ID_BTFLY);
+
+    // 新建光晕泡泡
+    for (u8 i = 0; i < BTF_LIGHT_NUM; i++)
+    {
+        compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_DIALPLATE_BUTTERFLY_LIGHT_BIN);
+        compo_setid(pic, COMPO_ID_L_LIGHT1 + i);
+        compo_picturebox_set_visible(pic, false);
+        widget_set_top(pic->img, true);
+    }
+
+    // 新建文本
+    compo_textbox_t *txt = compo_textbox_create(frm, 2);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 120, 300, 70);
+    compo_bonddata(txt, COMPO_BOND_HOUR);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
+    txt = compo_textbox_create(frm, 2);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 120, 300, 70);
+    compo_bonddata(txt, COMPO_BOND_MINUTE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
+    txt = compo_textbox_create(frm, 10);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 70, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 60, 290, 70);
+    compo_bonddata(txt, COMPO_BOND_DATE);
+    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+
+    txt = compo_textbox_create(frm, 1);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 140, 300, 70);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 120, 260, 70);
+    compo_textbox_set(txt, ":");
+    compo_setid(txt, COMPO_ID_TIME_DOT);
+
+    return frm;
+}
+#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 // 蝴表盘
 compo_form_t *func_clock_butterfly_form_create(void)
 {
@@ -131,6 +193,15 @@ compo_form_t *func_clock_butterfly_form_create(void)
 
     return frm;
 }
+#else
+// 蝴表盘
+compo_form_t *func_clock_butterfly_form_create(void)
+{
+    // 新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+#endif
 
 void func_clock_butterfly_set_light_visible(bool visible)
 {
@@ -144,9 +215,12 @@ void func_clock_butterfly_set_light_visible(bool visible)
     for (u8 i = 0; i < BTF_LIGHT_NUM; i++)
     {
         pic = compo_getobj_byid(COMPO_ID_L_LIGHT1 + i);
-        if (compo_picturebox_get_visible(pic))
+        if(pic != NULL)
         {
-            compo_picturebox_set_visible(pic, visible);
+            if (compo_picturebox_get_visible(pic))
+            {
+                compo_picturebox_set_visible(pic, visible);
+            }
         }
     }
 }
@@ -154,6 +228,8 @@ void func_clock_butterfly_set_light_visible(bool visible)
 void func_clock_butterfly_process_do(void)
 {
     compo_butterfly_t *btfly = compo_getobj_byid(COMPO_ID_BTFLY);
+
+    if(btfly == NULL) return;
 
     static s8 direction = -1;
     static u32 ticks = 0;
@@ -290,9 +366,11 @@ bool func_clock_butterfly_message(size_msg_t msg)
         case MSG_SYS_500MS: // 秒跳动处理
         {
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TIME_DOT);
-            compo_textbox_set_visible(txt, time_visible);
-            time_visible ^= 1;
-            // intercept_msg = true;
+            if(txt != NULL)
+            {
+                compo_textbox_set_visible(txt, time_visible);
+                time_visible ^= 1;
+            }
         }
         break;
 

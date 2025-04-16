@@ -85,13 +85,13 @@ compo_form_t *func_breathe_form_create(void)
     compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,50+34);
 
     compo_cardbox_icon_set_pos(cardbox,0,0,0);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_BREATH_TRAINING_BG_BIN);
+    compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_19_BREATHING_TRAINING_1_BREATHING_TRAINING_ICON_BG_224X68_X8_Y50_Y126_BIN);
 
     compo_cardbox_icon_set_pos(cardbox,1,-72,0);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I335001_BREATH_TRAINING_TIME_BIN);
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I335001_19_BREATHING_TRAINING_1_BREATHING_TRAINING_ICON_TUBIAO_28X30_X26_Y69_145_00_BIN);
 
     compo_cardbox_icon_set_pos(cardbox,2,80,0);
-    compo_cardbox_icon_set(cardbox, 2, UI_BUF_I335001_BREATH_TRAINING_NEXT_BIN);
+    compo_cardbox_icon_set(cardbox, 2, UI_BUF_I335001_19_BREATHING_TRAINING_1_BREATHING_TRAINING_ICON_ARROW_10X15_X206_Y76_Y153_BIN);
 
     compo_cardbox_text_set_location(cardbox,0,-50,-10,110,30);
     widget_set_align_center(cardbox->text[0],false);
@@ -101,13 +101,13 @@ compo_form_t *func_breathe_form_create(void)
     compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,126+34);
 
     compo_cardbox_icon_set_pos(cardbox,0,0,0);
-    compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_BREATH_TRAINING_BG_BIN);
+    compo_cardbox_icon_set(cardbox, 0, UI_BUF_I335001_19_BREATHING_TRAINING_1_BREATHING_TRAINING_ICON_BG_224X68_X8_Y50_Y126_BIN);
 
     compo_cardbox_icon_set_pos(cardbox,1,-72,0);
-    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I335001_BREATH_TRAINING_MODERATE_BIN);
+    compo_cardbox_icon_set(cardbox, 1, UI_BUF_I335001_19_BREATHING_TRAINING_1_BREATHING_TRAINING_ICON_TUBIAO_28X30_X26_Y69_145_01_BIN);
 
     compo_cardbox_icon_set_pos(cardbox,2,80,0);
-    compo_cardbox_icon_set(cardbox, 2, UI_BUF_I335001_BREATH_TRAINING_NEXT_BIN);
+    compo_cardbox_icon_set(cardbox, 2, UI_BUF_I335001_19_BREATHING_TRAINING_1_BREATHING_TRAINING_ICON_ARROW_10X15_X206_Y76_Y153_BIN);
 
     compo_cardbox_text_set_location(cardbox,0,-50,-10,110,30);
     widget_set_align_center(cardbox->text[0],false);
@@ -120,14 +120,14 @@ compo_form_t *func_breathe_form_create(void)
     // compo_picturebox_set_visible(pic, false);
 
     //创建按钮
-    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_BREATH_TRAINING_PAUSE_BIN);
+    compo_button_t* btn = compo_button_create_by_image(frm, UI_BUF_I335001_19_BREATHING_TRAINING_1_BREATHING_TRAINING_ICON_PLAY_208X52_X16_Y222_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,52/2+222);
     compo_setid(btn, COMPO_ID_BTN_START);
 
     ///设置标题栏名字///
-    compo_textbox_t *txt = compo_textbox_create(frm,strlen("breath training"));
+    compo_textbox_t *txt = compo_textbox_create(frm,strlen(i18n[STR_BREATHE_TRAIN]));
     compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
-    compo_textbox_set(txt, "breath training");
+    compo_textbox_set(txt, i18n[STR_BREATHE_TRAIN]);
     compo_textbox_set_align_center(txt, false);
 
     return frm;
@@ -143,6 +143,9 @@ static void func_breathe_button_click(void)
     switch(id)
     {
         case COMPO_ID_BTN_START:
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+
+#else
             // compo_picturebox_set_visible(pic, true);
             // f_breathe->sta = BREATHE_STA_IDLE;
             // f_breathe->animation_sta = ANIMATION_PREPARE;
@@ -160,6 +163,7 @@ static void func_breathe_button_click(void)
                 f_breathe->sta = BREATHE_STA_IDLE;
                 compo_button_set_bgimg(btn,UI_BUF_I335001_BREATH_TRAINING_PAUSE_BIN);
             }
+#endif
             break;
         default:
             break;
@@ -1009,9 +1013,9 @@ static void func_breathe_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_breathe_t));
     func_cb.frm_main = func_breathe_form_create();
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
-#elif (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
+#elif (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT)
     f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;
     compo_picturebox_t *pic_breathe = compo_getobj_byid(COMPO_ID_PIC_BREATHE);
     f_breathe->icon_org_size = compo_picturebox_get_location(pic_breathe).wid;

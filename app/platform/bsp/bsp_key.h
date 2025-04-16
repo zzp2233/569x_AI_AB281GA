@@ -87,6 +87,7 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define EVT_MSGBOX_EXIT         0xc2
 #define EVT_WATCH_MSG_POP_UP    0xc3
 #define EVT_WATCH_TIMER_DONE    0xc4
+#define EVT_CLOCK_SUB_SIDE_EXIT 0xc5
 
 
 //普通按键定义，可以支持短按，长按，双击等。范围：0 ~ 0xf

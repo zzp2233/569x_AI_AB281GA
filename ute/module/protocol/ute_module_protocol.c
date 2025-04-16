@@ -32,6 +32,7 @@
 #include "ute_module_factorytest.h"
 #include "ute_module_music.h"
 #include "ute_module_menstrualcycle.h"
+#include "ute_module_appbinding.h"
 #include "func_cover.h"
 
 /**
@@ -64,6 +65,7 @@ void uteModuleProtocolSetParamHourKmFormat(uint8_t*receive,uint8_t length)
         UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,error length=%d", __func__,length);
     }
 }
+
 /**
 *@brief        绑定提醒
 *@details
@@ -74,18 +76,19 @@ void uteModuleProtocolSetParamHourKmFormat(uint8_t*receive,uint8_t length)
 */
 void uteAppCmdVerificationBindingNotify()
 {
-    // UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,uteModuleAppBindingGetOurAppConnection = %d,uteModuleAppBindingGetBindingNotify=%d", __func__,uteModuleAppBindingGetOurAppConnection(),uteModuleAppBindingGetBindingNotify());
-//     uteModuleAppBindingSetOurAppConnection(true);
-//     uteModuleAppBindingSetHasBindingBefore(HAS_BEEN_CONNECTED);
-//     if(!uteModuleAppBindingGetBindingNotify())
-//     {
-//         uteModuleAppBindingSetBindingNotify(true);
-// #if !UTR_APP_BINDING_NOT_NOTIFY_SUPPORT
-//         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-//         uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_NOTIFY_ID);
-// #endif
-//     }
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,uteModuleAppBindingGetOurAppConnection = %d,uteModuleAppBindingGetBindingNotify=%d", __func__, uteModuleAppBindingGetOurAppConnection(), uteModuleAppBindingGetBindingNotify());
+    uteModuleAppBindingSetOurAppConnection(true);
+    uteModuleAppBindingSetHasBindingBefore(HAS_BEEN_CONNECTED);
+    if (!uteModuleAppBindingGetBindingNotify())
+    {
+        uteModuleAppBindingSetBindingNotify(true);
+#if !UTR_APP_BINDING_NOT_NOTIFY_SUPPORT
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
+        // uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_NOTIFY_ID);
+#endif
+    }
 }
+
 /**
 *@brief        获取软件版本号
 *@details
@@ -2503,6 +2506,92 @@ void uteModuleProtocolSportsTargetSelect(uint8_t*receive,uint8_t length)
 #endif
 }
 
+/**
+*@brief       绑定数据同步
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author
+*@date       2022-02-15
+*/
+void uteModuleProtocolAppBindingCtrl(uint8_t *receive, uint8_t length)
+{
+#if UTE_USER_ID_FOR_BINDING_SUPPORT
+    ute_application_sn_data_t snData;
+    uint32_t size = sizeof(ute_application_sn_data_t);
+    uint32_t newBindingUserId = 0xffffffff;
+    uint8_t response[20];
+    memset(response, 0, sizeof(response));
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,receive = %d", __func__, receive[1]);
+    if (receive[1] == 0x01)
+    {
+        uteModuleAppBindingSetOurAppConnection(true);
+        response[0] = receive[0];
+        response[1] = 0x04;
+        response[2] = 0x01;
+        uteModuleProfileBleSendToPhone(&response[0], 3);
+    }
+    else if (receive[1] == 0x02)
+    {
+        newBindingUserId = receive[2] << 24 | receive[3] << 16 | receive[4] << 8 | receive[5];
+        uteModuleAppBindingSetNewUserId(newBindingUserId);
+        uteModulePlatformFlashNorRead((uint8_t *)&snData, UTE_BLE_SN1_ADDRESS, size);
+        UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,newBindingUserId=%d,userId=0x%08x", __func__, newBindingUserId, snData.userId);
+#if UTE_QRCODE_BINDING_NO_CONFIRM_SUPPORT // 扫码绑定不需要确认
+        if ((newBindingUserId == snData.userId) || (newBindingUserId == uteModuleAppBindingGetQRcodeRandom()))
+#else
+        if (newBindingUserId == snData.userId)
+#endif
+        {
+#if UTE_QRCODE_BINDING_NO_CONFIRM_SUPPORT
+            if (newBindingUserId == uteModuleAppBindingGetQRcodeRandom())
+            {
+                uteModulePlatformFlashNorRead((uint8_t *)&snData, UTE_BLE_SN1_ADDRESS, size);
+                uteModulePlatformFlashNorErase(UTE_BLE_SN1_ADDRESS);
+                snData.userId = newBindingUserId;
+                uteModulePlatformFlashNorWrite((uint8_t *)&snData, UTE_BLE_SN1_ADDRESS, size);
+            }
+#endif
+            uteModuleAppBindingSetOurAppConnection(true);
+            response[0] = receive[0];
+            response[1] = 0x04;
+            response[2] = 0x01;
+            uteModuleProfileBleSendToPhone(&response[0], 3);
+        }
+        else
+        {
+            response[0] = receive[0];
+            response[1] = 0x04;
+            if (snData.userId != 0xffffffff)
+            {
+                response[2] = 0x03;
+            }
+            else
+            {
+                response[2] = 0x04;
+            }
+            uteModuleProfileBleSendToPhone(&response[0], 3);
+            uteModuleAppBindingSetBindingStart(true);
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
+#if UTE_MODULE_SCREENS_APP_BINDING_SUPPORT
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WHETHER_BINDING_ID);
+#endif
+        }
+    }
+    else if (receive[1] == 0x03)
+    {
+        uteModulePlatformFlashNorRead((uint8_t *)&snData, UTE_BLE_SN1_ADDRESS, size);
+        response[0] = receive[0];
+        response[1] = 0x03;
+        response[2] = snData.userId >> 24 & 0xff;
+        response[3] = snData.userId >> 16 & 0xff;
+        response[4] = snData.userId >> 8 & 0xff;
+        response[5] = snData.userId & 0xff;
+        uteModuleProfileBleSendToPhone(&response[0], 6);
+    }
+#endif
+}
+
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 {
@@ -2555,7 +2644,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_SYNC_CONTACTS,.publicCmd=CMD_SYNC_CONTACTS,.function=uteModuleProtocolSyncAddressBook},
     {.privateCmd = CMD_SOCIAL_APP_SELECT,.publicCmd=CMD_SOCIAL_APP_SELECT,.function=uteModuleProtocolSocialAppSelectParam},
     // {.privateCmd = CMD_EMOTION_PRESSURE_TEST,.publicCmd=CMD_EMOTION_PRESSURE_TEST,.function=uteModuleProtocolEmotionPressureCtrl},
-    // {.privateCmd = CMD_USER_ID_FOR_BINDING,.publicCmd=PUBLIC_CMD_USER_ID_FOR_BINDING,.function=uteModuleProtocolAppBindingCtrl},
+    {.privateCmd = CMD_USER_ID_FOR_BINDING,.publicCmd=PUBLIC_CMD_USER_ID_FOR_BINDING,.function=uteModuleProtocolAppBindingCtrl},
 #if UTE_MODULE_UNIT_TEST_FUNCTION_DATAS_SUPPORT
     {.privateCmd = CMD_DEBUG_TEST_DATA,.publicCmd=CMD_DEBUG_TEST_DATA,.function=uteModuleUnitTestDatasReceiveHandler},
 #else
@@ -2634,28 +2723,28 @@ void uteModuleProtocolFromPhone(uint8_t *receive,uint8_t length,bool isPublic)
     // uteModulePlaformUpdateConnectParam(12,36,10*1000);
     /*Casen 22-04-09*/
 
-//#if UTE_USER_ID_FOR_BINDING_SUPPORT
-//    if (uteModuleAppBindingGetOurAppConnection())
-//    {
-//        // binding ok ,isOurAppApkConnection receive cmd
-//    }
-//    else
-//    {
-//        if((receive[0] == CMD_USER_ID_FOR_BINDING)||(receive[0] == PUBLIC_CMD_USER_ID_FOR_BINDING))
-//        {
-//            // binding
-//            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data binding",__func__);
-//        }
-//        else
-//        {
-//#if UTE_LOG_CONNECTION_PROTOCOL_LVL&&UTE_LOG_SYSTEM_LVL
-    // uteModuleAppBindingSetOurAppConnection(true);
-//#endif
-//            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data return",__func__);
-//            return;
-//        }
-//    }
-//#endif
+#if UTE_USER_ID_FOR_BINDING_SUPPORT
+    if (uteModuleAppBindingGetOurAppConnection())
+    {
+        // binding ok ,isOurAppApkConnection receive cmd
+    }
+    else
+    {
+        if((receive[0] == CMD_USER_ID_FOR_BINDING)||(receive[0] == PUBLIC_CMD_USER_ID_FOR_BINDING))
+        {
+            // binding
+            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data binding",__func__);
+        }
+        else
+        {
+#if UTE_LOG_CONNECTION_PROTOCOL_LVL&&UTE_LOG_SYSTEM_LVL
+            uteModuleAppBindingSetOurAppConnection(true);
+#endif
+            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,receice data return",__func__);
+            return;
+        }
+    }
+#endif
 
     if(isPublic)
     {

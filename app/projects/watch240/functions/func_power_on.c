@@ -2,6 +2,7 @@
 #include "func.h"
 #include "ute_module_systemtime.h"
 #include "ute_application_common.h"
+#include "ute_module_appbinding.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -11,18 +12,51 @@
 
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 
-#define POWER_TIME_SEC  3
+/*! 默认开机动画时长,wang.luo 2025-04-12 */
+#ifndef DEFAULT_POWERON_ANIMATION_SECOND
+#define DEFAULT_POWERON_ANIMATION_SECOND  2
+#endif
 
 typedef struct f_power_on_t_
 {
     u32 tick;
     u8 pic_num_disp;
+    u16 animation_second;
 } f_power_on_t;
 
 enum
 {
     COMPO_PIC_ID = 1,
 };
+
+static void func_power_on_switch_screen_handle(void)
+{
+    if (0)
+    {
+        // pass
+    }
+#if UTE_MODULE_POWERON_LANGUAGE_SELECT_SUPPORT
+    else if ((uteModuleAppBindingGetHasBindingBefore() != HAS_BEEN_CONNECTED) && (!uteApplicationCommonIsHasConnectOurApp()))
+    {
+#if UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT
+        uteTaskGuiStartScreen(FUNC_POWER_ON_LANGUAGE, 0, __func__);
+#else
+        uteTaskGuiStartScreen(FUNC_LANGUAGE, 0, __func__);
+#endif
+    }
+#endif
+#if (UTE_MODULE_SCREENS_APP_BINDING_SUPPORT) // 如果没有开机界面，在这里跳转至绑定界面 dengli.lu 2022-02-28
+    else if (uteModuleAppBindingGetHasBindingBefore() != HAS_BEEN_CONNECTED)
+    {
+        uteTaskGuiStartScreen(FUNC_POWER_ON_SCAN, 0, __func__);
+    }
+#endif
+    else
+    {
+        uteTaskGuiStartScreen(FUNC_CLOCK, 0, __func__);
+    }
+}
+
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)
@@ -185,7 +219,18 @@ compo_form_t *func_power_on_form_create(void)
 }
 static void func_power_on_disp_process(void)
 {
+    f_power_on_t* f_power_on = (f_power_on_t*)func_cb.f_cb;
 
+    if (tick_check_expire(f_power_on->tick, 1000))
+    {
+        f_power_on->tick = tick_get();
+        f_power_on->animation_second ++;
+    }
+
+    if (f_power_on->animation_second > DEFAULT_POWERON_ANIMATION_SECOND)
+    {
+        func_power_on_switch_screen_handle();
+    }
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 

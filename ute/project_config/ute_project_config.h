@@ -89,6 +89,10 @@
 #define UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT 1
 #endif
 
+#ifndef HAS_BEEN_CONNECTED
+#define HAS_BEEN_CONNECTED 0x80
+#endif
+
 /** 默认系统支持是最大闹钟数量*/
 #ifndef SYSTEM_TIME_ALARMS_MAX_CNT
 #define SYSTEM_TIME_ALARMS_MAX_CNT 5
@@ -293,6 +297,11 @@
 /*! Chsc64x TP升级版本校验功能默认打开，针对chsc64x TP升级版本校验功能，置false则不对比TP项目版本进行强制升级 lkl 2025-1-6  */
 #ifndef DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
 #define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN true
+#endif
+
+/*! TP固件升级功能开关*/
+#ifndef UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT
+#define UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT 0
 #endif
 
 /*! 默认抬手亮屏开关zn.zeng, 2021-08-20  */
@@ -795,7 +804,7 @@
 
 /*! 天气增加紫外强度和湿度 2022-09-22  */
 #ifndef UTE_MODULE_WEATHER_HUMIDITY_ULTRAVIOLET_SUPPORT
-#define UTE_MODULE_WEATHER_HUMIDITY_ULTRAVIOLET_SUPPORT 0
+#define UTE_MODULE_WEATHER_HUMIDITY_ULTRAVIOLET_SUPPORT 1
 #endif
 
 /* 天气城市名支持,utf8编码 txj 2022-11-10*/

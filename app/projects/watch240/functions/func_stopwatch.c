@@ -543,19 +543,19 @@ compo_form_t *func_stopwatch_form_create(void)
     //新建按钮
     u32 res_addr;
     compo_button_t *btn;
-    res_addr = sys_cb.stopwatch_sta ? UI_BUF_I335001_27_MORE_2_STOPWATCH_1_1STOPWATCH_PLAY_BIN: UI_BUF_I335001_27_MORE_2_STOPWATCH_1_2_STOPWATCH_SUSPENDED_BIN;    //开始/暂停
+    res_addr = sys_cb.stopwatch_sta ? UI_BUF_I335001_27_MORE_2_STOPWATCH_1_2_STOPWATCH_SUSPENDED_BIN: UI_BUF_I335001_27_MORE_2_STOPWATCH_1_1STOPWATCH_PLAY_BIN;    //开始/暂停
     btn = compo_button_create_by_image(frm, res_addr);
     compo_setid(btn, COMPO_ID_BTN_START_REC);
     compo_button_set_pos(btn, 122+102/2, 222+52/2);
-    btn = compo_button_create_by_image(frm, UI_BUF_I335001_27_MORE_2_STOPWATCH_1_2_STOPWATCH_SUSPENDED_BIN);    //复位
-    compo_setid(btn, COMPO_ID_BTN_AFRESH);
-    compo_button_set_pos(btn, 64/2+47, 98/2+230);
-    compo_button_set_visible(btn, sys_cb.stopwatch_total_msec > 0);
+    // btn = compo_button_create_by_image(frm, UI_BUF_I335001_27_MORE_2_STOPWATCH_1_2_STOPWATCH_SUSPENDED_BIN);    //复位
+    // compo_setid(btn, COMPO_ID_BTN_AFRESH);
+    // compo_button_set_pos(btn, 64/2+47, 98/2+230);
+    // compo_button_set_visible(btn, sys_cb.stopwatch_total_msec > 0);
 
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_27_MORE_2_STOPWATCH_1_2_STOPWATCH_TIME_BIN);    //计次
     compo_setid(btn, COMPO_ID_BTN_RECORD);
-    compo_button_set_pos(btn, 64/2+249, 98/2+230);
-    compo_button_set_visible(btn, sys_cb.stopwatch_rec_cnt > 0);
+    compo_button_set_pos(btn, 16+102/2, 222+52/2);
+    // compo_button_set_visible(btn, sys_cb.stopwatch_rec_cnt > 0);
 
 
     //创建数字文本
@@ -563,34 +563,34 @@ compo_form_t *func_stopwatch_form_create(void)
     char str_buff[9];
     u8 min, sec;
     u16 msec;
-//    min = ((sys_cb.stopwatch_total_msec / 1000) % 6000) / 60;
-//    sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
-//    msec = sys_cb.stopwatch_total_msec % 1000;
-//    txt_num = compo_textbox_create(frm, 8);     //当前计时
-//    compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_TIME);
-//    compo_textbox_set_pos(txt_num, 63, 120);
-//    compo_textbox_set_font(txt_num, UI_BUF_I335001_NUM_22_12X17_BIN);
-//    snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
-//    compo_textbox_set(txt_num, str_buff);
-//    compo_textbox_set_align_center(txt_num, false);
-//    txt_num = compo_textbox_create(frm, 2);     //记录数
-//    compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
-//    compo_textbox_set_pos(txt_num, 30/2+180, 91);
-////    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_22_BIN);
-//    snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
-//    compo_textbox_set(txt_num, str_buff);
-//    compo_textbox_set_forecolor(txt_num, NUM_REC_COLOR);
-//    compo_textbox_set_visible(txt_num, sys_cb.stopwatch_rec_cnt > 0);
-//
-//    min = ((sys_cb.stopwatch_total_msec / 1000) / 60) % 100;
-//    sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
-//    msec = sys_cb.stopwatch_total_msec % 1000;
+    min = ((sys_cb.stopwatch_total_msec / 1000) % 6000) / 60;
+    sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
+    msec = sys_cb.stopwatch_total_msec % 1000;
+    txt_num = compo_textbox_create(frm, 8);     //当前计时
+    compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_TIME);
+    compo_textbox_set_pos(txt_num, GUI_SCREEN_CENTER_X/4, 110);
+    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
+    compo_textbox_set(txt_num, str_buff);
+    compo_textbox_set_align_center(txt_num, false);
+    txt_num = compo_textbox_create(frm, 2);     //记录数
+    compo_setid(txt_num, COMPO_ID_NUM_STOPWATCH_REC);
+    compo_textbox_set_location(txt_num, 131, 85, 226, widget_text_get_height());
+//    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_22_BIN);
+    snprintf(str_buff, sizeof(str_buff), "%02d", sys_cb.stopwatch_rec_cnt);
+    compo_textbox_set(txt_num, str_buff);
+    compo_textbox_set_forecolor(txt_num, NUM_REC_COLOR);
+    compo_textbox_set_visible(txt_num, sys_cb.stopwatch_rec_cnt > 0);
+
+    min = ((sys_cb.stopwatch_total_msec / 1000) / 60) % 100;
+    sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
+    msec = sys_cb.stopwatch_total_msec % 1000;
 
 
     if(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
     {
         compo_button_t *btn_start = compo_getobj_byid(COMPO_ID_BTN_START_REC);
-        compo_button_set_bgimg(btn_start, UI_BUF_I335001_NUM_22_12X17_BIN);
+        //  compo_button_set_bgimg(btn_start, UI_BUF_I330001_PUBLIC_PLAY_GRAY_BIN);
 
         min  = 99;
         sec  = 59;
@@ -604,9 +604,6 @@ compo_form_t *func_stopwatch_form_create(void)
         snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
         compo_textbox_set(num_time, str_buff);
     }
-
-
-    return frm;
 }
 
 //50ms秒表毫秒刷新回调函数（10ms误差大）

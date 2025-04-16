@@ -214,6 +214,9 @@ enum
     FUNC_UP_WATCH_DIAL,
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
     FUNC_SYSTEM,    //系统设置列表界面
+#if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
+    FUNC_BRIGHT_SET,    //亮度设置列表
+#endif
     FUNC_MAX_NUM,           //用于计数
 };
 

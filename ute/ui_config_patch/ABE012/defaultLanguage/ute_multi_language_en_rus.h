@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 英语(美国）
 *@author
-*@date   2025-04-10 15:41:37
+*@date   2025-04-11 15:59:29
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -284,6 +284,8 @@ const char * const i18n_en_rus[] =
     [STR_CHANGE_PASSWORD] = "\x43\x68\x61\x6e\x67\x65\x20\x50\x61\x73\x73\x77\x6f\x72\x64\x00", // [268] Change Password
     [STR_SLIDE_UNLOCK] = "\x53\x6c\x69\x64\x65\x20\x74\x6f\x20\x55\x6e\x6c\x6f\x63\x6b\x00", // [269] Slide to Unlock
     [STR_CHILD_LOCK] = "\x54\x68\x65\x20\x63\x68\x69\x6c\x64\x20\x6c\x6f\x63\x6b\x20\x68\x61\x73\x20\x62\x65\x65\x6e\x20\x6f\x70\x65\x6e\x65\x64\x00", // [270] The child lock has been opened
+    [STR_SINGLE] = "\x73\x69\x6e\x67\x6c\x65\x00", // [271] single
+    [STR_DUAL] = "\x64\x75\x61\x6c\x00", // [272] dual
 };
 
 #endif

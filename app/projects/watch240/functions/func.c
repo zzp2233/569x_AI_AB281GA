@@ -199,7 +199,9 @@ extern void func_dial_and_theme(void);
 #endif
 extern void func_heart_about(void);
 extern void func_oxygen_about(void);
+extern void func_breathe_run(void);
 
+compo_form_t *func_breathe_run_form_create(void);
 compo_form_t *func_oxygen_about_form_create(void);
 compo_form_t *func_heart_warning_form_create(void);
 compo_form_t *func_menu_football_list_form_create(void);
@@ -451,6 +453,7 @@ const func_t tbl_func_create[] =
 #endif
     {FUNC_HEAR_ABOUT,                   func_heart_about_form_create},
     {FUNC_OXYGEN_ABOUT,                 func_oxygen_about_form_create},
+    {FUNC_BREATHE_RUN,                  func_breathe_run_form_create},
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
 #endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
@@ -592,6 +595,7 @@ const func_t tbl_func_entry[] =
     {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
     {FUNC_HEAR_ABOUT,                   func_heart_about},               //
     {FUNC_OXYGEN_ABOUT,                 func_oxygen_about},
+    {FUNC_BREATHE_RUN,                  func_breathe_run},
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game},                     //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT

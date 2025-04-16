@@ -165,6 +165,7 @@ enum
     FUNC_DIAL_AND_THEME, //表盘&主题界面
     FUNC_HEAR_ABOUT,
     FUNC_OXYGEN_ABOUT,
+    FUNC_BREATHE_RUN,                           //呼吸训练运行
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,

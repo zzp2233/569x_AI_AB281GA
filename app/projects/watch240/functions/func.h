@@ -217,6 +217,9 @@ enum
 #if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
     FUNC_BRIGHT_SET,    //亮度设置列表
 #endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    FUNC_TOOLBOX,   //工具箱
+#endif
     FUNC_MAX_NUM,           //用于计数
 };
 

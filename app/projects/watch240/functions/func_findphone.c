@@ -203,43 +203,32 @@ compo_form_t *func_findphone_form_create(void)
 
     //新建图像
     compo_picturebox_t *pic;
+    pic = compo_picturebox_create(frm, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_1_FIND_MY_PHONE_ICON_PIC58X100_X92_Y83_BIN);
+    compo_setid(pic, COMPO_ID_PIC_FIND_BG);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 83+100/2);
 
-    if(ble_is_connect())
+    //图像按钮
+    compo_button_t * btn;
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_1_FIND_MY_PHONE_ICON_PIC58X100_X92_Y83_BIN);
+    compo_setid(btn, COMPO_ID_BUTTON_FIND);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 83+100/2);
+
+    //按钮上的文本
+    compo_textbox_t * txt = compo_textbox_create(frm, strlen(i18n[STR_START]));
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 247);
+    compo_textbox_set(txt, i18n[STR_START]);
+    compo_setid(txt, COMPO_ID_TEXT_FIND);
+
+    if(uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
     {
-        //图像按钮
-        compo_button_t * btn;
-        btn = compo_button_create_by_image(frm, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_1_FIND_MY_PHONE_ICON_PIC58X100_X92_Y83_BIN);
-        compo_setid(btn, COMPO_ID_BUTTON_FIND);
-        compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 183-100/2);
-
-        //文本
-        compo_textbox_t * txt = compo_textbox_create(frm, strlen(i18n[STR_START]));
-        compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 183-100/2+40);
-
-        if(uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
-        {
-            compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_2_FIND_MY_PHONE_ICON_PIC140X100_X50_Y83_BIN);
-            compo_textbox_set(txt, i18n[STR_STOP]);
-        }
-        else
-        {
-            compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_1_FIND_MY_PHONE_ICON_PIC58X100_X92_Y83_BIN);
-            compo_textbox_set(txt, i18n[STR_START]);
-        }
+        compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_2_FIND_MY_PHONE_ICON_PIC140X100_X50_Y83_BIN);
+        compo_textbox_set(txt, i18n[STR_STOP]);
     }
     else
     {
-        pic = compo_picturebox_create(frm, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_3_BLUETOOTH_NOCONNECTED_ICON_BLE_70X74_X86_Y76_BIN);
-        compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 183-74/2);
-        //文本
-        compo_textbox_t * txt = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
-        compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 183-100/2+60);
-        compo_textbox_set(txt, i18n[STR_CONNECT_BLUETOOTH]);
-        compo_setid(txt, COMPO_ID_TEXT_BT_UNCONNECT);
+        compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_1_FIND_MY_PHONE_ICON_PIC58X100_X92_Y83_BIN);
+        compo_textbox_set(txt, i18n[STR_START]);
     }
-
-
-
 
     return frm;
 }
@@ -407,7 +396,7 @@ static void func_findphone_process(void)
     {
         if (uteModuleFindPhoneGetStatus() == FIND_PHONE_RING)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_3_BLUETOOTH_NOCONNECTED_ICON_BLE_70X74_X86_Y76_BIN);
+            // compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_4_FIND_MY_PHONE_3_BLUETOOTH_NOCONNECTED_ICON_BLE_70X74_X86_Y76_BIN);
             uteModuleFindPhoneSetStatus(FIND_PHONE_STOP);
             compo_textbox_set(txt, i18n[STR_START]);
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);

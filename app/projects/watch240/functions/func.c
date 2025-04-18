@@ -203,6 +203,9 @@ extern void func_breathe_run(void);
 #if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
 extern void func_bright_set(void);
 #endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+extern void func_toolbox_list(void);
+#endif
 
 compo_form_t *func_breathe_run_form_create(void);
 compo_form_t *func_oxygen_about_form_create(void);
@@ -324,6 +327,9 @@ compo_form_t *func_system_sub_system_form_create(void); //系统
 compo_form_t *func_heart_about_form_create(void);
 #if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
 compo_form_t *func_bright_set_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+compo_form_t *func_toolbox_list_form_create(void);   //工具箱
 #endif
 bool func_music_is_play(void);
 void func_music_play(bool sta);
@@ -524,6 +530,9 @@ const func_t tbl_func_create[] =
 #endif
 #if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
     {FUNC_BRIGHT_SET,                   func_bright_set_form_create},//亮度设置列表
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    {FUNC_TOOLBOX,                      func_toolbox_list_form_create},//工具箱
 #endif
 };
 
@@ -735,6 +744,9 @@ const func_t tbl_func_entry[] =
 #endif
 #if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
     {FUNC_BRIGHT_SET,                   func_bright_set},//亮度设置列表
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    {FUNC_TOOLBOX,                      func_toolbox_list},//工具箱
 #endif
 };
 

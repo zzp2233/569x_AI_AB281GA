@@ -782,12 +782,6 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-    //设置标题栏
-    // if(page_type != TIMER_PAGE_SELECT)
-    // {
-    //     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    //     compo_form_set_title(frm, i18n[STR_TIMER]);
-    // }
 
     switch (page_type)
     {
@@ -811,10 +805,6 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             compo_setid(btn, COMPO_ID_BTN_CUSTOM);
             compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.74*4+CONTROL_LENGTH);
 
-            // txt = compo_textbox_create_for_page(frm, page, strlen(i18n[STR_CUSTOM]));
-            // compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.74*4+CONTROL_LENGTH);
-            // compo_textbox_set(txt, i18n[STR_CUSTOM]);
-
             if (func_cb.sta == FUNC_TIMER)
             {
                 f_timer->page_sub = page;
@@ -829,30 +819,36 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
 
             compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
             compo_form_set_title(frm, i18n[STR_CUSTOM]);
-            // compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN);
-            // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X+44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
-            // picbox = compo_picturebox_create(frm, UI_BUF_I330001_PUBLIC_KUANG_COLON_BIN);
-            // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
+
+            compo_textbox_t *textbox = compo_textbox_create(frm, 1);
+            compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
+            compo_textbox_set(textbox,":");
+            compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
+
+            textbox = compo_textbox_create(frm, 1);
+            compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
+            compo_textbox_set(textbox,":");
+            compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-44,GUI_SCREEN_CENTER_Y-TIME_SET_TXT_SPACING/2+4 );
 
             for(int i=0; i<TIMER_BTN_ITEM_CNT; i++)
             {
                 txt = compo_textbox_create(frm, 2);
-                compo_textbox_set_font(txt, UI_BUF_I335001_NUM_36_20X27_BIN);
+                compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set(txt,tbl_timer_btn_item[i].text );
                 compo_setid(txt,tbl_timer_btn_item[i].txt_id);
                 compo_textbox_set_pos(txt,tbl_timer_btn_item[i].x,tbl_timer_btn_item[i].y-TIME_SET_TXT_SPACING_SHIFT);
             }
-            // btn = compo_button_create_by_image(frm, UI_BUF_I330001_TIMER_BOX01_BIN);
-            // compo_button_set_pos(btn,tbl_timer_btn_item[2].x,tbl_timer_btn_item[2].y -TIME_SET_TXT_SPACING_SHIFT);
-            // compo_setid(btn,COMPO_ID_SEC_IMG_BTN);
+            btn = compo_button_create(frm);
+            compo_button_set_location(btn,tbl_timer_btn_item[2].x,tbl_timer_btn_item[2].y -TIME_SET_TXT_SPACING_SHIFT,50,130);
+            compo_setid(btn,COMPO_ID_SEC_IMG_BTN);
 
-            // btn = compo_button_create_by_image(frm, UI_BUF_I330001_TIMER_BOX01_BIN);
-            // compo_button_set_pos(btn,tbl_timer_btn_item[7].x,tbl_timer_btn_item[7].y -TIME_SET_TXT_SPACING_SHIFT);
-            // compo_setid(btn,COMPO_ID_MIN_IMG_BTN);
+            btn = compo_button_create(frm);
+            compo_button_set_location(btn,tbl_timer_btn_item[7].x,tbl_timer_btn_item[7].y -TIME_SET_TXT_SPACING_SHIFT,50,130);
+            compo_setid(btn,COMPO_ID_MIN_IMG_BTN);
 
-            // btn = compo_button_create_by_image(frm, UI_BUF_I330001_TIMER_BOX01_BIN);
-            // compo_button_set_pos(btn,tbl_timer_btn_item[12].x,tbl_timer_btn_item[12].y -TIME_SET_TXT_SPACING_SHIFT);
-            // compo_setid(btn,COMPO_ID_HOUR_IMG_BTN);
+            btn = compo_button_create(frm);
+            compo_button_set_location(btn,tbl_timer_btn_item[12].x,tbl_timer_btn_item[12].y -TIME_SET_TXT_SPACING_SHIFT,50,130);
+            compo_setid(btn,COMPO_ID_HOUR_IMG_BTN);
 
             compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
             compo_shape_set_location(shape, GUI_SCREEN_CENTER_X,tbl_timer_btn_item[0].y-TIME_SET_TXT_SPACING_SHIFT,GUI_SCREEN_WIDTH,42);
@@ -864,11 +860,7 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
 
             btn = compo_button_create_by_image(frm, UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_2_CUSTOM_TIMING_ICON_PLAY_208X52_X16_Y222_BIN);
             compo_setid(btn,COMPO_ID_BTN_OK);
-            compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 222);
-
-            txt = compo_textbox_create(frm, strlen(i18n[STR_OK]));
-            compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, 247);
-            compo_textbox_set(txt, i18n[STR_OK]);
+            compo_button_set_pos(btn,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_2_CUSTOM_TIMING_ICON_PLAY_208X52_X16_Y222_BIN).hei/2-10);
 
             break;
 
@@ -890,7 +882,6 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
                 res_addr=UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN;
             }
             res_addr = UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN;
-            // res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN : (sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_REST_BIN : UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN);
             btn = compo_button_create_by_image(frm, res_addr); //pause //start//again
             compo_setid(btn, COMPO_ID_BTN_START);
             compo_button_set_pos(btn, 175, 246);
@@ -910,12 +901,6 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
             compo_textbox_set(txt, str_buff);
 
-            //    txt = compo_textbox_create(frm, strlen("计时结束"));
-            //    compo_setid(txt, COMPO_ID_COUNT_FINSH);
-            //    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X/1.5);
-            //    compo_textbox_set(txt, "计时结束");
-            //    compo_textbox_set_visible(txt, sys_cb.timer_sta == TIMER_STA_DONE);
-
             break;
 
         default:
@@ -933,7 +918,6 @@ compo_form_t *func_timer_form_create(void)
     {
         case TIMER_STA_IDLE:
             frm = func_timer_form_create_by_type(TIMER_PAGE_SELECT);
-//             printf("11111111111111111111111111111\n");
             break;
 
         case TIMER_STA_WORKING:
@@ -941,7 +925,6 @@ compo_form_t *func_timer_form_create(void)
         case TIMER_STA_PAUSE:
         case TIMER_STA_DONE:
         case TIMER_STA_RESET:
-//             printf("22222222222222222222222222222222222\n");
             frm = func_timer_form_create_by_type(TIMER_PAGE_COUNTDOWN);
             break;
 
@@ -955,52 +938,33 @@ compo_form_t *func_timer_form_create(void)
 //触摸按钮效果处理
 static void func_timer_button_touch_handle(void)
 {
-    compo_button_t *btn;
-    int id = compo_get_button_id();
+    f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
 
-    switch (id)
+    if(f_timer->page_disp  == TIMER_PAGE_SELECT)
     {
-        case COMPO_ID_BTN_START:
-            btn = compo_getobj_byid(COMPO_ID_BTN_START);
-            if (sys_cb.timer_sta == TIMER_STA_WORKING)
-            {
-                compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN);
-            }
-            else if (sys_cb.timer_sta == TIMER_STA_DONE)
-            {
-                compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_REST_BIN);
-            }
-            else
-            {
-                compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN);
-            }
-            break;
-
-        case COMPO_ID_BTN_NO:
-            btn = compo_getobj_byid(COMPO_ID_BTN_NO);
-//            compo_button_set_bgimg(btn, UI_BUF_COMMON_NO_CLICK_BIN);
-            break;
-
-        default:
-            break;
+        f_timer->touch_flag = true;
     }
-
-}
-
-//释放按钮效果处理
-static void func_timer_button_release_handle(void)
-{
-    u32 res_addr;
-    compo_button_t *btn;
-
-    if ((btn = compo_getobj_byid(COMPO_ID_BTN_START)) != NULL)
+    else if(f_timer->page_disp  == TIMER_PAGE_CUSTOM)
     {
-        res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN : (sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_REST_BIN : UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN);
-        compo_button_set_bgimg(btn, res_addr);
-    }
-    if ((btn = compo_getobj_byid(COMPO_ID_BTN_NO)) != NULL)
-    {
-//        compo_button_set_bgimg(btn, UI_BUF_I330001_PUBLIC_CLOSE00_BIN);
+        int id = compo_get_button_id();
+        if(f_timer->touch_flag == false)
+        {
+            f_timer->touch_flag = true;
+            switch (id)
+            {
+                case COMPO_ID_SEC_IMG_BTN:
+                    f_timer->set_time_flag = 3;
+                    break;
+                case COMPO_ID_MIN_IMG_BTN:
+                    f_timer->set_time_flag = 2;
+                    break;
+                case COMPO_ID_HOUR_IMG_BTN:
+                    f_timer->set_time_flag = 1;
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
 
@@ -1014,7 +978,6 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     static u32 rtccnt_tmp;
     u16 sec_past;
     bool lowpwr_sta = bsp_system_is_sleep() /*| sys_cb.idle_sta*/;
-//    static u8 cnt = 0;
 
     if (param)
     {
@@ -1082,17 +1045,6 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
         }
     }
 
-
-//    if (done)
-//    {
-//        printf(">>>COUNTDOWN_FINISH\n");
-//        sys_cb.timer_sta = TIMER_STA_DONE;
-//        if (sys_cb.timer_done == false)
-//        {
-//            sys_cb.timer_done = true;
-//        }
-//    }
-
     lowpwr_sta_bkp = lowpwr_sta;
 }
 
@@ -1156,7 +1108,6 @@ static void func_timer_button_click(void)
             switch (id)
             {
                 case COMPO_ID_BTN_START:
-//                    printf("COMPO_ID_BTN_START %d\n",sys_cb.timer_sta);
                     if (sys_cb.timer_sta == TIMER_STA_WORKING)
                     {
                         sys_cb.timer_sta = TIMER_STA_PAUSE;
@@ -1167,10 +1118,6 @@ static void func_timer_button_click(void)
                         sys_cb.timer_start_rtc = compo_cb.rtc_cnt;
                         count_100ms = 0;
                         co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
-//                        count_100ms = 0;
-//                        sys_cb.timer_left_sec = sys_cb.timer_total_sec;
-//                        sys_cb.timer_sta = TIMER_STA_RESET;
-//                        uteModuleGuiCommonDisplayOffAllowGoBack(true);
                         uteModuleGuiCommonDisplayOffAllowGoBack(false);
                         sys_cb.timer_sta = TIMER_STA_WORKING;
                     }
@@ -1202,8 +1149,6 @@ static void func_timer_button_click(void)
         default:
             break;
     }
-
-    func_timer_button_release_handle();
 
     if (page_next != f_timer->page_disp)
     {
@@ -2117,9 +2062,9 @@ static void func_timer_process(void)
                 if(f_timer->touch_flag == true)
                 {
                     f_timer->moveto.y = f_timer->old_y+dy;
-                    if(f_timer->moveto.y > 0 )
+                    if(f_timer->moveto.y > -44 )
                     {
-                        f_timer->moveto.y = 0;
+                        f_timer->moveto.y = -44;
                     }
                     else if(f_timer->moveto.y < PAGE_LOCATION_LAST)
                     {
@@ -2133,7 +2078,6 @@ static void func_timer_process(void)
                 {
                     f_timer->old_y = f_timer->moveto.y;
                 }
-                printf("f_timer->moveto.y:%d\n",f_timer->moveto.y);
             }
             break;
 
@@ -2320,80 +2264,12 @@ static void func_timer_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-
-            if(f_timer->page_disp  == TIMER_PAGE_SELECT)
-            {
-                f_timer->touch_flag = true;
-            }
-            else if(f_timer->page_disp  == TIMER_PAGE_CUSTOM)
-            {
-                int id = compo_get_button_id();
-                compo_button_t *btn_sec  = compo_getobj_byid(COMPO_ID_SEC_IMG_BTN);
-                compo_button_t *btn_min  = compo_getobj_byid(COMPO_ID_MIN_IMG_BTN);
-                compo_button_t *btn_hour = compo_getobj_byid(COMPO_ID_HOUR_IMG_BTN);
-
-                if(f_timer->touch_flag == false)
-                {
-                    switch(id)
-                    {
-                        case COMPO_ID_HOUR_IMG_BTN:
-                            for(int i=0; i<5; i++)
-                            {
-                                f_timer->set_time_buf[i] = f_timer->hour_buf[i];
-                            }
-                            //     compo_button_set_bgimg(btn_hour,UI_BUF_I332001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
-                            //     compo_button_set_bgimg(btn_min,UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN );
-                            //     compo_button_set_bgimg(btn_sec, UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN);
-                            //     f_timer->set_time_flag = 1;
-                            //     break;
-                            // case COMPO_ID_MIN_IMG_BTN:
-                            //     for(int i=0; i<5; i++)
-                            //     {
-                            //         f_timer->set_time_buf[i] = f_timer->min_buf[i];
-                            //     }
-                            //     compo_button_set_bgimg(btn_hour,UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN );
-                            //     compo_button_set_bgimg(btn_min,UI_BUF_I332001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
-                            //     compo_button_set_bgimg(btn_sec,UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN );
-                            //     f_timer->set_time_flag = 2;
-                            //     break;
-                            // case COMPO_ID_SEC_IMG_BTN:
-                            //     for(int i=0; i<5; i++)
-                            //     {
-                            //         f_timer->set_time_buf[i] = f_timer->sec_buf[i];
-                            //     }
-                            //     compo_button_set_bgimg(btn_hour,UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN );
-                            //     compo_button_set_bgimg(btn_min,UI_BUF_I332001_PUBLIC_KUANG_GREY_SMALL_BIN );
-                            //     compo_button_set_bgimg(btn_sec,UI_BUF_I332001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
-                            //     f_timer->set_time_flag = 3;
-                            //     break;
-                    }
-                }
-                f_timer->touch_flag = true;
-            }
             func_timer_button_touch_handle();
-
             break;
 
         case MSG_CTP_CLICK:
             func_timer_button_click();
             break;
-
-        case MSG_CTP_SHORT_UP:
-        case MSG_CTP_SHORT_DOWN:
-        case MSG_CTP_SHORT_LEFT:
-        case MSG_CTP_LONG:
-            func_timer_button_release_handle();
-            if (func_cb.flag_sort)
-            {
-                func_message(msg);
-            }
-            break;
-
-        case MSG_CTP_SHORT_RIGHT:
-            func_timer_button_release_handle();
-            func_message(msg);
-            break;
-
         default:
             func_message(msg);
             break;

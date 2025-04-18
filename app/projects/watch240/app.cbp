@@ -1031,9 +1031,6 @@
 		<Unit filename="functions/func_blood_oxygen.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions/func_blood_pressure.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="functions/func_bloodsugar.c">
 			<Option compilerVar="CC" />
 		</Unit>

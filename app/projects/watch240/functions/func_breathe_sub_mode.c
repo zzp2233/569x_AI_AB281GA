@@ -945,31 +945,27 @@ typedef struct f_breathe_sub_mode_t_
 #define CENTER_TXT_Y   (130/2)
 
 const uint16_t BREATHE_MODE_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
-const txt_mode[3] = {STR_FASTER, STR_SOOTHING, STR_SLOW};
-// 函数功能：获取设置时间（上下 & 上上下下 ）的数
-static void func_breathe_sub_mode_get_timer(uint8_t timer, u8 *timer_data)
+const txt_mode[3] = {STR_SLOW, STR_SOOTHING,STR_FASTER };
+// 函数功能：获取设置时间（上下 & 上上下下 ）的数// 核心函数：偏移后timer值等于timer_data[2]
+static void func_breathe_sub_mode_get_timer(uint8_t *timer, uint8_t *timer_data, int8_t num)
 {
-    for (int i = 0; i < 5; i++)
-    {
-        // 计算偏移后的索引
-        int index = (i + timer) % 3;
-        // 将偏移后的值存入timer_data
-        timer_data[i] = txt_mode[index];
-    }
-}
-// 函数功能：根据timer和num的偏移量获取txt_num数组元素并更新timer指向的值
-static void func_set_breathe_mode_get_timer(uint8_t *timer, s8 num)
-{
-    char txt_num[5] = {1, 2, 3, 4, 5};
-    // 计算偏移后的索引，注意要将timer的值转换为0 - 4的范围
-    int index = (*timer - 1 + num) % 5;
-    // 处理负数索引的情况
-    if (index < 0)
-    {
-        index += 5;
-    }
-    // 更新timer指向的值为txt_num数组中对应索引的元素
-    *timer = txt_num[index];
+    // 1. 计算中心索引（0-2，支持正负偏移循环）
+    int center_idx = (*timer - 1 + num);
+    center_idx = (center_idx % 3 + 3) % 3;  // 转为0-2索引
+
+    // 2. 计算左右相邻索引（循环取模）
+    int left_idx = (center_idx - 1 + 3) % 3;   // 左侧相邻索引（如中心2→1，中心0→2）
+    int right_idx = (center_idx + 1) % 3;       // 右侧相邻索引（如中心1→2，中心2→0）
+
+    // 3. 对称填充5个元素（重点修正此处）
+    timer_data[0] = txt_mode[right_idx];  // 右1（第一个元素）
+    timer_data[1] = txt_mode[left_idx];   // 左1（第二个元素）
+    timer_data[2] = txt_mode[center_idx]; // 中心（第三个元素）
+    timer_data[3] = timer_data[0];        // 右2（对称复制右1，第四个元素）
+    timer_data[4] = timer_data[1];        // 左2（对称复制左1，第五个元素）
+
+    // 4. 更新timer为中心值（1-3，对应txt_mode索引+1）
+    *timer = center_idx + 1;
 }
 //创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_breathe_sub_mode_form_create(void)
@@ -977,22 +973,24 @@ compo_form_t *func_breathe_sub_mode_form_create(void)
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
     u8 txt_data[5];
+    uint8_t mode = sys_cb.breathe_mode;
 
     ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_MODE]);
 
-    func_breathe_sub_mode_get_timer(1,txt_data);///获取模式
+    func_breathe_sub_mode_get_timer(&mode,txt_data,1);///获取模式
     //创建一个页面用于限制滚动的时间文本
     widget_page_t* page = widget_page_create(frm->page_body);
     widget_set_location(page, GUI_SCREEN_CENTER_X, 62+130/2, GUI_SCREEN_WIDTH,130);
     for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
     {
-        printf("idx:%d\n",txt_data[idx-COMPO_ID_TXT_1]);
+        // printf("idx:%d\n",txt_data[idx-COMPO_ID_TXT_1]);
         compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,50);
         compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_MODE_TXT_Y[idx-COMPO_ID_TXT_1]);;
         compo_textbox_set(txt,i18n[txt_data[idx-COMPO_ID_TXT_1]]);
         compo_setid(txt,idx);
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
     }
 
     compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
@@ -1003,6 +1001,13 @@ compo_form_t *func_breathe_sub_mode_form_create(void)
     compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I335001_19_BREATHING_TRAINING_2_1_SET_TIME_ICON_YES_208X52_X16_Y222_BIN).hei/2-10);
     compo_setid(btn_ok,COMPO_ID_BTN_SURE);
 
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 105, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 150, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
 
     if(func_cb.sta == FUNC_BREATHE_SUB_MODE)
     {
@@ -1011,7 +1016,7 @@ compo_form_t *func_breathe_sub_mode_form_create(void)
         {
             f_alarm_clock_sub_set->breathe_mode[i]  = txt_data[i];
         }
-        f_alarm_clock_sub_set->mode  = 1;
+        f_alarm_clock_sub_set->mode  = mode;
     }
 
     return frm;
@@ -1033,25 +1038,21 @@ static void func_breathe_set_mode_sub_move(void)
 
             f_disturd_set->offset = f_disturd_set->move_dy_data/TXT_SPACING;
 
-            if(f_disturd_set->offset != f_disturd_set->offset_old)
+            if(f_disturd_set->offset != f_disturd_set->offset_old )
             {
+                if(f_disturd_set->offset != 0)
+                {
+                    func_breathe_sub_mode_get_timer(&f_disturd_set->mode,f_disturd_set->breathe_mode,-f_disturd_set->offset + f_disturd_set->offset_old);///获取时间
+                }
                 f_disturd_set->offset_old = f_disturd_set->offset;
-                if(f_disturd_set->offset >=1)
-                {
-                    func_set_breathe_mode_get_timer(&f_disturd_set->mode,-1);
-                }
-                else if(f_disturd_set->offset <= -1)
-                {
-                    func_set_breathe_mode_get_timer(&f_disturd_set->mode,1);
-                }
             }
-            func_breathe_sub_mode_get_timer(f_disturd_set->mode,f_disturd_set->breathe_mode);///获取时间
 
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
             {
                 compo_textbox_t *txt = compo_getobj_byid(idx);
                 compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_MODE_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
                 compo_textbox_set(txt,i18n[f_disturd_set->breathe_mode[idx-COMPO_ID_TXT_1]]);
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
             }
         }
         else   //松手状态
@@ -1067,10 +1068,12 @@ static void func_breathe_set_mode_sub_move(void)
 //单击按钮
 static void func_breathe_sub_mode_button_click(void)
 {
+    f_breathe_sub_mode_t *f_disturd_set = (f_breathe_sub_mode_t*) func_cb.f_cb;
     int id = compo_get_button_id();
     switch (id)
     {
         case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_mode = (f_disturd_set->mode+3-1)%3;
             func_backing_to();
             break;
         default:
@@ -1080,16 +1083,15 @@ static void func_breathe_sub_mode_button_click(void)
 static void func_breathe_sub_mode_button_touch_handle(void)
 {
     f_breathe_sub_mode_t *f_breathe_sub_mode = (f_breathe_sub_mode_t*) func_cb.f_cb;
-    // if(f_breathe_sub_mode->touch_flag == false)
-    // {
-    //     switch(compo_get_button_id())
-    //     {
-    //         case COMPO_ID_BTN_MIN_BG:
-    //             f_breathe_sub_mode->touch_flag = true;
-    //             break;
-    //     }
-    // }
-    f_breathe_sub_mode->touch_flag = true;
+    if(f_breathe_sub_mode->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_mode->touch_flag = true;
+                break;
+        }
+    }
 }
 #else
 typedef struct f_breathe_sub_mode_t_

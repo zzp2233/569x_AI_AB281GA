@@ -44,15 +44,10 @@ compo_form_t *func_system_sub_system_form_create(void)
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
     compo_listbox_set(listbox, tbl_system_list, SYSTEM_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_BIN);
     compo_setid(listbox, COMPO_ID_SYSTEM);
 
-    u8 set_idx = sys_cb.set_idx;
-    if (set_idx < 1)
-    {
-        set_idx = 1;
-    }
-
-    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);
 
     return frm;

@@ -581,175 +581,74 @@ compo_form_t *func_charge_form_create(void)
 enum
 {
     //数字
-    COMPO_ID_NUM_BAT_VALUE,
-    COMPO_ID_PIC_BAT_PERCENT,
-
-    COMPO_ID_RECT_BAT_1,
-    COMPO_ID_RECT_BAT_2,
-    COMPO_ID_RECT_BAT_3,
-    COMPO_ID_RECT_BAT_4,
-    COMPO_ID_RECT_BAT_5,
-
+    COMPO_ID_NUM_BAT_VALUE=1,
+    COMPO_ID_TTXT,
     COMPO_ID_GIF_PIC,
-    COMPO_ID_SMALL_ICON,
+    COMPO_ID_BAT_PIC,
 };
 
 typedef struct charge_ui_handle_t_
 {
-    struct ui_bat_value
-    {
-        u16 id;
-        s16 x, y;
-        u16 w, h;
-        u32 res;        //res不为0使用图库，为0使用字库
-        u8 num_layout;  //横向，竖向排列
-        u8 num_align;   //对其方式
-        bool flag_zfill;
-        int  margin;
-        u8 rev;
-    } bat_value;
-
-    struct ui_bat_percent
-    {
-        u16 id;
-        s16 x, y;
-        u16 w, h;
-        u32 res;
-        u8 rev;
-    } bat_percent;
-
-    struct ui_bat_rect
-    {
-        u16 id;
-        s16 x, y;
-        u16 w, h;
-        u32 bright_res;       //res不为0使用图库，为0使用组件实现
-        u32 destroy_res;
-        color_t bright_color;
-        color_t destroy_color;
-        u16 rev;              //矩形圆角
-    } bat_rect[5];
-
+    u8 gif_pic;
+    u32 tick;
 } charge_ui_handle_t;
 
-static const charge_ui_handle_t ui_handle =
-{
-    .bat_value = {
-        .id     = COMPO_ID_NUM_BAT_VALUE,
-        .x      = 37+60/2,
-        .y      = 30+87/2,
-        .w      = 0,
-        .h      = 0,
-        .res    = 0,        //res不为0使用图库，为0使用字库
-        .num_layout = 1,  //横向，竖向排列
-        .num_align  = 0,   //对其方式
-        .flag_zfill = false,
-        .margin     = -5,
-        .rev    = 3,
-    },
-
-    .bat_percent = {
-        .id     = COMPO_ID_PIC_BAT_PERCENT,
-        .x      = 37+60/2,
-        .y      = 30+87+48/2,
-        .w      = 0,
-        .h      = 0,
-        .res    = UI_BUF_I335001_CHARGE_1_LOW_BATTERY_NUM_BATTSYM_24X26_X128_Y113_BIN,
-        .rev    = 0,
-    },
-
-    .bat_rect = {
-        [0]     = {COMPO_ID_RECT_BAT_1,     37+60/2,    241+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-        [1]     = {COMPO_ID_RECT_BAT_2,     37+60/2,    223+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-        [2]     = {COMPO_ID_RECT_BAT_3,     37+60/2,    205+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-        [3]     = {COMPO_ID_RECT_BAT_4,     37+60/2,    187+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-        [4]     = {COMPO_ID_RECT_BAT_5,     37+60/2,    169+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-    },
-
-
-};
 
 //电量更新
 void func_charge_update(void)
 {
+    compo_textbox_t *txt_val   = compo_getobj_byid(COMPO_ID_NUM_BAT_VALUE);
+    compo_textbox_t *txt_title = compo_getobj_byid(COMPO_ID_TTXT);
+    compo_picturebox_t *pic    = compo_getobj_byid(COMPO_ID_BAT_PIC);
 
-    //更新bat Value
-    compo_number_t* bat_value = compo_getobj_byid(ui_handle.bat_value.id);
-    compo_number_set(bat_value, BAT_PERCENT_VALUE);
-
-    //动图
-    compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_GIF_PIC);
-    uint32_t tic=0;
-    if(tic >= 12)
-    {
-        tic =0;
-    }
-    else
-    {
-        tic++;
-    }
-    compo_picturebox_cut(picbox,tic, 12);
-
-    //更新bat rect
-    u8 bright_value = (sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0])) * BAT_PERCENT_VALUE / 100;      //等级
-
-    //熄灭的
-    for(int i=0; i<(sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0])); i++)
-    {
-        compo_shape_t* bat_rect = compo_getobj_byid(ui_handle.bat_rect[i].id);
-        compo_shape_set_color(bat_rect, make_color(ui_handle.bat_rect[i].destroy_color.r, ui_handle.bat_rect[i].destroy_color.g, ui_handle.bat_rect[i].destroy_color.b));
-    }
-
-    //点亮
-    for(int i=0; i<bright_value; i++)
-    {
-        compo_shape_t* bat_rect = compo_getobj_byid(ui_handle.bat_rect[i].id);
-        compo_shape_set_color(bat_rect, make_color(ui_handle.bat_rect[i].bright_color.r, ui_handle.bat_rect[i].bright_color.g, ui_handle.bat_rect[i].bright_color.b));
-    }
+    char txt_buf[30];
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
+    compo_textbox_set(txt_val,txt_buf);
+    compo_textbox_set_visible(txt_title,BAT_PERCENT_VALUE<=20);
+    compo_picturebox_set_visible(pic,BAT_PERCENT_VALUE>20);
 
 }
 
 //创建充电窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_charge_form_create(void)
 {
+    char txt_buf[30];
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_NULL]);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_1_LOW_BATTERY_ICON_PIC168X227_X36_Y53_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
+
     ///设置动图
-    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_CURRENT_PROCESS_90X90_X74_Y192_00_BIN);
-    compo_picturebox_set_pos(picbox, 74+90/2, 192+90/2);
-    compo_picturebox_cut(picbox, 0, 12);
-    compo_setid(picbox,COMPO_ID_GIF_PIC);
+    // picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_CURRENT_PROCESS_90X90_X74_Y192_00_BIN);
+    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 240);
+    // compo_picturebox_cut(picbox, 10, 11);
+    // compo_setid(picbox,COMPO_ID_GIF_PIC);
 
-    //设置小图标
-    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_BATT_16X19_X112_Y171_BIN);///电量小图片
-    compo_picturebox_set_pos(pic,112+16/2, 171+19/2);
-    compo_setid(pic, COMPO_ID_SMALL_ICON);
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
+    compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y-20,150,50);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,COMPO_ID_NUM_BAT_VALUE);
 
-    //创建BAT Vaule
-    compo_number_t* bat_value = compo_number_create(frm, ui_handle.bat_value.res, ui_handle.bat_value.rev);
-    compo_number_set_align(bat_value, ui_handle.bat_value.num_align);
-    compo_number_set_layout(bat_value, ui_handle.bat_value.num_layout);
-    compo_number_set_zfill(bat_value, ui_handle.bat_value.flag_zfill);
-    compo_number_set_margin(bat_value, ui_handle.bat_value.margin);
-    compo_number_set_pos(bat_value, ui_handle.bat_value.x, ui_handle.bat_value.y);
-    compo_number_set(bat_value, 100);
-    compo_setid(bat_value, ui_handle.bat_value.id);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_LOW_BATTERY]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+20,150,30);
+    compo_textbox_set_forecolor(textbox,COLOR_RED);
+    compo_textbox_set(textbox,i18n[STR_LOW_BATTERY]);
+    compo_setid(textbox,COMPO_ID_TTXT);
+    compo_textbox_set_visible(textbox,BAT_PERCENT_VALUE<=20);
 
-    //创建 %
-    compo_picturebox_t* bat_percent = compo_picturebox_create(frm, ui_handle.bat_percent.res);
-    compo_picturebox_set_pos(bat_percent, ui_handle.bat_percent.x, ui_handle.bat_percent.y);
-    compo_setid(bat_percent, ui_handle.bat_percent.id);
+    picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_BATT_16X19_X112_Y171_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
+    compo_setid(picbox,COMPO_ID_BAT_PIC);
+    compo_picturebox_set_visible(picbox,BAT_PERCENT_VALUE>20);
 
-    //创建rect
-    for (int i=0; i<sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0]); i++)
-    {
-        compo_shape_t* bat_rect = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-        compo_shape_set_color(bat_rect, make_color(ui_handle.bat_rect[i].bright_color.r, ui_handle.bat_rect[i].bright_color.g, ui_handle.bat_rect[i].bright_color.b));
-        compo_shape_set_location(bat_rect, ui_handle.bat_rect[i].x, ui_handle.bat_rect[i].y, ui_handle.bat_rect[i].w, ui_handle.bat_rect[i].h);
-        compo_shape_set_radius(bat_rect, ui_handle.bat_rect[i].rev);
-        compo_setid(bat_rect, ui_handle.bat_rect[i].id);
-    }
 
     return frm;
 }

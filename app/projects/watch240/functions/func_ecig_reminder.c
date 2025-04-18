@@ -76,9 +76,10 @@ compo_form_t *func_ecig_reminder_form_create(void)
 
                 // 创建文本
                 char str_buff[8];
-                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_DELETE_SUCCES])); /// PASS
-                compo_textbox_set(textbox, i18n[STR_DELETE_SUCCES]);
-                compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 60);
+                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_TARGET_PUFFSGET])); /// PASS
+                compo_textbox_set(textbox, i18n[STR_TARGET_PUFFSGET]);
+                compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 60,220,90);
+                compo_textbox_set_multiline(textbox, true);
                 compo_textbox_set_forecolor(textbox, COLOR_WHITE);
             }
             else
@@ -108,16 +109,27 @@ compo_form_t *func_ecig_reminder_form_create(void)
         if (get_gear_func() == 0)
         {
             picbox = compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_IN_DANG_BIN);
-            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 40);
+            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50);
+
+            compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SINGLE])); /// PASS
+            compo_textbox_set(textbox, i18n[STR_SINGLE]);
+            compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
+            compo_textbox_set_forecolor(textbox, COLOR_WHITE);
         }
         else
         {
             picbox = compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_IN_SHUANG_BIN);
-            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 40);
+            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50);
+
+            compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_DUAL])); /// PASS
+            compo_textbox_set(textbox, i18n[STR_DUAL]);
+            compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
+            compo_textbox_set_forecolor(textbox, COLOR_WHITE);
         }
-        compo_textbox_set(txt, i18n[STR_INSERT]);
-        txt = compo_textbox_create(frm, 20);
-        compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH / 2, GUI_SCREEN_HEIGHT / 2 + 50);
+
+        compo_textbox_t *txt2 = compo_textbox_create(frm, strlen(i18n[STR_INSERT]));
+        compo_textbox_set(txt2, i18n[STR_INSERT]);
+        compo_textbox_set_pos(txt2, GUI_SCREEN_WIDTH / 2, GUI_SCREEN_HEIGHT / 2 +40);
 
         buf[0] = ecig_get_res() / 10 + '0';
         buf[1] = '.';
@@ -130,7 +142,9 @@ compo_form_t *func_ecig_reminder_form_create(void)
         // buf[8] = '.';
         // buf[9] = ecig_get_res2() % 10 + '0';
         // buf[10] = 'R';
-        compo_textbox_set(txt, buf);
+        compo_textbox_t *txt1=compo_textbox_create(frm, 20);
+        compo_textbox_set(txt1, buf) ;
+        compo_textbox_set_pos(txt1, GUI_SCREEN_WIDTH / 2, GUI_SCREEN_HEIGHT / 2 + 70);
     }
     else if (sys_cb.smoke_index == LOW_POWER)
     {

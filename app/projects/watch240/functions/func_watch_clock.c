@@ -200,7 +200,8 @@ static void func_sliding_unlcok_screen_message(size_msg_t msg)
             break;
         case MSG_CTP_LONG:
             break;
-
+        case KU_BACK:
+            break;
         default:
             func_message(msg);
             break;
@@ -212,12 +213,16 @@ static void func_sliding_unlcok_screen_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_sliding_unlcok_t));
     func_cb.frm_main = func_sliding_unlcok_screen_form_create();
+    sys_cb.passwordflag = 1;
+    printf("sys_cb.passwordflag = 1;sys_cb.passwordflag = 1;\n");
 }
 
 //退出童锁功能
 static void func_sliding_unlcok_screen_exit(void)
 {
     func_cb.last = FUNC_SLIDING_UNLOCK_SCREEN;
+    sys_cb.passwordflag = 0;
+    printf("sys_cb.passwordflag = 0;sys_cb.passwordflag = 0;\n");
 }
 
 //童锁功能

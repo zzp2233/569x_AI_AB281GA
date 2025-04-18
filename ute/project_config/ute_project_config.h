@@ -11,6 +11,7 @@
 
 #define PROJECT_AB281_SUPPORT        0
 #define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T62,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
+#define PROJECT_AB281AB_SUPPORT      0 /*! 同乐达 T69,在T62基础上增加编码器,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-04-18 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
 #define PROJECT_AB281C_SUPPORT       0 /*! 同乐达 T60, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
 #define PROJECT_AB281D_SUPPORT       1 /*! 共鑫 天之蓝UI, TFT 240x284 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
@@ -19,6 +20,8 @@
 #include"ute_project_config_ab281.h"
 #elif PROJECT_AB281A_SUPPORT
 #include"ute_project_config_ab281a.h"
+#elif PROJECT_AB281AB_SUPPORT
+#include"ute_project_config_ab281ab.h"
 #elif PROJECT_AB281B_SUPPORT
 #include"ute_project_config_ab281b.h"
 #elif PROJECT_AB281C_SUPPORT

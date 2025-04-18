@@ -165,6 +165,7 @@ enum
     FUNC_DIAL_AND_THEME, //表盘&主题界面
     FUNC_HEAR_ABOUT,
     FUNC_OXYGEN_ABOUT,
+    FUNC_BREATHE_RUN,                           //呼吸训练运行
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN
     FUNC_MUSIC,
@@ -216,6 +217,9 @@ enum
     FUNC_SYSTEM,    //系统设置列表界面
 #if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
     FUNC_BRIGHT_SET,    //亮度设置列表
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    FUNC_TOOLBOX,   //工具箱
 #endif
     FUNC_MAX_NUM,           //用于计数
 };

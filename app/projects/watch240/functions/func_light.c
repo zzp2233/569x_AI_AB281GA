@@ -464,6 +464,83 @@ static void func_light_button_click(void)
     }
     func_light_disp_Refresh();
 }
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+//组件ID
+enum
+{
+    //按键
+    COMPO_ID_LIGHT_PIC = 1,
+    COMPO_ID_LIGHT_BTN,
+};
+
+#define SPACING_COUNT  (-40)
+typedef struct f_light_t_
+{
+    bool touch_flag;
+    s32  move_offset;
+    s32  move_offset_old;
+    s8   level_old;
+    s8   level_value;
+} f_light_t;
+//创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_light_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_LIGHT]);
+    //亮度
+    compo_picturebox_t *light_pic = compo_picturebox_create(frm, UI_BUF_I335001_27_MORE_28_SET_3_BRIGHTNESS_2_BRIGHTNESS_SETTING_ICON_68X200_X86_Y58_00_BIN);
+    compo_setid(light_pic, COMPO_ID_LIGHT_PIC);
+    compo_picturebox_set_pos(light_pic, GUI_SCREEN_CENTER_X, 58+200/2);
+    compo_picturebox_cut(light_pic,sys_cb.light_level-1,5);
+
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn,GUI_SCREEN_CENTER_X, 58+200/2,68,200);
+    compo_setid(btn,COMPO_ID_LIGHT_BTN);
+
+    if(func_cb.sta == FUNC_LIGHT)
+    {
+        f_light_t *f_light = (f_light_t *)func_cb.f_cb;
+        f_light->level_old = (s8)sys_cb.light_level;
+    }
+
+    return frm;
+}
+static void func_light_disp_move_handle(void)
+{
+    f_light_t *f_light = (f_light_t *)func_cb.f_cb;
+    if(f_light->touch_flag)//触摸状态
+    {
+        s32 dx, dy;
+        f_light->touch_flag = ctp_get_dxy(&dx, &dy);
+
+        compo_picturebox_t *light_pic = compo_getobj_byid(COMPO_ID_LIGHT_PIC);
+        if(f_light->touch_flag)//触摸状态
+        {
+            s8 level_data= (dy/SPACING_COUNT)+f_light->level_old;
+
+            if(level_data<1)
+                level_data=1;
+            else if(level_data>5)
+                level_data=5;
+
+            if(level_data != f_light->level_value)
+            {
+                printf("level_data:%d\n",level_data);
+                f_light->level_value = level_data;
+                compo_picturebox_cut(light_pic,(uint8_t)level_data-1,5);
+                tft_bglight_set_level((uint8_t)level_data,false);
+            }
+        }
+        else
+        {
+            f_light->level_old = f_light->level_value;
+        }
+    }
+}
 #else
 typedef struct f_light_t_
 {
@@ -485,16 +562,28 @@ static void func_light_disp_Refresh(void)
 //亮度调节功能事件处理
 static void func_light_process(void)
 {
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    func_light_disp_move_handle();
+#endif
     func_process();
 }
 
 //亮度调节功能消息处理
 static void func_light_message(size_msg_t msg)
 {
-
+    f_light_t *f_light = (f_light_t *)func_cb.f_cb;
     switch (msg)
     {
+        case MSG_CTP_TOUCH:
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+            if(compo_get_button_id() == COMPO_ID_LIGHT_BTN && f_light->touch_flag == false)
+            {
+                f_light->touch_flag = true;
+            }
+#endif
+            break;
         case MSG_CTP_CLICK:
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
             func_light_button_click();
             uint8_t level_tmp = sys_cb.light_level;
             if(level_tmp < DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
@@ -506,23 +595,7 @@ static void func_light_message(size_msg_t msg)
                 level_tmp = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
             }
             tft_bglight_set_level(level_tmp,false);
-            break;
-
-        case MSG_CTP_SHORT_UP:
-        case MSG_CTP_SHORT_DOWN:
-
-        case MSG_CTP_SHORT_LEFT:
-        case MSG_CTP_LONG:
-            func_light_disp_Refresh();
-            break;
-
-        case MSG_CTP_SHORT_RIGHT:
-            func_light_disp_Refresh();
-            func_message(msg);
-            break;
-
-        case MSG_QDEC_FORWARD:
-        case MSG_QDEC_BACKWARD:
+#endif
             break;
 
         default:
@@ -536,12 +609,15 @@ static void func_light_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_light_t));
     func_cb.frm_main = func_light_form_create();
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     func_light_disp_Refresh();
+#endif
 }
 
 //退出亮度调节功能
 static void func_light_exit(void)
 {
+    f_light_t *f_light = (f_light_t *)func_cb.f_cb;
     uteModuleGuiCommonSetBackLightPercent(tft_cb.tft_bglight_duty);
     func_cb.last = FUNC_LIGHT;
 }

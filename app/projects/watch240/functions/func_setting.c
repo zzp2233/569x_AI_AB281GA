@@ -306,7 +306,10 @@ static void func_set_sub_list_switch_to_clock(void)
 static void func_set_sub_list_process(void)
 {
     f_set_list_t *f_set = (f_set_list_t *)func_cb.f_cb;
-    compo_listbox_move(f_set->listbox);
+    if(f_set->listbox)
+    {
+        compo_listbox_move(f_set->listbox);
+    }
     func_process();
 }
 
@@ -349,15 +352,6 @@ static void func_set_sub_list_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_set_sub_list_icon_click();                //单击图标
             break;
-
-        case MSG_CTP_LONG:
-            break;
-
-        case MSG_CTP_SHORT_RIGHT:
-            func_message(msg);
-            // sys_cb.set_idx = 0;
-            break;
-
         case KU_DELAY_BACK:
             if (tick_check_expire(func_cb.enter_tick, TICK_IGNORE_KEY))
             {
@@ -377,7 +371,10 @@ void func_set_sub_exit(void)
 //    printf("func_set_sub_exit\r\n");
     f_set_list_t *f_set = (f_set_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_set->listbox;
-    func_free(listbox->mcb);                                            //释放移动控制块
+    if(listbox != NULL)
+    {
+        func_free(listbox->mcb);
+    }                                      //释放移动控制块
     func_cb.last = FUNC_SETTING;
 }
 

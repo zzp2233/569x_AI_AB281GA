@@ -1041,9 +1041,6 @@
 		<Unit filename="functions/func_blood_oxygen.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="functions/func_blood_pressure.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="functions/func_bloodsugar.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1051,6 +1048,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_breathe_finish.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_breathe_run.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_breathe_sub_mode.c">
@@ -1376,6 +1376,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_timer.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_toolbox.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_up_watch_dial.c">

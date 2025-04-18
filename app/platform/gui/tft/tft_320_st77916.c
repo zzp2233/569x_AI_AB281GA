@@ -176,7 +176,7 @@ uint32_t tft_read_id(void)
 void tft_320_st77916_init(void)
 {
     printf("tft_st77916_init\n");
-
+#if DEVELOPMENT_BOARD_TYPE != DEVELOPMENT_BOARD_USER
     WriteComm(0xF0);
     WriteData(0x08);
 
@@ -885,6 +885,173 @@ void tft_320_st77916_init(void)
 //      WriteComm(0x2C);
 
     CommEnd();
+#else
+    WriteComm(0xDF);
+    WriteData(0x98);
+    WriteData(0x53);
+
+    WriteComm(0xDE);
+    WriteData(0x00);
+
+    WriteComm(0xB2);
+    WriteData(0x23);
+
+    WriteComm(0xB7);
+    WriteData(0x00);
+    WriteData(0x2D);
+    WriteData(0x00);
+    WriteData(0x55);
+
+    WriteComm(0xBB);
+    WriteData(0x1C);
+    WriteData(0x1A);
+    WriteData(0x55);
+    WriteData(0x73);
+    WriteData(0x6F);
+    WriteData(0xF0);
+
+    WriteComm(0xC0);
+    WriteData(0x44);
+    WriteData(0xA4);
+
+    WriteComm(0xC1);
+    WriteData(0x12);
+
+    WriteComm(0xC2);
+    WriteData(0x00);
+
+    WriteComm(0xC3);
+    WriteData(0x7D);
+    WriteData(0x07);
+    WriteData(0x14);
+    WriteData(0x06);
+    WriteData(0xC8);
+    WriteData(0x71);
+    WriteData(0x6C);
+    WriteData(0x77);
+
+    WriteComm(0xC4);
+    WriteData(0x00);//00=60Hz 04=52Hz 08=42Hz
+    WriteData(0x00);
+    WriteData(0xA0);
+    WriteData(0x79);
+    WriteData(0x13);
+    WriteData(0x1A);
+    WriteData(0x16);
+    WriteData(0x79);
+    WriteData(0x13);
+    WriteData(0x1A);
+    WriteData(0x16);
+    WriteData(0x82);
+
+    //SET_R_GAMMA Fit G2.5 20230822
+    WriteComm(0xC8);    //G2.2
+    WriteData(0x3F);    //0x3F
+    WriteData(0x35);    //0x36
+    WriteData(0x2E);    //0x30
+    WriteData(0x27);    //0x29
+    WriteData(0x2D);    //0x30
+    WriteData(0x2E);    //0x32
+    WriteData(0x27);    //0x2B
+    WriteData(0x28);    //0x2C
+    WriteData(0x26);    //0x2A
+    WriteData(0x24);    //0x28
+    WriteData(0x1F);    //0x26
+    WriteData(0x10);    //0x17
+    WriteData(0x0B);    //0x12
+    WriteData(0x08);    //0x0D
+    WriteData(0x03);    //0x07
+    WriteData(0x01);    //0x02
+    WriteData(0x3F);    //0x3F
+    WriteData(0x35);    //0x36
+    WriteData(0x2E);    //0x30
+    WriteData(0x27);    //0x29
+    WriteData(0x2D);    //0x30
+    WriteData(0x2E);    //0x32
+    WriteData(0x27);    //0x2B
+    WriteData(0x28);    //0x2C
+    WriteData(0x26);    //0x2A
+    WriteData(0x24);    //0x28
+    WriteData(0x1F);    //0x26
+    WriteData(0x10);    //0x17
+    WriteData(0x0B);    //0x12
+    WriteData(0x08);    //0x0D
+    WriteData(0x03);    //0x07
+    WriteData(0x01);    //0x02
+
+
+    WriteComm(0xD0);
+    WriteData(0x04);
+    WriteData(0x06);
+    WriteData(0x6B);
+    WriteData(0x0F);
+    WriteData(0x00);
+
+    WriteComm(0xD7);
+    WriteData(0x30);
+    WriteData(0x30);
+
+    WriteComm(0xE6);
+    WriteData(0x14);
+
+    WriteComm(0xDE);
+    WriteData(0x01);
+
+    WriteComm(0xB7);
+    WriteData(0x03);
+    WriteData(0x13);
+    WriteData(0xEF);
+    WriteData(0x35);
+    WriteData(0x35);
+
+    WriteComm(0xC1);
+    WriteData(0x14);
+    WriteData(0x15);
+    WriteData(0xC0);
+
+    WriteComm(0xC2);
+    WriteData(0x06);
+    WriteData(0x3A);
+
+    WriteComm(0xC4);
+    WriteData(0x72);
+    WriteData(0x12);
+
+    WriteComm(0xBE);
+    WriteData(0x00);
+
+    WriteComm(0xDE);
+    WriteData(0x00);
+
+    WriteComm(0x35);
+    WriteData(0x00);
+
+    WriteComm(0x3A);
+    WriteData(0x05);//06=RGB666；05=RGB565
+
+    WriteComm(0x2A);
+    WriteData(0x00);
+    WriteData(0x00);//Start_X=00
+    WriteData(0x00);
+    WriteData(0xEF);//End_X=239
+
+    WriteComm(0x2B);
+    WriteData(0x00);
+    WriteData(0x0C);//Start_Y=12
+    WriteData(0x01);
+    WriteData(0x33);//End_Y=307
+
+
+    WriteComm(0x11);
+    CommEnd();
+    delay_ms(120);
+
+
+    WriteComm(0x29);
+    delay_ms(50);
+    CommEnd();
+
+#endif
 }
 #endif
 

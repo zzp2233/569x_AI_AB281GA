@@ -37,10 +37,10 @@
 #endif
 
 #if (GUI_SELECT == GUI_TFT_320_ST77916)
-#define GUI_SCREEN_WIDTH                320
-#define GUI_SCREEN_HEIGHT               385
+#define GUI_SCREEN_WIDTH                240
+#define GUI_SCREEN_HEIGHT               296
 #define GUI_SCREEN_OFS_X                0
-#define GUI_SCREEN_OFS_Y                0
+#define GUI_SCREEN_OFS_Y                12
 #define GUI_USE_TFT
 #elif (GUI_SELECT == GUI_TFT_RGBW_320_ST77916)
 #define GUI_SCREEN_WIDTH                240

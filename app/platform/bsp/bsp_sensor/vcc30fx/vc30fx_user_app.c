@@ -6,6 +6,8 @@
  * @LastEditors: Tse
  * @Description:
  **********************************************************************************************/
+#include "include.h"
+
 #if (SENSOR_HR_SEL == SENSOR_HR_VC30FX)
 /* 驱动头文件 */
 #include "vc30fx_driver_com.h"
@@ -14,8 +16,6 @@
 /* 算法头文件 */
 #include "algo.h"
 #include "spo2Algo_16bit.h"
-
-#include "include.h"
 #include "ute_module_sport.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_module_message.h"

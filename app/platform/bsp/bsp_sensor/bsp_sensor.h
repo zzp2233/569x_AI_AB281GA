@@ -30,6 +30,7 @@ typedef enum
     HR_WORK_MODE_FACTORY1,
     HR_WORK_MODE_HRSPO2,
 
+    HR_WORK_MODE_UNKNOWN,
     HR_WORK_MODE_MAX_NUNBER
 } sensor_hr_mode_t;
 

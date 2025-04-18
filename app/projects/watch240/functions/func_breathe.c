@@ -112,7 +112,7 @@ compo_form_t *func_breathe_form_create(void)
     uteModuleCharencodeReplaceSubString( i18n[STR_MIN_JOINT],txt_buf,"##",txt_num_buf);
     compo_cardbox_text_set(cardbox,0,txt_buf);
 
-    cardbox = compo_cardbox_create(frm,0,3,1,228,144);
+    cardbox = compo_cardbox_create(frm,0,3,1,228,68);
     compo_cardbox_set_pos(cardbox,GUI_SCREEN_CENTER_X,126+34);
     compo_setid(cardbox,COMPO_ID_BTN_MODE);
 
@@ -160,7 +160,7 @@ static void func_breathe_button_click(void)
 
     switch(id)
     {
-        case COMPO_ID_BTN_START:
+        case COMPO_ID_BTN_START://
             uteTaskGuiStartScreen(FUNC_BREATHE_RUN, 0, __func__);
             break;
         default:

@@ -964,30 +964,22 @@ typedef struct f_breathe_sub_time_t_
 
 const uint16_t BREATHE_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
 // 函数功能：获取设置时间（上下 & 上上下下 ）的数
-static void func_breathe_sub_time_get_timer(uint8_t timer, u8 *timer_data)
+// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+static void func_breathe_sub_time_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
 {
-    char txt_num[5] = {1, 2, 3, 4, 5};
-    uint8_t i;
-    uint8_t start_index = (3 + timer - 1) % 5;  // 计算起始索引
+    const char txt_num[5] = {1, 2, 3, 4, 5}; // 固定数组
 
-    for (i = 0; i < 5; i++)
+    // 1. 第一步：更新timer的值（原func_set_breathe_time_get_timer逻辑）
+    int index = (*timer - 1 + num) % 5; // 转换为0-4索引并应用偏移
+    if (index < 0) index += 5;         // 处理负数索引
+    *timer = txt_num[index];            // 更新timer到新值（1-5）
+
+    // 2. 第二步：生成环形排列的timer_data数组（原func_breathe_sub_time_get_timer逻辑）
+    uint8_t start_index = (3 + *timer - 1) % 5; // 计算起始索引（基于更新后的timer）
+    for (uint8_t i = 0; i < 5; i++)
     {
-        timer_data[i] = txt_num[(start_index + i) % 5];
+        timer_data[i] = txt_num[(start_index + i) % 5]; // 环形填充
     }
-}
-// 函数功能：根据timer和num的偏移量获取txt_num数组元素并更新timer指向的值
-static void func_set_breathe_time_get_timer(uint8_t *timer, s8 num)
-{
-    char txt_num[5] = {1, 2, 3, 4, 5};
-    // 计算偏移后的索引，注意要将timer的值转换为0 - 4的范围
-    int index = (*timer - 1 + num) % 5;
-    // 处理负数索引的情况
-    if (index < 0)
-    {
-        index += 5;
-    }
-    // 更新timer指向的值为txt_num数组中对应索引的元素
-    *timer = txt_num[index];
 }
 //创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_breathe_sub_time_form_create(void)
@@ -996,12 +988,13 @@ compo_form_t *func_breathe_sub_time_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     char txt_buf[20];
     u8 txt_data[5];
+    u8 breathe_time = sys_cb.breathe_duration/60000;
 
     ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
 
-    func_breathe_sub_time_get_timer(1,txt_data);///获取时间
+    func_breathe_sub_time_get_timer(&breathe_time,txt_data,0);///获取时间
     //创建一个页面用于限制滚动的时间文本
     widget_page_t* page = widget_page_create(frm->page_body);
     widget_set_location(page, GUI_SCREEN_CENTER_X, 62+130/2, GUI_SCREEN_WIDTH,130);
@@ -1014,6 +1007,7 @@ compo_form_t *func_breathe_sub_time_form_create(void)
         snprintf(txt_buf,sizeof(txt_buf),"%02d",txt_data[idx-COMPO_ID_TXT_1]);
         compo_setid(txt,idx);
         compo_textbox_set(txt,txt_buf);
+        compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
     }
 
     compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
@@ -1056,19 +1050,12 @@ static void func_breathe_set_time_sub_move(void)
 
             if(f_disturd_set->offset != f_disturd_set->offset_old)
             {
+                if(f_disturd_set->offset != 0)
+                {
+                    func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,-f_disturd_set->offset+f_disturd_set->offset_old);///获取时间
+                }
                 f_disturd_set->offset_old = f_disturd_set->offset;
-                if(f_disturd_set->offset >=1)
-                {
-                    func_set_breathe_time_get_timer(&f_disturd_set->min,-1);
-                }
-                else if(f_disturd_set->offset <= -1)
-                {
-                    func_set_breathe_time_get_timer(&f_disturd_set->min,1);
-                }
             }
-
-            func_breathe_sub_time_get_timer(f_disturd_set->min,f_disturd_set->breathe_min);///获取时间
-
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
             {
                 compo_textbox_t *txt = compo_getobj_byid(idx);
@@ -1076,6 +1063,7 @@ static void func_breathe_set_time_sub_move(void)
                 compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]+f_disturd_set->move_dy);
                 snprintf(txt_buf,sizeof(txt_buf),"%02d",f_disturd_set->breathe_min[idx-COMPO_ID_TXT_1]);
                 compo_textbox_set(txt,txt_buf);
+                compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
             }
         }
         else   //松手状态
@@ -1091,10 +1079,12 @@ static void func_breathe_set_time_sub_move(void)
 //单击按钮
 static void func_breathe_sub_time_button_click(void)
 {
+    f_breathe_sub_time_t *f_disturd_set = (f_breathe_sub_time_t*) func_cb.f_cb;
     int id = compo_get_button_id();
     switch (id)
     {
         case COMPO_ID_BTN_SURE:
+            sys_cb.breathe_duration = f_disturd_set->min * 60000;
             func_backing_to();
             break;
         default:
@@ -1104,16 +1094,15 @@ static void func_breathe_sub_time_button_click(void)
 static void func_breathe_sub_time_button_touch_handle(void)
 {
     f_breathe_sub_time_t *f_breathe_sub_time = (f_breathe_sub_time_t*) func_cb.f_cb;
-    f_breathe_sub_time->touch_flag = true;
-    // if(f_breathe_sub_time->touch_flag == false)
-    // {
-    //     switch(compo_get_button_id())
-    //     {
-    //         case COMPO_ID_BTN_MIN_BG:
-    //             f_breathe_sub_time->touch_flag = true;
-    //             break;
-    //     }
-    // }
+    if(f_breathe_sub_time->touch_flag == false)
+    {
+        switch(compo_get_button_id())
+        {
+            case COMPO_ID_BTN_MIN_BG:
+                f_breathe_sub_time->touch_flag = true;
+                break;
+        }
+    }
 
 }
 #else

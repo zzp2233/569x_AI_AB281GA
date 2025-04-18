@@ -764,7 +764,7 @@ static void func_activity_message(size_msg_t msg)
             }
             break;
         case MSG_CTP_CLICK:
-            // func_cb.sta = FUNC_HEART_WARNING;
+            // func_cb.sta = FUNC_CHARGE;
             break;
         default:
             func_message(msg);

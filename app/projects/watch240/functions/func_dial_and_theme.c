@@ -23,8 +23,8 @@ typedef struct f_dial_and_theme_list_t_
 
 static const compo_listbox_item_t tbl_dial_and_theme_list[] =
 {
-    {STR_DIAL_SWICTH, UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_1_INTEREST_RATES_SCREEN_ICON_ARROW_10X15_X214_Y73_X214_Y211_X214_Y348_BIN,        .func_sta = FUNC_CLOCK_PREVIEW}, //更换表盘
-    {STR_STYLE,       UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_1_INTEREST_RATES_SCREEN_ICON_ARROW_10X15_X214_Y73_X214_Y211_X214_Y348_BIN,        .func_sta = FUNC_STYLE}, //主题
+    {STR_DIAL_SWICTH, 0,        .func_sta = FUNC_CLOCK_PREVIEW}, //更换表盘
+    {STR_STYLE,       0,        .func_sta = FUNC_STYLE}, //主题
 };
 
 
@@ -42,7 +42,7 @@ compo_form_t *func_dial_and_theme_form_create(void)
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_dial_and_theme_list, DIAL_AND_THEME_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_1_START_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_BIN);
 
 
     compo_setid(listbox, COMPO_ID_LISTBOX);

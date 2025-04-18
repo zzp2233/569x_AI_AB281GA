@@ -177,7 +177,7 @@ void test_2st_gear_func(void)
 //单发
 u8 get_gear_func(void)
 {
-    printf("%s \n",__func__);
+    // printf("%s \n",__func__);
     return ecig_cfg.smoke_position_swich;
 
 }

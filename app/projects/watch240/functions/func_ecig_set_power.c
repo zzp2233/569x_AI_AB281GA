@@ -22,7 +22,7 @@ void load_power_and_index(int *power, int *index);
 
 enum
 {
-    COMPO_ID_BTN_ECIG_SET_D_D,  // 单发
+    COMPO_ID_BTN_ECIG_SET_D_D=0xff,  // 单发
     COMPO_ID_BTN_ECIG_SET_S_D,  // 双发
     COMPO_ID_BTN_ECIG_SET_D_D1, // 单发按钮
     COMPO_ID_BTN_ECIG_SET_S_D1, // 双发按钮

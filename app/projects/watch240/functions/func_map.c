@@ -32,8 +32,6 @@ compo_form_t *func_map_form_create(void)
 
     compo_form_t * frm = func_3d_batter_form_create();
 
-
-
     return frm;
 }
 

@@ -325,6 +325,8 @@ static void func_clock_button_click(void)
     func_clock_cube_disk_icon_click();                //单击图标
 }
 
+#define CUBE_RADIUS_MAX             60                                                             //切图正方形一倍
+#define CUBE_RADIUS_MIN             45
 //立方体表盘
 compo_form_t *func_clock_cube_form_create(void)
 {
@@ -337,8 +339,13 @@ compo_form_t *func_clock_cube_form_create(void)
 //    printf("w:%d h:%d\n",gui_image_get_size(UI_BUF_DIALPLATE_CUBE_CALL_BIN).wid,gui_image_get_size(UI_BUF_DIALPLATE_CUBE_CALL_BIN).hei);
 
     //创建立方体菜单
-    compo_cube_t *cube = compo_cube_create(frm, CUBE_RADIUS, tbl_menu_cube, CUBE_ITEM_CNT);
-    compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
+    // compo_cube_t *cube = compo_cube_create(frm, CUBE_RADIUS, tbl_menu_cube, CUBE_ITEM_CNT);
+    compo_cube_t *cube = compo_cube_create(frm, CUBE_RADIUS_MAX, tbl_menu_cube, CUBE_ITEM_CNT);
+    compo_cube_set_type(cube, COMPO_CUBE_TYPE_POWER);
+    // compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
+    compo_cube_add_element(cube, 0, UI_BUF_I330001_3D_BATTER_LIGHT_BIN, 18);
+
+    compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20 );
     compo_setid(cube, COMPO_ID_CUBE);
 
 //    s32 ax, ay;
@@ -656,6 +663,133 @@ void func_clock_sub_message(size_msg_t msg)
 
 #define CUBE_DIAL_ANIMATION_TICK_EXPIRE               18                                  //动画单位时间Tick(ms)
 #define CUBE_DIAL_FOCUS_AUTO_STEP_DIV                 10
+
+enum
+{
+    DIAL_3D_CLICK_STA_NONE,   //None
+    DIAL_3D_CLICK_STA_DEC,    //缩小
+    DIAL_3D_CLICK_STA_INC,    //放大
+    DIAL_3D_CLICK_STA_END,    //结束
+    DIAL_3D_CLICK_STA_STOP,   //停顿
+};
+
+
+static bool click = false;
+
+void func_3d_dial_click(void)
+{
+    if (click == false)
+    {
+        click = true;
+    }
+}
+void func_clock_3d_process(void)
+{
+
+    compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+    compo_cube_move(cube);
+    static u32 tick = 0;
+    static u8 sta = DIAL_3D_CLICK_STA_NONE; //0:None 1:开始缩小; 2:开始放大; 3:结束; 4:停顿
+    u32 width_max = cube->ele[0].location.wid;//gui_image_get_size(tbl_menu_ele[0].res_addr).wid / 2;
+    static u32 width;
+    static u8 stop_cnt = 0;
+    // printf("%s,click=%d,flag_move_auto=%d\n",__func__, click,cube->move_cb.flag_move_auto);
+    if (cube->move_cb.flag_move_auto==0)
+    {
+        if(tick_check_expire(cube->move_cb.tick, 18))
+        {
+            s32 da;
+            cube->move_cb.tick = tick_get();
+            da = 20;
+            compo_cube_roll(cube, da);
+            compo_cube_update(cube);
+        }
+    }
+
+
+    if (click)
+    {
+        if (tick_check_expire(tick, 100))
+        {
+            tick = tick_get();
+
+            switch (sta)
+            {
+                case DIAL_3D_CLICK_STA_NONE:
+                    width = width_max;
+                    if (cube->radius >= CUBE_RADIUS_MAX)
+                    {
+                        sta = DIAL_3D_CLICK_STA_DEC;
+                    }
+                    break;
+
+                case DIAL_3D_CLICK_STA_DEC:
+                    cube->radius--;
+                    //1:x = CUBE_RADIUS_MIN * 1414/1000 : (s32)cube->radius * 1414 / 1000;
+                    if ((((s32)cube->radius * 1414 / 1000) / (CUBE_RADIUS_MIN * 1414/1000)) <= width_max)
+                    {
+                        width--;
+                        if (width < 0)
+                        {
+                            width = 0;
+                        }
+                    }
+                    if (cube->radius <= CUBE_RADIUS_MIN)
+                    {
+                        width = 0;
+                        sta =DIAL_3D_CLICK_STA_STOP;
+                    }
+                    break;
+
+                case DIAL_3D_CLICK_STA_INC:
+                    cube->radius++;
+
+                    if ((((s32)cube->radius * 1414 / 1000) / (CUBE_RADIUS_MIN * 1414/1000)) <= width_max)
+                    {
+                        width++;
+                        if (width > width_max)
+                        {
+                            width = width_max;
+                        }
+                    }
+
+                    if (cube->radius >= CUBE_RADIUS_MAX)
+                    {
+                        width = width_max;
+                        sta = DIAL_3D_CLICK_STA_END;
+                    }
+                    break;
+
+                case DIAL_3D_CLICK_STA_END:
+                    click = false;
+                    sta = DIAL_3D_CLICK_STA_NONE;
+                    break;
+
+                case DIAL_3D_CLICK_STA_STOP:
+                    stop_cnt++;
+                    if (stop_cnt > 5)
+                    {
+                        sta = 2;
+                        stop_cnt = 0;
+                    }
+                    break;
+            }
+
+            for (int i=0; i<CUBE_ITEM_CNT; i++)
+            {
+                widget_image3d_set_r(cube->item_img[i], cube->radius);
+            }
+
+            for (int i=0; i<CUBE_ITEM_ELE_CNT; i++)
+            {
+                if (cube->ele[i].img3d != NULL)
+                {
+                    widget_set_size(cube->ele[i].img3d, width, cube->ele[i].location.hei);
+                }
+            }
+        }
+    }
+}
 //时钟表盘功能事件处理
 static void func_clock_process(void)
 {
@@ -663,17 +797,11 @@ static void func_clock_process(void)
     if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
     {
 
-        compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
-        compo_cube_move(cube);
-        if (cube->move_cb.flag_move_auto==0)//滑动模式下，惯性停止时自动旋转
-        {
-            if(tick_check_expire(cube->move_cb.tick, CUBE_DIAL_ANIMATION_TICK_EXPIRE))
-            {
-                cube->move_cb.tick = tick_get();
-                compo_cube_roll(cube, CUBE_DIAL_FOCUS_AUTO_STEP_DIV);
-                compo_cube_update(cube);
-            }
-        }
+        func_clock_3d_process();
+        // compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+        // compo_cube_move(cube);
+
+
     }
     else if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {
@@ -717,22 +845,29 @@ void func_clock_recreate_dial(void)
 static void func_clock_message(size_msg_t msg)
 {
     f_clock_t *f_clock = (f_clock_t*)func_cb.f_cb;
-
+    bool flag_cube_touch = false;
     point_t pt = ctp_get_sxy();
-    s16 cube_limit_x = (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
-    s16 cube_limit_y = (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
-    bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
-    bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
-
+    // s16 cube_limit_x = (GUI_SCREEN_WIDTH - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
+    // s16 cube_limit_y = (GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid) / 2;
+    // bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
+    // bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + gui_image_get_size(UI_BUF_DIALPLATE_CUBE_BG_BIN).wid));
+    s16 cube_limit_x = (GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X/2);
+    s16 cube_limit_y = (GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y/2);
+    bool flag_cube_touch_x = (pt.x >= cube_limit_x) && (pt.x <= (cube_limit_x + GUI_SCREEN_CENTER_X));
+    bool flag_cube_touch_y = (pt.y >= cube_limit_y) && (pt.y <= (cube_limit_y + GUI_SCREEN_CENTER_Y));
 
     if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX && flag_cube_touch_x && flag_cube_touch_y)
     {
-        if (msg == MSG_CTP_TOUCH)
+        compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+        if (msg == MSG_CTP_TOUCH && cube != NULL)
         {
-            compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
-            //移动过程中，触屏停止。重新进入到开始拖动模式
+            // 移动过程中，触屏停止。重新进入到开始拖动模式
             compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_DRAG);
-            f_clock->cube_touch = true;
+            flag_cube_touch = true;
+            // compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+            // //移动过程中，触屏停止。重新进入到开始拖动模式
+            // compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_DRAG);
+            // f_clock->cube_touch = true;
         }
         else if (msg >= MSG_CTP_SHORT_LEFT && msg <= MSG_CTP_SHORT_DOWN)
         {
@@ -773,6 +908,12 @@ static void func_clock_message(size_msg_t msg)
             break;
 
         case MSG_CTP_CLICK:
+            if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
+            {
+                flag_cube_touch = true;
+                func_3d_dial_click();
+            }
+
             func_clock_button_click();
             break;
 
@@ -796,7 +937,9 @@ static void func_clock_message(size_msg_t msg)
             if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
             {
                 compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+                if(cube == NULL) return;
                 compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_FORWARD);
+                flag_cube_touch = true;
             }
 #endif
             break;
@@ -806,7 +949,9 @@ static void func_clock_message(size_msg_t msg)
             if (sys_cb.dialplate_index == DIALPLATE_CUBE_IDX)
             {
                 compo_cube_t *cube = compo_getobj_byid(COMPO_ID_CUBE);
+                if(cube == NULL) return;
                 compo_cube_move_control(cube, COMPO_CUBE_MOVE_CMD_BACKWARD);
+                flag_cube_touch = true;
             }
 #endif
             break;

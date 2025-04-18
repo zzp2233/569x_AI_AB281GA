@@ -806,7 +806,7 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
     }
     else
     {
-        uteModuleGuiCommonGoBackLastScreen();
+        //  uteModuleGuiCommonGoBackLastScreen();
 #if UTE_MODULE_SPORT_SUPPORT
         if(uteModuleSportIsTakePicture())
         {

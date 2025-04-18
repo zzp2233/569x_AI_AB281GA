@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-04-11 15:59:29
+*@date   2025-04-17 10:43:27
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -286,6 +286,7 @@ const char * const i18n_zh_rcn[] =
     [STR_CHILD_LOCK] = "\xe7\xab\xa5\xe9\x94\x81\xe5\xb7\xb2\xe6\x89\x93\xe5\xbc\x80\x00", // [270] 童锁已打开
     [STR_SINGLE] = "\xe5\x8d\x95\xe5\x8f\x91\x00", // [271] 单发
     [STR_DUAL] = "\xe5\x8f\x8c\xe5\x8f\x91\x00", // [272] 双发
+    [STR_TARGET_PUFFSGET] = "\xe7\x9b\xae\xe6\xa0\x87\xe5\x8f\xa3\xe6\x95\xb0\xe5\xb7\xb2\xe8\xbe\xbe\xe6\x88\x90\x00", // [273] 目标口数已达成
 };
 
 #endif

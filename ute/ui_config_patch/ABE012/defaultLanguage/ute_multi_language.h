@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-11 15:59:28
+*@date   2025-04-17 10:43:26
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -286,6 +286,7 @@ enum
     STR_CHILD_LOCK, // 童锁已打开
     STR_SINGLE, // 单发
     STR_DUAL, // 双发
+    STR_TARGET_PUFFSGET, // 目标口数已达成
 };
 
 extern const char * const *i18n;

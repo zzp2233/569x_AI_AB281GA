@@ -400,6 +400,7 @@ void uteApplicationCommonStartupSecond(void)
         uteApplicationCommonData.isPowerOn = true;
         uteApplicationCommonData.systemPowerOnSecond = 0;
         uteApplicationCommonData.mtuSize = 20;
+        ecig_set_power(15);
         //按键
         // uteDrvKeysCommonInit();
 #if SET_THE_LOW_BATTERY_POPUP_TIME

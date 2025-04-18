@@ -6,8 +6,8 @@
 *@date        2024-03-22
 *@version       v1.0
 */
-#ifndef _UTE_PROJECT_CONFIG_AB281A_H_
-#define _UTE_PROJECT_CONFIG_AB281A_H_
+#ifndef _UTE_PROJECT_CONFIG_AB281D_H_
+#define _UTE_PROJECT_CONFIG_AB281D_H_
 
 #define DEFAULT_BLE_DEV_NAME "W12Y"
 #define UTE_SW_VERSION "AB281DV000034"
@@ -149,19 +149,21 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 0
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D17196001_BIN, \
-                                                UI_BUF_DIALPLATE_D17312001_BIN, \
-                                                UI_BUF_DIALPLATE_D17195001_BIN, \
-                                                UI_BUF_DIALPLATE_D17194001_BIN, \
-                                                UI_BUF_DIALPLATE_BTF_BIN, \
-                                                UI_BUF_DIALPLATE_CUBE_BIN}
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18649001_BIN, \
+                                                UI_BUF_DIALPLATE_D18650001_BIN, \
+                                                UI_BUF_DIALPLATE_D18651001_BIN, \
+                                                UI_BUF_DIALPLATE_D18652001_BIN, \
+                                                UI_BUF_DIALPLATE_D18653001_BIN, \
+                                              }
+//    UI_BUF_DIALPLATE_BTF_BIN,
+//     UI_BUF_DIALPLATE_CUBE_BIN
 
-#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1      // 使用立方体表盘
-#define UTE_WATCHS_DIALPLATE_BTF_INDEX 4    // 蝴蝶表盘索引
-#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 5   // 立方体表盘索引
+#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0 // 使用蝴蝶表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0      // 使用立方体表盘
+#define UTE_WATCHS_DIALPLATE_BTF_INDEX 5    // 蝴蝶表盘索引
+#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 6   // 立方体表盘索引
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
@@ -169,7 +171,7 @@
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      1
 
-// #define UTE_DRV_CTP_SELECT              CTP_CHSC6X
+#define UTE_DRV_CTP_SELECT              CTP_CHSC6X
 /*! TP固件升级功能开关*/
 #define UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT 1
 

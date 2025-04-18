@@ -197,7 +197,7 @@ static void func_breathe_run_disp_handle(void)
         }
         else if(f_breathe_run->run_state == BREATHE_FINISH)
         {
-            uteTaskGuiStartScreen(FUNC_BREATHE, 0, __func__);
+            uteTaskGuiStartScreen(FUNC_BREATHE_FINISH, 0, __func__);
         }
     }
 }

@@ -3164,6 +3164,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
             }
             compo_setid(txt,idx);
             compo_textbox_set(txt,txt_buf);
+            compo_textbox_set_forecolor(txt,(idx==COMPO_ID_TXT_HOUR_3 || idx==COMPO_ID_TXT_MIN_3) ? COLOR_WHITE : COLOR_GRAY);
         }
         // compo_textbox_t *txt_colon = compo_textbox_create_for_page(frm,page,1);
         // compo_textbox_set_font(txt_colon,UI_BUF_0FONT_FONT_NUM_28_BIN);
@@ -3191,6 +3192,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
             }
             compo_setid(txt,idx);
             compo_textbox_set(txt,txt_buf);
+            compo_textbox_set_forecolor(txt,(idx==COMPO_ID_TXT_HOUR_3 || idx==COMPO_ID_TXT_MIN_3) ? COLOR_WHITE : COLOR_GRAY);
         }
         // compo_textbox_t *txt_colon = compo_textbox_create_for_page(frm,page,1);
         // compo_textbox_set_font(txt_colon,UI_BUF_0FONT_FONT_NUM_28_BIN);
@@ -3321,6 +3323,7 @@ static void func_set_alarm_sub_move(void)
                         compo_textbox_set_pos(txt,TXT_24_HOUR_X,TXT_Y[idx-COMPO_ID_TXT_HOUR_1]+f_disturd_set->move_dy);
                         snprintf(txt_buf,sizeof(txt_buf),"%02d",f_disturd_set->disturd_hour[idx-COMPO_ID_TXT_HOUR_1]);
                     }
+                    compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_HOUR_3 ? COLOR_WHITE : COLOR_GRAY);
                     compo_textbox_set(txt,txt_buf);
                 }
             }
@@ -3342,6 +3345,7 @@ static void func_set_alarm_sub_move(void)
                         compo_textbox_set_pos(txt,TXT_24_MIN_X,TXT_Y[idx-COMPO_ID_TXT_MIN_1]+f_disturd_set->move_dy);
                     }
                     snprintf(txt_buf,sizeof(txt_buf),"%02d",f_disturd_set->disturd_min[idx-COMPO_ID_TXT_MIN_1]);
+                    compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_MIN_3 ? COLOR_WHITE : COLOR_GRAY);
                     compo_textbox_set(txt,txt_buf);
                 }
             }

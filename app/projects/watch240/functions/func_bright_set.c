@@ -23,11 +23,9 @@ typedef struct f_bright_set_list_t_
 
 static const compo_listbox_item_t tbl_bright_set_list[] =
 {
-    {STR_SETTING_LIGHT,      UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_1_INTEREST_RATES_SCREEN_ICON_ARROW_10X15_X214_Y73_X214_Y211_X214_Y348_BIN,        .func_sta = FUNC_LIGHT}, //亮度
-    {STR_SETTING_DOUSING,    UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_1_INTEREST_RATES_SCREEN_ICON_ARROW_10X15_X214_Y73_X214_Y211_X214_Y348_BIN,        .func_sta = FUNC_LIGHT}, //亮屏时长
+    {STR_SETTING_LIGHT,      0,        .func_sta = FUNC_LIGHT}, //亮度
+    {STR_SETTING_DOUSING,    0,        .func_sta = FUNC_SET_SUB_DOUSING}, //亮屏时长
 };
-
-
 
 //亮度设置页面
 compo_form_t *func_bright_set_form_create(void)
@@ -42,7 +40,7 @@ compo_form_t *func_bright_set_form_create(void)
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_bright_set_list, BRIGHT_SET_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_1_START_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_BIN);
 
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
@@ -75,6 +73,16 @@ void func_bright_set_icon_click(void)
     }
 }
 #else
+//亮度设置页面
+compo_form_t *func_bright_set_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    return frm;
+}
+void func_bright_set_icon_click(void)
+{
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //亮度设置能消息处理

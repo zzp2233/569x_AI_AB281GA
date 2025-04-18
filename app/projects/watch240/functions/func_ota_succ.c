@@ -71,6 +71,28 @@ compo_form_t *func_ota_succ_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+
+//创建地图窗体
+compo_form_t *func_ota_succ_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I335001_UPGRADE_UPDATE_SUCCESSED_ICON_SUCCEEDED_92X92_X74_Y65_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-35);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_UPDATED]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+55,150,50);
+    compo_textbox_set(textbox,i18n[STR_UPDATED]);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_WATCH_RESTART]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+95,150,30);
+    compo_textbox_set(textbox,i18n[STR_WATCH_RESTART]);
+    widget_text_set_color(textbox->txt, make_color(128,128,128));
+
+    return frm;
+}
 #else
 compo_form_t *func_ota_succ_form_create(void)
 {
@@ -89,7 +111,6 @@ static void func_ota_succ_process(void)
 
     func_process();
 }
-#include "func_cover.h"
 //地图功能消息处理
 static void func_ota_succ_message(size_msg_t msg)
 {

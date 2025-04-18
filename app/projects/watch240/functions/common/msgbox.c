@@ -1195,15 +1195,15 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         break;
 
         case MSGBOX_MODE_BTN_OKCANCEL:      //确定与取消按钮1
-            btn = compo_button_create_by_image(frm, 0);
+            btn = compo_button_create_by_image(frm, UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC102X52_X16_X122_Y222_00_BIN);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20);
+            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4+5,
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC102X52_X16_X122_Y222_00_BIN).hei/2 - 20);
 
-            btn = compo_button_create_by_image(frm, 0);
+            btn = compo_button_create_by_image(frm, UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC102X52_X16_X122_Y222_01_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20);
+            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4-5,
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC102X52_X16_X122_Y222_01_BIN).hei/2 - 20);
             break;
 
         case MSGBOX_MODE_BTN_YESNO:         //确定与取消按钮2

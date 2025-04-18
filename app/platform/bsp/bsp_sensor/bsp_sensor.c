@@ -145,6 +145,10 @@ uint8_t bsp_sensor_hr_get_work_mode(void)
         mode = HR_WORK_MODE_HR;
     }
 #endif
+    if(!bsp_sensor_hr_work_status())
+    {
+        mode = HR_WORK_MODE_UNKNOWN;
+    }
     return mode;
 }
 

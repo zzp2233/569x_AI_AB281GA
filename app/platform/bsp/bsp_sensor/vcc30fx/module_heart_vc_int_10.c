@@ -31,6 +31,8 @@
 
 #define GsensorEn 0
 
+const unsigned char arry10[] = {0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12};
+const unsigned char arry20[] = {0, 2, 3, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28};
 
 /* Heart rate value */
 int HeartRateValue = 0;
@@ -79,16 +81,20 @@ static bool vclc09_pwr_sta = false;
 
 void vclc09_pwr_en(void)        //PF5
 {
-    if(vcHr11.oscCheckFinishFlag == 0)
+    // if(vcHr11.oscCheckFinishFlag == 0)
     {
         uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
     }
 
-    uteModulePlatformOutputGpioSet(IO_PF5,true);
+    if(!vclc09_pwr_sta)
+    {
+        uteModulePlatformOutputGpioSet(IO_PF5,true);
+    }
 
     bsp_i2c_init();
     uteModuleSprotAlgoTimerStop();
 
+    bsp_sensor_hr_interrupt_flag_set(false);
     vclc09_pwr_sta = true;
 }
 
@@ -106,6 +112,11 @@ void vclc09_pwr_dis(void)       //PF5
     uteModulePlatformOutputGpioSet(IO_PE2,false);
 #endif
     vclc09_pwr_sta = false;
+#if (CHIP_PACKAGE_SELECT == CHIP_5691G)
+    extab_user_isr_clr(IO_PG6);
+#elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
+    extab_user_isr_clr(IO_PE7);
+#endif
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //恢复睡眠
 }
 
@@ -177,8 +188,7 @@ void vcHr11_process(sport_mode_type vcSportMode)
             {
                 Algo_Init();
             }
-            printf("vcHr11_process\n");
-            printf("vcHr11.vcFifoReadFlag=%d,vcPsFlag=%d,wearStatus=%d\n",vcHr11.vcFifoReadFlag, vcHr11.vcPsFlag,vcHr11.wearStatus);
+
             if(vcHr11.vcFifoReadFlag || vcHr11.vcPsFlag)
             {
 #if GsensorEn
@@ -245,7 +255,6 @@ void vcHr11_process(sport_mode_type vcSportMode)
 
                         Algo_Output(&algoOutputData);
                         HeartRateValue = algoOutputData.hrData;
-                        printf("HeartRateValue=%d\n",HeartRateValue);
 
                         if(HeartRateValue >= 0)
                         {
@@ -256,6 +265,8 @@ void vcHr11_process(sport_mode_type vcSportMode)
                         {
                             Algo_Init();
                         }
+
+                        uteModuleSportInputDataBeforeAlgo();
                     }
                 }
                 else
@@ -278,14 +289,14 @@ void vcHr11_process(sport_mode_type vcSportMode)
                 //Display the value of vcHr11.sampleData.maxLedCur and vcHr11.sampleData.preValue[0]
             }
         }
-
-#if 0
         else if (vcHr11.workMode == VCWORK_MODE_SPO2WORK)
         {
             if(VCHR11RET_UNWEARTOISWEAR == vcHr11GetSampleValues(&vcHr11,&ppgLength))
             {
+#if (SENSOR_HR_SEL != SENSOR_HR_VCLC09A)
                 vcSpo2AlgoInit();
                 vcSportMotionAlgoInit();
+#endif
             }
             if(vcHr11.vcFifoReadFlag || vcHr11.vcPsFlag)
             {
@@ -321,16 +332,20 @@ void vcHr11_process(sport_mode_type vcSportMode)
                         {
                             vcIrPPG = vcHr11.sampleData.ppgValue[algoCallNum*2];
                             vcRedPPG = vcHr11.sampleData.ppgValue[algoCallNum*2+1];
+#if (SENSOR_HR_SEL != SENSOR_HR_VCLC09A)
                             vcSpo2Value = vcSpo2Calculate(vcRedPPG,vcIrPPG);
 #if GsensorEn
                             vcSportFlag = vcSportMotionCalculate(xData[algoCallNum], yData[algoCallNum],zData[algoCallNum]);
 #endif
+#endif
                             if((!vcSportFlag) && (vcSpo2Value > 0))
                             {
                                 real_spo = vcSpo2Value;
+                                bsp_sensor_spo2_data_save(real_spo);
                             }
                         }
                     }
+                    uteModuleSportInputDataBeforeAlgo();
                 }
                 else
                 {
@@ -340,7 +355,6 @@ void vcHr11_process(sport_mode_type vcSportMode)
                 }
             }
         }
-#endif
     }
 }
 
@@ -370,6 +384,7 @@ void vcxx_process(void)
  *
  *
  **/
+AT(.com_text.vc30fx)
 void vcHr11IRQHandler()
 {
     if (vcHr11.oscCheckFinishFlag == 0 || !sleep_cb.sys_is_sleep)

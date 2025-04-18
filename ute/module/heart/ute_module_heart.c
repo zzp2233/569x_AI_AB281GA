@@ -53,7 +53,16 @@ void uteModuleHeartInit(void)
 #if UTE_DRV_HEART_VCXX_SUPPORT
     uteDrvHeartVcxxInit();
 #else
-    bsp_sensor_hr_stop();
+    if(uteModuleHeartIsAutoTesting())
+    {
+        uteModuleHeartStartSingleTesting(TYPE_HEART);
+        uteModuleHeartData.isAutoTestFlag = true;
+        uteModuleHeartData.autoTestSecond = 0;
+    }
+    else
+    {
+        bsp_sensor_hr_stop();
+    }
 #endif
     uteModuleSystemtimeRegisterSecond(uteModuleHeartEverySecond);
     /*add by pcm 2023-06-06 把心率温度检测延迟到心率模块初始化结束之后再开始检测*/
@@ -213,7 +222,7 @@ void uteModuleHeartEverySecond(void)
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
            && (uteModuleNewFactoryTestGetMode() == FACTORY_TEST_MODE_NULL)
 #endif
-           && uteModuleHeartGetWorkMode() != HR_WORK_MODE_HR
+           && (uteModuleHeartGetWorkMode() != HR_WORK_MODE_HR || !bsp_sensor_hr_work_status())
           )
         {
             if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
@@ -471,13 +480,13 @@ void uteModuleHeartStartSingleTesting(ute_module_heart_type_t type)
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_START_SINGLE_TESTING, (uint32_t)type);
 }
 
-// /**
-// *@brief        开始单次测试消息处理函数
-// *@details
-// *@param ute_module_heart_type_t type 启动类型
-// *@author       zn.zeng
-// *@date       2021-07-16
-// */
+/**
+*@brief        开始单次测试消息处理函数
+*@details
+*@param ute_module_heart_type_t type 启动类型
+*@author       zn.zeng
+*@date       2021-07-16
+*/
 void uteModuleHeartStartSingleTestingMsgHandler(uint32_t param)
 {
     ute_module_heart_type_t type = (ute_module_heart_type_t)param;
@@ -824,7 +833,7 @@ void uteModuleHeartMinMaxWarningValueProcess(void)
         }
     }
 
-    UTE_MODULE_LOG(UTE_LOG_HEART_LVL, ".warning.isOpen = %d, isAutoTestFlag = %d, heart = %d, needRemind = %d", uteModuleHeartData.warning.isOpen, autoTestFlag, heart, needRemind);
+    // UTE_MODULE_LOG(UTE_LOG_HEART_LVL, ".warning.isOpen = %d, isAutoTestFlag = %d, heart = %d, needRemind = %d", uteModuleHeartData.warning.isOpen, autoTestFlag, heart, needRemind);
 
     if (uteModuleHeartIsWear() && (heart > 0) && uteModuleHeartData.warning.isOpen && (heart != 255) && (autoTestFlag || uteModuleSportMoreSportIsRuning()))
     {
@@ -1183,8 +1192,7 @@ void uteModuleHeartPowerOff(void)
 #endif
     uteDrvHeartVcxxSetPowerEnable(false);
 #else
-    vc30fx_usr_stop_work();
-    vc30fx_pwr_dis();
+    bsp_sensor_hr_stop();
 #endif
 }
 

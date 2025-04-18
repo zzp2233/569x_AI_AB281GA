@@ -1043,6 +1043,9 @@
 		<Unit filename="functions/func_breathe_finish.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_breathe_run.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_breathe_sub_mode.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -155,7 +155,7 @@ compo_form_t *func_bt_form_create(void)
 
     //歌名
     compo_textbox_t *lyric_txt = compo_textbox_create(frm, TITLE_BUF_LEN);
-    compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X,44,96, 30);
+    compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X,44,230, 30);
     compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
     compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
     compo_textbox_set(lyric_txt,title_buf);

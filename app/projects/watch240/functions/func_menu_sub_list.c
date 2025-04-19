@@ -82,7 +82,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     // {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SOS_BIN,                   .str_idx=STR_SOS},                  //SOS
 // #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
-    {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  .str_idx=STR_GAME},                 //游戏
+    // {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  .str_idx=STR_GAME},                 //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
 // #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {.func_sta=FUNC_TOOLBOX,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TOOLBOX_BIN,               .str_idx=STR_TOOL_BOX},             //工具箱

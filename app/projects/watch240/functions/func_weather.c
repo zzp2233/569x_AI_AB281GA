@@ -219,11 +219,9 @@ compo_form_t *func_weather_form_create(void)
 
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_BG_BIN);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y);
-
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_ICON_WEATHER_BIN);///
     compo_picturebox_set_pos(picbox, 40+14,40+72);
     compo_picturebox_cut(picbox, weather_list[get_weather_id[0]].res_addr,16 );
-
     memset(str_buff,0,sizeof(str_buff));
     if(weather_no_data_flag)
     {
@@ -237,10 +235,8 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
     compo_textbox_set_pos(txt,76/2+120,52/2+63);
     compo_textbox_set(txt, str_buff);
-
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_DU_BIN);
     compo_picturebox_set_pos(picbox,207,70);
-
     memset(str_buff,0,sizeof(str_buff));
     if(!weather_no_data_flag)
     {
@@ -260,48 +256,39 @@ compo_form_t *func_weather_form_create(void)
     txt = compo_textbox_create(frm,strlen(str_buff));
     compo_textbox_set_pos(txt,77/2+120,120+9);
     compo_textbox_set(txt, str_buff);
-
     txt = compo_textbox_create(frm,strlen(i18n[weather_list[get_weather_id[0]].txt_num]));
     compo_textbox_set_pos(txt,77/2+120,144+9);
     compo_textbox_set_forecolor(txt, make_color(0x98,0xd0,0xff));
     compo_textbox_set(txt, i18n[weather_list[get_weather_id[0]].txt_num]);
-
     //紫外线icon
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_UV_BIN);///背景图片
     compo_picturebox_set_pos(picbox, 13+51,13+188);
-
     //紫外线data
-    txt = compo_textbox_create(frm,strlen(i18n[weather_uv[weather_date.fristDayWeatherUltraviolet]]));
+    txt = compo_textbox_create(frm,strlen(i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]));
     compo_textbox_set_pos(txt,64,229);
-    compo_textbox_set(txt,i18n[weather_uv[weather_date.fristDayWeatherUltraviolet]]);
-
+    compo_textbox_set(txt,i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]);
     //紫外线txt
     txt = compo_textbox_create(frm,strlen(i18n[STR_UV]));
     compo_textbox_set_pos(txt,64,243+8);
     compo_textbox_set(txt,i18n[STR_UV]);
-
     //湿度icon
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_HUMIDITY_BIN);///背景图片
     compo_picturebox_set_pos(picbox, 152+42/2,13+188);
-
     //湿度data
     memset(str_humidity_buff,0,sizeof(str_humidity_buff));
     snprintf(str_humidity_buff,sizeof(str_humidity_buff),"%d%%",weather_date.fristDayWeatherHumidity);
     txt = compo_textbox_create(frm,strlen(str_humidity_buff));
     compo_textbox_set_pos(txt,152+42/2,229);
     compo_textbox_set(txt,str_humidity_buff);
-
     //湿度txt
     txt = compo_textbox_create(frm,strlen(i18n[STR_HUMIDITY]));
     compo_textbox_set_pos(txt,152+42/2,245+8);
     compo_textbox_set(txt,i18n[STR_HUMIDITY]);
-
     ///设置标题栏名字///
     txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
     compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
     compo_textbox_set(txt, i18n[STR_WEATHER]);
     compo_textbox_set_align_center(txt, false);
-
     //第二页
     for(int i=1; i<4; i++)
     {
@@ -320,7 +307,7 @@ compo_form_t *func_weather_form_create(void)
         compo_textbox_set_location(txt, 16+(i-1)*(82),GUI_SCREEN_HEIGHT+82,60,widget_text_get_max_height());
         compo_textbox_set_align_center(txt,false);
         compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
-        if(i==0)
+        if(i==1)
         {
             compo_textbox_set(txt,i18n[STR_TO_DAY]);/// 星期
         }
@@ -369,7 +356,6 @@ compo_form_t *func_weather_form_create(void)
         compo_textbox_set(txt,str_buff);
         compo_textbox_set_location(txt, 8+30+(i-1)*(82),GUI_SCREEN_HEIGHT+202+12,40,30);
         compo_textbox_set_align_center(txt, true);
-
     }
     widget_page_set_client(frm->page_body, 0, page_y);
 

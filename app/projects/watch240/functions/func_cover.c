@@ -870,48 +870,25 @@ void gui_set_cover_index(uint8_t index)
                     uteModuleSystemtimeGetAlarm(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 }
                 u8 hour_num=alarm_p->repeatRemindHour;
-//                printf("hour=%d min=%d\n",alarm_p->repeatRemindHour,alarm_p->repeatRemindMin);
-//                alarm_p = &alarm;
-                if (alarm_p->isRepeatRemindOpen)
+
+                if(uteModuleSystemtime12HOn())
                 {
-                    if (hour_num >= 12)
+                    if(hour_num <=12 && hour_num!=0)
                     {
-                        if(hour_num !=12)
-                        {
-                            hour_num -=12;
-                        }
-                        snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
+                        snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
                     }
                     else
                     {
-                        if(hour_num==0)
-                        {
-                            hour_num = 12;
-                        }
-                        snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
-                    }
-                    snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
-                }
-                else
-                {
-                    if (hour_num >= 12)
-                    {
-                        if(hour_num !=12)
-                        {
-                            hour_num -=12;
-                        }
                         snprintf(txt, sizeof(txt), "%s", i18n[STR_PM]);
                     }
-                    else
+
+                    hour_num%=12;
+                    if(hour_num == 0)
                     {
-                        if(hour_num==0)
-                        {
-                            hour_num = 12;
-                        }
-                        snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
+                        hour_num=12;
                     }
-                    snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
                 }
+                snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
                 if (bt_is_connected())//暂停音乐
                 {
                     bt_music_pause();

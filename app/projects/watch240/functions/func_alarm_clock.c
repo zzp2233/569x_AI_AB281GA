@@ -556,9 +556,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             compo_cardbox_rect_set_location(cardbox, 0, 0, 0, 324, 90, 20);
 
             compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I332001_PUBLIC_SWITCH01_BIN : UI_BUF_I332001_PUBLIC_SWITCH00_BIN);
-            compo_cardbox_icon_set_pos(cardbox, 0,
-                                       (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_I332001_PUBLIC_SWITCH01_BIN).wid / 2 - 2, 0);
-
+            compo_cardbox_icon_set_pos(cardbox, 0, (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_I332001_PUBLIC_SWITCH01_BIN).wid / 2 - 25, 0);
             snprintf(str_buff, str_buff_size, "%02d:%02d", func_alarm_convert_to_12hour(ALARM_GET_HOUR(i)).hour, ALARM_GET_MIN(i));
 //            compo_cardbox_text_set_font(cardbox, 0, UI_BUF_0FONT_FONT_NUM_32_BIN);
             compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
@@ -763,8 +761,6 @@ static void func_alarm_clock_process(void)
         compo_cardbox_text_scroll_process(cardbox, true);
         compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
         compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I332001_PUBLIC_SWITCH01_BIN : UI_BUF_I332001_PUBLIC_SWITCH00_BIN);
-        compo_cardbox_icon_set_pos(cardbox, 0,
-                                   (GUI_SCREEN_WIDTH - 10) / 2 - gui_image_get_size(UI_BUF_I332001_PUBLIC_SWITCH01_BIN).wid / 2 - 25, 0);
     }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }

@@ -359,10 +359,10 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
     // {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SOS_BIN,                   },  //SOS
 // #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
-    {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  }, //游戏
+    // {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  }, //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
 // #if UTE_MODULE_SCREENS_VOICE_SUPPORT
-    {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TOOLBOX_BIN,               },  //工具箱
+    {.func_sta=FUNC_TOOLBOX,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TOOLBOX_BIN,               },  //工具箱
 // #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              },  //设置
@@ -371,18 +371,18 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
     {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
 // #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-    {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表
+    // {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
-    {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TIMER_BIN,                 },    //定时器
+    // {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TIMER_BIN,                 },    //定时器
 #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
-    {.func_sta=FUNC_FINDPHONE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FIND_PHONE_BIN,            },    //查找手机
-    {.func_sta=FUNC_FLASHLIGHT,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_FLASHLIGHT_BIN,            },    //手电筒
+    // {.func_sta=FUNC_FINDPHONE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FIND_PHONE_BIN,            },    //查找手机
+    // {.func_sta=FUNC_FLASHLIGHT,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_FLASHLIGHT_BIN,            },    //手电筒
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-    {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
+    // {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
+    // {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 };
 compo_form_t *func_menu_sub_honeycomb_form_create(void)

@@ -509,18 +509,12 @@ typedef struct f_stopwatch_t_
     compo_listbox_t *listbox;
 } f_stopwatch_t;
 
-typedef struct stopwatch_num_item_t_
-{
-
-} stopwatch_num_item_t;
-
-
 #define TO_BEGIN_MODE_PLAY_PIC       UI_BUF_I335001_2_STOPWATCH_ICON_START_208X52_X16_Y222_BIN
 #define SART_MODE_PLAY_PIC           UI_BUF_I335001_2_STOPWATCH_PLAY_BIN
 #define PAUSE_MODE_PAUSE_PIC         UI_BUF_I335001_2_STOPWATCH_SUSPENDED_BIN
 #define PAUSE_MODE_RESET_PIC         UI_BUF_I335001_2_STOPWATCH_00_102X52_X16_Y222_BIN
 #define SART_MODE_COUNT_PIC          UI_BUF_I335001_2_STOPWATCH_TIME_BIN
-#define PAUSE_MODE_END_PIC           0
+#define PAUSE_MODE_END_PIC           UI_BUF_I335001_2_STOPWATCH_GRAY_START_BIN
 
 static co_timer_t stopwatch_timer;
 
@@ -666,7 +660,7 @@ static void func_stopwatch_button_click(u32 key_flag)
     switch(id)
     {
         case COMPO_ID_BTN_RECORD_REST://记录数/重新开始
-            if(sys_cb.stopwatch_sta) //计次
+            if(sys_cb.stopwatch_sta && (sys_cb.stopwatch_total_msec / 1000 / 60 <= 99)) //计次
             {
                 if(sys_cb.stopwatch_rec_cnt < STOPWATCH_REC_NUM_MAX)
                 {
@@ -682,10 +676,7 @@ static void func_stopwatch_button_click(u32 key_flag)
             else//复位
             {
                 compo_textbox_set(num_time, "00:00.00");
-                if(!(sys_cb.stopwatch_total_msec / 1000 / 60 >= 100))
-                {
-                    co_timer_del(&stopwatch_timer);
-                }
+                co_timer_del(&stopwatch_timer);
                 sys_cb.stopwatch_rec_cnt = 0;
                 sys_cb.stopwatch_total_msec = 0;
                 compo_button_set_bgimg(btn_play,TO_BEGIN_MODE_PLAY_PIC);
@@ -700,6 +691,12 @@ static void func_stopwatch_button_click(u32 key_flag)
             }
             break;
         case COMPO_ID_BTN_PAUSE_PLAY://暂停/开始
+
+            if (sys_cb.stopwatch_total_msec / 1000 / 60 >= 100)
+            {
+                return;
+            }
+
             if(sys_cb.stopwatch_total_msec == 0)
             {
                 sys_cb.stopwatch_sta = 1;
@@ -862,7 +859,6 @@ static void func_stopwatch_process(void)
     compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
     if (sys_cb.stopwatch_sta)
     {
-
         u8 min = ((sys_cb.stopwatch_total_msec / 1000) / 60) % 100;
         u8 sec = (sys_cb.stopwatch_total_msec / 1000) % 60;
         u16 msec = sys_cb.stopwatch_total_msec % 1000;
@@ -873,6 +869,11 @@ static void func_stopwatch_process(void)
             sec  = 59;
             msec = 999;
             co_timer_del(&stopwatch_timer);
+            sys_cb.stopwatch_sta = false;
+            compo_button_t *btn_play = compo_getobj_byid(COMPO_ID_BTN_PAUSE_PLAY);
+            compo_button_t *btn_rest = compo_getobj_byid(COMPO_ID_BTN_RECORD_REST);
+            compo_button_set_bgimg(btn_play,PAUSE_MODE_END_PIC);
+            compo_button_set_bgimg(btn_rest,PAUSE_MODE_RESET_PIC);
         }
         else
         {

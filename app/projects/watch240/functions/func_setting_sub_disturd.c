@@ -1615,10 +1615,10 @@ static const ui_handle_t ui_handle =
             [0] = {
                 .idx    = 0,
                 .x      = 0,
-                .y      = 0,
+                .y      = 60/2,
                 .w      = 232,
-                .h      = 62,
-                .r      = 16,
+                .h      = 1,
+                .r      = 0,
             },
         },
 
@@ -1662,10 +1662,10 @@ static const ui_handle_t ui_handle =
             [0] = {
                 .idx    = 0,
                 .x      = 0,
-                .y      = 0,
+                .y      = 60/2,
                 .w      = 232,
-                .h      = 62,
-                .r      = 16,
+                .h      = 1,
+                .r      = 0,
             },
         },
 
@@ -1709,10 +1709,10 @@ static const ui_handle_t ui_handle =
             [0] = {
                 .idx    = 0,
                 .x      = 0,
-                .y      = 0,
+                .y      = 60/2,
                 .w      = 232,
-                .h      = 72,
-                .r      = 16,
+                .h      = 1,
+                .r      = 0,
             },
         },
 
@@ -1774,9 +1774,9 @@ static const ui_handle_t ui_handle =
                 .idx    = 0,
                 .x      = 0,
                 .y      = 0,
-                .w      = 232,
-                .h      = 72,
-                .r      = 16,
+                .w      = 0,
+                .h      = 0,
+                .r      = 0,
             },
         },
 

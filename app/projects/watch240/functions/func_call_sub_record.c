@@ -16,6 +16,7 @@ enum
     COMPO_ID_LISTBOX = 1,
     COMPO_ID_COVER_PIC,
     COMPO_ID_COVER_TXT,
+    COMPO_ID_BTN_DELAY,
 };
 
 #define CALL_LIST_CNT                       ((int)(sizeof(tbl_record_list) / sizeof(tbl_record_list[0])))
@@ -796,14 +797,19 @@ compo_form_t *func_call_sub_record_form_create(void)
         compo_listbox_set(listbox, tbl_record_list, (record_cnt < 2) ? 2 : record_cnt);
     }
     compo_listbox_set_alike_icon(listbox, UI_BUF_I335001_CALL_01_ICON_56X56_X16_Y62_Y134_Y206_BIN);
-    // compo_listbox_set_icon_area(listbox, CALL_TYPE_ICON_AREA);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, call_record_update_callback);
-    // compo_listbox_set_icon_callback(listbox, call_record_set_icon_callback);
-    // compo_listbox_set_text1_color_callback(listbox, call_record_set_text1_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_CALL_00_ICON_BG_224X68_X8_Y48_Y126_Y202_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update_with_text_scroll_rst(listbox);
     compo_listbox_update(listbox);
+
+    s32 last_y = compo_listbox_gety_byidx(listbox, (record_cnt < 2) ? 2 : record_cnt );
+    //新建按钮
+    compo_button_t *btn;
+    btn = compo_button_create_page_by_image(frm,listbox->page, UI_BUF_I335001_20_ALARM_CLOCK_7_EDIT_THE_ALARM_ICON_DELETE_208X52_X16_Y222_BIN);
+    compo_setid(btn, COMPO_ID_BTN_DELAY);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,last_y-3);
+    compo_button_set_visible(btn,record_cnt);
 
     compo_textbox_set_visible(txt, record_cnt > 0 ? false : true);
     compo_picturebox_set_visible(pic, record_cnt > 0 ? false : true);
@@ -817,6 +823,15 @@ static void func_call_sub_record_icon_click(void)
     int icon_idx;
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_call->listbox;
+    compo_button_t *btn =compo_getobj_byid(COMPO_ID_BTN_DELAY);
+
+    if(compo_get_button_id() == COMPO_ID_BTN_DELAY)
+    {
+        uteModuleCallDeleteCallRecords();
+        compo_button_set_visible(btn,false);
+        compo_listbox_set_visible(f_call->listbox, false);
+        return;
+    }
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
     if (icon_idx < 0 || icon_idx >= record_cnt)
@@ -1263,6 +1278,7 @@ static void func_set_sub_record_list_process(void)
                 compo_listbox_update_with_text_scroll_rst(f_call->listbox);
                 compo_listbox_set_bgimg(f_call->listbox, UI_BUF_I335001_CALL_00_ICON_NEXT_10X16_X206_Y76_Y152_Y227_BIN);
                 compo_listbox_set_focus_byidx(f_call->listbox, 1);
+
 #else //区别GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
                 compo_listbox_set_visible(f_call->listbox, true);
                 compo_listbox_set(f_call->listbox, tbl_record_list, (record_cnt < 2) ? 2 : record_cnt);

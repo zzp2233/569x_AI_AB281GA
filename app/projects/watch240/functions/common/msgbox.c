@@ -998,7 +998,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //图标
             if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH)
             {
-                compo_animation_t *animation = compo_animation_create(frm, 0);
+                compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I335001_REMIND_WATCH_BIN);
                 compo_animation_set_pos(animation,GUI_SCREEN_CENTER_X,func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
                 compo_animation_set_radix(animation,3);
                 compo_animation_set_interval(animation,30);
@@ -1031,7 +1031,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set(txt_msg, i18n[STR_LOW_BATTERY]);
                 //title
                 compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/4.5,60,30);//调整文本位置
+                compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/4.5,230,30);//调整文本位置
                 compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_32_BIN);
                 char level[4];
                 memset(level,0,sizeof(level));

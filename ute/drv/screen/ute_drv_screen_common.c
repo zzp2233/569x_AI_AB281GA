@@ -29,6 +29,8 @@
 #include "ute_drv_tft_s240x284_i183_jd9853_0185A035_qspi.h"
 #elif UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT
 #include "ute_drv_tft_s240x296_gc9309_js202018a_qspi.h"
+#elif UTE_DRV_TFT_S360_X360_ST77916_HY138026A_OV_QSPI_SUPPORT
+#include "ute_drv_tft_s360X360_st77916_hy138026a_ov_qspi.h"
 #endif
 
 /*! 配置屏的接口zn.zeng, 2021-09-06  */
@@ -71,6 +73,8 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd98530185A035Config;
 #elif UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X296Gc9309Js202018aConfig;
+#elif UTE_DRV_TFT_S360_X360_ST77916_HY138026A_OV_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360St77916Hy138026AConfig;
 #else
 #error "Please select a screen driver"
 #endif

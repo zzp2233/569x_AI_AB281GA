@@ -244,6 +244,7 @@ const menu_hc_item_t tbl_menu_waterfall[] =
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I332001_THEME_ICON1_WEATHER_BIN,                   FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_I332001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
 };
 #else
 //瀑布流图标列表及顺序

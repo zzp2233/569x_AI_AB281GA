@@ -720,6 +720,8 @@ typedef struct f_sport_sub_run_t_
     u8          direction;
     uint32_t    updata_tick;
     bool page2_move_flag;
+    bool        sport_run_state;
+    bool        sport_run_state_updata_flag;
 } f_sport_sub_run_t;
 enum
 {
@@ -727,7 +729,11 @@ enum
     UP_DOWM_DIR,
     LEFT_RIGHT_DIR,
 };
-
+enum
+{
+    SPORT_RUN_STOP=false,
+    SPORT_RUN_START=true,
+};
 enum
 {
     TOUCH_FINISH_STATE=0,
@@ -971,7 +977,6 @@ static void func_soprt_run_move(void)
 #define   STEP_NUM       8    //步进y像素点
     f_sport_sub_run_t *f_sleep = (f_sport_sub_run_t *)func_cb.f_cb;
 
-
     if(f_sleep->page_num == PAGE_1)//第一页
     {
         if(f_sleep->touch_flag)//触摸状态
@@ -1061,6 +1066,7 @@ static void func_soprt_run_move(void)
                                 f_sleep->move_offset_x = GUI_SCREEN_HEIGHT;
                                 f_sleep->page_num = PAGE_3;//第2页
                                 f_sleep->touch_state = TOUCH_FINISH_STATE;
+                                uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
                             }
                         }
                         else if(f_sleep->switch_page_state == SWITCH_NO)
@@ -1209,6 +1215,7 @@ static void func_soprt_run_move(void)
                             f_sleep->page_num = PAGE_1;//第1页
                             f_sleep->move_offset_x = 0;
                             f_sleep->touch_state = TOUCH_FINISH_STATE;
+                            uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
                         }
                     }
                     else if(f_sleep->switch_page_state == SWITCH_NO)
@@ -1266,13 +1273,49 @@ static void func_sport_sub_run_updata(void)
 
         if(btn_play != NULL)
         {
-            if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_OPEN)
+            switch (uteModuleSportMoreSportGetStatus())
             {
-                compo_button_set_bgimg(btn_play,UI_BUF_I332001_SPORT_BTN_PUSED_BIN);
+                case ALL_SPORT_STATUS_OPEN:
+                case ALL_SPORT_STATUS_CONTINUE:
+                    compo_button_set_bgimg(btn_play,UI_BUF_I332001_SPORT_BTN_PUSED_BIN);
+                    f_sleep->sport_run_state = SPORT_RUN_START;
+                    if(f_sleep->page_num == PAGE_3)
+                    {
+                        f_sleep->page_num = PAGE_1;
+                    }
+                    break;
+
+                case ALL_SPORT_STATUS_CLOSE:
+                case ALL_SPORT_STATUS_PAUSE:
+                    compo_button_set_bgimg(btn_play,UI_BUF_I332001_SPORT_BTN_PLAY_BIN);
+                    f_sleep->sport_run_state = SPORT_RUN_STOP;
+                    f_sleep->page_num = PAGE_3;
+                    break;
             }
-            else if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_PAUSE)
+        }
+
+        if(f_sleep->sport_run_state != f_sleep->sport_run_state_updata_flag)
+        {
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            f_sleep->sport_run_state_updata_flag = f_sleep->sport_run_state;
+            switch(f_sleep->page_num)
             {
-                compo_button_set_bgimg(btn_play,UI_BUF_I332001_SPORT_BTN_PLAY_BIN);
+                case PAGE_1:
+                    widget_page_set_client(func_cb.frm_main->page_body,0, 0);
+                    widget_page_set_client(func_cb.frm_main->page, 0, 0);
+                    f_sleep->page_old_y = 0;
+                    f_sleep->move_offset = 0;
+                    f_sleep->move_offset_x = 0;
+                    f_sleep->page_old_x = 0;
+                    break;
+                case PAGE_3:
+                    f_sleep->page_old_y = 0;
+                    f_sleep->move_offset = 0;
+                    f_sleep->move_offset_x = GUI_SCREEN_HEIGHT;
+                    f_sleep->page_old_x = GUI_SCREEN_HEIGHT;
+                    widget_page_set_client(func_cb.frm_main->page_body,0, 0);
+                    widget_page_set_client(func_cb.frm_main->page, GUI_SCREEN_HEIGHT, 0);
+                    break;
             }
         }
 
@@ -1397,13 +1440,17 @@ static void func_sport_sub_run_click_handler(void)
     switch (id)
     {
         case COMPO_ID_BTN_SPORT_PALY:
-            if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_OPEN)
+            switch (uteModuleSportMoreSportGetStatus())
             {
-                uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
-            }
-            else if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_PAUSE)
-            {
-                uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
+                case ALL_SPORT_STATUS_CLOSE:
+                case ALL_SPORT_STATUS_PAUSE:
+                    uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
+                    break;
+
+                case ALL_SPORT_STATUS_OPEN:
+                case ALL_SPORT_STATUS_CONTINUE:
+                    uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
+                    break;
             }
             break;
         case COMPO_ID_BTN_SPORT_EXIT:
@@ -1447,7 +1494,21 @@ static void func_sport_sub_run_init(void)
         uteModuleSportSetCountZeroIndex(0);
         uteModuleHeartStartSingleTesting(TYPE_HEART);
     }
+    f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
+    switch (uteModuleSportMoreSportGetStatus())
+    {
+        case ALL_SPORT_STATUS_CLOSE:
+        case ALL_SPORT_STATUS_PAUSE:
+            f_sport_sub_run->sport_run_state = SPORT_RUN_STOP;
+            f_sport_sub_run->sport_run_state_updata_flag = SPORT_RUN_STOP;
+            break;
 
+        case ALL_SPORT_STATUS_OPEN:
+        case ALL_SPORT_STATUS_CONTINUE:
+            f_sport_sub_run->sport_run_state = SPORT_RUN_START;
+            f_sport_sub_run->sport_run_state_updata_flag = SPORT_RUN_START;
+            break;
+    }
     func_cb.frm_main = func_sport_sub_run_form_create();
 }
 static void func_sport_sub_run_exit_data(void)
@@ -2401,24 +2462,22 @@ static void func_sport_sub_run_message(size_msg_t msg)
             }
             break;
         case KU_BACK:
-        case KU_DELAY_BACK:
-            switch(f_sport_sub_run->page_num)
+            switch (uteModuleSportMoreSportGetStatus())
             {
-                case PAGE_1:
-                    widget_page_set_client(func_cb.frm_main->page, 360, 0);
+                case ALL_SPORT_STATUS_CLOSE:
+                case ALL_SPORT_STATUS_PAUSE:
+                    uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
                     break;
-                case PAGE_2:
-                    widget_page_set_client(func_cb.frm_main->page_body,0, 0);
-                    widget_page_set_client(func_cb.frm_main->page, 360, 0);
+
+                case ALL_SPORT_STATUS_OPEN:
+                case ALL_SPORT_STATUS_CONTINUE:
+                    uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
                     break;
             }
-            f_sport_sub_run->page_old_y = 0;
-            f_sport_sub_run->move_offset = 0;
-            f_sport_sub_run->move_offset_x = 360;
-            f_sport_sub_run->page_old_x = 360;
-            f_sport_sub_run->page_num = PAGE_3;
-
             break;
+        case KU_DELAY_BACK:
+            break;
+
 #endif
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

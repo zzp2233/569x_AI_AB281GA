@@ -239,7 +239,7 @@ const menu_hc_item_t tbl_menu_cum_sudoku[] =
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I332001_THEME_ICON1_WEATHER_BIN,                   FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
-
+    {UI_BUF_I332001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
     //{UI_BUF_ICON_BLOOD_PRESSURE_BIN,            FUNC_BLOOD_PRESSURE},
     ////{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
 };

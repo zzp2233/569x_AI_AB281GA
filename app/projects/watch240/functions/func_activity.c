@@ -42,9 +42,6 @@ typedef struct f_activity_t_
 } f_activity_t;
 
 
-
-
-
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
 compo_form_t *func_activity_form_create(void)
@@ -371,9 +368,9 @@ compo_form_t *func_activity_form_create(void)
     compo_setid(textbox,KCAL_TXT_VALUE_ID);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_KCAL]));///千卡
-    compo_textbox_set(textbox, i18n[STR_KCAL]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,218+47);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,218+47,80,widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,KCAL_ARC_COLOR);
+    compo_textbox_set(textbox, i18n[STR_KCAL]);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%02ld",distance/100, distance%100);///公里数据
@@ -383,19 +380,18 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,218);
     compo_setid(textbox,KM_TXT_VALUE_ID);
 
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_MILE])+strlen(i18n[STR_KM]));//英里
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,218+47,80,widget_text_get_max_height());
+    compo_textbox_set_forecolor(textbox,KM_ARC_COLOR);
+    compo_setid(textbox,KM_TXT_UNIT_ID);
     if(uteModuleSystemtimeGetDistanceMiType())
     {
-        textbox = compo_textbox_create(frm,strlen(i18n[STR_MILE]));//英里
         compo_textbox_set(textbox, i18n[STR_MILE]);
     }
     else
     {
-        textbox = compo_textbox_create(frm,strlen(i18n[STR_KM]));//公里
         compo_textbox_set(textbox, i18n[STR_KM]);
     }
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,218+47);
-    compo_textbox_set_forecolor(textbox,KM_ARC_COLOR);
-    compo_setid(textbox,KM_TXT_UNIT_ID);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
@@ -406,9 +402,9 @@ compo_form_t *func_activity_form_create(void)
     compo_setid(textbox,STEP_TXT_VALUE_ID);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));///步数
-    compo_textbox_set(textbox, i18n[STR_STEP]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,279+47);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,279+47,80,widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,STEP_ARC_COLOR);
+    compo_textbox_set(textbox, i18n[STR_STEP]);
 
     return frm;
 }
@@ -440,13 +436,9 @@ static void func_activity_disp_handle(void)
         compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
         compo_textbox_t *textbox_km_unit = compo_getobj_byid(KM_TXT_UNIT_ID);
 
-        if(uteModuleSystemtimeGetDistanceMiType())//英里
+        if(f_activity->uint_km != uteModuleSystemtimeGetDistanceMiType())
         {
-            compo_textbox_set(textbox_km_unit, i18n[STR_MILE]);
-        }
-        else
-        {
-            compo_textbox_set(textbox_km_unit, i18n[STR_KM]);
+            compo_textbox_set(textbox_km_unit, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KM]);
         }
 
         if(f_activity->activity_state == 0)
@@ -792,6 +784,8 @@ static void func_activity_enter(void)
         .quick_jump_perc = 40,
     };
     compo_page_move_init(f_activity->ptm, func_cb.frm_main->page_body, &info);
+    f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 #endif
 }

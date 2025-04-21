@@ -130,7 +130,8 @@ static const menu_hc_item_t tbl_menu_grid[] =
 //全部图标资源tbl, 最大可以显示81个图标
 static const menu_hc_item_t tbl_menu_grid[] =
 {
-    {UI_BUF_I332001_THEME_ICON1_GUANYU_BIN,          FUNC_SET_SUB_ABOUT},
+    // {UI_BUF_I332001_THEME_ICON1_GUANYU_BIN,          FUNC_SET_SUB_ABOUT},
+    {UI_BUF_I332001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
     {UI_BUF_I332001_THEME_ICON1_RETRY_BIN,           FUNC_RSTFY},
 //    {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT

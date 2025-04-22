@@ -116,7 +116,7 @@ void uteLanguageCommonSelect(MULTIPLE_LANGUAGE_ID langId)
 #endif
 #if SCREEN_TITLE_MULTIPLE_INDONESUAN_LANGUAGE_SUPPORT
         case INDONESUAN_LANGUAGE_ID:
-            i18n = i18n_id_rid;
+            i18n = i18n_in_rid;
             break;
 #endif
 #if SCREEN_TITLE_MULTIPLE_PUNJABI_LANGUAGE_SUPPORT

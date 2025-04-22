@@ -149,6 +149,16 @@ void uteLanguageCommonSelect(MULTIPLE_LANGUAGE_ID langId)
             i18n = i18n_vi_rvn;
             break;
 #endif
+#if SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT
+        case MALAYSIA_LANGUAGE_ID:
+            i18n = i18n_ms_rmy;
+            break;
+#endif
+#if SCREEN_TITLE_MULTIPLE_GREEK_LANGUAGE_SUPPORT
+        case GREEK_LANGUAGE_ID:
+            i18n = i18n_el;
+            break;
+#endif
         default :
             if(DEFAULT_LANGUAGE == CHINESE_LANGUAGE_ID)
             {

@@ -828,45 +828,21 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
         }
         else
         {
+            uteModuleGuiCommonSetSwitchToMenu(true);
             func_cb.sta = screenId;
             task_stack_push(screenId);
         }
     }
 }
 
-/**
-*@brief        开始显示界面
-*@detail
-*@param[in] int screenId 界面唯一id
-*@param[in]  isWithoutHistory是否不把当前界面添加到历史栈列表
-*@author       cxd
-*@date       2022-07-11
-*/
-void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
+bool uteModuleGuiCommonIsSwitchToMenu(void)
 {
-    if(sys_cb.gui_sleep_sta)
-    {
-        sys_cb.gui_need_wakeup = true;
-    }
-    reset_sleep_delay_all();
+    return uteModuleGuiCommonData.isSwitchToMenu;
+}
 
-    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
-    {
-        return;
-    }
-
-    if(func_cb.sta != screenId)
-    {
-        msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
-        msg_enqueue(EVT_MSGBOX_EXIT);
-        msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
-        func_cb.sta = screenId;
-        // func_switch_to(screenId, 0);
-        if(!isWithoutHistory)
-        {
-            task_stack_push(screenId);
-        }
-    }
+void uteModuleGuiCommonSetSwitchToMenu(bool isSwitchToMenu)
+{
+    uteModuleGuiCommonData.isSwitchToMenu = isSwitchToMenu;
 }
 
 /**

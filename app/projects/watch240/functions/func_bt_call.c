@@ -1109,6 +1109,341 @@ static void func_bt_call_click(void)
     }
 
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#define TXT_X_MIN 20
+
+enum
+{
+    COMPO_ID_TXT_NUMBER = 0xff,     //避免id被覆盖
+    COMPO_ID_TXT_NAME,
+    COMPO_ID_TXT_TIME,
+    COMPO_ID_BTN_REJECT,
+    COMPO_ID_BTN_MIC,
+    COMPO_ID_TXT_IN_CALL,
+};
+
+static void func_bt_call_back_to(void)
+{
+    u8 last_func = func_directly_back_to();
+    if (last_func == FUNC_BT_RING)
+    {
+        func_directly_back_to();
+    }
+}
+
+void bt_incall_time_update(void)
+{
+    f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+    char *call_time_str = f_bt_call->call_time_str;
+
+#if !CALL_MGR_EN
+    u16 call_times = uteModuleCallGetCallingTimeSecond();;
+#else
+    u16 call_times = bt_cb.times;
+#endif
+
+    u8 hours   = call_times / 3600;
+    u8 minutes = (call_times % 3600) / 60;
+    u8 seconds = call_times % 60;
+    sprintf(call_time_str, "%02d:%02d:%02d", hours, minutes, seconds);
+//    printf("call_time_str: %s\n", call_time_str);
+
+    compo_textbox_t *time_txt = compo_getobj_byid(COMPO_ID_TXT_TIME);
+    compo_textbox_set(time_txt, call_time_str);
+    compo_textbox_set_visible(time_txt, true);
+}
+
+void  func_bt_call_number_update(void)
+{
+    if (bt_cb.number_sta)
+    {
+        compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
+        compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+        bt_pbap_lookup_number((char*)hfp_get_last_call_number(0));
+    }
+}
+
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_bt_call_form_create(void)
+{
+
+//    bt_pbap_lookup_number(hfp_get_last_call_number(0));
+    //printf("%s\n", __func__);
+    //新建窗体, 通话页面
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 83, GUI_SCREEN_WIDTH/1.4, 50);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
+    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_font( number_txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+    msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
+    compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_setid(time_txt, COMPO_ID_TXT_TIME);
+    // compo_textbox_set_forecolor(time_txt, COLOR_GREEN);
+
+    //挂断按钮
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_HANG_UP_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 80/2+234);
+
+    //mic
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_MICROPHONE_BIN);
+    compo_setid(btn, COMPO_ID_BTN_MIC);
+    compo_button_set_pos(btn, 80/2+232,80/2+234);
+
+    return frm;
+}
+
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_bt_outgoing_form_create(void)
+{
+
+//    bt_pbap_lookup_number(hfp_get_last_call_number(0));
+//    新建窗体, 呼出页面
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    //设置标题栏
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_PHONE]);
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 83, GUI_SCREEN_WIDTH/1.4, 50);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
+    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_font( number_txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+    msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_IN_CALL]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_setid(txt, COMPO_ID_TXT_TIME);
+    // compo_textbox_set_forecolor(txt, COLOR_GREEN);
+    compo_textbox_set(txt, i18n[STR_IN_CALL]);
+
+    //挂断按钮
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_HANG_UP_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 80/2+234);
+
+    return frm;
+}
+
+AT(.text.func.bt)
+static void func_bt_call_interface(void)
+{
+    f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+
+    if (bt_cb.disp_status == BT_STA_INCALL && f_bt_call->sta == false)
+    {
+        //销毁窗体
+        if (func_cb.frm_main != NULL)
+        {
+            compo_form_destroy(func_cb.frm_main);
+            memset(f_bt_call->pbap_result_Name, '\0', sizeof(f_bt_call->pbap_result_Name));
+        }
+
+        func_cb.frm_main = func_bt_call_form_create();
+        f_bt_call->sta = true;
+    }
+}
+
+AT(.text.func.bt)
+static void func_bt_call_exit_process(void)
+{
+    f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+
+    if (!bt_cb.number_sta)                                                              //号码未通知, 主动查询
+    {
+        if (tick_check_expire(f_bt_call->clcc_tick, 500))
+        {
+            f_bt_call->clcc_tick = tick_get();
+            bt_call_get_remote_phone_number();
+        }
+    }
+
+#if !CALL_MGR_EN
+    if(bt_cb.disp_status != BT_STA_OUTGOING && bt_cb.disp_status != BT_STA_INCALL)      //退出通话页面
+    {
+        func_bt_call_back_to();
+    }
+    else
+#endif
+        if (f_bt_call->exit_tick && tick_check_expire(f_bt_call->exit_tick, 500))          //强制退出, 防呆
+        {
+            printf("call reject, force exit!\n");
+            sys_cb.reject_tick = tick_get();
+            f_bt_call->exit_tick = 0;
+            func_bt_call_back_to();
+        }
+}
+
+
+// 判断从指定位置开始的字节序列是否是一个完整的UTF - 8字符
+static int is_complete_utf8_char(const char *str, int pos)
+{
+    unsigned char byte = str[pos];
+    if ((byte & 0x80) == 0)
+    {
+        // 单字节字符，肯定是完整的
+        return 1;
+    }
+    int num_bytes = 0;
+    if ((byte & 0xE0) == 0xC0)
+    {
+        num_bytes = 2;
+    }
+    else if ((byte & 0xF0) == 0xE0)
+    {
+        num_bytes = 3;
+    }
+    else if ((byte & 0xF8) == 0xF0)
+    {
+        num_bytes = 4;
+    }
+    for (int i = 1; i < num_bytes; i++)
+    {
+        if ((str[pos + i] & 0xC0)!= 0x80)
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+// 截取有用数据并在尾部补上三个...
+static void truncate_and_append(const char *src, char *dst, int dst_size)
+{
+    int i = 0;
+    int j = 0;
+    while (i < strlen(src) && j < dst_size - 1)
+    {
+        if (is_complete_utf8_char(src, i))
+        {
+            dst[j++] = src[i++];
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (j < dst_size - 3)
+    {
+        if (strlen(src) > PBAP_MAX_NAME_LEN)
+        {
+            dst[j++] = '.';
+            dst[j++] = '.';
+            dst[j++] = '.';
+        }
+    }
+    dst[j] = '\0';
+}
+
+void func_bt_call_up_date_process(void)
+{
+    f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+
+//    printf("name:%s name:%s\n",f_bt_call->pbap_result_Name , sys_cb.pbap_result_Name);
+
+    if(strcmp(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name)!=0)
+    {
+        s16 txt_leng;
+        s16 txt_x=0;
+        memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, sizeof(f_bt_call->pbap_result_Name));
+
+        memset(f_bt_call->tmp_pbap_result_Name, '\0', sizeof(f_bt_call->tmp_pbap_result_Name));
+        truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
+
+
+//        printf("tmp_pbap_result_Name [%s]\n", f_bt_call->tmp_pbap_result_Name);
+        compo_textbox_t *name_txt     = compo_getobj_byid(COMPO_ID_TXT_NAME);
+        compo_textbox_set(name_txt, f_bt_call->tmp_pbap_result_Name);
+    }
+}
+void func_bt_call_process(void)
+{
+    func_bt_call_up_date_process();
+    func_process();
+    func_bt_sub_process();
+    func_bt_call_exit_process();
+    func_bt_call_interface();
+}
+
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+bool mic_eq_drc_test = false;
+#endif
+
+static void func_bt_call_click(void)
+{
+    f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
+
+    int id = compo_get_button_id();
+    switch (id)
+    {
+
+        case COMPO_ID_BTN_REJECT:
+//        printf("COMPO_ID_BTN_REJECT\n");
+            bt_call_terminate();
+            f_bt_call->exit_tick = tick_get();
+            break;
+        case COMPO_ID_BTN_MIC:
+//        printf("COMPO_ID_BTN_REJECT\n");
+            f_bt_call->call_mute_flag ^=1;
+            compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_MIC);
+
+            if(f_bt_call->call_mute_flag)
+            {
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+                if (xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_uart_en)
+                {
+                    mic_eq_drc_test = false;
+                }
+                else
+                {
+                    audio_path_exit(AUDIO_PATH_BTMIC);
+                }
+#else
+                audio_path_exit(AUDIO_PATH_BTMIC);
+#endif
+                compo_button_set_bgimg(btn,UI_BUF_I338001_11_CALL_MICROPHONE_01_BIN);
+            }
+            else
+            {
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+                if (xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_uart_en)
+                {
+                    mic_eq_drc_test = true;
+                }
+                else
+                {
+                    audio_path_init(AUDIO_PATH_BTMIC);
+                    audio_path_start(AUDIO_PATH_BTMIC);
+                }
+#else
+                audio_path_init(AUDIO_PATH_BTMIC);
+                audio_path_start(AUDIO_PATH_BTMIC);
+#endif
+                compo_button_set_bgimg(btn,UI_BUF_I338001_11_CALL_MICROPHONE_BIN);
+            }
+            break;
+
+        default:
+            break;
+    }
+
+}
 #else
 compo_form_t *func_bt_outgoing_form_create(void)
 {
@@ -1123,7 +1458,7 @@ void  func_bt_call_number_update(void)
 //蓝牙音乐消息处理
 static void func_bt_call_message(size_msg_t msg)
 {
-#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT)
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT)
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
     switch (msg)

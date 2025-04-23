@@ -199,6 +199,126 @@ static void func_breathe_process(void)
 {
     func_process();
 }
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+compo_form_t *func_breathe_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    ///设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_BREATHE_TRAIN]);
+
+    char txt_num_buf[20];
+    char txt_buf[50];
+    u8 time = sys_cb.breathe_duration / 60 / 1000;
+
+    if(time == 0)time=1;
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    memset(txt_num_buf,0,sizeof(txt_num_buf));
+    snprintf(txt_num_buf,sizeof(txt_num_buf),"%d",time);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_BREATHE_TRAIN]);
+
+    //新建按钮
+    compo_button_t *btn;
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_19_BREATHING_TRAINING_START_BIN);
+    compo_setid(btn, COMPO_ID_BTN_START);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 60+120);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_19_BREATHING_TRAINING_TIME_BIN);
+    compo_setid(btn, COMPO_ID_BTN_TIME);
+    compo_button_set_pos(btn, 40/2+45, 40/2+149);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_19_BREATHING_TRAINING_ICON_BIN);
+    compo_setid(btn, COMPO_ID_BTN_MODE);
+    compo_button_set_pos(btn, 40/2+274, 40/2+149);
+
+
+    //创建文本
+    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_START]));
+    compo_textbox_set_pos(txt_start,GUI_SCREEN_CENTER_X, 64/2+266);
+    compo_setid(txt_start, COMPO_ID_TXT_START);
+    compo_textbox_set(txt_start, i18n[STR_START]);
+
+    u16 str_id=0;
+    switch (sys_cb.breathe_mode)
+    {
+        case BREATHE_MODE_SLOW:          //缓慢
+            str_id =STR_SLOW;
+            break;
+        case BREATHE_MODE_MEDIUM:        //舒缓
+            str_id =STR_SOOTHING;
+            break;
+        case BREATHE_MODE_FAST:          //稍快
+            str_id =STR_FASTER;
+            break;
+        default:
+            break;
+    }
+
+    uteModuleCharencodeReplaceSubString( i18n[STR_MIN_JOINT],txt_buf,"##",txt_num_buf);
+    compo_textbox_t *txt_time = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_location(txt_time,40/2+45, 24/2+204,80,35);
+    compo_textbox_set(txt_time, txt_buf);
+
+    compo_textbox_t *txt_mode = compo_textbox_create(frm, strlen(i18n[str_id]));
+    compo_textbox_set_location(txt_mode,40/2+274, 24/2+204,80,35);
+    compo_textbox_set(txt_mode, i18n[str_id]);
+
+    return frm;
+}
+
+//单击按钮
+static void func_breathe_button_click(void)
+{
+    f_breathe_t *f_breathe = (f_breathe_t *)func_cb.f_cb;
+    int id = compo_get_button_id();
+
+    switch(id)
+    {
+        case COMPO_ID_BTN_START://
+            uteTaskGuiStartScreen(FUNC_BREATHE_RUN, 0, __func__);
+            break;
+        default:
+        {
+            point_t pt = ctp_get_sxy();
+            compo_cardbox_t *cardbox = compo_getobj_byid(COMPO_ID_BTN_MODE);
+            if (compo_cardbox_btn_is(cardbox, pt))
+            {
+                uteTaskGuiStartScreen(FUNC_BREATHE_SUB_MODE, 0, __func__);
+                return;
+            }
+            cardbox = compo_getobj_byid(COMPO_ID_BTN_TIME);
+            if (compo_cardbox_btn_is(cardbox, pt))
+            {
+                uteTaskGuiStartScreen(FUNC_BREATHE_SUB_TIME, 0, __func__);
+                return;
+            }
+        }
+        break;
+    }
+}
+
+static void func_breathe_message(size_msg_t msg)
+{
+    switch (msg)
+    {
+        case MSG_CTP_CLICK:
+            func_breathe_button_click();
+            break;
+        default:
+            func_message(msg);
+            break;
+    }
+}
+static void func_breathe_process(void)
+{
+    func_process();
+}
 #elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //创建呼吸窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

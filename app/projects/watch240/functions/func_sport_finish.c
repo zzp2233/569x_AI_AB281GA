@@ -1150,6 +1150,364 @@ static void func_sport_finish_init(void)
     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     f_sport_finish->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+enum//对应运动中显示运动数据种类->不同项目可自行添加
+{
+    MULTIPLE_DATA=0,//多数据
+    MID_DATA,       //中数据
+    LESS_DATA,      //少数据
+};
+enum
+{
+    COMPO_SWIMING_STATE=1,
+    COMPO_WALK_STATE,
+    COMPO_OTHER_STATE,
+};
+enum
+{
+    COMPO_BTN_SURE=1,
+};
+
+typedef struct f_sport_finish_t_
+{
+    page_tp_move_t *ptm;
+    u8 sport_finish_state;
+    bool uint_km;
+
+} f_sport_finish_t;
+
+extern u32 func_sport_get_current_idx(void);
+extern u32 func_sport_get_str(u8 sport_idx);
+extern u32 func_sport_get_ui(u8 sport_idx);
+
+//创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sport_finish_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+#define TXT_SPACING  117
+
+    u16 str_id = func_sport_get_str(sys_cb.sport_idx);
+    u32 icon_addr = func_sport_get_ui(sys_cb.sport_idx);
+    char txt_buf[50];
+    ute_module_more_sports_data_t sport_data;
+    uteModuleSportGetMoreSportsDatas(&sport_data);
+
+    if(uteModuleSystemtime12HOn())
+    {
+        sport_data.saveData.startSportTime.hour %=12;
+        if(sport_data.saveData.startSportTime.hour == 0)
+        {
+            sport_data.saveData.startSportTime.hour = 12;
+        }
+    }
+    compo_textbox_t *textbox;
+    compo_picturebox_t *picbox;
+
+    //第一页
+    //运动类型图片
+    picbox = compo_picturebox_create(frm, icon_addr);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 58/2+38);
+    compo_picturebox_set_size(picbox, 58, 58);
+
+    /*运动类型->标题*/
+    textbox = compo_textbox_create(frm, strlen(i18n[str_id]));
+
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, 42/2+109);
+    compo_textbox_set(textbox, i18n[str_id]);
+
+    //时间日期
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %02d:%02d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, 152+38/2);
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
+///////////////////////////////////////////////////////////////////////////////////
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_3_EXERCISE_ICON1_TIME_BIN);
+    compo_picturebox_set_pos(picbox, 58/2+45, 58/2+231);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_CUSTOM_TIME]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
+    compo_textbox_set_location(textbox,126,217,130,30);
+    compo_textbox_set(textbox, i18n[STR_CUSTOM_TIME]);
+
+    /*运动时长->数据*/
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%02ld:%02ld:%02ld",sport_data.totalSportTime/60/60,sport_data.totalSportTime/60%60,sport_data.totalSportTime%60);
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,126,251);
+    compo_textbox_set(textbox, txt_buf);
+
+    compo_shape_t * shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,317,278,1);
+    compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
+///////////////////////////////////////////////////////////////////////////////////
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_3_EXERCISE_ICON1_HEART_BIN);
+    compo_picturebox_set_pos(picbox, 58/2+45, 58/2+231+TXT_SPACING);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_RATE]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,126,217+TXT_SPACING,130,30);
+    compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
+    compo_textbox_set(textbox, i18n[STR_HEART_RATE]);
+
+    /*运动心率->数据*/
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.avgHeartRate);
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,126,251+TXT_SPACING);
+    compo_textbox_set(textbox, txt_buf);
+
+    area_t txt_leng = widget_text_get_area(textbox->txt);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING,88,30);
+    compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,317+TXT_SPACING,278,1);
+    compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
+///////////////////////////////////////////////////////////////////////////////////
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_3_EXERCISE_ICON1_KCAL_BIN);
+    compo_picturebox_set_pos(picbox, 58/2+45, 58/2+231+TXT_SPACING*2);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_CALORIE]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,126,217+TXT_SPACING*2,130,30);
+    compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
+    compo_textbox_set(textbox, i18n[STR_CALORIE]);
+
+    /*运动卡路里->数据*/
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d",sport_data.saveData.sportCaloire);
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,126,251+TXT_SPACING*2);
+    compo_textbox_set(textbox, txt_buf);
+
+    txt_leng = widget_text_get_area(textbox->txt);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*2,88,30);
+    compo_textbox_set(textbox, i18n[STR_KCAL]);
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    u8 sport_type = 0;
+
+    switch(func_sport_get_disp_mode())
+    {
+        case MULTIPLE_DATA://多数据
+            sport_type = 0;
+            break;
+        case MID_DATA:     //中数据
+            sport_type = 2;
+            break;
+        case LESS_DATA:    //少数据
+            sport_type = 3;
+            break;
+    }
+
+    compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I338001_3_EXERCISE_5_EXERCISING_OK_BIN);
+    compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 251+TXT_SPACING*6-(sport_type*TXT_SPACING));
+    compo_setid(btn,COMPO_BTN_SURE);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
+    compo_textbox_set_align_center(textbox, true);
+    compo_textbox_set_multiline(textbox, true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 225+TXT_SPACING*7-(sport_type*TXT_SPACING),GUI_SCREEN_CENTER_X*1.7,30*2);
+    compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
+
+///               判断运动类型                       /
+    if(func_sport_get_disp_mode() == LESS_DATA)
+    {
+        return frm;
+    }
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,317+TXT_SPACING*2,278,1);
+    compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
+///////////////////////////////////////////////////////////////////////////////////
+    if(func_sport_get_disp_mode() == MID_DATA)
+    {
+        picbox = compo_picturebox_create(frm, UI_BUF_I338001_3_EXERCISE_ICON1_TIMES_BIN);
+        compo_picturebox_set_pos(picbox, 58/2+45, 58/2+231+TXT_SPACING*3);
+
+        textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_ORDER]));
+        compo_textbox_set_align_center(textbox, false);
+        compo_textbox_set_location(textbox,126,217+TXT_SPACING*3,130,30);
+        compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
+        compo_textbox_set(textbox, i18n[STR_SPORT_ORDER]);
+
+        /*次数->数据*/
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d",sport_data.saveData.sportTimes);
+        textbox = compo_textbox_create(frm, strlen(txt_buf));
+        compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
+        compo_textbox_set_align_center(textbox, false);
+        compo_textbox_set_pos(textbox,126,251+TXT_SPACING*3);
+        compo_textbox_set(textbox, txt_buf);
+
+        txt_leng = widget_text_get_area(textbox->txt);
+        textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_ORDER]));
+        compo_textbox_set_align_center(textbox, false);
+        compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*3,88,30);
+        compo_textbox_set(textbox, i18n[STR_SPORT_ORDER]);
+
+        return frm;
+    }
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,317+TXT_SPACING*3,278,1);
+    compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
+///////////////////////////////////////////////////////////////////////////////////
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_3_EXERCISE_ICON1_STEP_BIN);
+    compo_picturebox_set_pos(picbox, 58/2+45, 58/2+231+TXT_SPACING*3);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_STEPS]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,126,217+TXT_SPACING*3,130,30);
+    compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
+    compo_textbox_set(textbox, i18n[STR_STEPS]);
+
+    /*运动步数->数据*/
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,126,251+TXT_SPACING*3);
+    compo_textbox_set(textbox, txt_buf);
+
+    txt_leng = widget_text_get_area(textbox->txt);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_STEP]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*3,88,30);
+    compo_textbox_set(textbox, i18n[STR_STEP]);
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,317+TXT_SPACING*4,278,1);
+    compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
+///////////////////////////////////////////////////////////////////////////////////
+    u8 km_integer  = sport_data.saveData.sportDistanceInteger;                 //距离 整数
+    u8 km_decimals = sport_data.saveData.sportDistanceDecimals;               //距离 小数
+    if(uteModuleSystemtimeGetDistanceMiType())//英里
+    {
+        uint16_t distance = km_integer*1000+km_decimals*10;
+        distance = distance*0.6213712;
+        km_integer  = distance/1000;
+        km_decimals = distance%1000/10;
+    }
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_3_EXERCISE_ICON1_PACE_BIN);
+    compo_picturebox_set_pos(picbox, 58/2+45, 58/2+231+TXT_SPACING*4);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PACE]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,126,217+TXT_SPACING*4,130,30);
+    compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
+    compo_textbox_set(textbox, i18n[STR_PACE]);
+
+    /*运动步数->数据*/
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(sport_data.saveData.avgTimeSecond)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", sport_data.saveData.avgTimeMinute,(km_integer+km_decimals)/(sport_data.saveData.avgTimeMinute+sport_data.saveData.avgTimeSecond),'"');
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", 0,0,'"');
+    }
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,126,251+TXT_SPACING*4);
+    compo_textbox_set(textbox, txt_buf);
+
+    txt_leng = widget_text_get_area(textbox->txt);
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"/%s",uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*4,88,30);
+    compo_textbox_set(textbox, txt_buf);
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,317+TXT_SPACING*5,278,1);
+    compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
+
+///////////////////////////////////////////////////////////////////////////////////
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_3_EXERCISE_ICON1_DIS_BIN);
+    compo_picturebox_set_pos(picbox, 58/2+45, 58/2+231+TXT_SPACING*5);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_DISTANCE]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,126,217+TXT_SPACING*5,130,30);
+    compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
+    compo_textbox_set(textbox, i18n[STR_DISTANCE]);
+
+    /*运动步数->数据*/
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",km_integer,km_decimals);
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_pos(textbox,126,251+TXT_SPACING*5);
+    compo_textbox_set(textbox, txt_buf);
+
+    txt_leng = widget_text_get_area(textbox->txt);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_MILE])+strlen(i18n[STR_KILOMETRE]));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*5,88,30);
+    compo_textbox_set(textbox, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
+
+    return frm;
+}
+
+static void func_sport_finish_init(void)
+{
+    f_sport_finish_t *f_sport_finish = (f_sport_finish_t*)func_cb.f_cb;
+    //防止跳回运动中界面
+    if(task_stack_contains(FUNC_SPORT_SUB_RUN))
+    {
+        task_stack_remove(FUNC_SPORT_SUB_RUN);
+    }
+    int page_size=0;
+    switch(func_sport_get_disp_mode())
+    {
+        case MULTIPLE_DATA:
+            page_size = 1134;
+            break;
+        case MID_DATA:
+            page_size = 900;
+            break;
+        case LESS_DATA:
+            page_size = 798;
+            break;
+    }
+
+    func_cb.frm_main = func_sport_finish_form_create();
+    f_sport_finish->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used=false,
+        .page_size = page_size,
+        .page_count = 1,
+    };
+    compo_page_move_init(f_sport_finish->ptm, func_cb.frm_main->page_body, &info);
+
+    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+    f_sport_finish->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
+}
 #else
 enum
 {

@@ -53,11 +53,11 @@ compo_form_t *func_system_sub_system_form_create(void)
     return frm;
 }
 #else
-#define SET_LIST_CNT                       ((int)(sizeof(tbl_setting_list) / sizeof(tbl_setting_list[0])))
+#define SYSTEM_LIST_CNT                       ((int)(sizeof(tbl_system_list) / sizeof(tbl_system_list[0])))
 
 enum
 {
-    COMPO_ID_LISTBOX = 1,
+    COMPO_ID_SYSTEM = 1,
 };
 
 typedef struct f_set_list_t_
@@ -66,20 +66,20 @@ typedef struct f_set_list_t_
 
 } f_set_list_t;
 
-static const compo_listbox_item_t tbl_setting_list[] =
+static const compo_listbox_item_t tbl_system_list[] =
 {
     {0},
 };
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
-compo_form_t *func_set_sub_list_form_create(void)
+compo_form_t *func_system_sub_system_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
-    compo_listbox_set(listbox, tbl_setting_list, SET_LIST_CNT);
+    compo_listbox_set(listbox, tbl_system_list, SYSTEM_LIST_CNT);
     compo_listbox_set_bgimg(listbox, 0);
-    compo_setid(listbox, COMPO_ID_LISTBOX);
+    compo_setid(listbox, SYSTEM_LIST_CNT);
 
     u8 set_idx = sys_cb.set_idx;
     if (set_idx < 1)
@@ -154,11 +154,7 @@ static void func_system_sub_system_enter(void)
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
-#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT - 2));
 #endif
     func_cb.enter_tick = tick_get();

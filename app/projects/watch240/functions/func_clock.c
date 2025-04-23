@@ -163,13 +163,11 @@ compo_form_t *func_clock_form_create(void)
             UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,watch online index %d: 0x%x", __func__, i, dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + i]);
         }
     }
-    else
 #endif
+
+    if (sys_cb.dialplate_index > uteModuleGuiCommonGetCurrWatchMaxIndex() - 1)
     {
-        if (sys_cb.dialplate_index > UTE_MODULE_SCREENS_WATCH_CNT_MAX - 1)
-        {
-            sys_cb.dialplate_index = DEFAULT_WATCH_INDEX;
-        }
+        sys_cb.dialplate_index = DEFAULT_WATCH_INDEX;
     }
 
     switch (sys_cb.dialplate_index)

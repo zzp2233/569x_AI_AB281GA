@@ -710,7 +710,7 @@ compo_form_t *func_bt_form_create(void)
     {
         //歌词/歌手
         compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-        compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, 200, 50);
         compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
         compo_textbox_set(name_txt,artist_buf);
@@ -722,7 +722,7 @@ compo_form_t *func_bt_form_create(void)
 
         //歌名
         compo_textbox_t *lyric_txt = compo_textbox_create(frm, 50);
-        compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, 200, 50);
         compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
         compo_textbox_set(lyric_txt,title_buf);
@@ -766,7 +766,7 @@ compo_form_t *func_bt_form_create(void)
     else
     {
         compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-        compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, 200, 50);
         compo_textbox_set_autoroll_mode(name_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_setid(name_txt, COMPO_ID_TXT_MUSIC_NAME);
         compo_textbox_set(name_txt, i18n[STR_UNKNOWN]);
@@ -774,7 +774,7 @@ compo_form_t *func_bt_form_create(void)
         compo_textbox_set_visible(name_txt, false);
 
         compo_textbox_t *lyric_txt = compo_textbox_create(frm, 50);
-        compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_location(lyric_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, 200, 50);
         compo_textbox_set_autoroll_mode(lyric_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_textbox_set(lyric_txt, i18n[STR_VOICE_BT_NOT_CONNECT]);
         compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
@@ -837,7 +837,7 @@ static void func_bt_music_refresh_disp(void)
     {
         compo_textbox_set_visible(tilte_art_txt, false);
 
-        compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2, 200, 50);
         compo_textbox_set_autoroll_mode(tilte_txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
         compo_textbox_set(tilte_txt, i18n[STR_VOICE_BT_NOT_CONNECT]);
         compo_setid(tilte_txt, COMPO_ID_TXT_MUSIC_LYRIC);
@@ -856,8 +856,8 @@ static void func_bt_music_refresh_disp(void)
     {
         compo_shape_set_visible(shape,true);
         compo_textbox_set_visible(tilte_art_txt, true);
-        compo_textbox_set_location(tilte_art_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, GUI_SCREEN_WIDTH, 50);
-        compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, GUI_SCREEN_WIDTH, 50);
+        compo_textbox_set_location(tilte_art_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/2.5, 200, 50);
+        compo_textbox_set_location(tilte_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/1.8, 200, 50);
     }
     uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
     uint16_t title_size_leng  = 0;

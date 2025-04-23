@@ -35,7 +35,9 @@ language_id_map = {
     'CZECK': 'cs_rcs',
     'TRADITIONAL_CHINESE': 'zh_rtw',
     'ROMANIAN': 'ro_rro',
-    'VIETNAMESE': 'vi_rvn'
+    'VIETNAMESE': 'vi_rvn',
+    'MALAYSIA': 'ms_rmy',
+    'GREEK': 'el',
 }
 
 def process_yaml(yaml_data, folder_path):

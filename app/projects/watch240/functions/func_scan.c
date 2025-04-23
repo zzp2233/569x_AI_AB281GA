@@ -120,6 +120,28 @@ compo_form_t *func_scan_form_create(void)
     //barcode_creat(frm->page_body, "123896\0", GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 80, 6, false);
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+//创建扫一扫窗体
+compo_form_t *func_scan_form_create(void)
+{
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+    static const uint8_t maxSizeQrCodeLink = 140;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set(qrbox, qr_str);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
+    uteModulePlatformMemoryFree(qr_str);
+    return frm;
+}
 #else
 compo_form_t *func_scan_form_create(void)
 {

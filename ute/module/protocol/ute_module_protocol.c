@@ -760,7 +760,7 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
 #endif
         uteModuleSportSetTakePictureEnable(true);
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-        uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
+        uteTaskGuiStartScreen(FUNC_CAMERA, 0, __func__);
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
     }
     else
@@ -1638,7 +1638,7 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
         }
         if(!uteModuleGuiCommonIsDisplayOn() || uteModuleGuiCommonGetCurrentScreenId() != FUNC_BLOOD_OXYGEN)
         {
-            uteTaskGuiStartScreenWithoutHistory(FUNC_BLOOD_OXYGEN,true);
+            uteTaskGuiStartScreen(FUNC_BLOOD_OXYGEN, 0, __func__);
         }
         uteModuleBloodoxygenStartSingleTesting();
     }

@@ -50,6 +50,7 @@ typedef struct
     ute_display_ctrl_t displayCtrl;
     int themeTypeId;//主题类型,蜂窝,列表,转圈等
     bool isPowerSavingOpen;
+    bool isSwitchToMenu;
 } ute_module_gui_common_t;
 
 typedef struct
@@ -93,8 +94,9 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear);
 int uteModuleGuiCommonGetCurrentScreenId(void);
 int uteModuleGuiCommonGetLastScreenId(void);
 void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *format, ...);
-void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory);
 void uteTaskGuiStackRemoveScreenId(uint8_t screenId);
+bool uteModuleGuiCommonIsSwitchToMenu(void);
+void uteModuleGuiCommonSetSwitchToMenu(bool isSwitchToMenu);
 
 uint8_t uteModuleGuiCommonGetBackLightPercent(void);
 bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void);

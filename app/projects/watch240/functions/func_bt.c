@@ -284,7 +284,7 @@ compo_form_t *func_bt_form_create(void)
 
     if (bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
-        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSICC_SHENGYING_SMALL_BIN); /// 音量减
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSICC_SHENGYING_SMALL1_BIN); /// 音量减
     }
     else
     {
@@ -295,7 +295,7 @@ compo_form_t *func_bt_form_create(void)
 
     if (bt_a2dp_profile_completely_connected() || ble_is_connect())
     {
-        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSICC_SHENGYING_BIG_BIN); /// 音量加
+        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSICC_SHENGYING_BIG1_BIN); /// 音量加
     }
     else
     {
@@ -453,8 +453,8 @@ static void func_bt_button_release_handle()
         {
             compo_button_set_bgimg(btn_play, UI_BUF_I330001_MUSICC_PAUSE_BIN);
         }
-        compo_button_set_bgimg(btn_up, UI_BUF_I330001_MUSICC_SHENGYING_BIG_BIN);
-        compo_button_set_bgimg(btn_down, UI_BUF_I330001_MUSICC_SHENGYING_SMALL_BIN);
+        compo_button_set_bgimg(btn_up, UI_BUF_I330001_MUSICC_SHENGYING_BIG1_BIN);
+        compo_button_set_bgimg(btn_down, UI_BUF_I330001_MUSICC_SHENGYING_SMALL1_BIN);
     }
 
     int id = compo_get_button_id();

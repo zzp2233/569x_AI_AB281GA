@@ -22,6 +22,8 @@ typedef struct
     uint32_t target_smoking_count; // 抽吸目标口数
     uint32_t smoking_count_per_hour[24];  // 存储每小时的口数
     uint32_t smoking_count_per_day[7];
+    int current_power;                     // 新增：当前功率（单/双发）
+    int current_index; // 新增：当前进度条索引
 } ute_module_smoke_data_t;
 extern ute_module_smoke_data_t uteModuleSmokeData;
 
@@ -44,5 +46,6 @@ void check_and_update_week();
 uint32_t get_today_smoking_count();
 uint32_t get_this_week_smoking_count();
 void uteModuleResetTotalSmokeCount(void);
+void save_current_power_to_file(int power);
 
 #endif

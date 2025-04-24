@@ -5607,6 +5607,7 @@ void music_data_refresh(void)
 
 #endif
 
+
 #if 0
 
 #elif 1
@@ -5841,7 +5842,7 @@ enum
     COMPO_CARD_START,
     COMPO_ID_CARD_1,
     COMPO_ID_CARD_2,
-    COMPO_ID_CARD_3,
+    // COMPO_ID_CARD_3,
     COMPO_ID_CARD_4,
     COMPO_ID_CARD_5,
     COMPO_ID_CARD_6,
@@ -6108,74 +6109,74 @@ static const ui_handle_t ui_handle =
         },
     },
 
-    .card3 = {
-        .id = COMPO_ID_CARD_3,
-        .x  = SUB_CARD_X+SUB_CARD_W/2,
-        .y  = 190+(SUB_CARD_H+6)*2,
-        .w  = SUB_CARD_W,
-        .h  = SUB_CARD_H,
+    // .card3 = {
+    //     .id = COMPO_ID_CARD_3,
+    //     .x  = SUB_CARD_X+SUB_CARD_W/2,
+    //     .y  = 190+(SUB_CARD_H+6)*2,
+    //     .w  = SUB_CARD_W,
+    //     .h  = SUB_CARD_H,
 
-        .rect = {
-            .idx    = 0,
-            .x      = 0,
-            .y      = 0,
-            .w      = SUB_CARD_W,
-            .h      = SUB_CARD_H,
-            .r      = 16,
-            .color  = {41,41,41},
-        },
+    //     .rect = {
+    //         .idx    = 0,
+    //         .x      = 0,
+    //         .y      = 0,
+    //         .w      = SUB_CARD_W,
+    //         .h      = SUB_CARD_H,
+    //         .r      = 16,
+    //         .color  = {41,41,41},
+    //     },
 
-        .text_music = {
-            .idx    = 0,
-            .x      = 12-SUB_CARD_W/2,
-            .y      = 10-SUB_CARD_H/2,
-            .w      = 200,
-            .h      = 30,
-            .res    = UI_BUF_0FONT_FONT_BIN,
-            .str_id = STR_MUSIC,
-            .center = false,
-            .color  = {255,48,96},
-        },
+    //     .text_music = {
+    //         .idx    = 0,
+    //         .x      = 12-SUB_CARD_W/2,
+    //         .y      = 10-SUB_CARD_H/2,
+    //         .w      = 200,
+    //         .h      = 30,
+    //         .res    = UI_BUF_0FONT_FONT_BIN,
+    //         .str_id = STR_MUSIC,
+    //         .center = false,
+    //         .color  = {255,48,96},
+    //     },
 
-        .pic_click_prev = {
-            .idx    = COMPO_MUSIC_BTN_PREV,
-            .x      = 26+28/2-SUB_CARD_W/2,
-            .y      = 52+28/2-SUB_CARD_H/2,
-            .w      = 28,
-            .h      = 28,
-            .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_UP00_BIN,
-            .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_UP01_BIN,
-            .res_switch = 0,
-            .func_sta = 0,
-        },
-        .pic_click_next = {
-            .idx    = COMPO_MUSIC_BTN_NEXT,
-            .x      = 178+28/2-SUB_CARD_W/2,
-            .y      = 52+28/2-SUB_CARD_H/2,
-            .w      = 28,
-            .h      = 28,
-            .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_NEXT00_BIN,
-            .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_NEXT01_BIN,
-            .res_switch = 0,
-            .func_sta = 0,
-        },
-        .pic_click_play = {
-            .idx    = COMPO_MUSIC_BTN_PLAY,
-            .x      = 88+56/2-SUB_CARD_W/2,
-            .y      = 38+56/2-SUB_CARD_H/2,
-            .w      = 28,
-            .h      = 28,
-            .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY00_BIN,
-            .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY01_BIN,
-            .res_switch = UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN,
-            .func_sta = 0,
-        },
-    },
+    //     .pic_click_prev = {
+    //         .idx    = COMPO_MUSIC_BTN_PREV,
+    //         .x      = 26+28/2-SUB_CARD_W/2,
+    //         .y      = 52+28/2-SUB_CARD_H/2,
+    //         .w      = 28,
+    //         .h      = 28,
+    //         .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_UP00_BIN,
+    //         .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_UP01_BIN,
+    //         .res_switch = 0,
+    //         .func_sta = 0,
+    //     },
+    //     .pic_click_next = {
+    //         .idx    = COMPO_MUSIC_BTN_NEXT,
+    //         .x      = 178+28/2-SUB_CARD_W/2,
+    //         .y      = 52+28/2-SUB_CARD_H/2,
+    //         .w      = 28,
+    //         .h      = 28,
+    //         .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_NEXT00_BIN,
+    //         .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_NEXT01_BIN,
+    //         .res_switch = 0,
+    //         .func_sta = 0,
+    //     },
+    //     .pic_click_play = {
+    //         .idx    = COMPO_MUSIC_BTN_PLAY,
+    //         .x      = 88+56/2-SUB_CARD_W/2,
+    //         .y      = 38+56/2-SUB_CARD_H/2,
+    //         .w      = 28,
+    //         .h      = 28,
+    //         .res    = UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY00_BIN,
+    //         .res_click = UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY01_BIN,
+    //         .res_switch = UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN,
+    //         .func_sta = 0,
+    //     },
+    // },
 
     .card4 = {
         .id = COMPO_ID_CARD_4,
         .x  = SUB_CARD_X+SUB_CARD_W/2,
-        .y  = 190+(SUB_CARD_H+6)*3,
+        .y  = 190+(SUB_CARD_H+6)*2,
         .w  = SUB_CARD_W,
         .h  = SUB_CARD_H,
 
@@ -6216,7 +6217,7 @@ static const ui_handle_t ui_handle =
     .card5 = {
         .id = COMPO_ID_CARD_5,
         .x  = SUB_CARD_X+SUB_CARD_W/2,
-        .y  = 190+(SUB_CARD_H+6)*4,
+        .y  = 190+(SUB_CARD_H+6)*3,
         .w  = SUB_CARD_W,
         .h  = SUB_CARD_H,
 
@@ -6257,7 +6258,7 @@ static const ui_handle_t ui_handle =
     .card6 = {
         .id = COMPO_ID_CARD_6,
         .x  = SUB_CARD_X+SUB_CARD_W/2,
-        .y  = 190+(SUB_CARD_H+6)*5,
+        .y  = 190+(SUB_CARD_H+6)*4,
         .w  = SUB_CARD_W,
         .h  = SUB_CARD_H,
 
@@ -6330,7 +6331,7 @@ static const ui_handle_t ui_handle =
     .card7 = {
         .id = COMPO_ID_CARD_7,
         .x  = SUB_CARD_X+SUB_CARD_W/2,
-        .y  = 190+(SUB_CARD_H+6)*6+7,
+        .y  = 190+(SUB_CARD_H+6)*5+7,
         .w  = SUB_CARD_W,
         .h  = SUB_CARD_H,
 
@@ -6430,10 +6431,10 @@ static int func_clock_sub_card_get_y_info(int card_compo_id)
     {
         ret = ui_handle.card2.y;
     }
-    if (card_compo_id == ui_handle.card3.id)
-    {
-        ret = ui_handle.card3.y;
-    }
+    // if (card_compo_id == ui_handle.card3.id)
+    // {
+    //     ret = ui_handle.card3.y;
+    // }
     if (card_compo_id == ui_handle.card4.id)
     {
         ret = ui_handle.card4.y;
@@ -6740,11 +6741,11 @@ static void func_clock_sub_card_compo_create(compo_form_t *frm)
 
 
     // //卡片3 //闹钟
-    compo_cardbox_t* card3 = compo_cardbox_create(frm, 1, 1, 5, SUB_CARD_W,SUB_CARD_H);
-    compo_setid(card3, COMPO_ID_CARD_3);
-    set_cardbox_rect_location(card3, 0,0,0, SUB_CARD_W, SUB_CARD_H,make_color(41,41,41));
-    set_cardbox_icon(card3, 0,UI_BUF_I330001_FIRSTORDER_VAPE_RECORD_BG_L_BIN,0,0,SUB_CARD_W, SUB_CARD_H,SUB_CARD_W,SUB_CARD_H);
-    // set_cardbox_text(card3,0,card3->text[0],i18n[STR_ALARM_CLOCK],make_color(255,255,255),UI_BUF_0FONT_FONT_BIN,12,10,200,30,SUB_CARD_W,SUB_CARD_H,false);
+    // compo_cardbox_t* card3 = compo_cardbox_create(frm, 1, 1, 5, SUB_CARD_W,SUB_CARD_H);
+    // compo_setid(card3, COMPO_ID_CARD_3);
+    // set_cardbox_rect_location(card3, 0,0,0, SUB_CARD_W, SUB_CARD_H,make_color(41,41,41));
+    // set_cardbox_icon(card3, 0,UI_BUF_I330001_FIRSTORDER_VAPE_RECORD_BG_L_BIN,0,0,SUB_CARD_W, SUB_CARD_H,SUB_CARD_W,SUB_CARD_H);
+    // // set_cardbox_text(card3,0,card3->text[0],i18n[STR_ALARM_CLOCK],make_color(255,255,255),UI_BUF_0FONT_FONT_BIN,12,10,200,30,SUB_CARD_W,SUB_CARD_H,false);
 
 
     //卡片2 //音乐
@@ -6924,18 +6925,18 @@ static void func_clock_sub_card_compo_update(s32 ofs_y, bool creating)
                 card_id = ui_handle.card2.id;
                 break;
 
-            case COMPO_ID_CARD_3:
-                if (ui_handle.card3.id != COMPO_ID_CARD_3)
-                {
-                    printf("COMPO_ID_CARD_3 ERR\n");
-                    halt(HALT_GUI);
-                }
-                x = ui_handle.card3.x;
-                y = card_y = ui_handle.card3.y;
-                w = ui_handle.card3.w;
-                h = ui_handle.card3.h;
-                card_id = ui_handle.card3.id;
-                break;
+            // case COMPO_ID_CARD_3:
+            //     if (ui_handle.card3.id != COMPO_ID_CARD_3)
+            //     {
+            //         printf("COMPO_ID_CARD_3 ERR\n");
+            //         halt(HALT_GUI);
+            //     }
+            //     x = ui_handle.card3.x;
+            //     y = card_y = ui_handle.card3.y;
+            //     w = ui_handle.card3.w;
+            //     h = ui_handle.card3.h;
+            //     card_id = ui_handle.card3.id;
+            //     break;
 
             case COMPO_ID_CARD_4:
                 if (ui_handle.card4.id != COMPO_ID_CARD_4)
@@ -7210,9 +7211,9 @@ static void func_clock_sub_card_click_handler(void)
             }
 
             break;
-        case COMPO_ID_CARD_3:
-            func_jump = FUNC_ECIG_VPAE_SUB;
-            break;
+        // case COMPO_ID_CARD_3:
+        //     func_jump = FUNC_ECIG_VPAE_SUB;
+        //     break;
         case COMPO_ID_CARD_4 :
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
             func_jump = FUNC_TIMER;
@@ -7372,11 +7373,11 @@ void music_data_refresh(void)
     compo_button_t *btn = compo_getobj_byid(COMPO_MUSIC_BTN_PLAY); //播放/暂停
     if(ble_is_connect() || uteModuleCallBtIsConnected())
     {
-        compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : ui_handle.card3.pic_click_play.res);
+        compo_button_set_bgimg(btn, bt_cb.music_playing ? UI_BUF_I330001_FIRSTORDER_MUSIC_PAUSED_BIN : UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY00_BIN);
     }
     else
     {
-        compo_button_set_bgimg(btn,ui_handle.card3.pic_click_play.res_click);
+        compo_button_set_bgimg(btn,UI_BUF_I330001_FIRSTORDER_MUSIC_PLAY01_BIN);
     }
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

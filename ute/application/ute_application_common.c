@@ -263,6 +263,7 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleEmotionPressureInit();
 #endif
         uteModuleWeatherInit();
+        uteModuleSmokeInit();
         uteModuleNotDisturbInit();
 #if UTE_MODULE_DRINK_WATER_NOTIFY_SCREEN_SUPPORT
         //uteModuleDrinkWaterInit();

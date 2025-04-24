@@ -590,15 +590,15 @@ static void func_clock_sub_dropdown_click_handler(void)
         //点击任务跳转
         case COMPO_ID_PIC_PASSWORD:
 
-            if(sys_cb.password_flag == true)
-            {
-                sys_cb.password_flag = false;
-            }
-            else
-            {
-                sys_cb.password_flag = true;
-            }
-            func_cb.sta = FUNC_PASSWORD_SUB_DISP;
+            // if(sys_cb.password_flag == true)
+            // {
+            //     sys_cb.password_flag = false;
+            // }
+            // else
+            // {
+            //     sys_cb.password_flag = true;
+            // }
+            func_cb.sta = FUNC_SET_SUB_PASSWORD;
             break;
         //点击任务跳转
         case COMPO_ID_BTN_FLASHLIGHT:

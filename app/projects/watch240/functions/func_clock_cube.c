@@ -235,7 +235,7 @@ static void func_clock_cube_disk_icon_click(void)
     {
         // func_switching(FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO, NULL);
         func_switch_to(func_sta, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
-        func_cb.sta = func_sta;
+        // func_cb.sta = func_sta;
         func_cb.menu_idx = icon_idx; // 记住当前编号
     }
 }

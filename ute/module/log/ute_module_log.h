@@ -16,10 +16,10 @@
 #define UTE_LOG_SYSTEM_LVL  1   //  1
 #define UTE_LOG_FILE_SYSTEM_LVL 0 //2
 #define UTE_LOG_KEYS_LVL 0 //3
-#define UTE_LOG_HEART_LVL 4 //4
+#define UTE_LOG_HEART_LVL 0 //4
 #define UTE_LOG_BP_LVL 0 //5
 #define UTE_LOG_OXYGEN_LVL 0 //6
-#define UTE_LOG_STEP_LVL 7 //7
+#define UTE_LOG_STEP_LVL 0 //7
 #define UTE_LOG_PROTOCOL_LVL 8//8
 #define UTE_LOG_NOTIFY_LVL 0//9
 #define UTE_LOG_WEATHER_LVL 0 //10

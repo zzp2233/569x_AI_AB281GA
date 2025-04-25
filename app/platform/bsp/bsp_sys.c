@@ -879,6 +879,6 @@ void bsp_sys_init(void)
 #if !UTE_MULTIPLE_LANGUAGE_SUPPORT
     lang_select(LANG_ZH);
 #endif
-    ecig_cfg.smoke_power = 15;
+    // ecig_cfg.smoke_power = 15;
 }
 

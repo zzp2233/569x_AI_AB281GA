@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_module_smoke.h"
 #define TRACE_EN 1
 #if TRACE_EN
 #define TRACE(...) printf(__VA_ARGS__)
@@ -15,10 +16,6 @@
 #define MAX_POWER_DOUBLE 30    // 双发最大功率
 #define INDEX_MAX_SINGLE 8     // 单发最大 index
 #define INDEX_MAX_DOUBLE 10    // 双发最大 index
-
-
-void save_power_and_index(int power, int index);
-void load_power_and_index(int *power, int *index);
 
 enum
 {
@@ -43,22 +40,22 @@ typedef struct f_setpower_t_
     int current_power; // 当前功率值
 } f_setpower_t;
 
-static int stored_power = 15;
-static int stored_index = 15 - MIN_POWER_SINGLE;
+// static int stored_power = uteModuleSmokeData.current_power;
+// static int stored_index = uteModuleSmokeData.current_index;
 
 // 保存功率和进度条信息
 void save_power_and_index(int power, int index)
 {
-    stored_power = power;
-    stored_index = index;
+    uteModuleSmokeData.current_power = power;
+    uteModuleSmokeData.current_index = index;
     ecig_set_power(power);
 }
 
 // 加载功率和进度条信息
 void load_power_and_index(int *power, int *index)
 {
-    *power = stored_power;
-    *index = stored_index;
+    *power = uteModuleSmokeData.current_power;
+    *index = uteModuleSmokeData.current_index;
     if ((get_gear_func() == 0 && *power < MIN_POWER_SINGLE) ||
         (get_gear_func() == 1 && *power < MIN_POWER_DOUBLE))
     {
@@ -104,10 +101,10 @@ compo_form_t *func_ecig_set_power_form_create(void)
 
     int total_cnt = (get_gear_func() == 0) ? 9 : 11;
     int power, index;
-    load_power_and_index(&power, &index);
-    f_setpower->current_index = index;
-    f_setpower->current_power = power;
 
+    f_setpower->current_index = uteModuleSmokeData.current_index;
+    f_setpower->current_power = uteModuleSmokeData.current_power;
+    load_power_and_index(&power, &index);
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DANG_FA_POINT_BIN);
     compo_picturebox_cut(picbox, f_setpower->current_index, total_cnt);
     compo_picturebox_set_pos(picbox, 121, 165);
@@ -116,10 +113,10 @@ compo_form_t *func_ecig_set_power_form_create(void)
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SHUANG_FA_POINT_BIN);
 
-    if (get_gear_func() == 1 && f_setpower->current_index > INDEX_MAX_DOUBLE)
-    {
-        f_setpower->current_index = INDEX_MAX_DOUBLE;
-    }
+    // if (get_gear_func() == 1 && f_setpower->current_index > INDEX_MAX_DOUBLE)
+    // {
+    //     f_setpower->current_index = INDEX_MAX_DOUBLE;
+    // }
     compo_picturebox_cut(picbox, f_setpower->current_index, total_cnt);
     compo_picturebox_set_pos(picbox, 121, 165);
     compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
@@ -206,6 +203,7 @@ static void func_ecig_set_power_button_touch_handle(void)
             f_setpower->current_power = 15;
             compo_picturebox_cut(picbox2, f_setpower->current_index, 9);
             ecig_set_power(f_setpower->current_power);
+
             printf("222Switched to Single mode: total_cnt = 9, current_index = %d, current_power = %d\n",
                    f_setpower->current_index, f_setpower->current_power);
             break;
@@ -267,6 +265,7 @@ static void func_ecig_set_power_button_touch_handle(void)
             break;
     }
     save_power_and_index(f_setpower->current_power, f_setpower->current_index);
+    uteModuleSmokeDataSaveConfig();
 }
 
 static void func_ecig_set_power_button_release_handle()

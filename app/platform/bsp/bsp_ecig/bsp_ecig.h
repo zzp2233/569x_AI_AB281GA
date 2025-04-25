@@ -101,4 +101,5 @@ void ecig_set_res2(u8 value);
 void test_1st_gear_func(void);
 void test_2st_gear_func(void);
 u8 get_gear_func(void);
+u8 get_gear_func1(void);
 #endif // _BSP_ECIG_H

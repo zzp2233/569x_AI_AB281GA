@@ -9,7 +9,7 @@
 #ifndef _UTE_PROJECT_CONFIG_AB281A_H_
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
-#define DEFAULT_BLE_DEV_NEME "R175"
+#define DEFAULT_BLE_DEV_NEME "Romio"
 #define UTE_SW_VERSION "ABE012V000007"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */

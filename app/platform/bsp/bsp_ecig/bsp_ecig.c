@@ -1,5 +1,5 @@
 #include "include.h"
-
+#include "ute_module_smoke.h"
 #if ECIG_POWER_CONTROL
 
 ecig_cfg_t ecig_cfg;
@@ -43,7 +43,7 @@ void bsp_ecig_init(void)
 #endif
 
     //p->aim_power = 5,
-    ecig_set_power(10);
+    ecig_set_power(15);
     p->heat_time_max = 8;
     p->short_res_prop = 14;
     p->open_res_prop = 300;
@@ -69,11 +69,12 @@ u32 ecig_vbat_get(void)
 void ecig_set_power(u8 value)
 {
     ecig_cfg.aim_power = value - 2;
+    uteModuleSmokeData.current_power=value;
 }
 
 u8 ecig_get_power(void)
 {
-    return ecig_cfg.aim_power +2 ;
+    return uteModuleSmokeData.current_power ;
 }
 AT(.com_text.isr)
 void ecig_set_res(u8 value)
@@ -114,7 +115,7 @@ uint8_t ecig_get_res(void)
     printf("%s, data_temp1=%d,result=%lu\n", __func__,data_temp1, result);
     printf("%s, data=%d\n", __func__, data);
 #endif
-    if(get_gear_func()==0)
+    if(get_gear_func()==0||get_gear_func1()==0)
     {
         return data;
     }
@@ -161,8 +162,8 @@ u8 ecig_get_res2(void)
 void test_1st_gear_func(void)
 {
     printf("%s \n",__func__);
+    uteModuleSmokeData.smoke_position_swich = 0;
     ecig_cfg.smoke_position_swich = 0;
-
 }
 
 
@@ -171,6 +172,7 @@ void test_1st_gear_func(void)
 void test_2st_gear_func(void)
 {
     printf("%s \n",__func__);
+    uteModuleSmokeData.smoke_position_swich = 1;
     ecig_cfg.smoke_position_swich = 1;
 }
 
@@ -179,6 +181,12 @@ u8 get_gear_func(void)
 {
     // printf("%s \n",__func__);
     return ecig_cfg.smoke_position_swich;
+
+}
+u8 get_gear_func1(void)
+{
+    // printf("%s \n",__func__);
+    return uteModuleSmokeData.smoke_position_swich;
 
 }
 

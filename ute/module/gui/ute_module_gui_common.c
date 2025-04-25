@@ -1138,9 +1138,19 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
             return false;
         }
 #endif
-#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-        if(((id == UTE_MOUDLE_SCREENS_PRESSURE_ID)||(id == UTE_MOUDLE_SCREENS_EMOTION_ID)||\
-            (id == UTE_MOUDLE_SCREENS_FATIGUE_ID)) && uteModuleEmotionPressureIsTesting())
+#if 0// UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+        if ((
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+                (id == UTE_MOUDLE_SCREENS_PRESSURE_ID)
+#endif
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+                || (id == UTE_MOUDLE_SCREENS_EMOTION_ID)
+#endif
+#if UTE_MODULE_SCREENS_FATIGUE_SUPPORT
+                || (id == UTE_MOUDLE_SCREENS_FATIGUE_ID)
+#endif
+            ) &&
+            uteModuleEmotionPressureIsTesting())
         {
             return false;
         }

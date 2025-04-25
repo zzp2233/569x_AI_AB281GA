@@ -24,6 +24,9 @@
 #include "ute_module_factoryTest.h"
 #include "ute_module_newFactoryTest.h"
 #include "ute_module_sleep.h"
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#include "ute_module_emotionPressure.h"
+#endif
 
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
@@ -221,6 +224,9 @@ void uteModuleHeartEverySecond(void)
            && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
            && (uteModuleNewFactoryTestGetMode() == FACTORY_TEST_MODE_NULL)
+#endif
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+           && (!uteModuleEmotionPressureIsTesting())
 #endif
            && (uteModuleHeartGetWorkMode() != HR_WORK_MODE_HR || !bsp_sensor_hr_work_status())
           )
@@ -574,13 +580,13 @@ void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_STOP_SINGLE_TESTING, (uint32_t)type);
 }
 
-// /**
-// *@brief        结束单次测试消息处理函数
-// *@details
-// *@param      uint32_t param，结束类型
-// *@author       zn.zeng
-// *@date       2021-07-16
-// */
+/**
+*@brief        结束单次测试消息处理函数
+*@details
+*@param      uint32_t param，结束类型
+*@author       zn.zeng
+*@date       2021-07-16
+*/
 void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
 {
     ute_module_heart_type_t type = (ute_module_heart_type_t)param;

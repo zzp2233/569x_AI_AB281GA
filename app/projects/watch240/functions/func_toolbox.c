@@ -9,8 +9,6 @@
 
 #if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
 
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-
 #define TOOLBOX_LIST_CNT                       ((int)(sizeof(tbl_toolbox_list) / sizeof(tbl_toolbox_list[0])))
 
 enum
@@ -23,6 +21,8 @@ typedef struct f_toolbox_list_t_
     compo_listbox_t *listbox;
 
 } f_toolbox_list_t;
+
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
 static const compo_listbox_item_t tbl_toolbox_list[] =
 {
@@ -73,6 +73,83 @@ compo_form_t *func_toolbox_list_form_create(void)
 
     compo_listbox_set_focus_byidx(listbox, set_idx);
     compo_listbox_update(listbox);
+
+    return frm;
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
+static const compo_listbox_item_t tbl_toolbox_list[] =
+{
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {STR_STOP_WATCH,             UI_BUF_I338001_2_HONEYCOMB_STOPWATCH_BIN,          .func_sta = FUNC_STOPWATCH},    //秒表
+#endif
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {STR_TIMER,                  UI_BUF_I338001_2_HONEYCOMB_TIMER_BIN,              .func_sta = FUNC_TIMER},                //计时器
+#endif
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+    {STR_FIND_PHONE,             UI_BUF_I338001_2_HONEYCOMB_FINDPHONE_BIN,          .func_sta = FUNC_FINDPHONE},  //找手机
+#endif
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {STR_FLASHLIGHT,             UI_BUF_I338001_2_HONEYCOMB_FLASHLIGHT_BIN,         .func_sta = FUNC_FLASHLIGHT},    //手电筒
+#endif
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {STR_CAMERA,                 UI_BUF_I338001_2_HONEYCOMB_PHOTO_BIN,              .func_sta = FUNC_CAMERA},  //遥控拍照
+#endif
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {STR_CALCULATOR,             UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,         .func_sta = FUNC_CALCULATOR}, //计算器
+#endif
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {STR_STYLE,                          UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_04_CAMERA_BIN,            .func_sta = FUNC_STYLE}, //日历
+#endif
+};
+
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_toolbox_list_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_TOOL_BOX]);
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
+    compo_listbox_set(listbox, tbl_toolbox_list, TOOLBOX_LIST_CNT);
+    // compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    u8 set_idx = sys_cb.set_idx;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+    return frm;
+}
+#else
+
+static const compo_listbox_item_t tbl_toolbox_list[] =
+{
+    {0},
+};
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_toolbox_list_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_TOOL_BOX]);
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_set(listbox, tbl_toolbox_list, TOOLBOX_LIST_CNT);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
 
     return frm;
 }
@@ -141,7 +218,7 @@ static void func_toolbox_list_enter(void)
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2));
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);

@@ -609,6 +609,254 @@ static void func_sport_list_icon_click(void)
     uteModuleSportStartMoreSports(tbl_sport_list_sort[icon_idx].vidx, 1, 0);
     sys_cb.sport_idx = tbl_sport_list_sort[icon_idx].vidx;
 }
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#define MENU_LIST_CNT                       ((int)(sizeof(tbl_sport_list_data) / sizeof(tbl_sport_list_data[0])))
+static const compo_listbox_item_t tbl_sport_list_data[] =
+{
+#if UTE_MODULE_SPORT_RUNNING_SUPPORT
+    [SPORT_TYPE_RUNNING]      = {STR_SPORT_RUN,           UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_001OUTDOOR_RUNNING_BIN},
+#endif
+#if UTE_MODULE_SPORT_BIKE_SUPPORT
+    [SPORT_TYPE_RIDE_BIKE]    = {STR_SPORT_RIDE_BIKE,     UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_002OUTDOOR_CYCLING_BIN},
+#endif
+#if UTE_MODULE_SPORT_JUMP_ROPE_SUPPORT
+    [SPORT_TYPE_JUMP_ROPE]    = {STR_SPORT_JUMP_ROPE,     UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_003SKIPPING_BIN},
+#endif
+#if UTE_MODULE_SPORT_SWIMMING_SUPPORT
+    [SPORT_TYPE_SWIMMING]     = {STR_SPORT_JUMP_ROPE,     UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_004SWIMMING_BIN},
+#endif
+#if UTE_MODULE_SPORT_BADMINTION_SUPPORT
+    [SPORT_TYPE_BADMINTON]    = {STR_SPORT_BADMINTON,     UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_005BADMINTON_BIN},
+#endif
+#if UTE_MODULE_SPORT_TABLE_TENNIS_SUPPORT
+    [SPORT_TYPE_TABLE_TENNIS] = {STR_SPORT_TABLE_TENNIS,  UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_006TABLE_TENNIS_BIN},
+#endif
+#if UTE_MODULE_SPORT_TENNIS_SUPPORT
+    [SPORT_TYPE_TENNIS]       = {STR_SPORT_TENNIS,        UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_007TENNIS_BIN},
+#endif
+#if UTE_MODULE_SPORT_CLIMBING_SUPPORT
+    [SPORT_TYPE_CLIMBING]     = {STR_SPORT_CLIMBING,      UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_008CLIMBING_BIN},
+#endif
+#if UTE_MODULE_SPORT_WALKING_SUPPORT
+    [SPORT_TYPE_WALKING]      = {STR_SPORT_WALKING,       UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_009HIKING_BIN},
+#endif
+#if UTE_MODULE_SPORT_BASKETBALL_SUPPORT
+    [SPORT_TYPE_BASKETBALL]   = {STR_SPORT_BASKETBALL,    UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_010BASKETBALL_BIN},
+#endif
+#if UTE_MODULE_SPORT_FOOTBALL_SUPPORT
+    [SPORT_TYPE_FOOTBALL]     = {STR_SPORT_FOOTBALL,      UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_011SOCCER_BIN},
+#endif
+#if UTE_MODULE_SPORT_BASEBALL_SUPPORT
+    [SPORT_TYPE_BASEBALL]     = {STR_SPORT_BASEBALL,      UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_012BASEBALL_BIN},
+#endif
+#if UTE_MODULE_SPORT_VOLLEYBALL_SUPPORT
+    [SPORT_TYPE_VOLLEYBALL]   = {STR_SPORT_VOLLEYBALL,    UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_013VOLLEYBALL_BIN},
+#endif
+#if UTE_MODULE_SPORT_CRICKET_SUPPORT
+    [SPORT_TYPE_CRICKET]      = {STR_SPORT_CRICKET,       UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_014CRICKET_BIN},
+#endif
+#if UTE_MODULE_SPORT_RUGBY_SUPPORT
+    [SPORT_TYPE_RUGBY]        = {STR_SPORT_RUGBY,         UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_015RUGBY_BIN},
+#endif
+#if UTE_MODULE_SPORT_HOCKEY_SUPPORT
+    [SPORT_TYPE_HOCKEY]       = {STR_SPORT_HOCKEY,        UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_016HOCKEY_BIN},
+#endif
+#if UTE_MODULE_SPORT_DANCE_SUPPORT
+    [SPORT_TYPE_DANCE]        = {STR_SPORT_DANCE,         UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_017DANCE_BIN},
+#endif
+#if UTE_MODULE_SPORT_SPINNING_SUPPORT
+    [SPORT_TYPE_SPINNING]     = {STR_SPORT_SPINNING,      UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_018INDOOR_CYCLING_BIN},
+#endif
+#if UTE_MODULE_SPORT_YOGA_SUPPORT
+    [SPORT_TYPE_YOGA]         = {STR_SPORT_YOGA,          UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_019YOGA_BIN},
+#endif
+#if UTE_MODULE_SPORT_SIT_UP_SUPPORT
+    [SPORT_TYPE_SIT_UP]       = {STR_SPORT_SIT_UP,        UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_020SIT_UPS_BIN},
+#endif
+#if UTE_MODULE_SPORT_TREADMILL_SUPPORT
+    [SPORT_TYPE_TREADMILL]    = {STR_SPORT_TREADMILL,     UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_021TREADMILL_BIN},
+#endif
+#if UTE_MODULE_SPORT_GYMNASTICS_SUPPORT
+    [SPORT_TYPE_GYMNASTICS]   = {STR_SPORT_GYMNASTICS,    UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_022GYMNASTICS_BIN},
+#endif
+#if UTE_MODULE_SPORT_BOATING_SUPPORT
+    [SPORT_TYPE_BOATING]      = {STR_SPORT_BOATING,       UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_023ROWING_BIN},
+#endif
+#if UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT
+    [SPORT_TYPE_JUMPING_JACK] = {STR_SPORT_JUMPING_JACK,  UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_024JUMPING_JACK_BIN},
+#endif
+};
+enum//对应运动中显示运动数据种类->不同项目可自行添加
+{
+    MULTIPLE_DATA=0,//多数据
+    MID_DATA,       //中数据
+    LESS_DATA,      //少数据
+};
+
+u32 func_sport_get_disp_mode(void)//对应运动中显示运动数据种类->不同项目可自行添加->用于运动中与运动结束
+{
+    switch(sys_cb.sport_idx)
+    {
+        case SPORT_TYPE_RUNNING:
+        case SPORT_TYPE_CLIMBING:
+        case SPORT_TYPE_WALKING:
+        case SPORT_TYPE_TREADMILL:
+            return MULTIPLE_DATA;
+        case SPORT_TYPE_JUMP_ROPE://跳绳
+        case SPORT_TYPE_SWIMMING://游泳
+            return MID_DATA;
+        default:
+            return LESS_DATA;
+    }
+}
+
+u32 func_sport_get_str(u8 sport_idx)
+{
+    if (sport_idx < MENU_LIST_CNT)
+    {
+        return tbl_sport_list_data[sport_idx].str_idx;
+    }
+    return 0;
+}
+
+u32 func_sport_get_ui(u8 sport_idx)
+{
+    if (sport_idx < MENU_LIST_CNT)
+    {
+        return tbl_sport_list_data[sport_idx].res_addr;
+    }
+    return 0;
+}
+
+static const compo_listbox_item_t tbl_sport_list[UTE_MODULE_SPORT_MAX_SPORT_NUM]  =
+{
+#if UTE_MODULE_SPORT_RUNNING_SUPPORT
+    {.vidx = SPORT_TYPE_RUNNING,         .str_idx = STR_SPORT_RUN,           .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_001OUTDOOR_RUNNING_BIN},
+#endif
+#if UTE_MODULE_SPORT_BIKE_SUPPORT
+    {.vidx = SPORT_TYPE_RIDE_BIKE,       .str_idx = STR_SPORT_RIDE_BIKE,     .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_002OUTDOOR_CYCLING_BIN},
+#endif
+#if UTE_MODULE_SPORT_JUMP_ROPE_SUPPORT
+    {.vidx = SPORT_TYPE_JUMP_ROPE,       .str_idx = STR_SPORT_JUMP_ROPE,     .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_003SKIPPING_BIN},
+#endif
+#if UTE_MODULE_SPORT_SWIMMING_SUPPORT
+    {.vidx = SPORT_TYPE_SWIMMING,        .str_idx = STR_SPORT_SWIMMING,      .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_004SWIMMING_BIN},
+#endif
+#if UTE_MODULE_SPORT_BADMINTION_SUPPORT
+    {.vidx = SPORT_TYPE_BADMINTON,       .str_idx = STR_SPORT_BADMINTON,     .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_005BADMINTON_BIN},
+#endif
+#if UTE_MODULE_SPORT_TABLE_TENNIS_SUPPORT
+    {.vidx = SPORT_TYPE_TABLE_TENNIS,    .str_idx = STR_SPORT_TABLE_TENNIS,  .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_006TABLE_TENNIS_BIN},
+#endif
+#if UTE_MODULE_SPORT_TENNIS_SUPPORT
+    {.vidx = SPORT_TYPE_TENNIS,          .str_idx = STR_SPORT_TENNIS,        .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_007TENNIS_BIN},
+#endif
+#if UTE_MODULE_SPORT_CLIMBING_SUPPORT
+    {.vidx = SPORT_TYPE_CLIMBING,        .str_idx = STR_SPORT_CLIMBING,      .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_008CLIMBING_BIN},
+#endif
+#if UTE_MODULE_SPORT_WALKING_SUPPORT
+    {.vidx = SPORT_TYPE_WALKING,         .str_idx = STR_SPORT_WALKING,       .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_009HIKING_BIN},
+#endif
+#if UTE_MODULE_SPORT_BASKETBALL_SUPPORT
+    {.vidx = SPORT_TYPE_BASKETBALL,      .str_idx = STR_SPORT_BASKETBALL,    .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_010BASKETBALL_BIN},
+#endif
+#if UTE_MODULE_SPORT_FOOTBALL_SUPPORT
+    {.vidx = SPORT_TYPE_FOOTBALL,        .str_idx = STR_SPORT_FOOTBALL,      .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_011SOCCER_BIN},
+#endif
+#if UTE_MODULE_SPORT_BASEBALL_SUPPORT
+    {.vidx = SPORT_TYPE_BASEBALL,        .str_idx = STR_SPORT_BASEBALL,      .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_012BASEBALL_BIN},
+#endif
+#if UTE_MODULE_SPORT_VOLLEYBALL_SUPPORT
+    {.vidx = SPORT_TYPE_VOLLEYBALL,      .str_idx = STR_SPORT_VOLLEYBALL,    .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_013VOLLEYBALL_BIN},
+#endif
+#if UTE_MODULE_SPORT_CRICKET_SUPPORT
+    {.vidx = SPORT_TYPE_CRICKET,         .str_idx = STR_SPORT_CRICKET,       .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_014CRICKET_BIN},
+#endif
+#if UTE_MODULE_SPORT_RUGBY_SUPPORT
+    {.vidx = SPORT_TYPE_RUGBY,           .str_idx = STR_SPORT_RUGBY,         .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_015RUGBY_BIN},
+#endif
+#if UTE_MODULE_SPORT_HOCKEY_SUPPORT
+    {.vidx = SPORT_TYPE_HOCKEY,          .str_idx = STR_SPORT_HOCKEY,        .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_016HOCKEY_BIN},
+#endif
+#if UTE_MODULE_SPORT_DANCE_SUPPORT
+    {.vidx = SPORT_TYPE_DANCE,           .str_idx = STR_SPORT_DANCE,         .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_017DANCE_BIN},
+#endif
+#if UTE_MODULE_SPORT_SPINNING_SUPPORT
+    {.vidx = SPORT_TYPE_SPINNING,        .str_idx = STR_SPORT_SPINNING,      .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_018INDOOR_CYCLING_BIN},
+#endif
+#if UTE_MODULE_SPORT_YOGA_SUPPORT
+    {.vidx = SPORT_TYPE_YOGA,            .str_idx = STR_SPORT_YOGA,          .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_019YOGA_BIN},
+#endif
+#if UTE_MODULE_SPORT_SIT_UP_SUPPORT
+    {.vidx = SPORT_TYPE_SIT_UP,          .str_idx = STR_SPORT_SIT_UP,        .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_020SIT_UPS_BIN},
+#endif
+#if UTE_MODULE_SPORT_TREADMILL_SUPPORT
+    {.vidx = SPORT_TYPE_TREADMILL,       .str_idx = STR_SPORT_TREADMILL,     .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_021TREADMILL_BIN},
+#endif
+#if UTE_MODULE_SPORT_GYMNASTICS_SUPPORT
+    {.vidx = SPORT_TYPE_GYMNASTICS,      .str_idx = STR_SPORT_GYMNASTICS,    .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_022GYMNASTICS_BIN},
+#endif
+#if UTE_MODULE_SPORT_BOATING_SUPPORT
+    {.vidx = SPORT_TYPE_BOATING,         .str_idx = STR_SPORT_BOATING,       .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_023ROWING_BIN},
+#endif
+#if UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT
+    {.vidx = SPORT_TYPE_JUMPING_JACK,    .str_idx = STR_SPORT_JUMPING_JACK,  .res_addr = UI_BUF_I338001_3_EXERCISE_1_LIST_ICON_024JUMPING_JACK_BIN},
+#endif
+};
+
+static compo_listbox_item_t tbl_sport_list_sort[UTE_MODULE_SPORT_MAX_SPORT_NUM];
+
+//创建运动窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_sport_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    ///设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SPORTS]);
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
+#if UTE_MODULE_SPORT_HUNDRED_SUPPORT
+    compo_listbox_set(listbox, tbl_sport_list_sort, uteModuleSportGetHundredSportValidNumber()-1);
+#else
+    compo_listbox_set(listbox, tbl_sport_list_sort, UTE_MODULE_SPORT_MAX_SPORT_NUM);
+#endif
+    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_1_START_LOGO_BIN);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update(listbox);
+    return frm;
+}
+
+//点进图标进入应用
+static void func_sport_list_icon_click(void)
+{
+    int icon_idx;
+    f_sport_list_t *f_sport = (f_sport_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_sport->listbox;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+    if (icon_idx < 0 || icon_idx >= UTE_MODULE_SPORT_MAX_SPORT_NUM)
+    {
+        return;
+    }
+
+    uint8_t batLvl = uteDrvBatteryCommonGetLvl();
+    if(batLvl < UTE_DRV_BATTERY_LOW_POWER_PERECNT)
+    {
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
+        sys_cb.remind_tag = true;
+        return;
+    }
+
+    uteTaskGuiStartScreen(FUNC_SPORT_SWITCH, 0, __func__);
+    uteModuleSportStartMoreSports(tbl_sport_list_sort[icon_idx].vidx, 1, 0);
+    sys_cb.sport_idx = tbl_sport_list_sort[icon_idx].vidx;
+}
 #else
 #define MENU_LIST_CNT                       ((int)(sizeof(tbl_sport_list_data) / sizeof(tbl_sport_list_data[0])))
 static const compo_listbox_item_t tbl_sport_list_data[] =

@@ -136,7 +136,13 @@ compo_form_t *func_sub_sos_form_create(void)
     return frm;
 }
 #else
+compo_form_t *func_sub_sos_form_create(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
 
+    return frm;
+}
 #endif /*GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT*/
 
 ///SOS功能事件处理

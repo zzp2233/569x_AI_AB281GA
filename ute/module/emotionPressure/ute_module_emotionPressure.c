@@ -1,6 +1,6 @@
 /**
  *@file
- *@brief    ÇéĞ÷Ñ¹Á¦´¦ÀíÄ£¿é
+ *@brief    æƒ…ç»ªå‹åŠ›å¤„ç†æ¨¡å—
  *@details
  *@author   xjc
  *@date     2022-02-15
@@ -24,7 +24,7 @@
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
 ute_module_emotion_pressure_data_t uteModuleEmotionPressureData;
 
-/* »¥³âÁ¿ zn.zeng 2022-02-14*/
+/* äº’æ–¥é‡ zn.zeng 2022-02-14*/
 void *uteModuleEmotionPressureMute;
 
 #if UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT
@@ -104,7 +104,7 @@ uint8_t uteDrvHeartVcxxGetVkPressureValue(void)
 #endif
 
 /**
- *@brief     ³õÊ¼»¯º¯Êı
+ *@brief     åˆå§‹åŒ–å‡½æ•°
  *@details
  *@author    xjc
  *@date      2022-02-15
@@ -133,13 +133,13 @@ void uteModuleEmotionPressureInit(void)
 #endif
     uteModuleSystemtimeRegisterSecond(uteModuleEmotionPressureEverySecond);
 
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿ÍËã·¨²»µ÷ÓÃ
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢ç®—æ³•ä¸è°ƒç”¨
 #if UTE_DRV_BLOODPRESSURE_DN02_SUPPORT
-    // Ëã·¨ÉêÇëÄÚ´æ
+    // ç®—æ³•ç”³è¯·å†…å­˜
     int status = init_algorithm(uteModuleEmotionPressureData.ppgData.algorithmBuff, EMOTION_PRESSURE_ALGORITHM_BUFF_MAX_LEN);
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,algorithm init status = %d", __func__, status);
 #else
-    // Ëã·¨»ñÈ¡ÏµÍ³Ê±¼ä
+    // ç®—æ³•è·å–ç³»ç»Ÿæ—¶é—´
     extern_get_time_cb_reg(uteModuleEmotionPressureAlgoGetSystemTimeHandler);
 #endif
     extern_printf_cb_reg(uteModuleEmotionPrintfLog);
@@ -147,7 +147,7 @@ void uteModuleEmotionPressureInit(void)
 }
 
 /**
- *@brief     ¶ÁÈ¡config
+ *@brief     è¯»å–config
  *@details
  *@author    xjc
  *@date      2022-02-15
@@ -155,7 +155,7 @@ void uteModuleEmotionPressureInit(void)
 void uteModuleEmotionPressureReadConfig(void)
 {
     void *file = NULL;
-    /*! ÇéĞ÷Ñ¹Á¦²ÎÊı,xjc 2022-02-15*/
+    /*! æƒ…ç»ªå‹åŠ›å‚æ•°,xjc 2022-02-15*/
     uint8_t readbuff[8];
     readbuff[0] = UTE_MODULE_EMOTION_PRESSURE_IS_AUTO_OPEN;
     readbuff[1] = UTE_MODULE_EMOTION_PRESSURE_IS_AUTO_TIME_BUCKET_OPEN;
@@ -179,8 +179,8 @@ void uteModuleEmotionPressureReadConfig(void)
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,isAutoTesting=%d,intervalMin=%d", __func__, uteModuleEmotionPressureData.isAutoTesting, uteModuleEmotionPressureData.intervalMin);
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,startTimeHourMin=0x%02x,endTimeHourMin=0x%02x", __func__, uteModuleEmotionPressureData.startTimeHourMin, uteModuleEmotionPressureData.endTimeHourMin);
 
-    /*! ÇéĞ÷Ñ¹Á¦ÇëÇóÂë,xjc 2022-02-15*/
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // Î¬¿ÍËã·¨¹Ø±Õ¼¤»îÂë  add  by pcm 2023-08-21
+    /*! æƒ…ç»ªå‹åŠ›è¯·æ±‚ç ,xjc 2022-02-15*/
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // ç»´å®¢ç®—æ³•å…³é—­æ¿€æ´»ç   add  by pcm 2023-08-21
     uint8_t reqCodeBuff[EMOTION_PRESSURE_REQ_CODE_LEN];
     memset(reqCodeBuff, 0xFF, sizeof(reqCodeBuff));
     if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_EMOTION_PRESSURE_REQ_CODE, &file, FS_O_RDONLY))
@@ -192,7 +192,7 @@ void uteModuleEmotionPressureReadConfig(void)
     memcpy(uteModuleEmotionPressureData.algoReqCode, reqCodeBuff, EMOTION_PRESSURE_REQ_CODE_LEN);
     // APP_PRINT_INFO2("%s,.algoReqCode = %s ", __func__, TRACE_BINARY(EMOTION_PRESSURE_REQ_CODE_LEN, &uteModuleEmotionPressureData.algoReqCode[0]));
 
-    /*! ÇéĞ÷Ñ¹Á¦¼¤»îÂë,xjc 2022-02-15*/
+    /*! æƒ…ç»ªå‹åŠ›æ¿€æ´»ç ,xjc 2022-02-15*/
     uint8_t keyCodeBuff[EMOTION_PRESSURE_KEY_CODE_LEN];
     memset(keyCodeBuff, 0xFF, sizeof(keyCodeBuff));
     if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_EMOTION_PRESSURE_KEY_CODE, &file, FS_O_RDONLY))
@@ -204,7 +204,7 @@ void uteModuleEmotionPressureReadConfig(void)
     memcpy(uteModuleEmotionPressureData.algoKeyCode, keyCodeBuff, EMOTION_PRESSURE_KEY_CODE_LEN);
     // APP_PRINT_INFO2("%s,.algoKeyCode = %s ", __func__, TRACE_BINARY(EMOTION_PRESSURE_KEY_CODE_LEN, &uteModuleEmotionPressureData.algoKeyCode[0]));
 
-    /*! ÇéĞ÷Ñ¹Á¦Ëã·¨¼¤»î×´Ì¬,xjc 2022-02-15*/
+    /*! æƒ…ç»ªå‹åŠ›ç®—æ³•æ¿€æ´»çŠ¶æ€,xjc 2022-02-15*/
     uteModuleEmotionPressureActiveAlgo(false);
 #endif
 }
@@ -224,8 +224,8 @@ void uteModuleEmotionPressureAlgoGetSystemTimeHandler(lib_time_t *crt_time)
 #endif
 
 /**
- *@brief     ÇéĞ÷Ñ¹Á¦Ã¿Ãëº¯Êı
- *@details   ĞèÒª×¢²áµ½Ö÷Ê±¼ä£¬Ã¿ÃëÖ´ĞĞÒ»´Î
+ *@brief     æƒ…ç»ªå‹åŠ›æ¯ç§’å‡½æ•°
+ *@details   éœ€è¦æ³¨å†Œåˆ°ä¸»æ—¶é—´ï¼Œæ¯ç§’æ‰§è¡Œä¸€æ¬¡
  *@author    xjc
  *@date      2021-07-23
  */
@@ -235,11 +235,11 @@ void uteModuleEmotionPressureEverySecond(void)
     {
         return;
     }
-    /*! µ¥´Î²âÊÔÂß¼­ xjc, 2022-02-15  */
+    /*! å•æ¬¡æµ‹è¯•é€»è¾‘ xjc, 2022-02-15  */
     if (uteModuleEmotionPressureData.isSingleTesting)
     {
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,.testingSecond=%d", __func__, uteModuleEmotionPressureData.testingSecond);
-#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿ÍËã·¨¼ÆËãÑ¹Á¦Öµ£¬55Ãë³öÖµ
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢ç®—æ³•è®¡ç®—å‹åŠ›å€¼ï¼Œ55ç§’å‡ºå€¼
         if (uteModuleEmotionPressureIsWear())
         {
             if (uteModuleEmotionPressureData.testingSecond > UTE_DRV_EMOTION_PRESSURE_TEST_TIMEOUT_SECOND)
@@ -287,7 +287,7 @@ void uteModuleEmotionPressureEverySecond(void)
 #endif
     }
 
-    /*! ×Ô¶¯²âÊÔÂß¼­ xjc, 2022-02-15  */
+    /*! è‡ªåŠ¨æµ‹è¯•é€»è¾‘ xjc, 2022-02-15  */
     if (uteModuleEmotionPressureData.isAutoTesting)
     {
         bool isNeedAutoTest = false;
@@ -311,7 +311,7 @@ void uteModuleEmotionPressureEverySecond(void)
                     isNeedAutoTest = true;
                 }
             }
-            if (((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 60) && isNeedAutoTest) // ¼ÓÒ»·ÖÖÓÔÙ²âÊÔ£¬·ÀÖ¹ÓëÆäËûĞèÒªĞÄÂÊSensorµÄ¶¨Ê±²âÊÔ³åÍ»
+            if (((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 60) && isNeedAutoTest) // åŠ ä¸€åˆ†é’Ÿå†æµ‹è¯•ï¼Œé˜²æ­¢ä¸å…¶ä»–éœ€è¦å¿ƒç‡Sensorçš„å®šæ—¶æµ‹è¯•å†²çª
             {
                 isNeedAutoTest = true;
             }
@@ -322,7 +322,7 @@ void uteModuleEmotionPressureEverySecond(void)
         }
         else
         {
-            if ((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 60) // ¹ı1·ÖÖÓÔÙ²âÁ¿£¬·ÀÖ¹ÓëÑªÑõ×Ô¶¯²âÊÔ³åÍ»
+            if ((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 60) // è¿‡1åˆ†é’Ÿå†æµ‹é‡ï¼Œé˜²æ­¢ä¸è¡€æ°§è‡ªåŠ¨æµ‹è¯•å†²çª
             {
                 isNeedAutoTest = true;
             }
@@ -360,9 +360,9 @@ void uteModuleEmotionPressureEverySecond(void)
 }
 
 /**
- *@brief        ¿ªÊ¼µ¥´Î²âÊÔ
+ *@brief        å¼€å§‹å•æ¬¡æµ‹è¯•
  *@details
- *@param[in] bool isAppStart ÊÇ·ñAPPÆô¶¯²âÊÔ
+ *@param[in] bool isAppStart æ˜¯å¦APPå¯åŠ¨æµ‹è¯•
  *@author       xjc
  *@date       2021-07-21
  */
@@ -380,9 +380,9 @@ void uteModuleEmotionPressureStartSingleTesting(bool isAppStart)
 }
 
 /**
- *@brief        ¿ªÊ¼µ¥´Î²âÊÔ
+ *@brief        å¼€å§‹å•æ¬¡æµ‹è¯•
  *@details
- *@param[in] bool isAppStart ÊÇ·ñAPPÆô¶¯²âÊÔ
+ *@param[in] bool isAppStart æ˜¯å¦APPå¯åŠ¨æµ‹è¯•
  *@author       xjc
  *@date       2021-07-21
  */
@@ -393,7 +393,7 @@ void uteModuleEmotionPressureStartSingleTestingMsgHandler(uint32_t param)
     {
         isAppStart = true;
     }
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿ÍËã·¨¹Ø±Õ¼¤»îÁ÷³Ì
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢ç®—æ³•å…³é—­æ¿€æ´»æµç¨‹
 #if (UTE_DRV_HEART_VC30FX_SUPPORT & UTE_DRV_HEART_VC30S_SUPPORT)
     // uint8_t id = uteDrvheartvc30fxEmotionReadId();
     if (uteModuleEmotionPressureIsWear() && (uteModuleHeartGetWorkMode() == (uteDrvHeartVcxxCommonFunction->id == UTE_DRV_HEART_ID_VC30FX ? VC30FX_WORK_MODE_IRPPG : VCWORK_MODE_IRPPG)))
@@ -404,7 +404,7 @@ void uteModuleEmotionPressureStartSingleTestingMsgHandler(uint32_t param)
         uteModuleEmotionPressureData.isSingleTesting = true;
         return;
     }
-    if (!uteModuleEmotionPressureData.isAlgoActive) // Î´¼¤»î
+    if (!uteModuleEmotionPressureData.isAlgoActive) // æœªæ¿€æ´»
     {
 #if UTE_MODULE_EMOTION_SAVE_REQCODE_PRESSURE_SUPPORT
         uteModuleEmotionPressureActiveAlgo(true);
@@ -425,7 +425,7 @@ void uteModuleEmotionPressureStartSingleTestingMsgHandler(uint32_t param)
     uteModuleEmotionPressureData.curDayPressureAvgValue = 0;
     uteModuleEmotionPressureData.lastPressureValue = 0;
 #endif
-#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿Í¿ªÊ¼²ÉÑùËã·¨µ÷ÓÃ
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢å¼€å§‹é‡‡æ ·ç®—æ³•è°ƒç”¨
     uteModuleHeartStartSingleTesting(TYPE_HEART);
     uteDrvHeartVcxxStartPressureSample();
 #else
@@ -438,9 +438,9 @@ void uteModuleEmotionPressureStartSingleTestingMsgHandler(uint32_t param)
 }
 
 /**
- *@brief        ½áÊøµ¥´Î²âÊÔ
+ *@brief        ç»“æŸå•æ¬¡æµ‹è¯•
  *@details
- *@param[in] uint8_t stopReasion ½áÊøÔ­Òò EMOTION_PRESSURE_STOP_REASION_T
+ *@param[in] uint8_t stopReasion ç»“æŸåŸå›  EMOTION_PRESSURE_STOP_REASION_T
  *@author       xjc
  *@date       2021-07-21
  */
@@ -451,16 +451,16 @@ void uteModuleEmotionPressureStopSingleTesting(uint8_t stopReasion)
 }
 
 /**
- *@brief        ½áÊøµ¥´Î²âÊÔ
+ *@brief        ç»“æŸå•æ¬¡æµ‹è¯•
  *@details
- *@param[in] uint8_t stopReasion ½áÊøÔ­Òò EMOTION_PRESSURE_STOP_REASION_T
+ *@param[in] uint8_t stopReasion ç»“æŸåŸå›  EMOTION_PRESSURE_STOP_REASION_T
  *@author       xjc
  *@date       2021-07-21
  */
 void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
 {
     uint8_t stopReasion = (uint32_t)param;
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿ÍËã·¨²»µ÷ÓÃ£¬²»ĞèÒªÅĞ¶ÏÄ£Ê½
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢ç®—æ³•ä¸è°ƒç”¨ï¼Œä¸éœ€è¦åˆ¤æ–­æ¨¡å¼
 #if (UTE_DRV_HEART_VC30FX_SUPPORT & UTE_DRV_HEART_VC30S_SUPPORT)
     // uint8_t id = uteDrvheartvc30fxEmotionReadId();
     if (uteModuleHeartGetWorkMode() != (uteDrvHeartVcxxCommonFunction->id == UTE_DRV_HEART_ID_VC30FX ? VC30FX_WORK_MODE_IRPPG : VCWORK_MODE_IRPPG))
@@ -480,7 +480,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
     uteModuleEmotionPressureData.lastPressureValue = uteModuleEmotionPressureData.pressureValue;
     uteModuleCalculateMaxMinAvgPressValue();
 #endif
-#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿ÍËã·¨Í£Ö¹²âÊÔºÍ²ÉÑù
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢ç®—æ³•åœæ­¢æµ‹è¯•å’Œé‡‡æ ·
     uteModuleHeartStopSingleTesting(TYPE_HEART);
     uteDrvHeartVcxxStopPressureSample();
 
@@ -503,7 +503,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
     stopCmd[4] = uteModuleEmotionPressureData.fatigueValue;
     stopCmd[5] = stopReasion;
     uteModuleProfileBleSendToPhone(&stopCmd[0], 6);
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 APP·¢Æğ°ÉÁ÷³Ì²»ĞèÒª£¬£¬Èç¹ûÑ¹Á¦³öÖµ²»ÔÚ·¶Î§ÄÚ£¬¶¼ÊÇ·µ»Ø´íÎó×´Ì¬
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 APPå‘èµ·å§æµç¨‹ä¸éœ€è¦ï¼Œï¼Œå¦‚æœå‹åŠ›å‡ºå€¼ä¸åœ¨èŒƒå›´å†…ï¼Œéƒ½æ˜¯è¿”å›é”™è¯¯çŠ¶æ€
     if (uteModuleEmotionPressureData.isAppStartTesting)
     {
         if (stopReasion != EP_STOP_REASION_SUCCESS)
@@ -521,7 +521,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
     }
 #endif
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,.emotionValue=%d,.pressureValue=%d,.fatigueValue=%d", __func__, uteModuleEmotionPressureData.emotionValue, uteModuleEmotionPressureData.pressureValue, uteModuleEmotionPressureData.fatigueValue);
-    /*! ±£´æÊı¾İxjc, 2022-02-15  */
+    /*! ä¿å­˜æ•°æ®xjc, 2022-02-15  */
     if ((uteModuleEmotionPressureData.emotionValue != 0xFF) &&
         (uteModuleEmotionPressureData.pressureValue != 0) && (uteModuleEmotionPressureData.pressureValue != 0xFF))
     {
@@ -534,7 +534,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
     uteModuleEmotionPressureData.isAppStartTesting = false;
     uteModuleEmotionPressureData.isEmotionPressureAutoTestFlag = false;
     uteModuleEmotionPressureData.testingSecond = 0;
-#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿ÍËã·¨½áÊø²âÊÔÍùÉÏÌá
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢ç®—æ³•ç»“æŸæµ‹è¯•å¾€ä¸Šæ
     uteModuleHeartStopSingleTesting(TYPE_HEART);
     uteDrvHeartVcxxStopPressureSample();
 #else
@@ -543,7 +543,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
 #endif
 }
 /**
- *@brief        ÊÇ·ñÅå´÷
+ *@brief        æ˜¯å¦ä½©æˆ´
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -555,10 +555,10 @@ bool uteModuleEmotionPressureIsWear(void)
     return isWear;
 }
 
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿ÍËã·¨Ìø¹ı¼¤»îÁ÷³Ì
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢ç®—æ³•è·³è¿‡æ¿€æ´»æµç¨‹
 /**
- *@brief        ÉèÖÃÇéĞ÷Ñ¹Á¦Öµ¼¤»îÂë
- *@details      APPÏÂ·¢µÄÊÚÈ¨¼¤»îÂë
+ *@brief        è®¾ç½®æƒ…ç»ªå‹åŠ›å€¼æ¿€æ´»ç 
+ *@details      APPä¸‹å‘çš„æˆæƒæ¿€æ´»ç 
  *@author       xjc
  *@date       2022-02-15
  */
@@ -568,8 +568,8 @@ void uteModuleEmotionPressureSetKeyCode(uint8_t *keyCode)
     // APP_PRINT_INFO2("%s,SetKeyCode = %s", __func__, uteModuleEmotionPressureData.algoKeyCode);
 }
 /**
- *@brief        »ñÈ¡ÇéĞ÷Ñ¹Á¦Öµ¼¤»îÂë
- *@details      APPÏÂ·¢µÄÊÚÈ¨¼¤»îÂë
+ *@brief        è·å–æƒ…ç»ªå‹åŠ›å€¼æ¿€æ´»ç 
+ *@details      APPä¸‹å‘çš„æˆæƒæ¿€æ´»ç 
  *@author       xjc
  *@date       2022-02-15
  */
@@ -578,8 +578,8 @@ void uteModuleEmotionPressureGetKeyCode(uint8_t *keyCode)
     memcpy(keyCode, uteModuleEmotionPressureData.algoKeyCode, EMOTION_PRESSURE_KEY_CODE_LEN);
 }
 /**
- *@brief        »ñÈ¡ÇéĞ÷Ñ¹Á¦ÖµÉêÇëÂë
- *@details      APPÏÂ·¢µÄÊÚÈ¨ÉêÇëÂë
+ *@brief        è·å–æƒ…ç»ªå‹åŠ›å€¼ç”³è¯·ç 
+ *@details      APPä¸‹å‘çš„æˆæƒç”³è¯·ç 
  *@author       xjc
  *@date       2022-02-15
  */
@@ -590,8 +590,8 @@ void uteModuleEmotionPressureGetReqCode(uint8_t *reqCode)
 #endif
 
 /**
- *@brief        ÉèÖÃÇéĞ÷Ñ¹Á¦Öµ
- *@details      APPÆô¶¯²âÁ¿Ê±Ê¹ÓÃ£¬APPÏÂ·¢ÇéĞ÷Ñ¹Á¦Öµ
+ *@brief        è®¾ç½®æƒ…ç»ªå‹åŠ›å€¼
+ *@details      APPå¯åŠ¨æµ‹é‡æ—¶ä½¿ç”¨ï¼ŒAPPä¸‹å‘æƒ…ç»ªå‹åŠ›å€¼
  *@author       xjc
  *@date       2022-02-15
  */
@@ -603,7 +603,7 @@ void uteModuleEmotionPressureSetEmotionPressureValue(uint8_t emotionValue, uint8
 }
 
 /**
- *@brief        »ñÈ¡ÇéĞ÷Öµ
+ *@brief        è·å–æƒ…ç»ªå€¼
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -614,7 +614,7 @@ uint8_t uteModuleEmotionPressureGetEmotionValue(void)
 }
 
 /**
- *@brief        »ñÈ¡Ñ¹Á¦Öµ
+ *@brief        è·å–å‹åŠ›å€¼
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -625,7 +625,7 @@ uint8_t uteModuleEmotionPressureGetPressureValue(void)
 }
 
 /**
- *@brief        »ñÈ¡Æ£ÀÍ¶ÈÖµ
+ *@brief        è·å–ç–²åŠ³åº¦å€¼
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -636,7 +636,7 @@ uint8_t uteModuleEmotionPressureGetFatigueValue(void)
 }
 
 /**
- *@brief        »ñÈ¡ÇéĞ÷Ñ¹Á¦²âÊÔ×´Ì¬
+ *@brief        è·å–æƒ…ç»ªå‹åŠ›æµ‹è¯•çŠ¶æ€
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -647,10 +647,10 @@ bool uteModuleEmotionPressureIsTesting(void)
 }
 
 /**
- *@brief        ±£´æÇéĞ÷Ñ¹Á¦ÉèÖÃ²ÎÊı
+ *@brief        ä¿å­˜æƒ…ç»ªå‹åŠ›è®¾ç½®å‚æ•°
  *@details
- *@param[in] bool isAutoTesting  ÊÇ·ñ´ò¿ª×Ô¶¯²âÊÔ
- *@param[in] uint16_t intervalMin  ²âÊÔ¼ä¸ô£¬µ¥Î»Îª·ÖÖÓ
+ *@param[in] bool isAutoTesting  æ˜¯å¦æ‰“å¼€è‡ªåŠ¨æµ‹è¯•
+ *@param[in] uint16_t intervalMin  æµ‹è¯•é—´éš”ï¼Œå•ä½ä¸ºåˆ†é’Ÿ
  *@author       xjc
  *@date       2022-02-15
  */
@@ -658,7 +658,7 @@ void uteModuleEmotionPressureSaveAutoIntervalParam(bool isAutoTesting, uint16_t 
 {
     uteModuleEmotionPressureData.isAutoTesting = isAutoTesting;
     uteModuleEmotionPressureData.intervalMin = intervalMin;
-    /*! ±£´æµ½ÎÄ¼şxjc, 2021-08-30*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2021-08-30*/
     void *file;
     uint8_t writebuff[8];
     writebuff[0] = uteModuleEmotionPressureData.isAutoTesting;
@@ -679,11 +679,11 @@ void uteModuleEmotionPressureSaveAutoIntervalParam(bool isAutoTesting, uint16_t 
 }
 
 /**
- *@brief        ±£´æÇéĞ÷Ñ¹Á¦ÉèÖÃ²ÎÊı
+ *@brief        ä¿å­˜æƒ…ç»ªå‹åŠ›è®¾ç½®å‚æ•°
  *@details
- *@param[in] bool isAutoTimeBucketTesting  ÊÇ·ñ´ò¿ªÊ±¼ä¶Î×Ô¶¯²âÊÔ
- *@param[in] uint16_t startTimeHourMin ¿ªÊ¼Ê±¼ä£¬¸ß8bitÎªĞ¡Ê±£¬µÍ8bitÎª·ÖÖÓ
- *@param[in] uint16_t endTimeHourMin ½áÊøÊ±¼ä£¬¸ß8bitÎªĞ¡Ê±£¬µÍ8bitÎª·ÖÖÓ
+ *@param[in] bool isAutoTimeBucketTesting  æ˜¯å¦æ‰“å¼€æ—¶é—´æ®µè‡ªåŠ¨æµ‹è¯•
+ *@param[in] uint16_t startTimeHourMin å¼€å§‹æ—¶é—´ï¼Œé«˜8bitä¸ºå°æ—¶ï¼Œä½8bitä¸ºåˆ†é’Ÿ
+ *@param[in] uint16_t endTimeHourMin ç»“æŸæ—¶é—´ï¼Œé«˜8bitä¸ºå°æ—¶ï¼Œä½8bitä¸ºåˆ†é’Ÿ
  *@author       xjc
  *@date         2022-02-15
  */
@@ -692,7 +692,7 @@ void uteModuleEmotionPressureSaveAutoTimeBucketParam(bool isAutoTimeBucketTestin
     uteModuleEmotionPressureData.isAutoTimeBucketTesting = isAutoTimeBucketTesting;
     uteModuleEmotionPressureData.startTimeHourMin = startTimeHourMin;
     uteModuleEmotionPressureData.endTimeHourMin = endTimeHourMin;
-    /*! ±£´æµ½ÎÄ¼şxjc, 2022-02-15*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2022-02-15*/
     void *file;
     uint8_t writebuff[8];
     writebuff[0] = uteModuleEmotionPressureData.isAutoTesting;
@@ -712,9 +712,9 @@ void uteModuleEmotionPressureSaveAutoTimeBucketParam(bool isAutoTimeBucketTestin
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,startTimeHourMin=0x%02x,endTimeHourMin=0x%02x", __func__, uteModuleEmotionPressureData.startTimeHourMin, uteModuleEmotionPressureData.endTimeHourMin);
 }
 
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 Î¬¿ÍËã·¨Ìø¹ı¼¤»îÁ÷³Ì
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 ç»´å®¢ç®—æ³•è·³è¿‡æ¿€æ´»æµç¨‹
 /**
- *@brief        ±£´æÇéĞ÷Ñ¹Á¦¼¤»îÂë
+ *@brief        ä¿å­˜æƒ…ç»ªå‹åŠ›æ¿€æ´»ç 
  *@details
  *@author       xjc
  *@date         2022-02-15
@@ -722,7 +722,7 @@ void uteModuleEmotionPressureSaveAutoTimeBucketParam(bool isAutoTimeBucketTestin
 void uteModuleEmotionPressureSaveKeyCode(void)
 {
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s", __func__);
-    /*! ±£´æµ½ÎÄ¼şxjc, 2022-02-15*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2022-02-15*/
     void *file;
     uint8_t writebuff[EMOTION_PRESSURE_KEY_CODE_LEN];
     memcpy(writebuff, uteModuleEmotionPressureData.algoKeyCode, EMOTION_PRESSURE_KEY_CODE_LEN);
@@ -734,7 +734,7 @@ void uteModuleEmotionPressureSaveKeyCode(void)
     }
 }
 /**
- *@brief        ±£´æÇéĞ÷Ñ¹Á¦ÉêÇëÂë
+ *@brief        ä¿å­˜æƒ…ç»ªå‹åŠ›ç”³è¯·ç 
  *@details
  *@author       xjc
  *@date         2022-02-15
@@ -742,7 +742,7 @@ void uteModuleEmotionPressureSaveKeyCode(void)
 void uteModuleEmotionPressureSaveReqCode(void)
 {
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s", __func__);
-    /*! ±£´æµ½ÎÄ¼şxjc, 2022-02-15*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2022-02-15*/
     void *file;
     uint8_t writebuff[EMOTION_PRESSURE_REQ_CODE_LEN];
     memcpy(writebuff, uteModuleEmotionPressureData.algoReqCode, EMOTION_PRESSURE_REQ_CODE_LEN);
@@ -754,7 +754,7 @@ void uteModuleEmotionPressureSaveReqCode(void)
     }
 }
 /**
- *@brief        ±£´æÇéĞ÷Ñ¹Á¦Ëã·¨¼¤»î×´Ì¬
+ *@brief        ä¿å­˜æƒ…ç»ªå‹åŠ›ç®—æ³•æ¿€æ´»çŠ¶æ€
  *@details
  *@author       xjc
  *@date         2022-02-15
@@ -762,7 +762,7 @@ void uteModuleEmotionPressureSaveReqCode(void)
 void uteModuleEmotionPressureSaveAlgoActiveStatus(void)
 {
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s", __func__);
-    /*! ±£´æµ½ÎÄ¼şxjc, 2022-02-15*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶xjc, 2022-02-15*/
     // void *file;
     // uint8_t writebuff[2];
     // writebuff[0] = uteModuleEmotionPressureData.isAlgoActive;
@@ -775,14 +775,14 @@ void uteModuleEmotionPressureSaveAlgoActiveStatus(void)
 #endif
 
 /**
- *@brief      ±£´æÇéĞ÷Ñ¹Á¦Êı¾İÊı¾İ£¬Ã¿10·ÖÖÓÒ»ÌõÊı¾İ
- *@details    Ã¿Ìì±£´æÒ»¸öÎÄ¼ş£¬×Ô¶¯±£´æ
+ *@brief      ä¿å­˜æƒ…ç»ªå‹åŠ›æ•°æ®æ•°æ®ï¼Œæ¯10åˆ†é’Ÿä¸€æ¡æ•°æ®
+ *@details    æ¯å¤©ä¿å­˜ä¸€ä¸ªæ–‡ä»¶ï¼Œè‡ªåŠ¨ä¿å­˜
  *@author     xjc
  *@date       2022-02-15
  */
 void uteModuleEmotionPressureAutoSaveData(void)
 {
-    /*! Ã»ÓĞÁ¬½Ó¹ıAPP²»±£´æÊı¾İ xjc, 2022-05-06  */
+    /*! æ²¡æœ‰è¿æ¥è¿‡APPä¸ä¿å­˜æ•°æ® xjc, 2022-05-06  */
     if (!uteApplicationCommonIsHasConnectOurApp())
     {
         return;
@@ -799,7 +799,7 @@ void uteModuleEmotionPressureAutoSaveData(void)
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR, dirInfo, NULL);
     if ((dirInfo->filesCnt >= UTE_MODULE_EMOTION_PRESSURE_SAVE_DATA_MAX_DAYS) && (memcmp(&path[0], &dirInfo->filesName[0][0], 8) != 0))
     {
-        /*! É¾³ı×î¾ÉÒ»ÌìµÄÊı¾İxjc, 2022-02-15*/
+        /*! åˆ é™¤æœ€æ—§ä¸€å¤©çš„æ•°æ®xjc, 2022-02-15*/
         memset(&path[0], 0, 40);
         sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR, &dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,del file=%s", __func__, &path[0]);
@@ -809,7 +809,7 @@ void uteModuleEmotionPressureAutoSaveData(void)
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR, time.year, time.month, time.day);
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,dirInfo->filesCnt=%d", __func__, dirInfo->filesCnt);
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,save file=%s", __func__, &path[0]);
-    /*! ±£´æµ±Ç°Êı¾İxjc, 2022-02-15  */
+    /*! ä¿å­˜å½“å‰æ•°æ®xjc, 2022-02-15  */
     void *file;
     // read
     if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
@@ -841,7 +841,7 @@ void uteModuleEmotionPressureAutoSaveData(void)
     uteModulePlatformMemoryFree(dirInfo);
 }
 /**
- *@brief        ¿ªÊ¼·¢ËÍ24Ğ¡Ê±ÇéĞ÷Ñ¹Á¦Êı¾İ
+ *@brief        å¼€å§‹å‘é€24å°æ—¶æƒ…ç»ªå‹åŠ›æ•°æ®
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -864,7 +864,7 @@ void uteModuleEmotionPressureSendHistoryData(void)
     if (sendParam->dirInfo.filesCnt > 0)
     {
     SEND_NEXT_DATA:
-        sendSize = 2 + 6 + (12 * 3); // cmd = head+date+data(ÇéĞ÷¡¢Ñ¹Á¦¡¢Æ£ÀÍ¶È)
+        sendSize = 2 + 6 + (12 * 3); // cmd = head+date+data(æƒ…ç»ªã€å‹åŠ›ã€ç–²åŠ³åº¦)
         bool isHasData = false;
         void *file;
         sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR, &sendParam->dirInfo.filesName[sendParam->currSendFileIndex][0]);
@@ -873,8 +873,8 @@ void uteModuleEmotionPressureSendHistoryData(void)
         if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY))
         {
             uteModuleFilesystemReadData(file, &tempDataBuff[0], sendParam->dataBuffSize);
-            memcpy(&dataBuff[0], tempDataBuff, 4);               /*!»ñÈ¡ÄêÔÂÈÕ , xjc 2022-03-03*/
-            memcpy(&dataBuff[4], &tempDataBuff[4 + 3], 143 * 3); /*!»ñÈ¡µ±Ìì00£º10~23£º50µÄÊı¾İ, xjc 2022-03-03*/
+            memcpy(&dataBuff[0], tempDataBuff, 4);               /*!è·å–å¹´æœˆæ—¥ , xjc 2022-03-03*/
+            memcpy(&dataBuff[4], &tempDataBuff[4 + 3], 143 * 3); /*!è·å–å½“å¤©00ï¼š10~23ï¼š50çš„æ•°æ®, xjc 2022-03-03*/
             uteModuleFilesystemCloseFile(file);
         }
         if ((sendParam->currSendFileIndex + 1) < sendParam->dirInfo.filesCnt)
@@ -884,7 +884,7 @@ void uteModuleEmotionPressureSendHistoryData(void)
             if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
             {
                 uteModuleFilesystemReadData(file, &tempDataBuff[0], sendParam->dataBuffSize);
-                memcpy(&dataBuff[sendParam->dataBuffSize - 3], &tempDataBuff[4], 3); /*!»ñÈ¡ºóÒ»Ìì00£º00µÄÊı¾İ, xjc 2022-03-03*/
+                memcpy(&dataBuff[sendParam->dataBuffSize - 3], &tempDataBuff[4], 3); /*!è·å–åä¸€å¤©00ï¼š00çš„æ•°æ®, xjc 2022-03-03*/
                 uteModuleFilesystemCloseFile(file);
             }
         }
@@ -965,9 +965,9 @@ void uteModuleEmotionPressureSendHistoryData(void)
     uteModuleProfileBle50SendToPhone(&response[0], sendSize);
 }
 /**
- *@brief         ×¼±¸¿ªÊ¼·¢ËÍÇéĞ÷Ñ¹Á¦Êı¾İ
+ *@brief         å‡†å¤‡å¼€å§‹å‘é€æƒ…ç»ªå‹åŠ›æ•°æ®
  *@details
- *@param[in]     ĞèÒªÍ¬²½µÄÊı¾İÊ±¼ä´Á
+ *@param[in]     éœ€è¦åŒæ­¥çš„æ•°æ®æ—¶é—´æˆ³
  *@author        xjc
  *@date          2022-02-15
  */
@@ -984,14 +984,14 @@ void uteModuleEmotionPressureStartSendAutoTestHistoryData(ute_module_systemtime_
     param->currSendFileIndex = 0;
     param->currSendHourIndex = 0;
     param->currSendMinIndex = 0;
-    param->dataBuffSize = (3 * 6) * 24 + 4; // ÇéĞ÷¡¢Ñ¹Á¦¡¢Æ£ÀÍ¶È 3bytes
+    param->dataBuffSize = (3 * 6) * 24 + 4; // æƒ…ç»ªã€å‹åŠ›ã€ç–²åŠ³åº¦ 3bytes
     uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR, &param->dirInfo, NULL);
     uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleEmotionPressureSendHistoryData);
     uteApplicationCommonSyncDataTimerStart();
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,", __func__);
 }
 /**
- *@brief        É¾³ıÇéĞ÷Ñ¹Á¦ÀúÊ·Êı¾İ
+ *@brief        åˆ é™¤æƒ…ç»ªå‹åŠ›å†å²æ•°æ®
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -1012,7 +1012,7 @@ void uteModuleEmotionPressureDelHistoryData(void)
 }
 
 /**
- *@brief        ÊÇ·ñÕıÔÚ²âÁ¿ÇéĞ÷Ñ¹Á¦
+ *@brief        æ˜¯å¦æ­£åœ¨æµ‹é‡æƒ…ç»ªå‹åŠ›
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -1022,11 +1022,11 @@ bool uteModuleEmotionPressureIsEmotionPressureAutoTesting(void)
     return uteModuleEmotionPressureData.isEmotionPressureAutoTestFlag;
 }
 
-#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // Î¬¿ÍËã·¨Ìø¹ı¼¤»îÁ÷³Ì
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // ç»´å®¢ç®—æ³•è·³è¿‡æ¿€æ´»æµç¨‹
 /**
- *@brief        ¼¤»îÇéĞ÷Ñ¹Á¦Ëã·¨
+ *@brief        æ¿€æ´»æƒ…ç»ªå‹åŠ›ç®—æ³•
  *@details
- *@param[in] bool isAppActiveAlgo ÊÇ·ñAPPÆô¶¯¼¤»î
+ *@param[in] bool isAppActiveAlgo æ˜¯å¦APPå¯åŠ¨æ¿€æ´»
  *@author       xjc
  *@date       2022-02-15
  */
@@ -1058,18 +1058,18 @@ void uteModuleEmotionPressureActiveAlgo(bool isAppActiveAlgo)
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,hasKeyCode = %d,hasReqCode=%d", __func__, hasKeyCode, hasReqCode);
     if (hasReqCode && hasKeyCode)
     {
-        /*! ¿ªÊ¼¼¤»îËã·¨,xjc 2022-02-15*/
+        /*! å¼€å§‹æ¿€æ´»ç®—æ³•,xjc 2022-02-15*/
         bool isActive = activate_algorithm(reqCode, EMOTION_PRESSURE_REQ_CODE_LEN, keyCode, EMOTION_PRESSURE_KEY_CODE_LEN);
         uteModuleEmotionPressureSetAlgoActiveStatus(isActive);
     }
-    /*! ±£´æ¼¤»îÂë,xjc 2022-02-15*/
+    /*! ä¿å­˜æ¿€æ´»ç ,xjc 2022-02-15*/
     if (isAppActiveAlgo && uteModuleEmotionPressureGetAlgoActiveStatus())
     {
         uteModuleEmotionPressureSaveKeyCode();
     }
 }
 /**
- *@brief        ÉèÖÃÇéĞ÷Ñ¹Á¦Ëã·¨¼¤»î×´Ì¬
+ *@brief        è®¾ç½®æƒ…ç»ªå‹åŠ›ç®—æ³•æ¿€æ´»çŠ¶æ€
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -1081,7 +1081,7 @@ void uteModuleEmotionPressureSetAlgoActiveStatus(bool isAlgoActive)
     // uteModuleEmotionPressureSaveAlgoActiveStatus();
 }
 /**
- *@brief        ²éÑ¯ÇéĞ÷Ñ¹Á¦Ëã·¨ÊÇ·ñÒÑ¼¤»î
+ *@brief        æŸ¥è¯¢æƒ…ç»ªå‹åŠ›ç®—æ³•æ˜¯å¦å·²æ¿€æ´»
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -1091,7 +1091,7 @@ bool uteModuleEmotionPressureGetAlgoActiveStatus(void)
     return uteModuleEmotionPressureData.isAlgoActive;
 }
 /**
- *@brief        »ñÈ¡Éè±¸macµØÖ·
+ *@brief        è·å–è®¾å¤‡macåœ°å€
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -1108,7 +1108,7 @@ void uteModuleEmotionPressureGetMacAddress(uint8_t *mac)
     // APP_PRINT_INFO2("%s,mac = %s", __func__, TRACE_BINARY(12, &mac[0]));
 }
 /**
- *@brief       ·¢ËÍÊÚÈ¨Âë
+ *@brief       å‘é€æˆæƒç 
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -1123,7 +1123,7 @@ void uteModuleEmotionPressureSendDeviceInfomationToService(void)
     uint8_t factLen = EMOTION_PRESSURE_FACT_LEN;
     memcpy(fact, EMOTION_PRESSURE_DEFAULT_FACT, sizeof(fact));
 
-    uint8_t macAddr[12]; // ³¤¶ÈÒ»°ã12£¬Êä³ö¼ÓÃÜºóµÄ×Ö·û´®Îª64
+    uint8_t macAddr[12]; // é•¿åº¦ä¸€èˆ¬12ï¼Œè¾“å‡ºåŠ å¯†åçš„å­—ç¬¦ä¸²ä¸º64
     uint8_t macAddrLen = sizeof(macAddr);
     memset(macAddr, 0, macAddrLen);
 
@@ -1133,7 +1133,7 @@ void uteModuleEmotionPressureSendDeviceInfomationToService(void)
     response[0] = CMD_EMOTION_PRESSURE_TEST;
     response[1] = 0x0E;
     response[2] = EMOTION_PRESSURE_REQ_CODE_LEN;
-    /*! Ö®Ç°Ã»±£´æ¹ı»ò»Ö¸´³ö³§ÉèÖÃ»á¼ÆËãÒ»´ÎÉêÇëÂë£¬¼ÆËãÖ®ºó±£´æµ½±¾µØ,xjc 2022-02-15*/
+    /*! ä¹‹å‰æ²¡ä¿å­˜è¿‡æˆ–æ¢å¤å‡ºå‚è®¾ç½®ä¼šè®¡ç®—ä¸€æ¬¡ç”³è¯·ç ï¼Œè®¡ç®—ä¹‹åä¿å­˜åˆ°æœ¬åœ°,xjc 2022-02-15*/
     bool hasReqCode = false;
     for (uint8_t i = 0; i < EMOTION_PRESSURE_REQ_CODE_LEN; i++)
     {
@@ -1146,26 +1146,26 @@ void uteModuleEmotionPressureSendDeviceInfomationToService(void)
     if (!hasReqCode)
     {
         uteModuleEmotionPressureGetMacAddress(&macAddr[0]);
-        /*! Ëã·¨»ñÈ¡ÉêÇëÂë,xjc 2022-02-15*/
+        /*! ç®—æ³•è·å–ç”³è¯·ç ,xjc 2022-02-15*/
         request_validation(fact, factLen, macAddr, macAddrLen, uteModuleEmotionPressureData.algoReqCode, &algoReqCodeLen);
 #if UTE_LOG_EMOTION_PRESSURE_LVL
         // APP_PRINT_INFO3("%s,request algoReqCodelen = %d,data=%s", __func__, algoReqCodeLen, TRACE_BINARY(64, uteModuleEmotionPressureData.algoReqCode));
 #endif
-        /*! ±£´æÉêÇëÂë,xjc 2022-02-15*/
+        /*! ä¿å­˜ç”³è¯·ç ,xjc 2022-02-15*/
         uteModuleEmotionPressureSaveReqCode();
     }
-    /*! ·¢ËÍÉêÇëÂë,xjc 2022-02-15*/
+    /*! å‘é€ç”³è¯·ç ,xjc 2022-02-15*/
     memcpy(&response[3], uteModuleEmotionPressureData.algoReqCode, EMOTION_PRESSURE_REQ_CODE_LEN);
     uteModuleProfileBle50SendToPhone(&response[0], EMOTION_PRESSURE_REQ_CODE_LEN + 3);
 }
 /**
-@para key = false Ğ¡¶Ë´æ´¢  true ´ó¶Ë´æ´¢
-            index ´ÓµÚ¼¸¸ö×Ö½Ú¿ªÊ¼
+@para key = false å°ç«¯å­˜å‚¨  true å¤§ç«¯å­˜å‚¨
+            index ä»ç¬¬å‡ ä¸ªå­—èŠ‚å¼€å§‹
 */
 /**
  *@brief        float2u8Arry
  *@details
- *@param[in] bool bigEndian  false Ğ¡¶Ë´æ´¢  true ´ó¶Ë´æ´¢
+ *@param[in] bool bigEndian  false å°ç«¯å­˜å‚¨  true å¤§ç«¯å­˜å‚¨
  *@author       xjc
  *@date       2022-02-15
  */
@@ -1189,7 +1189,7 @@ void uteModuleEmotionPressureFloat2U8Arry(uint8_t *u8Arry, uint32_t index, float
     }
 }
 /**
- *@brief        ¿ªÊ¼·¢ËÍÖĞ¼äÖµÊı¾İ
+ *@brief        å¼€å§‹å‘é€ä¸­é—´å€¼æ•°æ®
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -1203,12 +1203,12 @@ void uteModuleEmotionPressureSendMidData(void)
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,stop 1", __func__);
         return;
     }
-    static uint8_t negNumCnt = 0;         // ¼ÆËãÖĞ¼äÖµº¬ÓĞ¸ºÊıµÄ×ÜÊı
-    static int emotionMidValueBagCnt = 0; // ·¢ËÍ°üµÄÊıÁ¿
+    static uint8_t negNumCnt = 0;         // è®¡ç®—ä¸­é—´å€¼å«æœ‰è´Ÿæ•°çš„æ€»æ•°
+    static int emotionMidValueBagCnt = 0; // å‘é€åŒ…çš„æ•°é‡
     uint8_t sendMidValue[4 + 32] = {CMD_EMOTION_PRESSURE_TEST, 0x11, 0x00, 0x00};
     uint8_t index = 4;
 
-    // ·¢ËÍ½áÊøÖ¡
+    // å‘é€ç»“æŸå¸§
     if (uteModuleEmotionPressureData.stopSendMidValue)
     {
         negNumCnt = 0;
@@ -1219,13 +1219,13 @@ void uteModuleEmotionPressureSendMidData(void)
         sendMidValue[2] = 0xFD;
         uteModuleProfileBle50SendToPhone(&sendMidValue[0], 3);
         uteModuleEmotionPressureData.ppgData.algoCaculatePerSampleTimeMidValueCnt = 0;
-        memset(uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule, 0, sizeof(uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule)); // ·¢ÍêÇåÁã
-        // Í£Ö¹¶¨Ê±Æ÷
+        memset(uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule, 0, sizeof(uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule)); // å‘å®Œæ¸…é›¶
+        // åœæ­¢å®šæ—¶å™¨
         uteApplicationCommonSyncDataTimerStop();
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,stop 3", __func__);
         return;
     }
-    // ×ª»»
+    // è½¬æ¢
     for (uint8_t i = 0; i < 8; i++)
     {
         uteModuleEmotionPressureFloat2U8Arry(sendMidValue, index, &uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule[emotionMidValueBagCnt][i], false);
@@ -1240,26 +1240,26 @@ void uteModuleEmotionPressureSendMidData(void)
             break;
         }
     }
-    // ·¢ËÍÖĞ¼äÖµ
+    // å‘é€ä¸­é—´å€¼
     emotionMidValueBagCnt++;
     uteModuleEmotionPressureData.ppgData.appTestStartToEndEPMidValueTotalCnt++;
-    sendMidValue[3] = uteModuleEmotionPressureData.ppgData.appTestStartToEndEPMidValueTotalCnt & 0xff; // ·¢ËÍ°üµÄÊıÁ¿
+    sendMidValue[3] = uteModuleEmotionPressureData.ppgData.appTestStartToEndEPMidValueTotalCnt & 0xff; // å‘é€åŒ…çš„æ•°é‡
     uteModuleProfileBle50SendToPhone(&sendMidValue[0], 36);
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "emotionMidValueBagCnt = %d,algoCaculatePerSampleTimeMidValueCnt=%d", emotionMidValueBagCnt, uteModuleEmotionPressureData.ppgData.appTestStartToEndEPMidValueTotalCnt);
     if (emotionMidValueBagCnt >= uteModuleEmotionPressureData.ppgData.algoCaculatePerSampleTimeMidValueCnt)
     {
         emotionMidValueBagCnt = 0;
         uteModuleEmotionPressureData.ppgData.algoCaculatePerSampleTimeMidValueCnt = 0;
-        memset(uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule, 0, sizeof(uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule)); // ·¢ÍêÇåÁã
-        // Í£Ö¹¶¨Ê±Æ÷
+        memset(uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule, 0, sizeof(uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule)); // å‘å®Œæ¸…é›¶
+        // åœæ­¢å®šæ—¶å™¨
         uteApplicationCommonSyncDataTimerStop();
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,stop 2", __func__);
     }
 }
 /**
- *@brief         ×¼±¸¿ªÊ¼·¢ËÍÖĞ¼äÖµÊı¾İ
+ *@brief         å‡†å¤‡å¼€å§‹å‘é€ä¸­é—´å€¼æ•°æ®
  *@details
- *@param[in]     ĞèÒªÍ¬²½µÄÊı¾İÊ±¼ä´Á
+ *@param[in]     éœ€è¦åŒæ­¥çš„æ•°æ®æ—¶é—´æˆ³
  *@author        xjc
  *@date          2022-02-15
  */
@@ -1271,7 +1271,7 @@ void uteModuleEmotionPressureStartSendMidData(void)
 }
 /**
  *@brief      uteArrayEnemLeftMove
- *@details    ´æ·ÅË÷ÒıÌØÕ÷µÄÊı×éÕûÌå×óÒÆ Èç:ÊäÈë :[0,1,2,3] Êä³ö :[1,2,3,0];;;ÊäÈë :[1,2,3,0] Êä³ö :[2,3,0,1];...
+ *@details    å­˜æ”¾ç´¢å¼•ç‰¹å¾çš„æ•°ç»„æ•´ä½“å·¦ç§» å¦‚:è¾“å…¥ :[0,1,2,3] è¾“å‡º :[1,2,3,0];;;è¾“å…¥ :[1,2,3,0] è¾“å‡º :[2,3,0,1];...
  *@author       xjc
  *@date       2022-02-15
  */
@@ -1300,7 +1300,7 @@ void uteModuleEmotionPressureArrayEnemLeftMove(uint8_t *arr, uint8_t len, bool i
     // APP_PRINT_INFO1("arr[] = %s", TRACE_BINARY(len, &arr[0]));
 }
 /**
- *@brief      ppgÊäÈë
+ *@brief      ppgè¾“å…¥
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -1309,7 +1309,7 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
 {
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,.ppgDataSize = %d", __func__, size);
     uteModuleEmotionPressureData.ppgData.ppgMinValue = 0xfffff0;
-    /*! ÊÕ¼¯1ÃëµÄÊı¾İ,xjc 2022-02-16*/
+    /*! æ”¶é›†1ç§’çš„æ•°æ®,xjc 2022-02-16*/
     if ((uteModuleEmotionPressureData.ppgData.oneSencondDataCnt < VCXX_SAMPLERATE + 20) && size >= 20)
     {
         for (uint8_t i = 0; i < size; i++)
@@ -1329,13 +1329,13 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
     }
     //////////////////////////////////////////////////////////////////
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "oneSencondDataCnt = %d", uteModuleEmotionPressureData.ppgData.oneSencondDataCnt);
-    if (uteModuleEmotionPressureData.ppgData.oneSencondDataCnt == VCXX_SAMPLERATE) // ²ÉÍêÒ»ÃëµÄPPGÊı¾İ
+    if (uteModuleEmotionPressureData.ppgData.oneSencondDataCnt == VCXX_SAMPLERATE) // é‡‡å®Œä¸€ç§’çš„PPGæ•°æ®
     {
-        /***Êı¾İÔ¤´¦Àí**/
+        /***æ•°æ®é¢„å¤„ç†**/
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,.bufferIsFull = %d", __func__, uteModuleEmotionPressureData.ppgData.bufferIsFull);
-        if (uteModuleEmotionPressureData.ppgData.bufferIsFull) // »º´æÒÑÂú£¬Ö´ĞĞËã·¨Âß¼­
+        if (uteModuleEmotionPressureData.ppgData.bufferIsFull) // ç¼“å­˜å·²æ»¡ï¼Œæ‰§è¡Œç®—æ³•é€»è¾‘
         {
-            // »º´æ¸üĞÂ,¼´Ìî³ä¾ÉÊı¾İ
+            // ç¼“å­˜æ›´æ–°,å³å¡«å……æ—§æ•°æ®
             for (uint8_t i = 0; i < VCXX_SAMPLERATE; i++)
             {
                 uteModuleEmotionPressureData.ppgData.buffer[uteModuleEmotionPressureData.ppgData.index][i] = uteModuleEmotionPressureData.ppgData.oneSecondData[i];
@@ -1346,7 +1346,7 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
             {
                 uteModuleEmotionPressureData.ppgData.index = 0;
             }
-            // Êı¾İÔ¤´¦Àí
+            // æ•°æ®é¢„å¤„ç†
             uteModuleEmotionPressureArrayEnemLeftMove(uteModuleEmotionPressureData.ppgData.ppgDataBufferIndex, APP_TEST_SAMPLETIME_BUFFER, false);
             for (uint8_t i = 0; i < APP_TEST_SAMPLETIME_BUFFER; i++)
             {
@@ -1369,21 +1369,21 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
                 uteModuleEmotionPressureData.ppgData.emotionData[index] = (uteModuleEmotionPressureData.ppgData.emotionData[index] - uteModuleEmotionPressureData.ppgData.ppgMinValue) * 100;
             }
             UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,%d seconds ppg data pretreatment completed!", __func__, APP_TEST_SAMPLETIME_BUFFER);
-            /***Êı¾İÔ¤´¦Àí**/
-            // ÔËĞĞËã·¨£¬ÏÈ×ßÄ¬ÈÏ¼¤»î,µ÷ÊÔËã·¨ÓÃ
+            /***æ•°æ®é¢„å¤„ç†**/
+            // è¿è¡Œç®—æ³•ï¼Œå…ˆèµ°é»˜è®¤æ¿€æ´»,è°ƒè¯•ç®—æ³•ç”¨
             //  uint8_t req_code[] = UTE_EMOTION_PRESSURE_DEFAULT_REQUSTCODE;
             //  uint8_t key_code[] = UTE_EMOTION_PRESSURE_DEFAULT_KEYCODE;
-            //  uteModuleEmotionPressureData.isAlgoActive = activate_algorithm(req_code, EMOTION_PRESSURE_REQ_CODE_LEN, key_code, EMOTION_PRESSURE_KEY_CODE_LEN); //isAlgoActive=1±íÊ¾Ëã·¨¼¤»î  ½ÓÊÕµ½APP¶Ë·µ»ØµÄ¼¤»îÂëÖ®ºóµ÷ÓÃ´Ëº¯Êı¡£
+            //  uteModuleEmotionPressureData.isAlgoActive = activate_algorithm(req_code, EMOTION_PRESSURE_REQ_CODE_LEN, key_code, EMOTION_PRESSURE_KEY_CODE_LEN); //isAlgoActive=1è¡¨ç¤ºç®—æ³•æ¿€æ´»  æ¥æ”¶åˆ°APPç«¯è¿”å›çš„æ¿€æ´»ç ä¹‹åè°ƒç”¨æ­¤å‡½æ•°ã€‚
             int fmlen = 0;
             UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,isAlgoActive = %d", __func__, uteModuleEmotionPressureData.isAlgoActive);
-            if (uteModuleEmotionPressureData.isAlgoActive) // ¼¤»î³É¹¦
+            if (uteModuleEmotionPressureData.isAlgoActive) // æ¿€æ´»æˆåŠŸ
             {
                 uteModuleEmotionPressureData.ppgData.algoExeCnt++;
 #if UTE_DRV_BLOODPRESSURE_DN02_SUPPORT
                 int status = ppg_midvalue(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER, VCXX_SAMPLERATE, uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule, &fmlen);
                 UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,status=%d", __func__, status);
 #else
-                ppg_correction(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER); // ĞÅºÅĞŞÕı£¬Ã¿´ÎĞÂĞÅºÅ´«À´Ê±ĞèÒªµ÷ÓÃ
+                ppg_correction(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER); // ä¿¡å·ä¿®æ­£ï¼Œæ¯æ¬¡æ–°ä¿¡å·ä¼ æ¥æ—¶éœ€è¦è°ƒç”¨
                 fmlen = ppg_midvalue(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER, VCXX_SAMPLERATE, uteModuleEmotionPressureData.ppgData.emotionOutPutFMvaule);
 #endif
                 uteModuleEmotionPressureData.ppgData.algoCaculatePerSampleTimeMidValueCnt = fmlen;
@@ -1394,14 +1394,14 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
                 {
                     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "start send mid value to app , epAlgoExeCnt = %d", uteModuleEmotionPressureData.ppgData.algoExeCnt);
                     uteModuleEmotionPressureData.ppgData.algoExeCnt = 0;
-                    // APP²âÊÔÍ¾ÖĞÀ¶ÑÀÁ¬½Ó¶Ï¿ª,½áÊø²âÊÔ
+                    // APPæµ‹è¯•é€”ä¸­è“ç‰™è¿æ¥æ–­å¼€,ç»“æŸæµ‹è¯•
                     ute_ble_connect_state_t connectStatus;
                     uteApplicationCommonGetBleConnectionState(&connectStatus);
                     if (!connectStatus.isConnected)
                     {
                         uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_TIMEOUT);
                     }
-                    // ²É¼¯µ½ÓĞĞ§µÄÖĞ¼äÖ®ºó²Å·¢¸øAPP
+                    // é‡‡é›†åˆ°æœ‰æ•ˆçš„ä¸­é—´ä¹‹åæ‰å‘ç»™APP
                     if (fmlen > 0)
                     {
                         if (!uteModuleEmotionPressureData.stopSendMidValue)
@@ -1422,29 +1422,29 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
                 {
                     int emo = 0;
                     int pi = 0;
-                    // ±¾µØ¼ÆËã
+                    // æœ¬åœ°è®¡ç®—
 #if UTE_LOG_EMOTION_PRESSURE_LVL
                     uint32_t diffTime = uteModulePlatformGetSystemTick();
 #endif
                     get_emotion_pi(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER, VCXX_SAMPLERATE, &emo, &pi);
-//                  tempPiValue = get_pi(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER, VCXX_SAMPLERATE);       // µ÷ÓÃµ½EMOTIONTIME/SINGLETIME=20´ÎÊ±³öÑ¹Á¦½á¹û£¬·ñÔò·µ»Ø0
+//                  tempPiValue = get_pi(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER, VCXX_SAMPLERATE);       // è°ƒç”¨åˆ°EMOTIONTIME/SINGLETIME=20æ¬¡æ—¶å‡ºå‹åŠ›ç»“æœï¼Œå¦åˆ™è¿”å›0
 #if UTE_LOG_EMOTION_PRESSURE_LVL
                     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%d,diffTime1=%d ms", __LINE__, (uteModulePlatformGetSystemTick() - diffTime) / 32);
 #endif
-                    //                  tempEmotionValue = get_emotion(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER, VCXX_SAMPLERATE); // µ÷ÓÃµ½EMOTIONTIME/SINGLETIME=20´ÎÊ±³öÇéĞ÷½á¹û£¬·ñÔò·µ»Ø-4
+                    //                  tempEmotionValue = get_emotion(uteModuleEmotionPressureData.ppgData.emotionData, VCXX_SAMPLERATE * APP_TEST_SAMPLETIME_BUFFER, VCXX_SAMPLERATE); // è°ƒç”¨åˆ°EMOTIONTIME/SINGLETIME=20æ¬¡æ—¶å‡ºæƒ…ç»ªç»“æœï¼Œå¦åˆ™è¿”å›-4
                     //                  #if UTE_LOG_GUI_LVL
                     //                  UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%d,diffTime2=%d ms", __LINE__,(uteModulePlatformGetSystemTick()-diffTime)/32);
                     //                  #endif
                     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,pi = %d, emo = %d", __func__, pi, emo);
                     if (pi > 0 && emo >= 0)
                     {
-                        // pi ºÍ emoÓĞĞ§£¬¿É·¢ËÍÖÁ³ÌĞòÆäËûµØ·½Ê¹ÓÃ
+                        // pi å’Œ emoæœ‰æ•ˆï¼Œå¯å‘é€è‡³ç¨‹åºå…¶ä»–åœ°æ–¹ä½¿ç”¨
                         uteModuleEmotionPressureData.emotionValue = emo & 0xff;
                         uteModuleEmotionPressureData.pressureValue = pi & 0xff;
-                        //                        uteModuleEmotionPressureData.fatigueValue = 0xFF;//Æ£ÀÍ¶ÈÄ¬ÈÏ²»³öÖµ£¬±¾µØËã·¨Ã»ÓĞÕæÊµµÄ³öÖµ xjc 2022-04-13*/
-                        uteModuleEmotionPressureData.fatigueValue = 10 + rand() % 10; // Æ£ÀÍ¶È±¾µØ¼ÆËãÔİÊ±ÓÃËæ»úÖµ
+                        //                        uteModuleEmotionPressureData.fatigueValue = 0xFF;//ç–²åŠ³åº¦é»˜è®¤ä¸å‡ºå€¼ï¼Œæœ¬åœ°ç®—æ³•æ²¡æœ‰çœŸå®çš„å‡ºå€¼ xjc 2022-04-13*/
+                        uteModuleEmotionPressureData.fatigueValue = 10 + rand() % 10; // ç–²åŠ³åº¦æœ¬åœ°è®¡ç®—æš‚æ—¶ç”¨éšæœºå€¼
                         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,emotionValue = %d,pressureValue = %d,fatigueValue = %d", __func__, uteModuleEmotionPressureData.emotionValue, uteModuleEmotionPressureData.pressureValue, uteModuleEmotionPressureData.fatigueValue);
-                        if (uteModuleEmotionPressureData.ppgData.algoExeCnt >= LOCAL_TEST_OUTPUT_VALUE_TIME) // ÑÓ³¤±¾µØ²âÊÔ³öÖµÊ±¼ä£¬²»¼Ó´ËÌõ¼ş£¬±¾µØ²âÊÔ³öÖµ½Ï¿ì
+                        if (uteModuleEmotionPressureData.ppgData.algoExeCnt >= LOCAL_TEST_OUTPUT_VALUE_TIME) // å»¶é•¿æœ¬åœ°æµ‹è¯•å‡ºå€¼æ—¶é—´ï¼Œä¸åŠ æ­¤æ¡ä»¶ï¼Œæœ¬åœ°æµ‹è¯•å‡ºå€¼è¾ƒå¿«
                         {
                             uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_SUCCESS);
                         }
@@ -1457,7 +1457,7 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
                 uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_TIMEOUT);
             }
         }
-        else // »º´æÎ´Âú£¬½«ÕâÒ»ÃëÊı¾İÌîÈë»º´æ
+        else // ç¼“å­˜æœªæ»¡ï¼Œå°†è¿™ä¸€ç§’æ•°æ®å¡«å…¥ç¼“å­˜
         {
             APP_PRINT_ERROR0("3 seconds ppg data isn't enough !");
             for (uint8_t i = 0; i < VCXX_SAMPLERATE; i++)
@@ -1469,7 +1469,7 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
             if (uteModuleEmotionPressureData.ppgData.index == APP_TEST_SAMPLETIME_BUFFER - 1)
             {
                 uteModuleEmotionPressureData.ppgData.bufferIsFull = true;
-                uteModuleEmotionPressureArrayEnemLeftMove(uteModuleEmotionPressureData.ppgData.ppgDataBufferIndex, APP_TEST_SAMPLETIME_BUFFER, true); // ³õÊ¼»¯
+                uteModuleEmotionPressureArrayEnemLeftMove(uteModuleEmotionPressureData.ppgData.ppgDataBufferIndex, APP_TEST_SAMPLETIME_BUFFER, true); // åˆå§‹åŒ–
             }
         }
         uteModuleEmotionPressureData.ppgData.oneSencondDataCnt = 0;
@@ -1479,8 +1479,8 @@ void uteModuleEmotionPressureAlgoInputData(vcxxCommonSampleData_t *sampleData, u
 
 #if 1
 /**
-*@brief      ´¦Àí¼ÓÔØµ±ÌìÑ¹Á¦ÀúÊ·Êı¾İ£¬ÓÃÓÚÖù×´Í¼ÏÔÊ¾
-*@details    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@brief      å¤„ç†åŠ è½½å½“å¤©å‹åŠ›å†å²æ•°æ®ï¼Œç”¨äºæŸ±çŠ¶å›¾æ˜¾ç¤º
+*@details    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author     xjc
 *@date       2022-02-18
 */
@@ -1493,7 +1493,7 @@ bool uteModuleEmotionPressureLoadTodayPressureHistoryData(uint8_t *pressureHisto
         pressureHistoryData[i] = 50 + rand()%15;
     }
 #endif
-    /*! Ñ¹Á¦ÀúÊ·Êı¾İÃ¿¸ô10·ÖÖÓÏÔÊ¾ xjc, 2022-05-27  */
+    /*! å‹åŠ›å†å²æ•°æ®æ¯éš”10åˆ†é’Ÿæ˜¾ç¤º xjc, 2022-05-27  */
 #if UTE_EMOTION_PRESSURE_HISTOTY_DISPLAY_EACH_20_MIN_SUPPORT
     uint8_t tempPressureHistoryData[72];
     memset(tempPressureHistoryData,0,sizeof(tempPressureHistoryData));
@@ -1513,7 +1513,7 @@ bool uteModuleEmotionPressureLoadTodayPressureHistoryData(uint8_t *pressureHisto
     for (uint8_t i = 0; i < pressureHistoryGraphCount; i++)
     {
         uint8_t pressureValue = 0;
-        uint16_t pressureValidValue = 0; //×ÜĞÄÂÊÖµ
+        uint16_t pressureValidValue = 0; //æ€»å¿ƒç‡å€¼
         uint8_t averagePressureValueCnt = 0;
         for (int j = m; j > 0; j--)
         {
@@ -1549,8 +1549,8 @@ bool uteModuleEmotionPressureLoadTodayPressureHistoryData(uint8_t *pressureHisto
 }
 
 /**
-*@brief      »ñÈ¡µ±ÌìÑ¹Á¦ÀúÊ·Êı¾İ£¬ÓÃÓÚÖù×´Í¼ÏÔÊ¾
-*@details    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@brief      è·å–å½“å¤©å‹åŠ›å†å²æ•°æ®ï¼Œç”¨äºæŸ±çŠ¶å›¾æ˜¾ç¤º
+*@details    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author     xjc
 *@date       2022-02-18
 */
@@ -1560,7 +1560,7 @@ bool uteModuleEmotionPressureGetTodayPressureHistoryData(uint8_t *pressureHistor
     void *file;
     bool isHasData = false;
     uint8_t path[40];
-    uint8_t pressureHistoryData[144]; // Ò»Ìì24hµÄÊı¾İ£¬Ê®·ÖÖÓÒ»Ìõ£¬Ò»¹²144Ìõ
+    uint8_t pressureHistoryData[144]; // ä¸€å¤©24hçš„æ•°æ®ï¼Œååˆ†é’Ÿä¸€æ¡ï¼Œä¸€å…±144æ¡
     uint16_t readPressureHistoryDataSize = (144 * 3) + 4;
     uint8_t *readPressureHistoryData = uteModulePlatformMemoryAlloc(readPressureHistoryDataSize);
     ute_module_systemtime_time_t time;
@@ -1626,8 +1626,8 @@ bool uteModuleEmotionPressureGetTodayPressureHistoryData(uint8_t *pressureHistor
 }
 
 /**
-*@brief      ´¦Àí¼ÓÔØµ±ÌìÑ¹Á¦ÀúÊ·Êı¾İ£¬ÓÃÓÚÖù×´Í¼ÏÔÊ¾
-*@details    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@brief      å¤„ç†åŠ è½½å½“å¤©å‹åŠ›å†å²æ•°æ®ï¼Œç”¨äºæŸ±çŠ¶å›¾æ˜¾ç¤º
+*@details    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author     xjc
 *@date       2022-02-18
 */
@@ -1655,7 +1655,7 @@ bool uteModuleEmotionPressureLoadTodayEmotionHistoryData(uint8_t *emotionHistory
                     lastEmotion = emotionHistoryData[i * m + (j - 1)];
                 }
             }
-            if (lastEmotion != 0xff) // ÓĞĞ§Öµ
+            if (lastEmotion != 0xff) // æœ‰æ•ˆå€¼
             {
                 tempEmotionHistoryData[i] = lastEmotion;
             }
@@ -1675,8 +1675,8 @@ bool uteModuleEmotionPressureLoadTodayEmotionHistoryData(uint8_t *emotionHistory
 }
 
 /**
-*@brief      »ñÈ¡µ±ÌìÇéĞ÷ÀúÊ·Êı¾İ£¬ÓÃÓÚÖù×´Í¼ÏÔÊ¾
-*@details    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@brief      è·å–å½“å¤©æƒ…ç»ªå†å²æ•°æ®ï¼Œç”¨äºæŸ±çŠ¶å›¾æ˜¾ç¤º
+*@details    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author     zn.zeng
 *@date       2022-09-04
 */
@@ -1686,7 +1686,7 @@ bool uteModuleEmotionPressureGetTodayEmotionHistoryData(uint8_t *emotionHistoryG
     void *file;
     bool isHasData = false;
     uint8_t path[40];
-    uint8_t emotionHistoryData[144]; // Ò»Ìì24hµÄÊı¾İ£¬Ê®·ÖÖÓÒ»Ìõ£¬Ò»¹²144Ìõ
+    uint8_t emotionHistoryData[144]; // ä¸€å¤©24hçš„æ•°æ®ï¼Œååˆ†é’Ÿä¸€æ¡ï¼Œä¸€å…±144æ¡
     uint16_t readEmotionHistoryDataSize = (144 * 3) + 4;
     uint8_t *readEmotionHistoryData = uteModulePlatformMemoryAlloc(readEmotionHistoryDataSize);
     ute_module_systemtime_time_t time;
@@ -1728,8 +1728,8 @@ bool uteModuleEmotionPressureGetTodayEmotionHistoryData(uint8_t *emotionHistoryG
 }
 
 /**
-*@brief      ´¦Àí¼ÓÔØµ±ÌìÆ£ÀÍ¶ÈÀúÊ·Êı¾İ£¬ÓÃÓÚÖù×´Í¼ÏÔÊ¾
-*@details    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@brief      å¤„ç†åŠ è½½å½“å¤©ç–²åŠ³åº¦å†å²æ•°æ®ï¼Œç”¨äºæŸ±çŠ¶å›¾æ˜¾ç¤º
+*@details    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author     xjc
 *@date       2022-02-18
 */
@@ -1743,7 +1743,7 @@ bool uteModuleEmotionPressureLoadTodayFatigueHistoryData(uint8_t *fatigueHistory
     }
 #endif
     uint8_t tempFatigueHistoryData[144];
-    /*! Ñ¹Á¦ÀúÊ·Êı¾İÃ¿¸ô10·ÖÖÓÏÔÊ¾ xjc, 2022-05-27  */
+    /*! å‹åŠ›å†å²æ•°æ®æ¯éš”10åˆ†é’Ÿæ˜¾ç¤º xjc, 2022-05-27  */
 #if UTE_EMOTION_PRESSURE_HISTOTY_DISPLAY_EACH_20_MIN_SUPPORT
     memset(tempFatigueHistoryData,0,sizeof(tempFatigueHistoryData));
     for (uint8_t i = 0; i < 72; i++)
@@ -1757,7 +1757,7 @@ bool uteModuleEmotionPressureLoadTodayFatigueHistoryData(uint8_t *fatigueHistory
     for (uint8_t i = 0; i < fatigueHistoryGraphCount; i++)
     {
         uint8_t fatigueValue = 0;
-        uint16_t fatigueValidValue = 0; //×ÜĞÄÂÊÖµ
+        uint16_t fatigueValidValue = 0; //æ€»å¿ƒç‡å€¼
         uint8_t averageFatigueValueCnt = 0;
         for (int j = m; j > 0; j--)
         {
@@ -1790,8 +1790,8 @@ bool uteModuleEmotionPressureLoadTodayFatigueHistoryData(uint8_t *fatigueHistory
 }
 
 /**
-*@brief      »ñÈ¡µ±ÌìÆ£ÀÍ¶ÈÀúÊ·Êı¾İ£¬ÓÃÓÚÖù×´Í¼ÏÔÊ¾
-*@details    µ±ÌìÓĞÊı¾İ·µ»Øtrue,Ã»ÓĞÔò·µ»Øfalse
+*@brief      è·å–å½“å¤©ç–²åŠ³åº¦å†å²æ•°æ®ï¼Œç”¨äºæŸ±çŠ¶å›¾æ˜¾ç¤º
+*@details    å½“å¤©æœ‰æ•°æ®è¿”å›true,æ²¡æœ‰åˆ™è¿”å›false
 *@author     xjc
 *@date       2022-02-18
 */
@@ -1801,7 +1801,7 @@ bool uteModuleEmotionPressureGetTodayFatigueHistoryData(uint8_t *fatigueHistoryG
     void *file;
     bool isHasData = false;
     uint8_t path[40];
-    uint8_t fatigueHistoryData[144]; //Ò»Ìì24hµÄÊı¾İ£¬Ê®·ÖÖÓÒ»Ìõ£¬Ò»¹²144Ìõ
+    uint8_t fatigueHistoryData[144]; //ä¸€å¤©24hçš„æ•°æ®ï¼Œååˆ†é’Ÿä¸€æ¡ï¼Œä¸€å…±144æ¡
     uint16_t readFatigueHistoryDataSize = (144 * 3) + 4;
     uint8_t *readFatigueHistoryData = uteModulePlatformMemoryAlloc(readFatigueHistoryDataSize);
     ute_module_systemtime_time_t time;
@@ -1865,8 +1865,8 @@ bool uteModuleEmotionPressureGetTodayFatigueHistoryData(uint8_t *fatigueHistoryG
 
 #if UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT
 /**
- *@brief        ÉèÖÃÑ¹Á¦×î´ó×îĞ¡Öµ
- *@details      APPÆô¶¯²âÁ¿Ê±Ê¹ÓÃ£¬APPÏÂ·¢ÇéĞ÷Ñ¹Á¦Öµ
+ *@brief        è®¾ç½®å‹åŠ›æœ€å¤§æœ€å°å€¼
+ *@details      APPå¯åŠ¨æµ‹é‡æ—¶ä½¿ç”¨ï¼ŒAPPä¸‹å‘æƒ…ç»ªå‹åŠ›å€¼
  *@author     txj
  *@date       2022-07-21
  */
@@ -1886,8 +1886,8 @@ void uteModuleEmotionPressureSetEmotionPressureMaxAndMinValue(uint8_t lastPressu
     }
 }
 /**
- *@brief        »ñÈ¡Ñ¹Á¦×î´óÖµ
- *@details      APPÆô¶¯²âÁ¿Ê±Ê¹ÓÃ£¬APPÏÂ·¢ÇéĞ÷Ñ¹Á¦Öµ
+ *@brief        è·å–å‹åŠ›æœ€å¤§å€¼
+ *@details      APPå¯åŠ¨æµ‹é‡æ—¶ä½¿ç”¨ï¼ŒAPPä¸‹å‘æƒ…ç»ªå‹åŠ›å€¼
  *@author     txj
  *@date       2022-07-21
  */
@@ -1896,8 +1896,8 @@ uint8_t uteModuleEmotionPressureGetEmotionPressureMaxValue(void)
     return (uteModuleEmotionPressureData.curDayPressureMaxValue == 0xFF) ? 0 : uteModuleEmotionPressureData.curDayPressureMaxValue;
 }
 /**
- *@brief        »ñÈ¡Ñ¹Á¦×îĞ¡Öµ
- *@details      APPÆô¶¯²âÁ¿Ê±Ê¹ÓÃ£¬APPÏÂ·¢ÇéĞ÷Ñ¹Á¦Öµ
+ *@brief        è·å–å‹åŠ›æœ€å°å€¼
+ *@details      APPå¯åŠ¨æµ‹é‡æ—¶ä½¿ç”¨ï¼ŒAPPä¸‹å‘æƒ…ç»ªå‹åŠ›å€¼
  *@author     txj
  *@date       2022-07-21
  */
@@ -1906,8 +1906,8 @@ uint8_t uteModuleEmotionPressureGetEmotionPressureMinValue(void)
     return (uteModuleEmotionPressureData.curDayPressureMinValue == 0xFF) ? 0 : uteModuleEmotionPressureData.curDayPressureMinValue;
 }
 /**
- *@brief        »ñÈ¡Ñ¹Á¦Æ½¾ùÖµ
- *@details      APPÆô¶¯²âÁ¿Ê±Ê¹ÓÃ£¬APPÏÂ·¢ÇéĞ÷Ñ¹Á¦Öµ
+ *@brief        è·å–å‹åŠ›å¹³å‡å€¼
+ *@details      APPå¯åŠ¨æµ‹é‡æ—¶ä½¿ç”¨ï¼ŒAPPä¸‹å‘æƒ…ç»ªå‹åŠ›å€¼
  *@author     txj
  *@date       2022-07-21
  */
@@ -1919,7 +1919,7 @@ uint8_t uteModuleEmotionPressureGetEmotionPressureAvgValue(void)
 
 #if UTE_MODULE_PRESSURE_PERCENT_SUPPORT
 /**
- *@brief        ¼ÆËãÑ¹Á¦Ã¿¸öµÈ¼¶µÄ°Ù·Ö±È  High Medium Normal Relax
+ *@brief        è®¡ç®—å‹åŠ›æ¯ä¸ªç­‰çº§çš„ç™¾åˆ†æ¯”  High Medium Normal Relax
  *@details
  *@author     xjc
  *@date       2022-09-17
@@ -1930,7 +1930,7 @@ bool uteModuleEmotionPressureCalculatePressurePercent(void)
     void *file;
     bool isHasData = false;
     uint8_t path[30];
-    uint8_t pressureHistoryData[144]; // Ò»Ìì24hµÄÊı¾İ£¬Ê®·ÖÖÓÒ»Ìõ£¬Ò»¹²144Ìõ
+    uint8_t pressureHistoryData[144]; // ä¸€å¤©24hçš„æ•°æ®ï¼Œååˆ†é’Ÿä¸€æ¡ï¼Œä¸€å…±144æ¡
     uint16_t readPressureHistoryDataSize = (144 * 3) + 4;
     uint8_t *readPressureHistoryData = uteModulePlatformMemoryAlloc(readPressureHistoryDataSize);
     ute_module_systemtime_time_t time;
@@ -2118,7 +2118,7 @@ bool uteModuleEmotionPressureCalculatePressurePercent(void)
 }
 
 /**
- *@brief        »ñÈ¡Ñ¹Á¦°Ù·Ö±È²ÎÊı
+ *@brief        è·å–å‹åŠ›ç™¾åˆ†æ¯”å‚æ•°
  *@details
  *@author        xjc
  *@date        2022-09-18

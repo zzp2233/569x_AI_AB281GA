@@ -1,6 +1,6 @@
 /**
  *@file
- *@brief        ÇéĞ÷Ñ¹Á¦´¦ÀíÄ£¿é
+ *@brief        æƒ…ç»ªå‹åŠ›å¤„ç†æ¨¡å—
  *@details
  *@author       xjc
  *@date       2022-02-15
@@ -17,49 +17,49 @@
 #endif
 
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-/*!Ğ´ÈëÇéĞ÷Ñ¹Á¦²âÊÔ²ÎÊı xjc, 2022-02-15  */
+/*!å†™å…¥æƒ…ç»ªå‹åŠ›æµ‹è¯•å‚æ•° xjc, 2022-02-15  */
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_EMOTION_PRESSURE_SET_INFO "systemparam/EPInfo"
-/*!Ğ´ÈëÇéĞ÷Ñ¹Á¦ÇëÇóÂë xjc, 2022-02-15  */
+/*!å†™å…¥æƒ…ç»ªå‹åŠ›è¯·æ±‚ç  xjc, 2022-02-15  */
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_EMOTION_PRESSURE_REQ_CODE "systemparam/EPReqCode"
-/*!Ğ´ÈëÇéĞ÷Ñ¹Á¦¼¤»îÂë xjc, 2022-02-15  */
+/*!å†™å…¥æƒ…ç»ªå‹åŠ›æ¿€æ´»ç  xjc, 2022-02-15  */
 #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_EMOTION_PRESSURE_KEY_CODE "systemparam/EPKeyCode"
-/*!Ğ´ÈëÇéĞ÷Ñ¹Á¦Ëã·¨ÊÇ·ñ¼¤»î xjc, 2022-02-15  */
+/*!å†™å…¥æƒ…ç»ªå‹åŠ›ç®—æ³•æ˜¯å¦æ¿€æ´» xjc, 2022-02-15  */
 // #define UTE_MODULE_FILESYSTEM_SYSTEMPARM_EMOTION_PRESSURE_ALGO_ACTIVE "systemparam/EPAlgoActive"
-/*! ÇéĞ÷Ñ¹Á¦24Ğ¡Ê±×Ô¶¯²âÊÔÊı¾İ±£´æÄ¿Â¼ xjc, 2022-02-15  */
+/*! æƒ…ç»ªå‹åŠ›24å°æ—¶è‡ªåŠ¨æµ‹è¯•æ•°æ®ä¿å­˜ç›®å½• xjc, 2022-02-15  */
 #define UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR "EPAutoData"
 
 #if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
 #define EMOTION_PRESSURE_DEFAULT_KEY_CODE "ElMSEkzC9IkWUmFYiBELzBygiF+rJ5CYr9NBiuXXsOYa5kDqsRxCrEIc3kLIymAZgL4SMwq/3Lif88er7PcHfw=="
-#define EMOTION_PRESSURE_KEY_CODE_LEN 88 // ¶¨³¤88
+#define EMOTION_PRESSURE_KEY_CODE_LEN 88 // å®šé•¿88
 #define EMOTION_PRESSURE_DEFAULT_REQ_CODE "6+m78fFJkFKu1mzhhL4jKRJTEhJMwvSJFlJhWIgRC8wfyB0HFw8JMURNQ6c3MP/U"
-#define EMOTION_PRESSURE_REQ_CODE_LEN 64 // ¶¨³¤64
+#define EMOTION_PRESSURE_REQ_CODE_LEN 64 // å®šé•¿64
 #define EMOTION_PRESSURE_DEFAULT_FACT "ute"
 #define EMOTION_PRESSURE_FACT_LEN 3
 #if UTE_DRV_BLOODPRESSURE_DN02_SUPPORT
-#define EMOTION_PRESSURE_ALGORITHM_BUFF_MAX_LEN 8000 // ÇéĞ÷Ñ¹Á¦Ëã·¨buff´óĞ¡£¬´óÓÚµÈÓÚ 3 * 100 * SAMPLETIME * sizeof(int) + 30 * 10 * sizeof(int) + 25 * 8 * sizeof(float)
-#define VCXX_SAMPLERATE 100                          // ²ÉÑùÆµÂÊ
+#define EMOTION_PRESSURE_ALGORITHM_BUFF_MAX_LEN 8000 // æƒ…ç»ªå‹åŠ›ç®—æ³•buffå¤§å°ï¼Œå¤§äºç­‰äº 3 * 100 * SAMPLETIME * sizeof(int) + 30 * 10 * sizeof(int) + 25 * 8 * sizeof(float)
+#define VCXX_SAMPLERATE 100                          // é‡‡æ ·é¢‘ç‡
 #else
 #define VCXX_SAMPLERATE SAMPLERATE
 /**
-ÏÖÔÚÊÇ1sµ÷ÓÃÒ»´ÎËã·¨
+ç°åœ¨æ˜¯1sè°ƒç”¨ä¸€æ¬¡ç®—æ³•
 **/
-#define APP_TEST_BLE_SEND_APP_DEFAULT_MAX_EPMIDVALUE_COUNT 140 // APP ·¢Æğ²âÊÔ£¬µ±¼ÆËãµÄÖĞ¼äÖµÊıÎª70Ê±£¬BLEÏòAPP·¢ËÍ½áÊøÖ¡
-// #define APP_TEST_SAMPLETIME 1 //APP ·¢ÆğµÄ²âÊÔ¡£²»Òª¸ü¸Ä
-#define APP_TEST_SAMPLETIME_BUFFER 4    // »º´æ3ÃëµÄPPGÊı¾İ£¬×îºÃ4Ãë
-#define APP_START_TEST_OVER_TIME 1      // APP²âÊÔ³¬Ê±Ê±¼ä
-#define LOCAL_START_TEST_OVER_TIME 2    // ±¾µØ²âÊÔ³¬Ê±Ê±¼ä
-#define LOCAL_TEST_OUTPUT_VALUE_TIME 45 // µ¥Î»Ãë ÉèÖÃ±¾µØ²âÊÔ³öÖµÊ±¼ä,ÉèÖÃµÄÖµĞè³¬¹ı30Ãë
-#define UTE_DRV_EMOTION_PRESSURE_TEST_TIMEOUT_SECOND (60 * LOCAL_START_TEST_OVER_TIME) // 2·ÖÖÓ³¬Ê±
+#define APP_TEST_BLE_SEND_APP_DEFAULT_MAX_EPMIDVALUE_COUNT 140 // APP å‘èµ·æµ‹è¯•ï¼Œå½“è®¡ç®—çš„ä¸­é—´å€¼æ•°ä¸º70æ—¶ï¼ŒBLEå‘APPå‘é€ç»“æŸå¸§
+// #define APP_TEST_SAMPLETIME 1 //APP å‘èµ·çš„æµ‹è¯•ã€‚ä¸è¦æ›´æ”¹
+#define APP_TEST_SAMPLETIME_BUFFER 4    // ç¼“å­˜3ç§’çš„PPGæ•°æ®ï¼Œæœ€å¥½4ç§’
+#define APP_START_TEST_OVER_TIME 1      // APPæµ‹è¯•è¶…æ—¶æ—¶é—´
+#define LOCAL_START_TEST_OVER_TIME 2    // æœ¬åœ°æµ‹è¯•è¶…æ—¶æ—¶é—´
+#define LOCAL_TEST_OUTPUT_VALUE_TIME 45 // å•ä½ç§’ è®¾ç½®æœ¬åœ°æµ‹è¯•å‡ºå€¼æ—¶é—´,è®¾ç½®çš„å€¼éœ€è¶…è¿‡30ç§’
+#define UTE_DRV_EMOTION_PRESSURE_TEST_TIMEOUT_SECOND (60 * LOCAL_START_TEST_OVER_TIME) // 2åˆ†é’Ÿè¶…æ—¶
 #endif
 #endif
 
 #if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
 typedef struct
 {
-    uint32_t algoCaculatePerSampleTimeMidValueCnt;                // lib_emotion.h --> #define SAMPLETIME ÖĞ¶¨Òå
-    uint32_t appTestStartToEndEPMidValueTotalCnt;                 // APP·¢ÆğÒ»´Î²âÊÔºó£¬¼ÆÊı´Ó²âÊÔµ½½áÊøËù²úÉúµÄÖĞ¼äÖµ×ÜµÄ¸öÊı
-    uint32_t algoExeCnt;                                          // Ëã·¨Ö´ĞĞ´ÎÊı
-    uint32_t buffer[APP_TEST_SAMPLETIME_BUFFER][VCXX_SAMPLERATE]; // ²âÊÔPPG»º´æ
+    uint32_t algoCaculatePerSampleTimeMidValueCnt;                // lib_emotion.h --> #define SAMPLETIME ä¸­å®šä¹‰
+    uint32_t appTestStartToEndEPMidValueTotalCnt;                 // APPå‘èµ·ä¸€æ¬¡æµ‹è¯•åï¼Œè®¡æ•°ä»æµ‹è¯•åˆ°ç»“æŸæ‰€äº§ç”Ÿçš„ä¸­é—´å€¼æ€»çš„ä¸ªæ•°
+    uint32_t algoExeCnt;                                          // ç®—æ³•æ‰§è¡Œæ¬¡æ•°
+    uint32_t buffer[APP_TEST_SAMPLETIME_BUFFER][VCXX_SAMPLERATE]; // æµ‹è¯•PPGç¼“å­˜
     uint16_t index;
     bool bufferIsFull;
     uint32_t ppgMinValue;
@@ -87,13 +87,13 @@ typedef struct
     uint32_t TotalValidCnt;
 } emotion_pressure_result_data_t;
 
-/*! ÇéĞ÷Ñ¹Á¦Êı¾İ½á¹¹,xjc, 2022-02-15*/
+/*! æƒ…ç»ªå‹åŠ›æ•°æ®ç»“æ„,xjc, 2022-02-15*/
 typedef struct
 {
     bool isSingleTesting;
     bool isAppStartTesting;
     int16_t appStartScreen;
-    uint8_t emotionValue; // 0:Ïû¼«ÇéĞ÷£¬1£ºÖĞĞÔÇéĞ÷£¬2£º»ı¼«ÇéĞ÷
+    uint8_t emotionValue; // 0:æ¶ˆææƒ…ç»ªï¼Œ1ï¼šä¸­æ€§æƒ…ç»ªï¼Œ2ï¼šç§¯ææƒ…ç»ª
     uint8_t pressureValue;
     uint8_t fatigueValue;
     uint8_t testingSecond;
@@ -104,11 +104,11 @@ typedef struct
     uint16_t endTimeHourMin;
     bool isEmotionPressureAutoTestFlag;
 #if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
-    bool isAlgoActive;                                  // Ëã·¨ÊÇ·ñ¼¤»î
-    uint8_t algoKeyCode[EMOTION_PRESSURE_KEY_CODE_LEN]; // ½ÓÊÕÔİ´æËÍ·şÎñÆ÷¶Î·¢¹ıÀ´µÄ¼¤»îÂë
-    uint8_t algoReqCode[EMOTION_PRESSURE_REQ_CODE_LEN]; // ÇëÇóÂë
+    bool isAlgoActive;                                  // ç®—æ³•æ˜¯å¦æ¿€æ´»
+    uint8_t algoKeyCode[EMOTION_PRESSURE_KEY_CODE_LEN]; // æ¥æ”¶æš‚å­˜é€æœåŠ¡å™¨æ®µå‘è¿‡æ¥çš„æ¿€æ´»ç 
+    uint8_t algoReqCode[EMOTION_PRESSURE_REQ_CODE_LEN]; // è¯·æ±‚ç 
     emotion_pressure_ppg_data_t ppgData;
-    bool stopSendMidValue; // ÊÇ·ñÍ£Ö¹·¢ËÍÖĞ¼äÖµ
+    bool stopSendMidValue; // æ˜¯å¦åœæ­¢å‘é€ä¸­é—´å€¼
 #if DUG_EMOTION_PRESSURE_SUPPORT
     uint8_t vcxxSendPPGBuff[44];
 #endif
@@ -131,14 +131,14 @@ typedef struct
 
 typedef enum
 {
-    EP_STOP_REASION_SUCCESS = 0x00,         // Õı³£³öÖµ
-    EP_STOP_REASION_NETWORK = 0xF0,         // ·şÎñÆ÷ÍøÂçÒì³£
-    EP_STOP_REASION_PARSE = 0xF1,           // ·şÎñÆ÷½âÎöÒì³£
-    EP_STOP_REASION_TIMEOUT = 0xF2,         // ²âÊÔ³¬Ê±
-    EP_STOP_REASION_UNWEAR = 0xF3,          // ÍÑÊÖ
-    EP_STOP_REASION_TRAINING = 0xF4,        // ÔË¶¯ÖĞ
-    EP_STOP_REASION_INITIATIVE_QUIT = 0xF5, // ÊÖ»·¶ËÖ÷¶¯ÍË³ö
-    EP_STOP_REASION_TESTING = 0xF6,         // ²âÊÔÖĞ
+    EP_STOP_REASION_SUCCESS = 0x00,         // æ­£å¸¸å‡ºå€¼
+    EP_STOP_REASION_NETWORK = 0xF0,         // æœåŠ¡å™¨ç½‘ç»œå¼‚å¸¸
+    EP_STOP_REASION_PARSE = 0xF1,           // æœåŠ¡å™¨è§£æå¼‚å¸¸
+    EP_STOP_REASION_TIMEOUT = 0xF2,         // æµ‹è¯•è¶…æ—¶
+    EP_STOP_REASION_UNWEAR = 0xF3,          // è„±æ‰‹
+    EP_STOP_REASION_TRAINING = 0xF4,        // è¿åŠ¨ä¸­
+    EP_STOP_REASION_INITIATIVE_QUIT = 0xF5, // æ‰‹ç¯ç«¯ä¸»åŠ¨é€€å‡º
+    EP_STOP_REASION_TESTING = 0xF6,         // æµ‹è¯•ä¸­
 } EMOTION_PRESSURE_STOP_REASION_T;
 
 void uteModuleEmotionPressureInit(void);

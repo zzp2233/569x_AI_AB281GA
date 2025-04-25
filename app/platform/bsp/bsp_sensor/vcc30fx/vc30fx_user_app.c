@@ -22,7 +22,9 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_factorytest.h"
 #include "ute_module_newFactoryTest.h"
-
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#include "ute_module_emotionPressure.h"
+#endif
 #include "vc30fx_driver.h"
 extern vc30fx_clk_info clk_info;            /* oscclk_calibration_infomation */
 
@@ -413,6 +415,12 @@ static int vc30fx_heart_rate_calculate(vcare_ppg_device_t *pdev)
         Algo_Input(&algoInputData_t, 1000 / 25, (AlgoSportMode)pdev->heart_algo_mode, 1, 1);
         VCARE_DBG_LOG("[%d] ppg=%d, x=%d, y=%d, z=%d", i, algoInputData_t.ppgSample,
                       algoInputData_t.axes.x, algoInputData_t.axes.y, algoInputData_t.axes.z);
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+        if(uteDrvHeartVcxxIsPressureTesting())
+        {
+            StressEst_Input(vc30fx_dev.heart_rate,algoOutputData.reliability,vc30fx_gsensor_data.xData[0], algoInputData_t.ppgSample);
+        }
+#endif
     }
     Algo_Output(&algoOutputData);
     heartRate = algoOutputData.hrData;
@@ -598,6 +606,12 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
 #endif
                     vc30fx_dev.heart_rate = 0;
                     Algo_Init();
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+                    if(uteDrvHeartVcxxIsPressureTesting())
+                    {
+                        StressEst_Init(-1);
+                    }
+#endif
                 }
                 //disp_data.hr_rate = vc30fx_dev.heart_rate;
                 bsp_sensor_hrs_data_save(vc30fx_dev.heart_rate);

@@ -19,8 +19,10 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_factoryTest.h"
 #include "ute_module_newFactoryTest.h"
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#include "ute_module_emotionPressure.h"
+#endif
 // #include "ute_drv_heart_vcxx_common.h"
-// #include "ute_module_emotionPressure.h"
 
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
 /*! 血压数据结构zn.zeng, 2021-07-23  */

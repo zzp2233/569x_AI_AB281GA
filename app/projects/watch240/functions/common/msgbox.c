@@ -1481,14 +1481,14 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set(txt, str_buff);
 
                 txt = compo_textbox_create(frm, strlen(i18n[STR_TIMER_FINIFH]));
-                compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X/1.5);
+                compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 274+34/2,250,40);
                 compo_textbox_set(txt, i18n[STR_TIMER_FINIFH]);
             }
             else if (sys_cb.cover_index == REMIND_COVER_ALARM)//12小时制度闹钟特殊处理
             {
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, 0);
-                compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y-40);
-                compo_picturebox_set_size(picbox,85,85);
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_20_ALARM_CLOCK_CLOCK_BIN);
+                compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,124/2+81);
+                // compo_picturebox_set_size(picbox,85,85);
 
                 //msg1
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
@@ -1500,14 +1500,14 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 
                 //title
                 compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+60);
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,237+38/2);
                 compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_28_BIN);
                 compo_textbox_set(txt_title, title);
 
                 compo_textbox_set_multiline(txt_msg, false);
                 compo_textbox_set_align_center(txt_msg, false);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,
-                                           GUI_SCREEN_CENTER_Y+50,
+                                           240+38/2-19,
                                            widget_text_get_area(txt_msg->txt).wid,
                                            widget_text_get_height()); //调整文本位置
             }
@@ -1600,7 +1600,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             switch(func_cb.sta)
             {
                 case FUNC_ALARM_CLOCK:
-                    res_ok = 0;
+                    res_ok = UI_BUF_I338001_20_ALARM_CLOCK_COMFIRM_BIN;
                     break;
                 default:
                     res_ok = 0;
@@ -1609,7 +1609,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             btn = compo_button_create_by_image(frm, res_ok);
             compo_setid(btn, COMPO_ID_BTN_OK);
             compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(res_ok).hei/2 - 10);
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(res_ok).hei/2 - 20);
         }
         break;
 
@@ -1626,12 +1626,12 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             break;
 
         case MSGBOX_MODE_BTN_YESNO:         //确定与取消按钮2
-            btn = compo_button_create_by_image(frm, UI_BUF_I338001_3_EXERCISE_BTN_FINISH_BIN);
-            compo_setid(btn, COMPO_ID_BTN_CANCEL);
+            btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_COMFIRM_BIN);
+            compo_setid(btn, COMPO_ID_BTN_OK);
             compo_button_set_pos(btn, 80/2+209,80/2+224);
 
-            btn = compo_button_create_by_image(frm, UI_BUF_I338001_3_EXERCISE_BTN_FINISH_BIN);
-            compo_setid(btn, COMPO_ID_BTN_OK);
+            btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_CANCEL_BIN);
+            compo_setid(btn, COMPO_ID_BTN_CANCEL);
             compo_button_set_pos(btn, 80/2+71,80/2+224);
             break;
         case MSGBOX_MODE_BTN_DELETE:        //删除按钮

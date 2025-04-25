@@ -35,7 +35,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
     if (sys_cb.smoke_index == SMOKING)
     {
         printf("1111111111111111111sys_cb.password_flag=%d\n",sys_cb.password_flag);
-        if(sys_cb.password_flag==1)
+        if(sys_cb.password_cnt == 4)
         {
             picbox = compo_picturebox_create(frm, UI_BUF_I330001_CHILD_LOCK_ICON_84X84_X78_Y89_BIN);
             compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 109);

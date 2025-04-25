@@ -173,7 +173,7 @@ static void func_clock_sub_dropdown_password_pic_update(void)
 {
     compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_PIC_PASSWORD);
     // if(sys_cb.mute)
-    if(sys_cb.password_flag == true)
+    if(sys_cb.password_cnt == 4)
     {
         compo_button_set_bgimg(mute_pic, UI_BUF_I330001_CHILD_LOCK_PASSWORD01_BIN);
     }

@@ -55,6 +55,8 @@ enum
     TO_APP_TASK_PLAY_RING,
     TO_APP_TASK_STOP_RING,
     MSG_TYPE_FACTORY_PLAY_SOUND_RECORDING,
+    MSG_TYPE_EMOTION_PRESSURE_START_SINGLE_TESTING,
+    MSG_TYPE_EMOTION_PRESSURE_STOP_SINGLE_TESTING,
 };
 
 void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *msg);

@@ -49,7 +49,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_EXERCISE_BIN,               .str_idx=STR_SPORTS},                //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    // {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_OXYGEN_BIN,           .str_idx=STR_BLOOD_OXYGEN},          //血氧
+    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_OXYGEN_BIN,           .str_idx=STR_BLOOD_OXYGEN},          //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 // #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     // {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_PRESSURE_BIN,         .str_idx=STR_BLOOD_PRESSURE},       //血压

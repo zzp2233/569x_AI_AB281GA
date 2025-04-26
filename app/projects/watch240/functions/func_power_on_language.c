@@ -176,8 +176,8 @@ compo_form_t *func_power_on_language_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
 
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);

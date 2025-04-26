@@ -962,12 +962,12 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 195+TXT_SPACING*6-(sport_type*TXT_SPACING));
     compo_setid(btn,COMPO_BTN_SURE);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
-    compo_textbox_set_align_center(textbox, true);
-    compo_textbox_set_multiline(textbox, true);
-    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 180+TXT_SPACING*7-(sport_type*TXT_SPACING),GUI_SCREEN_CENTER_X*1.7,28*2);
-    compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
+    // textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
+    // compo_textbox_set_align_center(textbox, true);
+    // compo_textbox_set_multiline(textbox, true);
+    // widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    // compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 180+TXT_SPACING*7-(sport_type*TXT_SPACING),GUI_SCREEN_CENTER_X*1.7,28*2);
+    // compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
 
 ///               判断运动类型                       /
     if(func_sport_get_disp_mode() == LESS_DATA)
@@ -1142,12 +1142,11 @@ static void func_sport_finish_init(void)
     page_move_info_t info =
     {
         .title_used=false,
-        .page_size = page_size,
+        .page_size = page_size-65,
         .page_count = 1,
     };
     compo_page_move_init(f_sport_finish->ptm, func_cb.frm_main->page_body, &info);
 
-    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     f_sport_finish->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT

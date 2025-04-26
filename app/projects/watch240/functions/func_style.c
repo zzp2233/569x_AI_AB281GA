@@ -275,8 +275,8 @@ enum
 static const compo_listbox_item_t tbl_style_list[] =
 {
     {STR_STYLE_LIST_1,          UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_ICON_THEME_28X28_X18_Y64_X18_Y138_X18_Y212_LIST_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_ICON_THEME_28X28_X18_Y64_X18_Y138_X18_Y212_GRID_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //宫格
-    {STR_STYLE_HONEYCOMB,       UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_ICON_THEME_28X28_X18_Y64_X18_Y138_X18_Y212_HONEYCOMB_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_GONG_GE,               UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_ICON_THEME_28X28_X18_Y64_X18_Y138_X18_Y212_GRID_BIN,           .menu_style = MENU_STYLE_SUDOKU},       //宫格
+    {STR_STYLE_HONEYCOMB,       UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_ICON_THEME_28X28_X18_Y64_X18_Y138_X18_Y212_HONEYCOMB_BIN,      .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
     // {STR_SPHERE,                UI_BUF_I330001_SETTINGS_THEME_07_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
     // {STR_CHECKERBOARD,          UI_BUF_I330001_SETTINGS_THEME_06_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
     // {STR_HALO,                  UI_BUF_I330001_SETTINGS_THEME_01_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
@@ -324,8 +324,8 @@ compo_form_t *func_style_form_create(void)
     //新建菜单选择列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_style_list, SET_LIST_CNT);
-    // compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
-    // compo_listbox_set_sta_icon(listbox, UI_BUF_I330001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_1_BIN);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_BUTTON_ICON_PIC24X24_X200_Y66_141_214_00_BIN, UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_BUTTON_ICON_PIC24X24_X200_Y66_141_214_01_BIN);
     compo_listbox_set_bithook(listbox, func_sel_style_bit);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 

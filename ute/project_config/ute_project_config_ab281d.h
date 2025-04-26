@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281D_H_
 
 #define DEFAULT_BLE_DEV_NAME "W12Y"
-#define UTE_SW_VERSION "AB281DV000037"
+#define UTE_SW_VERSION "AB281DV000040"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
@@ -279,6 +279,7 @@
 #define SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT           1 //越南语 0x63
 #define SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT             1 //马来西亚语 0x40
 #endif // DEFAULT_LANGUAGE
+
 
 /*! 多运动支持百种运动标志, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_HUNDRED_SUPPORT 1

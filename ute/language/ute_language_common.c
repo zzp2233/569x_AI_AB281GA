@@ -102,7 +102,8 @@ void uteLanguageCommonSelect(MULTIPLE_LANGUAGE_ID langId)
 #if SCREEN_TITLE_MULTIPLE_TURKISH_LANGUAGE_SUPPORT
         case TURKISH_LANGUAGE_ID:
             i18n = i18n_tr_rtr;
-            break;
+            -
+                break;
 #endif
 #if SCREEN_TITLE_MULTIPLE_BENGALI_LANGUAGE_SUPPORT
         case BENGALI_LANGUAGE_ID:
@@ -116,7 +117,7 @@ void uteLanguageCommonSelect(MULTIPLE_LANGUAGE_ID langId)
 #endif
 #if SCREEN_TITLE_MULTIPLE_INDONESUAN_LANGUAGE_SUPPORT
         case INDONESUAN_LANGUAGE_ID:
-            i18n = i18n_id_rid;
+            i18n = i18n_in_rid;
             break;
 #endif
 #if SCREEN_TITLE_MULTIPLE_PUNJABI_LANGUAGE_SUPPORT
@@ -131,7 +132,7 @@ void uteLanguageCommonSelect(MULTIPLE_LANGUAGE_ID langId)
 #endif
 #if SCREEN_TITLE_MULTIPLE_CZECH_LANGUAGE_SUPPORT
         case CZECH_LANGUAGE_ID:
-            i18n = i18n_cs_rcs;
+            i18n = i18n_cs_rcz;
             break;
 #endif
 #if SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT

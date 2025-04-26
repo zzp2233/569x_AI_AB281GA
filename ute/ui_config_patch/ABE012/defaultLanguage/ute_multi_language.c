@@ -8,13 +8,9 @@
 
 #include "ute_multi_language_ru_rru.h"
 
-#include "ute_multi_language_ja_rjp.h"
+#include "ute_multi_language_cs_rcz.h"
 
-#include "ute_multi_language_de_rde.h"
+#include "ute_multi_language_in_rid.h"
 
-#include "ute_multi_language_fr_rfr.h"
-
-#include "ute_multi_language_it_rit.h"
-
-#include "ute_multi_language_zh_rtw.h"
+#include "ute_multi_language_vi_rvn.h"
 

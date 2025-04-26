@@ -22,6 +22,9 @@
 #include "ute_module_call.h"
 #include "ute_module_localRingtone.h"
 #include "ute_module_micrecord.h"
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#include "ute_module_emotionPressure.h"
+#endif
 
 /**
 *@brief  消息模块消息处理函数
@@ -177,6 +180,18 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleNotifyCallDisableHandlerMsg();
         }
         break;
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+        case MSG_TYPE_EMOTION_PRESSURE_START_SINGLE_TESTING:
+        {
+            uteModuleEmotionPressureStartSingleTestingMsgHandler(param);
+        }
+        break;
+        case MSG_TYPE_EMOTION_PRESSURE_STOP_SINGLE_TESTING:
+        {
+            uteModuleEmotionPressureStopSingleTestingMsgHandler(param);
+        }
+        break;
+#endif
 #if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
         case TO_APP_TASK_CONNECT_A2DP:
         {

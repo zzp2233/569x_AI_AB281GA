@@ -33,6 +33,7 @@
 #include "ute_module_music.h"
 #include "ute_module_menstrualcycle.h"
 #include "ute_module_appbinding.h"
+#include "ute_module_emotionPressure.h"
 #include "func_cover.h"
 
 /**
@@ -2592,6 +2593,229 @@ void uteModuleProtocolAppBindingCtrl(uint8_t *receive, uint8_t length)
 #endif
 }
 
+/**
+*@brief       情绪压力控制和数据同步
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       xjc
+*@date       2022-02-15
+*/
+void uteModuleProtocolEmotionPressureCtrl(uint8_t*receive,uint8_t length)
+{
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+    uint8_t response[20];
+    memset(response, 0, sizeof(response));
+    if(receive[1]==0x11)//start test
+    {
+        bool isNeedStart = true;
+        response[0]=CMD_EMOTION_PRESSURE_TEST;
+        response[1]=0x00;
+        response[2]=0xFF;
+        response[3]=0xFF;
+        response[4]=0xFF;
+        response[5]=EP_STOP_REASION_SUCCESS;
+        if(!uteModuleEmotionPressureIsWear())
+        {
+            response[5]=EP_STOP_REASION_UNWEAR;
+            isNeedStart = false;
+        }
+        else if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        {
+            response[5]=EP_STOP_REASION_TIMEOUT;
+            isNeedStart = false;
+        }
+        else if(uteModuleSportMoreSportIsRuning())
+        {
+            response[5]=EP_STOP_REASION_TRAINING;
+            isNeedStart = false;
+        }
+        else if(uteModuleEmotionPressureIsTesting())
+        {
+            response[5]=EP_STOP_REASION_TESTING;
+            isNeedStart = false;
+        }
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT     //add by pcm 2023-07-28 维客情绪压力
+        else if(!uteModuleEmotionPressureGetAlgoActiveStatus())
+        {
+            response[5]=EP_STOP_REASION_TIMEOUT;
+            isNeedStart = false;
+        }
+
+#endif
+        if(isNeedStart)
+        {
+            uteModuleEmotionPressureStartSingleTesting(true);
+#if 0
+            switch (receive[2])
+            {
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+                case 0: // 情绪
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_EMOTION_ID, 0, __func__);
+                    break;
+#endif
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+                case 1: // 压力
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_PRESSURE_ID, 0, __func__);
+                    break;
+#endif
+#if UTE_MODULE_SCREENS_FATIGUE_SUPPORT
+                case 2: // 疲劳度
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FATIGUE_ID, 0, __func__);
+                    break;
+#endif
+                default:
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_PRESSURE_ID, 0, __func__);
+#endif
+                    break;
+            }
+#endif
+        }
+        else
+        {
+            uteModuleProfileBleSendToPhone((uint8_t *)&response[0],6);
+        }
+    }
+    else if(receive[1]==0x00)
+    {
+        uint8_t emotionValue = receive[2];
+        uint8_t pressureValue = receive[3];
+        uint8_t fatigueValue = receive[4];
+        uint8_t stopReasion = receive[5];
+        uteModuleEmotionPressureSetEmotionPressureValue(emotionValue,pressureValue,fatigueValue);
+        uteModuleEmotionPressureStopSingleTesting(stopReasion);
+    }
+    else if(receive[1]==0x03)/*! 自动测试开关+采样间隔 xjc, 2022-02-15  */
+    {
+        bool isAutoTesting = receive[2];
+        uint16_t intervalMin = receive[3]<<8|receive[4];
+        uteModuleEmotionPressureSaveAutoIntervalParam(isAutoTesting,intervalMin);
+        uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],5);
+    }
+    else if(receive[1]==0x04)/*!设置自动测试时间段 xjc, 2022-02-15  */
+    {
+        bool isAutoTimeBucketTesting = receive[2];
+        uint16_t startTimeHourMin = receive[3]<<8|receive[4];
+        uint16_t endTimeHourMin = receive[5]<<8|receive[6];
+        uteModuleEmotionPressureSaveAutoTimeBucketParam(isAutoTimeBucketTesting,startTimeHourMin,endTimeHourMin);
+        uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],7);
+    }
+    else if(receive[1]==0xaa)/*! 查询测试状态  xjc, 2022-02-15  */
+    {
+        response[0] = receive[0];
+        response[1] = receive[1];
+        if(uteModuleEmotionPressureIsTesting())
+        {
+            response[2] = 0x11;
+        }
+        else
+        {
+            response[2] = 0xff;
+        }
+        uteModuleProfileBleSendToPhone((uint8_t *)&response[0],3);
+    }
+    else if(receive[1]==0x0c)/*! 删除历史数据  xjc, 2022-02-15  */
+    {
+        uteModuleEmotionPressureDelHistoryData();
+        uteModuleProfileBleSendToPhone((uint8_t *)&receive[0],2);
+    }
+    else if (receive[1] == 0x0d) /*! 查询情绪压力算法是否已激活 xjc, 2022-02-15  */
+    {
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT     //add by pcm 2023-07-28 维???压力算??
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = 0x11;      //默认已激活，不需要重新申请激活码
+#else
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = (uteModuleEmotionPressureGetAlgoActiveStatus()) ? 0x11 : 0xFF;
+#endif
+        uteModuleProfileBleSendToPhone(&response[0], 3);
+    }
+    else if (receive[1] == 0x0e) /*! APP请求获取申请激活码所使用的申请码 xjc, 2022-02-15  */
+    {
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT     //add by pcm 2023-07-28 维客情绪压力算法
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = receive[2];
+        response[3] =  0x11;
+        response[4] = 0xFD;
+        uteModuleProfileBleSendToPhone(&response[0], 5);
+#else
+        if (receive[2] == 0x11) //获取申请激活码所使用的申请码
+        {
+            uteModuleEmotionPressureSendDeviceInfomationToService();
+        }
+        else if (receive[2] == EMOTION_PRESSURE_KEY_CODE_LEN) //返回授权激活码
+        {
+            uteModuleEmotionPressureSetKeyCode(&receive[3]);
+            uteModuleEmotionPressureActiveAlgo(true);
+            response[0] = receive[0];
+            response[1] = receive[1];
+            response[2] = receive[2];
+            response[3] = (uteModuleEmotionPressureGetAlgoActiveStatus()) ? 0x11 : 0xFF;
+            response[4] = 0xFD;
+            uteModuleProfileBleSendToPhone(&response[0], 5);
+        }
+#endif
+    }
+    else if(receive[1]==0x0f)/*! 查询手环端支持显示的界面+Sensor xjc, 2022-03-31  */
+    {
+        response[0] = receive[0];
+        response[1] = receive[1];
+        response[2] = UTE_MODULE_SCREENS_EMOTION_SUPPORT;
+        response[3] = UTE_MODULE_SCREENS_PRESSURE_SUPPORT;
+        response[4] = UTE_MODULE_SCREENS_FATIGUE_SUPPORT;
+        /*! 传感器型号(VC32/VC52/VP60) */
+#if UTE_DRV_HEART_VC32S_SUPPORT
+        response[5] = 4;
+        memcpy(&response[6],"VC32",4);
+#elif UTE_DRV_HEART_VC52S_SUPPORT
+        response[5] = 4;
+        memcpy(&response[6],"VC52",4);
+#elif UTE_DRV_HEART_VC9201C_VP60A1_SUPPORT||UTE_DRV_HEART_VC9201C_VP60A2_SUPPORT||UTE_DRV_HEART_VC30S_SUPPORT||UTE_DRV_HEART_VC9202_VP60A2_SUPPORT
+        response[5] = 4;
+        memcpy(&response[6],"VP60",4);
+#else
+        response[5] = 4;
+        memcpy(&response[6],"VP60",4);
+#endif
+        uteModuleProfileBleSendToPhone(&response[0], (6+response[5]));
+    }
+    else if(receive[1]==0xfa)/*! 同步历史数据 xjc, 2022-02-15  */
+    {
+        ute_module_systemtime_time_t time;
+        memset(&time,0,sizeof(ute_module_systemtime_time_t));
+        if(length>2)
+        {
+            time.year = receive[2]<<8|receive[3];
+            time.month = receive[4];
+            time.day = receive[5];
+            time.hour = receive[6];
+            time.min = receive[7];
+            time.sec = receive[8];
+        }
+        /*! 情绪压力测试过程中，不发送历史数据,xjc 2022-02-18*/
+        if(uteModuleEmotionPressureIsTesting())
+        {
+            response[0] = receive[0];
+            response[1] = receive[1];
+            response[2] = 0xFD;
+            response[3] = 0x00;
+            uteModuleProfileBleSendToPhone(&response[0], 4);
+        }
+        else
+        {
+            uteModuleEmotionPressureStartSendAutoTestHistoryData(time);
+        }
+    }
+#else
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,undefine ", __func__);
+#endif
+}
+
+
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 {
@@ -2643,7 +2867,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
 #endif
     {.privateCmd = CMD_SYNC_CONTACTS,.publicCmd=CMD_SYNC_CONTACTS,.function=uteModuleProtocolSyncAddressBook},
     {.privateCmd = CMD_SOCIAL_APP_SELECT,.publicCmd=CMD_SOCIAL_APP_SELECT,.function=uteModuleProtocolSocialAppSelectParam},
-    // {.privateCmd = CMD_EMOTION_PRESSURE_TEST,.publicCmd=CMD_EMOTION_PRESSURE_TEST,.function=uteModuleProtocolEmotionPressureCtrl},
+    {.privateCmd = CMD_EMOTION_PRESSURE_TEST,.publicCmd=CMD_EMOTION_PRESSURE_TEST,.function=uteModuleProtocolEmotionPressureCtrl},
     {.privateCmd = CMD_USER_ID_FOR_BINDING,.publicCmd=PUBLIC_CMD_USER_ID_FOR_BINDING,.function=uteModuleProtocolAppBindingCtrl},
 #if UTE_MODULE_UNIT_TEST_FUNCTION_DATAS_SUPPORT
     {.privateCmd = CMD_DEBUG_TEST_DATA,.publicCmd=CMD_DEBUG_TEST_DATA,.function=uteModuleUnitTestDatasReceiveHandler},

@@ -24,6 +24,9 @@
 #include "ute_module_factoryTest.h"
 #include "ute_module_newFactoryTest.h"
 #include "ute_module_sleep.h"
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#include "ute_module_emotionPressure.h"
+#endif
 
 #if UTE_MODULE_HEART_SUPPORT
 // #include "ute_module_sleep.h"
@@ -221,6 +224,9 @@ void uteModuleHeartEverySecond(void)
            && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
            && (uteModuleNewFactoryTestGetMode() == FACTORY_TEST_MODE_NULL)
+#endif
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+           && (!uteModuleEmotionPressureIsTesting())
 #endif
            && (uteModuleHeartGetWorkMode() != HR_WORK_MODE_HR || !bsp_sensor_hr_work_status())
           )
@@ -574,13 +580,13 @@ void uteModuleHeartStopSingleTesting(ute_module_heart_type_t type)
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_STOP_SINGLE_TESTING, (uint32_t)type);
 }
 
-// /**
-// *@brief        结束单次测试消息处理函数
-// *@details
-// *@param      uint32_t param，结束类型
-// *@author       zn.zeng
-// *@date       2021-07-16
-// */
+/**
+*@brief        结束单次测试消息处理函数
+*@details
+*@param      uint32_t param，结束类型
+*@author       zn.zeng
+*@date       2021-07-16
+*/
 void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
 {
     ute_module_heart_type_t type = (ute_module_heart_type_t)param;
@@ -1568,6 +1574,66 @@ void uteModuleHeartSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
 */
 void uteModuleHeartWeekStaticSecond(ute_module_systemtime_time_t time)
 {
+#if UTE_MODULE_HEART_STATIC_ALL_DAY_SUPPORT
+    if (uteModuleSportGetStepType() == STEP_TYPE_STEP)
+    {
+        if (uteModuleSleepCurrDayIsHasSleep() && !uteModuleSleepCurrDayIsGetUp())
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,sleeping...",__func__);
+        }
+        else
+        {
+            if (time.sec == 59)
+            {
+                if (uteModuleHeartData.dayStaticHeart == 0 || uteModuleHeartData.dayStaticHeart == 0xff)
+                {
+                    if (uteModuleHeartData.weekDayStaticHeart[6] > 0 && uteModuleHeartData.weekDayStaticHeart[6] < 0xff)
+                    {
+                        uteModuleHeartData.dayStaticHeart = uteModuleHeartData.weekDayStaticHeart[6];
+                    }
+                    else if(uteModuleHeartData.heartValue > 0 && uteModuleHeartData.heartValue < 0xff)
+                    {
+                        uteModuleHeartData.dayStaticHeart = uteModuleHeartData.heartValue;
+                    }
+                }
+                else if (uteModuleHeartData.dayStaticHeart > uteModuleHeartData.heartValue && uteModuleHeartData.heartValue > 0)
+                {
+                    uteModuleHeartData.dayStaticHeart = uteModuleHeartData.heartValue;
+                }
+
+                if (uteModuleHeartData.dayStaticHeart > 0 && uteModuleHeartData.dayStaticHeart < 0xff)
+                {
+                    if (uteModuleHeartData.weekDayStaticHeart[6] != uteModuleHeartData.dayStaticHeart)
+                    {
+                        if (uteModuleHeartData.weekDayStaticHeart[6] > 0 && uteModuleHeartData.weekDayStaticHeart[6] < 0xff)
+                        {
+                            uint16_t avgHeart = uteModuleHeartData.weekDayStaticHeart[6] + uteModuleHeartData.dayStaticHeart;
+                            uteModuleHeartData.weekDayStaticHeart[6] = avgHeart / 2;
+                        }
+                        else
+                        {
+                            uteModuleHeartData.weekDayStaticHeart[6] = uteModuleHeartData.dayStaticHeart;
+                        }
+
+                        if (uteModuleHeartData.weekDayStaticHeart[6] > 120)
+                        {
+                            uteModuleHeartData.weekDayStaticHeart[6] = 120;
+                        }
+
+                        uteModuleHeartData.dayStaticHeart = uteModuleHeartData.weekDayStaticHeart[6];
+                        //save
+                        uteModuleHeartrSaveStaticHeartData();
+#if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
+                        uteModuleHeartRestingHeartrateSend();
+#endif
+                    }
+                }
+
+                UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,dayStaticHeart=%d,weekDayStaticHeart[6]=%d,heartValue=%d",__func__,uteModuleHeartData.dayStaticHeart,uteModuleHeartData.weekDayStaticHeart[6],uteModuleHeartData.heartValue);
+            }
+        }
+    }
+#else
     if (time.sec==59)
     {
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,uteModuleSleepCurrDayIsHasSleep()=%d", __func__,uteModuleSleepCurrDayIsHasSleep());
@@ -1631,9 +1697,11 @@ void uteModuleHeartWeekStaticSecond(ute_module_systemtime_time_t time)
             uteModuleHeartData.dayStaticHeart = 0;
         }
     }
+#endif
     //过零点之后再去读
-    if((time.hour==0)&&(time.min==0)&&time.sec==02)
+    if((time.hour==0)&&(time.min==0)&&time.sec==2)
     {
+        uteModuleHeartData.dayStaticHeart = 0;
         uteModuleHeartrReadStaticHeartData();
     }
 }

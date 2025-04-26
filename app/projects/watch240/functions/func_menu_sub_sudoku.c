@@ -251,7 +251,7 @@ const menu_hc_item_t tbl_menu_sudoku[] =
     {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_HEART_RATE_BIN,            },   //心率
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 // #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STRESS_BIN,                },   //压力
+    // {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STRESS_BIN,                },   //压力
 // #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_EXERCISE_BIN,              },   //运动
@@ -275,7 +275,7 @@ const menu_hc_item_t tbl_menu_sudoku[] =
     {.func_sta=FUNC_ALARM_CLOCK,              .res_addr=UI_BUF_I335001_2_HONEYCOMB_ALARM_BIN,                 },  //闹钟
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
 // #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_MOOD_BIN,                  },  //情绪
+    // {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_MOOD_BIN,                  },  //情绪
 // #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {.func_sta=FUNC_BREATHE,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_BREATHE_BIN,               },  //呼吸

@@ -488,6 +488,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     if(!uteApplicationCommonData.bleConnectState.isConnected)
     {
         uteModuleSportSetTakePictureEnable(false);
+        uteApplicationCommonSetAppClosed(true);
         if(!uteApplicationCommonData.isPowerOn)
         {
             // uteModulePlatformSetFastAdvertisingTimeCnt(0);

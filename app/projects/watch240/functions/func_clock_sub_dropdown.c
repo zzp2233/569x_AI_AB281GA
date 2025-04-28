@@ -897,7 +897,6 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BLUETOOTH_STA_PIC);
     compo_picturebox_set_pos(bluetooth_pic, 28, 20);
 
-
     char txt_buf[50];
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);//获取系统时间
@@ -905,6 +904,16 @@ static void func_clock_sub_dropdown_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"%02d/%02d %s",time.month,time.day,i18n[STR_SUNDAY+time.week]);
     compo_textbox_t *textbox = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/5.5,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/10.5);
+    compo_textbox_set(textbox,txt_buf );
+
+#define BAT_PERCENT_VALUE       uteDrvBatteryCommonGetLvl()  //电量百分比数值
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
+    textbox = compo_textbox_create(frm,4);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_20_BIN);
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 10,65,30);
+    compo_textbox_set_right_align(textbox,true);
     compo_textbox_set(textbox,txt_buf );
 
     func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新

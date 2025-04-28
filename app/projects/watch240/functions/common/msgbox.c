@@ -891,8 +891,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             printf("MSGBOX_MSG_TYPE_DETAIL\n");
             //图标
             compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
-                                 GUI_SCREEN_CENTER_X,
-                                 func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
+                                 40,
+                                 40);  //需要更替为弹窗图标
 
             //title
             if (title != NULL)
@@ -926,8 +926,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
                 compo_textbox_set_align_center(txt_time, true);
-                compo_textbox_set_pos(txt_time, GUI_SCREEN_CENTER_X,
-                                      func_cover_get_time_txt_y(msg_type));              //调整文本位置
+                compo_textbox_set_pos(txt_time, 195,
+                                      40);              //调整文本位置
                 widget_text_set_color(txt_time->txt, make_color(128,128,128));
                 compo_textbox_set(txt_time, time);
             }
@@ -1023,20 +1023,27 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             else if (sys_cb.cover_index == REMIND_COVER_LOW_BATTERY)  //低电提醒
             {
 #if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, 0);
-                compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
-
-                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,GUI_SCREEN_WIDTH/1.2,30);//调整文本位置
-                compo_textbox_set(txt_msg, i18n[STR_LOW_BATTERY]);
-                //title
-                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/4.5,230,30);//调整文本位置
-                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_32_BIN);
+                char *str_buf = ab_zalloc(strlen(i18n[STR_LOW_BATTERY_MODE])+10);
                 char level[4];
                 memset(level,0,sizeof(level));
-                sprintf(level,"%d%%",uteDrvBatteryCommonGetLvl());
-                compo_textbox_set(txt_title, level);
+                snprintf(level,sizeof(level),"%d",uteDrvBatteryCommonGetLvl());
+                uteModuleCharencodeReplaceSubString(i18n[STR_LOW_BATTERY_MODE], str_buf,"##",level);
+
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, strlen(str_buf));
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20,GUI_SCREEN_WIDTH/1.2,60);//调整文本位置
+                compo_textbox_set(txt_msg, str_buf);
+                compo_textbox_set_multiline_drag(txt_msg,true);
+                ab_free(str_buf);
+
+                btn = compo_button_create_by_image(frm, UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC102X52_X16_X122_Y222_00_BIN);
+                compo_setid(btn, COMPO_ID_BTN_CANCEL);
+                compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4+5,
+                                     GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC102X52_X16_X122_Y222_00_BIN).hei/2 - 20);
+
+                btn = compo_button_create_by_image(frm, UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC102X52_X16_X122_Y222_01_BIN);
+                compo_setid(btn, COMPO_ID_BTN_OK);
+                compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4-5,
+                                     GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC102X52_X16_X122_Y222_01_BIN).hei/2 - 20);
 #endif // UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
             }
             else if(sys_cb.cover_index == REMIND_COVER_TIMER_FINISH)//计时器结束
@@ -1048,7 +1055,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_button_t *btn;
                 compo_textbox_t *txt;
                 char str_buff[24];
-                btn = compo_button_create_by_image(frm, 0);  //close
+                btn = compo_button_create_by_image(frm, UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_NO_BIN);  //close
                 compo_setid(btn, COMPO_ID_BTN_DELETE);
                 compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,246 );
                 //新建数字
@@ -1182,6 +1189,9 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 case FUNC_ALARM_CLOCK:
                     res_ok = UI_BUF_I335001_20_ALARM_CLOCK_6_QUANTITY_LIMIT_REMINDER_ICON_YES_208X52_X16_Y222_BIN;
+                    break;
+                case FUNC_HEARTRATE:
+                    res_ok = UI_BUF_I335001_7_SPO2_2_ICON_BUTTON_208X52_X16_Y222_00_BIN;
                     break;
                 default:
                     res_ok = UI_BUF_I335001_20_ALARM_CLOCK_6_QUANTITY_LIMIT_REMINDER_ICON_YES_208X52_X16_Y222_BIN;

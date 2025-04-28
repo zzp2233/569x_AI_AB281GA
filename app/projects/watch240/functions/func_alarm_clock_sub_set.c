@@ -3166,10 +3166,10 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
             compo_textbox_set(txt,txt_buf);
             compo_textbox_set_forecolor(txt,(idx==COMPO_ID_TXT_HOUR_3 || idx==COMPO_ID_TXT_MIN_3) ? COLOR_WHITE : COLOR_GRAY);
         }
-        // compo_textbox_t *txt_colon = compo_textbox_create_for_page(frm,page,1);
-        // compo_textbox_set_font(txt_colon,UI_BUF_0FONT_FONT_NUM_28_BIN);
-        // compo_textbox_set_pos(txt_colon,32/2+141,CENTER_TXT_Y);
-        // compo_textbox_set(txt_colon,":");
+        compo_textbox_t *txt_colon = compo_textbox_create_for_page(frm,page,1);
+        compo_textbox_set_font(txt_colon,UI_BUF_0FONT_FONT_NUM_28_BIN);
+        compo_textbox_set_pos(txt_colon,32/2+141,CENTER_TXT_Y);
+        compo_textbox_set(txt_colon,":");
     }
     else
     {
@@ -3194,10 +3194,10 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
             compo_textbox_set(txt,txt_buf);
             compo_textbox_set_forecolor(txt,(idx==COMPO_ID_TXT_HOUR_3 || idx==COMPO_ID_TXT_MIN_3) ? COLOR_WHITE : COLOR_GRAY);
         }
-        // compo_textbox_t *txt_colon = compo_textbox_create_for_page(frm,page,1);
-        // compo_textbox_set_font(txt_colon,UI_BUF_0FONT_FONT_NUM_28_BIN);
-        // compo_textbox_set_pos(txt_colon,32/2+103,CENTER_TXT_Y);
-        // compo_textbox_set(txt_colon,":");
+        compo_textbox_t *txt_colon = compo_textbox_create_for_page(frm,page,1);
+        compo_textbox_set_font(txt_colon,UI_BUF_0FONT_FONT_NUM_28_BIN);
+        compo_textbox_set_pos(txt_colon,32/2+103,CENTER_TXT_Y);
+        compo_textbox_set(txt_colon,":");
     }
 
     compo_button_t * btn_hour = compo_button_create(frm);///小时滑动按钮 UI_BUF_I330001_PUBLIC_KUANG_BLUE_BIN

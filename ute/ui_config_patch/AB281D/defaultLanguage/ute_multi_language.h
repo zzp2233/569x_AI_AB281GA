@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-22 17:40:07
+*@date   2025-04-26 18:01:17
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -266,7 +266,7 @@ enum
     STR_SOS, // SOS
     STR_RESTING_HEART, // 静息心率
     STR_WEEK7_HEART, // 最近7天平均静息心率
-    STR_HEART_ABOUT, // 静息心率是指在清醒、不活跃的安静状态下，每分钟的心跳次数，是衡量心脏健康的重要指标之一可选择在清晨清醒后安静状态下测量，理想的静息心率是50~80次/分钟
+    STR_HEART_ABOUT, // 静息心率是指在清醒、不活动的安静状态下，每分钟的心跳次数，是衡量心脏健康的重要指标之一。可选择在清晨清醒后安静状态下测量，理想的静息心率是50~80次/分钟。
     STR_OXYGEN_ABOUT_1, // 血氧饱和度(SpO2)是血液中氧合血红蛋(HbO2)的百分比，即血液中氧气的浓度，是维持人体正常机能的重要生理参数。
     STR_OXYGEN_ABOUT_2, // 测量须知:1.本设备支持测量范围为70%-100%2.请确保手表佩戴在距离腕骨一指处，不要太靠下，并系紧表带。3.测量过程中请尽可能保持静止，保持表盘朝上。4.佩戴方式错误、测量过程中的晃动、双臂垂在两侧、手臂毛发、纹身或处于寒冷环境等因素影响测量精准度可能会下降。5.测量结果仅供参考，不做为医疗诊断依据。
     STR_DO_DELAY_CLOCK, // 是否删除闹钟？
@@ -288,6 +288,9 @@ enum
     STR_INDONESUAN, // Indonesia
     STR_MALAYSIA, // Melayu
     STR_VIETNAMESE, // Tiếng Việt
+    STR_LOW_BATTERY_MODE, // 电量剩余##%，是否开启省电模式？
+    STR_SILENT_MODE_PROMAT, // 在静音模式下，来电无铃声提醒（闹钟除外）。
+    STR_BREATHE_EXPLAIN, // 请保持静止，将注意力集中在呼吸上。
 };
 
 extern const char * const *i18n;

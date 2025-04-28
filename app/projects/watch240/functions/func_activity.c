@@ -218,11 +218,20 @@ compo_form_t *func_activity_form_create(void)
     for (int i=0; i<24; i++)
     {
         // printf("step:%ld\n",step_date[i]);
-        // step_date[i] =7000;
+        // step_date[i] =8000;
         chart_info.x = i*chart_info.width + i*4;
         chart_info.height = step_date[i]*(94*1000/target_step)/1000;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, make_color(0,236,203));
     }
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_step);///步数数据目标
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_12_BIN);
+    compo_textbox_set_location(textbox,20,700-15-94/2,230,30);
+    compo_textbox_set_forecolor(textbox, make_color(128,128,128));
+    compo_textbox_set(textbox, txt_buf);
 
 //////////////////////////////////////////////////////////////////////////////////
     uint32_t week_step_data;
@@ -250,17 +259,29 @@ compo_form_t *func_activity_form_create(void)
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+12,926,GUI_SCREEN_WIDTH,77);
     compo_chartbox_set_pixel(chart, 1);
 
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_week_step);///week步数数据
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_12_BIN);
+    compo_textbox_set_location(textbox,15,912-78/2,230,30);
+    compo_textbox_set_forecolor(textbox, make_color(128,128,128));
+    compo_textbox_set(textbox, txt_buf);
+
     chart_info;
     chart_info.y = 0;
     chart_info.width = 12;   ///像素点
     for (int i=0; i<7; i++)
     {
-        // week_step_date[i] =17000;
+        // week_step_date[i] =18000;
         chart_info.x = i*chart_info.width + i*22;
         chart_info.height = week_step_date[i]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, make_color(0,236,203));
     }
 
+    compo_shape_t *shape = compo_shape_create_for_page(frm, frm->page_body, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,926-78/2,218,1);
+    compo_shape_set_color(shape,make_color(51,51,51));
 
     return frm;
 }
@@ -1005,7 +1026,7 @@ static void func_activity_process(void)
     func_activity_disp_handle();
     func_process();
 }
-// #include "func_cover.h"
+#include "func_cover.h"
 //活动记录功能消息处理
 static void func_activity_message(size_msg_t msg)
 {
@@ -1021,7 +1042,7 @@ static void func_activity_message(size_msg_t msg)
             break;
         case MSG_CTP_CLICK:
             // uteModuleCallChangeEntertranmentVoiceSwitchStatus();
-            // func_cb.sta = FUNC_OXYGEN_ABOUT;
+            // func_cb.sta = FUNC_CHARGE;
             // sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
             // msgbox(NULL, NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
             break;

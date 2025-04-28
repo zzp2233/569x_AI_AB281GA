@@ -22,6 +22,7 @@ extern u16 func_clock_preview_get_type(void);
 #define DIALPLATE_NUM               uteModuleGuiCommonGetCurrWatchMaxIndex()
 #define DIALPLATE_BTF_IDX           UTE_WATCHS_DIALPLATE_BTF_INDEX        //蝴蝶表盘默认最后一个
 #define DIALPLATE_CUBE_IDX          UTE_WATCHS_DIALPLATE_CUBE_INDEX        //立方体表盘默认倒数第二个
+#define DIALPLATE_LIGHT_CUBE_IDX    UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX        //立方体表盘默认倒数第二个
 
 u32 dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT] = UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS;
 
@@ -186,6 +187,13 @@ compo_form_t *func_clock_form_create(void)
         }
         break;
 #endif
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+        case DIALPLATE_LIGHT_CUBE_IDX:
+        {
+            frm = func_clock_light_cube_form_create();
+        }
+        break;
+#endif
         default:
         {
             u32 base_addr = dialplate_info[sys_cb.dialplate_index];
@@ -221,6 +229,9 @@ static void func_clock_process(void)
 {
 #if UTE_WATCHS_CUBE_DIAL_SUPPORT
     func_clock_cube_process();
+#endif
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+    func_clock_light_cube_process();
 #endif
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     func_clock_butterfly_process();
@@ -260,6 +271,17 @@ static void func_clock_message(size_msg_t msg)
             return;
         }
     }
+#endif
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+    if(sys_cb.dialplate_index == DIALPLATE_LIGHT_CUBE_IDX)
+    {
+        if(func_clock_light_cube_message(msg))
+        {
+            TRACE("func_clock_cube_message return\n");
+            return;
+        }
+    }
+
 #endif
 
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT

@@ -219,17 +219,20 @@ void uteModuleHeartEverySecond(void)
             isNeedAutoTest = true;
         }
 
-        if(!uteModuleBloodoxygenIsTesting() &&
-           (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
-           && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
+        if(
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT
+            !uteModuleBloodoxygenIsTesting() &&
+#endif
+            (uteDrvBatteryCommonGetChargerStatus() == BAT_STATUS_NO_CHARGE)
+            && (uteModuleFactoryTestGetCurrTestItem() == TEST_ITEM_NONE)
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-           && (uteModuleNewFactoryTestGetMode() == FACTORY_TEST_MODE_NULL)
+            && (uteModuleNewFactoryTestGetMode() == FACTORY_TEST_MODE_NULL)
 #endif
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-           && (!uteModuleEmotionPressureIsTesting())
+            && (!uteModuleEmotionPressureIsTesting())
 #endif
-           && (uteModuleHeartGetWorkMode() != HR_WORK_MODE_HR || !bsp_sensor_hr_work_status())
-          )
+            && (uteModuleHeartGetWorkMode() != HR_WORK_MODE_HR || !bsp_sensor_hr_work_status())
+        )
         {
             if(isNeedAutoTest && !uteModuleHeartData.isAutoTestFlag)
             {
@@ -277,7 +280,10 @@ void uteModuleHeartEverySecond(void)
             if(uteModuleGuiCommonGetCurrentScreenId() == FUNC_HEARTRATE)
 #endif
             {
-                uteModuleProfileBleSendToPhone(&heartData[0],4);
+                if(bsp_system_is_sleep() || uteModuleGuiCommonIsDisplayOn())
+                {
+                    uteModuleProfileBleSendToPhone(&heartData[0],4);
+                }
             }
         }
 #endif
@@ -315,7 +321,10 @@ void uteModuleHeartEverySecond(void)
 #if !DUG_VCXX_HEART_SUPPORT
                 if(uteModuleGuiCommonGetCurrentScreenId() == FUNC_HEARTRATE)
                 {
-                    uteModuleProfileBleSendToPhone(&heartData[0],4);
+                    if(bsp_system_is_sleep() || uteModuleGuiCommonIsDisplayOn()) // 熄屏后等待进入休眠再发送数据，防止发送数据时无法进入休眠
+                    {
+                        uteModuleProfileBleSendToPhone(&heartData[0],4);
+                    }
                 }
 #endif
                 uteModuleHeartData.notWearSecond = 0;

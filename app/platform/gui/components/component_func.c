@@ -321,7 +321,9 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_BLOOD_OXYGEN:
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT
             value = uteModuleBloodoxygenGetValue();
+#endif
             sprintf(value_str, "%d", value);
             break;
 

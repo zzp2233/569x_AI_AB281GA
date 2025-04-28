@@ -7,6 +7,7 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
 
 typedef struct f_oxygen_about_t_
 {
@@ -196,4 +197,5 @@ void func_oxygen_about(void)
     func_oxygen_about_exit();
 }
 
+#endif
 

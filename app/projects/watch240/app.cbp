@@ -92,6 +92,7 @@
 			<Add directory="../../../ute/module/fifo" />
 			<Add directory="../../../ute/module/slideBar" />
 			<Add directory="../../../ute/module/appbinding" />
+			<Add directory="../../../ute/module/emotionPressure" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -112,10 +113,12 @@
 			<Add library="../../platform/libs/libgcc.a" />
 			<Add library="../../platform/libs/libc.a" />
 			<Add library="../../platform/libs/libm.a" />
-			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_BIODetect_V141_codeBlock_Riscv_01.a" />
 			<Add library="../../../ute/lib/libute_all_sports_int_algorithms3_0.a" />
 			<Add library="../../../ute/lib/libUTEsleepOnBandLib.a" />
 			<Add library="../../../ute/drv/gsensor/libSL_Acc_Mtp_WR.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_BIODetect_V141_codeBlock_Riscv_01.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_RepRateEst_Int_16Bit_CodeBlocks_RISCV_NA_01.a" />
+			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_StressEst_V107H_30s_ZKLX_NA_01.a" />
 			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_hr.a" />
 			<Add library="../../platform/bsp/bsp_sensor/vcc30fx/lib_spo2.a" />
 			<Add directory="../../platform/libs" />
@@ -203,6 +206,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/crc/ute_module_crc.h" />
+		<Unit filename="../../../ute/module/emotionPressure/ute_module_emotionPressure.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/emotionPressure/ute_module_emotionPressure.h" />
 		<Unit filename="../../../ute/module/factorytest/ute_module_factorytest.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1112,6 +1119,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_clock_cube.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_clock_light_cube.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_clock_preview.c">

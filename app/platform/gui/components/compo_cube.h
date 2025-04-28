@@ -2,6 +2,7 @@
 #define _COMPO_CUBE_H
 
 #define CUBE_ITEM_CNT               6               //立方体菜单项列表数量，必须是6项
+#define CUBE_ITEM_ELE_CNT           20               //立方体菜单项列表数量，必须是6项
 
 //立方体菜单移动控制命令
 enum COMPO_CUBE_MOVE_CMD
@@ -20,6 +21,13 @@ enum COMPO_CUBE_STA
     COMPO_CUBE_STA_MOVE,                        //移动中
 };
 
+enum CUBE_TYPE
+{
+    COMPO_CUBE_TYPE_NONE,                        //无效
+    COMPO_CUBE_TYPE_NORMAL,                      //正常立方体
+    COMPO_CUBE_TYPE_POWER,                       //能量球
+    COMPO_CUBE_TYPE_MAX,                         //最大值
+};
 
 //立方体菜单项定义
 typedef struct compo_cube_item_t_
@@ -45,6 +53,15 @@ typedef struct compo_cube_move_cb_t_
     u32 stop_wait_tick;                 //停止等待定时器
 } compo_cube_move_cb_t;
 
+
+typedef struct compo_cube_ele_t_
+{
+    u32 res;                            //元素图片资源
+    widget_image3d_t *img3d;            //2.5d图片控件
+    rect_t location;                    //元素初始位置
+    s16 radius;                         //元素的半径
+} compo_cube_ele_t;
+
 typedef struct compo_cube_t_
 {
     COMPO_STRUCT_COMMON;
@@ -60,6 +77,9 @@ typedef struct compo_cube_t_
     compo_cube_item_t const *item;
     s16 radius;
     widget_image3d_t *item_img[CUBE_ITEM_CNT];
+    compo_cube_ele_t ele[CUBE_ITEM_ELE_CNT];
+
+    uint8_t cube_type;                       //立方体组件类型，可选COMPO_CUBE_TYPE_NORMAL(正常的立方体)，COMPO_CUBE_TYPE_POWER(能量球)
 } compo_cube_t;
 
 /**
@@ -120,5 +140,21 @@ void compo_cube_move(compo_cube_t *cube);
 void compo_cube_move_control(compo_cube_t *cube, int cmd);
 
 void compo_cube_set_pos(compo_cube_t *cube, s16 x, s16 y);
+
+/**
+ * 设置compo_cube的类型
+ * @param cube 指向compo_cube结构体的指针，用于指定哪个立方体的类型需要被设置
+ * @param type 要设置的立方体类型，使用uint8_t表示
+ * 此函数用于更新compo_cube结构体中的类型信息如果传入的指针为NULL，将调用halt函数
+ * 停止程序运行，以避免潜在的程序崩溃或未定义行为
+ */
+void compo_cube_set_type(compo_cube_t *cube, uint8_t type);
+
+/**
+ * @brief 立方体菜单添加元素
+ * @param[in] cube : 立方体菜单指针
+ * @param[in] cmd : 控制命令
+ **/
+void compo_cube_add_element(compo_cube_t *cube, s16 radius, u32 ele_res, int ele_cnt);
 
 #endif

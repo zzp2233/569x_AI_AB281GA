@@ -198,7 +198,9 @@ extern void func_system_sub_system(void);
 extern void func_dial_and_theme(void);
 #endif
 extern void func_heart_about(void);
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
 extern void func_oxygen_about(void);
+#endif
 extern void func_breathe_run(void);
 #if UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT
 extern void func_bright_set(void);
@@ -208,7 +210,9 @@ extern void func_toolbox_list(void);
 #endif
 
 compo_form_t *func_breathe_run_form_create(void);
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
 compo_form_t *func_oxygen_about_form_create(void);
+#endif
 compo_form_t *func_heart_warning_form_create(void);
 compo_form_t *func_menu_football_list_form_create(void);
 compo_form_t *func_women_health_form_create(void);
@@ -464,7 +468,9 @@ const func_t tbl_func_create[] =
     {FUNC_HEART_WARNING,                func_heart_warning_form_create},
 #endif
     {FUNC_HEAR_ABOUT,                   func_heart_about_form_create},
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
     {FUNC_OXYGEN_ABOUT,                 func_oxygen_about_form_create},
+#endif
     {FUNC_BREATHE_RUN,                  func_breathe_run_form_create},
 #if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
     {FUNC_SET_SUB_LANGUAGE,             func_set_sub_language_form_create},
@@ -612,7 +618,9 @@ const func_t tbl_func_entry[] =
     {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
     {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
     {FUNC_HEAR_ABOUT,                   func_heart_about},               //
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
     {FUNC_OXYGEN_ABOUT,                 func_oxygen_about},
+#endif
     {FUNC_BREATHE_RUN,                  func_breathe_run},
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game},                     //游戏

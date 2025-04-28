@@ -1875,7 +1875,10 @@ void uteModuleSportSendRealTimeStepInfo(void)
     if(uteModuleSprotData.appDebugGsensorDataSwitch == false)
 #endif
     {
-        uteModuleProfileBleSendToPhone(&response[0],18);
+        if(bsp_system_is_sleep() || uteModuleGuiCommonIsDisplayOn()) //熄屏后进入睡眠前不发送数据，防止无法进入睡眠
+        {
+            uteModuleProfileBleSendToPhone(&response[0],18);
+        }
     }
 #endif
 }

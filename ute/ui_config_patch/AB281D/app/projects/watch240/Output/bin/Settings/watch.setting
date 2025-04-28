@@ -13,7 +13,7 @@
         <add key="ampabd_type" value="独立IO电平控制" />
         <add key="ampabd_io_sel" value="0" />
         <add key="earphone_det_iosel" value="0" />
-        <add key="sys_sleep_time" value="5" />
+        <add key="sys_sleep_time" value="2" />
         <add key="sys_off_time" value="0" />
         <add key="lowpower_warning_en" value="True" />
         <add key="lpwr_warning_vbat" value="3.4V" />

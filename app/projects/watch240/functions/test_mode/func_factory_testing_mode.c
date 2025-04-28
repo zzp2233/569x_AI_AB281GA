@@ -31,7 +31,9 @@ compo_form_t * func_factory_testing_cross(void);
 compo_form_t * func_factory_testing_rgb(void);
 compo_form_t * func_factory_testing_tp(void);
 compo_form_t * func_factory_testing_heart(void);
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT
 compo_form_t * func_factory_testing_blood_oxygen(void);
+#endif
 compo_form_t * func_factory_testing_gsensor(void);
 compo_form_t * func_factory_testing_key(void);
 compo_form_t * func_factory_testing_motor(void);
@@ -123,7 +125,9 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
     "屏RGB测试",
     "TP测试",
     "心率测试",
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT
     "血氧测试",
+#endif
     "gsensor测试",
     "马达测试",
     "充电测试",
@@ -194,10 +198,12 @@ compo_form_t *func_factory_testing_create(void)
     {
         frm = func_factory_testing_heart();
     }
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT
     else if (test_data->moduleType == FACTORY_MODULE_SPO2)
     {
         frm = func_factory_testing_blood_oxygen();
     }
+#endif
     else if (test_data->moduleType == FACTORY_MODULE_GSENSOR)
     {
         frm = func_factory_testing_gsensor();
@@ -502,6 +508,7 @@ compo_form_t * func_factory_testing_heart(void)
     return frm;
 }
 ///创建血氧测试窗体   模式七/
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT
 compo_form_t * func_factory_testing_blood_oxygen(void)
 {
     uteModuleHeartStartSingleTesting(TYPE_BLOODOXYGEN);
@@ -527,6 +534,8 @@ compo_form_t * func_factory_testing_blood_oxygen(void)
 
     return frm;
 }
+#endif
+
 ///创建角度测试窗体   模式八/
 compo_form_t * func_factory_testing_gsensor(void)
 {
@@ -1017,6 +1026,7 @@ static void func_mode_heart_process(void)
     }
 }
 
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT
 static void func_mode_blood_oxygen_process(void)
 {
     char txt_buf[50];
@@ -1042,6 +1052,8 @@ static void func_mode_blood_oxygen_process(void)
         compo_textbox_set(textbox1, txt_buf);
     }
 }
+#endif
+
 static void func_mode_gsensor_process(void)
 {
     char txt_buf[50];
@@ -1139,9 +1151,11 @@ static void func_factory_testing_process(void)
         case FACTORY_MODULE_HEART:
             func_mode_heart_process();
             break;
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT
         case FACTORY_MODULE_SPO2:
             func_mode_blood_oxygen_process();
             break;
+#endif
         case FACTORY_MODULE_GSENSOR:
             func_mode_gsensor_process();
             break;

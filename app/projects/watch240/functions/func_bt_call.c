@@ -456,8 +456,8 @@ compo_form_t *func_bt_call_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_PHONE]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_PHONE]);
 
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
 //    compo_form_set_title(frm, i18n[STR_HEART_RATE]);
@@ -497,9 +497,9 @@ compo_form_t *func_bt_call_form_create(void)
     compo_button_set_pos(btn, 166+60/2, 240);
 
     //音量按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
-    compo_setid(btn, COMPO_ID_PIC_VOICE);
-    compo_button_set_pos(btn, 14+60/2, 240);
+    // btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
+    // compo_setid(btn, COMPO_ID_PIC_VOICE);
+    // compo_button_set_pos(btn, 14+60/2, 240);
 
     return frm;
 }
@@ -514,8 +514,8 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_button_t *btn;
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_PHONE]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_PHONE]);
     s16 txt_leng=0;
     s16 txt_x=0;
 
@@ -558,9 +558,9 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_button_set_pos(btn, 166+60/2, 240);
 
     //音量按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
-    compo_setid(btn, COMPO_ID_PIC_VOICE);
-    compo_button_set_pos(btn, 14+60/2, 240);
+    // btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
+    // compo_setid(btn, COMPO_ID_PIC_VOICE);
+    // compo_button_set_pos(btn, 14+60/2, 240);
 
     return frm;
 }

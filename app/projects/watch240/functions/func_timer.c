@@ -868,25 +868,12 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
             compo_form_set_title(frm, i18n[STR_TIMER]);
             //新建按钮
-            if(sys_cb.timer_sta == TIMER_STA_WORKING)
-            {
-                res_addr=UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN;
-            }
-            else if(sys_cb.timer_sta == TIMER_STA_DONE)
-            {
-                res_addr=UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_REST_BIN;
-
-            }
-            else
-            {
-                res_addr=UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN;
-            }
-            res_addr = UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN;
+            res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN : UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN;
             btn = compo_button_create_by_image(frm, res_addr); //pause //start//again
             compo_setid(btn, COMPO_ID_BTN_START);
             compo_button_set_pos(btn, 175, 246);
-            res2_addr =sys_cb.timer_sta == TIMER_STA_DONE ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_4_END_BUTTON_ICON_PIC68X68_X32_140_Y194_NO_BIN:UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_CLOSE_BIN;
-            btn = compo_button_create_by_image(frm, res2_addr);  //close
+
+            btn = compo_button_create_by_image(frm, UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_CLOSE_BIN);  //close
             compo_setid(btn, COMPO_ID_BTN_NO);
             compo_button_set_pos(btn, 63, 246);
             //新建数字
@@ -921,7 +908,6 @@ compo_form_t *func_timer_form_create(void)
             break;
 
         case TIMER_STA_WORKING:
-            uteModuleGuiCommonDisplayOffAllowGoBack(false);
         case TIMER_STA_PAUSE:
         case TIMER_STA_DONE:
         case TIMER_STA_RESET:
@@ -979,56 +965,18 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     u16 sec_past;
     bool lowpwr_sta = bsp_system_is_sleep() /*| sys_cb.idle_sta*/;
 
-    if (param)
+    if (sys_cb.timer_sta == TIMER_STA_WORKING)    //休眠不计时
     {
-        count = (u8 *)param;
-    }
 
-    if (count && sys_cb.timer_sta == TIMER_STA_WORKING)    //休眠不计时
-    {
-        if (++(*count) >= 10)   //1s
+        if (sys_cb.timer_left_sec)
         {
-            *count = 0;
-        }
-
-        if (!lowpwr_sta)
-        {
-            if (rtccnt_tmp != RTCCNT)
-            {
-                rtccnt_tmp = RTCCNT;
-                *count = 0;
-            }
-        }
-        else            //省电/休眠模式，RTC已休眠
-        {
-            if (lowpwr_sta_bkp == false)      //初次进入
-            {
-                rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
-            }
-            if (rtc_cal_cnt_bkp != sys_cb.rtc_cal_cnt)      //RTC已校准，同步校准
-            {
-                rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
-                rtccnt_tmp = RTCCNT;
-                // printf("calibrated!\n");
-            }
-            else if (*count == 0)
-            {
-                rtccnt_tmp++;
-            }
-        }
-
-
-        sec_past = rtccnt_tmp - sys_cb.timer_start_rtc;
-        if (sec_past < sys_cb.timer_total_sec)
-        {
-            sys_cb.timer_left_sec = sys_cb.timer_total_sec - sec_past;
-            // printf("countdown-->[%d/%d][%d %d]\n", sec_past, sys_cb.timer_total_sec, rtccnt_tmp, RTCCNT);
+            rtccnt_tmp+=1;
+            sys_cb.timer_left_sec = sys_cb.timer_total_sec - (rtccnt_tmp/10);
         }
         else
         {
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             sys_cb.timer_left_sec = 0;
-            // printf(">>>COUNTDOWN_FINISH\n");
 
             if(func_cb.sta == FUNC_TIMER)
             {
@@ -1045,7 +993,6 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
         }
     }
 
-    lowpwr_sta_bkp = lowpwr_sta;
 }
 
 //单击按钮
@@ -1111,14 +1058,12 @@ static void func_timer_button_click(void)
                     if (sys_cb.timer_sta == TIMER_STA_WORKING)
                     {
                         sys_cb.timer_sta = TIMER_STA_PAUSE;
-                        uteModuleGuiCommonDisplayOffAllowGoBack(true);
                     }
                     else if (sys_cb.timer_sta == TIMER_STA_DONE)
                     {
                         sys_cb.timer_start_rtc = compo_cb.rtc_cnt;
                         count_100ms = 0;
                         co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
-                        uteModuleGuiCommonDisplayOffAllowGoBack(false);
                         sys_cb.timer_sta = TIMER_STA_WORKING;
                     }
                     else
@@ -1130,8 +1075,10 @@ static void func_timer_button_click(void)
                             co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
                         }
                         sys_cb.timer_sta = TIMER_STA_WORKING;
-                        uteModuleGuiCommonDisplayOffAllowGoBack(false);
                     }
+                    compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_START);
+                    u32 res_addr = sys_cb.timer_sta == TIMER_STA_WORKING ? UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_2_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_SUSPENDED_BIN : UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN;
+                    compo_button_set_bgimg(btn,res_addr);
                     break;
 
                 case COMPO_ID_BTN_NO:
@@ -2579,6 +2526,7 @@ static void func_timer_process(void)
             break;
 
         case TIMER_PAGE_COUNTDOWN:
+            reset_sleep_delay_all();
             hour = SEC_TO_HOUR(sys_cb.timer_left_sec);
             min = SEC_TO_MIN(sys_cb.timer_left_sec);
             sec = SEC_TO_SEC(sys_cb.timer_left_sec);
@@ -2600,7 +2548,7 @@ static void func_timer_process(void)
 
 
                 btn = compo_getobj_byid(COMPO_ID_BTN_START);
-                compo_button_set_bgimg(btn, UI_BUF_I335001_NUM_36_20X27_BIN);
+                compo_button_set_bgimg(btn, UI_BUF_I335001_27_MORE_3_TIMER_OUTPUT_3_1_THE_TIMING_OF_BUTTON_ICON_PIC102X52_X16_X122_Y222_OPEN_BIN);
 
                 txt_num = compo_getobj_byid(COMPO_ID_NUM_COUNTDOWN);
                 snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", f_timer->hour, f_timer->min, f_timer->sec);
@@ -3172,7 +3120,6 @@ static void func_timer_enter(void)
 //退出定时器功能
 static void func_timer_exit(void)
 {
-    uteModuleGuiCommonDisplayOffAllowGoBack(true);
     func_cb.last = FUNC_TIMER;
 }
 

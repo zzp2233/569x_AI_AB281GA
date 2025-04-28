@@ -101,8 +101,8 @@ enum
 
 static const u32 tbl_wrist_switch_res[] =
 {
-    UI_BUF_I335001_27_MORE_28_SET_7_RAISE_SWITCH_ICON_PIC40X20_X184_Y66_CLOSE_BIN,         //ON
     UI_BUF_I335001_27_MORE_28_SET_7_RAISE_SWITCH_ICON_PIC40X20_X184_Y66_OPEN_BIN,         //OFF
+    UI_BUF_I335001_27_MORE_28_SET_7_RAISE_SWITCH_ICON_PIC40X20_X184_Y66_CLOSE_BIN,         //ON
 };
 
 static void switch_set_sub_wrist(void)

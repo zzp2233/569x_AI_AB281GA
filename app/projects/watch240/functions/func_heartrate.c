@@ -39,6 +39,7 @@ typedef struct f_heartrate_t_
     u8 min_hr;
     bool heart_pic_state;
     u8 heart_pic_size;
+    bool no_wear_flag;
 } f_heartrate_t;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 //创建心率窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -193,13 +194,13 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,txt_buf);
     compo_textbox_set_right_align(textbox,true);
-    compo_setid(textbox,COMPO_ID_HEART_STATIC_VALUE_TXT);
+    // compo_setid(textbox,COMPO_ID_HEART_STATIC_VALUE_TXT);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,415+11,107, widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
-    compo_setid(textbox,COMPO_ID_HEART_STATIC_BPM_TXT);
+    // compo_setid(textbox,COMPO_ID_HEART_STATIC_BPM_TXT);
 
     uint8_t heart_week_date[7];
     uteModuleHeartrGetWeekDayStaticHeartData(heart_week_date);///获取心率
@@ -247,7 +248,14 @@ static void func_heartrate_refresh(void)
         else
         {
             f_heartrate->heart_pic_size = 0;
+            if(f_heartrate->no_wear_flag == false)
+            {
+                msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+            }
+            f_heartrate->no_wear_flag = true;
         }
+
+
         compo_picturebox_cut(picbox, f_heartrate->heart_pic_size, 18);
         if(uteModuleHeartGetMinHeartValue() == 0 || uteModuleHeartGetMinHeartValue() == 255)
         {
@@ -1053,10 +1061,6 @@ static void func_heartrate_message(size_msg_t msg)
 #endif
             break;
         case MSG_SYS_1S:
-            if(uteModuleHeartIsWear() == false)
-            {
-                // msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-            }
             break;
         default:
             func_message(msg);
@@ -1082,6 +1086,10 @@ static void func_heartrate_enter(void)
     };
     compo_page_move_init(f_heartrate->ptm, func_cb.frm_main->page_body, &info);
     func_cb.flag_animation = false;
+    if(uteModuleHeartIsWear() == false)
+    {
+        msgbox(i18n[STR_PLEASE_WEAR], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+    }
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
     f_heartrate->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));

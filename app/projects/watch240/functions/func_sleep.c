@@ -80,6 +80,11 @@ compo_form_t *func_sleep_form_create(void)
     // sleep_data->sleep_record[3].period = 120;
     // sleep_data->sleep_record[4].period = 20;
 
+    // sleep_data->fallAsSleepTime.hour = 8;
+    // sleep_data->fallAsSleepTime.min  = 30;
+    // sleep_data->getUpSleepTime.hour  = 11;
+    // sleep_data->getUpSleepTime.min  = 30;
+
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
     //设置标题栏
@@ -142,8 +147,10 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:--");
     }
     txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt,20,265,50,30);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
     compo_textbox_set(txt, buf);
 
     memset(buf,0,sizeof(buf));
@@ -156,9 +163,11 @@ compo_form_t *func_sleep_form_create(void)
         snprintf(buf, sizeof(buf), "--:--");
     }
     txt = compo_textbox_create(frm,strlen(buf));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set_location(txt,GUI_SCREEN_WIDTH-50-20,265,50,30);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
     compo_textbox_set(txt, buf);
 ///////////////////////////////////////////////////////////////////////////
 #define height_spacing 80
@@ -175,25 +184,25 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, 20, first_y,100,32);
     compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
-    compo_textbox_set_forecolor(txt, make_color(0x69, 0x7e, 0xff));
+    compo_textbox_set_forecolor(txt, make_color(127, 43, 235));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, 20, first_y+height_spacing,100,32);
     compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
-    compo_textbox_set_forecolor(txt, make_color(0x36, 0xb7, 0xff));
+    compo_textbox_set_forecolor(txt, make_color(192, 67, 255));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, 20, first_y+height_spacing*2,100,32);
     compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
-    compo_textbox_set_forecolor(txt, make_color(0xff, 0x87, 0x0f));
+    compo_textbox_set_forecolor(txt, make_color(254, 255, 210));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, 20, first_y+height_spacing*3,100,32);
     compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
-    compo_textbox_set_forecolor(txt, make_color(0x00, 0xf7, 0xd6));
+    compo_textbox_set_forecolor(txt, make_color(245, 170, 68));
 //////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
     {

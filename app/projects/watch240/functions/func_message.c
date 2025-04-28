@@ -46,7 +46,7 @@ static const f_message_card_t message_card[]=
     {
         .pic_x=-85,    .pic_y=-35,   .pic_w=20,    .pic_h=20,
         .time_x=-18,   .time_y=-44,  .time_w=118,  .time_h=25,
-        .msg_x=-100,   .msg_y=-15,   .msg_w=212,   .msg_h=93,
+        .msg_x=-100,   .msg_y=-15,   .msg_w=212,   .msg_h=60,
     },
 };
 

@@ -1574,6 +1574,66 @@ void uteModuleHeartSystemtimeChange(ute_module_systemtime_time_t curr,ute_module
 */
 void uteModuleHeartWeekStaticSecond(ute_module_systemtime_time_t time)
 {
+#if UTE_MODULE_HEART_STATIC_ALL_DAY_SUPPORT
+    if (uteModuleSportGetStepType() == STEP_TYPE_STEP)
+    {
+        if (uteModuleSleepCurrDayIsHasSleep() && !uteModuleSleepCurrDayIsGetUp())
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,sleeping...",__func__);
+        }
+        else
+        {
+            if (time.sec == 59)
+            {
+                if (uteModuleHeartData.dayStaticHeart == 0 || uteModuleHeartData.dayStaticHeart == 0xff)
+                {
+                    if (uteModuleHeartData.weekDayStaticHeart[6] > 0 && uteModuleHeartData.weekDayStaticHeart[6] < 0xff)
+                    {
+                        uteModuleHeartData.dayStaticHeart = uteModuleHeartData.weekDayStaticHeart[6];
+                    }
+                    else if(uteModuleHeartData.heartValue > 0 && uteModuleHeartData.heartValue < 0xff)
+                    {
+                        uteModuleHeartData.dayStaticHeart = uteModuleHeartData.heartValue;
+                    }
+                }
+                else if (uteModuleHeartData.dayStaticHeart > uteModuleHeartData.heartValue && uteModuleHeartData.heartValue > 0)
+                {
+                    uteModuleHeartData.dayStaticHeart = uteModuleHeartData.heartValue;
+                }
+
+                if (uteModuleHeartData.dayStaticHeart > 0 && uteModuleHeartData.dayStaticHeart < 0xff)
+                {
+                    if (uteModuleHeartData.weekDayStaticHeart[6] != uteModuleHeartData.dayStaticHeart)
+                    {
+                        if (uteModuleHeartData.weekDayStaticHeart[6] > 0 && uteModuleHeartData.weekDayStaticHeart[6] < 0xff)
+                        {
+                            uint16_t avgHeart = uteModuleHeartData.weekDayStaticHeart[6] + uteModuleHeartData.dayStaticHeart;
+                            uteModuleHeartData.weekDayStaticHeart[6] = avgHeart / 2;
+                        }
+                        else
+                        {
+                            uteModuleHeartData.weekDayStaticHeart[6] = uteModuleHeartData.dayStaticHeart;
+                        }
+
+                        if (uteModuleHeartData.weekDayStaticHeart[6] > 120)
+                        {
+                            uteModuleHeartData.weekDayStaticHeart[6] = 120;
+                        }
+
+                        uteModuleHeartData.dayStaticHeart = uteModuleHeartData.weekDayStaticHeart[6];
+                        //save
+                        uteModuleHeartrSaveStaticHeartData();
+#if APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT
+                        uteModuleHeartRestingHeartrateSend();
+#endif
+                    }
+                }
+
+                UTE_MODULE_LOG(UTE_LOG_HEART_LVL,"%s,dayStaticHeart=%d,weekDayStaticHeart[6]=%d,heartValue=%d",__func__,uteModuleHeartData.dayStaticHeart,uteModuleHeartData.weekDayStaticHeart[6],uteModuleHeartData.heartValue);
+            }
+        }
+    }
+#else
     if (time.sec==59)
     {
         UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,uteModuleSleepCurrDayIsHasSleep()=%d", __func__,uteModuleSleepCurrDayIsHasSleep());
@@ -1637,9 +1697,11 @@ void uteModuleHeartWeekStaticSecond(ute_module_systemtime_time_t time)
             uteModuleHeartData.dayStaticHeart = 0;
         }
     }
+#endif
     //过零点之后再去读
-    if((time.hour==0)&&(time.min==0)&&time.sec==02)
+    if((time.hour==0)&&(time.min==0)&&time.sec==2)
     {
+        uteModuleHeartData.dayStaticHeart = 0;
         uteModuleHeartrReadStaticHeartData();
     }
 }

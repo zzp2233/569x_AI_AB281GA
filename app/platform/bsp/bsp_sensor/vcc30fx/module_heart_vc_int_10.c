@@ -19,6 +19,9 @@
 #include "vcHr11Hci.h"
 #include "ute_module_sport.h"
 #include "spo2Algo_16bit.h"
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#include "ute_module_emotionPressure.h"
+#endif
 
 /* Include your INT,I2C,Timer header file */
 //#include "INT.h"
@@ -142,6 +145,12 @@ void vcHr11Init(vcHr11_t *pVcHr11,vcHr11Mode_t vcHr11WorkMode)
     {
         vcHr11StartSample(pVcHr11);
         Algo_Init();
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+        if(uteDrvHeartVcxxIsPressureTesting())
+        {
+            StressEst_Init(-1);
+        }
+#endif
     }
     else if (pVcHr11->workMode == VCWORK_MODE_CROSSTALKTEST)
     {
@@ -187,6 +196,12 @@ void vcHr11_process(sport_mode_type vcSportMode)
             if(VCHR11RET_UNWEARTOISWEAR == vcHr11GetSampleValues(&vcHr11,&ppgLength))
             {
                 Algo_Init();
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+                if(uteDrvHeartVcxxIsPressureTesting())
+                {
+                    StressEst_Init(-1);
+                }
+#endif
             }
 
             if(vcHr11.vcFifoReadFlag || vcHr11.vcPsFlag)
@@ -250,7 +265,12 @@ void vcHr11_process(sport_mode_type vcSportMode)
                             algoInputData.axes.y = yData[algoCallNum];//The direction parallel with ARM.
                             algoInputData.axes.z = zData[algoCallNum];//The direction upside.
                             Algo_Input(&algoInputData, 1000/vcHr11SampleRate, vcSportMode, 0, 0);
-
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+                            if(uteDrvHeartVcxxIsPressureTesting())
+                            {
+                                StressEst_Input(algoOutputData.hrData,algoOutputData.reliability,xData[0], algoInputData.ppgSample);
+                            }
+#endif
                         }
 
                         Algo_Output(&algoOutputData);
@@ -264,6 +284,12 @@ void vcHr11_process(sport_mode_type vcSportMode)
                         if(HeartRateValue == -1)
                         {
                             Algo_Init();
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+                            if(uteDrvHeartVcxxIsPressureTesting())
+                            {
+                                StressEst_Init(-1);
+                            }
+#endif
                         }
 
                         uteModuleSportInputDataBeforeAlgo();

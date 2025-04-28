@@ -217,6 +217,33 @@ compo_form_t *func_weather_form_create(void)
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
+    if(weather_no_data_flag)
+    {
+        if(func_cb.sta == FUNC_WEATHER)
+        {
+            f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
+            f_weather->no_weather_dada = true;
+        }
+        ///设置标题栏名字///
+        txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
+//        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
+        compo_textbox_set(txt, i18n[STR_WEATHER]);
+        compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
+        compo_textbox_set(txt, i18n[STR_WEATHER]);
+        compo_textbox_set_align_center(txt, false);
+
+        picbox = compo_picturebox_create(frm,UI_BUF_I335001_1_WEATHER_ICON_WEATHER_96X70_X72_Y75_BIN);///背景图片
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,84+50/2);
+
+        txt = compo_textbox_create(frm,strlen(i18n[STR_NO_GET_WEATHER]));
+        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,160+56/2, GUI_SCREEN_WIDTH/1.1,widget_text_get_max_height()*2);
+        compo_textbox_set_multiline(txt, true);
+        compo_textbox_set_align_center(txt, true);
+        compo_textbox_set_multiline_drag(txt, false);      //避免既有滚动又有省略号的情况
+        compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);
+        return frm;
+    }
+
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_BG_BIN);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y);
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_ICON_WEATHER_BIN);///

@@ -2104,13 +2104,11 @@ static void func_sport_sub_run_updata(void)
             if (ble_is_connect())
             {
                 compo_button_set_visible(btn_play,true);
-                compo_textbox_set_pos(txt_stop, -(GUI_SCREEN_CENTER_X), 134+23/2);
             }
             else
             {
                 compo_button_set_visible(btn_play,false);
                 compo_textbox_set(txt_stop, i18n[STR_CONNECT_BLUETOOTH]);
-                compo_textbox_set_pos(txt_stop, -(GUI_SCREEN_CENTER_X), 62+68/2);
             }
         }
 
@@ -2268,7 +2266,6 @@ static void func_sport_sub_run_exit_data(void)
         {
             task_stack_pop();
         }
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
 
 }

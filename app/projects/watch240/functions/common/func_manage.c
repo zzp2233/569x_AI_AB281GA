@@ -617,6 +617,7 @@ const static u8 latest_allowed_id[] =
     FUNC_RSTFY,                         //设置--恢复出厂
 //    FUNC_OFF,                           //关机
     FUNC_SET_SUB_ABOUT,                 //关于
+    FUNC_WOMEN_HEALTH,
 };
 
 /**

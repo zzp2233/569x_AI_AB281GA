@@ -328,7 +328,7 @@ compo_form_t *func_address_book_form_create(void)
     }
     compo_listbox_set_alike_icon(listbox, UI_BUF_I335001_CALL_01_ICON_56X56_X16_Y62_Y134_Y206_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
-    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_CALL_00_ICON_BG_224X68_X8_Y48_Y126_Y202_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_1_BIN);
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update_with_text_scroll_rst(listbox);
     compo_listbox_update(listbox);

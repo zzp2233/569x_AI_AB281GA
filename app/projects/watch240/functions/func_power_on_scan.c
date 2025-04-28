@@ -83,14 +83,16 @@ compo_form_t *func_power_on_scan_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_QRCODE]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_QRCODE]);
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I335001_1_START_2_ICON_NEXT_16X10_X112_Y268_BIN);
     compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X, 10/2+268);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,235,GUI_SCREEN_WIDTH,28);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,226,164,68);
+    compo_textbox_set_multiline(textbox,true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
 
     static const uint8_t maxSizeQrCodeLink = 140;
@@ -100,6 +102,7 @@ compo_form_t *func_power_on_scan_form_create(void)
     compo_qrcodebox_set(qrbox, qr_str);
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
     uteModulePlatformMemoryFree(qr_str);
+    compo_qrcodebox_set_pos(qrbox,GUI_SCREEN_CENTER_X,115);
 
     return frm;
 }

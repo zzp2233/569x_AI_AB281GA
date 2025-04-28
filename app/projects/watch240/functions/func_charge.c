@@ -587,13 +587,6 @@ enum
     COMPO_ID_BAT_PIC,
 };
 
-typedef struct charge_ui_handle_t_
-{
-    u8 gif_pic;
-    u32 tick;
-} charge_ui_handle_t;
-
-
 //电量更新
 void func_charge_update(void)
 {
@@ -604,9 +597,10 @@ void func_charge_update(void)
     char txt_buf[30];
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
+    compo_textbox_set_location(txt_val,GUI_SCREEN_CENTER_X,BAT_PERCENT_VALUE<=20 ? GUI_SCREEN_CENTER_Y-20 : GUI_SCREEN_CENTER_Y-10,150,50);
     compo_textbox_set(txt_val,txt_buf);
     compo_textbox_set_visible(txt_title,BAT_PERCENT_VALUE<=20);
-    compo_picturebox_set_visible(pic,BAT_PERCENT_VALUE>20);
+    compo_picturebox_set_visible(pic,BAT_PERCENT_VALUE>20 && BAT_PERCENT_VALUE<100);
 
 }
 
@@ -620,14 +614,19 @@ compo_form_t *func_charge_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_NULL]);
 
-    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_1_LOW_BATTERY_ICON_PIC168X227_X36_Y53_BIN);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
+    // compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_1_LOW_BATTERY_ICON_PIC168X227_X36_Y53_BIN);
+    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
 
-    ///设置动图
-    // picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_CURRENT_PROCESS_90X90_X74_Y192_00_BIN);
-    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 240);
-    // compo_picturebox_cut(picbox, 10, 11);
-    // compo_setid(picbox,COMPO_ID_GIF_PIC);
+    // ///设置动图
+    // // picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_CURRENT_PROCESS_90X90_X74_Y192_00_BIN);
+    // // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 240);
+    // // compo_picturebox_cut(picbox, 10, 11);
+    // // compo_setid(picbox,COMPO_ID_GIF_PIC);
+
+    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I335001_CHARGE_ICON_GIF_168X231_X36_Y53_00_BIN);
+    compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
+    compo_animation_set_radix(animation, 16);
+    compo_animation_set_interval(animation, 15);
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
@@ -644,7 +643,7 @@ compo_form_t *func_charge_form_create(void)
     compo_setid(textbox,COMPO_ID_TTXT);
     compo_textbox_set_visible(textbox,BAT_PERCENT_VALUE<=20);
 
-    picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_BATT_16X19_X112_Y171_BIN);
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_BATT_14X18_X114_Y171_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
     compo_setid(picbox,COMPO_ID_BAT_PIC);
     compo_picturebox_set_visible(picbox,BAT_PERCENT_VALUE>20);

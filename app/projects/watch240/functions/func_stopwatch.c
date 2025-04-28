@@ -502,6 +502,7 @@ enum
     COMPO_ID_BTN_RECORD_REST,             //记录数/重新开始
     COMPO_ID_BTN_PAUSE_PLAY,              //暂停/开始
     COMPO_ID_LISTBOX,
+    COMPO_ID_LISTBOX_SHAPE,
 };
 
 typedef struct f_stopwatch_t_
@@ -578,20 +579,22 @@ compo_form_t *func_stopwatch_form_create(void)
         msec = sys_cb.stopwatch_total_msec % 1000;
     }
 
-    // compo_shape_t *shape = compo_shape_create_for_page(frm, frm->page_body, COMPO_SHAPE_TYPE_RECTANGLE);
-    // compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+5,GUI_SCREEN_WIDTH,120);
-    // compo_shape_set_color(shape,COLOR_BLUE);
-
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD);
-    compo_listbox_set_location(listbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+5,GUI_SCREEN_WIDTH,120);
+    compo_listbox_set_location(listbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+5,GUI_SCREEN_WIDTH,100);
     compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt+2);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_2_STOPWATCH_BG_240X34_X0_Y114_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, stopwatch_set_text_callback);
     compo_listbox_set_text1_color_callback(listbox, stopwatch_text1_callback);
     compo_listbox_set_text2_color_callback(listbox, stopwatch_text2_callback);
-    compo_listbox_set_focus_byidx(listbox, sys_cb.stopwatch_rec_cnt+2);
+    compo_listbox_set_focus_byidx(listbox, sys_cb.stopwatch_rec_cnt+1);
     compo_listbox_update(listbox);
+
+    compo_shape_t *shape = compo_shape_create_for_page(frm, frm->page_body, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+5-51,230,1);
+    compo_shape_set_color(shape,make_color(51,51,51));
+    compo_setid(shape,COMPO_ID_LISTBOX_SHAPE);
+    compo_shape_set_visible(shape,sys_cb.stopwatch_rec_cnt ? true : false);
 
     //创建数字文本
     compo_textbox_t *txt_num;
@@ -657,6 +660,7 @@ static void func_stopwatch_button_click(u32 key_flag)
     compo_button_t *btn_rest = compo_getobj_byid(COMPO_ID_BTN_RECORD_REST);
     compo_textbox_t *num_time = compo_getobj_byid(COMPO_ID_NUM_STOPWATCH_TIME);
     compo_listbox_t *listbox  = compo_getobj_byid(COMPO_ID_LISTBOX);
+    compo_shape_t   *shape    = compo_getobj_byid(COMPO_ID_LISTBOX_SHAPE);
     switch(id)
     {
         case COMPO_ID_BTN_RECORD_REST://记录数/重新开始
@@ -669,7 +673,7 @@ static void func_stopwatch_button_click(u32 key_flag)
                     compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt+2);
                     compo_listbox_set_text_modify_by_idx_callback2(listbox, stopwatch_set_text_callback);
                     compo_listbox_set_focus_byidx(listbox, sys_cb.stopwatch_rec_cnt+2);
-                    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt)+34);
+                    compo_listbox_move_init_modify(listbox, 85, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1)+34);
                     compo_listbox_update(listbox);
                 }
             }
@@ -685,10 +689,11 @@ static void func_stopwatch_button_click(u32 key_flag)
 
                 compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt+2);
                 compo_listbox_set_text_modify_by_idx_callback2(listbox, stopwatch_set_text_callback);
-                compo_listbox_set_focus_byidx(listbox, sys_cb.stopwatch_rec_cnt+2);
-                compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt)+34);
+                compo_listbox_set_focus_byidx(listbox, sys_cb.stopwatch_rec_cnt+1);
+                compo_listbox_move_init_modify(listbox, 85, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1)+34);
                 compo_listbox_update(listbox);
             }
+            compo_shape_set_visible(shape,sys_cb.stopwatch_rec_cnt ? true : false);
             break;
         case COMPO_ID_BTN_PAUSE_PLAY://暂停/开始
 
@@ -1202,7 +1207,7 @@ static void func_stopwatch_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     // compo_listbox_move_init(listbox);
-    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt)+34);
+    compo_listbox_move_init_modify(listbox, 85, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1)+34);
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     f_stopwatch_t *f_stopwatch = (f_stopwatch_t *)func_cb.f_cb;
     f_stopwatch->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);

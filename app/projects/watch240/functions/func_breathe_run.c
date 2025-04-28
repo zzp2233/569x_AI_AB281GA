@@ -88,12 +88,12 @@ compo_form_t *func_breathe_run_form_create(void)
     compo_textbox_set_visible(textbox,false);
     compo_setid(textbox,COMPO_ID_TXT_STATE);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_BREATHE_EXHALE]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,250,230,widget_text_get_max_height()*2);
-    compo_textbox_set(textbox,i18n[STR_BREATHE_EXHALE]);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_BREATHE_EXPLAIN]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,250,230,60);
     compo_textbox_set_multiline(textbox,true);
+    compo_textbox_set_multiline_drag(textbox,true);
+    compo_textbox_set(textbox,i18n[STR_BREATHE_EXPLAIN]);
     compo_setid(textbox,COMPO_ID_PIC_PROMPT);
-    compo_textbox_set_visible(textbox,false);
 
     if(func_cb.sta == FUNC_BREATHE_RUN)
     {
@@ -395,7 +395,10 @@ static void func_breathe_run_enter(void)
 static void func_breathe_run_exit(void)
 {
     func_cb.last = FUNC_BREATHE_RUN;
-    uteTaskGuiStackRemoveScreenId(FUNC_BREATHE_RUN);
+    if (!sys_cb.refresh_language_flag)
+    {
+        uteTaskGuiStackRemoveScreenId(FUNC_BREATHE_RUN);
+    }
 }
 
 //呼吸训练运行功能

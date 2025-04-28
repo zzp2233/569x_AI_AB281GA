@@ -316,22 +316,22 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
     compo_textbox_set(txt, i18n[STR_WEATHER]);
     compo_textbox_set_align_center(txt, false);
+
+    //未来天气txt
+    txt = compo_textbox_create(frm,strlen(i18n[STR_FUTURE_WEATHER]));
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
+    compo_textbox_set(txt,i18n[STR_FUTURE_WEATHER]);
+    compo_textbox_set_align_center(txt, false);
     //第二页
     for(int i=1; i<4; i++)
     {
-        //未来天气txt
-        txt = compo_textbox_create(frm,strlen(i18n[STR_FUTURE_WEATHER]));
-        compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/21.8,GUI_SCREEN_WIDTH * 2 / 5,GUI_SCREEN_HEIGHT/(284/28));
-        compo_textbox_set(txt,i18n[STR_FUTURE_WEATHER]);
-        compo_textbox_set_align_center(txt, false);
-
         //bg pic
         picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_ICON_BG_X60_Y186_X8_Y61_X76_Y61_X144_Y61_X212_Y61_01_BIN);
         compo_picturebox_set_pos(picbox,8+30+(i-1)*(82),GUI_SCREEN_HEIGHT+61+93);
 
         //星期 txt
         txt = compo_textbox_create(frm,20);
-        compo_textbox_set_location(txt, 16+(i-1)*(82),GUI_SCREEN_HEIGHT+82,60,widget_text_get_max_height());
+        compo_textbox_set_location(txt, 16+(i-1)*(82),GUI_SCREEN_HEIGHT+82,45,widget_text_get_max_height());
         compo_textbox_set_align_center(txt,false);
         compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
         if(i==1)

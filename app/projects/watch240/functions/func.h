@@ -164,7 +164,9 @@ enum
     FUNC_HEART_WARNING,
     FUNC_DIAL_AND_THEME, //表盘&主题界面
     FUNC_HEAR_ABOUT,
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
     FUNC_OXYGEN_ABOUT,
+#endif
     FUNC_BREATHE_RUN,                           //呼吸训练运行
     FUNC_EMPTY,                         //空白界面
 #if FUNC_MUSIC_EN

@@ -9,6 +9,7 @@
 #include "func_menu.h"
 #include "ute_module_call.h"
 #include "ute_module_localRingtone.h"
+#include "ute_module_bedside_mode.h"
 
 #if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
 
@@ -624,6 +625,7 @@ enum
     COMPO_ID_BTN_MUTE,          //静音模式开关
     COMPO_ID_BTN_PHONE,         //查找手机
     COMPO_ID_BTN_SETTING,       //设置
+    COMPO_ID_BTN_BEDSIDE_MODE,  //床头钟模式开关
 
     COMPO_ID_PIC_WHITE,       //底部页码点->白
     COMPO_ID_PIC_GREY,        //底部页码点->灰
@@ -662,6 +664,9 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
     {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_10_BIN,      COMPO_ID_BTN_PHONE,            GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  84-56},///查找手机
     {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_11_BIN,      COMPO_ID_BTN_FLASHLIGHT,       GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  84-56},///手电筒
     {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_13_BIN,      COMPO_ID_BTN_SETTING,          GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  148-56},///设置
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+    {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_CHAUNGTOUDENG00_BIN, COMPO_ID_BTN_BEDSIDE_MODE, GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  148-56},// 床头钟模式开关
+#endif
 };
 
 #define MENU_CNT    ((int)(sizeof(dwon_tbl_style_list) / sizeof(dwon_tbl_style_list[0])))
@@ -725,6 +730,23 @@ static void func_clock_sub_dropdown_mute_pic_update(void)
     {
         compo_button_set_bgimg(mute_pic, UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_05_BIN);
     }
+}
+
+// 下拉床头钟图标更新
+static void func_clock_sub_dropdown_bedside_mode_pic_update(void)
+{
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+    compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_BEDSIDE_MODE);
+    // if(sys_cb.mute)
+    if(uteModuleBedsideModeIsOpen())
+    {
+        compo_button_set_bgimg(mute_pic, UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_CHAUNGTOUDENG01_BIN);
+    }
+    else
+    {
+        compo_button_set_bgimg(mute_pic, UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_CHAUNGTOUDENG00_BIN);
+    }
+#endif
 }
 
 ////下拉蓝牙按钮更新
@@ -923,6 +945,7 @@ static void func_clock_sub_dropdown_form_create(void)
     func_clock_sub_dropdown_disturb_pic_update();       //勿扰
     func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
     func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
+    func_clock_sub_dropdown_bedside_mode_pic_update(); // 下拉床头钟图标更新
 
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sub_frm = frm;
@@ -1164,6 +1187,12 @@ static void func_clock_sub_dropdown_click_handler(void)
             func_clock_sub_dropdown_menu_pic_update();
 //           printf("1:%d  2:%d\n",func_cb.menu_style, dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style);
             break;
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+        case COMPO_ID_BTN_BEDSIDE_MODE:
+            uteModuleBedsideModeSwitch();
+            func_clock_sub_dropdown_bedside_mode_pic_update();
+            break;
+#endif
         default:
             break;
     }

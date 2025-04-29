@@ -13,7 +13,7 @@
 
 #if UTE_MODULE_BEDSIDE_MODE_SUPPORT
 
-ute_module_bedside_mode_data_t uteModuleBloodoxygenData;
+ute_module_bedside_mode_data_t uteModuleBedsideModeData;
 
 /**
  * @brief        床头钟模块初始化
@@ -23,9 +23,9 @@ ute_module_bedside_mode_data_t uteModuleBloodoxygenData;
  */
 void uteModuleBedsideModeInit(void)
 {
-    memset(&uteModuleBloodoxygenData,0,sizeof(ute_module_bedside_mode_data_t));
-    uteModuleBedsideModeReadConfig();
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s",__func__);
+    memset(&uteModuleBedsideModeData,0,sizeof(ute_module_bedside_mode_data_t));
+    uteModuleBedsideModeReadConfig();
 }
 
 /**
@@ -45,8 +45,8 @@ void uteModuleBedsideModeReadConfig(void)
         uteModuleFilesystemReadData(file,&readbuff[0],sizeof(readbuff));
         uteModuleFilesystemCloseFile(file);
     }
-    uteModuleBloodoxygenData.isOpen = readbuff[0];
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isOpen=%d",__func__,uteModuleBloodoxygenData.isOpen);
+    uteModuleBedsideModeData.isOpen = readbuff[0];
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isOpen=%d",__func__,uteModuleBedsideModeData.isOpen);
 }
 
 /**
@@ -59,14 +59,14 @@ void uteModuleBedsideModeSaveConfig(void)
 {
     void *file = NULL;
     uint8_t writebuff[2];
-    writebuff[0] = uteModuleBloodoxygenData.isOpen;
-    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_BEDSIDE_MODE_SET_INFO,&file,FS_O_WRONLY))
+    writebuff[0] = uteModuleBedsideModeData.isOpen;
+    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_BEDSIDE_MODE_SET_INFO,&file,FS_O_CREAT | FS_O_WRONLY))
     {
         uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
         uteModuleFilesystemWriteData(file,&writebuff[0],sizeof(writebuff));
         uteModuleFilesystemCloseFile(file);
     }
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isOpen=%d",__func__,uteModuleBloodoxygenData.isOpen);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isOpen=%d",__func__,uteModuleBedsideModeData.isOpen);
 }
 
 /**
@@ -78,7 +78,7 @@ void uteModuleBedsideModeSaveConfig(void)
  */
 bool uteModuleBedsideModeIsOpen(void)
 {
-    return uteModuleBloodoxygenData.isOpen;
+    return uteModuleBedsideModeData.isOpen;
 }
 
 /**
@@ -90,7 +90,7 @@ bool uteModuleBedsideModeIsOpen(void)
  */
 void uteModuleBedsideModeSetOpen(bool isOpen)
 {
-    uteModuleBloodoxygenData.isOpen = isOpen;
+    uteModuleBedsideModeData.isOpen = isOpen;
     uteModuleBedsideModeSaveConfig();
 }
 
@@ -102,7 +102,7 @@ void uteModuleBedsideModeSetOpen(bool isOpen)
  */
 void uteModuleBedsideModeSwitch(void)
 {
-    uteModuleBloodoxygenData.isOpen = !uteModuleBloodoxygenData.isOpen;
+    uteModuleBedsideModeData.isOpen = !uteModuleBedsideModeData.isOpen;
     uteModuleBedsideModeSaveConfig();
 }
 

@@ -700,7 +700,7 @@ static const charge_ui_handle_t ui_handle =
         .w_hour = 0,
         .h_hour = 0,
         .hour   = 0,
-        .res    = UI_BUF_I335001_I269032_CHARGE_NUM_HOUR_MIN_88X49_X65_Y43_X65_Y175_BIN,          //res不为0使用图库，为0使用字库
+        .res    = UI_BUF_I269032_CHARGE_NUM_HOUR_MIN_88X49_X65_Y43_X65_Y175_BIN,          //res不为0使用图库，为0使用字库
         .num_layout = 1,
         .num_align  = 0,
         .flag_zfill = true,
@@ -715,7 +715,7 @@ static const charge_ui_handle_t ui_handle =
         .w_min  = 0,
         .h_min  = 0,
         .min    = 0,
-        .res    = UI_BUF_I335001_I269032_CHARGE_NUM_HOUR_MIN_88X49_X65_Y43_X65_Y175_BIN,          //res不为0使用图库，为0使用字库
+        .res    = UI_BUF_I269032_CHARGE_NUM_HOUR_MIN_88X49_X65_Y43_X65_Y175_BIN,          //res不为0使用图库，为0使用字库
         .num_layout = 1,
         .num_align  = 0,
         .flag_zfill = true,
@@ -729,8 +729,8 @@ static const charge_ui_handle_t ui_handle =
     //     .y      = 43+49/2,
     //     .w      = 0,
     //     .h      = 0,
-    //     .bright_res     = UI_BUF_I335001_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN,
-    //     .destroy_res    = UI_BUF_I335001_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN,
+    //     .bright_res     = UI_BUF_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN,
+    //     .destroy_res    = UI_BUF_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN,
     //     .rev    = 0,
     // },
 
@@ -741,7 +741,7 @@ static const charge_ui_handle_t ui_handle =
         .w      = 0,
         .h      = 0,
         .val    =0,
-        .res    = UI_BUF_I335001_I269032_CHARGE_NUM_DATE_21X14_X31_Y245_BIN,         //res不为0使用图库，为0使用字库
+        .res    = UI_BUF_I269032_CHARGE_NUM_DATE_21X14_X31_Y245_BIN,         //res不为0使用图库，为0使用字库
         .num_layout = 1,  //横向，竖向排列
         .num_align  = 0,   //对其方式
         .flag_zfill = true,
@@ -755,7 +755,7 @@ static const charge_ui_handle_t ui_handle =
         .w      = 0,
         .h      = 0,
         .val    =0,
-        .res    = UI_BUF_I335001_I269032_CHARGE_NUM_DATE_21X14_X31_Y245_BIN,         //res不为0使用图库，为0使用字库
+        .res    = UI_BUF_I269032_CHARGE_NUM_DATE_21X14_X31_Y245_BIN,         //res不为0使用图库，为0使用字库
         .num_layout = 1,  //横向，竖向排列
         .num_align  = 0,   //对其方式
         .flag_zfill = true,
@@ -827,7 +827,7 @@ compo_form_t *func_charge_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //创建 :
-    compo_picturebox_t*  pic =  compo_picturebox_create(frm, UI_BUF_I335001_I269032_CHARGE_XIE_21X14_X31_Y245_BIN);
+    compo_picturebox_t*  pic =  compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_XIE_21X14_X31_Y245_BIN);
 
     compo_picturebox_set_pos(pic, 42, 178);
     //compo_picturebox_cut(pic, 2, 7);
@@ -835,11 +835,11 @@ compo_form_t *func_charge_form_create(void)
     uteModuleSystemtimeGetTime(&time);
     if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
     {
-        pic =  compo_picturebox_create(frm, UI_BUF_I335001_I269032_CHARGE_CHAR_WEEK_ZH_30X50_X27_Y195_BIN);
+        pic =  compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_CHAR_WEEK_ZH_30X50_X27_Y195_BIN);
     }
     else
     {
-        pic = compo_picturebox_create(frm,UI_BUF_I335001_I269032_CHARGE_CHAR_WEEK_EN_30X50_X27_Y195_BIN);
+        pic = compo_picturebox_create(frm,UI_BUF_I269032_CHARGE_CHAR_WEEK_EN_30X50_X27_Y195_BIN);
     }
     compo_picturebox_set_pos(pic, 42, 100);
     compo_setid(pic, COMPO_ID_NUM_TIME_WEEK);
@@ -869,12 +869,12 @@ compo_form_t *func_charge_form_create(void)
     compo_setid(min, ui_handle.time_min.id_min);
     compo_bonddata(min, COMPO_BOND_MINUTE);
 
-    pic = compo_picturebox_create(frm, UI_BUF_I335001_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN);
+    pic = compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN);
     compo_picturebox_set_pos(pic, 109, 135);
     compo_setid(pic, COMPO_ID_PIC_TIME_COLON);
 
 
-    pic =  compo_picturebox_create(frm,UI_BUF_I335001_I269032_CHARGE_ICON_54X54_X161_Y219_BIN);
+    pic =  compo_picturebox_create(frm,UI_BUF_I269032_CHARGE_ICON_54X54_X161_Y219_BIN);
     compo_picturebox_set_pos(pic, 178,246);
     compo_setid(pic, COMPO_ID_NUM_BAT_VALUE);
     compo_picturebox_cut(pic, uteDrvBatteryCommonGetBatteryIndex(4), 4);

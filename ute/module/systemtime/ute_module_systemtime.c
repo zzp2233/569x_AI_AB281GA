@@ -447,24 +447,24 @@ void uteModuleSystemtimeInputDateCalDay(ute_module_systemtime_time_t *time, uint
 */
 void uteModuleSystemtimeInputDateIncreaseDecreaseDay(ute_module_systemtime_time_t *time, int day)
 {
-    /*
-    struct tm timeptr;
-    struct tm *timeout;
+    tm_t timeptr;
+    tm_t timeout;
     time_t timestamp = 0;
-    timeptr.tm_year = time->year - 1900;
-    timeptr.tm_mon = systemTime.month - 1;
-    timeptr.tm_mday = systemTime.day;
-    timeptr.tm_hour = 0;
-    timeptr.tm_min = 0;
-    timeptr.tm_sec = 0;
-    time_t tmp = mktime(&timeptr);
+    timeptr.year = time->year;
+    timeptr.mon = systemTime.month - 1;
+    timeptr.day = systemTime.day;
+    timeptr.hour = 0;
+    timeptr.min = 0;
+    timeptr.sec = 0;
+    time_t tmp = tm_to_time(timeptr);
     timestamp = tmp + day * 86400;
-    timeout = localtime(&timestamp);
-    time->year = timeout->tm_year + 1900;
-    time->month = timeout->tm_mon + 1;
-    time->day = timeout->tm_mday;
-    time->week = timeout->tm_wday;
-    */
+    timeout = time_to_tm(timestamp);
+    timeout.mon += 1;
+    timeout.weekday = get_weekday(timeout.year, timeout.mon, timeout.day);
+    time->year = timeout.year;
+    time->month = timeout.mon;
+    time->day = timeout.day;
+    time->week = timeout.weekday;
 }
 /**
 *@brief 注册系统每秒时间函数

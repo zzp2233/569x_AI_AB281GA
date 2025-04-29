@@ -609,7 +609,7 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
 
     u32tmp = ptcfg[1];
     u32tmp = (u32tmp << 16) | ptcfg[0];
-#if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
+#if 0//DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
     if (((g_chsc6x_cfg_ver & 0x3ffffff) != (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
     {
         chsc6x_info("chsc6x: prj info not match,now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
@@ -620,14 +620,21 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
     vnow = (g_chsc6x_cfg_ver >> 26) & 0x3f;
     vbuild = (u32tmp >> 26) & 0x3f;
     chsc6x_info("chsc6x: cfg_vnow: 0x%x,cfg_vbuild: 0x%x \r\n", vnow, vbuild);
+
 #if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
-    if (0 == g_upgrade_flag && vbuild <= vnow)
+    chsc6x_info("chsc6x: now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
+    if (((g_chsc6x_cfg_ver & 0x3ffffff) == (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
     {
-        return 0; //driver init upgrade, must vbuild > vnow
-    }
-    if(1 == g_upgrade_flag && vbuild == vnow)
-    {
-        return 0; //OTA upgrade just vbuild != vnow
+        if (0 == g_upgrade_flag && vbuild <= vnow)
+        {
+            chsc6x_info("chsc6x: vbuild=%d,vnow=%d\r\n",vbuild,vnow);
+            return 0; //driver init upgrade, must vbuild > vnow
+        }
+        if(1 == g_upgrade_flag && vbuild == vnow)
+        {
+            chsc6x_info("chsc6x: vbuild=%d,vnow=%d\r\n",vbuild,vnow);
+            return 0; //OTA upgrade just vbuild != vnow
+        }
     }
 #endif
 

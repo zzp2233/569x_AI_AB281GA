@@ -209,6 +209,9 @@
 #define UTE_DRV_SCREEN_HEIGHT 284
 #endif
 
+/*! 床头钟模式(充电界面不息屏),wang.luo 2025-04-29 */
+#define UTE_MODULE_BEDSIDE_MODE_SUPPORT 1
+
 #define UTE_MODULE_POWERON_LANGUAGE_SELECT_SUPPORT 1
 
 #define UTE_MODULE_SCREENS_POWERON_SUPPORT            1 //开机logo界面

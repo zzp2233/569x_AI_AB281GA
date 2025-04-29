@@ -46,9 +46,7 @@ enum
     FUNC_ALARM_CLOCK_SUB_REPEAT,        //闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑
     FUNC_ALARM_CLOCK_SUB_POP,           //闹钟--弹出
-#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     FUNC_BLOOD_OXYGEN,                  //血氧
-#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     FUNC_PRESSURE,                      //压力
     FUNC_PRESSURE_EXPLAIN,              //压力说明
     FUNC_LONG_PRESS,                    //关机 重启 SOS

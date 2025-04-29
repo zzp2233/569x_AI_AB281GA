@@ -4,6 +4,9 @@
 #include "ute_drv_motor.h"
 #include "ute_module_systemtime.h"
 #include "ute_application_common.h"
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+#include "ute_module_bedside_mode.h"
+#endif
 
 #define TRACE_EN    1
 
@@ -1007,6 +1010,12 @@ void func_charge_update(void)
 //充电功能事件处理
 static void func_charge_process(void)
 {
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+    if (uteModuleBedsideModeIsOpen())
+    {
+        reset_guioff_delay();
+    }
+#endif
     func_charge_update();
     func_process();
 }

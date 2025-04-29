@@ -255,6 +255,12 @@ void func_clock_recreate_dial(void)
             tft_set_temode(0);
         }
 #endif
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+        if (sys_cb.dialplate_index == DIALPLATE_LIGHT_CUBE_IDX)
+        {
+            tft_set_temode(0);
+        }
+#endif
     }
 }
 
@@ -404,6 +410,13 @@ static void func_clock_enter(void)
     }
 #endif
 
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+    if (sys_cb.dialplate_index == DIALPLATE_LIGHT_CUBE_IDX)
+    {
+        tft_set_temode(0);
+    }
+#endif
+
 }
 
 //退出时钟表盘功能
@@ -416,6 +429,13 @@ static void func_clock_exit(void)
         tft_set_temode(DEFAULT_TE_MODE);
     }
 #endif
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+    if (sys_cb.dialplate_index == DIALPLATE_LIGHT_CUBE_IDX)
+    {
+        tft_set_temode(0);
+    }
+#endif
+
     func_cb.last = FUNC_CLOCK;
 
     if(!uteApplicationCommonIsHasConnectOurApp())//防止上电直接进入表盘特殊情况

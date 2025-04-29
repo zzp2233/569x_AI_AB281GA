@@ -93,6 +93,7 @@
 			<Add directory="../../../ute/module/slideBar" />
 			<Add directory="../../../ute/module/appbinding" />
 			<Add directory="../../../ute/module/emotionPressure" />
+			<Add directory="../../../ute/module/bedsideMode" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -190,6 +191,10 @@
 		<Unit filename="../../../ute/module/appbinding/ute_module_appbinding.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../ute/module/bedsideMode/ute_module_bedside_mode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/bedsideMode/ute_module_bedside_mode.h" />
 		<Unit filename="../../../ute/module/bloodoxygen/ute_module_bloodoxygen.c">
 			<Option compilerVar="CC" />
 		</Unit>

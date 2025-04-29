@@ -33,9 +33,9 @@ bool cst8x_enter_bootmode(void)
 
     //进入Boot要拉复位，拉低拉高后延时10ms，否则无法进入Boot
     delay_5ms(2);
-    uteDrvScreenCommonSetResetPin(false);
+    PORT_CTP_RST_L();
     delay_5ms(2);
-    uteDrvScreenCommonSetResetPin(true);
+    PORT_CTP_RST_H();
     delay_5ms(2);
 
     while (retry_cnt--)
@@ -52,9 +52,9 @@ bool cst8x_enter_bootmode(void)
         if (res != 0xC1)   // CST816D, CST816T
         {
             delay_5ms(2);
-            uteDrvScreenCommonSetResetPin(false);
+            PORT_CTP_RST_L();
             delay_5ms(2);
-            uteDrvScreenCommonSetResetPin(true);
+            PORT_CTP_RST_H();
             delay_5ms(2);
             continue;
         }

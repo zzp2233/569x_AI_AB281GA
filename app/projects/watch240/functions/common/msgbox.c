@@ -1095,7 +1095,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_multiline(txt_msg, false);
                 compo_textbox_set_align_center(txt_msg, false);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,
-                                           GUI_SCREEN_CENTER_Y+50,
+                                           GUI_SCREEN_CENTER_Y+51,
                                            widget_text_get_area(txt_msg->txt).wid,
                                            widget_text_get_height()); //调整文本位置
             }

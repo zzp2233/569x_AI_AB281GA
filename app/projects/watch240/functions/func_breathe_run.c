@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "ute_drv_motor.h"
+#include "ute_module_heart.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -56,9 +57,9 @@ enum
 
 const uint32_t countdown_pic [3]=
 {
-    UI_BUF_I335001_19_BREATHING_TRAINING_3_COUNTDOWN_ICON_PIC36X48_X102_Y118_00_BIN,
-    UI_BUF_I335001_19_BREATHING_TRAINING_3_COUNTDOWN_ICON_PIC36X48_X102_Y118_01_BIN,
     UI_BUF_I335001_19_BREATHING_TRAINING_3_COUNTDOWN_ICON_PIC36X48_X102_Y118_02_BIN,
+    UI_BUF_I335001_19_BREATHING_TRAINING_3_COUNTDOWN_ICON_PIC36X48_X102_Y118_01_BIN,
+    UI_BUF_I335001_19_BREATHING_TRAINING_3_COUNTDOWN_ICON_PIC36X48_X102_Y118_00_BIN,
 };
 
 #define PIC_BG_MAX_SIZE   144
@@ -374,7 +375,7 @@ static void func_breathe_run_message(size_msg_t msg)
 {
     switch (msg)
     {
-        case KLH_BACK:
+        case KU_BACK:
             uteTaskGuiStartScreen(FUNC_BREATHE, 0, __func__);
             break;
 
@@ -389,6 +390,7 @@ static void func_breathe_run_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_breathe_run_t));
     func_cb.frm_main = func_breathe_run_form_create();
+    uteModuleHeartStartSingleTesting(TYPE_HEART);  //开启心率
 }
 
 //退出呼吸训练运行功能
@@ -398,6 +400,7 @@ static void func_breathe_run_exit(void)
     if (!sys_cb.refresh_language_flag)
     {
         uteTaskGuiStackRemoveScreenId(FUNC_BREATHE_RUN);
+        uteModuleHeartStopSingleTesting(TYPE_HEART);  //关闭心率
     }
 }
 

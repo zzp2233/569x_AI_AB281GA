@@ -1063,7 +1063,7 @@ compo_form_t *func_sport_finish_form_create(void)
     memset(txt_buf,0,sizeof(txt_buf));
     if(sport_data.saveData.avgTimeSecond)
     {
-        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", sport_data.saveData.avgTimeMinute,(km_integer+km_decimals)/(sport_data.saveData.avgTimeMinute+sport_data.saveData.avgTimeSecond),'"');
+        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", sport_data.saveData.avgTimeMinute, sport_data.saveData.avgTimeSecond,'"');
     }
     else
     {

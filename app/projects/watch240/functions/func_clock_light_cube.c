@@ -37,25 +37,31 @@ enum
 
 static const compo_cube_item_t tbl_menu_cube[] =
 {
-#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
-    {UI_BUF_I335001_WATCH4_MF_00_BIN, FUNC_ACTIVITY},
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_FIND_PHONE_BIN, FUNC_FINDPHONE},
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_MUSIC_BIN, FUNC_BT},
 #endif
-#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
-    {UI_BUF_I335001_WATCH4_MF_03_BIN, FUNC_SLEEP},
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_SETTING_BIN, FUNC_SETTING},
+#endif
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_THEME_BIN, FUNC_MENUSTYLE},
+#else
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_THEME_BIN, FUNC_STYLE},
+#endif
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_VOICE_BIN, FUNC_VOICE},
 #endif
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
-    {UI_BUF_I335001_WATCH4_MF_04_BIN, FUNC_WEATHER},
-#endif
-#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    {UI_BUF_I335001_WATCH4_MF_01_BIN, FUNC_BLOOD_OXYGEN},
-#endif
-#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {UI_BUF_I335001_WATCH4_MF_02_BIN, FUNC_HEARTRATE},
-#endif
-#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
-    {UI_BUF_I335001_WATCH4_MF_05_BIN, FUNC_BT},
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_WEATHER_BIN, FUNC_WEATHER},
 #endif
 };
+
+// 光束图片
+#define UTE_WATCHS_CUBE_LIGHT_PIC_ADDR UI_BUF_DIALPLATE_CUBE_LIGHT_LIGHT_00_BIN
+
+// 光束数量
+#define UTE_WATCHS_CUBE_LIGHT_ELE_CNT 12
 
 // 时间数字字体
 #define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_48_BIN
@@ -84,32 +90,39 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define CUBE_DATE_HEIGHT     70
 
 #else
+
 static const compo_cube_item_t tbl_menu_cube[] =
 {
-#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
-    {0, FUNC_ACTIVITY},
-#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
-#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
-    {0, FUNC_SLEEP},
-#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
-#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
-    {0, FUNC_WEATHER},
-#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
-#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    {0, FUNC_BLOOD_OXYGEN},
-#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {0, FUNC_HEARTRATE},
-#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_FIND_PHONE_BIN, FUNC_FINDPHONE},
 #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
-    {0, FUNC_BT},
-#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_MUSIC_BIN, FUNC_BT},
+#endif
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_SETTING_BIN, FUNC_SETTING},
+#endif
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_THEME_BIN, FUNC_MENUSTYLE},
+#else
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_THEME_BIN, FUNC_STYLE},
+#endif
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_VOICE_BIN, FUNC_VOICE},
+#endif
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_WEATHER_BIN, FUNC_WEATHER},
+#endif
 };
 
+// 光束图片
+#define UTE_WATCHS_CUBE_LIGHT_PIC_ADDR UI_BUF_DIALPLATE_CUBE_LIGHT_LIGHT_00_BIN
+
+// 光束数量
+#define UTE_WATCHS_CUBE_LIGHT_ELE_CNT 20
+
 // 时间数字字体
-#define UTE_WATCHS_CUBE_TIME_NUM_FONT 0
+#define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_48_BIN
 // 日期数字字体
-#define UTE_WATCHS_CUBE_DATE_NUM_FONT 0
+#define UTE_WATCHS_CUBE_DATE_NUM_FONT UI_BUF_0FONT_FONT_NUM_32_BIN
 
 // 时间小时数字位置
 #define CUBE_HOUR_X         (GUI_SCREEN_CENTER_X - 40)
@@ -203,8 +216,6 @@ static void func_clock_light_cube_disk_icon_click(void)
     }
 }
 
-
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 compo_form_t *func_clock_light_cube_form_create(void)
 {
     // 新建窗体
@@ -213,7 +224,7 @@ compo_form_t *func_clock_light_cube_form_create(void)
     // 创建立方体菜单
     compo_cube_t *cube = compo_cube_create(frm, CUBE_RADIUS_MAX, tbl_menu_cube, CUBE_ITEM_CNT);
     compo_cube_set_type(cube, COMPO_CUBE_TYPE_POWER);
-    compo_cube_add_element(cube, 0, UI_BUF_I335001_WATCH4_LIGHT_LIGHT_BIN, 18+20);
+    compo_cube_add_element(cube, 0, UTE_WATCHS_CUBE_LIGHT_PIC_ADDR, UTE_WATCHS_CUBE_LIGHT_ELE_CNT);
     compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
     compo_setid(cube, COMPO_ID_CUBE);
 
@@ -252,17 +263,7 @@ compo_form_t *func_clock_light_cube_form_create(void)
     // compo_cube_update(cube);
     return frm;
 }
-#else
-// 立方体表盘
-compo_form_t *func_clock_light_cube_form_create(void)
-{
-    // 新建窗体
-    compo_form_t *frm = compo_form_create(true); // 菜单一般创建在底层
 
-    return frm;
-}
-#endif
-// 地图功能事件处理
 void func_clock_light_cube_process(void)
 {
     if (sys_cb.dialplate_index != UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX)
@@ -354,7 +355,7 @@ void func_clock_light_cube_process(void)
                     stop_cnt++;
                     if (stop_cnt > 5)
                     {
-                        sta = 2;
+                        sta = BATTER_3D_CLICK_STA_INC;
                         stop_cnt = 0;
                     }
                     break;

@@ -954,6 +954,7 @@ static void func_timer_button_touch_handle(void)
     }
 }
 
+static u32 rtccnt_tmp=0;
 //100ms计时器秒数刷新回调函数
 static void timer_100ms_pro(co_timer_t *timer, void *param)
 {
@@ -961,7 +962,6 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     u8 *count = NULL;
     static bool lowpwr_sta_bkp;
     static u8 rtc_cal_cnt_bkp;
-    static u32 rtccnt_tmp;
     u16 sec_past;
     bool lowpwr_sta = bsp_system_is_sleep() /*| sys_cb.idle_sta*/;
 
@@ -977,7 +977,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
         {
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             sys_cb.timer_left_sec = 0;
-
+            rtccnt_tmp =0;
             if(func_cb.sta == FUNC_TIMER)
             {
                 sys_cb.timer_sta = TIMER_STA_DONE;
@@ -1018,6 +1018,7 @@ static void func_timer_button_click(void)
                     sys_cb.timer_custom_sec = sys_cb.timer_left_sec = sys_cb.timer_total_sec = id * 60;
                     sys_cb.timer_sta = TIMER_STA_RESET;
                     page_next = TIMER_PAGE_COUNTDOWN;
+                    rtccnt_tmp =0;
                     break;
 
                 case COMPO_ID_BTN_CUSTOM:
@@ -1044,6 +1045,7 @@ static void func_timer_button_click(void)
                     sys_cb.timer_left_sec = sys_cb.timer_total_sec = sys_cb.timer_custom_sec = f_timer->hour * 3600 + f_timer->min * 60 + f_timer->sec;
                     sys_cb.timer_sta = TIMER_STA_RESET;
                     page_next = TIMER_PAGE_COUNTDOWN;
+                    rtccnt_tmp =0;
                     break;
 
                 default:
@@ -1073,6 +1075,7 @@ static void func_timer_button_click(void)
                             sys_cb.timer_start_rtc = compo_cb.rtc_cnt;
                             count_100ms = 0;
                             co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
+                            rtccnt_tmp =0;
                         }
                         sys_cb.timer_sta = TIMER_STA_WORKING;
                     }
@@ -1086,6 +1089,7 @@ static void func_timer_button_click(void)
                     sys_cb.timer_sta = TIMER_STA_IDLE;
                     sys_cb.timer_left_sec = sys_cb.timer_total_sec = 0;
                     page_next = TIMER_PAGE_SELECT;
+                    rtccnt_tmp =0;
                     break;
 
                 default:

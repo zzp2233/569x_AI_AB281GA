@@ -162,8 +162,10 @@ extern void func_message_reply_info(void);
 //extern void func_tetris_start(void);
 extern void func_bird(void);
 extern void func_ota_ui(void);
-//extern void func_pressure(void);//压力
-//extern void func_pressure_explain(void);//压力说明
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+extern void func_pressure(void);//压力
+extern void func_pressure_explain(void);//压力说明
+#endif
 extern void func_long_press(void);//关机 重启 SOS
 extern void func_ota_update(void);
 extern void func_ota_err(void);
@@ -208,7 +210,20 @@ extern void func_bright_set(void);
 #if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
 extern void func_toolbox_list(void);
 #endif
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+extern void func_mood(void);
+#endif
+#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+extern void func_mood_about(void);
+#endif
 
+
+#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+compo_form_t *func_mood_about_form_create(void);
+#endif
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+compo_form_t *func_mood_form_create(void);
+#endif
 compo_form_t *func_breathe_run_form_create(void);
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
 compo_form_t *func_oxygen_about_form_create(void);
@@ -229,8 +244,10 @@ compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_ota_err_form_create(void);
 compo_form_t *func_ota_succ_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
-//compo_form_t *func_pressure_explain_form_create(void);//压力说明
-//compo_form_t *func_pressure_form_create(void);//压力
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+compo_form_t *func_pressure_explain_form_create(void);//压力说明
+compo_form_t *func_pressure_form_create(void);//压力
+#endif
 compo_form_t *func_menu_form_create(void);
 compo_form_t *func_clock_form_create(void);
 //compo_form_t *func_clock_sub_sidebar_form_create(void);
@@ -379,8 +396,10 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-//    {FUNC_PRESSURE,                     func_pressure_form_create},//压力
-//    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain_form_create},//压力说明
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+    {FUNC_PRESSURE,                     func_pressure_form_create},//压力
+    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain_form_create},//压力说明
+#endif
     {FUNC_LONG_PRESS,                   func_long_press_form_create},//关机 重启 SOS
 //    {FUNC_BLOODSUGAR,                   func_bloodsugar_form_create},
 //    {FUNC_BLOOD_PRESSURE,               func_bloodpressure_form_create},
@@ -401,6 +420,9 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {FUNC_SLEEP,                        func_sleep_form_create},
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+    {FUNC_MOOD,                         func_mood_form_create},
+#endif
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {FUNC_STOPWATCH,                    func_stopwatch_form_create},
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
@@ -460,6 +482,9 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_LIGHT_SUPPORT
     {FUNC_LIGHT,                        func_light_form_create},
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+    {FUNC_MOOD_ABOUT,                   func_mood_about_form_create},
+#endif
     {FUNC_SET_SUB_DOUSING,              func_set_sub_dousing_form_create},
     {FUNC_SET_SUB_WRIST,                func_set_sub_wrist_form_create},
     {FUNC_SET_SUB_DISTURD,              func_set_sub_disturd_form_create},
@@ -570,8 +595,10 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-//    {FUNC_PRESSURE,                     func_pressure},                 //压力
-//    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+    {FUNC_PRESSURE,                     func_pressure},                 //压力
+    {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
+#endif
     {FUNC_LONG_PRESS,                   func_long_press},               //关机 重启 SOS界面
 //    {FUNC_BLOODSUGAR,                   func_bloodsugar},               //血糖
 //    {FUNC_BLOOD_PRESSURE,               func_bloodpressure},            //血压
@@ -581,6 +608,9 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {FUNC_BREATHE,                      func_breathe},                  //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+    {FUNC_MOOD_ABOUT,                   func_mood_about},
+#endif
     {FUNC_POWER_ON_SCAN,                func_power_on_scan},             //开机二维码
     {FUNC_POWER_ON_LANGUAGE,            func_power_on_language},        //开机语言
     {FUNC_BREATHE_SUB_MODE,             func_breathe_sub_mode},         //呼吸--模式设置
@@ -599,6 +629,9 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
     {FUNC_TIMER,                        func_timer},                    //定时器
 #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+    {FUNC_MOOD,                         func_mood},
+#endif
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {FUNC_SLEEP,                        func_sleep},                    //睡眠
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT

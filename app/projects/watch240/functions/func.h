@@ -46,11 +46,11 @@ enum
     FUNC_ALARM_CLOCK_SUB_REPEAT,        //闹钟--重复
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑
     FUNC_ALARM_CLOCK_SUB_POP,           //闹钟--弹出
-#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     FUNC_BLOOD_OXYGEN,                  //血氧
-#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
     FUNC_PRESSURE,                      //压力
     FUNC_PRESSURE_EXPLAIN,              //压力说明
+#endif
     FUNC_LONG_PRESS,                    //关机 重启 SOS
     FUNC_BLOODSUGAR,                    //血糖
     FUNC_BLOOD_PRESSURE,                //血压
@@ -164,6 +164,8 @@ enum
     FUNC_HEART_WARNING,
     FUNC_DIAL_AND_THEME, //表盘&主题界面
     FUNC_HEAR_ABOUT,
+    FUNC_MOOD,
+    FUNC_MOOD_ABOUT,
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
     FUNC_OXYGEN_ABOUT,
 #endif

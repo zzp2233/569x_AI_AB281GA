@@ -233,16 +233,22 @@ static void func_bt_music_refresh_disp(void)
     uint16_t title_size_leng  = 0;
     memset(title_buf,0,sizeof(title_buf));
     uteModuleMusicGetPlayerTitle((uint8_t *)title_buf,&title_size_leng);
+    // printf("name:%s [%d] name_old:%s\n",title_buf,f_bt->title_buf_old,title_size_leng);
+
     if(!uteModuleCallBtIsConnected() && !ble_is_connect())
     {
-        memset(title_buf,0,sizeof(title_buf));
-        snprintf(title_buf,sizeof(title_buf),"%s",i18n[STR_CONNECT_BLUETOOTH]);
+        compo_textbox_set(tilte_txt, i18n[STR_CONNECT_BLUETOOTH]);
     }
-    else if(title_size_leng==0)
+    else if(strcmp(title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
     {
-        memset(title_buf,0,sizeof(title_buf));
-        snprintf(title_buf,sizeof(title_buf),"%s",i18n[STR_UNKNOWN]);
+        memcpy(f_bt->title_buf_old, title_buf, TITLE_BUF_LEN);
+        compo_textbox_set(tilte_txt, title_buf);
+        if(title_size_leng == 0)
+        {
+            compo_textbox_set(tilte_txt, i18n[STR_UNKNOWN]);
+        }
     }
+
     if(!uteModuleCallBtIsConnected() && !ble_is_connect())
     {
         btn_play   = compo_getobj_byid(COMPO_ID_BTN_PLAY);
@@ -272,23 +278,6 @@ static void func_bt_music_refresh_disp(void)
     uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
     if(vol>16)vol=16;
     compo_picturebox_cut(pic,vol,17);
-
-    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
-    {
-        memset(title_buf,0,sizeof(title_buf));
-        snprintf(title_buf,sizeof(title_buf),"%s",i18n[STR_CONNECT_BLUETOOTH]);
-        compo_textbox_set(tilte_txt, title_buf);
-    }
-    else if(strcmp(f_bt->title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
-    {
-        f_bt->refresh_data = false;
-        memcpy(f_bt->title_buf_old, f_bt->title_buf, sizeof(f_bt->title_buf));
-        compo_textbox_set(tilte_txt, f_bt->title_buf);
-        if(title_size_leng == 0)
-        {
-            compo_textbox_set(tilte_txt, i18n[STR_UNKNOWN]);
-        }
-    }
 }
 static void func_bt_button_release_handle()
 {

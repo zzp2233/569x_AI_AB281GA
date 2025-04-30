@@ -655,7 +655,7 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 {
     ///*第一页*/
     {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_00_BIN,      COMPO_ID_BTN_CONNECT,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  84-56},///蓝牙连接开关
-    {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_14_BIN,      COMPO_ID_BTN_MENU,             GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  84-56},///菜单
+    {UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_00_BIN,      COMPO_ID_BTN_MENU,             GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  84-56},///菜单
     {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_03_BIN,      COMPO_ID_BTN_DISCURD,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  148-56},///勿扰模式开关
     {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_05_BIN,      COMPO_ID_BTN_MUTE,             GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  148-56},///静音模式开关
     {UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_07_BIN,      COMPO_ID_BTN_LIGHT,            GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  212-56},///亮度调节
@@ -673,16 +673,15 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 //风格列表tbl
 static const compo_listbox_item_t dwon_tbl_style_list[] =
 {
-    {STR_STYLE_LIST_1,          UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_14_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_15_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
-    {STR_STYLE_HONEYCOMB,       UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_02_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
-    // {STR_SPHERE,                UI_BUF_I330001_SLIDEMENU_ICON_THEME07_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
-    // {STR_CHECKERBOARD,          UI_BUF_I330001_SLIDEMENU_ICON_THEME06_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
-    // {STR_HALO,                  UI_BUF_I330001_SLIDEMENU_ICON_THEME02_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
-    // {STR_STYLE_SKYRER,          UI_BUF_I330001_SLIDEMENU_ICON_THEME08_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
-    // {STR_STYLE_GRID_1,          UI_BUF_I330001_SLIDEMENU_ICON_THEME09_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
-    // // {STR_SIX_PALACE_GRID,       UI_BUF_I330001_SLIDEMENU_ICON_THEME04_BIN,           .menu_style = MENU_STYLE_CUM_FOURGRID},     //六宫格
-    // {STR_STYLE_WATERFALL,       UI_BUF_I330001_SLIDEMENU_ICON_THEME05_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+    {STR_STYLE_LIST_1,          UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_06_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
+    {STR_GONG_GE,               UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_09_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
+    {STR_STYLE_HONEYCOMB,       UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_08_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_SPHERE,                UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_02_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
+    {STR_CHECKERBOARD,          UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_03_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
+    {STR_HALO,                  UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_07_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
+    {STR_STYLE_SKYRER,          UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_01_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+    {STR_STYLE_GRID_1,          UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_00_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
+    {STR_STYLE_WATERFALL,       UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_04_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
 };
 
 ///               /                 *更新*                    /                 ///

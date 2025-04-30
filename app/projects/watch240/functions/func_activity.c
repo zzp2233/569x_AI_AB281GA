@@ -52,7 +52,7 @@ compo_form_t *func_activity_form_create(void)
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-    u8 pic_dis =(totalStepCnt / uteModuleSportGetStepsTargetCnt());
+    u8 pic_dis =(totalStepCnt *10 / uteModuleSportGetStepsTargetCnt());
     if(pic_dis>10)pic_dis=10;
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数
@@ -300,7 +300,7 @@ static void func_activity_disp_handle(void)
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-    u8 pic_dis =(totalStepCnt / uteModuleSportGetStepsTargetCnt());
+    u8 pic_dis =(totalStepCnt *10 / uteModuleSportGetStepsTargetCnt());
     if(pic_dis>10)pic_dis=10;
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数

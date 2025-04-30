@@ -11,8 +11,8 @@ __STATIC_INLINE void drvScreenTft240X284Jd98530185A035PowerOn(void)
 {
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x11,NULL,0);
     uteModulePlatformDelayMs(120);
-    uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0xDE,(uint8_t *)"\x03",1);//ESD
-    uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0xB5,(uint8_t *)"\x23",1);
+    // uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0xDE,(uint8_t *)"\x03",1);//ESD
+    // uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0xB5,(uint8_t *)"\x23",1);
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x29,NULL,0);
     uteModulePlatformDelayMs(10);
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
@@ -66,8 +66,8 @@ __STATIC_INLINE void drvScreenTft240X284Jd98530185A035Init(void)
     memcpy(tmp, "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, tmp, 1);
 
-    memcpy(tmp, "\x12\x1A\x27\x73\x6F\xF0", 6);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, tmp, 6); //ESD
+    // memcpy(tmp, "\x12\x1A\x27\x73\x6F\xF0", 6);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, tmp, 6); //ESD
 
     memcpy(tmp, "\x22", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB2, tmp, 1);
@@ -86,8 +86,8 @@ __STATIC_INLINE void drvScreenTft240X284Jd98530185A035Init(void)
     memcpy(tmp, "\x3F\x2C\x21\x1A\x1F\x20\x1B\x1B\x19\x19\x16\x0A\x08\x03\x05\x00\x3F\x2C\x21\x1A\x1F\x20\x1B\x1B\x19\x19\x16\x0A\x08\x03\x05\x00", 32);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC8, tmp, 32);
 
-    memcpy(tmp, "\x77", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBC, tmp, 1); //ESD
+    // memcpy(tmp, "\x77", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBC, tmp, 1); //ESD
 
     memcpy(tmp, "\x04\x06\x6B\x0F\x00", 5);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xD0, tmp, 5);
@@ -106,23 +106,25 @@ __STATIC_INLINE void drvScreenTft240X284Jd98530185A035Init(void)
     memcpy(tmp, "\x72\x12", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC4, tmp, 2);
 
-    memcpy(tmp, "\x03", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC5, tmp, 1); //ESD
+    // memcpy(tmp, "\x03", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC5, tmp, 1); //ESD
 
     memcpy(tmp, "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBE, tmp, 1);
 
-    memcpy(tmp, "\x02", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, tmp, 1); //ESD
-    memcpy(tmp, "\x03\x5A", 2);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBD, tmp, 2); //ESD
+    // memcpy(tmp, "\x02", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, tmp, 1); //ESD
+    // memcpy(tmp, "\x03\x5A", 2);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBD, tmp, 2); //ESD
 
     memcpy(tmp, "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, tmp, 1);
     memcpy(tmp, "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x35, tmp, 1);
-    memcpy(tmp, "\x48", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x36, tmp, 1);
+
+    // memcpy(tmp, "\x48", 1);
+    // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x36, tmp, 1);
+
     memcpy(tmp, "\x05", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x3A, tmp, 1);
     memcpy(tmp, "\x00", 1); // 00=60Hz 06=52Hz 08=40Hz

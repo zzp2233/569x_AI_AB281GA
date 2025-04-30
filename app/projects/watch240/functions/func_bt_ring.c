@@ -116,7 +116,7 @@ compo_form_t *func_bt_ring_form_create(void)
 //    compo_setid(txt, COMPO_ID_TXT_IN_CALL);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,138-widget_text_get_height()/2,GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
-    compo_textbox_set_forecolor(txt, COLOR_GREEN);
+    compo_textbox_set_forecolor(txt, COLOR_WHITE);
     compo_textbox_set_align_center(txt, false);
     txt_leng = widget_text_get_area(txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;

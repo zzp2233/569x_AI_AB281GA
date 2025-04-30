@@ -125,6 +125,8 @@ typedef struct
     uint8_t sc7a20hTempBuffer[29];
     uint8_t bioSaveBuf[10];
     uint8_t beforeFactoryBatLvl;
+    uint8_t bleDevNameLen;
+    uint8_t bleDevName[32];
 } ute_application_sn_data_t;
 
 typedef void (*ute_module_sync_data_reg_func_t)(void);

@@ -17,6 +17,7 @@
 #include "ute_module_sport.h"
 #include "ute_module_filesystem.h"
 #include "ute_module_watchonline.h"
+#include "ute_drv_battery_common.h"
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
@@ -402,19 +403,35 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
 {
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
 
     if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
         return;
     }
-
+#if UTE_MODULE_SPORT_SUPPORT
+    if(uteModuleSportMoreSportIsRuning() && func_cb.sta != FUNC_SPORT_SUB_RUN)
+    {
+        func_cb.sta = FUNC_SPORT_SUB_RUN;
+        return;
+    }
+#endif
     UTE_MODULE_LOG(UTE_LOG_GUI_LVL, "%s,isAllClear = %d", __func__,isAllClear);
     if (isAllClear)
     {
         task_stack_init();
-        latest_task_init(); //最近任务
-        task_stack_push(FUNC_CLOCK);
-        func_cb.sta = FUNC_CLOCK;
+        latest_task_init(); // 最近任务
+        if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return FUNC_CHARGE", __func__);
+            func_cb.sta = FUNC_CHARGE;
+            task_stack_push(FUNC_CHARGE);
+        }
+        else
+        {
+            task_stack_push(FUNC_CLOCK);
+            func_cb.sta = FUNC_CLOCK;
+        }
     }
     else
     {
@@ -483,7 +500,12 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
 #if UTE_MODULE_SPORT_SUPPORT
         uteModuleSprotResetRovllverScreenMode();
 #endif
-
+        //充电中，返回充电界面
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE && func_cb.sta != FUNC_CHARGE)
+        {
+            func_cb.sta = FUNC_CHARGE;
+            task_stack_push(FUNC_CHARGE);
+        }
     }
     else
     {
@@ -753,6 +775,7 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 {
     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
     msg_enqueue(EVT_MSGBOX_EXIT);
+    msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
 
     if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
     {
@@ -769,63 +792,73 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 *@author       zn.zeng
 *@date       2021-09-03
 */
-void uteTaskGuiStartScreen(uint8_t screenId)
+void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *format, ...)
 {
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,disp_status=%d,func_cb.sta=%d,is_fot_start=%d,func_cb.sta=%d,screenId=%d",
-                   __func__,bt_cb.disp_status,func_cb.sta,is_fot_start(),func_cb.sta,screenId);
-    if(sys_cb.gui_sleep_sta)
+#if UTE_LOG_SYSTEM_LVL
+    if (format != NULL)
+    {
+        va_list args;
+        va_start(args, format);
+        char debugInfo[256];
+        vsnprintf(debugInfo, sizeof(debugInfo), format, args);
+        va_end(args);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s:%s", __func__, debugInfo);
+    }
+#endif
+
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,%d->%d,mode:%d", __func__, func_cb.sta, screenId, switchMode);
+
+    if (sys_cb.gui_sleep_sta)
     {
         sys_cb.gui_need_wakeup = true;
     }
     reset_sleep_delay_all();
 
-    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
+    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start() || screenId == FUNC_NULL)
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return",__func__);
         return;
     }
 
-    if(func_cb.sta != screenId)
+    if (func_cb.sta != screenId)
     {
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
         msg_enqueue(EVT_MSGBOX_EXIT);
-        func_cb.sta = screenId;
-        //func_switch_to(screenId, 0);
-        task_stack_push(screenId);
+        msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
+        if (switchMode != 0 && !(switchMode & FUNC_SWITCH_CANCEL) && !(switchMode & FUNC_SWITCH_DIRECT))
+        {
+            func_switch_to(screenId, switchMode);
+        }
+        else
+        {
+            uteModuleGuiCommonSetSwitchToMenu(true);
+            func_cb.sta = screenId;
+            task_stack_push(screenId);
+        }
     }
 }
 
-/**
-*@brief        开始显示界面
-*@detail
-*@param[in] int screenId 界面唯一id
-*@param[in]  isWithoutHistory是否不把当前界面添加到历史栈列表
-*@author       cxd
-*@date       2022-07-11
-*/
-void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory)
+bool uteModuleGuiCommonIsSwitchToMenu(void)
 {
-    if(sys_cb.gui_sleep_sta)
-    {
-        sys_cb.gui_need_wakeup = true;
-    }
-    reset_sleep_delay_all();
+    return uteModuleGuiCommonData.isSwitchToMenu;
+}
 
-    if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start())
-    {
-        return;
-    }
+void uteModuleGuiCommonSetSwitchToMenu(bool isSwitchToMenu)
+{
+    uteModuleGuiCommonData.isSwitchToMenu = isSwitchToMenu;
+}
 
-    if(func_cb.sta != screenId)
+/**
+ * @brief        从栈中删除某个界面
+ * @param[in]    screenId 界面ID
+ * @author       Wang.Luo
+ * @date         2025-03-14
+ */
+void uteTaskGuiStackRemoveScreenId(uint8_t screenId)
+{
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,screenId;%d",__func__,screenId);
+    if(func_cb.sta != screenId && task_stack_contains(screenId))
     {
-        msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
-        msg_enqueue(EVT_MSGBOX_EXIT);
-        func_cb.sta = screenId;
-        // func_switch_to(screenId, 0);
-        if(!isWithoutHistory)
-        {
-            task_stack_push(screenId);
-        }
+        task_stack_remove(screenId);
     }
 }
 
@@ -1107,9 +1140,19 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
             return false;
         }
 #endif
-#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-        if(((id == UTE_MOUDLE_SCREENS_PRESSURE_ID)||(id == UTE_MOUDLE_SCREENS_EMOTION_ID)||\
-            (id == UTE_MOUDLE_SCREENS_FATIGUE_ID)) && uteModuleEmotionPressureIsTesting())
+#if 0// UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+        if ((
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+                (id == UTE_MOUDLE_SCREENS_PRESSURE_ID)
+#endif
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+                || (id == UTE_MOUDLE_SCREENS_EMOTION_ID)
+#endif
+#if UTE_MODULE_SCREENS_FATIGUE_SUPPORT
+                || (id == UTE_MOUDLE_SCREENS_FATIGUE_ID)
+#endif
+            ) &&
+            uteModuleEmotionPressureIsTesting())
         {
             return false;
         }

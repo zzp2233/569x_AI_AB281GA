@@ -19,10 +19,17 @@
 #define ANIMATION_TICK_EXPIRE               18                                  //动画单位时间Tick(ms)
 #define ANIMATION_CNT_ENTERING              15                                  //入场动画拍数
 #define ANIMATION_CNT_EXITING               15                                  //出场动画拍数
-#define FOCUS_AUTO_STEP                     10                                   //松手后自动对齐焦点单位时间步进
+#define FOCUS_AUTO_STEP                     5                                   //松手后自动对齐焦点单位时间步进
 #define FOCUS_AUTO_STEP_DIV                 16
 #define DRAG_AUTO_SPEED                     (CUBE_ITEM_ANGLE * 80)              //拖动松手后的速度
 
+#ifndef CUBE_TOUCH_STOP_WAIT_TIME
+#define CUBE_TOUCH_STOP_WAIT_TIME           1000  // 触摸后停止自转等待时间（毫秒,0为不停止）
+#endif
+
+#ifndef CUBE_AUTO_SPIN_SPEED
+#define CUBE_AUTO_SPIN_SPEED                7 // 自动旋转速度（0为不自转）
+#endif
 
 //    {UI_BUF_ICON_CUBE_CALL_BIN,             FUNC_CALL},
 //    {UI_BUF_ICON_CUBE_HEART_RATE_BIN,       FUNC_HEARTRATE},
@@ -153,7 +160,7 @@ void compo_cube_add_element(compo_cube_t *cube, s16 radius, u32 ele_res, int ele
         widget_image3d_set_azimuth(img, azimuth);
         widget_image3d_set_rotation_center(img, gui_image_get_size(ele_res).wid/2, gui_image_get_size(ele_res).hei/2);
         widget_image3d_set_rotation(img, rotation);
-        printf("%s-> img[%d, %d, %x] polar[%d], azimuth[%d] rotation[%d]\n", __func__,  i, j, img, polar, azimuth, rotation);
+        // printf("%s-> img[%d, %d, %x] polar[%d], azimuth[%d] rotation[%d]\n", __func__,  i, j, img, polar, azimuth, rotation);
     }
 
     cube->flag_need_update = true;
@@ -201,9 +208,17 @@ compo_cube_t *compo_cube_create(compo_form_t *frm, s16 radius, compo_cube_item_t
     cube->img_area = gui_image_get_size(item[0].res_addr);
 
     //初始角度
-    cube->sph.rotation = 2250;
+    cube->sph.rotation = 0;//2250;
     cube->sph.polar = 550;
-    cube->sph.azimuth = 920;
+    cube->sph.azimuth = 1400;//920;
+#if CUBE_TOUCH_STOP_WAIT_TIME
+    cube->move_cb.flag_stop_wait = true;
+    cube->move_cb.flag_auto_spin = false;
+    cube->move_cb.stop_wait_tick = tick_get();
+#else
+    cube->move_cb.flag_auto_spin = true;
+    cube->move_cb.flag_stop_wait = false;
+#endif
     compo_cube_update(cube);
     return cube;
 }
@@ -409,6 +424,15 @@ void compo_cube_move(compo_cube_t *cube)
         {
             mcb->flag_move_auto = false;              //移动完成
             compo_cube_update(cube);
+            // 惯性减速完成，切换到停止等待状态
+#if CUBE_TOUCH_STOP_WAIT_TIME
+            mcb->flag_auto_spin = false;
+            mcb->flag_stop_wait = true;
+#else
+            mcb->flag_stop_wait = false;
+            mcb->flag_auto_spin = true;
+#endif
+            mcb->stop_wait_tick = tick_get();
         }
         else if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
         {
@@ -446,6 +470,41 @@ void compo_cube_move(compo_cube_t *cube)
             compo_cube_update(cube);
         }
     }
+
+#if CUBE_AUTO_SPIN_SPEED
+#if CUBE_TOUCH_STOP_WAIT_TIME
+    if (mcb->flag_stop_wait)
+    {
+        // 停止等待逻辑
+        if (tick_check_expire(mcb->stop_wait_tick, CUBE_TOUCH_STOP_WAIT_TIME))
+        {
+            mcb->flag_stop_wait = false;
+            mcb->flag_auto_spin = true;
+            mcb->tick = tick_get();
+#if CUBE_ROLL360_MODE
+            if(mcb->roll_azimuth == 0)
+            {
+                mcb->roll_azimuth = 450;
+            }
+#endif
+        }
+    }
+#endif
+    if (mcb->flag_auto_spin)
+    {
+        // 匀速自转逻辑
+        if (tick_check_expire(mcb->tick, ANIMATION_TICK_EXPIRE))
+        {
+            mcb->tick = tick_get();
+#if CUBE_ROLL360_MODE
+            compo_cube_roll(cube, CUBE_AUTO_SPIN_SPEED);
+#else
+            compo_cube_set_rotation(cube, cube->sph.rotation - CUBE_AUTO_SPIN_SPEED);
+#endif
+            compo_cube_update(cube);
+        }
+    }
+#endif
 }
 
 /**
@@ -466,6 +525,8 @@ void compo_cube_move_control(compo_cube_t *cube, int cmd)
             //开始拖动
             mcb->flag_drag = true;
             mcb->flag_move_auto = false;
+            mcb->flag_auto_spin = false;
+            mcb->flag_stop_wait = false; // 退出所有自动状态
             mcb->focus_sph = cube->sph;
             break;
 

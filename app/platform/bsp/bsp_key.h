@@ -37,6 +37,7 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define MSG_CTP_COVER           0xAC
 
 #define MSG_CHECK_LANGUAGE      0xAD        //语言切换
+#define MSG_REBUILD_FUNC        0xAE        //重建界面
 
 //编码器
 #define MSG_QDEC_FORWARD        0xBF
@@ -87,6 +88,8 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define EVT_MSGBOX_EXIT         0xc2
 #define EVT_WATCH_MSG_POP_UP    0xc3
 #define EVT_WATCH_TIMER_DONE    0xc4
+#define EVT_CLOCK_SUB_SIDE_EXIT 0xc5
+
 
 #define EVT_ECIG_SMOKE_REMINDER 0xd7
 

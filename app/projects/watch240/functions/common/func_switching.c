@@ -299,6 +299,19 @@ static bool func_switching_lr_alpha(u16 switch_mode, bool flag_auto, void* param
         {
             break;
         }
+        switch(msg_dequeue())
+        {
+            case EVT_MSGBOX_EXIT:
+            case EVT_CLOCK_DROPDOWN_EXIT:
+            case EVT_CLOCK_SUB_SIDE_EXIT:
+            case EVT_WATCH_TIMER_DONE:
+                compo_form_set_pos(frm_last, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+                compo_form_set_pos(frm_cur, GUI_SCREEN_WIDTH*2, GUI_SCREEN_CENTER_Y);
+                compo_form_scale_to(frm_last, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+                compo_form_set_alpha(frm_last, 255);
+                return (flag_pos == FLAG_POS_END);
+                break;
+        }
     }
     return (flag_pos == FLAG_POS_END);
 }
@@ -478,6 +491,19 @@ static bool func_switching_lr(u16 switch_mode, bool flag_auto)
         {
             break;
         }
+        switch(msg_dequeue())
+        {
+            case EVT_MSGBOX_EXIT:
+            case EVT_CLOCK_DROPDOWN_EXIT:
+            case EVT_CLOCK_SUB_SIDE_EXIT:
+            case EVT_WATCH_TIMER_DONE:
+                compo_form_set_pos(frm_last, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+                compo_form_set_pos(frm_cur, GUI_SCREEN_WIDTH*2, GUI_SCREEN_CENTER_Y);
+                compo_form_scale_to(frm_last, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+                compo_form_set_alpha(frm_last, 255);
+                return (flag_pos == FLAG_POS_END);
+                break;
+        }
     }
     return (flag_pos == FLAG_POS_END);
 }
@@ -496,6 +522,7 @@ static bool func_switching_ud(u16 switch_mode, bool flag_auto)
     s32 ypos1 = GUI_SCREEN_CENTER_Y;
     s32 ypos2, ypos2_start;
     s32 y_distance;
+    bool interrupt_flag = false;
     if (frm_last == NULL || frm_cur == NULL)
     {
         halt(HALT_FUNC_SWITCH_UD_PTR);
@@ -591,7 +618,25 @@ static bool func_switching_ud(u16 switch_mode, bool flag_auto)
             dy += dy_auto;
             flag_change = true;
         }
-
+        switch (msg_dequeue())
+        {
+            case EVT_MSGBOX_EXIT:
+            case EVT_CLOCK_DROPDOWN_EXIT:
+            case EVT_CLOCK_SUB_SIDE_EXIT:
+            case EVT_WATCH_TIMER_DONE:
+                if (switch_mode == FUNC_SWITCH_UD_ZOOM_UP || switch_mode == FUNC_SWITCH_UD_UP)
+                {
+                    dy = -y_distance;
+                }
+                else
+                {
+                    dy = y_distance;
+                }
+                flag_change = true;
+                flag_press = false;
+                interrupt_flag = true;
+                break;
+        }
         if (flag_change)
         {
             switch (switch_mode)
@@ -651,6 +696,10 @@ static bool func_switching_ud(u16 switch_mode, bool flag_auto)
             }
         }
         func_process();
+        if(interrupt_flag)
+        {
+            flag_pos = FLAG_POS_START;
+        }
         if (!flag_auto)
         {
             func_switching_message(msg_dequeue());
@@ -677,6 +726,7 @@ static bool func_switching_menu(u16 switch_mode, bool flag_auto)
     u32 tick = tick_get();
     int xpos = GUI_SCREEN_CENTER_X;
     int ypos = GUI_SCREEN_CENTER_Y;
+    bool interrupt_flag = false;
     if (sub_frm == NULL)
     {
         halt(HALT_FUNC_SWITCH_MENU_PTR);
@@ -787,6 +837,32 @@ static bool func_switching_menu(u16 switch_mode, bool flag_auto)
             dy += dy_auto;
             flag_change = true;
         }
+        switch (msg_dequeue())
+        {
+            case EVT_MSGBOX_EXIT:
+            case EVT_CLOCK_DROPDOWN_EXIT:
+            case EVT_CLOCK_SUB_SIDE_EXIT:
+            case EVT_WATCH_TIMER_DONE:
+                interrupt_flag = true;
+                if (switch_mode == FUNC_SWITCH_MENU_DROPDOWN_UP || switch_mode == FUNC_SWITCH_MENU_DROPDOWN_DOWN)
+                {
+                    interrupt_flag = false;
+                    dy = -GUI_SCREEN_HEIGHT;
+                }
+                else if (switch_mode == FUNC_SWITCH_MENU_PULLUP_DOWN || switch_mode == FUNC_SWITCH_MENU_PULLUP_UP)
+                {
+                    dy = GUI_SCREEN_HEIGHT;
+                }
+                else if (switch_mode == FUNC_SWITCH_MENU_SIDE_BACK || switch_mode == FUNC_SWITCH_MENU_SIDE_POP)
+                {
+                    interrupt_flag = false;
+                    dx = -GUI_SIDE_MENU_WIDTH;
+                }
+
+                flag_change = true;
+                flag_press = false;
+                break;
+        }
         if (flag_change)
         {
             switch (switch_mode)
@@ -872,6 +948,10 @@ static bool func_switching_menu(u16 switch_mode, bool flag_auto)
             compo_form_set_pos(sub_frm, xpos, ypos);
         }
         func_process();
+        if(interrupt_flag)
+        {
+            flag_pos = FLAG_POS_START;
+        }
         if (!flag_auto)
         {
             func_switching_message(msg_dequeue());
@@ -901,6 +981,7 @@ static bool func_switching_zoom(u16 switch_mode, bool flag_auto, widget_icon_t *
     s32 back_rate, back_x, back_y, back_wid, back_hei, back_alpha, back_hide_hei;
     s32 d_rate;
     u32 tick = tick_get();
+    bool interrupt_flag = false;
 
     if (icon == NULL)
     {
@@ -1040,6 +1121,22 @@ static bool func_switching_zoom(u16 switch_mode, bool flag_auto, widget_icon_t *
             dx += dx_auto;
             flag_change = true;
         }
+
+        switch (msg_dequeue())
+        {
+            case EVT_MSGBOX_EXIT:
+            case EVT_CLOCK_DROPDOWN_EXIT:
+            case EVT_CLOCK_SUB_SIDE_EXIT:
+            case EVT_WATCH_TIMER_DONE:
+                if(uteModuleGuiCommonIsSwitchToMenu())
+                {
+                    interrupt_flag = true;
+                }
+                dx = GUI_SCREEN_WIDTH;
+                flag_change = true;
+                break;
+        }
+
         if (flag_change)
         {
             switch (switch_mode)
@@ -1167,6 +1264,10 @@ static bool func_switching_zoom(u16 switch_mode, bool flag_auto, widget_icon_t *
             {
                 func_switching_message(msg_dequeue());
             }
+        }
+        if(interrupt_flag)
+        {
+            flag_pos = FLAG_POS_START;
         }
         if (flag_pos != FLAG_POS_NORM)
         {

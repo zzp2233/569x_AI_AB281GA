@@ -28,6 +28,7 @@ enum
 
     PASS_SHAPE_BG_ID,
     PASS_TXT_ID,
+    PASS_BTN_ID,
 };
 
 
@@ -171,6 +172,12 @@ compo_form_t * func_ageing_mode_create(u8 mode,u8 time)
     compo_setid(textbox,PASS_TXT_ID);
     compo_textbox_set_visible(textbox, false );
 
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, widget_text_get_area(textbox->txt).wid*2, widget_text_get_area(textbox->txt).hei*2);
+    compo_setid(btn,PASS_BTN_ID);
+
+
+
     return frm;
 }
 
@@ -199,6 +206,14 @@ static void func_test_mode_click(void)
             break;
         case NO_BTN_ID:
             func_back_to();
+            break;
+        case PASS_BTN_ID:
+            if ( f_ageing->test_state==true)
+            {
+                func_back_to();
+            }
+
+
             break;
         case YES_BTN_ID:
         {

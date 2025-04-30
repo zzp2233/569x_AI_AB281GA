@@ -29,6 +29,10 @@
 #include "ute_module_factorytest.h"
 #include "ute_module_music.h"
 #include "ute_module_gui_common.h"
+// #include "ute_module_menstrualcycle.h"
+#include "ute_module_newFactoryTest.h"
+#include "ute_module_localRingtone.h"
+// #include "ute_module_appbinding.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -41,18 +45,14 @@
 #include "ute_module_stopwatch.h"
 #include "ute_module_breathtraining.h"
 #include "ute_module_countdown.h"
-#include "ute_module_menstrualcycle.h"
 #include "ute_module_temperature.h"
 #include "ute_module_emotionPressure.h"
 #include "UTEsecurityCode.h"
 #include "ute_picture_font_common.h"
-#include "ute_module_newFactoryTest.h"
 #include "ute_module_lockScreen.h"
 #include "ute_module_game.h"
 #include "ute_module_calculator.h"
-#include "ute_module_localRingtone.h"
 #include "ute_module_earphone.h"
-#include "ute_module_appbinding.h"
 #include "ute_module_quickReply.h"
 #include "ute_module_gui_string.h"
 #include "ute_module_ecg.h"
@@ -66,7 +66,6 @@
 #include "ute_module_earphone.h"
 #endif
 
-#include "ute_module_appbinding.h"
 #if UTE_MODULE_ALI_UPAY_SUPPORT||UTE_MODULE_ALI_UPAY_V02_SUPPORT
 #include "ute_module_aliUpay.h"
 #endif
@@ -319,13 +318,12 @@ void uteApplicationCommonStartupSecond(void)
         // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isDelayDisplayCharger=%d", __func__,uteDrvBatteryCommonIsDelayDisplayCharger());
 
         // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,HasBindingBefore=%d , HasConnectOurApp = %d", __func__,uteModuleAppBindingGetHasBindingBefore(),uteApplicationCommonIsHasConnectOurApp());
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,uteDrvBatteryCommonGetLvl=%d", __func__,uteDrvBatteryCommonGetLvl());
         if(0)
 #if UTE_DRV_BATTERY_USE_UTE_PERCENTAGE_SUPPORT
         {}
         else if(uteDrvBatteryCommonIsDelayDisplayCharger())
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID, 0, __func__);
         }
 #endif
         else if(uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL || CHARGE_DC_IN()) //USB插入
@@ -336,14 +334,14 @@ void uteApplicationCommonStartupSecond(void)
             data->mode = FACTORY_TEST_MODE_FACTORY;
             data->justDisplayCross = true;
             data->moduleType = FACTORY_MODULE_CROSS;
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID, 0, __func__);
 #elif UTE_MODULE_NEW_FACTORY_TEST_JUST_SCREEN_TP_SUPPORT
             ute_new_factory_test_data_t *data;
             uteModuleNewFactoryTestSetMode(&data);
             data->mode = FACTORY_TEST_MODE_FACTORY;
             data->justDisplayScreenTp = true;
             data->moduleType = FACTORY_MODULE_RGB;
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID, 0, __func__);
 #elif UTE_MODULE_NEW_FACTORY_TEST_JUST_HEART_CHECK_LIGHT_SUPPORT
             uteModuleNewFactoryTestInit();
             ute_new_factory_test_data_t *data;
@@ -354,10 +352,10 @@ void uteApplicationCommonStartupSecond(void)
             uteModuleNewFactoryTestSetCheckLightMode(NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK);
             uteModuleHeartStartSingleTesting(TYPE_HEART);
             uteDrvHeartVcxxStartCrosstalktest();
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID, 0, __func__);
 #else
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWERON_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWERON_ID, 0, __func__);
 #else
             if(0)
             {}
@@ -365,21 +363,21 @@ void uteApplicationCommonStartupSecond(void)
             else if((uteModuleAppBindingGetHasBindingBefore()!=HAS_BEEN_CONNECTED)&&(!uteApplicationCommonIsHasConnectOurApp()))
             {
 #if UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWER_ON_LANGUAGE_SELECT_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWER_ON_LANGUAGE_SELECT_ID, 0, __func__);
 #else
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_LANGUAGE_SELECT_LIST_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_LANGUAGE_SELECT_LIST_ID, 0, __func__);
 #endif
             }
 #endif
 #if (UTE_MODULE_SCREENS_APP_BINDING_SUPPORT)//如果没有开机界面，在这里跳转至绑定界面 dengli.lu 2022-02-28
             else if(uteModuleAppBindingGetHasBindingBefore()!=HAS_BEEN_CONNECTED)
             {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_ID, 0, __func__);
             }
 #endif
             else
             {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
             }
 #endif
 #endif
@@ -465,7 +463,29 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     if(!isConnected) /* ellison add ,2022-Jun-15 断开以后回到20 byte 兼容部分手机同步表盘失败*/
     {
         uteApplicationCommonSetMtuSize(20);
+#if UTE_MODULE_SCREENS_APP_BINDING_SUPPORT || UTE_USER_ID_FOR_BINDING_SUPPORT || UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT // dengli.lu, 2022-03-06
+#if (!UTE_APP_BINDING_ONLY_ONCENOTIFY_SUPPORT)
+        uteModuleAppBindingSetBindingNotify(false);
+#endif
+        uteModuleAppBindingSetOurAppConnection(false);
+#endif
+#if UTE_USER_ID_FOR_BINDING_SUPPORT
+        uteModuleAppBindingSetBindingStart(false);
+        uteModuleAppBindingSetBindingSecCnt(0);
+#endif
     }
+    else
+    {
+#if UTE_MODULE_SCREENS_APP_BINDING_SUPPORT || UTE_USER_ID_FOR_BINDING_SUPPORT || UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT // dengli.lu, 2022-03-06
+        uteModuleAppBindingSetOurAppConnection(false);
+#if (!UTE_APP_BINDING_ONLY_ONCENOTIFY_SUPPORT)
+        uteModuleAppBindingSetBindingNotify(false);
+#endif
+        uteModuleAppBindingSetBindingStart(false);
+        uteModuleAppBindingSetBindingSecCnt(0);
+#endif
+    }
+
     if(!uteApplicationCommonData.bleConnectState.isConnected)
     {
 #if UTE_MODULE_SPORT_SUPPORT
@@ -622,7 +642,7 @@ void uteApplicationCommonEverySecond(void)
 #if UTE_MODULE_SCREENS_APP_BINDING_NOTIFY_SUPPORT
                     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_NOTIFY_ID);
 #elif UTE_MODULE_SCREENS_APP_BINDING_SUPPORT
-                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_ID);
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_APP_BINDING_ID, 0, __func__);
 #endif
                 }
                 uint8_t bindingSecCnt = uteModuleAppBindingGetBindingSecCnt();
@@ -860,12 +880,15 @@ void uteApplicationCommonStartPowerOffMsg(void)
     }
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
-
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID, 0, __func__);
+#else
     if(!sys_cb.gui_sleep_sta)
     {
         gui_sleep();
     }
-
+    uteApplicationCommonData.isPowerOn = false;
+#endif
     uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
 #if UTE_MODULE_SPORT_SUPPORT
@@ -932,9 +955,7 @@ void uteApplicationCommonStartPowerOffMsg(void)
     // uteModuleFactoryTestStop();
     // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN|UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR|UTE_MODULE_PLATFORM_DLPS_BIT_KEYS|UTE_MODULE_PLATFORM_DLPS_BIT_UART);
 
-#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
-    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID);
-#else
+#if !UTE_MODULE_SCREENS_POWEROFF_SUPPORT
 //    uteModuleGuiCommonDisplayOff(true);
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
 #endif
@@ -1456,7 +1477,7 @@ void uteApplicationCommonCheckSoftwareVersion(void)
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,get project version:", __func__);
     UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL, &tempSoftwareVersion[0],7);
     UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL, &uteApplicationCommonData.softwareVersion[0],7);
-    // if((uteDrvBatteryCommonIsDelayDisplayCharger())||(uteDrvBatteryCommonGetLvl()>=UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL))
+    if((uteDrvBatteryCommonIsDelayDisplayCharger()) || (uteDrvBatteryCommonGetLvl() >= UTE_DRV_BATTERY_AUTO_POWER_OFF_LVL))
     {
 #if UTE_COMPARE_SOFTWARE_VERSION_AND_CLEAR_FLASH_SUPPORT
         if(memcmp(&tempSoftwareVersion[0],&uteApplicationCommonData.softwareVersion[0],7) != 0)

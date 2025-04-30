@@ -50,7 +50,7 @@ void bt_incall_time_update(void)
     u16 call_times = bt_cb.times;
 #endif
 
-    uteModuleCallUpdateCallingTimeSecond(call_times);
+    // uteModuleCallUpdateCallingTimeSecond(call_times);
 
     u8 hours   = call_times / 3600;
     u8 minutes = (call_times % 3600) / 60;

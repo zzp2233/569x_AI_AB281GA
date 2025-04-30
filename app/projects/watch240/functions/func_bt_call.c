@@ -394,6 +394,7 @@ static void func_bt_call_click(void)
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
 #define TXT_X_MIN 20
+#define SPACING_COUNT (-(GUI_SCREEN_HEIGHT/8))
 
 enum
 {
@@ -403,9 +404,78 @@ enum
     COMPO_ID_BTN_REJECT,
     COMPO_ID_BTN_MIC,
     COMPO_ID_TXT_IN_CALL,
-    COMPO_ID_PIC_VOICE,//音量
+    COMPO_ID_BTN_VOLUME,//音量
+    COMPO_ID_PIC_VOLUME,//音量等级
+    COMPO_ID_COLOR_BLACK,//刷黑
 };
+typedef struct f_bt_call_volume_t_
+{
+    bool touch_flag;
+    s8   level_value;
+} f_bt_call_volume_t;
+static s16 level_old = 0;
+static bool call_volume_flag = false;
 
+static void func_bt_call_volume_handle(void)
+{
+    f_bt_call_volume_t *f_bt_call_volume = (f_bt_call_volume_t *)func_cb.f_cb;
+    if(f_bt_call_volume->touch_flag)//触摸状态
+    {
+        s32 dx, dy;
+        f_bt_call_volume->touch_flag = ctp_get_dxy(&dx, &dy);//上一个条件默认是true,在这里重新获取状态以及更新
+        if(f_bt_call_volume->touch_flag == 0) //未按下，将记录系统通话音量
+        {
+            level_old = sys_cb.hfp_vol;
+            f_bt_call_volume->level_value = sys_cb.hfp_vol;
+        }
+        compo_picturebox_t *volume_pic = compo_getobj_byid(COMPO_ID_PIC_VOLUME);
+        if(f_bt_call_volume->touch_flag && dy != 0)//触摸状态
+        {
+            s8 level_data= (dy/SPACING_COUNT)+level_old;
+            if(level_data<1)
+                level_data=1;
+            else if(level_data>15)
+                level_data=15;
+
+            if(level_data != f_bt_call_volume->level_value)
+            {
+                if(level_data < f_bt_call_volume->level_value)
+                {
+                    bt_volume_down();
+                    f_bt_call_volume->level_value = level_data;
+                    compo_picturebox_cut(volume_pic,(uint8_t)level_data-1,15);
+                }
+                else if(level_data > f_bt_call_volume->level_value)
+                {
+                    bt_volume_up();
+                    f_bt_call_volume->level_value = level_data;
+                    compo_picturebox_cut(volume_pic,(uint8_t)level_data-1,15);
+                }
+            }
+        }
+        else
+        {
+            printf("%s\n",__func__);
+            // f_bt_call_volume->level_old = f_bt_call_volume->level_value;
+        }
+    }
+}
+static void func_bt_call_volume_pic_update(void)
+{
+    compo_picturebox_t *volume_pic = compo_getobj_byid(COMPO_ID_PIC_VOLUME);
+    compo_picturebox_cut(volume_pic,sys_cb.hfp_vol-1,15);
+    compo_shape_t *shape = compo_getobj_byid(COMPO_ID_COLOR_BLACK);
+    if(call_volume_flag)
+    {
+        compo_listbox_set_visible(volume_pic,true);
+        compo_listbox_set_visible(shape,true);
+    }
+    else
+    {
+        compo_listbox_set_visible(volume_pic,false);
+        compo_listbox_set_visible(shape,false);
+    }
+}
 static void func_bt_call_back_to(void)
 {
     u8 last_func = func_directly_back_to();
@@ -469,11 +539,9 @@ compo_form_t *func_bt_call_form_create(void)
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 28/2+56, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
-    // compo_textbox_set_align_center(name_txt, false);
     txt_leng = widget_text_get_area(name_txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    // compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_max_height()/2);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
@@ -483,9 +551,8 @@ compo_form_t *func_bt_call_form_create(void)
 
     compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
     compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
-//    compo_textbox_set_autosize(time_txt, true);
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
-    compo_textbox_set_forecolor(time_txt, COLOR_GREEN);
+    compo_textbox_set_forecolor(time_txt, COLOR_WHITE);
 
     //挂断按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);
@@ -498,9 +565,22 @@ compo_form_t *func_bt_call_form_create(void)
     compo_button_set_pos(btn, 166+60/2, 240);
 
     //音量按钮
-    // btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
-    // compo_setid(btn, COMPO_ID_PIC_VOICE);
-    // compo_button_set_pos(btn, 14+60/2, 240);
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
+    compo_setid(btn, COMPO_ID_BTN_VOLUME);
+    compo_button_set_pos(btn, 14+60/2, 240);
+
+    //刷黑
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_setid(shape, COMPO_ID_COLOR_BLACK);
+    compo_shape_set_color(shape, COLOR_BLACK);
+    //音量
+    compo_picturebox_t *volume_pic = compo_picturebox_create(frm, UI_BUF_I335001_CALL_20_ICON_VOLUME_68X200_X86_Y40_BIN);
+    compo_setid(volume_pic, COMPO_ID_PIC_VOLUME);
+    compo_picturebox_set_pos(volume_pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_cut(volume_pic,sys_cb.hfp_vol-1,15);
+
+    func_bt_call_volume_pic_update();
 
     return frm;
 }
@@ -524,11 +604,9 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 28/2+56, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
-    // compo_textbox_set_align_center(name_txt, false);
     txt_leng = widget_text_get_area(name_txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    // compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_max_height()/2);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
@@ -540,13 +618,10 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_setid(txt, COMPO_ID_TXT_IN_CALL);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-5, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(txt, i18n[STR_IN_CALL]);
-    compo_textbox_set_forecolor(txt, COLOR_GREEN);
-    // compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_forecolor(txt, COLOR_WHITE);
     txt_leng = widget_text_get_area(txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-    // compo_textbox_set_pos(txt,txt_x,138-widget_text_get_max_height()/2);
-//    printf("x:%d leng:%d\n",txt_x,txt_leng);
 
     //挂断按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);
@@ -559,9 +634,10 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_button_set_pos(btn, 166+60/2, 240);
 
     //音量按钮
-    // btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
-    // compo_setid(btn, COMPO_ID_PIC_VOICE);
-    // compo_button_set_pos(btn, 14+60/2, 240);
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
+    // compo_setid(btn, COMPO_ID_BTN_VOLUME);
+    compo_button_set_pos(btn, 14+60/2, 240);
+
 
     return frm;
 }
@@ -704,6 +780,10 @@ void func_bt_call_up_date_process(void)
 }
 void func_bt_call_process(void)
 {
+    if(call_volume_flag)
+    {
+        func_bt_call_volume_handle();
+    }
     func_bt_call_up_date_process();
     func_process();
     func_bt_sub_process();
@@ -769,7 +849,13 @@ static void func_bt_call_click(void)
                 compo_button_set_bgimg(btn,UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_02_LOUDSPEAKER_BIN);
             }
             break;
-
+        case COMPO_ID_BTN_VOLUME:           //进入音量设置界面
+            if(sys_cb.incall_flag)
+            {
+                call_volume_flag = true;
+                func_bt_call_volume_pic_update();
+            }
+            break;
         default:
             break;
     }
@@ -1546,7 +1632,12 @@ static void func_bt_call_message(size_msg_t msg)
             break;
 
         case MSG_CTP_CLICK:
-            func_bt_call_click();                           //单击按钮
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+            if(!call_volume_flag)//音量设置页面状态，true:显示，false:不显示
+#endif
+            {
+                func_bt_call_click();                           //单击按钮
+            }
             break;
 
         case EVT_CALL_NUMBER_UPDATE:
@@ -1556,7 +1647,15 @@ static void func_bt_call_message(size_msg_t msg)
         case MSG_SYS_500MS:
             reset_sleep_delay_all();                           //来电不休眠
             break;
-
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+        case MSG_CTP_LONG_RIGHT:                               //退出音量设置页面
+            if(call_volume_flag)
+            {
+                call_volume_flag = false;
+                func_bt_call_volume_pic_update();
+            }
+            break;
+#endif
         case MSG_QDEC_FORWARD:
         case MSG_QDEC_BACKWARD:
         case MSG_CTP_SHORT_LEFT:
@@ -1596,6 +1695,9 @@ void func_bt_call_enter(void)
 
 void func_bt_call_exit(void)
 {
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    call_volume_flag = false;//音量设置页面标志复位
+#endif
     bsp_bt_call_exit();
 #if UTE_MODULE_SCREENS_SCAN_SUPPORT
     if (func_cb.sta == FUNC_SCAN)

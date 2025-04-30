@@ -690,7 +690,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
     ///设置图片
     compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I332001_BLOODOXYGEN_GIF_BIN);
     compo_picturebox_cut(picbox, 0, 16);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 113/2+36);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 113/2+36+15);
     compo_setid(picbox,COMPO_ID_PIC_BG);
 
     compo_textbox_t *textbox;

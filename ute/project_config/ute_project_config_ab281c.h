@@ -167,6 +167,9 @@
 #define UTE_DRV_SCREEN_HEIGHT 284
 #endif
 
+//情绪压力模块
+#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
+
 #define UTE_MODULE_SCREENS_POWERON_SUPPORT            1 //开机logo界面
 #define UTE_MODULE_SCREENS_UP_MENU_SUPPORT            1 //上拉菜单
 #define UTE_MODULE_SCREENS_DWON_MENU_SUPPORT          1 //下拉菜单

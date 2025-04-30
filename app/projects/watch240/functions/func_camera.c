@@ -447,6 +447,12 @@ static void func_camera_button_handle(void)
         }
     }
 }
+
+static void func_camera_process_handle(void)
+{
+    return;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 ///非相机传输功能
 enum
@@ -559,6 +565,7 @@ static void func_camera_button_handle(void)
 }
 static void func_camera_process_handle(void)
 {
+    return;
 }
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 ///非相机传输功能
@@ -675,11 +682,11 @@ compo_form_t *func_camera_form_create(void)
         compo_setid(btn, ui_handle.btn.click_id);
 
         // 创建提示文本
-        compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[ui_handle.text.str_id1]));
-        compo_textbox_set_location(txt_start, ui_handle.text.x, ui_handle.text.y, ui_handle.text.w, ui_handle.text.h);
-        compo_textbox_set_align_center(txt_start, ui_handle.text.center);
-        compo_textbox_set(txt_start, i18n[ui_handle.text.str_id1]);
-        compo_setid(txt_start, ui_handle.text.id);
+        // compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[ui_handle.text.str_id1]));
+        // compo_textbox_set_location(txt_start, ui_handle.text.x, ui_handle.text.y, ui_handle.text.w, ui_handle.text.h);
+        // compo_textbox_set_align_center(txt_start, ui_handle.text.center);
+        // compo_textbox_set(txt_start, i18n[ui_handle.text.str_id1]);
+        // compo_setid(txt_start, ui_handle.text.id);
     }
 
     return frm;

@@ -85,7 +85,7 @@
 #define UTE_MODULE_HEART_STATIC_ALL_DAY_SUPPORT (1&UTE_MODULE_HEART_WEEK_STATIC_SUPPORT)
 
 /*! 情绪压力模块,xjc 2022-02-15*/
-#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
+#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 1
 
 /*! 活动界面列表形式,xjc 2022-02-15*/
 #define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT                1
@@ -161,31 +161,38 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 0
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 7
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
 #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18649001_BIN, \
                                                 UI_BUF_DIALPLATE_D18650001_BIN, \
                                                 UI_BUF_DIALPLATE_D18651001_BIN, \
                                                 UI_BUF_DIALPLATE_D18652001_BIN, \
                                                 UI_BUF_DIALPLATE_D18653001_BIN, \
+                                                UI_BUF_DIALPLATE_CUBE_LIGHT_BIN,\
+                                                UI_BUF_DIALPLATE_BTF_BIN,\
                                               }
-//    UI_BUF_DIALPLATE_BTF_BIN,
 //     UI_BUF_DIALPLATE_CUBE_BIN
 
-#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0 // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0      // 使用立方体表盘
-#define UTE_WATCHS_DIALPLATE_BTF_INDEX 5    // 蝴蝶表盘索引
-#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 6   // 立方体表盘索引
+#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1     // 使用蝴蝶表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1          // 使用立方体表盘
+#define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 0    // 使用光束立方体表盘
+#define UTE_WATCHS_DIALPLATE_BTF_INDEX 6        // 蝴蝶表盘索引
+#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 5       // 立方体表盘索引
+#define UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX  5// 立方体光束表盘索引
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
 
+/*! 床头钟模式(充电界面不息屏),wang.luo 2025-04-29 */
+#define UTE_MODULE_BEDSIDE_MODE_SUPPORT 0
+
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      1
 #define GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT      0
+#define GUI_SCREEN_SIZE_240X284RGB_I269032_SUPPORT      (1&UTE_MODULE_BEDSIDE_MODE_SUPPORT)
 
 #define UTE_DRV_CTP_SELECT              CTP_CHSC6X
-#define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN false
+#define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN 1
 /*! TP固件升级功能开关*/
 #define UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT 1
 
@@ -252,6 +259,7 @@
 #define UTE_MODULE_SCREENS_TOOLBOX_SUPPORT            1 //工具箱列表
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
 #define UTE_MODULE_SCREENS_EMOTION_SUPPORT            1 //情绪界面
+#define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      1 //情绪说明界面
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
 #endif
 
@@ -325,7 +333,7 @@
 #define UTE_MODULE_SPORT_GYMNASTICS_SUPPORT             1 //体操
 #define UTE_MODULE_SPORT_BOATING_SUPPORT                1 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
-#define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          1 //自由训练
+#define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          0 //自由训练
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
 #define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_SUPPORT             0 //0x1B,室内跑步

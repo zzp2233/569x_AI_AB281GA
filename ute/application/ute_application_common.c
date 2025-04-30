@@ -33,6 +33,7 @@
 #include "ute_module_newFactoryTest.h"
 #include "ute_module_localRingtone.h"
 #include "ute_module_appbinding.h"
+#include "ute_module_bedside_mode.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -281,6 +282,9 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #if UTE_MODULE_LOCAL_RINGTONE_VOLUME_SET
         uteModuleLocalRingtoneInit();
+#endif
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+        uteModuleBedsideModeInit();
 #endif
         //系统参数配置
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT

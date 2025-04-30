@@ -44,7 +44,9 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_HEART_RATE_BIN,             .str_idx=STR_HEART_RATE},            //心率
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-// #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {.func_sta=FUNC_PRESSURE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STRESS_BIN,                  .str_idx=STR_STRESS},               //压力
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_EXERCISE_BIN,               .str_idx=STR_SPORTS},                //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
@@ -66,9 +68,9 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {.func_sta=FUNC_ALARM_CLOCK,              .res_addr=UI_BUF_I335001_2_HONEYCOMB_ALARM_BIN,                 .str_idx=STR_ALARM_CLOCK},           //闹钟
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
-// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    // {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_MOOD_BIN,                  .str_idx=STR_EMOTION},              //情绪
-// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+    {.func_sta=FUNC_MOOD,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_MOOD_BIN,                  .str_idx=STR_EMOTION},              //情绪
+#endif // UTE_MODULE_SCREENS_EMOTION_SUPPORT
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {.func_sta=FUNC_BREATHE,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_BREATHE_BIN,               .str_idx=STR_BREATHE_TRAIN},         //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT

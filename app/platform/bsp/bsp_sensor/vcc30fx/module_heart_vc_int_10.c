@@ -84,6 +84,7 @@ static bool vclc09_pwr_sta = false;
 
 void vclc09_pwr_en(void)        //PF5
 {
+    printf("%s\n",__func__);
     // if(vcHr11.oscCheckFinishFlag == 0)
     {
         uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
@@ -103,7 +104,7 @@ void vclc09_pwr_en(void)        //PF5
 
 void vclc09_pwr_dis(void)       //PF5
 {
-    printf("vclc09_pwr_dis\n");
+    printf("%s\n",__func__);
     uteModulePlatformOutputGpioSet(IO_PF5,false);
     i2c_gsensor_init();
     uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);

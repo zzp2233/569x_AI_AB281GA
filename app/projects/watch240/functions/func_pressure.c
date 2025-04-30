@@ -221,7 +221,6 @@ static void func_pressure_button_click(void)
             if(f_pressure->up_data_flag)
             {
                 uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_INITIATIVE_QUIT);
-                uteModuleEmotionPressureStopSingleTestingMsgHandler(EP_STOP_REASION_INITIATIVE_QUIT);
             }
             else
             {
@@ -237,14 +236,12 @@ static void func_pressure_refresh(void)
 {
     f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
 
-    if(f_pressure->up_data_flag && uteModuleEmotionPressureIsWear()==false)
+    if(f_pressure->up_data_flag && !uteModuleEmotionPressureIsWear() && !uteModuleEmotionPressureIsTesting())
     {
-        uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_UNWEAR);
-        uteModuleEmotionPressureStopSingleTestingMsgHandler(EP_STOP_REASION_UNWEAR);
         u8 res = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-        if (res == MSGBOX_RES_OK && uteModuleEmotionPressureIsTesting() == false)
+        if (res == MSGBOX_RES_OK)
         {
-            uteModuleEmotionPressureStartSingleTesting(false);
+            // uteModuleEmotionPressureStartSingleTesting(false);
         }
     }
 
@@ -299,7 +296,7 @@ static void func_pressure_refresh(void)
 
 
         compo_animation_t *animation = compo_getobj_byid(COMPO_ID_PRESSURE_PIC);
-        compo_animation_set_interval(animation, f_pressure->up_data_flag?150:0);
+        compo_animation_set_interval(animation, f_pressure->up_data_flag?20:0);
 
         compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
         compo_button_set_bgimg(btn, f_pressure->up_data_flag ? UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_00_BIN:UI_BUF_I335001_15_EMOTIONS_1_1_EMOTIONS_ICON_PLAY_44X44_X180_Y62_01_BIN);
@@ -353,6 +350,10 @@ static void func_pressure_refresh(void)
 //压力功能消息处理
 static void func_pressure_process(void)
 {
+    if(uteModuleEmotionPressureIsTesting())
+    {
+        reset_guioff_delay();
+    }
     func_pressure_refresh();
     func_process();
 }
@@ -377,16 +378,16 @@ static void func_pressure_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_pressure_t));
     func_cb.frm_main = func_pressure_form_create();
-    uteModuleEmotionPressureStartSingleTesting(false);
+    f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
+    f_pressure->up_data_flag = uteModuleEmotionPressureIsTesting();
 }
 
 //退出压力功能
 static void func_pressure_exit(void)
 {
-    if(uteModuleEmotionPressureIsTesting() == false)
+    if(uteModuleEmotionPressureIsTesting())
     {
         uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_INITIATIVE_QUIT);
-        uteModuleEmotionPressureStopSingleTestingMsgHandler(EP_STOP_REASION_INITIATIVE_QUIT);
     }
     func_cb.last = FUNC_PRESSURE;
 }

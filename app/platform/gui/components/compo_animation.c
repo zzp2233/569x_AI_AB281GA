@@ -45,7 +45,8 @@ void compo_animation_set(compo_animation_t *animation, u32 res_addr)
 void compo_animation_manual_next(compo_animation_t *animation)
 {
     animation->index++;
-    if (animation->index >= animation->radix) {
+    if (animation->index >= animation->radix)
+    {
         animation->index = 0;
         compo_animation_click_set_notvis(animation);
     }
@@ -60,11 +61,13 @@ void compo_animation_manual_next(compo_animation_t *animation)
  **/
 void compo_animation_process(compo_animation_t *animation)
 {
-    if (animation->interval == 0) {
+    if (animation->interval == 0)
+    {
         return;
     }
 
-    if (tick_check_expire(animation->ticks, animation->interval)) {
+    if (tick_check_expire(animation->ticks, animation->interval))
+    {
         animation->ticks = tick_get();
         compo_animation_manual_next(animation);
     }
@@ -96,7 +99,7 @@ void compo_animation_set_radix(compo_animation_t *animation, u8 radix)
 /**
  * @brief 设置动画的播放间隔
  * @param[in] animation : 动画指针
- * @param[in] interval : 动画播放间隔
+ * @param[in] interval : 动画播放间隔 单位：10ms
  **/
 void compo_animation_set_interval(compo_animation_t *animation, u32 interval)
 {
@@ -109,14 +112,21 @@ void compo_animation_set_interval(compo_animation_t *animation, u32 interval)
 int compo_get_animation_id(void)
 {
     component_t *compo = (component_t *)compo_pool_get_top();
-    while (compo != NULL) {
-        if (compo->type == COMPO_TYPE_ANIMATION) {
+    while (compo != NULL)
+    {
+        if (compo->type == COMPO_TYPE_ANIMATION)
+        {
             compo_animation_t *animation = (compo_animation_t *)compo;
-            if (compo_animation_get_click(animation)) {
-                if (animation->bond_data == COMPO_BOND_IMAGE_CLICK) {
+            if (compo_animation_get_click(animation))
+            {
+                if (animation->bond_data == COMPO_BOND_IMAGE_CLICK)
+                {
                     return animation->id;
-                } else if (animation->bond_data == COMPO_BOND_ANIMATION_AREA_CLICK) {
-                    if (!widget_get_visble(animation->img)) {
+                }
+                else if (animation->bond_data == COMPO_BOND_ANIMATION_AREA_CLICK)
+                {
+                    if (!widget_get_visble(animation->img))
+                    {
                         return animation->id;
                     }
                 }
@@ -206,11 +216,15 @@ void compo_animation_set_roll(compo_animation_t *animation, u32 res_addr)
 {
     widget_image_t *img[animation->radix+1];
     widget_set_size(animation->page, animation->wid, animation->hei);
-    for (int i=0; i<=animation->radix; i++) {
+    for (int i=0; i<=animation->radix; i++)
+    {
         img[i] = widget_image_create(animation->page, res_addr);
-        if (i != animation->radix) {
+        if (i != animation->radix)
+        {
             widget_image_cut(img[i], 0, animation->hei * i, animation->wid, animation->hei);
-        } else {
+        }
+        else
+        {
             widget_image_cut(img[i], 0, animation->hei * 0, animation->wid, animation->hei);    //首尾图片一致
         }
         widget_set_align_center(img[i], false);
@@ -240,7 +254,8 @@ bool compo_animation_get_click(compo_animation_t *animation)
 {
     point_t pt = ctp_get_sxy();
     rect_t *rect = &animation->click_area;
-    if (abs_s(pt.x - rect->x) * 2 <= rect->wid && abs_s(pt.y - rect->y) * 2 <= rect->hei) {
+    if (abs_s(pt.x - rect->x) * 2 <= rect->wid && abs_s(pt.y - rect->y) * 2 <= rect->hei)
+    {
         return true;
     }
     return false;
@@ -251,7 +266,8 @@ bool compo_animation_get_click(compo_animation_t *animation)
  **/
 void compo_animation_click_set_vis(compo_animation_t *animation)
 {
-    if (animation->bond_data == COMPO_BOND_ANIMATION_AREA_CLICK) {
+    if (animation->bond_data == COMPO_BOND_ANIMATION_AREA_CLICK)
+    {
         point_t pt = ctp_get_rxy(func_cb.frm_main->page_body);
         compo_animation_set_pos(animation, pt.x, pt.y);
         compo_animation_set_index(animation, 0);
@@ -266,7 +282,8 @@ void compo_animation_click_set_vis(compo_animation_t *animation)
  **/
 void compo_animation_click_set_notvis(compo_animation_t *animation)
 {
-    if (animation->bond_data == COMPO_BOND_ANIMATION_AREA_CLICK) {
+    if (animation->bond_data == COMPO_BOND_ANIMATION_AREA_CLICK)
+    {
         compo_animation_set_visible(animation, false);
     }
 }

@@ -54,14 +54,14 @@ void uteDrvHeartVcxxStartPressureSample(void)
     uteModuleEmotionPressureData.vkPressureValue = 0;
 }
 
-void uteDrvHeartVcxxStopPressureSample(void)
+void uteDrvHeartVcxxStopPressureSample(uint8_t stopReasion)
 {
     uteModuleEmotionPressureData.isVkPressureTesting = false;
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
     uteModuleEmotionPressureData.isVkPressureTesting = false;
     StressOutputData_t vkPressureData;
     StressEst_Output(&vkPressureData);
-    if (vkPressureData.strData > 0 && vkPressureData.strData < 100)
+    if (stopReasion == EP_STOP_REASION_SUCCESS && vkPressureData.strData > 0 && vkPressureData.strData < 100)
     {
         uteModuleEmotionPressureData.vkPressureValue = vkPressureData.strData;
     }
@@ -482,8 +482,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
 #endif
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 维客算法停止测试和采样
     uteModuleHeartStopSingleTesting(TYPE_HEART);
-    uteDrvHeartVcxxStopPressureSample();
-
+    uteDrvHeartVcxxStopPressureSample(stopReasion);
     if ((uteDrvHeartVcxxGetVkPressureValue() == 0) || (uteDrvHeartVcxxGetVkPressureValue() == 0xff))
     {
         stopReasion = EP_STOP_REASION_TIMEOUT;
@@ -534,10 +533,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
     uteModuleEmotionPressureData.isAppStartTesting = false;
     uteModuleEmotionPressureData.isEmotionPressureAutoTestFlag = false;
     uteModuleEmotionPressureData.testingSecond = 0;
-#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 维客算法结束测试往上提
-    uteModuleHeartStopSingleTesting(TYPE_HEART);
-    uteDrvHeartVcxxStopPressureSample();
-#else
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 维客算法结束测试往上提
     uteModuleEmotionPressureData.stopSendMidValue = true;
     uteModuleHeartStopSingleTestingMsgHandler((uint32_t)TYPE_EMOTION_PRESSURE);
 #endif

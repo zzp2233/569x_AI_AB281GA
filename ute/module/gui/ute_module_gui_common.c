@@ -950,7 +950,7 @@ bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void)
     }
 #endif
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-    if((id == UTE_MOUDLE_SCREENS_PRESSURE_ID || id == UTE_MOUDLE_SCREENS_EMOTION_ID || id == UTE_MOUDLE_SCREENS_FATIGUE_ID)\
+    if((id == FUNC_PRESSURE || id == FUNC_MOOD || id == UTE_MOUDLE_SCREENS_FATIGUE_ID)\
        &&(uteModuleEmotionPressureIsTesting()))
     {
         result =true;
@@ -1138,13 +1138,13 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
             return false;
         }
 #endif
-#if 0// UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
         if ((
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-                (id == UTE_MOUDLE_SCREENS_PRESSURE_ID)
+                (id == FUNC_PRESSURE)
 #endif
 #if UTE_MODULE_SCREENS_EMOTION_SUPPORT
-                || (id == UTE_MOUDLE_SCREENS_EMOTION_ID)
+                || (id == FUNC_MOOD)
 #endif
 #if UTE_MODULE_SCREENS_FATIGUE_SUPPORT
                 || (id == UTE_MOUDLE_SCREENS_FATIGUE_ID)

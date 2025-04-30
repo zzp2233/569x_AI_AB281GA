@@ -107,7 +107,6 @@ compo_form_t *func_mood_form_create(void)
 
     }
 
-
     return frm;
 }
 //单击按钮
@@ -125,7 +124,6 @@ static void func_mood_button_click(void)
             if(f_bo->up_data_flag)
             {
                 uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_INITIATIVE_QUIT);
-                uteModuleEmotionPressureStopSingleTestingMsgHandler(EP_STOP_REASION_INITIATIVE_QUIT);
             }
             else
             {
@@ -138,14 +136,12 @@ static void func_mood_refresh_update(void)
 {
     f_mood_t *f_bo = (f_mood_t *)func_cb.f_cb;
 
-    if(f_bo->up_data_flag && uteModuleEmotionPressureIsWear()==false)
+    if(f_bo->up_data_flag && !uteModuleEmotionPressureIsWear() && !uteModuleEmotionPressureIsTesting())
     {
-        uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_UNWEAR);
-        uteModuleEmotionPressureStopSingleTestingMsgHandler(EP_STOP_REASION_UNWEAR);
         u8 res = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-        if (res == MSGBOX_RES_OK && uteModuleEmotionPressureIsTesting() == false)
+        if (res == MSGBOX_RES_OK)
         {
-            uteModuleEmotionPressureStartSingleTesting(false);
+            // uteModuleEmotionPressureStartSingleTesting(false);
         }
     }
 
@@ -191,6 +187,10 @@ static void func_mood_refresh_update(void)
 //血氧界面刷新、事件处理
 static void func_mood_process(void)
 {
+    if(uteModuleEmotionPressureIsTesting())
+    {
+        reset_guioff_delay();
+    }
     func_mood_refresh_update();
     func_process();
 }
@@ -216,17 +216,17 @@ static void func_mood_message(size_msg_t msg)
 static void func_mood_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_mood_t));
+    f_mood_t *f_mood = (f_mood_t *)func_cb.f_cb;
     func_cb.frm_main = func_mood_form_create();
-    uteModuleEmotionPressureStartSingleTesting(false);
+    f_mood->up_data_flag = uteModuleEmotionPressureIsTesting();
 }
 
 //退出血氧功能
 static void func_mood_exit(void)
 {
-    if(uteModuleEmotionPressureIsTesting() == false)
+    if(uteModuleEmotionPressureIsTesting())
     {
         uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_INITIATIVE_QUIT);
-        uteModuleEmotionPressureStopSingleTestingMsgHandler(EP_STOP_REASION_INITIATIVE_QUIT);
     }
     func_cb.last = FUNC_MOOD;
 }

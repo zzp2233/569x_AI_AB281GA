@@ -2646,17 +2646,16 @@ void uteModuleProtocolEmotionPressureCtrl(uint8_t*receive,uint8_t length)
         if(isNeedStart)
         {
             uteModuleEmotionPressureStartSingleTesting(true);
-#if 0
             switch (receive[2])
             {
 #if UTE_MODULE_SCREENS_EMOTION_SUPPORT
                 case 0: // 情绪
-                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_EMOTION_ID, 0, __func__);
+                    uteTaskGuiStartScreen(FUNC_MOOD, 0, __func__);
                     break;
 #endif
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
                 case 1: // 压力
-                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_PRESSURE_ID, 0, __func__);
+                    uteTaskGuiStartScreen(FUNC_PRESSURE, 0, __func__);
                     break;
 #endif
 #if UTE_MODULE_SCREENS_FATIGUE_SUPPORT
@@ -2666,11 +2665,10 @@ void uteModuleProtocolEmotionPressureCtrl(uint8_t*receive,uint8_t length)
 #endif
                 default:
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_PRESSURE_ID, 0, __func__);
+                    uteTaskGuiStartScreen(FUNC_PRESSURE, 0, __func__);
 #endif
                     break;
             }
-#endif
         }
         else
         {

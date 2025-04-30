@@ -356,22 +356,22 @@ compo_form_t *func_sleep_form_create(void)
             if (sleep_data->sleep_record[i].state == DEEP_SLEEP)
             {
                 compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
-                compo_shape_set_color(shape, make_color(0x69, 0x7e, 0xff));
+                compo_shape_set_color(shape, make_color(127, 43, 235));
             }
             else if (sleep_data->sleep_record[i].state == LIGHT_SLEEP)
             {
                 compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
-                compo_shape_set_color(shape, make_color(0x36, 0xb7, 0xff));
+                compo_shape_set_color(shape, make_color(192, 67, 255));
             }
             else if (sleep_data->sleep_record[i].state == AWAKE_SLEEP)
             {
                 compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
-                compo_shape_set_color(shape, make_color(0xff, 0x87, 0x0f));
+                compo_shape_set_color(shape, make_color(254, 255, 210));
             }
             else if (sleep_data->sleep_record[i].state == REM_SLEEP)
             {
                 compo_shape_set_location(shape, startX + fillRect_x + (fillRect_w / 2), fillRect_y, fillRect_w, fillRect_h);
-                compo_shape_set_color(shape, make_color(0x00, 0xf7, 0xd6));
+                compo_shape_set_color(shape, make_color(245, 170, 68));
             }
 
             // 更新起始点

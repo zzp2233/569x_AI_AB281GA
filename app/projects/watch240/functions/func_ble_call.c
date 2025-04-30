@@ -83,27 +83,18 @@ compo_form_t *func_ble_call_form_create(void)
 
     ute_bt_call_data_t callData;
     uteModuleCallGetData(&callData);
-    //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_PHONE]);
 
+    //名字
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH/1.2, 50);
-//    compo_textbox_set_autosize(name_txt, true);
     compo_textbox_set(name_txt, (char*)callData.name);
-//    compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
-//    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-//    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
-////    compo_textbox_set_autosize(number_txt, true);
-//    compo_textbox_set(number_txt, (char*)callData.number);
-//    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
-
+    //txt 来电
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
-    compo_textbox_set_forecolor(txt, COLOR_GREEN);
+    compo_textbox_set_forecolor(txt, COLOR_WHITE);
 
     //挂断
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);

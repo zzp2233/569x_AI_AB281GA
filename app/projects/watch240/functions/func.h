@@ -47,8 +47,10 @@ enum
     FUNC_ALARM_CLOCK_SUB_EDIT,          //闹钟--编辑
     FUNC_ALARM_CLOCK_SUB_POP,           //闹钟--弹出
     FUNC_BLOOD_OXYGEN,                  //血氧
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
     FUNC_PRESSURE,                      //压力
     FUNC_PRESSURE_EXPLAIN,              //压力说明
+#endif
     FUNC_LONG_PRESS,                    //关机 重启 SOS
     FUNC_BLOODSUGAR,                    //血糖
     FUNC_BLOOD_PRESSURE,                //血压

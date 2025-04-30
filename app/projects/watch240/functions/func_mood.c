@@ -216,9 +216,7 @@ static void func_mood_message(size_msg_t msg)
 static void func_mood_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_mood_t));
-    f_mood_t *f_mood = (f_mood_t *)func_cb.f_cb;
     func_cb.frm_main = func_mood_form_create();
-    f_mood->up_data_flag = uteModuleEmotionPressureIsTesting();
 }
 
 //退出血氧功能

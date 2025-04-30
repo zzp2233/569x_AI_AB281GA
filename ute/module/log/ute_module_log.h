@@ -1,10 +1,3 @@
-/*
- * @brief:
- * @LastEditors: ljf
- * @LastEditTime: 2025-02-25 17:31:57
- * @FilePath: \AB5691_SDK\ute\module\log\ute_module_log.h
- * @Date: 2025-02-13 10:22:32
- */
 /**
 *@file
 *@brief     ute log 模块h文件

@@ -4,7 +4,7 @@
 
 #if CHARGE_EN
 
-#define TRACE_EN                0
+#define TRACE_EN                UTE_LOG_DRV_BAT_LVL
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -53,6 +53,7 @@ void bsp_charge_sta(u8 sta)
             {
                 msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
                 msg_enqueue(EVT_MSGBOX_EXIT);
+                msg_enqueue(EVT_CLOCK_SUB_SIDE_EXIT);
             }
             func_cb.sta = FUNC_CHARGE;
         }
@@ -125,7 +126,16 @@ void bsp_charge_init(void)
         p->trick_stop_volt = CHARGE_TRICK_STOP_VOLT;
         p->stop_volt = CHARGE_STOP_VOLT;
         p->follow_volt = CHARGE_VOLT_FOLLOW;
+#if UTE_DRV_BATTERY_CUSTOM_CHARGE_CURRENT_SUPPORT
+        p->const_curr = UTE_DRV_BATTERY_CHARGE_CURRENT / 5 - 1;
+        if(p->const_curr > 63 || p->const_curr == 0)
+        {
+            p->const_curr = CHARGE_CONSTANT_CURR;
+        }
+#else
         p->const_curr = CHARGE_CONSTANT_CURR;
+#endif
+        printf("bsp_charge_init,const_curr:%d ma\n",p->const_curr*5+5);
         p->trick_curr = CHARGE_TRICKLE_CURR;
         p->stop_curr = CHARGE_STOP_CURR;
         p->stop_curr_thd = 80;

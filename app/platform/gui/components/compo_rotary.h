@@ -2,6 +2,7 @@
 #define _COMPO_ROTARY_H
 
 #define ROTARY_ITEM_CNT_MAX                     7
+#define ROTARY_ITEM_CNT_MIN                     3
 
 
 //转盘移动控制命令

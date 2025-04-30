@@ -1588,7 +1588,7 @@ void func_message(size_msg_t msg)
                 // }
                 // else
                 {
-                    uteTaskGuiStartScreen(FUNC_ECIG_REMINDER);
+                    uteTaskGuiStartScreen(FUNC_ECIG_REMINDER, 0, __func__);
                 }
 
 

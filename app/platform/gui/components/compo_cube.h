@@ -48,6 +48,9 @@ typedef struct compo_cube_move_cb_t_
     bool flag_move_auto;                //自动移到坐标
     u8 sta;
     u8 animation_cnt;
+    bool flag_auto_spin;                //匀速自转标志
+    bool flag_stop_wait;                //停止等待标志
+    u32 stop_wait_tick;                 //停止等待定时器
 } compo_cube_move_cb_t;
 
 

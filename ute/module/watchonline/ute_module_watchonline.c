@@ -325,25 +325,23 @@ void uteModuleWatchOnlineReadyStart(void)
     uteModuleWatchOnlineData.lastReceiveIndex = -1;
     uteModuleWatchOnlineData.lastEraseAddress = uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex];
     if(uteModuleWatchOnlineData.multipleValidWatchCnt)uteModuleWatchOnlineData.multipleValidWatchCnt--;// cxd add 2022-08-24
-    //Casen add 2020-02-24
-    uteModulePlatformFlashNorErase(uteModuleWatchOnlineData.lastEraseAddress);
     uteModuleWatchOnlineData.receiveTimeout = 1; //Casen add 2020-10-26
     bool isUpdateWatch = uteModuleWatchOnlineUpddateDefaultWatchIndex();
 
-    UTE_MODULE_LOG(1, "%s,need erase lastEraseAddress=0x%x\r\n", __func__,uteModuleWatchOnlineData.lastEraseAddress);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,need erase lastEraseAddress=0x%x\r\n", __func__, uteModuleWatchOnlineData.lastEraseAddress);
 
     //先跳转到主表盘界面
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 //    if(/*isUpdateWatch||*/!uteModuleGuiCommonIsDisplayOn())
     {
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SYNC_WATCH_ONLINE_ID);
+        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_SYNC_WATCH_ONLINE_ID, 0, __func__);
     }
 #else
     if(isUpdateWatch||!uteModuleGuiCommonIsDisplayOn())
     {
-        if(func_cb.sta != FUNC_CLOCK)
+        if(uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_WATCHMAIN_ID)
         {
-            uteTaskGuiStartScreen(FUNC_CLOCK);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
         }
         else
         {
@@ -356,6 +354,8 @@ void uteModuleWatchOnlineReadyStart(void)
         }
     }
 #endif
+    //Casen add 2020-02-24
+    uteModulePlatformFlashNorErase(uteModuleWatchOnlineData.lastEraseAddress);
 }
 
 uint8_t uteModuleWatchOnlineDataWrite(const uint8_t *data, uint32_t size)
@@ -496,9 +496,9 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     else
 #endif
     {
-        if(func_cb.sta != FUNC_CLOCK)
+        if(uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_WATCHMAIN_ID)
         {
-            uteTaskGuiStartScreen(FUNC_CLOCK);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
         }
         else
         {

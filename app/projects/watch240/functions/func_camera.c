@@ -557,6 +557,9 @@ static void func_camera_button_handle(void)
         }
     }
 }
+static void func_camera_process_handle(void)
+{
+}
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 ///非相机传输功能
 enum

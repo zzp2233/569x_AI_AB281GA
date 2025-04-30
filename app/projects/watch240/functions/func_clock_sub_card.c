@@ -1879,10 +1879,10 @@ void music_data_refresh(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-#define CARD_SCALE_START_POS            228//265                                                                     //卡片开始缩小位置
+#define CARD_SCALE_START_POS            250//265                                                                     //卡片开始缩小位置
 #define CARD_SCALE_STOP_POS             360//320                                                                     //卡片停止缩小位置
-#define CARD_SCALE_STOP_Y               (CARD_SCALE_STOP_POS + 200 * 2)                                         //卡片停止缩小实际位置（越大缩小越慢，可见叠加越多）
-#define CARD_WIDTH_MIN                  150//200                                                                     //卡片缩小的最小宽度
+#define CARD_SCALE_STOP_Y               (CARD_SCALE_STOP_POS + 200+90 )                                         //卡片停止缩小实际位置（越大缩小越慢，可见叠加越多）
+#define CARD_WIDTH_MIN                  100//200                                                                     //卡片缩小的最小宽度
 #define CARD_UNVISIBLE_POS_TOP          (-100)//(-160)                                                                  //卡片超出屏幕顶部某位置后设为不可见
 #define CARD_UNVISIBLE_POS_BOTTOM       (CARD_SCALE_STOP_Y + 200)                                               //卡片缩到最小后实际位置大于某值设为不可见
 #define CARD_BG_GRAY_START              41                                                                      //卡片开始缩小位置处背景的灰度
@@ -2154,7 +2154,7 @@ static const ui_handle_t ui_handle =
 
         .week = {
             .id = COMPO_ID_WEEKDAY,
-            .x  = 12-232/2,
+            .x  = 12-232/2+20,
             .y  = 69-136/2,
             .w  = 60,
             .h  = 32,

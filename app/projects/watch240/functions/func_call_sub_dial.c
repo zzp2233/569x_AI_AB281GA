@@ -554,8 +554,6 @@ enum
     COMPO_ID_PIC_CLICK_NUM9,
     COMPO_ID_PIC_CLICK_CALL,
     COMPO_ID_PIC_CLICK_DEL,
-
-
     COMPO_ID_NUM_DISP_ZERO,
 //    COMPO_ID_PIC_NUM,
 
@@ -587,8 +585,8 @@ static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
     {UI_BUF_I332001_CALL_DIAL_BLACK_08_BIN,             COMPO_ID_BTN_NUM8,       UI_BUF_I332001_CALL_DIAL_BLUE_08_BIN,  COMPO_ID_PIC_CLICK_NUM8,     180,    183+62},
     {UI_BUF_I332001_CALL_DIAL_BLACK_09_BIN,             COMPO_ID_BTN_NUM9,       UI_BUF_I332001_CALL_DIAL_BLUE_09_BIN,  COMPO_ID_PIC_CLICK_NUM9,     180+92,    183+62},
     {UI_BUF_I332001_CALL_DIAL_BLACK_00_BIN,             COMPO_ID_BTN_NUM0,       UI_BUF_I332001_CALL_DIAL_BLUE_00_BIN,  COMPO_ID_PIC_CLICK_NUM0,     180,    183+124},
-    {UI_BUF_I332001_CALL_DIAL_DELETE_BIN,               COMPO_ID_BTN_DEL,        0,                                     COMPO_ID_PIC_CLICK_DEL,      180+92,    183+124},
-    {UI_BUF_I332001_CALL_DIAL_CALL_BIN,                 COMPO_ID_BTN_CALL,       0,                                     COMPO_ID_PIC_CLICK_CALL,     180-92,     183+124},
+    // {UI_BUF_I332001_CALL_DIAL_DELETE_BIN,               COMPO_ID_BTN_DEL,        0,                                     COMPO_ID_PIC_CLICK_DEL,      180+92,    183+124},
+    // {UI_BUF_I332001_CALL_DIAL_CALL_BIN,                 COMPO_ID_BTN_CALL,       0,                                     COMPO_ID_PIC_CLICK_CALL,     180-92,     183+124},
 };
 
 //打电话页面
@@ -605,6 +603,26 @@ compo_form_t *func_call_sub_dial_form_create(void)
         compo_setid(btn, tbl_call_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_call_disp_btn_item[idx_btn].x, tbl_call_disp_btn_item[idx_btn].y);
     }
+    compo_picturebox_t* pic =compo_picturebox_create(frm,UI_BUF_I332001_CALL_DIAL_DELETE_BIN);//删除图片
+    compo_picturebox_set_pos(pic, 180+92,    183+124);
+    compo_setid(pic,COMPO_ID_PIC_CLICK_DEL );
+    compo_picturebox_set_visible(pic, true);
+
+    pic =compo_picturebox_create(frm,UI_BUF_I332001_CALL_DIAL_CALL_BIN);                       //拨号图片
+    compo_picturebox_set_pos(pic,180-92,    183+124);
+    compo_setid(pic,COMPO_ID_PIC_CLICK_CALL );
+    compo_picturebox_set_visible(pic, true);
+
+    compo_button_t* but =compo_button_create(frm);  //删除按键
+    compo_setid(but, COMPO_ID_BTN_DEL);
+    compo_button_set_location(but,180+92,183+124,66+20,48+20);
+
+    but =compo_button_create(frm);                  //拨号按键
+    compo_setid(but, COMPO_ID_BTN_CALL);
+    compo_button_set_location(but,180-92,183+124,66+20,48+20);
+
+
+
 //    printf("W:%d H:%d\n",gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).wid,gui_image_get_size(UI_BUF_COMMON_1_CLICK_BIN).hei);
 
     //创建点击按钮变色图片

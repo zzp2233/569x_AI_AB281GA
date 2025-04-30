@@ -55,6 +55,12 @@ compo_form_t *func_set_sub_about_form_create(void)
 
     snprintf((char *)Ble_Address_str_buf, sizeof(Ble_Address_str_buf), "%02X:%02X:%02X:%02X:%02X:%02X",\
              Ble_Address[0],Ble_Address[1],Ble_Address[2],Ble_Address[3],Ble_Address[4],Ble_Address[5]); //信息
+    char Ble_last_four[10];
+    snprintf(Ble_last_four, sizeof(Ble_last_four), "%02X%02X", Ble_Address[4], Ble_Address[5]);
+
+    // 组合蓝牙名称和后四位地址
+    char combined_name[50];
+    snprintf(combined_name, sizeof(combined_name), "%s(ID-%s)", davName, Ble_last_four);
 
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
@@ -74,8 +80,8 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.1 - SHAPE_HEIGTH/2.2-GUI_SCREEN_CENTER_Y/1.8);
 
-    txt = compo_textbox_create(frm,strlen(davName));
-    compo_textbox_set(txt, davName);
+    txt = compo_textbox_create(frm,strlen(combined_name));
+    compo_textbox_set(txt, combined_name);
     compo_textbox_set_align_center(txt,false);
     compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.1 -GUI_SCREEN_CENTER_Y/1.8);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));

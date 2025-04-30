@@ -176,15 +176,15 @@ static const compo_football_item_t tbl_menu_football[20] =
     {UI_BUF_I332001_THEME_ICON2_MORE_BIN,              FUNC_MENU_STYLE_FOOTBALL_LIST},
 };
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-#define FOOTBALL_RADIUS                          (GUI_SCREEN_WIDTH/2.2)
+#define FOOTBALL_RADIUS                          (GUI_SCREEN_WIDTH/2.5)
 #define MENU_FOOTBALL_ITEM_CNT                   ((int)(sizeof(tbl_menu_football) / sizeof(tbl_menu_football[0])))
-#define KALE_EDGE_SPACE                          2                                                              //边缘距离
-#define KALE_ICON_SPACE                          2                                                              //图标距离
-#define KALE_ICON_OUTER_SIZE                     (gui_image_get_size(tbl_menu_football[0].res_addr).wid)    //外圈图标大小
-#define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 1.5)                                 //内圈图标大小
-#define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
-#define KALE_SWITCH_DR                           2                                                              //单次变更R值
-#define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
+// #define KALE_EDGE_SPACE                          2                                                              //边缘距离
+// #define KALE_ICON_SPACE                          2                                                              //图标距离
+// #define KALE_ICON_OUTER_SIZE                     (gui_image_get_size(tbl_menu_football[0].res_addr).wid)    //外圈图标大小
+// #define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 1.5)                                 //内圈图标大小
+// #define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
+// #define KALE_SWITCH_DR                           2                                                              //单次变更R值
+// #define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 //足球图标列表(固定20项)
 static const compo_football_item_t tbl_menu_football[20] =
 {
@@ -276,6 +276,12 @@ compo_form_t *func_menu_sub_football_form_create(void)
 //    //创建背景
 //    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_ICON_FOOTBALL_BG_BIN);
 //    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+
+    // compo_shape_t *masklayer = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    // compo_shape_set_color(masklayer, COLOR_DIMGRAY);
+    // compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, (FOOTBALL_RADIUS+8)*2, (FOOTBALL_RADIUS+8)*2);
+    // compo_shape_set_alpha(masklayer, 255);
+    // compo_shape_set_radius(masklayer,(FOOTBALL_RADIUS+8));
 
     //创建足球菜单
     compo_football_t *ball = compo_football_create(frm, FOOTBALL_RADIUS, tbl_menu_football, MENU_FOOTBALL_ITEM_CNT);

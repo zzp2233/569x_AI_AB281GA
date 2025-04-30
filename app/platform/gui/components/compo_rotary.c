@@ -8,14 +8,14 @@
 #define TRACE(...)
 #endif
 
-#define ROTARY_ITEM_CNT                     ((rotary->item_cnt >= ROTARY_ITEM_CNT_MAX) ? ROTARY_ITEM_CNT_MAX : rotary->item_cnt)                  //转盘个数, 根据传入要显示的个数和最大可以显示的个数去自动适配
+#define ROTARY_ITEM_CNT                     ((rotary->item_cnt > ROTARY_ITEM_CNT_MAX) ? ROTARY_ITEM_CNT_MAX : (rotary->item_cnt < ROTARY_ITEM_CNT_MIN) ? ROTARY_ITEM_CNT_MIN : rotary->item_cnt) //转盘个数, 根据传入要显示的个数和最大可以显示的个数去自动适配
 #define ROTARY_ITEM_ANGLE                   ((3600 + ROTARY_ITEM_CNT - 1) / ROTARY_ITEM_CNT)
 
-#define ROTARY_SIGHT_DISTANCE           1280                            //视距
-#define ROTARY_OVERLOOK                 150                             //默认视角15度
-#define ROTARY_RADIUS                   112                             //转盘半径
-#define ROTARY_HALF_CIRCUM              ((int)(M_PI * ROTARY_RADIUS))   //圆周一半
-#define ROTARY_FIX_ANGLE                845                             //从正前顺时针转过多少度后切图
+#define ROTARY_SIGHT_DISTANCE               1280                            //视距
+#define ROTARY_OVERLOOK                     150                             //默认视角15度
+#define ROTARY_RADIUS                       (GUI_SCREEN_WIDTH/2.143f)          //转盘半径
+#define ROTARY_HALF_CIRCUM                  ((int)(M_PI * ROTARY_RADIUS))   //圆周一半
+#define ROTARY_FIX_ANGLE                    845                             //从正前顺时针转过多少度后切图
 
 //移动相关控制
 #define ANIMATION_TICK_EXPIRE               18                          //动画单位时间Tick(ms)
@@ -44,15 +44,18 @@ compo_rotary_t *compo_rotary_create(compo_form_t *frm, compo_rotary_item_t const
     rotary->item_cnt = item_cnt;
     rotary->total_angle = ROTARY_ITEM_ANGLE * item_cnt;
     rotary->axis = axis;
-    rotary->radius = ROTARY_RADIUS;
+    float factor = (float)ROTARY_ITEM_CNT / ROTARY_ITEM_CNT_MAX;
+    rotary->radius = ROTARY_RADIUS * factor;
+    int sight_distance = ROTARY_SIGHT_DISTANCE * factor;
+    int overlook = ROTARY_OVERLOOK * factor;
 
     y = muls_shift16(-rotary->radius, SIN(ROTARY_OVERLOOK));
     if (item_cnt <= 0)
     {
         halt(HALT_GUI_COMPO_ROTARY_CREATE);
     }
-    widget_axis3d_set_distance(axis, ROTARY_SIGHT_DISTANCE);
-    widget_axis3d_set_overlook(axis, ROTARY_OVERLOOK);
+    widget_axis3d_set_distance(axis, sight_distance);
+    widget_axis3d_set_overlook(axis, overlook);
     widget_axis3d_set_pos(axis, 0, y, -rotary->radius);
     for (i=0; i<ROTARY_ITEM_CNT; i++)
     {
@@ -68,7 +71,11 @@ compo_rotary_t *compo_rotary_create(compo_form_t *frm, compo_rotary_item_t const
 //    widget_text_set_autoroll_mode(txt, 2);
 //    rotary->item_title = txt;
     compo_textbox_t* txt = compo_textbox_create(frm, 32);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - 48, GUI_SCREEN_WIDTH - 20, widget_text_get_height() + 5);
+#if UTE_DRV_SCREEN_SHAPE
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - widget_text_get_max_height()/1.2, GUI_SCREEN_WIDTH - 20, widget_text_get_max_height());
+#else
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - widget_text_get_max_height()/1.2, GUI_SCREEN_CENTER_X*0.8, widget_text_get_max_height());
+#endif
     rotary->item_title = txt;
     rotary->img_area = gui_image_get_size(item[0].res_addr);
 
@@ -168,7 +175,7 @@ void compo_rotary_set_radius(compo_rotary_t *rotary, u16 radius)
  **/
 s32 compo_rotary_set_rotation_byidx(compo_rotary_t *rotary, int idx)
 {
-    rotary->angle = idx * ROTARY_ITEM_ANGLE;;
+    rotary->angle = idx * ROTARY_ITEM_ANGLE;
     return rotary->angle;
 }
 

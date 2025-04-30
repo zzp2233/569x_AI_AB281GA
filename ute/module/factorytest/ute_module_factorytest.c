@@ -231,7 +231,7 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
             uteModuleHeartStartSingleTesting(TYPE_FACTORY0);
 #endif
 //            uteDrvHeartVcxxStartCrosstalktest();
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
         }
         else
         {
@@ -242,7 +242,7 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
     else if(item==TEST_ITEM_AGING)
     {
         uteModuleFactoryTestData.u.aging.runningTimeSecond = 0;
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
 #if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStartSingleTesting(TYPE_HEART);
 #endif
@@ -253,32 +253,32 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
         uteModuleFactoryTestData.u.battery.startBatteryLvl = uteDrvBatteryCommonGetLvl();
         uteModuleFactoryTestData.u.battery.runningTimeSecond = 0;
         uteModuleSystemtimeGetTime(&uteModuleFactoryTestData.u.battery.startTime);
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
     }
     else if(item==TEST_ITEM_SCREEN_RGB)
     {
         if(isOpen)
         {
             uteModuleFactoryTestData.u.screen.runningTimeSecond = 0;
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
         }
         else
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
             uteModuleFactoryTestDisconnectHandler();
         }
     }
     else if(item==TEST_ITEM_TOUCH)
     {
         memset(uteModuleFactoryTestData.u.touch.graph, 0, sizeof(uteModuleFactoryTestData.u.touch.graph));
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
     }
     else if(item==TEST_ITEM_MIC_SPEAKER)
     {
         uteModuleFactoryTestData.u.micSpeaker.runningTimeSecond = 0;
         if(isOpen)
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
             uteModuleMicRecordFactoryEnter();
             // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_FACTORY_TEST_MIC_SPEAKER_START,0);
         }
@@ -286,7 +286,7 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
         {
             // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_FACTORY_TEST_MIC_SPEAKER_STOP,0);
             uteModuleMicRecordFactoryExit();
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
         }
     }
     else if(item==TEST_ITEM_SCREEN_HOLD_BRIGHT)
@@ -294,11 +294,11 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
         if(isOpen)
         {
             uteModuleFactoryTestData.u.screen.runningTimeSecond = 0;
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
         }
         else
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
         }
     }
     else if(item==TEST_ITEM_MOTOR)
@@ -318,11 +318,11 @@ void uteModuleFactoryTestStartTestItem(ute_module_factory_test_item_t item,bool 
         if(isOpen)
         {
             uteModuleFactoryTestData.u.screen.runningTimeSecond = 0;
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_FACTORY_TEST_ID, 0, __func__);
         }
         else
         {
-            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
         }
     }
 }
@@ -604,7 +604,7 @@ void uteModuleFactoryTestProtocol(uint8_t*receive,uint8_t length)
             uteModuleCallChangeEntertranmentVoiceSwitchStatus();
         }
 #endif
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID);
+        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID, 0, __func__);
         uteModuleProfileBleSendToPhone(&response[0],3);
     }
     else if(option==0x001B)
@@ -713,8 +713,12 @@ void uteModuleFactoryTestStop(void)
     {
 #if UTE_MODULE_HEART_SUPPORT
         uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
+
+        if(task_stack_contains(FUNC_TEST_MODE) == false)
+        {
+            uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
+        }
 #endif
-        uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID);
     }
 }
 

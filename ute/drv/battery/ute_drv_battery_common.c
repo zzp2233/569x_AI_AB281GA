@@ -306,21 +306,30 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 #if CHARGE_EN
     uteDrvBatteryCommonData.lvl = sys_cb.vbat_percent;
     uteDrvBatteryCommonData.voltage = sys_cb.vbat;//vbat_cb.vbat_adc_last;
+#if UTE_DRV_BATTERY_CUSTOM_CHARGE_CURRENT_SUPPORT
+    int16_t current = UTE_DRV_BATTERY_CHARGE_CURRENT;
+    if (current <= 5 || current >= 320)
+    {
+        current = CHARGE_CONSTANT_CURR * 5 + 5;
+    }
+#else
+    int16_t current = CHARGE_CONSTANT_CURR * 5 + 5;
+#endif
     if(!sys_cb.chg_on || uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE)
     {
         uteDrvBatteryCommonData.current = 0;
     }
-    if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_090)
+    else if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_090)
     {
         uteDrvBatteryCommonData.current = CHARGE_TRICKLE_CURR * 5 + 5;
     }
     else if (uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_080)
     {
-        uteDrvBatteryCommonData.current = (CHARGE_CONSTANT_CURR * 5 + 5) * 0.8;
+        uteDrvBatteryCommonData.current = current * 80 / 100;
     }
     else
     {
-        uteDrvBatteryCommonData.current = CHARGE_CONSTANT_CURR * 5 + 5;
+        uteDrvBatteryCommonData.current = current;
     }
 #endif
 
@@ -345,19 +354,21 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 #if (!UTE_MODULE_BATTERY_CHARGED_DISPLAY_ON_SUPPORT)
     if((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGING)&&(uteDrvBatteryCommonData.lvl == 100))
     {
-        uteDrvBatteryCommonData.lvl = 99;
+#if UTE_MODULE_BATTERY_LINEAR_CONSUME_SUPPORT
+        if (uteDrvBatteryCommonData.bat100PercentTimeout == 0)
+#endif
+        {
+            uteDrvBatteryCommonData.lvl = 99;
+        }
     }
 #endif
-    if(uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGED)
+    if (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGED)
     {
         uteDrvBatteryCommonData.lvl = 100;
-    }
 #if UTE_MODULE_BATTERY_LINEAR_CONSUME_SUPPORT
-    if((uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGING)||(uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_CHARGED))
-    {
-        uteDrvBatteryCommonData.bat100PercentTimeout = (uteDrvBatteryCommonData.lvl == 100) ? 2 : 0;
-    }
+        uteDrvBatteryCommonData.bat100PercentTimeout = 2;
 #endif
+    }
     if (uteApplicationCommonIsStartupFinish() && (uteDrvBatteryCommonData.chargerStatus == BAT_STATUS_NO_CHARGE))
     {
         if (uteDrvBatteryCommonData.lvlCnt < UTE_DRV_BATTERY_AVG_LEVEL_BUFF_MAX)
@@ -830,9 +841,10 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
 #endif
         uteDrvBatteryCommonData.chargerStatus = BAT_STATUS_NO_CHARGE;
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
-        if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID||
-           uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID||
-           uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID)
+        if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID ||
+           uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID ||
+           uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID ||
+           uteModuleGuiCommonGetCurrentScreenId() == FUNC_ONLINE_FACTORY_TEST)
         {
             return;
         }
@@ -852,7 +864,16 @@ void uteDrvBatteryCommonSetChargerPlug(bool isPlugIn)
         {
             if(uteApplicationCommonIsStartupFinish())
             {
-                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID);
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+                if(uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID ||
+                   uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID ||
+                   uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID ||
+                   uteModuleGuiCommonGetCurrentScreenId() == FUNC_ONLINE_FACTORY_TEST)
+                {
+                    return;
+                }
+#endif
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_CHARGER_ID, 0, __func__);
                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             }
             else

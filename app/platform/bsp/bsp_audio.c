@@ -181,6 +181,26 @@ void mic_mute(bool en)
 {
     sdadc_analog_mic_mute(en);
 }
+u8 sco_pcm_dump_pass_cnt = 0;
+
+//设置要跳过多少次处理PCM函数的次数
+AT(.com_text.bt_voice.sco.pcm)
+void bt_sco_pcm_set_dump_pass_cnt(u8 cnt)
+{
+    sco_pcm_dump_pass_cnt = cnt;
+}
+
+//获取还剩下要跳过多少次处理PCM函数的次数
+AT(.com_text.bt_voice.sco.pcm)
+u8 bt_sco_pcm_dump_pass_cnt_sub1(bool sub)
+{
+    if (sco_pcm_dump_pass_cnt > 0 && sub == true)
+    {
+        sco_pcm_dump_pass_cnt--;
+    }
+
+    return sco_pcm_dump_pass_cnt;
+}
 
 //-------------------------------------------------------------------------------
 

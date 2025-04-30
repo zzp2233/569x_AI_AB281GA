@@ -20,6 +20,12 @@
 #define UTE_MOUDLE_SCREENS_CHARGER_ID FUNC_CHARGE
 #define UTE_MOUDLE_SCREENS_POWERON_ID FUNC_POWER_ON
 #define UTE_MOUDLE_SCREENS_SYNC_WATCH_ONLINE_ID FUNC_UP_WATCH_DIAL
+#define UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID FUNC_AGEING
+#define UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID FUNC_FACTORY_TESTING
+#define UTE_MOUDLE_SCREENS_NEW_FACTORY_MODE_SELECT_ID FUNC_TEST_MODE
+#define UTE_MOUDLE_SCREENS_APP_BINDING_ID FUNC_POWER_ON_SCAN
+#define UTE_MOUDLE_SCREENS_POWER_ON_LANGUAGE_SELECT_ID FUNC_POWER_ON_LANGUAGE
+#define UTE_MOUDLE_SCREENS_LANGUAGE_SELECT_LIST_ID FUNC_LANGUAGE
 
 /*! 控制显示内容相关参数zn.zeng, 2021-08-18  */
 typedef struct
@@ -44,6 +50,7 @@ typedef struct
     ute_display_ctrl_t displayCtrl;
     int themeTypeId;//主题类型,蜂窝,列表,转圈等
     bool isPowerSavingOpen;
+    bool isSwitchToMenu;
 } ute_module_gui_common_t;
 
 typedef struct
@@ -86,8 +93,10 @@ bool uteModuleGuiCommonIsDisplayOn(void);
 void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear);
 int uteModuleGuiCommonGetCurrentScreenId(void);
 int uteModuleGuiCommonGetLastScreenId(void);
-void uteTaskGuiStartScreen(uint8_t screenId);
-void uteTaskGuiStartScreenWithoutHistory(uint8_t screenId,bool isWithoutHistory);
+void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *format, ...);
+void uteTaskGuiStackRemoveScreenId(uint8_t screenId);
+bool uteModuleGuiCommonIsSwitchToMenu(void);
+void uteModuleGuiCommonSetSwitchToMenu(bool isSwitchToMenu);
 
 uint8_t uteModuleGuiCommonGetBackLightPercent(void);
 bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void);

@@ -64,8 +64,8 @@
 #endif
 
 /*! 默认蓝牙名字 zn.zeng  modify Jul 05, 2021 */
-#ifndef DEFAULT_BLE_DEV_NEME
-#define DEFAULT_BLE_DEV_NEME "UTE"
+#ifndef DEFAULT_BLE_DEV_NAME
+#define DEFAULT_BLE_DEV_NAME "UTE"
 #endif
 #ifndef UTE_SW_VERSION
 #define UTE_SW_VERSION "ABxxxV000001"
@@ -97,6 +97,10 @@
 /*! PC工具烧录蓝牙名 wang.luo, 2022-07-14  */
 #ifndef UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
 #define UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT 1
+#endif
+
+#ifndef HAS_BEEN_CONNECTED
+#define HAS_BEEN_CONNECTED 0x80
 #endif
 
 /** 默认系统支持是最大闹钟数量*/
@@ -225,6 +229,16 @@
 #define UTE_DRV_BATTERY_CHARGE_STOP_VOLT 0
 #endif
 
+/*! 是否使用代码定义的充电电流,打开这个宏使用代码设置的电流,关闭使用烧录工具设置的电流,wang.luo 2025-03-31 */
+#ifndef UTE_DRV_BATTERY_CUSTOM_CHARGE_CURRENT_SUPPORT
+#define UTE_DRV_BATTERY_CUSTOM_CHARGE_CURRENT_SUPPORT 1
+#endif
+
+/*! 充电电流,默认0.65C,wang.luo 2025-03-31 */
+#ifndef UTE_DRV_BATTERY_CHARGE_CURRENT
+#define UTE_DRV_BATTERY_CHARGE_CURRENT (UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH * 65 / 100) // 毫安 误差+-5ma
+#endif
+
 /*! 默认发送历史数据定时器间隔zn.zeng, 2021-08-23  */
 #ifndef UTE_SEND_DATA_TO_PHONE_INVTERVAL
 #define UTE_SEND_DATA_TO_PHONE_INVTERVAL 60 // ms
@@ -239,7 +253,7 @@
 
 /*! UTE任务配置,wang.luo 2024-11-07 */
 #ifndef UTE_TASK_USER_SUPPORT
-#define UTE_TASK_USER_SUPPORT 0
+#define UTE_TASK_USER_SUPPORT 1
 #endif
 #if UTE_TASK_USER_SUPPORT
 #ifndef UTE_TASK_APPLICATION_STACK_SIZE
@@ -293,6 +307,11 @@
 /*! Chsc64x TP升级版本校验功能默认打开，针对chsc64x TP升级版本校验功能，置false则不对比TP项目版本进行强制升级 lkl 2025-1-6  */
 #ifndef DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
 #define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN true
+#endif
+
+/*! TP固件升级功能开关*/
+#ifndef UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT
+#define UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT 0
 #endif
 
 /*! 默认抬手亮屏开关zn.zeng, 2021-08-20  */

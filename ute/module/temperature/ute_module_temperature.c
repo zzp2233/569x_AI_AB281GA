@@ -215,7 +215,7 @@ void uteModuleTemperatureWarningProcess(ute_module_systemtime_time_t time)
                     // notify
                     UTE_MODULE_LOG(UTE_LOG_TEMPERATURE_LVL,"%s,warning!!",__func__);
 #if UTE_MODULE_SCREENS_TEMPERATURE_WARNING_SUPPORT
-                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TEMPERATURE_WARNING_ID);
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_TEMPERATURE_WARNING_ID, 0, __func__);
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
 #endif
                 }

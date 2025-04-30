@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-26 09:56:20
+*@date   2025-04-28 17:52:04
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -291,15 +291,17 @@ enum
     STR_JK, // 捷克语
     STR_YDNXY, // 印度尼西亚语
     STR_YN, // 越南语
+    STR_XBYY, // 西班牙语
+    STR_BLY, // 波兰语
 };
 
 extern const char * const *i18n;
-extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
 extern const char * const i18n_ar_ril[];
 extern const char * const i18n_ru_rru[];
-extern const char * const i18n_cs_rcz[];
+extern const char * const i18n_es_res[];
+extern const char * const i18n_fr_rfr[];
 extern const char * const i18n_in_rid[];
-extern const char * const i18n_vi_rvn[];
+extern const char * const i18n_pl_rpl[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

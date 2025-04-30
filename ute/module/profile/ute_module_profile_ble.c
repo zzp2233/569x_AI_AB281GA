@@ -316,6 +316,12 @@ typedef int (*ble_gatt_callback_func)(uint16_t con_handle, uint16_t handle, uint
 
 static int uteModuleProfileBleWriteCallback(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len)
 {
+    if(is_fot_start())
+    {
+        printf("fot_start,return\n");
+        return 0;
+    }
+
     u8 wptr = ble_cmd_cb.cmd_wptr & BLE_CMD_BUF_MASK;
 
 //    printf("BLE_RX len[%d] handle[%d],wptr:%d,cmd_wptr:%d\n", len, handle,wptr,ble_cmd_cb.cmd_wptr);
@@ -463,10 +469,30 @@ uint8_t uteModuleProfileBleSendNotify(uint8_t att_handle, void *p_value, uint16_
 bool uteModuleProfileBleSendToPhone(uint8_t *data,uint8_t size)
 {
     uint8_t isRet = false;
+    if(is_fot_start())
+    {
+        printf("fot_start,return\n");
+        return false;
+    }
     if (!ble_is_connect())
     {
         return false;
     }
+#if UTE_USER_ID_FOR_BINDING_SUPPORT
+    if(!uteModuleAppBindingGetOurAppConnection())
+    {
+        if((data[0] == CMD_USER_ID_FOR_BINDING)||(data[0] == PUBLIC_CMD_USER_ID_FOR_BINDING))
+        {
+            // binding
+            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,send data binding", __func__);
+        }
+        else
+        {
+            UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,send data return", __func__);
+            return isRet;
+        }
+    }
+#endif
 #if UTE_SERVICE_PUBLIC_BLE_SUPPORT
     if(uteModuleProfileIsPublicProtocol)
     {
@@ -495,6 +521,11 @@ bool uteModuleProfileBleSendToPhone(uint8_t *data,uint8_t size)
 bool uteModuleProfileBle50SendToPhone(uint8_t *data,uint8_t size)
 {
     bool isRet = false;
+    if(is_fot_start())
+    {
+        printf("fot_start,return\n");
+        return false;
+    }
     if (!ble_is_connect())
     {
         return false;
@@ -659,6 +690,7 @@ void ble_app_watch_connect_callback(void)
 
 void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
 {
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,handle=0x%x,cfg=%d",__func__,handle,cfg);
     if (handle == gatts_ute_ble_read_write_base.handle || handle == gatts_ute_ble5_read_write_base.handle
 #if UTE_SERVICE_PUBLIC_BLE_SUPPORT
         || handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle
@@ -666,6 +698,10 @@ void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
        )
     {
         uteApplicationCommonSetAppClosed(cfg == 0 ? true : false);
+    }
+    else if (handle == gatts_app_notify_base.handle) // && cfg == 0
+    {
+        fot_ble_disconnect_callback();
     }
 }
 

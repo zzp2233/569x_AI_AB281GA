@@ -630,6 +630,7 @@ void uteModuleSystemtimeSetTimeFormat(bool is12Hour,bool isMi)
     if(is12Hour != systemTime.is12HourTime)
     {
         systemTime.change12HourTime = true;
+        msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言消息更新界面
     }
     systemTime.isDistanceMi = isMi;
     systemTime.is12HourTime = is12Hour;
@@ -896,6 +897,7 @@ void uteModuleSystemtimeDeleteAlarm(uint8_t index)
     memset(&path[0],0,20);
     sprintf((char *)&path[0],"%s/%02d",UTE_MODULE_FILESYSTEM_ALARMINFO_DIR,index);
     UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index = %d,beforeTotalCnt=%d", __func__,index,beforeTotalCnt);
+    memset(&systemAlarms.alarmParam[index],0,sizeof(ute_module_systemtime_one_alarm_t));
     systemAlarms.alarmParam[index].isFinish = false;
     uteModuleFilesystemDelFile((char *)&path[0]);
     ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));

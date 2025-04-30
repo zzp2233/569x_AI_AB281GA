@@ -472,6 +472,12 @@ void uteModulePlatformFlashNorErase(uint32_t addr)
     }
     os_spiflash_erase(addr);
 }
+
+#if UTE_LOG_SYSTEM_LVL
+AT(.com_text.ute_msg.val)
+char ute_msg_fail_str[]="%s,send msg fail,type=%d\n";
+#endif
+
 /**
 * @brief   发送消息到app task
 *@param[in] uint16_t type ，消息类型
@@ -489,7 +495,9 @@ void uteModulePlatformSendMsgToUteApplicationTask(uint16_t type, uint32_t param)
     bool isSend = uteTaskApplicationSendMsg(&p_msg);
     if (!isSend)
     {
-        // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,send msg fail,type=%d", __func__, type);
+#if UTE_LOG_SYSTEM_LVL
+        printf(ute_msg_fail_str,"uteModulePlatformSendMsgToUteApplicationTask",type);
+#endif
     }
 }
 /**
@@ -509,7 +517,9 @@ void uteModulePlatformSendMsgToAppTask(uint16_t type, uint32_t param)
     bool isSend = uteTaskApplicationSendMsg(&p_msg);
     if (!isSend)
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,send msg fail,type=%d", __func__, type);
+#if UTE_LOG_SYSTEM_LVL
+        printf(ute_msg_fail_str,"uteModulePlatformSendMsgToAppTask",type);
+#endif
     }
 }
 uint64_t uteModulePlatformSystemTickCnt = 0;
@@ -570,11 +580,15 @@ void uteModulePlatformRtcSetTime(uint16_t year,uint8_t month,uint8_t day,uint8_t
 */
 void uteModulePlatformCalibrationSystemTimer(void)
 {
+#if UTE_LOG_TIME_LVL
     tm_t getRtcTime = rtc_clock_get();
     ute_module_systemtime_time_t getSystemTime;
     uteModuleSystemtimeGetTime(&getSystemTime);
     UTE_MODULE_LOG(UTE_LOG_TIME_LVL,"%s,rtc    %04d-%02d-%02d,%02d:%02d:%02d",__func__,getRtcTime.year,getRtcTime.mon,getRtcTime.day,getRtcTime.hour,getRtcTime.min,getRtcTime.sec);
     UTE_MODULE_LOG(UTE_LOG_TIME_LVL,"%s,system %04d-%02d-%02d,%02d:%02d:%02d",__func__,getSystemTime.year,getSystemTime.month,getSystemTime.day,getSystemTime.hour,getSystemTime.min,getSystemTime.sec);
+#else
+    return;
+#endif
 }
 /**
 *@brief 系统滴答计数
@@ -596,6 +610,11 @@ uint32_t uteModulePlatformGetSystemTick(void)
 */
 void *uteModulePlatformMemoryAlloc(size_t size)
 {
+    if(size == 0)
+    {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,error size is 0", __func__);
+        return NULL;
+    }
     return ab_malloc(size);
 }
 /**
@@ -1276,21 +1295,45 @@ void uteModulePlatformUpdateDevName(void)
     devNameSize = 0;
     uint8_t size=0;
 #if UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
-    size = strlen(xcfg_cb.le_name);
-    // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,read size=%d",__func__,size);
-    // UTE_MODULE_LOG_BUFF(UTE_LOG_SYSTEM_LVL,xcfg_cb.le_name,32);
-#endif
-    if(size==0)
+    uint16_t snDataLen = sizeof(ute_application_sn_data_t);
+    ute_application_sn_data_t *snData = uteModulePlatformMemoryAlloc(snDataLen);
+    memset(snData, 0, snDataLen);
+    uteModulePlatformFlashNorRead(snData, UTE_USER_PARAM_ADDRESS, snDataLen);
+    if (snData->bleDevNameLen > 0 && snData->bleDevNameLen <= sizeof(devName))
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,size is error", __func__);
-        memcpy(&name[0],DEFAULT_BLE_DEV_NEME,strlen(DEFAULT_BLE_DEV_NEME));
-        size = strlen(DEFAULT_BLE_DEV_NEME);
+        size = snData->bleDevNameLen;
     }
+#endif
+    if (size == 0)
+    {
+#if UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
+        size = strlen(xcfg_cb.le_name);
+        if (size > 0)
+        {
+            memcpy(&name[0], xcfg_cb.le_name, size);
+            memset(snData->bleDevName, 0, sizeof(snData->bleDevName));
+            memcpy(snData->bleDevName, xcfg_cb.le_name, size);
+            snData->bleDevNameLen = size;
+            uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
+            uteModulePlatformFlashNorWrite(snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,DevName from xcfg_cb, size=%d", __func__,size);
+        }
+        else
+#endif
+        {
+            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,size is error", __func__);
+            memcpy(&name[0], DEFAULT_BLE_DEV_NAME, strlen(DEFAULT_BLE_DEV_NAME));
+            size = strlen(DEFAULT_BLE_DEV_NAME);
+        }
+    }
+#if UTE_PC_TOOL_WIRTE_BT_NAME_SUPPORT
     else
     {
-        memcpy(&name[0],xcfg_cb.le_name,size);
+        memcpy(&name[0], snData->bleDevName, size);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,DevName from flash, size=%d", __func__,size);
     }
-    // memcpy(devName,&name[0],size);
+    uteModulePlatformMemoryFree(snData);
+#endif
     devNameSize = size;
 #if UTE_APP_DISPLAY_NAME_ID_SUPPORT
     {

@@ -191,9 +191,17 @@ void uteModuleProtocolSetBleName(uint8_t*receive,uint8_t length)
 {
     if (length>1)
     {
-        memset(xcfg_cb.le_name, 0, sizeof(xcfg_cb.le_name));
-        memcpy(xcfg_cb.le_name, &receive[1], length - 1 < sizeof(xcfg_cb.le_name) ? length - 1 : sizeof(xcfg_cb.le_name));
-        uteModuleProfileBleSendToPhone(&receive[0],1);
+        uint16_t snDataLen = sizeof(ute_application_sn_data_t);
+        ute_application_sn_data_t *snData = uteModulePlatformMemoryAlloc(snDataLen);
+        memset(snData, 0, snDataLen);
+        uteModulePlatformFlashNorRead(snData, UTE_USER_PARAM_ADDRESS, snDataLen);
+        uint8_t nameLen = length - 1 < sizeof(snData->bleDevName) ? length - 1 : snData->bleDevName;
+        memcpy(snData->bleDevName, &receive[1], nameLen);
+        snData->bleDevNameLen = nameLen;
+        uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
+        uteModulePlatformFlashNorWrite(snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
+        uteModulePlatformMemoryFree(snData);
+        uteModuleProfileBleSendToPhone(&receive[0], 1);
     }
 }
 /**
@@ -801,7 +809,7 @@ void uteModuleProtocolTakePictureCtrl(uint8_t*receive,uint8_t length)
         uteModuleSportSetTakePictureEnable(true);
 #endif
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-        uteTaskGuiStartScreenWithoutHistory(FUNC_CAMERA,true);
+        uteTaskGuiStartScreen(FUNC_CAMERA, 0, __func__);
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
     }
     else
@@ -1680,7 +1688,7 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
     if(receive[1]==0x11)
     {
-        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE || uteModuleSportMoreSportGetStatus() != ALL_SPORT_STATUS_CLOSE)
         {
             uint8_t stopCmd[5];
             stopCmd[0] =CMD_SPO2_TEST;
@@ -1697,7 +1705,7 @@ void uteModuleProtocolBloodoxygenCtrl(uint8_t*receive,uint8_t length)
         }
         if(!uteModuleGuiCommonIsDisplayOn() || uteModuleGuiCommonGetCurrentScreenId() != FUNC_BLOOD_OXYGEN)
         {
-            uteTaskGuiStartScreenWithoutHistory(FUNC_BLOOD_OXYGEN,true);
+            uteTaskGuiStartScreen(FUNC_BLOOD_OXYGEN, 0, __func__);
         }
         uteModuleBloodoxygenStartSingleTesting();
     }

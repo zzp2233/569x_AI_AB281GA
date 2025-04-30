@@ -221,6 +221,14 @@ typedef struct
     bool ancs_missed_call;
     bool sys_init_complete; //系统初始化完成标志，用于互斥ute task和sys task，防止sys没初始化完成就执行ute task导致流程错误
     bool need_wakeup_flag;
+    bool loudspeaker_mute_flag; //mute 标志位
+    u8 loudspeaker_mute_countdown; //mute 倒计时
+
+#if VDDHR_TRIM_EN
+    u8 vddhr_trim_sta; //vddhr trim
+    u8 vddhr_trim_base;
+    u8 vddhr_trim_cnt;
+#endif
 #if ASR_SELECT
     bool asr_play;                                  //asr 指令响应状态
     u8   asr_gain;                                  //asr 备份增益

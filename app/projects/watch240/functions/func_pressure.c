@@ -378,8 +378,6 @@ static void func_pressure_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_pressure_t));
     func_cb.frm_main = func_pressure_form_create();
-    f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
-    f_pressure->up_data_flag = uteModuleEmotionPressureIsTesting();
 }
 
 //退出压力功能

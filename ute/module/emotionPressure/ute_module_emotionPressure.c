@@ -1663,7 +1663,7 @@ bool uteModuleEmotionPressureLoadTodayEmotionHistoryData(uint8_t *emotionHistory
         uint8_t emotionData = emotionHistoryData[i];
         if (emotionData > 2)
         {
-            emotionData = 2;
+            emotionData = 0xff;
         }
         emotionHistoryGraph[i] = emotionData;
     }

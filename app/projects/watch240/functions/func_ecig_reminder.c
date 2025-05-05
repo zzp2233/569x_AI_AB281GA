@@ -32,6 +32,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
     compo_picturebox_t *picbox;
     compo_animation_t *animation;
     compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH / 2, GUI_SCREEN_HEIGHT / 2 + 20);
+    printf("1111111111111111111,smoke_index=%d\n",sys_cb.smoke_index);
     if (sys_cb.smoke_index == SMOKING)
     {
         printf("1111111111111111111sys_cb.password_flag=%d\n",sys_cb.password_flag);

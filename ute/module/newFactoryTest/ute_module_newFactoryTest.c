@@ -24,6 +24,7 @@
 
 /*! zn.zeng,2022-03-16*/
 ute_new_factory_test_data_t uteModuleNewFactoryTestData;
+ute_smoke_factory_test_data_t uteModuleSmokeFactoryData;
 
 /**
 *@brief     发给对端的测试数据暂定32byte ascii 数据
@@ -55,6 +56,7 @@ void uteModuleNewFactoryTestResetParam(void)
         tpFirmwareCheckSum = uteModuleNewFactoryTestData.tpFirmwareCheckSum;
     }
     memset(&uteModuleNewFactoryTestData, 0, sizeof(ute_new_factory_test_data_t));
+    memset(&uteModuleSmokeFactoryData, 0, sizeof(ute_smoke_factory_test_data_t));
     uteModuleNewFactoryTestData.tpFirmwareCheckSum = tpFirmwareCheckSum;
 }
 /**
@@ -133,6 +135,17 @@ uint16_t uteModuleNewFactoryTestGetTpVersion(void)
 }
 
 /**
+*@brief  老化马达震动次数
+*@details
+*@author        lkl
+*@date        2022-02-09
+*/
+uint16_t uteModuleNewFactoryAgingTestMotoCount(void)
+{
+    return uteModuleSmokeFactoryData.Moto_Count;
+}
+
+/**
 *@brief        每秒函数
 *@details       需要注册到主时间，每秒执行一次
 *@author        xjc
@@ -175,6 +188,9 @@ void uteModuleNewFactoryTestEverySecond(void)
         }
     }
 #endif
+    printf("%s,mode=%d,secondCount=%d,maxCount=%d\r\n",__func__,uteModuleNewFactoryTestData.mode,uteModuleNewFactoryTestData.secondCount,uteModuleNewFactoryTestData.maxCount);
+
+    // printf("SCREEN_ID=%d\r\n",uteModuleGuiCommonGetCurrentScreenId());
     if ((uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING) &&
         (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID))
     {
@@ -244,15 +260,21 @@ void uteModuleNewFactoryTestEverySecond(void)
             // {
             //     // uteModuleHeartStartSingleTesting(TYPE_HEART);
             // }
+
             if(uteModuleNewFactoryTestData.secondCount<uteModuleNewFactoryTestData.maxCount)
             {
                 if((uteModuleNewFactoryTestData.secondCount%3) == 0)
                 {
-                    uteDrvMotorStart(500,500,1);
+                    // uteDrvMotorStart(500,500,1);
+                    printf("MOTOR\r\n");
+                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+                    uteModuleSmokeFactoryData.Moto_Count++;
                 }
+                uteModuleNewFactoryTestData.secondCount++;
             }
+
         }
-        uteModuleNewFactoryTestData.secondCount++;
+
 #if UTE_MODULE_NEW_FACTORY_AGING_REPORT_SUPPORT
         if (uteModuleNewFactoryTestData.secondCount == uteModuleNewFactoryTestData.maxCount)
         {

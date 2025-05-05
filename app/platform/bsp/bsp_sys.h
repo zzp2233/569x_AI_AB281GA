@@ -224,11 +224,6 @@ typedef struct
     bool loudspeaker_mute_flag; //mute 标志位
     u8 loudspeaker_mute_countdown; //mute 倒计时
 
-#if VDDHR_TRIM_EN
-    u8 vddhr_trim_sta; //vddhr trim
-    u8 vddhr_trim_base;
-    u8 vddhr_trim_cnt;
-#endif
 #if ASR_SELECT
     bool asr_play;                                  //asr 指令响应状态
     u8   asr_gain;                                  //asr 备份增益

@@ -305,9 +305,10 @@ void third_et_func_kws_deal(u32 event)
             break;
         case UI_EVENT_CLEARPUFFS: // 口数清0
             uteModuleResetTotalSmokeCount();
+            play_sound(UI_EVENT_CLEARPUFFS, t_pwn.sound_en);
             msgbox(NULL, NULL, NULL, MSGBOX_MODE_BTN_DELETE_SUCCES, MSGBOX_MSG_TYPE_NONE);
 #if ET_WARNING_TONE_EN
-            play_sound(UI_EVENT_CLEARPUFFS, t_pwn.sound_en);
+
 #endif // ET_WARNING_TONE_EN
             break;
         case UI_EVENT_SMOKEANIMATION: // 抽吸动画
@@ -677,6 +678,9 @@ void play_sound(u32 evendId, u8 sound_en)
         case UI_EVENT_SINGLEMODE: // Singlemode  8
         case UI_EVENT_DUALMODE:   // Dualmode  9:
             bsp_asr_tone_play(RES_BUF_ASR_K008_MP3, RES_LEN_ASR_K008_MP3);
+            break;
+        case UI_EVENT_CLEARPUFFS:
+            bsp_asr_tone_play(RES_BUF_ASR_K009_MP3, RES_LEN_ASR_K009_MP3);
             break;
         default:
             break;

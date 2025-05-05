@@ -823,7 +823,7 @@ compo_form_t *func_sport_form_create(void)
 #else
     compo_listbox_set(listbox, tbl_sport_list_sort, UTE_MODULE_SPORT_MAX_SPORT_NUM);
 #endif
-    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_1_START_LOGO_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_11_CALL_BG_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     compo_listbox_set_focus_byidx(listbox, 1);

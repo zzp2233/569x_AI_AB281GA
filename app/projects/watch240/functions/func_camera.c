@@ -642,11 +642,18 @@ compo_form_t *func_camera_form_create(void)
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
-    f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
-    f_camera->ble_connect_sta = ble_is_connect();
-    f_camera->open_camera_sta = uteModuleSportIsTakePicture();
+    compo_form_t *frm = compo_form_create(true);
+    bool ble_connect_sta = ble_is_connect(); //蓝牙连接状态
+    bool open_camera_sta = uteModuleSportIsTakePicture();; //打开相机状态
 
-    if(!f_camera->ble_connect_sta) //蓝牙未连接
+    if(func_cb.sta == FUNC_CAMERA)
+    {
+        f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
+        f_camera->ble_connect_sta = ble_connect_sta;
+        f_camera->open_camera_sta = open_camera_sta;
+    }
+
+    if(!ble_connect_sta) //蓝牙未连接
     {
         // icon
         compo_picturebox_t *icon = compo_picturebox_create(frm, UI_BUF_I335001_27_MORE_5_REMOTE_CAMERA_3_BLUETOOTH_NOCONNECTED_ICON_BLE_70X74_X86_Y76_BIN);
@@ -658,7 +665,7 @@ compo_form_t *func_camera_form_create(void)
         compo_textbox_set_align_center(txt, true);
         compo_textbox_set(txt, i18n[STR_CONNECT_BLUETOOTH]);
     }
-    else if (!f_camera->open_camera_sta) //相机未打开
+    else if (!open_camera_sta) //相机未打开
     {
         // icon
         compo_picturebox_t *icon = compo_picturebox_create(frm, UI_BUF_I335001_27_MORE_5_REMOTE_CAMERA_2_OPEN_CAMERA_ICON_56X92_X92_Y66_BIN);
@@ -735,6 +742,91 @@ static void func_camera_button_handle(void)
             f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
             f_camera->animation_start = true;
             f_camera->animation_frame = 0;
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY, 0);
+        }
+    }
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+///非相机传输功能
+enum
+{
+    START_BTN_ID=1,
+};
+
+//创建相机窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_camera_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+    bool ble_connect_sta = ble_is_connect(); //蓝牙连接状态
+    bool open_camera_sta = uteModuleSportIsTakePicture();; //打开相机状态
+
+    if(func_cb.sta == FUNC_CAMERA)
+    {
+        f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
+        f_camera->ble_connect_sta = ble_connect_sta;
+        f_camera->open_camera_sta = open_camera_sta;
+    }
+
+    if(!ble_connect_sta) //蓝牙未连接
+    {
+        // icon
+        compo_picturebox_t *icon = compo_picturebox_create(frm, UI_BUF_I338001_27_MORE_CONNECT_BIN);
+        compo_picturebox_set_pos(icon, GUI_SCREEN_CENTER_X, 50+96);
+
+        // 创建提示文本
+        compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 42/2+274, 170, 28);
+        compo_textbox_set_align_center(txt, true);
+        compo_textbox_set(txt, i18n[STR_CONNECT_BLUETOOTH]);
+    }
+    else if (!open_camera_sta) //相机未打开
+    {
+        // icon
+        compo_picturebox_t *icon = compo_picturebox_create(frm, UI_BUF_I338001_27_MORE_PHONE_BIN);
+        compo_picturebox_set_pos(icon, GUI_SCREEN_CENTER_X, 104+134/2);
+
+        // 创建提示文本
+        compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_PLEASE_APP_DATA]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 42/2+274, 170, 28);
+        compo_textbox_set_align_center(txt, true);
+        compo_textbox_set(txt, i18n[STR_PLEASE_APP_DATA]);
+    }
+    else
+    {
+        //设置标题栏
+        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+        compo_form_set_title(frm, i18n[STR_CAMERA]);
+
+        //按钮
+        compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I338001_27_MORE_PITRUE_BIN);
+        compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+        compo_setid(btn, START_BTN_ID);
+    }
+
+    return frm;
+}
+
+static void func_camera_process_handle(void)
+{
+    f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
+
+    if (f_camera->ble_connect_sta != ble_is_connect() || f_camera->open_camera_sta != uteModuleSportIsTakePicture())
+    {
+        func_camera_recreate();
+    }
+}
+
+static void func_camera_button_handle(void)
+{
+    int id = compo_get_button_id();
+
+    if (id == START_BTN_ID)
+    {
+        if (uteModuleSportIsTakePicture())
+        {
+            f_camera_t *f_camera = (f_camera_t *)func_cb.f_cb;
             uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY, 0);
         }
     }

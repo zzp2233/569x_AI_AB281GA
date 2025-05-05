@@ -180,7 +180,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    if( uteModuleHeartrGetCurrDayStaticHeartData() > 0 && uteModuleHeartrGetCurrDayStaticHeartData() != 255)
+    if( uteModuleHeartrGetLast7DayAvgStaticHeartData() > 0 && uteModuleHeartrGetLast7DayAvgStaticHeartData() != 255)
     {
         snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartrGetLast7DayAvgStaticHeartData());
     }

@@ -542,7 +542,9 @@ static void func_blood_oxygen_button_click(void)
         }
         break;
         case COMPO_ID_ABOUT_BTN:
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
             uteTaskGuiStartScreen(FUNC_OXYGEN_ABOUT, 0, __func__);
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
             break;
     }
 }

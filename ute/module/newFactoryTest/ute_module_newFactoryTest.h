@@ -180,6 +180,16 @@ typedef struct
 #endif
 } ute_new_factory_test_data_t;
 
+typedef struct
+{
+    uint8_t Smoke_R;     //烟弹阻值
+    uint8_t Smoke_Module;//抽吸模式
+    uint8_t Smoke_Hot;//发热丝状态
+    uint16_t Moto_Count;//震动次数
+    uint16_t Smoke_Count;//抽吸口数
+    uint8_t BatPersent;
+}
+ute_smoke_factory_test_data_t;
 
 void uteModuleNewFactoryTestInit(void);
 void uteModuleNewFactoryTestResetParam(void);
@@ -209,6 +219,7 @@ void uteModuleNewFactoryTestSetKeyValue(ute_module_factory_test_key_t key);
 void uteModuleNewFactoryTestResSetKeyValue(void);
 ute_module_factory_test_key_t uteModuleNewFactoryTestGetKeyValue(void);
 
+uint16_t uteModuleNewFactoryAgingTestMotoCount(void);
 #if UTE_MODULE_NEW_FACTORY_AGING_REPORT_SUPPORT
 void uteModuleNewFactoryTestReadAgingReportData(void);
 void uteModuleNewFactoryTestSaveAgingReportData(FACTORY_AGING_TEST_MODE mode, uint8_t totalHour,bool isPass);

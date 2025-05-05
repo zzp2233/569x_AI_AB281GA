@@ -423,18 +423,18 @@ compo_form_t *func_heartrate_form_create(void)
     }
 ////////////////////////////////////////////////////////////////
     textbox = compo_textbox_create(frm, strlen(i18n[STR_RESTING_HEART]) );///静态心率
-    compo_textbox_set_location(textbox,41,389,88, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,41,389,105, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_RESTING_HEART]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
 
-    // picbox = compo_picturebox_create(frm, UI_BUF_I338001_6_HEART_RESTING_HEART_RATE_BIN);
-    // compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,292/2+497);
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_7_SPO2_ABOUT_BIN);//////关于
+    compo_picturebox_set_pos(picbox,20+146,403);
 
-    // compo_button_t *btn = compo_button_create(frm);
-    // compo_button_set_location(btn,115,295,30,30);
-    // compo_setid(btn,COMPO_ID_HEART_BTN_ABOUT);
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn,20+146,403,40,40);///关于
+    compo_setid(btn,COMPO_ID_HEART_BTN_ABOUT);
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartrGetCurrDayStaticHeartData());
@@ -1056,7 +1056,7 @@ static void func_heartrate_message(size_msg_t msg)
             }
             break;
         case MSG_CTP_CLICK:
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
             func_heartrate_click_handler();
 #endif
             break;

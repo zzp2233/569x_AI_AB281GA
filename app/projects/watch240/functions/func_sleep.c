@@ -748,6 +748,8 @@ compo_form_t *func_sleep_form_create(void)
             TRACE("i=%d, fillRect_x=%u, fillRect_w=%u\n", i, fillRect_x, fillRect_w);
         }
     }
+    pic = compo_picturebox_create(frm, UI_BUF_I338001_9_SLEEP_YJ_BIN);///* 无数据*/
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, fillRect_y-fillRect_h/2+5);
 /////////////////////////////////////////////////////////////////////////////////////////////////////
     ab_free(sleep_data);
     return frm;

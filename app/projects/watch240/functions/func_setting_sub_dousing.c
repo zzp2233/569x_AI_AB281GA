@@ -539,9 +539,9 @@ compo_form_t *func_set_sub_dousing_form_create(void)
         compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
     }
 
-    compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,strlen(i18n[STR_SEC]));
+    compo_textbox_t *txt = compo_textbox_create(frm,strlen(i18n[STR_SEC]));
     compo_textbox_set_align_center(txt,false);
-    compo_textbox_set_pos(txt,220,162);
+    compo_textbox_set_location(txt,210,152,100,35);
     compo_textbox_set(txt,i18n[STR_SEC]);
 
     compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮

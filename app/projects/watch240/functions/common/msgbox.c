@@ -1624,15 +1624,13 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         break;
 
         case MSGBOX_MODE_BTN_OKCANCEL:      //确定与取消按钮1
-            btn = compo_button_create_by_image(frm, 0);
-            compo_setid(btn, COMPO_ID_BTN_CANCEL);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4+5,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20);
-
-            btn = compo_button_create_by_image(frm, 0);
+            btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_COMFIRM_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
-            compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4-5,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(0).hei/2 - 20);
+            compo_button_set_pos(btn, 80/2+209,80/2+224);
+
+            btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_CANCEL_BIN);
+            compo_setid(btn, COMPO_ID_BTN_CANCEL);
+            compo_button_set_pos(btn, 80/2+71,80/2+224);
             break;
 
         case MSGBOX_MODE_BTN_YESNO:         //确定与取消按钮2

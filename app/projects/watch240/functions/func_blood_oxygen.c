@@ -339,12 +339,12 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_button_set_pos(btn,260+59/2,78+59/2);
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
-    // picbox = compo_picturebox_create(frm, UI_BUF_I338001_7_SPO2_PAUSE_BIN);//////关于
-    // compo_picturebox_set_pos(picbox,158,5+66);
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_7_SPO2_ABOUT_BIN);//////关于
+    compo_picturebox_set_pos(picbox,20/2+220,10+82);
 
-    // btn = compo_button_create(frm);
-    // compo_button_set_location(btn,158,5+66,30,30);///关于
-    // compo_setid(btn,COMPO_ID_ABOUT_BTN);
+    btn = compo_button_create(frm);
+    compo_button_set_location(btn,20/2+220,10+82,40,40);///关于
+    compo_setid(btn,COMPO_ID_ABOUT_BTN);
 ////////////////////////////////////////////////////////////////////
 
     uteModuleBloodoxygenGetMinMaxValue(&oxygen_min,&oxygen_max);

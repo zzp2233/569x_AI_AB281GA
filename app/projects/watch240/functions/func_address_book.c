@@ -828,7 +828,7 @@ static void func_address_book_process(void)
                 compo_listbox_set_alike_icon(f_book->listbox, UI_BUF_I338001_11_CALL_CONTACTS_BIN);
                 compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1));
                 compo_listbox_update_with_text_scroll_rst(f_book->listbox);
-                compo_listbox_set_bgimg(f_book->listbox, UI_BUF_I338001_11_CALL_NEXT_BIN);
+                compo_listbox_set_bgimg(f_book->listbox, UI_BUF_I338001_11_CALL_BG_BIN);
                 compo_listbox_set_focus_byidx(f_book->listbox, 1);
                 compo_listbox_update(f_book->listbox);
             }

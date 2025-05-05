@@ -446,7 +446,7 @@ void func_set_sub_exit(void)
 //主菜单功能
 void func_set_sub_list(void)
 {
-//    printf("pic w:%d h:%d\n",gui_image_get_size(tbl_setting_list->res_addr).wid,gui_image_get_size(tbl_setting_list->res_addr).hei);
+    printf("%s\n", __func__);
     func_set_sub_list_enter();
     while (func_cb.sta == FUNC_SETTING)
     {

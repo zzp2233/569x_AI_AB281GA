@@ -375,8 +375,25 @@ compo_form_t *func_activity_form_create(void)
     char txt_buf[20];
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
+    uint32_t totalStepCnt_handle = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-    u8 pic_dis =(totalStepCnt / uteModuleSportGetStepsTargetCnt());
+    if(totalStepCnt > uteModuleSportGetStepsTargetCnt())
+    {
+        totalStepCnt_handle = uteModuleSportGetStepsTargetCnt();
+    }
+    else
+    {
+        if(totalStepCnt!=0)
+        {
+            totalStepCnt_handle = uteModuleSportGetStepsTargetCnt()/totalStepCnt;
+        }
+        else
+        {
+            totalStepCnt_handle = 0;
+        }
+
+    }
+    u8 pic_dis = totalStepCnt_handle!=0 ? (100/(totalStepCnt_handle)/10 ) : 0;
     if(pic_dis>10)pic_dis=10;
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数
@@ -1071,7 +1088,7 @@ static void func_activity_message(size_msg_t msg)
             break;
         case MSG_CTP_CLICK:
             // uteModuleCallChangeEntertranmentVoiceSwitchStatus();
-            // func_cb.sta = FUNC_CHARGE;
+            // func_cb.sta = FUNC_HEART_WARNING;
             // sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
             // msgbox(NULL, NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
             break;

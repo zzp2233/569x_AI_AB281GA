@@ -397,15 +397,15 @@ enum
 //风格列表tbl
 static const compo_listbox_item_t tbl_style_list[] =
 {
-    {STR_STYLE_LIST_1,          UI_BUF_I338001_28_SET_THEME_02_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
+    {STR_STYLE_LIST_1,          UI_BUF_I338001_28_SET_THEME_03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
     {STR_GONG_GE,               UI_BUF_I338001_28_SET_THEME_01_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
-    {STR_STYLE_HONEYCOMB,       UI_BUF_I338001_28_SET_THEME_00_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
-    {STR_SPHERE,                UI_BUF_I338001_28_SET_THEME_00_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
-    {STR_CHECKERBOARD,          UI_BUF_I338001_28_SET_THEME_00_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
-    {STR_HALO,                  UI_BUF_I338001_28_SET_THEME_00_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
-    {STR_STYLE_SKYRER,          UI_BUF_I338001_28_SET_THEME_00_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
-    {STR_STYLE_GRID_1,          UI_BUF_I338001_28_SET_THEME_00_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
-    {STR_STYLE_WATERFALL,       UI_BUF_I338001_28_SET_THEME_00_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+    {STR_STYLE_HONEYCOMB,       UI_BUF_I338001_28_SET_THEME_05_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_SPHERE,                UI_BUF_I338001_28_SET_THEME_06_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
+    {STR_CHECKERBOARD,          UI_BUF_I338001_28_SET_THEME_07_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
+    {STR_HALO,                  UI_BUF_I338001_28_SET_THEME_08_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
+    {STR_STYLE_SKYRER,          UI_BUF_I338001_28_SET_THEME_09_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+    {STR_STYLE_GRID_1,          UI_BUF_I338001_28_SET_THEME_10_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
+    {STR_STYLE_WATERFALL,       UI_BUF_I338001_28_SET_THEME_12_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
 };
 
 typedef struct f_style_t_
@@ -624,6 +624,8 @@ static void func_style_enter(void)
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
 #endif
     func_cb.enter_tick = tick_get();
 }

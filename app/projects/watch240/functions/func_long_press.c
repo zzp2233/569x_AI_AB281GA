@@ -635,7 +635,58 @@ static void func_long_press_slide_disp_handle()
         compo_shape_set_location(rect_cover,distance/2+IMG_WIDTH/2-5,y,distance, IMG_WIDTH);
     }
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+typedef struct f_long_press_t_
+{
+    bool touch_flag; //触屏状态标志位
+    bool touch_btn_flag;//触屏按键状态标志位
+    u16  touch_btn_id; //触屏按键id状态
+} f_long_press_t;
+enum
+{
+    RECT_ID_1 = 1,
 
+    IMG_BTN_ID_1,
+    IMG_BTN_ID_2,
+    IMG_BTN_ID_3,
+    CANCEL_BTN_ID,
+
+    BTN_POWER_OFF_ID,//关机按钮
+    BTN_RESTART_ID,//重启按钮
+};
+//创建睡眠窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_long_press_form_create(void)
+{
+    compo_button_t * img_btn;
+    compo_shape_t  * rect_cover;
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    /*创建图标*/
+    compo_shape_t * btn;
+    //重启
+    btn = compo_button_create_by_image(frm,UI_BUF_I338001_PRIMARY_FUNCTION_RESET_100X100_BIN);
+    compo_setid(btn,BTN_RESTART_ID);
+    compo_button_set_pos(btn,60+50,109+50);
+    //关机
+    btn = compo_button_create_by_image(frm,UI_BUF_I338001_PRIMARY_FUNCTION_CLOSE_100X100_BIN);
+    compo_setid(btn,BTN_POWER_OFF_ID);
+    compo_button_set_pos(btn,202+50,109+50);
+
+    /*创建文本*/
+    compo_textbox_t *txt;
+    //重启
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SETTING_RESTART]));
+    compo_textbox_set_location(txt, 60+50,235,100,50);
+    compo_textbox_set(txt,i18n[STR_SETTING_RESTART]);
+    //关机
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SETTING_OFF]));
+    compo_textbox_set_location(txt, 202+50,235,100,50);
+    compo_textbox_set(txt,i18n[STR_SETTING_OFF]);
+
+    return frm;
+}
 #else
 //三个图标与矩形的Y轴
 #define RECT_Y_1 GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y*0.4
@@ -689,7 +740,9 @@ static void func_long_press_slide_disp_handle()
 //长按滑动关机显示处理
 static void func_long_press_process(void)
 {
+#if !GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     func_long_press_slide_disp_handle();
+#endif
     func_process();
 }
 
@@ -730,6 +783,16 @@ static void func_long_press_click(void)
             func_directly_back_to();
             //func_switch_to_clock();
             break;
+        case BTN_RESTART_ID:
+        {
+            uteApplicationCommonRestart();
+        }
+        break;
+        case BTN_POWER_OFF_ID:
+        {
+            uteApplicationCommonPoweroff();
+        }
+        break;
     }
 }
 

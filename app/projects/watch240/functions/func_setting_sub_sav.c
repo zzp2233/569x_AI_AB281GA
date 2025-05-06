@@ -217,6 +217,80 @@ static void func_set_sub_sav_disp(void)
     compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
 }
 
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
+#define VOL_CHANGE          4  //音量等级每次增加或者减少4
+#define MOTOR_MAX_LEVEL     4  //马达最大等级
+
+typedef struct f_sav_t_
+{
+    u8 vol_value;
+    u8 shk_value;
+} f_sav_t;
+
+enum
+{
+    COMPO_ID_SAV = 1,
+    COMPO_ID_MUTE,
+};
+
+#define  ON_PIC     UI_BUF_I338001_28_SET_OPEN_BIN
+#define  OFF_PIC    UI_BUF_I338001_28_SET_CLOSE_BIN
+
+//声音与振动页面
+compo_form_t *func_set_sub_sav_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_VOL]);
+
+    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 1, 1, 1, 324, 80);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,80/2+102,324, 80);
+    compo_setid(cardbox, COMPO_ID_SAV);
+    compo_cardbox_rect_set_location(cardbox,0,0,39,278, 1,16);
+    compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
+    compo_cardbox_text_set_location(cardbox, 0, 25-324/2,  -(34/2), 200, 30);
+    compo_cardbox_text_set(cardbox,0,i18n[STR_MEDIA_VOL]);
+    compo_cardbox_text_set_align_center(cardbox, 0, false);
+    compo_cardbox_icon_set_location(cardbox, 0, 116, 0, 50, 30);
+    compo_cardbox_icon_set(cardbox,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
+    compo_cardbox_text_scroll_process(cardbox, true);
+
+    cardbox = compo_cardbox_create(frm, 1, 1, 1, 324, 80);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,80/2+192,324, 80);
+    compo_setid(cardbox, COMPO_ID_MUTE);
+    compo_cardbox_rect_set_location(cardbox,0,0,39,278, 1,16);
+    compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
+    compo_cardbox_text_set_location(cardbox, 0, 25-324/2,  -(34/2), 200, 30);
+    compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
+    compo_cardbox_text_set_align_center(cardbox, 0, false);
+    compo_cardbox_icon_set_location(cardbox, 0, 116, 0, 50, 30);
+    compo_cardbox_icon_set(cardbox,0,uteModuleLocalRingtoneGetMuteStatus() ? ON_PIC : OFF_PIC);
+    compo_cardbox_text_scroll_process(cardbox, true);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SILENT_MODE_PROMAT]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,310,230,68);
+    compo_textbox_set_multiline(textbox,true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    compo_textbox_set(textbox,i18n[STR_SILENT_MODE_PROMAT]);
+    compo_textbox_set_forecolor(textbox,make_color(102,102,102));
+
+    return frm;
+}
+
+//更新显示界面
+static void func_set_sub_sav_disp(void)
+{
+    compo_cardbox_t *cardbox_sav  = compo_getobj_byid(COMPO_ID_SAV);
+    compo_cardbox_t *cardbox_mute = compo_getobj_byid(COMPO_ID_MUTE);
+
+    compo_cardbox_icon_set(cardbox_sav,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
+    compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
+}
+
 #else
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级

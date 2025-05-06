@@ -432,28 +432,30 @@ compo_form_t *func_sleep_form_create(void)
     ute_module_sleep_display_data_t * sleep_data = (ute_module_sleep_display_data_t *)ab_zalloc(sizeof(ute_module_sleep_display_data_t));
     uteModuleSleepGetCurrDayDataDisplay(sleep_data);
 
-    sleep_data->totalSleepMin = 480;
-    sleep_data->fallAsSleepTime.hour =0;
-    sleep_data->fallAsSleepTime.min =0;
-    sleep_data->getUpSleepTime.hour =8;
-    sleep_data->getUpSleepTime.min = 0;
+    // sleep_data->totalSleepMin = 480;
+    // sleep_data->fallAsSleepTime.hour =0;
+    // sleep_data->fallAsSleepTime.min =0;
+    // sleep_data->getUpSleepTime.hour =8;
+    // sleep_data->getUpSleepTime.min = 0;
 
-    sleep_data->lightSleepMin= 480;
-    sleep_data->deepSleepMin= 480;
-    sleep_data->wakeSleepMin= 480;
-    sleep_data->RemSleepMin= 480;
+    // sleep_data->lightSleepMin= 480;
+    // sleep_data->deepSleepMin= 480;
+    // sleep_data->wakeSleepMin= 480;
+    // sleep_data->RemSleepMin= 480;
 
-    sleep_data->recordCnt = 5;
-    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
-    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
-    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
-    sleep_data->sleep_record[2].state = REM_SLEEP;
-    sleep_data->sleep_record[4].state = DEEP_SLEEP;
-    sleep_data->sleep_record[0].period = 20;
-    sleep_data->sleep_record[1].period = 100;
-    sleep_data->sleep_record[2].period = 100;
-    sleep_data->sleep_record[3].period = 120;
-    sleep_data->sleep_record[4].period = 20;
+    // sleep_data->recordCnt = 5;
+    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[2].state = REM_SLEEP;
+    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[0].period = 20;
+    // sleep_data->sleep_record[1].period = 100;
+    // sleep_data->sleep_record[2].period = 100;
+    // sleep_data->sleep_record[3].period = 120;
+    // sleep_data->sleep_record[4].period = 20;
+    // sleep_data->getUpSleepTime.min = 30;
+    // sleep_data->fallAsSleepTime.min = 40;
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
@@ -502,7 +504,7 @@ compo_form_t *func_sleep_form_create(void)
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,258,170,32,32);
+    compo_textbox_set_location(txt,258,170,60,32);
     compo_textbox_set_autoroll_mode(txt, 0);
     compo_textbox_set(txt, i18n[STR_MIN]);
 //////////////////////////////////////////////////////////////////////
@@ -522,6 +524,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt,46,348,75,33);
     compo_textbox_set(txt, buf);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
 
     memset(buf,0,sizeof(buf));
     if(sleep_data->getUpSleepTime.min)  ///是否有睡眠时长
@@ -537,6 +540,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,348,136,33);
     compo_textbox_set(txt, buf);
+    compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
 ///////////////////////////////////////////////////////////////////////////
 #define height_spacing 84
 #define first_y 408
@@ -552,25 +556,25 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, 42, first_y,100,32);
     compo_textbox_set(txt, i18n[STR_DEEP_SLEEP]);
-    compo_textbox_set_forecolor(txt, make_color(0x69, 0x7e, 0xff));
+    compo_textbox_set_forecolor(txt, make_color(127, 43, 235));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_LIGHT_SLEEP]));///* 浅睡*
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, 42, first_y+height_spacing,100,32);
     compo_textbox_set(txt, i18n[STR_LIGHT_SLEEP]);
-    compo_textbox_set_forecolor(txt, make_color(0x36, 0xb7, 0xff));
+    compo_textbox_set_forecolor(txt, make_color(192, 67, 255));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, 42, first_y+height_spacing*2,100,32);
     compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
-    compo_textbox_set_forecolor(txt, make_color(0xff, 0x87, 0x0f));
+    compo_textbox_set_forecolor(txt, make_color(254, 255, 220));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, 42, first_y+height_spacing*3,100,32);
     compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
-    compo_textbox_set_forecolor(txt, make_color(0x00, 0xf7, 0xd6));
+    compo_textbox_set_forecolor(txt, make_color(214, 149, 49));
 //////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
     {
@@ -662,17 +666,17 @@ compo_form_t *func_sleep_form_create(void)
     uint16_t startX = ((GUI_SCREEN_WIDTH-width)/2);     // 相对坐标
     uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1+10;
 
-    sleep_data->recordCnt = 5;
-    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
-    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
-    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
-    sleep_data->sleep_record[2].state = REM_SLEEP;
-    sleep_data->sleep_record[4].state = DEEP_SLEEP;
-    sleep_data->sleep_record[0].period = 1;
-    sleep_data->sleep_record[1].period = 100;
-    sleep_data->sleep_record[2].period = 120;
-    sleep_data->sleep_record[3].period = 119;
-    sleep_data->sleep_record[4].period = 20;
+    // sleep_data->recordCnt = 5;
+    // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
+    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[2].state = REM_SLEEP;
+    // sleep_data->sleep_record[4].state = DEEP_SLEEP;
+    // sleep_data->sleep_record[0].period = 1;
+    // sleep_data->sleep_record[1].period = 100;
+    // sleep_data->sleep_record[2].period = 120;
+    // sleep_data->sleep_record[3].period = 119;
+    // sleep_data->sleep_record[4].period = 20;
 
     for(int k=0; k<sleep_data->recordCnt; k++)
     {

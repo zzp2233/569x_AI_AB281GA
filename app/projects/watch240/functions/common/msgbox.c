@@ -1452,20 +1452,26 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             else if (sys_cb.cover_index == REMIND_COVER_LOW_BATTERY)  //低电提醒
             {
 #if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
-                compo_picturebox_t *picbox = compo_picturebox_create(frm, 0);
-                compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.7);
-
-                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.9,GUI_SCREEN_WIDTH/1.2,30);//调整文本位置
-                compo_textbox_set(txt_msg, i18n[STR_LOW_BATTERY]);
-                //title
-                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_location(txt_title, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/4.5,230,30);//调整文本位置
-                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_32_BIN);
+                char *str_buf = ab_zalloc(strlen(i18n[STR_LOW_BATTERY_MODE])+10);
                 char level[4];
                 memset(level,0,sizeof(level));
-                sprintf(level,"%d%%",uteDrvBatteryCommonGetLvl());
-                compo_textbox_set(txt_title, level);
+                snprintf(level,sizeof(level),"%d",uteDrvBatteryCommonGetLvl());
+                uteModuleCharencodeReplaceSubString(i18n[STR_LOW_BATTERY_MODE], str_buf,"##",level);
+
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, strlen(str_buf));
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20,GUI_SCREEN_WIDTH/1.2,60);//调整文本位置
+                compo_textbox_set(txt_msg, str_buf);
+                compo_textbox_set_multiline_drag(txt_msg,true);
+                ab_free(str_buf);
+
+                btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_COMFIRM_BIN);
+                compo_setid(btn, COMPO_ID_BTN_OK);
+                compo_button_set_pos(btn, 80/2+209,80/2+224);
+
+                btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_CANCEL_BIN);
+                compo_setid(btn, COMPO_ID_BTN_CANCEL);
+                compo_button_set_pos(btn, 80/2+71,80/2+224);
+                break;
 #endif // UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
             }
             else if(sys_cb.cover_index == REMIND_COVER_TIMER_FINISH)//计时器结束
@@ -1613,7 +1619,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                     res_ok = UI_BUF_I338001_20_ALARM_CLOCK_COMFIRM_BIN;
                     break;
                 default:
-                    res_ok = 0;
+                    res_ok = UI_BUF_I338001_20_ALARM_CLOCK_COMFIRM_BIN;
                     break;
             }
             btn = compo_button_create_by_image(frm, res_ok);

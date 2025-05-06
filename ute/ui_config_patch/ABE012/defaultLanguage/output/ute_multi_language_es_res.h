@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 西班牙(西班牙）
 *@author
-*@date   2025-05-05 14:59:12
+*@date   2025-05-05 16:15:23
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -214,13 +214,13 @@ const char * const i18n_es_res[] =
     [STR_START] = "\x45\x6d\x70\x65\x7a\x61\x72\x00", // [198] Empezar
     [STR_STOP] = "\x44\x65\x74\x65\x6e\x65\x72\x00", // [199] Detener
     [STR_CLICK_OPEN] = "\x48\x61\x67\x61\x20\x63\x6c\x69\x63\x20\x65\x6e\x20\x6c\x61\x20\x70\x61\x6e\x74\x61\x6c\x6c\x61\x20\x70\x61\x72\x61\x20\x61\x62\x72\x69\x72\x00", // [200] Haga clic en la pantalla para abrir
-    [STR_CALENDAR_ONE] = "\x55\x6e\x6f\x00", // [201] Uno
-    [STR_CALENDAR_TWO] = "\x44\x6f\x73\x00", // [202] Dos
-    [STR_CALENDAR_THREE] = "\x54\x72\x65\x73\x00", // [203] Tres
-    [STR_CALENDAR_HOUR] = "\x43\x75\x61\x74\x72\x6f\x00", // [204] Cuatro
-    [STR_CALENDAR_FIVE] = "\x43\x69\x6e\x63\x6f\x00", // [205] Cinco
-    [STR_CALENDAR_SIX] = "\x53\x65\x69\x73\x00", // [206] Seis
-    [STR_CALENDAR_SEVEN] = "\x44\xc3\xad\x61\x00", // [207] Día
+    [STR_CALENDAR_ONE] = "\x4d\x00", // [201] M
+    [STR_CALENDAR_TWO] = "\x54\x00", // [202] T
+    [STR_CALENDAR_THREE] = "\x57\x00", // [203] W
+    [STR_CALENDAR_HOUR] = "\x54\x00", // [204] T
+    [STR_CALENDAR_FIVE] = "\x46\x00", // [205] F
+    [STR_CALENDAR_SIX] = "\x53\x00", // [206] S
+    [STR_CALENDAR_SEVEN] = "\x53\x00", // [207] S
     [STR_MORE] = "\x4d\xc3\xa1\x73\x00", // [208] Más
     [STR_COMMON_APP] = "\x41\x70\x6c\x69\x63\x61\x63\x69\x6f\x6e\x65\x73\x20\x63\x6f\x6d\x75\x6e\x65\x73\x00", // [209] Aplicaciones comunes
     [STR_ITALY] = "\x49\x74\x61\x6c\x69\x61\x6e\x6f\x00", // [210] Italiano

@@ -6,6 +6,8 @@
 
 #include "ute_multi_language_ru_rru.h"
 
+#include "ute_multi_language_de_rde.h"
+
 #include "ute_multi_language_es_res.h"
 
 #include "ute_multi_language_fr_rfr.h"

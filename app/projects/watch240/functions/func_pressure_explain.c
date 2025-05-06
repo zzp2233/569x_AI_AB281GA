@@ -177,6 +177,7 @@ static void func_pressure_explain_message(size_msg_t msg)
         case MSG_CTP_TOUCH:
             if(f_pressure_explain->ptm)
             {
+
                 compo_page_move_touch_handler(f_pressure_explain->ptm);
             }
             break;

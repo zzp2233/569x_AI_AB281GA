@@ -1479,13 +1479,13 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff,sizeof(str_buff),"%d",weather_date.fristDayCurrTemperature);
     }
     txt = compo_textbox_create(frm,strlen(str_buff));
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
     compo_textbox_set_pos(txt,82/2+188,58/2+92);
     compo_textbox_set(txt, str_buff);
 
     txt = compo_textbox_create(frm,1);
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_28_BIN);
-    compo_textbox_set_pos(txt,28/2+270,42/2+87);
+    compo_textbox_set_pos(txt,28/2+270,40+87);
     compo_textbox_set(txt, displayInfo.isFahrenheit ? "℉" : "℃");
 
     if(!weather_no_data_flag)

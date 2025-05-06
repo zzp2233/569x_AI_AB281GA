@@ -312,158 +312,6 @@ static void func_light_button_click(void)
     }
     func_light_disp_Refresh();
 }
-#elif 0//GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-
-//组件ID
-enum
-{
-    //按键
-    COMPO_ID_BTN_REDUCE = 1,
-    COMPO_ID_BTN_INCREASE,
-
-    //图像
-    COMPO_ID_PIC_LEVEL1,            //亮度等级 1~5
-    COMPO_ID_PIC_LEVEL2,
-    COMPO_ID_PIC_LEVEL3,
-    COMPO_ID_PIC_LEVEL4,
-    COMPO_ID_PIC_LEVEL5,
-    COMPO_ID_PIC_REDUCE_CLICK,      //按钮触摸效果图
-    COMPO_ID_PIC_INCREASE_CLICK,
-};
-
-typedef struct f_light_t_
-{
-    int last_y_move;
-    u8 light_level;
-} f_light_t;
-
-typedef struct light_pic_item_t_
-{
-    u32 res_addr;
-    u16 pic_id;
-    s16 x;
-    s16 y;
-} light_pic_item_t;
-
-#define LIGHT_PIC_ITEM_CNT    ((int)(sizeof(tbl_light_pic_item) / sizeof(tbl_light_pic_item[0])))
-
-//图片item，创建时遍历一下
-static const light_pic_item_t tbl_light_pic_item[] =
-{
-    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN,     COMPO_ID_PIC_LEVEL1,         120,     82     },
-    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL2,         120,     123    },
-    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL3,         120,     164    },
-    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN,     COMPO_ID_PIC_LEVEL4,         120,     205    },
-    {UI_BUF_I330001_SETTINGS_BRIGHTNESS_00_BIN,     COMPO_ID_PIC_LEVEL5,         120,     246    },
-};
-
-//创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
-compo_form_t *func_light_form_create(void)
-{
-
-    //新建窗体和背景
-    compo_form_t *frm = compo_form_create(true);
-
-    //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_LIGHT]);
-
-    //新建按钮
-    compo_button_t *btn;
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_LESS_BIN);
-    compo_setid(btn, COMPO_ID_BTN_REDUCE);
-    compo_button_set_pos(btn, 39, 164);
-
-    btn = compo_button_create_by_image(frm, UI_BUF_I330001_SETTINGS_BRIGHTNESS_PLUS_BIN);
-    compo_setid(btn, COMPO_ID_BTN_INCREASE);
-    compo_button_set_pos(btn, 201, 164);
-
-    //新建图像
-    compo_picturebox_t *pic_level[LIGHT_PIC_ITEM_CNT];
-    for (u8 idx = 0; idx < LIGHT_PIC_ITEM_CNT; idx++)
-    {
-        pic_level[idx] = compo_picturebox_create(frm, tbl_light_pic_item[idx].res_addr);
-        compo_setid(pic_level[idx], tbl_light_pic_item[idx].pic_id);
-        compo_picturebox_set_pos(pic_level[idx], tbl_light_pic_item[idx].x, tbl_light_pic_item[idx].y);
-    }
-    return frm;
-}
-
-static void func_light_disp_Refresh(void)
-{
-    compo_picturebox_t *pic_level[5];
-    pic_level[0] = compo_getobj_byid(COMPO_ID_PIC_LEVEL1);
-    pic_level[1] = compo_getobj_byid(COMPO_ID_PIC_LEVEL2);
-    pic_level[2] = compo_getobj_byid(COMPO_ID_PIC_LEVEL3);
-    pic_level[3] = compo_getobj_byid(COMPO_ID_PIC_LEVEL4);
-    pic_level[4] = compo_getobj_byid(COMPO_ID_PIC_LEVEL5);
-
-    switch(sys_cb.light_level)
-    {
-        case 1:
-            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-            break;
-        case 2:
-            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-            break;
-        case 3:
-            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_04_BIN);
-            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-            break;
-        case 4:
-            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_01_BIN);
-            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-            break;
-        case 5:
-            compo_picturebox_set(pic_level[0], UI_BUF_I330001_SETTINGS_BRIGHTNESS_03_BIN);
-            compo_picturebox_set(pic_level[1], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[2], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[3], UI_BUF_I330001_SETTINGS_BRIGHTNESS_05_BIN);
-            compo_picturebox_set(pic_level[4], UI_BUF_I330001_SETTINGS_BRIGHTNESS_02_BIN);
-            break;
-    }
-}
-
-//单击按钮
-static void func_light_button_click(void)
-{
-    int id = compo_get_button_id();
-
-    switch (id)
-    {
-        case COMPO_ID_BTN_REDUCE:
-            if (sys_cb.light_level > DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE && sys_cb.light_level <= DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
-            {
-                sys_cb.light_level--;
-            }
-            break;
-
-        case COMPO_ID_BTN_INCREASE:
-            if (sys_cb.light_level >= DEFAULT_BACK_LIGHT_PERCENT_MIN / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE && sys_cb.light_level < DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE)
-            {
-                sys_cb.light_level++;
-            }
-            break;
-
-        default:
-            break;
-    }
-    func_light_disp_Refresh();
-}
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 //组件ID
 enum
@@ -529,7 +377,85 @@ static void func_light_disp_move_handle(void)
 
             if(level_data != f_light->level_value)
             {
-                printf("level_data:%d\n",level_data);
+                // printf("level_data:%d\n",level_data);
+                f_light->level_value = level_data;
+                compo_picturebox_cut(light_pic,(uint8_t)level_data-1,5);
+                tft_bglight_set_level((uint8_t)level_data,false);
+            }
+        }
+        else
+        {
+            f_light->level_old = f_light->level_value;
+        }
+    }
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+//组件ID
+enum
+{
+    //按键
+    COMPO_ID_LIGHT_PIC = 1,
+    COMPO_ID_LIGHT_BTN,
+};
+
+#define SPACING_COUNT  (-40)
+typedef struct f_light_t_
+{
+    bool touch_flag;
+    s32  move_offset;
+    s32  move_offset_old;
+    s8   level_old;
+    s8   level_value;
+} f_light_t;
+//创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_light_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_LIGHT]);
+    //亮度
+    compo_picturebox_t *light_pic = compo_picturebox_create(frm, UI_BUF_I338001_28_SET_BRIGHTNESS_00_BIN);
+    compo_setid(light_pic, COMPO_ID_LIGHT_PIC);
+    compo_picturebox_set_pos(light_pic, GUI_SCREEN_CENTER_X, 79+266/2);
+    compo_picturebox_cut(light_pic,sys_cb.light_level-1,5);
+
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn,GUI_SCREEN_CENTER_X, 79+266/2,90,266);
+    compo_setid(btn,COMPO_ID_LIGHT_BTN);
+
+    if(func_cb.sta == FUNC_LIGHT)
+    {
+        f_light_t *f_light = (f_light_t *)func_cb.f_cb;
+        f_light->level_old = (s8)sys_cb.light_level;
+    }
+
+    return frm;
+}
+static void func_light_disp_move_handle(void)
+{
+    f_light_t *f_light = (f_light_t *)func_cb.f_cb;
+    if(f_light->touch_flag)//触摸状态
+    {
+        s32 dx, dy;
+        f_light->touch_flag = ctp_get_dxy(&dx, &dy);
+
+        compo_picturebox_t *light_pic = compo_getobj_byid(COMPO_ID_LIGHT_PIC);
+        if(f_light->touch_flag)//触摸状态
+        {
+            s8 level_data= (dy/SPACING_COUNT)+f_light->level_old;
+
+            if(level_data<1)
+                level_data=1;
+            else if(level_data>5)
+                level_data=5;
+
+            if(level_data != f_light->level_value)
+            {
+                // printf("level_data:%d\n",level_data);
                 f_light->level_value = level_data;
                 compo_picturebox_cut(light_pic,(uint8_t)level_data-1,5);
                 tft_bglight_set_level((uint8_t)level_data,false);
@@ -562,7 +488,7 @@ static void func_light_disp_Refresh(void)
 //亮度调节功能事件处理
 static void func_light_process(void)
 {
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     func_light_disp_move_handle();
 #endif
     func_process();
@@ -575,7 +501,7 @@ static void func_light_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
             if(compo_get_button_id() == COMPO_ID_LIGHT_BTN && f_light->touch_flag == false)
             {
                 f_light->touch_flag = true;

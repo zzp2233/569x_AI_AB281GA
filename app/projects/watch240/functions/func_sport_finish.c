@@ -1268,7 +1268,7 @@ compo_form_t *func_sport_finish_form_create(void)
     area_t txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING,88,30);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,253+TXT_SPACING,88,30);
     compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
@@ -1296,7 +1296,7 @@ compo_form_t *func_sport_finish_form_create(void)
     txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*2,88,30);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,253+TXT_SPACING*2,88,30);
     compo_textbox_set(textbox, i18n[STR_KCAL]);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -1359,7 +1359,7 @@ compo_form_t *func_sport_finish_form_create(void)
         txt_leng = widget_text_get_area(textbox->txt);
         textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_ORDER]));
         compo_textbox_set_align_center(textbox, false);
-        compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*3,88,30);
+        compo_textbox_set_location(textbox,130+txt_leng.wid,253+TXT_SPACING*3,88,30);
         compo_textbox_set(textbox, i18n[STR_SPORT_ORDER]);
 
         return frm;
@@ -1390,7 +1390,7 @@ compo_form_t *func_sport_finish_form_create(void)
     txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_STEP]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*3,88,30);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,253+TXT_SPACING*3,88,30);
     compo_textbox_set(textbox, i18n[STR_STEP]);
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
@@ -1437,7 +1437,7 @@ compo_form_t *func_sport_finish_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"/%s",uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*4,88,30);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,253+TXT_SPACING*4,88,30);
     compo_textbox_set(textbox, txt_buf);
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
@@ -1466,7 +1466,7 @@ compo_form_t *func_sport_finish_form_create(void)
     txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_MILE])+strlen(i18n[STR_KILOMETRE]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,130+txt_leng.wid,251+TXT_SPACING*5,88,30);
+    compo_textbox_set_location(textbox,130+txt_leng.wid,253+TXT_SPACING*5,88,30);
     compo_textbox_set(textbox, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
 
     return frm;

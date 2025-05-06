@@ -375,8 +375,25 @@ compo_form_t *func_activity_form_create(void)
     char txt_buf[20];
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
+    uint32_t totalStepCnt_handle = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
-    u8 pic_dis =(totalStepCnt / uteModuleSportGetStepsTargetCnt());
+    if(totalStepCnt > uteModuleSportGetStepsTargetCnt())
+    {
+        totalStepCnt_handle = uteModuleSportGetStepsTargetCnt();
+    }
+    else
+    {
+        if(totalStepCnt!=0)
+        {
+            totalStepCnt_handle = uteModuleSportGetStepsTargetCnt()/totalStepCnt;
+        }
+        else
+        {
+            totalStepCnt_handle = 0;
+        }
+
+    }
+    u8 pic_dis = totalStepCnt_handle!=0 ? (100/(totalStepCnt_handle)/10 ) : 0;
     if(pic_dis>10)pic_dis=10;
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数
@@ -392,9 +409,6 @@ compo_form_t *func_activity_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_EVREY_DAY_ACTIVITY]);
 
-    // widget_page_set_client(frm->page_body,0,TITLE_BAR_HIGH);
-    // widget_page_t *page_body_2 = widget_page_create(frm->page_body);
-    // frm->page_body = page_body_2;
 
     compo_picturebox_t * pic;
     compo_textbox_t *textbox;
@@ -402,17 +416,17 @@ compo_form_t *func_activity_form_create(void)
 #define TXT_SPACING  87
 
     pic = compo_picturebox_create(frm,UI_BUF_I338001_5_ACTIVITY_KCAL_BIN);
-    compo_picturebox_set_pos(pic,114/2+58,189/2+96-TITLE_BAR_HIGH);
+    compo_picturebox_set_pos(pic,114/2+58,20+189/2+96-TITLE_BAR_HIGH);
     compo_picturebox_cut(pic,pic_dis,11);
     compo_setid(pic,KCAL_ARC_ID);
 
     pic = compo_picturebox_create(frm,UI_BUF_I338001_5_ACTIVITY_STEPS_BIN);
-    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,115/2+249-TITLE_BAR_HIGH);
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,20+115/2+249-TITLE_BAR_HIGH);
     compo_picturebox_cut(pic,pic_dis,11);
     compo_setid(pic,STEP_ARC_ID);
 
     pic = compo_picturebox_create(frm,UI_BUF_I338001_5_ACTIVITY_DIS_BIN);
-    compo_picturebox_set_pos(pic,114/2+188,189/2+96-TITLE_BAR_HIGH);
+    compo_picturebox_set_pos(pic,114/2+188,20+189/2+96-TITLE_BAR_HIGH);
     compo_picturebox_cut(pic,pic_dis,11);
     compo_setid(pic,KM_ARC_ID);
 
@@ -1074,7 +1088,7 @@ static void func_activity_message(size_msg_t msg)
             break;
         case MSG_CTP_CLICK:
             // uteModuleCallChangeEntertranmentVoiceSwitchStatus();
-            // func_cb.sta = FUNC_CHARGE;
+            // func_cb.sta = FUNC_HEART_WARNING;
             // sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
             // msgbox(NULL, NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
             break;

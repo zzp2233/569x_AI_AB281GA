@@ -2432,11 +2432,11 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     compo_button_t * btn = compo_button_create_page_by_image(frm,frm->page,UI_BUF_I338001_3_EXERCISE_BTN_FINISH_BIN);
     compo_setid(btn,COMPO_ID_BTN_SPORT_EXIT);
-    compo_button_set_pos(btn,-(GUI_SCREEN_WIDTH)+80/2+209,80/2+224);
+    compo_button_set_pos(btn,-(GUI_SCREEN_WIDTH)+80/2+71,80/2+224);
 
     btn =compo_button_create_page_by_image(frm,frm->page,UI_BUF_I338001_3_EXERCISE_BTN_PLAY_BACK_BIN);
     compo_setid(btn,COMPO_ID_BTN_SPORT_STOP);
-    compo_button_set_pos(btn,-(GUI_SCREEN_WIDTH)+80/2+71,80/2+224);
+    compo_button_set_pos(btn,-(GUI_SCREEN_WIDTH)+80/2+209,80/2+224);
 
     txt = compo_textbox_create_for_page(frm,frm->page, strlen(i18n[STR_PAUSE]));
     compo_textbox_set_location(txt,-GUI_SCREEN_CENTER_X,42/2+86, 200, 30);
@@ -2548,7 +2548,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+113*4, GUI_SCREEN_CENTER_X-51, 50);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+113*3, GUI_SCREEN_CENTER_X-51, 50);
     memset(txt_buf,0,sizeof(txt_buf));
     if(data->saveData.avgTimeSecond)
     {

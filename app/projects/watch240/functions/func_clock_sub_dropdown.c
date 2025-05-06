@@ -2118,12 +2118,6 @@ static void func_clock_sub_dropdown_form_create(void)
     f_clk->masklayer = masklayer;
 }
 
-static u8 disp_flag;
-static u8 touch_state=false;
-static s32 old_dx = 0;
-static s16 touch_last_dx = 0;
-uint32_t tick = 0;
-#define MOVE_DISP_PIXEL   GUI_SCREEN_WIDTH/24
 //下滑菜单左右滑动处理
 static void func_clock_sub_dropdown_slide_handle(void)
 {
@@ -2135,13 +2129,13 @@ static void func_clock_sub_dropdown_slide_handle(void)
         compo_page_move_process(f_clk->ptm);
         switch (compo_page_move_get_offset(f_clk->ptm))
         {
-            case -GUI_SCREEN_WIDTH...0:
+            case -(GUI_SCREEN_WIDTH/2)...0:
                 compo_picturebox_cut(ymd,0,3);
                 break;
-            case (-(GUI_SCREEN_WIDTH*2))...(-GUI_SCREEN_WIDTH-1):
+            case (-(GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2))...(-GUI_SCREEN_WIDTH/2-1):
                 compo_picturebox_cut(ymd,1,3);
                 break;
-            case (-(GUI_SCREEN_WIDTH*3))...(-GUI_SCREEN_WIDTH*2-1):
+            case (-(GUI_SCREEN_WIDTH*3))...(-(GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2)-1):
                 compo_picturebox_cut(ymd,2,3);
                 break;
             default:
@@ -2400,8 +2394,6 @@ static void func_clock_sub_dropdown_enter(void)
     touch_state=false;
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     get_menu_idx_update();
-    disp_flag=false;
-    touch_state=false;
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_clock_sub_dropdown_form_create();
     if (!func_switching(FUNC_SWITCH_MENU_DROPDOWN_DOWN, NULL))

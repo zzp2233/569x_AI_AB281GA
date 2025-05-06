@@ -198,9 +198,9 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
 {
     /*id                               res_addr,                              str_idx,                pic_y,                txt_y                  title_y   */
     [REMIND_COVER_ALARM]            = {0,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5-20,  GUI_SCREEN_CENTER_Y-20},
-    [REMIND_COVER_HEALTH_SEDENTARY] = {0,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I338001_REMIND_SPORTS_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_FIND_WATCH]       = {0,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
-    [REMIND_COVER_GOAL]             = {0,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
+    [REMIND_COVER_GOAL]             = {UI_BUF_I338001_REMIND_GOAL_BIN,         STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I338001_27_MORE_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},        //自定义
     [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义

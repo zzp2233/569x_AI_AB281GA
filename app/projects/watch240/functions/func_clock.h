@@ -29,6 +29,7 @@ typedef struct f_clock_t_
     void *sub_cb;
     compo_shape_t *masklayer;
     uint32_t tick;
+    page_tp_move_t *ptm;
 } f_clock_t;
 
 //主窗体

@@ -1782,7 +1782,7 @@ static void func_clock_sub_dropdown_click_handler(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
-#define PAGE_HEIGHT     176
+#define PAGE_HEIGHT     190
 #define  BT_ON_PIC_BIN       UI_BUF_I338001_PRIMARY_FUNCTION_CALL_BIN    ///BT 连接状态图片
 #define  BT_OFF_PIC_BIN      UI_BUF_I338001_PRIMARY_FUNCTION_GRAY_CALL_BIN   ///BT 断开状态图片
 #define  BLE_ON_PIC_BIN      UI_BUF_I338001_PRIMARY_FUNCTION_BLUETOOTH_BIN      ///BLE 连接状态图片
@@ -2048,18 +2048,16 @@ static void func_clock_sub_dropdown_form_create(void)
 
     widget = widget_page_create(frm->page);///创建按键页面
     widget_page_set_client(widget, 0, 0);
-    widget_set_location(widget,GUI_SCREEN_WIDTH, GUI_SCREEN_CENTER_Y+PAGE_HEIGHT_ADJUST,GUI_SCREEN_WIDTH*3,PAGE_HEIGHT);
+    widget_set_location(widget,GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2,GUI_SCREEN_HEIGHT/2,GUI_SCREEN_WIDTH*3,GUI_SCREEN_HEIGHT);
 
     // picbox = compo_picturebox_create(frm, UI_BUF_I338001_PRIMARY_FUNCTION_NUM_24_14X19_BIN);
     // compo_picturebox_set_pos(picbox,184+14/2, 40+19/2);
     // compo_setid(picbox,COMPO_ID_PIC_GREY);
 
-
-
     //电池
     compo_picturebox_t *battery_pic = compo_picturebox_create(frm, UI_BUF_I338001_PRIMARY_FUNCTION_ICON_BATT_36X19_BIN);
     compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
-    compo_picturebox_set_pos(battery_pic, 250+36/2, 44+19/2);
+    compo_picturebox_set_pos(battery_pic, 18+250, 46+9);
     compo_picturebox_cut(battery_pic,uteDrvBatteryCommonGetBatteryIndex(5),11);
 
     ///创建页码点
@@ -2075,7 +2073,7 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_button_t *btn;
     for (u8 idx_btn = 0; idx_btn < DROPDOWN_DISP_BTN_ITEM_CNT; idx_btn++)
     {
-        btn =compo_button_create_page_by_image(frm,frm->page, tbl_dropdown_disp_btn_item[idx_btn].res_addr);
+        btn =compo_button_create_page_by_image(frm,widget, tbl_dropdown_disp_btn_item[idx_btn].res_addr);
         compo_setid(btn,  tbl_dropdown_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_dropdown_disp_btn_item[idx_btn].x, tbl_dropdown_disp_btn_item[idx_btn].y);
     }
@@ -2084,12 +2082,12 @@ static void func_clock_sub_dropdown_form_create(void)
     //蓝牙状态 Ble
     compo_picturebox_t *bluetooth_pic = compo_picturebox_create(frm, BT_ON_PIC_BIN);
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BLUETOOTH_STA_PIC);
-    compo_picturebox_set_pos(bluetooth_pic,180, 25);
+    compo_picturebox_set_pos(bluetooth_pic,18+75, 46+9);
 
     //蓝牙状态 Bt
     bluetooth_pic = compo_picturebox_create(frm, BLE_OFF_PIC_BIN);
     compo_setid(bluetooth_pic, COMPO_ID_TXT_BTETOOTH_STA_PIC);
-    compo_picturebox_set_pos(bluetooth_pic,146, 25);
+    compo_picturebox_set_pos(bluetooth_pic,18+122, 46+9);
 
 
     char txt_buf[50];
@@ -2098,8 +2096,14 @@ static void func_clock_sub_dropdown_form_create(void)
 
     snprintf(txt_buf,sizeof(txt_buf),"%02d/%02d %s",time.month,time.day,i18n[STR_SUNDAY+time.week]);
     compo_textbox_t *textbox = compo_textbox_create(frm,strlen(txt_buf));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,68,170,40);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,81+45/2,170,40);
     compo_textbox_set(textbox,txt_buf );
+
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",uteDrvBatteryCommonGetLvl());
+    textbox = compo_textbox_create(frm,4);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,64,130,40);
+    compo_textbox_set(textbox,txt_buf );
+    compo_textbox_set_right_align(textbox,true);
 
     func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
     func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
@@ -2123,128 +2127,25 @@ uint32_t tick = 0;
 //下滑菜单左右滑动处理
 static void func_clock_sub_dropdown_slide_handle(void)
 {
-    s32 dy=0,dx=0;
-    bool touch_flag = 0;
-    compo_picturebox_t *picbox_white = compo_getobj_byid(COMPO_ID_PIC_WHITE);
+    f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
+    compo_picturebox_t *ymd = compo_getobj_byid(COMPO_ID_PIC_WHITE);
 
-    touch_flag = ctp_get_dxy(&dx, &dy);
-    if(touch_flag == true)
+    if(f_clk->ptm)
     {
-        old_dx = dx;
-        touch_last_dx = ctp_get_last_dxy().x;
-        if(disp_flag == 1)
+        compo_page_move_process(f_clk->ptm);
+        switch (compo_page_move_get_offset(f_clk->ptm))
         {
-            old_dx=old_dx-GUI_SCREEN_WIDTH;
-            if(old_dx < -GUI_SCREEN_WIDTH)
-            {
-                old_dx = -GUI_SCREEN_WIDTH;
-            }
-        }
-        else if (disp_flag == 2)
-        {
-            old_dx=old_dx-2*GUI_SCREEN_WIDTH;
-            if(old_dx < -2*GUI_SCREEN_WIDTH)
-            {
-                old_dx = -2*GUI_SCREEN_WIDTH;
-            }
-        }
-        else
-        {
-            if(old_dx>0)old_dx=0;
-        }
-        widget_page_set_client(widget, old_dx, 0);
-        widget_page_update();
-        touch_state = 1;
-    }
-    else if(touch_state)
-    {
-        if(touch_state == 1)
-        {
-            if(disp_flag == 1)
-            {
-                if(old_dx < -GUI_SCREEN_CENTER_X || touch_last_dx <=(-7))
-                {
-                    touch_state = 2;
-                    disp_flag = 1;
-                }
-                else
-                {
-                    touch_state = 3;
-                }
-            }
-            else if(disp_flag == 2)
-            {
-                if(old_dx < -2*GUI_SCREEN_CENTER_X || touch_last_dx <=(-7))
-                {
-                    touch_state = 2;
-                    disp_flag = 2;
-                }
-                else
-                {
-                    touch_state = 3;
-                }
-            }
-            else
-            {
-                if(old_dx > -GUI_SCREEN_CENTER_X ||  touch_last_dx >=7)
-                {
-                    touch_state = 4;
-                    disp_flag = 0;
-                }
-                // else if()
-                //{
-
-                //}
-                else
-                {
-                    touch_state = 5;
-                }
-            }
-        }
-        if(old_dx == 0 || old_dx == -GUI_SCREEN_WIDTH) touch_state = 0;
-
-        if(tick_check_expire(tick, 3))
-        {
-            tick = tick_get();
-            switch(touch_state)
-            {
-                case 2:
-                    old_dx -=MOVE_DISP_PIXEL;
-                    if(old_dx<=-GUI_SCREEN_WIDTH)
-                    {
-                        touch_state = 0;
-                        old_dx=-GUI_SCREEN_WIDTH;
-                        //compo_picturebox_set(picbox_white,PAGE_NUM_GREY_BIN);
-                    }
-                    break;
-                case 3:
-                    old_dx+=MOVE_DISP_PIXEL;
-                    if(old_dx >= 0)
-                    {
-                        touch_state = 0;
-                        old_dx = 0;
-                    }
-                    break;
-                case 4:
-                    old_dx+=MOVE_DISP_PIXEL;
-                    if(old_dx >= 0)
-                    {
-                        touch_state = 0;
-                        old_dx = 0;
-                        // compo_picturebox_set(picbox_white,PAGE_NUM_WHITE_BIN);
-                    }
-                    break;
-                case 5:
-                    old_dx -=MOVE_DISP_PIXEL;
-                    if(old_dx <= -GUI_SCREEN_WIDTH)
-                    {
-                        touch_state = 0;
-                        old_dx = -GUI_SCREEN_WIDTH;
-                    }
-                    break;
-            }
-            widget_page_set_client(widget, old_dx, 0);
-            widget_page_update();
+            case -GUI_SCREEN_WIDTH...0:
+                compo_picturebox_cut(ymd,0,3);
+                break;
+            case (-(GUI_SCREEN_WIDTH*2))...(-GUI_SCREEN_WIDTH-1):
+                compo_picturebox_cut(ymd,1,3);
+                break;
+            case (-(GUI_SCREEN_WIDTH*3))...(-GUI_SCREEN_WIDTH*2-1):
+                compo_picturebox_cut(ymd,2,3);
+                break;
+            default:
+                break;
         }
     }
 }
@@ -2397,6 +2298,12 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
     dropdown_disp_btn_item_t *f_dropdown =(dropdown_disp_btn_item_t *)func_cb.f_cb;
     switch (msg)
     {
+        case MSG_CTP_TOUCH:
+            if(f_clk->ptm)
+            {
+                compo_page_move_touch_handler(f_clk->ptm);
+            }
+            break;
         case MSG_CTP_CLICK:
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
             func_clock_sub_dropdown_click_handler();
@@ -2503,6 +2410,21 @@ static void func_clock_sub_dropdown_enter(void)
     }
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sta = FUNC_CLOCK_SUB_DROPDOWN;                   //进入到下拉菜单
+#if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+    f_clk->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = false,
+        .dir = 1,
+        .page_size =  GUI_SCREEN_WIDTH,
+        .page_count = 3,
+        .jump_perc = 20,
+        .quick_jump_perc = 360,
+        .up_over_perc = 10,
+        .down_over_perc = 10,
+    };
+    compo_page_move_init(f_clk->ptm, widget, &info);
+#endif
 }
 
 //时钟表盘下拉菜单退出处理
@@ -2510,6 +2432,10 @@ static void func_clock_sub_dropdown_exit(void)
 {
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     compo_form_destroy(f_clk->sub_frm);
+    if (f_clk->ptm)
+    {
+        func_free(f_clk->ptm);
+    }
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     func_clock_butterfly_set_light_visible(true);
 #endif

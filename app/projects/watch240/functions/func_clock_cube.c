@@ -71,7 +71,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define CUBE_DATE_WIDTH      300
 #define CUBE_DATE_HEIGHT     70
 
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 static const compo_cube_item_t tbl_menu_cube[] =
 {
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
@@ -92,7 +92,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
     {UI_BUF_DIALPLATE_CUBE_05_BIN, FUNC_BT},
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
-
+};
 // 时间数字字体
 #define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_54_BIN
 
@@ -120,7 +120,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define CUBE_DATE_WIDTH      300
 #define CUBE_DATE_HEIGHT     70
 
-};
+
 
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 static const compo_cube_item_t tbl_menu_cube[] =

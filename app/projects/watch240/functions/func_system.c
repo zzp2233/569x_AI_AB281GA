@@ -52,6 +52,50 @@ compo_form_t *func_system_sub_system_form_create(void)
 
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
+#define SYSTEM_LIST_CNT                       ((int)(sizeof(tbl_system_list) / sizeof(tbl_system_list[0])))
+
+enum
+{
+    COMPO_ID_SYSTEM = 1,
+};
+
+typedef struct f_set_list_t_
+{
+    compo_listbox_t *listbox;
+
+} f_set_list_t;
+
+static const compo_listbox_item_t tbl_system_list[] =
+{
+    {STR_SETTING_RESTART,            UI_BUF_I338001_28_SET_MENU_RESET_BIN,           .func_sta = FUNC_RESTART},    //重启
+    {STR_SETTING_OFF,                UI_BUF_I338001_28_SET_MENU_POWER_OFF_BIN,       .func_sta = FUNC_OFF},        //关机
+    {STR_SETTING_RSTFY,              UI_BUF_I338001_28_SET_MENU_RECOVER_BIN,         .func_sta = FUNC_RSTFY},    //恢复出厂
+};
+
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_system_sub_system_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SYSTEM_SET]);
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_set(listbox, tbl_system_list, SYSTEM_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_11_CALL_NEXT_BIN);
+    compo_setid(listbox, COMPO_ID_SYSTEM);
+
+    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update(listbox);
+
+    return frm;
+}
 #else
 #define SYSTEM_LIST_CNT                       ((int)(sizeof(tbl_system_list) / sizeof(tbl_system_list[0])))
 
@@ -210,7 +254,7 @@ void func_system_sub_exit(void)
 //主菜单功能
 void func_system_sub_system(void)
 {
-//    printf("pic w:%d h:%d\n",gui_image_get_size(tbl_setting_list->res_addr).wid,gui_image_get_size(tbl_setting_list->res_addr).hei);
+    printf("%s\n", __func__);
     func_system_sub_system_enter();
     while (func_cb.sta == FUNC_SYSTEM)
     {

@@ -177,7 +177,6 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_textbox_set(txt, i18n[STR_DEV_NEME]);
 
     txt = compo_textbox_create(frm,strlen(davName));
-    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134,220,34);
     compo_textbox_set(txt, davName);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
@@ -188,7 +187,6 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_textbox_set(txt, i18n[STR_SYS_VERSION]);
 
     txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
-    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING,220,34);
     compo_textbox_set(txt, UTE_SW_VERSION);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
@@ -199,7 +197,6 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_textbox_set(txt, i18n[STR_BLE_MAC]);
 
     txt = compo_textbox_create(frm,strlen(Ble_Address_str_buf));
-    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
     compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING*2,220,34);
     compo_textbox_set(txt, (char*)Ble_Address_str_buf);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));

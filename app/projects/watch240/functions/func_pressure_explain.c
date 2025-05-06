@@ -7,7 +7,7 @@
 #define TRACE(...)
 #endif
 
-#if UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT
 
 typedef struct f_pressure_explain_t_
 {
@@ -82,6 +82,81 @@ compo_form_t *func_pressure_explain_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+compo_form_t *func_pressure_explain_form_create(void)
+{
+
+    char str_buf[50];
+
+    compo_form_t *frm = compo_form_create(true);
+
+    // //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_STRESS]);
+
+    u16 page_size=0;
+
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_PRESSURE_EXPLAIN1]));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,36, 90, 290, 280);
+    compo_textbox_set_multiline(textbox, true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN1]);
+    compo_textbox_set_location(textbox,36, 90, 290, widget_text_get_area(textbox->txt).hei);
+    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN1]);
+    page_size=widget_text_get_area(textbox->txt).hei+90;
+
+    memset(str_buf,0,sizeof(str_buf));
+    snprintf(str_buf,sizeof(str_buf),"%s1-29",i18n[STR_RELAXED]);
+    textbox = compo_textbox_create(frm, strlen(str_buf));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,55, page_size+30, 220, 280);
+    compo_textbox_set(textbox,str_buf);
+
+    memset(str_buf,0,sizeof(str_buf));
+    snprintf(str_buf,sizeof(str_buf),"%s30-59",i18n[STR_NORMAL]);
+    textbox = compo_textbox_create(frm, strlen(str_buf));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,55, page_size+30+47, 220, 280);
+    compo_textbox_set(textbox,str_buf);
+
+    memset(str_buf,0,sizeof(str_buf));
+    snprintf(str_buf,sizeof(str_buf),"%s60-79",i18n[STR_MEDIUM]);
+    textbox = compo_textbox_create(frm, strlen(str_buf));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,55, page_size+30+47*2, 220, 280);
+    compo_textbox_set(textbox,str_buf);
+
+    memset(str_buf,0,sizeof(str_buf));
+    snprintf(str_buf,sizeof(str_buf),"%s80-100",i18n[STR_HIGH]);
+    textbox = compo_textbox_create(frm, strlen(str_buf));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,55, page_size+30+47*3, 220, 280);
+    compo_textbox_set(textbox,str_buf);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm,UI_BUF_I338001_16_PRESSURE_EXPALIN_BIN );
+    compo_picturebox_set_pos(picbox,gui_image_get_size(UI_BUF_I338001_16_PRESSURE_EXPALIN_BIN).wid/2+36,page_size+20+47*2 );
+    page_size+=(gui_image_get_size(UI_BUF_I338001_16_PRESSURE_EXPALIN_BIN).hei+70);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PRESSURE_EXPLAIN2]));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,36, page_size, 290, 280);
+    compo_textbox_set_multiline(textbox, true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN2]);
+    compo_textbox_set_location(textbox,36, page_size, 290, widget_text_get_area(textbox->txt).hei);
+    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN2]);
+    page_size+=widget_text_get_area(textbox->txt).hei+70;
+
+    if(func_cb.sta == FUNC_PRESSURE_EXPLAIN)
+    {
+        f_pressure_explain_t *f_pressure_explain = (f_pressure_explain_t *)func_cb.f_cb;
+        f_pressure_explain->page_size = page_size;
+    }
+
+    return frm;
+}
 #else
 compo_form_t *func_pressure_explain_form_create(void)
 {
@@ -138,6 +213,16 @@ static void func_pressure_explain_enter(void)
     page_move_info_t info =
     {
         .title_used = false,
+        .page_size =  f_pressure_explain->page_size,
+        .page_count = 1,
+        .quick_jump_perc =10,
+    };
+    compo_page_move_init(f_pressure_explain->ptm, func_cb.frm_main->page_body, &info);
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+    f_pressure_explain->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = true,
         .page_size =  f_pressure_explain->page_size,
         .page_count = 1,
         .quick_jump_perc =10,

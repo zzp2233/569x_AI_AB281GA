@@ -3,6 +3,8 @@
 #include "ute_module_systemtime.h"
 #include "ute_drv_motor.h"
 #include "ute_application_common.h"
+#include "ute_module_newFactoryTest.h"
+#include "ute_drv_battery_common.h"
 
 #define TXT_SPACING    GUI_SCREEN_HEIGHT/13
 
@@ -32,7 +34,7 @@ enum
 };
 
 
-
+ute_new_factory_test_data_t *data;
 typedef struct f_ageing_t_
 {
     uint32_t tick;
@@ -120,19 +122,19 @@ compo_form_t * func_ageing_mode_create(u8 mode,u8 time)
 
     textbox = compo_textbox_create(frm,10);
     compo_textbox_set_align_center(textbox, false );
-    compo_textbox_set(textbox,"心率:未佩戴");
+    compo_textbox_set(textbox,"震动次数:");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X/5, TXT_SPACING*6.5-widget_text_get_area(textbox->txt).hei/2);
     compo_setid(textbox,TXT_3_ID);
 
     textbox = compo_textbox_create(frm,6);
     compo_textbox_set_align_center(textbox, false );
-    compo_textbox_set(textbox,"--次/分");
+    compo_textbox_set(textbox,"--次");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X/5, TXT_SPACING*7.5-widget_text_get_area(textbox->txt).hei/2);
     compo_setid(textbox,TXT_4_ID);
 
     textbox = compo_textbox_create(frm,9);
     compo_textbox_set_align_center(textbox, false );
-    compo_textbox_set(textbox,"G-sensor:");
+    compo_textbox_set(textbox,"抽吸口数:");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X/5, TXT_SPACING*8.8-widget_text_get_area(textbox->txt).hei/2);
 
     textbox = compo_textbox_create(frm,6);
@@ -141,17 +143,17 @@ compo_form_t * func_ageing_mode_create(u8 mode,u8 time)
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X/5, TXT_SPACING*9.8-widget_text_get_area(textbox->txt).hei/2);
     compo_setid(textbox,TXT_5_ID);
 
-    textbox = compo_textbox_create(frm,6);
-    compo_textbox_set_align_center(textbox, false );
-    compo_textbox_set(textbox,"Y:--");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING*9.8-widget_text_get_area(textbox->txt).hei/2);
-    compo_setid(textbox,TXT_6_ID);
+    // textbox = compo_textbox_create(frm,6);
+    // compo_textbox_set_align_center(textbox, false );
+    // compo_textbox_set(textbox,"Y:--");
+    // compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING*9.8-widget_text_get_area(textbox->txt).hei/2);
+    // compo_setid(textbox,TXT_6_ID);
 
-    textbox = compo_textbox_create(frm,6);
-    compo_textbox_set_align_center(textbox, false );
-    compo_textbox_set(textbox,"Z:--");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X/1.7, TXT_SPACING*10.8-widget_text_get_area(textbox->txt).hei/2);
-    compo_setid(textbox,TXT_7_ID);
+    // textbox = compo_textbox_create(frm,6);
+    // compo_textbox_set_align_center(textbox, false );
+    // compo_textbox_set(textbox,"Z:--");
+    // compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X/1.7, TXT_SPACING*10.8-widget_text_get_area(textbox->txt).hei/2);
+    // compo_setid(textbox,TXT_7_ID);
 
     textbox = compo_textbox_create(frm,20);
     compo_textbox_set(textbox,"运行时间:00:00:00");
@@ -201,14 +203,23 @@ static void func_test_mode_click(void)
         case TIME_BTN_ID:
             f_ageing->time_flag ^= 1;
 
-            if(f_ageing->time_flag == 0)compo_textbox_set(textbox_time,"4小时");
-            else compo_textbox_set(textbox_time,"永久");
+            uteModuleNewFactoryTestSetMode(&data);
+            if(f_ageing->time_flag == 0)
+            {
+                compo_textbox_set(textbox_time,"4小时");
+                data->maxCount = 40;//(60 * 60) * 4;
+            }
+            else
+            {
+                compo_textbox_set(textbox_time,"永久");
+                data->maxCount = 0xFFFFFFF;
+            }
             break;
         case NO_BTN_ID:
             func_back_to();
             break;
         case PASS_BTN_ID:
-            if ( f_ageing->test_state==true)
+            if ( f_ageing->test_state==false)
             {
                 func_back_to();
             }
@@ -217,6 +228,12 @@ static void func_test_mode_click(void)
             break;
         case YES_BTN_ID:
         {
+            // ute_new_factory_test_data_t *data;
+            uteModuleNewFactoryTestSetMode(&data);
+            data->mode = FACTORY_TEST_MODE_AGING;
+            data->factoryAgingTestMode = FACTORY_AGING_TEST_MODE1;
+            data->secondCount = 0;
+            // data->isAgingTestEnd = false;
             f_ageing->test_state = true;
             compo_form_t *frm = func_cb.frm_main;
             if(frm !=  NULL)
@@ -268,27 +285,36 @@ static void func_ageing_process(void)
             compo_textbox_t *textbox3 = compo_getobj_byid(TXT_3_ID);///心率佩戴状态
             compo_textbox_t *textbox4 = compo_getobj_byid(TXT_4_ID);///心率值
             compo_textbox_t *textbox5 = compo_getobj_byid(TXT_5_ID);///x轴
-            compo_textbox_t *textbox6 = compo_getobj_byid(TXT_6_ID);///y轴
-            compo_textbox_t *textbox7 = compo_getobj_byid(TXT_7_ID);///z轴
+            // compo_textbox_t *textbox6 = compo_getobj_byid(TXT_6_ID);///y轴
+            // compo_textbox_t *textbox7 = compo_getobj_byid(TXT_7_ID);///z轴
             compo_textbox_t *textbox8 = compo_getobj_byid(TXT_8_ID);///运行时间
             compo_shape_t *shape_pass = compo_getobj_byid(PASS_SHAPE_BG_ID);///运行时间
             compo_textbox_t *pass_txt = compo_getobj_byid(PASS_TXT_ID);///运行时间
 
+            ute_new_factory_test_data_t *tdata;
+            uteModuleNewFactoryTestSetMode(&tdata);
+            uint8_t totalHour = 0;
+            uint8_t totalMin = 0;
+            uint8_t totalSec = 0;
+            totalHour = (tdata->secondCount) / 3600;
+            totalMin = (tdata->secondCount - (totalHour * 3600)) / 60;
+            totalSec = (tdata->secondCount - (totalHour * 3600) - (totalMin * 60));
 
-            if(f_ageing->sec%3 == 0)compo_shape_set_color(shape, COLOR_GREEN );
-            else if(f_ageing->sec%3 == 1)compo_shape_set_color(shape, COLOR_BLUE );
-            else if(f_ageing->sec%3 == 2)
+
+            if(tdata->secondCount%3 == 0)compo_shape_set_color(shape, COLOR_GREEN );
+            else if(tdata->secondCount%3 == 1)compo_shape_set_color(shape, COLOR_BLUE );
+            else if(tdata->secondCount%3 == 2)
             {
                 compo_shape_set_color(shape, COLOR_RED );
-                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
+                // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
             }
 
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%d",f_ageing->sec%10);
+            snprintf(txt_buf,sizeof(txt_buf),"%d",tdata->secondCount%10);
             compo_textbox_set(textbox1,txt_buf);
 
             memset(txt_buf,0,sizeof(txt_buf));
-            if(uteApplicationCommonIsStartupFinish()) ///获取充电状态
+            if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE) ///获取充电状态
             {
                 snprintf(txt_buf,sizeof(txt_buf),"电池:充电中  %d%%",bsp_vbat_percent_get());
                 compo_textbox_set(textbox2,txt_buf);
@@ -300,49 +326,42 @@ static void func_ageing_process(void)
             }
 
             memset(txt_buf,0,sizeof(txt_buf));
-            if(bsp_sensor_hr_wear_sta_get()==true)
-            {
-                u8 cur_hr = bsp_sensor_hrs_data_get();
+            u8 cur_hr = bsp_sensor_hrs_data_get();
 
-                compo_textbox_set(textbox3,"心率:检测中");
-                snprintf(txt_buf,sizeof(txt_buf),"%d次/分",cur_hr);
-                compo_textbox_set(textbox4,txt_buf);
-            }
-            else
-            {
-                compo_textbox_set(textbox3,"心率:未佩戴");
-                compo_textbox_set(textbox4,"--次/分");
-            }
+            compo_textbox_set(textbox3,"震动次数:");
+            snprintf(txt_buf,sizeof(txt_buf),"%d次",uteModuleNewFactoryAgingTestMotoCount());
+            compo_textbox_set(textbox4,txt_buf);
 
             memset(txt_buf,0,sizeof(txt_buf));
 
-            compo_textbox_set(textbox5,"X:--");
-            compo_textbox_set(textbox6,"Y:--");
-            compo_textbox_set(textbox7,"Z:--");
+            compo_textbox_set(textbox5,"--");
+            // compo_textbox_set(textbox6,"Y:--");
+            // compo_textbox_set(textbox7,"Z:--");
 
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"运行时间:%d:%02d:%02d",f_ageing->hour,f_ageing->min,f_ageing->sec);
+            snprintf(txt_buf,sizeof(txt_buf),"运行时间:%d:%02d:%02d",totalHour,totalMin,totalSec);
             compo_textbox_set(textbox8,txt_buf);
 
-            if(++f_ageing->sec == 60)
-            {
-                f_ageing->sec = 0;
-                if(++f_ageing->min == 60)
-                {
-                    f_ageing->min = 0;
-                    f_ageing->hour++;
-                }
-            }
+            // if(++f_ageing->sec == 60)
+            // {
+            //     f_ageing->sec = 0;
+            //     if(++f_ageing->min == 60)
+            //     {
+            //         f_ageing->min = 0;
+            //         f_ageing->hour++;
+            //     }
+            // }
 
-            if(f_ageing->time_flag == 0)///4小时模式
-            {
-                if(f_ageing->sec == 10)
-                {
-                    f_ageing->test_state = false;
-                    compo_textbox_set_visible(pass_txt, true );
-                    compo_shape_set_visible(shape_pass, true );
-                }
-            }
+            // if(f_ageing->time_flag == 0)///4小时模式
+            // {
+            //     if(f_ageing->sec == 10)
+            //     {
+            //         uteDrvMotorDisable(); //关闭马达
+            //         f_ageing->test_state = false;
+            //         compo_textbox_set_visible(pass_txt, true );
+            //         compo_shape_set_visible(shape_pass, true );
+            //     }
+            // }
         }
     }
 
@@ -351,12 +370,16 @@ static void func_ageing_process(void)
 ///进入老化测试功能
 static void func_ageing_enter(void)
 {
+    uteModuleNewFactoryTestSetMode(&data);
+    data->maxCount = 40;
     func_cb.f_cb = func_zalloc(sizeof(f_ageing_t));
     func_cb.frm_main = func_ageing_create();
+
 }
 ///退出老化测试功能
 static void func_ageing_exit(void)
 {
+    uteModuleNewFactoryTestResetParam();
     func_cb.last = FUNC_AGEING;
 }
 ///老化测试功能

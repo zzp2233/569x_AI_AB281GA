@@ -97,9 +97,9 @@ static void func_test_mode_click(void)
 
             if(ret == MSGBOX_RES_OK)
             {
-                uteModuleFactoryTestStartTestItem(TEST_ITEM_AGING,true);
+                // uteModuleFactoryTestStartTestItem(TEST_ITEM_AGING,true);
                 // func_cb.sta = FUNC_ONLINE_FACTORY_TEST;
-                uteTaskGuiStartScreen(FUNC_ONLINE_FACTORY_TEST,0,__func__);
+                uteTaskGuiStartScreen(FUNC_AGEING,0,__func__);
                 // func_switch_to(FUNC_AGEING, 0);///跳转老化测试界面
             }
             break;

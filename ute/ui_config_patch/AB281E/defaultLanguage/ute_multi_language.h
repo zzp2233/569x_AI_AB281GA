@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-29 18:52:48
+*@date   2025-05-06 14:12:07
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -298,6 +298,10 @@ enum
     STR_MOOD_EXPLAIN2, // 测量通知 1. 设备支持的测量范围:正静和负。
     STR_PRESSURE_EXPLAIN1, // 压力在心理学上指精神上束缚和紧张的感受，适当压力有助于提高工作和学习的效率，压力过大则会影响到身心健康。压力指标是通过心率变异性(HRV)的数值变化进行计算，用来评定身体状态改变的指标。
     STR_PRESSURE_EXPLAIN2, // 1.本设备支持测量范围为1-1002.请确保手环佩戴在距离腕骨一指处，不要太靠下，并系紧表带。3.测量过程中请尽可能保持静止，保持表盘朝上。4.处于运动状态和佩戴部位频繁活动时，会影响测量的准确性。5.测量结果仅供参考，不作为医疗诊断依据。
+    STR_RELAXED, // 轻松
+    STR_NORMAL, // 正常
+    STR_MEDIUM, // 中等
+    STR_HIGH, // 偏高
 };
 
 extern const char * const *i18n;

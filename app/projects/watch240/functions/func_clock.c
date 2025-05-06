@@ -392,7 +392,6 @@ static void func_clock_message(size_msg_t msg)
             break;
     }
 }
-
 //进入时钟表盘功能
 static void func_clock_enter(void)
 {
@@ -401,7 +400,6 @@ static void func_clock_enter(void)
     func_cb.flag_animation = true;
     func_cb.left_sta = FUNC_NULL;
     func_cb.pullup_sta = FUNC_NULL;
-
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {

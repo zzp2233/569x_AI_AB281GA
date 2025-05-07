@@ -1,7 +1,7 @@
 /*
  * @brief:
  * @LastEditors: ljf
- * @LastEditTime: 2025-04-18 11:28:33
+ * @LastEditTime: 2025-05-07 09:29:49
  * @FilePath: \AB5691_SDK\app\projects\watch240\config.h
  * @Date: 2025-04-16 10:52:40
  */
@@ -46,7 +46,7 @@
 // #define GUI_SELECT                      GUI_TFT_240_JD9853W3//DISPLAY_UTE//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 // #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
 // #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT
-#define GUI_SELECT                      GUI_TFT_320_ST77916//GUI_TFT_320_385_GV9B71                 //GUI Display Select
+#define GUI_SELECT                      GUI_TFT_240_296_NV3030B//GUI_TFT_320_ST77916//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,

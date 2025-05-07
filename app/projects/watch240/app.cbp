@@ -875,6 +875,9 @@
 		<Unit filename="../../platform/gui/tft/tft_240_JD9853w3.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../platform/gui/tft/tft_240_NV3030B_S.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../platform/gui/tft/tft_240_jd9853.c">
 			<Option compilerVar="CC" />
 		</Unit>

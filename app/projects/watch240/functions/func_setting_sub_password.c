@@ -55,7 +55,8 @@ compo_form_t *func_set_sub_password_form_create(void)
 
     compo_textbox_t *txt_change = compo_textbox_create(frm, strlen(i18n[STR_CHANGE_PASSWORD]));
     compo_textbox_set_align_center(txt_change, false);
-    compo_textbox_set_pos(txt_change, 30, 173-30);
+    compo_textbox_set_location(txt_change, 30, 173-30,136,40);
+    //  compo_textbox_set_pos(txt_change, 30, 173-30);
     compo_textbox_set(txt_change,i18n[STR_CHANGE_PASSWORD]);
     compo_textbox_set_visible(txt_change, false);
 

@@ -13,7 +13,7 @@
 #include "ute_application_common.h"
 #include "ute_module_platform.h"
 #include "ute_module_notdisturb.h"
-
+#include "ute_module_gui_common.h"
 
 /*! 马达运行数据zn.zeng, 2021-10-12  */
 ute_drv_motor_t uteDrvMotorData;
@@ -171,10 +171,9 @@ void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,lvl=%d is too low", __func__,uteDrvBatteryCommonGetLvl());
         return;
     }
-#if 0//UTE_BT30_CALL_SUPPORT
-    ute_bt_call_data_t callData;
-    uteModuleCallGetData(&callData);
-    if ((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_CALL_ING_ID) || (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_QUICK_REPLY_LIST_ID) || (callData.state == BT_CALL_ING))
+#if UTE_BT30_CALL_SUPPORT
+    uint disp_status = bsp_bt_disp_status();
+    if (uteModuleGuiCommonGetCurrentScreenId() == FUNC_BT_CALL || disp_status >= BT_STA_INCOMING)
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,BT calling not allow motor!", __func__);
         return;

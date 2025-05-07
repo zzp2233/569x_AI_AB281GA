@@ -1814,7 +1814,7 @@ uint8_t uteModuleHeartrGetLast7DayAvgStaticHeartData(void)
             vail++;
         }
     }
-    avg = sum/vail;
+    avg = vail ? sum/vail : 0;
     UTE_MODULE_LOG(UTE_LOG_HEART_LVL, "%s,sum=%d,vail=%d,avg=%d", __func__,sum,vail,avg);
     return avg;
 }

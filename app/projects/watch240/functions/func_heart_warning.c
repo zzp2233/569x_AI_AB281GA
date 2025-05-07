@@ -164,7 +164,7 @@ compo_form_t *func_heart_warning_form_create(void)
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+8,234,100,widget_text_get_max_height());
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+8,229,100,widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
 
 

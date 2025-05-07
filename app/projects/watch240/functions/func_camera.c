@@ -640,7 +640,7 @@ static const uint32_t animation_icon_res[] =
 compo_form_t *func_camera_form_create(void)
 {
     //新建窗体和背景
-    compo_form_t *frm = compo_form_create(true);
+    //compo_form_t *frm = compo_form_create(true);
 
     compo_form_t *frm = compo_form_create(true);
     bool ble_connect_sta = ble_is_connect(); //蓝牙连接状态

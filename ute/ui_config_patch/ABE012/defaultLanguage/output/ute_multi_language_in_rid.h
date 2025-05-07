@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 印度尼西亚语(印度尼西亚）
 *@author
-*@date   2025-05-05 14:59:13
+*@date   2025-05-05 16:15:24
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -214,13 +214,13 @@ const char * const i18n_in_rid[] =
     [STR_START] = "\x4d\x75\x6c\x61\x69\x00", // [198] Mulai
     [STR_STOP] = "\x42\x65\x72\x68\x65\x6e\x74\x69\x00", // [199] Berhenti
     [STR_CLICK_OPEN] = "\x4b\x6c\x69\x6b\x20\x6c\x61\x79\x61\x72\x20\x75\x6e\x74\x75\x6b\x20\x6d\x65\x6d\x62\x75\x6b\x61\x00", // [200] Klik layar untuk membuka
-    [STR_CALENDAR_ONE] = "\x53\x61\x74\x75\x00", // [201] Satu
-    [STR_CALENDAR_TWO] = "\x44\x75\x61\x00", // [202] Dua
-    [STR_CALENDAR_THREE] = "\x54\x69\x67\x61\x00", // [203] Tiga
-    [STR_CALENDAR_HOUR] = "\x45\x6d\x70\x61\x74\x00", // [204] Empat
-    [STR_CALENDAR_FIVE] = "\x4c\x69\x6d\x61\x00", // [205] Lima
-    [STR_CALENDAR_SIX] = "\x45\x6e\x61\x6d\x00", // [206] Enam
-    [STR_CALENDAR_SEVEN] = "\x48\x61\x72\x69\x00", // [207] Hari
+    [STR_CALENDAR_ONE] = "\x4d\x00", // [201] M
+    [STR_CALENDAR_TWO] = "\x54\x00", // [202] T
+    [STR_CALENDAR_THREE] = "\x57\x00", // [203] W
+    [STR_CALENDAR_HOUR] = "\x54\x00", // [204] T
+    [STR_CALENDAR_FIVE] = "\x46\x00", // [205] F
+    [STR_CALENDAR_SIX] = "\x53\x00", // [206] S
+    [STR_CALENDAR_SEVEN] = "\x53\x00", // [207] S
     [STR_MORE] = "\x4c\x65\x62\x69\x68\x20\x42\x61\x6e\x79\x61\x6b\x00", // [208] Lebih Banyak
     [STR_COMMON_APP] = "\x4c\x65\x62\x69\x68\x20\x42\x61\x6e\x79\x61\x6b\x00", // [209] Lebih Banyak
     [STR_ITALY] = "\x49\x74\x61\x6c\x69\x61\x6e\x6f\x00", // [210] Italiano

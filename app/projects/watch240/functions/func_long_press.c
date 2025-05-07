@@ -189,7 +189,32 @@ static void func_long_press_event_handle(s32 distance, u16 id)
         }
     }
 }
+//触摸按键处理
+static void func_long_press_button(void)
+{
+    f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
 
+    f_long_press->touch_btn_id = compo_get_button_id();
+    compo_shape_t  *rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
+
+    if( f_long_press->touch_btn_id >=IMG_BTN_ID_1 &&  f_long_press->touch_btn_id <=IMG_BTN_ID_3)    //触摸是否是按键图标
+    {
+        f_long_press->touch_flag = true;
+
+        switch(f_long_press->touch_btn_id)
+        {
+            case IMG_BTN_ID_3:
+                compo_shape_set_color(rect_cover,COLOR_WHITE);
+                break;
+            case IMG_BTN_ID_2:
+                compo_shape_set_color(rect_cover,COLOR_WHITE);
+                break;
+            case IMG_BTN_ID_1:
+                compo_shape_set_color(rect_cover,make_color(0xff,0x39,0x10));
+                break;
+        }
+    }
+}
 //长按滑动关机界面显示处理
 static void func_long_press_slide_disp_handle()
 {
@@ -392,7 +417,32 @@ static void func_long_press_event_handle(s32 distance, u16 id)
         }
     }
 }
+//触摸按键处理
+static void func_long_press_button(void)
+{
+    f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
 
+    f_long_press->touch_btn_id = compo_get_button_id();
+    compo_shape_t  *rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
+
+    if( f_long_press->touch_btn_id >=IMG_BTN_ID_1 &&  f_long_press->touch_btn_id <=IMG_BTN_ID_3)    //触摸是否是按键图标
+    {
+        f_long_press->touch_flag = true;
+
+        switch(f_long_press->touch_btn_id)
+        {
+            case IMG_BTN_ID_3:
+                compo_shape_set_color(rect_cover,COLOR_WHITE);
+                break;
+            case IMG_BTN_ID_2:
+                compo_shape_set_color(rect_cover,COLOR_WHITE);
+                break;
+            case IMG_BTN_ID_1:
+                compo_shape_set_color(rect_cover,make_color(0xff,0x39,0x10));
+                break;
+        }
+    }
+}
 //长按滑动关机界面显示处理
 static void func_long_press_slide_disp_handle()
 {
@@ -599,7 +649,32 @@ static void func_long_press_event_handle(s32 distance, u16 id)
         }
     }
 }
+//触摸按键处理
+static void func_long_press_button(void)
+{
+    f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
 
+    f_long_press->touch_btn_id = compo_get_button_id();
+    compo_shape_t  *rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
+
+    if( f_long_press->touch_btn_id >=IMG_BTN_ID_1 &&  f_long_press->touch_btn_id <=IMG_BTN_ID_3)    //触摸是否是按键图标
+    {
+        f_long_press->touch_flag = true;
+
+        switch(f_long_press->touch_btn_id)
+        {
+            case IMG_BTN_ID_3:
+                compo_shape_set_color(rect_cover,COLOR_WHITE);
+                break;
+            case IMG_BTN_ID_2:
+                compo_shape_set_color(rect_cover,COLOR_WHITE);
+                break;
+            case IMG_BTN_ID_1:
+                compo_shape_set_color(rect_cover,make_color(0xff,0x39,0x10));
+                break;
+        }
+    }
+}
 //长按滑动关机界面显示处理
 static void func_long_press_slide_disp_handle()
 {
@@ -687,6 +762,29 @@ compo_form_t *func_long_press_form_create(void)
 
     return frm;
 }
+static void func_long_press_click(void)
+{
+    int id = compo_get_button_id();
+
+    switch(id)
+    {
+        case CANCEL_BTN_ID:
+//            func_back_to();
+            func_directly_back_to();
+            //func_switch_to_clock();
+            break;
+        case BTN_RESTART_ID:
+        {
+            uteApplicationCommonRestart();
+        }
+        break;
+        case BTN_POWER_OFF_ID:
+        {
+            uteApplicationCommonPoweroff();
+        }
+        break;
+    }
+}
 #else
 //三个图标与矩形的Y轴
 #define RECT_Y_1 GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y*0.4
@@ -746,78 +844,24 @@ static void func_long_press_process(void)
     func_process();
 }
 
-//触摸按键处理
-static void func_long_press_button(void)
-{
-    f_long_press_t *f_long_press = (f_long_press_t *)func_cb.f_cb;
-
-    f_long_press->touch_btn_id = compo_get_button_id();
-    compo_shape_t  *rect_cover = compo_getobj_byid(RECT_ID_1);//遍历红色拖尾控件
-
-    if( f_long_press->touch_btn_id >=IMG_BTN_ID_1 &&  f_long_press->touch_btn_id <=IMG_BTN_ID_3)    //触摸是否是按键图标
-    {
-        f_long_press->touch_flag = true;
-
-        switch(f_long_press->touch_btn_id)
-        {
-            case IMG_BTN_ID_3:
-                compo_shape_set_color(rect_cover,COLOR_WHITE);
-                break;
-            case IMG_BTN_ID_2:
-                compo_shape_set_color(rect_cover,COLOR_WHITE);
-                break;
-            case IMG_BTN_ID_1:
-                compo_shape_set_color(rect_cover,make_color(0xff,0x39,0x10));
-                break;
-        }
-    }
-}
-static void func_long_press_click(void)
-{
-    int id = compo_get_button_id();
-
-    switch(id)
-    {
-        case CANCEL_BTN_ID:
-//            func_back_to();
-            func_directly_back_to();
-            //func_switch_to_clock();
-            break;
-#if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
-        case BTN_RESTART_ID:
-        {
-            uteApplicationCommonRestart();
-        }
-        break;
-
-        case BTN_POWER_OFF_ID:
-        {
-            uteApplicationCommonPoweroff();
-        }
-        break;
-#endif
-    }
-}
-
-
 static void func_long_press_message(size_msg_t msg)
 {
-
-
     switch (msg)
     {
         case MSG_CTP_TOUCH:
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
             func_long_press_button();
+#endif
             break;
         case MSG_CTP_CLICK:
+#if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
             func_long_press_click();
+#endif
             break;
         case KU_BACK:
             if(sys_cb.power_on_state==true)
             {
-//                func_back_to();
                 func_directly_back_to();
-                //func_switch_to_clock();
             }
             break;
         case K_BACK:
@@ -827,7 +871,6 @@ static void func_long_press_message(size_msg_t msg)
             }
             break;
         default:
-            //func_message(msg);
             evt_message(msg);
             break;
     }

@@ -162,7 +162,7 @@ extern void func_message_reply_info(void);
 //extern void func_tetris_start(void);
 extern void func_bird(void);
 extern void func_ota_ui(void);
-#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
 extern void func_pressure(void);//压力
 #endif
 #if UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT

@@ -15,6 +15,9 @@ typedef struct f_bt_call_t_
     char pbap_result_Name[50];//存放来电与接听联系人名字
     char tmp_pbap_result_Name[50];
     u8  page_num;               //0:通话  1：声音设置
+    bool touch_flag;
+    s8   level_value;
+    s32 old_dy;
 } f_bt_call_t;
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -408,17 +411,12 @@ enum
     COMPO_ID_PIC_VOLUME,//音量等级
     COMPO_ID_COLOR_BLACK,//刷黑
 };
-typedef struct f_bt_call_volume_t_
-{
-    bool touch_flag;
-    s8   level_value;
-} f_bt_call_volume_t;
 static s16 level_old = 0;
 static bool call_volume_flag = false;
 
 static void func_bt_call_volume_handle(void)
 {
-    f_bt_call_volume_t *f_bt_call_volume = (f_bt_call_volume_t *)func_cb.f_cb;
+    f_bt_call_t *f_bt_call_volume = (f_bt_call_t *)func_cb.f_cb;
     if(f_bt_call_volume->touch_flag)//触摸状态
     {
         s32 dx, dy;
@@ -1257,6 +1255,9 @@ enum
     COMPO_ID_TXT_TIME,
     COMPO_ID_BTN_REJECT,
     COMPO_ID_BTN_MIC,
+    COMPO_ID_BTN_SOUD,
+    COMPO_ID_SOUD_SHAPE,
+    COMPO_ID_BTN_SOUD_SHAPE,
     COMPO_ID_TXT_IN_CALL,
 };
 
@@ -1268,7 +1269,6 @@ static void func_bt_call_back_to(void)
         func_directly_back_to();
     }
 }
-
 void bt_incall_time_update(void)
 {
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
@@ -1301,10 +1301,16 @@ void  func_bt_call_number_update(void)
     }
 }
 
+#define val_shape_y  45
+#define val_shepe_x  135
+#define val_shape_h  270
+#define val_shepe_w  90
+#define make_pic_hei(val)   (val*val_shape_h/15)
+#define make_pic_y(hei)     (val_shape_h-hei+val_shape_y)
+
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_bt_call_form_create(void)
 {
-
 //    bt_pbap_lookup_number(hfp_get_last_call_number(0));
     //printf("%s\n", __func__);
     //新建窗体, 通话页面
@@ -1337,6 +1343,32 @@ compo_form_t *func_bt_call_form_create(void)
     btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_MICROPHONE_BIN);
     compo_setid(btn, COMPO_ID_BTN_MIC);
     compo_button_set_pos(btn, 80/2+232,80/2+234);
+
+    //声音
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_SOUND_BIN);
+    compo_setid(btn, COMPO_ID_BTN_SOUD);
+    compo_button_set_pos(btn, 80/2+48,80/2+234);
+
+    compo_shape_t * val_bg = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(val_bg,-GUI_SCREEN_WIDTH+val_shepe_x,val_shape_y,val_shepe_w,val_shape_h);
+    compo_shape_set_color(val_bg,make_color(50, 50, 50));
+    compo_shape_set_radius(val_bg, 20);
+    widget_set_align_center(val_bg->rect, false);
+
+    s16 shape_y = make_pic_y(make_pic_hei(sys_cb.hfp_vol));
+    s16 shape_h = make_pic_hei(sys_cb.hfp_vol);
+    compo_shape_t * val = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(val,-GUI_SCREEN_WIDTH+val_shepe_x,shape_y,val_shepe_w,shape_h);
+    compo_shape_set_radius(val, 20);
+    widget_set_align_center(val->rect, false);
+    compo_setid(val, COMPO_ID_SOUD_SHAPE);
+
+    btn = compo_button_create_by_image(frm, 0);
+    compo_setid(btn, COMPO_ID_BTN_SOUD_SHAPE);
+    compo_button_set_location(btn, -GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y,val_shepe_w,val_shape_h);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_VOLUME_BIN);
+    compo_button_set_pos(btn, -GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X,32/2+262);
 
     return frm;
 }
@@ -1428,7 +1460,6 @@ static void func_bt_call_exit_process(void)
         }
 }
 
-
 // 判断从指定位置开始的字节序列是否是一个完整的UTF - 8字符
 static int is_complete_utf8_char(const char *str, int pos)
 {
@@ -1493,7 +1524,40 @@ void func_bt_call_up_date_process(void)
 {
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
-//    printf("name:%s name:%s\n",f_bt_call->pbap_result_Name , sys_cb.pbap_result_Name);
+
+    if(f_bt_call->touch_flag)
+    {
+#define lever_data (270/15)
+        s32 dx,dy;
+        f_bt_call->touch_flag = ctp_get_dxy(&dx, &dy);//上一个条件默认是true,在这里重新获取状态以及更新
+        if(f_bt_call->touch_flag)
+        {
+            s8 level_value = sys_cb.hfp_vol + (-dy/lever_data)+f_bt_call->level_value;
+            // printf("level:%d  hfp_vol:%d\n",level_value,sys_cb.hfp_vol);
+            if(level_value > sys_cb.hfp_vol && sys_cb.hfp_vol<15)
+            {
+                bt_volume_up();
+                f_bt_call->level_value --;
+            }
+            else if(level_value < sys_cb.hfp_vol && sys_cb.hfp_vol>1)
+            {
+                bt_volume_down();
+                f_bt_call->level_value ++;
+            }
+        }
+        else
+        {
+            f_bt_call->level_value = 0;
+        }
+    }
+
+    s16 shape_y = make_pic_y(make_pic_hei(sys_cb.hfp_vol));
+    s16 shape_h = make_pic_hei(sys_cb.hfp_vol);
+    compo_shape_t * val = compo_getobj_byid(COMPO_ID_SOUD_SHAPE);
+    if(val != NULL)
+    {
+        compo_shape_set_location(val,-GUI_SCREEN_WIDTH+val_shepe_x,shape_y,val_shepe_w,shape_h);
+    }
 
     if(strcmp(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name)!=0)
     {
@@ -1503,9 +1567,6 @@ void func_bt_call_up_date_process(void)
 
         memset(f_bt_call->tmp_pbap_result_Name, '\0', sizeof(f_bt_call->tmp_pbap_result_Name));
         truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
-
-
-//        printf("tmp_pbap_result_Name [%s]\n", f_bt_call->tmp_pbap_result_Name);
         compo_textbox_t *name_txt     = compo_getobj_byid(COMPO_ID_TXT_NAME);
         compo_textbox_set(name_txt, f_bt_call->tmp_pbap_result_Name);
     }
@@ -1576,7 +1637,10 @@ static void func_bt_call_click(void)
                 compo_button_set_bgimg(btn,UI_BUF_I338001_11_CALL_MICROPHONE_BIN);
             }
             break;
-
+        case COMPO_ID_BTN_SOUD:
+            widget_page_set_client(func_cb.frm_main->page_body, GUI_SCREEN_WIDTH, 0);
+            f_bt_call->page_num =1 ;
+            break;
         default:
             break;
     }
@@ -1601,6 +1665,14 @@ static void func_bt_call_message(size_msg_t msg)
 
     switch (msg)
     {
+        case MSG_CTP_TOUCH:
+#if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+            if(f_bt_call->touch_flag == false && compo_get_button_id() == COMPO_ID_BTN_SOUD_SHAPE)
+            {
+                f_bt_call->touch_flag = true;
+            }
+#endif
+            break;
         case KU_BACK:
             if(bt_get_call_indicate() == BT_CALL_INCOMING)
             {
@@ -1660,12 +1732,23 @@ static void func_bt_call_message(size_msg_t msg)
         case MSG_QDEC_BACKWARD:
         case MSG_CTP_SHORT_LEFT:
             break;
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
         case MSG_CTP_SHORT_RIGHT:
             if(f_bt_call->page_num==1)
             {
                 f_bt_call->page_num=0;
                 widget_page_set_client(func_cb.frm_main->page,0, 0);
             }
+            break;
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+        case MSG_CTP_SHORT_RIGHT:
+            if(f_bt_call->page_num==1)
+            {
+                f_bt_call->page_num=0;
+                widget_page_set_client(func_cb.frm_main->page_body,0, 0);
+            }
+            break;
+#endif
         default:
             func_message(msg);
             break;

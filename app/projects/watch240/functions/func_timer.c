@@ -1974,7 +1974,7 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
             compo_setid(txt, COMPO_ID_NUM_COUNTDOWN);
             compo_textbox_set_align_center(txt, false);     //左对齐显示
             compo_textbox_set_pos(txt, 63, 120);
-            compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
+            compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d:%02d", hour, min, sec);
             compo_textbox_set(txt, str_buff);
 
@@ -2047,6 +2047,7 @@ static void func_timer_button_touch_handle(void)
     }
 }
 
+static u32 rtccnt_tmp=0;
 //100ms计时器秒数刷新回调函数
 static void timer_100ms_pro(co_timer_t *timer, void *param)
 {
@@ -2054,61 +2055,22 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
     u8 *count = NULL;
     static bool lowpwr_sta_bkp;
     static u8 rtc_cal_cnt_bkp;
-    static u32 rtccnt_tmp;
     u16 sec_past;
     bool lowpwr_sta = bsp_system_is_sleep() /*| sys_cb.idle_sta*/;
 
-    if (param)
+    if (sys_cb.timer_sta == TIMER_STA_WORKING)    //休眠不计时
     {
-        count = (u8 *)param;
-    }
 
-    if (count && sys_cb.timer_sta == TIMER_STA_WORKING)    //休眠不计时
-    {
-        if (++(*count) >= 10)   //1s
+        if (sys_cb.timer_left_sec)
         {
-            *count = 0;
-        }
-
-        if (!lowpwr_sta)
-        {
-            if (rtccnt_tmp != RTCCNT)
-            {
-                rtccnt_tmp = RTCCNT;
-                *count = 0;
-            }
-        }
-        else            //省电/休眠模式，RTC已休眠
-        {
-            if (lowpwr_sta_bkp == false)      //初次进入
-            {
-                rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
-            }
-            if (rtc_cal_cnt_bkp != sys_cb.rtc_cal_cnt)      //RTC已校准，同步校准
-            {
-                rtc_cal_cnt_bkp = sys_cb.rtc_cal_cnt;
-                rtccnt_tmp = RTCCNT;
-                // printf("calibrated!\n");
-            }
-            else if (*count == 0)
-            {
-                rtccnt_tmp++;
-            }
-        }
-
-
-        sec_past = rtccnt_tmp - sys_cb.timer_start_rtc;
-        if (sec_past < sys_cb.timer_total_sec)
-        {
-            sys_cb.timer_left_sec = sys_cb.timer_total_sec - sec_past;
-            // printf("countdown-->[%d/%d][%d %d]\n", sec_past, sys_cb.timer_total_sec, rtccnt_tmp, RTCCNT);
+            rtccnt_tmp+=1;
+            sys_cb.timer_left_sec = sys_cb.timer_total_sec - (rtccnt_tmp/10);
         }
         else
         {
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             sys_cb.timer_left_sec = 0;
-            // printf(">>>COUNTDOWN_FINISH\n");
-
+            rtccnt_tmp =0;
             if(func_cb.sta == FUNC_TIMER)
             {
                 sys_cb.timer_sta = TIMER_STA_DONE;
@@ -2124,9 +2086,7 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
         }
     }
 
-    lowpwr_sta_bkp = lowpwr_sta;
 }
-
 //单击按钮
 static void func_timer_button_click(void)
 {

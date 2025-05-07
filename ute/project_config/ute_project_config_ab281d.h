@@ -261,6 +261,8 @@
 #define UTE_MODULE_SCREENS_EMOTION_SUPPORT            1 //情绪界面
 #define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      1 //情绪说明界面
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
+#define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
+
 #endif
 
 //未完善

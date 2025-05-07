@@ -783,16 +783,19 @@ static void func_long_press_click(void)
             func_directly_back_to();
             //func_switch_to_clock();
             break;
+#if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
         case BTN_RESTART_ID:
         {
             uteApplicationCommonRestart();
         }
         break;
+
         case BTN_POWER_OFF_ID:
         {
             uteApplicationCommonPoweroff();
         }
         break;
+#endif
     }
 }
 

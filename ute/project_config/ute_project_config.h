@@ -1379,7 +1379,7 @@
 #define UTE_MODUEL_CALL_ADDRESSBOOK_EXPANSION_LENGTH_SUPPORT 1
 #endif
 
-/* 音频调试，正常模式下不能打开 zn.zeng 2022-01-10*/
+/* 音频调试，正常模式下不能打开，开启后烧录需要拔插电源 zn.zeng 2022-01-10*/
 #ifndef UTE_CONNECT_PC_AUDIO_TEST
 #define UTE_CONNECT_PC_AUDIO_TEST 0
 #endif

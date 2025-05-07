@@ -195,6 +195,66 @@ static void func_ota_update_disp(void)
         }
     }
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
+compo_form_t *func_ota_update_form_create(void)
+{
+    char txt_buf[30];
+
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I338001_UPGRADE_02_UPGRADE_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 40+158/2);
+    compo_setid(picbox,ROCKET_ID);
+
+    extern fot_progress_t *bsp_fot_progress_get(void);
+    fot_progress_t *fot_data = bsp_fot_progress_get();
+
+    //数字
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent);
+    compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,225+25,150,50);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,PROGRESS_BAR_ID);
+
+    //TXT1 升级中
+    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, UPDATING_TXT_ID);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 286+30/2, 196, 30);
+    compo_textbox_set(txt, i18n[STR_UPGRADING]);
+
+    return frm;
+}
+
+//显示升级界面处理
+static void func_ota_update_disp(void)
+{
+    static u32 ticks = 0;
+
+    if (tick_check_expire(ticks, 100))
+    {
+        ticks = tick_get();
+        reset_sleep_delay_all();
+
+        extern fot_progress_t *bsp_fot_progress_get(void);
+        fot_progress_t *fot_data = bsp_fot_progress_get();
+        if(fot_data->type == FOT_FILE_TYPE_FOT)
+        {
+            if(fot_data->percent)
+            {
+                if(fot_data->percent >= 97)
+                {
+                    fot_data->percent = 100;
+                }
+                compo_arc_t *bar = compo_getobj_byid(PROGRESS_BAR_ID);
+                compo_arc_set_value(bar,fot_data->percent*10);
+            }
+        }
+    }
+}
+
 #else
 compo_form_t *func_ota_update_form_create(void)
 {

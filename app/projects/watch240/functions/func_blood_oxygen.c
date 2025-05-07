@@ -920,7 +920,7 @@ static void func_blood_oxygen_enter(void)
     page_move_info_t info =
     {
         .title_used = true,
-        .page_size = 860,
+        .page_size = 436,
         .page_count = 1,
         .quick_jump_perc = 80,
     };

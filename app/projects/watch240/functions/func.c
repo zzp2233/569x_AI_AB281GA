@@ -1581,15 +1581,24 @@ void func_message(size_msg_t msg)
             }
             else if (func_cb.sta == FUNC_CLOCK)
             {
+
+
                 if(sys_cb.dialplate_btf_ready)
                 {
                     sys_cb.dialplate_btf_ready = false;
                 }
-                func_switch_to_menu();                      //退回到主菜单
+#if UTE_MODULE_SCREENS_CLOCK_SUB_CLICK_SUPPORT
+                if(!sys_cb.gui_sleep_sta)
+                {
+                    sys_cb.guioff_delay = 0;
+                    gui_sleep();                //仅熄屏
+                }
+#else
+                func_switch_to_menu();
+#endif                  //退回到主菜单
             }
             else
             {
-
                 func_back_to();                             //直接退出任务
             }
             break;

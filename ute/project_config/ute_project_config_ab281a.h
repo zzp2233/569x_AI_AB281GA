@@ -13,7 +13,7 @@
 #define UTE_SW_VERSION "AB281AV000031"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
-#define UTE_UI_CONFIG_PATCH "AB281D"
+#define UTE_UI_CONFIG_PATCH "AB281AB"
 
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
@@ -77,6 +77,11 @@
 #define UTE_MODULE_HEART_WEEK_STATIC_SUPPORT 1  //周的静息心率统计
 /*! 静息心率上报,wuhuowang 2022-11-18*/
 #define APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT   (1&UTE_MODULE_HEART_WEEK_STATIC_SUPPORT)
+/*! 全天静息心率,wang.luo 2023-10-30 */
+#define UTE_MODULE_HEART_STATIC_ALL_DAY_SUPPORT (1&UTE_MODULE_HEART_WEEK_STATIC_SUPPORT)
+
+/*! 情绪压力模块,xjc 2022-02-15*/
+#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 1
 
 /*! 活动界面列表形式,xjc 2022-02-15*/
 #define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT                1
@@ -92,6 +97,8 @@
 #define DEFAULT_DISTANCE_TARGET_CNT 5000
 #define DEFAULT_DISTANCE_TARGET_OPEN true
 #endif
+
+#define UTE_MODULE_BLOODOXYGEN_SUPPORT 1
 
 #define UTE_DISPLAY_BLOODGXYGEN_HISTORY_HISTOGRAM_SUPPORT  1  //血氧柱形图
 
@@ -138,9 +145,10 @@
 #define UTE_DRV_TP_X_AXIS_EXCHANGE 0 // 交换X轴左右坐标
 #define UTE_DRV_TP_Y_AXIS_EXCHANGE 0 // 交换Y轴上下坐标
 
+
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
-#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7
-#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY, FUNC_BLOOD_OXYGEN, FUNC_HEARTRATE, FUNC_SLEEP, FUNC_WEATHER, FUNC_BT}
+#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7                             //FUNC_BLOOD_OXYGEN
+#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY,FUNC_HEARTRATE,FUNC_BLOOD_OXYGEN,FUNC_SLEEP, FUNC_WEATHER, FUNC_BT}
 /*! 表盘左侧界面,wang.luo 2025-04-07 */
 #define UTE_CUI_SCREEN_WATCHDIAL_LEFT FUNC_NULL
 /*! 表盘上拉界面,wang.luo 2025-04-07 */
@@ -148,19 +156,20 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 0
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
 #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18649001_BIN, \
                                                 UI_BUF_DIALPLATE_D18650001_BIN, \
                                                 UI_BUF_DIALPLATE_D18651001_BIN, \
                                                 UI_BUF_DIALPLATE_D18652001_BIN, \
-                                                UI_BUF_DIALPLATE_D18653001_BIN, \
+                                                UI_BUF_DIALPLATE_BTF_BIN,\
+                                                UI_BUF_DIALPLATE_CUBE_BIN,\
                                               }
 //    UI_BUF_DIALPLATE_BTF_BIN,
 //     UI_BUF_DIALPLATE_CUBE_BIN
 
-#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0 // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0      // 使用立方体表盘
+#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1     // 使用立方体表盘
 #define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 0      // 使用光束立方体表盘
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 4    // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 5   // 立方体表盘索引
@@ -206,7 +215,8 @@
 #define UTE_MODULE_SCREENS_GAME_SUPPORT               1 //游戏
 #define UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT         1 //找手机
 #define UTE_MODULE_SCREENS_RESFY_SUPPORT              1 //恢复出厂
-#define UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT       1 //血氧
+#define UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT       (1&UTE_MODULE_BLOODOXYGEN_SUPPORT) //血氧
+#define UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT  (1&UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT) //血氧说明界面
 #define UTE_MODULE_SCREENS_ACTIVITY_SUPPORT           1 //每日活动
 #define UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT         1 //手电筒
 #define UTE_MODULE_SCREENS_SPORT_SUPPORT              1 //运动
@@ -227,11 +237,19 @@
 #define UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT      1 //心率预警
 #define UTE_MODULE_SCREENS_SYSTEM_SUPPORT             1 //系统设置列表界面
 #define UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT     1 //主题&表盘列表界面
-#define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     1 //表盘侧边栏
+#define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     0 //表盘侧边栏
+#define UTE_MODULE_SCREENS_CLOCK_SUB_MENU_SUPPORT     1 //表盘右滑切菜单
+#define UTE_MODULE_SCREENS_CLOCK_SUB_CLICK_SUPPORT    1 //表盘界面时，单击可亮屏灭屏 非表盘界面时单击返回上一级
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   0 //菜单样式预览旋转界面
 #define UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT         1 //亮度设置列表界面
 #define UTE_MODULE_SCREENS_SUB_SOS_SUPPORT            1 //SOS界面
 #define UTE_MODULE_SCREENS_TOOLBOX_SUPPORT            1 //工具箱列表
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#define UTE_MODULE_SCREENS_EMOTION_SUPPORT            1 //情绪界面
+#define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      1 //情绪说明界面
+#define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
+#endif
+
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/
 #define UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT 0 /*开机选择语言界面*/

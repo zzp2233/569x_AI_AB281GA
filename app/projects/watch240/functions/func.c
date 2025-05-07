@@ -244,7 +244,7 @@ compo_form_t *func_ota_update_form_create(void);
 compo_form_t *func_ota_err_form_create(void);
 compo_form_t *func_ota_succ_form_create(void);
 compo_form_t *func_long_press_form_create(void);//关机 重启 SOS
-#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
 compo_form_t *func_pressure_explain_form_create(void);//压力说明
 compo_form_t *func_pressure_form_create(void);//压力
 #endif
@@ -396,7 +396,7 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
     {FUNC_PRESSURE,                     func_pressure_form_create},//压力
     {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain_form_create},//压力说明
 #endif
@@ -595,7 +595,7 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
     {FUNC_PRESSURE,                     func_pressure},                 //压力
     {FUNC_PRESSURE_EXPLAIN,             func_pressure_explain},         //压力说明
 #endif

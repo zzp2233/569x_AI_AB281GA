@@ -440,12 +440,9 @@ void uteModuleWatchOnlineSyncData(uint8_t *receive, uint8_t length)
             response[2] = WATCH_ERR_FILE_TOO_LARGE;
             uteModuleProfileBleSendToPhone(&response[0], 3);
         }
-#if 0 // UTE_BT30_CALL_SUPPORT //&& (UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT == false)
-        ute_bt_call_data_t callData;
-        uteModuleCallGetData(&callData);
-        if((uteModuleCallGetBeforeCallStatus() == BT_HFP_OUTGOING_CALL_ONGOING) ||\
-           (uteModuleCallGetBeforeCallStatus() == BT_HFP_INCOMING_CALL_ONGOING) ||\
-           (callData.state == BT_CALL_ING))
+#if UTE_BT30_CALL_SUPPORT //&& (UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT == false)
+        uint disp_status = bsp_bt_disp_status();
+        if (uteModuleGuiCommonGetCurrentScreenId() == FUNC_BT_CALL || disp_status >= BT_STA_INCOMING)
         {
             response[0] = CMD_WATCH_ONLINE;
             response[1] = 0x03;

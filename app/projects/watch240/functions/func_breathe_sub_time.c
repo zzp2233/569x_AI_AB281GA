@@ -540,15 +540,16 @@ compo_form_t *func_breathe_sub_time_form_create(void)
     {
         memset(txt_buf,0,sizeof(txt_buf));
         compo_textbox_t *txt = compo_textbox_create_for_page(frm,page,2);
-        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_28_BIN);
+        compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_38_BIN);
         compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,BREATHE_TIME_TXT_Y[idx-COMPO_ID_TXT_1]);
         snprintf(txt_buf,sizeof(txt_buf),"%02d",txt_data[idx-COMPO_ID_TXT_1]);
         compo_setid(txt,idx);
         compo_textbox_set(txt,txt_buf);
         compo_textbox_set_forecolor(txt,idx==COMPO_ID_TXT_3 ? COLOR_WHITE : COLOR_GRAY);
     }
-    compo_textbox_t *txt = compo_textbox_create_for_page(frm,frm->page,strlen(i18n[STR_MIN]));
-    compo_textbox_set_location(txt,220,162,100,35);
+    compo_textbox_t *txt = compo_textbox_create(frm,strlen(i18n[STR_MIN]));
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_location(txt,220,151,100,35);
     compo_textbox_set(txt,i18n[STR_MIN]);
 
     compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮

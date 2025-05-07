@@ -265,11 +265,11 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_SOPRT_BIN,               .str_idx=STR_SPORTS},                //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    // {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_OXYGEN_BIN,           .str_idx=STR_BLOOD_OXYGEN},          //血氧
+    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I338001_2_HONEYCOMB_SPO2_BIN,                .str_idx=STR_BLOOD_OXYGEN},          //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-// #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    // {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_PRESSURE_BIN,         .str_idx=STR_BLOOD_PRESSURE},       //血压
-// #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {.func_sta=FUNC_PRESSURE,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_STRESS_BIN,                  .str_idx=STR_BLOOD_PRESSURE},       //压力
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_SLEEP_BIN,                 .str_idx=STR_SLEEP},                 //睡眠
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT

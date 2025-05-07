@@ -1,7 +1,10 @@
 #include "include.h"
-// 240 * 296
+// 320 * 385
 
-#if (GUI_SELECT == 0)
+//#define Delay(ms) bsp_spide_cs(1);delay_ms(ms)
+#if (GUI_SELECT == GUI_TFT_240_296_NV3030B)
+
+
 #define WriteData(v) tft_write_data(v)
 #define CommEnd()    tft_write_end()
 // cmd 12h 1:cmd      4:addr/data
@@ -9,52 +12,46 @@
 // cmd 02h 1:cmd      1:addr/data
 #define WriteComm12(v) \
 ({                   \
-    bsp_spide_cs(1);         \
-    bsp_spide_cs(0);         \
-    bsp_spide_bus_mode(SPIDE_1IO);   \
-    bsp_spide_snd_byte(0x12);\
-    bsp_spide_bus_mode(SPIDE_4IO);   \
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_snd_byte(v);   \
-    bsp_spide_snd_byte(0x00);\
+bsp_spide_cs(1);         \
+bsp_spide_cs(0);         \
+bsp_spide_bus_mode(SPIDE_1IO);   \
+bsp_spide_snd_byte(0x12);\
+bsp_spide_bus_mode(SPIDE_4IO);   \
+bsp_spide_snd_byte(0x00);\
+bsp_spide_snd_byte(v);   \
+bsp_spide_snd_byte(0x00);\
 })
 #define WriteComm32(v) \
 ({                   \
-    bsp_spide_cs(1);         \
-    bsp_spide_cs(0);         \
-    bsp_spide_bus_mode(SPIDE_1IO);   \
-    bsp_spide_snd_byte(0x32);\
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_snd_byte(v);   \
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_bus_mode(SPIDE_4IO);   \
+bsp_spide_cs(1);         \
+bsp_spide_cs(0);         \
+bsp_spide_bus_mode(SPIDE_1IO);   \
+bsp_spide_snd_byte(0x32);\
+bsp_spide_snd_byte(0x00);\
+bsp_spide_snd_byte(v);   \
+bsp_spide_snd_byte(0x00);\
+bsp_spide_bus_mode(SPIDE_4IO);   \
 })
 #define WriteComm02(v) \
 ({                   \
-    bsp_spide_cs(1);         \
-    bsp_spide_cs(0);         \
-    bsp_spide_bus_mode(SPIDE_1IO);   \
-    bsp_spide_snd_byte(0x02);\
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_snd_byte(v);   \
-    bsp_spide_snd_byte(0x00);\
+bsp_spide_cs(1);         \
+bsp_spide_cs(0);         \
+bsp_spide_bus_mode(SPIDE_1IO);   \
+bsp_spide_snd_byte(0x02);\
+bsp_spide_snd_byte(0x00);\
+bsp_spide_snd_byte(v);   \
+bsp_spide_snd_byte(0x00);\
 })
 #define ReadComm03(v) \
 ({                   \
-    bsp_spide_cs(1);         \
-    bsp_spide_cs(0);         \
-    bsp_spide_bus_mode(SPIDE_1IO);   \
-    bsp_spide_snd_byte(0x03);\
-    bsp_spide_snd_byte(0x00);\
-    bsp_spide_snd_byte(v);   \
-    bsp_spide_snd_byte(0x00);\
+bsp_spide_cs(1);         \
+bsp_spide_cs(0);         \
+bsp_spide_bus_mode(SPIDE_1IO);   \
+bsp_spide_snd_byte(0x03);\
+bsp_spide_snd_byte(0x00);\
+bsp_spide_snd_byte(v);   \
+bsp_spide_snd_byte(0x00);\
 })
-
-AT(.com_text.tft_spi)
-bool tft_rgbw_is_support(void)
-{
-    return true;
-}
 
 //0x02: 1CMD 1ADDR 1DATA
 AT(.com_text.tft_spi)
@@ -139,6 +136,8 @@ void tft_write_data_start(void)
     tft_write_cmd12(0x2C);      //TFT_RAMWR
 }
 
+
+
 void tft_write_cmd(u8 cmd);
 void tft_write_data(u8 data);
 void tft_write_end(void);
@@ -146,67 +145,37 @@ void tft_write_end(void);
 #define WriteComm(v) tft_write_cmd(v)
 #define ReadComm(v)  ReadComm03(v)
 
+//0x03: 2bit
+void tft_read_id_cmd(u8 cmd)
+{
+    TFT_SPI_CS_DIS();
+    delay_us(1);
+    TFT_SPI_CS_EN();
+    DESPICON = (DESPICON & ~(0x03<<2)) | (0x00<<2); //1data in 1data out
+    tft_spi_sendbyte(0x03);
+    tft_spi_sendbyte(0x00);
+    tft_spi_sendbyte(cmd);
+    tft_spi_sendbyte(0x00);
+}
+
 uint32_t tft_read_id(void)
 {
+    u32 despicon = DESPICON;
     uint32_t id = 0;
-    tft_read_cmd(0x04);
+    //tft_read_cmd(0x04);
+    tft_read_id_cmd(0x04);
     id = tft_spi_getbyte();
     id = (id << 8) + tft_spi_getbyte();
     id = (id << 8) + tft_spi_getbyte();
     id = (id << 8) + tft_spi_getbyte();
     tft_write_end();
+    DESPICON = despicon;
     return id;
-}
-
-
-void st7789_display_point(uint16_t x1, uint16_t y1, uint16_t color)
-{
-    TFT_SPI_DATA_EN();
-    delay_5ms(200);
-    printf("st7789_display_point_test_nomal\n");
-    tft_set_window(0, 0, x1, y1);
-    tft_frame_start();
-    for (int x = 0; x <= x1; x++)
-    {
-        for (int y = 0; y <= y1; y++)
-        {
-            WDT_CLR();
-            WriteData(color >> 8);
-            WriteData(color);
-        }
-    }
-    tft_write_end();
-
-}
-
-void HW_Reset(void)
-{
-
-    GPIOAFEN &= ~BIT(3);                            //RS
-    GPIOADE  |= BIT(3);
-    GPIOASET = BIT(3);
-    GPIOADIR &= ~BIT(3);
-
-    /*GPIOEFEN &= ~BIT(7);                            //RESET
-    GPIOEDE  |= BIT(7);
-    GPIOESET = BIT(7);
-    GPIOEDIR &= ~BIT(7);
-    delay_ms(10);
-    GPIOECLR = BIT(7);
-    delay_ms(20);
-    GPIOESET = BIT(7);
-    delay_ms(50);*/
 }
 
 void tft_spi_nv3030b_init(void)
 {
-    printf("tft_nv3030b_init\n");
-
-    // HW_Reset();
-    // delay_ms(120);
-
-    // WriteComm(0x11);
-    // delay_ms(120);
+    printf("tft_spi_nv3030b_init\n");
 
 //驱动信息:NV3030B-02-BOE2.01-IPS-GAMMA2.2-20230719.txt
     WriteComm(0xFD);
@@ -351,5 +320,7 @@ void tft_spi_nv3030b_init(void)
     delay_ms(200);
     WriteComm(0x29); // display on
     delay_ms(20);
+
 }
 #endif
+

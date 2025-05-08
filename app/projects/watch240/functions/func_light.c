@@ -399,7 +399,6 @@ enum
     COMPO_ID_LIGHT_BTN,
 };
 
-#define SPACING_COUNT  (-40)
 typedef struct f_light_t_
 {
     bool touch_flag;
@@ -408,6 +407,14 @@ typedef struct f_light_t_
     s8   level_old;
     s8   level_value;
 } f_light_t;
+
+#define val_shape_y  45
+#define val_shepe_x  135
+#define val_shape_h  266
+#define val_shepe_w  90
+#define make_pic_hei(val)   (val*val_shape_h/5)
+#define make_pic_y(hei)     (val_shape_h-hei+val_shape_y)
+#define SPACING_COUNT  (-val_shape_h/5)
 //创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_light_form_create(void)
 {
@@ -418,14 +425,29 @@ compo_form_t *func_light_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_LIGHT]);
     //亮度
-    compo_picturebox_t *light_pic = compo_picturebox_create(frm, UI_BUF_I338001_28_SET_BRIGHTNESS_00_BIN);
-    compo_setid(light_pic, COMPO_ID_LIGHT_PIC);
-    compo_picturebox_set_pos(light_pic, GUI_SCREEN_CENTER_X, 79+266/2);
-    compo_picturebox_cut(light_pic,sys_cb.light_level-1,5);
+    // compo_picturebox_t *light_pic = compo_picturebox_create(frm, UI_BUF_I338001_28_SET_BRIGHTNESS_00_BIN);
+    // compo_setid(light_pic, COMPO_ID_LIGHT_PIC);
+    // compo_picturebox_set_pos(light_pic, GUI_SCREEN_CENTER_X, 79+266/2);
+    // compo_picturebox_cut(light_pic,sys_cb.light_level-1,5);
 
-    compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn,GUI_SCREEN_CENTER_X, 79+266/2,90,266);
-    compo_setid(btn,COMPO_ID_LIGHT_BTN);
+    // compo_button_t *btn = compo_button_create(frm);
+    // compo_button_set_location(btn,GUI_SCREEN_CENTER_X, 79+266/2,90,266);
+    // compo_setid(btn,COMPO_ID_LIGHT_BTN);
+
+    s16 shape_y = make_pic_y(make_pic_hei(sys_cb.light_level));
+    s16 shape_h = make_pic_hei(sys_cb.light_level);
+    compo_shape_t * val = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(val,val_shepe_x,shape_y+5,val_shepe_w,shape_h);
+    compo_shape_set_radius(val, 20);
+    widget_set_align_center(val->rect, false);
+    compo_setid(val, COMPO_ID_LIGHT_PIC);
+
+    compo_button_t *btn = compo_button_create_by_image(frm, 0);
+    compo_setid(btn, COMPO_ID_LIGHT_BTN);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+5,val_shepe_w,val_shape_h);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_VOLUME_BIN);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,32/2+262);
 
     if(func_cb.sta == FUNC_LIGHT)
     {
@@ -442,8 +464,6 @@ static void func_light_disp_move_handle(void)
     {
         s32 dx, dy;
         f_light->touch_flag = ctp_get_dxy(&dx, &dy);
-
-        compo_picturebox_t *light_pic = compo_getobj_byid(COMPO_ID_LIGHT_PIC);
         if(f_light->touch_flag)//触摸状态
         {
             s8 level_data= (dy/SPACING_COUNT)+f_light->level_old;
@@ -457,7 +477,15 @@ static void func_light_disp_move_handle(void)
             {
                 // printf("level_data:%d\n",level_data);
                 f_light->level_value = level_data;
-                compo_picturebox_cut(light_pic,(uint8_t)level_data-1,5);
+                // compo_picturebox_cut(light_pic,(uint8_t)level_data-1,5);
+                s16 shape_y = make_pic_y(make_pic_hei(level_data));
+                s16 shape_h = make_pic_hei(level_data);
+                compo_shape_t * val = compo_getobj_byid(COMPO_ID_LIGHT_PIC);
+                if(val != NULL)
+                {
+                    compo_shape_set_location(val,val_shepe_x,shape_y+5,val_shepe_w,shape_h);
+                }
+                printf("y:%d h:%d lever:%d\n",shape_y,shape_h,level_data);
                 tft_bglight_set_level((uint8_t)level_data,false);
             }
         }

@@ -640,6 +640,117 @@ static void func_set_sub_dousing_button_touch_handle(void)
     }
 
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+//熄屏设置页面
+compo_form_t *func_set_sub_dousing_form_create(void)
+{
+
+    switch (uteModuleGuiCommonGetDisplayOffTime())
+    {
+        case 5:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM0;
+            break;
+
+        case 10:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM1;
+            break;
+
+        case 20:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM2;
+            break;
+
+        case 30:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM3;
+            break;
+
+        case 60:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM4;
+            break;
+
+        case 0:
+            sys_cb.set_sleep_time_id = COMPO_ID_BTN_NUM5;
+            break;
+    }
+
+    snprintf(tbl_list_dousing[0].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("5",i18n[STR_SECOND_JOINT]));
+    snprintf(tbl_list_dousing[1].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("10",i18n[STR_SECOND_JOINT]));
+    snprintf(tbl_list_dousing[2].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("20",i18n[STR_SECOND_JOINT]));
+    snprintf(tbl_list_dousing[3].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("30",i18n[STR_SECOND_JOINT]));
+    snprintf(tbl_list_dousing[4].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",back_string("1",i18n[STR_MIN_JOINT]));
+    snprintf(tbl_list_dousing[5].str_txt,sizeof(tbl_list_dousing[1].str_txt),"%s",i18n[STR_LIGHT_ALWAYS]);
+
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_DOUSING]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_dousing_list, DOUSING_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I340001_FIRSTORDER_CARD_BIN);
+    compo_listbox_set_text_modify(listbox, tbl_list_dousing);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I340001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bithook(listbox, func_sel_dousing_bit);
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    compo_listbox_set_focus(listbox, 80);
+    compo_listbox_update(listbox);
+
+
+    return frm;
+}
+
+//点进图标进入应用
+void func_set_sub_dousing_list_icon_click(void)
+{
+    int icon_idx;
+    f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+    if (icon_idx < 0 || icon_idx >= DOUSING_LIST_CNT)
+    {
+        return;
+    }
+    sys_cb.set_sleep_time_id = icon_idx;
+    //切入应用
+    switch(icon_idx)
+    {
+        case  COMPO_ID_BTN_NUM0...COMPO_ID_BTN_NUM6:
+            if (icon_idx==COMPO_ID_BTN_NUM0)
+            {
+                uteModuleGuiCommonSetDisplayOffTime(5);
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM1)
+            {
+                uteModuleGuiCommonSetDisplayOffTime(10);
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM2)
+            {
+                uteModuleGuiCommonSetDisplayOffTime(20);
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM3)
+            {
+                uteModuleGuiCommonSetDisplayOffTime(30);
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM4)
+            {
+                uteModuleGuiCommonSetDisplayOffTime(60);
+            }
+            else if (icon_idx==COMPO_ID_BTN_NUM5)
+            {
+                uteModuleGuiCommonSetDisplayOffTime(0);
+            }
+            compo_listbox_update(listbox);
+            break;
+
+        default:
+            break;
+    }
+}
+
 #else
 compo_form_t *func_set_sub_dousing_form_create(void)
 {
@@ -653,7 +764,7 @@ void func_set_sub_dousing_list_icon_click(void)
 static void func_set_sub_dousing_list_process(void)
 {
     f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
-#if(GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
+#if(GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT ||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT)
     compo_listbox_move(f_set->listbox);
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     func_set_sub_dousing_sub_move();
@@ -665,7 +776,7 @@ static void func_set_sub_dousing_list_process(void)
 static void func_set_sub_dousing_list_message(size_msg_t msg)
 {
     f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
-#if(GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
+#if(GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT)
     compo_listbox_t *listbox = f_set->listbox;
     if (compo_listbox_message(listbox, msg))
     {
@@ -695,7 +806,7 @@ static void func_set_sub_dousing_enter(void)
     func_cb.frm_main = func_set_sub_dousing_form_create();
 
     f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
-#if(GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
+#if(GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT)
     f_set->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_set->listbox;
     if (listbox->type != COMPO_TYPE_LISTBOX)
@@ -709,6 +820,9 @@ static void func_set_sub_dousing_enter(void)
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, DOUSING_LIST_CNT - 2));
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, DOUSING_LIST_CNT - 2)+40);
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, DOUSING_LIST_CNT - 2)+40);
+
 #endif
     func_cb.enter_tick = tick_get();
 }
@@ -717,7 +831,7 @@ static void func_set_sub_dousing_enter(void)
 static void func_set_sub_dousing_exit(void)
 {
     f_dousing_list_t *f_set = (f_dousing_list_t *)func_cb.f_cb;
-#if(GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT)
+#if(GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT)
     compo_listbox_t *listbox = f_set->listbox;
     func_free(listbox->mcb);                                            //释放移动控制块
 #endif

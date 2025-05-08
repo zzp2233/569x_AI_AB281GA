@@ -138,6 +138,39 @@ compo_form_t *func_ble_call_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+#define TXT_X_MIN 20
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_ble_call_form_create(void)
+{
+    //printf("%s\n", __func__);
+
+//    char txt_buf[20]="121353461";///假数据
+
+    //新建窗体, 通话页面
+    compo_form_t *frm = compo_form_create(true);
+
+    ute_bt_call_data_t callData;
+    uteModuleCallGetData(&callData);
+
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(name_txt, (char*)callData.name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
+
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set_forecolor(txt, COLOR_GREEN);
+
+    //挂断
+    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I340001_CALL_CALLING_END_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 279);
+
+    return frm;
+}
 #else
 #define TXT_X_MIN 20
 compo_form_t *func_ble_call_form_create(void)

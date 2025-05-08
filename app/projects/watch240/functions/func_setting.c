@@ -285,6 +285,82 @@ compo_form_t *func_set_sub_list_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
+#define SET_LIST_CNT                       ((int)(sizeof(tbl_setting_list) / sizeof(tbl_setting_list[0])))
+
+enum
+{
+    COMPO_ID_LISTBOX = 1,
+};
+
+typedef struct f_set_list_t_
+{
+    compo_listbox_t *listbox;
+
+} f_set_list_t;
+
+static const compo_listbox_item_t tbl_setting_list[] =
+{
+    {STR_DIAL_SWICTH,                    UI_BUF_I340001_SETTINGS_ICON_WATCHFACES_BIN,       .func_sta = FUNC_CLOCK_PREVIEW},    //表盘切换
+#if UTE_MODULE_SCREENS_LIGHT_SUPPORT
+    {STR_SETTING_LIGHT,                  UI_BUF_I340001_SETTINGS_ICON_RIGHTNESS_BIN,        .func_sta = FUNC_LIGHT},            //亮度调节
+#endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
+    {STR_SETTING_DOUSING,                UI_BUF_I340001_SETTINGS_ICON_TIME_BIN,             .func_sta = FUNC_SET_SUB_DOUSING},  //息屏时长
+    {STR_SETTING_UP,                     UI_BUF_I340001_SETTINGS_ICON_TAIWAN_BIN,           .func_sta = FUNC_SET_SUB_WRIST},    //抬腕亮屏
+    {STR_SETTING_DISTURD,                UI_BUF_I340001_SETTINGS_ICON_DND_BIN,              .func_sta = FUNC_SET_SUB_DISTURD},  //勿扰模式
+    {STR_VOL,                           UI_BUF_I340001_SETTINGS_ICON_SOUND_BIN,            .func_sta = FUNC_SET_SUB_SAV},       //声音
+#if UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+    {STR_SETTING_LANGUAGE,               UI_BUF_I340001_SETTINGS_ICON_LANUAGE_BIN,          .func_sta = FUNC_SET_SUB_LANGUAGE}, //语言设置
+#endif // UTE_MODULE_SCREENS_LANGUAGE_SUPPORT
+#if UTE_MODULE_SCREENS_STYLE_SUPPORT
+    {STR_STYLE,                          UI_BUF_I340001_SETTINGS_ICON_THEME_BIN,            .func_sta = FUNC_STYLE}, //主题
+#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+    //{STR_BEATHER_DURATION,                   UI_BUF_SETTING_TIME_BIN,                       .func_sta = FUNC_SET_SUB_TIME},     //时间设置
+//    {STR_SETTING_CALENDAR,               UI_BUF_SETTING_CALENDAR_BIN,                   .func_sta = FUNC_CALENDAER},        //日期设置
+//    {STR_SETTING_PASSWORD,               UI_BUF_SETTING_PASSWORD_BIN,                   .func_sta = FUNC_SET_SUB_PASSWORD}, //密码锁
+    {STR_SETTING_ABOUT,                  UI_BUF_I340001_SETTINGS_ICON_ABOUT_BIN,            .func_sta = FUNC_SET_SUB_ABOUT},    //关于
+    // {STR_SETTING_4G,                     UI_BUF_SETTING_ABOUT_BIN,                      .func_sta = FUNC_SET_SUB_4G},       //4G
+//    {STR_SETTING_ABOUT,                  UI_BUF_SETTING_RESTART_BIN,                    .func_sta = FUNC_SET_SUB_SOS},  //SOS
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
+    {STR_QRCODE,                        UI_BUF_I340001_SETTINGS_ICON_QR_BIN,               .func_sta = FUNC_SCAN},    //二维码
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
+#if UTE_MODULE_SCREENS_RESTART_SUPPORT
+    {STR_SETTING_RESTART,               UI_BUF_I340001_SETTINGS_ICON_BOOT_BIN,             .func_sta = FUNC_SET_SUB_RESTART},  //重启
+#endif // UTE_MODULE_SCREENS_RESTART_SUPPORT
+    {STR_SETTING_OFF,                   UI_BUF_I340001_SETTINGS_ICON_SHUTDOWN_BIN,         .func_sta = FUNC_SET_SUB_OFF},      //关机
+#if UTE_MODULE_SCREENS_RESFY_SUPPORT
+    {STR_SETTING_RSTFY,                 UI_BUF_I340001_SETTINGS_ICON_RETYR_BIN,            .func_sta = FUNC_SET_SUB_RSTFY},    //恢复出厂
+#endif // UTE_MODULE_SCREENS_RESFY_SUPPORT
+};
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_set_sub_list_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING]);
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_set(listbox, tbl_setting_list, SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I340001_FIRSTORDER_CARD_BIN);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    u8 set_idx = sys_cb.set_idx;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+    return frm;
+}
+
 #else
 #define SET_LIST_CNT                       ((int)(sizeof(tbl_setting_list) / sizeof(tbl_setting_list[0])))
 
@@ -398,6 +474,9 @@ static void func_set_sub_list_enter(void)
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
+
 #endif
     func_cb.enter_tick = tick_get();
 }

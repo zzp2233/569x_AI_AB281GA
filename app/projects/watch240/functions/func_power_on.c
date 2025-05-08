@@ -256,16 +256,17 @@ static void func_power_on_disp_process(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-    compo_animation_t * animation = compo_animation_create(frm,UI_BUF_I340001_1_START_ICON_LOGO_BIN);
-    compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-    compo_animation_set_radix(animation, 24);
-    compo_animation_set_interval(animation, 1);
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I340001_KAIJI_ICON_LOGO_BIN);///背景图片
+    compo_picturebox_cut(pic, 0, 24 );
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_setid(pic, COMPO_PIC_ID);
 
     return frm;
 }
@@ -274,11 +275,14 @@ static void func_power_on_disp_process(void)
     f_power_on_t* f_power_on = (f_power_on_t*)func_cb.f_cb;
     if(tick_check_expire(f_power_on->tick,200))
     {
+        compo_picturebox_t *pic  = compo_getobj_byid(COMPO_PIC_ID);
+
         f_power_on->tick = tick_get();
         f_power_on->pic_num_disp ++;
 
         if(f_power_on->pic_num_disp<24)
         {
+            compo_picturebox_cut(pic, f_power_on->pic_num_disp, 24);
         }
         else
         {
@@ -302,6 +306,7 @@ static void func_power_on_disp_process(void)
         }
     }
 }
+
 #else
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)

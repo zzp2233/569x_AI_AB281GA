@@ -254,6 +254,63 @@ static void func_ota_update_disp(void)
         }
     }
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
+compo_form_t *func_ota_update_form_create(void)
+{
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I340001_OTA_00_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 60+150/2);
+    compo_setid(picbox,ROCKET_ID);
+
+    //CODE 进度条
+    compo_arc_t *arc = compo_arc_create(frm);
+    compo_setid(arc, PROGRESS_BAR_ID);
+    compo_arc_set_location(arc, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-5, GUI_SCREEN_HEIGHT-5);
+    compo_arc_set_rotation(arc, 0);
+    compo_arc_set_angles(arc, 0, 3600);
+    compo_arc_set_edge_circle(arc,true,true);
+    compo_arc_set_color(arc,make_color(0x23,0x8d,0xff),make_color(0x33,0x33,0x33));
+    compo_arc_set_alpha(arc,255,255);
+    compo_arc_set_value(arc,0);
+    compo_arc_set_width(arc, 10);
+
+    //TXT1 升级中
+    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, UPDATING_TXT_ID);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 250+32/2, 196, 30);
+    compo_textbox_set(txt, i18n[STR_UPGRADING]);
+
+    return frm;
+}
+
+//显示升级界面处理
+static void func_ota_update_disp(void)
+{
+    static u32 ticks = 0;
+
+    if (tick_check_expire(ticks, 100))
+    {
+        ticks = tick_get();
+        reset_sleep_delay_all();
+
+        extern fot_progress_t *bsp_fot_progress_get(void);
+        fot_progress_t *fot_data = bsp_fot_progress_get();
+        if(fot_data->type == FOT_FILE_TYPE_FOT)
+        {
+            if(fot_data->percent)
+            {
+                if(fot_data->percent >= 97)
+                {
+                    fot_data->percent = 100;
+                }
+                compo_arc_t *bar = compo_getobj_byid(PROGRESS_BAR_ID);
+                compo_arc_set_value(bar,fot_data->percent*10);
+            }
+        }
+    }
+}
 
 #else
 compo_form_t *func_ota_update_form_create(void)

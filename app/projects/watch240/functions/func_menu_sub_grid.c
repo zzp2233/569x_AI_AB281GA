@@ -279,7 +279,7 @@ static const menu_hc_item_t tbl_menu_grid[] =
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              },  //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
 // #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
+    // {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
 // #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表

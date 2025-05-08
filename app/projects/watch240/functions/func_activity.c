@@ -520,8 +520,8 @@ compo_form_t *func_activity_form_create(void)
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
     textbox = compo_textbox_create(frm, strlen(txt_buf));
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_28_BIN);
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,816+4/2,GUI_SCREEN_CENTER_X,30);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,826+4/2,GUI_SCREEN_CENTER_X,30);
     compo_textbox_set(textbox, txt_buf);
 
     uint32_t target_step = uteModuleSportGetStepsTargetCnt();
@@ -536,8 +536,9 @@ compo_form_t *func_activity_form_create(void)
     // compo_textbox_set_forecolor(textbox, make_color(153,153,153));
     // compo_textbox_set(textbox, txt_buf);
 
-    uint16_t step_date[24];
-    uteModuleSportLoadTodayEveryHourSportTimeHistoryData(step_date);
+    uint32_t step_date[24];
+
+    uteModuleSportLoadTodayEveryHourStepHistoryData(step_date);
     compo_chartbox_t*chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 24);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X,877+124/2,235,124);
     compo_chartbox_set_pixel(chart, 1);
@@ -570,7 +571,7 @@ compo_form_t *func_activity_form_create(void)
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",week_step_data);///week步数数据
     textbox = compo_textbox_create(frm, strlen(txt_buf));
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_28_BIN);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,1128+45/2,230,30);
     compo_textbox_set(textbox, txt_buf);
 

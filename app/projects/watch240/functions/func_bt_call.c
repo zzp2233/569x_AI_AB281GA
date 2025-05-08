@@ -29,6 +29,10 @@ enum
     COMPO_ID_BTN_REJECT,
     COMPO_ID_BTN_MIC,
     COMPO_ID_TXT_IN_CALL,
+    COMPO_ID_BIN_SOUND,
+    COMPO_ID_PIC_VOLUME,
+    COMPO_ID_BTN_INCREASE,
+    COMPO_ID_BTN_REDUCE,
 };
 
 static void func_bt_call_back_to(void)
@@ -122,6 +126,30 @@ compo_form_t *func_bt_call_form_create(void)
     compo_setid(btn, COMPO_ID_BTN_MIC);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/3, 240);
 
+    //sound
+    btn =compo_button_create_by_image (frm,UI_BUF_I330001_CALL_CALLING_SOUND_BIN);
+    compo_setid(btn, COMPO_ID_BIN_SOUND);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X*2/3,240);
+
+    ///////////////////////////////////////第二页
+    widget_page_t *page = widget_page_create(frm->page);///创建页码页面
+    widget_page_set_client(page, 0, 0);
+
+    //音量
+    compo_picturebox_t *volume_pic = compo_picturebox_create_for_page(frm,frm->page, UI_BUF_I330001_CALL_CALLING_PROGRESS_BAR_BIN);
+    compo_setid(volume_pic, COMPO_ID_PIC_VOLUME);
+    compo_picturebox_set_pos(volume_pic, GUI_SCREEN_CENTER_X+GUI_SCREEN_WIDTH, 144);
+    compo_picturebox_cut(volume_pic,sys_cb.hfp_vol-1,15);
+
+    //新建按钮
+    btn = compo_button_create_page_by_image(frm,frm->page, UI_BUF_I330001_SETTINGS_BRIGHTNESS_LESS_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REDUCE);
+    compo_button_set_pos(btn,39+GUI_SCREEN_WIDTH,164);
+
+    btn = compo_button_create_page_by_image(frm,frm->page, UI_BUF_I330001_SETTINGS_BRIGHTNESS_PLUS_BIN);
+    compo_setid(btn, COMPO_ID_BTN_INCREASE);
+    compo_button_set_pos(btn,  201+GUI_SCREEN_WIDTH,164);
+
 
     return frm;
 }
@@ -180,7 +208,12 @@ compo_form_t *func_bt_outgoing_form_create(void)
 
     return frm;
 }
-
+static void func_bt_call_disp_Refresh(void)
+{
+    compo_picturebox_t *pic_level;
+    pic_level = compo_getobj_byid(COMPO_ID_PIC_VOLUME);
+    compo_picturebox_cut(pic_level,sys_cb.hfp_vol-1,15);
+}
 AT(.text.func.bt)
 static void func_bt_call_interface(void)
 {
@@ -319,11 +352,16 @@ void func_bt_call_up_date_process(void)
 }
 void func_bt_call_process(void)
 {
+    f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
     func_bt_call_up_date_process();
     func_process();
     func_bt_sub_process();
     func_bt_call_exit_process();
     func_bt_call_interface();
+    if(f_bt_call->page_num==1)
+    {
+        func_bt_call_disp_Refresh();
+    }
 }
 
 #if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
@@ -384,7 +422,24 @@ static void func_bt_call_click(void)
                 compo_button_set_bgimg(btn,UI_BUF_I330001_CALL_CALLING_JINGYIN00_BIN);
             }
             break;
+        case COMPO_ID_BIN_SOUND:
+            widget_page_set_client(func_cb.frm_main->page,-GUI_SCREEN_WIDTH, 0);
+            f_bt_call->page_num =1 ;
+            break;
+        case COMPO_ID_BTN_REDUCE:
+            if(sys_cb.hfp_vol>1)
+            {
+                printf("11111down");
+                bt_volume_down();
+            }
+            func_bt_call_disp_Refresh();
+            break;
 
+        case COMPO_ID_BTN_INCREASE:
+            bt_volume_up();
+            printf("11111up");
+            func_bt_call_disp_Refresh();
+            break;
         default:
             break;
     }

@@ -571,7 +571,7 @@ compo_form_t *func_sport_form_create(void)
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-    compo_listbox_set(listbox, tbl_sport_list_sort, uteModuleSportGetHundredSportValidNumber()-1);
+    compo_listbox_set(listbox, tbl_sport_list_sort, uteModuleSportGetHundredSportValidNumber());
 #else
     compo_listbox_set(listbox, tbl_sport_list_sort, UTE_MODULE_SPORT_MAX_SPORT_NUM);
 #endif
@@ -1099,7 +1099,7 @@ static void func_sport_enter(void)
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init(listbox);
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, uteModuleSportGetHundredSportValidNumber()-3));
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, uteModuleSportGetHundredSportValidNumber()-2));
 #endif
     // compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, MENU_LIST_CNT - 1));
     func_cb.enter_tick = tick_get();

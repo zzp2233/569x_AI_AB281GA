@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
 #define DEFAULT_BLE_DEV_NAME "T70"
-#define UTE_SW_VERSION "AB281FV000043"
+#define UTE_SW_VERSION "AB281FV000049"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
@@ -148,22 +148,19 @@
 /*! 表盘上拉界面,wang.luo 2025-04-07 */
 #define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_CARD
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
-#define DEFAULT_WATCH_INDEX 1
+#define DEFAULT_WATCH_INDEX 0
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 2
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 4
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_CUBE_BIN,      \
-                                                UI_BUF_DIALPLATE_BUTTERFLY_BIN}
-// #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18306001_BIN, \
-//                                                 UI_BUF_DIALPLATE_D18308001_BIN, \
-//                                                 UI_BUF_DIALPLATE_D18309001_BIN, \
-//                                                 UI_BUF_DIALPLATE_CUBE_BIN,      \
-//                                                 UI_BUF_DIALPLATE_BUTTERFLY_BIN}//, UI_BUF_DIALPLATE_D18310001_BIN, UI_BUF_DIALPLATE_BTF_BIN, UI_BUF_DIALPLATE_CUBE_BIN
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18306001_BIN, \
+                                                UI_BUF_DIALPLATE_D18308001_BIN, \
+                                                UI_BUF_DIALPLATE_CUBE_BIN,      \
+                                                UI_BUF_DIALPLATE_BUTTERFLY_BIN}// UI_BUF_DIALPLATE_D18309001_BIN, \
 
 #define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
 #define UTE_WATCHS_CUBE_DIAL_SUPPORT 1      // 使用立方体表盘
-#define UTE_WATCHS_DIALPLATE_BTF_INDEX 0    // 蝴蝶表盘索引
-#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 1   // 立方体表盘索引
+#define UTE_WATCHS_DIALPLATE_BTF_INDEX 3    // 蝴蝶表盘索引
+#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 2   // 立方体表盘索引
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1

@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 德语(德国）
 *@author
-*@date   2025-05-08 15:39:39
+*@date   2025-05-09 17:18:26
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -302,6 +302,11 @@ const char * const i18n_de_rde[] =
     [STR_NORMAL] = "\x4e\x6f\x72\x6d\x61\x6c\x00", // [286] Normal
     [STR_MEDIUM] = "\x4d\x69\x74\x74\x65\x6c\x00", // [287] Mittel
     [STR_HIGH] = "\x48\x6f\x63\x68\x00", // [288] Hoch
+    [STR_VBRATION] = "\x56\x69\x62\x72\x61\x74\x69\x6f\x6e\x00", // [289] Vibration
+    [STR_SOUND_AND_VIBRATION] = "\x4b\x6c\x61\x6e\x67\x20\x75\x6e\x64\x20\x56\x69\x62\x72\x61\x74\x69\x6f\x6e\x00", // [290] Klang und Vibration
+    [STR_HIGH_1] = "\x48\x6f\x63\x68\x00", // [291] Hoch
+    [STR_MIDDLE] = "\x4d\x69\x74\x74\x65\x6c\x00", // [292] Mittel
+    [STR_LOW] = "\x4e\x69\x65\x64\x72\x69\x67\x00", // [293] Niedrig
 };
 
 #endif

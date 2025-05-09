@@ -1264,6 +1264,9 @@
 		<Unit filename="functions/func_mood_about.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_motor_grade.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_music.c">
 			<Option compilerVar="CC" />
 		</Unit>

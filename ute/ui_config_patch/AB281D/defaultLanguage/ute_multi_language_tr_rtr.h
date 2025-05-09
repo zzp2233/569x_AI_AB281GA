@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 土耳其语(土耳其）
 *@author
-*@date   2025-05-08 15:39:37
+*@date   2025-05-09 17:18:24
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -302,6 +302,11 @@ const char * const i18n_tr_rtr[] =
     [STR_NORMAL] = "\x4e\x6f\x72\x6d\x61\x6c\x00", // [286] Normal
     [STR_MEDIUM] = "\x4f\x72\x74\x61\x00", // [287] Orta
     [STR_HIGH] = "\x59\xc3\xbc\x6b\x73\x65\x6b\x00", // [288] Yüksek
+    [STR_VBRATION] = "\x54\x69\x74\x72\x65\xc5\x9f\x69\x6d\x00", // [289] Titreşim
+    [STR_SOUND_AND_VIBRATION] = "\x53\x65\x73\x6c\x65\x72\x20\x76\x65\x20\x74\x69\x74\x72\x65\x6d\x65\x6c\x65\x72\x00", // [290] Sesler ve titremeler
+    [STR_HIGH_1] = "\x59\xc3\xbc\x6b\x73\x65\x6b\x00", // [291] Yüksek
+    [STR_MIDDLE] = "\x4f\x72\x74\x61\x00", // [292] Orta
+    [STR_LOW] = "\x44\xc3\xbc\xc5\x9f\xc3\xbc\x6b\x00", // [293] Düşük
 };
 
 #endif

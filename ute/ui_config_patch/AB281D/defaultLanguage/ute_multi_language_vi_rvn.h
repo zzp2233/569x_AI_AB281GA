@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 越南语(越南）
 *@author
-*@date   2025-05-08 15:39:41
+*@date   2025-05-09 17:18:29
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -302,6 +302,11 @@ const char * const i18n_vi_rvn[] =
     [STR_NORMAL] = "\x42\xc3\xac\x6e\x68\x20\x74\x68\xc6\xb0\xe1\xbb\x9d\x6e\x67\x00", // [286] Bình thường
     [STR_MEDIUM] = "\x56\xe1\xbb\xab\x61\x20\x70\x68\xe1\xba\xa3\x69\x00", // [287] Vừa phải
     [STR_HIGH] = "\x43\x61\x6f\x00", // [288] Cao
+    [STR_VBRATION] = "\x52\x75\x6e\x67\x00", // [289] Rung
+    [STR_SOUND_AND_VIBRATION] = "\xc3\x82\x6d\x20\x74\x68\x61\x6e\x68\x20\x76\xc3\xa0\x20\x72\x75\x6e\x67\x20\x6c\xe1\xba\xaf\x63\x00", // [290] Âm thanh và rung lắc
+    [STR_HIGH_1] = "\x43\x61\x6f\x00", // [291] Cao
+    [STR_MIDDLE] = "\x47\x69\xe1\xbb\xaf\x61\x00", // [292] Giữa
+    [STR_LOW] = "\x54\x68\xe1\xba\xa5\x70\x00", // [293] Thấp
 };
 
 #endif

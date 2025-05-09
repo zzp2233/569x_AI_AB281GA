@@ -83,7 +83,7 @@ __STATIC_INLINE void drvScreenTft360X360Gc9b71Zd138g1616Init(void)
     memcpy(tmp, "\x05", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x3A, tmp, 1);
 
-    memcpy(tmp, "\x00", 1);
+    memcpy(tmp, "\xc0", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x36, tmp, 1);
 
     memcpy(tmp, "\x07", 1);

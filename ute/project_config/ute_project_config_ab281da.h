@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DA_H_
 
 #define DEFAULT_BLE_DEV_NAME "Huafit S6"
-#define UTE_SW_VERSION "AB281DAV000047"
+#define UTE_SW_VERSION "AB281DAV000050"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281D"
@@ -261,12 +261,12 @@
 #define UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT         1 //亮度设置列表界面
 #define UTE_MODULE_SCREENS_SUB_SOS_SUPPORT            1 //SOS界面
 #define UTE_MODULE_SCREENS_TOOLBOX_SUPPORT            1 //工具箱列表
+#define UTE_MODULE_SCREENS_MOTOR_GRADE                1 //震动强度
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
 #define UTE_MODULE_SCREENS_EMOTION_SUPPORT            1 //情绪界面
 #define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      1 //情绪说明界面
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
 #define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
-
 #endif
 
 //未完善

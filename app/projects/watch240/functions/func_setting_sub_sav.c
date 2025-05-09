@@ -172,7 +172,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_VOL]);
+    compo_form_set_title(frm, i18n[STR_SOUND_AND_VIBRATION]);
 
     compo_cardbox_t *cardbox = compo_cardbox_create(frm, 0, 1, 1, GUI_SCREEN_WIDTH, 62);
     compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2,GUI_SCREEN_WIDTH,62);
@@ -181,7 +181,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_icon_set(cardbox,0,UI_BUF_I335001_3_EXERCISE_LIST_BIN);
     compo_cardbox_text_scroll_process(cardbox, true);
     compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
-    compo_cardbox_text_set(cardbox,0,i18n[STR_MEDIA_VOL]);
+    compo_cardbox_text_set(cardbox,0,i18n[STR_VBRATION]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
 
     cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);

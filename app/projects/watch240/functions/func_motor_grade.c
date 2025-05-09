@@ -26,7 +26,7 @@ enum
 typedef struct f_motor_grade_t_
 {
     bool touch_flag;
-    u8 breathe_mode[5];
+    uint16_t breathe_mode[5];
     s32 move_dy;
     s32 move_dy_data;
     u8 mode;
@@ -38,11 +38,11 @@ typedef struct f_motor_grade_t_
 #define CENTER_TXT_Y   (130/2)
 
 const static uint16_t MOTOR_GRADE_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
-const static uint16_t txt_mode[3] = {STR_HIGH_1, STR_MIDDLE,STR_LOW };
+const static uint16_t txt_mode[3] = {STR_MIDDLE, STR_LOW,STR_HIGH_1 };
 
 static u8 func_motor_grade_get_mode(void)
 {
-    switch (uteDrvMotorGetVibrationLeve())
+    switch (uteDrvMotorGetVibrationLevel())
     {
         case UTE_DRV_MOTOR_PWM_VIBRATION_LOW:
             return 2;
@@ -54,6 +54,7 @@ static u8 func_motor_grade_get_mode(void)
             return 0;
             break;
         default:
+            return 0;
             break;
     }
 }
@@ -71,12 +72,13 @@ static u8 func_motor_grade_get_mode_motor(u8 grade)
             return UTE_DRV_MOTOR_PWM_VIBRATION_HIGH;
             break;
         default:
+            return UTE_DRV_MOTOR_PWM_VIBRATION_HIGH;
             break;
     }
 }
 
 // 函数功能：获取设置时间（上下 & 上上下下 ）的数// 核心函数：偏移后timer值等于timer_data[2]
-static void func_motor_grade_get_timer(uint8_t *timer, uint8_t *timer_data, int8_t num)
+static void func_motor_grade_get_timer(uint8_t *timer, uint16_t *timer_data, int8_t num)
 {
     // 1. 计算中心索引（0-2，支持正负偏移循环）
     int center_idx = (*timer - 1 + num);
@@ -101,14 +103,15 @@ compo_form_t *func_motor_grade_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-    u8 txt_data[5];
+    uint16_t txt_data[5];
     uint8_t mode = func_motor_grade_get_mode();
 
     ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_SETTING_MODE]);
+    compo_form_set_title(frm, i18n[STR_VBRATION]);
 
-    func_motor_grade_get_timer(&mode,txt_data,1);///获取模式
+    func_motor_grade_get_timer(&mode,txt_data,0);///获取模式
+
     //创建一个页面用于限制滚动的时间文本
     widget_page_t* page = widget_page_create(frm->page_body);
     widget_set_location(page, GUI_SCREEN_CENTER_X, 62+130/2, GUI_SCREEN_WIDTH,130);
@@ -175,6 +178,7 @@ static void func_breathe_set_mode_sub_move(void)
                 }
                 f_disturd_set->offset_old = f_disturd_set->offset;
                 uteDrvMotorSetTempVibrationLevel(func_motor_grade_get_mode_motor(f_disturd_set->mode));
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
             }
 
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
@@ -203,7 +207,7 @@ static void func_motor_grade_button_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_SURE:
-            sys_cb.breathe_mode = (f_disturd_set->mode+3-1)%3;
+            uteDrvMotorSetVibrationLevel(func_motor_grade_get_mode_motor(f_disturd_set->mode));
             func_backing_to();
             break;
         default:

@@ -192,7 +192,7 @@ compo_form_t *func_set_sub_language_form_create(void)
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_1_START_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_1_BIN);
 
     compo_listbox_set_sta_icon(listbox, UI_BUF_I335001_1_START_1_OK_22X22_X202_Y25_Y95_Y162_Y232_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_language_bit);

@@ -42,7 +42,7 @@
 #include"ute_project_config_ab281f.h"
 #endif
 /** Log模块控制开关*/
-#define UTE_MODULE_LOG_SUPPORT 0
+#define UTE_MODULE_LOG_SUPPORT 1
 
 /** 芯片选型 */
 #define CHIP_5691G                      0           //QFN40

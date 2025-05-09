@@ -80,6 +80,30 @@ compo_form_t *func_alarm_clock_sub_pop_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
+//创建闹钟弹出窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_alarm_clock_sub_pop_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    //新建图像
+    compo_picturebox_t *pic;
+//    pic = compo_picturebox_create(frm, UI_BUF_I330001_THEME_1_ALARM_BIN);
+//    compo_setid(pic, COMPO_ID_PIC_ALARM);
+//    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 40);
+
+    //创建文本
+    char str_buff[8];
+    compo_textbox_t *txt = compo_textbox_create(frm, 8);
+    compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 40);
+    snprintf(str_buff, sizeof(str_buff), "%02d:%02d", ALARM_RING_HOUR(), ALARM_RING_MIN());
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set(txt, str_buff);
+
+    return frm;
+}
 #else
 compo_form_t *func_alarm_clock_sub_pop_form_create(void)
 {

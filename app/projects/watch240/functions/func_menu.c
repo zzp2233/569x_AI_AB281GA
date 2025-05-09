@@ -61,70 +61,37 @@ compo_form_t *func_menu_form_create(void)
     }
 }
 
-////切换菜单样式
-//static void func_menu_switch_style(void)
-//{
-//    func_cb.menu_idx = 0;
-//    func_switching(FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO, NULL);
-//    func_cb.flag_animation = true;
-//    switch (func_cb.menu_style) {
-//    case MENU_STYLE_HONEYCOMB:
-//        func_cb.menu_style = MENU_STYLE_WATERFALL;
-//        break;
-//
-//    case MENU_STYLE_WATERFALL:
-//        func_cb.menu_style = MENU_STYLE_SUDOKU;
-//        break;
-//
-//    case MENU_STYLE_SUDOKU:
-//        func_cb.menu_style = MENU_STYLE_LIST;
-//        break;
-//
-//    case MENU_STYLE_LIST:
-//        func_cb.menu_style = MENU_STYLE_SUDOKU_HRZ;
-//        break;
-//
-//    case MENU_STYLE_SUDOKU_HRZ:
-//        func_cb.menu_style = MENU_STYLE_GRID;
-//        break;
-//
-//    case MENU_STYLE_GRID:
-//        func_cb.menu_style = MENU_STYLE_DISK;
-//        break;
-//
-//    case MENU_STYLE_DISK:
-//        func_cb.menu_style = MENU_STYLE_RING;
-//        break;
-//
-//    case MENU_STYLE_RING:
-//        func_cb.menu_style = MENU_STYLE_KALE;
-//        break;
-//
-//    case MENU_STYLE_KALE:
-//        func_cb.menu_style = MENU_STYLE_SKYRER;
-//        break;
-//
-//    case MENU_STYLE_SKYRER:
-//        func_cb.menu_style = MENU_STYLE_CUM_SUDOKU;
-//        break;
-//
-//    case MENU_STYLE_CUM_SUDOKU:
-//        func_cb.menu_style = MENU_STYLE_CUM_GRID;
-//        break;
-//
-//    case MENU_STYLE_CUM_GRID:
-//        func_cb.menu_style = MENU_STYLE_CUM_HEXAGON;
-//        break;
-//
-//    case MENU_STYLE_CUM_HEXAGON:
-//        func_cb.menu_style = MENU_STYLE_CUM_FOURGRID;
-//        break;
-//
-//    default:
-//        func_cb.menu_style = MENU_STYLE_HONEYCOMB;
-//        break;
-//    }
-//}
+#if UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE
+#define MENU_CNT                       sizeof(SWITCH_NEXT_MENU) / sizeof(SWITCH_NEXT_MENU[0])
+const u8 SWITCH_NEXT_MENU[]=UTE_CUI_SCREEN_MENU_STYLE;
+static void func_menu_sub_switch_next(void)
+{
+    int idx;
+    for(int idx=0; idx<MENU_CNT; idx++)
+    {
+        if(SWITCH_NEXT_MENU[idx] == func_cb.menu_style)
+        {
+            idx++;
+            if(idx == MENU_CNT)
+            {
+                idx = 0;
+            }
+            func_cb.menu_style = SWITCH_NEXT_MENU[idx];
+            if (func_cb.menu_style == MENU_STYLE_SKYRER)
+            {
+                u8 func_menu_sub_skyrer_get_first_idx(void);
+                func_cb.menu_idx = func_menu_sub_skyrer_get_first_idx();
+            }
+            else
+            {
+                func_cb.menu_idx = 0;           //切换风格后进入回中心位置
+            }
+            uteModuleGuiCommonSetThemeTypeId(func_cb.menu_style);
+            return;
+        }
+    }
+}
+#endif
 
 //菜单样式公用消息
 void func_menu_sub_message(size_msg_t msg)
@@ -141,6 +108,8 @@ void func_menu_sub_message(size_msg_t msg)
             {
                 func_cb.sta = FUNC_MENUSTYLE;
             }
+#elif UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE
+            func_menu_sub_switch_next();
 #endif
             break;
 

@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_H_
 
 #define PROJECT_AB281_SUPPORT        0
-#define PROJECT_AB281A_SUPPORT       1 /*! 同乐达 T62,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
+#define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T62,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 #define PROJECT_AB281AB_SUPPORT      0 /*! 同乐达 T69,在T62基础上增加编码器,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-04-18 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
 #define PROJECT_AB281C_SUPPORT       0 /*! 同乐达 T60, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
@@ -18,6 +18,7 @@
 #define PROJECT_AB281AC_SUPPORT      0 /*! 同乐达T66，TFT 240x296 NV3030B,CHIP_5691C_F 基于AB281AV0000031修改分辨率为240x296 ,ganqian.yi 2025-4-21*/
 #define PROJECT_AB281E_SUPPORT       0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
 #define PROJECT_AB281DA_SUPPORT      0 /*! 共鑫W17Y,在AB281D基础上更改蓝牙名, TFT 240x284 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
+#define PROJECT_AB281F_SUPPORT       0 /*! 同乐达T70 TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -37,6 +38,8 @@
 #include"ute_project_config_ab281da.h"
 #elif PROJECT_AB281E_SUPPORT
 #include"ute_project_config_ab281e.h"
+#elif PROJECT_AB281F_SUPPORT
+#include"ute_project_config_ab281f.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
@@ -476,12 +479,12 @@
 
 /*! pwm控制马达支持zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_MOTOR_PWM_MODE_SUPPORT
-#define UTE_DRV_MOTOR_PWM_MODE_SUPPORT 0
+#define UTE_DRV_MOTOR_PWM_MODE_SUPPORT 1
 #endif
 
 /*! pwm控制马达的频率zn.zeng, 2021-10-22  */
 #ifndef UTE_DRV_MOTOR_PWM_RATE_HZ
-#define UTE_DRV_MOTOR_PWM_RATE_HZ 177
+#define UTE_DRV_MOTOR_PWM_RATE_HZ 160
 #endif
 
 //允许马达振动
@@ -525,6 +528,11 @@
 /*! 最大歌词的字节数 zn.zeng, 2021-11-20  */
 #ifndef UTE_MUSIC_ARTLIST_MAX_SIZE
 #define UTE_MUSIC_ARTLIST_MAX_SIZE  103
+#endif
+
+/*! 默认PWM频率,中科平台PWM使用一个定时器产生，不能多路PWM输出不同频率的PWM信号,wang.luo 2025-05-09 */
+#ifndef UTE_DRV_DEFAULT_PWM_HZ
+#define UTE_DRV_DEFAULT_PWM_HZ 160
 #endif
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
@@ -1379,7 +1387,7 @@
 #define UTE_MODUEL_CALL_ADDRESSBOOK_EXPANSION_LENGTH_SUPPORT 1
 #endif
 
-/* 音频调试，正常模式下不能打开，开启后烧录需要拔插电源 zn.zeng 2022-01-10*/
+/* 音频调试，正常模式下不能打开 zn.zeng 2022-01-10*/
 #ifndef UTE_CONNECT_PC_AUDIO_TEST
 #define UTE_CONNECT_PC_AUDIO_TEST 0
 #endif

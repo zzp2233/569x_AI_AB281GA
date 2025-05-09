@@ -1481,18 +1481,24 @@ static void func_stopwatch_message(size_msg_t msg)
     }
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     f_stopwatch_t *f_stopwatch = (f_stopwatch_t *)func_cb.f_cb;
+#if !GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     compo_listbox_t *listbox = f_stopwatch->listbox;
     if (compo_listbox_message(listbox, msg))
     {
         return;                                         //处理列表框信息
     }
+#endif
     switch (msg)
     {
         case MSG_CTP_CLICK:
             func_stopwatch_button_click(0);
             break;
         case KU_BACK:
+#if !GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
             func_stopwatch_button_click(COMPO_ID_BTN_PAUSE_PLAY);
+#else
+            func_stopwatch_button_click(COMPO_ID_BTN_START_REC);
+#endif
             break;
         default:
             func_message(msg);

@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NAME "T62"
-#define UTE_SW_VERSION "AB281AV000031"
+#define UTE_SW_VERSION "AB281AV000048"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281AB"
@@ -81,7 +81,7 @@
 #define UTE_MODULE_HEART_STATIC_ALL_DAY_SUPPORT (1&UTE_MODULE_HEART_WEEK_STATIC_SUPPORT)
 
 /*! 情绪压力模块,xjc 2022-02-15*/
-#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 1
+#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
 
 /*! 活动界面列表形式,xjc 2022-02-15*/
 #define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT                1
@@ -150,7 +150,7 @@
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7                             //FUNC_BLOOD_OXYGEN
 #define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY,FUNC_HEARTRATE,FUNC_BLOOD_OXYGEN,FUNC_SLEEP, FUNC_WEATHER, FUNC_BT}
 /*! 表盘左侧界面,wang.luo 2025-04-07 */
-#define UTE_CUI_SCREEN_WATCHDIAL_LEFT FUNC_NULL
+#define UTE_CUI_SCREEN_WATCHDIAL_LEFT FUNC_MENU
 /*! 表盘上拉界面,wang.luo 2025-04-07 */
 #define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_MESSAGE
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
@@ -158,15 +158,16 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18649001_BIN, \
+
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D17195001_BIN, \
+                                                UI_BUF_DIALPLATE_D17196001_BIN, \
+                                                UI_BUF_DIALPLATE_D17312001_BIN, \
                                                 UI_BUF_DIALPLATE_D18650001_BIN, \
-                                                UI_BUF_DIALPLATE_D18651001_BIN, \
-                                                UI_BUF_DIALPLATE_D18652001_BIN, \
                                                 UI_BUF_DIALPLATE_BTF_BIN,\
-                                                UI_BUF_DIALPLATE_CUBE_BIN,\
+                                                UI_BUF_DIALPLATE_CUBE_LIGHT_BIN ,\
                                               }
 //    UI_BUF_DIALPLATE_BTF_BIN,
-//     UI_BUF_DIALPLATE_CUBE_BIN
+//     UI_BUF_DIALPLATE_CUBE_LIGHT_BIN
 
 #define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
 #define UTE_WATCHS_CUBE_DIAL_SUPPORT 1     // 使用立方体表盘
@@ -238,8 +239,8 @@
 #define UTE_MODULE_SCREENS_SYSTEM_SUPPORT             1 //系统设置列表界面
 #define UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT     1 //主题&表盘列表界面
 #define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     0 //表盘侧边栏
-#define UTE_MODULE_SCREENS_CLOCK_SUB_MENU_SUPPORT     1 //表盘右滑切菜单
 #define UTE_MODULE_SCREENS_CLOCK_SUB_CLICK_SUPPORT    1 //表盘界面时，单击可亮屏灭屏 非表盘界面时单击返回上一级
+#define UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT     1 //HELLO开机界面
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   0 //菜单样式预览旋转界面
 #define UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT         1 //亮度设置列表界面
 #define UTE_MODULE_SCREENS_SUB_SOS_SUPPORT            1 //SOS界面

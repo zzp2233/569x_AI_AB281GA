@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 法语(法国）
 *@author
-*@date   2025-05-08 15:39:39
+*@date   2025-05-09 17:18:27
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -302,6 +302,11 @@ const char * const i18n_fr_rfr[] =
     [STR_NORMAL] = "\x4e\x6f\x72\x6d\x61\x6c\x00", // [286] Normal
     [STR_MEDIUM] = "\x4d\x6f\x64\xc3\xa9\x72\xc3\xa9\x00", // [287] Modéré
     [STR_HIGH] = "\xc3\x89\x6c\x65\x76\xc3\xa9\x00", // [288] Élevé
+    [STR_VBRATION] = "\x56\x69\x62\x72\x61\x74\x69\x6f\x6e\x00", // [289] Vibration
+    [STR_SOUND_AND_VIBRATION] = "\x53\x6f\x6e\x73\x20\x65\x74\x20\x73\x65\x63\x6f\x75\x73\x73\x65\x73\x00", // [290] Sons et secousses
+    [STR_HIGH_1] = "\x48\x61\x75\x74\x65\x00", // [291] Haute
+    [STR_MIDDLE] = "\x41\x75\x20\x6d\x69\x6c\x69\x65\x75\x00", // [292] Au milieu
+    [STR_LOW] = "\x46\x61\x69\x62\x6c\x65\x00", // [293] Faible
 };
 
 #endif

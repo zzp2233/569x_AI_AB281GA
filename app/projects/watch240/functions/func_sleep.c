@@ -194,13 +194,13 @@ compo_form_t *func_sleep_form_create(void)
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_ALWAKE_SLEEP]));///* 清醒*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 20, first_y+height_spacing*2,100,32);
+    compo_textbox_set_location(txt, 20, first_y+height_spacing*3,100,32);
     compo_textbox_set(txt, i18n[STR_ALWAKE_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(254, 255, 210));
 
     txt = compo_textbox_create(frm,strlen(i18n[STR_EYE_MOVE_SLEEP]));///* 快速眼动*/
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, 20, first_y+height_spacing*3,100,32);
+    compo_textbox_set_location(txt, 20, first_y+height_spacing*2,100,32);
     compo_textbox_set(txt, i18n[STR_EYE_MOVE_SLEEP]);
     compo_textbox_set_forecolor(txt, make_color(245, 170, 68));
 //////////////////////////////////////////////////////////////////////////////////
@@ -264,7 +264,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*2,100,32);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*3,100,32);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -285,7 +285,7 @@ compo_form_t *func_sleep_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*3,100,32);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*2,100,32);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////

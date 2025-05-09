@@ -1017,13 +1017,13 @@ compo_form_t *func_stopwatch_form_create(void)
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 98/2+230);
     btn = compo_button_create_by_image(frm, UI_BUF_I340001_PUBLIC_END_BIN);    //复位
     compo_setid(btn, COMPO_ID_BTN_AFRESH);
-    compo_button_set_pos(btn, 64/2+47, 98/2+230);
+    compo_button_set_pos(btn, 76/2+34, 76/2+241);
     compo_button_set_visible(btn, sys_cb.stopwatch_total_msec > 0);
 
     btn = compo_button_create_by_image(frm, UI_BUF_I340001_PUBLIC_JICI_BIN);    //计次
     compo_setid(btn, COMPO_ID_BTN_RECORD);
-    compo_button_set_pos(btn, 64/2+249, 98/2+230);
-    compo_button_set_visible(btn, sys_cb.stopwatch_rec_cnt > 0);
+    compo_button_set_pos(btn, 76/2+250, 76/2+241);
+    compo_button_set_visible(btn, (sys_cb.stopwatch_sta || sys_cb.stopwatch_rec_cnt) > 0);  //秒表在运行的时候重新进入，计次按钮还是要显示出来
     btn = compo_button_create_by_image(frm, UI_BUF_I340001_STOPWATCH_BG_BIN);    //计次详情
     compo_setid(btn, COMPO_ID_BTN_RECORD_VIEW);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 94);
@@ -1494,6 +1494,39 @@ static void func_stopwatch_message(size_msg_t msg)
         case KU_BACK:
             func_stopwatch_button_click(COMPO_ID_BTN_PAUSE_PLAY);
             break;
+        default:
+            func_message(msg);
+            break;
+    }
+#elif  GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+//            func_stopwatch_button_touch_handle();
+            break;
+
+        case MSG_CTP_CLICK:
+            func_stopwatch_button_click(0);
+            break;
+
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            if (func_cb.flag_sort)
+            {
+                func_message(msg);
+            }
+            break;
+
+        case KU_BACK:
+            func_stopwatch_button_click(COMPO_ID_BTN_START_REC);
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            func_message(msg);
+            break;
+
         default:
             func_message(msg);
             break;

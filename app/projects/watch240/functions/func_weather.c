@@ -143,24 +143,30 @@ compo_form_t *func_weather_form_create(void)
     ute_module_weather_data_t  weather_date;
     ute_display_ctrl_t displayInfo;
 
-    u8 week_sort[7];
-    u8 week_day=0;
+    const u8 week_sort[7]= {STR_SUNDAY, // 周日
+                            STR_MONDAY, // 周一
+                            STR_TUESDAY, // 周二
+                            STR_WEDNESDAY, // 周三
+                            STR_THURSDAY, // 周四
+                            STR_FRIDAY, // 周五
+                            STR_SATURDAY, // 周六
+                           };
+    // u8 week_day=0;
     u8 get_weather_id[7];//存放一个星期的排序
     char str_buff[50];//用于存放打印数据
     char str_humidity_buff[8];//用于存放湿度打印数据
-
     memset(get_weather_id,0,sizeof(get_weather_id));
     uteModuleSystemtimeGetTime(&time);//获取系统时间
 //    printf("week:%d\n",time.week);
-    week_day = time.week; //获取星期
-    for(int i=0; i<=6; i++) //星期排序
-    {
-        week_sort[i] = week_day;
-        if(++week_day==7)
-        {
-            week_day = 0;
-        }
-    }
+//     week_day = time.week; //获取星期
+//     for(int i=0; i<=6; i++) //星期排序
+//     {
+//         week_sort[i] = week_day;
+//         if(++week_day==7)
+//         {
+//             week_day = 0;
+//         }
+//     }
     if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
     {
         uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
@@ -323,17 +329,17 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set(txt,i18n[STR_FUTURE_WEATHER]);
     compo_textbox_set_align_center(txt, false);
     //第二页
-    for(int i=1; i<4; i++)
+    for(int i=0; i<3; i++)
     {
         //bg pic
         picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_ICON_BG_X60_Y186_X8_Y61_X76_Y61_X144_Y61_X212_Y61_01_BIN);
-        compo_picturebox_set_pos(picbox,8+30+(i-1)*(82),GUI_SCREEN_HEIGHT+61+93);
+        compo_picturebox_set_pos(picbox,8+30+(i)*(82),GUI_SCREEN_HEIGHT+61+93);
 
         //星期 txt
         txt = compo_textbox_create(frm,20);
-        compo_textbox_set_location(txt, 16+(i-1)*(82),GUI_SCREEN_HEIGHT+82,45,widget_text_get_max_height());
+        compo_textbox_set_location(txt, 16+(i)*(82),GUI_SCREEN_HEIGHT+82,45,widget_text_get_max_height());
         compo_textbox_set_align_center(txt,false);
-        compo_textbox_set(txt,i18n[STR_SUNDAY+week_sort[i]]);/// 星期
+        compo_textbox_set(txt,i18n[week_sort[(time.week+i)%7]]);/// 星期
         if(i==1)
         {
             compo_textbox_set(txt,i18n[STR_TO_DAY]);/// 星期
@@ -342,18 +348,11 @@ compo_form_t *func_weather_form_create(void)
         //天气 icon
         //图切的不对，80x80了，
         picbox = compo_picturebox_create(frm,future_weather_icon[get_weather_id[i]]);
-        compo_picturebox_set_pos(picbox,8+30+(i-1)*(82),GUI_SCREEN_HEIGHT+108+30);
+        compo_picturebox_set_pos(picbox,8+30+(i)*(82),GUI_SCREEN_HEIGHT+108+30);
         compo_picturebox_set_size(picbox,40,40);
         if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
         {
-            // if(displayInfo.isFahrenheit)     ///是否为华氏度
-            // {
-            //     snprintf(str_buff, sizeof(str_buff), "%02d/%02d℉",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i]);//一周 小~大 温度
-            // }
-            // else
-            {
-                snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMax[i]);//一周 小~大 温度
-            }
+            snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMax[i]);//一周 小~大 温度
         }
         else
         {
@@ -361,19 +360,12 @@ compo_form_t *func_weather_form_create(void)
         }
         txt = compo_textbox_create(frm,strlen(str_buff));
         compo_textbox_set(txt,str_buff);
-        compo_textbox_set_location(txt, 8+30+(i-1)*(82),GUI_SCREEN_HEIGHT+167+12,40,30);
+        compo_textbox_set_location(txt, 8+30+(i)*(82),GUI_SCREEN_HEIGHT+167+12,40,30);
         // compo_textbox_set_pos(txt, 16+(i-1)*(82),GUI_SCREEN_HEIGHT+167);
         compo_textbox_set_align_center(txt, true);
         if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
         {
-            // if(displayInfo.isFahrenheit)     ///是否为华氏度
-            // {
-            //     snprintf(str_buff, sizeof(str_buff), "%02d/%02d℉",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i]);//一周 小~大 温度
-            // }
-            // else
-            {
-                snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMin[i]);//一周 小~大 温度
-            }
+            snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMin[i]);//一周 小~大 温度
         }
         else
         {
@@ -381,7 +373,7 @@ compo_form_t *func_weather_form_create(void)
         }
         txt = compo_textbox_create(frm,strlen(str_buff));
         compo_textbox_set(txt,str_buff);
-        compo_textbox_set_location(txt, 8+30+(i-1)*(82),GUI_SCREEN_HEIGHT+202+12,40,30);
+        compo_textbox_set_location(txt, 8+30+(i)*(82),GUI_SCREEN_HEIGHT+202+12,40,30);
         compo_textbox_set_align_center(txt, true);
     }
     widget_page_set_client(frm->page_body, 0, page_y);

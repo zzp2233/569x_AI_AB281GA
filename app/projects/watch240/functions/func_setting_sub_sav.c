@@ -9,22 +9,23 @@
 #define TRACE(...)
 #endif
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-#define VOL_CHANGE          4  //音量等级每次增加或者减少4
-#define MOTOR_MAX_LEVEL     4  //马达最大等级
-
+enum
+{
+    COMPO_ID_SAV = 1,
+    COMPO_ID_MOTOR_GRADE,
+    COMPO_ID_MUTE,
+};
 typedef struct f_sav_t_
 {
     u8 vol_value;
     u8 shk_value;
+    page_tp_move_t *ptm;
 } f_sav_t;
 
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+#define VOL_CHANGE          4  //音量等级每次增加或者减少4
+#define MOTOR_MAX_LEVEL     4  //马达最大等级
 
 #define  ON_PIC     UI_BUF_I330001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I330001_PUBLIC_SWITCH00_BIN
@@ -81,18 +82,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
-
 #define  ON_PIC     UI_BUF_I332001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I332001_PUBLIC_SWITCH00_BIN
 
@@ -147,19 +136,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-    page_tp_move_t *ptm;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MOTOR_GRADE,
-    COMPO_ID_MUTE,
-};
 
 #define  ON_PIC     UI_BUF_I335001_27_MORE_28_SET_4_SOUND_AND_VIBRATION_1_SOUND_AND_VIBRATION_SWITCH_ICON_PIC40X20_X184_Y204_268_OPEN_BIN
 #define  OFF_PIC    UI_BUF_I335001_27_MORE_28_SET_4_SOUND_AND_VIBRATION_1_SOUND_AND_VIBRATION_SWITCH_ICON_PIC40X20_X184_Y204_268_CLOSE_BIN
@@ -233,18 +209,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
-
 #define  ON_PIC     UI_BUF_I338001_28_SET_OPEN_BIN
 #define  OFF_PIC    UI_BUF_I338001_28_SET_CLOSE_BIN
 
@@ -305,18 +269,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
-
 #define  ON_PIC     UI_BUF_I340001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I340001_PUBLIC_SWITCH00_BIN
 
@@ -371,17 +323,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
 
 #define  ON_PIC     UI_BUF_I332001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I332001_PUBLIC_SWITCH00_BIN
@@ -457,11 +398,11 @@ static void func_sav_button_click(void)
                 uteModuleLocalRingtoneSetMuteStatus(true,true);
             }
             break;
-        case COMPO_ID_MOTOR_GRADE:
 #if UTE_MODULE_SCREENS_MOTOR_GRADE
+        case COMPO_ID_MOTOR_GRADE:
             uteTaskGuiStartScreen(FUNC_MOTOR_GRADE, 0, __func__);
-#endif
             break;
+#endif
         default:
             break;
     }

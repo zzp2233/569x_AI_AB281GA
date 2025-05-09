@@ -1602,8 +1602,11 @@ void func_message(size_msg_t msg)
 #if UTE_MODULE_SCREENS_CLOCK_SUB_CLICK_SUPPORT
                 if(!sys_cb.gui_sleep_sta)
                 {
-                    sys_cb.guioff_delay = 0;
-                    gui_sleep();                //仅熄屏
+                    sys_cb.guioff_delay = 1;
+                    sys_cb.sleep_delay = 1;
+                    // gui_sleep();              //熄屏且进入休眠
+                    // reset_sleep_delay_all();
+                    // reset_pwroff_delay();               //仅熄屏
                 }
 #else
                 func_switch_to_menu();

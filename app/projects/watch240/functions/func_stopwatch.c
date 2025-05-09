@@ -1447,6 +1447,38 @@ static void func_stopwatch_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+//            func_stopwatch_button_touch_handle();
+            break;
+
+        case MSG_CTP_CLICK:
+            func_stopwatch_button_click(0);
+            break;
+
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            if (func_cb.flag_sort)
+            {
+                func_message(msg);
+            }
+            break;
+
+        case KU_BACK:
+            func_stopwatch_button_click(COMPO_ID_BTN_START_REC);
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            func_message(msg);
+            break;
+        default:
+            func_message(msg);
+            break;
+    }
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     f_stopwatch_t *f_stopwatch = (f_stopwatch_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_stopwatch->listbox;

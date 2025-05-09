@@ -87,7 +87,7 @@ compo_form_t *func_mood_form_create(void)
     compo_setid(animation,COMPO_ID_MOOD_GIF);
     compo_animation_set_visible(animation,mood_mode==255? true : false);
 
-    compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I335001_15_EMOTIONS_1_1_EMOTIONS_ICON_PLAY_44X44_X180_Y62_01_BIN);///重新测量按钮
+    compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_00_BIN);///重新测量按钮
     compo_button_set_pos(btn,22+184,22+58);
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
@@ -219,7 +219,8 @@ static void func_mood_refresh_update(void)
         }
 
         compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
-        compo_button_set_bgimg(btn, f_bo->up_data_flag ? UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_00_BIN:UI_BUF_I335001_15_EMOTIONS_1_1_EMOTIONS_ICON_PLAY_44X44_X180_Y62_01_BIN);
+        compo_button_set_bgimg(btn, UI_BUF_I335001_15_EMOTIONS_1_1_EMOTIONS_ICON_PLAY_44X44_X180_Y62_01_BIN);
+        compo_button_set_visible(btn,f_bo->up_data_flag ? false : true);
 
         uint8_t test_date[24];
         uteModuleEmotionPressureGetTodayEmotionHistoryData(test_date,24);

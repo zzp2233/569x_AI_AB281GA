@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-05-08 15:39:35
+*@date   2025-05-09 17:18:22
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -302,6 +302,11 @@ enum
     STR_NORMAL, // 正常
     STR_MEDIUM, // 中等
     STR_HIGH, // 偏高
+    STR_VBRATION, // 振动强度
+    STR_SOUND_AND_VIBRATION, // 声音和震动
+    STR_HIGH_1, // 高
+    STR_MIDDLE, // 中
+    STR_LOW, // 低
 };
 
 extern const char * const *i18n;

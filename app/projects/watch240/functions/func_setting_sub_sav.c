@@ -9,22 +9,23 @@
 #define TRACE(...)
 #endif
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-
-#define VOL_CHANGE          4  //音量等级每次增加或者减少4
-#define MOTOR_MAX_LEVEL     4  //马达最大等级
-
+enum
+{
+    COMPO_ID_SAV = 1,
+    COMPO_ID_MOTOR_GRADE,
+    COMPO_ID_MUTE,
+};
 typedef struct f_sav_t_
 {
     u8 vol_value;
     u8 shk_value;
+    page_tp_move_t *ptm;
 } f_sav_t;
 
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+#define VOL_CHANGE          4  //音量等级每次增加或者减少4
+#define MOTOR_MAX_LEVEL     4  //马达最大等级
 
 #define  ON_PIC     UI_BUF_I330001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I330001_PUBLIC_SWITCH00_BIN
@@ -81,18 +82,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
-
 #define  ON_PIC     UI_BUF_I332001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I332001_PUBLIC_SWITCH00_BIN
 
@@ -147,17 +136,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
 
 #define  ON_PIC     UI_BUF_I335001_27_MORE_28_SET_4_SOUND_AND_VIBRATION_1_SOUND_AND_VIBRATION_SWITCH_ICON_PIC40X20_X184_Y204_268_OPEN_BIN
 #define  OFF_PIC    UI_BUF_I335001_27_MORE_28_SET_4_SOUND_AND_VIBRATION_1_SOUND_AND_VIBRATION_SWITCH_ICON_PIC40X20_X184_Y204_268_CLOSE_BIN
@@ -170,12 +148,22 @@ compo_form_t *func_set_sub_sav_form_create(void)
 
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_VOL]);
+    compo_form_set_title(frm, i18n[STR_SOUND_AND_VIBRATION]);
 
-    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
+    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 0, 1, 1, GUI_SCREEN_WIDTH, 62);
     compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2,GUI_SCREEN_WIDTH,62);
+    compo_setid(cardbox, COMPO_ID_MOTOR_GRADE);
+    compo_cardbox_icon_set_pos(cardbox, 0, 0,0);
+    compo_cardbox_icon_set(cardbox,0,UI_BUF_I335001_3_EXERCISE_LIST_BIN);
+    compo_cardbox_text_scroll_process(cardbox, true);
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
+    compo_cardbox_text_set(cardbox,0,i18n[STR_VBRATION]);
+    compo_cardbox_text_set_align_center(cardbox, 0, false);
+
+    cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+68,GUI_SCREEN_WIDTH,62);
     compo_setid(cardbox, COMPO_ID_SAV);
-    compo_cardbox_rect_set_location(cardbox,0,0,0,232,62,16);
+    compo_cardbox_rect_set_location(cardbox,0,0,30,232,1,16);
     compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
     compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
     compo_cardbox_text_set(cardbox,0,i18n[STR_MEDIA_VOL]);
@@ -185,9 +173,9 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_text_scroll_process(cardbox, true);
 
     cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
-    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+62+6,GUI_SCREEN_WIDTH,62);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+68*2,GUI_SCREEN_WIDTH,62);
     compo_setid(cardbox, COMPO_ID_MUTE);
-    compo_cardbox_rect_set_location(cardbox,0,0,0,232,62,16);
+    compo_cardbox_rect_set_location(cardbox,0,0,30,232,1,16);
     compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
     compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
     compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
@@ -197,7 +185,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_text_scroll_process(cardbox, true);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SILENT_MODE_PROMAT]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,240,235,68);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,240+68,235,68);
     compo_textbox_set_multiline(textbox,true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_SILENT_MODE_PROMAT]);
@@ -220,18 +208,6 @@ static void func_set_sub_sav_disp(void)
 
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
-
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
 
 #define  ON_PIC     UI_BUF_I338001_28_SET_OPEN_BIN
 #define  OFF_PIC    UI_BUF_I338001_28_SET_CLOSE_BIN
@@ -293,18 +269,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
-
 #define  ON_PIC     UI_BUF_I340001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I340001_PUBLIC_SWITCH00_BIN
 
@@ -359,17 +323,6 @@ static void func_set_sub_sav_disp(void)
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
 #define MOTOR_MAX_LEVEL     4  //马达最大等级
 
-typedef struct f_sav_t_
-{
-    u8 vol_value;
-    u8 shk_value;
-} f_sav_t;
-
-enum
-{
-    COMPO_ID_SAV = 1,
-    COMPO_ID_MUTE,
-};
 
 #define  ON_PIC     UI_BUF_I332001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I332001_PUBLIC_SWITCH00_BIN
@@ -391,6 +344,11 @@ static void func_set_sub_sav_disp(void)
 //声音与振动事件处理
 static void func_set_sub_sav_process(void)
 {
+    f_sav_t *f_sav = (f_sav_t *)func_cb.f_cb;
+    if(f_sav->ptm)
+    {
+        compo_page_move_process(f_sav->ptm);
+    }
     func_set_sub_sav_disp();
     func_process();
 }
@@ -404,7 +362,6 @@ static u16 func_setting_sav_card_get_btn_id(point_t pt)
     compo_cardbox_t *cardbox;
     for(i=0; i<COMPO_ID_MUTE; i++)
     {
-//        id = COMPO_ID_CARD_SPORT_COMPASS + i;
         id = COMPO_ID_SAV+i;
         cardbox = compo_getobj_byid(id);
         rect = compo_cardbox_get_absolute(cardbox);
@@ -432,8 +389,6 @@ static void func_sav_button_click(void)
             uteModuleCallChangeEntertranmentVoiceSwitchStatus();
             break;
         case COMPO_ID_MUTE:
-//            compo_cardbox_icon_set_location(cardbox_mute, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
-//            compo_cardbox_icon_set(cardbox_mute,0,ON_PIC);
             if(uteModuleLocalRingtoneGetMuteStatus())
             {
                 uteModuleLocalRingtoneSetMuteStatus(false,true);
@@ -443,6 +398,11 @@ static void func_sav_button_click(void)
                 uteModuleLocalRingtoneSetMuteStatus(true,true);
             }
             break;
+#if UTE_MODULE_SCREENS_MOTOR_GRADE
+        case COMPO_ID_MOTOR_GRADE:
+            uteTaskGuiStartScreen(FUNC_MOTOR_GRADE, 0, __func__);
+            break;
+#endif
         default:
             break;
     }
@@ -452,8 +412,16 @@ static void func_sav_button_click(void)
 //声音与振动功能消息处理
 static void func_set_sub_sav_message(size_msg_t msg)
 {
+    f_sav_t *f_sav = (f_sav_t *)func_cb.f_cb;
+
     switch (msg)
     {
+        case MSG_CTP_TOUCH:
+            if(f_sav->ptm)
+            {
+                compo_page_move_touch_handler(f_sav->ptm);
+            }
+            break;
         case MSG_CTP_CLICK:
             func_sav_button_click();
             break;
@@ -470,11 +438,28 @@ static void func_set_sub_sav_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_sav_t));
     func_cb.frm_main = func_set_sub_sav_form_create();
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    f_sav_t *f_sav = (f_sav_t *)func_cb.f_cb;
+    f_sav->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = true,
+        .page_size =  340,
+        .page_count = 1,
+        .quick_jump_perc =10,
+    };
+    compo_page_move_init(f_sav->ptm, func_cb.frm_main->page_body, &info);
+#endif
 }
 
 //退出声音与振动功能
 static void func_set_sub_sav_exit(void)
 {
+    f_sav_t *f_sav = (f_sav_t *)func_cb.f_cb;
+    if (f_sav->ptm)
+    {
+        func_free(f_sav->ptm);
+    }
     func_cb.last = FUNC_SET_SUB_SAV;
 }
 

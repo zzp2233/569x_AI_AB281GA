@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 印度尼西亚语(印度尼西亚）
 *@author
-*@date   2025-05-08 15:39:40
+*@date   2025-05-09 17:18:27
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -302,6 +302,11 @@ const char * const i18n_in_rid[] =
     [STR_NORMAL] = "\x4e\x6f\x72\x6d\x61\x6c\x00", // [286] Normal
     [STR_MEDIUM] = "\x53\x65\x64\x61\x6e\x67\x00", // [287] Sedang
     [STR_HIGH] = "\x54\x69\x6e\x67\x67\x69\x00", // [288] Tinggi
+    [STR_VBRATION] = "\x47\x65\x74\x61\x72\x61\x6e\x00", // [289] Getaran
+    [STR_SOUND_AND_VIBRATION] = "\x53\x75\x61\x72\x61\x20\x64\x61\x6e\x20\x67\x65\x74\x61\x72\x61\x6e\x00", // [290] Suara dan getaran
+    [STR_HIGH_1] = "\x54\x69\x6e\x67\x67\x69\x00", // [291] Tinggi
+    [STR_MIDDLE] = "\x74\x65\x6e\x67\x61\x68\x00", // [292] tengah
+    [STR_LOW] = "\x52\x65\x6e\x64\x61\x68\x00", // [293] Rendah
 };
 
 #endif

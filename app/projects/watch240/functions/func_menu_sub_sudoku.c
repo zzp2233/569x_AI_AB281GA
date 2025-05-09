@@ -274,9 +274,9 @@ const menu_hc_item_t tbl_menu_sudoku[] =
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT
     {.func_sta=FUNC_ALARM_CLOCK,              .res_addr=UI_BUF_I335001_2_HONEYCOMB_ALARM_BIN,                 },  //闹钟
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
-// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    // {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_MOOD_BIN,                  },  //情绪
-// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+    {.func_sta=FUNC_MOOD,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_MOOD_BIN,                  },  //情绪
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {.func_sta=FUNC_BREATHE,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_BREATHE_BIN,               },  //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT

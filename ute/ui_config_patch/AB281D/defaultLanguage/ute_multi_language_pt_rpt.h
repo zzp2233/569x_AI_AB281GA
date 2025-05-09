@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 葡萄牙语(葡萄牙）
 *@author
-*@date   2025-05-08 15:39:41
+*@date   2025-05-09 17:18:28
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -302,6 +302,11 @@ const char * const i18n_pt_rpt[] =
     [STR_NORMAL] = "\x4e\x6f\x72\x6d\x61\x6c\x00", // [286] Normal
     [STR_MEDIUM] = "\x4d\xc3\xa9\x64\x69\x6f\x00", // [287] Médio
     [STR_HIGH] = "\x41\x6c\x74\x6f\x00", // [288] Alto
+    [STR_VBRATION] = "\x56\x69\x62\x72\x61\xc3\xa7\xc3\xa3\x6f\x00", // [289] Vibração
+    [STR_SOUND_AND_VIBRATION] = "\x53\x6f\x6e\x73\x20\x65\x20\x76\x69\x62\x72\x61\xc3\xa7\xc3\xb5\x65\x73\x00", // [290] Sons e vibrações
+    [STR_HIGH_1] = "\x41\x6c\x74\x6f\x00", // [291] Alto
+    [STR_MIDDLE] = "\x6d\xc3\xa9\x64\x69\x6f\x00", // [292] médio
+    [STR_LOW] = "\x42\x61\x69\x78\x6f\x00", // [293] Baixo
 };
 
 #endif

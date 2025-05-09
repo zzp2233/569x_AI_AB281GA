@@ -3778,6 +3778,89 @@ static void func_timer_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+
+            if(f_timer->page_disp  == TIMER_PAGE_SELECT)
+            {
+                f_timer->touch_flag = true;
+            }
+            else if(f_timer->page_disp  == TIMER_PAGE_CUSTOM)
+            {
+                int id = compo_get_button_id();
+                compo_button_t *btn_sec  = compo_getobj_byid(COMPO_ID_SEC_IMG_BTN);
+                compo_button_t *btn_min  = compo_getobj_byid(COMPO_ID_MIN_IMG_BTN);
+                compo_button_t *btn_hour = compo_getobj_byid(COMPO_ID_HOUR_IMG_BTN);
+
+                if(f_timer->touch_flag == false)
+                {
+                    switch(id)
+                    {
+                        case COMPO_ID_HOUR_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->hour_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I340001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            compo_button_set_bgimg(btn_sec, UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN);
+                            f_timer->set_time_flag = 1;
+                            break;
+                        case COMPO_ID_MIN_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->min_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I340001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
+                            compo_button_set_bgimg(btn_sec,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            f_timer->set_time_flag = 2;
+                            break;
+                        case COMPO_ID_SEC_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->sec_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            compo_button_set_bgimg(btn_sec,UI_BUF_I340001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
+                            f_timer->set_time_flag = 3;
+                            break;
+                    }
+                }
+                f_timer->touch_flag = true;
+            }
+            func_timer_button_touch_handle();
+
+            break;
+
+        case MSG_CTP_CLICK:
+            func_timer_button_click();
+            break;
+
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_timer_button_release_handle();
+            if (func_cb.flag_sort)
+            {
+                func_message(msg);
+            }
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            func_timer_button_release_handle();
+            func_message(msg);
+            break;
+
+        default:
+            func_message(msg);
+            break;
+    }
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
     switch (msg)
@@ -3789,6 +3872,89 @@ static void func_timer_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_timer_button_click();
             break;
+        default:
+            func_message(msg);
+            break;
+    }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
+    switch (msg)
+    {
+        case MSG_CTP_TOUCH:
+
+            if(f_timer->page_disp  == TIMER_PAGE_SELECT)
+            {
+                f_timer->touch_flag = true;
+            }
+            else if(f_timer->page_disp  == TIMER_PAGE_CUSTOM)
+            {
+                int id = compo_get_button_id();
+                compo_button_t *btn_sec  = compo_getobj_byid(COMPO_ID_SEC_IMG_BTN);
+                compo_button_t *btn_min  = compo_getobj_byid(COMPO_ID_MIN_IMG_BTN);
+                compo_button_t *btn_hour = compo_getobj_byid(COMPO_ID_HOUR_IMG_BTN);
+
+                if(f_timer->touch_flag == false)
+                {
+                    switch(id)
+                    {
+                        case COMPO_ID_HOUR_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->hour_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I340001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            compo_button_set_bgimg(btn_sec, UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN);
+                            f_timer->set_time_flag = 1;
+                            break;
+                        case COMPO_ID_MIN_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->min_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I340001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
+                            compo_button_set_bgimg(btn_sec,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            f_timer->set_time_flag = 2;
+                            break;
+                        case COMPO_ID_SEC_IMG_BTN:
+                            for(int i=0; i<5; i++)
+                            {
+                                f_timer->set_time_buf[i] = f_timer->sec_buf[i];
+                            }
+                            compo_button_set_bgimg(btn_hour,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            compo_button_set_bgimg(btn_min,UI_BUF_I340001_PUBLIC_KUANG_GREY_SMALL_BIN );
+                            compo_button_set_bgimg(btn_sec,UI_BUF_I340001_PUBLIC_KUANG_YELLOW_SMALL_BIN );
+                            f_timer->set_time_flag = 3;
+                            break;
+                    }
+                }
+                f_timer->touch_flag = true;
+            }
+            func_timer_button_touch_handle();
+
+            break;
+
+        case MSG_CTP_CLICK:
+            func_timer_button_click();
+            break;
+
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+        case MSG_CTP_SHORT_LEFT:
+        case MSG_CTP_LONG:
+            func_timer_button_release_handle();
+            if (func_cb.flag_sort)
+            {
+                func_message(msg);
+            }
+            break;
+
+        case MSG_CTP_SHORT_RIGHT:
+            func_timer_button_release_handle();
+            func_message(msg);
+            break;
+
         default:
             func_message(msg);
             break;

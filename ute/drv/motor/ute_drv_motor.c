@@ -14,6 +14,7 @@
 #include "ute_module_platform.h"
 #include "ute_module_notdisturb.h"
 #include "ute_module_gui_common.h"
+#include "ute_module_newFactoryTest.h"
 
 /*! 马达运行数据zn.zeng, 2021-10-12  */
 ute_drv_motor_t uteDrvMotorData;
@@ -105,7 +106,7 @@ void uteDrvMotorEnable(void)
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
         else if(uteModuleNewFactoryTestGetMode()!= FACTORY_TEST_MODE_NULL)
         {
-            motorDuty = (uint8_t)((UTE_DRV_MOTOR_FACTORY_MODE_VOLTAGE_SUPPORT/curVoltage)*100);
+            motorDuty = UTE_DRV_MOTOR_PWM_VIBRATION_HIGH;//(uint8_t)((UTE_DRV_MOTOR_FACTORY_MODE_VOLTAGE_SUPPORT/curVoltage)*100);
         }
 #endif
         else
@@ -133,8 +134,9 @@ void uteDrvMotorDisable(void)
 #if UTE_DRV_MOTOR_PWM_MODE_SUPPORT
     uteModulePlatformPwmDisable(UTE_DRV_MOTOR_PWM_ID,UTE_DRV_MOTOR_GPIO_PIN);
     uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR);
-#endif
+#else
     uteModulePlatformOutputGpioSet(UTE_DRV_MOTOR_GPIO_PIN,false);
+#endif
 }
 
 /**

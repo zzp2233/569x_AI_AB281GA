@@ -9,6 +9,7 @@
 #else
 #define TRACE(...)
 #endif
+#if UTE_MODULE_SCREENS_MOTOR_GRADE
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
@@ -298,7 +299,7 @@ void func_motor_grade(void)
     func_motor_grade_exit();
 }
 
-
+#endif
 
 
 

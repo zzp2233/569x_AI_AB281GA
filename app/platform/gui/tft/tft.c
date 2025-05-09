@@ -190,7 +190,6 @@ void tft_bglight_set_level(uint8_t level, bool stepless_en)
 #if (GUI_SELECT == DISPLAY_UTE)
         uteDrvScreenCommonOpenBacklight(tft_cb.tft_bglight_duty);
 #else
-        bsp_pwm_freq_set(177);
         bsp_pwm_duty_set(PORT_TFT_BL, tft_cb.tft_bglight_duty, false);
 #endif
         tft_cb.tft_bglight_last_duty = tft_cb.tft_bglight_duty;

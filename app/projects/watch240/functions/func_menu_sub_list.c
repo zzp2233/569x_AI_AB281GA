@@ -330,7 +330,6 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {STR_HEART_RATE,             UI_BUF_I340001_THEME_ICON1_HEART_BIN,             .func_sta = FUNC_HEARTRATE},            //心率
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-//    {STR_BLOOD_PRESSURE,         UI_BUF_ICON_BLOOD_PRESSURE_BIN,    .func_sta = FUNC_BLOOD_PRESSURE},       //血压
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {STR_BLOOD_OXYGEN,           UI_BUF_I340001_THEME_ICON1_SPO2_BIN,              .func_sta = FUNC_BLOOD_OXYGEN},         //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
@@ -377,11 +376,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {STR_SETTING,                UI_BUF_I340001_THEME_ICON1_SETTINGS_BIN,          .func_sta = FUNC_SETTING},              //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
-// #if UTE_MODULE_SCREENS_STYLE_SUPPORT
-//     {STR_STYLE,                  UI_BUF_I340001_THEME_ICON1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
-// #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
-//     {STR_SETTING_ABOUT,          UI_BUF_I340001_THEME_ICON1_GUANYU_BIN,            .func_sta = FUNC_SET_SUB_ABOUT},        //关于
-    {STR_WOMEN_HEALTH,          UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
+    {STR_WOMEN_HEALTH,          UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},          //女性
 };
 #define  BATTERY_PIC_0_BIN   UI_BUF_I340001_SLIDEMENU_ICON_BATT_00_BIN                ///电池电量图标0
 #define  BATTERY_PIC_1_BIN   UI_BUF_I340001_SLIDEMENU_ICON_BATT_01_BIN                ///电池电量图标1
@@ -458,7 +453,7 @@ compo_form_t *func_menu_sub_list_form_create(void)
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
-        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
+        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
 #else
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

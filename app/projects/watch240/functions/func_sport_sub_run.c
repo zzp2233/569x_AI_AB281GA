@@ -3155,11 +3155,11 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     compo_button_t * btn = compo_button_create_page_by_image(frm,frm->page,UI_BUF_I340001_SPORT_BTN_PUSED_BIN);
     compo_setid(btn,COMPO_ID_BTN_SPORT_PALY);
-    compo_button_set_pos(btn,80/2+68-GUI_SCREEN_WIDTH,80/2+234);
+    compo_button_set_pos(btn,90/2+62-GUI_SCREEN_WIDTH,90/2+234);
 
     btn =compo_button_create_page_by_image(frm,frm->page,UI_BUF_I340001_SPORT_BTN_CLOSE_BIN);
     compo_setid(btn,COMPO_ID_BTN_SPORT_EXIT);
-    compo_button_set_pos(btn,80/2+212-GUI_SCREEN_WIDTH,80/2+234);
+    compo_button_set_pos(btn,90/2+206-GUI_SCREEN_WIDTH,90/2+234);
 
     ///*下页*/
     if(func_sport_get_disp_mode()==LESS_DATA)

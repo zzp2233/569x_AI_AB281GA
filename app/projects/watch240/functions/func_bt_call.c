@@ -1794,12 +1794,12 @@ compo_form_t *func_bt_call_form_create(void)
     //mic
     btn = compo_button_create_by_image(frm, UI_BUF_I340001_CALL_CALLING_JINGYIN00_BIN);
     compo_setid(btn, COMPO_ID_BTN_MIC);
-    compo_button_set_pos(btn, 79,279);
+    compo_button_set_pos(btn, 34+76/2,241+76/2);
 
     //sound
     btn =compo_button_create_by_image (frm,UI_BUF_I340001_CALL_CALLING_SOUND_BIN);
     compo_setid(btn, COMPO_ID_BIN_SOUND);
-    compo_button_set_pos(btn, 281,279);
+    compo_button_set_pos(btn, 250+76/2,241+76/2);
 
 ///////////////////////////////////////第二页
     widget_page_t *page = widget_page_create(frm->page);///创建页码页面

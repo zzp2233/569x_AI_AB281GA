@@ -995,7 +995,7 @@ void uteModulePlatformScreenDspiReadCmd(uint8_t cmd,uint8_t *buf, uint32_t len,u
 */
 void uteModulePlatformPwmInit(pwm_gpio id,uint8_t pinNum,uint8_t duty,uint32_t rateHz)
 {
-    bsp_pwm_freq_set(rateHz); /*! 使用多路pwm时，平台不支持设置频率，会影响其他路,wang.luo 2024-10-23 */
+    // bsp_pwm_freq_set(rateHz); /*! 使用多路pwm时，平台不支持设置频率，会影响其他路,wang.luo 2024-10-23 */
     bsp_pwm_duty_set(id,duty,false);
 }
 /**

@@ -446,7 +446,7 @@ compo_form_t *func_light_form_create(void)
     compo_setid(btn, COMPO_ID_LIGHT_BTN);
     compo_button_set_location(btn, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+5,val_shepe_w,val_shape_h);
 
-    btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_VOLUME_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_LIGHT_BIN);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,32/2+262);
 
     if(func_cb.sta == FUNC_LIGHT)
@@ -485,7 +485,7 @@ static void func_light_disp_move_handle(void)
                 {
                     compo_shape_set_location(val,val_shepe_x,shape_y+5,val_shepe_w,shape_h);
                 }
-                printf("y:%d h:%d lever:%d\n",shape_y,shape_h,level_data);
+                // printf("y:%d h:%d lever:%d\n",shape_y,shape_h,level_data);
                 tft_bglight_set_level((uint8_t)level_data,false);
             }
         }

@@ -212,7 +212,6 @@ static void func_set_sub_sav_disp(void)
     compo_cardbox_t *cardbox_sav  = compo_getobj_byid(COMPO_ID_SAV);
     compo_cardbox_t *cardbox_mute = compo_getobj_byid(COMPO_ID_MUTE);
 
-    compo_cardbox_icon_set_location(cardbox_sav, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
     compo_cardbox_icon_set(cardbox_sav,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
     compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
 }

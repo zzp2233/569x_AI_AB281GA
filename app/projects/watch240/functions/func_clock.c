@@ -321,13 +321,19 @@ static void func_clock_message(size_msg_t msg)
         case MSG_CTP_SHORT_RIGHT:
 #if UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT
             func_clock_sub_side();
-#elif UTE_MODULE_SCREENS_CLOCK_SUB_MENU_SUPPORT
-            func_switch_to_menu();
 #else
             if(UTE_CUI_SCREEN_WATCHDIAL_LEFT != FUNC_NULL)
             {
                 func_cb.left_sta = UTE_CUI_SCREEN_WATCHDIAL_LEFT;
-                func_switch_to(UTE_CUI_SCREEN_WATCHDIAL_LEFT, FUNC_SWITCH_LR_ZOOM_RIGHT);
+                if(UTE_CUI_SCREEN_WATCHDIAL_LEFT == FUNC_MENU)
+                {
+                    func_switch_to_menu();
+                }
+                else
+                {
+                    func_switch_to(UTE_CUI_SCREEN_WATCHDIAL_LEFT, FUNC_SWITCH_LR_ZOOM_RIGHT);
+                }
+
             }
 
 #endif

@@ -479,6 +479,7 @@ static void func_set_sub_list_enter(void)
 
 #endif
     func_cb.enter_tick = tick_get();
+    sys_cb.set_idx = 1;
 }
 
 //主菜单功能消息处理

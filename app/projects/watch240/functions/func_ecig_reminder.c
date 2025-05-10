@@ -86,8 +86,8 @@ compo_form_t *func_ecig_reminder_form_create(void)
             {
                 animation = compo_animation_create(frm, UI_BUF_I330001_SMOKEING_FIRE1_BIN);
                 compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-                compo_animation_set_radix(animation, 14);
-                compo_animation_set_interval(animation, 20);
+                compo_animation_set_radix(animation, 20);
+                compo_animation_set_interval(animation, 8);
                 compo_setid(animation, COMPO_ID_PIC_SMOCKING);
             }
         }
@@ -103,6 +103,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_OUT_BIN);
         compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 40);
         compo_textbox_set(txt, i18n[STR_PULL_OUT]);
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
     else if (sys_cb.smoke_index == IN_DEVICE)
     {
@@ -145,6 +146,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
         compo_textbox_t *txt1=compo_textbox_create(frm, 20);
         compo_textbox_set(txt1, buf) ;
         compo_textbox_set_pos(txt1, GUI_SCREEN_WIDTH / 2, GUI_SCREEN_HEIGHT / 2 + 70);
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
     else if (sys_cb.smoke_index == LOW_POWER)
     {
@@ -219,6 +221,7 @@ static void func_ecig_reminder_message(size_msg_t msg)
 // 进入控制功能
 static void func_ecig_reminder_enter(void)
 {
+
     func_cb.f_cb = func_zalloc(sizeof(f_ecig_reminder_t));
     func_cb.frm_main = func_ecig_reminder_form_create();
     f_ecig_reminder_t *f_ecig_reminder = (f_ecig_reminder_t *)func_cb.f_cb;

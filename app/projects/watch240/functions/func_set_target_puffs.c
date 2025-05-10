@@ -1,7 +1,7 @@
 
 #include "include.h"
 #include "func.h"
-
+#include "ute_module_smoke.h"
 #define TRACE_EN 1
 #if TRACE_EN
 #define TRACE(...) printf(__VA_ARGS__)
@@ -34,7 +34,18 @@ typedef struct target_puffs_sub_set_t_
 // 目标口数数组
 static const u16 target_puffs_data[] = {50, 100, 150, 200, 250, 300, 350, 400, 450, 500, 600, 700, 800, 900, 1000};
 #define TARGET_PUFFS_DATA_SIZE (sizeof(target_puffs_data) / sizeof(target_puffs_data[0]))
-
+// 查找目标口数在数组中的索引
+static int find_target_puffs_index(u16 value)
+{
+    for (int i = 0; i < TARGET_PUFFS_DATA_SIZE; i++)
+    {
+        if (target_puffs_data[i] == value)
+        {
+            return i;
+        }
+    }
+    return 3; // 默认返回200的索引
+}
 // 创建目标口数选择窗体
 compo_form_t *func_target_puffs_form_create(void)
 {
@@ -43,18 +54,41 @@ compo_form_t *func_target_puffs_form_create(void)
     compo_form_set_title(frm, i18n[STR_TARGET_PUFFS]);
 
     target_puffs_sub_set_t *f_target_puffs = (target_puffs_sub_set_t *)func_cb.f_cb;
-    f_target_puffs->current_index = 3;  // 初始选中200（数组索引3对应200）
+    u16 saved_target_puffs = uteModuleSmokeData.target_smoking_count;
+    if (saved_target_puffs == 0)
+    {
+        saved_target_puffs = 200; // 默认值
+        ecig_set_target_puffs(saved_target_puffs); // 保存默认值
+    }
+    f_target_puffs->current_index = find_target_puffs_index(saved_target_puffs);
     for (int i = 0; i < 3; i++)
     {
-        f_target_puffs->target_puffs[i] = target_puffs_data[f_target_puffs->current_index + i - 1];
+        int data_index = f_target_puffs->current_index + i - 1;
+        if (data_index >= 0 && data_index < TARGET_PUFFS_DATA_SIZE)
+        {
+            f_target_puffs->target_puffs[i] = target_puffs_data[data_index];
+        }
+        else
+        {
+            f_target_puffs->target_puffs[i] = 0; // 超出范围设为0
+        }
         compo_textbox_t *txt = compo_textbox_create(frm, 4);
         compo_setid(txt, COMPO_ID_TXT_NUM_TOP + i);
         compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
         compo_textbox_set_align_center(txt, true);
         compo_textbox_set_pos(txt, TXT_X, GUI_SCREEN_CENTER_Y + TXT_SPACING * (i - 1) - 15);
-        char buf[5];
-        snprintf(buf, sizeof(buf), "%d", f_target_puffs->target_puffs[i]);
-        compo_textbox_set(txt, buf);
+        if (f_target_puffs->target_puffs[i] > 0)
+        {
+            char buf[5];
+            snprintf(buf, sizeof(buf), "%d", f_target_puffs->target_puffs[i]);
+            compo_textbox_set(txt, buf);
+        }
+        else
+        {
+            compo_textbox_set(txt, ""); // 超出范围显示为空
+        }
+
+
     }
 
     compo_button_t *btn_confirm = compo_button_create_by_image(frm, UI_BUF_I330001_SET_PUFFS_OK_BIN);

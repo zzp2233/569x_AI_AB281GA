@@ -90,10 +90,50 @@ compo_form_t *func_power_on_language_form_create(void)
     compo_listbox_set_bithook(listbox, func_sel_language_bit);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
-    uint8_t set_idx = 1;
+    uint8_t current_language = uteModuleSystemtimeReadLanguage();
+    uint8_t set_idx = 1; // 默认值
+    for (int i = 0; i < LANGUAGE_LIST_CNT; i++)
+    {
+        if (tbl_power_on_language_list[i].vidx == current_language)
+        {
+            set_idx = i;
+            break;
+        }
+    }
+
+    // 确保set_idx有效
+    if (set_idx >= LANGUAGE_LIST_CNT)
+    {
+        set_idx = 1; // 如果未找到，使用默认值
+    }
+
+    // 计算使当前选中项居中的索引（考虑边界情况）
+    int center_idx = LANGUAGE_LIST_CNT / 2;
+    int offset = center_idx - set_idx;
+
+    // 调整索引，使选中项居中（避免超出边界）
+    if (offset > 0 && set_idx < 2)
+    {
+        // 当前选中项在前两个，不调整
+        offset = 0;
+    }
+    else if (offset < 0 && set_idx > (LANGUAGE_LIST_CNT - 3))
+    {
+        // 当前选中项在后两个，不调整
+        offset = 0;
+    }
+
+    // 应用偏移量
+    set_idx += offset;
+
+    // 确保调整后的索引有效
     if (set_idx < 1)
     {
         set_idx = 1;
+    }
+    else if (set_idx >= LANGUAGE_LIST_CNT)
+    {
+        set_idx = LANGUAGE_LIST_CNT - 1;
     }
     compo_listbox_set_focus_byidx(listbox, set_idx);
     compo_listbox_update(listbox);
@@ -180,7 +220,7 @@ static void func_power_on_language_list_message(size_msg_t msg)
             func_power_on_language_list_icon_click();                //单击图标
             break;
         case KL_BACK:
-            func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            //    func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
             break;
     }
 
@@ -203,7 +243,7 @@ static void func_power_on_language_enter(void)
     // compo_listbox_move_init(listbox);
 
     compo_listbox_move_init(listbox);
-//    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
     //func_cb.enter_tick = tick_get();
 
 }

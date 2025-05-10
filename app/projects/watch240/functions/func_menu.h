@@ -13,18 +13,18 @@ enum
 //MENU STYLE
 enum
 {
-
-    MENU_STYLE_HONEYCOMB,               //蜂窝
-    MENU_STYLE_WATERFALL,               //瀑布流
     MENU_STYLE_LIST,                    //菜单列表
-    MENU_STYLE_FOOTBALL,                //足球
     MENU_STYLE_GRID,                    //棋盘
     MENU_STYLE_KALE,                    //万花筒
     MENU_STYLE_SKYRER,                  //天圆地方
-    MENU_STYLE_CUM_FOURGRID,            //六宫格
     MENU_STYLE_CUM_SUDOKU,              //九宫格(上下边缘图标自动缩放)
     MENU_STYLE_CUM_GRID,                //华为风格网格
+    MENU_STYLE_CUM_FOURGRID,            //六宫格
 
+    MENU_STYLE_HONEYCOMB,               //蜂窝
+    MENU_STYLE_WATERFALL,               //瀑布流
+
+    MENU_STYLE_FOOTBALL,                //足球
     MENU_STYLE_SUDOKU,                  //九宫格
     MENU_STYLE_SUDOKU_HRZ,              //横向九宫格
     MENU_STYLE_DISK,                    //圆盘
@@ -37,7 +37,7 @@ enum
 };
 
 //创建不同菜单窗体
-compo_form_t *func_menu_sub_football_form_create(void);
+//compo_form_t *func_menu_sub_football_form_create(void);
 compo_form_t *func_menu_sub_honeycomb_form_create(void);
 compo_form_t *func_menu_sub_waterfall_form_create(void);
 compo_form_t *func_menu_sub_list_form_create(void);
@@ -52,7 +52,7 @@ compo_form_t *func_menu_sub_cum_sudoku_form_create(void);      //客户新加菜
 compo_form_t *func_menu_sub_hexagon_form_create(void);
 
 //不同样式菜单入口
-void func_menu_sub_football(void);
+//void func_menu_sub_football(void);
 void func_menu_sub_honeycomb(void);
 void func_menu_sub_waterfall(void);
 void func_menu_sub_list(void);

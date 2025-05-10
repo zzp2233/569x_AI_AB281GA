@@ -532,6 +532,7 @@ static void func_menu_sub_list_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init(listbox);
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, MENU_LIST_CNT - 2));
     func_cb.enter_tick = tick_get();
     if (func_cb.flag_animation)
     {

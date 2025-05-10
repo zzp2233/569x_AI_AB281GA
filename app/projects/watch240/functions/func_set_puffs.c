@@ -29,7 +29,7 @@ enum
 #define  ON_PIC     UI_BUF_I330001_PUBLIC_SWITCH02_BIN
 #define  OFF_PIC    UI_BUF_I330001_PUBLIC_SWITCH00_BIN
 
-//声音与振动页面
+//设置口数页面
 compo_form_t *func_set_puffs_form_create(void)
 {
     //新建窗体
@@ -77,7 +77,7 @@ static void func_set_puffs_disp(void)
 // compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
 }
 
-//声音与振动事件处理
+//设置口数事件处理
 static void func_set_puffs_process(void)
 {
     func_set_puffs_disp();
@@ -134,7 +134,7 @@ static void func_sav_button_click(void)
     func_set_puffs_disp();
 }
 
-//声音与振动功能消息处理
+//设置口数功能消息处理
 static void func_set_puffs_message(size_msg_t msg)
 {
     switch (msg)
@@ -150,20 +150,20 @@ static void func_set_puffs_message(size_msg_t msg)
 
 }
 
-//进入声音与振动功能
+//进入设置口数功能
 static void func_set_puffs_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_sav_t));
     func_cb.frm_main = func_set_puffs_form_create();
 }
 
-//退出声音与振动功能
+//退出设置口数功能
 static void func_set_puffs_exit(void)
 {
     func_cb.last = FUNC_SET_PUFFS;
 }
 
-//声音与振动功能
+//设置口数功能
 void func_set_puffs(void)
 {
     printf("%s\n", __func__);

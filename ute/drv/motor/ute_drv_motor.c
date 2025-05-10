@@ -206,14 +206,7 @@ void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_
     {
         uteDrvMotorData.durationTimeMsec = durationTimeMsec;
         uteDrvMotorData.intervalTimeMsec = intervalTimeMsec;
-        if(!uteDrvMotorData.isRunning)
-        {
-            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START,cnt);
-        }
-        else
-        {
-            uteDrvMotorData.currMaxCnt = cnt;
-        }
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START,cnt);
     }
     else
     {

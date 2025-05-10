@@ -15,7 +15,7 @@
 #include "ute_module_message.h"
 // #include "ute_module_music.h"
 
-#define TRACE_EN 0
+#define TRACE_EN UTE_LOG_MICRECORD_LVL
 
 #if TRACE_EN
 #define TRACE(...) printf(__VA_ARGS__)
@@ -29,10 +29,6 @@
 
 #if (FACTORY_RECORD_DATA_LENGTH + 100 * 1024) > UTE_OTA_TMP_SIZE
 #error "FACTORY_RECORD_DATA_LENGTH > UTE_OTA_TMP_SIZE"
-#endif
-
-#ifndef FACTORY_EARPHONE_TEST_TIME
-#define FACTORY_EARPHONE_TEST_TIME 3 // 5s
 #endif
 
 #define RECORD_FLASH_BUF_LENGTH 4096
@@ -129,7 +125,7 @@ void factory_test_init_record_data()
     }
 }
 
-void factory_test_write_record_data_to_flash(void)
+void uteModuleMicRecordFactoryWriteDataToFlash(void)
 {
     uint32_t write_addr = FACTORY_RECORD_DATA_START + factory_test_earphone_data.record_flash_data_write_length;
 
@@ -310,9 +306,9 @@ void uteModuleMicRecordFactoryStart(void)
     factory_test_earphone_data.record_state = FACTORY_TEST_RECORD_RECORDING;
     if (uteModuleMicRecordTimerPointer == NULL)
     {
-        uteModulePlatformCreateTimer(&uteModuleMicRecordTimerPointer, "MicRecord", 1, FACTORY_EARPHONE_TEST_TIME * 1000, false, uteModuleMicRecordFactoryTimerCallback);
+        uteModulePlatformCreateTimer(&uteModuleMicRecordTimerPointer, "MicRecord", 1, UTE_MODULE_MIC_FACTORY_TEST_RECORDING_TIME * 1000, false, uteModuleMicRecordFactoryTimerCallback);
     }
-    uteModulePlatformRestartTimer(&uteModuleMicRecordTimerPointer, FACTORY_EARPHONE_TEST_TIME * 1000);
+    uteModulePlatformRestartTimer(&uteModuleMicRecordTimerPointer, UTE_MODULE_MIC_FACTORY_TEST_RECORDING_TIME * 1000);
     mic_test_start();
 }
 
@@ -340,4 +336,9 @@ void uteModuleMicRecordFactoryPlayStart(void)
 uint8_t uteModuleMicRecordFactoryGetrecordState(void)
 {
     return factory_test_earphone_data.record_state;
+}
+
+void uteModuleMicRecordFactorySetrecordState(uint8_t state)
+{
+    factory_test_earphone_data.record_state = state;
 }

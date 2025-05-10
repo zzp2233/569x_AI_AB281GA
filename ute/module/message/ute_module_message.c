@@ -214,12 +214,15 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleLocalRingtoneStopRingDetail();
         }
         break;
-        case MSG_TYPE_FACTORY_PLAY_SOUND_RECORDING:
-        {
+
+        case MSG_TYPE_FACTORY_WRITE_RECORD_DATA_TO_FLASH:
+            uteModuleMicRecordFactoryWriteDataToFlash();
+            break;
+
+        case MSG_TYPE_FACTORY_PLAY_RECORD:
             uteModuleMicRecordFactoryPlay();
-            uteModuleMicRecordFactoryStart();
-        }
-        break;
+            break;
+
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

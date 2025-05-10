@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        ¼��ģ��ͷ�ļ�
+*@brief        录音模块头文件
 *@details
 *@author       zn.zeng
 *@date       2021-12-21
@@ -16,8 +16,8 @@
 enum
 {
     FACTORY_TEST_RECORD_IDLE,
-    FACTORY_TEST_RECORD_RECORDING,   //¼����
-    FACTORY_TEST_RECORD_RECORDED,    //¼�����
+    FACTORY_TEST_RECORD_RECORDING,   //录音中
+    FACTORY_TEST_RECORD_RECORDED,    //录音完成
     FACTORY_TEST_RECORD_PLAYING,
 };
 

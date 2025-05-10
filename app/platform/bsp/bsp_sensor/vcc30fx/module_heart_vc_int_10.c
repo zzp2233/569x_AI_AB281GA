@@ -470,7 +470,10 @@ vcHr11Ret_t vcHr11WriteRegisters(uint8_t startAddress, uint8_t *pRegisters, uint
 
 
     /*------------------INSERT YOUR CODE HERE-----------------*/
-
+    if(!vclc09_pwr_sta)
+    {
+        return VCHR11RET_ISERR;
+    }
     if(sys_cb.gsensor_iic_en)
     {
         bsp_i2c_init();
@@ -501,6 +504,10 @@ vcHr11Ret_t vcHr11ReadRegisters(uint8_t startAddress, uint8_t *pRegisters, uint8
 
 
     /*------------------INSERT YOUR CODE HERE-----------------*/
+    if(!vclc09_pwr_sta)
+    {
+        return VCHR11RET_ISERR;
+    }
     if(sys_cb.gsensor_iic_en)
     {
         bsp_i2c_init();

@@ -163,7 +163,7 @@ compo_form_t *func_pressure_form_create(void)
     compo_textbox_set_pos(textbox,126+txt_leng.wid,114);
     compo_textbox_set_align_center(textbox, false);
 
-    compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_01_BIN);///重新测量按钮
+    compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_00_BIN);///重新测量按钮
     compo_button_set_pos(btn,22+184,22+58);
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
@@ -300,7 +300,8 @@ static void func_pressure_refresh(void)
         compo_animation_set_interval(animation, f_pressure->up_data_flag?20:0);
 
         compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
-        compo_button_set_bgimg(btn, f_pressure->up_data_flag ? UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_00_BIN:UI_BUF_I335001_15_EMOTIONS_1_1_EMOTIONS_ICON_PLAY_44X44_X180_Y62_01_BIN);
+        compo_button_set_bgimg(btn, UI_BUF_I335001_15_EMOTIONS_1_1_EMOTIONS_ICON_PLAY_44X44_X180_Y62_01_BIN);
+        compo_button_set_visible(btn,f_pressure->up_data_flag ? false : true);
 
         for (int i = 0; i < 24; i++)
         {

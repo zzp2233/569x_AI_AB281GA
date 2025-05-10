@@ -26,7 +26,7 @@ void uteModuleMicRecordFactoryExit(void);
 void uteModuleMicRecordFactoryStart(void);
 void uteModuleMicRecordFactoryPlay(void);
 void uteModuleMicRecordFactoryPlayStart(void);
-uint8_t uteModuleMicRecordFactoryGetrecordState(void);
+uint8_t uteModuleMicRecordFactoryGetRecordState(void);
 void uteModuleMicRecordFactoryWriteDataToFlash(void);
 void uteModuleMicRecordFactorySetrecordState(uint8_t state);
 

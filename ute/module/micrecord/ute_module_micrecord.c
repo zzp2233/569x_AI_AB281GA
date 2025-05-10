@@ -244,6 +244,7 @@ void uteModuleMicRecordFactoryPlay(void)
     //    printf("tick[%d]\n", tick_get() - tick);
 
     factory_test_earphone_data.record_state = FACTORY_TEST_RECORD_IDLE;
+    factory_test_earphone_data.record_flash_data_read_length = 0;
 
     bsp_change_volume(sys_cb.vol);
     if (mute_bkp)
@@ -333,7 +334,7 @@ void uteModuleMicRecordFactoryPlayStart(void)
  * @author       Wang.Luo
  * @date         2025-05-10
  */
-uint8_t uteModuleMicRecordFactoryGetrecordState(void)
+uint8_t uteModuleMicRecordFactoryGetRecordState(void)
 {
     return factory_test_earphone_data.record_state;
 }

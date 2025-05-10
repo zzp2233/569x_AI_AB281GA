@@ -154,7 +154,7 @@
 /*! 表盘上拉界面,wang.luo 2025-04-07 */
 #define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_MESSAGE
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
-#define DEFAULT_WATCH_INDEX 0
+#define DEFAULT_WATCH_INDEX 2
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
@@ -292,7 +292,7 @@
 
 /*! 多运动支持百种运动标志, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_HUNDRED_SUPPORT 1
-#define UTE_MODULE_SPORT_MAX_SPORT_NUM          24
+#define UTE_MODULE_SPORT_MAX_SPORT_NUM          23
 #define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM  4
 #define UTE_MODULE_SPORT_DISPLAY_MAX_SPORT_NUM  (UTE_MODULE_SPORT_MAX_SPORT_NUM)
 /*! 具体的运动类型,支持的置1,不支持置0, xjc 2222-03-29*/

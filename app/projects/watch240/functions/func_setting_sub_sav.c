@@ -398,7 +398,7 @@ static void func_sav_button_click(void)
                 uteModuleLocalRingtoneSetMuteStatus(true,true);
             }
             break;
-#if UTE_MODULE_SCREENS_MOTOR_GRADE
+#if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
         case COMPO_ID_MOTOR_GRADE:
             uteTaskGuiStartScreen(FUNC_MOTOR_GRADE, 0, __func__);
             break;

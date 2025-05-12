@@ -120,8 +120,8 @@ enum
     FUNC_CALL_SUB_DIAL,                 //电话-拨打电话
     FUNC_CALL_SORT,                     //通话-一级界面
     FUNC_FINDPHONE,                     //寻找手机
-#if UTE_MODULE_SCREENS_MOTOR_GRADE
-    FUNC_MOTOR_GRADE,                   //震动强渡
+#if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
+    FUNC_MOTOR_GRADE,                   //震动强度
 #endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     FUNC_CALENDAER,                     //日历

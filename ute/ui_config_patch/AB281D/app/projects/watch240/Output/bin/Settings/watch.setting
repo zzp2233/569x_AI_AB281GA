@@ -235,8 +235,8 @@
         <add key="vddcore_sel" value="16" />
         <add key="dacaud_ldo_sel" value="5" />
         <add key="dacaud_bypass_en" value="False" />
-        <add key="uosci_cap" value="60" />
-        <add key="uosco_cap" value="60" />
+        <add key="uosci_cap" value="38" />
+        <add key="uosco_cap" value="38" />
         <add key="ft_osc_cap_en" value="True" />
         <add key="rf_pa_gain" value="7" />
         <add key="rf_captune_vl" value="7" />

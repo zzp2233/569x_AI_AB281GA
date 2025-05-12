@@ -1,6 +1,6 @@
 /**
  *@file
- *@brief        Â¼ÒôÄ£¿é
+ *@brief        å½•éŸ³æ¨¡å—
  *@details
  *@author       zn.zeng
  *@date       2021-12-21
@@ -33,7 +33,7 @@
 
 #define RECORD_FLASH_BUF_LENGTH 4096
 
-AT(.mic_test_buf) // ¸´ÓÃaram
+AT(.mic_test_buf) // å¤ç”¨aram
 static uint8_t record_flash_buf[RECORD_FLASH_BUF_LENGTH];
 
 void *uteModuleMicRecordTimerPointer = NULL;
@@ -189,7 +189,7 @@ void mic_test_sdadc_process(u8 *ptr, u32 samples, int ch_mode)
 void mic_test_init(void)
 {
     TRACE("-->%s\n", __func__);
-    bt_audio_bypass(); // ¸´ÓÃaram£¬bypassÀ¶ÑÀÒôÀÖ
+    bt_audio_bypass(); // å¤ç”¨aramï¼Œbypassè“ç‰™éŸ³ä¹
 }
 
 void mic_test_start(void)
@@ -244,6 +244,7 @@ void uteModuleMicRecordFactoryPlay(void)
     //    printf("tick[%d]\n", tick_get() - tick);
 
     factory_test_earphone_data.record_state = FACTORY_TEST_RECORD_IDLE;
+    factory_test_earphone_data.record_flash_data_read_length = 0;
 
     bsp_change_volume(sys_cb.vol);
     if (mute_bkp)
@@ -274,7 +275,7 @@ void uteModuleMicRecordFactoryEnter(void)
 }
 
 /**
- *@brief  ¹¤³§Ä£Ê½½áÊø²âÊÔ
+ *@brief  å·¥å‚æ¨¡å¼ç»“æŸæµ‹è¯•
  *@details
  *@author        zn.zeng
  *@date        2022-01-10
@@ -294,7 +295,7 @@ void uteModuleMicRecordFactoryTimerCallback(void *pxTimer)
 }
 
 /**
- *@brief  ¹¤³§Ä£Ê½¿ªÊ¼²âÊÔ
+ *@brief  å·¥å‚æ¨¡å¼å¼€å§‹æµ‹è¯•
  *@details
  *@author        zn.zeng
  *@date        2021-12-21
@@ -313,7 +314,7 @@ void uteModuleMicRecordFactoryStart(void)
 }
 
 /**
- * @brief        ¹¤³§Ä£Ê½¿ªÊ¼²¥·Å²âÊÔÊı¾İ
+ * @brief        å·¥å‚æ¨¡å¼å¼€å§‹æ’­æ”¾æµ‹è¯•æ•°æ®
  * @details
  * @return       void*
  * @author       Wang.Luo
@@ -327,13 +328,13 @@ void uteModuleMicRecordFactoryPlayStart(void)
 }
 
 /**
- * @brief        ¹¤³§Ä£Ê½»ñÈ¡Â¼Òô×´Ì¬
+ * @brief        å·¥å‚æ¨¡å¼è·å–å½•éŸ³çŠ¶æ€
  * @details
  * @return       uint8_t
  * @author       Wang.Luo
  * @date         2025-05-10
  */
-uint8_t uteModuleMicRecordFactoryGetrecordState(void)
+uint8_t uteModuleMicRecordFactoryGetRecordState(void)
 {
     return factory_test_earphone_data.record_state;
 }

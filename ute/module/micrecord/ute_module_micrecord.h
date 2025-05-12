@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        Â¼ÒôÄ£¿éÍ·ÎÄ¼ş
+*@brief        å½•éŸ³æ¨¡å—å¤´æ–‡ä»¶
 *@details
 *@author       zn.zeng
 *@date       2021-12-21
@@ -16,8 +16,8 @@
 enum
 {
     FACTORY_TEST_RECORD_IDLE,
-    FACTORY_TEST_RECORD_RECORDING,   //Â¼ÒôÖĞ
-    FACTORY_TEST_RECORD_RECORDED,    //Â¼ÒôÍê³É
+    FACTORY_TEST_RECORD_RECORDING,   //å½•éŸ³ä¸­
+    FACTORY_TEST_RECORD_RECORDED,    //å½•éŸ³å®Œæˆ
     FACTORY_TEST_RECORD_PLAYING,
 };
 
@@ -26,7 +26,7 @@ void uteModuleMicRecordFactoryExit(void);
 void uteModuleMicRecordFactoryStart(void);
 void uteModuleMicRecordFactoryPlay(void);
 void uteModuleMicRecordFactoryPlayStart(void);
-uint8_t uteModuleMicRecordFactoryGetrecordState(void);
+uint8_t uteModuleMicRecordFactoryGetRecordState(void);
 void uteModuleMicRecordFactoryWriteDataToFlash(void);
 void uteModuleMicRecordFactorySetrecordState(uint8_t state);
 

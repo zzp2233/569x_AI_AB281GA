@@ -899,7 +899,7 @@ static void func_mode_mic_speaker_click(void)
         }
         break;
         case RECORDING_BTN_ID:
-            if(uteModuleMicRecordFactoryGetrecordState() == FACTORY_TEST_RECORD_IDLE)
+            if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
             {
                 uteModuleMicRecordFactoryStart();
             }
@@ -1140,16 +1140,16 @@ static void func_mode_mic_speaker_process(void)
     static bool isNeedPlay = false;
     if (textbox == NULL)
         return;
-    if (uteModuleMicRecordFactoryGetrecordState() == FACTORY_TEST_RECORD_IDLE)
+    if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
     {
         compo_textbox_set(textbox, "点击开始录音");
     }
-    else if (uteModuleMicRecordFactoryGetrecordState() == FACTORY_TEST_RECORD_RECORDING)
+    else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDING)
     {
         compo_textbox_set(textbox, "录音中...");
         isNeedPlay = true;
     }
-    else if (uteModuleMicRecordFactoryGetrecordState() == FACTORY_TEST_RECORD_RECORDED)
+    else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDED)
     {
         if (isNeedPlay)
         {
@@ -1159,7 +1159,7 @@ static void func_mode_mic_speaker_process(void)
             // isNeedPlay = false;
         }
     }
-    else if (uteModuleMicRecordFactoryGetrecordState() == FACTORY_TEST_RECORD_PLAYING)
+    else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_PLAYING)
     {
         compo_textbox_set(textbox, "播放中...");
         if (isNeedPlay)

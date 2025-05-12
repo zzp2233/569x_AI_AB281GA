@@ -668,7 +668,7 @@ static void func_online_factory_test_mic_process(void)
         compo_shape_set_color((compo_shape_t *)compo_getobj_byid(COMPO_ID_MIC_RECT_PLAY), COLOR_DARKGREEN);
         f_online_factory_test->play_need = false;
     }
-    if (f_online_factory_test->sta == MIC_TEST_STA_RECORDING && uteModuleMicRecordFactoryIsHaveData())
+    if (f_online_factory_test->sta == MIC_TEST_STA_RECORDING && uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDED)
     {
         f_online_factory_test->sta = MIC_TEST_STA_FULL;
         f_online_factory_test->play_need = true;

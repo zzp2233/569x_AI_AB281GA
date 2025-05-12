@@ -224,6 +224,7 @@ static void func_toolbox_list_enter(void)
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);
 #endif
     func_cb.enter_tick = tick_get();
+    sys_cb.set_idx = 1;
 }
 
 //主菜单功能消息处理

@@ -186,7 +186,7 @@ static const compo_football_item_t tbl_menu_football[20] =
 // #define KALE_SWITCH_DR                           2                                                              //单次变更R值
 // #define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 //足球图标列表(固定20项)
-static const compo_football_item_t tbl_menu_football[20] =
+static compo_football_item_t tbl_menu_football[20] =
 {
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {UI_BUF_I335001_STYLE_FOOTBALL_ACTIVITY_BIN,         FUNC_ACTIVITY},
@@ -422,15 +422,18 @@ compo_form_t *func_menu_sub_football_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
-//    //创建背景
-//    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_ICON_FOOTBALL_BG_BIN);
-//    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-
-    // compo_shape_t *masklayer = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    // compo_shape_set_color(masklayer, COLOR_DIMGRAY);
-    // compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, (FOOTBALL_RADIUS+8)*2, (FOOTBALL_RADIUS+8)*2);
-    // compo_shape_set_alpha(masklayer, 255);
-    // compo_shape_set_radius(masklayer,(FOOTBALL_RADIUS+8));
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
+        tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].res_addr = UI_BUF_I335001_STYLE_FOOTBALL_FEMALE_BIN;
+    }
+    else
+    {
+        tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].func_sta = FUNC_FLASHLIGHT;
+        tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].res_addr = UI_BUF_I335001_STYLE_FOOTBALL_FLASHLIGHT_BIN;
+    }
+#endif
 
     //创建足球菜单
     compo_football_t *ball = compo_football_create(frm, FOOTBALL_RADIUS, tbl_menu_football, MENU_FOOTBALL_ITEM_CNT);

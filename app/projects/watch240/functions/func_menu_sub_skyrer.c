@@ -235,7 +235,7 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
 
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 //天圆地方图标列表及顺序
-static const compo_rings_item_t tbl_menu_skyrer[] =
+static compo_rings_item_t tbl_menu_skyrer[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALL_BIN,                  },   //电话
@@ -294,9 +294,6 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              },  //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
-// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
-// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
@@ -312,9 +309,12 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+//     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
+// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
+// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 //天圆地方图标列表及顺序
@@ -520,6 +520,18 @@ compo_form_t *func_menu_sub_skyrer_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].func_sta = FUNC_WOMEN_HEALTH;
+        tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+    }
+    else
+    {
+        tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].func_sta = FUNC_CALCULATOR;
+        tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
+    }
+#endif
     //新建菜单
     compo_rings_t *rings = compo_rings_create(frm);
     compo_rings_ele_t ele =
@@ -535,6 +547,7 @@ compo_form_t *func_menu_sub_skyrer_form_create(void)
         .item           = tbl_menu_skyrer,
     };
     compo_rings_set(rings, &ele);
+
     //环形图标
     for (int i = 0; i < SKYRER_LOOP_ICON_NUM; i++)
     {

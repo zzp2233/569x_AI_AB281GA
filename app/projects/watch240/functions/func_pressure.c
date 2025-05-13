@@ -55,38 +55,15 @@ typedef struct f_pressure_t_
 #define make_pic_hei(val)   (val*height_pic/mood_max)
 #define make_pic_y(hei)     (height_pic-hei+first_y)
 
-// 函数用于找出数组中除 0 和 255 之外的最大值和最小值
-static void findMaxMin(uint8_t *arr, uint8_t *max, uint8_t *min)
-{
-    // 初始化最大值为一个极小值，最小值为一个极大值
-    *max = -1;
-    *min = 256;
-
-    for (int i = 0; i < 24; i++)
-    {
-        if (arr[i] != 0 && arr[i] != 255)
-        {
-            if (arr[i] > *max)
-            {
-                *max = arr[i];
-            }
-            if (arr[i] < *min)
-            {
-                *min = arr[i];
-            }
-        }
-    }
-}
 //创建压力窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_pressure_form_create(void)
 {
     char txt_buf[20];
     uint8_t test_date[24];
-    uint8_t max_val=0;
-    uint8_t min_val=0;
+    uint8_t max_val= uteModuleEmotionPressureGetEmotionPressureMaxValue();
+    uint8_t min_val= uteModuleEmotionPressureGetEmotionPressureMinValue();
 
     bool had_date = uteModuleEmotionPressureGetTodayPressureHistoryData(test_date, 24);
-    findMaxMin(test_date,&max_val,&min_val);
     u8 Pressure_val = uteModuleEmotionPressureGetPressureValue();
 
     //新建窗体
@@ -252,14 +229,13 @@ static void func_pressure_refresh(void)
 
         char txt_buf[20];
         uint8_t test_date[24];
-        uint8_t max_val=0;
-        uint8_t min_val=0;
+        uint8_t max_val= uteModuleEmotionPressureGetEmotionPressureMaxValue();
+        uint8_t min_val= uteModuleEmotionPressureGetEmotionPressureMinValue();
         compo_textbox_t *val = compo_getobj_byid(COMPO_TXT_VALUE_ID);
         compo_textbox_t *val_max = compo_getobj_byid(COMPO_TXT_VALUE_MAX_ID);
         compo_textbox_t *val_min = compo_getobj_byid(COMPO_TXT_VALUE_MIN_ID);
 
         bool had_date = uteModuleEmotionPressureGetTodayPressureHistoryData(test_date,24);
-        findMaxMin(test_date,&max_val,&min_val);
         u8 Pressure_val = uteModuleEmotionPressureGetPressureValue();
 
         memset(txt_buf,0,sizeof(txt_buf));

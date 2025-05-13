@@ -2290,7 +2290,6 @@ static void msgbox_process(void)
         }
         else if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH && msg_cb->msg_type == MSGBOX_MSG_TYPE_REMIND_COVER)
         {
-            // printf("11111111111111111111111\n");
             reset_sleep_delay_all();
             if(uteDrvMotorGetRunningStatus() == false)
             {
@@ -2303,6 +2302,11 @@ static void msgbox_process(void)
                 msg_cb->flag_entering = false;
                 msg_cb->res = MSGBOX_RES_TIMEOUT_EXIT;
             }
+            goto __exit;
+        }
+        else if(func_cb.sta == FUNC_FACTORY_TESTING || func_cb.sta == FUNC_TEST_MODE)
+        {
+            reset_sleep_delay_all();
             goto __exit;
         }
 

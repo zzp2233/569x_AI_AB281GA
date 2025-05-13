@@ -2615,12 +2615,13 @@ void uteModuleProtocolEmotionPressureCtrl(uint8_t*receive,uint8_t length)
         response[3]=0xFF;
         response[4]=0xFF;
         response[5]=EP_STOP_REASION_SUCCESS;
-        if(!uteModuleEmotionPressureIsWear())
-        {
-            response[5]=EP_STOP_REASION_UNWEAR;
-            isNeedStart = false;
-        }
-        else if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
+        // if(!uteModuleEmotionPressureIsWear())
+        // {
+        // response[5]=EP_STOP_REASION_UNWEAR;
+        // isNeedStart = false;
+        // }
+        // else
+        if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
         {
             response[5]=EP_STOP_REASION_TIMEOUT;
             isNeedStart = false;

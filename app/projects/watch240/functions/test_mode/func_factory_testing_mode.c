@@ -34,6 +34,9 @@ compo_form_t * func_factory_testing_heart(void);
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
 compo_form_t * func_factory_testing_blood_oxygen(void);
 #endif
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+compo_form_t *func_factory_testing_heart_light(void);
+#endif
 compo_form_t * func_factory_testing_gsensor(void);
 compo_form_t * func_factory_testing_key(void);
 compo_form_t * func_factory_testing_motor(void);
@@ -94,6 +97,7 @@ enum
     QDEC_BACKWARD_TXT_ID,
     ///*马达测试*/
     MOTOR_TXT_ID,
+    MOTOR_BTN_ID,
     ///*充电测试*/
     CHARGE_TXT_ID,
     ///*录音测试*/
@@ -128,6 +132,9 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
     "屏十字测试",
     "屏RGB测试",
     "TP测试",
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+    "漏光测试",
+#endif
     "心率测试",
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
     "血氧测试",
@@ -205,6 +212,12 @@ compo_form_t *func_factory_testing_create(void)
     {
         frm = func_factory_testing_heart();
     }
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+    else if (test_data->moduleType == FACTORY_MODULE_HEART_CHECK_LIGHT)
+    {
+        frm = func_factory_testing_heart_light();
+    }
+#endif
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
     else if (test_data->moduleType == FACTORY_MODULE_SPO2)
     {
@@ -286,6 +299,12 @@ static void func_factory_testing_pass_fail_bnt_click(void)
 
     if(id == PASS_ID || id == FALL_ID)
     {
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+        if (test_data->moduleType == FACTORY_MODULE_HEART_CHECK_LIGHT)
+        {
+            uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
+        }
+#endif
         if(id == PASS_ID)
         {
             test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
@@ -486,6 +505,57 @@ compo_form_t * func_factory_testing_tp(void)
     return frm;
 }
 
+//创建心率漏光窗体  /
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+compo_form_t *func_factory_testing_heart_light(void)
+{
+    uteModuleNewFactoryTestSetCheckLightMode(NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK);
+    // 新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[50];
+    compo_textbox_t *textbox = NULL;
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof("漏光测试:"), "漏光测试:");
+    textbox = compo_textbox_create(frm, strlen(txt_buf)); // dif___, Max___
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 1 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_1_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "preV:000");
+    textbox = compo_textbox_create(frm, strlen(txt_buf)); /// 心率:未佩戴
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 2 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_2_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "curV:000");
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 3 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_3_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "psV:000");
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 4 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_4_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "fail");
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 5 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_5_ID);
+
+    func_factory_testing_pass_fail_bnt_create(frm);
+
+    return frm;
+}
+#endif
+
 ///创建心率测试窗体   模式六/
 compo_form_t * func_factory_testing_heart(void)
 {
@@ -495,7 +565,7 @@ compo_form_t * func_factory_testing_heart(void)
     char txt_buf[50];
     compo_textbox_t *textbox = NULL;
 
-#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+#if 0//UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
     memset(txt_buf, '\0', sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf), "dif:---,Max:---");
     textbox = compo_textbox_create(frm, strlen(txt_buf));///dif___, Max___
@@ -673,6 +743,10 @@ compo_form_t * func_factory_testing_motor(void)
     compo_textbox_set(textbox, "震动关闭");
     compo_setid(textbox,MOTOR_TXT_ID);
     compo_textbox_set_forecolor(textbox, make_color(0,191,255));
+
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_setid(btn, MOTOR_BTN_ID);
 
     func_factory_testing_pass_fail_bnt_create(frm);
 
@@ -886,7 +960,7 @@ static void func_mode_motor_click(void)
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
     compo_textbox_t *textbox = compo_getobj_byid(MOTOR_TXT_ID);///马达震动
 
-    if(id != FALL_ID && id != PASS_ID)
+    if(id == MOTOR_BTN_ID)
     {
         if(!f_factory_testing->motor_flag)
         {
@@ -1062,11 +1136,11 @@ static void func_factory_testing_message(size_msg_t msg)
             uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             if (ret == MSGBOX_RES_OK)
             {
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-                uteApplicationCommonRestart();
-#else
-                uteTaskGuiStartScreen(FUNC_TEST_MODE,0,__func__);
+#if UTE_MODULE_LOG_SUPPORT
+                uteTaskGuiStartScreen(FUNC_TEST_MODE, 0, __func__);
                 uteTaskGuiStackRemoveScreenId(FUNC_FACTORY_TESTING);
+#else
+                uteModulePlatformSystemReboot();
 #endif
             }
         }
@@ -1128,6 +1202,41 @@ static void func_mode_blood_oxygen_process(void)
         snprintf((char *)txt_buf, sizeof(txt_buf), "血氧:未佩戴");
         compo_textbox_set(textbox1, txt_buf);
     }
+}
+#endif
+
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+static void func_factory_testing_heart_light_process(void)
+{
+    int preV;
+    int curV;
+    int psV;
+    bool isPass;
+    compo_textbox_t *TextPreV = compo_getobj_byid(LEAKAGE_TXT_2_ID);
+    compo_textbox_t *TextCurV = compo_getobj_byid(LEAKAGE_TXT_3_ID);
+    compo_textbox_t *TextPsV = compo_getobj_byid(LEAKAGE_TXT_4_ID);
+    compo_textbox_t *TextIsPass = compo_getobj_byid(LEAKAGE_TXT_5_ID);
+    char txt_buf[50];
+
+    uteModuleFactoryTestGetVkData(&preV, &curV, &psV, &isPass);
+
+    snprintf((char *)txt_buf, sizeof(txt_buf), "preV:%d",preV);
+    compo_textbox_set(TextPreV, txt_buf);
+    snprintf((char *)txt_buf, sizeof(txt_buf), "curV:%d",curV);
+    compo_textbox_set(TextCurV, txt_buf);
+    snprintf((char *)txt_buf, sizeof(txt_buf), "psV:%d",psV);
+    compo_textbox_set(TextPsV, txt_buf);
+    if(isPass)
+    {
+        snprintf((char *)txt_buf, sizeof(txt_buf), "%s","PASS");
+        compo_textbox_set_forecolor(TextIsPass, COLOR_GREEN);
+    }
+    else
+    {
+        snprintf((char *)txt_buf, sizeof(txt_buf), "%s","FAIL");
+        compo_textbox_set_forecolor(TextIsPass, COLOR_RED);
+    }
+    compo_textbox_set(TextIsPass, txt_buf);
 }
 #endif
 
@@ -1278,7 +1387,7 @@ static void func_factory_testing_process(void)
     {
 #if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
         case FACTORY_MODULE_HEART_CHECK_LIGHT:
-            func_mode_5_process();
+            func_factory_testing_heart_light_process();
             break;
 #endif
         case FACTORY_MODULE_HEART:

@@ -45,6 +45,10 @@
 
 /*! 默认背光百分比zn.zeng, 2021-09-24  */
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
+/*! 中科平台广播UUID,wang.luo 2025-02-13 */
+#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+//二维码链接内容
+#define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
 
 //Gsensor
 #define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1
@@ -272,8 +276,8 @@
 #define UTE_MODULE_SCREENS_TOOLBOX_SUPPORT            1 //工具箱列表
 #define UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT        1 //震动强度
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-#define UTE_MODULE_SCREENS_EMOTION_SUPPORT            1 //情绪界面
-#define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      1 //情绪说明界面
+#define UTE_MODULE_SCREENS_EMOTION_SUPPORT            0 //情绪界面
+#define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      0 //情绪说明界面
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
 #define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
 

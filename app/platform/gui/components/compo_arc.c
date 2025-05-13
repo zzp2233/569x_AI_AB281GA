@@ -13,10 +13,36 @@ compo_arc_t *compo_arc_create(compo_form_t *frm)
 {
 #if GUI_USE_ARC
     compo_arc_t *compo_arc = compo_create(frm, COMPO_TYPE_ARC);
-    if (NULL == compo_arc) {
+    if (NULL == compo_arc)
+    {
         halt(HALT_GUI_COMPO_ARC_FAIL);
     }
     compo_arc->arc = widget_arc_create(frm->page_body);
+    compo_arc->prec = ARC_ANGLE_PREC_DEFAULT; //默认精度
+    compo_arc->rotation_offset = ARC_ROTATION_DEFAULT;
+    widget_arc_set_angles(compo_arc->arc, compo_arc->rotation_offset, compo_arc->rotation_offset);
+
+    return compo_arc;
+#else
+    return NULL;
+#endif
+}
+
+/**
+ * @brief 创建一个圆弧组件(默认0°位置在12点钟方向)
+ * @param[in] frm : 窗体指针
+ * @param[in] page : 窗体页面
+ * @return 返回圆弧指针
+ **/
+compo_arc_t *compo_arc_create_page(compo_form_t *frm,widget_page_t *page)
+{
+#if GUI_USE_ARC
+    compo_arc_t *compo_arc = compo_create(frm, COMPO_TYPE_ARC);
+    if (NULL == compo_arc)
+    {
+        halt(HALT_GUI_COMPO_ARC_FAIL);
+    }
+    compo_arc->arc = widget_arc_create(page);
     compo_arc->prec = ARC_ANGLE_PREC_DEFAULT; //默认精度
     compo_arc->rotation_offset = ARC_ROTATION_DEFAULT;
     widget_arc_set_angles(compo_arc->arc, compo_arc->rotation_offset, compo_arc->rotation_offset);
@@ -40,7 +66,8 @@ compo_arc_t *compo_arc_create(compo_form_t *frm)
 void compo_arc_set_location(compo_arc_t *arc, s16 x, s16 y, s16 width, s16 height)
 {
 #if GUI_USE_ARC
-    if (NULL == arc) {
+    if (NULL == arc)
+    {
         halt(HALT_GUI_COMPO_ARC_NULL);
     }
     widget_set_location(arc->arc, x, y, width, height);
@@ -57,7 +84,8 @@ void compo_arc_set_location(compo_arc_t *arc, s16 x, s16 y, s16 width, s16 heigh
 void compo_arc_set_size(compo_arc_t *arc, s16 width, s16 height)
 {
 #if GUI_USE_ARC
-    if (NULL == arc) {
+    if (NULL == arc)
+    {
         halt(HALT_GUI_COMPO_ARC_NULL);
     }
     widget_set_size(arc->arc, width, height);
@@ -88,7 +116,8 @@ void compo_arc_set_angles(compo_arc_t *arc, u16 start_angle, u16 end_angle)
 void compo_arc_set_rotation(compo_arc_t *arc, u16 angle)
 {
 #if GUI_USE_ARC
-    if (NULL == arc) {
+    if (NULL == arc)
+    {
         halt(HALT_GUI_COMPO_ARC_NULL);
     }
 
@@ -108,16 +137,20 @@ void compo_arc_set_value(compo_arc_t *arc, u16 value)
 #if GUI_USE_ARC
     u32 s_angle, e_angle;
 
-    if (value > ARC_VALUE_MAX) {
+    if (value > ARC_VALUE_MAX)
+    {
         value = ARC_VALUE_MAX;
     }
     arc->value = value;
 
-    if (arc->start_angle < arc->end_angle) {
+    if (arc->start_angle < arc->end_angle)
+    {
         s_angle = arc->start_angle;
         e_angle = arc->end_angle;
         e_angle = s_angle + (e_angle - s_angle) * value / ARC_VALUE_MAX;
-    } else {
+    }
+    else
+    {
         s_angle = arc->end_angle;
         e_angle = arc->start_angle;
         s_angle = e_angle - (e_angle - s_angle) * value / ARC_VALUE_MAX;
@@ -125,7 +158,8 @@ void compo_arc_set_value(compo_arc_t *arc, u16 value)
     s_angle = s_angle + arc->rotation_offset;
     e_angle = e_angle + arc->rotation_offset;
 
-    if (ANGLE_PREC_1_1 == arc->prec) {
+    if (ANGLE_PREC_1_1 == arc->prec)
+    {
         s_angle = (s_angle / 10) * 10;
         e_angle = (e_angle / 10) * 10;
     }
@@ -143,7 +177,8 @@ void compo_arc_set_value(compo_arc_t *arc, u16 value)
 void compo_arc_set_width(compo_arc_t *arc, u16 arc_width)
 {
 #if GUI_USE_ARC
-    if (NULL == arc) {
+    if (NULL == arc)
+    {
         halt(HALT_GUI_COMPO_ARC_NULL);
     }
     widget_arc_set_width(arc->arc, arc_width);
@@ -160,7 +195,8 @@ void compo_arc_set_width(compo_arc_t *arc, u16 arc_width)
 void compo_arc_set_color(compo_arc_t *arc, u16 content_color, u16 bg_color)
 {
 #if GUI_USE_ARC
-    if (NULL == arc) {
+    if (NULL == arc)
+    {
         halt(HALT_GUI_COMPO_ARC_NULL);
     }
 
@@ -178,7 +214,8 @@ void compo_arc_set_color(compo_arc_t *arc, u16 content_color, u16 bg_color)
 void compo_arc_set_alpha(compo_arc_t *arc, u16 content_alpha, u16 bg_alpha)
 {
 #if GUI_USE_ARC
-    if (NULL == arc) {
+    if (NULL == arc)
+    {
         halt(HALT_GUI_COMPO_ARC_NULL);
     }
 
@@ -196,12 +233,13 @@ void compo_arc_set_alpha(compo_arc_t *arc, u16 content_alpha, u16 bg_alpha)
  **/
 void compo_arc_set_edge_circle(compo_arc_t *arc, bool start_onoff, bool end_onoff)
 {
-    #if GUI_USE_ARC
-    if (NULL == arc) {
+#if GUI_USE_ARC
+    if (NULL == arc)
+    {
         halt(HALT_GUI_COMPO_ARC_NULL);
     }
     widget_arc_set_edge_circle(arc->arc, start_onoff, end_onoff);
-    #endif
+#endif
 }
 
 
@@ -216,7 +254,8 @@ void compo_arc_set_edge_circle(compo_arc_t *arc, bool start_onoff, bool end_onof
 void compo_arc_set_prec(compo_arc_t *arc, u8 prec)
 {
 #if GUI_USE_ARC
-    if (NULL == arc) {
+    if (NULL == arc)
+    {
         halt(HALT_GUI_COMPO_ARC_NULL);
     }
 

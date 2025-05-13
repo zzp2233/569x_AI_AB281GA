@@ -219,7 +219,7 @@ static const menu_hc_item_t tbl_menu_grid[] =
 };
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 //全部图标资源tbl, 最大可以显示81个图标
-static const menu_hc_item_t tbl_menu_grid[] =
+static menu_hc_item_t tbl_menu_grid[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALL_BIN,                  },   //电话
@@ -510,6 +510,20 @@ typedef struct f_menu_grid_t_
 compo_form_t* func_menu_sub_grid_form_create(void)
 {
     compo_form_t *frm = compo_form_create(false);
+
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        tbl_menu_grid[MENU_GRID_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
+        tbl_menu_grid[MENU_GRID_CNT-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+    }
+    else
+    {
+        tbl_menu_grid[MENU_GRID_CNT-1].func_sta = 0;
+        tbl_menu_grid[MENU_GRID_CNT-1].res_addr = 0;
+    }
+#endif
+
     compo_iconlist_t *iconlist;
     if (func_cb.menu_style == MENU_STYLE_GRID)
     {

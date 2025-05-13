@@ -182,8 +182,18 @@
 #define UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX  5// 立方体光束表盘索引
 
 #define UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE   1  //双击切换菜单
-#define UTE_CUI_SCREEN_MENU_STYLE {MENU_STYLE_SUDOKU,MENU_STYLE_HONEYCOMB,MENU_STYLE_FOOTBALL,MENU_STYLE_GRID,MENU_STYLE_KALE,MENU_STYLE_SKYRER,MENU_STYLE_CUM_GRID,MENU_STYLE_WATERFALL}
-
+// 菜单样式枚举值集合 - 用于UI菜单显示风格配置
+#define UTE_CUI_SCREEN_MENU_STYLE { \
+    MENU_STYLE_LIST,     /* 列表式菜单 */ \
+    MENU_STYLE_SUDOKU,   /* 九宫格式菜单 */ \
+    MENU_STYLE_HONEYCOMB,/* 蜂窝状菜单 */ \
+    MENU_STYLE_FOOTBALL, /* 球体旋转菜单 */ \
+    MENU_STYLE_GRID,     /* 棋盘式网格菜单 */ \
+    MENU_STYLE_KALE,     /* 环形光晕菜单 */ \
+    MENU_STYLE_SKYRER,   /* 天圆地方布局菜单 */ \
+    MENU_STYLE_CUM_GRID, /* 累积式网格菜单 */ \
+    MENU_STYLE_WATERFALL /* 瀑布流式菜单 */ \
+}
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
 

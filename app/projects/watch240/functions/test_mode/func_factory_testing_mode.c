@@ -40,6 +40,7 @@ compo_form_t * func_factory_testing_motor(void);
 compo_form_t * func_factory_testing_charging(void);
 compo_form_t * func_factory_testing_mic_speaker(void);
 compo_form_t * func_factory_testing_mode_result(void);
+compo_form_t * func_factory_testing_ring(void);
 
 enum
 {
@@ -117,6 +118,8 @@ typedef struct f_factory_testing_t_
     bool motor_flag;///测试马达标志位
     bool tape_flag;///测试录音标志位
     bool horn_flag;///测试喇叭标志位
+    u8   count_num;//测试喇叭标音频播放时间
+    u32 tick;      ///测试喇叭标音频播放时间
 } f_factory_testing_t;
 
 const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
@@ -133,6 +136,9 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
     "马达测试",
     "充电测试",
     "咪头喇叭测试",
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+    "音频测试",
+#endif
     "按键测试",
 };
 
@@ -221,6 +227,14 @@ compo_form_t *func_factory_testing_create(void)
     {
         frm = func_factory_testing_mic_speaker();
     }
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+    else if (test_data->moduleType == FACTORY_MODULE_SPEAKER)
+    {
+        f_factory_testing->horn_flag = true;
+        f_factory_testing->tick = tick_get();
+        frm = func_factory_testing_ring();
+    }
+#endif
     else if (test_data->moduleType == FACTORY_MODULE_KEY)
     {
         frm = func_factory_testing_key();
@@ -712,6 +726,33 @@ compo_form_t * func_factory_testing_mic_speaker(void)
     return frm;
 }
 
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+///创建音频测试窗体   模式十二*/
+compo_form_t * func_factory_testing_ring(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("音频测试"));
+    compo_textbox_set(textbox, "音频测试");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
+
+    textbox = compo_textbox_create(frm, strlen("点击暂停播放"));
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
+    compo_textbox_set(textbox, "点击暂停播放");
+    compo_setid(textbox,TAPE_TXT_ID);
+    compo_textbox_set_forecolor(textbox, make_color(0,191,255));
+
+    compo_button_t *btn = compo_button_create(frm); // 按键
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_setid(btn, RECORDING_BTN_ID);
+
+    func_factory_testing_pass_fail_bnt_create(frm);
+
+    return frm;
+}
+#endif
+
 ///创建测试结果窗体   测试结果*/
 compo_form_t * func_factory_testing_mode_result(void)
 {
@@ -862,40 +903,56 @@ static void func_mode_motor_click(void)
     }
 }
 
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+static void func_mode_test_ring_click(void)
+{
+    int id = compo_get_button_id();
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    switch(id)
+    {
+        case FALL_ID: ///不通过后切换下一个模式
+        {
+            uteModuleMicRecordFactoryExit();
+        }
+        break;
+        case PASS_ID: ///通过后切换下一个模式
+        {
+            uteModuleMicRecordFactoryExit();
+        }
+        break;
+        case RECORDING_BTN_ID:
+            if(f_factory_testing->horn_flag == true)
+            {
+                f_factory_testing->horn_flag = false;
+                f_factory_testing->count_num = 0;
+                if (sys_cb.mp3_res_playing)
+                {
+                    music_control(MUSIC_MSG_STOP);
+                }
+            }
+            else
+            {
+                f_factory_testing->horn_flag = true;
+            }
+            break;
+    }
+}
+#endif
+
 static void func_mode_mic_speaker_click(void)
 {
     int id = compo_get_button_id();
-//    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-//    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
 
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
         {
             uteModuleMicRecordFactoryExit();
-            compo_form_t *frm = func_cb.frm_main;
-            test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_FAIL;///获取测试结果
-            test_data->moduleType ++;///切换下一个模式
-            if (frm != NULL)
-            {
-                compo_form_destroy(frm);
-                frm = NULL;
-            }
-            func_cb.frm_main = func_factory_testing_create();
         }
         break;
         case PASS_ID: ///通过后切换下一个模式
         {
             uteModuleMicRecordFactoryExit();
-            compo_form_t *frm = func_cb.frm_main;
-            test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;///获取测试结果
-            test_data->moduleType ++;///切换下一个模式
-            if (frm != NULL)
-            {
-                compo_form_destroy(frm);
-                frm = NULL;
-            }
-            func_cb.frm_main = func_factory_testing_create();
         }
         break;
         case RECORDING_BTN_ID:
@@ -934,6 +991,12 @@ static void func_factory_testing_message(size_msg_t msg)
             {
                 func_mode_mic_speaker_click();
             }
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+            else if (test_data->moduleType == FACTORY_MODULE_SPEAKER)
+            {
+                func_mode_test_ring_click();
+            }
+#endif
             func_factory_testing_pass_fail_bnt_click();
         }
         break;
@@ -1174,6 +1237,34 @@ static void func_mode_mic_speaker_process(void)
     }
 }
 
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+static void func_mode_test_ring_process(void)
+{
+    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    if(f_factory_testing->horn_flag == true)
+    {
+        compo_textbox_set(textbox, "点击暂停播放");
+        if(tick_check_expire(f_factory_testing->tick, 1000))
+        {
+            f_factory_testing->tick = tick_get();
+            if(f_factory_testing->count_num == 0)
+            {
+                func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
+            }
+
+            if(++f_factory_testing->count_num==13)
+            {
+                f_factory_testing->count_num = 0;
+            }
+        }
+    }
+    else
+    {
+        compo_textbox_set(textbox, "点击开始播放");
+    }
+}
+#endif
 static void func_mode_result_process(void)
 {
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
@@ -1207,6 +1298,11 @@ static void func_factory_testing_process(void)
         case FACTORY_MODULE_MIC_SPEAKER:
             func_mode_mic_speaker_process();
             break;
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+        case FACTORY_MODULE_SPEAKER:
+            func_mode_test_ring_process();
+            break;
+#endif
         case FACTORY_MODULE_MAX:
             func_mode_result_process();
             break;

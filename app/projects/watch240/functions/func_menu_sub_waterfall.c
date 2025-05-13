@@ -249,7 +249,7 @@ const menu_hc_item_t tbl_menu_waterfall[] =
 
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 //瀑布流图标列表及顺序
-const menu_hc_item_t tbl_menu_waterfall[] =
+static menu_hc_item_t tbl_menu_waterfall[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALL_BIN,                  },   //电话
@@ -308,9 +308,6 @@ const menu_hc_item_t tbl_menu_waterfall[] =
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              },  //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
-// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
-// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
@@ -328,6 +325,9 @@ const menu_hc_item_t tbl_menu_waterfall[] =
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
+// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
+// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
@@ -511,7 +511,18 @@ compo_form_t *func_menu_sub_waterfall_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
-
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        tbl_menu_waterfall[MENU_WF_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
+        tbl_menu_waterfall[MENU_WF_CNT-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+    }
+    else
+    {
+        tbl_menu_waterfall[MENU_WF_CNT-1].func_sta = 0;
+        tbl_menu_waterfall[MENU_WF_CNT-1].res_addr = 0;
+    }
+#endif
     //新建瀑布流效果
     compo_iconlist_t *iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_WATERFALL);
     compo_setid(iconlist, COMPO_ID_ICONLIST);

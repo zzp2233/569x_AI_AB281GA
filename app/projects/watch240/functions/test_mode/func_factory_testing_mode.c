@@ -986,12 +986,18 @@ static void func_mode_test_ring_click(void)
     {
         case FALL_ID: ///不通过后切换下一个模式
         {
-            uteModuleMicRecordFactoryExit();
+            if (sys_cb.mp3_res_playing)
+            {
+                music_control(MUSIC_MSG_STOP);
+            }
         }
         break;
         case PASS_ID: ///通过后切换下一个模式
         {
-            uteModuleMicRecordFactoryExit();
+            if (sys_cb.mp3_res_playing)
+            {
+                music_control(MUSIC_MSG_STOP);
+            }
         }
         break;
         case RECORDING_BTN_ID:

@@ -2981,13 +2981,11 @@ static void func_sport_sub_run_exit_data(void)
 
     if(sys_cb.refresh_language_flag == false || sport_start_flag == true)//刷新语言时不清除数据
     {
-        uteModuleHeartStopSingleTesting(TYPE_HEART);
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
         if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
         {
             task_stack_pop();
         }
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
 
 }

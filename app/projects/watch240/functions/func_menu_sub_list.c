@@ -463,7 +463,11 @@ compo_form_t *func_menu_sub_list_form_create(void)
             menu_idx = 1;
         }
     }
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    compo_listbox_set(listbox, tbl_menu_list, uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1);
+#else
     compo_listbox_set(listbox, tbl_menu_list, MENU_LIST_CNT);
+#endif
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_focus_byidx(listbox, menu_idx);
 

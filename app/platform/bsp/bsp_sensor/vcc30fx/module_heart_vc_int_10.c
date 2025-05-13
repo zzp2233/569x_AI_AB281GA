@@ -12,6 +12,7 @@
 */
 #include "include.h"
 #include "ute_module_message.h"
+#include "ute_module_factorytest.h"
 
 #if (SENSOR_HR_SEL == SENSOR_HR_VCLC09A)
 
@@ -310,11 +311,12 @@ void vcHr11_process(sport_mode_type vcSportMode)
         {
             vcHr11GetSampleValues(&vcHr11,&ppgLength);
             /* If Pass: */
-            if ((vcHr11.sampleData.maxLedCur >= 100) && (vcHr11.sampleData.preValue[0] <= 2))
-            {
-                //PASS：
-                //Display the value of vcHr11.sampleData.maxLedCur and vcHr11.sampleData.preValue[0]
-            }
+            // if ((vcHr11.sampleData.maxLedCur >= 100) && (vcHr11.sampleData.preValue[0] <= 2))
+            // {
+            //PASS：
+            //Display the value of vcHr11.sampleData.maxLedCur and vcHr11.sampleData.preValue[0]
+            // }
+            uteModuleFactoryTestSetVkData(vcHr11.sampleData.preValue[0], vcHr11.sampleData.maxLedCur, vcHr11.sampleData.psValue);
         }
         else if (vcHr11.workMode == VCWORK_MODE_SPO2WORK)
         {

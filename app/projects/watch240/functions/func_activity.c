@@ -372,6 +372,20 @@ compo_form_t *func_activity_form_create(void)
 {
     ///新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
+
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+
+    compo_arc_t *arc = compo_arc_create(frm);
+    compo_arc_set_alpha(arc,255,255);
+    compo_arc_set_location(arc,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y,172,172/2);
+    compo_arc_set_width(arc,28);
+    compo_arc_set_rotation(arc,2700);
+    compo_arc_set_angles(arc,0,1800);
+    compo_arc_set_color(arc,make_color(0,242,214),make_color(0,73,64));
+    compo_arc_set_value(arc,900);
+
+
+#else
     char txt_buf[20];
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
@@ -592,12 +606,15 @@ compo_form_t *func_activity_form_create(void)
         chart_info.height = week_step_date[i]*(126*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, make_color(85,238,151));
     }
-
+#endif
 
     return frm;
 }
 static void func_activity_disp_handle(void)
 {
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+
+#else
     compo_picturebox_t *arc_kcal = compo_getobj_byid(KCAL_ARC_ID);
     compo_picturebox_t *arc_km   = compo_getobj_byid(KM_ARC_ID);
     compo_picturebox_t *arc_step = compo_getobj_byid(STEP_ARC_ID);
@@ -643,6 +660,7 @@ static void func_activity_disp_handle(void)
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());///千卡数据
     compo_textbox_set(textbox_kcal, txt_buf);
+#endif
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 
@@ -1314,6 +1332,18 @@ static void func_activity_enter(void)
     compo_page_move_init(f_activity->ptm, func_cb.frm_main->page_body, &info);
     f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+    f_activity->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = false,
+        .page_size = GUI_SCREEN_HEIGHT,
+        .page_count = 3,
+        .quick_jump_perc = 40,
+    };
+    compo_page_move_init(f_activity->ptm, func_cb.frm_main->page_body, &info);
+    f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
+#else
     f_activity->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {
@@ -1324,6 +1354,7 @@ static void func_activity_enter(void)
     };
     compo_page_move_init(f_activity->ptm, func_cb.frm_main->page_body, &info);
     f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
+#endif
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
     f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
 #endif

@@ -239,7 +239,7 @@ const menu_hc_item_t tbl_menu_sudoku[] =
 //#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 };
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-const menu_hc_item_t tbl_menu_sudoku[] =
+static menu_hc_item_t tbl_menu_sudoku[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALL_BIN,                  },   //电话
@@ -301,20 +301,6 @@ const menu_hc_item_t tbl_menu_sudoku[] =
 // #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
 // #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-    // {.func_sta=STR_STOP_WATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表
-#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-#if UTE_MODULE_SCREENS_TIMER_SUPPORT
-    // {.func_sta=STR_TIMER,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_TIMER_BIN,                 },    //定时器
-#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
-    // {.func_sta=STR_FIND_PHONE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FIND_PHONE_BIN,            },    //查找手机
-    // {.func_sta=STR_FLASHLIGHT,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FLASHLIGHT_BIN,            },    //手电筒
-#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-    // {.func_sta=STR_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
-#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    // {.func_sta=STR_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 const menu_hc_item_t tbl_menu_sudoku[] =
@@ -497,8 +483,21 @@ const menu_hc_item_t tbl_menu_sudoku[] =
 compo_form_t *func_menu_sub_sudoku_form_create(void)
 {
     printf("%s, <%d>\n",__func__,func_cb.menu_style);
+
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        tbl_menu_sudoku[MENU_SUD_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
+        tbl_menu_sudoku[MENU_SUD_CNT-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+    }
+    else
+    {
+        tbl_menu_sudoku[MENU_SUD_CNT-1].func_sta = 0;
+        tbl_menu_sudoku[MENU_SUD_CNT-1].res_addr = 0;
+    }
+#endif
 
     //新建九宫格效果
     compo_iconlist_t *iconlist;

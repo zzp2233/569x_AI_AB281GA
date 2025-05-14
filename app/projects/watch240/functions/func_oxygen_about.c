@@ -69,7 +69,7 @@ compo_form_t *func_oxygen_about_form_create(void)
     // compo_textbox_set(textbox,i18n[STR_BLOOD_OXYGEN_UINT]);
     // //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_HEART_RATE]);
+    compo_form_set_title(frm, i18n[STR_BLOOD_OXYGEN]);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_OXYGEN_ABOUT_1]));
     compo_textbox_set_align_center(textbox,false);

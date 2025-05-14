@@ -343,24 +343,27 @@ compo_form_t *func_heartrate_form_create(void)
 
     compo_textbox_t *textbox;
     textbox = compo_textbox_create(frm, 3 );///次/分 数据
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
     compo_textbox_set_pos(textbox,154,40);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,"--");
     compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
-
     area_t txt_leng = widget_text_get_area(textbox->txt);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
+    compo_setid(textbox,COMPO_ID_HEART_BPM_TXT);
+
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,164+txt_leng.wid,62,100, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,164+txt_leng.wid,57,100, widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
     compo_setid(textbox,COMPO_ID_HEART_BPM_TXT);
-    if(textbox==NULL)
-    {
-        printf("txt_null\n");
-    }
-    printf("[create]txt_tepe:%d id:%d\n",textbox->type,textbox->id);
+    // if(textbox==NULL)
+    // {
+    //     printf("txt_null\n");
+    // }
+    // printf("[create]txt_tepe:%d id:%d\n",textbox->type,textbox->id);
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338002_6_HEART_DATE_BGZ_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,180);
@@ -443,6 +446,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_right_align(textbox, true);
     compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,COMPO_ID_HEART_STATIC_VALUE_TXT);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
     compo_textbox_set_align_center(textbox, false);
@@ -474,11 +478,6 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,12+266+GUI_SCREEN_HEIGHT,300, widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_WEEK7_HEART]);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_RESTING_HEART]) );///静态心率
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,35+GUI_SCREEN_HEIGHT,105, widget_text_get_max_height());
-    compo_textbox_set(textbox,i18n[STR_RESTING_HEART]);
-    compo_setid(textbox,COMPO_ID_HEART_STATIC_VALUE_TXT);
-
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartrGetLast7DayAvgStaticHeartData() > 0 && uteModuleHeartrGetLast7DayAvgStaticHeartData() != 255)
     {
@@ -498,7 +497,7 @@ compo_form_t *func_heartrate_form_create(void)
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,180,314+GUI_SCREEN_HEIGHT,100, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,180,310+GUI_SCREEN_HEIGHT,100, widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
 
     return frm;
@@ -706,12 +705,12 @@ static void func_heartrate_refresh(void)
             f_heartrate->no_wear_flag = uteModuleHeartIsWear();
             if(f_heartrate->no_wear_flag)
             {
-                msgbox(i18n[STR_PLEASE_WEAR], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
                 compo_animation_set_interval(animation,20);
             }
             else
             {
                 compo_animation_set_interval(animation,0);
+                msgbox((char *)i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_NONE);
             }
         }
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -726,12 +725,13 @@ static void func_heartrate_refresh(void)
             compo_textbox_set(textbox_value,"--");
         }
         area_t txt_leng = widget_text_get_area(textbox_value->txt);
-        if(textbox_bpm==NULL)
-        {
-            printf("txt_null\n");
-        }
-        printf("[refresh]txt_tepe:%d id:%d\n",textbox_bpm->type,textbox_bpm->id);
-        // compo_textbox_set_pos(textbox_bpm,164+txt_leng.wid,62);
+        // if(textbox_bpm==NULL)
+        // {
+        //     printf("txt_null\n");
+        // }
+        // printf("[refresh]txt_tepe:%d id:%d\n",textbox_bpm->type,textbox_bpm->id);
+        // printf("leng:%d\n",txt_leng.wid);
+        compo_textbox_set_pos(textbox_bpm,164+txt_leng.wid,57);
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         memset(txt_buf,0,sizeof(txt_buf));   //心率最小
         if(uteModuleHeartGetMinHeartValue() == 0 || uteModuleHeartGetMinHeartValue() == 255)
@@ -1595,6 +1595,7 @@ static void func_heartrate_enter(void)
         .down_over_perc = 10,
     };
     compo_page_move_init(f_heartrate->ptm, func_cb.frm_main->page_body, &info);
+    f_heartrate->no_wear_flag = true;
 #else
     f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;
     f_heartrate->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));

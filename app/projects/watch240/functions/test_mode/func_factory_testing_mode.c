@@ -1224,7 +1224,7 @@ static void func_factory_testing_heart_light_process(void)
     compo_textbox_t *TextIsPass = compo_getobj_byid(LEAKAGE_TXT_5_ID);
     char txt_buf[50];
 
-    uteModuleFactoryTestGetVkData(&preV, &curV, &psV, &isPass);
+    uteModuleNewFactoryTestGetVkData(&preV, &curV, &psV, &isPass);
 
     snprintf((char *)txt_buf, sizeof(txt_buf), "preV:%d",preV);
     compo_textbox_set(TextPreV, txt_buf);

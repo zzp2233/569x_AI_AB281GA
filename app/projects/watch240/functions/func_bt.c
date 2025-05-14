@@ -1510,7 +1510,7 @@ compo_form_t *func_bt_form_create(void)
 static void func_bt_button_release_handle()
 {
 }
-#endif UI控制宏
+#endif
 //单击按钮
 static void func_bt_button_click(void)
 {

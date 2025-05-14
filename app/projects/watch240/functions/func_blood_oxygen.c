@@ -32,6 +32,7 @@ enum
     COMPO_ID_SAHPE_BG,
     COMPO_ID_MAX_VLA,
     COMPO_ID_MIN_VLA,
+    COMPO_ID_PIC_ABOUT,
     COMPO_ID_ABOUT_BTN,
     COMPO_ID_TXT_TEST,
     COMPO_ID_CHART_VALUE,
@@ -305,10 +306,112 @@ static void func_blood_oxygen_button_click(void)
 compo_form_t *func_blood_oxygen_form_create(void)
 {
     char txt_buf[20];
-    //新建窗体
-    compo_form_t *frm = compo_form_create(true);
     uint8_t oxygen_max;
     uint8_t oxygen_min;
+
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+
+    ///设置背景图片
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I338002_7_SPO2_NO_DATA_BG_BIN);
+    compo_picturebox_set_pos(picbox, 180, 180);
+    //compo_picturebox_cut(picbox, 0, 20);
+    compo_setid(picbox,COMPO_ID_PIC_BG);
+
+    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I338002_7_SPO2_7_SPO2_BIN);
+    compo_animation_set_pos(animation,150,60);  //需要更替为弹窗图标
+    compo_animation_set_radix(animation,19);
+    compo_animation_set_interval(animation,15);
+    //compo_setid(animation,COMPO_ID_PIC_BG);
+
+    compo_textbox_t *textbox;
+    textbox = compo_textbox_create(frm, 5);/// 数据
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_pos(textbox,180,45);
+    compo_textbox_set_align_center(textbox, false);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I338002_7_SPO2_EXPLAIN_BIN);
+    compo_picturebox_set_pos(picbox, 280, 70);
+    compo_setid(picbox,COMPO_ID_PIC_ABOUT);
+    memset(txt_buf, 0, sizeof(txt_buf));
+    if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xFF)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--%%");
+        compo_picturebox_set_visible(picbox, false);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d%%",uteModuleBloodoxygenGetValue());//血氧值
+        compo_picturebox_set_visible(picbox, true);
+    }
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,COMPO_ID_TXT_VALUE);
+
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn,180,340,200,40);///点击测量区域
+    compo_setid(btn,COMPO_ID_AGAIN_BTN);
+
+    btn = compo_button_create(frm);
+    compo_button_set_location(btn, 280, 70, 40, 40);///关于
+    compo_setid(btn,COMPO_ID_ABOUT_BTN);
+    ////////////////////////////////////////////////////////////////////
+    uteModuleBloodoxygenGetMinMaxValue(&oxygen_min,&oxygen_max);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(oxygen_max > 0 && oxygen_max != 255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d%%",oxygen_max);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--%%");
+    }
+    textbox = compo_textbox_create(frm, 10);///最高数据
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,109,280);
+    compo_textbox_set_align_center(textbox, false);
+    compo_setid(textbox,COMPO_ID_MAX_VLA);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I338002_7_SPO2_HIGH_BIN);//////最高标志
+    compo_picturebox_set_pos(picbox,89,295);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(oxygen_min > 0 && oxygen_min != 255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d%%",oxygen_min);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--%%");
+    }
+    textbox = compo_textbox_create(frm, 10);///最低数据
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,230,280);
+    compo_textbox_set_align_center(textbox, false);
+    compo_setid(textbox,COMPO_ID_MIN_VLA);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I338002_7_SPO2_LOW_BIN);//////最低标志
+    compo_picturebox_set_pos(picbox,210,295);
+
+    uint8_t oxygen_date[24];
+    uteModuleBloodoxygenGetTodayHistoryData(oxygen_date,24);///获取一天的血氧
+
+    compo_chartbox_t* chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 24);///图表内的柱形图
+    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X,166,312,100);
+    compo_chartbox_set_pixel(chart, 1);
+    compo_setid(chart,COMPO_ID_CHART_VALUE);
+
+    chart_t chart_info;
+    chart_info.y = 0;
+    chart_info.width = 5;   ///像素点
+    for (int i=0; i<24; i++)
+    {
+        chart_info.x = i*chart_info.width + i*7.8 + 5;
+        chart_info.height = oxygen_date[i]*0.89;///心率数据转换为柱形条显示数据
+        compo_chartbox_set_value(chart, i, chart_info, COLOR_BLUE);
+    }
+#else
 
     // //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
@@ -416,12 +519,93 @@ compo_form_t *func_blood_oxygen_form_create(void)
         chart_info.height = oxygen_date[i]*0.465;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
     }
-
+#endif
     return frm;
 }
 // 界面刷新
 static void func_blood_oxygen_disp_handle(void)
 {
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+    f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
+    compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TXT_VALUE);
+    compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_PIC_ABOUT);
+    //compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
+    compo_textbox_t *max_value = compo_getobj_byid(COMPO_ID_MAX_VLA);
+    compo_textbox_t *min_value = compo_getobj_byid(COMPO_ID_MIN_VLA);
+
+    uint8_t oxygen_max;
+    uint8_t oxygen_min;
+    char txt_buf[20] = {0};
+
+    // 仅进入界面时自动发起一次测量
+    if(f_bo->need_auto_test_flag && !uteModuleBloodoxygenIsTesting() && f_bo->need_auto_test_flag == true && f_bo->tick_start <= tick_get()-500)
+    {
+        uteModuleBloodoxygenStartSingleTesting();
+        f_bo->need_auto_test_flag = false;
+    }
+
+    compo_picturebox_set_pos(picbox, 280, 70);
+    if(uteModuleBloodoxygenGetValue() == 0 || uteModuleBloodoxygenGetValue() == 0xFF)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--%%");
+        compo_picturebox_set_visible(picbox, false);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d%%",uteModuleBloodoxygenGetValue());//血氧值
+        compo_picturebox_set_visible(picbox, true);
+    }
+    compo_textbox_set(textbox,txt_buf);
+
+    uteModuleBloodoxygenGetMinMaxValue(&oxygen_min,&oxygen_max);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(oxygen_max > 0 && oxygen_max != 255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d%%",oxygen_max);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--%%");
+    }
+    compo_textbox_set(max_value,txt_buf);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(oxygen_min > 0 && oxygen_min != 255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d%%",oxygen_min);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--%%");
+    }
+    compo_textbox_set(min_value,txt_buf);
+
+    if(f_bo->blood_oxygen_state == BO_STA_TESTING) ///血氧检测界面
+    {
+        if(tick_check_expire(f_bo->tick, 100))
+        {
+            f_bo->tick = tick_get();
+            /*if(++f_bo->pic_type==20)
+            {
+                f_bo->pic_type=0;
+            }*/
+            f_bo->need_auto_test_flag = false;
+            //compo_picturebox_cut(picbox, f_bo->pic_type, 20); ///图片动态显示
+            //compo_button_set_bgimg(btn,UI_BUF_I338001_7_SPO2_CONTINUE_BIN );
+        }
+    }
+    else if (f_bo->blood_oxygen_state == BO_STA_UNWEAR)
+    {
+        // msgbox((char *)i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+        f_bo->blood_oxygen_state = BO_STA_IDLE;
+    }
+    else
+    {
+        //compo_button_set_bgimg(btn,UI_BUF_I338001_7_SPO2_PAUSE_BIN);
+    }
+
+#else
     f_blood_oxygen_t *f_bo = (f_blood_oxygen_t *)func_cb.f_cb;
     compo_picturebox_t * picbox = compo_getobj_byid(COMPO_ID_PIC_BG);
     compo_picturebox_t * pic_uint = compo_getobj_byid(COMPO_ID_PIC_UNIT);
@@ -517,6 +701,7 @@ static void func_blood_oxygen_disp_handle(void)
     {
         compo_button_set_bgimg(btn,UI_BUF_I338001_7_SPO2_PAUSE_BIN );
     }
+#endif
 }
 //单击按钮
 static void func_blood_oxygen_button_click(void)
@@ -528,6 +713,7 @@ static void func_blood_oxygen_button_click(void)
     {
         case COMPO_ID_AGAIN_BTN:
         {
+            printf("enter COMPO_ID_AGAIN_BTN\r\n");
             if(f_bo->blood_oxygen_state == BO_STA_TESTING)
             {
                 uteModuleBloodoxygenStopSingleTesting();
@@ -1060,6 +1246,10 @@ static void func_blood_oxygen_enter(void)
     tft_set_temode(0);
 
 #if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+
+#else
     f_bo->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {
@@ -1070,6 +1260,7 @@ static void func_blood_oxygen_enter(void)
     };
     compo_page_move_init(f_bo->ptm, func_cb.frm_main->page_body, &info);
     func_cb.flag_animation = false;
+#endif
 #endif
 }
 

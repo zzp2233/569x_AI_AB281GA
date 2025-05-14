@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-05-06 14:12:07
+*@date   2025-05-14 16:34:32
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -34,11 +34,11 @@ const char * const i18n_zh_rcn[] =
     [STR_SPORT_CRICKET] = "\xe6\x9d\xbf\xe7\x90\x83\x00", // [18] 板球
     [STR_SPORT_RUGBY] = "\xe6\xa9\x84\xe6\xa6\x84\xe7\x90\x83\x00", // [19] 橄榄球
     [STR_SPORT_HOCKEY] = "\xe6\x9b\xb2\xe6\xa3\x8d\xe7\x90\x83\x00", // [20] 曲棍球
-    [STR_SPORT_DANCE] = "\xe8\x88\x9e\xe8\xb9\x88\x00", // [21] 舞蹈
+    [STR_SPORT_DANCE] = "\xe8\xb7\xb3\xe8\x88\x9e\x00", // [21] 跳舞
     [STR_SPORT_SPINNING] = "\xe5\x8a\xa8\xe6\x84\x9f\xe5\x8d\x95\xe8\xbd\xa6\x00", // [22] 动感单车
     [STR_SPORT_YOGA] = "\xe7\x91\x9c\xe4\xbc\xbd\x00", // [23] 瑜伽
     [STR_SPORT_SIT_UP] = "\xe4\xbb\xb0\xe5\x8d\xa7\xe8\xb5\xb7\xe5\x9d\x90\x00", // [24] 仰卧起坐
-    [STR_SPORT_TREADMILL] = "\xe5\xae\xa4\xe5\x86\x85\xe8\xb7\x91\x00", // [25] 室内跑
+    [STR_SPORT_TREADMILL] = "\xe8\xb7\x91\xe6\xad\xa5\xe6\x9c\xba\x00", // [25] 跑步机
     [STR_SPORT_GYMNASTICS] = "\xe4\xbd\x93\xe6\x93\x8d\x00", // [26] 体操
     [STR_SPORT_BOATING] = "\xe5\x88\x92\xe8\x88\xb9\x00", // [27] 划船
     [STR_SPORT_JUMPING_JACK] = "\xe5\xbc\x80\xe5\x90\x88\xe8\xb7\xb3\x00", // [28] 开合跳
@@ -302,6 +302,13 @@ const char * const i18n_zh_rcn[] =
     [STR_NORMAL] = "\xe6\xad\xa3\xe5\xb8\xb8\x00", // [286] 正常
     [STR_MEDIUM] = "\xe4\xb8\xad\xe7\xad\x89\x00", // [287] 中等
     [STR_HIGH] = "\xe5\x81\x8f\xe9\xab\x98\x00", // [288] 偏高
+    [STR_VBRATION] = "\xe6\x8c\xaf\xe5\x8a\xa8\xe5\xbc\xba\xe5\xba\xa6\x00", // [289] 振动强度
+    [STR_SOUND_AND_VIBRATION] = "\xe5\xa3\xb0\xe9\x9f\xb3\xe5\x92\x8c\xe9\x9c\x87\xe5\x8a\xa8\x00", // [290] 声音和震动
+    [STR_HIGH_1] = "\xe9\xab\x98\x00", // [291] 高
+    [STR_MIDDLE] = "\xe4\xb8\xad\x00", // [292] 中
+    [STR_LOW] = "\xe4\xbd\x8e\x00", // [293] 低
+    [STR_TESTING] = "\xe6\xb5\x8b\xe9\x87\x8f\xe4\xb8\xad\x2e\x2e\x2e\x00", // [294] 测量中...
+    [STR_STATE_TEST] = "\xe5\xbc\x80\xe5\xa7\x8b\xe6\xb5\x8b\xe9\x87\x8f\x00", // [295] 开始测量
 };
 
 #endif

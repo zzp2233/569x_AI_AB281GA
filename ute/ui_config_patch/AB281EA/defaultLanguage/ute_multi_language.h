@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-05-06 14:12:07
+*@date   2025-05-14 16:34:32
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -34,11 +34,11 @@ enum
     STR_SPORT_CRICKET, // 板球
     STR_SPORT_RUGBY, // 橄榄球
     STR_SPORT_HOCKEY, // 曲棍球
-    STR_SPORT_DANCE, // 舞蹈
+    STR_SPORT_DANCE, // 跳舞
     STR_SPORT_SPINNING, // 动感单车
     STR_SPORT_YOGA, // 瑜伽
     STR_SPORT_SIT_UP, // 仰卧起坐
-    STR_SPORT_TREADMILL, // 室内跑
+    STR_SPORT_TREADMILL, // 跑步机
     STR_SPORT_GYMNASTICS, // 体操
     STR_SPORT_BOATING, // 划船
     STR_SPORT_JUMPING_JACK, // 开合跳
@@ -302,6 +302,13 @@ enum
     STR_NORMAL, // 正常
     STR_MEDIUM, // 中等
     STR_HIGH, // 偏高
+    STR_VBRATION, // 振动强度
+    STR_SOUND_AND_VIBRATION, // 声音和震动
+    STR_HIGH_1, // 高
+    STR_MIDDLE, // 中
+    STR_LOW, // 低
+    STR_TESTING, // 测量中...
+    STR_STATE_TEST, // 开始测量
 };
 
 extern const char * const *i18n;

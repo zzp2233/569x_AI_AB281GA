@@ -163,6 +163,11 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleWatchOnlineOneSecMsgHandler();
         }
         break;
+        case MSG_TYPE_MODULE_WATCHONLINE_START_TIMER:
+        {
+            uteModuleWatchOnlineStartSync();
+        }
+        break;
 #endif
         case MSG_TYPE_DRV_KEY_HANDLER:
         {

@@ -37,6 +37,7 @@ ute_module_watchonline_data_t uteModuleWatchOnlineData =
 /*! 接收单笔数据超时指针, 2021-11-27  */
 void *uteModuleWatchOnlineRecvTimeoutTimerPointer = NULL;
 void *uteModuleWatchOnlineOneSecTimerPointer = NULL;
+void *uteModuleWatchOnlineWaitingStartTimerPointer = NULL;
 
 /**
  * @brief        获取在线表盘地址
@@ -118,6 +119,35 @@ void uteModuleWatchOnlineOneSecCallback(void * pxTimer)
         uteModulePlatformStopTimer(&uteModuleWatchOnlineOneSecTimerPointer);
         uteModulePlatformDeleteTimer(&uteModuleWatchOnlineOneSecTimerPointer);
     }
+}
+
+void uteModuleWatchOnlineWaitingStartCallback(void *pxTimer)
+{
+    uint8_t watchIndex = 0;
+    uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
+    // 等待当前表盘不是要同步的表盘后再擦除flash
+    if (uteModuleWatchOnlineData.isStartReceive && uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_WATCHMAIN_ID && (watchIndex - UTE_MODULE_SCREENS_WATCH_CNT_MAX) == uteModuleWatchOnlineData.writeWatchIndex)
+    {
+        uteModulePlatformRestartTimer(&uteModuleWatchOnlineWaitingStartTimerPointer, 100);
+        UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,waiting to switch dials...", __func__);
+    }
+    else
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_WATCHONLINE_START_TIMER, 0);
+        uteModulePlatformStopTimer(&uteModuleWatchOnlineWaitingStartTimerPointer);
+        uteModulePlatformDeleteTimer(&uteModuleWatchOnlineWaitingStartTimerPointer);
+        uteModuleWatchOnlineWaitingStartTimerPointer = NULL;
+    }
+}
+
+void uteModuleWatchOnlineStartSync(void)
+{
+    uteModulePlatformFlashNorErase(uteModuleWatchOnlineData.lastEraseAddress);
+    uint8_t response[2];
+    response[0] = CMD_WATCH_ONLINE;
+    response[1] = 0x02;
+    uteModuleProfileBleSendToPhone(&response[0], 2);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,start sync...", __func__);
 }
 
 void uteModuleWatchOnlineRecvTimeoutMsgHandler(void)
@@ -312,9 +342,17 @@ void uteModuleWatchOnlineReadyStart(void)
     {
         uteModulePlatformCreateTimer(&uteModuleWatchOnlineOneSecTimerPointer, "WatchOnlineOneSecTimer", 2, 1000, true, uteModuleWatchOnlineOneSecCallback);
     }
+    if(uteModuleWatchOnlineWaitingStartTimerPointer == NULL)
+    {
+        uteModulePlatformCreateTimer(&uteModuleWatchOnlineWaitingStartTimerPointer, "WatchOnlineWaitingStartTimer", 1, 100, false, uteModuleWatchOnlineWaitingStartCallback);
+    }
     if(uteModuleWatchOnlineOneSecTimerPointer != NULL)
     {
         uteModulePlatformRestartTimer(&uteModuleWatchOnlineOneSecTimerPointer,1000);
+    }
+    if(uteModuleWatchOnlineWaitingStartTimerPointer != NULL)
+    {
+        uteModulePlatformRestartTimer(&uteModuleWatchOnlineWaitingStartTimerPointer,100);
     }
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,.writeWatchIndex=%d,supportMultipleMaxCnt=%d",__func__,uteModuleWatchOnlineData.writeWatchIndex,uteModuleWatchOnlineData.supportMultipleMaxCnt);
     uteModuleWatchOnlineData.receiveCnt = 0;
@@ -355,7 +393,7 @@ void uteModuleWatchOnlineReadyStart(void)
     }
 #endif
     //Casen add 2020-02-24
-    uteModulePlatformFlashNorErase(uteModuleWatchOnlineData.lastEraseAddress);
+    // uteModulePlatformFlashNorErase(uteModuleWatchOnlineData.lastEraseAddress);
 }
 
 uint8_t uteModuleWatchOnlineDataWrite(const uint8_t *data, uint32_t size)
@@ -464,8 +502,8 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex], watchConfigSize);
     uteModuleWatchOnlineData.isStartReceive = false;
     uteModuleWatchOnlineData.receiveTimeout = 0; // Casen add 20-10-28
-    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,systemNotSaveVariable.watchParam.fileCrc32=0x%x", __func__, uteModuleWatchOnlineData.fileCrc32);
-    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,systemNotSaveVariable.watchConfig.fileCrc32=0x%x", __func__, watchConfig.fileCrc);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,systemNotSaveVariable.watchParam.fileCrc32=0x%x,fileSize=%d", __func__, uteModuleWatchOnlineData.fileCrc32, uteModuleWatchOnlineData.fileSize);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,systemNotSaveVariable.watchConfig.fileCrc32=0x%x,fileSize=%d,snNo=%d", __func__, watchConfig.fileCrc, watchConfig.fileSize,watchConfig.snNo);
     uint16_t headerNum = bsp_uitool_header_phrase(uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex]);
     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,headerNum=%d", __func__, headerNum);
     if (uteModuleWatchOnlineData.fileCrc32 == watchConfig.fileCrc && headerNum > 0)
@@ -482,6 +520,7 @@ uint8_t uteModuleWatchOnLineTSyncComplete(void)
     {
         uteModuleWatchOnlineUpddateDefaultWatchIndex();
         status = WATCH_ERR_CRC;
+        UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,Sync watchonline error because crc error!", __func__);
     }
     uteModuleWatchOnlineUpateConfigFromFlash();
     /*判断如果再运动中，则会=返回上个界面，防止运动被中断*/

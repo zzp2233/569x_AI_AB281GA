@@ -1556,7 +1556,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //msg
             compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
             compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,
-                                       GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);              //调整文本位置
+                                       311, GUI_SCREEN_HEIGHT);              //调整文本位置
             compo_textbox_set_multiline(txt_msg, true);
             compo_textbox_set(txt_msg, msg);
             area_t txt_leng = widget_text_get_area(txt_msg->txt);

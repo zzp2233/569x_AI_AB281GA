@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 印度尼西亚语(印度尼西亚）
 *@author
-*@date   2025-05-06 14:12:11
+*@date   2025-05-14 16:34:36
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -38,7 +38,7 @@ const char * const i18n_in_rid[] =
     [STR_SPORT_SPINNING] = "\x62\x69\x6b\x65\x00", // [22] bike
     [STR_SPORT_YOGA] = "\x59\x6f\x67\x61\x00", // [23] Yoga
     [STR_SPORT_SIT_UP] = "\x53\x69\x74\x2d\x75\x70\x00", // [24] Sit-up
-    [STR_SPORT_TREADMILL] = "\x49\x6e\x64\x6f\x6f\x72\x20\x72\x75\x6e\x6e\x69\x6e\x67\x00", // [25] Indoor running
+    [STR_SPORT_TREADMILL] = "\x54\x72\x65\x61\x64\x6d\x69\x6c\x6c\x00", // [25] Treadmill
     [STR_SPORT_GYMNASTICS] = "\x47\x79\x6d\x6e\x61\x73\x74\x69\x63\x73\x00", // [26] Gymnastics
     [STR_SPORT_BOATING] = "\x52\x6f\x77\x69\x6e\x67\x00", // [27] Rowing
     [STR_SPORT_JUMPING_JACK] = "\x4a\x75\x6d\x70\x69\x6e\x67\x20\x6a\x61\x63\x6b\x00", // [28] Jumping jack
@@ -302,6 +302,13 @@ const char * const i18n_in_rid[] =
     [STR_NORMAL] = "\x4e\x6f\x72\x6d\x61\x6c\x00", // [286] Normal
     [STR_MEDIUM] = "\x53\x65\x64\x61\x6e\x67\x00", // [287] Sedang
     [STR_HIGH] = "\x54\x69\x6e\x67\x67\x69\x00", // [288] Tinggi
+    [STR_VBRATION] = "\x47\x65\x74\x61\x72\x61\x6e\x00", // [289] Getaran
+    [STR_SOUND_AND_VIBRATION] = "\x53\x75\x61\x72\x61\x20\x64\x61\x6e\x20\x67\x65\x74\x61\x72\x61\x6e\x00", // [290] Suara dan getaran
+    [STR_HIGH_1] = "\x54\x69\x6e\x67\x67\x69\x00", // [291] Tinggi
+    [STR_MIDDLE] = "\x74\x65\x6e\x67\x61\x68\x00", // [292] tengah
+    [STR_LOW] = "\x52\x65\x6e\x64\x61\x68\x00", // [293] Rendah
+    [STR_TESTING] = "\x53\x65\x64\x61\x6e\x67\x20\x6d\x65\x6e\x67\x75\x6b\x75\x72\x2e\x2e\x2e\x00", // [294] Sedang mengukur...
+    [STR_STATE_TEST] = "\x4d\x75\x6c\x61\x69\x20\x6d\x65\x6e\x67\x75\x6b\x75\x72\x00", // [295] Mulai mengukur
 };
 
 #endif

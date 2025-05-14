@@ -1310,17 +1310,14 @@ static void weather_refresh(void)
 {
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     ute_display_ctrl_t displayInfo;
-    ute_module_weather_data_t *weather_date = (ute_module_weather_data_t *)ab_zalloc(sizeof(ute_module_weather_data_t));
-    // ute_module_weather_data_t  weather_date;
-    uteModuleWeatherGetData(weather_date);//获取天气状态
+    ute_module_weather_data_t  weather_date;
+    uteModuleWeatherGetData(&weather_date);//获取天气状态
     uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
     bool weather_flag = false;
     for(int i=0; i<7; i++)
     {
-        // printf(" f_weather->DayWeather[%d] = weather_date.DayWeather[%d]\n", f_weather->DayWeather[i] ,weather_date->DayWeather[i]);
-        if(f_weather->DayWeather[i] != weather_date->DayWeather[i])
+        if(f_weather->DayWeather[i] != weather_date.DayWeather[i])
         {
-            f_weather->DayWeather[i] = weather_date->DayWeather[i];
             weather_flag = true;
             break;
         }
@@ -1328,11 +1325,9 @@ static void weather_refresh(void)
 
     if(displayInfo.isFahrenheit != f_weather->isFahrenheit_flag || weather_flag == true)    //是否为华氏度
     {
-        // printf("displayInfo.isFahrenheit:%d f_weather->isFahrenheit_flag:%d weather_flag:%d\n",displayInfo.isFahrenheit,f_weather->isFahrenheit_flag,weather_flag);
         f_weather->isFahrenheit_flag = displayInfo.isFahrenheit;
         msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
     }
-    ab_free(weather_date);
 }
 
 static void weather_data_Init(void)
@@ -1359,6 +1354,220 @@ static void weather_data_Init(void)
 //创建天气窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_weather_form_create(void)
 {
+
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+    compo_textbox_t *txt;
+    compo_picturebox_t * picbox;
+    bool weather_no_data_flag = true;
+
+    ute_module_systemtime_time_t time;
+    ute_module_weather_data_t  weather_date;
+    ute_display_ctrl_t displayInfo;
+
+    u8 week_day=0;
+    u8 get_weather_id[7];//存放一个星期的排序
+    char str_buff[50];//用于存放打印数据
+    char str_humidity_buff[8];//用于存放湿度打印数据
+
+    memset(get_weather_id,0,sizeof(get_weather_id));
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
+    const u16 week_sort[7]= {STR_SUNDAY, // 周日
+                             STR_MONDAY, // 周一
+                             STR_TUESDAY, // 周二
+                             STR_WEDNESDAY, // 周三
+                             STR_THURSDAY, // 周四
+                             STR_FRIDAY, // 周五
+                             STR_SATURDAY, // 周六
+                            };
+    if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
+    {
+        uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
+        uteModuleWeatherGetData(&weather_date);//获取天气状态
+        for(int i=0; i<7; i++) //获取一周的天气
+        {
+            if(weather_date.DayWeather[i] != WEATHER_TYPE_UNKNOWN)
+            {
+                weather_no_data_flag = false;
+                break;
+            }
+        }
+
+        for(int i=0; i<7; i++) //获取一周的天气
+        {
+            if(uteModuleSystemtimeIsNight()) //是否为夜间
+            {
+                switch(get_weather_id[i])
+                {
+                    case WEATHER_TYPE_SUNNY:
+                        get_weather_id[i] = 13;
+                        break;
+                    case WEATHER_TYPE_CLOUDY:
+                        get_weather_id[i] = 14;
+                        break;
+                    case WEATHER_TYPE_THUNDERSHOWER_RAIN:
+                        get_weather_id[i] = 15;
+                        break;
+                }
+            }
+            get_weather_id[i] = weather_date.DayWeather[i]>>8;//赋值排序天气状态
+        }
+
+        if(displayInfo.isFahrenheit)    //是否为华氏度
+        {
+            weather_date.fristDayCurrTemperature= weather_date.fristDayCurrTemperature*9/5+32;
+            /*pcm 2022-09-19 */
+            if(weather_date.fristDayCurrTemperature<(-99))
+            {
+                weather_date.fristDayCurrTemperature=-99;
+            }
+
+            for(int i=0; i<7; i++)
+            {
+                weather_date.dayTemperatureMax[i]= weather_date.dayTemperatureMax[i]*9/5+32;
+                weather_date.dayTemperatureMin[i]= weather_date.dayTemperatureMin[i]*9/5+32;
+
+                if(weather_date.dayTemperatureMax[i]<(-99))  weather_date.dayTemperatureMax[i]=-99;
+                if(weather_date.dayTemperatureMin[i]<(-99))  weather_date.dayTemperatureMin[i]=-99;
+            }
+        }
+    }
+
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    if(weather_no_data_flag)
+    {
+        if(func_cb.sta == FUNC_WEATHER)
+        {
+            f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
+            f_weather->no_weather_dada = true;
+        }
+        ///设置标题栏名字///
+        picbox = compo_picturebox_create_for_page(frm,frm->page,UI_BUF_I338001_12_WEATHER_CLOUD_BIN);///背景图片
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,120);
+
+        txt = compo_textbox_create_for_page(frm,frm->page,strlen(i18n[STR_NO_GET_WEATHER]));
+        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,226, 276,widget_text_get_max_height()*2);
+        compo_textbox_set_multiline(txt, true);
+        compo_textbox_set_multiline_drag(txt, true);
+        compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);
+
+        return frm;
+    }
+
+    picbox = compo_picturebox_create(frm,UI_BUF_I338001_12_WEATHER_WEATHER_BG_BIN);///背景图片
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y);
+    picbox = compo_picturebox_create(frm,0);///
+    compo_picturebox_set_pos(picbox, 80/2+72,88/2+137);
+    compo_picturebox_set(picbox, future_weather_icon[get_weather_id[0]]);
+    memset(str_buff,0,sizeof(str_buff));
+    if(weather_no_data_flag)
+    {
+        snprintf(str_buff,sizeof(str_buff),"--");
+    }
+    else
+    {
+        snprintf(str_buff,sizeof(str_buff),"%d",weather_date.fristDayCurrTemperature);
+    }
+    txt = compo_textbox_create(frm,strlen(str_buff));
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_pos(txt,82/2+188,58/2+92);
+    compo_textbox_set(txt, str_buff);
+
+    txt = compo_textbox_create(frm,1);
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_28_BIN);
+    compo_textbox_set_pos(txt,28/2+270,40+87);
+    compo_textbox_set(txt, displayInfo.isFahrenheit ? "℉" : "℃");
+
+    if(!weather_no_data_flag)
+    {
+        if(!displayInfo.isFahrenheit)      ///是否为华氏度
+        {
+            snprintf(str_buff,sizeof(str_buff),"%d/%d℃",weather_date.dayTemperatureMin[0],weather_date.dayTemperatureMax[0]);
+        }
+        else
+        {
+            snprintf(str_buff,sizeof(str_buff),"%d/%d℉",weather_date.dayTemperatureMin[0],weather_date.dayTemperatureMax[0]);
+        }
+    }
+    else
+    {
+        snprintf(str_buff,sizeof(str_buff),"--/--℃");
+    }
+    txt = compo_textbox_create(frm,strlen(str_buff));
+    compo_textbox_set_pos(txt,82/2+190,28/2+165);
+    compo_textbox_set(txt, str_buff);
+    txt = compo_textbox_create(frm,strlen(i18n[weather_list[get_weather_id[0]].txt_num]));
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,32/2+72);
+    compo_textbox_set_forecolor(txt, make_color(152,209,255));
+    compo_textbox_set(txt, i18n[weather_list[get_weather_id[0]].txt_num]);
+    //紫外线icon
+    picbox = compo_picturebox_create(frm,UI_BUF_I338001_12_WEATHER_UV_BIN);///背景图片
+    compo_picturebox_set_pos(picbox, 15+100,15+233);
+    //紫外线data
+    txt = compo_textbox_create(frm,strlen(i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]));
+    compo_textbox_set_location(txt,15+100,270+24/2,130,30);
+    compo_textbox_set(txt,i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]);
+
+    //湿度icon
+    picbox = compo_picturebox_create(frm,UI_BUF_I338001_12_WEATHER_HUMIDITY_BIN);///背景图片
+    compo_picturebox_set_pos(picbox, 229+42/2,15+233);
+    //湿度data
+    memset(str_humidity_buff,0,sizeof(str_humidity_buff));
+    snprintf(str_humidity_buff,sizeof(str_humidity_buff),"%d%%",weather_date.fristDayWeatherHumidity);
+    txt = compo_textbox_create(frm,strlen(str_humidity_buff));
+    compo_textbox_set_pos(txt,229+42/2,270+24/2);
+    compo_textbox_set(txt,str_humidity_buff);
+
+    ///设置标题栏名字///
+    txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 30, 120, widget_text_get_max_height());
+    compo_textbox_set(txt, i18n[STR_WEATHER]);
+
+    u16 spacing_y=GUI_SCREEN_HEIGHT;
+    //第二页
+    for(int i=0; i<7; i++)
+    {
+        if(i==4)
+        {
+            spacing_y = GUI_SCREEN_HEIGHT*2+29;
+        }
+        u16 str_id = week_sort[(time.week+i)%7];
+        if(i == 0)
+        {
+            str_id = STR_TO_DAY;
+        }
+        txt = compo_textbox_create(frm,strlen(i18n[str_id]));
+        compo_textbox_set_location(txt, 39,91+spacing_y,50,widget_text_get_max_height());
+        compo_textbox_set(txt,i18n[str_id]);/// 星期
+        compo_textbox_set_align_center(txt,false);
+
+        picbox = compo_picturebox_create(frm,future_weather_icon[get_weather_id[i]]);
+        compo_picturebox_set_pos(picbox,34/2+148,91+26/2+spacing_y);
+        compo_picturebox_set_size(picbox,34,34);
+
+        if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
+        {
+            snprintf(str_buff, sizeof(str_buff), "%02d/%02d%s",weather_date.dayTemperatureMax[i],weather_date.dayTemperatureMin[i],displayInfo.isFahrenheit ? "℉" : "℃");//一周 小~大 温度
+        }
+        else
+        {
+            snprintf(str_buff, sizeof(str_buff), "--/--%s",displayInfo.isFahrenheit ? "℉" : "℃");
+        }
+        txt = compo_textbox_create(frm,strlen(str_buff));
+        compo_textbox_set(txt,str_buff);
+        compo_textbox_set_location(txt,232,91+spacing_y,90,widget_text_get_max_height());
+        compo_textbox_set_align_center(txt,false);
+
+        compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+        compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,121+spacing_y,280,1);
+        compo_shape_set_color(shape,COLOR_GRAY);
+
+        spacing_y +=59;
+    }
+    // widget_page_set_client(frm->page_body, 0, page_y);
+
+#else
     compo_textbox_t *txt;
     compo_picturebox_t * picbox;
     bool weather_no_data_flag = true;
@@ -1585,6 +1794,7 @@ compo_form_t *func_weather_form_create(void)
     widget_page_set_client(frm->page_body, 0, page_y);
 
     return frm;
+#endif
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 #define WHEATHER_CNT                         ((int)((sizeof(weather_list) / sizeof(weather_list[0]))))
@@ -2125,7 +2335,6 @@ static void func_weather_process(void)
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     compo_page_move_process(f_weather->ptm);
-    //    printf("page:%d\n",compo_page_move_get_offset(f_weather->ptm));
     page_y = compo_page_move_get_offset(f_weather->ptm);
 #elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
@@ -2190,6 +2399,21 @@ static void func_weather_enter(void)
     weather_data_Init();
     f_weather->ptm->move_offset = page_y;
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+    f_weather->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = false,
+        .page_size = GUI_SCREEN_HEIGHT,
+        .page_count = 3,
+        .quick_jump_perc = GUI_SCREEN_HEIGHT,
+        .jump_perc = 20,
+        .up_over_perc = 0,
+        .down_over_perc = 10,
+    };
+    compo_page_move_init(f_weather->ptm, func_cb.frm_main->page_body, &info);
+    weather_data_Init();
+#else
     f_weather->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {
@@ -2203,6 +2427,7 @@ static void func_weather_enter(void)
     compo_page_move_init(f_weather->ptm, func_cb.frm_main->page_body, &info);
     weather_data_Init();
     f_weather->ptm->move_offset = page_y;
+#endif
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT ||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
     weather_data_Init();
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

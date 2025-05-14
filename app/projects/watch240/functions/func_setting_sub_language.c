@@ -387,11 +387,11 @@ static void func_set_sub_language_enter(void)
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
-#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORTa
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
 
 #endif

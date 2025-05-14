@@ -224,33 +224,24 @@ compo_form_t *func_up_watch_dial_form_create(void)
     compo_textbox_set(textbox,txt_buf);
     compo_setid(textbox,PROGRESS_BAR_ID);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_UPGRADING]));
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_INS]));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+95,150,30);
-    compo_textbox_set(textbox,i18n[STR_UPGRADING]);
+    compo_textbox_set(textbox,i18n[STR_INS]);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_UPGRADE_UPDATE_SUCCESSED_ICON_SUCCEEDED_92X92_X74_Y65_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-35);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_UPDATED]));
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_SYNC_SUC]));
     compo_textbox_set_location(textbox,GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+55,150,50);
-    compo_textbox_set(textbox,i18n[STR_UPDATED]);
-
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_WATCH_RESTART]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+95,150,30);
-    compo_textbox_set(textbox,i18n[STR_WATCH_RESTART]);
-    widget_text_set_color(textbox->txt, make_color(128,128,128));
+    compo_textbox_set(textbox,i18n[STR_SYNC_SUC]);
 ////////////////////////////////////////////////////////////////////////////////
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_UPGRADE_UPGRADE_UNSUCCESSFUL_ICON_SYNC_FAILED_92X92_X74_Y65_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_WIDTH, GUI_SCREEN_CENTER_Y-35);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_UPDATE_FAILED]));
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_SYNC_FAIL]));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_WIDTH,GUI_SCREEN_CENTER_Y+55,150,50);
-    compo_textbox_set(textbox,i18n[STR_UPDATE_FAILED]);
+    compo_textbox_set(textbox,i18n[STR_SYNC_FAIL]);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_AGIAN]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_WIDTH,GUI_SCREEN_CENTER_Y+95,150,30);
-    compo_textbox_set(textbox,i18n[STR_APP_AGIAN]);
-    widget_text_set_color(textbox->txt, make_color(128,128,128));
 //////////////////////////////////////////////////////////////////////////////////////////
     return frm;
 }
@@ -260,7 +251,7 @@ static void func_up_watch_dial_disp(void)
 {
     f_up_watch_dial_t *f_up_watch_dial = (f_up_watch_dial_t *)func_cb.f_cb;
 
-    if(f_up_watch_dial->state  != UPGRADING)
+    if(f_up_watch_dial->state == UPGRADE_FAILED)
     {
         if(tick_get() > f_up_watch_dial->switch_page_time+SWITCH_TIME)
         {
@@ -288,7 +279,7 @@ static void func_up_watch_dial_disp(void)
             }
             char txt_buf[30];
             compo_textbox_t *txt_val   = compo_getobj_byid(PROGRESS_BAR_ID);
-            snprintf(txt_buf,sizeof(txt_buf),"%d%%",progress);
+            snprintf(txt_buf,sizeof(txt_buf),"%d%%",(uint16_t)progress);
             compo_textbox_set(txt_val,txt_buf);
         }
         else
@@ -298,7 +289,7 @@ static void func_up_watch_dial_disp(void)
                 widget_page_set_client(func_cb.frm_main->page_body, GUI_SCREEN_WIDTH, 0);
             }
             f_up_watch_dial->state  = UPGRADE_FAILED;
-
+            f_up_watch_dial->switch_page_time = tick_get();
         }
     }
 }

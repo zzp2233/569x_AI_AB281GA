@@ -2102,7 +2102,7 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
     else if(receive[1]==0x02) // 开始同步表盘数据
     {
         uteModuleWatchOnlineReadyStart();
-        uteModuleProfileBleSendToPhone(&response[0],2);
+        // uteModuleProfileBleSendToPhone(&response[0],2);
     }
     else if(receive[1]==0x03) // 结束同步表盘数据
     {

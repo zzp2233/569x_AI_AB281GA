@@ -1248,6 +1248,15 @@
 #define UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT 0
 #endif
 
+#define SENSOR_HR_NULL                           0
+#define SENSOR_HR_EN                             0x200
+#define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)                       //天易合芯HRS3300心率血压传感器
+#define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)                       //天易合芯HX3605心率血氧传感器
+#define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
+#define SENSOR_HR_VCLC09A                        (SENSOR_HR_EN | 0x4)
+
+/*! 心率漏光测试默认阈值,wang.luo 2025-05-15 */
+#ifndef DRV_HEART_VCXX_LIGHT_I_MIN_VALUE
 #if (UTE_DRV_HR_SENSOR_SELECT == SENSOR_HR_VCLC09A)
 #define DRV_HEART_VCXX_LIGHT_I_MIN_VALUE 85 //100 单颗灯时电流只需要大于85
 #define DRV_HEART_VCXX_LIGHT_I_MAX_VALUE 120
@@ -1261,11 +1270,12 @@
 #define DRV_HEART_VCXX_PS_MIN_VALUE 210
 #define DRV_HEART_VCXX_BIO_PASS_VALUE 60
 #endif
+#endif
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #ifndef UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT
-#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7
-#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY, FUNC_HEARTRATE, FUNC_SLEEP, FUNC_BLOOD_OXYGEN, FUNC_BT, FUNC_COMPO_SELECT}
+#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 2
+#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY}
 #endif
 
 /*! 表盘左侧界面,wang.luo 2025-04-07 */

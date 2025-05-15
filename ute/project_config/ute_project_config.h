@@ -20,6 +20,7 @@
 #define PROJECT_AB281DA_SUPPORT      0 /*! 共鑫W17Y,在AB281D基础上更改蓝牙名, TFT 240x284 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
 #define PROJECT_AB281F_SUPPORT       0 /*! 同乐达T70 TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
 #define PROJECT_AB281EA_SUPPORT      1 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
+#define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -43,6 +44,8 @@
 #include"ute_project_config_ab281f.h"
 #elif PROJECT_AB281EA_SUPPORT
 #include"ute_project_config_ab281ea.h"
+#elif PROJECT_AB281G_SUPPORT
+#include"ute_project_config_ab281g.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0

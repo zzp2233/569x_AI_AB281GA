@@ -1563,10 +1563,10 @@ static void func_heartrate_enter(void)
     };
     compo_page_move_init(f_heartrate->ptm, func_cb.frm_main->page_body, &info);
     func_cb.flag_animation = false;
-    if(uteModuleHeartIsWear() == false)
-    {
-        msgbox(i18n[STR_PLEASE_WEAR], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-    }
+    // if(uteModuleHeartIsWear() == false)
+    // {
+    //     msgbox(i18n[STR_PLEASE_WEAR], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+    // }
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 #if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
     f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;

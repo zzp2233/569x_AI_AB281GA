@@ -115,6 +115,7 @@ void uteApplicationCommonStartupFrist(void)
     uteApplicationCommonData.isStartupFristFinish = false;
     uteApplicationCommonData.isStartupSecondFinish = false;
     uteApplicationCommonData.isPowerOn = false;
+    uteApplicationCommonData.isAppClosed = true;
     uteModuleFilesystemInit();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_LOG_DIR);

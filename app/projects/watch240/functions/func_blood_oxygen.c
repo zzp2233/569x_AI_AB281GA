@@ -348,12 +348,13 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_setid(textbox,COMPO_ID_TXT_VALUE);
 
     compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn,180,340,200,40);///点击测量区域
+    compo_button_set_location(btn,180,330,200,50);///点击测量区域
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
     btn = compo_button_create(frm);
-    compo_button_set_location(btn, 280, 70, 40, 40);///关于
+    compo_button_set_location(btn, 280, 70, 80, 80);///关于
     compo_setid(btn,COMPO_ID_ABOUT_BTN);
+    compo_button_set_visible(btn,false);
     ////////////////////////////////////////////////////////////////////
     uteModuleBloodoxygenGetMinMaxValue(&oxygen_min,&oxygen_max);
 
@@ -539,6 +540,7 @@ static void func_blood_oxygen_disp_handle(void)
     compo_textbox_t *min_value = compo_getobj_byid(COMPO_ID_MIN_VLA);
     compo_textbox_t *state_test = compo_getobj_byid(COMPO_ID_TXT_TEST);
     compo_animation_t *animation = compo_getobj_byid(COMPO_ID_PIC_BG);
+    compo_button_t *btn_about = compo_getobj_byid(COMPO_ID_ABOUT_BTN);
 
     uint8_t oxygen_max;
     uint8_t oxygen_min;
@@ -556,11 +558,13 @@ static void func_blood_oxygen_disp_handle(void)
     {
         snprintf(txt_buf,sizeof(txt_buf),"--%%");
         compo_picturebox_set_visible(picbox, false);
+        compo_button_set_visible(btn_about, false);
     }
     else
     {
         snprintf(txt_buf,sizeof(txt_buf),"%d%%",uteModuleBloodoxygenGetValue());//血氧值
         compo_picturebox_set_visible(picbox, true);
+        compo_button_set_visible(btn_about, true);
     }
     compo_textbox_set(textbox,txt_buf);
 

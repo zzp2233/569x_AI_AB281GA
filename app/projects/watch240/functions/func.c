@@ -1595,10 +1595,6 @@ void func_message(size_msg_t msg)
             {
 
 
-                if(sys_cb.dialplate_btf_ready)
-                {
-                    sys_cb.dialplate_btf_ready = false;
-                }
 #if UTE_MODULE_SCREENS_CLOCK_SUB_CLICK_SUPPORT
                 if(!sys_cb.gui_sleep_sta)
                 {
@@ -1608,7 +1604,13 @@ void func_message(size_msg_t msg)
                     // reset_sleep_delay_all();
                     // reset_pwroff_delay();               //仅熄屏
                 }
+
+
 #else
+                if(sys_cb.dialplate_btf_ready)
+                {
+                    sys_cb.dialplate_btf_ready = false;
+                }
                 func_switch_to_menu();
 #endif                  //退回到主菜单
             }

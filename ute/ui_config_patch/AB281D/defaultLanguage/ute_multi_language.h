@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-05-09 17:18:22
+*@date   2025-05-15 15:10:24
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -38,7 +38,7 @@ enum
     STR_SPORT_SPINNING, // 动感单车
     STR_SPORT_YOGA, // 瑜伽
     STR_SPORT_SIT_UP, // 仰卧起坐
-    STR_SPORT_TREADMILL, // 跑步机
+    STR_SPORT_TREADMILL, // 室内跑
     STR_SPORT_GYMNASTICS, // 体操
     STR_SPORT_BOATING, // 划船
     STR_SPORT_JUMPING_JACK, // 开合跳
@@ -307,6 +307,10 @@ enum
     STR_HIGH_1, // 高
     STR_MIDDLE, // 中
     STR_LOW, // 低
+    STR_TESTING, // 测量中...
+    STR_STATE_TEST, // 开始测量
+    STR_BLE_SUCCESSFUL, // 蓝牙连接成功
+    STR_BLE_OFF, // 手机蓝牙已断开
 };
 
 extern const char * const *i18n;

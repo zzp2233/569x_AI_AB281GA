@@ -96,6 +96,7 @@ ute_application_common_data_t uteApplicationCommonData =
 {
     .isSynchronizingData = false,
     .isAncsConnected = false,
+    .isAppClosed = true,
 };
 ute_application_sync_data_param_t sendHistoryDataParam;
 /* app common 互斥量 zn.zeng 2022-02-14*/
@@ -115,7 +116,6 @@ void uteApplicationCommonStartupFrist(void)
     uteApplicationCommonData.isStartupFristFinish = false;
     uteApplicationCommonData.isStartupSecondFinish = false;
     uteApplicationCommonData.isPowerOn = false;
-    uteApplicationCommonData.isAppClosed = true;
     uteModuleFilesystemInit();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_LOG_DIR);

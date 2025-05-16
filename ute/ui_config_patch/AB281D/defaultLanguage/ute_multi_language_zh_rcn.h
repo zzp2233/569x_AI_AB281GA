@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-05-09 17:18:23
+*@date   2025-05-15 15:10:24
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -38,7 +38,7 @@ const char * const i18n_zh_rcn[] =
     [STR_SPORT_SPINNING] = "\xe5\x8a\xa8\xe6\x84\x9f\xe5\x8d\x95\xe8\xbd\xa6\x00", // [22] 动感单车
     [STR_SPORT_YOGA] = "\xe7\x91\x9c\xe4\xbc\xbd\x00", // [23] 瑜伽
     [STR_SPORT_SIT_UP] = "\xe4\xbb\xb0\xe5\x8d\xa7\xe8\xb5\xb7\xe5\x9d\x90\x00", // [24] 仰卧起坐
-    [STR_SPORT_TREADMILL] = "\xe8\xb7\x91\xe6\xad\xa5\xe6\x9c\xba\x00", // [25] 跑步机
+    [STR_SPORT_TREADMILL] = "\xe5\xae\xa4\xe5\x86\x85\xe8\xb7\x91\x00", // [25] 室内跑
     [STR_SPORT_GYMNASTICS] = "\xe4\xbd\x93\xe6\x93\x8d\x00", // [26] 体操
     [STR_SPORT_BOATING] = "\xe5\x88\x92\xe8\x88\xb9\x00", // [27] 划船
     [STR_SPORT_JUMPING_JACK] = "\xe5\xbc\x80\xe5\x90\x88\xe8\xb7\xb3\x00", // [28] 开合跳
@@ -307,6 +307,10 @@ const char * const i18n_zh_rcn[] =
     [STR_HIGH_1] = "\xe9\xab\x98\x00", // [291] 高
     [STR_MIDDLE] = "\xe4\xb8\xad\x00", // [292] 中
     [STR_LOW] = "\xe4\xbd\x8e\x00", // [293] 低
+    [STR_TESTING] = "\xe6\xb5\x8b\xe9\x87\x8f\xe4\xb8\xad\x2e\x2e\x2e\x00", // [294] 测量中...
+    [STR_STATE_TEST] = "\xe5\xbc\x80\xe5\xa7\x8b\xe6\xb5\x8b\xe9\x87\x8f\x00", // [295] 开始测量
+    [STR_BLE_SUCCESSFUL] = "\xe8\x93\x9d\xe7\x89\x99\xe8\xbf\x9e\xe6\x8e\xa5\xe6\x88\x90\xe5\x8a\x9f\x00", // [296] 蓝牙连接成功
+    [STR_BLE_OFF] = "\xe6\x89\x8b\xe6\x9c\xba\xe8\x93\x9d\xe7\x89\x99\xe5\xb7\xb2\xe6\x96\xad\xe5\xbc\x80\x00", // [297] 手机蓝牙已断开
 };
 
 #endif

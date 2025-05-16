@@ -825,13 +825,12 @@ extern u32 func_sport_get_current_idx(void);
 extern u32 func_sport_get_str(u8 sport_idx);
 extern u32 func_sport_get_ui(u8 sport_idx);
 
+#define TXT_SPACING  87
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_finish_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-
-#define TXT_SPACING  87
 
     u16 str_id = func_sport_get_str(sys_cb.sport_idx);
     u32 icon_addr = func_sport_get_ui(sys_cb.sport_idx);
@@ -889,13 +888,15 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_shape_t * shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243,208,1);
     compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
+    u16 accrual_y = 0;
 ///////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=TXT_SPACING;
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_9_FINISH_ICON_44X44_X16_Y174_Y261_Y348_Y435_Y522_Y609_01_HEART_BIN);
-    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+TXT_SPACING);
+    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+accrual_y);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_RATE]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75,170+TXT_SPACING,130,25);
+    compo_textbox_set_location(textbox,75,170+accrual_y,130,25);
     compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
     compo_textbox_set(textbox, i18n[STR_HEART_RATE]);
 
@@ -905,25 +906,26 @@ compo_form_t *func_sport_finish_form_create(void)
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_pos(textbox,75,195+TXT_SPACING);
+    compo_textbox_set_pos(textbox,75,195+accrual_y);
     compo_textbox_set(textbox, txt_buf);
 
     area_t txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+TXT_SPACING,88,25);
+    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+accrual_y,88,25);
     compo_textbox_set(textbox, i18n[STR_PER_MINUTE]);
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+TXT_SPACING,208,1);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+accrual_y,208,1);
     compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
 ///////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=TXT_SPACING;
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_9_FINISH_ICON_44X44_X16_Y174_Y261_Y348_Y435_Y522_Y609_02_KCAL_BIN);
-    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+TXT_SPACING*2);
+    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+accrual_y);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_CALORIE]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75,170+TXT_SPACING*2,130,25);
+    compo_textbox_set_location(textbox,75,170+accrual_y,130,25);
     compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
     compo_textbox_set(textbox, i18n[STR_CALORIE]);
 
@@ -933,13 +935,13 @@ compo_form_t *func_sport_finish_form_create(void)
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_pos(textbox,75,195+TXT_SPACING*2);
+    compo_textbox_set_pos(textbox,75,195+accrual_y);
     compo_textbox_set(textbox, txt_buf);
 
     txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_KCAL]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+TXT_SPACING*2,88,25);
+    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+accrual_y,88,25);
     compo_textbox_set(textbox, i18n[STR_KCAL]);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -948,7 +950,11 @@ compo_form_t *func_sport_finish_form_create(void)
     switch(func_sport_get_disp_mode())
     {
         case MULTIPLE_DATA://多数据
+#if UTE_MODULE_SCREENS_SPORT_KM_OFF
+            sport_type = 1;
+#else
             sport_type = 0;
+#endif
             break;
         case MID_DATA:     //中数据
             sport_type = 2;
@@ -962,12 +968,9 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 195+TXT_SPACING*6-(sport_type*TXT_SPACING));
     compo_setid(btn,COMPO_BTN_SURE);
 
-    // textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
-    // compo_textbox_set_align_center(textbox, true);
-    // compo_textbox_set_multiline(textbox, true);
-    // widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
-    // compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 180+TXT_SPACING*7-(sport_type*TXT_SPACING),GUI_SCREEN_CENTER_X*1.7,28*2);
-    // compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_FINISH_APP]));//运动说明
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 180+TXT_SPACING*7-(sport_type*TXT_SPACING),GUI_SCREEN_CENTER_X*1.7,28);
+    compo_textbox_set(textbox, i18n[STR_SPORT_FINISH_APP]);
 
 ///               判断运动类型                       /
     if(func_sport_get_disp_mode() == LESS_DATA)
@@ -976,17 +979,18 @@ compo_form_t *func_sport_finish_form_create(void)
     }
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+TXT_SPACING*2,208,1);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+TXT_SPACING,208,1);
     compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
 ///////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=TXT_SPACING;
     if(func_sport_get_disp_mode() == MID_DATA)
     {
         picbox = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_9_FINISH_ICON_44X44_X16_Y174_Y261_Y348_Y435_Y522_Y609_06_FREQUENCY_BIN);
-        compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+TXT_SPACING*3);
+        compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+accrual_y);
 
         textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_ORDER]));
         compo_textbox_set_align_center(textbox, false);
-        compo_textbox_set_location(textbox,75,170+TXT_SPACING*3,130,25);
+        compo_textbox_set_location(textbox,75,170+accrual_y,130,25);
         compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
         compo_textbox_set(textbox, i18n[STR_SPORT_ORDER]);
 
@@ -996,28 +1000,28 @@ compo_form_t *func_sport_finish_form_create(void)
         textbox = compo_textbox_create(frm, strlen(txt_buf));
         compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
         compo_textbox_set_align_center(textbox, false);
-        compo_textbox_set_pos(textbox,75,195+TXT_SPACING*3);
+        compo_textbox_set_pos(textbox,75,195+accrual_y);
         compo_textbox_set(textbox, txt_buf);
 
         txt_leng = widget_text_get_area(textbox->txt);
         textbox = compo_textbox_create(frm, strlen(i18n[STR_SPORT_ORDER]));
         compo_textbox_set_align_center(textbox, false);
-        compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+TXT_SPACING*3,88,25);
+        compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+accrual_y,88,25);
         compo_textbox_set(textbox, i18n[STR_SPORT_ORDER]);
 
         return frm;
     }
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+TXT_SPACING*3,208,1);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+accrual_y,208,1);
     compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
 ///////////////////////////////////////////////////////////////////////////////////
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_9_FINISH_ICON_44X44_X16_Y174_Y261_Y348_Y435_Y522_Y609_03_STEP_BIN);
-    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+TXT_SPACING*3);
+    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+accrual_y);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_STEPS]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75,170+TXT_SPACING*3,130,25);
+    compo_textbox_set_location(textbox,75,170+accrual_y,130,25);
     compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
     compo_textbox_set(textbox, i18n[STR_STEPS]);
 
@@ -1027,19 +1031,20 @@ compo_form_t *func_sport_finish_form_create(void)
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_pos(textbox,75,195+TXT_SPACING*3);
+    compo_textbox_set_pos(textbox,75,195+accrual_y);
     compo_textbox_set(textbox, txt_buf);
 
     txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_STEP]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+TXT_SPACING*3,88,25);
+    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+accrual_y,88,25);
     compo_textbox_set(textbox, i18n[STR_STEP]);
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+TXT_SPACING*3,208,1);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+accrual_y,208,1);
     compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
 ///////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=TXT_SPACING;
     u8 km_integer  = sport_data.saveData.sportDistanceInteger;                 //距离 整数
     u8 km_decimals = sport_data.saveData.sportDistanceDecimals;               //距离 小数
     if(uteModuleSystemtimeGetDistanceMiType())//英里
@@ -1051,11 +1056,11 @@ compo_form_t *func_sport_finish_form_create(void)
     }
 
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_9_FINISH_ICON_44X44_X16_Y174_Y261_Y348_Y435_Y522_Y609_04_PACE_BIN);
-    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+TXT_SPACING*4);
+    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+accrual_y);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PACE]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75,170+TXT_SPACING*4,130,25);
+    compo_textbox_set_location(textbox,75,170+accrual_y,130,25);
     compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
     compo_textbox_set(textbox, i18n[STR_PACE]);
 
@@ -1072,7 +1077,7 @@ compo_form_t *func_sport_finish_form_create(void)
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_pos(textbox,75,195+TXT_SPACING*4);
+    compo_textbox_set_pos(textbox,75,195+accrual_y);
     compo_textbox_set(textbox, txt_buf);
 
     txt_leng = widget_text_get_area(textbox->txt);
@@ -1080,20 +1085,22 @@ compo_form_t *func_sport_finish_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"/%s",uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+TXT_SPACING*4,88,25);
+    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+accrual_y,88,25);
     compo_textbox_set(textbox, txt_buf);
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+TXT_SPACING*4,208,1);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,243+accrual_y,208,1);
     compo_shape_set_color(shape, make_color(0x33,0x33,0x33));
 
 ///////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=TXT_SPACING;
+#if (UTE_MODULE_SCREENS_SPORT_KM_OFF==0)
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_9_FINISH_ICON_44X44_X16_Y174_Y261_Y348_Y435_Y522_Y609_05_DIS_BIN);
-    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+TXT_SPACING*5);
+    compo_picturebox_set_pos(picbox, 44/2+16, 44/2+178+accrual_y);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_DISTANCE]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75,170+TXT_SPACING*5,130,25);
+    compo_textbox_set_location(textbox,75,170+accrual_y,130,25);
     compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
     compo_textbox_set(textbox, i18n[STR_DISTANCE]);
 
@@ -1103,15 +1110,15 @@ compo_form_t *func_sport_finish_form_create(void)
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_pos(textbox,75,195+TXT_SPACING*5);
+    compo_textbox_set_pos(textbox,75,195+accrual_y);
     compo_textbox_set(textbox, txt_buf);
 
     txt_leng = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_MILE])+strlen(i18n[STR_KILOMETRE]));
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+TXT_SPACING*5,88,25);
+    compo_textbox_set_location(textbox,75+8+txt_leng.wid,200+accrual_y,88,25);
     compo_textbox_set(textbox, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
-
+#endif
     return frm;
 }
 
@@ -1128,6 +1135,9 @@ static void func_sport_finish_init(void)
     {
         case MULTIPLE_DATA:
             page_size = 836;
+#if UTE_MODULE_SCREENS_SPORT_KM_OFF
+            page_size -= TXT_SPACING;
+#endif
             break;
         case MID_DATA:
             page_size = 665;
@@ -1136,7 +1146,7 @@ static void func_sport_finish_init(void)
             page_size = 577;
             break;
     }
-
+    page_size+=TXT_SPACING;
     func_cb.frm_main = func_sport_finish_form_create();
     f_sport_finish->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =

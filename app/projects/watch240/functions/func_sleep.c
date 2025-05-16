@@ -70,15 +70,15 @@ compo_form_t *func_sleep_form_create(void)
 
     // sleep_data->recordCnt = 5;
     // sleep_data->sleep_record[1].state = LIGHT_SLEEP;
-    // sleep_data->sleep_record[0].state = AWAKE_SLEEP;
+    // sleep_data->sleep_record[0].state = DEEP_SLEEP;
     // sleep_data->sleep_record[3].state = AWAKE_SLEEP;
     // sleep_data->sleep_record[2].state = REM_SLEEP;
     // sleep_data->sleep_record[4].state = DEEP_SLEEP;
-    // sleep_data->sleep_record[0].period = 20;
-    // sleep_data->sleep_record[1].period = 100;
-    // sleep_data->sleep_record[2].period = 100;
-    // sleep_data->sleep_record[3].period = 120;
-    // sleep_data->sleep_record[4].period = 20;
+    // sleep_data->sleep_record[0].period = 30;
+    // sleep_data->sleep_record[1].period = 30;
+    // sleep_data->sleep_record[2].period = 30;
+    // sleep_data->sleep_record[3].period = 30;
+    // sleep_data->sleep_record[4].period = 30;
 
     // sleep_data->fallAsSleepTime.hour = 8;
     // sleep_data->fallAsSleepTime.min  = 30;
@@ -134,7 +134,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_autoroll_mode(txt, 0);
     compo_textbox_set(txt, i18n[STR_MIN]);
 //////////////////////////////////////////////////////////////////////
-    pic = compo_picturebox_create(frm, UI_BUF_I335001_9_SLEEP_2_NO_DATA_SLEEP_ICON_NO_DATA_216X78_Y12_Y168_BIN);///* 无数据*/
+    pic = compo_picturebox_create(frm,sleep_data->totalSleepMin ? UI_BUF_I335001_9_SLEEP_1_SLEEP_00_BIN : UI_BUF_I335001_9_SLEEP_2_NO_DATA_SLEEP_ICON_NO_DATA_216X78_Y12_Y168_BIN);///* 无数据*/
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 225);
 
     memset(buf,0,sizeof(buf));
@@ -289,22 +289,10 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
-    uint16_t width = (204);    // 总宽度
+    uint16_t width = (203);    // 总宽度
     uint8_t fillRect_h = 77; // 绘制单个高度
     uint16_t startX = ((GUI_SCREEN_WIDTH-width)/2);     // 相对坐标
     uint16_t fillRect_y = GUI_SCREEN_HEIGHT + GUI_SCREEN_HEIGHT / 4.1+10;
-
-//    sleep_data->recordCnt = 5;
-//    sleep_data->sleep_record[1].state = LIGHT_SLEEP;
-//    sleep_data->sleep_record[0].state = AWAKE_SLEEP;
-//    sleep_data->sleep_record[3].state = AWAKE_SLEEP;
-//    sleep_data->sleep_record[2].state = REM_SLEEP;
-//    sleep_data->sleep_record[4].state = DEEP_SLEEP;
-//    sleep_data->sleep_record[0].period = 1;
-//    sleep_data->sleep_record[1].period = 100;
-//    sleep_data->sleep_record[2].period = 120;
-//    sleep_data->sleep_record[3].period = 119;
-//    sleep_data->sleep_record[4].period = 20;
 
     for(int k=0; k<sleep_data->recordCnt; k++)
     {

@@ -284,6 +284,8 @@
 #define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
 #endif
 
+#define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
+
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/
 #define UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT 0 /*开机选择语言界面*/

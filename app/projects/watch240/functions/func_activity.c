@@ -57,26 +57,19 @@ compo_form_t *func_activity_form_create(void)
     char txt_buf[20];
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
-    uint32_t totalStepCnt_handle = 0;
+    u8 pic_dis = 0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
     if(totalStepCnt > uteModuleSportGetStepsTargetCnt())
     {
-        totalStepCnt_handle = uteModuleSportGetStepsTargetCnt();
+        pic_dis=10;
     }
     else
     {
         if(totalStepCnt!=0)
         {
-            totalStepCnt_handle = uteModuleSportGetStepsTargetCnt()/totalStepCnt;
+            pic_dis = totalStepCnt*10/uteModuleSportGetStepsTargetCnt();
         }
-        else
-        {
-            totalStepCnt_handle = 0;
-        }
-
     }
-    u8 pic_dis = totalStepCnt_handle!=0 ? (100/(totalStepCnt_handle)/10 ) : 0;
-    if(pic_dis>10)pic_dis=10;
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数
     if(uteModuleSystemtimeGetDistanceMiType())//英里
@@ -228,6 +221,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_forecolor(textbox, make_color(153,153,153));
     compo_textbox_set(textbox, txt_buf);
 
+
     uint32_t step_date[24];
     uteModuleSportLoadTodayEveryHourStepHistoryData(step_date);
     compo_chartbox_t*chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 24);///图表内的柱形图
@@ -322,24 +316,19 @@ static void func_activity_disp_handle(void)
     char txt_buf[20];
     uint16_t distance = uteModuleSportGetCurrDayDistanceData();
     uint32_t totalStepCnt = 0;
-    uint32_t totalStepCnt_handle = 0;
+    u8 pic_dis=0;
     uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
     if(totalStepCnt > uteModuleSportGetStepsTargetCnt())
     {
-        totalStepCnt_handle = uteModuleSportGetStepsTargetCnt();
+        pic_dis=10;
     }
     else
     {
         if(totalStepCnt!=0)
         {
-            totalStepCnt_handle = uteModuleSportGetStepsTargetCnt()/totalStepCnt;
-        }
-        else
-        {
-            totalStepCnt_handle = 0;
+            pic_dis = totalStepCnt*10/uteModuleSportGetStepsTargetCnt();
         }
     }
-    u8 pic_dis = totalStepCnt_handle!=0 ? (100/(totalStepCnt_handle)/10 ) : 0;
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数
     if(uteModuleSystemtimeGetDistanceMiType())//英里

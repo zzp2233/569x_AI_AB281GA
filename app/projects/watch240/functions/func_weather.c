@@ -335,15 +335,16 @@ compo_form_t *func_weather_form_create(void)
         picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_ICON_BG_X60_Y186_X8_Y61_X76_Y61_X144_Y61_X212_Y61_01_BIN);
         compo_picturebox_set_pos(picbox,8+30+(i)*(82),GUI_SCREEN_HEIGHT+61+93);
 
+        u16 str_id = week_sort[(time.week+i)%7];
+        if(i==0)
+        {
+            str_id = STR_TO_DAY;
+        }
         //星期 txt
-        txt = compo_textbox_create(frm,20);
+        txt = compo_textbox_create(frm,strlen(i18n[str_id]));
         compo_textbox_set_location(txt, 16+(i)*(82),GUI_SCREEN_HEIGHT+82,45,widget_text_get_max_height());
         compo_textbox_set_align_center(txt,false);
-        compo_textbox_set(txt,i18n[week_sort[(time.week+i)%7]]);/// 星期
-        if(i==1)
-        {
-            compo_textbox_set(txt,i18n[STR_TO_DAY]);/// 星期
-        }
+        compo_textbox_set(txt,i18n[str_id]);/// 星期
 
         //天气 icon
         //图切的不对，80x80了，
@@ -1555,9 +1556,9 @@ compo_form_t *func_weather_form_create(void)
             snprintf(str_buff, sizeof(str_buff), "--/--%s",displayInfo.isFahrenheit ? "℉" : "℃");
         }
         txt = compo_textbox_create(frm,strlen(str_buff));
-        compo_textbox_set(txt,str_buff);
         compo_textbox_set_location(txt,232,91+spacing_y,90,widget_text_get_max_height());
         compo_textbox_set_align_center(txt,false);
+        compo_textbox_set(txt,str_buff);
 
         compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
         compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,121+spacing_y,280,1);

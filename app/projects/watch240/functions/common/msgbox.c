@@ -926,10 +926,10 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
                 compo_textbox_set_align_center(txt_time, true);
-                compo_textbox_set_pos(txt_time, 195,
-                                      40);              //调整文本位置
-                widget_text_set_color(txt_time->txt, make_color(128,128,128));
+                compo_textbox_set_location(txt_time, GUI_SCREEN_CENTER_X, 40,GUI_SCREEN_WIDTH-20,widget_text_get_height());              //调整文本位置
+                compo_textbox_set_forecolor(txt_time, make_color(128,128,128));
                 compo_textbox_set(txt_time, time);
+                compo_textbox_set_right_align(txt_time, true);
             }
         }
         break;

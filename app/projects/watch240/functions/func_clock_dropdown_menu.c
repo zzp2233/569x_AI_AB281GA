@@ -11,7 +11,7 @@
 #include "ute_module_localRingtone.h"
 #include "ute_module_bedside_mode.h"
 
-#if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
+#if 0
 
 typedef struct f_clock_dropdwon_menu_t_
 {

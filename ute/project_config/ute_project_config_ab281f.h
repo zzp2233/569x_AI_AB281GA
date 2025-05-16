@@ -9,8 +9,8 @@
 #ifndef _UTE_PROJECT_CONFIG_AB281F_H_
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
-#define DEFAULT_BLE_DEV_NAME "T70"
-#define UTE_SW_VERSION "AB281FV000049"
+#define DEFAULT_BLE_DEV_NAME "Storm Verge"
+#define UTE_SW_VERSION "AB281FV000059"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
@@ -122,22 +122,22 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      410 //mAh
 /*! 电池最大电压值zn.zeng, 2021-11-09  */
 #define UTE_DRV_BATTERY_MAX_VOLTAGE 4350
 
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3520
-#define UTE_DRV_BATTERY_010      3682
-#define UTE_DRV_BATTERY_020      3736
+#define UTE_DRV_BATTERY_000      3500
+#define UTE_DRV_BATTERY_010      3685
+#define UTE_DRV_BATTERY_020      3733
 #define UTE_DRV_BATTERY_030      3768
-#define UTE_DRV_BATTERY_040      3802
-#define UTE_DRV_BATTERY_050      3840
-#define UTE_DRV_BATTERY_060      3908
-#define UTE_DRV_BATTERY_070      3986
+#define UTE_DRV_BATTERY_040      3803
+#define UTE_DRV_BATTERY_050      3844
+#define UTE_DRV_BATTERY_060      3905
+#define UTE_DRV_BATTERY_070      3985
 #define UTE_DRV_BATTERY_080      4092
-#define UTE_DRV_BATTERY_090      4190
-#define UTE_DRV_BATTERY_100      4276
+#define UTE_DRV_BATTERY_090      4194
+#define UTE_DRV_BATTERY_100      4304
 
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
@@ -152,15 +152,15 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 4
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18306001_BIN, \
-                                                UI_BUF_DIALPLATE_D18308001_BIN, \
-                                                UI_BUF_DIALPLATE_CUBE_BIN,      \
-                                                UI_BUF_DIALPLATE_BUTTERFLY_BIN}// UI_BUF_DIALPLATE_D18309001_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19026001_BIN,\
+                                                UI_BUF_DIALPLATE_D19027001_BIN,\
+                                                UI_BUF_DIALPLATE_D19028001_BIN,\
+                                                UI_BUF_DIALPLATE_D19030001_BIN,}
 
-#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1      // 使用立方体表盘
-#define UTE_WATCHS_DIALPLATE_BTF_INDEX 3    // 蝴蝶表盘索引
-#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 2   // 立方体表盘索引
+#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0 // 使用蝴蝶表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0      // 使用立方体表盘
+#define UTE_WATCHS_DIALPLATE_BTF_INDEX 0    // 蝴蝶表盘索引
+#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 0   // 立方体表盘索引
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
@@ -168,6 +168,7 @@
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0  //UI界面
 #define GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT      0  //UI界面
 #define GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT      1  //UI界面
+#define GUI_SCREEN_SIZE_360X360RGB_I340002_SUPPORT      1  //同乐达T70客户定制开机logo
 
 #define UTE_ALARM_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT 1 //勿扰模式闹钟开启马达震动
 
@@ -293,7 +294,7 @@
 #define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          1 //自由训练
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_SUPPORT             0 //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_SUPPORT      0 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_SUPPORT          0 //0x1D,踏步
@@ -409,7 +410,7 @@
 #define UTE_MODULE_SPORT_BOATING_ON_OFF                 1 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_ON_OFF            1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_ON_OFF           1 //自由训练
-#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ON_OFF              0 //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ON_OFF       1 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_ON_OFF           1 //0x1D,踏步
@@ -526,7 +527,7 @@
 #define UTE_MODULE_SPORT_BOATING_ORDER                  22 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             23 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            24 //自由训练
-#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ORDER               0  //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ORDER        0 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_ORDER            0 //0x1D,踏步

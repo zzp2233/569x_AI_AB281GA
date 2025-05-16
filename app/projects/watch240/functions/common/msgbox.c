@@ -2363,6 +2363,16 @@ static void msgbox_check_force_exit(void)
 //对话框
 int msgbox(char *msg, char *title, char* time, int mode, char msg_type)
 {
+    if (func_cb.sta == FUNC_CLOCK)
+    {
+        f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
+        if (f_clk->sta != FUNC_CLOCK_MAIN)
+        {
+            printf("%s ---->EVT_MSGBOX_EXIT\n", __func__);
+            return NULL;
+        }
+    }
+
     func_cb.msgbox_enter_sta = func_cb.sta;
 
     msg_cb_t *msg_cb;

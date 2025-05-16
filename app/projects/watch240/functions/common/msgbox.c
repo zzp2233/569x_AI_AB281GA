@@ -926,10 +926,10 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
                 compo_textbox_set_align_center(txt_time, true);
-                compo_textbox_set_pos(txt_time, 195,
-                                      40);              //调整文本位置
-                widget_text_set_color(txt_time->txt, make_color(128,128,128));
+                compo_textbox_set_location(txt_time, GUI_SCREEN_CENTER_X, 40,GUI_SCREEN_WIDTH-20,widget_text_get_height());              //调整文本位置
+                compo_textbox_set_forecolor(txt_time, make_color(128,128,128));
                 compo_textbox_set(txt_time, time);
+                compo_textbox_set_right_align(txt_time, true);
             }
         }
         break;
@@ -1095,7 +1095,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_multiline(txt_msg, false);
                 compo_textbox_set_align_center(txt_msg, false);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,
-                                           GUI_SCREEN_CENTER_Y+51,
+                                           GUI_SCREEN_CENTER_Y+54,
                                            widget_text_get_area(txt_msg->txt).wid,
                                            widget_text_get_height()); //调整文本位置
             }
@@ -2363,6 +2363,16 @@ static void msgbox_check_force_exit(void)
 //对话框
 int msgbox(char *msg, char *title, char* time, int mode, char msg_type)
 {
+    if (func_cb.sta == FUNC_CLOCK)
+    {
+        f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
+        if (f_clk->sta != FUNC_CLOCK_MAIN)
+        {
+            printf("%s ---->EVT_MSGBOX_EXIT\n", __func__);
+            return NULL;
+        }
+    }
+
     func_cb.msgbox_enter_sta = func_cb.sta;
 
     msg_cb_t *msg_cb;

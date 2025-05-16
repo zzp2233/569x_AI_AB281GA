@@ -3,6 +3,7 @@
 #include "ute_all_sports_int_algorithms.h"
 #include "ute_module_sport.h"
 #include "ute_module_heart.h"
+#include "func_cover.h"
 
 #define TRACE_EN        0
 
@@ -1517,13 +1518,7 @@ static void func_sport_sub_run_exit_data(void)
 
     if(sys_cb.refresh_language_flag == false || sport_start_flag == true)//刷新语言时不清除数据
     {
-        uteModuleHeartStopSingleTesting(TYPE_HEART);
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-        {
-            task_stack_pop();
-        }
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
 
 }
@@ -1553,6 +1548,7 @@ enum
     COMPO_ID_BTN_SPORT_EXIT,         //退出
 
     COMPO_ID_TXT_SPORT_STOP,         //暂停
+    COMPO_ID_TXT_BLE_OFF,           //BLE断开连接
 
 };
 enum//对应运动中显示运动数据种类->不同项目可自行添加
@@ -1579,6 +1575,9 @@ typedef struct f_sport_sub_run_t_
     u32         updata_tick;
     bool        sport_run_state;
     bool        sport_run_state_updata_flag;
+    bool        ble_state;
+    u16          count_time;
+
 } f_sport_sub_run_t;
 
 enum
@@ -1655,9 +1654,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
     pic = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_5_EXERCISING_HEART_PROGRESS_ICON_PIC220X16_X10_Y168_00_BIN);///心率进度
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,176);
 
+    u8 heart_lever = uteModuleHeartGetHeartValueRange(uteModuleHeartGetHeartValue());
+    if(heart_lever == 0)heart_lever=5;
+
     pic = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_5_EXERCISING_ARROW_14X11_X26_X70_X114_X158_X200_Y183_BIN);///心率进度指针
-    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X+(44*(1-3)),176+15);
-    compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE);
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X+(44*(heart_lever-3)),176+15);
+    compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE_PERCENTAGE);
 
     txt = compo_textbox_create(frm, strlen(i18n[STR_CALORIE]));
     compo_textbox_set_align_center(txt, false);
@@ -1702,6 +1704,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_forecolor(txt,make_color(0x00,0xff,0xda));
     compo_setid(txt,COMPO_ID_TXT_SPORT_STOP);
 
+    txt = compo_textbox_create_for_page(frm,frm->page, strlen(i18n[STR_BLE_OFF]));
+    compo_textbox_set_location(txt,-GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y-50, 200, 30);
+    compo_textbox_set(txt, i18n[STR_BLE_OFF]);
+    compo_setid(txt,COMPO_ID_TXT_BLE_OFF);
+    compo_textbox_set_visible(txt,false);
+
     if(func_sport_get_disp_mode() == LESS_DATA)
     {
         return frm;
@@ -1733,17 +1741,21 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
         return frm;
     }
+
+    u16 accrual_y = 0;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+#if (UTE_MODULE_SCREENS_SPORT_KM_OFF==0)
+    accrual_y+=84;
     txt = compo_textbox_create(frm, strlen(i18n[STR_DISTANCE]));
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,16,216+84, 130, 30);
+    compo_textbox_set_location(txt,16,216+accrual_y, 130, 30);
     compo_textbox_set(txt, i18n[STR_DISTANCE]);
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%s%s",uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     txt = compo_textbox_create(frm, strlen(txt_buf));///公里文本
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,16,245+84, 130, 30);
+    compo_textbox_set_location(txt,16,245+accrual_y, 130, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     compo_setid(txt,COMPO_ID_UINT_SPORT_KM);
@@ -1752,7 +1764,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 212+84, GUI_SCREEN_CENTER_X-10, 50);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 212+accrual_y, GUI_SCREEN_CENTER_X-10, 50);
     u8 km_integer = data->saveData.sportDistanceInteger;                 //距离 整数
     u8 km_decimals = data->saveData.sportDistanceDecimals;               //距离 小数
     if(uteModuleSystemtimeGetDistanceMiType())//英里
@@ -1767,15 +1779,17 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set(txt, txt_buf);
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_KM);
+#endif
 //////////////////////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=84;
     txt = compo_textbox_create(frm, strlen(i18n[STR_STEPS]));///步数文本
-    compo_textbox_set_location(txt,16,216+84*2, 130, 30);
+    compo_textbox_set_location(txt,16,216+accrual_y, 130, 30);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set(txt, i18n[STR_STEPS]);
 
     txt = compo_textbox_create(frm, strlen( i18n[STR_STEP]));///步数文本
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,16,245+84*2, 130, 30);
+    compo_textbox_set_location(txt,16,245+accrual_y, 130, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, i18n[STR_STEP]);
 
@@ -1783,14 +1797,15 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 212+84*2, GUI_SCREEN_CENTER_X-10, 50);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 212+accrual_y, GUI_SCREEN_CENTER_X-10, 50);
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_STEP);
 //////////////////////////////////////////////////////////////////////////////////////////////////
+    accrual_y+=84;
     txt = compo_textbox_create(frm, strlen(i18n[STR_PACE]));///配速文本
-    compo_textbox_set_location(txt,16,216+84*3, 130, 30);
+    compo_textbox_set_location(txt,16,216+accrual_y, 130, 30);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set(txt, i18n[STR_PACE]);
 
@@ -1798,7 +1813,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"/%s", i18n[STR_KILOMETRE]);
     txt = compo_textbox_create(frm, strlen(txt_buf));///配速文本
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,16,245+84*3, 130, 30);
+    compo_textbox_set_location(txt,16,245+accrual_y, 130, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
 
@@ -1806,16 +1821,9 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 212+84*3, GUI_SCREEN_CENTER_X-10, 50);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 212+accrual_y, GUI_SCREEN_CENTER_X-10, 50);
     memset(txt_buf,0,sizeof(txt_buf));
-    if(data->saveData.avgTimeSecond)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", data->saveData.avgTimeMinute,data->saveData.avgTimeSecond,'"');
-    }
-    else
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", 0,0,'"');
-    }
+    snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", data->saveData.avgTimeMinute,data->saveData.avgTimeSecond,'"');
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_SPEED);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -2064,169 +2072,202 @@ static void func_sport_sub_run_click_handler(void)
 static void func_sport_sub_run_updata(void)
 {
     f_sport_sub_run_t *f_sleep = (f_sport_sub_run_t *)func_cb.f_cb;
-    if(tick_check_expire(f_sleep->updata_tick, 200))
+    // if(tick_check_expire(f_sleep->updata_tick, 1000))
+    // {
+
+    // }
+    // f_sleep->updata_tick = tick_get();
+    char txt_buf[50];
+    compo_textbox_t* txt_time       = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME);
+    compo_textbox_t* txt_heart      = compo_getobj_byid(COMPO_ID_NUM_SPORT_HEARTRATE);
+    compo_textbox_t* uint_heart     = compo_getobj_byid(COMPO_ID_UINT_SPORT_HEARTRATE);
+    compo_textbox_t* txt_kcal       = compo_getobj_byid(COMPO_ID_NUM_SPORT_KCAL);
+    compo_textbox_t* txt_step       = compo_getobj_byid(COMPO_ID_NUM_SPORT_STEP);
+    compo_textbox_t* txt_speed      = compo_getobj_byid(COMPO_ID_NUM_SPORT_SPEED);
+    compo_textbox_t* txt_km         = compo_getobj_byid(COMPO_ID_NUM_SPORT_KM);
+    compo_textbox_t* uint_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
+    compo_textbox_t* txt_count      = compo_getobj_byid(COMPO_ID_NUM_SPORT_COUNT);
+    // compo_shape_t * page_point1     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE1);
+    // compo_shape_t * page_point2     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE2);
+    compo_button_t * btn_play       = compo_getobj_byid(COMPO_ID_BTN_SPORT_STOP);
+    compo_button_t * btn_exit       = compo_getobj_byid(COMPO_ID_BTN_SPORT_EXIT);
+    compo_textbox_t* txt_time_right = compo_getobj_byid(COMPO_ID_UINT_SPORT_TIME);
+    compo_textbox_t* txt_stop       = compo_getobj_byid(COMPO_ID_TXT_SPORT_STOP);
+    compo_textbox_t* txt_ble_off    = compo_getobj_byid(COMPO_ID_TXT_BLE_OFF);
+    compo_picturebox_t* pic_heart_lever = compo_getobj_byid(COMPO_ID_PIC_SPORT_HEARTRATE_PERCENTAGE);
+
+
+    ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
+    uteModuleSportGetMoreSportsDatas(data);
+
+    switch (uteModuleSportMoreSportGetStatus())
     {
-        f_sleep->updata_tick = tick_get();
-        char txt_buf[50];
-        compo_textbox_t* txt_time       = compo_getobj_byid(COMPO_ID_NUM_SPORT_TIME);
-        compo_textbox_t* txt_heart      = compo_getobj_byid(COMPO_ID_NUM_SPORT_HEARTRATE);
-        compo_textbox_t* uint_heart     = compo_getobj_byid(COMPO_ID_UINT_SPORT_HEARTRATE);
-        compo_textbox_t* txt_kcal       = compo_getobj_byid(COMPO_ID_NUM_SPORT_KCAL);
-        compo_textbox_t* txt_step       = compo_getobj_byid(COMPO_ID_NUM_SPORT_STEP);
-        compo_textbox_t* txt_km         = compo_getobj_byid(COMPO_ID_NUM_SPORT_KM);
-        compo_textbox_t* uint_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
-        compo_textbox_t* txt_count      = compo_getobj_byid(COMPO_ID_NUM_SPORT_COUNT);
-        // compo_shape_t * page_point1     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE1);
-        // compo_shape_t * page_point2     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE2);
-        compo_button_t * btn_play       = compo_getobj_byid(COMPO_ID_BTN_SPORT_STOP);
-        compo_textbox_t* txt_time_right = compo_getobj_byid(COMPO_ID_UINT_SPORT_TIME);
-        compo_textbox_t* txt_stop       = compo_getobj_byid(COMPO_ID_TXT_SPORT_STOP);
+        case ALL_SPORT_STATUS_CLOSE:
+        case ALL_SPORT_STATUS_PAUSE:
+            f_sleep->sport_run_state = SPORT_RUN_START;
+            break;
 
-        ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
-        uteModuleSportGetMoreSportsDatas(data);
+        case ALL_SPORT_STATUS_OPEN:
+        case ALL_SPORT_STATUS_CONTINUE:
+            f_sleep->sport_run_state = SPORT_RUN_STOP;;
+            break;
+    }
 
-
-        switch (uteModuleSportMoreSportGetStatus())
+    if(uteModuleSportMoreSportIsAppStart())
+    {
+        if(f_sleep->ble_state != ble_is_connect())
         {
-            case ALL_SPORT_STATUS_CLOSE:
-            case ALL_SPORT_STATUS_PAUSE:
-                f_sleep->sport_run_state = SPORT_RUN_START;
-                break;
-
-            case ALL_SPORT_STATUS_OPEN:
-            case ALL_SPORT_STATUS_CONTINUE:
-                f_sleep->sport_run_state = SPORT_RUN_STOP;;
-                break;
-        }
-
-        if(uteModuleSportMoreSportIsAppStart())
-        {
-            if (ble_is_connect())
-            {
-                compo_button_set_visible(btn_play,true);
-            }
-            else
+            f_sleep->ble_state = ble_is_connect();
+            if (!f_sleep->ble_state)
             {
                 compo_button_set_visible(btn_play,false);
-                compo_textbox_set(txt_stop, i18n[STR_CONNECT_BLUETOOTH]);
-            }
-        }
-
-        if(f_sleep->sport_run_state != f_sleep->sport_run_state_updata_flag)
-        {
-            // printf("motor_on\n");
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-            f_sleep->sport_run_state_updata_flag = f_sleep->sport_run_state;
-
-            if(f_sleep->sport_run_state == SPORT_RUN_STOP)
-            {
-                f_sleep->page_old_x = 0;
-                f_sleep->move_offset_x = 0;
-                f_sleep->page_num = PAGE_1;
-            }
-            else if(f_sleep->sport_run_state == SPORT_RUN_START)
-            {
+                compo_button_set_bgimg(btn_exit,UI_BUF_I335001_3_EXERCISE_00_BIN);
+                compo_button_set_pos(btn_exit,-(GUI_SCREEN_CENTER_X),72/2+190);
+                compo_textbox_set_visible(txt_stop,false);
+                compo_textbox_set_visible(txt_ble_off,true);
+                f_sleep->count_time = 5*60;
+                compo_textbox_set_pos(txt_time_right,-GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+30);
                 f_sleep->page_old_x    = GUI_SCREEN_WIDTH;
                 f_sleep->move_offset_x = GUI_SCREEN_WIDTH;
                 f_sleep->page_num = PAGE_2;
+                widget_page_set_client(func_cb.frm_main->page,f_sleep->move_offset_x, 0);
             }
-
-            widget_page_set_client(func_cb.frm_main->page,f_sleep->move_offset_x, 0);
-        }
-
-
-
-        if(txt_time != NULL)
-        {
-            memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
-            compo_textbox_set(txt_time, txt_buf);
-        }
-
-        if(txt_heart != NULL && uint_heart != NULL)
-        {
-            memset(txt_buf, 0, sizeof(txt_buf));
-            snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
-            compo_textbox_set(txt_heart, txt_buf);
-
-            area_t leng_size = widget_text_get_area(txt_heart->txt);
-            compo_textbox_set_pos(uint_heart, 32+16+8+leng_size.wid,136);
-        }
-
-        if(txt_kcal != NULL)
-        {
-            memset(txt_buf, 0, sizeof(txt_buf));
-            snprintf(txt_buf, sizeof(txt_buf), "%d", data->saveData.sportCaloire);
-            compo_textbox_set(txt_kcal, txt_buf);
-        }
-
-        if(txt_step != NULL)
-        {
-            memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
-            compo_textbox_set(txt_step, txt_buf);
-        }
-
-        if(txt_km != NULL)
-        {
-            u8 km_integer = data->saveData.sportDistanceInteger;                 //距离 整数
-            u8 km_decimals = data->saveData.sportDistanceDecimals;               //距离 小数
-            if(uteModuleSystemtimeGetDistanceMiType())//英里
+            else
             {
-                uint16_t distance = km_integer*1000+km_decimals*10;
-                distance = distance*0.6213712;
-                km_integer  = distance/1000;
-                km_decimals = distance%1000/10;
+                sys_cb.cover_index = REMIND_COVER_BLE_OFF;
+                msgbox(i18n[STR_BLE_SUCCESSFUL], NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
+                compo_button_set_visible(btn_play,true);
+                compo_button_set_bgimg(btn_exit,UI_BUF_I335001_3_EXERCISE_6_PAUSE_BUTTON_ICON_PIC72X72_X32_X136_Y190_00_BIN);
+                compo_button_set_pos(btn_exit,-(GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2),72/2+190);
+                compo_textbox_set_visible(txt_stop,true);
+                compo_textbox_set_visible(txt_ble_off,false);
+                compo_textbox_set_pos(txt_time_right, -(GUI_SCREEN_CENTER_X), GUI_SCREEN_CENTER_Y);
             }
-            memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",km_integer,km_decimals);
-            compo_textbox_set(txt_km, txt_buf);
         }
-        if(uint_km != NULL)
+
+        if (!f_sleep->ble_state)
         {
-            compo_textbox_set(uint_km, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
+            if(txt_time_right != NULL)
+            {
+                snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d",f_sleep->count_time/60,f_sleep->count_time%60);
+                compo_textbox_set(txt_time_right, txt_buf);
+            }
+
+            if(f_sleep->count_time == 0)
+            {
+                uteModuleSportStopMoreSports();                             //通知APP退出运动
+                sport_start_flag = false;
+                if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
+                {
+                    task_stack_pop();
+                }
+            }
+            return;
         }
-
-        if(txt_count != NULL)
-        {
-            memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%d",  data->saveData.sportTimes);
-            compo_textbox_set(txt_count, txt_buf);
-        }
-
-        if(txt_time_right != NULL)
-        {
-            snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
-            compo_textbox_set(txt_time_right, txt_buf);
-        }
-
-        // if(page_point1 != NULL)
-        // {
-        //     if(f_sleep->page_num == PAGE_1)
-        //     {
-        //         compo_shape_set_color(page_point1,COLOR_WHITE);
-        //     }
-        //     else
-        //     {
-        //         compo_shape_set_color(page_point1, make_color(0x29,0x29,0x29));
-        //     }
-
-        // }
-
-        // if(page_point2 != NULL)
-        // {
-        //     if(f_sleep->page_num == PAGE_2)
-        //     {
-        //         compo_shape_set_color(page_point2,COLOR_WHITE);
-        //     }
-        //     else
-        //     {
-        //         compo_shape_set_color(page_point2, make_color(0x29,0x29,0x29));
-        //     }
-        // }
-
-        ab_free(data);
     }
+
+    if(f_sleep->sport_run_state != f_sleep->sport_run_state_updata_flag)
+    {
+        // printf("motor_on\n");
+        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        f_sleep->sport_run_state_updata_flag = f_sleep->sport_run_state;
+
+        if(f_sleep->sport_run_state == SPORT_RUN_STOP)
+        {
+            f_sleep->page_old_x = 0;
+            f_sleep->move_offset_x = 0;
+            f_sleep->page_num = PAGE_1;
+        }
+        else if(f_sleep->sport_run_state == SPORT_RUN_START)
+        {
+            f_sleep->page_old_x    = GUI_SCREEN_WIDTH;
+            f_sleep->move_offset_x = GUI_SCREEN_WIDTH;
+            f_sleep->page_num = PAGE_2;
+        }
+
+        widget_page_set_client(func_cb.frm_main->page,f_sleep->move_offset_x, 0);
+    }
+
+    if(pic_heart_lever != NULL)
+    {
+        u8 heart_lever = uteModuleHeartGetHeartValueRange(uteModuleHeartGetHeartValue());
+        if(heart_lever == 0)heart_lever=5;
+        compo_picturebox_set_pos(pic_heart_lever,GUI_SCREEN_CENTER_X+(44*(heart_lever-3)),176+15);
+    }
+
+    if(txt_time != NULL)
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
+        compo_textbox_set(txt_time, txt_buf);
+    }
+
+    if(txt_heart != NULL && uint_heart != NULL)
+    {
+        memset(txt_buf, 0, sizeof(txt_buf));
+        snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
+        compo_textbox_set(txt_heart, txt_buf);
+
+        area_t leng_size = widget_text_get_area(txt_heart->txt);
+        compo_textbox_set_pos(uint_heart, 32+16+8+leng_size.wid,136);
+    }
+
+    if(txt_kcal != NULL)
+    {
+        memset(txt_buf, 0, sizeof(txt_buf));
+        snprintf(txt_buf, sizeof(txt_buf), "%d", data->saveData.sportCaloire);
+        compo_textbox_set(txt_kcal, txt_buf);
+    }
+
+    if(txt_step != NULL)
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d", data->saveData.sportStep);
+        compo_textbox_set(txt_step, txt_buf);
+    }
+
+    if(txt_km != NULL)
+    {
+        u8 km_integer = data->saveData.sportDistanceInteger;                 //距离 整数
+        u8 km_decimals = data->saveData.sportDistanceDecimals;               //距离 小数
+        if(uteModuleSystemtimeGetDistanceMiType())//英里
+        {
+            uint16_t distance = km_integer*1000+km_decimals*10;
+            distance = distance*0.6213712;
+            km_integer  = distance/1000;
+            km_decimals = distance%1000/10;
+        }
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",km_integer,km_decimals);
+        compo_textbox_set(txt_km, txt_buf);
+    }
+    if(uint_km != NULL)
+    {
+        compo_textbox_set(uint_km, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
+    }
+
+    if(txt_count != NULL)
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d",  data->saveData.sportTimes);
+        compo_textbox_set(txt_count, txt_buf);
+    }
+
+    if(txt_time_right != NULL)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
+        compo_textbox_set(txt_time_right, txt_buf);
+    }
+
+    if(txt_speed != NULL)
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", data->saveData.avgTimeMinute,data->saveData.avgTimeSecond,'"');
+        compo_textbox_set(txt_speed, txt_buf);
+    }
+
+    ab_free(data);
+
 }
 static void func_sport_sub_run_init(void)
 {
@@ -2241,6 +2282,9 @@ static void func_sport_sub_run_init(void)
     {
         case MULTIPLE_DATA:
             f_sport_sub_run->page_hei = (544-GUI_SCREEN_HEIGHT+TITLE_BAR_HIGH) ;
+#if UTE_MODULE_SCREENS_SPORT_KM_OFF
+            f_sport_sub_run->page_hei -= 84;
+#endif
             break;
         case MID_DATA:
             f_sport_sub_run->page_hei = (367-GUI_SCREEN_HEIGHT+TITLE_BAR_HIGH) ;
@@ -2251,6 +2295,7 @@ static void func_sport_sub_run_init(void)
     }
     f_sport_sub_run->direction=TOUCH_NULL;
     f_sport_sub_run->sport_run_state = SPORT_RUN_STOP;
+    f_sport_sub_run->ble_state = ble_is_connect();
     f_sport_sub_run->sport_run_state_updata_flag = SPORT_RUN_STOP;
     func_cb.frm_main = func_sport_sub_run_form_create();
 }
@@ -2260,12 +2305,7 @@ static void func_sport_sub_run_exit_data(void)
 
     if(sys_cb.refresh_language_flag == false || sport_start_flag == true)//刷新语言时不清除数据
     {
-        uteModuleHeartStopSingleTesting(TYPE_HEART);
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-        {
-            task_stack_pop();
-        }
     }
 
 }
@@ -2982,10 +3022,6 @@ static void func_sport_sub_run_exit_data(void)
     if(sys_cb.refresh_language_flag == false || sport_start_flag == true)//刷新语言时不清除数据
     {
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-        {
-            task_stack_pop();
-        }
     }
 
 }
@@ -3833,13 +3869,7 @@ static void func_sport_sub_run_exit_data(void)
 
     if(sys_cb.refresh_language_flag == false || sport_start_flag == true)//刷新语言时不清除数据
     {
-        uteModuleHeartStopSingleTesting(TYPE_HEART);
         uteModuleGuiCommonDisplayOffAllowGoBack(true);
-        if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
-        {
-            task_stack_pop();
-        }
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
     }
 
 }
@@ -3986,6 +4016,19 @@ static void func_sport_sub_run_message(size_msg_t msg)
             func_sport_sub_run_click_handler();
             break;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+        case MSG_SYS_1S:
+            if(uteModuleSportMoreSportIsAppStart() && f_sport_sub_run->ble_state==false)
+            {
+                if(f_sport_sub_run->count_time!=0)
+                {
+                    f_sport_sub_run->count_time --;
+                }
+            }
+            break;
+#endif // GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+        case KL_BACK:
+            break;
         case MSG_CTP_SHORT_UP:
         case MSG_CTP_LONG_UP:
         case MSG_CTP_SHORT_DOWN:

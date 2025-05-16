@@ -268,7 +268,7 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
             bool num_part_en = uitool_res->param1 & BIT(2);
             s16 delt_x = num_part_en ? ((uitool_res->param1 >> 8) & 0xffff) : 0;
             s16 delt_y = num_part_en ? ((uitool_res->param1 >> 24) & 0xffff) : 0;
-            u8 cnt = num_part_en ? 5 : 1;
+            u8 cnt = num_part_en ? max_cnt : 1;
             max_cnt = num_part_en ? 1 : max_cnt;
             compo_number_t *num;
             for(u8 i=0; i<cnt; i++)

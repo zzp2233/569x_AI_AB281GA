@@ -295,7 +295,7 @@ static void i2cx_init(void)
     uteModulePlatformOutputGpioSet(IO_PE2,false);
 #endif
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
-    CLKCON1 |= BIT(7);      //x26m_clkdiv8
+    CLKCON1 &= ~BIT(7);      //x26m_clkdiv8
     CLKGAT2 |= BIT(0);      //en iic0 clk
     RSTCON0 |= BIT(3);      //Release IIC0
 
@@ -361,7 +361,7 @@ void i2c_gsensor_init(void)
     uteModulePlatformOutputGpioSet(IO_PF2,false);
 #endif
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
-    CLKCON1 |= BIT(7);      //x26m_clkdiv8
+    CLKCON1  &= ~BIT(7);      //rc2m
     CLKGAT2 |= BIT(0);      //en iic0 clk
     RSTCON0 |= BIT(3);      //Release IIC0
 

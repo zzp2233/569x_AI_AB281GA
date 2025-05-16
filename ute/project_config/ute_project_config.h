@@ -19,7 +19,8 @@
 #define PROJECT_AB281E_SUPPORT       0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
 #define PROJECT_AB281DA_SUPPORT      0/*! 共鑫W17Y,在AB281D基础上更改蓝牙名, TFT 240x284 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
 #define PROJECT_AB281F_SUPPORT       0 /*! 同乐达T70 TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
-#define PROJECT_AB281EA_SUPPORT      0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
+#define PROJECT_AB281EA_SUPPORT      1 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
+#define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -43,6 +44,8 @@
 #include"ute_project_config_ab281f.h"
 #elif PROJECT_AB281EA_SUPPORT
 #include"ute_project_config_ab281ea.h"
+#elif PROJECT_AB281G_SUPPORT
+#include"ute_project_config_ab281g.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
@@ -1245,6 +1248,15 @@
 #define UTE_DRV_HEART_VCXX_NIGHT_OPTIMIZE_SLEEP_SUPPORT 0
 #endif
 
+#define SENSOR_HR_NULL                           0
+#define SENSOR_HR_EN                             0x200
+#define SENSOR_HR_TYHX_HRS3300                   (SENSOR_HR_EN | 0x0)                       //天易合芯HRS3300心率血压传感器
+#define SENSOR_HR_TYHX_HX3605                    (SENSOR_HR_EN | 0x1)                       //天易合芯HX3605心率血氧传感器
+#define SENSOR_HR_VC30FX                         (SENSOR_HR_EN | 0x2)
+#define SENSOR_HR_VCLC09A                        (SENSOR_HR_EN | 0x4)
+
+/*! 心率漏光测试默认阈值,wang.luo 2025-05-15 */
+#ifndef DRV_HEART_VCXX_LIGHT_I_MIN_VALUE
 #if (UTE_DRV_HR_SENSOR_SELECT == SENSOR_HR_VCLC09A)
 #define DRV_HEART_VCXX_LIGHT_I_MIN_VALUE 85 //100 单颗灯时电流只需要大于85
 #define DRV_HEART_VCXX_LIGHT_I_MAX_VALUE 120
@@ -1258,11 +1270,12 @@
 #define DRV_HEART_VCXX_PS_MIN_VALUE 210
 #define DRV_HEART_VCXX_BIO_PASS_VALUE 60
 #endif
+#endif
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #ifndef UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT
-#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7
-#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY, FUNC_HEARTRATE, FUNC_SLEEP, FUNC_BLOOD_OXYGEN, FUNC_BT, FUNC_COMPO_SELECT}
+#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 2
+#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY}
 #endif
 
 /*! 表盘左侧界面,wang.luo 2025-04-07 */

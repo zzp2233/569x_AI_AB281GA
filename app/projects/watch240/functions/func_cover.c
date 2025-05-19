@@ -38,6 +38,7 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
     [REMIND_COVER_LOW_BATTERY]      = {NULL, STR_NULL, 0, 0, 0},        //自定义
     [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
     [REMIND_COVER_BLE_OFF]          = {UI_BUF_I335001_UPGRADE_UPDATE_SUCCESSED_ICON_SUCCEEDED_92X92_X74_Y65_BIN,     STR_BLE_SUCCESSFUL, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
+
 };
 
 ///消息弹窗界面（简略）

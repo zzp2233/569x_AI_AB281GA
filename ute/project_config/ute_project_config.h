@@ -21,9 +21,9 @@
 #define PROJECT_AB281F_SUPPORT       0 /*! 同乐达T70 TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
 #define PROJECT_AB281EA_SUPPORT      0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
-#define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
+#define PROJECT_AB281H_SUPPORT       1 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
 #define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
-#define PROJECT_AB281J_SUPPORT       1 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G22Z项目 */
+#define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G22Z项目 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"

@@ -65,9 +65,9 @@ const uint32_t countdown_pic [3]=
 #define PIC_BG_MAX_SIZE   144
 #define PIC_BG_MIN_SIZE   80
 
-#define BREATHE_DAST      6  // 次数快
+#define BREATHE_DAST      8  // 次数快
 #define BREATHE_DURING    7  // 次数中
-#define BREATHE_SLOW      8  // 次数慢
+#define BREATHE_SLOW      6  // 次数慢
 
 //创建呼吸训练运行窗体
 compo_form_t *func_breathe_run_form_create(void)
@@ -167,7 +167,6 @@ static void func_breathe_run_disp_handle(void)
                     f_breathe_run->animation_state = PIC_MIN_STATE;
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                     compo_textbox_set(txt_state,i18n[STR_BREATHE_EXHALE]);
-                    f_breathe_run->count_finish++;
                 }
             }
             else if(f_breathe_run->animation_state == PIC_MIN_STATE)
@@ -177,6 +176,7 @@ static void func_breathe_run_disp_handle(void)
                     f_breathe_run->animation_state = PIC_MAX_STATE;
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                     compo_textbox_set(txt_state,i18n[STR_BREATHE_INHALE]);
+                    f_breathe_run->count_finish++;
                 }
             }
 
@@ -190,7 +190,7 @@ static void func_breathe_run_disp_handle(void)
             compo_picturebox_set_size(picbox,f_breathe_run->pic_size,f_breathe_run->pic_size);
             compo_picturebox_set_rotation(picbox,f_breathe_run->rotate_data);
 
-            if(f_breathe_run->count_finish == f_breathe_run->mode)
+            if(f_breathe_run->count_finish == f_breathe_run->mode*(sys_cb.breathe_duration/60000))
             {
                 f_breathe_run->run_state = BREATHE_FINISH;
             }

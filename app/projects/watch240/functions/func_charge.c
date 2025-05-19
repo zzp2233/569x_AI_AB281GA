@@ -602,223 +602,56 @@ enum
 
 typedef struct charge_ui_handle_t_
 {
-    struct ui_time_hour
+    struct ui_time_pic
     {
-        u16 id_hour;
-        s16 x_hour, y_hour;
-        u16 w_hour, h_hour;
-        u8 hour;
-        u32 res;        //res不为0使用图库，为0使用字库
-        u8 num_layout;  //横向，竖向排列
-        u8 num_align;   //对其方式
-        bool flag_zfill;
-        int  margin;
-        u8 rev;
-    } time_hour;
+        u16 id_hour_s;
+        u16 id_hour_g;
+        u16 id_min_s;
+        u16 id_min_g;
+        u16 id_week_s;
+        u16 id_week_g;
+        u16 id_week_zh;
+        u16 id_week_bat_pic;
+    } time_pic;
 
-    struct ui_time_min
+    struct ui_pic_axis
     {
-        u16 id_min;
-        s16 x_min, y_min;
-        u16 w_min, h_min;
-        u8 min;
-        u32 res;        //res不为0使用图库，为0使用字库
-        u8 num_layout;  //横向，竖向排列
-        u8 num_align;   //对其方式
-        bool flag_zfill;
-        int  margin;
-        u8 rev;
-    } time_min;
-
-    // struct ui_time_colon
-    // {
-    //     u16 id;
-    //     s16 x, y;
-    //     u16 w, h;
-    //     u32 bright_res;
-    //     u32 destroy_res;
-    //     u8 rev;
-    // } time_colon;
-
-    struct ui_bat_value
-    {
-        u16 id;
-        s16 x, y;
-        u16 w, h;
-        u32 res;
-        u8 val;   //res不为0使用图库，为0使用字库
-        u8 num_layout;  //横向，竖向排列
-        u8 num_align;   //对其方式
-        bool flag_zfill;
-        int  margin;
-        u8 rev;
-    } bat_value;
-
-
-    struct ui_bat_date
-    {
-        u16 id;
-        s16 x, y;
-        u16 w, h;
-        u32 res;
-        u8 val;   //res不为0使用图库，为0使用字库
-        u8 num_layout;  //横向，竖向排列
-        u8 num_align;   //对其方式
-        bool flag_zfill;
-        int  margin;
-        u8 rev;
-    } bat_date;
-    struct ui_bat_percent
-    {
-        u16 id;
-        s16 x, y;
-        u16 w, h;
-        u32 res;
-        u8 rev;
-    } bat_percent;
-
-    struct ui_bat_rect
-    {
-        u16 id;
-        s16 x, y;
-        u16 w, h;
-        u32 bright_res;       //res不为0使用图库，为0使用组件实现
-        u32 destroy_res;
-        color_t bright_color;
-        color_t destroy_color;
-        u16 rev;              //矩形圆角
-    } bat_rect[5];
-
+        s16 hour_s_x;
+        s16 hour_s_y;
+        s16 min_s_x;
+        s16 min_s_y;
+        s16 hour_m_x;
+        s16 hour_m_y;
+        s16 min_m_x;
+        s16 min_m_y;
+        s16 colon_x;
+        s16 colon_y;
+        u16 id_week_zh_x;
+        u16 id_week_zh_y;
+        u16 id_week_s_x;
+        u16 id_week_s_y;
+        u16 id_week_g_x;
+        u16 id_week_g_y;
+        u16 id_week_bat_pic_x;
+        u16 id_week_bat_pic_y;
+    } pic_axis;
 } charge_ui_handle_t;
 
 static const charge_ui_handle_t ui_handle =
 {
-
-    .time_hour = {
-        .id_hour = COMPO_ID_NUM_TIME_HOUR,
-        .x_hour = 65+88/2,
-        .y_hour = 43+49/2,
-        .w_hour = 0,
-        .h_hour = 0,
-        .hour   = 0,
-        .res    = UI_BUF_I269032_CHARGE_NUM_HOUR_MIN_88X49_X65_Y43_X65_Y175_BIN,          //res不为0使用图库，为0使用字库
-        .num_layout = 1,
-        .num_align  = 0,
-        .flag_zfill = true,
-        .margin     = -5,
-        .rev    = 2,
-    },
-
-    .time_min = {
-        .id_min = COMPO_ID_NUM_TIME_MIN,
-        .x_min  = 65+88/2,
-        .y_min  = 179+49/2,
-        .w_min  = 0,
-        .h_min  = 0,
-        .min    = 0,
-        .res    = UI_BUF_I269032_CHARGE_NUM_HOUR_MIN_88X49_X65_Y43_X65_Y175_BIN,          //res不为0使用图库，为0使用字库
-        .num_layout = 1,
-        .num_align  = 0,
-        .flag_zfill = true,
-        .margin     = -5,
-        .rev    = 2,
-    },
-
-    // .time_colon = {
-    //     .id     = COMPO_ID_PIC_TIME_COLON,
-    //     .x      = 65+88/2,
-    //     .y      = 43+49/2,
-    //     .w      = 0,
-    //     .h      = 0,
-    //     .bright_res     = UI_BUF_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN,
-    //     .destroy_res    = UI_BUF_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN,
-    //     .rev    = 0,
-    // },
-
-    .bat_value= {
-        .id     = COMPO_ID_NUM_BAT_VALUE,
-        .x      = 31+21/2,
-        .y      = 150+14/2,
-        .w      = 0,
-        .h      = 0,
-        .val    =0,
-        .res    = UI_BUF_I269032_CHARGE_NUM_DATE_21X14_X31_Y245_BIN,         //res不为0使用图库，为0使用字库
-        .num_layout = 1,  //横向，竖向排列
-        .num_align  = 0,   //对其方式
-        .flag_zfill = true,
-        .margin     = 0,
-        .rev    = 2,
-    },
-    .bat_date = {
-        .id     = COMPO_ID_NUM_BAT_VALUE,
-        .x      = 31+21/2,
-        .y      = 190+14/2,
-        .w      = 0,
-        .h      = 0,
-        .val    =0,
-        .res    = UI_BUF_I269032_CHARGE_NUM_DATE_21X14_X31_Y245_BIN,         //res不为0使用图库，为0使用字库
-        .num_layout = 1,  //横向，竖向排列
-        .num_align  = 0,   //对其方式
-        .flag_zfill = true,
-        .margin     = 0,
-        .rev    = 2,
-    },
-
-    // .bat_percent = {
-    //     .id     = COMPO_ID_PIC_BAT_PERCENT,
-    //     .x      = 37+60/2,
-    //     .y      = 30+87+48/2,
-    //     .w      = 0,
-    //     .h      = 0,
-    //     .res    = UI_BUF_I330001_CHARGE_PERCENT_BIN,
-    //     .rev    = 0,
-    // },
-
-    // .bat_rect = {
-    //     [0]     = {COMPO_ID_RECT_BAT_1,     37+60/2,    241+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-    //     [1]     = {COMPO_ID_RECT_BAT_2,     37+60/2,    223+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-    //     [2]     = {COMPO_ID_RECT_BAT_3,     37+60/2,    205+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-    //     [3]     = {COMPO_ID_RECT_BAT_4,     37+60/2,    187+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-    //     [4]     = {COMPO_ID_RECT_BAT_5,     37+60/2,    169+14/2,   60,     14,     0,  0,  {0,255,225}, {0,76,68}, 14/2},
-    // },
-
 
 };
 
 //电量更新
 void func_charge_update(void)
 {
+    // compo_picturebox_t *pic    = compo_getobj_byid(COMPO_ID_NUM_BAT_VALUE);
+    // compo_picturebox_t *week    = compo_getobj_byid(COMPO_ID_NUM_TIME_WEEK);
+    // ute_module_systemtime_time_t time;
+    // uteModuleSystemtimeGetTime(&time);
+    // compo_picturebox_cut(week,time.week, 7);
 
-    // //更新bat Value
-    //compo_number_t* bat_value = compo_getobj_byid(ui_handle.bat_value.id);
-    //  compo_number_set(bat_value, BAT_PERCENT_VALUE);
-    compo_picturebox_t *pic    = compo_getobj_byid(COMPO_ID_NUM_BAT_VALUE);
-    compo_picturebox_t *week    = compo_getobj_byid(COMPO_ID_NUM_TIME_WEEK);
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-    compo_picturebox_cut(week,time.week, 7);
-
-    compo_picturebox_cut(pic, uteDrvBatteryCommonGetBatteryIndex(4), 4);
-
-
-    //更新 :
-    // static u32 tick = 0;
-    // static bool bright_sta = 0;
-    // compo_picturebox_t* colon = compo_getobj_byid(ui_handle.time_colon.id);
-    // if (tick_check_expire(tick, 1000))
-    // {
-    //     tick = tick_get();
-    //     if (bright_sta)
-    //     {
-    //         compo_picturebox_set(colon, ui_handle.time_colon.bright_res);
-    //     }
-    //     else
-    //     {
-    //         compo_picturebox_set(colon, ui_handle.time_colon.destroy_res);
-    //     }
-    //     bright_sta = !bright_sta;
-    // }
-
+    // compo_picturebox_cut(pic, uteDrvBatteryCommonGetBatteryIndex(4), 4);
 }
 
 //创建充电窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -845,8 +678,6 @@ compo_form_t *func_charge_form_create(void)
     compo_picturebox_set_pos(pic, 42, 100);
     compo_setid(pic, COMPO_ID_NUM_TIME_WEEK);
     compo_picturebox_cut(pic,time.week, 7);
-
-
 
 //     //创建time hour
     compo_number_t* hour = compo_number_create(frm, ui_handle.time_hour.res, ui_handle.time_hour.rev);
@@ -957,15 +788,6 @@ compo_form_t *func_charge_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_NULL]);
 
-    // compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_1_LOW_BATTERY_ICON_PIC168X227_X36_Y53_BIN);
-    // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
-
-    // ///设置动图
-    // // picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_CURRENT_PROCESS_90X90_X74_Y192_00_BIN);
-    // // compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 240);
-    // // compo_picturebox_cut(picbox, 10, 11);
-    // // compo_setid(picbox,COMPO_ID_GIF_PIC);
-
     compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I335001_CHARGE_ICON_GIF_168X231_X36_Y53_00_BIN);
     compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
     compo_animation_set_radix(animation, 16);
@@ -1007,7 +829,6 @@ enum
 //电量更新
 void func_charge_update(void)
 {
-    printf("%s,batt:%d,batt_flag:%d",__func__,BAT_PERCENT_VALUE,BAT_PERCENT_FLAG);
     compo_textbox_t *txt_val   = compo_getobj_byid(COMPO_ID_NUM_BAT_VALUE);
     compo_textbox_t *txt_title = compo_getobj_byid(COMPO_ID_TTXT);
     compo_picturebox_t *pic    = compo_getobj_byid(COMPO_ID_BAT_PIC);

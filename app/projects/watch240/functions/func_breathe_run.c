@@ -314,7 +314,6 @@ static void func_breathe_run_disp_handle(void)
                     f_breathe_run->animation_state = PIC_MIN_STATE;
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                     compo_textbox_set(txt_state,i18n[STR_BREATHE_EXHALE]);
-                    f_breathe_run->count_finish++;
                 }
             }
             else if(f_breathe_run->animation_state == PIC_MIN_STATE)
@@ -324,6 +323,7 @@ static void func_breathe_run_disp_handle(void)
                     f_breathe_run->animation_state = PIC_MAX_STATE;
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                     compo_textbox_set(txt_state,i18n[STR_BREATHE_INHALE]);
+                    f_breathe_run->count_finish++;
                 }
             }
 
@@ -337,7 +337,7 @@ static void func_breathe_run_disp_handle(void)
             compo_picturebox_set_size(picbox,f_breathe_run->pic_size,f_breathe_run->pic_size);
             compo_picturebox_set_rotation(picbox,f_breathe_run->rotate_data);
 
-            if(f_breathe_run->count_finish == f_breathe_run->mode)
+            if(f_breathe_run->count_finish == f_breathe_run->mode*(sys_cb.breathe_duration/60000))
             {
                 f_breathe_run->run_state = BREATHE_FINISH;
             }

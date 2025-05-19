@@ -659,94 +659,94 @@ compo_form_t *func_charge_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
+    /*
+        //创建 :
+        compo_picturebox_t*  pic =  compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_XIE_21X14_X31_Y245_BIN);
 
-    //创建 :
-    compo_picturebox_t*  pic =  compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_XIE_21X14_X31_Y245_BIN);
+        compo_picturebox_set_pos(pic, 42, 178);
+        //compo_picturebox_cut(pic, 2, 7);
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+        if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+        {
+            pic =  compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_CHAR_WEEK_ZH_30X50_X27_Y195_BIN);
+        }
+        else
+        {
+            pic = compo_picturebox_create(frm,UI_BUF_I269032_CHARGE_CHAR_WEEK_EN_30X50_X27_Y195_BIN);
+        }
+        compo_picturebox_set_pos(pic, 42, 100);
+        compo_setid(pic, COMPO_ID_NUM_TIME_WEEK);
+        compo_picturebox_cut(pic,time.week, 7);
 
-    compo_picturebox_set_pos(pic, 42, 178);
-    //compo_picturebox_cut(pic, 2, 7);
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-    if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
-    {
-        pic =  compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_CHAR_WEEK_ZH_30X50_X27_Y195_BIN);
-    }
-    else
-    {
-        pic = compo_picturebox_create(frm,UI_BUF_I269032_CHARGE_CHAR_WEEK_EN_30X50_X27_Y195_BIN);
-    }
-    compo_picturebox_set_pos(pic, 42, 100);
-    compo_setid(pic, COMPO_ID_NUM_TIME_WEEK);
-    compo_picturebox_cut(pic,time.week, 7);
+    //     //创建time hour
+        compo_number_t* hour = compo_number_create(frm, ui_handle.time_hour.res, ui_handle.time_hour.rev);
+        compo_number_set_align(hour, ui_handle.time_hour.num_align);
+        compo_number_set_layout(hour, ui_handle.time_hour.num_layout);
+        compo_number_set_zfill(hour, ui_handle.time_hour.flag_zfill);
+        compo_number_set_margin(hour, ui_handle.time_hour.margin);
+        compo_number_set_pos(hour, ui_handle.time_hour.x_hour, ui_handle.time_hour.y_hour);
+        compo_number_set(hour, ui_handle.time_hour.hour);
+        compo_setid(hour, ui_handle.time_hour.id_hour);
+        compo_bonddata(hour, COMPO_BOND_HOUR);
 
-//     //创建time hour
-    compo_number_t* hour = compo_number_create(frm, ui_handle.time_hour.res, ui_handle.time_hour.rev);
-    compo_number_set_align(hour, ui_handle.time_hour.num_align);
-    compo_number_set_layout(hour, ui_handle.time_hour.num_layout);
-    compo_number_set_zfill(hour, ui_handle.time_hour.flag_zfill);
-    compo_number_set_margin(hour, ui_handle.time_hour.margin);
-    compo_number_set_pos(hour, ui_handle.time_hour.x_hour, ui_handle.time_hour.y_hour);
-    compo_number_set(hour, ui_handle.time_hour.hour);
-    compo_setid(hour, ui_handle.time_hour.id_hour);
-    compo_bonddata(hour, COMPO_BOND_HOUR);
+        //创建timer min
+        compo_number_t* min = compo_number_create(frm, ui_handle.time_min.res, ui_handle.time_min.rev);
+        compo_number_set_align(min, ui_handle.time_min.num_align);
+        compo_number_set_layout(min, ui_handle.time_min.num_layout);
+        compo_number_set_zfill(min, ui_handle.time_min.flag_zfill);
+        compo_number_set_margin(min, ui_handle.time_min.margin);
+        compo_number_set_pos(min, ui_handle.time_min.x_min, ui_handle.time_min.y_min);
+        compo_number_set(min, ui_handle.time_min.min);
+        compo_setid(min, ui_handle.time_min.id_min);
+        compo_bonddata(min, COMPO_BOND_MINUTE);
 
-    //创建timer min
-    compo_number_t* min = compo_number_create(frm, ui_handle.time_min.res, ui_handle.time_min.rev);
-    compo_number_set_align(min, ui_handle.time_min.num_align);
-    compo_number_set_layout(min, ui_handle.time_min.num_layout);
-    compo_number_set_zfill(min, ui_handle.time_min.flag_zfill);
-    compo_number_set_margin(min, ui_handle.time_min.margin);
-    compo_number_set_pos(min, ui_handle.time_min.x_min, ui_handle.time_min.y_min);
-    compo_number_set(min, ui_handle.time_min.min);
-    compo_setid(min, ui_handle.time_min.id_min);
-    compo_bonddata(min, COMPO_BOND_MINUTE);
-
-    pic = compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN);
-    compo_picturebox_set_pos(pic, 109, 135);
-    compo_setid(pic, COMPO_ID_PIC_TIME_COLON);
+        pic = compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN);
+        compo_picturebox_set_pos(pic, 109, 135);
+        compo_setid(pic, COMPO_ID_PIC_TIME_COLON);
 
 
-    pic =  compo_picturebox_create(frm,UI_BUF_I269032_CHARGE_ICON_54X54_X161_Y219_BIN);
-    compo_picturebox_set_pos(pic, 178,246);
-    compo_setid(pic, COMPO_ID_NUM_BAT_VALUE);
-    compo_picturebox_cut(pic, uteDrvBatteryCommonGetBatteryIndex(4), 4);
+        pic =  compo_picturebox_create(frm,UI_BUF_I269032_CHARGE_ICON_54X54_X161_Y219_BIN);
+        compo_picturebox_set_pos(pic, 178,246);
+        compo_setid(pic, COMPO_ID_NUM_BAT_VALUE);
+        compo_picturebox_cut(pic, uteDrvBatteryCommonGetBatteryIndex(4), 4);
 
-    //创建 Vaule
-    compo_number_t* bat_value = compo_number_create(frm, ui_handle.bat_value.res, ui_handle.bat_value.rev);
-    compo_number_set_align(bat_value, ui_handle.bat_value.num_align);
-    compo_number_set_layout(bat_value, ui_handle.bat_value.num_layout);
-    compo_number_set_zfill(bat_value, ui_handle.bat_value.flag_zfill);
-    compo_number_set_margin(bat_value, ui_handle.bat_value.margin);
-    compo_number_set_pos(bat_value, ui_handle.bat_value.x, ui_handle.bat_value.y);
-    compo_number_set(bat_value,ui_handle.bat_value.val);
-    compo_setid(bat_value, ui_handle.bat_value.id);
-    compo_bonddata(bat_value,COMPO_BOND_MONTH);
+        //创建 Vaule
+        compo_number_t* bat_value = compo_number_create(frm, ui_handle.bat_value.res, ui_handle.bat_value.rev);
+        compo_number_set_align(bat_value, ui_handle.bat_value.num_align);
+        compo_number_set_layout(bat_value, ui_handle.bat_value.num_layout);
+        compo_number_set_zfill(bat_value, ui_handle.bat_value.flag_zfill);
+        compo_number_set_margin(bat_value, ui_handle.bat_value.margin);
+        compo_number_set_pos(bat_value, ui_handle.bat_value.x, ui_handle.bat_value.y);
+        compo_number_set(bat_value,ui_handle.bat_value.val);
+        compo_setid(bat_value, ui_handle.bat_value.id);
+        compo_bonddata(bat_value,COMPO_BOND_MONTH);
 
-    compo_number_t* bat_date = compo_number_create(frm, ui_handle.bat_date.res, ui_handle.bat_date.rev);
-    compo_number_set_align(bat_date, ui_handle.bat_date.num_align);
-    compo_number_set_layout(bat_date, ui_handle.bat_date.num_layout);
-    compo_number_set_zfill(bat_date, ui_handle.bat_date.flag_zfill);
-    compo_number_set_margin(bat_date, ui_handle.bat_date.margin);
-    compo_number_set_pos(bat_date, ui_handle.bat_date.x, ui_handle.bat_date.y);
-    compo_number_set(bat_date,ui_handle.bat_date.val);
-    compo_setid(bat_date, ui_handle.bat_date.id);
-    compo_bonddata(bat_date,COMPO_BOND_DAY);
+        compo_number_t* bat_date = compo_number_create(frm, ui_handle.bat_date.res, ui_handle.bat_date.rev);
+        compo_number_set_align(bat_date, ui_handle.bat_date.num_align);
+        compo_number_set_layout(bat_date, ui_handle.bat_date.num_layout);
+        compo_number_set_zfill(bat_date, ui_handle.bat_date.flag_zfill);
+        compo_number_set_margin(bat_date, ui_handle.bat_date.margin);
+        compo_number_set_pos(bat_date, ui_handle.bat_date.x, ui_handle.bat_date.y);
+        compo_number_set(bat_date,ui_handle.bat_date.val);
+        compo_setid(bat_date, ui_handle.bat_date.id);
+        compo_bonddata(bat_date,COMPO_BOND_DAY);
 
-    // //创建 %
-    // compo_picturebox_t* bat_percent = compo_picturebox_create(frm, ui_handle.bat_percent.res);
-    // compo_picturebox_set_pos(bat_percent, ui_handle.bat_percent.x, ui_handle.bat_percent.y);
-    // compo_setid(bat_percent, ui_handle.bat_percent.id);
+        // //创建 %
+        // compo_picturebox_t* bat_percent = compo_picturebox_create(frm, ui_handle.bat_percent.res);
+        // compo_picturebox_set_pos(bat_percent, ui_handle.bat_percent.x, ui_handle.bat_percent.y);
+        // compo_setid(bat_percent, ui_handle.bat_percent.id);
 
-    //创建rect
-    // for (int i=0; i<sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0]); i++)
-    // {
-    //     compo_shape_t* bat_rect = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    //     compo_shape_set_color(bat_rect, make_color(ui_handle.bat_rect[i].bright_color.r, ui_handle.bat_rect[i].bright_color.g, ui_handle.bat_rect[i].bright_color.b));
-    //     compo_shape_set_location(bat_rect, ui_handle.bat_rect[i].x, ui_handle.bat_rect[i].y, ui_handle.bat_rect[i].w, ui_handle.bat_rect[i].h);
-    //     compo_shape_set_radius(bat_rect, ui_handle.bat_rect[i].rev);
-    //     compo_setid(bat_rect, ui_handle.bat_rect[i].id);
-    // }
-
+        //创建rect
+        // for (int i=0; i<sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0]); i++)
+        // {
+        //     compo_shape_t* bat_rect = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+        //     compo_shape_set_color(bat_rect, make_color(ui_handle.bat_rect[i].bright_color.r, ui_handle.bat_rect[i].bright_color.g, ui_handle.bat_rect[i].bright_color.b));
+        //     compo_shape_set_location(bat_rect, ui_handle.bat_rect[i].x, ui_handle.bat_rect[i].y, ui_handle.bat_rect[i].w, ui_handle.bat_rect[i].h);
+        //     compo_shape_set_radius(bat_rect, ui_handle.bat_rect[i].rev);
+        //     compo_setid(bat_rect, ui_handle.bat_rect[i].id);
+        // }
+    */
     return frm;
 }
 

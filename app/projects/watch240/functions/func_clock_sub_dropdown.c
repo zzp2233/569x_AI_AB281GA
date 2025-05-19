@@ -2858,6 +2858,14 @@ static void func_clock_sub_dropdown_click_handler(void)
 }
 
 #else
+typedef struct dropdown_disp_btn_item_t_
+{
+    u32 res_addr;
+    u16 btn_id;
+    s16 x;
+    s16 y;
+    u8 sel_idx;
+} dropdown_disp_btn_item_t;
 static void func_clock_sub_dropdown_form_create(void)
 {
 }

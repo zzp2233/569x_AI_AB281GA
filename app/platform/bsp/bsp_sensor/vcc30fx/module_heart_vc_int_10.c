@@ -13,6 +13,7 @@
 #include "include.h"
 #include "ute_module_message.h"
 #include "ute_module_factorytest.h"
+#include "ute_drv_gsensor_common.h"
 
 #if (SENSOR_HR_SEL == SENSOR_HR_VCLC09A)
 
@@ -33,7 +34,7 @@
 #define VCLC09_READ_ADDR_UPDATE(ADDR)   ((ADDR) << 1 | 1)
 #define VCLC09_READ_ADDR(ADDR)          ((ADDR) << 1 | 1) << 8 | ((ADDR) << 1)
 
-#define GsensorEn 0
+#define GsensorEn 1
 
 const unsigned char arry10[] = {0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12};
 const unsigned char arry20[] = {0, 2, 3, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28};
@@ -97,8 +98,9 @@ void vclc09_pwr_en(void)        //PF5
     }
 
     bsp_i2c_init();
+#if GsensorEn
     uteModuleSprotAlgoTimerStop();
-
+#endif
     bsp_sensor_hr_interrupt_flag_set(false);
     vclc09_pwr_sta = true;
 }
@@ -212,6 +214,30 @@ void vcHr11_process(sport_mode_type vcSportMode)
                 /* Gsensor精度要求 */
                 /* ReadGsensorFIFO(+-4G11bit or +-8G12bit 256/g) */
 
+                static int16_t xx[UTE_DRV_GSENSOR_AXIS_DATA_MAX], yy[UTE_DRV_GSENSOR_AXIS_DATA_MAX], zz[UTE_DRV_GSENSOR_AXIS_DATA_MAX];
+                memset(xx, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
+                memset(yy, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
+                memset(zz, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
+
+                ute_drv_gsensor_common_axis_data_t *data = NULL;
+                uteDrvGsensorCommonReadFifo(&data);
+                GsensorLength = data->frameCnt;
+
+                ute_drv_gsensor_common_axis_bit_change_t axisBitChange;
+                axisBitChange.inputXaxis = &data->accXaxis[0];
+                axisBitChange.inputYaxis = &data->accYaxis[0];
+                axisBitChange.inputZaxis = &data->accZaxis[0];
+                axisBitChange.outputXaxis = &xx[0];
+                axisBitChange.outputYaxis = &yy[0];
+                axisBitChange.outputZaxis = &zz[0];
+                for (uint8_t i = data->frameCnt; i < UTE_DRV_GSENSOR_AXIS_DATA_MAX; i++)
+                {
+                    data->accXaxis[i] = data->accXaxis[data->frameCnt - 1];
+                    data->accYaxis[i] = data->accYaxis[data->frameCnt - 1];
+                    data->accZaxis[i] = data->accZaxis[data->frameCnt - 1];
+                }
+                // change g-sensor bit
+                uteDrvGsensorCommonXYZaxisDataBitChange(&axisBitChange, 50, GSENSOR_DATA_BIT_VCXX);
 
                 //========================================
                 //       GsensorEn里的内容均为示例
@@ -237,9 +263,9 @@ void vcHr11_process(sport_mode_type vcSportMode)
                 {
 
                     //cash_num[20]数组为抽样数组，抽样数组由我们提供此处将29个数据抽成20个，匹配800mS中断的20个PPG
-                    xData[i]=yData[cash_num[i]]>>5;
-                    yData[i]=xData[cash_num[i]]>>5;
-                    zData[i]=zData[cash_num[i]]>>5;
+                    xData[i]=yData[arry20[i]]>>5;
+                    yData[i]=xData[arry20[i]]>>5;
+                    zData[i]=zData[arry20[i]]>>5;
                 }
 #endif
                 if(vcHr11.vcFifoReadFlag)
@@ -293,8 +319,9 @@ void vcHr11_process(sport_mode_type vcSportMode)
                             }
 #endif
                         }
-
+#if GsensorEn
                         uteModuleSportInputDataBeforeAlgo();
+#endif
                     }
                 }
                 else
@@ -347,9 +374,9 @@ void vcHr11_process(sport_mode_type vcSportMode)
 
                 for(uint8_t i=0; i<20; i++)
                 {
-                    xData[i]=yData[cash_num[i]]>>5;
-                    yData[i]=xData[cash_num[i]]>>5;
-                    zData[i]=zData[cash_num[i]]>>5;
+                    xData[i]=yData[arry20[i]]>>5;
+                    yData[i]=xData[arry20[i]]>>5;
+                    zData[i]=zData[arry20[i]]>>5;
                 }
 #endif
                 if(vcHr11.vcFifoReadFlag)
@@ -374,7 +401,9 @@ void vcHr11_process(sport_mode_type vcSportMode)
                             }
                         }
                     }
+#if GsensorEn
                     uteModuleSportInputDataBeforeAlgo();
+#endif
                 }
                 else
                 {

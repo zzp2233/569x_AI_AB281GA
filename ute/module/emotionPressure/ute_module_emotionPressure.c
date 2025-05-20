@@ -297,7 +297,7 @@ void uteModuleEmotionPressureEverySecond(void)
     /*! 自动测试逻辑 xjc, 2022-02-15  */
     if (uteModuleEmotionPressureData.isAutoTesting)
     {
-        bool isNeedAutoTest = false;
+        static bool isNeedAutoTest = false;
         ute_module_systemtime_time_t time;
         uteModuleSystemtimeGetTime(&time);
         uint32_t oneDaySec = time.hour * 3600 + time.min * 60 + time.sec;
@@ -318,7 +318,7 @@ void uteModuleEmotionPressureEverySecond(void)
                     isNeedAutoTest = true;
                 }
             }
-            if (((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 0) && isNeedAutoTest  && (time.sec == 0)) // 加一分钟再测试，防止与其他需要心率Sensor的定时测试冲突
+            if (((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 0) && isNeedAutoTest) // 加一分钟再测试，防止与其他需要心率Sensor的定时测试冲突
             {
                 isNeedAutoTest = true;
             }
@@ -329,7 +329,7 @@ void uteModuleEmotionPressureEverySecond(void)
         }
         else
         {
-            if ((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 0 && (time.sec == 0)) // 过1分钟再测量，防止与血氧自动测试冲突
+            if ((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 0) // 过1分钟再测量，防止与血氧自动测试冲突
             {
                 isNeedAutoTest = true;
             }
@@ -353,6 +353,7 @@ void uteModuleEmotionPressureEverySecond(void)
             {
                 uteModuleEmotionPressureData.isEmotionPressureAutoTestFlag = true;
                 uteModuleEmotionPressureStartSingleTesting(false);
+                isNeedAutoTest = false;
             }
             else
             {

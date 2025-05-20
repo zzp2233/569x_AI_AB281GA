@@ -958,7 +958,7 @@ static u8 touch_state=false;
 static s32 old_dx = 0;
 static s16 touch_last_dx = 0;
 uint32_t tick = 0;
-#define MOVE_DISP_PIXEL   GUI_SCREEN_WIDTH/22
+#define MOVE_DISP_PIXEL   10
 //下滑菜单左右滑动处理
 static void func_clock_sub_dropdown_slide_handle(void)
 {
@@ -994,7 +994,7 @@ static void func_clock_sub_dropdown_slide_handle(void)
         {
             if(disp_flag == false)
             {
-                if(old_dx < -GUI_SCREEN_CENTER_X || touch_last_dx <=(-7))
+                if(old_dx < -20 || touch_last_dx <=(-7))
                 {
                     touch_state = 2;
                     disp_flag = true;
@@ -1006,7 +1006,7 @@ static void func_clock_sub_dropdown_slide_handle(void)
             }
             else
             {
-                if(old_dx > -GUI_SCREEN_CENTER_X ||  touch_last_dx >=7)
+                if(old_dx > -(GUI_SCREEN_WIDTH-20) ||  touch_last_dx >=7)
                 {
                     touch_state = 4;
                     disp_flag = false;
@@ -2858,6 +2858,14 @@ static void func_clock_sub_dropdown_click_handler(void)
 }
 
 #else
+typedef struct dropdown_disp_btn_item_t_
+{
+    u32 res_addr;
+    u16 btn_id;
+    s16 x;
+    s16 y;
+    u8 sel_idx;
+} dropdown_disp_btn_item_t;
 static void func_clock_sub_dropdown_form_create(void)
 {
 }

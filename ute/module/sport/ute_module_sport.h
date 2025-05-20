@@ -328,6 +328,7 @@ typedef struct
 #if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
     uint8_t switchSysclkCountdown; //切换系统时钟倒计时
 #endif
+    uint8_t deviceOrientation; //设备方向
 } ute_module_sport_data_t;
 
 #if UTE_MODULE_SPORTS_HISTORY_HEART_ZONE_SUPPORT
@@ -503,5 +504,8 @@ void uteModuleSprotAlgoTimerStop(void);
 bool uteModuleSportAlgoTimerIsRunning(void);
 #endif
 void uteModuleSprotInputDataBeforeAlgoTimerHandler(void);
+
+uint8_t uteModuleSportGetDeviceOrientation(void);
+
 #endif //_UTE_MODULE_SPORT_H_
 

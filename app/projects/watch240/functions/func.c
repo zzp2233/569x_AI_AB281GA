@@ -881,7 +881,7 @@ void print_info(void)
         ticks = tick_get();
         extern void mem_monitor_run(void);
         mem_monitor_run();
-        printf("sys_cb.sco_state[%d], bt_cb.call_type[%d], bt_cb.disp_status[%d]\n", sys_cb.sco_state, bt_cb.call_type, bt_cb.disp_status);
+        printf("sys_cb.sco_state[%d], bt_cb.call_type[%d], bt_cb.disp_status[%d], func_cb.sta[%d]\n", sys_cb.sco_state, bt_cb.call_type, bt_cb.disp_status,func_cb.sta);
         extern void thread_info_printf(void);
         thread_info_printf();
     }

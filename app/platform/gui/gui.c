@@ -75,7 +75,7 @@ void gui_sleep(void)
         sys_cb.gui_sleep_sta = 1;
         tft_cb.tft_bglight_first_set = false;
         uteModuleGuiCommonDisplayOff(true);
-        //printf("gui_sleep\n");
+        printf("gui_sleep\n");
     }
 }
 
@@ -91,7 +91,7 @@ void gui_wakeup(void)
         // uteDrvScreenCommonInit();
         sys_cb.gui_sleep_sta = 0;
         uteModuleGuiCommonDisplayOff(false);
-        //printf("gui_wakeup\n");
+        printf("gui_wakeup\n");
     }
 }
 

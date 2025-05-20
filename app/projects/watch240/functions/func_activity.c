@@ -324,13 +324,6 @@ static void func_activity_disp_handle(void)
     }
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数
-    if(uteModuleSystemtimeGetDistanceMiType())//英里
-    {
-        uint16_t distance = km_integer*1000+km_decimals*10;
-        distance = distance*0.6213712;
-        km_integer  = distance/1000;
-        km_decimals = distance%1000/10;
-    }
 
     compo_picturebox_cut(arc_kcal,pic_dis,11);
     compo_picturebox_cut(arc_km,pic_dis,11);
@@ -346,7 +339,7 @@ static void func_activity_disp_handle(void)
     compo_textbox_set(textbox_step, txt_buf);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, distance);///公里数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, km_decimals);///公里数据
     compo_textbox_set(textbox_km, txt_buf);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
@@ -1587,7 +1580,7 @@ static void func_activity_message(size_msg_t msg)
             break;
         case MSG_CTP_CLICK:
             // uteModuleCallChangeEntertranmentVoiceSwitchStatus();
-            // func_cb.sta = FUNC_HEART_WARNING;
+            // func_cb.sta = FUNC_CHARGE;
             // sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
             // msgbox(NULL, NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
             break;

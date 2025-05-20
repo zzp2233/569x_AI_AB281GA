@@ -651,6 +651,130 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+const menu_hc_item_t tbl_menu_honeycomb[] =
+{
+
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_ACTIVITY_BIN,        FUNC_ACTIVITY},             //活动记录
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_CALL_BIN,            FUNC_CALL    },                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_SOPRT_BIN,       FUNC_SPORT,                 },                //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_HEART_BIN, FUNC_HEARTRATE,             },            //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_STRESS_BIN, FUNC_PRESSURE,                },               //压力
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_SPO2_BIN, FUNC_BLOOD_OXYGEN,           },         //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_PRESSURE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_BLOOD_PRESSURE_BIN, FUNC_BLOOD_OXYGEN,      },       //血压
+#endif
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_SLEEP_BIN, FUNC_SLEEP,                  },                //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_MUSIC_BIN, FUNC_BT,                  },                   //音乐
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_WEATHER_BIN, FUNC_WEATHER,                },              //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_ALARM_BIN, FUNC_ALARM_CLOCK,            },          //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_MOOD_BIN, FUNC_MOOD,               },              //情绪
+#endif // UTE_MODULE_SCREENS_EMOTION_SUPPORT
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_BREATHING_BIN, FUNC_BREATHE,          },              //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_MESSAGE_BIN, FUNC_MESSAGE,                },              //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_VOICE_ASSISTANT_BIN, FUNC_VOICE,        },                //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+// #if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    // {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SOS_BIN,                   .str_idx=STR_SOS},                  //SOS
+// #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_GAME_BIN, FUNC_GAME,                  },                 //游戏
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_TOOLBOX_BIN, FUNC_TOOLBOX,              },             //工具箱
+#endif
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_PERIOD_BIN, FUNC_WOMEN_HEALTH,          },          //女性
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_SETTINGS_BIN, FUNC_SETTING,                },              //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_STOPWATCH_BIN, FUNC_STOPWATCH,             },            //秒表
+#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_TIMER_BIN, FUNC_TIMER,                  },                //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_FLASHLIGHT_BIN, FUNC_FLASHLIGHT,             },            //手电筒
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_FINDPHONE_BIN, FUNC_FINDPHONE,             },            //查找手机
+#endif // UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_PHOTO_BIN, FUNC_CAMERA,                 },               //相机
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_CALCULATOR_BIN, FUNC_CALCULATOR,             },           //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_CIRCLE_CALENDAR_BIN, FUNC_CALENDAER,               },            //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+
+
+};
+
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_menu_sub_honeycomb_form_create(void)
+{
+    compo_iconlist_t *iconlist = NULL;
+    //新建窗体
+    compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
+
+    //新建蜂窝效果
+    if (func_cb.menu_style == MENU_STYLE_HONEYCOMB)
+    {
+        iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_HONEYCOMB);
+    }
+    else
+    {
+        iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_CUM_HONEYGRID);
+    }
+
+    compo_setid(iconlist, COMPO_ID_ICONLIST);
+    for (int i=0; i<MENU_HC_CNT; i++)
+    {
+        compo_iconlist_add(iconlist, tbl_menu_honeycomb[i].res_addr);
+    }
+//    compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_HOUR, UI_BUF_I340001_THEME_CLOCK_CLOCK_H_BIN, 1, 2);
+//    compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_MIN, UI_BUF_I340001_THEME_CLOCK_CLOCK_M_BIN, 1, 2);
+//    compo_iconlist_add_time(iconlist, COMPO_ICONLIST_TIME_TYPE_SEC, UI_BUF_I340001_THEME_CLOCK_CLOCK_S_BIN, 10, 3);
+//    compo_iconlist_set_start_angle(iconlist, 900);
+
+    compo_iconlist_set_focus_byidx(iconlist, func_cb.menu_idx);
+    compo_iconlist_update(iconlist);
+    return frm;
+}
+
 #else
 //蜂窝图标列表及顺序
 const menu_hc_item_t tbl_menu_honeycomb[] =

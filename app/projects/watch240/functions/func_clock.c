@@ -43,7 +43,7 @@ const u8 quick_btn_tbl[] =
     [4]     = FUNC_BLOOD_OXYGEN,            //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     [5]     = FUNC_NULL,                    //血糖
-    [6]     = FUNC_BLOOD_PRESSURE,          //血压
+    [6]     = FUNC_NULL,          //血压
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     [7]     = FUNC_BREATHE,                 //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT

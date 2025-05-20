@@ -128,7 +128,7 @@ compo_form_t *func_heartrate_form_create(void)
     uteModuleHeartGetTodayHistoryData(heart_date,24);///获取一天的心率
 
     compo_chartbox_t* chart = compo_chartbox_create(frm, CHART_TYPE_BAR, CHART_NUM);///图表内的柱形图
-    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+14,202,156,71);
+    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+38/2,202,166,71);
     compo_chartbox_set_pixel(chart, 1);
 
     chart_t chart_info;
@@ -137,7 +137,7 @@ compo_form_t *func_heartrate_form_create(void)
     for (int i=0; i<CHART_NUM; i++)
     {
         // heart_date[i] =200;
-        chart_info.x = i*chart_info.width + i*4;
+        chart_info.x = i*chart_info.width + i*3;
         chart_info.height = heart_date[i]*0.34;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
     }

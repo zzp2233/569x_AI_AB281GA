@@ -239,6 +239,7 @@ void uteModuleHeartEverySecond(void)
                 uteModuleHeartStartSingleTesting(TYPE_HEART);
                 uteModuleHeartData.isAutoTestFlag = true;
                 uteModuleHeartData.autoTestSecond = 0;
+                isNeedAutoTest = false;
             }
             else
             {
@@ -262,7 +263,6 @@ void uteModuleHeartEverySecond(void)
                 uteModuleHeartStopSingleTesting(TYPE_HEART);
                 uteModuleHeartData.isAutoTestFlag = false;
                 uteModuleHeartData.autoTestSecond = 0;
-                isNeedAutoTest = false;
             }
             else
             {

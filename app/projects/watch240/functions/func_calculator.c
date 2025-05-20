@@ -729,7 +729,10 @@ static void func_calculator_button_press_handle(void)
 {
 
 }
+static void func_calculator_button_Refresh_disp(void)
+{
 
+}
 //符号按钮释放效果
 static void func_calculator_button_release_handle(void)
 {

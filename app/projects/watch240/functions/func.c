@@ -460,11 +460,13 @@ const func_t tbl_func_create[] =
 //    {FUNC_SPORT_CONFIG,                 func_sport_config_form_create},
     {FUNC_SPORT_SUB_RUN,                func_sport_sub_run_form_create},
     {FUNC_SPORT_SWITCH,                 func_sport_switching_form_create},
-#if UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {FUNC_SPORT_SORT,                   func_sport_sort_form_create},
-#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_SPORT_FINISH,                 func_sport_finish_form_create},
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game_form_create},
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     {FUNC_STYLE,                        func_style_form_create},
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT

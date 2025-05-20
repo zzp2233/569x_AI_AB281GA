@@ -583,8 +583,15 @@ void compo_listbox_update(compo_listbox_t *listbox)
                 flag_scale = false;
                 break;
 
+
+
             case COMPO_LISTBOX_STYLE_SELECT:
                 flag_scale = (dy > udy_th);
+            case COMPO_LISTBOX_STYLE_MENU_CIRCLE_SELECT:
+                //圆屏菜单弧形样式
+                lnx += LISTBOX_STYLE_CIRCLE_R - sqrt64(LISTBOX_STYLE_CIRCLE_R * LISTBOX_STYLE_CIRCLE_R - dy * dy);
+                udy_th = LISTBOX_ITEM_SIZE_THRESHOLD_CIRCLE;
+                flag_scale = (udy > udy_th);
             case COMPO_LISTBOX_STYLE_LANGUAGE:
                 //选择模式 语言选择模式
                 icon2 = (listbox->get_bit != NULL && listbox->get_bit(item->vidx) != 0) ? listbox->res_sta_icon1 : listbox->res_sta_icon2;
@@ -1193,6 +1200,18 @@ void compo_listbox_set_location(compo_listbox_t *listbox, s16 x, s16 y, s16 widt
 void compo_listbox_set_item_height(compo_listbox_t *listbox, int item_height)
 {
     listbox->item_height = item_height;
+    compo_listbox_init_update(listbox);
+}
+
+/**
+ * @brief 设置列表控件item的高度
+          用于无图标和背景图时，自定义列表中item的高度
+ * @param[in] listbox : 列表指针
+ * @param[in] item_height : item高度
+ **/
+void compo_listbox_set_item_width(compo_listbox_t *listbox, int item_width)
+{
+    listbox->item_width = item_width;
     compo_listbox_init_update(listbox);
 }
 

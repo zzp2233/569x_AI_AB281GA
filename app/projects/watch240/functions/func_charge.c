@@ -19,6 +19,9 @@
 typedef struct f_charge_t_
 {
     u8 percent_bkp;
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+    u8 last_orientation;
+#endif
 } f_charge_t;
 #define BAT_PERCENT_VALUE       uteDrvBatteryCommonGetLvl()  //电量百分比数值
 #define BAT_PERCENT_FLAG        uteDrvBatteryCommonGetChargerStatus()   //充电状态0：未充电，1：充电中，2：充电完成
@@ -752,36 +755,42 @@ void func_charge_update(void)
     }
     img_3d_res_addr[6] = num_pic_mini[time.day/10];
     img_3d_res_addr[7] = num_pic_mini[time.day%10];
-    img_3d_res_addr[8] = bat_pic[BAT_PERCENT_VALUE/25];
+    img_3d_res_addr[8] = bat_pic[uteDrvBatteryCommonGetBatteryIndex(sizeof(bat_pic)/sizeof(bat_pic[0]))];
 
-    u8 direction = 3;
-    for(u8 i=0; i<9; i++)
+    f_charge_t *f_charge = (f_charge_t *)func_cb.f_cb;
+
+    u8 direction = uteModuleSportGetDeviceOrientation();
+    if(direction > 0 && direction < 5)
+    {
+        f_charge->last_orientation = direction;
+    }
+
+    for (u8 i = 0; i < 9; i++)
     {
         compo_picturebox_t *pic = compo_getobj_byid(ui_handle_1[i].id);
-        compo_picturebox_set(pic,img_3d_res_addr[i]);
-        switch (direction)
+        compo_picturebox_set(pic, img_3d_res_addr[i]);
+        switch (f_charge->last_orientation)
         {
-            case 0:
-                compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); //0°
-                compo_picturebox_set_rotation(pic,0);
+            case 3:
+                compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); // 0°
+                compo_picturebox_set_rotation(pic, 0);
                 break;
             case 1:
-                compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y);//90°
-                compo_picturebox_set_rotation(pic,900);
+                compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y); // 90°
+                compo_picturebox_set_rotation(pic, 900);
+                break;
+            case 4:
+                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_1[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_1[i].pic_y); // 180°
+                compo_picturebox_set_rotation(pic, 1800);
                 break;
             case 2:
-                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH-ui_handle_1[i].pic_x,  GUI_SCREEN_HEIGHT-ui_handle_1[i].pic_y);//180°
-                compo_picturebox_set_rotation(pic,1800);
-                break;
-            case 3:
-                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH-ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT-ui_handle_2[i].pic_y);//270°
-                compo_picturebox_set_rotation(pic,2700);
+                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_2[i].pic_y); // 270°
+                compo_picturebox_set_rotation(pic, 2700);
                 break;
             default:
                 break;
         }
     }
-
 }
 
 //创建充电窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -810,36 +819,33 @@ compo_form_t *func_charge_form_create(void)
     }
     img_3d_res_addr[6] = num_pic_mini[time.day/10];
     img_3d_res_addr[7] = num_pic_mini[time.day%10];
-    img_3d_res_addr[8] = bat_pic[BAT_PERCENT_VALUE/25];
+    img_3d_res_addr[8] = bat_pic[uteDrvBatteryCommonGetBatteryIndex(sizeof(bat_pic)/sizeof(bat_pic[0]))];
 
-    u8 direction = 3;
+    u8 direction = uteModuleSportGetDeviceOrientation();
 
-    for(u8 i=0; i<9; i++)
+    for (u8 i = 0; i < 9; i++)
     {
         compo_picturebox_t *pic = compo_picturebox_create(frm, img_3d_res_addr[i]);
-        compo_setid(pic,ui_handle_1[i].id);
+        compo_setid(pic, ui_handle_1[i].id);
         switch (direction)
         {
-            case 0:
-                compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); //0°
-                compo_picturebox_set_rotation(pic,0);
-                break;
             case 1:
-                compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y);//90°
-                compo_picturebox_set_rotation(pic,900);
+                compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y); // 90°
+                compo_picturebox_set_rotation(pic, 900);
+                break;
+            case 4:
+                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_1[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_1[i].pic_y); // 180°
+                compo_picturebox_set_rotation(pic, 1800);
                 break;
             case 2:
-                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH-ui_handle_1[i].pic_x,  GUI_SCREEN_HEIGHT-ui_handle_1[i].pic_y);//180°
-                compo_picturebox_set_rotation(pic,1800);
-                break;
-            case 3:
-                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH-ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT-ui_handle_2[i].pic_y);//270°
-                compo_picturebox_set_rotation(pic,2700);
+                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_2[i].pic_y); // 270°
+                compo_picturebox_set_rotation(pic, 2700);
                 break;
             default:
+                compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); // 0°
+                compo_picturebox_set_rotation(pic, 0);
                 break;
         }
-
     }
     return frm;
 }
@@ -1323,6 +1329,17 @@ static void func_charge_enter(void)
     f_charge_t *f_charge = (f_charge_t *)func_cb.f_cb;
     f_charge->percent_bkp = BAT_PERCENT_VALUE;
     func_cb.enter_tick = tick_get();
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+    u8 direction = uteModuleSportGetDeviceOrientation(); // 5、6为平放，忽略
+    if (direction > 0 && direction < 5)
+    {
+        f_charge->last_orientation = direction;
+    }
+    else
+    {
+        f_charge->last_orientation = 1;
+    }
+#endif
 }
 
 //退出充电功能

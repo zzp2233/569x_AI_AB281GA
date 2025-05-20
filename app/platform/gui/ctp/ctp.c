@@ -276,7 +276,6 @@ void ctp_isr(void)
 #endif
         TRACE_K(str_xy, press, ctp_cb.x, ctp_cb.y);
         ctp_msg_deal(press);
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_RESET_ROVLLVER_SCREEN_MODE, 0);
     }
 }
 

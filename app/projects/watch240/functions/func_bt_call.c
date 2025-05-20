@@ -2112,6 +2112,8 @@ static void func_bt_call_message(size_msg_t msg)
             {
                 f_bt_call->touch_flag = true;
             }
+#else   GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+            f_bt_call->touch_flag = true;
 #endif
             break;
         case KU_BACK:

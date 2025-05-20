@@ -584,74 +584,204 @@ compo_form_t *func_charge_form_create(void)
 enum
 {
     //数字
-    COMPO_ID_NUM_TIME_HOUR = 1,
-    COMPO_ID_NUM_TIME_MIN,
+    COMPO_ID_NUM_TIME_HOUR_S = 1,
+    COMPO_ID_NUM_TIME_HOUR_G,
+    COMPO_ID_NUM_TIME_MIN_S,
+    COMPO_ID_NUM_CLOLON,
+    COMPO_ID_NUM_TIME_MIN_G,
     COMPO_ID_PIC_TIME_COLON,
 
     COMPO_ID_NUM_BAT_VALUE,
     COMPO_ID_NUM_TIME_WEEK,
-    COMPO_ID_NUM_DATE_VALUE,
+    COMPO_ID_NUM_DATE_S,
+    COMPO_ID_NUM_DATE_G,
     COMPO_ID_PIC_BAT_PERCENT,
-
-    COMPO_ID_RECT_BAT_1,
-    COMPO_ID_RECT_BAT_2,
-    COMPO_ID_RECT_BAT_3,
-    COMPO_ID_RECT_BAT_4,
-    COMPO_ID_RECT_BAT_5,
 };
 
 typedef struct charge_ui_handle_t_
 {
-    struct ui_time_pic
-    {
-        u16 id_hour_s;
-        u16 id_hour_g;
-        u16 id_min_s;
-        u16 id_min_g;
-        u16 id_week_s;
-        u16 id_week_g;
-        u16 id_week_zh;
-        u16 id_week_bat_pic;
-    } time_pic;
+    u16 id;
+    s16 pic_x;
+    s16 pic_y;
 
-    struct ui_pic_axis
-    {
-        s16 hour_s_x;
-        s16 hour_s_y;
-        s16 min_s_x;
-        s16 min_s_y;
-        s16 hour_m_x;
-        s16 hour_m_y;
-        s16 min_m_x;
-        s16 min_m_y;
-        s16 colon_x;
-        s16 colon_y;
-        u16 id_week_zh_x;
-        u16 id_week_zh_y;
-        u16 id_week_s_x;
-        u16 id_week_s_y;
-        u16 id_week_g_x;
-        u16 id_week_g_y;
-        u16 id_week_bat_pic_x;
-        u16 id_week_bat_pic_y;
-    } pic_axis;
 } charge_ui_handle_t;
 
-static const charge_ui_handle_t ui_handle =
+static const charge_ui_handle_t ui_handle_1 [] = //正面
 {
-
+    {.pic_x=35,    .pic_y=160, .id=COMPO_ID_NUM_TIME_HOUR_S},//小时 十位
+    {.pic_x=35+46, .pic_y=160, .id=COMPO_ID_NUM_TIME_HOUR_G},//小时 个位
+    {.pic_x=35+46*2, .pic_y=160, .id=COMPO_ID_NUM_CLOLON},//冒号
+    {.pic_x=35+46*3, .pic_y=160, .id=COMPO_ID_NUM_TIME_MIN_S},//分钟 十位
+    {.pic_x=35+46*4, .pic_y=160, .id=COMPO_ID_NUM_TIME_MIN_G},//分钟 个位
+    {.pic_x=155, .pic_y=230, .id=COMPO_ID_NUM_TIME_WEEK},//星期
+    {.pic_x=207, .pic_y=230, .id=COMPO_ID_NUM_DATE_S},//日期 十位
+    {.pic_x=225, .pic_y=230, .id=COMPO_ID_NUM_DATE_G},//日期 个位
+    {.pic_x=200, .pic_y=65, .id=COMPO_ID_PIC_BAT_PERCENT},//电量
 };
 
-//电量更新
+static const charge_ui_handle_t ui_handle_2 [] = //90反转
+{
+    {.pic_x=120, .pic_y=55, .id=COMPO_ID_NUM_TIME_HOUR_S},//小时 十位
+    {.pic_x=120, .pic_y=55+46, .id=COMPO_ID_NUM_TIME_HOUR_G},//小时 个位
+    {.pic_x=120, .pic_y=55+46*2, .id=COMPO_ID_NUM_CLOLON},//冒号
+    {.pic_x=120, .pic_y=55+46*3, .id=COMPO_ID_NUM_TIME_MIN_S},//分钟 十位
+    {.pic_x=120, .pic_y=55+46*4, .id=COMPO_ID_NUM_TIME_MIN_G},//分钟 个位
+    {.pic_x=50,  .pic_y=180, .id=COMPO_ID_NUM_TIME_WEEK},//星期
+    {.pic_x=50,  .pic_y=180+52, .id=COMPO_ID_NUM_DATE_S},//日期 十位
+    {.pic_x=50,  .pic_y=180+70, .id=COMPO_ID_NUM_DATE_G},//日期 个位
+    {.pic_x=195, .pic_y=240, .id=COMPO_ID_PIC_BAT_PERCENT},//电量
+};
+
+#define num_big_0    UI_BUF_I269032_CHARGE_NUM_BIG_03_BIN
+#define num_big_1    UI_BUF_I269032_CHARGE_NUM_BIG_04_BIN
+#define num_big_2    UI_BUF_I269032_CHARGE_NUM_BIG_05_BIN
+#define num_big_3    UI_BUF_I269032_CHARGE_NUM_BIG_06_BIN
+#define num_big_4    UI_BUF_I269032_CHARGE_NUM_BIG_07_BIN
+#define num_big_5    UI_BUF_I269032_CHARGE_NUM_BIG_08_BIN
+#define num_big_6    UI_BUF_I269032_CHARGE_NUM_BIG_09_BIN
+#define num_big_7    UI_BUF_I269032_CHARGE_NUM_BIG_10_BIN
+#define num_big_8    UI_BUF_I269032_CHARGE_NUM_BIG_11_BIN
+#define num_big_9    UI_BUF_I269032_CHARGE_NUM_BIG_12_BIN
+#define colon_big    UI_BUF_I269032_CHARGE_NUM_BIG_13_BIN
+
+#define num_mini_0    UI_BUF_I269032_CHARGE_NUM_MINI_03_BIN
+#define num_mini_1    UI_BUF_I269032_CHARGE_NUM_MINI_04_BIN
+#define num_mini_2    UI_BUF_I269032_CHARGE_NUM_MINI_05_BIN
+#define num_mini_3    UI_BUF_I269032_CHARGE_NUM_MINI_06_BIN
+#define num_mini_4    UI_BUF_I269032_CHARGE_NUM_MINI_07_BIN
+#define num_mini_5    UI_BUF_I269032_CHARGE_NUM_MINI_08_BIN
+#define num_mini_6    UI_BUF_I269032_CHARGE_NUM_MINI_09_BIN
+#define num_mini_7    UI_BUF_I269032_CHARGE_NUM_MINI_10_BIN
+#define num_mini_8    UI_BUF_I269032_CHARGE_NUM_MINI_11_BIN
+#define num_mini_9    UI_BUF_I269032_CHARGE_NUM_MINI_12_BIN
+#define colon_mini    UI_BUF_I269032_CHARGE_NUM_MINI_13_BIN
+
+#define bat_pic_0     UI_BUF_I269032_CHARGE_BAT_00_BIN
+#define bat_pic_1     UI_BUF_I269032_CHARGE_BAT_01_BIN
+#define bat_pic_2     UI_BUF_I269032_CHARGE_BAT_02_BIN
+#define bat_pic_3     UI_BUF_I269032_CHARGE_BAT_03_BIN
+#define bat_pic_4     UI_BUF_I269032_CHARGE_BAT_04_BIN
+
+#define week_zh_1     UI_BUF_I269032_CHARGE_WEEK_01_BIN
+#define week_zh_2     UI_BUF_I269032_CHARGE_WEEK_02_BIN
+#define week_zh_3     UI_BUF_I269032_CHARGE_WEEK_03_BIN
+#define week_zh_4     UI_BUF_I269032_CHARGE_WEEK_04_BIN
+#define week_zh_5     UI_BUF_I269032_CHARGE_WEEK_05_BIN
+#define week_zh_6     UI_BUF_I269032_CHARGE_WEEK_06_BIN
+#define week_zh_7     UI_BUF_I269032_CHARGE_WEEK_00_BIN
+
+#define week_en_1     UI_BUF_I269032_CHARGE_WEEK_08_BIN
+#define week_en_2     UI_BUF_I269032_CHARGE_WEEK_09_BIN
+#define week_en_3     UI_BUF_I269032_CHARGE_WEEK_10_BIN
+#define week_en_4     UI_BUF_I269032_CHARGE_WEEK_11_BIN
+#define week_en_5     UI_BUF_I269032_CHARGE_WEEK_12_BIN
+#define week_en_6     UI_BUF_I269032_CHARGE_WEEK_13_BIN
+#define week_en_7     UI_BUF_I269032_CHARGE_WEEK_07_BIN
+
+const static u32 num_pic_big[10]=
+{
+    num_big_0,
+    num_big_1,
+    num_big_2,
+    num_big_3,
+    num_big_4,
+    num_big_5,
+    num_big_6,
+    num_big_7,
+    num_big_8,
+    num_big_9,
+};
+const static u32 num_pic_mini[10]=
+{
+    num_mini_0,
+    num_mini_1,
+    num_mini_2,
+    num_mini_3,
+    num_mini_4,
+    num_mini_5,
+    num_mini_6,
+    num_mini_7,
+    num_mini_8,
+    num_mini_9,
+};
+const static u32 bat_pic[5]=
+{
+    bat_pic_0,
+    bat_pic_1,
+    bat_pic_2,
+    bat_pic_3,
+    bat_pic_4,
+};
+const static u32 week_pic_zh[10]=
+{
+    week_zh_7,
+    week_zh_1,
+    week_zh_2,
+    week_zh_3,
+    week_zh_4,
+    week_zh_5,
+    week_zh_6,
+};
+const static u32 week_pic_en[10]=
+{
+    week_en_7,
+    week_en_1,
+    week_en_2,
+    week_en_3,
+    week_en_4,
+    week_en_5,
+    week_en_6,
+};
 void func_charge_update(void)
 {
-    // compo_picturebox_t *pic    = compo_getobj_byid(COMPO_ID_NUM_BAT_VALUE);
-    // compo_picturebox_t *week    = compo_getobj_byid(COMPO_ID_NUM_TIME_WEEK);
-    // ute_module_systemtime_time_t time;
-    // uteModuleSystemtimeGetTime(&time);
-    // compo_picturebox_cut(week,time.week, 7);
+    u32 img_3d_res_addr[9]= {0};
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    img_3d_res_addr[0] = num_pic_big[time.hour/10];
+    img_3d_res_addr[1] = num_pic_big[time.hour%10];
+    img_3d_res_addr[2] = colon_big;
+    img_3d_res_addr[3] = num_pic_big[time.min/10];
+    img_3d_res_addr[4] = num_pic_big[time.min%10];
+    if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+    {
+        img_3d_res_addr[5] = week_pic_zh[time.week];
+    }
+    else
+    {
+        img_3d_res_addr[5] = week_pic_en[time.week];
+    }
+    img_3d_res_addr[6] = num_pic_mini[time.day/10];
+    img_3d_res_addr[7] = num_pic_mini[time.day%10];
+    img_3d_res_addr[8] = bat_pic[BAT_PERCENT_VALUE/25];
 
-    // compo_picturebox_cut(pic, uteDrvBatteryCommonGetBatteryIndex(4), 4);
+    u8 direction = 3;
+    for(u8 i=0; i<9; i++)
+    {
+        compo_picturebox_t *pic = compo_getobj_byid(ui_handle_1[i].id);
+        compo_picturebox_set(pic,img_3d_res_addr[i]);
+        switch (direction)
+        {
+            case 0:
+                compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); //0°
+                compo_picturebox_set_rotation(pic,0);
+                break;
+            case 1:
+                compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y);//90°
+                compo_picturebox_set_rotation(pic,900);
+                break;
+            case 2:
+                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH-ui_handle_1[i].pic_x,  GUI_SCREEN_HEIGHT-ui_handle_1[i].pic_y);//180°
+                compo_picturebox_set_rotation(pic,1800);
+                break;
+            case 3:
+                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH-ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT-ui_handle_2[i].pic_y);//270°
+                compo_picturebox_set_rotation(pic,2700);
+                break;
+            default:
+                break;
+        }
+    }
+
 }
 
 //创建充电窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -659,94 +789,58 @@ compo_form_t *func_charge_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-    /*
-        //创建 :
-        compo_picturebox_t*  pic =  compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_XIE_21X14_X31_Y245_BIN);
 
-        compo_picturebox_set_pos(pic, 42, 178);
-        //compo_picturebox_cut(pic, 2, 7);
-        ute_module_systemtime_time_t time;
-        uteModuleSystemtimeGetTime(&time);
-        if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+    u32 img_3d_res_addr[9]= {0};
+
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+
+    img_3d_res_addr[0] = num_pic_big[time.hour/10];
+    img_3d_res_addr[1] = num_pic_big[time.hour%10];
+    img_3d_res_addr[2] = colon_big;
+    img_3d_res_addr[3] = num_pic_big[time.min/10];
+    img_3d_res_addr[4] = num_pic_big[time.min%10];
+    if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+    {
+        img_3d_res_addr[5] = week_pic_zh[time.week];
+    }
+    else
+    {
+        img_3d_res_addr[5] = week_pic_en[time.week];
+    }
+    img_3d_res_addr[6] = num_pic_mini[time.day/10];
+    img_3d_res_addr[7] = num_pic_mini[time.day%10];
+    img_3d_res_addr[8] = bat_pic[BAT_PERCENT_VALUE/25];
+
+    u8 direction = 3;
+
+    for(u8 i=0; i<9; i++)
+    {
+        compo_picturebox_t *pic = compo_picturebox_create(frm, img_3d_res_addr[i]);
+        compo_setid(pic,ui_handle_1[i].id);
+        switch (direction)
         {
-            pic =  compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_CHAR_WEEK_ZH_30X50_X27_Y195_BIN);
+            case 0:
+                compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); //0°
+                compo_picturebox_set_rotation(pic,0);
+                break;
+            case 1:
+                compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y);//90°
+                compo_picturebox_set_rotation(pic,900);
+                break;
+            case 2:
+                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH-ui_handle_1[i].pic_x,  GUI_SCREEN_HEIGHT-ui_handle_1[i].pic_y);//180°
+                compo_picturebox_set_rotation(pic,1800);
+                break;
+            case 3:
+                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH-ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT-ui_handle_2[i].pic_y);//270°
+                compo_picturebox_set_rotation(pic,2700);
+                break;
+            default:
+                break;
         }
-        else
-        {
-            pic = compo_picturebox_create(frm,UI_BUF_I269032_CHARGE_CHAR_WEEK_EN_30X50_X27_Y195_BIN);
-        }
-        compo_picturebox_set_pos(pic, 42, 100);
-        compo_setid(pic, COMPO_ID_NUM_TIME_WEEK);
-        compo_picturebox_cut(pic,time.week, 7);
 
-    //     //创建time hour
-        compo_number_t* hour = compo_number_create(frm, ui_handle.time_hour.res, ui_handle.time_hour.rev);
-        compo_number_set_align(hour, ui_handle.time_hour.num_align);
-        compo_number_set_layout(hour, ui_handle.time_hour.num_layout);
-        compo_number_set_zfill(hour, ui_handle.time_hour.flag_zfill);
-        compo_number_set_margin(hour, ui_handle.time_hour.margin);
-        compo_number_set_pos(hour, ui_handle.time_hour.x_hour, ui_handle.time_hour.y_hour);
-        compo_number_set(hour, ui_handle.time_hour.hour);
-        compo_setid(hour, ui_handle.time_hour.id_hour);
-        compo_bonddata(hour, COMPO_BOND_HOUR);
-
-        //创建timer min
-        compo_number_t* min = compo_number_create(frm, ui_handle.time_min.res, ui_handle.time_min.rev);
-        compo_number_set_align(min, ui_handle.time_min.num_align);
-        compo_number_set_layout(min, ui_handle.time_min.num_layout);
-        compo_number_set_zfill(min, ui_handle.time_min.flag_zfill);
-        compo_number_set_margin(min, ui_handle.time_min.margin);
-        compo_number_set_pos(min, ui_handle.time_min.x_min, ui_handle.time_min.y_min);
-        compo_number_set(min, ui_handle.time_min.min);
-        compo_setid(min, ui_handle.time_min.id_min);
-        compo_bonddata(min, COMPO_BOND_MINUTE);
-
-        pic = compo_picturebox_create(frm, UI_BUF_I269032_CHARGE_MAOHAO_88X49_X65_Y43_X65_Y175_BIN);
-        compo_picturebox_set_pos(pic, 109, 135);
-        compo_setid(pic, COMPO_ID_PIC_TIME_COLON);
-
-
-        pic =  compo_picturebox_create(frm,UI_BUF_I269032_CHARGE_ICON_54X54_X161_Y219_BIN);
-        compo_picturebox_set_pos(pic, 178,246);
-        compo_setid(pic, COMPO_ID_NUM_BAT_VALUE);
-        compo_picturebox_cut(pic, uteDrvBatteryCommonGetBatteryIndex(4), 4);
-
-        //创建 Vaule
-        compo_number_t* bat_value = compo_number_create(frm, ui_handle.bat_value.res, ui_handle.bat_value.rev);
-        compo_number_set_align(bat_value, ui_handle.bat_value.num_align);
-        compo_number_set_layout(bat_value, ui_handle.bat_value.num_layout);
-        compo_number_set_zfill(bat_value, ui_handle.bat_value.flag_zfill);
-        compo_number_set_margin(bat_value, ui_handle.bat_value.margin);
-        compo_number_set_pos(bat_value, ui_handle.bat_value.x, ui_handle.bat_value.y);
-        compo_number_set(bat_value,ui_handle.bat_value.val);
-        compo_setid(bat_value, ui_handle.bat_value.id);
-        compo_bonddata(bat_value,COMPO_BOND_MONTH);
-
-        compo_number_t* bat_date = compo_number_create(frm, ui_handle.bat_date.res, ui_handle.bat_date.rev);
-        compo_number_set_align(bat_date, ui_handle.bat_date.num_align);
-        compo_number_set_layout(bat_date, ui_handle.bat_date.num_layout);
-        compo_number_set_zfill(bat_date, ui_handle.bat_date.flag_zfill);
-        compo_number_set_margin(bat_date, ui_handle.bat_date.margin);
-        compo_number_set_pos(bat_date, ui_handle.bat_date.x, ui_handle.bat_date.y);
-        compo_number_set(bat_date,ui_handle.bat_date.val);
-        compo_setid(bat_date, ui_handle.bat_date.id);
-        compo_bonddata(bat_date,COMPO_BOND_DAY);
-
-        // //创建 %
-        // compo_picturebox_t* bat_percent = compo_picturebox_create(frm, ui_handle.bat_percent.res);
-        // compo_picturebox_set_pos(bat_percent, ui_handle.bat_percent.x, ui_handle.bat_percent.y);
-        // compo_setid(bat_percent, ui_handle.bat_percent.id);
-
-        //创建rect
-        // for (int i=0; i<sizeof(ui_handle.bat_rect)/sizeof(ui_handle.bat_rect[0]); i++)
-        // {
-        //     compo_shape_t* bat_rect = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-        //     compo_shape_set_color(bat_rect, make_color(ui_handle.bat_rect[i].bright_color.r, ui_handle.bat_rect[i].bright_color.g, ui_handle.bat_rect[i].bright_color.b));
-        //     compo_shape_set_location(bat_rect, ui_handle.bat_rect[i].x, ui_handle.bat_rect[i].y, ui_handle.bat_rect[i].w, ui_handle.bat_rect[i].h);
-        //     compo_shape_set_radius(bat_rect, ui_handle.bat_rect[i].rev);
-        //     compo_setid(bat_rect, ui_handle.bat_rect[i].id);
-        // }
-    */
+    }
     return frm;
 }
 

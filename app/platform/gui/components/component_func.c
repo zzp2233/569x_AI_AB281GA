@@ -74,6 +74,30 @@ void compo_update(void)
     compo_set_update(compo_cb.tm, compo_cb.mtime);
 }
 
+//获取数字位数
+int count_digits(int number)
+{
+    if (number == 0)
+    {
+        return 1; // 处理0的情况
+    }
+
+    int count = 0;
+    // 如果是负数，先转为正数
+    if (number < 0)
+    {
+        number = -number;
+    }
+
+    while (number != 0)
+    {
+        number /= 10;
+        ++count;
+    }
+
+    return count;
+}
+
 /**
  * @brief 设置绑定数据
  * @param[in] compo : 组件
@@ -403,20 +427,25 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
     if (flag_update)
     {
-//        printf("bond_data:%d, type:%d, value:%d\n", compo->bond_data, compo->type, value);
+        bool is_visible = true;
         if (compo->type == COMPO_TYPE_NUMBER)
         {
             compo_number_t *num = (compo_number_t *)compo;
             if (num->num_part)
             {
+                int max_bit = count_digits(value);
                 if (num->num_part > 1)
                 {
                     value /= soft_pow(10, num->num_part - 1);
                 }
                 value %= 10;
+                if(!num->flag_zfill && num->num_part > max_bit && value == 0)
+                {
+                    is_visible = false;
+                }
             }
             compo_number_set(num, value);
-            compo_number_set_visible(num, true);
+            compo_number_set_visible(num, is_visible);
         }
         else if (compo->type == COMPO_TYPE_TEXTBOX)
         {

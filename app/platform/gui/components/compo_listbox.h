@@ -18,6 +18,7 @@ enum COMPO_LISTBOX_STYLE
     COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT,         //带Title的列表，头部不做缩放，两行Text
     COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD,
     COMPO_LISTBOX_STYLE_CUM_SPORT_LIST,         //客户自己运动界面列表
+    COMPO_LISTBOX_STYLE_MENU_CIRCLE_SELECT,     //园屏弧形选择模式
 };
 
 enum COMPO_LISTBOX_ITEM_MODE
@@ -320,6 +321,15 @@ void compo_listbox_set_location(compo_listbox_t *listbox, s16 x, s16 y, s16 widt
  * @param[in] item_height : item高度
  **/
 void compo_listbox_set_item_height(compo_listbox_t *listbox, int item_height);
+
+/**
+ * @brief 设置列表控件item的高度
+          用于无图标和背景图时，自定义列表中item的高度
+ * @param[in] listbox : 列表指针
+ * @param[in] item_height : item高度
+ **/
+void compo_listbox_set_item_width(compo_listbox_t *listbox, int item_width);
+
 
 /**
  * @brief 设置列表控件的文本坐标、大小、是否居中显示

@@ -302,7 +302,7 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set(txt,i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]);
     //紫外线txt
     txt = compo_textbox_create(frm,strlen(i18n[STR_UV]));
-    compo_textbox_set_pos(txt,64,243+8);
+    compo_textbox_set_location(txt,64,243+8,60,40);
     compo_textbox_set(txt,i18n[STR_UV]);
     //湿度icon
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_HUMIDITY_BIN);///背景图片
@@ -315,7 +315,7 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set(txt,str_humidity_buff);
     //湿度txt
     txt = compo_textbox_create(frm,strlen(i18n[STR_HUMIDITY]));
-    compo_textbox_set_pos(txt,152+42/2,245+8);
+    compo_textbox_set_location(txt,152+42/2,245+8,60,40);
     compo_textbox_set(txt,i18n[STR_HUMIDITY]);
     ///设置标题栏名字///
     txt = compo_textbox_create(frm,strlen(i18n[STR_WEATHER]));

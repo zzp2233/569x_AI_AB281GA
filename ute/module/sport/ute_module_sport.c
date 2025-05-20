@@ -1378,6 +1378,57 @@ void uteModuleSportReadTodayAllSportDataConfig(ute_module_systemtime_time_t time
 }
 #endif
 
+/*! 设备方向切换阈值,wang.luo 2025-05-20 */
+#ifndef UTE_MODULE_SPORT_DIRECTION_SWITCH_THRESHOLD
+#define UTE_MODULE_SPORT_DIRECTION_SWITCH_THRESHOLD 90
+#endif
+
+/**
+ * @brief        计算设备方向
+ * @details
+ * @param[in]    int x, int y, int z 设备三轴数据
+ * @return       设备方向
+ * @author       Wang.Luo
+ * @date         2025-05-20
+ */
+AT(.com_text.gsensor)
+uint8_t uteModuleSportCountDeviceOrientation(int x, int y, int z)
+{
+    int absX = ABS(x);
+    int absY = ABS(y);
+    int absZ = ABS(z);
+
+    if (absX > UTE_MODULE_SPORT_DIRECTION_SWITCH_THRESHOLD && absX > absY && absX > absZ)
+    {
+        return (x > 0) ? 1 : 2;
+    }
+    else if (absY > UTE_MODULE_SPORT_DIRECTION_SWITCH_THRESHOLD && absY > absX && absY > absZ)
+    {
+        return (y > 0) ? 3 : 4;
+    }
+    else if (absZ > UTE_MODULE_SPORT_DIRECTION_SWITCH_THRESHOLD && absZ > absX && absZ > absY)
+    {
+        return (z > 0) ? 5 : 6;
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+/**
+ * @brief        获取当前设备方向
+ * @details
+ * @return       设备方向值
+ * @author       Wang.Luo
+ * @date         2025-05-20
+ */
+AT(.com_text.gsensor)
+uint8_t uteModuleSportGetDeviceOrientation(void)
+{
+    return uteModuleSprotData.deviceOrientation;
+}
+
 /**
 *@brief        sport每秒函数
 *@details       需要注册到主时间，每秒执行一次
@@ -1529,10 +1580,11 @@ void uteModuleSportInputDataBeforeAlgo(void)
         if(!((x[i]==0)&&(y[i]==0)&&(z[i]==0)))
         {
             uint16_t accValue =0;
-            // if(i==0)
-            // {
-            //     UTE_MODULE_LOG(1, "%s,i=%02d,frameCnt=%02d,x=%d,y=%d,z=%d", __func__,i,frameCnt,x[i],y[i],z[i]);
-            // }
+            if(i==0)
+            {
+                uteModuleSprotData.deviceOrientation = uteModuleSportCountDeviceOrientation(x[i],y[i],z[i]);
+                UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,i=%02d,frameCnt=%02d,x=%d,y=%d,z=%d", __func__, i, frameCnt, x[i], y[i], z[i]);
+            }
             if(uteModuleSprotData.moreSportData.status==ALL_SPORT_STATUS_PAUSE)
             {
                 /*! 运动暂停不走算法，不出运动值 ,xjc 2022-03-09*/
@@ -1584,7 +1636,6 @@ void uteModuleSportInputDataBeforeAlgo(void)
     }
 #if UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
     accValueAvg = accValueCount > 0 ? accValueSum / accValueCount : 0;
-    // if (abs(accValueAvg - 127) > 10)
     if(accValueAvg > 127 ? (accValueAvg - 127) : (127 - accValueAvg) > 10)
     {
         uteModuleSprotData.switchSysclkCountdown = 10;
@@ -1600,7 +1651,7 @@ void uteModuleSportInputDataBeforeAlgo(void)
     if(uteModuleSprotData.isOpenHandScreenOn)
     {
         uint8_t rolloverHandScreenStatus = getHandRollVerScreenDisplayParam();
-        // UTE_MODULE_LOG(1,"%s,rolloverHandScreenStatus=%d",__func__,rolloverHandScreenStatus);
+        UTE_MODULE_LOG(UTE_LOG_STEP_LVL,"%s,rolloverHandScreenStatus=%d",__func__,rolloverHandScreenStatus);
         switch (rolloverHandScreenStatus)
         {
             case ROLLOVER_HAND_SCREEN_ON_STATUS:

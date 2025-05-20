@@ -557,10 +557,11 @@ void uteModuleGuiCommonHandScreenOffMsg(void)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, gui_sleep_sta=%d", __func__, sys_cb.gui_sleep_sta);
     // uteModuleGuiCommonDisplayOff(false);
-    if(!sys_cb.gui_sleep_sta)
+    if(!sys_cb.gui_sleep_sta && sys_cb.guioff_delay)
     {
-        sys_cb.guioff_delay = 0;
-        gui_sleep();                //½öÏ¨ÆÁ
+        sys_cb.guioff_delay = 1;
+        // gui_sleep();                //½öÏ¨ÆÁ
+        uteModuleSprotResetRovllverScreenMode();
     }
 }
 

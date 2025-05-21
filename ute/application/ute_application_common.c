@@ -875,15 +875,15 @@ void uteApplicationCommonStartPowerOffMsg(void)
     }
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
-#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
-    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID, 0, __func__);
-#else
+// #if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+//     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID, 0, __func__);
+// #else
     if(!sys_cb.gui_sleep_sta)
     {
         gui_sleep();
     }
     uteApplicationCommonData.isPowerOn = false;
-#endif
+// #endif
     uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
     uteModuleSportSaveStepData();
@@ -946,10 +946,10 @@ void uteApplicationCommonStartPowerOffMsg(void)
     // uteModuleFactoryTestStop();
     // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN|UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR|UTE_MODULE_PLATFORM_DLPS_BIT_KEYS|UTE_MODULE_PLATFORM_DLPS_BIT_UART);
 
-#if !UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+// #if !UTE_MODULE_SCREENS_POWEROFF_SUPPORT
 //    uteModuleGuiCommonDisplayOff(true);
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
-#endif
+// #endif
 }
 
 /**

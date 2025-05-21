@@ -216,7 +216,6 @@ void bsp_sensor_hr_algo_input_data_handle(void)
 #elif (SENSOR_HR_SEL == SENSOR_HR_VCLC09A)
     extern void vcHr11_process(sport_mode_type vcSportMode) ;
     vcHr11_process(sportType);
-    printf("vc30fx_usr_device_handler\r\n");
 #endif
 
 }

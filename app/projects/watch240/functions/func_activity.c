@@ -1544,6 +1544,325 @@ static void func_activity_disp_handle(void)
 
     }
 }
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+compo_form_t *func_activity_form_create(void)
+{
+    ///新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    uint32_t totalStepCnt = 0;
+    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+    uint32_t arc_step = 0;
+    if(uteModuleSportGetStepsTargetCnt() != 0)
+    {
+        arc_step = (totalStepCnt*1000 / uteModuleSportGetStepsTargetCnt());
+        if(arc_step>1000)arc_step=1000;
+    }
+
+
+    widget_page_t *page = widget_page_create(frm->page_body);///创建按键页面
+    widget_set_location(page,GUI_SCREEN_WIDTH/2,96/2+24,GUI_SCREEN_WIDTH,212/2+20/2);
+
+    compo_arc_t *arc = compo_arc_create_page(frm,page);
+    compo_arc_set_alpha(arc,255,0);
+    compo_arc_set_location(arc,GUI_SCREEN_CENTER_X,212/2,192,192);
+    compo_arc_set_width(arc,20);
+    compo_arc_set_rotation(arc,2700);
+    compo_arc_set_angles(arc,0,1800);
+    compo_arc_set_color(arc,make_color(76,16,12),0);
+    compo_arc_set_value(arc,1000);
+    compo_arc_set_edge_circle(arc,true,true);
+
+    arc = compo_arc_create_page(frm,page);
+    compo_arc_set_alpha(arc,255,0);
+    compo_arc_set_location(arc,GUI_SCREEN_CENTER_X,212/2,144,144);
+    compo_arc_set_width(arc,20);
+    compo_arc_set_rotation(arc,2700);
+    compo_arc_set_angles(arc,0,1800);
+    compo_arc_set_color(arc,make_color(76,64,0),0);
+    compo_arc_set_value(arc,1000);
+    compo_arc_set_edge_circle(arc,true,true);
+
+    arc = compo_arc_create_page(frm,page);
+    compo_arc_set_alpha(arc,255,0);
+    compo_arc_set_location(arc,GUI_SCREEN_CENTER_X,212/2,96,96);
+    compo_arc_set_width(arc,20);
+    compo_arc_set_rotation(arc,2700);
+    compo_arc_set_angles(arc,0,1800);
+    compo_arc_set_color(arc,make_color(0,73,64),0);
+    compo_arc_set_value(arc,1000);
+    compo_arc_set_edge_circle(arc,true,true);
+///////////////////////////////////////////////////////////
+    arc = compo_arc_create_page(frm,page);
+    compo_arc_set_alpha(arc,255,0);
+    compo_arc_set_location(arc,GUI_SCREEN_CENTER_X,212/2,192,192);
+    compo_arc_set_width(arc,20);
+    compo_arc_set_rotation(arc,2700);
+    compo_arc_set_angles(arc,0,1800);
+    compo_arc_set_color(arc,make_color(252,55,40),make_color(76,16,12));
+    compo_arc_set_value(arc,arc_step);
+    compo_arc_set_edge_circle(arc,true,true);
+    compo_setid(arc,KCAL_ARC_ID);
+
+    arc = compo_arc_create_page(frm,page);
+    compo_arc_set_alpha(arc,255,0);
+    compo_arc_set_location(arc,GUI_SCREEN_CENTER_X,212/2,144,144);
+    compo_arc_set_width(arc,20);
+    compo_arc_set_rotation(arc,2700);
+    compo_arc_set_angles(arc,0,1800);
+    compo_arc_set_color(arc,make_color(255,212,0),make_color(76,64,0));
+    compo_arc_set_value(arc,arc_step);
+    compo_arc_set_edge_circle(arc,true,true);
+    compo_setid(arc,KM_ARC_ID);
+
+    arc = compo_arc_create_page(frm,page);
+    compo_arc_set_alpha(arc,255,0);
+    compo_arc_set_location(arc,GUI_SCREEN_CENTER_X,212/2,96,96);
+    compo_arc_set_width(arc,20);
+    compo_arc_set_rotation(arc,2700);
+    compo_arc_set_angles(arc,0,1800);
+    compo_arc_set_color(arc,make_color(0,242,214),make_color(0,73,64));
+    compo_arc_set_value(arc,arc_step);
+    compo_arc_set_edge_circle(arc,true,true);
+    compo_setid(arc,STEP_ARC_ID);
+////////////////////////////////////////////////////////////////////////////////
+    char txt_buf[20];
+    uint16_t distance = uteModuleSportGetCurrDayDistanceData();
+
+    compo_textbox_t *textbox;
+    memset(txt_buf,'\0',sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());///千卡数据
+    textbox = compo_textbox_create(frm,6);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,144);
+    compo_setid(textbox,KCAL_TXT_VALUE_ID);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I342001_5_ACTIVITY_ICON_KCAL_BIN);
+    compo_picturebox_set_size(picbox,32,32);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/1.6,144+25);
+
+    memset(txt_buf,'\0',sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld.%02ld",distance/100, distance%100);///公里数据
+    textbox = compo_textbox_create(frm,6);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,144);
+    compo_setid(textbox,KM_TXT_VALUE_ID);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I342001_5_ACTIVITY_ICON_DIS_BIN);
+    compo_picturebox_set_size(picbox,32,32);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/1.6,144+25);
+
+    memset(txt_buf,'\0',sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
+    textbox = compo_textbox_create(frm,6);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,178);
+    compo_setid(textbox,STEP_TXT_VALUE_ID);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I342001_5_ACTIVITY_ICON_STEPS_BIN);
+    compo_picturebox_set_size(picbox,32,32);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,178+25);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I342001_5_ACTIVITY_NEXT_BIN);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,218+16/2);
+/////////////////////////////////////////////////////////////////////////////////////////////////
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP_DETAILS]));
+    compo_textbox_set(textbox, i18n[STR_STEP_DETAILS]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+42);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I342001_5_ACTIVITY_NO_DATA_BG_BIN);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+72+96/2);
+
+    /*步数数据*/
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
+    textbox = compo_textbox_create(frm,6);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+186+30/2);
+    compo_setid(textbox,STEP_DAY_TXT_VALUE_ID);
+
+    area_t txt_leng= widget_text_get_area(textbox->txt);
+
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));
+    compo_textbox_set(textbox, i18n[STR_STEP]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT+186+30/2);
+    compo_textbox_set_forecolor(textbox,make_color(128,128,128));
+    compo_setid(textbox,STEP_DAY_TXT_UNIT_ID);
+
+    uint32_t target_step = uteModuleSportGetStepsTargetCnt();
+    if(target_step == 0)target_step = 8000;
+    uint32_t step_date[24];
+    uteModuleSportLoadTodayEveryHourStepHistoryData(step_date);
+    compo_chartbox_t*chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 24);///图表内的柱形图
+    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+72+96/2-10,206,80);
+    compo_chartbox_set_pixel(chart, 1);
+    compo_setid(textbox,STEP_DAY_CAHRT_VALUE_ID);
+
+    chart_t chart_info;
+    chart_info.y = 0;
+    chart_info.width = 4;   ///像素点
+    for (int i=0; i<24; i++)
+    {
+//         printf("step:%ld\n",step_date[i]);
+//         step_date[i] =8000;
+        chart_info.x = i*chart_info.width + i*5;
+        chart_info.height = step_date[i]*(104*1000/target_step)/1000;///心率数据转换为柱形条显示数据
+        compo_chartbox_set_value(chart, i, chart_info, make_color(0,242,214));
+    }
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+    uint32_t week_step_data;
+    uint32_t week_step_date[7];
+    uint32_t target_week_step = uteModuleSportLoadWeekDayStepHistoryData(week_step_date, &week_step_data);
+
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_WEEK_STEP]));
+    compo_textbox_set(textbox, i18n[STR_WEEK_STEP]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT*2+42);
+
+    picbox = compo_picturebox_create(frm, uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID ? UI_BUF_I342001_5_ACTIVITY_WEEK_DATE_BG_ZH_BIN: UI_BUF_I342001_5_ACTIVITY_WEEK_DATE_BG_EN_BIN);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT*2+72+96/2);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",week_step_data);///week步数数据
+    textbox = compo_textbox_create(frm,6);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT*2+186+30/2);
+    compo_setid(textbox,STEP_WEEK_TXT_VALUE_ID);
+
+    txt_leng= widget_text_get_area(textbox->txt);
+
+    textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));
+    compo_textbox_set(textbox, i18n[STR_STEP]);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT*2+186+30/2);
+    compo_textbox_set_forecolor(textbox,make_color(128,128,128));
+    compo_setid(textbox,STEP_WEEK_TXT_UNIT_ID);
+
+    chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 7);///图表内的柱形图
+    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+5,GUI_SCREEN_HEIGHT*2+72+96/2-10,206,78);
+    compo_chartbox_set_pixel(chart, 1);
+    compo_setid(textbox,STEP_WEEK_CAHRT_VALUE_ID);
+
+    chart_info;
+    chart_info.y = 0;
+    chart_info.width = 14;   ///像素点
+    for (int i=0; i<7; i++)
+    {
+//         week_step_date[i] =18000;
+//         target_week_step = 18000;
+        chart_info.x = i*chart_info.width + i*16;
+        if(target_week_step != 0)
+        {
+            chart_info.height = week_step_date[i]*(100*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
+        }
+        else
+        {
+            chart_info.height = 0;///心率数据转换为柱形条显示数据
+        }
+        compo_chartbox_set_value(chart, i, chart_info,  make_color(0,242,214));
+    }
+
+
+    return frm;
+}
+static void func_activity_disp_handle(void)
+{
+    compo_arc_t *arc_kcal = compo_getobj_byid(KCAL_ARC_ID);
+    compo_arc_t *arc_km   = compo_getobj_byid(KM_ARC_ID);
+    compo_arc_t *arc_step = compo_getobj_byid(STEP_ARC_ID);
+    compo_textbox_t *textbox_kcal = compo_getobj_byid(KCAL_TXT_VALUE_ID);
+    compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
+    compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
+    compo_textbox_t *textbox_step_day = compo_getobj_byid(STEP_DAY_TXT_VALUE_ID);
+    compo_textbox_t *textbox_step_week = compo_getobj_byid(STEP_WEEK_TXT_VALUE_ID);
+    compo_textbox_t *textbox_step_day_uint = compo_getobj_byid(STEP_DAY_TXT_UNIT_ID);
+    compo_textbox_t *textbox_step_week_uint = compo_getobj_byid(STEP_WEEK_TXT_UNIT_ID);
+    compo_chartbox_t*day_chart = compo_getobj_byid(STEP_DAY_CAHRT_VALUE_ID);
+    compo_chartbox_t*week_chart = compo_getobj_byid(STEP_WEEK_CAHRT_VALUE_ID);
+
+    char txt_buf[20];
+    uint16_t distance = uteModuleSportGetCurrDayDistanceData();
+    uint32_t totalStepCnt = 0;
+    uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+    uint32_t arc_step_value = 0;
+    if(uteModuleSportGetStepsTargetCnt() != 0)
+    {
+        arc_step_value = (totalStepCnt*1000 / uteModuleSportGetStepsTargetCnt());
+        if(arc_step_value>1000)arc_step_value=1000;
+    }
+
+    u8 km_integer  = distance/100;                //距离 整数
+    u8 km_decimals = distance%100;               //距离 小数
+    if(uteModuleSystemtimeGetDistanceMiType())//英里
+    {
+        uint16_t distance = km_integer*1000+km_decimals*10;
+        distance = distance*0.6213712;
+        km_integer  = distance/1000;
+        km_decimals = distance%1000/10;
+    }
+//////////////////////////////////////////////////////////////////////////
+    compo_arc_set_value(arc_kcal,arc_step_value);
+    compo_arc_set_value(arc_km,arc_step_value);
+    compo_arc_set_value(arc_step,arc_step_value);
+
+    memset(txt_buf,'\0',sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
+    compo_textbox_set(textbox_step, txt_buf);
+
+    memset(txt_buf,'\0',sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, distance);///公里数据
+    compo_textbox_set(textbox_km, txt_buf);
+
+    memset(txt_buf,'\0',sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());///千卡数据
+    compo_textbox_set(textbox_kcal, txt_buf);
+////////////////////////////////////////////////////////////////
+    uint32_t target_step = uteModuleSportGetStepsTargetCnt();
+    if(target_step == 0)target_step = 8000;
+    uint32_t step_date[24];
+    uteModuleSportLoadTodayEveryHourStepHistoryData(step_date);
+    chart_t chart_info;
+    chart_info.y = 0;
+    chart_info.width = 4;   ///像素点
+    for (int i=0; i<24; i++)
+    {
+        chart_info.x = i*chart_info.width + i*5;
+        chart_info.height = step_date[i]*(104*1000/target_step)/1000;///心率数据转换为柱形条显示数据
+        compo_chartbox_set_value(day_chart, i, chart_info, make_color(0,242,214));
+    }
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///今日步数数据
+    compo_textbox_set(textbox_step_day, txt_buf);
+//////////////////////////////////////////////////////////////////////
+    uint32_t week_step_data;
+    uint32_t week_step_date[7];
+    uint32_t target_week_step = uteModuleSportLoadWeekDayStepHistoryData(week_step_date, &week_step_data);
+    chart_info;
+    chart_info.y = 0;
+    chart_info.width = 14;   ///像素点
+    for (int i=0; i<7; i++)
+    {
+        chart_info.x = i*chart_info.width + i*16;
+        if(target_week_step != 0)
+        {
+            chart_info.height = week_step_date[i]*(100*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
+        }
+        else
+        {
+            chart_info.height = 0;///心率数据转换为柱形条显示数据
+        }
+        compo_chartbox_set_value(week_chart, i, chart_info,  make_color(0,242,214));
+    }
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",week_step_data);///week步数数据
+    compo_textbox_set(textbox_step_week, txt_buf);
+}
+
 #else
 compo_form_t *func_activity_form_create(void)
 {
@@ -1609,8 +1928,8 @@ static void func_activity_enter(void)
     };
     compo_page_move_init(f_activity->ptm, func_cb.frm_main->page_body, &info);
     f_activity->uint_km = uteModuleSystemtimeGetDistanceMiType();//英里
-#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
-#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     f_activity->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {

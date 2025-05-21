@@ -140,6 +140,7 @@ bool timer_hot_mic_work(void)
         && (ecig.hot_time_cnt < ecig.cfg->heat_time_max)//吸烟超时时间
         && (ecig.smoke_sta != LOW_POWER) //低电量不工作
         && (ecig.short_circuit_flag != SHORT_CIRCUIT) //短路不工作
+        && (ecig.poweroff_flag != 0) //关机立马不工作
         &&  (ecig.short_circuit_flag != OPEN_CIRCUIT))//开路也不工作
     {
         return true;

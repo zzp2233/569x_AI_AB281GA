@@ -24,6 +24,7 @@ typedef struct
     uint32_t smoking_count_per_day[7];
     int current_power;                     // 当前功率（单/双发）
     int current_index; // 当前进度条索引
+    u8  resistance_type;
     u8 smoke_position_swich;// （单/双发）
 } ute_module_smoke_data_t;
 extern ute_module_smoke_data_t uteModuleSmokeData;

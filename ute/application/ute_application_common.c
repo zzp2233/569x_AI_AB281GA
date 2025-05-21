@@ -32,6 +32,7 @@
 // #include "ute_module_menstrualcycle.h"
 #include "ute_module_newFactoryTest.h"
 #include "ute_module_localRingtone.h"
+#include "ecig.h"
 // #include "ute_module_appbinding.h"
 #if 0
 #include "ute_drv_keys_common.h"
@@ -114,6 +115,7 @@ void uteApplicationCommonStartupFrist(void)
     uteApplicationCommonData.isStartupFristFinish = false;
     uteApplicationCommonData.isStartupSecondFinish = false;
     uteApplicationCommonData.isPowerOn = false;
+    uteApplicationCommonData.isAppClosed = true;
     uteModuleFilesystemInit();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_LOG_DIR);
@@ -1804,7 +1806,9 @@ void uteApplicationCommonPoweroff(void)
     uteModuleNewFactoryTestSetMode(&data);
     data->mode = FACTORY_TEST_MODE_SHIP;
 #endif
+    ecig.poweroff_flag=0;
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF, 0);
+
 }
 
 /**

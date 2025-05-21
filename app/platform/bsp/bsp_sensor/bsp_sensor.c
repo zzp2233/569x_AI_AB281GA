@@ -68,6 +68,7 @@ u8 bsp_sensor_hr_init(u8 mode)
     {
         vcMode = VCWORK_MODE_HRWORK;
     }
+    extern vcHr11_t vcHr11;
     vcHr11Init(&vcHr11, vcMode);
 #endif
 
@@ -102,6 +103,7 @@ u8 bsp_sensor_hr_stop(void)
         vc30fx_pwr_dis();
     }
 #elif (SENSOR_HR_SEL == SENSOR_HR_VCLC09A)
+    extern vcHr11_t vcHr11;
     stop = !vcHr11StopSample(&vcHr11);
     extern void vclc09_pwr_dis();
     vclc09_pwr_dis();

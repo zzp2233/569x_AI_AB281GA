@@ -399,6 +399,112 @@ static const compo_football_item_t tbl_menu_football[20] =
     {UI_BUF_I340001_THEME_ICON2_MORE_BIN,              FUNC_MENU_STYLE_FOOTBALL_LIST},
 };
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+#define FOOTBALL_RADIUS                          (GUI_SCREEN_WIDTH/4) + 10
+#define MENU_FOOTBALL_ITEM_CNT                   ((int)(sizeof(tbl_menu_football) / sizeof(tbl_menu_football[0])))
+#define KALE_EDGE_SPACE                          2                                                              //边缘距离
+#define KALE_ICON_SPACE                          2                                                              //图标距离
+#define KALE_ICON_OUTER_SIZE                     (gui_image_get_size(tbl_menu_football[0].res_addr).wid)    //外圈图标大小
+#define KALE_ICON_INNER_SIZE                     (KALE_ICON_OUTER_SIZE / 5 * 2)                                 //内圈图标大小
+#define KALE_REFRASH_EXPIRE                      1                                                              //刷新间隔 uint：ms
+#define KALE_SWITCH_DR                           2                                                              //单次变更R值
+#define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
+
+static const compo_football_item_t tbl_menu_football[20] =
+{
+
+
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_ACTIVITY_01_BIN,        FUNC_ACTIVITY},             //活动记录
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_CALL_BIN,            FUNC_CALL    },                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_SOPRT_BIN,       FUNC_SPORT,                 },                //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_HEART_BIN, FUNC_HEARTRATE,             },            //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_STRESS_BIN, FUNC_PRESSURE,                },               //压力
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_SPO2_BIN, FUNC_BLOOD_OXYGEN,           },         //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_PRESSURE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_BLOOD_PRESSURE_BIN, FUNC_BLOOD_OXYGEN,      },       //血压
+#endif
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_SLEEP_BIN, FUNC_SLEEP,                  },                //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_MUSIC_BIN, FUNC_BT,                  },                   //音乐
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_WEATHER_BIN, FUNC_WEATHER,                },              //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_ALARM_BIN, FUNC_ALARM_CLOCK,            },          //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+#if UTE_MODULE_SCREENS_EMOTION_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_MOOD_BIN, FUNC_MOOD,               },              //情绪
+#endif // UTE_MODULE_SCREENS_EMOTION_SUPPORT
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_BREATHING_BIN, FUNC_BREATHE,          },              //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_MESSAGE_BIN, FUNC_MESSAGE,                },              //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_VOICE_ASSISTANT_BIN, FUNC_VOICE,        },                //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+// #if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    // {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SOS_BIN,                   .str_idx=STR_SOS},                  //SOS
+// #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_GAME_BIN, FUNC_GAME,                  },                 //游戏
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_TOOLBOX_BIN, FUNC_TOOLBOX,              },             //工具箱
+#endif
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_PERIOD_BIN, FUNC_WOMEN_HEALTH,          },          //女性
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_SETTINGS_BIN, FUNC_SETTING,                },              //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+
+//#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+//    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_STOPWATCH_BIN, FUNC_STOPWATCH,             },            //秒表
+//#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_TIMER_BIN, FUNC_TIMER,                  },                //定时器
+#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+
+
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_FLASHLIGHT_BIN, FUNC_FLASHLIGHT,             },            //手电筒
+#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_FINDPHONE_BIN, FUNC_FINDPHONE,             },            //查找手机
+#endif // UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_PHOTO_BIN, FUNC_CAMERA,                 },               //相机
+#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_CALCULATOR_BIN, FUNC_CALCULATOR,             },           //计算器
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {UI_BUF_I342001_2_HONEYCOMB_POLYGON_CALENDAR_BIN, FUNC_CALENDAER,               },            //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+};
+
+
 #else
 #define FOOTBALL_RADIUS                          (GUI_SCREEN_WIDTH/2.2-10)
 #define MENU_FOOTBALL_ITEM_CNT                   ((int)(sizeof(tbl_menu_football) / sizeof(tbl_menu_football[0])))

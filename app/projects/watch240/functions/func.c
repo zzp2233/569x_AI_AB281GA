@@ -179,6 +179,9 @@ extern void func_sub_sos(void);
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 extern void func_power_on(void);//开机
 #endif
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+extern void func_power_off(void);//关机logo界面
+#endif
 extern void func_power_on_scan(void);
 extern void func_power_on_language(void);
 extern void func_test_mode(void);///*出厂测试模式选择*/
@@ -252,6 +255,9 @@ compo_form_t *func_power_on_scan_form_create(void);
 compo_form_t *func_sport_finish_form_create(void);
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
 compo_form_t *func_power_on_form_create(void);//开机
+#endif
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+compo_form_t *func_power_off_form_create(void);//关机logo界面
 #endif
 compo_form_t *func_ble_call_form_create(void);
 compo_form_t *func_ota_update_form_create(void);
@@ -569,6 +575,9 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
     {FUNC_POWER_ON,                     func_power_on_form_create},
 #endif
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+    {FUNC_POWER_OFF,                    func_power_off_form_create},
+#endif
     {FUNC_TEST_MODE,                    func_test_mode_form_create},///*出厂测试模式选择*/
     {FUNC_TEST_MODE_LIST,               func_test_mode_list_form_create},///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/
@@ -803,6 +812,9 @@ const func_t tbl_func_entry[] =
 #endif
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
     {FUNC_POWER_ON,                     func_power_on},
+#endif
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+    {FUNC_POWER_OFF,                    func_power_off},
 #endif
     {FUNC_TEST_MODE,                    func_test_mode}, ///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing},///*工厂测试*/

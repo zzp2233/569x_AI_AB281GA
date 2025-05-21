@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
 #define DEFAULT_BLE_DEV_NAME "Storm Verge"
-#define UTE_SW_VERSION "AB281FV000059"
+#define UTE_SW_VERSION "AB281FV000067"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
@@ -56,6 +56,10 @@
 /*! 默认背光百分比zn.zeng, 2021-09-24  */
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
 
+/*! 默认亮屏时间zn.zeng, 2021-08-20  */
+#ifndef DEFAULT_SCREEN_ON_TIME_SECOND
+#define DEFAULT_SCREEN_ON_TIME_SECOND 5
+#endif
 //Gsensor
 #define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1
 #define UTE_DRV_STK8321_SUPPORT 0
@@ -80,19 +84,23 @@
 /*! PWRKEY,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_SUPPORT 1
 /*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
-#define UTE_DRV_PWRKEY_MAX_CNT 2
+#define UTE_DRV_PWRKEY_MAX_CNT 1
 
+#if (UTE_DRV_PWRKEY_MAX_CNT > 0)
 #define UTE_DRV_PWRKEY_KEY0 KEY_BACK
 #define UTE_DRV_PWRKEY_KEY0_MAX_ADC 0x20 // 0R
+#endif
 
+#if (UTE_DRV_PWRKEY_MAX_CNT > 1)
 #define UTE_DRV_PWRKEY_KEY1 KEY_LEFT
 #define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x9A // 12K
+#endif
 
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
 
 /*! KEY1跳转界面,wang.luo 2025-04-09 */
-#define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT
+#define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_NULL
 
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1
@@ -162,6 +170,7 @@
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 0    // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 0   // 立方体表盘索引
 
+
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
 
@@ -196,6 +205,7 @@
 #define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
 
 #define UTE_MODULE_SCREENS_POWERON_SUPPORT            1 //开机logo界面
+#define UTE_MODULE_SCREENS_POWEROFF_SUPPORT           1 //关机logo界面
 #define UTE_MODULE_SCREENS_UP_MENU_SUPPORT            1 //上拉菜单
 #define UTE_MODULE_SCREENS_DWON_MENU_SUPPORT          1 //下拉菜单
 #define UTE_MODULE_SCREENS_LINK_MAN_SUPPORT           1 //联系人

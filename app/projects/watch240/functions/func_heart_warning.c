@@ -351,6 +351,65 @@ static void func_heart_warning_updata(void)
     }
 }
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+//创建心率预警窗体
+compo_form_t *func_heart_warning_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+//    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I338002_6_HEART_ICON_HEART_BIN);
+//    compo_animation_set_pos(animation,52/2+95, 52/2+112);  //需要更替为弹窗图标
+//    compo_animation_set_radix(animation,1);
+//    compo_animation_set_interval(animation,0);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I342001_6_HEART_HEART_BIN);
+    compo_picturebox_set_pos(picbox, 60+34/2, 78+34/2);
+
+    char txt_buf[100];
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetHeartValue());
+    compo_textbox_t *textbox = compo_textbox_create(frm, 3);
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_pos(textbox,103,69+10);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,COMPO_ID_TEXT_HEART_VALUE);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_HIGHT])+strlen(i18n[STR_HEART_LOW]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,48/2+128,230,widget_text_get_max_height());
+    compo_textbox_set_forecolor(textbox,make_color(249,52,52));
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue())
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
+    }
+    else if (uteModuleHeartGetHeartValue() < uteModuleHeartGetMinHeartValue())
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
+    }
+    compo_textbox_set(textbox,txt_buf);
+
+    return frm;
+}
+
+static void func_heart_warning_updata(void)
+{
+    compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_HEART_VALUE);
+    uint8_t heart_value = uteModuleHeartGetHeartValue();
+    if(heart_value > 0 && heart_value < 0xff)
+    {
+        char txt_buf[10];
+        memset(txt_buf, 0, sizeof(txt_buf));
+        snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
+        compo_textbox_set(textbox, txt_buf);
+    }
+    if (uteModuleHeartGetHeartValue() < uteModuleHeartGetHeartWaringMaxValue() && uteModuleHeartGetHeartValue() > uteModuleHeartGetHeartWaringMinValue())
+    {
+        uteModuleGuiCommonGoBackLastScreen();
+    }
+}
+
 #else
 compo_form_t *func_heart_warning_form_create(void)
 {

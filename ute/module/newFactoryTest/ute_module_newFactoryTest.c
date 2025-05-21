@@ -173,13 +173,27 @@ void uteModuleNewFactoryTestEverySecond(void)
         else
         {
             uteModuleFactoryTestGetVkData(&uteModuleNewFactoryTestData.u.vcxx.pre,&uteModuleNewFactoryTestData.u.vcxx.current,&uteModuleNewFactoryTestData.u.vcxx.ps,&uteModuleNewFactoryTestData.u.vcxx.isPass);
-            if ((uteModuleNewFactoryTestData.u.vcxx.pre <= DRV_HEART_VCXX_LIGHT_LEAKGE_DIFF_VALUE) && (uteModuleNewFactoryTestData.u.vcxx.current >= DRV_HEART_VCXX_LIGHT_I_MIN_VALUE))
+            if(uteModuleNewFactoryTestGetCheckLightMode()==NEW_FACTORY_VCXX_TEST_MODE_INFRARED)
             {
-                uteModuleNewFactoryTestData.u.vcxx.isPass = true;
+                if((uteModuleNewFactoryTestData.u.vcxx.ps >= DRV_HEART_VCXX_PS_MIN_VALUE)&&(uteModuleNewFactoryTestData.u.vcxx.current >= DRV_HEART_VCXX_LIGHT_I_MIN_VALUE))
+                {
+                    uteModuleNewFactoryTestData.u.vcxx.isPass = true;
+                }
+                else
+                {
+                    uteModuleNewFactoryTestData.u.vcxx.isPass = false;
+                }
             }
             else
             {
-                uteModuleNewFactoryTestData.u.vcxx.isPass = false;
+                if ((uteModuleNewFactoryTestData.u.vcxx.pre <= DRV_HEART_VCXX_LIGHT_LEAKGE_DIFF_VALUE) && (uteModuleNewFactoryTestData.u.vcxx.current >= DRV_HEART_VCXX_LIGHT_I_MIN_VALUE))
+                {
+                    uteModuleNewFactoryTestData.u.vcxx.isPass = true;
+                }
+                else
+                {
+                    uteModuleNewFactoryTestData.u.vcxx.isPass = false;
+                }
             }
             // uteDrvHeartNewFactoryVcxxGetCrosstalktestValue(&uteModuleNewFactoryTestData.u.vcxx.pre,&uteModuleNewFactoryTestData.u.vcxx.current,&uteModuleNewFactoryTestData.u.vcxx.ps,&uteModuleNewFactoryTestData.u.vcxx.bioA,&uteModuleNewFactoryTestData.u.vcxx.isPass);
         }

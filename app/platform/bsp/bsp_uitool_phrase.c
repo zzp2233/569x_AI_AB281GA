@@ -247,14 +247,7 @@ void bsp_uitool_num_create(compo_form_t *frm, uitool_res_t *uitool_res, u32 res_
 
             case COMPO_BOND_BATTERY:
                 bond_compo_type = COMPO_TYPE_NUMBER;
-                if((uitool_res->param1 & BIT(2)) && (sys_cb.vbat_percent >= 100))
-                {
-                    max_cnt = 3;
-                }
-                else
-                {
-                    max_cnt = 2;
-                }
+                max_cnt = 3;
                 break;
 
             case COMPO_BOND_DISTANCE:

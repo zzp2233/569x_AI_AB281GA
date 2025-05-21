@@ -126,8 +126,10 @@ typedef struct compo_listbox_t_
 
     u8 flag_area;                   //是否点击特定区域
     int sidx;                       //起始编号
+    int sidx2;                       //起始编号
     bool flash_read_flag;
     bool txt_roll_need_rst;         //文本滚动重置标志
+    bool txt2_roll_need_rst;         //文本滚动重置标志
     widget_page_t *item_page[LISTBOX_ITEM_CNT];
     widget_icon_t *item_bgimg[LISTBOX_ITEM_CNT];
     widget_icon_t *item_icon[LISTBOX_ITEM_CNT];
@@ -135,6 +137,7 @@ typedef struct compo_listbox_t_
     widget_text_t *item_text2[LISTBOX_ITEM_CNT];
     widget_icon_t *item_icon2[LISTBOX_ITEM_CNT];
     compo_roll_cb_t roll_cb[LISTBOX_ITEM_CNT];
+    compo_roll_cb_t roll_cb2[LISTBOX_ITEM_CNT];
     s16 item_idx[LISTBOX_ITEM_CNT];
 
     u8 idx_time;                //加入时分秒针元素

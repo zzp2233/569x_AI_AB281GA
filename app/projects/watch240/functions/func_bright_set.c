@@ -38,7 +38,7 @@ compo_form_t *func_bright_set_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_LIGHT]);
 
     //新建列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
     compo_listbox_set(listbox, tbl_bright_set_list, BRIGHT_SET_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_BIN);
 

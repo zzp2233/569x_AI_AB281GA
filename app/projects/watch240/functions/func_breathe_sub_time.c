@@ -1127,10 +1127,8 @@ typedef struct f_breathe_sub_time_t_
     bool touch_flag;
     u8 breathe_min[5];
     s32 move_dy;
-    s32 move_dy_data;
     u8 min;
-    s8 offset;
-    s8 offset_old;
+    s8 num_offset;
 } f_breathe_sub_time_t;
 
 #define TXT_SPACING    (105-62)
@@ -1192,6 +1190,13 @@ compo_form_t *func_breathe_sub_time_form_create(void)
     compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I335001_19_BREATHING_TRAINING_2_1_SET_TIME_ICON_YES_208X52_X16_Y222_BIN).hei/2-10);
     compo_setid(btn_ok,COMPO_ID_BTN_SURE);
 
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 105, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 150, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
 
     if(func_cb.sta == FUNC_BREATHE_SUB_TIME)
     {
@@ -1201,6 +1206,8 @@ compo_form_t *func_breathe_sub_time_form_create(void)
             f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
         }
         f_alarm_clock_sub_set->min  = txt_data[2];
+        f_alarm_clock_sub_set->min  = txt_data[2];
+        printf("[create_time]set->min:%d\n",f_alarm_clock_sub_set->min);
     }
 
     return frm;
@@ -1217,19 +1224,16 @@ static void func_breathe_set_time_sub_move(void)
         f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
         if(f_disturd_set->touch_flag == true)//触摸状态
         {
-            f_disturd_set->move_dy_data = ((int)(dy/TXT_SPACING))*TXT_SPACING;
-            f_disturd_set->move_dy = dy-f_disturd_set->move_dy_data;
+            f_disturd_set->move_dy = (dy%TXT_SPACING);
 
-            f_disturd_set->offset = f_disturd_set->move_dy_data/TXT_SPACING;
-
-            if(f_disturd_set->offset != f_disturd_set->offset_old)
+            if( dy != 0 && f_disturd_set->num_offset != dy/TXT_SPACING)
             {
-                if(f_disturd_set->offset != 0)
-                {
-                    func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,-f_disturd_set->offset+f_disturd_set->offset_old);///获取时间
-                }
-                f_disturd_set->offset_old = f_disturd_set->offset;
+                s8 set_offset = -(dy/TXT_SPACING)+f_disturd_set->num_offset;//获取偏移
+                func_breathe_sub_time_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,set_offset);///获取时间
+                f_disturd_set->num_offset = dy/TXT_SPACING;
+
             }
+
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
             {
                 compo_textbox_t *txt = compo_getobj_byid(idx);
@@ -1242,6 +1246,7 @@ static void func_breathe_set_time_sub_move(void)
         }
         else   //松手状态
         {
+            f_disturd_set->num_offset = 0;
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
             {
                 compo_textbox_t *txt = compo_getobj_byid(idx);

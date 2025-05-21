@@ -228,7 +228,7 @@ compo_form_t *func_heartrate_form_create(void)
         snprintf(txt_buf,sizeof(txt_buf),"%d",readTime.day);
         textbox = compo_textbox_create(frm, 2);//七天
         compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_12_BIN);
-        compo_textbox_set_pos(textbox,23+(7-i)*27,566);
+        compo_textbox_set_pos(textbox,48+i*27,566);
         compo_textbox_set(textbox,txt_buf);
         compo_textbox_set_forecolor(textbox,COLOR_GRAY);
     }

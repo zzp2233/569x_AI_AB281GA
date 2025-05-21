@@ -318,7 +318,7 @@ compo_form_t *func_style_form_create(void)
     //新建菜单选择列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_style_list, SET_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_1_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_BG_BIN);
     compo_listbox_set_sta_icon(listbox, UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_BUTTON_ICON_PIC24X24_X200_Y66_141_214_00_BIN, UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_3_THEME_SELECTION_BUTTON_ICON_PIC24X24_X200_Y66_141_214_01_BIN);
     compo_listbox_set_bithook(listbox, func_sel_style_bit);
     compo_setid(listbox, COMPO_ID_LISTBOX);

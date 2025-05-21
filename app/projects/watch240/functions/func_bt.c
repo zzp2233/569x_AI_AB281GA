@@ -164,7 +164,8 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(lyric_txt, COMPO_ID_TXT_MUSIC_LYRIC);
     compo_textbox_set(lyric_txt,title_buf);
 
-    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_28X30_X24_Y137_X188_Y137_PREVIOUS_SONG_BIN);///上一曲
+    compo_button_t *btn;
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_28X30_X24_Y137_X188_Y137_PREVIOUS_SONG_BIN);///上一曲
     if(!uteModuleCallBtIsConnected() && !ble_is_connect())
     {
         btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_BUTTON_28X30_X24_Y137_X188_Y137_PREVIOUS_SONG_BIN);///上一曲
@@ -213,7 +214,7 @@ compo_form_t *func_bt_form_create(void)
         btn = compo_button_create_by_image(frm, UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_26X22_X26_Y248_X192_Y248_REDUCTION_BIN);///音量减
     }
     compo_setid(btn, COMPO_ID_BTN_VOL_DOWN_BG);
-    compo_button_set_pos(btn, 26+13,248+11);
+    compo_button_set_pos(btn, 26+13,248+11);;
 
     btn = compo_button_create(frm);
     compo_setid(btn, COMPO_ID_BTN_VOL_DOWN);
@@ -266,7 +267,8 @@ static void func_bt_music_refresh_disp(void)
         {
             f_bt->refresh_data = false;
         }
-        if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+
+        if(f_bt->refresh_data == false)
         {
             btn_play   = compo_getobj_byid(COMPO_ID_BTN_PLAY);
             compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_96X96_X72_Y104_BIN);///灰色的暂停按钮
@@ -278,11 +280,12 @@ static void func_bt_music_refresh_disp(void)
             compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_26X22_X26_Y248_X192_Y248_REDUCTION_BIN);//音量减
             btn_play   = compo_getobj_byid(COMPO_ID_BTN_VOL_UP_BG);
             compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_2_NOT_CONNECTED_ICON_26X22_X26_Y248_X192_Y248_ADD_BIN);//音量加
+            compo_textbox_set(tilte_txt, i18n[STR_CONNECT_BLUETOOTH]);
+            compo_picturebox_set_visible(pic,false);
+            return;
         }
         else
         {
-            btn_play   = compo_getobj_byid(COMPO_ID_BTN_PLAY);
-            compo_button_set_bgimg(btn_play,bt_cb.music_playing ? UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_96X96_X72_Y104_01_BIN:UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_96X96_X72_Y104_02_BIN);///暂停 播放
             btn_play   = compo_getobj_byid(COMPO_ID_BTN_PREV_BG);
             compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_28X30_X24_Y137_X188_Y137_PREVIOUS_SONG_BIN);//上一首
             btn_play   = compo_getobj_byid(COMPO_ID_BTN_NEXT_BG);
@@ -291,14 +294,25 @@ static void func_bt_music_refresh_disp(void)
             compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_26X22_X26_Y248_X192_Y248_REDUCTION_BIN);//音量减
             btn_play   = compo_getobj_byid(COMPO_ID_BTN_VOL_UP_BG);
             compo_button_set_bgimg(btn_play,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_26X22_X26_Y248_X192_Y248_ADD_BIN);//音量加
+            compo_picturebox_set_visible(pic,true);
+            memcpy(f_bt->title_buf_old, title_buf, TITLE_BUF_LEN);
+            compo_textbox_set(tilte_txt, title_buf);
+            if(title_size_leng == 0)
+            {
+                compo_textbox_set(tilte_txt, i18n[STR_UNKNOWN]);
+            }
         }
     }
 
-    if(!uteModuleCallBtIsConnected() && !ble_is_connect())
+    if(f_bt->refresh_data == false)
     {
-        compo_textbox_set(tilte_txt, i18n[STR_CONNECT_BLUETOOTH]);
+        return;
     }
-    else if(strcmp(title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
+
+    btn_play   = compo_getobj_byid(COMPO_ID_BTN_PLAY);
+    compo_button_set_bgimg(btn_play,bt_cb.music_playing ? UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_96X96_X72_Y104_01_BIN:UI_BUF_I335001_MUSIC_1_MUSIC_ICON_BUTTON_96X96_X72_Y104_02_BIN);///暂停 播放
+
+    if(strcmp(title_buf, f_bt->title_buf_old)!=0 || title_size_leng == 0) //歌名刷新
     {
         memcpy(f_bt->title_buf_old, title_buf, TITLE_BUF_LEN);
         compo_textbox_set(tilte_txt, title_buf);

@@ -207,6 +207,11 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
     }
     //listbox->sidx = INT_MIN;
     listbox->sidx = -listbox->item_cnt;
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+    {
+        listbox->sidx2 = -listbox->item_cnt;
+    }
+
 }
 
 /**
@@ -746,6 +751,87 @@ void compo_listbox_update(compo_listbox_t *listbox)
         listbox->sidx = sidx;
         listbox->txt_roll_need_rst = false;
     }
+
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+    {
+        ////text 2
+        //滚动控制器
+        if (sidx != listbox->sidx2 || listbox->txt2_roll_need_rst)
+        {
+            int i_end = 0;
+            i = 0;
+            if (sidx > listbox->sidx2)               //向上滑动
+            {
+                int k = sidx - listbox->sidx2;       //向上滑动的列表行数
+
+                //if(k <= INT_MIN) {
+                if(k <= -listbox->item_cnt)         //正常运行不可能运行到这
+                {
+                    listbox->sidx2 = 0;
+                    k = LISTBOX_ITEM_CNT;
+                }
+
+                for (i=0; i<LISTBOX_ITEM_CNT-k; i++)        //将下一行列表项对应的滚动控制器 赋值给 上一行列表对应的滚动控制器
+                {
+                    listbox->roll_cb2[i] = listbox->roll_cb2[i + k];
+                }
+                i_end = LISTBOX_ITEM_CNT;
+            }
+            else if (sidx < listbox->sidx2)          //向下滑动
+            {
+                int k = listbox->sidx2 - sidx;       //向下滑动的列表行数
+                for (i_end=LISTBOX_ITEM_CNT; i_end>k; i_end--)      //将上一行列表项对应的滚动控制器 赋值给 下一行列表对应的滚动控制器
+                {
+                    listbox->roll_cb2[i_end - 1] = listbox->roll_cb2[i_end - 1 - k];
+                }
+                i = 0;
+            }
+
+            for (; i<i_end; i++)                    //对移动超出列表项个数一半的滚动控制器重新赋值
+            {
+                memset(&listbox->roll_cb2[i], 0, sizeof(compo_roll_cb_t));
+                listbox->roll_cb2[i].tick = tick_get();
+            }
+
+            for (i=0; i<LISTBOX_ITEM_CNT; i++)          //判断列表项的中是否可以滚动
+            {
+                if (listbox->txt2_roll_need_rst)
+                {
+                    memset(&listbox->roll_cb2[i], 0, sizeof(compo_roll_cb_t));
+                    listbox->roll_cb2[i].tick = tick_get();
+                }
+                widget_text_t *txt = listbox->item_text2[i];
+                if (widget_get_visble(txt))
+                {
+                    area_t text_area = widget_text_get_area(txt);
+                    area_t textbox_rect = widget_text_get_box_area_rel(txt);
+                    if (text_area.wid > textbox_rect.wid)
+                    {
+                        listbox->roll_cb2[i].mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;
+                        listbox->roll_cb2[i].direction = -1;
+                        if (widget_get_align_center(txt))
+                        {
+                            if(listbox->roll_cb2[i].mode != TEXT_AUTOROLL_MODE_SROLL_CIRC)
+                            {
+                                listbox->roll_cb2[i].offset = (text_area.wid - textbox_rect.wid) / 2;
+                            }
+                        }
+                        widget_text_set_autoroll_mode(listbox->item_text2[i], TEXT_AUTOROLL_MODE_SROLL_CIRC);
+                    }
+                    else
+                    {
+                        widget_text_set_autoroll_mode(listbox->item_text2[i], TEXT_AUTOROLL_MODE_NULL);
+                    }
+                }
+            }
+            for (i=0; i<LISTBOX_ITEM_CNT; i++)
+            {
+                widget_text_set_client(listbox->item_text2[i], listbox->roll_cb2[i].offset, 0);
+            }
+            listbox->sidx2 = sidx;
+            listbox->txt2_roll_need_rst = false;
+        }
+    }
 }
 
 /**
@@ -755,6 +841,10 @@ void compo_listbox_update(compo_listbox_t *listbox)
 void compo_listbox_update_with_text_scroll_rst(compo_listbox_t *listbox)
 {
     listbox->txt_roll_need_rst = true;
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+    {
+        listbox->txt2_roll_need_rst = true;
+    }
     compo_listbox_update(listbox);
 }
 

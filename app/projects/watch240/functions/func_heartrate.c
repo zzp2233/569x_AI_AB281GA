@@ -211,6 +211,8 @@ compo_form_t *func_heartrate_form_create(void)
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+13,512,190,94);
     compo_chartbox_set_pixel(chart, 1);
 
+    ute_module_systemtime_time_t time, readTime;
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
     chart_info.y = 0;
     chart_info.width = 18;   ///像素点
     for (int i=0; i<7; i++)
@@ -219,6 +221,16 @@ compo_form_t *func_heartrate_form_create(void)
         chart_info.x = i*chart_info.width + i*10;
         chart_info.height = heart_week_date[i]*1.14;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
+
+        memcpy(&readTime, &time, sizeof(ute_module_systemtime_time_t));
+        uteModuleSystemtimeInputDateIncreaseDecreaseDay(&readTime, i - 6);
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d",readTime.day);
+        textbox = compo_textbox_create(frm, 2);//七天
+        compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_12_BIN);
+        compo_textbox_set_pos(textbox,23+(7-i)*27,566);
+        compo_textbox_set(textbox,txt_buf);
+        compo_textbox_set_forecolor(textbox,COLOR_GRAY);
     }
 
     return frm;

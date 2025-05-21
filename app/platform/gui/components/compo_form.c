@@ -11,7 +11,7 @@
 #define MAX_WORD_CNT                    32                          //标题最多32个字符
 
 #if GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
-#define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 5)
+#define GUI_PAGE_HEAD_HEIGHT            TITLE_BAR_HIGH//(GUI_SCREEN_HEIGHT / 5)
 #else
 #define GUI_PAGE_HEAD_HEIGHT            (GUI_SCREEN_HEIGHT / 8)
 #endif

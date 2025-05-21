@@ -756,6 +756,10 @@ void compo_set_update(tm_t tm, u16 mtime)
                 for (i=0; i<LISTBOX_ITEM_CNT; i++)
                 {
                     compo_set_roll(&listbox->roll_cb[i], listbox->item_text[i], false);     //滚动
+                    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+                    {
+                        compo_set_roll(&listbox->roll_cb2[i], listbox->item_text2[i], false);     //滚动
+                    }
                 }
 
                 s16 angle = 0;
@@ -973,22 +977,42 @@ void compo_set_update(tm_t tm, u16 mtime)
 /**
  * @brief 获取按键ID
  **/
+// int compo_get_button_id(void)
+// {
+//     point_t pt = ctp_get_sxy();
+//     component_t *compo = (component_t *)compo_pool_get_top();
+//     while (compo != NULL)
+//     {
+//         if (compo->type == COMPO_TYPE_BUTTON)
+//         {
+//             compo_button_t *btn = (compo_button_t *)compo;
+//             rect_t rect = widget_get_absolute(btn->widget);
+//             if ((widget_get_visble(btn->widget)) && (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei))
+//             {
+//                 return btn->id;
+//             }
+//         }
+//         compo = compo_get_next(compo);          //遍历组件
+//     }
+//     return ID_NULL;
+// }
 int compo_get_button_id(void)
 {
+    int id = ID_NULL;
     point_t pt = ctp_get_sxy();
-    component_t *compo = (component_t *)compo_pool_get_top();
+    component_t *compo = (component_t *)compo_pool_get_bottom();
     while (compo != NULL)
     {
         if (compo->type == COMPO_TYPE_BUTTON)
         {
             compo_button_t *btn = (compo_button_t *)compo;
             rect_t rect = widget_get_absolute(btn->widget);
-            if ((widget_get_visble(btn->widget)) && (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei))
+            if ((widget_get_visble(btn->widget)) && abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
             {
-                return btn->id;
+                id = btn->id;
             }
         }
         compo = compo_get_next(compo);          //遍历组件
     }
-    return ID_NULL;
+    return id;
 }

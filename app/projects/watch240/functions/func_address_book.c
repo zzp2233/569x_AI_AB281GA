@@ -908,10 +908,10 @@ static void func_address_book_process(void)
             {
                 compo_listbox_set_visible(f_book->listbox, true);
                 compo_listbox_set(f_book->listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
-                compo_listbox_set_alike_icon(f_book->listbox, UI_BUF_I335001_CALL_00_ICON_36X40_X24_Y64_Y140_Y216_02_BIN);
+                compo_listbox_set_alike_icon(f_book->listbox, UI_BUF_I335001_CALL_01_ICON_56X56_X16_Y62_Y134_Y206_BIN);
                 compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1));
                 compo_listbox_update_with_text_scroll_rst(f_book->listbox);
-                compo_listbox_set_bgimg(f_book->listbox, UI_BUF_I335001_CALL_00_ICON_NEXT_10X16_X206_Y76_Y152_Y227_BIN);
+                compo_listbox_set_bgimg(f_book->listbox, UI_BUF_I335001_3_EXERCISE_LIST_1_BIN);
                 compo_listbox_set_focus_byidx(f_book->listbox, 1);
                 compo_listbox_update(f_book->listbox);
             }

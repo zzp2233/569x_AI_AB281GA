@@ -95,6 +95,7 @@ void vclc09_pwr_en(void)        //PF5
     if(!vclc09_pwr_sta)
     {
         uteModulePlatformOutputGpioSet(IO_PF5,true);
+        delay_5ms(2);
     }
 
     bsp_i2c_init();
@@ -437,6 +438,11 @@ void vcxx_process(void)
 }
 #endif
 
+#if LOG_LVL
+AT(.com_text.vc30fx_dbg)
+char vc_hr11_irq_str[]="vcHr11IRQHandler,oscCheckFinishFlag=%d,sys_is_sleep=%d\n";
+#endif
+
 /*
  * @brief
  *
@@ -445,6 +451,9 @@ void vcxx_process(void)
 AT(.com_text.vc30fx)
 void vcHr11IRQHandler()
 {
+#if LOG_LVL
+    printf(vc_hr11_irq_str,vcHr11.oscCheckFinishFlag,sleep_cb.sys_is_sleep);
+#endif
     if (vcHr11.oscCheckFinishFlag == 0 || !sleep_cb.sys_is_sleep)
     {
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_ALGO_HANDLER,0);

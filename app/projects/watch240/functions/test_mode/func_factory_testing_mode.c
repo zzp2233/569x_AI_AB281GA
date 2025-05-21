@@ -299,12 +299,6 @@ static void func_factory_testing_pass_fail_bnt_click(void)
 
     if(id == PASS_ID || id == FALL_ID)
     {
-#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
-        if (test_data->moduleType == FACTORY_MODULE_HEART_CHECK_LIGHT)
-        {
-            uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
-        }
-#endif
         if(id == PASS_ID)
         {
             test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
@@ -516,7 +510,7 @@ compo_form_t *func_factory_testing_heart_light(void)
     compo_textbox_t *textbox = NULL;
 
     memset(txt_buf, '\0', sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof("漏光测试:"), "漏光测试:");
+    snprintf((char *)txt_buf, sizeof("漏光测试:绿灯"), "漏光测试:绿灯");
     textbox = compo_textbox_create(frm, strlen(txt_buf)); // dif___, Max___
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 1 / 7);
@@ -1044,6 +1038,39 @@ static void func_mode_mic_speaker_click(void)
     }
 }
 
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+static void func_factory_testing_heart_light_click(void)
+{
+    int id = compo_get_button_id();
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    switch(id)
+    {
+        case FALL_ID:
+        {
+            uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
+        }
+        break;
+        case PASS_ID:
+        {
+            uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
+        }
+        break;
+        default:
+        {
+            if (uteModuleNewFactoryTestGetCheckLightMode() == NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK)
+            {
+                uteModuleNewFactoryTestSetCheckLightMode(NEW_FACTORY_VCXX_TEST_MODE_INFRARED);
+            }
+            else
+            {
+                uteModuleNewFactoryTestSetCheckLightMode(NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK);
+            }
+        }
+        break;
+    }
+}
+#endif
+
 ///工厂测试功能消息处理
 static void func_factory_testing_message(size_msg_t msg)
 {
@@ -1075,6 +1102,12 @@ static void func_factory_testing_message(size_msg_t msg)
             else if (test_data->moduleType == FACTORY_MODULE_SPEAKER)
             {
                 func_mode_test_ring_click();
+            }
+#endif
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+            else if (test_data->moduleType == FACTORY_MODULE_HEART_CHECK_LIGHT)
+            {
+                func_factory_testing_heart_light_click();
             }
 #endif
             func_factory_testing_pass_fail_bnt_click();
@@ -1218,11 +1251,25 @@ static void func_factory_testing_heart_light_process(void)
     int curV;
     int psV;
     bool isPass;
+    compo_textbox_t *TextTitle = compo_getobj_byid(LEAKAGE_TXT_1_ID);
     compo_textbox_t *TextPreV = compo_getobj_byid(LEAKAGE_TXT_2_ID);
     compo_textbox_t *TextCurV = compo_getobj_byid(LEAKAGE_TXT_3_ID);
     compo_textbox_t *TextPsV = compo_getobj_byid(LEAKAGE_TXT_4_ID);
     compo_textbox_t *TextIsPass = compo_getobj_byid(LEAKAGE_TXT_5_ID);
     char txt_buf[50];
+
+    if (uteModuleNewFactoryTestGetCheckLightMode() == NEW_FACTORY_VCXX_TEST_MODE_INFRARED)
+    {
+        memset(txt_buf, '\0', sizeof(txt_buf));
+        snprintf((char *)txt_buf, sizeof("漏光测试:红外"), "漏光测试:红外");
+        compo_textbox_set(TextTitle, txt_buf);
+    }
+    else
+    {
+        memset(txt_buf, '\0', sizeof(txt_buf));
+        snprintf((char *)txt_buf, sizeof("漏光测试:绿灯"), "漏光测试:绿灯");
+        compo_textbox_set(TextTitle, txt_buf);
+    }
 
     uteModuleNewFactoryTestGetVkData(&preV, &curV, &psV, &isPass);
 

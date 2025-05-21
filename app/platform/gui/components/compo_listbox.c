@@ -588,15 +588,18 @@ void compo_listbox_update(compo_listbox_t *listbox)
                 flag_scale = false;
                 break;
 
-
-
-            case COMPO_LISTBOX_STYLE_SELECT:
-                flag_scale = (dy > udy_th);
             case COMPO_LISTBOX_STYLE_MENU_CIRCLE_SELECT:
                 //圆屏菜单弧形样式
                 lnx += LISTBOX_STYLE_CIRCLE_R - sqrt64(LISTBOX_STYLE_CIRCLE_R * LISTBOX_STYLE_CIRCLE_R - dy * dy);
                 udy_th = LISTBOX_ITEM_SIZE_THRESHOLD_CIRCLE;
                 flag_scale = (udy > udy_th);
+                //选择模式 语言选择模式
+                icon2 = (listbox->get_bit != NULL && listbox->get_bit(item->vidx) != 0) ? listbox->res_sta_icon1 : listbox->res_sta_icon2;
+                widget_icon_set(listbox->item_icon2[i], icon2);
+                break;
+
+            case COMPO_LISTBOX_STYLE_SELECT:
+                flag_scale = (dy > udy_th);
             case COMPO_LISTBOX_STYLE_LANGUAGE:
                 //选择模式 语言选择模式
                 icon2 = (listbox->get_bit != NULL && listbox->get_bit(item->vidx) != 0) ? listbox->res_sta_icon1 : listbox->res_sta_icon2;

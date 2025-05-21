@@ -43,7 +43,7 @@ compo_form_t *func_call_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_PHONE]);
     //新建列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
     compo_listbox_set(listbox, tbl_call_list, CALL_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_CALL_00_ICON_BG_224X68_X8_Y48_Y126_Y202_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);

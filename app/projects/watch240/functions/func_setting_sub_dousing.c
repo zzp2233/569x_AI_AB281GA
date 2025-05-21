@@ -33,8 +33,7 @@ typedef struct f_dousing_list_t_
     s32 move_dy;
     s32 move_dy_data;
     u8 min;
-    s8 offset;
-    s8 offset_old;
+    s8 num_offset;
 #endif
 } f_dousing_list_t;
 
@@ -314,29 +313,41 @@ enum
 
 #define TXT_SPACING    (105-62)
 #define CENTER_TXT_Y   (130/2)
-const uint8_t txt_num[5] = {5, 10, 15, 30, 60}; // 固定数组
-const uint16_t DOUSING_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
-// 函数功能：获取设置时间（上下 & 上上下下 ）的数
-// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+const static uint8_t txt_num[5] = {5, 10, 15, 30, 60}; // 固定数组
+const static uint16_t DOUSING_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+/**
+ * @brief 根据当前时间和偏移量更新时间值，并生成环形排列的时间选项数组
+ * @param[in,out] timer      : 当前选中的时间值（应为txt_num中的元素）
+ * @param[out]    timer_data : 生成的环形时间选项数组（5个元素）
+ * @param[in]     num        : 偏移量（正数为增加，负数为减少）
+ */
 static void func_set_sub_dousing_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
 {
-    // 1. 计算偏移后的索引
-    int new_index = (*timer + num) % 5;
-    if (new_index < 0)
+    // 1. 查找当前timer在txt_num中的索引
+    unsigned char current_index = 0;
+    for (unsigned char i = 0; i < 5; i++)
     {
-        new_index += 5;
-    }
-    // 2. 更新timer指向的值
-    *timer = new_index;
-    // 3. 生成环形排列的timer_data数组
-    for (int i = 0; i < 5; i++)
-    {
-        int idx = (new_index - 2 + i) % 5;
-        if (idx < 0)
+        if (txt_num[i] == *timer)
         {
-            idx += 5;
+            current_index = i;
+            break;
         }
-        timer_data[i] = txt_num[idx];
+    }
+
+    // 2. 应用偏移量并计算新索引（处理环形逻辑）
+    int new_index = (current_index + num) % 5;
+    if (new_index < 0) new_index += 5; // 处理负数索引
+
+    // 3. 更新timer为新值
+    *timer = txt_num[new_index];
+
+    // 4. 生成环形排列的timer_data数组（以新索引为中心）
+    for (signed char i = -2; i <= 2; i++)
+    {
+        // 计算相对于新索引的环形偏移
+        unsigned char offset = (new_index + i + 5) % 5;
+        // 将结果放入以索引2为中心的位置
+        timer_data[i + 2] = txt_num[offset];
     }
 }
 //创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -345,23 +356,15 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
     char txt_buf[20];
-    u8 txt_data[5];
-    u8 set_time = 0;
-
-    for (u8 i = 0; i < 5; i++)
-    {
-        if(uteModuleGuiCommonGetDisplayOffTime() == txt_num[i])
-        {
-            set_time = i;
-            break;
-        }
-    }
+    uint8_t txt_data[5];
+    uint8_t set_time = uteModuleGuiCommonGetDisplayOffTime() ;
 
     ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
-
+    printf("create_time:%d\n",set_time);
     func_set_sub_dousing_get_timer(&set_time,txt_data,0);///获取时间
+    printf("create_time:%d\n",set_time);
     //创建一个页面用于限制滚动的时间文本
     widget_page_t* page = widget_page_create(frm->page_body);
     widget_set_location(page, GUI_SCREEN_CENTER_X, 62+130/2, GUI_SCREEN_WIDTH,130);
@@ -390,6 +393,14 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I335001_19_BREATHING_TRAINING_2_1_SET_TIME_ICON_YES_208X52_X16_Y222_BIN).hei/2-10);
     compo_setid(btn_ok,COMPO_ID_BTN_SURE);
 
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 105, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 150, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
 
     if(func_cb.sta == FUNC_SET_SUB_DOUSING)
     {
@@ -398,7 +409,7 @@ compo_form_t *func_set_sub_dousing_form_create(void)
         {
             f_alarm_clock_sub_set->breathe_min[i]  = txt_data[i];
         }
-        f_alarm_clock_sub_set->min  = txt_data[2];
+        f_alarm_clock_sub_set->min  = set_time;
     }
 
     return frm;
@@ -415,18 +426,14 @@ static void func_set_sub_dousing_sub_move(void)
         f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
         if(f_disturd_set->touch_flag == true)//触摸状态
         {
-            f_disturd_set->move_dy_data = ((int)(dy/TXT_SPACING))*TXT_SPACING;
-            f_disturd_set->move_dy = dy-f_disturd_set->move_dy_data;
+            f_disturd_set->move_dy = (dy%TXT_SPACING);
 
-            f_disturd_set->offset = f_disturd_set->move_dy_data/TXT_SPACING;
-
-            if(f_disturd_set->offset != f_disturd_set->offset_old)
+            if( dy != 0 && f_disturd_set->num_offset != dy/TXT_SPACING)
             {
-                if(f_disturd_set->offset != 0)
-                {
-                    func_set_sub_dousing_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,-f_disturd_set->offset+f_disturd_set->offset_old);///获取时间
-                }
-                f_disturd_set->offset_old = f_disturd_set->offset;
+                s8 set_offset = -(dy/TXT_SPACING)+f_disturd_set->num_offset;//获取偏移
+                func_set_sub_dousing_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,set_offset);///获取时间
+                f_disturd_set->num_offset = dy/TXT_SPACING;
+
             }
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
             {
@@ -440,6 +447,7 @@ static void func_set_sub_dousing_sub_move(void)
         }
         else   //松手状态
         {
+            f_disturd_set->num_offset = 0;
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
             {
                 compo_textbox_t *txt = compo_getobj_byid(idx);
@@ -456,7 +464,8 @@ static void func_set_sub_dousing_list_icon_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_SURE:
-            uteModuleGuiCommonSetDisplayOffTime(f_disturd_set->breathe_min[2]);
+            printf("create_time:%d\n",f_disturd_set->min);
+            uteModuleGuiCommonSetDisplayOffTime(f_disturd_set->min);
             sys_cb.set_sleep_time_id = f_disturd_set->min;
             func_backing_to();
             break;

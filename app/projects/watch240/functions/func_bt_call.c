@@ -481,7 +481,6 @@ static void func_bt_call_volume_handle(void)
             level_old = sys_cb.hfp_vol;
             f_bt_call_volume->level_value = sys_cb.hfp_vol;
         }
-        compo_picturebox_t *volume_pic = compo_getobj_byid(COMPO_ID_PIC_VOLUME);
         if(f_bt_call_volume->touch_flag && dy != 0)//触摸状态
         {
             s8 level_data= (dy/SPACING_COUNT)+level_old;
@@ -496,13 +495,11 @@ static void func_bt_call_volume_handle(void)
                 {
                     bt_volume_down();
                     f_bt_call_volume->level_value = level_data;
-                    compo_picturebox_cut(volume_pic,(uint8_t)level_data-1,15);
                 }
                 else if(level_data > f_bt_call_volume->level_value)
                 {
                     bt_volume_up();
                     f_bt_call_volume->level_value = level_data;
-                    compo_picturebox_cut(volume_pic,(uint8_t)level_data-1,15);
                 }
             }
         }
@@ -512,6 +509,8 @@ static void func_bt_call_volume_handle(void)
             // f_bt_call_volume->level_old = f_bt_call_volume->level_value;
         }
     }
+    compo_picturebox_t *volume_pic = compo_getobj_byid(COMPO_ID_PIC_VOLUME);
+    compo_picturebox_cut(volume_pic,sys_cb.hfp_vol-1,15);
 }
 static void func_bt_call_volume_pic_update(void)
 {
@@ -682,14 +681,14 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 240);
 
     //静音按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_03_LOUDSPEAKER_BIN);
-    compo_setid(btn, COMPO_ID_BTN_MIC);
-    compo_button_set_pos(btn, 166+60/2, 240);
+    // btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_03_LOUDSPEAKER_BIN);
+    // compo_setid(btn, COMPO_ID_BTN_MIC);
+    // compo_button_set_pos(btn, 166+60/2, 240);
 
     //音量按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
-    // compo_setid(btn, COMPO_ID_BTN_VOLUME);
-    compo_button_set_pos(btn, 14+60/2, 240);
+    // btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
+    // // compo_setid(btn, COMPO_ID_BTN_VOLUME);
+    // compo_button_set_pos(btn, 14+60/2, 240);
 
 
     return frm;
@@ -880,7 +879,7 @@ static void func_bt_call_click(void)
 #else
                 audio_path_exit(AUDIO_PATH_BTMIC);
 #endif
-                compo_button_set_bgimg(btn,UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_03_LOUDSPEAKER_BIN);
+                compo_button_set_bgimg(btn,UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_02_LOUDSPEAKER_BIN);
             }
             else
             {
@@ -899,7 +898,7 @@ static void func_bt_call_click(void)
                 audio_path_start(AUDIO_PATH_BTMIC);
                 bt_sco_pcm_set_dump_pass_cnt(5);
 #endif
-                compo_button_set_bgimg(btn,UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_02_LOUDSPEAKER_BIN);
+                compo_button_set_bgimg(btn,UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_03_LOUDSPEAKER_BIN);
             }
             break;
         case COMPO_ID_BTN_VOLUME:           //进入音量设置界面
@@ -2112,7 +2111,7 @@ static void func_bt_call_message(size_msg_t msg)
             {
                 f_bt_call->touch_flag = true;
             }
-#else   GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
             f_bt_call->touch_flag = true;
 #endif
             break;

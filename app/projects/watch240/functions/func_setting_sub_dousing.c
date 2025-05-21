@@ -346,7 +346,16 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     char txt_buf[20];
     u8 txt_data[5];
-    u8 set_time = sys_cb.set_sleep_time_id;
+    u8 set_time = 0;
+
+    for (u8 i = 0; i < 5; i++)
+    {
+        if(uteModuleGuiCommonGetDisplayOffTime() == txt_num[i])
+        {
+            set_time = i;
+            break;
+        }
+    }
 
     ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
@@ -447,7 +456,7 @@ static void func_set_sub_dousing_list_icon_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_SURE:
-            uteModuleGuiCommonSetDisplayOffTime(txt_num[f_disturd_set->min]);
+            uteModuleGuiCommonSetDisplayOffTime(f_disturd_set->breathe_min[2]);
             sys_cb.set_sleep_time_id = f_disturd_set->min;
             func_backing_to();
             break;

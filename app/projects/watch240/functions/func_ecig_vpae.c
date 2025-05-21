@@ -81,7 +81,7 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
         {
             chart_info_daily.x = base_x;
         }
-        chart_info_daily.height = ecig_date[i] / 1.31;
+        chart_info_daily.height = ecig_date[i] *0.73;
         compo_chartbox_set_value(chart_daily, i, chart_info_daily, make_color(255, 116, 169));
     }
     ///设置图片
@@ -168,7 +168,7 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     {
         int base_x = i * (chart_info_weekly.width + 26);
         chart_info_weekly.x = base_x +2;
-        chart_info_weekly.height = uteModuleSmokeData.smoking_count_per_day[i] / 1.31;
+        chart_info_weekly.height = uteModuleSmokeData.smoking_count_per_day[i] * 0.73;
         compo_chartbox_set_value(chart_weekly, i, chart_info_weekly, make_color(0, 242, 214));
     }
     return frm;

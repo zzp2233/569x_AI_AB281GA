@@ -398,6 +398,7 @@ static void func_password_sub_disp_message(size_msg_t msg)
             if(sys_cb.password_change && sys_cb.password_cnt == 0)
             {
                 sys_cb.password_cnt = 4;
+                ecig.clock_flag = 1;
             }
             func_message(msg);
             break;

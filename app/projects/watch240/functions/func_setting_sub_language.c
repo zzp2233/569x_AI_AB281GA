@@ -101,50 +101,10 @@ compo_form_t *func_set_sub_language_form_create(void)
     compo_listbox_set_bithook(listbox, func_sel_language_bit);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
-    uint8_t current_language = uteModuleSystemtimeReadLanguage();
-    uint8_t set_idx = 1; // 默认值
-    for (int i = 0; i < SET_LIST_CNT; i++)
-    {
-        if (tbl_language_list[i].vidx == current_language)
-        {
-            set_idx = i;
-            break;
-        }
-    }
-
-    // 确保set_idx有效
-    if (set_idx >= SET_LIST_CNT)
-    {
-        set_idx = 1; // 如果未找到，使用默认值
-    }
-
-    // 计算使当前选中项居中的索引（考虑边界情况）
-    int center_idx = SET_LIST_CNT / 2;
-    int offset = center_idx - set_idx;
-
-    // 调整索引，使选中项居中（避免超出边界）
-    if (offset > 0 && set_idx < 2)
-    {
-        // 当前选中项在前两个，不调整
-        offset = 0;
-    }
-    else if (offset < 0 && set_idx > (SET_LIST_CNT - 3))
-    {
-        // 当前选中项在后两个，不调整
-        offset = 0;
-    }
-
-    // 应用偏移量
-    set_idx += offset;
-
-    // 确保调整后的索引有效
+    uint8_t set_idx = 1;
     if (set_idx < 1)
     {
         set_idx = 1;
-    }
-    else if (set_idx >= SET_LIST_CNT)
-    {
-        set_idx = SET_LIST_CNT - 1;
     }
     compo_listbox_set_focus_byidx(listbox, set_idx);
     compo_listbox_update(listbox);

@@ -29,7 +29,7 @@ extern u16 func_clock_preview_get_type(void);
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 static const compo_cube_item_t tbl_menu_cube[] =
 {
-    {UI_BUF_I330001_3D_MENU_THEM_BIN,             FUNC_NULL},
+    {UI_BUF_I330001_3D_MENU_THEM_BIN,             FUNC_STYLE},
     {UI_BUF_I330001_3D_MENU_FINDPHONE_BIN,         FUNC_FINDPHONE},
     {UI_BUF_I330001_3D_MENU_MUSIC_BIN,             FUNC_BT},
     {UI_BUF_I330001_3D_MENU_POWER_BIN,             FUNC_ECIG_SET_POWER},

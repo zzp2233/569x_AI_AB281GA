@@ -120,6 +120,8 @@ typedef struct
     u8 det2_sta;                 //det状态（20ms防抖）插拔检测
     u8 det1_start;               //det start信号
     u8 det2_start;               //det start信号
+    u8 clock_flag;               //童锁标志位
+    u8 poweroff_flag;               //关机标志位
 } ecig_cb_t;
 
 extern ecig_cb_t ecig;

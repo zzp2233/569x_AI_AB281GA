@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-03 14:37:43
+*@date   2025-05-21 11:29:45
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -284,6 +284,7 @@ enum
 extern const char * const *i18n;
 extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
+extern const char * const i18n_ar_ril[];
 extern const char * const i18n_ru_rru[];
 extern const char * const i18n_tr_rtr[];
 extern const char * const i18n_ja_rjp[];

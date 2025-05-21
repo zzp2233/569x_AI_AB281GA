@@ -940,7 +940,11 @@ static void func_long_press_event_handle(s32 distance, u16 id)
 
                     break;
                 case IMG_BTN_ID_2://关机
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+                    func_cb.sta = FUNC_POWER_OFF;
+#else
                     uteApplicationCommonPoweroff();
+#endif
                     break;
                 case IMG_BTN_ID_3://重启
                     uteApplicationCommonRestart();

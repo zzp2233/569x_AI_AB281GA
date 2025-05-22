@@ -221,6 +221,7 @@ enum
     FUNC_OTA_ERROR,        //OTA升级失败界面
     FUNC_OTA_SUCC,          //OTA升级成功界面
     FUNC_POWER_ON,         //开机
+    FUNC_POWER_OFF,        //关机logo界面
 
     FUNC_BLE_CALL,
     FUNC_TEST_MODE_LIST,      ///*出厂测试模式选择*/

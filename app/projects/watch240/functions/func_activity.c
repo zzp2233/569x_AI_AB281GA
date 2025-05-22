@@ -1900,7 +1900,7 @@ static void func_activity_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             // uteModuleCallChangeEntertranmentVoiceSwitchStatus();
             // func_cb.sta = FUNC_CHARGE;
-            // sys_cb.cover_index = REMIND_COVER_HEALTH_SEDENTARY;
+            // sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
             // msgbox(NULL, NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
             break;
         default:

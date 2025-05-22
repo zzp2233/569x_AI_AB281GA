@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 葡萄牙语(葡萄牙）
 *@author
-*@date   2025-04-03 14:37:48
+*@date   2025-05-21 11:29:50
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 

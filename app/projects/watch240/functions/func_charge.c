@@ -865,7 +865,6 @@ enum
 void func_charge_update(void)
 {
     compo_textbox_t *txt_val   = compo_getobj_byid(COMPO_ID_NUM_BAT_VALUE);
-    compo_textbox_t *txt_title = compo_getobj_byid(COMPO_ID_TTXT);
     compo_picturebox_t *pic    = compo_getobj_byid(COMPO_ID_BAT_PIC);
 
     char txt_buf[30];
@@ -873,8 +872,7 @@ void func_charge_update(void)
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
     compo_textbox_set_location(txt_val,GUI_SCREEN_CENTER_X,BAT_PERCENT_VALUE<=20 ? GUI_SCREEN_CENTER_Y-20 : GUI_SCREEN_CENTER_Y-10,150,50);
     compo_textbox_set(txt_val,txt_buf);
-    compo_textbox_set_visible(txt_title,BAT_PERCENT_VALUE<=20);
-    compo_picturebox_set_visible(pic,BAT_PERCENT_VALUE>20 && BAT_PERCENT_VALUE<100);
+    compo_picturebox_set_visible(pic,BAT_PERCENT_VALUE<100);
 
 }
 
@@ -888,8 +886,11 @@ compo_form_t *func_charge_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_NULL]);
 
-    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I335001_CHARGE_ICON_GIF_168X231_X36_Y53_00_BIN);
-    compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_GIF_168X231_X36_Y53_BG_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20);
+
+    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I335001_CHARGE_ICON_GIF_168X231_X36_Y53_GIF_BIN);
+    compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+156/2+75/2-20);
     compo_animation_set_radix(animation, 16);
     compo_animation_set_interval(animation, 15);
 
@@ -901,17 +902,10 @@ compo_form_t *func_charge_form_create(void)
     compo_textbox_set(textbox,txt_buf);
     compo_setid(textbox,COMPO_ID_NUM_BAT_VALUE);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_LOW_BATTERY]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+20,150,30);
-    compo_textbox_set_forecolor(textbox,COLOR_RED);
-    compo_textbox_set(textbox,i18n[STR_LOW_BATTERY]);
-    compo_setid(textbox,COMPO_ID_TTXT);
-    compo_textbox_set_visible(textbox,BAT_PERCENT_VALUE<=20);
-
-    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_BATT_14X18_X114_Y171_BIN);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+20);
+    picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_BATT_14X18_X114_Y171_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+30);
     compo_setid(picbox,COMPO_ID_BAT_PIC);
-    compo_picturebox_set_visible(picbox,BAT_PERCENT_VALUE>20);
+    compo_picturebox_set_visible(picbox,BAT_PERCENT_VALUE<100);
 
 
     return frm;

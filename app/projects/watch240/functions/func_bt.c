@@ -155,7 +155,6 @@ compo_form_t *func_bt_form_create(void)
     compo_picturebox_t *bg_pic = compo_picturebox_create(frm, UI_BUF_I335001_MUSIC_1_MUSIC_BG_240X210_X0_Y46_BIN);
     compo_setid(bg_pic, COMPO_ID_MUSIC_BG_FIG);
     compo_picturebox_set_pos(bg_pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-    compo_picturebox_cut(bg_pic,0,2);
 
     //歌名
     compo_textbox_t *lyric_txt = compo_textbox_create(frm, TITLE_BUF_LEN);

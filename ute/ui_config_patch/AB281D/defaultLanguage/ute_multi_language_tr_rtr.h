@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 土耳其语(土耳其）
 *@author
-*@date   2025-05-21 09:14:54
+*@date   2025-05-22 16:44:51
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 

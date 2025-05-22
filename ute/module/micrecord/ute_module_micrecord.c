@@ -51,11 +51,13 @@ static factory_test_earphone_data_t factory_test_earphone_data;
 
 bool factory_record_addr_check(uint32_t addr)
 {
+#if 0
     TRACE("%s, start %x, end %x, length %x\n",
           __func__,
           FACTORY_RECORD_DATA_START,
           FACTORY_RECORD_DATA_END,
           FACTORY_RECORD_DATA_LENGTH);
+#endif
 
     if (addr < FACTORY_RECORD_DATA_START)
     {
@@ -115,10 +117,10 @@ void factory_test_init_record_data()
          addr < (FACTORY_RECORD_DATA_START + FACTORY_RECORD_DATA_LENGTH);
          addr += 4096)
     {
-        TRACE("%s, write start %x,length %x, addr %x\n",
+        TRACE("%s, erase start %x,length %d, addr %x\n",
               __func__,
               FACTORY_RECORD_DATA_START,
-              factory_test_earphone_data.record_flash_data_write_length,
+              4096,
               addr);
 
         factory_record_erase(addr);
@@ -204,6 +206,7 @@ void mic_test_exit(void)
     TRACE("-->%s\n", __func__);
     audio_path_exit(AUDIO_PATH_SPEAKER);
     bt_audio_enable();
+    bsp_change_volume(sys_cb.vol);
 }
 
 void uteModuleMicRecordFactoryPlay(void)
@@ -272,6 +275,19 @@ void uteModuleMicRecordFactoryEnter(void)
     UTE_MODULE_LOG(UTE_LOG_MICRECORD_LVL, "%s", __func__);
     factory_test_earphone_data.record_state = FACTORY_TEST_RECORD_IDLE;
     mic_test_init();
+    // 提前打开dac，防止播放时阻塞导致dac打开失败
+    bsp_change_volume(UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME);
+    bool mute_bkp;
+    mute_bkp = bsp_get_mute_sta();
+    if (mute_bkp)
+    {
+        bsp_sys_unmute();
+    }
+    else
+    {
+        dac_fade_in();
+    }
+    dac_spr_set(SPR_16000);
 }
 
 /**

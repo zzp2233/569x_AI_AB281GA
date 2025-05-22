@@ -259,16 +259,17 @@ static void func_blood_oxygen_disp_handle(void)
             }
             f_bo->need_auto_test_flag = false;
             compo_picturebox_cut(picbox, f_bo->pic_type, 20); ///图片动态显示
-            compo_button_set_bgimg(btn,UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_00_BIN );
+            compo_button_set_visible(btn,false);
         }
     }
     else if (f_bo->blood_oxygen_state == BO_STA_UNWEAR)
     {
-        // msgbox((char *)i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+        msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
         f_bo->blood_oxygen_state = BO_STA_IDLE;
     }
     else
     {
+        compo_button_set_visible(btn,true);
         compo_button_set_bgimg(btn,UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_01_BIN );
     }
 }

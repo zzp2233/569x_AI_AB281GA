@@ -595,18 +595,14 @@ static void func_set_sub_dousing_sub_move(void)
         f_disturd_set->touch_flag = ctp_get_dxy(&dx, &dy);
         if(f_disturd_set->touch_flag == true)//触摸状态
         {
-            f_disturd_set->move_dy_data = ((int)(dy/TXT_SPACING))*TXT_SPACING;
-            f_disturd_set->move_dy = dy-f_disturd_set->move_dy_data;
+            f_disturd_set->move_dy = (dy%TXT_SPACING);
 
-            f_disturd_set->offset = f_disturd_set->move_dy_data/TXT_SPACING;
-
-            if(f_disturd_set->offset != f_disturd_set->offset_old)
+            if( dy != 0 && f_disturd_set->num_offset != dy/TXT_SPACING)
             {
-                if(f_disturd_set->offset != 0)
-                {
-                    func_set_sub_dousing_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,-f_disturd_set->offset+f_disturd_set->offset_old);///获取时间
-                }
-                f_disturd_set->offset_old = f_disturd_set->offset;
+                s8 set_offset = -(dy/TXT_SPACING)+f_disturd_set->num_offset;//获取偏移
+                func_set_sub_dousing_get_timer(&f_disturd_set->min,f_disturd_set->breathe_min,set_offset);///获取时间
+                f_disturd_set->num_offset = dy/TXT_SPACING;
+
             }
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
             {
@@ -620,6 +616,7 @@ static void func_set_sub_dousing_sub_move(void)
         }
         else   //松手状态
         {
+            f_disturd_set->num_offset = 0;
             for(int idx=COMPO_ID_TXT_1; idx<=COMPO_ID_TXT_5; idx++) ///创建滑动文本
             {
                 compo_textbox_t *txt = compo_getobj_byid(idx);

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-05-21 09:14:52
+*@date   2025-05-22 16:44:49
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -232,7 +232,7 @@ enum
     STR_NO_CONTACTS, // 没有联系人
     STR_BREATHE_FINISH, // 训练完成
     STR_BREATHE_TIME, // 训练时长
-    STR_LOW_BATTERY, // 电量过低
+    STR_LOW_BATTERY, // 低电量
     STR_TIMER_FINIFH, // 计时结束
     STR_INS, // 同步中...
     STR_SYNC_SUC, // 同步成功

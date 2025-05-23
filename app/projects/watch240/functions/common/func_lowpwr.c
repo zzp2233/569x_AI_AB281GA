@@ -648,6 +648,15 @@ bool sleep_process(is_sleep_func is_sleep)
             reset_pwroff_delay();
             return false;
         }
+        if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)
+        {
+            if(sys_cb.sleep_delay > 0) //休眠时间未到时仅熄屏
+            {
+                printf("sleep_delay:%d\n", sys_cb.sleep_delay);
+                gui_sleep();
+                return false;
+            }
+        }
         if (sys_cb.sleep_delay == 0 && !sleep_cb.sys_is_sleep)
         {
             if(sys_cb.guioff_delay == 0) /*! 亮屏时不休眠,wang.luo 2024-10-21 */

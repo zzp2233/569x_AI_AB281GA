@@ -301,15 +301,6 @@ static void func_clock_sub_side_form_create(void)
     compo_shape_set_alpha(masklayer, 255);
     // compo_shape_set_radius(masklayer,30);
 
-    compo_picturebox_t *picbox;
-
-    //sos背景
-    picbox = compo_picturebox_create(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG1_BIN);
-    compo_picturebox_set_pos(picbox,4+164/2,220+62/2);
-
-    picbox = compo_picturebox_create(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG2_BIN);
-    compo_picturebox_set_pos(picbox,4+164/2+13,285+62/2);
-
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);//获取系统时间
     // hour
@@ -338,16 +329,26 @@ static void func_clock_sub_side_form_create(void)
     compo_textbox_set_location(textbox,110,85,120,40);
     compo_textbox_set(textbox,txt_buf );
 
-    //创建按钮
-    compo_button_t *btn_app = compo_button_create_by_image(frm, UI_BUF_I338001_2_HONEYCOMB_SOS_BIN);
-    compo_button_set_location(btn_app, f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_x,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_y,48,48);
+    compo_button_t *btn_app = compo_button_create_by_image(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG1_BIN);//sos_bg
+    compo_button_set_pos(btn_app, 4+164/2,220+62/2);
     compo_setid(btn_app,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_id);
 
+    btn_app = compo_button_create_by_image(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG1_BIN);//app_1_bg
+    compo_button_set_pos(btn_app, 4+164/2+13,285+62/2);
+    compo_setid(btn_app,f_clock_sub_sider_app[0].last_app_id);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_2_HONEYCOMB_SOS_BIN);
+    compo_picturebox_set_location(picbox,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_x,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_y,48,48);
+
+    picbox = compo_picturebox_create(frm, side_get_latest_icon(0));
+    compo_picturebox_set_location(picbox,f_clock_sub_sider_app[0].last_app_x,f_clock_sub_sider_app[0].last_app_y,48,48);
+
+    //创建按钮
     textbox = compo_textbox_create(frm,strlen(i18n[STR_SOS]));
     compo_textbox_set_location(textbox,115,250,60,40);
     compo_textbox_set(textbox,i18n[STR_SOS]);
 
-    for(int i =0; i<DEFAULT_LATEST_TASK_NUM; i++)
+    for(int i =1; i<DEFAULT_LATEST_TASK_NUM; i++)
     {
         //创建按钮
         compo_button_t *btn_app = compo_button_create_by_image(frm, side_get_latest_icon(i));

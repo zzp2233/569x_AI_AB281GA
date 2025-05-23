@@ -652,7 +652,7 @@ bool sleep_process(is_sleep_func is_sleep)
         {
             if(sys_cb.sleep_delay > 0) //休眠时间未到时仅熄屏
             {
-                printf("sleep_delay:%d\n", sys_cb.sleep_delay);
+                printf("sleep_delay:%d,only off screen\n", sys_cb.sleep_delay);
                 gui_sleep();
                 return false;
             }

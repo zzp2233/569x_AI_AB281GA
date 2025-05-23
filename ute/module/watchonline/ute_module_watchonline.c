@@ -321,10 +321,10 @@ void uteModuleWatchOnlineReadDeviceInfo(uint8_t *data)
 #endif
 
     data[8] = UTE_DRV_SCREEN_SHAPE;
-    data[9] = (UTE_MODULE_WATCHONLINE_MAX_SIZE>>24)&0xff;
-    data[10] = (UTE_MODULE_WATCHONLINE_MAX_SIZE>>16)&0xff;
-    data[11] = (UTE_MODULE_WATCHONLINE_MAX_SIZE>>8)&0xff;
-    data[12] = UTE_MODULE_WATCHONLINE_MAX_SIZE&0xff;
+    data[9] = ((UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT) >> 24) & 0xff;
+    data[10] = ((UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT) >> 16) & 0xff;
+    data[11] = ((UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT) >> 8) & 0xff;
+    data[12] = (UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT) & 0xff;
     data[13] = UTE_MODULE_WATCHONLINNE_COMPATIBLE_LEVEL;
     data[14] = UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT;
 #if UTE_MODULE_WATCHONLINNE_R_VALUE
@@ -402,7 +402,7 @@ uint8_t uteModuleWatchOnlineDataWrite(const uint8_t *data, uint32_t size)
     uint32_t writeAddress = uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex]+uteModuleWatchOnlineData.fileSize;
     uint32_t eraseAddress;
     eraseAddress = ((writeAddress + size) / 0x1000) * 0x1000;
-    if (eraseAddress >= (uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex] + UTE_MODULE_WATCHONLINE_MAX_SIZE))
+    if (eraseAddress >= (uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex] + (UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)))
     {
         uteModuleWatchOnlineData.isStartReceive = false;
         uteModuleWatchOnlineUpddateDefaultWatchIndex();

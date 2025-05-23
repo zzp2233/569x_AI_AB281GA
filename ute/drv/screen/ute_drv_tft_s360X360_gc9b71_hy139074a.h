@@ -5,9 +5,9 @@
 #include "ute_module_platform.h"
 #include "ute_drv_screen_common.h"
 
-#if UTE_DRV_TFT_S360X360_GC9B71_HY138026A_QSPI_SUPPORT
+#if UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT
 
-__STATIC_INLINE void drvScreenTft360X360Gc9b71Hy138026aPowerOn(void)
+__STATIC_INLINE void drvScreenTft360X360Gc9b71Hy139074aPowerOn(void)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11,NULL,0);
     uteModulePlatformDelayMs(120);
@@ -17,7 +17,7 @@ __STATIC_INLINE void drvScreenTft360X360Gc9b71Hy138026aPowerOn(void)
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
-__STATIC_INLINE void drvScreenTft360X360Gc9b71Hy138026aPowerOff(void)
+__STATIC_INLINE void drvScreenTft360X360Gc9b71Hy139074aPowerOff(void)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x28,NULL,0);
     uteModulePlatformDelayMs(120);
@@ -27,7 +27,7 @@ __STATIC_INLINE void drvScreenTft360X360Gc9b71Hy138026aPowerOff(void)
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
-__STATIC_INLINE void drvScreenTft360X360Gc9b71Hy138026aSetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
+__STATIC_INLINE void drvScreenTft360X360Gc9b71Hy139074aSetWindow(uint16_t xStart, uint16_t yStart, uint16_t xEnd, uint16_t yEnd)
 {
     yStart += 0;
     yEnd += 0;
@@ -47,7 +47,7 @@ __STATIC_INLINE void drvScreenTft360X360Gc9b71Hy138026aSetWindow(uint16_t xStart
 
 }
 
-__STATIC_INLINE void drvScreenTft360X360Gc9b71Hy138026aInit(void)
+__STATIC_INLINE void drvScreenTft360X360Gc9b71Hy139074aInit(void)
 {
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
     uint8_t tmp[34];
@@ -203,13 +203,13 @@ __STATIC_INLINE void drvScreenTft360X360Gc9b71Hy138026aInit(void)
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEE, tmp, 0);
 
 }
-const ute_drv_screen_common_config_t uteDrvScreenTft360X360Gc9b71Hy138026aConfig =
+const ute_drv_screen_common_config_t uteDrvScreenTft360X360Gc9b71Hy139074aConfig =
 {
-    .name = "Tft360X360Gc9b71Hy138026aQspi",
-    .init = drvScreenTft360X360Gc9b71Hy138026aInit,
-    .powerOn = drvScreenTft360X360Gc9b71Hy138026aPowerOn,
-    .powerOff = drvScreenTft360X360Gc9b71Hy138026aPowerOff,
-    .setWindow = drvScreenTft360X360Gc9b71Hy138026aSetWindow,
+    .name = "Tft360X360Gc9b71Hy139074aQspi",
+    .init = drvScreenTft360X360Gc9b71Hy139074aInit,
+    .powerOn = drvScreenTft360X360Gc9b71Hy139074aPowerOn,
+    .powerOff = drvScreenTft360X360Gc9b71Hy139074aPowerOff,
+    .setWindow = drvScreenTft360X360Gc9b71Hy139074aSetWindow,
     .setBackLight = NULL,
 };
 

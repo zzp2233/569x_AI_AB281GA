@@ -914,10 +914,21 @@ void uteModuleHeartSaveHeartWaringInfo(ute_module_heart_warning_t *value)
 */
 uint8_t uteModuleHeartGetBloodOxygenValue(void)
 {
+#if UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
+    if(uteModuleBloodoxygenGetTestingSecond() > 30)
+    {
+        uteModuleHeartData.bloodoxygenValue = 96 + get_random(3);
+    }
+    else
+    {
+        uteModuleHeartData.bloodoxygenValue = 0;
+    }
+#else
 #if UTE_DRV_HEART_VCXX_SUPPORT
     uteModuleHeartData.bloodoxygenValue = uteDrvHeartVcxxGetBloodoxygenValue();
 #else
     uteModuleHeartData.bloodoxygenValue = bsp_sensor_spo2_data_get();
+#endif
 #endif
     return uteModuleHeartData.bloodoxygenValue;
 }

@@ -264,8 +264,17 @@ static void func_blood_oxygen_disp_handle(void)
     }
     else if (f_bo->blood_oxygen_state == BO_STA_UNWEAR)
     {
-        msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-        f_bo->blood_oxygen_state = BO_STA_IDLE;
+        u8 msg_flag = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+        if(msg_flag==MSGBOX_RES_OK)
+        {
+            uteModuleBloodoxygenStartSingleTesting(); /// 开启测试
+            f_bo->blood_oxygen_state = BO_STA_TESTING;
+        }
+        else
+        {
+            f_bo->blood_oxygen_state = BO_STA_IDLE;
+        }
+
     }
     else
     {

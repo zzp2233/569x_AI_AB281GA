@@ -116,7 +116,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
             else
             {
                 rect_t location = widget_get_location(listbox->item_bgimg[i]);
-                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
                 {
                     listbox->line_height = max(max(max(font_height*2, listbox->item_height), listbox->icon_area.hei), location.hei);
                 }
@@ -143,7 +143,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                     }
                 }
                 font_x = (listbox->icon_area.wid >> 1) + (font_height >> 2) + icon_x;
-                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
                 {
                     font_y = (listbox->line_height/2 - font_height) >> 1;
                 }
@@ -181,7 +181,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                 widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_center_y);
             }
 
-            if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+            if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
             {
                 widget_set_location(listbox->item_text[i], font_x, font_y, font_w, listbox->line_height/2);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
                 widget_set_location(listbox->item_text2[i], font_x, font_y+listbox->line_height/2, font_w, listbox->line_height/2);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
@@ -207,7 +207,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
     }
     //listbox->sidx = INT_MIN;
     listbox->sidx = -listbox->item_cnt;
-    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
     {
         listbox->sidx2 = -listbox->item_cnt;
     }
@@ -576,6 +576,13 @@ void compo_listbox_update(compo_listbox_t *listbox)
                 flag_scale = (udy > udy_th);
                 break;
 
+            case COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE:
+                //圆屏菜单弧形样式
+                lnx += LISTBOX_STYLE_CIRCLE_R - sqrt64(LISTBOX_STYLE_CIRCLE_R * LISTBOX_STYLE_CIRCLE_R - dy * dy);
+                udy_th = LISTBOX_ITEM_SIZE_THRESHOLD_CIRCLE;
+                flag_scale = (udy > udy_th);
+                break;
+
             case COMPO_LISTBOX_STYLE_TITLE:
             case COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT:
             case COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD:
@@ -762,7 +769,7 @@ void compo_listbox_update(compo_listbox_t *listbox)
         listbox->txt_roll_need_rst = false;
     }
 
-    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
     {
         ////text 2
         //滚动控制器
@@ -851,7 +858,7 @@ void compo_listbox_update(compo_listbox_t *listbox)
 void compo_listbox_update_with_text_scroll_rst(compo_listbox_t *listbox)
 {
     listbox->txt_roll_need_rst = true;
-    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
     {
         listbox->txt2_roll_need_rst = true;
     }
@@ -1282,6 +1289,11 @@ void compo_listbox_move_control(compo_listbox_t *listbox, int cmd)
 void compo_listbox_set_location(compo_listbox_t *listbox, s16 x, s16 y, s16 width, s16 height)
 {
     widget_set_location(listbox->page, x, y, width, height);
+}
+
+void compo_listbox_set_pos(compo_listbox_t *listbox, s16 x, s16 y)
+{
+    widget_set_pos(listbox->page, x, y);
 }
 
 /**

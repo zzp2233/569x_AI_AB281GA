@@ -908,6 +908,16 @@ static void func_voice_exit(void)
 void func_voice(void)
 {
     printf("%s\n", __func__);
+
+    u16 interval = 0, latency = 0, tout = 0;
+    if (ble_is_connect() && (ble_get_conn_interval() < 400))
+    {
+        interval = ble_get_conn_interval();
+        latency = ble_get_conn_latency();
+        tout = ble_get_conn_timeout();
+        ble_update_conn_param(480, 0, 500);
+    }
+
     func_voice_enter();
     while (func_cb.sta == FUNC_VOICE)
     {
@@ -915,5 +925,11 @@ void func_voice(void)
         func_voice_message(msg_dequeue());
     }
     func_voice_exit();
+
+    if (interval | latency | tout)
+    {
+        printf("restore conn param\r\n");
+        ble_update_conn_param(interval, latency, tout);
+    }
 }
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT

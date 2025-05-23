@@ -599,6 +599,7 @@ enum
     COMPO_ID_NUM_DATE_S,
     COMPO_ID_NUM_DATE_G,
     COMPO_ID_PIC_BAT_PERCENT,
+    COMPO_ID_BAT_PIC,
 };
 
 typedef struct charge_ui_handle_t_
@@ -737,117 +738,168 @@ const static u32 week_pic_en[10]=
 };
 void func_charge_update(void)
 {
-    u32 img_3d_res_addr[9]= {0};
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-    img_3d_res_addr[0] = num_pic_big[time.hour/10];
-    img_3d_res_addr[1] = num_pic_big[time.hour%10];
-    img_3d_res_addr[2] = colon_big;
-    img_3d_res_addr[3] = num_pic_big[time.min/10];
-    img_3d_res_addr[4] = num_pic_big[time.min%10];
-    if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+    if(uteModuleBedsideModeIsOpen())
     {
-        img_3d_res_addr[5] = week_pic_zh[time.week];
+        u32 img_3d_res_addr[9]= {0};
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+        img_3d_res_addr[0] = num_pic_big[time.hour/10];
+        img_3d_res_addr[1] = num_pic_big[time.hour%10];
+        img_3d_res_addr[2] = colon_big;
+        img_3d_res_addr[3] = num_pic_big[time.min/10];
+        img_3d_res_addr[4] = num_pic_big[time.min%10];
+        if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+        {
+            img_3d_res_addr[5] = week_pic_zh[time.week];
+        }
+        else
+        {
+            img_3d_res_addr[5] = week_pic_en[time.week];
+        }
+        img_3d_res_addr[6] = num_pic_mini[time.day/10];
+        img_3d_res_addr[7] = num_pic_mini[time.day%10];
+        img_3d_res_addr[8] = bat_pic[uteDrvBatteryCommonGetBatteryIndex(sizeof(bat_pic)/sizeof(bat_pic[0]))];
+
+        f_charge_t *f_charge = (f_charge_t *)func_cb.f_cb;
+
+        u8 direction = uteModuleSportGetDeviceOrientation();
+        if(direction > 0 && direction < 5)
+        {
+            f_charge->last_orientation = direction;
+        }
+
+        for (u8 i = 0; i < 9; i++)
+        {
+            compo_picturebox_t *pic = compo_getobj_byid(ui_handle_1[i].id);
+            compo_picturebox_set(pic, img_3d_res_addr[i]);
+            switch (f_charge->last_orientation)
+            {
+                case 3:
+                    compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); // 0°
+                    compo_picturebox_set_rotation(pic, 0);
+                    break;
+                case 1:
+                    compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y); // 90°
+                    compo_picturebox_set_rotation(pic, 900);
+                    break;
+                case 4:
+                    compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_1[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_1[i].pic_y); // 180°
+                    compo_picturebox_set_rotation(pic, 1800);
+                    break;
+                case 2:
+                    compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_2[i].pic_y); // 270°
+                    compo_picturebox_set_rotation(pic, 2700);
+                    break;
+                default:
+                    break;
+            }
+        }
     }
     else
     {
-        img_3d_res_addr[5] = week_pic_en[time.week];
-    }
-    img_3d_res_addr[6] = num_pic_mini[time.day/10];
-    img_3d_res_addr[7] = num_pic_mini[time.day%10];
-    img_3d_res_addr[8] = bat_pic[uteDrvBatteryCommonGetBatteryIndex(sizeof(bat_pic)/sizeof(bat_pic[0]))];
+        compo_textbox_t *txt_val   = compo_getobj_byid(COMPO_ID_NUM_BAT_VALUE);
+        compo_picturebox_t *pic    = compo_getobj_byid(COMPO_ID_BAT_PIC);
 
-    f_charge_t *f_charge = (f_charge_t *)func_cb.f_cb;
-
-    u8 direction = uteModuleSportGetDeviceOrientation();
-    if(direction > 0 && direction < 5)
-    {
-        f_charge->last_orientation = direction;
-    }
-
-    for (u8 i = 0; i < 9; i++)
-    {
-        compo_picturebox_t *pic = compo_getobj_byid(ui_handle_1[i].id);
-        compo_picturebox_set(pic, img_3d_res_addr[i]);
-        switch (f_charge->last_orientation)
-        {
-            case 3:
-                compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); // 0°
-                compo_picturebox_set_rotation(pic, 0);
-                break;
-            case 1:
-                compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y); // 90°
-                compo_picturebox_set_rotation(pic, 900);
-                break;
-            case 4:
-                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_1[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_1[i].pic_y); // 180°
-                compo_picturebox_set_rotation(pic, 1800);
-                break;
-            case 2:
-                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_2[i].pic_y); // 270°
-                compo_picturebox_set_rotation(pic, 2700);
-                break;
-            default:
-                break;
-        }
+        char txt_buf[30];
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
+        compo_textbox_set_location(txt_val,GUI_SCREEN_CENTER_X,BAT_PERCENT_VALUE<=20 ? GUI_SCREEN_CENTER_Y-20 : GUI_SCREEN_CENTER_Y-10,150,50);
+        compo_textbox_set(txt_val,txt_buf);
+        compo_picturebox_set_visible(pic,BAT_PERCENT_VALUE<100);
     }
 }
 
 //创建充电窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_charge_form_create(void)
 {
-    //新建窗体和背景
-    compo_form_t *frm = compo_form_create(true);
-
-    u32 img_3d_res_addr[9]= {0};
-
-    ute_module_systemtime_time_t time;
-    uteModuleSystemtimeGetTime(&time);
-
-    img_3d_res_addr[0] = num_pic_big[time.hour/10];
-    img_3d_res_addr[1] = num_pic_big[time.hour%10];
-    img_3d_res_addr[2] = colon_big;
-    img_3d_res_addr[3] = num_pic_big[time.min/10];
-    img_3d_res_addr[4] = num_pic_big[time.min%10];
-    if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+    if(uteModuleBedsideModeIsOpen())
     {
-        img_3d_res_addr[5] = week_pic_zh[time.week];
+        //新建窗体和背景
+        compo_form_t *frm = compo_form_create(true);
+
+        u32 img_3d_res_addr[9]= {0};
+
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+
+        img_3d_res_addr[0] = num_pic_big[time.hour/10];
+        img_3d_res_addr[1] = num_pic_big[time.hour%10];
+        img_3d_res_addr[2] = colon_big;
+        img_3d_res_addr[3] = num_pic_big[time.min/10];
+        img_3d_res_addr[4] = num_pic_big[time.min%10];
+        if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+        {
+            img_3d_res_addr[5] = week_pic_zh[time.week];
+        }
+        else
+        {
+            img_3d_res_addr[5] = week_pic_en[time.week];
+        }
+        img_3d_res_addr[6] = num_pic_mini[time.day/10];
+        img_3d_res_addr[7] = num_pic_mini[time.day%10];
+        img_3d_res_addr[8] = bat_pic[uteDrvBatteryCommonGetBatteryIndex(sizeof(bat_pic)/sizeof(bat_pic[0]))];
+
+        u8 direction = uteModuleSportGetDeviceOrientation();
+
+        for (u8 i = 0; i < 9; i++)
+        {
+            compo_picturebox_t *pic = compo_picturebox_create(frm, img_3d_res_addr[i]);
+            compo_setid(pic, ui_handle_1[i].id);
+            switch (direction)
+            {
+                case 1:
+                    compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y); // 90°
+                    compo_picturebox_set_rotation(pic, 900);
+                    break;
+                case 4:
+                    compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_1[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_1[i].pic_y); // 180°
+                    compo_picturebox_set_rotation(pic, 1800);
+                    break;
+                case 2:
+                    compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_2[i].pic_y); // 270°
+                    compo_picturebox_set_rotation(pic, 2700);
+                    break;
+                default:
+                    compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); // 0°
+                    compo_picturebox_set_rotation(pic, 0);
+                    break;
+            }
+        }
+        return frm;
     }
     else
     {
-        img_3d_res_addr[5] = week_pic_en[time.week];
-    }
-    img_3d_res_addr[6] = num_pic_mini[time.day/10];
-    img_3d_res_addr[7] = num_pic_mini[time.day%10];
-    img_3d_res_addr[8] = bat_pic[uteDrvBatteryCommonGetBatteryIndex(sizeof(bat_pic)/sizeof(bat_pic[0]))];
+        char txt_buf[30];
+        //新建窗体和背景
+        compo_form_t *frm = compo_form_create(true);
 
-    u8 direction = uteModuleSportGetDeviceOrientation();
+        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+        compo_form_set_title(frm, i18n[STR_NULL]);
 
-    for (u8 i = 0; i < 9; i++)
-    {
-        compo_picturebox_t *pic = compo_picturebox_create(frm, img_3d_res_addr[i]);
-        compo_setid(pic, ui_handle_1[i].id);
-        switch (direction)
-        {
-            case 1:
-                compo_picturebox_set_pos(pic, ui_handle_2[i].pic_x, ui_handle_2[i].pic_y); // 90°
-                compo_picturebox_set_rotation(pic, 900);
-                break;
-            case 4:
-                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_1[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_1[i].pic_y); // 180°
-                compo_picturebox_set_rotation(pic, 1800);
-                break;
-            case 2:
-                compo_picturebox_set_pos(pic, GUI_SCREEN_WIDTH - ui_handle_2[i].pic_x, GUI_SCREEN_HEIGHT - ui_handle_2[i].pic_y); // 270°
-                compo_picturebox_set_rotation(pic, 2700);
-                break;
-            default:
-                compo_picturebox_set_pos(pic, ui_handle_1[i].pic_x, ui_handle_1[i].pic_y); // 0°
-                compo_picturebox_set_rotation(pic, 0);
-                break;
-        }
+        compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_ICON_GIF_168X231_X36_Y53_BG_BIN);
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20);
+
+        compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I335001_CHARGE_ICON_GIF_168X231_X36_Y53_GIF_BIN);
+        compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+156/2+75/2-20);
+        compo_animation_set_radix(animation, 16);
+        compo_animation_set_interval(animation, 15);
+
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
+        compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+        compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+        compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y-20,150,50);
+        compo_textbox_set(textbox,txt_buf);
+        compo_setid(textbox,COMPO_ID_NUM_BAT_VALUE);
+
+        picbox = compo_picturebox_create(frm, UI_BUF_I335001_CHARGE_BATT_14X18_X114_Y171_BIN);
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+30);
+        compo_setid(picbox,COMPO_ID_BAT_PIC);
+        compo_picturebox_set_visible(picbox,BAT_PERCENT_VALUE<100);
+
+
+        return frm;
     }
-    return frm;
 }
 
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT

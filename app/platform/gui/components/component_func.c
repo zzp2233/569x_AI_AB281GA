@@ -756,7 +756,7 @@ void compo_set_update(tm_t tm, u16 mtime)
                 for (i=0; i<LISTBOX_ITEM_CNT; i++)
                 {
                     compo_set_roll(&listbox->roll_cb[i], listbox->item_text[i], false);     //滚动
-                    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+                    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
                     {
                         compo_set_roll(&listbox->roll_cb2[i], listbox->item_text2[i], false);     //滚动
                     }

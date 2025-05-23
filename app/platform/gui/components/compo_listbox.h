@@ -19,6 +19,7 @@ enum COMPO_LISTBOX_STYLE
     COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD,
     COMPO_LISTBOX_STYLE_CUM_SPORT_LIST,         //客户自己运动界面列表
     COMPO_LISTBOX_STYLE_MENU_CIRCLE_SELECT,     //园屏弧形选择模式
+    COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE,
 };
 
 enum COMPO_LISTBOX_ITEM_MODE
@@ -435,4 +436,5 @@ void compo_listbox_set_icon_callback(compo_listbox_t *listbox, void* callback);
 void compo_listbox_set_text1_color_callback(compo_listbox_t *listbox, void* callback);
 void compo_listbox_set_text2_color_callback(compo_listbox_t *listbox, void* callback);
 
+void compo_listbox_set_pos(compo_listbox_t *listbox, s16 x, s16 y);
 #endif

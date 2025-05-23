@@ -1258,6 +1258,7 @@ enum
     //蓝牙状态图片
     COMPO_ID_TXT_BLUETOOTH_STA_PIC,
     COMPO_ID_TXT_BTETOOTH_STA_PIC,
+
 };
 
 typedef struct dropdown_disp_btn_item_t_
@@ -1551,6 +1552,7 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_textbox_t *textbox = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,68,170,40);
     compo_textbox_set(textbox,txt_buf );
+
 
     func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
     func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新

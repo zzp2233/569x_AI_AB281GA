@@ -88,7 +88,7 @@ compo_form_t *compo_form_create(bool flag_top)
     compo_textbox_t *title = compo_textbox_create(frm, MAX_WORD_CNT);
     frm->page_body = page_body;
     compo_textbox_set_font(title, UI_BUF_FONT_FORM_TIME);
-    compo_textbox_set_location(title, GUI_SCREEN_CENTER_X, 30, 120, widget_text_get_max_height());
+    compo_textbox_set_location(title, GUI_SCREEN_CENTER_X, 20, 120, widget_text_get_max_height());
 //    compo_textbox_set_location(title, FORM_TITLE_LEFT, GUI_PAGE_HEAD_HEIGHT - FORM_TITLE_HEIGHT, 120, FORM_TITLE_HEIGHT);
     compo_textbox_set_autoroll_mode(title, TEXT_AUTOROLL_MODE_NULL);
     frm->title = title;

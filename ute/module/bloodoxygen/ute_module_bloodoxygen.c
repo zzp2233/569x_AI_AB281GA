@@ -249,7 +249,7 @@ void uteModuleBloodoxygenStopSingleTesting(void)
         uteModuleBloodoxygenData.lastValue = uteModuleBloodoxygenData.value;
         if (uteModuleBloodoxygenData.dayMinValue == 0)
         {
-            uteModuleBloodoxygenData.dayMinValue = 100;
+            uteModuleBloodoxygenData.dayMinValue = 0xff;
         }
         if (uteModuleBloodoxygenData.lastValue > uteModuleBloodoxygenData.dayMaxValue)
         {
@@ -684,10 +684,10 @@ bool uteModuleBloodoxygenSetBloodoxygenHistoryGraph(uint8_t *Bloodoxygen, uint8_
     memset(tempBloodxygenHistoryData, 0, sizeof(tempBloodxygenHistoryData));
 #if !UTE_MODULE_BLOODGXYGEN_REAL_TIME_MAX_AND_MIN_VAULE_SUPPORT
     uteModuleBloodoxygenData.dayMaxValue = 0;
-    uteModuleBloodoxygenData.dayMinValue = 100;
+    uteModuleBloodoxygenData.dayMinValue = 0xff;
 #endif
     uint8_t dayMaxValue = 0;
-    uint8_t dayMinValue = 100;
+    uint8_t dayMinValue = 0xff;
     for (uint8_t i = 0; i < BloodoxygenCount; i++)
     {
         uint8_t oxygenValue = 0;

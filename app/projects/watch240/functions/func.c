@@ -1048,7 +1048,6 @@ void func_process(void)
 //根据任务名创建窗体。此处调用的创建窗体函数不要调用子任务的控制结构体
 compo_form_t *func_create_form(u8 sta)
 {
-    // printf("%s->sta:%d\n", __func__, sta);
     compo_form_t *frm = NULL;
     compo_form_t *(*func_create)(void) = NULL;
     for (int i = 0; i < FUNC_CREATE_CNT; i++)
@@ -1065,7 +1064,7 @@ compo_form_t *func_create_form(u8 sta)
     }
     if (frm == NULL)
     {
-        // printf("halt %s->sta:%d\n", __func__, sta);
+        printf("halt %s->create sta:%d\n", __func__, sta);
         halt(HALT_FUNC_SORT);
     }
     return frm;

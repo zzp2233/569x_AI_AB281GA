@@ -44,7 +44,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_SETTING_BIN, FUNC_SETTING},
 #endif
-#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+#if 0//UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
     {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_THEME_BIN, FUNC_MENUSTYLE},
 #else
     {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_THEME_BIN, FUNC_STYLE},
@@ -281,17 +281,17 @@ void func_clock_light_cube_process(void)
     static u32 width;
     static u8 stop_cnt = 0;
     // printf("%s,click=%d,flag_move_auto=%d\n",__func__, click,cube->move_cb.flag_move_auto);
-    if (cube->move_cb.flag_move_auto==0)
-    {
-        if(tick_check_expire(cube->move_cb.tick, 18))
-        {
-            s32 da;
-            cube->move_cb.tick = tick_get();
-            da = 20;
-            compo_cube_roll(cube, da);
-            compo_cube_update(cube);
-        }
-    }
+    // if (cube->move_cb.flag_move_auto==0)
+    // {
+    //     if(tick_check_expire(cube->move_cb.tick, 18))
+    //     {
+    //         s32 da;
+    //         cube->move_cb.tick = tick_get();
+    //         da = 20;
+    //         compo_cube_roll(cube, da);
+    //         compo_cube_update(cube);
+    //     }
+    // }
 
     if (click)
     {

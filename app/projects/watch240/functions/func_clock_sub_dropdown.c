@@ -1258,6 +1258,7 @@ enum
     //蓝牙状态图片
     COMPO_ID_TXT_BLUETOOTH_STA_PIC,
     COMPO_ID_TXT_BTETOOTH_STA_PIC,
+
 };
 
 typedef struct dropdown_disp_btn_item_t_
@@ -1551,6 +1552,7 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_textbox_t *textbox = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,68,170,40);
     compo_textbox_set(textbox,txt_buf );
+
 
     func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
     func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新
@@ -1855,7 +1857,7 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 {
     ///*第一页*/
     {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_00_BIN,       COMPO_ID_BTN_CONNECT,         40+134/2,  144+75/2},///蓝牙连接开关
-    {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_01_BIN,      COMPO_ID_BTN_MENU,             188+134/2, 144+75/2},///菜单
+    {UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_01_BIN,      COMPO_ID_BTN_MENU,             188+134/2, 144+75/2},///菜单
     {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_02_BIN,      COMPO_ID_BTN_DISCURD,          40+134/2,  229+75/2},///勿扰模式开关
     {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_03_BIN,      COMPO_ID_BTN_MUTE,             188+134/2, 229+75/2},///静音模式开关
 
@@ -1872,16 +1874,16 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 //风格列表tbl
 static const compo_listbox_item_t dwon_tbl_style_list[] =
 {
-    {STR_STYLE_LIST_1,          UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_12_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_13_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
-    {STR_STYLE_HONEYCOMB,       UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_09_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
-    {STR_SPHERE,                UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_16_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
-    {STR_CHECKERBOARD,          UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_15_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
-    {STR_HALO,                  UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_14_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
-    {STR_STYLE_SKYRER,          UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_17_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
-    {STR_STYLE_GRID_1,          UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_18_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
+    {STR_STYLE_LIST_1,          UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
+    {STR_GONG_GE,               UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_09_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
+    {STR_STYLE_HONEYCOMB,       UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_01_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_SPHERE,                UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_06_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
+    {STR_CHECKERBOARD,          UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_05_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
+    {STR_HALO,                  UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_02_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
+    {STR_STYLE_SKYRER,          UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_07_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+    {STR_STYLE_GRID_1,          UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_08_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
     // {STR_SIX_PALACE_GRID,       UI_BUF_I332001_SLIDEMENU_ICON_THEME04_BIN,           .menu_style = MENU_STYLE_CUM_FOURGRID},     //六宫格
-    {STR_STYLE_WATERFALL,       UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_11_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+    {STR_STYLE_WATERFALL,       UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_04_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
 };
 
 ///               /                 *更新*                    /                 ///
@@ -1890,7 +1892,7 @@ static const compo_listbox_item_t dwon_tbl_style_list[] =
 static void func_clock_sub_dropdown_battery_pic_update(void)
 {
     compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
-    compo_picturebox_cut(battery_pic,uteDrvBatteryCommonGetBatteryIndex(5),11);
+    compo_picturebox_cut(battery_pic,uteDrvBatteryCommonGetBatteryIndex(11),11);
 }
 ////下拉蓝牙连接标志更新
 static void func_clock_sub_dropdown_bluetooth_pic_update(void)

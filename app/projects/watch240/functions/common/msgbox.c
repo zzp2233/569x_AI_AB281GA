@@ -1186,6 +1186,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                     res_ok = UI_BUF_I335001_20_ALARM_CLOCK_6_QUANTITY_LIMIT_REMINDER_ICON_YES_208X52_X16_Y222_BIN;
                     break;
                 case FUNC_HEARTRATE:
+                case FUNC_BLOOD_OXYGEN:
+                case FUNC_PRESSURE:
                     res_ok = UI_BUF_I335001_7_SPO2_2_ICON_BUTTON_208X52_X16_Y222_00_BIN;
                     break;
                 default:

@@ -687,7 +687,7 @@ compo_form_t *func_sport_finish_form_create(void)
         compo_textbox_set_forecolor(textbox,make_color(0x80,0x80,0x80));
         /*心率->数据*/
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.avgHeartRate);
         textbox = compo_textbox_create(frm, strlen(txt_buf));
         compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
         compo_textbox_set_align_center(textbox, false);
@@ -713,7 +713,7 @@ compo_form_t *func_sport_finish_form_create(void)
         compo_textbox_set_forecolor(textbox,make_color(0x80,0x80,0x80));
         /*心率->数据*/
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.avgHeartRate);
         textbox = compo_textbox_create(frm, strlen(txt_buf));
         compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
         compo_textbox_set_align_center(textbox, false);
@@ -1765,7 +1765,7 @@ compo_form_t *func_sport_finish_form_create(void)
         compo_textbox_set_forecolor(textbox,make_color(0x80,0x80,0x80));
         /*心率->数据*/
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.avgHeartRate);
         textbox = compo_textbox_create(frm, strlen(txt_buf));
         compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
         compo_textbox_set_align_center(textbox, false);
@@ -1791,7 +1791,7 @@ compo_form_t *func_sport_finish_form_create(void)
         compo_textbox_set_forecolor(textbox,make_color(0x80,0x80,0x80));
         /*心率->数据*/
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+        snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.avgHeartRate);
         textbox = compo_textbox_create(frm, strlen(txt_buf));
         compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_28_BIN);
         compo_textbox_set_align_center(textbox, false);

@@ -345,8 +345,8 @@ compo_form_t *func_weather_form_create(void)
         }
         //星期 txt
         txt = compo_textbox_create(frm,strlen(i18n[str_id]));
-        compo_textbox_set_location(txt, 16+(i)*(82),GUI_SCREEN_HEIGHT+82,45,widget_text_get_max_height());
-        compo_textbox_set_align_center(txt,false);
+        compo_textbox_set_location(txt, 8+30+(i)*(82),GUI_SCREEN_HEIGHT+82,45,widget_text_get_max_height());
+        compo_textbox_set_align_center(txt,true);
         compo_textbox_set(txt,i18n[str_id]);/// 星期
 
         //天气 icon

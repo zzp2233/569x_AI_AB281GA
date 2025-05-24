@@ -62,6 +62,7 @@ compo_form_t *func_set_sub_password_form_create(void)
 
     if(sys_cb.password_cnt == 4)
     {
+        ecig.clock_flag = 1;
         compo_textbox_set_visible(txt_change, true);
         compo_cardbox_set_visible(cardbox, true);
     }
@@ -75,6 +76,7 @@ compo_form_t *func_set_sub_password_form_create(void)
 
     if(sys_cb.password_cnt != 4)
     {
+        ecig.clock_flag = 0;
         compo_button_set_visible(btn, true);
     }
 

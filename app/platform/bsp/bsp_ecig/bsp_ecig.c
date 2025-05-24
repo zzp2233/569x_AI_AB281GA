@@ -46,7 +46,7 @@ void bsp_ecig_init(void)
     ecig_set_power(15);
     p->heat_time_max = 8;
     p->short_res_prop = 14;
-    p->open_res_prop = 300;
+    p->open_res_prop = 320;
     test_1st_gear_func();
     ecigarette_init(p); //需要用到硬件定时器TMR3
 }
@@ -115,6 +115,10 @@ uint8_t ecig_get_res(void)
     printf("%s, data_temp1=%d,result=%lu\n", __func__,data_temp1, result);
     printf("%s, data=%d\n", __func__, data);
 #endif
+    if(data>=11 && data<=13)
+        data =12;
+    if(data>=7 && data<=9)
+        data =8;
     if(get_gear_func()==0||get_gear_func1()==0)
     {
         return data;

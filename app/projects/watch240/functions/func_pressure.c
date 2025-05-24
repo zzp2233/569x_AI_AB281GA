@@ -218,11 +218,15 @@ static void func_pressure_refresh(void)
 
     if(f_pressure->up_data_flag && !uteModuleEmotionPressureIsWear() && !uteModuleEmotionPressureIsTesting())
     {
-        u8 res = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-        if (res == MSGBOX_RES_OK)
+        u8 msg_flag = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+        if(msg_flag==MSGBOX_RES_OK)
         {
-            // uteModuleEmotionPressureStartSingleTesting(false);
+            uteModuleEmotionPressureStartSingleTesting(false);
         }
+        else
+        {
+        }
+
     }
 
     if(f_pressure->up_data_flag != uteModuleEmotionPressureIsTesting())

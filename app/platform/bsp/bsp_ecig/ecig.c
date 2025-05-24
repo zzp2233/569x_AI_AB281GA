@@ -614,7 +614,29 @@ void ecigarette_isr(void)//50us
         return;
     }
 #endif
-
+    static u16 cnt_lock_ms = 0;
+    if(ecig.clock_flag == 1)
+    {
+        if(mic_start_or_not())
+        {
+            if(cnt_lock_ms >= (ecig.timer_20ms_cnt))
+            {
+                if(cnt_lock_ms == (ecig.timer_20ms_cnt))
+                {
+                    //发提醒事件
+                }
+            }
+            else
+            {
+                cnt_lock_ms++;
+            }
+        }
+        else
+        {
+            cnt_lock_ms = 0;
+        }
+        return;
+    }
 #if ECIG_ADC2_EN
     timer_hot_dual_isr();
 #else
@@ -635,6 +657,7 @@ void ecig_timer_init(void)  //使用TMR3
     PICPR &= ~BIT(IRQ_TMR3_VECTOR);
     PICEN |= BIT(IRQ_TMR3_VECTOR);
     register_isr(IRQ_TMR3_VECTOR, ecigarette_isr);
+    printf("timer_hot_mic_work()=%d\n",timer_hot_mic_work());
 }
 
 AT(.com_text.ecig)

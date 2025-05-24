@@ -399,7 +399,14 @@ static void func_password_sub_disp_message(size_msg_t msg)
             {
                 sys_cb.password_cnt = 4;
                 ecig.clock_flag = 1;
+                printf("111111111111111111111111111111ecig.clock_flag = 1\n");
             }
+            else
+            {
+                ecig.clock_flag = 0;
+                printf("2222222222222222222222222222222ecig.clock_flag = 0\n");
+            }
+
             func_message(msg);
             break;
 

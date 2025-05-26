@@ -978,6 +978,7 @@ uint32_t tick = 0;
 //下滑菜单左右滑动处理
 static void func_clock_sub_dropdown_slide_handle(void)
 {
+#if !UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
     s32 dy=0,dx=0;
     bool touch_flag = 0;
     compo_picturebox_t *picbox_white = compo_getobj_byid(COMPO_ID_PIC_WHITE);
@@ -1083,6 +1084,7 @@ static void func_clock_sub_dropdown_slide_handle(void)
             widget_page_update();
         }
     }
+#endif
 }
 static void func_clock_sub_dropdown_click_handler(void)
 {
@@ -2924,8 +2926,19 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_CTP_SHORT_LEFT:
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT && UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
+            widget_page_set_client(widget, -GUI_SCREEN_WIDTH, 0);
+            compo_picturebox_t *picbox_white = compo_getobj_byid(COMPO_ID_PIC_WHITE);
+            compo_picturebox_cut(picbox_white,0,2);
+#endif
             break;
         case MSG_CTP_SHORT_RIGHT:
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT && UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
+            widget_page_set_client(widget, 0, 0);
+            compo_picturebox_t *picbox_white_2 = compo_getobj_byid(COMPO_ID_PIC_WHITE);
+            compo_picturebox_cut(picbox_white_2,1,2);
+
+#endif
             break;
         case MSG_CTP_SHORT_UP:
             if (func_switching(FUNC_SWITCH_MENU_DROPDOWN_UP, NULL))

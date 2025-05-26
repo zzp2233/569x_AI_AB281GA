@@ -244,7 +244,7 @@ static const compo_listbox_item_t tbl_setting_list[] =
     {STR_STYLE,                          UI_BUF_I338001_28_SET_ICON_40X79_THEME_BIN,        .func_sta = FUNC_DIAL_AND_THEME}, //主题
 #endif
     {STR_SETTING_LIGHT,                  UI_BUF_I338001_28_SET_ICON_40X79_DISPLAY_AND_BRIGHTNESS_BIN,        .func_sta = FUNC_BRIGHT_SET},            //亮度调节
-    {STR_VOL,                            UI_BUF_I338001_28_SET_ICON_40X79_RING_BIN,            .func_sta = FUNC_SET_SUB_SAV},       //声音
+    {STR_SOUND_AND_VIBRATION,            UI_BUF_I338001_28_SET_ICON_40X79_RING_BIN,            .func_sta = FUNC_SET_SUB_SAV},       //声音
     // {STR_SETTING_PASSWORD,               UI_BUF_I335001_27_MORE_28_SET_1_LIST_TUBIAO_ICON_PIC56X56_X16_Y62_134_206_278_350_422_494_566_638_710_04_PASSWORD_BIN,         .func_sta = FUNC_SET_SUB_PASSWORD}, //密码锁
     {STR_SETTING_UP,                     UI_BUF_I338001_28_SET_ICON_40X79_RAISE_THE_WRIST_BIN,      .func_sta = FUNC_SET_SUB_WRIST},    //抬腕亮屏
     {STR_SETTING_DISTURD,                UI_BUF_I338001_28_SET_ICON_40X79_DO_NOT_DISTURB_BIN,   .func_sta = FUNC_SET_SUB_DISTURD},  //勿扰模式

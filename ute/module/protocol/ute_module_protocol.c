@@ -1894,7 +1894,9 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
             // uteModuleProfileBleSendToPhone(&response[0],4);
             return;
         }
+        uteTaskGuiStartScreen(FUNC_SPORT_SWITCH, 0, __func__);
         uteModuleSportStartMoreSports(receive[2],receive[3],true);
+        sys_cb.sport_idx = receive[2];//解决app发起运动，不显示运动类型问题
     }
     else if(receive[1]==0x00)//close sport
     {

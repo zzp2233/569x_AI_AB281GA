@@ -362,9 +362,9 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
-    printf("create_time:%d\n",set_time);
+    // printf("create_time:%d\n",set_time);
     func_set_sub_dousing_get_timer(&set_time,txt_data,0);///获取时间
-    printf("create_time:%d\n",set_time);
+    // printf("create_time:%d\n",set_time);
     //创建一个页面用于限制滚动的时间文本
     widget_page_t* page = widget_page_create(frm->page_body);
     widget_set_location(page, GUI_SCREEN_CENTER_X, 62+130/2, GUI_SCREEN_WIDTH,130);
@@ -464,7 +464,7 @@ static void func_set_sub_dousing_list_icon_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_SURE:
-            printf("create_time:%d\n",f_disturd_set->min);
+            // printf("create_time:%d\n",f_disturd_set->min);
             uteModuleGuiCommonSetDisplayOffTime(f_disturd_set->min);
             sys_cb.set_sleep_time_id = f_disturd_set->min;
             func_backing_to();
@@ -503,29 +503,41 @@ enum
 
 #define TXT_SPACING    (135-82)
 #define CENTER_TXT_Y   (140/2)
-const uint8_t txt_num[5] = {5, 10, 15, 30, 60}; // 固定数组
-const uint16_t DOUSING_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
-// 函数功能：获取设置时间（上下 & 上上下下 ）的数
-// 函数功能：根据timer和num偏移量更新timer，并生成环形排列的timer_data数组
+const static uint8_t txt_num[5] = {5, 10, 15, 30, 60}; // 固定数组
+const static uint16_t DOUSING_TIME_TXT_Y[5]= {CENTER_TXT_Y-TXT_SPACING*2,CENTER_TXT_Y-TXT_SPACING,CENTER_TXT_Y,CENTER_TXT_Y+TXT_SPACING,CENTER_TXT_Y+TXT_SPACING*2}; ///文本Y轴
+/**
+ * @brief 根据当前时间和偏移量更新时间值，并生成环形排列的时间选项数组
+ * @param[in,out] timer      : 当前选中的时间值（应为txt_num中的元素）
+ * @param[out]    timer_data : 生成的环形时间选项数组（5个元素）
+ * @param[in]     num        : 偏移量（正数为增加，负数为减少）
+ */
 static void func_set_sub_dousing_get_timer(uint8_t *timer, uint8_t *timer_data, s8 num)
 {
-    // 1. 计算偏移后的索引
-    int new_index = (*timer + num) % 5;
-    if (new_index < 0)
+    // 1. 查找当前timer在txt_num中的索引
+    unsigned char current_index = 0;
+    for (unsigned char i = 0; i < 5; i++)
     {
-        new_index += 5;
-    }
-    // 2. 更新timer指向的值
-    *timer = new_index;
-    // 3. 生成环形排列的timer_data数组
-    for (int i = 0; i < 5; i++)
-    {
-        int idx = (new_index - 2 + i) % 5;
-        if (idx < 0)
+        if (txt_num[i] == *timer)
         {
-            idx += 5;
+            current_index = i;
+            break;
         }
-        timer_data[i] = txt_num[idx];
+    }
+
+    // 2. 应用偏移量并计算新索引（处理环形逻辑）
+    int new_index = (current_index + num) % 5;
+    if (new_index < 0) new_index += 5; // 处理负数索引
+
+    // 3. 更新timer为新值
+    *timer = txt_num[new_index];
+
+    // 4. 生成环形排列的timer_data数组（以新索引为中心）
+    for (signed char i = -2; i <= 2; i++)
+    {
+        // 计算相对于新索引的环形偏移
+        unsigned char offset = (new_index + i + 5) % 5;
+        // 将结果放入以索引2为中心的位置
+        timer_data[i + 2] = txt_num[offset];
     }
 }
 //创建设置窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

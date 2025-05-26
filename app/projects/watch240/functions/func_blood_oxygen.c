@@ -104,7 +104,8 @@ compo_form_t *func_blood_oxygen_form_create(void)
     uteModuleBloodoxygenGetMinMaxValue(&oxygen_min,&oxygen_max);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
-    compo_textbox_set_location(textbox,14,114,60, widget_text_get_max_height());
+    // compo_textbox_set_location(textbox,14,114,60, widget_text_get_max_height());//有些语言自适应长度处理不好，暂时不做自适应长度
+    compo_textbox_set_location(textbox,14,114,50, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_HIGHEST]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -122,12 +123,14 @@ compo_form_t *func_blood_oxygen_form_create(void)
     textbox = compo_textbox_create(frm, 10);///最高数据
     // compo_setid(textbox,COMPO_ID_HEART_MAX_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,20+txt_leng.wid,114);
+    // compo_textbox_set_pos(textbox,20+txt_leng.wid,114);
+    compo_textbox_set_pos(textbox,70,114);
     compo_textbox_set_align_center(textbox, false);
     compo_setid(textbox,COMPO_ID_MAX_VLA);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
-    compo_textbox_set_location(textbox,120,114,60, widget_text_get_max_height());
+    // compo_textbox_set_location(textbox,120,114,60, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,120,114,50, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_LOWSET]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -145,7 +148,8 @@ compo_form_t *func_blood_oxygen_form_create(void)
     textbox = compo_textbox_create(frm, 10);///最低数据
     // compo_setid(textbox,COMPO_ID_HEART_MIN_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,126+txt_leng.wid,114);
+    // compo_textbox_set_pos(textbox,126+txt_leng.wid,114);
+    compo_textbox_set_pos(textbox,180,114);
     compo_textbox_set_align_center(textbox, false);
     compo_setid(textbox,COMPO_ID_MIN_VLA);
 
@@ -264,8 +268,17 @@ static void func_blood_oxygen_disp_handle(void)
     }
     else if (f_bo->blood_oxygen_state == BO_STA_UNWEAR)
     {
-        msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-        f_bo->blood_oxygen_state = BO_STA_IDLE;
+        u8 msg_flag = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+        if(msg_flag==MSGBOX_RES_OK)
+        {
+            uteModuleBloodoxygenStartSingleTesting(); /// 开启测试
+            f_bo->blood_oxygen_state = BO_STA_TESTING;
+        }
+        else
+        {
+            f_bo->blood_oxygen_state = BO_STA_IDLE;
+        }
+
     }
     else
     {

@@ -148,9 +148,10 @@ compo_form_t *func_breathe_finish_form_create(void)
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_RATE]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox, 80, 52, 200, 30);
+    compo_textbox_set_location(textbox, 80, 52, UTE_DRV_SCREEN_WIDTH-80, 30);
     compo_textbox_set(textbox,i18n[STR_HEART_RATE]);
     compo_textbox_set_forecolor(textbox,make_color(150,150,150));
+    compo_textbox_set_autoroll_mode(textbox,2);
 
     memset(txt_buf,0,sizeof(txt_buf));
     u8 heart_value = bsp_sensor_hrs_data_get();
@@ -175,14 +176,15 @@ compo_form_t *func_breathe_finish_form_create(void)
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
 
     //设置图片
-    picbox = compo_picturebox_create(frm, UI_BUF_I335001_19_BREATHING_TRAINING_5_COMPLETE_THE_TRAINING_ICON_PIC40X40_X16_Y64_155_HEART_BIN);
+    picbox = compo_picturebox_create(frm, UI_BUF_I335001_19_BREATHING_TRAINING_5_COMPLETE_THE_TRAINING_ICON_PIC40X40_X16_Y64_155_TIME_BIN);
     compo_picturebox_set_pos(picbox,45, 90+95);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_BREATHE_TIME]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox, 80, 55+95, 200, 30);
+    compo_textbox_set_location(textbox, 80, 55+95, UTE_DRV_SCREEN_WIDTH-80, 30);
     compo_textbox_set(textbox,i18n[STR_BREATHE_TIME]);
     compo_textbox_set_forecolor(textbox,make_color(150,150,150));
+    compo_textbox_set_autoroll_mode(textbox,2);
 
     memset(time_num,0,sizeof(time_num));
     snprintf(time_num,sizeof(time_num),"%ld",sys_cb.breathe_duration / 60000);

@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-05-14 16:34:32
+*@date   2025-05-23 17:52:04
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -38,7 +38,7 @@ enum
     STR_SPORT_SPINNING, // 动感单车
     STR_SPORT_YOGA, // 瑜伽
     STR_SPORT_SIT_UP, // 仰卧起坐
-    STR_SPORT_TREADMILL, // 跑步机
+    STR_SPORT_TREADMILL, // 室内跑
     STR_SPORT_GYMNASTICS, // 体操
     STR_SPORT_BOATING, // 划船
     STR_SPORT_JUMPING_JACK, // 开合跳
@@ -83,11 +83,6 @@ enum
     STR_MEDIA_VOL, // 媒体音量
     STR_CALL_VOL, // 通话音量
     STR_SETTING_LANGUAGE, // 语言选择
-    STR_LANGUAGE_CN, // 简体中文
-    STR_LANGUAGE_ENG, // English
-    STR_LANGUAGE_FN, // Français
-    STR_LANGUAGE_RU, // Русский
-    STR_LANGUAGE_JP, // 日語
     STR_BEATHER_DURATION, // 呼吸时长
     STR_CUSTOM_TIME, // 时间
     STR_SETTING_CALENDAR, // 日历
@@ -211,9 +206,6 @@ enum
     STR_CALENDAR_SEVEN, // 日
     STR_MORE, // 更多
     STR_COMMON_APP, // 常用应用
-    STR_ITALY, // Italiano
-    STR_GERMAN, // Deutsch
-    STR_ARABIC, // العربية
     STR_APP_DOWNLOAD, // 扫码下载APP或扫码配对
     STR_BLOOD_OXYGEN, // 血氧
     STR_ALTITUDE, // 海拔
@@ -227,7 +219,6 @@ enum
     STR_MIN_JOINT, // ##分钟
     STR_SECOND_JOINT, // ##秒
     STR_ADD_CLOCK, // 添加闹钟
-    STR_TRADITIONAL_CHINESE, // 繁体中文
     STR_TO_DAY, // 今天
     STR_END, // 结束
     STR_NO_GET_WEATHER, // 未获取到天气，请连接APP后重试。
@@ -241,16 +232,12 @@ enum
     STR_NO_CONTACTS, // 没有联系人
     STR_BREATHE_FINISH, // 训练完成
     STR_BREATHE_TIME, // 训练时长
-    STR_LOW_BATTERY, // 电量过低
+    STR_LOW_BATTERY, // 低电量
     STR_TIMER_FINIFH, // 计时结束
     STR_INS, // 同步中...
     STR_SYNC_SUC, // 同步成功
     STR_SYNC_FAIL, // 同步失败
     STR_MUTE, // 静音
-    STR_TURKEY, // Türkçe
-    STR_PORTUGUESE, // Português
-    STR_SPANISH, // Español
-    STR_THAI, // ภาษาไทย
     STR_WOMEN_HEALTH, // 女性健康
     STR_PLEASE_APP_DATA, // 请前往APP同步数据
     STR_MENSTRUAL_CYCLE, // 月经期
@@ -285,9 +272,6 @@ enum
     STR_CALL_CLOSED_IS_OPEN, // 呼叫开关已禁用，您想打开它吗？
     STR_WATCHFACE_AND_THEME, // 表盘&主题
     STR_DIAL_SOS, // 拨打SOS？
-    STR_INDONESUAN, // Indonesia
-    STR_MALAYSIA, // Melayu
-    STR_VIETNAMESE, // Tiếng Việt
     STR_LOW_BATTERY_MODE, // 电量剩余##%，是否开启省电模式？
     STR_SILENT_MODE_PROMAT, // 在静音模式下，来电无铃声提醒（闹钟除外）。
     STR_BREATHE_EXPLAIN, // 请保持静止，将注意力集中在呼吸上。
@@ -309,6 +293,24 @@ enum
     STR_LOW, // 低
     STR_TESTING, // 测量中...
     STR_STATE_TEST, // 开始测量
+    STR_BLE_SUCCESSFUL, // 蓝牙连接成功
+    STR_BLE_OFF, // 手机蓝牙已断开
+    STR_LANGUAGE_CN, // 简体中文
+    STR_LANGUAGE_ENG, // English
+    STR_LANGUAGE_FN, // Français
+    STR_LANGUAGE_RU, // Русский
+    STR_LANGUAGE_JP, // 日語
+    STR_ITALY, // Italiano
+    STR_GERMAN, // Deutsch
+    STR_ARABIC, // العربية
+    STR_TRADITIONAL_CHINESE, // 繁体中文
+    STR_THAI, // ภาษาไทย
+    STR_SPANISH, // Español
+    STR_TURKEY, // Türkçe
+    STR_PORTUGUESE, // Português
+    STR_INDONESUAN, // Indonesia
+    STR_VIETNAMESE, // Tiếng Việt
+    STR_MALAYSIA, // Melayu
 };
 
 extern const char * const *i18n;

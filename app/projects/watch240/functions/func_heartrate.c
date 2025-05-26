@@ -78,7 +78,8 @@ compo_form_t *func_heartrate_form_create(void)
     compo_setid(textbox,COMPO_ID_HEART_BPM_TXT);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
-    compo_textbox_set_location(textbox,14,114,60, widget_text_get_max_height());
+    // compo_textbox_set_location(textbox,14,114,60, widget_text_get_max_height());//有些语言自适应长度处理不好，暂时不做自适应长度
+    compo_textbox_set_location(textbox,14,114,50, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_HIGHEST]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -96,11 +97,13 @@ compo_form_t *func_heartrate_form_create(void)
     textbox = compo_textbox_create(frm, 3);///最高数据
     compo_setid(textbox,COMPO_ID_HEART_MAX_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,20+txt_leng.wid,114);
+    // compo_textbox_set_pos(textbox,20+txt_leng.wid,114);
+    compo_textbox_set_pos(textbox,70,114);
     compo_textbox_set_align_center(textbox, false);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
-    compo_textbox_set_location(textbox,120,114,60, widget_text_get_max_height());
+    // compo_textbox_set_location(textbox,120,114,60, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,120,114,50, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_LOWSET]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -118,7 +121,8 @@ compo_form_t *func_heartrate_form_create(void)
     textbox = compo_textbox_create(frm, 3);///最低数据
     compo_setid(textbox,COMPO_ID_HEART_MIN_TXT);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,126+txt_leng.wid,114);
+    // compo_textbox_set_pos(textbox,126+txt_leng.wid,114);
+    compo_textbox_set_pos(textbox,180,114);
     compo_textbox_set_align_center(textbox, false);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_6_HEART_1_1_ICON_BG_DATA_HEART_DATE_BG_224X110_X8_Y162_BIN);

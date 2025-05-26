@@ -321,10 +321,10 @@ void uteModuleWatchOnlineReadDeviceInfo(uint8_t *data)
 #endif
 
     data[8] = UTE_DRV_SCREEN_SHAPE;
-    data[9] = (UTE_MODULE_WATCHONLINE_MAX_SIZE>>24)&0xff;
-    data[10] = (UTE_MODULE_WATCHONLINE_MAX_SIZE>>16)&0xff;
-    data[11] = (UTE_MODULE_WATCHONLINE_MAX_SIZE>>8)&0xff;
-    data[12] = UTE_MODULE_WATCHONLINE_MAX_SIZE&0xff;
+    data[9] = ((UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT) >> 24) & 0xff;
+    data[10] = ((UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT) >> 16) & 0xff;
+    data[11] = ((UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT) >> 8) & 0xff;
+    data[12] = (UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT) & 0xff;
     data[13] = UTE_MODULE_WATCHONLINNE_COMPATIBLE_LEVEL;
     data[14] = UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT;
 #if UTE_MODULE_WATCHONLINNE_R_VALUE
@@ -402,7 +402,7 @@ uint8_t uteModuleWatchOnlineDataWrite(const uint8_t *data, uint32_t size)
     uint32_t writeAddress = uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex]+uteModuleWatchOnlineData.fileSize;
     uint32_t eraseAddress;
     eraseAddress = ((writeAddress + size) / 0x1000) * 0x1000;
-    if (eraseAddress >= (uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex] + UTE_MODULE_WATCHONLINE_MAX_SIZE))
+    if (eraseAddress >= (uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex] + (UTE_MODULE_WATCHONLINE_MAX_SIZE / UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)))
     {
         uteModuleWatchOnlineData.isStartReceive = false;
         uteModuleWatchOnlineUpddateDefaultWatchIndex();
@@ -700,5 +700,111 @@ void uteModuleWatchOnlineSetWillUpdateDataIndex(uint8_t index)
         UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,error the index=%d is too large\r\n", __func__, index);
     }
 }
+
+/**
+*@brief        删除表盘数据序号
+*@details
+*@param[in] uint8_t index,索引
+*@author       wuhuowang
+*@date       2023-02-09
+*/
+void uteModuleWatchOnlineDeleteDataIndex(uint8_t index, uint8_t *data)
+{
+    uint8_t watchIndex = 0;
+    uint8_t multipleValidWatchCnt = 0;
+    int watchConfigSize = sizeof(watchConfig_t);
+
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,index=%d %d", __func__, index, uteModuleWatchOnlineData.multipleValidWatchCnt);
+    if (index < UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)
+        uteModulePlatformFlashNorRead((uint8_t *)&uteModuleWatchOnlineData.watchConfig, uteModuleWatchOnlineMultipleBaseAddress[index], watchConfigSize);
+    multipleValidWatchCnt = uteModuleWatchOnlineData.multipleValidWatchCnt;
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,multipleValidWatchCnt=%d", __func__, multipleValidWatchCnt);
+    data[0] = UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT;
+
+    if (multipleValidWatchCnt)
+    {
+        if (index < UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)
+        {
+            uteModulePlatformFlashNorErase(uteModuleWatchOnlineMultipleBaseAddress[index]);
+            uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
+            if (watchIndex >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
+            {
+                uteModuleGuiCommonSetCurrWatchIndex(DEFAULT_WATCH_INDEX);
+            }
+            uteModuleWatchOnlineData.multipleValidWatchCnt -= 1;
+            uteModulePlatformFlashNorRead((uint8_t *)&uteModuleWatchOnlineData.watchConfig, uteModuleWatchOnlineMultipleBaseAddress[index], watchConfigSize);
+        }
+        data[1] = 0x01;
+        data[2] = 0xFF;
+        data[3] = 0xFF;
+        data[4] = 0xFF;
+        data[5] = 0xFF;
+    }
+    else
+    {
+        data[1] = 0x02;
+        data[2] = 0xFF;
+        data[3] = 0xFF;
+        data[4] = 0xFF;
+        data[5] = 0xFF;
+    }
+}
+
+/**
+ * @brief        发送所有表盘信息
+ * @details
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-05-24
+ */
+void uteModuleWatchOnlineGetAllInfo(void)
+{
+    ute_application_sync_data_param_t *sendParam;
+    uteApplicationCommonGetSyncDataParam(&sendParam);
+    uint8_t response[20];
+    memset(response, 0x00, 20);
+    uint8_t sendSize = 3;
+    int watchConfigSize = sizeof(watchConfig_t);
+    watchConfig_t watchConfig;
+    response[0] = CMD_WATCH_ONLINE;
+    response[1] = 0x09;
+    response[2] = sendParam->currSendFileIndex;
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,multipleValidWatchCnt=%d,currSendOffset=%d", __func__, uteModuleWatchOnlineData.multipleValidWatchCnt, sendParam->currSendFileDataOffset);
+    if (sendParam->currSendFileDataOffset < uteModuleWatchOnlineData.multipleValidWatchCnt)
+    {
+        uint8_t remaining = uteModuleWatchOnlineData.multipleValidWatchCnt - sendParam->currSendFileDataOffset;
+        uint8_t maxCount = MIN(remaining, 3); // 最多发 3 个，也不能超过剩余数
+        for (uint8_t i = 0; i < maxCount; i++)
+        {
+            uint8_t index = sendParam->currSendFileDataOffset + i;
+            uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, uteModuleWatchOnlineMultipleBaseAddress[index], watchConfigSize);
+            response[3 + i * 5 + 0] = index;
+            response[3 + i * 5 + 1] = (watchConfig.snNo >> 24) & 0xff;
+            response[3 + i * 5 + 2] = (watchConfig.snNo >> 16) & 0xff;
+            response[3 + i * 5 + 3] = (watchConfig.snNo >> 8) & 0xff;
+            response[3 + i * 5 + 4] = watchConfig.snNo & 0xff;
+            sendSize += 5;
+        }
+        sendParam->currSendFileDataOffset += maxCount;
+    }
+    else
+    {
+        response[2] = 0xfd;
+        uteApplicationCommonSyncDataTimerStop();
+    }
+    sendParam->currSendFileIndex++;
+    uteModuleProfileBleSendToPhone(response, sendSize);
+}
+
+void uteModuleWatchOnlineGetAllInfoStart(void)
+{
+    ute_application_sync_data_param_t *param;
+    uteApplicationCommonGetSyncDataParam(&param);
+    param->currSendFileIndex = 0;
+    param->currSendFileDataOffset = 0;
+    uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleWatchOnlineGetAllInfo);
+    uteApplicationCommonSyncDataTimerStart();
+}
+
 #endif //UTE_MODULE_WATCHONLINE_SUPPORT
 

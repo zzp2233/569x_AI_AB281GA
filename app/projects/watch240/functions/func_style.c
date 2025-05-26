@@ -397,15 +397,15 @@ enum
 //风格列表tbl
 static const compo_listbox_item_t tbl_style_list[] =
 {
-    {STR_STYLE_LIST_1,          UI_BUF_I338001_28_SET_THEME_03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I338001_28_SET_THEME_01_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
-    {STR_STYLE_HONEYCOMB,       UI_BUF_I338001_28_SET_THEME_05_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
-    {STR_SPHERE,                UI_BUF_I338001_28_SET_THEME_06_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
-    {STR_CHECKERBOARD,          UI_BUF_I338001_28_SET_THEME_07_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
-    {STR_HALO,                  UI_BUF_I338001_28_SET_THEME_08_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
-    {STR_STYLE_SKYRER,          UI_BUF_I338001_28_SET_THEME_09_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
-    {STR_STYLE_GRID_1,          UI_BUF_I338001_28_SET_THEME_10_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
-    {STR_STYLE_WATERFALL,       UI_BUF_I338001_28_SET_THEME_12_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+    {STR_STYLE_LIST_1,          UI_BUF_I338001_STYLE_LIST_MENU_02_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
+    {STR_GONG_GE,               UI_BUF_I338001_STYLE_LIST_MENU_01_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //宫格
+    {STR_STYLE_HONEYCOMB,       UI_BUF_I338001_STYLE_LIST_MENU_03_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_SPHERE,                UI_BUF_I338001_STYLE_LIST_MENU_04_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
+    {STR_CHECKERBOARD,          UI_BUF_I338001_STYLE_LIST_MENU_05_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
+    {STR_HALO,                  UI_BUF_I338001_STYLE_LIST_MENU_06_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
+    {STR_STYLE_SKYRER,          UI_BUF_I338001_STYLE_LIST_MENU_07_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+    {STR_STYLE_GRID_1,          UI_BUF_I338001_STYLE_LIST_MENU_08_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
+    {STR_STYLE_WATERFALL,       UI_BUF_I338001_STYLE_LIST_MENU_09_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
 };
 
 typedef struct f_style_t_

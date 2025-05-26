@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281D_H_
 
 #define DEFAULT_BLE_DEV_NAME "W12Y"
-#define UTE_SW_VERSION "AB281DV000069"
+#define UTE_SW_VERSION "AB281DV000072"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
@@ -287,8 +287,10 @@
 #define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      0 //情绪说明界面
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
 #define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
-
 #endif
+
+#define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
+#define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

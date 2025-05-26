@@ -127,6 +127,62 @@ void func_dial_and_theme_icon_click(void)
         func_cb.sta = func_sta;
     }
 }
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+static const compo_listbox_item_t tbl_dial_and_theme_list[] =
+{
+    {STR_DIAL_SWICTH, 0,        .func_sta = FUNC_CLOCK_PREVIEW}, //更换表盘
+    {STR_STYLE,       0,        .func_sta = FUNC_STYLE}, //主题
+};
+
+//表盘&主题页面
+compo_form_t *func_dial_and_theme_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_WATCHFACE_AND_THEME]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_dial_and_theme_list, DIAL_AND_THEME_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I342001_28_SET_BG_BIN);
+//    compo_listbox_set_item_height(listbox, 60);
+
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    compo_listbox_set_focus(listbox, 90);
+    compo_listbox_update(listbox);
+    return frm;
+}
+
+//点进图标进入应用
+void func_dial_and_theme_icon_click(void)
+{
+    int icon_idx;
+    f_dat_list_t *f_dial_and_theme = (f_dat_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_dial_and_theme->listbox;
+    u8 func_sta;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+    if (icon_idx < 0 || icon_idx >= DIAL_AND_THEME_LIST_CNT)
+    {
+        return;
+    }
+
+    //根据图标索引获取应用ID
+    func_sta = tbl_dial_and_theme_list[icon_idx].func_sta;
+    //切入应用
+    if (func_sta > 0)
+    {
+        func_cb.sta = func_sta;
+    }
+}
+
 #else
 static const compo_listbox_item_t tbl_dial_and_theme_list[] =
 {

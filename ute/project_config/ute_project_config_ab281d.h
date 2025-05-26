@@ -41,13 +41,18 @@
 /*! 屏最小亮度百分比 dengli.lu, 2021-10-29  */
 #define DEFAULT_BACK_LIGHT_PERCENT_MIN 20
 
+/*! 默认亮屏时间zn.zeng, 2021-08-20  */
+#define DEFAULT_SCREEN_ON_TIME_SECOND 5
+
 /*! 调节屏亮度时增加或者减少的百分比 dengli.lu, 2021-10-29  */
 #define BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE 20
 
 /*! 默认背光百分比zn.zeng, 2021-09-24  */
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
+
 /*! 中科平台广播UUID,wang.luo 2025-02-13 */
 #define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+
 //二维码链接内容
 #define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
 

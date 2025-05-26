@@ -2526,7 +2526,7 @@ static void func_call_sub_record_enter(void)
     compo_listbox_move_init_modify(f_call->listbox, 127-50, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+40);
 
 #else
-    compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+40);
+    compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+60);
 #endif // GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     func_cb.enter_tick = tick_get();
 

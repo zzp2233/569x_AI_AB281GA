@@ -4934,6 +4934,7 @@ static void func_sport_sub_run_enter(void)
     uteModuleGuiCommonDisplayOffAllowGoBack(false);
     func_cb.f_cb = func_zalloc(sizeof(f_sport_sub_run_t));
     func_sport_sub_run_init();
+    func_sport_sub_run_updata();//优化app更换语言时，再暂停状态闪现出运动状态问题
 }
 
 //退出室内跑步功能

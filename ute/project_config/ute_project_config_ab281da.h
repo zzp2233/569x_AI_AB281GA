@@ -294,6 +294,7 @@
 #endif
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
+#define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

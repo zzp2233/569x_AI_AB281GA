@@ -96,6 +96,51 @@ compo_form_t *func_system_sub_system_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+
+#define SYSTEM_LIST_CNT                       ((int)(sizeof(tbl_system_list) / sizeof(tbl_system_list[0])))
+
+enum
+{
+    COMPO_ID_SYSTEM = 1,
+};
+
+typedef struct f_set_list_t_
+{
+    compo_listbox_t *listbox;
+
+} f_set_list_t;
+
+static const compo_listbox_item_t tbl_system_list[] =
+{
+    {STR_SETTING_RESTART,          UI_BUF_I342001_28_SET_MENU_00_BIN,       .func_sta = FUNC_RESTART},    //重启
+    {STR_SETTING_OFF,              UI_BUF_I342001_28_SET_MENU_01_BIN,          .func_sta = FUNC_OFF},        //关机
+    {STR_SETTING_RSTFY,            UI_BUF_I342001_28_SET_MENU_02_BIN,         .func_sta = FUNC_RSTFY},    //恢复出厂
+};
+
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_system_sub_system_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SYSTEM_SET]);
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_set(listbox, tbl_system_list, SYSTEM_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I342001_28_SET_BG_BIN);
+    compo_setid(listbox, COMPO_ID_SYSTEM);
+
+    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update(listbox);
+
+    return frm;
+}
+
 #else
 #define SYSTEM_LIST_CNT                       ((int)(sizeof(tbl_system_list) / sizeof(tbl_system_list[0])))
 
@@ -200,6 +245,8 @@ static void func_system_sub_system_enter(void)
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT - 2));
 #endif
     func_cb.enter_tick = tick_get();
 }

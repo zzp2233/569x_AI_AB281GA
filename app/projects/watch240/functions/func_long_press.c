@@ -527,8 +527,8 @@ compo_form_t *func_long_press_form_create(void)
 
     //设置标题栏
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE);
-    compo_form_set_title(frm, i18n[STR_CANCEL]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE);//暂时不需要显示取消
+    // compo_form_set_title(frm, i18n[STR_CANCEL]);
 
     s16 rel_x,rel_y;
     area_t text_area = widget_text_get_area(frm->title->txt);

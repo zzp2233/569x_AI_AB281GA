@@ -40,6 +40,9 @@ enum
     STEP_WEEK_TXT_VALUE_ID,
     STEP_WEEK_TXTT_VALUE_TARGET_ID,
     STEP_WEEK_CAHRT_VALUE_ID,
+
+    STEP_DAY_TXT_UNIT_ID,
+    STEP_WEEK_TXT_UNIT_ID,
 };
 
 typedef struct f_activity_t_

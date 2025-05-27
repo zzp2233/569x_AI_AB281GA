@@ -226,7 +226,11 @@ static void func_off_button_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_YES:
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT//进入关机logo动画界面
+            func_cb.sta = FUNC_POWER_OFF;
+#else
             uteApplicationCommonPoweroff();
+#endif
             break;
 
         case COMPO_ID_BTN_NO:

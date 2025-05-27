@@ -218,11 +218,15 @@ static void func_pressure_refresh(void)
 
     if(f_pressure->up_data_flag && !uteModuleEmotionPressureIsWear() && !uteModuleEmotionPressureIsTesting())
     {
-        u8 res = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-        if (res == MSGBOX_RES_OK)
+        u8 msg_flag = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+        if(msg_flag==MSGBOX_RES_OK)
         {
-            // uteModuleEmotionPressureStartSingleTesting(false);
+            uteModuleEmotionPressureStartSingleTesting(false);
         }
+        else
+        {
+        }
+
     }
 
     if(f_pressure->up_data_flag != uteModuleEmotionPressureIsTesting())
@@ -599,38 +603,15 @@ static void func_pressure_refresh(void)
 #define make_pic_hei(val)   (val*height_pic/mood_max)
 #define make_pic_y(hei)     (height_pic-hei+first_y)
 
-// 函数用于找出数组中除 0 和 255 之外的最大值和最小值
-static void findMaxMin(uint8_t *arr, uint8_t *max, uint8_t *min)
-{
-    // 初始化最大值为一个极小值，最小值为一个极大值
-    *max = -1;
-    *min = 256;
-
-    for (int i = 0; i < 24; i++)
-    {
-        if (arr[i] != 0 && arr[i] != 255)
-        {
-            if (arr[i] > *max)
-            {
-                *max = arr[i];
-            }
-            if (arr[i] < *min)
-            {
-                *min = arr[i];
-            }
-        }
-    }
-}
 //创建压力窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_pressure_form_create(void)
 {
     char txt_buf[20];
     uint8_t test_date[24];
-    uint8_t max_val=0;
-    uint8_t min_val=0;
+    uint8_t max_val= uteModuleEmotionPressureGetEmotionPressureMaxValue();
+    uint8_t min_val= uteModuleEmotionPressureGetEmotionPressureMinValue();
 
     bool had_date = uteModuleEmotionPressureGetTodayPressureHistoryData(test_date, 24);
-    findMaxMin(test_date,&max_val,&min_val);
     u8 Pressure_val = uteModuleEmotionPressureGetPressureValue();
 
     //新建窗体
@@ -670,7 +651,7 @@ compo_form_t *func_pressure_form_create(void)
     compo_setid(textbox,COMPO_TXT_VALUE_ID);
 
     compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn,180,330,200,50);///点击测量区域
+    compo_button_set_location(btn,180,34/2+307,200,60);///点击测量区域
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I338002_7_SPO2_EXPLAIN_BIN);
@@ -754,7 +735,7 @@ compo_form_t *func_pressure_form_create(void)
         }
     }
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_STATE_TEST]));///最低数据
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_STATE_TEST]));
     compo_textbox_set(textbox,i18n[STR_STATE_TEST]);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,34/2+307,100,34);
     compo_setid(textbox,COMPO_ID_TXT_TEST);
@@ -923,8 +904,8 @@ static void func_pressure_refresh(void)
 
         char txt_buf[20];
         uint8_t test_date[24];
-        uint8_t max_val=0;
-        uint8_t min_val=0;
+        uint8_t max_val= uteModuleEmotionPressureGetEmotionPressureMaxValue();
+        uint8_t min_val= uteModuleEmotionPressureGetEmotionPressureMinValue();
         compo_textbox_t *val = compo_getobj_byid(COMPO_TXT_VALUE_ID);
         compo_textbox_t *val_max = compo_getobj_byid(COMPO_TXT_VALUE_MAX_ID);
         compo_textbox_t *val_min = compo_getobj_byid(COMPO_TXT_VALUE_MIN_ID);
@@ -933,7 +914,6 @@ static void func_pressure_refresh(void)
         compo_button_t *btn_about = compo_getobj_byid(COMPO_BTN_ABOUT_ID);
 
         bool had_date = uteModuleEmotionPressureGetTodayPressureHistoryData(test_date,24);
-        findMaxMin(test_date,&max_val,&min_val);
         u8 Pressure_val = uteModuleEmotionPressureGetPressureValue();
 
         memset(txt_buf,0,sizeof(txt_buf));

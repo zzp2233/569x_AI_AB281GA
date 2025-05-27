@@ -277,7 +277,7 @@ __STATIC_INLINE void drvScreenTft360X3603002chy138026aInit(void)
 
     // 显示控制
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x35, tmp, 0); // 无参数命令
-    tmp[0] = 0x00;
+    tmp[0] = 0xd0;
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x36, tmp, 1);
     tmp[0] = 0x11;
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x46, tmp, 1);

@@ -1473,9 +1473,9 @@ void uteModulePlatformDlpsEnable(uint32_t bit)
     uint32_t lastDlpsBit = uteModulePlatformDlpsBit;
 #endif
     uteModulePlatformDlpsBit &= ~bit;
-    if (uteModulePlatformDlpsBit  == 0)
+    if (sys_cb.sleep_delay && uteModulePlatformDlpsBit == 0)
     {
-        sys_cb.sleep_delay = 0;
+        sys_cb.sleep_delay = 1;
         // sys_cb.guioff_delay = 0;
     }
 #if UTE_LOG_SYSTEM_LVL

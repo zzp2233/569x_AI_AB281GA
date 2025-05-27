@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281D_H_
 
 #define DEFAULT_BLE_DEV_NAME "W12Y"
-#define UTE_SW_VERSION "AB281DV000054"
+#define UTE_SW_VERSION "AB281DV000072"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
@@ -41,13 +41,18 @@
 /*! 屏最小亮度百分比 dengli.lu, 2021-10-29  */
 #define DEFAULT_BACK_LIGHT_PERCENT_MIN 20
 
+/*! 默认亮屏时间zn.zeng, 2021-08-20  */
+#define DEFAULT_SCREEN_ON_TIME_SECOND 5
+
 /*! 调节屏亮度时增加或者减少的百分比 dengli.lu, 2021-10-29  */
 #define BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE 20
 
 /*! 默认背光百分比zn.zeng, 2021-09-24  */
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
+
 /*! 中科平台广播UUID,wang.luo 2025-02-13 */
 #define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+
 //二维码链接内容
 #define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
 
@@ -287,8 +292,10 @@
 #define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      0 //情绪说明界面
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
 #define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
-
 #endif
+
+#define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
+#define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

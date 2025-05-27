@@ -113,6 +113,7 @@ void uteModuleNotifyInit(void)
 */
 void uteModuleNotifyCallDisableHandlerMsg(void)
 {
+    UTE_MODULE_LOG(UTE_LOG_NOTIFY_LVL, "%s,BtIsConnected=%d,CurrentScreenId=%d", __func__, uteModuleCallBtIsConnected(), uteModuleGuiCommonGetCurrentScreenId());
 #if UTE_BT30_CALL_SUPPORT
     if(uteModuleCallBtIsConnected())
     {

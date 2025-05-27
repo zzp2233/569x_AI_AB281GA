@@ -10,7 +10,7 @@
 __STATIC_INLINE void drvScreenTft240X284Jd98530185A035PowerOn(void)
 {
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x11,NULL,0);
-    uteModulePlatformDelayMs(120);
+    uteModulePlatformDelayMs(50);
     // uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0xDE,(uint8_t *)"\x03",1);//ESD
     // uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0xB5,(uint8_t *)"\x23",1);
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x29,NULL,0);
@@ -55,11 +55,11 @@ __STATIC_INLINE void drvScreenTft240X284Jd98530185A035Init(void)
 
     uteDrvScreenCommonSetPowerEnable(true);
     uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(1000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonSetResetPin(false);
-    uteModulePlatformDelayUs(5000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(120000);
+    uteModulePlatformDelayMs(50);
 
     memcpy(tmp, "\x98\x53", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDF, tmp, 2);

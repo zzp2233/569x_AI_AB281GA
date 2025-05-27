@@ -460,7 +460,7 @@ static const f_clock_sub_sider_t f_clock_sub_sider_app[] =
     {.last_app_x=29 + 48 / 2, .last_app_y =228 + 48 / 2,  .last_app_id=COMPO_ID_APP_7 },
 };
 #define DEFAULT_LATEST_TASK_NUM 6   //最近任务不足5个时默认值补上
-const u8 last_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_MESSAGE,FUNC_SLEEP, FUNC_BLOOD_OXYGEN, FUNC_VOICE,FUNC_BREATHE,FUNC_WEATHER};
+const static u8 last_default[DEFAULT_LATEST_TASK_NUM] = {FUNC_MESSAGE,FUNC_SLEEP, FUNC_BLOOD_OXYGEN, FUNC_VOICE,FUNC_BREATHE,FUNC_WEATHER};
 //根据序号获取最近任务序号（idx=0为最近，无任务返回0）(idx<=3)
 static u8 side_get_latest_func(u8 idx)
 {
@@ -510,15 +510,6 @@ static void func_clock_sub_side_form_create(void)
     compo_shape_set_alpha(masklayer, 255);
     // compo_shape_set_radius(masklayer,30);
 
-    compo_picturebox_t *picbox;
-
-    //sos背景
-    picbox = compo_picturebox_create(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG1_BIN);
-    compo_picturebox_set_pos(picbox,4+164/2,220+62/2);
-
-    picbox = compo_picturebox_create(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG2_BIN);
-    compo_picturebox_set_pos(picbox,4+164/2+13,285+62/2);
-
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);//获取系统时间
     // hour
@@ -547,16 +538,26 @@ static void func_clock_sub_side_form_create(void)
     compo_textbox_set_location(textbox,110,85,120,40);
     compo_textbox_set(textbox,txt_buf );
 
-    //创建按钮
-    compo_button_t *btn_app = compo_button_create_by_image(frm, UI_BUF_I338001_2_HONEYCOMB_SOS_BIN);
-    compo_button_set_location(btn_app, f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_x,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_y,48,48);
+    compo_button_t *btn_app = compo_button_create_by_image(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG1_BIN);//sos_bg
+    compo_button_set_pos(btn_app, 4+164/2,220+62/2);
     compo_setid(btn_app,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_id);
 
+    btn_app = compo_button_create_by_image(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG1_BIN);//app_1_bg
+    compo_button_set_pos(btn_app, 4+164/2+13,285+62/2);
+    compo_setid(btn_app,f_clock_sub_sider_app[0].last_app_id);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_2_HONEYCOMB_SOS_BIN);
+    compo_picturebox_set_location(picbox,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_x,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_y,48,48);
+
+    picbox = compo_picturebox_create(frm, side_get_latest_icon(0));
+    compo_picturebox_set_location(picbox,f_clock_sub_sider_app[0].last_app_x,f_clock_sub_sider_app[0].last_app_y,48,48);
+
+    //创建按钮
     textbox = compo_textbox_create(frm,strlen(i18n[STR_SOS]));
     compo_textbox_set_location(textbox,115,250,60,40);
     compo_textbox_set(textbox,i18n[STR_SOS]);
 
-    for(int i =0; i<DEFAULT_LATEST_TASK_NUM; i++)
+    for(int i =1; i<DEFAULT_LATEST_TASK_NUM; i++)
     {
         //创建按钮
         compo_button_t *btn_app = compo_button_create_by_image(frm, side_get_latest_icon(i));
@@ -579,40 +580,39 @@ static void func_clock_sub_side_button_click(void)
     }
     else if (id == COMPO_ID_APP_7)
     {
-//         printf("1111111111\n");
-//         memset(sys_cb.outgoing_number, 0, sizeof(sys_cb.outgoing_number));
-//         ute_module_call_addressbook_t sosData;
-//         memset(&sosData, 0, sizeof(ute_module_call_addressbook_t));
-// #if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
-//         uteModuleCallGetSosContact(&sosData);
-// #endif
-//         if(strlen((const char *)sosData.numberAscii) && uteModuleCallBtIsConnected())
-//         {
-//             memcpy(sys_cb.outgoing_number, sosData.numberAscii, strlen((const char *)sosData.numberAscii));
-// #if MODEM_CAT1_EN
-//             if (bsp_modem_get_init_flag())
-//             {
-//                 modem_call_dial(sys_cb.outgoing_number);
-//             }
-//             else
-// #endif
-//             {
-//                 bt_call_redial_number();
-//             }
-//         }
-//         else
-//         {
-//             if(uteModuleCallBtIsConnected())
-//             {
-//                 msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_NONE);
-//             }
-//             else
-//             {
-//                 uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-//                 sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
-//                 msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
-//             }
-//         }
+        memset(sys_cb.outgoing_number, 0, sizeof(sys_cb.outgoing_number));
+        ute_module_call_addressbook_t sosData;
+        memset(&sosData, 0, sizeof(ute_module_call_addressbook_t));
+#if UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT
+        uteModuleCallGetSosContact(&sosData);
+#endif
+        if(strlen((const char *)sosData.numberAscii) && uteModuleCallBtIsConnected())
+        {
+            memcpy(sys_cb.outgoing_number, sosData.numberAscii, strlen((const char *)sosData.numberAscii));
+#if MODEM_CAT1_EN
+            if (bsp_modem_get_init_flag())
+            {
+                modem_call_dial(sys_cb.outgoing_number);
+            }
+            else
+#endif
+            {
+                bt_call_redial_number();
+            }
+        }
+        else
+        {
+            if(uteModuleCallBtIsConnected())
+            {
+                msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_NONE);
+            }
+            else
+            {
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+                sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+                msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+            }
+        }
     }
 }
 #else

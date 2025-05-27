@@ -1133,8 +1133,8 @@ void uteModuleCallGetAllAddressBookContactContent(uint16_t totalLen,ute_module_c
 */
 bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen)
 {
-    uint8_t path[25];
-    memset(&path[0],0,25);
+    uint8_t path[40];
+    memset(&path[0],0,40);
     bool isMatch = false;
     uint8_t tempBuff[UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH];
     sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_ADDRESS_BOOK_DIR);

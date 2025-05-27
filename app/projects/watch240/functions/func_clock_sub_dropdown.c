@@ -2929,14 +2929,14 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT && UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
             widget_page_set_client(widget, -GUI_SCREEN_WIDTH, 0);
             compo_picturebox_t *picbox_white = compo_getobj_byid(COMPO_ID_PIC_WHITE);
-            compo_picturebox_cut(picbox_white,0,2);
+            compo_picturebox_cut(picbox_white,1,2);
 #endif
             break;
         case MSG_CTP_SHORT_RIGHT:
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT && UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
             widget_page_set_client(widget, 0, 0);
             compo_picturebox_t *picbox_white_2 = compo_getobj_byid(COMPO_ID_PIC_WHITE);
-            compo_picturebox_cut(picbox_white_2,1,2);
+            compo_picturebox_cut(picbox_white_2,0,2);
 
 #endif
             break;

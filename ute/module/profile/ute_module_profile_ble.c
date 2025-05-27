@@ -10,6 +10,8 @@
 /*! 此变量读取功能标识 zn.zeng Jul 05, 2021 */
 static uint8_t uteModuleProfileCharReadValueBuff[UTE_MODULE_PORFILE_READ_MAX_BYTES];
 
+static bool ble_app_need_wakeup_flag = false;
+
 ///////////////////////////////////////////////////////////////////////////
 // #define AB_MATE_VID     2           //广播包协议版本号
 // #define AB_MATE_BID     0x000000    //代理商和客户ID，0表示原厂bluetrum
@@ -449,7 +451,19 @@ void ble_app_watch_process(void)
 
 bool ble_app_watch_need_wakeup(void)
 {
-    return false;
+    return ble_app_need_wakeup_flag;
+}
+
+void ble_app_watch_set_wakeup(bool need)
+{
+    if (!bsp_system_is_sleep())
+    {
+        ble_app_need_wakeup_flag = false;
+    }
+    else
+    {
+        ble_app_need_wakeup_flag = need;
+    }
 }
 
 uint8_t uteModuleProfileBleSendNotify(uint8_t att_handle, void *p_value, uint16_t length)

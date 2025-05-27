@@ -799,7 +799,7 @@ compo_form_t *func_call_sub_record_form_create(void)
     compo_listbox_set_alike_icon(listbox, UI_BUF_I335001_CALL_01_ICON_56X56_X16_Y62_Y134_Y206_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, call_record_update_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_1_BIN);
-    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_set_focus(listbox, 102);
     compo_listbox_update_with_text_scroll_rst(listbox);
     compo_listbox_update(listbox);
 
@@ -2405,7 +2405,7 @@ static void func_set_sub_record_list_process(void)
                 compo_listbox_set_visible(f_call->listbox, true);
                 compo_listbox_set(f_call->listbox, tbl_record_list, (record_cnt < 2) ? 2 : record_cnt);
                 compo_listbox_set_alike_icon(f_call->listbox, UI_BUF_I335001_CALL_00_ICON_36X40_X24_Y64_Y140_Y216_02_BIN);
-                compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1));
+                compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+60);
                 compo_listbox_update_with_text_scroll_rst(f_call->listbox);
                 compo_listbox_set_bgimg(f_call->listbox, UI_BUF_I335001_CALL_00_ICON_NEXT_10X16_X206_Y76_Y152_Y227_BIN);
                 compo_listbox_set_focus_byidx(f_call->listbox, 1);
@@ -2526,7 +2526,7 @@ static void func_call_sub_record_enter(void)
     compo_listbox_move_init_modify(f_call->listbox, 127-50, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+40);
 
 #else
-    compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+40);
+    compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+60);
 #endif // GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     func_cb.enter_tick = tick_get();
 

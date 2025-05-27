@@ -329,7 +329,7 @@ compo_form_t *func_address_book_form_create(void)
     compo_listbox_set_alike_icon(listbox, UI_BUF_I335001_CALL_01_ICON_56X56_X16_Y62_Y134_Y206_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_1_BIN);
-    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_set_focus(listbox, 102);
     compo_listbox_update_with_text_scroll_rst(listbox);
     compo_listbox_update(listbox);
 
@@ -1071,7 +1071,7 @@ static void func_address_book_process(void)
                 compo_listbox_set_visible(f_book->listbox, true);
                 compo_listbox_set(f_book->listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
                 compo_listbox_set_alike_icon(f_book->listbox, UI_BUF_I335001_CALL_01_ICON_56X56_X16_Y62_Y134_Y206_BIN);
-                compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1));
+                compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1)+10);
                 compo_listbox_update_with_text_scroll_rst(f_book->listbox);
                 compo_listbox_set_bgimg(f_book->listbox, UI_BUF_I335001_3_EXERCISE_LIST_1_BIN);
                 compo_listbox_set_focus_byidx(f_book->listbox, 1);
@@ -1380,7 +1380,7 @@ static void func_address_book_enter(void)
         halt(HALT_GUI_COMPO_LISTBOX_TYPE);
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
-    compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1));
+    compo_listbox_move_init_modify(f_book->listbox, 127-30, compo_listbox_gety_byidx(f_book->listbox, (address_book_cnt - 2 > 0) ? address_book_cnt - 2 : 1)+10);
     func_cb.enter_tick = tick_get();
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
     f_address_book_list_t *f_book = (f_address_book_list_t *)func_cb.f_cb;

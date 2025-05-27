@@ -17,7 +17,7 @@ enum
 
 typedef struct f_heart_warning_t_
 {
-
+    bool up_date_flag;
 } f_heart_warning_t;
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -262,11 +262,12 @@ compo_form_t *func_heart_warning_form_create(void)
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_HIGHT])+strlen(i18n[STR_HEART_LOW]));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,230,230,widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(255,69,46));
-    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue())
+    compo_setid(textbox,COMPO_ID_TEXT_UINT);
+    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue() )
     {
         compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
     }
-    else if (uteModuleHeartGetHeartValue() < uteModuleHeartGetMinHeartValue())
+    else if (uteModuleHeartGetHeartValue() <= uteModuleHeartGetMinHeartValue())
     {
         compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
     }
@@ -276,7 +277,9 @@ compo_form_t *func_heart_warning_form_create(void)
 
 static void func_heart_warning_updata(void)
 {
+    f_heart_warning_t *f_heart_warning = (f_heart_warning_t *)func_cb.f_cb;
     compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_HEART_VALUE);
+    compo_textbox_t *txt_uint = compo_getobj_byid(COMPO_ID_TEXT_UINT);
     uint8_t heart_value = uteModuleHeartGetHeartValue();
     if(heart_value > 0 && heart_value < 0xff)
     {
@@ -285,6 +288,24 @@ static void func_heart_warning_updata(void)
         snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
         compo_textbox_set(textbox, txt_buf);
     }
+
+    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue() || (uteModuleHeartGetHeartValue() <= uteModuleHeartGetMinHeartValue()))
+    {
+        f_heart_warning = true;
+    }
+    if(f_heart_warning == true)
+    {
+        f_heart_warning = false;
+        if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue() )
+        {
+            compo_textbox_set(txt_uint,i18n[STR_HEART_HIGHT]);
+        }
+        else if (uteModuleHeartGetHeartValue() < uteModuleHeartGetMinHeartValue())
+        {
+            compo_textbox_set(txt_uint,i18n[STR_HEART_LOW]);
+        }
+    }
+
     if (uteModuleHeartGetHeartValue() < uteModuleHeartGetHeartWaringMaxValue() && uteModuleHeartGetHeartValue() > uteModuleHeartGetHeartWaringMinValue())
     {
         uteModuleGuiCommonGoBackLastScreen();

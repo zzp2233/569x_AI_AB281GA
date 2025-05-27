@@ -26,6 +26,21 @@ void uteModuleBedsideModeInit(void)
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s",__func__);
     memset(&uteModuleBedsideModeData,0,sizeof(ute_module_bedside_mode_data_t));
     uteModuleBedsideModeReadConfig();
+    if (uteModuleBedsideModeData.isOpen)
+    {
+#if CHARGE_EN
+        bsp_charge_set_stop_time(18000);
+        bsp_charge_sta(sys_cb.charge_sta); // update充灯状态
+        charge_set_detect_cnt(5);
+#if CHARGE_VOL_DYNAMIC_DET
+        if (sys_cb.chg_on)
+        {
+            gradient_process(0);
+            RTCCON8 &= ~BIT(1); // charge open
+        }
+#endif
+#endif // CHARGE_EN
+    }
 }
 
 /**
@@ -92,6 +107,21 @@ void uteModuleBedsideModeSetOpen(bool isOpen)
 {
     uteModuleBedsideModeData.isOpen = isOpen;
     uteModuleBedsideModeSaveConfig();
+    if (uteModuleBedsideModeData.isOpen)
+    {
+#if CHARGE_EN
+        bsp_charge_set_stop_time(18000);
+        bsp_charge_sta(sys_cb.charge_sta); // update充灯状态
+        charge_set_detect_cnt(5);
+#if CHARGE_VOL_DYNAMIC_DET
+        if (sys_cb.chg_on)
+        {
+            gradient_process(0);
+            RTCCON8 &= ~BIT(1); // charge open
+        }
+#endif
+#endif // CHARGE_EN
+    }
 }
 
 /**
@@ -104,6 +134,21 @@ void uteModuleBedsideModeSwitch(void)
 {
     uteModuleBedsideModeData.isOpen = !uteModuleBedsideModeData.isOpen;
     uteModuleBedsideModeSaveConfig();
+    if (uteModuleBedsideModeData.isOpen)
+    {
+#if CHARGE_EN
+        bsp_charge_set_stop_time(18000);
+        bsp_charge_sta(sys_cb.charge_sta); // update充灯状态
+        charge_set_detect_cnt(5);
+#if CHARGE_VOL_DYNAMIC_DET
+        if (sys_cb.chg_on)
+        {
+            gradient_process(0);
+            RTCCON8 &= ~BIT(1); // charge open
+        }
+#endif
+#endif // CHARGE_EN
+    }
 }
 
 #endif

@@ -1894,7 +1894,9 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
             // uteModuleProfileBleSendToPhone(&response[0],4);
             return;
         }
+        uteTaskGuiStartScreen(FUNC_SPORT_SWITCH, 0, __func__);
         uteModuleSportStartMoreSports(receive[2],receive[3],true);
+        sys_cb.sport_idx = receive[2];//解决app发起运动，不显示运动类型问题
     }
     else if(receive[1]==0x00)//close sport
     {
@@ -2128,14 +2130,6 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
         uteModuleProfileBleSendToPhone(&response[0], 3);
     }
 #if (UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT > 1)
-    else if (receive[1] == 0x08)
-    {
-        response[0] = receive[0];
-        response[1] = receive[1];
-        response[2] = receive[2];
-        uteModuleWatchOnlineDeleteDataIndex(receive[2], &response[3]);
-        uteModuleProfileBleSendToPhone(&response[0], 9);
-    }
     else if (receive[1] == 0x08)
     {
         response[0] = receive[0];

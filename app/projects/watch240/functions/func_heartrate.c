@@ -262,6 +262,8 @@ static void func_heartrate_refresh(void)
         {
             if(++f_heartrate->heart_pic_size >= 18)
                 f_heartrate->heart_pic_size =0;
+
+            f_heartrate->no_wear_flag = false;
         }
         else
         {
@@ -1882,10 +1884,6 @@ static void func_heartrate_enter(void)
     };
     compo_page_move_init(f_heartrate->ptm, func_cb.frm_main->page_body, &info);
     func_cb.flag_animation = false;
-    // if(uteModuleHeartIsWear() == false)
-    // {
-    //     msgbox(i18n[STR_PLEASE_WEAR], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-    // }
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
 #if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;

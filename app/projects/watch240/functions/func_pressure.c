@@ -379,7 +379,7 @@ compo_form_t *func_pressure_form_create(void)
     compo_setid(textbox,COMPO_TXT_VALUE_ID);
 
     compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn,180,330,200,50);///点击测量区域
+    compo_button_set_location(btn,180,34/2+307,200,60);///点击测量区域
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I338002_7_SPO2_EXPLAIN_BIN);
@@ -463,7 +463,7 @@ compo_form_t *func_pressure_form_create(void)
         }
     }
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_STATE_TEST]));///最低数据
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_STATE_TEST]));
     compo_textbox_set(textbox,i18n[STR_STATE_TEST]);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,34/2+307,100,34);
     compo_setid(textbox,COMPO_ID_TXT_TEST);

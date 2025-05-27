@@ -2709,7 +2709,6 @@ static void func_weather_message(size_msg_t msg)
         case MSG_SYS_500MS:
             weather_refresh();
             break;
-        case MSG_CTP_CLICK:
         default:
             func_message(msg);
             break;

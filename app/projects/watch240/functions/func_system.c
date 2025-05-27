@@ -86,7 +86,7 @@ compo_form_t *func_system_sub_system_form_create(void)
     compo_form_set_title(frm, i18n[STR_SYSTEM_SET]);
 
     //新建菜单列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
     compo_listbox_set(listbox, tbl_system_list, SYSTEM_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I338001_11_CALL_NEXT_BIN);
     compo_setid(listbox, COMPO_ID_SYSTEM);
@@ -247,6 +247,8 @@ static void func_system_sub_system_enter(void)
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT - 2));
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT - 2));
+#else
+    compo_listbox_move_init_modify(listbox, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT-2), compo_listbox_gety_byidx(listbox,SYSTEM_LIST_CNT-2));
 #endif
     func_cb.enter_tick = tick_get();
 }
@@ -265,14 +267,6 @@ static void func_system_sub_system_message(size_msg_t msg)
     {
         case MSG_CTP_CLICK:
             func_system_sub_system_icon_click();                //单击图标
-            break;
-
-        case MSG_CTP_LONG:
-            break;
-
-        case MSG_CTP_SHORT_RIGHT:
-            func_message(msg);
-            // sys_cb.set_idx = 0;
             break;
 
         case KU_DELAY_BACK:

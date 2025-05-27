@@ -287,7 +287,7 @@ void hfp_hf_call_notice(uint32_t evt)
             bt_cb.call_type = CALL_TYPE_NONE;
 
             //保存通话记录
-            if (sys_cb.refresh_language_flag == false)    //切换语言的时候不保存
+            // if (sys_cb.refresh_language_flag == false)    //切换语言的时候不保存
             {
                 memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
                 uteModuleCallUpdateRecordsData();
@@ -299,8 +299,23 @@ void hfp_hf_call_notice(uint32_t evt)
 #endif
             break;
         case BT_NOTICE_CALL_NUMBER:
-            printf("===>>> Number: %s\n", hfp_get_last_call_number(0));
-            uteModuleCallSetContactsNumberAndName((uint8_t*)hfp_get_last_call_number(0), strlen(hfp_get_last_call_number(0)), NULL, 0);
+        {
+            uint8_t nameLen;
+            uint8_t nameLen_buf[UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH];
+            uint8_t number_buf[32];
+            memset(nameLen_buf, 0, UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
+            memcpy(nameLen_buf,sys_cb.pbap_result_Name,UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
+            memset(number_buf, 0, 32);
+            memcpy(number_buf,hfp_get_last_call_number(0),32);
+
+            printf("===>>> Number: %s\n",number_buf);
+            uteModuleCallSetContactsNumberAndName(number_buf, strlen(number_buf), NULL, 0);
+
+            printf("===>>> Name_in: %s\n", nameLen_buf);
+            uteModuleCallGetAddressBookContactName(number_buf,strlen(number_buf),nameLen_buf,&nameLen);
+            printf("===>>> Name_out: %s\n", nameLen_buf);
+            memcpy(sys_cb.pbap_result_Name,nameLen_buf,UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
+
             bt_cb.number_sta = true;
 #if CALL_MGR_EN
             // 三方来电 延迟更新号码
@@ -309,7 +324,8 @@ void hfp_hf_call_notice(uint32_t evt)
             {
                 msg_enqueue(EVT_CALL_NUMBER_UPDATE);
             }
-            break;
+        }
+        break;
     }
 }
 

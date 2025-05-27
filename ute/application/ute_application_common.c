@@ -92,12 +92,7 @@
 #endif
 #endif
 /*!application 数据 zn.zeng, 2021-07-15  */
-ute_application_common_data_t uteApplicationCommonData =
-{
-    .isSynchronizingData = false,
-    .isAncsConnected = false,
-    .isAppClosed = true,
-};
+ute_application_common_data_t uteApplicationCommonData;
 ute_application_sync_data_param_t sendHistoryDataParam;
 /* app common 互斥量 zn.zeng 2022-02-14*/
 void *uteApplicationCommonMute;
@@ -116,6 +111,9 @@ void uteApplicationCommonStartupFrist(void)
     uteApplicationCommonData.isStartupFristFinish = false;
     uteApplicationCommonData.isStartupSecondFinish = false;
     uteApplicationCommonData.isPowerOn = false;
+    uteApplicationCommonData.isAppClosed = true;
+    uteApplicationCommonData.isSynchronizingData = false,
+    uteApplicationCommonData.isAncsConnected = false,
     uteModuleFilesystemInit();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_LOG_DIR);

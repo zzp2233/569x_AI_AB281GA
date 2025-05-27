@@ -46,6 +46,10 @@
 
 /*! 默认背光百分比zn.zeng, 2021-09-24  */
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
+
+/*! 默认亮屏时间zn.zeng, 2021-08-20  */
+#define DEFAULT_SCREEN_ON_TIME_SECOND 5
+
 /*! 中科平台广播UUID,wang.luo 2025-02-13 */
 #define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
 //二维码链接内容

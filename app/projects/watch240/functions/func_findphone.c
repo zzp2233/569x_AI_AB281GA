@@ -803,9 +803,9 @@ void func_findphone(void)
     printf("%s\n", __func__);
     func_findphone_enter();
     bool EntertranmentVoiceOn = uteModuleCallIsEntertranmentVoiceOn();
-    if(EntertranmentVoiceOn && bt_a2dp_profile_completely_connected())
+    if(EntertranmentVoiceOn)
     {
-        uteModuleCallDisconnectA2DPProfile();
+        uteModuleCallChangeEntertranmentVoiceSwitchStatus();
     }
     while (func_cb.sta == FUNC_FINDPHONE)
     {
@@ -816,7 +816,7 @@ void func_findphone(void)
 
     if(EntertranmentVoiceOn)
     {
-        uteModuleCallConnectA2DPProfile();
+        uteModuleCallChangeEntertranmentVoiceSwitchStatus();
     }
 }
 

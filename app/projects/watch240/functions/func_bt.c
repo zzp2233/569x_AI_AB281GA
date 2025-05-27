@@ -145,7 +145,14 @@ compo_form_t *func_bt_form_create(void)
     }
     else
     {
-        str_txt = title_buf;
+        if(title_size_leng == 0)
+        {
+            str_txt = i18n[STR_UNKNOWN];
+        }
+        else
+        {
+            str_txt = title_buf;
+        }
         str_leng = TITLE_BUF_LEN;
     }
 

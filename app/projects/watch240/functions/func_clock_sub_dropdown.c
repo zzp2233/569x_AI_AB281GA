@@ -1877,7 +1877,7 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 static const compo_listbox_item_t dwon_tbl_style_list[] =
 {
     {STR_STYLE_LIST_1,          UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_09_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
+    {STR_GONG_GE,               UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_09_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //宫格
     {STR_STYLE_HONEYCOMB,       UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_01_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
     {STR_SPHERE,                UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_06_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
     {STR_CHECKERBOARD,          UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_05_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘

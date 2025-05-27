@@ -345,7 +345,7 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
     uteDrvBatteryCommonData.lvl = uteDrvBatteryCommonCalibrationBatLvl(uteDrvBatteryCommonData.voltage,uteDrvBatteryCommonData.current,uteDrvBatteryCommonData.chargerStatus);
 #endif
 
-    UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,lvl=%d,chargerStatus=%d", __func__,uteDrvBatteryCommonData.lvl,uteDrvBatteryCommonData.chargerStatus);
+    UTE_MODULE_LOG(UTE_LOG_DRV_BAT_LVL, "%s,lvl=%d,chargerStatus=%d,chg_on=%d", __func__,uteDrvBatteryCommonData.lvl,uteDrvBatteryCommonData.chargerStatus,sys_cb.chg_on);
     if(uteDrvBatteryCommonData.lvl>=100)
     {
         uteDrvBatteryCommonData.lvl = 100;

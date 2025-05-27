@@ -3,6 +3,7 @@
 #include "ute_module_message.h"
 #include "ute_project_config.h"
 #include "ute_module_sport.h"
+#include "ute_module_bedside_mode.h"
 
 bool power_off_check(void);
 void lock_code_pwrsave(void);
@@ -441,7 +442,8 @@ static void sfunc_sleep(void)
         if (ble_app_need_wakeup())
         {
             printf("ble_app_need_wakeup\n");
-            gui_need_wkp = true;
+            gui_need_wkp = false;
+            ble_app_watch_set_wakeup(false);
             break;
         }
 #endif

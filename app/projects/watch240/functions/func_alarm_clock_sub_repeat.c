@@ -368,6 +368,102 @@ static void func_alarm_clock_sub_repeat_button_click(void)
     }
 
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+//创建闹钟--重复窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
+{
+    //新建窗体和背景
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_REPEAT]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I341001_28_SET_BG1_BIN);
+    compo_listbox_set(listbox, tbl_weeks_list, WEEKS_LIST_CNT);
+
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I341001_20_ALARM_CLOCK_SELECT_BIN, 0);
+    compo_listbox_set_bithook(listbox, bsp_sys_get_ctlbit);
+    compo_listbox_set_focus_byidx(listbox, 1);
+
+    s32 last_y = compo_listbox_gety_byidx(listbox, WEEKS_LIST_CNT);
+    //新建按钮
+    compo_button_t *btn;
+    btn = compo_button_create_page_by_image(frm,listbox->page, UI_BUF_I341001_20_ALARM_CLOCK_CONFIRM_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REPETAT_YES);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,last_y);
+    for (int i=0; i<7; i++)         //获取当前闹钟设置的星期
+    {
+        bsp_sys_set_ctlbit(SYS_CTL_ACLOCK_MON + i,(ALARM_GET_CYCLE(sys_cb.alarm_edit_idx) >> i) & 1);
+    }
+
+    compo_listbox_update(listbox);
+
+    return frm;
+}
+
+//单击按钮
+static void func_alarm_clock_sub_repeat_button_click(void)
+{
+    int id = compo_get_button_id();
+
+    int week_idx;
+    f_alarm_clock_sub_repeat_t *f_aclock = (f_alarm_clock_sub_repeat_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_aclock->listbox;
+
+    week_idx = compo_listbox_select(listbox, ctp_get_sxy());
+    if (week_idx >= 0)
+    {
+        bsp_sys_reverse_ctlbit(tbl_weeks_list[week_idx].vidx);
+        compo_listbox_update(listbox);
+    }
+
+    switch (id)
+    {
+
+        case COMPO_ID_BTN_REPETAT_YES:
+            sys_cb.alarm_edit_cycle = 0;
+            for (int i=0; i<7; i++)
+            {
+                sys_cb.alarm_edit_cycle |= (bsp_sys_get_ctlbit(SYS_CTL_ACLOCK_MON + i) << i);
+            }
+//        printf("%s-->alarm_edit_cycle[0x%x]:%x\n", __func__, sys_cb.alarm_edit_idx, sys_cb.alarm_edit_cycle);
+
+            if (sys_cb.alarm_edit_cycle == 0)
+            {
+                sys_cb.alarm_edit_cycle = 0x80;   //单次
+            }
+
+            if (task_stack_get_last() == FUNC_ALARM_CLOCK_SUB_EDIT)
+            {
+                ALARM_EDIT(sys_cb.alarm_edit_idx,
+                           ALARM_GET_SWITCH(sys_cb.alarm_edit_idx),
+                           sys_cb.alarm_edit_cycle,
+                           ALARM_GET_HOUR(sys_cb.alarm_edit_idx),
+                           ALARM_GET_MIN(sys_cb.alarm_edit_idx),
+                           0,
+                           0);
+                func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
+                break;
+            }
+//            printf("hour:%d min:%d\n",sys_cb.alarm_edit_hour,sys_cb.alarm_edit_min);
+            ALARM_SET(sys_cb.alarm_edit_idx, true, sys_cb.alarm_edit_cycle, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min, 0, 0);
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+            func_cb.sta = FUNC_ALARM_CLOCK;
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+            break;
+
+        default:
+            break;
+    }
+
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 //创建闹钟--重复窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_alarm_clock_sub_repeat_form_create(void)
@@ -734,7 +830,7 @@ static void func_alarm_clock_sub_repeat_enter(void)
     compo_listbox_move_init_modify(listbox, first_y, last_y);
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, WEEKS_LIST_CNT - 1)+40);
-#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     s32 first_y = compo_listbox_gety_byidx(listbox, 1);
     s32 last_y = compo_listbox_gety_byidx(listbox, WEEKS_LIST_CNT - 1);
     compo_listbox_move_init_modify(listbox, first_y, last_y);

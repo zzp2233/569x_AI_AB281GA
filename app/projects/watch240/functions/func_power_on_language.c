@@ -243,6 +243,40 @@ compo_form_t *func_power_on_language_form_create(void)
 
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+//语言设置页面
+compo_form_t *func_power_on_language_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_power_on_language_list, LANGUAGE_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I341001_28_SET_BG1_BIN);
+
+
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I341001_20_ALARM_CLOCK_SELECT_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bithook(listbox, func_sel_language_bit);
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    uint8_t set_idx = 1;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 //语言设置页面
 compo_form_t *func_power_on_language_form_create(void)
@@ -409,6 +443,8 @@ static void func_power_on_language_enter(void)
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2));
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, LANGUAGE_LIST_CNT - 2)+40);

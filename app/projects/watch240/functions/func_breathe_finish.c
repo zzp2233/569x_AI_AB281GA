@@ -209,6 +209,85 @@ compo_form_t *func_breathe_finish_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+compo_form_t *func_breathe_finish_form_create(void)
+{
+
+    char txt_buf[50];
+    char time_buf[30];
+    char time_num[10];
+
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_BREATHE_FINISH]);
+
+    //设置图片
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I341001_19_BREATHING_TRAINING_TRAINING_TIME_BIN);
+    compo_picturebox_set_pos(picbox,53, 132);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_RATE]));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox, 110, 85+18, 200, 40);
+    compo_textbox_set(textbox,i18n[STR_HEART_RATE]);
+    compo_textbox_set_forecolor(textbox,make_color(150,150,150));
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    u8 heart_value = bsp_sensor_hrs_data_get();
+    if(heart_value != 0 && heart_value!= 255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",heart_value);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_pos(textbox,110,124+33);
+    compo_textbox_set(textbox,txt_buf);
+
+    area_t txt_wid = widget_text_get_area(textbox->txt);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox, txt_wid.wid+118, 143+18, 200, 40);
+    compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
+
+    //设置图片
+    picbox = compo_picturebox_create(frm, UI_BUF_I341001_19_BREATHING_TRAINING_HEART_BIN);
+    compo_picturebox_set_pos(picbox,53,268);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_BREATHE_TIME]));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox, 110, 229+18, 200, 40);
+    compo_textbox_set(textbox,i18n[STR_BREATHE_TIME]);
+    compo_textbox_set_forecolor(textbox,make_color(150,150,150));
+
+    memset(time_num,0,sizeof(time_num));
+    snprintf(time_num,sizeof(time_num),"%ld",sys_cb.breathe_duration / 60000);
+    memset(time_buf,0,sizeof(time_buf));
+    uteModuleCharencodeReplaceSubString(i18n[STR_MIN_JOINT], time_buf,"##",time_num);
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%s",time_buf);
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox, 110, 265+33, 200, 40);
+    compo_textbox_set(textbox,txt_buf);
+
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I341001_28_SET_CONFIRM_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I341001_28_SET_CONFIRM_BIN).hei/2-20);
+    compo_setid(btn_ok,COMPO_ID_BTN_OK);
+
+
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 200, 320, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 compo_form_t *func_breathe_finish_form_create(void)
 {

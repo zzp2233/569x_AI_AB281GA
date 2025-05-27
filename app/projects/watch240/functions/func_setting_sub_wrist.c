@@ -160,6 +160,82 @@ compo_form_t *func_set_sub_wrist_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+
+typedef struct f_wrist_t_
+{
+    bool value;
+} f_wrist_t;
+
+enum
+{
+    //card
+    COMPO_CARD_START = 1,
+    COMPO_CARD_1,
+    COMPO_CARD_END,
+};
+
+static const u32 tbl_wrist_switch_res[] =
+{
+    UI_BUF_I341001_20_ALARM_CLOCK_OPEN_BIN,         //ON
+    UI_BUF_I341001_20_ALARM_CLOCK_GRAY_BUTTON_BIN,  //OFF
+};
+
+static void switch_set_sub_wrist(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    quick.isTurnTheWrist = !quick.isTurnTheWrist;
+    bool isHandOpen = quick.isTurnTheWrist;
+    uteModuleSportSaveHandScreenOnStepsTargetCnt(isHandOpen,uteModuleSportGetStepsTargetCnt());
+    uteApplicationCommonSetQuickSwitchStatus(&quick);
+    uteApplicationCommonSendQuickSwitchStatus();
+}
+
+
+//抬腕亮屏页面
+compo_form_t *func_set_sub_wrist_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_UP]);
+
+    //创建卡片
+    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 320, 100);
+    compo_cardbox_set_visible(card, true);
+    compo_cardbox_set_location(card, 24 + 320/2, 60 + 100/2, 320, 100);
+    compo_setid(card, COMPO_CARD_1);
+
+    compo_cardbox_rect_set_color(card, 0, COLOR_BLACK);
+    compo_cardbox_rect_set_location(card, 0, 0, 0, 320, 100, 16);
+
+    compo_cardbox_icon_set_location(card, 0,
+                                    320/2 - 5 - gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,
+                                    0, gui_image_get_size(tbl_wrist_switch_res[0]).wid, gui_image_get_size(tbl_wrist_switch_res[0]).hei);
+
+    if(uteModuleSportGetIsOpenHandScreenOn())
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[0]);
+    }
+    else
+    {
+        compo_cardbox_icon_set(card, 0, tbl_wrist_switch_res[1]);
+    }
+
+    compo_cardbox_text_set_font(card, 0, UI_BUF_0FONT_FONT_BIN);
+    compo_cardbox_text_set_location(card, 0, 10-320/2, -14,
+                                    320 - gui_image_get_size(tbl_wrist_switch_res[0]).wid - 50,
+                                    30);
+    compo_cardbox_text_set_align_center(card, 0, false);
+    widget_text_set_color(card->text[0], make_color(255,255,255));
+    compo_cardbox_text_set(card, 0, i18n[STR_SETTING_UP]);
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 
 typedef struct f_wrist_t_

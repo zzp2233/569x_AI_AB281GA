@@ -210,6 +210,87 @@ static void func_set_sub_sav_disp(void)
     compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
 }
 
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+
+#define VOL_CHANGE          4  //音量等级每次增加或者减少4
+#define MOTOR_MAX_LEVEL     4  //马达最大等级
+
+
+#define  ON_PIC     UI_BUF_I341001_20_ALARM_CLOCK_OPEN_BIN
+#define  OFF_PIC    UI_BUF_I341001_20_ALARM_CLOCK_GRAY_BUTTON_BIN
+
+//声音与振动页面
+compo_form_t *func_set_sub_sav_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SOUND_AND_VIBRATION]);
+
+    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 1, 1, 1, 320, 116);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,60+116/2,320,116);
+    compo_setid(cardbox, COMPO_ID_MOTOR_GRADE);
+
+    compo_cardbox_rect_set_location(cardbox,0,0,114/2,320,1,16);    //画线
+    compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
+
+    compo_cardbox_icon_set_pos(cardbox, 0, 320-20/2-160,0);
+    compo_cardbox_icon_set(cardbox,0,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN);
+    compo_cardbox_text_scroll_process(cardbox, true);
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0, 145, 48);
+    compo_cardbox_text_set(cardbox,0,i18n[STR_VBRATION]);
+    compo_cardbox_text_set_align_center(cardbox, 0, false);
+
+
+    cardbox = compo_cardbox_create(frm, 1, 1, 1, 320, 116);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,60+116/2+116,320,116);
+    compo_setid(cardbox, COMPO_ID_SAV);
+
+    compo_cardbox_rect_set_location(cardbox,0,0,114/2,320,1,16);    //画线
+    compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
+
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0, 145, 48);
+    compo_cardbox_text_set(cardbox,0,i18n[STR_MEDIA_VOL]);
+    compo_cardbox_text_set_align_center(cardbox, 0, false);
+    compo_cardbox_icon_set_location(cardbox, 0, 320-62/2-160, 0, 62, 32);
+    compo_cardbox_icon_set(cardbox,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
+    compo_cardbox_text_scroll_process(cardbox, true);
+
+
+    cardbox = compo_cardbox_create(frm, 1, 1, 1, 320, 116);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,60+116/2+116*2,320,116);
+    compo_setid(cardbox, COMPO_ID_MUTE);
+    //compo_cardbox_rect_set_location(cardbox,0,0,30,232,1,16);
+    //compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0, 145, 48);
+    compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
+    compo_cardbox_text_set_align_center(cardbox, 0, false);
+    compo_cardbox_icon_set_location(cardbox, 0, 320-62/2-160, 0, 62, 32);
+    compo_cardbox_icon_set(cardbox,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
+    compo_cardbox_text_scroll_process(cardbox, true);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SILENT_MODE_PROMAT]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,388+44,320,80);
+    compo_textbox_set_multiline(textbox,true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    compo_textbox_set(textbox,i18n[STR_SILENT_MODE_PROMAT]);
+    compo_textbox_set_forecolor(textbox,make_color(102,102,102));
+
+    return frm;
+}
+
+//更新显示界面
+static void func_set_sub_sav_disp(void)
+{
+    compo_cardbox_t *cardbox_sav  = compo_getobj_byid(COMPO_ID_SAV);
+    compo_cardbox_t *cardbox_mute = compo_getobj_byid(COMPO_ID_MUTE);
+
+    compo_cardbox_icon_set(cardbox_sav,0,uteModuleCallIsEntertranmentVoiceOn() ? ON_PIC : OFF_PIC);
+    compo_cardbox_icon_set(cardbox_mute,0,uteModuleLocalRingtoneGetMuteStatus()==false ? OFF_PIC : ON_PIC);
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 
 #define VOL_CHANGE          4  //音量等级每次增加或者减少4
@@ -546,6 +627,17 @@ static void func_set_sub_sav_enter(void)
     {
         .title_used = true,
         .page_size =  470,
+        .page_count = 1,
+        .quick_jump_perc =10,
+    };
+    compo_page_move_init(f_sav->ptm, func_cb.frm_main->page_body, &info);
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+    f_sav_t *f_sav = (f_sav_t *)func_cb.f_cb;
+    f_sav->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = true,
+        .page_size =  506,
         .page_count = 1,
         .quick_jump_perc =10,
     };

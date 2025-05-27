@@ -2162,6 +2162,7 @@ static void func_sport_sub_run_updata(void)
                     task_stack_pop();
                 }
             }
+            ab_free(data);
             return;
         }
     }

@@ -24,15 +24,21 @@ enum
     KCAL_TXT_VALUE_ID,
     KM_TXT_VALUE_ID,
 
+    STEP_TXT_UNIT_ID,
+    KCAL_TXT_UNIT_ID,
+    KM_TXT_UNIT_ID,
+
     KCAL_ARC_ID,
     KM_ARC_ID,
     STEP_ARC_ID,
-    KM_TXT_UNIT_ID,
+
     STEP_DAY_TXT_VALUE_ID,
-    STEP_WEEK_TXT_VALUE_ID,
-    STEP_WEEK_TXT_UNIT_ID,
-    STEP_DAY_TXT_UNIT_ID,
+    STEP_DAY_TXT_VALUE_TARGET_ID,
+    STEP_DAY_TXT2_VALUE_TARGET_ID,
     STEP_DAY_CAHRT_VALUE_ID,
+
+    STEP_WEEK_TXT_VALUE_ID,
+    STEP_WEEK_TXTT_VALUE_TARGET_ID,
     STEP_WEEK_CAHRT_VALUE_ID,
 };
 
@@ -131,6 +137,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,75+8+txt_leng.wid,336,88,25);
     compo_textbox_set(textbox, i18n[STR_KCAL]);
+    compo_setid(textbox,KCAL_TXT_UNIT_ID);
 ///////////////////////////////////////////////////////////////////////////////////
     pic = compo_picturebox_create(frm, UI_BUF_I335001_5_ACTIVITY_ICON_DIS_30X36_X22_Y401_BIN);
     compo_picturebox_set_pos(pic, 30/2+22, 36/2+316+TXT_SPACING);
@@ -171,7 +178,7 @@ compo_form_t *func_activity_form_create(void)
     /*步数数据*/
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
-    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    textbox = compo_textbox_create(frm, 7);
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_pos(textbox,75, 331+TXT_SPACING*2);
@@ -183,6 +190,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,75+8+txt_leng.wid,336+TXT_SPACING*2,88,25);
     compo_textbox_set(textbox, i18n[STR_STEP]);
+    compo_setid(textbox,STEP_TXT_UNIT_ID);
 ///////////////////////////////////////////////////////////////////////////////
     pic = compo_picturebox_create(frm, UI_BUF_I335001_5_ACTIVITY_STEP_DETAILS_DATE_BG_224X220_X8_Y555_BIN);
     compo_picturebox_set_pos(pic, 224/2+8, 220/2+555);
@@ -194,13 +202,14 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set(textbox, i18n[STR_STEP_DETAILS]);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据
-    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);///步数数据目标
+    textbox = compo_textbox_create(frm, 7);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_28_BIN);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,10,590,GUI_SCREEN_CENTER_X-13,25);
     compo_textbox_set_right_align(textbox, true);
     compo_textbox_set(textbox, txt_buf);
+    compo_setid(textbox,STEP_DAY_TXT_VALUE_ID);
 
     uint32_t target_step = uteModuleSportGetStepsTargetCnt();
     // uint32_t target_step = 0;
@@ -213,13 +222,15 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,594,GUI_SCREEN_CENTER_X-13,25);
     compo_textbox_set_forecolor(textbox, make_color(153,153,153));
     compo_textbox_set(textbox, txt_buf);
-
+    compo_setid(textbox,STEP_DAY_TXT_VALUE_TARGET_ID);
 
     uint32_t step_date[24];
     uteModuleSportLoadTodayEveryHourStepHistoryData(step_date);
     compo_chartbox_t*chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 24);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+12,698,212,94);
     compo_chartbox_set_pixel(chart, 1);
+    compo_setid(chart,STEP_DAY_CAHRT_VALUE_ID);
+
 
     // printf("mb:target_step:%ld\n",target_step);
     chart_t chart_info;
@@ -235,13 +246,14 @@ compo_form_t *func_activity_form_create(void)
     }
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_step);///步数数据目标
-    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_step);///day步数 小字号
+    textbox = compo_textbox_create(frm, 7);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_12_BIN);
     compo_textbox_set_location(textbox,20,700-15-94/2,230,30);
     compo_textbox_set_forecolor(textbox, make_color(128,128,128));
     compo_textbox_set(textbox, txt_buf);
+    compo_setid(textbox,STEP_DAY_TXT2_VALUE_TARGET_ID);
 
 //////////////////////////////////////////////////////////////////////////////////
     uint32_t week_step_data;
@@ -261,6 +273,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_28_BIN);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,850,230,30);
     compo_textbox_set(textbox, txt_buf);
+    compo_setid(textbox,STEP_WEEK_TXT_VALUE_ID);
 
     pic = compo_picturebox_create(frm,uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID ? UI_BUF_I335001_5_ACTIVITY_WEEKLY_DATA_01_ZH_218X112_X12_Y888_BIN : UI_BUF_I335001_5_ACTIVITY_WEEKLY_DATA_00_EN_218X112_X12_Y888_BIN);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 930);
@@ -268,16 +281,17 @@ compo_form_t *func_activity_form_create(void)
     chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 7);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+12,926,GUI_SCREEN_WIDTH,77);
     compo_chartbox_set_pixel(chart, 1);
+    compo_setid(chart,STEP_WEEK_CAHRT_VALUE_ID);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_week_step);///week步数数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_week_step);///week步数数据 最大值
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_12_BIN);
     compo_textbox_set_location(textbox,15,912-78/2,230,30);
     compo_textbox_set_forecolor(textbox, make_color(128,128,128));
     compo_textbox_set(textbox, txt_buf);
-
+    compo_setid(textbox,STEP_WEEK_TXTT_VALUE_TARGET_ID);
     chart_info;
     chart_info.y = 0;
     chart_info.width = 12;   ///像素点
@@ -300,10 +314,23 @@ static void func_activity_disp_handle(void)
     compo_picturebox_t *arc_kcal = compo_getobj_byid(KCAL_ARC_ID);
     compo_picturebox_t *arc_km   = compo_getobj_byid(KM_ARC_ID);
     compo_picturebox_t *arc_step = compo_getobj_byid(STEP_ARC_ID);
+
     compo_textbox_t *textbox_kcal = compo_getobj_byid(KCAL_TXT_VALUE_ID);
     compo_textbox_t *textbox_km = compo_getobj_byid(KM_TXT_VALUE_ID);
     compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
+
+    compo_textbox_t *textbox_kcal_unit = compo_getobj_byid(KCAL_TXT_UNIT_ID);
+    compo_textbox_t *textbox_step_unit = compo_getobj_byid(STEP_TXT_UNIT_ID);
     compo_textbox_t *textbox_km_unit = compo_getobj_byid(KM_TXT_UNIT_ID);
+///////////////////////////////////////////////////////////////////////////////
+    compo_textbox_t *textbox_day_step = compo_getobj_byid(STEP_DAY_TXT_VALUE_ID);
+    compo_textbox_t *textbox_day_step_target = compo_getobj_byid(STEP_DAY_TXT_VALUE_TARGET_ID);
+    compo_textbox_t *textbox2_day_step_target = compo_getobj_byid(STEP_DAY_TXT2_VALUE_TARGET_ID);
+    compo_chartbox_t*chart_day = compo_getobj_byid(STEP_DAY_CAHRT_VALUE_ID);
+//////////////////////////////////////////////////////////////////////////////////
+    compo_textbox_t *textbox_week_step = compo_getobj_byid(STEP_WEEK_TXT_VALUE_ID);
+    compo_textbox_t *textbox_week_step_target = compo_getobj_byid(STEP_WEEK_TXTT_VALUE_TARGET_ID);
+    compo_chartbox_t*chart_week = compo_getobj_byid(STEP_WEEK_CAHRT_VALUE_ID);
     f_activity_t *f_activity = (f_activity_t *)func_cb.f_cb;
 
     char txt_buf[20];
@@ -325,26 +352,78 @@ static void func_activity_disp_handle(void)
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数
 
-    compo_picturebox_cut(arc_kcal,pic_dis,11);
+    compo_picturebox_cut(arc_kcal,pic_dis,11);//进度图
     compo_picturebox_cut(arc_km,pic_dis,11);
     compo_picturebox_cut(arc_step,pic_dis,11);
 
-    if(f_activity->uint_km != uteModuleSystemtimeGetDistanceMiType())
-    {
-        compo_textbox_set(textbox_km_unit, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
-    }
-
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);//步数
     compo_textbox_set(textbox_step, txt_buf);
+    area_t txt_leng = widget_text_get_area(textbox_step->txt);
+    compo_textbox_set_location(textbox_step_unit,75+8+txt_leng.wid,336+TXT_SPACING*2,88,25);//单位文本
 
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, km_decimals);///公里数据
     compo_textbox_set(textbox_km, txt_buf);
+    txt_leng = widget_text_get_area(textbox_km->txt);
+    compo_textbox_set_location(textbox_km_unit,75+8+txt_leng.wid,336+TXT_SPACING,88,25);//单位文本
 
     memset(txt_buf,'\0',sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"%d",uteModuleSportGetCurrDayKcalData());///千卡数据
     compo_textbox_set(textbox_kcal, txt_buf);
+    txt_leng = widget_text_get_area(textbox_kcal->txt);
+    compo_textbox_set_location(textbox_kcal_unit,75+8+txt_leng.wid,336,88,25);//单位文本
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    memset(txt_buf,'\0',sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",totalStepCnt);//一天步数
+    compo_textbox_set(textbox_day_step, txt_buf);
+
+    uint32_t target_step = uteModuleSportGetStepsTargetCnt();
+    if(target_step == 0)target_step = 8000;
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"/%ld",target_step);
+    compo_textbox_set(textbox_day_step_target, txt_buf);///一天步数目标
+    compo_textbox_set(textbox2_day_step_target, txt_buf);///一天步数目标 柱形图最大值
+
+    uint32_t step_date[24];
+    uteModuleSportLoadTodayEveryHourStepHistoryData(step_date);
+    chart_t chart_info;
+    chart_info.y = 0;
+    chart_info.width = 4;   ///像素点
+    for (int i=0; i<24; i++)
+    {
+        chart_info.x = i*chart_info.width + i*4;
+        chart_info.height = step_date[i]*(94*1000/target_step)/1000;
+        compo_chartbox_set_value(chart_day, i, chart_info, make_color(0,236,203));//一天步数柱形图
+    }
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    uint32_t week_step_data;
+    uint32_t week_step_date[7];
+    uint32_t target_week_step = uteModuleSportLoadWeekDayStepHistoryData(week_step_date, &week_step_data);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",week_step_data);///week步数数据
+    compo_textbox_set(textbox_week_step, txt_buf);///一周步数
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_week_step);///week步数数据 最大值
+    compo_textbox_set(textbox_week_step_target, txt_buf);///一周步数目标 柱形图最大值
+
+    chart_info;
+    chart_info.y = 0;
+    chart_info.width = 12;   ///像素点
+    for (int i=0; i<7; i++)
+    {
+        chart_info.x = i*chart_info.width + i*22;
+        chart_info.height = week_step_date[i]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
+        compo_chartbox_set_value(chart_week, i, chart_info, make_color(0,236,203));
+    }
+
+
 }
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
@@ -1899,7 +1978,7 @@ static void func_activity_message(size_msg_t msg)
             break;
         case MSG_CTP_CLICK:
             // uteModuleCallChangeEntertranmentVoiceSwitchStatus();
-            // func_cb.sta = FUNC_CHARGE;
+            // func_cb.sta = FUNC_HEART_WARNING;
             // sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
             // msgbox(NULL, NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
             break;

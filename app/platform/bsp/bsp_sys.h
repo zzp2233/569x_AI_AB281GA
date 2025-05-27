@@ -218,8 +218,6 @@ typedef struct
 
     bool sys_init_complete; //系统初始化完成标志，用于互斥ute task和sys task，防止sys没初始化完成就执行ute task导致流程错误
 
-    bool need_wakeup_flag;
-
     bool loudspeaker_mute_flag; //mute 标志位
     u8 loudspeaker_mute_countdown; //mute 倒计时
 

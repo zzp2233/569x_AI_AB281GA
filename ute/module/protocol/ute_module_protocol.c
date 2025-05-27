@@ -2138,14 +2138,6 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
         uteModuleWatchOnlineDeleteDataIndex(receive[2], &response[3]);
         uteModuleProfileBleSendToPhone(&response[0], 9);
     }
-    else if (receive[1] == 0x08)
-    {
-        response[0] = receive[0];
-        response[1] = receive[1];
-        response[2] = receive[2];
-        uteModuleWatchOnlineDeleteDataIndex(receive[2], &response[3]);
-        uteModuleProfileBleSendToPhone(&response[0], 9);
-    }
     else if (receive[1] == 0x09)
     {
         uteModuleWatchOnlineGetAllInfoStart();

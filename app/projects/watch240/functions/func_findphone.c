@@ -789,13 +789,6 @@ static void func_findphone_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_findphone_t));
     func_cb.frm_main = func_findphone_form_create();
-
-    if(bt_a2dp_profile_completely_connected())
-    {
-        // bt_audio_bypass();
-        bt_a2dp_profile_dis();
-    }
-//    ab_app_search_phone(true);
 }
 
 //退出查找手机功能
@@ -807,12 +800,6 @@ static void func_findphone_exit(void)
     {
         uteModuleFindPhoneStopRing();
     }
-
-//    ab_app_search_phone(false);
-    if (bt_hfp_is_connected() && uteModuleCallIsEntertranmentVoiceOn() && !bt_a2dp_profile_completely_connected())
-    {
-        bt_a2dp_profile_en();
-    }
 }
 
 //查找手机功能
@@ -820,12 +807,25 @@ void func_findphone(void)
 {
     printf("%s\n", __func__);
     func_findphone_enter();
+#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
+    bool EntertranmentVoiceOn = uteModuleCallIsEntertranmentVoiceOn();
+    if(bt_a2dp_profile_completely_connected() && EntertranmentVoiceOn)
+    {
+        uteModuleCallChangeEntertranmentVoiceSwitchStatus();
+    }
+#endif
     while (func_cb.sta == FUNC_FINDPHONE)
     {
         func_findphone_process();
         func_findphone_message(msg_dequeue());
     }
     func_findphone_exit();
+#if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
+    if(EntertranmentVoiceOn && !uteModuleCallIsEntertranmentVoiceOn())
+    {
+        uteModuleCallChangeEntertranmentVoiceSwitchStatus();
+    }
+#endif
 }
 
 #endif

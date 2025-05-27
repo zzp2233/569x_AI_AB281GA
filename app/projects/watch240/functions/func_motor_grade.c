@@ -655,7 +655,7 @@ compo_form_t *func_motor_grade_form_create(void)
 //设置功能事件处理
 static void func_motor_grade_process(void)
 {
-#if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT)
+#if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT)
     func_breathe_set_mode_sub_move();
 #endif
     func_process();

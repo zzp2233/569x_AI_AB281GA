@@ -33,7 +33,7 @@ void tbox_uart_isr(void);
 #if USER_IO_QEDC_EN
 void bsp_qdec_io_process(void);
 #endif
-static u8 heap_func[HEAP_FUNC_SIZE] AT(.heap.func);
+u8 heap_func[HEAP_FUNC_SIZE] AT(.heap.func);
 
 #if TRACE_EN
 AT(.com_text.str_sddet)

@@ -128,7 +128,7 @@ static void func_heart_about_enter(void)
    page_move_info_t info =
    {
       .title_used = false,
-      .page_size = widget_text_get_area(f_heart_about->txt_page->txt).hei+50,
+      .page_size = widget_text_get_area(f_heart_about->txt_page->txt).hei+43+30,//长页，+43为当前显示总像素，+20增加长度，避免角落位置显示不全
       .page_count = 1,
       .quick_jump_perc =10,
    };

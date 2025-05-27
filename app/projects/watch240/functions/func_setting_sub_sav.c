@@ -150,15 +150,21 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SOUND_AND_VIBRATION]);
 
-    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 0, 1, 1, GUI_SCREEN_WIDTH, 62);
+    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
     compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2,GUI_SCREEN_WIDTH,62);
     compo_setid(cardbox, COMPO_ID_MOTOR_GRADE);
     compo_cardbox_icon_set_pos(cardbox, 0, 0,0);
     compo_cardbox_icon_set(cardbox,0,UI_BUF_I335001_3_EXERCISE_LIST_BIN);
+    compo_cardbox_rect_set_location(cardbox,0,0,30,232,1,16);
+    compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
     compo_cardbox_text_scroll_process(cardbox, true);
     compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
     compo_cardbox_text_set(cardbox,0,i18n[STR_VBRATION]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
+
+    compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape,GUI_SCREEN_CENTER_X,54+62/2+30,GUI_SCREEN_WIDTH,1);
+    compo_shape_set_color(shape,make_color(0x29,0x29,0x29));
 
     cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
     compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+68,GUI_SCREEN_WIDTH,62);

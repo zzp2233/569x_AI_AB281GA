@@ -47,44 +47,10 @@ compo_form_t *func_call_form_create(void)
     compo_listbox_set(listbox, tbl_call_list, CALL_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_CALL_00_ICON_BG_224X68_X8_Y48_Y126_Y202_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
-    // compo_listbox_set_sta_icon(listbox, UI_BUF_I335001_CALL_NEXT_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
-    // compo_listbox_set_bithook(listbox, true);
 
     compo_listbox_set_focus(listbox, 102);
     compo_listbox_update(listbox);
-    // compo_listbox_set_visible(listbox,false);//默认隐藏
 
-    // //取消按钮
-    // compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335001_23_SOS_2_WHETHER_TO_DIAL_ICON_BUTTON_102X52_X16_Y222_BIN);
-    // compo_picturebox_set_pos(pic, 16+102/2, 222+52/2);
-    // compo_picturebox_set_visible(pic, true);
-    // compo_setid(pic, COMPO_ID_PIC_CLOSE);
-
-    // //确定按钮
-    // pic = compo_picturebox_create(frm, UI_BUF_I335001_23_SOS_2_WHETHER_TO_DIAL_ICON_BUTTON_102X52_X122_Y220_BIN);
-    // compo_picturebox_set_pos(pic, 122+102/2, 222+52/2);
-    // compo_picturebox_set_visible(pic, true);
-    // compo_setid(pic, COMPO_ID_PIC_OPEN);
-
-    // compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_CLOSED_IS_OPEN]));
-    // compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH / 1.2, 0);
-    // compo_textbox_set_visible(txt, true);
-    // compo_textbox_set(txt, i18n[STR_CALL_CLOSED_IS_OPEN]);
-    // compo_textbox_set_multiline(txt,true);
-    // compo_setid(txt, COMPO_ID_TXT_BT_NOT_ENABLED);
-
-    // if(uteModuleCallBtIsPowerOn())
-    // {
-    //     compo_listbox_set_focus(listbox, 102);
-    //     compo_listbox_update(listbox);
-    //     compo_listbox_set_visible(listbox,true);
-    //     pic = compo_getobj_byid(COMPO_ID_PIC_CLOSE);
-    //     compo_picturebox_set_visible(pic, false);
-    //     pic = compo_getobj_byid(COMPO_ID_PIC_OPEN);
-    //     compo_picturebox_set_visible(pic, false);
-    //     txt = compo_getobj_byid(COMPO_ID_TXT_BT_NOT_ENABLED);
-    //     compo_textbox_set_multiline(txt,false);
-    // }
     return frm;
 }
 

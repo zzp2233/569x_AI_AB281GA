@@ -578,7 +578,7 @@ compo_form_t *func_sport_form_create(void)
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_1_LIST_BG_ICON_224X68_X8_Y50_Y126_Y202_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
-    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_set_focus(listbox, 102);
     compo_listbox_update(listbox);
     return frm;
 }

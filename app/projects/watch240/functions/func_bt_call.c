@@ -596,7 +596,7 @@ compo_form_t *func_bt_call_form_create(void)
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 74+30/2, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
@@ -609,17 +609,17 @@ compo_form_t *func_bt_call_form_create(void)
     //挂断按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 156+54/2);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 240);
 
     //静音按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_03_LOUDSPEAKER_BIN);
     compo_setid(btn, COMPO_ID_BTN_MIC);
-    compo_button_set_pos(btn, 166+60/2, 156+54/2);
+    compo_button_set_pos(btn, 166+60/2, 240);
 
     //音量按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
     compo_setid(btn, COMPO_ID_BTN_VOLUME);
-    compo_button_set_pos(btn, 14+60/2, 156+54/2);
+    compo_button_set_pos(btn, 14+60/2, 240);
 
     //刷黑
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
@@ -661,7 +661,7 @@ compo_form_t *func_bt_outgoing_form_create(void)
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 74+30/2, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
@@ -678,7 +678,7 @@ compo_form_t *func_bt_outgoing_form_create(void)
     //挂断按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 156+54/2);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 240);
 
     //静音按钮
     // btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_03_LOUDSPEAKER_BIN);
@@ -2234,7 +2234,7 @@ compo_form_t *func_bt_call_form_create(void)
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 74+30/2, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
@@ -2245,19 +2245,19 @@ compo_form_t *func_bt_call_form_create(void)
     compo_textbox_set_forecolor(time_txt, COLOR_WHITE);
 
     //挂断按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_I342001_11_CALL_BUTTON_PRESS_HANG_UP_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 240);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 156+54/2);
 
     //静音按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_I342001_11_CALL_BUTTON_PRESS_MICROPHONE00_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_03_LOUDSPEAKER_BIN);
     compo_setid(btn, COMPO_ID_BTN_MIC);
-    compo_button_set_pos(btn, 166+60/2, 240);
+    compo_button_set_pos(btn, 166+60/2, 156+54/2);
 
     //音量按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_I342001_11_CALL_BUTTON_PRESS_SOUND_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_00_SOUND_BIN);
     compo_setid(btn, COMPO_ID_BTN_VOLUME);
-    compo_button_set_pos(btn, 14+60/2, 240);
+    compo_button_set_pos(btn, 14+60/2, 156+54/2);
 
     //刷黑
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
@@ -2299,7 +2299,7 @@ compo_form_t *func_bt_outgoing_form_create(void)
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 74+30/2, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
@@ -2314,9 +2314,9 @@ compo_form_t *func_bt_outgoing_form_create(void)
     if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
 
     //挂断按钮
-    btn = compo_button_create_by_image(frm, UI_BUF_I342001_11_CALL_BUTTON_PRESS_HANG_UP_BIN);
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
-    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 240);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 156+54/2);
 
     //静音按钮
     // btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_03_LOUDSPEAKER_BIN);

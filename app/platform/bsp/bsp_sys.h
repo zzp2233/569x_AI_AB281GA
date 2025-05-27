@@ -207,7 +207,7 @@ typedef struct
 
     u8 set_sleep_time_id;//熄屏时常id
 
-    char pbap_result_Name[50];//存放来电与接听联系人名字
+    char pbap_result_Name[57];//存放来电与接听联系人名字
 
     char sos_call_number[11];
     bool sos_open_flag;

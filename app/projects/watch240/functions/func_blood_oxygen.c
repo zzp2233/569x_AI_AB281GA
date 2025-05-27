@@ -362,7 +362,7 @@ compo_form_t *func_blood_oxygen_form_create(void)
     compo_setid(textbox,COMPO_ID_TXT_VALUE);
 
     compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn,180,330,200,50);///点击测量区域
+    compo_button_set_location(btn,180,34/2+307,200,60);///点击测量区域
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
     btn = compo_button_create(frm);

@@ -1877,7 +1877,7 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 static const compo_listbox_item_t dwon_tbl_style_list[] =
 {
     {STR_STYLE_LIST_1,          UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_03_BIN,           .menu_style = MENU_STYLE_LIST},             //列表
-    {STR_GONG_GE,               UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_09_BIN,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
+    {STR_GONG_GE,               UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_09_BIN,           .menu_style = MENU_STYLE_CUM_SUDOKU},       //宫格
     {STR_STYLE_HONEYCOMB,       UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_01_BIN,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
     {STR_SPHERE,                UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_06_BIN,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
     {STR_CHECKERBOARD,          UI_BUF_I338001_STYLE_CLOCK_DOWN_MENU_05_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
@@ -2929,14 +2929,14 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT && UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
             widget_page_set_client(widget, -GUI_SCREEN_WIDTH, 0);
             compo_picturebox_t *picbox_white = compo_getobj_byid(COMPO_ID_PIC_WHITE);
-            compo_picturebox_cut(picbox_white,0,2);
+            compo_picturebox_cut(picbox_white,1,2);
 #endif
             break;
         case MSG_CTP_SHORT_RIGHT:
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT && UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
             widget_page_set_client(widget, 0, 0);
             compo_picturebox_t *picbox_white_2 = compo_getobj_byid(COMPO_ID_PIC_WHITE);
-            compo_picturebox_cut(picbox_white_2,1,2);
+            compo_picturebox_cut(picbox_white_2,0,2);
 
 #endif
             break;

@@ -73,13 +73,13 @@ compo_form_t *func_oxygen_about_form_create(void)
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_OXYGEN_ABOUT_1]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox,58, 43, 244, 280);
+    compo_textbox_set_location(textbox,58, 60, 255, 280);
     compo_textbox_set_multiline(textbox, true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_1]);
-    compo_textbox_set_location(textbox,58, 43, 244, widget_text_get_area(textbox->txt).hei);
+    compo_textbox_set_location(textbox,58, 60, 255, widget_text_get_area(textbox->txt).hei);
     compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_1]);
-    page_size=widget_text_get_area(textbox->txt).hei+43;
+    page_size=widget_text_get_area(textbox->txt).hei+60;
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN);
     compo_picturebox_set_pos(picbox,gui_image_get_size(UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN).wid/2+58, widget_text_get_area(textbox->txt).hei+(gui_image_get_size(UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN).hei)+5);
@@ -87,11 +87,11 @@ compo_form_t *func_oxygen_about_form_create(void)
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_OXYGEN_ABOUT_2]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox,58, page_size, 244, 280);
+    compo_textbox_set_location(textbox,58, page_size, 255, 280);
     compo_textbox_set_multiline(textbox, true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_2]);
-    compo_textbox_set_location(textbox,58, page_size, 244, widget_text_get_area(textbox->txt).hei);
+    compo_textbox_set_location(textbox,58, page_size, 255, widget_text_get_area(textbox->txt).hei);
     compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_2]);
     page_size+=widget_text_get_area(textbox->txt).hei+20;
 
@@ -168,7 +168,7 @@ static void func_oxygen_about_enter(void)
     f_oxygen_about->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {
-        .title_used = false,
+        .title_used = true,
         .page_size =  f_oxygen_about->page_size,
         .page_count = 1,
         .quick_jump_perc =10,

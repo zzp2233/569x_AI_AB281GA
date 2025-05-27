@@ -37,6 +37,10 @@
 #include "ute_drv_tft_s240X240_nv3002c_hy138026a.h"
 #elif UTE_DRV_AMOLED_S368X448_GC3A71_HK0J1931972B03_QSPI_SUPPORT
 #include "ute_drv_amoled_s368_x448_gc3a71_hk0j1931972b03_qspi.h"
+#elif UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT
+#include "ute_drv_tft_s360X360_gc9b71_hy139074a.h"
+#elif UTE_DRV_TFT_S360X360_GC9B71_JS139005A_QSPI_SUPPORT
+#include "ute_drv_tft_s360X360_gc9b71_js139005a.h"
 #endif
 
 /*! 配置屏的接口zn.zeng, 2021-09-06  */
@@ -87,6 +91,10 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenTft360X3603002chy138026aConfig;
 #elif UTE_DRV_AMOLED_S368X448_GC3A71_HK0J1931972B03_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenAmoledS368X448Gc3A71Hk0J1931972B03Config;
+#elif UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Gc9b71Hy139074aConfig;
+#elif UTE_DRV_TFT_S360X360_GC9B71_JS139005A_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft360X360Gc9b71Js139005aConfig;
 #else
 #error "Please select a screen driver"
 #endif

@@ -116,7 +116,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
             else
             {
                 rect_t location = widget_get_location(listbox->item_bgimg[i]);
-                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
                 {
                     listbox->line_height = max(max(max(font_height*2, listbox->item_height), listbox->icon_area.hei), location.hei);
                 }
@@ -143,7 +143,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                     }
                 }
                 font_x = (listbox->icon_area.wid >> 1) + (font_height >> 2) + icon_x;
-                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+                if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
                 {
                     font_y = (listbox->line_height/2 - font_height) >> 1;
                 }
@@ -181,7 +181,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
                 widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_center_y);
             }
 
-            if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT)
+            if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
             {
                 widget_set_location(listbox->item_text[i], font_x, font_y, font_w, listbox->line_height/2);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
                 widget_set_location(listbox->item_text2[i], font_x, font_y+listbox->line_height/2, font_w, listbox->line_height/2);//    widget_set_location(listbox->item_text[i], icon_x/2, listbox->line_height - font_height, font_w, listbox->line_height);
@@ -207,6 +207,11 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
     }
     //listbox->sidx = INT_MIN;
     listbox->sidx = -listbox->item_cnt;
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
+    {
+        listbox->sidx2 = -listbox->item_cnt;
+    }
+
 }
 
 /**
@@ -571,6 +576,13 @@ void compo_listbox_update(compo_listbox_t *listbox)
                 flag_scale = (udy > udy_th);
                 break;
 
+            case COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE:
+                //圆屏菜单弧形样式
+                lnx += LISTBOX_STYLE_CIRCLE_R - sqrt64(LISTBOX_STYLE_CIRCLE_R * LISTBOX_STYLE_CIRCLE_R - dy * dy);
+                udy_th = LISTBOX_ITEM_SIZE_THRESHOLD_CIRCLE;
+                flag_scale = (udy > udy_th);
+                break;
+
             case COMPO_LISTBOX_STYLE_TITLE:
             case COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT:
             case COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD:
@@ -581,6 +593,16 @@ void compo_listbox_update(compo_listbox_t *listbox)
             case COMPO_LISTBOX_STYLE_TITLE_NORMAL:
                 //带标题的列表，头部底部不做缩放
                 flag_scale = false;
+                break;
+
+            case COMPO_LISTBOX_STYLE_MENU_CIRCLE_SELECT:
+                //圆屏菜单弧形样式
+                lnx += LISTBOX_STYLE_CIRCLE_R - sqrt64(LISTBOX_STYLE_CIRCLE_R * LISTBOX_STYLE_CIRCLE_R - dy * dy);
+                udy_th = LISTBOX_ITEM_SIZE_THRESHOLD_CIRCLE;
+                flag_scale = (udy > udy_th);
+                //选择模式 语言选择模式
+                icon2 = (listbox->get_bit != NULL && listbox->get_bit(item->vidx) != 0) ? listbox->res_sta_icon1 : listbox->res_sta_icon2;
+                widget_icon_set(listbox->item_icon2[i], icon2);
                 break;
 
             case COMPO_LISTBOX_STYLE_SELECT:
@@ -746,6 +768,87 @@ void compo_listbox_update(compo_listbox_t *listbox)
         listbox->sidx = sidx;
         listbox->txt_roll_need_rst = false;
     }
+
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
+    {
+        ////text 2
+        //滚动控制器
+        if (sidx != listbox->sidx2 || listbox->txt2_roll_need_rst)
+        {
+            int i_end = 0;
+            i = 0;
+            if (sidx > listbox->sidx2)               //向上滑动
+            {
+                int k = sidx - listbox->sidx2;       //向上滑动的列表行数
+
+                //if(k <= INT_MIN) {
+                if(k <= -listbox->item_cnt)         //正常运行不可能运行到这
+                {
+                    listbox->sidx2 = 0;
+                    k = LISTBOX_ITEM_CNT;
+                }
+
+                for (i=0; i<LISTBOX_ITEM_CNT-k; i++)        //将下一行列表项对应的滚动控制器 赋值给 上一行列表对应的滚动控制器
+                {
+                    listbox->roll_cb2[i] = listbox->roll_cb2[i + k];
+                }
+                i_end = LISTBOX_ITEM_CNT;
+            }
+            else if (sidx < listbox->sidx2)          //向下滑动
+            {
+                int k = listbox->sidx2 - sidx;       //向下滑动的列表行数
+                for (i_end=LISTBOX_ITEM_CNT; i_end>k; i_end--)      //将上一行列表项对应的滚动控制器 赋值给 下一行列表对应的滚动控制器
+                {
+                    listbox->roll_cb2[i_end - 1] = listbox->roll_cb2[i_end - 1 - k];
+                }
+                i = 0;
+            }
+
+            for (; i<i_end; i++)                    //对移动超出列表项个数一半的滚动控制器重新赋值
+            {
+                memset(&listbox->roll_cb2[i], 0, sizeof(compo_roll_cb_t));
+                listbox->roll_cb2[i].tick = tick_get();
+            }
+
+            for (i=0; i<LISTBOX_ITEM_CNT; i++)          //判断列表项的中是否可以滚动
+            {
+                if (listbox->txt2_roll_need_rst)
+                {
+                    memset(&listbox->roll_cb2[i], 0, sizeof(compo_roll_cb_t));
+                    listbox->roll_cb2[i].tick = tick_get();
+                }
+                widget_text_t *txt = listbox->item_text2[i];
+                if (widget_get_visble(txt))
+                {
+                    area_t text_area = widget_text_get_area(txt);
+                    area_t textbox_rect = widget_text_get_box_area_rel(txt);
+                    if (text_area.wid > textbox_rect.wid)
+                    {
+                        listbox->roll_cb2[i].mode = TEXT_AUTOROLL_MODE_SROLL_CIRC;
+                        listbox->roll_cb2[i].direction = -1;
+                        if (widget_get_align_center(txt))
+                        {
+                            if(listbox->roll_cb2[i].mode != TEXT_AUTOROLL_MODE_SROLL_CIRC)
+                            {
+                                listbox->roll_cb2[i].offset = (text_area.wid - textbox_rect.wid) / 2;
+                            }
+                        }
+                        widget_text_set_autoroll_mode(listbox->item_text2[i], TEXT_AUTOROLL_MODE_SROLL_CIRC);
+                    }
+                    else
+                    {
+                        widget_text_set_autoroll_mode(listbox->item_text2[i], TEXT_AUTOROLL_MODE_NULL);
+                    }
+                }
+            }
+            for (i=0; i<LISTBOX_ITEM_CNT; i++)
+            {
+                widget_text_set_client(listbox->item_text2[i], listbox->roll_cb2[i].offset, 0);
+            }
+            listbox->sidx2 = sidx;
+            listbox->txt2_roll_need_rst = false;
+        }
+    }
 }
 
 /**
@@ -755,6 +858,10 @@ void compo_listbox_update(compo_listbox_t *listbox)
 void compo_listbox_update_with_text_scroll_rst(compo_listbox_t *listbox)
 {
     listbox->txt_roll_need_rst = true;
+    if (listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT || listbox->style == COMPO_LISTBOX_STYLE_TITLE_TWO_TEXT_CIRCLE)
+    {
+        listbox->txt2_roll_need_rst = true;
+    }
     compo_listbox_update(listbox);
 }
 
@@ -1184,6 +1291,11 @@ void compo_listbox_set_location(compo_listbox_t *listbox, s16 x, s16 y, s16 widt
     widget_set_location(listbox->page, x, y, width, height);
 }
 
+void compo_listbox_set_pos(compo_listbox_t *listbox, s16 x, s16 y)
+{
+    widget_set_pos(listbox->page, x, y);
+}
+
 /**
  * @brief 设置列表控件item的高度
           用于无图标和背景图时，自定义列表中item的高度
@@ -1193,6 +1305,18 @@ void compo_listbox_set_location(compo_listbox_t *listbox, s16 x, s16 y, s16 widt
 void compo_listbox_set_item_height(compo_listbox_t *listbox, int item_height)
 {
     listbox->item_height = item_height;
+    compo_listbox_init_update(listbox);
+}
+
+/**
+ * @brief 设置列表控件item的高度
+          用于无图标和背景图时，自定义列表中item的高度
+ * @param[in] listbox : 列表指针
+ * @param[in] item_height : item高度
+ **/
+void compo_listbox_set_item_width(compo_listbox_t *listbox, int item_width)
+{
+    listbox->item_width = item_width;
     compo_listbox_init_update(listbox);
 }
 

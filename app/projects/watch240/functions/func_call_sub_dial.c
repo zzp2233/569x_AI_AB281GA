@@ -1564,6 +1564,257 @@ static void func_call_sub_dial_button_long(void)
     func_call_sub_dial_button_release_handle();
 
 }
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+enum
+{
+
+    COMPO_ID_BTN_NUM0 = 1,
+    COMPO_ID_BTN_NUM1,
+    COMPO_ID_BTN_NUM2,
+    COMPO_ID_BTN_NUM3,
+    COMPO_ID_BTN_NUM4,
+    COMPO_ID_BTN_NUM5,
+    COMPO_ID_BTN_NUM6,
+    COMPO_ID_BTN_NUM7,
+    COMPO_ID_BTN_NUM8,
+    COMPO_ID_BTN_NUM9,
+    COMPO_ID_BTN_CALL,
+    COMPO_ID_BTN_DEL,
+
+    COMPO_ID_PIC_CLICK_NUM0,
+    COMPO_ID_PIC_CLICK_NUM1,
+    COMPO_ID_PIC_CLICK_NUM2,
+    COMPO_ID_PIC_CLICK_NUM3,
+    COMPO_ID_PIC_CLICK_NUM4,
+    COMPO_ID_PIC_CLICK_NUM5,
+    COMPO_ID_PIC_CLICK_NUM6,
+    COMPO_ID_PIC_CLICK_NUM7,
+    COMPO_ID_PIC_CLICK_NUM8,
+    COMPO_ID_PIC_CLICK_NUM9,
+    COMPO_ID_PIC_CLICK_CALL,
+    COMPO_ID_PIC_CLICK_DEL,
+
+
+    COMPO_ID_NUM_DISP_ZERO,
+//    COMPO_ID_PIC_NUM,
+
+
+};
+
+#define CALL_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_call_disp_btn_item) / sizeof(tbl_call_disp_btn_item[0])))
+
+typedef struct password_disp_btn_item_t_
+{
+    u32 res_addr;
+    u16 btn_id;
+    u32 res_click;
+    u16 btn_click_id;
+    s16 x;
+    s16 y;
+} call_disp_btn_item_t;
+
+#define offset_y1  (0)
+#define offset_y2  (0)
+#define offset_y3  (0)
+#define offset_y4  (0)
+//按钮item，创建时遍历一下
+static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
+{
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_01_BIN,             COMPO_ID_BTN_NUM1,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_01_BIN,  COMPO_ID_PIC_CLICK_NUM1,     92+56/2-62,     99+41/2-44+offset_y4},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_02_BIN,             COMPO_ID_BTN_NUM2,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_02_BIN,  COMPO_ID_PIC_CLICK_NUM2,     92+56/2,        99+41/2-44+offset_y4},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_03_BIN,             COMPO_ID_BTN_NUM3,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_03_BIN,  COMPO_ID_PIC_CLICK_NUM3,     92+56/2+62,     99+41/2-44+offset_y4},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_04_BIN,             COMPO_ID_BTN_NUM4,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_04_BIN,  COMPO_ID_PIC_CLICK_NUM4,     92+56/2-62,     99+41/2+offset_y3},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_05_BIN,             COMPO_ID_BTN_NUM5,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_05_BIN,  COMPO_ID_PIC_CLICK_NUM5,     92+56/2,        99+41/2+offset_y3},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_06_BIN,             COMPO_ID_BTN_NUM6,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_06_BIN,  COMPO_ID_PIC_CLICK_NUM6,     92+56/2+62,     99+41/2+offset_y3},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_07_BIN,             COMPO_ID_BTN_NUM7,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_07_BIN,  COMPO_ID_PIC_CLICK_NUM7,     92+56/2-62,     99+41/2+44+offset_y2},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_08_BIN,             COMPO_ID_BTN_NUM8,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_08_BIN,  COMPO_ID_PIC_CLICK_NUM8,     92+56/2,        99+41/2+44+offset_y2},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_09_BIN,             COMPO_ID_BTN_NUM9,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_09_BIN,  COMPO_ID_PIC_CLICK_NUM9,     92+56/2+62,     99+41/2+44+offset_y2},
+    {UI_BUF_I342001_11_CALL_DIAL_PLATE_00_BIN,             COMPO_ID_BTN_NUM0,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_00_BIN,  COMPO_ID_PIC_CLICK_NUM0,     92+56/2,        99+41/2+88+offset_y1},
+    {UI_BUF_I342001_11_CALL_00_DELETE_BIN,                 COMPO_ID_BTN_DEL,        0,                                                COMPO_ID_PIC_CLICK_DEL,      92+56/2+62,     99+41/2+88+offset_y1},
+    {UI_BUF_I342001_11_CALL_00_CALL_BIN,                   COMPO_ID_BTN_CALL,       0,                                                COMPO_ID_PIC_CLICK_CALL,     92+56/2-62,     99+41/2+88+offset_y1},
+};
+
+//打电话页面
+compo_form_t *func_call_sub_dial_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //创建按钮
+    compo_button_t *btn;
+    for (u8 idx_btn = 0; idx_btn < CALL_DISP_BTN_ITEM_CNT; idx_btn++)
+    {
+        btn = compo_button_create_by_image(frm, tbl_call_disp_btn_item[idx_btn].res_addr);
+        compo_setid(btn, tbl_call_disp_btn_item[idx_btn].btn_id);
+        compo_button_set_pos(btn, tbl_call_disp_btn_item[idx_btn].x, tbl_call_disp_btn_item[idx_btn].y);
+    }
+
+    //创建点击按钮变色图片
+    for (u8 i=0; i<CALL_DISP_BTN_ITEM_CNT; i++)
+    {
+        compo_picturebox_t* pic = compo_picturebox_create(frm, tbl_call_disp_btn_item[i].res_click);
+        compo_setid(pic, tbl_call_disp_btn_item[i].btn_click_id);
+        compo_picturebox_set_pos(pic, tbl_call_disp_btn_item[i].x, tbl_call_disp_btn_item[i].y);
+        compo_picturebox_set_visible(pic, false);
+    }
+
+
+    //创建数字
+    compo_textbox_t *txt_num;
+    txt_num = compo_textbox_create(frm, 14);
+    compo_textbox_set_font(txt_num, UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_setid(txt_num, COMPO_ID_NUM_DISP_ZERO);
+    compo_textbox_set_align_center(txt_num, true);
+    compo_textbox_set_location(txt_num, GUI_SCREEN_CENTER_X, 18+40/2, GUI_SCREEN_WIDTH/1.5, 40);
+    compo_textbox_set(txt_num, "");
+
+    return frm;
+}
+
+///触摸按钮效果处理
+static void func_call_sub_dial_button_touch_handle(void)
+{
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_DEL:
+            compo_picturebox_set_visible(compo_getobj_byid(id+COMPO_ID_BTN_DEL), true);
+            break;
+        default:
+            break;
+    }
+}
+
+///释放按钮效果处理
+static void func_call_sub_dial_button_release_handle(void)
+{
+    for (u8 i=0; i<CALL_DISP_BTN_ITEM_CNT; i++)
+    {
+        compo_picturebox_t* pic = compo_getobj_byid(tbl_call_disp_btn_item[i].btn_click_id);
+        compo_picturebox_set_visible(pic, false);       //触摸效果图设置不可见
+    }
+}
+
+///单击
+static void func_call_sub_dial_button_click(void)
+{
+    int id = compo_get_button_id();
+    //获取文本组件的地址
+//    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_PIC_NUM);
+
+    //获取数字组件地址
+    char buf[34];
+    compo_textbox_t *txt_num = compo_getobj_byid(COMPO_ID_NUM_DISP_ZERO);
+
+    f_call_sub_dial_t *call = (f_call_sub_dial_t *)func_cb.f_cb;
+
+    switch (id)
+    {
+        case COMPO_ID_BTN_NUM0...COMPO_ID_BTN_NUM9:
+//            compo_textbox_set_visible(txt, false);
+            if(call->phone_number_cnt <= 14)
+            {
+                call->phone_number[call->phone_number_cnt++] = id+0x30 - 1;
+            }
+            break;
+
+        case COMPO_ID_BTN_CALL:
+            bt_pbap_lookup_number((char*)call->phone_number);
+            memset(sys_cb.outgoing_number, 0, 16);
+            for(int i=0; i<call->phone_number_cnt; i++)
+            {
+                sys_cb.outgoing_number[i] = call->phone_number[i];
+            }
+            if(!uteModuleCallBtIsConnected())
+            {
+                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+                sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
+                msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
+            }
+#if MODEM_CAT1_EN
+            if (bsp_modem_get_init_flag())
+            {
+                modem_call_dial(sys_cb.outgoing_number);
+            }
+            else
+#endif
+            {
+                bt_call_redial_number();
+            }
+//            printf("name:%s\n",sys_cb.pbap_result_Name);
+            break;
+
+        case COMPO_ID_BTN_DEL:
+//            compo_textbox_set_visible(txt, false);
+            if(call->phone_number_cnt > 0)
+            {
+                call->phone_number[--call->phone_number_cnt] = '\0';
+            }
+            break;
+
+        default:
+            break;
+    }
+
+    memset(buf, 0, sizeof(buf));
+    if(call->phone_number_cnt)
+    {
+        snprintf(buf, sizeof(buf), "%s", call->phone_number);
+    }
+    compo_textbox_set(txt_num, buf);
+    func_call_sub_dial_button_release_handle();
+}
+
+///长按处理
+static void func_call_sub_dial_button_long(void)
+{
+    int id = compo_get_button_id();
+    //获取文本组件的地址
+//    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_PIC_NUM);
+
+    //获取数字组件地址
+    char buf[34];
+    compo_textbox_t *txt_num = compo_getobj_byid(COMPO_ID_NUM_DISP_ZERO);
+
+    f_call_sub_dial_t *call = (f_call_sub_dial_t *)func_cb.f_cb;
+
+    switch (id)
+    {
+        case COMPO_ID_BTN_NUM7:
+//            compo_textbox_set_visible(txt, false);
+            if(call->phone_number_cnt < 16)
+            {
+                call->phone_number[call->phone_number_cnt++] = '*';
+            }
+            break;
+        case COMPO_ID_BTN_NUM9:
+//            compo_textbox_set_visible(txt, false);
+            if(call->phone_number_cnt < 16)
+            {
+                call->phone_number[call->phone_number_cnt++] = '#';
+            }
+            break;
+        case COMPO_ID_BTN_NUM0:
+//            compo_textbox_set_visible(txt, false);
+            if(call->phone_number_cnt < 16)
+            {
+                call->phone_number[call->phone_number_cnt++] = '+';
+            }
+            break;
+    }
+
+    memset(buf, 0, sizeof(buf));
+    if(call->phone_number_cnt)
+    {
+        snprintf(buf, sizeof(buf), "%s", call->phone_number);
+    }
+    compo_textbox_set(txt_num, buf);
+    func_call_sub_dial_button_release_handle();
+
+}
+
 #else
 compo_form_t *func_call_sub_dial_form_create(void)
 {
@@ -1577,7 +1828,9 @@ compo_form_t *func_call_sub_dial_form_create(void)
 //电话消息处理
 static void func_call_sub_dial_message(size_msg_t msg)
 {
-#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT)
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT \
+       || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT \
+       || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT)
     switch (msg)
     {
 

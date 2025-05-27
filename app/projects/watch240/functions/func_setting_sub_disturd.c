@@ -13,7 +13,10 @@ static void func_set_sub_disturd_enter(void);
 #define TRACE(...)
 #endif
 
-#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT)
+#if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT \
+     || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT \
+     ||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT \
+     || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT)
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 #define         DRAG_AUTO_SPEED     10
 #define         DRAG_MAX_DISTANCE   151
@@ -4495,6 +4498,755 @@ static void func_disturd_card_click(void)
     func_set_sub_disturd_disp_update();
 }
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+#define         DRAG_AUTO_SPEED     10
+#define         DRAG_MAX_DISTANCE   220
+#define         DRAG_MAX_DISTANCE1  84
+#define         DRAG_MIN_DISTANCE   4
+#define         DRAG_MAX_BACK_DISTANCE      200
+#define         DRAG_MIN_BACK_DISTANCE      49
+#define         FOCUS_AUTO_STEP         5
+#define         FOCUS_AUTO_STEP_DIV     16
+typedef struct f_disturd_t_
+{
+    bool flag_drag;                 //开始拖动
+    bool flag_move_auto;            //自动移动，惯性
+    u32 tick;
+    s32 focus_x;
+    s32 focus_y;
+    s32 focus_dx;
+    s32 focus_dy;
+    s32 focus_ofsx;
+    s32 focus_ofsy;
+//    s32 focus_ofsx_max;
+//    s32 focus_ofsy_max;
+    int moveto_ix;                  //设定自动移到的目标菜单ix
+    int moveto_iy;                  //设置自动移到的目标菜单iy
+    point_t moveto;                 //设定自动移到的坐标
+    u8 time_scale;
+} f_disturd_t;
+
+enum
+{
+    CARD_ID_START = 1,
+    COMPO_ID_CARD_DISTURD_ALL,
+    COMPO_ID_CARD_DISTURD_DEF,
+    COMPO_ID_CARD_DISTURD_START_TIME,
+    COMPO_ID_CARD_DISTURD_END_TIME,
+    CARD_ID_END,
+};
+
+typedef struct ui_handle_t_
+{
+
+    ///全天勿扰
+    struct card1_t
+    {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct card_rect_t
+        {
+            u8 idx;
+            s16 x,y;
+            s16 w,h;
+            u16 r;
+        } rect[1];
+
+        struct card_icon_t
+        {
+            u8 idx;
+            s16 x,y;
+            u16 w,h;
+            u32 res_on;
+            u32 res_off;
+        } icon[1];
+
+        struct card_text_t
+        {
+            u8 idx;
+            s16 x,y;
+            u16 w,h;
+            u16 str_id;
+            u32 res;
+            bool center;
+            bool wordwrap;
+            color_t color;
+            u16 rev;
+        } text[1];
+    } disturd_all_card;
+
+    ///定时勿扰
+    struct card1_t disturd_def_card;
+
+    ///开始时间
+    struct card2_t
+    {
+        u16 id;
+        s16 x,y;
+        u16 w,h;
+
+        struct card_rect_t rect[1];
+        struct card_text_t text[3];
+    } disturd_start_time;
+
+    ///结束时间
+    struct card2_t disturd_end_time;
+
+} ui_handle_t;
+
+static const ui_handle_t ui_handle =
+{
+    .disturd_all_card = {
+        .id = COMPO_ID_CARD_DISTURD_ALL,
+        .x  = 4+232/2,
+        .y  = 54+62/2,
+        .w  = 232,
+        .h  = 62,
+
+        .rect = {
+            [0] = {
+                .idx    = 0,
+                .x      = 0,
+                .y      = 60/2,
+                .w      = 232,
+                .h      = 1,
+                .r      = 0,
+            },
+        },
+
+        .icon = {
+            [0] = {
+                .idx    = 0,
+                .x      = 182+40/2 - 232/2,
+                .y      = 19+24/2 - 62/2,
+                .w      = 40,
+                .h      = 24,
+                .res_on = UI_BUF_I342001_28_SET_OPEN_BIN,
+                .res_off= UI_BUF_I342001_28_SET_CLOSE_BIN,
+            },
+        },
+
+        .text = {
+            [0] = {
+                .idx    = 0,
+                .x      = 12 - 232/2,
+                .y      = 18 - 62/2,
+                .w      = 96,
+                .h      = 26,
+                .str_id = STR_DISTURD_ALL,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {255,255,255},
+                .rev    = 0,
+            },
+        },
+    },
+
+    .disturd_def_card = {
+        .id = COMPO_ID_CARD_DISTURD_DEF,
+        .x  = 4+232/2,
+        .y  = 122+62/2,
+        .w  = 232,
+        .h  = 62,
+
+        .rect = {
+            [0] = {
+                .idx    = 0,
+                .x      = 0,
+                .y      = 60/2,
+                .w      = 232,
+                .h      = 1,
+                .r      = 0,
+            },
+        },
+
+        .icon = {
+            [0] = {
+                .idx    = 0,
+                .x      = 182+40/2 - 232/2,
+                .y      = 19+24/2 - 62/2,
+                .w      = 40,
+                .h      = 24,
+                .res_on = UI_BUF_I342001_28_SET_OPEN_BIN,
+                .res_off= UI_BUF_I342001_28_SET_CLOSE_BIN,
+            },
+        },
+
+        .text = {
+            [0] = {
+                .idx    = 0,
+                .x      = 12 - 232/2,
+                .y      = 18 - 62/2,
+                .w      = 96,
+                .h      = 26,
+                .str_id = STR_DISTURD_TIM,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {255,255,255},
+                .rev    = 0,
+            },
+        },
+    },
+
+    .disturd_start_time = {
+        .id = COMPO_ID_CARD_DISTURD_START_TIME,
+        .x  = 4+232/2,
+        .y  = 190+72/2,
+        .w  = 232,
+        .h  = 72,
+
+        .rect = {
+            [0] = {
+                .idx    = 0,
+                .x      = 0,
+                .y      = 60/2,
+                .w      = 232,
+                .h      = 1,
+                .r      = 0,
+            },
+        },
+
+        .text = {
+            [0] = {
+                .idx    = 0,
+                .x      = 10 - 232/2,
+                .y      = 10 - 72/2,
+                .w      = 96,
+                .h      = 26,
+                .str_id = STR_DISTURD_TIM_START,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {255,255,255},
+                .rev    = 0,
+            },
+
+            [1] = {
+                .idx    = 1,
+                .x      = 10 - 232/2,
+                .y      = 40 - 72/2,
+                .w      = 60,
+                .h      = 26,
+                .str_id = STR_NULL,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {148,148,148},
+                .rev    = 0,
+            },
+
+            [2] = {
+                .idx    = 2,
+                .x      = 10 - 232/2 + 60,
+                .y      = 40 - 72/2,
+                .w      = 52,
+                .h      = 26,
+                .str_id = STR_AM,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {148,148,148},
+                .rev    = STR_PM,
+            },
+        },
+    },
+
+
+    .disturd_end_time = {
+        .id = COMPO_ID_CARD_DISTURD_END_TIME,
+        .x  = 4+232/2,
+        .y  = 268+72/2,
+        .w  = 232,
+        .h  = 72,
+
+        .rect = {
+            [0] = {
+                .idx    = 0,
+                .x      = 0,
+                .y      = 0,
+                .w      = 0,
+                .h      = 0,
+                .r      = 0,
+            },
+        },
+
+        .text = {
+            [0] = {
+                .idx    = 0,
+                .x      = 10 - 232/2,
+                .y      = 10 - 72/2,
+                .w      = 96,
+                .h      = 26,
+                .str_id = STR_DISTURD_TIM_END,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {255,255,255},
+                .rev    = 0,
+            },
+
+            [1] = {
+                .idx    = 1,
+                .x      = 10 - 232/2,
+                .y      = 40 - 72/2,
+                .w      = 60,
+                .h      = 26,
+                .str_id = STR_NULL,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {148,148,148},
+                .rev    = 0,
+            },
+
+            [2] = {
+                .idx    = 2,
+                .x      = 10 - 232/2 + 60,
+                .y      = 40 - 72/2,
+                .w      = 52,
+                .h      = 26,
+                .str_id = STR_AM,
+                .res    = UI_BUF_0FONT_FONT_BIN,
+                .center = false,
+                .wordwrap = false,
+                .color  = {148,148,148},
+                .rev    = STR_PM,
+            },
+        },
+    },
+};
+
+typedef struct func_alarm_hour_format_t_
+{
+    u8 hour;
+    u8 am_pm;
+} func_alarm_hour_format_t;
+
+static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
+{
+    // printf("time_apm%d\n",hour24);
+    u8 am_pm = (hour24 <= 12 && hour24) ? 2 : 1;    //1 PM, 2 AM
+    func_alarm_hour_format_t hour12;
+    if(uteModuleSystemtime12HOn())
+    {
+        if (hour24 == 0)
+        {
+            hour12.hour = 12;
+        }
+        else if (hour24 > 12)
+        {
+            hour12.hour = hour24 - 12;
+        }
+        else
+        {
+            hour12.hour = hour24;
+        }
+        hour12.am_pm = am_pm;
+        return hour12;
+    }
+    hour12.hour = hour24;
+    hour12.am_pm = 0;
+    return hour12;
+}
+
+static void func_set_sub_disturd_state_update(void)
+{
+    ute_quick_switch_t quick;
+    uteApplicationCommonGetQuickSwitchStatus(&quick);
+    if(quick.isNotDisturb)
+    {
+        if(uteModuleNotDisturbIsOpenScheduled())
+        {
+            sys_cb.disturd_adl = 0;
+            sys_cb.disturd_tim = 1;
+        }
+        else
+        {
+            sys_cb.disturd_adl = 1;
+            sys_cb.disturd_tim = 0;
+        }
+    }
+    else
+    {
+        if(uteModuleNotDisturbIsOpenScheduled())
+        {
+            sys_cb.disturd_tim = 1;
+        }
+        else
+        {
+            sys_cb.disturd_tim = 0;
+        }
+        sys_cb.disturd_adl = 0;
+    }
+    sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
+    sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
+
+}
+
+//勿扰模式页面
+compo_form_t *func_set_sub_disturd_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_DISTURD]);
+
+    widget_page_set_client(frm->page_body, 0, -DRAG_MIN_BACK_DISTANCE);
+
+    func_set_sub_disturd_state_update();
+
+    ///创建全天勿扰卡片
+    compo_cardbox_t* disturd_all_card = compo_cardbox_create(frm,
+                                        sizeof(ui_handle.disturd_all_card.rect)/sizeof(ui_handle.disturd_all_card.rect[0]),
+                                        sizeof(ui_handle.disturd_all_card.icon)/sizeof(ui_handle.disturd_all_card.icon[0]),
+                                        sizeof(ui_handle.disturd_all_card.text)/sizeof(ui_handle.disturd_all_card.text[0]),
+                                        ui_handle.disturd_all_card.w, ui_handle.disturd_all_card.h);
+    compo_cardbox_set_visible(disturd_all_card, true);
+    compo_cardbox_set_location(disturd_all_card, ui_handle.disturd_all_card.x, ui_handle.disturd_all_card.y, ui_handle.disturd_all_card.w, ui_handle.disturd_all_card.h);
+    compo_setid(disturd_all_card, ui_handle.disturd_all_card.id);
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.rect)/sizeof(ui_handle.disturd_all_card.rect[0]); i++)
+    {
+        compo_cardbox_rect_set_location(disturd_all_card, ui_handle.disturd_all_card.rect[i].idx, ui_handle.disturd_all_card.rect[i].x, ui_handle.disturd_all_card.rect[i].y,
+                                        ui_handle.disturd_all_card.rect[i].w, ui_handle.disturd_all_card.rect[i].h, ui_handle.disturd_all_card.rect[i].r);
+        compo_cardbox_rect_set_color(disturd_all_card, ui_handle.disturd_all_card.rect[i].idx, make_color(41, 41, 41));
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.icon)/sizeof(ui_handle.disturd_all_card.icon[0]); i++)
+    {
+        compo_cardbox_icon_set_location(disturd_all_card, ui_handle.disturd_all_card.icon[i].idx, ui_handle.disturd_all_card.icon[i].x, ui_handle.disturd_all_card.icon[i].y,
+                                        ui_handle.disturd_all_card.icon[i].w, ui_handle.disturd_all_card.icon[i].h);
+        compo_cardbox_icon_set(disturd_all_card, ui_handle.disturd_all_card.icon[i].idx,
+                               sys_cb.disturd_adl > 0 ? ui_handle.disturd_all_card.icon[i].res_on : ui_handle.disturd_all_card.icon[i].res_off);
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_all_card.text)/sizeof(ui_handle.disturd_all_card.text[0]); i++)
+    {
+        compo_cardbox_text_set_font(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, ui_handle.disturd_all_card.text[i].res);
+        widget_text_set_ellipsis(disturd_all_card->text[ui_handle.disturd_all_card.text[i].idx], false);
+        compo_cardbox_text_set_align_center(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, ui_handle.disturd_all_card.text[i].center);
+        widget_text_set_wordwrap(disturd_all_card->text[ui_handle.disturd_all_card.text[i].idx], ui_handle.disturd_all_card.text[i].wordwrap);
+        widget_text_set_color(disturd_all_card->text[ui_handle.disturd_all_card.text[i].idx], make_color(ui_handle.disturd_all_card.text[i].color.r, ui_handle.disturd_all_card.text[i].color.g, ui_handle.disturd_all_card.text[i].color.b));
+        compo_cardbox_text_set_location(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, ui_handle.disturd_all_card.text[i].x, ui_handle.disturd_all_card.text[i].y,
+                                        ui_handle.disturd_all_card.text[i].w, ui_handle.disturd_all_card.text[i].h);
+        compo_cardbox_text_set(disturd_all_card, ui_handle.disturd_all_card.text[i].idx, i18n[ui_handle.disturd_all_card.text[i].str_id]);
+    }
+
+    ///创建定时勿扰卡片
+    compo_cardbox_t* disturd_def_card = compo_cardbox_create(frm,
+                                        sizeof(ui_handle.disturd_def_card.rect)/sizeof(ui_handle.disturd_def_card.rect[0]),
+                                        sizeof(ui_handle.disturd_def_card.icon)/sizeof(ui_handle.disturd_def_card.icon[0]),
+                                        sizeof(ui_handle.disturd_def_card.text)/sizeof(ui_handle.disturd_def_card.text[0]),
+                                        ui_handle.disturd_def_card.w, ui_handle.disturd_def_card.h);
+    compo_cardbox_set_visible(disturd_def_card, true);
+    compo_cardbox_set_location(disturd_def_card, ui_handle.disturd_def_card.x, ui_handle.disturd_def_card.y, ui_handle.disturd_def_card.w, ui_handle.disturd_def_card.h);
+    compo_setid(disturd_def_card, ui_handle.disturd_def_card.id);
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.rect)/sizeof(ui_handle.disturd_def_card.rect[0]); i++)
+    {
+        compo_cardbox_rect_set_location(disturd_def_card, ui_handle.disturd_def_card.rect[i].idx, ui_handle.disturd_def_card.rect[i].x, ui_handle.disturd_def_card.rect[i].y,
+                                        ui_handle.disturd_def_card.rect[i].w, ui_handle.disturd_def_card.rect[i].h, ui_handle.disturd_def_card.rect[i].r);
+        compo_cardbox_rect_set_color(disturd_def_card, ui_handle.disturd_def_card.rect[i].idx, make_color(41, 41, 41));
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.icon)/sizeof(ui_handle.disturd_def_card.icon[0]); i++)
+    {
+        compo_cardbox_icon_set_location(disturd_def_card, ui_handle.disturd_def_card.icon[i].idx, ui_handle.disturd_def_card.icon[i].x, ui_handle.disturd_def_card.icon[i].y,
+                                        ui_handle.disturd_def_card.icon[i].w, ui_handle.disturd_def_card.icon[i].h);
+        compo_cardbox_icon_set(disturd_def_card, ui_handle.disturd_def_card.icon[i].idx,
+                               sys_cb.disturd_tim > 0 ? ui_handle.disturd_def_card.icon[i].res_on : ui_handle.disturd_def_card.icon[i].res_off);
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_def_card.text)/sizeof(ui_handle.disturd_def_card.text[0]); i++)
+    {
+        compo_cardbox_text_set_font(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, ui_handle.disturd_def_card.text[i].res);
+        widget_text_set_ellipsis(disturd_def_card->text[ui_handle.disturd_def_card.text[i].idx], false);
+        compo_cardbox_text_set_align_center(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, ui_handle.disturd_def_card.text[i].center);
+        widget_text_set_wordwrap(disturd_def_card->text[ui_handle.disturd_def_card.text[i].idx], ui_handle.disturd_def_card.text[i].wordwrap);
+        widget_text_set_color(disturd_def_card->text[ui_handle.disturd_def_card.text[i].idx], make_color(ui_handle.disturd_def_card.text[i].color.r, ui_handle.disturd_def_card.text[i].color.g, ui_handle.disturd_def_card.text[i].color.b));
+        compo_cardbox_text_set_location(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, ui_handle.disturd_def_card.text[i].x, ui_handle.disturd_def_card.text[i].y,
+                                        ui_handle.disturd_def_card.text[i].w, ui_handle.disturd_def_card.text[i].h);
+        compo_cardbox_text_set(disturd_def_card, ui_handle.disturd_def_card.text[i].idx, i18n[ui_handle.disturd_def_card.text[i].str_id]);
+    }
+
+    ///创建开始时间卡片
+    compo_cardbox_t* disturd_start_time = compo_cardbox_create(frm,
+                                          sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]),
+                                          0,
+                                          sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]),
+                                          ui_handle.disturd_start_time.w, ui_handle.disturd_start_time.h);
+    compo_picturebox_t *picbox = compo_picturebox_create_for_page(frm,disturd_start_time->page,UI_BUF_I342001_28_SET_MORE_BIN);
+    compo_picturebox_set_pos(picbox,ui_handle.disturd_def_card.icon[0].x+15, ui_handle.disturd_def_card.icon[0].y);
+    compo_cardbox_set_visible(disturd_start_time, sys_cb.disturd_tim > 0 ? true : false);
+    compo_cardbox_set_location(disturd_start_time, ui_handle.disturd_start_time.x, ui_handle.disturd_start_time.y, ui_handle.disturd_start_time.w, ui_handle.disturd_start_time.h);
+    compo_setid(disturd_start_time, ui_handle.disturd_start_time.id);
+    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.rect)/sizeof(ui_handle.disturd_start_time.rect[0]); i++)
+    {
+        compo_cardbox_rect_set_location(disturd_start_time, ui_handle.disturd_start_time.rect[i].idx, ui_handle.disturd_start_time.rect[i].x, ui_handle.disturd_start_time.rect[i].y,
+                                        ui_handle.disturd_start_time.rect[i].w, ui_handle.disturd_start_time.rect[i].h, ui_handle.disturd_start_time.rect[i].r);
+        compo_cardbox_rect_set_color(disturd_start_time, ui_handle.disturd_start_time.rect[i].idx, make_color(41, 41, 41));
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_start_time.text)/sizeof(ui_handle.disturd_start_time.text[0]); i++)
+    {
+        compo_cardbox_text_set_font(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].res);
+        widget_text_set_ellipsis(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], false);
+        compo_cardbox_text_set_align_center(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].center);
+        widget_text_set_wordwrap(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], ui_handle.disturd_start_time.text[i].wordwrap);
+        widget_text_set_color(disturd_start_time->text[ui_handle.disturd_start_time.text[i].idx], make_color(ui_handle.disturd_start_time.text[i].color.r, ui_handle.disturd_start_time.text[i].color.g, ui_handle.disturd_start_time.text[i].color.b));
+        compo_cardbox_text_set_location(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, ui_handle.disturd_start_time.text[i].x, ui_handle.disturd_start_time.text[i].y,
+                                        ui_handle.disturd_start_time.text[i].w, ui_handle.disturd_start_time.text[i].h);
+//        if(sys_cb.disturd_tim == 0)
+//        {
+//            sys_cb.disturd_start_time_sec = 0;
+//            sys_cb.disturd_end_time_sec = 0;
+//        }
+        u8 hour = sys_cb.disturd_start_time_sec / 3600;
+        u8 min  = (sys_cb.disturd_start_time_sec % 3600) / 60;
+        u8 am_pm = 0;
+        func_alarm_hour_format_t hour_cov = func_alarm_convert_to_12hour(hour);
+        hour = hour_cov.hour;
+        am_pm = hour_cov.am_pm;
+        char aclock_str[20] = {0};
+        memset(aclock_str, '\0', sizeof(aclock_str));
+        sprintf(aclock_str, "%02d:%02d", hour, min);
+
+        printf("pm_flag:%d\n",am_pm);
+        if (ui_handle.disturd_start_time.text[i].idx == 2)
+        {
+            if(am_pm == 2)      //AM
+            {
+                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
+            }
+            else if (am_pm == 1)
+            {
+                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
+            }
+        }
+        else if (ui_handle.disturd_start_time.text[i].idx == 1)
+        {
+            compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, aclock_str);
+        }
+        else if (ui_handle.disturd_start_time.text[i].idx == 0)
+        {
+            compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
+        }
+    }
+
+    ///创建结束时间卡片
+    compo_cardbox_t* disturd_end_time = compo_cardbox_create(frm,
+                                        sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]),
+                                        0,
+                                        sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]),
+                                        ui_handle.disturd_end_time.w, ui_handle.disturd_end_time.h);
+    picbox = compo_picturebox_create_for_page(frm,disturd_end_time->page,UI_BUF_I342001_28_SET_MORE_BIN);
+    compo_picturebox_set_pos(picbox,ui_handle.disturd_def_card.icon[0].x+15, ui_handle.disturd_def_card.icon[0].y);
+    compo_cardbox_set_visible(disturd_end_time, sys_cb.disturd_tim > 0 ? true : false);
+    compo_cardbox_set_location(disturd_end_time, ui_handle.disturd_end_time.x, ui_handle.disturd_end_time.y, ui_handle.disturd_end_time.w, ui_handle.disturd_end_time.h);
+    compo_setid(disturd_end_time, ui_handle.disturd_end_time.id);
+    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.rect)/sizeof(ui_handle.disturd_end_time.rect[0]); i++)
+    {
+        compo_cardbox_rect_set_location(disturd_end_time, ui_handle.disturd_end_time.rect[i].idx, ui_handle.disturd_end_time.rect[i].x, ui_handle.disturd_end_time.rect[i].y,
+                                        ui_handle.disturd_end_time.rect[i].w, ui_handle.disturd_end_time.rect[i].h, ui_handle.disturd_end_time.rect[i].r);
+        compo_cardbox_rect_set_color(disturd_end_time, ui_handle.disturd_end_time.rect[i].idx, make_color(41, 41, 41));
+    }
+
+    for (u8 i=0; i<sizeof(ui_handle.disturd_end_time.text)/sizeof(ui_handle.disturd_end_time.text[0]); i++)
+    {
+        compo_cardbox_text_set_font(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].res);
+        widget_text_set_ellipsis(disturd_end_time->text[ui_handle.disturd_end_time.text[i].idx], false);
+        compo_cardbox_text_set_align_center(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].center);
+        widget_text_set_wordwrap(disturd_end_time->text[ui_handle.disturd_end_time.text[i].idx], ui_handle.disturd_end_time.text[i].wordwrap);
+        widget_text_set_color(disturd_end_time->text[ui_handle.disturd_end_time.text[i].idx], make_color(ui_handle.disturd_end_time.text[i].color.r, ui_handle.disturd_end_time.text[i].color.g, ui_handle.disturd_end_time.text[i].color.b));
+        compo_cardbox_text_set_location(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, ui_handle.disturd_end_time.text[i].x, ui_handle.disturd_end_time.text[i].y,
+                                        ui_handle.disturd_end_time.text[i].w, ui_handle.disturd_end_time.text[i].h);
+
+//        if(sys_cb.disturd_tim == 0)
+//        {
+//            sys_cb.disturd_start_time_sec = 0;
+//            sys_cb.disturd_end_time_sec = 0;
+//        }
+        u8 hour   = sys_cb.disturd_end_time_sec / 3600;
+        u8 min  = (sys_cb.disturd_end_time_sec % 3600) / 60;
+        u8 am_pm = 0;
+        func_alarm_hour_format_t hour_cov = func_alarm_convert_to_12hour(hour);
+        hour = hour_cov.hour;
+        am_pm = hour_cov.am_pm;
+        char aclock_str[20] = {0};
+        memset(aclock_str, '\0', sizeof(aclock_str));
+        sprintf(aclock_str, "%02d:%02d", hour, min);
+
+        if (ui_handle.disturd_end_time.text[i].idx == 2)
+        {
+            if(am_pm == 2)      //AM
+            {
+                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
+            }
+            else if (am_pm == 1)
+            {
+                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
+            }
+            else
+            {
+//                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
+            }
+        }
+        else if (ui_handle.disturd_end_time.text[i].idx == 1)
+        {
+            compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, aclock_str);
+        }
+        else if (ui_handle.disturd_end_time.text[i].idx == 0)
+        {
+            compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
+        }
+    }
+    return frm;
+}
+
+//获取点击卡片的id
+static u16 func_set_sub_disturd_card_get_btn_id(point_t pt)
+{
+    u16 i, id;
+    u16 ret = 0;
+    rect_t rect;
+    compo_cardbox_t *cardbox;
+    for(i=0; i<CARD_ID_END-CARD_ID_START-1; i++)
+    {
+        id = CARD_ID_START + 1 + i;
+        cardbox = compo_getobj_byid(id);
+        rect = compo_cardbox_get_absolute(cardbox);
+        if (compo_cardbox_get_visible(cardbox) && abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
+        {
+            ret = id;
+            break;
+        }
+    }
+    return ret;
+}
+
+//更新显示勿扰模式界面
+static void func_set_sub_disturd_disp_update(void)
+{
+    func_set_sub_disturd_state_update();
+    compo_cardbox_t* cardbox_disturd_all = compo_getobj_byid(ui_handle.disturd_all_card.id);
+    if (sys_cb.disturd_adl==0)                              //全天勿扰关闭状态
+    {
+        compo_cardbox_icon_set(cardbox_disturd_all, ui_handle.disturd_all_card.icon[0].idx, ui_handle.disturd_all_card.icon[0].res_off);
+    }
+    else
+    {
+        compo_cardbox_icon_set(cardbox_disturd_all, ui_handle.disturd_all_card.icon[0].idx, ui_handle.disturd_all_card.icon[0].res_on);
+    }
+
+    compo_cardbox_t* cardbox_disturd_def = compo_getobj_byid(ui_handle.disturd_def_card.id);
+    if(sys_cb.disturd_tim == 0)                             //定时勿扰关闭
+    {
+        compo_cardbox_icon_set(cardbox_disturd_def, ui_handle.disturd_def_card.icon[0].idx, ui_handle.disturd_def_card.icon[0].res_off);
+        compo_cardbox_t* cardbox_start_time = compo_getobj_byid(ui_handle.disturd_start_time.id);
+        compo_cardbox_set_visible(cardbox_start_time, false);
+        compo_cardbox_t* cardbox_end_time = compo_getobj_byid(ui_handle.disturd_end_time.id);
+        compo_cardbox_set_visible(cardbox_end_time, false);
+    }
+    else
+    {
+        compo_cardbox_icon_set(cardbox_disturd_def, ui_handle.disturd_def_card.icon[0].idx, ui_handle.disturd_def_card.icon[0].res_on);
+        compo_cardbox_t* cardbox_start_time = compo_getobj_byid(ui_handle.disturd_start_time.id);
+        compo_cardbox_set_visible(cardbox_start_time, true);
+        compo_cardbox_t* cardbox_end_time = compo_getobj_byid(ui_handle.disturd_end_time.id);
+        compo_cardbox_set_visible(cardbox_end_time, true);
+    }
+
+}
+
+//单击按钮
+static void func_disturd_card_click(void)
+{
+    point_t pt = ctp_get_sxy();
+    u16 compo_id = func_set_sub_disturd_card_get_btn_id(pt);
+    if (compo_id <= 0 || compo_id > CARD_ID_END-1)
+    {
+        return;
+    }
+//    printf("click compo_id:%d\n", compo_id);
+
+    compo_cardbox_t* cardbox = compo_getobj_byid(compo_id);
+    if (compo_cardbox_get_visible(cardbox))
+    {
+        if (compo_id == ui_handle.disturd_all_card.id)              //全天勿扰
+        {
+            if (sys_cb.disturd_adl == 0)
+            {
+                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+                {
+                    if (sys_cb.disturd_adl == 0)
+                    {
+                        sys_cb.disturd_adl = 1;
+                        uteModuleNotDisturbAllDaySwitch();
+                    }
+                }
+            }
+            else
+            {
+                sys_cb.disturd_adl = 0;
+                uteModuleNotDisturbAllDaySwitch();
+            }
+            uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
+        }
+        else if (compo_id == ui_handle.disturd_def_card.id)         //定时勿扰
+        {
+            if (sys_cb.disturd_tim == 0)
+            {
+                if (msgbox((char *)i18n[STR_DISTURD_TIM_CTT], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+                {
+                    if(sys_cb.disturd_tim == 0)
+                    {
+                        sys_cb.disturd_tim = 1;
+                        uteModuleNotDisturbScheduledSwitch();
+                    }
+                }
+            }
+            else
+            {
+                sys_cb.disturd_tim = 0;
+                uteModuleNotDisturbScheduledSwitch();
+                uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
+                uteModuleNotDisturbSetTime(23*60);
+                uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_END_TIME);
+                uteModuleNotDisturbSetTime(7*60);
+                sys_cb.disturd_start_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_START_TIME) * 60;
+                sys_cb.disturd_end_time_sec = uteModuleNotDisturbGetTime(NOT_DISTURB_END_TIME) * 60;
+                msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
+            }
+        }
+        else if (compo_id == ui_handle.disturd_start_time.id)      //开始时间
+        {
+            if(sys_cb.disturd_tim)
+            {
+                sys_cb.disturd_sel = 0;
+                func_cb.sta = FUNC_DISTURD_SUB_SET;
+                uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_START_TIME);
+//                task_stack_pop();
+            }
+        }
+        else if (compo_id == ui_handle.disturd_end_time.id)      //结束时间
+        {
+            if(sys_cb.disturd_tim)
+            {
+                sys_cb.disturd_sel = 1;
+                func_cb.sta = FUNC_DISTURD_SUB_SET;
+                uteModuleNotDisturbSetTimeStatus(NOT_DISTURB_END_TIME);
+//                task_stack_pop();
+            }
+        }
+    }
+    func_set_sub_disturd_disp_update();
+}
+
+
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 //////////////////////////////                            /////////////////////////////////
 //勿扰模式事件处理
@@ -4726,6 +5478,7 @@ static void func_set_sub_disturd_enter(void)
     widget_page_set_client(func_cb.frm_main->page_body, 0, -f_disturd->focus_y);
     f_disturd->time_scale = uteModuleSystemtime12HOn();
 }
+
 #else
 typedef struct f_disturd_t_
 {

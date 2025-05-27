@@ -207,7 +207,7 @@ typedef struct
 
     u8 set_sleep_time_id;//熄屏时常id
 
-    char pbap_result_Name[50];//存放来电与接听联系人名字
+    char pbap_result_Name[57];//存放来电与接听联系人名字
 
     char sos_call_number[11];
     bool sos_open_flag;
@@ -217,8 +217,6 @@ typedef struct
     bool ancs_missed_call;
 
     bool sys_init_complete; //系统初始化完成标志，用于互斥ute task和sys task，防止sys没初始化完成就执行ute task导致流程错误
-
-    bool need_wakeup_flag;
 
     bool loudspeaker_mute_flag; //mute 标志位
     u8 loudspeaker_mute_countdown; //mute 倒计时

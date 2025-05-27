@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NAME "T62"
-#define UTE_SW_VERSION "AB281AV000056"
+#define UTE_SW_VERSION "AB281AV000073"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281AB"
@@ -127,7 +127,7 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh 
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
 #define UTE_DRV_BATTERY_000      3564
@@ -170,11 +170,11 @@
 //     UI_BUF_DIALPLATE_CUBE_LIGHT_BIN
 
 #define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1     // 使用立方体表盘
-#define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 0      // 使用光束立方体表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0     // 使用立方体表盘
+#define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 1      // 使用光束立方体表盘
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 4    // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 5   // 立方体表盘索引
-#define UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX 6 // 立方体光束表盘索引
+#define UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX 5 // 立方体光束表盘索引
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
@@ -323,7 +323,7 @@
 #define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          1 //自由训练
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_SUPPORT             0 //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_SUPPORT      0 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_SUPPORT          0 //0x1D,踏步
@@ -439,7 +439,7 @@
 #define UTE_MODULE_SPORT_BOATING_ON_OFF                 1 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_ON_OFF            1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_ON_OFF           1 //自由训练
-#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ON_OFF              0 //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ON_OFF       1 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_ON_OFF           1 //0x1D,踏步
@@ -556,7 +556,7 @@
 #define UTE_MODULE_SPORT_BOATING_ORDER                  22 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             23 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            24 //自由训练
-#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ORDER               0  //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ORDER        0 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_ORDER            0 //0x1D,踏步

@@ -16,7 +16,7 @@
 
 //以下缓存大小一般情况下不需要修改
 #define GUI_ELE_BUF_SIZE                4096 + 2096                    //element缓存
-#define GUI_WGT_BUF_SIZE                16384                    //widget缓存
+#define GUI_WGT_BUF_SIZE                16384+1024                    //widget缓存
 #define GUI_MAXSIZE_TEMPBUF             0x7000                  //中间临时计算缓存14k
 #define GUI_MAXSIZE_PARBUF              8096                    //PAR解码缓存
 #define GUI_MAX_FONT_SIZE               128                     //单个字最大尺寸
@@ -75,7 +75,7 @@ void gui_sleep(void)
         sys_cb.gui_sleep_sta = 1;
         tft_cb.tft_bglight_first_set = false;
         uteModuleGuiCommonDisplayOff(true);
-        //printf("gui_sleep\n");
+        printf("gui_sleep\n");
     }
 }
 
@@ -91,7 +91,7 @@ void gui_wakeup(void)
         // uteDrvScreenCommonInit();
         sys_cb.gui_sleep_sta = 0;
         uteModuleGuiCommonDisplayOff(false);
-        //printf("gui_wakeup\n");
+        printf("gui_wakeup\n");
     }
 }
 

@@ -3,6 +3,7 @@
 #include "ute_module_message.h"
 #include "ute_project_config.h"
 #include "ute_module_sport.h"
+#include "ute_module_bedside_mode.h"
 
 bool power_off_check(void);
 void lock_code_pwrsave(void);
@@ -441,7 +442,8 @@ static void sfunc_sleep(void)
         if (ble_app_need_wakeup())
         {
             printf("ble_app_need_wakeup\n");
-            gui_need_wkp = true;
+            gui_need_wkp = false;
+            ble_app_watch_set_wakeup(false);
             break;
         }
 #endif
@@ -647,6 +649,15 @@ bool sleep_process(is_sleep_func is_sleep)
             reset_sleep_delay();
             reset_pwroff_delay();
             return false;
+        }
+        if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)
+        {
+            if(sys_cb.sleep_delay > 0) //休眠时间未到时仅熄屏
+            {
+                printf("sleep_delay:%d,only off screen\n", sys_cb.sleep_delay);
+                gui_sleep();
+                return false;
+            }
         }
         if (sys_cb.sleep_delay == 0 && !sleep_cb.sys_is_sleep)
         {

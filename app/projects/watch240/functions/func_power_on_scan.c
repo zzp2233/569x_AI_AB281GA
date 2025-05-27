@@ -235,6 +235,39 @@ compo_form_t *func_power_on_scan_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+//创建扫一扫窗体
+compo_form_t *func_power_on_scan_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+//    compo_form_set_title(frm, i18n[STR_QRCODE]);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I342001_1_START_NEXT_BIN);
+    compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X, 240+8/2-14);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,186+22/2,144,64);
+//    compo_textbox_set_multiline(textbox,true);
+//    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);
+
+    static const uint8_t maxSizeQrCodeLink = 140;
+    char *qr_str = (char *)uteModulePlatformMemoryAlloc(maxSizeQrCodeLink);
+    uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
+    compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
+    compo_qrcodebox_set_pos(qrbox,GUI_SCREEN_CENTER_X,140/2+38);
+    compo_qrcodebox_set_bitwid(qrbox, 80);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 80);
+    compo_qrcodebox_set(qrbox, qr_str);
+    uteModulePlatformMemoryFree(qr_str);
+
+    return frm;
+}
 #else
 compo_form_t *func_power_on_scan_form_create(void)
 {

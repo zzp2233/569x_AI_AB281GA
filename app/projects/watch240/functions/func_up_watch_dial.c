@@ -293,6 +293,97 @@ static void func_up_watch_dial_disp(void)
         }
     }
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+compo_form_t *func_up_watch_dial_form_create(void)
+{
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[30];
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I341001_UPGRADE_UPGRADE_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 55+91);
+
+    extern fot_progress_t *bsp_fot_progress_get(void);
+    fot_progress_t *fot_data = bsp_fot_progress_get();
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent);
+    compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+58,230,50);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,PROGRESS_BAR_ID);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_INS]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+136,230,50);
+    compo_textbox_set(textbox,i18n[STR_INS]);
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+    picbox = compo_picturebox_create(frm, UI_BUF_I341001_1_START_SUCCEED_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X, 104+72);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_SYNC_SUC]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+80,240,50);
+    compo_textbox_set(textbox,i18n[STR_SYNC_SUC]);
+////////////////////////////////////////////////////////////////////////////////
+    picbox = compo_picturebox_create(frm, UI_BUF_I341001_1_START_FAIL_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_WIDTH, 104+72);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_SYNC_FAIL]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_WIDTH,GUI_SCREEN_CENTER_Y+80,240,50);
+    compo_textbox_set(textbox,i18n[STR_SYNC_FAIL]);
+
+//////////////////////////////////////////////////////////////////////////////////////////
+    return frm;
+}
+
+//显示升级界面处理
+static void func_up_watch_dial_disp(void)
+{
+    f_up_watch_dial_t *f_up_watch_dial = (f_up_watch_dial_t *)func_cb.f_cb;
+
+    if(f_up_watch_dial->state == UPGRADE_FAILED)
+    {
+        if(tick_get() > f_up_watch_dial->switch_page_time+SWITCH_TIME)
+        {
+            uteTaskGuiStartScreen(FUNC_CLOCK,0,__func__);
+        }
+        return;
+    }
+
+    if (tick_check_expire(f_up_watch_dial->ticks, 100))
+    {
+        f_up_watch_dial->ticks = tick_get();
+        reset_sleep_delay_all();
+        if(ble_is_connect())//ble状态
+        {
+            uint32_t progress = uteModuleWatchOnlineGetSynchronizeWatchSize()*100/uteModuleWatchOnlineGetTotileWatchSize();
+            printf("progress:%d,SynchronizeWatchSize:%d,TotileWatchSize:%d\n",progress,uteModuleWatchOnlineGetSynchronizeWatchSize(),uteModuleWatchOnlineGetTotileWatchSize());
+            if (progress>=100)
+            {
+                progress=100;
+                if(f_up_watch_dial->state != UPGRADE_SUCCESSFUL)
+                {
+                    widget_page_set_client(func_cb.frm_main->page_body, -GUI_SCREEN_WIDTH, 0);
+                }
+                f_up_watch_dial->state  = UPGRADE_SUCCESSFUL;
+            }
+            char txt_buf[30];
+            compo_textbox_t *txt_val   = compo_getobj_byid(PROGRESS_BAR_ID);
+            snprintf(txt_buf,sizeof(txt_buf),"%d%%",(uint16_t)progress);
+            compo_textbox_set(txt_val,txt_buf);
+        }
+        else
+        {
+            if(f_up_watch_dial->state != UPGRADE_FAILED)
+            {
+                widget_page_set_client(func_cb.frm_main->page_body, GUI_SCREEN_WIDTH, 0);
+            }
+            f_up_watch_dial->state  = UPGRADE_FAILED;
+            f_up_watch_dial->switch_page_time = tick_get();
+        }
+    }
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 compo_form_t *func_up_watch_dial_form_create(void)
 {

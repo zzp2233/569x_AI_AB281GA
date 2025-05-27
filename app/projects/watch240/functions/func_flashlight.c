@@ -295,6 +295,56 @@ static void func_flashlight_button_click(void)
     }
 }
 
+#elif  GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+//创建手电筒窗体
+compo_form_t *func_flashlight_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+//    //设置标题栏
+//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+//    compo_form_set_title(frm, i18n[STR_FLASHLIGHT]);
+//
+    compo_shape_t * shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_shape_set_color(shape, COLOR_WHITE);
+    compo_setid(shape,COMPO_ID_BG_SHAPE);
+    compo_shape_set_visible(shape, false);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I342001_27_MORE_FLASHLIGHT_CLOSE_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_setid(picbox,COMPO_ID_PIC);
+
+    return frm;
+}
+
+static void func_flashlight_button_click(void)
+{
+    f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+    compo_shape_t * shape = compo_getobj_byid(COMPO_ID_BG_SHAPE);
+    compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_PIC);
+    // compo_textbox_t *txt_idle = compo_getobj_byid(COMPO_ID_TXT);
+    f_flashlight->flashlight_flag = !f_flashlight->flashlight_flag;
+
+    if(f_flashlight->flashlight_flag == true)
+    {
+        f_flashlight ->light_level = sys_cb.light_level;
+        sys_cb.light_level = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
+        tft_bglight_set_level(sys_cb.light_level,false);
+        compo_shape_set_visible(shape, true);
+        compo_picturebox_set(picbox,UI_BUF_I342001_27_MORE_FLASHLIGHT_OPEN_BIN);
+    }
+    else
+    {
+        tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
+        compo_shape_set_visible(shape, false);
+        compo_picturebox_set(picbox,UI_BUF_I342001_27_MORE_FLASHLIGHT_CLOSE_BIN);
+    }
+}
+
+
 #else
 compo_form_t *func_flashlight_form_create(void)
 {

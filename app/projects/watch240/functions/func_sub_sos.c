@@ -135,6 +135,84 @@ compo_form_t *func_sub_sos_form_create(void)
     }
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+//SOS页面
+compo_form_t *func_sub_sos_form_create(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //创建蓝牙未连接界面
+    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I342001_23_SOS_BLUETOOTH_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 64+64/2);
+    compo_picturebox_set_visible(pic, false);
+    compo_setid(pic, COMPO_ID_BLE_NO_CON_PIC);
+
+    compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 158+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
+    compo_textbox_set_visible(txt, false);
+    compo_textbox_set(txt, i18n[STR_CONNECT_BLUETOOTH]);
+    compo_setid(txt, COMPO_ID_BLE_NO_CON_TXT);
+
+    //创建没有数据界面
+    pic = compo_picturebox_create(frm, UI_BUF_I342001_23_SOS_PHONE_BIN);
+    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 53+82/2);
+    compo_picturebox_set_visible(pic, false);
+    compo_setid(pic, COMPO_ID_SOS_NOT_DATA_PIC);
+
+    txt = compo_textbox_create(frm, strlen(i18n[STR_ADDRESS_BOOK_SYNC]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 159+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
+    compo_textbox_set_visible(txt, false);
+    compo_textbox_set(txt, i18n[STR_ADDRESS_BOOK_SYNC]);
+    compo_setid(txt, COMPO_ID_SOS_NOT_DATA_TXT);
+
+    //创建是否拨打界面
+    txt = compo_textbox_create(frm, strlen(i18n[STR_DIAL_SOS]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 98+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
+    compo_textbox_set_visible(txt, false);
+    compo_textbox_set(txt, i18n[STR_DIAL_SOS]);
+    compo_setid(txt, COMPO_ID_TXT_NUM);
+
+    //取消按钮
+    pic = compo_picturebox_create(frm, UI_BUF_I342001_23_SOS_CANCEL_BIN);
+    compo_picturebox_set_pos(pic, 49+52/2, 163+52/2);
+    compo_picturebox_set_visible(pic, false);
+    compo_setid(pic, COMPO_ID_BTN_BACK);
+
+    //确定按钮
+    pic = compo_picturebox_create(frm, UI_BUF_I342001_23_SOS_CONFIRM_BIN);
+    compo_picturebox_set_pos(pic, 137+54/2, 163+52/2);
+    compo_picturebox_set_visible(pic, false);
+    compo_setid(pic, COMPO_ID_BTN_SURE);
+
+    if(!uteModuleCallBtIsConnected())
+    {
+        pic = compo_getobj_byid(COMPO_ID_BLE_NO_CON_PIC);
+        compo_picturebox_set_visible(pic, true);
+        txt = compo_getobj_byid(COMPO_ID_BLE_NO_CON_TXT);
+        compo_textbox_set_visible(txt, true);
+    }
+    else if(uteModuleCallGetSosContactSize() <= 0)
+    {
+        pic = compo_getobj_byid(COMPO_ID_SOS_NOT_DATA_PIC);
+        compo_picturebox_set_visible(pic, true);
+        txt = compo_getobj_byid(COMPO_ID_SOS_NOT_DATA_TXT);
+        compo_textbox_set_visible(txt, true);
+    }
+    else if(uteModuleCallGetSosContactSize() > 0)
+    {
+        pic = compo_getobj_byid(COMPO_ID_BTN_BACK);
+        compo_picturebox_set_visible(pic, true);
+        pic = compo_getobj_byid(COMPO_ID_BTN_SURE);
+        compo_picturebox_set_visible(pic, true);
+        txt = compo_getobj_byid(COMPO_ID_TXT_NUM);
+        compo_textbox_set_visible(txt, true);
+    }
+    return frm;
+}
+
+
 #else
 compo_form_t *func_sub_sos_form_create(void)
 {

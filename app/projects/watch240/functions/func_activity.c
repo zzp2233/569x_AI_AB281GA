@@ -1774,7 +1774,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set(textbox, i18n[STR_STEP]);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT+186+30/2);
     compo_textbox_set_forecolor(textbox,make_color(128,128,128));
-    compo_setid(textbox,STEP_DAY_TXT_UNIT_ID);
+//    compo_setid(textbox,STEP_DAY_TXT_UNIT_ID);
 
     uint32_t target_step = uteModuleSportGetStepsTargetCnt();
     if(target_step == 0)target_step = 8000;
@@ -1823,7 +1823,7 @@ compo_form_t *func_activity_form_create(void)
     compo_textbox_set(textbox, i18n[STR_STEP]);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT*2+186+30/2);
     compo_textbox_set_forecolor(textbox,make_color(128,128,128));
-    compo_setid(textbox,STEP_WEEK_TXT_UNIT_ID);
+//    compo_setid(textbox,STEP_WEEK_TXT_UNIT_ID);
 
     chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 7);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+5,GUI_SCREEN_HEIGHT*2+72+96/2-10,206,78);
@@ -1862,8 +1862,8 @@ static void func_activity_disp_handle(void)
     compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
     compo_textbox_t *textbox_step_day = compo_getobj_byid(STEP_DAY_TXT_VALUE_ID);
     compo_textbox_t *textbox_step_week = compo_getobj_byid(STEP_WEEK_TXT_VALUE_ID);
-    compo_textbox_t *textbox_step_day_uint = compo_getobj_byid(STEP_DAY_TXT_UNIT_ID);
-    compo_textbox_t *textbox_step_week_uint = compo_getobj_byid(STEP_WEEK_TXT_UNIT_ID);
+//    compo_textbox_t *textbox_step_day_uint = compo_getobj_byid(STEP_DAY_TXT_UNIT_ID);
+//    compo_textbox_t *textbox_step_week_uint = compo_getobj_byid(STEP_WEEK_TXT_UNIT_ID);
     compo_chartbox_t*day_chart = compo_getobj_byid(STEP_DAY_CAHRT_VALUE_ID);
     compo_chartbox_t*week_chart = compo_getobj_byid(STEP_WEEK_CAHRT_VALUE_ID);
 

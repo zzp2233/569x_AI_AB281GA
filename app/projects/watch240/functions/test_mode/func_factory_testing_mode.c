@@ -31,7 +31,7 @@ compo_form_t * func_factory_testing_cross(void);
 compo_form_t * func_factory_testing_rgb(void);
 compo_form_t * func_factory_testing_tp(void);
 compo_form_t * func_factory_testing_heart(void);
-#if UTE_MODULE_BLOODOXYGEN_SUPPORT
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
 compo_form_t * func_factory_testing_blood_oxygen(void);
 #endif
 #if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
@@ -136,7 +136,7 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
     "漏光测试",
 #endif
     "心率测试",
-#if UTE_MODULE_BLOODOXYGEN_SUPPORT
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
     "血氧测试",
 #endif
     "gsensor测试",
@@ -218,7 +218,7 @@ compo_form_t *func_factory_testing_create(void)
         frm = func_factory_testing_heart_light();
     }
 #endif
-#if UTE_MODULE_BLOODOXYGEN_SUPPORT
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
     else if (test_data->moduleType == FACTORY_MODULE_SPO2)
     {
         frm = func_factory_testing_blood_oxygen();
@@ -360,18 +360,22 @@ static void func_factory_testing_pass_fail_bnt_create(compo_form_t *frm)
     compo_textbox_set(textbox, (const char *)"FALL");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
+    rect_t location_data = widget_get_location(textbox->txt);
+    area_t txt_data = widget_text_get_area(textbox->txt);
 
     compo_button_t *btn = compo_button_create(frm); // 按钮FALL
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6 - (widget_text_get_area(textbox->txt).hei / 2), (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2);
     compo_setid(btn, FALL_ID);
 
     textbox = compo_textbox_create(frm, strlen((const char *)"PASS")); // PASS
     compo_textbox_set(textbox, (const char *)"PASS");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6);
     compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+    location_data = widget_get_location(textbox->txt);
+    txt_data = widget_text_get_area(textbox->txt);
 
     btn = compo_button_create(frm); // 按钮PASS
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6 -(widget_text_get_area(textbox->txt).hei / 2), (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2);
     compo_setid(btn, PASS_ID);
 }
 
@@ -587,7 +591,7 @@ compo_form_t * func_factory_testing_heart(void)
     return frm;
 }
 ///创建血氧测试窗体   模式七/
-#if UTE_MODULE_BLOODOXYGEN_SUPPORT
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
 compo_form_t * func_factory_testing_blood_oxygen(void)
 {
     uteModuleHeartStartSingleTesting(TYPE_BLOODOXYGEN);
@@ -1216,7 +1220,7 @@ static void func_mode_heart_process(void)
     }
 }
 
-#if UTE_MODULE_BLOODOXYGEN_SUPPORT
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
 static void func_mode_blood_oxygen_process(void)
 {
     char txt_buf[50];
@@ -1446,7 +1450,7 @@ static void func_factory_testing_process(void)
         case FACTORY_MODULE_HEART:
             func_mode_heart_process();
             break;
-#if UTE_MODULE_BLOODOXYGEN_SUPPORT
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
         case FACTORY_MODULE_SPO2:
             func_mode_blood_oxygen_process();
             break;

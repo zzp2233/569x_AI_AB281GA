@@ -127,7 +127,7 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh 
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
 #define UTE_DRV_BATTERY_000      3564
@@ -323,7 +323,7 @@
 #define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          1 //自由训练
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_SUPPORT             0 //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_SUPPORT      0 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_SUPPORT          0 //0x1D,踏步
@@ -439,7 +439,7 @@
 #define UTE_MODULE_SPORT_BOATING_ON_OFF                 1 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_ON_OFF            1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_ON_OFF           1 //自由训练
-#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ON_OFF              0 //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ON_OFF       1 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_ON_OFF           1 //0x1D,踏步
@@ -556,7 +556,7 @@
 #define UTE_MODULE_SPORT_BOATING_ORDER                  22 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             23 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            24 //自由训练
-#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路 
+#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ORDER               0  //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ORDER        0 //0x1C,力量训练
 #define UTE_MODULE_SPORT_STEP_TRAINING_ORDER            0 //0x1D,踏步

@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281D_H_
 
 #define DEFAULT_BLE_DEV_NAME "W12Y"
-#define UTE_SW_VERSION "AB281DV000072"
+#define UTE_SW_VERSION "AB281DV000075"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
@@ -160,7 +160,10 @@
 // #define UTE_DRV_TP_SWAP_XY_AXIS_EXCHANGE 1 // 交换X轴Y轴坐标
 
 /*! 血氧功能zn.zeng, 2021-07-23  */
-#define UTE_MODULE_BLOODOXYGEN_SUPPORT 0
+#define UTE_MODULE_BLOODOXYGEN_SUPPORT 1
+
+/*! 假血氧，结束后出随机值,wang.luo 2025-05-23 */
+#define UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT 1
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 6

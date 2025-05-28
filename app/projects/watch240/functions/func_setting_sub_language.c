@@ -75,6 +75,7 @@ static const compo_listbox_item_t tbl_language_list[] =
     {STR_MALAYSIA,    .vidx = MALAYSIA_LANGUAGE_ID},
 #endif
 };
+
 u8 func_sel_language_bit(uint n)
 {
 
@@ -294,6 +295,10 @@ compo_form_t *func_set_sub_language_form_create(void)
 
     compo_listbox_set_sta_icon(listbox, UI_BUF_I338001_1_START_LANGUAGE_OK_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_language_bit);
+
+    area_t img_rect = gui_image_get_size(UI_BUF_I338001_11_CALL_BG_BIN);
+
+    compo_listbox_set_item_text(listbox,img_rect.wid/2, img_rect.hei/2, 100, img_rect.hei, true);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
     uint8_t set_idx = 1;

@@ -135,6 +135,11 @@ static const compo_listbox_item_t tbl_dial_and_theme_list[] =
     {STR_STYLE,       0,        .func_sta = FUNC_STYLE}, //主题
 };
 
+static u8 set_back_pic(uint n)
+{
+    return true;
+}
+
 //表盘&主题页面
 compo_form_t *func_dial_and_theme_form_create(void)
 {
@@ -148,13 +153,16 @@ compo_form_t *func_dial_and_theme_form_create(void)
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_dial_and_theme_list, DIAL_AND_THEME_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_11_CALL_BG_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_28_SET_LIST_BG_BIN);
+    compo_listbox_set_item_text(listbox, 0, 30, 100, 35, false);
 
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I338001_28_SET_MORE_BIN, 0);
+    compo_listbox_set_bithook(listbox, set_back_pic);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
-
     compo_listbox_set_focus(listbox, 102);
     compo_listbox_update(listbox);
+
     return frm;
 }
 

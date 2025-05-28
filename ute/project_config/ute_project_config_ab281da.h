@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DA_H_
 
 #define DEFAULT_BLE_DEV_NAME "Huafit S6"
-#define UTE_SW_VERSION "AB281DAV000071"
+#define UTE_SW_VERSION "AB281DAV000074"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281D"
@@ -46,6 +46,10 @@
 
 /*! 默认背光百分比zn.zeng, 2021-09-24  */
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
+
+/*! 默认亮屏时间zn.zeng, 2021-08-20  */
+#define DEFAULT_SCREEN_ON_TIME_SECOND 5
+
 /*! 中科平台广播UUID,wang.luo 2025-02-13 */
 #define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
 //二维码链接内容

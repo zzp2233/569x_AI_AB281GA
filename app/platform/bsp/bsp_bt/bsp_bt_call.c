@@ -287,7 +287,7 @@ void hfp_hf_call_notice(uint32_t evt)
             bt_cb.call_type = CALL_TYPE_NONE;
 
             //保存通话记录
-            if (sys_cb.refresh_language_flag == false)    //切换语言的时候不保存
+            // if (sys_cb.refresh_language_flag == false)    //切换语言的时候不保存
             {
                 memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
                 uteModuleCallUpdateRecordsData();
@@ -299,8 +299,15 @@ void hfp_hf_call_notice(uint32_t evt)
 #endif
             break;
         case BT_NOTICE_CALL_NUMBER:
+        {
             printf("===>>> Number: %s\n", hfp_get_last_call_number(0));
             uteModuleCallSetContactsNumberAndName((uint8_t*)hfp_get_last_call_number(0), strlen(hfp_get_last_call_number(0)), NULL, 0);
+            if(strlen(sys_cb.pbap_result_Name) == 0)
+            {
+                uint8_t nameLen;
+                uteModuleCallGetAddressBookContactName((uint8_t*)hfp_get_last_call_number(0),strlen(hfp_get_last_call_number(0)),&sys_cb.pbap_result_Name[0],&nameLen);
+                printf("===>>> Address Book Name: %s\n", sys_cb.pbap_result_Name);
+            }
             bt_cb.number_sta = true;
 #if CALL_MGR_EN
             // 三方来电 延迟更新号码
@@ -309,7 +316,8 @@ void hfp_hf_call_notice(uint32_t evt)
             {
                 msg_enqueue(EVT_CALL_NUMBER_UPDATE);
             }
-            break;
+        }
+        break;
     }
 }
 

@@ -73,6 +73,62 @@ void func_bright_set_icon_click(void)
     }
 }
 
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#define BRIGHT_SET_LIST_CNT                       ((int)(sizeof(tbl_bright_set_list) / sizeof(tbl_bright_set_list[0])))
+
+static const compo_listbox_item_t tbl_bright_set_list[] =
+{
+    {STR_SETTING_LIGHT,      0,        .func_sta = FUNC_LIGHT}, //亮度
+    {STR_SETTING_DOUSING,    0,        .func_sta = FUNC_SET_SUB_DOUSING}, //亮屏时长
+};
+
+//亮度设置页面
+compo_form_t *func_bright_set_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_LIGHT]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_bright_set_list, BRIGHT_SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I341001_28_SET_BG1_BIN);
+    compo_listbox_set_sta_icon(listbox,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN);
+
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    compo_listbox_set_focus(listbox, 162);
+    compo_listbox_update(listbox);
+    return frm;
+}
+
+//点进图标进入应用
+void func_bright_set_icon_click(void)
+{
+    int icon_idx;
+    f_bright_set_list_t *f_bright_set = (f_bright_set_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_bright_set->listbox;
+    u8 func_sta;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+    if (icon_idx < 0 || icon_idx >= BRIGHT_SET_LIST_CNT)
+    {
+        return;
+    }
+
+    //根据图标索引获取应用ID
+    func_sta = tbl_bright_set_list[icon_idx].func_sta;
+    //切入应用
+    if (func_sta > 0)
+    {
+        func_cb.sta = func_sta;
+    }
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 #define BRIGHT_SET_LIST_CNT                       ((int)(sizeof(tbl_bright_set_list) / sizeof(tbl_bright_set_list[0])))
 

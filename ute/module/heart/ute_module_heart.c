@@ -917,7 +917,7 @@ uint8_t uteModuleHeartGetBloodOxygenValue(void)
 #if UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
     if(uteModuleBloodoxygenGetTestingSecond() > 30)
     {
-        uteModuleHeartData.bloodoxygenValue = 96 + get_random(3);
+        uteModuleHeartData.bloodoxygenValue = 96 + get_random(4);
     }
     else
     {

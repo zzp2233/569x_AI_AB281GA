@@ -309,13 +309,13 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SOUND_AND_VIBRATION]);
 
-    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 0, 1, 1,324, 80);
+    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 1, 1, 1,324, 80);
     compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,80/2+102-30,324, 80);
     compo_cardbox_rect_set_location(cardbox,0,0,39,278, 1,16);
     compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
     compo_setid(cardbox, COMPO_ID_MOTOR_GRADE);
-    compo_cardbox_icon_set_pos(cardbox, 0, 0,0);
-    compo_cardbox_icon_set(cardbox,0,0);
+    compo_cardbox_icon_set_pos(cardbox, 0, 130,0);
+    compo_cardbox_icon_set(cardbox,0,UI_BUF_I338001_28_SET_MORE_BIN);
     compo_cardbox_text_scroll_process(cardbox, true);
     compo_cardbox_text_set_location(cardbox, 0, 25-324/2,  -(34/2), 200, 30);
     compo_cardbox_text_set(cardbox,0,i18n[STR_VBRATION]);

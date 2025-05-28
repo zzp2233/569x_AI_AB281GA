@@ -1061,11 +1061,8 @@ void func_charge_update(void)
     char txt_buf[30];
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
-    compo_textbox_set_location(txt_val,GUI_SCREEN_CENTER_X,BAT_PERCENT_VALUE<=20 ? 169 : 191,150,50);
     compo_textbox_set(txt_val,txt_buf);
-    compo_textbox_set_visible(txt_title,BAT_PERCENT_VALUE<=20 && BAT_PERCENT_FLAG == BAT_STATUS_NO_CHARGE);
-    compo_picturebox_set_visible(pic,(BAT_PERCENT_VALUE<=20 && BAT_PERCENT_FLAG == BAT_STATUS_NO_CHARGE) || (BAT_PERCENT_VALUE==100 && BAT_PERCENT_FLAG == BAT_STATUS_CHARGED));
-
+    compo_picturebox_set_visible(pic,BAT_PERCENT_VALUE!=100);
 }
 
 //创建充电窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -1078,25 +1075,28 @@ compo_form_t *func_charge_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_NULL]);
 
+    //低电量背景
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_CHARGE_BATT_GIF_BG_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y);
+
     //充电中动画
-    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I338001_CHARGE_GIF_BATT_238X2368_BIN);
-    compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+32);//(360-296)/2
+    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I338001_CHARGE_BATT_GIF_BIN);
+    compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+206/2+90/2);//(360-296)/2
     compo_animation_set_radix(animation, 8);
     compo_animation_set_interval(animation, 15);
     compo_setid(animation,COMPO_ID_GIF_PIC);
-    compo_animation_set_visible(animation,BAT_PERCENT_FLAG == BAT_STATUS_CHARGING);
 
-    //低电量背景--低电量跟充满电是同一个图标
-    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_CHARGE_LOW_232X290_BIN);
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,215);//360-290/2
+    //--低电量跟充满电是同一个图标
+    picbox = compo_picturebox_create(frm, UI_BUF_I338001_CHARGE_BATT_BATT_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+60);//360-290/2
     compo_setid(picbox,COMPO_ID_BAT_PIC);
-    compo_picturebox_set_visible(picbox,(BAT_PERCENT_VALUE<=20 && BAT_PERCENT_FLAG == BAT_STATUS_NO_CHARGE) || (BAT_PERCENT_VALUE==100 && BAT_PERCENT_FLAG == BAT_STATUS_CHARGED));
+    compo_picturebox_set_visible(picbox,BAT_PERCENT_VALUE!=100);
 
     //电量
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
     compo_textbox_t *textbox = compo_textbox_create(frm, 5);
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,191,150,50);
     compo_textbox_set(textbox,txt_buf);
     compo_setid(textbox,COMPO_ID_NUM_BAT_VALUE);

@@ -3045,21 +3045,17 @@ compo_form_t *func_weather_form_create(void)
 //天气功能事件处理
 static void func_weather_process(void)
 {
-    <<<<<<< HEAD
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
-    =======
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
-        >>>>>>> f6fe5e4eef346c1f25aec2bbe528e7c5a275cddc
-        f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
+    f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     compo_page_move_process(f_weather->ptm);
     page_y = compo_page_move_get_offset(f_weather->ptm);
 #elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-        f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
+    f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     compo_page_move_process(f_weather->ptm);
 //    printf("page:%d\n",compo_page_move_get_offset(f_weather->ptm));
     page_y = compo_page_move_get_offset(f_weather->ptm);
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT||GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
-        func_weather_move();
+    func_weather_move();
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     func_process();
 }

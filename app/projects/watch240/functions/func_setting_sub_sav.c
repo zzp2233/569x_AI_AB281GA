@@ -272,7 +272,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_text_scroll_process(cardbox, true);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SILENT_MODE_PROMAT]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,388+44,320,80);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,388+44,320,100);
     compo_textbox_set_multiline(textbox,true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_SILENT_MODE_PROMAT]);

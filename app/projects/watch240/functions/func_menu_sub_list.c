@@ -96,7 +96,11 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                .str_idx=STR_WOMEN_HEALTH},          //女性健康
 // #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 };
-
+#define  BATTERY_PIC_0_BIN   0                ///电池电量图标0
+#define  BATTERY_PIC_1_BIN   0                ///电池电量图标1
+#define  BATTERY_PIC_2_BIN   0                ///电池电量图标2
+#define  BATTERY_PIC_3_BIN   0                ///电池电量图标3
+#define  BATTERY_PIC_4_BIN   0                ///电池电量图标4
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
 static const compo_listbox_item_t tbl_menu_list[] =
 {
@@ -561,6 +565,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
 //菜单栏自定义图标更新
 static void func_menu_sub_list_battery_pic_update(void)
 {
+#if BATTERY_PIC_0_BIN
     compo_picturebox_t *battery_pic = compo_getobj_byid(COMPO_ID_TXT_BATTERY_PIC);
     switch(uteDrvBatteryCommonGetBatteryIndex(5))
     {
@@ -583,6 +588,7 @@ static void func_menu_sub_list_battery_pic_update(void)
             compo_picturebox_set(battery_pic, BATTERY_PIC_4_BIN);
             break;
     }
+#endif
 }
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

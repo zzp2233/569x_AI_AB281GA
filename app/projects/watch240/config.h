@@ -613,7 +613,7 @@
 #define ECIG_POLLING_CONTROL            1               //0:轮休判断，1：计数判断
 #define ECIG_TIME_BIG_CYCLES            10000
 #if ECIG_POLLING_CONTROL
-#define ECIG_TIMER_US                   50              //50us
+#define ECIG_TIMER_US                   100              //50us
 #else
 #define ECIG_TIMER_US                   100             //100us
 #endif

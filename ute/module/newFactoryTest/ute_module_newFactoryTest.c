@@ -1,11 +1,11 @@
 /**
-*@file
-*@brief        老化测试处理模块
-*@details
-*@author       xjc
-*@date       2022-02-09
-*@version      v1.0
-*/
+ *@file
+ *@brief        老化测试处理模块
+ *@details
+ *@author       xjc
+ *@date       2022-02-09
+ *@version      v1.0
+ */
 #include "ute_module_log.h"
 #include "ute_module_message.h"
 #include "ute_module_newFactoryTest.h"
@@ -27,31 +27,31 @@ ute_new_factory_test_data_t uteModuleNewFactoryTestData;
 ute_smoke_factory_test_data_t uteModuleSmokeFactoryData;
 
 /**
-*@brief     发给对端的测试数据暂定32byte ascii 数据
-*@details   类型+测试结果+数据长度+内容
-*/
+ *@brief     发给对端的测试数据暂定32byte ascii 数据
+ *@details   类型+测试结果+数据长度+内容
+ */
 ute_new_factory_test_send_app_data_t uteModuleNewFactorySendAppData;
 /**
-*@brief  初始化函数
-*@details
-*@author        xjc
-*@date        2022-02-09
-*/
+ *@brief  初始化函数
+ *@details
+ *@author        xjc
+ *@date        2022-02-09
+ */
 void uteModuleNewFactoryTestInit(void)
 {
     uteModuleNewFactoryTestResetParam();
     uteModuleSystemtimeRegisterSecond(uteModuleNewFactoryTestEverySecond);
 }
 /**
-*@brief  复位变量
-*@details
-*@author        xjc
-*@date        2022-02-09
-*/
+ *@brief  复位变量
+ *@details
+ *@author        xjc
+ *@date        2022-02-09
+ */
 void uteModuleNewFactoryTestResetParam(void)
 {
     uint16_t tpFirmwareCheckSum = 0;
-    if(uteModuleNewFactoryTestData.tpFirmwareCheckSum!=0&&uteModuleNewFactoryTestData.tpFirmwareCheckSum!=0xFFFF)
+    if (uteModuleNewFactoryTestData.tpFirmwareCheckSum != 0 && uteModuleNewFactoryTestData.tpFirmwareCheckSum != 0xFFFF)
     {
         tpFirmwareCheckSum = uteModuleNewFactoryTestData.tpFirmwareCheckSum;
     }
@@ -60,22 +60,22 @@ void uteModuleNewFactoryTestResetParam(void)
     uteModuleNewFactoryTestData.tpFirmwareCheckSum = tpFirmwareCheckSum;
 }
 /**
-*@brief  设置工厂模式
-*@details
-*@author        xjc
-*@date        2022-02-09
-*/
+ *@brief  设置工厂模式
+ *@details
+ *@author        xjc
+ *@date        2022-02-09
+ */
 void uteModuleNewFactoryTestSetMode(ute_new_factory_test_data_t **data)
 {
     *data = &uteModuleNewFactoryTestData;
 }
 /**
-*@brief  获取测试维客数据
-*@details
-*@author     casen
-*@date       2022-02-25
-*/
-void uteModuleNewFactoryTestGetVkData(int *preV,int *curV, int *psV,bool *isPass)
+ *@brief  获取测试维客数据
+ *@details
+ *@author     casen
+ *@date       2022-02-25
+ */
+void uteModuleNewFactoryTestGetVkData(int *preV, int *curV, int *psV, bool *isPass)
 {
     (*preV) = uteModuleNewFactoryTestData.u.vcxx.pre;
     (*curV) = uteModuleNewFactoryTestData.u.vcxx.current;
@@ -83,7 +83,7 @@ void uteModuleNewFactoryTestGetVkData(int *preV,int *curV, int *psV,bool *isPass
     (*isPass) = uteModuleNewFactoryTestData.u.vcxx.isPass;
 }
 
-void uteModuleNewFactoryTestSetVkData(int preV,int curV, int psV)
+void uteModuleNewFactoryTestSetVkData(int preV, int curV, int psV)
 {
     uteModuleNewFactoryTestData.u.vcxx.pre = preV;
     uteModuleNewFactoryTestData.u.vcxx.current = curV;
@@ -91,76 +91,86 @@ void uteModuleNewFactoryTestSetVkData(int preV,int curV, int psV)
 }
 
 /**
-*@brief  获取工厂模式
-*@details
-*@author        xjc
-*@date        2022-02-09
-*/
+ *@brief  获取工厂模式
+ *@details
+ *@author        xjc
+ *@date        2022-02-09
+ */
 FACTORY_TEST_MODE uteModuleNewFactoryTestGetMode(void)
 {
     return uteModuleNewFactoryTestData.mode;
 }
 
 /**
-*@brief        复位系统
-*@details
-*@author        xjc
-*@date        2022-02-09
-*/
+ *@brief        复位系统
+ *@details
+ *@author        xjc
+ *@date        2022-02-09
+ */
 void uteModuleNewFactoryTestSystemReset(void)
 {
     uteApplicationCommonFactoryReset();
 }
 
 /**
-*@brief         设置TP校验码
-*@details
-*@author        xjc
-*@date        2022-03-09
-*/
+ *@brief         设置TP校验码
+ *@details
+ *@author        xjc
+ *@date        2022-03-09
+ */
 void uteModuleNewFactoryTestSetTpVersion(uint16_t version)
 {
     uteModuleNewFactoryTestData.tpFirmwareCheckSum = version;
 }
 
 /**
-*@brief         获取TP校验码
-*@details
-*@author        xjc
-*@date        2022-03-09
-*/
+ *@brief         获取TP校验码
+ *@details
+ *@author        xjc
+ *@date        2022-03-09
+ */
 uint16_t uteModuleNewFactoryTestGetTpVersion(void)
 {
     return uteModuleNewFactoryTestData.tpFirmwareCheckSum;
 }
 
 /**
-*@brief  老化马达震动次数
-*@details
-*@author        lkl
-*@date        2022-02-09
-*/
+ *@brief  老化马达震动次数
+ *@details
+ *@author        lkl
+ *@date        2022-02-09
+ */
 uint16_t uteModuleNewFactoryAgingTestMotoCount(void)
 {
     return uteModuleSmokeFactoryData.Moto_Count;
 }
+/**
+ *@brief  抽吸次数
+ *@details
+ *@author        lkl
+ *@date        2022-02-09
+ */
+uint16_t uteModuleNewFactoryAgingTestSmokeCount(void)
+{
+    return uteModuleSmokeFactoryData.Smoke_Count;
+}
 
 /**
-*@brief        每秒函数
-*@details       需要注册到主时间，每秒执行一次
-*@author        xjc
-*@date        2022-02-09
-*/
+ *@brief        每秒函数
+ *@details       需要注册到主时间，每秒执行一次
+ *@author        xjc
+ *@date        2022-02-09
+ */
 void uteModuleNewFactoryTestEverySecond(void)
 {
 #if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
-    if(uteModuleNewFactoryTestData.moduleType==FACTORY_MODULE_HEART_CHECK_LIGHT)
+    if (uteModuleNewFactoryTestData.moduleType == FACTORY_MODULE_HEART_CHECK_LIGHT)
     {
-        if(uteModuleNewFactoryTestData.u.vcxx.testMode==NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
+        if (uteModuleNewFactoryTestData.u.vcxx.testMode == NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
         {
             ute_module_systemtime_time_t time;
             uteModuleSystemtimeGetTime(&time);
-            if(time.sec%2)
+            if (time.sec % 2)
             {
                 // uteDrvHeartVcxxStartHrMaxTest();
             }
@@ -169,10 +179,10 @@ void uteModuleNewFactoryTestEverySecond(void)
                 // uteDrvHeartVcxxStartSpo2MaxTest();
             }
         }
-        else if(uteModuleNewFactoryTestData.u.vcxx.testMode==NEW_FACTORY_VCXX_TEST_MODE_BIO_B)
+        else if (uteModuleNewFactoryTestData.u.vcxx.testMode == NEW_FACTORY_VCXX_TEST_MODE_BIO_B)
         {
             // uteDrvHeartNewFactoryVcxxGetCrosstalktestValue(&uteModuleNewFactoryTestData.u.vcxx.pre,&uteModuleNewFactoryTestData.u.vcxx.current,&uteModuleNewFactoryTestData.u.vcxx.ps,&uteModuleNewFactoryTestData.u.vcxx.bioB,&uteModuleNewFactoryTestData.u.vcxx.isPass);
-            uteModuleNewFactoryTestData.u.vcxx.bioDiff = abs(uteModuleNewFactoryTestData.u.vcxx.bioB-uteModuleNewFactoryTestData.u.vcxx.bioA);
+            uteModuleNewFactoryTestData.u.vcxx.bioDiff = abs(uteModuleNewFactoryTestData.u.vcxx.bioB - uteModuleNewFactoryTestData.u.vcxx.bioA);
             // if(uteModuleNewFactoryTestData.u.vcxx.bioDiff>=DRV_HEART_VCXX_BIO_PASS_VALUE)
             // {
             //     uteModuleNewFactoryTestData.u.vcxx.isPass = true;
@@ -188,31 +198,23 @@ void uteModuleNewFactoryTestEverySecond(void)
         }
     }
 #endif
-    printf("%s,mode=%d,secondCount=%d,maxCount=%d\r\n",__func__,uteModuleNewFactoryTestData.mode,uteModuleNewFactoryTestData.secondCount,uteModuleNewFactoryTestData.maxCount);
+    printf("%s,mode=%d,secondCount=%d,maxCount=%d,factoryAgingTestMode=%d\r\n", __func__, uteModuleNewFactoryTestData.mode, uteModuleNewFactoryTestData.secondCount, uteModuleNewFactoryTestData.maxCount, uteModuleNewFactoryTestData.factoryAgingTestMode);
 
     // printf("SCREEN_ID=%d\r\n",uteModuleGuiCommonGetCurrentScreenId());
     if ((uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING) &&
         (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID))
     {
-        if(uteModuleNewFactoryTestData.factoryAgingTestMode == FACTORY_AGING_TEST_MODE2) //老化测试模式2
+        if (uteModuleNewFactoryTestData.factoryAgingTestMode == FACTORY_AGING_TEST_MODE2) // 老化测试模式2
         {
-            if(uteModuleNewFactoryTestData.secondCount<uteModuleNewFactoryTestData.maxCount)
+            if (uteModuleNewFactoryTestData.secondCount < uteModuleNewFactoryTestData.maxCount)
             {
-                //屏幕10分钟亮一次，震动一次
-                if((uteModuleNewFactoryTestData.secondCount%(60*10) == 0) && (uteModuleNewFactoryTestData.secondCount>0))
+                // 屏幕10分钟亮一次，震动一次
+                if ((uteModuleNewFactoryTestData.secondCount % (60 * 10) == 0) && (uteModuleNewFactoryTestData.secondCount > 0))
                 {
-                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
                     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_AGING_ID, 0, __func__);
                 }
-                //心率5分钟测一次，每次测1分钟
-                if(uteModuleNewFactoryTestData.secondCount%(60*5) == 0)
-                {
-                    // uteModuleHeartStartSingleTesting(TYPE_HEART);
-                }
-                if(uteModuleNewFactoryTestData.secondCount%(60*5) == 60)
-                {
-                    // uteModuleHeartStopSingleTesting(TYPE_HEART);
-                }
+                // 心率5分钟测一次，每次测1分钟
             }
             else
             {
@@ -223,29 +225,29 @@ void uteModuleNewFactoryTestEverySecond(void)
             }
         }
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
-        else if(uteModuleNewFactoryTestData.factoryAgingTestMode == FACTORY_AGING_TEST_MODE3) //老化测试模式3
+        else if (uteModuleNewFactoryTestData.factoryAgingTestMode == FACTORY_AGING_TEST_MODE3) // 老化测试模式3
         {
-            if(uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING)
+            if (uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING)
             {
                 if (uteModuleNewFactoryTestData.secondCount <= uteModuleNewFactoryTestData.maxCount)
                 {
-                    if((uteModuleLocalRingtoneGetPlayRingType() == RINGTON_TYPE_NONE))
+                    if ((uteModuleLocalRingtoneGetPlayRingType() == RINGTON_TYPE_NONE))
                     {
                         uteModuleLocalRingtonePlayRing(RINGTON_TYPE_FACTORY);
                     }
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_MOTOR_SCREEN_SUPPORT
-                    if(uteModuleNewFactoryTestData.isMode3MotorAwaysVibration)
+                    if (uteModuleNewFactoryTestData.isMode3MotorAwaysVibration)
                     {
-                        if((uteModuleNewFactoryTestData.secondCount%3) == 0)
+                        if ((uteModuleNewFactoryTestData.secondCount % 3) == 0)
                         {
-                            uteDrvMotorStart(500,500,1);
+                            uteDrvMotorStart(500, 500, 1);
                         }
                     }
 #endif
                 }
                 else
                 {
-                    if((uteModuleLocalRingtoneGetPlayRingType() == RINGTON_TYPE_FACTORY))
+                    if ((uteModuleLocalRingtoneGetPlayRingType() == RINGTON_TYPE_FACTORY))
                     {
                         uteModuleLocalRingtoneStopRing();
                     }
@@ -255,30 +257,52 @@ void uteModuleNewFactoryTestEverySecond(void)
 #endif
         else
         {
-            //老化测试模式1
-            // if ((!uteModuleHeartIsSingleTesting()) && uteModuleGuiCommonIsDisplayOn())
-            // {
-            //     // uteModuleHeartStartSingleTesting(TYPE_HEART);
-            // }
+            // 老化测试模式1
+            //  if ((!uteModuleHeartIsSingleTesting()) && uteModuleGuiCommonIsDisplayOn())
+            //  {
+            //      // uteModuleHeartStartSingleTesting(TYPE_HEART);
+            //  }
 
-            if(uteModuleNewFactoryTestData.secondCount<uteModuleNewFactoryTestData.maxCount)
+            if (uteModuleNewFactoryTestData.secondCount < uteModuleNewFactoryTestData.maxCount)
             {
-                if((uteModuleNewFactoryTestData.secondCount%3) == 0)
+                if ((uteModuleNewFactoryTestData.secondCount % 3) == 0)
                 {
                     // uteDrvMotorStart(500,500,1);
                     printf("MOTOR\r\n");
-                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+                    uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
                     uteModuleSmokeFactoryData.Moto_Count++;
+                }
+                // if(uteModuleNewFactoryTestData.secondCount % 30 == 0)
+                // {
+                //     ecig.cfg->smoke_start_or_not = 0;
+                //    //  printf("11111111111111111uteModuleNewFactoryTestData.secondCount=%d",uteModuleNewFactoryTestData.secondCount);
+                // }
+                // if(uteModuleNewFactoryTestData.secondCount %30 == 1)
+                // {
+                //     ecig.cfg->smoke_start_or_not = 1;
+                //     printf("22222222222222222uteModuleNewFactoryTestData.secondCount=%d",uteModuleNewFactoryTestData.secondCount);
+                // }
+                if (uteModuleNewFactoryTestData.secondCount == 1 ||
+                    (uteModuleNewFactoryTestData.secondCount > 0 && uteModuleNewFactoryTestData.secondCount % 30 == 0))
+                {
+                    ecig.cfg->smoke_start_or_not = 1; // 开启烟雾
+                    uteModuleSmokeFactoryData.Smoke_Count++; // 增加抽吸口数
+                    printf("ecig.cfg->smoke_start_or_not = 1 secondCount=%d,uteModuleSmokeFactoryData.Smoke_Count\r\n", uteModuleNewFactoryTestData.secondCount,uteModuleSmokeFactoryData.Smoke_Count);
+                }
+                else if (uteModuleNewFactoryTestData.secondCount == 2 ||
+                         (uteModuleNewFactoryTestData.secondCount > 1 && uteModuleNewFactoryTestData.secondCount % 30 == 1))
+                {
+                    ecig.cfg->smoke_start_or_not = 0; // 关闭烟雾
+                    printf("ecig.cfg->smoke_start_or_not = 0: secondCount=%d\r\n", uteModuleNewFactoryTestData.secondCount);
                 }
                 uteModuleNewFactoryTestData.secondCount++;
             }
-
         }
 
 #if UTE_MODULE_NEW_FACTORY_AGING_REPORT_SUPPORT
         if (uteModuleNewFactoryTestData.secondCount == uteModuleNewFactoryTestData.maxCount)
         {
-            uteModuleNewFactoryTestSaveAgingReportData(uteModuleNewFactoryTestData.factoryAgingTestMode, (uteModuleNewFactoryTestData.maxCount/3600), true);
+            uteModuleNewFactoryTestSaveAgingReportData(uteModuleNewFactoryTestData.factoryAgingTestMode, (uteModuleNewFactoryTestData.maxCount / 3600), true);
         }
 #endif
     }
@@ -293,48 +317,48 @@ void uteModuleNewFactoryTestEverySecond(void)
 }
 
 /**
-*@brief  获取需要发送给APP的数据指针
-*@details
-*@author     casen
-*@date       2022-03-15
-*/
-void uteModuleNewFactoryTestGetSendAppDataPointer(ute_new_factory_test_send_app_data_t ** pAppData)
+ *@brief  获取需要发送给APP的数据指针
+ *@details
+ *@author     casen
+ *@date       2022-03-15
+ */
+void uteModuleNewFactoryTestGetSendAppDataPointer(ute_new_factory_test_send_app_data_t **pAppData)
 {
-    //APP_PRINT_INFO1("GetSendAppDataPointer LEN = %d",sizeof(uteModuleNewFactorySendAppData));
-    memset(&uteModuleNewFactorySendAppData,0x00,sizeof(uteModuleNewFactorySendAppData));
+    // APP_PRINT_INFO1("GetSendAppDataPointer LEN = %d",sizeof(uteModuleNewFactorySendAppData));
+    memset(&uteModuleNewFactorySendAppData, 0x00, sizeof(uteModuleNewFactorySendAppData));
     (*pAppData) = &uteModuleNewFactorySendAppData;
 }
 
 void uteModuleNewFactorySendAppDataFunc(void)
 {
     uint8_t sendBuff[247];
-    memset(sendBuff,0,247);
+    memset(sendBuff, 0, 247);
     ute_application_sync_data_param_t *param;
     uteApplicationCommonGetSyncDataParam(&param);
     sendBuff[0] = CMD_FACTORY_TEST_MODE;
     sendBuff[1] = 0xff;
     sendBuff[2] = 0xf2;
-    sendBuff[3] = param->currSendMinIndex>>8&0xff;
-    sendBuff[4] = param->currSendMinIndex&0xff;
-    if(param->currSendMinIndex>0 && param->currSendMinIndex<=param->currSendMaxIndex)
+    sendBuff[3] = param->currSendMinIndex >> 8 & 0xff;
+    sendBuff[4] = param->currSendMinIndex & 0xff;
+    if (param->currSendMinIndex > 0 && param->currSendMinIndex <= param->currSendMaxIndex)
     {
-        memcpy(&sendBuff[5],&uteModuleNewFactorySendAppData.sendAppData[param->currSendMinIndex-1][SEND_APP_DATA_CONTENT_OFFSET],uteModuleNewFactorySendAppData.sendAppData[param->currSendMinIndex-1][SEND_APP_DATA_LENGTH_OFFSET]);
+        memcpy(&sendBuff[5], &uteModuleNewFactorySendAppData.sendAppData[param->currSendMinIndex - 1][SEND_APP_DATA_CONTENT_OFFSET], uteModuleNewFactorySendAppData.sendAppData[param->currSendMinIndex - 1][SEND_APP_DATA_LENGTH_OFFSET]);
     }
-    uteModuleProfileBle50SendToPhone(&sendBuff[0],5+uteModuleNewFactorySendAppData.sendAppData[param->currSendMinIndex-1][SEND_APP_DATA_LENGTH_OFFSET]);
+    uteModuleProfileBle50SendToPhone(&sendBuff[0], 5 + uteModuleNewFactorySendAppData.sendAppData[param->currSendMinIndex - 1][SEND_APP_DATA_LENGTH_OFFSET]);
     param->currSendMinIndex++;
-    if(param->currSendMinIndex>param->currSendMaxIndex)  //通过序号结束
+    if (param->currSendMinIndex > param->currSendMaxIndex) // 通过序号结束
     {
         sendBuff[3] = 0xfd;
-        uteModuleProfileBleSendToPhone(&sendBuff[0],4);
+        uteModuleProfileBleSendToPhone(&sendBuff[0], 4);
         uteApplicationCommonSyncDataTimerStop();
     }
 }
 /**
-*@brief        准备开始发送hardfault 数据
-*@details
-*@author       zn.zeng
-*@date       2022-03-16
-*/
+ *@brief        准备开始发送hardfault 数据
+ *@details
+ *@author       zn.zeng
+ *@date       2022-03-16
+ */
 void uteModuleNewFactoryStartSendlogData(void)
 {
     ute_application_sync_data_param_t *param;
@@ -356,17 +380,17 @@ void uteModuleNewFactoryStartSendlogData(void)
     {
         goto SEND_NEW_FACTORY_FINISH;
     }
-    for(uint8_t i=0; i<FACTORY_AGING_TIME_MAX; i++)
+    for (uint8_t i = 0; i < FACTORY_AGING_TIME_MAX; i++)
     {
         flashReadSize += uteModuleNewFactorySendAppData.sendAppData[i][SEND_APP_DATA_LENGTH_OFFSET];
     }
-    if(flashReadSize != 0)
+    if (flashReadSize != 0)
     {
-        response[3] = flashReadSize>>24&0xff;
-        response[4] = flashReadSize>>16&0xff;
-        response[5] = flashReadSize>>8&0xff;
-        response[6] = flashReadSize>>0&0xff;
-        uteModuleProfileBleSendToPhone(&response[0],7);
+        response[3] = flashReadSize >> 24 & 0xff;
+        response[4] = flashReadSize >> 16 & 0xff;
+        response[5] = flashReadSize >> 8 & 0xff;
+        response[6] = flashReadSize >> 0 & 0xff;
+        uteModuleProfileBleSendToPhone(&response[0], 7);
         uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleNewFactorySendAppDataFunc);
         uteApplicationCommonSyncDataTimerStart();
     }
@@ -374,7 +398,7 @@ void uteModuleNewFactoryStartSendlogData(void)
     {
     SEND_NEW_FACTORY_FINISH:
         response[3] = 0xfd;
-        uteModuleProfileBleSendToPhone(&response[0],4);
+        uteModuleProfileBleSendToPhone(&response[0], 4);
     }
     param->currSendFileSize = flashReadSize;
     param->currSendMaxIndex = FACTORY_MODULE_MAX;
@@ -383,87 +407,87 @@ void uteModuleNewFactoryStartSendlogData(void)
 }
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_MOTOR_SCREEN_SUPPORT
 /**
-*@brief  设置马达状态
-*@details
-*@return bool isMotorAwaysVibration
-*@author        dengli.lu
-*@date        2022-04-24
-*/
+ *@brief  设置马达状态
+ *@details
+ *@return bool isMotorAwaysVibration
+ *@author        dengli.lu
+ *@date        2022-04-24
+ */
 void uteModuleNewFactorySetMode3MotorStatus(bool isMode3MotorAwaysVibration)
 {
     uteModuleNewFactoryTestData.isMode3MotorAwaysVibration = isMode3MotorAwaysVibration;
 }
 /**
-*@brief  获取马达状态
-*@details
-*@return bool isMotorAwaysVibration
-*@author        dengli.lu
-*@date        2022-04-24
-*/
+ *@brief  获取马达状态
+ *@details
+ *@return bool isMotorAwaysVibration
+ *@author        dengli.lu
+ *@date        2022-04-24
+ */
 bool uteModuleNewFactoryGetMode3MotorStatus(void)
 {
     return uteModuleNewFactoryTestData.isMode3MotorAwaysVibration;
 }
 /**
-*@brief  设置屏幕状态
-*@details
-*@return bool isMotorAwaysVibration
-*@author        dengli.lu
-*@date        2022-04-24
-*/
+ *@brief  设置屏幕状态
+ *@details
+ *@return bool isMotorAwaysVibration
+ *@author        dengli.lu
+ *@date        2022-04-24
+ */
 void uteModuleNewFactorySetMode3ScreenStatus(bool isMode3ScreenAwaysBright)
 {
     uteModuleNewFactoryTestData.isMode3ScreenAwaysBright = isMode3ScreenAwaysBright;
 }
 /**
-*@brief  获取屏幕状态
-*@details
-*@return bool isMotorAwaysVibration
-*@author        dengli.lu
-*@date        2022-04-24
-*/
+ *@brief  获取屏幕状态
+ *@details
+ *@return bool isMotorAwaysVibration
+ *@author        dengli.lu
+ *@date        2022-04-24
+ */
 bool uteModuleNewFactoryGetMode3ScreenStatus(void)
 {
     return uteModuleNewFactoryTestData.isMode3ScreenAwaysBright;
 }
-#endif //UTE_MODULE_NEW_FACTORY_TEST_RING_MOTOR_SCREEN_SUPPORT
+#endif // UTE_MODULE_NEW_FACTORY_TEST_RING_MOTOR_SCREEN_SUPPORT
 /**
-*@brief  设置心率检测模式
-*@details
-*@author        dengli.lu
-*@date        2022-09-02
-*/
+ *@brief  设置心率检测模式
+ *@details
+ *@author        dengli.lu
+ *@date        2022-09-02
+ */
 void uteModuleNewFactoryTestSetCheckLightMode(uint8_t mode)
 {
     uteModuleNewFactoryTestData.u.vcxx.testMode = mode;
-    if(mode!=NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
+    if (mode != NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
     {
-        //uteDrvHeartVcxxStartCrosstalktest();
+        // uteDrvHeartVcxxStartCrosstalktest();
     }
 #if !UTE_DRV_HEART_VC9202_VP60A2_SUPPORT
-    if(mode == NEW_FACTORY_VCXX_TEST_MODE_BIO_A)
+    if (mode == NEW_FACTORY_VCXX_TEST_MODE_BIO_A)
     {
         uteModuleNewFactoryTestData.u.vcxx.testMode = NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK;
     }
 #endif
 }
 /**
-*@brief  获取心率检测模式
-*@details
-*@author        dengli.lu
-*@date        2022-09-02
-*/
+ *@brief  获取心率检测模式
+ *@details
+ *@author        dengli.lu
+ *@date        2022-09-02
+ */
 uint8_t uteModuleNewFactoryTestGetCheckLightMode(void)
 {
     return uteModuleNewFactoryTestData.u.vcxx.testMode;
 }
 /**
-*@brief        vcxx系列获取漏光bio值
-*@details
-*@author       dengli.li
-*@date       2022-09-02
-*/
-void uteModuleNewFactoryTestGetCheckLightBioValue(uint16_t *bioA,uint16_t *bioB,uint16_t *bioDiff)
+ *@brief        vcxx系列获取漏光bio值
+ *@details
+ *@author       dengli.li
+ *@date       2022-09-02
+ */
+void uteModuleNewFactoryTestGetCheckLightBioValue(uint16_t *bioA, uint16_t *bioB, uint16_t *bioDiff)
 {
     *bioA = uteModuleNewFactoryTestData.u.vcxx.bioA;
     *bioB = uteModuleNewFactoryTestData.u.vcxx.bioB;
@@ -471,31 +495,31 @@ void uteModuleNewFactoryTestGetCheckLightBioValue(uint16_t *bioA,uint16_t *bioB,
 }
 
 /**
-*@brief        设置按键Key值
-*@details
-*@author       xjc
-*@date         2022-10-12
-*/
+ *@brief        设置按键Key值
+ *@details
+ *@author       xjc
+ *@date         2022-10-12
+ */
 void uteModuleNewFactoryTestSetKeyValue(ute_module_factory_test_key_t key)
 {
-    memcpy(&uteModuleNewFactoryTestData.key,&key,sizeof(ute_module_factory_test_key_t));
+    memcpy(&uteModuleNewFactoryTestData.key, &key, sizeof(ute_module_factory_test_key_t));
 }
 /**
-*@brief        重置按键Key值
-*@details
-*@author       xjc
-*@date         2022-10-12
-*/
+ *@brief        重置按键Key值
+ *@details
+ *@author       xjc
+ *@date         2022-10-12
+ */
 void uteModuleNewFactoryTestResSetKeyValue(void)
 {
-    memset(&uteModuleNewFactoryTestData.key,0,sizeof(ute_module_factory_test_key_t));
+    memset(&uteModuleNewFactoryTestData.key, 0, sizeof(ute_module_factory_test_key_t));
 }
 /**
-*@brief        读取按键Key值
-*@details
-*@author       xjc
-*@date         2022-10-12
-*/
+ *@brief        读取按键Key值
+ *@details
+ *@author       xjc
+ *@date         2022-10-12
+ */
 ute_module_factory_test_key_t uteModuleNewFactoryTestGetKeyValue(void)
 {
     return uteModuleNewFactoryTestData.key;
@@ -503,11 +527,11 @@ ute_module_factory_test_key_t uteModuleNewFactoryTestGetKeyValue(void)
 
 #if UTE_MODULE_SHIP_MODE_SUPPORT
 /**
-*@brief        是否要进入船运模式
-*@details
-*@author       xjc
-*@date         2022-11-02
-*/
+ *@brief        是否要进入船运模式
+ *@details
+ *@author       xjc
+ *@date         2022-11-02
+ */
 void uteModuleNewFactoryTestShipModeEnter(void)
 {
     if (uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_SHIP)
@@ -547,8 +571,8 @@ void uteModuleNewFactoryTestReadAgingReportData(void)
  *@details
  *@author        xjc
  *@date        2023-05-27
-*/
-void uteModuleNewFactoryTestSaveAgingReportData(FACTORY_AGING_TEST_MODE mode, uint8_t totalHour,bool isPass)
+ */
+void uteModuleNewFactoryTestSaveAgingReportData(FACTORY_AGING_TEST_MODE mode, uint8_t totalHour, bool isPass)
 {
     void *file;
 #if PROJECT_RH303AU_SUPPORT
@@ -556,10 +580,10 @@ void uteModuleNewFactoryTestSaveAgingReportData(FACTORY_AGING_TEST_MODE mode, ui
 #endif
     uteModuleNewFactoryTestData.agingRecord[mode].totalHour = totalHour;
     uteModuleNewFactoryTestData.agingRecord[mode].isPass = isPass;
-    if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_NEW_FACTORY_AGING_REPORT_DATA,&file,FS_O_WRONLY|FS_O_CREAT))
+    if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_NEW_FACTORY_AGING_REPORT_DATA, &file, FS_O_WRONLY | FS_O_CREAT))
     {
-        uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
-        uteModuleFilesystemWriteData(file,&uteModuleNewFactoryTestData.agingRecord[0],sizeof(uteModuleNewFactoryTestData.agingRecord));
+        uteModuleFilesystemSeek(file, 0, FS_SEEK_SET);
+        uteModuleFilesystemWriteData(file, &uteModuleNewFactoryTestData.agingRecord[0], sizeof(uteModuleNewFactoryTestData.agingRecord));
         uteModuleFilesystemCloseFile(file);
     }
 }
@@ -569,10 +593,10 @@ void uteModuleNewFactoryTestSaveAgingReportData(FACTORY_AGING_TEST_MODE mode, ui
  *@details
  *@author        xjc
  *@date        2023-05-27
-*/
+ */
 void uteModuleNewFactoryTestGetAgingReportData(ute_module_factory_aging_record_t *agingRecord)
 {
-    memcpy(agingRecord,&uteModuleNewFactoryTestData.agingRecord[0],sizeof(uteModuleNewFactoryTestData.agingRecord));
+    memcpy(agingRecord, &uteModuleNewFactoryTestData.agingRecord[0], sizeof(uteModuleNewFactoryTestData.agingRecord));
 }
 
 /**
@@ -580,7 +604,7 @@ void uteModuleNewFactoryTestGetAgingReportData(ute_module_factory_aging_record_t
  *@details
  *@author        xjc
  *@date        2023-05-27
-*/
+ */
 void uteModuleNewFactoryTestSetEnterAgingReportPage(bool isEnterAgingReport)
 {
     uteModuleNewFactoryTestData.isEnterAgingReportPage = isEnterAgingReport;
@@ -590,7 +614,7 @@ void uteModuleNewFactoryTestSetEnterAgingReportPage(bool isEnterAgingReport)
  *@details
  *@author        xjc
  *@date        2023-05-27
-*/
+ */
 bool uteModuleNewFactoryTestGetEnterAgingReportPage(void)
 {
     return uteModuleNewFactoryTestData.isEnterAgingReportPage;

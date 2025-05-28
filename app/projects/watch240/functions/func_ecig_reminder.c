@@ -32,65 +32,66 @@ compo_form_t *func_ecig_reminder_form_create(void)
     compo_picturebox_t *picbox;
     compo_animation_t *animation;
     compo_textbox_set_pos(txt, GUI_SCREEN_WIDTH / 2, GUI_SCREEN_HEIGHT / 2 + 20);
+
     if (sys_cb.smoke_index == SMOKING)
     {
         printf("1111111111111111111sys_cb.password_flag=%d\n",sys_cb.password_flag);
-        if(sys_cb.password_cnt == 4)
-        {
-            picbox = compo_picturebox_create(frm, UI_BUF_I330001_CHILD_LOCK_ICON_84X84_X78_Y89_BIN);
-            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 109);
-            picbox = compo_picturebox_create(frm, UI_BUF_I330001_CHILD_LOCK_ICON_LOCK_18X24_X111_Y35_BIN);
-            compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 35);
+        // if(sys_cb.password_cnt == 4)
+        // {
+        //     picbox = compo_picturebox_create(frm, UI_BUF_I330001_CHILD_LOCK_ICON_84X84_X78_Y89_BIN);
+        //     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 109);
+        //     picbox = compo_picturebox_create(frm, UI_BUF_I330001_CHILD_LOCK_ICON_LOCK_18X24_X111_Y35_BIN);
+        //     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 35);
 
-            txt = compo_textbox_create(frm, strlen(i18n[STR_CHILD_LOCK]));
-            compo_textbox_set(txt, i18n[STR_CHILD_LOCK]);
-            compo_textbox_set_autoroll_mode(txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
-            // compo_textbox_set_multiline(txt, true);
-            compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 80,210,80);
-            //compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X + 80);
+        //     txt = compo_textbox_create(frm, strlen(i18n[STR_CHILD_LOCK]));
+        //     compo_textbox_set(txt, i18n[STR_CHILD_LOCK]);
+        //     compo_textbox_set_autoroll_mode(txt, TEXT_AUTOROLL_MODE_SROLL_CIRC);
+        //     // compo_textbox_set_multiline(txt, true);
+        //     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 80,210,80);
+        //     //compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_X + 80);
+        // }
+        // else
+        // {
+        uint32_t smokeing_count = uteModuleGetSomkeSomkeCount();
+        smokeing_count++;
+        uteModuleSetSomkeCount(smokeing_count);
+
+        // 获取当前时间
+        ute_module_systemtime_time_t time;
+        uteModuleSystemtimeGetTime(&time);
+        int current_hour = time.hour;
+
+        // 更新对应小时的口数
+        uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
+        // 更新本周对应日期的口数
+        int current_weekday = time.week;
+        uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
+
+        uteModuleSmokeDataSaveConfig();
+        if (uteModuleSmokeData.total_smoking_count == uteModuleSmokeData.target_smoking_count)
+        {
+            compo_picturebox_t *pic;
+            pic = compo_picturebox_create(frm, UI_BUF_I330001_SET_PUFFS_OK01_BIN);
+            compo_setid(pic, COMPO_ID_PIC_SMOCK_TARGET);
+            compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 40);
+
+            // 创建文本
+            char str_buff[8];
+            compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_TARGET_PUFFSGET])); /// PASS
+            compo_textbox_set(textbox, i18n[STR_TARGET_PUFFSGET]);
+            compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 60,220,90);
+            compo_textbox_set_multiline(textbox, true);
+            compo_textbox_set_forecolor(textbox, COLOR_WHITE);
         }
         else
         {
-            uint32_t smokeing_count = uteModuleGetSomkeSomkeCount();
-            smokeing_count++;
-            uteModuleSetSomkeCount(smokeing_count);
-
-            // 获取当前时间
-            ute_module_systemtime_time_t time;
-            uteModuleSystemtimeGetTime(&time);
-            int current_hour = time.hour;
-
-            // 更新对应小时的口数
-            uteModuleSmokeData.smoking_count_per_hour[current_hour]++;
-            // 更新本周对应日期的口数
-            int current_weekday = time.week;
-            uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
-
-            uteModuleSmokeDataSaveConfig();
-            if (uteModuleSmokeData.total_smoking_count == uteModuleSmokeData.target_smoking_count)
-            {
-                compo_picturebox_t *pic;
-                pic = compo_picturebox_create(frm, UI_BUF_I330001_SET_PUFFS_OK01_BIN);
-                compo_setid(pic, COMPO_ID_PIC_SMOCK_TARGET);
-                compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 40);
-
-                // 创建文本
-                char str_buff[8];
-                compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_TARGET_PUFFSGET])); /// PASS
-                compo_textbox_set(textbox, i18n[STR_TARGET_PUFFSGET]);
-                compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 60,220,90);
-                compo_textbox_set_multiline(textbox, true);
-                compo_textbox_set_forecolor(textbox, COLOR_WHITE);
-            }
-            else
-            {
-                animation = compo_animation_create(frm, UI_BUF_I330001_SMOKEING_FIRE1_BIN);
-                compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-                compo_animation_set_radix(animation, 20);
-                compo_animation_set_interval(animation, 8);
-                compo_setid(animation, COMPO_ID_PIC_SMOCKING);
-            }
+            animation = compo_animation_create(frm, UI_BUF_I330001_SMOKEING_FIRE1_BIN);
+            compo_animation_set_pos(animation, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+            compo_animation_set_radix(animation, 20);
+            compo_animation_set_interval(animation, 8);
+            compo_setid(animation, COMPO_ID_PIC_SMOCKING);
         }
+        // }
 
     }
     else if (sys_cb.smoke_index == SHORT_CIRCUIT)
@@ -157,6 +158,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
         compo_textbox_set_forecolor(txt, COLOR_RED);
         compo_textbox_set(txt, i18n[STR_SMOKING_OUT]);
     }
+
     return frm;
 }
 
@@ -167,7 +169,7 @@ static void func_ecig_reminder_process(void)
     func_process();
     if (!bsp_ecig_is_working_sta())
     {
-        if (tick_check_expire(f_ecig_reminder->tick, 1500))
+        if (tick_check_expire(f_ecig_reminder->tick, 800))
         {
             func_directly_back_to();
         }

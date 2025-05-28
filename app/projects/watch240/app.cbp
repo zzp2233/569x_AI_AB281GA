@@ -1249,6 +1249,9 @@
 		<Unit filename="functions/func_ecig_reminder.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_ecig_reminderclock.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_ecig_set_power.c">
 			<Option compilerVar="CC" />
 		</Unit>

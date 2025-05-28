@@ -220,6 +220,7 @@ void uteModuleNewFactoryTestResSetKeyValue(void);
 ute_module_factory_test_key_t uteModuleNewFactoryTestGetKeyValue(void);
 
 uint16_t uteModuleNewFactoryAgingTestMotoCount(void);
+uint16_t uteModuleNewFactoryAgingTestSmokeCount(void);
 #if UTE_MODULE_NEW_FACTORY_AGING_REPORT_SUPPORT
 void uteModuleNewFactoryTestReadAgingReportData(void);
 void uteModuleNewFactoryTestSaveAgingReportData(FACTORY_AGING_TEST_MODE mode, uint8_t totalHour,bool isPass);

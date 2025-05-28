@@ -75,7 +75,7 @@
 #endif
 #endif
 
-
+#define ECIG_SET_VOLTAGE_DATA   2600 //2.60mv
 #define bsp_ecig_exit()         ecigarette_exit()
 #define bsp_ecig_is_working()   ecig_is_working()   //正在吸烟（mic高电平）
 
@@ -91,7 +91,7 @@ enum
 
 void bsp_ecig_init(void);
 void bsp_ecig_sleep_wakeup(void);
-void ecig_set_power(u8 value);
+void ecig_set_power(u16 value);
 u8 ecig_get_power(void);
 void ecig_set_res(u8 value);
 u8 ecig_get_res(void);

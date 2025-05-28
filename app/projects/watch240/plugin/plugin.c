@@ -77,7 +77,7 @@ void sleep_wakeup_config(void)
 #endif
 
 
-    port_wakeup_init(ECIG_DET1_GPIO, 1, 0);  //通道一插入唤醒
+    port_wakeup_init(ECIG_DET1_GPIO, 0, 0);  //通道一插入唤醒
     port_wakeup_init(ECIG_DET2_GPIO, 1, 0);  //通道二插入唤醒
 
 

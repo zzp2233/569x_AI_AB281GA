@@ -234,6 +234,15 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleMicRecordFactoryStart();
         }
         break;
+        case MSG_TYPE_SMOKE_REMIND:
+        {
+            if(uteApplicationCommonIsPowerOn() && func_cb.sta != FUNC_AGEING)
+            {
+                printf("uteTaskGuiStartScreen(FUNC_ECIG_REMINDER\n");
+                uteTaskGuiStartScreen(FUNC_ECIG_REMINDER, 0, __func__);
+            }
+        }
+        break;
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

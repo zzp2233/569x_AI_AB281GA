@@ -93,6 +93,30 @@ compo_form_t *func_ota_succ_form_create(void)
 
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+
+//创建地图窗体
+compo_form_t *func_ota_succ_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I341001_1_START_SUCCEED_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 104+72);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_UPDATED]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+80,240,50);
+    compo_textbox_set(textbox,i18n[STR_UPDATED]);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_WATCH_RESTART]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+136,240,50);
+    compo_textbox_set(textbox,i18n[STR_WATCH_RESTART]);
+    widget_text_set_color(textbox->txt, make_color(128,128,128));
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 //创建地图窗体
 compo_form_t *func_ota_succ_form_create(void)

@@ -57,6 +57,53 @@ compo_form_t *func_set_sub_watchface_and_theme_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#define WATCHFACE_AND_THEME_CNT                       ((int)(sizeof(tbl_watchface_and_theme_list) / sizeof(tbl_watchface_and_theme_list[0])))
+
+enum
+{
+    COMPO_ID_WATCHFACE_AND_THEME = 1,
+};
+
+typedef struct f_set_list_t_
+{
+    compo_listbox_t *listbox;
+
+} f_set_list_t;
+
+static const compo_listbox_item_t tbl_watchface_and_theme_list[] =
+{
+    {STR_DIAL_SWICTH, UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_1_INTEREST_RATES_SCREEN_ICON_ARROW_10X15_X214_Y73_X214_Y211_X214_Y348_BIN,        .func_sta = FUNC_CLOCK_PREVIEW}, //更换表盘
+    {STR_STYLE,       UI_BUF_I335001_27_MORE_28_SET_2_DIALS_AND_THEMES_1_INTEREST_RATES_SCREEN_ICON_ARROW_10X15_X214_Y73_X214_Y211_X214_Y348_BIN,        .func_sta = FUNC_STYLE}, //主题
+};
+
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_set_sub_watchface_and_theme_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_WATCHFACE_AND_THEME]);
+
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_set(listbox, tbl_watchface_and_theme_list, WATCHFACE_AND_THEME_CNT);
+    compo_setid(listbox, COMPO_ID_WATCHFACE_AND_THEME);
+
+    u8 set_idx = sys_cb.set_idx;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+    return frm;
+}
 #else
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
@@ -126,6 +173,8 @@ static void func_watchface_and_theme_sub_list_enter(void)
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, WATCHFACE_AND_THEME_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, WATCHFACE_AND_THEME_CNT - 2)+40);
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, WATCHFACE_AND_THEME_CNT - 2)+40);
 #endif
     func_cb.enter_tick = tick_get();

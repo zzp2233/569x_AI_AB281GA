@@ -72,7 +72,19 @@
 /*! PWRKEY,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_SUPPORT 1
 /*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
-#define UTE_DRV_PWRKEY_MAX_CNT 1
+#define UTE_DRV_PWRKEY_MAX_CNT 2
+
+#define UTE_DRV_PWRKEY_KEY0 KEY_BACK
+#define UTE_DRV_PWRKEY_KEY0_MAX_ADC 0x20 // 0R
+
+#define UTE_DRV_PWRKEY_KEY1 KEY_LEFT
+#define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x9A // 12K
+
+/*! 使用编码器功能,wang.luo 2025-04-09 */
+#define DRV_ENCODER_KEYS_SUPPORT 1
+
+/*! KEY1跳转界面,wang.luo 2025-04-09 */
+#define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT
 
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1

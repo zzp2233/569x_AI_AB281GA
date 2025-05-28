@@ -195,6 +195,61 @@ static void func_ota_update_disp(void)
         }
     }
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+compo_form_t *func_ota_update_form_create(void)
+{
+    char txt_buf[30];
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I341001_UPGRADE_UPGRADE_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 55+91);
+
+    extern fot_progress_t *bsp_fot_progress_get(void);
+    fot_progress_t *fot_data = bsp_fot_progress_get();
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent);
+    compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+58,230,80);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,PROGRESS_BAR_ID);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_UPGRADING]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+136,230,50);
+    compo_textbox_set(textbox,i18n[STR_UPGRADING]);
+
+    return frm;
+}
+static void func_ota_update_disp(void)
+{
+    static u32 ticks = 0;
+
+    if (tick_check_expire(ticks, 100))
+    {
+        ticks = tick_get();
+        reset_sleep_delay_all();
+
+        extern fot_progress_t *bsp_fot_progress_get(void);
+        fot_progress_t *fot_data = bsp_fot_progress_get();
+        if(fot_data->type == FOT_FILE_TYPE_FOT)
+        {
+            if(fot_data->percent)
+            {
+                if(fot_data->percent >= 97)
+                {
+                    fot_data->percent = 100;
+                }
+                char txt_buf[30];
+                compo_textbox_t *txt_val   = compo_getobj_byid(PROGRESS_BAR_ID);
+                snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent );
+                compo_textbox_set(txt_val,txt_buf);
+            }
+        }
+    }
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 
 compo_form_t *func_ota_update_form_create(void)

@@ -311,6 +311,278 @@ static void func_pressure_refresh(void)
         }
     }
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+
+#define Grade_1_color make_color(163,251,206)
+#define Grade_2_color make_color(97,196,146)
+#define Grade_3_color make_color(247,193,62)
+#define Grade_4_color make_color(254,99,40)
+
+#define Grade_1_val_min  0
+#define Grade_2_val_min  30
+#define Grade_3_val_min  59
+#define Grade_4_val_min  80
+
+#define mood_max   100
+#define first_x    89
+#define spacing_x  5
+#define height_pic 106
+#define first_y   (271+height_pic/2)
+#define make_pic_hei(val)   (val*height_pic/mood_max)
+#define make_pic_y(hei)     (height_pic-hei+first_y)
+
+//创建压力窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_pressure_form_create(void)
+{
+    char txt_buf[20];
+    uint8_t test_date[24];
+    uint8_t max_val= uteModuleEmotionPressureGetEmotionPressureMaxValue();
+    uint8_t min_val= uteModuleEmotionPressureGetEmotionPressureMinValue();
+
+    bool had_date = uteModuleEmotionPressureGetTodayPressureHistoryData(test_date, 24);
+    u8 Pressure_val = uteModuleEmotionPressureGetPressureValue();
+
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    // //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_STRESS]);
+
+    ///设置图片
+    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I341001_16_PRESSURE_GIF_BIN);
+    compo_animation_set_pos(animation,23+74/2, 94+74/2);
+    compo_animation_set_radix(animation, 16);
+    compo_animation_set_interval(animation, 0);
+    compo_setid(animation,COMPO_ID_PRESSURE_PIC);
+
+    compo_textbox_t *textbox;
+    if(Pressure_val!=0 && Pressure_val!=255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",Pressure_val);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"55");
+    }
+    textbox = compo_textbox_create(frm, 3 );/// 数据
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_64_BIN);
+    compo_textbox_set_pos(textbox,109,73);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,COMPO_TXT_VALUE_ID);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
+    compo_textbox_set_location(textbox,26,205+14,60, widget_text_get_max_height());
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox,i18n[STR_HIGHEST]);
+    compo_textbox_set_forecolor(textbox, COLOR_GRAY);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(max_val!=0 && max_val!=255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",max_val);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+    area_t txt_leng = widget_text_get_area(textbox->txt);
+    textbox = compo_textbox_create(frm, 3);///最高数据
+    compo_setid(textbox,COMPO_TXT_VALUE_MAX_ID);
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,31+txt_leng.wid,205+14);
+    compo_textbox_set_align_center(textbox, false);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
+    compo_textbox_set_location(textbox,194,205+14,60, widget_text_get_max_height());
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox,i18n[STR_LOWSET]);
+    compo_textbox_set_forecolor(textbox, COLOR_GRAY);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(min_val!=0 && min_val!=255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",min_val);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+    txt_leng = widget_text_get_area(textbox->txt);
+    textbox = compo_textbox_create(frm, 3);///最低数据
+    compo_setid(textbox,COMPO_TXT_VALUE_MIN_ID);
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,198+txt_leng.wid,205+14);
+    compo_textbox_set_align_center(textbox, false);
+
+    compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I341001_16_PRESSURE_RETRY_BIN);///重新测量按钮
+    compo_button_set_pos(btn,26+282,26+98);
+    compo_setid(btn,COMPO_ID_AGAIN_BTN);
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I341001_6_HEART_ABOUT_BIN);//////关于
+    compo_picturebox_set_pos(picbox,12+186,12+91);
+
+    btn = compo_button_create(frm);
+    compo_button_set_location(btn,12+186,12+91,30,30);///关于
+    compo_setid(btn,COMPO_BTN_ABOUT_ID);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I341001_16_PRESSURE_DATE_BG_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 247+85);
+
+
+    for (int i = 0; i < 24; i++)
+    {
+        compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE );
+        widget_set_align_center(shape->rect, false);
+        compo_shape_set_location(shape,first_x+i*spacing_x+i*5,make_pic_y(make_pic_hei(test_date[i])),4,had_date?make_pic_hei(test_date[i]):0);
+        compo_setid(shape,COMPO_CAHRT_1+i);
+        switch (test_date[i])
+        {
+            case Grade_1_val_min...Grade_2_val_min-1:
+                compo_shape_set_color(shape,Grade_1_color);
+                break;
+            case Grade_2_val_min...Grade_3_val_min-1:
+                compo_shape_set_color(shape,Grade_2_color);
+                break;
+            case Grade_3_val_min...Grade_4_val_min-1:
+                compo_shape_set_color(shape,Grade_3_color);
+                break;
+            case Grade_4_val_min...100:
+                compo_shape_set_color(shape,Grade_4_color);
+                break;
+
+            default:
+                break;
+        }
+    }
+
+    return frm;
+
+}
+
+//触摸单击按钮
+static void func_pressure_button_click(void)
+{
+    f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_BTN_ABOUT_ID:
+            uteTaskGuiStartScreen(FUNC_PRESSURE_EXPLAIN, 0, __func__);
+            break;
+        case COMPO_ID_AGAIN_BTN:
+            if(f_pressure->up_data_flag)
+            {
+                uteModuleEmotionPressureStopSingleTesting(EP_STOP_REASION_INITIATIVE_QUIT);
+            }
+            else
+            {
+                uteModuleEmotionPressureStartSingleTesting(false);
+            }
+            break;
+    }
+
+}
+
+//刷新压力数据
+static void func_pressure_refresh(void)
+{
+    f_pressure_t *f_pressure = (f_pressure_t *)func_cb.f_cb;
+
+    if(f_pressure->up_data_flag && !uteModuleEmotionPressureIsWear() && !uteModuleEmotionPressureIsTesting())
+    {
+        u8 res = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
+        if (res == MSGBOX_RES_OK)
+        {
+            // uteModuleEmotionPressureStartSingleTesting(false);
+        }
+    }
+
+    if(f_pressure->up_data_flag != uteModuleEmotionPressureIsTesting())
+    {
+        f_pressure->up_data_flag = uteModuleEmotionPressureIsTesting();
+
+        char txt_buf[20];
+        uint8_t test_date[24];
+        uint8_t max_val= uteModuleEmotionPressureGetEmotionPressureMaxValue();
+        uint8_t min_val= uteModuleEmotionPressureGetEmotionPressureMinValue();
+        compo_textbox_t *val = compo_getobj_byid(COMPO_TXT_VALUE_ID);
+        compo_textbox_t *val_max = compo_getobj_byid(COMPO_TXT_VALUE_MAX_ID);
+        compo_textbox_t *val_min = compo_getobj_byid(COMPO_TXT_VALUE_MIN_ID);
+
+        bool had_date = uteModuleEmotionPressureGetTodayPressureHistoryData(test_date,24);
+        u8 Pressure_val = uteModuleEmotionPressureGetPressureValue();
+
+        memset(txt_buf,0,sizeof(txt_buf));
+        if(Pressure_val!=0 && Pressure_val!=255)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%d",Pressure_val);
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"--");
+        }
+        compo_textbox_set(val,txt_buf);
+
+        memset(txt_buf,0,sizeof(txt_buf));
+        if(max_val!=0 && max_val!=255)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%d",max_val);
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"--");
+        }
+        compo_textbox_set(val_max,txt_buf);
+
+        memset(txt_buf,0,sizeof(txt_buf));
+        if(min_val!=0 && min_val!=255)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%d",min_val);
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"--");
+        }
+        compo_textbox_set(val_min,txt_buf);
+
+
+        compo_animation_t *animation = compo_getobj_byid(COMPO_ID_PRESSURE_PIC);
+        compo_animation_set_interval(animation, f_pressure->up_data_flag?20:0);
+
+        compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
+        compo_button_set_bgimg(btn, UI_BUF_I341001_16_PRESSURE_PAUSE_BIN);
+        compo_button_set_visible(btn,f_pressure->up_data_flag ? false : true);
+
+        for (int i = 0; i < 24; i++)
+        {
+            u8 mood_mode = test_date[i];
+            compo_shape_t *shape = compo_getobj_byid(COMPO_CAHRT_1+i);
+            compo_shape_set_location(shape,first_x+i*spacing_x+i*4,make_pic_y(make_pic_hei(test_date[i])),4,had_date?make_pic_hei(test_date[i]):0);
+            switch (test_date[i])
+            {
+                case Grade_1_val_min...Grade_2_val_min-1:
+                    compo_shape_set_color(shape,Grade_1_color);
+                    break;
+                case Grade_2_val_min...Grade_3_val_min-1:
+                    compo_shape_set_color(shape,Grade_2_color);
+                    break;
+                case Grade_3_val_min...Grade_4_val_min-1:
+                    compo_shape_set_color(shape,Grade_3_color);
+                    break;
+                case Grade_4_val_min...100:
+                    compo_shape_set_color(shape,Grade_4_color);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 
 #define Grade_1_color make_color(163,251,206)
@@ -379,7 +651,7 @@ compo_form_t *func_pressure_form_create(void)
     compo_setid(textbox,COMPO_TXT_VALUE_ID);
 
     compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn,180,330,200,50);///点击测量区域
+    compo_button_set_location(btn,180,34/2+307,200,60);///点击测量区域
     compo_setid(btn,COMPO_ID_AGAIN_BTN);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I338002_7_SPO2_EXPLAIN_BIN);
@@ -463,7 +735,7 @@ compo_form_t *func_pressure_form_create(void)
         }
     }
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_STATE_TEST]));///最低数据
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_STATE_TEST]));
     compo_textbox_set(textbox,i18n[STR_STATE_TEST]);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,34/2+307,100,34);
     compo_setid(textbox,COMPO_ID_TXT_TEST);

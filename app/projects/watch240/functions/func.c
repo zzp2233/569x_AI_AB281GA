@@ -1766,8 +1766,12 @@ void func_enter(void)
     u32 heap_size = func_heap_get_free_size();
     if (heap_size != HEAP_FUNC_SIZE)
     {
+        extern u8 heap_func[HEAP_FUNC_SIZE];
+        func_heap_init(heap_func, HEAP_FUNC_SIZE);
         printf("Func heap leak (%d -> %d): %d\n", func_cb.last, func_cb.sta, heap_size);
+#if UTE_MODULE_LOG_SUPPORT
         halt(HALT_FUNC_HEAP);
+#endif
     }
 
 //    gui_box_clear();

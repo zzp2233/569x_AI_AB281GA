@@ -3801,7 +3801,7 @@ static void func_clock_sub_dropdown_form_create(void)
 
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",uteDrvBatteryCommonGetLvl());
     textbox = compo_textbox_create(frm,4);
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,27+40/2,100,40);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,24+40/2,94,40);
     compo_textbox_set(textbox,txt_buf );
     compo_textbox_set_right_align(textbox,true);
 

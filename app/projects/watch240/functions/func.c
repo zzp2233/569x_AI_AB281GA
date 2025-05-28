@@ -198,6 +198,7 @@ extern void func_up_watch_dial(void);
 #if ECIG_POWER_CONTROL
 extern void func_ecig_set_power(void);
 extern void func_ecig_reminder(void);
+extern void func_ecig_reminderclock(void);
 #endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
 extern void func_calendar_sub(void);
@@ -328,6 +329,7 @@ compo_form_t *func_ecig_vpae_sub_form_create(void);
 #if ECIG_POWER_CONTROL
 compo_form_t *func_ecig_set_power_form_create(void);
 compo_form_t *func_ecig_reminder_form_create(void);
+compo_form_t *func_ecig_reminderclock_form_create(void);
 #endif
 
 bool func_music_is_play(void);
@@ -518,6 +520,7 @@ const func_t tbl_func_create[] =
 #if ECIG_POWER_CONTROL
     {FUNC_ECIG_SET_POWER,               func_ecig_set_power_form_create},
     {FUNC_ECIG_REMINDER,                func_ecig_reminder_form_create},
+    {FUNC_ECIG_REMINDERCLOCK,                func_ecig_reminderclock_form_create},
 #endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
     {FUNC_CALENDAER_SUB,                    func_calender_sub_form_create},
@@ -724,6 +727,7 @@ const func_t tbl_func_entry[] =
 #if ECIG_POWER_CONTROL
     {FUNC_ECIG_SET_POWER,               func_ecig_set_power},
     {FUNC_ECIG_REMINDER,                func_ecig_reminder},
+    {FUNC_ECIG_REMINDERCLOCK,                func_ecig_reminderclock},
 #endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
     {FUNC_CALENDAER_SUB,                func_calendar_sub},
@@ -900,7 +904,7 @@ void func_process(void)
                     }
                     reset_sleep_delay_all();
                 }
-                if (func_cb.sta != FUNC_CHARGE)
+                if (func_cb.sta != FUNC_CHARGE && func_cb.sta != FUNC_AGEING)
                 {
                     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
                     msg_enqueue(EVT_MSGBOX_EXIT);
@@ -1578,7 +1582,7 @@ void func_message(size_msg_t msg)
             break;
 #if ECIG_POWER_CONTROL
         case EVT_ECIG_SMOKE_REMINDER:
-            if(func_cb.sta != FUNC_ECIG_REMINDER)
+            if(func_cb.sta != FUNC_ECIG_REMINDER && func_cb.sta !=FUNC_AGEING)
             {
                 printf(" func_cb.sta != FUNC_ECIG_REMINDER \n");
                 // func_cb.sta = FUNC_ECIG_REMINDER;

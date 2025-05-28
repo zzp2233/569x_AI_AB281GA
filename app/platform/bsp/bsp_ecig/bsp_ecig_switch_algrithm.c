@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_message.h"
 #if ECIG_POWER_CONTROL
 
 #if ECIG_POLLING_CONTROL
@@ -17,11 +18,15 @@
 AT(.com_rodata.str)
 const char hot_str[] = "%d %d %d\n";
 AT(.com_rodata.str)
-const char vol_hot_str[] = "%d %d %d\n";
+const char vol_hot_str[] = "123123  %d %d %d\n";
 AT(.com_rodata.str)
 const char short_circuit_str[] = "short circuit! %d sta [%d]\n";
 AT(.com_rodata.str)
 const char info_8s[] = "8S warning\n";
+AT(.com_rodata.str)
+const char hot_str11[] = "smoke_res_swich%d\n";
+AT(.com_rodata.str)
+const char vol_hot_test_str[] = " %d %d %d %d %d %d\n";
 
 #endif
 
@@ -36,7 +41,7 @@ void timer_hot_hot_vol(void)//
     u32 adc_vbg = saradc_get_value10(ADCCH_BGOP);
     u32 hot_voltage = saradc_get_value10(ecig.cfg->adc1_ch);
     u32 hot_voltage2 = saradc_get_value10(ecig.cfg->adc2_ch);
-    //  TRACE(hot_str, adc_vbg,hot_voltage,hot_voltage2);
+    // TRACE(hot_str, adc_vbg,hot_voltage,hot_voltage2);
 #if DEVELOPMENT_BOARD_TYPE == DEVELOPMENT_BOARD_USER
     ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
     ecig.AD_hot_voltage_mv2 = (hot_voltage2 * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
@@ -101,7 +106,8 @@ void timer_hot_bat_vol(void)//
             ECIG_PWM_OFF_FUNC();
             ecig.smoke_sta = LOW_POWER;
             ecig.power_on_flag = 0;
-            msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+            // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
             sys_cb.smoke_index = LOW_POWER;
             printf(hot_str,13,ecig.AD_BAT_voltage_mv,0);
         }
@@ -183,7 +189,8 @@ void timer_hot_dual_isr(void)//
                         ecig.power_on_flag = 0;
                         ecig.short_circuit_flag = ecig.smoke_sta;//短路开路
                         printf(short_circuit_str,-1,ecig.short_circuit_flag);
-                        msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                        //  msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                         sys_cb.smoke_index = ecig.smoke_sta;
                         //break;
                     }
@@ -191,7 +198,8 @@ void timer_hot_dual_isr(void)//
                     {
                         ecig.smoke_sta = SMOKING;
                         ecig.power_on_flag = 1;
-                        msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                        //msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                         sys_cb.smoke_index = SMOKING;
                     }
                     printf(hot_str,6,ecig.hot_res,0xff);
@@ -206,11 +214,11 @@ void timer_hot_dual_isr(void)//
             {
                 case 0:////获取电量
                 case 1:
-                case 2:
                 {
                     timer_hot_bat_vol();
                 }
                 break;
+                case 2:
                 case 3:////等一段时间电压稳定，做VDDIO校准
                 case 4:
                 case 5:
@@ -233,18 +241,22 @@ void timer_hot_dual_isr(void)//
                     {
                         if(ecig.cfg->smoke_res_swich)
                         {
-                            ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
+                            // ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
+                            ecig.p_current = (u16)ecig.AD_hot_voltage_mv + ecig.p_prev;
                         }
                         else
                         {
-                            ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage2) >> 13) + ecig.p_prev);
+                            ecig.p_current = (u16)ecig.AD_hot_voltage_mv2+ ecig.p_prev;
                         }
                     }
                     else
                     {
                         //双发
-                        ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
-                        ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage2) >> 13) + ecig.p_current);
+                        // ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
+                        // ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage2) >> 13) + ecig.p_current);
+                        //  ecig.p_current = (u16)ecig.AD_hot_voltage_mv + ecig.p_prev;
+                        //  ecig.p_current = (u16)ecig.AD_hot_voltage_mv2  + ecig.p_current;
+                        ecig.p_current = ((u16)ecig.AD_hot_voltage_mv2 +(u16)ecig.AD_hot_voltage_mv)/2 + ecig.p_current;
                     }
                     ecig.p_prev = ecig.p_current;
                 }
@@ -265,7 +277,8 @@ void timer_hot_dual_isr(void)//
                             ecig.power_on_flag = 0;/*  */
                             ecig.smoke_sta = SHORT_CIRCUIT;
                             ecig.short_circuit_flag = ecig.smoke_sta;
-                            msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                            //  msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                             sys_cb.smoke_index = SHORT_CIRCUIT;
                             TRACE(hot_str, 88,ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv);
                             TRACE(hot_str,  ecig.cfg->smoke_res_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv),ecig.AD_hot_voltage_mv * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
@@ -315,27 +328,36 @@ void timer_hot_dual_isr(void)//
                     if (ecig.power_on_flag)
                     {
                         //ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
-                        //TRACE(hot_str, ecig.p_current, (calculate_power(ecig.AD_hot_voltage) >> 13),ecig.p_prev );
+                        //TRACE(hot_str11,ecig.cfg->smoke_res_swich );
                         //单发
                         if(!ecig.cfg->smoke_position_swich)
                         {
                             if(ecig.cfg->smoke_res_swich)
                             {
-                                ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
+                                // ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
+                                ecig.p_current = (u16)ecig.AD_hot_voltage_mv + ecig.p_prev;
                             }
                             else
                             {
-                                ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage2) >> 13) + ecig.p_prev);
+                                // ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage2) >> 13) + ecig.p_prev);
+                                ecig.p_current = (u16)ecig.AD_hot_voltage_mv2  + ecig.p_prev;
                             }
                         }
                         else
                         {
                             //双发
-                            ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
-                            ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage2) >> 13) + ecig.p_current);
+                            // ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
+                            // ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage2) >> 13) + ecig.p_current);
+                            // ecig.p_current = (u16)ecig.AD_hot_voltage_mv + ecig.p_prev;
+                            // ecig.p_current = (u16)ecig.AD_hot_voltage_mv2 + ecig.p_current;
+                            ecig.p_current = ((u16)ecig.AD_hot_voltage_mv +(u16)ecig.AD_hot_voltage_mv2)/2 + ecig.p_prev;
                         }
-                        if (ecig.p_current >= ecig.cfg->aim_power * ecig.timer_big_cycles_10ms)
+                        // if (ecig.p_current >= ecig.cfg->aim_power * ecig.timer_big_cycles_10ms)
+                        //  printf(hot_str,ecig.AD_hot_voltage_mv,ecig.timer_cycle_cnt,12340);
+                        // printf(vol_hot_test_str,ecig.p_current,ecig.AD_hot_voltage_mv,ecig.AD_hot_voltage_mv2,ecig.timer_cycle_cnt, ecig.cfg->aim_voltage,ecig.cfg->smoke_res_swich);
+                        if (ecig.p_current >= ecig.cfg->aim_voltage * ecig.timer_big_cycles_10ms)
                         {
+                            // printf(vol_hot_str,ecig.AD_hot_voltage_mv,ecig.timer_cycle_cnt, ecig.cfg->aim_voltage);
                             if (ecig.power_on_flag)
                             {
                                 //TRACE(hot_str, ecig.timer_cycle_cnt,ecig.cfg->aim_power, ecig.p_current);
@@ -395,7 +417,8 @@ void timer_hot_dual_isr(void)//
                 printf(info_8s);
                 if(ecig.smoke_sta != SMOKE_TIMEOUT)
                 {
-                    msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                    // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                     sys_cb.smoke_index = SMOKE_TIMEOUT;
                 }
             }
@@ -407,7 +430,8 @@ void timer_hot_dual_isr(void)//
                 printf(short_circuit_str,0,ecig.short_circuit_flag);
                 if(ecig.smoke_sta != SHORT_CIRCUIT)
                 {
-                    msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                    // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                     sys_cb.smoke_index = SHORT_CIRCUIT;
                 }
             }

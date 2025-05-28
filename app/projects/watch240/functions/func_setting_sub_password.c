@@ -133,7 +133,7 @@ static void func_password_button_click(void)
         case COMPO_ID_BIN_CHANGE:
             sys_cb.password_change = 1;
             func_cb.sta = FUNC_PASSWORD_SUB_DISP;
-            printf("2222222222222\n");
+            printf("0000000000000000000000000000\n");
             break;
 
         default:

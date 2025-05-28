@@ -43,7 +43,8 @@ void bsp_ecig_init(void)
 #endif
 
     //p->aim_power = 5,
-    ecig_set_power(15);
+    //ecig_set_power(15);
+    ecig_cfg.aim_voltage = 3290;
     p->heat_time_max = 8;
     p->short_res_prop = 14;
     p->open_res_prop = 320;
@@ -65,13 +66,69 @@ u32 ecig_vbat_get(void)
 {
     return bsp_vbat_get_voltage(0);
 }
-
-void ecig_set_power(u8 value)
+typedef struct
 {
-    ecig_cfg.aim_power = value - 2;
-    uteModuleSmokeData.current_power=value;
-}
-
+    u16 power;   // 功率值
+    u16 voltage; // 对应电压值
+} PowerVoltagePair;
+//单发0.8欧
+const PowerVoltagePair power_voltage_singe_limi_0_8[]=
+{
+    {10,2690},
+    {11,2740},
+    {12,2790},
+    {13,2840},
+    {14,3050},
+    {15,3290},
+    {16,3480},
+    {17,3530},
+    {18,3570},
+};
+//单发0.8欧
+const PowerVoltagePair power_voltage_dual_limi_0_4[]=
+{
+    {20,3010},
+    {21,3060},
+    {22,3110},
+    {23,3160},
+    {24,3260},
+    {25,3310},
+    {26,3410},
+    {27,3440},
+    {28,3460},
+    {29,3510},
+    {30,3560},
+};
+//单发1.2
+const PowerVoltagePair power_voltage_singe_limi_1_2[]=
+{
+    {10,3350},
+    {11,3400},
+    {12,3440},
+    {13,3480},
+    {14,3520},
+    {15,3560},
+    {16,3600},
+    {17,3640},
+    {18,3680},
+    {19,3720},
+    {20,3760},
+};
+//双发1.2
+const PowerVoltagePair power_voltage_dual_limi_1_2[]=
+{
+    {20,2940},
+    {21,2960},
+    {22,2980},
+    {23,3000},
+    {24,3020},
+    {25,3040},
+    {26,3060},
+    {27,3080},
+    {28,3100},
+    {29,3120},
+    {30,3140},
+};
 u8 ecig_get_power(void)
 {
     return uteModuleSmokeData.current_power ;
@@ -201,6 +258,60 @@ void test_1st_gear_func(void)
 }
 
 
+void ecig_set_power(u16 value)
+{
+    uint8_t res = ecig_get_res();
+    printf("get_gear_func()==%d && res== %d\n",get_gear_func(),res);
+    if(get_gear_func()==0 && res== 8)
+    {
+        // ecig_cfg.aim_voltage = 2650 ;
+        // uteModuleSmokeData.current_power=value;
+        for (int i = 0; i < sizeof(power_voltage_singe_limi_0_8) / sizeof(power_voltage_singe_limi_0_8[0]); i++)
+        {
+            if (power_voltage_singe_limi_0_8[i].power == value)
+            {
+                ecig_cfg.aim_voltage = power_voltage_singe_limi_0_8[i].voltage;
+                break;
+            }
+        }
+    }
+    else if(get_gear_func()==1 && res== 4)
+    {
+        for (int i = 0; i < sizeof(power_voltage_dual_limi_0_4) / sizeof(power_voltage_dual_limi_0_4[0]); i++)
+        {
+            if (power_voltage_dual_limi_0_4[i].power == value)
+            {
+                ecig_cfg.aim_voltage = power_voltage_dual_limi_0_4[i].voltage;
+                break;
+            }
+        }
+    }
+    else if(get_gear_func()==0 && res== 12)
+    {
+        for (int i = 0; i < sizeof(power_voltage_singe_limi_1_2) / sizeof(power_voltage_singe_limi_1_2[0]); i++)
+        {
+            if (power_voltage_singe_limi_1_2[i].power == value)
+            {
+
+                ecig_cfg.aim_voltage = power_voltage_singe_limi_1_2[i].voltage;
+                break;
+            }
+        }
+    }
+    else if(get_gear_func()==1 && res== 6)
+    {
+        for (int i = 0; i < sizeof(power_voltage_dual_limi_1_2) / sizeof(power_voltage_dual_limi_1_2[0]); i++)
+        {
+            if (power_voltage_dual_limi_1_2[i].power == value)
+            {
+
+                ecig_cfg.aim_voltage = power_voltage_dual_limi_1_2[i].voltage;
+                break;
+            }
+        }
+    }
+    uteModuleSmokeData.current_power = value;
+}
 
 //双发
 void test_2st_gear_func(void)

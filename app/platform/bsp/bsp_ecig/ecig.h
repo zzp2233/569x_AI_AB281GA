@@ -72,6 +72,7 @@ typedef struct
     bool hot_det_flag;          //烟弹检测标志
 
     u8 aim_power;               //目标功率（W）
+    u16 aim_voltage;             //目标电压
     u8 smoke_power;               //抽烟功率（W）
     u8 heat_time_max;           //单次加热最长时间（s）
     u8 short_res_prop;          //短路保护，电热丝阻值和MOS内阻（100mΩ）的最小比例，阻值相近乘10提高精度，10--0.1Ω视作短路
@@ -82,6 +83,7 @@ typedef struct
     u8 smoke_position_swich;    //一档:0x00二档:0x01三档:0x02
     gpio_t ecig_gpio[ECIG_MAX_IO];
     u32 smoking_count;                              //抽烟口数
+    bool smoke_start_or_not;       //是否抽吸
 } ecig_cfg_t;
 extern ecig_cfg_t ecig_cfg;
 typedef struct
@@ -92,8 +94,8 @@ typedef struct
     u32 AD_hot_voltage_mv2;      //VAT（真实值）
     u32 AD_hot_voltage2;         //VAT（定点值）
     u32 AD_BAT_voltage_mv;      //VBAT
-    u16 p_current;              //当前功率
-    u16 p_prev;                 //前一次功率
+    u32 p_current;              //当前功率
+    u32 p_prev;                 //前一次功率
     u8 power_on_flag;           //PWM开启标志位
     u8 hot_time_flag;           //开始8S计时标志
     u16 hot_time_cnt;           //PWM计时第几秒

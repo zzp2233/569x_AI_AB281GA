@@ -77,30 +77,85 @@ compo_form_t *func_toolbox_list_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+static const compo_listbox_item_t tbl_toolbox_list[] =
+{
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {STR_STOP_WATCH,                    UI_BUF_I342001_2_HONEYCOMB_CIRCLE_STOPWATCH_BIN,       .func_sta = FUNC_STOPWATCH},    //秒表
+#endif
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {STR_TIMER,                  UI_BUF_I342001_2_HONEYCOMB_CIRCLE_TIMER_BIN,        .func_sta = FUNC_TIMER},                //计时器
+#endif
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+    {STR_FIND_PHONE,                UI_BUF_I342001_2_HONEYCOMB_CIRCLE_FINDPHONE_BIN,             .func_sta = FUNC_FINDPHONE},  //找手机
+#endif
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {STR_FLASHLIGHT,                     UI_BUF_I342001_2_HONEYCOMB_CIRCLE_FLASHLIGHT_BIN,           .func_sta = FUNC_FLASHLIGHT},    //手电筒
+#endif
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {STR_CAMERA,                UI_BUF_I342001_2_HONEYCOMB_CIRCLE_PHOTO_BIN,              .func_sta = FUNC_CAMERA},  //遥控拍照
+#endif
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {STR_CALCULATOR,               UI_BUF_I342001_2_HONEYCOMB_CIRCLE_CALCULATOR_BIN,          .func_sta = FUNC_CALCULATOR}, //计算器
+#endif
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {STR_STYLE,                          UI_BUF_I342001_2_HONEYCOMB_CIRCLE_PHOTO_BIN,            .func_sta = FUNC_STYLE}, //日历
+#endif
+};
+
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_toolbox_list_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_TOOL_BOX]);
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
+    compo_listbox_set(listbox, tbl_toolbox_list, TOOLBOX_LIST_CNT);
+    // compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    u8 set_idx = sys_cb.set_idx;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
 
 static const compo_listbox_item_t tbl_toolbox_list[] =
 {
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-    {STR_STOP_WATCH,                    UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_00_STOPWATCH_BIN,       .func_sta = FUNC_STOPWATCH},    //秒表
+    {STR_STOP_WATCH,            UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_STOPWATCH_BIN,       .func_sta = FUNC_STOPWATCH},  //秒表
 #endif
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
-    {STR_TIMER,                  UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_01_TIMER_BIN,        .func_sta = FUNC_TIMER},                //计时器
+    {STR_TIMER,                 UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_TIMER_BIN,            .func_sta = FUNC_TIMER},     //计时器
 #endif
 #if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
-    {STR_FIND_PHONE,                UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_03_FINDPHONE_BIN,             .func_sta = FUNC_FINDPHONE},  //找手机
+    {STR_FIND_PHONE,            UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_FINDPHONE_BIN,        .func_sta = FUNC_FINDPHONE},  //找手机
 #endif
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-    {STR_FLASHLIGHT,                     UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_02_FLASHLIGHT_BIN,           .func_sta = FUNC_FLASHLIGHT},    //手电筒
+    {STR_FLASHLIGHT,            UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_FLASHLIGHT_BIN,       .func_sta = FUNC_FLASHLIGHT}, //手电筒
 #endif
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-    {STR_CAMERA,                UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_04_CAMERA_BIN,              .func_sta = FUNC_CAMERA},  //遥控拍照
+    {STR_CAMERA,                UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_PHOTO_BIN,            .func_sta = FUNC_CAMERA},     //遥控拍照
 #endif
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {STR_CALCULATOR,               UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_06_CALCULATOR_BIN,          .func_sta = FUNC_CALCULATOR}, //计算器
+    {STR_CALCULATOR,            UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_CALCULATOR_BIN,       .func_sta = FUNC_CALCULATOR}, //计算器
 #endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
-    {STR_STYLE,                          UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_04_CAMERA_BIN,            .func_sta = FUNC_STYLE}, //日历
+    {STR_STYLE,                 UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_PHOTO_BIN,            .func_sta = FUNC_STYLE}, //日历
 #endif
 };
 
@@ -279,6 +334,8 @@ static void func_toolbox_list_enter(void)
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);
 #endif
     func_cb.enter_tick = tick_get();

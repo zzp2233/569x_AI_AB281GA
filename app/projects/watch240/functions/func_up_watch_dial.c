@@ -310,7 +310,7 @@ compo_form_t *func_up_watch_dial_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent);
     compo_textbox_t *textbox = compo_textbox_create(frm, 5);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_54_BIN);
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+58,230,50);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+58,230,80);
     compo_textbox_set(textbox,txt_buf);
     compo_setid(textbox,PROGRESS_BAR_ID);
 

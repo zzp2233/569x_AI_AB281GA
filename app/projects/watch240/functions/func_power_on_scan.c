@@ -137,7 +137,7 @@ compo_form_t *func_power_on_scan_form_create(void)
     compo_setid(btn,COMPO_ID_BTN_SKIP);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_APP_DOWNLOAD]) );
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,330,214,58);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,330,214,80);
     compo_textbox_set_multiline(textbox,true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_APP_DOWNLOAD]);

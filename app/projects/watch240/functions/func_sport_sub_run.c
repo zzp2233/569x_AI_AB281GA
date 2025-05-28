@@ -2337,6 +2337,7 @@ enum
     COMPO_ID_BTN_SPORT_EXIT,         //退出
 
     COMPO_ID_TXT_SPORT_STOP,         //暂停
+    COMPO_ID_TXT_BLE_OFF,           //BLE断开连接
 
 };
 enum//对应运动中显示运动数据种类->不同项目可自行添加
@@ -2363,6 +2364,8 @@ typedef struct f_sport_sub_run_t_
     u32         updata_tick;
     bool        sport_run_state;
     bool        sport_run_state_updata_flag;
+    bool        ble_state;
+    u16         count_time;
 } f_sport_sub_run_t;
 
 enum
@@ -2439,8 +2442,10 @@ compo_form_t *func_sport_sub_run_form_create(void)
     pic = compo_picturebox_create(frm, UI_BUF_I341001_3_EXERCISE_5_EXERCISING_HEART_RATE_INTERVAL_BIN);///心率进度
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X,266);
 
+    u8 heart_lever = uteModuleHeartGetHeartValueRange(uteModuleHeartGetHeartValue());
+    if(heart_lever == 0)heart_lever=5;
     pic = compo_picturebox_create(frm, UI_BUF_I341001_3_EXERCISE_5_EXERCISING_ARROW_BIN);///心率进度指针
-    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X+(64*(1-3)),288);
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X+(64*(heart_lever-3)),288);
     compo_setid(pic,COMPO_ID_PIC_SPORT_HEARTRATE_PERCENTAGE);
 
     txt = compo_textbox_create(frm, strlen(i18n[STR_CALORIE]));
@@ -2865,6 +2870,7 @@ static void func_sport_sub_run_updata(void)
         compo_button_t * btn_play       = compo_getobj_byid(COMPO_ID_BTN_SPORT_STOP);
         compo_textbox_t* txt_time_right = compo_getobj_byid(COMPO_ID_UINT_SPORT_TIME);
         compo_textbox_t* txt_stop       = compo_getobj_byid(COMPO_ID_TXT_SPORT_STOP);
+        compo_picturebox_t* pic_heart_lever = compo_getobj_byid(COMPO_ID_PIC_SPORT_HEARTRATE_PERCENTAGE);
 
         ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
         uteModuleSportGetMoreSportsDatas(data);
@@ -2936,7 +2942,12 @@ static void func_sport_sub_run_updata(void)
             area_t leng_size = widget_text_get_area(txt_heart->txt);
             compo_textbox_set_pos(uint_heart, 65+20+leng_size.wid,201);
         }
-
+        if(pic_heart_lever != NULL)
+        {
+            u8 heart_lever = uteModuleHeartGetHeartValueRange(uteModuleHeartGetHeartValue());
+            if(heart_lever == 0)heart_lever=5;
+            compo_picturebox_set_pos(pic_heart_lever,GUI_SCREEN_CENTER_X+(64*(heart_lever-3)),288);
+        }
         if(txt_kcal != NULL)
         {
             memset(txt_buf, 0, sizeof(txt_buf));
@@ -5549,8 +5560,8 @@ static void func_sport_sub_run_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_sport_sub_run_click_handler();
             break;
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
         case MSG_SYS_1S:
             if(uteModuleSportMoreSportIsAppStart() && f_sport_sub_run->ble_state==false)
             {

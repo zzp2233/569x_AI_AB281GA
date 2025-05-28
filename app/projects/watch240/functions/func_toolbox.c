@@ -77,7 +77,7 @@ compo_form_t *func_toolbox_list_form_create(void)
     return frm;
 }
 
-elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
 
 static const compo_listbox_item_t tbl_toolbox_list[] =
 {

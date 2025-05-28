@@ -2586,8 +2586,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             printf("MSGBOX_MSG_TYPE_DETAIL\n");
             //图标
             compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
-                                 40,
-                                 40);  //需要更替为弹窗图标
+                                 108+22/2,
+                                 12+22/2);  //需要更替为弹窗图标
 
             //title
             if (title != NULL)
@@ -2608,7 +2608,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
                                            func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH-10, 128-20);              //调整文本位置
+                                           186, 128-20);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
 //                compo_textbox_set_align_center_top(txt_msg, true);
@@ -2621,10 +2621,10 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
                 compo_textbox_set_align_center(txt_time, true);
-                compo_textbox_set_location(txt_time, GUI_SCREEN_CENTER_X, 40,GUI_SCREEN_WIDTH-20,widget_text_get_height());              //调整文本位置
+                compo_textbox_set_location(txt_time, GUI_SCREEN_CENTER_X, 70,GUI_SCREEN_WIDTH-20,widget_text_get_height());              //调整文本位置
                 compo_textbox_set_forecolor(txt_time, make_color(128,128,128));
                 compo_textbox_set(txt_time, time);
-                compo_textbox_set_right_align(txt_time, true);
+//                compo_textbox_set_right_align(txt_time, true);
             }
         }
         break;

@@ -83,6 +83,75 @@ compo_form_t *func_pressure_explain_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+compo_form_t *func_pressure_explain_form_create(void)
+{
+
+    u16 str_id[] =
+    {
+        STR_POSITIVE, // 积极
+        STR_CALM, // 平和
+        STR_NEGATIVE, // 消极
+    };
+    u32 res_addr[] =
+    {
+        UI_BUF_I342001_MOOD_ICON_POSTIVE_BIN, // 积极
+        UI_BUF_I342001_MOOD_ICON_CALM_BIN, // 平和
+        UI_BUF_I342001_MOOD_ICON_NEGATIVE_BIN, // 消极
+    };
+
+    compo_form_t *frm = compo_form_create(true);
+    u16 page_size=0;
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_STRESS]));
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, 20, 230, 30);
+    compo_textbox_set(textbox,i18n[STR_STRESS]);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PRESSURE_EXPLAIN1]));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,10, 43, 220, 280);
+    compo_textbox_set_multiline(textbox, true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN1]);
+    compo_textbox_set_location(textbox,10, 43, 220, widget_text_get_area(textbox->txt).hei);
+    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN1]);
+    page_size=widget_text_get_area(textbox->txt).hei+60;
+
+    u32 res_addre = 0;
+    if(uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID)
+    {
+        res_addre = 0;
+    }
+    else
+    {
+        res_addre = 0;
+    }
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm,res_addre );
+    compo_picturebox_set_pos(picbox,gui_image_get_size(res_addre).wid/2+10, widget_text_get_area(textbox->txt).hei+(gui_image_get_size(res_addre).hei)+5);
+    page_size+=(gui_image_get_size(res_addre).hei+30);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PRESSURE_EXPLAIN2]));
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_location(textbox,10, page_size, 220, 280);
+    compo_textbox_set_multiline(textbox, true);
+    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN2]);
+    compo_textbox_set_location(textbox,10, page_size, 220, widget_text_get_area(textbox->txt).hei);
+    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN2]);
+    page_size+=widget_text_get_area(textbox->txt).hei+20;
+
+    if(func_cb.sta == FUNC_PRESSURE_EXPLAIN)
+    {
+        f_pressure_explain_t *f_pressure_explain = (f_pressure_explain_t *)func_cb.f_cb;
+        f_pressure_explain->page_size = page_size;
+    }
+
+    return frm;
+}
+
+
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
 compo_form_t *func_pressure_explain_form_create(void)
 {
@@ -292,7 +361,8 @@ static void func_pressure_explain_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_pressure_explain_t));
     func_cb.frm_main = func_pressure_explain_form_create();
     f_pressure_explain_t *f_pressure_explain = (f_pressure_explain_t *)func_cb.f_cb;
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT \
+    || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     f_pressure_explain->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
     page_move_info_t info =
     {

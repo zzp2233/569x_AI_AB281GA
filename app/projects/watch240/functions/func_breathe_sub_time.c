@@ -2104,7 +2104,8 @@ compo_form_t *func_breathe_sub_time_form_create(void)
 //设置功能事件处理
 static void func_breathe_sub_time_process(void)
 {
-#if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT)
+#if (GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT \
+     || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT)
     func_breathe_set_time_sub_move();
 #endif
     func_process();

@@ -125,7 +125,10 @@ static const compo_listbox_item_t tbl_system_list[] =
     {STR_SETTING_OFF,                UI_BUF_I338001_28_SET_MENU_POWER_OFF_BIN,       .func_sta = FUNC_OFF},        //关机
     {STR_SETTING_RSTFY,              UI_BUF_I338001_28_SET_MENU_RECOVER_BIN,         .func_sta = FUNC_RSTFY},    //恢复出厂
 };
-
+static u8 set_back_pic(uint n)
+{
+    return true;
+}
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_system_sub_system_form_create(void)
 {
@@ -137,10 +140,13 @@ compo_form_t *func_system_sub_system_form_create(void)
     compo_form_set_title(frm, i18n[STR_SYSTEM_SET]);
 
     //新建菜单列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_system_list, SYSTEM_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_11_CALL_NEXT_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_28_SET_LIST_BG_BIN);
     compo_setid(listbox, COMPO_ID_SYSTEM);
+
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I338001_28_SET_MORE_BIN, 0);
+    compo_listbox_set_bithook(listbox, set_back_pic);
 
     compo_listbox_set_focus_byidx(listbox, 1);
     compo_listbox_update(listbox);

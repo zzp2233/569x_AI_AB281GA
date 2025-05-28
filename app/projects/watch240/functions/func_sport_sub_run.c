@@ -5550,7 +5550,8 @@ static void func_sport_sub_run_message(size_msg_t msg)
             if(f_sport_sub_run->touch_state == TOUCH_FINISH_STATE)
             {
                 f_sport_sub_run->touch_flag = true;
-#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT \
+      || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
             f_sport_sub_run->touch_flag = true;
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;

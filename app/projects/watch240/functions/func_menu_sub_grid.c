@@ -687,7 +687,18 @@ compo_form_t* func_menu_sub_grid_form_create(void)
 {
     compo_form_t *frm = compo_form_create(false);
 
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        tbl_menu_grid[MENU_GRID_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
+        tbl_menu_grid[MENU_GRID_CNT-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+    }
+    else
+    {
+        tbl_menu_grid[MENU_GRID_CNT-1].func_sta = 0;
+        tbl_menu_grid[MENU_GRID_CNT-1].res_addr = 0;
+    }
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     if(uteModuleMenstrualCycleIsOpen())
     {
         tbl_menu_grid[MENU_GRID_CNT-1].func_sta = FUNC_WOMEN_HEALTH;

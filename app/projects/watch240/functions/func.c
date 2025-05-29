@@ -904,12 +904,13 @@ void func_process(void)
                     }
                     reset_sleep_delay_all();
                 }
-                if (func_cb.sta != FUNC_CHARGE && func_cb.sta != FUNC_AGEING)
+                if (func_cb.sta != FUNC_CHARGE)
                 {
                     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
                     msg_enqueue(EVT_MSGBOX_EXIT);
                 }
-                func_cb.sta = FUNC_CHARGE;
+                if(func_cb.sta != FUNC_AGEING)
+                    func_cb.sta = FUNC_CHARGE;
             }
         }
     }

@@ -1,6 +1,6 @@
 #include "include.h"
 #include "ute_module_smoke.h"
-#if ECIG_POWER_CONTROL
+//#if ECIG_POWER_CONTROL
 
 ecig_cfg_t ecig_cfg;
 
@@ -176,7 +176,7 @@ uint8_t ecig_get_res(void)
         data =12;
     if(data>=7 && data<=9)
         data =8;
-    if(get_gear_func()==0||get_gear_func1()==0)
+    if(ecig_cfg.smoke_position_swich == 0|| uteModuleSmokeData.smoke_position_swich==0)
     {
         return data;
     }
@@ -185,7 +185,7 @@ uint8_t ecig_get_res(void)
         return data/2;
     }
 
-
+//printf("%s, data=%u\n", __func__, data);  //
 }
 u8 ecig_get_res2(void)
 {
@@ -324,7 +324,7 @@ void test_2st_gear_func(void)
 //单发
 u8 get_gear_func(void)
 {
-    // printf("%s \n",__func__);
+    //  printf("%s ,%d\n",__func__,ecig_cfg.smoke_position_swich);
     return ecig_cfg.smoke_position_swich;
 
 }
@@ -335,24 +335,24 @@ u8 get_gear_func1(void)
 
 }
 
-#else
-void ecig_set_power(u8 value)
-{
+// #else
+// void ecig_set_power(u8 value)
+// {
 
-}
+// }
 
-u8 ecig_get_power(void)
-{
-    return 0;
-}
+// u8 ecig_get_power(void)
+// {
+//     return 0;
+// }
 
-void ecig_set_res(u8 value)
-{
+// void ecig_set_res(u8 value)
+// {
 
-}
+// }
 
-u8 ecig_get_res(void)
-{
-    return 0;
-}
-#endif
+// u8 ecig_get_res(void)
+// {
+//     return 0;
+// }
+// #endif

@@ -659,10 +659,10 @@ static void func_charge_exit(void)
         {
             func_cb.sta = FUNC_POWER_ON_LANGUAGE;
         }
-        else
-        {
-            func_cb.sta = FUNC_POWER_ON_SCAN;
-        }
+        // else
+        // {
+        //     func_cb.sta = FUNC_POWER_ON_SCAN;
+        // }
     }
     sys_cb.power_on_flag = true;
 }

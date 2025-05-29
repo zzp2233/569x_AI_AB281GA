@@ -188,8 +188,8 @@ void func_power_on_language_list_icon_click(void)
         return;
     }
 
-    func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
-
+    // func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+    func_switch_to_clock();
     compo_listbox_update(listbox);
     uteModuleSystemtimeSetLanguage(tbl_power_on_language_list[icon_idx].vidx);
 }

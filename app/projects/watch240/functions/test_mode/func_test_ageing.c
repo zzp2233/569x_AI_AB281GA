@@ -25,11 +25,15 @@ enum
     TXT_5_ID,    // 抽吸口数
     TXT_6_ID,    /// 发热丝1
     TXT_7_ID,    /// 发热丝2
-    TXT_8_ID,    ///运行时间
-    SHAPE_1_ID,  //发热丝1背景
-    SHAPE_2_ID,  //发热丝2背景
-    TXT_9_ID,    ///单发双发文字
-    BUTTON_1,    //切换单双发按钮
+    TXT_8_ID,    /// 运行时间
+    SHAPE_1_ID,  // 发热丝1背景
+    SHAPE_2_ID,  // 发热丝2背景
+    SHAPE_3_ID,  // 单发双发背景
+    TXT_9_ID,    /// 单发双发文字
+    BUTTON_1,    // 切换单双发按钮
+    TXT_10_ID,   /// 阻值
+    TXT_11_ID,   /// 阻值
+    TXT_12_ID,   /// 输入模式
     PASS_SHAPE_BG_ID,
     PASS_TXT_ID,
     PASS_BTN_ID,
@@ -55,24 +59,24 @@ compo_form_t *func_ageing_create(void)
     compo_textbox_set(textbox, "老化测试");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y / 3);
 
-    textbox = compo_textbox_create(frm, 3);
-    compo_textbox_set(textbox, "模式一");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y / 6);
-    compo_textbox_set_forecolor(textbox, make_color(0x00, 0xbb, 0xff));
-    compo_setid(textbox, MODE_TXT_ID);
+    // textbox = compo_textbox_create(frm, 3);
+    // compo_textbox_set(textbox, "模式一");
+    // compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y / 6);
+    // compo_textbox_set_forecolor(textbox, make_color(0x00, 0xbb, 0xff));
+    // compo_setid(textbox, MODE_TXT_ID);
 
-    compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y / 6, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei * 2);
-    compo_setid(btn, MODE_BTN_ID);
+    // compo_button_t *btn = compo_button_create(frm);
+    // compo_button_set_location(btn, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y / 6, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei * 2);
+    // compo_setid(btn, MODE_BTN_ID);
 
-    textbox = compo_textbox_create(frm, 3);
-    compo_textbox_set(textbox, "4小时");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_Y + GUI_SCREEN_CENTER_Y / 3, GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y / 6);
+    textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set(textbox, "1小时");
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y / 6);
     compo_textbox_set_forecolor(textbox, make_color(0x00, 0xbb, 0xff));
     compo_setid(textbox, TMIE_TXT_ID);
 
-    btn = compo_button_create(frm);
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_Y + GUI_SCREEN_CENTER_Y / 3, GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y / 6, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei * 2);
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - GUI_SCREEN_CENTER_Y / 6, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei * 2);
     compo_setid(btn, TIME_BTN_ID);
 
     textbox = compo_textbox_create(frm, 1);
@@ -99,12 +103,12 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
     compo_form_t *frm = compo_form_create(true);
 
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X - 60, TXT_SPACING * 2 + 15, 50, 20);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X - 57, TXT_SPACING * 2 + 16, 50, 25);
     compo_shape_set_color(shape, COLOR_GREEN);
     compo_setid(shape, SHAPE_1_ID);
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X + 60, TXT_SPACING * 2 + 15, 50, 20);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X + 67, TXT_SPACING * 2 + 16, 50, 25);
     compo_shape_set_color(shape, COLOR_GREEN);
     compo_setid(shape, SHAPE_2_ID);
 
@@ -113,20 +117,20 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING * 2 - 15);
     compo_setid(textbox, TXT_1_ID);
 
-    textbox = compo_textbox_create(frm, 3);
-    compo_textbox_set_align_center(textbox, false);
-    if (mode == 0)
-        compo_textbox_set(textbox, "模式一");
-    else if (mode == 1)
-        compo_textbox_set(textbox, "模式二");
-    else if (mode == 2)
-        compo_textbox_set(textbox, "模式三");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 4 - widget_text_get_area(textbox->txt).hei / 2);
+    // textbox = compo_textbox_create(frm, 3);
+    // compo_textbox_set_align_center(textbox, false);
+    // if (mode == 0)
+    //     compo_textbox_set(textbox, "模式一");
+    // else if (mode == 1)
+    //     compo_textbox_set(textbox, "模式二");
+    // else if (mode == 2)
+    //     compo_textbox_set(textbox, "模式三");
+    // compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 4 - widget_text_get_area(textbox->txt).hei / 2);
 
     textbox = compo_textbox_create(frm, 20);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox, "电池:未充电  --%");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 5.5 - widget_text_get_area(textbox->txt).hei / 2);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5,5 + TXT_SPACING * 9.8 - widget_text_get_area(textbox->txt).hei / 2 );
     compo_setid(textbox, TXT_2_ID);
 
     textbox = compo_textbox_create(frm, 10);
@@ -149,30 +153,41 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
     textbox = compo_textbox_create(frm, 6);
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox, "X:--");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X,  TXT_SPACING * 8.8 - widget_text_get_area(textbox->txt).hei / 2);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING * 8.8 - widget_text_get_area(textbox->txt).hei / 2);
     compo_setid(textbox, TXT_5_ID);
 
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X +22, TXT_SPACING * 5.5 +6 - widget_text_get_area(textbox->txt).hei / 2, 50, 30);
+    compo_shape_set_color(shape, make_color(4, 161, 251));
+    compo_setid(shape, SHAPE_3_ID);
+
     compo_button_t *btn1 = compo_button_create(frm);
-    compo_button_set_location(btn1, GUI_SCREEN_CENTER_X,  TXT_SPACING * 9.8 - widget_text_get_area(textbox->txt).hei / 2,150, 100);
+    compo_button_set_location(btn1, GUI_SCREEN_CENTER_X, TXT_SPACING * 5.5 -4- widget_text_get_area(textbox->txt).hei / 2, widget_text_get_area(textbox->txt).wid * 3, widget_text_get_area(textbox->txt).hei * 3);
     compo_setid(btn1, BUTTON_1);
 
     textbox = compo_textbox_create(frm, 6);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox,  get_gear_func() == 0 ?"单发":"双发");
-    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X,  TXT_SPACING * 9.8 - widget_text_get_area(textbox->txt).hei / 2);
+    compo_textbox_set(textbox, get_gear_func() == 0 ? "单发" : "双发");
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING * 5.5 - 4 - widget_text_get_area(textbox->txt).hei / 2);
     compo_setid(textbox, TXT_9_ID);
-    // compo_shape_t *rect;
-    // rect = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    // compo_shape_set_location(rect, GUI_SCREEN_CENTER_X - 60, TXT_SPACING * 2 + 5, 30, 10);
-    // compo_shape_set_color(rect, COLOR_DGRAY);
 
-    // compo_setid(rect, TXT_8_ID);
+    textbox = compo_textbox_create(frm, 6);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox, "输出模式：");
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 5.5 - 4 - widget_text_get_area(textbox->txt).hei / 2);
+    compo_setid(textbox, TXT_12_ID);
 
-    // rect = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    textbox = compo_textbox_create(frm, 6);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox, "烟弹阻值：");
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 4 - widget_text_get_area(textbox->txt).hei / 2);
+    compo_setid(textbox, TXT_10_ID);
 
-    // compo_shape_set_location(rect, GUI_SCREEN_CENTER_X + 60, TXT_SPACING * 2 + 5, 30, 10);
-    // compo_shape_set_color(rect, make_color(51, 121, 246));
-    // compo_setid(rect, TXT_9_ID);
+    textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox, "--Ω");
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING * 4 - widget_text_get_area(textbox->txt).hei / 2);
+    compo_setid(textbox, TXT_11_ID);
 
     textbox = compo_textbox_create(frm, 1);
     compo_textbox_set_align_center(textbox, false);
@@ -239,18 +254,59 @@ static void func_test_mode_click(void)
                 compo_textbox_set(textbox_mode, "模式三");
             break;
         case TIME_BTN_ID:
-            f_ageing->time_flag ^= 1;
+
+            f_ageing->time_flag++;
+            // 检查是否达到最大值(9)，如果是则重置为0，实现循环
+            if (f_ageing->time_flag == 9)
+            {
+                f_ageing->time_flag = 0;
+            }
 
             uteModuleNewFactoryTestSetMode(&data);
-            if (f_ageing->time_flag == 0)
+            switch (f_ageing->time_flag)
             {
-                compo_textbox_set(textbox_time, "4小时");
-                data->maxCount = (60 * 60) * 4;
-            }
-            else
-            {
-                compo_textbox_set(textbox_time, "永久");
-                data->maxCount = 0xFFFFFFF;
+                case 0:
+                    compo_textbox_set(textbox_time, "1小时");
+                    data->maxCount = (60 * 60) * 1;
+                    break;
+                case 1:
+                    compo_textbox_set(textbox_time, "2小时");
+                    data->maxCount = (60 * 60) * 2;
+                    break;
+                case 2:
+                    compo_textbox_set(textbox_time, "4小时");
+                    data->maxCount = (60 * 60) * 4;
+                    break;
+                case 3:
+                    compo_textbox_set(textbox_time, "6小时");
+                    data->maxCount = (60 * 60) * 6;
+                    break;
+                case 4:
+                    compo_textbox_set(textbox_time, "9小时");
+                    data->maxCount = (60 * 60) * 9;
+                    break;
+                case 5:
+                    compo_textbox_set(textbox_time, "12小时");
+                    data->maxCount = (60 * 60) * 12;
+                    break;
+                case 6:
+                    compo_textbox_set(textbox_time, "18小时");
+                    data->maxCount = (60 * 60) * 18;
+                    break;
+                case 7:
+                    compo_textbox_set(textbox_time, "24小时");
+                    data->maxCount = (60 * 60) * 24;
+                    break;
+                case 8:
+                    compo_textbox_set(textbox_time, "永久");
+                    data->maxCount = 0xFFFFFFF;
+                    break;
+                default:
+                    // 错误处理
+                    compo_textbox_set(textbox_time, "1小时");
+                    data->maxCount = (60 * 60) * 1;
+                    f_ageing->time_flag = 0;
+                    break;
             }
             break;
         case NO_BTN_ID:
@@ -264,8 +320,11 @@ static void func_test_mode_click(void)
 
             break;
         case BUTTON_1:
-            printf("BUTTON_1BUTTON_1BUTTON_1ecig_cfg.smoke_position_swich=%d\n",ecig_cfg.smoke_position_swich);
+
+
             ecig_cfg.smoke_position_swich = !ecig_cfg.smoke_position_swich;
+            ecig_get_res();
+            // printf("BUTTON_1BUTTON_1BUTTON_1ecig_cfg.smoke_position_swich=%d\n", ecig_cfg.smoke_position_swich);
             break;
         case YES_BTN_ID:
         {
@@ -319,17 +378,18 @@ static void func_ageing_process(void)
             char txt_buf[50];
 
             f_ageing->tick = tick_get();
-            compo_shape_t *shape = compo_getobj_byid(SHAPE_BG_ID);   /// 背景
-            compo_textbox_t *textbox1 = compo_getobj_byid(TXT_1_ID); /// 发热丝状态文字
-            compo_textbox_t *textbox2 = compo_getobj_byid(TXT_2_ID); /// 电池状态
-            compo_textbox_t *textbox3 = compo_getobj_byid(TXT_3_ID); /// 震动次数文字
-            compo_textbox_t *textbox4 = compo_getobj_byid(TXT_4_ID); /// 震动次数
-            compo_textbox_t *textbox5 = compo_getobj_byid(TXT_5_ID); // 抽吸口数
-            compo_textbox_t *textbox9 = compo_getobj_byid(TXT_9_ID);///单发双发显示
-            // compo_textbox_t *textbox7 = compo_getobj_byid(TXT_7_ID);///
+            compo_shape_t *shape = compo_getobj_byid(SHAPE_BG_ID);           /// 背景
+            compo_textbox_t *textbox1 = compo_getobj_byid(TXT_1_ID);         /// 发热丝状态文字
+            compo_textbox_t *textbox2 = compo_getobj_byid(TXT_2_ID);         /// 电池状态
+            compo_textbox_t *textbox3 = compo_getobj_byid(TXT_3_ID);         /// 震动次数文字
+            compo_textbox_t *textbox4 = compo_getobj_byid(TXT_4_ID);         /// 震动次数
+            compo_textbox_t *textbox5 = compo_getobj_byid(TXT_5_ID);         // 抽吸口数
+            compo_textbox_t *textbox9 = compo_getobj_byid(TXT_9_ID);         /// 单发双发显示
+            compo_textbox_t *textbox10 = compo_getobj_byid(TXT_10_ID);       ///
+            compo_textbox_t *textbox11 = compo_getobj_byid(TXT_11_ID);       ///
             compo_textbox_t *textbox8 = compo_getobj_byid(TXT_8_ID);         /// 运行时间
-            compo_shape_t *shape1 = compo_getobj_byid(SHAPE_1_ID);   /// 发热丝1背景
-            compo_shape_t *shape2 = compo_getobj_byid(SHAPE_2_ID);   /// 发热丝2背景
+            compo_shape_t *shape1 = compo_getobj_byid(SHAPE_1_ID);           /// 发热丝1背景
+            compo_shape_t *shape2 = compo_getobj_byid(SHAPE_2_ID);           /// 发热丝2背景
             compo_shape_t *shape_pass = compo_getobj_byid(PASS_SHAPE_BG_ID); ///
             compo_textbox_t *pass_txt = compo_getobj_byid(PASS_TXT_ID);      ///
 
@@ -341,20 +401,21 @@ static void func_ageing_process(void)
             totalHour = (tdata->secondCount) / 3600;
             totalMin = (tdata->secondCount - (totalHour * 3600)) / 60;
             totalSec = (tdata->secondCount - (totalHour * 3600) - (totalMin * 60));
-            printf("get_gear_func() ==%d,ecig.cfg->smoke_res_swich=%decig.cfg->smoke_start_or_not=%ddet1_start_or_not()=%d\r\n",get_gear_func(),ecig.cfg->smoke_res_swich,ecig.cfg->smoke_start_or_not,det1_start_or_not());
-            if(ecig.cfg->smoke_start_or_not ==1 && det1_start_or_not()==1)
+
+            if (ecig.cfg->smoke_start_or_not == 1)
             {
-                if (get_gear_func() == 0 && ecig.cfg->smoke_res_swich)
+
+                if (get_gear_func() == 0 && ecig.cfg->smoke_res_swich==1)
                 {
                     compo_shape_set_color(shape1, COLOR_RED);
                     compo_shape_set_color(shape2, COLOR_GREEN);
                 }
-                else if(get_gear_func() == 0 && !ecig.cfg->smoke_res_swich)
+                else if (get_gear_func() == 0 && ecig.cfg->smoke_res_swich==0)
                 {
                     compo_shape_set_color(shape1, COLOR_GREEN);
                     compo_shape_set_color(shape2, COLOR_RED);
                 }
-                else if(get_gear_func() == 1)
+                else if (get_gear_func() == 1)
                 {
                     compo_shape_set_color(shape1, COLOR_RED);
                     compo_shape_set_color(shape2, COLOR_RED);
@@ -366,26 +427,14 @@ static void func_ageing_process(void)
                 compo_shape_set_color(shape2, COLOR_GREEN);
             }
 
-
-            if(get_gear_func() == 0)
+            if (get_gear_func() == 0)
             {
-                compo_textbox_set(textbox9,"单发");
+                compo_textbox_set(textbox9, "单发");
             }
             else
             {
-                compo_textbox_set(textbox9,"双发");
+                compo_textbox_set(textbox9, "双发");
             }
-            // if (tdata->secondCount % 3 == 0)
-            //     compo_shape_set_color(shape, COLOR_GREEN);
-            // else if (tdata->secondCount % 3 == 1)
-            //     compo_shape_set_color(shape, COLOR_BLUE);
-            // else if (tdata->secondCount % 3 == 2)
-            // {
-            //     compo_shape_set_color(shape, COLOR_RED);
-            //     // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
-            // }
-
-
 
             memset(txt_buf, 0, sizeof(txt_buf));
             if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE) /// 获取充电状态
@@ -406,36 +455,24 @@ static void func_ageing_process(void)
             snprintf(txt_buf, sizeof(txt_buf), "%d次", uteModuleNewFactoryAgingTestMotoCount());
             compo_textbox_set(textbox4, txt_buf);
 
+            compo_textbox_set(textbox10, "烟弹阻值:");
+            uint8_t fixed_res = ecig_get_res();
+
+            uint8_t integer_part = fixed_res / 10; // 整数部分
+
+            uint8_t decimal_part = fixed_res % 10; // 小数部分
+            snprintf(txt_buf, sizeof(txt_buf), "%d.%dΩ", integer_part, decimal_part);
+            // printf("fixed_res=%d,%d.%d,ecig_cfg.smoke_position_swich=%d\r\n",fixed_res,integer_part,decimal_part,ecig_cfg.smoke_position_swich);
+            compo_textbox_set(textbox11, txt_buf);
+
             memset(txt_buf, 0, sizeof(txt_buf));
             snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleNewFactoryAgingTestSmokeCount());
             compo_textbox_set(textbox5, txt_buf);
-            // compo_textbox_set(textbox6,"Y:--");
-            // compo_textbox_set(textbox7,"Z:--");
 
             memset(txt_buf, 0, sizeof(txt_buf));
             snprintf(txt_buf, sizeof(txt_buf), "运行时间:%d:%02d:%02d", totalHour, totalMin, totalSec);
             compo_textbox_set(textbox8, txt_buf);
 
-            // if(++f_ageing->sec == 60)
-            // {
-            //     f_ageing->sec = 0;
-            //     if(++f_ageing->min == 60)
-            //     {
-            //         f_ageing->min = 0;
-            //         f_ageing->hour++;
-            //     }
-            // }
-
-            // if(f_ageing->time_flag == 0)///4小时模式
-            // {
-            //     if(f_ageing->sec == 10)
-            //     {
-            //         uteDrvMotorDisable(); //关闭马达
-            //         f_ageing->test_state = false;
-            //         compo_textbox_set_visible(pass_txt, true );
-            //         compo_shape_set_visible(shape_pass, true );
-            //     }
-            // }
         }
     }
 
@@ -445,7 +482,7 @@ static void func_ageing_process(void)
 static void func_ageing_enter(void)
 {
     uteModuleNewFactoryTestSetMode(&data);
-    data->maxCount = (60 * 60) * 4;
+    data->maxCount = (60 * 60) * 1;
     func_cb.f_cb = func_zalloc(sizeof(f_ageing_t));
     func_cb.frm_main = func_ageing_create();
     get_gear_func();

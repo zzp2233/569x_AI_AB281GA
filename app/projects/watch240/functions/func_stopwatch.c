@@ -1059,7 +1059,7 @@ compo_form_t *func_stopwatch_form_create(void)
     // compo_shape_set_color(shape,COLOR_BLUE);
 
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD);
-    compo_listbox_set_location(listbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+5,GUI_SCREEN_WIDTH,80);
+    compo_listbox_set_location(listbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+10,GUI_SCREEN_WIDTH,75);
     compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt+4);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_bgimg(listbox, UI_BUF_I338001_STOPWATCH_LIST_BG_BIN);

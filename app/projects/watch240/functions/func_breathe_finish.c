@@ -229,7 +229,7 @@ compo_form_t *func_breathe_finish_form_create(void)
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_RATE]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox, 110, 85+18, 200, 40);
+    compo_textbox_set_location(textbox, 110, 85, 200, 40);
     compo_textbox_set(textbox,i18n[STR_HEART_RATE]);
     compo_textbox_set_forecolor(textbox,make_color(150,150,150));
 
@@ -246,13 +246,13 @@ compo_form_t *func_breathe_finish_form_create(void)
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_pos(textbox,110,124+33);
+    compo_textbox_set_pos(textbox,110,124+23);
     compo_textbox_set(textbox,txt_buf);
 
     area_t txt_wid = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox, txt_wid.wid+118, 143+18, 200, 40);
+    compo_textbox_set_location(textbox, txt_wid.wid+118, 143, 200, 40);
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
 
     //设置图片
@@ -261,7 +261,7 @@ compo_form_t *func_breathe_finish_form_create(void)
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_BREATHE_TIME]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox, 110, 229+18, 200, 40);
+    compo_textbox_set_location(textbox, 110, 229, 200, 40);
     compo_textbox_set(textbox,i18n[STR_BREATHE_TIME]);
     compo_textbox_set_forecolor(textbox,make_color(150,150,150));
 
@@ -273,7 +273,7 @@ compo_form_t *func_breathe_finish_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"%s",time_buf);
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox, 110, 265+33, 200, 40);
+    compo_textbox_set_location(textbox, 110, 265+23, 200, 40);
     compo_textbox_set(textbox,txt_buf);
 
     compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I341001_28_SET_CONFIRM_BIN);///确定按钮

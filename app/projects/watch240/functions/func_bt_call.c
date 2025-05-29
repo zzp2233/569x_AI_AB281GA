@@ -3095,7 +3095,11 @@ static void func_bt_call_message(size_msg_t msg)
             break;
 
         case MSG_SYS_500MS:
+#if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
+#else
             reset_sleep_delay_all();                           //来电不休眠
+#endif
             break;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
         case MSG_CTP_LONG_RIGHT:                               //退出音量设置页面

@@ -301,7 +301,8 @@ compo_form_t *func_weather_form_create(void)
     compo_picturebox_set_pos(picbox, 13+51,13+188);
     //紫外线data
     txt = compo_textbox_create(frm,strlen(i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]));
-    compo_textbox_set_pos(txt,64,229);
+    // compo_textbox_set_pos(txt,64,229);
+    compo_textbox_set_location(txt,64,229,65,40);//部分语言显示超出屏幕，改为限制文本框大小
     compo_textbox_set(txt,i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]);
     //紫外线txt
     txt = compo_textbox_create(frm,strlen(i18n[STR_UV]));
@@ -643,10 +644,10 @@ compo_form_t *func_weather_form_create(void)
     }
     txt = compo_textbox_create(frm,strlen(str_buff));
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
-    compo_textbox_set_pos(txt,64/2+186,64/2+118);
+    compo_textbox_set_pos(txt,90/2+186,20+118);
     compo_textbox_set(txt, str_buff);
     picbox = compo_picturebox_create(frm,UI_BUF_I341001_12_WEATHER_WEATHERSYM_BIN);
-    compo_picturebox_set_pos(picbox,315+12,120+12);
+    compo_picturebox_set_pos(picbox,212+widget_text_get_area(txt->txt).wid,120+12);
     memset(str_buff,0,sizeof(str_buff));
     if(!weather_no_data_flag)
     {
@@ -664,11 +665,12 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff,sizeof(str_buff),"--/--℃");
     }
     txt = compo_textbox_create(frm,strlen(str_buff));
-    compo_textbox_set_pos(txt,124/2+182,40/2+231);
+    compo_textbox_set_pos(txt,124/2+182,40/2+206);
     compo_textbox_set(txt, str_buff);
 
     txt = compo_textbox_create(frm,strlen(i18n[weather_list[get_weather_id[0]].txt_num]));
-    compo_textbox_set_pos(txt,84/2+28,40/2+69);
+    compo_textbox_set_pos(txt,30,69);
+    compo_textbox_set_align_center(txt, false);
     compo_textbox_set_forecolor(txt, make_color(0x98,0xd0,0xff));
     compo_textbox_set(txt, i18n[weather_list[get_weather_id[0]].txt_num]);
     //紫外线icon
@@ -703,7 +705,7 @@ compo_form_t *func_weather_form_create(void)
 
     //未来天气txt
     txt = compo_textbox_create(frm,strlen(i18n[STR_FUTURE_WEATHER]));
-    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/21.8,140,GUI_SCREEN_HEIGHT/(284/28));
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH/12,GUI_SCREEN_HEIGHT+GUI_SCREEN_HEIGHT/21.8,260,GUI_SCREEN_HEIGHT/(284/28));
     compo_textbox_set(txt,i18n[STR_FUTURE_WEATHER]);
     compo_textbox_set_align_center(txt, false);
     //第二页
@@ -715,7 +717,7 @@ compo_form_t *func_weather_form_create(void)
 
         //星期 txt
         txt = compo_textbox_create(frm,20);
-        compo_textbox_set_location(txt, 29+34+(i)*(120),GUI_SCREEN_HEIGHT+116+24,68,widget_text_get_max_height());
+        compo_textbox_set_location(txt, 29+34+(i)*(120),GUI_SCREEN_HEIGHT+116+30,68,widget_text_get_max_height());
         compo_textbox_set_align_center(txt,true);
         compo_textbox_set(txt,i18n[week_sort[(time.week+i)%7]]);/// 星期
         if(i==1)
@@ -3045,7 +3047,8 @@ compo_form_t *func_weather_form_create(void)
 //天气功能事件处理
 static void func_weather_process(void)
 {
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT \
+    || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     f_weather_t* f_weather = (f_weather_t*)func_cb.f_cb;
     compo_page_move_process(f_weather->ptm);
     page_y = compo_page_move_get_offset(f_weather->ptm);
@@ -3073,7 +3076,8 @@ static void func_weather_message(size_msg_t msg)
             {
                 f_weather->touch_flag = true;
             }
-#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT \
+      || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
             if(!f_weather->no_weather_dada)
             {
                 compo_page_move_touch_handler(f_weather->ptm);
@@ -3150,7 +3154,8 @@ static void func_weather_exit(void)
 {
     f_weather_t *f_weather = (f_weather_t *)func_cb.f_cb;
     func_cb.last = FUNC_WEATHER;
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT \
+    || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     if(sys_cb.refresh_language_flag == false)
     {
         page_y = 0;

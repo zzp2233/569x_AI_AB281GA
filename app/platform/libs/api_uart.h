@@ -1,7 +1,8 @@
 #ifndef __API_UART_H__
 #define __API_UART_H__
 
-enum {
+enum
+{
     HUART_TR_PA1    = 0,
     HUART_TR_PA7,
     HUART_TR_PB1,
@@ -20,5 +21,7 @@ uint huart_get_rxcnt(void);
 void huart_rxfifo_clear(void);
 char huart_getchar(void);
 void huart_exit(void);
+void huart_sleep(void);
+void huart_wakeup(void);
 
 #endif // __API_UART_H__

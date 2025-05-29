@@ -15,6 +15,8 @@
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281AB"
 
+#define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT  1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
 /*gesnsor 采集原始数据*/
@@ -170,8 +172,8 @@
 //     UI_BUF_DIALPLATE_CUBE_LIGHT_BIN
 
 #define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0     // 使用立方体表盘
-#define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 1      // 使用光束立方体表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1     // 使用立方体表盘
+#define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 0      // 使用光束立方体表盘
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 4    // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 5   // 立方体表盘索引
 #define UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX 5 // 立方体光束表盘索引

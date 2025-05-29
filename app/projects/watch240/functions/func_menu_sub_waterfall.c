@@ -325,10 +325,13 @@ static menu_hc_item_t tbl_menu_waterfall[] =
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
-// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                },  //女性健康
-// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                },                //游戏
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,               },          //女性健康
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 };
 
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT

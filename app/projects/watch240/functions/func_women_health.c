@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+
 typedef struct f_women_health_t_
 {
     s16 pic_x;
@@ -377,3 +379,4 @@ void func_women_health(void)
     }
     func_women_health_exit();
 }
+#endif

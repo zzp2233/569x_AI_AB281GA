@@ -296,6 +296,8 @@
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
 #define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
 #endif
+#define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
+#define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
 #define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义

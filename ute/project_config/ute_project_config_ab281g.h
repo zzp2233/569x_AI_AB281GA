@@ -205,6 +205,8 @@
 #define GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT      1    //屏分辨率选择
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      0
 
+#define UTE_TITLE_BAR_HIGH   38
+
 //#define UTE_DRV_CTP_SELECT              CTP_CHSC6X
 //#define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN 1
 /*! TP固件升级功能开关*/
@@ -282,8 +284,9 @@
 #define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      0 //情绪说明界面
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
 #define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
-
 #endif
+#define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
+#define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

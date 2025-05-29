@@ -160,7 +160,9 @@ extern void func_message_reply_info(void);
 // extern void func_mic_test(void);
 //extern void func_tetris(void);
 //extern void func_tetris_start(void);
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
 extern void func_bird(void);
+#endif
 extern void func_ota_ui(void);
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
 extern void func_pressure(void);//压力
@@ -196,7 +198,9 @@ extern void func_sport_finish(void);
 extern void func_up_watch_dial(void);
 #endif // UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
 extern void func_breathe_finish(void);
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
 extern void func_women_health(void);
+#endif
 extern void func_menu_football_list(void);
 #if UTE_MODULE_SCREENS_SYSTEM_SUPPORT
 extern void func_system_sub_system(void);
@@ -247,7 +251,9 @@ compo_form_t *func_oxygen_about_form_create(void);
 #endif
 compo_form_t *func_heart_warning_form_create(void);
 compo_form_t *func_menu_football_list_form_create(void);
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
 compo_form_t *func_women_health_form_create(void);
+#endif
 compo_form_t *func_breathe_finish_form_create(void);
 compo_form_t *func_up_watch_dial_form_create(void);
 compo_form_t *func_power_on_language_form_create(void);
@@ -354,7 +360,9 @@ compo_form_t *func_message_reply_form_create(void);
 // compo_form_t *func_mic_test_form_create(void);
 //compo_form_t *func_tetris_form_create(void);
 //compo_form_t *func_tetris_start_form_create(void);
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
 compo_form_t *func_bird_form_create(void);
+#endif
 #if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
 compo_form_t *func_sub_sos_form_create(void);
 #endif
@@ -382,7 +390,9 @@ func_cb_t func_cb AT(.buf.func_cb);
 const func_t tbl_func_create[] =
 {
     {FUNC_MENU_STYLE_FOOTBALL_LIST,     func_menu_football_list_form_create},
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     {FUNC_WOMEN_HEALTH,                 func_women_health_form_create},
+#endif
     {FUNC_BLE_CALL,                     func_ble_call_form_create},
     {FUNC_MENU,                         func_menu_form_create},
 #if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
@@ -565,8 +575,9 @@ const func_t tbl_func_create[] =
 #if 0//MIC_TEST_EN
     {FUNC_MIC_TEST,                     func_mic_test_form_create},
 #endif // MIC_TEST_EN
-
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
     {FUNC_BIRD,                         func_bird_form_create},
+#endif
 //    {FUNC_TETRIS,                       func_tetris_form_create},
 //    {FUNC_TETRIS_START,                 func_tetris_start_form_create},
     {FUNC_OTA_MODE,                     func_ota_update_form_create},
@@ -605,7 +616,9 @@ const func_t tbl_func_create[] =
 const func_t tbl_func_entry[] =
 {
     {FUNC_MENU_STYLE_FOOTBALL_LIST,     func_menu_football_list},
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     {FUNC_WOMEN_HEALTH,                 func_women_health},
+#endif
     {FUNC_MENU,                         func_menu},                     //主菜单(蜂窝)
 #if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
     {FUNC_MENUSTYLE,                    func_menustyle},                //主菜单样式选择
@@ -800,7 +813,9 @@ const func_t tbl_func_entry[] =
 #if 0//MIC_TEST_EN
     {FUNC_MIC_TEST,                     func_mic_test},
 #endif // MIC_TEST_EN
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
     {FUNC_BIRD,                         func_bird},
+#endif
 //    {FUNC_TETRIS,                       func_tetris},
 //    {FUNC_TETRIS_START,                 func_tetris_start},
     {FUNC_OTA_MODE,                     func_ota_update},
@@ -1565,7 +1580,7 @@ void func_message(size_msg_t msg)
             else
             {
                 //     if (func_cb.last == FUNC_CLOCK && func_cb.left_sta == func_cb.sta && func_cb.left_sta != 0)
-                if(func_cb.left_sta != FUNC_NULL && func_cb.left_sta == UTE_CUI_SCREEN_WATCHDIAL_LEFT)
+                if(func_cb.left_sta != FUNC_NULL && func_cb.left_sta == UTE_CUI_SCREEN_WATCHDIAL_LEFT &&  func_cb.sta == func_cb.left_sta)
                 {
                     func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT);
                 }
@@ -1679,6 +1694,11 @@ void func_message(size_msg_t msg)
             {
                 uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
             }
+            break;
+        case KTH_BACK:
+#if UTE_THREE_KEY_EVENT_SOS
+            uteTaskGuiStartScreen(FUNC_SUB_SOS, 0, __func__);
+#endif
             break;
 
 //        case KU_LEFT:

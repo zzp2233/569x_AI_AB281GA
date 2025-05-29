@@ -199,7 +199,7 @@ compo_form_t *func_pressure_explain_form_create(void)
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, res_addre);
     compo_picturebox_set_pos(picbox,gui_image_get_size(res_addre).wid/2+10, widget_text_get_area(textbox->txt).hei+(gui_image_get_size(res_addre).hei)+5);
-    s16 current_h = widget_text_get_area(textbox->txt).hei+(gui_image_get_size(res_addre).hei) / 2;
+    s16 current_h = widget_text_get_area(textbox->txt).hei + (gui_image_get_size(res_addre).hei)/2 - 6;
     for(uint8_t i = 0; i < 4; i++)
     {
         textbox = compo_textbox_create(frm, strlen(i18n[str_id[i]]));
@@ -213,7 +213,7 @@ compo_form_t *func_pressure_explain_form_create(void)
         compo_textbox_set(textnum,str_data[i]);
     }
 
-    page_size+=(gui_image_get_size(res_addre).hei+60);
+    page_size+=(gui_image_get_size(res_addre).hei+70);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PRESSURE_EXPLAIN2]));
     compo_textbox_set_align_center(textbox,false);

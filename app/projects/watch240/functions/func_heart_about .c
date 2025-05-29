@@ -54,7 +54,7 @@ compo_form_t *func_heart_about_form_create(void)
 
    textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_ABOUT]));
    compo_textbox_set_align_center(textbox,false);
-   compo_textbox_set_location(textbox,20, 67, 328, 280);
+   compo_textbox_set_location(textbox,20, 67, 328, 300);
    compo_textbox_set_multiline(textbox, true);
    widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
    compo_textbox_set(textbox,i18n[STR_HEART_ABOUT]);
@@ -122,9 +122,9 @@ static void func_heart_about_message(size_msg_t msg)
             compo_page_move_touch_handler(f_heart_about->ptm);
          }
          break;
-      case MSG_CTP_SHORT_RIGHT:
-         func_switch_to(FUNC_HEARTRATE,FUNC_SWITCH_LR_ZOOM_RIGHT);
-         break;
+      // case MSG_CTP_SHORT_RIGHT:
+      //    func_switch_to(FUNC_HEARTRATE,FUNC_SWITCH_LR_ZOOM_RIGHT);
+      //    break;
       case MSG_CTP_SHORT_LEFT:
          break;
 

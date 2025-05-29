@@ -387,7 +387,7 @@ void uteModuleGuiCommonInit(void)
 void uteModuleGuiCommonDisplayExternalClearDepth(void)
 {
     task_stack_init();
-    latest_task_init(); //最近任务
+    // latest_task_init(); //最近任务
     task_stack_push(FUNC_CLOCK);
     func_cb.sta = FUNC_CLOCK;
 }
@@ -420,7 +420,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     if (isAllClear)
     {
         task_stack_init();
-        latest_task_init(); // 最近任务
+        // latest_task_init(); // 最近任务
         if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
         {
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return FUNC_CHARGE", __func__);
@@ -492,6 +492,9 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         {
             uteModulePlatformRestartTimer(&clearDepthAfterOffTimerPointer,UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND*1000);
         }
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+        uteDrvScreenEsdTeIntErrorCheckTimerStop();
+#endif
         // uteDrvScreenCommonDisplayOff();
         // uteDrvTpCommonSleep();
         uteModuleGuiCommonData.isDisplayOn = false;
@@ -509,6 +512,9 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
     {
         uteModulePlatformStopTimer(&clearDepthAfterOffTimerPointer);
         uteModuleGuiCommonData.isDisplayOn = true;
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+        uteDrvScreenEsdTeIntErrorCheckTimerStart(1000);
+#endif
     }
 }
 
@@ -816,6 +822,12 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
     if ((bt_cb.disp_status >= BT_STA_INCOMING && bt_cb.disp_status <= BT_STA_OTA) || func_cb.sta == FUNC_OTA_UI_MODE || is_fot_start() || screenId == FUNC_NULL)
     {
         return;
+    }
+
+    if(func_cb.flag_sort) //在快捷任务界面跳转到其他界面
+    {
+        func_cb.flag_sort_jump = true;
+        func_cb.flag_sort = false;
     }
 
     if (func_cb.sta != screenId)

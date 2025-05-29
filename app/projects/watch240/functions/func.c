@@ -1112,6 +1112,7 @@ void func_switch_prev(bool flag_auto)
         if (sta == FUNC_CLOCK)
         {
             func_cb.flag_sort = false;
+            func_cb.flag_sort_jump = false;
         }
         func_cb.sta = sta;
     }
@@ -1160,10 +1161,12 @@ void func_switch_next(bool flag_auto, bool flag_loop)
         if (sta == FUNC_CLOCK)
         {
             func_cb.flag_sort = false;
+            func_cb.flag_sort_jump = false;
         }
         else
         {
             func_cb.flag_sort = true;
+            func_cb.flag_sort_jump = false;
         }
         func_cb.sta = sta;
     }
@@ -1196,6 +1199,7 @@ void func_switch_to_clock(void)
 {
     func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
     func_cb.flag_sort = false;
+    func_cb.flag_sort_jump = false;
 }
 
 
@@ -1369,6 +1373,15 @@ void func_backing_to(void)
     {
         task_stack_push(func_cb.sta);
     }
+    else
+    {
+        if (func_cb.flag_sort_jump && func_get_order(func_cb.sta) > 0)
+        {
+            func_cb.flag_sort = true;
+            func_cb.flag_sort_jump = false;
+            printf("func_backing_to: %d flag_sort\n", func_cb.sta);
+        }
+    }
 }
 
 //页面按键回退功能
@@ -1402,6 +1415,13 @@ void func_back_to(void)
     else
     {
         func_switch_to(stack_top, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);    //返回上一个界面
+    }
+
+    if (func_cb.flag_sort_jump && func_get_order(stack_top) > 0)
+    {
+        func_cb.flag_sort = true;
+        func_cb.flag_sort_jump = false;
+        printf("func_back_to: %d flag_sort\n", stack_top);
     }
 }
 

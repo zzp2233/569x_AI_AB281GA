@@ -1337,7 +1337,6 @@ compo_form_t *func_alarm_clock_sub_edit_form_create(void)
     compo_cardbox_text_set_location(cardbox,0,WEEK_LOCATION_X-10,WEEK_LOCATION_Y-25,180,34);
     compo_cardbox_text_set_forecolor(cardbox, 0, MAKE_GRAY(128));
     compo_cardbox_text_set_align_center(cardbox,0, false);
-    compo_cardbox_text_set_font(cardbox,0, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_cardbox_text_set(cardbox,0,str_buff);
 
     compo_cardbox_text_set_location(cardbox,1,WEEK_LOCATION_X-10,-30,180,34);

@@ -1199,6 +1199,7 @@ static void func_clock_sub_dropdown_click_handler(void)
             break;
         case COMPO_ID_BTN_WIRST:
             switch_set_sub_wrist();
+            func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
             break;
         case COMPO_ID_BTN_MENU:
             if(++dropdown_disp_btn_item->sel_idx==MENU_CNT)

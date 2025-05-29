@@ -228,6 +228,12 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleMicRecordFactoryPlay();
             break;
 
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+        case MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET:
+            uteDrvScreenEsdTeIntErrorCheckHandlerMsg();
+            break;
+#endif
+
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

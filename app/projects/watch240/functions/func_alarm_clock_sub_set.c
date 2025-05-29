@@ -3598,8 +3598,8 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_textbox_set(txt_pm,i18n[STR_PM]);
         compo_setid(txt_pm,COMPO_ID_TXT_PM_BG);
 
-        compo_textbox_set_pos(txt_am,50+34,(hour && hour<=12) ? TXT_Y[2] : TXT_Y[3]);
-        compo_textbox_set_pos(txt_pm,50+34,(hour && hour<=12) ? TXT_Y[1] : TXT_Y[2]);
+        compo_textbox_set_pos(txt_am,50+34,(hour && hour<=12) ? TXT_Y[2]+10 : TXT_Y[3]+10);
+        compo_textbox_set_pos(txt_pm,50+34,(hour && hour<=12) ? TXT_Y[1]+10 : TXT_Y[2]+10);
         compo_textbox_set_forecolor(txt_am,(hour && hour<=12) ? COLOR_WHITE : COLOR_GRAY);
         compo_textbox_set_forecolor(txt_pm,!(hour && hour<=12) ? COLOR_WHITE : COLOR_GRAY);
 
@@ -3897,8 +3897,8 @@ static void func_set_alarm_sub_move(void)
                 compo_textbox_t *txt_am = compo_getobj_byid(COMPO_ID_TXT_AM_BG);
                 compo_textbox_t *txt_pm = compo_getobj_byid(COMPO_ID_TXT_PM_BG);
 
-                compo_textbox_set_pos(txt_am,50+34,f_disturd_set->am_pm_flag ? TXT_Y[2] : TXT_Y[3]);
-                compo_textbox_set_pos(txt_pm,50+34,f_disturd_set->am_pm_flag ? TXT_Y[1] : TXT_Y[2]);
+                compo_textbox_set_pos(txt_am,50+34,f_disturd_set->am_pm_flag ? TXT_Y[2]+10 : TXT_Y[3]+10);
+                compo_textbox_set_pos(txt_pm,50+34,f_disturd_set->am_pm_flag ? TXT_Y[1]+10 : TXT_Y[2]+10);
                 compo_textbox_set_forecolor(txt_am,f_disturd_set->am_pm_flag ? COLOR_WHITE : COLOR_GRAY);
                 compo_textbox_set_forecolor(txt_pm,!f_disturd_set->am_pm_flag ? COLOR_WHITE : COLOR_GRAY);
             }

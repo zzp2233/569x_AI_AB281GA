@@ -328,7 +328,7 @@ static void func_pressure_refresh(void)
 #define first_x    89
 #define spacing_x  5
 #define height_pic 106
-#define first_y   (271+height_pic/2)
+#define first_y   (272)
 #define make_pic_hei(val)   (val*height_pic/mood_max)
 #define make_pic_y(hei)     (height_pic-hei+first_y)
 
@@ -352,7 +352,7 @@ compo_form_t *func_pressure_form_create(void)
 
     ///设置图片
     compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I341001_16_PRESSURE_GIF_BIN);
-    compo_animation_set_pos(animation,23+74/2, 94+74/2);
+    compo_animation_set_pos(animation,23+74/2, 84+74/2);
     compo_animation_set_radix(animation, 16);
     compo_animation_set_interval(animation, 0);
     compo_setid(animation,COMPO_ID_PRESSURE_PIC);
@@ -364,7 +364,7 @@ compo_form_t *func_pressure_form_create(void)
     }
     else
     {
-        snprintf(txt_buf,sizeof(txt_buf),"55");
+        snprintf(txt_buf,sizeof(txt_buf),"--");
     }
     textbox = compo_textbox_create(frm, 3 );/// 数据
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_64_BIN);
@@ -374,7 +374,7 @@ compo_form_t *func_pressure_form_create(void)
     compo_setid(textbox,COMPO_TXT_VALUE_ID);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
-    compo_textbox_set_location(textbox,26,205+14,60, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,26,195+14,100, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_HIGHEST]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -392,11 +392,11 @@ compo_form_t *func_pressure_form_create(void)
     textbox = compo_textbox_create(frm, 3);///最高数据
     compo_setid(textbox,COMPO_TXT_VALUE_MAX_ID);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,31+txt_leng.wid,205+14);
+    compo_textbox_set_pos(textbox,31+txt_leng.wid,195+14);
     compo_textbox_set_align_center(textbox, false);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
-    compo_textbox_set_location(textbox,194,205+14,60, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,194,195+14,100, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_LOWSET]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -414,7 +414,7 @@ compo_form_t *func_pressure_form_create(void)
     textbox = compo_textbox_create(frm, 3);///最低数据
     compo_setid(textbox,COMPO_TXT_VALUE_MIN_ID);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,198+txt_leng.wid,205+14);
+    compo_textbox_set_pos(textbox,198+txt_leng.wid,195+14);
     compo_textbox_set_align_center(textbox, false);
 
     compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I341001_16_PRESSURE_RETRY_BIN);///重新测量按钮
@@ -434,7 +434,7 @@ compo_form_t *func_pressure_form_create(void)
 
     for (int i = 0; i < 24; i++)
     {
-        compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE );
+        compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
         widget_set_align_center(shape->rect, false);
         compo_shape_set_location(shape,first_x+i*spacing_x+i*5,make_pic_y(make_pic_hei(test_date[i])),4,had_date?make_pic_hei(test_date[i]):0);
         compo_setid(shape,COMPO_CAHRT_1+i);
@@ -496,7 +496,7 @@ static void func_pressure_refresh(void)
         u8 res = msgbox(i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
         if (res == MSGBOX_RES_OK)
         {
-            // uteModuleEmotionPressureStartSingleTesting(false);
+            uteModuleEmotionPressureStartSingleTesting(false);
         }
     }
 
@@ -553,14 +553,13 @@ static void func_pressure_refresh(void)
         compo_animation_set_interval(animation, f_pressure->up_data_flag?20:0);
 
         compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
-        compo_button_set_bgimg(btn, UI_BUF_I341001_16_PRESSURE_PAUSE_BIN);
-        compo_button_set_visible(btn,f_pressure->up_data_flag ? false : true);
+        compo_button_set_bgimg(btn, f_pressure->up_data_flag ? UI_BUF_I341001_16_PRESSURE_PAUSE_BIN : UI_BUF_I341001_16_PRESSURE_RETRY_BIN);
 
         for (int i = 0; i < 24; i++)
         {
             u8 mood_mode = test_date[i];
             compo_shape_t *shape = compo_getobj_byid(COMPO_CAHRT_1+i);
-            compo_shape_set_location(shape,first_x+i*spacing_x+i*4,make_pic_y(make_pic_hei(test_date[i])),4,had_date?make_pic_hei(test_date[i]):0);
+            compo_shape_set_location(shape,first_x+i*spacing_x+i*5,make_pic_y(make_pic_hei(test_date[i])),4,had_date?make_pic_hei(test_date[i]):0);
             switch (test_date[i])
             {
                 case Grade_1_val_min...Grade_2_val_min-1:

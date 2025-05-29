@@ -370,7 +370,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_setid(textbox,COMPO_ID_HEART_VALUE_TXT);
 
     area_t txt_leng = widget_text_get_area(textbox->txt);
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));///次/分
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set_location(textbox,146+txt_leng.wid,130,100, widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
@@ -378,7 +378,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_setid(textbox,COMPO_ID_HEART_BPM_TXT);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
-    compo_textbox_set_location(textbox,25,206,60, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,25,206,80, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_HIGHEST]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -400,7 +400,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_align_center(textbox, false);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
-    compo_textbox_set_location(textbox,193,206,60, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,193,206,80, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_LOWSET]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -436,25 +436,23 @@ compo_form_t *func_heartrate_form_create(void)
     chart_info.width = 5;   ///像素点
     for (int i=0; i<CHART_NUM; i++)
     {
-        heart_date[i] =200;
-        heart_date[10] =100;
         chart_info.x = i*chart_info.width + i*5;
         chart_info.height = heart_date[i]*0.53;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
     }
 ////////////////////////////////////////////////////////////////
     textbox = compo_textbox_create(frm, strlen(i18n[STR_RESTING_HEART]) );///静态心率
-    compo_textbox_set_location(textbox,24,455,112, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,24,455,245, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_RESTING_HEART]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
     txt_leng = widget_text_get_area(textbox->txt);
     picbox = compo_picturebox_create(frm, UI_BUF_I341001_6_HEART_ABOUT_BIN);
-    compo_picturebox_set_pos(picbox,34+txt_leng.wid+12,475);
+    compo_picturebox_set_pos(picbox,txt_leng.wid < 240 ? 34+txt_leng.wid+12 : 306,475);
 
     compo_button_t *btn = compo_button_create(frm);
-    compo_button_set_location(btn,155,475,40,40);
+    compo_button_set_location(btn,txt_leng.wid < 240 ? 34+txt_leng.wid+12 : 306,475,40,40);
     compo_setid(btn,COMPO_ID_HEART_BTN_ABOUT);
 
     memset(txt_buf,0,sizeof(txt_buf));
@@ -477,7 +475,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,572+336/2);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_WEEK7_HEART]) );///7天平均静态心率
-    compo_textbox_set_location(textbox,33,592,220, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,33,592,280, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
     compo_textbox_set(textbox,i18n[STR_WEEK7_HEART]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
@@ -515,8 +513,6 @@ compo_form_t *func_heartrate_form_create(void)
     chart_info.width = 28;   ///像素点
     for (int i=0; i<7; i++)
     {
-        heart_week_date[i] =80;
-        heart_week_date[5] =40;
         chart_info.x = i*chart_info.width + i*15+18;
         chart_info.height = heart_week_date[i]*1.8;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, make_color(255, 60, 32));

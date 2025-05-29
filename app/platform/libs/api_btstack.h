@@ -21,7 +21,9 @@
 #define PROF_SPP                        0x0080  //蓝牙串口功能
 #define PROF_PBAP                       0x0100  //蓝牙电话本功能
 #define PROF_HSP                        0x0200
-#define PROF_MAP                        0x0400  //蓝牙短息功能
+#define PROF_MAP                        0x0400  //蓝牙短信功能
+#define PROF_GATT                       0x0800  //GATT over BREDR功能
+#define PROF_PANU                       0x1000  //蓝牙PANU功能
 
 //蓝牙特性
 #define HFP_BAT_REPORT                  0x01    //是否支持手机电量显示
@@ -52,7 +54,6 @@
 #define CODEC_LHDCV5                    0x10
 #define CODEC_LHDCV4                    0x20
 #define CODEC_LDAC                      0x40
-
 
 //删除配对信息TAG
 #define BT_INFO_TAG_NOR                 "NULL"   //删除手机
@@ -116,8 +117,8 @@ enum
     BT_NOTICE_CALL_CHANGE_DEV,                  //1拖2时改变了通话设备
     BT_NOTICE_MUSIC_PLAY,                       //蓝牙音乐开始播放
     BT_NOTICE_MUSIC_STOP,                       //蓝牙音乐停止播放
-    BT_NOTICE_MUSIC_CHANGE_VOL,                 //手机端改变蓝牙音乐音量, param[0]=down/up, param[1]=index, param[7:2]=bd_addr
-    BT_NOTICE_MUSIC_SET_VOL,                    //手机端设置蓝牙音乐音量, param[0]=a2dp_vol, param[1]=index, param[7:2]=bd_addr
+    BT_NOTICE_MUSIC_CHANGE_VOL,                 //改变蓝牙音乐音量, param[0]=down/up, param[1]=index, param[7:2]=bd_addr
+    BT_NOTICE_MUSIC_SET_VOL,                    //设置蓝牙音乐音量, param[0]=a2dp_vol, param[1]=index, param[7:2]=bd_addr
     BT_NOTICE_MUSIC_CHANGE_DEV,                 //1拖2时改变了播放设备, 例如从A手机切换到B手机, param[0]=a2dp_vol, param[1]=index, param[7:2]=bd_addr
     BT_NOTICE_HID_CONN_EVT,                     //HID服务连接事件
     BT_NOTICE_A2DP_CONN_EVT,                    //A2DP服务连接事件
@@ -136,8 +137,20 @@ enum
     BT_NOTICE_HFP_HF_ERROR,                     //通话错误，比如拨打错误电话号码
     BT_NOTICE_FAST_MUSIC_STATUS,               //快速上报音乐播放暂停状态
     BT_NOTICE_RSSI_REPORT,                      //上报连接RSSI
+    BT_NOTICE_AUTH_FAIL,
+
+#if BT_EMIT_EN
     BT_NOTICE_INQUIRY_FINISH,                    //搜索完成返回状态
     BT_NOTICE_BT_INFO,                          //返回蓝牙地址以及蓝牙名字信息
+    BT_NOTICE_MUSIC_STATUS,                     //上报音乐播放暂停状态, param[0]= play(1)/pause(2);
+    BT_NOTICE_MUSIC_FOWARD_OR_BACKWARD,         //上报播放上一曲还是下一曲, param[0]= backward(0)/forward(1);
+    BT_NOTICE_SCO_CONNECT_REQ,
+    BT_NOTICE_REMOTE_DEVICE_MAXBITPOOL,
+    BT_NOTICE_EMIT_STOP,                        //断开耳机，上报关闭发射功能
+    BT_NOTICE_EMIT_AVCTP_CTRL,                  //远端音乐avctp控制发送完成, param[0]=play(1)/pause(2);
+    BT_NOTICE_MUSIC_CHANGE_VOL_PERC,            //上报音量变化, param[0]= vol(0~127%);
+    BT_NOTICE_A2DP_SEARCH_COMPLETE,
+#endif
 };
 
 //param[0]=feat,index
@@ -213,11 +226,19 @@ enum
     BT_CTL_SNIFF_DROP_OUT,
     BT_CTL_HFP_SPK_GAIN,                        //设置通话扬声器音量
     BT_CTL_HID_PROFILE_EN,
+
+#if BT_EMIT_EN
     BT_CTL_EMIT_INQ,
     BT_CTL_EMIT_CANCEL,
     BT_CTL_AVDTP_START,
     BT_CTL_AVDTP_SUSPEND,
     BT_CTL_SALVE_SET_VOLUME,
+#endif
+
+    BT_CTL_PANU_CONNECT,
+    BT_CTL_PANU_DISCONNECT,
+    BT_CTL_SEARCH_OS_CAPACITY,
+    BT_CTL_HID_PROFILE_DIS,
     BT_CTL_MAX,
 
     BT_CTL_A2DP_VOLUME_UP           = 0xff0041,     //音量加
@@ -252,6 +273,7 @@ enum bt_msg_comm_t
     COMM_BT_ABORT_PAGE_PSCAN,                   //中止PAGE和PAGESCAN
     COMM_LE_AMS_REMOTE_CTRL,                    //LE AMS remote ctl
     COMM_BT_AUTO_SNIFF,
+    COMM_BT_ABORT_CONNECT,
 };
 
 enum bt_msg_hid_t
@@ -260,6 +282,7 @@ enum bt_msg_hid_t
     HID_CONSUMER,
     HID_TOUCH_SCREEN,
     HID_MOUSE,
+    HID_DOUYIN,                                 //抖音神器
 };
 
 enum bt_msg_pbap_t
@@ -336,6 +359,9 @@ enum
 
     LE_NOTICE_ANCS_CONN_EVT,                    //ancs client连接事件
     LE_NOTICE_AMS_CONN_EVT,                     //ams  client连接事件
+
+    LE_NOTICE_INDICATION_COMPLETE,              //indicate完成
+    LE_NOTICE_INDICATION_TIMEOUT,               //indicate超时
 };
 
 //LE GATT 服务相关
@@ -394,7 +420,7 @@ typedef enum
 */
 #define ATT_CB_FALG_OFFSET         (0xffff)
 #define ATT_CB_FALG_DIR_WRITE      (0x10000)
-typedef int (*ble_gatt_callback_func)(uint16_t con_handle, uint16_t handle, uint32_t flag, uint8_t *ptr, uint16_t len);
+typedef int (*ble_gatt_callback_func)(uint16_t con_handle, uint16_t handle, uint32_t offset, uint8_t *ptr, uint16_t len);
 
 /**
     define GATT service base
@@ -437,7 +463,7 @@ typedef struct gatts_profile_list
     void *item;
     uint16_t  profile_start_handle;
     uint16_t  profile_end_handle;
-    const uint8_t   *profile_date;
+    const uint8_t *profile_date;
     uint16_t profile_date_size;
 } ble_gatts_profile_list_st;
 
@@ -480,6 +506,8 @@ extern const uint16_t link_info_page_size;
 extern bool cfg_bt_emit_mode;
 extern bool cfg_bt_connect_name_en;
 
+extern volatile bool bt_auto_sniff_en;
+
 #define bt_is_scan_ctrl()                       cfg_bt_scan_ctrl_mode
 #define bt_a2dp_is_vol_ctrl()                   (cfg_bt_a2dp_feature & A2DP_AVRCP_VOL_CTRL)
 
@@ -515,11 +543,12 @@ uint8_t bt_get_curr_scan(void);                 //获取当前可被发现可被
 void bt_connect(void);                          //蓝牙设备回连, 回连次数在cfg_bt_connect_times配置
 void bt_connect_address(void);                  //蓝牙设备回连地址, 回连地址在bt_get_connect_addr函数设置
 void bt_disconnect_address(void);               //蓝牙设备断开地址, 断开地址在bt_get_disconnect_addr函数设置
-void bt_disconnect(uint reason);                //蓝牙设备断开, reason: 0=单独断开（入仓）; 1=断开并同步关机（按键/自动关机）;用户单独调用断开，并不关机reason=0xff
+void bt_disconnect(uint reason);                //蓝牙设备断开, reason: 0=单独断开; 1=断开并同步关机（按键/自动关机）;用户单独调用断开，并不关机reason=0xff
 void bt_hid_connect(void);                      //蓝牙HID服务回连
 void bt_hid_disconnect(void);                   //蓝牙HID服务断开
 int bt_hid_is_connected(void);
 bool bt_hid_is_ready_to_discon(void);
+void bt_abort_connect(void);
 
 //status
 uint bt_get_disp_status(void);                  //获取蓝牙的当前显示状态, V060
@@ -587,7 +616,7 @@ void ble_send_sm_req_for_android(void);
 #define bt_abort_reconnect()                    bt_comm_msg(COMM_BT_ABORT_RECONNECT, 0xffff)        //终止回接
 #define bt_abort_reconnect_silence(feat)        bt_comm_msg(COMM_BT_ABORT_RECONNECT, (u16)feat)     //终止回接，没有消息回调。feat:0=手机, BT_FEAT_TWS=TWS
 #define bt_auto_sniff_set(val)                  bt_comm_msg(COMM_BT_AUTO_SNIFF,(u16)val)                 //配置sniff自动模式：0:关闭 1:开启
-
+#define bt_search_os_capacity()                 bt_ctrl_msg(BT_CTL_SEARCH_OS_CAPACITY)  //主动发起查询当前连接的设备是否IOS，发起查询后，调用判断bt_is_ios_device(),连接2个手机此函数无效
 
 //蓝牙音乐
 #define bt_music_play()                         bt_ctrl_msg(BT_CTL_A2DP_PLAY)               //播放
@@ -609,6 +638,17 @@ void ble_send_sm_req_for_android(void);
 #define bt_low_latency_enable()                 bt_ctrl_msg(BT_CTL_LOW_LATENCY_EN)          //蓝牙使能低延时
 #define bt_low_latency_disable()                bt_ctrl_msg(BT_CTL_LOW_LATENCY_DIS)         //蓝牙关闭低延时
 #define bt_fcc_test_start()                     bt_ctrl_msg(BT_CTL_FCC_TEST)                //FCC test模式
+#if BT_EMIT_EN
+#define bt_emit_refresh()                       bt_ctrl_msg(BT_CTL_EMIT_INQ)             //蓝牙发射扫描开始
+#define bt_emit_refresh_cancel()                bt_ctrl_msg(BT_CTL_EMIT_CANCEL)          //蓝牙发射扫描结束
+#define bt_music_avdtp_start()                  bt_ctrl_msg(BT_CTL_AVDTP_START)          //切换播放/暂停
+#define bt_music_avdtp_suspend()                bt_ctrl_msg(BT_CTL_AVDTP_SUSPEND)        //切换播放/暂停
+#define bt_music_slave_set_volume()             bt_ctrl_msg(BT_CTL_SALVE_SET_VOLUME)     //设置bt从机音量, 传参从a2dp_get_slave_volume返回
+
+bool bt_is_connect_for_earphone(bd_addr_t addr);
+bool bt_is_connect_for_mobilephone(void);
+u8 bt_emit_inquiry_status(void);
+#endif
 
 //蓝牙通话
 #define bt_call_redial_last_number()            bt_ctrl_msg(BT_CTL_CALL_REDIAL)         //电话回拨（最后一次通话）
@@ -637,6 +677,9 @@ void ble_send_sm_req_for_android(void);
 #define bt_hfp_profile_en()                     bt_ctrl_msg(BT_CTL_HFP_CONNECT)         //打开HFP服务
 #define bt_hfp_profile_dis()                    bt_ctrl_msg(BT_CTL_HFP_DISCONNECT)      //关闭HFP服务
 #define bt_hid_profile_en()                     bt_ctrl_msg(BT_CTL_HID_PROFILE_EN)      //打开HID服务
+#define bt_hid_profile_dis()                    bt_ctrl_msg(BT_CTL_HID_PROFILE_DIS)     //关闭HID服务
+#define bt_panu_network_connect()               bt_ctrl_msg(BT_CTL_PANU_CONNECT)        //打开PANU服务
+#define bt_panu_network_disconnect()            bt_ctrl_msg(BT_CTL_PANU_DISCONNECT)     //关闭PANU服务
 
 //PBAP
 #define bt_pbap_connect()                       bt_pbap_msg(BT_PBAP_CTRL, 1)
@@ -683,8 +726,6 @@ void aap_init(void);
 uint8_t sdp_add_service(void *item);
 void sdp_rmv_service(uint32_t service_record_handle);
 uint bt_get_hfp_feature(void);
-bool bt_hfp_is_connected(void);
-bool hfp_is_connected(void);
 
 //a2dp
 bool a2dp_is_playing_fast(void);
@@ -709,6 +750,24 @@ bool spp_is_connected_with_channel(uint8_t ch);  //判断某一个SPP通路是�
 void spp_disconnect(void);
 
 //hid
+
+enum
+{
+    HID_MOUSE_BUTTON_1,
+    HID_MOUSE_BUTTON_MAX,
+
+    HID_MOUSE_UP_SLIDE =    0x10,
+    HID_MOUSE_DOWN_SLIDE,
+
+    HID_MOUSE_WHEEL_UP =    0xF0,
+    HID_MOUSE_WHEEL_DOWN,
+    HID_MOUSE_ACPAN_UP,
+    HID_MOUSE_ACPAN_DOWN,
+
+    HID_MOUSE_MAX,
+};
+
+extern u8* douyin_hid_code;
 void hid_device_init(void);
 bool bt_hid_send(void *buf, uint len, bool auto_release);                                           //自定义HID数组
 bool bt_hid_send_key(uint type, uint keycode);                                                      //标准HID按键
@@ -717,8 +776,13 @@ bool bt_hid_send_key(uint type, uint keycode);                                  
 #define bt_hid_touch_screen(keycode)            bt_hid_send_key(HID_TOUCH_SCREEN, keycode)          //触屏
 bool bt_hid_touch_screen_set_key(void *ts);
 
+#if (BT_HID_TYPE == 5)
+#define bt_hid_finger_select_ios()
+#define bt_hid_finger_select_andriod()
+#else
 #define bt_hid_finger_select_ios()              bt_hid_msg(HID_TOUCH_SCREEN, 1)                //抖音视频选择IOS系统
 #define bt_hid_finger_select_andriod()          bt_hid_msg(HID_TOUCH_SCREEN, 2)                //抖音视频选择andriod系统
+#endif
 /**
  * @brief 模拟触点函数
    注意:IOS 范围是-2047-2048 ，安卓是0-4096;
@@ -729,7 +793,8 @@ bool bt_hid_touch_screen_set_key(void *ts);
  * @param y 模拟触点纵坐标
  **/
 void bt_hid_point_pos(bool is_press, s16 x, s16 y);
-
+void bsp_bt_hid_finger(bool is_press, s16 x, s16 y);
+bool hid_mouse_handler(u8 opcode);
 //goep
 void goep_client_init(void);
 //pbap
@@ -763,26 +828,117 @@ void bt_hsp_sco_disconn(void);                  //断开HSP SCO连接
 void btstack_hid_simple_keyboard(uint);
 
 /*****************************************************************************
+ * RF API
+ *****************************************************************************/
+/**
+* @brief 修改rf发射功率
+* @param[in] txpwr: 发射功率
+注: txpwr默认值为7, 每减1, 功率大约降低3dbm, 实际功率值需做传导测试;
+此处调整为功率数字增益dig_gain, 可读取rfphy_tx_pwr(), 获取当前硬件配置的增益值;
+**/
+void rfphy_tx_pwr(uint8_t txpwr);
+
+/**
+* @brief 获取rf发射增益(RFTXGAINMAP0)
+*  return bit0~5 dig_gain(步进0.5dbm), bit12~32 rf_gain(步进2dbm)
+ **/
+u32 rfphy_tx_pwr_get(void);
+
+/*****************************************************************************
  * BLE API
  *****************************************************************************/
-#define ble_adv_dis()                           bt_ctrl_msg(BT_CTL_BLE_ADV_DISABLE)
-#define ble_adv_en()                            bt_ctrl_msg(BT_CTL_BLE_ADV_ENABLE)
+#define ble_adv_dis()                           bt_ctrl_msg(BT_CTL_BLE_ADV_DISABLE) //关闭广播
+#define ble_adv_en()                            bt_ctrl_msg(BT_CTL_BLE_ADV_ENABLE)  //打开广播
+
+/**
+* @brief 广播设置
+* @param[in] chanel: 广播索引预留, 目前未使用
+* @param[in] type: 广播类型
+   - 0: ADV_IND（可连接的非定向广播）
+   - 1: ADV_DIRECT_IND（可连接的定向广播）
+   - 2: ADV_SCAN_IND（可扫描的非定向广播）
+   - 3:ADV_NONCONN_IND（不可连接的非定向广播）
+**/
 void ble_set_adv(u8 chanel, u8 type);
-void ble_set_adv_interval(u16 interval);
+
+/**
+ * @brief 设置广播间隔
+ * @param[in] interval 广播间隔(单位:0.625ms)
+ **/
+void ble_set_adv_interval(u16 interval);                //设置广播间隔
+
+/**
+ * @brief 主动设置广播数据
+ * @param[in] adv_buf 广播数据buff
+ * @param[in] size 数据大小最大31字节
+ * return : ture 成功
+    注: 意思可以在广播过程中，更改广播数据
+ **/
 bool ble_set_adv_data(const u8 *adv_buf, u32 size);
-bool ble_set_scan_rsp_data(const u8 *scan_rsp_buf, u32 size);
+
+/**
+ * @brief 主动设置扫描响应数据
+ * @param[in] scan_rsp_buf 数据buff
+ * @param[in] size 数据大小最大31字节
+ * return : ture 成功
+    注: 意思可以在广播过程中，更改扫描数据
+ **/
+bool ble_set_scan_rsp_data(const u8 *scan_rsp_buf, u32 size);   //设置scan rsp数据
+
+/**
+ * @brief 更新连接间隔
+ * @param[in] interval 连接间隔，1.25ms为单位；最大和最小连接间隔设置为一样了
+ * @param[in] latency 潜伏时间 可跳过多少事件
+ * @param[in] timeout 超时时间 10ms为单位
+ **/
 void ble_update_conn_param(u16 interval, u16 latency, u16 timeout);
+
+/**
+ * @brief 获取BLE的状态
+ * @return 3种状态的一种
+   LE_STA_STANDBY,                           //standby
+   LE_STA_ADVERTISING,                       //正在广播
+   LE_STA_CONNECTION,                        //已连接
+ *
+ **/
 u8 ble_get_status(void);
+
+/**
+ * @brief 断开BLE连接
+ **/
 void ble_disconnect(void);
+
+/**
+ * @brief 判断BLE是否已经链接
+ * @return true表示已连接，false断开
+ *
+ **/
 bool ble_is_connect(void);
+
+/**
+ * @brief 获取当前MTU值
+ * @return 返回MTU
+ * 注: 设置mtu的方法, 强定义u16 att_get_max_mtu(void);返回设置的值给蓝牙库调用, 且MAX_NOTIFY_LEN不小于该值
+ **/
 u16 ble_get_gatt_mtu(void);
-void ble_set_adv_interval(u16 interval);
-void ble_disconnect(void);
+
 void ble_send_kick(void);
-int ble_tx_notify(u16 att_handle, u8* buf, u8 len);
+
+/**
+ * @brief 往手机(client)端发送数据
+   注: 发送的数据长度不能超过MTU设置，可以通过ble_get_gatt_mtu函数获取。
+ * @param[in] index GATT初始化的时候返回的一个ID，在ble_gatts_characteristic_add_do函数里有返回
+ * @param[in] buf 发送数据的buff
+ * @param[len] buf 发送数据的长度
+ * @return[int] 0: 成功
+                0x0C: APP没打开client_config，或发送的数据大于MTU，或BLE没连接
+                0x54: BTSTACK_NOT_ACTIVATED, ble未创建连接 或 txpkt缓冲区是空的
+                0x56：发送数据为空指针；或发送数据大小超过init设置的(txpkt_init函数的buf_size参数)
+                0x57: 发送条数大于最大值, 内部缓存已满
+ **/
+int ble_tx_notify(u16 att_handle, u8* buf, uint16_t len);
 uint8_t ble_set_delta_gain(void);
-void ble_update_conn_param(u16 interval, u16 latency, u16 timeout);
-bool ble_set_adv_data(const u8 *adv_buf, u32 size);
+
 void ble_send_sm_req(void);
 void ble_exchange_mtu_request(void);
 void ble_set_gap_name(char *gap_name, u8 len);
@@ -791,13 +947,35 @@ u16 ble_get_conn_latency(void);
 u16 ble_get_conn_timeout(void);                 //N*10ms
 u16 ble_get_adv_interval(void);                 //N*625us
 
-//init gatt
-//profile_table: profile cache buf
-//cb_info_table_p: call back info cache
+/**
+ * @brief 添加服务初始化函数
+          客户一般不需要直接调用，SDK默认引用好了
+ * @param[in] profile_table : 存储profile的buuff
+ * @param[in] profile_table_size : profile_table大小
+ * @param[in] cb_info_table_p：回调结构体
+ * @param[in] gatt_max_att：GATT数量的最多需求
+ **/
 void ble_gatts_init(uint8_t *profile_table, uint16_t profile_table_size,
                     ble_gatt_characteristic_cb_info_t **cb_info_table_p,
                     uint16_t gatt_max_att);
+
+/**
+ * @brief 添加服务函数
+ * @param[in] service_type BLE_GATTS_SRVC_TYPE_PRIMARY BLE_GATTS_SRVC_TYPE_SEVONDARY BLE_GATTS_SRVC_TYPE_INCLUDE一种
+ * @param[in] service_uuid UUID数据
+ * @param[in] uuid_type UUID类型，指16bit还是128bit类型
+ * @param[in] service_handle 用这个位置去获取当前分配的handle
+ **/
 int ble_gatts_service_add(ble_gatts_service_type service_type, const uint8_t *service_uuid, ble_gatts_uuid_type uuid_type, uint8_t *service_handle);
+
+/**
+ * @brief 添加特征值函数
+ * @param[in] att_uuid GATT的UUID
+ * @param[in] uuid_type UUID类型，指16bit还是128bit类型
+ * @param[in] props 读写权限
+ * @param[in] att_handle 用这个位置去获取当前分配的handle， 可以填NULL
+ * @param[in] cb_info： 回调信息，存放读写回调函数等
+ **/
 int ble_gatts_characteristic_add(const uint8_t *att_uuid, ble_gatts_uuid_type uuid_type, uint16_t props,
                                  uint16_t *att_handle,
                                  ble_gatt_characteristic_cb_info_t *cb_info);
@@ -819,8 +997,6 @@ bool ble_gatts_profile_mg_alloc_att_num_check(uint8_t att_num);
  * return : 1表示设置数量满了，0没满
  **/
 bool is_le_buff_full(uint rsvd_num);
-
-
 
 /**
  * @brief ams复位，设备端控制手机端播放暂停等

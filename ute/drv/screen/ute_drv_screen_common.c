@@ -7,6 +7,8 @@
 *@version       v1.0
 */
 #include "ute_drv_screen_common.h"
+#include "ute_application_common.h"
+#include "ute_module_message.h"
 #include "ute_module_log.h"
 #include "gui.h"
 
@@ -474,7 +476,7 @@ void uteDrvScreenCommonSt7789p3DspiWriteCmdParam(uint8_t cmd,uint8_t data)
 /*! ESD测试屏幕TE中断异常复位处理,wang.luo 2023-03-21 */
 #if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
 void *screenEsdTeIntErrorCheckTimerPointer = NULL;
-uint8_t  EsdTeIntErrorCheckCnt=0;
+uint8_t screenEsdTeIntErrorCheckCnt = 0;
 /**
 *@brief        延时初始化处理函数
 *@details
@@ -486,18 +488,16 @@ void uteDrvScreenEsdTeIntErrorCheckHandlerMsg(void)
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s,", __func__);
     if (uteApplicationCommonIsPowerOn())
     {
-        if (uteModuleGuiCommonIsDisplayOn())
+        if (!sys_cb.gui_sleep_sta)
         {
-            EsdTeIntErrorCheckCnt++;
-            /*! 灭屏*/
-            uteModuleGuiCommonDisplayOff(true);
-            /*! 关闭屏幕电源*/
-            uteDrvScreenCommonSetPowerEnable(false);
-            uteModulePlatformDelayUs(50 * 1000);
-            /*! 亮屏*/
-            ute_task_gui_message_t msg;
-            msg.type = MSG_TYPE_HNAD_SCREEN_ON_NOTIFY;
-            uteTaskGuiSendMsg(&msg);
+            tft_exit();
+            ctp_exit();
+            power_gate_3v3_off();
+            sys_cb.gui_sleep_sta = 1;
+            tft_cb.tft_bglight_first_set = false;
+            delay_5ms(10);
+            gui_wakeup();
+            uteDrvScreenEsdTeIntErrorCheckTimerStart(1000);
         }
         else
         {
@@ -508,6 +508,7 @@ void uteDrvScreenEsdTeIntErrorCheckHandlerMsg(void)
     {
         uteDrvScreenEsdTeIntErrorCheckTimerStop();
     }
+    screenEsdTeIntErrorCheckCnt = 0;
 }
 /**
 *@brief        延时初始化回调函数
@@ -517,8 +518,24 @@ void uteDrvScreenEsdTeIntErrorCheckHandlerMsg(void)
 */
 void uteDrvScreenEsdTeIntErrorCheckTimerCallback(void *pxTimer)
 {
-    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET,0);
+    printf("screenEsdTeIntErrorCheckCnt:%d\n",screenEsdTeIntErrorCheckCnt);
+    if(screenEsdTeIntErrorCheckCnt >= 3)
+    {
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET,0);
+    }
+    else
+    {
+        uteDrvScreenEsdTeIntErrorCheckTimerStart(1000);
+    }
+    screenEsdTeIntErrorCheckCnt ++;
 }
+
+AT(.com_text.tft_spi)
+void uteDrvScreenEsdTeIntErrorCheckCntReset(void)
+{
+    screenEsdTeIntErrorCheckCnt = 0;
+}
+
 /**
 *@brief        延时初始化定时器创建函数
 *@details

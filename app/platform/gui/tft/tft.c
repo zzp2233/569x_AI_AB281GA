@@ -75,6 +75,9 @@ void tft_te_isr(void)
             }
         }
     }
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+    uteDrvScreenEsdTeIntErrorCheckCntReset();
+#endif
 }
 
 AT(.com_text.tft_spi)

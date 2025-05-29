@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NAME "T62"
-#define UTE_SW_VERSION "AB281AV000073"
+#define UTE_SW_VERSION "AB281AV000077"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281AB"
@@ -146,7 +146,6 @@
 
 #define UTE_DRV_TP_X_AXIS_EXCHANGE 0 // 交换X轴左右坐标
 #define UTE_DRV_TP_Y_AXIS_EXCHANGE 0 // 交换Y轴上下坐标
-
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7                             //FUNC_BLOOD_OXYGEN

@@ -9,7 +9,7 @@
 #ifndef _UTE_PROJECT_CONFIG_AB281F_H_
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
-#define DEFAULT_BLE_DEV_NAME "Storm Verge"
+#define DEFAULT_BLE_DEV_NAME "SVERGE"
 #define UTE_SW_VERSION "AB281FV000067"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
@@ -241,6 +241,8 @@
 #define UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT      1 //心率预警
 #define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     0 //表盘侧边栏
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   1 //菜单样式预览旋转界面
+#define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
+#define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

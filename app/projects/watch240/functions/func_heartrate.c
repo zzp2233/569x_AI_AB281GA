@@ -2109,7 +2109,7 @@ static void func_heartrate_process(void)
         compo_page_move_process(f_heartrate->ptm);
     }
 
-    if(bsp_sensor_hr_work_status() && uteModuleHeartGetWorkMode() == HR_WORK_MODE_HR && uteModuleHeartGetHeartValue() == 0)
+    if(bsp_sensor_hr_work_status() && uteModuleHeartGetWorkMode() == HR_WORK_MODE_HR && uteModuleHeartGetHeartValue() == 0 && uteModuleHeartIsWear())//解决未佩戴时心率界面不灭屏问题
     {
         reset_guioff_delay();
     }

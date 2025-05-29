@@ -93,7 +93,9 @@ enum
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     FUNC_ALTITUDE,                      //海拔
     FUNC_MAP,                           //地图
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     FUNC_WOMEN_HEALTH,                  //女性健康
+#endif
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     FUNC_MESSAGE,                       //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
@@ -213,8 +215,9 @@ enum
     FUNC_MESSAGE_REPLY,                  //消息发送
     FUNC_MIC_TEST,
     FUNC_OTA_UI_MODE,
-
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
     FUNC_BIRD,
+#endif
     FUNC_TETRIS,
     FUNC_TETRIS_START,
     FUNC_OTA_MODE,         //OTA升级
@@ -262,8 +265,9 @@ typedef struct
     u16 pullup_sta;                                 //CLOCK上拉界面
     u8 msgbox_enter_sta;                            //弹窗进入之前的界面任务
     u8  flag_sort       : 1,                        //已进入快捷任务
-    flag_animation  : 1;                        //入场动画
+    flag_animation  : 1;                            //入场动画
 
+    bool flag_sort_jump;                            //记录处于快捷任务界面时跳转
 
 
     void (*mp3_res_play)(u32 addr, u32 len);        //各任务的语音播报函数接口

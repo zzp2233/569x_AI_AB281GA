@@ -650,6 +650,10 @@ bool sleep_process(is_sleep_func is_sleep)
             reset_pwroff_delay();
             return false;
         }
+        // if(sys_cb.sleep_delay % 10 == 0 && sys_cb.guioff_delay%10==0)
+        // {
+        //     printf("%s,sleep_delay:%d,guioff_delay:%d,sys_is_sleep:%d,gui_sleep_sta:%d\n",__func__,sys_cb.sleep_delay,sys_cb.guioff_delay,sleep_cb.sys_is_sleep,sys_cb.gui_sleep_sta);
+        // }
         if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)
         {
             if(sys_cb.sleep_delay > 0) //休眠时间未到时仅熄屏

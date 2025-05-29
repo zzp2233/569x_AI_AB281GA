@@ -175,7 +175,7 @@ void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_
     }
 #if UTE_BT30_CALL_SUPPORT
     uint disp_status = bsp_bt_disp_status();
-    if (uteModuleGuiCommonGetCurrentScreenId() == FUNC_BT_CALL || disp_status >= BT_STA_INCOMING)
+    if (uteModuleGuiCommonGetCurrentScreenId() == FUNC_BT_CALL || disp_status > BT_STA_INCOMING)//=BT_STA_INCOMING时，BT来电没有震动
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,BT calling not allow motor!", __func__);
         return;

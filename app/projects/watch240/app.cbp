@@ -45,6 +45,7 @@
 			<Add directory="../../platform/gui/ctp" />
 			<Add directory="../../platform/bsp/bsp_sensor/internal_sensor" />
 			<Add directory="../../platform/gui/ctp/axs5106" />
+			<Add directory="../../platform/gui/ctp/chsc6x/Firmware" />
 			<Add directory="functions/common" />
 			<Add directory="../../platform/bsp/bsp_sensor/vcc30fx" />
 			<Add directory="../../../ute/project_config" />

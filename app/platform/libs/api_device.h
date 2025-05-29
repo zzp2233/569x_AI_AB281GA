@@ -5,7 +5,8 @@
 #define DEV_FEAT_SDCARD1            0x02            //支持SD1卡
 #define DEV_FEAT_USB                0x04            //支持USB
 
-enum {
+enum
+{
     DEV_SDCARD = 0,
     DEV_SDCARD1,
     DEV_UDISK,
@@ -16,9 +17,9 @@ enum {
     DEV_HDMI,
     DEV_DP_GND,
     DEV_DPDM_SC,
-    DEV_TOTAL_NUM,
+    DEV_SPIFLASH = 0x30,
 
-    DEV_SPIFLASH = 0x30,   //读ID检测,不参与该头文件中的device检测机制
+    DEV_TOTAL_NUM,
 };
 
 extern uint32_t cfg_dev_feat;

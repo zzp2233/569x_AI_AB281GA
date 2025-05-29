@@ -1138,6 +1138,11 @@ compo_form_t *func_address_book_form_create(void)
     {
         compo_listbox_set(listbox, tbl_call_list, (address_book_cnt < 2) ? 2 : address_book_cnt);
     }
+    else
+    {
+        compo_picturebox_set_visible(pic, true);
+        compo_textbox_set_visible(txt, true);
+    }
     compo_listbox_set_alike_icon(listbox, UI_BUF_I342001_11_CALL_CONTACTS_BIN);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, address_book_update_callback);
 //    compo_listbox_set_location(listbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT-TITLE_BAR_HIGH/2);

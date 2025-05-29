@@ -1896,26 +1896,22 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             else if (sys_cb.cover_index == REMIND_COVER_LOW_BATTERY)  //低电提醒
             {
 #if UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
-                char *str_buf = ab_zalloc(strlen(i18n[STR_LOW_BATTERY_MODE])+10);
-                char level[4];
-                memset(level,0,sizeof(level));
-                snprintf(level,sizeof(level),"%d",uteDrvBatteryCommonGetLvl());
-                uteModuleCharencodeReplaceSubString(i18n[STR_LOW_BATTERY_MODE], str_buf,"##",level);
+#define BAT_PERCENT_VALUE       uteDrvBatteryCommonGetLvl()  //电量百分比数值
+                char txt_buf[30];
+                compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_CHARGE_BATT_BG_BIN);
+                compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT-296/2);
 
-                compo_textbox_t *txt_msg = compo_textbox_create(frm, strlen(str_buf));
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20,GUI_SCREEN_WIDTH/1.2,60);//调整文本位置
-                compo_textbox_set(txt_msg, str_buf);
-                compo_textbox_set_multiline_drag(txt_msg,true);
-                ab_free(str_buf);
+                memset(txt_buf,0,sizeof(txt_buf));
+                snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
+                compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+                compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
+                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y-30,150,50);
+                compo_textbox_set(textbox,txt_buf);
 
-                btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_COMFIRM_BIN);
-                compo_setid(btn, COMPO_ID_BTN_OK);
-                compo_button_set_pos(btn, 80/2+209,80/2+224);
-
-                btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_CANCEL_BIN);
-                compo_setid(btn, COMPO_ID_BTN_CANCEL);
-                compo_button_set_pos(btn, 80/2+71,80/2+224);
-                break;
+                textbox = compo_textbox_create(frm, strlen(i18n[STR_LOW_BATTERY]));
+                compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+25,120,30);
+                compo_textbox_set_forecolor(textbox,COLOR_RED);
+                compo_textbox_set(textbox,i18n[STR_LOW_BATTERY]);
 #endif // UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
             }
             else if(sys_cb.cover_index == REMIND_COVER_TIMER_FINISH)//计时器结束
@@ -2590,8 +2586,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             printf("MSGBOX_MSG_TYPE_DETAIL\n");
             //图标
             compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
-                                 40,
-                                 40);  //需要更替为弹窗图标
+                                 108+22/2,
+                                 12+22/2);  //需要更替为弹窗图标
 
             //title
             if (title != NULL)
@@ -2612,7 +2608,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
                                            func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH-10, 128-20);              //调整文本位置
+                                           186, 128-20);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
 //                compo_textbox_set_align_center_top(txt_msg, true);
@@ -2625,10 +2621,10 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_textbox_t *txt_time = compo_textbox_create(frm, 20);
                 compo_textbox_set_align_center(txt_time, true);
-                compo_textbox_set_location(txt_time, GUI_SCREEN_CENTER_X, 40,GUI_SCREEN_WIDTH-20,widget_text_get_height());              //调整文本位置
+                compo_textbox_set_location(txt_time, GUI_SCREEN_CENTER_X, 70,GUI_SCREEN_WIDTH-20,widget_text_get_height());              //调整文本位置
                 compo_textbox_set_forecolor(txt_time, make_color(128,128,128));
                 compo_textbox_set(txt_time, time);
-                compo_textbox_set_right_align(txt_time, true);
+//                compo_textbox_set_right_align(txt_time, true);
             }
         }
         break;

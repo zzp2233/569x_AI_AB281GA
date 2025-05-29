@@ -318,7 +318,7 @@ compo_form_t *func_alarm_clock_form_create(void)
             snprintf(str_buff, sizeof(str_buff), "%02d:%02d %s", clock_time.hour, ALARM_GET_MIN(i),clock_time.am_pm ? (clock_time.am_pm ==1 ? i18n[STR_AM] : i18n[STR_PM]) : " ");
             compo_cardbox_text_set_location(cardbox,0,WEEK_LOCATION_X-20,-50,180,35);
             compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
-            compo_cardbox_text_set_font(cardbox,0, UI_BUF_0FONT_FONT_NUM_38_BIN);
+            //compo_cardbox_text_set_font(cardbox,0, UI_BUF_0FONT_FONT_NUM_38_BIN);
             compo_cardbox_text_set_align_center(cardbox,0, false);
             compo_cardbox_text_set(cardbox,0,str_buff);
 

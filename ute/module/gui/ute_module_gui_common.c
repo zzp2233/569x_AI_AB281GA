@@ -420,7 +420,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     if (isAllClear)
     {
         task_stack_init();
-        latest_task_init(); // 最近任务
+        // latest_task_init(); // 最近任务
         if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
         {
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return FUNC_CHARGE", __func__);

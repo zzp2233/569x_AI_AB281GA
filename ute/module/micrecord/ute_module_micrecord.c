@@ -207,6 +207,9 @@ void mic_test_exit(void)
     audio_path_exit(AUDIO_PATH_SPEAKER);
     bt_audio_enable();
     bsp_change_volume(sys_cb.vol);
+    dac_fade_out();
+    delay_5ms(2);
+    bsp_loudspeaker_mute();
 }
 
 void uteModuleMicRecordFactoryPlay(void)

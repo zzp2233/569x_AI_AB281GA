@@ -87,6 +87,7 @@ void uteDrvScreenEsdTeIntErrorCheckTimerCallback(void *pxTimer);
 void uteDrvScreenEsdTeIntErrorCheckTimerCreate(void);
 void uteDrvScreenEsdTeIntErrorCheckTimerStart(uint16_t ms);
 void uteDrvScreenEsdTeIntErrorCheckTimerStop(void);
+void uteDrvScreenEsdTeIntErrorCheckCntReset(void);
 #endif
 #endif //_UTE_DRV_SCREEN_COMMON_H_
 

@@ -824,12 +824,16 @@ static void func_call_sub_record_icon_click(void)
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_call->listbox;
     compo_button_t *btn =compo_getobj_byid(COMPO_ID_BTN_DELAY);
+    compo_picturebox_t* pic = compo_getobj_byid(COMPO_ID_COVER_PIC);
+    compo_textbox_t* txt = compo_getobj_byid(COMPO_ID_COVER_TXT);
 
     if(compo_get_button_id() == COMPO_ID_BTN_DELAY)
     {
         uteModuleCallDeleteCallRecords();
         compo_button_set_visible(btn,false);
         compo_listbox_set_visible(f_call->listbox, false);
+        compo_picturebox_set_visible(pic,true);
+        compo_textbox_set_visible(txt,true);
         return;
     }
 
@@ -2943,7 +2947,7 @@ static void func_call_sub_record_enter(void)
     compo_listbox_move_init_modify(f_call->listbox, 127-50, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+40);
 
 #else
-    compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+60);
+    compo_listbox_move_init_modify(f_call->listbox, 127-30, compo_listbox_gety_byidx(f_call->listbox, (record_cnt - 2 > 0) ? record_cnt - 2 : 1)+40+((record_cnt > 2)?20:0));
 #endif // GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     func_cb.enter_tick = tick_get();
 

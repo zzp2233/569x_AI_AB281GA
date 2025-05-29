@@ -92,9 +92,13 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              .str_idx=STR_SETTING},               //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
-// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  .str_idx=STR_GAME},                //游戏
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                .str_idx=STR_WOMEN_HEALTH},          //女性健康
-// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+
 };
 #define  BATTERY_PIC_0_BIN   0                ///电池电量图标0
 #define  BATTERY_PIC_1_BIN   0                ///电池电量图标1

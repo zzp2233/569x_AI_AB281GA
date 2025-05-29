@@ -7,6 +7,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
+
 typedef struct f_bird_t_
 {
     uint32_t tick;
@@ -104,6 +106,294 @@ compo_form_t *func_bird_form_create(void)
 
     //finish pic
 //    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I330001_GAME_WINDOW2_BIN);
+//    compo_setid(compo, COMPO_ID_BIRD_FINISH_PIC);
+//    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+//    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+
+    //stop btn
+    compo = (component_t *)compo_button_create(frm);
+    compo_setid(compo, COMPO_ID_BIRD_STOP_BTN);
+    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X+50, GUI_SCREEN_CENTER_Y+35, 60, 60);
+//    compo_button_set_visible((compo_button_t *)compo, false);
+
+    //start btn
+    compo = (component_t *)compo_button_create(frm);
+    compo_setid(compo, COMPO_ID_BIRD_START_BTN);
+    compo_button_set_location((compo_button_t *)compo, GUI_SCREEN_CENTER_X-50, GUI_SCREEN_CENTER_Y+35, 60, 60);
+//    compo_button_set_visible((compo_button_t *)compo, false);
+
+    return frm;
+}
+
+
+//游戏初始化
+static void func_bird_init(void)
+{
+    f_bird_t *bird = (f_bird_t *)func_cb.f_cb;
+    compo_picturebox_t *compo;
+    uint8_t i;
+
+    compo = compo_getobj_byid(COMPO_ID_BIRD_FAIL_PIC);
+    if(compo)
+    {
+        compo_picturebox_set_visible(compo, false);
+    }
+
+    compo = compo_getobj_byid(COMPO_ID_BIRD_STOP_PIC);
+    if(compo)
+    {
+        compo_picturebox_set_visible(compo, true);
+    }
+
+    compo = compo_getobj_byid(COMPO_ID_BIRD_BIRD_PIC);
+    if(compo)
+    {
+        compo_picturebox_set_visible(compo, false);
+        compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_CENTER_Y);
+    }
+
+    bird->pipe_cut = 1;
+    for(i = 0; i < 4; i++)
+    {
+        if(!(i % 2))
+        {
+            compo = compo_getobj_byid(COMPO_ID_BIRD_PIPE_PIC_START + i);
+            if(compo)
+            {
+                compo_picturebox_cut((compo_picturebox_t *)compo, 0, bird->pipe_cut + i/2);
+            }
+        }
+    }
+    bird->bird_anim_cnt = 0;
+    bird->speed = 0;
+    bird->tick = tick_get();
+    bird->bird_y_pos = GUI_SCREEN_CENTER_Y;
+    bird->pipe_index = 0;
+    bird->pipe_x_pos = GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X;
+    bird->pipe_y_pos = CAL_PIPE_DOWM_Y_POS(bird->pipe_cut);
+    bird->status = BIRD_STATUS_WAIT_RUN;
+}
+
+
+//游戏中
+static void func_bird_runing(void)
+{
+    f_bird_t *bird = (f_bird_t *)func_cb.f_cb;
+    compo_picturebox_t *compo;
+    uint8_t i;
+    uint16_t id;
+    s16  x_pos, y_pos;
+    uint8_t pipe_cut;
+    s16 diff;
+
+    if (tick_check_expire(bird->tick, 1000 / 24)) //24hz
+    {
+        //bird pic refresh
+        bird->tick = tick_get();
+        bird->bird_y_pos += bird->speed;
+        bird->speed += BIRD_DOWN_ACC_V;
+        if(bird->bird_y_pos >= GUI_SCREEN_HEIGHT)
+        {
+            bird->status = BIRD_STATUS_BIRDOVER;
+        }
+        compo = compo_getobj_byid(COMPO_ID_BIRD_BIRD_PIC);
+        if(compo)
+        {
+            compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X / 2, bird->bird_y_pos);
+            compo_picturebox_cut((compo_picturebox_t *)compo, bird->bird_anim_cnt, 3);
+            bird->bird_anim_cnt ++;
+            bird->bird_anim_cnt %= 3;
+        }
+
+        //pipe pic refresh
+        x_pos = bird->pipe_x_pos;
+        y_pos = bird->pipe_y_pos;
+        pipe_cut = bird->pipe_cut;
+
+        for (i = 0; i < 4; i++)
+        {
+            id = COMPO_ID_BIRD_PIPE_PIC_START + (bird->pipe_index + i) % 4;
+            compo = compo_getobj_byid(id);
+            if(compo)
+            {
+                if(i % 2)
+                {
+                    y_pos = CAL_PIPE_UP_Y_POS(y_pos, pipe_cut);
+                }
+                if(i == 2)
+                {
+                    x_pos += PIPE_X_GAP;
+                    pipe_cut = 1 + (pipe_cut + 1) % 3;
+                    y_pos = CAL_PIPE_DOWM_Y_POS(pipe_cut);
+                }
+                compo_picturebox_set_pos((compo_picturebox_t *)compo, x_pos, y_pos);
+            }
+        }
+        if(bird->pipe_x_pos > (-PIPE_PIC_WIDTH / 2))
+        {
+
+            //碰撞检测
+            if ((bird->pipe_x_pos + PIPE_PIC_WIDTH / 2) >= (BIRD_X_POS - BIRD_WIDTH / 2))
+            {
+                diff = (bird->pipe_x_pos - PIPE_PIC_WIDTH / 2) - (BIRD_X_POS + BIRD_WIDTH / 2);
+                if(diff <= 0)
+                {
+                    y_pos = CAL_PIPE_DOWM_Y_POS(bird->pipe_cut);
+                    if((y_pos - PIPE_PIC_HEIGHT / bird->pipe_cut / 2) <= (bird->bird_y_pos + BIRD_HEIGHT / 2))
+                    {
+                        bird->status = BIRD_STATUS_BIRDOVER;
+                    }
+                    y_pos = CAL_PIPE_UP_Y_POS(y_pos, bird->pipe_cut);
+                    if((y_pos + PIPE_PIC_HEIGHT / 2) >= (bird->bird_y_pos - BIRD_HEIGHT / 2))
+                    {
+                        bird->status = BIRD_STATUS_BIRDOVER;
+                    }
+                }
+            }
+            else    //下一管道
+            {
+                diff = ((bird->pipe_x_pos + PIPE_X_GAP) - PIPE_PIC_WIDTH / 2) - (BIRD_X_POS + BIRD_WIDTH / 2);
+                if (diff <= 0)
+                {
+                    y_pos = CAL_PIPE_DOWM_Y_POS(pipe_cut);
+                    if((y_pos - PIPE_PIC_HEIGHT / pipe_cut / 2) <= (bird->bird_y_pos + BIRD_HEIGHT / 2))
+                    {
+                        bird->status = BIRD_STATUS_BIRDOVER;
+                    }
+                    y_pos = CAL_PIPE_UP_Y_POS(y_pos, pipe_cut);
+                    if((y_pos + PIPE_PIC_HEIGHT / 2) >= (bird->bird_y_pos - BIRD_HEIGHT / 2))
+                    {
+                        bird->status = BIRD_STATUS_BIRDOVER;
+                    }
+                }
+            }
+
+            if(diff > 0 && diff < PIPE_SPEED)
+            {
+                bird->pipe_x_pos -= diff;
+            }
+            else
+            {
+                bird->pipe_x_pos -= PIPE_SPEED;
+            }
+
+        }
+        else
+        {
+            //前管道视野消失，位置切换至下一个管道
+            bird->pipe_x_pos = x_pos;
+            bird->pipe_y_pos = CAL_PIPE_DOWM_Y_POS(pipe_cut);
+            bird->pipe_cut = pipe_cut;
+
+            if (bird->pipe_index)
+            {
+                bird->pipe_index = 0;
+            }
+            else
+            {
+                bird->pipe_index = 2;
+            }
+
+            id = COMPO_ID_BIRD_PIPE_PIC_START + (bird->pipe_index + 2) % 4;
+            compo = compo_getobj_byid(id);
+            if(compo)
+            {
+                compo_picturebox_cut((compo_picturebox_t *)compo, 0, 1 + (pipe_cut + 1) % 3);
+            }
+        }
+    }
+}
+
+
+//游戏失败
+static void func_bird_fail(void)
+{
+    compo_picturebox_t *compo;
+    uint8_t i;
+
+    compo = compo_getobj_byid(COMPO_ID_BIRD_FAIL_PIC);
+    if(compo)
+    {
+        compo_picturebox_set_visible(compo, true);
+    }
+
+    compo = compo_getobj_byid(COMPO_ID_BIRD_BIRD_PIC);
+    if(compo)
+    {
+        compo_picturebox_set_visible(compo, false);
+        compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 130);
+    }
+
+    for(i = 0; i < 4; i++)
+    {
+        compo = compo_getobj_byid(COMPO_ID_BIRD_PIPE_PIC_START + i);
+        if(compo)
+        {
+            compo_picturebox_set_visible(compo, false);
+        }
+    }
+}
+#elif  GUI_SCREEN_SIZE_240X284RGB_I335003_SUPPORT
+#define BIRD_DOWN_ACC_V                         1                           //向下加速度
+#define BIRD_UP_ACC_V                           5                           //向上加速度
+#define BIRD_X_POS                              (GUI_SCREEN_CENTER_X / 2)   //小鸟图X坐标
+#define BIRD_WIDTH                              44
+#define BIRD_HEIGHT                             (96 / 3)
+#define PIPE_SPEED                              3                           //管道移动速度
+#define PIPE_X_GAP                              (GUI_SCREEN_CENTER_X + 80)  //管道水平间隔
+#define PIPE_Y_GAP                              100                         //管道纵向间隔
+#define PIPE_PIC_WIDTH                          50                          //管道图片宽度
+#define PIPE_PIC_HEIGHT                         168                         //管道图片高度
+#define BIRD_VALID_HEIGHT                       300                         //有效界面高度
+
+//计算上管道y坐标(中心参考点)
+#define CAL_PIPE_UP_Y_POS(pipe_down_y_pos, pipe_down_cut)    ((pipe_down_y_pos) - (PIPE_PIC_HEIGHT / (pipe_down_cut) / 2) - (PIPE_PIC_HEIGHT / 2) - PIPE_Y_GAP)
+//计算下管道y坐标(中心参考点)
+#define CAL_PIPE_DOWM_Y_POS(pipe_down_cut)                   (BIRD_VALID_HEIGHT - (PIPE_PIC_HEIGHT / (pipe_down_cut)) / 2)
+
+//创建游戏界面
+compo_form_t *func_bird_form_create(void)
+{
+    compo_form_t *frm;
+    component_t *compo;
+    uint8_t i;
+    uint32_t pipe_bin_addr[] = {UI_BUF_I335003_GAME_ZHUZI1_BIN, UI_BUF_I335003_GAME_ZHUZI2_BIN};
+
+    //新建窗体和背景
+    frm = compo_form_create(true);
+
+    //背景图
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I335003_GAME_BG_BIN);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+
+    //stop pic
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I335003_GAME_PLAY_BIN);
+    compo_setid(compo, COMPO_ID_BIRD_STOP_PIC);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+
+    //bird pic
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I335003_GAME_BIRD2_BIN);
+    compo_setid(compo, COMPO_ID_BIRD_BIRD_PIC);
+    compo_picturebox_cut((compo_picturebox_t *)compo, 0, 3);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, BIRD_X_POS, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+
+    //pipe pic
+    for(i = 0; i < 4; i++)
+    {
+        compo = (component_t *)compo_picturebox_create(frm, pipe_bin_addr[i % 2]);
+        compo_setid(compo, COMPO_ID_BIRD_PIPE_PIC_START + i);
+        compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+    }
+
+    //fail pic
+    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I335003_GAME_WINDOW1_BIN);
+    compo_setid(compo, COMPO_ID_BIRD_FAIL_PIC);
+    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
+
+    //finish pic
+//    compo = (component_t *)compo_picturebox_create(frm, UI_BUF_I335003_GAME_WINDOW2_BIN);
 //    compo_setid(compo, COMPO_ID_BIRD_FINISH_PIC);
 //    compo_picturebox_set_pos((compo_picturebox_t *)compo, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 //    compo_picturebox_set_visible((compo_picturebox_t *)compo, false);
@@ -1114,3 +1404,5 @@ void func_bird(void)
     }
     func_bird_exit();
 }
+
+#endif

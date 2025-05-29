@@ -35,7 +35,6 @@ compo_form_t *func_ecig_reminder_form_create(void)
 
     if (sys_cb.smoke_index == SMOKING)
     {
-        printf("1111111111111111111sys_cb.password_flag=%d\n",sys_cb.password_flag);
         // if(sys_cb.password_cnt == 4)
         // {
         //     picbox = compo_picturebox_create(frm, UI_BUF_I330001_CHILD_LOCK_ICON_84X84_X78_Y89_BIN);
@@ -108,7 +107,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
     }
     else if (sys_cb.smoke_index == IN_DEVICE)
     {
-        if (get_gear_func() == 0)
+        if (get_gear_func1() == 0)
         {
             picbox = compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_IN_DANG_BIN);
             compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50);
@@ -169,7 +168,7 @@ static void func_ecig_reminder_process(void)
     func_process();
     if (!bsp_ecig_is_working_sta())
     {
-        if (tick_check_expire(f_ecig_reminder->tick, 800))
+        if (tick_check_expire(f_ecig_reminder->tick, 600))
         {
             func_directly_back_to();
         }

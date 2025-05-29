@@ -198,7 +198,7 @@ void uteModuleNewFactoryTestEverySecond(void)
         }
     }
 #endif
-    printf("%s,mode=%d,secondCount=%d,maxCount=%d,factoryAgingTestMode=%d\r\n", __func__, uteModuleNewFactoryTestData.mode, uteModuleNewFactoryTestData.secondCount, uteModuleNewFactoryTestData.maxCount, uteModuleNewFactoryTestData.factoryAgingTestMode);
+    // printf("%s,mode=%d,secondCount=%d,maxCount=%d,factoryAgingTestMode=%d\r\n", __func__, uteModuleNewFactoryTestData.mode, uteModuleNewFactoryTestData.secondCount, uteModuleNewFactoryTestData.maxCount, uteModuleNewFactoryTestData.factoryAgingTestMode);
 
     // printf("SCREEN_ID=%d\r\n",uteModuleGuiCommonGetCurrentScreenId());
     if ((uteModuleNewFactoryTestData.mode == FACTORY_TEST_MODE_AGING) &&
@@ -272,28 +272,19 @@ void uteModuleNewFactoryTestEverySecond(void)
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
                     uteModuleSmokeFactoryData.Moto_Count++;
                 }
-                // if(uteModuleNewFactoryTestData.secondCount % 30 == 0)
-                // {
-                //     ecig.cfg->smoke_start_or_not = 0;
-                //    //  printf("11111111111111111uteModuleNewFactoryTestData.secondCount=%d",uteModuleNewFactoryTestData.secondCount);
-                // }
-                // if(uteModuleNewFactoryTestData.secondCount %30 == 1)
-                // {
-                //     ecig.cfg->smoke_start_or_not = 1;
-                //     printf("22222222222222222uteModuleNewFactoryTestData.secondCount=%d",uteModuleNewFactoryTestData.secondCount);
-                // }
-                if (uteModuleNewFactoryTestData.secondCount == 1 ||
-                    (uteModuleNewFactoryTestData.secondCount > 0 && uteModuleNewFactoryTestData.secondCount % 30 == 0))
+
+                // printf("ecig.cfg->smoke_res_swich=%d,timer_hot_mic_work()=%d,Smoke_Count=%d\r\n",ecig.cfg->smoke_res_swich,timer_hot_mic_work(),uteModuleNewFactoryTestData.secondCount);
+                if ((uteModuleNewFactoryTestData.secondCount == 1 ||
+                     (uteModuleNewFactoryTestData.secondCount > 0 && uteModuleNewFactoryTestData.secondCount % 10 == 0)) && det1_start_or_not()==1)
                 {
                     ecig.cfg->smoke_start_or_not = 1; // 开启烟雾
                     uteModuleSmokeFactoryData.Smoke_Count++; // 增加抽吸口数
-                    printf("ecig.cfg->smoke_start_or_not = 1 secondCount=%d,uteModuleSmokeFactoryData.Smoke_Count\r\n", uteModuleNewFactoryTestData.secondCount,uteModuleSmokeFactoryData.Smoke_Count);
+
                 }
                 else if (uteModuleNewFactoryTestData.secondCount == 2 ||
-                         (uteModuleNewFactoryTestData.secondCount > 1 && uteModuleNewFactoryTestData.secondCount % 30 == 1))
+                         (uteModuleNewFactoryTestData.secondCount > 1 && uteModuleNewFactoryTestData.secondCount % 10 == 1))
                 {
                     ecig.cfg->smoke_start_or_not = 0; // 关闭烟雾
-                    printf("ecig.cfg->smoke_start_or_not = 0: secondCount=%d\r\n", uteModuleNewFactoryTestData.secondCount);
                 }
                 uteModuleNewFactoryTestData.secondCount++;
             }

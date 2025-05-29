@@ -67,10 +67,10 @@ static void func_power_on_disp_process(void)
                 {
                     func_cb.sta = FUNC_POWER_ON_LANGUAGE;
                 }
-                else
-                {
-                    func_cb.sta = FUNC_POWER_ON_SCAN;
-                }
+                // else
+                // {
+                //     func_cb.sta = FUNC_POWER_ON_SCAN;
+                // }
             }
         }
     }

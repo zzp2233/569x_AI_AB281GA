@@ -497,10 +497,10 @@ static void func_long_press_message(size_msg_t msg)
             }
             break;
         case K_BACK:
-            if(sys_cb.power_on_state==false)
-            {
-                func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
-            }
+            // if(sys_cb.power_on_state==false)
+            // {
+            //     func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            // }
             break;
         default:
             //func_message(msg);

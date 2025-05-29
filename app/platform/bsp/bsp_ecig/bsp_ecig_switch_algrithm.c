@@ -328,7 +328,7 @@ void timer_hot_dual_isr(void)//
                     if (ecig.power_on_flag)
                     {
                         //ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
-                        //TRACE(hot_str11,ecig.cfg->smoke_res_swich );
+                        //  TRACE(hot_str11,ecig.cfg->smoke_res_swich );
                         //单发
                         if(!ecig.cfg->smoke_position_swich)
                         {
@@ -397,6 +397,11 @@ void timer_hot_dual_isr(void)//
             ecig.hot_time_cnt = 0;
             ecig.hot_time_flag = 0;
             ecig.cnt_1s = 0;
+            if(ecig.smoke_sta != IDLE)
+            {
+                ecig.cfg->smoke_res_swich = !ecig.cfg->smoke_res_swich;
+                //  TRACE(hot_str11,ecig.cfg->smoke_res_swich );
+            }
             ecig.smoke_sta = IDLE;
 
             ecig.timer_cycle_cnt = 0;
@@ -406,7 +411,7 @@ void timer_hot_dual_isr(void)//
             {
                 ecig.short_circuit_flag = IDLE;
             }
-            ecig.cfg->smoke_res_swich = !ecig.cfg->smoke_res_swich;
+
 //                ecig.short_circuit_flag = 0;
             //printf(ecig_end);
         }

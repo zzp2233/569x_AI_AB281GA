@@ -262,8 +262,9 @@ typedef struct
     u16 pullup_sta;                                 //CLOCK上拉界面
     u8 msgbox_enter_sta;                            //弹窗进入之前的界面任务
     u8  flag_sort       : 1,                        //已进入快捷任务
-    flag_animation  : 1;                        //入场动画
+    flag_animation  : 1;                            //入场动画
 
+    bool flag_sort_jump;                            //记录处于快捷任务界面时跳转
 
 
     void (*mp3_res_play)(u32 addr, u32 len);        //各任务的语音播报函数接口

@@ -122,9 +122,9 @@ static void func_heart_about_message(size_msg_t msg)
             compo_page_move_touch_handler(f_heart_about->ptm);
          }
          break;
-      case MSG_CTP_SHORT_RIGHT:
-         func_switch_to(FUNC_HEARTRATE,FUNC_SWITCH_LR_ZOOM_RIGHT);
-         break;
+      // case MSG_CTP_SHORT_RIGHT:
+      //    func_switch_to(FUNC_HEARTRATE,FUNC_SWITCH_LR_ZOOM_RIGHT);
+      //    break;
       case MSG_CTP_SHORT_LEFT:
          break;
 

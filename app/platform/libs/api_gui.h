@@ -27,7 +27,6 @@ typedef struct
     u8 g;
     u8 b;
 } color_t;
-
 typedef struct rect_t_
 {
     s16 x;
@@ -56,6 +55,14 @@ typedef struct sph_t_
     s16 azimuth;
     s16 rotation;
 } sph_t;
+
+typedef struct matrix22_t_
+{
+    s32 a11;
+    s32 a12;
+    s32 a21;
+    s32 a22;
+} matrix22_t;
 
 typedef void widget_t;
 typedef void widget_page_t;
@@ -479,6 +486,14 @@ void widget_image3d_set_rotation(widget_image3d_t *img, s16 angle);
 void widget_image3d_set_rotation_center(widget_image3d_t *img, s16 x, s16 y);
 
 /**
+ * @brief 设置3D图片的2x2矩阵
+ * @param[in] img:3D图片Widget
+ * @param[in] m:2x2矩阵指针
+ * @return 无
+ **/
+void widget_image3d_set_matrix22(widget_image3d_t *img, matrix22_t *m);
+
+/**
  * @brief 获取3D图片的中心的屏幕前坐标
  * @param[in] img:3D图片Widget
  * @return x坐标
@@ -792,13 +807,6 @@ u16 widget_text_get_autoroll_circ_pixel(widget_text_t *txt);
 u8 widget_text_get_height(void);
 
 /**
- * @brief 获取系统字高(最大值) 用于换行等高
- * @param[in] 无
- * @return 系统字库字体字高
- **/
-u8 widget_text_get_max_height(void);
-
-/**
  * @brief 设置排版方向
  * @param[in] right_align:排版方向是否右对齐
  * @return 无
@@ -1057,6 +1065,40 @@ void widget_chart_set_range(widget_chart_t *chart, u16 range_x, u16 range_y);
 */
 bool widget_chart_set_real_num(widget_chart_t *chart, u8 real_num);
 
+/**
+ * 设置图表的显示方向
+ * chart:图表
+ * dir：
+
+ 0垂直方向 ：
+/|\ y轴正方向
+ |    **      **
+ |    **      **
+ |    **      **
+ |    **      **
+ |    **      **
+ |    **
+ |    **
+ |    **
+0|    **
+----------------------------------------------> x正方向
+
+
+1水平方向
+/|\ y轴正方向
+ |
+ |************
+ |************
+ |
+ |
+ |    ******
+ |    ******
+ |
+0|
+----------------------------------------------> x正方向
+*/
+bool widget_chart_set_dir(widget_chart_t *chart, u8 dir);
+
 
 /**
  * 设置图表数据
@@ -1153,12 +1195,18 @@ bool widget_line_set_width(widget_line_t *line, u16 width);
 bool widget_line_set_circle(widget_line_t *line, bool onof);
 
 /**
- * 或许line widget上已经有的点个数
+ * 获取line widget上已经有的点个数
  * line:线条 widget
  * return: 返回点个数
 */
 u16 widget_line_get_item_num(widget_line_t *line);
 
+/**
+ * 获取指定id的point点结构体指针
+ * line:线条 widget
+ * return: 返回point结构体指针，非法返回NULL
+ */
+point_t * widget_line_get_point(widget_line_t *line, u16 item_id);
 
 /**
  * 创建bar类型的widget(进度条)

@@ -301,7 +301,8 @@ compo_form_t *func_weather_form_create(void)
     compo_picturebox_set_pos(picbox, 13+51,13+188);
     //紫外线data
     txt = compo_textbox_create(frm,strlen(i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]));
-    compo_textbox_set_pos(txt,64,229);
+    // compo_textbox_set_pos(txt,64,229);
+    compo_textbox_set_location(txt,64,229,65,40);//部分语言显示超出屏幕，改为限制文本框大小
     compo_textbox_set(txt,i18n[weather_uv[uteModuleWeatherGetUltravioletLevel(weather_date.fristDayWeatherUltraviolet)]]);
     //紫外线txt
     txt = compo_textbox_create(frm,strlen(i18n[STR_UV]));

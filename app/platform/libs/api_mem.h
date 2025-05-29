@@ -30,6 +30,11 @@ void tlsf_walk_pool(pool_t pool, tlsf_walker walker, void * user);
  * size:字节大小
  */
 void *ab_malloc(size_t size);
+
+/**
+ * 用户堆空间申请并清零
+ * size:字节大小
+ */
 void *ab_zalloc(size_t size);
 
 /**

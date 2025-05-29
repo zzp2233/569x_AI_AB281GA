@@ -222,7 +222,8 @@ compo_form_t *func_sleep_form_create(void)
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y,100,32);
-    compo_textbox_set_right_align(txt, true);
+    // compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_autoroll_mode(txt,0);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
@@ -244,7 +245,8 @@ compo_form_t *func_sleep_form_create(void)
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing,100,32);
-    compo_textbox_set_right_align(txt, true);
+    // compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_autoroll_mode(txt,0);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
@@ -265,7 +267,8 @@ compo_form_t *func_sleep_form_create(void)
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*3,100,32);
-    compo_textbox_set_right_align(txt, true);
+    // compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_autoroll_mode(txt,0);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
@@ -286,7 +289,8 @@ compo_form_t *func_sleep_form_create(void)
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X+5, first_y+height_spacing*2,100,32);
-    compo_textbox_set_right_align(txt, true);
+    // compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_autoroll_mode(txt,0);
     compo_textbox_set(txt, buf);
 //////////////////////////////////////////////////////////////////////////////////////////////////////
     uint16_t width = (203);    // 总宽度

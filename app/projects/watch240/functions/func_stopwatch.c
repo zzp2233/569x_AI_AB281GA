@@ -815,11 +815,11 @@ compo_form_t *func_stopwatch_form_create(void)
     }
 
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_STOPWATCH_RECORD);
-    compo_listbox_set_location(listbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+10,GUI_SCREEN_WIDTH,148);
+    compo_listbox_set_location(listbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+20,GUI_SCREEN_WIDTH,148);
     compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt+2);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_bgimg(listbox, UI_BUF_I341001_27_MORE_GROUP_BIN);
-    compo_listbox_set_item_height(listbox, 40);
+    compo_listbox_set_item_height(listbox, 50);
     compo_listbox_set_text_modify_by_idx_callback2(listbox, stopwatch_set_text_callback);
     compo_listbox_set_text1_color_callback(listbox, stopwatch_text1_callback);
     compo_listbox_set_text2_color_callback(listbox, stopwatch_text2_callback);
@@ -908,9 +908,9 @@ static void func_stopwatch_button_click(u32 key_flag)
                     sys_cb.stopwatch_rec_view[sys_cb.stopwatch_rec_cnt-1] = sys_cb.stopwatch_total_msec;
                     compo_listbox_set(listbox, tbl_stopwatch_list, sys_cb.stopwatch_rec_cnt+2);
                     compo_listbox_set_text_modify_by_idx_callback2(listbox, stopwatch_set_text_callback);
-                    compo_listbox_set_focus_byidx(listbox, sys_cb.stopwatch_rec_cnt+2);
+                    compo_listbox_set_focus_byidx(listbox, sys_cb.stopwatch_rec_cnt+1);
                     if (sys_cb.stopwatch_rec_cnt > 3)
-                        compo_listbox_move_init_modify(listbox, 122+46*2, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1)+20);
+                        compo_listbox_move_init_modify(listbox, 130+56*2, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1));
                     compo_listbox_update(listbox);
                 }
             }
@@ -928,7 +928,7 @@ static void func_stopwatch_button_click(u32 key_flag)
                 compo_listbox_set_text_modify_by_idx_callback2(listbox, stopwatch_set_text_callback);
                 compo_listbox_set_focus_byidx(listbox, sys_cb.stopwatch_rec_cnt+1);
                 if (sys_cb.stopwatch_rec_cnt > 3)
-                    compo_listbox_move_init_modify(listbox, 122+46*2, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1)+20);
+                    compo_listbox_move_init_modify(listbox, 130+56*2, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1));
                 compo_listbox_update(listbox);
 
             }
@@ -2044,8 +2044,7 @@ static void func_stopwatch_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     // compo_listbox_move_init(listbox);
-    if (sys_cb.stopwatch_rec_cnt > 3)
-        compo_listbox_move_init_modify(listbox, 122+46*2, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1)+20);
+    compo_listbox_move_init_modify(listbox, 130+56*2, compo_listbox_gety_byidx(listbox,sys_cb.stopwatch_rec_cnt+1));
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     f_stopwatch_t *f_stopwatch = (f_stopwatch_t *)func_cb.f_cb;
     f_stopwatch->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);

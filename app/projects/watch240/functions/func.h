@@ -93,7 +93,9 @@ enum
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
     FUNC_ALTITUDE,                      //海拔
     FUNC_MAP,                           //地图
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     FUNC_WOMEN_HEALTH,                  //女性健康
+#endif
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     FUNC_MESSAGE,                       //消息
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
@@ -213,8 +215,9 @@ enum
     FUNC_MESSAGE_REPLY,                  //消息发送
     FUNC_MIC_TEST,
     FUNC_OTA_UI_MODE,
-
+#if UTE_MODULE_SCREENS_BIRD_SUPPORT
     FUNC_BIRD,
+#endif
     FUNC_TETRIS,
     FUNC_TETRIS_START,
     FUNC_OTA_MODE,         //OTA升级

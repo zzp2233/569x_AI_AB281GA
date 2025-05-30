@@ -497,7 +497,6 @@ compo_form_t *func_calculator_form_create(void)
     compo_textbox_t *txt;
     txt = compo_textbox_create(frm, 11);
     compo_setid(txt, COMPO_ID_NUM_DISP);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
 //    compo_textbox_set_autosize(txt, true);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, false);

@@ -10,10 +10,14 @@
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
 #define DEFAULT_BLE_DEV_NAME "SVERGE"
-#define UTE_SW_VERSION "AB281FV000067"
+#define UTE_SW_VERSION "AB281FV000067T"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
-
+/*! 上传蓝牙名广播时，使用 蓝牙名_XXXX 格式*/
+#define UTE_MODULE_BLE_NAME_FORMET1_SUPPORT 1
+/*! 设备本地蓝牙名 */
+#define UTE_MODULE_LOCAL_BLE_NAME_SUPPORT 1
+#define UTE_DEV_LOCAL_BLE_NAME "Storm Verge"
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
 /*gesnsor 采集原始数据*/

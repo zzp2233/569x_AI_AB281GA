@@ -1229,7 +1229,6 @@ compo_form_t *func_sport_finish_form_create(void)
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d/%d/%d %02d:%02d",sport_data.saveData.startSportTime.year,sport_data.saveData.startSportTime.month,sport_data.saveData.startSportTime.day,sport_data.saveData.startSportTime.hour,sport_data.saveData.startSportTime.min);
     textbox = compo_textbox_create(frm, strlen(txt_buf));
-    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, 174+20);
     compo_textbox_set(textbox, txt_buf);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);

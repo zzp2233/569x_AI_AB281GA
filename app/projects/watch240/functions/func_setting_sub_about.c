@@ -347,7 +347,11 @@ compo_form_t *func_set_sub_about_form_create(void)
     char davName[40];
     memset(davName,'\0',sizeof(davName));
     uint8_t davNameLength = sizeof(davName);
+#if UTE_MODULE_LOCAL_BLE_NAME_SUPPORT
+    memcpy(davName,UTE_DEV_LOCAL_BLE_NAME,sizeof(UTE_DEV_LOCAL_BLE_NAME));
+#else
     uteModulePlatformGetDevName((uint8_t*)davName,&davNameLength);//获取设备名称
+#endif
 
     uint8_t Ble_Address[6];//获取蓝牙地址数组
     char Ble_Address_str_buf[20];//蓝牙地址文本数组

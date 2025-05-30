@@ -1334,6 +1334,38 @@ void uteModulePlatformUpdateDevName(void)
             BleId[2*i] = (device_MAC_address_buf[i]/16)+ (((device_MAC_address_buf[i]/16)>9)?(-10 +'A'):(+'0'));
             BleId[2*i+1] = (device_MAC_address_buf[i]%16)+ (((device_MAC_address_buf[i]%16)>9)?(-10 +'A'):(+'0'));
         }
+#if UTE_MODULE_BLE_NAME_FORMET1_SUPPORT
+        if((size+9+2)<=(remainLength))   //total char "(namelen+0x09)+...+"_XXXX"
+        {
+            memcpy(&BleId[7],"_",1);
+            len = 5;
+            memcpy(&name[size],&BleId[7],len);
+            size = size + len;
+        }
+        else if((size+5+2)<=(remainLength)) //total char "(namelen+0x07)+...+-XXXX" 7byte
+        {
+            BleId[7]='-';
+            memcpy(&name[size],&BleId[7],5);
+            size = size + 5;
+        }
+        else if((size+4+2)<=(remainLength))
+        {
+            BleId[7]='-';
+            memcpy(&name[size],&BleId[7],4);
+            size = size + 4;
+        }
+        else if((size+2)<=(remainLength))
+        {
+
+        }
+        else
+        {
+            if(remainLength>2)
+            {
+                size = remainLength-2;
+            }
+        }
+#else
         if((size+9+2)<=(remainLength))   //total char "(namelen+0x09)+...+(ID-XXXX)" 12byte
         {
             memcpy(&BleId[4],"(ID-",4);
@@ -1365,6 +1397,7 @@ void uteModulePlatformUpdateDevName(void)
                 size = remainLength-2;
             }
         }
+#endif
     }
 #endif
     name[size] = 0;

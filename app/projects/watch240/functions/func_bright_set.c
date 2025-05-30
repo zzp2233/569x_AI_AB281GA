@@ -97,9 +97,11 @@ compo_form_t *func_bright_set_form_create(void)
     compo_listbox_set(listbox, tbl_bright_set_list, BRIGHT_SET_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I341001_28_SET_BG1_BIN);
     compo_listbox_set_sta_icon(listbox,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN);
-
-
     compo_setid(listbox, COMPO_ID_LISTBOX);
+
+    compo_shape_t *shape = compo_shape_create_for_page(frm, listbox->page, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 104, 320, 1);
+    compo_shape_set_color(shape,make_color(0x29,0x29,0x29));
 
     compo_listbox_set_focus(listbox, 162);
     compo_listbox_update(listbox);

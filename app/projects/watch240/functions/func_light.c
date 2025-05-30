@@ -415,7 +415,7 @@ const static u32 light_arr[5] =
     UI_BUF_I341001_28_SET_BRIGHTNESS_01_BIN,
     UI_BUF_I341001_28_SET_BRIGHTNESS_02_BIN,
     UI_BUF_I341001_28_SET_BRIGHTNESS_03_BIN,
-    UI_BUF_I341001_28_SET_BRIGHTNESS_04_BIN
+    UI_BUF_I341001_28_SET_BRIGHTNESS_04_BIN,
 };
 //创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_light_form_create(void)
@@ -466,7 +466,7 @@ static void func_light_disp_move_handle(void)
             {
                 // printf("level_data:%d\n",level_data);
                 f_light->level_value = level_data;
-                compo_picturebox_set(light_pic, light_arr[sys_cb.light_level-1]);
+                compo_picturebox_set(light_pic, light_arr[level_data-1]);
                 tft_bglight_set_level((uint8_t)level_data,false);
             }
         }

@@ -100,7 +100,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_54_BIN
 
 // 日期数字字体
-#define UTE_WATCHS_CUBE_DATE_NUM_FONT UI_BUF_0FONT_FONT_NUM_32_BIN
+#define UTE_WATCHS_CUBE_DATE_NUM_FONT UI_BUF_0FONT_FONT_BIN
 
 // 时间小时数字位置
 #define CUBE_HOUR_X         (GUI_SCREEN_CENTER_X - 40)

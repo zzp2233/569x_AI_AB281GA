@@ -520,35 +520,25 @@ compo_form_t *func_weather_form_create(void)
     ute_module_weather_data_t  weather_date;
     ute_display_ctrl_t displayInfo;
 
-    const u8 week_sort[7]= {STR_SUNDAY, // 周日
-                            STR_MONDAY, // 周一
-                            STR_TUESDAY, // 周二
-                            STR_WEDNESDAY, // 周三
-                            STR_THURSDAY, // 周四
-                            STR_FRIDAY, // 周五
-                            STR_SATURDAY, // 周六
+    const u8 week_sort[7]= {STR_SUNDAY,     // 周日
+                            STR_MONDAY,     // 周一
+                            STR_TUESDAY,    // 周二
+                            STR_WEDNESDAY,  // 周三
+                            STR_THURSDAY,   // 周四
+                            STR_FRIDAY,     // 周五
+                            STR_SATURDAY,   // 周六
                            };
-    // u8 week_day=0;
-    u8 get_weather_id[7];//存放一个星期的排序
-    char str_buff[50];//用于存放打印数据
-    char str_humidity_buff[8];//用于存放湿度打印数据
+    u8 get_weather_id[7];               //存放一个星期的排序
+    char str_buff[50];                  //用于存放打印数据
+    char str_humidity_buff[8];          //用于存放湿度打印数据
     memset(get_weather_id,0,sizeof(get_weather_id));
-    uteModuleSystemtimeGetTime(&time);//获取系统时间
-//    printf("week:%d\n",time.week);
-//     week_day = time.week; //获取星期
-//     for(int i=0; i<=6; i++) //星期排序
-//     {
-//         week_sort[i] = week_day;
-//         if(++week_day==7)
-//         {
-//             week_day = 0;
-//         }
-//     }
-    if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
+    uteModuleSystemtimeGetTime(&time);  //获取系统时间
+
+    if(uteModuleWeatherGetCurrDay() == time.day)        //当前日期是否与系统日期一致
     {
-        uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
-        uteModuleWeatherGetData(&weather_date);//获取天气状态
-        for(int i=0; i<7; i++) //获取一周的天气
+        uteModuleGuiCommonGetDisplayInfo(&displayInfo); //获取温度
+        uteModuleWeatherGetData(&weather_date);         //获取天气状态
+        for(int i=0; i<7; i++)                          //获取一周的天气
         {
             if(weather_date.DayWeather[i] != WEATHER_TYPE_UNKNOWN)
             {
@@ -632,22 +622,31 @@ compo_form_t *func_weather_form_create(void)
 
     picbox = compo_picturebox_create(frm,future_weather_icon[weather_list[get_weather_id[0]].res_addr]);///
     compo_picturebox_set_pos(picbox, 40+50,132+57);
-    //compo_picturebox_cut(picbox, weather_list[get_weather_id[0]].res_addr,16);
-    memset(str_buff,0,sizeof(str_buff));
+
+    picbox = compo_picturebox_create(frm,UI_BUF_I341001_12_WEATHER_WEATHERSYM_BIN);
     if(weather_no_data_flag)
     {
-        snprintf(str_buff,sizeof(str_buff),"--");
+        compo_picturebox_set_pos(picbox,309+16, 113+24);
+
+        picbox = compo_picturebox_create(frm, UI_BUF_I341001_12_WEATHER_102_56X76_BIN);///背景图片
+        compo_picturebox_cut(picbox, 10, 11);
+        compo_picturebox_set_pos(picbox, 186+38,118+38);
+
+        picbox = compo_picturebox_create(frm, UI_BUF_I341001_12_WEATHER_102_56X76_BIN);///背景图片
+        compo_picturebox_cut(picbox, 10, 11);
+        compo_picturebox_set_pos(picbox, 186+84, 118+38);
     }
     else
     {
-        snprintf(str_buff,sizeof(str_buff),"%d",weather_date.fristDayCurrTemperature);
+        compo_number_t *num = compo_number_create(frm,UI_BUF_I341001_12_WEATHER_102_56X76_BIN, 3);
+        compo_number_set_margin(num, 5);
+        compo_number_set_radix(num, 11, true);
+        compo_number_set(num, weather_date.fristDayCurrTemperature);
+        compo_number_set_align(num, 1);
+        compo_number_set_pos(num, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/3-8, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/4);
+        compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X+compo_number_get_rel_location(num).wid/2+GUI_SCREEN_CENTER_X/3+10, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/3-6);
     }
-    txt = compo_textbox_create(frm,strlen(str_buff));
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_64_BIN);
-    compo_textbox_set_pos(txt,90/2+186,20+118);
-    compo_textbox_set(txt, str_buff);
-    picbox = compo_picturebox_create(frm,UI_BUF_I341001_12_WEATHER_WEATHERSYM_BIN);
-    compo_picturebox_set_pos(picbox,212+widget_text_get_area(txt->txt).wid,120+12);
+
     memset(str_buff,0,sizeof(str_buff));
     if(!weather_no_data_flag)
     {
@@ -665,7 +664,7 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff,sizeof(str_buff),"--/--℃");
     }
     txt = compo_textbox_create(frm,strlen(str_buff));
-    compo_textbox_set_pos(txt,124/2+182,40/2+206);
+    compo_textbox_set_pos(txt,124/2+182,40/2+230);
     compo_textbox_set(txt, str_buff);
 
     txt = compo_textbox_create(frm,strlen(i18n[weather_list[get_weather_id[0]].txt_num]));

@@ -324,7 +324,7 @@ static menu_hc_item_t tbl_menu_grid[] =
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_SOPRT_BIN,              },   //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_BLOOD_OXYGEN_BIN,          },   //血氧
+    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_SPO2_BIN,          },   //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 // #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     // {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_BLOOD_PRESSURE_BIN,        },   //血压

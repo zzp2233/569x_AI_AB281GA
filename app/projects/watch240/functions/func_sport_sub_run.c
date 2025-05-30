@@ -2321,6 +2321,8 @@ enum
     COMPO_ID_NUM_SPORT_KM,          //距离
     COMPO_ID_NUM_SPORT_COUNT,       //计次
     COMPO_ID_NUM_SPORT_SPEED,       //配速
+    COMPO_ID_NUM_SPORT_SPEED_MIN,   //配速分钟
+    COMPO_ID_UINT_SPORT_SPEED_MIN,  //'
 
     COMPO_ID_UINT_SPORT_TIME,        //运动时间
     COMPO_ID_UINT_SPORT_HEARTRATE,   //心率
@@ -2599,14 +2601,36 @@ compo_form_t *func_sport_sub_run_form_create(void)
     memset(txt_buf,0,sizeof(txt_buf));
     if(data->saveData.avgTimeSecond)
     {
-        snprintf(txt_buf,sizeof(txt_buf),"%d%s%d%c", data->saveData.avgTimeMinute,"'",data->saveData.avgTimeSecond,'"');
+        snprintf(txt_buf,sizeof(txt_buf),"%d%c",data->saveData.avgTimeSecond,'"');
     }
     else
     {
-        snprintf(txt_buf,sizeof(txt_buf),"%d%s%d%c", 0,"'",0,'"');
+        snprintf(txt_buf,sizeof(txt_buf),"%d%c",0,'"');
     }
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_SPEED);
+
+    s16 txt_leng = widget_text_get_area(txt->txt).wid;
+    txt = compo_textbox_create(frm, 3);///配速数据文本
+    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_align_center(txt, false);
+    compo_textbox_set_right_align(txt, true);
+    compo_textbox_set_location(txt,0, 708+22, GUI_SCREEN_WIDTH-22-txt_leng-11, 50);
+    memset(txt_buf,0,sizeof(txt_buf));
+    if(data->saveData.avgTimeSecond)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",data->saveData.avgTimeMinute);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",0);
+    }
+    compo_textbox_set(txt, data->saveData.avgTimeMinute);
+    compo_setid(txt,COMPO_ID_NUM_SPORT_SPEED_MIN);
+
+    pic = compo_picturebox_create(frm, UI_BUF_I341001_3_EXERCISE_5_EXERCISING_MIN_BIN);///'
+    compo_picturebox_set_pos(pic,GUI_SCREEN_WIDTH-22-txt_leng-5,708+42);
+    compo_setid(pic,COMPO_ID_UINT_SPORT_SPEED_MIN);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -2863,10 +2887,11 @@ static void func_sport_sub_run_updata(void)
         compo_textbox_t* txt_kcal       = compo_getobj_byid(COMPO_ID_NUM_SPORT_KCAL);
         compo_textbox_t* txt_step       = compo_getobj_byid(COMPO_ID_NUM_SPORT_STEP);
         compo_textbox_t* txt_km         = compo_getobj_byid(COMPO_ID_NUM_SPORT_KM);
+        compo_textbox_t* txt_speed      = compo_getobj_byid(COMPO_ID_NUM_SPORT_SPEED);
+        compo_textbox_t* txt_min        = compo_getobj_byid(COMPO_ID_NUM_SPORT_SPEED_MIN);
+        compo_picturebox_t* pic_min     = compo_getobj_byid(COMPO_ID_UINT_SPORT_SPEED_MIN);
         compo_textbox_t* uint_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
         compo_textbox_t* txt_count      = compo_getobj_byid(COMPO_ID_NUM_SPORT_COUNT);
-        // compo_shape_t * page_point1     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE1);
-        // compo_shape_t * page_point2     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE2);
         compo_button_t * btn_play       = compo_getobj_byid(COMPO_ID_BTN_SPORT_STOP);
         compo_textbox_t* txt_time_right = compo_getobj_byid(COMPO_ID_UINT_SPORT_TIME);
         compo_textbox_t* txt_stop       = compo_getobj_byid(COMPO_ID_TXT_SPORT_STOP);
@@ -2995,30 +3020,20 @@ static void func_sport_sub_run_updata(void)
             compo_textbox_set(txt_time_right, txt_buf);
         }
 
-        // if(page_point1 != NULL)
-        // {
-        //     if(f_sleep->page_num == PAGE_1)
-        //     {
-        //         compo_shape_set_color(page_point1,COLOR_WHITE);
-        //     }
-        //     else
-        //     {
-        //         compo_shape_set_color(page_point1, make_color(0x29,0x29,0x29));
-        //     }
+        if(txt_speed != NULL)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d%c",data->saveData.avgTimeSecond,'"');
+            compo_textbox_set(txt_speed, txt_buf);
 
-        // }
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%d",data->saveData.avgTimeMinute);
+            s16 txt_leng = widget_text_get_area(txt_speed->txt).wid;
+            compo_textbox_set_location(txt_min,0, 708+22, GUI_SCREEN_WIDTH-22-txt_leng-11, 50);
+            compo_textbox_set(txt_min, txt_buf);
 
-        // if(page_point2 != NULL)
-        // {
-        //     if(f_sleep->page_num == PAGE_2)
-        //     {
-        //         compo_shape_set_color(page_point2,COLOR_WHITE);
-        //     }
-        //     else
-        //     {
-        //         compo_shape_set_color(page_point2, make_color(0x29,0x29,0x29));
-        //     }
-        // }
+            compo_picturebox_set_pos(pic_min,GUI_SCREEN_WIDTH-22-txt_leng-5,708+42);
+        }
 
         ab_free(data);
     }

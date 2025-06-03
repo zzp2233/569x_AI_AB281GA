@@ -71,7 +71,61 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define CUBE_DATE_WIDTH      300
 #define CUBE_DATE_HEIGHT     70
 
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+static const compo_cube_item_t tbl_menu_cube[] =
+{
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_EN_00_BIN, FUNC_ACTIVITY},
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_EN_04_BIN, FUNC_SLEEP},
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_EN_05_BIN, FUNC_WEATHER},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+//#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+//   {UI_BUF_DIALPLATE_CUBE_EN_02_BIN, FUNC_BLOOD_OXYGEN},
+//#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_EN_03_BIN, FUNC_PRESSURE},
+#endif // UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_EN_01_BIN, FUNC_HEARTRATE},
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_EN_06_BIN, FUNC_BT},
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+};
+// 时间数字字体
+#define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_54_BIN
+
+// 日期数字字体
+#define UTE_WATCHS_CUBE_DATE_NUM_FONT UI_BUF_0FONT_FONT_BIN
+
+// 时间小时数字位置
+#define CUBE_HOUR_X         (GUI_SCREEN_CENTER_X - 40)
+#define CUBE_HOUR_Y         (GUI_SCREEN_CENTER_Y - 160)
+#define CUBE_HOUR_WIDTH     300
+#define CUBE_HOUR_HEIGHT    70
+// 时间:位置
+#define CUBE_DOT_X          GUI_SCREEN_CENTER_X
+#define CUBE_DOT_Y          (GUI_SCREEN_CENTER_Y - 160)
+#define CUBE_DOT_WIDTH      300
+#define CUBE_DOT_HEIGHT     70
+// 时间分钟数字位置
+#define CUBE_MIN_X          (GUI_SCREEN_CENTER_X + 40)
+#define CUBE_MIN_Y          (GUI_SCREEN_CENTER_Y - 160)
+#define CUBE_MIN_WIDTH      300
+#define CUBE_MIN_HEIGHT     70
+// 日期数字位置
+#define CUBE_DATE_X          GUI_SCREEN_CENTER_X
+#define CUBE_DATE_Y          (GUI_SCREEN_CENTER_Y + 170)
+#define CUBE_DATE_WIDTH      300
+#define CUBE_DATE_HEIGHT     70
+
+
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 static const compo_cube_item_t tbl_menu_cube[] =
 {
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
@@ -92,6 +146,58 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #if UTE_MODULE_SCREENS_MUSIC_SUPPORT
     {UI_BUF_DIALPLATE_CUBE_05_BIN, FUNC_BT},
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+};
+// 时间数字字体
+#define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_54_BIN
+
+// 日期数字字体
+#define UTE_WATCHS_CUBE_DATE_NUM_FONT UI_BUF_0FONT_FONT_NUM_32_BIN
+
+// 时间小时数字位置
+#define CUBE_HOUR_X         (GUI_SCREEN_CENTER_X - 40)
+#define CUBE_HOUR_Y         (GUI_SCREEN_CENTER_Y - 120)
+#define CUBE_HOUR_WIDTH     300
+#define CUBE_HOUR_HEIGHT    70
+// 时间:位置
+#define CUBE_DOT_X          GUI_SCREEN_CENTER_X
+#define CUBE_DOT_Y          (GUI_SCREEN_CENTER_Y - 120)
+#define CUBE_DOT_WIDTH      300
+#define CUBE_DOT_HEIGHT     70
+// 时间分钟数字位置
+#define CUBE_MIN_X          (GUI_SCREEN_CENTER_X + 40)
+#define CUBE_MIN_Y          (GUI_SCREEN_CENTER_Y - 120)
+#define CUBE_MIN_WIDTH      300
+#define CUBE_MIN_HEIGHT     70
+// 日期数字位置
+#define CUBE_DATE_X          GUI_SCREEN_CENTER_X
+#define CUBE_DATE_Y          (GUI_SCREEN_CENTER_Y - 70)
+#define CUBE_DATE_WIDTH      300
+#define CUBE_DATE_HEIGHT     70
+
+
+
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+static const compo_cube_item_t tbl_menu_cube[] =
+{
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_FIND_PHONE_BIN, FUNC_FINDPHONE},
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_MUSIC_BIN, FUNC_BT},
+#endif
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_SETTING_BIN, FUNC_SETTING},
+#endif
+#if UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_THEME_BIN, FUNC_MENUSTYLE},
+#else
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_THEME_BIN, FUNC_STYLE},
+#endif
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_VOICE_BIN, FUNC_VOICE},
+#endif
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_DIALPLATE_CUBE_LIGHT_MF_WEATHER_BIN, FUNC_WEATHER},
+#endif
+};
 
 // 时间数字字体
 #define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_48_BIN
@@ -119,7 +225,6 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define CUBE_DATE_WIDTH      300
 #define CUBE_DATE_HEIGHT     70
 
-};
 #else
 static const compo_cube_item_t tbl_menu_cube[] =
 {
@@ -233,59 +338,10 @@ static void func_clock_cube_disk_icon_click(void)
     // 切入应用
     if (func_sta > 0)
     {
-        // func_switching(FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO, NULL);
-        func_switch_to(func_sta, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
-        // func_cb.sta = func_sta;
-        func_cb.menu_idx = icon_idx; // 记住当前编号
+        func_cb.sta = func_sta;
     }
 }
 
-#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-// 立方体表盘
-compo_form_t *func_clock_cube_form_create(void)
-{
-    // 新建窗体
-    compo_form_t *frm = compo_form_create(true); // 菜单一般创建在底层
-
-    // 创建立方体菜单
-    compo_cube_t *cube = compo_cube_create(frm, CUBE_RADIUS, tbl_menu_cube, CUBE_ITEM_CNT);
-    compo_cube_set_pos(cube, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + 20);
-    compo_setid(cube, COMPO_ID_CUBE);
-
-    // 新建文本
-    compo_textbox_t *txt = compo_textbox_create(frm, 2);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
-    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X - 40, GUI_SCREEN_CENTER_Y - 120, 300, 70);
-    compo_bonddata(txt, COMPO_BOND_HOUR);
-    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
-
-    txt = compo_textbox_create(frm, 2);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
-    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 50, GUI_SCREEN_CENTER_Y - 140, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X + 40, GUI_SCREEN_CENTER_Y - 120, 300, 70);
-    compo_bonddata(txt, COMPO_BOND_MINUTE);
-    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
-
-    txt = compo_textbox_create(frm, 10);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
-    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 70, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,320, 290, 70);
-    compo_bonddata(txt, COMPO_BOND_DATE);
-    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
-
-    txt = compo_textbox_create(frm, 1);
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_54_BIN);
-    //    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 140, 300, 70);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 120, 260, 70);
-    compo_textbox_set(txt, ":");
-    compo_setid(txt, COMPO_ID_TIME_DOT);
-
-    // compo_cube_update(cube);
-    return frm;
-}
-#elif   GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-// 立方体表盘
 compo_form_t *func_clock_cube_form_create(void)
 {
     // 新建窗体
@@ -331,16 +387,7 @@ compo_form_t *func_clock_cube_form_create(void)
     // compo_cube_update(cube);
     return frm;
 }
-#else
-// 立方体表盘
-compo_form_t *func_clock_cube_form_create(void)
-{
-    // 新建窗体
-    compo_form_t *frm = compo_form_create(true); // 菜单一般创建在底层
 
-    return frm;
-}
-#endif
 // 地图功能事件处理
 void func_clock_cube_process(void)
 {

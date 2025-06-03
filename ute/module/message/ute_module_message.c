@@ -163,6 +163,11 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleWatchOnlineOneSecMsgHandler();
         }
         break;
+        case MSG_TYPE_MODULE_WATCHONLINE_START_TIMER:
+        {
+            uteModuleWatchOnlineStartSync();
+        }
+        break;
 #endif
         case MSG_TYPE_DRV_KEY_HANDLER:
         {
@@ -214,12 +219,21 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
             uteModuleLocalRingtoneStopRingDetail();
         }
         break;
-        case MSG_TYPE_FACTORY_PLAY_SOUND_RECORDING:
-        {
+
+        case MSG_TYPE_FACTORY_WRITE_RECORD_DATA_TO_FLASH:
+            uteModuleMicRecordFactoryWriteDataToFlash();
+            break;
+
+        case MSG_TYPE_FACTORY_PLAY_RECORD:
             uteModuleMicRecordFactoryPlay();
-            uteModuleMicRecordFactoryStart();
-        }
-        break;
+            break;
+
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+        case MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET:
+            uteDrvScreenEsdTeIntErrorCheckHandlerMsg();
+            break;
+#endif
+
         default:
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,unknown msg,type=%d", __func__, type);
             break;

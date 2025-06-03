@@ -55,6 +55,119 @@ static const u16 tbl_cube_azimuth[] =
 };
 
 /**
+ * 设置compo_cube的类型
+ * @param cube 指向compo_cube结构体的指针，用于指定哪个立方体的类型需要被设置
+ * @param type 要设置的立方体类型，使用uint8_t表示
+ * 此函数用于更新compo_cube结构体中的类型信息如果传入的指针为NULL，将调用halt函数
+ * 停止程序运行，以避免潜在的程序崩溃或未定义行为
+ */
+void compo_cube_set_type(compo_cube_t *cube, uint8_t type)
+{
+    if (cube == NULL)               // 检查传入的指针是否为NULL，如果为NULL则停止程序运行
+    {
+        halt(HALT_GUI_COMPO_CUBE);
+        return;
+    }
+    cube->cube_type = type;              // 更新立方体的类型
+    cube->flag_need_update = true;
+    compo_cube_update(cube);
+}
+
+void compo_cube_add_element(compo_cube_t *cube, s16 radius, u32 ele_res, int ele_cnt)
+{
+
+    if (cube->cube_type == COMPO_CUBE_TYPE_NORMAL)
+    {
+        halt(HALT_GUI_COMPO_CUBE);
+        return;
+    }
+
+    if (ele_cnt > sizeof(cube->ele)/sizeof(cube->ele[0]))
+    {
+        ele_cnt = sizeof(cube->ele)/sizeof(cube->ele[0]);
+    }
+
+//    cube->ele = item_ele;
+    for(int i=0; i<ele_cnt; i++)
+    {
+        cube->ele[i].radius = radius;
+        cube->ele[i].res = ele_res;
+        widget_image3d_t *img = widget_image3d_create(cube->page, ele_res);
+//        cube->item_ele[i] = img;
+        cube->ele[i].img3d = img;
+
+        widget_image3d_set_axis(img, cube->axis);
+
+        cube->ele[i].location.x = GUI_SCREEN_CENTER_X;
+        cube->ele[i].location.y = GUI_SCREEN_CENTER_Y;
+        cube->ele[i].location.wid = gui_image_get_size(ele_res).wid / 2;
+        cube->ele[i].location.hei = gui_image_get_size(ele_res).hei;
+
+        widget_set_location(img, cube->ele[i].location.x, cube->ele[i].location.y, cube->ele[i].location.wid, cube->ele[i].location.hei);
+        widget_image3d_set_r(img, 0);
+
+        //极角 与 方位角 组合
+        //极角:450(固定);       方位角: 450 到 -450;    旋转角: 0(固定);
+        //方位角:450(固定);     极角: 450 到 -450;      旋转角: 0(固定);
+        //极角:1350(固定);      方位角: 450 到 -450;    旋转角: 0(固定);
+        //方位角:1350(固定);    极角: 450 到 -450;      旋转角: 0(固定);
+        //极角:2250(固定);      方位角: 900(固定);      旋转角: 450 到 -450;
+        //极角:1350(固定);      方位角: 900(固定);      旋转角: 450 到 -450;
+
+
+        static const u16 tbl_cube_ele_polar[] =
+        {
+            450, 0, 1350, 0, 2250, 1350,
+        };
+
+        static const u16 tbl_cube_ele_azimuth[] =
+        {
+            0, 450, 0, 1350, 900, 900,
+        };
+
+
+        //每个角度3个元素
+        static int j = 0;
+        if (i % 3 == 0 && i != 0)
+        {
+            j++;
+            if (j >= sizeof(tbl_cube_ele_polar) / sizeof(tbl_cube_ele_polar[0]))
+            {
+                j = 0;
+            }
+        }
+
+
+        // 更均匀的分布方法（适用于大n值）
+        int n = 250;
+        int range = 2 * n + 1;
+        int buckets = RAND_MAX / range;
+        int max_random = buckets * range;
+
+        int random_num;
+        do
+        {
+            random_num = get_random(3600);
+        }
+        while (random_num >= max_random);
+
+        random_num = (random_num % range) - n;
+
+        s16 polar = tbl_cube_ele_polar[j] != 0 ? tbl_cube_ele_polar[j] : random_num;
+        s16 azimuth = tbl_cube_ele_azimuth[j] != 0 ? tbl_cube_ele_azimuth[j] : random_num;
+        s16 rotation = tbl_cube_ele_azimuth[j] == 900 ? random_num : 0;
+        widget_image3d_set_polar(img, polar);
+        widget_image3d_set_azimuth(img, azimuth);
+        widget_image3d_set_rotation_center(img, gui_image_get_size(ele_res).wid/2, gui_image_get_size(ele_res).hei/2);
+        widget_image3d_set_rotation(img, rotation);
+        // printf("%s-> img[%d, %d, %x] polar[%d], azimuth[%d] rotation[%d]\n", __func__,  i, j, img, polar, azimuth, rotation);
+    }
+
+    cube->flag_need_update = true;
+    compo_cube_update(cube);
+}
+
+/**
  * @brief 创建一个立方体菜单组件
  * @param[in] frm : 窗体指针
  * @param[in] item : 立方体菜单项列表
@@ -72,6 +185,10 @@ compo_cube_t *compo_cube_create(compo_form_t *frm, s16 radius, compo_cube_item_t
     widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
     int i;
     widget_axis3d_t *axis = widget_axis3d_create(page);
+    if (cube->cube_type == COMPO_CUBE_TYPE_NONE)
+    {
+        cube->cube_type = COMPO_CUBE_TYPE_NORMAL;
+    }
     cube->page = page;
     cube->item = item;
     cube->flag_need_update = true;
@@ -124,7 +241,15 @@ void compo_cube_update(compo_cube_t *cube)
     for (i=0; i<CUBE_ITEM_CNT; i++)
     {
         widget_image3d_t *img = cube->item_img[i];
-        widget_set_visible(img, widget_image3d_get_front(img) >= 0);
+        if (cube->cube_type == COMPO_CUBE_TYPE_NORMAL)
+        {
+            widget_set_visible(img, widget_image3d_get_front(img) >= 0);
+        }
+        else if (cube->cube_type == COMPO_CUBE_TYPE_POWER)
+        {
+            widget_set_visible(img, true);
+            widget_set_top(img, widget_image3d_get_front(img) >= 0);
+        }
     }
 }
 

@@ -100,6 +100,9 @@ uint8_t uteModuleWatchOnlineGetWatchindex(uint8_t index);
 #endif
 void uteModuleWatchOnlineGetInfoWithIndex(uint8_t index, uint8_t *data);
 void uteModuleWatchOnlineSetWillUpdateDataIndex(uint8_t index);
+void uteModuleWatchOnlineStartSync(void);
+void uteModuleWatchOnlineDeleteDataIndex(uint8_t index, uint8_t *data);
+void uteModuleWatchOnlineGetAllInfoStart(void);
 #endif
 #endif //_UTE_MODULE_WATCHONLINE_H_
 

@@ -53,7 +53,7 @@
 #define UART0_PRINTF_SEL                PRINTF_PB3                  //选择UART打印信息输出IO，或关闭打印信息输出
 #define SYS_INIT_VOLUME                 xcfg_cb.sys_init_vol        //系统默认音量
 
-#define HEAP_FUNC_SIZE                  4096                        //FUNC HEAP SIZE
+#define HEAP_FUNC_SIZE                  (1024*6)                        //FUNC HEAP SIZE
 #define CUSTOMER_HEAP_SIZE              (16 * 1024)                 //malloc 空间大小
 
 #define TS_MODE_EN                      0                           //内部NTC模块是否开启
@@ -333,7 +333,7 @@
 #define EQ_MODE_EN                      0           //是否调节EQ MODE (POP, Rock, Jazz, Classic, Country)
 #define MIC_EQ_EN                       UTE_CONNECT_PC_AUDIO_TEST           //是否调节MIC_EQ (通话模式)
 #define EQ_DBG_IN_UART                  UTE_CONNECT_PC_AUDIO_TEST           //是否使能UART在线调节EQ
-#define EQ_DBG_IN_SPP                   0//UTE_CONNECT_PC_AUDIO_TEST           //是否使能SPP在线调节EQ
+#define EQ_DBG_IN_SPP                   UTE_CONNECT_PC_AUDIO_TEST           //是否使能SPP在线调节EQ
 
 
 /*****************************************************************************

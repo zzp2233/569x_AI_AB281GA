@@ -235,7 +235,7 @@ bool ctp_chsc6x_init(void)
     unsigned char fw_update_ret_flag = 0; //1:update OK, !0 fail
     struct ts_fw_infos fw_infos;
 
-    if (uteApplicationCommonGetSystemPowerOnSecond() > 5) //chsc6x 获取TP信息太慢，影响亮屏速度，只在开机时获取一次
+    if (is_init) //chsc6x 获取TP信息太慢，影响亮屏速度，只在开机时获取一次
     {
         return true;
     }

@@ -75,6 +75,7 @@ static const compo_listbox_item_t tbl_language_list[] =
     {STR_MALAYSIA,    .vidx = MALAYSIA_LANGUAGE_ID},
 #endif
 };
+
 u8 func_sel_language_bit(uint n)
 {
 
@@ -192,7 +193,7 @@ compo_form_t *func_set_sub_language_form_create(void)
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
     compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
-    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_1_START_CARD_BIN);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_LIST_BG_BIN);
 
     compo_listbox_set_sta_icon(listbox, UI_BUF_I335001_1_START_1_OK_22X22_X202_Y25_Y95_Y162_Y232_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_language_bit);
@@ -226,6 +227,203 @@ void func_set_sub_language_list_icon_click(void)
     compo_listbox_update(listbox);
     uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+//语言设置页面
+compo_form_t *func_set_sub_language_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I341001_28_SET_LANGUAGE_BG_BIN);
+
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I341001_20_ALARM_CLOCK_SELECT_BIN, 0);
+    compo_listbox_set_bithook(listbox, func_sel_language_bit);
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    uint8_t set_idx = 1;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+
+    return frm;
+}
+
+//点进图标进入应用
+void func_set_sub_language_list_icon_click(void)
+{
+    int icon_idx;
+    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
+    {
+        return;
+    }
+    compo_listbox_update(listbox);
+    uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+//语言设置页面
+compo_form_t *func_set_sub_language_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I338001_11_CALL_BG_BIN);
+
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I338001_1_START_LANGUAGE_OK_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bithook(listbox, func_sel_language_bit);
+
+    area_t img_rect = gui_image_get_size(UI_BUF_I338001_11_CALL_BG_BIN);
+
+    compo_listbox_set_item_text(listbox,img_rect.wid/2, img_rect.hei/2, 100, img_rect.hei, true);
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    uint8_t set_idx = 1;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+
+    return frm;
+}
+
+//点进图标进入应用
+void func_set_sub_language_list_icon_click(void)
+{
+    int icon_idx;
+    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
+    {
+        return;
+    }
+    compo_listbox_update(listbox);
+    uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+//语言设置页面
+compo_form_t *func_set_sub_language_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I340001_FIRSTORDER_CARD_BIN);
+
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I340001_PUBLIC_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bithook(listbox, func_sel_language_bit);
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    compo_listbox_set_focus(listbox, 80);
+    compo_listbox_update(listbox);
+
+
+    return frm;
+}
+
+//点进图标进入应用
+void func_set_sub_language_list_icon_click(void)
+{
+    int icon_idx;
+    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
+    {
+        return;
+    }
+    compo_listbox_update(listbox);
+
+    uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
+}
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+//语言设置页面
+compo_form_t *func_set_sub_language_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I342001_28_SET_BG_BIN);
+
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I342001_28_SET_CHECKED1_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_bithook(listbox, func_sel_language_bit);
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    uint8_t set_idx = 1;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+
+    return frm;
+}
+
+//点进图标进入应用
+void func_set_sub_language_list_icon_click(void)
+{
+    int icon_idx;
+    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
+    {
+        return;
+    }
+    compo_listbox_update(listbox);
+    uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
+}
+
 
 #else
 compo_form_t *func_set_sub_language_form_create(void)
@@ -294,9 +492,15 @@ static void func_set_sub_language_enter(void)
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 70, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
 #endif
 

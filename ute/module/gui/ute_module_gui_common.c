@@ -387,7 +387,7 @@ void uteModuleGuiCommonInit(void)
 void uteModuleGuiCommonDisplayExternalClearDepth(void)
 {
     task_stack_init();
-    latest_task_init(); //最近任务
+    // latest_task_init(); //最近任务
     task_stack_push(FUNC_CLOCK);
     func_cb.sta = FUNC_CLOCK;
 }
@@ -420,7 +420,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     if (isAllClear)
     {
         task_stack_init();
-        latest_task_init(); // 最近任务
+        // latest_task_init(); // 最近任务
         if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
         {
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return FUNC_CHARGE", __func__);
@@ -492,6 +492,9 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         {
             uteModulePlatformRestartTimer(&clearDepthAfterOffTimerPointer,UTE_MODULE_GUI_CLEAR_DEPTH_AFTER_TIME_SECOND*1000);
         }
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+        uteDrvScreenEsdTeIntErrorCheckTimerStop();
+#endif
         // uteDrvScreenCommonDisplayOff();
         // uteDrvTpCommonSleep();
         uteModuleGuiCommonData.isDisplayOn = false;
@@ -509,6 +512,9 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
     {
         uteModulePlatformStopTimer(&clearDepthAfterOffTimerPointer);
         uteModuleGuiCommonData.isDisplayOn = true;
+#if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
+        uteDrvScreenEsdTeIntErrorCheckTimerStart(1000);
+#endif
     }
 }
 
@@ -555,12 +561,13 @@ void uteModuleGuiCommonHandScreenOnMsg(void)
 */
 void uteModuleGuiCommonHandScreenOffMsg(void)
 {
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, gui_sleep_sta=%d", __func__, sys_cb.gui_sleep_sta);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s, gui_sleep_sta=%d,guioff_delay=%d", __func__, sys_cb.gui_sleep_sta, sys_cb.guioff_delay);
     // uteModuleGuiCommonDisplayOff(false);
-    if(!sys_cb.gui_sleep_sta)
+    if(!sys_cb.gui_sleep_sta && sys_cb.guioff_delay)
     {
-        sys_cb.guioff_delay = 0;
-        gui_sleep();                //仅熄屏
+        sys_cb.guioff_delay = 1;
+        // gui_sleep();                //仅熄屏
+        uteModuleSprotResetRovllverScreenMode();
     }
 }
 
@@ -817,6 +824,12 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
         return;
     }
 
+    if(func_cb.flag_sort) //在快捷任务界面跳转到其他界面
+    {
+        func_cb.flag_sort_jump = true;
+        func_cb.flag_sort = false;
+    }
+
     if (func_cb.sta != screenId)
     {
         msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
@@ -950,7 +963,7 @@ bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void)
     }
 #endif
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-    if((id == UTE_MOUDLE_SCREENS_PRESSURE_ID || id == UTE_MOUDLE_SCREENS_EMOTION_ID || id == UTE_MOUDLE_SCREENS_FATIGUE_ID)\
+    if((id == FUNC_PRESSURE || id == FUNC_MOOD || id == UTE_MOUDLE_SCREENS_FATIGUE_ID)\
        &&(uteModuleEmotionPressureIsTesting()))
     {
         result =true;
@@ -1138,13 +1151,13 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
             return false;
         }
 #endif
-#if 0// UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
         if ((
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-                (id == UTE_MOUDLE_SCREENS_PRESSURE_ID)
+                (id == FUNC_PRESSURE)
 #endif
 #if UTE_MODULE_SCREENS_EMOTION_SUPPORT
-                || (id == UTE_MOUDLE_SCREENS_EMOTION_ID)
+                || (id == FUNC_MOOD)
 #endif
 #if UTE_MODULE_SCREENS_FATIGUE_SUPPORT
                 || (id == UTE_MOUDLE_SCREENS_FATIGUE_ID)
@@ -1156,10 +1169,10 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
         }
 #endif
 #if UTE_BT30_CALL_SUPPORT
-//         if((id == UTE_MOUDLE_SCREENS_CALL_INCOMING_ID) || (id == UTE_MOUDLE_SCREENS_CALL_OUTGOING_ID))
-//         {
-//             return false;
-//         }
+        if (id == FUNC_BT_CALL)
+        {
+            return false;
+        }
 #endif
 #if UTE_MOUDLE_SCREENS_BREATH_TRAINING_ID
         if(id == UTE_MOUDLE_SCREENS_BREATH_TRAINING_ID)
@@ -1185,10 +1198,10 @@ bool uteModuleGuiCommonIsAllowHandGestureDisplayOff(void)
         }
 #endif
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-//        if(id == UTE_MOUDLE_SCREENS_FLASHLIGHT_ID)
-//        {
-//            return false;
-//        }
+        if(id == FUNC_FLASHLIGHT)
+        {
+            return false;
+        }
 #endif
 #if UTE_MODULE_SCREENS_OTA_SUPPORT
         if(id == UTE_MOUDLE_SCREENS_OTA_ID)

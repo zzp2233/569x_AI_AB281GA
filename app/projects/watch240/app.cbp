@@ -45,6 +45,7 @@
 			<Add directory="../../platform/gui/ctp" />
 			<Add directory="../../platform/bsp/bsp_sensor/internal_sensor" />
 			<Add directory="../../platform/gui/ctp/axs5106" />
+			<Add directory="../../platform/gui/ctp/chsc6x/Firmware" />
 			<Add directory="functions/common" />
 			<Add directory="../../platform/bsp/bsp_sensor/vcc30fx" />
 			<Add directory="../../../ute/project_config" />
@@ -94,6 +95,7 @@
 			<Add directory="../../../ute/module/appbinding" />
 			<Add directory="../../../ute/module/emotionPressure" />
 			<Add directory="../../../ute/module/breathrate" />
+			<Add directory="../../../ute/module/bedsideMode" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -191,6 +193,10 @@
 		<Unit filename="../../../ute/module/appbinding/ute_module_appbinding.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../../ute/module/bedsideMode/ute_module_bedside_mode.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/bedsideMode/ute_module_bedside_mode.h" />
 		<Unit filename="../../../ute/module/bloodoxygen/ute_module_bloodoxygen.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -321,6 +327,20 @@
 		<Unit filename="../../../ute/module/weather/ute_module_weather.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281a.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281ab.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281ac.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281b.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281c.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281d.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281da.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281db.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281e.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281ea.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281f.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281g.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281h.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281j.h" />
 		<Unit filename="../../../ute/task/ute_task_application.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1126,6 +1146,9 @@
 		<Unit filename="functions/func_clock_cube.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_clock_light_cube.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_clock_preview.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1255,6 +1278,15 @@
 		<Unit filename="functions/func_modem_ring.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_mood.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_mood_about.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_motor_grade.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_music.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1278,6 +1310,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_password_sub_select.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_power_off.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_power_on.c">

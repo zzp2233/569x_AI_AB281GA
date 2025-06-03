@@ -8,6 +8,8 @@
 #define TRACE(...)
 #endif
 
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+
 typedef struct f_women_health_t_
 {
     s16 pic_x;
@@ -84,8 +86,8 @@ compo_form_t *func_women_health_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_WOMEN_HEALTH]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_WOMEN_HEALTH]);
 
     u8 state=0;
 
@@ -102,6 +104,44 @@ compo_form_t *func_women_health_form_create(void)
 
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+static const f_women_health_t    f_women_health[]=
+{
+    [NO_DATA]          ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=109+142/2, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+292, .txt_w=308, .txt_h=40, .str_id=STR_PLEASE_APP_DATA, .res_addr=UI_BUF_I341001_23_SOS_PHONE_BIN},//前往app同步
+    [MENSTRUAL_CYCLE]  ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=112/2+118, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+317, .txt_w=308, .txt_h=40, .str_id=STR_MENSTRUAL_CYCLE, .res_addr=UI_BUF_I341001_26_WOMEN_HEALTH_00_BIN},//月经
+    [PREGNANCY]        ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=112/2+118, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+317, .txt_w=308, .txt_h=40, .str_id=STR_PREGNANCY,       .res_addr=UI_BUF_I341001_26_WOMEN_HEALTH_02_BIN},//易孕
+    [SAFE_PERIOD]      ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=112/2+118, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+317, .txt_w=308, .txt_h=40, .str_id=STR_SAFE_PERIOD,     .res_addr=UI_BUF_I341001_26_WOMEN_HEALTH_01_BIN},//安全
+};
+
+
+
+//创建女性健康窗体
+compo_form_t *func_women_health_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_WOMEN_HEALTH]);
+
+    u8 state=0;
+
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        uteModuleMenstrualCycleGetStatus(&state);
+    }
+    compo_picturebox_t *picbox = compo_picturebox_create(frm,f_women_health[state].res_addr);
+    compo_picturebox_set_pos(picbox,f_women_health[state].pic_x,f_women_health[state].pic_y);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[f_women_health[state].str_id]));
+    compo_textbox_set_location(textbox,f_women_health[state].txt_x,f_women_health[state].txt_y,f_women_health[state].txt_w,f_women_health[state].txt_h);
+    compo_textbox_set(textbox,i18n[f_women_health[state].str_id]);
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 static const f_women_health_t    f_women_health[]=
 {
@@ -144,7 +184,7 @@ compo_form_t *func_women_health_form_create(void)
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 static const f_women_health_t    f_women_health[]=
 {
-    [NO_DATA]          ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+212, .txt_w=288, .txt_h=40, .str_id=STR_PLEASE_APP_DATA, .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_PHONE_BIN},
+    [NO_DATA]          ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=288, .txt_h=40, .str_id=STR_PLEASE_APP_DATA, .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_PHONE_BIN},
     [MENSTRUAL_CYCLE]  ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_MENSTRUAL_CYCLE, .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_00_BIN},
     [SAFE_PERIOD]      ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_PREGNANCY,       .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_01_BIN},
     [PREGNANCY]        ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_SAFE_PERIOD,     .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_02_BIN},
@@ -191,6 +231,83 @@ compo_form_t *func_women_health_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+static const f_women_health_t    f_women_health[]=
+{
+    [NO_DATA]          ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=92/2+86,   .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+212, .txt_w=288, .txt_h=40, .str_id=STR_PLEASE_APP_DATA, .res_addr=UI_BUF_I340001_PERIOD_PHONE_BIN},
+    [MENSTRUAL_CYCLE]  ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_MENSTRUAL_CYCLE, .res_addr=UI_BUF_I340001_PERIOD_PERIOD_MP_BIN},
+    [PREGNANCY]        ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_PREGNANCY,       .res_addr=UI_BUF_I340001_PERIOD_PERIOD_FP_BIN},
+    [SAFE_PERIOD]      ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_SAFE_PERIOD,     .res_addr=UI_BUF_I340001_PERIOD_SAFE_MP_BIN},
+};
+
+//创建女性健康窗体
+compo_form_t *func_women_health_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    u8 state=0;
+
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        uteModuleMenstrualCycleGetStatus(&state);
+    }
+
+    if(state)
+    {
+        //设置标题栏
+        compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+        compo_form_set_title(frm, i18n[STR_WOMEN_HEALTH]);
+    }
+
+    compo_picturebox_t *picbox = compo_picturebox_create(frm,f_women_health[state].res_addr);
+    compo_picturebox_set_pos(picbox,f_women_health[state].pic_x,f_women_health[state].pic_y);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[f_women_health[state].str_id]));
+    compo_textbox_set_location(textbox,f_women_health[state].txt_x,f_women_health[state].txt_y,f_women_health[state].txt_w,f_women_health[state].txt_h);
+    compo_textbox_set(textbox,i18n[f_women_health[state].str_id]);
+
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+static const f_women_health_t    f_women_health[]=
+{
+    [NO_DATA]          ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=96/2+53,  .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+159, .txt_w=224, .txt_h=40, .str_id=STR_PLEASE_APP_DATA, .res_addr=UI_BUF_I342001_26_WOMEN_HEALTH_PHONE_BIN},//前往app同步
+    [MENSTRUAL_CYCLE]  ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=82/2+53, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+159, .txt_w=224, .txt_h=40, .str_id=STR_MENSTRUAL_CYCLE, .res_addr=UI_BUF_I342001_26_WOMEN_HEALTH_00_BIN},//月经
+    [PREGNANCY]        ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=82/2+53, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+159, .txt_w=224, .txt_h=40, .str_id=STR_PREGNANCY,       .res_addr=UI_BUF_I342001_26_WOMEN_HEALTH_02_BIN},//易孕
+    [SAFE_PERIOD]      ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=82/2+53, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=28/2+159, .txt_w=224, .txt_h=40, .str_id=STR_SAFE_PERIOD,     .res_addr=UI_BUF_I342001_26_WOMEN_HEALTH_01_BIN},//安全
+};
+
+
+
+//创建女性健康窗体
+compo_form_t *func_women_health_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_WOMEN_HEALTH]);
+
+    u8 state=0;
+
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        uteModuleMenstrualCycleGetStatus(&state);
+    }
+    compo_picturebox_t *picbox = compo_picturebox_create(frm,f_women_health[state].res_addr);
+    compo_picturebox_set_pos(picbox,f_women_health[state].pic_x,f_women_health[state].pic_y);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[f_women_health[state].str_id]));
+    compo_textbox_set_location(textbox,f_women_health[state].txt_x,f_women_health[state].txt_y,f_women_health[state].txt_w,f_women_health[state].txt_h);
+    compo_textbox_set(textbox,i18n[f_women_health[state].str_id]);
+
+    return frm;
+}
+
 #else
 compo_form_t *func_women_health_form_create(void)
 {
@@ -198,6 +315,7 @@ compo_form_t *func_women_health_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     return frm;
 }
+
 #endif
 
 //女性健康功能事件处理
@@ -261,3 +379,4 @@ void func_women_health(void)
     }
     func_women_health_exit();
 }
+#endif

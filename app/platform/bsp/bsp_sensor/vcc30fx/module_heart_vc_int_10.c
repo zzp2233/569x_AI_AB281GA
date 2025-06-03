@@ -12,6 +12,8 @@
 */
 #include "include.h"
 #include "ute_module_message.h"
+#include "ute_module_factorytest.h"
+#include "ute_drv_gsensor_common.h"
 
 #if (SENSOR_HR_SEL == SENSOR_HR_VCLC09A)
 
@@ -23,6 +25,9 @@
 #include "RspRateEst.h"
 #include "ute_module_breathrate.h"
 #endif
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#include "ute_module_emotionPressure.h"
+#endif
 
 /* Include your INT,I2C,Timer header file */
 //#include "INT.h"
@@ -33,7 +38,7 @@
 #define VCLC09_READ_ADDR_UPDATE(ADDR)   ((ADDR) << 1 | 1)
 #define VCLC09_READ_ADDR(ADDR)          ((ADDR) << 1 | 1) << 8 | ((ADDR) << 1)
 
-#define GsensorEn 0
+#define GsensorEn 1
 
 const unsigned char arry10[] = {0, 2, 3, 4, 5, 7, 8, 9, 10, 11, 12};
 const unsigned char arry20[] = {0, 2, 3, 5, 6, 8, 9, 11, 12, 13, 15, 16, 18, 19, 21, 22, 24, 25, 27, 28};
@@ -85,6 +90,7 @@ static bool vclc09_pwr_sta = false;
 
 void vclc09_pwr_en(void)        //PF5
 {
+    printf("%s\n",__func__);
     // if(vcHr11.oscCheckFinishFlag == 0)
     {
         uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
@@ -93,18 +99,20 @@ void vclc09_pwr_en(void)        //PF5
     if(!vclc09_pwr_sta)
     {
         uteModulePlatformOutputGpioSet(IO_PF5,true);
+        delay_5ms(2);
     }
 
     bsp_i2c_init();
+#if GsensorEn
     uteModuleSprotAlgoTimerStop();
-
+#endif
     bsp_sensor_hr_interrupt_flag_set(false);
     vclc09_pwr_sta = true;
 }
 
 void vclc09_pwr_dis(void)       //PF5
 {
-    printf("vclc09_pwr_dis\n");
+    printf("%s\n",__func__);
     uteModulePlatformOutputGpioSet(IO_PF5,false);
     i2c_gsensor_init();
     uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);
@@ -148,6 +156,12 @@ void vcHr11Init(vcHr11_t *pVcHr11,vcHr11Mode_t vcHr11WorkMode)
         Algo_Init();
 #if UTE_MODULE_BREATHRATE_SUPPORT
         RespRate_Init();
+#endif
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+        if(uteDrvHeartVcxxIsPressureTesting())
+        {
+            StressEst_Init(-1);
+        }
 #endif
     }
     else if (pVcHr11->workMode == VCWORK_MODE_CROSSTALKTEST)
@@ -197,6 +211,12 @@ void vcHr11_process(sport_mode_type vcSportMode)
 #if UTE_MODULE_BREATHRATE_SUPPORT
                 RespRate_Init();
 #endif
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+                if(uteDrvHeartVcxxIsPressureTesting())
+                {
+                    StressEst_Init(-1);
+                }
+#endif
             }
 
             if(vcHr11.vcFifoReadFlag || vcHr11.vcPsFlag)
@@ -205,6 +225,30 @@ void vcHr11_process(sport_mode_type vcSportMode)
                 /* Gsensor精度要求 */
                 /* ReadGsensorFIFO(+-4G11bit or +-8G12bit 256/g) */
 
+                static int16_t xx[UTE_DRV_GSENSOR_AXIS_DATA_MAX], yy[UTE_DRV_GSENSOR_AXIS_DATA_MAX], zz[UTE_DRV_GSENSOR_AXIS_DATA_MAX];
+                memset(xx, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
+                memset(yy, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
+                memset(zz, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
+
+                ute_drv_gsensor_common_axis_data_t *data = NULL;
+                uteDrvGsensorCommonReadFifo(&data);
+                GsensorLength = data->frameCnt;
+
+                ute_drv_gsensor_common_axis_bit_change_t axisBitChange;
+                axisBitChange.inputXaxis = &data->accXaxis[0];
+                axisBitChange.inputYaxis = &data->accYaxis[0];
+                axisBitChange.inputZaxis = &data->accZaxis[0];
+                axisBitChange.outputXaxis = &xx[0];
+                axisBitChange.outputYaxis = &yy[0];
+                axisBitChange.outputZaxis = &zz[0];
+                for (uint8_t i = data->frameCnt; i < UTE_DRV_GSENSOR_AXIS_DATA_MAX; i++)
+                {
+                    data->accXaxis[i] = data->accXaxis[data->frameCnt - 1];
+                    data->accYaxis[i] = data->accYaxis[data->frameCnt - 1];
+                    data->accZaxis[i] = data->accZaxis[data->frameCnt - 1];
+                }
+                // change g-sensor bit
+                uteDrvGsensorCommonXYZaxisDataBitChange(&axisBitChange, 50, GSENSOR_DATA_BIT_VCXX);
 
                 //========================================
                 //       GsensorEn里的内容均为示例
@@ -230,9 +274,9 @@ void vcHr11_process(sport_mode_type vcSportMode)
                 {
 
                     //cash_num[20]数组为抽样数组，抽样数组由我们提供此处将29个数据抽成20个，匹配800mS中断的20个PPG
-                    xData[i]=yData[cash_num[i]]>>5;
-                    yData[i]=xData[cash_num[i]]>>5;
-                    zData[i]=zData[cash_num[i]]>>5;
+                    xData[i]=yData[arry20[i]]>>5;
+                    yData[i]=xData[arry20[i]]>>5;
+                    zData[i]=zData[arry20[i]]>>5;
                 }
 #endif
                 if(vcHr11.vcFifoReadFlag)
@@ -269,6 +313,12 @@ void vcHr11_process(sport_mode_type vcSportMode)
                             respInputData.axes.z  =algoInputData.axes.z;
                             RespRate_Input(&respInputData);
 #endif
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+                            if(uteDrvHeartVcxxIsPressureTesting())
+                            {
+                                StressEst_Input(algoOutputData.hrData,algoOutputData.reliability,xData[0], algoInputData.ppgSample);
+                            }
+#endif
                         }
 
                         Algo_Output(&algoOutputData);
@@ -300,9 +350,16 @@ void vcHr11_process(sport_mode_type vcSportMode)
 #if UTE_MODULE_BREATHRATE_SUPPORT
                             RespRate_Init();
 #endif
+#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
+                            if(uteDrvHeartVcxxIsPressureTesting())
+                            {
+                                StressEst_Init(-1);
+                            }
+#endif
                         }
-
+#if GsensorEn
                         uteModuleSportInputDataBeforeAlgo();
+#endif
                     }
                 }
                 else
@@ -319,11 +376,12 @@ void vcHr11_process(sport_mode_type vcSportMode)
         {
             vcHr11GetSampleValues(&vcHr11,&ppgLength);
             /* If Pass: */
-            if ((vcHr11.sampleData.maxLedCur >= 100) && (vcHr11.sampleData.preValue[0] <= 2))
-            {
-                //PASS：
-                //Display the value of vcHr11.sampleData.maxLedCur and vcHr11.sampleData.preValue[0]
-            }
+            // if ((vcHr11.sampleData.maxLedCur >= 100) && (vcHr11.sampleData.preValue[0] <= 2))
+            // {
+            //PASS：
+            //Display the value of vcHr11.sampleData.maxLedCur and vcHr11.sampleData.preValue[0]
+            // }
+            uteModuleFactoryTestSetVkData(vcHr11.sampleData.preValue[0], vcHr11.sampleData.maxLedCur, vcHr11.sampleData.psValue);
         }
         else if (vcHr11.workMode == VCWORK_MODE_SPO2WORK)
         {
@@ -354,9 +412,9 @@ void vcHr11_process(sport_mode_type vcSportMode)
 
                 for(uint8_t i=0; i<20; i++)
                 {
-                    xData[i]=yData[cash_num[i]]>>5;
-                    yData[i]=xData[cash_num[i]]>>5;
-                    zData[i]=zData[cash_num[i]]>>5;
+                    xData[i]=yData[arry20[i]]>>5;
+                    yData[i]=xData[arry20[i]]>>5;
+                    zData[i]=zData[arry20[i]]>>5;
                 }
 #endif
                 if(vcHr11.vcFifoReadFlag)
@@ -381,7 +439,9 @@ void vcHr11_process(sport_mode_type vcSportMode)
                             }
                         }
                     }
+#if GsensorEn
                     uteModuleSportInputDataBeforeAlgo();
+#endif
                 }
                 else
                 {
@@ -415,6 +475,11 @@ void vcxx_process(void)
 }
 #endif
 
+#if LOG_LVL
+AT(.com_text.vc30fx_dbg)
+char vc_hr11_irq_str[]="vcHr11IRQHandler,oscCheckFinishFlag=%d,sys_is_sleep=%d\n";
+#endif
+
 /*
  * @brief
  *
@@ -423,6 +488,9 @@ void vcxx_process(void)
 AT(.com_text.vc30fx)
 void vcHr11IRQHandler()
 {
+#if LOG_LVL
+    printf(vc_hr11_irq_str,vcHr11.oscCheckFinishFlag,sleep_cb.sys_is_sleep);
+#endif
     if (vcHr11.oscCheckFinishFlag == 0 || !sleep_cb.sys_is_sleep)
     {
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_HEART_ALGO_HANDLER,0);
@@ -479,7 +547,10 @@ vcHr11Ret_t vcHr11WriteRegisters(uint8_t startAddress, uint8_t *pRegisters, uint
 
 
     /*------------------INSERT YOUR CODE HERE-----------------*/
-
+    if(!vclc09_pwr_sta)
+    {
+        return VCHR11RET_ISERR;
+    }
     if(sys_cb.gsensor_iic_en)
     {
         bsp_i2c_init();
@@ -510,6 +581,10 @@ vcHr11Ret_t vcHr11ReadRegisters(uint8_t startAddress, uint8_t *pRegisters, uint8
 
 
     /*------------------INSERT YOUR CODE HERE-----------------*/
+    if(!vclc09_pwr_sta)
+    {
+        return VCHR11RET_ISERR;
+    }
     if(sys_cb.gsensor_iic_en)
     {
         bsp_i2c_init();

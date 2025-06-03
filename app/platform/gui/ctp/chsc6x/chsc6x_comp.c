@@ -9,8 +9,14 @@
 #include "YCY_AB281B_1805A_304_21_V241_V2.h" //801 new
 #elif UTE_DRV_TFT_S240X284_NV3030B_ZD183G1196_QSPI_SUPPORT
 #include "YCY_AB281_801_chsc6x_upd_[304_17]_V241_V3.h" //801
-#elif UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT
+#elif (UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT || UTE_DRV_TFT_S240X284_I183_JD9853_SXT180G1911_QSPI_SUPPORT)
 #include "YCY_W26Y_W12Y_304_23_V242_V2.h"
+#elif UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
+#include "YCY_AB281L_G22Z_G21Y_304_24_V239_V3.h"
+#elif UTE_DRV_TFT_S240X240_NV3002C_HY138026A_QSPI_SUPPORT
+#include "YCY_AB281L_G22Z_304_26_V239_V3.h"
+#elif UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT
+#include "YCY_AB281L_G28Z_304_25_V239_V3.h"
 #else
 #include "YCY_AB281_S81pro_chsc6x_upd_[304_18]_V240_V2.h"//s81 pro
 #endif
@@ -609,7 +615,7 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
 
     u32tmp = ptcfg[1];
     u32tmp = (u32tmp << 16) | ptcfg[0];
-#if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
+#if 0//DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
     if (((g_chsc6x_cfg_ver & 0x3ffffff) != (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
     {
         chsc6x_info("chsc6x: prj info not match,now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
@@ -620,14 +626,21 @@ static int is_tpcfg_update_allow(uint16_t *ptcfg)
     vnow = (g_chsc6x_cfg_ver >> 26) & 0x3f;
     vbuild = (u32tmp >> 26) & 0x3f;
     chsc6x_info("chsc6x: cfg_vnow: 0x%x,cfg_vbuild: 0x%x \r\n", vnow, vbuild);
+
 #if DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN
-    if (0 == g_upgrade_flag && vbuild <= vnow)
+    chsc6x_info("chsc6x: now_cfg=0x%x:build_cfg=0x%x!\r\n",(g_chsc6x_cfg_ver&0x3ffffff), (u32tmp&0x3ffffff));
+    if (((g_chsc6x_cfg_ver & 0x3ffffff) == (u32tmp & 0x3ffffff)) && (0 == g_force_update_flag))
     {
-        return 0; //driver init upgrade, must vbuild > vnow
-    }
-    if(1 == g_upgrade_flag && vbuild == vnow)
-    {
-        return 0; //OTA upgrade just vbuild != vnow
+        if (0 == g_upgrade_flag && vbuild <= vnow)
+        {
+            chsc6x_info("chsc6x: vbuild=%d,vnow=%d\r\n",vbuild,vnow);
+            return 0; //driver init upgrade, must vbuild > vnow
+        }
+        if(1 == g_upgrade_flag && vbuild == vnow)
+        {
+            chsc6x_info("chsc6x: vbuild=%d,vnow=%d\r\n",vbuild,vnow);
+            return 0; //OTA upgrade just vbuild != vnow
+        }
     }
 #endif
 

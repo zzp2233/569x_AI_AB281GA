@@ -29,6 +29,7 @@ typedef struct f_clock_t_
     void *sub_cb;
     compo_shape_t *masklayer;
     uint32_t tick;
+    page_tp_move_t *ptm;
 } f_clock_t;
 
 //主窗体
@@ -53,6 +54,11 @@ void func_clock_sub_rotary(void);
 compo_form_t *func_clock_cube_form_create(void);
 bool func_clock_cube_message(size_msg_t msg);
 void func_clock_cube_process(void);
+
+// 光束立方体表盘
+compo_form_t *func_clock_light_cube_form_create(void);
+bool func_clock_light_cube_message(size_msg_t msg);
+void func_clock_light_cube_process(void);
 
 #if UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT
 void func_clock_sub_side(void);

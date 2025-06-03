@@ -1,7 +1,8 @@
 #ifndef _COMPO_PICTUREBOX_H
 #define _COMPO_PICTUREBOX_H
 
-typedef struct compo_picturebox_t_ {
+typedef struct compo_picturebox_t_
+{
     COMPO_STRUCT_COMMON;
     u8 radix;
     widget_image_t *img;
@@ -56,7 +57,16 @@ void compo_picturebox_cut(compo_picturebox_t *picbox, u8 index, u8 total_cnt);
  * @param[in] y : y轴坐标
  **/
 void compo_picturebox_set_pos(compo_picturebox_t *picbox, s16 x, s16 y);
-
+/**
+ * @brief 设置图像框组件的坐标
+          注意：该设置默认的坐标是以中心点作为参考点
+ * @param[in] picbox : 图像指针
+ * @param[in] x : x轴坐标
+ * @param[in] y : y轴坐标
+ * @param[in] width : 图像框宽度
+ * @param[in] height : 图像框高度
+ **/
+void compo_picturebox_set_location(compo_picturebox_t *picbox, s16 x, s16 y, s16 width, s16 height);
 /**
  * @brief 设置图像框组件的前景色
  * @param[in] picbox : 图像指针

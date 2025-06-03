@@ -90,8 +90,8 @@ compo_form_t *func_bt_ring_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
     //设置标题栏
-    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    compo_form_set_title(frm, i18n[STR_PHONE]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_PHONE]);
 
     s16 txt_leng=0;
     s16 txt_x=0;
@@ -116,7 +116,7 @@ compo_form_t *func_bt_ring_form_create(void)
 //    compo_setid(txt, COMPO_ID_TXT_IN_CALL);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,138-widget_text_get_height()/2,GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
-    compo_textbox_set_forecolor(txt, COLOR_GREEN);
+    compo_textbox_set_forecolor(txt, COLOR_WHITE);
     compo_textbox_set_align_center(txt, false);
     txt_leng = widget_text_get_area(txt->txt).wid;
     txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
@@ -135,6 +135,62 @@ compo_form_t *func_bt_ring_form_create(void)
 
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_bt_ring_form_create(void)
+{
+    //printf("%s\n", __func__);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+    //设置标题栏
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_PHONE]);
+
+    s16 txt_leng=0;
+    s16 txt_x=0;
+
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 28/2+56, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+    // compo_textbox_set_align_center(name_txt, false);
+    txt_leng = widget_text_get_area(name_txt->txt).wid;
+    txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
+    if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
+    // compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_max_height()/2);
+
+    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 126+10, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
+    compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+    msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+//    compo_setid(txt, COMPO_ID_TXT_IN_CALL);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,191+widget_text_get_height()/2,GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    compo_textbox_set_forecolor(txt, COLOR_WHITE);
+    compo_textbox_set_align_center(txt, false);
+    txt_leng = widget_text_get_area(txt->txt).wid;
+    txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
+    if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
+    compo_textbox_set_pos(txt,txt_x,191-widget_text_get_height()/2);
+
+    //接听
+    btn = compo_button_create_by_image(frm, UI_BUF_I341001_11_CALL_BUTT_ANSWER_BIN);
+    compo_setid(btn, COMPO_ID_BTN_ANSWER);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, 310+48);
+
+    //挂断
+    btn = compo_button_create_by_image(frm, UI_BUF_I341001_23_SOS_HANG_UP_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, 310+48);
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_bt_ring_form_create(void)
@@ -210,6 +266,83 @@ compo_form_t *func_bt_ring_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_bt_ring_form_create(void)
+{
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X,83, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
+    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_font( number_txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+    msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    compo_textbox_set_forecolor(txt, COLOR_GREEN);
+
+    //接听
+    btn = compo_button_create_by_image(frm, UI_BUF_I340001_CALL_CALLING_CALL_BIN);
+    compo_setid(btn, COMPO_ID_BTN_ANSWER);
+    compo_button_set_pos(btn, 196+98/2, 279);
+
+    //挂断
+    btn = compo_button_create_by_image(frm, UI_BUF_I340001_CALL_CALLING_END_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn, 108, 279);
+
+
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_bt_ring_form_create(void)
+{
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X,43, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
+    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_font( number_txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X,77, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+    msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 103, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    // compo_textbox_set_forecolor(txt, COLOR_GREEN);
+
+    //接听
+    btn = compo_button_create_by_image(frm, UI_BUF_I342001_11_CALL_BUTTON_PRESS_ANSWER_BIN);
+    compo_setid(btn, COMPO_ID_BTN_ANSWER);
+    compo_button_set_pos(btn, 44+54/2, 159+54/2);
+
+    //挂断
+    btn = compo_button_create_by_image(frm, UI_BUF_I342001_11_CALL_BUTTON_PRESS_HANG_UP_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn, 142+54/2, 159+54/2);
+
+
+    return frm;
+}
+
 #else
 compo_form_t *func_bt_ring_form_create(void)
 {

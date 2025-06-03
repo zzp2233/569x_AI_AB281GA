@@ -6,11 +6,11 @@
 *@date        2024-03-22
 *@version       v1.0
 */
-#ifndef _UTE_PROJECT_CONFIG_AB281D_H_
-#define _UTE_PROJECT_CONFIG_AB281D_H_
+#ifndef _UTE_PROJECT_CONFIG_AB281G_H_
+#define _UTE_PROJECT_CONFIG_AB281G_H_
 
 #define DEFAULT_BLE_DEV_NAME "W12Y"
-#define UTE_SW_VERSION "AB281GV000054"
+#define UTE_SW_VERSION "AB281GV000079"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 

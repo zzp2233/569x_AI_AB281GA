@@ -33,11 +33,11 @@
 #include "ute_module_newFactoryTest.h"
 #include "ute_module_localRingtone.h"
 #include "ute_module_appbinding.h"
+#include "ute_module_breathrate.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
 #include "ute_drv_gsensor_common.h"
-#include "ute_module_breathrate.h"
 #include "ute_module_screens_common.h"
 #include "ute_task_gui.h"
 #include "ute_module_call.h"

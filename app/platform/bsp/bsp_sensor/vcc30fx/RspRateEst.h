@@ -1,28 +1,28 @@
 
-#ifndef APP_ALGO_ALGO_H
-#define APP_ALGO_ALGO_H
+#ifndef _RSP_RATE_EST_H_
+#define _RSP_RATE_EST_H_
 
 #include <stdbool.h>
 #include <stdint.h>
 typedef struct
 {
-	int32_t x;
-	int32_t y;
-	int32_t z;
-}RespAxesData_t;
+    int32_t x;
+    int32_t y;
+    int32_t z;
+} RespAxesData_t;
 
 typedef struct
 {
-	RespAxesData_t	axes;
-	int32_t 		ppgSample;
-	int32_t			envSample;
-}RespInputData_t;
+    RespAxesData_t  axes;
+    int32_t         ppgSample;
+    int32_t         envSample;
+} RespInputData_t;
 
 typedef struct
 {
-	int32_t 		resData;
-	int32_t			errType;
-}RespOutputData_t;
+    int32_t         resData;
+    int32_t         errType;
+} RespOutputData_t;
 
 void RespRate_Init(void);
 void RespRate_Input(RespInputData_t *pInputData);

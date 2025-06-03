@@ -19,6 +19,10 @@
 #include "vcHr11Hci.h"
 #include "ute_module_sport.h"
 #include "spo2Algo_16bit.h"
+#if UTE_MODULE_BREATHRATE_SUPPORT
+#include "RspRateEst.h"
+#include "ute_module_breathrate.h"
+#endif
 
 /* Include your INT,I2C,Timer header file */
 //#include "INT.h"
@@ -142,6 +146,9 @@ void vcHr11Init(vcHr11_t *pVcHr11,vcHr11Mode_t vcHr11WorkMode)
     {
         vcHr11StartSample(pVcHr11);
         Algo_Init();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+        RespRate_Init();
+#endif
     }
     else if (pVcHr11->workMode == VCWORK_MODE_CROSSTALKTEST)
     {
@@ -187,6 +194,9 @@ void vcHr11_process(sport_mode_type vcSportMode)
             if(VCHR11RET_UNWEARTOISWEAR == vcHr11GetSampleValues(&vcHr11,&ppgLength))
             {
                 Algo_Init();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+                RespRate_Init();
+#endif
             }
 
             if(vcHr11.vcFifoReadFlag || vcHr11.vcPsFlag)
@@ -250,7 +260,15 @@ void vcHr11_process(sport_mode_type vcSportMode)
                             algoInputData.axes.y = yData[algoCallNum];//The direction parallel with ARM.
                             algoInputData.axes.z = zData[algoCallNum];//The direction upside.
                             Algo_Input(&algoInputData, 1000/vcHr11SampleRate, vcSportMode, 0, 0);
-
+#if UTE_MODULE_BREATHRATE_SUPPORT
+                            RespInputData_t respInputData;
+                            respInputData.ppgSample = algoInputData.ppgSample;
+                            respInputData.envSample = algoInputData.envSample;
+                            respInputData.axes.x  =algoInputData.axes.x;
+                            respInputData.axes.y  =algoInputData.axes.y;
+                            respInputData.axes.z  =algoInputData.axes.z;
+                            RespRate_Input(&respInputData);
+#endif
                         }
 
                         Algo_Output(&algoOutputData);
@@ -261,9 +279,27 @@ void vcHr11_process(sport_mode_type vcSportMode)
                             bsp_sensor_hrs_data_save(HeartRateValue);
                         }
 
+#if UTE_MODULE_BREATHRATE_SUPPORT
+                        {
+                            RespOutputData_t pOutputData;
+                            RespRate_Output(&pOutputData);
+                            if(pOutputData.resData > 0 && pOutputData.resData < UTE_MODULE_BREATHRATE_MAX_VALUE)
+                            {
+                                uteModuleBreathrateSetValue(pOutputData.resData);
+                            }
+                            else
+                            {
+                                uteModuleBreathrateSetValue(0);
+                            }
+                            //  UTE_MODULE_LOG(UTE_LOG_BREATHRATE_LVL, "%s,pOutputData.resData = %d,errType=%d", __func__,pOutputData.resData,pOutputData.errType);
+                        }
+#endif
                         if(HeartRateValue == -1)
                         {
                             Algo_Init();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+                            RespRate_Init();
+#endif
                         }
 
                         uteModuleSportInputDataBeforeAlgo();

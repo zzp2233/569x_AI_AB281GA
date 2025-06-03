@@ -93,6 +93,7 @@
 			<Add directory="../../../ute/module/slideBar" />
 			<Add directory="../../../ute/module/appbinding" />
 			<Add directory="../../../ute/module/emotionPressure" />
+			<Add directory="../../../ute/module/breathrate" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -194,6 +195,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/bloodoxygen/ute_module_bloodoxygen.h" />
+		<Unit filename="../../../ute/module/breathrate/ute_module_breathrate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/breathrate/ute_module_breathrate.h" />
 		<Unit filename="../../../ute/module/call/ute_module_call.c">
 			<Option compilerVar="CC" />
 		</Unit>

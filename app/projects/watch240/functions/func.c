@@ -1717,6 +1717,7 @@ void func_message(size_msg_t msg)
             break;
         case KTH_BACK:
 #if UTE_THREE_KEY_EVENT_SOS
+            sys_cb.sos_open_flag = true;
             uteTaskGuiStartScreen(FUNC_SUB_SOS, 0, __func__);
 #endif
             break;

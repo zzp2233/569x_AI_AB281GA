@@ -27,13 +27,59 @@ enum
     COMPO_ID_SOS_NOT_DATA_PIC,//SOS没有数据
     COMPO_ID_SOS_NOT_DATA_TXT,//SOS没有数据
 };
+enum
+{
+    SOS_STATE_BT_OFF=0,//蓝牙为连接
+    SOS_STATE_NO_NUMBER,//未设置sos号码
+    SOS_STATE_BT_CALL,//拨号中
+};
+
 typedef struct f_sos_t_
 {
-    uint32_t tick;
-    u8 phone_number_cnt;
-    bool input_mode_flag;
-    u8 cursor_disp_time;
+    u8 sos_state;
 } f_sos_t;
+
+
+static void get_sos_state(void)
+{
+    f_sos_t* f_sos = (f_sos_t*)func_cb.f_cb;
+
+    if(!uteModuleCallBtIsConnected())
+    {
+        f_sos->sos_state = SOS_STATE_BT_OFF;
+    }
+    else if(uteModuleCallGetSosContactSize() <= 0)
+    {
+        f_sos->sos_state = SOS_STATE_NO_NUMBER;
+    }
+    else if(uteModuleCallGetSosContactSize() > 0)
+    {
+        f_sos->sos_state = SOS_STATE_BT_CALL;
+    }
+}
+static void updata_sos_state(void)
+{
+    f_sos_t* f_sos = (f_sos_t*)func_cb.f_cb;
+    u8 sos_state=0;
+
+    if(!uteModuleCallBtIsConnected())
+    {
+        sos_state = SOS_STATE_BT_OFF;
+    }
+    else if(uteModuleCallGetSosContactSize() <= 0)
+    {
+        sos_state = SOS_STATE_NO_NUMBER;
+    }
+    else if(uteModuleCallGetSosContactSize() > 0)
+    {
+        sos_state = SOS_STATE_BT_CALL;
+    }
+
+    if(sos_state != f_sos->sos_state)
+    {
+        msg_enqueue(MSG_CHECK_LANGUAGE);
+    }
+}
 
 // SOS拨打
 void func_sub_sos_dial(void)
@@ -67,72 +113,59 @@ compo_form_t *func_sub_sos_form_create(void)
     ///新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-    //创建蓝牙未连接界面
-    compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I335001_23_SOS_5_BLUETOOTH_NOT_CONNECTED_ICON_NOT_CONNECTED_72X74_X84_Y74_BIN);
-    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 74+74/2);
-    compo_picturebox_set_visible(pic, false);
-    compo_setid(pic, COMPO_ID_BLE_NO_CON_PIC);
-
-    compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 182+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
-    compo_textbox_set_visible(txt, false);
-    compo_textbox_set(txt, i18n[STR_CONNECT_BLUETOOTH]);
-    compo_setid(txt, COMPO_ID_BLE_NO_CON_TXT);
-
-    //创建没有数据界面
-    pic = compo_picturebox_create(frm, UI_BUF_I335001_23_SOS_1_SET_NUMBER_ICON_PHONE_56X92_X92_Y66_BIN);
-    compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 66+92/2);
-    compo_picturebox_set_visible(pic, false);
-    compo_setid(pic, COMPO_ID_SOS_NOT_DATA_PIC);
-
-    txt = compo_textbox_create(frm, strlen(i18n[STR_ADDRESS_BOOK_SYNC]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 188+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
-    compo_textbox_set_visible(txt, false);
-    compo_textbox_set(txt, i18n[STR_ADDRESS_BOOK_SYNC]);
-    compo_setid(txt, COMPO_ID_SOS_NOT_DATA_TXT);
-
-    //创建是否拨打界面
-    txt = compo_textbox_create(frm, strlen(i18n[STR_DIAL_SOS]));
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 110+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
-    compo_textbox_set_visible(txt, false);
-    compo_textbox_set(txt, i18n[STR_DIAL_SOS]);
-    compo_setid(txt, COMPO_ID_TXT_NUM);
-
-    //取消按钮
-    pic = compo_picturebox_create(frm, UI_BUF_I335001_23_SOS_2_WHETHER_TO_DIAL_ICON_BUTTON_102X52_X16_Y222_BIN);
-    compo_picturebox_set_pos(pic, 16+102/2, 222+52/2);
-    compo_picturebox_set_visible(pic, false);
-    compo_setid(pic, COMPO_ID_BTN_BACK);
-
-    //确定按钮
-    pic = compo_picturebox_create(frm, UI_BUF_I335001_23_SOS_2_WHETHER_TO_DIAL_ICON_BUTTON_102X52_X122_Y220_BIN);
-    compo_picturebox_set_pos(pic, 122+102/2, 222+52/2);
-    compo_picturebox_set_visible(pic, false);
-    compo_setid(pic, COMPO_ID_BTN_SURE);
+    compo_picturebox_t* pic;
+    compo_textbox_t* txt;
+    compo_button_t *btn;
 
     if(!uteModuleCallBtIsConnected())
     {
-        pic = compo_getobj_byid(COMPO_ID_BLE_NO_CON_PIC);
-        compo_picturebox_set_visible(pic, true);
-        txt = compo_getobj_byid(COMPO_ID_BLE_NO_CON_TXT);
-        compo_textbox_set_visible(txt, true);
+        //创建蓝牙未连接界面
+        pic = compo_picturebox_create(frm, UI_BUF_I335001_23_SOS_5_BLUETOOTH_NOT_CONNECTED_ICON_NOT_CONNECTED_72X74_X84_Y74_BIN);
+        compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 74+74/2);
+        compo_setid(pic, COMPO_ID_BLE_NO_CON_PIC);
+
+        txt = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 182+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
+        compo_textbox_set(txt, i18n[STR_CONNECT_BLUETOOTH]);
+        compo_setid(txt, COMPO_ID_BLE_NO_CON_TXT);
     }
     else if(uteModuleCallGetSosContactSize() <= 0)
     {
-        pic = compo_getobj_byid(COMPO_ID_SOS_NOT_DATA_PIC);
-        compo_picturebox_set_visible(pic, true);
-        txt = compo_getobj_byid(COMPO_ID_SOS_NOT_DATA_TXT);
-        compo_textbox_set_visible(txt, true);
+        //创建没有数据界面
+        pic = compo_picturebox_create(frm, UI_BUF_I335001_23_SOS_1_SET_NUMBER_ICON_PHONE_56X92_X92_Y66_BIN);
+        compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 66+92/2);
+        compo_setid(pic, COMPO_ID_SOS_NOT_DATA_PIC);
+
+        txt = compo_textbox_create(frm, strlen(i18n[STR_ADDRESS_BOOK_SYNC]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 188+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
+        compo_textbox_set(txt, i18n[STR_ADDRESS_BOOK_SYNC]);
+        compo_setid(txt, COMPO_ID_SOS_NOT_DATA_TXT);
     }
+#if UTE_THREE_KEY_EVENT_SOS
+    else if(sys_cb.sos_open_flag == true)
+    {
+        func_sub_sos_dial();
+    }
+#endif
     else if(uteModuleCallGetSosContactSize() > 0)
     {
-        pic = compo_getobj_byid(COMPO_ID_BTN_BACK);
-        compo_picturebox_set_visible(pic, true);
-        pic = compo_getobj_byid(COMPO_ID_BTN_SURE);
-        compo_picturebox_set_visible(pic, true);
-        txt = compo_getobj_byid(COMPO_ID_TXT_NUM);
-        compo_textbox_set_visible(txt, true);
+        //创建是否拨打界面
+        txt = compo_textbox_create(frm, strlen(i18n[STR_DIAL_SOS]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 110+28/2, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
+        compo_textbox_set(txt, i18n[STR_DIAL_SOS]);
+        compo_setid(txt, COMPO_ID_TXT_NUM);
+
+        //取消按钮
+        btn = compo_button_create_by_image(frm, UI_BUF_I335001_23_SOS_2_WHETHER_TO_DIAL_ICON_BUTTON_102X52_X16_Y222_BIN);
+        compo_button_set_pos(btn, 16+102/2, 222+52/2);
+        compo_setid(btn, COMPO_ID_BTN_BACK);
+
+        //确定按钮
+        btn = compo_button_create_by_image(frm, UI_BUF_I335001_23_SOS_2_WHETHER_TO_DIAL_ICON_BUTTON_102X52_X122_Y220_BIN);
+        compo_button_set_pos(btn, 122+102/2, 222+52/2);
+        compo_setid(btn, COMPO_ID_BTN_SURE);
     }
+
     return frm;
 }
 
@@ -302,7 +335,7 @@ compo_form_t *func_sub_sos_form_create(void)
 static void func_sub_sos_process(void)
 {
     // f_sos_t *f_sos = (f_sos_t *)func_cb.f_cb;
-
+    updata_sos_state();
     func_process();
 }
 
@@ -348,12 +381,15 @@ static void func_sub_sos_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_sos_t));
     func_cb.frm_main = func_sub_sos_form_create();
+    get_sos_state();
 }
 
 ///退出SOS功能
 static void func_sub_sos_exit(void)
 {
+    sys_cb.sos_open_flag = false;
     func_cb.last = FUNC_SUB_SOS;
+    uteTaskGuiStackRemoveScreenId(FUNC_SUB_SOS);
 }
 
 ///SOS功能

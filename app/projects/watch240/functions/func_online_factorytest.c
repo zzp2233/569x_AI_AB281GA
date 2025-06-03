@@ -85,6 +85,7 @@ typedef struct f_online_factory_test_t_
     u8 sta;
     u8 test_item;
     u32 tick;
+    u8 music_sec;
     u8 color_idx;
     bool play_need;
     page_tp_move_t *ptm;
@@ -479,6 +480,17 @@ static void func_online_factory_test_ageing_process(void)
     if(tick_check_expire(f_online_factory_test->tick, 1000))
     {
         f_online_factory_test->tick = tick_get();
+
+        if(f_online_factory_test->music_sec == 0)
+        {
+            func_bt_mp3_res_play(RES_BUF_RING_VOICE_DIAL_MP3, RES_LEN_RING_VOICE_DIAL_MP3);
+        }
+
+        if(++f_online_factory_test->music_sec==6)
+        {
+            f_online_factory_test->music_sec = 0;
+        }
+
         f_online_factory_test->color_idx = (f_online_factory_test->color_idx + 1) % (sizeof(dis_color) / sizeof(uint16_t));
         compo_shape_set_color(shape, dis_color[f_online_factory_test->color_idx]);
     }
@@ -706,6 +718,7 @@ compo_form_t *func_online_factory_test_form_create(void)
 {
     f_online_factory_test_t *f_online_factory_test = (f_online_factory_test_t *)func_cb.f_cb;
     f_online_factory_test->test_item = uteModuleFactoryTestGetCurrTestItem();
+    f_online_factory_test->tick = tick_get();
 
     printf("f_online_factory_test->test_item = %d\n", f_online_factory_test->test_item);
 
@@ -869,6 +882,10 @@ static void func_online_factory_test_message(size_msg_t msg)
             uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             if (ret == MSGBOX_RES_OK)
             {
+                if (sys_cb.mp3_res_playing)
+                {
+                    music_control(MUSIC_MSG_STOP);
+                }
                 uteModuleGuiCommonGoBackLastScreen();
             }
         }

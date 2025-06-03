@@ -195,6 +195,233 @@ static void func_ota_update_disp(void)
         }
     }
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+compo_form_t *func_ota_update_form_create(void)
+{
+    char txt_buf[30];
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I341001_UPGRADE_UPGRADE_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 55+91);
+
+    extern fot_progress_t *bsp_fot_progress_get(void);
+    fot_progress_t *fot_data = bsp_fot_progress_get();
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent);
+    compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_54_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+58,230,50);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,PROGRESS_BAR_ID);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_UPGRADING]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+136,320,50);
+    compo_textbox_set(textbox,i18n[STR_UPGRADING]);
+
+    return frm;
+}
+static void func_ota_update_disp(void)
+{
+    static u32 ticks = 0;
+
+    if (tick_check_expire(ticks, 100))
+    {
+        ticks = tick_get();
+        reset_sleep_delay_all();
+
+        extern fot_progress_t *bsp_fot_progress_get(void);
+        fot_progress_t *fot_data = bsp_fot_progress_get();
+        if(fot_data->type == FOT_FILE_TYPE_FOT)
+        {
+            if(fot_data->percent)
+            {
+                if(fot_data->percent >= 97)
+                {
+                    fot_data->percent = 100;
+                }
+                char txt_buf[30];
+                compo_textbox_t *txt_val   = compo_getobj_byid(PROGRESS_BAR_ID);
+                snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent );
+                compo_textbox_set(txt_val,txt_buf);
+            }
+        }
+    }
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+
+compo_form_t *func_ota_update_form_create(void)
+{
+    char txt_buf[30];
+
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I338001_UPGRADE_02_UPGRADE_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 40+158/2);
+    compo_setid(picbox,ROCKET_ID);
+
+    extern fot_progress_t *bsp_fot_progress_get(void);
+    fot_progress_t *fot_data = bsp_fot_progress_get();
+
+    //数字
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent);
+    compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,225+25,150,50);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,PROGRESS_BAR_ID);
+
+    //TXT1 升级中
+    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, UPDATING_TXT_ID);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 286+30/2, 196, 30);
+    compo_textbox_set(txt, i18n[STR_UPGRADING]);
+
+    return frm;
+}
+
+//显示升级界面处理
+static void func_ota_update_disp(void)
+{
+    static u32 ticks = 0;
+
+    if (tick_check_expire(ticks, 100))
+    {
+        ticks = tick_get();
+        reset_sleep_delay_all();
+
+        extern fot_progress_t *bsp_fot_progress_get(void);
+        fot_progress_t *fot_data = bsp_fot_progress_get();
+        if(fot_data->type == FOT_FILE_TYPE_FOT)
+        {
+            if(fot_data->percent)
+            {
+                if(fot_data->percent >= 97)
+                {
+                    fot_data->percent = 100;
+                }
+                compo_arc_t *bar = compo_getobj_byid(PROGRESS_BAR_ID);
+                compo_arc_set_value(bar,fot_data->percent*10);
+            }
+        }
+    }
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
+compo_form_t *func_ota_update_form_create(void)
+{
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I340001_OTA_00_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 60+150/2);
+    compo_setid(picbox,ROCKET_ID);
+
+    //CODE 进度条
+    compo_arc_t *arc = compo_arc_create(frm);
+    compo_setid(arc, PROGRESS_BAR_ID);
+    compo_arc_set_location(arc, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-5, GUI_SCREEN_HEIGHT-5);
+    compo_arc_set_rotation(arc, 0);
+    compo_arc_set_angles(arc, 0, 3600);
+    compo_arc_set_edge_circle(arc,true,true);
+    compo_arc_set_color(arc,make_color(0x23,0x8d,0xff),make_color(0x33,0x33,0x33));
+    compo_arc_set_alpha(arc,255,255);
+    compo_arc_set_value(arc,0);
+    compo_arc_set_width(arc, 10);
+
+    //TXT1 升级中
+    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, UPDATING_TXT_ID);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 250+32/2, 196, 30);
+    compo_textbox_set(txt, i18n[STR_UPGRADING]);
+
+    return frm;
+}
+
+//显示升级界面处理
+static void func_ota_update_disp(void)
+{
+    static u32 ticks = 0;
+
+    if (tick_check_expire(ticks, 100))
+    {
+        ticks = tick_get();
+        reset_sleep_delay_all();
+
+        extern fot_progress_t *bsp_fot_progress_get(void);
+        fot_progress_t *fot_data = bsp_fot_progress_get();
+        if(fot_data->type == FOT_FILE_TYPE_FOT)
+        {
+            if(fot_data->percent)
+            {
+                if(fot_data->percent >= 97)
+                {
+                    fot_data->percent = 100;
+                }
+                compo_arc_t *bar = compo_getobj_byid(PROGRESS_BAR_ID);
+                compo_arc_set_value(bar,fot_data->percent*10);
+            }
+        }
+    }
+}
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+compo_form_t *func_ota_update_form_create(void)
+{
+    char txt_buf[30];
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I342001_UPGRADE_UPGRADE_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 28+105/2);
+
+    extern fot_progress_t *bsp_fot_progress_get(void);
+    fot_progress_t *fot_data = bsp_fot_progress_get();
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent);
+    compo_textbox_t *textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,150+35/2,150,50);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,PROGRESS_BAR_ID);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_UPGRADING]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,190+30/2,150,30);
+    compo_textbox_set(textbox,i18n[STR_UPGRADING]);
+
+    return frm;
+}
+static void func_ota_update_disp(void)
+{
+    static u32 ticks = 0;
+
+    if (tick_check_expire(ticks, 100))
+    {
+        ticks = tick_get();
+        reset_sleep_delay_all();
+
+        extern fot_progress_t *bsp_fot_progress_get(void);
+        fot_progress_t *fot_data = bsp_fot_progress_get();
+        if(fot_data->type == FOT_FILE_TYPE_FOT)
+        {
+            if(fot_data->percent)
+            {
+                if(fot_data->percent >= 97)
+                {
+                    fot_data->percent = 100;
+                }
+                char txt_buf[30];
+                compo_textbox_t *txt_val   = compo_getobj_byid(PROGRESS_BAR_ID);
+                snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent );
+                compo_textbox_set(txt_val,txt_buf);
+            }
+        }
+    }
+}
+
 #else
 compo_form_t *func_ota_update_form_create(void)
 {

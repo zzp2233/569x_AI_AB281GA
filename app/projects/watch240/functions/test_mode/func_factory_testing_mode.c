@@ -31,13 +31,19 @@ compo_form_t * func_factory_testing_cross(void);
 compo_form_t * func_factory_testing_rgb(void);
 compo_form_t * func_factory_testing_tp(void);
 compo_form_t * func_factory_testing_heart(void);
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
 compo_form_t * func_factory_testing_blood_oxygen(void);
+#endif
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+compo_form_t *func_factory_testing_heart_light(void);
+#endif
 compo_form_t * func_factory_testing_gsensor(void);
 compo_form_t * func_factory_testing_key(void);
 compo_form_t * func_factory_testing_motor(void);
 compo_form_t * func_factory_testing_charging(void);
 compo_form_t * func_factory_testing_mic_speaker(void);
 compo_form_t * func_factory_testing_mode_result(void);
+compo_form_t * func_factory_testing_ring(void);
 
 enum
 {
@@ -91,12 +97,14 @@ enum
     QDEC_BACKWARD_TXT_ID,
     ///*马达测试*/
     MOTOR_TXT_ID,
+    MOTOR_BTN_ID,
     ///*充电测试*/
     CHARGE_TXT_ID,
     ///*录音测试*/
     TAPE_TXT_ID,
     ///*喇叭测试*/
     HORN_TXT_ID,
+    RECORDING_BTN_ID,
 };
 
 // bool mode_test_result_data[13];
@@ -114,6 +122,8 @@ typedef struct f_factory_testing_t_
     bool motor_flag;///测试马达标志位
     bool tape_flag;///测试录音标志位
     bool horn_flag;///测试喇叭标志位
+    u8   count_num;//测试喇叭标音频播放时间
+    u32 tick;      ///测试喇叭标音频播放时间
 } f_factory_testing_t;
 
 const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
@@ -122,12 +132,20 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
     "屏十字测试",
     "屏RGB测试",
     "TP测试",
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+    "漏光测试",
+#endif
     "心率测试",
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
     "血氧测试",
+#endif
     "gsensor测试",
     "马达测试",
     "充电测试",
     "咪头喇叭测试",
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+    "音频测试",
+#endif
     "按键测试",
 };
 
@@ -194,10 +212,18 @@ compo_form_t *func_factory_testing_create(void)
     {
         frm = func_factory_testing_heart();
     }
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+    else if (test_data->moduleType == FACTORY_MODULE_HEART_CHECK_LIGHT)
+    {
+        frm = func_factory_testing_heart_light();
+    }
+#endif
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
     else if (test_data->moduleType == FACTORY_MODULE_SPO2)
     {
         frm = func_factory_testing_blood_oxygen();
     }
+#endif
     else if (test_data->moduleType == FACTORY_MODULE_GSENSOR)
     {
         frm = func_factory_testing_gsensor();
@@ -214,6 +240,14 @@ compo_form_t *func_factory_testing_create(void)
     {
         frm = func_factory_testing_mic_speaker();
     }
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+    else if (test_data->moduleType == FACTORY_MODULE_SPEAKER)
+    {
+        f_factory_testing->horn_flag = true;
+        f_factory_testing->tick = tick_get();
+        frm = func_factory_testing_ring();
+    }
+#endif
     else if (test_data->moduleType == FACTORY_MODULE_KEY)
     {
         frm = func_factory_testing_key();
@@ -326,18 +360,22 @@ static void func_factory_testing_pass_fail_bnt_create(compo_form_t *frm)
     compo_textbox_set(textbox, (const char *)"FALL");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6);
     compo_textbox_set_forecolor(textbox, COLOR_RED);
+    rect_t location_data = widget_get_location(textbox->txt);
+    area_t txt_data = widget_text_get_area(textbox->txt);
 
     compo_button_t *btn = compo_button_create(frm); // 按钮FALL
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6 - (widget_text_get_area(textbox->txt).hei / 2), (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2);
     compo_setid(btn, FALL_ID);
 
     textbox = compo_textbox_create(frm, strlen((const char *)"PASS")); // PASS
     compo_textbox_set(textbox, (const char *)"PASS");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6);
     compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+    location_data = widget_get_location(textbox->txt);
+    txt_data = widget_text_get_area(textbox->txt);
 
     btn = compo_button_create(frm); // 按钮PASS
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6 -(widget_text_get_area(textbox->txt).hei / 2), (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2);
     compo_setid(btn, PASS_ID);
 }
 
@@ -465,6 +503,57 @@ compo_form_t * func_factory_testing_tp(void)
     return frm;
 }
 
+//创建心率漏光窗体  /
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+compo_form_t *func_factory_testing_heart_light(void)
+{
+    uteModuleNewFactoryTestSetCheckLightMode(NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK);
+    // 新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[50];
+    compo_textbox_t *textbox = NULL;
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof("漏光测试:绿灯"), "漏光测试:绿灯");
+    textbox = compo_textbox_create(frm, strlen(txt_buf)); // dif___, Max___
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 1 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_1_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "preV:000");
+    textbox = compo_textbox_create(frm, strlen(txt_buf)); /// 心率:未佩戴
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 2 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_2_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "curV:000");
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 3 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_3_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "psV:000");
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 4 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_4_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "fail");
+    textbox = compo_textbox_create(frm, strlen(txt_buf));
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT * 5 / 7);
+    compo_setid(textbox, LEAKAGE_TXT_5_ID);
+
+    func_factory_testing_pass_fail_bnt_create(frm);
+
+    return frm;
+}
+#endif
+
 ///创建心率测试窗体   模式六/
 compo_form_t * func_factory_testing_heart(void)
 {
@@ -474,7 +563,7 @@ compo_form_t * func_factory_testing_heart(void)
     char txt_buf[50];
     compo_textbox_t *textbox = NULL;
 
-#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+#if 0//UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
     memset(txt_buf, '\0', sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf), "dif:---,Max:---");
     textbox = compo_textbox_create(frm, strlen(txt_buf));///dif___, Max___
@@ -502,6 +591,7 @@ compo_form_t * func_factory_testing_heart(void)
     return frm;
 }
 ///创建血氧测试窗体   模式七/
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
 compo_form_t * func_factory_testing_blood_oxygen(void)
 {
     uteModuleHeartStartSingleTesting(TYPE_BLOODOXYGEN);
@@ -527,6 +617,8 @@ compo_form_t * func_factory_testing_blood_oxygen(void)
 
     return frm;
 }
+#endif
+
 ///创建角度测试窗体   模式八/
 compo_form_t * func_factory_testing_gsensor(void)
 {
@@ -650,6 +742,10 @@ compo_form_t * func_factory_testing_motor(void)
     compo_setid(textbox,MOTOR_TXT_ID);
     compo_textbox_set_forecolor(textbox, make_color(0,191,255));
 
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_setid(btn, MOTOR_BTN_ID);
+
     func_factory_testing_pass_fail_bnt_create(frm);
 
     return frm;
@@ -680,7 +776,6 @@ compo_form_t * func_factory_testing_charging(void)
 compo_form_t * func_factory_testing_mic_speaker(void)
 {
     uteModuleMicRecordFactoryEnter();
-    uteModuleMicRecordFactoryStart();
     ///新建窗体
     compo_form_t *frm = compo_form_create(true);
 
@@ -688,16 +783,47 @@ compo_form_t * func_factory_testing_mic_speaker(void)
     compo_textbox_set(textbox, "咪头喇叭测试");
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
 
-    // textbox = compo_textbox_create(frm, strlen("开始录音"));
-    // compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
-    // compo_textbox_set(textbox, "开始录音");
-    // compo_setid(textbox,TAPE_TXT_ID);
-    // compo_textbox_set_forecolor(textbox, make_color(0,191,255));
+    textbox = compo_textbox_create(frm, strlen("点击开始录音"));
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
+    compo_textbox_set(textbox, "点击开始录音");
+    compo_setid(textbox,TAPE_TXT_ID);
+    compo_textbox_set_forecolor(textbox, make_color(0,191,255));
+
+    compo_button_t *btn = compo_button_create(frm); // 录音
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_setid(btn, RECORDING_BTN_ID);
 
     func_factory_testing_pass_fail_bnt_create(frm);
 
     return frm;
 }
+
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+///创建音频测试窗体   模式十二*/
+compo_form_t * func_factory_testing_ring(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("音频测试"));
+    compo_textbox_set(textbox, "音频测试");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_SPACING_Y);
+
+    textbox = compo_textbox_create(frm, strlen("点击暂停播放"));
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
+    compo_textbox_set(textbox, "点击暂停播放");
+    compo_setid(textbox,TAPE_TXT_ID);
+    compo_textbox_set_forecolor(textbox, make_color(0,191,255));
+
+    compo_button_t *btn = compo_button_create(frm); // 按键
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_setid(btn, RECORDING_BTN_ID);
+
+    func_factory_testing_pass_fail_bnt_create(frm);
+
+    return frm;
+}
+#endif
 
 ///创建测试结果窗体   测试结果*/
 compo_form_t * func_factory_testing_mode_result(void)
@@ -832,7 +958,7 @@ static void func_mode_motor_click(void)
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
     compo_textbox_t *textbox = compo_getobj_byid(MOTOR_TXT_ID);///马达震动
 
-    if(id != FALL_ID && id != PASS_ID)
+    if(id == MOTOR_BTN_ID)
     {
         if(!f_factory_testing->motor_flag)
         {
@@ -849,44 +975,105 @@ static void func_mode_motor_click(void)
     }
 }
 
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+static void func_mode_test_ring_click(void)
+{
+    int id = compo_get_button_id();
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    switch(id)
+    {
+        case FALL_ID: ///不通过后切换下一个模式
+        {
+            if (sys_cb.mp3_res_playing)
+            {
+                music_control(MUSIC_MSG_STOP);
+            }
+        }
+        break;
+        case PASS_ID: ///通过后切换下一个模式
+        {
+            if (sys_cb.mp3_res_playing)
+            {
+                music_control(MUSIC_MSG_STOP);
+            }
+        }
+        break;
+        case RECORDING_BTN_ID:
+            if(f_factory_testing->horn_flag == true)
+            {
+                f_factory_testing->horn_flag = false;
+                f_factory_testing->count_num = 0;
+                if (sys_cb.mp3_res_playing)
+                {
+                    music_control(MUSIC_MSG_STOP);
+                }
+            }
+            else
+            {
+                f_factory_testing->horn_flag = true;
+            }
+            break;
+    }
+}
+#endif
+
 static void func_mode_mic_speaker_click(void)
 {
     int id = compo_get_button_id();
-//    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-//    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
 
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
         {
             uteModuleMicRecordFactoryExit();
-            compo_form_t *frm = func_cb.frm_main;
-            test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_FAIL;///获取测试结果
-            test_data->moduleType ++;///切换下一个模式
-            if (frm != NULL)
-            {
-                compo_form_destroy(frm);
-                frm = NULL;
-            }
-            func_cb.frm_main = func_factory_testing_create();
         }
         break;
         case PASS_ID: ///通过后切换下一个模式
         {
             uteModuleMicRecordFactoryExit();
-            compo_form_t *frm = func_cb.frm_main;
-            test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;///获取测试结果
-            test_data->moduleType ++;///切换下一个模式
-            if (frm != NULL)
+        }
+        break;
+        case RECORDING_BTN_ID:
+            if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
             {
-                compo_form_destroy(frm);
-                frm = NULL;
+                uteModuleMicRecordFactoryStart();
             }
-            func_cb.frm_main = func_factory_testing_create();
+            break;
+    }
+}
+
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+static void func_factory_testing_heart_light_click(void)
+{
+    int id = compo_get_button_id();
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    switch(id)
+    {
+        case FALL_ID:
+        {
+            uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
+        }
+        break;
+        case PASS_ID:
+        {
+            uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
+        }
+        break;
+        default:
+        {
+            if (uteModuleNewFactoryTestGetCheckLightMode() == NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK)
+            {
+                uteModuleNewFactoryTestSetCheckLightMode(NEW_FACTORY_VCXX_TEST_MODE_INFRARED);
+            }
+            else
+            {
+                uteModuleNewFactoryTestSetCheckLightMode(NEW_FACTORY_VCXX_TEST_MODE_CROSSTALK);
+            }
         }
         break;
     }
 }
+#endif
 
 ///工厂测试功能消息处理
 static void func_factory_testing_message(size_msg_t msg)
@@ -915,6 +1102,18 @@ static void func_factory_testing_message(size_msg_t msg)
             {
                 func_mode_mic_speaker_click();
             }
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+            else if (test_data->moduleType == FACTORY_MODULE_SPEAKER)
+            {
+                func_mode_test_ring_click();
+            }
+#endif
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+            else if (test_data->moduleType == FACTORY_MODULE_HEART_CHECK_LIGHT)
+            {
+                func_factory_testing_heart_light_click();
+            }
+#endif
             func_factory_testing_pass_fail_bnt_click();
         }
         break;
@@ -980,8 +1179,12 @@ static void func_factory_testing_message(size_msg_t msg)
             uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             if (ret == MSGBOX_RES_OK)
             {
-                uteTaskGuiStartScreen(FUNC_TEST_MODE,0,__func__);
+#if UTE_MODULE_LOG_SUPPORT
+                uteTaskGuiStartScreen(FUNC_TEST_MODE, 0, __func__);
                 uteTaskGuiStackRemoveScreenId(FUNC_FACTORY_TESTING);
+#else
+                uteModulePlatformSystemReboot();
+#endif
             }
         }
         break;
@@ -1017,6 +1220,7 @@ static void func_mode_heart_process(void)
     }
 }
 
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
 static void func_mode_blood_oxygen_process(void)
 {
     char txt_buf[50];
@@ -1042,6 +1246,57 @@ static void func_mode_blood_oxygen_process(void)
         compo_textbox_set(textbox1, txt_buf);
     }
 }
+#endif
+
+#if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
+static void func_factory_testing_heart_light_process(void)
+{
+    int preV;
+    int curV;
+    int psV;
+    bool isPass;
+    compo_textbox_t *TextTitle = compo_getobj_byid(LEAKAGE_TXT_1_ID);
+    compo_textbox_t *TextPreV = compo_getobj_byid(LEAKAGE_TXT_2_ID);
+    compo_textbox_t *TextCurV = compo_getobj_byid(LEAKAGE_TXT_3_ID);
+    compo_textbox_t *TextPsV = compo_getobj_byid(LEAKAGE_TXT_4_ID);
+    compo_textbox_t *TextIsPass = compo_getobj_byid(LEAKAGE_TXT_5_ID);
+    char txt_buf[50];
+
+    if (uteModuleNewFactoryTestGetCheckLightMode() == NEW_FACTORY_VCXX_TEST_MODE_INFRARED)
+    {
+        memset(txt_buf, '\0', sizeof(txt_buf));
+        snprintf((char *)txt_buf, sizeof("漏光测试:红外"), "漏光测试:红外");
+        compo_textbox_set(TextTitle, txt_buf);
+    }
+    else
+    {
+        memset(txt_buf, '\0', sizeof(txt_buf));
+        snprintf((char *)txt_buf, sizeof("漏光测试:绿灯"), "漏光测试:绿灯");
+        compo_textbox_set(TextTitle, txt_buf);
+    }
+
+    uteModuleNewFactoryTestGetVkData(&preV, &curV, &psV, &isPass);
+
+    snprintf((char *)txt_buf, sizeof(txt_buf), "preV:%d",preV);
+    compo_textbox_set(TextPreV, txt_buf);
+    snprintf((char *)txt_buf, sizeof(txt_buf), "curV:%d",curV);
+    compo_textbox_set(TextCurV, txt_buf);
+    snprintf((char *)txt_buf, sizeof(txt_buf), "psV:%d",psV);
+    compo_textbox_set(TextPsV, txt_buf);
+    if(isPass)
+    {
+        snprintf((char *)txt_buf, sizeof(txt_buf), "%s","PASS");
+        compo_textbox_set_forecolor(TextIsPass, COLOR_GREEN);
+    }
+    else
+    {
+        snprintf((char *)txt_buf, sizeof(txt_buf), "%s","FAIL");
+        compo_textbox_set_forecolor(TextIsPass, COLOR_RED);
+    }
+    compo_textbox_set(TextIsPass, txt_buf);
+}
+#endif
+
 static void func_mode_gsensor_process(void)
 {
     char txt_buf[50];
@@ -1114,12 +1369,68 @@ static void func_mode_charging_process(void)
 
 static void func_mode_mic_speaker_process(void)
 {
-    if (!uteModuleMicRecordFactoryIsRecording() && !uteModuleMicRecordFactoryIsPlaying() && uteModuleMicRecordFactoryIsHaveData())
+    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
+    static bool isNeedPlay = false;
+    if (textbox == NULL)
+        return;
+    if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
     {
-        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_FACTORY_PLAY_SOUND_RECORDING, 0);
+        compo_textbox_set(textbox, "点击开始录音");
+    }
+    else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDING)
+    {
+        compo_textbox_set(textbox, "录音中...");
+        isNeedPlay = true;
+    }
+    else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDED)
+    {
+        if (isNeedPlay)
+        {
+            compo_textbox_set(textbox, "播放中...");
+            uteModuleMicRecordFactorySetrecordState(FACTORY_TEST_RECORD_PLAYING);
+            // uteModuleMicRecordFactoryPlayStart();
+            // isNeedPlay = false;
+        }
+    }
+    else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_PLAYING)
+    {
+        compo_textbox_set(textbox, "播放中...");
+        if (isNeedPlay)
+        {
+            uteModuleMicRecordFactoryPlay();
+            isNeedPlay = false;
+        }
     }
 }
 
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+static void func_mode_test_ring_process(void)
+{
+    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    if(f_factory_testing->horn_flag == true)
+    {
+        compo_textbox_set(textbox, "点击暂停播放");
+        if(tick_check_expire(f_factory_testing->tick, 1000))
+        {
+            f_factory_testing->tick = tick_get();
+            if(f_factory_testing->count_num == 0)
+            {
+                func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
+            }
+
+            if(++f_factory_testing->count_num==13)
+            {
+                f_factory_testing->count_num = 0;
+            }
+        }
+    }
+    else
+    {
+        compo_textbox_set(textbox, "点击开始播放");
+    }
+}
+#endif
 static void func_mode_result_process(void)
 {
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
@@ -1133,15 +1444,17 @@ static void func_factory_testing_process(void)
     {
 #if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
         case FACTORY_MODULE_HEART_CHECK_LIGHT:
-            func_mode_5_process();
+            func_factory_testing_heart_light_process();
             break;
 #endif
         case FACTORY_MODULE_HEART:
             func_mode_heart_process();
             break;
+#if UTE_MODULE_BLOODOXYGEN_SUPPORT && !UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
         case FACTORY_MODULE_SPO2:
             func_mode_blood_oxygen_process();
             break;
+#endif
         case FACTORY_MODULE_GSENSOR:
             func_mode_gsensor_process();
             break;
@@ -1151,6 +1464,11 @@ static void func_factory_testing_process(void)
         case FACTORY_MODULE_MIC_SPEAKER:
             func_mode_mic_speaker_process();
             break;
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+        case FACTORY_MODULE_SPEAKER:
+            func_mode_test_ring_process();
+            break;
+#endif
         case FACTORY_MODULE_MAX:
             func_mode_result_process();
             break;

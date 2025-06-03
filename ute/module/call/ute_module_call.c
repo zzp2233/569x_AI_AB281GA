@@ -310,7 +310,7 @@ void uteModuleCallEverySecond(void)
             UTE_MODULE_LOG(UTE_LOG_BT_AUDIO_LVL, "%s,.powerOnTimeSecond = %d", __func__, uteModuleCallData.powerOnTimeSecond);
         }
 
-#if UTE_BT30_AUTO_POWRER_OFF_SUPPORT
+#if (UTE_BT30_AUTO_POWRER_OFF_SUPPORT && !UTE_CONNECT_PC_AUDIO_TEST)
         if (uteModuleCallData.powerOnTimeSecond > (UTE_BT30_AUTO_POWRER_OFF_TIME_SECOND + 10)&&(!isHfpAndA2dpProfileBothConnected()))
         {
             uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_AUTO);
@@ -710,7 +710,11 @@ void uteModuleCallReadBtPowerOnOffStatus(void)
         uteModuleFilesystemReadData(file,&readbuff[0],1);
         uteModuleFilesystemCloseFile(file);
     }
+#if UTE_CONNECT_PC_AUDIO_TEST
+    uteModuleCallData.isPowerOn = true;
+#else
     uteModuleCallData.isPowerOn = readbuff[0];
+#endif
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,uteModuleCallData.isPowerOn=%d", __func__,uteModuleCallData.isPowerOn);
 }
 #endif
@@ -809,7 +813,11 @@ void uteModuleCallEntertranmentVoiceSwitchReadConfig(void)
         uteModuleFilesystemReadData(file,&readbuff[0],1);
         uteModuleFilesystemCloseFile(file);
     }
+#if UTE_CONNECT_PC_AUDIO_TEST
+    uteModuleCallData.isEntertranmentVoiceOn = true;
+#else
     uteModuleCallData.isEntertranmentVoiceOn = readbuff[0];
+#endif
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,.isEntertranmentVoiceOn=%d", __func__,uteModuleCallData.isEntertranmentVoiceOn);
 }
 
@@ -1125,8 +1133,8 @@ void uteModuleCallGetAllAddressBookContactContent(uint16_t totalLen,ute_module_c
 */
 bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,uint8_t *name,uint8_t *nameLen)
 {
-    uint8_t path[25];
-    memset(&path[0],0,25);
+    uint8_t path[40];
+    memset(&path[0],0,40);
     bool isMatch = false;
     uint8_t tempBuff[UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH];
     sprintf((char *)&path[0],"%s/%s",UTE_MODULE_FILESYSTEM_CALL_DATA_DIR,UTE_MODULE_FILESYSTEM_CALL_ADDRESS_BOOK_DIR);

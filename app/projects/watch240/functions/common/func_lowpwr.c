@@ -3,6 +3,7 @@
 #include "ute_module_message.h"
 #include "ute_project_config.h"
 #include "ute_module_sport.h"
+#include "ute_module_bedside_mode.h"
 
 bool power_off_check(void);
 void lock_code_pwrsave(void);
@@ -352,8 +353,8 @@ static void sfunc_sleep(void)
 
 #if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
     GPIOFDE = 0 | BIT(2) | BIT(1);          //GSENSOR I2C
-    GPIOEDE = 0 ; //| BIT(2) | BIT(1);          //HR I2C
-    // GPIOFDE |= BIT(5);                      //HR POWER
+    GPIOEDE = 0 | BIT(2) | BIT(1);          //HR I2C
+    GPIOFDE = 0 | BIT(5);                   //HR POWER
 #elif (UTE_CHIP_PACKAGE_SELECT == CHIP_5691C_F)
     GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
     GPIOEDE |= BIT(4) | BIT(5);             //HR I2C
@@ -441,7 +442,8 @@ static void sfunc_sleep(void)
         if (ble_app_need_wakeup())
         {
             printf("ble_app_need_wakeup\n");
-            gui_need_wkp = true;
+            gui_need_wkp = false;
+            ble_app_watch_set_wakeup(false);
             break;
         }
 #endif
@@ -648,7 +650,20 @@ bool sleep_process(is_sleep_func is_sleep)
             reset_pwroff_delay();
             return false;
         }
-        if (sys_cb.sleep_delay == 0)
+        // if(sys_cb.sleep_delay % 10 == 0 && sys_cb.guioff_delay%10==0)
+        // {
+        //     printf("%s,sleep_delay:%d,guioff_delay:%d,sys_is_sleep:%d,gui_sleep_sta:%d\n",__func__,sys_cb.sleep_delay,sys_cb.guioff_delay,sleep_cb.sys_is_sleep,sys_cb.gui_sleep_sta);
+        // }
+        if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)
+        {
+            if(sys_cb.sleep_delay > 0) //休眠时间未到时仅熄屏
+            {
+                printf("sleep_delay:%d,only off screen\n", sys_cb.sleep_delay);
+                gui_sleep();
+                return false;
+            }
+        }
+        if (sys_cb.sleep_delay == 0 && !sleep_cb.sys_is_sleep)
         {
             if(sys_cb.guioff_delay == 0) /*! 亮屏时不休眠,wang.luo 2024-10-21 */
             {

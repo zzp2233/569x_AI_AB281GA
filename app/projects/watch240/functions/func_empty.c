@@ -31,9 +31,9 @@ static void func_empty_message(size_msg_t msg)
 {
     switch (msg)
     {
-    default:
-        evt_message(msg);
-        break;
+        default:
+            evt_message(msg);
+            break;
     }
 }
 

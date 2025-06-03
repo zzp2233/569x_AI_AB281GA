@@ -161,7 +161,7 @@ static vcHr11Ret_t vcHr11RegInit(vcHr11_t *pvcHr11)
                              0x57, 0x37, 0x47,
                              0x16, 0x56, 0x16, 0x00
                             };
-    fifoIntTim = pvcHr11->vcSampleRate - 6;
+    fifoIntTim = pvcHr11->vcSampleRate - 16; //6->800ms
     regConfig[3] = (fifoIntTim) | regConfig[3];
     switch (pvcHr11->workMode)
     {

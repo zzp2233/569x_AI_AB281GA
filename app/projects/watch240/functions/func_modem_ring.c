@@ -76,6 +76,34 @@ compo_form_t *func_modem_ring_form_create(void)
 
     return frm;
 }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_modem_ring_form_create(void)
+{
+    //printf("%s\n", __func__);
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
+    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50, GUI_SCREEN_WIDTH, 50);
+    compo_textbox_set_autosize(number_txt, true);
+    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
+    msg_enqueue(EVT_CALL_NUMBER_UPDATE);
+
+    //接听
+//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_CALL_BIN);
+//    compo_setid(btn, COMPO_ID_BTN_ANSWER);
+//    compo_button_set_pos(btn, 250, 240);
+
+    //挂断
+//    btn = compo_button_create_by_image(frm, UI_BUF_I330001_CALL_CALLING_END_BIN);
+//    compo_setid(btn, COMPO_ID_BTN_REJECT);
+//    compo_button_set_pos(btn, 70, 240);
+
+    return frm;
+}
+
 #else
 
 compo_form_t *func_modem_ring_form_create(void)

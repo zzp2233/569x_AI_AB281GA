@@ -194,7 +194,7 @@ void uteModuleEmotionPressureCalculateGetPressurePercent(emotion_pressure_result
 
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
 void uteDrvHeartVcxxStartPressureSample(void);
-void uteDrvHeartVcxxStopPressureSample(void);
+void uteDrvHeartVcxxStopPressureSample(uint8_t stopReasion);
 bool uteDrvHeartVcxxIsPressureTesting(void);
 uint8_t uteDrvHeartVcxxGetVkPressureValue(void);
 #endif

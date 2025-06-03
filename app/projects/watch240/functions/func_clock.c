@@ -22,6 +22,7 @@ extern u16 func_clock_preview_get_type(void);
 #define DIALPLATE_NUM               uteModuleGuiCommonGetCurrWatchMaxIndex()
 #define DIALPLATE_BTF_IDX           UTE_WATCHS_DIALPLATE_BTF_INDEX        //蝴蝶表盘默认最后一个
 #define DIALPLATE_CUBE_IDX          UTE_WATCHS_DIALPLATE_CUBE_INDEX        //立方体表盘默认倒数第二个
+#define DIALPLATE_LIGHT_CUBE_IDX    UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX        //立方体表盘默认倒数第二个
 
 u32 dialplate_info[UTE_MODULE_SCREENS_WATCH_CNT_MAX + UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT] = UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS;
 
@@ -42,7 +43,7 @@ const u8 quick_btn_tbl[] =
     [4]     = FUNC_BLOOD_OXYGEN,            //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     [5]     = FUNC_NULL,                    //血糖
-    [6]     = FUNC_BLOOD_PRESSURE,          //血压
+    [6]     = FUNC_NULL,          //血压
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     [7]     = FUNC_BREATHE,                 //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
@@ -186,6 +187,13 @@ compo_form_t *func_clock_form_create(void)
         }
         break;
 #endif
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+        case DIALPLATE_LIGHT_CUBE_IDX:
+        {
+            frm = func_clock_light_cube_form_create();
+        }
+        break;
+#endif
         default:
         {
             u32 base_addr = dialplate_info[sys_cb.dialplate_index];
@@ -221,6 +229,9 @@ static void func_clock_process(void)
 {
 #if UTE_WATCHS_CUBE_DIAL_SUPPORT
     func_clock_cube_process();
+#endif
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+    func_clock_light_cube_process();
 #endif
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     func_clock_butterfly_process();
@@ -261,6 +272,17 @@ static void func_clock_message(size_msg_t msg)
         }
     }
 #endif
+#if UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT
+    if(sys_cb.dialplate_index == DIALPLATE_LIGHT_CUBE_IDX)
+    {
+        if(func_clock_light_cube_message(msg))
+        {
+            TRACE("func_clock_cube_message return\n");
+            return;
+        }
+    }
+
+#endif
 
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if(sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
@@ -297,8 +319,17 @@ static void func_clock_message(size_msg_t msg)
             if(UTE_CUI_SCREEN_WATCHDIAL_LEFT != FUNC_NULL)
             {
                 func_cb.left_sta = UTE_CUI_SCREEN_WATCHDIAL_LEFT;
-                func_switch_to(UTE_CUI_SCREEN_WATCHDIAL_LEFT, FUNC_SWITCH_LR_ZOOM_RIGHT);
+                if(UTE_CUI_SCREEN_WATCHDIAL_LEFT == FUNC_MENU)
+                {
+                    func_switch_to_menu();
+                }
+                else
+                {
+                    func_switch_to(UTE_CUI_SCREEN_WATCHDIAL_LEFT, FUNC_SWITCH_LR_ZOOM_RIGHT);
+                }
+
             }
+
 #endif
             break;
 
@@ -364,7 +395,6 @@ static void func_clock_message(size_msg_t msg)
             break;
     }
 }
-
 //进入时钟表盘功能
 static void func_clock_enter(void)
 {
@@ -373,7 +403,6 @@ static void func_clock_enter(void)
     func_cb.flag_animation = true;
     func_cb.left_sta = FUNC_NULL;
     func_cb.pullup_sta = FUNC_NULL;
-
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {
@@ -381,7 +410,6 @@ static void func_clock_enter(void)
         tft_set_temode(0);
     }
 #endif
-
 }
 
 //退出时钟表盘功能
@@ -391,9 +419,14 @@ static void func_clock_exit(void)
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {
         sys_cb.dialplate_btf_ready = false;
-        tft_set_temode(DEFAULT_TE_MODE);
     }
 #endif
+
+    if(tft_cb.te_mode != DEFAULT_TE_MODE)
+    {
+        tft_set_temode(DEFAULT_TE_MODE);
+    }
+
     func_cb.last = FUNC_CLOCK;
 
     if(!uteApplicationCommonIsHasConnectOurApp())//防止上电直接进入表盘特殊情况

@@ -13,6 +13,7 @@
 #include "ute_drv_motor.h"
 #include "ute_module_gui_common.h"
 #include "ute_module_heart.h"
+#include "ute_module_localRingtone.h"
 
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
 /*! zn.zeng,2022-03-16*/
@@ -145,16 +146,16 @@ void uteModuleNewFactoryTestEverySecond(void)
     {
         if(uteModuleNewFactoryTestData.u.vcxx.testMode==NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
         {
-            ute_module_systemtime_time_t time;
-            uteModuleSystemtimeGetTime(&time);
-            if(time.sec%2)
-            {
-                // uteDrvHeartVcxxStartHrMaxTest();
-            }
-            else
-            {
-                // uteDrvHeartVcxxStartSpo2MaxTest();
-            }
+            // ute_module_systemtime_time_t time;
+            // uteModuleSystemtimeGetTime(&time);
+            // if(time.sec%2)
+            // {
+            // uteDrvHeartVcxxStartHrMaxTest();
+            // }
+            // else
+            // {
+            // uteDrvHeartVcxxStartSpo2MaxTest();
+            // }
         }
         else if(uteModuleNewFactoryTestData.u.vcxx.testMode==NEW_FACTORY_VCXX_TEST_MODE_BIO_B)
         {
@@ -171,6 +172,29 @@ void uteModuleNewFactoryTestEverySecond(void)
         }
         else
         {
+            uteModuleFactoryTestGetVkData(&uteModuleNewFactoryTestData.u.vcxx.pre,&uteModuleNewFactoryTestData.u.vcxx.current,&uteModuleNewFactoryTestData.u.vcxx.ps,&uteModuleNewFactoryTestData.u.vcxx.isPass);
+            if(uteModuleNewFactoryTestGetCheckLightMode()==NEW_FACTORY_VCXX_TEST_MODE_INFRARED)
+            {
+                if((uteModuleNewFactoryTestData.u.vcxx.ps >= DRV_HEART_VCXX_PS_MIN_VALUE)&&(uteModuleNewFactoryTestData.u.vcxx.current >= DRV_HEART_VCXX_LIGHT_I_MIN_VALUE))
+                {
+                    uteModuleNewFactoryTestData.u.vcxx.isPass = true;
+                }
+                else
+                {
+                    uteModuleNewFactoryTestData.u.vcxx.isPass = false;
+                }
+            }
+            else
+            {
+                if ((uteModuleNewFactoryTestData.u.vcxx.pre <= DRV_HEART_VCXX_LIGHT_LEAKGE_DIFF_VALUE) && (uteModuleNewFactoryTestData.u.vcxx.current >= DRV_HEART_VCXX_LIGHT_I_MIN_VALUE))
+                {
+                    uteModuleNewFactoryTestData.u.vcxx.isPass = true;
+                }
+                else
+                {
+                    uteModuleNewFactoryTestData.u.vcxx.isPass = false;
+                }
+            }
             // uteDrvHeartNewFactoryVcxxGetCrosstalktestValue(&uteModuleNewFactoryTestData.u.vcxx.pre,&uteModuleNewFactoryTestData.u.vcxx.current,&uteModuleNewFactoryTestData.u.vcxx.ps,&uteModuleNewFactoryTestData.u.vcxx.bioA,&uteModuleNewFactoryTestData.u.vcxx.isPass);
         }
     }
@@ -417,7 +441,7 @@ void uteModuleNewFactoryTestSetCheckLightMode(uint8_t mode)
     if(mode!=NEW_FACTORY_VCXX_TEST_MODE_RED_LIGHT)
     {
         //uteDrvHeartVcxxStartCrosstalktest();
-        uteModuleHeartStopSingleTesting(TYPE_FACTORY0);
+        uteModuleHeartStartSingleTesting(TYPE_FACTORY0);
     }
 #if !UTE_DRV_HEART_VC9202_VP60A2_SUPPORT
     if(mode == NEW_FACTORY_VCXX_TEST_MODE_BIO_A)

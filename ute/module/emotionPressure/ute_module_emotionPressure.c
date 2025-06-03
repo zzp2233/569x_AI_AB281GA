@@ -54,20 +54,27 @@ void uteDrvHeartVcxxStartPressureSample(void)
     uteModuleEmotionPressureData.vkPressureValue = 0;
 }
 
-void uteDrvHeartVcxxStopPressureSample(void)
+void uteDrvHeartVcxxStopPressureSample(uint8_t stopReasion)
 {
     uteModuleEmotionPressureData.isVkPressureTesting = false;
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
     uteModuleEmotionPressureData.isVkPressureTesting = false;
     StressOutputData_t vkPressureData;
     StressEst_Output(&vkPressureData);
-    if (vkPressureData.strData > 0 && vkPressureData.strData < 100)
+    if (stopReasion == EP_STOP_REASION_SUCCESS && vkPressureData.strData > 0 && vkPressureData.strData < 100)
     {
         uteModuleEmotionPressureData.vkPressureValue = vkPressureData.strData;
     }
     else
     {
-        uteModuleEmotionPressureData.vkPressureValue = 0xFF;
+        if (uteModuleEmotionPressureData.isEmotionPressureAutoTestFlag && uteModuleHeartGetHeartValue() > 40 && uteModuleHeartGetHeartValue() < 0xff)
+        {
+            uteModuleEmotionPressureData.vkPressureValue = uteModuleHeartGetHeartValue() / 5;
+        }
+        else
+        {
+            uteModuleEmotionPressureData.vkPressureValue = 0xFF;
+        }
     }
     uint8_t EmotionValue = 2;
     if (uteModuleEmotionPressureData.vkPressureValue == 0xFF)
@@ -290,7 +297,7 @@ void uteModuleEmotionPressureEverySecond(void)
     /*! 自动测试逻辑 xjc, 2022-02-15  */
     if (uteModuleEmotionPressureData.isAutoTesting)
     {
-        bool isNeedAutoTest = false;
+        static bool isNeedAutoTest = false;
         ute_module_systemtime_time_t time;
         uteModuleSystemtimeGetTime(&time);
         uint32_t oneDaySec = time.hour * 3600 + time.min * 60 + time.sec;
@@ -311,7 +318,7 @@ void uteModuleEmotionPressureEverySecond(void)
                     isNeedAutoTest = true;
                 }
             }
-            if (((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 60) && isNeedAutoTest) // 加一分钟再测试，防止与其他需要心率Sensor的定时测试冲突
+            if (((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 0) && isNeedAutoTest) // 加一分钟再测试，防止与其他需要心率Sensor的定时测试冲突
             {
                 isNeedAutoTest = true;
             }
@@ -322,7 +329,7 @@ void uteModuleEmotionPressureEverySecond(void)
         }
         else
         {
-            if ((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 60) // 过1分钟再测量，防止与血氧自动测试冲突
+            if ((oneDaySec % (60 * (uteModuleEmotionPressureData.intervalMin))) == 0) // 过1分钟再测量，防止与血氧自动测试冲突
             {
                 isNeedAutoTest = true;
             }
@@ -346,6 +353,7 @@ void uteModuleEmotionPressureEverySecond(void)
             {
                 uteModuleEmotionPressureData.isEmotionPressureAutoTestFlag = true;
                 uteModuleEmotionPressureStartSingleTesting(false);
+                isNeedAutoTest = false;
             }
             else
             {
@@ -353,7 +361,7 @@ void uteModuleEmotionPressureEverySecond(void)
             }
         }
     }
-#if UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT
+#if (0&UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT)
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,curDayPressureAvgValue=%d,curDayPressureMinValue=%d", __func__, uteModuleEmotionPressureData.curDayPressureAvgValue, uteModuleEmotionPressureData.curDayPressureMinValue);
     UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,curDayPressureMaxValue=%d,lastPressureValue=%d", __func__, uteModuleEmotionPressureData.curDayPressureMaxValue, uteModuleEmotionPressureData.lastPressureValue);
 #endif
@@ -482,8 +490,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
 #endif
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 维客算法停止测试和采样
     uteModuleHeartStopSingleTesting(TYPE_HEART);
-    uteDrvHeartVcxxStopPressureSample();
-
+    uteDrvHeartVcxxStopPressureSample(stopReasion);
     if ((uteDrvHeartVcxxGetVkPressureValue() == 0) || (uteDrvHeartVcxxGetVkPressureValue() == 0xff))
     {
         stopReasion = EP_STOP_REASION_TIMEOUT;
@@ -534,10 +541,7 @@ void uteModuleEmotionPressureStopSingleTestingMsgHandler(uint32_t param)
     uteModuleEmotionPressureData.isAppStartTesting = false;
     uteModuleEmotionPressureData.isEmotionPressureAutoTestFlag = false;
     uteModuleEmotionPressureData.testingSecond = 0;
-#if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 维客算法结束测试往上提
-    uteModuleHeartStopSingleTesting(TYPE_HEART);
-    uteDrvHeartVcxxStopPressureSample();
-#else
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT // add by pcm 2023-07-28 维客算法结束测试往上提
     uteModuleEmotionPressureData.stopSendMidValue = true;
     uteModuleHeartStopSingleTestingMsgHandler((uint32_t)TYPE_EMOTION_PRESSURE);
 #endif
@@ -1667,7 +1671,7 @@ bool uteModuleEmotionPressureLoadTodayEmotionHistoryData(uint8_t *emotionHistory
         uint8_t emotionData = emotionHistoryData[i];
         if (emotionData > 2)
         {
-            emotionData = 2;
+            emotionData = 0xff;
         }
         emotionHistoryGraph[i] = emotionData;
     }

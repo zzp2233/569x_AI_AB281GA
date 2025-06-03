@@ -34,6 +34,7 @@
 #include "ute_module_localRingtone.h"
 #include "ute_module_appbinding.h"
 #include "ute_module_breathrate.h"
+#include "ute_module_bedside_mode.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -91,11 +92,7 @@
 #endif
 #endif
 /*!application 数据 zn.zeng, 2021-07-15  */
-ute_application_common_data_t uteApplicationCommonData =
-{
-    .isSynchronizingData = false,
-    .isAncsConnected = false,
-};
+ute_application_common_data_t uteApplicationCommonData;
 ute_application_sync_data_param_t sendHistoryDataParam;
 /* app common 互斥量 zn.zeng 2022-02-14*/
 void *uteApplicationCommonMute;
@@ -114,6 +111,9 @@ void uteApplicationCommonStartupFrist(void)
     uteApplicationCommonData.isStartupFristFinish = false;
     uteApplicationCommonData.isStartupSecondFinish = false;
     uteApplicationCommonData.isPowerOn = false;
+    uteApplicationCommonData.isAppClosed = true;
+    uteApplicationCommonData.isSynchronizingData = false,
+    uteApplicationCommonData.isAncsConnected = false,
     uteModuleFilesystemInit();
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DIR);
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_LOG_DIR);
@@ -281,6 +281,9 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #if UTE_MODULE_LOCAL_RINGTONE_VOLUME_SET
         uteModuleLocalRingtoneInit();
+#endif
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+        uteModuleBedsideModeInit();
 #endif
         //系统参数配置
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
@@ -488,6 +491,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     if(!uteApplicationCommonData.bleConnectState.isConnected)
     {
         uteModuleSportSetTakePictureEnable(false);
+        uteApplicationCommonSetAppClosed(true);
         if(!uteApplicationCommonData.isPowerOn)
         {
             // uteModulePlatformSetFastAdvertisingTimeCnt(0);
@@ -869,15 +873,15 @@ void uteApplicationCommonStartPowerOffMsg(void)
     }
     // uteModuleCountDownStop();
     // uteModuleLocalRingtoneSaveData();//关机的时候保存一次本地铃声配置
-#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
-    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID, 0, __func__);
-#else
+// #if UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+//     uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWEROFF_ID, 0, __func__);
+// #else
     if(!sys_cb.gui_sleep_sta)
     {
         gui_sleep();
     }
     uteApplicationCommonData.isPowerOn = false;
-#endif
+// #endif
     uteApplicationCommonSaveQuickSwitchInfo();
     uteModuleWeatherSaveData();
     uteModuleSportSaveStepData();
@@ -940,10 +944,10 @@ void uteApplicationCommonStartPowerOffMsg(void)
     // uteModuleFactoryTestStop();
     // uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_SCREEN|UTE_MODULE_PLATFORM_DLPS_BIT_MOTOR|UTE_MODULE_PLATFORM_DLPS_BIT_KEYS|UTE_MODULE_PLATFORM_DLPS_BIT_UART);
 
-#if !UTE_MODULE_SCREENS_POWEROFF_SUPPORT
+// #if !UTE_MODULE_SCREENS_POWEROFF_SUPPORT
 //    uteModuleGuiCommonDisplayOff(true);
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_REAL_POWER_OFF,0);
-#endif
+// #endif
 }
 
 /**

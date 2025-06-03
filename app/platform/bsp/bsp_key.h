@@ -37,6 +37,7 @@ typedef u8 size_msg_t;                      //定义MSG的SIZE
 #define MSG_CTP_COVER           0xAC
 
 #define MSG_CHECK_LANGUAGE      0xAD        //语言切换
+#define MSG_REBUILD_FUNC        0xAE        //重建界面
 
 //编码器
 #define MSG_QDEC_FORWARD        0xBF

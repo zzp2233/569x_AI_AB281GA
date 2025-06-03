@@ -10,6 +10,8 @@
 /*! 此变量读取功能标识 zn.zeng Jul 05, 2021 */
 static uint8_t uteModuleProfileCharReadValueBuff[UTE_MODULE_PORFILE_READ_MAX_BYTES];
 
+static bool ble_app_need_wakeup_flag = false;
+
 ///////////////////////////////////////////////////////////////////////////
 // #define AB_MATE_VID     2           //广播包协议版本号
 // #define AB_MATE_BID     0x000000    //代理商和客户ID，0表示原厂bluetrum
@@ -449,7 +451,19 @@ void ble_app_watch_process(void)
 
 bool ble_app_watch_need_wakeup(void)
 {
-    return false;
+    return ble_app_need_wakeup_flag;
+}
+
+void ble_app_watch_set_wakeup(bool need)
+{
+    if (!bsp_system_is_sleep())
+    {
+        ble_app_need_wakeup_flag = false;
+    }
+    else
+    {
+        ble_app_need_wakeup_flag = need;
+    }
 }
 
 uint8_t uteModuleProfileBleSendNotify(uint8_t att_handle, void *p_value, uint16_t length)
@@ -690,10 +704,10 @@ void ble_app_watch_connect_callback(void)
 
 void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
 {
-    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL,"%s,handle=0x%x,cfg=%d",__func__,handle,cfg);
-    if (handle == gatts_ute_ble_read_write_base.handle || handle == gatts_ute_ble5_read_write_base.handle
+    UTE_MODULE_LOG(UTE_LOG_PROTOCOL_LVL, "%s,handle=0x%x,cfg=%d", __func__, handle, cfg);
+    if (handle == gatts_ute_ble_notify_base.handle || handle == gatts_ute_ble5_notify_base.handle
 #if UTE_SERVICE_PUBLIC_BLE_SUPPORT
-        || handle == gatts_ute_ble_public_read_write_base.handle || handle == gatts_ute_ble5_public_read_write_base.handle
+        || handle == gatts_ute_ble_public_notify_base.handle || handle == gatts_ute_ble5_public_notify_base.handle
 #endif
        )
     {

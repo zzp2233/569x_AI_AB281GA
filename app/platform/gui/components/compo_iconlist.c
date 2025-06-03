@@ -233,13 +233,15 @@ void compo_iconlist_add(compo_iconlist_t *iconlist, u32 res_addr)
         }
         else if (iconlist->style == ICONLIST_STYLE_CUM_SUDOKU)                  //根据图标间距与屏幕大小自动适配图标大小, 保持九个图标显示在屏幕中心
         {
-            iconlist->icon_space_y = 20;
-            iconlist->icon_size = (GUI_SCREEN_HEIGHT - 4 * iconlist->icon_space_y) / 4;
-#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-            iconlist->icon_space = 25;
+
+            iconlist->icon_size = (GUI_SCREEN_HEIGHT / 5);
+#if (UTE_DRV_SCREEN_SHAPE==0)
+            iconlist->icon_space_y = (GUI_SCREEN_HEIGHT / 4.3)-iconlist->icon_size;
+            iconlist->icon_space   = (GUI_SCREEN_WIDTH  / 4.3)-iconlist->icon_size;
 #else
-            iconlist->icon_space = GUI_SCREEN_CENTER_X - 5 - (iconlist->icon_size * 3 / 2);
-#endif // GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+            iconlist->icon_space_y = (GUI_SCREEN_HEIGHT / 4)-iconlist->icon_size;
+            iconlist->icon_space   = (GUI_SCREEN_WIDTH  / 3.3)-iconlist->icon_size;
+#endif
 
             iconlist->icon_total_size = iconlist->icon_size + iconlist->icon_space_y;
             iconlist->ln_hei = iconlist->icon_total_size * 2 + iconlist->icon_size;         //图标保持原大小区域

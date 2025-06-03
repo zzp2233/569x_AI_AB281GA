@@ -93,6 +93,108 @@ compo_form_t *func_ota_succ_form_create(void)
 
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+
+//创建地图窗体
+compo_form_t *func_ota_succ_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I341001_1_START_SUCCEED_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 104+72);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_UPDATED]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+80,320,50);
+    compo_textbox_set(textbox,i18n[STR_UPDATED]);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_WATCH_RESTART]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+136,320,50);
+    compo_textbox_set(textbox,i18n[STR_WATCH_RESTART]);
+    widget_text_set_color(textbox->txt, make_color(128,128,128));
+
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+//创建地图窗体
+compo_form_t *func_ota_succ_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I338001_UPGRADE_00_SUCCEED_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 76+62);
+
+    //TXT1 升级成功
+    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, COMPO_ID_TXT_OTA_SUCC1);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 228+15, 196, 30);
+    widget_text_set_color(txt->txt, make_color(255,255,255));
+    compo_textbox_set(txt, i18n[STR_UPDATED]);
+
+    //TXT2 手表即将进入重启
+    txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, COMPO_ID_TXT_OTA_SUCC2);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 274+15, 224, 30);
+    widget_text_set_color(txt->txt, make_color(128,128,128));
+    compo_textbox_set(txt, i18n[STR_WATCH_RESTART]);
+
+    return frm;
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
+//创建地图窗体
+compo_form_t *func_ota_succ_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I340001_OTA_01_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 60+150/2);
+
+    //TXT1 升级成功
+    compo_textbox_t* txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, COMPO_ID_TXT_OTA_SUCC1);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 250+32/2, 196, 30);
+    widget_text_set_color(txt->txt, make_color(255,255,255));
+    compo_textbox_set(txt, i18n[STR_UPDATED]);
+
+    //TXT2 手表即将进入重启
+    txt = compo_textbox_create(frm, 20);
+    compo_setid(txt, COMPO_ID_TXT_OTA_SUCC2);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 293+32/2, 224, 30);
+    widget_text_set_color(txt->txt, make_color(128,128,128));
+    compo_textbox_set(txt, i18n[STR_WATCH_RESTART]);
+
+    return frm;
+}
+
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+
+
+//创建地图窗体
+compo_form_t *func_ota_succ_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I342001_UPGRADE_SUCCEED_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 50+82/2);
+
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_UPDATED]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,152+30/2,150,50);
+    compo_textbox_set(textbox,i18n[STR_UPDATED]);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_WATCH_RESTART]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,182+30/2,150,30);
+    compo_textbox_set(textbox,i18n[STR_WATCH_RESTART]);
+    widget_text_set_color(textbox->txt, make_color(128,128,128));
+
+    return frm;
+}
+
 #else
 compo_form_t *func_ota_succ_form_create(void)
 {

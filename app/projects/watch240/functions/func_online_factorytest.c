@@ -480,7 +480,7 @@ static void func_online_factory_test_ageing_process(void)
     if(tick_check_expire(f_online_factory_test->tick, 1000))
     {
         f_online_factory_test->tick = tick_get();
-
+#if UTE_MODULE_NEW_AGING_TEST_AUDIO
         if(f_online_factory_test->music_sec == 0)
         {
             func_bt_mp3_res_play(RES_BUF_RING_VOICE_DIAL_MP3, RES_LEN_RING_VOICE_DIAL_MP3);
@@ -490,7 +490,7 @@ static void func_online_factory_test_ageing_process(void)
         {
             f_online_factory_test->music_sec = 0;
         }
-
+#endif
         f_online_factory_test->color_idx = (f_online_factory_test->color_idx + 1) % (sizeof(dis_color) / sizeof(uint16_t));
         compo_shape_set_color(shape, dis_color[f_online_factory_test->color_idx]);
     }

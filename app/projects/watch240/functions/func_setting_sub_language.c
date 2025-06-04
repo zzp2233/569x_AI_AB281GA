@@ -74,6 +74,18 @@ static const compo_listbox_item_t tbl_language_list[] =
 #if SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT
     {STR_MALAYSIA,    .vidx = MALAYSIA_LANGUAGE_ID},
 #endif
+#if SCREEN_TITLE_MULTIPLE_KOREAN_LANGUAGE_SUPPORT   //韩语
+    {STR_KREA,    .vidx = KOREAN_LANGUAGE_ID},
+#endif
+#if SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT //捷克
+    {STR_CRS,    .vidx = THAI_LANGUAGE_ID},
+#endif
+#if SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT //波兰
+    {STR_POLS,    .vidx = POLISH_LANGUAGE_ID},
+#endif
+#if SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT //罗马尼亚
+    {STR_RAMANA,    .vidx = ROMANIAN_LANGUAGE_ID},
+#endif
 };
 
 u8 func_sel_language_bit(uint n)

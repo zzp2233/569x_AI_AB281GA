@@ -14,6 +14,8 @@
 
 #include "ute_multi_language_ja_rjp.h"
 
+#include "ute_multi_language_cs_rcz.h"
+
 #include "ute_multi_language_de_rde.h"
 
 #include "ute_multi_language_es_res.h"
@@ -24,11 +26,17 @@
 
 #include "ute_multi_language_it_rit.h"
 
+#include "ute_multi_language_pl_rpl.h"
+
 #include "ute_multi_language_pt_rpt.h"
+
+#include "ute_multi_language_ro_rro.h"
 
 #include "ute_multi_language_th_rth.h"
 
 #include "ute_multi_language_vi_rvn.h"
+
+#include "ute_multi_language_ko_rkr.h"
 
 #include "ute_multi_language_zh_rtw.h"
 

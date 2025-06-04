@@ -23,8 +23,8 @@
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 #define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
 #define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
-#define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G22Z项目 */
-
+#define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
+#define PROJECT_AB281K_SUPPORT       1 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
 #elif PROJECT_AB281A_SUPPORT
@@ -55,6 +55,8 @@
 #include"ute_project_config_ab281j.h"
 #elif PROJECT_AB281H_SUPPORT
 #include"ute_project_config_ab281h.h"
+#elif PROJECT_AB281K_SUPPORT
+#include"ute_project_config_ab281k.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
@@ -70,17 +72,13 @@
 #define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F
 #endif
 
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-#define TITLE_BAR_HIGH   28    ///标题栏高度
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
-#define TITLE_BAR_HIGH   64    ///标题栏高度
-#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
-#define TITLE_BAR_HIGH   (GUI_SCREEN_HEIGHT / 6)    ///标题栏高度
-#elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
-#define TITLE_BAR_HIGH   38
+/*! 标题栏高度,quan.qi.cai 2025-05-29 */
+#ifndef UTE_TITLE_BAR_HIGH
+#define TITLE_BAR_HIGH         28
 #else
-#define TITLE_BAR_HIGH   28
+#define TITLE_BAR_HIGH         UTE_TITLE_BAR_HIGH
 #endif
+
 
 /*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
 #ifndef UTE_DRV_CTP_SELECT
@@ -996,6 +994,37 @@
 #ifndef UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT
 #define UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT 1
 #endif
+
+/*! 呼吸率,wang.luo 2025-04-25 */
+#ifndef UTE_MODULE_BREATHRATE_SUPPORT
+#define UTE_MODULE_BREATHRATE_SUPPORT 0
+#endif
+#ifndef UTE_DRV_BREATHRATE_VCXX_SUPPORT
+#define UTE_DRV_BREATHRATE_VCXX_SUPPORT 0
+#endif
+/*!呼吸率自动测试模式默认打开 zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_IS_AUTO_OPEN
+#define UTE_MODULE_BREATHRATE_IS_AUTO_OPEN true
+#endif
+/*!呼吸率时间段测试模式默认关闭 zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_IS_AUTO_TIME_BUCKET_OPEN
+#define UTE_MODULE_BREATHRATE_IS_AUTO_TIME_BUCKET_OPEN false
+#endif
+/*!呼吸率自动测试时间间隔，单位为分钟，默认为10分钟     zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_AUTO_INTERVAL_MIN
+#define UTE_MODULE_BREATHRATE_AUTO_INTERVAL_MIN 10
+#endif
+/*! 呼吸率测试时间段zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_TIME_BUCKET_START
+#define UTE_MODULE_BREATHRATE_TIME_BUCKET_START 0X0001
+#define UTE_MODULE_BREATHRATE_TIME_BUCKET_END 0X173B
+#endif
+/*! zn.zeng, 2021-08-31  */
+#ifndef UTE_MODULE_BREATHRATE_SAVE_DATA_MAX_DAYS
+#define UTE_MODULE_BREATHRATE_SAVE_DATA_MAX_DAYS 7
+#endif
+/*!呼吸率最大数字，zn.zeng 2023-01-12  */
+#define UTE_MODULE_BREATHRATE_MAX_VALUE 50
 
 //二维码链接内容
 #ifndef UTE_BINDING_QRENCODE_LINK

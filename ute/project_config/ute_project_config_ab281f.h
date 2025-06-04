@@ -10,10 +10,14 @@
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
 #define DEFAULT_BLE_DEV_NAME "SVERGE"
-#define UTE_SW_VERSION "AB281FV000067"
+#define UTE_SW_VERSION "AB281FV000067T"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
-
+/*! 上传蓝牙名广播时，使用 蓝牙名_XXXX 格式*/
+#define UTE_MODULE_BLE_NAME_FORMET1_SUPPORT 1
+/*! 设备本地蓝牙名 */
+#define UTE_MODULE_LOCAL_BLE_NAME_SUPPORT 1
+#define UTE_DEV_LOCAL_BLE_NAME "Storm Verge"
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
 /*gesnsor 采集原始数据*/
@@ -241,6 +245,8 @@
 #define UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT      1 //心率预警
 #define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     0 //表盘侧边栏
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   1 //菜单样式预览旋转界面
+#define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
+#define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

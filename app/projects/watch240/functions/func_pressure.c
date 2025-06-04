@@ -553,7 +553,7 @@ static void func_pressure_refresh(void)
         compo_animation_set_interval(animation, f_pressure->up_data_flag?20:0);
 
         compo_button_t *btn = compo_getobj_byid(COMPO_ID_AGAIN_BTN);
-        compo_button_set_bgimg(btn, f_pressure->up_data_flag ? UI_BUF_I341001_16_PRESSURE_PAUSE_BIN : UI_BUF_I341001_16_PRESSURE_RETRY_BIN);
+        compo_button_set_bgimg(btn, f_pressure->up_data_flag ? UI_BUF_I341001_7_SPO2_CONTINUE_BIN : UI_BUF_I341001_16_PRESSURE_PAUSE_BIN);
 
         for (int i = 0; i < 24; i++)
         {

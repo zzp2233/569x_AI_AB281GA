@@ -9,7 +9,7 @@
 #ifndef _UTE_PROJECT_CONFIG_AB281DB_H_
 #define _UTE_PROJECT_CONFIG_AB281DB_H_
 
-#define DEFAULT_BLE_DEV_NAME "W26Y"
+#define DEFAULT_BLE_DEV_NAME "huafit S10"
 #define UTE_SW_VERSION "AB281DBV000080"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
@@ -171,25 +171,18 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 0
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 12
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_CUBE_LIGHT_BIN,\
-                                                UI_BUF_DIALPLATE_BTF_BIN,\
-                                                UI_BUF_DIALPLATE_D18650001_BIN,\
-                                                UI_BUF_DIALPLATE_D18652001_BIN,\
-                                                UI_BUF_DIALPLATE_D18653001_BIN,\
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19132001_BIN,\
                                                 UI_BUF_DIALPLATE_D19129001_BIN,\
-                                                UI_BUF_DIALPLATE_D19130001_BIN,\
-                                                UI_BUF_DIALPLATE_D19131001_BIN,\
-                                                UI_BUF_DIALPLATE_D19132001_BIN,\
-                                                UI_BUF_DIALPLATE_D19133001_BIN,\
-                                                UI_BUF_DIALPLATE_D19134001_BIN,\
                                                 UI_BUF_DIALPLATE_D19135001_BIN,\
+                                                UI_BUF_DIALPLATE_D19130001_BIN,\
+                                                UI_BUF_DIALPLATE_D18650001_BIN,\
+                                                UI_BUF_DIALPLATE_D18653001_BIN,\
                                               }
-//     UI_BUF_DIALPLATE_CUBE_BIN
 
-#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1     // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1          // 使用立方体表盘
+#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0     // 使用蝴蝶表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0          // 使用立方体表盘
 #define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 0    // 使用光束立方体表盘
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 1        // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 0       // 立方体表盘索引
@@ -213,6 +206,7 @@
 
 /*! 床头钟模式(充电界面不息屏),wang.luo 2025-04-29 */
 #define UTE_MODULE_BEDSIDE_MODE_SUPPORT 1
+#define UTE_MODULE_BEDSIDE_MODE_LIGHT_LOW_SUPPORT 1 //床头灯默认亮度最底
 
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      1

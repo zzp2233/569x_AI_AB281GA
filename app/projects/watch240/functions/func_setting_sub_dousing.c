@@ -717,12 +717,14 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     char txt_buf[20];
     u8 txt_data[5];
     u8 set_time = sys_cb.set_sleep_time_id;
+    printf("create_sleep_light:%d\n",set_time);
 
     ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
 
     func_set_sub_dousing_get_timer(&set_time,txt_data,0);///获取时间
+    printf("create_sleep_light:%d\n",set_time);
     //创建一个页面用于限制滚动的时间文本
     widget_page_t* page = widget_page_create(frm->page_body);
     widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, GUI_SCREEN_WIDTH,140);
@@ -814,7 +816,8 @@ static void func_set_sub_dousing_list_icon_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_SURE:
-            uteModuleGuiCommonSetDisplayOffTime(txt_num[f_disturd_set->min]);
+            uteModuleGuiCommonSetDisplayOffTime(f_disturd_set->min);
+            printf("out_sleep_light:%d\n",f_disturd_set->min);
             sys_cb.set_sleep_time_id = f_disturd_set->min;
             func_backing_to();
             break;

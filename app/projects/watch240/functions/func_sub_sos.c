@@ -169,6 +169,70 @@ compo_form_t *func_sub_sos_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+//SOS页面
+compo_form_t *func_sub_sos_form_create(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t* pic;
+    compo_textbox_t* txt;
+    compo_button_t *btn;
+
+
+    if(!uteModuleCallBtIsConnected())
+    {
+        // icon
+        compo_picturebox_t *icon = compo_picturebox_create(frm, UI_BUF_I338001_27_MORE_CONNECT_BIN);
+        compo_picturebox_set_pos(icon, GUI_SCREEN_CENTER_X, 50+96);
+
+        // 创建提示文本
+        compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CONNECT_BLUETOOTH]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 42/2+274, 170, 28);
+        compo_textbox_set_align_center(txt, true);
+        compo_textbox_set(txt, i18n[STR_CONNECT_BLUETOOTH]);
+    }
+    else if(uteModuleCallGetSosContactSize() <= 0)
+    {
+        // icon
+        compo_picturebox_t *icon = compo_picturebox_create(frm, UI_BUF_I338001_27_MORE_PHONE_BIN);
+        compo_picturebox_set_pos(icon, GUI_SCREEN_CENTER_X, 104+134/2);
+
+        // 创建提示文本
+        compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_ADDRESS_BOOK_SYNC]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 42/2+274, 170, 28);
+        compo_textbox_set_align_center(txt, true);
+        compo_textbox_set(txt, i18n[STR_ADDRESS_BOOK_SYNC]);
+    }
+#if UTE_THREE_KEY_EVENT_SOS
+    else if(sys_cb.sos_open_flag == true)
+    {
+        func_sub_sos_dial();
+    }
+#endif
+    else if(uteModuleCallGetSosContactSize() > 0)
+    {
+        //创建是否拨打界面
+        txt = compo_textbox_create(frm, strlen(i18n[STR_DIAL_SOS]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 154, GUI_SCREEN_WIDTH / 1.2, widget_text_get_max_height());
+        compo_textbox_set(txt, i18n[STR_DIAL_SOS]);
+        compo_setid(txt, COMPO_ID_TXT_NUM);
+
+        //取消按钮
+        btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_CANCEL_BIN);
+        compo_button_set_pos(btn, 80/2+71,80/2+224);
+        compo_setid(btn, COMPO_ID_BTN_BACK);
+
+        //确定按钮
+        btn = compo_button_create_by_image(frm, UI_BUF_I338001_20_ALARM_CLOCK_COMFIRM_BIN);
+        compo_button_set_pos(btn, 80/2+209,80/2+224);
+        compo_setid(btn, COMPO_ID_BTN_SURE);
+    }
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
 //SOS页面
 compo_form_t *func_sub_sos_form_create(void)

@@ -175,6 +175,7 @@ compo_form_t *func_scan_form_create(void)
     compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
     compo_qrcodebox_set(qrbox, qr_str);
     compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
+    widget_rect_set_radius(qrbox->bg, 20);
     uteModulePlatformMemoryFree(qr_str);
     return frm;
 }

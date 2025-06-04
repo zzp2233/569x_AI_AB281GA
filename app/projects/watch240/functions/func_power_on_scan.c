@@ -187,9 +187,9 @@ compo_form_t *func_power_on_scan_form_create(void)
     uteApplicationCommonGetDeviceQrCodeLink(qr_str,maxSizeQrCodeLink);
     compo_qrcodebox_t *qrbox = compo_qrcodebox_create(frm, QRCODE_TYPE_2D, maxSizeQrCodeLink);
     compo_qrcodebox_set_pos(qrbox,GUI_SCREEN_CENTER_X,90+60);
-    compo_qrcodebox_set_bitwid(qrbox, 100);
-    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, 120);
     compo_qrcodebox_set(qrbox, qr_str);
+    compo_qrcodebox_set_bitwid_by_qrwid(qrbox, GUI_SCREEN_CENTER_X*0.7);
+    widget_rect_set_radius(qrbox->bg, 20);
     uteModulePlatformMemoryFree(qr_str);
 
     return frm;
@@ -313,6 +313,13 @@ static void func_power_on_scan_message(size_msg_t msg)
                 latest_task_init(); //最近任务
                 func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
                 sys_cb.power_on_state=true;
+                break;
+            case KU_BACK:
+#if UTE_DRV_PWRKEY_KEY0_KU_BACK_IN_CLOCK
+                task_stack_init();  //任务堆栈
+                latest_task_init(); //最近任务
+                func_switch_to(FUNC_CLOCK, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
+#endif
                 break;
             case KL_BACK:
                 func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);

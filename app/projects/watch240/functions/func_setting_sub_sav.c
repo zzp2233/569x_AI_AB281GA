@@ -239,7 +239,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_icon_set_pos(cardbox, 0, 320-20/2-160,0);
     compo_cardbox_icon_set(cardbox,0,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN);
     compo_cardbox_text_scroll_process(cardbox, true);
-    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0, 145, 48);
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0-17, 200, 48);
     compo_cardbox_text_set(cardbox,0,i18n[STR_VBRATION]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
 
@@ -251,7 +251,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_rect_set_location(cardbox,0,0,114/2,320,1,16);    //画线
     compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
 
-    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0, 145, 48);
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0-17, 200, 48);
     compo_cardbox_text_set(cardbox,0,i18n[STR_MEDIA_VOL]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
     compo_cardbox_icon_set_location(cardbox, 0, 320-62/2-160, 0, 62, 32);
@@ -264,7 +264,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_setid(cardbox, COMPO_ID_MUTE);
     //compo_cardbox_rect_set_location(cardbox,0,0,30,232,1,16);
     //compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
-    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0, 145, 48);
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+24, 0-17, 200, 48);
     compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
     compo_cardbox_icon_set_location(cardbox, 0, 320-62/2-160, 0, 62, 32);
@@ -272,7 +272,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_text_scroll_process(cardbox, true);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SILENT_MODE_PROMAT]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,388+44,320,100);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,388+60,320,150);
     compo_textbox_set_multiline(textbox,true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_SILENT_MODE_PROMAT]);

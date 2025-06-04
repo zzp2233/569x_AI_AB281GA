@@ -1303,9 +1303,14 @@ static compo_form_t *func_timer_form_create_by_type(u8 page_type)
                 compo_button_set_pos(btn, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y);
 
                 txt = compo_textbox_create_for_page(frm, page, strlen(tbl_timer_txt_item[idx].text));
-                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y-10);
+                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y-20);
                 compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
                 compo_textbox_set(txt, tbl_timer_txt_item[idx].text);
+
+                char *substr = i18n[STR_MIN_JOINT] + 2;
+                txt = compo_textbox_create_for_page(frm, page, strlen(substr));
+                compo_textbox_set_pos(txt, tbl_timer_txt_item[idx].x, tbl_timer_txt_item[idx].y+28);
+                compo_textbox_set(txt, substr);
             }
             btn = compo_button_create_page_by_image(frm, page, UI_BUF_I341001_27_MORE_TIMER_ADD_BIN);
             compo_setid(btn, COMPO_ID_BTN_CUSTOM);

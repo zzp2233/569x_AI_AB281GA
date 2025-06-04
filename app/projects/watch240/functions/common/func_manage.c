@@ -247,9 +247,9 @@ const static func_item_info_t func_item_tbl[] =
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              .str_idx=STR_SETTING},               //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
-// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,                .str_idx=STR_WOMEN_HEALTH},          //女性健康
-// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#endif // UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {STR_STOP_WATCH,                    UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_00_STOPWATCH_BIN,       .func_sta = FUNC_STOPWATCH},    //秒表
 #endif
@@ -290,7 +290,7 @@ const static func_item_info_t func_item_tbl[] =
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_SOPRT_BIN,               .str_idx=STR_SPORTS},                //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_BLOOD_OXYGEN_BIN,           .str_idx=STR_BLOOD_OXYGEN},          //血氧
+    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_SPO2_BIN,           .str_idx=STR_BLOOD_OXYGEN},          //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
     {.func_sta=FUNC_PRESSURE,                 .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_STRESS_BIN,                 .str_idx=STR_STRESS},              //压力

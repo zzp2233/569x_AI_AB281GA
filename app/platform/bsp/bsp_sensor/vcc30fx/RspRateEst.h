@@ -1,6 +1,6 @@
 
-#ifndef APP_ALGO_ALGO_H
-#define APP_ALGO_ALGO_H
+#ifndef _RSP_RATE_EST_H_
+#define _RSP_RATE_EST_H_
 
 #include <stdbool.h>
 #include <stdint.h>

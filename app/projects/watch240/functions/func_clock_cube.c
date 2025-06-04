@@ -100,7 +100,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_54_BIN
 
 // 日期数字字体
-#define UTE_WATCHS_CUBE_DATE_NUM_FONT UI_BUF_0FONT_FONT_NUM_32_BIN
+#define UTE_WATCHS_CUBE_DATE_NUM_FONT UI_BUF_0FONT_FONT_BIN
 
 // 时间小时数字位置
 #define CUBE_HOUR_X         (GUI_SCREEN_CENTER_X - 40)
@@ -338,10 +338,7 @@ static void func_clock_cube_disk_icon_click(void)
     // 切入应用
     if (func_sta > 0)
     {
-        // func_switching(FUNC_SWITCH_FADE_OUT | FUNC_SWITCH_AUTO, NULL);
-        func_switch_to(func_sta, FUNC_SWITCH_LR_ZOOM_LEFT | FUNC_SWITCH_AUTO);
-        // func_cb.sta = func_sta;
-        func_cb.menu_idx = icon_idx; // 记住当前编号
+        func_cb.sta = func_sta;
     }
 }
 

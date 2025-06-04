@@ -603,38 +603,7 @@ static void func_long_press_event_handle(s32 distance, u16 id)
             switch(id)
             {
                 case IMG_BTN_ID_1://SOS
-                    memset(sys_cb.outgoing_number, 0, sizeof(sys_cb.outgoing_number));
-                    ute_module_call_addressbook_t sosData;
-                    memset(&sosData, 0, sizeof(ute_module_call_addressbook_t));
-                    uteModuleCallGetSosContact(&sosData);
-                    if(strlen((const char *)sosData.numberAscii) && uteModuleCallBtIsConnected())
-                    {
-                        memcpy(sys_cb.outgoing_number, sosData.numberAscii, strlen((const char *)sosData.numberAscii));
-#if MODEM_CAT1_EN
-                        if (bsp_modem_get_init_flag())
-                        {
-                            modem_call_dial(sys_cb.outgoing_number);
-                        }
-                        else
-#endif
-                        {
-                            bt_call_redial_number();
-                        }
-                    }
-                    else
-                    {
-                        if(uteModuleCallBtIsConnected())
-                        {
-                            msgbox((char *)i18n[STR_ADDRESS_BOOK_SYNC], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_NONE);
-                        }
-                        else
-                        {
-                            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-                            sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
-                            msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
-                        }
-                    }
-
+                    uteTaskGuiStartScreen(FUNC_SUB_SOS, 0, __func__);
                     break;
                 case IMG_BTN_ID_2://关机
                     uteApplicationCommonPoweroff();

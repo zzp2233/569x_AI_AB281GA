@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281K_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon GTS"
-#define UTE_SW_VERSION "AB281KV000074"
+#define UTE_SW_VERSION "AB281KV000081"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 //#define UTE_UI_CONFIG_PATCH "AB281K"
@@ -19,8 +19,6 @@
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
 /*gesnsor 采集原始数据*/
 #define APP_DBG_GSENSOR_DATA 1
-
-//#define UTE_CHIP_PACKAGE_SELECT        CHIP_5690F
 
 /*! 心率sensor选择,wang.luo 2025-04-16 */
 #define UTE_DRV_HR_SENSOR_SELECT       SENSOR_HR_VCLC09A
@@ -150,17 +148,17 @@
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3450  //3564
-#define UTE_DRV_BATTERY_010      3678  //3698
-#define UTE_DRV_BATTERY_020      3725  //3744
-#define UTE_DRV_BATTERY_030      3755  //3765
-#define UTE_DRV_BATTERY_040      3773  //3780
-#define UTE_DRV_BATTERY_050      3797  //3807
-#define UTE_DRV_BATTERY_060      3836  //3856
-#define UTE_DRV_BATTERY_070      3902  //3908
-#define UTE_DRV_BATTERY_080      3963  //3964
-#define UTE_DRV_BATTERY_090      4050  //4045
-#define UTE_DRV_BATTERY_100      4126  //4128
+#define UTE_DRV_BATTERY_000      3400 //3450  //3564
+#define UTE_DRV_BATTERY_010      3685 //3678  //3698
+#define UTE_DRV_BATTERY_020      3738 //3725  //3744
+#define UTE_DRV_BATTERY_030      3766 //3755  //3765
+#define UTE_DRV_BATTERY_040      3792 //3773  //3780
+#define UTE_DRV_BATTERY_050      3829 //3797  //3807
+#define UTE_DRV_BATTERY_060      3897 //3836  //3856
+#define UTE_DRV_BATTERY_070      3966 //3902  //3908
+#define UTE_DRV_BATTERY_080      4076 //3963  //3964
+#define UTE_DRV_BATTERY_090      4183 //4050  //4045
+#define UTE_DRV_BATTERY_100      4300 //4126  //4128
 
 // #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 // #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标
@@ -184,11 +182,11 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 7
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18649001_BIN, \
-                                                UI_BUF_DIALPLATE_D18650001_BIN, \
-                                                UI_BUF_DIALPLATE_D18651001_BIN, \
-                                                UI_BUF_DIALPLATE_D18652001_BIN, \
-                                                UI_BUF_DIALPLATE_D18653001_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_G39Z001_BIN, \
+                                                UI_BUF_DIALPLATE_G39Z002_BIN, \
+                                                UI_BUF_DIALPLATE_G39Z003_BIN, \
+                                                UI_BUF_DIALPLATE_G39Z004_BIN, \
+                                                UI_BUF_DIALPLATE_G39Z005_BIN, \
                                                 UI_BUF_DIALPLATE_CUBE_LIGHT_BIN,\
                                                 UI_BUF_DIALPLATE_BTF_BIN,\
                                               }
@@ -222,7 +220,7 @@
 
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      1
-#define GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT      0
+#define GUI_SCREEN_SIZE_240X284RGB_I335004_SUPPORT      (1&GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT)
 #define GUI_SCREEN_SIZE_240X284RGB_I269032_SUPPORT      (1&UTE_MODULE_BEDSIDE_MODE_SUPPORT)
 
 #define UTE_DRV_CTP_SELECT              CTP_CHSC6X
@@ -328,7 +326,7 @@
 #define SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT               1 //阿拉伯文 A
 #define SCREEN_TITLE_MULTIPLE_INDIA_LANGUAGE_SUPPORT                0 //India     B
 #define SCREEN_TITLE_MULTIPLE_HINDI_LANGUAGE_SUPPORT                0 //印地语  C
-#define SCREEN_TITLE_MULTIPLE_POLISH_LANGUAGE_SUPPORT               0 //波兰语  D
+#define SCREEN_TITLE_MULTIPLE_POLISH_LANGUAGE_SUPPORT               1 //波兰语  D
 #define SCREEN_TITLE_MULTIPLE_RUSSIAN_LANGUAGE_SUPPORT              1 //俄语  E
 #define SCREEN_TITLE_MULTIPLE_DUTCH_LANGUAGE_SUPPORT                0 //荷兰语 F
 #define SCREEN_TITLE_MULTIPLE_TURKISH_LANGUAGE_SUPPORT              1 //土耳其语  10
@@ -337,9 +335,9 @@
 #define SCREEN_TITLE_MULTIPLE_INDONESUAN_LANGUAGE_SUPPORT           1 //印度尼西亚语（爪哇语）  13  Indonesian
 #define SCREEN_TITLE_MULTIPLE_PUNJABI_LANGUAGE_SUPPORT              0 //旁遮普语  14   Punjabi
 #define SCREEN_TITLE_MULTIPLE_THAI_LANGUAGE_SUPPORT                 1 //泰文  15   Thai
-#define SCREEN_TITLE_MULTIPLE_CZECH_LANGUAGE_SUPPORT                0 //捷克语  16  Czech
+#define SCREEN_TITLE_MULTIPLE_CZECH_LANGUAGE_SUPPORT                1 //捷克语  16  Czech
 #define SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT  1 //繁体中文
-#define SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT             0 //罗马尼亚语 limba 0x1B
+#define SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT             1 //罗马尼亚语 limba 0x1B
 #define SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT           1 //越南语 0x63
 #define SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT             1 //马来西亚语 0x40
 #endif // DEFAULT_LANGUAGE

@@ -25,6 +25,10 @@
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
 #include "ute_module_emotionPressure.h"
 #endif
+#if UTE_MODULE_BREATHRATE_SUPPORT
+#include "RspRateEst.h"
+#include "ute_module_breathrate.h"
+#endif
 #include "vc30fx_driver.h"
 extern vc30fx_clk_info clk_info;            /* oscclk_calibration_infomation */
 
@@ -415,6 +419,17 @@ static int vc30fx_heart_rate_calculate(vcare_ppg_device_t *pdev)
         Algo_Input(&algoInputData_t, 1000 / 25, (AlgoSportMode)pdev->heart_algo_mode, 1, 1);
         VCARE_DBG_LOG("[%d] ppg=%d, x=%d, y=%d, z=%d", i, algoInputData_t.ppgSample,
                       algoInputData_t.axes.x, algoInputData_t.axes.y, algoInputData_t.axes.z);
+#if UTE_MODULE_BREATHRATE_SUPPORT
+        {
+            RespInputData_t respInputData;
+            respInputData.ppgSample = algoInputData.ppgSample;
+            respInputData.envSample = algoInputData.envSample;
+            respInputData.axes.x  =algoInputData.axes.x;
+            respInputData.axes.y  =algoInputData.axes.y;
+            respInputData.axes.z  =algoInputData.axes.z;
+            RespRate_Input(&respInputData);
+        }
+#endif
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
         if(uteDrvHeartVcxxIsPressureTesting())
         {
@@ -425,9 +440,27 @@ static int vc30fx_heart_rate_calculate(vcare_ppg_device_t *pdev)
     Algo_Output(&algoOutputData);
     heartRate = algoOutputData.hrData;
     reliability = algoOutputData.reliability;
+
+#if UTE_MODULE_BREATHRATE_SUPPORT
+    RespOutputData_t pOutputData;
+    RespRate_Output(&pOutputData);
+    if(pOutputData.resData > 0 && pOutputData.resData < UTE_MODULE_BREATHRATE_MAX_VALUE)
+    {
+        uteModuleBreathrateSetValue(pOutputData.resData);
+    }
+    else
+    {
+        uteModuleBreathrateSetValue(0);
+    }
+    //  UTE_MODULE_LOG(UTE_LOG_BREATHRATE_LVL, "%s,pOutputData.resData = %d,errType=%d", __func__,pOutputData.resData,pOutputData.errType);
+#endif
+
     if (-1 == heartRate)
     {
         Algo_Init();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+        RespRate_Init();
+#endif
         /* call heart algo wear status check,[-1] */
         vc30fx_drv_set_algo_wear_status(pdev, heartRate);
         VCARE_DBG_LOG("ALGO_STA=-1");
@@ -606,6 +639,9 @@ void vc30fx_usr_device_handler( unsigned char heart_algo_mode, unsigned char spo
 #endif
                     vc30fx_dev.heart_rate = 0;
                     Algo_Init();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+                    RespRate_Init();
+#endif
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
                     if(uteDrvHeartVcxxIsPressureTesting())
                     {
@@ -920,6 +956,9 @@ u8 vc30fx_usr_device_init( InitParamTypeDef *pinitconfig )
     vc30fx_dev.blood_pressure=0;
     Algo_Init();
     spo2AlgoInit_16bit();
+#if UTE_MODULE_BREATHRATE_SUPPORT
+    RespRate_Init();
+#endif
 //  vcSportMotionAlgoInit();
     VCARE_DBG_LOG("work_mode=%d", pinitconfig->work_mode );
     /* 如果使用定时器，必须适配模式的定时器执行时间，否则无法正确解析数据 */

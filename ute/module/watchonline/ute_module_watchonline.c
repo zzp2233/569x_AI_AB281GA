@@ -806,5 +806,9 @@ void uteModuleWatchOnlineGetAllInfoStart(void)
     uteApplicationCommonSyncDataTimerStart();
 }
 
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+
+#endif
+
 #endif //UTE_MODULE_WATCHONLINE_SUPPORT
 

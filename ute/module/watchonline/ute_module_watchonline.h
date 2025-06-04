@@ -48,6 +48,16 @@ typedef struct
     uint8_t reserved[4];
 } watchConfig_t; // all 24byte write to file
 
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+typedef struct
+{
+    uint8_t timePosition; //时间位置
+    uint32_t fontColour; //字体颜色
+    uint32_t bgSize;
+    uint32_t previewSize;
+} photoWatchConfig_t;
+#endif
+
 typedef struct
 {
     watchConfig_t watchConfig;

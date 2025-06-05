@@ -1631,8 +1631,8 @@ static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
     {UI_BUF_I342001_11_CALL_DIAL_PLATE_08_BIN,             COMPO_ID_BTN_NUM8,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_08_BIN,  COMPO_ID_PIC_CLICK_NUM8,     92+56/2,        99+41/2+44+offset_y2},
     {UI_BUF_I342001_11_CALL_DIAL_PLATE_09_BIN,             COMPO_ID_BTN_NUM9,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_09_BIN,  COMPO_ID_PIC_CLICK_NUM9,     92+56/2+62,     99+41/2+44+offset_y2},
     {UI_BUF_I342001_11_CALL_DIAL_PLATE_00_BIN,             COMPO_ID_BTN_NUM0,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_00_BIN,  COMPO_ID_PIC_CLICK_NUM0,     92+56/2,        99+41/2+88+offset_y1},
-    {UI_BUF_I342001_11_CALL_00_DELETE_BIN,                 COMPO_ID_BTN_DEL,        0,                                                COMPO_ID_PIC_CLICK_DEL,      92+56/2+62,     99+41/2+88+offset_y1},
-    {UI_BUF_I342001_11_CALL_00_CALL_BIN,                   COMPO_ID_BTN_CALL,       0,                                                COMPO_ID_PIC_CLICK_CALL,     92+56/2-62,     99+41/2+88+offset_y1},
+    {UI_BUF_I342001_11_CALL_00_DELETE_BIN,                 COMPO_ID_BTN_DEL,        0,                                                COMPO_ID_PIC_CLICK_DEL,      92+56/2+57,     99+41/2+86+offset_y1},
+    {UI_BUF_I342001_11_CALL_00_CALL_BIN,                   COMPO_ID_BTN_CALL,       0,                                                COMPO_ID_PIC_CLICK_CALL,     92+56/2-57,     99+41/2+88+offset_y1},
 };
 
 //打电话页面

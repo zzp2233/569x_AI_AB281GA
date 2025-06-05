@@ -1583,19 +1583,22 @@ void func_message(size_msg_t msg)
             break;
 #if ECIG_POWER_CONTROL
         case EVT_ECIG_SMOKE_REMINDER:
-            if(func_cb.sta != FUNC_ECIG_REMINDER && func_cb.sta !=FUNC_AGEING)
+            if(func_cb.sta !=FUNC_AGEING)
             {
-                printf(" func_cb.sta != FUNC_ECIG_REMINDER \n");
-                // func_cb.sta = FUNC_ECIG_REMINDER;
-                uteTaskGuiStartScreen(FUNC_ECIG_REMINDER, 0, __func__);
+                if(func_cb.sta != FUNC_ECIG_REMINDER )
+                {
+                    printf(" func_cb.sta != FUNC_ECIG_REMINDER \n");
+                    // func_cb.sta = FUNC_ECIG_REMINDER;
+                    uteTaskGuiStartScreen(FUNC_ECIG_REMINDER, 0, __func__);
 
-            }
-            else
-            {
-                printf(" func_cb.sta == FUNC_ECIG_REMINDER \n");
-                compo_form_destroy(func_cb.frm_main);
-                func_cb.frm_main = func_ecig_reminder_form_create();
+                }
+                else
+                {
+                    printf(" func_cb.sta == FUNC_ECIG_REMINDER \n");
+                    compo_form_destroy(func_cb.frm_main);
+                    func_cb.frm_main = func_ecig_reminder_form_create();
 
+                }
             }
 
             break;

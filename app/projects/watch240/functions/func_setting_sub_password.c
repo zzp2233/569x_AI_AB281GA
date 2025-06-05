@@ -1,6 +1,6 @@
 #include "include.h"
 #include "func.h"
-
+#include "ute_module_lockScreen.h"
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -60,11 +60,13 @@ compo_form_t *func_set_sub_password_form_create(void)
     compo_textbox_set(txt_change,i18n[STR_CHANGE_PASSWORD]);
     compo_textbox_set_visible(txt_change, false);
 
-    if(sys_cb.password_cnt == 4)
+    if(uteModulePasswordData.password_cnt == 4)
     {
-        ecig.clock_flag = 1;
+        // ecig.clock_flag = 1;
+        uteModulePasswordData.password_flag = true;
         compo_textbox_set_visible(txt_change, true);
         compo_cardbox_set_visible(cardbox, true);
+        uteModulePasswordDataSaveConfig();
     }
 
     //创建按钮
@@ -74,9 +76,11 @@ compo_form_t *func_set_sub_password_form_create(void)
     compo_button_set_pos(btn, 190, 100-17);
     compo_button_set_visible(btn, false);
 
-    if(sys_cb.password_cnt != 4)
+    if(uteModulePasswordData.password_cnt != 4)
     {
-        ecig.clock_flag = 0;
+        uteModulePasswordData.password_flag = false;
+        uteModulePasswordDataSaveConfig();
+        //ecig.clock_flag = 0;
         compo_button_set_visible(btn, true);
     }
 
@@ -85,7 +89,7 @@ compo_form_t *func_set_sub_password_form_create(void)
     compo_button_set_pos(btn, 190, 100-17);
     compo_button_set_visible(btn, false);
 
-    if(sys_cb.password_cnt == 4)
+    if(uteModulePasswordData.password_cnt == 4)
     {
         compo_button_set_visible(btn, true);
     }
@@ -95,7 +99,7 @@ compo_form_t *func_set_sub_password_form_create(void)
     compo_button_set_location(btn, 140, 183-30, 180, 80);
     compo_button_set_visible(btn, false);
 
-    if(sys_cb.password_cnt == 4)
+    if(uteModulePasswordData.password_cnt == 4)
     {
         compo_button_set_visible(btn, true);
         //compo_form_add_image(frm, UI_BUF_I330001_PUBLIC_SWITCH02_BIN, 190, 183-30);
@@ -119,19 +123,25 @@ static void func_password_button_click(void)
     {
         case COMPO_ID_BIN_OFF:
             password_switch_on = 1; // 打开密码开关
-            sys_cb.password_flag = true;
+            // c = true;
+            //uteModuleSetPasswordLock(true);
+            // 新增：调用保存函数
+            uteModulePasswordDataSaveConfig();
             func_cb.sta = FUNC_PASSWORD_SUB_DISP;
             printf("11111111111111111111\n");
             break;
         case COMPO_ID_BIN_ON:
             password_switch_on = 0; // 关闭密码开关
-            sys_cb.password_flag = false;
+            //  uteModulePasswordData.password_flag = false;
+            // uteModuleSetPasswordLock(false);
+            // 新增：调用保存函数
+            uteModulePasswordDataSaveConfig();
             func_cb.sta = FUNC_PASSWORD_SUB_DISP;
             printf("3333333333333333333333\n");
             break;
 
         case COMPO_ID_BIN_CHANGE:
-            sys_cb.password_change = 1;
+            uteModulePasswordData.password_change = 1;
             func_cb.sta = FUNC_PASSWORD_SUB_DISP;
             printf("0000000000000000000000000000\n");
             break;
@@ -163,9 +173,9 @@ static void func_set_sub_password_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_password_t));
     func_cb.frm_main = func_set_sub_password_form_create();
-    if(sys_cb.password_change)
+    if(uteModulePasswordData.password_change)
     {
-        sys_cb.password_change = 0;
+        uteModulePasswordData.password_change = 0;
     }
 }
 

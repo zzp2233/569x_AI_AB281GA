@@ -188,6 +188,7 @@ static void func_sav_button_click(void)
     {
         case COMPO_ID_SAV:
             uteModuleCallChangeEntertranmentVoiceSwitchStatus();
+            uteModuleCallEntertranmentVoiceSwitchSaveConfig();
             break;
 //         case COMPO_ID_MUTE:
 // //            compo_cardbox_icon_set_location(cardbox_mute, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);

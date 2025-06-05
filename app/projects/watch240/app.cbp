@@ -97,6 +97,7 @@
 			<Add directory="../../platform/modules/yj" />
 			<Add directory="functions/3d" />
 			<Add directory="../../../ute/module/smoke" />
+			<Add directory="../../../ute/module/password" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -265,6 +266,11 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/notify/ute_module_notify.h" />
+		<Unit filename="../../../ute/module/password/ute_module_lockScreen.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/password/ute_module_lockScreen.h" />
+		<Unit filename="../../../ute/module/password/ute_module_password.h" />
 		<Unit filename="../../../ute/module/platform/ute_module_platform.c">
 			<Option compilerVar="CC" />
 		</Unit>

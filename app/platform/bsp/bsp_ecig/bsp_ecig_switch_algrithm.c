@@ -1,5 +1,6 @@
 #include "include.h"
 #include "ute_module_message.h"
+#include "ute_module_lockScreen.h"
 #if ECIG_POWER_CONTROL
 
 #if ECIG_POLLING_CONTROL
@@ -106,8 +107,8 @@ void timer_hot_bat_vol(void)//
             ECIG_PWM_OFF_FUNC();
             ecig.smoke_sta = LOW_POWER;
             ecig.power_on_flag = 0;
-            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-            // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+            // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+            msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
             sys_cb.smoke_index = LOW_POWER;
             printf(hot_str,13,ecig.AD_BAT_voltage_mv,0);
         }
@@ -147,7 +148,7 @@ bool timer_hot_mic_work(void)
         && (ecig.smoke_sta != LOW_POWER) //低电量不工作
         && (ecig.short_circuit_flag != SHORT_CIRCUIT) //短路不工作
         && (ecig.poweroff_flag != 0) //关机立马不工作
-        && (ecig.clock_flag != 1) //童锁立马不工作
+        && (uteModulePasswordData.password_flag != 1) //童锁立马不工作
         &&  (ecig.short_circuit_flag != OPEN_CIRCUIT))//开路也不工作
     {
         return true;
@@ -189,8 +190,8 @@ void timer_hot_dual_isr(void)//
                         ecig.power_on_flag = 0;
                         ecig.short_circuit_flag = ecig.smoke_sta;//短路开路
                         printf(short_circuit_str,-1,ecig.short_circuit_flag);
-                        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                        //  msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                        //  uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                        msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                         sys_cb.smoke_index = ecig.smoke_sta;
                         //break;
                     }
@@ -198,8 +199,8 @@ void timer_hot_dual_isr(void)//
                     {
                         ecig.smoke_sta = SMOKING;
                         ecig.power_on_flag = 1;
-                        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                        //msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                        //uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                        msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                         sys_cb.smoke_index = SMOKING;
                     }
                     printf(hot_str,6,ecig.hot_res,0xff);
@@ -277,8 +278,8 @@ void timer_hot_dual_isr(void)//
                             ecig.power_on_flag = 0;/*  */
                             ecig.smoke_sta = SHORT_CIRCUIT;
                             ecig.short_circuit_flag = ecig.smoke_sta;
-                            uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                            //  msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                            //  uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                            msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                             sys_cb.smoke_index = SHORT_CIRCUIT;
                             TRACE(hot_str, 88,ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv);
                             TRACE(hot_str,  ecig.cfg->smoke_res_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv),ecig.AD_hot_voltage_mv * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
@@ -328,7 +329,7 @@ void timer_hot_dual_isr(void)//
                     if (ecig.power_on_flag)
                     {
                         //ecig.p_current = (u16)((calculate_power(ecig.AD_hot_voltage) >> 13) + ecig.p_prev);
-                        //  TRACE(hot_str11,ecig.cfg->smoke_res_swich );
+                        //TRACE(hot_str11,ecig.cfg->smoke_res_swich );
                         //单发
                         if(!ecig.cfg->smoke_position_swich)
                         {
@@ -422,8 +423,8 @@ void timer_hot_dual_isr(void)//
                 printf(info_8s);
                 if(ecig.smoke_sta != SMOKE_TIMEOUT)
                 {
-                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                    // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                    // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                    msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                     sys_cb.smoke_index = SMOKE_TIMEOUT;
                 }
             }
@@ -435,8 +436,8 @@ void timer_hot_dual_isr(void)//
                 printf(short_circuit_str,0,ecig.short_circuit_flag);
                 if(ecig.smoke_sta != SHORT_CIRCUIT)
                 {
-                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                    // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                    // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                    msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                     sys_cb.smoke_index = SHORT_CIRCUIT;
                 }
             }

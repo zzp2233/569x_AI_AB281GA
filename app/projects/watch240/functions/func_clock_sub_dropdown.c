@@ -9,6 +9,7 @@
 #include "func_menu.h"
 #include "ute_module_call.h"
 #include "ute_module_localRingtone.h"
+#include "ute_module_lockScreen.h"
 
 #if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
 
@@ -173,7 +174,7 @@ static void func_clock_sub_dropdown_password_pic_update(void)
 {
     compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_PIC_PASSWORD);
     // if(sys_cb.mute)
-    if(sys_cb.password_cnt == 4)
+    if(uteModulePasswordData.password_cnt == 4)
     {
         compo_button_set_bgimg(mute_pic, UI_BUF_I330001_CHILD_LOCK_PASSWORD01_BIN);
     }

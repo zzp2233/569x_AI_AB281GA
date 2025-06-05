@@ -1,7 +1,8 @@
 #ifndef _BSP_GPIO_H
 #define _BSP_GPIO_H
 
-enum {
+enum
+{
     GPIOxSET    =   0,
     GPIOxCLR,
     GPIOx,
@@ -17,7 +18,8 @@ enum {
     GPIOxPD300,
 };
 
-typedef struct {
+typedef struct
+{
     psfr_t sfr;                                             //GPIO SFR ADDR
     u8 num;
     u8 type;                                                //type = 1, 没有300R的强上下拉电阻。 type = 0, 普通IO, 有内部300R上下拉电阻。
@@ -45,11 +47,12 @@ void port_var_init(void);
 void port_irq_register(int irq_num, isr_t isr);
 void port_irq_free(int irq_num);
 u8 port_wakeup_get_status(void);
-bool port_wakeup_init(u8 io_num, u8 edge, u8 pupd_sel);     //参数edge: 0->上升沿, 1->下降沿,  参数pupd_sel: 0->不开内部上拉, 1->开内部上拉, 2->开内部下拉
+bool port_wakeup_init(u8 io_num, u8 edge, u8 pupd_sel);     //参数edge: 0->上升沿, 1->c,  参数pupd_sel: 0->不开内部上拉, 1->开内部上拉, 2->开内部下拉
 bool port_wakeup_exit(u8 io_num);
 void wko_wakeup_init(u8 edge);
 void wko_wakeup_exit(void);
 bool port_wko_is_wakeup(void);
+//上升沿 ： 中断7  下降沿：中断6
 void port_wakeup_all_init(u8 io_num, u8 edge, u8 pupd_sel);
 
 #endif // _BSP_GPIO_H

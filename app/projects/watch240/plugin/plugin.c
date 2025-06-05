@@ -65,7 +65,8 @@ void sleep_wakeup_config(void)
 #endif // USER_IOKEY
 #if ECIG_POWER_CONTROL
 #if (CHIP_PACKAGE_SELECT == CHIP_5690F)
-    port_wakeup_all_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
+    bsp_gpio_no_pu_en(ECIG_MIC_GPIO);
+    port_wakeup_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
 #elif (CHIP_PACKAGE_SELECT == CHIP_5690G)
     port_wakeup_all_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
@@ -75,10 +76,19 @@ void sleep_wakeup_config(void)
 #else
     port_wakeup_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
 #endif
+    port_gpio_set_in(ECIG_DET1_GPIO,0);
+    printf("ECIG_DET1_GPIO =%d\r\n",bsp_gpio_get_sta(ECIG_DET1_GPIO));
+    if(bsp_gpio_get_sta(ECIG_DET1_GPIO) == 0)
+    {
+        port_wakeup_init(ECIG_DET1_GPIO, 0, 0);  //通道一插入唤醒
+    }
+    else
+    {
+        port_wakeup_init(ECIG_DET1_GPIO, 1, 0);  //通道一插入唤醒
+    }
 
 
-    port_wakeup_init(ECIG_DET1_GPIO, 0, 0);  //通道一插入唤醒
-    port_wakeup_init(ECIG_DET2_GPIO, 1, 0);  //通道二插入唤醒
+    //port_wakeup_init(ECIG_DET2_GPIO, 1, 0);  //通道二插入唤醒
 
 
 #endif

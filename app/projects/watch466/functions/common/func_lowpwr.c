@@ -442,6 +442,7 @@ static void sfunc_sleep(void)
     {
         printf("gui_wakeup\n");
         gui_wakeup();
+        func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
     }
     else
     {
@@ -472,6 +473,7 @@ bool sleep_process(is_sleep_func is_sleep)
     {
         gui_wakeup();                   //按键亮屏
         reset_sleep_delay_all();
+        func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
         sys_cb.gui_need_wakeup = 0;
         return false;
     }

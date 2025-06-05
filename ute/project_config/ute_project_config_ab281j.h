@@ -80,8 +80,6 @@
 #define UTE_DRV_PWRKEY_KEY1 KEY_LEFT
 #define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x9A // 12K
 
-#define UTE_DRV_PWRKEY_KEY0_KU_BACK_IN_CLOCK   1//单机跳过绑定界面
-
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
 

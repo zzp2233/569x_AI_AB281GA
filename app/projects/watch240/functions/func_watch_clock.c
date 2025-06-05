@@ -35,9 +35,13 @@ void func_sliding_unlcok_value_change_callback(int32_t change_value)
     {
         num = 140;
     }
-    slider_unlock = false;
-    if(change_value <= 70)
+    if(change_value > 70)
     {
+        slider_unlock = false;
+    }
+    if(change_value <= 70 && !slider_unlock)
+    {
+        printf("1999999999999999999999999999999\r\n");
         //func_directly_back_to();
         slider_unlock = true;
     }
@@ -47,7 +51,8 @@ void func_sliding_unlcok_value_change_callback(int32_t change_value)
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X + num/2, GUI_SCREEN_CENTER_Y, 200 - num,56);
 
 }
-//创建童锁窗体
+
+//创建锁屏窗体
 compo_form_t *func_sliding_unlcok_screen_form_create(void)
 {
     //新建窗体
@@ -121,7 +126,7 @@ compo_form_t *func_sliding_unlcok_screen_form_create(void)
     return frm;
 }
 
-//童锁功能事件处理
+//锁屏功能事件处理
 static void func_sliding_unlcok_screen_process(void)
 {
     compo_bar_t *slider;
@@ -176,7 +181,7 @@ static void func_sliding_unlcok_screen_process(void)
     func_process();
 }
 
-//童锁功能消息处理
+//锁屏功能消息处理
 static void func_sliding_unlcok_screen_message(size_msg_t msg)
 {
     compo_bar_t *slider;
@@ -208,7 +213,7 @@ static void func_sliding_unlcok_screen_message(size_msg_t msg)
     }
 }
 
-//进入童锁功能
+//进入锁屏功能
 static void func_sliding_unlcok_screen_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_sliding_unlcok_t));
@@ -216,14 +221,13 @@ static void func_sliding_unlcok_screen_enter(void)
 
 }
 
-//退出童锁功能
+//退出锁屏功能
 static void func_sliding_unlcok_screen_exit(void)
 {
     func_cb.last = FUNC_SLIDING_UNLOCK_SCREEN;
-
 }
 
-//童锁功能
+//锁屏功能
 void func_sliding_unlcok_screen(void)
 {
     printf("%s\n", __func__);

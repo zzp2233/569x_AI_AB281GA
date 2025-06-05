@@ -1,6 +1,7 @@
 #include "include.h"
 #include "ecig.h"
 #include "ute_module_message.h"
+#include "ute_module_lockScreen.h"
 #if ECIG_POWER_CONTROL
 #define TRACE_EN                             1
 
@@ -344,8 +345,8 @@ void timer_hot_single_data_init(void)
             printf(short_circuit_str,1,ecig.short_circuit_flag);
             if(ecig.smoke_sta != SHORT_CIRCUIT)
             {
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                //  msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                //    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                 sys_cb.smoke_index = SHORT_CIRCUIT;
             }
         }
@@ -356,8 +357,8 @@ void timer_hot_single_data_init(void)
         {
             if(ecig.smoke_sta != SMOKE_TIMEOUT)
             {
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                //msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                //uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                 sys_cb.smoke_index = SMOKE_TIMEOUT;
             }
             printf(info_8s);
@@ -391,8 +392,8 @@ void timer_hot_dual_data_init(void)
             printf(info_8s);
             if(ecig.smoke_sta != SMOKE_TIMEOUT)
             {
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                //  uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                 sys_cb.smoke_index = SMOKE_TIMEOUT;
             }
         }
@@ -404,8 +405,8 @@ void timer_hot_dual_data_init(void)
             printf(short_circuit_str,0,ecig.short_circuit_flag);
             if(ecig.smoke_sta != SHORT_CIRCUIT)
             {
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                 sys_cb.smoke_index = SHORT_CIRCUIT;
             }
         }
@@ -481,7 +482,7 @@ bool timer_hot_det_res(void)
         //  printf(flag_str,__LINE__);
         if (++cnt_det_20ms >= (ecig.timer_20ms_cnt))      //20ms
         {
-            if(det1_start_or_not())//
+            if(det1_start_or_not())//()
             {
                 //printf(flag_str,__LINE__);
 #if ECIG_ADC2_EN
@@ -498,8 +499,8 @@ bool timer_hot_det_res(void)
                     timer_hot_dual_data_init();
                     ecig.det1_start = true;
                     //   printf(flag_str,__LINE__);
-                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                    // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                    //  uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                    msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                     sys_cb.smoke_index = IN_DEVICE;
                     printf(info_det,ecig.det1_start);
                 }
@@ -517,8 +518,8 @@ bool timer_hot_det_res(void)
                 ecig.det1_start = false;
                 ecig_set_res(0);
                 // printf(flag_str,__LINE__);
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                // msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                 sys_cb.smoke_index = OPEN_CIRCUIT;
                 printf(info_det,ecig.det1_start);
             }
@@ -551,8 +552,8 @@ bool timer_hot_det_res(void)
                     timer_hot_dual_data_init();
                     ecig.det2_start = true;
                     //  printf(flag_str,__LINE__);
-                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                    //msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                    // uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                    msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                     sys_cb.smoke_index = IN_DEVICE;
                     printf(info_det,ecig.det2_start);
                 }
@@ -569,8 +570,8 @@ bool timer_hot_det_res(void)
                 ecig.det2_start = false;
                 ecig_set_res2(0);
                 //  printf(flag_str,__LINE__);
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
-                //  msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
+                //    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SMOKE_REMIND,0);
+                msg_enqueue(EVT_ECIG_SMOKE_REMINDER);
                 sys_cb.smoke_index = OPEN_CIRCUIT;
                 printf(info_det,ecig.det2_start);
             }
@@ -646,7 +647,8 @@ void ecigarette_isr(void)//50us
 
 
     static u16 cnt_lock_ms = 0;
-    if(ecig.clock_flag == 1)
+    //if(ecig.clock_flag == 1)
+    if(uteModulePasswordData.password_flag == 1)
     {
         if(mic_start_or_not())
         {

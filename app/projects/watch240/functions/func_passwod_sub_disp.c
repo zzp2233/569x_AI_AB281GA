@@ -1,6 +1,6 @@
 #include "include.h"
 #include "func.h"
-
+#include "ute_module_lockScreen.h"
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -121,11 +121,11 @@ compo_form_t *func_password_sub_disp_form_create(void)
     compo_textbox_set(txt, i18n[STR_ENTER_CUR]);
     compo_textbox_set_visible(txt, true);
 
-    if(sys_cb.password_cnt == 4 && sys_cb.password_change)
+    if(uteModulePasswordData.password_cnt == 4 && uteModulePasswordData.password_change)
     {
         compo_textbox_set(txt, i18n[STR_OLD_PASSWORD]);
     }
-    else if(sys_cb.password_cnt == 0 && !sys_cb.password_change)
+    else if(uteModulePasswordData.password_cnt == 0 && !uteModulePasswordData.password_change)
     {
         compo_textbox_set(txt, i18n[STR_NEW_PASSWORD]);
     }
@@ -163,7 +163,11 @@ compo_form_t *func_password_sub_disp_form_create(void)
         compo_textbox_set_align_center(txt_num, false);
         compo_textbox_set_pos(txt_num, txt_num_x + (idx * txt_num_x_offset), txt_num_y);
         memset(buf, 0, sizeof(buf));
-        snprintf(buf, sizeof(buf), "%d%d%d%d", sys_cb.password_value[idx], sys_cb.password_value[idx+1], sys_cb.password_value[idx+2], sys_cb.password_value[idx+3]);
+        snprintf(buf, sizeof(buf), "%d%d%d%d",
+                 uteModulePasswordData.password_value[0],
+                 uteModulePasswordData.password_value[1],
+                 uteModulePasswordData.password_value[2],
+                 uteModulePasswordData.password_value[3]);
         compo_textbox_set(txt_num, buf);
         compo_textbox_set_visible(txt_num, false);
     }
@@ -178,11 +182,11 @@ static void func_password_sub_disp_process(void)
 }
 void debug_print_password_info()
 {
-    printf("System password count: %d\n", sys_cb.password_cnt);
+    printf("System password count: %d\n", uteModulePasswordData.password_cnt);
     printf("System password value: ");
-    for(int i = 0; i < sys_cb.password_cnt; i++)
+    for(int i = 0; i < uteModulePasswordData.password_cnt; i++)
     {
-        printf("%d ", sys_cb.password_value[i]);
+        printf("%d ", uteModulePasswordData.password_value[i]);
     }
     printf("\n");
 }
@@ -292,13 +296,14 @@ static void func_password_sub_disp_button_click(void)
         compo_textbox_set(txt_num, buf);
         printf("Password count is 4, updated textbox\n"); // 添加调试信息
         debug_print_password_info();
-        if(sys_cb.password_cnt == 0 && password->cnt == 4 && !sys_cb.password_change)
+        if(uteModulePasswordData.password_cnt == 0 && password->cnt == 4 && !uteModulePasswordData.password_change)
         {
-            sys_cb.password_cnt = password->cnt;
+            uteModulePasswordData.password_cnt = password->cnt;
             for(int i = 0; i < password->cnt; i++)
             {
-                sys_cb.password_value[i] = password->value[i];
+                uteModulePasswordData.password_value[i] = password->value[i];
             }
+            uteModulePasswordDataSaveConfig();
             func_cb.sta = FUNC_PASSWORD_SUB_SELECT;
             printf("Case 1: Updated password and changed state\n"); // 添加调试信息
             // 新增：清除UI状态后立即返回
@@ -309,13 +314,13 @@ static void func_password_sub_disp_button_click(void)
             compo_textbox_set(txt_num, "");
             return; // 关键修改：状态改变后立即退出
         }
-        else if(sys_cb.password_cnt == 4 && password->cnt == 4 && !sys_cb.password_change)
+        else if(uteModulePasswordData.password_cnt == 4 && password->cnt == 4 && !uteModulePasswordData.password_change)
         {
             psd_ctn = 0;
             // 使用独立循环进行验证
             for(int j = 0; j < 4; j++)
             {
-                if(sys_cb.password_value[j] == password->value[j])
+                if(uteModulePasswordData.password_value[j] == password->value[j])
                 {
                     psd_ctn++;
                 }
@@ -323,32 +328,43 @@ static void func_password_sub_disp_button_click(void)
             // 在循环结束后判断
             if(psd_ctn == 4)
             {
-                sys_cb.password_cnt = 0;
+                uteModulePasswordData.password_cnt = 0;
                 func_cb.sta = FUNC_SET_SUB_PASSWORD;
                 printf("Password matched, changed state\n");
                 return; // 立即退出
             }
         }
-        else if(sys_cb.password_cnt == 0 && password->cnt == 4 && sys_cb.password_change)
+        else if(uteModulePasswordData.password_cnt == 0 && password->cnt == 4 && uteModulePasswordData.password_change)
         {
-            sys_cb.password_cnt = password->cnt;
+            uteModulePasswordData.password_cnt = password->cnt;
             for(int i = 0; i < password->cnt; i++)
             {
-                sys_cb.password_value[i] = password->value[i];
+                uteModulePasswordData.password_value[i] = password->value[i];
             }
+            // 新增：调用保存函数
+            uteModulePasswordDataSaveConfig();
             func_cb.sta = FUNC_PASSWORD_SUB_SELECT;
             printf("Case 3: Updated password and changed state\n"); // 添加调试信息
         }
-        else if(sys_cb.password_cnt == 4 && password->cnt == 4 && sys_cb.password_change)
+        else if(uteModulePasswordData.password_cnt == 4 && password->cnt == 4 && uteModulePasswordData.password_change)
         {
             for(int j = 0; j < password->cnt; j++)
             {
-                if(sys_cb.password_value[j] == password->value[j])
+                if(uteModulePasswordData.password_value[j] == password->value[j])
                 {
                     psd_ctn++;
                 }
             }
-            printf("Case 4: Calculated match count: %d\n", psd_ctn); // 添加调试信息
+            printf("Case 4: Calculated match count: %d\n", psd_ctn); // 添加调
+            if(psd_ctn == 4)
+            {
+                // 原密码验证通过，准备输入新密码
+                uteModulePasswordData.password_cnt = 0;
+                password->cnt = 0;
+                compo_textbox_set(txt, i18n[STR_NEW_PASSWORD]);
+                compo_textbox_set_visible(txt, true);
+                printf("Password matched, reset and updated textbox\n");
+            }
         }
         compo_picturebox_set_visible(pic_zer, false);
         compo_picturebox_set_visible(pic_one, false);
@@ -359,11 +375,22 @@ static void func_password_sub_disp_button_click(void)
 
         if(psd_ctn == 4)
         {
-            sys_cb.password_cnt = 0;
-            password->cnt = 0;
-            compo_textbox_set(txt, i18n[STR_NEW_PASSWORD]);
-            compo_textbox_set_visible(txt, true);
-            printf("Password matched, reset and updated textbox\n"); // 添加调试信息
+            // 密码验证通过
+            if(uteModulePasswordData.password_change)
+            {
+                // 修改密码流程：标记为待保存新密码
+                uteModulePasswordData.password_change = 0;
+                // 注意：新密码将在用户输入后保存（在上面的场景3中处理）
+            }
+            else
+            {
+                // 其他场景：保持逻辑不变
+                uteModulePasswordData.password_cnt = 0;
+                password->cnt = 0;
+                compo_textbox_set(txt, i18n[STR_NEW_PASSWORD]);
+                compo_textbox_set_visible(txt, true);
+                printf("Password matched, reset and updated textbox\n");
+            }
         }
         else
         {
@@ -395,16 +422,18 @@ static void func_password_sub_disp_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-            if(sys_cb.password_change && sys_cb.password_cnt == 0)
+            if(uteModulePasswordData.password_change && uteModulePasswordData.password_cnt == 0)
             {
-                sys_cb.password_cnt = 4;
-                ecig.clock_flag = 1;
-                printf("111111111111111111111111111111ecig.clock_flag = 1\n");
+                uteModulePasswordData.password_cnt = 4;
+                uteModulePasswordData.password_flag = true;
+                // ecig.clock_flag = 1;
+                // printf("111111111111111111111111111111uteModulePasswordData.password_flag = 1\n");
             }
             else
             {
-                ecig.clock_flag = 0;
-                printf("2222222222222222222222222222222ecig.clock_flag = 0\n");
+                uteModulePasswordData.password_flag = false;
+                // ecig.clock_flag = 0;
+                //  printf("2222222222222222222222222222222uteModulePasswordData.password_flag = 0\n");
             }
 
             func_message(msg);
@@ -418,6 +447,7 @@ static void func_password_sub_disp_message(size_msg_t msg)
             func_message(msg);
             break;
     }
+    uteModulePasswordDataSaveConfig();
 }
 
 //进入开启密码锁功能

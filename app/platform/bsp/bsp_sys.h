@@ -251,7 +251,8 @@ extern volatile u32 ticks_50ms;
 
 typedef void (*isr_t)(void);
 isr_t register_isr(int vector, isr_t isr);
-
+void uteModulePasswordSyncSysCbToModule(void);
+void uteModulePasswordLoadToSysCb(void);
 void bsp_sys_init(void);
 u8 bsp_sys_get_ctlbit(uint n);                      //获取系统控制位
 void bsp_sys_set_ctlbit(uint n, u8 v);              //设置系统控制位

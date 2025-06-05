@@ -118,7 +118,11 @@ void gui_wakeup(void)
         // uteDrvScreenCommonInit();
         sys_cb.gui_sleep_sta = 0;
         uteModuleGuiCommonDisplayOff(false);
-        //printf("gui_wakeup\n");
+        // printf("gui_wakeup\n");
+        if (func_cb.sta != FUNC_SLIDING_UNLOCK_SCREEN)
+        {
+            func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
+        }
     }
 }
 

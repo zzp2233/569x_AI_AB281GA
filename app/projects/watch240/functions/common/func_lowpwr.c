@@ -223,7 +223,7 @@ uint32_t sleep_timer(void)
 
     return ret;
 }
-
+extern bool slider_unlock;
 extern bool vc30fx_sleep_isr;
 AT(.text.lowpwr.sleep)
 static void sfunc_sleep(void)
@@ -252,7 +252,7 @@ static void sfunc_sleep(void)
 #endif
 
     printf("%s\n", __func__);
-
+    slider_unlock = false;
     sleep_cb.sys_is_sleep = true;
     sys_cb.gui_need_wakeup = 0;
     bt_enter_sleep();
@@ -426,6 +426,7 @@ static void sfunc_sleep(void)
 #endif
 #if ECIG_POWER_CONTROL
         //吸烟唤醒
+        // printf("1MIC wakeup: %x %x\n", wkpnd,BIT(ECIG_MIC_INT));
 #if (CHIP_PACKAGE_SELECT == CHIP_5690F)
         if (wkpnd & BIT(ECIG_MIC_INT))
         {
@@ -454,19 +455,16 @@ static void sfunc_sleep(void)
             printf("DET wakeup: %x\n", wkpnd);
             // gui_need_wkp = true;
             sys_cb.gui_need_wakeup = true;
+            // func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
             break;
         }
 #endif
-        if (wkpnd)
-        {
-            printf("port wakeup: %x\n", wkpnd);
-            gui_need_wkp = true;
-            break;
-        }
+
         if ((RTCCON9 & BIT(2)) || (RTCCON10 & BIT(2)) || wko_wkup_flag)
         {
             printf("wko wakeup\n");
             gui_need_wkp = true;
+            //   func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
             break;
         }
 #if LE_EN
@@ -474,6 +472,7 @@ static void sfunc_sleep(void)
         {
             printf("ble_app_need_wakeup\n");
             gui_need_wkp = true;
+            //   func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
             break;
         }
 #endif
@@ -542,11 +541,13 @@ static void sfunc_sleep(void)
         {
             sys_cb.gui_need_wakeup = 0;
             gui_need_wkp = true;
+            func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
             printf("gui_need_wakeup\n");
             break;
         }
     }
-
+    //  u32 tick = tick_get();
+    //  printf("tick %d \n",tick);
     RTCCON9 = BIT(7) | BIT(5) | BIT(2);         //clr port, bt, wko wakeup pending
     RTCCON3 &= ~(BIT(17) | BIT(13));            //disable port, bt wakeup
     sleep_wakeup_exit();
@@ -596,6 +597,7 @@ static void sfunc_sleep(void)
 #if MODEM_CAT1_EN
     bsp_modem_sleep_exit();
 #endif
+    // printf("44tick %d \n",tick_get()-tick);
     if (gui_need_wkp)
     {
         printf("11gui_wakeup\n");
@@ -607,7 +609,7 @@ static void sfunc_sleep(void)
         //sys_clk_set(SYS_24M);
     }
 
-
+    // printf("33tick %d \n",tick_get()-tick);
     sys_set_tmr_enable(1, 1);
 
 #if LE_EN
@@ -619,7 +621,7 @@ static void sfunc_sleep(void)
 #endif
     dac_restart();
     bsp_change_volume(sys_cb.vol);
-
+    //printf("22tick %d \n",tick_get()-tick);
 #if (ASR_SELECT && ASR_FULL_SCENE)
     bsp_asr_start();
 #endif
@@ -631,6 +633,7 @@ static void sfunc_sleep(void)
 #endif
     bt_exit_sleep();
     sleep_cb.sys_is_sleep = false;
+    // printf("11tick %d \n",tick_get()-tick);
     // func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
     printf("sleep_exit\n");
 }

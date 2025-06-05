@@ -346,6 +346,7 @@ void uteModuleCallInit(void)
     UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,line=%d,reset mac address",__func__,__LINE__);
     memset(&uteModuleCallData,0,sizeof(ute_module_call_data_t));
     uteModuleCallData.isPowerOn = false;
+
     uteModuleCallBtReadConfig();
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
     uteModuleCallBtReadCtrlAppData();
@@ -359,6 +360,7 @@ void uteModuleCallInit(void)
 #if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
     uteModuleCallEntertranmentVoiceSwitchReadConfig();
 #endif
+    uteModuleCallData.isEntertranmentVoiceOn =true;
 
     if(uteModuleCallData.isPowerOn || uteModuleCallData.isBtAutoClose)
     {

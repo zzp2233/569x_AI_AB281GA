@@ -1,6 +1,6 @@
 #include "include.h"
 #include "func.h"
-
+#include "ute_module_lockScreen.h"
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -31,7 +31,7 @@ compo_form_t *func_password_sub_select_form_create(void)
     compo_textbox_set(txt_set,  i18n[STR_SET_PASSWORD]);
     compo_textbox_set_visible(txt_set, true);
 
-    if(sys_cb.password_change)
+    if(uteModulePasswordData.password_change)
     {
         compo_textbox_set_visible(txt_set, false);
     }
@@ -42,7 +42,7 @@ compo_form_t *func_password_sub_select_form_create(void)
     compo_textbox_set(txt_title, i18n[STR_SUCCES_PASSWORD]);
     compo_textbox_set_visible(txt_title, false);
 
-    if(sys_cb.password_change)
+    if(uteModulePasswordData.password_change)
     {
         compo_textbox_set_visible(txt_title, true);
     }
@@ -54,7 +54,7 @@ compo_form_t *func_password_sub_select_form_create(void)
     compo_button_set_pos(btn, 65, 249);
     compo_button_set_visible(btn, false);
 
-    if(!sys_cb.password_change)
+    if(!uteModulePasswordData.password_change)
     {
         compo_button_set_visible(btn, true);
     }
@@ -79,11 +79,18 @@ static void func_select_button_click(void)
     switch (id)
     {
         case COMPO_ID_BTN_YES:
+            if(uteModulePasswordData.password_cnt > 0)
+            {
+                // 确保密码已设置且有效
+                uteModulePasswordDataSaveConfig(); // 保存密码配置
+                printf("Password saved successfully\n");
+            }
             func_cb.sta = FUNC_SET_SUB_PASSWORD;
             break;
 
         case COMPO_ID_BTN_NO:
-            sys_cb.password_cnt = 0;
+            uteModulePasswordData.password_cnt = 0;
+            uteModulePasswordDataSaveConfig(); // 保存清除后的状态
             func_cb.sta = FUNC_PASSWORD_SUB_DISP;
             break;
 

@@ -247,6 +247,7 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleNotifyInit();
         // uteModuleSleepInit();
         uteModuleCallInit();
+        //funcPasswordModuleInit();
         //uteModuleOtaInit();
         uteModuleMusicInit();
         //uteModuleStopWatchInit();
@@ -274,7 +275,8 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleSportMoreSportsTargetInit();
 #endif
 #if UTE_MODULE_LOCK_SCREEN_SUPPORT
-        uteModuleLockScreenInit();
+        uteModulePasswordInit();
+        //  uteModulePasswordLoadToSysCb();
 #endif
 #if UTE_MODULE_GAME_SUPPORT
         uteModuleGameInit();

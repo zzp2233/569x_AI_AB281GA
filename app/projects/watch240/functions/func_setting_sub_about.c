@@ -187,7 +187,7 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_textbox_set(txt, i18n[STR_SYS_VERSION]);
 
     txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING,250,34);
     compo_textbox_set(txt, UTE_SW_VERSION);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
 

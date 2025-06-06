@@ -333,6 +333,13 @@ typedef struct f_light_t_
 //创建亮度调节窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_light_form_create(void)
 {
+    u8 level_data = sys_cb.light_level-1;
+
+    if(level_data<2)
+    {
+        level_data=2;
+    }
+
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
@@ -343,7 +350,7 @@ compo_form_t *func_light_form_create(void)
     compo_picturebox_t *light_pic = compo_picturebox_create(frm, UI_BUF_I335001_27_MORE_28_SET_3_BRIGHTNESS_2_BRIGHTNESS_SETTING_ICON_68X200_X86_Y58_00_BIN);
     compo_setid(light_pic, COMPO_ID_LIGHT_PIC);
     compo_picturebox_set_pos(light_pic, GUI_SCREEN_CENTER_X, 58+200/2);
-    compo_picturebox_cut(light_pic,sys_cb.light_level-1,5);
+    compo_picturebox_cut(light_pic,level_data,5);
 
     compo_button_t *btn = compo_button_create(frm);
     compo_button_set_location(btn,GUI_SCREEN_CENTER_X, 58+200/2,68,200);
@@ -370,8 +377,8 @@ static void func_light_disp_move_handle(void)
         {
             s8 level_data= (dy/SPACING_COUNT)+f_light->level_old;
 
-            if(level_data<1)
-                level_data=1;
+            if(level_data<2)
+                level_data=2;
             else if(level_data>5)
                 level_data=5;
 

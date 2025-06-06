@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-05-23 17:52:04
+*@date   2025-06-04 19:48:04
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -311,6 +311,10 @@ enum
     STR_INDONESUAN, // Indonesia
     STR_VIETNAMESE, // Tiếng Việt
     STR_MALAYSIA, // Melayu
+    STR_RAMANA, // Română
+    STR_KREA, // 한국어
+    STR_CRS, // Čeština
+    STR_POLS, //Polski
 };
 
 extern const char * const *i18n;
@@ -321,14 +325,18 @@ extern const char * const i18n_ru_rru[];
 extern const char * const i18n_tr_rtr[];
 extern const char * const i18n_ms_rmy[];
 extern const char * const i18n_ja_rjp[];
+extern const char * const i18n_cs_rcs[];
 extern const char * const i18n_de_rde[];
 extern const char * const i18n_es_res[];
 extern const char * const i18n_fr_rfr[];
 extern const char * const i18n_in_rid[];
 extern const char * const i18n_it_rit[];
+extern const char * const i18n_pl_rpl[];
 extern const char * const i18n_pt_rpt[];
+extern const char * const i18n_ro_rro[];
 extern const char * const i18n_th_rth[];
 extern const char * const i18n_vi_rvn[];
+extern const char * const i18n_ko_rkr[];
 extern const char * const i18n_zh_rtw[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

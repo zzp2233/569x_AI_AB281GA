@@ -199,7 +199,7 @@ compo_form_t *func_system_sub_system_form_create(void)
     compo_listbox_set_bgimg(listbox, UI_BUF_I342001_28_SET_BG_BIN);
     compo_setid(listbox, COMPO_ID_SYSTEM);
 
-    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_set_focus(listbox, 80);
     compo_listbox_update(listbox);
 
     return frm;

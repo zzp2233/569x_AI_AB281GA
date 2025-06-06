@@ -2807,7 +2807,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
                                            func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH/1.1, widget_text_get_max_height());              //调整文本位置
+                                           GUI_SCREEN_WIDTH/1.3, widget_text_get_max_height());              //调整文本位置
                 compo_textbox_set(txt_msg, msg);
 
                 //title
@@ -2826,13 +2826,13 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //msg
             compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
             compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,
-                                       GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);              //调整文本位置
+                                       200, GUI_SCREEN_HEIGHT);              //调整文本位置
             compo_textbox_set_multiline(txt_msg, true);
             compo_textbox_set(txt_msg, msg);
             area_t txt_leng = widget_text_get_area(txt_msg->txt);
-            if(txt_leng.hei>GUI_SCREEN_HEIGHT/2.5)
+            if(txt_leng.hei>GUI_SCREEN_CENTER_Y)
             {
-                txt_leng.hei = GUI_SCREEN_HEIGHT/2.5;
+                txt_leng.hei = GUI_SCREEN_CENTER_Y;
             }
             if(msg == i18n[STR_ADDRESS_BOOK_SYNC])
             {
@@ -2842,7 +2842,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             }
             else
             {
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-widget_text_get_height(),txt_leng.wid,txt_leng.hei);              //调整文本位置
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, txt_leng.hei>widget_text_get_height()*3 ? 100 : GUI_SCREEN_CENTER_Y-txt_leng.hei/2,200,GUI_SCREEN_CENTER_Y);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);

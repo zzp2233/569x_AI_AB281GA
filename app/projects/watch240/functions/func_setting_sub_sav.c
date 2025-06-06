@@ -437,22 +437,24 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SOUND_AND_VIBRATION]);
 
-    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 0, 1, 1, GUI_SCREEN_WIDTH, 62);
-    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2,GUI_SCREEN_WIDTH,62);
+    compo_cardbox_t *cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,30+62/2,GUI_SCREEN_WIDTH,62);
     compo_setid(cardbox, COMPO_ID_MOTOR_GRADE);
-    compo_cardbox_icon_set_pos(cardbox, 0, 0,0);
+    compo_cardbox_rect_set_location(cardbox,0,0,30,192,1,16);
+    compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
+    compo_cardbox_icon_set_pos(cardbox, 0, 80,0);
     compo_cardbox_icon_set(cardbox,0,UI_BUF_I342001_28_SET_MORE_BIN);
     compo_cardbox_text_scroll_process(cardbox, true);
-    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+25, -11, 145, 30);
     compo_cardbox_text_set(cardbox,0,i18n[STR_VBRATION]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
 
     cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
-    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+68,GUI_SCREEN_WIDTH,62);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,30+62/2+68,GUI_SCREEN_WIDTH,62);
     compo_setid(cardbox, COMPO_ID_SAV);
-    compo_cardbox_rect_set_location(cardbox,0,0,30,232,1,16);
+    compo_cardbox_rect_set_location(cardbox,0,0,30,192,1,16);
     compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
-    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+25, -11, 145, 30);
     compo_cardbox_text_set(cardbox,0,i18n[STR_MEDIA_VOL]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
     compo_cardbox_icon_set_location(cardbox, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
@@ -460,11 +462,11 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_text_scroll_process(cardbox, true);
 
     cardbox = compo_cardbox_create(frm, 1, 1, 1, GUI_SCREEN_WIDTH, 62);
-    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,54+62/2+68*2,GUI_SCREEN_WIDTH,62);
+    compo_cardbox_set_location(cardbox,GUI_SCREEN_CENTER_X,30+62/2+68*2,GUI_SCREEN_WIDTH,62);
     compo_setid(cardbox, COMPO_ID_MUTE);
-    compo_cardbox_rect_set_location(cardbox,0,0,30,232,1,16);
+    compo_cardbox_rect_set_location(cardbox,0,0,30,192,1,16);
     compo_cardbox_rect_set_color(cardbox,0,make_color(0x29,0x29,0x29));
-    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+15, -11, 145, 30);
+    compo_cardbox_text_set_location(cardbox, 0, -GUI_SCREEN_CENTER_X+25, -11, 145, 30);
     compo_cardbox_text_set(cardbox,0,i18n[STR_MUTE]);
     compo_cardbox_text_set_align_center(cardbox, 0, false);
     compo_cardbox_icon_set_location(cardbox, 0, 194-GUI_SCREEN_CENTER_X, 0, 40, 24);
@@ -472,7 +474,7 @@ compo_form_t *func_set_sub_sav_form_create(void)
     compo_cardbox_text_scroll_process(cardbox, true);
 
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_SILENT_MODE_PROMAT]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,240+68,235,68);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,240+30,200,75);
     compo_textbox_set_multiline(textbox,true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
     compo_textbox_set(textbox,i18n[STR_SILENT_MODE_PROMAT]);

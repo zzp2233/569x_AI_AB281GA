@@ -1710,10 +1710,17 @@ void func_message(size_msg_t msg)
             break;
 
         case KU_LEFT:
-            if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL)
+            if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL && func_cb.sta != UTE_KEY_LEFT_SWITCH_SCREEN)
             {
                 uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
             }
+#if UTE_DRV_PWRKEY_KEY1_BACK
+            else if(func_cb.sta == UTE_KEY_LEFT_SWITCH_SCREEN )
+            {
+                printf("func_sta:%d\n",func_cb.sta);
+                func_back_to();
+            }
+#endif
             break;
         case KTH_BACK:
 #if UTE_THREE_KEY_EVENT_SOS

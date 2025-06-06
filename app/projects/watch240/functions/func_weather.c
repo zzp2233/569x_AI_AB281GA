@@ -2872,12 +2872,12 @@ compo_form_t *func_weather_form_create(void)
         }
         ///设置标题栏名字///
         picbox = compo_picturebox_create_for_page(frm,frm->page,UI_BUF_I342001_12_WEATHER_ICON_NODATA_BIN);///背景图片
-        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,66/2+87);
+        compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,48/2+66);
 
         txt = compo_textbox_create_for_page(frm,frm->page,strlen(i18n[STR_NO_GET_WEATHER]));
-        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+10, 200,widget_text_get_max_height()*2);
-        compo_textbox_set_multiline(txt, true);
-        compo_textbox_set_multiline_drag(txt, true);
+        compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+24, 220, 34);
+        //compo_textbox_set_multiline(txt, true);
+        //compo_textbox_set_multiline_drag(txt, true);
         compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);
 
         return frm;

@@ -2121,24 +2121,27 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             break;
         case MSGBOX_MODE_BTN_FACTORR://工厂测试
         {
-            compo_textbox_t *textbox;
-            textbox = compo_textbox_create(frm, strlen((const char *)"PASS")); //PASS
-            compo_textbox_set(textbox, (const char *)"PASS");
-            compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y/10*2+GUI_SCREEN_HEIGHT/11*9);
-            compo_textbox_set_forecolor(textbox, COLOR_GREEN);
-
-            btn = compo_button_create(frm);//透明按钮PASS
-            compo_button_set_location(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y/10*2+GUI_SCREEN_HEIGHT/11*9, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei*2);
-            compo_setid(btn,COMPO_ID_BTN_OK);
-
-            textbox = compo_textbox_create(frm, strlen((const char *)"FALL")); //FALL
+            compo_textbox_t *textbox = compo_textbox_create(frm, strlen((const char *)"FALL")); // FALL
             compo_textbox_set(textbox, (const char *)"FALL");
-            compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  GUI_SCREEN_CENTER_Y/10*2+GUI_SCREEN_HEIGHT/11*9);
+            compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X - GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6);
             compo_textbox_set_forecolor(textbox, COLOR_RED);
+            rect_t location_data = widget_get_location(textbox->txt);
+            area_t txt_data = widget_text_get_area(textbox->txt);
 
-            btn = compo_button_create(frm);//透明按钮FALL
-            compo_button_set_location(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  GUI_SCREEN_CENTER_Y/10*2+GUI_SCREEN_HEIGHT/11*9, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei*2);
-            compo_setid(btn,COMPO_ID_BTN_CANCEL);
+            compo_button_t *btn = compo_button_create(frm); // 按钮FALL
+            compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2.5);
+            compo_setid(btn, COMPO_ID_BTN_CANCEL);
+
+            textbox = compo_textbox_create(frm, strlen((const char *)"PASS")); // PASS
+            compo_textbox_set(textbox, (const char *)"PASS");
+            compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6);
+            compo_textbox_set_forecolor(textbox, COLOR_GREEN);
+            location_data = widget_get_location(textbox->txt);
+            txt_data = widget_text_get_area(textbox->txt);
+
+            btn = compo_button_create(frm); // 按钮PASS
+            compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2.5);
+            compo_setid(btn, COMPO_ID_BTN_OK);
 
         }
         break;
@@ -2804,7 +2807,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
                                            func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH/1.1, widget_text_get_max_height());              //调整文本位置
+                                           GUI_SCREEN_WIDTH/1.3, widget_text_get_max_height());              //调整文本位置
                 compo_textbox_set(txt_msg, msg);
 
                 //title
@@ -2823,13 +2826,13 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //msg
             compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
             compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y,
-                                       GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);              //调整文本位置
+                                       200, GUI_SCREEN_HEIGHT);              //调整文本位置
             compo_textbox_set_multiline(txt_msg, true);
             compo_textbox_set(txt_msg, msg);
             area_t txt_leng = widget_text_get_area(txt_msg->txt);
-            if(txt_leng.hei>GUI_SCREEN_HEIGHT/2.5)
+            if(txt_leng.hei>GUI_SCREEN_CENTER_Y)
             {
-                txt_leng.hei = GUI_SCREEN_HEIGHT/2.5;
+                txt_leng.hei = GUI_SCREEN_CENTER_Y;
             }
             if(msg == i18n[STR_ADDRESS_BOOK_SYNC])
             {
@@ -2839,7 +2842,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             }
             else
             {
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-widget_text_get_height(),txt_leng.wid,txt_leng.hei);              //调整文本位置
+                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, txt_leng.hei>widget_text_get_height()*3 ? 100 : GUI_SCREEN_CENTER_Y-txt_leng.hei/2,200,GUI_SCREEN_CENTER_Y);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);

@@ -364,7 +364,7 @@ static void func_factory_testing_pass_fail_bnt_create(compo_form_t *frm)
     area_t txt_data = widget_text_get_area(textbox->txt);
 
     compo_button_t *btn = compo_button_create(frm); // 按钮FALL
-    compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2);
+    compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2.5);
     compo_setid(btn, FALL_ID);
 
     textbox = compo_textbox_create(frm, strlen((const char *)"PASS")); // PASS
@@ -375,7 +375,7 @@ static void func_factory_testing_pass_fail_bnt_create(compo_form_t *frm)
     txt_data = widget_text_get_area(textbox->txt);
 
     btn = compo_button_create(frm); // 按钮PASS
-    compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2);
+    compo_button_set_location(btn,location_data.x, location_data.y,txt_data.wid,txt_data.hei*2.5);
     compo_setid(btn, PASS_ID);
 }
 

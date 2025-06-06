@@ -682,8 +682,12 @@ static const compo_listbox_item_t dwon_tbl_style_list[] =
     {STR_CHECKERBOARD,          UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_03_BIN,           .menu_style = MENU_STYLE_GRID},             //棋盘
     {STR_HALO,                  UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_07_BIN,           .menu_style = MENU_STYLE_KALE},             //光环
     {STR_STYLE_SKYRER,          UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_01_BIN,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+#if (UTE_GUI_MENU_STYLE_CUM_GRID_DISENABLE==0)
     {STR_STYLE_GRID_1,          UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_00_BIN,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
+#endif
+#if (UTE_GUI_MENU_STYLE_WATERFALL_DISENABLE==0)
     {STR_STYLE_WATERFALL,       UI_BUF_I335001_STYLE_CLOCK_DOWN_GRAY_04_BIN,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+#endif
 };
 
 ///               /                 *更新*                    /                 ///
@@ -2434,6 +2438,8 @@ enum
     COMPO_ID_BTN_MUTE,          //静音模式开关
     COMPO_ID_BTN_PHONE,         //查找手机
     COMPO_ID_BTN_SETTING,       //设置
+    COMPO_ID_BTN_ABOUT,         //关于
+    COMPO_ID_BTN_BEDSIDE_MODE,  //床头灯
 
     COMPO_ID_PIC_WHITE,       //底部页码点->白
     COMPO_ID_PIC_GREY,        //底部页码点->灰
@@ -2474,7 +2480,11 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
     {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_06_BIN,      COMPO_ID_BTN_PHONE,            40+134/2 +GUI_SCREEN_WIDTH,  229+75/2},///查找手机
     {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_07_BIN,      COMPO_ID_BTN_FLASHLIGHT,       188+134/2+GUI_SCREEN_WIDTH, 229+75/2},///手电筒
     ///*第三页*/
-    {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_08_BIN,        COMPO_ID_BTN_SETTING,        40+134/2+2*GUI_SCREEN_WIDTH,  144+75/2},///设置
+    {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_08_BIN,      COMPO_ID_BTN_SETTING,           40+134/2+2*GUI_SCREEN_WIDTH,  144+75/2},///设置
+    {UI_BUF_I338001_PRIMARY_FUNCTION_ICON_GRAY_19_BIN,      COMPO_ID_BTN_ABOUT,           188+134/2+2*GUI_SCREEN_WIDTH,  144+75/2},///关于
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+    {UI_BUF_I338001_PRIMARY_FUNCTION_CT_00_BIN,             COMPO_ID_BTN_BEDSIDE_MODE,     40+134/2+2*GUI_SCREEN_WIDTH,  229+75/2},// 床头钟模式开关
+#endif
 };
 
 #define MENU_CNT    ((int)(sizeof(dwon_tbl_style_list) / sizeof(dwon_tbl_style_list[0])))
@@ -2494,7 +2504,22 @@ static const compo_listbox_item_t dwon_tbl_style_list[] =
 };
 
 ///               /                 *更新*                    /                 ///
-
+// 下拉床头钟图标更新
+static void func_clock_sub_dropdown_bedside_mode_pic_update(void)
+{
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+    compo_button_t *mute_pic = compo_getobj_byid(COMPO_ID_BTN_BEDSIDE_MODE);
+    // if(sys_cb.mute)
+    if(uteModuleBedsideModeIsOpen())
+    {
+        compo_button_set_bgimg(mute_pic, UI_BUF_I338001_PRIMARY_FUNCTION_CT_01_BIN);
+    }
+    else
+    {
+        compo_button_set_bgimg(mute_pic, UI_BUF_I338001_PRIMARY_FUNCTION_CT_00_BIN);
+    }
+#endif
+}
 //下拉电量图标更新
 static void func_clock_sub_dropdown_battery_pic_update(void)
 {
@@ -2742,6 +2767,7 @@ static void func_clock_sub_dropdown_form_create(void)
     func_clock_sub_dropdown_disturb_pic_update();       //勿扰
     func_clock_sub_dropdown_wrist_pic_update();//下拉抬婉亮屏按钮更新
     func_clock_sub_dropdown_menu_pic_update();//下拉菜单->菜单切换按钮更新
+    func_clock_sub_dropdown_bedside_mode_pic_update();
 
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sub_frm = frm;
@@ -2892,6 +2918,15 @@ static void func_clock_sub_dropdown_click_handler(void)
             func_clock_sub_dropdown_menu_pic_update();
 //           printf("1:%d  2:%d\n",func_cb.menu_style, dwon_tbl_style_list[dropdown_disp_btn_item->sel_idx].menu_style);
             break;
+        case COMPO_ID_BTN_ABOUT:
+            func_cb.sta = FUNC_SET_SUB_ABOUT;
+            break;
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+        case COMPO_ID_BTN_BEDSIDE_MODE:
+            uteModuleBedsideModeSwitch();
+            func_clock_sub_dropdown_bedside_mode_pic_update();
+            break;
+#endif
         default:
             break;
     }
@@ -4131,7 +4166,6 @@ static void func_clock_sub_dropdown_enter(void)
         .page_size =  GUI_SCREEN_WIDTH,
         .page_count = 3,
         .jump_perc = 20,
-        .quick_jump_perc = 360,
         .up_over_perc = 10,
         .down_over_perc = 10,
     };

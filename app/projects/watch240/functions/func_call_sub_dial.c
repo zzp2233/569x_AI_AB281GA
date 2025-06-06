@@ -1116,8 +1116,8 @@ static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
     {UI_BUF_I338001_11_CALL_DIAL_PLATE_08_BIN,             COMPO_ID_BTN_NUM8,       UI_BUF_I338001_11_CALL_DIAL_PLATE_SELECT_08_BIN,  COMPO_ID_PIC_CLICK_NUM8,     180,        183+62+offset_y2},
     {UI_BUF_I338001_11_CALL_DIAL_PLATE_09_BIN,             COMPO_ID_BTN_NUM9,       UI_BUF_I338001_11_CALL_DIAL_PLATE_SELECT_09_BIN,  COMPO_ID_PIC_CLICK_NUM9,     180+92,     183+62+offset_y2},
     {UI_BUF_I338001_11_CALL_DIAL_PLATE_00_BIN,             COMPO_ID_BTN_NUM0,       UI_BUF_I338001_11_CALL_DIAL_PLATE_SELECT_00_BIN,  COMPO_ID_PIC_CLICK_NUM0,     180,        183+124+offset_y1},
-    {UI_BUF_I338001_11_CALL_00_DELETE_BIN,                 COMPO_ID_BTN_DEL,        0,                                                COMPO_ID_PIC_CLICK_DEL,      180+92,     183+124+offset_y1},
-    {UI_BUF_I338001_11_CALL_CALL_BIN,                      COMPO_ID_BTN_CALL,       0,                                                COMPO_ID_PIC_CLICK_CALL,     180-92,     183+124+offset_y1},
+    {UI_BUF_I338001_11_CALL_00_DELETE_BIN,                 COMPO_ID_BTN_DEL,        UI_BUF_I338001_11_CALL_00_DELETE_BIN,             COMPO_ID_PIC_CLICK_DEL,      180+92,     183+124+offset_y1},
+    {UI_BUF_I338001_11_CALL_CALL_BIN,                      COMPO_ID_BTN_CALL,       UI_BUF_I338001_11_CALL_CALL_BIN,                  COMPO_ID_PIC_CLICK_CALL,     180-92,     183+124+offset_y1},
 };
 
 //打电话页面
@@ -1130,9 +1130,8 @@ compo_form_t *func_call_sub_dial_form_create(void)
     compo_button_t *btn;
     for (u8 idx_btn = 0; idx_btn < CALL_DISP_BTN_ITEM_CNT; idx_btn++)
     {
-        btn = compo_button_create_by_image(frm, tbl_call_disp_btn_item[idx_btn].res_addr);
+        btn = compo_button_create_image_in_btn(frm, tbl_call_disp_btn_item[idx_btn].res_addr,tbl_call_disp_btn_item[idx_btn].x, tbl_call_disp_btn_item[idx_btn].y,84,62);
         compo_setid(btn, tbl_call_disp_btn_item[idx_btn].btn_id);
-        compo_button_set_pos(btn, tbl_call_disp_btn_item[idx_btn].x, tbl_call_disp_btn_item[idx_btn].y);
     }
 
     //创建点击按钮变色图片
@@ -1632,8 +1631,8 @@ static const call_disp_btn_item_t tbl_call_disp_btn_item[] =
     {UI_BUF_I342001_11_CALL_DIAL_PLATE_08_BIN,             COMPO_ID_BTN_NUM8,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_08_BIN,  COMPO_ID_PIC_CLICK_NUM8,     92+56/2,        99+41/2+44+offset_y2},
     {UI_BUF_I342001_11_CALL_DIAL_PLATE_09_BIN,             COMPO_ID_BTN_NUM9,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_09_BIN,  COMPO_ID_PIC_CLICK_NUM9,     92+56/2+62,     99+41/2+44+offset_y2},
     {UI_BUF_I342001_11_CALL_DIAL_PLATE_00_BIN,             COMPO_ID_BTN_NUM0,       UI_BUF_I342001_11_CALL_DIAL_PLATE_SELECT_00_BIN,  COMPO_ID_PIC_CLICK_NUM0,     92+56/2,        99+41/2+88+offset_y1},
-    {UI_BUF_I342001_11_CALL_00_DELETE_BIN,                 COMPO_ID_BTN_DEL,        0,                                                COMPO_ID_PIC_CLICK_DEL,      92+56/2+62,     99+41/2+88+offset_y1},
-    {UI_BUF_I342001_11_CALL_00_CALL_BIN,                   COMPO_ID_BTN_CALL,       0,                                                COMPO_ID_PIC_CLICK_CALL,     92+56/2-62,     99+41/2+88+offset_y1},
+    {UI_BUF_I342001_11_CALL_00_DELETE_BIN,                 COMPO_ID_BTN_DEL,        0,                                                COMPO_ID_PIC_CLICK_DEL,      92+56/2+57,     99+41/2+86+offset_y1},
+    {UI_BUF_I342001_11_CALL_00_CALL_BIN,                   COMPO_ID_BTN_CALL,       0,                                                COMPO_ID_PIC_CLICK_CALL,     92+56/2-57,     99+41/2+88+offset_y1},
 };
 
 //打电话页面

@@ -313,6 +313,64 @@ static void func_restart_button_click(void)
     }
 }
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+compo_form_t *func_set_sub_restart_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //创建文本
+    compo_textbox_t *txt_off = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
+    compo_textbox_set_location(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.2,GUI_SCREEN_HEIGHT/4);
+    compo_textbox_set_multiline(txt_off, true);
+    compo_textbox_set_multiline_drag(txt_off,true);
+    compo_textbox_set_align_center(txt_off, true);
+    compo_textbox_set(txt_off, i18n[STR_SURE_REBOOT]);
+
+    //创建按钮
+    compo_button_t *btn;
+    btn = compo_button_create_by_image(frm, UI_BUF_I342001_28_SET_CANCEL_BIN);
+    compo_setid(btn, COMPO_ID_BTN_NO);
+    compo_button_set_pos(btn, 49+54/2, 162+54/2);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I342001_28_SET_COMFIRM_BIN);
+    compo_setid(btn, COMPO_ID_BTN_YES);
+    compo_button_set_pos(btn, 139+54/2, 162+54/2);
+
+    return frm;
+}
+
+//按键事件处理
+static void func_restart_button_click(void)
+{
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_YES:
+            // ble_disconnect();
+            // bt_disconnect(1);
+            // WDT_RST();
+            uteApplicationCommonRestart();
+            break;
+
+        case COMPO_ID_BTN_NO:
+//            task_stack_pop();
+            func_back_to();
+//            if(func_cb.last == FUNC_SETTING)
+//            {
+//                func_cb.sta = FUNC_SETTING;
+//            }
+//            else
+//            {
+//                func_cb.sta = FUNC_MENU;
+//            }
+            break;
+
+        default:
+            break;
+    }
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //重启页面
 compo_form_t *func_set_sub_restart_form_create(void)

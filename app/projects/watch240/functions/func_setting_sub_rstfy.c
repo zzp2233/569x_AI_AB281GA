@@ -181,6 +181,33 @@ compo_form_t *func_set_sub_rstfy_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+compo_form_t *func_set_sub_rstfy_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //创建文本
+    compo_textbox_t *txt_off = compo_textbox_create(frm, strlen(i18n[STR_SURE_RESET]));
+    compo_textbox_set_location(txt_off, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.2,GUI_SCREEN_HEIGHT/4);
+    compo_textbox_set_multiline(txt_off, true);
+    compo_textbox_set_multiline_drag(txt_off,true);
+    compo_textbox_set_align_center(txt_off, true);
+    compo_textbox_set(txt_off, i18n[STR_SURE_RESET]);
+
+    //创建按钮
+    compo_button_t *btn;
+    btn = compo_button_create_by_image(frm, UI_BUF_I342001_28_SET_CANCEL_BIN);
+    compo_setid(btn, COMPO_ID_BTN_NO);
+    compo_button_set_pos(btn, 49+54/2, 162+54/2);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I342001_28_SET_COMFIRM_BIN);
+    compo_setid(btn, COMPO_ID_BTN_YES);
+    compo_button_set_pos(btn, 139+54/2, 162+54/2);
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //恢复出厂页面
 compo_form_t *func_set_sub_rstfy_form_create(void)

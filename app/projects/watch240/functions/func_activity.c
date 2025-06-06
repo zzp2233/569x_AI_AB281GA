@@ -2293,6 +2293,7 @@ static void func_activity_message(size_msg_t msg)
             }
             break;
         case MSG_CTP_CLICK:
+            // uteModuleBedsideModeSwitch();
             // uteModuleCallChangeEntertranmentVoiceSwitchStatus();
             // func_cb.sta = FUNC_CHARGE;
             // sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;

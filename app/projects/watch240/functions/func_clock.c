@@ -67,6 +67,8 @@ const u8 quick_btn_tbl[] =
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     [14]    = FUNC_GAME,                    //游戏
+#else
+    [14]    = FUNC_NULL,                    //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     [15]    = FUNC_STYLE,                   //菜单风格

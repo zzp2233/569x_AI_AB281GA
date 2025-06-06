@@ -2103,6 +2103,9 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
     }
     else if(receive[1]==0x02) // 开始同步表盘数据
     {
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+        uteModuleWatchOnlineSetStartReceivePhoto(false);
+#endif
         uteModuleWatchOnlineReadyStart();
         // uteModuleProfileBleSendToPhone(&response[0],2);
     }
@@ -2141,6 +2144,18 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
     else if (receive[1] == 0x09)
     {
         uteModuleWatchOnlineGetAllInfoStart();
+    }
+#endif
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+    else if (receive[1] == 0x0A)
+    {
+        memcpy(&response[0], receive, 2);
+        uteModuleWatchOnlineGetInfoWithPhoto(&response[0]);
+        uteModuleProfileBleSendToPhone(&response[0], 14);
+    }
+    else if (receive[1] == 0x0B)
+    {
+        uteModuleWatchOnlineStartSyncPhoto(&receive[0]);
     }
 #endif
 }

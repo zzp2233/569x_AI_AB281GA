@@ -25,17 +25,32 @@ u32 func_clock_preview_get_addr(u32 base_addr)
 #if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
     user_addr += sizeof(watchConfig_t);
 #endif
-    uitool_header_t uitool_header;
-    os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
-    for(u16 i=0; i<uitool_header.num; i++)
+
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+    watchConfig_t watchConfig;
+    uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, base_addr, sizeof(watchConfig_t));
+    if(uteModuleWatchOnlineIsHasPhoto() && watchConfig.snNo == UTE_MODULE_WATCH_PHOTO_DEFAULT_ID)
     {
-        uitool_res_t uitool_res = {0};
-        os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
-        u32 res_addr = user_addr + uitool_res.res_addr;
-        //预览图
-        if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW)
+        uint32_t preview = 0;
+        uint32_t photo = 0;
+        uteModuleWatchOnlineGetCurrPhotoAddress(&preview,&photo);
+        return preview;
+    }
+    else
+#endif
+    {
+        uitool_header_t uitool_header;
+        os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
+        for(u16 i=0; i<uitool_header.num; i++)
         {
-            return res_addr;
+            uitool_res_t uitool_res = {0};
+            os_spiflash_read(&uitool_res, user_addr + UITOOL_HEADER + i * UITOOL_RES_HEADER, UITOOL_RES_HEADER);
+            u32 res_addr = user_addr + uitool_res.res_addr;
+            //预览图
+            if (uitool_res.res_type == UITOOL_TYPE_IMAGE && uitool_res.bond_type == COMPO_BOND_IMAGE_CLOCK_PREVIEW)
+            {
+                return res_addr;
+            }
         }
     }
 

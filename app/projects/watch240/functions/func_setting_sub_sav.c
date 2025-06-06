@@ -14,6 +14,7 @@ enum
     COMPO_ID_SAV = 1,
     COMPO_ID_MOTOR_GRADE,
     COMPO_ID_MUTE,
+    COMPO_ID_MAX,
 };
 typedef struct f_sav_t_
 {
@@ -531,10 +532,14 @@ static u16 func_setting_sav_card_get_btn_id(point_t pt)
     u16 ret = 0;
     rect_t rect;
     compo_cardbox_t *cardbox;
-    for(i=0; i<COMPO_ID_MUTE; i++)
+    for(i=0; i<COMPO_ID_MAX; i++)
     {
-        id = COMPO_ID_SAV+i;
+        id = COMPO_ID_SAV + i;
         cardbox = compo_getobj_byid(id);
+        if(cardbox == NULL)//如果没有这个组件就不需要处理
+        {
+            continue;
+        }
         rect = compo_cardbox_get_absolute(cardbox);
         if (abs_s(pt.x - rect.x) * 2 <= rect.wid && abs_s(pt.y - rect.y) * 2 <= rect.hei)
         {
@@ -549,7 +554,7 @@ static void func_sav_button_click(void)
 {
     point_t pt = ctp_get_sxy();
     u16 compo_id = func_setting_sav_card_get_btn_id(pt);
-    if (compo_id <= 0 || compo_id > COMPO_ID_MUTE)
+    if (compo_id <= 0 || compo_id > COMPO_ID_MAX)
     {
         return;
     }

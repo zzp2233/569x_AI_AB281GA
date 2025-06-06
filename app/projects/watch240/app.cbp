@@ -1154,6 +1154,9 @@
 		<Unit filename="functions/func_clock_light_cube.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_clock_photo.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_clock_preview.c">
 			<Option compilerVar="CC" />
 		</Unit>

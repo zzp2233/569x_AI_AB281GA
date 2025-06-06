@@ -197,13 +197,25 @@ compo_form_t *func_clock_form_create(void)
         default:
         {
             u32 base_addr = dialplate_info[sys_cb.dialplate_index];
-            u16 compo_num = bsp_uitool_header_phrase(base_addr);
-            if (!compo_num)
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+            watchConfig_t watchConfig;
+            uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, base_addr, sizeof(watchConfig_t));
+            printf("watchConfig.snNo = %d\n", watchConfig.snNo);
+            if (watchConfig.snNo == UTE_MODULE_WATCH_PHOTO_DEFAULT_ID && uteModuleWatchOnlineIsHasPhoto())
             {
-                halt(HALT_GUI_DIALPLATE_HEAD);
+                frm = func_clock_photo_form_create();
             }
-            frm = compo_form_create(true);
-            bsp_uitool_create(frm, base_addr, compo_num);
+            else
+#endif
+            {
+                u16 compo_num = bsp_uitool_header_phrase(base_addr);
+                if (!compo_num)
+                {
+                    halt(HALT_GUI_DIALPLATE_HEAD);
+                }
+                frm = compo_form_create(true);
+                bsp_uitool_create(frm, base_addr, compo_num);
+            }
         }
         break;
     }

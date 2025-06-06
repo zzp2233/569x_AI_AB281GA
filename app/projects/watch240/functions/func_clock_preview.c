@@ -21,11 +21,6 @@ extern u32 dialplate_info[];
 //根据表盘的基地址获取对应的预览图
 u32 func_clock_preview_get_addr(u32 base_addr)
 {
-    u32 user_addr = base_addr;
-#if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
-    user_addr += sizeof(watchConfig_t);
-#endif
-
 #if UTE_MODULE_WATCH_PHOTO_SUPPORT
     watchConfig_t watchConfig;
     uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, base_addr, sizeof(watchConfig_t));
@@ -39,6 +34,10 @@ u32 func_clock_preview_get_addr(u32 base_addr)
     else
 #endif
     {
+        u32 user_addr = base_addr;
+#if UTE_MODULE_CUSTOM_WATCHONLINE_UITOOL_SUPPORT
+        user_addr += sizeof(watchConfig_t);
+#endif
         uitool_header_t uitool_header;
         os_spiflash_read(&uitool_header, user_addr, UITOOL_HEADER);
         for(u16 i=0; i<uitool_header.num; i++)

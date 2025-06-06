@@ -484,13 +484,10 @@ compo_form_t *func_set_sub_wrist_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_UP]);
 
     //创建卡片
-    compo_cardbox_t * card = compo_cardbox_create(frm, 1, 1, 1, 232, 72);
+    compo_cardbox_t * card = compo_cardbox_create(frm, 0, 1, 1, 232, 72);
     compo_cardbox_set_visible(card, true);
     compo_cardbox_set_location(card, 4 + 232/2, 54 + 72/2, 232, 72);
     compo_setid(card, COMPO_CARD_1);
-
-    compo_cardbox_rect_set_color(card, 0, make_color(41,41,41));
-    compo_cardbox_rect_set_location(card, 0, 0, 0, 232, 72, 16);
 
     compo_cardbox_icon_set_location(card, 0,
                                     232/2 - 5 - gui_image_get_size(tbl_wrist_switch_res[0]).wid/2,

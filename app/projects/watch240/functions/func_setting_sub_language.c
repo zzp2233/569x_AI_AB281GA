@@ -404,12 +404,7 @@ compo_form_t *func_set_sub_language_form_create(void)
     compo_listbox_set_bithook(listbox, func_sel_language_bit);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
-    uint8_t set_idx = 1;
-    if (set_idx < 1)
-    {
-        set_idx = 1;
-    }
-    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_set_focus(listbox, 80);
     compo_listbox_update(listbox);
 
 

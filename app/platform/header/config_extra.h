@@ -123,7 +123,8 @@
 #define TP_IIC_UPDATE_ADDR              0x6A
 #elif (CTP_SELECT == CTP_CHSC6X)
 #define TP_IIC_ADDR                     0x2E
-
+#elif (CTP_SELECT == CTP_SPT5113C)
+#define TP_IIC_ADDR                     0x13
 #endif
 
 #ifndef MODEM_CAT1_EN

@@ -369,6 +369,7 @@ static void func_activity_disp_handle(void)
     snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, km_decimals);///公里数据
     compo_textbox_set(textbox_km, txt_buf);
     txt_leng = widget_text_get_area(textbox_km->txt);
+    compo_textbox_set(textbox_km_unit, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);//app切换单位时在界面同步更新
     compo_textbox_set_location(textbox_km_unit,75+8+txt_leng.wid,336+TXT_SPACING,88,25);//单位文本
 
     memset(txt_buf,'\0',sizeof(txt_buf));
@@ -389,6 +390,8 @@ static void func_activity_disp_handle(void)
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"/%ld",target_step);
     compo_textbox_set(textbox_day_step_target, txt_buf);///一天步数目标
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_step);
     compo_textbox_set(textbox2_day_step_target, txt_buf);///一天步数目标 柱形图最大值
 
     uint32_t step_date[24];

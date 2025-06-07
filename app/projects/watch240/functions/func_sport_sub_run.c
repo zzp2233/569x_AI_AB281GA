@@ -2288,7 +2288,11 @@ static void func_sport_sub_run_init(void)
 #endif
             break;
         case MID_DATA:
+#if UTE_SCREEN_SCROLL_OFFSET_HEIGHT
+            f_sport_sub_run->page_hei = (367-GUI_SCREEN_HEIGHT+TITLE_BAR_HIGH+UTE_SCREEN_SCROLL_OFFSET_HEIGHT) ;
+#else
             f_sport_sub_run->page_hei = (367-GUI_SCREEN_HEIGHT+TITLE_BAR_HIGH) ;
+#endif
             break;
         case LESS_DATA:
             f_sport_sub_run->page_hei = (284-GUI_SCREEN_HEIGHT+TITLE_BAR_HIGH) ;

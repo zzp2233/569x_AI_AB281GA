@@ -481,6 +481,10 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
+    {.func_sta=FUNC_LANGUAGE,                    .res_addr=UI_BUF_I338003_SETTING_MENU_LANGUAGE_BIN,         },    //语言
+    {.func_sta=FUNC_SET_SUB_ABOUT,               .res_addr=UI_BUF_I338003_SETTING_MENU_ABOUT_BIN,             },    //关于
+#endif
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //万花筒图标列表及顺序

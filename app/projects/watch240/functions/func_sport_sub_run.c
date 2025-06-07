@@ -5594,7 +5594,11 @@ static void func_sport_sub_run_message(size_msg_t msg)
         case MSG_CTP_LONG_UP:
         case MSG_CTP_SHORT_DOWN:
         case MSG_CTP_LONG_DOWN:
-            if(f_sport_sub_run->direction==TOUCH_NULL && func_sport_get_disp_mode() != LESS_DATA)
+            if(f_sport_sub_run->direction==TOUCH_NULL
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+               && func_sport_get_disp_mode() != LESS_DATA
+#endif
+              )
             {
                 f_sport_sub_run->direction = UP_DOWM_DIR;
             }

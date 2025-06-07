@@ -483,13 +483,24 @@ compo_form_t *func_message_form_create(void)
 
     compo_textbox_t *title = compo_textbox_create_for_page(frm,frm->page,strlen(i18n[STR_MESSAGE]));
     compo_textbox_set_location(title, GUI_SCREEN_CENTER_X, 30, 120, widget_text_get_max_height());
+#if !GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
     compo_textbox_set(title,i18n[STR_MESSAGE]);
+#endif
 
     char time_buf[30];
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
 
     if(msg_num == 0)
     {
+#if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
+        //创建无消息界面
+        compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I338003_14_INFORMATION_MESSAGE_BIN);
+        compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 94+84/2);
+
+        compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 205+21, 200, 35);
+        compo_textbox_set(txt, i18n[STR_NO_MSG]);
+#else
         //创建无消息界面
         compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I338001_14_INFORMATION_MESSAGE_BIN);
         compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 150);
@@ -497,7 +508,7 @@ compo_form_t *func_message_form_create(void)
         compo_textbox_t* txt = compo_textbox_create(frm, strlen(i18n[STR_NO_MSG]));
         compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 42/2+246, 200, 35);
         compo_textbox_set(txt, i18n[STR_NO_MSG]);
-
+#endif
         return frm;
     }
 

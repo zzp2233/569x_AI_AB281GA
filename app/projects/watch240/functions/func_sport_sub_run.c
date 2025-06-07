@@ -3881,7 +3881,7 @@ enum
 //创建室内跑步窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_sport_sub_run_form_create(void)
 {
-    char txt_buf[50];
+    char txt_buf[70];
     ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
     uteModuleSportGetMoreSportsDatas(data);
     //新建窗体和背景
@@ -3903,14 +3903,14 @@ compo_form_t *func_sport_sub_run_form_create(void)
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_HEART_RATE],i18n[STR_PER_MINUTE]);
     txt = compo_textbox_create(frm, strlen(txt_buf));///心率文本
-    compo_textbox_set_location(txt, 154/2+32, 22/2+184, 154, 30);
+    compo_textbox_set_location(txt, 132/2+42, 22/2+184, 132, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
 
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_CALORIE],i18n[STR_KCAL]);
     txt = compo_textbox_create(frm, strlen(txt_buf));///卡路里文本
-    compo_textbox_set_location(txt, 132/2+186, 22/2+184, 148, 30);
+    compo_textbox_set_location(txt, 132/2+186, 22/2+184, 132, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
 

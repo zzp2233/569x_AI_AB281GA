@@ -1866,7 +1866,7 @@ static void func_activity_disp_handle(void)
         compo_textbox_t *textbox_step = compo_getobj_byid(STEP_TXT_VALUE_ID);
         compo_textbox_t *textbox_km_unit = compo_getobj_byid(KM_TXT_UNIT_ID);
 
-        if(f_activity->uint_km != uteModuleSystemtimeGetDistanceMiType())
+        // if(f_activity->uint_km != uteModuleSystemtimeGetDistanceMiType())
         {
             compo_textbox_set(textbox_km_unit, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KM]);
         }

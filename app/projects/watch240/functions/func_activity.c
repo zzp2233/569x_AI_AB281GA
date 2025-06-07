@@ -890,7 +890,8 @@ compo_form_t *func_activity_form_create(void)
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));
     compo_textbox_set(textbox, i18n[STR_STEP]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT+300);
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT+300-5);
     compo_textbox_set_forecolor(textbox,make_color(128,128,128));
     compo_setid(textbox,STEP_DAY_TXT_UNIT_ID);
 
@@ -939,7 +940,8 @@ compo_form_t *func_activity_form_create(void)
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));
     compo_textbox_set(textbox, i18n[STR_STEP]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT*2+300);
+    compo_textbox_set_align_center(textbox,false);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT*2+300-5);
     compo_textbox_set_forecolor(textbox,make_color(128,128,128));
     compo_setid(textbox,STEP_WEEK_TXT_UNIT_ID);
 

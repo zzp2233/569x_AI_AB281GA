@@ -27,6 +27,8 @@ enum
     COMPO_ID_BTN_PLAYING,
     COMPO_ID_BTN_VOL_UP,
     COMPO_ID_BTN_VOL_DOWN,
+    COMPO_ID_BTN_VOL1_UP,
+    COMPO_ID_BTN_VOL1_DOWN,
     COMPO_ID_TXT_MUSIC_NAME,
     COMPO_ID_TXT_MUSIC_LYRIC,
     COMPO_ID_SHAPE_MUSIC_VOL,
@@ -149,6 +151,10 @@ compo_form_t *func_bt_form_create(void)
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     pic = compo_picturebox_create(frm, UI_BUF_I330001_MUSICC_MUSIC_BG_BIN); /// 音量进度条背景
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y + GUI_SCREEN_CENTER_Y / 1.3);
+    pic = compo_picturebox_create(frm, UI_BUF_I330001_MUSICC_SHENGYING_SMALL1_BIN); ///* 音量减*/
+    compo_picturebox_set_pos(pic,45, 261);
+    pic = compo_picturebox_create(frm, UI_BUF_I330001_MUSICC_SHENGYING_BIG1_BIN); ///* 音量加*/
+    compo_picturebox_set_pos(pic,193, 261);
     txt = compo_textbox_create(frm, strlen(i18n[STR_MUSIC]));
     //    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_24_BIN);
     compo_textbox_set(txt, i18n[STR_MUSIC]);
@@ -282,27 +288,23 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(btn, COMPO_ID_BTN_NEXT);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 1.5, GUI_SCREEN_CENTER_Y);
 
-    if (bt_a2dp_profile_completely_connected() || ble_is_connect())
-    {
-        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSICC_SHENGYING_SMALL1_BIN); /// 音量减
-    }
-    else
-    {
-        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME01_BIN); /// 音量减
-    }
-    compo_setid(btn, COMPO_ID_BTN_VOL_DOWN);
-    compo_button_set_pos(btn, 45, 261);
+    btn = compo_button_create(frm); //音量减
+    compo_button_set_location(btn,45, 261,80,80);
+    compo_setid(btn, COMPO_ID_BTN_VOL1_DOWN);
 
-    if (bt_a2dp_profile_completely_connected() || ble_is_connect())
-    {
-        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSICC_SHENGYING_BIG1_BIN); /// 音量加
-    }
-    else
-    {
-        btn = compo_button_create_by_image(frm, UI_BUF_I330001_MUSIC_VOLUME03_BIN); /// 音量加
-    }
-    compo_setid(btn, COMPO_ID_BTN_VOL_UP);
-    compo_button_set_pos(btn, 193, 261);
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_MUSIC_VOLUME01_BIN);
+    compo_picturebox_set_pos(picbox,45, 261);
+    compo_picturebox_set_visible(picbox, (bt_a2dp_profile_completely_connected() || ble_is_connect()) ? false : true);
+    compo_setid(picbox, COMPO_ID_BTN_VOL_DOWN);
+
+    btn = compo_button_create(frm);// 音量加
+    compo_button_set_location(btn,193, 261,80,80);
+    compo_setid(btn, COMPO_ID_BTN_VOL1_UP);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_MUSIC_VOLUME03_BIN);
+    compo_picturebox_set_pos(picbox,195, 261);
+    compo_picturebox_set_visible(picbox, (bt_a2dp_profile_completely_connected() || ble_is_connect()) ? false : true);
+    compo_setid(picbox, COMPO_ID_BTN_VOL_UP);
 
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE); /// 音量进度条
     compo_setid(shape, COMPO_ID_SHAPE_MUSIC_VOL);
@@ -332,8 +334,7 @@ static void func_bt_music_refresh_disp(void)
     compo_button_t *btn_prev = compo_getobj_byid(COMPO_ID_BTN_PREV);
     compo_button_t *btn_next = compo_getobj_byid(COMPO_ID_BTN_NEXT);
     compo_button_t *btn_play = compo_getobj_byid(COMPO_ID_BTN_PLAY);
-    compo_button_t *btn_up = compo_getobj_byid(COMPO_ID_BTN_VOL_UP);
-    compo_button_t *btn_down = compo_getobj_byid(COMPO_ID_BTN_VOL_DOWN);
+
     // 歌词，歌名
     //  compo_textbox_t *tilte_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_LYRIC);
     // compo_textbox_t *tilte_art_txt = compo_getobj_byid(COMPO_ID_TXT_MUSIC_NAME);
@@ -439,8 +440,8 @@ static void func_bt_button_release_handle()
     compo_button_t *btn_prev = compo_getobj_byid(COMPO_ID_BTN_PREV);
     compo_button_t *btn_next = compo_getobj_byid(COMPO_ID_BTN_NEXT);
     compo_button_t *btn_play = compo_getobj_byid(COMPO_ID_BTN_PLAY);
-    compo_button_t *btn_up = compo_getobj_byid(COMPO_ID_BTN_VOL_UP);
-    compo_button_t *btn_down = compo_getobj_byid(COMPO_ID_BTN_VOL_DOWN);
+    compo_picturebox_t *picbox1 = compo_getobj_byid(COMPO_ID_BTN_VOL_UP);
+    compo_picturebox_t *picbox2 = compo_getobj_byid(COMPO_ID_BTN_VOL_DOWN);
 
     //    func_bt_music_refresh_disp();
 
@@ -449,12 +450,13 @@ static void func_bt_button_release_handle()
 
         compo_button_set_bgimg(btn_prev, UI_BUF_I330001_MUSICC_PREVIOUS_SONG_BIN);
         compo_button_set_bgimg(btn_next, UI_BUF_I330001_MUSICC_NEXT_SONG_BIN);
+        compo_picturebox_set_visible(picbox1, false);
+        compo_picturebox_set_visible(picbox2, false);
         if (bt_cb.music_playing == false)
         {
             compo_button_set_bgimg(btn_play, UI_BUF_I330001_MUSICC_PAUSE_BIN);
         }
-        compo_button_set_bgimg(btn_up, UI_BUF_I330001_MUSICC_SHENGYING_BIG1_BIN);
-        compo_button_set_bgimg(btn_down, UI_BUF_I330001_MUSICC_SHENGYING_SMALL1_BIN);
+
     }
 
     int id = compo_get_button_id();
@@ -477,11 +479,13 @@ static void func_bt_button_release_handle()
                 compo_button_set_bgimg(btn_play, UI_BUF_I330001_MUSICC_PAUSE_BIN);
             }
             break;
-        case COMPO_ID_BTN_VOL_UP:
-            compo_button_set_bgimg(btn_up, UI_BUF_I330001_MUSIC_VOLUME03_BIN);
+        case COMPO_ID_BTN_VOL1_UP:
+            compo_picturebox_set_visible(picbox1, true);
+            compo_picturebox_set_visible(picbox2, false);
             break;
-        case COMPO_ID_BTN_VOL_DOWN:
-            compo_button_set_bgimg(btn_down, UI_BUF_I330001_MUSIC_VOLUME01_BIN);
+        case COMPO_ID_BTN_VOL1_DOWN:
+            compo_picturebox_set_visible(picbox1, false);
+            compo_picturebox_set_visible(picbox2, true);
             break;
     }
 }
@@ -510,11 +514,11 @@ static void func_bt_button_click(void)
             printf("bt_cb.music_playing=%d\n", bt_is_playing());
             break;
 
-        case COMPO_ID_BTN_VOL_UP:
+        case COMPO_ID_BTN_VOL1_UP:
             uteModuleMusicCtrlVolumeIncrease(false);
             break;
 
-        case COMPO_ID_BTN_VOL_DOWN:
+        case COMPO_ID_BTN_VOL1_DOWN:
             uteModuleMusicCtrlVolumeDecrease(false);
             break;
 

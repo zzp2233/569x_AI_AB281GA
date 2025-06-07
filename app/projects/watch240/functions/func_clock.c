@@ -67,6 +67,8 @@ const u8 quick_btn_tbl[] =
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     [14]    = FUNC_GAME,                    //游戏
+#else
+    [14]    = FUNC_NULL,                    //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     [15]    = FUNC_STYLE,                   //菜单风格
@@ -197,13 +199,25 @@ compo_form_t *func_clock_form_create(void)
         default:
         {
             u32 base_addr = dialplate_info[sys_cb.dialplate_index];
-            u16 compo_num = bsp_uitool_header_phrase(base_addr);
-            if (!compo_num)
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+            watchConfig_t watchConfig;
+            uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, base_addr, sizeof(watchConfig_t));
+            printf("watchConfig.snNo = %d\n", watchConfig.snNo);
+            if (watchConfig.snNo == UTE_MODULE_WATCH_PHOTO_DEFAULT_ID && uteModuleWatchOnlineIsHasPhoto())
             {
-                halt(HALT_GUI_DIALPLATE_HEAD);
+                frm = func_clock_photo_form_create();
             }
-            frm = compo_form_create(true);
-            bsp_uitool_create(frm, base_addr, compo_num);
+            else
+#endif
+            {
+                u16 compo_num = bsp_uitool_header_phrase(base_addr);
+                if (!compo_num)
+                {
+                    halt(HALT_GUI_DIALPLATE_HEAD);
+                }
+                frm = compo_form_create(true);
+                bsp_uitool_create(frm, base_addr, compo_num);
+            }
         }
         break;
     }

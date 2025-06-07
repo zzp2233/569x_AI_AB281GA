@@ -64,4 +64,8 @@ void func_clock_light_cube_process(void);
 void func_clock_sub_side(void);
 #endif
 
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+compo_form_t *func_clock_photo_form_create(void);
+#endif
+
 #endif

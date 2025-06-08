@@ -147,6 +147,38 @@ static const compo_cube_item_t tbl_menu_cube[] =
     {UI_BUF_DIALPLATE_CUBE_05_BIN, FUNC_BT},
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
 };
+#if UTE_WATCHS_360X360_CUBE_DIAL_SUPPORT
+// 时间数字字体
+#define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_64_BIN
+
+// 日期数字字体
+#define UTE_WATCHS_CUBE_DATE_NUM_FONT UI_BUF_0FONT_FONT_NUM_38_BIN
+
+// 时间小时数字位置
+#define CUBE_HOUR_X         (GUI_SCREEN_CENTER_X - 40)
+// #define CUBE_HOUR_Y         (GUI_SCREEN_CENTER_Y - 120)
+#define CUBE_HOUR_Y         (GUI_SCREEN_CENTER_Y - 150)
+#define CUBE_HOUR_WIDTH     300
+#define CUBE_HOUR_HEIGHT    80
+// 时间:位置
+#define CUBE_DOT_X          GUI_SCREEN_CENTER_X
+// #define CUBE_DOT_Y          (GUI_SCREEN_CENTER_Y - 120)
+#define CUBE_DOT_Y          (GUI_SCREEN_CENTER_Y - 150)
+#define CUBE_DOT_WIDTH      300
+#define CUBE_DOT_HEIGHT     80
+// 时间分钟数字位置
+#define CUBE_MIN_X          (GUI_SCREEN_CENTER_X + 40)
+// #define CUBE_MIN_Y          (GUI_SCREEN_CENTER_Y - 120)
+#define CUBE_MIN_Y          (GUI_SCREEN_CENTER_Y - 150)
+#define CUBE_MIN_WIDTH      300
+#define CUBE_MIN_HEIGHT     80
+// 日期数字位置
+#define CUBE_DATE_X          GUI_SCREEN_CENTER_X
+// #define CUBE_DATE_Y          (GUI_SCREEN_CENTER_Y - 70)
+#define CUBE_DATE_Y          (GUI_SCREEN_CENTER_Y + 150)
+#define CUBE_DATE_WIDTH      300
+#define CUBE_DATE_HEIGHT     70
+#else
 // 时间数字字体
 #define UTE_WATCHS_CUBE_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_54_BIN
 
@@ -173,6 +205,8 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define CUBE_DATE_Y          (GUI_SCREEN_CENTER_Y + 130)
 #define CUBE_DATE_WIDTH      300
 #define CUBE_DATE_HEIGHT     70
+#endif
+
 
 
 

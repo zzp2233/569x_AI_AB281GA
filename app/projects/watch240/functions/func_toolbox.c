@@ -60,7 +60,7 @@ compo_form_t *func_toolbox_list_form_create(void)
     compo_form_set_title(frm, i18n[STR_TOOL_BOX]);
 
     //新建菜单列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
     compo_listbox_set(listbox, tbl_toolbox_list, TOOLBOX_LIST_CNT);
     // compo_listbox_set_bgimg(listbox, UI_BUF_I330001_FIRSTORDER_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
@@ -332,7 +332,7 @@ static void func_toolbox_list_enter(void)
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);
+    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 3)+40);
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, TOOLBOX_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT

@@ -94,6 +94,7 @@
 /*!application 数据 zn.zeng, 2021-07-15  */
 ute_application_common_data_t uteApplicationCommonData;
 ute_application_sync_data_param_t sendHistoryDataParam;
+static bool uteApplicationCommonHardfaultFlag = false;
 /* app common 互斥量 zn.zeng 2022-02-14*/
 void *uteApplicationCommonMute;
 void *uteApplicationCommonSyncDataTimer = NULL;
@@ -357,7 +358,18 @@ void uteApplicationCommonStartupSecond(void)
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_NEW_FACTORY_MODULE_ID, 0, __func__);
 #else
 #if UTE_MODULE_SCREENS_POWERON_SUPPORT
+#if UTE_HARDFAULT_SILENT_RESTART_SUPPORT
+            if (uteApplicationCommonIsHardfaultReboot())
+            {
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
+            }
+            else
+            {
+                uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWERON_ID, 0, __func__);
+            }
+#else
             uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_POWERON_ID, 0, __func__);
+#endif
 #else
             if(0)
             {}
@@ -395,8 +407,14 @@ void uteApplicationCommonStartupSecond(void)
             uteModuleMotorSetIsOpenVibrationStatus(true);
         }
 #endif
-
+#if UTE_HARDFAULT_SILENT_RESTART_SUPPORT
+        if (!uteApplicationCommonIsHardfaultReboot())
+        {
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+        }
+#else
         uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+#endif
         uteApplicationCommonData.isStartupSecondFinish = true;
         uteApplicationCommonData.isPowerOn = true;
         uteApplicationCommonData.systemPowerOnSecond = 0;
@@ -1873,6 +1891,32 @@ float ExactDecimalPoint(float data,uint8_t bit)
     tmp = (data * multiple);//取整
     dst = (float)tmp/multiple;
     return dst;
+}
+
+/**
+ * @brief        Hardfaul复位标志
+ * @details
+ * @return       true Hardfaul复位,false 正常复位
+ * @author       Wang.Luo
+ * @date         2025-06-11
+ */
+bool uteApplicationCommonIsHardfaultReboot(void)
+{
+    return uteApplicationCommonHardfaultFlag;
+}
+
+/**
+ * @brief        设置Hardfaul复位标志位
+ * @details
+ * @param[in]    isHardfaul 是否是Hardfaul复位
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-06-11
+ */
+void uteApplicationCommonSetHardfaultReboot(bool isHardfaul)
+{
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isHardfaul:%d", __func__, isHardfaul);
+    uteApplicationCommonHardfaultFlag = isHardfaul;
 }
 
 /**

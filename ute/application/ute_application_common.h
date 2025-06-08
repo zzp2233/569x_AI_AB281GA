@@ -247,6 +247,8 @@ bool uteApplicationCommonGetAncsConnStatus(void);
 uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len);
 void uteModuleHardfaultInfoSave(void);
 void uteModuleHardfaultStartSendlogData(void);
+bool uteApplicationCommonIsHardfaultReboot(void);
+void uteApplicationCommonSetHardfaultReboot(bool isHardfaul);
 
 float ExactDecimalPoint(float data,uint8_t bit);
 

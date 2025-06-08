@@ -14,7 +14,8 @@ const char str_res_halt[] = "ERROR ======> resource halt:%X\n";
 
 //资源错误代码
 AT(.com_rodata.halt)
-const u32 res_halt_no_res[19] = {
+const u32 res_halt_no_res[19] =
+{
     0xC003, 0xC241, 0xC242, 0xC261, 0xC262, 0xC281, 0xC282, 0xC401,
     0xC402, 0xC471, 0xC472, 0xC481, 0xC482, 0xC491, 0xC492, 0xC4A1,
     0xC4A2, 0x5301, 0x5302
@@ -24,8 +25,10 @@ const u32 res_halt_no_res[19] = {
 AT(.com_text.halt)
 bool halt_do(u32 halt_no)
 {
-    for(u8 i=0;i<sizeof(res_halt_no_res)/sizeof(res_halt_no_res[0]);i++) {
-        if (halt_no == res_halt_no_res[i]) {
+    for(u8 i=0; i<sizeof(res_halt_no_res)/sizeof(res_halt_no_res[0]); i++)
+    {
+        if (halt_no == res_halt_no_res[i])
+        {
             sys_cb.flag_halt = true;
             printf(str_res_halt, halt_no);
             msg_enqueue(EVT_HALT);
@@ -39,25 +42,38 @@ bool halt_do(u32 halt_no)
 AT(.com_text.halt)
 void halt(u32 halt_no)
 {
-    if (sys_cb.flag_halt) {
+    if (sys_cb.flag_halt)
+    {
         return;
     }
 
-    if(halt_no == 0x8101){
+    if(halt_no == 0x8101)
+    {
         return;
     }
-    
+
     halt_err_set(halt_no);
+#if UTE_HARDFAULT_SILENT_RESTART_SUPPORT
+    gui_sleep();
+#else
     gui_halt(halt_no);
-    if (!halt_do(halt_no)) {
-        int reset_cnt = 15000000;
+#endif
+    if (!halt_do(halt_no))
+    {
         TRACE(str_halt, halt_no);
         PICCON = 0;
-        while (1) {
+#if UTE_HARDFAULT_SILENT_RESTART_SUPPORT
+        WDT_RST();
+#else
+        int reset_cnt = 15000000;
+        while (1)
+        {
             WDT_CLR();
-            if (reset_cnt-- <= 0) {
+            if (reset_cnt-- <= 0)
+            {
                 WDT_RST_DELAY();
             }
         }
+#endif
     }
 }

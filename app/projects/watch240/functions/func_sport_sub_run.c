@@ -2019,22 +2019,16 @@ static void func_soprt_run_move(void)
 static void func_sport_sub_run_click_handler(void)
 {
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
+
     int id = compo_get_button_id();
     switch (id)
     {
         case COMPO_ID_BTN_SPORT_STOP:
-            switch (uteModuleSportMoreSportGetStatus())
-            {
-                case ALL_SPORT_STATUS_CLOSE:
-                case ALL_SPORT_STATUS_PAUSE:
-                    uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
-                    break;
-
-                case ALL_SPORT_STATUS_OPEN:
-                case ALL_SPORT_STATUS_CONTINUE:
-                    uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
-                    break;
-            }
+            uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
+            f_sport_sub_run->page_old_x = 0;
+            f_sport_sub_run->move_offset_x = 0;
+            f_sport_sub_run->page_num = PAGE_1;
+            widget_page_set_client(func_cb.frm_main->page,f_sport_sub_run->move_offset_x, 0);
             break;
         case COMPO_ID_BTN_SPORT_EXIT:
         {
@@ -5608,19 +5602,11 @@ static void func_sport_sub_run_message(size_msg_t msg)
             break;
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
         case MSG_CTP_TOUCH:
-#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
-            if(f_sport_sub_run->touch_state != AUTO_STATE)
+
+            if( f_sport_sub_run->touch_state == TOUCH_FINISH_STATE)
             {
                 f_sport_sub_run->touch_flag = true;
             }
-#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-            if(f_sport_sub_run->touch_state == TOUCH_FINISH_STATE)
-            {
-                f_sport_sub_run->touch_flag = true;
-#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT \
-      || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
-            f_sport_sub_run->touch_flag = true;
-#endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
             break;
         case MSG_SYS_500MS:
             func_sport_sub_run_updata();

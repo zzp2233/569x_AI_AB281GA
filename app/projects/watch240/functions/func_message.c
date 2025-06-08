@@ -1548,7 +1548,6 @@ static void func_message_click(void)
 static void func_message_process(void)
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    printf("f_message->ptm:%x\n",f_message->ptm);
     compo_page_move_process(f_message->ptm);
     func_message_card_update();
     func_process();

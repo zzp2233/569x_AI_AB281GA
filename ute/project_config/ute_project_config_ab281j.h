@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281J_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon GTR"
-#define UTE_SW_VERSION "AB281JV000082"
+#define UTE_SW_VERSION "AB281JV000094"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281J"
 
@@ -49,6 +49,9 @@
 
 /*! 默认背光百分比zn.zeng, 2021-09-24  */
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
+
+/*! ESD测试屏幕TE中断异常复位处理,wang.luo 2025-05-28 */
+#define UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT 1
 
 //Gsensor
 #define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1

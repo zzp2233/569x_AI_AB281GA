@@ -518,7 +518,6 @@ void uteDrvScreenEsdTeIntErrorCheckHandlerMsg(void)
 */
 void uteDrvScreenEsdTeIntErrorCheckTimerCallback(void *pxTimer)
 {
-    printf("screenEsdTeIntErrorCheckCnt:%d\n",screenEsdTeIntErrorCheckCnt);
     if(screenEsdTeIntErrorCheckCnt >= 3)
     {
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET,0);

@@ -96,6 +96,7 @@
 			<Add directory="../../../ute/module/emotionPressure" />
 			<Add directory="../../../ute/module/breathrate" />
 			<Add directory="../../../ute/module/bedsideMode" />
+			<Add directory="../../platform/gui/ctp/spt5113c" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -876,6 +877,10 @@
 		<Unit filename="../../platform/gui/ctp/ctp_cst8x.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="../../platform/gui/ctp/spt5113c/spt5113c.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/gui/ctp/spt5113c/spt5113c.h" />
 		<Unit filename="../../platform/gui/gui.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1147,6 +1152,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_clock_light_cube.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_clock_photo.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_clock_preview.c">

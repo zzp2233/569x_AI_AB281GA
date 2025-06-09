@@ -51,8 +51,9 @@ typedef struct
 #if UTE_MODULE_WATCH_PHOTO_SUPPORT
 typedef struct
 {
-    uint8_t timePosition; //时间位置
-    uint32_t fontColour; //字体颜色
+    uint8_t isVaild;
+    uint8_t timePosition; // 时间位置
+    uint32_t fontColor;   // 字体颜色
     uint32_t bgSize;
     uint32_t previewSize;
 } photoWatchConfig_t;
@@ -75,6 +76,17 @@ typedef struct
     uint8_t writeWatchIndex;//当前写入在线表盘索引
     uint8_t multipleValidWatchCnt;//有效在线表盘数量
     uint8_t multipleWatchIndexBuff[UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT];
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+    bool isStartReceivePhoto;
+    bool isHasPhoto;
+    uint8_t photoWatchIndex;
+    uint8_t photoWatchTimePosition; // 时间位置
+    uint32_t photoWatchFontColor;   // 字体颜色
+    uint8_t photoWatchPictureCnt;
+    uint8_t photoWatchPictureIndex;
+    photoWatchConfig_t photoWatchConfig[UTE_MODULE_WATCH_PHOTO_MAX_PICTURE_CNT];
+    watchConfig_t ReceivePhotoHead;
+#endif
 } ute_module_watchonline_data_t;
 uint32_t uteModuleWatchOnlineGetBaseAddress(uint8_t index);
 void uteModuleWatchOnlineReadDeviceInfo(uint8_t *data);
@@ -113,6 +125,17 @@ void uteModuleWatchOnlineSetWillUpdateDataIndex(uint8_t index);
 void uteModuleWatchOnlineStartSync(void);
 void uteModuleWatchOnlineDeleteDataIndex(uint8_t index, uint8_t *data);
 void uteModuleWatchOnlineGetAllInfoStart(void);
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+uint32_t uteModuleWatchOnlineGetOnePhotoMaxSize(void);
+void uteModuleWatchOnlineUpdatePhotoWatchInfo(void);
+void uteModuleWatchOnlineGetInfoWithPhoto(uint8_t *data);
+void uteModuleWatchOnlineStartSyncPhoto(uint8_t *data);
+void uteModuleWatchOnlineSetStartReceivePhoto(bool isStart);
+bool uteModuleWatchOnlineGetPhotoAddress(uint8_t index, uint32_t *bassAddr, uint32_t *preview, uint32_t *photo);
+void uteModuleWatchOnlineGetCurrPhotoAddress(uint32_t *preview, uint32_t *photo);
+bool uteModuleWatchOnlineIsHasPhoto(void);
+void uteModuleWatchOnlineGetCurrPhotoWatchConfig(photoWatchConfig_t config);
+#endif
 #endif
 #endif //_UTE_MODULE_WATCHONLINE_H_
 

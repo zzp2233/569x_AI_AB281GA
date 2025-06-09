@@ -543,7 +543,7 @@ static void func_clock_sub_side_form_create(void)
     compo_setid(btn_app,f_clock_sub_sider_app[DEFAULT_LATEST_TASK_NUM].last_app_id);
 
     btn_app = compo_button_create_by_image(frm, UI_BUF_I338001_PRIMARY_FUNCTION_SIDE_BG1_BIN);//app_1_bg
-    compo_button_set_pos(btn_app, 4+164/2+13,285+62/2);
+    compo_button_set_pos(btn_app, 4+164/2,285+62/2);
     compo_setid(btn_app,f_clock_sub_sider_app[0].last_app_id);
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_2_HONEYCOMB_SOS_BIN);

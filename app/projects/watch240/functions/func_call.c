@@ -70,15 +70,16 @@ void func_call_icon_click(void)
     }
     // if(!uteModuleCallBtIsPowerOn())
     // {
-    //     switch (id)
-    //     {
-    //     case COMPO_ID_PIC_CLOSE:
-    //         break;
-    //     case COMPO_ID_PIC_OPEN:
-    //         break;
-    //     default:
-    //         break;
-    //     }
+    // switch (id)
+    // {
+    // case COMPO_ID_PIC_CLOSE:
+    //     break;
+    // case COMPO_ID_PIC_OPEN:
+    //     break;
+    // default:
+    //     break;
+    // }
+    //     msgbox(i18n[STR_CALL_CLOSED_IS_OPEN], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
     // }
     // else
     {

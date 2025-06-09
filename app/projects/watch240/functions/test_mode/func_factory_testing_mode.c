@@ -1414,6 +1414,17 @@ static void func_mode_test_ring_process(void)
         if(tick_check_expire(f_factory_testing->tick, 1000))
         {
             f_factory_testing->tick = tick_get();
+#ifdef UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT
+            if(f_factory_testing->count_num == 0)
+            {
+                func_bt_mp3_res_play(UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT, UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT);
+            }
+
+            if(++f_factory_testing->count_num==UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT)
+            {
+                f_factory_testing->count_num = 0;
+            }
+#else
             if(f_factory_testing->count_num == 0)
             {
                 func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
@@ -1423,6 +1434,7 @@ static void func_mode_test_ring_process(void)
             {
                 f_factory_testing->count_num = 0;
             }
+#endif
         }
     }
     else

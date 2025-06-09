@@ -131,18 +131,12 @@ compo_form_t *func_ecig_reminder_form_create(void)
         compo_textbox_t *txt2 = compo_textbox_create(frm, strlen(i18n[STR_INSERT]));
         compo_textbox_set(txt2, i18n[STR_INSERT]);
         compo_textbox_set_pos(txt2, GUI_SCREEN_WIDTH / 2, GUI_SCREEN_HEIGHT / 2 +40);
-
+        printf("get_gear_func=%d\r\n",get_gear_func());
         buf[0] = ecig_get_res() / 10 + '0';
         buf[1] = '.';
         buf[2] = ecig_get_res() % 10 + '0';
         buf[3] = 'R';
-        // buf[4] = ' ';
-        // buf[5] = ' ';
-        // buf[6] = ' ';
-        // buf[7] = ecig_get_res2() / 10 + '0';
-        // buf[8] = '.';
-        // buf[9] = ecig_get_res2() % 10 + '0';
-        // buf[10] = 'R';
+
         compo_textbox_t *txt1=compo_textbox_create(frm, 20);
         compo_textbox_set(txt1, buf) ;
         compo_textbox_set_pos(txt1, GUI_SCREEN_WIDTH / 2, GUI_SCREEN_HEIGHT / 2 + 70);

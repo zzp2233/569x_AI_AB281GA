@@ -1590,9 +1590,7 @@
 #endif
 
 /*! hardfault info to flash zn.zeng,2022-03-10*/
-#if UTE_MODULE_LOG_SUPPORT
-#define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 0
-#else
+#ifndef UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
 #define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 1
 #endif
 

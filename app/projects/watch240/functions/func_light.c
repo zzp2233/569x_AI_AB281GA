@@ -335,10 +335,10 @@ compo_form_t *func_light_form_create(void)
 {
     u8 level_data = sys_cb.light_level-1;
 
-    if(level_data<2)
-    {
-        level_data=2;
-    }
+    // if(level_data<2)
+    // {
+    //     level_data=2;
+    // }
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);

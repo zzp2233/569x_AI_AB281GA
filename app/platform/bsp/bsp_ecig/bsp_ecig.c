@@ -176,7 +176,7 @@ uint8_t ecig_get_res(void)
         data =12;
     if(data>=7 && data<=9)
         data =8;
-    if(ecig_cfg.smoke_position_swich == 0|| uteModuleSmokeData.smoke_position_swich==0)
+    if(ecig_cfg.smoke_position_swich == 0)
     {
         return data;
     }
@@ -187,68 +187,8 @@ uint8_t ecig_get_res(void)
 
 //printf("%s, data=%u\n", __func__, data);  //
 }
-u8 ecig_get_res2(void)
-{
-#if DEBUG
-    printf("%s, res_wire=%d\n", __func__, ecig_cfg.res_wire);
-#endif
-    // 使用更大的数据类型防止溢出，并提高精度
-    uint32_t data_temp = (uint32_t)ecig_cfg.res_wire2 * 1000;
-    uint32_t result = data_temp / 8192;
-    uint16_t data_temp1 = 0;
-    uint8_t data = 0;
 
-    if(result<1000&&result>0)
-    {
-        // 对 result 进行四舍五入处理
-        data_temp1 = (uint16_t)((result + 10) / 10);
-        data = (uint8_t)((data_temp1 + 10) / 10);
-    }
-    else if(result>=1000)
-    {
-        // 对 result 进行四舍五入处理
-        data_temp1 = (uint16_t)((result + 15) / 10);
-        data = (uint8_t)((data_temp1 + 15) / 10);
-    }
-#if DEBUG
-    printf("%s, data_temp1=%d,result=%lu\n", __func__,data_temp1, result);
-    printf("%s, data=%d\n", __func__, data);
-#endif
 
-    return data;
-    // return ecig_cfg.res_wire2 * 10 / 8192;
-}
-uint8_t ecig_get_res3(void)
-{
-#if DEBUG
-    printf("%s, res_wire=%d\n", __func__, ecig_cfg.res_wire);
-#endif
-    // 使用更大的数据类型防止溢出，并提高精度
-    uint32_t data_temp = (uint32_t)ecig_cfg.res_wire * 1000;
-    uint32_t result = data_temp / 8192;
-    uint16_t data_temp1 = 0;
-    uint8_t data = 0;
-    if(result<1000&&result>0)
-    {
-        // 对 result 进行四舍五入处理
-        data_temp1 = (uint16_t)((result + 10) / 10);
-        data = (uint8_t)((data_temp1 + 10) / 10);
-    }
-    else if(result>=1000)
-    {
-        // 对 result 进行四舍五入处理
-        data_temp1 = (uint16_t)((result + 15) / 10);
-        data = (uint8_t)((data_temp1 + 15) / 10);
-    }
-
-#if DEBUG
-    printf("%s, data_temp1=%d,result=%lu\n", __func__,data_temp1, result);
-    printf("%s, data=%d\n", __func__, data);
-#endif
-
-    return data *10;
-
-}
 //单发
 void test_1st_gear_func(void)
 {
@@ -324,6 +264,7 @@ void test_2st_gear_func(void)
 //单发
 u8 get_gear_func(void)
 {
+    ecig_cfg.smoke_position_swich = uteModuleSmokeData.smoke_position_swich;
     //  printf("%s ,%d\n",__func__,ecig_cfg.smoke_position_swich);
     return ecig_cfg.smoke_position_swich;
 

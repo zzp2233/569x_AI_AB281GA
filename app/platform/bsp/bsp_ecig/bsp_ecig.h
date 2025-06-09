@@ -95,8 +95,6 @@ void ecig_set_power(u16 value);
 u8 ecig_get_power(void);
 void ecig_set_res(u8 value);
 u8 ecig_get_res(void);
-u8 ecig_get_res2(void);
-u8 ecig_get_res3(void);
 void ecig_set_res2(u8 value);
 //一档
 void test_1st_gear_func(void);

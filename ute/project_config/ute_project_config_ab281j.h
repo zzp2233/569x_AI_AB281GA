@@ -6,13 +6,15 @@
 *@date        2024-03-22
 *@version       v1.0
 */
-#ifndef _UTE_PROJECT_CONFIG_AB281D_H_
-#define _UTE_PROJECT_CONFIG_AB281D_H_
+#ifndef _UTE_PROJECT_CONFIG_AB281J_H_
+#define _UTE_PROJECT_CONFIG_AB281J_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon GTR"
-#define UTE_SW_VERSION "ZK-AB281JV000082"
+#define UTE_SW_VERSION "AB281JV000082"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281J"
+
+#define UTE_SW_VERSION_FIRST_NAME  "ZK-"
 
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
@@ -81,7 +83,7 @@
 #define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x9A // 12K
 
 /*! 使用编码器功能,wang.luo 2025-04-09 */
-#define DRV_ENCODER_KEYS_SUPPORT 1
+#define DRV_ENCODER_KEYS_SUPPORT 0
 
 /*! KEY1跳转界面,wang.luo 2025-04-09 */
 #define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT
@@ -141,6 +143,11 @@
 #define UTE_MODULE_NEW_FACTORY_MODULE_TEST_SCREENS_STRING_ENLARGEMENT 2
 #define UTE_MODULE_NEW_FACTORY_TEST_CHAR_EN_SUPPORT  1
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1 //工厂测试音频测试
+
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT     RES_BUF_RING_LET_GO_MP3 //工厂测试音频测试->音频地址
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT    13 //工厂测试音频测试->音频时长
+
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
@@ -184,7 +191,19 @@
                                                 UI_BUF_DIALPLATE_BUTTERFLY_BIN,\
                                                 UI_BUF_DIALPLATE_CUBE_BIN,\
                                               }
-
+#define UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE   1  //双击切换菜单
+// 菜单样式枚举值集合 - 用于UI菜单显示风格配置
+#define UTE_CUI_SCREEN_MENU_STYLE { \
+    MENU_STYLE_LIST,     /* 列表式菜单 */ \
+    MENU_STYLE_CUM_SUDOKU, /* 宫格式菜单 */ \
+    MENU_STYLE_HONEYCOMB,/* 蜂窝状菜单 */ \
+    MENU_STYLE_FOOTBALL, /* 球体旋转菜单 */ \
+    MENU_STYLE_GRID,     /* 棋盘式网格菜单 */ \
+    MENU_STYLE_KALE,     /* 环形光晕菜单 */ \
+    MENU_STYLE_SKYRER,   /* 天圆地方布局菜单 */ \
+    MENU_STYLE_CUM_GRID, /* 累积式网格菜单 */ \
+    MENU_STYLE_WATERFALL /* 瀑布流式菜单 */ \
+}
 #define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1     // 使用蝴蝶表盘
 #define UTE_WATCHS_CUBE_DIAL_SUPPORT 1          // 使用立方体表盘
 #define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 0    // 使用光束立方体表盘
@@ -326,8 +345,8 @@
 #define SCREEN_TITLE_MULTIPLE_CZECH_LANGUAGE_SUPPORT                0 //捷克语  16  Czech
 #define SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT  0 //繁体中文
 #define SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT             0 //罗马尼亚语 limba 0x1B
-#define SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT           0 //越南语 0x63
-#define SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT             0 //马来西亚语 0x40
+#define SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT           1 //越南语 0x63
+#define SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT             1 //马来西亚语 0x40
 #endif // DEFAULT_LANGUAGE
 
 

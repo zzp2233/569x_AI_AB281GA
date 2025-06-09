@@ -344,7 +344,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I338001_2_HONEYCOMB_SPO2_BIN,                .str_idx=STR_BLOOD_OXYGEN},          //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
-    {.func_sta=FUNC_PRESSURE,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_STRESS_BIN,                  .str_idx=STR_BLOOD_PRESSURE},       //压力
+    {.func_sta=FUNC_PRESSURE,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_STRESS_BIN,                  .str_idx=STR_STRESS},       //压力
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_SLEEP_BIN,                 .str_idx=STR_SLEEP},                 //睡眠

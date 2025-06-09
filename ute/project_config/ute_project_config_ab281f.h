@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
 #define DEFAULT_BLE_DEV_NAME "SVERGE"
-#define UTE_SW_VERSION "AB281FV000067T"
+#define UTE_SW_VERSION "AB281FV000089"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 /*! 上传蓝牙名广播时，使用 蓝牙名_XXXX 格式*/
@@ -23,12 +23,7 @@
 /*gesnsor 采集原始数据*/
 #define APP_DBG_GSENSOR_DATA 1
 
-/*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
-#ifndef UTE_DRV_CTP_SELECT
-#define UTE_DRV_CTP_SELECT             CTP_CST8X
-#endif
-#define UTE_DRV_TP_X_AXIS_EXCHANGE 0 // 交换X轴左右坐标
-#define UTE_DRV_TP_Y_AXIS_EXCHANGE 0 // 交换Y轴上下坐标
+
 // #define UTE_DRV_TP_SWAP_XY_AXIS_EXCHANGE 1 // 交换X轴Y轴坐标
 
 /*! 心率sensor选择,wang.luo 2025-04-16 */
@@ -69,7 +64,7 @@
 #define UTE_DRV_STK8321_SUPPORT 0
 
 /*! 抬手亮屏参数 zn.zeng, 2021-10-22  */
-#define ROLLOVER_HAND_SCREEN_X_MIN  -140
+#define ROLLOVER_HAND_SCREEN_X_MIN  -46
 #define ROLLOVER_HAND_SCREEN_X_MAX  140
 #define ROLLOVER_HAND_SCREEN_Y_MIN  -46
 #define ROLLOVER_HAND_SCREEN_Y_MAX  40
@@ -151,6 +146,12 @@
 #define UTE_DRV_BATTERY_090      4194
 #define UTE_DRV_BATTERY_100      4304
 
+/*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
+#ifndef UTE_DRV_CTP_SELECT
+#define UTE_DRV_CTP_SELECT             CTP_CST8X
+#endif
+#define UTE_DRV_TP_X_AXIS_EXCHANGE 0 // 交换X轴左右坐标
+#define UTE_DRV_TP_Y_AXIS_EXCHANGE 0 // 交换Y轴上下坐标
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 8
@@ -160,19 +161,24 @@
 /*! 表盘上拉界面,wang.luo 2025-04-07 */
 #define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_CARD
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
-#define DEFAULT_WATCH_INDEX 0
+#define DEFAULT_WATCH_INDEX 1
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 4
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19026001_BIN,\
-                                                UI_BUF_DIALPLATE_D19027001_BIN,\
+// #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19026001_BIN,\
+//                                                 UI_BUF_DIALPLATE_D19027001_BIN,\
+//                                                 UI_BUF_DIALPLATE_D19028001_BIN,\
+//                                                 UI_BUF_DIALPLATE_D19030001_BIN,}
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19027001_BIN,\
                                                 UI_BUF_DIALPLATE_D19028001_BIN,\
-                                                UI_BUF_DIALPLATE_D19030001_BIN,}
+                                                UI_BUF_DIALPLATE_D19030001_BIN,\
+                                                UI_BUF_DIALPLATE_CUBE_BIN, \
+                                                UI_BUF_DIALPLATE_BUTTERFLY_BIN,}
 
-#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0 // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0      // 使用立方体表盘
-#define UTE_WATCHS_DIALPLATE_BTF_INDEX 0    // 蝴蝶表盘索引
-#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 0   // 立方体表盘索引
+#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1      // 使用立方体表盘
+#define UTE_WATCHS_DIALPLATE_BTF_INDEX 4    // 蝴蝶表盘索引
+#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 3   // 立方体表盘索引
 
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
@@ -183,7 +189,9 @@
 #define GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT      1  //UI界面
 #define GUI_SCREEN_SIZE_360X360RGB_I340002_SUPPORT      1  //同乐达T70客户定制开机logo
 
+
 #define UTE_ALARM_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT 1 //勿扰模式闹钟开启马达震动
+#define UTE_FIND_WATCH_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT 1 //勿扰模式查找手机开启马达震动
 
 #if UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT
 #define UTE_DRV_SCREEN_WIDTH 360
@@ -221,7 +229,7 @@
 #define UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT  1 //在线表盘同步界面
 #define UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT 1 //低电提醒
 #define UTE_MODULE_SCREENS_WEATHER_SUPPORT            1 //天气
-#define UTE_MODULE_SCREENS_GAME_SUPPORT               1 //游戏
+#define UTE_MODULE_SCREENS_GAME_SUPPORT               0 //游戏
 #define UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT         1 //找手机
 #define UTE_MODULE_SCREENS_RESFY_SUPPORT              1 //恢复出厂
 #define UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT       1 //血氧

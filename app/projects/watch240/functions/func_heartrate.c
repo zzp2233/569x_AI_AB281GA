@@ -2157,7 +2157,11 @@ static void func_heartrate_enter(void)
     page_move_info_t info =
     {
         .title_used = true,
+#if UTE_SCREEN_SCROLL_OFFSET_HEIGHT
+        .page_size = 562+UTE_SCREEN_SCROLL_OFFSET_HEIGHT,
+#else
         .page_size = 562,
+#endif
         .page_count = 1,
         .quick_jump_perc = 80,
     };

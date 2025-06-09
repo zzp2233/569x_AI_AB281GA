@@ -149,7 +149,7 @@ compo_form_t *func_sleep_form_create(void)
     txt = compo_textbox_create(frm,strlen(buf));
     compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
     compo_textbox_set_align_center(txt, false);
-    compo_textbox_set_location(txt,20,265,50,30);
+    compo_textbox_set_location(txt,20,270,50,30);
     compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
     compo_textbox_set(txt, buf);
 
@@ -166,7 +166,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_12_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
-    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH-50-20,265,50,30);
+    compo_textbox_set_location(txt,GUI_SCREEN_WIDTH-50-20,270,50,30);
     compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
     compo_textbox_set(txt, buf);
 ///////////////////////////////////////////////////////////////////////////

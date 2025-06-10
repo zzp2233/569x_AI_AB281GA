@@ -1456,6 +1456,10 @@ compo_form_t *func_alarm_clock_form_create(void)
     return frm;
 }
 
+static void func_alarm_clock_disp_handle(void)
+{
+
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //闹钟功能事件处理

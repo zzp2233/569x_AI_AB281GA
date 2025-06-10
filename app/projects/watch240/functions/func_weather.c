@@ -355,9 +355,10 @@ compo_form_t *func_weather_form_create(void)
         picbox = compo_picturebox_create(frm,future_weather_icon[get_weather_id[i]]);
         compo_picturebox_set_pos(picbox,8+30+(i)*(82),GUI_SCREEN_HEIGHT+108+30);
         compo_picturebox_set_size(picbox,40,40);
+        //温度调整为上方是低温，下方是高温，与app保持一致
         if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
         {
-            snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMax[i]);//一周 小~大 温度
+            snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMin[i]);//一周 小~大 温度
         }
         else
         {
@@ -370,7 +371,7 @@ compo_form_t *func_weather_form_create(void)
         compo_textbox_set_align_center(txt, true);
         if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
         {
-            snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMin[i]);//一周 小~大 温度
+            snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMax[i]);//一周 小~大 温度
         }
         else
         {

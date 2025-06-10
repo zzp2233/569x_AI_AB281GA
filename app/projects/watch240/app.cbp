@@ -97,6 +97,7 @@
 			<Add directory="../../../ute/module/breathrate" />
 			<Add directory="../../../ute/module/bedsideMode" />
 			<Add directory="../../platform/gui/ctp/spt5113c" />
+			<Add directory="../../platform/gui/ctp/spt5113c/firmware" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />

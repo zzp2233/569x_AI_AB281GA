@@ -1,5 +1,4 @@
 #include "spt5113c.h"
-#include "spt5113c_firmware.h"
 #include "bsp_i2c.h"
 #include "ute_module_newFactoryTest.h"
 

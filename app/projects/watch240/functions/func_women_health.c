@@ -186,8 +186,8 @@ static const f_women_health_t    f_women_health[]=
 {
     [NO_DATA]          ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=288, .txt_h=40, .str_id=STR_PLEASE_APP_DATA, .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_PHONE_BIN},
     [MENSTRUAL_CYCLE]  ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_MENSTRUAL_CYCLE, .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_00_BIN},
-    [SAFE_PERIOD]      ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_PREGNANCY,       .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_01_BIN},
-    [PREGNANCY]        ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_SAFE_PERIOD,     .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_02_BIN},
+    [SAFE_PERIOD]      ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_SAFE_PERIOD,     .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_01_BIN},
+    [PREGNANCY]        ={ .pic_x=GUI_SCREEN_CENTER_X, .pic_y=138/2+102, .txt_x=GUI_SCREEN_CENTER_X,  .txt_y=34/2+270, .txt_w=220, .txt_h=40, .str_id=STR_PREGNANCY,       .res_addr=UI_BUF_I338001_26_WOMEN_HEALTH_02_BIN},
 };
 
 //创建女性健康窗体
@@ -215,10 +215,10 @@ compo_form_t *func_women_health_form_create(void)
             color = make_color(255,87,165);
             break;
         case PREGNANCY:
-            color = make_color(72,144,255);
+            color = make_color(161,72,255);
             break;
         case SAFE_PERIOD:
-            color = make_color(161,72,255);
+            color = make_color(72,144,255);
             break;
         default:
             break;

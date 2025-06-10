@@ -126,7 +126,7 @@ compo_form_t *func_oxygen_about_form_create(void)
     page_size=widget_text_get_area(textbox->txt).hei+60;
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN);
-    compo_picturebox_set_pos(picbox,gui_image_get_size(UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN).wid/2+58, widget_text_get_area(textbox->txt).hei+(gui_image_get_size(UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN).hei)+5);
+    compo_picturebox_set_pos(picbox,gui_image_get_size(UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN).wid/2+58, widget_text_get_area(textbox->txt).hei+(gui_image_get_size(UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN).hei)+22);
     page_size+=(gui_image_get_size(UI_BUF_I338001_7_SPO2_ABOUT_DATE_BIN).hei+40);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_OXYGEN_ABOUT_2]));
@@ -138,6 +138,8 @@ compo_form_t *func_oxygen_about_form_create(void)
     compo_textbox_set_location(textbox,58, page_size, 255, widget_text_get_area(textbox->txt).hei);
     compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_2]);
     page_size+=widget_text_get_area(textbox->txt).hei+20;
+
+    // printf("oxyge_about:%d\n",strlen(i18n[STR_OXYGEN_ABOUT_2])+strlen(i18n[STR_OXYGEN_ABOUT_1]));
 
     if(func_cb.sta == FUNC_OXYGEN_ABOUT)
     {

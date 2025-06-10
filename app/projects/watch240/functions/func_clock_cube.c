@@ -170,7 +170,7 @@ static const compo_cube_item_t tbl_menu_cube[] =
 #define CUBE_MIN_HEIGHT     70
 // 日期数字位置
 #define CUBE_DATE_X          GUI_SCREEN_CENTER_X
-#define CUBE_DATE_Y          (GUI_SCREEN_CENTER_Y - 70)
+#define CUBE_DATE_Y          (GUI_SCREEN_CENTER_Y + 130)
 #define CUBE_DATE_WIDTH      300
 #define CUBE_DATE_HEIGHT     70
 

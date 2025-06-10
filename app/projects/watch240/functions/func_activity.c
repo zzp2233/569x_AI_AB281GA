@@ -874,8 +874,8 @@ compo_form_t *func_activity_form_create(void)
     compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,328+24/2);
 /////////////////////////////////////////////////////////////////////////////////////////////////
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP_DETAILS]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+42,120, widget_text_get_max_height());
     compo_textbox_set(textbox, i18n[STR_STEP_DETAILS]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+42);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I338002_5_ACTIVITY_DATE_BG_BIN);
     compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+108+144/2);
@@ -892,11 +892,11 @@ compo_form_t *func_activity_form_create(void)
     area_t txt_leng= widget_text_get_area(textbox->txt);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));
-    compo_textbox_set(textbox, i18n[STR_STEP]);
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT+300-5);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT+300-5,80, widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(128,128,128));
     compo_setid(textbox,STEP_DAY_TXT_UNIT_ID);
+    compo_textbox_set(textbox, i18n[STR_STEP]);
 
     uint32_t target_step = uteModuleSportGetStepsTargetCnt();
     if(target_step == 0)target_step = 8000;
@@ -925,8 +925,8 @@ compo_form_t *func_activity_form_create(void)
     uint32_t target_week_step = uteModuleSportLoadWeekDayStepHistoryData(week_step_date, &week_step_data);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_WEEK_STEP]));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT*2+42,120, widget_text_get_max_height());
     compo_textbox_set(textbox, i18n[STR_WEEK_STEP]);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT*2+42);
 
     picbox = compo_picturebox_create(frm, uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID ? UI_BUF_I338002_5_ACTIVITY_WEEK_DATE_BG_ZH_BIN: UI_BUF_I338002_5_ACTIVITY_WEEK_DATE_BG_EN_BIN);
     compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT*2+108+144/2);
@@ -942,11 +942,11 @@ compo_form_t *func_activity_form_create(void)
     txt_leng= widget_text_get_area(textbox->txt);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));
-    compo_textbox_set(textbox, i18n[STR_STEP]);
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT*2+300-5);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT*2+300-5,80, widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(128,128,128));
     compo_setid(textbox,STEP_WEEK_TXT_UNIT_ID);
+    compo_textbox_set(textbox, i18n[STR_STEP]);
 
     chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 7);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+5,GUI_SCREEN_HEIGHT*2+170,312-13,100);
@@ -1228,13 +1228,6 @@ static void func_activity_disp_handle(void)
 
     u8 km_integer  = distance/100;                //距离 整数
     u8 km_decimals = distance%100;               //距离 小数
-    if(uteModuleSystemtimeGetDistanceMiType())//英里
-    {
-        uint16_t distance = km_integer*1000+km_decimals*10;
-        distance = distance*0.6213712;
-        km_integer  = distance/1000;
-        km_decimals = distance%1000/10;
-    }
 //////////////////////////////////////////////////////////////////////////
     compo_arc_set_value(arc_kcal,arc_step_value);
     compo_arc_set_value(arc_km,arc_step_value);
@@ -1245,7 +1238,7 @@ static void func_activity_disp_handle(void)
     compo_textbox_set(textbox_step, txt_buf);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, distance);///公里数据
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%d.%02d",km_integer, km_decimals);///公里数据
     compo_textbox_set(textbox_km, txt_buf);
 
     memset(txt_buf,'\0',sizeof(txt_buf));
@@ -2300,7 +2293,7 @@ static void func_activity_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             // uteModuleBedsideModeSwitch();
             // uteModuleCallChangeEntertranmentVoiceSwitchStatus();
-            // func_cb.sta = FUNC_CHARGE;
+            // func_cb.sta = FUNC_HEART_WARNING;
             // sys_cb.cover_index = REMIND_COVER_LOW_BATTERY;
             // msgbox(NULL, NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
             break;

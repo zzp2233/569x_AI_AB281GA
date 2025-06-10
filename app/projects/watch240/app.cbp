@@ -97,6 +97,7 @@
 			<Add directory="../../../ute/module/breathrate" />
 			<Add directory="../../../ute/module/bedsideMode" />
 			<Add directory="../../platform/gui/ctp/spt5113c" />
+			<Add directory="../../platform/gui/ctp/spt5113c/firmware" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -342,6 +343,10 @@
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281g.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281h.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281j.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281k.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281l.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281m.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_ab281n.h" />
 		<Unit filename="../../../ute/task/ute_task_application.c">
 			<Option compilerVar="CC" />
 		</Unit>

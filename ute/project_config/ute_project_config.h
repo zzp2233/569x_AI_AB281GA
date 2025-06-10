@@ -23,10 +23,11 @@
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 #define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
 #define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
-#define PROJECT_AB281J_SUPPORT       1 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
+#define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
 #define PROJECT_AB281K_SUPPORT       0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
 #define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
 #define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
+#define PROJECT_AB281N_SUPPORT       1 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -64,6 +65,8 @@
 #include"ute_project_config_ab281l.h"
 #elif PROJECT_AB281M_SUPPORT
 #include"ute_project_config_ab281m.h"
+#elif PROJECT_AB281N_SUPPORT
+#include"ute_project_config_ab281n.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
@@ -1605,9 +1608,7 @@
 #endif
 
 /*! hardfault info to flash zn.zeng,2022-03-10*/
-#if UTE_MODULE_LOG_SUPPORT
-#define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 0
-#else
+#ifndef UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
 #define UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT 1
 #endif
 

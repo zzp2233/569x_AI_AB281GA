@@ -214,7 +214,20 @@ compo_form_t *func_alarm_clock_form_create(void)
 
     return frm;
 }
-
+//实时刷新，解决再当前界面时单次闹钟响铃后，闹钟开关状态不更新问题
+static void func_alarm_clock_disp_handle(void)
+{
+    //编辑/开关闹钟
+    for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)
+    {
+        compo_cardbox_t *cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
+        {
+            //刷新
+            compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
+            compo_cardbox_icon_set(cardbox, 0,  ALARM_GET_SWITCH(i) ? UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ALARM_40X20_X176_Y65_X176_Y151_01_OPEN_BIN:UI_BUF_I335001_20_ALARM_CLOCK_2_1_ALARM_CLOCK_ICON_ALARM_40X20_X176_Y65_X176_Y151_00_CLOSE_BIN);
+        }
+    }
+}
 //单击按钮
 static void func_alarm_clock_button_click(void)
 {
@@ -1443,6 +1456,10 @@ compo_form_t *func_alarm_clock_form_create(void)
     return frm;
 }
 
+static void func_alarm_clock_disp_handle(void)
+{
+
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //闹钟功能事件处理
@@ -1453,6 +1470,10 @@ static void func_alarm_clock_process(void)
     {
         compo_page_move_process(f_aclock->ptm);
     }
+    //处理在当前界面时单次闹钟响铃后，闹钟开关状态不更新问题
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    func_alarm_clock_disp_handle();
+#endif // GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     func_process();
 
 #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

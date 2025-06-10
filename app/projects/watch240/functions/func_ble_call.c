@@ -215,7 +215,9 @@ compo_form_t *func_ble_call_form_create(void)
 {
     //新建窗体, 通话页面
     compo_form_t *frm = compo_form_create(true);
-
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_PHONE]);
     return frm;
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -311,6 +313,7 @@ void func_ble_call_exit(void)
 //    f_ble_call_t *f_ble_call = (f_ble_call_t *)func_cb.f_cb;
     uteDrvMotorStop();
     func_cb.last = FUNC_BLE_CALL;
+    uteTaskGuiStackRemoveScreenId(FUNC_BLE_CALL);
 }
 
 void func_ble_call(void)

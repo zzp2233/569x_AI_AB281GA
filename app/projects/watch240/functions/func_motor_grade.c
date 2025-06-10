@@ -868,6 +868,16 @@ compo_form_t *func_motor_grade_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     return;
 }
+
+//单击按钮
+static void func_motor_grade_button_click(void)
+{
+
+}
+static void func_motor_grade_button_touch_handle(void)
+{
+
+}
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 //设置功能事件处理

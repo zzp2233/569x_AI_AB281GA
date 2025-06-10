@@ -1,8 +1,15 @@
 #include "spt5113c.h"
 #include "spt5113c_firmware.h"
 #include "bsp_i2c.h"
+#include "ute_module_newFactoryTest.h"
 
 #if (CTP_SELECT == CTP_SPT5113C)
+
+#if UTE_DRV_TFT_S320_X380_ST77916_TRULY_191_QSPI_SUPPORT
+#include "spt5113c_firmware_YCY_W16Y_5613B01_A1_01.h"
+#else
+#include "spt5113c_firmware_YCY_5758B01_A0_01.h"
+#endif
 
 static bool spt5113c_firmware_update(void);
 static bool spt5113c_is_init = false;
@@ -242,6 +249,7 @@ static FIRMWARE_UPDATE_STATUS spt5113c_crc_check(void)
     spt5113c_i2c_read_16bit(ASU_DEV_ADDR, 0xC135, &byte_lo, 1); //read crc lo byte
 
     crc_code = ((uint16_t)byte_hi << 8) + byte_lo;
+    uteModuleNewFactoryTestSetTpVersion(crc_code);
     if(crc_code == CRC16_CHECK_CODE)
     {
         return EXEC_OK;

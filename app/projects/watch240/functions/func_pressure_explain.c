@@ -291,14 +291,30 @@ compo_form_t *func_pressure_explain_form_create(void)
     compo_picturebox_set_pos(picbox,gui_image_get_size(UI_BUF_I338001_16_PRESSURE_EXPALIN_BIN).wid/2+36,page_size+20+47*2 );
     page_size+=(gui_image_get_size(UI_BUF_I338001_16_PRESSURE_EXPALIN_BIN).hei+70);
 
-    textbox = compo_textbox_create(frm, strlen(i18n[STR_PRESSURE_EXPLAIN2]));
+    u8 * txt_str = (u8 *)ab_zalloc(1400);
+    u16 str_num = strlen(i18n[STR_PRESSURE_EXPLAIN1])+strlen(i18n[STR_PRESSURE_EXPLAIN2]);
+
+
+
+    if(str_num>1400)
+    {
+        str_num = 1400 - strlen(i18n[STR_PRESSURE_EXPLAIN1])+3;
+    }
+    else
+    {
+        str_num = strlen(i18n[STR_PRESSURE_EXPLAIN2])+3;
+    }
+
+    snprintf(txt_str,str_num,"%s...",i18n[STR_PRESSURE_EXPLAIN2]);
+
+    textbox = compo_textbox_create(frm, str_num);
     compo_textbox_set_align_center(textbox,false);
     compo_textbox_set_location(textbox,36, page_size, 290, 280);
     compo_textbox_set_multiline(textbox, true);
     widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
-    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN2]);
+    compo_textbox_set(textbox,txt_str);
     compo_textbox_set_location(textbox,36, page_size, 290, widget_text_get_area(textbox->txt).hei);
-    compo_textbox_set(textbox,i18n[STR_PRESSURE_EXPLAIN2]);
+    compo_textbox_set(textbox,txt_str);
     page_size+=widget_text_get_area(textbox->txt).hei+70;
 
     if(func_cb.sta == FUNC_PRESSURE_EXPLAIN)

@@ -305,7 +305,7 @@ typedef struct f_set_list_t_
 static const compo_listbox_item_t tbl_setting_list[] =
 {
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
-    {STR_STYLE,                          UI_BUF_I338001_28_SET_ICON_40X79_THEME_BIN,        .func_sta = FUNC_DIAL_AND_THEME}, //主题
+    {STR_WATCHFACE_AND_THEME,            UI_BUF_I338001_28_SET_ICON_40X79_THEME_BIN,        .func_sta = FUNC_DIAL_AND_THEME}, //主题
 #endif
     {STR_SETTING_LIGHT,                  UI_BUF_I338001_28_SET_ICON_40X79_DISPLAY_AND_BRIGHTNESS_BIN,        .func_sta = FUNC_BRIGHT_SET},            //亮度调节
     {STR_SOUND_AND_VIBRATION,            UI_BUF_I338001_28_SET_ICON_40X79_RING_BIN,            .func_sta = FUNC_SET_SUB_SAV},       //声音

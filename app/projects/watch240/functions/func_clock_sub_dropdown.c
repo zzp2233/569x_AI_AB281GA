@@ -2678,11 +2678,11 @@ static void func_clock_sub_dropdown_wrist_pic_update(void)
 #if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
     if(quick.isTurnTheWrist == true)
     {
-        compo_button_set_bgimg(wrist_pic, UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_BLUE_02_BIN);
+        compo_button_set_bgimg(wrist_pic, UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_BLUE_05_BIN);
     }
     else
     {
-        compo_button_set_bgimg(wrist_pic, UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_02_BIN);
+        compo_button_set_bgimg(wrist_pic, UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_05_BIN);
     }
 #else
     if(quick.isTurnTheWrist == true)
@@ -2703,13 +2703,13 @@ static void func_clock_sub_dropdown_disturb_pic_update(void)
     if(dropdown_disturb_sw)
     {
         sys_cb.disturd_adl = true;
-        compo_button_set_bgimg(disturb_pic, UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_BLUE_05_BIN);
+        compo_button_set_bgimg(disturb_pic, UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_BLUE_02_BIN);
         uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
     }
     else
     {
         sys_cb.disturd_adl = false;
-        compo_button_set_bgimg(disturb_pic, UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_05_BIN);
+        compo_button_set_bgimg(disturb_pic, UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_02_BIN);
         uteModuleNotDisturbSetOpenStatus(sys_cb.disturd_adl);
     }
 #else

@@ -502,9 +502,9 @@ typedef struct f_light_t_
     s8   level_value;
 } f_light_t;
 
-#define val_shape_y  45
+#define val_shape_y  60
 #define val_shepe_x  135
-#define val_shape_h  266
+#define val_shape_h  260
 #define val_shepe_w  90
 #define make_pic_hei(val)   (val*val_shape_h/5)
 #define make_pic_y(hei)     (val_shape_h-hei+val_shape_y)
@@ -530,7 +530,14 @@ compo_form_t *func_light_form_create(void)
 
     s16 shape_y = make_pic_y(make_pic_hei(sys_cb.light_level));
     s16 shape_h = make_pic_hei(sys_cb.light_level);
+
     compo_shape_t * val = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_color(val,make_color(37,37,41));
+    compo_shape_set_location(val,val_shepe_x,make_pic_y(make_pic_hei(5))+5,val_shepe_w,make_pic_hei(5));
+    compo_shape_set_radius(val, 20);
+    widget_set_align_center(val->rect, false);
+
+    val = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(val,val_shepe_x,shape_y+5,val_shepe_w,shape_h);
     compo_shape_set_radius(val, 20);
     widget_set_align_center(val->rect, false);

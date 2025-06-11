@@ -303,6 +303,9 @@ static void func_menu_football_list_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_menu_football_list_t));
     func_cb.frm_main = func_menu_football_list_form_create();
 
+#if UTE_MODULE_FOOTBALL_STYLE_LIST_TEARING_SUPPORT
+    tft_set_temode(1);
+#endif // UTE_MODULE_FOOTBALL_STYLE_LIST_TEARING_SUPPORT
     f_menu_football_list_t *f_menu_football_list = (f_menu_football_list_t *)func_cb.f_cb;
     f_menu_football_list->listbox = compo_getobj_byid(COMPO_ID_LISTBOX);
     compo_listbox_t *listbox = f_menu_football_list->listbox;
@@ -344,6 +347,9 @@ void func_menu_football_list_exit(void)
     compo_listbox_t *listbox = f_menu_football_list->listbox;
     func_free(listbox->mcb);                                            //释放移动控制块
     func_cb.last = FUNC_MENU_STYLE_FOOTBALL_LIST;
+#if UTE_MODULE_FOOTBALL_STYLE_LIST_TEARING_SUPPORT
+    tft_set_temode(DEFAULT_TE_MODE);
+#endif // UTE_MODULE_FOOTBALL_STYLE_LIST_TEARING_SUPPORT
 }
 
 //主菜单功能

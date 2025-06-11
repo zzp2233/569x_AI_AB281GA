@@ -162,14 +162,14 @@ compo_form_t *func_heart_warning_form_create(void)
     compo_setid(textbox,COMPO_ID_TEXT_HEART_VALUE);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_HIGHT])+strlen(i18n[STR_HEART_LOW]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,42/2+193,230,widget_text_get_max_height());
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+15,42/2+193,230,widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(249,52,52));
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue())
     {
         snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
     }
-    else if (uteModuleHeartGetHeartValue() < uteModuleHeartGetMinHeartValue())
+    else if (uteModuleHeartGetHeartValue() <= uteModuleHeartGetMinHeartValue())
     {
         snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
     }

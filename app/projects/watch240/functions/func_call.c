@@ -507,8 +507,9 @@ static void func_call_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
     compo_listbox_move_init(listbox);
+    func_cb.flag_animation = false;
+    // func_cb.enter_tick = tick_get();
 
-    func_cb.enter_tick = tick_get();
 }
 
 //退出电话功能

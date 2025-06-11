@@ -1838,7 +1838,7 @@ compo_form_t *func_weather_form_create(void)
     picbox = compo_picturebox_create(frm,UI_BUF_I338001_12_WEATHER_WEATHER_BG_BIN);///背景图片
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y);
     picbox = compo_picturebox_create(frm,0);///
-    compo_picturebox_set_pos(picbox, 80/2+72,88/2+137);
+    compo_picturebox_set_pos(picbox, 80/2+72,147);
     compo_picturebox_set(picbox, future_weather_icon[get_weather_id[0]]);
     memset(str_buff,0,sizeof(str_buff));
     if(weather_no_data_flag)
@@ -1875,10 +1875,12 @@ compo_form_t *func_weather_form_create(void)
         snprintf(str_buff,sizeof(str_buff),"--/--℃");
     }
     txt = compo_textbox_create(frm,strlen(str_buff));
-    compo_textbox_set_pos(txt,82/2+190,28/2+165);
+    compo_textbox_set_pos(txt,200,170);
+    compo_textbox_set_align_center(txt,false);
     compo_textbox_set(txt, str_buff);
+
     txt = compo_textbox_create(frm,strlen(i18n[weather_list[get_weather_id[0]].txt_num]));
-    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X,32/2+62);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,70,200,35);
     compo_textbox_set_forecolor(txt, make_color(152,209,255));
     compo_textbox_set(txt, i18n[weather_list[get_weather_id[0]].txt_num]);
     //紫外线icon
@@ -1910,7 +1912,7 @@ compo_form_t *func_weather_form_create(void)
     {
         if(i==4)
         {
-            spacing_y = GUI_SCREEN_HEIGHT*2+29;
+            spacing_y = GUI_SCREEN_HEIGHT*2+19;
         }
         u16 str_id = week_sort[(time.week+i)%7];
         if(i == 0)
@@ -1918,25 +1920,26 @@ compo_form_t *func_weather_form_create(void)
             str_id = STR_TO_DAY;
         }
         txt = compo_textbox_create(frm,strlen(i18n[str_id]));
-        compo_textbox_set_location(txt, 39,91+spacing_y,50,widget_text_get_max_height());
-        compo_textbox_set(txt,i18n[str_id]);/// 星期
+        compo_textbox_set_location(txt, 39,81+spacing_y,50,widget_text_get_max_height());
         compo_textbox_set_align_center(txt,false);
+        compo_textbox_set(txt,i18n[str_id]);/// 星期
 
         picbox = compo_picturebox_create(frm,future_weather_icon[get_weather_id[i]]);
-        compo_picturebox_set_pos(picbox,34/2+148,91+26/2+spacing_y);
+        compo_picturebox_set_pos(picbox,34/2+148,94+spacing_y);
         compo_picturebox_set_size(picbox,34,34);
 
         if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
         {
-            snprintf(str_buff, sizeof(str_buff), "%02d/%02d%s",weather_date.dayTemperatureMax[i],weather_date.dayTemperatureMin[i],displayInfo.isFahrenheit ? "℉" : "℃");//一周 小~大 温度
+            snprintf(str_buff, sizeof(str_buff), "%02d/%02d%s",weather_date.dayTemperatureMin[i],weather_date.dayTemperatureMax[i],displayInfo.isFahrenheit ? "℉" : "℃");//一周 小~大 温度
         }
         else
         {
             snprintf(str_buff, sizeof(str_buff), "--/--%s",displayInfo.isFahrenheit ? "℉" : "℃");
         }
         txt = compo_textbox_create(frm,strlen(str_buff));
-        compo_textbox_set_location(txt,232,91+spacing_y,90,widget_text_get_max_height());
+        compo_textbox_set_location(txt,225,81+spacing_y,95,widget_text_get_max_height());
         compo_textbox_set_align_center(txt,false);
+        compo_textbox_set_right_align(txt,true);
         compo_textbox_set(txt,str_buff);
 
         compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);

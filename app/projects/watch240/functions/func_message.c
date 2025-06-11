@@ -197,10 +197,8 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    if(!f_message->ptm)
-    {
-        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    }
+
+    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
@@ -401,10 +399,8 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    if(!f_message->ptm)
-    {
-        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    }
+
+    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
@@ -483,9 +479,7 @@ compo_form_t *func_message_form_create(void)
 
     compo_textbox_t *title = compo_textbox_create_for_page(frm,frm->page,strlen(i18n[STR_MESSAGE]));
     compo_textbox_set_location(title, GUI_SCREEN_CENTER_X, 30, 120, widget_text_get_max_height());
-#if !GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
     compo_textbox_set(title,i18n[STR_MESSAGE]);
-#endif
 
     char time_buf[30];
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
@@ -493,6 +487,10 @@ compo_form_t *func_message_form_create(void)
     if(msg_num == 0)
     {
 #if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
+        shape = compo_shape_create_for_page(frm,frm->page, COMPO_SHAPE_TYPE_RECTANGLE);
+        compo_shape_set_location(shape,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+        compo_shape_set_color(shape, COLOR_BLACK);
+
         //创建无消息界面
         compo_picturebox_t* pic = compo_picturebox_create(frm, UI_BUF_I338003_14_INFORMATION_MESSAGE_BIN);
         compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, 94+84/2);
@@ -604,10 +602,8 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    if(!f_message->ptm)
-    {
-        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    }
+
+    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
@@ -804,10 +800,9 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    if(!f_message->ptm)
-    {
-        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    }
+
+    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
 
@@ -997,10 +992,8 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    if(!f_message->ptm)
-    {
-        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    }
+
+    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
@@ -1190,10 +1183,8 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    if(!f_message->ptm)
-    {
-        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    }
+
+    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
@@ -1394,10 +1385,8 @@ compo_form_t *func_message_form_create(void)
 static void func_message_card_init()
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
-    if(!f_message->ptm)
-    {
-        f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    }
+
+    f_message->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
 
     u8 msg_num = uteModuleNotifyGetTotalNotifyCnt();
     f_message->msg_num = msg_num;
@@ -1559,6 +1548,7 @@ static void func_message_click(void)
 static void func_message_process(void)
 {
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
+    printf("f_message->ptm:%x\n",f_message->ptm);
     compo_page_move_process(f_message->ptm);
     func_message_card_update();
     func_process();
@@ -1571,6 +1561,10 @@ static void func_message_pullup_to_clock(bool auto_switch)
     f_message_t *f_message = (f_message_t *)func_cb.f_cb;
     u16 switch_mode = FUNC_SWITCH_MENU_PULLUP_DOWN | (auto_switch ? FUNC_SWITCH_AUTO : 0);
     compo_form_destroy(func_cb.frm_main);
+    if(f_message->ptm != NULL)
+    {
+        func_free(f_message->ptm);
+    }
     compo_form_t *frm_clock = func_create_form(FUNC_CLOCK);
     compo_form_t *frm = func_message_form_create();
     func_cb.frm_main = frm;
@@ -1584,8 +1578,8 @@ static void func_message_pullup_to_clock(bool auto_switch)
         f_message->flag_init = true;
         f_message->flag_drag = false;
     }
-
     compo_form_destroy(frm_clock);
+    func_message_card_init();
 }
 
 //消息功能消息处理
@@ -1597,11 +1591,6 @@ static void func_message_message(size_msg_t msg)
     {
         evt_message(msg);  //拖动中，只处理部分消息
         return;
-    }
-
-    if(f_message->flag_init)
-    {
-        func_message_card_init();
     }
 
     switch (msg)

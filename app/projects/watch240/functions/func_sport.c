@@ -1067,7 +1067,7 @@ compo_form_t *func_sport_form_create(void)
     //新建菜单列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT
-    compo_listbox_set(listbox, tbl_sport_list_sort, uteModuleSportGetHundredSportValidNumber()-1);
+    compo_listbox_set(listbox, tbl_sport_list_sort, uteModuleSportGetHundredSportValidNumber());
 #else
     compo_listbox_set(listbox, tbl_sport_list_sort, UTE_MODULE_SPORT_MAX_SPORT_NUM);
 #endif

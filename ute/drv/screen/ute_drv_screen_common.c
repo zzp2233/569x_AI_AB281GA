@@ -147,6 +147,19 @@ void uteDrvScreenCommonInit(void)
     uteDrvScreenCommonData.isInit = true;
     uteDrvScreenCommonData.currBackLightPercent = 0;
 }
+
+/**
+ * @brief        屏幕初始化标志
+ * @details
+ * @return       true 已经初始化 false 未初始化
+ * @author       Wang.Luo
+ * @date         2025-06-11
+ */
+__SCREEN_COMMON bool uteDrvScreenCommonIsInit(void)
+{
+    return uteDrvScreenCommonData.isInit;
+}
+
 /**
 *@brief   设置屏reset 脚电平
 *@details

@@ -618,16 +618,10 @@ compo_form_t *func_menu_sub_list_form_create(void)
     }
     else
     {
-#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
-        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
-#elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
-#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
-        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
-#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
-        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
-#elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
-        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
 #else
         listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_NORMAL);
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -636,6 +630,12 @@ compo_form_t *func_menu_sub_list_form_create(void)
         {
             menu_idx = 1;
         }
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+        if (menu_idx > (uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT-2 : MENU_LIST_CNT-3))
+        {
+            menu_idx = (uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT-2 : MENU_LIST_CNT-3);
+        }
+#endif
     }
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     compo_listbox_set(listbox, tbl_menu_list, uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1);
@@ -892,7 +892,7 @@ static void func_menu_sub_list_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-    compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, (uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1) - 2)+40);
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, (uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1) - 3)+40);
 #else
     compo_listbox_move_init(listbox);
 #endif

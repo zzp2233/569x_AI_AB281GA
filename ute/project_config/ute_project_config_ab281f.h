@@ -10,19 +10,25 @@
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
 #define DEFAULT_BLE_DEV_NAME "T70"
-#define UTE_SW_VERSION "AB281FV000089"
+#define UTE_SW_VERSION "AB281FV000092"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
+
 /*! 上传蓝牙名广播时，使用 蓝牙名_XXXX 格式*/
 #define UTE_MODULE_BLE_NAME_FORMET1_SUPPORT 0
 /*! 设备本地蓝牙名 */
 #define UTE_MODULE_LOCAL_BLE_NAME_SUPPORT 0
+#if UTE_MODULE_LOCAL_BLE_NAME_SUPPORT
 #define UTE_DEV_LOCAL_BLE_NAME "Storm Verge"
+#endif
+
+/*! 足球样式列表撕裂问题，跟别的项目区分，防止修改点导致别的项目撕裂 */
+#define UTE_MODULE_FOOTBALL_STYLE_LIST_TEARING_SUPPORT 1
+
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
 /*gesnsor 采集原始数据*/
 #define APP_DBG_GSENSOR_DATA 1
-
 
 // #define UTE_DRV_TP_SWAP_XY_AXIS_EXCHANGE 1 // 交换X轴Y轴坐标
 
@@ -179,6 +185,8 @@
 #define UTE_WATCHS_CUBE_DIAL_SUPPORT 1      // 使用立方体表盘
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 4    // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 3   // 立方体表盘索引
+// #define UTE_WATCHS_360X360_BUTTERFLY_DIAL_SUPPORT 1 // 360x360屏幕使用蝴蝶表盘
+#define UTE_WATCHS_360X360_CUBE_DIAL_SUPPORT 1      // 360x360屏幕使用立方体表盘
 
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
@@ -187,7 +195,7 @@
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0  //UI界面
 #define GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT      0  //UI界面
 #define GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT      1  //UI界面
-#define GUI_SCREEN_SIZE_360X360RGB_I340002_SUPPORT      1  //同乐达T70客户定制开机logo
+#define GUI_SCREEN_SIZE_360X360RGB_I340002_SUPPORT      0  //同乐达T70客户定制开机logo
 
 
 #define UTE_ALARM_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT 1 //勿扰模式闹钟开启马达震动
@@ -217,7 +225,7 @@
 #define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
 
 #define UTE_MODULE_SCREENS_POWERON_SUPPORT            1 //开机logo界面
-#define UTE_MODULE_SCREENS_POWEROFF_SUPPORT           1 //关机logo界面
+#define UTE_MODULE_SCREENS_POWEROFF_SUPPORT           0 //关机logo界面
 #define UTE_MODULE_SCREENS_UP_MENU_SUPPORT            1 //上拉菜单
 #define UTE_MODULE_SCREENS_DWON_MENU_SUPPORT          1 //下拉菜单
 #define UTE_MODULE_SCREENS_LINK_MAN_SUPPORT           1 //联系人

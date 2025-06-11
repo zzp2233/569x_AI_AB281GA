@@ -2505,7 +2505,6 @@ compo_form_t *func_timer_form_create(void)
     {
         case TIMER_STA_IDLE:
             frm = func_timer_form_create_by_type(TIMER_PAGE_SELECT);
-            // printf("11111111111111111111111111111\n");
             break;
 
         case TIMER_STA_WORKING:
@@ -2513,7 +2512,6 @@ compo_form_t *func_timer_form_create(void)
         case TIMER_STA_PAUSE:
         case TIMER_STA_DONE:
         case TIMER_STA_RESET:
-            // printf("22222222222222222222222222222222222\n");
             frm = func_timer_form_create_by_type(TIMER_PAGE_COUNTDOWN);
             break;
 
@@ -2557,9 +2555,8 @@ static void func_timer_button_touch_handle(void)
     }
 }
 
-static u32 rtccnt_tmp=0;
 //100ms计时器秒数刷新回调函数
-static void timer_100ms_pro(co_timer_t *timer, void *param)
+static void timer_1000s_pro(co_timer_t *timer, void *param)
 {
 //    bool done = false;
     u8 *count = NULL;
@@ -2573,14 +2570,14 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
 
         if (sys_cb.timer_left_sec)
         {
-            rtccnt_tmp+=1;
-            sys_cb.timer_left_sec = sys_cb.timer_total_sec - (rtccnt_tmp/10);
+            sys_cb.timer_left_sec --;
         }
-        else
+
+        if (sys_cb.timer_left_sec == 0)
         {
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             sys_cb.timer_left_sec = 0;
-            rtccnt_tmp =0;
+
             if(func_cb.sta == FUNC_TIMER)
             {
                 sys_cb.timer_sta = TIMER_STA_DONE;
@@ -2601,7 +2598,6 @@ static void timer_100ms_pro(co_timer_t *timer, void *param)
 static void func_timer_button_click(void)
 {
     static co_timer_t timer_timer;
-    static u8 count_100ms;  //100ms定时器计数，10次为1s，减小暂停误差
     f_timer_t *f_timer = (f_timer_t*)func_cb.f_cb;
     u8 page_next = f_timer->page_disp;
     int id = compo_get_button_id();
@@ -2666,9 +2662,7 @@ static void func_timer_button_click(void)
                     }
                     else if (sys_cb.timer_sta == TIMER_STA_DONE)
                     {
-                        sys_cb.timer_start_rtc = compo_cb.rtc_cnt;
-                        count_100ms = 0;
-                        co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
+                        co_timer_set(&timer_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, timer_1000s_pro,NULL);
                         uteModuleGuiCommonDisplayOffAllowGoBack(false);
                         sys_cb.timer_sta = TIMER_STA_WORKING;
                     }
@@ -2676,9 +2670,7 @@ static void func_timer_button_click(void)
                     {
                         if (sys_cb.timer_sta == TIMER_STA_RESET)
                         {
-                            sys_cb.timer_start_rtc = compo_cb.rtc_cnt;
-                            count_100ms = 0;
-                            co_timer_set(&timer_timer, 100, TIMER_REPEAT, LEVEL_LOW_PRI, timer_100ms_pro, &count_100ms);
+                            co_timer_set(&timer_timer, 1000, TIMER_REPEAT, LEVEL_LOW_PRI, timer_1000s_pro, NULL);
                         }
                         sys_cb.timer_sta = TIMER_STA_WORKING;
                         uteModuleGuiCommonDisplayOffAllowGoBack(false);

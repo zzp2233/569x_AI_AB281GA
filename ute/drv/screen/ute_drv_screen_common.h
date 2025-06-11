@@ -46,6 +46,7 @@ typedef struct
 } ute_drv_screen_common_data_t;
 
 void uteDrvScreenCommonInit(void);
+bool uteDrvScreenCommonIsInit(void);
 void uteDrvScreenCommonSetResetPin(bool isHeight);
 void uteDrvScreenCommonSetPowerEnable(bool isEnable);
 void uteDrvScreenCommonSetPower(bool isPoweron);

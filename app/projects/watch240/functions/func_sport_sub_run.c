@@ -3110,6 +3110,7 @@ enum
     COMPO_ID_BTN_SPORT_EXIT,         //退出
 
     COMPO_ID_TXT_SPORT_STOP,         //暂停
+    COMPO_ID_TXT_BLE_OFF,
 
 };
 enum//对应运动中显示运动数据种类->不同项目可自行添加
@@ -3136,6 +3137,8 @@ typedef struct f_sport_sub_run_t_
     u32         updata_tick;
     bool        sport_run_state;
     bool        sport_run_state_updata_flag;
+    bool        ble_state;
+    u16          count_time;
 } f_sport_sub_run_t;
 
 enum
@@ -3258,6 +3261,12 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set(txt, i18n[STR_PAUSE]);
     compo_textbox_set_forecolor(txt,make_color(0x00,0xff,0xda));
     compo_setid(txt,COMPO_ID_TXT_SPORT_STOP);
+
+    txt = compo_textbox_create_for_page(frm,frm->page, strlen(i18n[STR_BLE_OFF]));
+    compo_textbox_set_location(txt,-GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y-60, 200, 30);
+    compo_textbox_set(txt, i18n[STR_BLE_OFF]);
+    compo_setid(txt,COMPO_ID_TXT_BLE_OFF);
+    compo_textbox_set_visible(txt,false);
 
     if(func_sport_get_disp_mode() == LESS_DATA)
     {
@@ -3638,6 +3647,8 @@ static void func_sport_sub_run_updata(void)
         compo_button_t * btn_play       = compo_getobj_byid(COMPO_ID_BTN_SPORT_STOP);
         compo_textbox_t* txt_time_right = compo_getobj_byid(COMPO_ID_UINT_SPORT_TIME);
         compo_textbox_t* txt_stop       = compo_getobj_byid(COMPO_ID_TXT_SPORT_STOP);
+        compo_button_t * btn_exit       = compo_getobj_byid(COMPO_ID_BTN_SPORT_EXIT);
+        compo_textbox_t* txt_ble_off    = compo_getobj_byid(COMPO_ID_TXT_BLE_OFF);
 
         ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
         uteModuleSportGetMoreSportsDatas(data);
@@ -3658,16 +3669,52 @@ static void func_sport_sub_run_updata(void)
 
         if(uteModuleSportMoreSportIsAppStart())
         {
-            if (ble_is_connect())
+
+            if(f_sleep->ble_state != ble_is_connect())
             {
-                compo_button_set_visible(btn_play,true);
-                compo_textbox_set_pos(txt_stop, -(GUI_SCREEN_CENTER_X), 134+23/2);
+                f_sleep->ble_state = ble_is_connect();
+                if (!f_sleep->ble_state)
+                {
+                    compo_button_set_visible(btn_play,false);
+                    compo_button_set_pos(btn_exit,-(GUI_SCREEN_CENTER_X),80/2+224);
+                    compo_textbox_set_visible(txt_stop,false);
+                    compo_textbox_set_visible(txt_ble_off,true);
+                    f_sleep->count_time = 5*60;
+                    f_sleep->page_old_x    = GUI_SCREEN_WIDTH;
+                    f_sleep->move_offset_x = GUI_SCREEN_WIDTH;
+                    f_sleep->page_num = PAGE_2;
+                    widget_page_set_client(func_cb.frm_main->page,f_sleep->move_offset_x, 0);
+                }
+                else
+                {
+                    sys_cb.cover_index = REMIND_COVER_BLE_OFF;
+                    msgbox(i18n[STR_BLE_SUCCESSFUL], NULL, NULL, NULL, MSGBOX_MSG_TYPE_REMIND_COVER);
+                    compo_button_set_visible(btn_play,true);
+                    compo_button_set_pos(btn_exit,-(GUI_SCREEN_WIDTH)+80/2+71,80/2+224);
+                    compo_textbox_set_visible(txt_stop,true);
+                    compo_textbox_set_visible(txt_ble_off,false);
+                }
             }
-            else
+
+            if (!f_sleep->ble_state)
             {
-                compo_button_set_visible(btn_play,false);
-                compo_textbox_set(txt_stop, i18n[STR_CONNECT_BLUETOOTH]);
-                compo_textbox_set_pos(txt_stop, -(GUI_SCREEN_CENTER_X), 62+68/2);
+                if(txt_time_right != NULL)
+                {
+                    snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d",f_sleep->count_time/60,f_sleep->count_time%60);
+                    compo_textbox_set(txt_time_right, txt_buf);
+                }
+
+                if(f_sleep->count_time == 0)
+                {
+                    uteModuleSportStopMoreSports();                             //通知APP退出运动
+                    sport_start_flag = false;
+                    if (task_stack_get_top() == FUNC_SPORT_SUB_RUN)
+                    {
+                        task_stack_pop();
+                    }
+                }
+                ab_free(data);
+                return;
             }
         }
 
@@ -3788,6 +3835,7 @@ static void func_sport_sub_run_init(void)
     f_sport_sub_run->direction=TOUCH_NULL;
     f_sport_sub_run->sport_run_state = SPORT_RUN_STOP;
     f_sport_sub_run->sport_run_state_updata_flag = SPORT_RUN_STOP;
+    f_sport_sub_run->ble_state = ble_is_connect();
     func_cb.frm_main = func_sport_sub_run_form_create();
 }
 static void func_sport_sub_run_exit_data(void)
@@ -5581,7 +5629,7 @@ static void func_sport_sub_run_message(size_msg_t msg)
             func_sport_sub_run_click_handler();
             break;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT|| GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
         case MSG_SYS_1S:
             if(uteModuleSportMoreSportIsAppStart() && f_sport_sub_run->ble_state==false)
             {

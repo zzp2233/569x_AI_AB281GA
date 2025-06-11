@@ -1746,7 +1746,7 @@ compo_form_t *func_sport_finish_form_create(void)
 
     /*运动步数->数据*/
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportCaloire);
+    snprintf(txt_buf,sizeof(txt_buf),"%02d",sport_data.saveData.sportStep);
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);

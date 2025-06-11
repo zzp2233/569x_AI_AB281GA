@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-05-23 17:52:04
+*@date   2025-06-10 15:47:01
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -286,7 +286,7 @@ enum
     STR_NORMAL, // 正常
     STR_MEDIUM, // 中等
     STR_HIGH, // 偏高
-    STR_VBRATION, // 振动强度
+    STR_VBRATION, // 震动强度
     STR_SOUND_AND_VIBRATION, // 声音和震动
     STR_HIGH_1, // 高
     STR_MIDDLE, // 中
@@ -316,11 +316,9 @@ enum
 extern const char * const *i18n;
 extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
-extern const char * const i18n_ar_ril[];
 extern const char * const i18n_ru_rru[];
 extern const char * const i18n_tr_rtr[];
 extern const char * const i18n_ms_rmy[];
-extern const char * const i18n_ja_rjp[];
 extern const char * const i18n_de_rde[];
 extern const char * const i18n_es_res[];
 extern const char * const i18n_fr_rfr[];
@@ -329,6 +327,5 @@ extern const char * const i18n_it_rit[];
 extern const char * const i18n_pt_rpt[];
 extern const char * const i18n_th_rth[];
 extern const char * const i18n_vi_rvn[];
-extern const char * const i18n_zh_rtw[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

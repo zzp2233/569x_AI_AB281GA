@@ -1918,11 +1918,14 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
+
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_IN_CALL]));
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
     compo_setid(txt, COMPO_ID_TXT_TIME);
-    // compo_textbox_set_forecolor(txt, COLOR_GREEN);
-    compo_textbox_set(txt, i18n[STR_IN_CALL]);
+    if(bt_cb.disp_status != BT_STA_INCALL)
+    {
+        compo_textbox_set(txt, i18n[STR_IN_CALL]);
+    }
 
     //挂断按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_HANG_UP_BIN);

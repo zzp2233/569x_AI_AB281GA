@@ -164,8 +164,9 @@ void uteDrvMotorTimerCallback(void *pxTimer)
 */
 void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_t cnt)
 {
-    if(uteDrvMotorData.motorVibrationLevel == 0 && uteDrvMotorData.motorTempVibrationLevel == 0)
+    if ((uteDrvMotorData.motorVibrationLevel == 0 && uteDrvMotorData.motorTempVibrationLevel == 0) || cnt == 0)
     {
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,motorVibrationLevel=%d, motorTempVibrationLevel=%d, cnt=%d", __func__, uteDrvMotorData.motorVibrationLevel, uteDrvMotorData.motorTempVibrationLevel, cnt);
         return;
     }
     if((uteDrvBatteryCommonGetChargerStatus()==BAT_STATUS_NO_CHARGE)&&(uteDrvBatteryCommonGetLvl()<10))

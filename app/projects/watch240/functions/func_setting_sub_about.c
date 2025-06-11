@@ -189,7 +189,7 @@ compo_form_t *func_set_sub_about_form_create(void)
 #ifdef UTE_SW_VERSION_FIRST_NAME
     u8 str[100];
     snprintf(str,100,"%s%s",UTE_SW_VERSION_FIRST_NAME,UTE_SW_VERSION);
-    txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
+    txt = compo_textbox_create(frm,strlen(str));
     compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING,250,34);
     compo_textbox_set(txt, str);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));

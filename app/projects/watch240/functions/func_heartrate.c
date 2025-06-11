@@ -677,7 +677,7 @@ compo_form_t *func_heartrate_form_create(void)
     }
 
     picbox = compo_picturebox_create(frm, UI_BUF_I338002_6_HEART_MAX_BIN);
-    compo_picturebox_set_pos(picbox, 90,288);
+    compo_picturebox_set_pos(picbox, 90,293);
 
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
@@ -695,7 +695,7 @@ compo_form_t *func_heartrate_form_create(void)
     compo_textbox_set_align_center(textbox, false);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I338002_6_HEART_MIN_BIN);
-    compo_picturebox_set_pos(picbox, 216,288);
+    compo_picturebox_set_pos(picbox, 216,293);
 
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartGetMinHeartValue() > 0 && uteModuleHeartGetMinHeartValue() != 255)
@@ -753,6 +753,8 @@ compo_form_t *func_heartrate_form_create(void)
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(chart,COMPO_ID_CHART_WEEK);
 
+    ute_module_systemtime_time_t time, readTime;
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
     chart_info.y = 0;
     chart_info.width = 20;   ///像素点
     for (int i=0; i<7; i++)
@@ -761,10 +763,20 @@ compo_form_t *func_heartrate_form_create(void)
         chart_info.x = i*chart_info.width + i*25;
         chart_info.height = heart_week_date[i]*1.125;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, make_color(252,25,82));
+
+        memcpy(&readTime, &time, sizeof(ute_module_systemtime_time_t));
+        uteModuleSystemtimeInputDateIncreaseDecreaseDay(&readTime, i - 6);
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d",readTime.day);
+        textbox = compo_textbox_create(frm, 2);//七天
+        // compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_12_BIN);
+        compo_textbox_set_pos(textbox,43+i*45,233+GUI_SCREEN_HEIGHT);
+        compo_textbox_set(textbox,txt_buf);
+        compo_textbox_set_forecolor(textbox,COLOR_GRAY);
     }
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_WEEK7_HEART]) );///7天平均静态心率
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,12+266+GUI_SCREEN_HEIGHT,300, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,12+266+GUI_SCREEN_HEIGHT,250, widget_text_get_max_height());
     compo_textbox_set(textbox,i18n[STR_WEEK7_HEART]);
 
     memset(txt_buf,0,sizeof(txt_buf));

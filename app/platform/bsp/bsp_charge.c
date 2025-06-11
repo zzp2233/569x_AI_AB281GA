@@ -213,6 +213,11 @@ static void charge_timer_callback (co_timer_t *timer, void *param)
         case 1:             //充电中
             //NTC
 #if (CHARGE_USER_NTC_EN && TS_MODE_EN) || UTE_DRV_BATTERY_CE_AUTH_SUPPORT
+            if(ambientTemperature > 100)
+            {
+                ambientTemperature = 25;
+                printf("NTC ERROR:%d\n", ambientTemperature);
+            }
             if((charge_ntc_stop_flag== 0)  && ((ambientTemperature > CHARGE_NTC_ADC_MAX_TEMP) || (ambientTemperature < CHARGE_NTC_ADC_MIN_TEMP)))
             {
                 //温度异常 停止充

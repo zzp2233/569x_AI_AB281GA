@@ -1470,7 +1470,10 @@ static void func_alarm_clock_process(void)
     {
         compo_page_move_process(f_aclock->ptm);
     }
+    //处理在当前界面时单次闹钟响铃后，闹钟开关状态不更新问题
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     func_alarm_clock_disp_handle();
+#endif // GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     func_process();
 
 #if  GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT

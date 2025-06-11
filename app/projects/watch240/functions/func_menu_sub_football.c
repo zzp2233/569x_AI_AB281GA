@@ -900,7 +900,11 @@ static void func_menu_sub_football_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_menu_football_t));
     func_cb.frm_main = func_menu_sub_football_form_create();
 
+#if UTE_MODULE_FOOTBALL_STYLE_LIST_TEARING_SUPPORT
+    tft_set_temode(1);
+#else
     tft_set_temode(false);
+#endif // UTE_MODULE_FOOTBALL_STYLE_LIST_TEARING_SUPPORT
     f_menu_football_t *f_menu = (f_menu_football_t *)func_cb.f_cb;
     f_menu->ball = compo_getobj_byid(COMPO_ID_FOOTBALL);
     compo_football_t *ball = f_menu->ball;

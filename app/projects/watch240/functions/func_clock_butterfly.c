@@ -173,6 +173,17 @@ enum
 
 #elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
 
+// 蝴蝶表盘
+#define BTF_MIN_WING 20      // 翅膀挥动最小幅度
+#define BTF_MAX_WING 25      // 翅膀挥动最大幅度
+#define BTF_MOVE_MAX_WING 35 // 飞舞时翅膀挥动最大幅度
+
+#define BTF_Y_POS 30                            // 主体相对于屏幕中心Y的偏移
+#define BTF_LIGHT_NUM 20                        // 左+右边光晕泡泡数量
+#define BTF_STATIC_FLAP_EXPIRE 5                // 静态挥动翅膀频率,ms
+#define BTF_MOVE_FLAP_EXPIRE 2                  // 静态挥动翅膀频率,ms
+#define BTF_LEFT_EDGE GUI_SCREEN_WIDTH / 3      // 点击范围左边距判断
+#define BTF_RIGHT_EDGE GUI_SCREEN_WIDTH / 3 * 2 // 点击范围右边距判断
 // 蝴蝶身体图片
 #define BUTTERFLY_BODY_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN
 
@@ -226,7 +237,6 @@ enum
 #define BUTTERFLY_DATE_Y          (GUI_SCREEN_CENTER_Y - 90)
 #define BUTTERFLY_DATE_WIDTH      300
 #define BUTTERFLY_DATE_HEIGHT     70
-
 
 #else
 // 蝴蝶表盘

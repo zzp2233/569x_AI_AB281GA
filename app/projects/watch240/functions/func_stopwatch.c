@@ -1044,7 +1044,7 @@ compo_form_t *func_stopwatch_form_create(void)
     {
         min = 99;
         sec = 59;
-        msec = 99;
+        msec = 999;
         end_flag = true;
     }
     else
@@ -1867,12 +1867,13 @@ static void func_stopwatch_process(void)
             compo_button_t *btn_rest = compo_getobj_byid(COMPO_ID_BTN_RECORD_REST);
             compo_button_set_bgimg(btn_play,PAUSE_MODE_END_PIC);
             compo_button_set_bgimg(btn_rest,PAUSE_MODE_RESET_PIC);
+            // printf("stopwatch_end\n");
         }
         else
         {
             reset_sleep_delay_all();        //计时的时候不许休眠
         }
-
+        memset(str_buff,0,sizeof(str_buff));
         snprintf(str_buff, sizeof(str_buff), "%02d:%02d.%02d", min, sec, msec / 10);
         compo_textbox_set(num_time, str_buff);
 

@@ -10,10 +10,11 @@
 __STATIC_INLINE void drvScreenTft360X360Gc9b71Hy139074aPowerOn(void)
 {
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11,NULL,0);
-    uteModulePlatformDelayMs(120);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29,NULL,0);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2c, (uint8_t *)"\x00\x00\x00\x00", 4);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2c, (uint8_t *)"\x00\x00\x00\x00", 4);
+    uteModulePlatformDelayMs(10);
     UTE_MODULE_LOG(UTE_LOG_DRV_SCREEN_LVL, "%s", __func__);
 }
 
@@ -54,11 +55,11 @@ __STATIC_INLINE void drvScreenTft360X360Gc9b71Hy139074aInit(void)
 
     uteDrvScreenCommonSetPowerEnable(true);
     uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(50000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonSetResetPin(false);
-    uteModulePlatformDelayUs(50000);
+    uteModulePlatformDelayMs(50);
     uteDrvScreenCommonSetResetPin(true);
-    uteModulePlatformDelayUs(120000);
+    uteModulePlatformDelayMs(50);
 
 
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xFE, tmp, 0);

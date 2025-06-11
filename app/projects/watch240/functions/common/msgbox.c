@@ -1795,8 +1795,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, UTE_NOTIFY_MSG_CONTENT_MAX_SIZE+3);
                 compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
-                                           func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH-10, 128-20);              //调整文本位置
+                                           func_cover_get_txt_y(msg_type)+15,
+                                           270, 160);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
                 compo_textbox_set(txt_msg, msg);
@@ -1944,28 +1944,17 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             {
                 compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_20_ALARM_CLOCK_CLOCK_BIN);
                 compo_picturebox_set_pos(picbox,GUI_SCREEN_CENTER_X,124/2+81);
-                // compo_picturebox_set_size(picbox,85,85);
 
-                //msg1
-                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
-                                           func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH, 50);              //调整文本位置
-                compo_textbox_set_multiline(txt_msg, true);
-                compo_textbox_set(txt_msg, msg);
+                char str[100];
+                memset(str,0,sizeof(str));
+                snprintf(str,sizeof(str),"%s %s",title,msg);
 
                 //title
                 compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
-                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X,237+38/2);
-                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_28_BIN);
-                compo_textbox_set(txt_title, title);
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X-30,250);
+                compo_textbox_set_align_center(txt_title,false);
+                compo_textbox_set(txt_title, str);
 
-                compo_textbox_set_multiline(txt_msg, false);
-                compo_textbox_set_align_center(txt_msg, false);
-                compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,
-                                           240+38/2-19,
-                                           widget_text_get_area(txt_msg->txt).wid,
-                                           widget_text_get_height()); //调整文本位置
             }
             else
             {

@@ -161,7 +161,7 @@ compo_form_t *func_bright_set_form_create(void)
     compo_listbox_set_sta_icon(listbox, UI_BUF_I338001_28_SET_MORE_BIN, 0);
     compo_listbox_set_bithook(listbox, set_back_pic);
 
-    compo_listbox_set_item_text(listbox, 0, 30, 100, 35, false);
+    compo_listbox_set_item_text(listbox, 0, 30, 180, 35, false);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);
     compo_listbox_set_focus(listbox, 102);

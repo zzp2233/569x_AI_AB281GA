@@ -735,10 +735,10 @@ compo_form_t *func_pressure_form_create(void)
     }
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_STATE_TEST]));
-    compo_textbox_set(textbox,i18n[STR_STATE_TEST]);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,34/2+307,100,34);
     compo_setid(textbox,COMPO_ID_TXT_TEST);
     compo_textbox_set_forecolor(textbox, make_color(6,235,149) );
+    compo_textbox_set(textbox,i18n[STR_STATE_TEST]);
 
 #else
     // //设置标题栏

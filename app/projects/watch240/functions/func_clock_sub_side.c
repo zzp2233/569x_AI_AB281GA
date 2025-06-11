@@ -557,6 +557,8 @@ static void func_clock_sub_side_form_create(void)
     compo_textbox_set_location(textbox,115,250,60,40);
     compo_textbox_set(textbox,i18n[STR_SOS]);
 
+
+
     for(int i =1; i<DEFAULT_LATEST_TASK_NUM; i++)
     {
         //创建按钮

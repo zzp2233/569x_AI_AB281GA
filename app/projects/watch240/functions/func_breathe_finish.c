@@ -331,7 +331,7 @@ compo_form_t *func_breathe_finish_form_create(void)
     area_t txt_wid = widget_text_get_area(textbox->txt);
     textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox, txt_wid.wid+105, 132, 200, 35);
+    compo_textbox_set_location(textbox, txt_wid.wid+105, 127, 200, 35);
     compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
 
     //设置图片

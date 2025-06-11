@@ -1843,10 +1843,11 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
         //中间缓存大小要比实际获取的名字要大
         //方便再接受到的名字过长时，方便后面使用uteModuleCharencodeGetUtf8String转换的时候可以自动加入省略号
         u8 time_disp_state = 0;
-        static u8 str_txt2_time[30] = {0};
+        u8 str_txt2_time[50] = {0};
+        uint8_t str_am[30];
+        memset(str_am,0,sizeof(str_am));
         memset(str_txt2_time, 0, sizeof(str_txt2_time));
 
-//        printf("len [%d,%d]\n", str_txt1_len, str_txt2_len);
         if (record_tbl[index].nameUnicodeLen == 0)
         {
             if (str_txt1_len > record_tbl[index].numberAsciiLen)
@@ -1855,24 +1856,10 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
             }
 
             memcpy(str_txt1, get_address_name(record_tbl[index].numberAscii), strlen(get_address_name(record_tbl[index].numberAscii)));
-
-//            printf("####[%d,%d,%d]->[%s] [%s]\n", record_tbl[index].nameUnicodeLen, record_tbl[index].numberAsciiLen, str_txt1_len, str_txt1, record_tbl[index].numberAscii);
         }
         else
         {
-//            if (str_txt1_len > record_tbl[index].nameUnicodeLen)
-//            {
-//                str_txt1_len = record_tbl[index].nameUnicodeLen;
-//            }
-
             truncate_and_append(record_tbl[index].nameUnicode, str_txt1, str_txt1_len);
-
-//            memcpy(str_txt1, record_tbl[index].nameUnicode, str_txt1_len);
-        }
-
-        if (str_txt2_len > sizeof(str_txt2_time))
-        {
-            str_txt2_len = sizeof(str_txt2_time);
         }
 
         if(time.year != record_tbl[index].callTime.year || time.month != record_tbl[index].callTime.month)
@@ -1888,37 +1875,45 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
             time_disp_state = 2;
         }
 
+        if(uteModuleSystemtime12HOn())
+        {
+            if(record_tbl[index].callTime.hour<=12 && record_tbl[index].callTime.hour!=0)
+            {
+                memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
+            }
+            else
+            {
+                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_AM])+1);
+            }
+            record_tbl[index].callTime.hour %= 12;
+            if(record_tbl[index].callTime.hour==0)
+            {
+                record_tbl[index].callTime.hour = 12;
+            }
+        }
+
         switch(time_disp_state)
         {
             case 0:
-                sprintf((char*)str_txt2_time, "%04d/%02d/%02d", //record_tbl[index].callTime.year,
-                        record_tbl[index].callTime.year,
-                        record_tbl[index].callTime.month,
-                        record_tbl[index].callTime.day);
+                snprintf(str_txt2_time,sizeof(str_txt2_time), "%04d/%02d/%02d", //record_tbl[index].callTime.year,
+                         record_tbl[index].callTime.year,
+                         record_tbl[index].callTime.month,
+                         record_tbl[index].callTime.day);
                 break;
             case 1:
-                sprintf((char*)str_txt2_time, "%02d/%02d", //record_tbl[index].callTime.year,
-                        record_tbl[index].callTime.month,
-                        record_tbl[index].callTime.day);
+                snprintf(str_txt2_time,sizeof(str_txt2_time), "%02d/%02d", //record_tbl[index].callTime.year,
+                         record_tbl[index].callTime.month,
+                         record_tbl[index].callTime.day);
                 break;
             case 2:
-                sprintf((char*)str_txt2_time, "%02d:%02d", //record_tbl[index].callTime.year,
-                        record_tbl[index].callTime.hour,
-                        record_tbl[index].callTime.min);
+                snprintf(str_txt2_time,sizeof(str_txt2_time), "%02d:%02d %s", //record_tbl[index].callTime.year,
+                         record_tbl[index].callTime.hour,
+                         record_tbl[index].callTime.min,
+                         str_am);
                 break;
         }
-        //"2024-11-11 09:10:50"
-//        sprintf((char*)str_txt2_time, "%02d/%02d %02d:%02d:%02d", //record_tbl[index].callTime.year,
-//                record_tbl[index].callTime.month,
-//                record_tbl[index].callTime.day,
-//                record_tbl[index].callTime.hour,
-//                record_tbl[index].callTime.min,
-//                record_tbl[index].callTime.sec);
-        memcpy(str_txt2, str_txt2_time, str_txt2_len);
+        memcpy(str_txt2, str_txt2_time, sizeof(str_txt2_time));
 
-
-
-//        printf("####[%s]\n", str_txt2_time);
         return true;
     }
     return false;

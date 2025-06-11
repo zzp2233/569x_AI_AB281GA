@@ -18,7 +18,7 @@ void lowpwr_tout_ticks(void)
 {
     //当屏幕初始化SPI等待不到pending，就重新断电再初始化一次屏幕
     u8 get_tft_spi_timeout(void);
-    if (get_tft_spi_timeout())
+    if (uteDrvScreenCommonIsInit() && get_tft_spi_timeout())
     {
         printf(tft_restore_printf);
         reset_sleep_delay_all();
@@ -168,11 +168,11 @@ uint32_t sleep_timer(void)
         while(!bsp_saradc_process(0));
         sys_cb.vbat = bsp_vbat_get_voltage(1);
         RTCCON8 = rtccon8;
-        if (sys_cb.vbat < LPWR_WARNING_VBAT)
-        {
-            //低电需要唤醒sniff mode
-            ret = 2;
-        }
+        // if (sys_cb.vbat < LPWR_WARNING_VBAT)
+        // {
+        //低电需要唤醒sniff mode
+        // ret = 2;
+        // }
         saradc_exit();
 #endif
     }
@@ -264,7 +264,14 @@ static void sfunc_sleep(void)
         interval = ble_get_conn_interval();
         latency = ble_get_conn_latency();
         tout = ble_get_conn_timeout();
-        ble_update_conn_param(400, 0, 500);     //interval: 400*1.25ms = 500ms
+        if (bt_is_ios_device())
+        {
+            ble_update_conn_param(96, 2, 500);
+        }
+        else
+        {
+            ble_update_conn_param(400, 0, 500); // interval: 400*1.25ms = 500ms
+        }
     }
 #endif
 #if BT_SINGLE_SLEEP_LPW_EN

@@ -11,18 +11,6 @@
 
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
 
-// 蝴蝶表盘
-#define BTF_MIN_WING 20      // 翅膀挥动最小幅度
-#define BTF_MAX_WING 25      // 翅膀挥动最大幅度
-#define BTF_MOVE_MAX_WING 35 // 飞舞时翅膀挥动最大幅度
-
-#define BTF_Y_POS 30                            // 主体相对于屏幕中心Y的偏移
-#define BTF_LIGHT_NUM 20                        // 左+右边光晕泡泡数量
-#define BTF_STATIC_FLAP_EXPIRE 5                // 静态挥动翅膀频率,ms
-#define BTF_MOVE_FLAP_EXPIRE 2                  // 静态挥动翅膀频率,ms
-#define BTF_LEFT_EDGE GUI_SCREEN_WIDTH / 3      // 点击范围左边距判断
-#define BTF_RIGHT_EDGE GUI_SCREEN_WIDTH / 3 * 2 // 点击范围右边距判断
-
 enum
 {
     COMPO_ID_BTFLY = 0x32,
@@ -50,6 +38,18 @@ enum
 };
 
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+
+// 蝴蝶表盘
+#define BTF_MIN_WING 20      // 翅膀挥动最小幅度
+#define BTF_MAX_WING 25      // 翅膀挥动最大幅度
+#define BTF_MOVE_MAX_WING 35 // 飞舞时翅膀挥动最大幅度
+
+#define BTF_Y_POS 30                            // 主体相对于屏幕中心Y的偏移
+#define BTF_LIGHT_NUM 20                        // 左+右边光晕泡泡数量
+#define BTF_STATIC_FLAP_EXPIRE 10                // 静态挥动翅膀频率,ms
+#define BTF_MOVE_FLAP_EXPIRE 4                  // 静态挥动翅膀频率,ms
+#define BTF_LEFT_EDGE GUI_SCREEN_WIDTH / 3      // 点击范围左边距判断
+#define BTF_RIGHT_EDGE GUI_SCREEN_WIDTH / 3 * 2 // 点击范围右边距判断
 
 // 蝴蝶身体图片
 #define BUTTERFLY_BODY_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN
@@ -105,64 +105,18 @@ enum
 #define BUTTERFLY_DATE_WIDTH      290
 #define BUTTERFLY_DATE_HEIGHT     70
 
-#elif 0//GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-
-// 蝴蝶身体图片
-#define BUTTERFLY_BODY_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN
-
-// 蝴蝶下半翅膀图片
-#define BUTTERFLY_WING_DOWN_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_DOWN_BIN
-
-// 蝴蝶上半翅膀图片
-#define BUTTERFLY_WING_UP_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_UP_BIN
-
-// 蝴蝶光晕泡泡图片
-#define BUTTERFLY_DOT_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_LIGHT_BIN
-
-// 蝴蝶X轴坐标
-#define BUTTERFLY_X GUI_SCREEN_CENTER_X
-
-// 蝴蝶Y轴坐标
-#define BUTTERFLY_Y (GUI_SCREEN_CENTER_Y + 30)
-
-// 蝴蝶身体偏移X轴
-#define BUTTERFLY_BODY_OFFSET_X  5
-
-// 蝴蝶身体偏移Y轴
-#define BUTTERFLY_BODY_OFFSET_Y  (-5)
-
-// 时间数字字体
-#define UTE_WATCHS_BUTTERFLY_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_48_BIN
-
-// 日期数字字体
-#define UTE_WATCHS_BUTTERFLY_DATE_NUM_FONT UI_BUF_0FONT_FONT_NUM_32_BIN
-
-// 时间小时数字位置
-#define BUTTERFLY_HOUR_X         (GUI_SCREEN_CENTER_X - 40)
-#define BUTTERFLY_HOUR_Y         (GUI_SCREEN_CENTER_Y - 100)
-#define BUTTERFLY_HOUR_WIDTH     300
-#define BUTTERFLY_HOUR_HEIGHT    70
-
-// 时间:位置
-#define BUTTERFLY_DOT_X          GUI_SCREEN_CENTER_X
-#define BUTTERFLY_DOT_Y          (GUI_SCREEN_CENTER_Y - 100)
-#define BUTTERFLY_DOT_WIDTH      300
-#define BUTTERFLY_DOT_HEIGHT     70
-
-// 时间分钟数字位置
-#define BUTTERFLY_MIN_X          (GUI_SCREEN_CENTER_X + 40)
-#define BUTTERFLY_MIN_Y          (GUI_SCREEN_CENTER_Y - 100)
-#define BUTTERFLY_MIN_WIDTH      300
-#define BUTTERFLY_MIN_HEIGHT     70
-
-// 日期数字位置
-#define BUTTERFLY_DATE_X          GUI_SCREEN_CENTER_X
-#define BUTTERFLY_DATE_Y          (GUI_SCREEN_CENTER_Y - 60)
-#define BUTTERFLY_DATE_WIDTH      300
-#define BUTTERFLY_DATE_HEIGHT     70
-
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+// 蝴蝶表盘
+#define BTF_MIN_WING 20      // 翅膀挥动最小幅度
+#define BTF_MAX_WING 25      // 翅膀挥动最大幅度
+#define BTF_MOVE_MAX_WING 35 // 飞舞时翅膀挥动最大幅度
 
+#define BTF_Y_POS 30                            // 主体相对于屏幕中心Y的偏移
+#define BTF_LIGHT_NUM 20                        // 左+右边光晕泡泡数量
+#define BTF_STATIC_FLAP_EXPIRE 5                // 静态挥动翅膀频率,ms
+#define BTF_MOVE_FLAP_EXPIRE 2                  // 静态挥动翅膀频率,ms
+#define BTF_LEFT_EDGE GUI_SCREEN_WIDTH / 3      // 点击范围左边距判断
+#define BTF_RIGHT_EDGE GUI_SCREEN_WIDTH / 3 * 2 // 点击范围右边距判断
 // 蝴蝶身体图片
 #define BUTTERFLY_BODY_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN
 
@@ -217,8 +171,85 @@ enum
 #define BUTTERFLY_DATE_WIDTH      300
 #define BUTTERFLY_DATE_HEIGHT     70
 
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+// 蝴蝶表盘
+#define BTF_MIN_WING 20      // 翅膀挥动最小幅度
+#define BTF_MAX_WING 25      // 翅膀挥动最大幅度
+#define BTF_MOVE_MAX_WING 35 // 飞舞时翅膀挥动最大幅度
+
+#define BTF_Y_POS 30                            // 主体相对于屏幕中心Y的偏移
+#define BTF_LIGHT_NUM 20                        // 左+右边光晕泡泡数量
+#define BTF_STATIC_FLAP_EXPIRE 5                // 静态挥动翅膀频率,ms
+#define BTF_MOVE_FLAP_EXPIRE 2                  // 静态挥动翅膀频率,ms
+#define BTF_LEFT_EDGE GUI_SCREEN_WIDTH / 3      // 点击范围左边距判断
+#define BTF_RIGHT_EDGE GUI_SCREEN_WIDTH / 3 * 2 // 点击范围右边距判断
+// 蝴蝶身体图片
+#define BUTTERFLY_BODY_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN
+
+// 蝴蝶下半翅膀图片
+#define BUTTERFLY_WING_DOWN_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_DOWN_BIN
+
+// 蝴蝶上半翅膀图片
+#define BUTTERFLY_WING_UP_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_UP_BIN
+
+// 蝴蝶光晕泡泡图片
+#define BUTTERFLY_DOT_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_LIGHT_BIN
+
+// 蝴蝶X轴坐标
+#define BUTTERFLY_X GUI_SCREEN_CENTER_X
+
+// 蝴蝶Y轴坐标
+#define BUTTERFLY_Y (GUI_SCREEN_CENTER_Y + 50)
+
+// 蝴蝶身体偏移X轴
+#define BUTTERFLY_BODY_OFFSET_X  8
+
+// 蝴蝶身体偏移Y轴
+#define BUTTERFLY_BODY_OFFSET_Y  0
+
+// 时间数字字体
+#define UTE_WATCHS_BUTTERFLY_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_54_BIN
+
+// 日期数字字体
+#define UTE_WATCHS_BUTTERFLY_DATE_NUM_FONT UI_BUF_0FONT_FONT_NUM_38_BIN
+
+// 时间小时数字位置
+#define BUTTERFLY_HOUR_X         (GUI_SCREEN_CENTER_X - 40)
+#define BUTTERFLY_HOUR_Y         (GUI_SCREEN_CENTER_Y - 160)
+#define BUTTERFLY_HOUR_WIDTH     300
+#define BUTTERFLY_HOUR_HEIGHT    70
+
+// 时间:位置
+#define BUTTERFLY_DOT_X          GUI_SCREEN_CENTER_X
+#define BUTTERFLY_DOT_Y          (GUI_SCREEN_CENTER_Y - 160)
+#define BUTTERFLY_DOT_WIDTH      300
+#define BUTTERFLY_DOT_HEIGHT     70
+
+// 时间分钟数字位置
+#define BUTTERFLY_MIN_X          (GUI_SCREEN_CENTER_X + 40)
+#define BUTTERFLY_MIN_Y          (GUI_SCREEN_CENTER_Y - 160)
+#define BUTTERFLY_MIN_WIDTH      300
+#define BUTTERFLY_MIN_HEIGHT     70
+
+// 日期数字位置
+#define BUTTERFLY_DATE_X          GUI_SCREEN_CENTER_X
+#define BUTTERFLY_DATE_Y          (GUI_SCREEN_CENTER_Y - 90)
+#define BUTTERFLY_DATE_WIDTH      300
+#define BUTTERFLY_DATE_HEIGHT     70
 
 #else
+// 蝴蝶表盘
+#define BTF_MIN_WING 20      // 翅膀挥动最小幅度
+#define BTF_MAX_WING 25      // 翅膀挥动最大幅度
+#define BTF_MOVE_MAX_WING 35 // 飞舞时翅膀挥动最大幅度
+
+#define BTF_Y_POS 30                            // 主体相对于屏幕中心Y的偏移
+#define BTF_LIGHT_NUM 20                        // 左+右边光晕泡泡数量
+#define BTF_STATIC_FLAP_EXPIRE 5                // 静态挥动翅膀频率,ms
+#define BTF_MOVE_FLAP_EXPIRE 2                  // 静态挥动翅膀频率,ms
+#define BTF_LEFT_EDGE GUI_SCREEN_WIDTH / 3      // 点击范围左边距判断
+#define BTF_RIGHT_EDGE GUI_SCREEN_WIDTH / 3 * 2 // 点击范围右边距判断
 
 // 蝴蝶身体图片
 #define BUTTERFLY_BODY_PIC_ADDR UI_BUF_DIALPLATE_BUTTERFLY_BODY_BIN

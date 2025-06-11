@@ -118,6 +118,8 @@
 #define DEFAULT_DISTANCE_TARGET_OPEN true
 #endif
 
+#define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT  1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+
 #define UTE_DISPLAY_BLOODGXYGEN_HISTORY_HISTOGRAM_SUPPORT  1  //血氧柱形图
 
 /*! 新工厂测试,xjc 2022-02-09*/
@@ -352,7 +354,7 @@
 
 /*! 多运动支持百种运动标志, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_HUNDRED_SUPPORT 1
-#define UTE_MODULE_SPORT_MAX_SPORT_NUM          24
+#define UTE_MODULE_SPORT_MAX_SPORT_NUM          23
 #define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM  4
 #define UTE_MODULE_SPORT_DISPLAY_MAX_SPORT_NUM  (UTE_MODULE_SPORT_MAX_SPORT_NUM)
 /*! 具体的运动类型,支持的置1,不支持置0, xjc 2222-03-29*/

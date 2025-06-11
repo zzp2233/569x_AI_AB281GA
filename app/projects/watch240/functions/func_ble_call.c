@@ -41,21 +41,14 @@ compo_form_t *func_ble_call_form_create(void)
     compo_form_set_title(frm, i18n[STR_PHONE]);
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
-    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH/1.2, 50);
-//    compo_textbox_set_autosize(name_txt, true);
+    compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH/1.2, 50);;
     compo_textbox_set(name_txt, (char*)callData.name);
-//    compo_textbox_set(name_txt, "中国移动");
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
-//    compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
-//    compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+8, GUI_SCREEN_WIDTH/1.2, 50);
-////    compo_textbox_set_autosize(number_txt, true);
-//    compo_textbox_set(number_txt, (char*)callData.number);
-//    compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
-    compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //挂断
@@ -92,14 +85,49 @@ compo_form_t *func_ble_call_form_create(void)
 
     //txt 来电
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
-    compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_forecolor(txt, COLOR_WHITE);
 
     //挂断
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);
     compo_setid(btn, COMPO_ID_BTN_REJECT);
     compo_button_set_pos(btn, 120, 240);
+
+
+
+    return frm;
+}
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#define TXT_X_MIN 20
+
+//创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_ble_call_form_create(void)
+{
+
+    //新建窗体, 通话页面
+    compo_form_t *frm = compo_form_create(true);
+    compo_button_t *btn;
+
+    ute_bt_call_data_t callData;
+    uteModuleCallGetData(&callData);
+
+    //名字
+    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_set_location(name_txt,GUI_SCREEN_CENTER_X, 83, GUI_SCREEN_WIDTH/1.4, 50);
+    compo_textbox_set(name_txt, (char*)callData.name);
+    compo_setid(name_txt, COMPO_ID_TXT_NAME);
+
+    //txt 来电
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
+    compo_textbox_set_forecolor(txt, COLOR_WHITE);
+
+    //挂断
+    btn = btn = compo_button_create_by_image(frm, UI_BUF_I338001_11_CALL_HANG_UP_BIN);
+    compo_setid(btn, COMPO_ID_BTN_REJECT);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 80/2+234);
 
 
 
@@ -129,9 +157,9 @@ compo_form_t *func_ble_call_form_create(void)
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     //txt 来电
-    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]))
+                           compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set_forecolor(txt, COLOR_WHITE);
 
     //挂断
@@ -165,8 +193,8 @@ compo_form_t *func_ble_call_form_create(void)
 
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
-    compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //挂断
@@ -198,8 +226,8 @@ compo_form_t *func_ble_call_form_create(void)
 
 
     compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
-    compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_forecolor(txt, COLOR_GREEN);
 
     //挂断
@@ -245,11 +273,6 @@ void func_ble_call_process(void)
 
         compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
         compo_textbox_set(name_txt, f_bt_ring->tmp_pbap_result_Name);
-
-        txt_leng = widget_text_get_area(name_txt->txt).wid;
-        txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-        if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-        compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_height()/2);
     }
     func_process();
 }

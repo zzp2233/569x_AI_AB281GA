@@ -162,6 +162,8 @@
 #define UTE_MODULE_BLOODOXYGEN_SUPPORT 1
 /*! 假血氧，结束后出随机值,wang.luo 2025-05-23 */
 #define UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT 1
+/*! 表盘预览图使用平面模式,wang.luo 2024-11-16 */
+#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 6

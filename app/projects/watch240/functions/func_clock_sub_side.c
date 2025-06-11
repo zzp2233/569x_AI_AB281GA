@@ -18,6 +18,11 @@ typedef struct f_clock_sub_side_t_
 
 enum
 {
+    COMPO_ID_WEA_DATA = 1,
+};
+
+enum
+{
     COMPO_ID_APP_NULL = 0,
     COMPO_ID_APP_1,
     COMPO_ID_APP_2,
@@ -173,7 +178,7 @@ static void func_clock_sub_side_form_create(void)
             }
         }
 
-        picbox = compo_picturebox_create(frm, f_clock_sub_sider[WEATHER_TYPE_SHOWER_RAIN].wether_res);
+        picbox = compo_picturebox_create(frm, f_clock_sub_sider[weather_date.DayWeather[0]].wether_res);
         compo_picturebox_set_pos(picbox,GUI_SIDE_CENTER_X-30,44/2+104);
         compo_picturebox_set_size(picbox,30,30);
 
@@ -212,7 +217,8 @@ static void func_clock_sub_side_form_create(void)
 
     textbox = compo_textbox_create(frm,strlen(txt_buf));
     compo_textbox_set_location(textbox,GUI_SIDE_CENTER_X+25,44/2+104,45,30);
-    compo_textbox_set(textbox,txt_buf );
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox, COMPO_ID_WEA_DATA);
 
     for(int i =0; i<DEFAULT_LATEST_TASK_NUM; i++)
     {
@@ -225,6 +231,49 @@ static void func_clock_sub_side_form_create(void)
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clk->sub_frm = frm;
     f_clk->masklayer = masklayer;
+}
+
+static void func_clock_sub_side_reflash(void)
+{
+    compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_WEA_DATA);
+
+    uint8_t txt_buf[20]= {0};
+    ute_module_weather_data_t  weather_date;
+    ute_display_ctrl_t displayInfo;
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
+    if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
+    {
+        uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
+        uteModuleWeatherGetData(&weather_date);//获取天气状态
+
+        if(displayInfo.isFahrenheit)    //是否为华氏度
+        {
+            weather_date.fristDayCurrTemperature= weather_date.fristDayCurrTemperature*9/5+32;
+            /*pcm 2022-09-19 */
+            if(weather_date.fristDayCurrTemperature<(-99))
+            {
+                weather_date.fristDayCurrTemperature=-99;
+            }
+            snprintf(txt_buf,sizeof(txt_buf),"%d℉",weather_date.fristDayCurrTemperature);
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%d℃",weather_date.fristDayCurrTemperature);
+        }
+    }
+    else
+    {
+        if(displayInfo.isFahrenheit)    //是否为华氏度
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%s℉","--");
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%s℃","--");
+        }
+    }
+    compo_textbox_set(txt,txt_buf);
 }
 
 //单击按钮
@@ -381,7 +430,7 @@ static void func_clock_sub_side_form_create(void)
             }
         }
 
-        picbox = compo_picturebox_create(frm, f_clock_sub_sider[WEATHER_TYPE_SHOWER_RAIN].wether_res);
+        picbox = compo_picturebox_create(frm, f_clock_sub_sider[weather_date.DayWeather[0]].wether_res);
         compo_picturebox_set_pos(picbox,GUI_SIDE_CENTER_X-34,48/2+166);
         compo_picturebox_set_size(picbox,48,48);
 
@@ -762,7 +811,11 @@ static void func_clock_sub_side_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     return frm;
 }
+//刷新界面
+static void func_clock_sub_side_reflash(void)
+{
 
+}
 //单击按钮
 static void func_clock_sub_side_button_click(void)
 {
@@ -773,6 +826,7 @@ static void func_clock_sub_side_button_click(void)
 //时钟表盘主要事件流程处理
 static void func_clock_sub_side_process(void)
 {
+    func_clock_sub_side_reflash();
     func_clock_sub_process();
 }
 

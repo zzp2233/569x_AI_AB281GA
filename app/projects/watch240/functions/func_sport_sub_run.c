@@ -1539,6 +1539,7 @@ enum
     COMPO_ID_UINT_SPORT_STEP,        //计步
     COMPO_ID_UINT_SPORT_KM,          //距离
     COMPO_ID_UINT_SPORT_COUNT,       //计次
+    COMPO_ID_UINT_SPORT_SPEED,       //配速
 
     COMPO_ID_PIC_SPORT_HEARTRATE,                        //心率图片
     COMPO_ID_PIC_SPORT_HEARTRATE_PERCENTAGE,             //心率指针百分比
@@ -1810,12 +1811,13 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set(txt, i18n[STR_PACE]);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"/%s", i18n[STR_KILOMETRE]);
+    snprintf(txt_buf,sizeof(txt_buf),"/%s", uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     txt = compo_textbox_create(frm, strlen(txt_buf));///配速文本
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt,16,245+accrual_y, 130, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
+    compo_setid(txt,COMPO_ID_UINT_SPORT_SPEED);
 
     txt = compo_textbox_create(frm, 6);///配速数据文本
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
@@ -2084,8 +2086,9 @@ static void func_sport_sub_run_updata(void)
     compo_textbox_t* txt_kcal       = compo_getobj_byid(COMPO_ID_NUM_SPORT_KCAL);
     compo_textbox_t* txt_step       = compo_getobj_byid(COMPO_ID_NUM_SPORT_STEP);
     compo_textbox_t* txt_speed      = compo_getobj_byid(COMPO_ID_NUM_SPORT_SPEED);
+    compo_textbox_t* unit_speed     = compo_getobj_byid(COMPO_ID_UINT_SPORT_SPEED);
     compo_textbox_t* txt_km         = compo_getobj_byid(COMPO_ID_NUM_SPORT_KM);
-    compo_textbox_t* uint_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
+    compo_textbox_t* unit_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
     compo_textbox_t* txt_count      = compo_getobj_byid(COMPO_ID_NUM_SPORT_COUNT);
     // compo_shape_t * page_point1     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE1);
     // compo_shape_t * page_point2     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE2);
@@ -2242,9 +2245,9 @@ static void func_sport_sub_run_updata(void)
         snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",km_integer,km_decimals);
         compo_textbox_set(txt_km, txt_buf);
     }
-    if(uint_km != NULL)
+    if(unit_km != NULL)
     {
-        compo_textbox_set(uint_km, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
+        compo_textbox_set(unit_km, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     }
 
     if(txt_count != NULL)
@@ -2265,6 +2268,13 @@ static void func_sport_sub_run_updata(void)
         memset(txt_buf,0,sizeof(txt_buf));
         snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", data->saveData.avgTimeMinute,data->saveData.avgTimeSecond,'"');
         compo_textbox_set(txt_speed, txt_buf);
+    }
+
+    if(unit_speed != NULL)
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"/%s", uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
+        compo_textbox_set(unit_speed, txt_buf);
     }
 
     ab_free(data);

@@ -23,7 +23,7 @@
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 #define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
 #define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
-#define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
+#define PROJECT_AB281J_SUPPORT       1 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
 #define PROJECT_AB281K_SUPPORT       0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
 #define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
 #define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
@@ -1618,6 +1618,11 @@
 /*! 保存重启信息最大数量,wang.luo 2024-12-30 */
 #ifndef UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT
 #define UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT 6
+#endif
+
+/*! hardfault静默重启,不显示蓝屏，不显示开机logo,wang.luo 2025-06-11 */
+#ifndef UTE_HARDFAULT_SILENT_RESTART_SUPPORT
+#define UTE_HARDFAULT_SILENT_RESTART_SUPPORT 0
 #endif
 
 /*! 重置BT地址，启用后BT和BLE地址会不同,wang.luo 2025-02-08 */

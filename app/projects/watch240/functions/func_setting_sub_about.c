@@ -347,6 +347,75 @@ compo_form_t *func_set_sub_about_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+#define SHAPE_HEIGTH  GUI_SCREEN_HEIGHT/4.5
+
+//关于页面
+compo_form_t *func_set_sub_about_form_create(void)
+{
+    compo_textbox_t * txt;
+
+    char davName[40];
+    memset(davName,'\0',sizeof(davName));
+    uint8_t davNameLength = sizeof(davName);
+    uteModulePlatformGetDevName((uint8_t*)davName,&davNameLength);//获取设备名称
+
+    uint8_t Ble_Address[6];//获取蓝牙地址数组
+    char Ble_Address_str_buf[20];//蓝牙地址文本数组
+    memset(Ble_Address_str_buf,'\0',sizeof(Ble_Address_str_buf));//初始化数组
+    uteModulePlatformGetBleMacAddress(Ble_Address);//获取蓝牙地址
+
+    snprintf((char *)Ble_Address_str_buf, sizeof(Ble_Address_str_buf), "%02X:%02X:%02X:%02X:%02X:%02X",\
+             Ble_Address[0],Ble_Address[1],Ble_Address[2],Ble_Address[3],Ble_Address[4],Ble_Address[5]); //信息
+
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_ABOUT]);
+
+    //设备名称
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEV_NEME]));
+    compo_textbox_set(txt, i18n[STR_DEV_NEME]);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.1 - SHAPE_HEIGTH/2.2-GUI_SCREEN_CENTER_Y/1.8);
+
+    txt = compo_textbox_create(frm,strlen(davName));
+    compo_textbox_set(txt, davName);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.1 -GUI_SCREEN_CENTER_Y/1.8);
+    compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+
+    //系统版本
+    txt = compo_textbox_create(frm,strlen(i18n[STR_SYS_VERSION]));
+    compo_textbox_set(txt, i18n[STR_SYS_VERSION]);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.1  - SHAPE_HEIGTH/2.2);
+
+    txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
+    compo_textbox_set(txt, UTE_SW_VERSION);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.1 );
+    compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+
+    //蓝牙地址
+    txt = compo_textbox_create(frm,strlen(i18n[STR_BLE_MAC]));
+    compo_textbox_set(txt, i18n[STR_BLE_MAC]);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.1 - SHAPE_HEIGTH/2.2+GUI_SCREEN_CENTER_Y/1.8);
+
+    txt = compo_textbox_create(frm,strlen(Ble_Address_str_buf));
+    compo_textbox_set(txt, (char*)Ble_Address_str_buf);
+    compo_textbox_set_align_center(txt,false);
+    compo_textbox_set_pos(txt,GUI_SCREEN_CENTER_X/8,GUI_SCREEN_CENTER_Y*1.1 +GUI_SCREEN_CENTER_Y/1.8);
+    compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+
+    return frm;
+}
+
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 #if UTE_MODULE_MODEL_NUMBER_SUPPORT
 #define UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT 1    //关于页面支持长页面

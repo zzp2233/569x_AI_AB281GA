@@ -167,7 +167,7 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
 
     textbox = compo_textbox_create(frm, 6);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox, ecig_cfg.smoke_position_swich == 0 ? "单发" : "双发");
+    compo_textbox_set(textbox, get_gear_func() == 0 ? "单发" : "双发");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING * 5.5 - 4 - widget_text_get_area(textbox->txt).hei / 2);
     compo_setid(textbox, TXT_9_ID);
 
@@ -321,10 +321,11 @@ static void func_test_mode_click(void)
             break;
         case BUTTON_1:
 
-
+#if ECIG_POWER_CONTROL
             ecig_cfg.smoke_position_swich = !ecig_cfg.smoke_position_swich;
+#endif
             ecig_get_res();
-            printf("BUTTON_1BUTTON_1BUTTON_1ecig_cfg.smoke_position_swich=%d,%d\n", ecig_cfg.smoke_position_swich,ecig_get_res());
+            // printf("BUTTON_1BUTTON_1BUTTON_1ecig_cfg.smoke_position_swich=%d,%d\n", ecig_cfg.smoke_position_swich,ecig_get_res());
             break;
         case YES_BTN_ID:
         {
@@ -401,21 +402,21 @@ static void func_ageing_process(void)
             totalHour = (tdata->secondCount) / 3600;
             totalMin = (tdata->secondCount - (totalHour * 3600)) / 60;
             totalSec = (tdata->secondCount - (totalHour * 3600) - (totalMin * 60));
-
+#if ECIG_POWER_CONTROL
             if (ecig.cfg->smoke_start_or_not == 1)
             {
 
-                if (ecig_cfg.smoke_position_swich == 0 && ecig.cfg->smoke_res_swich==1)
+                if (get_gear_func() == 0 && ecig.cfg->smoke_res_swich==1)
                 {
                     compo_shape_set_color(shape1, COLOR_RED);
                     compo_shape_set_color(shape2, COLOR_GREEN);
                 }
-                else if (ecig_cfg.smoke_position_swich == 0 && ecig.cfg->smoke_res_swich==0)
+                else if (get_gear_func() == 0 && ecig.cfg->smoke_res_swich==0)
                 {
                     compo_shape_set_color(shape1, COLOR_GREEN);
                     compo_shape_set_color(shape2, COLOR_RED);
                 }
-                else if (ecig_cfg.smoke_position_swich == 1)
+                else if (get_gear_func() == 1)
                 {
                     compo_shape_set_color(shape1, COLOR_RED);
                     compo_shape_set_color(shape2, COLOR_RED);
@@ -426,8 +427,8 @@ static void func_ageing_process(void)
                 compo_shape_set_color(shape1, COLOR_GREEN);
                 compo_shape_set_color(shape2, COLOR_GREEN);
             }
-
-            if (ecig_cfg.smoke_position_swich == 0)
+#endif
+            if (get_gear_func() == 0)
             {
                 compo_textbox_set(textbox9, "单发");
             }

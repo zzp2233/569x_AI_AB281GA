@@ -22,7 +22,7 @@ static uint8_t last_weekday = 0;
 * @brief  功率等级参数读取
 * @details 读取总吸口数等配置参数。
 */
-static void uteModuleSmokeDataReadConfig(void)
+void uteModuleSmokeDataReadConfig(void)
 {
 
     void *file;

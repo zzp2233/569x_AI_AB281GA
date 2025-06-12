@@ -236,7 +236,11 @@ static void func_bt_ring_click(void)
     {
         case COMPO_ID_BTN_ANSWER:
             printf("COMPO_ID_BTN_ANSWER\n");
+            // 初始化麦克风音频路径
+            audio_path_init(AUDIO_PATH_BTMIC);
+            audio_path_start(AUDIO_PATH_BTMIC);
             bt_call_answer_incoming();
+            delay_ms(100);
             break;
 
         case COMPO_ID_BTN_REJECT:

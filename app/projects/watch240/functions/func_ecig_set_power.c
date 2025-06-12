@@ -219,7 +219,9 @@ static void func_ecig_set_power_button_touch_handle(void)
     {
         case COMPO_ID_BTN_ECIG_SET_S_D:
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+#if ECIG_POWER_CONTROL
             test_2st_gear_func();
+#endif
             compo_picturebox_set_visible(picbox1, false);
             compo_picturebox_set_visible(picbox, true);
             compo_picturebox_set_visible(picbox2, false);
@@ -240,8 +242,9 @@ static void func_ecig_set_power_button_touch_handle(void)
             break;
         case COMPO_ID_BTN_ECIG_SET_D_D:
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+#if ECIG_POWER_CONTROL
             test_1st_gear_func();
-
+#endif
             compo_picturebox_set_visible(picbox, false);
             compo_picturebox_set_visible(picbox1, true);
             compo_picturebox_set_visible(picbox3, false);

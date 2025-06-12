@@ -37,7 +37,7 @@ typedef struct
 } smoke_app_data_t;
 
 
-static void uteModuleSmokeDataReadConfig(void);
+void uteModuleSmokeDataReadConfig(void);
 void uteModuleSmokeDataSaveConfig(void);
 void uteModuleSetSomkeCount(uint32_t count);
 uint32_t uteModuleGetSomkeSomkeCount(void);

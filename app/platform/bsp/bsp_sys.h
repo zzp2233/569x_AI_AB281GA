@@ -93,6 +93,7 @@ typedef struct
     volatile u8  incall_flag;
     volatile u8  gui_sleep_sta;
     volatile u8  gui_need_wakeup;
+    volatile u8  gui_screen_wakeup;
     volatile u8  chg_on;            //配合工作RTCCON8开个充电; 1打开状态，0关闭状态
 
     ///位变量不要用于需要在中断改值的变量。 请谨慎使用位变量，尽量少定义位变量。

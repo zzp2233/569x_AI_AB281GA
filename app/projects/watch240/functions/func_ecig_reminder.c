@@ -164,7 +164,16 @@ static void func_ecig_reminder_process(void)
     {
         if (tick_check_expire(f_ecig_reminder->tick, 600))
         {
-            func_directly_back_to();
+            if(sys_cb.gui_screen_wakeup)
+            {
+                func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
+                sys_cb.gui_screen_wakeup = false;
+            }
+            else
+            {
+                func_directly_back_to();
+            }
+
         }
     }
     else

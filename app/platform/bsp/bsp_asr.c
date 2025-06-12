@@ -260,7 +260,7 @@ void bsp_asr_init(void)
 //开始
 void bsp_asr_start(void)
 {
-    if (asr_init_flag || func_cb.sta == FUNC_BT_CALL || func_cb.sta == FUNC_BT_RING)
+    if (asr_init_flag ||  func_cb.sta == FUNC_BT_RING)//||func_cb.sta == FUNC_BT_CALL
     {
         if (sys_cb.audio_path != AUDIO_PATH_ASR)
         {

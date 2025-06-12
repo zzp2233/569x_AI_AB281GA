@@ -12,8 +12,14 @@
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "include.h"
-
-//mic数据缓冲区
+enum
+{
+    FACTORY_TEST_RECORD_IDLE,
+    FACTORY_TEST_RECORD_RECORDING,   //录音中
+    FACTORY_TEST_RECORD_RECORDED,    //录音完成
+    FACTORY_TEST_RECORD_PLAYING,
+};
+//mic?????????
 typedef struct
 {
     u8 rec_buf[MIC_TEST_BUF_SIZE];
@@ -31,6 +37,7 @@ void uteModuleMicRecordFactoryPlay(void);
 mic_testbuf_t *uteModuleMicRecordFactoryGetMicBuf(void);
 bool uteModuleMicRecordFactoryIsPlaying(void);
 bool uteModuleMicRecordFactoryIsRecording(void);
-
+void uteModuleMicRecordFactorySetrecordState(uint8_t state);
+uint8_t uteModuleMicRecordFactoryGetRecordState(void);
 #endif //_UTE_MODULE_CRC_H_
 

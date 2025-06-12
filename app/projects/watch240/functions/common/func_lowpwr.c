@@ -378,7 +378,7 @@ static void sfunc_sleep(void)
 
     sys_cb.sleep_counter = 0;
     sys_cb.sleep_wakeup_time = -1L;
-
+    sys_cb.gui_screen_wakeup = false;
     while(bt_is_sleep())
     {
         WDT_CLR();
@@ -455,6 +455,7 @@ static void sfunc_sleep(void)
             printf("DET wakeup: %x\n", wkpnd);
             // gui_need_wkp = true;
             sys_cb.gui_need_wakeup = true;
+            sys_cb.gui_screen_wakeup = true;
             // func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
             break;
         }

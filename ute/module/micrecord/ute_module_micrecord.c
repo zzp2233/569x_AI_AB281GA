@@ -29,7 +29,16 @@
 
 AT(.mic_test_buf)
 mic_testbuf_t mic_cb;
+typedef struct
+{
+    uint16_t record_flash_buf_write_count;
+    uint32_t record_flash_data_write_length;
+    uint16_t record_flash_buf_read_count;
+    uint32_t record_flash_data_read_length;
+    uint8_t record_state;
+} factory_test_earphone_data_t;
 
+static factory_test_earphone_data_t factory_test_earphone_data;
 AT(.com_text.str)
 char mic_test_str[] = "data full!!!\n";
 
@@ -184,4 +193,12 @@ bool uteModuleMicRecordFactoryIsPlaying(void)
 bool uteModuleMicRecordFactoryIsRecording(void)
 {
     return isRecording;
+}
+uint8_t uteModuleMicRecordFactoryGetRecordState(void)
+{
+    return factory_test_earphone_data.record_state;
+}
+void uteModuleMicRecordFactorySetrecordState(uint8_t state)
+{
+    factory_test_earphone_data.record_state = state;
 }

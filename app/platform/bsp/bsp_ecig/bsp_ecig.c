@@ -1,6 +1,6 @@
 #include "include.h"
 #include "ute_module_smoke.h"
-//#if ECIG_POWER_CONTROL
+#if ECIG_POWER_CONTROL
 
 ecig_cfg_t ecig_cfg;
 
@@ -276,24 +276,34 @@ u8 get_gear_func1(void)
 
 }
 
-// #else
-// void ecig_set_power(u8 value)
-// {
+#else
+void ecig_set_power(u8 value)
+{
 
-// }
+}
 
-// u8 ecig_get_power(void)
-// {
-//     return 0;
-// }
+u8 ecig_get_power(void)
+{
+    return 0;
+}
 
-// void ecig_set_res(u8 value)
-// {
+void ecig_set_res(u8 value)
+{
 
-// }
+}
 
-// u8 ecig_get_res(void)
-// {
-//     return 0;
-// }
-// #endif
+u8 ecig_get_res(void)
+{
+    return 0;
+}
+u8 get_gear_func1(void)
+{
+
+
+}
+u8 get_gear_func(void)
+{
+
+
+}
+#endif

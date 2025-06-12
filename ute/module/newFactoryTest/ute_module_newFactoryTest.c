@@ -13,6 +13,7 @@
 #include "ute_drv_motor.h"
 #include "ute_module_gui_common.h"
 #include "ute_module_heart.h"
+#include "ute_module_localRingtone.h"
 
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
 /*! zn.zeng,2022-03-16*/
@@ -272,7 +273,7 @@ void uteModuleNewFactoryTestEverySecond(void)
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
                     uteModuleSmokeFactoryData.Moto_Count++;
                 }
-
+#if ECIG_POWER_CONTROL
                 // printf("ecig.cfg->smoke_res_swich=%d,timer_hot_mic_work()=%d,Smoke_Count=%d\r\n",ecig.cfg->smoke_res_swich,timer_hot_mic_work(),uteModuleNewFactoryTestData.secondCount);
                 if ((uteModuleNewFactoryTestData.secondCount == 1 ||
                      (uteModuleNewFactoryTestData.secondCount > 0 && uteModuleNewFactoryTestData.secondCount % 10 == 0)) && det1_start_or_not()==1)
@@ -286,6 +287,7 @@ void uteModuleNewFactoryTestEverySecond(void)
                 {
                     ecig.cfg->smoke_start_or_not = 0; // 关闭烟雾
                 }
+#endif
                 uteModuleNewFactoryTestData.secondCount++;
             }
         }

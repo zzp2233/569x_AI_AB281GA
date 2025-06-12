@@ -41,19 +41,18 @@ static const f_weather_t weather_list[] =
     {STR_SUNNY,             1  },                //晴天
     {STR_CLOUDY,            2  },                //多云
     {STR_OVERCAST,          3  },                //阴天
-    {STR_MODERATE_RAIN,     4  },                //阵雨
-    {STR_RAINY_SHOWERS,     5  },                //雷阵雨
+    {STR_MODERATE_RAIN,     5  },                //阵雨
+    {STR_RAINY_SHOWERS,     4  },                //雷阵雨
     {STR_SLEET,             6  },                //雨夹雪
     {STR_DRIZZLE,           7  },                //小雨
     {STR_HEAVY_RAIN,        8  },                //大雨
-    {STR_RAINY,             9  },                //雪
+    {STR_SNOWY,             9  },                //雪
     {STR_SAND_AND_DUST,     10  },                //沙尘暴
     {STR_HAZE,              11  },                //雾霾
     {STR_WINDY,             12  },                //大风
     {STR_SUNNY,             13  },                //明夜
     {STR_CLOUDY,            14  },                //云遮月
-    {STR_RAINY_SHOWERS,     15  },                //阵雨夜
-    {STR_RAINY_SHOWERS,     16  },                //阵雨夜
+    {STR_MODERATE_RAIN,     15  },                //阵雨夜
 };
 static const u16 weather_uv[5] =
 {
@@ -182,6 +181,7 @@ compo_form_t *func_weather_form_create(void)
 
         for(int i=0; i<7; i++) //获取一周的天气
         {
+            get_weather_id[i] = weather_date.DayWeather[i]>>8;//赋值排序天气状态
             if(uteModuleSystemtimeIsNight()) //是否为夜间
             {
                 switch(get_weather_id[i])
@@ -192,12 +192,15 @@ compo_form_t *func_weather_form_create(void)
                     case WEATHER_TYPE_CLOUDY:
                         get_weather_id[i] = 14;
                         break;
+                    case WEATHER_TYPE_SHOWER_RAIN:
                     case WEATHER_TYPE_THUNDERSHOWER_RAIN:
+                    case WEATHER_TYPE_RAIN_SNOW:         //雨夹雪
+                    case WEATHER_TYPE_LIGHT_RAIN:        //小雨
+                    case WEATHER_TYPE_HEAVY_RAIN:        //大雨
                         get_weather_id[i] = 15;
                         break;
                 }
             }
-            get_weather_id[i] = weather_date.DayWeather[i]>>8;//赋值排序天气状态
         }
 
         if(displayInfo.isFahrenheit)    //是否为华氏度

@@ -160,7 +160,9 @@ static void func_power_on_enter(void)
     func_cb.f_cb = func_zalloc(sizeof(f_power_on_t));
     func_cb.frm_main = func_power_on_form_create();
     f_power_on_t* f_power_on = (f_power_on_t*)func_cb.f_cb;
+#if ECIG_POWER_CONTROL
     ecig.poweroff_flag=1;
+#endif
     f_power_on->tick = 0;
     f_power_on->pic_num_disp = 0;
 }

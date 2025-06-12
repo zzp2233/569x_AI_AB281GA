@@ -346,34 +346,21 @@ static void sfunc_sleep(void)
     GPIOADE = 0;
     GPIOBDE = BIT(3);
     GPIOGDE = 0x3F;                             //MCP FLASH
-    GPIOHDE = 0| BIT(4);
+    GPIOHDE = 0;
     u32 pf_keep = 0;
-    if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL))
-    {
-        printf("bsp_sensor_init_sta_get\n");
-        GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
-        pf_keep |= BIT(2);                      //SENSOR PG
-    }
-    else
-    {
-        printf("bsp_sensor_init_sta_NO\n");
-        GPIOEDE = 0;
-    }
-
-#if MODEM_CAT1_EN
-    if (bsp_modem_get_init_flag())
-    {
-        pf_keep |= BIT(1) | BIT(2) | BIT(3);
-    }
-    else
-    {
-        pf_keep |= BIT(3);
-    }
-#endif
+    printf("bsp_sensor_init_sta_NO\n");
+    GPIOEDE = 0;
     GPIOFDE = pf_keep;
+
+    port_gpio_set_out(IO_PH5,0);
+    port_gpio_set_out(IO_PB1,0);
+    port_gpio_set_in(IO_PB0,GPIOxPU200K);
+    port_gpio_set_in(IO_PA5,GPIOxPU200K);
 
     wkie = WKUPCON & BIT(16);
     WKUPCON &= ~BIT(16);                        //休眠时关掉WKIE
+
+
     sleep_wakeup_config();
 
     sys_cb.sleep_counter = 0;

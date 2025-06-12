@@ -52,7 +52,11 @@ const f_cover_brief_msg_item_t tbl_cover_brief_msg_item[] =
     [MSG_OTHER]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_OTHER
     [MSG_Facebook]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FACEBOOK_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Facebook
     [MSG_Twitter]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TWITTER_BIN,            GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Twitter
+#if GUI_SCREEN_SIZE_240X284RGB_I335003_SUPPORT
+    [MSG_WhatsApp]          = {UI_BUF_I335003_MESSGE_MSG_WATCH_BIN,                        GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+#else
     [MSG_WhatsApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_WHATSAPP_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_WhatsApp
+#endif
     [MSG_Skype]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_SKYPE_BIN,              GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Skype
     [MSG_FacebookMessenger] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_FacebookMessenger
     [MSG_Hangouts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_HANGOUTS_BIN,           GUI_SCREEN_HEIGHT/5+10,     GUI_SCREEN_HEIGHT/2 - 20,    GUI_SCREEN_HEIGHT/2-20,  GUI_SCREEN_HEIGHT/2-50},       //MSG_Hangouts
@@ -122,8 +126,11 @@ const f_cover_detail_msg_item_t tbl_cover_detail_msg_item[] =
     [MSG_OTHER]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_OTHER_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_OTHER
     [MSG_Facebook]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FACEBOOK_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Facebook
     [MSG_Twitter]           = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_TWITTER_BIN,            8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Twitter
-//    [MSG_WhatsApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+#if GUI_SCREEN_SIZE_240X284RGB_I335003_SUPPORT
+    [MSG_WhatsApp]          = {UI_BUF_I335003_MESSGE_MSG_WATCH_BIN,                        8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+#else
     [MSG_WhatsApp]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_WHATSAPP_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_WhatsApp
+#endif
     [MSG_Skype]             = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_SKYPE_BIN,              8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Skype
     [MSG_FacebookMessenger] = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_FACEBOOKMESSENGER_BIN,  8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_FacebookMessenger
     [MSG_Hangouts]          = {UI_BUF_I335001_MESSAGE_ICON_MSG_MSG_HANGOUTS_BIN,           8+36/2,     81+128/2,    GUI_SCREEN_HEIGHT/2-20,  50+24/2},       //MSG_Hangouts

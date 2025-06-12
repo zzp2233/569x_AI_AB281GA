@@ -384,6 +384,92 @@ static void func_up_watch_dial_disp(void)
     }
 }
 
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+compo_form_t *func_up_watch_dial_form_create(void)
+{
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I338001_UPGRADE_02_UPGRADE_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 60+150/2);
+    compo_setid(picbox,ROCKET_ID);
+
+    //CODE 进度条
+    compo_arc_t *arc = compo_arc_create(frm);
+    compo_setid(arc, PROGRESS_BAR_ID);
+    compo_arc_set_location(arc, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH-5, GUI_SCREEN_HEIGHT-5);
+    compo_arc_set_rotation(arc, 0);
+    compo_arc_set_angles(arc, 0, 3600);
+    compo_arc_set_edge_circle(arc,true,true);
+    compo_arc_set_color(arc,make_color(0x23,0x8d,0xff),make_color(0x33,0x33,0x33));
+    compo_arc_set_alpha(arc,255,255);
+    compo_arc_set_value(arc,0);
+    compo_arc_set_width(arc, 10);
+
+    //TXT1 升级中
+    compo_textbox_t* txt = compo_textbox_create(frm, 40);
+    compo_setid(txt, UPDATING_TXT_ID);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 250+32/2, 196, 30);
+    compo_textbox_set(txt, i18n[STR_INS]);
+
+    txt = compo_textbox_create(frm,  40);
+    compo_setid(txt, UPDATING_TXT_TIP_ID);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 293+32/2, 224, 30);
+    compo_textbox_set(txt, i18n[STR_APP_AGIAN]);
+    compo_textbox_set_forecolor(txt, COLOR_GRAY);
+    compo_textbox_set_visible(txt, false);
+
+    return frm;
+}
+
+//显示升级界面处理
+static void func_up_watch_dial_disp(void)
+{
+    f_up_watch_dial_t *f_up_watch_dial = (f_up_watch_dial_t *)func_cb.f_cb;
+
+    if(f_up_watch_dial->state  != UPGRADING)
+    {
+        if(tick_get() > f_up_watch_dial->switch_page_time+SWITCH_TIME)
+        {
+            uteTaskGuiStartScreen(FUNC_CLOCK,0,__func__);
+        }
+        return;
+    }
+
+    if (tick_check_expire(f_up_watch_dial->ticks, 100))
+    {
+        f_up_watch_dial->ticks = tick_get();
+        reset_sleep_delay_all();
+
+        compo_progressbar_t *bar    = compo_getobj_byid(PROGRESS_BAR_ID);
+        compo_textbox_t* txt_tip    = compo_getobj_byid(UPDATING_TXT_TIP_ID);
+        compo_textbox_t* txt_state  = compo_getobj_byid(UPDATING_TXT_ID);
+        compo_picturebox_t * picbox = compo_getobj_byid(ROCKET_ID);
+        if(ble_is_connect())//ble状态
+        {
+            uint32_t progress = uteModuleWatchOnlineGetSynchronizeWatchSize()*100/uteModuleWatchOnlineGetTotileWatchSize();
+            printf("progress:%d,SynchronizeWatchSize:%d,TotileWatchSize:%d\n",progress,uteModuleWatchOnlineGetSynchronizeWatchSize(),uteModuleWatchOnlineGetTotileWatchSize());
+            if (progress>=100)
+            {
+                progress=100;
+                f_up_watch_dial->state  = UPGRADE_SUCCESSFUL;
+                compo_textbox_set(txt_state, i18n[STR_SYNC_SUC]);
+                f_up_watch_dial->switch_page_time = tick_get();
+                compo_arc_set_visible(bar,false);
+                compo_picturebox_set(picbox,UI_BUF_I338001_UPGRADE_00_SUCCEED_BIN);
+            }
+            compo_arc_set_value(bar,progress*10);
+        }
+        else
+        {
+            f_up_watch_dial->state  = UPGRADE_FAILED;
+            compo_textbox_set_visible(txt_tip, true);
+            compo_textbox_set(txt_state, i18n[STR_SYNC_FAIL]);
+            f_up_watch_dial->switch_page_time = tick_get();
+            compo_arc_set_visible(bar,false);
+            compo_picturebox_set(picbox,UI_BUF_I338001_UPGRADE_01_FAIL_BIN);
+        }
+    }
+}
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 compo_form_t *func_up_watch_dial_form_create(void)
 {

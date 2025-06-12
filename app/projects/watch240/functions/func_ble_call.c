@@ -157,8 +157,8 @@ compo_form_t *func_ble_call_form_create(void)
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     //txt 来电
-    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]))
-                           compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
+    compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_CALL_ME]));
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set(txt, i18n[STR_CALL_ME]);
     compo_textbox_set_forecolor(txt, COLOR_WHITE);
 

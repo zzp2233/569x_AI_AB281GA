@@ -2849,8 +2849,16 @@ static void func_clock_sub_dropdown_form_create(void)
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",uteDrvBatteryCommonGetLvl());
     textbox = compo_textbox_create(frm,4);
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox,210,30,100,40);
+    // compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_28_BIN);
+    compo_textbox_set_location(textbox,210,25,100,40);
     compo_textbox_set(textbox,txt_buf );
+
+    masklayer = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_color(masklayer, make_color(76,76,76));
+    compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, 14, 44, 6);
+    compo_shape_set_radius(masklayer,2);
+    compo_shape_set_alpha(masklayer, 150);
+
 
 #else
     ///创建遮罩层

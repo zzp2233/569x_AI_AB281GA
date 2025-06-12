@@ -185,9 +185,12 @@ void bt_pbap_sync_stop(void)
 void bt_pbap_report_card_result(const char *name)
 {
     printf("pbap result Name:   '%s'\n", name);
+    if(strcmp(name, sys_cb.pbap_result_Name)!=0)
+    {
+        return;
+    }
     memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
     snprintf(sys_cb.pbap_result_Name, sizeof(sys_cb.pbap_result_Name),"%s",name);///* 获取名字*/
-
     uteModuleCallSetContactsNumberAndName(NULL, 0, (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
 
 }

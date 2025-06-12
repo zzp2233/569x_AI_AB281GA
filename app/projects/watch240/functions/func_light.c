@@ -335,11 +335,6 @@ compo_form_t *func_light_form_create(void)
 {
     u8 level_data = sys_cb.light_level-1;
 
-    // if(level_data<2)
-    // {
-    //     level_data=2;
-    // }
-
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
 
@@ -377,8 +372,8 @@ static void func_light_disp_move_handle(void)
         {
             s8 level_data= (dy/SPACING_COUNT)+f_light->level_old;
 
-            if(level_data<2)
-                level_data=2;
+            if(level_data<1)
+                level_data=1;
             else if(level_data>5)
                 level_data=5;
 

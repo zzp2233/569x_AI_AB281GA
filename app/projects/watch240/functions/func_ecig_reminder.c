@@ -154,7 +154,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
 
     return frm;
 }
-
+extern bool slider_unlock;
 // 事件处理
 static void func_ecig_reminder_process(void)
 {
@@ -164,7 +164,8 @@ static void func_ecig_reminder_process(void)
     {
         if (tick_check_expire(f_ecig_reminder->tick, 600))
         {
-            if(sys_cb.gui_screen_wakeup)
+            printf("sys_cb.gui_screen_wakeu=%d,slider_unlock=%d\r\n");
+            if(sys_cb.gui_screen_wakeup && !slider_unlock)
             {
                 func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
                 sys_cb.gui_screen_wakeup = false;

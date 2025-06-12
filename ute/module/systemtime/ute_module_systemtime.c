@@ -139,7 +139,7 @@ void uteModuleSystemtimeReadConfig(void)
     set.zone = readbuff[2];
     set.languageId = readbuff[3]<<8|readbuff[4];
 
-    rtc_clock_calc_by_rc(1);
+    // rtc_clock_calc_by_rc(1);
     tm_t rtc_tm;
     rtc_tm.year = readbuff[5] << 8 | readbuff[6];
     rtc_tm.mon = readbuff[7];

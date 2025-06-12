@@ -1808,7 +1808,9 @@ void uteApplicationCommonPoweroff(void)
     uteModuleNewFactoryTestSetMode(&data);
     data->mode = FACTORY_TEST_MODE_SHIP;
 #endif
+#if ECIG_POWER_CONTROL
     ecig.poweroff_flag=0;
+#endif
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF, 0);
 
 }

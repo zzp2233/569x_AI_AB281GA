@@ -92,6 +92,13 @@
 #define UTE_CHIP_PACKAGE_SELECT             CHIP_5691C_F
 #endif
 
+/*! 侧边栏添加应用数量,quan.qi.cai 2025-05-29 */
+#ifndef UTE_CLOCK_SIDE_ADD_WIDGET_NUM
+#define CLOCK_SIDE_ADD_WIDGET_NUM         5
+#else
+#define CLOCK_SIDE_ADD_WIDGET_NUM         UTE_CLOCK_SIDE_ADD_WIDGET_NUM
+#endif
+
 /*! 标题栏高度,quan.qi.cai 2025-05-29 */
 #ifndef UTE_TITLE_BAR_HIGH
 #define TITLE_BAR_HIGH         28

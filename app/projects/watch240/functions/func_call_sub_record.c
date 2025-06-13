@@ -1988,6 +1988,14 @@ compo_form_t *func_call_sub_record_form_create(void)
     compo_listbox_set_focus(listbox, 80);
     compo_listbox_update(listbox);
 
+    s32 last_y = compo_listbox_gety_byidx(listbox, (record_cnt < 2) ? 2 : record_cnt );
+    //新建按钮
+    compo_button_t *btn;
+    btn = compo_button_create_page_by_image(frm,listbox->page, UI_BUF_I338001_14_INFORMATION_DELETE_BIN);
+    compo_setid(btn, COMPO_ID_BTN_DELAY);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X,last_y+5);
+    compo_button_set_visible(btn,record_cnt);
+
     compo_textbox_set_visible(txt, record_cnt > 0 ? false : true);
     compo_picturebox_set_visible(pic, record_cnt > 0 ? false : true);
 
@@ -2000,6 +2008,13 @@ static void func_call_sub_record_icon_click(void)
     int icon_idx;
     f_call_list_t *f_call = (f_call_list_t *)func_cb.f_cb;
     compo_listbox_t *listbox = f_call->listbox;
+
+    if(compo_get_button_id() == COMPO_ID_BTN_DELAY)
+    {
+        uteModuleCallDeleteCallRecords();
+        msg_enqueue(MSG_CHECK_LANGUAGE);
+        return;
+    }
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
     if (icon_idx < 0 || icon_idx >= record_cnt)

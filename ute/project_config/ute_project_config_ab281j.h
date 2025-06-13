@@ -104,7 +104,7 @@
 #define UTE_MODULE_HEART_STATIC_ALL_DAY_SUPPORT (1&UTE_MODULE_HEART_WEEK_STATIC_SUPPORT)
 
 /*! 情绪压力模块,xjc 2022-02-15*/
-#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 1
+#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
 
 /*! 活动界面列表形式,xjc 2022-02-15*/
 #define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT                1
@@ -190,10 +190,10 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 4
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19144001_BIN,\
-                                                UI_BUF_DIALPLATE_D19143001_BIN,\
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19886001_BIN,\
+                                                UI_BUF_DIALPLATE_D19144001_BIN,\
                                                 UI_BUF_DIALPLATE_D19142001_BIN,\
-                                                UI_BUF_DIALPLATE_D19886001_BIN,\
+                                                UI_BUF_DIALPLATE_D19143001_BIN,\
                                               }
 #define UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE   1  //双击切换菜单
 // 菜单样式枚举值集合 - 用于UI菜单显示风格配置
@@ -229,6 +229,7 @@
 #define GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT      (1&GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT)
 
 #define UTE_TITLE_BAR_HIGH    64//标题栏高度
+#define UTE_CLOCK_SIDE_ADD_WIDGET_NUM  5
 
 #define UTE_DRV_CTP_SELECT              CTP_CHSC6X
 #define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN 1
@@ -307,8 +308,8 @@
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
 #define UTE_MODULE_SCREENS_EMOTION_SUPPORT            0 //情绪界面
 #define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      0 //情绪说明界面
-#define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
-#define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
+#define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           0 //压力界面
+#define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     0 //压力说明界面
 #endif
 #define UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT        1 //震动强度
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
@@ -321,6 +322,9 @@
 #define UTE_USER_ID_FOR_BINDING_SUPPORT 0
 #define HAS_BEEN_CONNECTED 0x66
 #define UTE_VERIFY_OUR_APP_APK_DEFUALT_TIMEOUT 60
+
+/*! 表盘预览图使用平面模式,wang.luo 2024-11-16 */
+#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE
@@ -356,7 +360,7 @@
 
 /*! 多运动支持百种运动标志, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_HUNDRED_SUPPORT 1
-#define UTE_MODULE_SPORT_MAX_SPORT_NUM          23
+#define UTE_MODULE_SPORT_MAX_SPORT_NUM          22
 #define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM  4
 #define UTE_MODULE_SPORT_DISPLAY_MAX_SPORT_NUM  (UTE_MODULE_SPORT_MAX_SPORT_NUM)
 /*! 具体的运动类型,支持的置1,不支持置0, xjc 2222-03-29*/
@@ -382,7 +386,7 @@
 #define UTE_MODULE_SPORT_SIT_UP_SUPPORT                 1 //仰卧起坐
 #define UTE_MODULE_SPORT_TREADMILL_SUPPORT              1 //跑步机
 #define UTE_MODULE_SPORT_GYMNASTICS_SUPPORT             1 //体操
-#define UTE_MODULE_SPORT_BOATING_SUPPORT                1 //划船
+#define UTE_MODULE_SPORT_BOATING_SUPPORT                0 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          0 //自由训练
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT

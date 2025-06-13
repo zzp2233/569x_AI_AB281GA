@@ -28,6 +28,7 @@
 #define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
 #define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
 #define PROJECT_AB281N_SUPPORT       0 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
+#define PROJECT_AB281DC_SUPPORT      0 /*! 恒鑫HX01定制,双按键+编码器+手电筒,TFT 240x296 JD9853,CHIP_5691C_F,wang.luo 2025-06-13 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -67,7 +68,10 @@
 #include"ute_project_config_ab281m.h"
 #elif PROJECT_AB281N_SUPPORT
 #include"ute_project_config_ab281n.h"
+#elif PROJECT_AB281DC_SUPPORT
+#include"ute_project_config_ab281dc.h"
 #endif
+
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
 
@@ -560,6 +564,11 @@
 /*! 默认PWM频率,中科平台PWM使用一个定时器产生，不能多路PWM输出不同频率的PWM信号,wang.luo 2025-05-09 */
 #ifndef UTE_DRV_DEFAULT_PWM_HZ
 #define UTE_DRV_DEFAULT_PWM_HZ 160
+#endif
+
+/*! 手电筒LED电源gpio pin,wang.luo 2025-06-12 */
+#ifndef UTE_DRV_LED_POWER_GPIO_PIN
+#define UTE_DRV_LED_POWER_GPIO_PIN      IO_PB7
 #endif
 
 /*! 默认语言 zn.zeng, 2021-08-23  */

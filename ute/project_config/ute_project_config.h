@@ -29,6 +29,7 @@
 #define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
 #define PROJECT_AB281N_SUPPORT       0 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
 #define PROJECT_AB281DC_SUPPORT      0 /*! 恒鑫HX01定制,双按键+编码器+手电筒,TFT 240x296 JD9853,CHIP_5691C_F,wang.luo 2025-06-13 */
+#define PROJECT_AB281GA_SUPPORT      0 /*! 传音815N,amoled 368x448,wang.luo,CHIP_5691G 2025-06-13 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -70,6 +71,8 @@
 #include"ute_project_config_ab281n.h"
 #elif PROJECT_AB281DC_SUPPORT
 #include"ute_project_config_ab281dc.h"
+#elif PROJECT_AB281GA_SUPPORT
+#include"ute_project_config_ab281ga.h"
 #endif
 
 /** Log模块控制开关*/

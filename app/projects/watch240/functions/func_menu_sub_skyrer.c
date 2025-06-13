@@ -480,7 +480,7 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //天圆地方图标列表及顺序
-static const compo_rings_item_t tbl_menu_skyrer[] =
+static compo_rings_item_t tbl_menu_skyrer[] =
 {
 //    {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},            //时钟
     //{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
@@ -511,7 +511,6 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
 #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_FINDPHONE_BIN,                 FUNC_FINDPHONE},
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_GAME_BIN,                      FUNC_GAME},
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
@@ -520,7 +519,6 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
     {UI_BUF_I340001_THEME_ICON1_ALARM_BIN,               FUNC_ALARM_CLOCK},
 #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
     // {UI_BUF_I340001_THEME_ICON1_RETRY_BIN,           FUNC_RSTFY},
-    {UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
 #if UTE_MODULE_SCREENS_LIGHT_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
@@ -561,6 +559,10 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_CONTACTS_BIN,              FUNC_ADDRESS_BOOK},
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+    {UI_BUF_I340001_THEME_ICON1_FINDPHONE_BIN,                 FUNC_FINDPHONE},
+#if UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT //如果女性健康始终显示，那么数组长度加一，如果男性时需要隐藏，将长度减一，需要显示时与最后一个进行替换
+    {UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
+#endif // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
 };
 
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
@@ -718,6 +720,19 @@ compo_form_t *func_menu_sub_skyrer_form_create(void)
         tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].func_sta = FUNC_CALCULATOR;
         tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].res_addr = UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_CALCULATOR_BIN;
     }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        tbl_menu_skyrer[MENU_SKYRER_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
+        tbl_menu_skyrer[MENU_SKYRER_CNT-1].res_addr = UI_BUF_I340001_THEME_ICON1_PERIOD_BIN;
+    }
+    else
+    {
+        tbl_menu_skyrer[MENU_SKYRER_CNT-1].func_sta = FUNC_FINDPHONE;
+        tbl_menu_skyrer[MENU_SKYRER_CNT-1].res_addr = UI_BUF_I340001_THEME_ICON1_FINDPHONE_BIN;
+    }
+#endif  //UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
 #endif
     //新建菜单
     compo_rings_t *rings = compo_rings_create(frm);

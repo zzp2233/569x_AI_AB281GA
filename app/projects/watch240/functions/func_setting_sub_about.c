@@ -14,7 +14,7 @@
 
 typedef struct f_about_t_
 {
-
+    page_tp_move_t *ptm;
 } f_about_t;
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 #define SHAPE_HEIGTH  GUI_SCREEN_HEIGHT/4.5
@@ -417,11 +417,23 @@ compo_form_t *func_set_sub_about_form_create(void)
 
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
-
+#if UTE_MODULE_MODEL_NUMBER_SUPPORT
+#define UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT 1    //关于页面支持长页面
+#else
+#define UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT 0    //关于页面不支持长页面
+#endif
 //关于页面
 compo_form_t *func_set_sub_about_form_create(void)
 {
 #define SPACING  (164-82)
+#if UTE_MODULE_MODEL_NUMBER_SUPPORT
+#define CONTENT_NUM  4 //内容数量
+    char modelName[40];
+    memset(modelName,'\0',sizeof(modelName));
+    uint8_t modelNameLength = sizeof(modelName);
+#else
+#define CONTENT_NUM  3 //内容数量
+#endif  //UTE_MODULE_MODEL_NUMBER_SUPPORT
     compo_textbox_t * txt;
     char davName[40];
     memset(davName,'\0',sizeof(davName));
@@ -447,36 +459,50 @@ compo_form_t *func_set_sub_about_form_create(void)
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_SETTING_ABOUT]);
 
+#if UTE_MODULE_MODEL_NUMBER_SUPPORT
+    memcpy(modelName,UTE_MODULE_MODEL_NUMBER,sizeof(UTE_MODULE_MODEL_NUMBER));
+    //设备型号
+    txt = compo_textbox_create(frm,strlen(i18n[STR_DEV_MODEL]));
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98+SPACING*(CONTENT_NUM-4),220,34);
+    compo_textbox_set(txt, i18n[STR_DEV_MODEL]);
+
+    txt = compo_textbox_create(frm,strlen(modelName));
+    compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING*(CONTENT_NUM-4),220,34);
+    compo_textbox_set(txt, modelName);
+    compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+#endif // UTE_MODULE_MODEL_NUMBER_SUPPORT
+
     //设备名称
     txt = compo_textbox_create(frm,strlen(i18n[STR_DEV_NEME]));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98+SPACING*(CONTENT_NUM-3),220,34);
     compo_textbox_set(txt, i18n[STR_DEV_NEME]);
 
     txt = compo_textbox_create(frm,strlen(davName));
     compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING*(CONTENT_NUM-3),220,34);
     compo_textbox_set(txt, davName);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
 
     //系统版本
     txt = compo_textbox_create(frm,strlen(i18n[STR_SYS_VERSION]));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98+SPACING,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98+SPACING*(CONTENT_NUM-2),220,34);
     compo_textbox_set(txt, i18n[STR_SYS_VERSION]);
 
     txt = compo_textbox_create(frm,strlen(UTE_SW_VERSION));
     compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING*(CONTENT_NUM-2),220,34);
     compo_textbox_set(txt, UTE_SW_VERSION);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
 
     //蓝牙地址
     txt = compo_textbox_create(frm,strlen(i18n[STR_BLE_MAC]));
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98+SPACING*2,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,98+SPACING*(CONTENT_NUM-1),220,34);
     compo_textbox_set(txt, i18n[STR_BLE_MAC]);
 
     txt = compo_textbox_create(frm,strlen(Ble_Address_str_buf));
     compo_textbox_set_font(txt,UI_BUF_0FONT_FONT_NUM_24_BIN);
-    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING*2,220,34);
+    compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X,134+SPACING*(CONTENT_NUM-1),220,34);
     compo_textbox_set(txt, (char*)Ble_Address_str_buf);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
 
@@ -555,11 +581,20 @@ compo_form_t *func_set_sub_about_form_create(void)
 //关于功能消息处理
 static void func_set_sub_about_message(size_msg_t msg)
 {
+    f_about_t *f_about = (f_about_t *)func_cb.f_cb;
 
     if(sys_cb.power_on_state==false)
     {
         switch (msg)
         {
+#if UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
+            case MSG_CTP_TOUCH:
+                if(f_about->ptm)
+                {
+                    compo_page_move_touch_handler(f_about->ptm);
+                }
+                break;
+#endif  // UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
             case MSG_CTP_SHORT_DOWN:
                 uteTaskGuiStartScreen(FUNC_POWER_ON_SCAN, FUNC_SWITCH_UD_ZOOM_DOWN | FUNC_SWITCH_AUTO,__func__);
                 break;
@@ -578,6 +613,14 @@ static void func_set_sub_about_message(size_msg_t msg)
     {
         switch (msg)
         {
+#if UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
+            case MSG_CTP_TOUCH:
+                if(f_about->ptm)
+                {
+                    compo_page_move_touch_handler(f_about->ptm);
+                }
+                break;
+#endif  // UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
             case MSG_CTP_LONG:
                 if (!uteApplicationCommonIsHasConnectOurApp())
                 {
@@ -592,17 +635,48 @@ static void func_set_sub_about_message(size_msg_t msg)
 
 }
 
+static void func_set_sub_about_process(void)
+{
+#if UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
+    f_about_t *f_about = (f_about_t *)func_cb.f_cb;
+
+    if (f_about->ptm)
+    {
+        compo_page_move_process(f_about->ptm);
+    }
+#endif  // UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
+    func_process();
+}
 //进入关于功能
 static void func_set_sub_about_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_about_t));
     func_cb.frm_main = func_set_sub_about_form_create();
+#if UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
+    f_about_t *f_about = (f_about_t *)func_cb.f_cb;
+    f_about->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = true,
+        .page_size =  406,
+        .page_count = 1,
+        .quick_jump_perc =10,
+    };
+    compo_page_move_init(f_about->ptm, func_cb.frm_main->page_body, &info);
+#endif  // UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
 }
 
 //退出关于功能
 static void func_set_sub_about_exit(void)
 {
+    f_about_t *f_about = (f_about_t *)func_cb.f_cb;
     func_cb.last = FUNC_SET_SUB_ABOUT;
+#if UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
+    if (f_about->ptm)
+    {
+        func_free(f_about->ptm);
+    }
+#endif  // UTE_MODULE_SETTING_SUB_ABOUT_LONG_PAGE_SUPPORT
 }
 
 //关于功能
@@ -612,7 +686,8 @@ void func_set_sub_about(void)
     func_set_sub_about_enter();
     while (func_cb.sta == FUNC_SET_SUB_ABOUT)
     {
-        func_process();
+        // func_process();
+        func_set_sub_about_process();
         func_set_sub_about_message(msg_dequeue());
     }
     func_set_sub_about_exit();

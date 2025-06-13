@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DB_H_
 
 #define DEFAULT_BLE_DEV_NAME "huafit S10"
-#define UTE_SW_VERSION "AB281DBV000080"
+#define UTE_SW_VERSION "AB281DBV000098"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DB"
@@ -177,12 +177,13 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 2
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19131001_BIN,\
-                                                UI_BUF_DIALPLATE_D19129001_BIN,\
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19130001_BIN,\
+                                                UI_BUF_DIALPLATE_D19131001_BIN,\
                                                 UI_BUF_DIALPLATE_D19135001_BIN,\
-                                                UI_BUF_DIALPLATE_D19130001_BIN,\
+                                                UI_BUF_DIALPLATE_D19129001_BIN,\
+                                                UI_BUF_DIALPLATE_D18497001_BIN,\
                                                 UI_BUF_DIALPLATE_D18650001_BIN,\
                                               }
 

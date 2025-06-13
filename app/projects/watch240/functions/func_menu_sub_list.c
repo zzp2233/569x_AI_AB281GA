@@ -715,6 +715,12 @@ compo_form_t *func_menu_sub_list_form_create(void)
     }
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
     compo_listbox_set(listbox, tbl_menu_list, uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1);
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+    compo_listbox_set(listbox, tbl_menu_list, uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1);
+#else
+    compo_listbox_set(listbox, tbl_menu_list, MENU_LIST_CNT);
+#endif  //UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
 #else
     compo_listbox_set(listbox, tbl_menu_list, MENU_LIST_CNT);
 #endif

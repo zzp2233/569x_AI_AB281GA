@@ -13,7 +13,7 @@
 #define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T62,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 #define PROJECT_AB281AB_SUPPORT      0 /*! 同乐达 T69,在T62基础上增加编码器,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-04-18 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
-#define PROJECT_AB281C_SUPPORT       0 /*! 同乐达 T60, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
+#define PROJECT_AB281C_SUPPORT       1 /*! 同乐达 T60, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
 #define PROJECT_AB281D_SUPPORT       0 /*! 共鑫 天之蓝UI, TFT 240x284 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
 #define PROJECT_AB281AC_SUPPORT      0 /*! 同乐达T66，TFT 240x296 NV3030B,CHIP_5691C_F 基于AB281AV0000031修改分辨率为240x296 ,ganqian.yi 2025-4-21*/
 #define PROJECT_AB281E_SUPPORT       0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
@@ -23,11 +23,14 @@
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 #define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
 #define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
-#define PROJECT_AB281J_SUPPORT       1 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
+#define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
 #define PROJECT_AB281K_SUPPORT       0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
 #define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
 #define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
 #define PROJECT_AB281N_SUPPORT       0 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
+#define PROJECT_AB281DC_SUPPORT      0 /*! 恒鑫HX01定制,双按键+编码器+手电筒,TFT 240x296 JD9853,CHIP_5691C_F,wang.luo 2025-06-13 */
+#define PROJECT_AB281GA_SUPPORT      0 /*! 传音815N,amoled 368x448,wang.luo,CHIP_5691G 2025-06-13 */
+#define PROJECT_AB281FA_SUPPORT      0 /*! 同乐达T70-A TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -67,7 +70,14 @@
 #include"ute_project_config_ab281m.h"
 #elif PROJECT_AB281N_SUPPORT
 #include"ute_project_config_ab281n.h"
+#elif PROJECT_AB281DC_SUPPORT
+#include"ute_project_config_ab281dc.h"
+#elif PROJECT_AB281GA_SUPPORT
+#include"ute_project_config_ab281ga.h"
+#elif PROJECT_AB281FA_SUPPORT
+#include"ute_project_config_ab281fa.h"
 #endif
+
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 0
 
@@ -567,6 +577,11 @@
 /*! 默认PWM频率,中科平台PWM使用一个定时器产生，不能多路PWM输出不同频率的PWM信号,wang.luo 2025-05-09 */
 #ifndef UTE_DRV_DEFAULT_PWM_HZ
 #define UTE_DRV_DEFAULT_PWM_HZ 160
+#endif
+
+/*! 手电筒LED电源gpio pin,wang.luo 2025-06-12 */
+#ifndef UTE_DRV_LED_POWER_GPIO_PIN
+#define UTE_DRV_LED_POWER_GPIO_PIN      IO_PB7
 #endif
 
 /*! 默认语言 zn.zeng, 2021-08-23  */

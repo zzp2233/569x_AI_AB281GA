@@ -541,6 +541,11 @@ static void func_clock_sub_side_button_click(void)
     }
 }
 
+static void func_clock_sub_side_reflash(void)
+{
+    return;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 #define GUI_SIDE_WIDTH_SIZE (GUI_SIDE_MENU_WIDTH)
 #define GUI_SIDE_CENTER_X  (GUI_SIDE_WIDTH_SIZE/2)

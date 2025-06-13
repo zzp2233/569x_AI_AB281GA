@@ -687,6 +687,13 @@ const menu_hc_item_t tbl_menu_waterfall[] =
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_sub_waterfall_form_create(void)
 {
+#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+    static uint16_t waterfall_menu_cnt = 0;
+    waterfall_menu_cnt = uteModuleMenstrualCycleIsOpen() ? (MENU_WF_CNT) : (MENU_WF_CNT-1);
+#else
+    static uint16_t waterfall_menu_cnt = MENU_WF_CNT;
+#endif  // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
@@ -715,7 +722,7 @@ compo_form_t *func_menu_sub_waterfall_form_create(void)
     //新建瀑布流效果
     compo_iconlist_t *iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_WATERFALL);
     compo_setid(iconlist, COMPO_ID_ICONLIST);
-    for (int i=0; i<MENU_WF_CNT; i++)
+    for (int i=0; i<waterfall_menu_cnt; i++)
     {
         compo_iconlist_add(iconlist, tbl_menu_waterfall[i].res_addr);
     }

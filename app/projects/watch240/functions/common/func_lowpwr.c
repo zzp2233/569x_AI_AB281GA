@@ -4,6 +4,7 @@
 #include "ute_project_config.h"
 #include "ute_module_sport.h"
 #include "ute_module_bedside_mode.h"
+#include "ute_drv_screen_common.h"
 
 bool power_off_check(void);
 void lock_code_pwrsave(void);
@@ -336,6 +337,7 @@ static void sfunc_sleep(void)
     adda_clk_source_sel(1);                     //adda_clk48_a select xosc52m
     PLL0CON &= ~(BIT(18) | BIT(6));             //pll0 sdm & analog disable
     rtc_sleep_enter();
+    BTCON2 |= BIT(10) | BIT(8);                 //osc_en_wken 解决新btstack.lib休眠后蓝牙断连
 
     //io analog input
     pa_de = GPIOADE;

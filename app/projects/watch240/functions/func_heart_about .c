@@ -39,7 +39,6 @@ compo_form_t *func_heart_about_form_create(void)
       f_heart_about->txt_page = textbox;
    }
 
-
    return frm;
 }
 
@@ -65,6 +64,32 @@ compo_form_t *func_heart_about_form_create(void)
       f_heart_about->txt_page = textbox;
    }
 
+
+   return frm;
+}
+
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+compo_form_t *func_heart_about_form_create(void)
+{
+   compo_form_t *frm = compo_form_create(true);
+
+   compo_textbox_t *textbox = compo_textbox_create(frm, strlen(i18n[STR_RESTING_HEART]));
+   compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, 17, 230, 50);
+   compo_textbox_set(textbox,i18n[STR_RESTING_HEART]);
+
+   textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_ABOUT]));
+   compo_textbox_set_align_center(textbox,false);
+   compo_textbox_set_location(textbox,16, 70, 290, 380);
+   compo_textbox_set_multiline(textbox, true);
+   widget_text_set_ellipsis(textbox->txt, false);      //避免既有滚动又有省略号的情况
+   compo_textbox_set(textbox,i18n[STR_HEART_ABOUT]);
+
+   if(func_cb.sta == FUNC_HEAR_ABOUT)
+   {
+      f_heart_about_t *f_heart_about = (f_heart_about_t *)func_cb.f_cb;
+      f_heart_about->txt_page = textbox;
+   }
 
    return frm;
 }
@@ -161,6 +186,16 @@ static void func_heart_about_enter(void)
    };
    compo_page_move_init(f_heart_about->ptm, func_cb.frm_main->page_body, &info);
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
+   f_heart_about->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+   page_move_info_t info =
+   {
+      .title_used = false,
+      .page_size = widget_text_get_area(f_heart_about->txt_page->txt).hei+90,
+      .page_count = 1,
+      .quick_jump_perc =10,
+   };
+   compo_page_move_init(f_heart_about->ptm, func_cb.frm_main->page_body, &info);
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
    f_heart_about->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
    page_move_info_t info =
    {

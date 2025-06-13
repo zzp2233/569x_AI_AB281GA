@@ -228,14 +228,14 @@ extern void func_mood_about(void);
 #if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
 extern void func_motor_grade(void);
 #endif
-// #if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
-// extern void func_clock_dropdown_menu(void);
-// #endif
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+extern void func_clock_dropdown_menu(void);
+#endif
 
 
-// #if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
-// compo_form_t *func_clock_dropdown_menu_form_create(void);
-// #endif
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+compo_form_t *func_clock_dropdown_menu_form_create(void);
+#endif
 #if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
 compo_form_t *func_motor_grade_form_create(void);
 #endif
@@ -431,9 +431,9 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen_form_create},
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-// #if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
-//     {FUNC_CLOCK_DROPDOWN_MENU,          func_clock_dropdown_menu_form_create},
-// #endif
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+    {FUNC_CLOCK_DROPDOWN_MENU,          func_clock_dropdown_menu_form_create},
+#endif
 #if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
     {FUNC_PRESSURE,                     func_pressure_form_create},//压力
 #endif
@@ -643,9 +643,9 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {FUNC_BLOOD_OXYGEN,                 func_blood_oxygen},             //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-// #if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
-//     {FUNC_CLOCK_DROPDOWN_MENU,          func_clock_dropdown_menu},
-// #endif
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+    {FUNC_CLOCK_DROPDOWN_MENU,          func_clock_dropdown_menu},
+#endif
 #if UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT
     {FUNC_MOTOR_GRADE,                  func_motor_grade},
 #endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT

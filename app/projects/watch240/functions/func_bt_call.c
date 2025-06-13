@@ -584,16 +584,11 @@ compo_form_t *func_bt_call_form_create(void)
 
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
 //    compo_form_set_title(frm, i18n[STR_HEART_RATE]);
-    s16 txt_leng=0;
-    s16 txt_x=0;
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 28/2+56, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
-    txt_leng = widget_text_get_area(name_txt->txt).wid;
-    txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-    if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
@@ -649,16 +644,11 @@ compo_form_t *func_bt_outgoing_form_create(void)
     //设置标题栏
     // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     // compo_form_set_title(frm, i18n[STR_PHONE]);
-    s16 txt_leng=0;
-    s16 txt_x=0;
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 28/2+56, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
-    txt_leng = widget_text_get_area(name_txt->txt).wid;
-    txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-    if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X, 100, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
@@ -671,9 +661,6 @@ compo_form_t *func_bt_outgoing_form_create(void)
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X-5, GUI_SCREEN_CENTER_Y/1.5+GUI_SCREEN_CENTER_Y/6+16, GUI_SCREEN_WIDTH/1.2, widget_text_get_max_height());
     compo_textbox_set(txt, i18n[STR_IN_CALL]);
     compo_textbox_set_forecolor(txt, COLOR_WHITE);
-    txt_leng = widget_text_get_area(txt->txt).wid;
-    txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-    if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
 
     //挂断按钮
     btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALL_09_CALLING_ICON_PIC60X60_X14_90_166_Y202_01_HANG_UP_BIN);

@@ -18,11 +18,6 @@ typedef struct f_clock_sub_side_t_
 
 enum
 {
-    COMPO_ID_WEA_DATA = 1,
-};
-
-enum
-{
     COMPO_ID_APP_NULL = 0,
     COMPO_ID_APP_1,
     COMPO_ID_APP_2,
@@ -31,6 +26,7 @@ enum
     COMPO_ID_APP_5,
     COMPO_ID_APP_6,
     COMPO_ID_APP_7,
+    COMPO_ID_WEA_DATA,
 };
 
 extern void compo_set_bonddata(component_t *compo, tm_t tm);

@@ -57,7 +57,7 @@ __STATIC_INLINE void drvScreenTft240X284Jd9853Sxt180g1911Init(void)
     uteDrvScreenCommonSetResetPin(true);
     uteModulePlatformDelayMs(50);
 
-    uint8_t tmp[64];
+    uint8_t tmp[34];
 
     memcpy(&tmp[0], "\x98\x53", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDF, &tmp[0], 2);
@@ -68,13 +68,13 @@ __STATIC_INLINE void drvScreenTft240X284Jd9853Sxt180g1911Init(void)
     memcpy(&tmp[0], "\x22", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB2, &tmp[0], 1);
 
-    memcpy(&tmp[0], "\x00\x21\x00\x49", 4);
+    memcpy(&tmp[0], "\x00\x2D\x00\x55", 4);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB7, &tmp[0], 4);
 
-    memcpy(&tmp[0], "\x1d\x9A\x55\x73\x63\xF0", 6);
+    memcpy(&tmp[0], "\x04\x1A\x27\x71\x73\xF0", 6);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBB, &tmp[0], 6);
 
-    memcpy(&tmp[0], "\x22\x22", 2);
+    memcpy(&tmp[0], "\x44\xA4", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC0, &tmp[0], 2);
 
     memcpy(&tmp[0], "\x12", 1);
@@ -83,7 +83,7 @@ __STATIC_INLINE void drvScreenTft240X284Jd9853Sxt180g1911Init(void)
     memcpy(&tmp[0], "\x7D\x07\x14\x06\xC8\x71\x6C\x77", 8);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC3, &tmp[0], 8);
 
-    memcpy(&tmp[0], "\x00\x00\x8E\x79\x1E\x1A\x16\x79\x1E\x1A\x16\x82", 12);
+    memcpy(&tmp[0], "\x00\x00\x8E\xC0\x40\x30\x16\xC0\x40\x30\x16\x82", 12);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC4, &tmp[0], 12);
 
     memcpy(&tmp[0],
@@ -119,6 +119,33 @@ __STATIC_INLINE void drvScreenTft240X284Jd9853Sxt180g1911Init(void)
     memcpy(&tmp[0], "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBE, &tmp[0], 1);
 
+    memcpy(&tmp[0], "\x01", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+
+    memcpy(&tmp[0], "\x03", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC5, &tmp[0], 1);
+
+    memcpy(&tmp[0], "\x00", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+
+    memcpy(&tmp[0], "\x77", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBC, &tmp[0], 1);
+
+    memcpy(&tmp[0], "\x01", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+
+    memcpy(&tmp[0], "\x04", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBB, &tmp[0], 1);
+
+    memcpy(&tmp[0], "\x12", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xD7, &tmp[0], 1);
+
+    memcpy(&tmp[0], "\x02", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
+
+    memcpy(&tmp[0], "\x03\x5A", 2);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xBD, &tmp[0], 2);
+
     memcpy(&tmp[0], "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDE, &tmp[0], 1);
 
@@ -133,14 +160,6 @@ __STATIC_INLINE void drvScreenTft240X284Jd9853Sxt180g1911Init(void)
 
     memcpy(&tmp[0], "\x00\x00\x01\x1B", 4);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x2B, &tmp[0], 4);
-
-    memcpy(&tmp[0], "\x11", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x11, &tmp[0], 1);
-    uteModulePlatformDelayMs(120);
-
-    memcpy(&tmp[0], "\x29", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x29, &tmp[0], 1);
-    uteModulePlatformDelayMs(50);
 }
 
 const ute_drv_screen_common_config_t uteDrvScreenTft240X284Jd9853Sxt180g1911Config =

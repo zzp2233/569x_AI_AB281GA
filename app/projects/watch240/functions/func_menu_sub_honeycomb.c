@@ -851,6 +851,13 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
+#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+    static uint16_t honeycomb_menu_cnt = 0;
+    honeycomb_menu_cnt = uteModuleMenstrualCycleIsOpen() ? (MENU_HC_CNT) : (MENU_HC_CNT-1);
+#else
+    static uint16_t honeycomb_menu_cnt = MENU_HC_CNT;
+#endif  // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+
     //新建蜂窝效果
     if (func_cb.menu_style == MENU_STYLE_HONEYCOMB)
     {
@@ -862,7 +869,8 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
     }
 
     compo_setid(iconlist, COMPO_ID_ICONLIST);
-    for (int i=0; i<MENU_HC_CNT; i++)
+
+    for (int i=0; i<honeycomb_menu_cnt; i++)
     {
         compo_iconlist_add(iconlist, tbl_menu_honeycomb[i].res_addr);
     }

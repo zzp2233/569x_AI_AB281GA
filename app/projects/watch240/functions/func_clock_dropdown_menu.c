@@ -16,9 +16,10 @@
 typedef struct f_clock_dropdwon_menu_t_
 {
 #if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
-    page_tp_move_t ptm;
+    page_tp_move_t* ptm;
 #endif
     u8 page_num;
+    bool up_date_flag;
 } f_clock_dropdwon_menu_t;
 
 #ifdef UTE_CLOCK_DWON_PAGE_NUM //页面数量
@@ -54,13 +55,17 @@ typedef struct dropdown_disp_btn_item_t_
     s16 y;
 } dropdown_disp_btn_item_t;
 
+widget_page_t *widget_page;///创建按键父局器页面
+
 #define DROPDOWN_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_dropdown_disp_btn_item) / sizeof(tbl_dropdown_disp_btn_item[0])))
 #define MENU_CNT    ((int)(sizeof(dwon_tbl_style_list) / sizeof(dwon_tbl_style_list[0])))
 
-/*!* 更新函数/*/
+/*!* 更新函数  后续添加功能用宏控制/*/
 static void switch_set_sub_wrist(void);
 static void func_clock_sub_dropdown_mute_pic_update(compo_button_t *btn);
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT// 床头钟更新
 static void func_clock_sub_dropdown_bedside_mode_pic_update(compo_button_t *btn);
+#endif
 static void func_clock_sub_dropdown_bluetooth_btn_pic_update(compo_button_t *btn);
 static void func_clock_sub_dropdown_wrist_pic_update(compo_button_t *btn);
 static void func_clock_sub_dropdown_disturb_pic_update(compo_button_t *btn);
@@ -68,22 +73,23 @@ static void func_clock_sub_dropdown_menu_pic_update(compo_button_t *btn);
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 /*! 功能事件图片地址定义 */
-#define IMG_ADDR_BT_OFF               0   ///蓝牙Bt->开
-#define IMG_ADDR_BT_ON                0   ///蓝牙Bt->关
-#define IMG_ADDR_DISTURD_ON           0   ///勿扰->开
-#define IMG_ADDR_DISTURD_OFF          0   ///勿扰->关
-#define IMG_ADDR_MUTE_ON              0   ///静音->开
-#define IMG_ADDR_MUTE_OFF             0   ///静音->关
-#define IMG_ADDR_LIGHT_FUN            0   ///亮度->功能
-#define IMG_ADDR_WRIST_ON             0   ///抬腕亮屏->开
-#define IMG_ADDR_WRIST_OFF            0   ///抬腕亮屏->关
-#define IMG_ADDR_FIND_PHONE_FUN       0   ///找手机->功能
-#define IMG_ADDR_FLASHLIGHT_FUN       0   ///手电筒->功能
-#define IMG_ADDR_SETTING_FUN          0   ///设置->功能
-#define IMG_ADDR_ABOUT_FUN            0   ///关于->功能
-#define IMG_ADDR_BED_LAMP_ON          0   ///床头灯->开
-#define IMG_ADDR_BED_LAMP_OFF         0   ///床头灯->关
-
+#define IMG_ADDR_BT_OFF               UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_01_BIN   ///蓝牙Bt->开
+#define IMG_ADDR_BT_ON                UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_00_BIN   ///蓝牙Bt->关
+#define IMG_ADDR_DISTURD_ON           UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_04_BIN   ///勿扰->开
+#define IMG_ADDR_DISTURD_OFF          UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_03_BIN   ///勿扰->关
+#define IMG_ADDR_MUTE_ON              UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_06_BIN   ///静音->开
+#define IMG_ADDR_MUTE_OFF             UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_05_BIN   ///静音->关
+#define IMG_ADDR_LIGHT_FUN            UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_07_BIN   ///亮度->功能
+#define IMG_ADDR_WRIST_ON             UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_09_BIN   ///抬腕亮屏->开
+#define IMG_ADDR_WRIST_OFF            UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_08_BIN   ///抬腕亮屏->关
+#define IMG_ADDR_FIND_PHONE_FUN       UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_10_BIN   ///找手机->功能
+#define IMG_ADDR_FLASHLIGHT_FUN       UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_11_BIN   ///手电筒->功能
+#define IMG_ADDR_SETTING_FUN          UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_13_BIN   ///设置->功能
+#define IMG_ADDR_ABOUT_FUN            UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_17_BIN   ///关于->功能
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT// 床头钟模式开关
+#define IMG_ADDR_BED_LAMP_ON          UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_CHAUNGTOUDENG01_BIN   ///床头灯->开
+#define IMG_ADDR_BED_LAMP_OFF         UI_BUF_I335001_DROP_DOWN_MENU_TUBIAO_ICON_PIC108X56_X8_124_Y84_148_212_CHAUNGTOUDENG00_BIN   ///床头灯->关
+#endif
 //按钮item，创建时遍历一下
 static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
 {
@@ -123,20 +129,21 @@ compo_form_t *func_clock_dropdown_menu_form_create(void)
 {
 
     compo_form_t *frm = compo_form_create(true);
+    widget_page = widget_page_create(frm->page);///创建按键页面
+    widget_set_location(widget_page,GUI_SCREEN_WIDTH*(CLOCK_DWON_PAGE_NUM-1),GUI_SCREEN_CENTER_Y,GUI_SCREEN_WIDTH*CLOCK_DWON_PAGE_NUM,GUI_SCREEN_HEIGHT);
 
     ///创建遮罩层
     compo_shape_t *masklayer = compo_shape_create_for_page(frm,frm->page, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_color(masklayer, COLOR_BLACK);
     compo_shape_set_location(masklayer, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
     compo_shape_set_alpha(masklayer, 255);
-
     ///创建按钮
     compo_button_t *btn;
     for (u8 idx_btn = 0; idx_btn < DROPDOWN_DISP_BTN_ITEM_CNT; idx_btn++)
     {
-        btn =compo_button_create_by_image(frm, tbl_dropdown_disp_btn_item[idx_btn].res_addr);
+        btn = compo_button_create_page_by_image(frm,widget_page, tbl_dropdown_disp_btn_item[idx_btn].res_addr);
         compo_setid(btn,  tbl_dropdown_disp_btn_item[idx_btn].btn_id);
-        compo_button_set_pos(btn, tbl_dropdown_disp_btn_item[idx_btn].x, tbl_dropdown_disp_btn_item[idx_btn].y);
+        compo_button_set_pos(btn, tbl_dropdown_disp_btn_item[idx_btn].x, tbl_dropdown_disp_btn_item[idx_btn].y+67);
 
         switch (tbl_dropdown_disp_btn_item[idx_btn].btn_id)
         {
@@ -156,31 +163,31 @@ compo_form_t *func_clock_dropdown_menu_form_create(void)
                 func_clock_sub_dropdown_menu_pic_update(btn);//菜单更新
                 break;
             case COMPO_ID_BTN_BEDSIDE_MODE:
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT// 床头钟更新
                 func_clock_sub_dropdown_bedside_mode_pic_update(btn); //床头钟更新
+#endif
                 break;
         }
     }
+
     //电池
-    compo_picturebox_t *battery_pic = compo_picturebox_create_for_page(frm, UI_BUF_I335001_DROP_DOWN_MENU_ICON_BATTERY_34X18_X190_Y11_00_BIN,frm->page);
+    compo_picturebox_t *battery_pic = compo_picturebox_create_for_page(frm,frm->page, UI_BUF_I335001_DROP_DOWN_MENU_ICON_BATTERY_34X18_X190_Y11_00_BIN);
     compo_picturebox_set_pos(battery_pic, 207, 20);
     battery_pic->bond_data = COMPO_BOND_VBAT_PROGRESS;
     battery_pic->radix  = 5;
     compo_set_bonddata((component_t *)battery_pic, time_to_tm(compo_cb.rtc_cnt));
-
     //蓝牙状态 Bt
-    compo_picturebox_t *bt_pic = compo_picturebox_create_for_page(frm, UI_BUF_I335001_DROP_DOWN_MENU_PHONE_ICON_PIC26X11_X54_Y15_01_BIN,frm->page);
+    compo_picturebox_t *bt_pic = compo_picturebox_create_for_page(frm,frm->page, UI_BUF_I335001_DROP_DOWN_MENU_PHONE_ICON_PIC26X11_X54_Y15_01_BIN);
     compo_picturebox_set_pos(bt_pic, 67, 20);
     bt_pic->bond_data = COMPO_BOND_BT_STA;
     bt_pic->radix  = 2;
     compo_set_bonddata((component_t *)bt_pic, time_to_tm(compo_cb.rtc_cnt));
-
     //蓝牙状态 Ble
-    compo_picturebox_t *ble_pic  = compo_picturebox_create_for_page(frm, UI_BUF_I335001_DROP_DOWN_MENU_PHONE_ICON_PIC26X11_X54_Y15_01_BIN,frm->page);
+    compo_picturebox_t *ble_pic  = compo_picturebox_create_for_page(frm,frm->page, UI_BUF_I335001_DROP_DOWN_MENU_PHONE_ICON_PIC26X11_X54_Y15_01_BIN);
     compo_picturebox_set_pos(ble_pic, 28, 20);
     ble_pic->bond_data = COMPO_BOND_BLE_STA;
     ble_pic->radix  = 2;
     compo_set_bonddata((component_t *)ble_pic, time_to_tm(compo_cb.rtc_cnt));
-
     char txt_buf[50];
     ute_module_systemtime_time_t time;
     uteModuleSystemtimeGetTime(&time);//获取系统时间
@@ -192,52 +199,140 @@ compo_form_t *func_clock_dropdown_menu_form_create(void)
                              STR_FRIDAY,     // 周五
                              STR_SATURDAY,   // 周六
                             };
-
     snprintf(txt_buf,sizeof(txt_buf),"%02d/%02d %s",time.month,time.day,i18n[week_sort[time.week]]);
-    compo_textbox_t *textbox = compo_textbox_create_for_page(frm,strlen(txt_buf),frm->page);
+    compo_textbox_t *textbox = compo_textbox_create_for_page(frm,frm->page,strlen(txt_buf));
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/5.5,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/10.5);
     compo_textbox_set(textbox,txt_buf );
-
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d%%",uteDrvBatteryCommonGetLvl() );//电量百分比数值
-    textbox = compo_textbox_create_for_page(frm,4,frm->page);
+    textbox = compo_textbox_create_for_page(frm,frm->page,4);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_20_BIN);
     compo_textbox_set_align_center(textbox,false);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 10,65,30);
     compo_textbox_set_right_align(textbox,true);
     compo_textbox_set(textbox,txt_buf );
 
+    u16 page_num_pos[COMPO_ID_PAGE_LAST-COMPO_ID_PAGE_FIRST+1]= {114,126};
     ///创建页码点
     for (int idx = COMPO_ID_PAGE_FIRST; idx <= COMPO_ID_PAGE_LAST; idx++)
     {
         compo_shape_t *page_num = compo_shape_create_for_page(frm,frm->page, COMPO_SHAPE_TYPE_RECTANGLE);
         if(idx!=COMPO_ID_PAGE_FIRST)
         {
-            compo_shape_set_color(page_num, COLOR_BLACK);
+            compo_shape_set_color(page_num, make_color(51,51,51));
         }
-        compo_shape_set_location(page_num, GUI_SCREEN_CENTER_X+6*idx-(COMPO_ID_PAGE_LAST-idx)*6, 278, 8, 8);
+        compo_shape_set_location(page_num, page_num_pos[idx-COMPO_ID_PAGE_FIRST], 278, 8, 8);
+        compo_shape_set_radius(page_num,4);
+        compo_setid(page_num,idx);
     }
-
     return frm;
 }
+#else
+/*! 功能事件图片地址定义 */
+#define IMG_ADDR_BT_OFF               0   ///蓝牙Bt->开
+#define IMG_ADDR_BT_ON                0   ///蓝牙Bt->关
+#define IMG_ADDR_DISTURD_ON           0   ///勿扰->开
+#define IMG_ADDR_DISTURD_OFF          0   ///勿扰->关
+#define IMG_ADDR_MUTE_ON              0   ///静音->开
+#define IMG_ADDR_MUTE_OFF             0   ///静音->关
+#define IMG_ADDR_LIGHT_FUN            0   ///亮度->功能
+#define IMG_ADDR_WRIST_ON             0   ///抬腕亮屏->开
+#define IMG_ADDR_WRIST_OFF            0   ///抬腕亮屏->关
+#define IMG_ADDR_FIND_PHONE_FUN       0   ///找手机->功能
+#define IMG_ADDR_FLASHLIGHT_FUN       0   ///手电筒->功能
+#define IMG_ADDR_SETTING_FUN          0   ///设置->功能
+#define IMG_ADDR_ABOUT_FUN            0   ///关于->功能
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT// 床头钟模式开关
+#define IMG_ADDR_BED_LAMP_ON          0   ///床头灯->开
+#define IMG_ADDR_BED_LAMP_OFF         0   ///床头灯->关
+#endif
+//按钮item，创建时遍历一下
+static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
+{
+    ///*第一页*/
+    {IMG_ADDR_BT_OFF,               COMPO_ID_BTN_CONNECT,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  84-56},///蓝牙连接开关
+    {0,                             COMPO_ID_BTN_MENU,             GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  84-56},///菜单
+    {IMG_ADDR_DISTURD_OFF,          COMPO_ID_BTN_DISCURD,          GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  148-56},///勿扰模式开关
+    {IMG_ADDR_MUTE_OFF,             COMPO_ID_BTN_MUTE,             GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  148-56},///静音模式开关
+    {IMG_ADDR_LIGHT_FUN,            COMPO_ID_BTN_LIGHT,            GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  212-56},///亮度调节
+    {IMG_ADDR_WRIST_OFF,            COMPO_ID_BTN_WIRST,            GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  212-56},///抬婉亮屏
+    ///*第二页*/
+    {IMG_ADDR_FIND_PHONE_FUN,       COMPO_ID_BTN_PHONE,             GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  84-56},///查找手机
+    {IMG_ADDR_FLASHLIGHT_FUN,       COMPO_ID_BTN_FLASHLIGHT,        GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  84-56},///手电筒
+    {IMG_ADDR_SETTING_FUN,          COMPO_ID_BTN_SETTING,           GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  148-56},///设置
+    {IMG_ADDR_ABOUT_FUN,            COMPO_ID_BTN_ABOUT,             GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  148-56},///关于
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
+    {IMG_ADDR_BED_LAMP_OFF,         COMPO_ID_BTN_BEDSIDE_MODE,     GUI_SCREEN_WIDTH + GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,  212-56},// 床头钟模式开关
+#endif
+};
+
+//风格列表tbl
+static const compo_listbox_item_t dwon_tbl_style_list[] =
+{
+    {STR_STYLE_LIST_1,          0,           .menu_style = MENU_STYLE_LIST},             //列表
+    {STR_GONG_GE,               0,           .menu_style = MENU_STYLE_SUDOKU},           //宫格
+    {STR_STYLE_HONEYCOMB,       0,           .menu_style = MENU_STYLE_HONEYCOMB},        //蜂窝
+    {STR_SPHERE,                0,           .menu_style = MENU_STYLE_FOOTBALL},         //球体
+    {STR_CHECKERBOARD,          0,           .menu_style = MENU_STYLE_GRID},             //棋盘
+    {STR_HALO,                  0,           .menu_style = MENU_STYLE_KALE},             //光环
+    {STR_STYLE_SKYRER,          0,           .menu_style = MENU_STYLE_SKYRER},           //天圆地方
+    {STR_STYLE_GRID_1,          0,           .menu_style = MENU_STYLE_CUM_GRID},         //网格
+    {STR_STYLE_WATERFALL,       0,           .menu_style = MENU_STYLE_WATERFALL},        //瀑布
+};
+
+//创建下拉菜单
+compo_form_t *func_clock_dropdown_menu_form_create(void)
+{
+
+    compo_form_t *frm = compo_form_create(true);
+    widget_page = widget_page_create(frm->page);///创建按键页面
+    widget_set_location(widget_page,GUI_SCREEN_WIDTH*(CLOCK_DWON_PAGE_NUM-1),GUI_SCREEN_CENTER_Y,GUI_SCREEN_WIDTH*CLOCK_DWON_PAGE_NUM,GUI_SCREEN_HEIGHT);
+    return frm;
+}
+#endif
 //更新显示
-static void func_clock_dropdown_update(void)
+static void func_clock_dropdown_update_page_num(void)
 {
     f_clock_dropdwon_menu_t *f_clock_dropdwon_menu = (f_clock_dropdwon_menu_t *)func_cb.f_cb;
 
-    ///更新页码点
-    for (int idx = 0; idx < CLOCK_DWON_PAGE_NUM; idx++)
+#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
+    if(f_clock_dropdwon_menu->ptm)
     {
-        compo_shape_t *page_num = compo_getobj_byid(idx);
-        if(page_num!=NULL)
-        {
-            compo_shape_set_color(page_num, (idx == f_clock_dropdwon_menu->page_num) ? COLOR_WHITE:COLOR_BLACK);
-        }
+        compo_page_move_process(f_clock_dropdwon_menu->ptm);
+        printf("page_x:%d\n",compo_page_move_get_offset(f_clock_dropdwon_menu->ptm));
+        // switch (compo_page_move_get_offset(f_clk->ptm))
+        // {
+        //     case -(GUI_SCREEN_WIDTH/2)...0:
+        //         compo_picturebox_cut(ymd,0,3);
+        //         break;
+        //     case (-(GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2))...(-GUI_SCREEN_WIDTH/2-1):
+        //         compo_picturebox_cut(ymd,1,3);
+        //         break;
+        //     case (-(GUI_SCREEN_WIDTH*3))...(-(GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2)-1):
+        //         compo_picturebox_cut(ymd,2,3);
+        //         break;
+        //     default:
+        //         break;
+        // }
     }
-}
-
 #endif
 
+    if(f_clock_dropdwon_menu->up_date_flag)
+    {
+        f_clock_dropdwon_menu->up_date_flag = false;
+        ///更新页码点
+        for (int idx = COMPO_ID_PAGE_FIRST; idx <= COMPO_ID_PAGE_LAST; idx++)
+        {
+            compo_shape_t *page_num = compo_getobj_byid(idx);
+            if(page_num!=NULL)
+            {
+                compo_shape_set_color(page_num, (idx-COMPO_ID_PAGE_FIRST == f_clock_dropdwon_menu->page_num) ? COLOR_WHITE:make_color(51,51,51));
+            }
+            printf("idx:%d  page_num:%d\n",idx-COMPO_ID_PAGE_FIRST,f_clock_dropdwon_menu->page_num);
+        }
+        widget_page_set_client(func_cb.frm_main->page_body, -(f_clock_dropdwon_menu->page_num*GUI_SCREEN_WIDTH), 0);
+    }
+}
 static void func_clock_sub_dropdown_click_handler(void)
 {
     dropdown_disp_btn_item_t *dropdown_disp_btn_item = (dropdown_disp_btn_item_t *)func_cb.f_cb;
@@ -377,22 +472,23 @@ static void func_clock_sub_dropdown_click_handler(void)
 
 static void func_clock_sub_dropdown_process(void)
 {
-    func_clock_dropdown_update();
+    func_clock_dropdown_update_page_num();
     func_clock_sub_process();
 }
 
 //时钟表盘下拉菜单功能消息处理
 static void func_clock_sub_dropdown_message(size_msg_t msg)
 {
-    f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     f_clock_dropdwon_menu_t *f_clock_dropdwon_menu =(f_clock_dropdwon_menu_t *)func_cb.f_cb;
     switch (msg)
     {
         case MSG_CTP_TOUCH:
-            if(f_clk->ptm)
+#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
+            if(f_clock_dropdwon_menu->ptm)
             {
-                compo_page_move_touch_handler(f_clk->ptm);
+                compo_page_move_touch_handler(f_clock_dropdwon_menu->ptm);
             }
+#endif
             break;
         case MSG_CTP_CLICK:
             func_clock_sub_dropdown_click_handler();
@@ -402,6 +498,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             if(f_clock_dropdwon_menu->page_num < CLOCK_DWON_PAGE_NUM-1)
             {
                 f_clock_dropdwon_menu->page_num++;
+                f_clock_dropdwon_menu->up_date_flag=true;
             }
 #endif
             break;
@@ -410,6 +507,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             if(f_clock_dropdwon_menu->page_num != 0)
             {
                 f_clock_dropdwon_menu->page_num--;
+                f_clock_dropdwon_menu->up_date_flag=true;
             }
 #endif
             break;
@@ -435,14 +533,20 @@ static void func_clock_sub_dropdown_enter(void)
         .page_count = CLOCK_DWON_PAGE_NUM,//项目config定义页面数量
         .jump_perc  = GUI_SCREEN_WIDTH/18,
     };
-    compo_page_move_init(f_clock_dropdwon_menu->ptm,func_cb.frm_main->page_body,&info);
+    compo_page_move_init(f_clock_dropdwon_menu->ptm,widget_page,&info);
 #endif
 }
 
 //时钟表盘下拉菜单退出处理
 static void func_clock_sub_dropdown_exit(void)
 {
-
+#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
+    f_clock_dropdwon_menu_t *f_clock_dropdwon_menu = (f_clock_dropdwon_menu_t *)func_cb.f_cb;
+    if (f_clock_dropdwon_menu->ptm)
+    {
+        func_free(f_clock_dropdwon_menu->ptm);
+    }
+#endif
 }
 
 //时钟表盘下拉菜单
@@ -483,10 +587,10 @@ static void func_clock_sub_dropdown_mute_pic_update(compo_button_t *btn)
     }
 }
 
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT// 床头钟更新
 // 下拉床头钟按钮更新
 static void func_clock_sub_dropdown_bedside_mode_pic_update(compo_button_t *btn)
 {
-#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
     if(uteModuleBedsideModeIsOpen())
     {
         compo_button_set_bgimg(btn, IMG_ADDR_BED_LAMP_ON);
@@ -495,8 +599,8 @@ static void func_clock_sub_dropdown_bedside_mode_pic_update(compo_button_t *btn)
     {
         compo_button_set_bgimg(btn, IMG_ADDR_BED_LAMP_OFF);
     }
-#endif
 }
+#endif
 
 ////蓝牙按钮更新
 static void func_clock_sub_dropdown_bluetooth_btn_pic_update(compo_button_t *btn)

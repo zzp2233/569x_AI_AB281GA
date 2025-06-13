@@ -171,11 +171,11 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 7
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18649001_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18650001_BIN, \
+                                                UI_BUF_DIALPLATE_D18651001_BIN, \
                                                 UI_BUF_DIALPLATE_D18650001_BIN, \
                                                 UI_BUF_DIALPLATE_D18651001_BIN, \
-                                                UI_BUF_DIALPLATE_D18652001_BIN, \
-                                                UI_BUF_DIALPLATE_D18653001_BIN, \
+                                                UI_BUF_DIALPLATE_D18650001_BIN, \
                                                 UI_BUF_DIALPLATE_CUBE_LIGHT_BIN,\
                                                 UI_BUF_DIALPLATE_BTF_BIN,\
                                               }
@@ -275,8 +275,8 @@
 #define UTE_MODULE_SCREENS_TOOLBOX_SUPPORT            1 //工具箱列表
 #define UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT        1 //震动强度
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
-#define UTE_MODULE_SCREENS_EMOTION_SUPPORT            1 //情绪界面
-#define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      1 //情绪说明界面
+#define UTE_MODULE_SCREENS_EMOTION_SUPPORT            0 //情绪界面
+#define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      0 //情绪说明界面
 #define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           1 //压力界面
 #define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     1 //压力说明界面
 #endif

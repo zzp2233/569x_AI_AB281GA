@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DB_H_
 
 #define DEFAULT_BLE_DEV_NAME "huafit S10"
-#define UTE_SW_VERSION "AB281DBV000080"
+#define UTE_SW_VERSION "AB281DBV000098"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DB"
@@ -165,6 +165,8 @@
 /*! 表盘预览图使用平面模式,wang.luo 2024-11-16 */
 #define UTE_MODULE_WATCH_PREVIEW_STYLE 1
 
+#define UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT 1
+
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 6
 #define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY, FUNC_HEARTRATE, FUNC_SLEEP, FUNC_WEATHER, FUNC_BT}//, FUNC_BLOOD_OXYGEN
@@ -173,16 +175,16 @@
 /*! 表盘上拉界面,wang.luo 2025-04-07 */
 #define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_MESSAGE
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
-#define DEFAULT_WATCH_INDEX 0
+#define DEFAULT_WATCH_INDEX 2
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19132001_BIN,\
-                                                UI_BUF_DIALPLATE_D19129001_BIN,\
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19130001_BIN,\
+                                                UI_BUF_DIALPLATE_D19131001_BIN,\
                                                 UI_BUF_DIALPLATE_D19135001_BIN,\
-                                                UI_BUF_DIALPLATE_D19130001_BIN,\
+                                                UI_BUF_DIALPLATE_D19129001_BIN,\
+                                                UI_BUF_DIALPLATE_D18497001_BIN,\
                                                 UI_BUF_DIALPLATE_D18650001_BIN,\
-                                                UI_BUF_DIALPLATE_D18653001_BIN,\
                                               }
 
 #define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0     // 使用蝴蝶表盘

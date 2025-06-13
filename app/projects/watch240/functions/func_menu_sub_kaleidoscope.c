@@ -534,7 +534,6 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 //    {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
     // {UI_BUF_I340001_THEME_ICON1_BOOT_BIN,                   FUNC_RESTART},
-    {UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_CALENDAR_BIN,                  FUNC_CALENDAER},
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
@@ -581,6 +580,7 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_WEATHER_BIN,                   FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
 };
 
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
@@ -688,6 +688,13 @@ compo_form_t *func_menu_sub_kale_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
+#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+    static uint16_t kale_menu_cnt = 0;
+    kale_menu_cnt = uteModuleMenstrualCycleIsOpen() ? (MENU_KALE_CNT) : (MENU_KALE_CNT-1);
+#else
+    static uint16_t kale_menu_cnt = MENU_KALE_CNT;
+#endif  // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
     if(uteModuleMenstrualCycleIsOpen())
     {
@@ -714,7 +721,7 @@ compo_form_t *func_menu_sub_kale_form_create(void)
     //新建菜单
     compo_kaleidoscope_t *kale = compo_kaleidoscope_create(frm);
     compo_kaleidoscope_init(kale, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT, KALE_ICON_OUTER_SIZE, KALE_ICON_INNER_SIZE, KALE_EDGE_SPACE, KALE_ICON_SPACE);
-    compo_kaleidoscope_icon_add(kale, tbl_menu_kaleidoscope, MENU_KALE_CNT);
+    compo_kaleidoscope_icon_add(kale, tbl_menu_kaleidoscope, kale_menu_cnt);
 
 //    compo_kale_add_time(kale, COMPO_RINGS_TIME_TYPE_HOUR, UI_BUF_ICON_CLOCK_H_BIN, 1, 2, KALE_ICON_OUTER_SIZE);
 //    compo_kale_add_time(kale, COMPO_RINGS_TIME_TYPE_MIN, UI_BUF_ICON_CLOCK_M_BIN, 1, 2, KALE_ICON_OUTER_SIZE);

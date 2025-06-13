@@ -215,6 +215,7 @@ void uteModuleMusicSetPlayerTitle(uint8_t *data, uint16_t size)
 #endif
     memset(&uteModuleMusicData.playerTitle[0], 0, UTE_MUSIC_TITLE_MAX_SIZE);
     memcpy(&uteModuleMusicData.playerTitle[0], data, uteModuleMusicData.playerTitleSize);
+    printf("%s,playerTitleSize=%d\n", __func__, uteModuleMusicData.playerTitleSize);
     UTE_MODULE_LOG(UTE_LOG_MUSIC_LVL, "%s,title:", __func__);
     UTE_MODULE_LOG_BUFF(UTE_LOG_MUSIC_LVL, &uteModuleMusicData.playerTitle[0], uteModuleMusicData.playerTitleSize);
     uteModulePlatformGiveMutex(uteModuleMusicMute);

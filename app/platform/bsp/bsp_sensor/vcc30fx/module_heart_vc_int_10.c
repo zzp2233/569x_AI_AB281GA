@@ -613,6 +613,6 @@ uint32_t vcHr11GetRtcCountFromMCU(void)
     /*
         return RTC_GetCounter();
     */
-    return cc_time_count() / 32;
+    return cc_time_count() / 32 + 1;
 }
 #endif

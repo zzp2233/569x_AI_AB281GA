@@ -1279,11 +1279,11 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         {
             if(am_pm == 1)      //AM
             {
-                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
+                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
             }
             else if (am_pm == 2)
             {
-                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
+                compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
             }
             else
             {
@@ -1345,11 +1345,11 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         {
             if(am_pm == 1)      //AM
             {
-                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
+                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
             }
             else if (am_pm == 2)
             {
-                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
+                compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
             }
             else
             {

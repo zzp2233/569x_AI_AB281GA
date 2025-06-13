@@ -173,6 +173,9 @@
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
 #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18650001_BIN, \
                                                 UI_BUF_DIALPLATE_D18651001_BIN, \
+                                                UI_BUF_DIALPLATE_D18650001_BIN, \
+                                                UI_BUF_DIALPLATE_D18651001_BIN, \
+                                                UI_BUF_DIALPLATE_D18650001_BIN, \
                                                 UI_BUF_DIALPLATE_CUBE_LIGHT_BIN,\
                                                 UI_BUF_DIALPLATE_BTF_BIN,\
                                               }

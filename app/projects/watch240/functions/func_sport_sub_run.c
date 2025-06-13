@@ -3912,7 +3912,8 @@ typedef struct f_sport_sub_run_t_
     bool        sport_run_state;
     bool        sport_run_state_updata_flag;
     bool        ble_state;
-    u16          count_time;
+    u16         count_time;
+    bool        Refresh_disp;
 } f_sport_sub_run_t;
 
 enum
@@ -4044,6 +4045,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     if(func_sport_get_disp_mode() == LESS_DATA)
     {
+        ab_free(data);
         return frm;
     }
 
@@ -4071,6 +4073,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
         compo_textbox_set(txt, txt_buf);
         compo_setid(txt,COMPO_ID_NUM_SPORT_COUNT);
 
+        ab_free(data);
         return frm;
     }
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4142,20 +4145,13 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
 
-    txt = compo_textbox_create(frm, 6);///配速数据文本
+    txt = compo_textbox_create(frm, 10);///配速数据文本
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_right_align(txt, true);
     compo_textbox_set_location(txt,GUI_SCREEN_CENTER_X, 279+113*3, GUI_SCREEN_CENTER_X-51, 50);
     memset(txt_buf,0,sizeof(txt_buf));
-    if(data->saveData.avgTimeSecond)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", data->saveData.avgTimeMinute,(km_integer+km_decimals)/(data->saveData.avgTimeMinute+data->saveData.avgTimeSecond),'"');
-    }
-    else
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", 0,0,'"');
-    }
+    snprintf(txt_buf,sizeof(txt_buf),"%02d'%02d%c",data->saveData.avgTimeMinute,data->saveData.avgTimeSecond,'"');
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_SPEED);
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -4233,6 +4229,7 @@ static void func_soprt_run_move(void)
                                 f_sleep->move_offset_x = GUI_SCREEN_WIDTH;
                                 f_sleep->page_num = PAGE_2;//第2页
                                 f_sleep->sport_run_state = SPORT_RUN_STOP;
+                                // f_sleep->Refresh_disp = true;
                                 uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
                                 f_sleep->touch_state = TOUCH_FINISH_STATE;
                             }
@@ -4319,6 +4316,7 @@ static void func_soprt_run_move(void)
                             f_sleep->page_num = PAGE_1;//第1页
                             f_sleep->move_offset_x = 0;
                             f_sleep->touch_state = TOUCH_FINISH_STATE;
+                            // f_sleep->Refresh_disp = true;
                             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
                             f_sleep->sport_run_state = SPORT_RUN_START;
                         }
@@ -4355,18 +4353,12 @@ static void func_sport_sub_run_click_handler(void)
     switch (id)
     {
         case COMPO_ID_BTN_SPORT_STOP:
-            switch (uteModuleSportMoreSportGetStatus())
-            {
-                case ALL_SPORT_STATUS_CLOSE:
-                case ALL_SPORT_STATUS_PAUSE:
-                    uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
-                    break;
-
-                case ALL_SPORT_STATUS_OPEN:
-                case ALL_SPORT_STATUS_CONTINUE:
-                    uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
-                    break;
-            }
+            uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
+            f_sport_sub_run->page_old_x    = GUI_SCREEN_WIDTH;
+            f_sport_sub_run->move_offset_x = GUI_SCREEN_WIDTH;
+            f_sport_sub_run->page_num = PAGE_1;
+            widget_page_set_client(func_cb.frm_main->page,f_sport_sub_run->move_offset_x, 0);
+            f_sport_sub_run->Refresh_disp = true;
             break;
         case COMPO_ID_BTN_SPORT_EXIT:
         {
@@ -4416,6 +4408,7 @@ static void func_sport_sub_run_updata(void)
         compo_textbox_t* txt_km         = compo_getobj_byid(COMPO_ID_NUM_SPORT_KM);
         compo_textbox_t* uint_km        = compo_getobj_byid(COMPO_ID_UINT_SPORT_KM);
         compo_textbox_t* txt_count      = compo_getobj_byid(COMPO_ID_NUM_SPORT_COUNT);
+        compo_textbox_t* txt_speed      = compo_getobj_byid(COMPO_ID_NUM_SPORT_SPEED);
         // compo_shape_t * page_point1     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE1);
         // compo_shape_t * page_point2     = compo_getobj_byid(COMPO_ID_SPOT_SPORT_SHAPE2);
         compo_button_t * btn_play       = compo_getobj_byid(COMPO_ID_BTN_SPORT_STOP);
@@ -4437,7 +4430,7 @@ static void func_sport_sub_run_updata(void)
 
             case ALL_SPORT_STATUS_OPEN:
             case ALL_SPORT_STATUS_CONTINUE:
-                f_sleep->sport_run_state = SPORT_RUN_STOP;;
+                f_sleep->sport_run_state = SPORT_RUN_STOP;
                 break;
         }
 
@@ -4492,9 +4485,10 @@ static void func_sport_sub_run_updata(void)
             }
         }
 
-        if(f_sleep->sport_run_state != f_sleep->sport_run_state_updata_flag)
+        if(f_sleep->sport_run_state != f_sleep->sport_run_state_updata_flag || f_sleep->Refresh_disp)
         {
             // printf("motor_on\n");
+            f_sleep->Refresh_disp = false;
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             f_sleep->sport_run_state_updata_flag = f_sleep->sport_run_state;
 
@@ -4580,6 +4574,13 @@ static void func_sport_sub_run_updata(void)
         {
             snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
             compo_textbox_set(txt_time_right, txt_buf);
+        }
+
+        if(txt_speed != NULL)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"%02d'%02d%c",data->saveData.avgTimeMinute,data->saveData.avgTimeSecond,'"');
+            compo_textbox_set(txt_speed, txt_buf);
         }
 
         ab_free(data);
@@ -6382,10 +6383,7 @@ static void func_sport_sub_run_message(size_msg_t msg)
             break;
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
         case MSG_CTP_TOUCH:
-            if( f_sport_sub_run->touch_state == TOUCH_FINISH_STATE)
-            {
-                f_sport_sub_run->touch_flag = true;
-            }
+            f_sport_sub_run->touch_flag = true;
             break;
         case MSG_SYS_500MS:
             func_sport_sub_run_updata();

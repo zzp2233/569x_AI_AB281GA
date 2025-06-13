@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 马来语(马来西亚）
 *@author
-*@date   2025-06-10 15:47:03
+*@date   2025-06-13 15:59:22
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -38,7 +38,7 @@ const char * const i18n_ms_rmy[] =
     [STR_SPORT_SPINNING] = "\x42\x61\x73\x69\x6b\x61\x6c\x20\x62\x65\x72\x70\x75\x74\x61\x72\x00", // [22] Basikal berputar
     [STR_SPORT_YOGA] = "\x59\x6f\x67\x61\x00", // [23] Yoga
     [STR_SPORT_SIT_UP] = "\x53\x69\x74\x2d\x75\x70\x00", // [24] Sit-up
-    [STR_SPORT_TREADMILL] = "\x30\x00", // [25] 0
+    [STR_SPORT_TREADMILL] = "\x42\x65\x72\x6c\x61\x72\x69\x20\x64\x61\x6c\x61\x6d\x61\x6e\x00", // [25] Berlari dalaman
     [STR_SPORT_GYMNASTICS] = "\x47\x69\x6d\x6e\x61\x73\x74\x69\x6b\x00", // [26] Gimnastik
     [STR_SPORT_BOATING] = "\x4d\x65\x6e\x64\x61\x79\x75\x6e\x67\x00", // [27] Mendayung
     [STR_SPORT_JUMPING_JACK] = "\x4d\x65\x6c\x6f\x6d\x70\x61\x74\x20\x62\x69\x63\x75\x00", // [28] Melompat bicu

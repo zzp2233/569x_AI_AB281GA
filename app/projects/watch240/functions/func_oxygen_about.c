@@ -139,8 +139,6 @@ compo_form_t *func_oxygen_about_form_create(void)
     compo_textbox_set(textbox,i18n[STR_OXYGEN_ABOUT_2]);
     page_size+=widget_text_get_area(textbox->txt).hei+20;
 
-    // printf("oxyge_about:%d\n",strlen(i18n[STR_OXYGEN_ABOUT_2])+strlen(i18n[STR_OXYGEN_ABOUT_1]));
-
     if(func_cb.sta == FUNC_OXYGEN_ABOUT)
     {
         f_oxygen_about_t *f_oxygen_about = (f_oxygen_about_t *)func_cb.f_cb;

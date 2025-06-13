@@ -155,9 +155,9 @@ compo_form_t *func_heart_warning_form_create(void)
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetHeartValue());
     compo_textbox_t *textbox = compo_textbox_create(frm, 3);
-    compo_textbox_set_align_center(textbox,true);
+    compo_textbox_set_align_center(textbox,false);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_pos(textbox,170,135);
+    compo_textbox_set_pos(textbox,170,120);
     compo_textbox_set(textbox,txt_buf);
     compo_setid(textbox,COMPO_ID_TEXT_HEART_VALUE);
 
@@ -225,7 +225,12 @@ static void func_heart_warning_updata(void)
         snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
         compo_textbox_set(textbox, txt_buf);
     }
-    if (uteModuleHeartGetHeartValue() < uteModuleHeartGetHeartWaringMaxValue() && uteModuleHeartGetHeartValue() > uteModuleHeartGetHeartWaringMinValue())
+    // else
+    // {
+    //     uteModuleGuiCommonGoBackLastScreen();
+    // }
+
+    if (heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue())
     {
         uteModuleGuiCommonGoBackLastScreen();
     }

@@ -322,7 +322,7 @@ compo_form_t *func_pressure_explain_form_create(void)
         f_pressure_explain_t *f_pressure_explain = (f_pressure_explain_t *)func_cb.f_cb;
         f_pressure_explain->page_size = page_size;
     }
-
+    ab_free(txt_str);
     return frm;
 }
 #else

@@ -585,7 +585,7 @@ compo_form_t *func_menu_sub_cum_sudoku_form_create(void)
     static uint16_t cum_sudoku_menu_cnt = 0;
     cum_sudoku_menu_cnt = uteModuleMenstrualCycleIsOpen() ? (MENU_SUD_CNT) : (MENU_SUD_CNT-1);
 #else
-    static uint16_t cum_sudoku_menu_cnt = MENU_HC_CNT;
+    static uint16_t cum_sudoku_menu_cnt = MENU_SUD_CNT;
 #endif  // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层

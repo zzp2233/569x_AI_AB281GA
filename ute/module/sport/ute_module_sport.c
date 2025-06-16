@@ -5667,9 +5667,9 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(uint32_t *everyHourStep
         {
             maxStep = 99999;
         }
-        UTE_MODULE_LOG(1, "%s,everySportStep[%d] = %d,.everyHourRunStep = %d,.everyHourWalkStep = %d", __func__, i, everySportStep, uteModuleSprotData.dailyActivity.everyHourRunStep[i], uteModuleSprotData.dailyActivity.everyHourWalkStep[i]);
+        // UTE_MODULE_LOG(1, "%s,everySportStep[%d] = %d,.everyHourRunStep = %d,.everyHourWalkStep = %d", __func__, i, everySportStep, uteModuleSprotData.dailyActivity.everyHourRunStep[i], uteModuleSprotData.dailyActivity.everyHourWalkStep[i]);
     }
-    UTE_MODULE_LOG(1,"%s,maxStep = %d",__func__,maxStep);
+    // UTE_MODULE_LOG(1,"%s,maxStep = %d",__func__,maxStep);
     if(maxStep%1000)
     {
         intStep1000 = (maxStep/1000+1)*1000;
@@ -5682,7 +5682,7 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(uint32_t *everyHourStep
             intStep1000 = 1000;
         }
     }
-    UTE_MODULE_LOG(1,"%s,maxStep = %d,intStep1000 = %d",__func__,maxStep,intStep1000);
+    // UTE_MODULE_LOG(1,"%s,maxStep = %d,intStep1000 = %d",__func__,maxStep,intStep1000);
     for(uint8_t i=0; i<24; i++)
     {
         everySportStep = 0;
@@ -5710,7 +5710,7 @@ uint32_t uteModuleSportLoadTodayEveryHourStepHistoryData(uint32_t *everyHourStep
         {
             step = 99999;
         }
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,step[%d] = %d",__func__,i,step);
+        // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,step[%d] = %d",__func__,i,step);
         everyHourStep[i] = step;
     }
 #if UTE_LOG_STEP_LVL

@@ -1951,7 +1951,7 @@ compo_form_t *func_weather_form_create(void)
 
         spacing_y +=59;
     }
-    // widget_page_set_client(frm->page_body, 0, page_y);
+    return frm;
 
 #else
     compo_textbox_t *txt;

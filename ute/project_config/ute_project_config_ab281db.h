@@ -174,6 +174,8 @@
 #define UTE_CUI_SCREEN_WATCHDIAL_LEFT FUNC_NULL
 /*! 表盘上拉界面,wang.luo 2025-04-07 */
 #define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_MESSAGE
+/*! 表盘下拉界面,wang.luo 2025-04-07 */
+// #define UTE_CUI_SCREEN_WATCHDIAL_DOWN FUNC_CLOCK_DROPDOWN_MENU
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 2
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
@@ -243,7 +245,7 @@
 #endif
 
 #define UTE_MODULE_POWERON_LANGUAGE_SELECT_SUPPORT 1
-#define UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT      1 //新下拉菜单
+// #define UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT      1 //新下拉菜单
 #define UTE_MODULE_SCREENS_POWERON_SUPPORT            1 //开机logo界面
 #define UTE_MODULE_SCREENS_UP_MENU_SUPPORT            0 //上拉菜单
 #define UTE_MODULE_SCREENS_DWON_MENU_SUPPORT          1 //下拉菜单

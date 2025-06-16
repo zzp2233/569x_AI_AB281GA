@@ -180,7 +180,8 @@ void uteModuleBloodoxygenEverySecond(void)
 #endif
             // (!uteModuleBreathrateIsTesting()) &&
             // (!uteModuleGetBreathTrainingStatus()) &&
-            (!uteModuleHeartIsSingleTesting())
+            (!uteModuleHeartIsSingleTesting()) &&
+            (!uteModuleHeartIsAutoTestFlag())
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
             && (!uteModuleEmotionPressureIsTesting())
 #endif

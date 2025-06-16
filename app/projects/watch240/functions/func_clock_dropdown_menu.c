@@ -12,7 +12,6 @@
 #include "ute_module_bedside_mode.h"
 
 #if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
-#define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE 1
 
 typedef struct f_clock_dropdwon_menu_t_
 {
@@ -472,6 +471,46 @@ static void func_clock_sub_dropdown_process(void)
     func_clock_sub_process();
 }
 
+
+//下拉返回表盘
+static void func_message_down_to_clock(u8 auto_switch)
+{
+    printf("%s\n", __func__);
+    f_clock_dropdwon_menu_t *f_clock_dropdwon_menu =(f_clock_dropdwon_menu_t *)func_cb.f_cb;
+    u16 switch_mode = auto_switch == MSG_CTP_SHORT_DOWN ? FUNC_SWITCH_MENU_PULLUP_UP : FUNC_SWITCH_MENU_DROPDOWN_UP;
+    compo_form_destroy(func_cb.frm_main);
+#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
+    if(f_clock_dropdwon_menu->ptm != NULL)
+    {
+        func_free(f_clock_dropdwon_menu->ptm);
+    }
+#endif
+    compo_form_t *frm_clock = func_create_form(FUNC_CLOCK);
+    compo_form_t *frm = func_clock_dropdown_menu_form_create();
+    func_cb.frm_main = frm;
+
+    if (func_switching(switch_mode, NULL))
+    {
+        func_cb.sta = FUNC_CLOCK;
+    }
+    compo_form_destroy(frm_clock);
+#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
+    f_clock_dropdwon_menu->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = false,
+        .dir = 1,
+#if (UTE_DRV_SCREEN_SHAPE==1)
+        .page_size =  GUI_SCREEN_WIDTH+(GUI_SCREEN_HEIGHT-GUI_SCREEN_WIDTH)/2,
+#else
+        .page_size =  GUI_SCREEN_WIDTH,
+#endif
+        .page_count = CLOCK_DWON_PAGE_NUM,//项目config定义页面数量
+        .jump_perc  = GUI_SCREEN_WIDTH/20,
+    };
+    compo_page_move_init(f_clock_dropdwon_menu->ptm,func_cb.frm_main->page_body,&info);
+#endif
+}
 //时钟表盘下拉菜单功能消息处理
 static void func_clock_sub_dropdown_message(size_msg_t msg)
 {
@@ -507,8 +546,15 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             }
 #endif
             break;
+        case MSG_CTP_SHORT_UP:
+        case MSG_CTP_SHORT_DOWN:
+            if (func_cb.down_sta == UTE_CUI_SCREEN_WATCHDIAL_DOWN)
+            {
+                func_message_down_to_clock(false);
+            }
+            break;
         default:
-            func_message(msg);
+            evt_message(msg);
             break;
     }
 }
@@ -525,7 +571,11 @@ static void func_clock_sub_dropdown_enter(void)
     {
         .title_used = false,
         .dir = 1,
+#if (UTE_DRV_SCREEN_SHAPE==1)
+        .page_size =  GUI_SCREEN_WIDTH+(GUI_SCREEN_HEIGHT-GUI_SCREEN_WIDTH)/2,
+#else
         .page_size =  GUI_SCREEN_WIDTH,
+#endif
         .page_count = CLOCK_DWON_PAGE_NUM,//项目config定义页面数量
         .jump_perc  = GUI_SCREEN_WIDTH/20,
     };
@@ -548,6 +598,7 @@ static void func_clock_sub_dropdown_exit(void)
 //时钟表盘下拉菜单
 void func_clock_dropdown_menu(void)
 {
+    printf("%s\n", __func__);
     func_clock_sub_dropdown_enter();
     while (func_cb.sta == FUNC_CLOCK_DROPDOWN_MENU)
     {

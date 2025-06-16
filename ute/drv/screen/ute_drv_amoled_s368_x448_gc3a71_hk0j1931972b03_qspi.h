@@ -66,7 +66,7 @@ __STATIC_INLINE void drvScreenAmoledS368X448Gc3A71Hk0J1931972B03Init(void)
     memcpy(tmp, "\x00", 1);
     uteDrvScreenCommonNv3030bQspiWrite8bitCmdParams(0x35, tmp, 1);
     memcpy(tmp, "\x00", 1);
-    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x51,&light[0],1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x51,tmp,1);
 }
 
 __STATIC_INLINE void drvScreenAmoledS368X448Gc3A71Hk0J1931972B03SetBackLight(uint8_t backLightPercent)

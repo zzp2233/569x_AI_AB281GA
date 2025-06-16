@@ -1216,7 +1216,7 @@ compo_form_t *func_activity_form_create(void)
     if(target_step == 0)target_step = 8000;
     uint32_t step_date[24];
     uteModuleSportLoadTodayEveryHourStepHistoryData(step_date);
-    compo_chartbox_t*chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 24);///图表内的柱形图
+    compo_chartbox_t*chart = compo_chartbox_create(frm, CHART_TYPE_BAR, 24);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT+170,306,104);
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(textbox,STEP_DAY_CAHRT_VALUE_ID);
@@ -1262,7 +1262,7 @@ compo_form_t *func_activity_form_create(void)
     compo_setid(textbox,STEP_WEEK_TXT_UNIT_ID);
     compo_textbox_set(textbox, i18n[STR_STEP]);
 
-    chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 7);///图表内的柱形图
+    chart = compo_chartbox_create(frm, CHART_TYPE_BAR, 7);///图表内的柱形图
     compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+5,GUI_SCREEN_HEIGHT*2+170,312-13,100);
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(textbox,STEP_WEEK_CAHRT_VALUE_ID);

@@ -98,7 +98,7 @@ void uteDrvScreenCommonInterfaceInit(void)
 #elif UTE_DRV_TFT_S360X360_I172_ST77916_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft360X360I172St77916QspiConfig;
 #elif UTE_DRV_TFT_S240X240_NV3002C_HY138026A_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft360X3603002chy138026aConfig;
+    uteDrvScreenCommonFunction = &uteDrvScreenTft240X240nv3002chy138026aConfig;
 #elif UTE_DRV_AMOLED_S368X448_GC3A71_HK0J1931972B03_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenAmoledS368X448Gc3A71Hk0J1931972B03Config;
 #elif UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT

@@ -11,7 +11,8 @@
 #include "ute_module_localRingtone.h"
 #include "ute_module_bedside_mode.h"
 
-#if 1
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+#define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE 1
 
 typedef struct f_clock_dropdwon_menu_t_
 {
@@ -54,8 +55,6 @@ typedef struct dropdown_disp_btn_item_t_
     s16 x;
     s16 y;
 } dropdown_disp_btn_item_t;
-
-widget_page_t *widget_page;///创建按键父局器页面
 
 #define DROPDOWN_DISP_BTN_ITEM_CNT    ((int)(sizeof(tbl_dropdown_disp_btn_item) / sizeof(tbl_dropdown_disp_btn_item[0])))
 #define MENU_CNT    ((int)(sizeof(dwon_tbl_style_list) / sizeof(dwon_tbl_style_list[0])))
@@ -129,8 +128,6 @@ compo_form_t *func_clock_dropdown_menu_form_create(void)
 {
 
     compo_form_t *frm = compo_form_create(true);
-    widget_page = widget_page_create(frm->page);///创建按键页面
-    widget_set_location(widget_page,GUI_SCREEN_WIDTH*(CLOCK_DWON_PAGE_NUM-1),GUI_SCREEN_CENTER_Y,GUI_SCREEN_WIDTH*CLOCK_DWON_PAGE_NUM,GUI_SCREEN_HEIGHT);
 
     ///创建遮罩层
     compo_shape_t *masklayer = compo_shape_create_for_page(frm,frm->page, COMPO_SHAPE_TYPE_RECTANGLE);
@@ -141,7 +138,7 @@ compo_form_t *func_clock_dropdown_menu_form_create(void)
     compo_button_t *btn;
     for (u8 idx_btn = 0; idx_btn < DROPDOWN_DISP_BTN_ITEM_CNT; idx_btn++)
     {
-        btn = compo_button_create_page_by_image(frm,widget_page, tbl_dropdown_disp_btn_item[idx_btn].res_addr);
+        btn = compo_button_create_by_image(frm, tbl_dropdown_disp_btn_item[idx_btn].res_addr);
         compo_setid(btn,  tbl_dropdown_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_dropdown_disp_btn_item[idx_btn].x, tbl_dropdown_disp_btn_item[idx_btn].y+67);
 
@@ -285,8 +282,6 @@ compo_form_t *func_clock_dropdown_menu_form_create(void)
 {
 
     compo_form_t *frm = compo_form_create(true);
-    widget_page = widget_page_create(frm->page);///创建按键页面
-    widget_set_location(widget_page,GUI_SCREEN_WIDTH*(CLOCK_DWON_PAGE_NUM-1),GUI_SCREEN_CENTER_Y,GUI_SCREEN_WIDTH*CLOCK_DWON_PAGE_NUM,GUI_SCREEN_HEIGHT);
     return frm;
 }
 #endif
@@ -299,7 +294,9 @@ static void func_clock_dropdown_update_page_num(void)
     if(f_clock_dropdwon_menu->ptm)
     {
         compo_page_move_process(f_clock_dropdwon_menu->ptm);
-        printf("page_x:%d\n",compo_page_move_get_offset(f_clock_dropdwon_menu->ptm));
+        // printf("page_x:%d\n",compo_page_move_get_offset(f_clock_dropdwon_menu->ptm));
+        // printf("page_size:%d\n",f_clock_dropdwon_menu->ptm->info.page_size);
+
         // switch (compo_page_move_get_offset(f_clk->ptm))
         // {
         //     case -(GUI_SCREEN_WIDTH/2)...0:
@@ -315,8 +312,7 @@ static void func_clock_dropdown_update_page_num(void)
         //         break;
         // }
     }
-#endif
-
+#else
     if(f_clock_dropdwon_menu->up_date_flag)
     {
         f_clock_dropdwon_menu->up_date_flag = false;
@@ -328,10 +324,10 @@ static void func_clock_dropdown_update_page_num(void)
             {
                 compo_shape_set_color(page_num, (idx-COMPO_ID_PAGE_FIRST == f_clock_dropdwon_menu->page_num) ? COLOR_WHITE:make_color(51,51,51));
             }
-            printf("idx:%d  page_num:%d\n",idx-COMPO_ID_PAGE_FIRST,f_clock_dropdwon_menu->page_num);
         }
         widget_page_set_client(func_cb.frm_main->page_body, -(f_clock_dropdwon_menu->page_num*GUI_SCREEN_WIDTH), 0);
     }
+#endif
 }
 static void func_clock_sub_dropdown_click_handler(void)
 {
@@ -531,9 +527,9 @@ static void func_clock_sub_dropdown_enter(void)
         .dir = 1,
         .page_size =  GUI_SCREEN_WIDTH,
         .page_count = CLOCK_DWON_PAGE_NUM,//项目config定义页面数量
-        .jump_perc  = GUI_SCREEN_WIDTH/18,
+        .jump_perc  = GUI_SCREEN_WIDTH/20,
     };
-    compo_page_move_init(f_clock_dropdwon_menu->ptm,widget_page,&info);
+    compo_page_move_init(f_clock_dropdwon_menu->ptm,func_cb.frm_main->page_body,&info);
 #endif
 }
 

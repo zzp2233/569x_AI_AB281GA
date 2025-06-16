@@ -221,6 +221,8 @@ typedef struct
     bool loudspeaker_mute_flag; //mute 标志位
     u8 loudspeaker_mute_countdown; //mute 倒计时
 
+    u8 clock_side_add_widget[CLOCK_SIDE_ADD_WIDGET_NUM];//侧边栏添加组件界面号
+
 #if VDDHR_TRIM_EN
     u8 vddhr_trim_sta; //vddhr trim
     u8 vddhr_trim_base;

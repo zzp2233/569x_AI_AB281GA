@@ -2139,16 +2139,9 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
     compo_textbox_set(textbox, i18n[STR_PACE]);
 
-    /*运动步数->数据*/
+    /*运动配速->数据*/
     memset(txt_buf,0,sizeof(txt_buf));
-    if(sport_data.saveData.avgTimeSecond)
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", sport_data.saveData.avgTimeMinute,(km_integer+km_decimals)/(sport_data.saveData.avgTimeMinute+sport_data.saveData.avgTimeSecond),'"');
-    }
-    else
-    {
-        snprintf(txt_buf,sizeof(txt_buf),"%d'%d%c", 0,0,'"');
-    }
+    snprintf(txt_buf,sizeof(txt_buf),"%02d'%02d%c",sport_data.saveData.avgTimeMinute,sport_data.saveData.avgTimeSecond,'"');
     textbox = compo_textbox_create(frm, strlen(txt_buf));
     compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_align_center(textbox, false);
@@ -2177,7 +2170,7 @@ compo_form_t *func_sport_finish_form_create(void)
     compo_textbox_set_forecolor(textbox, make_color(0xa3,0xa3,0xa3));
     compo_textbox_set(textbox, i18n[STR_DISTANCE]);
 
-    /*运动步数->数据*/
+    /*运动距离->数据*/
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%d.%02d",km_integer,km_decimals);
     textbox = compo_textbox_create(frm, strlen(txt_buf));

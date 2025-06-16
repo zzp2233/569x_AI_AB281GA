@@ -206,7 +206,7 @@ int vc30fx_write_register(unsigned char regaddr, unsigned char *pbuf, unsigned s
 unsigned int vc30fx_get_cputimer_tick(void)
 {
     /*  return RTC(timer count value) */
-    hw_timer_count = cc_time_count() / 32;
+    hw_timer_count = cc_time_count() / 32 + 1;
     return hw_timer_count;
 }
 

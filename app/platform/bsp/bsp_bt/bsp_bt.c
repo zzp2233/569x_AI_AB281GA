@@ -372,6 +372,9 @@ void bsp_bt_status(void)
     bsp_bt_warning();
 }
 
+extern bool hfp_is_connect(void);
+extern u8 bt_get_status_do(void);
+
 bool  bt_connect_on_flag(void)
 {
     if (!bt_is_connected() && !bt_a2dp_profile_completely_connected() && !hfp_is_connect() && !bt_hid_is_connected() && (bt_get_status_do() < BT_STA_DISCONNECTING))

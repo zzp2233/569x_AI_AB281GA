@@ -600,6 +600,7 @@ static void sfunc_sleep(void)
     dac_dnr_set_sta(sta);
 #endif
     bt_exit_sleep();
+    ble_app_watch_set_wakeup(false);
     sleep_cb.sys_is_sleep = false;
     printf("sleep_exit\n");
 }

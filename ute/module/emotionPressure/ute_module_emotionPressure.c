@@ -343,7 +343,8 @@ void uteModuleEmotionPressureEverySecond(void)
 #endif
             // (!uteModuleBreathrateIsTesting()) &&
             // (!uteModuleGetBreathTrainingStatus()) &&
-            (!uteModuleHeartIsSingleTesting())
+            (!uteModuleHeartIsSingleTesting()) &&
+            (!uteModuleHeartIsAutoTestFlag())
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
             && (!uteModuleBloodoxygenIsTesting())
 #endif

@@ -266,7 +266,11 @@ void func_clock_recreate_dial(void)
         if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
         {
             sys_cb.dialplate_btf_ready = true;
+#if UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT
+            tft_set_temode(DEFAULT_TE_MODE);
+#else
             tft_set_temode(0);
+#endif
         }
 #endif
     }
@@ -348,7 +352,13 @@ static void func_clock_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_DOWN:
-#if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+            if(UTE_CUI_SCREEN_WATCHDIAL_DOWN != FUNC_NULL)
+            {
+                func_cb.down_sta = UTE_CUI_SCREEN_WATCHDIAL_DOWN;
+                func_switch_to(UTE_CUI_SCREEN_WATCHDIAL_DOWN, FUNC_SWITCH_MENU_DROPDOWN_DOWN);  //上拉卡片界面
+            }
+#elif UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
             func_clock_sub_dropdown();              //下拉菜单
 #endif
             break;
@@ -421,7 +431,11 @@ static void func_clock_enter(void)
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {
         sys_cb.dialplate_btf_ready = true;
+#if UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT
+        tft_set_temode(DEFAULT_TE_MODE);
+#else
         tft_set_temode(0);
+#endif
     }
 #endif
 }

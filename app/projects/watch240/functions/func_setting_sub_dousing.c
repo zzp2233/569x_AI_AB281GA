@@ -565,7 +565,7 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_textbox_set(txt,i18n[STR_SEC]);
 
     compo_button_t * btn_min = compo_button_create(frm);///分钟滑动按钮
-    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X,58+CENTER_TXT_Y,120,CENTER_TXT_Y*2);
+    compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X,75+252/2,200,252);
     compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
 
     compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I341001_28_SET_CONFIRM_BIN);///确定按钮

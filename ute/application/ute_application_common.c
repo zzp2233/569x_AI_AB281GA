@@ -533,7 +533,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
 #if UTE_MODUEL_QUICK_REPLY_SUPPORT
         uteModuleQuickReplySetStatus(false);
 #endif
-#if (UTE_MODULE_CYWEE_MOTION_SUPPORT&&(UTE_MODULE_LOG_SUPPORT && UTE_MODULE_RUNING_LOG_SUPPORT))
+#if (UTE_MODULE_LOG_SUPPORT && UTE_MODULE_RUNING_LOG_SUPPORT)
         uteModuleLogSetSendRuningLogSwitch(false);
 #endif
 #if BT_ID3_TAG_EN
@@ -549,7 +549,7 @@ void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
     {
         // uteModulePlatformSetFastAdvertisingTimeCnt(0);
         // uteModulePlaformUpdateConnectParam(12,36,55000);
-        ble_update_conn_param(12,0,500);
+        // ble_update_conn_param(12,0,500);
     }
     uteModuleCallBleConnectState(isConnected);
 }
@@ -1050,7 +1050,7 @@ void uteApplicationCommonSyncDataTimerMsg(void)
         uteApplicationCommonData.isSynchronizingData = false;
         return;
     }
-    if (is_le_buff_full(2))
+    if (!uteModulePlatformIsAllowBleSend())
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,le_buff_full!!!",__func__);
         uteModulePlatformRestartTimer(&uteApplicationCommonSyncDataTimer, UTE_SEND_DATA_TO_PHONE_INVTERVAL);

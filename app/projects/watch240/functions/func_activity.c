@@ -1207,7 +1207,7 @@ compo_form_t *func_activity_form_create(void)
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT+300-5,80, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT+300-10,80, widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(128,128,128));
     compo_setid(textbox,STEP_DAY_TXT_UNIT_ID);
     compo_textbox_set(textbox, i18n[STR_STEP]);
@@ -1239,7 +1239,7 @@ compo_form_t *func_activity_form_create(void)
     uint32_t target_week_step = uteModuleSportLoadWeekDayStepHistoryData(week_step_date, &week_step_data);
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_WEEK_STEP]));
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT*2+42,120, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT*2+37,120, widget_text_get_max_height());
     compo_textbox_set(textbox, i18n[STR_WEEK_STEP]);
 
     picbox = compo_picturebox_create(frm, uteModuleSystemtimeReadLanguage() == CHINESE_LANGUAGE_ID ? UI_BUF_I338002_5_ACTIVITY_WEEK_DATE_BG_ZH_BIN: UI_BUF_I338002_5_ACTIVITY_WEEK_DATE_BG_EN_BIN);
@@ -1257,7 +1257,7 @@ compo_form_t *func_activity_form_create(void)
 
     textbox = compo_textbox_create(frm,strlen(i18n[STR_STEP]));
     compo_textbox_set_align_center(textbox,false);
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT*2+300-5,80, widget_text_get_max_height());
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+txt_leng.wid/2+16,GUI_SCREEN_HEIGHT*2+300-10,80, widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(128,128,128));
     compo_setid(textbox,STEP_WEEK_TXT_UNIT_ID);
     compo_textbox_set(textbox, i18n[STR_STEP]);

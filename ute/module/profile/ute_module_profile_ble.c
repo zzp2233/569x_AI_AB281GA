@@ -694,6 +694,7 @@ void ble_app_watch_init(void)
 
 void ble_app_watch_disconnect_callback(void)
 {
+    ble_app_need_wakeup_flag = false;
     uteApplicationCommonSetBleConnectState(0,false);
 }
 

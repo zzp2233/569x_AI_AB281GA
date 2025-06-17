@@ -63,7 +63,7 @@ void uteModuleLogSetSendRuningLogSwitch(bool status)
 
     if (status)
     {
-        le_update_conn_param(0, 12, 36, 0,500, 12 * 2 - 2, 36 * 2 - 2);
+        // le_update_conn_param(0, 12, 36, 0,500, 12 * 2 - 2, 36 * 2 - 2);
         uteApplicationCommonRegisterSyncDataTimerFunction(uteModuleLogBleSend);
         uteApplicationCommonSyncDataTimerStart();
     }
@@ -88,12 +88,12 @@ void uteModuleLogRuningPrintf(uint8_t log_lvl, const char * format,...)
 
         if(uteModuleRuningLogSwitch)
         {
-            if(uteApplicationCommonGetHasUpdateConnectionParam() == false)
-            {
-                le_update_conn_param(0, 12, 36, 0,500, 12 * 2 - 2, 36 * 2 - 2);
-                UTE_MODULE_LOG(1,"le_update_conn_param");
-            }
-            uteApplicationCommonSetHasUpdateConnectionParam(true); //调整蓝牙连接间隔，处理丢包问题
+            // if(uteApplicationCommonGetHasUpdateConnectionParam() == false)
+            // {
+            //     le_update_conn_param(0, 12, 36, 0,500, 12 * 2 - 2, 36 * 2 - 2);
+            //     UTE_MODULE_LOG(1,"le_update_conn_param");
+            // }
+            // uteApplicationCommonSetHasUpdateConnectionParam(true); //调整蓝牙连接间隔，处理丢包问题
             //加入缓存
             if(strstr((char *)&uteModuleLogRuningArray[0],"IDX(0)") ==0)  //过滤 IDX_ACCEL 的日志
             {

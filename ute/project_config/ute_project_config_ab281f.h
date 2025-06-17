@@ -10,9 +10,12 @@
 #define _UTE_PROJECT_CONFIG_AB281F_H_
 
 #define DEFAULT_BLE_DEV_NAME "T70"
-#define UTE_SW_VERSION "AB281FV000092"
+#define UTE_SW_VERSION "AB281FV000100"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
+
+/*! 在蝴蝶表盘时TE模式设置为1，即默认模式，不适用复杂界面的TE模式 */
+#define UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT 1
 
 /*! 上传蓝牙名广播时，使用 蓝牙名_XXXX 格式*/
 #define UTE_MODULE_BLE_NAME_FORMET1_SUPPORT 0

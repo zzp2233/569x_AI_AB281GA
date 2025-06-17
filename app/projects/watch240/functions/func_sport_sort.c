@@ -381,6 +381,7 @@ static void func_sport_sort_card_click(void)
             printf("sportMode = %d\n", sportMode);
             uteTaskGuiStartScreen(FUNC_SPORT_SWITCH, 0, __func__);
             uteModuleSportStartMoreSports(sportMode, 1, 0);
+            sys_cb.sport_idx = sportMode;//解决进入运动不显示运动类型问题
         }
     }
 }

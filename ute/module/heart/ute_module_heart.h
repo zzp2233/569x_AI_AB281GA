@@ -109,6 +109,7 @@ bool uteModuleHeartIsNotNeedHeartLight(void);
 bool uteModuleHeartIsNeedTesting(void);
 bool uteModuleHeartIsAutoTesting(void);
 bool uteModuleHeartIsSingleTesting(void);
+bool uteModuleHeartIsAutoTestFlag(void);
 int uteModuleHeartGetHeartValue(void);
 void uteModuleHeartSetHeartValue(int heartValue);
 uint8_t uteModuleHeartGetMaxHeartValue(void);

@@ -1493,6 +1493,19 @@ void uteModulePlatformAdvDataInit(void)
 }
 
 /**
+*@brief  是否允许ble发送数据的
+*@details
+*@author  zn.zeng
+*@date    2022-04-15
+*/
+bool uteModulePlatformIsAllowBleSend(void)
+{
+    bool isAllowBleSend = !is_le_buff_full(2);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isAllowBleSend:%d", __func__, isAllowBleSend);
+    return isAllowBleSend;
+}
+
+/**
 *@brief   使能休眠
 *@details
 *@param[in] uint32_t bit ,功能位

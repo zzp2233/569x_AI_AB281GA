@@ -449,7 +449,7 @@ uint8_t uteModulePlatformGetAdvData(uint8_t *advData, uint8_t advDataLen);
 uint8_t uteModulePlatformGetScanRspData(uint8_t *scanRsp, uint8_t scanRspLen);
 
 void uteModulePlatformAdvDataInit(void);
-
+bool uteModulePlatformIsAllowBleSend(void);
 void uteModulePlatformDlpsEnable(uint32_t bit);
 void uteModulePlatformDlpsDisable(uint32_t bit);
 uint32_t uteModulePlatformNotAllowSleep(void);

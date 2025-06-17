@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281AB_H_
 
 #define DEFAULT_BLE_DEV_NAME "T69"
-#define UTE_SW_VERSION "AB281ABV000093"
+#define UTE_SW_VERSION "AB281ABV000102"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281AB"
@@ -171,8 +171,6 @@
                                                 UI_BUF_DIALPLATE_BTF_BIN,\
                                                 UI_BUF_DIALPLATE_CUBE_LIGHT_BIN ,\
                                               }
-//    UI_BUF_DIALPLATE_BTF_BIN,
-//     UI_BUF_DIALPLATE_CUBE_BIN
 
 #define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1 // 使用蝴蝶表盘
 #define UTE_WATCHS_CUBE_DIAL_SUPPORT 1     // 使用立方体表盘

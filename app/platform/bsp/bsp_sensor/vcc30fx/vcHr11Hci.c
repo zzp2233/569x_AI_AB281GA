@@ -379,6 +379,11 @@ static vcHr11Ret_t vcHr11OutPutPPGData(vcHr11_t *pvcHr11, uint8_t StartIndex, ui
  **/
 uint16_t vcHr11CalculateOSCFreq(vcHr11_t *pvcHr11)
 {
+    if(bsp_system_is_sleep())
+    {
+        uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART);
+        return 0;
+    }
 
     uint8_t clkAdjCnt[4] = {0}, newFreDiv[2] = {0}, i = 0;
     // uint8_t vcAdj_Th,vcRtc_Th,
@@ -392,6 +397,7 @@ uint16_t vcHr11CalculateOSCFreq(vcHr11_t *pvcHr11)
     rtcCount[0] = vcHr11GetRtcCountFromMCU(); // Get McuRtcCount
     vcHr11ReadRegisters(VCREG7, clkAdjCnt, 4);
     rtcCount[1] = vcHr11GetRtcCountFromMCU(); // Get McuRtcCount
+    // printf("[%s]: rtcCount[0]: %d, rtcCount[1]: %d\n",__func__, rtcCount[0], rtcCount[1]);
 
     adjCount[0] = clkAdjCnt[0] << 8 | clkAdjCnt[1];
     adjCount[1] = clkAdjCnt[2] << 8 | clkAdjCnt[3];
@@ -422,11 +428,33 @@ uint16_t vcHr11CalculateOSCFreq(vcHr11_t *pvcHr11)
         {
             for (i = 0; i < 2; i++)
             {
+                // printf("[%s]: intDiffRtc[2 * %d + 2]=%d, intDiffRtc[2 * %d]=%d\n", __func__, i, intDiffRtc[2 * i + 2],i, intDiffRtc[2 * i]);
+#if 1
                 freDiv[i] = ((uint32_t)(intDiffAdj[2 * i + 2] - intDiffAdj[2 * i])) * pvcHr11->mcuOscValue / pvcHr11->vcSampleRate / ((uint32_t)(intDiffRtc[2 * i + 2] - intDiffRtc[2 * i])) - 1;
                 if (freDiv[i] < (20000 / pvcHr11->vcSampleRate * 0.75f) || freDiv[i] > (20000 / pvcHr11->vcSampleRate * 1.25f))
                 {
                     return 0;
                 }
+#else
+                uint32_t deltaRtc = (uint32_t)(intDiffRtc[2 * i + 2] - intDiffRtc[2 * i]);
+                if (deltaRtc == 0)
+                {
+                    printf("[%s]: error deltaRtc=%d, intDiffRtc[2 * i + 2]=%d, intDiffRtc[2 * i]=%d\n", __func__, deltaRtc, intDiffRtc[2 * i + 2], intDiffRtc[2 * i]);
+                    return 0; // 防止除以零
+                }
+
+                uint32_t numerator = ((uint32_t)(intDiffAdj[2 * i + 2] - intDiffAdj[2 * i])) * pvcHr11->mcuOscValue;
+                freDiv[i] = numerator / pvcHr11->vcSampleRate / deltaRtc - 1;
+
+                // 使用整数运算代替浮点运算
+                uint32_t lowerBound = (20000 * 3) / (4 * pvcHr11->vcSampleRate); // 0.75f
+                uint32_t upperBound = (20000 * 5) / (4 * pvcHr11->vcSampleRate); // 1.25f
+
+                if (freDiv[i] < lowerBound || freDiv[i] > upperBound)
+                {
+                    return 0;
+                }
+#endif
             }
             diffIsOK = (freDiv[1] - freDiv[0] <= 20) || (freDiv[0] - freDiv[1] <= 20);
             if (diffIsOK)

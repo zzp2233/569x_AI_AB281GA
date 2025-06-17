@@ -602,6 +602,7 @@ static void sfunc_sleep(void)
     bt_exit_sleep();
     ble_app_watch_set_wakeup(false);
     sleep_cb.sys_is_sleep = false;
+    cc_time_init();
     printf("sleep_exit\n");
 }
 

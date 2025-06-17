@@ -54,7 +54,7 @@ typedef struct
     uint16_t bioA;
     uint16_t bioB;
     int bioDiff;
-    uint8_t ps;
+    uint16_t ps;
     bool isPass;
     uint8_t preValueBuff[10];
     uint8_t currentValueBuff[10];
@@ -140,8 +140,8 @@ void uteModuleFactoryTestKeysHandler(uint16_t keycode);
 void uteModuleFactoryTestDisconnectHandler(void);
 void uteModuleFactoryTestStop(void);
 uint8_t uteModuleFactoryTestGetCurrTestItem(void);
-void uteModuleFactoryTestGetVkData(int *preV,int *curV, int *psV,bool *isPass);
-void uteModuleFactoryTestSetVkData(int preV,int curV, int psV);
+void uteModuleFactoryTestGetVkData(uint16_t *preV,uint16_t *curV, uint16_t *psV,bool *isPass);
+void uteModuleFactoryTestSetVkData(uint16_t  preV,uint16_t  curV, uint16_t  psV);
 void uteModuleFactoryTestProtocol(uint8_t*receive,uint8_t length);
 
 void uteModuleFactoryTestSetCheckLightMode(uint8_t mode);

@@ -731,7 +731,7 @@ uint8_t uteModuleFactoryTestGetCheckLightMode(void)
 *@author     casen
 *@date       2022-02-25
 */
-void uteModuleFactoryTestGetVkData(int *preV,int *curV, int *psV,bool *isPass)
+void uteModuleFactoryTestGetVkData(uint16_t *preV,uint16_t *curV, uint16_t *psV,bool *isPass)
 {
     (*preV) = uteModuleFactoryTestData.u.vcxx.pre;
     (*curV) = uteModuleFactoryTestData.u.vcxx.current;
@@ -739,7 +739,7 @@ void uteModuleFactoryTestGetVkData(int *preV,int *curV, int *psV,bool *isPass)
     (*isPass) = uteModuleFactoryTestData.u.vcxx.isPass;
 }
 
-void uteModuleFactoryTestSetVkData(int preV,int curV, int psV)
+void uteModuleFactoryTestSetVkData(uint16_t  preV,uint16_t  curV, uint16_t  psV)
 {
     uteModuleFactoryTestData.u.vcxx.pre = preV;
     uteModuleFactoryTestData.u.vcxx.current = curV;

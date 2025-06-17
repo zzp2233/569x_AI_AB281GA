@@ -1283,7 +1283,7 @@ void uteModulePlatformUpdateDevName(void)
     uint16_t snDataLen = sizeof(ute_application_sn_data_t);
     ute_application_sn_data_t *snData = uteModulePlatformMemoryAlloc(snDataLen);
     memset(snData, 0, snDataLen);
-    uteModulePlatformFlashNorRead(snData, UTE_USER_PARAM_ADDRESS, snDataLen);
+    uteModulePlatformFlashNorRead((uint8_t *)snData, UTE_USER_PARAM_ADDRESS, snDataLen);
     if (snData->bleDevNameLen > 0 && snData->bleDevNameLen <= sizeof(devName))
     {
         size = snData->bleDevNameLen;
@@ -1300,7 +1300,7 @@ void uteModulePlatformUpdateDevName(void)
             memcpy(snData->bleDevName, xcfg_cb.le_name, size);
             snData->bleDevNameLen = size;
             uteModulePlatformFlashNorErase(UTE_USER_PARAM_ADDRESS);
-            uteModulePlatformFlashNorWrite(snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
+            uteModulePlatformFlashNorWrite((uint8_t *)snData, UTE_USER_PARAM_ADDRESS, sizeof(ute_application_sn_data_t));
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,DevName from xcfg_cb, size=%d", __func__,size);
         }
         else
@@ -1490,6 +1490,19 @@ void uteModulePlatformAdvDataInit(void)
     uteModulePlatformAdvDataModifySub(true, 0xff, mac, 6, ADV_APPEND);
 
     uteModulePlatformUpdateDevName();
+}
+
+/**
+*@brief  是否允许ble发送数据的
+*@details
+*@author  zn.zeng
+*@date    2022-04-15
+*/
+bool uteModulePlatformIsAllowBleSend(void)
+{
+    bool isAllowBleSend = !is_le_buff_full(2);
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isAllowBleSend:%d", __func__, isAllowBleSend);
+    return isAllowBleSend;
 }
 
 /**

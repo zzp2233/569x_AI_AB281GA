@@ -12,7 +12,7 @@ static u8 msc_dnr_sta;
 #endif
 
 co_timer_t mute_timer;
-void loudspeaker_mute_callback(void)
+static void loudspeaker_mute_callback(co_timer_t *timer, void *param)
 {
     bsp_loudspeaker_mute();
     co_timer_del(&mute_timer);

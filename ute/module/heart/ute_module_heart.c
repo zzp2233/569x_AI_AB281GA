@@ -424,6 +424,18 @@ bool uteModuleHeartIsSingleTesting(void)
 }
 
 /**
+*@brief        当前是否是正在自动测试
+*@details
+*@return
+*@author       zn.zeng
+*@date       2021-07-15
+*/
+bool uteModuleHeartIsAutoTestFlag(void)
+{
+    return uteModuleHeartData.isAutoTestFlag;
+}
+
+/**
 *@brief        读取心率值
 *@details
 *@author       zn.zeng

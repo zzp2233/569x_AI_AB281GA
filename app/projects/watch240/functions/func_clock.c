@@ -266,7 +266,11 @@ void func_clock_recreate_dial(void)
         if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
         {
             sys_cb.dialplate_btf_ready = true;
+#if UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT
+            tft_set_temode(DEFAULT_TE_MODE);
+#else
             tft_set_temode(0);
+#endif
         }
 #endif
     }
@@ -427,7 +431,11 @@ static void func_clock_enter(void)
     if (sys_cb.dialplate_index == DIALPLATE_BTF_IDX)
     {
         sys_cb.dialplate_btf_ready = true;
+#if UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT
+        tft_set_temode(DEFAULT_TE_MODE);
+#else
         tft_set_temode(0);
+#endif
     }
 #endif
 }

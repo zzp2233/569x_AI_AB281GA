@@ -185,7 +185,7 @@ void bt_pbap_sync_stop(void)
 void bt_pbap_report_card_result(const char *name)
 {
     printf("pbap result Name:   '%s'\n", name);
-    if(strcmp(name, sys_cb.pbap_result_Name)!=0)
+    if(strcmp(name, sys_cb.pbap_result_Name)==0)
     {
         return;
     }

@@ -1489,12 +1489,6 @@ static void func_sport_sub_run_click_handler(void)
 }
 static void func_sport_sub_run_init(void)
 {
-    if(sport_start_flag == false)///是否正常进入运动
-    {
-        sport_start_flag = true;
-        uteModuleSportSetCountZeroIndex(0);
-        uteModuleHeartStartSingleTesting(TYPE_HEART);
-    }
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     switch (uteModuleSportMoreSportGetStatus())
     {
@@ -2276,12 +2270,6 @@ static void func_sport_sub_run_updata(void)
 }
 static void func_sport_sub_run_init(void)
 {
-    if(sport_start_flag == false)///是否正常进入运动
-    {
-        sport_start_flag = true;
-        uteModuleSportSetCountZeroIndex(0);
-        uteModuleHeartStartSingleTesting(TYPE_HEART);
-    }
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     switch(func_sport_get_disp_mode())
     {
@@ -3048,12 +3036,6 @@ static void func_sport_sub_run_updata(void)
 }
 static void func_sport_sub_run_init(void)
 {
-    if(sport_start_flag == false)///是否正常进入运动
-    {
-        sport_start_flag = true;
-        uteModuleSportSetCountZeroIndex(0);
-        uteModuleHeartStartSingleTesting(TYPE_HEART);
-    }
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     switch(func_sport_get_disp_mode())
     {
@@ -3817,12 +3799,6 @@ static void func_sport_sub_run_updata(void)
 }
 static void func_sport_sub_run_init(void)
 {
-    if(sport_start_flag == false)///是否正常进入运动
-    {
-        sport_start_flag = true;
-        uteModuleSportSetCountZeroIndex(0);
-        uteModuleHeartStartSingleTesting(TYPE_HEART);
-    }
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     switch(func_sport_get_disp_mode())
     {
@@ -4588,12 +4564,6 @@ static void func_sport_sub_run_updata(void)
 }
 static void func_sport_sub_run_init(void)
 {
-    if(sport_start_flag == false)///是否正常进入运动
-    {
-        sport_start_flag = true;
-        uteModuleSportSetCountZeroIndex(0);
-        uteModuleHeartStartSingleTesting(TYPE_HEART);
-    }
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     switch(func_sport_get_disp_mode())
     {
@@ -5438,12 +5408,6 @@ static void func_sport_sub_run_click_handler(void)
 }
 static void func_sport_sub_run_init(void)
 {
-    if(sport_start_flag == false)///是否正常进入运动
-    {
-        sport_start_flag = true;
-        uteModuleSportSetCountZeroIndex(0);
-        uteModuleHeartStartSingleTesting(TYPE_HEART);
-    }
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     switch (uteModuleSportMoreSportGetStatus())
     {
@@ -6221,12 +6185,6 @@ static void func_sport_sub_run_updata(void)
 }
 static void func_sport_sub_run_init(void)
 {
-    if(sport_start_flag == false)///是否正常进入运动
-    {
-        sport_start_flag = true;
-        uteModuleSportSetCountZeroIndex(0);
-        uteModuleHeartStartSingleTesting(TYPE_HEART);
-    }
     f_sport_sub_run_t *f_sport_sub_run = (f_sport_sub_run_t*)func_cb.f_cb;
     switch(func_sport_get_disp_mode())
     {

@@ -943,7 +943,6 @@ static u8 func_address_book_update(void)
     {
         address_book_cnt = uteModuleCallGetAddressBookSize();
         printf("address_book_cnt:%d\n", address_book_cnt);
-//        if (func_cb.sta == FUNC_ADDRESS_BOOK) {
         if (address_book_tbl != NULL)
         {
             ab_free(address_book_tbl);
@@ -956,7 +955,6 @@ static u8 func_address_book_update(void)
             uteModuleCallGetAllAddressBookContactContent(address_book_cnt, address_book_tbl);
             return true;
         }
-//        }
     }
 
     return false;

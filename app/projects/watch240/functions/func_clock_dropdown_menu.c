@@ -17,6 +17,7 @@ typedef struct f_clock_dropdwon_menu_t_
 {
 #if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
     page_tp_move_t* ptm;
+    bool touch_flag;
 #endif
     u8 page_num;
     bool up_date_flag;
@@ -223,6 +224,11 @@ compo_form_t *func_clock_dropdown_menu_form_create(void)
     }
     return frm;
 }
+//更新显示
+static void func_clock_dropdown_update(void)
+{
+
+}
 #else
 /*! 功能事件图片地址定义 */
 #define IMG_ADDR_BT_OFF               0   ///蓝牙Bt->开
@@ -283,35 +289,37 @@ compo_form_t *func_clock_dropdown_menu_form_create(void)
     compo_form_t *frm = compo_form_create(true);
     return frm;
 }
-#endif
 //更新显示
+static void func_clock_dropdown_update(void)
+{
+
+}
+#endif
+//更新页码点显示
 static void func_clock_dropdown_update_page_num(void)
 {
     f_clock_dropdwon_menu_t *f_clock_dropdwon_menu = (f_clock_dropdwon_menu_t *)func_cb.f_cb;
 
 #if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
-    if(f_clock_dropdwon_menu->ptm)
+    if(f_clock_dropdwon_menu->ptm && f_clock_dropdwon_menu->touch_flag)
     {
         compo_page_move_process(f_clock_dropdwon_menu->ptm);
-        // printf("page_x:%d\n",compo_page_move_get_offset(f_clock_dropdwon_menu->ptm));
-        // printf("page_size:%d\n",f_clock_dropdwon_menu->ptm->info.page_size);
 
-        // switch (compo_page_move_get_offset(f_clk->ptm))
-        // {
-        //     case -(GUI_SCREEN_WIDTH/2)...0:
-        //         compo_picturebox_cut(ymd,0,3);
-        //         break;
-        //     case (-(GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2))...(-GUI_SCREEN_WIDTH/2-1):
-        //         compo_picturebox_cut(ymd,1,3);
-        //         break;
-        //     case (-(GUI_SCREEN_WIDTH*3))...(-(GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2)-1):
-        //         compo_picturebox_cut(ymd,2,3);
-        //         break;
-        //     default:
-        //         break;
-        // }
+        if(f_clock_dropdwon_menu->ptm->auto_move_offset == 0)
+        {
+            s32 dx,dy;
+            f_clock_dropdwon_menu->touch_flag = ctp_get_dxy(&dx,&dy);
+        }
+        int16_t move_y = compo_page_move_get_offset(f_clock_dropdwon_menu->ptm);
+
+        if(move_y%GUI_SCREEN_WIDTH == 0)
+        {
+            f_clock_dropdwon_menu->up_date_flag = true;
+            f_clock_dropdwon_menu->page_num = -(move_y/GUI_SCREEN_WIDTH);
+        }
+
     }
-#else
+#endif
     if(f_clock_dropdwon_menu->up_date_flag)
     {
         f_clock_dropdwon_menu->up_date_flag = false;
@@ -326,6 +334,53 @@ static void func_clock_dropdown_update_page_num(void)
         }
         widget_page_set_client(func_cb.frm_main->page_body, -(f_clock_dropdwon_menu->page_num*GUI_SCREEN_WIDTH), 0);
     }
+
+}
+
+static void func_clock_sub_dropdown_process(void)
+{
+    func_clock_dropdown_update();//预留更新函数
+    func_clock_dropdown_update_page_num();//更新页码点
+    func_clock_sub_process();
+}
+
+//下拉返回表盘
+static void func_message_down_to_clock(u8 auto_switch)
+{
+    printf("%s\n", __func__);
+    f_clock_dropdwon_menu_t *f_clock_dropdwon_menu =(f_clock_dropdwon_menu_t *)func_cb.f_cb;
+    u16 switch_mode = auto_switch == MSG_CTP_SHORT_DOWN ? FUNC_SWITCH_MENU_PULLUP_UP : FUNC_SWITCH_MENU_DROPDOWN_UP;
+    compo_form_destroy(func_cb.frm_main);
+#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
+    if(f_clock_dropdwon_menu->ptm != NULL)
+    {
+        func_free(f_clock_dropdwon_menu->ptm);
+    }
+#endif
+    compo_form_t *frm_clock = func_create_form(FUNC_CLOCK);
+    compo_form_t *frm = func_clock_dropdown_menu_form_create();
+    func_cb.frm_main = frm;
+
+    if (func_switching(switch_mode, NULL))
+    {
+        func_cb.sta = FUNC_CLOCK;
+    }
+    compo_form_destroy(frm_clock);
+#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
+    f_clock_dropdwon_menu->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
+    page_move_info_t info =
+    {
+        .title_used = false,
+        .dir = 1,
+#if (UTE_DRV_SCREEN_SHAPE==1)
+        .page_size =  GUI_SCREEN_WIDTH+(GUI_SCREEN_HEIGHT-GUI_SCREEN_WIDTH)/2,
+#else
+        .page_size =  GUI_SCREEN_WIDTH,
+#endif
+        .page_count = CLOCK_DWON_PAGE_NUM,//项目config定义页面数量
+        .jump_perc  = GUI_SCREEN_WIDTH/20,
+    };
+    compo_page_move_init(f_clock_dropdwon_menu->ptm,func_cb.frm_main->page_body,&info);
 #endif
 }
 static void func_clock_sub_dropdown_click_handler(void)
@@ -465,52 +520,6 @@ static void func_clock_sub_dropdown_click_handler(void)
     }
 }
 
-static void func_clock_sub_dropdown_process(void)
-{
-    func_clock_dropdown_update_page_num();
-    func_clock_sub_process();
-}
-
-
-//下拉返回表盘
-static void func_message_down_to_clock(u8 auto_switch)
-{
-    printf("%s\n", __func__);
-    f_clock_dropdwon_menu_t *f_clock_dropdwon_menu =(f_clock_dropdwon_menu_t *)func_cb.f_cb;
-    u16 switch_mode = auto_switch == MSG_CTP_SHORT_DOWN ? FUNC_SWITCH_MENU_PULLUP_UP : FUNC_SWITCH_MENU_DROPDOWN_UP;
-    compo_form_destroy(func_cb.frm_main);
-#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
-    if(f_clock_dropdwon_menu->ptm != NULL)
-    {
-        func_free(f_clock_dropdwon_menu->ptm);
-    }
-#endif
-    compo_form_t *frm_clock = func_create_form(FUNC_CLOCK);
-    compo_form_t *frm = func_clock_dropdown_menu_form_create();
-    func_cb.frm_main = frm;
-
-    if (func_switching(switch_mode, NULL))
-    {
-        func_cb.sta = FUNC_CLOCK;
-    }
-    compo_form_destroy(frm_clock);
-#if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
-    f_clock_dropdwon_menu->ptm = (page_tp_move_t *)func_zalloc(sizeof(page_tp_move_t));
-    page_move_info_t info =
-    {
-        .title_used = false,
-        .dir = 1,
-#if (UTE_DRV_SCREEN_SHAPE==1)
-        .page_size =  GUI_SCREEN_WIDTH+(GUI_SCREEN_HEIGHT-GUI_SCREEN_WIDTH)/2,
-#else
-        .page_size =  GUI_SCREEN_WIDTH,
-#endif
-        .page_count = CLOCK_DWON_PAGE_NUM,//项目config定义页面数量
-        .jump_perc  = GUI_SCREEN_WIDTH/20,
-    };
-    compo_page_move_init(f_clock_dropdwon_menu->ptm,func_cb.frm_main->page_body,&info);
-#endif
-}
 //时钟表盘下拉菜单功能消息处理
 static void func_clock_sub_dropdown_message(size_msg_t msg)
 {
@@ -519,6 +528,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
     {
         case MSG_CTP_TOUCH:
 #if UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
+            f_clock_dropdwon_menu->touch_flag = true;
             if(f_clock_dropdwon_menu->ptm)
             {
                 compo_page_move_touch_handler(f_clock_dropdwon_menu->ptm);
@@ -526,10 +536,10 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
 #endif
             break;
         case MSG_CTP_CLICK:
-            func_clock_sub_dropdown_click_handler();
+            func_clock_sub_dropdown_click_handler();//点击事件
             break;
         case MSG_CTP_SHORT_LEFT:
-#if !UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
+#if !UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
             if(f_clock_dropdwon_menu->page_num < CLOCK_DWON_PAGE_NUM-1)
             {
                 f_clock_dropdwon_menu->page_num++;
@@ -538,7 +548,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
 #endif
             break;
         case MSG_CTP_SHORT_RIGHT:
-#if !UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE
+#if !UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE//是否使用滑动效果
             if(f_clock_dropdwon_menu->page_num != 0)
             {
                 f_clock_dropdwon_menu->page_num--;
@@ -550,11 +560,11 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
         case MSG_CTP_SHORT_DOWN:
             if (func_cb.down_sta == UTE_CUI_SCREEN_WATCHDIAL_DOWN)
             {
-                func_message_down_to_clock(false);
+                func_message_down_to_clock(false);//上下切换效果
             }
             break;
         default:
-            evt_message(msg);
+            func_message(msg);
             break;
     }
 }

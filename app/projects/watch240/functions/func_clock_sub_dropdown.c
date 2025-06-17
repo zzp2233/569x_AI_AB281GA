@@ -4285,7 +4285,7 @@ static void func_clock_sub_dropdown_message(size_msg_t msg)
             break;
     }
 }
-
+static bool clcok_dwon=false;
 //时钟表盘下拉菜单进入处理
 static void func_clock_sub_dropdown_enter(void)
 {
@@ -4316,6 +4316,7 @@ static void func_clock_sub_dropdown_enter(void)
     func_clock_sub_dropdown_form_create();
     if (!func_switching(FUNC_SWITCH_MENU_DROPDOWN_DOWN, NULL))
     {
+        // clcok_dwon = true;
         return;                                             //下拉到一半取消
     }
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
@@ -4344,6 +4345,7 @@ static void func_clock_sub_dropdown_exit(void)
     if (f_clk->ptm)
     {
         func_free(f_clk->ptm);
+        f_clk->ptm = 0;
     }
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     func_clock_butterfly_set_light_visible(true);

@@ -80,10 +80,10 @@
 #define UTE_DRV_PWRKEY_MAX_CNT 2
 
 #define UTE_DRV_PWRKEY_KEY0 KEY_BACK
-#define UTE_DRV_PWRKEY_KEY0_MAX_ADC 0x20 // 0R
+#define UTE_DRV_PWRKEY_KEY0_MAX_ADC 0x5e // 0R
 
 #define UTE_DRV_PWRKEY_KEY1 KEY_LEFT
-#define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x9A // 12K
+#define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x7f // 12K
 
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 0
@@ -620,9 +620,9 @@
 #define UTE_MODULE_SPORT_SIT_UP_ORDER                   19 //仰卧起坐
 #define UTE_MODULE_SPORT_TREADMILL_ORDER                20 //跑步机
 #define UTE_MODULE_SPORT_GYMNASTICS_ORDER               21 //体操
-#define UTE_MODULE_SPORT_BOATING_ORDER                  22 //划船
-#define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             23 //开合跳
-#define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            24 //自由训练
+#define UTE_MODULE_SPORT_BOATING_ORDER                  0 //划船
+#define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             22 //开合跳
+#define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            23 //自由训练
 #define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ORDER               0  //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ORDER        0 //0x1C,力量训练

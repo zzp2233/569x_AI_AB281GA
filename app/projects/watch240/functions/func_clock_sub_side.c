@@ -18,11 +18,6 @@ typedef struct f_clock_sub_side_t_
 
 enum
 {
-    COMPO_ID_WEA_DATA = 1,
-};
-
-enum
-{
     COMPO_ID_APP_NULL = 0,
     COMPO_ID_APP_1,
     COMPO_ID_APP_2,
@@ -31,6 +26,7 @@ enum
     COMPO_ID_APP_5,
     COMPO_ID_APP_6,
     COMPO_ID_APP_7,
+    COMPO_ID_WEA_DATA,
 };
 
 extern void compo_set_bonddata(component_t *compo, tm_t tm);
@@ -539,11 +535,6 @@ static void func_clock_sub_side_button_click(void)
     {
         uteTaskGuiStartScreen(side_get_latest_func(id - COMPO_ID_APP_NULL - 1), 0, __func__);
     }
-}
-
-static void func_clock_sub_side_reflash(void)
-{
-    return;
 }
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT

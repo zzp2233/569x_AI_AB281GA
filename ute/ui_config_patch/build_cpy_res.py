@@ -13,6 +13,8 @@ import hashlib
 import shutil
 import zipfile
 import re
+import xml.etree.ElementTree as ET
+
 def get_ute_version(filename):
     with open(filename, 'r', errors='ignore') as file:
         content = file.read()
@@ -123,6 +125,48 @@ def get_ute_vcxx_drv(filename):
         print("vcxx_drv macro not found.")
         return ""
 
+# 获取烧录工具配置的蓝牙地址模式和地址  
+def read_bt_config(file_path):
+    bt_addr_mode = None
+    bt_addr = None
+    if os.path.exists(file_path):
+        try:
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+            # 找到 appSettings 节点
+            app_settings = root.find('appSettings')
+            if app_settings is not None:
+                for elem in app_settings.findall('add'):
+                    key = elem.get('key')
+                    value = elem.get('value')
+                    if key == 'bt_addr_mode':
+                        bt_addr_mode = value
+                    elif key == 'bt_addr':
+                        bt_addr = value
+        except Exception as e:
+            print(f"Error parsing {file_path}: {e}")
+    return bt_addr_mode, bt_addr
+
+# 修改蓝牙地址模式和地址
+def write_bt_config(file_path, bt_addr_mode, bt_addr):
+    if os.path.exists(file_path):
+        try:
+            tree = ET.parse(file_path)
+            root = tree.getroot()
+            # 找到 appSettings 节点
+            app_settings = root.find('appSettings')
+            if app_settings is not None:
+                for elem in app_settings.findall('add'):
+                    key = elem.get('key')
+                    if key == 'bt_addr_mode' and bt_addr_mode is not None:
+                        elem.set('value', bt_addr_mode)
+                    elif key == 'bt_addr' and bt_addr is not None:
+                        elem.set('value', bt_addr)
+            tree.write(file_path, encoding='utf-8', xml_declaration=True)
+            print(f"Successfully updated {file_path}")
+        except Exception as e:
+            print(f"Error writing to {file_path}: {e}")
+
 def panic(err_msg):
     print('Error: %s\n' %err_msg)
     sys.exit(1)
@@ -151,6 +195,11 @@ def main(argv):
     if os.path.exists("Output\\bin\\res\\"):
        os.system('rmdir /s /q Output\\bin\\res\\')
     if os.path.exists("Output\\bin\\Settings\\"):
+       settings_file = os.path.join(current_dir, "Output\\bin\\Settings\\watch.setting")
+       print("settings_file:", settings_file)
+       # 读取当前 bt_addr_mode 和 bt_addr 值
+       bt_addr_mode, bt_addr = read_bt_config(settings_file)
+       print("bt_addr_mode: %s, bt_addr: %s" % (bt_addr_mode, bt_addr))
        os.system('rmdir /s /q Output\\bin\\Settings\\')
     if os.path.exists("Output\\bin\\ui\\"):
        os.system('rmdir /s /q Output\\bin\\ui\\')
@@ -158,6 +207,10 @@ def main(argv):
     cpy_cmd = "xcopy /s/y/q "+project_dir+"\\app\\ ..\\..\\..\\app\\"
     print('cpy_cmd:',cpy_cmd)
     os.system(cpy_cmd)
+
+    # 如果有原始值，则写回
+    if bt_addr_mode is not None or bt_addr is not None:
+        write_bt_config(settings_file, bt_addr_mode, bt_addr)
 
     # language
     language_dir = os.path.join(project_dir, 'defaultLanguage')

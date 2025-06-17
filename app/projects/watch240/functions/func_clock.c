@@ -352,7 +352,13 @@ static void func_clock_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_DOWN:
-#if UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
+#if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
+            if(UTE_CUI_SCREEN_WATCHDIAL_DOWN != FUNC_NULL)
+            {
+                func_cb.down_sta = UTE_CUI_SCREEN_WATCHDIAL_DOWN;
+                func_switch_to(UTE_CUI_SCREEN_WATCHDIAL_DOWN, FUNC_SWITCH_MENU_DROPDOWN_DOWN);  //上拉卡片界面
+            }
+#elif UTE_MODULE_SCREENS_DWON_MENU_SUPPORT
             func_clock_sub_dropdown();              //下拉菜单
 #endif
             break;

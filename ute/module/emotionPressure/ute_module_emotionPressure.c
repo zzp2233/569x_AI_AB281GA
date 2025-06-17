@@ -30,6 +30,7 @@ void *uteModuleEmotionPressureMute;
 #if UTE_MODULE_PRESSURE_MAX_AND_MIN_VAULE_SUPPORT
 static uint32_t avgPressureCnt = 0;
 #endif
+#if !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
 static void uteModuleEmotionPrintfLog(const char *format, ...)
 {
 #if (UTE_LOG_EMOTION_PRESSURE_LVL && !UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT)
@@ -45,6 +46,7 @@ static void uteModuleEmotionPrintfLog(const char *format, ...)
     // APP_PRINT_INFO1("%s",TRACE_STRING(&uteModuleLogArrayBuff[0]));
 #endif
 }
+#endif
 
 #if UTE_MODULE_VK_EMOTION_PRESSURE_SUPPORT
 void uteDrvHeartVcxxStartPressureSample(void)
@@ -808,7 +810,7 @@ void uteModuleEmotionPressureAutoSaveData(void)
         memset(&path[0], 0, 40);
         sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR, &dirInfo->filesName[0][0]);
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,del file=%s", __func__, &path[0]);
-        uteModuleFilesystemDelFile(&path[0]);
+        uteModuleFilesystemDelFile((char *)&path[0]);
     }
     memset(&path[0], 0, 40);
     sprintf((char *)&path[0], "%s/%04d%02d%02d", UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR, time.year, time.month, time.day);
@@ -875,7 +877,7 @@ void uteModuleEmotionPressureSendHistoryData(void)
         sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_EMOTION_PRESSURE_AUTO_DATA_DIR, &sendParam->dirInfo.filesName[sendParam->currSendFileIndex][0]);
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,read file=%s", __func__, &path[0]);
         UTE_MODULE_LOG(UTE_LOG_EMOTION_PRESSURE_LVL, "%s,currSendFileIndex=%d,currSendMinIndex=%d", __func__, sendParam->currSendFileIndex, sendParam->currSendMinIndex);
-        if (uteModuleFilesystemOpenFile(&path[0], &file, FS_O_RDONLY))
+        if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_RDONLY))
         {
             uteModuleFilesystemReadData(file, &tempDataBuff[0], sendParam->dataBuffSize);
             memcpy(&dataBuff[0], tempDataBuff, 4);               /*!获取年月日 , xjc 2022-03-03*/

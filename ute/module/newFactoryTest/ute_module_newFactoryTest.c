@@ -14,6 +14,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_heart.h"
 #include "ute_module_localRingtone.h"
+#include "ute_module_factorytest.h"
 
 #if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
 /*! zn.zeng,2022-03-16*/

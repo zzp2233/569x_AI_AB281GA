@@ -18,6 +18,7 @@
 #include "ute_module_filesystem.h"
 #include "ute_module_watchonline.h"
 #include "ute_drv_battery_common.h"
+#include "ute_module_emotionPressure.h"
 
 /*! gui的数据结构 zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);

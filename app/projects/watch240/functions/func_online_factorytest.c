@@ -130,9 +130,9 @@ static compo_form_t *func_online_factory_test_check_light_create(void)
 // 漏光测试刷新
 static void func_online_factory_test_check_light_process(void)
 {
-    int preV = 0;
-    int curV = 0;
-    int psV = 0;
+    u16 preV = 0;
+    u16 curV = 0;
+    u16 psV = 0;
     bool isPass = false;
     char str_buff[40];
 

@@ -1,4 +1,5 @@
 #include "include.h"
+#include "ute_module_call.h"
 
 #if BT_PBAP_EN
 //static char qp[] = {"=12=34=56=78=9A=BC=DE=F0=12=34=56=78"};  //for test

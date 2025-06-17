@@ -35,6 +35,7 @@
 #include "ute_module_appbinding.h"
 #include "ute_module_breathrate.h"
 #include "ute_module_bedside_mode.h"
+#include "ute_module_emotionPressure.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -47,7 +48,6 @@
 #include "ute_module_breathtraining.h"
 #include "ute_module_countdown.h"
 #include "ute_module_temperature.h"
-#include "ute_module_emotionPressure.h"
 #include "UTEsecurityCode.h"
 #include "ute_picture_font_common.h"
 #include "ute_module_lockScreen.h"

@@ -74,6 +74,7 @@ compo_form_t *func_test_mode_list_form_create(void)
 #else
 compo_form_t *func_test_mode_list_form_create(void)
 {
+    return NULL;
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 

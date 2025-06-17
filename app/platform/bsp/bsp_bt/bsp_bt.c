@@ -112,6 +112,7 @@ void bt_emit_notice(uint evt, void *params)
         case BT_NOTICE_DISCONNECT:
             bt_cb.warning_status |= BT_WARN_DISCON;
             bt_redial_reset(((u8 *)params)[0] & 0x01);
+            printf("BT_NOTICE_DISCONNECT reason : 0x%X\n", ((u8 *)params)[1]);
 #if BT_HID_ONLY_FOR_IOS_EN
             bt_deinit_lib_hid();
 #endif
@@ -370,6 +371,9 @@ void bsp_bt_status(void)
     bsp_bt_disp_status();
     bsp_bt_warning();
 }
+
+extern bool hfp_is_connect(void);
+extern u8 bt_get_status_do(void);
 
 bool  bt_connect_on_flag(void)
 {

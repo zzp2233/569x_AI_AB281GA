@@ -60,6 +60,7 @@ bool isHfpAndA2dpProfileBothConnected(void)
         result = bt_a2dp_profile_completely_connected();
     }
 #endif
+    extern bool hfp_is_connected(void);
     result = hfp_is_connected();
     return result;
 }
@@ -277,6 +278,7 @@ void uteModuleCallEverySecond(void)
             bsp_bt_trun_on();
         }
 #if UTE_MODULE_BT_ENTERTRANMENT_VOICE_SWITCH_SUPPORT
+        extern bool bt_hfp_is_connected(void);
         if(!uteModuleCallIsEntertranmentVoiceOn() && bt_a2dp_profile_completely_connected())
         {
             bt_a2dp_profile_dis();

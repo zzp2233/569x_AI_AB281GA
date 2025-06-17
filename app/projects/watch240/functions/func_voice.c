@@ -365,16 +365,14 @@ compo_form_t *func_voice_form_create(void)
     compo_form_t *frm = compo_form_create(true);
 
     //设置标题栏
-//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-//    compo_form_set_title(frm, i18n[STR_VOICE]);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_VOICE]);
 
     //创建动画
     compo_animation_t *animation = compo_animation_create(frm, ui_handle.animation.res);
     compo_animation_set_pos(animation, ui_handle.animation.x, ui_handle.animation.y);
     compo_animation_set_radix(animation, ui_handle.animation.radix);
-    compo_animation_set_interval(animation, ui_handle.animation.interval);
     compo_setid(animation, ui_handle.animation.id);
-    compo_animation_set_roll(animation, UI_BUF_I340001_VOICE_GIF_BIN);
 
     //创建TEXT
     compo_textbox_t* txt = compo_textbox_create(frm, MAX(strlen(i18n[ui_handle.text.str_id1]), strlen(i18n[ui_handle.text.str_id2])));
@@ -416,13 +414,9 @@ static void func_voice_start_siri(void)
     else
     {
         f_voice->siri_en = false;
-        uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
-        sys_cb.cover_index = REMIND_GCOVER_BT_NOT_CONNECT;
-        msgbox((char*)i18n[STR_CONNECT_BLUETOOTH], NULL, NULL, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_REMIND_COVER);
         func_voice_frist_check();
     }
 }
-
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 //组件ID
 enum

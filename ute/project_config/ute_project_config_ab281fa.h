@@ -6,8 +6,8 @@
 *@date        2024-03-22
 *@version       v1.0
 */
-#ifndef _UTE_PROJECT_CONFIG_AB281F_H_
-#define _UTE_PROJECT_CONFIG_AB281F_H_
+#ifndef _UTE_PROJECT_CONFIG_AB281FA_H_
+#define _UTE_PROJECT_CONFIG_AB281FA_H_
 
 #define DEFAULT_BLE_DEV_NAME "SVERGE"
 #define UTE_SW_VERSION "AB281FAV000095"
@@ -15,6 +15,9 @@
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
 /******************客户定制功能支持开始**************************************/
+/*! 在蝴蝶表盘时TE模式设置为1，即默认模式，不适用复杂界面的TE模式 */
+#define UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT 0 //能优化撕裂效果，但是蝴蝶飞行速度变慢，后使用调屏幕驱动优化
+/*! 标题栏高度,quan.qi.cai 2025-05-29 */
 #define UTE_TITLE_BAR_HIGH 32
 /*! 上传蓝牙名广播时，使用 蓝牙名_XXXX 格式*/
 #define UTE_MODULE_BLE_NAME_FORMET1_SUPPORT 1
@@ -68,7 +71,6 @@
 #define UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT 0
 #define UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT 0
 #define UTE_DRV_TFT_S360X360_I172_ST77916_QSPI_SUPPORT 1
-
 
 /*! 屏最大亮度百分比 dengli.lu, 2021-10-29  */
 #define DEFAULT_BACK_LIGHT_PERCENT_MAX 100
@@ -203,7 +205,7 @@
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 0    // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 0   // 立方体表盘索引
 
-#define UTE_WATCHS_360X360_CUBE_DIAL_SUPPORT 0      // 360x360屏幕使用立方体表盘
+#define UTE_WATCHS_360X360_CUBE_DIAL_SUPPORT 0      // 360x360屏幕使用立方体表盘,需要支持立方体表盘才能开启
 
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */

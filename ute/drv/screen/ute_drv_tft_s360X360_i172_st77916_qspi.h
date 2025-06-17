@@ -108,7 +108,8 @@ __STATIC_INLINE void drvScreenTft360X360I172St77916QspiInit(void)
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xc0, tmp, 1);
     memcpy(tmp, "\x10", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xc1, tmp, 1);
-    memcpy(tmp, "\x37", 1);
+    // memcpy(tmp, "\x37", 1);
+    memcpy(tmp, "\x49", 1);//40Hz
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xc2, tmp, 1);//60hz
     memcpy(tmp, "\x80", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xc3, tmp, 1);

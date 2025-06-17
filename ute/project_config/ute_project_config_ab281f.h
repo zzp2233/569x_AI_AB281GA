@@ -15,7 +15,7 @@
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
 /*! 在蝴蝶表盘时TE模式设置为1，即默认模式，不适用复杂界面的TE模式 */
-#define UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT 1
+#define UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT 0 //能优化撕裂效果，但是蝴蝶飞行速度变慢，后使用调屏幕驱动优化
 
 /*! 上传蓝牙名广播时，使用 蓝牙名_XXXX 格式*/
 #define UTE_MODULE_BLE_NAME_FORMET1_SUPPORT 0
@@ -51,6 +51,14 @@
 #define UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT 0
 #define UTE_DRV_TFT_S360X360_I172_ST77916_QSPI_SUPPORT 1
 
+/*! 2TE 加大1MHz优化蝴蝶表盘撕裂问题 */
+/*! 不同TE模式下的spiclk,用于优化撕裂,spiclk : baud = sys_clk / (div +1),wang.luo 2025-01-11 */
+#ifndef UTE_DRV_SCREEN_1TE_SPI_CLK
+#define UTE_DRV_SCREEN_1TE_SPI_CLK 27000000 // 27Mhz
+#endif
+#ifndef UTE_DRV_SCREEN_2TE_SPI_CLK
+#define UTE_DRV_SCREEN_2TE_SPI_CLK 14000000 // 12Mhz
+#endif
 
 /*! 屏最大亮度百分比 dengli.lu, 2021-10-29  */
 #define DEFAULT_BACK_LIGHT_PERCENT_MAX 100
@@ -174,10 +182,6 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-// #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19026001_BIN,\
-//                                                 UI_BUF_DIALPLATE_D19027001_BIN,\
-//                                                 UI_BUF_DIALPLATE_D19028001_BIN,\
-//                                                 UI_BUF_DIALPLATE_D19030001_BIN,}
 #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19027001_BIN,\
                                                 UI_BUF_DIALPLATE_D19028001_BIN,\
                                                 UI_BUF_DIALPLATE_D19030001_BIN,\

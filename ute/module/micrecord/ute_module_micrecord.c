@@ -199,7 +199,7 @@ void mic_test_start(void)
     printf("-->%s\n", __func__);
     audio_path_init(AUDIO_PATH_SPEAKER);
     audio_path_start(AUDIO_PATH_SPEAKER);
-    dac_fade_in();
+    // dac_fade_in();
 }
 
 void mic_test_exit(void)
@@ -265,7 +265,6 @@ void uteModuleMicRecordFactoryPlay(void)
 }
 
 #else
-
 #define MIC_BUF_IS_FULL 0
 #define mic_test_init()
 #define mic_test_start()
@@ -322,12 +321,13 @@ void uteModuleMicRecordFactoryTimerCallback(void *pxTimer)
  */
 void uteModuleMicRecordFactoryStart(void)
 {
-    printf( "%s", __func__);
+    UTE_MODULE_LOG(UTE_LOG_MICRECORD_LVL, "%s", __func__);
     factory_test_init_record_data();
     factory_test_earphone_data.record_state = FACTORY_TEST_RECORD_RECORDING;
     if (uteModuleMicRecordTimerPointer == NULL)
     {
-        uteModulePlatformCreateTimer(&uteModuleMicRecordTimerPointer, "MicRecord", 1, UTE_MODULE_MIC_FACTORY_TEST_RECORDING_TIME * 1000, false, uteModuleMicRecordFactoryTimerCallback);
+        uteModulePlatformCreateTimer(&uteModuleMicRecordTimerPointer, "MicRecord", 1,
+                                     UTE_MODULE_MIC_FACTORY_TEST_RECORDING_TIME * 1000, false, uteModuleMicRecordFactoryTimerCallback);
     }
     uteModulePlatformRestartTimer(&uteModuleMicRecordTimerPointer, UTE_MODULE_MIC_FACTORY_TEST_RECORDING_TIME * 1000);
     mic_test_start();

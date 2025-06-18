@@ -439,6 +439,88 @@ const static func_item_info_t func_item_tbl[] =
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 };
 
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+#define FUNC_ITEM_CNT   (sizeof(func_item_tbl) / sizeof(func_item_tbl[0]))
+const static func_item_info_t func_item_tbl[] =
+{
+#if UTE_MODULE_SCREENS_CALL_SUPPORT
+    {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I343001_2_HONEYCOMB_CALL_BIN,                   .str_idx=STR_PHONE},                 //电话
+#endif // UTE_MODULE_SCREENS_CALL_SUPPORT
+#if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+    {.func_sta=FUNC_ACTIVITY,                 .res_addr=UI_BUF_I343001_2_HONEYCOMB_ACTIVITY_BIN,               .str_idx=STR_EVREY_DAY_ACTIVITY},    //每日活动
+#endif // UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
+#if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+    {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I343001_2_HONEYCOMB_HEART_BIN,             .str_idx=STR_HEART_RATE},            //心率
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_SPORT_SUPPORT
+    {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_SOPRT_BIN,               .str_idx=STR_SPORTS},                //运动
+#endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
+#if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+    {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I343001_2_HONEYCOMB_SPO2_BIN,           .str_idx=STR_BLOOD_OXYGEN},          //血氧
+#endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {.func_sta=FUNC_PRESSURE,                 .res_addr=UI_BUF_I343001_2_HONEYCOMB_STRESS_BIN,                 .str_idx=STR_STRESS},              //压力
+#endif
+// #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+// {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I343001_2_HONEYCOMB_BLOOD_PRESSURE_BIN,         .str_idx=STR_BLOOD_PRESSURE},          //血压
+// #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
+#if UTE_MODULE_SCREENS_SLEEP_SUPPORT
+    {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_SLEEP_BIN,                 .str_idx=STR_SLEEP},                 //睡眠
+#endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
+#if UTE_MODULE_SCREENS_MUSIC_SUPPORT
+    {.func_sta=FUNC_BT,                       .res_addr=UI_BUF_I343001_2_HONEYCOMB_MUSIC_BIN,                 .str_idx=STR_MUSIC},                 //音乐
+#endif // UTE_MODULE_SCREENS_MUSIC_SUPPORT
+#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+    {.func_sta=FUNC_WEATHER,                  .res_addr=UI_BUF_I343001_2_HONEYCOMB_WEATHER_BIN,               .str_idx=STR_WEATHER},               //天气
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+#if UTE_MODULE_SCREENS_ALARM_SUPPORT
+    {.func_sta=FUNC_ALARM_CLOCK,              .res_addr=UI_BUF_I343001_2_HONEYCOMB_ALARM_BIN,                 .str_idx=STR_ALARM_CLOCK},           //闹钟
+#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+//    {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I343001_2_HONEYCOMB_MOOD_BIN,                  .str_idx=STR_HEART_RATE},            //情绪
+// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_BREATHE_SUPPORT
+    {.func_sta=FUNC_BREATHE,                  .res_addr=UI_BUF_I343001_2_HONEYCOMB_BREATHING_BIN,               .str_idx=STR_BREATHE_TRAIN},         //呼吸
+#endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {.func_sta=FUNC_MESSAGE,                  .res_addr=UI_BUF_I343001_2_HONEYCOMB_MESSAGE_BIN,           .str_idx=STR_MESSAGE},               //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_VOICE_ASSISTANT_BIN,       .str_idx=STR_VOICE},                 //语音助手
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_GAME_SUPPORT
+    {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I343001_2_HONEYCOMB_GAME_BIN,                  .str_idx=STR_GAME},                 //游戏
+#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+#if UTE_MODULE_SCREENS_SETTING_SUPPORT
+    {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I343001_2_HONEYCOMB_SETTINGS_BIN,              .str_idx=STR_SETTING},               //设置
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
+
+    {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I343001_2_HONEYCOMB_PERIOD_BIN,                .str_idx=STR_WOMEN_HEALTH},          //女性健康
+
+#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
+    {STR_STOP_WATCH,                    UI_BUF_I343001_2_HONEYCOMB_STOPWATCH_BIN,       .func_sta = FUNC_STOPWATCH},    //秒表
+#endif
+#if UTE_MODULE_SCREENS_TIMER_SUPPORT
+    {STR_TIMER,                  UI_BUF_I343001_2_HONEYCOMB_TIMER_BIN,        .func_sta = FUNC_TIMER},                //计时器
+#endif
+#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+    {STR_FIND_PHONE,                UI_BUF_I343001_2_HONEYCOMB_FINDPHONE_BIN,             .func_sta = FUNC_FINDPHONE},  //找手机
+#endif
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {STR_FLASHLIGHT,                     UI_BUF_I343001_2_HONEYCOMB_FLASHLIGHT_BIN,           .func_sta = FUNC_FLASHLIGHT},    //手电筒
+#endif
+#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+    {STR_CAMERA,                UI_BUF_I343001_2_HONEYCOMB_PHOTO_BIN,              .func_sta = FUNC_CAMERA},  //遥控拍照
+#endif
+#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {STR_CALCULATOR,               UI_BUF_I343001_2_HONEYCOMB_CALCULATOR_BIN,          .func_sta = FUNC_CALCULATOR}, //计算器
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
+    {.func_sta=FUNC_TOOLBOX,                 .res_addr=UI_BUF_I343001_2_HONEYCOMB_TOOLBOX_BIN,                .str_idx = STR_TOOL_BOX},           //工具箱
+#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+};
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 #define FUNC_ITEM_CNT   (sizeof(func_item_tbl) / sizeof(func_item_tbl[0]))
 const static func_item_info_t func_item_tbl[] =

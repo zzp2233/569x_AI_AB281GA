@@ -289,6 +289,57 @@ void func_set_sub_language_list_icon_click(void)
     uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
 }
 
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+//语言设置页面
+compo_form_t *func_set_sub_language_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
+
+    //新建列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I343001_11_CALL_NOTICE_BG_BIN);
+
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I343001_20_ALARM_CLOCK_SELECT_BIN, 0);
+    compo_listbox_set_bithook(listbox, func_sel_language_bit);
+
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    uint8_t set_idx = 1;
+    if (set_idx < 1)
+    {
+        set_idx = 1;
+    }
+    compo_listbox_set_focus_byidx(listbox, set_idx);
+    compo_listbox_update(listbox);
+
+
+    return frm;
+}
+
+//点进图标进入应用
+void func_set_sub_language_list_icon_click(void)
+{
+    int icon_idx;
+    f_language_list_t *f_set = (f_language_list_t *)func_cb.f_cb;
+    compo_listbox_t *listbox = f_set->listbox;
+
+    icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+
+    if (icon_idx < 0 || icon_idx >= SET_LIST_CNT)
+    {
+        return;
+    }
+    compo_listbox_update(listbox);
+    uteModuleSystemtimeSetLanguage(tbl_language_list[icon_idx].vidx);
+}
+
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 //语言设置页面
 compo_form_t *func_set_sub_language_form_create(void)
@@ -509,6 +560,8 @@ static void func_set_sub_language_enter(void)
     compo_listbox_move_init_modify(listbox, 70, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2)+40);
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 100+20, compo_listbox_gety_byidx(listbox, SET_LIST_CNT - 2));
 #endif
 
 }

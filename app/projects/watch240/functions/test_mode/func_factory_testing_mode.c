@@ -129,8 +129,10 @@ typedef struct f_factory_testing_t_
 const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
 {
     "产品信息",
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_PART_FUNCTION
     "屏十字测试",
     "屏RGB测试",
+#endif
     "TP测试",
 #if UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT
     "漏光测试",
@@ -141,7 +143,9 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
 #endif
     "gsensor测试",
     "马达测试",
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_PART_FUNCTION
     "充电测试",
+#endif
     "咪头喇叭测试",
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
     "音频测试",
@@ -196,6 +200,7 @@ compo_form_t *func_factory_testing_create(void)
     {
         frm = func_factory_testing_drv_info();
     }
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_PART_FUNCTION
     else if (test_data->moduleType == FACTORY_MODULE_CROSS)
     {
         frm = func_factory_testing_cross();
@@ -204,6 +209,11 @@ compo_form_t *func_factory_testing_create(void)
     {
         frm = func_factory_testing_rgb();
     }
+    else if (test_data->moduleType == FACTORY_MODULE_CHARGING)
+    {
+        frm = func_factory_testing_charging();
+    }
+#endif
     else if (test_data->moduleType == FACTORY_MODULE_TP)
     {
         frm = func_factory_testing_tp();
@@ -231,10 +241,6 @@ compo_form_t *func_factory_testing_create(void)
     else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
     {
         frm = func_factory_testing_motor();
-    }
-    else if (test_data->moduleType == FACTORY_MODULE_CHARGING)
-    {
-        frm = func_factory_testing_charging();
     }
     else if (test_data->moduleType == FACTORY_MODULE_MIC_SPEAKER)
     {
@@ -1082,7 +1088,12 @@ static void func_factory_testing_message(size_msg_t msg)
     {
         case MSG_CTP_CLICK:
         {
-            if (test_data->moduleType == FACTORY_MODULE_CROSS)
+            if (test_data->moduleType == FACTORY_MODULE_TP)
+            {
+                func_mode_tp_click();
+            }
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_PART_FUNCTION
+            else if (test_data->moduleType == FACTORY_MODULE_CROSS)
             {
                 func_factory_testing_pass_fail_pop_click();
             }
@@ -1090,10 +1101,7 @@ static void func_factory_testing_message(size_msg_t msg)
             {
                 func_mode_rgb_click();
             }
-            else if (test_data->moduleType == FACTORY_MODULE_TP)
-            {
-                func_mode_tp_click();
-            }
+#endif
             else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
             {
                 func_mode_motor_click();
@@ -1470,9 +1478,11 @@ static void func_factory_testing_process(void)
         case FACTORY_MODULE_GSENSOR:
             func_mode_gsensor_process();
             break;
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_PART_FUNCTION
         case FACTORY_MODULE_CHARGING:
             func_mode_charging_process();
             break;
+#endif
         case FACTORY_MODULE_MIC_SPEAKER:
             func_mode_mic_speaker_process();
             break;

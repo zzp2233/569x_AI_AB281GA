@@ -16,6 +16,9 @@
 
 #define UTE_SW_VERSION_FIRST_NAME  "ZK-"
 
+// #define DUG_VCXX_HEART_SUPPORT  1//动态心率
+// #define DUG_VCXX_BLOOD_OXYGEN_SUPPORT  1
+
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
 /*gesnsor 采集原始数据*/

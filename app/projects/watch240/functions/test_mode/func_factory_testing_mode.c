@@ -99,7 +99,10 @@ enum
     TAPE_TXT_ID,
     ///*喇叭测试*/
     HORN_TXT_ID,
-    RECORDING_BTN_ID,
+    RECORDING_BTN_ID,//麦克风
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+    RECORDING1_BTN_ID,//播放铃声
+#endif
 };
 
 // bool mode_test_result_data[13];
@@ -745,7 +748,7 @@ compo_form_t * func_factory_testing_ring(void)
 
     compo_button_t *btn = compo_button_create(frm); // 按键
     compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
-    compo_setid(btn, RECORDING_BTN_ID);
+    compo_setid(btn, RECORDING1_BTN_ID);
 
     func_factory_testing_pass_fail_bnt_create(frm);
 
@@ -925,7 +928,7 @@ static void func_mode_test_ring_click(void)
             }
         }
         break;
-        case RECORDING_BTN_ID:
+        case RECORDING1_BTN_ID:
             if(f_factory_testing->horn_flag == true)
             {
                 f_factory_testing->horn_flag = false;
@@ -943,6 +946,7 @@ static void func_mode_test_ring_click(void)
     }
 }
 #endif
+//喇叭麦克风
 static void func_mode_mic_speaker_click(void)
 {
     int id = compo_get_button_id();
@@ -1216,8 +1220,8 @@ static void func_mode_mic_speaker_process(void)
         {
             compo_textbox_set(textbox, "播放中...");
             uteModuleMicRecordFactorySetrecordState(FACTORY_TEST_RECORD_PLAYING);
-            // uteModuleMicRecordFactoryPlayStart();
-            // isNeedPlay = false;
+            //  uteModuleMicRecordFactoryPlayStart();
+            //  isNeedPlay = false;
         }
     }
     else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_PLAYING)

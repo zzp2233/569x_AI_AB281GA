@@ -55,11 +55,11 @@ void load_power_and_index(int *power, int *index)
 {
     *power = uteModuleSmokeData.current_power;
     *index = uteModuleSmokeData.current_index;
-    if ((get_gear_func1() == 0 && *power < MIN_POWER_SINGLE) ||
-        (get_gear_func1() == 1 && *power < MIN_POWER_DOUBLE))
+    if ((get_gear_func() == 0 && *power < MIN_POWER_SINGLE) ||
+        (get_gear_func() == 1 && *power < MIN_POWER_DOUBLE))
     {
-        *power = get_gear_func1() == 0 ? 15 : 25;
-        *index = *power - (get_gear_func1() == 0 ? MIN_POWER_SINGLE : MIN_POWER_DOUBLE);
+        *power = get_gear_func() == 0 ? 15 : 25;
+        *index = *power - (get_gear_func() == 0 ? MIN_POWER_SINGLE : MIN_POWER_DOUBLE);
     }
 }
 
@@ -84,12 +84,12 @@ compo_form_t *func_ecig_set_power_form_create(void)
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_05_BIN);
     }
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-60);
-    compo_picturebox_set_visible(picbox, get_gear_func1() == 0 ? true : false);
+    compo_picturebox_set_visible(picbox, get_gear_func() == 0 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG_D_D);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_NUM_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-60);
-    compo_picturebox_set_visible(picbox, get_gear_func1() == 1 ? true : false);
+    compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG_S_D);
 
     compo_button_t *btn1 = compo_button_create(frm);
@@ -102,12 +102,12 @@ compo_form_t *func_ecig_set_power_form_create(void)
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_00_BIN);
     compo_picturebox_set_pos(picbox, 65, 241);
-    compo_picturebox_set_visible(picbox, get_gear_func1() == 0 ? true : false);
+    compo_picturebox_set_visible(picbox, get_gear_func() == 0 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_SET_D_D1);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_02_BIN);
     compo_picturebox_set_pos(picbox,172, 241);
-    compo_picturebox_set_visible(picbox, get_gear_func1() == 1 ? true : false);
+    compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_SET_S_D1);
 
     int power, index;
@@ -117,12 +117,12 @@ compo_form_t *func_ecig_set_power_form_create(void)
     int total_cnt;
     //printf("res =%d\n",res);
 
-    if(get_gear_func1() == 0 &&(( res == 8)||res == 0 ))
+    if(get_gear_func() == 0 &&(( res == 8)||res == 0 ))
     {
         //   printf("111\n");
         total_cnt =9;
     }
-    else if(get_gear_func1() == 1 &&res == 0 )
+    else if(get_gear_func() == 1 &&res == 0 )
     {
         //  printf("222\n");
         total_cnt =11;
@@ -137,12 +137,12 @@ compo_form_t *func_ecig_set_power_form_create(void)
 
 
     //int total_cnt1 = (get_gear_func1() == 0) ? 9 : 11;
-    if(get_gear_func1() == 0 &&(( res == 8)||res == 0 ))
+    if(get_gear_func() == 0 &&(( res == 8)||res == 0 ))
     {
         //  printf("444\n");
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
     }
-    else if  (get_gear_func1() == 1 &&res == 0 )
+    else if  (get_gear_func() == 1 &&res == 0 )
     {
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
         //  printf("555\n");
@@ -156,7 +156,7 @@ compo_form_t *func_ecig_set_power_form_create(void)
 
     compo_picturebox_cut(picbox, f_setpower->current_index, total_cnt);
     compo_picturebox_set_pos(picbox, 120, 82);
-    compo_picturebox_set_visible(picbox, get_gear_func1() == 0 ? true : false);
+    compo_picturebox_set_visible(picbox, get_gear_func() == 0 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG_NUM);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
@@ -167,7 +167,7 @@ compo_form_t *func_ecig_set_power_form_create(void)
     // }
     compo_picturebox_cut(picbox, f_setpower->current_index, total_cnt);
     compo_picturebox_set_pos(picbox, 120, 82);
-    compo_picturebox_set_visible(picbox, get_gear_func1() == 1 ? true : false);
+    compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG1_NUM);
 
     compo_button_t *btn3 = compo_button_create(frm); // ＋
@@ -272,7 +272,7 @@ static void func_ecig_set_power_button_touch_handle(void)
             //    f_setpower->current_index, f_setpower->current_power);
             break;
         case COMPO_ID_BTN_ECIG_SET_ADD:
-            if (get_gear_func1() == 0 && (res==4||res==8||res==0))
+            if (get_gear_func() == 0 && (res==4||res==8||res==0))
             {
                 if (f_setpower->current_index < INDEX_MAX_SINGLE)
                 {
@@ -284,7 +284,7 @@ static void func_ecig_set_power_button_touch_handle(void)
                     compo_picturebox_cut(picbox2, f_setpower->current_index, 9);
                 }
             }
-            else if (get_gear_func1() == 0 && (res==6||res==12))
+            else if (get_gear_func() == 0 && (res==6||res==12))
             {
                 if (f_setpower->current_index < INDEX_MAX_DOUBLE)
                 {
@@ -315,7 +315,7 @@ static void func_ecig_set_power_button_touch_handle(void)
             break;
 
         case COMPO_ID_BTN_ECIG_SET_DEL:
-            if (get_gear_func1() == 0 && (res==4||res==8||res==0))
+            if (get_gear_func() == 0 && (res==4||res==8||res==0))
             {
                 if (f_setpower->current_index > 0)
                 {
@@ -326,7 +326,7 @@ static void func_ecig_set_power_button_touch_handle(void)
                     compo_picturebox_cut(picbox2, f_setpower->current_index, 9);
                 }
             }
-            else if (get_gear_func1() == 0 && (res==6||res==12))
+            else if (get_gear_func() == 0 && (res==6||res==12))
             {
                 if (f_setpower->current_index > 0)
                 {
@@ -428,7 +428,7 @@ static void func_ecig_set_power_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_setpower_t));
     func_cb.frm_main = func_ecig_set_power_form_create();
-    get_gear_func1();
+    get_gear_func();
     ecig_get_res();
 }
 

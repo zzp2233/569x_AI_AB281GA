@@ -167,7 +167,6 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 #endif
             break;
         case COMPO_BOND_SMOKERESVAL:
-            get_gear_func1();
             get_gear_func();
             value = ecig_get_res();
             sprintf(value_str, "%d", value);
@@ -324,7 +323,6 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             value = 0;
             if (compo->type == COMPO_TYPE_PICTUREBOX)
             {
-                get_gear_func1();
                 get_gear_func();
                 if(ecig_get_res()==4)
                     value = 1;

@@ -107,7 +107,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
     }
     else if (sys_cb.smoke_index == IN_DEVICE)
     {
-        if (get_gear_func1() == 0)
+        if (get_gear_func() == 0)
         {
             picbox = compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_IN_DANG_BIN);
             compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50);

@@ -97,10 +97,14 @@ static void func_test_mode_click(void)
 
             if(ret == MSGBOX_RES_OK)
             {
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
+                uteTaskGuiStartScreen(FUNC_AGEING,0,__func__);
+#else
                 uteModuleFactoryTestStartTestItem(TEST_ITEM_AGING,true);
                 // func_cb.sta = FUNC_ONLINE_FACTORY_TEST;
                 uteTaskGuiStartScreen(FUNC_ONLINE_FACTORY_TEST,0,__func__);
                 // func_switch_to(FUNC_AGEING, 0);///跳转老化测试界面
+#endif
             }
             break;
 //        case MODE_SHIPPING_ID:///船运测试

@@ -15,10 +15,16 @@ enum
     COMPO_ID_TEXT_HEART_VALUE,
 };
 
+enum
+{
+    COMPO_MAX_STATE=1,
+    COMPO_MIN_STATE,
+};
+
 typedef struct f_heart_warning_t_
 {
-    bool up_date_flag;
-    bool up_date_old_flag;
+    u8 up_date_flag;
+    u8 up_date_old_flag;
 } f_heart_warning_t;
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -147,10 +153,8 @@ compo_form_t *func_heart_warning_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 #if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
-    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I338002_6_HEART_ICON_HEART_BIN);
-    compo_animation_set_pos(animation,52/2+95, 52/2+112);  //需要更替为弹窗图标
-    compo_animation_set_radix(animation,1);
-    compo_animation_set_interval(animation,0);
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338002_6_HEART_ICON_HEART_BIN);
+    compo_picturebox_set_pos(picbox,142, 135);  //需要更替为弹窗图标
 
     char txt_buf[100];
     memset(txt_buf,0,sizeof(txt_buf));
@@ -158,13 +162,13 @@ compo_form_t *func_heart_warning_form_create(void)
     compo_textbox_t *textbox = compo_textbox_create(frm, 3);
     compo_textbox_set_align_center(textbox,false);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_pos(textbox,170,120);
+    compo_textbox_set_pos(textbox,185,120);
     compo_textbox_set(textbox,txt_buf);
     compo_setid(textbox,COMPO_ID_TEXT_HEART_VALUE);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HEART_HIGHT])+strlen(i18n[STR_HEART_LOW]));
     compo_setid(textbox,COMPO_ID_TEXT_UINT);
-    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X+15,42/2+193,230,widget_text_get_max_height());
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,42/2+193,230,widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(249,52,52));
     memset(txt_buf,0,sizeof(txt_buf));
     if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue())
@@ -223,36 +227,36 @@ static void func_heart_warning_updata(void)
     compo_textbox_t *txt_uint = compo_getobj_byid(COMPO_ID_TEXT_UINT);
     uint8_t heart_value = uteModuleHeartGetHeartValue();
     char txt_buf[100];
-    if(heart_value > 0 && heart_value < 0xff)
-    {
-        memset(txt_buf, 0, sizeof(txt_buf));
-        snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
-        compo_textbox_set(textbox, txt_buf);
-    }
+
     memset(txt_buf, 0, sizeof(txt_buf));
-    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue())
+    snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
+    compo_textbox_set(textbox, txt_buf);
+
+    if(heart_value >= uteModuleHeartGetHeartWaringMaxValue())
     {
-        f_heart_warning->up_date_flag = true;
+        f_heart_warning->up_date_flag = COMPO_MAX_STATE;
     }
-    if (uteModuleHeartGetHeartValue() <= uteModuleHeartGetMinHeartValue())
+    else if (heart_value <= uteModuleHeartGetMinHeartValue())
     {
-        f_heart_warning->up_date_flag = false;
+        f_heart_warning->up_date_flag = COMPO_MIN_STATE;
     }
 
     if(f_heart_warning->up_date_flag != f_heart_warning->up_date_old_flag)
     {
+        memset(txt_buf, 0, sizeof(txt_buf));
         f_heart_warning->up_date_old_flag = f_heart_warning->up_date_flag;
         if(f_heart_warning->up_date_flag)
         {
-            snprintf(txt_uint,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
+            snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
         }
         else
         {
-            snprintf(txt_uint,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
+            snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
         }
+        compo_textbox_set(txt_uint, txt_buf);
     }
 
-    if (heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue())
+    if ((heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue()) || (heart_value == 0 || heart_value == 0xff))
     {
         uteModuleGuiCommonGoBackLastScreen();
     }

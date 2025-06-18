@@ -74,7 +74,7 @@ enum
 {
     //列表(横向)
     COMPO_ID_ROTARY = 1,
-
+    COMPO_ID_PIC_LOCK,
 };
 
 typedef struct f_clock_preview_t_
@@ -107,6 +107,19 @@ compo_form_t *func_clock_preview_form_create(void)
     compo_rotary_t *rotary = compo_rotary_create(frm, prev_dial_item, dial_count);
     compo_setid(rotary, COMPO_ID_ROTARY);
     compo_rotary_update(rotary);
+
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT && UI_BUF_DIALPLATE_LOCK_LOCK_BIN
+    area_t img_area;
+    u32 lock_btn_addr = UI_BUF_DIALPLATE_LOCK_LOCK_BIN;
+    if(!uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock())
+    {
+        lock_btn_addr = UI_BUF_DIALPLATE_LOCK_UNLOCK_BIN;
+    }
+    img_area = gui_image_get_size(lock_btn_addr);
+    compo_button_t *lock_btn = compo_button_create_by_image(frm,lock_btn_addr);
+    compo_button_set_pos(lock_btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - img_area.hei);
+    compo_setid(lock_btn, COMPO_ID_PIC_LOCK);
+#endif
 
     return frm;
 }
@@ -151,10 +164,32 @@ static void func_clock_preview_message(size_msg_t msg)
     switch (msg)
     {
         case MSG_CTP_CLICK:
-            // sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
-            uteModuleGuiCommonSetCurrWatchIndex(compo_rotary_get_idx(rotary));
-            compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
-            break;
+        {
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT && UI_BUF_DIALPLATE_LOCK_LOCK_BIN
+            int id = compo_get_button_id();
+            if (id == COMPO_ID_PIC_LOCK)
+            {
+                uteModuleGuiCommonSwitchEncoderKeysSwitchoverWatchMainLock();
+                u32 lock_btn_addr = UI_BUF_DIALPLATE_LOCK_LOCK_BIN;
+                if (!uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock())
+                {
+                    lock_btn_addr = UI_BUF_DIALPLATE_LOCK_UNLOCK_BIN;
+                }
+                compo_button_t *lock_btn = compo_getobj_byid(COMPO_ID_PIC_LOCK);
+                if (lock_btn)
+                {
+                    compo_button_set_bgimg(lock_btn, lock_btn_addr);
+                }
+            }
+            else
+#endif
+            {
+                // sys_cb.dialplate_index = compo_rotary_get_idx(rotary);
+                uteModuleGuiCommonSetCurrWatchIndex(compo_rotary_get_idx(rotary));
+                compo_rotary_move_control(rotary, COMPO_ROTARY_MOVE_CMD_EXITING);
+            }
+        }
+        break;
 
         default:
             func_message(msg);
@@ -213,7 +248,7 @@ enum
 {
     // 列表(横向)
     COMPO_ID_ROWBOX = 1,
-
+    COMPO_ID_PIC_LOCK,
 };
 
 typedef struct f_clock_preview_t_
@@ -249,6 +284,19 @@ compo_form_t *func_clock_preview_form_create(void)
     compo_rowbox_set_focus_byidx(rowbox, sys_cb.dialplate_index);
     compo_rowbox_update(rowbox);
 
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT && UI_BUF_DIALPLATE_LOCK_LOCK_BIN
+    area_t img_area;
+    u32 lock_btn_addr = UI_BUF_DIALPLATE_LOCK_LOCK_BIN;
+    if(!uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock())
+    {
+        lock_btn_addr = UI_BUF_DIALPLATE_LOCK_UNLOCK_BIN;
+    }
+    img_area = gui_image_get_size(lock_btn_addr);
+    compo_button_t *lock_btn = compo_button_create_by_image(frm,lock_btn_addr);
+    compo_button_set_pos(lock_btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT - img_area.hei);
+    compo_setid(lock_btn, COMPO_ID_PIC_LOCK);
+#endif
+
     return frm;
 }
 
@@ -277,6 +325,23 @@ static void func_clock_preview_message(size_msg_t msg)
                 uteModuleGuiCommonSetCurrWatchIndex(sel_idx);
                 func_switch_to(FUNC_CLOCK, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO); // 切换回主时钟
             }
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT && UI_BUF_DIALPLATE_LOCK_LOCK_BIN
+            int id = compo_get_button_id();
+            if (id == COMPO_ID_PIC_LOCK)
+            {
+                uteModuleGuiCommonSwitchEncoderKeysSwitchoverWatchMainLock();
+                u32 lock_btn_addr = UI_BUF_DIALPLATE_LOCK_LOCK_BIN;
+                if (!uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock())
+                {
+                    lock_btn_addr = UI_BUF_DIALPLATE_LOCK_UNLOCK_BIN;
+                }
+                compo_button_t *lock_btn = compo_getobj_byid(COMPO_ID_PIC_LOCK);
+                if (lock_btn)
+                {
+                    compo_button_set_bgimg(lock_btn, lock_btn_addr);
+                }
+            }
+#endif
             break;
 
         case MSG_CTP_SHORT_LEFT:

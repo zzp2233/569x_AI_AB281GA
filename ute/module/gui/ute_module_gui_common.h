@@ -42,6 +42,9 @@ typedef struct
     uint8_t currScreenSaverIndex;
     bool isScreenSaverSetOn;
 #endif
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+    bool isWatchMainLock;
+#endif
 } ute_display_ctrl_t;
 
 typedef struct
@@ -98,7 +101,10 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
 void uteTaskGuiStackRemoveScreenId(uint8_t screenId);
 bool uteModuleGuiCommonIsSwitchToMenu(void);
 void uteModuleGuiCommonSetSwitchToMenu(bool isSwitchToMenu);
-
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+void uteModuleGuiCommonSwitchEncoderKeysSwitchoverWatchMainLock(void);
+bool uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock(void);
+#endif
 uint8_t uteModuleGuiCommonGetBackLightPercent(void);
 bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void);
 uint8_t uteModuleGuiCommonGetVailWatchCnt(void);

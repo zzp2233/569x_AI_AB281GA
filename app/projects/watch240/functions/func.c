@@ -909,7 +909,7 @@ void func_process(void)
                     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
                     msg_enqueue(EVT_MSGBOX_EXIT);
                 }
-                if(func_cb.sta != FUNC_AGEING)
+                if(func_cb.sta != FUNC_AGEING &&func_cb.sta != FUNC_FACTORY_TESTING )
                     func_cb.sta = FUNC_CHARGE;
             }
         }
@@ -1597,6 +1597,7 @@ void func_message(size_msg_t msg)
                     printf(" func_cb.sta == FUNC_ECIG_REMINDER \n");
                     compo_form_destroy(func_cb.frm_main);
                     func_cb.frm_main = func_ecig_reminder_form_create();
+                    uteTaskGuiStartScreen(FUNC_ECIG_REMINDER, 0, __func__);
 
                 }
             }

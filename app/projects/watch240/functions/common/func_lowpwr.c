@@ -251,7 +251,7 @@ static void sfunc_sleep(void)
     }
 #endif
 
-    printf("%s\n", __func__);
+    printf("%s,slider_unlock=%d\n", __func__,slider_unlock);
     slider_unlock = false;
     sleep_cb.sys_is_sleep = true;
     sys_cb.gui_need_wakeup = 0;

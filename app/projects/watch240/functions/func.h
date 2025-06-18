@@ -216,7 +216,7 @@ enum
 
     //电子烟功能
     FUNC_ECIG_SET_POWER,                //功率设置页面
-    FUNC_ECIG_REMINDER,                 //页面提醒
+    FUNC_ECIG_REMINDER,                 //抽烟状态提醒
     FUNC_ECIG_REMINDERCLOCK,                 //童锁不能抽烟提醒
 #if UTE_MODULE_SCREENS_CALENDAER_SUB_SUPPORT
     FUNC_CALENDAER_SUB,

@@ -374,30 +374,48 @@ static void func_clock_message(size_msg_t msg)
 #if DRV_ENCODER_KEYS_WATCHMAIN_SCREEN_SWITCHOVER_SUPPORT
         case MSG_QDEC_FORWARD:                              //向前滚动菜单
         {
-            msg_queue_detach(MSG_QDEC_FORWARD, 0);  //防止不停滚动
-            sys_cb.dialplate_index ++;
-            if(sys_cb.dialplate_index > uteModuleGuiCommonGetCurrWatchMaxIndex() - 1)
+            msg_queue_detach(MSG_QDEC_FORWARD, 0); // 防止不停滚动
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+            if (uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock())
             {
-                sys_cb.dialplate_index = 0;
+                func_message(msg);
             }
-            uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
-            func_clock_recreate_dial();
+            else
+#endif
+            {
+                sys_cb.dialplate_index++;
+                if (sys_cb.dialplate_index > uteModuleGuiCommonGetCurrWatchMaxIndex() - 1)
+                {
+                    sys_cb.dialplate_index = 0;
+                }
+                uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
+                func_clock_recreate_dial();
+            }
         }
         break;
 
         case MSG_QDEC_BACKWARD:                             //向后滚动菜单
         {
             msg_queue_detach(MSG_QDEC_BACKWARD, 0);  //防止不停滚动
-            if(sys_cb.dialplate_index > 0)
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+            if (uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock())
             {
-                sys_cb.dialplate_index --;
+                func_message(msg);
             }
             else
+#endif
             {
-                sys_cb.dialplate_index = uteModuleGuiCommonGetCurrWatchMaxIndex() - 1;
+                if(sys_cb.dialplate_index > 0)
+                {
+                    sys_cb.dialplate_index --;
+                }
+                else
+                {
+                    sys_cb.dialplate_index = uteModuleGuiCommonGetCurrWatchMaxIndex() - 1;
+                }
+                uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
+                func_clock_recreate_dial();
             }
-            uteModuleGuiCommonSetCurrWatchIndex(sys_cb.dialplate_index);
-            func_clock_recreate_dial();
         }
         break;
 #endif

@@ -13,7 +13,7 @@
 #define UTE_SW_VERSION "AB281DCV000074"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
-#define UTE_UI_CONFIG_PATCH "AB281D"
+#define UTE_UI_CONFIG_PATCH "AB281DC"
 
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
@@ -97,6 +97,12 @@
 
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
+
+/*! 编码器切换表盘锁定,wang.luo 2025-04-09 */
+#define UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT  1
+
+/*! 表盘预览样式选择: 1 横向列表 2 堆叠 3 立体转盘,wang.luo 2025-05-29 */
+#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
 
 /*! KEY1跳转界面,wang.luo 2025-04-09 */
 #define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT

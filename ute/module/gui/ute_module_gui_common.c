@@ -325,8 +325,8 @@ void uteModuleGuiCommonGetScreenTblSort(uint8_t *tblSort, uint8_t *sortCnt)
 void uteModuleGuiCommonReadConfig(void)
 {
     void *file;
-    uint8_t readbuff[11];
-    memset(readbuff,0,11);
+    uint8_t readbuff[12];
+    memset(readbuff,0,sizeof(readbuff));
     /*! 显示参数zn.zeng, 2021-08-20  */
     readbuff[0] = DEFAULT_SCREEN_ON_TIME_SECOND;
     readbuff[1] = DEFAULT_TEMPERATURE_IS_FAHRENHEIT;
@@ -336,10 +336,13 @@ void uteModuleGuiCommonReadConfig(void)
     readbuff[8] = UTE_MODULE_DIAL_SCREEN_DEFAULT_STATUS;
     readbuff[9] = 0;
 #endif
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+    readbuff[11] = DEFAULT_SWITCHOVER_WATCHMAIN_LOCK;
+#endif
     if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DISPLAYINFO,&file,FS_O_RDONLY))
     {
         uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
-        uteModuleFilesystemReadData(file,&readbuff[0],11);
+        uteModuleFilesystemReadData(file,&readbuff[0],sizeof(readbuff));
         uteModuleFilesystemCloseFile(file);
     }
     uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond = readbuff[0];
@@ -352,6 +355,9 @@ void uteModuleGuiCommonReadConfig(void)
     uteModuleGuiCommonData.displayCtrl.currScreenSaverIndex = readbuff[9];
 #endif
     uteModuleGuiCommonData.isPowerSavingOpen = readbuff[10];
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+    uteModuleGuiCommonData.displayCtrl.isWatchMainLock = readbuff[11];
+#endif
     uteModuleGuiCommonReadScreenTblSort();
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,displayOffTime=%d,isFahrenheit=%d,backLightPercent=%d,currWatchIndex=%d,themeTypeId=%d", __func__,uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond,uteModuleGuiCommonData.displayCtrl.isFahrenheit,
                    uteModuleGuiCommonData.displayCtrl.backLightPercent,uteModuleGuiCommonData.displayCtrl.currWatchIndex,uteModuleGuiCommonData.themeTypeId);
@@ -692,8 +698,8 @@ void uteModuleGuiCommonSaveConfig(void)
 {
     /*! 保存到文件zn.zeng, 2021-08-20*/
     void *file;
-    uint8_t writebuff[11];
-    memset(writebuff,0,11);
+    uint8_t writebuff[12];
+    memset(writebuff,0,sizeof(writebuff));
     writebuff[0] = uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond;
     writebuff[1] = uteModuleGuiCommonData.displayCtrl.isFahrenheit;
     writebuff[2] = uteModuleGuiCommonData.displayCtrl.backLightPercent;
@@ -709,9 +715,12 @@ void uteModuleGuiCommonSaveConfig(void)
 #if UTE_MODULE_POWER_SAVING_SUPPORT
     writebuff[10] = uteModuleGuiCommonData.isPowerSavingOpen;
 #endif
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+    writebuff[11] = uteModuleGuiCommonData.displayCtrl.isWatchMainLock;
+#endif
     if( uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_DISPLAYINFO,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
     {
-        uteModuleFilesystemWriteData(file,&writebuff[0],11);
+        uteModuleFilesystemWriteData(file,&writebuff[0],sizeof(writebuff));
         uteModuleFilesystemCloseFile(file);
     }
 }
@@ -759,6 +768,37 @@ void uteModuleGuiCommonSetDisplayOffTime(uint8_t displayOffTimeSecond)
     uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond = displayOffTimeSecond;
     uteModuleGuiCommonSaveConfig();
 }
+
+#if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
+/**
+ * @brief        设置编码器切换表盘锁定开关
+ * @details
+ * @param[in]    isLock true 锁定，false 不锁定
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-06-18
+ */
+void uteModuleGuiCommonSwitchEncoderKeysSwitchoverWatchMainLock(void)
+{
+    uteModuleGuiCommonData.displayCtrl.isWatchMainLock = !uteModuleGuiCommonData.displayCtrl.isWatchMainLock;
+    uteModuleGuiCommonSaveConfig();
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isWatchMainLock=%d",__func__,uteModuleGuiCommonData.displayCtrl.isWatchMainLock);
+}
+
+/**
+ * @brief        获取编码器切换表盘锁定状态
+ * @details
+ * @return       bool 锁定状态 false:未锁定 true:锁定
+ * @author       Wang.Luo
+ * @date         2025-06-18
+ */
+bool uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock(void)
+{
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,isWatchMainLock=%d",__func__,uteModuleGuiCommonData.displayCtrl.isWatchMainLock);
+    return uteModuleGuiCommonData.displayCtrl.isWatchMainLock;
+}
+
+#endif
 
 /**
 *@brief        获取当前亮屏时长

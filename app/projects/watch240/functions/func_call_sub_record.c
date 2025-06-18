@@ -2301,7 +2301,6 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
         memset(str_am,0,strlen(i18n[STR_AM])+strlen(i18n[STR_PM]));
         if(uteModuleSystemtime12HOn())
         {
-
             if(hour<=12 && hour!=0)
             {
                 memcpy(&str_am[0],i18n[STR_AM],strlen(i18n[STR_AM]));
@@ -2310,13 +2309,11 @@ static bool call_record_update_callback(u32 item_cnt, char* str_txt1, u16 str_tx
             {
                 memcpy(&str_am[0],i18n[STR_PM],strlen(i18n[STR_PM]));
             }
-
             hour %= 12;
             if(hour==0)
             {
                 hour = 12;
             }
-            // printf("TIME:%02d:%02d %s\n",hour,min,str_am);
         }
         switch(time_disp_state)
         {

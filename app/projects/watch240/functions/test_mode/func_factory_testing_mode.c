@@ -1177,56 +1177,6 @@ static void func_mode_gsensor_process(void)
 {
     char txt_buf[50];
     uint32_t totalStepCnt = 0;
-#if 0
-    uteModuleSportGetCurrDayStepCnt(&totalStepCnt, NULL, NULL); /// 获取步数
-
-    if (tick_get() % 500 == 0)
-    {
-        ute_drv_gsensor_common_axis_data_t *data = NULL;
-        uteDrvGsensorCommonReadFifo(&data);
-
-        int16_t *x = (int16_t *)uteModulePlatformMemoryAlloc(UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-        int16_t *y = (int16_t *)uteModulePlatformMemoryAlloc(UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-        int16_t *z = (int16_t *)uteModulePlatformMemoryAlloc(UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-
-        if (x && y && z)
-        {
-            memset(x, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-            memset(y, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-            memset(z, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-
-            uint8_t frameCnt = 0;
-
-            frameCnt = data->frameCnt;
-            ute_drv_gsensor_common_axis_bit_change_t axisBitChange;
-            axisBitChange.inputXaxis = &data->accXaxis[0];
-            axisBitChange.inputYaxis = &data->accYaxis[0];
-            axisBitChange.inputZaxis = &data->accZaxis[0];
-            axisBitChange.outputXaxis = &x[0];
-            axisBitChange.outputYaxis = &y[0];
-            axisBitChange.outputZaxis = &z[0];
-            uteDrvGsensorCommonXYZaxisDataBitChange(&axisBitChange, frameCnt, GSENSOR_DATA_BIT_STEP);
-
-            compo_textbox_t *textbox1 = compo_getobj_byid(ANGLE_TXT_1_ID); // 步数
-            compo_textbox_t *textbox2 = compo_getobj_byid(ANGLE_TXT_2_ID); // X轴
-            compo_textbox_t *textbox3 = compo_getobj_byid(ANGLE_TXT_3_ID); // Y轴
-            compo_textbox_t *textbox4 = compo_getobj_byid(ANGLE_TXT_4_ID); // Z轴
-
-            snprintf(txt_buf, sizeof(txt_buf), "%ld", totalStepCnt);
-            compo_textbox_set(textbox1, txt_buf);
-            snprintf(txt_buf, sizeof(txt_buf), "X:%d", *axisBitChange.outputXaxis);
-            compo_textbox_set(textbox2, txt_buf);
-            snprintf(txt_buf, sizeof(txt_buf), "Y:%d", *axisBitChange.inputYaxis);
-            compo_textbox_set(textbox3, txt_buf);
-            snprintf(txt_buf, sizeof(txt_buf), "Z:%d", *axisBitChange.outputZaxis);
-            compo_textbox_set(textbox4, txt_buf);
-        }
-
-        uteModulePlatformMemoryFree(x);
-        uteModulePlatformMemoryFree(y);
-        uteModulePlatformMemoryFree(z);
-    }
-#endif
 }
 static void func_mode_charging_process(void)
 {
@@ -1344,6 +1294,7 @@ static void func_factory_testing_process(void)
             func_mode_charging_process();
             break;
         case FACTORY_MODULE_MIC_SPEAKER:
+
             func_mode_mic_speaker_process();
             break;
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
@@ -1364,6 +1315,9 @@ static void func_factory_testing_process(void)
 ///进入工厂测试功能
 static void func_factory_testing_enter(void)
 {
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
     func_cb.f_cb = func_zalloc(sizeof(f_factory_testing_t));
     func_factory_testing_init();
     func_cb.frm_main = func_factory_testing_create();

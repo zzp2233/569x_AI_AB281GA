@@ -156,6 +156,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
 }
 extern bool slider_unlock;
 // 事件处理
+
 static void func_ecig_reminder_process(void)
 {
     f_ecig_reminder_t *f_ecig_reminder = (f_ecig_reminder_t *)func_cb.f_cb;
@@ -164,11 +165,10 @@ static void func_ecig_reminder_process(void)
     {
         if (tick_check_expire(f_ecig_reminder->tick, 600))
         {
-            printf("sys_cb.gui_screen_wakeu=%d,slider_unlock=%d\r\n");
             if(sys_cb.gui_screen_wakeup && !slider_unlock)
             {
                 func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
-                sys_cb.gui_screen_wakeup = false;
+                //sys_cb.gui_screen_wakeup = false;
             }
             else
             {
@@ -238,6 +238,8 @@ static void func_ecig_reminder_exit(void)
 {
     sys_cb.smoke_index = 0;
     func_cb.last = FUNC_ECIG_REMINDER;
+    if(!slider_unlock )
+        func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
     ecig_clear_short_flag(0);
 }
 

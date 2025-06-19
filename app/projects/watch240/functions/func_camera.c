@@ -1310,6 +1310,15 @@ static void func_camera_message(size_msg_t msg)
             // func_camera_recreate();
             break;
 
+        case MSG_SYS_500MS:
+#if UTE_MODULE_SPORT_TAKE_PICTURE_OPEN_APP_SCREEN
+            if(!uteModuleSportIsTakePicture() && !uteApplicationCommonIsAppClosed())
+            {
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_OPEN_APP_SCREEN,0);
+            }
+#endif
+            break;
+
         default:
             func_message(msg);
             break;
@@ -1345,7 +1354,7 @@ static void func_camera_exit(void)
 {
     func_cb.last = FUNC_CAMERA;
 
-    if(uteModuleSportIsTakePicture())
+    // if(uteModuleSportIsTakePicture())
     {
         uteModuleSportExitTakePicture();
     }

@@ -579,9 +579,43 @@
 #define UTE_DRV_DEFAULT_PWM_HZ 160
 #endif
 
+/*! LED手电筒,wang.luo 2025-06-12 */
+#ifndef UTE_DRV_LED_SUPPORT
+#define UTE_DRV_LED_SUPPORT 0
+#endif
+
 /*! 手电筒LED电源gpio pin,wang.luo 2025-06-12 */
 #ifndef UTE_DRV_LED_POWER_GPIO_PIN
-#define UTE_DRV_LED_POWER_GPIO_PIN      IO_PB7
+#define UTE_DRV_LED_POWER_GPIO_PIN      IO_PF5
+#endif
+
+#ifndef UTE_DRV_LED_ENABLE_GPIO_PIN
+#define UTE_DRV_LED_ENABLE_GPIO_PIN     IO_PB7
+#endif
+
+#ifndef UTE_DRV_LED_ENABLE_PWM_ID
+#define UTE_DRV_LED_ENABLE_PWM_ID       GPIO_PB7
+#endif
+
+/*! LED亮度等级,wang.luo 2025-06-18 */
+#ifndef UTE_DRV_LED_PWM_LEVEL_HIGH
+#define UTE_DRV_LED_PWM_LEVEL_HIGH 90
+#endif
+#ifndef UTE_DRV_LED_PWM_LEVEL_MEDIUM
+#define UTE_DRV_LED_PWM_LEVEL_MEDIUM 70
+#endif
+#ifndef UTE_DRV_LED_PWM_LEVEL_LOW
+#define UTE_DRV_LED_PWM_LEVEL_LOW 50
+#endif
+
+/*!默认LED亮度等级 level 0-100,wang.luo 2025-06-18 */
+#ifndef UTE_MODULE_LED_PWM_DEFAULT_LEVEL
+#define UTE_MODULE_LED_PWM_DEFAULT_LEVEL UTE_DRV_LED_PWM_LEVEL_HIGH
+#endif
+
+/*! 复用心率电源,wang.luo 2025-06-19 */
+#ifndef UTE_DRV_REUSE_HEART_POWER_SUPPORT
+#define UTE_DRV_REUSE_HEART_POWER_SUPPORT 1
 #endif
 
 /*! 默认语言 zn.zeng, 2021-08-23  */

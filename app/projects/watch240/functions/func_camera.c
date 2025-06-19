@@ -670,11 +670,19 @@ compo_form_t *func_camera_form_create(void)
         compo_picturebox_t *icon = compo_picturebox_create(frm, UI_BUF_I335001_27_MORE_5_REMOTE_CAMERA_2_OPEN_CAMERA_ICON_56X92_X92_Y66_BIN);
         compo_picturebox_set_pos(icon, 120, 112);
 
+#if GUI_SCREEN_SIZE_240X284RGB_I335003_SUPPORT
+        // 创建提示文本
+        compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_PLEASE_REMOTE]));
+        compo_textbox_set_location(txt, 120, 198, 144, 28);
+        compo_textbox_set_align_center(txt, true);
+        compo_textbox_set(txt, i18n[STR_PLEASE_REMOTE]);
+#else
         // 创建提示文本
         compo_textbox_t *txt = compo_textbox_create(frm, strlen(i18n[STR_PLEASE_APP_DATA]));
         compo_textbox_set_location(txt, 120, 198, 144, 28);
         compo_textbox_set_align_center(txt, true);
         compo_textbox_set(txt, i18n[STR_PLEASE_APP_DATA]);
+#endif
     }
     else
     {

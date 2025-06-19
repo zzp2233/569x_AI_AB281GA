@@ -213,11 +213,8 @@ compo_form_t *func_up_watch_dial_form_create(void)
     compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I335001_UPGRADE_DURING_UPGRADE_ICON_SYNC_88X118_X76_Y37_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-35);
 
-    extern fot_progress_t *bsp_fot_progress_get(void);
-    fot_progress_t *fot_data = bsp_fot_progress_get();
-
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent);
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",0);
     compo_textbox_t *textbox = compo_textbox_create(frm, 5);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_32_BIN);
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_CENTER_Y+55,150,50);
@@ -266,8 +263,11 @@ static void func_up_watch_dial_disp(void)
         reset_sleep_delay_all();
         if(ble_is_connect())//ble状态
         {
-            uint32_t progress = uteModuleWatchOnlineGetSynchronizeWatchSize()*100/uteModuleWatchOnlineGetTotileWatchSize();
-            printf("progress:%d,SynchronizeWatchSize:%d,TotileWatchSize:%d\n",progress,uteModuleWatchOnlineGetSynchronizeWatchSize(),uteModuleWatchOnlineGetTotileWatchSize());
+            uint32_t progress = 0;
+            if(uteModuleWatchOnlineGetTotileWatchSize())
+            {
+                progress = uteModuleWatchOnlineGetSynchronizeWatchSize()*100/uteModuleWatchOnlineGetTotileWatchSize();
+            }
             if (progress>=100)
             {
                 progress=100;

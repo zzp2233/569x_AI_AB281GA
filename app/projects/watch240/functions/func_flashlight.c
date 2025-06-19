@@ -1,5 +1,6 @@
 #include "include.h"
 #include "func.h"
+#include "ute_drv_led.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -421,6 +422,17 @@ static void func_flashlight_message(size_msg_t msg)
     {
         case MSG_CTP_CLICK:
             func_flashlight_button_click();
+#if UTE_DRV_LED_SUPPORT
+            f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+            if (f_flashlight->flashlight_flag == true)
+            {
+                uteDrvLedEnable();
+            }
+            else
+            {
+                uteDrvLedDisable();
+            }
+#endif
             break;
 
         case MSG_CTP_SHORT_UP:
@@ -448,6 +460,9 @@ static void func_flashlight_enter(void)
 //退出手电筒功能
 static void func_flashlight_exit(void)
 {
+#if UTE_DRV_LED_SUPPORT
+    uteDrvLedDisable();
+#endif
     tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
     func_cb.last = FUNC_FLASHLIGHT;
 }

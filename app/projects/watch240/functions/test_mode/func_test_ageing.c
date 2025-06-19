@@ -2,7 +2,10 @@
 #include "func.h"
 #include "ute_module_systemtime.h"
 #include "ute_drv_motor.h"
+#include "ute_drv_gsensor_common.h"
 #include "ute_application_common.h"
+#include "ute_module_heart.h"
+#include "ute_drv_battery_common.h"
 
 #define TXT_SPACING    GUI_SCREEN_HEIGHT/13
 
@@ -37,6 +40,7 @@ typedef struct f_ageing_t_
     uint32_t tick;
     u8 mode_flag;
     u8 time_flag;
+    u8 count_num;
     bool test_state;
     u16 hour;
     u8 min;
@@ -47,11 +51,11 @@ compo_form_t * func_ageing_create(void)
 {
     compo_form_t *frm = compo_form_create(true);
 
-    compo_textbox_t *textbox = compo_textbox_create(frm, 4 );
+    compo_textbox_t *textbox = compo_textbox_create(frm, 4);
     compo_textbox_set(textbox,"老化测试");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/3);
 
-    textbox = compo_textbox_create(frm, 3 );
+    textbox = compo_textbox_create(frm, 3);
     compo_textbox_set(textbox,"模式一");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6);
     compo_textbox_set_forecolor(textbox, make_color(0x00,0xbb,0xff));
@@ -61,7 +65,7 @@ compo_form_t * func_ageing_create(void)
     compo_button_set_location(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2,GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
     compo_setid(btn,MODE_BTN_ID);
 
-    textbox = compo_textbox_create(frm, 3 );
+    textbox = compo_textbox_create(frm, 5);
     compo_textbox_set(textbox,"4小时");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/3, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6);
     compo_textbox_set_forecolor(textbox, make_color(0x00,0xbb,0xff));
@@ -71,20 +75,20 @@ compo_form_t * func_ageing_create(void)
     compo_button_set_location(btn, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/3, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6, widget_text_get_area(textbox->txt).wid, widget_text_get_area(textbox->txt).hei*2);
     compo_setid(btn,TIME_BTN_ID);
 
-    textbox = compo_textbox_create(frm, 1 );
+    textbox = compo_textbox_create(frm, 1);
     compo_textbox_set(textbox,"否");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/3);
 
     btn = compo_button_create(frm);
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/3, widget_text_get_area(textbox->txt).wid*2, widget_text_get_area(textbox->txt).hei*2);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/3, GUI_SCREEN_CENTER_X, 60);
     compo_setid(btn,NO_BTN_ID);
 
-    textbox = compo_textbox_create(frm, 1 );
+    textbox = compo_textbox_create(frm, 1);
     compo_textbox_set(textbox,"是");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/3);
 
     btn = compo_button_create(frm);
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/3, widget_text_get_area(textbox->txt).wid*2, widget_text_get_area(textbox->txt).hei*2);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2, GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/3, GUI_SCREEN_CENTER_X, 60);
     compo_setid(btn,YES_BTN_ID);
 
     return frm;
@@ -192,9 +196,11 @@ static void func_test_mode_click(void)
             else if(f_ageing->mode_flag == 2)compo_textbox_set(textbox_mode,"模式三");
             break;
         case TIME_BTN_ID:
-            f_ageing->time_flag ^= 1;
+            if (++f_ageing->time_flag == 4)f_ageing->time_flag = 0;
 
             if(f_ageing->time_flag == 0)compo_textbox_set(textbox_time,"4小时");
+            else if(f_ageing->time_flag == 1)compo_textbox_set(textbox_time,"12小时");
+            else if(f_ageing->time_flag == 2)compo_textbox_set(textbox_time,"20小时");
             else compo_textbox_set(textbox_time,"永久");
             break;
         case NO_BTN_ID:
@@ -209,6 +215,17 @@ static void func_test_mode_click(void)
                 compo_form_destroy(frm);
                 frm = NULL;
             }
+            uteModuleHeartStartSingleTesting(TYPE_HEART);
+
+            if (f_ageing->mode_flag == 1)
+            {
+                uteDrvMotorStart(300,200,2);
+            }
+            else
+            {
+                uteDrvMotorStart(1000,1000,1);
+            }
+
             func_cb.frm_main = func_ageing_mode_create(f_ageing->mode_flag,f_ageing->time_flag);
         }
         break;
@@ -223,9 +240,24 @@ static void func_ageing_message(size_msg_t msg)
         case MSG_CTP_CLICK:
             func_test_mode_click();
             break;
-
+        case KL_BACK:
+        {
+            music_control(MUSIC_MSG_PAUSE);
+            uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+            if (ret == MSGBOX_RES_OK)
+            {
+                uteModuleHeartStopSingleTesting(TYPE_HEART);
+                music_control(MUSIC_MSG_STOP);
+                uteModulePlatformSystemReboot();
+            }
+            else
+            {
+                music_control(MUSIC_MSG_PLAY);
+            }
+        }
+        break;
         default:
-            func_message(msg);
+            evt_message(msg);
             break;
     }
 }
@@ -260,12 +292,13 @@ static void func_ageing_process(void)
             compo_textbox_t *pass_txt = compo_getobj_byid(PASS_TXT_ID);///运行时间
 
 
-            if(f_ageing->sec%3 == 0)compo_shape_set_color(shape, COLOR_GREEN );
-            else if(f_ageing->sec%3 == 1)compo_shape_set_color(shape, COLOR_BLUE );
+            if(f_ageing->sec%3 == 0)compo_shape_set_color(shape, COLOR_GREEN);
+            else if(f_ageing->sec%3 == 1)compo_shape_set_color(shape, COLOR_BLUE);
             else if(f_ageing->sec%3 == 2)
             {
                 compo_shape_set_color(shape, COLOR_RED );
-                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,0xff);
+                if (f_ageing->mode_flag == 0)   //模式一不停震动
+                    uteDrvMotorStart(1000,1000,1);
             }
 
             memset(txt_buf,0,sizeof(txt_buf));
@@ -273,7 +306,7 @@ static void func_ageing_process(void)
             compo_textbox_set(textbox1,txt_buf);
 
             memset(txt_buf,0,sizeof(txt_buf));
-            if(uteApplicationCommonIsStartupFinish()) ///获取充电状态
+            if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE) ///获取充电状态
             {
                 snprintf(txt_buf,sizeof(txt_buf),"电池:充电中  %d%%",bsp_vbat_percent_get());
                 compo_textbox_set(textbox2,txt_buf);
@@ -285,12 +318,10 @@ static void func_ageing_process(void)
             }
 
             memset(txt_buf,0,sizeof(txt_buf));
-            if(bsp_sensor_hr_wear_sta_get()==true)
+            if(uteModuleHeartIsWear())
             {
-                u8 cur_hr = bsp_sensor_hrs_data_get();
-
                 compo_textbox_set(textbox3,"心率:检测中");
-                snprintf(txt_buf,sizeof(txt_buf),"%d次/分",cur_hr);
+                snprintf(txt_buf,sizeof(txt_buf),"%d次/分",uteModuleHeartGetHeartValue());
                 compo_textbox_set(textbox4,txt_buf);
             }
             else
@@ -299,15 +330,40 @@ static void func_ageing_process(void)
                 compo_textbox_set(textbox4,"--次/分");
             }
 
-            memset(txt_buf,0,sizeof(txt_buf));
 
-            compo_textbox_set(textbox5,"X:--");
-            compo_textbox_set(textbox6,"Y:--");
-            compo_textbox_set(textbox7,"Z:--");
+            int16_t x, y, z;
+            uteDrvGsensorCommonGetAccXyz(&x, &y, &z);
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"X:%d",x);
+            compo_textbox_set(textbox5,txt_buf);
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"Y:%d",y);
+            compo_textbox_set(textbox6,txt_buf);
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"Z:%d",z);
+            compo_textbox_set(textbox7,txt_buf);
 
             memset(txt_buf,0,sizeof(txt_buf));
             snprintf(txt_buf,sizeof(txt_buf),"运行时间:%d:%02d:%02d",f_ageing->hour,f_ageing->min,f_ageing->sec);
             compo_textbox_set(textbox8,txt_buf);
+
+            if(f_ageing->mode_flag == 2 && !sys_cb.mp3_res_playing)///模式三 放音乐
+            {
+#ifdef UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT
+                //if(f_ageing->count_num == 0)
+                {
+                    func_bt_mp3_res_play(UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT, UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT);
+                }
+
+                /*if(++f_ageing->count_num==UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT)
+                {
+                    f_ageing->count_num = 0;
+                }*/
+#else
+                func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
+
+#endif
+            }
 
             if(++f_ageing->sec == 60)
             {
@@ -319,13 +375,15 @@ static void func_ageing_process(void)
                 }
             }
 
-            if(f_ageing->time_flag == 0)///4小时模式
+            if(f_ageing->time_flag != 3)///时间模式
             {
-                if(f_ageing->sec == 10)
+                if(f_ageing->sec == 0 && f_ageing->min == 0 && f_ageing->hour == (4 + f_ageing->time_flag * 8))
                 {
                     f_ageing->test_state = false;
-                    compo_textbox_set_visible(pass_txt, true );
-                    compo_shape_set_visible(shape_pass, true );
+                    music_control(MUSIC_MSG_STOP);
+                    uteModuleHeartStopSingleTesting(TYPE_HEART);
+                    compo_textbox_set_visible(pass_txt, true);
+                    compo_shape_set_visible(shape_pass, true);
                 }
             }
         }

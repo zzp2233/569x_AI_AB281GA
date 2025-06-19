@@ -303,8 +303,10 @@ static void func_ota_update_disp(void)
                 {
                     fot_data->percent = 100;
                 }
-                compo_arc_t *bar = compo_getobj_byid(PROGRESS_BAR_ID);
-                compo_arc_set_value(bar,fot_data->percent*10);
+                char txt_buf[30];
+                compo_textbox_t *txt_val   = compo_getobj_byid(PROGRESS_BAR_ID);
+                snprintf(txt_buf,sizeof(txt_buf),"%d%%",fot_data->percent );
+                compo_textbox_set(txt_val,txt_buf);
             }
         }
     }

@@ -124,6 +124,8 @@ typedef struct f_factory_testing_t_
     bool horn_flag;///测试喇叭标志位
     u8   count_num;//测试喇叭标音频播放时间
     u32 tick;      ///测试喇叭标音频播放时间
+    bool touch_flag;///九宫格触摸测试标志位
+    bool no_touch_flag;///九宫格触摸测试标志位
 } f_factory_testing_t;
 
 const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
@@ -957,7 +959,65 @@ static void func_mode_tp_click(void)
     }
 
 }
+#if UTE_MODULE_NEW_FACTORY_MODULE_3x3_TP_TOUCH_TEST_SUPPORT
+static void func_mode_tp_touch(void)
+{
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
 
+    if(f_factory_testing->no_touch_flag == false)
+    {
+        s32 dx,dy;
+        f_factory_testing->no_touch_flag = ctp_get_dxy(&dx,&dy);
+    }
+
+    if(f_factory_testing->touch_flag == true && f_factory_testing->no_touch_flag == true)
+    {
+        s32 dx,dy,x,y;
+        f_factory_testing->touch_flag = ctp_get_cur_point(&dx,&dy,&x,&y);
+
+        int id = ID_NULL;
+        for (int i = SHAPE_1_ID; i <= SHAPE_9_ID; i++)
+        {
+            rect_t rect = compo_shape_get_location(compo_getobj_byid(i));
+            if (abs_s(x - rect.x) * 2 <= rect.wid && abs_s(y - rect.y) * 2 <= rect.hei)
+            {
+                id = i;
+                break;
+            }
+        }
+        if(id<SHAPE_1_ID || id>SHAPE_9_ID)
+        {
+            return;
+        }
+        compo_shape_t *shape = compo_getobj_byid(id);
+        uint8_t click_num = 0;
+        for (uint8_t i = 0; i < 9; i++)
+        {
+            if (f_factory_testing->tp_test[i] == true)
+            {
+                click_num ++;
+            }
+        }
+
+        if (click_num > 8)
+        {
+            test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
+            test_data->moduleType ++;//切换下一个模式
+            compo_form_t *frm = func_cb.frm_main;
+            if (frm != NULL)
+            {
+                compo_form_destroy(frm);
+                frm = NULL;
+            }
+            func_cb.frm_main = func_factory_testing_create();
+            return;
+        }
+
+        f_factory_testing->tp_test[id-SHAPE_1_ID] = true;
+        compo_shape_set_color(shape, COLOR_GREEN );
+    }
+}
+#endif
 static void func_mode_motor_click(void)
 {
     int id = compo_get_button_id();
@@ -1084,6 +1144,7 @@ static void func_factory_testing_heart_light_click(void)
 ///工厂测试功能消息处理
 static void func_factory_testing_message(size_msg_t msg)
 {
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
     switch (msg)
     {
         case MSG_CTP_CLICK:
@@ -1126,9 +1187,11 @@ static void func_factory_testing_message(size_msg_t msg)
         }
         break;
         case MSG_CTP_TOUCH:
+#if UTE_MODULE_NEW_FACTORY_MODULE_3x3_TP_TOUCH_TEST_SUPPORT  //3*3 = 9宫格TP触摸测试
+            f_factory_testing->touch_flag = true;
+#endif
             if (test_data->moduleType == FACTORY_MODULE_MAX)
             {
-                f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
                 compo_page_move_touch_handler(f_factory_testing->ptm);
             }
             break;
@@ -1491,12 +1554,18 @@ static void func_factory_testing_process(void)
             func_mode_test_ring_process();
             break;
 #endif
+        case FACTORY_MODULE_TP:
+#if UTE_MODULE_NEW_FACTORY_MODULE_3x3_TP_TOUCH_TEST_SUPPORT
+            func_mode_tp_touch();
+#endif
+            break;
         case FACTORY_MODULE_MAX:
             func_mode_result_process();
             break;
         default:
             break;
     }
+
     func_process();
 }
 ///*数据刷新*/

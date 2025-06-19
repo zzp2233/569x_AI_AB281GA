@@ -30,5 +30,3 @@
 
 #include "ute_multi_language_vi_rvn.h"
 
-#include "ute_multi_language_zh_rtw.h"
-

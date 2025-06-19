@@ -131,10 +131,10 @@ void uteModuleWatchOnlineUpdatePhotoWatchInfo(void);
 void uteModuleWatchOnlineGetInfoWithPhoto(uint8_t *data);
 void uteModuleWatchOnlineStartSyncPhoto(uint8_t *data);
 void uteModuleWatchOnlineSetStartReceivePhoto(bool isStart);
-bool uteModuleWatchOnlineGetPhotoAddress(uint8_t index, uint32_t *bassAddr, uint32_t *preview, uint32_t *photo);
+void uteModuleWatchOnlineGetPhotoAddress(uint8_t index, uint32_t *bassAddr, uint32_t *preview, uint32_t *photo);
 void uteModuleWatchOnlineGetCurrPhotoAddress(uint32_t *preview, uint32_t *photo);
 bool uteModuleWatchOnlineIsHasPhoto(void);
-void uteModuleWatchOnlineGetCurrPhotoWatchConfig(photoWatchConfig_t config);
+void uteModuleWatchOnlineGetCurrPhotoWatchConfig(photoWatchConfig_t *config);
 #endif
 #endif
 #endif //_UTE_MODULE_WATCHONLINE_H_

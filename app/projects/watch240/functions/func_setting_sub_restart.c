@@ -313,6 +313,69 @@ static void func_restart_button_click(void)
     }
 }
 
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+//重启页面
+compo_form_t *func_set_sub_restart_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_RESTART]);
+
+    //创建文本
+    compo_textbox_t *txt_rst = compo_textbox_create(frm, strlen(i18n[STR_SURE_REBOOT]));
+//    compo_textbox_set_align_center(txt_rst, false);
+    compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
+    compo_textbox_set_location(txt_rst, GUI_SCREEN_CENTER_X, GUI_SCREEN_HEIGHT/2.2,GUI_SCREEN_WIDTH/1.1,widget_text_get_area(txt_rst->txt).hei);
+    compo_textbox_set(txt_rst, i18n[STR_SURE_REBOOT]);
+
+    //创建按钮
+    compo_button_t *btn;
+    btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CANCEL_BIN);
+    compo_setid(btn, COMPO_ID_BTN_NO);
+    compo_button_set_pos(btn, 20+136/2, 294+70/2);
+
+    btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CONFIRM_2_BIN);
+    compo_setid(btn, COMPO_ID_BTN_YES);
+    compo_button_set_pos(btn, 164+136/2, 294+70/2);
+
+    return frm;
+}
+
+//按键事件处理
+static void func_restart_button_click(void)
+{
+    int id = compo_get_button_id();
+    switch (id)
+    {
+        case COMPO_ID_BTN_YES:
+            // ble_disconnect();
+            // bt_disconnect(1);
+            // WDT_RST();
+            uteApplicationCommonRestart();
+            break;
+
+        case COMPO_ID_BTN_NO:
+//            task_stack_pop();
+            func_back_to();
+//            if(func_cb.last == FUNC_SETTING)
+//            {
+//                func_cb.sta = FUNC_SETTING;
+//            }
+//            else
+//            {
+//                func_cb.sta = FUNC_MENU;
+//            }
+            break;
+
+        default:
+            break;
+    }
+}
+
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
 compo_form_t *func_set_sub_restart_form_create(void)
 {

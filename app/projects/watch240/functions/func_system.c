@@ -111,6 +111,64 @@ compo_form_t *func_system_sub_system_form_create(void)
     return frm;
 }
 
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+
+#define SYSTEM_LIST_CNT                       ((int)(sizeof(tbl_system_list) / sizeof(tbl_system_list[0])))
+
+enum
+{
+    COMPO_ID_SYSTEM = 1,
+};
+
+typedef struct f_set_list_t_
+{
+    compo_listbox_t *listbox;
+
+} f_set_list_t;
+
+static const compo_listbox_item_t tbl_system_list[] =
+{
+    {STR_SETTING_RESTART,          UI_BUF_I343001_28_SET_MENU_RESET_BIN,       .func_sta = FUNC_RESTART},    //重启
+    {STR_SETTING_OFF,              UI_BUF_I343001_28_SET_MENU_POWER_OFF_BIN,       .func_sta = FUNC_OFF},        //关机
+    {STR_SETTING_RSTFY,            UI_BUF_I343001_28_SET_MENU_RECOVER_BIN,       .func_sta = FUNC_RSTFY},    //恢复出厂
+};
+
+//创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
+compo_form_t *func_system_sub_system_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SYSTEM_SET]);
+
+    //新建菜单列表
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE);
+    compo_listbox_set(listbox, tbl_system_list, SYSTEM_LIST_CNT);
+    compo_listbox_set_bgimg(listbox, UI_BUF_I343001_28_SET_BG_BIN);
+
+//    for(int i=0; i<SYSTEM_LIST_CNT; i++)
+//    {
+//        compo_picturebox_t *pic = compo_picturebox_create_for_page(frm,listbox->page,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN);
+//        compo_picturebox_set_pos(pic, 330, 112/2 + i*116);
+//    }
+    //compo_listbox_set_sta_icon(listbox,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN,UI_BUF_I341001_20_ALARM_CLOCK_MORE_BIN);
+    compo_setid(listbox, COMPO_ID_SYSTEM);
+    //划线
+//    compo_shape_t *shape = compo_shape_create_for_page(frm, listbox->page, COMPO_SHAPE_TYPE_RECTANGLE);
+//    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 158, 278, 1);
+//    compo_shape_set_color(shape,make_color(0x29,0x29,0x29));
+//    shape = compo_shape_create_for_page(frm, listbox->page, COMPO_SHAPE_TYPE_RECTANGLE);
+//    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 255, 278, 1);
+//    compo_shape_set_color(shape,make_color(0x29,0x29,0x29));
+
+    compo_listbox_set_focus_byidx(listbox, 1);
+    compo_listbox_update(listbox);
+
+    return frm;
+}
+
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 
 #define SYSTEM_LIST_CNT                       ((int)(sizeof(tbl_system_list) / sizeof(tbl_system_list[0])))
@@ -311,6 +369,8 @@ static void func_system_sub_system_enter(void)
     compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT - 2));
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
     compo_listbox_move_init_modify(listbox, 80, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT - 2));
+#elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+    compo_listbox_move_init_modify(listbox, 120, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT - 2));
 #else
     compo_listbox_move_init_modify(listbox, compo_listbox_gety_byidx(listbox, SYSTEM_LIST_CNT-2), compo_listbox_gety_byidx(listbox,SYSTEM_LIST_CNT-2));
 #endif

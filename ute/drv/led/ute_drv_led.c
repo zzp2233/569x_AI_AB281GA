@@ -93,6 +93,7 @@ void uteDrvLedEnable(void)
         uteModulePlatformOutputGpioSet(UTE_DRV_LED_POWER_GPIO_PIN, true);
     }
     uteDrvLedData.isOpen = true;
+#if UTE_DRV_LED_PWM_MODE_SUPPORT
     uint8_t motorDuty = 0;
     if (0)
     {
@@ -110,6 +111,9 @@ void uteDrvLedEnable(void)
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,motorDuty=%d,brightnessLevel=%d", __func__, motorDuty, uteDrvLedData.brightnessLevel);
     uteModulePlatformPwmInit(UTE_DRV_LED_ENABLE_PWM_ID, UTE_DRV_LED_ENABLE_GPIO_PIN, motorDuty, UTE_DRV_DEFAULT_PWM_HZ);
     uteModulePlatformPwmEnable(UTE_DRV_LED_ENABLE_PWM_ID);
+#else
+    uteModulePlatformOutputGpioSet(UTE_DRV_LED_ENABLE_GPIO_PIN, true);
+#endif
 }
 
 /**
@@ -120,7 +124,11 @@ void uteDrvLedEnable(void)
 */
 void uteDrvLedDisable(void)
 {
+#if UTE_DRV_LED_PWM_MODE_SUPPORT
     uteModulePlatformPwmDisable(UTE_DRV_LED_ENABLE_PWM_ID,UTE_DRV_LED_ENABLE_GPIO_PIN);
+#else
+    uteModulePlatformOutputGpioSet(UTE_DRV_LED_ENABLE_GPIO_PIN, false);
+#endif
 #if UTE_DRV_REUSE_HEART_POWER_SUPPORT
     if(!bsp_sensor_hr_work_status())
 #endif

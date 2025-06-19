@@ -153,12 +153,13 @@ compo_form_t *func_flashlight_form_create(void)
 //    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
 //    compo_form_set_title(frm, i18n[STR_FLASHLIGHT]);
 //
+#if !UTE_DRV_LED_SUPPORT
     compo_shape_t * shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
     compo_shape_set_color(shape, COLOR_WHITE);
     compo_setid(shape,COMPO_ID_BG_SHAPE);
     compo_shape_set_visible(shape, false);
-
+#endif
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I335001_27_MORE_4_FLASHLIGHT_ICON_44X88_X98_Y98_00_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 98+88/2);
     compo_setid(picbox,COMPO_ID_PIC);
@@ -169,23 +170,29 @@ compo_form_t *func_flashlight_form_create(void)
 static void func_flashlight_button_click(void)
 {
     f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
+#if !UTE_DRV_LED_SUPPORT
     compo_shape_t * shape = compo_getobj_byid(COMPO_ID_BG_SHAPE);
+#endif
     compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_PIC);
     // compo_textbox_t *txt_idle = compo_getobj_byid(COMPO_ID_TXT);
     f_flashlight->flashlight_flag = !f_flashlight->flashlight_flag;
 
     if(f_flashlight->flashlight_flag == true)
     {
+#if !UTE_DRV_LED_SUPPORT
         f_flashlight ->light_level = sys_cb.light_level;
         sys_cb.light_level = DEFAULT_BACK_LIGHT_PERCENT_MAX / BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE;
         tft_bglight_set_level(sys_cb.light_level,false);
         compo_shape_set_visible(shape, true);
+#endif
         compo_picturebox_set(picbox,UI_BUF_I335001_27_MORE_4_FLASHLIGHT_ICON_44X88_X98_Y98_01_BIN);
     }
     else
     {
+#if !UTE_DRV_LED_SUPPORT
         tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
         compo_shape_set_visible(shape, false);
+#endif
         compo_picturebox_set(picbox,UI_BUF_I335001_27_MORE_4_FLASHLIGHT_ICON_44X88_X98_Y98_00_BIN);
     }
 }
@@ -455,11 +462,13 @@ static void func_flashlight_button_click(void)
 //手电筒功能事件处理
 static void func_flashlight_process(void)
 {
+#if !UTE_DRV_LED_SUPPORT
     f_flashlight_t *f_flashlight = (f_flashlight_t *)func_cb.f_cb;
     if(f_flashlight->flashlight_flag == true)
     {
         reset_guioff_delay();
     }
+#endif
     func_process();
 }
 
@@ -476,10 +485,12 @@ static void func_flashlight_message(size_msg_t msg)
             if (f_flashlight->flashlight_flag == true)
             {
                 uteDrvLedEnable();
+                uteModuleGuiCommonDisplayOffAllowGoBack(false);
             }
             else
             {
                 uteDrvLedDisable();
+                uteModuleGuiCommonDisplayOffAllowGoBack(true);
             }
 #endif
             break;
@@ -511,6 +522,7 @@ static void func_flashlight_exit(void)
 {
 #if UTE_DRV_LED_SUPPORT
     uteDrvLedDisable();
+    uteModuleGuiCommonDisplayOffAllowGoBack(true);
 #endif
     tft_bglight_set_level(uteModuleGuiCommonGetBackLightPercent(),true);
     func_cb.last = FUNC_FLASHLIGHT;

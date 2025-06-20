@@ -75,13 +75,8 @@
 
 /*! PWRKEY,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_SUPPORT 1
-#define UTE_DRV_PWRKEY_MAX_CNT 2
-
-#define UTE_DRV_PWRKEY_KEY0 KEY_BACK
-#define UTE_DRV_PWRKEY_KEY0_MAX_ADC 0x5e // 0R
-
-#define UTE_DRV_PWRKEY_KEY1 KEY_LEFT
-#define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x7f // 12K
+/*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
+#define UTE_DRV_PWRKEY_MAX_CNT 1
 
 /*! KEY_MSG_USER 按键事件功能SOS,.quan.qi.cai 2025-05-29 */
 #define UTE_THREE_KEY_EVENT_SOS 1
@@ -118,8 +113,6 @@
 
 #define UTE_DISPLAY_BLOODGXYGEN_HISTORY_HISTOGRAM_SUPPORT  1  //血氧柱形图
 
-//...？
-#define UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT 1
 
 //默认亮屏时长
 #define DEFAULT_SCREEN_ON_TIME_SECOND 5
@@ -318,7 +311,7 @@
 #endif
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
-#define UTE_MODULE_KEY_SET_FUNCTION_SUPPORT           1 //下按键功能设置
+//#define UTE_MODULE_KEY_SET_FUNCTION_SUPPORT           1 //下按键功能设置
 
 
 

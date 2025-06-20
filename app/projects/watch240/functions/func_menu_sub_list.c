@@ -35,8 +35,15 @@ typedef struct f_menu_list_t_
     u32 tick;
 } f_menu_list_t;
 
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-static const compo_listbox_item_t tbl_menu_list[] =
+#if UTE_MODULE_SCREENS_MENU_DATA_BIND//菜单资源绑定
+static compo_listbox_item_t tbl_menu_list[MENU_APP_MAX_CNT];
+#define  BATTERY_PIC_0_BIN   0                ///电池电量图标0
+#define  BATTERY_PIC_1_BIN   0                ///电池电量图标1
+#define  BATTERY_PIC_2_BIN   0                ///电池电量图标2
+#define  BATTERY_PIC_3_BIN   0                ///电池电量图标3
+#define  BATTERY_PIC_4_BIN   0                ///电池电量图标4
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+static compo_listbox_item_t tbl_menu_list[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALL_BIN,                   .str_idx=STR_PHONE},                 //电话
@@ -403,7 +410,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #define  BATTERY_PIC_2_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
 #define  BATTERY_PIC_3_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
 #define  BATTERY_PIC_4_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
-#elif 0
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 static const compo_listbox_item_t tbl_menu_list[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
@@ -633,13 +640,6 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 
 };
-#elif UTE_MODULE_SCREENS_MENU_DATA_BIND//菜单资源绑定
-static compo_listbox_item_t tbl_menu_list[MENU_APP_MAX_CNT];
-#define  BATTERY_PIC_0_BIN   0                ///电池电量图标0
-#define  BATTERY_PIC_1_BIN   0                ///电池电量图标1
-#define  BATTERY_PIC_2_BIN   0                ///电池电量图标2
-#define  BATTERY_PIC_3_BIN   0                ///电池电量图标3
-#define  BATTERY_PIC_4_BIN   0                ///电池电量图标4
 #else
 static const compo_listbox_item_t tbl_menu_list[] =
 {
@@ -769,14 +769,26 @@ compo_form_t *func_menu_sub_list_form_create(void)
             menu_idx = 1;
         }
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-        if (menu_idx > (uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT-2 : MENU_LIST_CNT-3))
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+        if(!uteModuleMenstrualCycleIsOpen())
         {
-            menu_idx = (uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT-2 : MENU_LIST_CNT-3);
+            for (int i=0; i<MENU_LIST_CNT; i++)
+            {
+                if(tbl_menu_list[i].func_sta == FUNC_WOMEN_HEALTH)
+                {
+                    tbl_menu_list[i].func_sta = FUNC_CALCULATOR;
+                    tbl_menu_list[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
+                    tbl_menu_list[i].str_idx = STR_CALCULATOR;
+                    break;
+                }
+
+            }
         }
+#endif
 #endif
     }
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
-    compo_listbox_set(listbox, tbl_menu_list, uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1);
+    compo_listbox_set(listbox, tbl_menu_list, MENU_LIST_CNT);
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 #if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
     compo_listbox_set(listbox, tbl_menu_list, uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1);

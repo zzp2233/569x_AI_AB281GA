@@ -572,7 +572,7 @@ const menu_hc_item_t tbl_menu_cum_sudoku[] =
 };
 
 #else
-const menu_hc_item_t tbl_menu_cum_sudoku[] =
+menu_hc_item_t tbl_menu_cum_sudoku[] =
 {
     {0},
 };
@@ -581,12 +581,22 @@ const menu_hc_item_t tbl_menu_cum_sudoku[] =
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_sub_cum_sudoku_form_create(void)
 {
-#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
-    static uint16_t cum_sudoku_menu_cnt = 0;
-    cum_sudoku_menu_cnt = uteModuleMenstrualCycleIsOpen() ? (MENU_SUD_CNT) : (MENU_SUD_CNT-1);
-#else
-    static uint16_t cum_sudoku_menu_cnt = MENU_SUD_CNT;
-#endif  // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+
+
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_SUD_CNT; i++)
+        {
+            if(tbl_menu_cum_sudoku[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_cum_sudoku[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_cum_sudoku[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
+                break;
+            }
+        }
+    }
+#endif
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
@@ -594,7 +604,7 @@ compo_form_t *func_menu_sub_cum_sudoku_form_create(void)
     compo_iconlist_t *iconlist;
     iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_CUM_SUDOKU);
     compo_setid(iconlist, COMPO_ID_ICONLIST);
-    for (int i=0; i<cum_sudoku_menu_cnt; i++)
+    for (int i=0; i<MENU_SUD_CNT; i++)
     {
         compo_iconlist_add(iconlist, tbl_menu_cum_sudoku[i].res_addr);
     }

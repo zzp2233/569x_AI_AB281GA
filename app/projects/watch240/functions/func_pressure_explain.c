@@ -71,14 +71,16 @@ compo_form_t *func_pressure_explain_form_create(void)
 
     if(str_num>1400)
     {
-        str_num = 1400 - strlen(i18n[STR_PRESSURE_EXPLAIN1])+3;
+        str_num = 1400 - strlen(i18n[STR_PRESSURE_EXPLAIN1]);
+        snprintf(txt_str,str_num,"%s",i18n[STR_PRESSURE_EXPLAIN2]);
     }
     else
     {
-        str_num = strlen(i18n[STR_PRESSURE_EXPLAIN2])+3;
+        str_num = strlen(i18n[STR_PRESSURE_EXPLAIN2]);
+        snprintf(txt_str,str_num,"%s",i18n[STR_PRESSURE_EXPLAIN2]);
     }
 
-    snprintf(txt_str,str_num,"%s...",i18n[STR_PRESSURE_EXPLAIN2]);
+
 
     textbox = compo_textbox_create(frm, str_num);
     compo_textbox_set_align_center(textbox,false);

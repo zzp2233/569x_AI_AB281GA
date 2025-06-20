@@ -245,7 +245,7 @@ static void func_heart_warning_updata(void)
     {
         memset(txt_buf, 0, sizeof(txt_buf));
         f_heart_warning->up_date_old_flag = f_heart_warning->up_date_flag;
-        if(f_heart_warning->up_date_flag)
+        if(f_heart_warning->up_date_flag == COMPO_MAX_STATE)
         {
             snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
         }
@@ -308,17 +308,41 @@ compo_form_t *func_heart_warning_form_create(void)
 
 static void func_heart_warning_updata(void)
 {
+    f_heart_warning_t* f_heart_warning = (f_heart_warning_t*)func_cb.f_cb;
     compo_textbox_t *textbox = compo_getobj_byid(COMPO_ID_TEXT_HEART_VALUE);
+    compo_textbox_t *txt_uint = compo_getobj_byid(COMPO_ID_TEXT_UINT);
     uint8_t heart_value = uteModuleHeartGetHeartValue();
-    if(heart_value > 0 && heart_value < 0xff)
+    char txt_buf[100];
+
+    memset(txt_buf, 0, sizeof(txt_buf));
+    snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
+    compo_textbox_set(textbox, txt_buf);
+
+    if(heart_value >= uteModuleHeartGetHeartWaringMaxValue())
     {
-        char txt_buf[10];
-        memset(txt_buf, 0, sizeof(txt_buf));
-        snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
-        compo_textbox_set(textbox, txt_buf);
+        f_heart_warning->up_date_flag = COMPO_MAX_STATE;
+    }
+    else if (heart_value <= uteModuleHeartGetMinHeartValue())
+    {
+        f_heart_warning->up_date_flag = COMPO_MIN_STATE;
     }
 
-    if (heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue())
+    if(f_heart_warning->up_date_flag != f_heart_warning->up_date_old_flag)
+    {
+        memset(txt_buf, 0, sizeof(txt_buf));
+        f_heart_warning->up_date_old_flag = f_heart_warning->up_date_flag;
+        if(f_heart_warning->up_date_flag == COMPO_MAX_STATE)
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
+        }
+        else
+        {
+            snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
+        }
+        compo_textbox_set(txt_uint, txt_buf);
+    }
+
+    if ((heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue()) || (heart_value == 0 || heart_value == 0xff))
     {
         uteModuleGuiCommonGoBackLastScreen();
     }

@@ -318,6 +318,9 @@
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
 
+// #define UTE_MODULE_SCREENS_MENU_DATA_BIND             1 //菜单资源绑定
+
+
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/
 #define UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT 0 /*开机选择语言界面*/

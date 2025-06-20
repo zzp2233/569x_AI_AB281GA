@@ -316,6 +316,8 @@
 
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
+#define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
+
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

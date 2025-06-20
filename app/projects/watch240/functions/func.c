@@ -1727,36 +1727,34 @@ void func_message(size_msg_t msg)
 
         case KU_LEFT:
 #if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
-            if (func_cb.sta == FUNC_CLOCK)
+        {
+            uint8_t func_sta = uteModuleKeySetFuncGetMenu();
+            if (func_sta == 0)
             {
-                if (uteModuleKeySetFuncData.key_set_flag)
+                if (msgbox((char *)i18n[STR_OPERATION_FUNC], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
                 {
-                    uteTaskGuiStartScreen(uteModuleKeySetFuncData.key_set_menu, 0, __func__);
-                }
-                else
-                {
-                    if (msgbox((char *)i18n[STR_OPERATION_FUNC], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
-                        uteTaskGuiStartScreen(FUNC_KEY_SET_FUNCTION, 0, __func__);
+                    uteTaskGuiStartScreen(FUNC_KEY_SET_FUNCTION, 0, __func__);
                 }
             }
             else
             {
-                uteTaskGuiStartScreen(FUNC_CLOCK, 0, __func__);
+                uteTaskGuiStartScreen(func_sta, 0, __func__);
             }
+        }
 #else
-            if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL && func_cb.sta != UTE_KEY_LEFT_SWITCH_SCREEN)
-            {
-                uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
-            }
+        if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL && func_cb.sta != UTE_KEY_LEFT_SWITCH_SCREEN)
+        {
+            uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
+        }
 #if UTE_DRV_PWRKEY_KEY1_BACK
-            else if(func_cb.sta == UTE_KEY_LEFT_SWITCH_SCREEN )
-            {
-                printf("func_sta:%d\n",func_cb.sta);
-                func_back_to();
-            }
+        else if(func_cb.sta == UTE_KEY_LEFT_SWITCH_SCREEN )
+        {
+            printf("func_sta:%d\n",func_cb.sta);
+            func_back_to();
+        }
 #endif
 #endif
-            break;
+        break;
         case KTH_BACK:
 #if UTE_THREE_KEY_EVENT_SOS
             sys_cb.sos_open_flag = true;

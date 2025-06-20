@@ -19,15 +19,15 @@
 
 typedef struct
 {
-    u8 key_set_menu;
-    bool key_set_flag;
+    u8 keySetMenu;
+    bool keySetFlag;
 } ute_module_keysetfunc_data_t;
-
-extern ute_module_keysetfunc_data_t uteModuleKeySetFuncData;
 
 void uteModuleKeySetFuncInit(void);
 void uteModuleKeySetFuncReadConfig(void);
 void uteModuleKeySetFuncSaveData(void);
+uint8_t uteModuleKeySetFuncGetMenu(void);
+void uteModuleKeySetFuncSetMenu(uint8_t menu);
 
 #endif //UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
 #endif//_UTE_MODULE_KEYSETFUNC_H_

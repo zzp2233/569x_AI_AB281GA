@@ -361,6 +361,9 @@ void uteModuleWatchOnlineReadDeviceInfo(uint8_t *data)
 #if UTE_MODULE_WATCHONLINNE_R_VALUE
     data[15] = UTE_MODULE_WATCHONLINNE_R_VALUE;
 #endif
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+    data[16] = UTE_MODULE_WATCH_PHOTO_SUPPORT;
+#endif
 }
 
 void uteModuleWatchOnlineReadyStart(void)

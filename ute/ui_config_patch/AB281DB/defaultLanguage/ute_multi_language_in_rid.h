@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 印度尼西亚语(印度尼西亚）
 *@author
-*@date   2025-05-23 17:52:09
+*@date   2025-06-20 14:44:06
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -311,6 +311,8 @@ const char * const i18n_in_rid[] =
     [STR_INDONESUAN] = "\x49\x6e\x64\x6f\x6e\x65\x73\x69\x61\x00", // [295] Indonesia
     [STR_VIETNAMESE] = "\x54\x69\xe1\xba\xbf\x6e\x67\x20\x56\x69\xe1\xbb\x87\x74\x00", // [296] Tiếng Việt
     [STR_MALAYSIA] = "\x4d\x65\x6c\x61\x79\x75\x00", // [297] Melayu
+    [STR_OPERATION_FUNC] = "\x41\x74\x75\x72\x20\x66\x75\x6e\x67\x73\x69\x20\x6f\x70\x65\x72\x61\x73\x69\x20\x75\x6e\x74\x75\x6b\x20\x74\x6f\x6d\x62\x6f\x6c\x20\x6a\x61\x6d\x2e\x00", // [298] Atur fungsi operasi untuk tombol jam.
+    [STR_KEY_SET] = "\x50\x65\x6e\x67\x61\x74\x75\x72\x61\x6e\x20\x74\x6f\x6d\x62\x6f\x6c\x00", // [299] Pengaturan tombol
 };
 
 #endif

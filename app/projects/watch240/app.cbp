@@ -98,6 +98,7 @@
 			<Add directory="../../../ute/module/bedsideMode" />
 			<Add directory="../../platform/gui/ctp/spt5113c" />
 			<Add directory="../../platform/gui/ctp/spt5113c/firmware" />
+			<Add directory="../../../ute/module/keysetfunc" />
 			<Add directory="../../../ute/drv/led" />
 		</Compiler>
 		<Linker>
@@ -252,6 +253,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/heart/ute_module_heart.h" />
+		<Unit filename="../../../ute/module/keysetfunc/ute_module_keysetfunc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/keysetfunc/ute_module_keysetfunc.h" />
 		<Unit filename="../../../ute/module/liftwrist/ute_module_liftwrist.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1230,6 +1235,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_heartrate.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_key_set_function.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_light.c">

@@ -77,6 +77,7 @@
 #define UTE_DRV_PWRKEY_SUPPORT 1
 /*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_MAX_CNT 1
+
 /*! KEY_MSG_USER 按键事件功能SOS,.quan.qi.cai 2025-05-29 */
 #define UTE_THREE_KEY_EVENT_SOS 1
 
@@ -312,6 +313,7 @@
 #endif
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
+//#define UTE_MODULE_KEY_SET_FUNCTION_SUPPORT           1 //下按键功能设置
 
 
 

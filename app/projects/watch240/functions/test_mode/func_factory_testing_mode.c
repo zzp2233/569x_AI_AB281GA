@@ -1230,19 +1230,25 @@ static void func_factory_testing_message(size_msg_t msg)
 #if DRV_ENCODER_KEYS_SUPPORT
         case MSG_QDEC_FORWARD: // 向前滚动菜单
         {
-            msg_queue_detach(MSG_QDEC_FORWARD, 0);
-            compo_textbox_t *textbox1 = compo_getobj_byid(QDEC_FORWARD_TXT_ID);
-            compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
+            if (test_data->moduleType == FACTORY_MODULE_KEY)
+            {
+                msg_queue_detach(MSG_QDEC_FORWARD, 0);
+                compo_textbox_t *textbox1 = compo_getobj_byid(QDEC_FORWARD_TXT_ID);
+                compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
+            }
+            break;
         }
-        break;
 
         case MSG_QDEC_BACKWARD: // 向后滚动菜单
         {
-            msg_queue_detach(MSG_QDEC_BACKWARD, 0);
-            compo_textbox_t *textbox1 = compo_getobj_byid(QDEC_BACKWARD_TXT_ID);
-            compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
+            if (test_data->moduleType == FACTORY_MODULE_KEY)
+            {
+                msg_queue_detach(MSG_QDEC_BACKWARD, 0);
+                compo_textbox_t *textbox1 = compo_getobj_byid(QDEC_BACKWARD_TXT_ID);
+                compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
+            }
+            break;
         }
-        break;
 #endif
 
         case KL_BACK:

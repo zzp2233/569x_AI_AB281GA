@@ -36,6 +36,7 @@
 #include "ute_module_breathrate.h"
 #include "ute_module_bedside_mode.h"
 #include "ute_module_emotionPressure.h"
+#include "ute_module_keysetfunc.h"
 #include "ute_drv_led.h"
 #if 0
 #include "ute_drv_keys_common.h"
@@ -271,6 +272,9 @@ void uteApplicationCommonStartupSecond(void)
         uteModuleLiftWristInit();
 #if UTE_MODULE_SCREENS_SPORT_TARGET_NOTIFY_SUPPORT
         uteModuleSportMoreSportsTargetInit();
+#endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+        uteModuleKeySetFuncInit();
 #endif
 #if UTE_MODULE_LOCK_SCREEN_SUPPORT
         uteModuleLockScreenInit();

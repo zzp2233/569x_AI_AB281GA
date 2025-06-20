@@ -1942,15 +1942,15 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_textbox_set_multiline_drag(txt_msg,true);
                 ab_free(str_buf);
 
-                btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CANCEL_BIN);
+                btn = compo_button_create_by_image(frm, UI_BUF_I343001_COMM_CANCEL_BIN);
                 compo_setid(btn, COMPO_ID_BTN_CANCEL);
                 compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4+5,
-                                     GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_28_SET_CANCEL_BIN).hei/2 - 20);
+                                     GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_COMM_CANCEL_BIN).hei/2 - 20);
 
-                btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CONFIRM_2_BIN);
+                btn = compo_button_create_by_image(frm, UI_BUF_I343001_COMM_CONFIRM_BIN);
                 compo_setid(btn, COMPO_ID_BTN_OK);
                 compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4-5,
-                                     GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_28_SET_CONFIRM_2_BIN).hei/2 - 20);
+                                     GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_COMM_CONFIRM_BIN).hei/2 - 20);
 #endif // UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT
             }
             else if(sys_cb.cover_index == REMIND_COVER_TIMER_FINISH)//计时器结束
@@ -1962,7 +1962,7 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 compo_button_t *btn;
                 compo_textbox_t *txt;
                 char str_buff[24];
-                btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CANCEL_BIN);  //close
+                btn = compo_button_create_by_image(frm, UI_BUF_I343001_COMM_CANCEL_BIN);  //close
                 compo_setid(btn, COMPO_ID_BTN_DELETE);
                 compo_button_set_pos(btn, GUI_SCREEN_CENTER_X, 361);
                 //新建数字
@@ -2095,13 +2095,13 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             switch(func_cb.sta)
             {
                 case FUNC_ALARM_CLOCK:
-                    res_ok = UI_BUF_I343001_20_ALARM_CLOCK_BUTTON_OK_BIN;
+                    res_ok = UI_BUF_I343001_COMM_OK_BIN;
                     break;
                 case FUNC_HEARTRATE:
-                    res_ok = UI_BUF_I343001_6_HEART_REFRESH_BIN;
+                    res_ok = UI_BUF_I343001_COMM_REFRESH_BIN;
                     break;
                 default:
-                    res_ok = UI_BUF_I343001_20_ALARM_CLOCK_BUTTON_OK_BIN;
+                    res_ok = UI_BUF_I343001_COMM_OK_BIN;
                     break;
             }
             btn = compo_button_create_by_image(frm, res_ok);
@@ -2112,27 +2112,27 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         break;
 
         case MSGBOX_MODE_BTN_OKCANCEL:      //确定与取消按钮1
-            btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CANCEL_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I343001_COMM_CANCEL_BIN);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4+5,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_28_SET_CANCEL_BIN).hei/2 - 20);
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_COMM_CANCEL_BIN).hei/2 - 20);
 
-            btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CONFIRM_2_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I343001_COMM_CONFIRM_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4-5,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_28_SET_CONFIRM_2_BIN).hei/2 - 20);
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_COMM_CONFIRM_BIN).hei/2 - 20);
             break;
 
         case MSGBOX_MODE_BTN_YESNO:         //确定与取消按钮2
-            btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CANCEL_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I343001_COMM_CANCEL_BIN);
             compo_setid(btn, COMPO_ID_BTN_CANCEL);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH/4+5,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_28_SET_CANCEL_BIN).hei/2 - 20);
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_COMM_CANCEL_BIN).hei/2 - 20);
 
-            btn = compo_button_create_by_image(frm, UI_BUF_I343001_28_SET_CONFIRM_2_BIN);
+            btn = compo_button_create_by_image(frm, UI_BUF_I343001_COMM_CONFIRM_BIN);
             compo_setid(btn, COMPO_ID_BTN_OK);
             compo_button_set_pos(btn, GUI_SCREEN_WIDTH*3/4-5,
-                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_28_SET_CONFIRM_2_BIN).hei/2 - 20);
+                                 GUI_SCREEN_HEIGHT - gui_image_get_size(UI_BUF_I343001_COMM_CONFIRM_BIN).hei/2 - 20);
             break;
 
         case MSGBOX_MODE_BTN_DELETE:        //删除按钮

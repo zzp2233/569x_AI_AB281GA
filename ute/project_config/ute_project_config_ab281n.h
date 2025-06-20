@@ -136,6 +136,8 @@
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1 //工厂测试音频测试
 #endif
 
+//#define UTE_FLASH_128MBIT_1280K_MAP_SUPPORT 1                //使用128M flash
+
 /* 电池容量 zn.zeng 2022-01-07*/
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
 

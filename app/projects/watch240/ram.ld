@@ -334,6 +334,7 @@ SECTIONS
     .disp (NOLOAD) : {
         __disp_start = .;
         *(.disp.*)
+        *(.ctp_ota*)
         __disp_end = .;
     } > disp
     __disp_stack_size = __disp_end - __disp_start;
@@ -448,7 +449,7 @@ SECTIONS
     } > aram
 
     .aram_ctp __aram_vma (NOLOAD) : {
-        *(.ctp_ota*)
+        //*(.ctp_ota*)
         . = 0x4000;
     } > aram
 

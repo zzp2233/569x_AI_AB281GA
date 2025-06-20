@@ -412,6 +412,18 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
 
         }
     }
+    else
+    {
+        for (int i=0; i<MENU_HC_CNT; i++)
+        {
+            if(tbl_menu_honeycomb[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_honeycomb[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_honeycomb[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
+        }
+    }
 #endif
 #endif
     //新建蜂窝效果
@@ -656,7 +668,7 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
 }
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
-const menu_hc_item_t tbl_menu_honeycomb[] =
+static menu_hc_item_t tbl_menu_honeycomb[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALL_BIN,                  },   //电话
@@ -727,16 +739,43 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_PHOTO_BIN,         },    //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+//     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
+// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 };
 compo_form_t *func_menu_sub_honeycomb_form_create(void)
 {
     compo_iconlist_t *iconlist = NULL;
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
-
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_HC_CNT; i++)
+        {
+            if(tbl_menu_honeycomb[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_honeycomb[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_honeycomb[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_HC_CNT; i++)
+        {
+            if(tbl_menu_honeycomb[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_honeycomb[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_honeycomb[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
+        }
+    }
+#endif
+#endif
     //新建蜂窝效果
     if (func_cb.menu_style == MENU_STYLE_HONEYCOMB)
     {

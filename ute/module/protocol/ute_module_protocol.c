@@ -1923,6 +1923,9 @@ void uteModuleProtocolMoreSportCtrl(uint8_t*receive,uint8_t length)
     {
         if(isAppStart)
         {
+#if UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR //APP开启运动->app暂停运动马达震动
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+#endif
             uteModuleSportMoreSportSetStatus(ALL_SPORT_STATUS_PAUSE);
             uteModuleSportSyncAppMoreSportData(receive);
             uteModuleProfileBleSendToPhone(&receive[0],13);

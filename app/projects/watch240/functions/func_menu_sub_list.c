@@ -2,6 +2,7 @@
 #include "func.h"
 #include "func_menu.h"
 #include "ute_drv_battery_common.h"
+#include "func_menu_ui_data.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -9,7 +10,9 @@
 #define TRACE(...)
 #endif
 
+#if !UTE_MODULE_SCREENS_MENU_DATA_BIND//菜单资源绑定
 #define MENU_LIST_CNT                       ((int)(sizeof(tbl_menu_list) / sizeof(tbl_menu_list[0])))
+#endif
 
 #define ENTERING_ANIMATION_MAX              (GUI_SCREEN_HEIGHT * 9 / 6)
 #define ENTERING_ANIMATION_CNT              30
@@ -227,7 +230,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_VOICE_ASSISTANT_BIN,       .str_idx=STR_VOICE},                 //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 // #if UTE_MODULE_SCREENS_VOICE_SUPPORT
-    {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_SOS_BIN,                   .str_idx=STR_SOS},                  //SOS
+    {.func_sta=FUNC_SUB_SOS,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_SOS_BIN,                   .str_idx=STR_SOS},                  //SOS
 // #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 //#if UTE_MODULE_SCREENS_GAME_SUPPORT
     // {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_GAME_BIN,                  .str_idx=STR_GAME},                 //游戏
@@ -400,7 +403,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #define  BATTERY_PIC_2_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
 #define  BATTERY_PIC_3_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
 #define  BATTERY_PIC_4_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
-#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#elif 0
 static const compo_listbox_item_t tbl_menu_list[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
@@ -630,6 +633,13 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 
 };
+#elif UTE_MODULE_SCREENS_MENU_DATA_BIND//菜单资源绑定
+static compo_listbox_item_t tbl_menu_list[MENU_APP_MAX_CNT];
+#define  BATTERY_PIC_0_BIN   0                ///电池电量图标0
+#define  BATTERY_PIC_1_BIN   0                ///电池电量图标1
+#define  BATTERY_PIC_2_BIN   0                ///电池电量图标2
+#define  BATTERY_PIC_3_BIN   0                ///电池电量图标3
+#define  BATTERY_PIC_4_BIN   0                ///电池电量图标4
 #else
 static const compo_listbox_item_t tbl_menu_list[] =
 {
@@ -674,6 +684,58 @@ static void func_menu_sub_list_battery_pic_update(void)
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_sub_list_form_create(void)
 {
+#if UTE_MODULE_SCREENS_MENU_DATA_BIND//菜单资源绑定
+    u8 menu_idx = func_cb.menu_idx;
+    //新建窗体
+    compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
+    //新建菜单列表
+    compo_listbox_t *listbox;
+    if (func_cb.menu_style == MENU_STYLE_CUM_FOURGRID)
+    {
+        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_FOURGRID);
+        compo_picturebox_t *battery_pic = compo_picturebox_create(frm, BATTERY_PIC_4_BIN);
+        compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
+        compo_picturebox_set_pos(battery_pic, 43, 25);
+        func_menu_sub_list_battery_pic_update();
+        if (menu_idx < 3)
+        {
+            menu_idx = 3;
+        }
+    }
+    else
+    {
+        memset(tbl_menu_list,0,sizeof(tbl_menu_list));
+        f_menu_ui_data_init();
+        for (int i = 0; i <=f_menu_ui_data_get_app_num() ; i++)
+        {
+            tbl_menu_list[i].func_sta= f_menu_data[i].func_sta;
+            tbl_menu_list[i].res_addr= f_menu_data[i].res_addr;
+            tbl_menu_list[i].str_idx=  f_menu_data[i].str_idx;
+        }
+
+#if UTE_DRV_SCREEN_SHAPE
+        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_TITLE_NORMAL);
+#else
+        listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE);
+#endif
+        if (menu_idx < 1)
+        {
+            menu_idx = 1;
+        }
+    }
+    compo_listbox_set(listbox, tbl_menu_list, f_menu_ui_data_get_app_num());
+    compo_setid(listbox, COMPO_ID_LISTBOX);
+    compo_listbox_set_focus_byidx(listbox, menu_idx);
+
+    compo_listbox_update(listbox);
+
+    if (func_cb.flag_animation)
+    {
+        widget_set_visible(listbox->page, false);
+    }
+
+    return frm;
+#else
     u8 menu_idx = func_cb.menu_idx;
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
@@ -734,6 +796,7 @@ compo_form_t *func_menu_sub_list_form_create(void)
         widget_set_visible(listbox->page, false);
     }
     return frm;
+#endif
 }
 
 //点进图标进入应用
@@ -745,10 +808,17 @@ static void func_menu_sub_list_icon_click(void)
     u8 func_sta;
 
     icon_idx = compo_listbox_select(listbox, ctp_get_sxy());
+#if UTE_MODULE_SCREENS_MENU_DATA_BIND//菜单资源绑定
+    if (icon_idx < 0 || icon_idx >=  f_menu_ui_data_get_app_num())
+    {
+        return;
+    }
+#else
     if (icon_idx < 0 || icon_idx >= MENU_LIST_CNT)
     {
         return;
     }
+#endif
 
     //根据图标索引获取应用ID
     func_sta = tbl_menu_list[icon_idx].func_sta;

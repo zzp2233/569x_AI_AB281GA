@@ -744,6 +744,14 @@ void func_charge_update(void)
         u32 img_3d_res_addr[9]= {0};
         ute_module_systemtime_time_t time;
         uteModuleSystemtimeGetTime(&time);
+        if(uteModuleSystemtime12HOn())
+        {
+            time.hour%=12;
+            if(time.hour==0)
+            {
+                time.hour=12;
+            }
+        }
         img_3d_res_addr[0] = num_pic_big[time.hour/10];
         img_3d_res_addr[1] = num_pic_big[time.hour%10];
         img_3d_res_addr[2] = colon_big;
@@ -823,6 +831,15 @@ compo_form_t *func_charge_form_create(void)
 
         ute_module_systemtime_time_t time;
         uteModuleSystemtimeGetTime(&time);
+
+        if(uteModuleSystemtime12HOn())
+        {
+            time.hour%=12;
+            if(time.hour==0)
+            {
+                time.hour=12;
+            }
+        }
 
         img_3d_res_addr[0] = num_pic_big[time.hour/10];
         img_3d_res_addr[1] = num_pic_big[time.hour%10];

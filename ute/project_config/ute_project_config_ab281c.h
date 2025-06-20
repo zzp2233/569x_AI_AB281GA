@@ -74,6 +74,9 @@
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
 
+/*! 心率警告功能 zn.zeng, 2021-10-22  */
+#define UTE_MODULE_HEART_MIN_MAX_WARNING_VALUE_SUPPORT 1
+
 /*! KEY1跳转界面,wang.luo 2025-04-09 */
 #define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT
 

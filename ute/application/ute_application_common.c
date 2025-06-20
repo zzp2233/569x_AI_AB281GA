@@ -36,6 +36,7 @@
 #include "ute_module_breathrate.h"
 #include "ute_module_bedside_mode.h"
 #include "ute_module_emotionPressure.h"
+#include "ute_drv_led.h"
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -305,7 +306,9 @@ void uteApplicationCommonStartupSecond(void)
 #if UTE_MODULE_COMPONENTS_SUPPORT
         uteModuleComponentsInit();
 #endif
-
+#if UTE_DRV_LED_SUPPORT
+        uteDrvLedInit();
+#endif
         uteModulePlatformCreateTimer(&uteApplicationCommonSyncDataTimer, "SYNC DATA timer", 1, UTE_SEND_DATA_TO_PHONE_INVTERVAL, false, uteApplicationCommonSyncDataTimerCallback);
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_ADV_DATA,0);
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_DEV_NAME,0);

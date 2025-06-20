@@ -504,6 +504,10 @@ static void func_flashlight_message(size_msg_t msg)
         case MSG_CTP_LONG:
             break;
 
+        case KU_LEFT:
+            msg_enqueue(MSG_CTP_CLICK);
+            break;
+
         default:
             func_message(msg);
             break;

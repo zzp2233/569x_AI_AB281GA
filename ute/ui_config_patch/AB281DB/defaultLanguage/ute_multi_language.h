@@ -311,6 +311,8 @@ enum
     STR_INDONESUAN, // Indonesia
     STR_VIETNAMESE, // Tiếng Việt
     STR_MALAYSIA, // Melayu
+    STR_OPERATION_FUNC, // 为手表下键设置操作功能。
+    STR_KEY_SET, // 下键设置
 };
 
 extern const char * const *i18n;

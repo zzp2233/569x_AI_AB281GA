@@ -4,7 +4,9 @@
 #include "ute_module_systemtime.h"
 #include "ute_language_common.h"
 #include "ute_drv_motor.h"
-
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+#include "ute_module_keysetfunc.h"
+#endif
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -231,6 +233,9 @@ extern void func_motor_grade(void);
 #if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
 extern void func_clock_dropdown_menu(void);
 #endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+extern void func_key_set_function(void);//KEY_LEFT按键进入设置选择功能界面
+#endif
 
 
 #if UTE_MODULE_SCREENS_NEW_DWON_MENU_SUPPORT
@@ -381,6 +386,9 @@ compo_form_t *func_bright_set_form_create(void);
 #endif
 #if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
 compo_form_t *func_toolbox_list_form_create(void);   //工具箱
+#endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+compo_form_t *func_key_set_function_form_create(void);//KEY_LEFT按键进入设置选择功能界面
 #endif
 bool func_music_is_play(void);
 void func_music_play(bool sta);
@@ -611,6 +619,10 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
     {FUNC_TOOLBOX,                      func_toolbox_list_form_create},//工具箱
 #endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+    {FUNC_KEY_SET_FUNCTION,        func_key_set_function_form_create},//KEY_LEFT按键进入设置选择功能界面
+#endif
+
 };
 
 const func_t tbl_func_entry[] =
@@ -850,6 +862,10 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
     {FUNC_TOOLBOX,                      func_toolbox_list},//工具箱
 #endif
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+    {FUNC_KEY_SET_FUNCTION,        func_key_set_function},//KEY_LEFT按键进入设置选择功能界面
+#endif
+
 };
 
 AT(.text.func.process)
@@ -1710,6 +1726,24 @@ void func_message(size_msg_t msg)
             break;
 
         case KU_LEFT:
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+            if (func_cb.sta == FUNC_CLOCK)
+            {
+                if (uteModuleKeySetFuncData.key_set_flag)
+                {
+                    uteTaskGuiStartScreen(uteModuleKeySetFuncData.key_set_menu, 0, __func__);
+                }
+                else
+                {
+                    if (msgbox((char *)i18n[STR_OPERATION_FUNC], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+                        uteTaskGuiStartScreen(FUNC_KEY_SET_FUNCTION, 0, __func__);
+                }
+            }
+            else
+            {
+                uteTaskGuiStartScreen(FUNC_CLOCK, 0, __func__);
+            }
+#else
             if (UTE_KEY_LEFT_SWITCH_SCREEN != FUNC_NULL && func_cb.sta != UTE_KEY_LEFT_SWITCH_SCREEN)
             {
                 uteTaskGuiStartScreen(UTE_KEY_LEFT_SWITCH_SCREEN, 0, __func__);
@@ -1720,6 +1754,7 @@ void func_message(size_msg_t msg)
                 printf("func_sta:%d\n",func_cb.sta);
                 func_back_to();
             }
+#endif
 #endif
             break;
         case KTH_BACK:

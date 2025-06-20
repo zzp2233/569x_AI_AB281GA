@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-05-23 17:52:04
+*@date   2025-06-20 14:44:01
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -311,6 +311,8 @@ const char * const i18n_zh_rcn[] =
     [STR_INDONESUAN] = "\x49\x6e\x64\x6f\x6e\x65\x73\x69\x61\x00", // [295] Indonesia
     [STR_VIETNAMESE] = "\x54\x69\xe1\xba\xbf\x6e\x67\x20\x56\x69\xe1\xbb\x87\x74\x00", // [296] Tiếng Việt
     [STR_MALAYSIA] = "\x4d\x65\x6c\x61\x79\x75\x00", // [297] Melayu
+    [STR_OPERATION_FUNC] = "\xe4\xb8\xba\xe6\x89\x8b\xe8\xa1\xa8\xe4\xb8\x8b\xe9\x94\xae\xe8\xae\xbe\xe7\xbd\xae\xe6\x93\x8d\xe4\xbd\x9c\xe5\x8a\x9f\xe8\x83\xbd\xe3\x80\x82\x00", // [298] 为手表下键设置操作功能。
+    [STR_KEY_SET] = "\xe4\xb8\x8b\xe9\x94\xae\xe8\xae\xbe\xe7\xbd\xae\x00", // [299] 下键设置
 };
 
 #endif

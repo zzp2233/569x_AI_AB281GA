@@ -2154,7 +2154,7 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
     {
         memcpy(&response[0], receive, 2);
         uteModuleWatchOnlineGetInfoWithPhoto(&response[0]);
-        uteModuleProfileBleSendToPhone(&response[0], 14);
+        uteModuleProfileBleSendToPhone(&response[0], 18);
     }
     else if (receive[1] == 0x0B)
     {

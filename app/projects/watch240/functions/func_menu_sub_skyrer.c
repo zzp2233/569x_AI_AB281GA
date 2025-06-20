@@ -699,16 +699,21 @@ compo_form_t *func_menu_sub_skyrer_form_create(void)
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-    if(uteModuleMenstrualCycleIsOpen())
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
     {
-        tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].func_sta = FUNC_WOMEN_HEALTH;
-        tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+        for (int i=0; i<SKYRER_LOOP_ICON_NUM; i++)
+        {
+            if(tbl_menu_skyrer[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_skyrer[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_skyrer[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
+                break;
+            }
+
+        }
     }
-    else
-    {
-        tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].func_sta = FUNC_CALCULATOR;
-        tbl_menu_skyrer[SKYRER_LOOP_ICON_NUM-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
-    }
+#endif
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     if(uteModuleMenstrualCycleIsOpen())
     {

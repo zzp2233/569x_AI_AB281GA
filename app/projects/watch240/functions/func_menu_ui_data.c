@@ -1,24 +1,13 @@
+#include "func_menu_ui_data.h"
 #include "func.h"
 #include "func_menu.h"
 
-typedef struct f_menu_ui_data_
-{
-    u8 func_sta;                            //普通菜单模式
-    u32 str_idx;                                //文字
-    u32 res_addr;                               //图标
-    u32 fb_res_addr;                            //图标->球形菜单
-} f_menu_ui_data;
+#if UTE_MODULE_SCREENS_MENU_DATA_BIND
 
-#ifndef UTE_MENU_APP_MAX_CNT
-#define MENU_APP_MAX_CNT     50
-#else
-#define MENU_APP_MAX_CNT     UTE_MENU_APP_MAX_CNT
-#endif
-
-#define MENU_APP_CNT                       ((int)(sizeof(f_menu_ui_data_all) / sizeof(f_menu_ui_data_all[0])))
+/*! 注释：使用f_menu_ui_data_all结构体里面的 fb_res_addr 前20个数据为足球菜单资源*/
 
 #if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
-const static f_menu_ui_data f_menu_ui_data_all[] =//菜单全部资源
+const f_menu_ui_data f_menu_ui_data_all[] =//菜单全部资源
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT//通话
     {.func_sta=FUNC_CALL,          .str_idx=STR_PHONE,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALL_BIN,      .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_CALL_BIN,  },
@@ -48,7 +37,7 @@ const static f_menu_ui_data f_menu_ui_data_all[] =//菜单全部资源
     {.func_sta=FUNC_BT,            .str_idx=STR_MUSIC,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_MUSIC_BIN,     .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_MUSIC_BIN,    },
 #endif
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT  //天气
-    {.func_sta=FUNC_WEATHER,       .str_idx=STR_MUSIC,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_WEATHER_BIN,   .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_WEATHER_BIN,    },
+    {.func_sta=FUNC_WEATHER,       .str_idx=STR_WEATHER,              .res_addr=UI_BUF_I338001_2_HONEYCOMB_WEATHER_BIN,   .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_WEATHER_BIN,    },
 #endif
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT  //闹钟
     {.func_sta=FUNC_ALARM_CLOCK,   .str_idx=STR_ALARM_CLOCK,          .res_addr=UI_BUF_I338001_2_HONEYCOMB_ALARM_BIN,     .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_ALARM_BIN,    },
@@ -100,10 +89,45 @@ const static f_menu_ui_data f_menu_ui_data_all[] =//菜单全部资源
 }
 #endif
 
-//
 f_menu_ui_data f_menu_data[MENU_APP_MAX_CNT];
+/*! 菜单UI数据初始化->重新加载菜单应用数量排序 */
+void f_menu_ui_data_init(void)
+{
+    memset(f_menu_data,0,sizeof(f_menu_data));
+    int j=0;
+    for(int i=0; i<MENU_APP_CNT; i++)
+    {
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT //女性健康
+        if(f_menu_ui_data_all[i].func_sta == FUNC_WOMEN_HEALTH && !uteModuleMenstrualCycleIsOpen())
+        {
+            j++;
+        }
+#endif
+        if(j < MENU_APP_CNT)
+        {
+            f_menu_data[i] = f_menu_ui_data_all[j];
+            j++;
+        }
+    }
+}
+
+/*!
+入口参数：index:菜单类型
+出口参数：菜单类型app数量
+*/
+u8 f_menu_ui_data_get_app_num(void)
+{
+    switch (func_cb.menu_style)
+    {
+        case MENU_STYLE_LIST:/*!  列表式菜单 显示应用最多数量*/
+            return MENU_STYLE_LIST_APP_MAX_NUM;
+        default:
+            return 0;
+    }
+}
 
 
+#endif
 
 
 

@@ -728,6 +728,18 @@ compo_form_t *func_menu_sub_sudoku_form_create(void)
 
         }
     }
+    else
+    {
+        for (int i=0; i<MENU_SUD_CNT; i++)
+        {
+            if(tbl_menu_sudoku[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_sudoku[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_sudoku[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
+        }
+    }
 #endif
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     if(uteModuleMenstrualCycleIsOpen())

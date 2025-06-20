@@ -196,7 +196,7 @@ compo_form_t *func_power_on_language_form_create(void)
     compo_listbox_set_bgimg(listbox, UI_BUF_I343001_1_START_LANG_BG_BIN);
 
 
-    compo_listbox_set_sta_icon(listbox, UI_BUF_I343001_1_START_OK_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
+    compo_listbox_set_sta_icon(listbox, UI_BUF_I343001_COMM_GOU_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_language_bit);
 
     compo_setid(listbox, COMPO_ID_LISTBOX);

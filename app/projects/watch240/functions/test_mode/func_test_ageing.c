@@ -29,6 +29,7 @@ enum
     SHAPE_1_ID,  // 发热丝1背景
     SHAPE_2_ID,  // 发热丝2背景
     SHAPE_3_ID,  // 单发双发背景
+    SHAPE_4_ID,  // 铃声开关背景
     TXT_9_ID,    /// 单发双发文字
     BUTTON_1,    // 切换单双发按钮
     BUTTON_2,    // 铃声打开关闭按钮
@@ -105,6 +106,7 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
     compo_form_t *frm = compo_form_create(true);
     f_ageing_t *f_ageing = (f_ageing_t *)func_cb.f_cb;
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_textbox_t *textbox;
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X - 57, TXT_SPACING * 2 + 16, 50, 25);
     compo_shape_set_color(shape, COLOR_GREEN);
     compo_setid(shape, SHAPE_1_ID);
@@ -114,7 +116,12 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
     compo_shape_set_color(shape, COLOR_GREEN);
     compo_setid(shape, SHAPE_2_ID);
 
-    compo_textbox_t *textbox = compo_textbox_create(frm, 6);
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X / 2 +4,5 + TXT_SPACING * 10.8 +2- widget_text_get_area(textbox->txt).hei / 2, 88, 25);
+    compo_shape_set_color(shape,make_color(4, 161, 251));
+    compo_setid(shape, SHAPE_4_ID);
+
+    textbox = compo_textbox_create(frm, 6);
     compo_textbox_set(textbox, "发热丝状态");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING * 2 - 15);
     compo_setid(textbox, TXT_1_ID);
@@ -211,7 +218,7 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
 
     textbox = compo_textbox_create(frm, 6);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox,uteModuleSmokeFactoryData.play_flag ==0 ? "铃声打开" : "铃声关闭");
+    compo_textbox_set(textbox,(uteModuleSmokeFactoryData.play_flag ==0) ? "铃声打开" : "铃声关闭");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5,5 + TXT_SPACING * 10.8 - widget_text_get_area(textbox->txt).hei / 2 );
     compo_setid(textbox, TXT_13_ID);
 
@@ -324,7 +331,7 @@ static void func_test_mode_click(void)
             break;
         case BUTTON_2:
             uteModuleSmokeFactoryData.play_flag = !uteModuleSmokeFactoryData.play_flag;
-            // printf("BUTTON_2,play_flag=%d\n",play_flag);
+            // printf("BUTTON_2,play_flag=%d\n",uteModuleSmokeFactoryData.play_flag);
             break;
         case BUTTON_1:
 
@@ -332,7 +339,7 @@ static void func_test_mode_click(void)
             ecig_cfg.smoke_position_swich = !ecig_cfg.smoke_position_swich;
 #endif
             ecig_get_res();
-            printf("BUTTON_1BUTTON_1BUTTON_1ecig_cfg.smoke_position_swich=%d,%d\n", ecig_cfg.smoke_position_swich,ecig_get_res());
+            // printf("BUTTON_1BUTTON_1BUTTON_1ecig_cfg.smoke_position_swich=%d,%d\n", ecig_cfg.smoke_position_swich,ecig_get_res());
             break;
         case YES_BTN_ID:
         {
@@ -510,6 +517,7 @@ static void func_ageing_enter(void)
 static void func_ageing_exit(void)
 {
     uteModuleSmokeFactoryData.play_flag=1;
+    music_control(MUSIC_MSG_STOP);
     uteModuleNewFactoryTestResetParam();
     func_cb.last = FUNC_AGEING;
 }

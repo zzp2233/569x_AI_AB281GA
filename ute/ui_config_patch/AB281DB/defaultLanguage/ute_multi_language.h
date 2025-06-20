@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-05-23 17:52:04
+*@date   2025-06-19 11:11:11
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -286,7 +286,7 @@ enum
     STR_NORMAL, // 正常
     STR_MEDIUM, // 中等
     STR_HIGH, // 偏高
-    STR_VBRATION, // 振动强度
+    STR_VBRATION, // 震动强度
     STR_SOUND_AND_VIBRATION, // 声音和震动
     STR_HIGH_1, // 高
     STR_MIDDLE, // 中
@@ -313,6 +313,7 @@ enum
     STR_MALAYSIA, // Melayu
     STR_OPERATION_FUNC, // 为手表下键设置操作功能。
     STR_KEY_SET, // 下键设置
+    STR_PLEASE_REMOTE, // 请前往APP打开遥控拍照
 };
 
 extern const char * const *i18n;
@@ -331,6 +332,5 @@ extern const char * const i18n_it_rit[];
 extern const char * const i18n_pt_rpt[];
 extern const char * const i18n_th_rth[];
 extern const char * const i18n_vi_rvn[];
-extern const char * const i18n_zh_rtw[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

@@ -2440,6 +2440,26 @@ static void func_bt_message_do(size_msg_t msg)
 #endif
             break;
 
+        case MSG_QDEC_FORWARD:
+        {
+            if(!func_cb.flag_sort)
+            {
+                msg_queue_detach(MSG_QDEC_FORWARD, 0);
+                uteModuleMusicCtrlVolumeIncrease(false);
+                break;
+            }
+        }
+
+        case MSG_QDEC_BACKWARD:
+        {
+            if(!func_cb.flag_sort)
+            {
+                msg_queue_detach(MSG_QDEC_BACKWARD, 0);
+                uteModuleMusicCtrlVolumeDecrease(false);
+                break;
+            }
+        }
+
         default:
             func_message(msg);
             break;

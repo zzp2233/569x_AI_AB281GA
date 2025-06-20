@@ -1679,7 +1679,7 @@ compo_form_t *func_sport_finish_form_create(void)
             break;
     }
 
-    compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I343001_28_SET_COMFIRM_BIN);
+    compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I343001_COMM_OK_BIN);
     compo_button_set_pos(btn,GUI_SCREEN_CENTER_X, 257+TXT_SPACING*6-(sport_type*TXT_SPACING));
     compo_setid(btn,COMPO_BTN_SURE);
 

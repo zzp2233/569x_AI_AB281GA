@@ -25,6 +25,7 @@
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
 #include "ute_module_emotionPressure.h"
 #endif
+#include "ute_drv_led.h"
 #if UTE_MODULE_BREATHRATE_SUPPORT
 #include "RspRateEst.h"
 #include "ute_module_breathrate.h"
@@ -78,7 +79,12 @@ void vc30fx_pwr_en(void)        //PF5
 
     if(!vc30fx_dev.dev_work_status)
     {
-        uteModulePlatformOutputGpioSet(IO_PF5,true);
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
+        if(!uteDrvLedIsOpen())
+#endif
+        {
+            uteModulePlatformOutputGpioSet(IO_PF5,true);
+        }
     }
 
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
@@ -98,7 +104,12 @@ void vc30fx_pwr_dis(void)       //PF5
 
     printf("vc30fx_pwr_dis\n");
     // drv_calibration_clk_clear();
-    uteModulePlatformOutputGpioSet(IO_PF5,false);
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
+    if(!uteDrvLedIsOpen())
+#endif
+    {
+        uteModulePlatformOutputGpioSet(IO_PF5,false);
+    }
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(true);
 #else

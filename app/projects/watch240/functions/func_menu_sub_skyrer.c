@@ -403,7 +403,7 @@ static compo_rings_item_t tbl_menu_skyrer[] =
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 //天圆地方图标列表及顺序
-static const compo_rings_item_t tbl_menu_skyrer[] =
+static  compo_rings_item_t tbl_menu_skyrer[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALL_BIN,                  },   //电话
@@ -474,9 +474,9 @@ static const compo_rings_item_t tbl_menu_skyrer[] =
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_PHOTO_BIN,         },    //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+//     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
+// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //天圆地方图标列表及顺序
@@ -702,7 +702,7 @@ compo_form_t *func_menu_sub_skyrer_form_create(void)
 #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     if(!uteModuleMenstrualCycleIsOpen())
     {
-        for (int i=0; i<SKYRER_LOOP_ICON_NUM; i++)
+        for (int i=0; i<MENU_SKYRER_CNT; i++)
         {
             if(tbl_menu_skyrer[i].func_sta == FUNC_WOMEN_HEALTH)
             {
@@ -711,6 +711,45 @@ compo_form_t *func_menu_sub_skyrer_form_create(void)
                 break;
             }
 
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_SKYRER_CNT; i++)
+        {
+            if(tbl_menu_skyrer[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_skyrer[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_skyrer[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
+        }
+    }
+#endif
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_SKYRER_CNT; i++)
+        {
+            if(tbl_menu_skyrer[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_skyrer[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_skyrer[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_SKYRER_CNT; i++)
+        {
+            if(tbl_menu_skyrer[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_skyrer[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_skyrer[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
         }
     }
 #endif

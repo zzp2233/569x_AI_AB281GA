@@ -401,7 +401,7 @@ static menu_kale_item_t tbl_menu_kaleidoscope[] =
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 //万花筒图标列表及顺序
-static const menu_kale_item_t tbl_menu_kaleidoscope[] =
+static menu_kale_item_t tbl_menu_kaleidoscope[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALL_BIN,                  },   //电话
@@ -460,25 +460,25 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-#if UTE_MODULE_SCREENS_TIMER_SUPPORT
-    {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_TIMER_BIN,                 },    //定时器
-#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
-#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
-    {.func_sta=FUNC_FINDPHONE,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_FINDPHONE_BIN            },    //查找手机
-#endif
-#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-    {.func_sta=FUNC_FLASHLIGHT,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_FLASHLIGHT_BIN,            },    //手电筒
-#endif
-#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-    {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_PHOTO_BIN,         },    //相机
-#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-#if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
-    {.func_sta=FUNC_LANGUAGE,                    .res_addr=UI_BUF_I338003_SETTING_MENU_LANGUAGE_BIN,         },    //语言
-    {.func_sta=FUNC_SET_SUB_ABOUT,               .res_addr=UI_BUF_I338003_SETTING_MENU_ABOUT_BIN,             },    //关于
-#endif
+// #if UTE_MODULE_SCREENS_TIMER_SUPPORT
+//     {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_TIMER_BIN,                 },    //定时器
+// #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+// #if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+//     {.func_sta=FUNC_FINDPHONE,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_FINDPHONE_BIN            },    //查找手机
+// #endif
+// #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+//     {.func_sta=FUNC_FLASHLIGHT,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_FLASHLIGHT_BIN,            },    //手电筒
+// #endif
+// #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+//     {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_PHOTO_BIN,         },    //相机
+// #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+//     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
+// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
+//     {.func_sta=FUNC_LANGUAGE,                    .res_addr=UI_BUF_I338003_SETTING_MENU_LANGUAGE_BIN,         },    //语言
+//     {.func_sta=FUNC_SET_SUB_ABOUT,               .res_addr=UI_BUF_I338003_SETTING_MENU_ABOUT_BIN,             },    //关于
+// #endif
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //万花筒图标列表及顺序
@@ -701,6 +701,45 @@ compo_form_t *func_menu_sub_kale_form_create(void)
                 break;
             }
 
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
+        }
+    }
+#endif
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
         }
     }
 #endif

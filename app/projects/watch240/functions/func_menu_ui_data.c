@@ -1,6 +1,7 @@
 #include "func_menu_ui_data.h"
 #include "func.h"
 #include "func_menu.h"
+#include "ute_module_menstrualcycle.h"
 
 #if UTE_MODULE_SCREENS_MENU_DATA_BIND
 
@@ -58,10 +59,10 @@ const f_menu_ui_data f_menu_ui_data_all[] =//菜单全部资源
     {.func_sta=FUNC_SETTING,       .str_idx=STR_SETTING,              .res_addr=UI_BUF_I338001_2_HONEYCOMB_SETTINGS_BIN,    .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_SETTINGS_BIN,    },
 #endif
 #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT //女性健康
-    {.func_sta=FUNC_WOMEN_HEALTH,  .str_idx=STR_WOMEN_HEALTH,         .res_addr=UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN,      .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_SETTINGS_BIN,    },
+    {.func_sta=FUNC_WOMEN_HEALTH,  .str_idx=STR_WOMEN_HEALTH,         .res_addr=UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN,      .fb_res_addr=0,    },
 #endif
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT//秒表
-    {.func_sta=FUNC_STOPWATCH,     .str_idx=STR_STOP_WATCH,           .res_addr=UI_BUF_I338001_2_HONEYCOMB_STOPWATCH_BIN,   .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_SETTINGS_BIN,   },
+    {.func_sta=FUNC_STOPWATCH,     .str_idx=STR_STOP_WATCH,           .res_addr=UI_BUF_I338001_2_HONEYCOMB_STOPWATCH_BIN,   .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_STOPWATCH_BIN,   },
 #endif
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT//计时器
     {.func_sta=FUNC_TIMER,         .str_idx=STR_STOP_WATCH,           .res_addr=UI_BUF_I338001_2_HONEYCOMB_TIMER_BIN,       .fb_res_addr=UI_BUF_I338001_28_SET_MENU_FOOTBALL_V_BIN,   },
@@ -111,19 +112,53 @@ void f_menu_ui_data_init(void)
     }
 }
 
+
 /*!
 入口参数：index:菜单类型
 出口参数：菜单类型app数量
 */
 u8 f_menu_ui_data_get_app_num(void)
 {
+    u8 app_num = MENU_APP_CNT;
     switch (func_cb.menu_style)
     {
-        case MENU_STYLE_LIST:/*!  列表式菜单 显示应用最多数量*/
-            return MENU_STYLE_LIST_APP_MAX_NUM;
+        case MENU_STYLE_LIST:      /*!  列表菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_LIST_APP_MAX_NUM;
+            break;
+        case MENU_STYLE_CUM_SUDOKU:/*!  宫格菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_CUM_SUDOKU_APP_MAX_NUM;
+            break;
+        case MENU_STYLE_HONEYCOMB:/*!  蜂窝菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_HONEYCOMB_APP_MAX_NUM;
+            break;
+        case MENU_STYLE_FOOTBALL: /*!  球体菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_FOOTBALL_APP_MAX_NUM;
+            break;
+        case MENU_STYLE_GRID:     /*!  棋盘菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_GRID_APP_MAX_NUM;
+            break;
+        case MENU_STYLE_KALE:     /*!  光环菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_KALE_APP_MAX_NUM;
+            break;
+        case MENU_STYLE_SKYRER:     /*! 天圆菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_SKYRER_APP_MAX_NUM;
+            break;
+        case MENU_STYLE_CUM_GRID:     /*! 网格菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_CUM_GRID_APP_MAX_NUM;
+            break;
+        case MENU_STYLE_WATERFALL:     /*! 瀑布菜单 显示应用最多数量*/
+            app_num = MENU_STYLE_WATERFALL_APP_MAX_NUM;
+            break;
         default:
-            return 0;
+            break;
     }
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT //女性健康
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        app_num--;
+    }
+#endif
+    return app_num;
 }
 
 

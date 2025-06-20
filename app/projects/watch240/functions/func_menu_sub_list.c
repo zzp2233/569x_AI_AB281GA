@@ -403,7 +403,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #define  BATTERY_PIC_2_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_02_BIN                ///电池电量图标2
 #define  BATTERY_PIC_3_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
 #define  BATTERY_PIC_4_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
-#elif 0
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 static const compo_listbox_item_t tbl_menu_list[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT

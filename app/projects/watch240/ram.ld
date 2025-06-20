@@ -69,7 +69,7 @@ SECTIONS
         *\ble_evt.o(.rodata*)
         *\hci_transport_h3.o(.rodata*)
         *gui.o(.rodata*)
-
+#if 0
         *ute_all_sports_int_algorithms3_0.o(.text*)
         *ute_all_sports_int_algorithms3_0.o(.bss*)
         *ute_all_sports_int_algorithms3_0.o(.sbss*)
@@ -79,7 +79,7 @@ SECTIONS
         *ute_sleep_algorithms_on_band.o(.bss*)
         *ute_sleep_algorithms_on_band.o(.sbss*)
         *ute_sleep_algorithms_on_band.o(.rodata*)
-
+#endif
         __comm_end = .;
         . = ALIGN(512);
     } > sram AT > flash
@@ -188,6 +188,7 @@ SECTIONS
         *(.sleep_text*)
         *(.text.sleep.rf)
         *(.text.charge_com*)
+#if 0
         *modle5_1.o(.text*)
         *modle5_2.o(.text*)
         *modle5_3.o(.text*)
@@ -228,6 +229,7 @@ SECTIONS
         *spo2Algo.o(.text*)
         *spo2Algo.o(.text*)
         *spo2Algo.o(.text*) */
+#endif
         . = ALIGN(512);
         __code_end_sleep = .;
 
@@ -370,6 +372,7 @@ SECTIONS
         *(.dnn_data*)
        __hr_start = .;
 
+#if 0
         __hr_3300_3605_start = .;
         *algo.o(.bss*)
         *modle5_13.o(.bss*)
@@ -388,6 +391,7 @@ SECTIONS
         *hx3605_hrs_agc.o(.bss*)
         *hx3605_spo2_agc.o(.bss*)
         __hr_3300_3605_stop = .;
+#endif
 
         __hr_stop = .;
         . = ALIGN(512);

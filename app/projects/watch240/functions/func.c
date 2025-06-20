@@ -165,7 +165,7 @@ extern void func_aux(void);
 extern void func_modem_call(void);
 extern void func_modem_ring(void);
 extern void func_message_reply_info(void);
-// extern void func_mic_test(void);
+//extern void func_mic_test(void);
 //extern void func_tetris(void);
 //extern void func_tetris_start(void);
 extern void func_bird(void);
@@ -498,8 +498,8 @@ const func_t tbl_func_create[] =
 #if FLASHDB_EN
     {FUNC_MESSAGE_REPLY,                func_message_reply_form_create},
 #endif
-#if 0//MIC_TEST_EN
-    {FUNC_MIC_TEST,                     func_mic_test_form_create},
+#if MIC_TEST_EN
+    // {FUNC_MIC_TEST,                     func_mic_test_form_create},
 #endif // MIC_TEST_EN
 
     {FUNC_BIRD,                         func_bird_form_create},
@@ -703,8 +703,8 @@ const func_t tbl_func_entry[] =
 #if FLASHDB_EN
     {FUNC_MESSAGE_REPLY,                func_message_reply_info},
 #endif
-#if 0//MIC_TEST_EN
-    {FUNC_MIC_TEST,                     func_mic_test},
+#if MIC_TEST_EN
+    //  {FUNC_MIC_TEST,                     func_mic_test},
 #endif // MIC_TEST_EN
     {FUNC_BIRD,                         func_bird},
 //    {FUNC_TETRIS,                       func_tetris},

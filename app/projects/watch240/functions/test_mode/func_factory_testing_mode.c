@@ -743,7 +743,7 @@ compo_form_t * func_factory_testing_ring(void)
     textbox = compo_textbox_create(frm, strlen("点击暂停播放"));
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
     compo_textbox_set(textbox, "点击暂停播放");
-    compo_setid(textbox,TAPE_TXT_ID);
+    compo_setid(textbox,HORN_TXT_ID);
     compo_textbox_set_forecolor(textbox, make_color(0,191,255));
 
     compo_button_t *btn = compo_button_create(frm); // 按键
@@ -1255,7 +1255,7 @@ static void func_mode_mic_speaker_process(void)
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
 static void func_mode_test_ring_process(void)
 {
-    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
+    compo_textbox_t *textbox = compo_getobj_byid(HORN_TXT_ID);
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
     if(f_factory_testing->horn_flag == true)
     {

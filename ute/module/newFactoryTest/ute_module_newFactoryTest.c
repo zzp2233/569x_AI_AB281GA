@@ -268,14 +268,19 @@ void uteModuleNewFactoryTestEverySecond(void)
                 if ((uteModuleNewFactoryTestData.secondCount % 3) == 0)
                 {
                     //a=1;
-                    //printf("uteModuleSmokeFactoryData.play_flag = %d\n", uteModuleSmokeFactoryData.play_flag);
+                    //  printf("uteModuleSmokeFactoryData.play_flag = %d\n", uteModuleSmokeFactoryData.play_flag);
                     if(uteModuleSmokeFactoryData.play_flag ==0)
                     {
-                        printf("PlayRing\n");
+                        //  printf("PlayRing\n");
                         func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
                     }
+                    else
+                    {
+                        // printf("PlayRingstop111\r\n");
+                        music_control(MUSIC_MSG_STOP);
+                    }
                     // uteDrvMotorStart(500,500,1);
-                    printf("MOTOR\n");
+                    //   printf("MOTOR\n");
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
                     uteModuleSmokeFactoryData.Moto_Count++;
                 }
@@ -301,7 +306,7 @@ void uteModuleNewFactoryTestEverySecond(void)
             {
                 if ((uteModuleLocalRingtoneGetPlayRingType() == RINGTON_TYPE_FACTORY))
                 {
-                    printf("PlayRingstop\r\n");
+                    //  printf("PlayRingstop\r\n");
                     music_control(MUSIC_MSG_STOP);
                 }
             }

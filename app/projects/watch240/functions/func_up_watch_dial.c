@@ -67,7 +67,7 @@ compo_form_t *func_up_watch_dial_form_create(void)
 
     return frm;
 }
-
+extern bool slider_unlock;
 //显示升级界面处理
 static void func_up_watch_dial_disp(void)
 {
@@ -77,10 +77,14 @@ static void func_up_watch_dial_disp(void)
     {
         if(f_up_watch_dial->switch_page_time+SWITCH_TIME >= tick_get())
         {
-            func_cb.sta = FUNC_CLOCK;
+            printf("22222222222222222222slider_unlock=%d\r\n",slider_unlock);
+            if(slider_unlock == true)
+                func_cb.sta = FUNC_CLOCK;
+            else
+                func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
         }
 
-        return;
+        // return;
     }
 
     if (tick_check_expire(f_up_watch_dial->ticks, 100))

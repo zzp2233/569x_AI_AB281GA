@@ -229,11 +229,11 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         }
         break;
         case MSG_TYPE_FACTORY_WRITE_RECORD_DATA_TO_FLASH:
-            uteModuleMicRecordFactoryWriteDataToFlash();
+            //uteModuleMicRecordFactoryWriteDataToFlash();
             break;
 
         case MSG_TYPE_FACTORY_PLAY_RECORD:
-            uteModuleMicRecordFactoryPlay();
+            //uteModuleMicRecordFactoryPlay();
             break;
 #if UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT
         case MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET:

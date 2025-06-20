@@ -950,9 +950,10 @@ static void func_mode_test_ring_click(void)
 static void func_mode_mic_speaker_click(void)
 {
     int id = compo_get_button_id();
-//    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-//    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
-
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
+    if (textbox == NULL)
+        return;
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
@@ -966,10 +967,18 @@ static void func_mode_mic_speaker_click(void)
         }
         break;
         case RECORDING_BTN_ID:
+            printf("uteModuleMicRecordFactoryGetRecordState() ==%d \r\n",uteModuleMicRecordFactoryGetRecordState());
             if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
             {
                 uteModuleMicRecordFactoryStart();
             }
+            // else if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDING){
+            //     uteModuleMicRecordFactorySetrecordState(FACTORY_TEST_RECORD_PLAYING);
+            //     uteModuleMicRecordFactoryPlayStart();
+            // }
+            // else if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_PLAYING || uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDED){
+            //     uteModuleMicRecordFactoryStart();
+            // }
             break;
     }
 }
@@ -1201,16 +1210,21 @@ static void func_mode_charging_process(void)
 
 static void func_mode_mic_speaker_process(void)
 {
+#if MIC_DATA_TO_FLASH
+    func_record_analysis();
+#endif
     compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
     static bool isNeedPlay = false;
     if (textbox == NULL)
         return;
     if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
     {
+        // printf("RECORD_IDLERECORD_IDLERECORD_IDLERECORD_IDLE\n");
         compo_textbox_set(textbox, "点击开始录音");
     }
     else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDING)
     {
+        // printf("RECORD_RECORDINGRECORD_RECORDINGRECORD_RECORDINGRECORD_RECORDING\n");
         compo_textbox_set(textbox, "录音中...");
         isNeedPlay = true;
     }
@@ -1218,6 +1232,7 @@ static void func_mode_mic_speaker_process(void)
     {
         if (isNeedPlay)
         {
+            //  printf("isNeedPlay=%d,RECORDEDRECORDEDRECORDEDRECORDED\n",isNeedPlay);
             compo_textbox_set(textbox, "播放中...");
             uteModuleMicRecordFactorySetrecordState(FACTORY_TEST_RECORD_PLAYING);
             //  uteModuleMicRecordFactoryPlayStart();
@@ -1226,11 +1241,13 @@ static void func_mode_mic_speaker_process(void)
     }
     else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_PLAYING)
     {
+        // printf("isNeedPlay=%d,PLAYINGPLAYINGPLAYING\n",isNeedPlay);
         compo_textbox_set(textbox, "播放中...");
         if (isNeedPlay)
         {
-            uteModuleMicRecordFactoryPlay();
+            uteModuleMicRecordFactoryPlayStart();
             isNeedPlay = false;
+            uteModuleMicRecordFactorySetrecordState(FACTORY_TEST_RECORD_IDLE);
         }
     }
 }

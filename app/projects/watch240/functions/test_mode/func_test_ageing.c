@@ -7,7 +7,7 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_smoke.h"
 #define TXT_SPACING GUI_SCREEN_HEIGHT / 13
-
+extern ute_smoke_factory_test_data_t uteModuleSmokeFactoryData;;
 enum
 {
     MODE_BTN_ID = 1,
@@ -31,9 +31,11 @@ enum
     SHAPE_3_ID,  // 单发双发背景
     TXT_9_ID,    /// 单发双发文字
     BUTTON_1,    // 切换单双发按钮
+    BUTTON_2,    // 铃声打开关闭按钮
     TXT_10_ID,   /// 阻值
     TXT_11_ID,   /// 阻值
     TXT_12_ID,   /// 输入模式
+    TXT_13_ID,   //铃声打开关闭
     PASS_SHAPE_BG_ID,
     PASS_TXT_ID,
     PASS_BTN_ID,
@@ -44,13 +46,13 @@ typedef struct f_ageing_t_
 {
     uint32_t tick;
     u8 mode_flag;
+    u8 play_flag;
     u8 time_flag;
     bool test_state;
     u16 hour;
     u8 min;
     u8 sec;
 } f_ageing_t;
-
 compo_form_t *func_ageing_create(void)
 {
     compo_form_t *frm = compo_form_create(true);
@@ -101,7 +103,7 @@ compo_form_t *func_ageing_create(void)
 compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
 {
     compo_form_t *frm = compo_form_create(true);
-
+    f_ageing_t *f_ageing = (f_ageing_t *)func_cb.f_cb;
     compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X - 57, TXT_SPACING * 2 + 16, 50, 25);
     compo_shape_set_color(shape, COLOR_GREEN);
@@ -117,15 +119,6 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING * 2 - 15);
     compo_setid(textbox, TXT_1_ID);
 
-    // textbox = compo_textbox_create(frm, 3);
-    // compo_textbox_set_align_center(textbox, false);
-    // if (mode == 0)
-    //     compo_textbox_set(textbox, "模式一");
-    // else if (mode == 1)
-    //     compo_textbox_set(textbox, "模式二");
-    // else if (mode == 2)
-    //     compo_textbox_set(textbox, "模式三");
-    // compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5, TXT_SPACING * 4 - widget_text_get_area(textbox->txt).hei / 2);
 
     textbox = compo_textbox_create(frm, 20);
     compo_textbox_set_align_center(textbox, false);
@@ -211,6 +204,16 @@ compo_form_t *func_ageing_mode_create(u8 mode, u8 time)
     compo_textbox_set(textbox, "运行时间:00:00:00");
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, TXT_SPACING * 12.2);
     compo_setid(textbox, TXT_8_ID);
+
+    compo_button_t *btn2 = compo_button_create(frm);
+    compo_button_set_location(btn2, GUI_SCREEN_CENTER_X / 5,5 + TXT_SPACING * 10.8 - widget_text_get_area(textbox->txt).hei / 2, widget_text_get_area(textbox->txt).wid * 3, widget_text_get_area(textbox->txt).hei * 3);
+    compo_setid(btn2, BUTTON_2);
+
+    textbox = compo_textbox_create(frm, 6);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox,uteModuleSmokeFactoryData.play_flag ==0 ? "铃声打开" : "铃声关闭");
+    compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X / 5,5 + TXT_SPACING * 10.8 - widget_text_get_area(textbox->txt).hei / 2 );
+    compo_setid(textbox, TXT_13_ID);
 
     shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
@@ -319,13 +322,17 @@ static void func_test_mode_click(void)
             }
 
             break;
+        case BUTTON_2:
+            uteModuleSmokeFactoryData.play_flag = !uteModuleSmokeFactoryData.play_flag;
+            // printf("BUTTON_2,play_flag=%d\n",play_flag);
+            break;
         case BUTTON_1:
 
 #if ECIG_POWER_CONTROL
             ecig_cfg.smoke_position_swich = !ecig_cfg.smoke_position_swich;
 #endif
             ecig_get_res();
-            // printf("BUTTON_1BUTTON_1BUTTON_1ecig_cfg.smoke_position_swich=%d,%d\n", ecig_cfg.smoke_position_swich,ecig_get_res());
+            printf("BUTTON_1BUTTON_1BUTTON_1ecig_cfg.smoke_position_swich=%d,%d\n", ecig_cfg.smoke_position_swich,ecig_get_res());
             break;
         case YES_BTN_ID:
         {
@@ -388,6 +395,7 @@ static void func_ageing_process(void)
             compo_textbox_t *textbox9 = compo_getobj_byid(TXT_9_ID);         /// 单发双发显示
             compo_textbox_t *textbox10 = compo_getobj_byid(TXT_10_ID);       ///
             compo_textbox_t *textbox11 = compo_getobj_byid(TXT_11_ID);       ///
+            compo_textbox_t *textbox13 = compo_getobj_byid(TXT_13_ID);       ///
             compo_textbox_t *textbox8 = compo_getobj_byid(TXT_8_ID);         /// 运行时间
             compo_shape_t *shape1 = compo_getobj_byid(SHAPE_1_ID);           /// 发热丝1背景
             compo_shape_t *shape2 = compo_getobj_byid(SHAPE_2_ID);           /// 发热丝2背景
@@ -437,6 +445,15 @@ static void func_ageing_process(void)
                 compo_textbox_set(textbox9, "双发");
             }
 
+            if (uteModuleSmokeFactoryData.play_flag == 0 )
+            {
+                compo_textbox_set(textbox13, "铃声打开");
+            }
+            else
+            {
+                compo_textbox_set(textbox13, "铃声关闭");
+            }
+
             memset(txt_buf, 0, sizeof(txt_buf));
             if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE) /// 获取充电状态
             {
@@ -482,6 +499,7 @@ static void func_ageing_process(void)
 /// 进入老化测试功能
 static void func_ageing_enter(void)
 {
+    uteModuleSmokeFactoryData.play_flag=0;
     uteModuleNewFactoryTestSetMode(&data);
     data->maxCount = (60 * 60) * 1;
     func_cb.f_cb = func_zalloc(sizeof(f_ageing_t));
@@ -491,6 +509,7 @@ static void func_ageing_enter(void)
 /// 退出老化测试功能
 static void func_ageing_exit(void)
 {
+    uteModuleSmokeFactoryData.play_flag=1;
     uteModuleNewFactoryTestResetParam();
     func_cb.last = FUNC_AGEING;
 }

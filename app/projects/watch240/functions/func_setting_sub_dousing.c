@@ -736,8 +736,8 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_button_set_location(btn_min,GUI_SCREEN_CENTER_X,58+CENTER_TXT_Y,120,CENTER_TXT_Y*2);
     compo_setid(btn_min,COMPO_ID_BTN_MIN_BG);
 
-    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I343001_28_SET_COMFIRM_BIN);///确定按钮
-    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I343001_28_SET_COMFIRM_BIN).hei/2-20);
+    compo_button_t * btn_ok = compo_button_create_by_image(frm,UI_BUF_I343001_COMM_OK_BIN);///确定按钮
+    compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I343001_COMM_OK_BIN).hei/2-20);
     compo_setid(btn_ok,COMPO_ID_BTN_SURE);
 
 

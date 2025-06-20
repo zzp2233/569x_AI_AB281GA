@@ -411,7 +411,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
 #define  BATTERY_PIC_3_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_03_BIN                ///电池电量图标3
 #define  BATTERY_PIC_4_BIN   UI_BUF_I332001_SLIDEMENU_ICON_BATT_04_BIN                ///电池电量图标4
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
-static const compo_listbox_item_t tbl_menu_list[] =
+static compo_listbox_item_t tbl_menu_list[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALL_BIN,                   .str_idx=STR_PHONE},                 //电话
@@ -768,8 +768,9 @@ compo_form_t *func_menu_sub_list_form_create(void)
         {
             menu_idx = 1;
         }
-#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+
 #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
         if(!uteModuleMenstrualCycleIsOpen())
         {
             for (int i=0; i<MENU_LIST_CNT; i++)
@@ -782,6 +783,46 @@ compo_form_t *func_menu_sub_list_form_create(void)
                     break;
                 }
 
+            }
+        }
+        else
+        {
+            for (int i=0; i<MENU_LIST_CNT; i++)
+            {
+                if(tbl_menu_list[i].func_sta == FUNC_CALCULATOR)
+                {
+                    tbl_menu_list[i].func_sta = FUNC_WOMEN_HEALTH;
+                    tbl_menu_list[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+                    tbl_menu_list[i].str_idx = STR_WOMEN_HEALTH;
+                    break;
+                }
+            }
+        }
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+        if(!uteModuleMenstrualCycleIsOpen())
+        {
+            for (int i=0; i<MENU_LIST_CNT; i++)
+            {
+                if(tbl_menu_list[i].func_sta == FUNC_WOMEN_HEALTH)
+                {
+                    tbl_menu_list[i].func_sta = FUNC_CALCULATOR;
+                    tbl_menu_list[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN;
+                    tbl_menu_list[i].str_idx = STR_CALCULATOR;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (int i=0; i<MENU_LIST_CNT; i++)
+            {
+                if(tbl_menu_list[i].func_sta == FUNC_CALCULATOR)
+                {
+                    tbl_menu_list[i].func_sta = FUNC_WOMEN_HEALTH;
+                    tbl_menu_list[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN;
+                    tbl_menu_list[i].str_idx = STR_WOMEN_HEALTH;
+                    break;
+                }
             }
         }
 #endif
@@ -1056,7 +1097,7 @@ static void func_menu_sub_list_enter(void)
     }
     listbox->mcb = func_zalloc(sizeof(compo_listbox_move_cb_t));        //建立移动控制块，退出时需要释放
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, (uteModuleMenstrualCycleIsOpen() ?  MENU_LIST_CNT : MENU_LIST_CNT-1) - 3)+40);
+    compo_listbox_move_init_modify(listbox, 100, compo_listbox_gety_byidx(listbox, MENU_LIST_CNT - 2));
 #else
     compo_listbox_move_init(listbox);
 #endif

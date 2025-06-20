@@ -33,6 +33,12 @@ typedef struct f_key_set_list_t_
 
 static const compo_listbox_item_t tbl_menu_list[] =
 {
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {.func_sta=FUNC_FLASHLIGHT,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_FLASHLIGHT_BIN,            .str_idx=STR_FLASHLIGHT},    //手电筒
+#endif
+#if UTE_MODULE_SCREENS_SUB_SOS_SUPPORT
+    {.func_sta=FUNC_SUB_SOS,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SOS_BIN,                 .str_idx=STR_SOS},                  //SOS
+#endif
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALL_BIN,                  .str_idx=STR_PHONE},              //电话
 #endif // 
@@ -146,10 +152,8 @@ void func_key_set_function_list_icon_click(void)
 
     if (func_sta > 0)
     {
-        uteModuleKeySetFuncData.key_set_menu = func_sta;
-        uteModuleKeySetFuncData.key_set_flag = true;
-        uteModuleKeySetFuncSaveData();
-        func_switch_to_clock();
+        uteModuleKeySetFuncSetMenu(func_sta);
+        uteModuleGuiCommonGoBackLastScreen();
     }
 
 }

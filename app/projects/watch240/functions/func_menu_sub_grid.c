@@ -684,24 +684,22 @@ compo_form_t* func_menu_sub_grid_form_create(void)
 {
     compo_form_t *frm = compo_form_create(false);
 
-#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
-    static uint16_t grid_menu_cnt = 0;
-    grid_menu_cnt = uteModuleMenstrualCycleIsOpen() ? 0 : 1;
-#else
-    static uint16_t grid_menu_cnt = 0;
-#endif  // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
-
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-    if(uteModuleMenstrualCycleIsOpen())
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
     {
-        tbl_menu_grid[MENU_GRID_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
-        tbl_menu_grid[MENU_GRID_CNT-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+        for (int i=0; i<MENU_GRID_CNT; i++)
+        {
+            if(tbl_menu_grid[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_grid[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_grid[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
+                break;
+            }
+
+        }
     }
-    else
-    {
-        tbl_menu_grid[MENU_GRID_CNT-1].func_sta = FUNC_CALCULATOR;
-        tbl_menu_grid[MENU_GRID_CNT-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
-    }
+#endif
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     if(uteModuleMenstrualCycleIsOpen())
     {
@@ -725,7 +723,7 @@ compo_form_t* func_menu_sub_grid_form_create(void)
         iconlist = compo_iconlist_create(frm, ICONLIST_STYLE_CUM_GRID);
     }
     compo_setid(iconlist, COMPO_ID_GRIDBOX);
-    for (int i=grid_menu_cnt; i<MENU_GRID_CNT; i++)
+    for (int i=0; i<MENU_GRID_CNT; i++)
     {
         compo_iconlist_add(iconlist, tbl_menu_grid[i].res_addr);
     }

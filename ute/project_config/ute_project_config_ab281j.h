@@ -318,7 +318,9 @@
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
 
+
 // #define UTE_MODULE_SCREENS_MENU_DATA_BIND             1 //菜单资源绑定
+// #define UTE_MENU_STYLE_LIST_APP_MAX_NUM               16/*!  列表式菜单 显示应用最多数量*/
 
 
 //未完善

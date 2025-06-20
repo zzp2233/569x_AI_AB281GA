@@ -14,6 +14,7 @@
 #include "ute_module_message.h"
 #include "ute_module_factorytest.h"
 #include "ute_drv_gsensor_common.h"
+#include "ute_drv_led.h"
 
 #if (SENSOR_HR_SEL == SENSOR_HR_VCLC09A)
 
@@ -98,7 +99,12 @@ void vclc09_pwr_en(void)        //PF5
 
     if(!vclc09_pwr_sta)
     {
-        uteModulePlatformOutputGpioSet(IO_PF5,true);
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
+        if(!uteDrvLedIsOpen())
+#endif
+        {
+            uteModulePlatformOutputGpioSet(IO_PF5,true);
+        }
         delay_5ms(2);
     }
 
@@ -113,7 +119,12 @@ void vclc09_pwr_en(void)        //PF5
 void vclc09_pwr_dis(void)       //PF5
 {
     printf("%s\n",__func__);
-    uteModulePlatformOutputGpioSet(IO_PF5,false);
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
+    if(!uteDrvLedIsOpen())
+#endif
+    {
+        uteModulePlatformOutputGpioSet(IO_PF5,false);
+    }
     i2c_gsensor_init();
     uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);
 #if (CHIP_PACKAGE_SELECT == CHIP_5691C_F)

@@ -22,16 +22,16 @@
 #define PROJECT_AB281EA_SUPPORT      0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 #define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
-#define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
+#define PROJECT_AB281DB_SUPPORT      1 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
 #define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
 #define PROJECT_AB281K_SUPPORT       0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
 #define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
 #define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
-#define PROJECT_AB281N_SUPPORT       0 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
+#define PROJECT_AB281N_SUPPORT       1 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
 #define PROJECT_AB281DC_SUPPORT      0 /*! 恒鑫HX01定制,双按键+编码器+手电筒,TFT 240x296 JD9853,CHIP_5691C_F,wang.luo 2025-06-13 */
 #define PROJECT_AB281GA_SUPPORT      0 /*! 传音815N,amoled 368x448,wang.luo,CHIP_5691G 2025-06-13 */
 #define PROJECT_AB281FA_SUPPORT      0 /*! 同乐达T70-A TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
-#define PROJECT_AB281AD_SUPPORT      1 /*! 同乐达 T69,在T62基础上增加编码器,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-04-18 */
+#define PROJECT_AB281AD_SUPPORT      0 /*! 同乐达 T69,在T62基础上增加编码器,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-04-18 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -582,9 +582,48 @@
 #define UTE_DRV_DEFAULT_PWM_HZ 160
 #endif
 
+/*! LED手电筒,wang.luo 2025-06-12 */
+#ifndef UTE_DRV_LED_SUPPORT
+#define UTE_DRV_LED_SUPPORT 0
+#endif
+
+/*! LED手电筒PWM调整亮度,wang.luo 2025-06-12 */
+#ifndef UTE_DRV_LED_PWM_MODE_SUPPORT
+#define UTE_DRV_LED_PWM_MODE_SUPPORT 0
+#endif
+
 /*! 手电筒LED电源gpio pin,wang.luo 2025-06-12 */
 #ifndef UTE_DRV_LED_POWER_GPIO_PIN
-#define UTE_DRV_LED_POWER_GPIO_PIN      IO_PB7
+#define UTE_DRV_LED_POWER_GPIO_PIN      IO_PF5
+#endif
+
+#ifndef UTE_DRV_LED_ENABLE_GPIO_PIN
+#define UTE_DRV_LED_ENABLE_GPIO_PIN     IO_PB7
+#endif
+
+#ifndef UTE_DRV_LED_ENABLE_PWM_ID
+#define UTE_DRV_LED_ENABLE_PWM_ID       GPIO_PB7
+#endif
+
+/*! LED亮度等级,wang.luo 2025-06-18 */
+#ifndef UTE_DRV_LED_PWM_LEVEL_HIGH
+#define UTE_DRV_LED_PWM_LEVEL_HIGH 90
+#endif
+#ifndef UTE_DRV_LED_PWM_LEVEL_MEDIUM
+#define UTE_DRV_LED_PWM_LEVEL_MEDIUM 70
+#endif
+#ifndef UTE_DRV_LED_PWM_LEVEL_LOW
+#define UTE_DRV_LED_PWM_LEVEL_LOW 50
+#endif
+
+/*!默认LED亮度等级 level 0-100,wang.luo 2025-06-18 */
+#ifndef UTE_MODULE_LED_PWM_DEFAULT_LEVEL
+#define UTE_MODULE_LED_PWM_DEFAULT_LEVEL UTE_DRV_LED_PWM_LEVEL_HIGH
+#endif
+
+/*! 复用心率电源,wang.luo 2025-06-19 */
+#ifndef UTE_DRV_REUSE_HEART_POWER_SUPPORT
+#define UTE_DRV_REUSE_HEART_POWER_SUPPORT 1
 #endif
 
 /*! 默认语言 zn.zeng, 2021-08-23  */

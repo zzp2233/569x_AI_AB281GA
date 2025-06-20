@@ -703,3 +703,15 @@ void clr_tft_spi_timeout(void)
 {
     tft_timeout_cnt = 0;
 }
+
+//os_gui_draw_w4_done 钩子函数 返回 false 直接退出等待
+AT(.text.gui)
+WEAK bool os_gui_draw_w4_done_hook(void)
+{
+    u32 ticks = tick_get();
+    if (tick_check_expire(ticks, 1000))
+    {
+        return false;
+    }
+    return true;
+}

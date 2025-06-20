@@ -75,6 +75,11 @@
 /*! 屏最大亮度百分比 dengli.lu, 2021-10-29  */
 #define DEFAULT_BACK_LIGHT_PERCENT_MAX 100
 
+/*! 心率警告功能 zn.zeng, 2021-10-22  */
+#ifndef UTE_MODULE_HEART_MIN_MAX_WARNING_VALUE_SUPPORT
+#define UTE_MODULE_HEART_MIN_MAX_WARNING_VALUE_SUPPORT 1
+#endif
+
 /*! 屏最小亮度百分比 dengli.lu, 2021-10-29  */
 #define DEFAULT_BACK_LIGHT_PERCENT_MIN 20
 

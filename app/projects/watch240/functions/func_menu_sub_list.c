@@ -227,7 +227,7 @@ static const compo_listbox_item_t tbl_menu_list[] =
     {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_VOICE_ASSISTANT_BIN,       .str_idx=STR_VOICE},                 //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 // #if UTE_MODULE_SCREENS_VOICE_SUPPORT
-    {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_SOS_BIN,                   .str_idx=STR_SOS},                  //SOS
+    {.func_sta=FUNC_SUB_SOS,                    .res_addr=UI_BUF_I343001_2_HONEYCOMB_SOS_BIN,                   .str_idx=STR_SOS},                  //SOS
 // #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 //#if UTE_MODULE_SCREENS_GAME_SUPPORT
     // {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_GAME_BIN,                  .str_idx=STR_GAME},                 //游戏

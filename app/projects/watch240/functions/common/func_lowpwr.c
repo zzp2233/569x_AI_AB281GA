@@ -582,7 +582,7 @@ static void sfunc_sleep(void)
     }
     else
     {
-        sys_clk_set(SYS_24M);
+        sys_clk_set(SYS_CLK_SEL);
     }
 
     sys_set_tmr_enable(1, 1);

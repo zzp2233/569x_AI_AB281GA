@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DC_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Tetra S5"
-#define UTE_SW_VERSION "AB281DCV000074"
+#define UTE_SW_VERSION "AB281DCV000114"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DC"
@@ -173,18 +173,21 @@
 /* 电池容量 zn.zeng 2022-01-07*/
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
 
+/*! 电池最大电压值zn.zeng, 2021-11-09  */
+#define UTE_DRV_BATTERY_MAX_VOLTAGE 4350
+
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3450  //3564
-#define UTE_DRV_BATTERY_010      3678  //3698
-#define UTE_DRV_BATTERY_020      3725  //3744
-#define UTE_DRV_BATTERY_030      3755  //3765
-#define UTE_DRV_BATTERY_040      3773  //3780
-#define UTE_DRV_BATTERY_050      3797  //3807
-#define UTE_DRV_BATTERY_060      3836  //3856
-#define UTE_DRV_BATTERY_070      3902  //3908
-#define UTE_DRV_BATTERY_080      3963  //3964
-#define UTE_DRV_BATTERY_090      4050  //4045
-#define UTE_DRV_BATTERY_100      4126  //4128
+#define UTE_DRV_BATTERY_000      3490
+#define UTE_DRV_BATTERY_010      3588
+#define UTE_DRV_BATTERY_020      3693
+#define UTE_DRV_BATTERY_030      3747
+#define UTE_DRV_BATTERY_040      3765
+#define UTE_DRV_BATTERY_050      3800
+#define UTE_DRV_BATTERY_060      3868
+#define UTE_DRV_BATTERY_070      3956
+#define UTE_DRV_BATTERY_080      4050
+#define UTE_DRV_BATTERY_090      4145
+#define UTE_DRV_BATTERY_100      4250
 
 // #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 // #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标

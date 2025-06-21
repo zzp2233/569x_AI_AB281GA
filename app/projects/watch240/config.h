@@ -27,12 +27,12 @@
  * Module    : 系统功能选择配置
  *****************************************************************************/
 #define BUCK_MODE_EN                    1                           //是否BUCK MODE
-#define SYS_CLK_SEL                     SYS_48M                     //选择系统时钟
+#define SYS_CLK_SEL                     SYS_192M                     //选择系统时钟
 #define POWKEY_10S_RESET                xcfg_cb.powkey_10s_reset
 #define SOFT_POWER_ON_OFF               1                           //是否使用软开关机功能
 #define PWRKEY_2_HW_PWRON               0                           //用PWRKEY模拟硬开关
 #define LP_XOSC_CLOCK_EN                0                           //是否使能低功耗晶振用于RTC CLOCK，支持关机时钟功能。(单脚晶振不支持低功耗晶振)
-#define GUI_AUTO_POWER_EN               1                           //是否使能刷图动态调节时钟，打开后系统时钟默认设置为SYS_CLK_SEL，刷图时调节为192M
+#define GUI_AUTO_POWER_EN               0                           //是否使能刷图动态调节时钟，打开后系统时钟默认设置为SYS_CLK_SEL，刷图时调节为192M
 
 #define CHIP_PACKAGE_SELECT             UTE_CHIP_PACKAGE_SELECT                  //芯片封装选择 5691G/5691C_F
 

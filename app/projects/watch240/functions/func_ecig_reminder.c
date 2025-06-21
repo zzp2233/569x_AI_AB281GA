@@ -67,7 +67,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
         uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
 
         uteModuleSmokeDataSaveConfig();
-        if (uteModuleSmokeData.total_smoking_count == uteModuleSmokeData.target_smoking_count)
+        if (uteModuleSmokeData.total_smoking_count >= uteModuleSmokeData.target_smoking_count)
         {
             compo_picturebox_t *pic;
             pic = compo_picturebox_create(frm, UI_BUF_I330001_SET_PUFFS_OK01_BIN);

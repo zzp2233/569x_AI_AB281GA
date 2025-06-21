@@ -1325,6 +1325,10 @@ void uteApplicationCommonSetMtuSize(uint16_t mtu)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,mtu=%d,%d", __func__,mtu,ble_get_gatt_mtu());
     uteApplicationCommonData.mtuSize = mtu;
+    if(uteApplicationCommonData.mtuSize > 243)
+    {
+        uteApplicationCommonData.mtuSize = 243;
+    }
 }
 /**
 *@brief   获取当前ble连接最大mtu size

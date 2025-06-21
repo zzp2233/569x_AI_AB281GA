@@ -152,20 +152,20 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      230 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3450  //3564
-#define UTE_DRV_BATTERY_010      3682  //3698
-#define UTE_DRV_BATTERY_020      3730  //3744
-#define UTE_DRV_BATTERY_030      3759  //3765
-#define UTE_DRV_BATTERY_040      3778  //3780
-#define UTE_DRV_BATTERY_050      3805  //3807
-#define UTE_DRV_BATTERY_060      3848  //3856
-#define UTE_DRV_BATTERY_070      3920  //3908
-#define UTE_DRV_BATTERY_080      3976  //3964
-#define UTE_DRV_BATTERY_090      4073  //4045
-#define UTE_DRV_BATTERY_100      4160  //4128
+#define UTE_DRV_BATTERY_000      3458  //3564
+#define UTE_DRV_BATTERY_010      3679  //3698
+#define UTE_DRV_BATTERY_020      3722  //3744
+#define UTE_DRV_BATTERY_030      3755  //3765
+#define UTE_DRV_BATTERY_040      3773  //3780
+#define UTE_DRV_BATTERY_050      3798  //3807
+#define UTE_DRV_BATTERY_060      3835  //3856
+#define UTE_DRV_BATTERY_070      3903  //3908
+#define UTE_DRV_BATTERY_080      3966  //3964
+#define UTE_DRV_BATTERY_090      4058  //4045
+#define UTE_DRV_BATTERY_100      4144  //4128
 
 // #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 // #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标

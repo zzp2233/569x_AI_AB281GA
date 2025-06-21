@@ -797,7 +797,7 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //蜂窝图标列表及顺序
-const menu_hc_item_t tbl_menu_honeycomb[] =
+static menu_hc_item_t tbl_menu_honeycomb[] =
 {
     {UI_BUF_I340001_THEME_CLOCK_CLOCK_BG_BIN,                  FUNC_CLOCK},//
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
@@ -848,7 +848,7 @@ const menu_hc_item_t tbl_menu_honeycomb[] =
     {UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN,                FUNC_CALCULATOR},
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 //    {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
-    {UI_BUF_I340001_THEME_ICON1_BOOT_BIN,                   FUNC_RESTART},
+    // {UI_BUF_I340001_THEME_ICON1_BOOT_BIN,                   FUNC_RESTART},
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_CALENDAR_BIN,                  FUNC_CALENDAER},
 #endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
@@ -895,12 +895,32 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
-#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
-    static uint16_t honeycomb_menu_cnt = 0;
-    honeycomb_menu_cnt = uteModuleMenstrualCycleIsOpen() ? (MENU_HC_CNT) : (MENU_HC_CNT-1);
-#else
-    static uint16_t honeycomb_menu_cnt = MENU_HC_CNT;
-#endif  // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_HC_CNT; i++)
+        {
+            if(tbl_menu_honeycomb[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_honeycomb[i].func_sta = FUNC_RESTART;
+                tbl_menu_honeycomb[i].res_addr = UI_BUF_I340001_THEME_ICON1_BOOT_BIN;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_HC_CNT; i++)
+        {
+            if(tbl_menu_honeycomb[i].func_sta == FUNC_RESTART)
+            {
+                tbl_menu_honeycomb[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_honeycomb[i].res_addr = UI_BUF_I340001_THEME_ICON1_PERIOD_BIN;
+                break;
+            }
+        }
+    }
+#endif
 
     //新建蜂窝效果
     if (func_cb.menu_style == MENU_STYLE_HONEYCOMB)
@@ -914,7 +934,7 @@ compo_form_t *func_menu_sub_honeycomb_form_create(void)
 
     compo_setid(iconlist, COMPO_ID_ICONLIST);
 
-    for (int i=0; i<honeycomb_menu_cnt; i++)
+    for (int i=0; i<MENU_HC_CNT; i++)
     {
         compo_iconlist_add(iconlist, tbl_menu_honeycomb[i].res_addr);
     }

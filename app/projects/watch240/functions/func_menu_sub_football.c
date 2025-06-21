@@ -486,7 +486,7 @@ static const compo_football_item_t tbl_menu_football[20] =
 #define KALE_SWITCH_DR                           2                                                              //单次变更R值
 #define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 //足球图标列表(固定20项)
-static const compo_football_item_t tbl_menu_football[20] =
+static compo_football_item_t tbl_menu_football[20] =
 {
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {UI_BUF_I340001_THEME_ICON2_ACTIVITY_BIN,         FUNC_ACTIVITY},
@@ -545,7 +545,9 @@ static const compo_football_item_t tbl_menu_football[20] =
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I340001_THEME_ICON2_WEATHER_BIN,          FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
-
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {UI_BUF_I340001_THEME_ICON2_FLASHLIGHT_BIN,          FUNC_FLASHLIGHT},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I340001_THEME_ICON2_MORE_BIN,              FUNC_MENU_STYLE_FOOTBALL_LIST},
 };
 

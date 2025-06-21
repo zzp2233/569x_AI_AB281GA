@@ -78,6 +78,7 @@ void uteModuleSmokeInit(void)
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SMOKE_DATA_DIR);
     uteModuleSmokeData.current_index =5;
     uteModuleSmokeData.current_power =15;
+    uteModuleSmokeData.target_smoking_count = 200;
     uteModuleSmokeDataReadConfig(); // 恢复数据
     uteModulePlatformCreateMutex(&uteModuleSmokeMute); // 创建互斥量
 }

@@ -458,7 +458,7 @@ static menu_hc_item_t tbl_menu_grid[] =
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //全部图标资源tbl, 最大可以显示81个图标
-static const menu_hc_item_t tbl_menu_grid[] =
+static menu_hc_item_t tbl_menu_grid[] =
 {
     // {UI_BUF_I340001_THEME_ICON1_GUANYU_BIN,          FUNC_SET_SUB_ABOUT},
     {UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
@@ -506,9 +506,9 @@ static const menu_hc_item_t tbl_menu_grid[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_MESSAGE_BIN,                   FUNC_MESSAGE},
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN,                FUNC_CALCULATOR},
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN,                FUNC_CALCULATOR},
+// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 //    {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
     {UI_BUF_I340001_THEME_ICON1_BOOT_BIN,                   FUNC_RESTART},
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
@@ -733,7 +733,6 @@ compo_form_t* func_menu_sub_grid_form_create(void)
             }
         }
     }
-#endif
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     if(uteModuleMenstrualCycleIsOpen())
     {
@@ -745,6 +744,32 @@ compo_form_t* func_menu_sub_grid_form_create(void)
         tbl_menu_grid[MENU_GRID_CNT-1].func_sta = 0;
         tbl_menu_grid[MENU_GRID_CNT-1].res_addr = 0;
     }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_GRID_CNT; i++)
+        {
+            if(tbl_menu_grid[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_grid[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_grid[i].res_addr = UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_GRID_CNT; i++)
+        {
+            if(tbl_menu_grid[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_grid[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_grid[i].res_addr = UI_BUF_I340001_THEME_ICON1_PERIOD_BIN;
+                break;
+            }
+        }
+    }
+#endif
 #endif
 
     compo_iconlist_t *iconlist;

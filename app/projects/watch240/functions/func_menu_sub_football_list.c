@@ -198,10 +198,12 @@ static const compo_listbox_item_t tbl_menu_football_list[] =
 #if UTE_MODULE_SCREENS_STYLE_SUPPORT
     {STR_STYLE,                  UI_BUF_I340001_THEME_ICON1_THEME_BIN,             .func_sta = FUNC_STYLE},                //风格
 #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
-#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-    {STR_FLASHLIGHT,             UI_BUF_I340001_THEME_ICON1_FLASHLIGHT_BIN,        .func_sta = FUNC_FLASHLIGHT},
-#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-    {STR_WOMEN_HEALTH,           UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},        //女性健康
+#if UTE_MODULE_SCREENS_SCAN_SUPPORT
+    {STR_QRCODE, UI_BUF_I340001_THEME_ICON1_QR_BIN,                      .func_sta =FUNC_SCAN},
+#endif // UTE_MODULE_SCREENS_SCAN_SUPPORT
+#if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
+    {STR_CALL_LINK,    UI_BUF_I340001_THEME_ICON1_CONTACTS_BIN,              .func_sta =FUNC_ADDRESS_BOOK},
+#endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 };
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

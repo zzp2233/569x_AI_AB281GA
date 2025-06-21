@@ -244,7 +244,7 @@ const menu_hc_item_t tbl_menu_cum_sudoku[] =
     ////{UI_BUF_ICON_COMPASS_BIN,                   FUNC_COMPASS},
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
-const menu_hc_item_t tbl_menu_cum_sudoku[] =
+static menu_hc_item_t tbl_menu_cum_sudoku[] =
 {
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_HEART_BIN,                FUNC_HEARTRATE},
@@ -293,9 +293,9 @@ const menu_hc_item_t tbl_menu_cum_sudoku[] =
     {UI_BUF_I340001_THEME_ICON1_BRIGHTNESS_BIN,                     FUNC_LIGHT},
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
     ////{UI_BUF_ICON_MAP_BIN,                       FUNC_MAP},
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN,                FUNC_CALCULATOR},
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN,                FUNC_CALCULATOR},
+// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 //    {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
     {UI_BUF_I340001_THEME_ICON1_BOOT_BIN,                   FUNC_RESTART},
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
@@ -615,6 +615,31 @@ compo_form_t *func_menu_sub_cum_sudoku_form_create(void)
             {
                 tbl_menu_cum_sudoku[i].func_sta = FUNC_WOMEN_HEALTH;
                 tbl_menu_cum_sudoku[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
+        }
+    }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_SUD_CNT; i++)
+        {
+            if(tbl_menu_cum_sudoku[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_cum_sudoku[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_cum_sudoku[i].res_addr = UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_SUD_CNT; i++)
+        {
+            if(tbl_menu_cum_sudoku[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_cum_sudoku[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_cum_sudoku[i].res_addr = UI_BUF_I340001_THEME_ICON1_PERIOD_BIN;
                 break;
             }
         }

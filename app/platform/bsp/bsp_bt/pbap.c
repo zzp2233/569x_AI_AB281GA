@@ -116,6 +116,7 @@ void bt_pbap_event_handle(uint evt, u8 *params)
         case BT_NOTICE_PBAP_CONNECTED:
             printf("===>>> PBAP: Connected\n");
             //若sync之前pbap没连上,连上后再读取通话记录
+            bt_pbap_is_connected();
             if (pbap_param.is_pb_syncing)
             {
                 bt_pbap_get_phonebook_size();

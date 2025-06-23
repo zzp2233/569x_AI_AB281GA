@@ -95,16 +95,16 @@ void gui_wakeup(void)
     }
 }
 
-bool music_is_playing(void);
-uint8_t sys_clk_get_cur(void);
+// bool music_is_playing(void);
+// uint8_t sys_clk_get_cur(void);
 
 AT(.com_text.gui)
 bool gui_get_auto_power_en(void)
 {
-    if (((bt_get_disp_status() > BT_STA_CONNECTED) || music_is_playing()) && (sys_clk_get_cur() == SYS_192M))
-    {
-        return false;
-    }
+    // if (((bt_get_disp_status() > BT_STA_CONNECTED) || music_is_playing()) && (sys_clk_get_cur() == SYS_192M))
+    // {
+    //     return false;
+    // }
 
     return GUI_AUTO_POWER_EN;
 }

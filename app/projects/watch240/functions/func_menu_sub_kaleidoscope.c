@@ -401,7 +401,7 @@ static menu_kale_item_t tbl_menu_kaleidoscope[] =
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
 //万花筒图标列表及顺序
-static const menu_kale_item_t tbl_menu_kaleidoscope[] =
+static menu_kale_item_t tbl_menu_kaleidoscope[] =
 {
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     {.func_sta=FUNC_CALL,                     .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALL_BIN,                  },   //电话
@@ -460,29 +460,29 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
 #if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
     {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表
 #endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-#if UTE_MODULE_SCREENS_TIMER_SUPPORT
-    {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_TIMER_BIN,                 },    //定时器
-#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
-#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
-    {.func_sta=FUNC_FINDPHONE,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_FINDPHONE_BIN            },    //查找手机
-#endif
-#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-    {.func_sta=FUNC_FLASHLIGHT,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_FLASHLIGHT_BIN,            },    //手电筒
-#endif
-#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-    {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_PHOTO_BIN,         },    //相机
-#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-#if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
-    {.func_sta=FUNC_LANGUAGE,                    .res_addr=UI_BUF_I338003_SETTING_MENU_LANGUAGE_BIN,         },    //语言
-    {.func_sta=FUNC_SET_SUB_ABOUT,               .res_addr=UI_BUF_I338003_SETTING_MENU_ABOUT_BIN,             },    //关于
-#endif
+// #if UTE_MODULE_SCREENS_TIMER_SUPPORT
+//     {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_TIMER_BIN,                 },    //定时器
+// #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
+// #if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
+//     {.func_sta=FUNC_FINDPHONE,                .res_addr=UI_BUF_I338001_2_HONEYCOMB_FINDPHONE_BIN            },    //查找手机
+// #endif
+// #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+//     {.func_sta=FUNC_FLASHLIGHT,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_FLASHLIGHT_BIN,            },    //手电筒
+// #endif
+// #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
+//     {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I338001_2_HONEYCOMB_PHOTO_BIN,         },    //相机
+// #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+//     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
+// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
+//     {.func_sta=FUNC_LANGUAGE,                    .res_addr=UI_BUF_I338003_SETTING_MENU_LANGUAGE_BIN,         },    //语言
+//     {.func_sta=FUNC_SET_SUB_ABOUT,               .res_addr=UI_BUF_I338003_SETTING_MENU_ABOUT_BIN,             },    //关于
+// #endif
 };
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //万花筒图标列表及顺序
-static const menu_kale_item_t tbl_menu_kaleidoscope[] =
+static menu_kale_item_t tbl_menu_kaleidoscope[] =
 {
 //    {UI_BUF_ICON_CLOCK_BG_BIN,                  FUNC_CLOCK},
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
@@ -529,9 +529,9 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
 #if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_MESSAGE_BIN,                   FUNC_MESSAGE},
 #endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
-#if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN,                FUNC_CALCULATOR},
-#endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN,                FUNC_CALCULATOR},
+// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 //    {UI_BUF_ICON_OFF_BIN,                       FUNC_OFF},
     // {UI_BUF_I340001_THEME_ICON1_BOOT_BIN,                   FUNC_RESTART},
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
@@ -564,22 +564,22 @@ static const menu_kale_item_t tbl_menu_kaleidoscope[] =
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 
     ///后续有新功能可把下面重复的功能替换
-#if UTE_MODULE_SCREENS_STYLE_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_THEME_BIN,                      FUNC_STYLE},
-#endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
-#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
-#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_FINDPHONE_BIN,                 FUNC_FINDPHONE},
-#if UTE_MODULE_SCREENS_GAME_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_GAME_BIN,                      FUNC_GAME},
-#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
-#if UTE_MODULE_SCREENS_ALARM_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_ALARM_BIN,               FUNC_ALARM_CLOCK},
-#endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
-#if UTE_MODULE_SCREENS_WEATHER_SUPPORT
-    {UI_BUF_I340001_THEME_ICON1_WEATHER_BIN,                   FUNC_WEATHER},
-#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
+// #if UTE_MODULE_SCREENS_STYLE_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_THEME_BIN,                      FUNC_STYLE},
+// #endif // UTE_MODULE_SCREENS_STYLE_SUPPORT
+// #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_FLASHLIGHT_BIN,                FUNC_FLASHLIGHT},
+// #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_FINDPHONE_BIN,                 FUNC_FINDPHONE},
+// #if UTE_MODULE_SCREENS_GAME_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_GAME_BIN,                      FUNC_GAME},
+// #endif // UTE_MODULE_SCREENS_GAME_SUPPORT
+// #if UTE_MODULE_SCREENS_ALARM_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_ALARM_BIN,               FUNC_ALARM_CLOCK},
+// #endif // UTE_MODULE_SCREENS_ALARM_SUPPORT
+// #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
+//     {UI_BUF_I340001_THEME_ICON1_WEATHER_BIN,                   FUNC_WEATHER},
+// #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I340001_THEME_ICON1_PERIOD_BIN,            .func_sta = FUNC_WOMEN_HEALTH},
 };
 
@@ -688,24 +688,61 @@ compo_form_t *func_menu_sub_kale_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(false);       //菜单一般创建在底层
 
-#if !UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
-    static uint16_t kale_menu_cnt = 0;
-    kale_menu_cnt = uteModuleMenstrualCycleIsOpen() ? (MENU_KALE_CNT) : (MENU_KALE_CNT-1);
-#else
-    static uint16_t kale_menu_cnt = MENU_KALE_CNT;
-#endif  // UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT
-
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
-    if(uteModuleMenstrualCycleIsOpen())
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
     {
-        tbl_menu_kaleidoscope[MENU_KALE_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
-        tbl_menu_kaleidoscope[MENU_KALE_CNT-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
+                break;
+            }
+
+        }
     }
     else
     {
-        tbl_menu_kaleidoscope[MENU_KALE_CNT-1].func_sta = FUNC_CALCULATOR;
-        tbl_menu_kaleidoscope[MENU_KALE_CNT-1].res_addr = UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN;
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
+        }
     }
+#endif
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_CALCULATOR_BIN;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN;
+                break;
+            }
+        }
+    }
+#endif
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     if(uteModuleMenstrualCycleIsOpen())
     {
@@ -717,11 +754,36 @@ compo_form_t *func_menu_sub_kale_form_create(void)
         tbl_menu_kaleidoscope[MENU_KALE_CNT-1].func_sta = FUNC_CALCULATOR;
         tbl_menu_kaleidoscope[MENU_KALE_CNT-1].res_addr = UI_BUF_I341001_2_HONEYCOMB_CIRCLE_ICON_CALCULATOR_BIN;
     }
+#elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_WOMEN_HEALTH)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_CALCULATOR;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I340001_THEME_ICON1_CALCULATOR_BIN;
+                break;
+            }
+        }
+    }
+    else
+    {
+        for (int i=0; i<MENU_KALE_CNT; i++)
+        {
+            if(tbl_menu_kaleidoscope[i].func_sta == FUNC_CALCULATOR)
+            {
+                tbl_menu_kaleidoscope[i].func_sta = FUNC_WOMEN_HEALTH;
+                tbl_menu_kaleidoscope[i].res_addr = UI_BUF_I340001_THEME_ICON1_PERIOD_BIN;
+                break;
+            }
+        }
+    }
 #endif
     //新建菜单
     compo_kaleidoscope_t *kale = compo_kaleidoscope_create(frm);
     compo_kaleidoscope_init(kale, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT, KALE_ICON_OUTER_SIZE, KALE_ICON_INNER_SIZE, KALE_EDGE_SPACE, KALE_ICON_SPACE);
-    compo_kaleidoscope_icon_add(kale, tbl_menu_kaleidoscope, kale_menu_cnt);
+    compo_kaleidoscope_icon_add(kale, tbl_menu_kaleidoscope, MENU_KALE_CNT);
 
 //    compo_kale_add_time(kale, COMPO_RINGS_TIME_TYPE_HOUR, UI_BUF_ICON_CLOCK_H_BIN, 1, 2, KALE_ICON_OUTER_SIZE);
 //    compo_kale_add_time(kale, COMPO_RINGS_TIME_TYPE_MIN, UI_BUF_ICON_CLOCK_M_BIN, 1, 2, KALE_ICON_OUTER_SIZE);

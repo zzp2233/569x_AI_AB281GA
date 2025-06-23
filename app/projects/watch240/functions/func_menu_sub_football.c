@@ -258,7 +258,8 @@ static compo_football_item_t tbl_menu_football[20] =
 // #define KALE_SWITCH_DR                           2                                                              //单次变更R值
 // #define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 //足球图标列表(固定20项)
-static const compo_football_item_t tbl_menu_football[20] =
+
+static compo_football_item_t tbl_menu_football[20] =
 {
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {UI_BUF_I338001_28_SET_MENU_FOOTBALL_ACTIVITY_BIN,         FUNC_ACTIVITY},
@@ -485,7 +486,7 @@ static const compo_football_item_t tbl_menu_football[20] =
 #define KALE_SWITCH_DR                           2                                                              //单次变更R值
 #define KALE_ROTATE_ANGLE                        50                                                             //单次旋转角度 范围：1~KALE_CIR_ANGLE_COM
 //足球图标列表(固定20项)
-static const compo_football_item_t tbl_menu_football[20] =
+static compo_football_item_t tbl_menu_football[20] =
 {
 #if UTE_MODULE_SCREENS_ACTIVITY_SUPPORT
     {UI_BUF_I340001_THEME_ICON2_ACTIVITY_BIN,         FUNC_ACTIVITY},
@@ -544,7 +545,9 @@ static const compo_football_item_t tbl_menu_football[20] =
 #if UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I340001_THEME_ICON2_WEATHER_BIN,          FUNC_WEATHER},
 #endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
-
+#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+    {UI_BUF_I340001_THEME_ICON2_FLASHLIGHT_BIN,          FUNC_FLASHLIGHT},
+#endif // UTE_MODULE_SCREENS_WEATHER_SUPPORT
     {UI_BUF_I340001_THEME_ICON2_MORE_BIN,              FUNC_MENU_STYLE_FOOTBALL_LIST},
 };
 
@@ -687,6 +690,17 @@ compo_form_t *func_menu_sub_football_form_create(void)
     {
         tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].func_sta = FUNC_FLASHLIGHT;
         tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].res_addr = UI_BUF_I335001_STYLE_FOOTBALL_FLASHLIGHT_BIN;
+    }
+#elif GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
+    if(uteModuleMenstrualCycleIsOpen())
+    {
+        tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].func_sta = FUNC_WOMEN_HEALTH;
+        tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].res_addr = UI_BUF_I338001_28_SET_MENU_FOOTBALL_FEMALE_BIN;
+    }
+    else
+    {
+        tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].func_sta = FUNC_FLASHLIGHT;
+        tbl_menu_football[MENU_FOOTBALL_ITEM_CNT-1].res_addr = UI_BUF_I338001_28_SET_MENU_FOOTBALL_FLASHLIGHT_BIN;
     }
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     if(uteModuleMenstrualCycleIsOpen())

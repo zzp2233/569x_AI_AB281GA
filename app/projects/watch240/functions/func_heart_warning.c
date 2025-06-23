@@ -270,7 +270,7 @@ static void func_heart_warning_updata(void)
     {
         memset(txt_buf, 0, sizeof(txt_buf));
         f_heart_warning->up_date_old_flag = f_heart_warning->up_date_flag;
-        if(f_heart_warning->up_date_flag)
+        if(f_heart_warning->up_date_flag == COMPO_MAX_STATE)
         {
             snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
         }
@@ -367,7 +367,7 @@ static void func_heart_warning_updata(void)
         compo_textbox_set(txt_uint, txt_buf);
     }
 
-    if (heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue())
+    if ((heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue()) || (heart_value == 0 || heart_value == 0xff))
     {
         uteModuleGuiCommonGoBackLastScreen();
     }

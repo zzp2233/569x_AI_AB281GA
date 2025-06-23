@@ -912,8 +912,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 //                compo_textbox_set_align_center(txt_msg, true);
                 compo_textbox_set_align_center_top(txt_msg, true);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
-                                           func_cover_get_txt_y(msg_type),
-                                           GUI_SCREEN_WIDTH-10, 128-20);              //调整文本位置
+                                           130,
+                                           GUI_SCREEN_WIDTH-10, 135);              //调整文本位置
                 compo_textbox_set_multiline(txt_msg, true);
                 compo_textbox_set_multiline_drag(txt_msg, true);
 //                compo_textbox_set_align_center_top(txt_msg, true);

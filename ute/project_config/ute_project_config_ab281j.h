@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281J_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon GTR"
-#define UTE_SW_VERSION "AB281JV000103"
+#define UTE_SW_VERSION "AB281JV000116"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281J"
 
@@ -317,6 +317,11 @@
 #define UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT        1 //震动强度
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
+
+
+// #define UTE_MODULE_SCREENS_MENU_DATA_BIND             1 //菜单资源绑定
+// #define UTE_MENU_STYLE_LIST_APP_MAX_NUM               16/*!  列表式菜单 显示应用最多数量*/
+
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

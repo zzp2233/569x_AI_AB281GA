@@ -149,7 +149,7 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201077rInit(void)
     memcpy(&tmp[0], "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x35, &tmp[0], 1);
 
-    memcpy(&tmp[0], "\x00", 1);
+    memcpy(&tmp[0], "\xc0", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x36, &tmp[0], 1);
 
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x21, &tmp[0], 0);

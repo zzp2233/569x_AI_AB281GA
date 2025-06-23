@@ -159,6 +159,7 @@ compo_form_t *func_pressure_form_create(void)
 
     for (int i = 0; i < 24; i++)
     {
+        // test_date[i] = 50;
         compo_shape_t *shape = compo_shape_create(frm,COMPO_SHAPE_TYPE_RECTANGLE );
         widget_set_align_center(shape->rect, false);
         compo_shape_set_location(shape,first_x+i*spacing_x+i*4,make_pic_y(make_pic_hei(test_date[i])),4,had_date?make_pic_hei(test_date[i]):0);
@@ -287,7 +288,7 @@ static void func_pressure_refresh(void)
 
         for (int i = 0; i < 24; i++)
         {
-            u8 mood_mode = test_date[i];
+            // test_date[i] = 50;
             compo_shape_t *shape = compo_getobj_byid(COMPO_CAHRT_1+i);
             compo_shape_set_location(shape,first_x+i*spacing_x+i*4,make_pic_y(make_pic_hei(test_date[i])),4,had_date?make_pic_hei(test_date[i]):0);
             switch (test_date[i])

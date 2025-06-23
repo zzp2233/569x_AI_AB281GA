@@ -240,14 +240,14 @@ compo_form_t *func_bt_form_create(void)
     compo_setid(btn, COMPO_ID_BTN_VOL_UP);
     compo_button_set_location(btn,192+13,248+11,70,70);
 
-    uint8_t vol = uteModuleMusicGetPlayerVolume() / 6;
+    uint8_t vol = (bt_a2dp_profile_completely_connected() || ble_is_connect()) ? uteModuleMusicGetPlayerVolume() / 6 : 0;
     if(vol>16)vol=16;
 
     compo_picturebox_t *pic = compo_picturebox_create(frm,UI_BUF_I335001_MUSIC_1_MUSIC_ICON_SOUND_120X4_X60_Y257_BIN);
     compo_picturebox_set_pos(pic,60+60,257+2);
     compo_picturebox_cut(pic,vol,17);
     compo_setid(pic,COMPO_ID_SHAPE_MUSIC_VOL);
-    compo_picturebox_set_visible(pic,(bt_a2dp_profile_completely_connected() || ble_is_connect()));
+    // compo_picturebox_set_visible(pic,(bt_a2dp_profile_completely_connected() || ble_is_connect()));
 
     if(func_cb.sta == FUNC_BT)
     {

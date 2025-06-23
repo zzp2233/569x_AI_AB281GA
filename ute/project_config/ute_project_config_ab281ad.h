@@ -21,6 +21,8 @@
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
 /*gesnsor 采集原始数据*/
 #define APP_DBG_GSENSOR_DATA 1
+/*! 心率sensor选择,wang.luo 2025-04-16 */
+#define UTE_DRV_HR_SENSOR_SELECT       SENSOR_HR_VC30FX
 
 #define UTE_DRV_DSPI_FOR_SCREEN_SUPPORT 0
 #define UTE_DRV_QSPI_FOR_SCREEN_SUPPORT 1
@@ -44,6 +46,10 @@
 
 /*! 默认背光百分比zn.zeng, 2021-09-24  */
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
+
+/*! 不同TE模式下的spiclk,用于优化撕裂,spiclk : baud = sys_clk / (div +1),wang.luo 2025-01-11 */
+#define UTE_DRV_SCREEN_2TE_SPI_CLK 27000000 // 27Mhz
+#define UTE_DRV_SCREEN_1TE_SPI_CLK 14000000 // 12Mhz
 
 //Gsensor
 #define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1
@@ -145,8 +151,8 @@
 #define UTE_DRV_BATTERY_090      4084
 #define UTE_DRV_BATTERY_100      4146
 
-#define UTE_DRV_TP_X_AXIS_EXCHANGE 0 // 交换X轴左右坐标
-#define UTE_DRV_TP_Y_AXIS_EXCHANGE 0 // 交换Y轴上下坐标
+#define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
+#define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7                             //FUNC_BLOOD_OXYGEN

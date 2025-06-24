@@ -160,6 +160,7 @@ typedef struct
     u32 breathe_duration;                           //训练时间 ms
     u8 breathe_mode;                                //训练模式 0:2,慢中快
     u8 dialplate_index;                             //表盘编号
+    u32 dialplate_id;                               //表盘id
     //天气
     u8 weather_idx;
     s8 temperature[2];                              //温度（0:最低 1:最高）

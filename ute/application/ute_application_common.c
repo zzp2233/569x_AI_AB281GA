@@ -1325,9 +1325,9 @@ void uteApplicationCommonSetMtuSize(uint16_t mtu)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,mtu=%d,%d", __func__,mtu,ble_get_gatt_mtu());
     uteApplicationCommonData.mtuSize = mtu;
-    if(uteApplicationCommonData.mtuSize > 243)
+    if(uteApplicationCommonData.mtuSize > UTE_BLE_MTU_MAX_SIZE)
     {
-        uteApplicationCommonData.mtuSize = 243;
+        uteApplicationCommonData.mtuSize = UTE_BLE_MTU_MAX_SIZE;
     }
 }
 /**
@@ -1944,16 +1944,21 @@ void uteModuleHardfaultInfoSave(void)
         printf("restart reason: %d\n", cause);
         return;
     }
-    tm_t rtc_tm;
-    rtc_tm = time_to_tm(RTCCNT);
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
     char *buf = (char *)uteModulePlatformMemoryAlloc(1024);
     memset(buf,0,1024);
     // print_r32(exception_debug_info_get(),32);
-    sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d\n", rtc_tm.year, rtc_tm.mon, rtc_tm.day, rtc_tm.hour, rtc_tm.min, rtc_tm.sec);
+    sprintf(buf, "%04d-%02d-%02d %02d:%02d:%02d\n", time.year, time.month, time.day, time.hour, time.min, time.sec);
     u32 cpu_gprs[32];
     u32 halt_err[16];
     memcpy(cpu_gprs, exception_debug_info_get(), sizeof(cpu_gprs));
     memcpy(halt_err, halt_err_debug_info_get(), sizeof(halt_err));
+
+    strcat(buf, "Version:\n");
+    strcat(buf, UTE_SW_VERSION);
+    strcat(buf, "\n");
+
     strcat(buf, "Cause:\n");
     switch (cause)
     {
@@ -2012,17 +2017,70 @@ void uteModuleHardfaultInfoSave(void)
         uteModuleFilesystemDelFile((char *)&path[0]);
     }
     memset(&path[0], 0, 42);
-    sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, rtc_tm.year, rtc_tm.mon, rtc_tm.day, rtc_tm.hour, rtc_tm.min);
+    sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, time.year, time.month, time.day, time.hour, time.min);
     void *file;
     if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT))
     {
-        uteModuleFilesystemSeek(file, 0, FS_SEEK_SET);
+        uteModuleFilesystemSeek(file, 0, FS_SEEK_END);
+        uint32_t fileSize = uteModuleFilesystemGetFileSize(file);
+        uteModuleFilesystemSeek(file, fileSize, FS_SEEK_SET);
         uteModuleFilesystemWriteData(file, &buf[0], strlen(buf));
         uteModuleFilesystemCloseFile(file);
     }
     uteModulePlatformMemoryFree(dirInfo);
 #endif
     uteModulePlatformMemoryFree(buf);
+}
+
+/**
+ * @brief        保持自定义信息到重启log文件
+ * @details
+ * @param[in]    buf: 保存的信息(字符串)
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-06-24
+ */
+void uteModuleHardfaultCustInfoSave(char *buf, uint16_t len)
+{
+    if (buf == NULL)
+    {
+        return;
+    }
+#if UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+
+    uint8_t path[42];
+    memset(&path[0], 0, sizeof(path));
+    ute_module_filesystem_dir_t *dirInfo = (ute_module_filesystem_dir_t *)uteModulePlatformMemoryAlloc(sizeof(ute_module_filesystem_dir_t));
+    uteModuleFilesystemLs(UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, dirInfo, NULL);
+    if (dirInfo->filesCnt >= UTE_HARDFAULT_INFO_TO_FLASH_MAX_CNT)
+    {
+        memset(&path[0], 0, sizeof(path));
+        sprintf((char *)&path[0], "%s/%s", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, &dirInfo->filesName[0][0]);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,del file=%s", __func__, &path[0]);
+        uteModuleFilesystemDelFile((char *)&path[0]);
+    }
+    memset(&path[0], 0, 42);
+    sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, time.year, time.month, time.day, time.hour, time.min);
+    void *file;
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT))
+    {
+        char *head = (char *)uteModulePlatformMemoryAlloc(256);
+        memset(&head[0], 0, 256);
+        snprintf(head, 256, "%04d-%02d-%02d %02d:%02d:%02d\nVersion:\n%s\n", time.year, time.month, time.day, time.hour, time.min, time.sec,UTE_SW_VERSION);
+        uteModuleFilesystemSeek(file, 0, FS_SEEK_END);
+        uint32_t fileSize = uteModuleFilesystemGetFileSize(file);
+        // printf("fileSize:%d,%s\n", fileSize,head);
+        uteModuleFilesystemSeek(file, fileSize, FS_SEEK_SET);
+        uteModuleFilesystemWriteData(file, &head[0], strlen(head));
+        uteModuleFilesystemSeek(file, 0, FS_SEEK_CUR);
+        uteModuleFilesystemWriteData(file, &buf[0], len);
+        uteModuleFilesystemCloseFile(file);
+        uteModulePlatformMemoryFree(head);
+    }
+    uteModulePlatformMemoryFree(dirInfo);
+#endif
 }
 
 /*!

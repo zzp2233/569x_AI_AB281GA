@@ -346,7 +346,8 @@ static void sfunc_sleep(void)
     GPIOADE = 0;
     GPIOBDE = BIT(3);
     GPIOGDE = 0x3F;                             //MCP FLASH
-    GPIOHDE = 0;
+    GPIOHDE = 0;//功耗低了但是灭屏无法充电
+    // GPIOHDE = 0| BIT(4); //功耗高，但是灭屏可以充电
     u32 pf_keep = 0;
     printf("bsp_sensor_init_sta_NO\n");
     GPIOEDE = 0;

@@ -187,7 +187,27 @@ void uteModuleBloodoxygenEverySecond(void)
 #endif
         )
         {
-            if(isNeedAutoTest && !uteModuleBloodoxygenData.isSingleTesting)
+#if UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT
+            if (isNeedAutoTest && !uteModuleBloodoxygenData.isSingleTesting)
+            {
+                if (uteModuleHeartGetHeartValue() > 0 && uteModuleHeartGetHeartValue() < 0xff)
+                {
+                    uteModuleBloodoxygenData.value = 96 + get_random(4);
+                    uteModuleBloodoxygenAutoSaveOxygenData();
+                    isNeedAutoTest = false;
+                }
+                else
+                {
+                    uteModuleBloodoxygenData.isBloodOxygenAutoTestFlag = true;
+                    uteModuleBloodoxygenStartSingleTesting();
+                }
+            }
+            else
+            {
+                isNeedAutoTest = false;
+            }
+#else
+            if (isNeedAutoTest && !uteModuleBloodoxygenData.isSingleTesting)
             {
                 uteModuleBloodoxygenData.isBloodOxygenAutoTestFlag = true;
                 uteModuleBloodoxygenStartSingleTesting();
@@ -196,6 +216,7 @@ void uteModuleBloodoxygenEverySecond(void)
             {
                 isNeedAutoTest = false;
             }
+#endif
         }
     }
 }

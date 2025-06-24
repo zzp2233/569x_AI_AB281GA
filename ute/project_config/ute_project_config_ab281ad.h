@@ -48,8 +48,12 @@
 #define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
 
 /*! 不同TE模式下的spiclk,用于优化撕裂,spiclk : baud = sys_clk / (div +1),wang.luo 2025-01-11 */
-#define UTE_DRV_SCREEN_2TE_SPI_CLK 27000000 // 27Mhz
-#define UTE_DRV_SCREEN_1TE_SPI_CLK 14000000 // 12Mhz
+#ifndef UTE_DRV_SCREEN_1TE_SPI_CLK
+#define UTE_DRV_SCREEN_1TE_SPI_CLK 27000000 // 27Mhz
+#endif
+#ifndef UTE_DRV_SCREEN_2TE_SPI_CLK
+#define UTE_DRV_SCREEN_2TE_SPI_CLK 12000000 // 12Mhz
+#endif
 
 //Gsensor
 #define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1
@@ -136,20 +140,21 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      200 //mAh
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      204 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3601
-#define UTE_DRV_BATTERY_010      3685
-#define UTE_DRV_BATTERY_020      3738
-#define UTE_DRV_BATTERY_030      3766
-#define UTE_DRV_BATTERY_040      3787
-#define UTE_DRV_BATTERY_050      3817
-#define UTE_DRV_BATTERY_060      3872
-#define UTE_DRV_BATTERY_070      3939
-#define UTE_DRV_BATTERY_080      4003
-#define UTE_DRV_BATTERY_090      4084
-#define UTE_DRV_BATTERY_100      4146
+#define UTE_DRV_BATTERY_000      3500
+#define UTE_DRV_BATTERY_010      3679
+#define UTE_DRV_BATTERY_020      3731
+#define UTE_DRV_BATTERY_030      3762
+#define UTE_DRV_BATTERY_040      3782
+#define UTE_DRV_BATTERY_050      3809
+#define UTE_DRV_BATTERY_060      3854
+#define UTE_DRV_BATTERY_070      3925
+#define UTE_DRV_BATTERY_080      3986
+#define UTE_DRV_BATTERY_090      4065
+#define UTE_DRV_BATTERY_100      4151
+
 
 #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标

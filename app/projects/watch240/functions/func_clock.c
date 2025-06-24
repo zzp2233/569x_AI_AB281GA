@@ -202,6 +202,7 @@ compo_form_t *func_clock_form_create(void)
 #if UTE_MODULE_WATCH_PHOTO_SUPPORT
             watchConfig_t watchConfig;
             uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, base_addr, sizeof(watchConfig_t));
+            sys_cb.dialplate_id = watchConfig.snNo;
             printf("watchConfig.snNo = %d\n", watchConfig.snNo);
             if (watchConfig.snNo == UTE_MODULE_WATCH_PHOTO_DEFAULT_ID && uteModuleWatchOnlineIsHasPhoto())
             {
@@ -249,6 +250,9 @@ static void func_clock_process(void)
 #endif
 #if UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT
     func_clock_butterfly_process();
+#endif
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+    func_clock_photo_process();
 #endif
     func_process();                                  //刷新UI
 }
@@ -308,6 +312,17 @@ static void func_clock_message(size_msg_t msg)
         if(func_clock_butterfly_message(msg))
         {
             TRACE("func_clock_butterfly_message return\n");
+            return;
+        }
+    }
+#endif
+
+#if UTE_MODULE_WATCH_PHOTO_SUPPORT
+    if (sys_cb.dialplate_id == UTE_MODULE_WATCH_PHOTO_DEFAULT_ID)
+    {
+        if (func_clock_photo_message(msg))
+        {
+            TRACE("func_clock_photo_message return\n");
             return;
         }
     }

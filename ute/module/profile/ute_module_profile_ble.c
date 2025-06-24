@@ -720,4 +720,9 @@ void ble_app_watch_client_cfg_callback(u16 handle, u8 cfg)
     }
 }
 
+u16 att_get_max_mtu(void)
+{
+    return UTE_BLE_MTU_MAX_SIZE;
+}
+
 #endif // (USE_APP_TYPE == USE_AB_APP)

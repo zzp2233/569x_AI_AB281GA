@@ -146,6 +146,11 @@
 /*! 应用端识别是否在搜索界面显示蓝牙名zn.zeng  modify Jul 05, 2021 */
 #define UTE_APP_DISPLAY_BT_NAME_ADVERTISE_DATA       "\x22\x22"
 
+/*! 最多MTU设置，不能超过247,wang.luo 2025-06-24 */
+#ifndef UTE_BLE_MTU_MAX_SIZE
+#define UTE_BLE_MTU_MAX_SIZE       247
+#endif
+
 /*! 显示蓝牙名蓝牙地址后4位 zn.zeng, 2021-12-08  */
 #ifndef UTE_APP_DISPLAY_NAME_ID_SUPPORT
 #define UTE_APP_DISPLAY_NAME_ID_SUPPORT 1

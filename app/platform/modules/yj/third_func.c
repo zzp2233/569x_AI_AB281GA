@@ -281,18 +281,29 @@ void third_et_func_kws_deal(u32 event)
             break;
         case UI_EVENT_SINGLEMODE: // 单发
             test_1st_gear_func();
+            if (func_cb.sta == FUNC_ECIG_SET_POWER)
+            {
+                func_ecig_set_power_refresh();
+            }
             uteModuleSmokeData.current_power = 15;
             uteModuleSmokeData.current_index = 5;
             uteModuleSmokeDataSaveConfig();
+            //  printf("111111uteModuleSmokeData.current_power=%d，ecig_get_power()=%d\r\n",uteModuleSmokeData.current_power,ecig_get_power());
 #if ET_WARNING_TONE_EN
             play_sound(UI_EVENT_SINGLEMODE, t_pwn.sound_en);
 #endif // ET_WARNING_TONE_EN
             break;
         case UI_EVENT_DUALMODE: // 双发
             test_2st_gear_func();
+            if (func_cb.sta == FUNC_ECIG_SET_POWER)
+            {
+                func_ecig_set_power_refresh();
+            }
             uteModuleSmokeData.current_power = 25;
             uteModuleSmokeData.current_index = 5;
             uteModuleSmokeDataSaveConfig();
+            //   printf("222222uteModuleSmokeData.current_power=%d，ecig_get_power()=%d\r\n",uteModuleSmokeData.current_power,ecig_get_power());
+
 #if ET_WARNING_TONE_EN
             play_sound(UI_EVENT_DUALMODE, t_pwn.sound_en);
 #endif // ET_WARNING_TONE_EN

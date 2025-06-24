@@ -3251,13 +3251,6 @@ static void func_alarm_clock_sub_set_button_click(void)
             }
             sys_cb.alarm_edit_hour = f_alarm_set->hour;
             sys_cb.alarm_edit_min  = f_alarm_set->min;
-            ALARM_EDIT(sys_cb.alarm_edit_idx,
-                       ALARM_GET_SWITCH(sys_cb.alarm_edit_idx),
-                       ALARM_GET_CYCLE(sys_cb.alarm_edit_idx),
-                       sys_cb.alarm_edit_hour,
-                       sys_cb.alarm_edit_min,
-                       0,
-                       0);
             uteTaskGuiStartScreen(FUNC_ALARM_CLOCK_SUB_REPEAT, 0, __func__);
             break;
         default:

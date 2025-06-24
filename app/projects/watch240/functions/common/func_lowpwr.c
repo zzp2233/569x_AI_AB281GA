@@ -291,7 +291,14 @@ static void sfunc_sleep(void)
 #else
     if (!bt_is_connected())                     //蓝牙未连接
     {
-        bt_update_bt_scan_param(4096, 12, 2048, 12);
+        if (bt_get_scan())
+        {
+            bt_update_bt_scan_param(4096, 12, 2048, 12);
+        }
+        else
+        {
+            bt_update_bt_scan_param(4096, 0, 4096, 0);
+        }
     }
 #endif
 
@@ -582,7 +589,7 @@ static void sfunc_sleep(void)
     }
     else
     {
-        sys_clk_set(SYS_CLK_SEL);
+        sys_clk_set(SYS_24M);
     }
 
     sys_set_tmr_enable(1, 1);
@@ -661,10 +668,6 @@ bool sleep_process(is_sleep_func is_sleep)
             reset_pwroff_delay();
             return false;
         }
-        // if(sys_cb.sleep_delay % 10 == 0 && sys_cb.guioff_delay%10==0)
-        // {
-        //     printf("%s,sleep_delay:%d,guioff_delay:%d,sys_is_sleep:%d,gui_sleep_sta:%d\n",__func__,sys_cb.sleep_delay,sys_cb.guioff_delay,sleep_cb.sys_is_sleep,sys_cb.gui_sleep_sta);
-        // }
         if (sys_cb.guioff_delay == 0 && !sys_cb.gui_sleep_sta)
         {
             if(sys_cb.sleep_delay > 0) //休眠时间未到时仅熄屏

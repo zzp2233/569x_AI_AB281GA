@@ -1053,6 +1053,11 @@ compo_form_t *func_sport_finish_form_create(void)
         distance = distance*0.6213712;
         km_integer  = distance/1000;
         km_decimals = distance%1000/10;
+
+        uint16_t distance_miles = (sport_data.saveData.avgTimeMinute*60+sport_data.saveData.avgTimeSecond)*1.6093;
+
+        sport_data.saveData.avgTimeMinute = distance_miles/60;
+        sport_data.saveData.avgTimeSecond = distance_miles%60;
     }
 
     picbox = compo_picturebox_create(frm, UI_BUF_I335001_3_EXERCISE_9_FINISH_ICON_44X44_X16_Y174_Y261_Y348_Y435_Y522_Y609_04_PACE_BIN);

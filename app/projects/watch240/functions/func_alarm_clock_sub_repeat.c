@@ -356,6 +356,16 @@ static void func_alarm_clock_sub_repeat_button_click(void)
                 func_cb.sta = FUNC_ALARM_CLOCK_SUB_EDIT;
                 break;
             }
+            else
+            {
+                ALARM_EDIT(sys_cb.alarm_edit_idx,
+                           ALARM_GET_SWITCH(sys_cb.alarm_edit_idx),
+                           ALARM_GET_CYCLE(sys_cb.alarm_edit_idx),
+                           sys_cb.alarm_edit_hour,
+                           sys_cb.alarm_edit_min,
+                           0,
+                           0);
+            }
 //            printf("hour:%d min:%d\n",sys_cb.alarm_edit_hour,sys_cb.alarm_edit_min);
             ALARM_SET(sys_cb.alarm_edit_idx, true, sys_cb.alarm_edit_cycle, sys_cb.alarm_edit_hour, sys_cb.alarm_edit_min, 0, 0);
 #if UTE_MODULE_SCREENS_ALARM_SUPPORT

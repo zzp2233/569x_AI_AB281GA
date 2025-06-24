@@ -3900,7 +3900,7 @@ typedef struct f_sport_sub_run_t_
     bool        sport_run_state_updata_flag;
     bool        ble_state;
     u16         count_time;
-    bool        Refresh_disp;
+    bool        ble_back_line_flag;
 } f_sport_sub_run_t;
 
 enum
@@ -4151,6 +4151,30 @@ compo_form_t *func_sport_sub_run_form_create(void)
 static void func_soprt_run_move(void)
 {
     f_sport_sub_run_t *f_sleep = (f_sport_sub_run_t *)func_cb.f_cb;
+
+    switch (uteModuleSportMoreSportGetStatus())
+    {
+        case ALL_SPORT_STATUS_CLOSE:
+        case ALL_SPORT_STATUS_PAUSE:
+            f_sleep->sport_run_state = SPORT_RUN_START;
+            break;
+
+        case ALL_SPORT_STATUS_OPEN:
+        case ALL_SPORT_STATUS_CONTINUE:
+            f_sleep->sport_run_state = SPORT_RUN_STOP;
+            break;
+    }
+    if(f_sleep->sport_run_state != f_sleep->sport_run_state_updata_flag)
+    {
+        f_sleep->sport_run_state_updata_flag = f_sleep->sport_run_state;
+        f_sleep->ble_back_line_flag = true;
+    }
+
+    if(uteModuleSportMoreSportIsAppStart() && f_sleep->ble_state == false)
+    {
+        return;
+    }
+
 #define   PAGE_TWO_SIZE  (f_sleep->page_hei)  //最底y轴
 #define   TOYCH_LAST_DY  40   //切换页滑动y
 #define   TICK_TIME      8   //步进y像素点时间
@@ -4218,6 +4242,7 @@ static void func_soprt_run_move(void)
                                 f_sleep->sport_run_state = SPORT_RUN_STOP;
                                 // f_sleep->Refresh_disp = true;
                                 uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
+                                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                                 f_sleep->touch_state = TOUCH_FINISH_STATE;
                             }
                         }
@@ -4305,6 +4330,7 @@ static void func_soprt_run_move(void)
                             f_sleep->touch_state = TOUCH_FINISH_STATE;
                             // f_sleep->Refresh_disp = true;
                             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
+                            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
                             f_sleep->sport_run_state = SPORT_RUN_START;
                         }
                     }
@@ -4341,11 +4367,11 @@ static void func_sport_sub_run_click_handler(void)
     {
         case COMPO_ID_BTN_SPORT_STOP:
             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
-            f_sport_sub_run->page_old_x    = GUI_SCREEN_WIDTH;
-            f_sport_sub_run->move_offset_x = GUI_SCREEN_WIDTH;
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            f_sport_sub_run->page_old_x = 0;
+            f_sport_sub_run->move_offset_x = 0;
             f_sport_sub_run->page_num = PAGE_1;
             widget_page_set_client(func_cb.frm_main->page,f_sport_sub_run->move_offset_x, 0);
-            f_sport_sub_run->Refresh_disp = true;
             break;
         case COMPO_ID_BTN_SPORT_EXIT:
         {
@@ -4407,25 +4433,12 @@ static void func_sport_sub_run_updata(void)
         ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
         uteModuleSportGetMoreSportsDatas(data);
 
-
-        switch (uteModuleSportMoreSportGetStatus())
-        {
-            case ALL_SPORT_STATUS_CLOSE:
-            case ALL_SPORT_STATUS_PAUSE:
-                f_sleep->sport_run_state = SPORT_RUN_START;
-                break;
-
-            case ALL_SPORT_STATUS_OPEN:
-            case ALL_SPORT_STATUS_CONTINUE:
-                f_sleep->sport_run_state = SPORT_RUN_STOP;
-                break;
-        }
-
         if(uteModuleSportMoreSportIsAppStart())
         {
 
             if(f_sleep->ble_state != ble_is_connect())
             {
+                f_sleep->ble_back_line_flag = true;
                 f_sleep->ble_state = ble_is_connect();
                 if (!f_sleep->ble_state)
                 {
@@ -4472,11 +4485,9 @@ static void func_sport_sub_run_updata(void)
             }
         }
 
-        if(f_sleep->sport_run_state != f_sleep->sport_run_state_updata_flag || f_sleep->Refresh_disp)
+        if( f_sleep->ble_back_line_flag == true)
         {
-            // printf("motor_on\n");
-            f_sleep->Refresh_disp = false;
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            f_sleep->ble_back_line_flag = false;
             f_sleep->sport_run_state_updata_flag = f_sleep->sport_run_state;
 
             if(f_sleep->sport_run_state == SPORT_RUN_STOP)
@@ -4496,7 +4507,6 @@ static void func_sport_sub_run_updata(void)
 
             widget_page_set_client(func_cb.frm_main->page,f_sleep->move_offset_x, 0);
         }
-
 
 
         if(txt_time != NULL)

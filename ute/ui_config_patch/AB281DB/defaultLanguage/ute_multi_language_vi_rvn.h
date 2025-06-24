@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 越南语(越南）
 *@author
-*@date   2025-06-20 16:27:13
+*@date   2025-06-23 15:25:45
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 

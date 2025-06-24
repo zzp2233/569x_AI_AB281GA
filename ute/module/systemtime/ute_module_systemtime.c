@@ -907,6 +907,7 @@ void uteModuleSystemtimeDeleteAlarm(uint8_t index)
             uteModuleFilesystemRenameFile((char *)oldPath,(char *)newPath);
             memcpy(&systemAlarms.alarmParam[i-1],&systemAlarms.alarmParam[i],sizeof(ute_module_systemtime_one_alarm_t));
         }
+        systemAlarms.alarmParam[beforeTotalCnt-1].weekDay = 0;
         uteModulePlatformGiveMutex(uteModuleSystemtimeMute);
     }
     systemAlarms.alarmTotalCnt = dirInfo->filesCnt;

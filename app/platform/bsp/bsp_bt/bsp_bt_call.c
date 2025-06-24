@@ -304,6 +304,7 @@ void hfp_hf_call_notice(uint32_t evt)
             {
                 uint8_t nameLen;
                 uteModuleCallGetAddressBookContactName((uint8_t*)hfp_get_last_call_number(0),strlen(hfp_get_last_call_number(0)),(uint8_t *)&sys_cb.pbap_result_Name[0],&nameLen);
+                uteModuleCallSetContactsNumberAndName(NULL, 0, (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
                 printf("===>>> Address Book Name: %s\n", sys_cb.pbap_result_Name);
             }
             bt_cb.number_sta = true;

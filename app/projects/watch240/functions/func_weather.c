@@ -103,7 +103,7 @@ static void weather_refresh(void)
 
     if(displayInfo.isFahrenheit != f_weather->isFahrenheit_flag || weather_flag == true)    //是否为华氏度
     {
-        // printf("displayInfo.isFahrenheit:%d f_weather->isFahrenheit_flag:%d weather_flag:%d\n",displayInfo.isFahrenheit,f_weather->isFahrenheit_flag,weather_flag);
+        // printf("refresh->isFahrenheit:%d,%d weather_flag:%d\n",displayInfo.isFahrenheit,f_weather->isFahrenheit_flag,weather_flag);
         f_weather->isFahrenheit_flag = displayInfo.isFahrenheit;
         msg_enqueue(MSG_CHECK_LANGUAGE);//使用切换语言中断，重新刷新数据
     }
@@ -116,19 +116,18 @@ static void weather_data_Init(void)
     ute_module_systemtime_time_t time;
     ute_module_weather_data_t  weather_date;
     ute_display_ctrl_t displayInfo;
-
+    uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
+    uteModuleWeatherGetData(&weather_date);//获取天气状态
     uteModuleSystemtimeGetTime(&time);//获取系统时间
     if(uteModuleWeatherGetCurrDay() == time.day) //当前日期是否与系统日期一致
     {
-        uteModuleGuiCommonGetDisplayInfo(&displayInfo);//获取温度
-        uteModuleWeatherGetData(&weather_date);//获取天气状态
-
         f_weather->isFahrenheit_flag = displayInfo.isFahrenheit;
         for(int i=0; i<7; i++)
         {
             f_weather->DayWeather[i] = weather_date.DayWeather[i];
         }
     }
+    // printf("create->isFahrenheit:%d,%d\n",displayInfo.isFahrenheit,f_weather->isFahrenheit_flag);
 }
 
 //创建天气窗体，创建窗体中不要使用功能结构体 func_cb.f_cb

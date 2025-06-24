@@ -75,6 +75,9 @@ void gui_sleep(void)
         sys_cb.gui_sleep_sta = 1;
         tft_cb.tft_bglight_first_set = false;
         uteModuleGuiCommonDisplayOff(true);
+#if (!GUI_AUTO_POWER_EN && UTE_DRV_DYNAMIC_FREQUENCY_SWITCH_SUPPORT)
+        sys_clk_set(SYS_24M);
+#endif
         printf("gui_sleep\n");
     }
 }
@@ -91,20 +94,16 @@ void gui_wakeup(void)
         // uteDrvScreenCommonInit();
         sys_cb.gui_sleep_sta = 0;
         uteModuleGuiCommonDisplayOff(false);
+#if (!GUI_AUTO_POWER_EN && UTE_DRV_DYNAMIC_FREQUENCY_SWITCH_SUPPORT)
+        sys_clk_set(SYS_192M);
+#endif
         printf("gui_wakeup\n");
     }
 }
 
-// bool music_is_playing(void);
-// uint8_t sys_clk_get_cur(void);
-
 AT(.com_text.gui)
 bool gui_get_auto_power_en(void)
 {
-    // if (((bt_get_disp_status() > BT_STA_CONNECTED) || music_is_playing()) && (sys_clk_get_cur() == SYS_192M))
-    // {
-    //     return false;
-    // }
 
     return GUI_AUTO_POWER_EN;
 }

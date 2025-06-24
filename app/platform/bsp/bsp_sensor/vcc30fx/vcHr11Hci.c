@@ -429,7 +429,7 @@ uint16_t vcHr11CalculateOSCFreq(vcHr11_t *pvcHr11)
             for (i = 0; i < 2; i++)
             {
                 // printf("[%s]: intDiffRtc[2 * %d + 2]=%d, intDiffRtc[2 * %d]=%d\n", __func__, i, intDiffRtc[2 * i + 2],i, intDiffRtc[2 * i]);
-#if 1
+#if 0
                 freDiv[i] = ((uint32_t)(intDiffAdj[2 * i + 2] - intDiffAdj[2 * i])) * pvcHr11->mcuOscValue / pvcHr11->vcSampleRate / ((uint32_t)(intDiffRtc[2 * i + 2] - intDiffRtc[2 * i])) - 1;
                 if (freDiv[i] < (20000 / pvcHr11->vcSampleRate * 0.75f) || freDiv[i] > (20000 / pvcHr11->vcSampleRate * 1.25f))
                 {
@@ -440,6 +440,7 @@ uint16_t vcHr11CalculateOSCFreq(vcHr11_t *pvcHr11)
                 if (deltaRtc == 0)
                 {
                     printf("[%s]: error deltaRtc=%d, intDiffRtc[2 * i + 2]=%d, intDiffRtc[2 * i]=%d\n", __func__, deltaRtc, intDiffRtc[2 * i + 2], intDiffRtc[2 * i]);
+                    cc_time_init();
                     return 0; // 防止除以零
                 }
 

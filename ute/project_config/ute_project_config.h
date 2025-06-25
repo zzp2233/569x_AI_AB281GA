@@ -1340,7 +1340,7 @@
 
 /*! 运动计步算法自动切换主频以降低功耗,静止时降低主频,运动时提高主频,wang.luo 2025-02-21 */
 #ifndef UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT
-#define UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT 1
+#define UTE_MODULE_SPROT_ALGO_AUTO_SWITCH_SYSCLK_SUPPORT 0
 #endif
 
 /*! 打开拍照界面app也打开,dengli.lu 2022-08-18*/

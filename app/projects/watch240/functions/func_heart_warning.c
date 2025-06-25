@@ -200,7 +200,7 @@ compo_form_t *func_heart_warning_form_create(void)
     {
         snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
     }
-    else if (uteModuleHeartGetHeartValue() <= uteModuleHeartGetMinHeartValue())
+    else if (uteModuleHeartGetHeartValue() <= uteModuleHeartGetHeartWaringMinValue())
     {
         snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
     }
@@ -261,9 +261,13 @@ static void func_heart_warning_updata(void)
     {
         f_heart_warning->up_date_flag = COMPO_MAX_STATE;
     }
-    else if (heart_value <= uteModuleHeartGetMinHeartValue())
+    else if (heart_value <= uteModuleHeartGetHeartWaringMinValue())
     {
         f_heart_warning->up_date_flag = COMPO_MIN_STATE;
+    }
+    else
+    {
+        uteModuleGuiCommonGoBackLastScreen();
     }
 
     if(f_heart_warning->up_date_flag != f_heart_warning->up_date_old_flag)
@@ -279,11 +283,6 @@ static void func_heart_warning_updata(void)
             snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
         }
         compo_textbox_set(txt_uint, txt_buf);
-    }
-
-    if ((heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue()) || (heart_value == 0 || heart_value == 0xff))
-    {
-        uteModuleGuiCommonGoBackLastScreen();
     }
 }
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT

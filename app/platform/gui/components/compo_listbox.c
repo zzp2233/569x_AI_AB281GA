@@ -763,7 +763,15 @@ void compo_listbox_update(compo_listbox_t *listbox)
         }
         for (i=0; i<LISTBOX_ITEM_CNT; i++)
         {
-            widget_text_set_client(listbox->item_text[i], listbox->roll_cb[i].offset, 0);
+            if(widget_get_align_center(listbox->item_text[i]) == false)
+            {
+                widget_text_set_client(listbox->item_text[i], listbox->roll_cb[i].offset, 0);
+            }
+            else
+            {
+                widget_text_set_client(listbox->item_text[i], listbox->roll_cb[i].offset,
+                                       (widget_text_get_box_area_rel(listbox->item_text[i]).hei/2 - widget_text_get_area(listbox->item_text[i]).hei/2));
+            }
         }
         listbox->sidx = sidx;
         listbox->txt_roll_need_rst = false;
@@ -843,7 +851,15 @@ void compo_listbox_update(compo_listbox_t *listbox)
             }
             for (i=0; i<LISTBOX_ITEM_CNT; i++)
             {
-                widget_text_set_client(listbox->item_text2[i], listbox->roll_cb2[i].offset, 0);
+                if(widget_get_align_center(listbox->item_text2[i]) == false)
+                {
+                    widget_text_set_client(listbox->item_text2[i], listbox->roll_cb2[i].offset, 0);
+                }
+                else
+                {
+                    widget_text_set_client(listbox->item_text2[i], listbox->roll_cb2[i].offset,
+                                           -(widget_text_get_box_area_rel(listbox->item_text2[i]).hei/2 - widget_text_get_area(listbox->item_text2[i]).hei/2));
+                }
             }
             listbox->sidx2 = sidx;
             listbox->txt2_roll_need_rst = false;

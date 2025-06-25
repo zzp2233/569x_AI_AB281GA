@@ -1564,6 +1564,7 @@ void app_ute_msg_pop_up(uint8_t index)
     {
 
         ute_module_notify_data_t *ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
+
         if (ute_msg == NULL)
         {
             printf("%s malloc err!!\n", __func__);
@@ -1598,13 +1599,14 @@ void app_ute_msg_pop_up(uint8_t index)
         memset(str_am,0,sizeof(str_am));
         if(uteModuleSystemtime12HOn())
         {
-            if(hour<=12 && hour!=0)
+            // printf("MSGBOX_MSG_TYPE_BRIEF:%02d:%02d\n",hour,min);
+            if(hour<12)
             {
                 memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
             }
             else
             {
-                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_AM])+1);
+                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_PM])+1);
             }
             hour %= 12;
             if(hour==0)
@@ -1617,7 +1619,7 @@ void app_ute_msg_pop_up(uint8_t index)
         int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
         if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
         {
-            printf("enter MSGBOX_RES_ENTER_DETAIL_MSG\n");
+            // printf("MSGBOX_MSG_TYPE_DETAIL:%02d:%02d\n",hour,min);
             int res = msgbox(tmp_msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
             if (res == MSGBOX_RES_DELETE)
             {

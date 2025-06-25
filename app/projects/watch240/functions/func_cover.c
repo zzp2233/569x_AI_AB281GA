@@ -1715,7 +1715,7 @@ void gui_set_cover_index(uint8_t index)
 
                 if(uteModuleSystemtime12HOn())
                 {
-                    if(hour_num <=12 && hour_num!=0)
+                    if(hour_num <12)
                     {
                         snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
                     }

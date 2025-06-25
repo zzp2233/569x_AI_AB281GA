@@ -111,7 +111,7 @@ compo_form_t *func_message_form_create(void)
         memset(str_am,0,sizeof(str_am));
         if(uteModuleSystemtime12HOn())
         {
-            if(hour<=12 && hour!=0)
+            if(hour<12)
             {
                 memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
             }

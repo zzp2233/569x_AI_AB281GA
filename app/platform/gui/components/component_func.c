@@ -413,7 +413,7 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             break;
 
         case COMPO_BOND_TIME_AMPM: //图片 am pm
-            value = tm.hour > 12 ? 1 : 0; // 0:AM 1:PM
+            value = tm.hour >= 12 ? 1 : 0; // 0:AM 1:PM
             break;
 
         case COMPO_BOND_TIME_MONTH: //图片 月份

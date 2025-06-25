@@ -602,6 +602,9 @@ const static func_item_info_t func_item_tbl[] =
     {FUNC_SETTING,                  UI_BUF_I338001_2_HONEYCOMB_SETTINGS_BIN,                    STR_SETTING},               //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
     {FUNC_SUB_SOS,                  UI_BUF_I338001_2_HONEYCOMB_SOS_BIN,                    STR_SOS},               //SOS
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    {FUNC_WOMEN_HEALTH,             UI_BUF_I338001_2_HONEYCOMB_PERIOD_BIN,               STR_WOMEN_HEALTH},               //女性健康
+#endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
 };
 
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT

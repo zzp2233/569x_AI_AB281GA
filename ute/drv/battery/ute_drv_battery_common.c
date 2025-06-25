@@ -411,7 +411,14 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 #if UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
                     if (uteDrvBatteryCommonData.lastLvl > percent)
                     {
-                        uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
+                        if(uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_010)
+                        {
+                            uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
+                        }
+                        else
+                        {
+                            uteDrvBatteryCommonData.lastLvl = percent;
+                        }
                     }
                     else
 #endif
@@ -423,7 +430,14 @@ void uteDrvBatteryCommonUpdateBatteryInfo(void)
 #if UTE_MODULE_BATTERY_SMOOTH_PERCENTAGE_SUPPORT
                 if (uteDrvBatteryCommonData.lastLvl > percent)
                 {
-                    uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
+                    if(uteDrvBatteryCommonData.voltage > UTE_DRV_BATTERY_010)
+                    {
+                        uteDrvBatteryCommonData.lastLvl = (uteDrvBatteryCommonData.lastLvl - 1 > percent) ? (uteDrvBatteryCommonData.lastLvl - 1) : percent;
+                    }
+                    else
+                    {
+                        uteDrvBatteryCommonData.lastLvl = percent;
+                    }
                 }
                 else
 #endif

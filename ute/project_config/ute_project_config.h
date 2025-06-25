@@ -204,7 +204,7 @@
 
 /** 系统启动电压*/
 #ifndef UTE_DRV_BATTERY_POWER_ON_VOLTAGE
-#define UTE_DRV_BATTERY_POWER_ON_VOLTAGE     3300  //mv
+#define UTE_DRV_BATTERY_POWER_ON_VOLTAGE     3400  //mv
 #endif
 
 /** 系统自动关机白分比*/

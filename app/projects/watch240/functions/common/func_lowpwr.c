@@ -891,6 +891,7 @@ void func_pwroff(int pwroff_tone_en)
 #endif // WARNING_POWER_OFF
 
 //    gui_off();
+    gui_sleep();
 
     if (SOFT_POWER_ON_OFF)
     {

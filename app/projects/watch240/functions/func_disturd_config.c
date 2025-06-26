@@ -1154,10 +1154,10 @@ compo_form_t *func_disturd_sub_set_form_create(void)
         compo_textbox_set(txt_pm,i18n[STR_PM]);
         compo_setid(txt_pm,COMPO_ID_TXT_PM_BG);
 
-        compo_textbox_set_pos(txt_am,16+48/2,(hour && hour<=12) ? DISTURD_TXT_Y[2] : DISTURD_TXT_Y[3]);
-        compo_textbox_set_pos(txt_pm,16+48/2,(hour && hour<=12) ? DISTURD_TXT_Y[1] : DISTURD_TXT_Y[2]);
-        compo_textbox_set_forecolor(txt_am,(hour && hour<=12) ? COLOR_WHITE : COLOR_GRAY);
-        compo_textbox_set_forecolor(txt_pm,!(hour && hour<=12) ? COLOR_WHITE : COLOR_GRAY);
+        compo_textbox_set_pos(txt_am,16+48/2,(hour<12) ? DISTURD_TXT_Y[2] : DISTURD_TXT_Y[3]);
+        compo_textbox_set_pos(txt_pm,16+48/2,(hour<12) ? DISTURD_TXT_Y[1] : DISTURD_TXT_Y[2]);
+        compo_textbox_set_forecolor(txt_am,(hour<12) ? COLOR_WHITE : COLOR_GRAY);
+        compo_textbox_set_forecolor(txt_pm,!(hour<12) ? COLOR_WHITE : COLOR_GRAY);
 
         func_disturd_sub_get_timer(1,0,hour,hour_data);///获取时间
         func_disturd_sub_get_timer(1,1,min,min_data);
@@ -1237,7 +1237,7 @@ compo_form_t *func_disturd_sub_set_form_create(void)
         f_alarm_clock_sub_set->time_scale = uteModuleSystemtime12HOn();
         f_alarm_clock_sub_set->hour_old = f_alarm_clock_sub_set->hour = hour_data[2];
         f_alarm_clock_sub_set->min_old  = f_alarm_clock_sub_set->min  = min_data[2];
-        f_alarm_clock_sub_set->am_pm_flag = (hour && hour<=12) ? true : false;
+        f_alarm_clock_sub_set->am_pm_flag = (hour<12) ? true : false;
     }
 
     return frm;
@@ -1259,11 +1259,11 @@ static void func_disturd_sub_set_button_click(void)
             {
                 if(f_disturd_set->am_pm_flag)
                 {
-                    if(hour==0)hour=12;
+                    if(hour==12)hour=0;
                 }
                 else
                 {
-                    if(hour!=0)hour+=12;
+                    if(hour!=12)hour+=12;
                 }
             }
             if(sys_cb.disturd_sel)

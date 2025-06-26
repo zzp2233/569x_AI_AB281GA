@@ -25,6 +25,7 @@
 #define UTE_DEV_LOCAL_BLE_NAME "Storm Verge"
 #endif
 
+
 /*! 足球样式列表撕裂问题，跟别的项目区分，防止修改点导致别的项目撕裂 */
 #define UTE_MODULE_FOOTBALL_STYLE_LIST_TEARING_SUPPORT 1
 

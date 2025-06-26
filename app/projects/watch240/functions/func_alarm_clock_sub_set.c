@@ -1558,6 +1558,7 @@ typedef struct f_alarm_clock_sub_set_t_
 
     bool time_scale;
     u8 time_am_pm;
+    bool am_pm_flag;
 } f_alarm_clock_sub_set_t;
 
 typedef struct aclock_set_pic_bg_t_
@@ -4884,6 +4885,7 @@ typedef struct f_alarm_clock_sub_set_t_
 
     bool time_scale;
     u8 time_am_pm;
+    bool am_pm_flag;
 } f_alarm_clock_sub_set_t;
 
 typedef struct aclock_set_pic_bg_t_
@@ -5572,11 +5574,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43);
         if(am_pm_conv == 1)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU01_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU00_BIN);
         }
         compo_setid(btn,COMPO_ID_PIC_AM_BG);
 
@@ -5584,11 +5586,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3);
         if(am_pm_conv == 0)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU01_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU00_BIN);
         }
         compo_setid(btn,COMPO_ID_PIC_PM_BG);
 

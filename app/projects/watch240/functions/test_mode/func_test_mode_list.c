@@ -31,7 +31,11 @@ static const compo_listbox_item_t online_factory_test_list[] =
     {     .vidx = TEST_ITEM_MIC_SPEAKER},
 };
 #define SET_LIST_CNT                       ((int)(sizeof(online_factory_test_list) / sizeof(online_factory_test_list[0])))
+#if !SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT
+static const compo_listbox_custom_item_t online_factory_test_list_txt[SET_LIST_CNT]= {/*"AGING MODE",*/"Electricity test","RGB test","Leakage test","Nine grid test","Mic Head Speaker Test"};
+#else
 static const compo_listbox_custom_item_t online_factory_test_list_txt[SET_LIST_CNT]= {/*"老化模式",*/"电量测试","RGB测试","漏光测试","九宫格测试","咪头喇叭测试"};
+#endif
 
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 // 工厂测试选项
@@ -114,7 +118,11 @@ static void func_test_mode_list_message(size_msg_t msg)
             break;
         case KL_BACK:
         {
+#if !SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT
+            uint8_t ret = msgbox("Exit the current test?", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+#else
             uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
+#endif
             if (ret == MSGBOX_RES_OK)
             {
                 func_cb.sta = FUNC_TEST_MODE;

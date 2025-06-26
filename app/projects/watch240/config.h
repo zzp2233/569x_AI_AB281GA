@@ -373,7 +373,7 @@
 #define VBAT_FILTER_USE_PEAK            0           //电池检测滤波选则://0 取平均值.//1 取峰值(适用于播放音乐时,电池波动比较大的音箱方案).
 #define LPWR_WARNING_VBAT               UTE_DRV_BATTERY_010        //低电提醒电压   0：表示关闭此功能
 #define LPWR_OFF_VBAT                   UTE_DRV_BATTERY_POWER_ON_VOLTAGE        //低电关机电压   0：表示关闭此功能
-#define LOWPWR_REDUCE_VOL_EN            1           //低电时是否降低音量
+#define LOWPWR_REDUCE_VOL_EN            0           //低电时是否降低音量
 #define LPWR_WARING_TIMES               0xff        //报低电次数
 #define LPWR_WARNING_PERIOD             30          //低电播报周期(单位：秒)
 

@@ -1838,7 +1838,7 @@ typedef struct func_alarm_hour_format_t_
 static func_alarm_hour_format_t func_alarm_convert_to_12hour(s8 hour24)
 {
     // printf("time_apm%d\n",hour24);
-    u8 am_pm = (hour24 <= 12 && hour24) ? 2 : 1;    //1 PM, 2 AM
+    u8 am_pm = (hour24 < 12 ) ? 1 : 2;    //2 PM, 1 AM
     func_alarm_hour_format_t hour12;
     if(uteModuleSystemtime12HOn())
     {
@@ -2024,14 +2024,14 @@ compo_form_t *func_set_sub_disturd_form_create(void)
         memset(aclock_str, '\0', sizeof(aclock_str));
         sprintf(aclock_str, "%02d:%02d", hour, min);
 
-        printf("pm_flag:%d\n",am_pm);
+        // printf("pm_flag:%d\n",am_pm);
         if (ui_handle.disturd_start_time.text[i].idx == 2)
         {
-            if(am_pm == 2)      //AM
+            if(am_pm == 1)      //AM
             {
                 compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].str_id]);
             }
-            else if (am_pm == 1)
+            else if (am_pm == 2)
             {
                 compo_cardbox_text_set(disturd_start_time, ui_handle.disturd_start_time.text[i].idx, i18n[ui_handle.disturd_start_time.text[i].rev]);
             }
@@ -2091,11 +2091,11 @@ compo_form_t *func_set_sub_disturd_form_create(void)
 
         if (ui_handle.disturd_end_time.text[i].idx == 2)
         {
-            if(am_pm == 2)      //AM
+            if(am_pm == 1)      //AM
             {
                 compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].str_id]);
             }
-            else if (am_pm == 1)
+            else if (am_pm == 2)
             {
                 compo_cardbox_text_set(disturd_end_time, ui_handle.disturd_end_time.text[i].idx, i18n[ui_handle.disturd_end_time.text[i].rev]);
             }

@@ -3856,6 +3856,7 @@ enum
     COMPO_ID_NUM_SPORT_COUNT,       //计次
     COMPO_ID_NUM_SPORT_SPEED,       //配速
 
+    COMPO_ID_UINT_SPORT_SPEED,       //配速单位
     COMPO_ID_UINT_SPORT_TIME,        //运动时间
     COMPO_ID_UINT_SPORT_HEARTRATE,   //心率
     COMPO_ID_UINT_SPORT_KCAL,        //卡路里
@@ -4125,12 +4126,13 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set(txt, i18n[STR_PACE]);
 
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"/%s", i18n[STR_KILOMETRE]);
+    snprintf(txt_buf,sizeof(txt_buf),"/%s", uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
     txt = compo_textbox_create(frm, strlen(txt_buf));///配速文本
     compo_textbox_set_align_center(txt, false);
     compo_textbox_set_location(txt,45,323+113*3, 130, 30);
     compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
     compo_textbox_set(txt, txt_buf);
+    compo_setid(txt,COMPO_ID_UINT_SPORT_SPEED);
 
     txt = compo_textbox_create(frm, 10);///配速数据文本
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
@@ -4161,6 +4163,7 @@ static void func_soprt_run_move(void)
 
         case ALL_SPORT_STATUS_OPEN:
         case ALL_SPORT_STATUS_CONTINUE:
+        case ALL_SPORT_STATUS_UPDATE_DATA:
             f_sleep->sport_run_state = SPORT_RUN_STOP;
             break;
     }
@@ -4429,6 +4432,7 @@ static void func_sport_sub_run_updata(void)
         compo_textbox_t* txt_stop       = compo_getobj_byid(COMPO_ID_TXT_SPORT_STOP);
         compo_button_t * btn_exit       = compo_getobj_byid(COMPO_ID_BTN_SPORT_EXIT);
         compo_textbox_t* txt_ble_off    = compo_getobj_byid(COMPO_ID_TXT_BLE_OFF);
+        compo_textbox_t* txt_speed_uint = compo_getobj_byid(COMPO_ID_UINT_SPORT_SPEED);
 
         ute_module_more_sports_data_t *data = ab_zalloc(sizeof(ute_module_more_sports_data_t));
         uteModuleSportGetMoreSportsDatas(data);
@@ -4558,6 +4562,12 @@ static void func_sport_sub_run_updata(void)
         if(uint_km != NULL)
         {
             compo_textbox_set(uint_km, uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
+        }
+        if(txt_speed_uint != NULL)
+        {
+            memset(txt_buf,0,sizeof(txt_buf));
+            snprintf(txt_buf,sizeof(txt_buf),"/%s", uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KILOMETRE]);
+            compo_textbox_set(txt_speed_uint,txt_buf);
         }
 
         if(txt_count != NULL)
@@ -6416,8 +6426,7 @@ static void func_sport_sub_run_message(size_msg_t msg)
                     uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
                     break;
             }
-
-
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             break;
 #endif
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT

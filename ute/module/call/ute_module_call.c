@@ -1151,7 +1151,7 @@ bool uteModuleCallGetAddressBookContactName(uint8_t *number,uint8_t numberSize,u
             uteModuleFilesystemSeek(file,2+i*UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH,FS_SEEK_SET);
             uteModuleFilesystemReadData(file,&tempBuff[0],UTE_MODULE_CALL_ADDRESSBOOK_ONCE_MAX_LENGTH);
             uteModuleCallParseAddressBookContactNameAndNumber(tempBuff,&tempData.nameUnicode[0],&tempData.nameUnicodeLen,&tempData.numberAscii[0],&tempData.numberAsciiLen);
-            UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,i=%d;nameUnicodeLen=%d,numberAsciiLen=%d", __func__,i,tempData.nameUnicodeLen,tempData.numberAsciiLen);
+            UTE_MODULE_LOG(UTE_LOG_CALL_LVL, "%s,i=%d;nameUnicodeLen=%d,numberAsciiLen=%d,isBtPbapNameUpdate=%d", __func__,i,tempData.nameUnicodeLen,tempData.numberAsciiLen,isBtPbapNameUpdate);
             if(isBtPbapNameUpdate == true) break;
             if(memcmp(number,tempData.numberAscii,numberSize) == 0 && numberSize!=0 && numberSize == tempData.numberAsciiLen)
             {
@@ -1309,6 +1309,7 @@ CALL_UPDATE_END:
     uteModuleCallData.callData.callingTimeSecond = 0;
     uteModuleCallData.callData.numberSize = 0;
     uteModuleCallData.callData.nameSize = 0;
+    isBtPbapNameUpdate = false;
     uteModulePlatformMemoryFree(readBuff);
 }
 

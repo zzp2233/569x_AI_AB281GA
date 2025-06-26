@@ -681,6 +681,7 @@ static void func_light_disp_move_handle(void)
     }
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
+static void func_light_disp_Refresh(void);
 //组件ID
 enum
 {
@@ -752,6 +753,7 @@ compo_form_t *func_light_form_create(void)
         compo_setid(pic_level[idx], tbl_light_pic_item[idx].pic_id);
         compo_picturebox_set_pos(pic_level[idx], tbl_light_pic_item[idx].x, tbl_light_pic_item[idx].y);
     }
+    func_light_disp_Refresh();//进入界面刷新当前亮度等级
     return frm;
 }
 

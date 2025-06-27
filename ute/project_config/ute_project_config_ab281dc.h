@@ -170,6 +170,9 @@
 #define  UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1//工厂测试音频测试
 #endif
 
+/*!指南针模块*/
+#define UTE_MODULE_MAGNETIC_SUPPORT 1
+
 /* 电池容量 zn.zeng 2022-01-07*/
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
 
@@ -330,6 +333,8 @@
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               0 //飞扬小鸟
 
 #define UTE_MODULE_KEY_SET_FUNCTION_SUPPORT           1 //下按键功能设置
+
+#define UTE_MODULE_SCREENS_COMPASS_SUPPORT            1 //指南针
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
 #define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义

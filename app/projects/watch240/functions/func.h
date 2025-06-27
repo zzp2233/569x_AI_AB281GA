@@ -106,7 +106,6 @@ enum
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     FUNC_VOICE,                         //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
-//    FUNC_COMPASS,                       //指南针
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     FUNC_ADDRESS_BOOK,                  //电话簿
     FUNC_CALL_SUB_LINKMAN = FUNC_ADDRESS_BOOK,
@@ -246,6 +245,8 @@ enum
 #if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
     FUNC_TOOLBOX,   //工具箱
 #endif
+    FUNC_COMPASS,                       //指南针
+
     FUNC_MAX_NUM,           //用于计数
 };
 

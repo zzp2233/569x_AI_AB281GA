@@ -26,6 +26,7 @@
 #include "ute_module_emotionPressure.h"
 #endif
 #include "ute_drv_led.h"
+#include "ute_module_compass.h"
 #if UTE_MODULE_BREATHRATE_SUPPORT
 #include "RspRateEst.h"
 #include "ute_module_breathrate.h"
@@ -41,11 +42,11 @@ static vcare_ppg_device_t vc30fx_dev = {"vc30fx_sc", 0};
 /* G-Sensor Data */
 static gsensor_axes vc30fx_gsensor_data = {0};
 
-InitParamTypeDef vc30fx_data = {600, 0};
+// InitParamTypeDef vc30fx_data = {600, 0};
 
 static uint32_t hw_timer_count = 0;
 
-// InitParamTypeDef vc30fx_data = {400, WORK_MODE_HR};
+InitParamTypeDef vc30fx_data = {400, WORK_MODE_HR};
 
 #if DUG_VCXX_HEART_SUPPORT
 extern void vc30fx_send_orginal_data(vcare_ppg_device_t *pdev, gsensor_axes *pgsensor, unsigned char ppgsize);
@@ -77,13 +78,18 @@ void vc30fx_pwr_en(void)        //PF5
         uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
     }
 
-    if(!vc30fx_dev.dev_work_status)
+    if (!vc30fx_dev.dev_work_status)
     {
+        if (1
 #if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
-        if(!uteDrvLedIsOpen())
+            && (!uteDrvLedIsOpen())
 #endif
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_MODULE_MAGNETIC_SUPPORT
+            && (!uteModulecompassOnoff())
+#endif
+           )
         {
-            uteModulePlatformOutputGpioSet(IO_PF5,true);
+            uteModulePlatformOutputGpioSet(IO_PF5, true);
         }
     }
 
@@ -104,11 +110,16 @@ void vc30fx_pwr_dis(void)       //PF5
 
     printf("vc30fx_pwr_dis\n");
     // drv_calibration_clk_clear();
+    if (1
 #if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
-    if(!uteDrvLedIsOpen())
+        && (!uteDrvLedIsOpen())
 #endif
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_MODULE_MAGNETIC_SUPPORT
+        && (!uteModulecompassOnoff())
+#endif
+       )
     {
-        uteModulePlatformOutputGpioSet(IO_PF5,false);
+        uteModulePlatformOutputGpioSet(IO_PF5, false);
     }
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(true);

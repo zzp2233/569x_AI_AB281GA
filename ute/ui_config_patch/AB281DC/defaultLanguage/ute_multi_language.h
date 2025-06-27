@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-06-20 16:37:17
+*@date   2025-06-26 15:27:37
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -314,6 +314,16 @@ enum
     STR_PLEASE_REMOTE, // 请前往APP打开遥控拍照
     STR_OPERATION_FUNC, // 为手表下键设置操作功能。
     STR_KEY_SET, // 下键设置
+    STR_COMPASS, // 指南针
+    STR_COMPASS_CALIBRATION, // 请把手表按照图示方向移动，进行校准
+    STR_COMPASS_E, // 东
+    STR_COMPASS_S, // 南
+    STR_COMPASS_W, // 西
+    STR_COMPASS_N, // 北
+    STR_COMPASS_SE, // 东南
+    STR_COMPASS_NE, // 东北
+    STR_COMPASS_SW, // 西南
+    STR_COMPASS_NW, // 西北
 };
 
 extern const char * const *i18n;

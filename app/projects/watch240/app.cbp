@@ -100,6 +100,8 @@
 			<Add directory="../../platform/gui/ctp/spt5113c/firmware" />
 			<Add directory="../../../ute/module/keysetfunc" />
 			<Add directory="../../../ute/drv/led" />
+			<Add directory="../../../ute/module/compass" />
+			<Add directory="../../../ute/drv/magnetic" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -116,6 +118,7 @@
 			<Add library="../../platform/bsp/bsp_sensor/hrs3300/libhrs3300.a" />
 			<Add library="../../platform/bsp/bsp_sensor/hrs3300/libhrs3300_s.a" />
 			<Add library="../../platform/bsp/bsp_sensor/hrs3300/libhrs3300_test.a" />
+			<Add library="../../../ute/module/compass/MemsicAlgo.a" />
 			<Add library="../../platform/libs/libapp.a" />
 			<Add library="../../platform/libs/libgcc.a" />
 			<Add library="../../platform/libs/libc.a" />
@@ -161,6 +164,14 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/drv/led/ute_drv_led.h" />
+		<Unit filename="../../../ute/drv/magnetic/ute_drv_magnetic_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/magnetic/ute_drv_magnetic_common.h" />
+		<Unit filename="../../../ute/drv/magnetic/ute_drv_magnetic_mmc5603.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/drv/magnetic/ute_drv_magnetic_mmc5603.h" />
 		<Unit filename="../../../ute/drv/motor/ute_drv_motor.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -221,6 +232,12 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/charencode/ute_module_charencode.h" />
+		<Unit filename="../../../ute/module/compass/MemsicAlgo.h" />
+		<Unit filename="../../../ute/module/compass/MemsicCompass.h" />
+		<Unit filename="../../../ute/module/compass/ute_module_compass.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/compass/ute_module_compass.h" />
 		<Unit filename="../../../ute/module/crc/ute_module_crc.c">
 			<Option compilerVar="CC" />
 		</Unit>

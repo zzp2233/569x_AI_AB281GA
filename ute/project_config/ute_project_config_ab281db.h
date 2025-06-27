@@ -318,6 +318,8 @@
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
 #define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
+#define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT    1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

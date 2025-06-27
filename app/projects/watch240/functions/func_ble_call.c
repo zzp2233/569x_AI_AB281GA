@@ -312,6 +312,8 @@ static void func_ble_call_message(size_msg_t msg)
 //        case EVT_CALL_NUMBER_UPDATE:
 //            func_ble_ring_number_update();
 //            break;
+        case KU_BACK:
+            break;
         case MSG_QDEC_FORWARD:
         case MSG_QDEC_BACKWARD:
         case MSG_CTP_SHORT_RIGHT:

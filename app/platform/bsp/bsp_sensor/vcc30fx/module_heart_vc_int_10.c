@@ -15,6 +15,7 @@
 #include "ute_module_factorytest.h"
 #include "ute_drv_gsensor_common.h"
 #include "ute_drv_led.h"
+#include "ute_module_compass.h"
 
 #if (SENSOR_HR_SEL == SENSOR_HR_VCLC09A)
 
@@ -97,13 +98,18 @@ void vclc09_pwr_en(void)        //PF5
         uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_HEART); //禁用睡眠，睡眠下无法测量
     }
 
-    if(!vclc09_pwr_sta)
+    if (!vclc09_pwr_sta)
     {
+        if (1
 #if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
-        if(!uteDrvLedIsOpen())
+            && (!uteDrvLedIsOpen())
 #endif
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_MODULE_MAGNETIC_SUPPORT
+            && (!uteModulecompassOnoff())
+#endif
+           )
         {
-            uteModulePlatformOutputGpioSet(IO_PF5,true);
+            uteModulePlatformOutputGpioSet(IO_PF5, true);
         }
         delay_5ms(2);
     }
@@ -119,11 +125,16 @@ void vclc09_pwr_en(void)        //PF5
 void vclc09_pwr_dis(void)       //PF5
 {
     printf("%s\n",__func__);
+    if (1
 #if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_DRV_LED_SUPPORT
-    if(!uteDrvLedIsOpen())
+        && (!uteDrvLedIsOpen())
 #endif
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_MODULE_MAGNETIC_SUPPORT
+        && (!uteModulecompassOnoff())
+#endif
+       )
     {
-        uteModulePlatformOutputGpioSet(IO_PF5,false);
+        uteModulePlatformOutputGpioSet(IO_PF5, false);
     }
     i2c_gsensor_init();
     uteModuleSportAlgoTimerStart(UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_TIMER_DURATION);

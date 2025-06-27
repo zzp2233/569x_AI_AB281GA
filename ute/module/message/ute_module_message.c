@@ -25,6 +25,9 @@
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
 #include "ute_module_emotionPressure.h"
 #endif
+#if UTE_MODULE_MAGNETIC_SUPPORT
+#include "ute_module_compass.h"
+#endif
 
 /**
 *@brief  消息模块消息处理函数
@@ -232,6 +235,14 @@ void uteModuleMessageUteApplicationTaskHandler(ute_task_application_message_t *m
         case MSG_TYPE_SCREEN_ESD_TE_INT_ERROR_RESET:
             uteDrvScreenEsdTeIntErrorCheckHandlerMsg();
             break;
+#endif
+
+#if (UTE_MODULE_MAGNETIC_SUPPORT)    //add by pcm 2024-11-27
+        case MSG_TYPE_COMPASS_TESTING:
+        {
+            uteModuleCompassDataputHandler();
+        }
+        break;
 #endif
 
         default:

@@ -43,19 +43,20 @@
 #define UTE_LOG_ALI_UPAY_LVL 0//28
 #define UTE_LOG_CYWEE_MOTION_LVL 0 //29
 #define UTE_LOG_MEMORY_LVL 0 //30
+#define UTE_LOG_COMPASS_LVL 0 //31
 
 /** 打印log，输入log等级和格式等*/
-extern const uint8_t uteModuleLogTagString[][31];
+extern const uint8_t uteModuleLogTagString[][32];
 #define UTE_MODULE_LOG(log_lvl,format,...) \
 {\
-  if((log_lvl!=0)&&(log_lvl<31))\
+  if((log_lvl!=0)&&(log_lvl<32))\
   {\
-   printf("%s:"format"\n",&uteModuleLogTagString[log_lvl][0],##__VA_ARGS__);\
+   printe("%s:"format"\n",&uteModuleLogTagString[log_lvl][0],##__VA_ARGS__);\
   }\
 }
 #define UTE_MODULE_LOG_BUFF(log_lvl,buff, size)\
 {\
-  if((log_lvl!=0)&&(log_lvl<31))\
+  if((log_lvl!=0)&&(log_lvl<32))\
   {\
    printf("%s:",&uteModuleLogTagString[log_lvl][0]);\
    uint8_t *tmpBuff = (uint8_t *)buff;\

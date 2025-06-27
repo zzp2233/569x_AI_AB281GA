@@ -38,6 +38,9 @@
 #include "ute_module_emotionPressure.h"
 #include "ute_module_keysetfunc.h"
 #include "ute_drv_led.h"
+#if UTE_MODULE_MAGNETIC_SUPPORT
+#include "ute_module_compass.h"
+#endif
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -312,6 +315,9 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #if UTE_DRV_LED_SUPPORT
         uteDrvLedInit();
+#endif
+#if UTE_MODULE_MAGNETIC_SUPPORT
+        uteModuleCompassInit();
 #endif
         uteModulePlatformCreateTimer(&uteApplicationCommonSyncDataTimer, "SYNC DATA timer", 1, UTE_SEND_DATA_TO_PHONE_INVTERVAL, false, uteApplicationCommonSyncDataTimerCallback);
         // uteModulePlatformSendMsgToAppTask(TO_APP_TASK_MSG_UPDATE_ADV_DATA,0);

@@ -367,6 +367,18 @@ static void sfunc_sleep(void)
 //         GPIOEDE = 0;
 //     }
 
+#if DRV_ENCODER_KEYS_SUPPORT
+    GPIOBDE |= BIT(0) | BIT(1);
+
+    GPIOBFEN &= ~BIT(0);
+    GPIOBDIR &= ~BIT(0);
+    GPIOBCLR = BIT(0);
+
+    GPIOBFEN &= ~BIT(1);
+    GPIOBDIR &= ~BIT(1);
+    GPIOBCLR = BIT(1);
+#endif
+
 #if (UTE_CHIP_PACKAGE_SELECT == CHIP_5691G)
     GPIOFDE = 0 | BIT(2) | BIT(1);          //GSENSOR I2C
     GPIOEDE = 0 | BIT(2) | BIT(1);          //HR I2C
@@ -610,6 +622,11 @@ static void sfunc_sleep(void)
     ble_app_watch_set_wakeup(false);
     sleep_cb.sys_is_sleep = false;
     cc_time_init();
+
+#if DRV_ENCODER_KEYS_SUPPORT
+    bsp_qdec_init();                            //旋转编码器初始化
+#endif
+
     printf("sleep_exit\n");
 }
 

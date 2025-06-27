@@ -1329,7 +1329,7 @@ compo_form_t *func_sleep_form_create(void)
     }
 
     memset(buf,0,sizeof(buf));
-    if(sleep_data->fallAsSleepTime.min)   ///是否有睡眠时长
+    if(sleep_data->totalSleepMin)   ///是否有睡眠时长
     {
 
         snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min);///* 睡 点*/
@@ -1346,7 +1346,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
 
     memset(buf,0,sizeof(buf));
-    if(sleep_data->getUpSleepTime.min)   ///是否有睡眠时长
+    if(sleep_data->totalSleepMin)   ///是否有睡眠时长
     {
         snprintf(buf, sizeof(buf), "%02d:%02d",sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///* 起 点*/
     }
@@ -1363,7 +1363,7 @@ compo_form_t *func_sleep_form_create(void)
     compo_textbox_set_forecolor(txt, make_color(128, 128, 128));
 
     memset(buf,0,sizeof(buf));
-    if(sleep_data->getUpSleepTime.min)   ///是否有睡眠时长
+    if(sleep_data->totalSleepMin)   ///是否有睡眠时长
     {
         snprintf(buf, sizeof(buf), "%02d:%02d - %02d:%02d",sleep_data->fallAsSleepTime.hour,sleep_data->fallAsSleepTime.min,sleep_data->getUpSleepTime.hour,sleep_data->getUpSleepTime.min);///*睡 起 点*/
     }

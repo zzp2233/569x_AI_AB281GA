@@ -178,12 +178,20 @@ compo_form_t *func_heart_warning_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 #if GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT
+
+    uint8_t heart_value = uteModuleHeartGetHeartValue();
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338002_6_HEART_ICON_HEART_BIN);
     compo_picturebox_set_pos(picbox,142, 135);  //需要更替为弹窗图标
-
     char txt_buf[100];
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetHeartValue());
+    if(heart_value && heart_value!=255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",heart_value);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
     compo_textbox_t *textbox = compo_textbox_create(frm, 3);
     compo_textbox_set_align_center(textbox,false);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
@@ -196,11 +204,11 @@ compo_form_t *func_heart_warning_form_create(void)
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,42/2+193,230,widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(249,52,52));
     memset(txt_buf,0,sizeof(txt_buf));
-    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue())
+    if(heart_value > uteModuleHeartGetHeartWaringMaxValue())
     {
         snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_HIGHT]);
     }
-    else if (uteModuleHeartGetHeartValue() <= uteModuleHeartGetMinHeartValue())
+    else if (heart_value < uteModuleHeartGetHeartWaringMinValue())
     {
         snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
     }
@@ -254,16 +262,27 @@ static void func_heart_warning_updata(void)
     char txt_buf[100];
 
     memset(txt_buf, 0, sizeof(txt_buf));
-    snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
+    if(heart_value && heart_value!=255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",heart_value);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
     compo_textbox_set(textbox, txt_buf);
 
-    if(heart_value >= uteModuleHeartGetHeartWaringMaxValue())
+    if(heart_value > uteModuleHeartGetHeartWaringMaxValue())
     {
         f_heart_warning->up_date_flag = COMPO_MAX_STATE;
     }
-    else if (heart_value <= uteModuleHeartGetMinHeartValue())
+    else if (heart_value < uteModuleHeartGetHeartWaringMinValue())
     {
         f_heart_warning->up_date_flag = COMPO_MIN_STATE;
+    }
+    else
+    {
+        uteModuleGuiCommonGoBackLastScreen();
     }
 
     if(f_heart_warning->up_date_flag != f_heart_warning->up_date_old_flag)
@@ -280,11 +299,6 @@ static void func_heart_warning_updata(void)
         }
         compo_textbox_set(txt_uint, txt_buf);
     }
-
-    if ((heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue()) || (heart_value == 0 || heart_value == 0xff))
-    {
-        uteModuleGuiCommonGoBackLastScreen();
-    }
 }
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 //创建心率预警窗体
@@ -293,6 +307,7 @@ compo_form_t *func_heart_warning_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
+    uint8_t heart_value = uteModuleHeartGetHeartValue();
     compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I335001_6_HEART_4_GIF_HEART_104X92_X68_Y46_BIN);
     compo_animation_set_pos(animation,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-50);  //需要更替为弹窗图标
     compo_animation_set_radix(animation,3);
@@ -300,7 +315,15 @@ compo_form_t *func_heart_warning_form_create(void)
 
     char txt_buf[10];
     memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartGetHeartValue());
+    if(heart_value && heart_value!=255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",heart_value);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+
     compo_textbox_t *textbox = compo_textbox_create(frm, 3);
     compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_48_BIN);
     compo_textbox_set_align_center(textbox,false);
@@ -319,11 +342,11 @@ compo_form_t *func_heart_warning_form_create(void)
     compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,230,230,widget_text_get_max_height());
     compo_textbox_set_forecolor(textbox,make_color(255,69,46));
     compo_setid(textbox,COMPO_ID_TEXT_UINT);
-    if(uteModuleHeartGetHeartValue() >= uteModuleHeartGetHeartWaringMaxValue() )
+    if(heart_value > uteModuleHeartGetHeartWaringMaxValue() )
     {
         compo_textbox_set(textbox,i18n[STR_HEART_HIGHT]);
     }
-    else if (uteModuleHeartGetHeartValue() <= uteModuleHeartGetMinHeartValue())
+    else if (heart_value < uteModuleHeartGetHeartWaringMinValue())
     {
         compo_textbox_set(textbox,i18n[STR_HEART_LOW]);
     }
@@ -343,13 +366,17 @@ static void func_heart_warning_updata(void)
     snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
     compo_textbox_set(textbox, txt_buf);
 
-    if(heart_value >= uteModuleHeartGetHeartWaringMaxValue())
+    if(heart_value > uteModuleHeartGetHeartWaringMaxValue())
     {
         f_heart_warning->up_date_flag = COMPO_MAX_STATE;
     }
-    else if (heart_value <= uteModuleHeartGetMinHeartValue())
+    else if (heart_value < uteModuleHeartGetHeartWaringMinValue())
     {
         f_heart_warning->up_date_flag = COMPO_MIN_STATE;
+    }
+    else
+    {
+        uteModuleGuiCommonGoBackLastScreen();
     }
 
     if(f_heart_warning->up_date_flag != f_heart_warning->up_date_old_flag)
@@ -365,11 +392,6 @@ static void func_heart_warning_updata(void)
             snprintf(txt_buf,sizeof(txt_buf),"%s!",i18n[STR_HEART_LOW]);
         }
         compo_textbox_set(txt_uint, txt_buf);
-    }
-
-    if ((heart_value < uteModuleHeartGetHeartWaringMaxValue() && heart_value > uteModuleHeartGetHeartWaringMinValue()) || (heart_value == 0 || heart_value == 0xff))
-    {
-        uteModuleGuiCommonGoBackLastScreen();
     }
 }
 
@@ -557,7 +579,7 @@ static void func_heart_warning_updata(void)
     {
         f_heart_warning->up_date_flag = COMPO_MAX_STATE;
     }
-    else if (heart_value <= uteModuleHeartGetMinHeartValue())
+    else if (heart_value <= uteModuleHeartGetHeartWaringMinValue())
     {
         f_heart_warning->up_date_flag = COMPO_MIN_STATE;
     }

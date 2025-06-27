@@ -5779,10 +5779,34 @@ static void func_timer_message(size_msg_t msg)
             break;
 
         case MSG_CTP_SHORT_RIGHT:
-            func_timer_button_release_handle();
-            func_message(msg);
+            if(f_timer->page_disp == TIMER_PAGE_CUSTOM) //在自定义的时候右滑不让退出
+            {
+                // f_timer->touch_flag = false;
+                // func_timer_setting_date_init();
+                // f_timer->old_y = 0;
+                // f_timer->moveto.y = 0;
+                // f_timer->page_disp = TIMER_PAGE_SELECT;
+                // compo_form_destroy(func_cb.frm_main);
+                // func_cb.frm_main = func_timer_form_create_by_type(f_timer->page_disp);
+            }
+            else
+            {
+                func_timer_button_release_handle();
+                func_message(msg);
+            }
             break;
-
+        case MSG_CTP_LONG_RIGHT:
+            // printf("MSG_CTP_LONG_RIGHT\n");
+            if(f_timer->page_disp == TIMER_PAGE_CUSTOM) //在自定义的时候右滑只让退出到选择界面
+            {
+                f_timer->touch_flag = false;
+                func_timer_setting_date_init();
+                f_timer->old_y = 0;
+                f_timer->moveto.y = 0;
+                f_timer->page_disp = TIMER_PAGE_SELECT;
+                compo_form_destroy(func_cb.frm_main);
+                func_cb.frm_main = func_timer_form_create_by_type(f_timer->page_disp);
+            }
         default:
             func_message(msg);
             break;

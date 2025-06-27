@@ -12,7 +12,7 @@
 enum
 {
     COMPO_ID_CARD_FIRST=1,
-    COMPO_ID_CARD_MAX_LAST=10,
+    COMPO_ID_CARD_MAX_LAST=UTE_MODULE_NOTIFY_SAVE_CNT,
     COMPO_ID_ALL_DEL_BTN,
 };
 typedef struct f_message_t_
@@ -111,7 +111,7 @@ compo_form_t *func_message_form_create(void)
         memset(str_am,0,sizeof(str_am));
         if(uteModuleSystemtime12HOn())
         {
-            if(hour<=12 && hour!=0)
+            if(hour<12)
             {
                 memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
             }
@@ -713,9 +713,9 @@ compo_form_t *func_message_form_create(void)
         return frm;
     }
 
-    if(msg_num>COMPO_ID_CARD_MAX_LAST)
+    if(msg_num>UTE_MODULE_NOTIFY_SAVE_CNT)
     {
-        msg_num = COMPO_ID_CARD_MAX_LAST;
+        msg_num = UTE_MODULE_NOTIFY_SAVE_CNT;
     }
 
     ute_module_notify_data_t *ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
@@ -731,7 +731,7 @@ compo_form_t *func_message_form_create(void)
         memset(str_am,0,sizeof(str_am));
         if(uteModuleSystemtime12HOn())
         {
-            if(hour<=12 && hour!=0)
+            if(hour<12)
             {
                 memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
             }
@@ -1647,7 +1647,7 @@ static u16 func_message_card_get_btn_id(point_t pt)
     u16 ret = 0;
     rect_t rect;
     compo_cardbox_t *cardbox;
-    for(i=0; i<=COMPO_ID_CARD_MAX_LAST; i++)
+    for(i=0; i<COMPO_ID_CARD_MAX_LAST; i++)
     {
         id = COMPO_ID_CARD_FIRST + i;
         cardbox = compo_getobj_byid(id);
@@ -1697,7 +1697,7 @@ static void func_message_click(void)
             memset(str_am,0,sizeof(str_am));
             if(uteModuleSystemtime12HOn())
             {
-                if(hour<=12 && hour!=0)
+                if(hour<12)
                 {
                     memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
                 }

@@ -246,6 +246,7 @@ void uteApplicationCommonSetAncsConnStatus(bool isConnected);
 bool uteApplicationCommonGetAncsConnStatus(void);
 uint8_t uteApplicationCommonGetDeviceQrCodeLink(char *qrBuff,uint8_t len);
 void uteModuleHardfaultInfoSave(void);
+void uteModuleHardfaultCustInfoSave(char *buf, uint16_t len);
 void uteModuleHardfaultStartSendlogData(void);
 bool uteApplicationCommonIsHardfaultReboot(void);
 void uteApplicationCommonSetHardfaultReboot(bool isHardfaul);

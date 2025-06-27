@@ -66,6 +66,8 @@ void func_clock_sub_side(void);
 
 #if UTE_MODULE_WATCH_PHOTO_SUPPORT
 compo_form_t *func_clock_photo_form_create(void);
+void func_clock_photo_process(void);
+bool func_clock_photo_message(size_msg_t msg);
 #endif
 
 #endif

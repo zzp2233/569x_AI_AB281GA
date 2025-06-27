@@ -1,4 +1,5 @@
 ﻿#include "include.h"
+#include "ute_application_common.h"
 
 #define TRACE_EN                1
 
@@ -60,6 +61,11 @@ void halt(u32 halt_no)
 #endif
     if (!halt_do(halt_no))
     {
+
+        char log_str[64];
+        snprintf(log_str, sizeof(log_str), "Halt: %04x func_cb.sta: %d\n", halt_no, func_cb.sta);
+        uteModuleHardfaultCustInfoSave(log_str,strlen(log_str));
+
         TRACE(str_halt, halt_no);
         PICCON = 0;
 #if UTE_HARDFAULT_SILENT_RESTART_SUPPORT

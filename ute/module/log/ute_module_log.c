@@ -83,7 +83,7 @@ void uteModuleLogRuningPrintf(uint8_t log_lvl, const char * format,...)
 
         va_start(args, format);
 
-        vsprintf((char *)&uteModuleLogRuningArray[0], format, args);
+        vsnprintf((char *)&uteModuleLogRuningArray[0], UTE_MODULE_LOG_RUNING_MAX_BUFF_SIZE, format, args);
 
         va_end(args);
 
@@ -112,7 +112,7 @@ void uteModuleLogBleSend(void)
 {
     while(uteModulePlatformIsAllowBleSend())
     {
-        strncpy((char *)uteModuleLogRuningArray, "\xFE\x08\x02",3);
+        memcpy((char *)uteModuleLogRuningArray, "\xFE\x08\x02",3);
         uint8_t logLen = readLogFormBuff(&uteModuleLogRuningArray[4]);
         if(logLen > 200-4)      //200是协议中设定的单条数据最大长度
         {

@@ -92,12 +92,13 @@ void vc30fx_pwr_en(void)        //PF5
             uteModulePlatformOutputGpioSet(IO_PF5, true);
         }
     }
-
+    delay_5ms(1);
 #if (SENSOR_STEP_SEL != SENSOR_STEP_NULL)
     sc7a20_500ms_callback_en(false);
 #else
     bsp_i2c_init();
     uteModuleSprotAlgoTimerStop();
+
 #endif
 }
 

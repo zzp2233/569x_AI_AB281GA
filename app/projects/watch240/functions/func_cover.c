@@ -1564,6 +1564,7 @@ void app_ute_msg_pop_up(uint8_t index)
     {
 
         ute_module_notify_data_t *ute_msg = ab_zalloc(sizeof(ute_module_notify_data_t));
+
         if (ute_msg == NULL)
         {
             printf("%s malloc err!!\n", __func__);
@@ -1598,13 +1599,14 @@ void app_ute_msg_pop_up(uint8_t index)
         memset(str_am,0,sizeof(str_am));
         if(uteModuleSystemtime12HOn())
         {
-            if(hour<=12 && hour!=0)
+            // printf("MSGBOX_MSG_TYPE_BRIEF:%02d:%02d\n",hour,min);
+            if(hour<12)
             {
                 memcpy(str_am,i18n[STR_AM],strlen(i18n[STR_AM])+1);
             }
             else
             {
-                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_AM])+1);
+                memcpy(str_am,i18n[STR_PM],strlen(i18n[STR_PM])+1);
             }
             hour %= 12;
             if(hour==0)
@@ -1617,7 +1619,7 @@ void app_ute_msg_pop_up(uint8_t index)
         int res = msgbox(msg, title, time, MSGBOX_MODE_BTN_NONE, MSGBOX_MSG_TYPE_BRIEF);
         if (res == MSGBOX_RES_ENTER_DETAIL_MSG)         //点击进入详细消息弹窗
         {
-            printf("enter MSGBOX_RES_ENTER_DETAIL_MSG\n");
+            // printf("MSGBOX_MSG_TYPE_DETAIL:%02d:%02d\n",hour,min);
             int res = msgbox(tmp_msg, title, time, MSGBOX_MODE_BTN_DELETE, MSGBOX_MSG_TYPE_DETAIL);
             if (res == MSGBOX_RES_DELETE)
             {
@@ -1713,7 +1715,7 @@ void gui_set_cover_index(uint8_t index)
 
                 if(uteModuleSystemtime12HOn())
                 {
-                    if(hour_num <=12 && hour_num!=0)
+                    if(hour_num <12)
                     {
                         snprintf(txt, sizeof(txt), "%s", i18n[STR_AM]);
                     }
@@ -1770,7 +1772,6 @@ void gui_set_cover_index(uint8_t index)
         {
             if (cover_index_last == REMIND_COVER_ALARM)
             {
-                printf("COVER_ALARM MSGBOX_RES_REMIND_LATER\n");
                 //开启配置贪睡时钟 参数
                 if (alarm_p != NULL)
                 {
@@ -1793,6 +1794,12 @@ void gui_set_cover_index(uint8_t index)
                     alarm_p->repeatRemindMin = min_later;
                     uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                     printf("repeat alarm[%d] ring, [%02d:%02d]\n", uteModuleSystemtimeGetAlarmRingIndex(), alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+                    if (uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) & BIT(7))//仅一次/单次的闹钟，点了贪睡后，接着显示闹钟为使能状态
+                    {
+                        uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(), true);
+                    }
+#endif
                 }
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
@@ -1852,6 +1859,12 @@ void gui_set_cover_index(uint8_t index)
             {
                 alarm_p->isRepeatRemindOpen = false;
                 uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+                if (uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) & BIT(7))//仅一次/单次的闹钟，点了取消后，显示闹钟为关闭状态
+                {
+                    uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(), false);
+                }
+#endif
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();

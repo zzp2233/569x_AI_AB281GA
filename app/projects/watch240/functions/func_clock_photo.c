@@ -12,35 +12,21 @@
 
 #if UTE_MODULE_WATCH_PHOTO_SUPPORT
 
+enum
+{
+    COMPO_ID_BG_IMG = 0x32,
+    COMPO_ID_TIME_TEXT,
+    COMPO_ID_DATE_TEXT,
+};
+
+/*! 时间数字字体,wang.luo 2025-06-24 */
+#ifndef UTE_WATCHS_PHOTO_TIME_NUM_FONT
 #define UTE_WATCHS_PHOTO_TIME_NUM_FONT UI_BUF_0FONT_FONT_NUM_48_BIN
+#endif
 
-#define UTE_WATCHS_PHOTO_DATE_NUM_FONT UI_BUF_0FONT_FONT_NUM_32_BIN
+const u16 week_char_id[] = {STR_SUNDAY, STR_MONDAY, STR_TUESDAY, STR_WEDNESDAY, STR_THURSDAY, STR_FRIDAY, STR_SATURDAY};
 
-// 时间小时数字位置
-#define WATCHS_PHOTO_HOUR_X         (GUI_SCREEN_CENTER_X - 40)
-#define WATCHS_PHOTO_HOUR_Y         (GUI_SCREEN_CENTER_Y)
-#define WATCHS_PHOTO_HOUR_WIDTH     300
-#define WATCHS_PHOTO_HOUR_HEIGHT    70
-
-// 时间:位置
-#define WATCHS_PHOTO_DOT_X          GUI_SCREEN_CENTER_X
-#define WATCHS_PHOTO_DOT_Y          (GUI_SCREEN_CENTER_Y)
-#define WATCHS_PHOTO_DOT_WIDTH      260
-#define WATCHS_PHOTO_DOT_HEIGHT     70
-
-// 时间分钟数字位置
-#define WATCHS_PHOTO_MIN_X          (GUI_SCREEN_CENTER_X + 40)
-#define WATCHS_PHOTO_MIN_Y          (GUI_SCREEN_CENTER_Y)
-#define WATCHS_PHOTO_MIN_WIDTH      300
-#define WATCHS_PHOTO_MIN_HEIGHT     70
-
-// 日期数字位置
-#define WATCHS_PHOTO_DATE_X          GUI_SCREEN_CENTER_X
-#define WATCHS_PHOTO_DATE_Y          (GUI_SCREEN_CENTER_Y)
-#define WATCHS_PHOTO_DATE_WIDTH      290
-#define WATCHS_PHOTO_DATE_HEIGHT     70
-
-// 蝴表盘
+// 相册表盘
 compo_form_t *func_clock_photo_form_create(void)
 {
     // 新建窗体
@@ -48,89 +34,115 @@ compo_form_t *func_clock_photo_form_create(void)
 
     uint32_t preview = 0;
     uint32_t photo = 0;
-    uteModuleWatchOnlineGetCurrPhotoAddress(&preview,&photo);
+    uteModuleWatchOnlineGetCurrPhotoAddress(&preview, &photo);
     photoWatchConfig_t config;
     uteModuleWatchOnlineGetCurrPhotoWatchConfig(&config);
+    u16 color = make_color(config.fontColor >> 16 & 0xff, config.fontColor >> 8 & 0xff, config.fontColor & 0xff);
 
+    // 背景图片
     compo_picturebox_t *pic = compo_picturebox_create(frm, photo);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
-    u16 color = make_color(config.fontColor >> 16 & 0xff, config.fontColor >> 8 & 0xff, config.fontColor & 0xff);
+    char timeStr[30];
+    tm_t rtc_tm;
+    rtc_tm = time_to_tm(compo_cb.rtc_cnt);
 
+    // hour
+    memset(timeStr, 0, sizeof(timeStr));
+    sprintf(timeStr, "%02d:%02d", rtc_tm.hour, rtc_tm.min);
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen(timeStr));
+    compo_textbox_set_font(textbox, UTE_WATCHS_PHOTO_TIME_NUM_FONT);
+
+    // 获取字体高度
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, GUI_SCREEN_WIDTH, GUI_SCREEN_HEIGHT);
+    compo_textbox_set(textbox, timeStr);
+    area_t text_area = widget_text_get_area(textbox->txt);
+    u8 date_str_hei = widget_text_get_height();
+
+    u16 all_str_hei = text_area.hei + date_str_hei + date_str_hei / 2;
     int16_t y_offset = 0;
 
     switch (config.timePosition)
     {
-        case 0:
-            y_offset = -(GUI_SCREEN_HEIGHT / 3);
+        case 0: // 上
+            y_offset = all_str_hei;
             break;
 
-        case 1:
-            y_offset = 0;
+        case 1: // 中
+            y_offset = GUI_SCREEN_CENTER_Y;
             break;
 
-        case 2:
-            y_offset = (GUI_SCREEN_HEIGHT / 3);
+        case 2: // 下
+            y_offset = GUI_SCREEN_HEIGHT - all_str_hei;
             break;
 
         default:
+            y_offset = all_str_hei;
             break;
     }
 
-    // hour
-    compo_textbox_t *txt = compo_textbox_create(frm, 2);
-    compo_textbox_set_font(txt, UTE_WATCHS_PHOTO_TIME_NUM_FONT);
-    compo_textbox_set_location(txt, WATCHS_PHOTO_HOUR_X, WATCHS_PHOTO_HOUR_Y + y_offset, WATCHS_PHOTO_HOUR_WIDTH, WATCHS_PHOTO_HOUR_HEIGHT);
-    compo_textbox_set_forecolor(txt, color);
-    compo_bonddata(txt, COMPO_BOND_HOUR);
-    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
-
-    // :
-    txt = compo_textbox_create(frm, 1);
-    compo_textbox_set_font(txt, UTE_WATCHS_PHOTO_TIME_NUM_FONT);
-    compo_textbox_set_location(txt, WATCHS_PHOTO_DOT_X, WATCHS_PHOTO_DOT_Y + y_offset, WATCHS_PHOTO_DOT_WIDTH, WATCHS_PHOTO_DOT_HEIGHT);
-    compo_textbox_set_forecolor(txt, color);
-    compo_textbox_set(txt, ":");
-
-    // minute
-    txt = compo_textbox_create(frm, 2);
-    compo_textbox_set_font(txt, UTE_WATCHS_PHOTO_TIME_NUM_FONT);
-    compo_textbox_set_location(txt, WATCHS_PHOTO_MIN_X, WATCHS_PHOTO_MIN_Y + y_offset, WATCHS_PHOTO_MIN_WIDTH, WATCHS_PHOTO_MIN_HEIGHT);
-    compo_textbox_set_forecolor(txt, color);
-    compo_bonddata(txt, COMPO_BOND_MINUTE);
-    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+    // 设置时间数字位置
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, y_offset, GUI_SCREEN_WIDTH, text_area.hei);
+    compo_textbox_set_align_center(textbox, true);
+    compo_textbox_set_forecolor(textbox, color);
+    compo_textbox_set(textbox, timeStr);
+    compo_setid(textbox, COMPO_ID_TIME_TEXT);
 
     // date
-    txt = compo_textbox_create(frm, 10);
-    compo_textbox_set_font(txt, UTE_WATCHS_PHOTO_DATE_NUM_FONT);
-    compo_textbox_set_location(txt, WATCHS_PHOTO_DATE_X,  WATCHS_PHOTO_MIN_Y + y_offset + 60, WATCHS_PHOTO_DATE_WIDTH, WATCHS_PHOTO_DATE_HEIGHT);
-    compo_textbox_set_forecolor(txt, color);
-    compo_bonddata(txt, COMPO_BOND_DATE);
-    compo_set_bonddata((component_t *)txt, time_to_tm(compo_cb.rtc_cnt));
+    memset(timeStr, 0, sizeof(timeStr));
+    char dayStr[5];
+    snprintf(timeStr, sizeof(timeStr) - sizeof(dayStr), "%s", i18n[week_char_id[rtc_tm.weekday]]);
+    snprintf(dayStr, sizeof(dayStr), " %02d", rtc_tm.day);
+    strcat(timeStr, dayStr);
+
+    // 设置日期文字
+    textbox = compo_textbox_create(frm, strlen(timeStr));
+    compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X, y_offset + date_str_hei * 2, GUI_SCREEN_WIDTH, date_str_hei);
+    compo_textbox_set_forecolor(textbox, color);
+    compo_setid(textbox, COMPO_ID_DATE_TEXT);
+    compo_textbox_set(textbox, timeStr);
 
     return frm;
 }
 
-// 地图功能事件处理
+// 相册表盘事件处理
 void func_clock_photo_process(void)
 {
-    if (sys_cb.dialplate_index != UTE_WATCHS_DIALPLATE_BTF_INDEX || sys_cb.dialplate_btf_ready == false)
+    if (sys_cb.dialplate_id != UTE_MODULE_WATCH_PHOTO_DEFAULT_ID)
     {
         return;
     }
 
+    compo_textbox_t *time_textbox = compo_getobj_byid(COMPO_ID_TIME_TEXT);
+    compo_textbox_t *date_textbox = compo_getobj_byid(COMPO_ID_DATE_TEXT);
+
+    char timeStr[30];
+    tm_t rtc_tm;
+    rtc_tm = time_to_tm(compo_cb.rtc_cnt);
+
+    // hour
+    memset(timeStr, 0, sizeof(timeStr));
+    sprintf(timeStr, "%02d:%02d", rtc_tm.hour, rtc_tm.min);
+    compo_textbox_set(time_textbox, timeStr);
+
+    // date
+    memset(timeStr, 0, sizeof(timeStr));
+    char dayStr[5];
+    snprintf(timeStr, sizeof(timeStr) - sizeof(dayStr), "%s", i18n[week_char_id[rtc_tm.weekday]]);
+    snprintf(dayStr, sizeof(dayStr), " %02d", rtc_tm.day);
+    strcat(timeStr, dayStr);
+    compo_textbox_set(date_textbox, timeStr);
 }
 
-// 地图功能消息处理
+// 相册表盘消息处理
 bool func_clock_photo_message(size_msg_t msg)
 {
-    if (sys_cb.dialplate_index != UTE_WATCHS_DIALPLATE_BTF_INDEX)
+    if (sys_cb.dialplate_id != UTE_MODULE_WATCH_PHOTO_DEFAULT_ID)
     {
         return false;
     }
 
     bool intercept_msg = false;
-    static bool time_visible = 0;
 
     switch (msg)
     {

@@ -307,12 +307,15 @@ static menu_kale_item_t tbl_menu_kaleidoscope[] =
 //#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
 //    {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
 //#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+#if !UTE_MODULE_SCREENS_GAME_SUPPORT //没有游戏功能用相机代替补全完整的圆形
+    {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
+#endif
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                },                //游戏
-#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#endif
 #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
     {.func_sta=FUNC_WOMEN_HEALTH,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_PERIOD_BIN,               },          //女性健康
-#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#endif
 };
 
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT

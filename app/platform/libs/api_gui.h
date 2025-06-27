@@ -807,6 +807,12 @@ u16 widget_text_get_autoroll_circ_pixel(widget_text_t *txt);
 u8 widget_text_get_height(void);
 
 /**
+ * @brief 获取系统字高(最大值) 用于换行等高
+ * @param[in] 无
+ * @return 系统字库字体字高
+ **/
+u8 widget_text_get_max_height(void);
+/**
  * @brief 设置排版方向
  * @param[in] right_align:排版方向是否右对齐
  * @return 无

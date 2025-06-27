@@ -68,6 +68,9 @@
 /*! LED手电筒,wang.luo 2025-06-12 */
 #define UTE_DRV_LED_SUPPORT 1
 
+/*! hardfault静默重启,不显示蓝屏，不显示开机logo,wang.luo 2025-06-11 */
+#define UTE_HARDFAULT_SILENT_RESTART_SUPPORT 1
+
 //Gsensor
 #define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1
 #define UTE_DRV_STK8321_SUPPORT 0

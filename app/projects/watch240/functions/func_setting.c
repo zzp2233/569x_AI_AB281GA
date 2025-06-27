@@ -619,8 +619,21 @@ static void func_set_sub_list_icon_click(void)
     {
 
 //        func_switch_to(func_sta, FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO);
-        func_cb.sta = func_sta;
-        sys_cb.set_idx = listbox->focus_icon_idx;
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+        if ((uteModuleKeySetFuncGetMenu() == 0) && (func_sta == FUNC_KEY_SET_FUNCTION))
+        {
+            if (msgbox((char *)i18n[STR_OPERATION_FUNC], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+            {
+                func_cb.sta = func_sta;
+                sys_cb.set_idx = listbox->focus_icon_idx;
+            }
+        }
+        else
+#endif
+        {
+            func_cb.sta = func_sta;
+            sys_cb.set_idx = listbox->focus_icon_idx;
+        }
     }
 }
 

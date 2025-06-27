@@ -624,6 +624,7 @@ static void sfunc_sleep(void)
     cc_time_init();
 
 #if DRV_ENCODER_KEYS_SUPPORT
+    extern void bsp_qdec_init(void);
     bsp_qdec_init();                            //旋转编码器初始化
 #endif
 

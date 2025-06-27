@@ -263,11 +263,19 @@ void hfp_hf_call_notice(uint32_t evt)
     switch (evt)
     {
         case BT_NOTICE_INCOMING:
+            if(!bt_pbap_is_connected())
+            {
+                bt_pbap_connect();
+            }
             printf("===>>> InComing, is 3way:%d\n", hfp_hf_check_is_3way());
             uteModuleCallSetBeforeCallStatus(1);
             bsp_call_mgr_send(CALL_MGR_BT_INCOM);
             break;
         case BT_NOTICE_OUTGOING:
+            if(!bt_pbap_is_connected())
+            {
+                bt_pbap_connect();
+            }
             printf("===>>> OutGoing, is 3way:%d\n", hfp_hf_check_is_3way());
             uteModuleCallSetBeforeCallStatus(0);
             bsp_call_mgr_send(CALL_MGR_BT_OUTGO);

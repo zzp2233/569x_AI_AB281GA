@@ -1727,7 +1727,7 @@
 
 /*! hardfault静默重启,不显示蓝屏，不显示开机logo,wang.luo 2025-06-11 */
 #ifndef UTE_HARDFAULT_SILENT_RESTART_SUPPORT
-#define UTE_HARDFAULT_SILENT_RESTART_SUPPORT 0
+#define UTE_HARDFAULT_SILENT_RESTART_SUPPORT 1
 #endif
 
 /*! 重置BT地址，启用后BT和BLE地址会不同,wang.luo 2025-02-08 */

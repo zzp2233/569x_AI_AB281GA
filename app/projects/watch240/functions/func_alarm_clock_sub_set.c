@@ -2247,11 +2247,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43);
         if(am_pm_conv == 1)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
         }
         compo_setid(btn,COMPO_ID_PIC_AM_BG);
 
@@ -2259,11 +2259,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3);
         if(am_pm_conv == 0)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
         }
         compo_setid(btn,COMPO_ID_PIC_PM_BG);
 

@@ -1918,6 +1918,7 @@ compo_form_t *func_bt_call_form_create(void)
     compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
     compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
+    compo_textbox_set(time_txt, "00:00:00");
     compo_textbox_set_forecolor(time_txt, COLOR_GREEN);
 
     //挂断按钮
@@ -3578,7 +3579,7 @@ static void func_bt_call_message(size_msg_t msg)
             break;
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT || GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT \
     || GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT \
-    || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
+    || GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
         case MSG_CTP_SHORT_RIGHT:
             if(f_bt_call->page_num==1)
             {
@@ -3605,7 +3606,18 @@ static void func_bt_call_message(size_msg_t msg)
 void func_bt_call_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_bt_call_t));
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+    if(bt_cb.disp_status == BT_STA_INCALL)
+    {
+        func_cb.frm_main = func_bt_call_form_create();
+    }
+    else
+    {
+        func_cb.frm_main = func_bt_outgoing_form_create();
+    }
+#else
     func_cb.frm_main = func_bt_outgoing_form_create();
+#endif
     func_bt_call_number_update();
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 

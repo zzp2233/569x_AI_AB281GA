@@ -555,7 +555,7 @@ static void func_heart_warning_updata(void)
     {
         f_heart_warning->up_date_flag = COMPO_MAX_STATE;
     }
-    else if (heart_value <= uteModuleHeartGetMinHeartValue())
+    else if (heart_value <= uteModuleHeartGetHeartWaringMinValue())
     {
         f_heart_warning->up_date_flag = COMPO_MIN_STATE;
     }

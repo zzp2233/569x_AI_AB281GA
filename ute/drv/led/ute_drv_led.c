@@ -16,6 +16,7 @@
 #include "ute_module_gui_common.h"
 #include "ute_module_newFactoryTest.h"
 #include "include.h"
+#include "ute_module_compass.h"
 
 #if UTE_DRV_LED_SUPPORT
 
@@ -87,7 +88,11 @@ void uteDrvLedEnable(void)
 {
     uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_LED);
 #if UTE_DRV_REUSE_HEART_POWER_SUPPORT
-    if(!bsp_sensor_hr_work_status())
+    if (!bsp_sensor_hr_work_status()
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_MODULE_MAGNETIC_SUPPORT
+        && (!uteModulecompassOnoff())
+#endif
+       )
 #endif
     {
         uteModulePlatformOutputGpioSet(UTE_DRV_LED_POWER_GPIO_PIN, true);
@@ -130,7 +135,11 @@ void uteDrvLedDisable(void)
     uteModulePlatformOutputGpioSet(UTE_DRV_LED_ENABLE_GPIO_PIN, false);
 #endif
 #if UTE_DRV_REUSE_HEART_POWER_SUPPORT
-    if(!bsp_sensor_hr_work_status())
+    if (!bsp_sensor_hr_work_status()
+#if UTE_DRV_REUSE_HEART_POWER_SUPPORT && UTE_MODULE_MAGNETIC_SUPPORT
+        && (!uteModulecompassOnoff())
+#endif
+       )
 #endif
     {
         uteModulePlatformOutputGpioSet(UTE_DRV_LED_POWER_GPIO_PIN, false);

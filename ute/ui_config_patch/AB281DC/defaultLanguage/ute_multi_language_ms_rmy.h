@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 马来语(马来西亚）
 *@author
-*@date   2025-06-20 16:37:20
+*@date   2025-06-26 15:27:40
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -314,6 +314,16 @@ const char * const i18n_ms_rmy[] =
     [STR_PLEASE_REMOTE] = "\x53\x69\x6c\x61\x20\x62\x75\x6b\x61\x20\x61\x70\x6c\x69\x6b\x61\x73\x69\x20\x6b\x61\x77\x61\x6c\x61\x6e\x20\x6a\x61\x75\x68\x20\x75\x6e\x74\x75\x6b\x20\x6d\x65\x6e\x67\x61\x6d\x62\x69\x6c\x20\x67\x61\x6d\x62\x61\x72\x2e\x00", // [298] Sila buka aplikasi kawalan jauh untuk mengambil gambar.
     [STR_OPERATION_FUNC] = "\x54\x65\x74\x61\x70\x6b\x61\x6e\x20\x66\x75\x6e\x67\x73\x69\x20\x6f\x70\x65\x72\x61\x73\x69\x20\x75\x6e\x74\x75\x6b\x20\x62\x75\x74\x61\x6e\x67\x20\x6a\x61\x6d\x2e\x00", // [299] Tetapkan fungsi operasi untuk butang jam.
     [STR_KEY_SET] = "\x54\x65\x74\x61\x70\x61\x6e\x20\x62\x75\x74\x61\x6e\x67\x00", // [300] Tetapan butang
+    [STR_COMPASS] = "\x20\x00", // [301]
+    [STR_COMPASS_CALIBRATION] = "\x20\x00", // [302]
+    [STR_COMPASS_E] = "\x20\x00", // [303]
+    [STR_COMPASS_S] = "\x20\x00", // [304]
+    [STR_COMPASS_W] = "\x20\x00", // [305]
+    [STR_COMPASS_N] = "\x20\x00", // [306]
+    [STR_COMPASS_SE] = "\x20\x00", // [307]
+    [STR_COMPASS_NE] = "\x20\x00", // [308]
+    [STR_COMPASS_SW] = "\x20\x00", // [309]
+    [STR_COMPASS_NW] = "\x20\x00", // [310]
 };
 
 #endif

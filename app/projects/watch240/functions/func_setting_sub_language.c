@@ -78,7 +78,7 @@ static const compo_listbox_item_t tbl_language_list[] =
     {STR_KREA,    .vidx = KOREAN_LANGUAGE_ID},
 #endif
 #if SCREEN_TITLE_MULTIPLE_CZECH_LANGUAGE_SUPPORT  //捷克
-    {STR_CRS,    .vidx = THAI_LANGUAGE_ID},
+    {STR_CRS,    .vidx = CZECH_LANGUAGE_ID},
 #endif
 #if SCREEN_TITLE_MULTIPLE_POLISH_LANGUAGE_SUPPORT //波兰
     {STR_POLS,    .vidx = POLISH_LANGUAGE_ID},

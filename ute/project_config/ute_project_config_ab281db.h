@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DB_H_
 
 #define DEFAULT_BLE_DEV_NAME "huafit S10"
-#define UTE_SW_VERSION "AB281DBV000112"
+#define UTE_SW_VERSION "AB281DBV000120"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DB"

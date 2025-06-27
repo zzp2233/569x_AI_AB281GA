@@ -1558,6 +1558,7 @@ typedef struct f_alarm_clock_sub_set_t_
 
     bool time_scale;
     u8 time_am_pm;
+    bool am_pm_flag;
 } f_alarm_clock_sub_set_t;
 
 typedef struct aclock_set_pic_bg_t_
@@ -2246,11 +2247,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43);
         if(am_pm_conv == 1)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
         }
         compo_setid(btn,COMPO_ID_PIC_AM_BG);
 
@@ -2258,11 +2259,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3);
         if(am_pm_conv == 0)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I332001_PUBLIC_SHANGWU00_BIN);
         }
         compo_setid(btn,COMPO_ID_PIC_PM_BG);
 
@@ -3140,10 +3141,10 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_textbox_set(txt_pm,i18n[STR_PM]);
         compo_setid(txt_pm,COMPO_ID_TXT_PM_BG);
 
-        compo_textbox_set_pos(txt_am,16+48/2,(hour && hour<=12) ? TXT_Y[2] : TXT_Y[3]);
-        compo_textbox_set_pos(txt_pm,16+48/2,(hour && hour<=12) ? TXT_Y[1] : TXT_Y[2]);
-        compo_textbox_set_forecolor(txt_am,(hour && hour<=12) ? COLOR_WHITE : COLOR_GRAY);
-        compo_textbox_set_forecolor(txt_pm,!(hour && hour<=12) ? COLOR_WHITE : COLOR_GRAY);
+        compo_textbox_set_pos(txt_am,16+48/2,(hour<12) ? TXT_Y[2] : TXT_Y[3]);
+        compo_textbox_set_pos(txt_pm,16+48/2,(hour<12) ? TXT_Y[1] : TXT_Y[2]);
+        compo_textbox_set_forecolor(txt_am,(hour<12) ? COLOR_WHITE : COLOR_GRAY);
+        compo_textbox_set_forecolor(txt_pm,!(hour<12) ? COLOR_WHITE : COLOR_GRAY);
 
         func_alarm_clock_sub_get_timer(1,0,hour,hour_data);///获取时间
         func_alarm_clock_sub_get_timer(1,1,min,min_data);
@@ -3223,7 +3224,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         f_alarm_clock_sub_set->time_scale = uteModuleSystemtime12HOn();
         f_alarm_clock_sub_set->hour_old = f_alarm_clock_sub_set->hour = hour_data[2];
         f_alarm_clock_sub_set->min_old  = f_alarm_clock_sub_set->min  = min_data[2];
-        f_alarm_clock_sub_set->am_pm_flag = (hour && hour<=12) ? true : false;
+        f_alarm_clock_sub_set->am_pm_flag = (hour<12) ? true : false;
     }
 
     return frm;
@@ -3242,11 +3243,11 @@ static void func_alarm_clock_sub_set_button_click(void)
             {
                 if(f_alarm_set->am_pm_flag)
                 {
-                    if(f_alarm_set->hour==0)f_alarm_set->hour=12;
+                    if(f_alarm_set->hour==12)f_alarm_set->hour=0;
                 }
                 else
                 {
-                    if(f_alarm_set->hour!=0)f_alarm_set->hour+=12;
+                    if(f_alarm_set->hour!=12)f_alarm_set->hour+=12;
                 }
             }
             sys_cb.alarm_edit_hour = f_alarm_set->hour;
@@ -4507,10 +4508,10 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_textbox_set(txt_pm,i18n[STR_PM]);
         compo_setid(txt_pm,COMPO_ID_TXT_PM_BG);
 
-        compo_textbox_set_pos(txt_am,TXT_AP_PM_X,(hour && hour<=12) ? TXT_Y[2] : TXT_Y[3]);
-        compo_textbox_set_pos(txt_pm,TXT_AP_PM_X,(hour && hour<=12) ? TXT_Y[1] : TXT_Y[2]);
-        compo_textbox_set_forecolor(txt_am,(hour && hour<=12) ? COLOR_WHITE : COLOR_GRAY);
-        compo_textbox_set_forecolor(txt_pm,!(hour && hour<=12) ? COLOR_WHITE : COLOR_GRAY);
+        compo_textbox_set_pos(txt_am,TXT_AP_PM_X,(hour<12) ? TXT_Y[2] : TXT_Y[3]);
+        compo_textbox_set_pos(txt_pm,TXT_AP_PM_X,(hour<12) ? TXT_Y[1] : TXT_Y[2]);
+        compo_textbox_set_forecolor(txt_am,(hour<12) ? COLOR_WHITE : COLOR_GRAY);
+        compo_textbox_set_forecolor(txt_pm,!(hour<12) ? COLOR_WHITE : COLOR_GRAY);
 
         func_alarm_clock_sub_get_timer(1,0,hour,hour_data);///获取时间
         func_alarm_clock_sub_get_timer(1,1,min,min_data);
@@ -4582,7 +4583,7 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         f_alarm_clock_sub_set->time_scale = uteModuleSystemtime12HOn();
         f_alarm_clock_sub_set->hour_old = f_alarm_clock_sub_set->hour = hour_data[2];
         f_alarm_clock_sub_set->min_old  = f_alarm_clock_sub_set->min  = min_data[2];
-        f_alarm_clock_sub_set->am_pm_flag = (hour && hour<=12) ? true : false;
+        f_alarm_clock_sub_set->am_pm_flag = (hour<12) ? true : false;
     }
 
     return frm;
@@ -4601,22 +4602,15 @@ static void func_alarm_clock_sub_set_button_click(void)
             {
                 if(f_alarm_set->am_pm_flag)
                 {
-                    if(f_alarm_set->hour==0)f_alarm_set->hour=12;
+                    if(f_alarm_set->hour==12)f_alarm_set->hour=0;
                 }
                 else
                 {
-                    if(f_alarm_set->hour!=0)f_alarm_set->hour+=12;
+                    if(f_alarm_set->hour!=12)f_alarm_set->hour+=12;
                 }
             }
             sys_cb.alarm_edit_hour = f_alarm_set->hour;
             sys_cb.alarm_edit_min  = f_alarm_set->min;
-            ALARM_EDIT(sys_cb.alarm_edit_idx,
-                       ALARM_GET_SWITCH(sys_cb.alarm_edit_idx),
-                       ALARM_GET_CYCLE(sys_cb.alarm_edit_idx),
-                       sys_cb.alarm_edit_hour,
-                       sys_cb.alarm_edit_min,
-                       0,
-                       0);
             uteTaskGuiStartScreen(FUNC_ALARM_CLOCK_SUB_REPEAT, 0, __func__);
             break;
         default:
@@ -4891,6 +4885,7 @@ typedef struct f_alarm_clock_sub_set_t_
 
     bool time_scale;
     u8 time_am_pm;
+    bool am_pm_flag;
 } f_alarm_clock_sub_set_t;
 
 typedef struct aclock_set_pic_bg_t_
@@ -5579,11 +5574,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y-43);
         if(am_pm_conv == 1)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU01_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU00_BIN);
         }
         compo_setid(btn,COMPO_ID_PIC_AM_BG);
 
@@ -5591,11 +5586,11 @@ compo_form_t *func_alarm_clock_sub_set_form_create(void)
         compo_button_set_pos(btn,GUI_SCREEN_CENTER_X/3,GUI_SCREEN_CENTER_Y+3);
         if(am_pm_conv == 0)
         {
-            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU00_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU01_BIN);
         }
         else
         {
-            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU01_BIN);
+            compo_button_set_bgimg(btn, UI_BUF_I340001_PUBLIC_SHANGWU00_BIN);
         }
         compo_setid(btn,COMPO_ID_PIC_PM_BG);
 
@@ -6841,6 +6836,7 @@ static void func_alarm_clock_sub_set_message(size_msg_t msg)
             break;
 
         case MSG_SYS_500MS:
+            printf("am_pm_flag:%d\n",f_alarm_set->am_pm_flag);
 #if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT)
             if (f_alarm_set->time_scale != uteModuleSystemtime12HOn())
             {

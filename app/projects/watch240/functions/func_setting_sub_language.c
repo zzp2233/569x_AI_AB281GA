@@ -78,7 +78,7 @@ static const compo_listbox_item_t tbl_language_list[] =
     {STR_KREA,    .vidx = KOREAN_LANGUAGE_ID},
 #endif
 #if SCREEN_TITLE_MULTIPLE_CZECH_LANGUAGE_SUPPORT  //捷克
-    {STR_CRS,    .vidx = THAI_LANGUAGE_ID},
+    {STR_CRS,    .vidx = CZECH_LANGUAGE_ID},
 #endif
 #if SCREEN_TITLE_MULTIPLE_POLISH_LANGUAGE_SUPPORT //波兰
     {STR_POLS,    .vidx = POLISH_LANGUAGE_ID},
@@ -353,22 +353,20 @@ compo_form_t *func_set_sub_language_form_create(void)
 
     //新建列表
     compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
-    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I338001_11_CALL_BG_BIN);
+    compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
 
     compo_listbox_set_sta_icon(listbox, UI_BUF_I338001_1_START_LANGUAGE_OK_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_language_bit);
-
-    area_t img_rect = gui_image_get_size(UI_BUF_I338001_11_CALL_BG_BIN);
-
-    compo_listbox_set_item_text(listbox,img_rect.wid/2, img_rect.hei/2, 100, img_rect.hei, true);
-
     compo_setid(listbox, COMPO_ID_LISTBOX);
     uint8_t set_idx = 1;
     if (set_idx < 1)
     {
         set_idx = 1;
     }
+    area_t img_rect = gui_image_get_size(UI_BUF_I338001_11_CALL_BG_BIN);
+    compo_listbox_set_item_text(listbox,img_rect.wid/2, img_rect.hei/2, 100, img_rect.hei, true);
+
     compo_listbox_set_focus_byidx(listbox, set_idx);
     compo_listbox_update(listbox);
 

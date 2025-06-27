@@ -263,11 +263,19 @@ void hfp_hf_call_notice(uint32_t evt)
     switch (evt)
     {
         case BT_NOTICE_INCOMING:
+            if(!bt_pbap_is_connected())
+            {
+                bt_pbap_connect();
+            }
             printf("===>>> InComing, is 3way:%d\n", hfp_hf_check_is_3way());
             uteModuleCallSetBeforeCallStatus(1);
             bsp_call_mgr_send(CALL_MGR_BT_INCOM);
             break;
         case BT_NOTICE_OUTGOING:
+            if(!bt_pbap_is_connected())
+            {
+                bt_pbap_connect();
+            }
             printf("===>>> OutGoing, is 3way:%d\n", hfp_hf_check_is_3way());
             uteModuleCallSetBeforeCallStatus(0);
             bsp_call_mgr_send(CALL_MGR_BT_OUTGO);
@@ -304,6 +312,7 @@ void hfp_hf_call_notice(uint32_t evt)
             {
                 uint8_t nameLen;
                 uteModuleCallGetAddressBookContactName((uint8_t*)hfp_get_last_call_number(0),strlen(hfp_get_last_call_number(0)),(uint8_t *)&sys_cb.pbap_result_Name[0],&nameLen);
+                uteModuleCallSetContactsNumberAndName(NULL, 0, (uint8_t*)sys_cb.pbap_result_Name, strlen(sys_cb.pbap_result_Name));
                 printf("===>>> Address Book Name: %s\n", sys_cb.pbap_result_Name);
             }
             bt_cb.number_sta = true;

@@ -10,11 +10,15 @@
 #define _UTE_PROJECT_CONFIG_AB281FA_H_
 
 #define DEFAULT_BLE_DEV_NAME "SVERGE"
-#define UTE_SW_VERSION "AB281FAV000095"
+#define UTE_SW_VERSION "AB281FAV000121"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
 /******************客户定制功能支持开始**************************************/
+
+/*! 工厂模式使用英文显示 */
+#define UTE_MODULE_FACTORY_TEST_ENGLISH_SUPPORT 1
+
 /*! 在蝴蝶表盘时TE模式设置为1，即默认模式，不适用复杂界面的TE模式 */
 #define UTE_WATCH_BUTTERFLY_DIAL_TE_MODE_DEFAULT_SUPPORT 0 //能优化撕裂效果，但是蝴蝶飞行速度变慢，后使用调屏幕驱动优化
 /*! 标题栏高度,quan.qi.cai 2025-05-29 */
@@ -43,7 +47,7 @@
 #endif
 
 #define UTE_MODULE_BREATHE_SUB_TIME_T70A_SUPPORT 1 // 呼吸设置时间界面
-#define UTE_GUI_MENU_ALWAYS_DISPLAY_MENSTRUAL_CYCLE_SUPPORT 0 // 女性健康界面始终显示，0为男性时隐藏
+
 /******************客户定制功能支持结束**************************************/
 
 /*! 足球样式列表撕裂问题，跟别的项目区分，防止修改点导致别的项目撕裂 */

@@ -250,9 +250,9 @@ static menu_hc_item_t tbl_menu_sudoku[] =
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_HEART_RATE_BIN,            },   //心率
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-// #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-    // {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STRESS_BIN,                },   //压力
-// #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+    {.func_sta=FUNC_PRESSURE,                 .res_addr=UI_BUF_I335001_2_HONEYCOMB_STRESS_BIN,                },   //压力
+#endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {.func_sta=FUNC_SPORT,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_EXERCISE_BIN,              },   //运动
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
@@ -289,12 +289,9 @@ static menu_hc_item_t tbl_menu_sudoku[] =
 // #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     // {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SOS_BIN,                   },  //SOS
 // #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
-#if UTE_MODULE_SCREENS_GAME_SUPPORT
-    // {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  }, //游戏
-#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
-// #if UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
     {.func_sta=FUNC_TOOLBOX,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TOOLBOX_BIN,               },  //工具箱
-// #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              },  //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT

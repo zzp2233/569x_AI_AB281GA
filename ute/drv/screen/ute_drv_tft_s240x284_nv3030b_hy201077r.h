@@ -98,7 +98,7 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201077rInit(void)
     memcpy(&tmp[0], "\x02\x02\x0A\x14", 4);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB5, &tmp[0], 4);
 
-    memcpy(&tmp[0], "\x04\x01\x9F\x00\x02", 5);
+    memcpy(&tmp[0], "\x04\x51\x9F\x00\x02", 5);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB6, &tmp[0], 5);
 
     memcpy(&tmp[0], "\x11", 1);
@@ -134,7 +134,7 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201077rInit(void)
     memcpy(&tmp[0], "\x52", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEc, &tmp[0], 1);
 
-    memcpy(&tmp[0], "\x01\x01\x02", 3);
+    memcpy(&tmp[0], "\x01\x61\x62", 3);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xF1, &tmp[0], 3);
 
     memcpy(&tmp[0], "\x01\x30\x00\x00", 4);
@@ -149,7 +149,7 @@ __STATIC_INLINE void drvScreenTft240X284Nv3030BHy201077rInit(void)
     memcpy(&tmp[0], "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x35, &tmp[0], 1);
 
-    memcpy(&tmp[0], "\xc0", 1);
+    memcpy(&tmp[0], "\x00", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x36, &tmp[0], 1);
 
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x21, &tmp[0], 0);

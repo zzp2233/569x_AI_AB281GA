@@ -813,6 +813,13 @@ static u8 side_get_latest_func(u8 idx)
     u8 i, j;
     u8 latest_default_tmp[DEFAULT_LATEST_TASK_NUM] = {0};
     u8 latest_cnt = latest_task_count();
+//     s8 women_health = latest_task_find(FUNC_WOMEN_HEALTH);
+// #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+//     if(!uteModuleMenstrualCycleIsOpen() && women_health != -1)
+//     {
+//         latest_task_del(women_health);
+//     }
+// #endif
     if (latest_cnt > idx)
     {
         return latest_task_get(idx);

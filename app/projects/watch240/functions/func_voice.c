@@ -1258,7 +1258,7 @@ static void func_voice_process(void)
 //语音助手功能消息处理
 static void func_voice_message(size_msg_t msg)
 {
-    //f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
+    // f_voice_t *f_voice = (f_voice_t*)func_cb.f_cb;
     switch (msg)
     {
         case MSG_CTP_CLICK:

@@ -1772,7 +1772,6 @@ void gui_set_cover_index(uint8_t index)
         {
             if (cover_index_last == REMIND_COVER_ALARM)
             {
-                printf("COVER_ALARM MSGBOX_RES_REMIND_LATER\n");
                 //开启配置贪睡时钟 参数
                 if (alarm_p != NULL)
                 {
@@ -1795,6 +1794,12 @@ void gui_set_cover_index(uint8_t index)
                     alarm_p->repeatRemindMin = min_later;
                     uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                     printf("repeat alarm[%d] ring, [%02d:%02d]\n", uteModuleSystemtimeGetAlarmRingIndex(), alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+                    if (uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) & BIT(7))//仅一次/单次的闹钟，点了贪睡后，接着显示闹钟为使能状态
+                    {
+                        uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(), true);
+                    }
+#endif
                 }
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
@@ -1854,6 +1859,12 @@ void gui_set_cover_index(uint8_t index)
             {
                 alarm_p->isRepeatRemindOpen = false;
                 uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+                if (uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) & BIT(7))//仅一次/单次的闹钟，点了取消后，显示闹钟为关闭状态
+                {
+                    uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(), false);
+                }
+#endif
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();

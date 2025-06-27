@@ -30,8 +30,8 @@
 #define UTE_MODULE_PLATFORM_DLPS_BIT_SYNC          0x00000200
 #define UTE_MODULE_PLATFORM_DLPS_BIT_LED           0x00000400
 
-#define UTE_MODULE_PLATFORM_TIMER_MAX    8
-#define UTE_MODULE_PLATFORM_MUTEX_MAX    6
+#define UTE_MODULE_PLATFORM_TIMER_MAX    0x0f
+#define UTE_MODULE_PLATFORM_MUTEX_MAX    0x0f
 typedef struct
 {
     co_timer_t timer;

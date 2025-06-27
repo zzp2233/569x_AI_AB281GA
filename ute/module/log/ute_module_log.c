@@ -16,7 +16,7 @@ uint8_t uteModuleRuningLogSwitch = false;
 static uint8_t uteModuleLogRuningArray[UTE_MODULE_LOG_RUNING_MAX_BUFF_SIZE];
 #endif
 /** log打印的tag字符串 */
-const uint8_t uteModuleLogTagString[][31] =
+const uint8_t uteModuleLogTagString[][32] =
 {
     {" "},
     {"LOG_SYSTEM"},
@@ -49,6 +49,7 @@ const uint8_t uteModuleLogTagString[][31] =
     {"LOG_ALI_UPAY"},
     {"LOG_CWM"},
     {"LOG_MEMORY"},
+    {"LOG_COMPASS"},
 };
 #if UTE_MODULE_RUNING_LOG_SUPPORT
 static uint8_t writeLogTobuff(uint8_t *pLogData, uint8_t logLen);
@@ -76,7 +77,7 @@ void uteModuleLogSetSendRuningLogSwitch(bool status)
 
 void uteModuleLogRuningPrintf(uint8_t log_lvl, const char * format,...)
 {
-    if ((log_lvl != 0) && (log_lvl < 30))
+    if ((log_lvl != 0) && (log_lvl < 32))
     {
         va_list    args;
 

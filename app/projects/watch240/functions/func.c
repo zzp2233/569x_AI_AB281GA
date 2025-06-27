@@ -104,7 +104,9 @@ extern void func_scan(void);
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
 extern void func_voice(void);
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
-//extern void func_compass(void);
+#if UTE_MODULE_SCREENS_COMPASS_SUPPORT
+extern void func_compass(void);
+#endif
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
 extern void func_address_book(void);
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
@@ -329,7 +331,9 @@ compo_form_t *func_altitude_form_create(void);
 compo_form_t *func_message_form_create(void);
 compo_form_t *func_scan_form_create(void);
 compo_form_t *func_voice_form_create(void);
-//compo_form_t *func_compass_form_create(void);
+#if UTE_MODULE_SCREENS_COMPASS_SUPPORT
+compo_form_t *func_compass_form_create(void);
+#endif
 compo_form_t *func_address_book_form_create(void);
 compo_form_t *func_set_sub_list_form_create(void);
 compo_form_t *func_set_sub_wrist_form_create(void);
@@ -506,7 +510,9 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {FUNC_VOICE,                        func_voice_form_create},
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
-//    {FUNC_COMPASS,                      func_compass_form_create},
+#if UTE_MODULE_SCREENS_COMPASS_SUPPORT
+    {FUNC_COMPASS,                      func_compass_form_create},
+#endif
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {FUNC_ADDRESS_BOOK,                 func_address_book_form_create},
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
@@ -741,7 +747,9 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {FUNC_VOICE,                        func_voice},                    //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
-//    {FUNC_COMPASS,                      func_compass},                  //指南针
+#if UTE_MODULE_SCREENS_COMPASS_SUPPORT
+    {FUNC_COMPASS,                      func_compass},                  //指南针
+#endif
 #if UTE_MODULE_SCREENS_LINK_MAN_SUPPORT
     {FUNC_ADDRESS_BOOK,                 func_address_book},             //电话簿
 #endif // UTE_MODULE_SCREENS_LINK_MAN_SUPPORT

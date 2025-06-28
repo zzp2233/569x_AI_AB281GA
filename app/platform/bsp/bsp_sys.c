@@ -313,6 +313,7 @@ void usr_tmr5ms_isr(void)
     if ((tmr5ms_cnt % 100) == 0)
     {
         msg_enqueue(MSG_SYS_500MS);
+        msg_enqueue(MSG_SYS_BOX_500MS);
         sys_cb.cm_times++;
 #if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_ELLIPSIS_TIMER_SUPPORT
         if(uteModuleSportAlgoTimerIsRunning())
@@ -880,5 +881,8 @@ void bsp_sys_init(void)
     lang_select(LANG_ZH);
 #endif
     // ecig_cfg.smoke_power = 15;
+#if CHARGE_EX_IC_SELECT
+    bsp_charge_ex_init();
+#endif
 }
 

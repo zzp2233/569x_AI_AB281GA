@@ -295,6 +295,7 @@ static void sfunc_sleep(void)
 #if ECIG_POWER_CONTROL
     bsp_ecig_exit();
 #endif
+    lp7812c_init_exit();
 #if (ASR_SELECT && ASR_FULL_SCENE)
     bsp_asr_stop();
 #endif
@@ -353,10 +354,10 @@ static void sfunc_sleep(void)
     GPIOEDE = 0;
     GPIOFDE = pf_keep;
 
-    port_gpio_set_out(IO_PH5,0);
-    port_gpio_set_out(IO_PB1,0);
-    port_gpio_set_in(IO_PB0,GPIOxPU200K);
-    port_gpio_set_in(IO_PA5,GPIOxPU200K);
+    // port_gpio_set_out(IO_PH5,0);
+    // port_gpio_set_out(IO_PB1,0);
+    // port_gpio_set_in(IO_PB0,GPIOxPU200K);
+    // port_gpio_set_in(IO_PA5,GPIOxPU200K);
 
     wkie = WKUPCON & BIT(16);
     WKUPCON &= ~BIT(16);                        //休眠时关掉WKIE
@@ -448,6 +449,12 @@ static void sfunc_sleep(void)
             break;
         }
 #endif
+        if(wkpnd & BIT(PORT_INT1_VECTOR))
+        {
+            sys_cb.gui_need_wakeup = true;
+            printf("box wakeup: %x\n", wkpnd);
+            break;
+        }
 
         if ((RTCCON9 & BIT(2)) || (RTCCON10 & BIT(2)) || wko_wkup_flag)
         {
@@ -619,6 +626,9 @@ static void sfunc_sleep(void)
 #endif
 #if ECIG_POWER_CONTROL
     bsp_ecig_sleep_wakeup();
+#endif
+#if CHARGE_EX_IC_SELECT
+    bsp_charge_ex_init();
 #endif
     bt_exit_sleep();
     sleep_cb.sys_is_sleep = false;

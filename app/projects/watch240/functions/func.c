@@ -1562,6 +1562,25 @@ void func_message(size_msg_t msg)
 //            break;
 //
         case MSG_SYS_500MS:
+
+            break;
+        case MSG_SYS_BOX_500MS:
+#if CHARGE_EX_IC_SELECT
+            printf("MSG_SYS_BOX_500MS \n");
+            bsp_charge_ex_process();
+#endif // CHARGE_EX_IC_SELECT
+            break;
+        case MSG_SYS_BOX_CHARGE:
+            printf("MSG_SYS_BOX_CHARGE \n");
+            bsp_charge_ex_mode_set(BOX_CHARGE_MODE);
+            // sleep_cb.sys_is_sleep = false;
+            uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_EARPHONE);
+            break;
+        case MSG_SYS_BOX_INTER:
+            printf("MSG_SYS_BOX_INTER \n");
+            bsp_charge_ex_mode_set(BOX_CHK_MODE);
+            // sleep_cb.sys_is_sleep = true;
+            uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_EARPHONE);
             break;
 
         case MSG_SYS_1S:

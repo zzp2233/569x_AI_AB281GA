@@ -22,7 +22,7 @@
 #define PROJECT_AB281EA_SUPPORT      0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-04-21 */
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
 #define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
-#define PROJECT_AB281DB_SUPPORT      1 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
+#define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
 #define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-05-19 G28Z项目 */
 #define PROJECT_AB281K_SUPPORT       0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
 #define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
@@ -33,6 +33,7 @@
 #define PROJECT_AB281FA_SUPPORT      0 /*! 同乐达T70-A TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
 #define PROJECT_AB281AD_SUPPORT      0 /*! 融创A310,在T62基础上增加编码器,TFT 240X284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-06-21 */
 #define PROJECT_AB281DE_SUPPORT      0 /*! JU107首版软件需求,TFT 240X284 NV3030B,CHIP_5691C_F,基于AB281DA,banghua.yin 2025-06-24 */
+#define PROJECT_AB281JA_SUPPORT      1 /*! HX03 天之蓝UI, TFT 360x360,CHIP_5691C_F,banghua.yin 2025-06-28 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -82,6 +83,8 @@
 #include"ute_project_config_ab281ad.h"
 #elif PROJECT_AB281DE_SUPPORT
 #include"ute_project_config_ab281de.h"
+#elif PROJECT_AB281JA_SUPPORT
+#include"ute_project_config_ab281ja.h"
 #endif
 
 /** Log模块控制开关*/

@@ -98,6 +98,9 @@
 			<Add directory="functions/3d" />
 			<Add directory="../../../ute/module/smoke" />
 			<Add directory="../../../ute/module/password" />
+			<Add directory="../../platform/bsp/bsp_charge_ex" />
+			<Add directory="../../platform/bsp/bsp_charge_ex/charge_ic_comm" />
+			<Add directory="../../platform/bsp/bsp_charge_ex/lp7812c" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -469,6 +472,45 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/bsp/bsp_charge.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_charge_ex.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_charge_ex.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_charge_ex_bat.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_charge_ex_bat.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_charge_ex_hal.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_charge_ex_hal.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_earphone_manage.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_earphone_manage.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_hall.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_hall.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_smart_vhouse_host.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_smart_vhouse_host.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_smart_vhouse_host_cmd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_smart_vhouse_host_cmd.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/bsp_smart_vhouse_host_parser.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/charge_ic_comm/charge_ic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/charge_ic_comm/charge_ic.h" />
+		<Unit filename="../../platform/bsp/bsp_charge_ex/lp7812c/lp7812c.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_charge_ex/lp7812c/lp7812c.h" />
 		<Unit filename="../../platform/bsp/bsp_cm.c">
 			<Option compilerVar="CC" />
 		</Unit>

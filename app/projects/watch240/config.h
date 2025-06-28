@@ -48,6 +48,7 @@
 // #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT
 #define GUI_SELECT                      GUI_TFT_320_ST77916//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
+#define GUI_MODE_SELECT                MODE_QSPI
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
 #define GUI_MODE_SELECT                 MODE_3WIRE_9BIT_2LINE             //屏幕接口选择
@@ -623,6 +624,77 @@
 #define ECIG_TIMER_US                   100             //100us
 #endif
 
+
+/*****************************************************************************
+ * Module    : 充电IC 功能选择
+ *****************************************************************************/
+#define CHARGE_EX_IC_SELECT             CHARGE_IC_LP7812C   //充电模块IC选择
+#if (CHARGE_EX_IC_SELECT == CHARGE_IC_SY8827)
+#define CHARGE_SDA_GPIO                 IO_PB7              //充电IC单线数据脚（DCIN-DET）
+#define CHARGE_CTRL_GPIO                IO_PF0              //充电IC模式控制脚（SY-EN）
+#define CHARGE_ENABLE_GPIO              IO_PB5              //充电启停控制脚（VOUT-EN）
+#else
+#define CHARGE_SDA_GPIO                 IO_PA5              //充电IC单线数据脚
+#define CHARGE_CTRL_GPIO                IO_PH4              //充电IC模式控制脚
+#define SDA_STATUS()                    (GPIOA & BIT(5))
+#define CHARGE_ENABLE_GPIO              IO_NONE             //充电启停控制脚
+#endif
+
+/*****************************************************************************
+ * Module    :  智能充电仓UART通讯 功能选择
+ *****************************************************************************/
+#define SMART_VHOUSE_HOST_EN            0               //是否打开智能充电仓串口主机功能
+#define SMART_VHOUSE_HOST_UART_SEL      UART1_GROUP
+#define SMART_VHOUSE_HOST_HS_EN         0               //是否打开智能充电仓串口高速通讯模式, 智能仓方案使用, 与测试盒快测快配独立使用
+#if (CHARGE_EX_IC_SELECT == CHARGE_IC_SY8827)
+#define SMART_VHOUSE_HOST_RX            IO_NONE
+#define SMART_VHOUSE_HOST_TX            IO_PB1          //串口通讯tx、rx复用引脚
+#else
+#define SMART_VHOUSE_HOST_RX            IO_PB0          //串口通讯rx脚配置, 不同串口需要在bsp_uart.h打开不同串口模块, 默认使用uart1;
+#define SMART_VHOUSE_HOST_TX            IO_PB1          //串口通讯tx脚配置
+#endif
+
+/*****************************************************************************
+ * Module    : 霍尔开关 功能选择
+ *****************************************************************************/
+#define HALL_EN                         0               //霍尔检测总开关
+#define HALL_GPIO                       IO_PE0          //霍尔检测IO口选择
+#define HALL_VDD_SEL                    0               //霍尔供电方式, 0:vbat; 1:vddio;
+
+/*****************************************************************************
+ * Module    :蜂鸣器 模拟pwm 功能选择
+ *****************************************************************************/
+#define BUZZER_EN                       0              //霍尔检测总开关
+
+#define BUZZER_GPIO                IO_PF3
+#define BUZZER_GPIO_INIT()        {GPIOFFEN &= ~BIT(3); GPIOFDE |= BIT(3); GPIOFDIR &= ~BIT(3);}
+#define BUZZER_GPIO_DEINIT()      {GPIOFFEN &= ~BIT(3); GPIOFDE &= ~BIT(3); GPIOFDIR |= BIT(3);}
+#define BUZZER_GPIO_EN()          {GPIOFSET = BIT(3);}
+#define BUZZER_GPIO_DIS()         {GPIOFCLR = BIT(3);}
+
+
+
+
+/*****************************************************************************
+ * Module    : 充电仓 功能选择
+ *****************************************************************************/
+#define BOX_LPWR_PERCENT                5                       //仓低电模式电量(不给耳机充电)
+#define BOX_LPWR_BRIGHTNESS             3                       //仓低电模式亮度(%)
+
+#define BOX_OPEN_WAKEUP_EARPHONE        0                       //仓是否打开唤醒耳机操作
+#define BOX_WKUP_OV_DURATION            600                     //掉0V持续时间(ms)
+#define BOX_CLOSE_WKUP_5V_EN            0                       //仓关盖拉唤醒, 是否需要拉5V
+
+#define BOX_GUI_ROTATE_DISP             1                       //是否打开旋转显示
+#define BOX_RTC_EN                      1                       //是否打开时间显示; (无时间显示时深睡无需时间校准)
+#define LPWR_IDLE_EN                    0                       //是否低电不关机, 进idle模式
+#define DEEPSLEEP_REPLACE_PWROFF        1                       //关机功能是否使用深睡替代
+
+#define TFT_SLEEP_CMD_EN                0                       //休眠前是否发送tft休眠指令（tft、tp共用vddio供电时使用）
+
+#define BOX_BLE_MASTER_SLAVE_EN         0                       //是否有ble主从
+#define BGLIGHT_LEVEL_CNT               3                       //背光亮度等级数（不包括0）
+#define BGLIGHT_LV_DEFAULT              50                      //默认背光亮度（0-100）
 
 #include "config_extra.h"
 

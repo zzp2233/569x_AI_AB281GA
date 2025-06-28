@@ -197,7 +197,30 @@ bool port_gpio_disable(u8 io_num)
 }
 
 
-
+// 功能：gpio 数字功能
+// io_num :gpio pin
+// level_flag 0 : 低电平，1 ： 高电平
+bool port_gpio_set_func(u8 io_num,bool level_flag)
+{
+    gpio_t gpio;
+    if ((io_num == IO_NONE) || (io_num > IO_MAX_NUM))
+    {
+        return false;
+    }
+    gpio_cfg_init(&gpio, io_num);
+    gpio.sfr[GPIOxFEN] |= BIT(gpio.num);
+    gpio.sfr[GPIOxDE] |= BIT(gpio.num);
+    gpio.sfr[GPIOxDIR] &= ~BIT(gpio.num);
+    if(!level_flag)
+    {
+        gpio.sfr[GPIOxCLR] = BIT(gpio.num);
+    }
+    else
+    {
+        gpio.sfr[GPIOxSET] = BIT(gpio.num);
+    }
+    return true;
+}
 
 
 

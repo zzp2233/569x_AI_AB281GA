@@ -1739,9 +1739,12 @@ void func_message(size_msg_t msg)
             uint8_t func_sta = uteModuleKeySetFuncGetMenu();
             if (func_sta == 0)
             {
-                if (msgbox((char *)i18n[STR_OPERATION_FUNC], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+                if (uteModuleGuiCommonGetCurrentScreenId() != FUNC_KEY_SET_FUNCTION)
                 {
-                    uteTaskGuiStartScreen(FUNC_KEY_SET_FUNCTION, 0, __func__);
+                    if (msgbox((char *)i18n[STR_OPERATION_FUNC], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+                    {
+                        uteTaskGuiStartScreen(FUNC_KEY_SET_FUNCTION, 0, __func__);
+                    }
                 }
             }
             else

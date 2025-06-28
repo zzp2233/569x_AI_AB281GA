@@ -1,5 +1,8 @@
 #include "include.h"
 #include "func.h"
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+#include "ute_module_keysetfunc.h"
+#endif
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -193,6 +196,9 @@ static const compo_listbox_item_t tbl_setting_list[] =
 #endif
     {STR_SYSTEM_SET,                    UI_BUF_I335001_27_MORE_28_SET_1_LIST_TUBIAO_ICON_PIC56X56_X16_Y62_134_206_278_350_422_494_566_638_710_09_SYSTEM_BIN,            .func_sta = FUNC_SYSTEM},   //系统
     {STR_SETTING_ABOUT,                 UI_BUF_I335001_27_MORE_28_SET_1_LIST_TUBIAO_ICON_PIC56X56_X16_Y62_134_206_278_350_422_494_566_638_710_10_ABOUT_BIN,             .func_sta = FUNC_SET_SUB_ABOUT},    //关于
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+    {STR_KEY_SET,                       UI_BUF_I335003_SETTING_KEYSET_BIN,                                                                                              .func_sta = FUNC_KEY_SET_FUNCTION},    //下按键设置
+#endif
 };
 
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -613,8 +619,21 @@ static void func_set_sub_list_icon_click(void)
     {
 
 //        func_switch_to(func_sta, FUNC_SWITCH_ZOOM_FADE | FUNC_SWITCH_AUTO);
-        func_cb.sta = func_sta;
-        sys_cb.set_idx = listbox->focus_icon_idx;
+#if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
+        if ((uteModuleKeySetFuncGetMenu() == 0) && (func_sta == FUNC_KEY_SET_FUNCTION))
+        {
+            if (msgbox((char *)i18n[STR_OPERATION_FUNC], NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE) == MSGBOX_RES_OK)
+            {
+                func_cb.sta = func_sta;
+                sys_cb.set_idx = listbox->focus_icon_idx;
+            }
+        }
+        else
+#endif
+        {
+            func_cb.sta = func_sta;
+            sys_cb.set_idx = listbox->focus_icon_idx;
+        }
     }
 }
 

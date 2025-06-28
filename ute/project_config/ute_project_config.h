@@ -84,13 +84,10 @@
 #include"ute_project_config_ab281ad.h"
 #elif PROJECT_AB281DE_SUPPORT
 #include"ute_project_config_ab281de.h"
-<<<<<<< HEAD
 #elif PROJECT_AB281AE_SUPPORT
 #include"ute_project_config_ab281ae.h"
-=======
 #elif PROJECT_AB281JA_SUPPORT
 #include"ute_project_config_ab281ja.h"
->>>>>>> 42b2cf287f639a8d0e8b316df05bef6c52d96b4e
 #endif
 
 /** Log模块控制开关*/

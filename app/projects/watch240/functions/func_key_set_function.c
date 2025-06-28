@@ -39,8 +39,6 @@ u8 func_sel_SetFunc_bit(uint n)
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
-#define LIST_HEIGHT  widget_image_get_size(UI_BUF_I335001_2_HONEYCOMB_CALL_BIN).hei
-
 static const compo_listbox_item_t tbl_menu_list[] =
 {
 #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT

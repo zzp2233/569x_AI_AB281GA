@@ -6,9 +6,13 @@
 #include "ute_application_common.h"
 #include "ute_module_heart.h"
 #include "ute_drv_battery_common.h"
+#include "ute_module_platform.h"
+#include "ute_module_message.h"
 
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
 #define TXT_SPACING    GUI_SCREEN_HEIGHT/13
 
+extern ute_drv_motor_t uteDrvMotorData;
 
 enum
 {
@@ -221,11 +225,15 @@ static void func_test_mode_click(void)
 
             if (f_ageing->mode_flag == 1)
             {
-                uteDrvMotorStart(300,200,2);
+                uteDrvMotorData.durationTimeMsec = 300;
+                uteDrvMotorData.intervalTimeMsec = 200;
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 2);
             }
             else
             {
-                uteDrvMotorStart(1000,1000,1);
+                uteDrvMotorData.durationTimeMsec = 1000;
+                uteDrvMotorData.intervalTimeMsec = 1000;
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
             }
 
             func_cb.frm_main = func_ageing_mode_create(f_ageing->mode_flag,f_ageing->time_flag);
@@ -300,7 +308,11 @@ static void func_ageing_process(void)
             {
                 compo_shape_set_color(shape, COLOR_RED );
                 if (f_ageing->mode_flag == 0)   //模式一不停震动
-                    uteDrvMotorStart(1000,1000,1);
+                {
+                    uteDrvMotorData.durationTimeMsec = 1000;
+                    uteDrvMotorData.intervalTimeMsec = 1000;
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
+                }
             }
 
             memset(txt_buf,0,sizeof(txt_buf));
@@ -351,20 +363,7 @@ static void func_ageing_process(void)
 
             if(f_ageing->mode_flag == 2 && !sys_cb.mp3_res_playing)///模式三 放音乐
             {
-#ifdef UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT
-                //if(f_ageing->count_num == 0)
-                {
-                    func_bt_mp3_res_play(UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT, UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT);
-                }
-
-                /*if(++f_ageing->count_num==UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT)
-                {
-                    f_ageing->count_num = 0;
-                }*/
-#else
-                func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
-
-#endif
+                func_bt_mp3_res_play(RES_BUF_RING_VOICE_DIAL_MP3, RES_LEN_RING_VOICE_DIAL_MP3);
             }
 
             if(++f_ageing->sec == 60)
@@ -566,11 +565,15 @@ static void func_test_mode_click(void)
 
             if (f_ageing->mode_flag == 1)
             {
-                uteDrvMotorStart(300,200,2);
+                uteDrvMotorData.durationTimeMsec = 300;
+                uteDrvMotorData.intervalTimeMsec = 200;
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 2);
             }
             else
             {
-                uteDrvMotorStart(1000,1000,1);
+                uteDrvMotorData.durationTimeMsec = 1000;
+                uteDrvMotorData.intervalTimeMsec = 1000;
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
             }
 
             func_cb.frm_main = func_ageing_mode_create(f_ageing->mode_flag,f_ageing->time_flag);
@@ -645,7 +648,11 @@ static void func_ageing_process(void)
             {
                 compo_shape_set_color(shape, COLOR_RED );
                 if (f_ageing->mode_flag == 0)   //模式一不停震动
-                    uteDrvMotorStart(1000,1000,1);
+                {
+                    uteDrvMotorData.durationTimeMsec = 1000;
+                    uteDrvMotorData.intervalTimeMsec = 1000;
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
+                }
             }
 
             memset(txt_buf,0,sizeof(txt_buf));
@@ -696,20 +703,7 @@ static void func_ageing_process(void)
 
             if(f_ageing->mode_flag == 2 && !sys_cb.mp3_res_playing)///模式三 放音乐
             {
-#ifdef UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT
-                //if(f_ageing->count_num == 0)
-                {
-                    func_bt_mp3_res_play(UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT, UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT);
-                }
-
-                /*if(++f_ageing->count_num==UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT)
-                {
-                    f_ageing->count_num = 0;
-                }*/
-#else
-                func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
-
-#endif
+                func_bt_mp3_res_play(RES_BUF_RING_VOICE_DIAL_MP3, RES_LEN_RING_VOICE_DIAL_MP3);
             }
 
             if(++f_ageing->sec == 60)
@@ -764,5 +758,5 @@ void func_ageing(void)
     func_ageing_exit();
 }
 
-
+#endif
 

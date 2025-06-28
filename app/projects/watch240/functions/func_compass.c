@@ -131,7 +131,7 @@ static void func_compass_sub_process(void)
             if (azimuth < 360)
             {
                 // 使用45°间隔进行方向判断
-                int index = azimuth / 45; // 0到7之间的索引
+                int index = ((azimuth + 22) / 45) % 8; // 0到7之间的索引
 
                 if (index >= 0 && index < (int)(sizeof(angle_lang_id)/sizeof(angle_lang_id[0])))
                 {

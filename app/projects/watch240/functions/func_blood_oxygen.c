@@ -931,17 +931,18 @@ compo_form_t *func_blood_oxygen_form_create(void)
     uteModuleBloodoxygenGetTodayHistoryData(oxygen_date,24);///获取一天的血氧
 
     compo_chartbox_t* chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 24);///图表内的柱形图
-    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X,166,312,100);
+    // compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X,166,312,100);
+    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X,173,292,102);
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(chart,COMPO_ID_CHART_VALUE);
 
     chart_t chart_info;
     chart_info.y = 0;
-    chart_info.width = 5;   ///像素点
+    chart_info.width = 6;   ///像素点
     for (int i=0; i<24; i++)
     {
-        // oxygen_date[i] =100;
-        chart_info.x = i*chart_info.width + i*7.8 + 5;
+        // oxygen_date[i] =50;
+        chart_info.x = i*chart_info.width + i*6;
         chart_info.height = oxygen_date[i]*0.89;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, make_color(0,242,214));
     }

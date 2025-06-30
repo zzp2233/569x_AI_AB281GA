@@ -898,6 +898,77 @@ void uteModuleWatchOnlineDeleteDataIndex(uint8_t index, uint8_t *data)
 }
 
 /**
+ * @brief        一次删除多个表盘
+ * @details
+ * @param[in]    count 删除的表盘个数
+ * @param[in]    *index 删除的表盘索引
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-06-29
+ */
+void uteModuleWatchOnlineDeleteDataMultipleIndex(uint8_t count, uint8_t *index)
+{
+    uint8_t *idx = NULL;
+    idx = (uint8_t *)uteModulePlatformMemoryAlloc(count);
+    memcpy(idx, index, count);
+
+    uint8_t response[20];
+    memset(response, 0x00, 20);
+    response[0] = CMD_WATCH_ONLINE;
+    response[1] = 0x0c;
+    response[2] = count;
+
+    if (uteModuleWatchOnlineData.multipleValidWatchCnt)
+    {
+        watchConfig_t watchConfig;
+        uint8_t watchIndex = 0;
+        uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
+        for (uint8_t i = 0; i < count; i++)
+        {
+            if (idx[i] < UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)
+            {
+                uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, uteModuleWatchOnlineMultipleBaseAddress[idx[i]], sizeof(watchConfig_t));
+                if (watchConfig.isWatchVaild == 0)
+                {
+                    if (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_WATCHMAIN_ID && (watchIndex - UTE_MODULE_SCREENS_WATCH_CNT_MAX) == idx[i])
+                    {
+                        if (uteModuleWatchOnlineWaitingDellTimerPointer == NULL)
+                        {
+                            uteModulePlatformCreateTimer(&uteModuleWatchOnlineWaitingDellTimerPointer, "WatchOnlineWaitingDellTimer", 1, 100, false, uteModuleWatchOnlineWaitingDellCallback);
+                        }
+                        if (uteModuleWatchOnlineWaitingDellTimerPointer != NULL)
+                        {
+                            uteModuleWatchOnlineData.writeWatchIndex = idx[i];
+                            uteModuleGuiCommonSetCurrWatchIndex(DEFAULT_WATCH_INDEX);
+                            func_clock_recreate_dial();
+                            if (sys_cb.gui_sleep_sta)
+                            {
+                                sys_cb.gui_need_wakeup = true;
+                            }
+                            reset_sleep_delay_all();
+                            uteModulePlatformRestartTimer(&uteModuleWatchOnlineWaitingDellTimerPointer, 100);
+                        }
+                    }
+                    else
+                    {
+                        uteModulePlatformFlashNorErase(uteModuleWatchOnlineMultipleBaseAddress[idx[i]]);
+                    }
+                    response[3 + i] = 1;
+                }
+                else
+                {
+                    response[3 + i] = 2;
+                }
+            }
+        }
+        uteModuleWatchOnlineUpateConfigFromFlash();
+    }
+    uteModuleProfileBleSendToPhone(response, 3 + count);
+
+    uteModulePlatformMemoryFree(idx);
+}
+
+/**
  * @brief        发送所有表盘信息
  * @details
  * @return       void*
@@ -940,7 +1011,7 @@ void uteModuleWatchOnlineGetAllInfo(void)
         uteApplicationCommonSyncDataTimerStop();
     }
     sendParam->currSendFileIndex++;
-    uteModuleProfileBleSendToPhone(response, sendSize);
+    uteModuleProfileBle50SendToPhone(response, sendSize);
 }
 
 void uteModuleWatchOnlineGetAllInfoStart(void)

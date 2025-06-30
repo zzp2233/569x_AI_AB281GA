@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NAME "romio"
-#define UTE_SW_VERSION "ABE012V000023"
+#define UTE_SW_VERSION "ABE012V000024"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "ABE012"
@@ -105,15 +105,15 @@
 /* 电池曲线 zn.zeng 2022-01-03*/
 #define UTE_DRV_BATTERY_000      3472
 #define UTE_DRV_BATTERY_010      3682
-#define UTE_DRV_BATTERY_020      3730
-#define UTE_DRV_BATTERY_030      3757
-#define UTE_DRV_BATTERY_040      3776
-#define UTE_DRV_BATTERY_050      3798
-#define UTE_DRV_BATTERY_060      3838
-#define UTE_DRV_BATTERY_070      3900
-#define UTE_DRV_BATTERY_080      3958
-#define UTE_DRV_BATTERY_090      4030
-#define UTE_DRV_BATTERY_100      4115
+#define UTE_DRV_BATTERY_020      3660
+#define UTE_DRV_BATTERY_030      3690
+#define UTE_DRV_BATTERY_040      3720
+#define UTE_DRV_BATTERY_050      3750
+#define UTE_DRV_BATTERY_060      3790
+#define UTE_DRV_BATTERY_070      3850
+#define UTE_DRV_BATTERY_080      3900
+#define UTE_DRV_BATTERY_090      3920
+#define UTE_DRV_BATTERY_100      4130
 
 #define UTE_DRV_TP_X_AXIS_EXCHANGE 0 // 交换X轴左右坐标
 #define UTE_DRV_TP_Y_AXIS_EXCHANGE 0 // 交换Y轴上下坐标

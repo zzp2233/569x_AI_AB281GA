@@ -425,7 +425,7 @@ bool bt_siri_and_asr_parallel_en(void)
     return enable_siri_and_asr;
 }
 
-AT(.bt_voice.sco)
+AT(.com_text.bt_voice.sco)
 void bt_siri_and_asr_parallel_en_setter(bool is_en)
 {
     enable_siri_and_asr = is_en;

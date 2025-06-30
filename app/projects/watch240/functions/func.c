@@ -193,7 +193,9 @@ extern void func_power_on_language(void);
 extern void func_test_mode(void);///*出厂测试模式选择*/
 extern void func_test_mode_list(void);///*出厂测试模式选择*/
 extern void func_factory_testing(void);///*工厂测试*/
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
 extern void func_ageing(void);///*老化测试*/
+#endif
 extern void func_audio(void);///*音频测试*/
 extern void func_online_factory_test(void);
 extern void func_empty(void);
@@ -379,7 +381,9 @@ compo_form_t *func_empty_form_create(void);
 compo_form_t *func_test_mode_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_test_mode_list_form_create(void);///*出厂测试模式选择*/
 compo_form_t *func_factory_testing_create(void);///*工厂测试*/
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
 compo_form_t *func_ageing_create(void);///*老化测试*/
+#endif
 compo_form_t *func_audio_create(void);///*音频测试*/
 compo_form_t *func_online_factory_test_form_create(void);
 compo_form_t *func_dial_and_theme_form_create(void);  //表盘与主题
@@ -606,7 +610,9 @@ const func_t tbl_func_create[] =
     {FUNC_TEST_MODE,                    func_test_mode_form_create},///*出厂测试模式选择*/
     {FUNC_TEST_MODE_LIST,               func_test_mode_list_form_create},///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing_create},///*出厂测试模式选择*/
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
     {FUNC_AGEING,                       func_ageing_create},///*老化测试*/
+#endif
     {FUNC_AUDIO,                        func_audio_create},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test_form_create},
     {FUNC_EMPTY,                        func_empty_form_create},
@@ -854,7 +860,9 @@ const func_t tbl_func_entry[] =
     {FUNC_TEST_MODE,                    func_test_mode}, ///*出厂测试模式选择*/
     {FUNC_FACTORY_TESTING,              func_factory_testing},///*工厂测试*/
     {FUNC_TEST_MODE_LIST,               func_test_mode_list},///*出厂测试模式选择*/
+#if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
     {FUNC_AGEING,                       func_ageing},///*老化测试*/
+#endif
     {FUNC_AUDIO,                        func_audio},///*音频测试*/
     {FUNC_ONLINE_FACTORY_TEST,          func_online_factory_test},
     {FUNC_EMPTY,                        func_empty},

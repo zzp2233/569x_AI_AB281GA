@@ -51,8 +51,8 @@
 #include "ute_drv_amoled_s368_x448_ch13620_193WY01012_qspi.h"
 #elif UTE_DRV_TFT_S240X296_JD9853_HKOE19124B01_QSPI_SUPPORT
 #include "ute_drv_tft_s240x296_jd9853_hkoe19124b01_qspi.h"
-#elif UTE_DRV_TFT_S240X284_NV3030B_HY201077R_QSPI_SUPPORT
-#include "ute_drv_tft_s240x284_nv3030b_hy201077r.h"
+#elif UTE_DRV_TFT_S240X296_NV3030B_HY201077R_QSPI_SUPPORT
+#include "ute_drv_tft_s240x296_nv3030b_hy201077r.h"
 #elif UTE_DRV_TFT_S240X284_C_JD9853_WV018LZQ_QSPI_SUPPORT
 #include "ute_drv_tft_s240x284_c_jd9853_wv018lzq_qspi.h"
 #endif
@@ -117,8 +117,8 @@ void uteDrvScreenCommonInterfaceInit(void)
     uteDrvScreenCommonFunction = &uteDrvScreenAmoledS368X448Ch13620193WY01012Config;
 #elif UTE_DRV_TFT_S240X296_JD9853_HKOE19124B01_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Jd9853Hkoe19124B01Config;
-#elif UTE_DRV_TFT_S240X284_NV3030B_HY201077R_QSPI_SUPPORT
-    uteDrvScreenCommonFunction = &uteDrvScreenTft240X284Nv3030BHy201077rConfig;
+#elif UTE_DRV_TFT_S240X296_NV3030B_HY201077R_QSPI_SUPPORT
+    uteDrvScreenCommonFunction = &uteDrvScreenTft240X296Nv3030BHy201077rConfig;
 #elif UTE_DRV_TFT_S240X284_C_JD9853_WV018LZQ_QSPI_SUPPORT
     uteDrvScreenCommonFunction = &uteDrvScreenTft240X284CJd9853Wv018LzqConfig;
 #else

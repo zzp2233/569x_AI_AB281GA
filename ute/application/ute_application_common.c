@@ -458,7 +458,7 @@ void uteApplicationCommonGetPersonalInfo(ute_personal_info_t *info)
 */
 void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
 {
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,connectId=%d,isConnected=%d", __func__,connid,isConnected);
+    // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,connectId=%d,isConnected=%d", __func__,connid,isConnected);
     uteApplicationCommonData.bleConnectState.connId = connid;
     uteApplicationCommonData.bleConnectState.isConnected = isConnected;
     uteApplicationCommonData.bleConnectState.connectedSecond = 0;

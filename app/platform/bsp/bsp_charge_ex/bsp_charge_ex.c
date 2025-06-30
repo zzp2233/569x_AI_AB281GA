@@ -66,7 +66,7 @@ void bsp_charge_ex_inbox_callback(bool l_inbox, bool r_inbox)
         bsp_earphone_inbox(EARPHONE_RIGHT, r_inbox);
         if(r_inbox)
         {
-            printf(" msg_enqueue(MSG_SYS_BOX_CHARGE) >>>>> DisableDisableDisable\n");
+            // printf(" msg_enqueue(MSG_SYS_BOX_CHARGE) >>>>> DisableDisableDisable\n");
             msg_enqueue(MSG_SYS_BOX_CHARGE);
         }
     }
@@ -79,7 +79,7 @@ void bsp_charge_ex_eoc_callback(bool l_eoc, bool r_eoc)
     printf("%s > 0\n",__func__);
     if (!bsp_charge_ex_eoc_check_en())
     {
-        printf("nnnnnnnnn\r\n");
+        // printf("nnnnnnnnn\r\n");
         return;
     }
 
@@ -108,7 +108,7 @@ void bsp_charge_ex_eoc_callback(bool l_eoc, bool r_eoc)
 #endif
     if (l_eoc)
     {
-        printf("ffffffffff\r\n");
+        // printf("ffffffffff\r\n");
         earphone.vbat[EARPHONE_LEFT] = 100;
 
     }

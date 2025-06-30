@@ -182,11 +182,11 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_G39Z001_BIN, \
-                                                UI_BUF_DIALPLATE_G39Z002_BIN, \
-                                                UI_BUF_DIALPLATE_G39Z003_BIN, \
-                                                UI_BUF_DIALPLATE_G39Z004_BIN, \
-                                                UI_BUF_DIALPLATE_G39Z005_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18166001_BIN, \
+                                                UI_BUF_DIALPLATE_D19133001_BIN, \
+                                                UI_BUF_DIALPLATE_D19131001_BIN, \
+                                                UI_BUF_DIALPLATE_D18155001_BIN, \
+                                                UI_BUF_DIALPLATE_D18134001_BIN, \
                                               }
 //     UI_BUF_DIALPLATE_CUBE_BIN UI_BUF_DIALPLATE_BTF_BIN UI_BUF_DIALPLATE_CUBE_LIGHT_BIN
 

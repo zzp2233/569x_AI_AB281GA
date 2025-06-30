@@ -38,6 +38,7 @@ ute_module_watchonline_data_t uteModuleWatchOnlineData =
 void *uteModuleWatchOnlineRecvTimeoutTimerPointer = NULL;
 void *uteModuleWatchOnlineOneSecTimerPointer = NULL;
 void *uteModuleWatchOnlineWaitingStartTimerPointer = NULL;
+void *uteModuleWatchOnlineWaitingDellTimerPointer = NULL;
 
 /**
  * @brief        获取在线表盘地址
@@ -801,6 +802,27 @@ void uteModuleWatchOnlineSetWillUpdateDataIndex(uint8_t index)
     }
 }
 
+void uteModuleWatchOnlineWaitingDellCallback(void *pxTimer)
+{
+    uint8_t watchIndex = 0;
+    uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
+    // 等待当前表盘不是要同步的表盘后再擦除flash
+    if (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_WATCHMAIN_ID && (watchIndex - UTE_MODULE_SCREENS_WATCH_CNT_MAX) == uteModuleWatchOnlineData.writeWatchIndex)
+    {
+        uteModulePlatformRestartTimer(&uteModuleWatchOnlineWaitingDellTimerPointer, 100);
+        UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,waiting to switch dials...", __func__);
+    }
+    else
+    {
+        uteModulePlatformFlashNorErase(uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex]);
+        uteModuleWatchOnlineUpateConfigFromFlash();
+
+        uteModulePlatformStopTimer(&uteModuleWatchOnlineWaitingDellTimerPointer);
+        uteModulePlatformDeleteTimer(&uteModuleWatchOnlineWaitingDellTimerPointer);
+        uteModuleWatchOnlineWaitingDellTimerPointer = NULL;
+    }
+}
+
 /**
 *@brief        删除表盘数据序号
 *@details
@@ -815,33 +837,58 @@ void uteModuleWatchOnlineDeleteDataIndex(uint8_t index, uint8_t *data)
     int watchConfigSize = sizeof(watchConfig_t);
 
     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,index=%d %d", __func__, index, uteModuleWatchOnlineData.multipleValidWatchCnt);
+
     if (index < UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)
+    {
         uteModulePlatformFlashNorRead((uint8_t *)&uteModuleWatchOnlineData.watchConfig, uteModuleWatchOnlineMultipleBaseAddress[index], watchConfigSize);
+    }
+    else
+    {
+        UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,index error, index=%d max=%d", __func__, index, UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT);
+        goto DELL_FAIL;
+    }
+
     multipleValidWatchCnt = uteModuleWatchOnlineData.multipleValidWatchCnt;
     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,multipleValidWatchCnt=%d", __func__, multipleValidWatchCnt);
     data[0] = UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT;
 
     if (multipleValidWatchCnt)
     {
-        if (index < UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)
+        uteModuleWatchOnlineData.writeWatchIndex = index;
+        uint8_t watchIndex = 0;
+        uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
+        if(uteModuleWatchOnlineWaitingDellTimerPointer == NULL)
         {
-            uteModulePlatformFlashNorErase(uteModuleWatchOnlineMultipleBaseAddress[index]);
-            uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
-            if (watchIndex >= UTE_MODULE_SCREENS_WATCH_CNT_MAX)
+            uteModulePlatformCreateTimer(&uteModuleWatchOnlineWaitingDellTimerPointer, "WatchOnlineWaitingDellTimer", 1, 100, false, uteModuleWatchOnlineWaitingDellCallback);
+        }
+        if(uteModuleWatchOnlineWaitingDellTimerPointer != NULL)
+        {
+            if (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_WATCHMAIN_ID && (watchIndex - UTE_MODULE_SCREENS_WATCH_CNT_MAX) == uteModuleWatchOnlineData.writeWatchIndex)
             {
                 uteModuleGuiCommonSetCurrWatchIndex(DEFAULT_WATCH_INDEX);
+                func_clock_recreate_dial();
+                if(sys_cb.gui_sleep_sta)
+                {
+                    sys_cb.gui_need_wakeup = true;
+                }
+                reset_sleep_delay_all();
             }
-            uteModuleWatchOnlineData.multipleValidWatchCnt -= 1;
-            uteModulePlatformFlashNorRead((uint8_t *)&uteModuleWatchOnlineData.watchConfig, uteModuleWatchOnlineMultipleBaseAddress[index], watchConfigSize);
+            uteModulePlatformRestartTimer(&uteModuleWatchOnlineWaitingDellTimerPointer,100);
+            data[1] = 0x01;
+            data[2] = 0xFF;
+            data[3] = 0xFF;
+            data[4] = 0xFF;
+            data[5] = 0xFF;
         }
-        data[1] = 0x01;
-        data[2] = 0xFF;
-        data[3] = 0xFF;
-        data[4] = 0xFF;
-        data[5] = 0xFF;
+        else
+        {
+            UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,timer creation failed, watch online fail.", __func__);
+            goto DELL_FAIL;
+        }
     }
     else
     {
+    DELL_FAIL:
         data[1] = 0x02;
         data[2] = 0xFF;
         data[3] = 0xFF;

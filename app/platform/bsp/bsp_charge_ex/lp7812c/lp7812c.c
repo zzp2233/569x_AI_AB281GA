@@ -251,7 +251,7 @@ void lp7812c_sda_parse(void)
         charge_ex_cb.l_inbox = l_inbox;
         charge_ex_cb.r_inbox = r_inbox;
         bsp_charge_ex_vbat_update_callback(v_batm);
-        printf(",r_inbox=%d r_eoc %d\n",r_inbox,r_eoc);
+        // printf(",r_inbox=%d r_eoc %d\n",r_inbox,r_eoc);
 
 //        TRACE("7812: vbat[%d]\n",v_batm);
 //        TRACE("crc[%x] cap[%x] mode[%d]\n", crc_result, cap_val, lp7812c_work_mode());
@@ -261,7 +261,7 @@ void lp7812c_sda_parse(void)
 
         if (lp7812c_work_mode() == BOX_CHK_MODE)
         {
-            printf("BOX_CHK_MODE>>> 0\n");
+            // printf("BOX_CHK_MODE>>> 0\n");
             bsp_charge_ex_inbox_callback(((cap_val >> 2) & 0x1), ((cap_val >> 4) & 0x1));
         }
         else if (lp7812c_work_mode() == BOX_CHARGE_MODE)
@@ -275,7 +275,7 @@ void lp7812c_sda_parse(void)
     }
     else
     {
-        printf("crc_error: %x %x\n", crc_result, cap_val);
+        // printf("crc_error: %x %x\n", crc_result, cap_val);
         return;
     }
 }

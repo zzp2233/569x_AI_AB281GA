@@ -124,6 +124,7 @@ void uteModuleWatchOnlineGetInfoWithIndex(uint8_t index, uint8_t *data);
 void uteModuleWatchOnlineSetWillUpdateDataIndex(uint8_t index);
 void uteModuleWatchOnlineStartSync(void);
 void uteModuleWatchOnlineDeleteDataIndex(uint8_t index, uint8_t *data);
+void uteModuleWatchOnlineDeleteDataMultipleIndex(uint8_t count, uint8_t *index);
 void uteModuleWatchOnlineGetAllInfoStart(void);
 #if UTE_MODULE_WATCH_PHOTO_SUPPORT
 uint32_t uteModuleWatchOnlineGetOnePhotoMaxSize(void);

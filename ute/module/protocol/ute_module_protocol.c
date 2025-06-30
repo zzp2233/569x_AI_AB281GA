@@ -2148,6 +2148,10 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
     {
         uteModuleWatchOnlineGetAllInfoStart();
     }
+    else if (receive[1] == 0x0c && length > 3)
+    {
+        uteModuleWatchOnlineDeleteDataMultipleIndex(receive[2],&receive[3]);
+    }
 #endif
 #if UTE_MODULE_WATCH_PHOTO_SUPPORT
     else if (receive[1] == 0x0A)

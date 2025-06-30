@@ -169,6 +169,16 @@ void uteDrvMotorStart(uint32_t durationTimeMsec,uint32_t intervalTimeMsec,uint8_
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,motorVibrationLevel=%d, motorTempVibrationLevel=%d, cnt=%d", __func__, uteDrvMotorData.motorVibrationLevel, uteDrvMotorData.motorTempVibrationLevel, cnt);
         return;
     }
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+    if(uteModuleNewFactoryTestGetMode() != FACTORY_TEST_MODE_NULL)
+    {
+        uteDrvMotorData.durationTimeMsec = durationTimeMsec;
+        uteDrvMotorData.intervalTimeMsec = intervalTimeMsec;
+        uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START,cnt);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,FactoryTest motorVibrationLevel=%d, motorTempVibrationLevel=%d, cnt=%d", __func__, uteDrvMotorData.motorVibrationLevel, uteDrvMotorData.motorTempVibrationLevel, cnt);
+        return;
+    }
+#endif
     if((uteDrvBatteryCommonGetChargerStatus()==BAT_STATUS_NO_CHARGE)&&(uteDrvBatteryCommonGetLvl()<10))
     {
         UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,lvl=%d is too low", __func__,uteDrvBatteryCommonGetLvl());

@@ -2731,7 +2731,10 @@ compo_form_t *func_bt_call_form_create(void)
     widget_page_set_client(page, 0, 0);
 
     //音量
-    compo_picturebox_t *volume_pic = compo_picturebox_create_for_page(frm,frm->page, UI_BUF_I340001_CALL_CALLING_PROGRESS_BAR_BIN);
+    compo_picturebox_t *volume_pic = compo_picturebox_create_for_page(frm,frm->page, UI_BUF_I340001_CALL_CALLING_PROGRESS_BAR_BG_BIN);//灰色背景
+    compo_picturebox_set_pos(volume_pic, GUI_SCREEN_CENTER_X+GUI_SCREEN_WIDTH, 44+144);
+
+    volume_pic = compo_picturebox_create_for_page(frm,frm->page, UI_BUF_I340001_CALL_CALLING_PROGRESS_BAR_BIN);
     compo_setid(volume_pic, COMPO_ID_PIC_VOLUME);
     compo_picturebox_set_pos(volume_pic, GUI_SCREEN_CENTER_X+GUI_SCREEN_WIDTH, 44+144);
     compo_picturebox_cut(volume_pic,sys_cb.hfp_vol-1,15);
@@ -2988,6 +2991,7 @@ static void func_bt_call_click(void)
 #else
                 audio_path_init(AUDIO_PATH_BTMIC);
                 audio_path_start(AUDIO_PATH_BTMIC);
+                bt_sco_pcm_set_dump_pass_cnt(5);
 #endif
                 compo_button_set_bgimg(btn,UI_BUF_I340001_CALL_CALLING_JINGYIN00_BIN);
             }

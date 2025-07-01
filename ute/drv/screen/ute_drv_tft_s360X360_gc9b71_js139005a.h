@@ -84,7 +84,11 @@ __STATIC_INLINE void drvScreenTft360X360Gc9b71Js139005aInit(void)
     memcpy(tmp, "\x05", 1);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x3A, tmp, 1);
 
+#if UTE_DRV_TFT_S360X360_GC9B71_JS139005A_QSPI_DEBUG_SUPPORT
+    memcpy(tmp, "\xd0", 1);//倒显/反扫
+#else
     memcpy(tmp, "\x00", 1);
+#endif
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0x36, tmp, 1);
 
     memcpy(tmp, "\x07", 1);
@@ -119,10 +123,17 @@ __STATIC_INLINE void drvScreenTft360X360Gc9b71Js139005aInit(void)
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB5, tmp, 2);
 
     // 反扫 B6&EC需要一起修改
+#if UTE_DRV_TFT_S360X360_GC9B71_JS139005A_QSPI_DEBUG_SUPPORT
+    memcpy(tmp, "\x00\x40", 2);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB6, tmp, 2);
+    memcpy(tmp, "\x87", 1);
+    uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEC, tmp, 1);
+#else
     // memcpy(tmp, "\x00\x40", 2);
     // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xB6, tmp, 2);
     // memcpy(tmp, "\x87", 1);
     // uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEC, tmp, 1);
+#endif
 
     memcpy(tmp, "\x01\x67", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xEB, tmp, 2);

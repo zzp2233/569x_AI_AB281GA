@@ -875,8 +875,13 @@ compo_form_t * func_factory_testing_mode_result(void)
         compo_textbox_t *textbox = compo_textbox_create(frm, strlen(result_txt[i]));
         compo_textbox_set_align_center(textbox, false );
         compo_textbox_set(textbox, result_txt[i]);
-        compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/5,RESULT_Y*i+MODE_ONE_INTIAL_SPACING_Y-widget_text_get_area(textbox->txt).hei/3);
+        // compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/5,RESULT_Y*i+MODE_ONE_INTIAL_SPACING_Y-widget_text_get_area(textbox->txt).hei/3);
+#if !SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT
+        compo_textbox_set_location(textbox, GUI_SCREEN_CENTER_X/5, RESULT_Y*i+MODE_ONE_INTIAL_SPACING_Y-widget_text_get_area(textbox->txt).hei/3, GUI_SCREEN_CENTER_X, widget_text_get_area(textbox->txt).hei);
         compo_textbox_set_autoroll_mode(textbox, true);
+#else
+        compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X/5,RESULT_Y*i+MODE_ONE_INTIAL_SPACING_Y-widget_text_get_area(textbox->txt).hei/3);
+#endif
 
         textbox = compo_textbox_create(frm, 4);
         compo_textbox_set_align_center(textbox, false );

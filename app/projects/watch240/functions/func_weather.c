@@ -373,6 +373,7 @@ compo_form_t *func_weather_form_create(void)
         compo_textbox_set_location(txt, 8+30+(i)*(82),GUI_SCREEN_HEIGHT+167+12,40,30);
         // compo_textbox_set_pos(txt, 16+(i-1)*(82),GUI_SCREEN_HEIGHT+167);
         compo_textbox_set_align_center(txt, true);
+        compo_textbox_set_autoroll_mode(txt, true); //开启自动滚动
         if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
         {
             snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMax[i]);//一周 小~大 温度
@@ -385,6 +386,7 @@ compo_form_t *func_weather_form_create(void)
         compo_textbox_set(txt,str_buff);
         compo_textbox_set_location(txt, 8+30+(i)*(82),GUI_SCREEN_HEIGHT+202+12,40,30);
         compo_textbox_set_align_center(txt, true);
+        compo_textbox_set_autoroll_mode(txt, true); //开启自动滚动
     }
     widget_page_set_client(frm->page_body, 0, page_y);
 

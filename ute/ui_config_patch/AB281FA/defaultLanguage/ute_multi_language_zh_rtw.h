@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(台湾）
 *@author
-*@date   2025-06-12 18:09:50
+*@date   2025-06-30 10:44:12
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -280,6 +280,8 @@ const char * const i18n_zh_rtw[] =
     [STR_HEART_LOW] = "\xe5\xbf\x83\xe7\x8e\x87\xe9\x81\x8e\xe4\xbd\x8e\x00", // [264] 心率過低
     [STR_FUTRUE_WEATHER] = "\xe6\x9c\xaa\xe4\xbe\x86\xe5\xa4\xa9\xe6\xb0\xa3\x00", // [265] 未來天氣
     [STR_DEV_MODEL] = "\xe8\xa8\xad\xe5\x82\x99\xe5\x9e\x8b\xe8\x99\x9f\x00", // [266] 設備型號
+    [STR_BLE_SUCCESSFUL] = "\xe8\x97\x8d\xe7\x89\x99\xe9\x80\xa3\xe6\x8e\xa5\xe6\x88\x90\xe5\x8a\x9f\x00", // [267] 藍牙連接成功
+    [STR_BLE_OFF] = "\xe6\x89\x8b\xe6\xa9\x9f\xe8\x97\x8d\xe7\x89\x99\xe5\xb7\xb2\xe6\x96\xb7\xe9\x96\x8b\x00", // [268] 手機藍牙已斷開
 };
 
 #endif

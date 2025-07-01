@@ -2890,8 +2890,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
         {
             //msg
             compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
-            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, 68/2+100,
-                                       275, 70);              //调整文本位置
+            compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.2,
+                                       GUI_SCREEN_WIDTH, GUI_SCREEN_CENTER_Y);              //调整文本位置
             compo_textbox_set_multiline(txt_msg, true);
             compo_textbox_set_multiline_drag(txt_msg, true);
             compo_textbox_set(txt_msg, msg);

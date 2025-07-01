@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-06-11 17:11:55
+*@date   2025-06-30 10:44:08
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -280,6 +280,8 @@ enum
     STR_HEART_LOW, // 心率过低
     STR_FUTRUE_WEATHER, // 未来天气
     STR_DEV_MODEL, // 设备型号
+    STR_BLE_SUCCESSFUL, // 蓝牙连接成功
+    STR_BLE_OFF, // 手机蓝牙已断开
 };
 
 extern const char * const *i18n;

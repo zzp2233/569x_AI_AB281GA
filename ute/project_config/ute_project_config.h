@@ -35,7 +35,8 @@
 #define PROJECT_AB281DE_SUPPORT      0 /*! JU107首版软件需求,TFT 240X284 NV3030B,CHIP_5691C_F,基于AB281DA,banghua.yin 2025-06-24 */
 #define PROJECT_AB281JA_SUPPORT      0 /*! HX03 天之蓝UI, TFT 360x360,CHIP_5691C_F,banghua.yin 2025-06-28 */
 #define PROJECT_AB281AE_SUPPORT      0 /*! 同乐达 T75,在T62-AB281AB基础上修改表盘、蓝牙名T75、电池,TFT 240X284 NV3030B,CHIP_5691C_F,xiaoqing.huang 2025-06-28 */
-#define PROJECT_AB281KA_SUPPORT      1 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-06-03 */
+#define PROJECT_AB281KA_SUPPORT      0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-06-03 */
+#define PROJECT_AB281AF_SUPPORT      1 /*! 共鑫W23Z，TFT 240x296 NV3030B,CHIP_5691C_F,qiquan.cai 2025-4-21*/
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -91,6 +92,8 @@
 #include"ute_project_config_ab281ja.h"
 #elif PROJECT_AB281KA_SUPPORT
 #include"ute_project_config_ab281ka.h"
+#elif PROJECT_AB281AF_SUPPORT
+#include "ute_project_config_ab281af.h"
 #endif
 
 /** Log模块控制开关*/

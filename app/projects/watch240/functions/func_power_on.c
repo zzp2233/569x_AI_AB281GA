@@ -170,6 +170,10 @@ compo_form_t *func_power_on_form_create(void)
     compo_picturebox_cut(pic, 0, 24);
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_setid(pic, COMPO_PIC_ID);
+#elif UTE_MODULE_SCREENS_POWER_AOLON_SUPPORT
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335001_LOGO_LOGO_BIN);///背景图片
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, 140);
+    compo_setid(pic, COMPO_PIC_ID);
 #else
 #ifdef UI_BUF_I335001_LOGO_ICON_LOGO_142X68_X50_Y107_BIN
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335001_LOGO_ICON_LOGO_142X68_X50_Y107_BIN);///背景图片

@@ -253,6 +253,8 @@ compo_form_t *func_weather_form_create(void)
     }
 #if GUI_SCREEN_SIZE_240X296RGB_I335002_SUPPORT
     picbox = compo_picturebox_create(frm,UI_BUF_I335002_WEATHER_240X296_BG_BIN);///背景图片
+#elif GUI_SCREEN_SIZE_240X296RGB_I335004_SUPPORT
+    picbox = compo_picturebox_create(frm,UI_BUF_I335004_WEATHER_BG_BIN);///背景图片
 #else
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_BG_BIN);///背景图片
 #endif

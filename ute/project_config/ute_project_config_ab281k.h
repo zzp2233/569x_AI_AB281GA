@@ -148,17 +148,17 @@
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
-#define UTE_DRV_BATTERY_000      3400 //3450  //3564
-#define UTE_DRV_BATTERY_010      3685 //3678  //3698
-#define UTE_DRV_BATTERY_020      3738 //3725  //3744
-#define UTE_DRV_BATTERY_030      3766 //3755  //3765
-#define UTE_DRV_BATTERY_040      3792 //3773  //3780
-#define UTE_DRV_BATTERY_050      3829 //3797  //3807
-#define UTE_DRV_BATTERY_060      3897 //3836  //3856
-#define UTE_DRV_BATTERY_070      3966 //3902  //3908
-#define UTE_DRV_BATTERY_080      4076 //3963  //3964
-#define UTE_DRV_BATTERY_090      4183 //4050  //4045
-#define UTE_DRV_BATTERY_100      4300 //4126  //4128
+#define UTE_DRV_BATTERY_000      3500
+#define UTE_DRV_BATTERY_010      3687
+#define UTE_DRV_BATTERY_020      3742
+#define UTE_DRV_BATTERY_030      3768
+#define UTE_DRV_BATTERY_040      3795
+#define UTE_DRV_BATTERY_050      3833
+#define UTE_DRV_BATTERY_060      3903
+#define UTE_DRV_BATTERY_070      3970
+#define UTE_DRV_BATTERY_080      4079
+#define UTE_DRV_BATTERY_090      4185
+#define UTE_DRV_BATTERY_100      4250
 
 // #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
 // #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标
@@ -182,11 +182,11 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_G39Z001_BIN, \
-                                                UI_BUF_DIALPLATE_G39Z002_BIN, \
-                                                UI_BUF_DIALPLATE_G39Z003_BIN, \
-                                                UI_BUF_DIALPLATE_G39Z004_BIN, \
-                                                UI_BUF_DIALPLATE_G39Z005_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D18166001_BIN, \
+                                                UI_BUF_DIALPLATE_D19133001_BIN, \
+                                                UI_BUF_DIALPLATE_D19131001_BIN, \
+                                                UI_BUF_DIALPLATE_D18155001_BIN, \
+                                                UI_BUF_DIALPLATE_D18134001_BIN, \
                                               }
 //     UI_BUF_DIALPLATE_CUBE_BIN UI_BUF_DIALPLATE_BTF_BIN UI_BUF_DIALPLATE_CUBE_LIGHT_BIN
 

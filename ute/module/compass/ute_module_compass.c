@@ -17,6 +17,7 @@
 #include "ute_module_message.h"
 #include "MemsicAlgo.h"
 #include "MemsicCompass.h"
+#include "ute_drv_led.h"
 // #include "ute_module_system_sleep.h"
 // acc 左侧垂直是X的最大值   屏幕正对人垂直是Y轴最大   平放桌面是Z最大
 #ifndef A_LAYOUT
@@ -329,6 +330,33 @@ void uteModuleCompassAlgohandler(float *rawMag,float *rawAcc)
 
     UTE_MODULE_LOG(UTE_LOG_COMPASS_LVL,"%s,acc:%f,%f,%f",__func__,acc_real_data[0],acc_real_data[1],acc_real_data[2]);
     UTE_MODULE_LOG(UTE_LOG_COMPASS_LVL,"%s,mag:%f,%f,%f",__func__,mag_real_data[0],mag_real_data[1],mag_real_data[2]);
+
+#if UTE_MODULE_RUNING_LOG_SUPPORT
+    static char log_buf[200] = {0}; // 日志缓冲区
+    char tmp[50];
+    // 计算当前 mag 数据并格式化为字符串
+    snprintf(tmp, sizeof(tmp), "mag:%d,%d,%d\n",
+             (int)(mag_raw_data[0] * 10000.f + 0.5),
+             (int)(mag_raw_data[1] * 10000.f + 0.5),
+             (int)(mag_raw_data[2] * 10000.f + 0.5));
+
+    // 检查是否还有足够空间容纳新内容
+    if (strlen(log_buf) + strlen(tmp) < sizeof(log_buf) - 1)
+    {
+        strcat(log_buf, tmp); // 空间足够，直接拼接
+    }
+    else
+    {
+        // 空间不足，先输出当前缓冲区内容
+        if (log_buf[0] != '\0')
+        {
+            UTE_MODULE_LOG_BLE(UTE_LOG_COMPASS_LVL, "%s", log_buf);
+        }
+        // 重置缓冲区并写入新内容
+        memset(log_buf, 0, sizeof(log_buf));
+        strcpy(log_buf, tmp);
+    }
+#endif
 
     /* Below functions are algorithm interface.
      * input acc, mag data into algorithm

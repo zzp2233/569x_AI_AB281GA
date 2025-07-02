@@ -37,7 +37,7 @@ enum
     //按键
     COMPO_ID_BTN_CONNECT,       //蓝牙连接开关
     COMPO_ID_BTN_MENU,          //菜单
-    COMPO_ID_BTN_FLASHLIGHT,    //手电筒
+    // COMPO_ID_BTN_FLASHLIGHT,    //手电筒
 #if GUI_MODULE_WRIST_SUPPORT
     COMPO_ID_BTN_WIRST,         //抬婉亮屏
 #endif
@@ -83,7 +83,7 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
     ///*第二页*/
     {UI_BUF_I330001_SLIDEMENU_ICON_FINDPHONE_BIN,       COMPO_ID_BTN_PHONE,               GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  31},///静音模式开关
     //  {UI_BUF_I330001_SLIDEMENU_ICON_FINDPHONE_BIN,       COMPO_ID_BTN_PHONE,            GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  31},///查找手机
-    {UI_BUF_I330001_SLIDEMENU_ICON_SHOUDIAN00_BIN,      COMPO_ID_BTN_FLASHLIGHT,            GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  31},//手电筒
+    //  {UI_BUF_I330001_SLIDEMENU_ICON_SHOUDIAN00_BIN,      COMPO_ID_BTN_FLASHLIGHT,            GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X/2,  31},//手电筒
     //  {UI_BUF_I330001_SLIDEMENU_ICON_SETTINGS_BIN,        COMPO_ID_BTN_SETTING,          GUI_SCREEN_WIDTH+GUI_SCREEN_CENTER_X/2,  62+31+4},///设置
 };
 
@@ -602,11 +602,11 @@ static void func_clock_sub_dropdown_click_handler(void)
             func_cb.sta = FUNC_SET_SUB_PASSWORD;
             break;
         //点击任务跳转
-        case COMPO_ID_BTN_FLASHLIGHT:
-#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-            func_cb.sta = FUNC_FLASHLIGHT;
-#endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-            break;
+//         case COMPO_ID_BTN_FLASHLIGHT:
+// #if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+//             func_cb.sta = FUNC_FLASHLIGHT;
+// #endif // UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
+//             break;
         case COMPO_ID_BTN_LIGHT:
 #if UTE_MODULE_SCREENS_LIGHT_SUPPORT
             func_cb.sta = FUNC_LIGHT;

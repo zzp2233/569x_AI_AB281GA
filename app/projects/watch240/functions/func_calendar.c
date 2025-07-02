@@ -269,6 +269,103 @@ compo_form_t *func_calender_form_create(void)
 
     return frm;
 }
+
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+
+#define CALE_CONTEXT_X_START_GAP    12  //x方向边界间隙
+#define CALE_CONTEXT_X_GAP          14  //间隔间隙
+#define CALE_CONTEXT_WIDTH          ((GUI_SCREEN_WIDTH - 6*CALE_CONTEXT_X_GAP - 2*CALE_CONTEXT_X_START_GAP) / 7) //宽度
+
+#define CALE_CONTEXT_y_START_GAP    140//170 //y方向上边界间隙
+#define CALE_CONTEXT_y_GAP          7//14  //间隔间隙
+#define CALE_CONTEXT_HEIGHT         18  //字高
+
+#define CALE_CONTEXT_DATA_Y_GAP     -19  //数据y轴微调宏
+
+#define CALE_CONTEXT_NUM_COUNT_MAX  2
+//创建日历主界面
+compo_form_t *func_calender_form_create(void)
+{
+    uint8_t i;
+    compo_label_t *cale_label;
+    s16 x_pos = CALE_CONTEXT_X_START_GAP + CALE_CONTEXT_WIDTH / 2;
+    s16 y_pos = CALE_CONTEXT_y_START_GAP + CALE_CONTEXT_HEIGHT / 2;
+
+    u16 week_text[7][2] =
+    {
+        {STR_CALENDAR_SEVEN,COLOR_GRAY},// 日
+        {STR_CALENDAR_ONE,COLOR_WHITE}, // 一
+        {STR_CALENDAR_TWO,COLOR_WHITE},// 二
+        {STR_CALENDAR_THREE,COLOR_WHITE},// 三
+        {STR_CALENDAR_HOUR,COLOR_WHITE},// 四
+        {STR_CALENDAR_FIVE,COLOR_WHITE},// 五
+        {STR_CALENDAR_SIX,COLOR_GRAY},// 六
+    };
+    // u16 week_text_idx[7] = {STR_SUNDAY, STR_MONDAY, STR_TUESDAY, STR_WEDNESDAY, STR_THURSDAY, STR_FRIDAY, STR_SATURDAY};
+
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_title(frm, i18n[STR_SETTING_CALENDAR]);
+
+    //新建日历文本内容
+    for(i = 0; i < CALE_CONTEXT_MAX; i++)
+    {
+        if(!(i % 7))
+        {
+            x_pos = CALE_CONTEXT_X_START_GAP + CALE_CONTEXT_WIDTH / 2;
+            y_pos = CALE_CONTEXT_y_START_GAP + CALE_CONTEXT_HEIGHT / 2 + (i / 7) * (CALE_CONTEXT_HEIGHT + CALE_CONTEXT_y_GAP)+CALE_CONTEXT_DATA_Y_GAP;
+        }
+        cale_label = compo_label_create(frm, CALE_CONTEXT_NUM_COUNT_MAX);
+        compo_label_set_font(cale_label, 0);
+        compo_setid(cale_label, COMPO_ID_DATE_TEXT_START + i);
+        compo_label_set_pos(cale_label, x_pos, y_pos);
+        x_pos += (CALE_CONTEXT_WIDTH + CALE_CONTEXT_X_GAP);
+    }
+
+    //新建（日 一 二 三 四 五 六）文本
+    x_pos = CALE_CONTEXT_X_START_GAP + CALE_CONTEXT_WIDTH / 2;
+    y_pos = CALE_CONTEXT_y_START_GAP - 48;
+    for(i = 0; i < 7; i++)
+    {
+        cale_label = compo_label_create(frm, strlen(i18n[week_text[i][0]]));
+        compo_label_set_pos(cale_label, x_pos, y_pos);
+        compo_label_set(cale_label, i18n[week_text[i][0]]);
+        compo_label_set_forecolor(cale_label, week_text[i][1]);
+        x_pos += (CALE_CONTEXT_WIDTH + CALE_CONTEXT_X_GAP);
+    }
+
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    char date_str[6] = {0};
+    //year_text
+    cale_label = compo_label_create(frm, 4);
+    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X - 20, CALE_CONTEXT_y_START_GAP - 80-3);
+    sprintf(date_str, "%04d", time.year);
+    compo_label_set(cale_label, date_str);
+    compo_setid(cale_label, COMPO_ID_YEAR_TEXT);
+
+    //mon_text
+    cale_label = compo_label_create(frm, 2);
+    compo_label_set_font(cale_label, UI_BUF_0FONT_FONT_NUM_24_BIN);
+    compo_label_set_pos(cale_label, GUI_SCREEN_CENTER_X + 40, CALE_CONTEXT_y_START_GAP - 80-3);
+    sprintf(date_str, "%02d", time.month);
+    compo_label_set(cale_label, date_str);
+    compo_setid(cale_label, COMPO_ID_MON_TEXT);
+
+    //last_btn
+    compo_button_t *btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALENDAR_LEFT_BIN);
+    compo_setid(btn, COMPO_ID_LAST_BTN);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X - 90, CALE_CONTEXT_y_START_GAP - 80);
+
+    //next_btn
+    btn = compo_button_create_by_image(frm, UI_BUF_I335001_CALENDAR_RIGHT_BIN);
+    compo_setid(btn, COMPO_ID_NEXT_BTN);
+    compo_button_set_pos(btn, GUI_SCREEN_CENTER_X + 90, CALE_CONTEXT_y_START_GAP - 80);
+
+    return frm;
+}
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 
 #define CALE_CONTEXT_X_START_GAP    66  //x方向边界间隙

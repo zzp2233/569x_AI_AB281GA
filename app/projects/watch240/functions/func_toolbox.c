@@ -45,8 +45,11 @@ static const compo_listbox_item_t tbl_toolbox_list[] =
     {STR_CALCULATOR,             UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_06_CALCULATOR_BIN,            .func_sta = FUNC_CALCULATOR}, //计算器
 #endif
 #if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
-    {STR_STYLE,                  UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_04_CAMERA_BIN,                .func_sta = FUNC_STYLE}, //日历
+    {STR_STYLE,                  UI_BUF_I335001_27_MORE_1_LIST_ICON_PIC56X56_X16_Y12_Y80_Y148_Y216_04_CAMERA_BIN,                .func_sta = FUNC_STYLE}, //主题
 #endif
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {STR_CALENDAR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALENDAR_BIN,                                              .func_sta=FUNC_CALENDAER,  },      //日历
+#endif // 
 #if UTE_MODULE_SCREENS_COMPASS_SUPPORT
     {STR_COMPASS,                UI_BUF_I335003_SETTING_COMPASS_BIN,                                                             .func_sta = FUNC_COMPASS}, //指南针
 #endif

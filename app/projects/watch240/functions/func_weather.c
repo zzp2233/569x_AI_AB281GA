@@ -297,7 +297,7 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set_pos(txt,77/2+120,120+9);
     compo_textbox_set(txt, str_buff);
     txt = compo_textbox_create(frm,strlen(i18n[weather_list[get_weather_id[0]].txt_num]));
-    compo_textbox_set_pos(txt,77/2+120,144+9);
+    compo_textbox_set_location(txt,77/2+120,144+9,100,widget_text_get_max_height());
     compo_textbox_set_forecolor(txt, make_color(0x98,0xd0,0xff));
     compo_textbox_set(txt, i18n[weather_list[get_weather_id[0]].txt_num]);
     //紫外线icon

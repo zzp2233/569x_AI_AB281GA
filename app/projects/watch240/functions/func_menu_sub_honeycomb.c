@@ -382,9 +382,9 @@ static menu_hc_item_t tbl_menu_honeycomb[] =
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
-// #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
-//     {.func_sta=FUNC_CALCULATOR,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALCULATOR_BIN,             },    //计算器
-// #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {.func_sta=FUNC_CALENDAER,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALENDAR_BIN,      },            //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                },                //游戏
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT

@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        gui ¹«¹²²ã
+*@brief        gui å…¬å…±å±‚
 *@details
 *@author       zn.zeng
 *@date       2021-09-03
@@ -20,13 +20,13 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_emotionPressure.h"
 
-/*! guiµÄÊı¾İ½á¹¹ zn.zeng, 2021-09-03  */
+/*! guiçš„æ•°æ®ç»“æ„ zn.zeng, 2021-09-03  */
 ute_module_gui_common_t uteModuleGuiCommonData AT(.com_text.ute_gui_comdata);
 // void *displayOffTimerPointer;
 void *clearDepthAfterOffTimerPointer;
 
 /**
-*@brief        ×Ô¶¯ÃğÆÁ¶¨Ê±Æ÷»Øµ÷
+*@brief        è‡ªåŠ¨ç­å±å®šæ—¶å™¨å›è°ƒ
 *@details
 *@author       zn.zeng
 *@date       2021-09-03
@@ -47,8 +47,8 @@ void *clearDepthAfterOffTimerPointer;
 // }
 
 /**
-*@brief        ÑÓÊ±Çå³ıÏÔÊ¾Éî¶È¶¨Ê±Æ÷»Øµ÷
-*@details       ¹Ø±ÕÏÔÊ¾ºó¿ªÊ¼¶¨Ê±
+*@brief        å»¶æ—¶æ¸…é™¤æ˜¾ç¤ºæ·±åº¦å®šæ—¶å™¨å›è°ƒ
+*@details       å…³é—­æ˜¾ç¤ºåå¼€å§‹å®šæ—¶
 *@author       zn.zeng
 *@date       2021-11-03
 */
@@ -60,7 +60,7 @@ void uteModuleGuiCommonClearDepthTimerCallback(void *pxTimer)
 
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
 /**
-*@brief        Ï¨ÆÁ±íÅÌ³õÊ¼»¯
+*@brief        ç†„å±è¡¨ç›˜åˆå§‹åŒ–
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -93,7 +93,7 @@ void uteModuleGuiCommonScreenSaverConfigInit(void)
 }
 
 /**
-*@brief        »ñÈ¡Ï¨ÆÁ±íÅÌµÄÅäÖÃÖ¸Õë
+*@brief        è·å–ç†„å±è¡¨ç›˜çš„é…ç½®æŒ‡é’ˆ
 *@details
 *@param[out] UI_WatchConfigTypeDef **config
 *@param[in] uint8_t index
@@ -109,7 +109,7 @@ void uteModuleGuiCommonGetScreenSaverConfig(UI_WatchConfigTypeDef **config,uint8
     }
 }
 /**
-*@brief        »ñÈ¡µ±Ç°±íÅÌµÄÅäÖÃË÷Òı
+*@brief        è·å–å½“å‰è¡¨ç›˜çš„é…ç½®ç´¢å¼•
 *@details
 *@param[out] uint8_t *index
 *@author       cxd
@@ -120,7 +120,7 @@ void uteModuleGuiCommonGetCurrScreenSaverIndex(uint8_t *index)
     *index = uteModuleGuiCommonData.displayCtrl.currScreenSaverIndex;
 }
 /**
-*@brief        ÉèÖÃµ±Ç°Ï¨ÆÁ±íÅÌµÄÅäÖÃË÷Òı
+*@brief        è®¾ç½®å½“å‰ç†„å±è¡¨ç›˜çš„é…ç½®ç´¢å¼•
 *@details
 *@param[out] uint8_t *index
 *@author       cxd
@@ -147,7 +147,7 @@ void uteModuleGuiCommonSetCurrSreenSaverIndex(uint8_t index)
     uteModuleGuiCommonSaveConfig();
 }
 /**
-*@brief        »ñÈ¡µ±Ç°±íÅÌÔ¤ÀÀµÄÅäÖÃË÷ÒıÖ¸Õë
+*@brief        è·å–å½“å‰è¡¨ç›˜é¢„è§ˆçš„é…ç½®ç´¢å¼•æŒ‡é’ˆ
 *@details
 *@param[out] uint8_t **index0
 *@param[out] uint8_t **index1
@@ -172,7 +172,7 @@ void uteModuleGuiCommonGetSreenSaverPreviewsIndex(uint8_t **index0,uint8_t **ind
 }
 
 /**
-*@brief        Ï¨ÆÁ±íÅÌ¹¦ÄÜÊÇ·ñ¿ªÆô
+*@brief        ç†„å±è¡¨ç›˜åŠŸèƒ½æ˜¯å¦å¼€å¯
 *@author       cxd
 *@date       2022-05-03
 */
@@ -193,7 +193,7 @@ bool uteModuleGuiCommonIsScreenSaverSetOn(void)
     return uteModuleGuiCommonData.displayCtrl.isScreenSaverSetOn;
 }
 /**
-*@brief        Ï¨ÆÁ±íÅÌ¹¦ÄÜ¿ª¹ØÉèÖÃ
+*@brief        ç†„å±è¡¨ç›˜åŠŸèƒ½å¼€å…³è®¾ç½®
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -205,7 +205,7 @@ void uteModuleGuiCommonScreenSaverSetSwitch(void)
 }
 
 /**
-*@brief        ½øÈëÏ¨ÆÁ±íÅÌÇ°¹Ø±Õ¼¸¸ö¶¨Ê±Æ÷
+*@brief        è¿›å…¥ç†„å±è¡¨ç›˜å‰å…³é—­å‡ ä¸ªå®šæ—¶å™¨
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -218,7 +218,7 @@ void uteModuleGuiCommonStopTimerForScreenSaver(void)
 }
 
 /**
-*@brief        ÉèÖÃÏ¢ÆÁ½çÃæ×´Ì¬
+*@brief        è®¾ç½®æ¯å±ç•Œé¢çŠ¶æ€
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -229,7 +229,7 @@ void uteModuleGuiCommonSetInScreenSaver(bool isScreenSaver)
 }
 
 /**
-*@brief        ÊÇ·ñÔÚÏ¢ÆÁ½çÃæ
+*@brief        æ˜¯å¦åœ¨æ¯å±ç•Œé¢
 *@details
 *@author       cxd
 *@date       2022-05-03
@@ -241,7 +241,7 @@ bool uteModuleGuiCommonIsInScreenSaver(void)
 #endif
 
 /**
- * @brief        ±£´æÒ»¼¶½çÃæÏÔÊ¾¿ØÖÆ²ÎÊı
+ * @brief        ä¿å­˜ä¸€çº§ç•Œé¢æ˜¾ç¤ºæ§åˆ¶å‚æ•°
  * @details
  * @return       void*
  * @author       Wang.Luo
@@ -271,7 +271,7 @@ void uteModuleGuiCommonSavescreenTblSort(uint8_t *tblSort, uint8_t sortCnt)
 }
 
 /**
- * @brief        ¶ÁÈ¡Ò»¼¶½çÃæÏÔÊ¾¿ØÖÆ²ÎÊı
+ * @brief        è¯»å–ä¸€çº§ç•Œé¢æ˜¾ç¤ºæ§åˆ¶å‚æ•°
  * @details
  * @return       void*
  * @author       Wang.Luo
@@ -300,7 +300,7 @@ void uteModuleGuiCommonReadScreenTblSort(void)
 }
 
 /**
- * @brief        Íâ²¿»ñÈ¡Ò»¼¶½çÃæÏÔÊ¾¿ØÖÆ²ÎÊı
+ * @brief        å¤–éƒ¨è·å–ä¸€çº§ç•Œé¢æ˜¾ç¤ºæ§åˆ¶å‚æ•°
  * @details
  * @return       void*
  * @author       Wang.Luo
@@ -317,7 +317,7 @@ void uteModuleGuiCommonGetScreenTblSort(uint8_t *tblSort, uint8_t *sortCnt)
 }
 
 /**
-*@brief        ¶ÁÈ¡ÏÔÊ¾²ÎÊı
+*@brief        è¯»å–æ˜¾ç¤ºå‚æ•°
 *@details
 *@author       zn.zeng
 *@date       2021-10-23
@@ -327,7 +327,7 @@ void uteModuleGuiCommonReadConfig(void)
     void *file;
     uint8_t readbuff[12];
     memset(readbuff,0,sizeof(readbuff));
-    /*! ÏÔÊ¾²ÎÊızn.zeng, 2021-08-20  */
+    /*! æ˜¾ç¤ºå‚æ•°zn.zeng, 2021-08-20  */
     readbuff[0] = DEFAULT_SCREEN_ON_TIME_SECOND;
     readbuff[1] = DEFAULT_TEMPERATURE_IS_FAHRENHEIT;
     readbuff[2] = DEFAULT_SCREEN_BACKLIGHT_PERCENT;
@@ -372,7 +372,7 @@ void uteModuleGuiCommonReadConfig(void)
 void uteModuleGuiCommonInit(void)
 {
     memset(&uteModuleGuiCommonData,0,sizeof(ute_module_gui_common_t));
-    /*! ´´½¨¶¨Ê±Æ÷ zn.zeng, 2021-09-03  */
+    /*! åˆ›å»ºå®šæ—¶å™¨ zn.zeng, 2021-09-03  */
     // uteModulePlatformCreateTimer(&displayOffTimerPointer, "display off",1, 5000, false, uteModuleGuiCommonDisplayOffTimerCallback);
     uteModulePlatformCreateTimer(&clearDepthAfterOffTimerPointer, "clear depth",1, 5000, false, uteModuleGuiCommonClearDepthTimerCallback);
     uteModuleGuiCommonReadConfig();
@@ -385,7 +385,7 @@ void uteModuleGuiCommonInit(void)
 }
 
 /**
-*@brief        Íâ²¿ÓÃÇå³ıËùÓĞÉî¶ÈµÄ·½·¨
+*@brief        å¤–éƒ¨ç”¨æ¸…é™¤æ‰€æœ‰æ·±åº¦çš„æ–¹æ³•
 *@details
 *@param[in]
 *@author      casen
@@ -394,15 +394,15 @@ void uteModuleGuiCommonInit(void)
 void uteModuleGuiCommonDisplayExternalClearDepth(void)
 {
     task_stack_init();
-    // latest_task_init(); //×î½üÈÎÎñ
+    // latest_task_init(); //æœ€è¿‘ä»»åŠ¡
     task_stack_push(FUNC_CLOCK);
     func_cb.sta = FUNC_CLOCK;
 }
 
 /**
-*@brief        Çå³ıÏÔÊ¾Éî¶È
+*@brief        æ¸…é™¤æ˜¾ç¤ºæ·±åº¦
 *@details
-*@param[in] bool isAllClear  ÊÇ·ñÈ«²¿Çå³ı£¬·ñÖ»Çå³ı×îºóÒ»¼¶
+*@param[in] bool isAllClear  æ˜¯å¦å…¨éƒ¨æ¸…é™¤ï¼Œå¦åªæ¸…é™¤æœ€åä¸€çº§
 *@author       zn.zeng
 *@date       2021-10-22
 */
@@ -427,7 +427,7 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
     if (isAllClear)
     {
         task_stack_init();
-        // latest_task_init(); // ×î½üÈÎÎñ
+        // latest_task_init(); // æœ€è¿‘ä»»åŠ¡
         if (uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE)
         {
             UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,return FUNC_CHARGE", __func__);
@@ -445,14 +445,14 @@ void uteModuleGuiCommonDisplayDepthClearTop(bool isAllClear)
         func_cb.sta = task_stack_pop();
         if (!func_cb.sta)
         {
-            func_cb.sta = FUNC_CLOCK;                                 //Òì³£·µ»Ø±íÅÌ
+            func_cb.sta = FUNC_CLOCK;                                 //å¼‚å¸¸è¿”å›è¡¨ç›˜
         }
     }
 }
 
 #if UTE_MODULE_SCREENS_SCREEN_SAVER_SUPPORT
 /**
-*@brief        »ñÈ¡ÁÙÊ±±£´æµÄÆÁÄ»id
+*@brief        è·å–ä¸´æ—¶ä¿å­˜çš„å±å¹•id
 *@details
 *@author       xjc
 *@date       2022-10-31
@@ -485,7 +485,7 @@ int uteModuleGuiCommonGetTempUIConfigId(void)
 }
 #endif
 /**
-*@brief        ¹Ø±ÕÏÔÊ¾
+*@brief        å…³é—­æ˜¾ç¤º
 *@details
 *@author       zn.zeng
 *@date       2021-09-18
@@ -508,7 +508,7 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
         // uteModulePlatformStopTimer(&displayOffTimerPointer);
         uteModuleSprotResetRovllverScreenMode();
 
-        //³äµçÖĞ£¬·µ»Ø³äµç½çÃæ
+        //å……ç”µä¸­ï¼Œè¿”å›å……ç”µç•Œé¢
         if(uteDrvBatteryCommonGetChargerStatus() != BAT_STATUS_NO_CHARGE && func_cb.sta != FUNC_CHARGE)
         {
             func_cb.sta = FUNC_CHARGE;
@@ -526,9 +526,9 @@ void uteModuleGuiCommonDisplayOff(bool isPowerOff)
 }
 
 /**
- * @brief        ÉèÖÃÏ¨ÆÁÊÇ·ñÔÊĞí·µ»Ø±íÅÌ
+ * @brief        è®¾ç½®ç†„å±æ˜¯å¦å…è®¸è¿”å›è¡¨ç›˜
  * @details
- * @param[in]    allow true ÔÊĞí£¬false ²»ÔÊĞí
+ * @param[in]    allow true å…è®¸ï¼Œfalse ä¸å…è®¸
  * @return       void*
  * @author       Wang.Luo
  * @date         2024-10-29
@@ -539,7 +539,7 @@ void uteModuleGuiCommonDisplayOffAllowGoBack(bool allow)
 }
 
 /**
-*@brief    Ì§ÊÖÁÁÆÁmsg´¦Àíº¯Êı
+*@brief    æŠ¬æ‰‹äº®å±msgå¤„ç†å‡½æ•°
 *@details
 *@author        zn.zeng
 *@date        2021-08-06
@@ -561,7 +561,7 @@ void uteModuleGuiCommonHandScreenOnMsg(void)
     }
 }
 /**
-*@brief    Ì§ÏÂÃğÆÁmsg´¦Àíº¯Êı
+*@brief    æŠ¬ä¸‹ç­å±msgå¤„ç†å‡½æ•°
 *@details
 *@author        zn.zeng
 *@date        2021-08-06
@@ -573,15 +573,15 @@ void uteModuleGuiCommonHandScreenOffMsg(void)
     if(!sys_cb.gui_sleep_sta && sys_cb.guioff_delay)
     {
         sys_cb.guioff_delay = 1;
-        // gui_sleep();                //½öÏ¨ÆÁ
+        // gui_sleep();                //ä»…ç†„å±
         uteModuleSprotResetRovllverScreenMode();
     }
 }
 
 #if UTE_CUSTOM_HAND_SCREEN_ON_DISPLAY_OFF_TIME
 /**
-* @brief        ÖØÖÃÌ§ÊÖÁÁÆÁ±êÖ¾
-* @details      ÓÃÓÚ×Ô¶¨ÒåÌ§ÊÖÁÁÆÁÊ±³¤Ê±£¬ÖØÖÃÌ§ÊÖÁÁÆÁ±êÖ¾
+* @brief        é‡ç½®æŠ¬æ‰‹äº®å±æ ‡å¿—
+* @details      ç”¨äºè‡ªå®šä¹‰æŠ¬æ‰‹äº®å±æ—¶é•¿æ—¶ï¼Œé‡ç½®æŠ¬æ‰‹äº®å±æ ‡å¿—
 * @author       Wang.Luo
 *@date          2022-09-02
 * @return       void*
@@ -593,9 +593,9 @@ void uteResetHandScreenOnFlag(void)
 #endif
 
 /**
-*@brief        ÖØÖÃÁÁÆÁtimer
+*@brief        é‡ç½®äº®å±timer
 *@details
-*@param[in] UI_ConfigTypeDef *pMenu£¬½çÃæÖ¸Õë
+*@param[in] UI_ConfigTypeDef *pMenuï¼Œç•Œé¢æŒ‡é’ˆ
 *@param[in] int16_t displayOffTimeSecond     If the value is not 0, the display off time is the set value (unit: second)
 *@author       wuhuowang
 *@date       2023-04-25
@@ -607,7 +607,7 @@ void uteResetHandScreenOnFlag(void)
 // }
 
 /**
-*@brief        »ñÈ¡µ±Ç°±íÅÌµÄÅäÖÃË÷Òı
+*@brief        è·å–å½“å‰è¡¨ç›˜çš„é…ç½®ç´¢å¼•
 *@details
 *@param[out] uint8_t *index
 *@author       zn.zeng
@@ -619,9 +619,9 @@ void uteModuleGuiCommonGetCurrWatchIndex(uint8_t *index)
 }
 
 /**
-*@brief        »ñÈ¡µ±Ç°×Ü±íÅÌ¸öÊı
+*@brief        è·å–å½“å‰æ€»è¡¨ç›˜ä¸ªæ•°
 *@details
-*@param[out] WatchMaxIndex  ·µ»Ø×Ü¸öÊı£¨°üÀ¨ÔÚÏß±íÅÌ¸öÊı£©
+*@param[out] WatchMaxIndex  è¿”å›æ€»ä¸ªæ•°ï¼ˆåŒ…æ‹¬åœ¨çº¿è¡¨ç›˜ä¸ªæ•°ï¼‰
 *@author       pcm
 *@date       2022-8-11
 */
@@ -633,7 +633,7 @@ uint8_t uteModuleGuiCommonGetCurrWatchMaxIndex(void)
 }
 
 /**
-*@brief        ÉèÖÃµ±Ç°±íÅÌµÄÅäÖÃË÷Òı
+*@brief        è®¾ç½®å½“å‰è¡¨ç›˜çš„é…ç½®ç´¢å¼•
 *@details
 *@param[out] uint8_t *index
 *@author       zn.zeng
@@ -659,12 +659,13 @@ void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
 */
 void uteModuleGuiCommonWatchConfigInit(void)
 {
+    uteModuleWatchOnlineDataInit();
     uteModuleWatchOnlineUpateConfigFromFlash();
     uteModuleGuiCommonSetCurrWatchIndex(uteModuleGuiCommonData.displayCtrl.currWatchIndex);
 }
 
 /**
-*@brief  ÉèÖÃÁÁÆÁÊ±¼äºÍÎÂ¶Èµ¥Î»
+*@brief  è®¾ç½®äº®å±æ—¶é—´å’Œæ¸©åº¦å•ä½
 *@details
 *@param[in] displayOffTime,isOpenHandScreenOn,isFahrenheit
 *@author        zn.zeng
@@ -678,9 +679,9 @@ void uteModuleGuiCommonSetDisplayTemperatureUtil(bool isFahrenheit)
 }
 
 /**
-*@brief  »ñÈ¡¿ØÖÆÏÔÊ¾ÄÚÈİÏà¹Ø²ÎÊı
+*@brief  è·å–æ§åˆ¶æ˜¾ç¤ºå†…å®¹ç›¸å…³å‚æ•°
 *@details
-*@param[in] displayOffTimeSecond,backLightPercent,isFahrenheit£¬currWatchIndex
+*@param[in] displayOffTimeSecond,backLightPercent,isFahrenheitï¼ŒcurrWatchIndex
 *@author    dengli.lu
 *@date      2021-10-27
 */
@@ -689,14 +690,14 @@ void uteModuleGuiCommonGetDisplayInfo(ute_display_ctrl_t *displayInfo)
     memcpy(displayInfo, &uteModuleGuiCommonData.displayCtrl, sizeof(ute_display_ctrl_t));
 }
 /**
-*@brief  ±£´æÏÔÊ¾²ÎÊıĞÅÏ¢
+*@brief  ä¿å­˜æ˜¾ç¤ºå‚æ•°ä¿¡æ¯
 *@details
 *@author        zn.zeng
 *@date        2021-08-20
 */
 void uteModuleGuiCommonSaveConfig(void)
 {
-    /*! ±£´æµ½ÎÄ¼şzn.zeng, 2021-08-20*/
+    /*! ä¿å­˜åˆ°æ–‡ä»¶zn.zeng, 2021-08-20*/
     void *file;
     uint8_t writebuff[12];
     memset(writebuff,0,sizeof(writebuff));
@@ -726,7 +727,7 @@ void uteModuleGuiCommonSaveConfig(void)
 }
 
 /**
-*@brief        ÉèÖÃ±³¹âÁÁ¶È°Ù·Ö±È
+*@brief        è®¾ç½®èƒŒå…‰äº®åº¦ç™¾åˆ†æ¯”
 *@details
 *@author       dengli.lu
 *@date       2021-10-30
@@ -739,7 +740,7 @@ void uteModuleGuiCommonSetBackLightPercent(uint8_t setBackLightPercent)
 }
 
 /**
-*@brief        »ñÈ¡±³¹âÁÁ¶È°Ù·Ö±È
+*@brief        è·å–èƒŒå…‰äº®åº¦ç™¾åˆ†æ¯”
 *@details
 *@author       xiaodong.chen
 *@date       2022.4.15
@@ -758,7 +759,7 @@ uint8_t uteModuleGuiCommonGetBackLightPercent(void)
     }
 }
 /**
-*@brief        ÉèÖÃÁÁÆÁÊ±³¤
+*@brief        è®¾ç½®äº®å±æ—¶é•¿
 *@details
 *@author       dengli.lu
 *@date       2021-12-02
@@ -771,9 +772,9 @@ void uteModuleGuiCommonSetDisplayOffTime(uint8_t displayOffTimeSecond)
 
 #if UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT
 /**
- * @brief        ÉèÖÃ±àÂëÆ÷ÇĞ»»±íÅÌËø¶¨¿ª¹Ø
+ * @brief        è®¾ç½®ç¼–ç å™¨åˆ‡æ¢è¡¨ç›˜é”å®šå¼€å…³
  * @details
- * @param[in]    isLock true Ëø¶¨£¬false ²»Ëø¶¨
+ * @param[in]    isLock true é”å®šï¼Œfalse ä¸é”å®š
  * @return       void*
  * @author       Wang.Luo
  * @date         2025-06-18
@@ -786,9 +787,9 @@ void uteModuleGuiCommonSwitchEncoderKeysSwitchoverWatchMainLock(void)
 }
 
 /**
- * @brief        »ñÈ¡±àÂëÆ÷ÇĞ»»±íÅÌËø¶¨×´Ì¬
+ * @brief        è·å–ç¼–ç å™¨åˆ‡æ¢è¡¨ç›˜é”å®šçŠ¶æ€
  * @details
- * @return       bool Ëø¶¨×´Ì¬ false:Î´Ëø¶¨ true:Ëø¶¨
+ * @return       bool é”å®šçŠ¶æ€ false:æœªé”å®š true:é”å®š
  * @author       Wang.Luo
  * @date         2025-06-18
  */
@@ -801,7 +802,7 @@ bool uteModuleGuiCommonGetEncoderKeysSwitchoverWatchMainLock(void)
 #endif
 
 /**
-*@brief        »ñÈ¡µ±Ç°ÁÁÆÁÊ±³¤
+*@brief        è·å–å½“å‰äº®å±æ—¶é•¿
 *@details
 *@author       dengli.lu
 *@date       2021-12-02
@@ -812,7 +813,7 @@ uint8_t uteModuleGuiCommonGetDisplayOffTime(void)
     return uteModuleGuiCommonData.displayCtrl.displayOffTimeSecond;
 }
 /**
-*@brief        ·µ»ØÉÏÒ»¼¶½çÃæ
+*@brief        è¿”å›ä¸Šä¸€çº§ç•Œé¢
 *@detail
 *@author       zn.zeng
 *@date       2021-11-03
@@ -832,9 +833,9 @@ void uteModuleGuiCommonGoBackLastScreen(void)
 }
 
 /**
-*@brief        ¿ªÊ¼ÏÔÊ¾½çÃæ
+*@brief        å¼€å§‹æ˜¾ç¤ºç•Œé¢
 *@detail
-*@param[in] int screenId ½çÃæÎ¨Ò»id
+*@param[in] int screenId ç•Œé¢å”¯ä¸€id
 *@author       zn.zeng
 *@date       2021-09-03
 */
@@ -865,7 +866,7 @@ void uteTaskGuiStartScreen(uint8_t screenId, uint16_t switchMode, const char *fo
         return;
     }
 
-    if(func_cb.flag_sort) //ÔÚ¿ì½İÈÎÎñ½çÃæÌø×ªµ½ÆäËû½çÃæ
+    if(func_cb.flag_sort) //åœ¨å¿«æ·ä»»åŠ¡ç•Œé¢è·³è½¬åˆ°å…¶ä»–ç•Œé¢
     {
         func_cb.flag_sort_jump = true;
         func_cb.flag_sort = false;
@@ -900,8 +901,8 @@ void uteModuleGuiCommonSetSwitchToMenu(bool isSwitchToMenu)
 }
 
 /**
- * @brief        ´ÓÕ»ÖĞÉ¾³ıÄ³¸ö½çÃæ
- * @param[in]    screenId ½çÃæID
+ * @brief        ä»æ ˆä¸­åˆ é™¤æŸä¸ªç•Œé¢
+ * @param[in]    screenId ç•Œé¢ID
  * @author       Wang.Luo
  * @date         2025-03-14
  */
@@ -915,7 +916,7 @@ void uteTaskGuiStackRemoveScreenId(uint8_t screenId)
 }
 
 /**
-*@brief        ÉèÖÃÖ÷ÌâÀàĞÍ£¬ÈçÓĞĞèÒª£¬¿ÉÔö¼Ótype
+*@brief        è®¾ç½®ä¸»é¢˜ç±»å‹ï¼Œå¦‚æœ‰éœ€è¦ï¼Œå¯å¢åŠ type
 *@details
 *@author       dengli.lu
 *@date       2021-11-08
@@ -930,7 +931,7 @@ void uteModuleGuiCommonSetThemeTypeId(int themeTypeId)
     }
 }
 /**
-*@brief        »ñÈ¡Ö÷ÌâÀàĞÍ£¬ÈçÓĞĞèÒª£¬¿ÉÔö¼Ótype
+*@brief        è·å–ä¸»é¢˜ç±»å‹ï¼Œå¦‚æœ‰éœ€è¦ï¼Œå¯å¢åŠ type
 *@details
 *@author       dengli.lu
 *@date       2021-11-17
@@ -941,7 +942,7 @@ int uteModuleGuiCommonGetThemeTypeId(void)
 }
 
 /**
-*@brief        »ñÈ¡µ±Ç°ÁÁÆÁ×´Ì¬
+*@brief        è·å–å½“å‰äº®å±çŠ¶æ€
 *@details
 *@author       zn.zeng
 *@date       2021-11-30
@@ -952,7 +953,7 @@ bool uteModuleGuiCommonIsDisplayOn(void)
 }
 
 /**
-*@brief        »ñÈ¡µ±Ç°ÏÔÊ¾½çÃæµÄID
+*@brief        è·å–å½“å‰æ˜¾ç¤ºç•Œé¢çš„ID
 *@details
 *@author       xjc
 *@date       2022-01-11
@@ -963,7 +964,7 @@ int uteModuleGuiCommonGetCurrentScreenId(void)
 }
 
 /**
-*@brief        »ñÈ¡ÉÏ¸öÏÔÊ¾½çÃæµÄID
+*@brief        è·å–ä¸Šä¸ªæ˜¾ç¤ºç•Œé¢çš„ID
 *@details
 *@author       xjc
 *@date       2022-01-11
@@ -976,8 +977,8 @@ int uteModuleGuiCommonGetLastScreenId(void)
 
 #if UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
 /**
-*@brief     ÊÇ·ñĞèÒªÏÔÊ¾ÏûÏ¢ÌáĞÑ½çÃæ
-*@details   ÔÚÕâĞ©½çÃæ¹¦ÄÜ²âÊÔÖĞ²»ĞèÒªÏûÏ¢ÌáĞÑ£¨µ«ÊÇ»á±£´æµ½ÀúÊ·ÁĞ±íÀïÃæ£©
+*@brief     æ˜¯å¦éœ€è¦æ˜¾ç¤ºæ¶ˆæ¯æé†’ç•Œé¢
+*@details   åœ¨è¿™äº›ç•Œé¢åŠŸèƒ½æµ‹è¯•ä¸­ä¸éœ€è¦æ¶ˆæ¯æé†’ï¼ˆä½†æ˜¯ä¼šä¿å­˜åˆ°å†å²åˆ—è¡¨é‡Œé¢ï¼‰
 *@author    xjc
 *@date      2022-05-23
 */
@@ -1083,7 +1084,7 @@ bool uteModuleGuiCommonIsDontNeedNotificationGuiScreen(void)
 #endif //end UTE_MODULE_GUI_TESTING_NOT_GOTO_NOTIFICATION_SCREEN_SUPPORT
 
 /**
-*@brief     »ñÈ¡µ±Ç°ÓĞĞ§±íÅÌÊı
+*@brief     è·å–å½“å‰æœ‰æ•ˆè¡¨ç›˜æ•°
 *@details
 *@author    zn.zeng
 *@date      2022-06-28
@@ -1099,7 +1100,7 @@ uint8_t uteModuleGuiCommonGetVailWatchCnt(void)
     return maxCnt;
 }
 /*
-*@brief     ¼ÆËãµãµ½Ô²ĞÄµÄ¾àÀë
+*@brief     è®¡ç®—ç‚¹åˆ°åœ†å¿ƒçš„è·ç¦»
 *@details
 *@author    cxd
 *@date      2022-05-30
@@ -1112,7 +1113,7 @@ int16_t uteModuleGuiGetDistanceFromCenter(UTE_UI_Point_t p)
 }
 
 /*
-*@brief     ÔÚÔ²ĞÎÆÁÄ»ÏÔÊ¾·¶Î§ÄÚ»ñÈ¡Ä³¸ö¾ØĞÎµÄËæ»úÆğÊ¼Î»ÖÃ
+*@brief     åœ¨åœ†å½¢å±å¹•æ˜¾ç¤ºèŒƒå›´å†…è·å–æŸä¸ªçŸ©å½¢çš„éšæœºèµ·å§‹ä½ç½®
 *@details
 *@author    cxd
 *@date      2022-05-30
@@ -1140,7 +1141,7 @@ RESTART_LINE:
 
 #if UTE_MODULE_POWER_SAVING_SUPPORT
 /**
-*@brief  ÉèÖÃÊ¡µçÄ£Ê½¿ª¹Ø
+*@brief  è®¾ç½®çœç”µæ¨¡å¼å¼€å…³
 *@details
 *@author      dengli.lu
 *@date        2022-06-17
@@ -1159,7 +1160,7 @@ void uteModuleGuiCommonSetPowerSavingModeOpen(bool isPowerSavingModeOpen)
     uteModuleGuiCommonSaveConfig();
 }
 /**
-*@brief  »ñÈ¡Ê¡µçÄ£Ê½¿ª¹Ø
+*@brief  è·å–çœç”µæ¨¡å¼å¼€å…³
 *@details
 *@author      dengli.lu
 *@date        2022-06-17
@@ -1170,7 +1171,7 @@ bool uteModuleGuiCommonGetPowerSavingModeOpen(void)
 }
 #endif
 /**
-*@brief  ÊÇ·ñÔÊĞíÊÖÊÆÏ¢ÆÁ,ÏÂÁĞ×´Ì¬²»ÔÊĞíÏ¢ÆÁ£¨¿ÉÔËÓÃÓÚÂäÍóÏ¢ÆÁ¡¢¸²¸ÇÏ¢ÆÁ£©,ÆäËû½çÃæ¿É×ÔĞĞÌí¼Ó
+*@brief  æ˜¯å¦å…è®¸æ‰‹åŠ¿æ¯å±,ä¸‹åˆ—çŠ¶æ€ä¸å…è®¸æ¯å±ï¼ˆå¯è¿ç”¨äºè½è…•æ¯å±ã€è¦†ç›–æ¯å±ï¼‰,å…¶ä»–ç•Œé¢å¯è‡ªè¡Œæ·»åŠ 
 *@details
 *@author      dengli.lu
 *@date        2022-06-17

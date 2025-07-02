@@ -10,11 +10,13 @@
 #define _UTE_PROJECT_CONFIG_AB281FA_H_
 
 #define DEFAULT_BLE_DEV_NAME "SVERGE"
-#define UTE_SW_VERSION "AB281FAV000121"
+#define UTE_SW_VERSION "AB281FAV000131"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
 /******************客户定制功能支持开始**************************************/
+
+//字库使用20号字体，泰语Y轴偏移-7，没有中文-日语-繁体-阿拉伯，需注意，去掉中文只是文字，需要把符号添加进来
 
 /*! 工厂模式使用英文显示 */
 #define UTE_MODULE_FACTORY_TEST_ENGLISH_SUPPORT 1
@@ -216,6 +218,8 @@
 
 #define UTE_WATCHS_360X360_CUBE_DIAL_SUPPORT 0      // 360x360屏幕使用立方体表盘,需要支持立方体表盘才能开启
 
+
+#define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1

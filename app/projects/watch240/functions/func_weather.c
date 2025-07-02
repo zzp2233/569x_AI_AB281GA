@@ -253,6 +253,8 @@ compo_form_t *func_weather_form_create(void)
     }
 #if GUI_SCREEN_SIZE_240X296RGB_I335002_SUPPORT
     picbox = compo_picturebox_create(frm,UI_BUF_I335002_WEATHER_240X296_BG_BIN);///背景图片
+#elif GUI_SCREEN_SIZE_240X296RGB_I335004_SUPPORT
+    picbox = compo_picturebox_create(frm,UI_BUF_I335004_WEATHER_BG_BIN);///背景图片
 #else
     picbox = compo_picturebox_create(frm,UI_BUF_I335001_WEATHER_BG_BIN);///背景图片
 #endif
@@ -367,10 +369,11 @@ compo_form_t *func_weather_form_create(void)
             snprintf(str_buff, sizeof(str_buff), " --°");
         }
         txt = compo_textbox_create(frm,strlen(str_buff));
-        compo_textbox_set(txt,str_buff);
         compo_textbox_set_location(txt, 8+30+(i)*(82),GUI_SCREEN_HEIGHT+167+12,40,30);
         // compo_textbox_set_pos(txt, 16+(i-1)*(82),GUI_SCREEN_HEIGHT+167);
         compo_textbox_set_align_center(txt, true);
+        compo_textbox_set(txt,str_buff);
+        // compo_textbox_set_autoroll_mode(txt, true); //开启自动滚动
         if(get_weather_id[i] != WEATHER_TYPE_UNKNOWN)
         {
             snprintf(str_buff, sizeof(str_buff), "%02d°",weather_date.dayTemperatureMax[i]);//一周 小~大 温度
@@ -380,9 +383,10 @@ compo_form_t *func_weather_form_create(void)
             snprintf(str_buff, sizeof(str_buff), " --°");
         }
         txt = compo_textbox_create(frm,strlen(str_buff));
-        compo_textbox_set(txt,str_buff);
         compo_textbox_set_location(txt, 8+30+(i)*(82),GUI_SCREEN_HEIGHT+202+12,40,30);
         compo_textbox_set_align_center(txt, true);
+        compo_textbox_set(txt,str_buff);
+        // compo_textbox_set_autoroll_mode(txt, true); //开启自动滚动
     }
     widget_page_set_client(frm->page_body, 0, page_y);
 

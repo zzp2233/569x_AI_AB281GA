@@ -121,6 +121,10 @@ void bt_pbap_event_handle(uint evt, u8 *params)
                 bt_pbap_get_phonebook_size();
             }
             pbap_param.is_pbap_connected = true;
+            if(bt_get_disp_status() == BT_STA_INCALL)
+            {
+                bt_pbap_lookup_number(hfp_get_last_call_number(0));//防止回连后无法获取联系人
+            }
             break;
         case BT_NOTICE_PBAP_DISCONNECT:
             printf("===>>> PBAP: Disconnect\n");

@@ -908,6 +908,58 @@ static void func_clock_sub_dropdown_form_create(void)
         compo_setid(btn,  tbl_dropdown_disp_btn_item[idx_btn].btn_id);
         compo_button_set_pos(btn, tbl_dropdown_disp_btn_item[idx_btn].x, tbl_dropdown_disp_btn_item[idx_btn].y);
     }
+#if GUI_SCREEN_SIZE_240X296RGB_I335004_SUPPORT
+    //电池
+    compo_picturebox_t *battery_pic = compo_picturebox_create(frm, UI_BUF_I335001_DROP_DOWN_MENU_ICON_BATTERY_34X18_X190_Y11_00_BIN);
+    compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
+#if UTE_MODULE_SCREEN_R_VALUE_SUPPORT
+    compo_picturebox_set_pos(battery_pic, 207-8, 20);
+#else
+    compo_picturebox_set_pos(battery_pic, 207, 20+5);
+#endif
+    compo_picturebox_cut(battery_pic,uteDrvBatteryCommonGetBatteryIndex(5),5);
+
+    //蓝牙状态 Bt
+    compo_picturebox_t *bluetooth_pic = compo_picturebox_create(frm, BT_OFF_PIC_BIN);
+    compo_setid(bluetooth_pic, COMPO_ID_TXT_BTETOOTH_STA_PIC);
+#if UTE_MODULE_SCREEN_R_VALUE_SUPPORT
+    compo_picturebox_set_pos(bluetooth_pic, 67+8, 20);
+#else
+    compo_picturebox_set_pos(bluetooth_pic, 67, 20+5);
+#endif
+
+    //蓝牙状态 Ble
+    bluetooth_pic = compo_picturebox_create(frm, BLE_OFF_PIC_BIN);
+    compo_setid(bluetooth_pic, COMPO_ID_TXT_BLUETOOTH_STA_PIC);
+#if UTE_MODULE_SCREEN_R_VALUE_SUPPORT
+    compo_picturebox_set_pos(bluetooth_pic, 28+8, 20);
+#else
+    compo_picturebox_set_pos(bluetooth_pic, 28, 20+5);
+#endif
+
+    char txt_buf[50];
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
+
+    snprintf(txt_buf,sizeof(txt_buf),"%02d/%02d %s",time.month,time.day,i18n[STR_SUNDAY+time.week]);
+    compo_textbox_t *textbox = compo_textbox_create(frm,strlen(txt_buf));
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/5.5+5,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT/10.5);
+    compo_textbox_set(textbox,txt_buf );
+
+#define BAT_PERCENT_VALUE       uteDrvBatteryCommonGetLvl()  //电量百分比数值
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d%%",BAT_PERCENT_VALUE);
+    textbox = compo_textbox_create(frm,4);
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_20_BIN);
+    compo_textbox_set_align_center(textbox,false);
+#if UTE_MODULE_SCREEN_R_VALUE_SUPPORT
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-8, 10,65,30);
+#else
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X, 10+5,65,30);
+#endif
+    compo_textbox_set_right_align(textbox,true);
+    compo_textbox_set(textbox,txt_buf );
+#else
     //电池
     compo_picturebox_t *battery_pic = compo_picturebox_create(frm, UI_BUF_I335001_DROP_DOWN_MENU_ICON_BATTERY_34X18_X190_Y11_00_BIN);
     compo_setid(battery_pic, COMPO_ID_TXT_BATTERY_PIC);
@@ -958,6 +1010,7 @@ static void func_clock_sub_dropdown_form_create(void)
 #endif
     compo_textbox_set_right_align(textbox,true);
     compo_textbox_set(textbox,txt_buf );
+#endif
 
     func_clock_sub_dropdown_battery_pic_update();//下拉电量图标更新
     func_clock_sub_dropdown_bluetooth_pic_update();     //蓝牙更新

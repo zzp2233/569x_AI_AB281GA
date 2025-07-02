@@ -146,6 +146,95 @@ compo_form_t *func_heartrate_form_create(void)
         compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
     }
 ////////////////////////////////////////////////////////////////
+#if GUI_SCREEN_SIZE_240X296RGB_I335004_SUPPORT
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_RESTING_HEART]) );///静态心率
+    compo_textbox_set_location(textbox,14,285+10,88, widget_text_get_max_height());
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox,i18n[STR_RESTING_HEART]);
+    compo_textbox_set_forecolor(textbox, COLOR_GRAY);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I335001_6_HEART_1_1_ICON_ABOUT_18X18_X176_Y299_BIN);
+    compo_picturebox_set_pos(picbox,115,295+10);
+
+    compo_button_t *btn = compo_button_create(frm);
+    compo_button_set_location(btn,115,295,30,30);
+    compo_setid(btn,COMPO_ID_HEART_BTN_ABOUT);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartrGetCurrDayStaticHeartData());
+    textbox = compo_textbox_create(frm, 3 );///次/分 数据
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_pos(textbox,14,320);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox,txt_buf);
+    compo_setid(textbox,COMPO_ID_HEART_STATIC_VALUE_TXT);
+
+    txt_leng = widget_text_get_area(textbox->txt);
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,20+txt_leng.wid,320+10,100, widget_text_get_max_height());
+    compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
+    compo_setid(textbox,COMPO_ID_HEART_STATIC_BPM_TXT);
+//////////////////////////////////////////////////////////////////////////////////
+    picbox = compo_picturebox_create(frm, UI_BUF_I335001_6_HEART_1_1_ICON_BG_DATA_RESTING_HEART_BG_224X220_X8_Y373_BIN);
+    compo_picturebox_set_pos(picbox, 120,480);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_WEEK7_HEART]) );///7天平均静态心率
+    compo_textbox_set_location(textbox,14,380,205, widget_text_get_max_height());
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox,i18n[STR_WEEK7_HEART]);
+    compo_textbox_set_forecolor(textbox, COLOR_GRAY);
+
+    memset(txt_buf,0,sizeof(txt_buf));
+    if( uteModuleHeartrGetLast7DayAvgStaticHeartData() > 0 && uteModuleHeartrGetLast7DayAvgStaticHeartData() != 255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",uteModuleHeartrGetLast7DayAvgStaticHeartData());
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
+    textbox = compo_textbox_create(frm, 3 );///7天平均静态心率 数据
+    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X-106,415,100,50);
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_right_align(textbox,true);
+
+    textbox = compo_textbox_create(frm, strlen(i18n[STR_PER_MINUTE]) );///次/分
+    compo_textbox_set_align_center(textbox, false);
+    compo_textbox_set_location(textbox,GUI_SCREEN_CENTER_X,415+11,107, widget_text_get_max_height());
+    compo_textbox_set(textbox,i18n[STR_PER_MINUTE]);
+
+    uint8_t heart_week_date[7];
+    uteModuleHeartrGetWeekDayStaticHeartData(heart_week_date);///获取心率
+
+    chart = compo_chartbox_create(frm, CHART_TYPE_BAR_ARC, 7);///图表内的柱形图
+    compo_chartbox_set_location(chart, GUI_SCREEN_CENTER_X+13,512,190,94);
+    compo_chartbox_set_pixel(chart, 1);
+
+    ute_module_systemtime_time_t time, readTime;
+    uteModuleSystemtimeGetTime(&time);//获取系统时间
+    chart_info.y = 0;
+    chart_info.width = 18;   ///像素点
+    for (int i=0; i<7; i++)
+    {
+        chart_info.x = i*chart_info.width + i*10;
+        chart_info.height = heart_week_date[i]*1.14;///心率数据转换为柱形条显示数据
+        compo_chartbox_set_value(chart, i, chart_info, COLOR_RED);
+
+        memcpy(&readTime, &time, sizeof(ute_module_systemtime_time_t));
+        uteModuleSystemtimeInputDateIncreaseDecreaseDay(&readTime, i - 6);
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%d",readTime.day);
+        textbox = compo_textbox_create(frm, 2);//七天
+        compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_12_BIN);
+        compo_textbox_set_pos(textbox,48+i*27,566);
+        compo_textbox_set(textbox,txt_buf);
+        compo_textbox_set_forecolor(textbox,COLOR_GRAY);
+    }
+
+#else
     textbox = compo_textbox_create(frm, strlen(i18n[STR_RESTING_HEART]) );///静态心率
     compo_textbox_set_location(textbox,14,285,88, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
@@ -236,7 +325,7 @@ compo_form_t *func_heartrate_form_create(void)
         compo_textbox_set(textbox,txt_buf);
         compo_textbox_set_forecolor(textbox,COLOR_GRAY);
     }
-
+#endif
     return frm;
 }
 
@@ -2451,20 +2540,20 @@ static void func_heartrate_enter(void)
     page_move_info_t info =
     {
         .title_used = true,
+#if GUI_SCREEN_SIZE_240X296RGB_I335004_SUPPORT
+        .page_size = 572,
+#else
 #if UTE_SCREEN_SCROLL_OFFSET_HEIGHT
         .page_size = 562+UTE_SCREEN_SCROLL_OFFSET_HEIGHT,
 #else
         .page_size = 562,
+#endif
 #endif
         .page_count = 1,
         .quick_jump_perc = 80,
     };
     compo_page_move_init(f_heartrate->ptm, func_cb.frm_main->page_body, &info);
     func_cb.flag_animation = false;
-    // if(uteModuleHeartIsWear() == false)
-    // {
-    //     msgbox(i18n[STR_PLEASE_WEAR], NULL, NULL, MSGBOX_MODE_BTN_OK, MSGBOX_MSG_TYPE_NONE);
-    // }
 
 #elif GUI_SCREEN_SIZE_368X448RGB_I341001_SUPPORT
     f_heartrate_t *f_heartrate = (f_heartrate_t *)func_cb.f_cb;

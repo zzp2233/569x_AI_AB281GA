@@ -130,19 +130,23 @@ compo_form_t *func_bt_call_form_create(void)
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X-GUI_SCREEN_CENTER_X*2/3, 240);
 
     //sound
+#ifdef UI_BUF_I330001_CALL_CALLING_SOUND_BIN
     btn =compo_button_create_by_image (frm,UI_BUF_I330001_CALL_CALLING_SOUND_BIN);
     compo_setid(btn, COMPO_ID_BIN_SOUND);
     compo_button_set_pos(btn, GUI_SCREEN_CENTER_X+GUI_SCREEN_CENTER_X*2/3,240);
+#endif
 
     ///////////////////////////////////////第二页
     widget_page_t *page = widget_page_create(frm->page);///创建页码页面
     widget_page_set_client(page, 0, 0);
 
     //音量
+#ifdef UI_BUF_I330001_CALL_CALLING_PROGRESS_BAR_BIN
     compo_picturebox_t *volume_pic = compo_picturebox_create_for_page(frm,frm->page, UI_BUF_I330001_CALL_CALLING_PROGRESS_BAR_BIN);
     compo_setid(volume_pic, COMPO_ID_PIC_VOLUME);
     compo_picturebox_set_pos(volume_pic, GUI_SCREEN_CENTER_X+GUI_SCREEN_WIDTH, 144);
     compo_picturebox_cut(volume_pic,sys_cb.hfp_vol-1,15);
+#endif
 
     //新建按钮
     btn = compo_button_create_page_by_image(frm,frm->page, UI_BUF_I330001_SETTINGS_BRIGHTNESS_LESS_BIN);

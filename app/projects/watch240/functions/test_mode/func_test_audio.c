@@ -122,7 +122,6 @@ static void func_test_audio_click(void)
     switch(id)
     {
         case BLUETOOTH_SWITCH_BTN_ID:
-            printf("2222222222222222222222\n");
             f_audio->bluetooth ^=1;
             if(f_audio->bluetooth == true)
             {
@@ -149,7 +148,6 @@ static void func_test_audio_click(void)
             }
             break;
         case UP_SWITCH_BTN_ID:
-            printf("333333333333\n");
             f_audio->up_switch_flag ^=1;
             if(f_audio->up_switch_flag == true)
             {
@@ -188,7 +186,6 @@ static void func_audio_message(size_msg_t msg)
     {
         case MSG_CTP_CLICK:
             func_test_audio_click();
-            printf("111111111111111111111111\n");
             break;
 
         default:
@@ -310,7 +307,6 @@ static void func_test_audio_click(void)
     switch(id)
     {
         case BLUETOOTH_SWITCH_BTN_ID:
-            printf("2222222222222222222222\n");
             f_audio->bluetooth ^=1;
             if(f_audio->bluetooth == true)
             {
@@ -337,7 +333,6 @@ static void func_test_audio_click(void)
             }
             break;
         case UP_SWITCH_BTN_ID:
-            printf("333333333333\n");
             f_audio->up_switch_flag ^=1;
             if(f_audio->up_switch_flag == true)
             {
@@ -376,7 +371,6 @@ static void func_audio_message(size_msg_t msg)
     {
         case MSG_CTP_CLICK:
             func_test_audio_click();
-            printf("111111111111111111111111\n");
             break;
 
         default:

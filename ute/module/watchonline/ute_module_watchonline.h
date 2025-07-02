@@ -88,6 +88,7 @@ typedef struct
     watchConfig_t ReceivePhotoHead;
 #endif
 } ute_module_watchonline_data_t;
+void uteModuleWatchOnlineDataInit(void);
 uint32_t uteModuleWatchOnlineGetBaseAddress(uint8_t index);
 void uteModuleWatchOnlineReadDeviceInfo(uint8_t *data);
 void uteModuleWatchOnlineUpateConfigFromFlash(void);

@@ -271,6 +271,9 @@ const static func_item_info_t func_item_tbl[] =
 #if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
     {.func_sta=FUNC_TOOLBOX,                 .res_addr=UI_BUF_I335001_2_HONEYCOMB_TOOLBOX_BIN,                .str_idx = STR_TOOL_BOX},           //工具箱
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+#if UTE_MODULE_SCREENS_CALENDAER_SUPPORT
+    {.func_sta=FUNC_CALENDAER,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_CALENDAR_BIN,               .str_idx = STR_CALENDAR},            //日历
+#endif // UTE_MODULE_SCREENS_CALENDAER_SUPPORT
 };
 
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT

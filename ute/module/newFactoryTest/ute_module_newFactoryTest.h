@@ -187,7 +187,7 @@ typedef struct
     uint8_t Smoke_Hot;//发热丝状态
     uint16_t Moto_Count;//震动次数
     uint16_t Smoke_Count;//抽吸口数
-    uint8_t BatPersent;
+    bool play_flag;
 }
 ute_smoke_factory_test_data_t;
 

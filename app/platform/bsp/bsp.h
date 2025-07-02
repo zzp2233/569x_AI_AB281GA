@@ -37,6 +37,9 @@
 #include "bsp_ecig_switch_algrithm.h"
 #endif
 #include "bsp_gpio.h"
+#include "bsp_charge_ex.h"
+
+
 #if BT_TWS_EN
 #define TICK_MAX_DELAY                  TWS_TICK_MAX_DELAY
 #define TICKN_GET()                     tws_time_tickn_get()

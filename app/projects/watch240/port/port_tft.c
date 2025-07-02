@@ -4,16 +4,9 @@
 
 void port_tft_init(void)
 {
-    GPIOHFEN &= ~BIT(6);                        // CS
-    GPIOHDE  |=  BIT(6);
-    GPIOHSET  =  BIT(6);
-    GPIOHDIR &= ~BIT(6);
+    port_gpio_set_out(PORT_TFT_CS,1);
 
-
-    GPIOAFEN |=  BIT(4);                        // CLK
-    GPIOADE  |=  BIT(4);
-    GPIOACLR  =  BIT(4);
-    GPIOADIR &= ~BIT(4);
+    port_gpio_set_func(PORT_TFT_CLK,0);
 
 #if (GUI_MODE_SELECT == MODE_4WIRE_8BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
     GPIOAFEN |= BIT(2);                         // D0
@@ -22,9 +15,13 @@ void port_tft_init(void)
 
     DC_ENABLE();
 #else
-    GPIOAFEN |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));  // D0/D1/D2/D3
-    GPIOADE  |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
-    GPIOADIR |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
+    //GPIOAFEN |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));  // D0/D1/D2/D3
+    //GPIOADE  |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
+    //GPIOADIR |= (BIT(2)|BIT(3)|BIT(1)|BIT(0));
+    port_gpio_set_func(PORT_TFT_GPIO_D0,0);
+    port_gpio_set_func(PORT_TFT_GPIO_D1,0);
+    port_gpio_set_func(PORT_TFT_GPIO_D2,0);
+    port_gpio_set_func(PORT_TFT_GPIO_D3,0);
 #endif
 
     FUNCMCON2 = BIT(28);
@@ -52,6 +49,22 @@ void port_tft_reset(void)
 
 void port_tft_exit(void)
 {
-    GPIOADE  &= ~(BIT(2)|BIT(3)|BIT(1)|BIT(0)|BIT(4)|BIT(5)|BIT(7));
-    GPIOADIR |= (BIT(2)|BIT(3)|BIT(1)|BIT(0)|BIT(4)|BIT(5)|BIT(7));
+#if (GUI_MODE_SELECT == MODE_4WIRE_8BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
+    需要配置对应协议IO
+#elif GUI_MODE_SELECT == MODE_QSPI
+
+    port_gpio_disable(PORT_TFT_CLK);
+    port_gpio_disable(PORT_TFT_CS);
+    port_gpio_disable(PORT_TFT_RST);
+
+    port_gpio_disable(PORT_TFT_GPIO_D0);
+    port_gpio_disable(PORT_TFT_GPIO_D1);
+    port_gpio_disable(PORT_TFT_GPIO_D2);
+    port_gpio_disable(PORT_TFT_GPIO_D3);
+
+#else
+    需要配置对应协议IO
+#endif
+
+
 }

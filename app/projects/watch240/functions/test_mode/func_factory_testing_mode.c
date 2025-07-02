@@ -99,7 +99,10 @@ enum
     TAPE_TXT_ID,
     ///*喇叭测试*/
     HORN_TXT_ID,
-    RECORDING_BTN_ID,
+    RECORDING_BTN_ID,//麦克风
+#if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
+    RECORDING1_BTN_ID,//播放铃声
+#endif
 };
 
 // bool mode_test_result_data[13];
@@ -359,7 +362,7 @@ static void func_factory_testing_pass_fail_bnt_create(compo_form_t *frm)
     compo_textbox_set_forecolor(textbox, COLOR_GREEN);
 
     btn = compo_button_create(frm); // 按钮PASS
-    compo_button_set_location(btn, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6 -(widget_text_get_area(textbox->txt).hei / 2), (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
+    compo_button_set_location(btn, GUI_SCREEN_CENTER_X + GUI_SCREEN_CENTER_X / 2, GUI_SCREEN_HEIGHT * 5 / 6, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 3);
     compo_setid(btn, PASS_ID);
 }
 
@@ -740,12 +743,12 @@ compo_form_t * func_factory_testing_ring(void)
     textbox = compo_textbox_create(frm, strlen("点击暂停播放"));
     compo_textbox_set_pos(textbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y);
     compo_textbox_set(textbox, "点击暂停播放");
-    compo_setid(textbox,TAPE_TXT_ID);
+    compo_setid(textbox,HORN_TXT_ID);
     compo_textbox_set_forecolor(textbox, make_color(0,191,255));
 
     compo_button_t *btn = compo_button_create(frm); // 按键
     compo_button_set_location(btn, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+MODE_ONE_SPACING_Y, (GUI_SCREEN_WIDTH / 2), widget_text_get_area(textbox->txt).hei * 2);
-    compo_setid(btn, RECORDING_BTN_ID);
+    compo_setid(btn, RECORDING1_BTN_ID);
 
     func_factory_testing_pass_fail_bnt_create(frm);
 
@@ -925,7 +928,7 @@ static void func_mode_test_ring_click(void)
             }
         }
         break;
-        case RECORDING_BTN_ID:
+        case RECORDING1_BTN_ID:
             if(f_factory_testing->horn_flag == true)
             {
                 f_factory_testing->horn_flag = false;
@@ -943,12 +946,14 @@ static void func_mode_test_ring_click(void)
     }
 }
 #endif
+//喇叭麦克风
 static void func_mode_mic_speaker_click(void)
 {
     int id = compo_get_button_id();
-//    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
-//    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
-
+    f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
+    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);///录音状态
+    if (textbox == NULL)
+        return;
     switch(id)
     {
         case FALL_ID: ///不通过后切换下一个模式
@@ -962,10 +967,18 @@ static void func_mode_mic_speaker_click(void)
         }
         break;
         case RECORDING_BTN_ID:
+            printf("uteModuleMicRecordFactoryGetRecordState() ==%d \r\n",uteModuleMicRecordFactoryGetRecordState());
             if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
             {
                 uteModuleMicRecordFactoryStart();
             }
+            // else if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDING){
+            //     uteModuleMicRecordFactorySetrecordState(FACTORY_TEST_RECORD_PLAYING);
+            //     uteModuleMicRecordFactoryPlayStart();
+            // }
+            // else if(uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_PLAYING || uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDED){
+            //     uteModuleMicRecordFactoryStart();
+            // }
             break;
     }
 }
@@ -1177,56 +1190,6 @@ static void func_mode_gsensor_process(void)
 {
     char txt_buf[50];
     uint32_t totalStepCnt = 0;
-#if 0
-    uteModuleSportGetCurrDayStepCnt(&totalStepCnt, NULL, NULL); /// 获取步数
-
-    if (tick_get() % 500 == 0)
-    {
-        ute_drv_gsensor_common_axis_data_t *data = NULL;
-        uteDrvGsensorCommonReadFifo(&data);
-
-        int16_t *x = (int16_t *)uteModulePlatformMemoryAlloc(UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-        int16_t *y = (int16_t *)uteModulePlatformMemoryAlloc(UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-        int16_t *z = (int16_t *)uteModulePlatformMemoryAlloc(UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-
-        if (x && y && z)
-        {
-            memset(x, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-            memset(y, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-            memset(z, 0, UTE_DRV_GSENSOR_AXIS_DATA_MAX * sizeof(int16_t));
-
-            uint8_t frameCnt = 0;
-
-            frameCnt = data->frameCnt;
-            ute_drv_gsensor_common_axis_bit_change_t axisBitChange;
-            axisBitChange.inputXaxis = &data->accXaxis[0];
-            axisBitChange.inputYaxis = &data->accYaxis[0];
-            axisBitChange.inputZaxis = &data->accZaxis[0];
-            axisBitChange.outputXaxis = &x[0];
-            axisBitChange.outputYaxis = &y[0];
-            axisBitChange.outputZaxis = &z[0];
-            uteDrvGsensorCommonXYZaxisDataBitChange(&axisBitChange, frameCnt, GSENSOR_DATA_BIT_STEP);
-
-            compo_textbox_t *textbox1 = compo_getobj_byid(ANGLE_TXT_1_ID); // 步数
-            compo_textbox_t *textbox2 = compo_getobj_byid(ANGLE_TXT_2_ID); // X轴
-            compo_textbox_t *textbox3 = compo_getobj_byid(ANGLE_TXT_3_ID); // Y轴
-            compo_textbox_t *textbox4 = compo_getobj_byid(ANGLE_TXT_4_ID); // Z轴
-
-            snprintf(txt_buf, sizeof(txt_buf), "%ld", totalStepCnt);
-            compo_textbox_set(textbox1, txt_buf);
-            snprintf(txt_buf, sizeof(txt_buf), "X:%d", *axisBitChange.outputXaxis);
-            compo_textbox_set(textbox2, txt_buf);
-            snprintf(txt_buf, sizeof(txt_buf), "Y:%d", *axisBitChange.inputYaxis);
-            compo_textbox_set(textbox3, txt_buf);
-            snprintf(txt_buf, sizeof(txt_buf), "Z:%d", *axisBitChange.outputZaxis);
-            compo_textbox_set(textbox4, txt_buf);
-        }
-
-        uteModulePlatformMemoryFree(x);
-        uteModulePlatformMemoryFree(y);
-        uteModulePlatformMemoryFree(z);
-    }
-#endif
 }
 static void func_mode_charging_process(void)
 {
@@ -1247,16 +1210,21 @@ static void func_mode_charging_process(void)
 
 static void func_mode_mic_speaker_process(void)
 {
+#if MIC_DATA_TO_FLASH
+    func_record_analysis();
+#endif
     compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
     static bool isNeedPlay = false;
     if (textbox == NULL)
         return;
     if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_IDLE)
     {
+        // printf("RECORD_IDLERECORD_IDLERECORD_IDLERECORD_IDLE\n");
         compo_textbox_set(textbox, "点击开始录音");
     }
     else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDING)
     {
+        // printf("RECORD_RECORDINGRECORD_RECORDINGRECORD_RECORDINGRECORD_RECORDING\n");
         compo_textbox_set(textbox, "录音中...");
         isNeedPlay = true;
     }
@@ -1264,19 +1232,22 @@ static void func_mode_mic_speaker_process(void)
     {
         if (isNeedPlay)
         {
+            //  printf("isNeedPlay=%d,RECORDEDRECORDEDRECORDEDRECORDED\n",isNeedPlay);
             compo_textbox_set(textbox, "播放中...");
             uteModuleMicRecordFactorySetrecordState(FACTORY_TEST_RECORD_PLAYING);
-            // uteModuleMicRecordFactoryPlayStart();
-            // isNeedPlay = false;
+            //  uteModuleMicRecordFactoryPlayStart();
+            //  isNeedPlay = false;
         }
     }
     else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_PLAYING)
     {
+        // printf("isNeedPlay=%d,PLAYINGPLAYINGPLAYING\n",isNeedPlay);
         compo_textbox_set(textbox, "播放中...");
         if (isNeedPlay)
         {
-            uteModuleMicRecordFactoryPlay();
+            uteModuleMicRecordFactoryPlayStart();
             isNeedPlay = false;
+            uteModuleMicRecordFactorySetrecordState(FACTORY_TEST_RECORD_IDLE);
         }
     }
 }
@@ -1284,7 +1255,7 @@ static void func_mode_mic_speaker_process(void)
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
 static void func_mode_test_ring_process(void)
 {
-    compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
+    compo_textbox_t *textbox = compo_getobj_byid(HORN_TXT_ID);
     f_factory_testing_t *f_factory_testing = (f_factory_testing_t *)func_cb.f_cb;
     if(f_factory_testing->horn_flag == true)
     {
@@ -1344,6 +1315,7 @@ static void func_factory_testing_process(void)
             func_mode_charging_process();
             break;
         case FACTORY_MODULE_MIC_SPEAKER:
+
             func_mode_mic_speaker_process();
             break;
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
@@ -1364,6 +1336,9 @@ static void func_factory_testing_process(void)
 ///进入工厂测试功能
 static void func_factory_testing_enter(void)
 {
+#if (ASR_SELECT && ASR_FULL_SCENE)
+    bsp_asr_stop();
+#endif
     func_cb.f_cb = func_zalloc(sizeof(f_factory_testing_t));
     func_factory_testing_init();
     func_cb.frm_main = func_factory_testing_create();

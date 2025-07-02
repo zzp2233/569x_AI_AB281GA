@@ -21,7 +21,7 @@ enum
     COMPO_ID_CHART_WEEKLY, // 本周口数图表
     COMPO_ID_SCROLLBAR,
 };
-uint8_t ecig_date[24];
+uint16_t ecig_date[24];
 
 typedef struct f_ecig_t_
 {
@@ -62,6 +62,7 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
     chart_info_daily.y = 8;
     chart_info_daily.width = 6;
 
+    // 在设置图表值的循环中添加范围检查
     for (int i = 0; i < 24; i++)
     {
         int base_x = i * chart_info_daily.width + 2 * i;
@@ -81,7 +82,10 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
         {
             chart_info_daily.x = base_x;
         }
-        chart_info_daily.height = ecig_date[i] *0.73;
+
+        // 增加最大限制，防止图表高度超出显示范围
+        uint16_t max_height = 100; // 根据实际图表高度调整
+        chart_info_daily.height = (ecig_date[i] * 0.73 > max_height) ? max_height : (ecig_date[i] * 0.73);
         compo_chartbox_set_value(chart_daily, i, chart_info_daily, make_color(255, 116, 169));
     }
     ///设置图片
@@ -176,6 +180,23 @@ compo_form_t *func_ecig_vpae_sub_form_create(void)
 #elif GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
 
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+void update_chart_with_current_time()
+{
+    uint32_t smoking_counts[24];
+    uteModuleGetSmokingCountPerHour(smoking_counts);
+
+    // 获取当前小时
+    ute_module_systemtime_time_t current_time;
+    uteModuleSystemtimeGetTime(&current_time);
+    uint8_t current_hour = current_time.hour;
+
+    // 更新ecig_date数组，确保时间顺序正确
+    for (int i = 0; i < 24; i++)
+    {
+        int index = (current_hour - i + 24) % 24; // 按当前时间倒序排列
+        ecig_date[i] = smoking_counts[index];
+    }
+}
 
 
 static void func_ecig_vpae_sub_date_update(bool next)
@@ -208,6 +229,7 @@ static void func_ecig_vpae_sub_comm_process(void)
     func_process();
     check_and_update_day();
     check_and_update_week();
+    update_chart_with_current_time();
 }
 
 //消息处理
@@ -230,6 +252,7 @@ static void func_ecig_vpae_sub_message(size_msg_t msg)
 
 static void func_ecig_vpae_sub_enter(void)
 {
+    update_chart_with_current_time();
     uint32_t smoking_counts[24];
     uteModuleGetSmokingCountPerHour(smoking_counts);
     for (int i=0; i<24; i++)ecig_date[i]=smoking_counts[i];

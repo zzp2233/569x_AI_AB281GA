@@ -78,14 +78,17 @@ void uteModuleSmokeInit(void)
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SMOKE_DATA_DIR);
     uteModuleSmokeData.current_index =5;
     uteModuleSmokeData.current_power =15;
+    uteModuleSmokeData.target_smoking_count = 9999;
     uteModuleSmokeDataReadConfig(); // 恢复数据
     uteModulePlatformCreateMutex(&uteModuleSmokeMute); // 创建互斥量
 }
-
+extern void update_chart_with_current_time();
 // 检查是否跨天并更新数据
 void check_and_update_day()
 {
     ute_module_systemtime_time_t current_time;
+    uteModuleSystemtimeGetTime(&current_time);
+    static ute_module_systemtime_time_t last_time;
     uteModuleSystemtimeGetTime(&current_time);
     uteModulePlatformTakeMutex(uteModuleSmokeMute); // 加锁
     if (last_day == 0)
@@ -101,6 +104,12 @@ void check_and_update_day()
         uteModuleSmokeData.total_smoking_count = 0;
         last_day = current_time.day;
         uteModuleSmokeDataSaveConfig(); // 跨天保存
+    }
+    // 当小时变化时更新图表
+    if (current_time.hour != last_time.hour)
+    {
+        update_chart_with_current_time();
+        last_time = current_time;
     }
     uteModulePlatformGiveMutex(uteModuleSmokeMute); // 解锁
 }

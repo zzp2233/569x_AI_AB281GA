@@ -16,6 +16,11 @@
 #define PARAM_MSC_BRKPT_SD1         0x24        //10BYTE = frame_count(4byte) +  file_ptr(4byte) + fname_crc(2byte)
 
 
+#define PARAM_BOX_PERCENT           0x38        //1BYTE, 仓电量
+
+
+#define PARAM_DEEP_SLEEP_FLAG       0x48        //1BYTE, 深睡开机标志, 0:深睡代替关机唤醒 1:深睡唤醒 2:关机唤醒
+#define PARAM_CV_PERCENT_TICKS_CNT  0x49        //1BYTE, 恒压阶段电量变化, 累计时间(单位:s)
 #define PARAM_MASTER_ADDR_VALID     0x50        //RFU
 #define PARAM_MASTER_ADDR           0x51        //6BYTE
 #define PARAM_NEW_LOCAL_NAME        0x57        //64byte=len+sum+62BYTE

@@ -67,7 +67,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
         uteModuleSmokeData.smoking_count_per_day[current_weekday]++;
 
         uteModuleSmokeDataSaveConfig();
-        if (uteModuleSmokeData.total_smoking_count == uteModuleSmokeData.target_smoking_count)
+        if (uteModuleSmokeData.total_smoking_count >= uteModuleSmokeData.target_smoking_count)
         {
             compo_picturebox_t *pic;
             pic = compo_picturebox_create(frm, UI_BUF_I330001_SET_PUFFS_OK01_BIN);
@@ -107,7 +107,7 @@ compo_form_t *func_ecig_reminder_form_create(void)
     }
     else if (sys_cb.smoke_index == IN_DEVICE)
     {
-        if (get_gear_func1() == 0)
+        if (get_gear_func() == 0)
         {
             picbox = compo_picturebox_create(frm, UI_BUF_I330001_YD_YANDAN_IN_DANG_BIN);
             compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 50);
@@ -154,8 +154,9 @@ compo_form_t *func_ecig_reminder_form_create(void)
 
     return frm;
 }
-
+extern bool slider_unlock;
 // 事件处理
+
 static void func_ecig_reminder_process(void)
 {
     f_ecig_reminder_t *f_ecig_reminder = (f_ecig_reminder_t *)func_cb.f_cb;
@@ -164,10 +165,10 @@ static void func_ecig_reminder_process(void)
     {
         if (tick_check_expire(f_ecig_reminder->tick, 600))
         {
-            if(sys_cb.gui_screen_wakeup)
+            if(sys_cb.gui_screen_wakeup && !slider_unlock)
             {
                 func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
-                sys_cb.gui_screen_wakeup = false;
+                //sys_cb.gui_screen_wakeup = false;
             }
             else
             {
@@ -237,6 +238,8 @@ static void func_ecig_reminder_exit(void)
 {
     sys_cb.smoke_index = 0;
     func_cb.last = FUNC_ECIG_REMINDER;
+    if(!slider_unlock )
+        func_cb.sta = FUNC_SLIDING_UNLOCK_SCREEN;
     ecig_clear_short_flag(0);
 }
 

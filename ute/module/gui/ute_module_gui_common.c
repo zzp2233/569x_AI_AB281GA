@@ -659,6 +659,7 @@ void uteModuleGuiCommonSetCurrWatchIndex(uint8_t index)
 */
 void uteModuleGuiCommonWatchConfigInit(void)
 {
+    uteModuleWatchOnlineDataInit();
     uteModuleWatchOnlineUpateConfigFromFlash();
     uteModuleGuiCommonSetCurrWatchIndex(uteModuleGuiCommonData.displayCtrl.currWatchIndex);
 }

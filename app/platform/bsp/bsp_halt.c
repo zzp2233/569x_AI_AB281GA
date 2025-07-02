@@ -35,7 +35,7 @@ bool halt_do(u32 halt_no)
                 f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
                 if (f_clk->sta == FUNC_CLOCK_MAIN)
                 {
-                    return false; // 在线表盘异常
+                    // return false; // 在线表盘异常
                 }
             }
             sys_cb.flag_halt = true;

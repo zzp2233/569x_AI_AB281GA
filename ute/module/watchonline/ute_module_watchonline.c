@@ -28,17 +28,18 @@ const uint32_t uteModuleWatchOnlineMultipleBaseAddress[UTE_MODULE_WATCHONLINE_MU
 extern void func_clock_recreate_dial(void);
 
 /*! 在线表盘的数据 casen, 2021-11-27  */
-ute_module_watchonline_data_t uteModuleWatchOnlineData =
-{
-    .isStartReceive = false,
-    .writeWatchIndex = 0,
-};
+ute_module_watchonline_data_t uteModuleWatchOnlineData;
 
 /*! 接收单笔数据超时指针, 2021-11-27  */
 void *uteModuleWatchOnlineRecvTimeoutTimerPointer = NULL;
 void *uteModuleWatchOnlineOneSecTimerPointer = NULL;
 void *uteModuleWatchOnlineWaitingStartTimerPointer = NULL;
 void *uteModuleWatchOnlineWaitingDellTimerPointer = NULL;
+
+void uteModuleWatchOnlineDataInit(void)
+{
+    memset(&uteModuleWatchOnlineData, 0, sizeof(ute_module_watchonline_data_t));
+}
 
 /**
  * @brief        获取在线表盘地址
@@ -298,7 +299,7 @@ void uteModuleWatchOnlineUpateConfigFromFlash(void)
     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,multipleValidWatchCnt=%d\r\n", __func__, uteModuleWatchOnlineData.multipleValidWatchCnt);
     if (!isConnectOurApp)
     {
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,is not connect our app!\r\n", __func__);
+        UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,is not connect our app!", __func__);
     }
     uint8_t watchIndex = 0;
     uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
@@ -389,7 +390,11 @@ void uteModuleWatchOnlineReadyStart(void)
     {
         uteModulePlatformRestartTimer(&uteModuleWatchOnlineWaitingStartTimerPointer,100);
     }
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,.writeWatchIndex=%d,supportMultipleMaxCnt=%d",__func__,uteModuleWatchOnlineData.writeWatchIndex,uteModuleWatchOnlineData.supportMultipleMaxCnt);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL,"%s,.writeWatchIndex=%d,supportMultipleMaxCnt=%d",__func__,uteModuleWatchOnlineData.writeWatchIndex,uteModuleWatchOnlineData.supportMultipleMaxCnt);
+    if (uteModuleWatchOnlineData.writeWatchIndex >= UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)
+    {
+        uteModuleWatchOnlineData.writeWatchIndex = 0;
+    }
     uteModuleWatchOnlineData.receiveCnt = 0;
     uteModuleWatchOnlineData.fileCrc32 = 0xffffffff;
     uteModuleWatchOnlineData.isStartReceive = true;
@@ -401,7 +406,7 @@ void uteModuleWatchOnlineReadyStart(void)
     uteModuleWatchOnlineData.receiveTimeout = 1; //Casen add 2020-10-26
     bool isUpdateWatch = uteModuleWatchOnlineUpddateDefaultWatchIndex();
 
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,need erase lastEraseAddress=0x%x\r\n", __func__, uteModuleWatchOnlineData.lastEraseAddress);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,need erase lastEraseAddress=0x%x\r\n", __func__, uteModuleWatchOnlineData.lastEraseAddress);
 
     //先跳转到主表盘界面
 #if UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT
@@ -816,7 +821,16 @@ void uteModuleWatchOnlineWaitingDellCallback(void *pxTimer)
     {
         uteModulePlatformFlashNorErase(uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.writeWatchIndex]);
         uteModuleWatchOnlineUpateConfigFromFlash();
-
+        if (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_WATCHMAIN_ID)
+        {
+            uteModuleGuiCommonSetCurrWatchIndex(DEFAULT_WATCH_INDEX);
+            func_clock_recreate_dial();
+            if(sys_cb.gui_sleep_sta)
+            {
+                sys_cb.gui_need_wakeup = true;
+            }
+            reset_sleep_delay_all();
+        }
         uteModulePlatformStopTimer(&uteModuleWatchOnlineWaitingDellTimerPointer);
         uteModulePlatformDeleteTimer(&uteModuleWatchOnlineWaitingDellTimerPointer);
         uteModuleWatchOnlineWaitingDellTimerPointer = NULL;
@@ -855,7 +869,6 @@ void uteModuleWatchOnlineDeleteDataIndex(uint8_t index, uint8_t *data)
     if (multipleValidWatchCnt)
     {
         uteModuleWatchOnlineData.writeWatchIndex = index;
-        uint8_t watchIndex = 0;
         uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
         if(uteModuleWatchOnlineWaitingDellTimerPointer == NULL)
         {
@@ -940,18 +953,21 @@ void uteModuleWatchOnlineDeleteDataMultipleIndex(uint8_t count, uint8_t *index)
                         {
                             uteModuleWatchOnlineData.writeWatchIndex = idx[i];
                             uteModuleGuiCommonSetCurrWatchIndex(DEFAULT_WATCH_INDEX);
-                            func_clock_recreate_dial();
-                            if (sys_cb.gui_sleep_sta)
-                            {
-                                sys_cb.gui_need_wakeup = true;
-                            }
-                            reset_sleep_delay_all();
                             uteModulePlatformRestartTimer(&uteModuleWatchOnlineWaitingDellTimerPointer, 100);
                         }
                     }
                     else
                     {
                         uteModulePlatformFlashNorErase(uteModuleWatchOnlineMultipleBaseAddress[idx[i]]);
+                    }
+                    if (uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_WATCHMAIN_ID)
+                    {
+                        func_clock_recreate_dial();
+                        if (sys_cb.gui_sleep_sta)
+                        {
+                            sys_cb.gui_need_wakeup = true;
+                        }
+                        reset_sleep_delay_all();
                     }
                     response[3 + i] = 1;
                 }
@@ -988,20 +1004,26 @@ void uteModuleWatchOnlineGetAllInfo(void)
     response[1] = 0x09;
     response[2] = sendParam->currSendFileIndex;
     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,multipleValidWatchCnt=%d,currSendOffset=%d", __func__, uteModuleWatchOnlineData.multipleValidWatchCnt, sendParam->currSendFileDataOffset);
-    if (sendParam->currSendFileDataOffset < uteModuleWatchOnlineData.multipleValidWatchCnt)
+    if (sendParam->currSendFileDataOffset < UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT)
     {
-        uint8_t remaining = uteModuleWatchOnlineData.multipleValidWatchCnt - sendParam->currSendFileDataOffset;
+        uint8_t remaining = UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT - sendParam->currSendFileDataOffset;
         uint8_t maxCount = MIN(remaining, 3); // 最多发 3 个，也不能超过剩余数
+        uint8_t vaildIndex = 0;
         for (uint8_t i = 0; i < maxCount; i++)
         {
             uint8_t index = sendParam->currSendFileDataOffset + i;
             uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, uteModuleWatchOnlineMultipleBaseAddress[index], watchConfigSize);
-            response[3 + i * 5 + 0] = index;
-            response[3 + i * 5 + 1] = (watchConfig.snNo >> 24) & 0xff;
-            response[3 + i * 5 + 2] = (watchConfig.snNo >> 16) & 0xff;
-            response[3 + i * 5 + 3] = (watchConfig.snNo >> 8) & 0xff;
-            response[3 + i * 5 + 4] = watchConfig.snNo & 0xff;
-            sendSize += 5;
+            printf("%s,index=%d,snNo=%d\n", __func__, index, watchConfig.snNo);
+            if (watchConfig.isWatchVaild == 0)
+            {
+                response[3 + vaildIndex * 5 + 0] = index;
+                response[3 + vaildIndex * 5 + 1] = (watchConfig.snNo >> 24) & 0xff;
+                response[3 + vaildIndex * 5 + 2] = (watchConfig.snNo >> 16) & 0xff;
+                response[3 + vaildIndex * 5 + 3] = (watchConfig.snNo >> 8) & 0xff;
+                response[3 + vaildIndex * 5 + 4] = watchConfig.snNo & 0xff;
+                sendSize += 5;
+                vaildIndex++;
+            }
         }
         sendParam->currSendFileDataOffset += maxCount;
     }
@@ -1011,7 +1033,7 @@ void uteModuleWatchOnlineGetAllInfo(void)
         uteApplicationCommonSyncDataTimerStop();
     }
     sendParam->currSendFileIndex++;
-    uteModuleProfileBle50SendToPhone(response, sendSize);
+    uteModuleProfileBleSendToPhone(response, sendSize);
 }
 
 void uteModuleWatchOnlineGetAllInfoStart(void)
@@ -1057,7 +1079,7 @@ void uteModuleWatchOnlineUpdatePhotoWatchInfo(void)
     for (uint8_t i = 0; i < UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT; i++)
     {
         uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, uteModuleWatchOnlineMultipleBaseAddress[i], sizeof(watchConfig_t));
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,watchConfig.snNo=%x,isWatchVaild=%d",__func__,watchConfig.snNo,watchConfig.isWatchVaild);
+        UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL,"%s,watchConfig.snNo=%x,isWatchVaild=%d",__func__,watchConfig.snNo,watchConfig.isWatchVaild);
         if (watchConfig.snNo == UTE_MODULE_WATCH_PHOTO_DEFAULT_ID && watchConfig.isWatchVaild == 0)
         {
             uteModuleWatchOnlineData.photoWatchIndex = i;
@@ -1069,7 +1091,7 @@ void uteModuleWatchOnlineUpdatePhotoWatchInfo(void)
     {
         uint32_t bassAddr = uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.photoWatchIndex] + UTE_MODULE_WATCH_PHOTO_BASSADDR_OFFSET;
         uint32_t onePhotoMaxSize = uteModuleWatchOnlineGetOnePhotoMaxSize();
-        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,bassAddr:0x%x", __func__, bassAddr);
+        UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,bassAddr:0x%x", __func__, bassAddr);
         for (uint8_t i = 0; i < UTE_MODULE_WATCH_PHOTO_MAX_PICTURE_CNT; i++)
         {
             uteModulePlatformFlashNorRead((uint8_t *)&uteModuleWatchOnlineData.photoWatchConfig[i], bassAddr + i * onePhotoMaxSize, sizeof(photoWatchConfig_t));
@@ -1083,18 +1105,18 @@ void uteModuleWatchOnlineUpdatePhotoWatchInfo(void)
                 img_area = gui_image_get_size(photo);
                 if (img_area.wid > 0 && img_area.hei > 0)
                 {
-                    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,img_area wid=%d,hei=%d",__func__,img_area.wid,img_area.hei);
+                    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL,"%s,img_area wid=%d,hei=%d",__func__,img_area.wid,img_area.hei);
                     uteModuleWatchOnlineData.photoWatchPictureCnt++;
                 }
             }
-            UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,addr:0x%x,isValid:%d", __func__, bassAddr + i * onePhotoMaxSize, uteModuleWatchOnlineData.photoWatchConfig[i].isVaild);
+            UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,addr:0x%x,isValid:%d", __func__, bassAddr + i * onePhotoMaxSize, uteModuleWatchOnlineData.photoWatchConfig[i].isVaild);
         }
         if(uteModuleWatchOnlineData.photoWatchPictureCnt == 0)
         {
             uteModuleWatchOnlineData.isHasPhoto = false;
         }
     }
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,isHasPhoto=%d,photoWatchIndex=%d", __func__, uteModuleWatchOnlineData.isHasPhoto, uteModuleWatchOnlineData.photoWatchIndex);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,isHasPhoto=%d,photoWatchIndex=%d", __func__, uteModuleWatchOnlineData.isHasPhoto, uteModuleWatchOnlineData.photoWatchIndex);
 }
 
 /**
@@ -1123,14 +1145,14 @@ void uteModuleWatchOnlineGetPhotoAddress(uint8_t index, uint32_t *bassAddr, uint
 {
     // if (index >= uteModuleWatchOnlineData.photoWatchPictureCnt || uteModuleWatchOnlineData.photoWatchConfig[index].isVaild)
     // {
-    //     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,index=%d,photoWatchConfig[index].isVaild=%d", __func__, index, uteModuleWatchOnlineData.photoWatchConfig[index].isVaild);
+    //     UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,index=%d,photoWatchConfig[index].isVaild=%d", __func__, index, uteModuleWatchOnlineData.photoWatchConfig[index].isVaild);
     //     return false;
     // }
     uint32_t photoBassAddr = uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.photoWatchIndex] + UTE_MODULE_WATCH_PHOTO_BASSADDR_OFFSET;
     *bassAddr = photoBassAddr + index * uteModuleWatchOnlineGetOnePhotoMaxSize();
     *preview = *bassAddr + sizeof(photoWatchConfig_t);
     *photo = uteModuleWatchOnlineData.photoWatchConfig[index].previewSize > 0 ? *preview + uteModuleWatchOnlineData.photoWatchConfig[index].previewSize : 0;
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,photoWatchIndex:%d,picIndex:%d,photoBassAddr=0x%x,preview=0x%x,photo=0x%x", __func__, uteModuleWatchOnlineData.photoWatchIndex, index, *bassAddr, *preview, *photo);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,photoWatchIndex:%d,picIndex:%d,photoBassAddr=0x%x,preview=0x%x,photo=0x%x", __func__, uteModuleWatchOnlineData.photoWatchIndex, index, *bassAddr, *preview, *photo);
 }
 
 void uteModuleWatchOnlineGetCurrPhotoAddress(uint32_t *preview, uint32_t *photo)
@@ -1159,7 +1181,7 @@ void uteModuleWatchOnlineGetCurrPhotoAddress(uint32_t *preview, uint32_t *photo)
         *photo = 0;
     }
 
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,photoWatchIndex:%d,picIndex:%d,preview=0x%x,photo=0x%x", __func__, uteModuleWatchOnlineData.photoWatchIndex, uteModuleWatchOnlineData.photoWatchPictureIndex, *preview, *photo);
+    UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,photoWatchIndex:%d,picIndex:%d,preview=0x%x,photo=0x%x", __func__, uteModuleWatchOnlineData.photoWatchIndex, uteModuleWatchOnlineData.photoWatchPictureIndex, *preview, *photo);
 }
 
 void uteModuleWatchOnlineGetCurrPhotoWatchConfig(photoWatchConfig_t *config)

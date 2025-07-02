@@ -423,7 +423,9 @@ void uteModuleProtocolGetBtInfo(uint8_t *response,uint8_t *length)
 {
     //回应0x3801 + BT3.0Name(20byte)+BT3.0MAC(6byte)+BT开关状态（1byte）+BT配对状态（1byte）
     uint8_t totalByte = 0;
-    uteModuleCallGetBtDevName(&response[totalByte],GAP_DEVICE_NAME_LEN);
+    // uteModuleCallGetBtDevName(&response[totalByte],GAP_DEVICE_NAME_LEN);
+    uint8_t nameLen = 19;
+    uteModulePlatformGetDevCompleteName(&response[totalByte], &nameLen);
     totalByte += 20;
     bt_get_local_bd_addr(&response[totalByte]);
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,BT Mac:",__func__);

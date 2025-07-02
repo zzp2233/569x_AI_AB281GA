@@ -165,7 +165,7 @@ extern void func_aux(void);
 extern void func_modem_call(void);
 extern void func_modem_ring(void);
 extern void func_message_reply_info(void);
-// extern void func_mic_test(void);
+//extern void func_mic_test(void);
 //extern void func_tetris(void);
 //extern void func_tetris_start(void);
 extern void func_bird(void);
@@ -498,8 +498,8 @@ const func_t tbl_func_create[] =
 #if FLASHDB_EN
     {FUNC_MESSAGE_REPLY,                func_message_reply_form_create},
 #endif
-#if 0//MIC_TEST_EN
-    {FUNC_MIC_TEST,                     func_mic_test_form_create},
+#if MIC_TEST_EN
+    // {FUNC_MIC_TEST,                     func_mic_test_form_create},
 #endif // MIC_TEST_EN
 
     {FUNC_BIRD,                         func_bird_form_create},
@@ -703,8 +703,8 @@ const func_t tbl_func_entry[] =
 #if FLASHDB_EN
     {FUNC_MESSAGE_REPLY,                func_message_reply_info},
 #endif
-#if 0//MIC_TEST_EN
-    {FUNC_MIC_TEST,                     func_mic_test},
+#if MIC_TEST_EN
+    //  {FUNC_MIC_TEST,                     func_mic_test},
 #endif // MIC_TEST_EN
     {FUNC_BIRD,                         func_bird},
 //    {FUNC_TETRIS,                       func_tetris},
@@ -909,7 +909,7 @@ void func_process(void)
                     msg_enqueue(EVT_CLOCK_DROPDOWN_EXIT);
                     msg_enqueue(EVT_MSGBOX_EXIT);
                 }
-                if(func_cb.sta != FUNC_AGEING)
+                if(func_cb.sta != FUNC_AGEING &&func_cb.sta != FUNC_FACTORY_TESTING )
                     func_cb.sta = FUNC_CHARGE;
             }
         }
@@ -1562,6 +1562,25 @@ void func_message(size_msg_t msg)
 //            break;
 //
         case MSG_SYS_500MS:
+
+            break;
+        case MSG_SYS_BOX_500MS:
+#if CHARGE_EX_IC_SELECT
+            // printf("MSG_SYS_BOX_500MS \n");
+            bsp_charge_ex_process();
+#endif // CHARGE_EX_IC_SELECT
+            break;
+        case MSG_SYS_BOX_CHARGE:
+            //printf("MSG_SYS_BOX_CHARGE \n");
+            bsp_charge_ex_mode_set(BOX_CHARGE_MODE);
+            // sleep_cb.sys_is_sleep = false;
+            uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_EARPHONE);
+            break;
+        case MSG_SYS_BOX_INTER:
+            //printf("MSG_SYS_BOX_INTER \n");
+            bsp_charge_ex_mode_set(BOX_CHK_MODE);
+            // sleep_cb.sys_is_sleep = true;
+            uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_EARPHONE);
             break;
 
         case MSG_SYS_1S:
@@ -1597,6 +1616,7 @@ void func_message(size_msg_t msg)
                     printf(" func_cb.sta == FUNC_ECIG_REMINDER \n");
                     compo_form_destroy(func_cb.frm_main);
                     func_cb.frm_main = func_ecig_reminder_form_create();
+                    uteTaskGuiStartScreen(FUNC_ECIG_REMINDER, 0, __func__);
 
                 }
             }

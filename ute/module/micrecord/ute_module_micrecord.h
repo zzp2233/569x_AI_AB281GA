@@ -1,6 +1,6 @@
 /**
 *@file
-*@brief        ¬º“Ùƒ£øÈÕ∑Œƒº˛
+*@brief        ÂΩïÈü≥Ê®°ÂùóÂ§¥Êñá‰ª∂
 *@details
 *@author       zn.zeng
 *@date       2021-12-21
@@ -12,32 +12,28 @@
 #include "ute_project_config.h"
 #include "ute_module_platform.h"
 #include "include.h"
-enum
+
+typedef enum
 {
     FACTORY_TEST_RECORD_IDLE,
-    FACTORY_TEST_RECORD_RECORDING,   //¬º“Ù÷–
-    FACTORY_TEST_RECORD_RECORDED,    //¬º“ÙÕÍ≥…
-    FACTORY_TEST_RECORD_PLAYING,
-};
-//mic?????????
-typedef struct
-{
-    u8 rec_buf[MIC_TEST_BUF_SIZE];
-    u32 rec_datalen;
-    bool rec_buf_full;
-    volatile u32 samples;
-    volatile int ch_mode;
-} mic_testbuf_t;
+    FACTORY_TEST_RECORD_RECORDING,   //ÂΩïÈü≥‰∏≠
+    FACTORY_TEST_RECORD_RECORDED,    //ÂΩïÈü≥ÂÆåÊàê
+    FACTORY_TEST_RECORD_PLAYING,     //Êí≠Êîæ‰∏≠
+} factory_test_record_state_t;
 
+bool put_mic_obuf(u8 *ptr, u32 samples, int ch_mode);
+void mic_test_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
+void mic_test_init(void);
+void mic_test_start(void);
+void mic_test_exit(void);
+void mic_test_outp(void);
 void uteModuleMicRecordFactoryEnter(void);
 void uteModuleMicRecordFactoryExit(void);
 void uteModuleMicRecordFactoryStart(void);
-bool uteModuleMicRecordFactoryIsHaveData(void);
-void uteModuleMicRecordFactoryPlay(void);
-mic_testbuf_t *uteModuleMicRecordFactoryGetMicBuf(void);
-bool uteModuleMicRecordFactoryIsPlaying(void);
-bool uteModuleMicRecordFactoryIsRecording(void);
-void uteModuleMicRecordFactorySetrecordState(uint8_t state);
+void uteModuleMicRecordFactoryPlayStart(void);
+void uteModulePlayTimerCallback(void *pxTimer);
+void func_record_analysis(void);
 uint8_t uteModuleMicRecordFactoryGetRecordState(void);
+void uteModuleMicRecordFactorySetrecordState(uint8_t state);
 #endif //_UTE_MODULE_CRC_H_
 

@@ -70,6 +70,7 @@ enum COMPO_BOND_DATA
     COMPO_BOND_COMM_UNIT,               //单位
     COMPO_BOND_TIME_AMPM,               //上午/下午
     COMPO_BOND_RESISTANCE_VALUE = 34,               //阻值进度条
+    COMPO_BOND_SMOKE_COUNTVALUE = 36,               //口数进度条
     COMPO_BOND_TIME_WEEK = 37,          //星期
     COMPO_BOND_TIME_MONTH,              //月份
     COMPO_BOND_TEMPERATURE_UNIT,        //温度单位

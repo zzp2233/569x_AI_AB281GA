@@ -167,7 +167,8 @@ static void func_sliding_unlcok_screen_process(void)
             compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 200,56);
             if(slider_unlock)
             {
-                slider_unlock = false;
+                //  slider_unlock = false;
+                // printf("1211slider_unlock=%d\r\n",slider_unlock);
                 // if(sys_cb.password_cnt == 4){
                 //     func_cb.sta = FUNC_PASSWORD_SUB_DISP;
                 //     sys_cb.password_flag = true;

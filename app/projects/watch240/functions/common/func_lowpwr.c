@@ -251,8 +251,8 @@ static void sfunc_sleep(void)
     }
 #endif
 
-    printf("%s\n", __func__);
-    slider_unlock = false;
+
+    // slider_unlock = false;
     sleep_cb.sys_is_sleep = true;
     sys_cb.gui_need_wakeup = 0;
     bt_enter_sleep();
@@ -295,6 +295,7 @@ static void sfunc_sleep(void)
 #if ECIG_POWER_CONTROL
     bsp_ecig_exit();
 #endif
+    lp7812c_init_exit();
 #if (ASR_SELECT && ASR_FULL_SCENE)
     bsp_asr_stop();
 #endif
@@ -346,34 +347,22 @@ static void sfunc_sleep(void)
     GPIOADE = 0;
     GPIOBDE = BIT(3);
     GPIOGDE = 0x3F;                             //MCP FLASH
-    GPIOHDE = 0| BIT(4);
+    GPIOHDE = 0;//功耗低了但是灭屏无法充电
+    // GPIOHDE = 0| BIT(4); //功耗高，但是灭屏可以充电
     u32 pf_keep = 0;
-    if (bsp_sensor_init_sta_get(SENSOR_INIT_ALL))
-    {
-        printf("bsp_sensor_init_sta_get\n");
-        GPIOEDE = 0 | BIT(2) | BIT(1);          //SENSOR I2C
-        pf_keep |= BIT(2);                      //SENSOR PG
-    }
-    else
-    {
-        printf("bsp_sensor_init_sta_NO\n");
-        GPIOEDE = 0;
-    }
-
-#if MODEM_CAT1_EN
-    if (bsp_modem_get_init_flag())
-    {
-        pf_keep |= BIT(1) | BIT(2) | BIT(3);
-    }
-    else
-    {
-        pf_keep |= BIT(3);
-    }
-#endif
+    printf("bsp_sensor_init_sta_NO\n");
+    GPIOEDE = 0;
     GPIOFDE = pf_keep;
+
+    // port_gpio_set_out(IO_PH5,0);
+    // port_gpio_set_out(IO_PB1,0);
+    // port_gpio_set_in(IO_PB0,GPIOxPU200K);
+    // port_gpio_set_in(IO_PA5,GPIOxPU200K);
 
     wkie = WKUPCON & BIT(16);
     WKUPCON &= ~BIT(16);                        //休眠时关掉WKIE
+
+
     sleep_wakeup_config();
 
     sys_cb.sleep_counter = 0;
@@ -460,6 +449,12 @@ static void sfunc_sleep(void)
             break;
         }
 #endif
+        if(wkpnd & BIT(PORT_INT1_VECTOR))
+        {
+            sys_cb.gui_need_wakeup = true;
+            printf("box wakeup: %x\n", wkpnd);
+            break;
+        }
 
         if ((RTCCON9 & BIT(2)) || (RTCCON10 & BIT(2)) || wko_wkup_flag)
         {
@@ -631,6 +626,9 @@ static void sfunc_sleep(void)
 #endif
 #if ECIG_POWER_CONTROL
     bsp_ecig_sleep_wakeup();
+#endif
+#if CHARGE_EX_IC_SELECT
+    bsp_charge_ex_init();
 #endif
     bt_exit_sleep();
     sleep_cb.sys_is_sleep = false;

@@ -458,7 +458,7 @@ void uteApplicationCommonGetPersonalInfo(ute_personal_info_t *info)
 */
 void uteApplicationCommonSetBleConnectState(uint8_t connid,bool isConnected)
 {
-    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,connectId=%d,isConnected=%d", __func__,connid,isConnected);
+    // UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,connectId=%d,isConnected=%d", __func__,connid,isConnected);
     uteApplicationCommonData.bleConnectState.connId = connid;
     uteApplicationCommonData.bleConnectState.isConnected = isConnected;
     uteApplicationCommonData.bleConnectState.connectedSecond = 0;
@@ -1808,7 +1808,9 @@ void uteApplicationCommonPoweroff(void)
     uteModuleNewFactoryTestSetMode(&data);
     data->mode = FACTORY_TEST_MODE_SHIP;
 #endif
+#if ECIG_POWER_CONTROL
     ecig.poweroff_flag=0;
+#endif
     uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_SYSTEM_START_POWER_OFF, 0);
 
 }

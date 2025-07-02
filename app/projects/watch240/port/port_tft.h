@@ -12,8 +12,13 @@
 #define PORT_TFT_RST_L()        GPIOACLR = BIT(7);//GPIOBCLR = BIT(7);
 
 //CS
+#define PORT_TFT_CS             IO_PH6
 #define TFT_SPI_CS_EN()         GPIOHCLR = BIT(6);
 #define TFT_SPI_CS_DIS()        GPIOHSET = BIT(6);
+
+//CLK
+#define PORT_TFT_CLK            IO_PA4
+
 
 #if (CHIP_PACKAGE_SELECT == CHIP_5691G)
 #define PORT_TFT_BL             GPIO_PE3
@@ -47,6 +52,19 @@
 #define   DC_ENABLE()           {GPIOAFEN |= BIT(3); GPIOADE |=  BIT(3); GPIOADIR |= BIT(3);} //DC脚 设置输入
 #define   DC_CMD_EN()           {DESPICON &= ~BIT(19);}     // DC 拉低
 #define   DC_DATA_EN()          {DESPICON |= BIT(19);}      // DC 拉高
+#elif (GUI_MODE_SELECT == MODE_QSPI)
+//D0 -> PA2
+#define PORT_TFT_D0          BIT(2)
+#define PORT_TFT_GPIO_D0     IO_PA2
+//D1 -> PA3
+#define PORT_TFT_D1     BIT(3)
+#define PORT_TFT_GPIO_D1     IO_PA3
+//D2 -> PA1
+#define PORT_TFT_D2     BIT(1)
+#define PORT_TFT_GPIO_D2     IO_PA1
+//D3 -> PA0
+#define PORT_TFT_D3     BIT(0)
+#define PORT_TFT_GPIO_D3     IO_PA0
 #endif
 
 void port_tft_init(void);

@@ -244,7 +244,9 @@ typedef struct
     u8 smoke_oil;                                   //烟油
     u8 smoke_index;                                 //吸烟类型
 #endif
-
+    bool idle_sta;                                  //是否处于idle状态
+    bool hall_close_wkup;                           //1:sniff时hall关盖唤醒不亮屏
+    bool bat_low;                                   //低电标志，低电时自动调低亮度
 } sys_cb_t;
 extern sys_cb_t sys_cb;
 extern volatile int micl2gnd_flag;

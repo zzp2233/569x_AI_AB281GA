@@ -155,7 +155,6 @@ uint16_t uteModuleNewFactoryAgingTestSmokeCount(void)
 {
     return uteModuleSmokeFactoryData.Smoke_Count;
 }
-
 /**
  *@brief        每秒函数
  *@details       需要注册到主时间，每秒执行一次
@@ -268,11 +267,24 @@ void uteModuleNewFactoryTestEverySecond(void)
             {
                 if ((uteModuleNewFactoryTestData.secondCount % 3) == 0)
                 {
+                    //a=1;
+                    //  printf("uteModuleSmokeFactoryData.play_flag = %d\n", uteModuleSmokeFactoryData.play_flag);
+                    if(uteModuleSmokeFactoryData.play_flag ==0)
+                    {
+                        //  printf("PlayRing\n");
+                        func_bt_mp3_res_play(RES_BUF_RING_REDIAL_MP3, RES_LEN_RING_REDIAL_MP3);
+                    }
+                    else
+                    {
+                        // printf("PlayRingstop111\r\n");
+                        music_control(MUSIC_MSG_STOP);
+                    }
                     // uteDrvMotorStart(500,500,1);
-                    printf("MOTOR\r\n");
+                    //   printf("MOTOR\n");
                     uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
                     uteModuleSmokeFactoryData.Moto_Count++;
                 }
+
 #if ECIG_POWER_CONTROL
                 // printf("ecig.cfg->smoke_res_swich=%d,timer_hot_mic_work()=%d,Smoke_Count=%d\r\n",ecig.cfg->smoke_res_swich,timer_hot_mic_work(),uteModuleNewFactoryTestData.secondCount);
                 if ((uteModuleNewFactoryTestData.secondCount == 1 ||
@@ -289,6 +301,14 @@ void uteModuleNewFactoryTestEverySecond(void)
                 }
 #endif
                 uteModuleNewFactoryTestData.secondCount++;
+            }
+            else
+            {
+                if ((uteModuleLocalRingtoneGetPlayRingType() == RINGTON_TYPE_FACTORY))
+                {
+                    //  printf("PlayRingstop\r\n");
+                    music_control(MUSIC_MSG_STOP);
+                }
             }
         }
 

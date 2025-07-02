@@ -57,7 +57,8 @@
 #define     FLASH_AB_PARAM_ADDR             (FLASH_SIZE - FLASH_CM_SIZE - FLASH_SECTOR_SIZE*2)  //放末尾的FLASH_CM_SIZE前面
 #define     FLASH_SECTOR0_ADDR              (FLASH_AB_PARAM_ADDR )                              //sector0, 4K
 #define     FLASH_SECTOR1_ADDR              (FLASH_SECTOR0_ADDR + FLASH_SECTOR_SIZE)            //sector1, 4K
-
+#define     FLASH_ADDRESS_DATA_ADDR         (FLASH_SECTOR1_ADDR + FLASH_SECTOR_SIZE)            //通讯录, 4K 
+#define     FLASH_MIC_DATA_ADDR             (FLASH_ADDRESS_DATA_ADDR + FLASH_SECTOR_SIZE)
 
 void sector0_var_init(void);                            //sector0数据初始化
 void sector1_var_init(void);                            //sector1数据初始化

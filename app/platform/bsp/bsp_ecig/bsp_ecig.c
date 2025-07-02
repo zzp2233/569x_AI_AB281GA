@@ -306,4 +306,12 @@ u8 get_gear_func(void)
 
 
 }
+void test_1st_gear_func(void)
+{
+
+}
+void test_2st_gear_func(void)
+{
+
+}
 #endif

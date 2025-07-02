@@ -390,7 +390,7 @@ bool  bt_disconnect_on_flag(void)
 
 static void bt_onoff_timer_callback(co_timer_t *timer, void *param)
 {
-    printk("bt_onoff_timer_callback[%d]\n", bt_onoff_timer_sta);
+    //  printk("bt_onoff_timer_callback[%d]\n", bt_onoff_timer_sta);
     if (bt_onoff_timer_cnt)
         bt_onoff_timer_cnt--;
 

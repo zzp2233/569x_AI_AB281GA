@@ -6,9 +6,10 @@
 #include "ute_module_bloodoxygen.h"
 #include "ute_module_weather.h"
 #include "ute_language_common.h"
+#include "ute_module_smoke.h"
 
 #define TRACE_EN                1
-
+extern ute_module_smoke_data_t uteModuleSmokeData;
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
 #else
@@ -167,7 +168,6 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 #endif
             break;
         case COMPO_BOND_SMOKERESVAL:
-            get_gear_func1();
             get_gear_func();
             value = ecig_get_res();
             sprintf(value_str, "%d", value);
@@ -324,7 +324,6 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
             value = 0;
             if (compo->type == COMPO_TYPE_PICTUREBOX)
             {
-                get_gear_func1();
                 get_gear_func();
                 if(ecig_get_res()==4)
                     value = 1;
@@ -339,8 +338,16 @@ void compo_set_bonddata(component_t *compo, tm_t tm)
 
             }
             sprintf(value_str, "%d", value);
+            break;//50  /200
+        case COMPO_BOND_SMOKE_COUNTVALUE:
+            value = 0;
+            if (compo->type == COMPO_TYPE_PICTUREBOX )
+            {
+                value = ((compo_picturebox_t*)compo)->radix * uteModuleSmokeData.total_smoking_count / uteModuleSmokeData.target_smoking_count;
+                value = MAX(0, MIN(((compo_picturebox_t*)compo)->radix - 1, value));
+            }
+            sprintf(value_str, "%d", value);
             break;
-
         case COMPO_BOND_VBAT_PROGRESS:
             value = 0;
             if (compo->type == COMPO_TYPE_PICTUREBOX)

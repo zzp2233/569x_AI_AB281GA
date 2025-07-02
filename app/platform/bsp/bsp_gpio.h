@@ -46,4 +46,5 @@ u8 port_gpio_readlevel(u8 io_num);
 //设置输出电平
 //level_flag 0 : 低电平，1 ： 高电平
 u8 port_gpio_out_level(u8 io_num,bool level_flag);
+bool port_gpio_set_func(u8 io_num,bool level_flag);
 #endif // _BSP_GPIO_H

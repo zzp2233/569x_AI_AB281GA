@@ -6836,7 +6836,6 @@ static void func_alarm_clock_sub_set_message(size_msg_t msg)
             break;
 
         case MSG_SYS_500MS:
-            printf("am_pm_flag:%d\n",f_alarm_set->am_pm_flag);
 #if (GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT)
             if (f_alarm_set->time_scale != uteModuleSystemtime12HOn())
             {

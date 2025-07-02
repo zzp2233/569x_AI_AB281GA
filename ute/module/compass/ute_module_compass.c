@@ -148,9 +148,9 @@ void uteModuleCompassAlgoInit(void)
 {
     if(isPowerUpInitAlgo == true) return;
     /* magnetic sensor soft iron calibration matrix, default is unit matrix */
-    float mag_smm[9] = {0.981784f, 0.008257f, 0.001859f,
-                        0.008257f, 0.989049f, 0.028845f,
-                        0.001859f, 0.028845f, 1.030747f
+    float mag_smm[9] = {1.0231f, 0.0142f, -0.0052f,
+                        0.0142f, 0.9868f, 0.0034f,
+                        -0.0052f, 0.0034f, 0.9907f
                        };
 
     /* default hard iron offset and magnetic field strength*/

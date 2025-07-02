@@ -503,10 +503,10 @@ static void func_clock_exit(void)
 
     func_cb.last = FUNC_CLOCK;
 
-    if(!uteApplicationCommonIsHasConnectOurApp())//防止上电直接进入表盘特殊情况
-    {
-        sys_cb.power_on_state=true;//开机绑定流程
-    }
+    // if(!uteApplicationCommonIsHasConnectOurApp())//防止上电直接进入表盘特殊情况
+    // {
+    sys_cb.power_on_state=true;//开机绑定流程
+    // }
 }
 
 //时钟表盘功能

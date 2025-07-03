@@ -675,14 +675,13 @@ void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
             {
                 stopCmd[2] = 0xff;
             }
+            ute_module_systemtime_time_t time;
+            uteModuleSystemtimeGetTime(&time);
             if(isWear)
             {
                 uteModuleProfileBleSendToPhone(&stopCmd[0],4);
-
                 if(uteModuleHeartData.heartValue > 0) //&& uteModuleHeartData.isAutoTestFlag
                 {
-                    ute_module_systemtime_time_t time;
-                    uteModuleSystemtimeGetTime(&time);
                     uint8_t everyTenMinReport[9];
                     everyTenMinReport[0] = CMD_HEART_24HOURS_AUTO_TEST;
                     everyTenMinReport[1] = 0x03;
@@ -706,6 +705,12 @@ void uteModuleHeartStopSingleTestingMsgHandler(uint32_t param)
             {
                 uteModuleProfileBleSendToPhone(&stopCmd[0],2);
             }
+            uteModuleHeartData.lastTestTime.year = time.year;
+            uteModuleHeartData.lastTestTime.month = time.month;
+            uteModuleHeartData.lastTestTime.day = time.day;
+            uteModuleHeartData.lastTestTime.hour = time.hour;
+            uteModuleHeartData.lastTestTime.min = time.min;
+            uteModuleHeartData.lastTestTime.sec = time.sec;
         }
         else
         {
@@ -2017,6 +2022,18 @@ void uteModuleHeartSendHistoryRestingHeartData(void)
     }
 }
 #endif
+
+/**
+ * @brief        获取心率最后一次测量时间
+ * @details
+ * @param[out]   time 返回时间
+ * @author       Wang.Luo
+ * @date         2025-07-03
+ */
+void uteModuleHeartGetLastTestTime(ute_module_heart_test_time_t *time)
+{
+    memcpy(time, &uteModuleHeartData.lastTestTime, sizeof(ute_module_heart_test_time_t));
+}
 
 #endif /* UTE_MODULE_HEART_SUPPORT */
 

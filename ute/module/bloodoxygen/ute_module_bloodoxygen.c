@@ -299,6 +299,15 @@ void uteModuleBloodoxygenStopSingleTesting(void)
     uteModuleBloodoxygenData.isBloodOxygenAutoTestFlag = false;
     uteModuleBloodoxygenData.testingSecond = 0;
     uteModuleHeartStopSingleTesting(TYPE_BLOODOXYGEN);
+
+    ute_module_systemtime_time_t time;
+    uteModuleSystemtimeGetTime(&time);
+    uteModuleBloodoxygenData.lastTestTime.year = time.year;
+    uteModuleBloodoxygenData.lastTestTime.month = time.month;
+    uteModuleBloodoxygenData.lastTestTime.day = time.day;
+    uteModuleBloodoxygenData.lastTestTime.hour = time.hour;
+    uteModuleBloodoxygenData.lastTestTime.min = time.min;
+    uteModuleBloodoxygenData.lastTestTime.sec = time.sec;
 }
 /**
 *@brief        是否佩戴
@@ -805,5 +814,17 @@ bool uteModuleBloodoxygenGetTodayHistoryData(uint8_t *Bloodoxygen, uint8_t Blood
     }
 }
 #endif
+
+/**
+ * @brief        获取最后一次测量的血氧时间
+ * @details
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-07-03
+ */
+void uteModuleBloodoxygenGetLastTestTime(ute_module_bloodoxygen_test_time_t *time)
+{
+    memcpy(time, &uteModuleBloodoxygenData.lastTestTime, sizeof(ute_module_bloodoxygen_test_time_t));
+}
 
 #endif //UTE_MODULE_BLOODOXYGEN_SUPPORT

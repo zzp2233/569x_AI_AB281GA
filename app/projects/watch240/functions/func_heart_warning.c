@@ -363,7 +363,14 @@ static void func_heart_warning_updata(void)
     char txt_buf[100];
 
     memset(txt_buf, 0, sizeof(txt_buf));
-    snprintf(txt_buf, sizeof(txt_buf), "%d", heart_value);
+    if(heart_value && heart_value!=255)
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"%d",heart_value);
+    }
+    else
+    {
+        snprintf(txt_buf,sizeof(txt_buf),"--");
+    }
     compo_textbox_set(textbox, txt_buf);
 
     if(heart_value > uteModuleHeartGetHeartWaringMaxValue())

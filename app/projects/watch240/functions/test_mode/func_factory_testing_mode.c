@@ -2293,10 +2293,6 @@ compo_form_t * func_factory_testing_gm(void)
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y-MODE_ONE_INTIAL_SPACING_Y*4.5);
     compo_setid(textbox,GM_TXT_DATA_ID);
 
-    textbox = compo_textbox_create(frm, strlen("G-sensor"));
-    compo_textbox_set(textbox, "G-sensor");
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_INTIAL_SPACING_Y*2.5);
-
     memset(txt_buf, '\0', sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf), "X:0");
     textbox = compo_textbox_create(frm, 9);

@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NAME "romio"
-#define UTE_SW_VERSION "ABE012V000025"
+#define UTE_SW_VERSION "ABE012V000026"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "ABE012"

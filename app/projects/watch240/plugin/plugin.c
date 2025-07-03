@@ -77,7 +77,7 @@ void sleep_wakeup_config(void)
     port_wakeup_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
 #endif
     port_gpio_set_in(ECIG_DET1_GPIO,0);
-    printf("ECIG_DET1_GPIO =%d\r\n",bsp_gpio_get_sta(ECIG_DET1_GPIO));
+    // printf("ECIG_DET1_GPIO =%d\r\n",bsp_gpio_get_sta(ECIG_DET1_GPIO));
     if(bsp_gpio_get_sta(ECIG_DET1_GPIO) == 0)
     {
         port_wakeup_init(ECIG_DET1_GPIO, 0, 0);  //通道一插入唤醒
@@ -88,7 +88,11 @@ void sleep_wakeup_config(void)
     }
 
     //充电仓，data脚配置上拉，下降沿唤醒
-    port_wakeup_init(IO_PA5, 1, 1);
+    if (func_cb.sta != FUNC_CHARGE)
+    {
+        port_wakeup_init(IO_PA5, 1, 1);
+    }
+
 
     //port_wakeup_init(ECIG_DET2_GPIO, 1, 0);  //通道二插入唤醒
 

@@ -43,7 +43,7 @@ compo_form_t *func_clock_photo_form_create(void)
     compo_picturebox_t *pic = compo_picturebox_create(frm, photo);
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
 
-    char timeStr[30];
+    char timeStr[50];
     tm_t rtc_tm;
     rtc_tm = time_to_tm(compo_cb.rtc_cnt);
 

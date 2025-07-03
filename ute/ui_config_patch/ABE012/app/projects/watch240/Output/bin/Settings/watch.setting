@@ -88,7 +88,7 @@
         <add key="bt_noise_threshoid" value="200" />
         <add key="bt_sco_ans_radio" value="30" />
         <add key="bt_aec_en" value="True" />
-        <add key="bt_echo_level" value="2" />
+        <add key="bt_echo_level" value="15" />
         <add key="bt_far_offset" value="156" />
         <add key="bt_alc_en" value="False" />
         <add key="music_wav_support" value="True" />

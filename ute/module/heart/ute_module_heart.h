@@ -70,6 +70,17 @@ typedef enum
     TYPE_FACTORY1,
     TYPE_WEAR,
 } ute_module_heart_type_t;
+
+typedef struct
+{
+    uint16_t year;
+    uint8_t month;
+    uint8_t day;
+    uint8_t hour;
+    uint8_t min;
+    uint8_t sec;
+} ute_module_heart_test_time_t;
+
 /*! 心率数据结构zn.zeng, 2021-07-13  */
 typedef struct
 {
@@ -99,6 +110,7 @@ typedef struct
     uint8_t maxHourheartValue;
     uint8_t minHourheartValue;
 #endif
+    ute_module_heart_test_time_t lastTestTime;
 } ute_module_heart_data_t;
 
 void uteModuleHeartInit(void);
@@ -161,6 +173,7 @@ void uteModuleHeartRestingHeartrateSend(void);
 void uteModuleHeartSendEveryHourMaxMInHeartData(uint8_t hour);
 void uteModuleHeartSendHistoryRestingHeartData(void);
 #endif
+void uteModuleHeartGetLastTestTime(ute_module_heart_test_time_t *time);
 #endif
 #endif //_UTE_MODULE_HEART_H_
 

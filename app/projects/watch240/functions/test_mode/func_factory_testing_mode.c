@@ -9,6 +9,7 @@
 #include "ute_drv_gsensor_common.h"
 #include "ute_drv_battery_common.h"
 #include "ute_module_micrecord.h"
+#include "ute_module_compass.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -44,6 +45,9 @@ compo_form_t * func_factory_testing_charging(void);
 compo_form_t * func_factory_testing_mic_speaker(void);
 compo_form_t * func_factory_testing_mode_result(void);
 compo_form_t * func_factory_testing_ring(void);
+#if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
+compo_form_t * func_factory_testing_gm(void);
+#endif
 
 enum
 {
@@ -105,6 +109,11 @@ enum
     ///*喇叭测试*/
     HORN_TXT_ID,
     RECORDING_BTN_ID,
+    ///*地磁测试*/
+    GM_TXT_DATA_ID,
+    ANGLE_TXT_X_ID,
+    ANGLE_TXT_Y_ID,
+    ANGLE_TXT_Z_ID,
 };
 
 // bool mode_test_result_data[13];
@@ -179,6 +188,9 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
     "咪头喇叭测试",
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
     "音频测试",
+#endif
+#if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
+    "地磁测试",
 #endif
     "按键测试",
 };
@@ -1596,6 +1608,17 @@ compo_form_t *func_factory_testing_create(void)
         uteModuleHeartStopSingleTesting(TYPE_BLOODOXYGEN);
     }
 
+#if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
+    if (test_data->moduleType == FACTORY_MODULE_GM)
+    {
+        uteModuleCompassStart();
+    }
+    else if(uteModulecompassOnoff())
+    {
+        uteModuleCompassStop();
+    }
+#endif
+
     if(f_factory_testing->motor_flag)
     {
         f_factory_testing->motor_flag = false;
@@ -1658,6 +1681,13 @@ compo_form_t *func_factory_testing_create(void)
         f_factory_testing->horn_flag = true;
         f_factory_testing->tick = tick_get();
         frm = func_factory_testing_ring();
+    }
+#endif
+#if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
+    else if (test_data->moduleType == FACTORY_MODULE_GM)
+    {
+        f_factory_testing->tick = tick_get();
+        frm = func_factory_testing_gm();
     }
 #endif
     else if (test_data->moduleType == FACTORY_MODULE_KEY)
@@ -2236,7 +2266,55 @@ compo_form_t * func_factory_testing_ring(void)
     return frm;
 }
 #endif
+///创建地磁测试窗体 /
+#if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
+compo_form_t * func_factory_testing_gm(void)
+{
+    ///新建窗体
+    compo_form_t *frm = compo_form_create(true);
+    char txt_buf[50];
 
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("地磁质量"));
+    compo_textbox_set(textbox, "地磁质量");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, MODE_ONE_SPACING_Y);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "0");
+    textbox = compo_textbox_create(frm, 5);
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  MODE_ONE_SPACING_Y+MODE_ONE_INTIAL_SPACING_Y*2);
+    compo_setid(textbox,GM_TXT_DATA_ID);
+
+    textbox = compo_textbox_create(frm, strlen("G-sensor"));
+    compo_textbox_set(textbox, "G-sensor");
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_INTIAL_SPACING_Y*3);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "X:0");
+    textbox = compo_textbox_create(frm, 9);
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y-MODE_ONE_INTIAL_SPACING_Y);
+    compo_setid(textbox,ANGLE_TXT_X_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "Y:0");
+    textbox = compo_textbox_create(frm, 9);
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+MODE_ONE_INTIAL_SPACING_Y);
+    compo_setid(textbox,ANGLE_TXT_Y_ID);
+
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "Z:0");
+    textbox = compo_textbox_create(frm, 9);
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+MODE_ONE_INTIAL_SPACING_Y*3);
+    compo_setid(textbox,ANGLE_TXT_Z_ID);
+
+    func_factory_testing_pass_fail_bnt_create(frm);
+
+    return frm;
+}
+#endif
 ///创建测试结果窗体   测试结果*/
 compo_form_t * func_factory_testing_mode_result(void)
 {
@@ -2884,6 +2962,59 @@ static void func_mode_mic_speaker_process(void)
     }
 }
 
+///地磁显示刷新 /
+#if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
+static void func_factory_testing_gm_process(void)
+{
+    char txt_buf[50];
+    int32_t gsensor_data[3];
+    uteModuleCompassAccrawgetData(gsensor_data);
+    int16_t x = gsensor_data[0];
+    int16_t y = gsensor_data[1];
+    int16_t z = gsensor_data[2];
+
+    if (tick_get() % 500 == 0)
+    {
+        compo_textbox_t *textbox1 = compo_getobj_byid(GM_TXT_DATA_ID); // 步数
+        compo_textbox_t *textbox2 = compo_getobj_byid(ANGLE_TXT_X_ID); // X轴
+        compo_textbox_t *textbox3 = compo_getobj_byid(ANGLE_TXT_Y_ID); // Y轴
+        compo_textbox_t *textbox4 = compo_getobj_byid(ANGLE_TXT_Z_ID); // Z轴
+
+        snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleCompassGetAccuracy());
+        compo_textbox_set(textbox1, txt_buf);
+        if(x<0)
+        {
+            snprintf(txt_buf, sizeof(txt_buf), "X:-%d.%04d", -x/10000,-x%10000);
+        }
+        else
+        {
+            snprintf(txt_buf, sizeof(txt_buf), "X:%d.%04d", x/10000,x%10000);
+        }
+        compo_textbox_set(textbox2, txt_buf);
+
+        if(y<0)
+        {
+            snprintf(txt_buf, sizeof(txt_buf), "Y:-%d.%04d", -y/10000,-y%10000);
+        }
+        else
+        {
+            snprintf(txt_buf, sizeof(txt_buf), "Y:%d.%04d", y/10000,y%10000);
+        }
+        compo_textbox_set(textbox3, txt_buf);
+
+        if(z<0)
+        {
+            snprintf(txt_buf, sizeof(txt_buf), "Z:-%d.%04d", -z/10000,-z%10000);
+        }
+        else
+        {
+            snprintf(txt_buf, sizeof(txt_buf), "Z:%d.%04d", z/10000,z%10000);
+        }
+        compo_textbox_set(textbox4, txt_buf);
+    }
+}
+#endif
+
 #if UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT
 static void func_mode_test_ring_process(void)
 {
@@ -2972,6 +3103,13 @@ static void func_factory_testing_process(void)
             func_mode_tp_touch();
 #endif
             break;
+#if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
+        case FACTORY_MODULE_GM:
+            func_factory_testing_gm_process();
+#endif
+            break;
+
+
         case FACTORY_MODULE_MAX:
             func_mode_result_process();
             break;

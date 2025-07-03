@@ -107,6 +107,13 @@ bool uteModuleCompassIsCalibrationFinish(void);
 */
 float* uteModuleCompassAccrawData(void);
 /**
+*@brief  获取厂测三轴数据
+*@details
+*@author        pcm
+*@date        2024-11-25
+*/
+uteModuleCompassAccrawgetData(int32_t* gsensor_data);
+/**
 *@brief  开始定时器中断处理，处理数据发送给算法
 *@details
 *@author        pcm

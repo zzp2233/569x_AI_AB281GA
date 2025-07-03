@@ -541,7 +541,7 @@ float* uteModuleCompassAccrawData(void)
 *@author        pcm
 *@date        2024-11-25
 */
-uteModuleCompassAccrawgetData(int32_t* gsensor_data)
+void uteModuleCompassAccrawgetData(int32_t* gsensor_data)
 {
     gsensor_data[0] = acc_raw_data[0]*10000.0;
     gsensor_data[1] = acc_raw_data[1]*10000.0;

@@ -536,6 +536,18 @@ float* uteModuleCompassAccrawData(void)
     return &acc_raw_data[3];
 }
 /**
+*@brief  获取厂测三轴数据
+*@details
+*@author        pcm
+*@date        2024-11-25
+*/
+uteModuleCompassAccrawgetData(int32_t* gsensor_data)
+{
+    gsensor_data[0] = acc_raw_data[0]*10000.0;
+    gsensor_data[1] = acc_raw_data[1]*10000.0;
+    gsensor_data[2] = acc_raw_data[2]*10000.0;
+}
+/**
 *@brief  开始定时器中断处理，处理数据发送给算法
 *@details
 *@author        pcm

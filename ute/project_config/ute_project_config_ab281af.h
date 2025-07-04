@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281AF_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Curve3"
-#define UTE_SW_VERSION "AB281AFV000104"
+#define UTE_SW_VERSION "AB281AFV000136"
 
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
@@ -76,6 +76,14 @@
 
 #define UTE_DRV_PWRKEY_KEY1 KEY_LEFT
 #define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x9A // 12K
+
+/*! 表盘预览样式选择: 1 横向列表 2 堆叠 3 立体转盘,wang.luo 2025-05-29 */
+#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
+/*! 使用编码器功能,wang.luo 2025-04-09 */
+#define DRV_ENCODER_KEYS_SUPPORT 1
+
+/*! KEY1跳转界面,wang.luo 2025-04-09 */
+#define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT
 
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1
@@ -292,6 +300,8 @@
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
 
 #define UTE_MODULE_SCREENS_POWER_AOLON_SUPPORT     1 //Aolon开机界面
+/*! 床头钟模式(充电界面不息屏),wang.luo 2025-04-29 */
+#define UTE_MODULE_BEDSIDE_MODE_SUPPORT 1
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

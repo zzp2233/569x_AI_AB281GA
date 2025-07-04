@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DC_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Tetra S5"
-#define UTE_SW_VERSION "AB281DCV000124"
+#define UTE_SW_VERSION "AB281DCV000135"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DC"
@@ -390,7 +390,7 @@
 
 /*! 多运动支持百种运动标志, xjc 2022-03-09  */
 #define UTE_MODULE_SPORT_HUNDRED_SUPPORT 1
-#define UTE_MODULE_SPORT_MAX_SPORT_NUM          23
+#define UTE_MODULE_SPORT_MAX_SPORT_NUM          22
 #define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM  4
 #define UTE_MODULE_SPORT_DISPLAY_MAX_SPORT_NUM  (UTE_MODULE_SPORT_MAX_SPORT_NUM)
 /*! 具体的运动类型,支持的置1,不支持置0, xjc 2222-03-29*/
@@ -416,7 +416,7 @@
 #define UTE_MODULE_SPORT_SIT_UP_SUPPORT                 1 //仰卧起坐
 #define UTE_MODULE_SPORT_TREADMILL_SUPPORT              1 //跑步机
 #define UTE_MODULE_SPORT_GYMNASTICS_SUPPORT             1 //体操
-#define UTE_MODULE_SPORT_BOATING_SUPPORT                1 //划船
+#define UTE_MODULE_SPORT_BOATING_SUPPORT                0 //划船
 #define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
 #define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          0 //自由训练
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT

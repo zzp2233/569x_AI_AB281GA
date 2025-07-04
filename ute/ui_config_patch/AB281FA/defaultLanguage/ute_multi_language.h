@@ -34,7 +34,7 @@ enum
     STR_SPORT_CRICKET, // 板球
     STR_SPORT_RUGBY, // 橄榄球
     STR_SPORT_HOCKEY, // 曲棍球
-    STR_SPORT_DANCE, // 舞蹈
+    STR_SPORT_DANCE, // 跳舞
     STR_SPORT_SPINNING, // 动感单车
     STR_SPORT_YOGA, // 瑜伽
     STR_SPORT_SIT_UP, // 仰卧起坐

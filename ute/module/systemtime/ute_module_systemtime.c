@@ -1040,6 +1040,7 @@ void uteModuleSystemtimeEnableAlarm(uint8_t index, bool en)
         UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index is too max", __func__);
         return;
     }
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,index:%d en:%d", __func__,index,en);
     uteModulePlatformTakeMutex(uteModuleSystemtimeMute);
     systemAlarms.alarmParam[index].isOpen = en;
     uteModuleSystemtimeSaveAlarmInfo(systemAlarms.alarmParam[index],index);
@@ -1227,7 +1228,9 @@ uint8_t uteModuleSystemtimeAlarmEdit(uint8_t index, bool enable, uint8_t cycle, 
     set->hour = alarm_hour;
     set->min = alarm_minute;
     set->sec = 0;
-
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT    //编辑闹钟默认添加贪睡提醒次数
+    set->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
+#endif
 //    uteModuleSystemtimeSetAlarmTotalCnt(uteModuleSystemtimeGetAlarmTotalCnt()+1);
     uteModuleSystemtimeSetAlarm(*set, index);
     ab_free(set);
@@ -1242,4 +1245,67 @@ uint8_t uteModuleSystemtimeGetAlarmRingIndex(void)
 void uteModuleSystemtimeSetAlarmRingIndex(uint8_t index)
 {
     systemAlarms.isRemindingIndex = index;
+}
+
+/**
+ * @brief 处理闹钟的重复提醒功能
+ *
+ * 该函数用于处理闹钟的贪睡/重复提醒功能，主要完成以下操作：
+ * 1. 开启重复提醒标志
+ * 2. 减少剩余重复提醒次数
+ * 3. 计算并设置下一次提醒时间
+ * 4. 更新闹钟设置
+ * 5. 对于单次闹钟的特殊处理
+ *
+ * @param alarm 指向闹钟结构体的指针，包含闹钟的各种设置信息
+ * @param index 闹钟的索引号，用于标识具体是哪个闹钟
+ */
+void ute_moduleSystemtimeAlarmRepeatRemindHandle(ute_module_systemtime_one_alarm_t* alarm,int index)
+{
+    // 参数有效性检查
+    if(alarm == NULL)return;
+
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,alarm->repeatRemindTimes = %d", __func__, alarm->repeatRemindTimes);
+    // 开启重复提醒功能并减少剩余提醒次数
+    alarm->isRepeatRemindOpen = true;
+    if(alarm->repeatRemindTimes > 0)
+    {
+        alarm->repeatRemindTimes--;
+    }
+
+    // 计算下一次提醒时间（当前时间 + 默认贪睡时间）
+    uint8_t hour_later = alarm->repeatRemindHour;
+    uint8_t min_later = alarm->repeatRemindMin + ALARM_REPEAT_REMIND_DEFAULT_TIME_MIN;
+
+    // 处理分钟进位和小时溢出
+    if(min_later > 59)
+    {
+        hour_later += 1;
+        min_later -= 60;
+    }
+    if(hour_later > 24)
+    {
+        hour_later -= 24;
+    }
+
+    // 更新闹钟的下次提醒时间并设置闹钟
+    alarm->repeatRemindHour = hour_later;
+    alarm->repeatRemindMin = min_later;
+    uteModuleSystemtimeSetAlarm(*alarm,index);
+
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+    // 对于单次闹钟的特殊处理：根据剩余重复次数决定是否保持闹钟使能状态
+    UTE_MODULE_LOG(UTE_LOG_TIME_LVL, "%s,alarm->repeatRemindTimes = %d", __func__, alarm->repeatRemindTimes);
+    if (uteModuleSystemtimeGetAlarmCycle(index) & BIT(7))
+    {
+        if(alarm->repeatRemindTimes > 0)
+        {
+            uteModuleSystemtimeEnableAlarm(index, true);
+        }
+        else
+        {
+            uteModuleSystemtimeEnableAlarm(index, false);
+        }
+    }
+#endif
 }

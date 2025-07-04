@@ -15,6 +15,10 @@
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
 /******************客户定制功能支持开始**************************************/
+#define UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT 1
+#define ALARM_REPEAT_REMIND_DEFAULT_OPEN true//默认重复提醒开关
+#define ALARM_REPEAT_REMIND_DEFAULT_TIME_MIN 10
+#define ALARM_REPEAT_REMIND_DEFAULT_TIMES 3//默认重复提醒次数，未手动关闭时重复提醒5次后不再提醒
 
 //字库使用20号字体，泰语Y轴偏移-7，没有中文-日语-繁体-阿拉伯，需注意，去掉中文只是文字，需要把符号添加进来
 

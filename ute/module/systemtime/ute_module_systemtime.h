@@ -140,7 +140,9 @@ uint8_t uteModuleSystemtimeGetAlarmIsFree(uint8_t index);
 uint8_t uteModuleSystemtimeAlarmEdit(uint8_t index, bool enable, uint8_t cycle, uint8_t alarm_hour, uint8_t alarm_minute, uint8_t motor_mode, uint8_t remind_later);
 uint8_t uteModuleSystemtimeGetAlarmRingIndex(void);
 void uteModuleSystemtimeSetAlarmRingIndex(uint8_t index);
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
 void ute_moduleSystemtimeAlarmRepeatRemindHandle(ute_module_systemtime_one_alarm_t* alarm,int index);
+#endif //UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
 
 #endif //_UTE_MODULE_SYSTEMTIME_H_
 

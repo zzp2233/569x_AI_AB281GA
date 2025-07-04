@@ -2715,6 +2715,7 @@ compo_form_t *func_bt_call_form_create(void)
 
     compo_textbox_t *time_txt = compo_textbox_create(frm, 10);
     compo_textbox_set_location(time_txt, GUI_SCREEN_CENTER_X, 169, GUI_SCREEN_WIDTH/1.2, 30);
+    compo_textbox_set(time_txt, "00:00:00");
     compo_setid(time_txt, COMPO_ID_TXT_TIME);
     compo_textbox_set_forecolor(time_txt, COLOR_GREEN);
 

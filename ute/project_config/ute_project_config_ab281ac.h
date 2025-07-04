@@ -21,6 +21,7 @@
 /*gesnsor 采集原始数据*/
 #define APP_DBG_GSENSOR_DATA 1
 
+
 #define UTE_DRV_DSPI_FOR_SCREEN_SUPPORT 0
 #define UTE_DRV_QSPI_FOR_SCREEN_SUPPORT 1
 

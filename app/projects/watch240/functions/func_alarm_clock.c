@@ -1216,16 +1216,20 @@ static void func_alarm_clock_button_click(void)
             if (abs_s(pt.x - rect.x) * 2 <= rect.wid*1.5 && abs_s(pt.y - rect.y) * 2 <= rect.hei*2)  //开关
             {
 #if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
-                printf("%s\n",__func__);
+                // printf("%s\n",__func__);
                 uteModuleSystemtimeGetAlarm(alarm_p, i);
-                if(ALARM_GET_SWITCH(i))     //关闭闹钟时，同时讲贪睡开关以及次数清零
+                if(ALARM_GET_SWITCH(i))     //关闭闹钟时，同时讲贪睡功能关闭、重置重复提醒信息
                 {
                     alarm_p->isRepeatRemindOpen = false;
-                    alarm_p->repeatRemindTimes = 0;
+                    alarm_p->repeatRemindHour = 0;
+                    alarm_p->repeatRemindMin = 0;
+                    alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
                 }
                 else    //打开时重新开启
                 {
-                    alarm_p->isRepeatRemindOpen = true;
+                    alarm_p->isRepeatRemindOpen = ALARM_REPEAT_REMIND_DEFAULT_OPEN;
+                    alarm_p->repeatRemindHour = 0;
+                    alarm_p->repeatRemindMin = 0;
                     alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
                 }
                 uteModuleSystemtimeSetAlarm(*alarm_p, i);
@@ -1461,16 +1465,20 @@ static void func_alarm_clock_button_click(void)
             if (abs_s(pt.x - rect.x) * 2 <= rect.wid*1.5 && abs_s(pt.y - rect.y) * 2 <= rect.hei*2)  //开关
             {
 #if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
-                printf("%s\n",__func__);
+                // printf("%s\n",__func__);
                 uteModuleSystemtimeGetAlarm(alarm_p, i);
-                if(ALARM_GET_SWITCH(i))     //关闭闹钟时，同时讲贪睡开关以及次数清零
+                if(ALARM_GET_SWITCH(i))     //关闭闹钟时，同时讲贪睡功能关闭、重置重复提醒信息
                 {
                     alarm_p->isRepeatRemindOpen = false;
-                    alarm_p->repeatRemindTimes = 0;
+                    alarm_p->repeatRemindHour = 0;
+                    alarm_p->repeatRemindMin = 0;
+                    alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
                 }
                 else    //打开时重新开启
                 {
-                    alarm_p->isRepeatRemindOpen = true;
+                    alarm_p->isRepeatRemindOpen = ALARM_REPEAT_REMIND_DEFAULT_OPEN;
+                    alarm_p->repeatRemindHour = 0;
+                    alarm_p->repeatRemindMin = 0;
                     alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
                 }
                 uteModuleSystemtimeSetAlarm(*alarm_p, i);

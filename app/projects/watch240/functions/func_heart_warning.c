@@ -385,6 +385,10 @@ static void func_heart_warning_updata(void)
     {
         uteModuleGuiCommonGoBackLastScreen();
     }
+    if(uteModuleHeartIsWear() == true)   ///佩戴处理
+    {
+        uteModuleGuiCommonGoBackLastScreen();
+    }
 
     if(f_heart_warning->up_date_flag != f_heart_warning->up_date_old_flag)
     {

@@ -802,26 +802,15 @@ void func_bt_call_up_date_process(void)
 {
     f_bt_call_t *f_bt_call = (f_bt_call_t *)func_cb.f_cb;
 
-//    printf("name:%s name:%s\n",f_bt_call->pbap_result_Name , sys_cb.pbap_result_Name);
-
     if(strcmp(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name)!=0)
     {
-        // s16 txt_leng;
-        // s16 txt_x=0;
         memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, sizeof(f_bt_call->pbap_result_Name));
 
         memset(f_bt_call->tmp_pbap_result_Name, '\0', sizeof(f_bt_call->tmp_pbap_result_Name));
         truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
 
-
-        printf("tmp_pbap_result_Name [%s]\n", f_bt_call->tmp_pbap_result_Name);
         compo_textbox_t *name_txt     = compo_getobj_byid(COMPO_ID_TXT_NAME);
         compo_textbox_set(name_txt, f_bt_call->tmp_pbap_result_Name);
-
-        // txt_leng = widget_text_get_area(name_txt->txt).wid;
-        // txt_x = GUI_SCREEN_CENTER_X-txt_leng/2;
-        // if(TXT_X_MIN>txt_x)txt_x = TXT_X_MIN;
-        // compo_textbox_set_pos(name_txt,txt_x,74-widget_text_get_max_height()/2);
     }
 }
 void func_bt_call_process(void)

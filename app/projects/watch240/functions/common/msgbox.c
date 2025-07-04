@@ -3,6 +3,7 @@
 #include "ute_project_config.h"
 #include "ute_drv_battery_common.h"
 #include "ute_drv_motor.h"
+#include "ute_module_message.h"
 
 #if TRACE_EN
 #define TRACE(...)              printf(__VA_ARGS__)
@@ -998,6 +999,10 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
             //图标
             if(sys_cb.cover_index == REMIND_COVER_FIND_WATCH)
             {
+                extern ute_drv_motor_t uteDrvMotorData;
+                uteDrvMotorData.durationTimeMsec = UTE_MOTOR_DURATION_TIME;
+                uteDrvMotorData.intervalTimeMsec = UTE_MOTOR_DURATION_TIME;
+
                 compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I335001_REMIND_WATCH_BIN);
                 compo_animation_set_pos(animation,GUI_SCREEN_CENTER_X,func_cover_get_pic_y(msg_type));  //需要更替为弹窗图标
                 compo_animation_set_radix(animation,3);
@@ -3633,7 +3638,8 @@ static void msgbox_process(void)
             reset_sleep_delay_all();
             if(uteDrvMotorGetRunningStatus() == false)
             {
-                uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+                // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
             }
             if (tick_check_expire(msg_cb->exit_tick, 150*1000))    //查找手表
             {

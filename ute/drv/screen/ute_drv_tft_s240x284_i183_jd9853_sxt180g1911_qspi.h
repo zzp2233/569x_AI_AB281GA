@@ -83,7 +83,9 @@ __STATIC_INLINE void drvScreenTft240X284Jd9853Sxt180g1911Init(void)
     memcpy(&tmp[0], "\x7D\x07\x14\x06\xC8\x71\x6C\x77", 8);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC3, &tmp[0], 8);
 
-    memcpy(&tmp[0], "\x00\x00\x8E\xC0\x40\x30\x16\xC0\x40\x30\x16\x82", 12);
+//42HZ
+//45HZ
+    memcpy(&tmp[0], "\x00\xC0\x8E\xA0\x70\x60\x16\xC0\x40\x30\x16\x82", 12);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xC4, &tmp[0], 12);
 
     memcpy(&tmp[0],

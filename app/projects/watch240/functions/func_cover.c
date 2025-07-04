@@ -1772,35 +1772,11 @@ void gui_set_cover_index(uint8_t index)
         {
             if (cover_index_last == REMIND_COVER_ALARM)
             {
-                //开启配置贪睡时钟 参数
-                if (alarm_p != NULL)
-                {
-                    alarm_p->isRepeatRemindOpen = true;
-
-                    uint8_t hour_later = alarm_p->repeatRemindHour;
-                    uint8_t min_later = alarm_p->repeatRemindMin + ALARM_REPEAT_REMIND_DEFAULT_TIME_MIN;
-                    if (min_later > 59)
-                    {
-                        hour_later += 1;
-                        min_later -= 60;
-                    }
-
-                    if (hour_later > 24)
-                    {
-                        hour_later -= 24;
-                    }
-
-                    alarm_p->repeatRemindHour = hour_later;
-                    alarm_p->repeatRemindMin = min_later;
-                    uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
-                    printf("repeat alarm[%d] ring, [%02d:%02d]\n", uteModuleSystemtimeGetAlarmRingIndex(), alarm_p->repeatRemindHour, alarm_p->repeatRemindMin);
-#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
-                    if (uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) & BIT(7))//仅一次/单次的闹钟，点了贪睡后，接着显示闹钟为使能状态
-                    {
-                        uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(), true);
-                    }
+                // printf("COVER_ALARM MSGBOX_RES_REMIND_LATER\n");
+                //开启配置贪睡时钟 参数，点击稍后提醒进行贪睡功能处理
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                ute_moduleSystemtimeAlarmRepeatRemindHandle(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
 #endif
-                }
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
@@ -1839,8 +1815,35 @@ void gui_set_cover_index(uint8_t index)
             if (cover_index_last == REMIND_COVER_ALARM)
             {
                 printf("COVER_ALARM MSGBOX_RES_TIMEOUT_EXIT\n");
+                //开启配置贪睡时钟 参数，响铃自动结束后进行贪睡功能处理
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                ute_moduleSystemtimeAlarmRepeatRemindHandle(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+#endif
                 //关闭 喇叭 马达
                 printf("%s,%d\n", __func__, __LINE__);
+                uteDrvMotorStop();
+                if (sys_cb.cover_index == REMIND_COVER_ALARM)
+                {
+                    sys_cb.cover_index = REMIND_COVER_NONE;
+                }
+                co_timer_del(&alarm_clock_timer);
+                if (sys_cb.mp3_res_playing)
+                {
+                    music_control(MUSIC_MSG_STOP);
+                }
+            }
+        }
+        else if(res == MSGBOX_RES_NONE) //增加闹钟提醒界面按键退出
+        {
+            if (cover_index_last == REMIND_COVER_ALARM)
+            {
+                // printf("COVER_ALARM MSGBOX_RES_NONE\n");
+                //开启配置贪睡时钟 参数，响铃中按下按键进行贪睡功能处理
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                ute_moduleSystemtimeAlarmRepeatRemindHandle(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
+#endif
+                //关闭 喇叭 马达
+                // printf("%s,%d\n", __func__, __LINE__);
                 uteDrvMotorStop();
                 if (sys_cb.cover_index == REMIND_COVER_ALARM)
                 {
@@ -1859,7 +1862,7 @@ void gui_set_cover_index(uint8_t index)
             {
                 alarm_p->isRepeatRemindOpen = false;
                 uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
-#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
+#if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
                 if (uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) & BIT(7))//仅一次/单次的闹钟，点了取消后，显示闹钟为关闭状态
                 {
                     uteModuleSystemtimeEnableAlarm(uteModuleSystemtimeGetAlarmRingIndex(), false);

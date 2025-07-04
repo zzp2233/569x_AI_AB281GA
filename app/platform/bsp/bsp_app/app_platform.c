@@ -68,7 +68,8 @@ static bool ute_alarm_check(tm_t *now_time)
               alarm_p->repeatRemindHour, alarm_p->repeatRemindMin, alarm_p->isRepeatRemindOpen);
         if ((cycle & week_mask) > 0 || (cycle >> 7))  //当天或者只提醒一次
         {
-            if (alarm_p->isRepeatRemindOpen)        //贪睡时钟
+            // if (alarm_p->isRepeatRemindOpen)        //贪睡时钟
+            if (alarm_p->isRepeatRemindOpen && alarm_p->repeatRemindTimes > 0) //贪睡时钟 ，闹钟贪睡功能打开，但是提醒次数为0时不响铃
             {
                 if ((alarm_p->repeatRemindHour == now_time->hour) && (alarm_p->repeatRemindMin == now_time->min))  //到时间
                 {

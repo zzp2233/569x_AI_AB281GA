@@ -472,7 +472,13 @@ void uteModuleSportReadHundredSportConfig(void)
         uteModuleFilesystemReadData(file,&readBuffSportList[0],sportSortSize);
         uteModuleFilesystemCloseFile(file);
     }
-    memcpy(&uteModuleSprotData.sportSort.sportListData[0],readBuffSportList,sportSortSize);
+    memcpy(&uteModuleSprotData.sportSort.sportListData[0], readBuffSportList, sportSortSize);
+    uint16_t totalSportNumber = uteModuleSportGetHundredSportValidNumber();
+    if (!totalSportNumber)
+    {
+        memcpy(&uteModuleSprotData.sportSort.sportListData[0], uteModuleSportDefaultSort, sportSortSize);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,%d,error: totalSportNumber=%d", __func__, __LINE__, totalSportNumber);
+    }
     uteModulePlatformMemoryFree(readBuffSportList);
 #if 0//UTE_MODULE_LOG_SUPPORT
     for (uint8_t i = 0; i < UTE_MODULE_SPORT_MAX_SPORT_NUM; i++)
@@ -495,7 +501,16 @@ void uteModuleSportSaveHundredSportConfig(void)
     /*! 保存到文件xjc, 2022-03-30*/
     uint16_t sportSortSize = sizeof(ute_sports_list_param_t)*UTE_MODULE_SPORT_MAX_SPORT_NUM;
     ute_sports_list_param_t *writeBuffSportList = (ute_sports_list_param_t *)uteModulePlatformMemoryAlloc(sportSortSize);
-    memcpy(writeBuffSportList,&uteModuleSprotData.sportSort.sportListData[0],sportSortSize);
+    uint16_t totalSportNumber = uteModuleSportGetHundredSportValidNumber();
+    if (totalSportNumber)
+    {
+        memcpy(writeBuffSportList, &uteModuleSprotData.sportSort.sportListData[0], sportSortSize);
+    }
+    else
+    {
+        memcpy(writeBuffSportList, uteModuleSportDefaultSort, sportSortSize);
+        UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,%d,error: totalSportNumber=%d", __func__, __LINE__, totalSportNumber);
+    }
     if (uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SPORT_HUNDRED_SPORT_SORT_DATA, &file, FS_O_WRONLY | FS_O_CREAT | FS_O_TRUNC))
     {
         uteModuleFilesystemSeek(file,0,FS_SEEK_SET);
@@ -588,12 +603,13 @@ int uteModuleSportGetHundredSportValidNumber(void)
     int totalSportNumber = 0;
     for (uint8_t i = 0; i < UTE_MODULE_SPORT_MAX_SPORT_NUM; i++)
     {
-        if (uteModuleSprotData.sportSort.sportListData[i].sportOnOff>0)
+        if (uteModuleSprotData.sportSort.sportListData[i].sportOnOff > 0)
         {
             totalSportNumber++;
         }
+        UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,receiveSportBytes[%d]= %d-%d-%d", __func__, i, uteModuleSprotData.sportSort.receiveSportBytes[(i * 3) + 0], uteModuleSprotData.sportSort.receiveSportBytes[(i * 3) + 1], uteModuleSprotData.sportSort.receiveSportBytes[(i * 3) + 2]);
     }
-    UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,totalSportNumber = %d", __func__,totalSportNumber);
+    UTE_MODULE_LOG(UTE_LOG_STEP_LVL, "%s,totalSportNumber = %d", __func__, totalSportNumber);
     return totalSportNumber;
 }
 #if UTE_MODULE_SPORT_HUNDRED_SUPPORT

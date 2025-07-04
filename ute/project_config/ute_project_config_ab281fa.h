@@ -186,6 +186,9 @@
 #define UTE_DRV_BATTERY_090      4135
 #define UTE_DRV_BATTERY_100      4228
 
+/*! 充电电流,默认0.65C,wang.luo 2025-03-31 */
+#define UTE_DRV_BATTERY_CHARGE_CURRENT (UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH * 60 / 100) // 毫安 误差+-5ma
+
 /*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
 #ifndef UTE_DRV_CTP_SELECT
 #define UTE_DRV_CTP_SELECT             CTP_CST8X

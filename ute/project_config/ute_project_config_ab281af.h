@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281AF_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Curve3"
-#define UTE_SW_VERSION "AB281AFV000104"
+#define UTE_SW_VERSION "AB281AFV000136"
 
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */

@@ -112,7 +112,7 @@ float* uteModuleCompassAccrawData(void);
 *@author        pcm
 *@date        2024-11-25
 */
-uteModuleCompassAccrawgetData(int32_t* gsensor_data);
+void uteModuleCompassAccrawgetData(int32_t* gsensor_data);
 /**
 *@brief  开始定时器中断处理，处理数据发送给算法
 *@details

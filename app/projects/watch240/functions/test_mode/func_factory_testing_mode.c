@@ -110,6 +110,7 @@ enum
     HORN_TXT_ID,
     RECORDING_BTN_ID,
     ///*地磁测试*/
+    ANGLE_TXT_DATA_ID,
     GM_TXT_DATA_ID,
     ANGLE_TXT_X_ID,
     ANGLE_TXT_Y_ID,
@@ -2274,40 +2275,43 @@ compo_form_t * func_factory_testing_gm(void)
     compo_form_t *frm = compo_form_create(true);
     char txt_buf[50];
 
-    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("地磁质量"));
-    compo_textbox_set(textbox, "地磁质量");
+    compo_textbox_t *textbox = compo_textbox_create(frm, strlen("地磁测试"));
+    compo_textbox_set(textbox, "地磁测试");
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, MODE_ONE_SPACING_Y);
 
     memset(txt_buf, '\0', sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf), "0");
+    snprintf((char *)txt_buf, sizeof(txt_buf), "0°");
     textbox = compo_textbox_create(frm, 5);
     compo_textbox_set(textbox,txt_buf);
     compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  MODE_ONE_SPACING_Y+MODE_ONE_INTIAL_SPACING_Y*2);
-    compo_setid(textbox,GM_TXT_DATA_ID);
+    compo_setid(textbox,ANGLE_TXT_DATA_ID);
 
-    textbox = compo_textbox_create(frm, strlen("G-sensor"));
-    compo_textbox_set(textbox, "G-sensor");
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-MODE_ONE_INTIAL_SPACING_Y*3);
+    memset(txt_buf, '\0', sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf), "地磁质量:0");
+    textbox = compo_textbox_create(frm, 9);
+    compo_textbox_set(textbox,txt_buf);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y-MODE_ONE_INTIAL_SPACING_Y*4.5);
+    compo_setid(textbox,GM_TXT_DATA_ID);
 
     memset(txt_buf, '\0', sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf), "X:0");
     textbox = compo_textbox_create(frm, 9);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y-MODE_ONE_INTIAL_SPACING_Y);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y-MODE_ONE_INTIAL_SPACING_Y/2);
     compo_setid(textbox,ANGLE_TXT_X_ID);
 
     memset(txt_buf, '\0', sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf), "Y:0");
     textbox = compo_textbox_create(frm, 9);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+MODE_ONE_INTIAL_SPACING_Y);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+MODE_ONE_INTIAL_SPACING_Y*1.5);
     compo_setid(textbox,ANGLE_TXT_Y_ID);
 
     memset(txt_buf, '\0', sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf), "Z:0");
     textbox = compo_textbox_create(frm, 9);
     compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+MODE_ONE_INTIAL_SPACING_Y*3);
+    compo_textbox_set_pos(textbox,GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+MODE_ONE_INTIAL_SPACING_Y*3.5);
     compo_setid(textbox,ANGLE_TXT_Z_ID);
 
     func_factory_testing_pass_fail_bnt_create(frm);
@@ -2966,21 +2970,25 @@ static void func_mode_mic_speaker_process(void)
 #if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
 static void func_factory_testing_gm_process(void)
 {
-    char txt_buf[50];
-    int32_t gsensor_data[3];
-    uteModuleCompassAccrawgetData(gsensor_data);
-    int16_t x = gsensor_data[0];
-    int16_t y = gsensor_data[1];
-    int16_t z = gsensor_data[2];
-
     if (tick_get() % 500 == 0)
     {
-        compo_textbox_t *textbox1 = compo_getobj_byid(GM_TXT_DATA_ID); // 步数
+        char txt_buf[50];
+        int32_t gsensor_data[3];
+        uteModuleCompassAccrawgetData(gsensor_data);
+        int16_t x = gsensor_data[0];
+        int16_t y = gsensor_data[1];
+        int16_t z = gsensor_data[2];
+
+        compo_textbox_t *textbox0 = compo_getobj_byid(ANGLE_TXT_DATA_ID); // 角度
+        compo_textbox_t *textbox1 = compo_getobj_byid(GM_TXT_DATA_ID); // 地磁质量
         compo_textbox_t *textbox2 = compo_getobj_byid(ANGLE_TXT_X_ID); // X轴
         compo_textbox_t *textbox3 = compo_getobj_byid(ANGLE_TXT_Y_ID); // Y轴
         compo_textbox_t *textbox4 = compo_getobj_byid(ANGLE_TXT_Z_ID); // Z轴
 
-        snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleCompassGetAccuracy());
+        snprintf(txt_buf, sizeof(txt_buf), "%d°", uteModuleCompassGetAzimuth());
+        compo_textbox_set(textbox0, txt_buf);
+
+        snprintf(txt_buf, sizeof(txt_buf), "地磁质量:%d", uteModuleCompassGetAccuracy());
         compo_textbox_set(textbox1, txt_buf);
         if(x<0)
         {

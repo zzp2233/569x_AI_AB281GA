@@ -88,6 +88,8 @@
 #define UTE_DRV_PWRKEY_KEY1_BACK   1
 /*! KEY_MSG_USER 按键事件功能SOS,.quan.qi.cai 2025-05-29 */
 #define UTE_THREE_KEY_EVENT_SOS 1
+//默认亮屏时长
+#define DEFAULT_SCREEN_ON_TIME_SECOND 5
 
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1

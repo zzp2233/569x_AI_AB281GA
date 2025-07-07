@@ -241,8 +241,6 @@
 #define UTE_MODULE_BEDSIDE_MODE_LIGHT_LOW_SUPPORT 1 //床头灯默认亮度最底
 /*! 床头钟模式默认开关,wang.luo 2025-04-29 */
 // #define UTE_MODULE_BEDSIDE_MODE_DEFAULT_OPEN 1
-/*! 表盘预览图使用平面模式,wang.luo 2024-11-16 */
-#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
 
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      1
@@ -329,7 +327,7 @@
 #define UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT     1 //HELLO开机界面
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
-#define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
+#define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
 #define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT    1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
 

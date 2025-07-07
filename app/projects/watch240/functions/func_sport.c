@@ -575,6 +575,7 @@ compo_form_t *func_sport_form_create(void)
 #else
     compo_listbox_set(listbox, tbl_sport_list_sort, UTE_MODULE_SPORT_MAX_SPORT_NUM);
 #endif
+
     compo_listbox_set_bgimg(listbox, UI_BUF_I335001_3_EXERCISE_1_LIST_BG_ICON_224X68_X8_Y50_Y126_Y202_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
@@ -1489,6 +1490,7 @@ compo_form_t *func_sport_form_create(void)
     compo_listbox_set(listbox, tbl_sport_list_sort, UTE_MODULE_SPORT_MAX_SPORT_NUM);
 #endif
 
+    compo_listbox_set_icon_area(listbox, gui_image_get_size(UI_BUF_I340001_SPORT_ICON_19_YANGWOQIZUO_BIN));
     compo_listbox_set_bgimg(listbox, UI_BUF_I340001_SPORT_CARD_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
 

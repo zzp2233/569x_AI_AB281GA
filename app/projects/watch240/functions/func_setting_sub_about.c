@@ -148,33 +148,25 @@ compo_form_t *func_set_sub_about_form_create(void)
 static void func_set_sub_about_message(size_msg_t msg)
 {
 
-    if(sys_cb.power_on_state==false)
+    switch (msg)
     {
-        switch (msg)
-        {
-            case MSG_CTP_SHORT_DOWN:
-                //  func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_UD_ZOOM_DOWN | FUNC_SWITCH_AUTO);
-                break;
-            case KL_BACK:
-                func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
-                break;
-        }
+        case MSG_CTP_SHORT_DOWN:
+            //  func_switch_to(FUNC_POWER_ON_SCAN, FUNC_SWITCH_UD_ZOOM_DOWN | FUNC_SWITCH_AUTO);
+            break;
+        case KL_BACK:
+            func_switch_to(FUNC_LONG_PRESS, FUNC_SWITCH_ZOOM_FADE_ENTER | FUNC_SWITCH_AUTO);
+            break;
+        case MSG_CTP_LONG:
+            if (!uteApplicationCommonIsHasConnectOurApp())
+            {
+                uteTaskGuiStartScreen(FUNC_TEST_MODE, 0, __func__);
+            }
+            break;
+        default:
+            func_message(msg);
+            break;
     }
-    else
-    {
-        switch (msg)
-        {
-            case MSG_CTP_LONG:
-                if (!uteApplicationCommonIsHasConnectOurApp())
-                {
-                    uteTaskGuiStartScreen(FUNC_TEST_MODE, 0, __func__);
-                }
-                break;
-            default:
-                func_message(msg);
-                break;
-        }
-    }
+
 
 }
 

@@ -174,7 +174,7 @@ static void compo_listbox_init_update(compo_listbox_t *listbox)
 
             if (listbox->style == COMPO_LISTBOX_STYLE_CUM_SPORT_LIST)
             {
-                // widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_height / 3+6);
+                // widget_set_pos(listbox->item_icon[i], icon_x, listbox->icon_area.hei / 2+2);
                 widget_set_pos(listbox->item_icon[i], icon_x, listbox->line_height / 3);
             }
             else

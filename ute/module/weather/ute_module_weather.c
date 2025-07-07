@@ -59,6 +59,7 @@ void uteModuleWeatherInit(void)
 */
 void uteModuleWeatherSaveData(void)
 {
+    printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
     void *file = NULL;
     if(uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SYSTEMPARM_WEATHERINFO,&file,FS_O_WRONLY|FS_O_CREAT|FS_O_TRUNC))
     {

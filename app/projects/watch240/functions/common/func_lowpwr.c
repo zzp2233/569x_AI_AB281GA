@@ -295,7 +295,9 @@ static void sfunc_sleep(void)
 #if ECIG_POWER_CONTROL
     bsp_ecig_exit();
 #endif
+#if CHARGE_EX_IC_SELECT
     lp7812c_init_exit();
+#endif
 #if (ASR_SELECT && ASR_FULL_SCENE)
     bsp_asr_stop();
 #endif

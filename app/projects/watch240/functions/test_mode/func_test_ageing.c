@@ -8,11 +8,12 @@
 #include "ute_drv_battery_common.h"
 #include "ute_module_platform.h"
 #include "ute_module_message.h"
+#include "ute_module_newFactoryTest.h"
 
 #if UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST
 #define TXT_SPACING    GUI_SCREEN_HEIGHT/13
 
-extern ute_drv_motor_t uteDrvMotorData;
+static ute_new_factory_test_data_t *test_data;
 
 enum
 {
@@ -225,15 +226,11 @@ static void func_test_mode_click(void)
 
             if (f_ageing->mode_flag == 1)
             {
-                uteDrvMotorData.durationTimeMsec = 300;
-                uteDrvMotorData.intervalTimeMsec = 200;
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 2);
+                uteDrvMotorStart(300,200,2);
             }
             else
             {
-                uteDrvMotorData.durationTimeMsec = 1000;
-                uteDrvMotorData.intervalTimeMsec = 1000;
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
+                uteDrvMotorStart(1000,1000,1);
             }
 
             func_cb.frm_main = func_ageing_mode_create(f_ageing->mode_flag,f_ageing->time_flag);
@@ -309,9 +306,7 @@ static void func_ageing_process(void)
                 compo_shape_set_color(shape, COLOR_RED );
                 if (f_ageing->mode_flag == 0)   //模式一不停震动
                 {
-                    uteDrvMotorData.durationTimeMsec = 1000;
-                    uteDrvMotorData.intervalTimeMsec = 1000;
-                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
+                    uteDrvMotorStart(1000,1000,1);
                 }
             }
 
@@ -565,15 +560,11 @@ static void func_test_mode_click(void)
 
             if (f_ageing->mode_flag == 1)
             {
-                uteDrvMotorData.durationTimeMsec = 300;
-                uteDrvMotorData.intervalTimeMsec = 200;
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 2);
+                uteDrvMotorStart(300,200,2);
             }
             else
             {
-                uteDrvMotorData.durationTimeMsec = 1000;
-                uteDrvMotorData.intervalTimeMsec = 1000;
-                uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
+                uteDrvMotorStart(1000,1000,1);
             }
 
             func_cb.frm_main = func_ageing_mode_create(f_ageing->mode_flag,f_ageing->time_flag);
@@ -649,9 +640,7 @@ static void func_ageing_process(void)
                 compo_shape_set_color(shape, COLOR_RED );
                 if (f_ageing->mode_flag == 0)   //模式一不停震动
                 {
-                    uteDrvMotorData.durationTimeMsec = 1000;
-                    uteDrvMotorData.intervalTimeMsec = 1000;
-                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_DRV_MOTOR_START, 1);
+                    uteDrvMotorStart(1000,1000,1);
                 }
             }
 
@@ -737,6 +726,11 @@ static void func_ageing_process(void)
 ///进入老化测试功能
 static void func_ageing_enter(void)
 {
+
+    uteModuleNewFactoryTestResetParam();
+    uteModuleNewFactoryTestSetMode(&test_data);
+    test_data->mode = FACTORY_TEST_MODE_AGING;
+
     func_cb.f_cb = func_zalloc(sizeof(f_ageing_t));
     func_cb.frm_main = func_ageing_create();
 }

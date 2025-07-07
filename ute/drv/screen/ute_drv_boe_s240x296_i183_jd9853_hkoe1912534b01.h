@@ -5,7 +5,7 @@
 #include "ute_module_platform.h"
 #include "ute_drv_screen_common.h"
 
-#if DRV_BOE_S240X284_I183_JD9853_HKOE1912534B01_QSPI_SUPPORT
+#if DRV_BOE_S240X296_I183_JD9853_HKOE1912534B01_QSPI_SUPPORT
 
 __STATIC_INLINE void drvScreenBoeHkoe1912534b01PowerOn(void)
 {
@@ -213,7 +213,7 @@ __STATIC_INLINE void drvScreenBoeHkoe1912534b01Init(void)
     memcpy(&tmp[0], "\x00\x00", 2);
     uteDrvScreenCommonGc9c01QspiWriteCmdParams(0xDF, &tmp[0], 2);
 }
-const ute_drv_screen_common_config_t uteDrvScreenBoe240X284Hkoe1912534b01Config =
+const ute_drv_screen_common_config_t uteDrvScreenBoe240X296Hkoe1912534b01Config =
 {
     .name = "Boe240X284Hkoe1912534b01",
     .init = drvScreenBoeHkoe1912534b01Init,

@@ -46,10 +46,14 @@ compo_form_t *func_clock_photo_form_create(void)
     char timeStr[50];
     tm_t rtc_tm;
     rtc_tm = time_to_tm(compo_cb.rtc_cnt);
-    u8 hour = rtc_tm.hour%12;
-    if (hour == 0)
+    u8 hour = rtc_tm.hour;
+    if(uteModuleSystemtime12HOn())
     {
-        hour = 12;
+        hour%=12;
+        if (hour == 0)
+        {
+            hour = 12;
+        }
     }
     // hour
     memset(timeStr, 0, sizeof(timeStr));
@@ -123,10 +127,14 @@ void func_clock_photo_process(void)
     char timeStr[30];
     tm_t rtc_tm;
     rtc_tm = time_to_tm(compo_cb.rtc_cnt);
-    u8 hour = rtc_tm.hour%12;
-    if (hour == 0)
+    u8 hour = rtc_tm.hour;
+    if(uteModuleSystemtime12HOn())
     {
-        hour = 12;
+        hour%=12;
+        if (hour == 0)
+        {
+            hour = 12;
+        }
     }
     // hour
     memset(timeStr, 0, sizeof(timeStr));

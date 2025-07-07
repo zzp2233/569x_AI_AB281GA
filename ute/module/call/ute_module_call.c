@@ -208,7 +208,7 @@ void uteModuleCallBtPowerOn(ute_bt_power_on_type_t type)
 */
 void uteModuleCallIsBtAutoCloseSaveConfig(void)
 {
-    printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
+    //  printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
     void *file;
     uint8_t writebuff[2];
     writebuff[0] = uteModuleCallData.isBtAutoClose;
@@ -686,7 +686,7 @@ void uteModuleCallBtReadCtrlAppData(void)
 */
 void uteModuleCallSaveBtPowerOnOffStatus(void)
 {
-    printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
+    // printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
     void *file;
     uint8_t writebuff[2];
     writebuff[0] = uteModuleCallData.isPowerOn;
@@ -785,7 +785,7 @@ void uteModuleCallDisconnectA2DPProfile(void)
 */
 void uteModuleCallEntertranmentVoiceSwitchSaveConfig(void)
 {
-    printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
+//   printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
     void *file;
     uint8_t writebuff[2];
     writebuff[0] = uteModuleCallData.isEntertranmentVoiceOn;

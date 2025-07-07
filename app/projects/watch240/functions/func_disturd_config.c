@@ -427,7 +427,7 @@ static void func_disturd_sub_move(void)
 {
     f_disturd_sub_set_t *f_disturd_set = (f_disturd_sub_set_t*) func_cb.f_cb;
 
-    if(f_disturd_set->touch_flag = true)
+    if(f_disturd_set->touch_flag == true)
     {
         // printf("11111111111\n");
         s8 txt_buf[20];

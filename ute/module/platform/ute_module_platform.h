@@ -32,7 +32,7 @@
 #define UTE_MODULE_PLATFORM_DLPS_BIT_EARPHONE          0x00000800
 
 #define UTE_MODULE_PLATFORM_TIMER_MAX    8
-#define UTE_MODULE_PLATFORM_MUTEX_MAX    6
+#define UTE_MODULE_PLATFORM_MUTEX_MAX    8
 typedef struct
 {
     co_timer_t timer;

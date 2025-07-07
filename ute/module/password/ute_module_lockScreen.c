@@ -13,7 +13,7 @@
 #endif
 
 ute_module_password_data_t uteModulePasswordData;
-void *uteModulePasswordMute; // 互斥锁
+//void *uteModulePasswordMute; // 互斥锁
 
 /**
 * @brief  密码配置读取
@@ -23,7 +23,7 @@ void uteModulePasswordDataReadConfig(void)
 {
     // printf("[PASSWORD] Reading password configuration...\n");
 
-    uteModulePlatformTakeMutex(uteModulePasswordMute); // 加锁
+    //uteModulePlatformTakeMutex(uteModulePasswordMute); // 加锁
 
     void *file;
     // 尝试打开密码配置文件
@@ -41,7 +41,7 @@ void uteModulePasswordDataReadConfig(void)
     // 关闭文件
     uteModuleFilesystemCloseFile(file);
 
-    uteModulePlatformGiveMutex(uteModulePasswordMute); // 解锁
+    //uteModulePlatformGiveMutex(uteModulePasswordMute); // 解锁
 }
 
 /**
@@ -57,7 +57,7 @@ void uteModulePasswordDataSaveConfig(void)
     }
     printf("}\n");
 
-    uteModulePlatformTakeMutex(uteModulePasswordMute); // 加锁
+    //  uteModulePlatformTakeMutex(uteModulePasswordMute); // 加锁
 
     void *file;
     // 打开文件（假设总是成功）
@@ -68,7 +68,7 @@ void uteModulePasswordDataSaveConfig(void)
     uteModuleFilesystemWriteData(file, &uteModulePasswordData, sizeof(ute_module_password_data_t));
 
     uteModuleFilesystemCloseFile(file);
-    uteModulePlatformGiveMutex(uteModulePasswordMute); // 解锁
+    //uteModulePlatformGiveMutex(uteModulePasswordMute); // 解锁
 }
 
 /**
@@ -77,8 +77,7 @@ void uteModulePasswordDataSaveConfig(void)
 */
 void uteModulePasswordInit(void)
 {
-    // printf("[PASSWORD] Initializing password module...\n");
-
+    printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
     // 创建密码数据目录
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SYSTEMPARM_PASSWORD_DATA_DIR);
 
@@ -88,7 +87,7 @@ void uteModulePasswordInit(void)
     uteModulePasswordData.password_flag = false;
 
     // 创建互斥锁
-    uteModulePlatformCreateMutex(&uteModulePasswordMute);
+    // uteModulePlatformCreateMutex(&uteModulePasswordMute);
 
     // 读取已保存的配置
     uteModulePasswordDataReadConfig();
@@ -110,10 +109,10 @@ void uteModuleSetPassword(const u8 *password, u8 len)
     }
     printf("}\n");
 
-    uteModulePlatformTakeMutex(uteModulePasswordMute);
+    //uteModulePlatformTakeMutex(uteModulePasswordMute);
     uteModulePasswordData.password_cnt = len;
     memcpy(uteModulePasswordData.password_value, password, len);
-    uteModulePlatformGiveMutex(uteModulePasswordMute);
+    // uteModulePlatformGiveMutex(uteModulePasswordMute);
 
     uteModulePasswordDataSaveConfig(); // 保存配置
 }
@@ -139,9 +138,9 @@ bool uteModuleVerifyPassword(const u8 *password, u8 len)
         return false;
     }
 
-    uteModulePlatformTakeMutex(uteModulePasswordMute);
+    //  uteModulePlatformTakeMutex(uteModulePasswordMute);
     result = (memcmp(uteModulePasswordData.password_value, password, len) == 0);
-    uteModulePlatformGiveMutex(uteModulePasswordMute);
+    //  uteModulePlatformGiveMutex(uteModulePasswordMute);
 
     // printf("[PASSWORD] Verify result: %s\n", result ? "SUCCESS" : "FAIL");
     return result;
@@ -155,9 +154,9 @@ void uteModuleSetPasswordLock(bool enable)
 {
     // printf("[PASSWORD] Setting password lock: %s\n", enable ? "ENABLED" : "DISABLED");
 
-    uteModulePlatformTakeMutex(uteModulePasswordMute);
+//   uteModulePlatformTakeMutex(uteModulePasswordMute);
     uteModulePasswordData.password_flag = enable;
-    uteModulePlatformGiveMutex(uteModulePasswordMute);
+    //  uteModulePlatformGiveMutex(uteModulePasswordMute);
 
     uteModulePasswordDataSaveConfig(); // 保存配置
 }
@@ -169,9 +168,9 @@ void uteModuleSetPasswordLock(bool enable)
 bool uteModuleIsPasswordLockEnabled(void)
 {
     bool result;
-    uteModulePlatformTakeMutex(uteModulePasswordMute);
+    // uteModulePlatformTakeMutex(uteModulePasswordMute);
     result = uteModulePasswordData.password_flag;
-    uteModulePlatformGiveMutex(uteModulePasswordMute);
+    // uteModulePlatformGiveMutex(uteModulePasswordMute);
 
     // printf("[PASSWORD] Password lock enabled: %s\n", result ? "YES" : "NO");
     return result;

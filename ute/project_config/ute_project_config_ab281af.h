@@ -100,6 +100,9 @@
 /*! 情绪压力模块,xjc 2022-02-15*/
 #define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
 
+//二维码链接内容
+#define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
+
 /*! 活动界面列表形式,xjc 2022-02-15*/
 #define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT                1
 #define APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT   0

@@ -14,7 +14,7 @@
 ute_module_smoke_data_t uteModuleSmokeData;
 
 // 添加互斥量定义
-void *uteModuleSmokeMute;
+//void *uteModuleSmokeMute;
 static uint8_t last_day = 0;
 static uint8_t last_weekday = 0;
 
@@ -58,7 +58,7 @@ void uteModuleSmokeDataReadConfig(void)
 */
 void uteModuleSmokeDataSaveConfig(void)
 {
-    uteModulePlatformTakeMutex(uteModuleSmokeMute); // 加锁
+    //uteModulePlatformTakeMutex(uteModuleSmokeMute); // 加锁
     void *file;
     if (!uteModuleFilesystemOpenFile(UTE_MODULE_FILESYSTEM_SMOKE_LEVEL_FILE, &file, FS_O_WRONLY | FS_O_CREAT | FS_O_TRUNC))
     {
@@ -75,12 +75,13 @@ void uteModuleSmokeDataSaveConfig(void)
 
 void uteModuleSmokeInit(void)
 {
+    printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
     uteModuleFilesystemCreateDirectory(UTE_MODULE_FILESYSTEM_SMOKE_DATA_DIR);
     uteModuleSmokeData.current_index =5;
     uteModuleSmokeData.current_power =15;
     uteModuleSmokeData.target_smoking_count = 9999;
     uteModuleSmokeDataReadConfig(); // 恢复数据
-    uteModulePlatformCreateMutex(&uteModuleSmokeMute); // 创建互斥量
+    // uteModulePlatformCreateMutex(&uteModuleSmokeMute); // 创建互斥量
 }
 extern void update_chart_with_current_time();
 // 检查是否跨天并更新数据
@@ -90,7 +91,7 @@ void check_and_update_day()
     uteModuleSystemtimeGetTime(&current_time);
     static ute_module_systemtime_time_t last_time;
     uteModuleSystemtimeGetTime(&current_time);
-    uteModulePlatformTakeMutex(uteModuleSmokeMute); // 加锁
+    //uteModulePlatformTakeMutex(uteModuleSmokeMute); // 加锁
     if (last_day == 0)
     {
         last_day = current_time.day;
@@ -111,7 +112,7 @@ void check_and_update_day()
         update_chart_with_current_time();
         last_time = current_time;
     }
-    uteModulePlatformGiveMutex(uteModuleSmokeMute); // 解锁
+    // uteModulePlatformGiveMutex(uteModuleSmokeMute); // 解锁
 }
 
 // 检查是否跨周并更新数据
@@ -119,7 +120,7 @@ void check_and_update_week()
 {
     ute_module_systemtime_time_t current_time;
     uteModuleSystemtimeGetTime(&current_time);
-    uteModulePlatformTakeMutex(uteModuleSmokeMute); // 加锁
+    //uteModulePlatformTakeMutex(uteModuleSmokeMute); // 加锁
     if (last_weekday == 0)
     {
         last_weekday = current_time.week;
@@ -132,7 +133,7 @@ void check_and_update_week()
         uteModuleSmokeDataSaveConfig(); // 跨周保存
     }
     last_weekday = current_time.week;
-    uteModulePlatformGiveMutex(uteModuleSmokeMute); // 解锁
+    //  uteModulePlatformGiveMutex(uteModuleSmokeMute); // 解锁
 }
 
 // 获取当天口数总计
@@ -160,9 +161,9 @@ uint32_t get_this_week_smoking_count()
 // 设置总抽吸口数的函数
 void uteModuleSetSomkeCount(uint32_t count)
 {
-    uteModulePlatformTakeMutex(uteModuleSmokeMute);
+//   uteModulePlatformTakeMutex(uteModuleSmokeMute);
     uteModuleSmokeData.total_smoking_count = count;
-    uteModulePlatformGiveMutex(uteModuleSmokeMute);
+    //  uteModulePlatformGiveMutex(uteModuleSmokeMute);
     uteModuleSmokeDataSaveConfig(); // 保存
 }
 // 获取总抽吸口数的函数
@@ -203,9 +204,9 @@ void uteModuleResetTotalSmokeCount(void)
 //目标口数
 void ecig_set_target_puffs(int puffs)
 {
-    uteModulePlatformTakeMutex(uteModuleSmokeMute);
+    // uteModulePlatformTakeMutex(uteModuleSmokeMute);
     uteModuleSmokeData.target_smoking_count = puffs;
-    uteModulePlatformGiveMutex(uteModuleSmokeMute);
+//   uteModulePlatformGiveMutex(uteModuleSmokeMute);
     uteModuleSmokeDataSaveConfig(); // 保存目标口数
     printf("Set target puffs: %d\n", puffs);
 }

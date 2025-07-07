@@ -58,6 +58,13 @@ void hr_vdd_ldo_noPB2_on(void)
     PWRCON3 &= ~BIT(12);
 }
 
+
+void hr_vdd_ldo_noPB2_off(void)
+{
+    PWRCON3 &= ~BIT(18);
+    RTCCON3 |= BIT(26);
+}
+
 //GUI相关初始化
 void gui_init(void)
 {
@@ -87,7 +94,8 @@ void gui_sleep(void)
         tft_exit();
         ctp_exit();
         power_gate_3v3_off();
-        hr_vdd_ldo_off();
+        //hr_vdd_ldo_off();
+        hr_vdd_ldo_noPB2_off();
 #if(DEVELOPMENT_BOARD_TYPE)
         LCD_OFF();
 #endif

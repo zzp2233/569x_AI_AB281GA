@@ -1711,7 +1711,13 @@ void gui_set_cover_index(uint8_t index)
                 {
                     uteModuleSystemtimeGetAlarm(alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
                 }
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
                 u8 hour_num=alarm_p->repeatRemindHour;
+                u8 min_num=alarm_p->repeatRemindMin;
+#else
+                u8 hour_num=alarm_p->hour;
+                u8 min_num=alarm_p->min;
+#endif
 
                 if(uteModuleSystemtime12HOn())
                 {
@@ -1730,7 +1736,7 @@ void gui_set_cover_index(uint8_t index)
                         hour_num=12;
                     }
                 }
-                snprintf(title, sizeof(title), "%02d:%02d", hour_num, alarm_p->repeatRemindMin);
+                snprintf(title, sizeof(title), "%02d:%02d", hour_num, min_num);
                 if (bt_is_connected())//暂停音乐
                 {
                     bt_music_pause();
@@ -1860,7 +1866,13 @@ void gui_set_cover_index(uint8_t index)
         {
             if (cover_index_last == REMIND_COVER_ALARM)
             {
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                //关闭闹钟，关闭重复提醒，清除重复提醒信息
                 alarm_p->isRepeatRemindOpen = false;
+                alarm_p->repeatRemindHour = 0;
+                alarm_p->repeatRemindMin = 0;
+                alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;//所有闹钟在响铃时关闭闹钟，重复提醒次数恢复默认次数
+#endif
                 uteModuleSystemtimeSetAlarm(*alarm_p, uteModuleSystemtimeGetAlarmRingIndex());
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT || GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT || GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
                 if (uteModuleSystemtimeGetAlarmCycle(uteModuleSystemtimeGetAlarmRingIndex()) & BIT(7))//仅一次/单次的闹钟，点了取消后，显示闹钟为关闭状态

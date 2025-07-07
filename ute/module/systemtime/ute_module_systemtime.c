@@ -1246,7 +1246,7 @@ void uteModuleSystemtimeSetAlarmRingIndex(uint8_t index)
 {
     systemAlarms.isRemindingIndex = index;
 }
-
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
 /**
  * @brief 处理闹钟的重复提醒功能
  *
@@ -1309,3 +1309,4 @@ void ute_moduleSystemtimeAlarmRepeatRemindHandle(ute_module_systemtime_one_alarm
     }
 #endif
 }
+#endif

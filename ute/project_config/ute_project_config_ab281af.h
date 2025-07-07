@@ -97,8 +97,14 @@
 /*! 全天静息心率,wang.luo 2023-10-30 */
 #define UTE_MODULE_HEART_STATIC_ALL_DAY_SUPPORT (1&UTE_MODULE_HEART_WEEK_STATIC_SUPPORT)
 
+/*! 心率sensor选择,wang.luo 2025-04-16 */
+#define UTE_DRV_HR_SENSOR_SELECT       SENSOR_HR_VCLC09A
+
 /*! 情绪压力模块,xjc 2022-02-15*/
 #define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
+
+//二维码链接内容
+#define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
 
 /*! 活动界面列表形式,xjc 2022-02-15*/
 #define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT                1

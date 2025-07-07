@@ -848,6 +848,7 @@ void uteApplicationCommonSavePersonalInfo(ute_personal_info_t personalInfo)
 */
 void uteApplicationCommonSaveQuickSwitchInfo(void)
 {
+    printf("KSKSKSKSKS%s,len: %d\n",__func__,__LINE__);
     /*! 保存到文件zn.zeng, 2021-08-24*/
     void *file;
     uint8_t writebuff[12];

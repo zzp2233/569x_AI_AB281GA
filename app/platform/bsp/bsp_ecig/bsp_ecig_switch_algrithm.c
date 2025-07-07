@@ -46,7 +46,7 @@ void timer_hot_hot_vol(void)//
 #if DEVELOPMENT_BOARD_TYPE == DEVELOPMENT_BOARD_USER
     ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
     ecig.AD_hot_voltage_mv2 = (hot_voltage2 * ECIG_VBG_VOLTAGE / adc_vbg) * 48 / 33 / ECIG_VBG_VOLTAGE_MULTIPLE;
-    // TRACE(hot_str, 9999,ecig.AD_hot_voltage_mv,ecig.AD_hot_voltage_mv2);
+    TRACE(hot_str, 9999,ecig.AD_hot_voltage_mv,ecig.AD_hot_voltage_mv2);
 #else
     ecig.AD_hot_voltage_mv = (hot_voltage * ECIG_VBG_VOLTAGE / adc_vbg) * 4 / 3 / ECIG_VBG_VOLTAGE_MULTIPLE;
 #endif
@@ -269,7 +269,7 @@ void timer_hot_dual_isr(void)//
                         ecig.timer_switch_acc_cnt  = 6;
                         ecig.timer_switch_adc_flag = false;
                         timer_hot_hot_vol();
-                        //TRACE(hot_str, 77, ecig.AD_hot_voltage_mv,ecig.AD_BAT_voltage_mv );
+                        TRACE(hot_str, 77, ecig.AD_hot_voltage_mv,ecig.AD_BAT_voltage_mv );
                         if (( (ecig.AD_hot_voltage_mv * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv) <= ecig.cfg->short_res_prop) && (ecig.cfg->smoke_position_swich || ecig.cfg->smoke_res_swich))||
                             ((ecig.AD_hot_voltage_mv2 * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2) <= ecig.cfg->short_res_prop ) && (ecig.cfg->smoke_position_swich || !ecig.cfg->smoke_res_swich) ))     //short circuit
                         {
@@ -285,7 +285,7 @@ void timer_hot_dual_isr(void)//
                             TRACE(hot_str,  ecig.cfg->smoke_res_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv),ecig.AD_hot_voltage_mv * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv));
 
                             TRACE(hot_str, 888, ecig.AD_BAT_voltage_mv,ecig.AD_hot_voltage_mv2);
-                            TRACE(hot_str, ecig.cfg->smoke_res_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2),ecig.AD_hot_voltage_mv2 * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
+                            TRACE(hot_str, ecig.cfg->smoke_position_swich,(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2),ecig.AD_hot_voltage_mv2 * 10 / (ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv2));
 
                         }
                         // else if (((ecig.AD_hot_voltage_mv * 10 / abs(ecig.AD_BAT_voltage_mv - ecig.AD_hot_voltage_mv) >= ecig.cfg->open_res_prop) && (ecig.cfg->smoke_position_swich || ecig.cfg->smoke_res_swich)) ||

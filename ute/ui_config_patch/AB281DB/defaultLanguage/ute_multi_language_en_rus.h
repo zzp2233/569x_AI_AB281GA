@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 英语(美国）
 *@author
-*@date   2025-06-23 15:25:40
+*@date   2025-07-07 16:15:28
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 

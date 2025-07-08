@@ -46,10 +46,18 @@ compo_form_t *func_clock_photo_form_create(void)
     char timeStr[50];
     tm_t rtc_tm;
     rtc_tm = time_to_tm(compo_cb.rtc_cnt);
-
+    u8 hour = rtc_tm.hour;
+    if(uteModuleSystemtime12HOn())
+    {
+        hour%=12;
+        if (hour == 0)
+        {
+            hour = 12;
+        }
+    }
     // hour
     memset(timeStr, 0, sizeof(timeStr));
-    sprintf(timeStr, "%02d:%02d", rtc_tm.hour, rtc_tm.min);
+    sprintf(timeStr, "%02d:%02d", hour, rtc_tm.min);
     compo_textbox_t *textbox = compo_textbox_create(frm, strlen(timeStr));
     compo_textbox_set_font(textbox, UTE_WATCHS_PHOTO_TIME_NUM_FONT);
 
@@ -119,10 +127,18 @@ void func_clock_photo_process(void)
     char timeStr[30];
     tm_t rtc_tm;
     rtc_tm = time_to_tm(compo_cb.rtc_cnt);
-
+    u8 hour = rtc_tm.hour;
+    if(uteModuleSystemtime12HOn())
+    {
+        hour%=12;
+        if (hour == 0)
+        {
+            hour = 12;
+        }
+    }
     // hour
     memset(timeStr, 0, sizeof(timeStr));
-    sprintf(timeStr, "%02d:%02d", rtc_tm.hour, rtc_tm.min);
+    sprintf(timeStr, "%02d:%02d", hour, rtc_tm.min);
     compo_textbox_set(time_textbox, timeStr);
 
     // date

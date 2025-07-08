@@ -10,11 +10,15 @@
 #define _UTE_PROJECT_CONFIG_AB281FA_H_
 
 #define DEFAULT_BLE_DEV_NAME "SVERGE"
-#define UTE_SW_VERSION "AB281FAV000131"
+#define UTE_SW_VERSION "AB281FAV000137"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
 /******************客户定制功能支持开始**************************************/
+#define UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT 1
+#define ALARM_REPEAT_REMIND_DEFAULT_OPEN true//默认重复提醒开关
+#define ALARM_REPEAT_REMIND_DEFAULT_TIME_MIN 10
+#define ALARM_REPEAT_REMIND_DEFAULT_TIMES 3//默认重复提醒次数，未手动关闭时重复提醒5次后不再提醒
 
 //字库使用20号字体，泰语Y轴偏移-7，没有中文-日语-繁体-阿拉伯，需注意，去掉中文只是文字，需要把符号添加进来
 
@@ -185,6 +189,9 @@
 #define UTE_DRV_BATTERY_080      4051
 #define UTE_DRV_BATTERY_090      4135
 #define UTE_DRV_BATTERY_100      4228
+
+/*! 充电电流,默认0.65C,wang.luo 2025-03-31 */
+#define UTE_DRV_BATTERY_CHARGE_CURRENT (UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH * 60 / 100) // 毫安 误差+-5ma
 
 /*! TP驱动选择，暂时这样使用，后续再封装,wang.luo 2025-01-09 */
 #ifndef UTE_DRV_CTP_SELECT

@@ -1187,6 +1187,12 @@ static void func_alarm_clock_button_click(void)
 {
     rect_t rect;
     point_t pt = ctp_get_sxy();
+    ute_module_systemtime_one_alarm_t* alarm_p = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (alarm_p == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return;
+    }
 
     if (icon_add)
     {
@@ -1209,6 +1215,25 @@ static void func_alarm_clock_button_click(void)
             rect_t rect = compo_cardbox_get_icon_absolute(compo_getobj_byid(COMPO_ID_CARD_0 + i),0);
             if (abs_s(pt.x - rect.x) * 2 <= rect.wid*1.5 && abs_s(pt.y - rect.y) * 2 <= rect.hei*2)  //开关
             {
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                // printf("%s\n",__func__);
+                uteModuleSystemtimeGetAlarm(alarm_p, i);
+                if(ALARM_GET_SWITCH(i))     //关闭闹钟时，同时讲贪睡功能关闭、重置重复提醒信息
+                {
+                    alarm_p->isRepeatRemindOpen = false;
+                    alarm_p->repeatRemindHour = 0;
+                    alarm_p->repeatRemindMin = 0;
+                    alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
+                }
+                else    //打开时重新开启
+                {
+                    alarm_p->isRepeatRemindOpen = ALARM_REPEAT_REMIND_DEFAULT_OPEN;
+                    alarm_p->repeatRemindHour = 0;
+                    alarm_p->repeatRemindMin = 0;
+                    alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
+                }
+                uteModuleSystemtimeSetAlarm(*alarm_p, i);
+#endif
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
                 //刷新
                 compo_cardbox_text_set_forecolor(compo_getobj_byid(COMPO_ID_CARD_0 + i), 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
@@ -1223,6 +1248,7 @@ static void func_alarm_clock_button_click(void)
     }
 
     func_alarm_clock_button_release_handle();
+    ab_free(alarm_p);
 }
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
 //创建闹钟窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
@@ -1410,6 +1436,12 @@ static void func_alarm_clock_button_click(void)
 {
     rect_t rect;
     point_t pt = ctp_get_sxy();
+    ute_module_systemtime_one_alarm_t* alarm_p = ab_zalloc(sizeof(ute_module_systemtime_one_alarm_t));
+    if (alarm_p == NULL)
+    {
+        printf("%s malloc err!!\n", __func__);
+        return;
+    }
 
     if (icon_add)
     {
@@ -1432,6 +1464,25 @@ static void func_alarm_clock_button_click(void)
             rect_t rect = compo_cardbox_get_icon_absolute(compo_getobj_byid(COMPO_ID_CARD_0 + i),0);
             if (abs_s(pt.x - rect.x) * 2 <= rect.wid*1.5 && abs_s(pt.y - rect.y) * 2 <= rect.hei*2)  //开关
             {
+#if UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT
+                // printf("%s\n",__func__);
+                uteModuleSystemtimeGetAlarm(alarm_p, i);
+                if(ALARM_GET_SWITCH(i))     //关闭闹钟时，同时讲贪睡功能关闭、重置重复提醒信息
+                {
+                    alarm_p->isRepeatRemindOpen = false;
+                    alarm_p->repeatRemindHour = 0;
+                    alarm_p->repeatRemindMin = 0;
+                    alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
+                }
+                else    //打开时重新开启
+                {
+                    alarm_p->isRepeatRemindOpen = ALARM_REPEAT_REMIND_DEFAULT_OPEN;
+                    alarm_p->repeatRemindHour = 0;
+                    alarm_p->repeatRemindMin = 0;
+                    alarm_p->repeatRemindTimes = ALARM_REPEAT_REMIND_DEFAULT_TIMES;
+                }
+                uteModuleSystemtimeSetAlarm(*alarm_p, i);
+#endif
                 ALARM_ENABLE(i, !ALARM_GET_SWITCH(i));
                 //刷新
                 compo_cardbox_text_set_forecolor(compo_getobj_byid(COMPO_ID_CARD_0 + i), 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
@@ -1446,6 +1497,7 @@ static void func_alarm_clock_button_click(void)
     }
 
     func_alarm_clock_button_release_handle();
+    ab_free(alarm_p);
 }
 
 #elif GUI_SCREEN_SIZE_240X240RGB_I342001_SUPPORT
@@ -1652,17 +1704,19 @@ static void func_alarm_clock_process(void)
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)      //文本滚动
     {
         compo_cardbox_t* cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
+        compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I332001_PUBLIC_SWITCH01_BIN : UI_BUF_I332001_PUBLIC_SWITCH00_BIN);//开关
+        compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));//时间
+        compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));//上下午
         compo_cardbox_text_scroll_process(cardbox, true);
-        compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
-        compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I332001_PUBLIC_SWITCH01_BIN : UI_BUF_I332001_PUBLIC_SWITCH00_BIN);
     }
 #elif GUI_SCREEN_SIZE_360X360RGB_I340001_SUPPORT
     for(u8 i=0; i<ALARM_ENABLE_CNT(); i++)      //文本滚动
     {
         compo_cardbox_t* cardbox = compo_getobj_byid(COMPO_ID_CARD_0 + i);
+        compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I340001_PUBLIC_SWITCH01_BIN : UI_BUF_I340001_PUBLIC_SWITCH00_BIN);//开关
+        compo_cardbox_text_set_forecolor(cardbox, 0, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));//时间
+        compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));//上下午
         compo_cardbox_text_scroll_process(cardbox, true);
-        compo_cardbox_text_set_forecolor(cardbox, 1, ALARM_GET_SWITCH(i) ? MAKE_GRAY(255) : MAKE_GRAY(128));
-        compo_cardbox_icon_set(cardbox, 0, ALARM_GET_SWITCH(i) ? UI_BUF_I340001_PUBLIC_SWITCH01_BIN : UI_BUF_I340001_PUBLIC_SWITCH00_BIN);
     }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 }

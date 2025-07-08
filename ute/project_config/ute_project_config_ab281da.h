@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DA_H_
 
 #define DEFAULT_BLE_DEV_NAME "Huafit S6"
-#define UTE_SW_VERSION "AB281DAV000132"
+#define UTE_SW_VERSION "AB281DAV000142"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281D"
@@ -55,6 +55,9 @@
 //二维码链接内容
 #define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
 
+
+/*! 表盘预览样式选择: 1 横向列表 2 堆叠 3 立体转盘,wang.luo 2025-05-29 */
+#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
 /*! 多个在线表盘功能，最大表盘个数,默认值为1，在具体项目里面修改此值 zn.zeng, 2022-06-28  */
 #define UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT 2
 /*! 多个在线表盘功能，每个表盘的起始地址组 zn.zeng, 2022-06-28  */

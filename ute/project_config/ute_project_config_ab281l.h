@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281L_H_
 
 #define DEFAULT_BLE_DEV_NAME "T7"
-#define UTE_SW_VERSION "AB281LV000133"
+#define UTE_SW_VERSION "AB281LV000140"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281L"
@@ -79,6 +79,8 @@
 #define UTE_DRV_PWRKEY_MAX_CNT 1
 /*! KEY_MSG_USER 按键事件功能SOS,.quan.qi.cai 2025-05-29 */
 #define UTE_THREE_KEY_EVENT_SOS 1
+//默认亮屏时长
+#define DEFAULT_SCREEN_ON_TIME_SECOND 5
 
 /*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
 #define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1
@@ -137,6 +139,13 @@
 #define  UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1//工厂测试音频测试
 #define  UTE_MODULE_NEW_AGING_TEST_AUDIO             1//老化测试音频
 #define UTE_MODULE_NEW_FACTORY_MODULE_3x3_TP_TOUCH_TEST_SUPPORT 1 //3*3 = 9宫格TP触摸测试
+
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT     RES_BUF_RING_LET_GO_MP3 //工厂测试音频测试->音频地址
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT    13 //工厂测试音频测试->音频时长
+
+#define UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST    1   //使用旧的老化模式
+#define UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_PART_FUNCTION  1   //工厂模式测试减少+字、RGB、充电功能 
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
@@ -164,6 +173,10 @@
 
 /*! 假血氧，结束后出随机值,wang.luo 2025-05-23 */
 #define UTE_MODULE_BLOODOXYGEN_RANDOM_SUPPORT 1
+/*! 表盘预览图使用平面模式,wang.luo 2024-11-16 */
+#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
+
+#define UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT 1
 
 /*! 一级界面默认排序,wang.luo 2024-11-16 */
 #define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 6
@@ -220,8 +233,6 @@
 #define UTE_MODULE_BEDSIDE_MODE_LIGHT_LOW_SUPPORT 1 //床头灯默认亮度最底
 /*! 床头钟模式默认开关,wang.luo 2025-04-29 */
 // #define UTE_MODULE_BEDSIDE_MODE_DEFAULT_OPEN 1
-/*! 表盘预览图使用平面模式,wang.luo 2024-11-16 */
-#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
 
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      1
@@ -308,7 +319,7 @@
 #define UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT     1 //HELLO开机界面
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
-#define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
+#define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
 #define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT    1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
 

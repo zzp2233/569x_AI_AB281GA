@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-04-03 14:37:43
+*@date   2025-06-30 10:44:08
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -34,7 +34,7 @@ enum
     STR_SPORT_CRICKET, // 板球
     STR_SPORT_RUGBY, // 橄榄球
     STR_SPORT_HOCKEY, // 曲棍球
-    STR_SPORT_DANCE, // 舞蹈
+    STR_SPORT_DANCE, // 跳舞
     STR_SPORT_SPINNING, // 动感单车
     STR_SPORT_YOGA, // 瑜伽
     STR_SPORT_SIT_UP, // 仰卧起坐
@@ -279,6 +279,9 @@ enum
     STR_HEART_HIGHT, // 心率过高
     STR_HEART_LOW, // 心率过低
     STR_FUTRUE_WEATHER, // 未来天气
+    STR_DEV_MODEL, // 设备型号
+    STR_BLE_SUCCESSFUL, // 蓝牙连接成功
+    STR_BLE_OFF, // 手机蓝牙已断开
 };
 
 extern const char * const *i18n;
@@ -286,13 +289,11 @@ extern const char * const i18n_zh_rcn[];
 extern const char * const i18n_en_rus[];
 extern const char * const i18n_ru_rru[];
 extern const char * const i18n_tr_rtr[];
-extern const char * const i18n_ja_rjp[];
 extern const char * const i18n_de_rde[];
 extern const char * const i18n_es_res[];
 extern const char * const i18n_fr_rfr[];
 extern const char * const i18n_it_rit[];
 extern const char * const i18n_pt_rpt[];
 extern const char * const i18n_th_rth[];
-extern const char * const i18n_zh_rtw[];
 
 #endif // _UTE_MULTI_LANGUAGE_H_

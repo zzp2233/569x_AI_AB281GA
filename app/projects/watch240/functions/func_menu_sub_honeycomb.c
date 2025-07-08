@@ -328,9 +328,6 @@ static menu_hc_item_t tbl_menu_honeycomb[] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_OXYGEN_BIN,          },   //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-// #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    // {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_PRESSURE_BIN,        },   //血压
-// #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SLEEP_BIN,                 },  //睡眠
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
@@ -355,15 +352,12 @@ static menu_hc_item_t tbl_menu_honeycomb[] =
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_VOICE_ASSISTANT_BIN,       },  //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
-// #if UTE_MODULE_SCREENS_VOICE_SUPPORT
-    // {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SOS_BIN,                   },  //SOS
-// #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
-    // {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  }, //游戏
-#endif // UTE_MODULE_SCREENS_GAME_SUPPORT
-// #if UTE_MODULE_SCREENS_VOICE_SUPPORT
+    {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  }, //游戏
+#endif
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
     {.func_sta=FUNC_TOOLBOX,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TOOLBOX_BIN,               },  //工具箱
-// #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
+#endif
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              },  //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT

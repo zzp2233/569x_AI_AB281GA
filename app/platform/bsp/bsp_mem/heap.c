@@ -76,6 +76,10 @@ void *ab_realloc(void *p, size_t new_size)
 {
     os_mutex_take(&sys_tlsf_mutex, OS_WAITING_FOREVER);
     void *ptr = tlsf_realloc(sys_tlsf, p, new_size);
+    if (!ptr)
+    {
+        printf("ab warning realloc ptr NULL:%x\n", new_size);
+    }
     os_mutex_release(&sys_tlsf_mutex);
     return ptr;
 }

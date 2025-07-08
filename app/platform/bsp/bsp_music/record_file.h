@@ -9,7 +9,7 @@
 bool record_directory_open(u8 *fname_buf, u32 size);
 bool record_file_open(u8 *fname_buf, u32 size, u32 rec_type);
 bool record_file_close(u32 rec_type);
-bool record_file_write(u8 *buf, u32 rec_type);
+bool record_file_write(u8 *buf, u32 btw, u32 rec_type);
 bool record_file_sync(u32 rec_type);
 
 bool record_wav_init(u32 nch, u32 spr, u32 rec_type);
@@ -17,7 +17,8 @@ bool record_wav_header_sync(u32 rec_type);
 
 bool is_record_dir(char *sfn);
 
-typedef struct {
+typedef struct
+{
     ///RIFF WAVE Chunk
     u32 riff_id;                    //Chunk ID: “RIFF”
     u32 riff_size;                  //文件实际长度-8

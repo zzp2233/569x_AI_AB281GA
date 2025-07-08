@@ -79,6 +79,7 @@
 #define DUMP_FAR_NR_INPUT                   BIT(8)      //远端降噪输入数据
 #define DUMP_FAR_NR_OUTPUT                  BIT(9)      //远端降噪输出数据
 #define DUMP_EQ_OUTPUT                      BIT(10)     //MIC EQ输出数据
+#define DUMP_REC                            BIT(11)     //通话录音（远端+近端)
 
 
 //call param

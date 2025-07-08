@@ -58,6 +58,13 @@ bool bsp_set_volume(u8 vol)
 //        gui_box_show_vol();
         return false;
     }
+    else
+    {
+        if (0 == sys_cb.vol)
+        {
+            dac_fade_in();
+        }
+    }
 
     if (vol <= VOL_MAX)
     {

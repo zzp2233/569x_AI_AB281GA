@@ -949,6 +949,13 @@ void func_process(void)
 #if (ASR_SELECT == ASR_WS_AIR && MONITOR_ASR_WAKEUP_EN)
     asr_event_process();
 #endif
+
+#if VDDHR_TRIM_EN
+    bsp_vddhr_trim_save();
+#if VDDHR_TRIM_TEST_EN
+    bsp_vddhr_test();
+#endif
+#endif
 }
 
 //根据任务名创建窗体。此处调用的创建窗体函数不要调用子任务的控制结构体
@@ -1156,8 +1163,14 @@ void func_switch_to_menu(void)
         }
         else
         {
-            halt(HALT_GUI_COMPO_ICONLIST_TYPE);
-            return;
+//            printf("%s\n", __func__);
+//            halt(HALT_GUI_COMPO_ICONLIST_TYPE);
+//            return;
+            icon = NULL;
+        }
+        if (icon == NULL)
+        {
+            switch_mode = FUNC_SWITCH_FADE_OUT;
         }
         func_switching(switch_mode, icon);                                      //退出动画
         compo_form_destroy(frm);                                                //切换完成或取消，销毁窗体
@@ -1213,8 +1226,10 @@ void func_switching_to_menu(void)
     }
     else
     {
-        halt(HALT_GUI_COMPO_ICONLIST_TYPE);
-        return;
+//            printf("%s\n", __func__);
+//            halt(HALT_GUI_COMPO_ICONLIST_TYPE);
+//            return;
+        icon = NULL;
     }
     if (func_cb.sta != FUNC_CLOCK || func_cb.menu_style == MENU_STYLE_HONEYCOMB)
     {
@@ -1223,6 +1238,11 @@ void func_switching_to_menu(void)
     else
     {
         switch_mode = FUNC_SWITCH_ZOOM_FADE_EXIT;
+    }
+
+    if (icon == NULL)
+    {
+        switch_mode = FUNC_SWITCH_FADE_OUT;
     }
     bool res = func_switching(switch_mode, icon);                               //退出动画
     compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体

@@ -544,8 +544,8 @@ void ble_hid_service_proc(void)
     }
 }
 
-bool ble_hid_peer_device_is_ios(void)
-{
-    return true;
-}
+// bool ble_hid_peer_device_is_ios(void)
+// {
+//     return true;
+// }
 

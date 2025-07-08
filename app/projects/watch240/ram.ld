@@ -9,15 +9,15 @@ __base = 0x10000000;
 
 /* Define the area */
 __bram_vma = 0x10C00; //加大6K个ble_cache
-__cram_vma = 0x1D000; //0x1AC00;
-__sram_vma = 0x21000; //0x1EC00;
+__cram_vma = 0x1C800; //0x1AC00;
+__sram_vma = 0x22000; //0x1EC00;
 __disp_vma = 0x50000;
 __aram_vma = 0x68000;
 __dram_vma = 0x6C000;
 __eram_vma = 0x6F000;
 
 __comm_vma = __sram_vma;
-__sram_size = 197k-6k;
+__sram_size = 197k-6k-7K;
 __disp_size = 96k;
 
 //复用6K AINS3的空间
@@ -33,8 +33,8 @@ MEMORY
     sram            : org = __sram_vma,         len = __sram_size
     disp            : org = __disp_vma,         len = __disp_size
     aram            : org = __aram_vma,         len = 16k
-    bram            : org = __bram_vma,         len = 40k+6k
-    cram            : org = __cram_vma,         len = 16k
+    bram            : org = __bram_vma,         len = 40k+7k
+    cram            : org = __cram_vma,         len = 16k+6K
     dram            : org = __dram_vma,         len = 12k
     eram            : org = __eram_vma,         len = 2560
 }
@@ -489,6 +489,7 @@ SECTIONS
         *(.sbcio_buf.dec)
         *(.rec_buf.wav)
         *(.adpcm_buf*)
+        *(.rec_buf.*)
     } > cram
 
     .aec_ram __aram_vma (NOLOAD) : {
@@ -617,7 +618,7 @@ SECTIONS
 
     .dram_rec __dram_vma (NOLOAD) : {
         . = 0xD38;
-        *(.rec_buf.*)
+
         . = 0x3000;
     } > dram
 

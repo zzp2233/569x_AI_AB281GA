@@ -69,7 +69,7 @@ void halt(u32 halt_no)
 #endif
     if (!halt_do(halt_no))
     {
-#if UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
+#if 0//UTE_HARDFAULT_INFO_TO_FLASH_SUPPORT
         char log_str[64];
         snprintf(log_str, sizeof(log_str), "Halt: %x func_cb.sta: %d\n", halt_no, func_cb.sta);
         uteModuleHardfaultCustInfoSave(log_str,strlen(log_str));

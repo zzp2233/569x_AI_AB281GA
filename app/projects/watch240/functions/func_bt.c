@@ -75,10 +75,50 @@ typedef struct f_bt_t_
 /*****************************************************************************
  *          BT or BLE interface
  *****************************************************************************/
-
-void func_bt_mp3_res_play(u32 addr, u32 len)
+typedef struct
 {
-    if (len == 0)
+    u8 encrypt;
+    u8 loop;
+    u16 crc_key;
+    u8 *addr;
+    u32 pos;
+    u32 len;
+} spires_cb_t;
+#define CRC_PTR         18
+#define XOR_KEY         0x8514
+extern const u8 encrypt_header_tbl[32];
+
+bool exflash_mp3_res_is_encrypt(spires_cb_t *s, u32 addr)
+{
+#if 1
+    u32 tmp_buf[64];
+    memset(tmp_buf, 0, sizeof(tmp_buf));
+    uint os_spiflash_read(void *buf, u32 addr, uint len);
+    os_spiflash_read(tmp_buf, addr, sizeof(tmp_buf));
+    u16* header = (u16*)tmp_buf;
+    print_r(tmp_buf, sizeof(tmp_buf));
+    const u16 *header_tbl = (u16 *)encrypt_header_tbl;
+    u16 crc_key = header[CRC_PTR];
+//    printf("crc_key start :%d\n", crc_key);
+    for (int i = 0; i < 16; i++)
+    {
+        if (header_tbl[i] != (header[i] ^ crc_key))
+        {
+            return false;
+        }
+    }
+    s->crc_key = crc_key;
+//    printf("crc_key success :%d\n", s->crc_key);
+    return true;
+#else
+    return false;
+#endif // 0
+}
+
+//播放 res 资源区以外的音频
+void func_bt_mp3_ex_res_play(u32 addr, u32 len)
+{
+    if (len == 0 || sys_cb.mp3_res_playing)
     {
         return;
     }
@@ -88,6 +128,25 @@ void func_bt_mp3_res_play(u32 addr, u32 len)
     {
         bt_audio_bypass();
     }
+    void register_spi_read_function(void* read_func);
+    register_spi_read_function(os_spiflash_read);
+    mp3_res_play(addr, len);
+}
+
+void func_bt_mp3_res_play(u32 addr, u32 len)
+{
+    if (len == 0 || sys_cb.mp3_res_playing)
+    {
+        return;
+    }
+    bt_cb.res_bt_bypass = true;
+
+    if (!sbc_is_bypass())
+    {
+        bt_audio_bypass();
+    }
+    void register_spi_read_function(void* read_func);
+    register_spi_read_function(NULL);
     mp3_res_play(addr, len);
 }
 

@@ -104,6 +104,7 @@ void gui_sleep(void)
         tft_cb.tft_bglight_first_set = false;
         uteModuleGuiCommonDisplayOff(true);
         slider_unlock = false;
+        sys_cb.gui_need_wakeup = 0;
         printf("%s,slider_unlock=%d\n", __func__,slider_unlock);
     }
 }
@@ -126,7 +127,7 @@ void gui_wakeup(void)
         // uteDrvScreenCommonInit();
         sys_cb.gui_sleep_sta = 0;
         uteModuleGuiCommonDisplayOff(false);
-
+        sys_cb.gui_need_wakeup = 1;
         if (func_cb.sta != FUNC_SLIDING_UNLOCK_SCREEN &&func_cb.sta != FUNC_UP_WATCH_DIAL)
         {
             printf("gui_wakeup\n");

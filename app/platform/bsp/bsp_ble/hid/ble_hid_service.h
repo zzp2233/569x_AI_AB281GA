@@ -36,14 +36,16 @@
 #define HID_KM_RIGHT_ALT                    0x04
 #define HID_KM_RIGHT_GUI                    0x08
 
-typedef enum {
+typedef enum
+{
     BLE_HID_CMD_ID_CONSUMER,
     BLE_HID_CMD_ID_DIGITIZER,
     BLE_HID_CMD_ID_MOUSE,
     BLE_HID_CMD_ID_KEYBOARD,
 } BLE_HID_CMD_ID_TYPEDEF;
 
-typedef struct PACKED {
+typedef struct PACKED
+{
     uint8_t         tip_switch  : 1;
     uint8_t         in_range    : 1;
     const uint8_t   reserve     : 6;
@@ -53,7 +55,8 @@ typedef struct PACKED {
     uint8_t         contact_count;
 } ble_digitizer_report_typedef;
 
-typedef struct PACKED {
+typedef struct PACKED
+{
     uint8_t         button1 : 1;    // Left Button
     uint8_t         button2 : 1;    // Right Button
     uint8_t         button3 : 1;    // Central Button
@@ -62,18 +65,21 @@ typedef struct PACKED {
     int8_t          y;              // Y offset
 } ble_mouse_report_typedef;
 
-typedef struct {
+typedef struct
+{
     uint8_t modifier;
     uint8_t key_code;
 } ble_keyboard_report_typedef;
 
-typedef struct {
+typedef struct
+{
     BLE_HID_CMD_ID_TYPEDEF  id;
     uint8_t                 len;
     uint8_t                 buffer[BLE_HID_CMD_BUFFER_LENGTH];
 } ble_hid_cmd_typedef;
 
-typedef struct {
+typedef struct
+{
     uint8_t                 head_idx;
     uint8_t                 rear_idx;
     ble_hid_cmd_typedef     queue[BLE_HID_CMD_QUEUE_SIZE];
@@ -84,7 +90,8 @@ typedef struct {
 #define BLE_HID_MSG_ID_TEST             0x0200
 #define BLE_HID_MSG_ID_MASK             0x0f00
 
-typedef enum {
+typedef enum
+{
     BLE_HID_MSG_NONE,
 
     /* TikTok Page turner Message */
@@ -108,7 +115,7 @@ typedef enum {
 int ble_hid_service_init(void);
 bool ble_hid_task_enqueue(BLE_HID_CMD_ID_TYPEDEF id, u8 *buffer, u8 len);
 void ble_hid_service_proc(void);
-bool ble_hid_peer_device_is_ios(void);
+//bool ble_hid_peer_device_is_ios(void);
 
 bool ble_hid_send_touch_cmd(u8 touch, u16 x, u16 y);
 //void ble_hid_send_touch_cmd_kick(u8 touch, u16 x, u16 y, u8 kick_cfg);

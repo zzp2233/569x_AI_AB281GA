@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 阿拉伯语(以色列）
 *@author
-*@date   2025-05-06 15:01:21
+*@date   2025-07-08 11:19:15
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 

@@ -107,6 +107,9 @@
 /*! 情绪压力模块,xjc 2022-02-15*/
 #define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
 
+/*! 编码器切换表盘锁定,wang.luo 2025-04-09 */
+#define UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT  1
+
 /*! 活动界面列表形式,xjc 2022-02-15*/
 #define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT                1
 #define APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT   0
@@ -334,6 +337,7 @@
 #endif
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               0 //飞扬小鸟
+#define UTE_MODULE_KEY_SET_FUNCTION_SUPPORT           1 //下按键功能设置
 
 
 #define UTE_MODULE_SCREENS_POWER_AOLON_SUPPORT     1 //Aolon开机界面

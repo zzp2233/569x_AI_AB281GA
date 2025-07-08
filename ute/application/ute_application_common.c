@@ -41,6 +41,9 @@
 #if UTE_MODULE_MAGNETIC_SUPPORT
 #include "ute_module_compass.h"
 #endif
+#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
+#include "ute_module_timezonesetting.h"
+#endif
 #if 0
 #include "ute_drv_keys_common.h"
 #include "ute_module_bloodpressure.h"
@@ -293,6 +296,9 @@ void uteApplicationCommonStartupSecond(void)
 #endif
 #if UTE_MODULE_BEDSIDE_MODE_SUPPORT
         uteModuleBedsideModeInit();
+#endif
+#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
+        uteModuleTimezoneInit();
 #endif
         //系统参数配置
 #if UTE_MODULE_BLOODOXYGEN_SUPPORT
@@ -2025,11 +2031,8 @@ void uteModuleHardfaultInfoSave(void)
     memset(&path[0], 0, 42);
     sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, time.year, time.month, time.day, time.hour, time.min);
     void *file;
-    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT))
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT | FS_O_APPEND))
     {
-        uteModuleFilesystemSeek(file, 0, FS_SEEK_END);
-        uint32_t fileSize = uteModuleFilesystemGetFileSize(file);
-        uteModuleFilesystemSeek(file, fileSize, FS_SEEK_SET);
         uteModuleFilesystemWriteData(file, &buf[0], strlen(buf));
         uteModuleFilesystemCloseFile(file);
     }
@@ -2070,17 +2073,12 @@ void uteModuleHardfaultCustInfoSave(char *buf, uint16_t len)
     memset(&path[0], 0, 42);
     sprintf((char *)&path[0], "%s/%04d%02d%02d%02d%02d", UTE_MODULE_FILESYSTEM_RESTART_INFO_DIR, time.year, time.month, time.day, time.hour, time.min);
     void *file;
-    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT))
+    if (uteModuleFilesystemOpenFile((char *)&path[0], &file, FS_O_WRONLY | FS_O_CREAT | FS_O_APPEND))
     {
         char *head = (char *)uteModulePlatformMemoryAlloc(256);
         memset(&head[0], 0, 256);
         snprintf(head, 256, "%04d-%02d-%02d %02d:%02d:%02d\nVersion:\n%s\n", time.year, time.month, time.day, time.hour, time.min, time.sec,UTE_SW_VERSION);
-        uteModuleFilesystemSeek(file, 0, FS_SEEK_END);
-        uint32_t fileSize = uteModuleFilesystemGetFileSize(file);
-        // printf("fileSize:%d,%s\n", fileSize,head);
-        uteModuleFilesystemSeek(file, fileSize, FS_SEEK_SET);
         uteModuleFilesystemWriteData(file, &head[0], strlen(head));
-        uteModuleFilesystemSeek(file, 0, FS_SEEK_CUR);
         uteModuleFilesystemWriteData(file, &buf[0], len);
         uteModuleFilesystemCloseFile(file);
         uteModulePlatformMemoryFree(head);

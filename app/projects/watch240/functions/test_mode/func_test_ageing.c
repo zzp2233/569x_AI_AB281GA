@@ -701,11 +701,12 @@ static void func_ageing_process(void)
             snprintf(txt_buf,sizeof(txt_buf),"运行时间:%d:%02d:%02d",f_ageing->hour,f_ageing->min,f_ageing->sec);
             compo_textbox_set(textbox8,txt_buf);
 
+#ifdef RES_BUF_RING_VOICE_DIAL_MP3
             if(f_ageing->mode_flag == 2 && !sys_cb.mp3_res_playing)///模式三 放音乐
             {
                 func_bt_mp3_res_play(RES_BUF_RING_VOICE_DIAL_MP3, RES_LEN_RING_VOICE_DIAL_MP3);
             }
-
+#endif // RES_BUF_RING_VOICE_DIAL_MP3
             if(++f_ageing->sec == 60)
             {
                 f_ageing->sec = 0;

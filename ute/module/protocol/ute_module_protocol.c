@@ -35,6 +35,9 @@
 #include "ute_module_appbinding.h"
 #include "ute_module_emotionPressure.h"
 #include "func_cover.h"
+#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
+#include "ute_module_timezonesetting.h"
+#endif
 
 /**
 *@brief        设置时间12H或者24H格式，公里英里设置
@@ -2852,6 +2855,20 @@ void uteModuleProtocolEmotionPressureCtrl(uint8_t*receive,uint8_t length)
 #endif
 }
 
+/**
+*@brief       时区数据同步
+*@details
+*@param[in] uint8_t*receive
+*@param[in] uint8_t length
+*@author       huanghe
+*@date       2022-08-24
+*/
+void uteModuleProtocolTimeZoneCtrl(uint8_t*receive,uint8_t length)
+{
+#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
+    uteModuleTimeZoneSettingCmd(receive,length);
+#endif
+}
 
 /*!指令转化列表 zn.zeng, 2021-08-17  */
 const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
@@ -2920,6 +2937,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_SPORTS_TARGET_SELECT,.publicCmd=CMD_SPORTS_TARGET_SELECT,.function=uteModuleProtocolSportsTargetSelect},
     // {.privateCmd = CMD_CUST_DEFINE_CMD,.publicCmd=CMD_CUST_DEFINE_CMD,.function=uteModuleProtocolCustomF6CmdHandle},
     // {.privateCmd = CMD_GOTO_SCREEN,.publicCmd=CMD_GOTO_SCREEN,.function=uteModuleProtocolGotoScreenCmdHandle},
+    {.privateCmd = CMD_SET_TIME_ZONE,.publicCmd=CMD_SET_TIME_ZONE,.function=uteModuleProtocolTimeZoneCtrl},
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
     {.privateCmd = CMD_BT30_CTRL,.publicCmd=CMD_BT30_CTRL,.function=uteModuleProtocolCtrlBT},
 #endif
@@ -3085,12 +3103,14 @@ void uteModuleProtocolReadFunctionSupport(uint8_t *data,uint8_t size)
 #if UTE_MODULE_LOCAL_ALARM_SUPPORT
     data[4]|= 0x01;
 #endif
-#if UTE_MODULE_MUTE_PHONE_INCOM_SUPPORT
-    data[4]|= 0x40;
+#if UTE_MODULE_TIME_ZONE_SETTING_SUPPORT
+    data[4]|= 0x10;
 #endif
-
 #if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
     data[4]|= 0x20;
+#endif
+#if UTE_MODULE_MUTE_PHONE_INCOM_SUPPORT
+    data[4]|= 0x40;
 #endif
 #if UTE_MODULE_WEATHER_CITY_NAME_NEW_SUPPORT
     data[4]|= 0x80;

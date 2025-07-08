@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DC_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Tetra S5"
-#define UTE_SW_VERSION "AB281DCV000135"
+#define UTE_SW_VERSION "AB281DCV000144"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DC"
@@ -95,6 +95,8 @@
 /*! PWRKEY,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_SUPPORT 1
 
+/*! 界面返回 */
+#define UTE_DRV_PWRKEY_KEY1_BACK   1
 /*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_MAX_CNT  2
 

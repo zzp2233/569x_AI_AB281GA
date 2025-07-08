@@ -1745,6 +1745,12 @@ void func_message(size_msg_t msg)
 #if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
         {
             uint8_t func_sta = uteModuleKeySetFuncGetMenu();
+#if UTE_DRV_PWRKEY_KEY1_BACK
+            if (func_sta != FUNC_NULL && func_cb.sta == func_sta)
+            {
+                func_sta = func_directly_back_to();
+            }
+#endif
             if (func_sta == 0)
             {
                 if (uteModuleGuiCommonGetCurrentScreenId() != FUNC_KEY_SET_FUNCTION)

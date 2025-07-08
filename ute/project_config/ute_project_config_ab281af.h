@@ -70,6 +70,8 @@
 #define QUICK_SWITCH_SHOCK_TIME_SUPPORT    1
 #define QUICK_SWITCH_LOCAL_WURAO_SET_TIME_SUPPORT 1
 
+/*! 界面返回 */
+#define UTE_DRV_PWRKEY_KEY1_BACK   1
 /*! PWRKEY,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_SUPPORT 1
 /*! PWRKEY按键最大数量,wang.luo 2024-12-03 */

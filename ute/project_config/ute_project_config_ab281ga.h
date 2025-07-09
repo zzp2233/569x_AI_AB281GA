@@ -14,6 +14,13 @@
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281G"
 
+// 客制化关于界面
+#define UTE_SW_CUSTOM_VERSION "V0.0.1" // 客制化版本号
+#define UTE_CUSTOM_VERSION_LENTH 6     // 客制化版本号的长度
+#define UTE_CUSTOM_DEVICE_MODEL "OSW-815N"
+
+#define UTE_APP_READ_CUSTOM_SOFTWARE_VERSON_SUPPORT 1 //读取客户的版本号
+
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
 /*gesnsor 采集原始数据*/

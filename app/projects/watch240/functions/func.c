@@ -80,6 +80,9 @@ extern void func_sport(void);
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 //extern void func_sport_config(void);
 extern void func_sport_sub_run(void);
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+extern void func_sport_sub_pause(void);
+#endif
 extern void func_sport_sort(void);
 extern void func_calendar(void);
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
@@ -317,6 +320,9 @@ compo_form_t *func_weather_form_create(void);
 compo_form_t *func_sport_form_create(void);
 //compo_form_t *func_sport_config_form_create(void);
 compo_form_t *func_sport_sub_run_form_create(void);
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+compo_form_t *func_sport_sub_pause_form_create(void);
+#endif
 compo_form_t *func_sport_switching_form_create(void);
 compo_form_t *func_sport_sort_form_create(void);
 compo_form_t *func_set_sub_disturd_form_create(void);
@@ -495,6 +501,9 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
     {FUNC_SPORT_SORT,                   func_sport_sort_form_create},
     {FUNC_SPORT_FINISH,                 func_sport_finish_form_create},
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+    {FUNC_SPORT_SUB_PAUSE,              func_sport_sub_pause_form_create},
+#endif
 #endif // UTE_MODULE_SCREENS_SPORT_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {FUNC_GAME,                         func_game_form_create},
@@ -730,6 +739,9 @@ const func_t tbl_func_entry[] =
     {FUNC_SPORT_SWITCH,                 func_sport_switching},          //运动开启动画
     {FUNC_SPORT_SORT,                   func_sport_sort},               //运动变菜单
     {FUNC_SPORT_FINISH,                 func_sport_finish},             //运动变菜单
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+    {FUNC_SPORT_SUB_PAUSE,              func_sport_sub_pause},            //运动--暂停
+#endif
     {FUNC_HEAR_ABOUT,                   func_heart_about},               //
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT
     {FUNC_OXYGEN_ABOUT,                 func_oxygen_about},
@@ -1745,6 +1757,12 @@ void func_message(size_msg_t msg)
 #if UTE_MODULE_KEY_SET_FUNCTION_SUPPORT
         {
             uint8_t func_sta = uteModuleKeySetFuncGetMenu();
+#if UTE_DRV_PWRKEY_KEY1_BACK
+            if (func_sta != FUNC_NULL && func_cb.sta == func_sta)
+            {
+                func_sta = func_directly_back_to();
+            }
+#endif
             if (func_sta == 0)
             {
                 if (uteModuleGuiCommonGetCurrentScreenId() != FUNC_KEY_SET_FUNCTION)

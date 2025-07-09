@@ -345,6 +345,38 @@ void compo_listbox_set_item_width(compo_listbox_t *listbox, int item_width);
 void compo_listbox_set_item_text(compo_listbox_t *listbox, s16 x, s16 y, s16 width, s16 height, bool align_center);
 
 /**
+ * @brief 设置列表控件的文本坐标、大小、是否居中显示
+          注意：需在compo_listbox_update前一步调用，避免被compo_listbox_init_update刷新了
+                listbox->flag_text_center与第一个文本需要设置为一致
+ * @param[in] listbox : 列表指针
+ * @param[in] x\y\width\height : 文本坐标、大小
+ * @param[in] align_center : 是否居中
+ **/
+void compo_listbox_set_item_text2(compo_listbox_t *listbox, s16 x, s16 y, s16 width, s16 height, bool align_center);
+
+/**
+ * @brief 设置列表框所有项的图标位置
+ * 注意：需在compo_listbox_update前一步调用，避免被compo_listbox_init_update刷新了
+ * 该函数遍历列表框中的所有项，将每个项的图标位置设置为指定的坐标(x,y)。
+ *
+ * @param listbox 指向列表框对象的指针，该对象包含要设置位置的图标数组
+ * @param x 图标新的水平坐标位置
+ * @param y 图标新的垂直坐标位置
+ * @return 无返回值
+ */
+void compo_listbox_set_item_icon_pos(compo_listbox_t *listbox, s16 x, s16 y);
+
+/**
+ * 设置列表框中所有项目的第二个文本(text2)右对齐
+ * 注意：需在compo_listbox_update前一步调用，避免被compo_listbox_init_update刷新了
+ * @param listbox 列表框组件指针
+ * @param align_right 是否右对齐(true为右对齐，false为左对齐)
+ * @note 该函数会遍历列表框中的所有项目，统一设置第二个文本的对齐方式
+ *       对齐方式由widget_text_set_right_align函数实现
+ */
+void compo_listbox_set_item_text2_align_right(compo_listbox_t *listbox,bool align_right);
+
+/**
  * @brief 是否修改列表控件的文本内容
  * @param[in] listbox : 列表指针
  * @param[in] custom_item : 存放自定义文本的数组

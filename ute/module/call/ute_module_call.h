@@ -54,6 +54,10 @@
 
 #define UTE_MODULE_CALL_RECORDS_MAX_COUNT               20
 
+#ifndef UTE_MODULE_BT_ONCE_PAIR_TIMEOUT_SECOND
+#define UTE_MODULE_BT_ONCE_PAIR_TIMEOUT_SECOND          40 //配对超时，用于计时，一键配对过程中禁用休眠，防止连接过慢
+#endif
+
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
 typedef enum
 {
@@ -119,6 +123,7 @@ typedef struct
     ute_bt_call_data_t callData;
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
     UTE_BT_DISCONNECT_REASON disconnectReason;
+    uint8_t onePairTimeoutSec;
 #endif
     bool muteActive; //静音键是否有效
     uint32_t muteRecordSecond; //记录音源切换的时间

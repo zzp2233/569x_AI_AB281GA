@@ -20,10 +20,8 @@ typedef struct
     u32 str_idx;
 } func_item_info_t;
 
-#if UTE_MODULE_SCREENS_MENU_DATA_BIND
-#define FUNC_ITEM_CNT   f_menu_ui_data_get_app_task_num()
-static func_item_info_t func_item_tbl[MENU_APP_CNT];
-#elif GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
+
+#if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 #define FUNC_ITEM_CNT   (sizeof(func_item_tbl) / sizeof(func_item_tbl[0]))
 const static func_item_info_t func_item_tbl[] =
 {
@@ -965,6 +963,7 @@ typedef struct
 
 static latest_list_t latest_list;
 
+#if !UTE_MODULE_SCREENS_MENU_DATA_BIND
 //最近任务允许记录的id
 #define LATEST_ALLOWED_CNT  (sizeof(latest_allowed_id) / sizeof(latest_allowed_id[0]))
 const static u8 latest_allowed_id[] =
@@ -1058,7 +1057,7 @@ const static u8 latest_allowed_id[] =
     FUNC_MOOD,
 #endif
 };
-
+#endif
 /**
  * @brief 最近任务列表初始化
  **/
@@ -1100,6 +1099,16 @@ void latest_task_add(u8 func_sta)
             return;
         }
     }
+#if UTE_MODULE_SCREENS_MENU_DATA_BIND
+    for (i = 0; i < MENU_APP_MAX_CNT; i++)     //过滤
+    {
+        if (func_sta == f_menu_ui_data_all[i].func_sta)
+        {
+            id = func_sta;
+            break;
+        }
+    }
+#else
     for (i = 0; i < LATEST_ALLOWED_CNT; i++)     //过滤
     {
         if (func_sta == latest_allowed_id[i])
@@ -1108,6 +1117,7 @@ void latest_task_add(u8 func_sta)
             break;
         }
     }
+#endif
     if (id != FUNC_NULL && func_get_icon_addr(func_sta))
     {
         if (latest_list.num >= LATEST_TASK_MAX)    //添加
@@ -1202,48 +1212,3 @@ s8 latest_task_find(u8 func_sta)
     }
     return -1;
 }
-#if UTE_MODULE_SCREENS_MENU_DATA_BIND
-/**
- * @brief 最近任务列表资源
- * @param[in] func_sta : 获取最近任务资源数量
- * @return 获取最近任务资源结构体
- **/
-void func_get_latest_task_data(u8 num,f_menu_ui_data *ui_data[])
-{
-    u8 func_sta = FUNC_NULL;
-    u8 latest_cnt = latest_task_count();
-
-#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
-    if(!uteModuleMenstrualCycleIsOpen())
-    {
-        if (latest_task_find(FUNC_WOMEN_HEALTH) != -1)
-        {
-            uteTaskGuiStackRemoveScreenId(FUNC_WOMEN_HEALTH);
-        }
-    }
-#endif
-
-    for (u8 index = 0; index < num; index++)
-    {
-        if(latest_cnt > index)
-        {
-            func_sta = latest_task_get(index);
-        }
-        else
-        {
-            for (int i = 0; i <= num; i++)
-            {
-                if (latest_task_find(f_menu_data[i].func_sta) == -1)
-                {
-                    func_sta = f_menu_data[i].func_sta;
-                    break;
-                }
-            }
-        }
-        f_menu_ui_data find_ui_data = f_menu_find_ui_data(func_sta);
-        ui_data[index]->func_sta = func_sta;
-        ui_data[index]->res_addr = find_ui_data.res_addr;
-        ui_data[index]->str_idx  = find_ui_data.str_idx;
-    }
-}
-#endif

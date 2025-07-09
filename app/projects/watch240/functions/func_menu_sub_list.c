@@ -696,7 +696,6 @@ compo_form_t *func_menu_sub_list_form_create(void)
     else
     {
         memset(tbl_menu_list,0,sizeof(tbl_menu_list));
-        f_menu_ui_data_init();
         for (int i = 0; i <=f_menu_ui_data_get_app_num() ; i++)
         {
             tbl_menu_list[i].func_sta= f_menu_data[i].func_sta;

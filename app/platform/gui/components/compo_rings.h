@@ -7,7 +7,8 @@
 #define RINGS_GET_ICON_REL_X(r, angle)            (muls_shift16(r, SIN(RINGS_GET_ANGLE(angle))))             //根据角度获取相对X 
 #define RINGS_GET_ICON_REL_Y(r, angle)            (-muls_shift16(r, COS(RINGS_GET_ANGLE(angle))))            //根据角度获取相对Y
 
-enum COMPO_RINGS_QUADRANT {
+enum COMPO_RINGS_QUADRANT
+{
     QUADRANT_NULL,
     QUADRANT_1,
     QUADRANT_2,
@@ -15,18 +16,22 @@ enum COMPO_RINGS_QUADRANT {
     QUADRANT_4,
 };
 
-enum COMPO_RINGS_TIME_TYPE {
+enum COMPO_RINGS_TIME_TYPE
+{
     COMPO_RINGS_TIME_TYPE_HOUR,
     COMPO_RINGS_TIME_TYPE_MIN,
     COMPO_RINGS_TIME_TYPE_SEC,
 };
 
-typedef struct compo_rings_item_t_ {
+typedef struct compo_rings_item_t_
+{
     u32 res_addr;                   //图标
     u8  func_sta;                   //任务序号
+    u16 str_id;                     //文本id
 } compo_rings_item_t;
 
-typedef struct compo_rings_ele_t_ {
+typedef struct compo_rings_ele_t_
+{
     int16_t  x;                                         //环形中心点X坐标
     int16_t  y;                                         //环形中心点Y坐标
     uint16_t r;                                         //环形半径
@@ -36,26 +41,30 @@ typedef struct compo_rings_ele_t_ {
     uint8_t  other_icon_num;                            //其他图标数     loop_icon_num + other_icon_num <= RINGS_MAX_ICON_CNT
     uint8_t  item_num;                                  //资源总数
     compo_rings_item_t const *item;                     //资源地址及任务序号
-}compo_rings_ele_t;
+} compo_rings_ele_t;
 
-typedef struct compo_rings_icon_t_ {
+typedef struct compo_rings_icon_t_
+{
     widget_icon_t *widget;
     uint16_t size;
     int32_t angle;
     u8 idx;
-}compo_rings_icon_t;
+} compo_rings_icon_t;
 
-typedef struct compo_rings_touch_t_ {
+typedef struct compo_rings_touch_t_
+{
     int32_t angle;
     u8 quad;
-}compo_rings_touch_t;
+} compo_rings_touch_t;
 
-typedef struct compo_rings_sel_t_ {
+typedef struct compo_rings_sel_t_
+{
     widget_icon_t *icon;                                //选择的ICON
     s16 idx;                                            //选择的IDX
-}compo_rings_sel_t;
+} compo_rings_sel_t;
 
-typedef struct compo_rings_time_t_ {
+typedef struct compo_rings_time_t_
+{
     u8 idx_time;                //加入时分秒针元素
     widget_page_t *page_time;
     widget_icon_t *time_bg;
@@ -63,9 +72,10 @@ typedef struct compo_rings_time_t_ {
     widget_image_t *min;
     widget_image_t *sec;
     s16 start_angle;
-}compo_rings_time_t;
+} compo_rings_time_t;
 
-typedef struct compo_rings_t_ {
+typedef struct compo_rings_t_
+{
     COMPO_STRUCT_COMMON;
     widget_page_t *page;
     u8 loop_icon_cnt;                                   //环形图标个数
@@ -77,7 +87,7 @@ typedef struct compo_rings_t_ {
     compo_rings_touch_t cur;
     compo_rings_time_t  time0;
     compo_rings_time_t  time1;
-}compo_rings_t;
+} compo_rings_t;
 
 #define COS_SCALE     10000
 #define ACOS(value)   myacos(value)
@@ -101,9 +111,9 @@ int myacos(int value);
 /**
  * @brief 弧度计算
  * 注：根据当前点和中心点确定余弦值并计算弧度值 精度为1°
- * @param[in] cx :中心点X 
+ * @param[in] cx :中心点X
  * @param[in] cy :中心点Y
- * @param[in] x  :当前点X 
+ * @param[in] x  :当前点X
  * @param[in] y  :当前点Y
  * @return 返回对应的弧度 精度为1° 0~180°
  **/

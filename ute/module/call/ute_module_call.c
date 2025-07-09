@@ -154,6 +154,8 @@ void uteModuleCallBtPowerOff(UTE_BT_POWER_OFF_REASON reason)
     if(reason == UTE_BT_POWER_OFF_APP_UNBIND)
     {
         bt_nor_delete_link_info();
+        memset(uteModuleCallData.address,0x00,6);
+        uteModuleCallBtSaveCtrlAppData();
     }
 
     if(UTE_BT_POWER_OFF_AUTO != reason)
@@ -303,12 +305,25 @@ void uteModuleCallEverySecond(void)
             if (uteModuleCallData.isBleLinkBackFlag) // 回连ble时回连BT
             {
                 uteModuleCallData.isBleLinkBackFlag = false;
-                if(!bt_is_connected() && bt_get_curr_scan() == BT_STA_SCANNING)
+                if(!bt_is_connected() && bt_get_curr_scan() == BT_STA_SCANNING && uteModuleCallIsHasConnection())
                 {
                     printf("%s,ble link back,bt connect\r\n", __func__);
                     bt_connect();
                 }
             }
+#if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT
+            if (uteModuleCallData.onePairTimeoutSec > 0)
+            {
+                uteModuleCallData.onePairTimeoutSec--;
+            }
+            else
+            {
+                if (uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR)
+                {
+                    uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR);
+                }
+            }
+#endif
             UTE_MODULE_LOG(UTE_LOG_BT_AUDIO_LVL, "%s,.powerOnTimeSecond = %d", __func__, uteModuleCallData.powerOnTimeSecond);
         }
 
@@ -525,17 +540,15 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
                 {
                     uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
                 }
-                bt_abort_reconnect(); //终止回连
+                // bt_abort_reconnect(); //终止回连
 #endif
-                if(uteModuleCallAppCtrlData.phoneOS == 0x01)
+                if (uteModuleCallAppCtrlData.phoneOS == 0x01)
                 {
-                    printf("======================>ble_bt_connect\n");
-                    //一键双连
-                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR,0);
-                    // app_phone_type_set(uteModuleCallIsCurrentConnectionIphone());
-                    // bsp_change_bt_mac();
-                    // ble_bt_connect();
+                    // 一键双连
+                    uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_MODULE_NOTIFY_ANCS_START_PAIR, 0);
                 }
+                uteModuleCallData.onePairTimeoutSec = UTE_MODULE_BT_ONCE_PAIR_TIMEOUT_SECOND;
+                uteModulePlatformDlpsDisable(UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR);
             }
         }
         uteModuleCallBtSaveCtrlAppData();
@@ -555,6 +568,8 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
             else
             {
                 bt_nor_delete_link_info();
+                memset(uteModuleCallData.address,0x00,6);
+                uteModuleCallBtSaveCtrlAppData();
             }
         }
         else
@@ -568,7 +583,7 @@ void uteModuleProtocolCtrlBT(uint8_t*receive,uint8_t length)
             if(uteModuleCallBtIsPowerOn() ==false)
             {
                 uteModuleCallBtPowerOn(UTE_BT_POWER_ON_NORMAL);
-                bt_abort_reconnect(); //终止回连
+                // bt_abort_reconnect(); //终止回连
             }
 #endif
         }

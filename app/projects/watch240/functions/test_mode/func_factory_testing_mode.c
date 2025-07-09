@@ -2748,7 +2748,9 @@ static void func_factory_testing_message(size_msg_t msg)
             uint8_t ret = msgbox("退出当前测试？", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             if (ret == MSGBOX_RES_OK)
             {
-#if UTE_MODULE_LOG_SUPPORT
+#if UTE_EXIT_FACTORY_TESTING_RESET
+                uteApplicationCommonFactoryReset();
+#elif UTE_MODULE_LOG_SUPPORT
                 uteTaskGuiStartScreen(FUNC_TEST_MODE, 0, __func__);
                 uteTaskGuiStackRemoveScreenId(FUNC_FACTORY_TESTING);
 #else

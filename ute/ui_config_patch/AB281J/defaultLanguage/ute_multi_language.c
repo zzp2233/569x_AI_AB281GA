@@ -4,11 +4,15 @@
 
 #include "ute_multi_language_en_rus.h"
 
+#include "ute_multi_language_ar_ril.h"
+
 #include "ute_multi_language_ru_rru.h"
 
 #include "ute_multi_language_tr_rtr.h"
 
 #include "ute_multi_language_ms_rmy.h"
+
+#include "ute_multi_language_ja_rjp.h"
 
 #include "ute_multi_language_de_rde.h"
 

@@ -302,6 +302,7 @@
 #define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   1 //菜单样式预览旋转界面
 #define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
 #define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
+#define UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT        0//1 //运动暂停界面 //暂时关闭，该功能还未测试，下个版本启用测试
 
 /*! 默认语言 zn.zeng, 2021-08-23  */
 #ifndef DEFAULT_LANGUAGE

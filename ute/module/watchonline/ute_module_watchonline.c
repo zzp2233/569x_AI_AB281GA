@@ -153,8 +153,8 @@ void uteModuleWatchOnlineStartSync(void)
         uint32_t photo = 0;
         uteModuleWatchOnlineGetPhotoAddress(uteModuleWatchOnlineData.photoWatchPictureIndex, &bassAddr, &preview, &photo);
 
-        uteModulePlatformFlashNorErase(uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.photoWatchPictureIndex]);
-        uteModulePlatformFlashNorWrite((uint8_t *)&uteModuleWatchOnlineData.ReceivePhotoHead, uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.photoWatchPictureIndex], sizeof(watchConfig_t));
+        uteModulePlatformFlashNorErase(uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.photoWatchIndex]);
+        uteModulePlatformFlashNorWrite((uint8_t *)&uteModuleWatchOnlineData.ReceivePhotoHead, uteModuleWatchOnlineMultipleBaseAddress[uteModuleWatchOnlineData.photoWatchIndex], sizeof(watchConfig_t));
 
         uteModuleWatchOnlineData.lastEraseAddress = bassAddr;
         uteModulePlatformFlashNorErase(uteModuleWatchOnlineData.lastEraseAddress);

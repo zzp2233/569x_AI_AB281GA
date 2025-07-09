@@ -118,6 +118,9 @@ enum
     FUNC_SPORT_SWITCH,                  //运动开启
     FUNC_SPORT_SORT,                    //运动边菜单
     FUNC_SPORT_FINISH,                  //运动结束
+#if UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+    FUNC_SPORT_SUB_PAUSE,                 //运动--暂停
+#endif
 #if UTE_MODULE_SCREENS_CALL_SUPPORT
     FUNC_CALL,                          //电话
 #endif // UTE_MODULE_SCREENS_CALL_SUPPORT

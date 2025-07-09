@@ -1495,6 +1495,8 @@ compo_form_t *func_sport_form_create(void)
     compo_setid(listbox, COMPO_ID_LISTBOX);
 
     compo_listbox_set_focus_byidx(listbox, 0);
+    //运动列表，当图标的高度大于背景的2/3时，在图标的顶部会有一部分显示不出来
+    compo_listbox_set_item_icon_pos(listbox,120*2/3,120/2+2);
     compo_listbox_update(listbox);
 
     return frm;

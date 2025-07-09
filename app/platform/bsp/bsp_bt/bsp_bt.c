@@ -120,6 +120,10 @@ void bt_emit_notice(uint evt, void *params)
             {
                 uteModuleMusicResetPlayStatus();
             }
+            if (uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR)
+            {
+                uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR);
+            }
             break;
 
         case BT_NOTICE_CONNECTED:
@@ -144,6 +148,10 @@ void bt_emit_notice(uint evt, void *params)
                 bt_hid_profile_en();
             }
 #endif
+            if (uteModulePlatformNotAllowSleep() & UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR)
+            {
+                uteModulePlatformDlpsEnable(UTE_MODULE_PLATFORM_DLPS_BIT_ONE_PAIR);
+            }
             break;
 
 //    case BT_NOTICE_LOSTCONNECT:
@@ -246,8 +254,13 @@ void bt_emit_notice(uint evt, void *params)
         case BT_NOTICE_HFP_CONN_EVT:
             break;
 
+        case BT_NOTICE_CONNECT_START:
+            printf("BT_NOTICE_CONNECT_START\n");
+            break;
+
         case BT_NOTICE_CONNECT_FAIL:
         {
+            printf("BT_NOTICE_CONNECT_FAIL\n");
 #if LE_SM_SC_EN
             if (packet[0] != 0x0B)     //BB_ERROR_ACL_CON_EXISTS
             {
@@ -408,7 +421,10 @@ static void bt_onoff_timer_callback(co_timer_t *timer, void *param)
             printk("onoff 1111 a2dp[%d] hfp[%d] hid[%d] bt_get_status_do[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), bt_get_status_do());
             if (bt_connect_on_flag())
             {
-                bt_connect();
+                if (uteModuleCallIsHasConnection()) // 如果存在配对信息
+                {
+                    bt_connect();
+                }
                 bt_onoff_timer_cnt = 0;
             }
             else
@@ -420,7 +436,10 @@ static void bt_onoff_timer_callback(co_timer_t *timer, void *param)
                 }
                 else
                 {
-                    bt_connect();
+                    if (uteModuleCallIsHasConnection()) // 如果存在配对信息
+                    {
+                        bt_connect();
+                    }
                 }
             }
         }
@@ -471,7 +490,10 @@ void bsp_bt_trun_on(void)
             printk("on 222 a2dp[%d] hfp[%d] hid[%d] bt_get_status_do[%d]\n", bt_a2dp_profile_completely_connected(), hfp_is_connect(), bt_hid_is_connected(), bt_get_status_do());
             if (bt_connect_on_flag())
             {
-                bt_connect();
+                if (uteModuleCallIsHasConnection()) // 如果存在配对信息
+                {
+                    bt_connect();
+                }
             }
             else
             {

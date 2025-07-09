@@ -228,6 +228,10 @@ compo_form_t *func_stopwatch_sub_record_form_create(void)
     compo_listbox_set_text2_color_callback(listbox, stopwatch_text2_callback);
 
     compo_listbox_set_focus_byidx(listbox, 1);
+    //新增文本坐标对齐方式
+    compo_listbox_set_item_text(listbox,0,5,256,30,false);
+    compo_listbox_set_item_text2(listbox,0,5,256,30,false);
+    compo_listbox_set_item_text2_align_right(listbox,true);
     compo_listbox_update(listbox);
 
     return frm;

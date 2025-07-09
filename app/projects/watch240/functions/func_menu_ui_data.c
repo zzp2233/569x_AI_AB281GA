@@ -5,6 +5,7 @@
 
 #if UTE_MODULE_SCREENS_MENU_DATA_BIND
 
+
 /*! 注释：使用f_menu_ui_data_all结构体里面的 fb_res_addr 前20个数据为足球菜单资源*/
 
 #if GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT
@@ -96,7 +97,7 @@ void f_menu_ui_data_init(void)
 {
     memset(f_menu_data,0,sizeof(f_menu_data));
     int j=0;
-    for(int i=0; i<MENU_APP_CNT; i++)
+    for(int i=0; i<MENU_APP_MAX_CNT; i++)
     {
 #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT //女性健康
         if(f_menu_ui_data_all[i].func_sta == FUNC_WOMEN_HEALTH && !uteModuleMenstrualCycleIsOpen())
@@ -104,7 +105,7 @@ void f_menu_ui_data_init(void)
             j++;
         }
 #endif
-        if(j < MENU_APP_CNT)
+        if(j < MENU_APP_MAX_CNT)
         {
             f_menu_data[i] = f_menu_ui_data_all[j];
             j++;
@@ -119,7 +120,7 @@ void f_menu_ui_data_init(void)
 */
 u8 f_menu_ui_data_get_app_num(void)
 {
-    u8 app_num = MENU_APP_CNT;
+    u8 app_num = MENU_APP_MAX_CNT;
     switch (func_cb.menu_style)
     {
         case MENU_STYLE_LIST:      /*!  列表菜单 显示应用最多数量*/
@@ -149,24 +150,19 @@ u8 f_menu_ui_data_get_app_num(void)
         case MENU_STYLE_WATERFALL:     /*! 瀑布菜单 显示应用最多数量*/
             app_num = MENU_STYLE_WATERFALL_APP_MAX_NUM;
             break;
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
+        case MENU_STYLE_CUM_RING1:     /*! 环形菜单风格1 显示应用最多数量*/
+            app_num = MENU_MENU_STYLE_CUM_RING1_APP_MAX_NUM;
+            break;
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
+        case MENU_STYLE_CUM_RING2:     /*! 环形菜单风格2 显示应用最多数量*/
+            app_num = MENU_MENU_STYLE_CUM_RING2_APP_MAX_NUM;
+            break;
+#endif
         default:
             break;
     }
-#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT //女性健康
-    if(!uteModuleMenstrualCycleIsOpen())
-    {
-        app_num--;
-    }
-#endif
-    return app_num;
-}
-
-/*!
-出口参数：最近任务app数量
-*/
-u8 f_menu_ui_data_get_app_task_num(void)
-{
-    u8 app_num = MENU_APP_CNT;
 #if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT //女性健康
     if(!uteModuleMenstrualCycleIsOpen())
     {
@@ -183,10 +179,12 @@ f_menu_ui_data f_menu_find_ui_data(u8 func_sta)
 {
     f_menu_ui_data ui_data;
     memset(&ui_data, 0, sizeof(f_menu_ui_data));
-    for (int index = 0; index < MENU_APP_CNT; index++)
+    for (int index = 0; index < MENU_APP_MAX_CNT; index++)
     {
+        printf("index:[%d] sta:[%d,%d]\n",index,f_menu_ui_data_all[index].func_sta,func_sta);
         if(f_menu_ui_data_all[index].func_sta == func_sta)
         {
+            ui_data.func_sta    = func_sta;
             ui_data.res_addr    = f_menu_ui_data_all[index].res_addr;
             ui_data.str_idx     = f_menu_ui_data_all[index].str_idx;
             ui_data.fb_res_addr = f_menu_ui_data_all[index].fb_res_addr;
@@ -194,6 +192,50 @@ f_menu_ui_data f_menu_find_ui_data(u8 func_sta)
         }
     }
     return ui_data;
+}
+
+/**
+ * @brief 最近任务列表资源
+ * @param[in] num : 获取最近任务资源数量
+ * @return 获取最近任务资源结构体
+ **/
+void func_get_latest_task_data(u8 num,f_menu_ui_data *ui_data)
+{
+    u8 func_sta = FUNC_NULL;
+    u8 latest_cnt = latest_task_count();
+    u8 index = 0;
+    f_menu_ui_data_init();
+
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        if (latest_task_find(FUNC_WOMEN_HEALTH) != -1)
+        {
+            uteTaskGuiStackRemoveScreenId(FUNC_WOMEN_HEALTH);
+        }
+    }
+#endif
+
+    for (u8 index = 0; index < num; index++)
+    {
+        if(latest_cnt > index)
+        {
+            func_sta = latest_task_get(index);
+        }
+        else
+        {
+            for (index; index <= num; index++)
+            {
+                if (latest_task_find(f_menu_data[index].func_sta) == -1)
+                {
+                    func_sta = f_menu_data[index].func_sta;
+                    break;
+                }
+            }
+        }
+        printf("func_sta = %d\n", func_sta);
+        ui_data[index] = f_menu_find_ui_data(func_sta);
+    }
 }
 
 #endif

@@ -216,13 +216,16 @@ static void func_test_mode_click(void)
     switch(id)
     {
         case MODE_FACTORY_TESTING_ID:///工厂测试
+#if UTE_MODULE_TEST_MODE_REMIND_SKIP
+            uteTaskGuiStartScreen(FUNC_FACTORY_TESTING,0,__func__);
+#else
             ret = msgbox("工厂测试", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             if(ret == MSGBOX_RES_OK)
             {
 
                 uteTaskGuiStartScreen(FUNC_FACTORY_TESTING,0,__func__);
-                // func_switch_to(FUNC_TEST_MODE_LIST, 0);///跳转工厂测试界面
             }
+#endif
             break;
         case MODE_AGING_TESTING_ID:///老化测试
             ret = msgbox("老化测试", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);

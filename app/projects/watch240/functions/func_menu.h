@@ -32,8 +32,12 @@ enum
 //    客户新加菜单样式
     MENU_STYLE_CUM_HEXAGON,             //六边型菜单风格
     MENU_STYLE_CUM_HONEYGRID,           //网格蜂窝（华为风格）
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
     MENU_STYLE_CUM_RING1,               //环形菜单风格1
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
     MENU_STYLE_CUM_RING2,               //环形菜单风格1
+#endif
 
     MENU_STYLE_CNT,
 };
@@ -49,7 +53,12 @@ compo_form_t *func_menu_sub_disk_form_create(void);
 compo_form_t *func_menu_sub_ring_form_create(void);
 compo_form_t *func_menu_sub_kale_form_create(void);
 compo_form_t *func_menu_sub_skyrer_form_create(void);
-
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
+compo_form_t *func_menu_sub_cum_ring1_form_create();
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
+compo_form_t *func_menu_sub_cum_ring2_form_create();
+#endif
 compo_form_t *func_menu_sub_cum_sudoku_form_create(void);      //客户新加菜单风格
 compo_form_t *func_menu_sub_hexagon_form_create(void);
 
@@ -64,7 +73,12 @@ void func_menu_sub_disk(void);
 void func_menu_sub_ring(void);
 void func_menu_sub_kale(void);
 void func_menu_sub_skyrer(void);
-
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
+void func_menu_sub_cum_ring1(void);
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
+void func_menu_sub_cum_ring2(void);
+#endif
 void func_menu_sub_cum_sudoku(void);   //客户新加菜单风格
 void func_menu_sub_hexagon(void);
 

@@ -1691,10 +1691,12 @@ compo_form_t *func_factory_testing_create(void)
         frm = func_factory_testing_gm();
     }
 #endif
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_KEY_FUNCTION
     else if (test_data->moduleType == FACTORY_MODULE_KEY)
     {
         frm = func_factory_testing_key();
     }
+#endif
     else if (test_data->moduleType == FACTORY_MODULE_MAX)
     {
         frm = func_factory_testing_mode_result();
@@ -2683,21 +2685,25 @@ static void func_factory_testing_message(size_msg_t msg)
             break;
         case K_BACK:
         {
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_KEY_FUNCTION
             if (test_data->moduleType == FACTORY_MODULE_KEY)
             {
                 compo_textbox_t *textbox1 = compo_getobj_byid(KEY_TXT_ID_0);
                 compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
             }
+#endif
         }
         break;
         case K_LEFT:
         {
 #if UTE_DRV_PWRKEY_MAX_CNT > 1
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_KEY_FUNCTION
             if (test_data->moduleType == FACTORY_MODULE_KEY)
             {
                 compo_textbox_t *textbox1 = compo_getobj_byid(KEY_TXT_ID_1);
                 compo_textbox_set_forecolor(textbox1, COLOR_GREEN);
             }
+#endif
 #endif
         }
         break;

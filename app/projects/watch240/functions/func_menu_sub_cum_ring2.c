@@ -1,7 +1,10 @@
 #include "include.h"
 #include "func.h"
 #include "func_menu.h"
+#include "func_menu_ui_data.h"
 
+
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
 ///> feat: menu ring2 code update, shadowX, 20250704, start
 
 #define TRACE_EN                0
@@ -22,8 +25,8 @@
 #define SKYRER_OTHER_ICON_NUM                       0                                                                                       //方形个数
 #define SKYRER_EDGE_SPACE                           2                                                                                       //边缘距离
 #define SKYRER_ICON_SIZE_ORG                        (gui_image_get_size(tbl_menu_skyrer[0].res_addr).wid)                                   //原始图标大小
-#define SKYRER_ICON_SIZE_MAX                        ((SKYRER_ICON_SIZE_ORG >> 4) * 13)                                                      //图标最大尺寸
-#define SKYRER_ICON_SIZE_MIN                        ((SKYRER_ICON_SIZE_MAX >> 4) * 13)                                                      //图标最小尺寸
+#define SKYRER_ICON_SIZE_MAX                        ((SKYRER_ICON_SIZE_ORG >> 4) * 15)                                                      //图标最大尺寸
+#define SKYRER_ICON_SIZE_MIN                        ((SKYRER_ICON_SIZE_MAX >> 4) * 15)                                                      //图标最小尺寸
 #define SKYRER_CENX                                 GUI_SCREEN_CENTER_X                                                                     //中心点
 #define SKYRER_CENY                                 GUI_SCREEN_CENTER_Y                                                                     //中心点
 #define SKYRER_SHORT_SIDE                           ((GUI_SCREEN_HEIGHT >= GUI_SCREEN_WIDTH) ? GUI_SCREEN_WIDTH : GUI_SCREEN_HEIGHT)        //取短边
@@ -38,6 +41,7 @@ enum
 {
     COMPO_ID_SKYRER = 1,
     COMPO_ID_APP_TXT,
+    COMPO_ID_SHAPE_POINT,
 };
 
 typedef struct f_menu_skyrer_t_
@@ -74,7 +78,7 @@ typedef struct f_menu_skyrer_back_t
 f_menu_skyrer_back ring2_back_idx[SKYRER_LOOP_ICON_NUM];
 
 #if UTE_MODULE_SCREENS_MENU_DATA_BIND
-static compo_rings_item_t tbl_menu_skyrer[MENU_APP_MAX_CNT]
+static compo_rings_item_t tbl_menu_skyrer[MENU_APP_MAX_CNT];
 #else
 //天圆地方图标列表及顺序
 static const compo_rings_item_t tbl_menu_skyrer[] =
@@ -111,11 +115,11 @@ compo_form_t *func_menu_sub_cum_ring2_form_create(void)
 {
 #if UTE_MODULE_SCREENS_MENU_DATA_BIND
     memset(tbl_menu_skyrer,0,sizeof(tbl_menu_skyrer));
-    f_menu_ui_data_init();
     for (int i = 0; i < MENU_SKYRER_CNT ; i++)
     {
         tbl_menu_skyrer[i].func_sta= f_menu_data[i].func_sta;
         tbl_menu_skyrer[i].res_addr= f_menu_data[i].res_addr;
+        tbl_menu_skyrer[i].str_id  = f_menu_data[i].str_idx;
     }
 #endif
 
@@ -151,12 +155,18 @@ compo_form_t *func_menu_sub_cum_ring2_form_create(void)
 
     compo_textbox_t* text = compo_textbox_create(frm, 50);
     compo_setid(text, COMPO_ID_APP_TXT);
-//    compo_textbox_set_location(text, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y, 150, 48);
-
-    //方形图标
-//    for (int i = 0; i < SKYRER_OTHER_ICON_NUM; i++) {
-//        compo_rings_icon_add(rings, tbl_menu_skyrer[i].res_addr, MENU_SKYRER_CNT + tal_party[i].idx, false);
-//    }
+#if UTE_MENU_STYLE_CUM_RING2_TRIANGLE_PIC
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UTE_MENU_STYLE_CUM_RING2_TRIANGLE_PIC);
+    compo_picturebox_set_pos(frm,GUI_SCREEN_WIDTH * 0.25, GUI_SCREEN_CENTER_Y);
+    compo_picturebox_set_visible(picbox,false);
+    compo_setid(picbox, COMPO_ID_SHAPE_POINT);
+#else
+    compo_shape_t* point = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(point, GUI_SCREEN_WIDTH * 0.25, GUI_SCREEN_CENTER_Y, 12, 12);
+    compo_shape_set_radius(point, 12);
+    compo_shape_set_visible(point, false);
+    compo_setid(point, COMPO_ID_SHAPE_POINT);
+#endif
 
 #if UTE_MENU_CUM_RING_CLOCK_APP_DISP
     //时钟指针
@@ -178,11 +188,6 @@ compo_form_t *func_menu_sub_cum_ring2_form_create(void)
         func_menu_sub_skyrer_set_focus(rings);
         func_menu_sub_skyrer_update(rings, 0, false);
     }
-
-    compo_shape_t* point = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
-    compo_shape_set_location(point, GUI_SCREEN_WIDTH * 0.25, GUI_SCREEN_CENTER_Y, 12, 12);
-    compo_shape_set_radius(point, 12);
-
 
     return frm;
 }
@@ -322,13 +327,6 @@ static void func_menu_sub_skyrer_animation_update(void)
         if (end_angle == (SKYRER_ANGLE_INITIAL + SKYRER_ANGLE_DIV))     //动画结束
         {
             func_menu_sub_skyrer_icon_party_update(rings);
-//            for (int i = 0; i < SKYRER_OTHER_ICON_NUM; i++) {
-//                int idx1 = compo_rings_loop_icon_find_idx(rings, SKYRER_LOOP_ICON_NUM + i);
-//                s16 x = SKYRER_CENX + tal_party[i].sgnx * ((SKYRER_ICON_SIZE_MAX >> 1) + 5);
-//                s16 y = SKYRER_CENY + tal_party[i].sgny * ((SKYRER_ICON_SIZE_MAX >> 1) + 5);
-//                compo_rings_set_location(rings, x, y, SKYRER_ICON_SIZE_MAX, SKYRER_ICON_SIZE_MAX, idx1);
-//            }
-
             func_cb.flag_animation = false;
         }
         else                                                            //动画开始
@@ -430,41 +428,24 @@ static void func_menu_sub_skyrer_swawn_update(void)
 static void func_menu_sub_skyrer_icon_party_update(compo_rings_t *rings)
 {
 
-
-
     for (int i = 0; i < SKYRER_LOOP_ICON_NUM; i++)
     {
         int32_t angle = compo_rings_loop_icon_find_angle(rings, i);
         u8      idx0  = compo_rings_loop_icon_find_idx(rings, i);
-//        for (int k = 0; k < SKYRER_OTHER_ICON_NUM; k++) {
-//            if (abs(angle - tbl_party_angle[k]) <= 50) {
-//                u8 idx1 = compo_rings_loop_icon_find_idx(rings, SKYRER_LOOP_ICON_NUM + k);
-//                compo_rings_set_res_from_idx(rings, tbl_menu_skyrer[idx0].res_addr, idx1);
-//                compo_rings_set_uidx_from_idx(rings, idx0 + MENU_SKYRER_CNT, idx1);
-//            }
-//        }
-
 
         for (int k = 0; k < 1; k++)
         {
             if (abs(angle - tbl_party_angle[k]) <= 50)
             {
-//                u8 idx1 = compo_rings_loop_icon_find_idx(rings, SKYRER_LOOP_ICON_NUM + k);
-//                compo_rings_set_res_from_idx(rings, tbl_menu_skyrer[idx0].res_addr, idx1);
-//                compo_rings_set_uidx_from_idx(rings, idx0 + MENU_SKYRER_CNT, idx1);
-
-
                 s16 x = SKYRER_CENX * 2 * tal_party[0].sgnx / 10;
                 s16 y = SKYRER_CENY * 2 * tal_party[0].sgny / 10;
                 if (func_cb.sta == FUNC_MENU && func_cb.menu_style == MENU_STYLE_CUM_RING2)
                 {
                     compo_textbox_t* text = compo_getobj_byid(COMPO_ID_APP_TXT);
-                    printf("text ptr:0x%x\n", text);
                     compo_textbox_set_align_center(text, false);
-                    compo_textbox_set_location(text, x, y - 38/2, 150, 48);
+                    compo_textbox_set_location(text, x, y - widget_text_get_height()/2, 150, 48);
                     compo_textbox_set(text, i18n[tbl_menu_skyrer[idx0].str_id]);
                 }
-
             }
         }
 
@@ -477,20 +458,14 @@ static uint16_t func_menu_sub_skyrer_icon_size_update(compo_rings_t *rings, int3
 //    printf("%s -> angle:%d\n", __func__, angle);
     uint16_t size = SKYRER_ICON_SIZE_MIN;
 
-    if (angle <= 3300 && angle >= 300)
+    if (angle <= 2400 && angle >= 3000)
     {
         return size;
     }
 
-    if (angle > 3300 && angle < 3600)
+    if (angle > 2400 && angle < 3000)
     {
-        size = SKYRER_ICON_SIZE_MAX - muls(SKYRER_ICON_SIZE_MAX - SKYRER_ICON_SIZE_MIN, 3600 - angle) / SKYRER_ANGLE_DIV;
-        return size;
-    }
-
-    if (angle >= 0 && angle < 300)
-    {
-        size = SKYRER_ICON_SIZE_MAX - muls(SKYRER_ICON_SIZE_MAX - SKYRER_ICON_SIZE_MIN, angle) / SKYRER_ANGLE_DIV;
+        size = SKYRER_ICON_SIZE_MAX - muls(SKYRER_ICON_SIZE_MAX - SKYRER_ICON_SIZE_MIN, abs(2700 - angle)) / SKYRER_ANGLE_DIV;
         return size;
     }
 
@@ -542,6 +517,13 @@ static void func_menu_sub_skyrer_process(void)
 
     if (!func_cb.flag_animation)
     {
+#if UTE_MENU_STYLE_CUM_RING2_TRIANGLE_PIC
+        compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_SHAPE_POINT);
+        compo_picturebox_set_visible(picbox,true);
+#else
+        compo_shape_t* point = compo_getobj_byid(COMPO_ID_SHAPE_POINT);
+        compo_shape_set_visible(point, true);
+#endif
         if (f_menu->flag_drag)
         {
             f_menu->flag_drag = ctp_get_cur_point(&f_menu->sx, &f_menu->sy, &f_menu->x, &f_menu->y);
@@ -774,3 +756,4 @@ void func_menu_sub_cum_ring2(void)
 }
 
 ///> feat: menu ring2 code update, shadowX, 20250704, end
+#endif

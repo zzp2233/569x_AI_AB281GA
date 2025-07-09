@@ -1,6 +1,7 @@
 #include "include.h"
 #include "func.h"
 #include "func_menu.h"
+#include "func_menu_ui_data.h"
 
 #define TRACE_EN                0
 
@@ -13,6 +14,10 @@
 //创建主菜单窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_menu_form_create(void)
 {
+
+#if UTE_MODULE_SCREENS_MENU_DATA_BIND
+    f_menu_ui_data_init();
+#endif
     switch (func_cb.menu_style)
     {
         case MENU_STYLE_CUM_HONEYGRID:
@@ -54,7 +59,14 @@ compo_form_t *func_menu_form_create(void)
 
         case MENU_STYLE_CUM_HEXAGON:
             return func_menu_sub_hexagon_form_create();
-
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
+        case MENU_STYLE_CUM_RING1:
+            return func_menu_sub_cum_ring1_form_create();
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
+        case MENU_STYLE_CUM_RING2:
+            return func_menu_sub_cum_ring2_form_create();
+#endif
         default:
             halt(HALT_FUNC_MENU_SUBSTA);
             return NULL;
@@ -202,7 +214,16 @@ void func_menu(void)
             case MENU_STYLE_CUM_HEXAGON:
                 func_menu_sub_hexagon();
                 break;
-
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
+            case MENU_STYLE_CUM_RING1:
+                func_menu_sub_cum_ring1();
+                break;
+#endif
+#if UTE_MENU_STYLE_CUM_RING2_FUNCTION
+            case MENU_STYLE_CUM_RING2:
+                func_menu_sub_cum_ring2();
+                break;
+#endif
             default:
                 halt(HALT_FUNC_MENU_SUBSTA);
                 break;

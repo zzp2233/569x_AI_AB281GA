@@ -84,7 +84,7 @@ const f_menu_ui_data f_menu_ui_data_all[] =//菜单全部资源
 #endif
 };
 #else
-const static f_menu_ui_data f_menu_ui_data_all[] =//菜单全部资源
+const f_menu_ui_data f_menu_ui_data_all[] =//菜单全部资源
 {
     {0},
 }
@@ -161,6 +161,40 @@ u8 f_menu_ui_data_get_app_num(void)
     return app_num;
 }
 
+/*!
+出口参数：最近任务app数量
+*/
+u8 f_menu_ui_data_get_app_task_num(void)
+{
+    u8 app_num = MENU_APP_CNT;
+#if UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT //女性健康
+    if(!uteModuleMenstrualCycleIsOpen())
+    {
+        app_num--;
+    }
+#endif
+    return app_num;
+}
+
+/*!
+出口参数：任务号获取资源
+*/
+f_menu_ui_data f_menu_find_ui_data(u8 func_sta)
+{
+    f_menu_ui_data ui_data;
+    memset(&ui_data, 0, sizeof(f_menu_ui_data));
+    for (int index = 0; index < MENU_APP_CNT; index++)
+    {
+        if(f_menu_ui_data_all[index].func_sta == func_sta)
+        {
+            ui_data.res_addr    = f_menu_ui_data_all[index].res_addr;
+            ui_data.str_idx     = f_menu_ui_data_all[index].str_idx;
+            ui_data.fb_res_addr = f_menu_ui_data_all[index].fb_res_addr;
+            return ui_data;
+        }
+    }
+    return ui_data;
+}
 
 #endif
 

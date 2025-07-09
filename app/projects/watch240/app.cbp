@@ -102,6 +102,7 @@
 			<Add directory="../../../ute/drv/led" />
 			<Add directory="../../../ute/module/compass" />
 			<Add directory="../../../ute/drv/magnetic" />
+			<Add directory="../../../ute/module/timezonesetting" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -346,6 +347,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/module/temperature/ute_module_temperature.h" />
+		<Unit filename="../../../ute/module/timezonesetting/ute_module_timezonesetting.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../../ute/module/timezonesetting/ute_module_timezonesetting.h" />
 		<Unit filename="../../../ute/module/watchonline/ute_module_watchonline.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -32,6 +32,8 @@ enum
 //    客户新加菜单样式
     MENU_STYLE_CUM_HEXAGON,             //六边型菜单风格
     MENU_STYLE_CUM_HONEYGRID,           //网格蜂窝（华为风格）
+    MENU_STYLE_CUM_RING1,               //环形菜单风格1
+    MENU_STYLE_CUM_RING2,               //环形菜单风格1
 
     MENU_STYLE_CNT,
 };

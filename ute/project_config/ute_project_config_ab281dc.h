@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DC_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Tetra S5"
-#define UTE_SW_VERSION "AB281DCV000135"
+#define UTE_SW_VERSION "AB281DCV000144"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DC"
@@ -95,6 +95,8 @@
 /*! PWRKEY,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_SUPPORT 1
 
+/*! 界面返回 */
+#define UTE_DRV_PWRKEY_KEY1_BACK   1
 /*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
 #define UTE_DRV_PWRKEY_MAX_CNT  2
 
@@ -222,11 +224,11 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D18721001_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D20279001_BIN, \
                                                UI_BUF_DIALPLATE_D18724001_BIN,\
                                                UI_BUF_DIALPLATE_D20226001_BIN,\
                                                UI_BUF_DIALPLATE_D20225001_BIN,\
-                                               UI_BUF_DIALPLATE_D18722001_BIN,\
+                                               UI_BUF_DIALPLATE_D20280001_BIN,\
                                                UI_BUF_DIALPLATE_D18720001_BIN, \
                                               }
 //     UI_BUF_DIALPLATE_CUBE_BIN

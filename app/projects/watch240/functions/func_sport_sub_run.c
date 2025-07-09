@@ -1843,6 +1843,7 @@ static void func_soprt_run_move(void)
 
         case ALL_SPORT_STATUS_OPEN:
         case ALL_SPORT_STATUS_CONTINUE:
+        case ALL_SPORT_STATUS_UPDATE_DATA:
             f_sleep->sport_run_state = SPORT_RUN_STOP;
             break;
     }

@@ -67,8 +67,10 @@ extern f_menu_ui_data f_menu_data[MENU_APP_MAX_CNT];
 #define MENU_STYLE_WATERFALL_APP_MAX_NUM MENU_APP_CNT
 #endif
 
-extern void f_menu_ui_data_init(void);
-extern u8 f_menu_ui_data_get_app_num();
+void f_menu_ui_data_init(void);
+u8 f_menu_ui_data_get_app_num();
+u8 f_menu_ui_data_get_app_task_num(void);
+f_menu_ui_data f_menu_find_ui_data(u8 func_sta);
 #endif
 #endif
 

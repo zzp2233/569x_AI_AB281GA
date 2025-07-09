@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 中文(简体）
 *@author
-*@date   2025-06-13 15:59:20
+*@date   2025-07-07 16:15:27
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -311,6 +311,7 @@ const char * const i18n_zh_rcn[] =
     [STR_INDONESUAN] = "\x49\x6e\x64\x6f\x6e\x65\x73\x69\x61\x00", // [295] Indonesia
     [STR_VIETNAMESE] = "\x54\x69\xe1\xba\xbf\x6e\x67\x20\x56\x69\xe1\xbb\x87\x74\x00", // [296] Tiếng Việt
     [STR_MALAYSIA] = "\x4d\x65\x6c\x61\x79\x75\x00", // [297] Melayu
+    [STR_PLEASE_REMOTE] = "\xe8\xaf\xb7\xe5\x89\x8d\xe5\xbe\x80\x41\x50\x50\xe6\x89\x93\xe5\xbc\x80\xe9\x81\xa5\xe6\x8e\xa7\xe6\x8b\x8d\xe7\x85\xa7\x00", // [298] 请前往APP打开遥控拍照
 };
 
 #endif

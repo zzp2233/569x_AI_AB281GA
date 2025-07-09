@@ -885,8 +885,8 @@ compo_form_t *func_sport_sub_run_form_create(void)
     if(func_sport_get_disp_mode()==MULTIPLE_DATA)
     {
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_SET_DISTANCE] : i18n[STR_KM]);
-        txt = compo_textbox_create(frm, strlen(txt_buf));///公里文本
+        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KM]);
+        txt = compo_textbox_create(frm, strlen(txt_buf)+5);///公里文本
         compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 30);
         compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
         compo_textbox_set(txt, txt_buf);
@@ -1367,7 +1367,7 @@ static void func_sport_sub_run_updata(void)
         if(uint_km != NULL)
         {
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_SET_DISTANCE] : i18n[STR_KM]);
+            snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KM]);
             compo_textbox_set(uint_km, txt_buf);
         }
 
@@ -4793,7 +4793,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     snprintf(txt_buf, sizeof(txt_buf), "%d", data->saveData.sportCaloire);
     compo_textbox_set(txt, txt_buf);
     compo_setid(txt,COMPO_ID_NUM_SPORT_KCAL);
-
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
     ///*右页*/
     pic = compo_picturebox_create_for_page(frm,frm->page,func_sport_get_ui(sys_cb.sport_idx));///运动类型图片
     compo_picturebox_set_size(pic,70,70);
@@ -4822,6 +4822,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     compo_textbox_set(txt, i18n[STR_BLE_OFF]);
     compo_setid(txt,COMPO_ID_TXT_BLE_OFF);
     compo_textbox_set_visible(txt,false);
+#endif
     ///*下页*/
     if(func_sport_get_disp_mode()==LESS_DATA)
     {
@@ -4863,7 +4864,7 @@ compo_form_t *func_sport_sub_run_form_create(void)
     if(func_sport_get_disp_mode()==MULTIPLE_DATA)
     {
         memset(txt_buf,0,sizeof(txt_buf));
-        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_SET_DISTANCE] : i18n[STR_KM]);
+        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KM]);
         txt = compo_textbox_create(frm, strlen(txt_buf));///公里文本
         compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 24/2+96+360, 240, 30);
         compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
@@ -4988,38 +4989,50 @@ static void func_soprt_run_move(void)
         {
             s32 dx, dy;
             f_sleep->touch_flag = ctp_get_dxy(&dx, &dy);
-            if(f_sleep->direction == UP_DOWM_DIR)
+            if(f_sleep->direction == UP_DOWM_DIR && func_sport_get_disp_mode() != LESS_DATA)
             {
                 f_sleep->move_offset   = dy;
             }
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
             else if(f_sleep->direction == LEFT_RIGHT_DIR)
             {
                 f_sleep->move_offset_x = dx;
             }
-
-            if(f_sleep->move_offset > 0)
+#endif
+            if(f_sleep->move_offset > 0 && func_sport_get_disp_mode() != LESS_DATA)
             {
                 f_sleep->move_offset = 0;
             }
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
             else if(f_sleep->move_offset_x < 0)
             {
                 f_sleep->move_offset_x = 0;
             }
-
-            if(f_sleep->direction == UP_DOWM_DIR)
+#endif
+            if(f_sleep->direction == UP_DOWM_DIR && func_sport_get_disp_mode() != LESS_DATA)
             {
                 widget_page_set_client(func_cb.frm_main->page_body, f_sleep->move_offset_x, f_sleep->move_offset);
             }
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
             else if(f_sleep->direction == LEFT_RIGHT_DIR)
             {
                 widget_page_set_client(func_cb.frm_main->page, f_sleep->move_offset_x, f_sleep->move_offset);
             }
-
+#endif
 
             if(f_sleep->touch_flag == false)//松手触发自动移动页
             {
+                if(func_sport_get_disp_mode() == LESS_DATA && f_sleep->direction == UP_DOWM_DIR)  //过滤短数据运动项目不允许下滑
+                {
+                    f_sleep->direction = TOUCH_NULL;    //清空触摸方向
+                    return;
+                }
                 f_sleep->touch_state = AUTO_STATE;
-                if(f_sleep->move_offset <= (-TOYCH_LAST_DY) || f_sleep->move_offset_x >= TOYCH_LAST_DY)//满足切换下一页
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+                if((f_sleep->move_offset <= (-TOYCH_LAST_DY) && func_sport_get_disp_mode() != LESS_DATA) || f_sleep->move_offset_x >= TOYCH_LAST_DY)//满足切换下一页
+#else
+                if(f_sleep->move_offset <= (-TOYCH_LAST_DY) && func_sport_get_disp_mode() != LESS_DATA)//满足切换下一页
+#endif
                 {
                     f_sleep->switch_page_state = SWITCH_YES;
                 }
@@ -5036,7 +5049,7 @@ static void func_soprt_run_move(void)
                 if(tick_check_expire(f_sleep->tick, TICK_TIME))//自动滑动
                 {
                     f_sleep->tick = tick_get();
-                    if(f_sleep->direction == UP_DOWM_DIR)
+                    if(f_sleep->direction == UP_DOWM_DIR && func_sport_get_disp_mode() != LESS_DATA)
                     {
                         if(f_sleep->switch_page_state == SWITCH_YES)//满足切换下一页
                         {
@@ -5060,15 +5073,16 @@ static void func_soprt_run_move(void)
                             }
                         }
                     }
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
                     else if(f_sleep->direction == LEFT_RIGHT_DIR)
                     {
                         if(f_sleep->switch_page_state == SWITCH_YES)//满足切换下一页
                         {
                             f_sleep->move_offset_x +=STEP_NUM;
 
-                            if(f_sleep->move_offset_x >= GUI_SCREEN_HEIGHT)
+                            if(f_sleep->move_offset_x >= GUI_SCREEN_WIDTH)
                             {
-                                f_sleep->move_offset_x = GUI_SCREEN_HEIGHT;
+                                f_sleep->move_offset_x = GUI_SCREEN_WIDTH;
                                 f_sleep->page_num = PAGE_3;//第2页
                                 f_sleep->touch_state = TOUCH_FINISH_STATE;
                                 uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
@@ -5085,17 +5099,20 @@ static void func_soprt_run_move(void)
                             }
                         }
                     }
+#endif
                     f_sleep->page_old_x = f_sleep->move_offset_x;
                     f_sleep->page_old_y = f_sleep->move_offset;
                 }
-                if(f_sleep->direction == UP_DOWM_DIR)
+                if(f_sleep->direction == UP_DOWM_DIR && func_sport_get_disp_mode() != LESS_DATA)
                 {
                     widget_page_set_client(func_cb.frm_main->page_body, f_sleep->move_offset_x, f_sleep->move_offset);
                 }
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
                 else if(f_sleep->direction == LEFT_RIGHT_DIR)
                 {
                     widget_page_set_client(func_cb.frm_main->page, f_sleep->move_offset_x, f_sleep->move_offset);
                 }
+#endif
                 f_sleep->page_old_x = f_sleep->move_offset_x;
                 if(f_sleep->touch_state == TOUCH_FINISH_STATE)
                 {
@@ -5169,6 +5186,7 @@ static void func_soprt_run_move(void)
             }
         }
     }
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
     else if(f_sleep->page_num == PAGE_3)//第三页
     {
         if(f_sleep->touch_flag)//触摸状态
@@ -5245,8 +5263,7 @@ static void func_soprt_run_move(void)
         }
         // printf("px:%d py:%d\n",f_sleep->move_offset_x,f_sleep->move_offset);
     }
-
-
+#endif //UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
 }
 
 //按键处理
@@ -5258,7 +5275,7 @@ static void func_sport_sub_run_click_handler(void)
     {
         case COMPO_ID_BTN_SPORT_STOP:
             uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_CONTINUE);
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            // uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             f_sport_sub_run->page_old_x = 0;
             f_sport_sub_run->move_offset_x = 0;
             f_sport_sub_run->page_num = PAGE_1;
@@ -5327,9 +5344,10 @@ static void func_sport_sub_run_updata(void)
 
         if(uteModuleSportMoreSportIsAppStart())
         {
-
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
             if(f_sleep->ble_state != ble_is_connect())
             {
+
                 f_sleep->ble_back_line_flag = true;
                 f_sleep->ble_state = ble_is_connect();
                 if (!f_sleep->ble_state)
@@ -5366,7 +5384,6 @@ static void func_sport_sub_run_updata(void)
                     // compo_button_set_bgimg(btn_play,UI_BUF_I340001_SPORT_BTN_PUSED_BIN);
                 }
             }
-
             f_sleep->count_time = 5*60-uteModuleSportMoreSportGetDisconnectTimeoutCnt();
 
             if (!f_sleep->ble_state)
@@ -5414,6 +5431,22 @@ static void func_sport_sub_run_updata(void)
 
             widget_page_set_client(func_cb.frm_main->page,f_sleep->move_offset_x, 0);
         }
+#else
+            if(ble_is_connect())
+            {
+                if(uteModuleSportMoreSportGetStatus() == ALL_SPORT_STATUS_PAUSE)//app发起的运动，判断app是否已暂停
+                {
+                    func_switch_to(FUNC_SPORT_SUB_PAUSE, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+                }
+            }
+            else  //app发起运动，判断app是否已断开
+            {
+                func_switch_to(FUNC_SPORT_SUB_PAUSE, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+            }
+        }
+#endif //UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+
+
 
 
         if(txt_time != NULL)
@@ -5466,7 +5499,7 @@ static void func_sport_sub_run_updata(void)
         if(uint_km != NULL)
         {
             memset(txt_buf,0,sizeof(txt_buf));
-            snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_SET_DISTANCE] : i18n[STR_KM]);
+            snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_SET_DISTANCE],uteModuleSystemtimeGetDistanceMiType() ? i18n[STR_MILE] : i18n[STR_KM]);
             compo_textbox_set(uint_km, txt_buf);
         }
 
@@ -6495,6 +6528,7 @@ static void func_sport_sub_run_message(size_msg_t msg)
                 f_sport_sub_run->direction = UP_DOWM_DIR;
             }
             break;
+#if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
         case MSG_CTP_SHORT_LEFT:
         case MSG_CTP_LONG_LEFT:
         case MSG_CTP_SHORT_RIGHT:
@@ -6520,6 +6554,20 @@ static void func_sport_sub_run_message(size_msg_t msg)
             }
             uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
             break;
+#else
+        case MSG_CTP_SHORT_RIGHT:
+        case MSG_CTP_LONG_RIGHT:
+            uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            func_switch_to(FUNC_SPORT_SUB_PAUSE, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+            break;
+        case KU_BACK:
+            uteModuleSportSyncAppSportStatus(ALL_SPORT_STATUS_PAUSE);
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
+            func_switch_to(FUNC_SPORT_SUB_PAUSE, FUNC_SWITCH_LR_ZOOM_RIGHT | FUNC_SWITCH_AUTO);
+            break;
+#endif //UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
+
 #endif
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
         case MSG_CTP_SHORT_UP:

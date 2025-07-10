@@ -108,6 +108,9 @@
 
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
+/*! 编码器gpio zn.zeng, 2021-12-06  */
+#define UTE_DRV_QDEC_Y_PHB_GPIO_PIN          IO_PB0
+#define UTE_DRV_QDEC_Y_PHA_GPIO_PIN          IO_PB1
 
 /*! 编码器切换表盘锁定,wang.luo 2025-04-09 */
 #define UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT  1
@@ -178,6 +181,10 @@
 #define  UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1//工厂测试音频测试
 #define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 15
 #define  UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT    1//地磁测试
+
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT     RES_BUF_RING_LET_GO_MP3 //工厂测试音频测试->音频地址
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT    13 //工厂测试音频测试->音频时长
 #endif
 
 /*!指南针模块*/

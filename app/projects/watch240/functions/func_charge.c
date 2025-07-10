@@ -1861,7 +1861,7 @@ static void func_charge_message(size_msg_t msg)
             break;
 
         default:
-            // func_message(msg);
+            func_message(msg);
             break;
     }
 }

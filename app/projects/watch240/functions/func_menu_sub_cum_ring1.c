@@ -3,6 +3,7 @@
 #include "func_menu.h"
 #include "func_menu_ui_data.h"
 
+#if UTE_MENU_STYLE_CUM_RING1_FUNCTION
 ///> feat: menu ring1 code update, shadowX, 20250704, start
 
 #define TRACE_EN                0
@@ -22,8 +23,8 @@
 #define SKYRER_OTHER_ICON_NUM                       1                                                                                       //方形个数
 #define SKYRER_EDGE_SPACE                           2                                                                                       //边缘距离
 #define SKYRER_ICON_SIZE_ORG                        (gui_image_get_size(tbl_menu_skyrer[0].res_addr).wid)                                   //原始图标大小
-#define SKYRER_ICON_SIZE_MAX                        ((SKYRER_ICON_SIZE_ORG >> 4) * 13)                                                      //图标最大尺寸
-#define SKYRER_ICON_SIZE_MIN                        ((SKYRER_ICON_SIZE_MAX >> 4) * 13)                                                      //图标最小尺寸
+#define SKYRER_ICON_SIZE_MAX                        ((SKYRER_ICON_SIZE_ORG >> 4) * 15)                                                      //图标最大尺寸
+#define SKYRER_ICON_SIZE_MIN                        ((SKYRER_ICON_SIZE_MAX >> 4) * 15)                                                      //图标最小尺寸
 #define SKYRER_CENX                                 GUI_SCREEN_CENTER_X                                                                     //中心点
 #define SKYRER_CENY                                 GUI_SCREEN_CENTER_Y                                                                     //中心点
 #define SKYRER_SHORT_SIDE                           ((GUI_SCREEN_HEIGHT >= GUI_SCREEN_WIDTH) ? GUI_SCREEN_WIDTH : GUI_SCREEN_HEIGHT)        //取短边
@@ -37,6 +38,7 @@
 enum
 {
     COMPO_ID_SKYRER = 1,
+    COMPO_ID_SHAPE_POINT,
 };
 
 typedef struct f_menu_skyrer_t_
@@ -73,7 +75,7 @@ typedef struct f_menu_skyrer_back_t
 f_menu_skyrer_back ring1_back_idx[SKYRER_LOOP_ICON_NUM];
 
 #if UTE_MODULE_SCREENS_MENU_DATA_BIND
-static compo_rings_item_t tbl_menu_skyrer[MENU_APP_MAX_CNT]
+static compo_rings_item_t tbl_menu_skyrer[MENU_APP_MAX_CNT];
 #else
 //天圆地方图标列表及顺序
 static const compo_rings_item_t tbl_menu_skyrer[] =
@@ -110,7 +112,6 @@ compo_form_t *func_menu_sub_cum_ring1_form_create(void)
 {
 #if UTE_MODULE_SCREENS_MENU_DATA_BIND
     memset(tbl_menu_skyrer,0,sizeof(tbl_menu_skyrer));
-    f_menu_ui_data_init();
     for (int i = 0; i < MENU_SKYRER_CNT ; i++)
     {
         tbl_menu_skyrer[i].func_sta= f_menu_data[i].func_sta;
@@ -162,6 +163,7 @@ compo_form_t *func_menu_sub_cum_ring1_form_create(void)
     compo_rings_idx_time_set(rings, 0);
 #endif
     compo_setid(rings, COMPO_ID_SKYRER);
+
     if (func_cb.flag_animation)
     {
         func_menu_sub_skyrer_animation_set(rings);
@@ -172,10 +174,18 @@ compo_form_t *func_menu_sub_cum_ring1_form_create(void)
         func_menu_sub_skyrer_update(rings, 0, false);
     }
 
+#if UTE_MENU_STYLE_CUM_RING1_TRIANGLE_PIC
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UTE_MENU_STYLE_CUM_RING2_TRIANGLE_PIC);
+    compo_picturebox_set_pos(frm, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - (SKYRER_ROTATE_RADIUS * 0.6));
+    compo_picturebox_set_visible(picbox,false);
+    compo_setid(picbox, COMPO_ID_SHAPE_POINT);
+#else
     compo_shape_t* point = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
     compo_shape_set_location(point, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - (SKYRER_ROTATE_RADIUS * 0.6), 12, 12);
     compo_shape_set_radius(point, 12);
-
+    compo_shape_set_visible(point, false);
+    compo_setid(point, COMPO_ID_SHAPE_POINT);
+#endif
 
     return frm;
 }
@@ -508,8 +518,16 @@ static void func_menu_sub_skyrer_process(void)
 
     func_menu_sub_skyrer_animation_update();
 
+
     if (!func_cb.flag_animation)
     {
+#if UTE_MENU_STYLE_CUM_RING2_TRIANGLE_PIC
+        compo_picturebox_t *picbox = compo_getobj_byid(COMPO_ID_SHAPE_POINT);
+        compo_picturebox_set_visible(picbox,true);
+#else
+        compo_shape_t* point = compo_getobj_byid(COMPO_ID_SHAPE_POINT);
+        compo_shape_set_visible(point, true);
+#endif
         if (f_menu->flag_drag)
         {
             f_menu->flag_drag = ctp_get_cur_point(&f_menu->sx, &f_menu->sy, &f_menu->x, &f_menu->y);
@@ -742,3 +760,4 @@ void func_menu_sub_cum_ring1(void)
 }
 
 ///> feat: menu ring1 code update, shadowX, 20250704, end
+#endif

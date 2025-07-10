@@ -2861,6 +2861,19 @@ void uteModuleProtocolEmotionPressureCtrl(uint8_t*receive,uint8_t length)
 }
 
 /**
+*@brief   app读取客户自定义版本号
+*@details
+*@author  dengli.lu
+*@date    2022-08-30
+*/
+void uteModuleProtocolCustomF6CmdHandle(uint8_t*receive,uint8_t length)
+{
+#if UTE_APP_READ_CUSTOM_SOFTWARE_VERSON_SUPPORT
+    uteApplicationCommonReadCustomSoftwareVersion(receive,length);
+#endif
+}
+
+/**
 *@brief       时区数据同步
 *@details
 *@param[in] uint8_t*receive
@@ -2940,7 +2953,7 @@ const ute_module_protocol_cmd_list_t uteModuleProtocolCmdList[]=
     {.privateCmd = CMD_TODAY_TARGET_CTRL,.publicCmd=CMD_TODAY_TARGET_CTRL,.function=uteModuleProtocolTodayTargetCtrl},
     // {.privateCmd = CMD_SYNC_CYWEE_SWIM_DATA,.publicCmd=CMD_SYNC_CYWEE_SWIM_DATA,.function=uteModuleProtocolSyncCyweeSwimData},
     {.privateCmd = CMD_SPORTS_TARGET_SELECT,.publicCmd=CMD_SPORTS_TARGET_SELECT,.function=uteModuleProtocolSportsTargetSelect},
-    // {.privateCmd = CMD_CUST_DEFINE_CMD,.publicCmd=CMD_CUST_DEFINE_CMD,.function=uteModuleProtocolCustomF6CmdHandle},
+    {.privateCmd = CMD_CUST_DEFINE_CMD,.publicCmd=CMD_CUST_DEFINE_CMD,.function=uteModuleProtocolCustomF6CmdHandle},
     // {.privateCmd = CMD_GOTO_SCREEN,.publicCmd=CMD_GOTO_SCREEN,.function=uteModuleProtocolGotoScreenCmdHandle},
     {.privateCmd = CMD_SET_TIME_ZONE,.publicCmd=CMD_SET_TIME_ZONE,.function=uteModuleProtocolTimeZoneCtrl},
 #if UTE_MODULE_BT_ONCE_PAIR_CONNECT_SUPPORT

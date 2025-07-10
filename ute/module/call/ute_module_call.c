@@ -272,6 +272,10 @@ void uteModuleCallEverySecond(void)
     }
 #endif
 
+#if UTE_CONNECT_PC_AUDIO_TEST
+    reset_sleep_delay_all();
+#endif
+
     if(uteModuleCallData.isPowerOn)
     {
         // 防止状态错误

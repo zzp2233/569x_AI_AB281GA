@@ -70,4 +70,6 @@ void func_clock_photo_process(void);
 bool func_clock_photo_message(size_msg_t msg);
 #endif
 
+u32 func_clock_get_dialplate_info(u8 index);
+
 #endif

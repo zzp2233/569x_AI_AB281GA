@@ -3,7 +3,7 @@
 *@brief utf8 words list h file
 *@details language: 印度尼西亚语(印度尼西亚）
 *@author
-*@date   2025-07-10 10:19:33
+*@date   2025-07-10 11:39:20
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -126,7 +126,7 @@ const char * const i18n_in_rid[] =
     [STR_KCAL] = "\x4b\x63\x61\x6c\x00", // [110] Kcal
     [STR_KM] = "\x4b\x6d\x00", // [111] Km
     [STR_MILE] = "\x4d\x69\x00", // [112] Mi
-    [STR_HOUR] = "\x48\x72\x00", // [113] Hr
+    [STR_HOUR] = "\x6a\x61\x6d\x00", // [113] jam
     [STR_MIN] = "\x4d\x69\x6e\x00", // [114] Min
     [STR_SEC] = "\x53\x65\x63\x00", // [115] Sec
     [STR_WEAR_CHECK] = "\x68\x61\x72\x61\x70\x20\x74\x65\x74\x61\x70\x20\x64\x69\x61\x6d\x20\x64\x65\x6e\x67\x61\x6e\x20\x61\x72\x6c\x6f\x6a\x69\x20\x79\x61\x6e\x67\x20\x64\x69\x6b\x65\x6e\x61\x6b\x61\x6e\x20\x65\x72\x61\x74\x20\x64\x69\x20\x6b\x75\x6c\x69\x74\x20\x61\x6e\x64\x61\x2e\x00", // [116] harap tetap diam dengan arloji yang dikenakan erat di kulit anda.

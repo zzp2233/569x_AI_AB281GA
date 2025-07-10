@@ -260,9 +260,6 @@ void bt_emit_notice(uint evt, void *params)
             break;
         }
         case BT_NOTICE_SCO_SETUP:
-#if FUNC_REC_SCO
-            bsp_record_start(true, REC_WAV);
-#endif
             printf("BT_NOTICE_SCO_SETUP\n");
             sys_cb.sco_state = true;
             break;
@@ -271,9 +268,6 @@ void bt_emit_notice(uint evt, void *params)
             printf("BT_NOTICE_SCO_KILL\n");
             sys_cb.sco_state = false;
             bt_cb.call_type = CALL_TYPE_NONE;
-#if FUNC_REC_SCO
-            bsp_record_stop();
-#endif
             break;
 
         case BT_NOTICE_NETWORK_CALL:

@@ -9,7 +9,7 @@
 bool record_directory_open(u8 *fname_buf, u32 size);
 bool record_file_open(u8 *fname_buf, u32 size, u32 rec_type);
 bool record_file_close(u32 rec_type);
-bool record_file_write(u8 *buf, u32 btw, u32 rec_type);
+bool record_file_write(u8 *buf, u32 rec_type);
 bool record_file_sync(u32 rec_type);
 
 bool record_wav_init(u32 nch, u32 spr, u32 rec_type);

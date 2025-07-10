@@ -755,10 +755,6 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/bsp/bsp_vbat.h" />
-		<Unit filename="../../platform/bsp/bsp_vddhr_trim.c">
-			<Option compilerVar="CC" />
-		</Unit>
-		<Unit filename="../../platform/bsp/bsp_vddhr_trim.h" />
 		<Unit filename="../../platform/gui/components/compo_animation.c">
 			<Option compilerVar="CC" />
 		</Unit>

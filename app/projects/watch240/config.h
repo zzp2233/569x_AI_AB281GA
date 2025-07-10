@@ -311,8 +311,6 @@
  * Module    : 录音功能配置
  *****************************************************************************/
 #define FUNC_REC_EN                     1   //录音功能总开关
-#define FUNC_REC_NR_EN                  0   //录音功能带降噪功能 目前支持  BT_SCO_DNN_EN 只支持wav编码的格式，其他待优化
-#define FUNC_REC_SCO                    0   //录音功通话的时候将远端和近端数据同时录下来保存，只支持wav格式，其他格式编码内存与通话以及降噪部分重叠会出现死机
 #define REC_FAST_PLAY                   0   //播卡播U下快速播放最新的录音文件(双击REC)
 
 #define REC_MP3_SUPPORT                 1   //是否支持MP3音频格式录音
@@ -411,11 +409,6 @@
 //充电辅助设置项
 #define CHARGE_USER_NTC_EN              UTE_DRV_BATTERY_CE_AUTH_SUPPORT //充电是否使用NTC参数
 #define CHARGE_VBAT_REFILL              (UTE_DRV_BATTERY_MAX_VOLTAGE - 100) //充满后停止充电，电池掉到指定电压后续充
-/*****************************************************************************
- * Module    : VDDHR补偿配置
- *****************************************************************************/
-#define VDDHR_TRIM_EN                   1                               //校准使能
-#define VDDHR_TRIM_TEST_EN              0                               //上电测试 默认关闭 生产时需要关闭
 
 #define CHARGE_NTC_ADC_MAX_TEMP         UTE_DRV_BATTERY_CE_AUTH_NOT_ALLOW_TEMPERATURE  //设置最小温度 摄氏度      53
 #define CHARGE_NTC_ADC_MAX_RE_TEMP      UTE_DRV_BATTERY_CE_AUTH_ALLOW_TEMPERATURE  //设置恢复温度 摄氏度     48

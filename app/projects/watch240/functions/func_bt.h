@@ -25,7 +25,6 @@ void sfunc_bt_ring(void);
 void sfunc_bt_call(void);
 void sfunc_bt_ota(void);
 
-void func_bt_mp3_ex_res_play(u32 addr, u32 len);
 void func_bt_mp3_res_play(u32 addr, u32 len);
 void func_bt_mp3_play_restore(void);
 void func_bt_exit(void);

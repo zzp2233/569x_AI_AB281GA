@@ -7,6 +7,5 @@ void power_gate_3v3_on(void);               //PF4 power gate 3v3打开
 void power_gate_3v3_off(void);              //PF4 power gate 3v3关闭
 void hr_vdd_ldo_on(void);                   //开VDDHR
 void hr_vdd_ldo_off(void);                  //关VDDHR
-void hr_vdd_oft_cfg(u8 base);               //VDDHR基准
 #endif // _API_PWR_H_
 

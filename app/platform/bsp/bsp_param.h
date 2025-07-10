@@ -39,10 +39,6 @@
 #define PARAM_RTC_CAL_ADDR          0xb5        //16BYTE
 #endif
 
-#define PARAM_ALI_FILE_VALID        0xcb        //1byte
-
-#define PARAM_VDDHR_TRIM_VAL        0xcc        //1byte
-
 #define PARAM_FOT_TYPE              0xec        //1byte
 
 #if (ASR_SELECT == ASR_WS_AIR && IR_AIR_FUNC)
@@ -68,7 +64,5 @@ void param_spiflash_breakpoint_read(void);
 void param_fot_type_read(u8 *param);
 void param_fot_hash_read(u8 *param);
 void param_fot_remote_ver_read(u8 *param);
-void param_vddhr_trim_write(u8 *param);
-void param_vddhr_trim_read(u8 *param);
 #endif // __BSP_PARAM_H
 

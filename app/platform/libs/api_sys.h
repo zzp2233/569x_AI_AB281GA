@@ -35,7 +35,6 @@ typedef struct
     u16 vbg_volt;           //vbg目标值
     u16 vbat_coef;
     u8  vbg_lv;             //vbg trim精度等级
-    u8  vddhr;              //vddhr trim值
     u8  resv[3];
 } sys_trim_t;
 extern sys_trim_t sys_trim;

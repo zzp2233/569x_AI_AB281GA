@@ -126,7 +126,11 @@ u8 func_clock_get_max_dialplate_num(void)
 
 u32 func_clock_get_dialplate_info(u8 index)
 {
-    return dialplate_info[index];
+    if(index < DIALPLATE_NUM)
+    {
+        return dialplate_info[index];
+    }
+    return 0;
 }
 
 //单击按钮

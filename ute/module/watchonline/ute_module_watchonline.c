@@ -128,7 +128,9 @@ void uteModuleWatchOnlineWaitingStartCallback(void *pxTimer)
     uint8_t watchIndex = 0;
     uteModuleGuiCommonGetCurrWatchIndex(&watchIndex);
     // 等待当前表盘不是要同步的表盘后再擦除flash
-    if (uteModuleWatchOnlineData.isStartReceive && uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_WATCHMAIN_ID && (watchIndex - UTE_MODULE_SCREENS_WATCH_CNT_MAX) == uteModuleWatchOnlineData.writeWatchIndex)
+    if (uteModuleWatchOnlineData.isStartReceive && ((uteModuleGuiCommonGetCurrentScreenId() == UTE_MOUDLE_SCREENS_WATCHMAIN_ID &&
+            (watchIndex - UTE_MODULE_SCREENS_WATCH_CNT_MAX) == uteModuleWatchOnlineData.writeWatchIndex) ||
+            uteModuleGuiCommonGetCurrentScreenId() == FUNC_CLOCK_PREVIEW))
     {
         uteModulePlatformRestartTimer(&uteModuleWatchOnlineWaitingStartTimerPointer, 100);
         UTE_MODULE_LOG(UTE_LOG_WATCHONLINE_LVL, "%s,waiting to switch dials...", __func__);
@@ -1034,6 +1036,55 @@ void uteModuleWatchOnlineGetAllInfo(void)
     }
     sendParam->currSendFileIndex++;
     uteModuleProfileBleSendToPhone(response, sendSize);
+}
+
+/**
+ * @brief        切换当前表盘
+ * @details
+ * @param[in]    watchIndex 在线表盘index
+ * @return       void*
+ * @author       Wang.Luo
+ * @date         2025-07-10
+ */
+void uteModuleWatchOnlineSwitchWatchMain(uint8_t watchIndex, uint32_t watchId)
+{
+    uint8_t response[3];
+    response[0] = CMD_WATCH_ONLINE;
+    response[1] = 0x0d;
+    response[2] = 0xff;
+
+    UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL,"%s,watchIndex=%d,watchId=%d",__func__,watchIndex,watchId);
+
+    for (uint8_t i = UTE_MODULE_SCREENS_WATCH_CNT_MAX; i < uteModuleGuiCommonGetCurrWatchMaxIndex(); i++)
+    {
+        uint32_t address = func_clock_get_dialplate_info(i);
+        if (address)
+        {
+            watchConfig_t watchConfig;
+            uteModulePlatformFlashNorRead((uint8_t *)&watchConfig, address, sizeof(watchConfig_t));
+            if (watchConfig.isWatchVaild == 0 && watchId == watchConfig.snNo)
+            {
+                response[2] = 0x00;
+                uteModuleGuiCommonSetCurrWatchIndex(i);
+                if (uteModuleGuiCommonGetCurrentScreenId() != UTE_MOUDLE_SCREENS_WATCHMAIN_ID)
+                {
+                    uteTaskGuiStartScreen(UTE_MOUDLE_SCREENS_WATCHMAIN_ID, 0, __func__);
+                }
+                else
+                {
+                    func_clock_recreate_dial();
+                    if (sys_cb.gui_sleep_sta)
+                    {
+                        sys_cb.gui_need_wakeup = true;
+                    }
+                    reset_sleep_delay_all();
+                }
+                break;
+            }
+        }
+    }
+
+    uteModuleProfileBleSendToPhone(response, 3);
 }
 
 void uteModuleWatchOnlineGetAllInfoStart(void)

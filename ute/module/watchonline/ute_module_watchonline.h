@@ -120,6 +120,7 @@ uint8_t uteModuleWatchOnlineGetSupportMultipleCnt(void);
 uint8_t uteModuleWatchOnlineGetVailWatchCnt(void);
 #if ((UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT!=1))
 uint8_t uteModuleWatchOnlineGetWatchindex(uint8_t index);
+void uteModuleWatchOnlineSwitchWatchMain(uint8_t watchIndex, uint32_t watchId);
 #endif
 void uteModuleWatchOnlineGetInfoWithIndex(uint8_t index, uint8_t *data);
 void uteModuleWatchOnlineSetWillUpdateDataIndex(uint8_t index);

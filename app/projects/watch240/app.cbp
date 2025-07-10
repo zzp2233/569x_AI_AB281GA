@@ -1276,6 +1276,12 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_menu.h" />
+		<Unit filename="functions/func_menu_sub_cum_ring1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_menu_sub_cum_ring2.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="functions/func_menu_sub_cum_sudoku.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1315,6 +1321,10 @@
 		<Unit filename="functions/func_menu_sub_waterfall.c">
 			<Option compilerVar="CC" />
 		</Unit>
+		<Unit filename="functions/func_menu_ui_data.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_menu_ui_data.h" />
 		<Unit filename="functions/func_menustyle.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -216,15 +216,21 @@ static void func_test_mode_click(void)
     switch(id)
     {
         case MODE_FACTORY_TESTING_ID:///工厂测试
+#if UTE_MODULE_TEST_MODE_REMIND_SKIP
+            uteTaskGuiStartScreen(FUNC_FACTORY_TESTING,0,__func__);
+#else
             ret = msgbox("工厂测试", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
             if(ret == MSGBOX_RES_OK)
             {
 
                 uteTaskGuiStartScreen(FUNC_FACTORY_TESTING,0,__func__);
-                // func_switch_to(FUNC_TEST_MODE_LIST, 0);///跳转工厂测试界面
             }
+#endif
             break;
         case MODE_AGING_TESTING_ID:///老化测试
+#if UTE_MODULE_TEST_MODE_REMIND_SKIP
+            uteTaskGuiStartScreen(FUNC_AGEING,0,__func__);
+#else
             ret = msgbox("老化测试", NULL, NULL, MSGBOX_MODE_BTN_OKCANCEL, MSGBOX_MSG_TYPE_NONE);
 
             if(ret == MSGBOX_RES_OK)
@@ -238,6 +244,7 @@ static void func_test_mode_click(void)
                 // func_switch_to(FUNC_AGEING, 0);///跳转老化测试界面
 #endif
             }
+#endif
             break;
 //        case MODE_SHIPPING_ID:///船运测试
 //            snprintf(buf_txt,BUF_TXT_LEN,"%s%s?",i18n[STR_DO_WANT_IN],i18n[f_test_mode_list[MODE_SHIPPING_ID-1].txt_num]);

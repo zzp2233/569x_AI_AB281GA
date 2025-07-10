@@ -108,6 +108,9 @@
 
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
+/*! 编码器gpio zn.zeng, 2021-12-06  */
+#define UTE_DRV_QDEC_Y_PHB_GPIO_PIN          IO_PB0
+#define UTE_DRV_QDEC_Y_PHA_GPIO_PIN          IO_PB1
 
 /*! 编码器切换表盘锁定,wang.luo 2025-04-09 */
 #define UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT  1

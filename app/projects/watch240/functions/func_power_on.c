@@ -340,8 +340,11 @@ compo_form_t *func_power_on_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
-
-#if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
+#if UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I338003_POWER_ON_POWER_HELLO_BIN);///背景图片
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_setid(pic, COMPO_PIC_ID);
+#elif GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I338003_POWER_ON_LOGO_BIN);///背景图片
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_setid(pic, COMPO_PIC_ID);

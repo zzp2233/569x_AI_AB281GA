@@ -17,7 +17,7 @@
 #define PROJECT_AB281D_SUPPORT       0 /*! 共鑫 天之蓝UI, TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-01-21 */
 #define PROJECT_AB281AC_SUPPORT      0 /*! 同乐达T66，TFT 240x296 NV3030B,CHIP_5691C_F 基于AB281AV0000031修改分辨率为240x296 ,ganqian.yi 2025-4-21*/
 #define PROJECT_AB281E_SUPPORT       0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-04-21 */
-#define PROJECT_AB281DA_SUPPORT      1 /*! 共鑫W17Y,在AB281D基础上更改蓝牙名, TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-01-21 */
+#define PROJECT_AB281DA_SUPPORT      0 /*! 共鑫W17Y,在AB281D基础上更改蓝牙名, TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-01-21 */
 #define PROJECT_AB281F_SUPPORT       0 /*! 同乐达T70 TFT 360x360 ST77916,CHIP_5691C_F,xiaoqing.huang 2025-05-08 */
 #define PROJECT_AB281EA_SUPPORT      0 /*! 共鑫 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-04-21 */
 #define PROJECT_AB281G_SUPPORT       0 /*! 天之蓝UI, TFT 368x448 ,CHIP_5691G,banghua.yin 2025-05-15 */
@@ -37,6 +37,7 @@
 #define PROJECT_AB281AE_SUPPORT      0 /*! 同乐达 T75,在T62-AB281AB基础上修改表盘、蓝牙名T75、电池,TFT 240X284 NV3030B,CHIP_5691C_F,xiaoqing.huang 2025-06-28 */
 #define PROJECT_AB281KA_SUPPORT      0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,qiquan.cai 2025-06-03 */
 #define PROJECT_AB281AF_SUPPORT      0 /*! 共鑫W23Z，TFT 240x296 NV3030B,CHIP_5691C_F,qiquan.cai 2025-4-21*/
+#define PROJECT_AB281JB_SUPPORT      1 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-05-19 G28Z中性项目 */
 
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
@@ -94,6 +95,8 @@
 #include"ute_project_config_ab281ka.h"
 #elif PROJECT_AB281AF_SUPPORT
 #include "ute_project_config_ab281af.h"
+#elif PROJECT_AB281JB_SUPPORT
+#include"ute_project_config_ab281jb.h"
 #endif
 
 /** Log模块控制开关*/

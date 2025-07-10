@@ -1,0 +1,735 @@
+/**
+*@file
+*@brief     ab281项目配置文件
+*@details
+*@author        zn.zeng
+*@date        2024-03-22
+*@version       v1.0
+*/
+#ifndef _UTE_PROJECT_CONFIG_AB281J_H_
+#define _UTE_PROJECT_CONFIG_AB281J_H_
+
+#define DEFAULT_BLE_DEV_NAME "G28"
+#define UTE_SW_VERSION "AB281JBV000148"
+/*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
+#define UTE_UI_CONFIG_PATCH "AB281JB"
+
+// #define UTE_SW_VERSION_FIRST_NAME  "ZK-"
+
+// #define DUG_VCXX_HEART_SUPPORT  1//动态心率
+// #define DUG_VCXX_BLOOD_OXYGEN_SUPPORT  1
+
+/* 睡眠数据采样支持 zn.zeng 2021-12-29*/
+#define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
+/*gesnsor 采集原始数据*/
+#define APP_DBG_GSENSOR_DATA 1
+
+/*! 心率sensor选择,wang.luo 2025-04-16 */
+#define UTE_DRV_HR_SENSOR_SELECT       SENSOR_HR_VC30FX
+
+#define UTE_DRV_DSPI_FOR_SCREEN_SUPPORT 0
+#define UTE_DRV_QSPI_FOR_SCREEN_SUPPORT 1
+
+#define UTE_DRV_TFT_S240X284_NV3030B_HY201068AVC_QSPI_SUPPORT 0
+#define DRV_BOE_S240X284_I183_JD9853_WV018LZQ_QSPI_SUPPORT 0
+#define UTE_DRV_TFT_S240X284_NV3030B_ZD183G1196_QSPI_SUPPORT 0//长沙调试用屏幕
+#define UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT 0
+#define UTE_DRV_TFT_S360X360_NV3030B_ZD138G1616_QSPI_SUPPORT 0
+#define UTE_DRV_TFT_S240X284_I183_JD9853_0185A035_QSPI_SUPPORT 0 // 正式版本屏幕
+#define UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT 0
+#define UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT 0 //W21Y
+#define UTE_DRV_TFT_S240X240_NV3002C_HY138026A_QSPI_SUPPORT 0//G22Z
+#define UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT 1 //G28Z
+
+/*! 屏最大亮度百分比 dengli.lu, 2021-10-29  */
+#define DEFAULT_BACK_LIGHT_PERCENT_MAX 100
+
+/*! 屏最小亮度百分比 dengli.lu, 2021-10-29  */
+#define DEFAULT_BACK_LIGHT_PERCENT_MIN 20
+
+/*! 调节屏亮度时增加或者减少的百分比 dengli.lu, 2021-10-29  */
+#define BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE 20
+
+/*! 默认背光百分比zn.zeng, 2021-09-24  */
+#define DEFAULT_SCREEN_BACKLIGHT_PERCENT    (BACK_LIGHT_PERCENT_INCREASE_OR_INCREASE*3)
+
+/*! ESD测试屏幕TE中断异常复位处理,wang.luo 2025-05-28 */
+#define UTE_DRV_SCREEN_ESD_TE_INT_ERROR_RESET_SUPPORT 1
+
+//Gsensor
+#define UTE_DRV_GSENSOR_SC7A20H_SUPPORT 1
+#define UTE_DRV_STK8321_SUPPORT 0
+
+/*! 抬手亮屏参数 zn.zeng, 2021-10-22  */
+#define ROLLOVER_HAND_SCREEN_X_MIN  -40
+#define ROLLOVER_HAND_SCREEN_X_MAX  40
+#define ROLLOVER_HAND_SCREEN_Y_MIN  -46
+#define ROLLOVER_HAND_SCREEN_Y_MAX  140
+#define ROLLOVER_HAND_SCREEN_Z_MIN  -136
+#define ROLLOVER_HAND_SCREEN_Z_MAX  128
+#define ROLLOVER_HAND_SCREEN_ACC_DIFF_VALUE  30
+
+#define QUICK_SWITCH_NOT_DISTURB_SUPPORT 1
+#define QUICK_SWITCH_ANTILOST_SUPPORT   1
+#define QUICK_SWITCH_DISPLAY_TIME_SUPPORT   1
+#define QUICK_SWITCH_FINDBAND_SUPPORT 0
+#define QUICK_SWITCH_TURNTHEWRIST_SUPPORT 1
+#define QUICK_SWITCH_SHOCK_TIME_SUPPORT    1
+#define QUICK_SWITCH_LOCAL_WURAO_SET_TIME_SUPPORT 1
+
+/*! PWRKEY,wang.luo 2024-12-03 */
+#define UTE_DRV_PWRKEY_SUPPORT 1
+/*! PWRKEY按键最大数量,wang.luo 2024-12-03 */
+#define UTE_DRV_PWRKEY_MAX_CNT 2
+
+#define UTE_DRV_PWRKEY_KEY0 KEY_BACK
+#define UTE_DRV_PWRKEY_KEY0_MAX_ADC 0x20 // 0R
+
+#define UTE_DRV_PWRKEY_KEY1 KEY_LEFT
+#define UTE_DRV_PWRKEY_KEY1_MAX_ADC 0x9A // 12K
+
+/*! 使用编码器功能,wang.luo 2025-04-09 */
+#define DRV_ENCODER_KEYS_SUPPORT 0
+
+/*! KEY1跳转界面,wang.luo 2025-04-09 */
+#define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT
+
+/*! 心率最大最小值数字显示跟随柱状图中的最大最小值 xjc, 2022-01-17  */
+#define UTE_HEART_MAX_MIN_AVG_FOLLOW_HISTOGRAM_SUPPORT 1
+
+/*! 心率警告功能 zn.zeng, 2021-10-22  */
+#define UTE_MODULE_HEART_MIN_MAX_WARNING_VALUE_SUPPORT 1
+
+#define UTE_MODULE_HEART_WEEK_STATIC_SUPPORT 1  //周的静息心率统计
+/*! 静息心率上报,wuhuowang 2022-11-18*/
+#define APP_MODULE_HEART_RESTING_HEARTRATE_SUPPORT   (1&UTE_MODULE_HEART_WEEK_STATIC_SUPPORT)
+/*! 全天静息心率,wang.luo 2023-10-30 */
+#define UTE_MODULE_HEART_STATIC_ALL_DAY_SUPPORT (1&UTE_MODULE_HEART_WEEK_STATIC_SUPPORT)
+
+/*! 情绪压力模块,xjc 2022-02-15*/
+#define UTE_MODULE_EMOTION_PRESSURE_SUPPORT 0
+
+/*! 活动界面列表形式,xjc 2022-02-15*/
+#define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT                1
+#define APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT   0
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
+/*! 默认目标步数值 zn.zeng, 2021-08-20  */
+#define DEFAULT_STEP_TARGET_CNT 8000
+#define DEFAULT_STEP_TARGET_OPEN true
+
+#define DEFAULT_KCAL_TARGET_CNT 250
+#define DEFAULT_KCAL_TARGET_OPEN true
+
+#define DEFAULT_DISTANCE_TARGET_CNT 5000
+#define DEFAULT_DISTANCE_TARGET_OPEN true
+#endif
+
+#define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT  1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+
+#define UTE_DISPLAY_BLOODGXYGEN_HISTORY_HISTOGRAM_SUPPORT  1  //血氧柱形图
+
+/*! 新工厂测试,xjc 2022-02-09*/
+#define UTE_MODULE_NEW_FACTORY_TEST_SUPPORT 1
+
+#if UTE_MODULE_NEW_FACTORY_TEST_SUPPORT
+#define UTE_MODULE_SCREENS_NEW_FACTORY_MODE_SELECT_SUPPORT 1
+#define UTE_MODULE_SCREENS_NEW_FACTORY_AGING_TEST_SUPPORT 1
+#define UTE_MODULE_SCREENS_NEW_FACTORY_MODULE_TEST_SUPPORT 1
+
+#define UTE_MODULE_NEW_FACTORY_TEST_JUST_HEART_CHECK_LIGHT_SUPPORT  0 //开机显示心率漏光界面
+#define UTE_MODULE_NEW_FACTORY_MODULE_TEST_ALLOW_RETEST_SUPPORT 1 //fail项目允许在列表中点击重新测试
+#define UTE_MODULE_NEW_FACTORY_AGING_REPORT_SUPPORT 0 //老化测试生成测试报告
+#define UTE_MODULE_NEW_FACTORY_MODULE_4X5_TP_TEST_SUPPORT 1 //4*5 = 20宫格TP触摸测试
+#define UTE_MODULE_NEW_FACTORY_MODULE_4X5_TP_TOTAL 20
+// #define UTE_MODULE_NEW_FACTORY_MODULE_MAX 13
+#define UTE_MODULE_NEW_FACTORY_MODULE_END_RESET_SUPPORT 1 //模块测试结束之后复位重启
+#define UTE_MODULE_NEW_FACTORY_MODULE_HEART_CHECK_LIGHT_SUPPORT 1 //新工厂模块测试默认有心率漏光测试
+#define UTE_DRV_NEW_FACTORY_TEST_BATTERY_CE_AUTH_ALLOW_TEMPERATURE 58.0f //工厂测试温度限制
+#define UTE_DRV_NEW_FACTORY_TEST_BATTERY_CE_AUTH_NOT_ALLOW_TEMPERATURE 60.0f
+#define UTE_MODULE_NEW_FACTORY_MODE_SELECT_SCREENS_STRING_ENLARGEMENT 2
+#define UTE_MODULE_NEW_FACTORY_AGING_TEST_SCREENS_STRING_ENLARGEMENT 2
+#define UTE_MODULE_NEW_FACTORY_MODULE_TEST_SCREENS_STRING_ENLARGEMENT 2
+#define UTE_MODULE_NEW_FACTORY_TEST_CHAR_EN_SUPPORT  1
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1 //工厂测试音频测试
+#define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 15 // 录音测试播放音量
+#define UTE_MODULE_TEST_MODE_REMIND_SKIP 1 // 工厂测试模式跳过
+#define UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_PART_FUNCTION  1   //工厂模式测试减少+字、RGB、充电功能 
+#define UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_KEY_FUNCTION  1   //工厂模式测试减少按键测试
+#define UTE_EXIT_FACTORY_TESTING_RESET 1//退出工厂测试模式后复位
+
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT     RES_BUF_RING_LET_GO_MP3 //工厂测试音频测试->音频地址
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT    13 //工厂测试音频测试->音频时长
+
+#endif
+
+/* 电池容量 zn.zeng 2022-01-07*/
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      245 //mAh
+
+/* 电池曲线 zn.zeng 2022-01-03*/
+#define UTE_DRV_BATTERY_000      3500
+#define UTE_DRV_BATTERY_010      3683
+#define UTE_DRV_BATTERY_020      3739
+#define UTE_DRV_BATTERY_030      3764
+#define UTE_DRV_BATTERY_040      3788
+#define UTE_DRV_BATTERY_050      3822
+#define UTE_DRV_BATTERY_060      3839
+#define UTE_DRV_BATTERY_070      3962
+#define UTE_DRV_BATTERY_080      4055
+#define UTE_DRV_BATTERY_090      4144
+#define UTE_DRV_BATTERY_100      4262
+
+// #define UTE_DRV_TP_X_AXIS_EXCHANGE 1 // 交换X轴左右坐标
+// #define UTE_DRV_TP_Y_AXIS_EXCHANGE 1 // 交换Y轴上下坐标
+// #define UTE_DRV_TP_SWAP_XY_AXIS_EXCHANGE 1 // 交换X轴Y轴坐标
+
+/*! 血氧功能zn.zeng, 2021-07-23  */
+#define UTE_MODULE_BLOODOXYGEN_SUPPORT 1
+
+/*! 一级界面默认排序,wang.luo 2024-11-16 */
+#define UTE_CUI_SCREEN_TBL_SORT_CNT_DEFAULT 7
+#define UTE_CUI_SCREEN_TBL_SORT_ARRAY_DEFAULT {FUNC_CLOCK, FUNC_ACTIVITY, FUNC_HEARTRATE,FUNC_BLOOD_OXYGEN, FUNC_SLEEP, FUNC_WEATHER, FUNC_BT}//,
+/*! 表盘左侧界面,wang.luo 2025-04-07 */
+#define UTE_CUI_SCREEN_WATCHDIAL_LEFT FUNC_NULL
+/*! 表盘上拉界面,wang.luo 2025-04-07 */
+#define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_MESSAGE
+/*! 默认表盘索引 zn.zeng, 2021-10-25  */
+#define DEFAULT_WATCH_INDEX 0
+/*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
+/*! 表盘排序地址数组,wang.luo 2024-11-26 */
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D20301001_BIN,\
+                                                UI_BUF_DIALPLATE_D20302001_BIN,\
+                                                UI_BUF_DIALPLATE_D20303001_BIN,\
+                                                UI_BUF_DIALPLATE_D20304001_BIN,\
+                                                UI_BUF_DIALPLATE_D19886001_BIN,\
+                                              }
+#define UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE   1  //双击切换菜单
+// 菜单样式枚举值集合 - 用于UI菜单显示风格配置
+#define UTE_CUI_SCREEN_MENU_STYLE { \
+    MENU_STYLE_LIST,     /* 列表式菜单 */ \
+    MENU_STYLE_CUM_SUDOKU, /* 宫格式菜单 */ \
+    MENU_STYLE_HONEYCOMB,/* 蜂窝状菜单 */ \
+    MENU_STYLE_FOOTBALL, /* 球体旋转菜单 */ \
+    MENU_STYLE_GRID,     /* 棋盘式网格菜单 */ \
+    MENU_STYLE_KALE,     /* 环形光晕菜单 */ \
+    MENU_STYLE_SKYRER,   /* 天圆地方布局菜单 */ \
+    MENU_STYLE_CUM_GRID, /* 累积式网格菜单 */ \
+    MENU_STYLE_WATERFALL /* 瀑布流式菜单 */ \
+}
+#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0     // 使用蝴蝶表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0          // 使用立方体表盘
+#define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 0    // 使用光束立方体表盘
+#define UTE_WATCHS_DIALPLATE_BTF_INDEX 3        // 蝴蝶表盘索引
+#define UTE_WATCHS_DIALPLATE_CUBE_INDEX 4       // 立方体表盘索引
+#define UTE_WATCHS_DIALPLATE_LIGHT_CUBE_INDEX  0// 立方体光束表盘索引
+
+/*! SOS联系人拨号功能,xjc 2022-07-06  */
+#define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
+
+/*! 床头钟模式(充电界面不息屏),wang.luo 2025-04-29 */
+#define UTE_MODULE_BEDSIDE_MODE_SUPPORT 1
+
+#define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
+#define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      0
+#define GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT      0
+#define GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT      1
+#define GUI_SCREEN_SIZE_360X360RGB_I338002_SUPPORT      (1&GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT)
+#define GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT      (1&GUI_SCREEN_SIZE_360X360RGB_I338001_SUPPORT)
+
+#define UTE_TITLE_BAR_HIGH    64//标题栏高度
+#define UTE_CLOCK_SIDE_ADD_WIDGET_NUM  5
+
+#define UTE_DRV_CTP_SELECT              CTP_CHSC6X
+#define DEFAULT_TP_UPDATE_VER_CHECKOUT_OPEN 1
+/*! TP固件升级功能开关*/
+#define UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT 1
+
+#define UTE_ALARM_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT 1 //勿扰模式闹钟开启马达震动
+/*! 中科平台广播UUID,wang.luo 2025-02-13 */
+#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+//二维码链接内容
+#define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
+
+#if UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT || UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT || UTE_DRV_TFT_S360X360_GC9B71_HY139074A_QSPI_SUPPORT
+#define UTE_DRV_SCREEN_WIDTH 360
+#define UTE_DRV_SCREEN_HEIGHT 360
+#define UTE_DRV_SCREEN_SHAPE 0
+#elif UTE_DRV_TFT_S240X284_NV3030B_HY201068AVC_QSPI_SUPPORT
+#define UTE_DRV_SCREEN_WIDTH 240
+#define UTE_DRV_SCREEN_HEIGHT 296
+#elif UTE_DRV_TFT_S240X296_GC9309_JS202018A_QSPI_SUPPORT
+#define UTE_DRV_SCREEN_WIDTH 240
+#define UTE_DRV_SCREEN_HEIGHT 296
+#elif UTE_DRV_TFT_S240X240_NV3002C_HY138026A_QSPI_SUPPORT
+#define UTE_DRV_SCREEN_WIDTH 240
+#define UTE_DRV_SCREEN_HEIGHT 240
+#define UTE_DRV_SCREEN_SHAPE 0
+#else
+#define UTE_DRV_SCREEN_WIDTH 240
+#define UTE_DRV_SCREEN_HEIGHT 284
+#endif
+
+#define UTE_MODULE_POWERON_LANGUAGE_SELECT_SUPPORT 1
+
+#define UTE_MODULE_SCREENS_POWERON_SUPPORT            1 //开机logo界面
+#define UTE_MODULE_SCREENS_UP_MENU_SUPPORT            0 //上拉菜单
+#define UTE_MODULE_SCREENS_DWON_MENU_SUPPORT          1 //下拉菜单
+#define UTE_MODULE_SCREENS_LINK_MAN_SUPPORT           1 //联系人
+#define UTE_MODULE_SCREENS_TIMER_SUPPORT              1 //计时器
+#define UTE_MODULE_SCREENS_CAMERA_SUPPORT             1 //遥控拍照
+#define UTE_MODULE_SCREENS_STOPWATCH_SUPPORT          1 //秒表
+#define UTE_MODULE_SCREENS_VOICE_SUPPORT              1 //语音
+#define UTE_MODULE_SCREENS_ALARM_SUPPORT              1 //闹钟
+#define UTE_MODULE_SCREENS_SYNC_WATCH_ONLINE_SUPPORT  1 //在线表盘同步界面
+#define UTE_MODULE_SCREENS_LOW_BATTERY_NOTIFY_SUPPORT 1 //低电提醒
+#define UTE_MODULE_SCREENS_WEATHER_SUPPORT            1 //天气
+#define UTE_MODULE_SCREENS_GAME_SUPPORT               1 //游戏
+#define UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT         1 //找手机
+#define UTE_MODULE_SCREENS_RESFY_SUPPORT              1 //恢复出厂
+#define UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT       (1&UTE_MODULE_BLOODOXYGEN_SUPPORT) //血氧
+#define UTE_MODULE_SCREENS_BLOOD_OXYGEN_INFO_SUPPORT  (1&UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT) //血氧说明界面
+#define UTE_MODULE_SCREENS_ACTIVITY_SUPPORT           1 //每日活动
+#define UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT         1 //手电筒
+#define UTE_MODULE_SCREENS_SPORT_SUPPORT              1 //运动
+#define UTE_MODULE_SCREENS_LANGUAGE_SUPPORT           1 //语言
+#define UTE_MODULE_SCREENS_BREATHE_SUPPORT            1 //呼吸
+#define UTE_MODULE_SCREENS_HEARTRATE_SUPPORT          1 //心率
+#define UTE_MODULE_SCREENS_STYLE_SUPPORT              1 //主题
+#define UTE_MODULE_SCREENS_SLEEP_SUPPORT              1 //睡眠
+#define UTE_MODULE_SCREENS_LIGHT_SUPPORT              1 //亮度调节
+#define UTE_MODULE_SCREENS_MUSIC_SUPPORT              1 //音乐
+#define UTE_MODULE_SCREENS_MESSAGE_SUPPORT            1 //信息
+#define UTE_MODULE_SCREENS_CALL_SUPPORT               1 //电话
+#define UTE_MODULE_SCREENS_SETTING_SUPPORT            1 //设置
+#define UTE_MODULE_SCREENS_CALCULATOR_SUPPORT         1 //计算器
+#define UTE_MODULE_SCREENS_RESTART_SUPPORT            1 //重启
+#define UTE_MODULE_SCREENS_CALENDAER_SUPPORT          0 //日历
+#define UTE_MODULE_SCREENS_SCAN_SUPPORT               1 //二维码
+#define UTE_MODULE_SCREENS_HEART_WARNING_SUPPORT      1 //心率预警
+#define UTE_MODULE_SCREENS_SYSTEM_SUPPORT             1 //系统设置列表界面
+#define UTE_MODULE_SCREENS_DIAL_AND_THEME_SUPPORT     1 //主题&表盘列表界面
+#define UTE_MODULE_SCREENS_CLOCK_SUB_SIDE_SUPPORT     1 //表盘侧边栏
+#define UTE_MODULE_SCREENS_ROTARY_MENUSTYLE_SUPPORT   0 //菜单样式预览旋转界面
+#define UTE_MODULE_SCREENS_BRIGHT_SET_SUPPORT         1 //亮度设置列表界面
+#define UTE_MODULE_SCREENS_SUB_SOS_SUPPORT            1 //SOS界面
+#define UTE_MODULE_SCREENS_TOOLBOX_SUPPORT            1 //工具箱列表
+#if UTE_MODULE_EMOTION_PRESSURE_SUPPORT
+#define UTE_MODULE_SCREENS_EMOTION_SUPPORT            0 //情绪界面
+#define UTE_MODULE_SCREENS_EMOTION_ABOUT_SUPPORT      0 //情绪说明界面
+#define UTE_MODULE_SCREENS_PRESSURE_SUPPORT           0 //压力界面
+#define UTE_MODULE_SCREENS_PRESSURE_ABOUT_SUPPORT     0 //压力说明界面
+#endif
+#define UTE_MODULE_SCREENS_MOTOR_GRADE_SUPPORT        1 //震动强度
+#define UTE_MODULE_SCREENS_WOMEN_HEALTH_SUPPORT       1 //女性健康
+#define UTE_MODULE_SCREENS_BIRD_SUPPORT               1 //飞扬小鸟
+#define UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT     1 //HELLO开机界面
+
+// #define UTE_MENU_STYLE_CUM_RING1_FUNCTION             1//环形菜单风格1
+// #define UTE_MENU_STYLE_CUM_RING2_FUNCTION             0//环形菜单风格2
+// #define UTE_MODULE_SCREENS_MENU_DATA_BIND             1 //菜单资源绑定
+
+// #define UTE_MENU_STYLE_LIST_APP_MAX_NUM               16/*!  列表式菜单 显示应用最多数量*/
+#define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
+
+//未完善
+#define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/
+#define UTE_MODULE_SCREENS_POWER_ON_LANGUAGE_SELECT_SUPPORT 0 /*开机选择语言界面*/
+/*! 绑定功能宏 pcm, 2025-05-09  */
+#define UTE_USER_ID_FOR_BINDING_SUPPORT 0
+#define HAS_BEEN_CONNECTED 0x66
+#define UTE_VERIFY_OUR_APP_APK_DEFUALT_TIMEOUT 60
+
+/*! 表盘预览图使用平面模式,wang.luo 2024-11-16 */
+#define UTE_MODULE_WATCH_PREVIEW_STYLE 1
+
+/*! 默认语言 zn.zeng, 2021-08-23  */
+#ifndef DEFAULT_LANGUAGE
+#define DEFAULT_LANGUAGE 0x02//ENGLISH_LANGUAGE_ID
+#define SCREEN_TITLE_MULTIPLE_CHINESE_LANGUAGE_SUPPORT              1 //中文 1
+#define SCREEN_TITLE_MULTIPLE_ENGLISH_LANGUAGE_SUPPORT              1 //英文 2
+#define SCREEN_TITLE_MULTIPLE_KOREAN_LANGUAGE_SUPPORT               0 //韩文 3
+#define SCREEN_TITLE_MULTIPLE_JAPANESE_LANGUAGE_SUPPORT             0 //日文 4
+#define SCREEN_TITLE_MULTIPLE_GERMAN_LANGUAGE_SUPPORT               1 //德文 5
+#define SCREEN_TITLE_MULTIPLE_SPANISH_LANGUAGE_SUPPORT              1 //西班牙文 6
+#define SCREEN_TITLE_MULTIPLE_FRENCH_LANGUAGE_SUPPORT               1 //法文 7
+#define SCREEN_TITLE_MULTIPLE_ITALIAN_LANGUAGE_SUPPORT              1 //意大利文 8
+#define SCREEN_TITLE_MULTIPLE_PORTUGUESE_LANGUAGE_SUPPORT           1 //葡萄牙文 9
+#define SCREEN_TITLE_MULTIPLE_ARABIC_LANGUAGE_SUPPORT               0 //阿拉伯文 A
+#define SCREEN_TITLE_MULTIPLE_INDIA_LANGUAGE_SUPPORT                0 //India     B
+#define SCREEN_TITLE_MULTIPLE_HINDI_LANGUAGE_SUPPORT                0 //印地语  C
+#define SCREEN_TITLE_MULTIPLE_POLISH_LANGUAGE_SUPPORT               0 //波兰语  D
+#define SCREEN_TITLE_MULTIPLE_RUSSIAN_LANGUAGE_SUPPORT              1 //俄语  E
+#define SCREEN_TITLE_MULTIPLE_DUTCH_LANGUAGE_SUPPORT                0 //荷兰语 F
+#define SCREEN_TITLE_MULTIPLE_TURKISH_LANGUAGE_SUPPORT              1 //土耳其语  10
+#define SCREEN_TITLE_MULTIPLE_BENGALI_LANGUAGE_SUPPORT              0 //孟加拉语  11  Bengali
+#define SCREEN_TITLE_MULTIPLE_URDU_LANGUAGE_SUPPORT                 0 //乌尔都语   12  Urdu
+#define SCREEN_TITLE_MULTIPLE_INDONESUAN_LANGUAGE_SUPPORT           1 //印度尼西亚语（爪哇语）  13  Indonesian
+#define SCREEN_TITLE_MULTIPLE_PUNJABI_LANGUAGE_SUPPORT              0 //旁遮普语  14   Punjabi
+#define SCREEN_TITLE_MULTIPLE_THAI_LANGUAGE_SUPPORT                 1 //泰文  15   Thai
+#define SCREEN_TITLE_MULTIPLE_CZECH_LANGUAGE_SUPPORT                0 //捷克语  16  Czech
+#define SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT  0 //繁体中文
+#define SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT             0 //罗马尼亚语 limba 0x1B
+#define SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT           1 //越南语 0x63
+#define SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT             1 //马来西亚语 0x40
+#endif // DEFAULT_LANGUAGE
+
+
+/*! 多运动支持百种运动标志, xjc 2022-03-09  */
+#define UTE_MODULE_SPORT_HUNDRED_SUPPORT 1
+#define UTE_MODULE_SPORT_MAX_SPORT_NUM          22
+#define UTE_MODULE_SPORT_DISPLAY_MIN_SPORT_NUM  4
+#define UTE_MODULE_SPORT_DISPLAY_MAX_SPORT_NUM  (UTE_MODULE_SPORT_MAX_SPORT_NUM)
+/*! 具体的运动类型,支持的置1,不支持置0, xjc 2222-03-29*/
+#define UTE_MODULE_SPORT_RUNNING_SUPPORT                1 //跑步
+#define UTE_MODULE_SPORT_BIKE_SUPPORT                   1 //骑行
+#define UTE_MODULE_SPORT_JUMP_ROPE_SUPPORT              1 //跳绳
+#define UTE_MODULE_SPORT_SWIMMING_SUPPORT               0 //游泳
+#define UTE_MODULE_SPORT_BADMINTION_SUPPORT             1 //羽毛球
+#define UTE_MODULE_SPORT_TABLE_TENNIS_SUPPORT           1 //乒乓球
+#define UTE_MODULE_SPORT_TENNIS_SUPPORT                 1 //网球
+#define UTE_MODULE_SPORT_CLIMBING_SUPPORT               1 //登山
+#define UTE_MODULE_SPORT_WALKING_SUPPORT                1 //徒步
+#define UTE_MODULE_SPORT_BASKETBALL_SUPPORT             1 //篮球
+#define UTE_MODULE_SPORT_FOOTBALL_SUPPORT               1 //足球
+#define UTE_MODULE_SPORT_BASEBALL_SUPPORT               1 //棒球（或垒球）
+#define UTE_MODULE_SPORT_VOLLEYBALL_SUPPORT             1 //排球
+#define UTE_MODULE_SPORT_CRICKET_SUPPORT                1 //板球
+#define UTE_MODULE_SPORT_RUGBY_SUPPORT                  1 //橄榄球（或美式足球）
+#define UTE_MODULE_SPORT_HOCKEY_SUPPORT                 1 //曲棍球
+#define UTE_MODULE_SPORT_DANCE_SUPPORT                  1 //跳舞
+#define UTE_MODULE_SPORT_SPINNING_SUPPORT               1 //动感单车
+#define UTE_MODULE_SPORT_YOGA_SUPPORT                   1 //瑜伽
+#define UTE_MODULE_SPORT_SIT_UP_SUPPORT                 1 //仰卧起坐
+#define UTE_MODULE_SPORT_TREADMILL_SUPPORT              1 //跑步机
+#define UTE_MODULE_SPORT_GYMNASTICS_SUPPORT             1 //体操
+#define UTE_MODULE_SPORT_BOATING_SUPPORT                0 //划船
+#define UTE_MODULE_SPORT_JUMPING_JACK_SUPPORT           1 //开合跳
+#define UTE_MODULE_SPORT_FREE_TRAINING_SUPPORT          0 //自由训练
+#if UTE_MODULE_SPORT_HUNDRED_SUPPORT
+#define UTE_MODULE_SPORT_INDOOR_WALK_SUPPORT            0 //0x1A,室内走路
+#define UTE_MODULE_SPORT_INDOOR_RUN_SUPPORT             0 //0x1B,室内跑步
+#define UTE_MODULE_SPORT_STRENGTH_TRAINING_SUPPORT      0 //0x1C,力量训练
+#define UTE_MODULE_SPORT_STEP_TRAINING_SUPPORT          0 //0x1D,踏步
+#define UTE_MODULE_SPORT_HORSE_RIDING_SUPPORT           0 //0x1E,骑马
+#define UTE_MODULE_SPORT_ELLIPTICAL_TRAINER_SUPPORT     0 //0x1F,椭圆机
+#define UTE_MODULE_SPORT_TAI_CHI_SUPPORT                0 //0x20,太极
+#define UTE_MODULE_SPORT_SHUTTLECOCK_SUPPORT            0 //0x21,毽球
+#define UTE_MODULE_SPORT_BOXING_SUPPORT                 0 //0x22,拳击
+#define UTE_MODULE_SPORT_OUTDOOR_WALK_SUPPORT           0 //0x23,户外健走
+#define UTE_MODULE_SPORT_TRAIL_RUNNING_SUPPORT          0 //0x24,越野跑
+#define UTE_MODULE_SPORT_SKIING_SUPPORT                 0 //0x25,滑雪
+#define UTE_MODULE_SPORT_ICE_HOCKEY_SUPPORT             0 //0x26,冰球
+#define UTE_MODULE_SPORT_TAEKWONDO_SUPPORT              0 //0x27,跆拳道
+#define UTE_MODULE_SPORT_VO2MAX_TEST_SUPPORT            0 //0x28,最大摄氧量测试
+#define UTE_MODULE_SPORT_ROWING_MACHING_SUPPORT         0 //0x29,划船机
+#define UTE_MODULE_SPORT_AIR_WALKER_SUPPORT             0 //0x2A,漫步机
+#define UTE_MODULE_SPORT_HIKING_SUPPORT                 0 //0x2B,徒步
+#define UTE_MODULE_SPORT_ATHLETICS_SUPPORT              0 //0x2C,田径
+#define UTE_MODULE_SPORT_WAIST_TRAINING_SUPPORT         0 //0x2D,腰腹训练
+#define UTE_MODULE_SPORT_KARATE_SUPPORT                 0 //0x2E,空手道
+#define UTE_MODULE_SPORT_COOLDOWN_SUPPORT               0 //0x2F,整理放松
+#define UTE_MODULE_SPORT_CROSS_TRAINING_SUPPORT         0 //0x30,交叉训练
+#define UTE_MODULE_SPORT_PILATES_SUPPORT                0 //0x31,普拉提
+#define UTE_MODULE_SPORT_CROSS_FIT_SUPPORT              0 //0x32,交叉配合
+#define UTE_MODULE_SPORT_FUNCTIONAL_TRAINING_SUPPORT    0 //0x33,功能性训练
+#define UTE_MODULE_SPORT_PHYSICAL_TRAINING_SUPPORT      0 //0x34,体能训练
+#define UTE_MODULE_SPORT_ARCHERY_SUPPORT                0 //0x35,射箭
+#define UTE_MODULE_SPORT_FLEXIBILITY_SUPPORT            0 //0x36,柔韧度
+#define UTE_MODULE_SPORT_MIXED_CARDIO_SUPPORT           0 //0x37,混合有氧
+#define UTE_MODULE_SPORT_LATIN_DANCE_SUPPORT            0 //0x38,拉丁舞
+#define UTE_MODULE_SPORT_STREET_DANCE_SUPPORT           0 //0x39,街舞
+#define UTE_MODULE_SPORT_KICKBOXING_SUPPORT             0 //0x3A,自由搏击
+#define UTE_MODULE_SPORT_BARRE_SUPPORT                  0 //0x3B,芭蕾
+#define UTE_MODULE_SPORT_AUSTRALIAN_FOOTBALL_SUPPORT    0 //0x3C,澳式足球
+#define UTE_MODULE_SPORT_MARTIAL_ARTS_SUPPORT           0 //0x3D,武术
+#define UTE_MODULE_SPORT_STAIRS_SUPPORT                 0 //0x3E,爬楼
+#define UTE_MODULE_SPORT_HANDBALL_SUPPORT               0 //0x3F,手球
+#define UTE_MODULE_SPORT_BOWLING_SUPPORT                0 //0x40,保龄球
+#define UTE_MODULE_SPORT_RACQUETBALL_SUPPORT            0 //0x41,壁球
+#define UTE_MODULE_SPORT_CURLING_SUPPORT                0 //0x42,冰壶
+#define UTE_MODULE_SPORT_HUNTING_SUPPORT                0 //0x43,打猎
+#define UTE_MODULE_SPORT_SNOWBOARDING_SUPPORT           0 //0x44,单板滑雪
+#define UTE_MODULE_SPORT_PLAY_SUPPORT                   0 //0x45,休闲运动
+#define UTE_MODULE_SPORT_AMERICAN_FOOTBALL_SUPPORT      0 //0x46,美式橄榄球
+#define UTE_MODULE_SPORT_HAND_CYCLING_SUPPORT           0 //0x47,手摇车
+#define UTE_MODULE_SPORT_FISHING_SUPPORT                0 //0x48,钓鱼
+#define UTE_MODULE_SPORT_DISC_SPORTS_SUPPORT            0 //0x49,飞盘
+#define UTE_MODULE_SPORT_RUGGER_SUPPORT                 0 //0x4A,橄榄球
+#define UTE_MODULE_SPORT_GOLF_SUPPORT                   0 //0x4B,高尔夫
+#define UTE_MODULE_SPORT_FOLK_DANCE_SUPPORT             0 //0x4C,民族舞
+#define UTE_MODULE_SPORT_DOWNHILL_SKIING_SUPPORT        0 //0x4D,高山滑雪
+#define UTE_MODULE_SPORT_SNOW_SPORTS_SUPPORT            0 //0x4E,雪上运动
+#define UTE_MODULE_SPORT_MIND_BODY_SUPPORT              0 //0x4F,舒缓冥想类运动
+#define UTE_MODULE_SPORT_CORE_TRAINING_SUPPORT          0 //0x50,核心训练
+#define UTE_MODULE_SPORT_SKATING_SUPPORT                0 //0x51,滑冰
+#define UTE_MODULE_SPORT_FITNESS_GAMING_SUPPORT         0 //0x52,健身游戏
+#define UTE_MODULE_SPORT_AEROBICS_SUPPORT               0 //0x53,健身操
+#define UTE_MODULE_SPORT_GROUP_TRAINING_SUPPORT         0 //0x54,团体操
+#define UTE_MODULE_SPORT_KENDO_SUPPORT                  0 //0x55,搏击操
+#define UTE_MODULE_SPORT_LACROSSE_SUPPORT               0 //0x56,长曲棍球
+#define UTE_MODULE_SPORT_ROLLING_SUPPORT                0 //0x57,泡沫轴筋膜放松
+#define UTE_MODULE_SPORT_WRESTLING_SUPPORT              0 //0x58,摔跤
+#define UTE_MODULE_SPORT_FENCING_SUPPORT                0 //0x59,击剑
+#define UTE_MODULE_SPORT_SOFTBALL_SUPPORT               0 //0x5A,垒球
+#define UTE_MODULE_SPORT_SINGLE_BAR_SUPPORT             0 //0x5B,单杠
+#define UTE_MODULE_SPORT_PARALLEL_BARS_SUPPORT          0 //0x5C,双杠
+#define UTE_MODULE_SPORT_ROLLER_SKATING_SUPPORT         0 //0x5D,轮滑
+#define UTE_MODULE_SPORT_HULA_HOOP_SUPPORT              0 //0x5E,呼啦圈
+#define UTE_MODULE_SPORT_DARTS_SUPPORT                  0 //0x5F,飞镖
+#define UTE_MODULE_SPORT_PICKLEBALL_SUPPORT             0 //0x60,匹克球
+#define UTE_MODULE_SPORT_HIIT_SUPPORT                   0 //0x61,HIIT
+#define UTE_MODULE_SPORT_SHOOTING_SUPPORT               0 //0x62,射击
+#define UTE_MODULE_SPORT_JUDO_SUPPORT                   0 //0x63,柔道
+#define UTE_MODULE_SPORT_TRAMPOLINE_SUPPORT             0 //0x64,蹦床
+#define UTE_MODULE_SPORT_SKATEBOARDING_SUPPORT          0 //0x65,滑板
+#define UTE_MODULE_SPORT_HOVERBOARD_SUPPORT             0 //0x66,平衡车
+#define UTE_MODULE_SPORT_BLADING_SUPPORT                0 //0x67,溜旱冰
+#define UTE_MODULE_SPORT_PARKOUR_SUPPORT                0 //0x68,跑酷
+#define UTE_MODULE_SPORT_DIVING_SUPPORT                 0 //0x69,跳水
+#define UTE_MODULE_SPORT_SURFING_SUPPORT                0 //0x6A,冲浪
+#define UTE_MODULE_SPORT_SNORKELING_SUPPORT             0 //0x6B,浮潜
+#define UTE_MODULE_SPORT_PULL_UP_SUPPORT                0 //0x6C,引体向上
+#define UTE_MODULE_SPORT_PUSH_UP_SUPPORT                0 //0x6D,俯卧撑
+#define UTE_MODULE_SPORT_PLANKING_SUPPORT               0 //0x6E,平板支撑
+#define UTE_MODULE_SPORT_ROCK_CLIMBING_SUPPORT          0 //0x6F,攀岩
+#define UTE_MODULE_SPORT_HIGHTJUMP_SUPPORT              0 //0x70,跳高
+#define UTE_MODULE_SPORT_BUNGEE_JUMPING_SUPPORT         0 //0x71,蹦极
+#define UTE_MODULE_SPORT_LONGJUMP_SUPPORT               0 //0x72,跳远
+#define UTE_MODULE_SPORT_MARATHON_SUPPORT               0 //0x73,马拉松
+/*! 运动显示开关,默认显示的置1,不显示置0, xjc 2222-03-29*/
+#define UTE_MODULE_SPORT_RUNNING_ON_OFF                 1 //跑步
+#define UTE_MODULE_SPORT_BIKE_ON_OFF                    1 //骑行
+#define UTE_MODULE_SPORT_JUMP_ROPE_ON_OFF               1 //跳绳
+#define UTE_MODULE_SPORT_SWIMMING_ON_OFF                0 //游泳
+#define UTE_MODULE_SPORT_BADMINTION_ON_OFF              1 //羽毛球
+#define UTE_MODULE_SPORT_TABLE_TENNIS_ON_OFF            1 //乒乓球
+#define UTE_MODULE_SPORT_TENNIS_ON_OFF                  1 //网球
+#define UTE_MODULE_SPORT_CLIMBING_ON_OFF                1 //登山
+#define UTE_MODULE_SPORT_WALKING_ON_OFF                 1 //徒步
+#define UTE_MODULE_SPORT_BASKETBALL_ON_OFF              1 //篮球
+#define UTE_MODULE_SPORT_FOOTBALL_ON_OFF                1 //足球
+#define UTE_MODULE_SPORT_BASEBALL_ON_OFF                1 //棒球（或垒球）
+#define UTE_MODULE_SPORT_VOLLEYBALL_ON_OFF              1 //排球
+#define UTE_MODULE_SPORT_CRICKET_ON_OFF                 1 //板球
+#define UTE_MODULE_SPORT_RUGBY_ON_OFF                   1 //橄榄球（或美式足球）
+#define UTE_MODULE_SPORT_HOCKEY_ON_OFF                  1 //曲棍球
+#define UTE_MODULE_SPORT_DANCE_ON_OFF                   1 //跳舞
+#define UTE_MODULE_SPORT_SPINNING_ON_OFF                1 //动感单车
+#define UTE_MODULE_SPORT_YOGA_ON_OFF                    1 //瑜伽
+#define UTE_MODULE_SPORT_SIT_UP_ON_OFF                  1 //仰卧起坐
+#define UTE_MODULE_SPORT_TREADMILL_ON_OFF               1 //跑步机
+#define UTE_MODULE_SPORT_GYMNASTICS_ON_OFF              1 //体操
+#define UTE_MODULE_SPORT_BOATING_ON_OFF                 1 //划船
+#define UTE_MODULE_SPORT_JUMPING_JACK_ON_OFF            1 //开合跳
+#define UTE_MODULE_SPORT_FREE_TRAINING_ON_OFF           1 //自由训练
+#define UTE_MODULE_SPORT_INDOOR_WALK_ON_OFF             0 //0x1A,室内走路
+#define UTE_MODULE_SPORT_INDOOR_RUN_ON_OFF              0 //0x1B,室内跑步
+#define UTE_MODULE_SPORT_STRENGTH_TRAINING_ON_OFF       1 //0x1C,力量训练
+#define UTE_MODULE_SPORT_STEP_TRAINING_ON_OFF           1 //0x1D,踏步
+#define UTE_MODULE_SPORT_HORSE_RIDING_ON_OFF            1 //0x1E,骑马
+#define UTE_MODULE_SPORT_ELLIPTICAL_TRAINER_ON_OFF      1 //0x1F,椭圆机
+#define UTE_MODULE_SPORT_TAI_CHI_ON_OFF                 1 //0x20,太极
+#define UTE_MODULE_SPORT_SHUTTLECOCK_ON_OFF             1 //0x21,毽球
+#define UTE_MODULE_SPORT_BOXING_ON_OFF                  0 //0x22,拳击
+#define UTE_MODULE_SPORT_OUTDOOR_WALK_ON_OFF            1 //0x23,户外健走
+#define UTE_MODULE_SPORT_TRAIL_RUNNING_ON_OFF           1 //0x24,越野跑
+#define UTE_MODULE_SPORT_SKIING_ON_OFF                  1 //0x25,滑雪
+#define UTE_MODULE_SPORT_ICE_HOCKEY_ON_OFF              1 //0x26,冰球
+#define UTE_MODULE_SPORT_TAEKWONDO_ON_OFF               1 //0x27,跆拳道
+#define UTE_MODULE_SPORT_VO2MAX_TEST_ON_OFF             0 //0x28,最大摄氧量测试
+#define UTE_MODULE_SPORT_ROWING_MACHING_ON_OFF          1 //0x29,划船机
+#define UTE_MODULE_SPORT_AIR_WALKER_ON_OFF              1 //0x2A,漫步机
+#define UTE_MODULE_SPORT_HIKING_ON_OFF                  0 //0x2B,徒步
+#define UTE_MODULE_SPORT_ATHLETICS_ON_OFF               1 //0x2C,田径
+#define UTE_MODULE_SPORT_WAIST_TRAINING_ON_OFF          1 //0x2D,腰腹训练
+#define UTE_MODULE_SPORT_KARATE_ON_OFF                  1 //0x2E,空手道
+#define UTE_MODULE_SPORT_COOLDOWN_ON_OFF                0 //0x2F,整理放松
+#define UTE_MODULE_SPORT_CROSS_TRAINING_ON_OFF          0 //0x30,交叉训练
+#define UTE_MODULE_SPORT_PILATES_ON_OFF                 1 //0x31,普拉提
+#define UTE_MODULE_SPORT_CROSS_FIT_ON_OFF               0 //0x32,交叉配合
+#define UTE_MODULE_SPORT_FUNCTIONAL_TRAINING_ON_OFF     0 //0x33,功能性训练
+#define UTE_MODULE_SPORT_PHYSICAL_TRAINING_ON_OFF       0 //0x34,体能训练
+#define UTE_MODULE_SPORT_ARCHERY_ON_OFF                 0 //0x35,射箭
+#define UTE_MODULE_SPORT_FLEXIBILITY_ON_OFF             0 //0x36,柔韧度
+#define UTE_MODULE_SPORT_MIXED_CARDIO_ON_OFF            0 //0x37,混合有氧
+#define UTE_MODULE_SPORT_LATIN_DANCE_ON_OFF             1 //0x38,拉丁舞
+#define UTE_MODULE_SPORT_STREET_DANCE_ON_OFF            1 //0x39,街舞
+#define UTE_MODULE_SPORT_KICKBOXING_ON_OFF              0 //0x3A,自由搏击
+#define UTE_MODULE_SPORT_BARRE_ON_OFF                   1 //0x3B,芭蕾
+#define UTE_MODULE_SPORT_AUSTRALIAN_FOOTBALL_ON_OFF     0 //0x3C,澳式足球
+#define UTE_MODULE_SPORT_MARTIAL_ARTS_ON_OFF            1 //0x3D,武术
+#define UTE_MODULE_SPORT_STAIRS_ON_OFF                  1 //0x3E,爬楼
+#define UTE_MODULE_SPORT_HANDBALL_ON_OFF                1 //0x3F,手球
+#define UTE_MODULE_SPORT_BOWLING_ON_OFF                 1 //0x40,保龄球
+#define UTE_MODULE_SPORT_RACQUETBALL_ON_OFF             1 //0x41,壁球
+#define UTE_MODULE_SPORT_CURLING_ON_OFF                 1 //0x42,冰壶
+#define UTE_MODULE_SPORT_HUNTING_ON_OFF                 0 //0x43,打猎
+#define UTE_MODULE_SPORT_SNOWBOARDING_ON_OFF            0 //0x44,单板滑雪
+#define UTE_MODULE_SPORT_PLAY_ON_OFF                    0 //0x45,休闲运动
+#define UTE_MODULE_SPORT_AMERICAN_FOOTBALL_ON_OFF       0 //0x46,美式橄榄球
+#define UTE_MODULE_SPORT_HAND_CYCLING_ON_OFF            0 //0x47,手摇车
+#define UTE_MODULE_SPORT_FISHING_ON_OFF                 1 //0x48,钓鱼
+#define UTE_MODULE_SPORT_DISC_SPORTS_ON_OFF             1 //0x49,飞盘
+#define UTE_MODULE_SPORT_RUGGER_ON_OFF                  0 //0x4A,橄榄球
+#define UTE_MODULE_SPORT_GOLF_ON_OFF                    1 //0x4B,高尔夫
+#define UTE_MODULE_SPORT_FOLK_DANCE_ON_OFF              1 //0x4C,民族舞
+#define UTE_MODULE_SPORT_DOWNHILL_SKIING_ON_OFF         0 //0x4D,高山滑雪
+#define UTE_MODULE_SPORT_SNOW_SPORTS_ON_OFF             0 //0x4E,雪上运动
+#define UTE_MODULE_SPORT_MIND_BODY_ON_OFF               0 //0x4F,舒缓冥想类运动
+#define UTE_MODULE_SPORT_CORE_TRAINING_ON_OFF           0 //0x50,核心训练
+#define UTE_MODULE_SPORT_SKATING_ON_OFF                 1 //0x51,滑冰
+#define UTE_MODULE_SPORT_FITNESS_GAMING_ON_OFF          0 //0x52,健身游戏
+#define UTE_MODULE_SPORT_AEROBICS_ON_OFF                1 //0x53,健身操
+#define UTE_MODULE_SPORT_GROUP_TRAINING_ON_OFF          0 //0x54,团体操
+#define UTE_MODULE_SPORT_KENDO_ON_OFF                   0 //0x55,搏击操
+#define UTE_MODULE_SPORT_LACROSSE_ON_OFF                1 //0x56,长曲棍球
+#define UTE_MODULE_SPORT_ROLLING_ON_OFF                 0 //0x57,泡沫轴筋膜放松
+#define UTE_MODULE_SPORT_WRESTLING_ON_OFF               0 //0x58,摔跤
+#define UTE_MODULE_SPORT_FENCING_ON_OFF                 0 //0x59,击剑
+#define UTE_MODULE_SPORT_SOFTBALL_ON_OFF                1 //0x5A,垒球
+#define UTE_MODULE_SPORT_SINGLE_BAR_ON_OFF              0 //0x5B,单杠
+#define UTE_MODULE_SPORT_PARALLEL_BARS_ON_OFF           0 //0x5C,双杠
+#define UTE_MODULE_SPORT_ROLLER_SKATING_ON_OFF          0 //0x5D,轮滑
+#define UTE_MODULE_SPORT_HULA_HOOP_ON_OFF               1 //0x5E,呼啦圈
+#define UTE_MODULE_SPORT_DARTS_ON_OFF                   1 //0x5F,飞镖
+#define UTE_MODULE_SPORT_PICKLEBALL_ON_OFF              1 //0x60,匹克球
+#define UTE_MODULE_SPORT_HIIT_ON_OFF                    0 //0x61,HIIT
+#define UTE_MODULE_SPORT_SHOOTING_ON_OFF                0 //0x62,射击
+#define UTE_MODULE_SPORT_JUDO_ON_OFF                    0 //0x63,柔道
+#define UTE_MODULE_SPORT_TRAMPOLINE_ON_OFF              1 //0x64,蹦床
+#define UTE_MODULE_SPORT_SKATEBOARDING_ON_OFF           1 //0x65,滑板
+#define UTE_MODULE_SPORT_HOVERBOARD_ON_OFF              0 //0x66,平衡车
+#define UTE_MODULE_SPORT_BLADING_ON_OFF                 0 //0x67,溜旱冰
+#define UTE_MODULE_SPORT_PARKOUR_ON_OFF                 1 //0x68,跑酷
+#define UTE_MODULE_SPORT_DIVING_ON_OFF                  0 //0x69,跳水
+#define UTE_MODULE_SPORT_SURFING_ON_OFF                 0 //0x6A,冲浪
+#define UTE_MODULE_SPORT_SNORKELING_ON_OFF              0 //0x6B,浮潜
+#define UTE_MODULE_SPORT_PULL_UP_ON_OFF                 1 //0x6C,引体向上
+#define UTE_MODULE_SPORT_PUSH_UP_ON_OFF                 1 //0x6D,俯卧撑
+#define UTE_MODULE_SPORT_PLANKING_ON_OFF                1 //0x6E,平板支撑
+#define UTE_MODULE_SPORT_ROCK_CLIMBING_ON_OFF           1 //0x6F,攀岩
+#define UTE_MODULE_SPORT_HIGHTJUMP_ON_OFF               1 //0x70,跳高
+#define UTE_MODULE_SPORT_BUNGEE_JUMPING_ON_OFF          0 //0x71,蹦极
+#define UTE_MODULE_SPORT_LONGJUMP_ON_OFF                1 //0x72,跳远
+#define UTE_MODULE_SPORT_MARATHON_ON_OFF                0 //0x73,马拉松
+
+/*! 默认显示的运动的顺序,不要重复,不显示的置0, xjc 2222-03-29*/
+#define UTE_MODULE_SPORT_RUNNING_ORDER                  1 //跑步
+#define UTE_MODULE_SPORT_BIKE_ORDER                     2 //骑行
+#define UTE_MODULE_SPORT_JUMP_ROPE_ORDER                3 //跳绳
+#define UTE_MODULE_SPORT_SWIMMING_ORDER                 0 //游泳
+#define UTE_MODULE_SPORT_BADMINTION_ORDER               4 //羽毛球
+#define UTE_MODULE_SPORT_TABLE_TENNIS_ORDER             5 //乒乓球
+#define UTE_MODULE_SPORT_TENNIS_ORDER                   6 //网球
+#define UTE_MODULE_SPORT_CLIMBING_ORDER                 7 //登山
+#define UTE_MODULE_SPORT_WALKING_ORDER                  8 //徒步
+#define UTE_MODULE_SPORT_BASKETBALL_ORDER               9 //篮球
+#define UTE_MODULE_SPORT_FOOTBALL_ORDER                 10 //足球
+#define UTE_MODULE_SPORT_BASEBALL_ORDER                 11 //棒球（或垒球）
+#define UTE_MODULE_SPORT_VOLLEYBALL_ORDER               12 //排球
+#define UTE_MODULE_SPORT_CRICKET_ORDER                  13 //板球
+#define UTE_MODULE_SPORT_RUGBY_ORDER                    14 //橄榄球（或美式足球）
+#define UTE_MODULE_SPORT_HOCKEY_ORDER                   15 //曲棍球
+#define UTE_MODULE_SPORT_DANCE_ORDER                    16 //跳舞
+#define UTE_MODULE_SPORT_SPINNING_ORDER                 18 //动感单车
+#define UTE_MODULE_SPORT_YOGA_ORDER                     17 //瑜伽
+#define UTE_MODULE_SPORT_SIT_UP_ORDER                   19 //仰卧起坐
+#define UTE_MODULE_SPORT_TREADMILL_ORDER                20 //跑步机
+#define UTE_MODULE_SPORT_GYMNASTICS_ORDER               21 //体操
+#define UTE_MODULE_SPORT_BOATING_ORDER                  0 //划船
+#define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             22 //开合跳
+#define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            23 //自由训练
+#define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路
+#define UTE_MODULE_SPORT_INDOOR_RUN_ORDER               0  //0x1B,室内跑步
+#define UTE_MODULE_SPORT_STRENGTH_TRAINING_ORDER        0 //0x1C,力量训练
+#define UTE_MODULE_SPORT_STEP_TRAINING_ORDER            0 //0x1D,踏步
+#define UTE_MODULE_SPORT_HORSE_RIDING_ORDER             0 //0x1E,骑马
+#define UTE_MODULE_SPORT_ELLIPTICAL_TRAINER_ORDER       0 //0x1F,椭圆机
+#define UTE_MODULE_SPORT_TAI_CHI_ORDER                  0 //0x20,太极
+#define UTE_MODULE_SPORT_SHUTTLECOCK_ORDER              0 //0x21,毽球
+#define UTE_MODULE_SPORT_BOXING_ORDER                   0 //0x22,拳击
+#define UTE_MODULE_SPORT_OUTDOOR_WALK_ORDER             0 //0x23,户外健走
+#define UTE_MODULE_SPORT_TRAIL_RUNNING_ORDER            0 //0x24,越野跑
+#define UTE_MODULE_SPORT_SKIING_ORDER                   0 //0x25,滑雪
+#define UTE_MODULE_SPORT_ICE_HOCKEY_ORDER               0 //0x26,冰球
+#define UTE_MODULE_SPORT_TAEKWONDO_ORDER                0 //0x27,跆拳道
+#define UTE_MODULE_SPORT_VO2MAX_TEST_ORDER              0 //0x28,最大摄氧量测试
+#define UTE_MODULE_SPORT_ROWING_MACHING_ORDER           0 //0x29,划船机
+#define UTE_MODULE_SPORT_AIR_WALKER_ORDER               0 //0x2A,漫步机
+#define UTE_MODULE_SPORT_HIKING_ORDER                   0 //0x2B,徒步
+#define UTE_MODULE_SPORT_ATHLETICS_ORDER                0 //0x2C,田径
+#define UTE_MODULE_SPORT_WAIST_TRAINING_ORDER           0 //0x2D,腰腹训练
+#define UTE_MODULE_SPORT_KARATE_ORDER                   0 //0x2E,空手道
+#define UTE_MODULE_SPORT_COOLDOWN_ORDER                 0 //0x2F,整理放松
+#define UTE_MODULE_SPORT_CROSS_TRAINING_ORDER           0 //0x30,交叉训练
+#define UTE_MODULE_SPORT_PILATES_ORDER                  0 //0x31,普拉提
+#define UTE_MODULE_SPORT_CROSS_FIT_ORDER                0 //0x32,交叉配合
+#define UTE_MODULE_SPORT_FUNCTIONAL_TRAINING_ORDER      0 //0x33,功能性训练
+#define UTE_MODULE_SPORT_PHYSICAL_TRAINING_ORDER        0 //0x34,体能训练
+#define UTE_MODULE_SPORT_ARCHERY_ORDER                  0 //0x35,射箭
+#define UTE_MODULE_SPORT_FLEXIBILITY_ORDER              0 //0x36,柔韧度
+#define UTE_MODULE_SPORT_MIXED_CARDIO_ORDER             0 //0x37,混合有氧
+#define UTE_MODULE_SPORT_LATIN_DANCE_ORDER              0 //0x38,拉丁舞
+#define UTE_MODULE_SPORT_STREET_DANCE_ORDER             0 //0x39,街舞
+#define UTE_MODULE_SPORT_KICKBOXING_ORDER               0 //0x3A,自由搏击
+#define UTE_MODULE_SPORT_BARRE_ORDER                    0 //0x3B,芭蕾
+#define UTE_MODULE_SPORT_AUSTRALIAN_FOOTBALL_ORDER      0 //0x3C,澳式足球
+#define UTE_MODULE_SPORT_MARTIAL_ARTS_ORDER             0 //0x3D,武术
+#define UTE_MODULE_SPORT_STAIRS_ORDER                   0 //0x3E,爬楼
+#define UTE_MODULE_SPORT_HANDBALL_ORDER                 0 //0x3F,手球
+#define UTE_MODULE_SPORT_BOWLING_ORDER                  0 //0x40,保龄球
+#define UTE_MODULE_SPORT_RACQUETBALL_ORDER              0 //0x41,壁球
+#define UTE_MODULE_SPORT_CURLING_ORDER                  0 //0x42,冰壶
+#define UTE_MODULE_SPORT_HUNTING_ORDER                  0//0x43,打猎
+#define UTE_MODULE_SPORT_SNOWBOARDING_ORDER             0//0x44,单板滑雪
+#define UTE_MODULE_SPORT_PLAY_ORDER                     0//0x45,休闲运动
+#define UTE_MODULE_SPORT_AMERICAN_FOOTBALL_ORDER        0//0x46,美式橄榄球
+#define UTE_MODULE_SPORT_HAND_CYCLING_ORDER             0//0x47,手摇车
+#define UTE_MODULE_SPORT_FISHING_ORDER                  0 //0x48,钓鱼
+#define UTE_MODULE_SPORT_DISC_SPORTS_ORDER              0 //0x49,飞盘
+#define UTE_MODULE_SPORT_RUGGER_ORDER                   0//0x4A,橄榄球
+#define UTE_MODULE_SPORT_GOLF_ORDER                     0 //0x4B,高尔夫
+#define UTE_MODULE_SPORT_FOLK_DANCE_ORDER               0 //0x4C,民族舞
+#define UTE_MODULE_SPORT_DOWNHILL_SKIING_ORDER          0//0x4D,高山滑雪
+#define UTE_MODULE_SPORT_SNOW_SPORTS_ORDER              0//0x4E,雪上运动
+#define UTE_MODULE_SPORT_MIND_BODY_ORDER                0//0x4F,舒缓冥想类运动
+#define UTE_MODULE_SPORT_CORE_TRAINING_ORDER            0//0x50,核心训练
+#define UTE_MODULE_SPORT_SKATING_ORDER                  0 //0x51,滑冰
+#define UTE_MODULE_SPORT_FITNESS_GAMING_ORDER           0//0x52,健身游戏
+#define UTE_MODULE_SPORT_AEROBICS_ORDER                 0 //0x53,健身操
+#define UTE_MODULE_SPORT_GROUP_TRAINING_ORDER           0//0x54,团体操
+#define UTE_MODULE_SPORT_KENDO_ORDER                    0//0x55,搏击操
+#define UTE_MODULE_SPORT_LACROSSE_ORDER                 0 //0x56,长曲棍球
+#define UTE_MODULE_SPORT_ROLLING_ORDER                  0//0x57,泡沫轴筋膜放松
+#define UTE_MODULE_SPORT_WRESTLING_ORDER                0//0x58,摔跤
+#define UTE_MODULE_SPORT_FENCING_ORDER                  0//0x59,击剑
+#define UTE_MODULE_SPORT_SOFTBALL_ORDER                 0 //0x5A,垒球
+#define UTE_MODULE_SPORT_SINGLE_BAR_ORDER               0//0x5B,单杠
+#define UTE_MODULE_SPORT_PARALLEL_BARS_ORDER            0//0x5C,双杠
+#define UTE_MODULE_SPORT_ROLLER_SKATING_ORDER           0//0x5D,轮滑
+#define UTE_MODULE_SPORT_HULA_HOOP_ORDER                0 //0x5E,呼啦圈
+#define UTE_MODULE_SPORT_DARTS_ORDER                    0 //0x5F,飞镖
+#define UTE_MODULE_SPORT_PICKLEBALL_ORDER               0 //0x60,匹克球
+#define UTE_MODULE_SPORT_HIIT_ORDER                     0//0x61,HIIT
+#define UTE_MODULE_SPORT_SHOOTING_ORDER                 0//0x62,射击
+#define UTE_MODULE_SPORT_JUDO_ORDER                     0//0x63,柔道
+#define UTE_MODULE_SPORT_TRAMPOLINE_ORDER               0 //0x64,蹦床
+#define UTE_MODULE_SPORT_SKATEBOARDING_ORDER            0 //0x65,滑板
+#define UTE_MODULE_SPORT_HOVERBOARD_ORDER               0//0x66,平衡车
+#define UTE_MODULE_SPORT_BLADING_ORDER                  0//0x67,溜旱冰
+#define UTE_MODULE_SPORT_PARKOUR_ORDER                  0 //0x68,跑酷
+#define UTE_MODULE_SPORT_DIVING_ORDER                   0//0x69,跳水
+#define UTE_MODULE_SPORT_SURFING_ORDER                  0//0x6A,冲浪
+#define UTE_MODULE_SPORT_SNORKELING_ORDER               0//0x6B,浮潜
+#define UTE_MODULE_SPORT_PULL_UP_ORDER                  0 //0x6C,引体向上
+#define UTE_MODULE_SPORT_PUSH_UP_ORDER                  0 //0x6D,俯卧撑
+#define UTE_MODULE_SPORT_PLANKING_ORDER                 0 //0x6E,平板支撑
+#define UTE_MODULE_SPORT_ROCK_CLIMBING_ORDER            0 //0x6F,攀岩
+#define UTE_MODULE_SPORT_HIGHTJUMP_ORDER                0 //0x70,跳高
+#define UTE_MODULE_SPORT_BUNGEE_JUMPING_ORDER           0//0x71,蹦极
+#define UTE_MODULE_SPORT_LONGJUMP_ORDER                 0 //0x72,跳远
+#define UTE_MODULE_SPORT_MARATHON_ORDER                 0//0x73,马拉松
+#endif
+
+#endif//_UTE_PROJECT_CONFIG_AB281_H_

@@ -264,14 +264,7 @@ static void sfunc_sleep(void)
         interval = ble_get_conn_interval();
         latency = ble_get_conn_latency();
         tout = ble_get_conn_timeout();
-        if(bt_is_ios_device())
-        {
-            ble_update_conn_param(96, 2, 500);
-        }
-        else
-        {
-            ble_update_conn_param(400, 0, 500);     //interval: 400*1.25ms = 500ms
-        }
+        ble_update_conn_param(400, 0, 500);     //interval: 400*1.25ms = 500ms
     }
 #endif
 #if BT_SINGLE_SLEEP_LPW_EN

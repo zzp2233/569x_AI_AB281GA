@@ -172,70 +172,6 @@ u32 bt_get_class_of_device(void)
 //    return true;
 //}
 
-void bt_get_link_info_flash(void *buf, u16 addr, u16 size)
-{
-//    printf("bt_read: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
-#if FUNC_BTHID_EN
-    if (is_bthid_mode())
-    {
-        cm_read(buf, BTHID_CM_PAGE(addr), size);
-    }
-    else
-#endif // FUNC_BTHID_EN
-    {
-        if ((addr + size) <= PAGE_DATA_SIZE)
-        {
-            cm_read(buf, BT_CM_PAGE(addr), size);
-#if BT_LINK_INFO_PAGE1_EN
-        }
-        else
-        {
-            cm_read(buf, BT_CM_PAGE1(addr - link_info_page_size), size);
-#endif
-        }
-    }
-//    print_r(buf, size);
-}
-
-void bt_put_link_info_flash(void *buf, u16 addr, u16 size)
-{
-//    printf("bt_write: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
-//    print_r(buf, size);
-#if FUNC_BTHID_EN
-    if (is_bthid_mode())
-    {
-        cm_write(buf, BTHID_CM_PAGE(addr), size);
-    }
-    else
-#endif // FUNC_BTHID_EN
-    {
-        if ((addr + size) <= PAGE_DATA_SIZE)
-        {
-            cm_write(buf, BT_CM_PAGE(addr), size);
-#if BT_LINK_INFO_PAGE1_EN
-        }
-        else
-        {
-            cm_write(buf, BT_CM_PAGE1(addr - link_info_page_size), size);
-#endif
-        }
-    }
-}
-
-void bt_get_ext_link_info_flash(void *buf, u16 addr, u16 size)
-{
-//    printf("bt_read: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
-    cm_read(buf, EXT_CM_PAGE(addr), size);
-//    print_r(buf, size);
-}
-
-void bt_put_ext_link_info_flash(void *buf, u16 addr, u16 size)
-{
-//    printf("bt_write: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
-//    print_r(buf, size);
-    cm_write(buf, EXT_CM_PAGE(addr), size);
-}
-
 const char *bt_get_local_name(void)
 {
     return xcfg_cb.bt_name;
@@ -267,41 +203,48 @@ u32 bt_get_rand_seed(void)
 
 void bt_get_link_info(void *buf, u16 addr, u16 size)
 {
-#if TEST_MODE_BT_INFO
-    if (bt_is_test_mode())
+    //printf("bt_read: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
+    if ((addr + size) <= PAGE_DATA_SIZE)
     {
-        bt_get_link_info_ram(buf,addr,size);
+        cm_read(buf, BT_CM_PAGE(addr), size);
+#if BT_LINK_INFO_PAGE1_EN
     }
     else
-#endif
     {
-        bt_get_link_info_flash(buf,addr,size);
+        cm_read(buf, BT_CM_PAGE1(addr - link_info_page_size), size);
+#endif
     }
+    //print_r(buf, size);
 }
 
 void bt_put_link_info(void *buf, u16 addr, u16 size)
 {
-#if TEST_MODE_BT_INFO
-    if (bt_is_test_mode())
+    //printf("bt_write: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
+    //print_r(buf, size);
+    if ((addr + size) <= PAGE_DATA_SIZE)
     {
-        bt_put_link_info_ram(buf,addr,size);
+        cm_write(buf, BT_CM_PAGE(addr), size);
+#if BT_LINK_INFO_PAGE1_EN
     }
     else
-#endif
     {
-        bt_put_link_info_flash(buf,addr,size);
+        cm_write(buf, BT_CM_PAGE1(addr - link_info_page_size), size);
+#endif
     }
 }
 
 void bt_get_ext_link_info(void *buf, u16 addr, u16 size)
 {
-    bt_get_ext_link_info_flash(buf,addr,size);
+    //printf("bt_read: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
+    cm_read(buf, EXT_CM_PAGE(addr), size);
+    //print_r(buf, size);
 }
 
 void bt_put_ext_link_info(void *buf, u16 addr, u16 size)
 {
-    bt_put_ext_link_info_flash(buf,addr,size);
-    cm_sync();
+    //printf("bt_write: %04x,%04x, %08lx\n", addr, size, BT_CM_PAGE(addr));
+    //print_r(buf, size);
+    cm_write(buf, EXT_CM_PAGE(addr), size);
 }
 
 void bt_sync_link_info(void)

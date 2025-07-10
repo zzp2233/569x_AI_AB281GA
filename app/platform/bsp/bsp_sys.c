@@ -165,7 +165,7 @@ void usb_detect(void)
 #else
     u8 usb_sta = usbchk_connect(USBCHK_ONLY_HOST);
 #endif
-#if MUSIC_UDISK_EN
+
     if (usb_sta == USB_UDISK_CONNECTED)
     {
         if (dev_online_filter(DEV_UDISK))
@@ -184,7 +184,6 @@ void usb_detect(void)
             TRACE_EVT(str_udisk_remove);
         }
     }
-#endif
 #if FUNC_USBDEV_EN
     if (usb_sta == USB_PC_CONNECTED)
     {

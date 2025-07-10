@@ -2155,6 +2155,11 @@ void uteModuleProtocolWatchOnlineCtrl(uint8_t*receive,uint8_t length)
     {
         uteModuleWatchOnlineDeleteDataMultipleIndex(receive[2],&receive[3]);
     }
+    else if (receive[1] == 0x0d)
+    {
+        uint32_t watchId = receive[3] << 24 | receive[4] << 16 | receive[5] << 8 | receive[6];
+        uteModuleWatchOnlineSwitchWatchMain(receive[2], watchId);
+    }
 #endif
 #if UTE_MODULE_WATCH_PHOTO_SUPPORT
     else if (receive[1] == 0x0A)

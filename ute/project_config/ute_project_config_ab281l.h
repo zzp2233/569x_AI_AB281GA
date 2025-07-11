@@ -322,6 +322,7 @@
 #define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
 #define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT    1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+#define UTE_MODULE_SCREENS_281L_MENU_DEL_APP     1     //本项目删除个别菜单多余应用
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

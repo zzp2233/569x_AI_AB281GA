@@ -1984,11 +1984,12 @@ compo_form_t *func_heartrate_form_create(void)
     char txt_buf[20];
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
-
+#if UTE_GUI_SCREEN_TITLE_SUPPORT
     // //设置标题栏
-    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     // compo_form_set_title(frm, i18n[STR_HEART_RATE]);
-
+    compo_form_set_title(frm, "Heart rate");
+#endif
     ///设置图片
     compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I340001_HEART_ICON_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-GUI_SCREEN_CENTER_Y/6-CONTROL_Y);
@@ -2167,6 +2168,16 @@ static void func_heartrate_refresh(void)
         }
         // area_t txt_leng = widget_text_get_area(textbox_value->txt);
         // compo_textbox_set_pos(textbox_bpm,120+txt_leng.wid,250);
+#if UTE_HEART_MODULE_WEAR_STATUS_ALERT_SUPPORT
+        if(uteModuleHeartIsWear() != f_heartrate->no_wear_flag)//识别到从测量中第一次脱手
+        {
+            f_heartrate->no_wear_flag = uteModuleHeartIsWear();
+            if(f_heartrate->no_wear_flag == false)
+            {
+                msgbox((char *)i18n[STR_WEAR_CHECK], NULL, NULL, MSGBOX_MODE_BTN_SURE, MSGBOX_MSG_TYPE_NONE);
+            }
+        }
+#endif
     }
 
 }
@@ -2629,7 +2640,7 @@ static void func_heartrate_enter(void)
     compo_page_move_init(f_heartrate->ptm, func_cb.frm_main->page_body, &info);
     // bsp_sensor_hr_init(0);
     func_cb.flag_animation = false;
-
+    f_heartrate->no_wear_flag = true;
     f_heartrate->heart_pic_size = 100;
 #endif
     uteModuleHeartStartSingleTesting(TYPE_HEART);

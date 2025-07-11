@@ -15,6 +15,23 @@
 // #define UTE_UI_CONFIG_PATCH "AB281D"
 
 /******************客户定制功能支持开始**************************************/
+#define UTE_SPORT_MODULE_SHAKE_TAKE_PICTURES_SUPPORT 1//客户要求只要点击拍照，不需要摇一摇拍照
+#define UTE_HEART_MODULE_WEAR_STATUS_ALERT_SUPPORT 1 //心率界面增加脱手
+#define UTE_CALL_MODULE_KUKEY_MUTE_SUPPORT 1 //再通话中，按键功能用于开启/关闭静音
+#define UTE_GUI_SCREEN_TITLE_SUPPORT 1 //每日活动、心率、血氧、睡眠添加标题
+#define UTE_GUI_SCREEN_ACTIVITY_LIST_SUPPORT              1
+#define APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT 1 //距离、步数、卡路里目标提醒，未开默认只有步数提醒
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
+/*! 默认目标步数值 zn.zeng, 2021-08-20  */
+#define DEFAULT_STEP_TARGET_CNT 8000
+#define DEFAULT_STEP_TARGET_OPEN true
+
+#define DEFAULT_KCAL_TARGET_CNT 250
+#define DEFAULT_KCAL_TARGET_OPEN true
+
+#define DEFAULT_DISTANCE_TARGET_CNT 5000
+#define DEFAULT_DISTANCE_TARGET_OPEN true
+#endif
 #define UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT 1
 #define ALARM_REPEAT_REMIND_DEFAULT_OPEN true//默认重复提醒开关
 #define ALARM_REPEAT_REMIND_DEFAULT_TIME_MIN 10
@@ -574,15 +591,15 @@
 #define UTE_MODULE_SPORT_MARATHON_ON_OFF                0 //0x73,马拉松
 
 /*! 默认显示的运动的顺序,不要重复,不显示的置0, xjc 2222-03-29*/
-#define UTE_MODULE_SPORT_RUNNING_ORDER                  1 //跑步
-#define UTE_MODULE_SPORT_BIKE_ORDER                     2 //骑行
-#define UTE_MODULE_SPORT_JUMP_ROPE_ORDER                3 //跳绳
+#define UTE_MODULE_SPORT_RUNNING_ORDER                  2 //跑步
+#define UTE_MODULE_SPORT_BIKE_ORDER                     3 //骑行
+#define UTE_MODULE_SPORT_JUMP_ROPE_ORDER                4 //跳绳
 #define UTE_MODULE_SPORT_SWIMMING_ORDER                 0 //游泳
-#define UTE_MODULE_SPORT_BADMINTION_ORDER               4 //羽毛球
-#define UTE_MODULE_SPORT_TABLE_TENNIS_ORDER             5 //乒乓球
-#define UTE_MODULE_SPORT_TENNIS_ORDER                   6 //网球
-#define UTE_MODULE_SPORT_CLIMBING_ORDER                 7 //登山
-#define UTE_MODULE_SPORT_WALKING_ORDER                  8 //徒步
+#define UTE_MODULE_SPORT_BADMINTION_ORDER               5 //羽毛球
+#define UTE_MODULE_SPORT_TABLE_TENNIS_ORDER             6 //乒乓球
+#define UTE_MODULE_SPORT_TENNIS_ORDER                   7 //网球
+#define UTE_MODULE_SPORT_CLIMBING_ORDER                 8 //登山
+#define UTE_MODULE_SPORT_WALKING_ORDER                  1 //徒步
 #define UTE_MODULE_SPORT_BASKETBALL_ORDER               9 //篮球
 #define UTE_MODULE_SPORT_FOOTBALL_ORDER                 10 //足球
 #define UTE_MODULE_SPORT_BASEBALL_ORDER                 11 //棒球（或垒球）

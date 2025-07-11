@@ -2911,7 +2911,14 @@ compo_form_t *func_weather_form_create(void)
         compo_textbox_set_multiline(txt, true);
         compo_textbox_set_multiline_drag(txt, true);
         compo_textbox_set(txt,i18n[STR_NO_GET_WEATHER]);
-
+#if UTE_GUI_SCREEN_TITLE_SUPPORT
+        //设置标题栏
+        compo_textbox_t *title = compo_textbox_create(frm,20);
+        compo_textbox_set_location(title,20,20,300,0);
+        compo_textbox_set_right_align(title, false);
+        compo_textbox_set_align_center(title,false);
+        compo_textbox_set(title, "Weather");
+#endif
         return frm;
     }
 
@@ -2990,6 +2997,15 @@ compo_form_t *func_weather_form_create(void)
     compo_textbox_set(txt, i18n[weather_list[get_weather_id[0]].txt_num]);
     compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X,  GUI_SCREEN_CENTER_Y+GUI_SCREEN_CENTER_Y/1.25,200,32);
     compo_textbox_set_forecolor(txt, make_color(0xc2,0xe1,0xf9));
+
+#if UTE_GUI_SCREEN_TITLE_SUPPORT
+    //设置标题栏
+    compo_textbox_t *title = compo_textbox_create(frm,20);
+    compo_textbox_set_location(title,20,20,300,0);
+    compo_textbox_set_right_align(title, false);
+    compo_textbox_set_align_center(title,false);
+    compo_textbox_set(title, "Weather");
+#endif
 
     //第二页
 

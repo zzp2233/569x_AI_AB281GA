@@ -299,7 +299,12 @@ void third_et_func_kws_deal(u32 event)
             {
                 func_ecig_set_power_refresh();
             }
+#if PROJECT_ABE012_SUPPORT
             uteModuleSmokeData.current_power = 25;
+#elif PROJECT_ABE013_SUPPORT
+            uteModuleSmokeData.current_power = 30;
+#endif
+
             uteModuleSmokeData.current_index = 5;
             uteModuleSmokeDataSaveConfig();
             //   printf("222222uteModuleSmokeData.current_power=%d，ecig_get_power()=%d\r\n",uteModuleSmokeData.current_power,ecig_get_power());

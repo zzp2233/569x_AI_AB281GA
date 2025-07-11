@@ -255,7 +255,7 @@ compo_form_t *func_activity_form_create(void)
 #endif
     u32 max_step;
     max_step = get_step_max(step_date,sizeof(step_date) / sizeof(step_date[0]));
-    target_step = target_step > max_step ? target_step : max_step;
+    target_step = target_step > max_step ? target_step : (( max_step / 1000 ) +1)*1000;
     // printf("mb:target_step:%ld\n",target_step);
     chart_t chart_info;
     chart_info.y = 0;
@@ -424,7 +424,7 @@ static void func_activity_disp_handle(void)
 #endif
     u32 max_step;
     max_step = get_step_max(step_date,sizeof(step_date) / sizeof(step_date[0]));
-    target_step = target_step > max_step ? target_step : max_step;
+    target_step = target_step > max_step ? target_step : (( max_step / 1000 ) +1)*1000;
     chart_t chart_info;
     chart_info.y = 0;
     chart_info.width = 4;   ///像素点

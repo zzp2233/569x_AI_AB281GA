@@ -87,6 +87,7 @@ const PowerVoltagePair power_voltage_singe_limi_0_8[]=
 //单发0.8欧
 const PowerVoltagePair power_voltage_dual_limi_0_4[]=
 {
+#if PROJECT_ABE012_SUPPORT
     {20,3010},
     {21,3060},
     {22,3110},
@@ -98,6 +99,20 @@ const PowerVoltagePair power_voltage_dual_limi_0_4[]=
     {28,3460},
     {29,3510},
     {30,3560},
+#elif PROJECT_ABE013_SUPPORT
+    {25,3390},
+    {26,3420},
+    {27,3450},
+    {28,3480},
+    {29,3500},
+    {30,3530},
+    {31,3570},
+    {32,3400},
+    {33,3430},
+    {34,3460},
+    {35,3490},
+#endif
+
 };
 //单发1.2
 const PowerVoltagePair power_voltage_singe_limi_1_2[]=
@@ -117,6 +132,7 @@ const PowerVoltagePair power_voltage_singe_limi_1_2[]=
 //双发1.2
 const PowerVoltagePair power_voltage_dual_limi_1_2[]=
 {
+#if PROJECT_ABE012_SUPPORT
     {20,2940},
     {21,2960},
     {22,2980},
@@ -128,6 +144,20 @@ const PowerVoltagePair power_voltage_dual_limi_1_2[]=
     {28,3100},
     {29,3120},
     {30,3140},
+#elif PROJECT_ABE013_SUPPORT
+    {25,3110},
+    {26,3140},
+    {27,3170},
+    {28,3200},
+    {29,3230},
+    {30,3260},
+    {31,3290},
+    {32,3320},
+    {33,3350},
+    {34,3380},
+    {35,3440},
+#endif
+
 };
 u8 ecig_get_power(void)
 {

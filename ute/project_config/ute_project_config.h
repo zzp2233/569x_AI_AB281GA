@@ -13,8 +13,8 @@
 #define PROJECT_AB281A_SUPPORT       0 /*! 同乐达 T8Z,TFT 240X284 NV3030B,CHIP_5691C_F,wang.luo 2025-01-06 */
 #define PROJECT_AB281B_SUPPORT       0 /*! 整机 801, TFT 240x282 NV3030B,CHIP_5691C_F,wang.luo 2025-01-10 */
 #define PROJECT_AB281C_SUPPORT       0 /*! , TFT 360x360 NV3030B,CHIP_5691C_F,quan.qi.cai 2025-01-21 */
-#define PROJECT_ABE012_SUPPORT       1
-
+#define PROJECT_ABE012_SUPPORT       0
+#define PROJECT_ABE013_SUPPORT       1
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
 #elif PROJECT_AB281A_SUPPORT
@@ -25,6 +25,8 @@
 #include"ute_project_config_ab281c.h"
 #elif PROJECT_ABE012_SUPPORT
 #include"ute_project_config_abe012.h"
+#elif PROJECT_ABE013_SUPPORT
+#include"ute_project_config_abe013.h"
 #endif
 /** Log模块控制开关*/
 #define UTE_MODULE_LOG_SUPPORT 1

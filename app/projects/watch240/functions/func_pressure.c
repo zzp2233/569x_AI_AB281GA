@@ -92,16 +92,16 @@ compo_form_t *func_pressure_form_create(void)
         snprintf(txt_buf,sizeof(txt_buf),"--");
     }
     textbox = compo_textbox_create(frm, 3 );/// 数据
-    compo_textbox_set_font(textbox,UI_BUF_0FONT_FONT_NUM_38_BIN);
-    compo_textbox_set_pos(textbox,74,65);
+    compo_textbox_set_font(textbox, UI_BUF_0FONT_FONT_NUM_38_BIN);
+    compo_textbox_set_pos(textbox, 74, 65);
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox,txt_buf);
-    compo_setid(textbox,COMPO_TXT_VALUE_ID);
+    compo_textbox_set(textbox, txt_buf);
+    compo_setid(textbox, COMPO_TXT_VALUE_ID);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_HIGHEST]) );///最高
-    compo_textbox_set_location(textbox,14,114,60, widget_text_get_max_height());
+    compo_textbox_set_location(textbox, 14, 114, 60, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox,i18n[STR_HIGHEST]);
+    compo_textbox_set(textbox, i18n[STR_HIGHEST]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
     memset(txt_buf,0,sizeof(txt_buf));
@@ -113,17 +113,18 @@ compo_form_t *func_pressure_form_create(void)
     {
         snprintf(txt_buf,sizeof(txt_buf),"--");
     }
-    area_t txt_leng = widget_text_get_area(textbox->txt);
+    s16 txt_leng = widget_text_get_area(textbox->txt).wid;
+    if (txt_leng > 60) txt_leng = 60;
     textbox = compo_textbox_create(frm, 3);///最高数据
-    compo_setid(textbox,COMPO_TXT_VALUE_MAX_ID);
-    compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,20+txt_leng.wid,114);
+    compo_setid(textbox, COMPO_TXT_VALUE_MAX_ID);
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox,20 + txt_leng, 114);
     compo_textbox_set_align_center(textbox, false);
 
     textbox = compo_textbox_create(frm, strlen(i18n[STR_LOWSET]) );///最低
-    compo_textbox_set_location(textbox,120,114,60, widget_text_get_max_height());
+    compo_textbox_set_location(textbox, 120, 114, 60, widget_text_get_max_height());
     compo_textbox_set_align_center(textbox, false);
-    compo_textbox_set(textbox,i18n[STR_LOWSET]);
+    compo_textbox_set(textbox, i18n[STR_LOWSET]);
     compo_textbox_set_forecolor(textbox, COLOR_GRAY);
 
     memset(txt_buf,0,sizeof(txt_buf));
@@ -135,11 +136,12 @@ compo_form_t *func_pressure_form_create(void)
     {
         snprintf(txt_buf,sizeof(txt_buf),"--");
     }
-    txt_leng = widget_text_get_area(textbox->txt);
+    txt_leng = widget_text_get_area(textbox->txt).wid;
+    if (txt_leng > 60) txt_leng = 60;
     textbox = compo_textbox_create(frm, 3);///最低数据
-    compo_setid(textbox,COMPO_TXT_VALUE_MIN_ID);
-    compo_textbox_set(textbox,txt_buf);
-    compo_textbox_set_pos(textbox,126+txt_leng.wid,114);
+    compo_setid(textbox, COMPO_TXT_VALUE_MIN_ID);
+    compo_textbox_set(textbox, txt_buf);
+    compo_textbox_set_pos(textbox, 126 + txt_leng, 114);
     compo_textbox_set_align_center(textbox, false);
 
     compo_button_t *btn = compo_button_create_by_image(frm,UI_BUF_I335001_7_SPO2_1_ICON_PLAY_44X44_X186_Y65_00_BIN);///重新测量按钮

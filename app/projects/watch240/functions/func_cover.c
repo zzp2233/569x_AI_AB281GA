@@ -4,6 +4,7 @@
 #include "ute_module_notify.h"
 #include "ute_drv_motor.h"
 #include "api_co_time.h"
+#include "ute_module_sport.h"
 #define TRACE_EN    0
 
 #if TRACE_EN
@@ -1046,7 +1047,11 @@ const f_cover_remind_item_t tbl_cover_remind_item[] =
     [REMIND_COVER_ALARM]            = {UI_BUF_I340001_THEME_ICON1_ALARM_BIN,             STR_NULL,        GUI_SCREEN_HEIGHT/3, GUI_SCREEN_HEIGHT/5-20,  GUI_SCREEN_CENTER_Y-20},
     [REMIND_COVER_HEALTH_SEDENTARY] = {UI_BUF_I340001_REPEAT_LONG_SIT_BIN,         STR_SEDENTARY_REMIND,   GUI_SCREEN_CENTER_Y-10,    GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_FIND_WATCH]       = {UI_BUF_I340001_FINGWATCH_WATCH_BIN,             STR_NULL,         GUI_SCREEN_CENTER_Y,    GUI_SCREEN_HEIGHT*4/5,  0},
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT   //目标提醒增加距离、卡路里提醒，界面添加数值，更改坐标
+    [REMIND_COVER_GOAL]             = {UI_BUF_I340001_REPEAT_GOAL_BIN,            STR_NULL,       125,    260,  240},
+#else
     [REMIND_COVER_GOAL]             = {UI_BUF_I340001_REPEAT_GOAL_BIN,            STR_GOAL_ACHIEVE,       GUI_SCREEN_CENTER_Y-15,    GUI_SCREEN_HEIGHT*4/5,  0},
+#endif
     [REMIND_GCOVER_BT_NOT_CONNECT]  = {UI_BUF_I340001_PUBLIC_NOT_CONNECT_BIN,     STR_VOICE_BT_NOT_CONNECT, GUI_SCREEN_CENTER_Y,  GUI_SCREEN_HEIGHT*4/5,  0},
     [REMIND_COVER_LOW_BATTERY]          = {NULL, STR_NULL, 0, 0, 0},        //自定义
     [REMIND_COVER_TIMER_FINISH]     = {NULL, STR_NULL, 0, 0, 0},        //自定义
@@ -1767,6 +1772,41 @@ void gui_set_cover_index(uint8_t index)
             res = msgbox(txt, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
 //            printf("clock=%s\n",txt);
         }
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
+        else if(sys_cb.cover_index == REMIND_COVER_GOAL) //目标提醒
+        {
+            ute_module_target_notify_data_t targetNotifyData;
+            uteModuleSportGetTodayTargetNotifyData(&targetNotifyData);
+            if(targetNotifyData.todayTargetNotifyType.isTodayKcalTargetNotify)
+            {
+                snprintf(title, sizeof(title), "%d", uteModuleSportGetCurrDayKcalData());
+                snprintf(txt, sizeof(txt), "%s", i18n[STR_KCAL]);
+            }
+            else if(targetNotifyData.todayTargetNotifyType.isTodayDistanceTargetNotify)
+            {
+                u16 tempDistance ;
+                tempDistance = uteModuleSportGetCurrDayDistanceData();
+                snprintf(title, sizeof(title), "%d.%d", ((tempDistance / 1000) > 0) ? ((tempDistance / 1000)) : 0,(tempDistance % 1000 / 100));
+                if(uteModuleSystemtimeGetDistanceMiType())//英里
+                {
+                    snprintf(txt, sizeof(txt), "%s", i18n[STR_MILE]);
+                }
+                else
+                {
+                    snprintf(txt, sizeof(txt), "%s", i18n[STR_KM]);
+                }
+            }
+            else if(targetNotifyData.todayTargetNotifyType.isTodayStepTargetNotify)
+            {
+                uint32_t totalStepCnt = 0;
+                uteModuleSportGetCurrDayStepCnt(&totalStepCnt,NULL,NULL);
+                snprintf(title, sizeof(title), "%d", totalStepCnt);
+                snprintf(txt, sizeof(txt), "%s", i18n[STR_STEPS]);
+            }
+
+            res = msgbox(txt, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);
+        }
+#endif //APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
         else
         {
             res = msgbox(msg, title, NULL, mode,  MSGBOX_MSG_TYPE_REMIND_COVER);

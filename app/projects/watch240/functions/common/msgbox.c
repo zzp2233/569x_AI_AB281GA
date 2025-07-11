@@ -2831,6 +2831,35 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
 
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X+widget_text_get_area(txt_title->txt).wid/2+8,160,70,32); //调整文本位置
             }
+#if APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
+            else if (sys_cb.cover_index == REMIND_COVER_GOAL)
+            {
+                u8 title_x = 0,txt_x = 0;
+#define TXT_FONT_W 20/2     //单位的字宽
+#define NUM_FONT_W 54/2     //数字的字宽
+                compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
+                                     GUI_SCREEN_CENTER_X,func_cover_get_pic_y(msg_type)-20);  //需要更替为弹窗图标
+
+                //title num
+                compo_textbox_t *txt_title = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_pos(txt_title, GUI_SCREEN_CENTER_X-TXT_FONT_W*strlen(msg)/2,
+                                      func_cover_get_title_txt_y(msg_type));
+                compo_textbox_set_font(txt_title, UI_BUF_0FONT_FONT_NUM_54_BIN);
+                compo_textbox_set(txt_title, title);
+
+                //msg1 txt_unit
+                compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
+                compo_textbox_set_pos(txt_msg, GUI_SCREEN_CENTER_X+NUM_FONT_W*strlen(title)/2+NUM_FONT_W,
+                                      func_cover_get_txt_y(msg_type));              //调整文本位置
+                compo_textbox_set(txt_msg, msg);
+                compo_textbox_set_forecolor(txt_msg,make_color(0x99,0x99,0x99));
+
+                //txt goal
+                compo_textbox_t *txt_GOAL = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);   //创建文本
+                compo_textbox_set_pos(txt_GOAL, GUI_SCREEN_CENTER_X,310);
+                compo_textbox_set(txt_GOAL, i18n[STR_GOAL_ACHIEVE]);
+            }
+#endif //APP_STAND_SPORT_STEP_KCAL_DISTANCE_NOTIFY_SUPPORT
             else
             {
                 compo_form_add_image(frm, func_cover_get_pic_res_addr(msg_type),
@@ -2840,8 +2869,8 @@ static compo_form_t *msgbox_frm_create(char *msg, char *title, char* time, int m
                 //msg1
                 compo_textbox_t *txt_msg = compo_textbox_create(frm, MSGBOX_MAX_TXT_LEN);
                 compo_textbox_set_location(txt_msg, GUI_SCREEN_CENTER_X,
-                                           func_cover_get_txt_y(msg_type),
-                                           220, widget_text_get_max_height());              //调整文本位置
+                                           -                                          func_cover_get_txt_y(msg_type),
+                                           -                                          220, widget_text_get_max_height());              //调整文本位置
                 compo_textbox_set(txt_msg, msg);
 
                 //title

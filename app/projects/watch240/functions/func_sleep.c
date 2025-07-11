@@ -2733,13 +2733,22 @@ compo_form_t *func_sleep_form_create(void)
 
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-    //设置标题栏
-//    compo_form_set_title(frm, i18n[STR_SLEEP]);
-//    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+
+    // //设置标题栏
+    // compo_form_set_title(frm, i18n[STR_SLEEP]);
+    // compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
 
     pic = compo_picturebox_create(frm, UI_BUF_I340001_SLEEP_BG_BIN);///* 背景图*/
     compo_picturebox_set_pos(pic, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-
+#if UTE_GUI_SCREEN_TITLE_SUPPORT
+    //设置标题栏
+    compo_textbox_t *title = compo_textbox_create(frm,20);
+    compo_textbox_set_location(title,20,20,300,0);
+    compo_textbox_set_right_align(title, false);
+    compo_textbox_set_align_center(title,false);
+    // compo_textbox_set(title, i18n[STR_SLEEP]);
+    compo_textbox_set(title, "Sleep");
+#endif
     memset(buf,0,sizeof(buf));
     if(sleep_data->totalSleepMin) ///是否有睡眠时长
     {

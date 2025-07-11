@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DC_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Tetra S5"
-#define UTE_SW_VERSION "AB281DCV000144"
+#define UTE_SW_VERSION "AB281DCV000149"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DC"
@@ -354,6 +354,7 @@
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
 #define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
+#define UTE_MODULE_SCREENS_281DC_MENU_DEL_APP     1     //本项目删除个别菜单多余应用
 
 
 //未完善
@@ -657,9 +658,9 @@
 #define UTE_MODULE_SPORT_SIT_UP_ORDER                   19 //仰卧起坐
 #define UTE_MODULE_SPORT_TREADMILL_ORDER                20 //跑步机
 #define UTE_MODULE_SPORT_GYMNASTICS_ORDER               21 //体操
-#define UTE_MODULE_SPORT_BOATING_ORDER                  22 //划船
-#define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             23 //开合跳
-#define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            24 //自由训练
+#define UTE_MODULE_SPORT_BOATING_ORDER                  0 //划船
+#define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             22 //开合跳
+#define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            0 //自由训练
 #define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ORDER               0  //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ORDER        0 //0x1C,力量训练

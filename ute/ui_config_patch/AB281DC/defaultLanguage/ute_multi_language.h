@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-07-03 19:23:20
+*@date   2025-07-11 09:32:36
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -312,8 +312,8 @@ enum
     STR_VIETNAMESE, // Tiếng Việt
     STR_MALAYSIA, // Melayu
     STR_PLEASE_REMOTE, // 请前往APP打开遥控拍照
-    STR_OPERATION_FUNC, // 为手表下键设置操作功能。
     STR_KEY_SET, // 下键设置
+    STR_OPERATION_FUNC, // 为手表下键设置操作功能。
     STR_COMPASS, // 指南针
     STR_COMPASS_CALIBRATION, // 请把手表按照图示方向移动，进行校准
     STR_COMPASS_E, // 东

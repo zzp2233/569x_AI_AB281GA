@@ -250,7 +250,7 @@ static menu_kale_item_t tbl_menu_kaleidoscope[] =
 #if UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
     {.func_sta=FUNC_HEARTRATE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_HEART_RATE_BIN,            },   //心率
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
-#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT
+#if UTE_MODULE_SCREENS_PRESSURE_SUPPORT && !UTE_MODULE_SCREENS_281DC_MENU_DEL_APP && !UTE_MODULE_SCREENS_281L_MENU_DEL_APP
     {.func_sta=FUNC_PRESSURE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STRESS_BIN,                },   //压力
 #endif // UTE_MODULE_SCREENS_HEARTRATE_SUPPORT
 #if UTE_MODULE_SCREENS_SPORT_SUPPORT
@@ -259,9 +259,6 @@ static menu_kale_item_t tbl_menu_kaleidoscope[] =
 #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
     {.func_sta=FUNC_BLOOD_OXYGEN,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_OXYGEN_BIN,          },   //血氧
 #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-// #if UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
-    // {.func_sta=FUNC_BLOOD_PRESSURE,             .res_addr=UI_BUF_I335001_2_HONEYCOMB_BLOOD_PRESSURE_BIN,        },   //血压
-// #endif // UTE_MODULE_SCREENS_BLOOD_OXYGEN_SUPPORT
 #if UTE_MODULE_SCREENS_SLEEP_SUPPORT
     {.func_sta=FUNC_SLEEP,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SLEEP_BIN,                 },  //睡眠
 #endif // UTE_MODULE_SCREENS_SLEEP_SUPPORT
@@ -280,33 +277,18 @@ static menu_kale_item_t tbl_menu_kaleidoscope[] =
 #if UTE_MODULE_SCREENS_BREATHE_SUPPORT
     {.func_sta=FUNC_BREATHE,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_BREATHE_BIN,               },  //呼吸
 #endif // UTE_MODULE_SCREENS_BREATHE_SUPPORT
-//#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
-//    {.func_sta=FUNC_MESSAGE,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_INFORMATION_BIN,           },  //消息
-//#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+#if UTE_MODULE_SCREENS_MESSAGE_SUPPORT
+    {.func_sta=FUNC_MESSAGE,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_INFORMATION_BIN,           },  //消息
+#endif // UTE_MODULE_SCREENS_MESSAGE_SUPPORT
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_VOICE_ASSISTANT_BIN,       },  //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
-// #if UTE_MODULE_SCREENS_VOICE_SUPPORT
+#if UTE_MODULE_SCREENS_TOOLBOX_SUPPORT
     {.func_sta=FUNC_TOOLBOX,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TOOLBOX_BIN,               },  //工具箱
-// #endif
+#endif
 #if UTE_MODULE_SCREENS_SETTING_SUPPORT
     {.func_sta=FUNC_SETTING,                  .res_addr=UI_BUF_I335001_2_HONEYCOMB_SETTINGS_BIN,              },  //设置
 #endif // UTE_MODULE_SCREENS_SETTING_SUPPORT
-//#if UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-//    {.func_sta=FUNC_STOPWATCH,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_STOPWATCH_BIN,             },    //秒表
-//#endif // UTE_MODULE_SCREENS_STOPWATCH_SUPPORT
-//#if UTE_MODULE_SCREENS_TIMER_SUPPORT
-//    {.func_sta=FUNC_TIMER,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_TIMER_BIN,                 },    //定时器
-//#endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
-//#if UTE_MODULE_SCREENS_FIND_PHNOE_SUPPORT
-//    {.func_sta=FUNC_FINDPHONE,                .res_addr=UI_BUF_I335001_2_HONEYCOMB_FIND_PHONE_BIN,            },    //查找手机
-//#endif
-//#if UTE_MODULE_SCREENS_FLASHLIGHT_SUPPORT
-//    {.func_sta=FUNC_FLASHLIGHT,               .res_addr=UI_BUF_I335001_2_HONEYCOMB_FLASHLIGHT_BIN,            },    //手电筒
-//#endif
-//#if UTE_MODULE_SCREENS_CAMERA_SUPPORT
-//    {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
-//#endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if !UTE_MODULE_SCREENS_GAME_SUPPORT //没有游戏功能用相机代替补全完整的圆形
     {.func_sta=FUNC_CAMERA,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_REMOTE_CAMERA_BIN,         },    //相机
 #endif

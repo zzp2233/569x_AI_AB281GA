@@ -24,9 +24,9 @@
 #define PROJECT_AB281H_SUPPORT       0 /*! 天之蓝UI, TFT 240*240 ,CHIP_5691G,jun.li 2025-05-19 */
 #define PROJECT_AB281DB_SUPPORT      0 /*! 共鑫W26Y,在AB281DA基础上更改蓝牙名,提供亮度等级 TFT 240x284 NV3030B,CHIP_5691C_F, jun.li 2025-05-19 */
 #define PROJECT_AB281J_SUPPORT       0 /*! 天之蓝UI, TFT 360x360 NV3030B,CHIP_5691C_F,qiquan.cai 2025-05-19 G28Z项目 */
-#define PROJECT_AB281K_SUPPORT       1 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
+#define PROJECT_AB281K_SUPPORT       0 /*! 共鑫G39Z,在AB281DA基础上更改蓝牙名,表盘,开机logo,TFT 240x284 NV3030B,CHIP_5691C_F,banghua.yin 2025-06-03 */
 #define PROJECT_AB281L_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-A中性定制需求软件 */
-#define PROJECT_AB281M_SUPPORT       0 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
+#define PROJECT_AB281M_SUPPORT       1 /*! 天之蓝UI, 共鑫240x284，W26Y-B中性定制需求软件 */
 #define PROJECT_AB281N_SUPPORT       0 /*! 分辨率320*380，Y17 CHIP_5691C_F  2025-06-09*/
 #define PROJECT_AB281DC_SUPPORT      1 /*! 恒鑫HX01定制,双按键+编码器+手电筒,TFT 240x296 JD9853,CHIP_5691C_F,wang.luo 2025-06-13 */
 #define PROJECT_AB281GA_SUPPORT      0 /*! 传音815N,amoled 368x448,wang.luo,CHIP_5691G 2025-06-13 */

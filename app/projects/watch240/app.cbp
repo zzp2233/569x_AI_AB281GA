@@ -317,6 +317,7 @@
 		<Unit filename="../../../ute/project_config/ute_project_config.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_abe012.h" />
+		<Unit filename="../../../ute/project_config/ute_project_config_abe013.h" />
 		<Unit filename="../../../ute/task/ute_task_application.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281M_H_
 
 #define DEFAULT_BLE_DEV_NAME "T8"
-#define UTE_SW_VERSION "AB281MV000142"
+#define UTE_SW_VERSION "AB281MV000151"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281M"
@@ -326,6 +326,7 @@
 #define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
 #define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT    1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+#define UTE_MODULE_SCREENS_281M_MENU_DEL_APP     1     //本项目删除个别菜单多余应用
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

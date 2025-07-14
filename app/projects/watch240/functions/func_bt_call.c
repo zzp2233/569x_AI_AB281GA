@@ -3521,6 +3521,46 @@ static void func_bt_call_message(size_msg_t msg)
             else
             {
 //                bt_call_terminate();                        //挂断当前通话
+#if UTE_CALL_MODULE_KUKEY_MUTE_SUPPORT
+                f_bt_call->call_mute_flag ^=1;
+                compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_MIC);
+
+                if(f_bt_call->call_mute_flag)
+                {
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+                    if (xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_uart_en)
+                    {
+                        mic_eq_drc_test = false;
+                    }
+                    else
+                    {
+                        audio_path_exit(AUDIO_PATH_BTMIC);
+                    }
+#else
+                    audio_path_exit(AUDIO_PATH_BTMIC);
+#endif
+                    compo_button_set_bgimg(btn,UI_BUF_I340001_CALL_CALLING_JINGYIN01_BIN);
+                }
+                else
+                {
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+                    if (xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_uart_en)
+                    {
+                        mic_eq_drc_test = true;
+                    }
+                    else
+                    {
+                        audio_path_init(AUDIO_PATH_BTMIC);
+                        audio_path_start(AUDIO_PATH_BTMIC);
+                    }
+#else
+                    audio_path_init(AUDIO_PATH_BTMIC);
+                    audio_path_start(AUDIO_PATH_BTMIC);
+                    bt_sco_pcm_set_dump_pass_cnt(5);
+#endif
+                    compo_button_set_bgimg(btn,UI_BUF_I340001_CALL_CALLING_JINGYIN00_BIN);
+                }
+#endif //UTE_CALL_MODULE_KUKEY_MUTE_SUPPORT
             }
             break;
 

@@ -1411,7 +1411,7 @@ compo_form_t *func_breathe_form_create(void)
     compo_picturebox_set_pos(pic, 186/2+87,186/2+79);
 
     //创建文本
-    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_START]));
+    compo_textbox_t *txt_start = compo_textbox_create(frm, strlen(i18n[STR_START])+strlen(i18n[STR_BREATHE_EXHALE]));
     compo_textbox_set_pos(txt_start,GUI_SCREEN_CENTER_X, 64/2+266);
     compo_setid(txt_start, COMPO_ID_TXT_START);
     compo_textbox_set(txt_start, i18n[STR_START]);

@@ -3143,11 +3143,13 @@ static const  dropdown_disp_btn_item_t tbl_dropdown_disp_btn_item[] =
     {0,      COMPO_ID_BTN_MUTE,             30+84/2+GUI_SCREEN_WIDTH,  137+84/2},///静音模式开关
     {UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_07_BIN,      COMPO_ID_BTN_PHONE,            138+84/2+GUI_SCREEN_WIDTH, 137+84/2},///查找手机
     {UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_09_BIN,      COMPO_ID_BTN_FLASHLIGHT,       246+84/2+GUI_SCREEN_WIDTH, 137+84/2},///手电筒
-    ///*第三页*/
-    {UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_10_BIN,      COMPO_ID_BTN_SETTING,          30+84/2+GUI_SCREEN_WIDTH*2,  137+84/2},///设置
     {UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_08_BIN,      COMPO_ID_BTN_ABOUT,            190+84/2+GUI_SCREEN_WIDTH, 241+84/2},///关于
 #if UTE_MODULE_BEDSIDE_MODE_SUPPORT
     {0,      COMPO_ID_BTN_BEDSIDE_MODE,     82+84/2+GUI_SCREEN_WIDTH, 241+84/2},// 床头钟模式开关
+    ///*第三页*/
+    {UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_10_BIN,      COMPO_ID_BTN_SETTING,          30+84/2+GUI_SCREEN_WIDTH*2,  137+84/2},///设置
+#else
+    {UI_BUF_I338003_CKOCK_DOWN_MENU_ICON_GRAY_10_BIN,      COMPO_ID_BTN_SETTING,          82+84/2+GUI_SCREEN_WIDTH,    241+84/2},///设置
 #endif
 };
 #else
@@ -3464,10 +3466,16 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_picturebox_cut(battery_pic,uteDrvBatteryCommonGetBatteryIndex(5),11);
 
     ///创建页码点
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338003_CKOCK_DOWN_MENU_POINT_54X10_BIN);
-    compo_picturebox_set_pos(picbox,153+54/2, 332+10/2);
-    compo_setid(picbox,COMPO_ID_PIC_WHITE);
+    compo_picturebox_set_pos(picbox, 153+54/2, 332+10/2);
     compo_picturebox_cut(picbox,0,3);
+#else
+    compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_PRIMARY_FUNCTION_POINT_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 332+10/2);
+    compo_picturebox_cut(picbox,0,2);
+    compo_setid(picbox,COMPO_ID_PIC_WHITE);
+#endif
 
     widget_page_t *page = widget_page_create(frm->page);///创建页码页面
     widget_page_set_client(page, 0, 0);
@@ -3598,12 +3606,12 @@ static void func_clock_sub_dropdown_slide_handle(void)
 {
     f_clock_t *f_clk = (f_clock_t *)func_cb.f_cb;
     compo_picturebox_t *ymd = compo_getobj_byid(COMPO_ID_PIC_WHITE);
-
     if(f_clk->ptm)
     {
         compo_page_move_process(f_clk->ptm);
         switch (compo_page_move_get_offset(f_clk->ptm))
         {
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
             case -(GUI_SCREEN_WIDTH/2)...0:
                 compo_picturebox_cut(ymd,0,3);
                 break;
@@ -3613,6 +3621,14 @@ static void func_clock_sub_dropdown_slide_handle(void)
             case (-(GUI_SCREEN_WIDTH*3))...(-(GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2)-1):
                 compo_picturebox_cut(ymd,2,3);
                 break;
+#else
+            case -(GUI_SCREEN_WIDTH/2)...0:
+                compo_picturebox_cut(ymd,0,2);
+                break;
+            case (-(GUI_SCREEN_WIDTH+GUI_SCREEN_WIDTH/2))...(-GUI_SCREEN_WIDTH/2-1):
+                compo_picturebox_cut(ymd,1,2);
+                break;
+#endif
             default:
                 break;
         }
@@ -4990,7 +5006,11 @@ static void func_clock_sub_dropdown_enter(void)
         .title_used = false,
         .dir = 1,
         .page_size =  GUI_SCREEN_WIDTH,
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
         .page_count = 3,
+#else
+        .page_count = 2,
+#endif
         .jump_perc = 20,
         .up_over_perc = 10,
         .down_over_perc = 10,

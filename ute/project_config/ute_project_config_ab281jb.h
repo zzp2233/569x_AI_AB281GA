@@ -165,7 +165,7 @@
 
 #endif
 
-#define UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION  1   //工厂模式TP测试不用跳过弹窗
+#define UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION  1   //开机始终显示语言选择界面
 
 /* 电池容量 zn.zeng 2022-01-07*/
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      245 //mAh

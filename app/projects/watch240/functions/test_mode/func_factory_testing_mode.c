@@ -963,7 +963,20 @@ static void func_mode_tp_click(void)
 
     if (click_num > 8)
     {
+#if UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION
+        test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
+        test_data->moduleType ++;//切换下一个模式
+
+        compo_form_t *frm = func_cb.frm_main;
+        if (frm != NULL)
+        {
+            compo_form_destroy(frm);
+            frm = NULL;
+        }
+        func_cb.frm_main = func_factory_testing_create();
+#else
         func_factory_testing_pass_fail_pop_click();
+#endif
         return;
     }
 
@@ -2401,7 +2414,20 @@ static void func_mode_tp_click(void)
 
     if (click_num > 8)
     {
+#if UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION
+        test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
+        test_data->moduleType ++;//切换下一个模式
+
+        compo_form_t *frm = func_cb.frm_main;
+        if (frm != NULL)
+        {
+            compo_form_destroy(frm);
+            frm = NULL;
+        }
+        func_cb.frm_main = func_factory_testing_create();
+#else
         func_factory_testing_pass_fail_pop_click();
+#endif
         return;
     }
 

@@ -193,7 +193,9 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
 #if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
     "地磁测试",
 #endif
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_KEY_FUNCTION
     "按键测试",
+#endif
 };
 #endif
 
@@ -1636,6 +1638,9 @@ compo_form_t *func_factory_testing_create(void)
     if(f_factory_testing->motor_flag)
     {
         f_factory_testing->motor_flag = false;
+#if UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL
+        uteDrvMotorSetTempVibrationLevel(UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL);
+#endif
         uteDrvMotorDisable();
     }
 
@@ -1683,6 +1688,9 @@ compo_form_t *func_factory_testing_create(void)
     }
     else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
     {
+#if UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL
+        uteDrvMotorSetTempVibrationLevel(UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL);
+#endif
         frm = func_factory_testing_motor();
     }
     else if (test_data->moduleType == FACTORY_MODULE_MIC_SPEAKER)
@@ -2964,6 +2972,13 @@ static void func_mode_charging_process(void)
 
 }
 
+#define AUANGCON0       SFR_RW (SFR1_BASE + 0x39*4)
+#define AUANGCON1       SFR_RW (SFR1_BASE + 0x3a*4)
+#define AUANGCON2       SFR_RW (SFR1_BASE + 0x3b*4)
+#define AUANGCON3       SFR_RW (SFR1_BASE + 0x3c*4)
+#define AUANGCON4       SFR_RW (SFR1_BASE + 0x3d*4)
+#define AUANGCON5       SFR_RW (SFR1_BASE + 0x3e*4)
+
 static void func_mode_mic_speaker_process(void)
 {
     compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
@@ -2978,6 +2993,13 @@ static void func_mode_mic_speaker_process(void)
     {
         compo_textbox_set(textbox, "录音中...");
         isNeedPlay = true;
+        printf("MIC[0]=[0x%x]V\n",AUANGCON0);
+        printf("MIC[1]=[0x%x]V\n",AUANGCON1);
+        printf("MIC[2]=[0x%x]V\n",AUANGCON2);
+        printf("MIC[3]=[0x%x]V\n",AUANGCON3);
+        printf("MIC[4]=[0x%x]V\n",AUANGCON4);
+        printf("MIC[5]=[0x%x]V\n",AUANGCON5);
+        printf("\n");
     }
     else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDED)
     {

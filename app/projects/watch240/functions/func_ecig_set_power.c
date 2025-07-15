@@ -68,6 +68,12 @@ compo_form_t *func_ecig_set_power_form_create(void)
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_BG_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_01_BIN);
+    compo_picturebox_set_pos(picbox, 62, 241);
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_03_BIN);
+    compo_picturebox_set_pos(picbox, 179, 241);
+
     uint8_t res = ecig_get_res();
     printf("121212122121ecig_get_res()=%d\n", res);
 
@@ -101,12 +107,12 @@ compo_form_t *func_ecig_set_power_form_create(void)
     compo_setid(btn2, COMPO_ID_BTN_ECIG_SET_S_D);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_00_BIN);
-    compo_picturebox_set_pos(picbox, 65, 241);
+    compo_picturebox_set_pos(picbox, 62, 241);
     compo_picturebox_set_visible(picbox, get_gear_func() == 0 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_SET_D_D1);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_02_BIN);
-    compo_picturebox_set_pos(picbox, 172, 241);
+    compo_picturebox_set_pos(picbox, 179, 241);
     compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_SET_S_D1);
 
@@ -154,7 +160,7 @@ compo_form_t *func_ecig_set_power_form_create(void)
     }
 
     compo_picturebox_cut(picbox, f_setpower->current_index, total_cnt);
-    compo_picturebox_set_pos(picbox, 120, 82);
+    compo_picturebox_set_pos(picbox, 120, 87);
     compo_picturebox_set_visible(picbox, get_gear_func() == 0 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG_NUM);
 
@@ -165,7 +171,7 @@ compo_form_t *func_ecig_set_power_form_create(void)
     //     f_setpower->current_index = INDEX_MAX_DOUBLE;
     // }
     compo_picturebox_cut(picbox, f_setpower->current_index, total_cnt);
-    compo_picturebox_set_pos(picbox, 120, 82);
+    compo_picturebox_set_pos(picbox, 120, 87);
     compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG1_NUM);
 

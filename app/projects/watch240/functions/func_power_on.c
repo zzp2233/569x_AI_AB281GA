@@ -212,7 +212,9 @@ static void func_power_on_disp_process(void)
                 sys_cb.power_on_state=false;
                 ute_module_systemtime_time_t time;
                 uteModuleSystemtimeGetTime(&time);
-
+#if UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION
+                func_cb.sta = FUNC_POWER_ON_LANGUAGE;
+#else
                 if(time.isWatchSetLangage == false)
                 {
                     func_cb.sta = FUNC_POWER_ON_LANGUAGE;
@@ -221,6 +223,7 @@ static void func_power_on_disp_process(void)
                 {
                     func_cb.sta = FUNC_POWER_ON_SCAN;
                 }
+#endif
             }
         }
     }

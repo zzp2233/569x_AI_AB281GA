@@ -2972,13 +2972,6 @@ static void func_mode_charging_process(void)
 
 }
 
-#define AUANGCON0       SFR_RW (SFR1_BASE + 0x39*4)
-#define AUANGCON1       SFR_RW (SFR1_BASE + 0x3a*4)
-#define AUANGCON2       SFR_RW (SFR1_BASE + 0x3b*4)
-#define AUANGCON3       SFR_RW (SFR1_BASE + 0x3c*4)
-#define AUANGCON4       SFR_RW (SFR1_BASE + 0x3d*4)
-#define AUANGCON5       SFR_RW (SFR1_BASE + 0x3e*4)
-
 static void func_mode_mic_speaker_process(void)
 {
     compo_textbox_t *textbox = compo_getobj_byid(TAPE_TXT_ID);
@@ -2993,13 +2986,6 @@ static void func_mode_mic_speaker_process(void)
     {
         compo_textbox_set(textbox, "录音中...");
         isNeedPlay = true;
-        printf("MIC[0]=[0x%x]V\n",AUANGCON0);
-        printf("MIC[1]=[0x%x]V\n",AUANGCON1);
-        printf("MIC[2]=[0x%x]V\n",AUANGCON2);
-        printf("MIC[3]=[0x%x]V\n",AUANGCON3);
-        printf("MIC[4]=[0x%x]V\n",AUANGCON4);
-        printf("MIC[5]=[0x%x]V\n",AUANGCON5);
-        printf("\n");
     }
     else if (uteModuleMicRecordFactoryGetRecordState() == FACTORY_TEST_RECORD_RECORDED)
     {

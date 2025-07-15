@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DE_H_
 
 #define DEFAULT_BLE_DEV_NAME "JU107"
-#define UTE_SW_VERSION "AB281DEV000118"
+#define UTE_SW_VERSION "AB281DEV000154"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DE"
@@ -301,7 +301,8 @@
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
 #define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
-
+#define UTE_MODULE_SCREENS_KALEIAOSCOPE_MENU_DEL_PRESSURE_APP     1     //本项目删除个别菜单多余应用
+#define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

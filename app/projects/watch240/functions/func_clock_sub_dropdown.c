@@ -3474,8 +3474,8 @@ static void func_clock_sub_dropdown_form_create(void)
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I338001_PRIMARY_FUNCTION_POINT_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, 332+10/2);
     compo_picturebox_cut(picbox,0,2);
-    compo_setid(picbox,COMPO_ID_PIC_WHITE);
 #endif
+    compo_setid(picbox,COMPO_ID_PIC_WHITE);
 
     widget_page_t *page = widget_page_create(frm->page);///创建页码页面
     widget_page_set_client(page, 0, 0);

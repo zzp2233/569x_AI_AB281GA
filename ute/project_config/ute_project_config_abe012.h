@@ -10,10 +10,16 @@
 #define _UTE_PROJECT_CONFIG_AB281A_H_
 
 #define DEFAULT_BLE_DEV_NAME "romio"
-#define UTE_SW_VERSION "ABE012V000028"
+#define UTE_SW_VERSION "ABE012V000029"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "ABE012"
+
+/* 单双发功率大小 zy 2025-07-11*/
+#define MIN_POWER_DOUBLE 20    // 双发最小功率
+#define MAX_POWER_DOUBLE 30    // 双发最大功率
+#define MIN_POWER_SINGLE 10    // 单发最小功率
+#define MAX_POWER_SINGLE 18    // 单发最大功率
 
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1

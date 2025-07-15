@@ -92,6 +92,8 @@ compo_form_t *func_ecig_set_power_form_create(void)
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_NUM_BIN);
 #elif PROJECT_ABE013_SUPPORT
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_NUM25_35_BIN);
+#elif PROJECT_ABF012_SUPPORT
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_NUM30_40_BIN);
 #endif
 
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 57);

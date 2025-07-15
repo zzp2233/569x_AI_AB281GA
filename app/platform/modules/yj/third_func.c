@@ -302,7 +302,9 @@ void third_et_func_kws_deal(u32 event)
 #if PROJECT_ABE012_SUPPORT
             uteModuleSmokeData.current_power = 25;
 #elif PROJECT_ABE013_SUPPORT
-            uteModuleSmokeData.current_power = 30;
+            uteModuleSmokeData.current_power = 30
+#elif PROJECT_ABF012_SUPPORT
+            uteModuleSmokeData.current_power = 35;
 #endif
 
             uteModuleSmokeData.current_index = 5;

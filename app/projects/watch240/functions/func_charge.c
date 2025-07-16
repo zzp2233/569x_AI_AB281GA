@@ -1173,6 +1173,7 @@ static const charge_ui_handle_t ui_handle_1 [] = //正面
     {.pic_x=268, .pic_y=93, .id=COMPO_ID_PIC_BAT_PERCENT},//电量
 };
 
+#if UTE_MODULE_BEDSIDE_MODE_SUPPORT
 #define num_big_0    UI_BUF_I338003_CHAGE_NUM_HOUR_MIN_54X76_X52_Y152_X186_Y152_03_BIN
 #define num_big_1    UI_BUF_I338003_CHAGE_NUM_HOUR_MIN_54X76_X52_Y152_X186_Y152_04_BIN
 #define num_big_2    UI_BUF_I338003_CHAGE_NUM_HOUR_MIN_54X76_X52_Y152_X186_Y152_05_BIN
@@ -1273,7 +1274,7 @@ const static u32 week_pic_en[10]=
     week_en_5,
     week_en_6,
 };
-
+#endif
 //电量更新
 void func_charge_update(void)
 {

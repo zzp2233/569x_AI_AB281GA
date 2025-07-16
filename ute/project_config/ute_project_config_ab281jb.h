@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281J_H_
 
 #define DEFAULT_BLE_DEV_NAME "G28"
-#define UTE_SW_VERSION "AB281JBV000148"
+#define UTE_SW_VERSION "AB281JBV000152"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281JB"
 
@@ -161,7 +161,11 @@
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT    13 //工厂测试音频测试->音频时长
 
+#define UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION  1   //工厂模式TP测试不用跳过弹窗
+
 #endif
+
+#define UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION  1   //开机始终显示语言选择界面
 
 /* 电池容量 zn.zeng 2022-01-07*/
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      245 //mAh
@@ -194,12 +198,12 @@
 /*! 表盘上拉界面,wang.luo 2025-04-07 */
 #define UTE_CUI_SCREEN_WATCHDIAL_PULLUP FUNC_MESSAGE
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
-#define DEFAULT_WATCH_INDEX 0
+#define DEFAULT_WATCH_INDEX 1
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
 #define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D20301001_BIN,\
-                                                UI_BUF_DIALPLATE_D20302001_BIN,\
+                                                UI_BUF_DIALPLATE_D19144001_BIN,\
                                                 UI_BUF_DIALPLATE_D20303001_BIN,\
                                                 UI_BUF_DIALPLATE_D20304001_BIN,\
                                                 UI_BUF_DIALPLATE_D19886001_BIN,\
@@ -228,7 +232,7 @@
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
 
 /*! 床头钟模式(充电界面不息屏),wang.luo 2025-04-29 */
-#define UTE_MODULE_BEDSIDE_MODE_SUPPORT 1
+#define UTE_MODULE_BEDSIDE_MODE_SUPPORT 0
 
 #define GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT      0
 #define GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT      0

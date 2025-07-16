@@ -352,20 +352,21 @@ compo_form_t *func_set_sub_language_form_create(void)
     compo_form_set_title(frm, i18n[STR_SETTING_LANGUAGE]);
 
     //新建列表
-    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_SELECT);
+    compo_listbox_t *listbox = compo_listbox_create(frm, COMPO_LISTBOX_STYLE_MENU_CIRCLE_SELECT);
     compo_listbox_set_bgimg(listbox, UI_BUF_I338001_11_CALL_BG_BIN);
     compo_listbox_set(listbox, tbl_language_list, SET_LIST_CNT);
 
     compo_listbox_set_sta_icon(listbox, UI_BUF_I338001_1_START_LANGUAGE_OK_BIN, /*UI_BUF_COMPO_SELECT_ADD_BIN*/0);
     compo_listbox_set_bithook(listbox, func_sel_language_bit);
+    compo_listbox_set_alike_icon(listbox, UI_BUF_I338001_1_START_LANGUAGE_00_BIN);
     compo_setid(listbox, COMPO_ID_LISTBOX);
     uint8_t set_idx = 1;
     if (set_idx < 1)
     {
         set_idx = 1;
     }
-    area_t img_rect = gui_image_get_size(UI_BUF_I338001_11_CALL_BG_BIN);
-    compo_listbox_set_item_text(listbox,img_rect.wid/2, img_rect.hei/2, 100, img_rect.hei, true);
+    //area_t img_rect = gui_image_get_size(UI_BUF_I338001_11_CALL_BG_BIN);
+    //compo_listbox_set_item_text(listbox,img_rect.wid/2, img_rect.hei/2, 100, img_rect.hei, true);
 
     compo_listbox_set_focus_byidx(listbox, set_idx);
     compo_listbox_update(listbox);

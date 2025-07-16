@@ -297,7 +297,11 @@ void hfp_hf_call_notice(uint32_t evt)
             //保存通话记录
             memset(sys_cb.pbap_result_Name, 0, sizeof(sys_cb.pbap_result_Name));
             bt_redial_init();
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+            uteModuleCallUpdateTempRecordsData();
+#else
             uteModuleCallUpdateRecordsData();
+#endif
 
 #if CALL_MGR_EN
             bt_cb.incall_flag = 0;
@@ -389,6 +393,9 @@ bool hfp_hf_3way_number_update_control(void)
 void hfp_hf_parse_clcc_cb(uint8_t idx, uint8_t dir, uint8_t status, uint8_t mode, uint8_t mpty, char *number, uint8_t type)
 {
     printf("===>>> clcc: idx:%d, dir:%d, status:%d, mode:%d, mpty:%d, number:%s, type:%d\n", idx, dir, status, mode, mpty, number, type);
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+    uteModuleCallSetClccTempData(idx, dir, status, mode, mpty, number, type);
+#endif
 }
 
 #endif //HFP_3WAY_CONTROL_EN

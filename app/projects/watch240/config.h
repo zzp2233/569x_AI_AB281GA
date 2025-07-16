@@ -46,12 +46,15 @@
 // #define GUI_SELECT                      GUI_TFT_240_JD9853W3//DISPLAY_UTE//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 // #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
 // #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT
-#define GUI_SELECT                      GUI_TFT_320_ST77916//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
-#define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
-#define GUI_MODE_SELECT                MODE_QSPI
+// #define GUI_SELECT                      GUI_TFT_320_ST77916//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
+// #define CTP_SELECT                      UTE_DRV_CTP_SELECT                   //CTP Select
+// #define GUI_MODE_SELECT                 MODE_QSPI
+#define GUI_SELECT                      GUI_TFT_SPI//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
+#define CTP_SELECT                      CTP_CST8X                   //CTP Select
+//#define GUI_MODE_SELECT                 MODE_QSPI
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
-#define GUI_MODE_SELECT                 MODE_3WIRE_9BIT_2LINE             //屏幕接口选择
+#define GUI_MODE_SELECT                 MODE_4WIRE_8BIT             //屏幕接口选择
 #define TFT_SPI_DRIVER                  SPI_GC9307_V1           //驱动选择
 #define TFT_SPI_LCD_WIDTH               240
 #define TFT_SPI_LCD_HEIGHT              284
@@ -621,7 +624,7 @@
 #define DEVELOPMENT_BOARD_USER         2//用户板子
 #define DEVELOPMENT_BOARD_TYPE          DEVELOPMENT_BOARD_USER
 //
-#define ECIG_POWER_CONTROL              0               //是否开启恒功率控制
+#define ECIG_POWER_CONTROL              1               //是否开启恒功率控制
 #define ECIG_ADC2_EN                    1               //是否有ADC2通路
 #define ECIG_DET_EN                     1               //是否有检测插拔电路
 #define ECIG_POLLING_CONTROL            1               //0:轮休判断，1：计数判断

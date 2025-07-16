@@ -298,7 +298,7 @@ void tft_init(void)
 #if (GUI_MODE_SELECT == MODE_3WIRE_9BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
     DESPICON |= BIT(18);                                                            //[18]3w-9b despi mode enable
 #elif (GUI_MODE_SELECT == MODE_QSPI)
-    DESPICON |= BIT(9) | BIT(3) | BIT(2);                                           //[9]MultiBit, [3:2]4BIT
+    DESPICON = BIT(27) | BIT(7) | BIT(0);                                            //[9]MultiBit, [3:2]4BIT
 #endif
 
 #else
@@ -330,6 +330,8 @@ void tft_init(void)
 #elif (GUI_SELECT == GUI_TFT_320_385_GV9B71)
     tft_spi_gc9b71_init();
 #elif (GUI_SELECT == GUI_TFT_SPI)
+    tft_spi_init();
+#elif (GUI_SELECT == GUI_SPI)
     tft_spi_init();
 #elif (GUI_SELECT == GUI_TFT_170_560_AXS15231B)
     tft_170_560_axs15231B_init();

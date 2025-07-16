@@ -58,7 +58,48 @@ static void func_power_off_disp_process(void)
         }
     }
 }
+#elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335005_SUPPORT
+/*! 默认开机动画logo图片数量 */
+#ifndef DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER
+#define DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER 0
+#endif
+//创建关机窗体
+compo_form_t *func_power_off_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
 
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335005_LOGO_00_BIN);///背景图片
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_setid(pic, COMPO_PIC_ID);
+
+    return frm;
+}
+static void func_power_off_disp_process(void)
+{
+    f_power_off_t* f_power_off = (f_power_off_t*)func_cb.f_cb;
+    if(tick_check_expire(f_power_off->tick,200))
+    {
+        compo_picturebox_t *pic  = compo_getobj_byid(COMPO_PIC_ID);
+
+        f_power_off->tick = tick_get();
+        f_power_off->pic_num_disp ++;
+        f_power_off->animation_second++;
+#if DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER
+        if(f_power_off->pic_num_disp < DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER)
+        {
+        }
+        else if(f_power_off->pic_num_disp == DEFAULT_POWEROFF_ANIMATION_LOGO_IMAGE_NUMBER)
+#else
+        if(f_power_off->animation_second == DEFAULT_POWEROFF_ANIMATION_SECOND*1000/200)
+#endif
+        {
+            uteApplicationCommonPoweroff();
+        }
+    }
+}
+#endif
 #else
 //创建关机窗体
 compo_form_t *func_power_off_form_create(void)
@@ -78,9 +119,9 @@ static void func_power_off_disp_process(void)
         f_power_off->animation_second ++;
     }
 
-    if (f_power_off->animation_second > DEFAULT_POWERON_ANIMATION_SECOND)
+    if (f_power_off->animation_second > DEFAULT_POWEROFF_ANIMATION_SECOND)
     {
-        func_power_off_switch_screen_handle();
+        uteApplicationCommonPoweroff();
     }
 }
 #endif // GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
@@ -111,6 +152,7 @@ static void func_power_off_enter(void)
 
     f_power_off->tick = 0;
     f_power_off->pic_num_disp = 0;
+    f_power_off->animation_second = 0;
 }
 
 //退出关机界面

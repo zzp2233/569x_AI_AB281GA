@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281AF_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Curve3"
-#define UTE_SW_VERSION "AB281AFV000143"
+#define UTE_SW_VERSION "AB281AFV000155"
 
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
@@ -87,6 +87,8 @@
 #define UTE_MODULE_WATCH_PREVIEW_STYLE 1
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
+/*! 全码编码器 qq.cai, 2025-07-14  */
+#define  UTE_DRV_ALL_QDEC_MODE  1
 
 /*! KEY1跳转界面,wang.luo 2025-04-09 */
 #define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT
@@ -163,9 +165,13 @@
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT    13 //工厂测试音频测试->音频时长
 
-#define UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST    1   //使用旧的老化模式
+#define UTE_MODULE_NEW_FACTORY_MODULE_USE_OLD_AGING_TEST    1   //使用三种模式的老化模式
 #define UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_PART_FUNCTION  1   //工厂模式测试减少+字、RGB、充电功能 
+
+#define UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION  1   //工厂模式TP测试不用跳过弹窗
 #endif
+
+#define UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION  1   //开机始终显示语言选择界面
 
 /* 电池容量 zn.zeng 2022-01-07*/
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      247 //mAh
@@ -209,11 +215,11 @@
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
 #define UTE_MODULE_SCREENS_WATCH_CNT_MAX 6
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D20205001_BIN, \
-                                                UI_BUF_DIALPLATE_D20202001_BIN, \
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS {UI_BUF_DIALPLATE_D20206001_BIN, \
+                                                UI_BUF_DIALPLATE_D20205001_BIN, \
                                                 UI_BUF_DIALPLATE_D20203001_BIN, \
+                                                UI_BUF_DIALPLATE_D20339001_BIN, \
                                                 UI_BUF_DIALPLATE_D20204001_BIN, \
-                                                UI_BUF_DIALPLATE_D20206001_BIN, \
                                                 UI_BUF_DIALPLATE_D18724001_BIN}
 
 #define UTE_MENU_STYLE_DOUBLE_NEXT_ENABLE   1  //双击切换菜单

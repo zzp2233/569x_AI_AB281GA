@@ -398,7 +398,7 @@ void bsp_qdec_io_process(void)
 
     if((wheel_port_last_state == 0x50 && wheel_z == 0x40)
 #if UTE_DRV_ALL_QDEC_MODE // 全码模式
-       || (wheel_port_last_state <= 0x10 && wheel_z == 0x50)
+       || (wheel_port_last_state == 0x10 && wheel_z == 0x50 && up_cnt!=0)
 #endif
       )
     {
@@ -415,7 +415,8 @@ void bsp_qdec_io_process(void)
     }
     else if((wheel_port_last_state == 0x50 && wheel_z == 0x10)
 #if UTE_DRV_ALL_QDEC_MODE // 全码模式
-            || (wheel_port_last_state <= 0x40 && wheel_z == 0x50)
+            || (wheel_port_last_state == 0x40 && wheel_z == 0x50 && dn_cnt!=0)
+            || (wheel_port_last_state == 0x00 && wheel_z == 0x50 && dn_cnt!=0)
 #endif
            )
     {
@@ -430,6 +431,13 @@ void bsp_qdec_io_process(void)
 #endif
         }
     }
+#if UTE_DRV_ALL_QDEC_MODE // 全码模式
+    else if(wheel_port_last_state == 0x50 && wheel_z == 0x50)
+    {
+        up_cnt = 0;
+        dn_cnt = 0;
+    }
+#endif
     wheel_port_last_state = wheel_z;
 }
 #else

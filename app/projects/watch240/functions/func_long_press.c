@@ -606,7 +606,11 @@ static void func_long_press_event_handle(s32 distance, u16 id)
                     uteTaskGuiStartScreen(FUNC_SUB_SOS, 0, __func__);
                     break;
                 case IMG_BTN_ID_2://关机
+#if UTE_MODULE_SCREENS_POWEROFF_SUPPORT//进入关机logo动画界面
+                    func_cb.sta = FUNC_POWER_OFF;
+#else
                     uteApplicationCommonPoweroff();
+#endif
                     break;
                 case IMG_BTN_ID_3://重启
                     uteApplicationCommonRestart();

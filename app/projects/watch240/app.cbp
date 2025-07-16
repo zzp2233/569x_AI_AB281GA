@@ -13,7 +13,6 @@
 				<Option compiler="riscv32-v2" />
 				<Compiler>
 					<Add directory="../../platform/bsp/bsp_ecig" />
-					<Add directory="functions" />
 				</Compiler>
 				<Linker>
 					<Add library="../../platform/libs/libc.a" />
@@ -101,6 +100,12 @@
 			<Add directory="../../platform/bsp/bsp_charge_ex" />
 			<Add directory="../../platform/bsp/bsp_charge_ex/charge_ic_comm" />
 			<Add directory="../../platform/bsp/bsp_charge_ex/lp7812c" />
+			<Add directory="../../platform/3rdparty/nopoll" />
+			<Add directory="../../platform/3rdparty/tinycrypt/include" />
+			<Add directory="../../platform/3rdparty/lwip/contrib" />
+			<Add directory="../../platform/3rdparty/lwip/contrib/ports/rtthread/include" />
+			<Add directory="../../platform/3rdparty/lwip/src/include" />
+			<Add directory="../../platform/bsp/bsp_speech" />
 		</Compiler>
 		<Linker>
 			<Add option="-T$(TARGET_OBJECT_DIR)ram.o" />
@@ -317,7 +322,6 @@
 		<Unit filename="../../../ute/project_config/ute_project_config.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_ab281.h" />
 		<Unit filename="../../../ute/project_config/ute_project_config_abe012.h" />
-		<Unit filename="../../../ute/project_config/ute_project_config_abe013.h" />
 		<Unit filename="../../../ute/task/ute_task_application.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -330,6 +334,530 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../../ute/thrid_lib/little_fs/lfs_util.h" />
+		<Unit filename="../../platform/3rdparty/cjson/cJSON.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/cjson/cJSON.h" />
+		<Unit filename="../../platform/3rdparty/lwip/contrib/apps/http/http_client_img.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/contrib/apps/ping/ping.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/contrib/apps/ping/ping.h" />
+		<Unit filename="../../platform/3rdparty/lwip/contrib/bnep_lwip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/contrib/lwipopts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/contrib/ports/rtthread/include/arch/cc.h" />
+		<Unit filename="../../platform/3rdparty/lwip/contrib/ports/rtthread/include/arch/sys_arch.h" />
+		<Unit filename="../../platform/3rdparty/lwip/contrib/ports/rtthread/sys_arch.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/api_lib.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/api_msg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/err.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/if_api.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/netbuf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/netdb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/netifapi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/sockets.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/api/tcpip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/altcp_tls/altcp_tls_mbedtls_mem.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/altcp_tls/altcp_tls_mbedtls_structs.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/http/fsdata.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/http/httpd_structs.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/http/makefsdata/makefsdata" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/http/makefsdata/readme.txt" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/http/makefsdata/tinydir.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/snmp/snmp_asn1.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/snmp/snmp_core_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/snmp/snmp_msg.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/snmp/snmp_pbuf_stream.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/snmp/snmpv3_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/apps/sntp/sntp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/altcp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/altcp_alloc.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/altcp_tcp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/def.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/dns.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/inet_chksum.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/init.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/acd.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/autoip.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/dhcp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/etharp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/icmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/igmp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/ip4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/ip4_addr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv4/ip4_frag.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/dhcp6.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/ethip6.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/icmp6.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/inet6.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/ip6.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/ip6_addr.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/ip6_frag.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/mld6.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/ipv6/nd6.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/mem.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/memp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/netif.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/pbuf.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/raw.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/stats.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/sys.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/tcp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/tcp_in.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/tcp_out.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/timeouts.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/core/udp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/include/compat/posix/arpa/inet.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/compat/posix/net/if.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/compat/posix/netdb.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/compat/posix/sys/socket.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/compat/stdc/errno.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/acd.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/altcp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/altcp_tcp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/altcp_tls.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/api.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/FILES" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/altcp_proxyconnect.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/altcp_tls_mbedtls_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/fs.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/http_client.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/httpd.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/httpd_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/lwiperf.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/mdns.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/mdns_domain.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/mdns_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/mdns_out.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/mdns_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/mqtt.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/mqtt_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/mqtt_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/netbiosns.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/netbiosns_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/smtp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/smtp_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp_core.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp_mib2.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp_scalar.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp_snmpv2_framework.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp_snmpv2_usm.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp_table.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmp_threadsync.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/snmpv3.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/sntp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/sntp_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/tftp_client.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/tftp_common.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/tftp_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/apps/tftp_server.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/arch.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/autoip.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/debug.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/def.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/dhcp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/dhcp6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/dns.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/err.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/errno.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/etharp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ethip6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/icmp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/icmp6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/if_api.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/igmp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/inet.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/inet_chksum.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/init.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip4.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip4_addr.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip4_frag.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip6_addr.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip6_frag.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip6_zone.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/ip_addr.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/mem.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/memp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/mld6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/nd6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/netbuf.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/netdb.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/netif.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/netifapi.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/opt.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/pbuf.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/altcp_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/api_msg.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/mem_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/memp_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/memp_std.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/nd6_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/raw_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/sockets_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/tcp_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/priv/tcpip_priv.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/acd.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/autoip.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/dhcp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/dhcp6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/dns.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/etharp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/ethernet.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/iana.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/icmp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/icmp6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/ieee.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/igmp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/ip.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/ip4.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/ip6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/mld6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/nd6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/tcp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/prot/udp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/raw.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/sio.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/snmp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/sockets.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/stats.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/sys.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/tcp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/tcpbase.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/tcpip.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/timeouts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/lwip/udp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/bridgeif.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/bridgeif_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/etharp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ethernet.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ieee802154.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/lowpan6.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/lowpan6_ble.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/lowpan6_common.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/lowpan6_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/ccp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/chap-md5.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/chap-new.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/chap_ms.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/eap.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/ecp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/eui64.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/fsm.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/ipcp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/ipv6cp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/lcp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/magic.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/mppe.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/polarssl/arc4.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/polarssl/des.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/polarssl/md4.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/polarssl/md5.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/polarssl/sha1.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/ppp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/ppp_impl.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/ppp_opts.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/pppapi.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/pppcrypt.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/pppdebug.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/pppoe.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/pppol2tp.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/pppos.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/upap.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/ppp/vj.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/slipif.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/include/netif/zepif.h" />
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/bridgeif.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/bridgeif_fdb.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ethernet.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/lowpan6.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/lowpan6_ble.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/lowpan6_common.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/PPPD_FOLLOWUP" />
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/auth.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/ccp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/chap-md5.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/chap-new.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/chap_ms.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/demand.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/eap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/ecp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/eui64.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/fsm.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/ipcp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/ipv6cp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/lcp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/magic.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/mppe.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/multilink.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/polarssl/README" />
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/polarssl/arc4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/polarssl/des.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/polarssl/md4.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/polarssl/md5.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/polarssl/sha1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/ppp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/pppapi.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/pppcrypt.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/pppoe.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/pppol2tp.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/pppos.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/upap.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/ppp/vj.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/slipif.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/src/netif/zepif.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/test/sockets/sockets_stresstest.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/lwip/test/sockets/sockets_stresstest.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_client.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_config.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_conn.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_conn.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_conn_opts.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_conn_opts.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_ctx.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_ctx.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_decl.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_decl.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_handlers.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_io.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_io.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_listener.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_listener.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_log.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_log.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_loop.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_loop.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_msg.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_msg.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_private.h" />
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_rtthread.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/nopoll/nopoll_rtthread.h" />
+		<Unit filename="../../platform/3rdparty/tinycrypt/src/tiny_aes.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/tinycrypt/src/tiny_base64.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/tinycrypt/src/tiny_md5.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/tinycrypt/src/tiny_sha1.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/3rdparty/tinycrypt/src/tiny_sha2.c">
+			<Option compilerVar="CC" />
+		</Unit>
 		<Unit filename="../../platform/bsp/bsp.h" />
 		<Unit filename="../../platform/bsp/bsp_app/ab_command/ab_common.c">
 			<Option compilerVar="CC" />
@@ -734,6 +1262,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/bsp/bsp_sleep.h" />
+		<Unit filename="../../platform/bsp/bsp_speech/chatbot.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_speech/chatbot.h" />
 		<Unit filename="../../platform/bsp/bsp_spi1flash.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -756,6 +1288,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="../../platform/bsp/bsp_vbat.h" />
+		<Unit filename="../../platform/bsp/bsp_vddhr_trim.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="../../platform/bsp/bsp_vddhr_trim.h" />
 		<Unit filename="../../platform/gui/components/compo_animation.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -997,6 +1533,7 @@
 		<Unit filename="../../platform/libs/api_sysclk.h" />
 		<Unit filename="../../platform/libs/api_update.h" />
 		<Unit filename="../../platform/libs/api_usb.h" />
+		<Unit filename="../../platform/libs/rt_thread.h" />
 		<Unit filename="../../platform/libs/strong_le.c">
 			<Option compilerVar="CC" />
 		</Unit>
@@ -1249,6 +1786,9 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_charge.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="functions/func_chatbot.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="functions/func_clock.c">

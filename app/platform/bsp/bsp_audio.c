@@ -1,6 +1,7 @@
 #include "include.h"
 
 void bt_aec_process(u8 *ptr, u32 samples, int ch_mode);
+void bt_aec_process_rec(u8 *ptr, u32 samples, int ch_mode);
 void bt_adc_process(u8 *ptr, u32 samples, int ch_mode);
 void bt_alc_process(u8 *ptr, u32 samples, int ch_mode);
 void speaker_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
@@ -10,6 +11,7 @@ void recorder_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 void mic_test_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 u8 bsp_modem_get_spr(void);
 void bsp_speech_recognition_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
+void chatbot_sdadc_process(u8 *ptr, u32 samples, int ch_mode);
 
 void bt_sco_tx_delay_init(void);
 void bt_sco_tx_delay_set(void *p);
@@ -52,6 +54,12 @@ void bt_sco_tx_delay_set(void *p);
 #define asr_sdadc_callback     sdadc_dummy
 #endif
 
+#if 1
+#define chatbot_sdadc_callback chatbot_sdadc_process
+#else
+#define chatbot_sdadc_callback sdadc_dummy
+#endif
+
 //MIC analog gain: 0~13(共14级), step 3DB (3db ~ +42db)
 //adadc digital gain: 0~63, step 0.5 DB, 保存在gain的低6bit
 const sdadc_cfg_t rec_cfg_tbl[] =
@@ -64,7 +72,7 @@ const sdadc_cfg_t rec_cfg_tbl[] =
     {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      480,    bt_sdadc_callback},             /* IIS     */
     {CH_MIC_PF0,   SPR_16000,  (12 << 6),   ADC2DAC_EN,     0,      128,    opus_sdadc_callback},           /* opus    */
     {CH_MIC_PF0,   SPR_16000,  ASR_GAIN,    ADC2DAC_EN,     0,      ASR_SAMPLE,     asr_sdadc_callback},    /* ASR     */
-
+    {CH_MIC_PF0,   SPR_16000, (12 << 6),    ADC2DAC_EN,     0,      240,     chatbot_sdadc_callback},    /* ASR     */
 };
 
 void audio_path_init(u8 path_idx)

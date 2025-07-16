@@ -34,7 +34,12 @@
 
 #define LWIP_TIMEVAL_PRIVATE 0
 // #define LWIP_ERRNO_STDINCLUDE
+
 #define LWIP_PROVIDE_ERRNO
+#include <errno.h>
+int *_os_errno(void);
+#undef errno
+#define errno (*_os_errno())
 
 #include <sys/time.h>
 #include <sys/fcntl.h>
@@ -68,5 +73,13 @@ void a_printf(const char *format, ...);
 #define INT_MAX    0x7FFFFFFF
 #endif
 
+#define X8_F "x"
+#define U16_F "u"
+#define S16_F "d"
+#define X16_F "x"
+#define U32_F "u"
+#define S32_F "d"
+#define X32_F "x"
+#define SZT_F "u"
 
 #endif /* LWIP_ARCH_CC_H */

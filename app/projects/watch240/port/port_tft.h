@@ -52,6 +52,13 @@
 #define   DC_ENABLE()           {GPIOAFEN |= BIT(3); GPIOADE |=  BIT(3); GPIOADIR |= BIT(3);} //DC脚 设置输入
 #define   DC_CMD_EN()           {DESPICON &= ~BIT(19);}     // DC 拉低
 #define   DC_DATA_EN()          {DESPICON |= BIT(19);}      // DC 拉高
+#elif (GUI_MODE_SELECT == MODE_SPI)
+//D0 -> PA2
+#define PORT_TFT_D0          BIT(2)
+#define PORT_TFT_GPIO_D0     IO_PA2
+//D1 -> PA3
+#define PORT_TFT_D1     BIT(3)
+#define PORT_TFT_GPIO_D1     IO_PA3
 #elif (GUI_MODE_SELECT == MODE_QSPI)
 //D0 -> PA2
 #define PORT_TFT_D0          BIT(2)

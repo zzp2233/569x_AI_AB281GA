@@ -57,6 +57,7 @@ extern void func_calculator(void);
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
 extern void func_camera(void);
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
+extern void func_chatbot(void);
 #if UTE_MODULE_SCREENS_LIGHT_SUPPORT
 extern void func_light(void);
 #endif // UTE_MODULE_SCREENS_LIGHT_SUPPORT
@@ -241,6 +242,7 @@ compo_form_t *func_breathe_form_create(void);
 compo_form_t *func_breathe_sub_mode_form_create(void);
 compo_form_t *func_breathe_sub_time_form_create(void);
 compo_form_t *func_calculator_form_create(void);
+compo_form_t *func_chatbot_form_create(void);
 #if UTE_MODULE_SCREENS_TIMER_SUPPORT
 compo_form_t *func_camera_form_create(void);
 #endif // UTE_MODULE_SCREENS_TIMER_SUPPORT
@@ -388,6 +390,7 @@ const func_t tbl_func_create[] =
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {FUNC_CALCULATOR,                   func_calculator_form_create},
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {FUNC_CHATBOT,                       func_chatbot_form_create},
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {FUNC_CAMERA,                       func_camera_form_create},
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -574,6 +577,7 @@ const func_t tbl_func_entry[] =
 #if UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
     {FUNC_CALCULATOR,                   func_calculator},               //计算器
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
+    {FUNC_CHATBOT,                       func_chatbot},
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     {FUNC_CAMERA,                       func_camera},                   //相机
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
@@ -949,6 +953,13 @@ void func_process(void)
 #if (ASR_SELECT == ASR_WS_AIR && MONITOR_ASR_WAKEUP_EN)
     asr_event_process();
 #endif
+
+#if VDDHR_TRIM_EN
+    bsp_vddhr_trim_save();
+#if VDDHR_TRIM_TEST_EN
+    bsp_vddhr_test();
+#endif
+#endif
 }
 
 //根据任务名创建窗体。此处调用的创建窗体函数不要调用子任务的控制结构体
@@ -1156,8 +1167,14 @@ void func_switch_to_menu(void)
         }
         else
         {
-            halt(HALT_GUI_COMPO_ICONLIST_TYPE);
-            return;
+//            printf("%s\n", __func__);
+//            halt(HALT_GUI_COMPO_ICONLIST_TYPE);
+//            return;
+            icon = NULL;
+        }
+        if (icon == NULL)
+        {
+            switch_mode = FUNC_SWITCH_FADE_OUT;
         }
         func_switching(switch_mode, icon);                                      //退出动画
         compo_form_destroy(frm);                                                //切换完成或取消，销毁窗体
@@ -1213,8 +1230,10 @@ void func_switching_to_menu(void)
     }
     else
     {
-        halt(HALT_GUI_COMPO_ICONLIST_TYPE);
-        return;
+//            printf("%s\n", __func__);
+//            halt(HALT_GUI_COMPO_ICONLIST_TYPE);
+//            return;
+        icon = NULL;
     }
     if (func_cb.sta != FUNC_CLOCK || func_cb.menu_style == MENU_STYLE_HONEYCOMB)
     {
@@ -1223,6 +1242,11 @@ void func_switching_to_menu(void)
     else
     {
         switch_mode = FUNC_SWITCH_ZOOM_FADE_EXIT;
+    }
+
+    if (icon == NULL)
+    {
+        switch_mode = FUNC_SWITCH_FADE_OUT;
     }
     bool res = func_switching(switch_mode, icon);                               //退出动画
     compo_form_destroy(frm);                                                    //切换完成或取消，销毁窗体

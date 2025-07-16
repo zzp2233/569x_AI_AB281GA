@@ -114,10 +114,10 @@ bool record_file_open(u8 *fname_buf, u32 size, u32 rec_type)
     return true;
 }
 
-bool record_file_write(u8 *buf, u32 rec_type)
+bool record_file_write(u8 *buf, u32 btw, u32 rec_type)
 {
     FRESULT res;
-    res = fs_write(buf, 512);
+    res = fs_write(buf, btw);
     if (res != FR_OK)
     {
         if (res == FR_NOT_ENOUGH_CORE)

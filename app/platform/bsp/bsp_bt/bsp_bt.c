@@ -22,7 +22,8 @@ void bsp_bt_init(void)
 
     cfg_bt_support_profile = (PROF_HFP*BT_HFP_EN*xcfg_cb.bt_sco_en)\
                              | (PROF_SPP*BT_SPP_EN*(xcfg_cb.bt_spp_en||xcfg_cb.eq_dgb_spp_en)) | (PROF_HID*BT_HID_EN) | (PROF_HSP*BT_HSP_EN*xcfg_cb.bt_sco_en)\
-                             | (PROF_PBAP*BT_PBAP_EN) | (PROF_MAP*BT_MAP_EN);
+                             | (PROF_PBAP*BT_PBAP_EN) | (PROF_MAP*BT_MAP_EN)
+                             | (PROF_PANU * BT_PANU_EN);
 
 #if BT_A2DP_PROFILE_DEFAULT_EN
     cfg_bt_support_profile |= (PROF_A2DP*BT_A2DP_EN*xcfg_cb.bt_a2dp_en);
@@ -113,35 +114,15 @@ void bt_emit_notice(uint evt, void *params)
             bt_cb.warning_status |= BT_WARN_DISCON;
             bt_redial_reset(((u8 *)params)[0] & 0x01);
 #if BT_HID_ONLY_FOR_IOS_EN
-            bt_deinit_lib_hid();
+            bt_init_lib_hid();
 #endif
-            if(!ble_is_connect())
-            {
-                uteModuleMusicResetPlayStatus();
-            }
             break;
 
         case BT_NOTICE_CONNECTED:
             bt_cb.warning_status |= BT_WARN_CON;
             bt_redial_reset(((u8 *)params)[0] & 0x01);
-            //ute add
-            uint8_t mac[6];
-            if(bt_nor_get_link_info(mac))
-            {
-                uteModuleCallBtUpdateKeyConnectAddress(mac);
-            }
-#if BT_HID_ONLY_FOR_IOS_EN
-            bd_addr_t address_iphone;
-            bd_addr_t remote_address;
-            bt_get_ext_link_info(address_iphone, 0,6);
-            for(int i = 0; i < 6; i++)
-            {
-                remote_address[i] = ((u8 *)param)[i+2];
-            }
-            if (memcmp(address_iphone,remote_address,6) == 0 && !bt_hid_is_connected())
-            {
-                bt_hid_profile_en();
-            }
+#if BT_PANU_EN
+            bt_panu_network_connect();
 #endif
             break;
 
@@ -260,6 +241,9 @@ void bt_emit_notice(uint evt, void *params)
             break;
         }
         case BT_NOTICE_SCO_SETUP:
+#if FUNC_REC_SCO
+            bsp_record_start(true, REC_WAV);
+#endif
             printf("BT_NOTICE_SCO_SETUP\n");
             sys_cb.sco_state = true;
             break;
@@ -268,6 +252,9 @@ void bt_emit_notice(uint evt, void *params)
             printf("BT_NOTICE_SCO_KILL\n");
             sys_cb.sco_state = false;
             bt_cb.call_type = CALL_TYPE_NONE;
+#if FUNC_REC_SCO
+            bsp_record_stop();
+#endif
             break;
 
         case BT_NOTICE_NETWORK_CALL:

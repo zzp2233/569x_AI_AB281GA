@@ -50,6 +50,10 @@ void bt_sco_dump_init(u8 *sysclk, call_cfg_t *p)
             nr->dump_en = 0;
         }
     }
+#if FUNC_REC_SCO
+    nr->dump_en |= DUMP_REC;
+#endif
+
 }
 
 void bt_sco_aec_init(u8 *sysclk, aec_cfg_t *aec, alc_cb_t *alc)

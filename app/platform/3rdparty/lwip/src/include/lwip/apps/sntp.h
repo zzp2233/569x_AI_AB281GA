@@ -39,6 +39,7 @@
 
 #include "lwip/apps/sntp_opts.h"
 #include "lwip/ip_addr.h"
+#include "lwip/apps/sntp.h"
 
 #ifdef __cplusplus
 extern "C" {

@@ -29,6 +29,9 @@ void param_init(bool reset)
         sys_cb.vol = SYS_INIT_VOLUME;
     }
     sys_cb.hfp_vol = sys_cb.vol / sys_cb.hfp2sys_mul;
+#if FUNC_MUSIC_EN
+    msc_cb.cur_dev = DEV_UDISK;
+#endif
 }
 
 AT(.text.bsp.param)
@@ -288,5 +291,21 @@ int air_flash_read(void)
         return -1;
     }
     return 0;
+}
+#endif
+
+
+#if VDDHR_TRIM_EN
+AT(.text.bsp.param.vddhr)
+void param_vddhr_trim_write(u8 *param)
+{
+    param_write((u8 *)param, PARAM_VDDHR_TRIM_VAL, 1);
+    param_sync();
+}
+
+AT(.text.bsp.param.vddhr)
+void param_vddhr_trim_read(u8 *param)
+{
+    param_read(param, PARAM_VDDHR_TRIM_VAL, 1);
 }
 #endif

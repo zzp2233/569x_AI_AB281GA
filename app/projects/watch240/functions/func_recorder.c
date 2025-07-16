@@ -98,7 +98,7 @@ static void func_recorder_button_click(void)
         case COMPO_ID_BTN_PLAY:
             if (!f_rec->start)
             {
-                bsp_record_start();
+                bsp_record_start(true, REC_MP3);
                 f_rec->start = 1;
                 f_rec->start_sec = RTCCNT;
                 func_recorder_set_title_name(fname_buf, COMPO_ID_TXT_MUSIC_NAME);
@@ -137,49 +137,11 @@ static void func_recorder_message(size_msg_t msg)
     }
 }
 
-AT(.com_text.func.recorder)
-void recorder_sdadc_process(u8 *ptr, u32 samples, int ch_mode)
-{
-#if FUNC_REC_EN
-    f_rec_t *f_rec = (f_rec_t *)func_cb.f_cb;
-    if (f_rec->start)
-    {
-        if (f_rec->frame_cnt < 4)
-        {
-            f_rec->frame_cnt++;
-        }
-        if (f_rec->frame_cnt > 3)
-        {
-            puts_rec_obuf(ptr, (u16)(samples << (1 + ch_mode)));
-        }
-    }
-#endif
-
-//#if MIC_EQ_EN
-//    sdadc_pcm_peri_eq(ptr,samples);
-//#endif
-//    sdadc_pcm_2_dac(ptr, samples, ch_mode);               //推DAC播放
-}
-
-#if FUNC_REC_EN
-void mic_rec_start(void)
-{
-    f_rec_t *f_rec = (f_rec_t *)func_cb.f_cb;
-    audio_path_init(AUDIO_PATH_RECORDER);
-    audio_path_start(AUDIO_PATH_RECORDER);
-    f_rec->frame_cnt = 0;
-}
-
-void mic_rec_stop(void)
-{
-    audio_path_exit(AUDIO_PATH_RECORDER);
-}
-#endif
 
 void func_recorder_process(void)
 {
     func_process();
-    bsp_record_process();
+    //bsp_record_process();
 }
 
 static void func_recorder_enter(void)
@@ -195,14 +157,8 @@ static void func_recorder_enter(void)
     bt_audio_bypass();
 #endif
 
-#if FUNC_REC_EN
-    rec_src.spr = SPR_16000;
-    rec_src.nchannel = 1;
-    rec_src.rec_type = REC_MP3;
-    rec_src.bitrate = 48000;
-    rec_src.source_start = mic_rec_start;
-    rec_src.source_stop  = mic_rec_stop;
-#endif
+
+
 }
 
 static void func_recorder_exit(void)

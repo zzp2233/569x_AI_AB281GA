@@ -34,12 +34,12 @@
  * Module    : 系统功能选择配置
  *****************************************************************************/
 #define BUCK_MODE_EN                    1                           //是否BUCK MODE
-#define SYS_CLK_SEL                     SYS_48M                     //选择系统时钟
+#define SYS_CLK_SEL                     SYS_192M                     //选择系统时钟
 #define POWKEY_10S_RESET                xcfg_cb.powkey_10s_reset
 #define SOFT_POWER_ON_OFF               1                           //是否使用软开关机功能
 #define PWRKEY_2_HW_PWRON               0                           //用PWRKEY模拟硬开关
 #define LP_XOSC_CLOCK_EN                0                           //是否使能低功耗晶振用于RTC CLOCK，支持关机时钟功能。(单脚晶振不支持低功耗晶振)
-#define GUI_AUTO_POWER_EN               1                           //是否使能刷图动态调节时钟，打开后系统时钟默认设置为SYS_CLK_SEL，刷图时调节为192M
+#define GUI_AUTO_POWER_EN               0                           //是否使能刷图动态调节时钟，打开后系统时钟默认设置为SYS_CLK_SEL，刷图时调节为192M
 
 #define CHIP_PACKAGE_SELECT             UTE_CHIP_PACKAGE_SELECT                  //芯片封装选择 5691G/5691C_F
 
@@ -65,7 +65,7 @@
 #define SYS_INIT_VOLUME                 xcfg_cb.sys_init_vol        //系统默认音量
 
 #define HEAP_FUNC_SIZE                  4096                        //FUNC HEAP SIZE
-#define CUSTOMER_HEAP_SIZE              (16 * 1024)                 //malloc 空间大小
+#define CUSTOMER_HEAP_SIZE              (64 * 1024)                 //malloc 空间大小
 
 #define TS_MODE_EN                      0                           //内部NTC模块是否开启
 #define MODEM_CAT1_EN                   0                           //cat1测试功能
@@ -156,6 +156,7 @@
 #define BT_MAP_EN                       0   //是否打开蓝牙短信服务(用于获取设备时间，支持IOS/Android)
 #define BT_SPP_EN                       1   //是否打开蓝牙串口服务
 #define BT_ID3_TAG_EN                   1   //是否打开蓝牙ID3功能
+#define BT_PANU_EN                      1   //是否打开蓝牙个人区域网服务（换btstack_lwip.a）
 #define BT_HID_EN                       1   //是否打开蓝牙HID服务
 #define BT_HID_TYPE                     0   //选择HID服务类型: 0=自拍器(VOL+, 部分Android不能拍照), 1=自拍器(VOL+和ENTER, 影响IOS键盘使用), 2=游戏手柄
 #define BT_HID_MANU_EN                  0   //蓝牙HID是否需要手动连接/断开
@@ -311,6 +312,8 @@
  * Module    : 录音功能配置
  *****************************************************************************/
 #define FUNC_REC_EN                     1   //录音功能总开关
+#define FUNC_REC_NR_EN                  0   //录音功能带降噪功能 目前支持  BT_SCO_DNN_EN 只支持wav编码的格式，其他待优化
+#define FUNC_REC_SCO                    0   //录音功通话的时候将远端和近端数据同时录下来保存，只支持wav格式，其他格式编码内存与通话以及降噪部分重叠会出现死机
 #define REC_FAST_PLAY                   0   //播卡播U下快速播放最新的录音文件(双击REC)
 
 #define REC_MP3_SUPPORT                 1   //是否支持MP3音频格式录音
@@ -409,6 +412,11 @@
 //充电辅助设置项
 #define CHARGE_USER_NTC_EN              UTE_DRV_BATTERY_CE_AUTH_SUPPORT //充电是否使用NTC参数
 #define CHARGE_VBAT_REFILL              (UTE_DRV_BATTERY_MAX_VOLTAGE - 100) //充满后停止充电，电池掉到指定电压后续充
+/*****************************************************************************
+ * Module    : VDDHR补偿配置
+ *****************************************************************************/
+#define VDDHR_TRIM_EN                   1                               //校准使能
+#define VDDHR_TRIM_TEST_EN              0                               //上电测试 默认关闭 生产时需要关闭
 
 #define CHARGE_NTC_ADC_MAX_TEMP         UTE_DRV_BATTERY_CE_AUTH_NOT_ALLOW_TEMPERATURE  //设置最小温度 摄氏度      53
 #define CHARGE_NTC_ADC_MAX_RE_TEMP      UTE_DRV_BATTERY_CE_AUTH_ALLOW_TEMPERATURE  //设置恢复温度 摄氏度     48
@@ -531,7 +539,7 @@
 /*****************************************************************************
  * Module    : 语音方案选择
  *****************************************************************************/
-#define ASR_SELECT                      ASR_YJ
+#define ASR_SELECT                      0//ASR_YJ
 #define ASR_FULL_SCENE                  1               //全场景模式
 #define ASR_API_CHECK_TIME              0               //API执行时间检测
 #define ASR_SAMPLE                      240             //MIC采样率
@@ -613,7 +621,7 @@
 #define DEVELOPMENT_BOARD_USER         2//用户板子
 #define DEVELOPMENT_BOARD_TYPE          DEVELOPMENT_BOARD_USER
 //
-#define ECIG_POWER_CONTROL              1               //是否开启恒功率控制
+#define ECIG_POWER_CONTROL              0               //是否开启恒功率控制
 #define ECIG_ADC2_EN                    1               //是否有ADC2通路
 #define ECIG_DET_EN                     1               //是否有检测插拔电路
 #define ECIG_POLLING_CONTROL            1               //0:轮休判断，1：计数判断
@@ -628,7 +636,7 @@
 /*****************************************************************************
  * Module    : 充电IC 功能选择
  *****************************************************************************/
-#define CHARGE_EX_IC_SELECT             CHARGE_IC_LP7812C   //充电模块IC选择
+#define CHARGE_EX_IC_SELECT             CHARGE_IC_NULL//CHARGE_IC_LP7812C   //充电模块IC选择
 #if (CHARGE_EX_IC_SELECT == CHARGE_IC_SY8827)
 #define CHARGE_SDA_GPIO                 IO_PB7              //充电IC单线数据脚（DCIN-DET）
 #define CHARGE_CTRL_GPIO                IO_PF0              //充电IC模式控制脚（SY-EN）

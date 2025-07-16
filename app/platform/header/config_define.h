@@ -63,6 +63,7 @@
 #define MODE_3WIRE_9BIT_2LINE           1                                       //屏幕3线9bit 两线模式(despi): 写命令用3w-9b, 写数据为两线模式多了D1/DC, 3w-9b-2line;
 #define MODE_4WIRE_8BIT                 2                                       //屏幕4线一通模式: 4线为SCLK CS D0 DC; 8bit为每次传输一个byte; 一通为一根数据线;
 #define MODE_QSPI                       3                                       //屏幕Qual-SPI模式: SCLK CS D0 D1 D2 D3;
+#define MODE_SPI                        4
 
 #define CTP_NO                          0
 #define CTP_CST8X                       1

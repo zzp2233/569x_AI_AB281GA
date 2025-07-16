@@ -244,6 +244,11 @@ typedef struct
     u8 smoke_oil;                                   //烟油
     u8 smoke_index;                                 //吸烟类型
 #endif
+#if VDDHR_TRIM_EN
+    u8 vddhr_trim_sta;                              //vddhr trim
+    u8 vddhr_trim_base;
+    u8 vddhr_trim_cnt;
+#endif
     bool idle_sta;                                  //是否处于idle状态
     bool hall_close_wkup;                           //1:sniff时hall关盖唤醒不亮屏
     bool bat_low;                                   //低电标志，低电时自动调低亮度

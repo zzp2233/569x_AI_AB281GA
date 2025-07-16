@@ -264,7 +264,14 @@ static void sfunc_sleep(void)
         interval = ble_get_conn_interval();
         latency = ble_get_conn_latency();
         tout = ble_get_conn_timeout();
-        ble_update_conn_param(400, 0, 500);     //interval: 400*1.25ms = 500ms
+        if(bt_is_ios_device())
+        {
+            ble_update_conn_param(96, 2, 500);
+        }
+        else
+        {
+            ble_update_conn_param(400, 0, 500);     //interval: 400*1.25ms = 500ms
+        }
     }
 #endif
 #if BT_SINGLE_SLEEP_LPW_EN
@@ -422,7 +429,7 @@ static void sfunc_sleep(void)
         if (wkpnd & BIT(ECIG_MIC_INT))
         {
 #elif (CHIP_PACKAGE_SELECT == CHIP_5690G)
-        if (wkpnd & BIT(PORT_INT6_VECTOR))
+        if (wkpnd & BIT(ECIG_MIC_INT))
         {
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
         if (wkpnd & BIT(PORT_INT4_VECTOR))

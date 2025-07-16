@@ -2993,6 +2993,7 @@ lwip_shutdown(int s, int how)
     err_t err;
     u8_t shut_rx = 0, shut_tx = 0;
 
+    a_printf("%s %d %d\n", __func__, s, how);
     LWIP_DEBUGF(SOCKETS_DEBUG, ("lwip_shutdown(%d, how=%d)\n", s, how));
 
     sock = get_socket(s);

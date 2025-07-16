@@ -38,7 +38,7 @@
 #endif
 #include "bsp_gpio.h"
 #include "bsp_charge_ex.h"
-
+#include "bsp_vddhr_trim.h"
 
 #if BT_TWS_EN
 #define TICK_MAX_DELAY                  TWS_TICK_MAX_DELAY

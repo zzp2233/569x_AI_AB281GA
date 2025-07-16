@@ -65,6 +65,7 @@ enum
 #endif // UTE_MODULE_SCREENS_CALCULATOR_SUPPORT
 #if UTE_MODULE_SCREENS_CAMERA_SUPPORT
     FUNC_CAMERA,                        //相机
+    FUNC_CHATBOT,                       //聊天机器人
 #endif // UTE_MODULE_SCREENS_CAMERA_SUPPORT
 #if UTE_MODULE_SCREENS_LIGHT_SUPPORT
     FUNC_LIGHT,                         //亮度调节

@@ -50,7 +50,17 @@ void port_tft_reset(void)
 void port_tft_exit(void)
 {
 #if (GUI_MODE_SELECT == MODE_4WIRE_8BIT || GUI_MODE_SELECT == MODE_3WIRE_9BIT_2LINE)
-    需要配置对应协议IO
+    GPIOADE  &= ~(BIT(2)|BIT(3)|BIT(1)|BIT(0)|BIT(4)|BIT(5)|BIT(7));
+    GPIOADIR |= (BIT(2)|BIT(3)|BIT(1)|BIT(0)|BIT(4)|BIT(5)|BIT(7));
+#elif GUI_MODE_SELECT == MODE_SPI
+
+    port_gpio_disable(PORT_TFT_CLK);
+    port_gpio_disable(PORT_TFT_CS);
+    port_gpio_disable(PORT_TFT_RST);
+
+    port_gpio_disable(PORT_TFT_GPIO_D0);
+    port_gpio_disable(PORT_TFT_GPIO_D1);
+
 #elif GUI_MODE_SELECT == MODE_QSPI
 
     port_gpio_disable(PORT_TFT_CLK);

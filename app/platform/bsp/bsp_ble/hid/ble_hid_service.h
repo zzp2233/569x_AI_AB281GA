@@ -115,7 +115,7 @@ typedef enum
 int ble_hid_service_init(void);
 bool ble_hid_task_enqueue(BLE_HID_CMD_ID_TYPEDEF id, u8 *buffer, u8 len);
 void ble_hid_service_proc(void);
-bool ble_hid_peer_device_is_ios(void);
+//bool ble_hid_peer_device_is_ios(void);
 
 bool ble_hid_send_touch_cmd(u8 touch, u16 x, u16 y);
 //void ble_hid_send_touch_cmd_kick(u8 touch, u16 x, u16 y, u8 kick_cfg);

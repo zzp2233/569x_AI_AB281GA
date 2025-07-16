@@ -9,24 +9,28 @@
 #endif
 
 // 组件ID
-#define BTN_REST_DISP_TIME 300                                         // 按钮释放时间 ms 级别
-#define INDEX_MAX_SINGLE 8                                             // 单发最大 index
-#define INDEX_MAX_DOUBLE 10                                            // 双发最大 index
-#define MAX_MIN_POWER_DOUBLE (MAX_POWER_DOUBLE + MIN_POWER_DOUBLE) / 2 // 中间功率
+#define BTN_REST_DISP_TIME 300 // 按钮释放时间 ms 级别
+#define MIN_POWER_SINGLE 10    // 单发最小功率
+#define MAX_POWER_SINGLE 18    // 单发最大功率
+#define MIN_POWER_DOUBLE 20    // 双发最小功率
+#define MAX_POWER_DOUBLE 30    // 双发最大功率
+#define INDEX_MAX_SINGLE 8     // 单发最大 index
+#define INDEX_MAX_DOUBLE 10    // 双发最大 index
+
 enum
 {
-    COMPO_ID_BTN_ECIG_SET_D_D = 0xff, // 单发
-    COMPO_ID_BTN_ECIG_SET_S_D,        // 双发
-    COMPO_ID_BTN_ECIG_SET_D_D1,       // 单发按钮
-    COMPO_ID_BTN_ECIG_SET_S_D1,       // 双发按钮
-    COMPO_ID_BTN_ECIG_BG_S_D,         // 背景双
-    COMPO_ID_BTN_ECIG_BG_D_D,         // 背景单
-    COMPO_ID_BTN_ECIG_BG_NUM,         // 单进度条
-    COMPO_ID_BTN_ECIG_BG1_NUM,        // 双进度条
-    COMPO_ID_BTN_ECIG_SET_ADD,        // 加功按钮
-    COMPO_ID_BTN_ECIG_SET_DEL,        // 减功按钮
-    COMPO_ID_BTN_ECIG_SET_ADD1,       // 加功率
-    COMPO_ID_BTN_ECIG_SET_DEL1,       // 减功率
+    COMPO_ID_BTN_ECIG_SET_D_D=0xff,  // 单发
+    COMPO_ID_BTN_ECIG_SET_S_D,  // 双发
+    COMPO_ID_BTN_ECIG_SET_D_D1, // 单发按钮
+    COMPO_ID_BTN_ECIG_SET_S_D1, // 双发按钮
+    COMPO_ID_BTN_ECIG_BG_S_D,   // 背景双
+    COMPO_ID_BTN_ECIG_BG_D_D,   // 背景单
+    COMPO_ID_BTN_ECIG_BG_NUM,   // 单进度条
+    COMPO_ID_BTN_ECIG_BG1_NUM,  // 双进度条
+    COMPO_ID_BTN_ECIG_SET_ADD,  // 加功按钮
+    COMPO_ID_BTN_ECIG_SET_DEL,  // 减功按钮
+    COMPO_ID_BTN_ECIG_SET_ADD1, // 加功率
+    COMPO_ID_BTN_ECIG_SET_DEL1, // 减功率
 };
 
 typedef struct f_setpower_t_
@@ -54,7 +58,7 @@ void load_power_and_index(int *power, int *index)
     if ((get_gear_func() == 0 && *power < MIN_POWER_SINGLE) ||
         (get_gear_func() == 1 && *power < MIN_POWER_DOUBLE))
     {
-        *power = get_gear_func() == 0 ? 15 : MAX_MIN_POWER_DOUBLE;
+        *power = get_gear_func() == 0 ? 15 : 25;
         *index = *power - (get_gear_func() == 0 ? MIN_POWER_SINGLE : MIN_POWER_DOUBLE);
     }
 }
@@ -68,16 +72,10 @@ compo_form_t *func_ecig_set_power_form_create(void)
 
     compo_picturebox_t *picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_BG_BIN);
     compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
-
-    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_01_BIN);
-    compo_picturebox_set_pos(picbox, 62, 241);
-    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_03_BIN);
-    compo_picturebox_set_pos(picbox, 179, 241);
-
     uint8_t res = ecig_get_res();
-    printf("121212122121ecig_get_res()=%d\n", res);
+    printf("121212122121ecig_get_res()=%d\n",res);
 
-    if ((res == 8) || res == 0)
+    if((res == 8)||res == 0 )
     {
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_04_BIN);
     }
@@ -85,18 +83,12 @@ compo_form_t *func_ecig_set_power_form_create(void)
     {
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_05_BIN);
     }
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 57);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-57);
     compo_picturebox_set_visible(picbox, get_gear_func() == 0 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG_D_D);
-#if PROJECT_ABE012_SUPPORT
-    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_NUM_BIN);
-#elif PROJECT_ABE013_SUPPORT
-    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_NUM25_35_BIN);
-#elif PROJECT_ABF012_SUPPORT
-    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_NUM30_40_BIN);
-#endif
 
-    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y - 57);
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_NUM_BIN);
+    compo_picturebox_set_pos(picbox, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-57);
     compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG_S_D);
 
@@ -109,47 +101,48 @@ compo_form_t *func_ecig_set_power_form_create(void)
     compo_setid(btn2, COMPO_ID_BTN_ECIG_SET_S_D);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_00_BIN);
-    compo_picturebox_set_pos(picbox, 62, 241);
+    compo_picturebox_set_pos(picbox, 65, 241);
     compo_picturebox_set_visible(picbox, get_gear_func() == 0 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_SET_D_D1);
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_02_BIN);
-    compo_picturebox_set_pos(picbox, 179, 241);
+    compo_picturebox_set_pos(picbox,172, 241);
     compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_SET_S_D1);
 
     int power, index;
 
     load_power_and_index(&f_setpower->current_power, &f_setpower->current_index);
-    // printf("aaaaaaaaf_setpower->current_inde=%d\n",f_setpower->current_index);
+//printf("aaaaaaaaf_setpower->current_inde=%d\n",f_setpower->current_index);
     int total_cnt;
-    // printf("res =%d\n",res);
+    //printf("res =%d\n",res);
 
-    if (get_gear_func() == 0 && ((res == 8) || res == 0))
+    if(get_gear_func() == 0 &&(( res == 8)||res == 0 ))
     {
         //   printf("111\n");
-        total_cnt = 9;
+        total_cnt =9;
     }
-    else if (get_gear_func() == 1 && res == 0)
+    else if(get_gear_func() == 1 &&res == 0 )
     {
         //  printf("222\n");
-        total_cnt = 11;
+        total_cnt =11;
     }
     else
     {
         //  printf("333\n");
-        total_cnt = 11;
+        total_cnt =11;
     }
-    if (f_setpower->current_index > 8 && total_cnt == 9)
+    if(f_setpower->current_index > 8 && total_cnt ==9)
         f_setpower->current_index = total_cnt - 1;
 
-    // int total_cnt1 = (get_gear_func1() == 0) ? 9 : 11;
-    if (get_gear_func() == 0 && ((res == 8) || res == 0))
+
+    //int total_cnt1 = (get_gear_func1() == 0) ? 9 : 11;
+    if(get_gear_func() == 0 &&(( res == 8)||res == 0 ))
     {
         //  printf("444\n");
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
     }
-    else if (get_gear_func() == 1 && res == 0)
+    else if  (get_gear_func() == 1 &&res == 0 )
     {
         picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
         //  printf("555\n");
@@ -162,7 +155,7 @@ compo_form_t *func_ecig_set_power_form_create(void)
     }
 
     compo_picturebox_cut(picbox, f_setpower->current_index, total_cnt);
-    compo_picturebox_set_pos(picbox, 120, 87);
+    compo_picturebox_set_pos(picbox, 120, 82);
     compo_picturebox_set_visible(picbox, get_gear_func() == 0 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG_NUM);
 
@@ -173,17 +166,17 @@ compo_form_t *func_ecig_set_power_form_create(void)
     //     f_setpower->current_index = INDEX_MAX_DOUBLE;
     // }
     compo_picturebox_cut(picbox, f_setpower->current_index, total_cnt);
-    compo_picturebox_set_pos(picbox, 120, 87);
+    compo_picturebox_set_pos(picbox, 120, 82);
     compo_picturebox_set_visible(picbox, get_gear_func() == 1 ? true : false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_BG1_NUM);
 
     compo_button_t *btn3 = compo_button_create(frm); // ＋
-    compo_button_set_location(btn3, 173, 161, 64, 64);
+    compo_button_set_location(btn3, 173, 161,  64, 64);
     compo_button_set_visible(btn3, true);
     compo_setid(btn3, COMPO_ID_BTN_ECIG_SET_ADD);
 
     compo_button_t *btn4 = compo_button_create(frm); // 减
-    compo_button_set_location(btn4, 64, 161, 64, 64);
+    compo_button_set_location(btn4,  64, 161, 64, 64);
     compo_button_set_visible(btn4, true);
     compo_setid(btn4, COMPO_ID_BTN_ECIG_SET_DEL);
 
@@ -196,6 +189,7 @@ compo_form_t *func_ecig_set_power_form_create(void)
     compo_picturebox_set_pos(picbox, 64, 161);
     compo_picturebox_set_visible(picbox, false);
     compo_setid(picbox, COMPO_ID_BTN_ECIG_SET_DEL1);
+
 
     picbox = compo_picturebox_create(frm, UI_BUF_I330001_POWER1_DUAL_ICON_ADD_BIN);
     compo_picturebox_set_pos(picbox, 173, 161);
@@ -224,7 +218,7 @@ static void func_ecig_set_power_button_touch_handle(void)
     switch (id)
     {
         case COMPO_ID_BTN_ECIG_SET_S_D:
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
 #if ECIG_POWER_CONTROL
             test_2st_gear_func();
 #endif
@@ -234,20 +228,20 @@ static void func_ecig_set_power_button_touch_handle(void)
             compo_picturebox_set_visible(picbox3, true);
             compo_picturebox_set_visible(picbox5, false);
             compo_picturebox_set_visible(picbox4, true);
-            f_setpower->current_index = MAX_MIN_POWER_DOUBLE - MIN_POWER_DOUBLE;
+            f_setpower->current_index = 25 - MIN_POWER_DOUBLE;
             if (f_setpower->current_index > INDEX_MAX_DOUBLE)
             {
                 f_setpower->current_index = INDEX_MAX_DOUBLE;
             }
-            f_setpower->current_power = MAX_MIN_POWER_DOUBLE;
-            compo_picturebox_set(picbox3, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
+            f_setpower->current_power = 25;
+            compo_picturebox_set(picbox3,UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
             compo_picturebox_cut(picbox3, f_setpower->current_index, 11);
 
             // printf("111Switched to Double mode: total_cnt = 11, current_index = %d, current_power = %d\n",
             //        f_setpower->current_index, f_setpower->current_power);
             break;
         case COMPO_ID_BTN_ECIG_SET_D_D:
-            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME, UTE_MOTOR_INTERVAL_TIME, 1);
+            uteDrvMotorStart(UTE_MOTOR_DURATION_TIME,UTE_MOTOR_INTERVAL_TIME,1);
 #if ECIG_POWER_CONTROL
             test_1st_gear_func();
 #endif
@@ -259,16 +253,16 @@ static void func_ecig_set_power_button_touch_handle(void)
             compo_picturebox_set_visible(picbox5, true);
             f_setpower->current_index = 15 - MIN_POWER_SINGLE;
             f_setpower->current_power = 15;
-            if (res == 8 || res == 4 || res == 0)
+            if(res==8||res==4||res==0)
             {
-                // printf("1111111111111111111111111111,f_setpower->current_index=%d\n",f_setpower->current_index);
-                compo_picturebox_set(picbox2, UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
+                //printf("1111111111111111111111111111,f_setpower->current_index=%d\n",f_setpower->current_index);
+                compo_picturebox_set(picbox2,UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
                 compo_picturebox_cut(picbox2, f_setpower->current_index, 9);
             }
             else
             {
                 // printf("22222222222222222222222222222222\n");
-                compo_picturebox_set(picbox2, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
+                compo_picturebox_set(picbox2,UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
                 compo_picturebox_cut(picbox2, f_setpower->current_index, 11);
             }
 
@@ -278,7 +272,7 @@ static void func_ecig_set_power_button_touch_handle(void)
             //    f_setpower->current_index, f_setpower->current_power);
             break;
         case COMPO_ID_BTN_ECIG_SET_ADD:
-            if (get_gear_func() == 0 && (res == 4 || res == 8 || res == 0))
+            if (get_gear_func() == 0 && (res==4||res==8||res==0))
             {
                 if (f_setpower->current_index < INDEX_MAX_SINGLE)
                 {
@@ -286,11 +280,11 @@ static void func_ecig_set_power_button_touch_handle(void)
                     f_setpower->current_index++;
                     f_setpower->current_power++;
                     ecig_set_power(f_setpower->current_power);
-                    compo_picturebox_set(picbox2, UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
+                    compo_picturebox_set(picbox2,UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
                     compo_picturebox_cut(picbox2, f_setpower->current_index, 9);
                 }
             }
-            else if (get_gear_func() == 0 && (res == 6 || res == 12))
+            else if (get_gear_func() == 0 && (res==6||res==12))
             {
                 if (f_setpower->current_index < INDEX_MAX_DOUBLE)
                 {
@@ -298,7 +292,7 @@ static void func_ecig_set_power_button_touch_handle(void)
                     f_setpower->current_index++;
                     f_setpower->current_power++;
                     ecig_set_power(f_setpower->current_power);
-                    compo_picturebox_set(picbox2, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
+                    compo_picturebox_set(picbox2,UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
                     compo_picturebox_cut(picbox2, f_setpower->current_index, 11);
                 }
             }
@@ -310,7 +304,7 @@ static void func_ecig_set_power_button_touch_handle(void)
                     f_setpower->current_index++;
                     f_setpower->current_power++;
                     ecig_set_power(f_setpower->current_power);
-                    compo_picturebox_set(picbox3, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
+                    compo_picturebox_set(picbox3,UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
                     compo_picturebox_cut(picbox3, f_setpower->current_index, 11);
                 }
             }
@@ -321,25 +315,25 @@ static void func_ecig_set_power_button_touch_handle(void)
             break;
 
         case COMPO_ID_BTN_ECIG_SET_DEL:
-            if (get_gear_func() == 0 && (res == 4 || res == 8 || res == 0))
+            if (get_gear_func() == 0 && (res==4||res==8||res==0))
             {
                 if (f_setpower->current_index > 0)
                 {
                     f_setpower->current_index--;
                     f_setpower->current_power--;
                     ecig_set_power(f_setpower->current_power);
-                    compo_picturebox_set(picbox2, UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
+                    compo_picturebox_set(picbox2,UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
                     compo_picturebox_cut(picbox2, f_setpower->current_index, 9);
                 }
             }
-            else if (get_gear_func() == 0 && (res == 6 || res == 12))
+            else if (get_gear_func() == 0 && (res==6||res==12))
             {
                 if (f_setpower->current_index > 0)
                 {
                     f_setpower->current_index--;
                     f_setpower->current_power--;
                     ecig_set_power(f_setpower->current_power);
-                    compo_picturebox_set(picbox2, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
+                    compo_picturebox_set(picbox2,UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
                     compo_picturebox_cut(picbox2, f_setpower->current_index, 11);
                 }
             }
@@ -350,7 +344,7 @@ static void func_ecig_set_power_button_touch_handle(void)
                     f_setpower->current_index--;
                     f_setpower->current_power--;
                     ecig_set_power(f_setpower->current_power);
-                    compo_picturebox_set(picbox3, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
+                    compo_picturebox_set(picbox3,UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
                     compo_picturebox_cut(picbox3, f_setpower->current_index, 11);
                 }
             }
@@ -372,8 +366,7 @@ static void func_ecig_set_power_button_touch_handle(void)
 void func_ecig_set_power_refresh(void)
 {
     f_setpower_t *f_setpower = (f_setpower_t *)func_cb.f_cb;
-    if (!f_setpower)
-        return;
+    if (!f_setpower) return;
 
     uint8_t res = ecig_get_res();
     // 获取界面组件
@@ -385,7 +378,7 @@ void func_ecig_set_power_refresh(void)
     compo_picturebox_t *double_bg = compo_getobj_byid(COMPO_ID_BTN_ECIG_BG_S_D);
 
     // 根据当前模式（单发/双发）更新界面显示
-    if (get_gear_func() == 0) // 单发模式
+    if (get_gear_func() == 0)    // 单发模式
     {
         compo_picturebox_set_visible(single_mode, true);
         compo_picturebox_set_visible(double_mode, false);
@@ -399,6 +392,7 @@ void func_ecig_set_power_refresh(void)
         {
             compo_picturebox_set(single_progress, UI_BUF_I330001_POWER1_SINGLE_ICON_POWER_BIN);
             compo_picturebox_cut(single_progress, f_setpower->current_index, 9);
+
         }
         else
         {
@@ -407,7 +401,7 @@ void func_ecig_set_power_refresh(void)
         }
         f_setpower->current_power = 15;
     }
-    else // 双发模式
+    else      // 双发模式
     {
         compo_picturebox_set_visible(double_mode, true);
         compo_picturebox_set_visible(single_mode, false);
@@ -418,7 +412,7 @@ void func_ecig_set_power_refresh(void)
 
         compo_picturebox_set(double_progress, UI_BUF_I330001_POWER1_DUAL_ICON_POWER_BIN);
         compo_picturebox_cut(double_progress, f_setpower->current_index, 11);
-        f_setpower->current_power = MAX_MIN_POWER_DOUBLE;
+        f_setpower->current_power = 25;
     }
     // load_power_and_index(&uteModuleSmokeData.current_power, &uteModuleSmokeData.current_index);
     // printf("2222uteModuleSmokeData.current_power=%d，ecig_get_power()=%d\r\n",uteModuleSmokeData.current_power,ecig_get_power());
@@ -485,7 +479,7 @@ static void func_ecig_set_power_process(void)
     func_process();
 
     // 新增：检测模式是否变化，变化时强制刷新界面
-    static int last_gear = -1; // 记录上一次模式
+    static int last_gear = -1;  // 记录上一次模式
     // int current_gear = get_gear_func();
     // if (last_gear != current_gear) {  // 模式变化时
     //     func_ecig_set_power_refresh();  // 调用刷新函数

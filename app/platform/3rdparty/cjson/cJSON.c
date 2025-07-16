@@ -47,7 +47,6 @@
 
 #define sscanf(...)                     a_sscanf(__VA_ARGS__)
 int a_sscanf(const char * buf, const char * fmt, ...);
-double strtod_c(const char *str, char **endptr);
 
 #ifdef ENABLE_LOCALES
 #include <locale.h>
@@ -361,7 +360,7 @@ static cJSON_bool parse_number(cJSON * const item, parse_buffer * const input_bu
 loop_end:
     number_c_string[i] = '\0';
 
-    number = strtod_c((const char*)number_c_string, (char**)&after_end);
+    number = strtod((const char*)number_c_string, (char**)&after_end);
     if (number_c_string == after_end)
     {
         return false; /* parse_error */

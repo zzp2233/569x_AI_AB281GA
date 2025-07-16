@@ -1,5 +1,5 @@
 #include "include.h"
-
+#include "tft_spi_driver.h"
 #if (GUI_SELECT == GUI_TFT_SPI)
 
 #define WriteData(v) tft_write_data(v)

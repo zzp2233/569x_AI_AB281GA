@@ -47,6 +47,7 @@
 
 #include "arch/cc.h"
 
+
 /**
  * @defgroup compiler_abstraction Compiler/platform abstraction
  * @ingroup sys_layer
@@ -79,7 +80,7 @@
  */
 #ifndef LWIP_PLATFORM_DIAG
 #define LWIP_PLATFORM_DIAG(x) do {a_printf x;} while(0)
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdlib.h>
 #endif
 
@@ -91,7 +92,7 @@
 #ifndef LWIP_PLATFORM_ASSERT
 #define LWIP_PLATFORM_ASSERT(x) do {a_printf("Assertion \"%s\" failed at line %d in %s\n", \
                                      x, __LINE__, __FILE__); WDT_RST();/* fflush(NULL); abort(); */} while(0)
-#include <stdio.h>
+// #include <stdio.h>
 #include <stdlib.h>
 #endif
 

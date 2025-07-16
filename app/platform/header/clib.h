@@ -15,6 +15,8 @@
 #define print_kr16(...)                 my_print_r16(__VA_ARGS__)
 #define print_kr32(...)                 my_print_r32(__VA_ARGS__)
 
+#define printe(...)                     extern_printf(__VA_ARGS__)  //不支持中断打印，支持最大9位精度的浮点数打印
+
 #define printf_end(x)                   {WDT_DIS(); printf(x); printf("\nTEST_END\n"); while(1);}
 #define sscanf(...)                     a_sscanf(__VA_ARGS__)
 #define sscank(...)                     my_sscanf(__VA_ARGS__)
@@ -54,6 +56,9 @@ int sprintf(char *buffer, const char *format, ...);
 int vsprintf(char *buffer, const char *format, va_list param);
 int snprintf(char *buffer, uint maxlen, const char *format, ...);
 int vsnprintf(char *buffer, uint maxlen, const char *format, va_list param);
+
+void extern_printf_init(void (*putchar)(char));
+int extern_printf(const char* format, ...);
 
 u32 swap32(u32 val);
 u16 swap16(u16 val);

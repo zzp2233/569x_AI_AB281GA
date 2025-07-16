@@ -1,8 +1,10 @@
 #include "include.h"
 
 #include "arch/sys_arch.h"
+#include "lwip/mem.h"
 
 #include "rt_thread.h"
+os_err_t os_mq_init(os_mq_t mq, const char *name, void *msgpool, os_size_t msg_size, os_size_t pool_size, os_uint8_t flag);
 
 #define LWIP_PLATFORM_ASSERT(x) do {a_printf("Assertion \"%s\" failed at line %d in %s\n", \
                                      x, __LINE__, __FILE__); WDT_RST();} while(0)
@@ -60,18 +62,14 @@ typedef enum
 } err_enum_t;
 #endif
 
-void *ab_calloc(size_t nitems, size_t size);
-void ab_free(void *ptr);
-
-#define calloc ab_calloc
-#define free ab_free
-
 u32 tick_get(void);
 uint32_t bb_timer_get(void);
 uint32_t bb_timestamp_get(void); // us
 void os_task_sleep(uint32_t ms);
 uint32_t os_tick_from_ms(uint32_t ms);
 u32 bt_rand(void);
+
+void sys_mark_tcpip_thread(void);
 
 static struct os_mutex lwip_mutex;
 
@@ -85,6 +83,7 @@ uint32_t lwip_port_rand(void)
  */
 static void tcpip_init_done_callback(void *arg)
 {
+    sys_mark_tcpip_thread();
     os_sem_release((os_sem_t)arg);
 }
 
@@ -147,9 +146,7 @@ void lwip_sys_init(void)
 
 uint32_t sys_now(void)
 {
-    // TODO
-    // return sys_now_update() / 1000;
-    return tick_get();
+    return bb_timer_get() / 16 * 10;
 }
 
 uint32_t sys_jiffies(void)
@@ -178,7 +175,7 @@ void sys_arch_msleep(uint32_t delay_ms)
 static uint8_t mutex_cnt = 0;
 err_t sys_mutex_new(sys_mutex_t *mutex)
 {
-    mutex->mut = calloc(1, sizeof(struct os_mutex));
+    mutex->mut = mem_malloc(sizeof(struct os_mutex));
     if (mutex->mut == NULL)
     {
         return ERR_MEM;
@@ -189,7 +186,7 @@ err_t sys_mutex_new(sys_mutex_t *mutex)
     os_err_t ret = os_mutex_init(mutex->mut, name, OS_IPC_FLAG_FIFO);
     if (ret != OS_EOK)
     {
-        free(mutex->mut);
+        mem_free(mutex->mut);
         return ERR_ARG;
     }
     return ERR_OK;
@@ -208,7 +205,7 @@ void sys_mutex_unlock(sys_mutex_t *mutex)
 void sys_mutex_free(sys_mutex_t *mutex)
 {
     os_mutex_detach((os_mutex_t)mutex->mut);
-    free(mutex->mut);
+    mem_free(mutex->mut);
     mutex->mut = NULL;
 }
 
@@ -217,7 +214,7 @@ void sys_mutex_free(sys_mutex_t *mutex)
 static uint8_t sem_cnt = 0;
 err_t sys_sem_new(sys_sem_t *sem, uint8_t initial_count)
 {
-    sem->sem = calloc(1, sizeof(struct os_semaphore));
+    sem->sem = mem_malloc(sizeof(struct os_semaphore));
     if (sem->sem == NULL)
     {
         return ERR_MEM;
@@ -229,7 +226,7 @@ err_t sys_sem_new(sys_sem_t *sem, uint8_t initial_count)
     os_err_t ret = os_sem_init(sem->sem, name, initial_count, OS_IPC_FLAG_FIFO);
     if (ret != OS_EOK)
     {
-        free(sem->sem);
+        mem_free(sem->sem);
         return ERR_ARG;
     }
     return ERR_OK;
@@ -253,7 +250,7 @@ uint32_t sys_arch_sem_wait(sys_sem_t *sem, uint32_t timeout_ms)
     os_err_t ret = os_sem_take(sem->sem, tick);
     if (ret != OS_EOK)
     {
-        printf("%s timeout_ms=%d ret=%d\n", __func__, timeout_ms, (int)ret);
+        // printf("%s timeout_ms=%d ret=%d\n", __func__, timeout_ms, (int)ret);
         return SYS_ARCH_TIMEOUT;
     }
 
@@ -269,24 +266,35 @@ void sys_sem_free(sys_sem_t *sem)
     LWIP_ASSERT("sem->sem != NULL", sem->sem != NULL);
 
     os_sem_detach(sem->sem);
-    free(sem->sem);
+    mem_free(sem->sem);
     sem->sem = NULL;
 }
 
+#define MBOX_MQ_LEN 4
 static uint8_t mq_cnt = 0;
 err_t sys_mbox_new(sys_mbox_t *mbox, int size)
 {
     LWIP_ASSERT("mbox != NULL", mbox != NULL);
     LWIP_ASSERT("size > 0", size > 0);
 
+    int pool_size = (MBOX_MQ_LEN + 4) * size;
+
     char name[4];
     mq_cnt = (mq_cnt + 1) % 100;
-    snprintf(name, 4, "l%d", mq_cnt++);
-    mbox->mbx = os_mq_create(name, 4, size, OS_IPC_FLAG_FIFO);
-    if(mbox->mbx == NULL)
+    snprintf(name, MBOX_MQ_LEN, "l%d", mq_cnt++);
+
+    mbox->mbx = mem_malloc(sizeof(struct os_messagequeue));
+    if (mbox->mbx == NULL)
     {
         return ERR_MEM;
     }
+    void *msgpool = mem_malloc(pool_size);
+    if (msgpool == NULL)
+    {
+        return ERR_MEM;
+    }
+
+    os_mq_init(mbox->mbx, name, msgpool, 4, pool_size, OS_IPC_FLAG_FIFO);
     return ERR_OK;
 }
 
@@ -304,11 +312,11 @@ void sys_mbox_post(sys_mbox_t *mbox, void *msg)
     }
     if (ret != OS_EOK)
     {
-        printf("mbox post failed\n");
+        printf("%s failed\n", __func__);
     }
 }
 
-AT(.com_text.lwip)
+// AT(.com_text.lwip)
 err_t sys_mbox_trypost(sys_mbox_t *mbox, void *msg)
 {
     LWIP_ASSERT("mbox != NULL", mbox != NULL);
@@ -318,16 +326,19 @@ err_t sys_mbox_trypost(sys_mbox_t *mbox, void *msg)
     os_err_t ret = os_mq_send(mbox->mbx, &addr, 4);
     if (ret != OS_EOK)
     {
+        printf("%s failed %x %x\n", __func__, mbox->mbx, __builtin_return_address(0));
         return ERR_MEM;
     }
 
     return ERR_OK;
 }
 
-AT(.com_text.lwip)
+// AT(.com_text.lwip)
 err_t sys_mbox_trypost_fromisr(sys_mbox_t *mbox, void *msg)
 {
-    return sys_mbox_trypost(mbox, msg);
+    printf("no defined\n");
+    return ERR_IF;
+    // return sys_mbox_trypost(mbox, msg);
 }
 
 uint32_t sys_arch_mbox_fetch(sys_mbox_t *mbox, void **msg, uint32_t timeout_ms)
@@ -393,7 +404,10 @@ void sys_mbox_free(sys_mbox_t *mbox)
     LWIP_ASSERT("mbox != NULL", mbox != NULL);
     LWIP_ASSERT("mbox->mbx != NULL", mbox->mbx != NULL);
 
-    os_mq_delete(mbox->mbx);
+    struct os_messagequeue *mbx = mbox->mbx;
+    mem_free(mbx->msg_pool);
+    os_mq_detach(mbox->mbx);
+    mem_free(mbox->mbx);
     mbox->mbx = NULL;
 }
 
@@ -407,15 +421,15 @@ sys_thread_t sys_thread_new(const char    *name,
 
     sys_thread_t lwip_thread;
     lwip_thread.thread_handle = NULL;
-    void *stack = calloc(1, stacksize);
+    void *stack = mem_malloc(stacksize);
     if (stack == NULL)
     {
         return lwip_thread;
     }
-    os_thread_t tid = calloc(1, sizeof(struct os_thread));
+    os_thread_t tid = mem_malloc(sizeof(struct os_thread));
     if (tid == NULL)
     {
-        free(stack);
+        mem_free(stack);
         return lwip_thread;
     }
 
@@ -426,7 +440,7 @@ sys_thread_t sys_thread_new(const char    *name,
         printf("%s real_prio=19\n", __func__);
     }
 
-    os_thread_init(tid, name, thread, arg, stack, stacksize, real_prio, 20);
+    os_thread_init(tid, name, thread, arg, stack, stacksize, real_prio, -1);
     lwip_thread.thread_handle = tid;
     os_thread_startup(tid);
     return lwip_thread;
@@ -458,22 +472,44 @@ void sys_unlock_tcpip_core(void)
 
 static os_thread_t lwip_tcpip_thread;
 
-void
-sys_mark_tcpip_thread(void)
+void sys_mark_tcpip_thread(void)
 {
     lwip_tcpip_thread = os_thread_self();
 }
 
-void
-sys_check_core_locking(void)
+void sys_check_core_locking(const char *file, unsigned int line)
 {
     if (lwip_tcpip_thread != 0)
     {
         os_thread_t current_thread = os_thread_self();
 
-        LWIP_ASSERT("Function called without core lock",
-                    current_thread == lwip_core_lock_holder_thread &&
-                    lwip_core_lock_count > 0);
+        if (!((current_thread == lwip_core_lock_holder_thread) &&
+              (lwip_core_lock_count > 0)))
+        {
+            printf("Function called without core lock(%s): failed at %d in "
+                   "%s\n",
+                   __func__,
+                   line,
+                   file);
+            WDT_RST();
+        }
     }
 }
 
+void sntp_set_system_time(unsigned long s, unsigned long f)
+{
+    //printf("%s %u %u\n", __func__, s, f);
+
+    // 70year
+    u32 ts = s - 2208988800UL;
+    rtc_clock_timestamp_set(ts, UTC_E8);
+
+    tm_t tm = rtc_clock_get();
+    printf("-- %d %d %d %d %d %d %d\n", tm.year, tm.mon, tm.day, tm.weekday, tm.hour, tm.min, tm.sec);
+    //printf("RTCCNT: %u %u\n", rtc_clock_get_utime(), RTCCNT);
+}
+
+const char *sys_arch_format_time(uint32_t sec)
+{
+    return "no impl\n";
+}

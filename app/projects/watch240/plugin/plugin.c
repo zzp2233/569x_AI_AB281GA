@@ -68,7 +68,8 @@ void sleep_wakeup_config(void)
     bsp_gpio_no_pu_en(ECIG_MIC_GPIO);
     port_wakeup_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
 #elif (CHIP_PACKAGE_SELECT == CHIP_5690G)
-    port_wakeup_all_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
+    bsp_gpio_no_pu_en(ECIG_MIC_GPIO);
+    port_wakeup_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691C_F)
     port_wakeup_init(ECIG_MIC_GPIO, 0, 0);  //吸烟唤醒
 #elif (CHIP_PACKAGE_SELECT == CHIP_5691G)

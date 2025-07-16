@@ -1,6 +1,6 @@
 #ifndef __BLE_H
 #define __BLE_H
-
+#include "hid/ble_hid_service.h"
 /**
  * @brief 重置bt地址为bt_get_local_bd_addr的返回值
  **/

@@ -36,35 +36,27 @@
 #include "lwipopts_test.h"
 #else /* LWIP_OPTTEST_FILE */
 
-#define U8_F                       "c"
-#define S8_F                       "c"
-#define X8_F                       "x"
-#define U16_F                      "u"
-#define S16_F                      "d"
-#define X16_F                      "x"
-#define U32_F                      "u"
-#define S32_F                      "d"
-#define X32_F                      "x"
+#define LWIP_TCPIP_CORE_LOCKING_INPUT 1
 
 #define LWIP_IPV4                  1
-#define LWIP_IPV6                  1
+#define LWIP_IPV6                  0
 
 #define NO_SYS                     0
 #define LWIP_SOCKET                (NO_SYS==0)
 #define LWIP_NETCONN               (NO_SYS==0)
 #define LWIP_NETIF_API             (NO_SYS==0)
 
-#define LWIP_IGMP                  LWIP_IPV4
+#define LWIP_IGMP                  0//LWIP_IPV4
 #define LWIP_ICMP                  LWIP_IPV4
 
-#define LWIP_SNMP                  LWIP_UDP
+#define LWIP_SNMP                  0//LWIP_UDP
 #define MIB2_STATS                 LWIP_SNMP
 #ifdef LWIP_HAVE_MBEDTLS
 #define LWIP_SNMP_V3               (LWIP_SNMP)
 #endif
 
 #define LWIP_DNS                   LWIP_UDP
-#define LWIP_MDNS_RESPONDER        LWIP_UDP
+#define LWIP_MDNS_RESPONDER        0//LWIP_UDP
 
 #define LWIP_NUM_NETIF_CLIENT_DATA (LWIP_MDNS_RESPONDER)
 
@@ -91,33 +83,36 @@
 #define LWIP_DBG_MIN_LEVEL         0
 #define PPP_DEBUG                  LWIP_DBG_OFF
 #define MEM_DEBUG                  LWIP_DBG_OFF
-#define MEMP_DEBUG                 LWIP_DBG_OFF
+#define MEMP_DEBUG                 LWIP_DBG_ON
 #define PBUF_DEBUG                 LWIP_DBG_OFF
 #define API_LIB_DEBUG              LWIP_DBG_OFF
 #define API_MSG_DEBUG              LWIP_DBG_OFF
 #define TCPIP_DEBUG                LWIP_DBG_OFF
 #define ETHARP_DEBUG               LWIP_DBG_OFF
 #define NETIF_DEBUG                LWIP_DBG_OFF
-#define SOCKETS_DEBUG              LWIP_DBG_ON
+#define SOCKETS_DEBUG              LWIP_DBG_OFF
+#define ACD_DEBUG                  LWIP_DBG_OFF
 #define DNS_DEBUG                  LWIP_DBG_OFF
 #define IP6_DEBUG                  LWIP_DBG_OFF
 #define AUTOIP_DEBUG               LWIP_DBG_OFF
 #define DHCP_DEBUG                 LWIP_DBG_OFF
-#define IP_DEBUG                   LWIP_DBG_ON
-#define IP_REASS_DEBUG             LWIP_DBG_ON
+#define IP_DEBUG                   LWIP_DBG_OFF
+#define IP_REASS_DEBUG             LWIP_DBG_OFF
+#define RAW_DEBUG                  LWIP_DBG_OFF
 #define ICMP_DEBUG                 LWIP_DBG_OFF
 #define IGMP_DEBUG                 LWIP_DBG_OFF
 #define UDP_DEBUG                  LWIP_DBG_OFF
-#define TCP_DEBUG                  LWIP_DBG_ON
-#define TCP_INPUT_DEBUG            LWIP_DBG_ON
-#define TCP_OUTPUT_DEBUG           LWIP_DBG_ON
-#define TCP_RTO_DEBUG              LWIP_DBG_ON
-#define TCP_CWND_DEBUG             LWIP_DBG_ON
-#define TCP_WND_DEBUG              LWIP_DBG_ON
-#define TCP_FR_DEBUG               LWIP_DBG_ON
-#define TCP_QLEN_DEBUG             LWIP_DBG_ON
-#define TCP_RST_DEBUG              LWIP_DBG_ON
+#define TCP_DEBUG                  LWIP_DBG_OFF
+#define TCP_INPUT_DEBUG            LWIP_DBG_OFF
+#define TCP_OUTPUT_DEBUG           LWIP_DBG_OFF
+#define TCP_RTO_DEBUG              LWIP_DBG_OFF
+#define TCP_CWND_DEBUG             LWIP_DBG_OFF
+#define TCP_WND_DEBUG              LWIP_DBG_OFF
+#define TCP_FR_DEBUG               LWIP_DBG_OFF
+#define TCP_QLEN_DEBUG             LWIP_DBG_OFF
+#define TCP_RST_DEBUG              LWIP_DBG_OFF
 #define LWIP_LOWPAN6_DEBUG         LWIP_DBG_OFF
+#define SNTP_DEBUG                 LWIP_DBG_ON
 #endif
 
 #define LWIP_DBG_TYPES_ON         (LWIP_DBG_ON|LWIP_DBG_TRACE|LWIP_DBG_STATE|LWIP_DBG_FRESH|LWIP_DBG_HALT)
@@ -131,6 +126,11 @@
  * already use it.
  */
 #define MEM_LIBC_MALLOC         1
+#define MEMP_MEM_MALLOC         1
+
+#define mem_clib_free ab_free
+#define mem_clib_malloc ab_malloc
+#define mem_clib_calloc ab_calloc
 
 /* MEM_ALIGNMENT: should be set to the alignment of the CPU for which
    lwIP is compiled. 4 byte alignment -> define MEM_ALIGNMENT to 4, 2
@@ -146,45 +146,52 @@ a lot of data that needs to be copied, this should be set high. */
 /* MEMP_NUM_PBUF: the number of memp struct pbufs. If the application
    sends a lot of data out of ROM (or other static memory), this
    should be set high. */
-#define MEMP_NUM_PBUF           9
+#define MEMP_NUM_PBUF           4
 /* MEMP_NUM_RAW_PCB: the number of UDP protocol control blocks. One
    per active RAW "connection". */
-#define MEMP_NUM_RAW_PCB        3
+#define MEMP_NUM_RAW_PCB        4
 /* MEMP_NUM_UDP_PCB: the number of UDP protocol control blocks. One
    per active UDP "connection". */
-#define MEMP_NUM_UDP_PCB        2
+#define MEMP_NUM_UDP_PCB        4
 /* MEMP_NUM_TCP_PCB: the number of simulatenously active TCP
    connections. */
-#define MEMP_NUM_TCP_PCB        2
+#define MEMP_NUM_TCP_PCB        10
 /* MEMP_NUM_TCP_PCB_LISTEN: the number of listening TCP
    connections. */
-#define MEMP_NUM_TCP_PCB_LISTEN 2
+#define MEMP_NUM_TCP_PCB_LISTEN 4
 /* MEMP_NUM_TCP_SEG: the number of simultaneously queued TCP
    segments. */
 #define MEMP_NUM_TCP_SEG        TCP_SND_QUEUELEN
 /* MEMP_NUM_SYS_TIMEOUT: the number of simulateously active
    timeouts. */
-#define MEMP_NUM_SYS_TIMEOUT    LWIP_NUM_SYS_TIMEOUT_INTERNAL
+#define MEMP_NUM_SYS_TIMEOUT    (LWIP_NUM_SYS_TIMEOUT_INTERNAL + 2)
 
 /* The following four are used only with the sequential API and can be
    set to 0 if the application only will use the raw API. */
 /* MEMP_NUM_NETBUF: the number of struct netbufs. */
 #define MEMP_NUM_NETBUF         2
 /* MEMP_NUM_NETCONN: the number of struct netconns. */
-#define MEMP_NUM_NETCONN        2
+#define MEMP_NUM_NETCONN        3
 /* MEMP_NUM_TCPIP_MSG_*: the number of struct tcpip_msg, which is used
    for sequential API communication and incoming packets. Used in
    src/api/tcpip.c. */
-#define MEMP_NUM_TCPIP_MSG_API   4
-#define MEMP_NUM_TCPIP_MSG_INPKT 4
+#define MEMP_NUM_TCPIP_MSG_API   (TCP_SND_QUEUELEN)
+#define MEMP_NUM_TCPIP_MSG_INPKT 8
 
+#define MEMP_NUM_NETDB           3
+
+#define MEMP_NUM_ALTCP_PCB 2
+#define MEMP_NUM_FRAG_PBUF 5
+#define MEMP_NUM_ARP_QUEUE 10
+#define MEMP_NUM_IGMP_GROUP 2
+#define MEMP_NUM_ND6_QUEUE 2
 
 /* ---------- Pbuf options ---------- */
 /* PBUF_POOL_SIZE: the number of buffers in the pbuf pool. */
-#define PBUF_POOL_SIZE          9
+#define PBUF_POOL_SIZE          8
 
 /* PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool. */
-#define PBUF_POOL_BUFSIZE       256
+// #define PBUF_POOL_BUFSIZE       256
 
 /** SYS_LIGHTWEIGHT_PROT
  * define SYS_LIGHTWEIGHT_PROT in lwipopts.h if you want inter-task protection
@@ -212,7 +219,7 @@ a lot of data that needs to be copied, this should be set high. */
 #define LWIP_TCP                1
 #define TCP_TTL                 255
 
-#define LWIP_ALTCP              (LWIP_TCP)
+#define LWIP_ALTCP              0//(LWIP_TCP)
 #ifdef LWIP_HAVE_MBEDTLS
 #define LWIP_ALTCP_TLS          (LWIP_TCP)
 #define LWIP_ALTCP_TLS_MBEDTLS  (LWIP_TCP)
@@ -224,24 +231,25 @@ a lot of data that needs to be copied, this should be set high. */
 #define TCP_QUEUE_OOSEQ         1
 
 /* TCP Maximum segment size. */
-#define TCP_MSS                 512
+#define TCP_MSS                 (1460)
+// #define TCP_MSS                 (607)
 
 /* TCP sender buffer space (bytes). */
-#define TCP_SND_BUF             (2 * TCP_MSS)
+#define TCP_SND_BUF             (4 * TCP_MSS)
 
 /* TCP sender buffer space (pbufs). This must be at least = 2 *
    TCP_SND_BUF/TCP_MSS for things to work. */
-#define TCP_SND_QUEUELEN       (3 * TCP_SND_BUF/TCP_MSS)
+#define TCP_SND_QUEUELEN       (2 * TCP_SND_BUF/TCP_MSS)
 
 /* TCP writable space (bytes). This must be less than or equal
    to TCP_SND_BUF. It is the amount of space which must be
    available in the tcp snd_buf for select to return writable */
-#define TCP_SNDLOWAT           (TCP_SND_BUF/2)
+#define TCP_SNDLOWAT           (TCP_MSS - 1)
 
-#define TCP_SNDQUEUELOWAT       4
+#define TCP_SNDQUEUELOWAT       (4)
 
 /* TCP receive window. */
-#define TCP_WND                 (3 * TCP_MSS)
+#define TCP_WND                 (4 * TCP_MSS)
 
 /* Maximum number of retransmissions of data segments. */
 #define TCP_MAXRTX              6
@@ -260,7 +268,7 @@ a lot of data that needs to be copied, this should be set high. */
 /* Define IP_FORWARD to 1 if you wish to have the ability to forward
    IP packets across network interfaces. If you are going to run lwIP
    on a device with only one network interface, define this to 0. */
-#define IP_FORWARD              1
+#define IP_FORWARD              (!LWIP_SINGLE_NETIF)
 
 /* IP reassembly and segmentation.These are orthogonal even
  * if they both deal with IP fragments */
@@ -292,7 +300,7 @@ a lot of data that needs to be copied, this should be set high. */
 
 #define DNS_TABLE_SIZE          1
 #define DNS_MAX_SERVERS         1
-#define DNS_MAX_RETRIES         2
+#define DNS_MAX_RETRIES         4
 
 /* ---------- UDP options ---------- */
 #define LWIP_UDP                1
@@ -358,7 +366,6 @@ a lot of data that needs to be copied, this should be set high. */
 #define LWIP_IPV6_NUM_ADDRESSES 1
 #endif
 
-#define MEMP_NUM_ND6_QUEUE 10
 #define LWIP_ND6_NUM_NEIGHBORS 3
 #define LWIP_ND6_NUM_DESTINATIONS 3
 #define LWIP_ND6_NUM_PREFIXES 3
@@ -367,8 +374,18 @@ a lot of data that needs to be copied, this should be set high. */
 /* The following defines must be done even in OPTTEST mode: */
 
 #if !defined(NO_SYS) || !NO_SYS /* default is 0 */
-void sys_check_core_locking(void);
-#define LWIP_ASSERT_CORE_LOCKED()  sys_check_core_locking()
+void sys_check_core_locking(const char* file, unsigned int line);
+#define LWIP_ASSERT_CORE_LOCKED()  sys_check_core_locking(__FILE__, __LINE__)
 #endif
+
+void sntp_set_system_time(unsigned long s, unsigned long f);
+#define SNTP_SET_SYSTEM_TIME_NTP(s,f) sntp_set_system_time(s, f)
+
+void sys_lock_tcpip_core(void);
+void sys_unlock_tcpip_core(void);
+#define LOCK_TCPIP_CORE() sys_lock_tcpip_core()
+#define UNLOCK_TCPIP_CORE() sys_unlock_tcpip_core()
+
+#define sntp_format_time(n) sys_arch_format_time(n)
 
 #endif /* LWIP_LWIPOPTS_H */

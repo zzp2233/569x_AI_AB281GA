@@ -62,8 +62,9 @@ bool puts_stm_buf(void *scb, u8 *buf, u32 len);
 bool gets_stm_buf(void *scb, u8 *buf, u32 len);
 void pcm_soft_vol_process(s16 *ptr, int gain, int samples);
 
-bool bsp_record_start(void);
+bool bsp_record_start(bool is_sco, u8 type);
 void bsp_record_process(void);
 void bsp_record_stop(void);
 void bsp_record_var_init(void);
+u8 get_bsp_record_sta(void);
 #endif //_BSP_RECORD_H

@@ -47,9 +47,9 @@
 #define SPI_DRIVER_GC9307              0x200                                    //GC9307系列驱动
 #define SPI_GC9307_V1                  (SPI_DRIVER_GC9307 | 0x01)               //GC9307系列驱动版本选择V1
 #define SPI_GC9307_WIDTH               240
-#define SPI_GC9307_HIGHT               284
+#define SPI_GC9307_HIGHT               296
 #define SPI_GC9307_OFS_X               0
-#define SPI_GC9307_OFS_Y               20
+#define SPI_GC9307_OFS_Y               0
 
 #define SPI_DRIVER_ST7789              0x300                                    //ST7789系列驱动
 #define SPI_ST7789_V1                  (SPI_DRIVER_ST7789 | 0x01)               //ST7789系列驱动版本选择V1   

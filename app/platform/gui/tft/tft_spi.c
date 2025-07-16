@@ -1,6 +1,6 @@
 #include "include.h"
 #include "tft_spi_driver.h"
-#if (GUI_SELECT == GUI_TFT_SPI)
+#if (GUI_SELECT == GUI_TFT_SPI ||GUI_SELECT == GUI_SPI)
 
 #define WriteData(v) tft_write_data(v)
 #define CommEnd()    tft_write_end()

@@ -399,6 +399,7 @@ void bsp_qdec_io_process(void)
     if((wheel_port_last_state == 0x50 && wheel_z == 0x40)
 #if UTE_DRV_ALL_QDEC_MODE // 全码模式
        || (wheel_port_last_state == 0x10 && wheel_z == 0x50 && up_cnt!=0)
+       || (wheel_port_last_state == 0x00 && wheel_z == 0x50 && up_cnt!=0)
 #endif
       )
     {

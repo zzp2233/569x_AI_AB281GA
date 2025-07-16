@@ -88,7 +88,7 @@
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
 /*! 全码编码器 qq.cai, 2025-07-14  */
-#define  UTE_DRV_ALL_QDEC_MODE  1
+#define  UTE_DRV_ALL_QDEC_MODE  0
 
 /*! KEY1跳转界面,wang.luo 2025-04-09 */
 #define UTE_KEY_LEFT_SWITCH_SCREEN FUNC_SPORT

@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DC_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Tetra S5"
-#define UTE_SW_VERSION "AB281DCV000144"
+#define UTE_SW_VERSION "AB281DCV000149"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DC"
@@ -108,6 +108,11 @@
 
 /*! 使用编码器功能,wang.luo 2025-04-09 */
 #define DRV_ENCODER_KEYS_SUPPORT 1
+/*! 编码器gpio zn.zeng, 2021-12-06  */
+#define UTE_DRV_QDEC_Y_PHB_GPIO_PIN          IO_PB0
+#define UTE_DRV_QDEC_Y_PHA_GPIO_PIN          IO_PB1
+/*! 全码编码器 qq.cai, 2025-07-14  */
+#define  UTE_DRV_ALL_QDEC_MODE  1
 
 /*! 编码器切换表盘锁定,wang.luo 2025-04-09 */
 #define UTE_MODULE_ENCODER_SWITCH_WATCHMAIN_LOCK_SUPPORT  1
@@ -175,9 +180,14 @@
 #define UTE_MODULE_NEW_FACTORY_AGING_TEST_SCREENS_STRING_ENLARGEMENT 2
 #define UTE_MODULE_NEW_FACTORY_MODULE_TEST_SCREENS_STRING_ENLARGEMENT 2
 #define UTE_MODULE_NEW_FACTORY_TEST_CHAR_EN_SUPPORT  1
-#define  UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1//工厂测试音频测试
-#define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 15
-#define  UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT    1//地磁测试
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_SUPPORT    1//工厂测试音频测试
+#define UTE_MODULE_MIC_FACTORY_TEST_PLAY_VOLUME 10
+#define UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT    1//地磁测试
+#define UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL     40//工厂测试马达震动等级
+
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_ADDR_SUPPORT     RES_BUF_RING_LET_GO_MP3 //工厂测试音频测试->音频地址
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
+#define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT    13 //工厂测试音频测试->音频时长
 #endif
 
 /*!指南针模块*/
@@ -229,7 +239,7 @@
                                                UI_BUF_DIALPLATE_D20226001_BIN,\
                                                UI_BUF_DIALPLATE_D20225001_BIN,\
                                                UI_BUF_DIALPLATE_D20280001_BIN,\
-                                               UI_BUF_DIALPLATE_D18720001_BIN, \
+                                               UI_BUF_DIALPLATE_D20350001_BIN, \
                                               }
 //     UI_BUF_DIALPLATE_CUBE_BIN
 
@@ -347,6 +357,7 @@
 
 #define UTE_MODULE_SCREENS_SPORT_KM_OFF       1 //运动距离（关）
 #define UTE_MODULE_SCREENS_CLOCK_DWON_MENU_MOVE_MODE       1 //下拉菜单滑动效果，针对这套UI的宏定义
+#define UTE_MODULE_SCREENS_KALEIAOSCOPE_MENU_DEL_PRESSURE_APP     1     //本项目删除个别菜单多余应用
 
 
 //未完善
@@ -650,9 +661,9 @@
 #define UTE_MODULE_SPORT_SIT_UP_ORDER                   19 //仰卧起坐
 #define UTE_MODULE_SPORT_TREADMILL_ORDER                20 //跑步机
 #define UTE_MODULE_SPORT_GYMNASTICS_ORDER               21 //体操
-#define UTE_MODULE_SPORT_BOATING_ORDER                  22 //划船
-#define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             23 //开合跳
-#define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            24 //自由训练
+#define UTE_MODULE_SPORT_BOATING_ORDER                  0 //划船
+#define UTE_MODULE_SPORT_JUMPING_JACK_ORDER             22 //开合跳
+#define UTE_MODULE_SPORT_FREE_TRAINING_ORDER            0 //自由训练
 #define UTE_MODULE_SPORT_INDOOR_WALK_ORDER              0  //0x1A,室内走路
 #define UTE_MODULE_SPORT_INDOOR_RUN_ORDER               0  //0x1B,室内跑步
 #define UTE_MODULE_SPORT_STRENGTH_TRAINING_ORDER        0 //0x1C,力量训练

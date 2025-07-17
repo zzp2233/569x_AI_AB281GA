@@ -240,9 +240,6 @@ const static func_item_info_t func_item_tbl[] =
 #if UTE_MODULE_SCREENS_VOICE_SUPPORT
     {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_VOICE_ASSISTANT_BIN,       .str_idx=STR_VOICE},                 //语音助手
 #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
-// #if UTE_MODULE_SCREENS_VOICE_SUPPORT
-    {.func_sta=FUNC_VOICE,                    .res_addr=UI_BUF_I335001_2_HONEYCOMB_SOS_BIN,                   .str_idx=STR_VOICE},                 //SOS
-// #endif // UTE_MODULE_SCREENS_VOICE_SUPPORT
 #if UTE_MODULE_SCREENS_GAME_SUPPORT
     {.func_sta=FUNC_GAME,                     .res_addr=UI_BUF_I335001_2_HONEYCOMB_GAME_BIN,                  .str_idx=STR_GAME},                 //游戏
 #endif // UTE_MODULE_SCREENS_GAME_SUPPORT

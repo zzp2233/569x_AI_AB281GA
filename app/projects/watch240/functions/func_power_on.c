@@ -159,6 +159,66 @@ static void func_power_on_disp_process(void)
     }
 }
 #elif GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
+#if GUI_SCREEN_SIZE_240X284RGB_I335005_SUPPORT
+/*! 默认开机动画logo图片数量 */
+#ifndef DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER
+#define DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER 0
+#endif
+//创建开机窗体
+compo_form_t *func_power_on_form_create(void)
+{
+    //新建窗体
+    compo_form_t *frm = compo_form_create(true);
+
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335005_LOGO_00_BIN);///背景图片
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, 140);
+    compo_setid(pic, COMPO_PIC_ID);
+
+    return frm;
+}
+static void func_power_on_disp_process(void)
+{
+    f_power_on_t* f_power_on = (f_power_on_t*)func_cb.f_cb;
+    if(tick_check_expire(f_power_on->tick,200))
+    {
+        compo_picturebox_t *pic  = compo_getobj_byid(COMPO_PIC_ID);
+
+        f_power_on->tick = tick_get();
+        f_power_on->pic_num_disp ++;
+        f_power_on->animation_second++;
+#if DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER
+        if(f_power_on->pic_num_disp<24)
+        {
+        }
+#else
+        if(f_power_on->animation_second < DEFAULT_POWERON_ANIMATION_SECOND*1000/200)
+        {
+
+        }
+#endif
+        else
+        {
+            func_cb.sta = FUNC_CLOCK;
+            sys_cb.power_on_state=true;
+            if(!uteApplicationCommonIsHasConnectOurApp())
+            {
+                sys_cb.power_on_state=false;
+                ute_module_systemtime_time_t time;
+                uteModuleSystemtimeGetTime(&time);
+
+                if(time.isWatchSetLangage == false)
+                {
+                    func_cb.sta = FUNC_POWER_ON_LANGUAGE;
+                }
+                else
+                {
+                    func_cb.sta = FUNC_POWER_ON_SCAN;
+                }
+            }
+        }
+    }
+}
+#else
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)
 {
@@ -212,7 +272,9 @@ static void func_power_on_disp_process(void)
                 sys_cb.power_on_state=false;
                 ute_module_systemtime_time_t time;
                 uteModuleSystemtimeGetTime(&time);
-
+#if UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION
+                func_cb.sta = FUNC_POWER_ON_LANGUAGE;
+#else
                 if(time.isWatchSetLangage == false)
                 {
                     func_cb.sta = FUNC_POWER_ON_LANGUAGE;
@@ -221,10 +283,12 @@ static void func_power_on_disp_process(void)
                 {
                     func_cb.sta = FUNC_POWER_ON_SCAN;
                 }
+#endif
             }
         }
     }
 }
+#endif
 
 #elif GUI_SCREEN_SIZE_320X380RGB_I343001_SUPPORT
 //创建开机窗体
@@ -340,8 +404,11 @@ compo_form_t *func_power_on_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
-
-#if GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
+#if UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I338003_POWER_ON_POWER_HELLO_BIN);///背景图片
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_setid(pic, COMPO_PIC_ID);
+#elif GUI_SCREEN_SIZE_360X360RGB_I338003_SUPPORT
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I338003_POWER_ON_LOGO_BIN);///背景图片
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_setid(pic, COMPO_PIC_ID);
@@ -374,6 +441,9 @@ static void func_power_on_disp_process(void)
                 ute_module_systemtime_time_t time;
                 uteModuleSystemtimeGetTime(&time);
 
+#if UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION
+                func_cb.sta = FUNC_POWER_ON_LANGUAGE;
+#else
                 if(time.isWatchSetLangage == false)
                 {
                     func_cb.sta = FUNC_POWER_ON_LANGUAGE;
@@ -382,6 +452,7 @@ static void func_power_on_disp_process(void)
                 {
                     func_cb.sta = FUNC_POWER_ON_SCAN;
                 }
+#endif
             }
         }
     }
@@ -554,6 +625,7 @@ static void func_power_on_enter(void)
 
     f_power_on->tick = 0;
     f_power_on->pic_num_disp = 0;
+    f_power_on->animation_second = 0;
 }
 
 //退出开机界面

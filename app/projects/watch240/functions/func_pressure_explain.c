@@ -66,18 +66,20 @@ compo_form_t *func_pressure_explain_form_create(void)
 
 
 ///////////////////////////////////////////////////////////////////////////////////
-    u8 * txt_str = (u8 *)ab_zalloc(1400);
-    u16 str_num = strlen(i18n[STR_PRESSURE_EXPLAIN1])+strlen(i18n[STR_PRESSURE_EXPLAIN2]);
+    u8 *txt_str = (u8 *)ab_zalloc(1400 - strlen(i18n[STR_PRESSURE_EXPLAIN1]));
+    u8 *txt_buf = (u8 *)ab_zalloc(1400 - strlen(i18n[STR_PRESSURE_EXPLAIN1]));
 
-    if(str_num>1400)
+    u16 str_num = strlen(i18n[STR_PRESSURE_EXPLAIN2]);
+
+    if(str_num > 1400 - strlen(i18n[STR_PRESSURE_EXPLAIN1]))
     {
         str_num = 1400 - strlen(i18n[STR_PRESSURE_EXPLAIN1]);
-        snprintf(txt_str,str_num,"%s",i18n[STR_PRESSURE_EXPLAIN2]);
+        snprintf(txt_buf, str_num - 6, "%s", i18n[STR_PRESSURE_EXPLAIN2]);
+        snprintf(txt_str, str_num, "%s...", txt_buf);
     }
     else
     {
-        str_num = strlen(i18n[STR_PRESSURE_EXPLAIN2]);
-        snprintf(txt_str,str_num,"%s",i18n[STR_PRESSURE_EXPLAIN2]);
+        snprintf(txt_str, str_num, "%s", i18n[STR_PRESSURE_EXPLAIN2]);
     }
 
 
@@ -90,7 +92,7 @@ compo_form_t *func_pressure_explain_form_create(void)
     compo_textbox_set(textbox,txt_str);
     compo_textbox_set_location(textbox,10, page_size, 220, widget_text_get_area(textbox->txt).hei);
     compo_textbox_set(textbox,txt_str);
-    page_size+=widget_text_get_area(textbox->txt).hei+70;
+    page_size+=widget_text_get_area(textbox->txt).hei+40;
 
     if(func_cb.sta == FUNC_PRESSURE_EXPLAIN)
     {
@@ -98,7 +100,7 @@ compo_form_t *func_pressure_explain_form_create(void)
         f_pressure_explain->page_size = page_size;
     }
     ab_free(txt_str);
-
+    ab_free(txt_buf);
 
 
     return frm;

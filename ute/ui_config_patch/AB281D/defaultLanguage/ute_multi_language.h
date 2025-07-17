@@ -3,7 +3,7 @@
 *@brief utf8 words list
 *@details
 *@author
-*@date   2025-06-23 15:25:39
+*@date   2025-07-10 11:39:15
 *@version  UTE WordListTool,Version 2.2.1.0
 */
 
@@ -312,6 +312,8 @@ enum
     STR_VIETNAMESE, // Tiếng Việt
     STR_MALAYSIA, // Melayu
     STR_PLEASE_REMOTE, // 请前往APP打开遥控拍照
+    STR_KEY_SET, // 下键设置
+    STR_OPERATION_FUNC, // 为手表下键设置操作功能。
 };
 
 extern const char * const *i18n;

@@ -20,6 +20,10 @@ typedef struct f_bt_call_t_
     s32 old_dy;
 } f_bt_call_t;
 
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+uint8_t number[UTE_CALL_DIAL_NUMBERS_MAX];
+uint8_t name[UTE_CALL_NAME_MAX];
+#endif
 #if GUI_SCREEN_SIZE_240X284RGB_I330001_SUPPORT
 
 #define TXT_X_MIN 20
@@ -2674,9 +2678,18 @@ void  func_bt_call_number_update(void)
 {
     if (bt_cb.number_sta)
     {
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+        memset(&number[0],0,UTE_CALL_DIAL_NUMBERS_MAX);
+        uteModuleCallGetCurrentNumbereAndName(&number[0],&name[0]);
+        printf("%s,number:%s,name:%s\n",__func__,&number[0],&name[0]);
+        compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
+        compo_textbox_set(number_txt, &number[0]);
+        bt_pbap_lookup_number((char*)&number[0]);
+#else
         compo_textbox_t *number_txt = compo_getobj_byid(COMPO_ID_TXT_NUMBER);
         compo_textbox_set(number_txt, hfp_get_last_call_number(0));
         bt_pbap_lookup_number((char*)hfp_get_last_call_number(0));
+#endif
     }
 }
 
@@ -2692,13 +2705,21 @@ compo_form_t *func_bt_call_form_create(void)
 
     compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, 83, GUI_SCREEN_WIDTH/1.4, 50);
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+    compo_textbox_set(name_txt, &name[0]);
+#else
     compo_textbox_set(name_txt, sys_cb.pbap_result_Name);
+#endif
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
 
     compo_textbox_t *number_txt = compo_textbox_create(frm, 20);
     compo_textbox_set_font( number_txt, UI_BUF_0FONT_FONT_NUM_38_BIN);
     compo_textbox_set_location(number_txt, GUI_SCREEN_CENTER_X,126, GUI_SCREEN_WIDTH/1.2, 50);
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+    compo_textbox_set(number_txt, &number[0]);
+#else
     compo_textbox_set(number_txt, hfp_get_last_call_number(0));
+#endif
     compo_setid(number_txt, COMPO_ID_TXT_NUMBER);
     msg_enqueue(EVT_CALL_NUMBER_UPDATE);
 
@@ -2830,7 +2851,7 @@ static void func_bt_call_exit_process(void)
     }
     else
 #endif
-        if (f_bt_call->exit_tick && tick_check_expire(f_bt_call->exit_tick, 500))          //强制退出, 防呆
+        if (f_bt_call->exit_tick && tick_check_expire(f_bt_call->exit_tick, 500))         //强制退出, 防呆
         {
             printf("call reject, force exit!\n");
             sys_cb.reject_tick = tick_get();
@@ -2913,12 +2934,22 @@ void func_bt_call_up_date_process(void)
         memcpy(f_bt_call->pbap_result_Name, sys_cb.pbap_result_Name, sizeof(f_bt_call->pbap_result_Name));
 
         memset(f_bt_call->tmp_pbap_result_Name, '\0', sizeof(f_bt_call->tmp_pbap_result_Name));
-        truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
 
+        memset(&name[0],0,UTE_CALL_NAME_MAX);
+        uteModuleCallGetCurrentNumbereAndName(&number[0],&name[0]);
+        printf("%s,name:%s,len:%d\n",__func__,&name[0],strlen(name));
+        truncate_and_append(&name[0], f_bt_call->tmp_pbap_result_Name, strlen(name)+1);
+
+        compo_textbox_t *name_txt     = compo_getobj_byid(COMPO_ID_TXT_NAME);
+        compo_textbox_set(name_txt, f_bt_call->tmp_pbap_result_Name);
+#else
+        truncate_and_append(sys_cb.pbap_result_Name, f_bt_call->tmp_pbap_result_Name, sizeof(f_bt_call->tmp_pbap_result_Name));
 
 //        printf("tmp_pbap_result_Name [%s]\n", f_bt_call->tmp_pbap_result_Name);
         compo_textbox_t *name_txt     = compo_getobj_byid(COMPO_ID_TXT_NAME);
         compo_textbox_set(name_txt, f_bt_call->tmp_pbap_result_Name);
+#endif
     }
 }
 void func_bt_call_process(void)
@@ -2950,7 +2981,14 @@ static void func_bt_call_click(void)
         case COMPO_ID_BTN_REJECT:
 //        printf("COMPO_ID_BTN_REJECT\n");
             bt_call_terminate();
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+            if(hfp_hf_check_is_3way() == 0)
+            {
+                f_bt_call->exit_tick = tick_get();
+            }
+#else
             f_bt_call->exit_tick = tick_get();
+#endif
             break;
         case COMPO_ID_BTN_MIC:
 //        printf("COMPO_ID_BTN_REJECT\n");
@@ -3520,7 +3558,53 @@ static void func_bt_call_message(size_msg_t msg)
             }
             else
             {
-//                bt_call_terminate();                        //挂断当前通话
+#if UTE_CALL_MODULE_KUKEY_MUTE_SUPPORT
+                f_bt_call->call_mute_flag ^=1;
+                compo_button_t *btn = compo_getobj_byid(COMPO_ID_BTN_MIC);
+
+                if(f_bt_call->call_mute_flag)
+                {
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+                    if (xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_uart_en)
+                    {
+                        mic_eq_drc_test = false;
+                    }
+                    else
+                    {
+                        audio_path_exit(AUDIO_PATH_BTMIC);
+                    }
+#else
+                    audio_path_exit(AUDIO_PATH_BTMIC);
+#endif
+                    compo_button_set_bgimg(btn,UI_BUF_I340001_CALL_CALLING_JINGYIN01_BIN);
+                }
+                else
+                {
+#if EQ_DBG_IN_UART || EQ_DBG_IN_SPP
+                    if (xcfg_cb.eq_dgb_uart_en || xcfg_cb.eq_dgb_uart_en)
+                    {
+                        mic_eq_drc_test = true;
+                    }
+                    else
+                    {
+                        audio_path_init(AUDIO_PATH_BTMIC);
+                        audio_path_start(AUDIO_PATH_BTMIC);
+                    }
+#else
+                    audio_path_init(AUDIO_PATH_BTMIC);
+                    audio_path_start(AUDIO_PATH_BTMIC);
+                    bt_sco_pcm_set_dump_pass_cnt(5);
+#endif
+                    compo_button_set_bgimg(btn,UI_BUF_I340001_CALL_CALLING_JINGYIN00_BIN);
+                }
+#else
+                //按按键默认为关闭通话
+                bt_call_terminate();                        //挂断当前通话
+                if(hfp_hf_check_is_3way() == 0)
+                {
+                    f_bt_call->exit_tick = tick_get();
+                }
+#endif //UTE_CALL_MODULE_KUKEY_MUTE_SUPPORT
             }
             break;
 
@@ -3607,6 +3691,12 @@ static void func_bt_call_message(size_msg_t msg)
 void func_bt_call_enter(void)
 {
     func_cb.f_cb = func_zalloc(sizeof(f_bt_call_t));
+#if UTE_BT_CALL_THREE_WAY_SUPPORT
+    memset(&number[0],0,UTE_CALL_DIAL_NUMBERS_MAX);
+    memset(&name[0],0,UTE_CALL_NAME_MAX);
+    uteModuleCallGetCurrentNumbereAndName(&number[0],&name[0]);
+    printf("%s,number:%s,name:%s\n",__func__,&number[0],&name[0]);
+#endif
 #if GUI_SCREEN_SIZE_360X360RGB_I332001_SUPPORT
     if(bt_cb.disp_status == BT_STA_INCALL)
     {

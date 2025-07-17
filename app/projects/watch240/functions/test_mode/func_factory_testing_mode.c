@@ -195,7 +195,9 @@ const char result_txt[UTE_MODULE_NEW_FACTORY_MODULE_MAX][30]=
 #if UTE_MODULE_NEW_FACTORY_TEST_GM_SUPPORT
     "地磁测试",
 #endif
+#if !UTE_MODULE_NEW_FACTORY_MODULE_REDUCE_KEY_FUNCTION
     "按键测试",
+#endif
 };
 #endif
 
@@ -965,7 +967,20 @@ static void func_mode_tp_click(void)
 
     if (click_num > 8)
     {
+#if UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION
+        test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
+        test_data->moduleType ++;//切换下一个模式
+
+        compo_form_t *frm = func_cb.frm_main;
+        if (frm != NULL)
+        {
+            compo_form_destroy(frm);
+            frm = NULL;
+        }
+        func_cb.frm_main = func_factory_testing_create();
+#else
         func_factory_testing_pass_fail_pop_click();
+#endif
         return;
     }
 
@@ -1625,6 +1640,9 @@ compo_form_t *func_factory_testing_create(void)
     if(f_factory_testing->motor_flag)
     {
         f_factory_testing->motor_flag = false;
+#if UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL
+        uteDrvMotorSetTempVibrationLevel(UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL);
+#endif
         uteDrvMotorDisable();
     }
 
@@ -1672,6 +1690,9 @@ compo_form_t *func_factory_testing_create(void)
     }
     else if (test_data->moduleType == FACTORY_MODULE_MOTOR)
     {
+#if UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL
+        uteDrvMotorSetTempVibrationLevel(UTE_MODULE_FACTORY_TEST_MOTOR_LEVEL);
+#endif
         frm = func_factory_testing_motor();
     }
     else if (test_data->moduleType == FACTORY_MODULE_MIC_SPEAKER)
@@ -2410,7 +2431,20 @@ static void func_mode_tp_click(void)
 
     if (click_num > 8)
     {
+#if UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION
+        test_data->moduleResult[test_data->moduleType] = MODULE_TEST_RESULT_PASS;
+        test_data->moduleType ++;//切换下一个模式
+
+        compo_form_t *frm = func_cb.frm_main;
+        if (frm != NULL)
+        {
+            compo_form_destroy(frm);
+            frm = NULL;
+        }
+        func_cb.frm_main = func_factory_testing_create();
+#else
         func_factory_testing_pass_fail_pop_click();
+#endif
         return;
     }
 

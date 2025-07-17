@@ -4741,59 +4741,68 @@ compo_form_t *func_sport_sub_run_form_create(void)
 
     compo_textbox_t* txt = compo_textbox_create(frm, 8);///运动时长
     compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_48_BIN);
-    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 58/2+100, 240, 60);
+    compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 58/2+100-20, 240, 60);
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf(txt_buf,sizeof(txt_buf),"%02d:%02d:%02d",(uint16_t)data->totalSportTime / 3600,(uint16_t)((data->totalSportTime) % 3600) / 60,(uint16_t)(data->totalSportTime) % 60);
     compo_textbox_set(txt, txt_buf);
     compo_textbox_set_forecolor(txt, make_color(0xa9,0xff,0x00));
     compo_setid(txt,COMPO_ID_NUM_SPORT_TIME);
 
-    memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_HEART_RATE],i18n[STR_PER_MINUTE]);
-    txt = compo_textbox_create(frm, strlen(txt_buf));///心率文本
-    compo_textbox_set_location(txt, 132/2+42, 22/2+184, 132, 30);
-    compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
-    compo_textbox_set(txt, txt_buf);
+    compo_shape_t *shape;
+    //heart_rate
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_HEART_RATE],i18n[STR_PER_MINUTE]);
+        txt = compo_textbox_create(frm, strlen(txt_buf));///心率文本
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 22/2+184-35, 240, 30);
+        compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+        compo_textbox_set(txt, txt_buf);
 
-    memset(txt_buf,0,sizeof(txt_buf));
-    snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_CALORIE],i18n[STR_KCAL]);
-    txt = compo_textbox_create(frm, strlen(txt_buf));///卡路里文本
-    compo_textbox_set_location(txt, 132/2+186, 22/2+184, 132, 30);
-    compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
-    compo_textbox_set(txt, txt_buf);
+        shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);///灰色矩形
+        compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 48/2+222-35, 296, 48);
+        compo_shape_set_radius(shape, 48/2);
+        compo_shape_set_color(shape, make_color(0x29,0x29,0x29));
 
-    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);///灰色矩形
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 48/2+222, 296, 48);
-    compo_shape_set_radius(shape, 48/2);
-    compo_shape_set_color(shape, make_color(0x29,0x29,0x29));
+        txt = compo_textbox_create(frm, 3);///心率数据文本
+        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
+        compo_textbox_set_location(txt, 43/2+167, 232-35, 60, 43);
+        compo_textbox_set_align_center(txt, false);
+        memset(txt_buf, 0, sizeof(txt_buf));
+        snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
+        compo_textbox_set(txt, txt_buf);
+        compo_setid(txt,COMPO_ID_NUM_SPORT_HEARTRATE);
 
-    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);///白色矩形
-    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 48/2+222, 2, 48);
-    compo_shape_set_color(shape, make_color(0x54,0x54,0x54));
+        pic = compo_picturebox_create(frm, UI_BUF_I340001_SPORT_ICON2_HR_BIN);///心率图片
+        compo_picturebox_set_pos(pic,43/2+167-30-widget_text_get_area(txt->txt).wid/2,48/2+222-35);
+    }
+    //kcal
+    {
+        memset(txt_buf,0,sizeof(txt_buf));
+        snprintf(txt_buf,sizeof(txt_buf),"%s(%s)",i18n[STR_CALORIE],i18n[STR_KCAL]);
+        txt = compo_textbox_create(frm, strlen(txt_buf));///卡路里文本
+        compo_textbox_set_location(txt, GUI_SCREEN_CENTER_X, 22/2+184+75, 240, 30);
+        compo_textbox_set_forecolor(txt, make_color(0x80,0x80,0x80));
+        compo_textbox_set(txt, txt_buf);
 
-    pic = compo_picturebox_create(frm, UI_BUF_I340001_SPORT_ICON2_HR_BIN);///心率图片
-    compo_picturebox_set_pos(pic,30/2+56,48/2+222);
+        shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);///灰色矩形
+        compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 48/2+222+75, 296, 48);
+        compo_shape_set_radius(shape, 48/2);
+        compo_shape_set_color(shape, make_color(0x29,0x29,0x29));
 
-    pic = compo_picturebox_create(frm, UI_BUF_I340001_SPORT_ICON2_CALORIES_BIN);///卡路里图片
-    compo_picturebox_set_pos(pic,30/2+205,48/2+222);
+        txt = compo_textbox_create(frm, 3);///卡路里数据文本
+        compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
+        compo_textbox_set_location(txt, 43/2+167, 232+75, 60, 43);
+        compo_textbox_set_align_center(txt, false);
+        memset(txt_buf, 0, sizeof(txt_buf));
+        snprintf(txt_buf, sizeof(txt_buf), "%d", data->saveData.sportCaloire);
+        compo_textbox_set(txt, txt_buf);
+        compo_setid(txt,COMPO_ID_NUM_SPORT_KCAL);
 
-    txt = compo_textbox_create(frm, 3);///心率数据文本
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
-    compo_textbox_set_location(txt, 53/2+92-16, 232, 60, 43);
-    compo_textbox_set_align_center(txt, false);
-    memset(txt_buf, 0, sizeof(txt_buf));
-    snprintf(txt_buf, sizeof(txt_buf), "%d", uteModuleHeartGetHeartValue());
-    compo_textbox_set(txt, txt_buf);
-    compo_setid(txt,COMPO_ID_NUM_SPORT_HEARTRATE);
+        pic = compo_picturebox_create(frm, UI_BUF_I340001_SPORT_ICON2_CALORIES_BIN);///卡路里图片
+        compo_picturebox_set_pos(pic,43/2+167-30-widget_text_get_area(txt->txt).wid/2,48/2+222+75);
+    }
 
-    txt = compo_textbox_create(frm, 3);///卡路里数据文本
-    compo_textbox_set_font(txt, UI_BUF_0FONT_FONT_NUM_32_BIN);
-    compo_textbox_set_location(txt, 53/2+245-16, 232, 60, 43);
-    compo_textbox_set_align_center(txt, false);
-    memset(txt_buf, 0, sizeof(txt_buf));
-    snprintf(txt_buf, sizeof(txt_buf), "%d", data->saveData.sportCaloire);
-    compo_textbox_set(txt, txt_buf);
-    compo_setid(txt,COMPO_ID_NUM_SPORT_KCAL);
+
 #if !UTE_MODULE_SCREENS_SPORT_PAUSE_SUPPORT
     ///*右页*/
     pic = compo_picturebox_create_for_page(frm,frm->page,func_sport_get_ui(sys_cb.sport_idx));///运动类型图片

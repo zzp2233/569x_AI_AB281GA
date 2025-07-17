@@ -14,9 +14,10 @@
 
 enum
 {
-    COMPO_ID_BTN_SPEAK,
-    COMPO_ID_TEXT_STATUS,
-    COMPO_ID_NUM_DISP = 128,
+
+    COMPO_ID_TEXT_STATUS=0xff,
+    COMPO_ID_BTN_SPEAKING,
+    COMPO_ID_BTN_SPEAKED,
 };
 
 typedef struct f_chatbot_t_
@@ -43,6 +44,25 @@ compo_form_t *func_chatbot_form_create(void)
 {
     //新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
+    compo_picturebox_t *picbox;
+
+    picbox = compo_picturebox_create(frm, UI_BUF_I330001_AI_SPEAKED1_BIN);
+    compo_picturebox_cut(picbox, 0, 38);
+    compo_picturebox_set_pos(picbox, 120, 148);
+
+    compo_animation_t *animation = compo_animation_create(frm, UI_BUF_I330001_AI_SPEAKING1_BIN);
+    compo_animation_set_pos(animation, 120, 148);
+    compo_animation_set_radix(animation, 38);
+    compo_animation_set_interval(animation, 15);
+    compo_setid(animation, COMPO_ID_BTN_SPEAKING);
+    compo_animation_set_visible(animation, false);
+
+    animation = compo_animation_create(frm, UI_BUF_I330001_AI_SPEAKED1_BIN);
+    compo_animation_set_pos(animation, 120, 148);
+    compo_animation_set_radix(animation, 38);
+    compo_animation_set_interval(animation, 15);
+    compo_setid(animation, COMPO_ID_BTN_SPEAKED);
+    compo_animation_set_visible(animation, false);
 
     //创建文本
     compo_textbox_t *txt;
@@ -51,6 +71,7 @@ compo_form_t *func_chatbot_form_create(void)
     compo_textbox_set_pos(txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
     compo_textbox_set_autosize(txt, true);
     compo_textbox_set(txt, "建立连接中...");
+
     return frm;
 }
 
@@ -58,13 +79,17 @@ static void event_cb(chatbot_event_t event)
 {
     f_chatbot_t *f_cb = func_cb.f_cb;
     printf("\nchatbot event: %d\n", event);
-
+    compo_animation_t *animation1 = compo_getobj_byid(COMPO_ID_BTN_SPEAKING);
+    compo_animation_t *animation2 = compo_getobj_byid(COMPO_ID_BTN_SPEAKED);
     switch (event)
     {
         case CHATEVT_IS_CONN:
         {
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "监听中");
+            compo_animation_set_visible(animation2, true);
+            compo_animation_set_visible(animation1, false);
+
             f_cb->is_listen = true;
             f_cb->is_conn = true;
             break;
@@ -76,6 +101,9 @@ static void event_cb(chatbot_event_t event)
         {
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "说话中");
+            compo_animation_set_visible(animation1, true);
+            compo_animation_set_visible(animation2, false);
+
             f_cb->is_listen = false;
             break;
         }
@@ -83,6 +111,9 @@ static void event_cb(chatbot_event_t event)
         {
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "监听中");
+            compo_animation_set_visible(animation2, true);
+            compo_animation_set_visible(animation1, false);
+
             f_cb->is_listen = true;
             break;
         }
@@ -91,6 +122,9 @@ static void event_cb(chatbot_event_t event)
 
             compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
             compo_textbox_set(txt, "重新连接");
+            compo_animation_set_visible(animation1, false);
+            compo_animation_set_visible(animation2, false);
+
             f_cb->need_reconn = true;
             f_cb->is_conn = false;
             break;
@@ -120,6 +154,7 @@ static void func_chatbot_process(void)
             f_cb->is_conn = true;
         }
     }
+    reset_sleep_delay_all();    //不休眠
     func_process();
 }
 
@@ -130,7 +165,8 @@ static void func_chatbot_process(void)
 static void func_chatbot_message(size_msg_t msg)
 {
     f_chatbot_t *f_cb = func_cb.f_cb;
-
+    compo_animation_t *animation1 = compo_getobj_byid(COMPO_ID_BTN_SPEAKING);
+    compo_animation_t *animation2 = compo_getobj_byid(COMPO_ID_BTN_SPEAKED);
     switch (msg)
     {
         // case MSG_CTP_TOUCH:
@@ -158,6 +194,9 @@ static void func_chatbot_message(size_msg_t msg)
             {
                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
                 compo_textbox_set(txt, "监听中");
+                compo_animation_set_visible(animation2, true);
+                compo_animation_set_visible(animation1, false);
+
                 f_cb->is_listen = true;
                 chatbot_start_mic();
             }
@@ -168,6 +207,9 @@ static void func_chatbot_message(size_msg_t msg)
             {
                 compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
                 compo_textbox_set(txt, "就绪（空闲），点击对话");
+                compo_animation_set_visible(animation2, true);
+                compo_animation_set_visible(animation1, false);
+
                 f_cb->is_listen = false;
                 chatbot_stop_mic();
             }
@@ -181,6 +223,9 @@ static void func_chatbot_message(size_msg_t msg)
                 {
                     compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
                     compo_textbox_set(txt, "监听中");
+                    compo_animation_set_visible(animation2, true);
+                    compo_animation_set_visible(animation1, false);
+
                     f_cb->is_listen = true;
                     chatbot_start_mic();
                 }
@@ -188,6 +233,9 @@ static void func_chatbot_message(size_msg_t msg)
                 {
                     compo_textbox_t *txt = compo_getobj_byid(COMPO_ID_TEXT_STATUS);
                     compo_textbox_set(txt, "就绪（空闲），点击对话");
+                    compo_animation_set_visible(animation2, true);
+                    compo_animation_set_visible(animation1, false);
+
                     f_cb->is_listen = false;
                     chatbot_stop_mic();
                 }

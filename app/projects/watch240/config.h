@@ -51,15 +51,10 @@
 // #define GUI_MODE_SELECT                 MODE_QSPI
 #define GUI_SELECT                      GUI_TFT_SPI//GUI_TFT_240_296_NV3030B//GUI_TFT_320_385_GV9B71                 //GUI Display Select
 #define CTP_SELECT                      CTP_CST8X                   //CTP Select
-//#define GUI_MODE_SELECT                 MODE_QSPI
 
 #if (GUI_SELECT == GUI_TFT_SPI)                                     //当使用spi通用接口时,
 #define GUI_MODE_SELECT                 MODE_4WIRE_8BIT             //屏幕接口选择
 #define TFT_SPI_DRIVER                  SPI_GC9307_V1           //驱动选择
-#define TFT_SPI_LCD_WIDTH               240
-#define TFT_SPI_LCD_HEIGHT              284
-#define TFT_SPI_LCD_OFS_X               0
-#define TFT_SPI_LCD_OFS_Y               20
 #endif
 
 #define CTP_SUPPORT_COVER               1                           //是否支持盖手息屏功能，需要确认屏幕是否支持

@@ -1059,12 +1059,14 @@ void uteModuleSportUpdateAlgoParam(ute_module_systemtime_time_t time)
 void uteModuleSportCheckTakePicture(void)
 {
 #if UTE_MODULE_ALL_SPORT_STEP_ALGORITHMS_SUPPORT
+#if !UTE_SPORT_MODULE_SHAKE_TAKE_PICTURES_SUPPORT
     if (getTakingPicturesResult()&&uteModuleSprotData.isTakingPictures)
     {
         disableTakingPicturesState();
         uteDrvGsensorCommonClearFifo();
         uteModulePlatformSendMsgToUteApplicationTask(MSG_TYPE_TAKE_PICTURE_NOTIFY,0);
     }
+#endif //!UTE_SPORT_MODULE_SHAKE_TAKE_PICTURES_SUPPORT
 #endif
 }
 /**

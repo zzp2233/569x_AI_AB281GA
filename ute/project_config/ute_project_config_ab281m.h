@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281M_H_
 
 #define DEFAULT_BLE_DEV_NAME "T8"
-#define UTE_SW_VERSION "AB281MV000141"
+#define UTE_SW_VERSION "AB281MV000151"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281M"
@@ -196,21 +196,17 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #define DEFAULT_WATCH_INDEX 0
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */
-#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 9
+#define UTE_MODULE_SCREENS_WATCH_CNT_MAX 5
 /*! 表盘排序地址数组,wang.luo 2024-11-26 */
-#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_BTF_BIN,\
-                                                UI_BUF_DIALPLATE_CUBE_LIGHT_BIN,\
-                                                UI_BUF_DIALPLATE_D18649001_BIN,\
-                                                UI_BUF_DIALPLATE_D18650001_BIN,\
-                                                UI_BUF_DIALPLATE_D18652001_BIN,\
-                                                UI_BUF_DIALPLATE_D19133001_BIN,\
-                                                UI_BUF_DIALPLATE_D19131001_BIN,\
-                                                UI_BUF_DIALPLATE_D19134001_BIN,\
-                                                UI_BUF_DIALPLATE_D19136001_BIN,\
+#define UTE_MODULE_WATCHS_SORT_ADDRESS_ARRAYS { UI_BUF_DIALPLATE_D19131001_BIN,\
+                                                UI_BUF_DIALPLATE_D18134001_BIN,\
+                                                UI_BUF_DIALPLATE_D20320001_BIN,\
+                                                UI_BUF_DIALPLATE_D20321001_BIN,\
+                                                UI_BUF_DIALPLATE_D20322001_BIN,\
                                               }
 
-#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 1     // 使用蝴蝶表盘
-#define UTE_WATCHS_CUBE_DIAL_SUPPORT 1          // 使用立方体表盘
+#define UTE_WATCHS_BUTTERFLY_DIAL_SUPPORT 0     // 使用蝴蝶表盘
+#define UTE_WATCHS_CUBE_DIAL_SUPPORT 0          // 使用立方体表盘
 #define UTE_WATCHS_LIGHT_CUBE_DIAL_SUPPORT 0    // 使用光束立方体表盘
 #define UTE_WATCHS_DIALPLATE_BTF_INDEX 0       // 蝴蝶表盘索引
 #define UTE_WATCHS_DIALPLATE_CUBE_INDEX 1       // 立方体表盘索引
@@ -330,6 +326,7 @@
 #define UTE_MODULE_SCREENS_SPORT_APP_START_SPORT_MOTOR        1 //APP开启运动->app暂停运动马达震动
 
 #define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT    1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+#define UTE_MODULE_SCREENS_KALEIAOSCOPE_MENU_DEL_PRESSURE_APP     1     //本项目删除个别菜单多余应用
 
 //未完善
 #define UTE_MODULE_SCREENS_APP_BINDING_SUPPORT        0 /*绑定界面*/

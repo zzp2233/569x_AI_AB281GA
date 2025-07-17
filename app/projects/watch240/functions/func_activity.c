@@ -59,6 +59,17 @@ typedef struct f_activity_t_
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
+static u32 get_step_max(u32 *temp,u8 len)
+{
+    u32 max = 0;
+    for(u8 i = 0; i < len; i++)
+    {
+        max = temp[i] > max ? temp[i] : max;
+    }
+    return max;
+}
+
+#define DEBUG 0
 compo_form_t *func_activity_form_create(void)
 {
     ///新建窗体和背景
@@ -234,7 +245,17 @@ compo_form_t *func_activity_form_create(void)
     compo_chartbox_set_pixel(chart, 1);
     compo_setid(chart,STEP_DAY_CAHRT_VALUE_ID);
 
-
+#if DEBUG
+    for(u8 i = 0; i<24; i ++)
+    {
+        step_date[i] = get_random(1000) + 1;
+    }
+    step_date[1] = 0;
+    step_date[22] = get_random(1000) + 1000;
+#endif
+    u32 max_step;
+    max_step = get_step_max(step_date,sizeof(step_date) / sizeof(step_date[0]));
+    target_step = target_step > max_step ? target_step : (( max_step / 1000 ) +1)*1000;
     // printf("mb:target_step:%ld\n",target_step);
     chart_t chart_info;
     chart_info.y = 0;
@@ -390,12 +411,20 @@ static void func_activity_disp_handle(void)
     memset(txt_buf,0,sizeof(txt_buf));
     snprintf((char *)txt_buf, sizeof(txt_buf),"/%ld",target_step);
     compo_textbox_set(textbox_day_step_target, txt_buf);///一天步数目标
-    memset(txt_buf,0,sizeof(txt_buf));
-    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_step);
-    compo_textbox_set(textbox2_day_step_target, txt_buf);///一天步数目标 柱形图最大值
 
     uint32_t step_date[24];
     uteModuleSportLoadTodayEveryHourStepHistoryData(step_date);
+#if DEBUG
+    for(u8 i = 0; i<24; i ++)
+    {
+        step_date[i] = i * 80;
+    }
+    step_date[1] = 0;
+    step_date[22] = get_random(2000) + 1000;
+#endif
+    u32 max_step;
+    max_step = get_step_max(step_date,sizeof(step_date) / sizeof(step_date[0]));
+    target_step = target_step > max_step ? target_step : (( max_step / 1000 ) +1)*1000;
     chart_t chart_info;
     chart_info.y = 0;
     chart_info.width = 4;   ///像素点
@@ -405,6 +434,9 @@ static void func_activity_disp_handle(void)
         chart_info.height = step_date[i]*(94*1000/target_step)/1000;
         compo_chartbox_set_value(chart_day, i, chart_info, make_color(0,236,203));//一天步数柱形图
     }
+    memset(txt_buf,0,sizeof(txt_buf));
+    snprintf((char *)txt_buf, sizeof(txt_buf),"%ld",target_step);
+    compo_textbox_set(textbox2_day_step_target, txt_buf);///一天步数目标 柱形图最大值
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     uint32_t week_step_data;
@@ -2065,7 +2097,12 @@ compo_form_t *func_activity_form_create(void)
 {
     ///新建窗体和背景
     compo_form_t *frm = compo_form_create(true);
-
+#if UTE_GUI_SCREEN_TITLE_SUPPORT
+    //设置标题栏
+    compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
+    // compo_form_set_title(frm, i18n[STR_EVREY_DAY_ACTIVITY]);
+    compo_form_set_title(frm, "Activity");
+#endif
     area_t pic_bg_area = gui_image_get_size(UI_BUF_I340001_ACTIVITY_BG_BIN);
     ///创建圆弧
     widget_page_t *widget_page = widget_page_create(frm->page_body);
@@ -2587,7 +2624,11 @@ static void func_activity_process(void)
     {
         compo_page_move_process(f_activity->ptm);
     }
-    func_activity_disp_handle();
+    if(tick_check_expire(f_activity->tick, 1000))
+    {
+        f_activity->tick = tick_get();
+        func_activity_disp_handle();
+    }
     func_process();
 }
 #include "func_cover.h"

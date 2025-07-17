@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281J_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon GTR"
-#define UTE_SW_VERSION "AB281JV000146"
+#define UTE_SW_VERSION "AB281JV000153"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281J"
 
@@ -161,7 +161,11 @@
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_LEN_SUPPORT      RES_LEN_RING_LET_GO_MP3 //工厂测试音频测试->音频占用空间
 #define UTE_MODULE_NEW_FACTORY_TEST_RING_MP3_TIMER_SUPPORT    13 //工厂测试音频测试->音频时长
 
+#define UTE_MODULE_NEW_FACTORY_MODULE_TP_NOPASS_FUNCTION  1   //工厂模式TP测试不用跳过弹窗
+
 #endif
+
+#define UTE_MODULE_POWER_ON_ALWALY_LANGUAGE_SELECT_FUNCTION  1   //开机始终显示语言选择界面
 
 /* 电池容量 zn.zeng 2022-01-07*/
 #define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      245 //mAh

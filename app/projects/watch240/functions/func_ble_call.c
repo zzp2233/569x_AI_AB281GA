@@ -66,19 +66,14 @@ compo_form_t *func_ble_call_form_create(void)
 //创建窗体，创建窗体中不要使用功能结构体 func_cb.f_cb
 compo_form_t *func_ble_call_form_create(void)
 {
-    //printf("%s\n", __func__);
-
-//    char txt_buf[20]="121353461";///假数据
-
     //新建窗体, 通话页面
     compo_form_t *frm = compo_form_create(true);
     compo_button_t *btn;
 
     ute_bt_call_data_t callData;
     uteModuleCallGetData(&callData);
-
     //名字
-    compo_textbox_t *name_txt = compo_textbox_create(frm, 50);
+    compo_textbox_t *name_txt = compo_textbox_create(frm, UTE_CALL_NAME_MAX);
     compo_textbox_set_location(name_txt, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y/1.5-GUI_SCREEN_CENTER_Y/6, GUI_SCREEN_WIDTH/1.2, 50);
     compo_textbox_set(name_txt, (char*)callData.name);
     compo_setid(name_txt, COMPO_ID_TXT_NAME);
@@ -259,21 +254,6 @@ void func_ble_call_process(void)
         sys_cb.gui_need_wakeup = 1;
     }
     reset_sleep_delay_all();
-
-    if(strcmp(f_bt_ring->pbap_result_Name, sys_cb.pbap_result_Name)!=0)
-    {
-        s16 txt_leng;
-        s16 txt_x=0;
-
-        memcpy(f_bt_ring->pbap_result_Name, sys_cb.pbap_result_Name, 50);
-
-        memset(f_bt_ring->tmp_pbap_result_Name, '\0', sizeof(f_bt_ring->tmp_pbap_result_Name));
-//        extern void truncate_and_append(const char *src, char *dst, int dst_size);
-        truncate_and_append(sys_cb.pbap_result_Name, f_bt_ring->tmp_pbap_result_Name, sizeof(f_bt_ring->tmp_pbap_result_Name));
-
-        compo_textbox_t *name_txt  = compo_getobj_byid(COMPO_ID_TXT_NAME);
-        compo_textbox_set(name_txt, f_bt_ring->tmp_pbap_result_Name);
-    }
     func_process();
 }
 

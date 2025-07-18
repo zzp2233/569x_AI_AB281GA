@@ -1337,9 +1337,9 @@ void uteApplicationCommonSetMtuSize(uint16_t mtu)
 {
     UTE_MODULE_LOG(UTE_LOG_SYSTEM_LVL, "%s,mtu=%d,%d", __func__,mtu,ble_get_gatt_mtu());
     uteApplicationCommonData.mtuSize = mtu;
-    if(uteApplicationCommonData.mtuSize > UTE_BLE_MTU_MAX_SIZE)
+    if(uteApplicationCommonData.mtuSize > (UTE_BLE_MTU_MAX_SIZE - 3))
     {
-        uteApplicationCommonData.mtuSize = UTE_BLE_MTU_MAX_SIZE;
+        uteApplicationCommonData.mtuSize = (UTE_BLE_MTU_MAX_SIZE - 3);
     }
 }
 /**

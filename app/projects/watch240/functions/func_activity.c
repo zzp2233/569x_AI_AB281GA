@@ -2100,8 +2100,7 @@ compo_form_t *func_activity_form_create(void)
 #if UTE_GUI_SCREEN_TITLE_SUPPORT
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    // compo_form_set_title(frm, i18n[STR_EVREY_DAY_ACTIVITY]);
-    compo_form_set_title(frm, "Activity");
+    compo_form_set_title(frm, i18n[STR_EVREY_DAY_ACTIVITY]);
 #endif
     area_t pic_bg_area = gui_image_get_size(UI_BUF_I340001_ACTIVITY_BG_BIN);
     ///创建圆弧

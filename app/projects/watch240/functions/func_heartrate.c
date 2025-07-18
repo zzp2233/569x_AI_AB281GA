@@ -1987,8 +1987,7 @@ compo_form_t *func_heartrate_form_create(void)
 #if UTE_GUI_SCREEN_TITLE_SUPPORT
     // //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    // compo_form_set_title(frm, i18n[STR_HEART_RATE]);
-    compo_form_set_title(frm, "Heart rate");
+    compo_form_set_title(frm, i18n[STR_HEART_RATE]);
 #endif
     ///设置图片
     compo_picturebox_t * picbox = compo_picturebox_create(frm, UI_BUF_I340001_HEART_ICON_BIN);

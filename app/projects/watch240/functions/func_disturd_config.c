@@ -2506,6 +2506,14 @@ compo_form_t *func_disturd_sub_set_form_create(void)
     compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I338001_28_SET_COMFIRM_BIN).hei/2-20);
     compo_setid(btn_ok,COMPO_ID_BTN_SURE);
 
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 133, 278, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, 192, 278, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
     if(func_cb.sta == FUNC_DISTURD_SUB_SET)
     {
         f_disturd_sub_set_t*f_alarm_clock_sub_set = (f_disturd_sub_set_t*)func_cb.f_cb;

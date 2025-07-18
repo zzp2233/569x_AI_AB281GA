@@ -887,14 +887,12 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     char txt_buf[20];
     u8 txt_data[5];
     u8 set_time = sys_cb.set_sleep_time_id;
-    printf("create_sleep_light:%d\n",set_time);
 
     ///设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
     compo_form_set_title(frm, i18n[STR_ALARM_CLOCK_SET]);
 
     func_set_sub_dousing_get_timer(&set_time,txt_data,0);///获取时间
-    printf("create_sleep_light:%d\n",set_time);
     //创建一个页面用于限制滚动的时间文本
     widget_page_t* page = widget_page_create(frm->page_body);
     widget_set_location(page, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-20, GUI_SCREEN_WIDTH,140);
@@ -923,6 +921,13 @@ compo_form_t *func_set_sub_dousing_form_create(void)
     compo_button_set_pos(btn_ok,GUI_SCREEN_CENTER_X,GUI_SCREEN_HEIGHT-gui_image_get_size(UI_BUF_I338001_28_SET_COMFIRM_BIN).hei/2-20);
     compo_setid(btn_ok,COMPO_ID_BTN_SURE);
 
+    compo_shape_t *shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y-47, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
+
+    shape = compo_shape_create(frm, COMPO_SHAPE_TYPE_RECTANGLE);
+    compo_shape_set_location(shape, GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y+9, 220, 1);
+    compo_shape_set_color(shape,make_color(47,47,47));
 
     if(func_cb.sta == FUNC_SET_SUB_DOUSING)
     {

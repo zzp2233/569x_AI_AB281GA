@@ -41,6 +41,7 @@
 #define PROJECT_AB281AG_SUPPORT      0 /*! 同乐达 T75-定制,在T75-AB281AE基础上修改蓝牙名F3 Stream、Gloryfit、开关机logo,TFT 240X284 NV3030B,CHIP_5691C_F,xiaoqing.huang 2025-07-18 */
 #define PROJECT_AB281DD_SUPPORT      0 /*! 共鑫W31,在AB281DA基础上更改蓝牙名、开关机logo、高压电池, TP:SPT5113C 240x284 CHIP_5691C_F,xiaoqing.huang 2025-07-18 */
 
+
 #if PROJECT_AB281_SUPPORT
 #include"ute_project_config_ab281.h"
 #elif PROJECT_AB281A_SUPPORT
@@ -474,6 +475,11 @@
 /*! 默认表盘索引 zn.zeng, 2021-10-25  */
 #ifndef DEFAULT_WATCH_INDEX
 #define DEFAULT_WATCH_INDEX                      0
+#endif
+
+/*! 默认菜单索引 zn.zeng, 2021-10-25  */
+#ifndef DEFAULT_THEMETYPE_INDEX
+#define DEFAULT_THEMETYPE_INDEX                      MENU_STYLE_LIST
 #endif
 
 /*! 最大表盘数量，不包括在线表盘 zn.zeng, 2021-10-23  */

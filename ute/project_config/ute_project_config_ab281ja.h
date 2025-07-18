@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281JA_H_
 
 #define DEFAULT_BLE_DEV_NAME "HX03"
-#define UTE_SW_VERSION "AB281JAV000128"
+#define UTE_SW_VERSION "AB281JAV000160"
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281JA"
 

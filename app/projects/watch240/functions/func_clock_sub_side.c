@@ -1156,6 +1156,13 @@ static void func_clock_sub_side_message(size_msg_t msg)
                 f_clk->sta = FUNC_CLOCK_MAIN;                   //单击边栏右边空白返回到时钟主界面
             }
             break;
+        case MSG_QDEC_BACKWARD:
+            printf("MSG_QDEC_BACKWARD\n");
+            break;
+
+        case MSG_QDEC_FORWARD:
+            printf("MSG_QDEC_FORWARD\n");
+            break;
 
         case KU_BACK:
             func_switching(FUNC_SWITCH_MENU_SIDE_BACK | FUNC_SWITCH_AUTO, NULL);

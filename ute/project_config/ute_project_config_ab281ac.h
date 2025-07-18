@@ -209,10 +209,11 @@
 #ifndef UTE_DRV_SCREEN_SHAPE
 #define UTE_DRV_SCREEN_SHAPE 1
 #endif
-/*! 相同分辨率不同R角的在线表盘区分,R角范围0~255 xjc 2023-07-05 */
-#ifndef UTE_MODULE_WATCHONLINNE_R_VALUE
-#define UTE_MODULE_WATCHONLINNE_R_VALUE   0
-#endif
+//这里暂时改为使用总配置的默认值，后续出版本需要注意测试一下
+// /*! 相同分辨率不同R角的在线表盘区分,R角范围0~255 xjc 2023-07-05 */
+// #ifndef UTE_MODULE_WATCHONLINNE_R_VALUE
+// #define UTE_MODULE_WATCHONLINNE_R_VALUE   0
+// #endif
 /*! 屏幕是大R角,部分界面会有遮挡，需要微调 */
 #define UTE_MODULE_SCREEN_R_VALUE_SUPPORT 1
 

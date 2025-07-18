@@ -139,7 +139,11 @@ void tft_frame_end(void)
     if (tft_cb.tft_bglight_kick)
     {
         tft_cb.tft_bglight_kick = false;
+#if UTE_DRV_TFT_MODULE_SNOWFLAKE_SUPPORT
+        tft_cb.te_bglight_cnt = 5; //3TE后打开背光
+#else
         tft_cb.te_bglight_cnt = 3; //3TE后打开背光
+#endif
     }
     if (tft_cb.tft_set_baud_kick)
     {

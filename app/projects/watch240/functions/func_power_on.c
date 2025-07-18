@@ -162,15 +162,16 @@ static void func_power_on_disp_process(void)
 #if GUI_SCREEN_SIZE_240X284RGB_I335005_SUPPORT
 /*! 默认开机动画logo图片数量 */
 #ifndef DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER
-#define DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER 0
+#define DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER 5
 #endif
+#define DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER_TIME 500
 //创建开机窗体
 compo_form_t *func_power_on_form_create(void)
 {
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335005_LOGO_00_BIN);///背景图片
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335005_LOGO_04_BIN);///背景图片
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, 140);
     compo_setid(pic, COMPO_PIC_ID);
 
@@ -179,7 +180,7 @@ compo_form_t *func_power_on_form_create(void)
 static void func_power_on_disp_process(void)
 {
     f_power_on_t* f_power_on = (f_power_on_t*)func_cb.f_cb;
-    if(tick_check_expire(f_power_on->tick,200))
+    if(tick_check_expire(f_power_on->tick,DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER_TIME))
     {
         compo_picturebox_t *pic  = compo_getobj_byid(COMPO_PIC_ID);
 
@@ -187,11 +188,31 @@ static void func_power_on_disp_process(void)
         f_power_on->pic_num_disp ++;
         f_power_on->animation_second++;
 #if DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER
-        if(f_power_on->pic_num_disp<24)
+        if(f_power_on->pic_num_disp <= DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER)
         {
+            if(f_power_on->pic_num_disp == 1)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_04_BIN);
+            }
+            else if(f_power_on->pic_num_disp == 2)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_03_BIN);
+            }
+            else if(f_power_on->pic_num_disp == 3)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_02_BIN);
+            }
+            else if(f_power_on->pic_num_disp == 4)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_01_BIN);
+            }
+            else if(f_power_on->pic_num_disp == 5)
+            {
+                compo_picturebox_set(pic,UI_BUF_I335005_LOGO_00_BIN);
+            }
         }
 #else
-        if(f_power_on->animation_second < DEFAULT_POWERON_ANIMATION_SECOND*1000/200)
+        if(f_power_on->animation_second < DEFAULT_POWERON_ANIMATION_SECOND*1000/DEFAULT_POWERON_ANIMATION_LOGO_IMAGE_NUMBER_TIME)
         {
 
         }
@@ -225,7 +246,12 @@ compo_form_t *func_power_on_form_create(void)
     //新建窗体
     compo_form_t *frm = compo_form_create(true);
 
-#if UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT
+#if UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT&&UI_BUF_I335001_LOGO_HELLO_BIN
+    compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335001_LOGO_HELLO_BIN);///背景图片
+    compo_picturebox_cut(pic, 0, 24);
+    compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
+    compo_setid(pic, COMPO_PIC_ID);
+#elif UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT
     compo_picturebox_t *pic = compo_picturebox_create(frm, UI_BUF_I335001_KAIJI_FRAME_1542_BIN);///背景图片
     compo_picturebox_cut(pic, 0, 24);
     compo_picturebox_set_pos(pic,GUI_SCREEN_CENTER_X, GUI_SCREEN_CENTER_Y);
@@ -259,7 +285,7 @@ static void func_power_on_disp_process(void)
 
         if(f_power_on->pic_num_disp<24)
         {
-#if UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT
+#if UTE_MODULE_SCREENS_POWER_ON_HELLO_SUPPORT||UI_BUF_I335001_LOGO_HELLO_BIN
             compo_picturebox_cut(pic, f_power_on->pic_num_disp, 24);
 #endif
         }

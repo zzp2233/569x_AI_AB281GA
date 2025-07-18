@@ -10,11 +10,14 @@
 #define _UTE_PROJECT_CONFIG_AB281AF_H_
 
 #define DEFAULT_BLE_DEV_NAME "Aolon Curve3"
-#define UTE_SW_VERSION "AB281AFV000155"
+#define UTE_SW_VERSION "AB281AFV000159"
 
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281AF"
+
+/*! 优化概率出现雪花屏问题 */
+#define UTE_DRV_TFT_MODULE_SNOWFLAKE_SUPPORT 1
 
 /* 睡眠数据采样支持 zn.zeng 2021-12-29*/
 #define UTE_MODULE_SLEEP_SAMPLE_DATA_SUPPORT 1
@@ -69,6 +72,9 @@
 #define QUICK_SWITCH_TURNTHEWRIST_SUPPORT 1
 #define QUICK_SWITCH_SHOCK_TIME_SUPPORT    1
 #define QUICK_SWITCH_LOCAL_WURAO_SET_TIME_SUPPORT 1
+
+/*! hardfault静默重启,不显示蓝屏，不显示开机logo,wang.luo 2025-06-11 */
+#define UTE_HARDFAULT_SILENT_RESTART_SUPPORT 1
 
 /*! 界面返回 */
 #define UTE_DRV_PWRKEY_KEY1_BACK   1
@@ -285,10 +291,11 @@
 #ifndef UTE_DRV_SCREEN_SHAPE
 #define UTE_DRV_SCREEN_SHAPE 1
 #endif
-/*! 相同分辨率不同R角的在线表盘区分,R角范围0~255 xjc 2023-07-05 */
-#ifndef UTE_MODULE_WATCHONLINNE_R_VALUE
-#define UTE_MODULE_WATCHONLINNE_R_VALUE   0
-#endif
+//这里的R角使用默认大小，
+// /*! 相同分辨率不同R角的在线表盘区分,R角范围0~255 xjc 2023-07-05 */
+// #ifndef UTE_MODULE_WATCHONLINNE_R_VALUE
+// #define UTE_MODULE_WATCHONLINNE_R_VALUE   0
+// #endif
 /*! 屏幕是大R角,部分界面会有遮挡，需要微调 */
 #define UTE_MODULE_SCREEN_R_VALUE_SUPPORT 1
 

@@ -59,6 +59,8 @@ typedef struct f_activity_t_
 
 #if GUI_SCREEN_SIZE_240X284RGB_I335001_SUPPORT
 
+const u8 week_sort[7]= {1,2,3,4,5,6,0};
+
 static u32 get_step_max(u32 *temp,u8 len)
 {
     u32 max = 0;
@@ -323,7 +325,7 @@ compo_form_t *func_activity_form_create(void)
     {
         // week_step_date[i] =18000;
         chart_info.x = i*chart_info.width + i*22;
-        chart_info.height = week_step_date[i]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
+        chart_info.height = week_step_date[week_sort[i]]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart, i, chart_info, make_color(0,236,203));
     }
 
@@ -457,7 +459,7 @@ static void func_activity_disp_handle(void)
     for (int i=0; i<7; i++)
     {
         chart_info.x = i*chart_info.width + i*22;
-        chart_info.height = week_step_date[i]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
+        chart_info.height = week_step_date[week_sort[i]]*(77*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
         compo_chartbox_set_value(chart_week, i, chart_info, make_color(0,236,203));
     }
 
@@ -1302,19 +1304,12 @@ compo_form_t *func_activity_form_create(void)
     chart_info;
     chart_info.y = 0;
     chart_info.width = 20;   ///像素点
+    const u8 week_sort[7]= {1,2,3,4,5,6,0};
+
     for (int i=0; i<7; i++)
     {
-        // week_step_date[i] =18000;
-        // target_week_step = 18000;
-        chart_info.x = i*chart_info.width + i*25;
-        if(target_week_step != 0)
-        {
-            chart_info.height = week_step_date[i]*(100*1000/target_week_step)/1000;///心率数据转换为柱形条显示数据
-        }
-        else
-        {
-            chart_info.height = 0;///心率数据转换为柱形条显示数据
-        }
+        chart_info.x = i*chart_info.width+i*25;
+        chart_info.height = (target_week_step != 0) ? (week_step_date[week_sort[i]] * (100 * 1000 / target_week_step) / 1000) : 0;
         compo_chartbox_set_value(chart, i, chart_info,  make_color(0,242,214));
     }
 
@@ -2100,8 +2095,7 @@ compo_form_t *func_activity_form_create(void)
 #if UTE_GUI_SCREEN_TITLE_SUPPORT
     //设置标题栏
     compo_form_set_mode(frm, COMPO_FORM_MODE_SHOW_TITLE | COMPO_FORM_MODE_SHOW_TIME);
-    // compo_form_set_title(frm, i18n[STR_EVREY_DAY_ACTIVITY]);
-    compo_form_set_title(frm, "Activity");
+    compo_form_set_title(frm, i18n[STR_EVREY_DAY_ACTIVITY]);
 #endif
     area_t pic_bg_area = gui_image_get_size(UI_BUF_I340001_ACTIVITY_BG_BIN);
     ///创建圆弧

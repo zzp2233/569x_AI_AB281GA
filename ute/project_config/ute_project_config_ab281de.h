@@ -10,7 +10,7 @@
 #define _UTE_PROJECT_CONFIG_AB281DE_H_
 
 #define DEFAULT_BLE_DEV_NAME "JU107"
-#define UTE_SW_VERSION "AB281DEV000154"
+#define UTE_SW_VERSION "AB281DEV000158"
 
 /*! 指定资源路径,如果不定义则使用对应项目号的路径,wang.luo 2025-01-07 */
 #define UTE_UI_CONFIG_PATCH "AB281DE"
@@ -51,9 +51,9 @@
 #define DEFAULT_SCREEN_ON_TIME_SECOND 5
 
 /*! 中科平台广播UUID,wang.luo 2025-02-13 */
-#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
+//#define UTE_SERVICE_APP_GLORY_ME_SUPPORT 0
 //二维码链接内容
-#define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
+//#define UTE_BINDING_QRENCODE_LINK "https://app.help-document.com/gloryfit/download/index.html"
 
 /*! 多个在线表盘功能，最大表盘个数,默认值为1，在具体项目里面修改此值 zn.zeng, 2022-06-28  */
 #define UTE_MODULE_WATCHONLINE_MULTIPLE_MAX_CNT 2
@@ -145,7 +145,7 @@
 #endif
 
 /* 电池容量 zn.zeng 2022-01-07*/
-#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      280 //mAh
+#define UTE_DRV_BATTERY_ELECTRICITY_POWER_MAH      215 //mAh
 
 /* 电池曲线 zn.zeng 2022-01-03*/
 #define UTE_DRV_BATTERY_000      3500
@@ -215,6 +215,8 @@
 /*! SOS联系人拨号功能,xjc 2022-07-06  */
 #define UTE_MODUEL_CALL_SOS_CONTACT_SUPPORT 1
 
+#define UTE_BT30_CALL_CUST_NO_NEED_SUPPORT    1 /* 解决关闭BT功能后 无法挂断电话问题 guoguo 2024-08-14 */
+
 /*! 床头钟模式(充电界面不息屏),wang.luo 2025-04-29 */
 #define UTE_MODULE_BEDSIDE_MODE_SUPPORT 1
 
@@ -229,6 +231,9 @@
 #define UTE_DRV_TP_COMMON_FW_UPDATE_SUPPORT 1
 
 #define UTE_ALARM_NOTDISTURB_ALLOW_MOTOR_VIBRATION_SUPPORT 1 //勿扰模式闹钟开启马达震动
+#define UTE_MODULE_LOCAL_ALARM_REPEAT_REMIND_SUPPORT 0       //关闭贪睡功能
+#define GUI_USE_MESSGE_MSG_WATCH_NEW_IMG 1          //whatsAPP图标
+#define GUI_REDUCE_FUNCTION_IN_SOME_MENU 1          //有些主题menu中去掉一些功能ui
 
 #if UTE_DRV_TFT_S360X360_NV3030B_HY139071A_QSPI_SUPPORT || UTE_DRV_TFT_S360X360_GC9B71_ZD138G1616_QSPI_SUPPORT
 #define UTE_DRV_SCREEN_WIDTH 360
@@ -337,7 +342,7 @@
 #define SCREEN_TITLE_MULTIPLE_PUNJABI_LANGUAGE_SUPPORT              0 //旁遮普语  14   Punjabi
 #define SCREEN_TITLE_MULTIPLE_THAI_LANGUAGE_SUPPORT                 1 //泰文  15   Thai
 #define SCREEN_TITLE_MULTIPLE_CZECH_LANGUAGE_SUPPORT                0 //捷克语  16  Czech
-#define SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT  1 //繁体中文
+#define SCREEN_TITLE_MULTIPLE_TRADITIONAL_CHINESE_LANGUAGE_SUPPORT  0 //繁体中文
 #define SCREEN_TITLE_MULTIPLE_ROMANIAN_LANGUAGE_SUPPORT             0 //罗马尼亚语 limba 0x1B
 #define SCREEN_TITLE_MULTIPLE_VIETNAMESE_LANGUAGE_SUPPORT           1 //越南语 0x63
 #define SCREEN_TITLE_MULTIPLE_MALAYSIA_LANGUAGE_SUPPORT             1 //马来西亚语 0x40
